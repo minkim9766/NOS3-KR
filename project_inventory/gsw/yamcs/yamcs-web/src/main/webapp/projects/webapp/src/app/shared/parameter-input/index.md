@@ -3,18 +3,111 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-input.component.css`
 
-file--parameter-input.component.css
-file--parameter-input.component.html
-file--parameter-input.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/parameter-input.component.css`
+
+
+```css
+.fill {
+  width: 100%;
+}
 ```
 
-## 항목
+### `parameter-input.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/parameter-input.component.css`](file--parameter-input.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/parameter-input.component.html`](file--parameter-input.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/parameter-input.component.ts`](file--parameter-input.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/parameter-input.component.html`
+
+
+```html
+<input
+  class="ya-input"
+  type="text"
+  autocomplete="off"
+  [formControl]="formControl"
+  [matAutocomplete]="auto"
+  [class.fill]="fill()" />
+<mat-autocomplete class="ya-autocomplete" #auto>
+  @for (option of filteredOptions | async; track option) {
+    <mat-option [value]="option | memberPath">
+      {{ option | memberPath }}
+    </mat-option>
+  }
+</mat-autocomplete>
+```
+
+### `parameter-input.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/parameter-input.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  input,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+} from '@angular/forms';
+import { Parameter, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { debounceTime, map, Observable, switchMap, tap } from 'rxjs';
+
+@Component({
+  selector: 'app-parameter-input',
+  templateUrl: './parameter-input.component.html',
+  styleUrl: './parameter-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => AppParameterInput),
+      multi: true,
+    },
+  ],
+  imports: [WebappSdkModule],
+})
+export class AppParameterInput implements ControlValueAccessor {
+  fill = input(false, { transform: booleanAttribute });
+
+  private onChange = (_: string | null) => {};
+
+  formControl = new FormControl<string | null>('');
+  filteredOptions: Observable<Parameter[]>;
+
+  constructor(yamcs: YamcsService) {
+    this.filteredOptions = this.formControl.valueChanges.pipe(
+      tap((val) => this.onChange(val)),
+      debounceTime(300),
+      switchMap((val) => {
+        if (val) {
+          return yamcs.yamcsClient.getParameters(yamcs.instance!, {
+            q: val,
+            limit: 20,
+            searchMembers: true,
+          });
+        } else {
+          return Promise.resolve({ parameters: [] });
+        }
+      }),
+      map((page) => page.parameters || []),
+    );
+  }
+
+  writeValue(value: any): void {
+    this.formControl.setValue(value ?? null);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
+}
+```

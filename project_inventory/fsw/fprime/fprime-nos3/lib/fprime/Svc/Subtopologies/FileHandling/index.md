@@ -3,22 +3,145 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 FileHandlingConfig/index
-file--CMakeLists.txt
-file--FileHandling.fpp
-file--PingEntries.hpp
-file--SubtopologyTopologyDefs.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/FileHandlingConfig/`](FileHandlingConfig/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/FileHandling.fpp`](file--FileHandling.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/PingEntries.hpp`](file--PingEntries.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/SubtopologyTopologyDefs.hpp`](file--SubtopologyTopologyDefs.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileHandlingConfig/")
+
+register_fprime_module(
+    EXCLUDE_FROM_ALL
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/FileHandling.fpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/SubtopologyTopologyDefs.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PingEntries.hpp"
+    INTERFACE
+    DEPENDS
+        Svc_Subtopologies_FileHandling_FileHandlingConfig
+)
+```
+
+### `FileHandling.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/FileHandling.fpp`
+
+
+```fpp
+module FileHandling {
+
+    # ----------------------------------------------------------------------
+    # Active Components
+    # ----------------------------------------------------------------------
+    instance fileUplink: Svc.FileUplink base id FileHandlingConfig.BASE_ID + 0x00000 \
+        queue size FileHandlingConfig.QueueSizes.fileUplink \
+        stack size FileHandlingConfig.StackSizes.fileUplink \
+        priority FileHandlingConfig.Priorities.fileUplink 
+
+    instance fileDownlink: Svc.FileDownlink base id FileHandlingConfig.BASE_ID + 0x01000 \
+        queue size FileHandlingConfig.QueueSizes.fileDownlink \
+        stack size FileHandlingConfig.StackSizes.fileDownlink \
+        priority FileHandlingConfig.Priorities.fileDownlink \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+        FileHandling::fileDownlink.configure(
+            FileHandlingConfig::DownlinkConfig::timeout,
+            FileHandlingConfig::DownlinkConfig::cooldown,
+            FileHandlingConfig::DownlinkConfig::cycleTime,
+            FileHandlingConfig::DownlinkConfig::fileQueueDepth
+        );
+        """
+    }
+
+    instance fileManager: Svc.FileManager base id FileHandlingConfig.BASE_ID + 0x02000 \
+        queue size FileHandlingConfig.QueueSizes.fileManager \
+        stack size FileHandlingConfig.StackSizes.fileManager \
+        priority FileHandlingConfig.Priorities.fileManager
+
+    instance prmDb: Svc.PrmDb base id FileHandlingConfig.BASE_ID + 0x03000 \
+        queue size FileHandlingConfig.QueueSizes.prmDb \
+        stack size FileHandlingConfig.StackSizes.prmDb \
+        priority FileHandlingConfig.Priorities.prmDb \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+            FileHandling::prmDb.configure("PrmDb.dat");
+        """
+        phase Fpp.ToCpp.Phases.readParameters """
+            FileHandling::prmDb.readParamFile();
+        """
+    }
+
+    topology Subtopology {
+        #Active Components
+        instance fileUplink
+        instance fileDownlink
+        instance fileManager
+        instance prmDb
+
+    } # end topology
+} # end FileHandling Subtopology
+```
+
+### `PingEntries.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/PingEntries.hpp`
+
+
+```cpp
+#ifndef FILEHANDLING_PINGENTRIES_HPP
+#define FILEHANDLING_PINGENTRIES_HPP
+
+namespace PingEntries {
+namespace FileHandling_fileDownlink {
+enum { WARN = 3, FATAL = 5 };
+}
+namespace FileHandling_fileManager {
+enum { WARN = 3, FATAL = 5 };
+}
+namespace FileHandling_fileUplink {
+enum { WARN = 3, FATAL = 5 };
+}
+namespace FileHandling_prmDb {
+enum { WARN = 3, FATAL = 5 };
+}
+}  // namespace PingEntries
+
+#endif
+```
+
+### `SubtopologyTopologyDefs.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/SubtopologyTopologyDefs.hpp`
+
+
+```cpp
+#ifndef FILEHANDLINGSUBTOPOLOGY_DEFS_HPP
+#define FILEHANDLINGSUBTOPOLOGY_DEFS_HPP
+
+#include "Svc/Subtopologies/FileHandling/FileHandlingConfig/FppConstantsAc.hpp"
+
+namespace FileHandling {
+// State for topology construction
+struct SubtopologyState {
+    // Empty - no external state needed for FileHandling subtopology
+};
+
+struct TopologyState {
+    SubtopologyState fileHandling;
+};
+}  // namespace FileHandling
+
+#endif
+```

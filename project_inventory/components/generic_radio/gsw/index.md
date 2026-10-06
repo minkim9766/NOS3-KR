@@ -3,18 +3,195 @@
 
 **경로:** `components/generic_radio/gsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 GENERIC_RADIO/index
-file--generic_radio.xtce
-file--GENERIC_RADIO_SIM_CMD.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_radio/gsw/GENERIC_RADIO/`](GENERIC_RADIO/index) — 폴더
-- [`components/generic_radio/gsw/generic_radio.xtce`](file--generic_radio.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/gsw/GENERIC_RADIO_SIM_CMD.txt`](file--GENERIC_RADIO_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
+### `generic_radio.xtce`
+
+**경로:** `components/generic_radio/gsw/generic_radio.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_RADIO" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_RADIO_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="FORWARD_ERR_COUNT_Type" shortDescription="Proxmity Forward Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="FORWARD_COUNT_Type" shortDescription="Proximity Forward Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNTER_Type" shortDescription="Reported Device Command Counter" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_CONFIG_Type" shortDescription="Reported Device Configuration" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="PROXIMITY_SIGNAL_Type" shortDescription="Proxmity Signal Strength" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="FORWARD_ERR_COUNT" parameterTypeRef="FORWARD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="FORWARD_COUNT" parameterTypeRef="FORWARD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNTER" parameterTypeRef="DEVICE_COUNTER_Type"/>
+        <xtce:Parameter name="DEVICE_CONFIG" parameterTypeRef="DEVICE_CONFIG_Type"/>
+        <xtce:Parameter name="PROXIMITY_SIGNAL" parameterTypeRef="PROXIMITY_SIGNAL_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_RADIO_HK_TLM" shortDescription="GENERIC_RADIO_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="FORWARD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="FORWARD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_CONFIG"/>
+            <xtce:ParameterRefEntry parameterRef="PROXIMITY_SIGNAL"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2352"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:IntegerArgumentType name="SCID_Type" initialValue="0" shortDescription="SpaceCraft ID" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="65535"/>
+        </xtce:IntegerArgumentType>
+        <xtce:BinaryArgumentType name="PROX_DATA_Type" initialValue="1930C00000010000" shortDescription="Proximity Data">
+          <xtce:BinaryDataEncoding>
+            <xtce:SizeInBits>
+              <xtce:FixedValue>512</xtce:FixedValue>
+            </xtce:SizeInBits>
+          </xtce:BinaryDataEncoding>
+        </xtce:BinaryArgumentType>
+        <xtce:IntegerArgumentType name="DEVICE_CONFIG_Type" initialValue="0" shortDescription="Device Configuration" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="4294967295"/>
+        </xtce:IntegerArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_RADIO_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6449"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_PROXIMITY_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="SCID" argumentTypeRef="SCID_Type"/>
+            <xtce:Argument name="PROX_DATA" argumentTypeRef="PROX_DATA_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_PROXIMITY_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="SCID"/>
+              <xtce:ArgumentRefEntry argumentRef="PROX_DATA"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_CONFIG_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="DEVICE_CONFIG" argumentTypeRef="DEVICE_CONFIG_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_CONFIG_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="DEVICE_CONFIG"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_RADIO_SIM_CMD.txt`
+
+**경로:** `components/generic_radio/gsw/GENERIC_RADIO_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RADIO_SIM_ENABLE BIG_ENDIAN "Enable Generic Radio Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"radio-sim-command-node","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RADIO_SIM_DISABLE BIG_ENDIAN "Disable Generic Radio Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"radio-sim-command-node","cmd":"DISABLE"}'
+
+
+```

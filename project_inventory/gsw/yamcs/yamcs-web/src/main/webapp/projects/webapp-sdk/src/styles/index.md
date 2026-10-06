@@ -3,38 +3,986 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 material-symbols/index
 roboto/index
-file--data-table.css
-file--dl-horizontal.css
-file--extension.scss
-file--form.css
-file--index.scss
-file--material-symbols.css
-file--material-theme.scss
-file--roboto.css
-file--scrollbar.css
-file--styles.css
-file--vars.css
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/material-symbols/`](material-symbols/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/`](roboto/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/data-table.css`](file--data-table.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/dl-horizontal.css`](file--dl-horizontal.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/extension.scss`](file--extension.scss) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/form.css`](file--form.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/index.scss`](file--index.scss) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/material-symbols.css`](file--material-symbols.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/material-theme.scss`](file--material-theme.scss) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto.css`](file--roboto.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/scrollbar.css`](file--scrollbar.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/styles.css`](file--styles.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/vars.css`](file--vars.css) — UTF-8 텍스트 파일 본문 포함
+### `data-table.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/data-table.css`
+
+
+```css
+.ya-data-table:not(.no-frame),
+.ya-data-table.mat-mdc-table:not(.no-frame) {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ya-data-table tr.mat-mdc-header-row,
+.ya-data-table tr.mat-mdc-footer-row {
+  height: auto;
+}
+
+.ya-data-table tr.mat-mdc-row {
+  height: auto;
+  background: #fff;
+}
+
+.ya-data-table:not(.nohover) tr.mat-mdc-row:hover td {
+  background: #fafafa;
+}
+
+.ya-data-table td.mat-mdc-cell,
+.ya-data-table th.mat-mdc-header-cell {
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.654);
+  padding: 4px 8px 4px 0;
+}
+
+.ya-data-table td.mat-mdc-footer-cell {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.654);
+  padding: 10px 10px 8px 0;
+}
+
+.ya-data-table td.vdiv,
+.ya-data-table th.vdiv {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ya-data-table td.mono,
+.ya-data-table th.mono,
+.mono {
+  font-family: "Roboto Mono", monospace;
+}
+
+.ya-data-table th.mat-mdc-header-cell,
+.ya-data-table td.mat-mdc-footer-cell {
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.ya-data-table th.mat-mdc-header-cell {
+  background-color: var(--y-background-color);
+  color: #707070;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ya-data-table td.mat-mdc-footer-cell {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ya-data-table td.mat-mdc-cell {
+  min-width: 0;
+  max-width: none;
+  white-space: nowrap;
+  -webkit-font-smoothing: auto;
+}
+
+.ya-data-table.expand,
+.ya-data-table .expand {
+  width: 100%;
+}
+
+.ya-data-table td.mat-mdc-cell.wrap {
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ya-data-table td.mat-mdc-cell.wrap200 {
+  min-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ya-data-table td.mat-mdc-cell.wrap400 {
+  min-width: 400px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.ya-data-table mat-icon {
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.ya-data-table .selected td {
+  background-color: rgba(0, 158, 135, 0.15) !important;
+}
+
+.ya-data-table .mat-mdc-button {
+  line-height: 16px;
+  min-width: 0;
+}
+
+.ya-data-table .mat-mdc-button.icon {
+  padding: 0;
+  width: 30px;
+}
+
+.ya-data-table a,
+.ya-link a,
+a.ya-link {
+  color: #009e87;
+  text-decoration: underline;
+  display: inline-block;
+}
+
+.ya-data-table .mat-mdc-row:hover a:not(.secundary) {
+  text-decoration: underline;
+}
+
+.ya-data-table a:hover,
+.ya-link a:hover,
+a.ya-link:hover {
+  text-decoration: underline;
+}
+
+.ya-data-table td.checkbox,
+.ya-data-table th.checkbox {
+  width: 1px;
+  text-align: left;
+}
+
+.ya-data-table td.status,
+.ya-data-table th.status,
+.ya-data-table td.iconcol,
+.ya-data-table th.iconcol {
+  width: 1px;
+  text-align: left;
+}
+
+.ya-data-table td.status .material-symbols,
+.ya-data-table th.status .material-symbols {
+  vertical-align: middle;
+}
+
+.ya-data-table td:first-child,
+.ya-data-table th:first-child {
+  padding-left: 8px !important;
+}
+
+.ya-data-table td:last-child,
+.ya-data-table th:last-child {
+  padding-right: 8px !important;
+}
+
+.ya-data-table td.checkbox + td,
+.ya-data-table th.checkbox + th,
+.ya-data-table td.status + td,
+.ya-data-table th.status + th {
+  padding-left: 4px;
+}
+
+.ya-data-table td:not(:first-child),
+.ya-data-table th:not(:first-child) {
+  padding-left: 24px;
+}
+
+.ya-data-table.no-frame th.mat-mdc-header-cell {
+  border-top: none;
+}
+
+@media print {
+  .ya-data-table {
+    width: auto !important;
+  }
+
+  .ya-data-table td.mat-mdc-cell,
+  .ya-data-table th.mat-mdc-header-cell,
+  .ya-data-table td.mat-mdc-footer-cell {
+    padding: 0 7px 0 0;
+    width: auto !important;
+  }
+}
+```
+
+### `dl-horizontal.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/dl-horizontal.css`
+
+
+```css
+.dl-horizontal {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding: 0;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+}
+
+.dl-horizontal.no-lead {
+  margin-top: 0;
+}
+
+.dl-horizontal.no-trail {
+  margin-bottom: 0;
+}
+
+.dl-horizontal dt {
+  float: left;
+  width: 160px;
+  clear: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgba(0, 0, 0, 0.654);
+}
+
+.dl-horizontal dd {
+  margin-left: 180px;
+  min-height: 20px;
+}
+
+.dl-horizontal dd:after {
+  clear: both;
+}
+```
+
+### `extension.scss`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/extension.scss`
+
+
+```text
+@use "vars";
+@use "material-theme";
+@use "scrollbar";
+@use "styles";
+@use "data-table";
+@use "dl-horizontal";
+@use "form";
+```
+
+### `form.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/form.css`
+
+
+```css
+.ya-form input[type="text"],
+.ya-form input[type="number"],
+.ya-form input[type="color"],
+.ya-form input[type="password"],
+.ya-form select,
+.ya-input {
+  background: white;
+  border: 1px solid #d3d3d3;
+  border-radius: 1px;
+  font-family: Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  height: 24px;
+  padding: 1px 7px 1px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.ya-form input[type="text"]:focus,
+.ya-form input[type="number"]:focus,
+.ya-form input[type="password"]:focus,
+.ya-input:focus,
+.ya-form textarea:focus {
+  border-color: #009e87;
+}
+
+.ya-form input[type="radio"] {
+  margin-right: 10px;
+  /*vertical-align: baseline;*/
+}
+
+.ya-form textarea {
+  border: 1px solid #d3d3d3;
+  border-radius: 1px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  padding: 0 7px 1px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.ya-form .error-message {
+  color: var(--y-error-color);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: normal;
+}
+
+.ya-form .hint {
+  color: grey;
+  line-height: 16px;
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+.ya-form div.radio-group input[type="radio"] {
+  margin-top: -1px;
+  vertical-align: middle;
+}
+
+.ya-form div.radio-group .radio {
+  font-weight: normal;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin: 0;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  line-height: 12px;
+  color: black;
+  font-family: Roboto, sans-serif;
+  width: 100%;
+}
+
+.ya-form div.radio-group .radio:hover {
+  background-color: #f7f7f7;
+}
+
+.ya-form div.radio-group .radio.checked {
+  background-color: #f5f5f5;
+  border-color: #d3d3d3;
+}
+```
+
+### `index.scss`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/index.scss`
+
+
+```text
+@use "extension";
+@use "material-symbols";
+@use "roboto";
+```
+
+### `material-symbols.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/material-symbols.css`
+
+
+```css
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  src: url(material-symbols/MaterialSymbols-Outlined.woff2) format("woff2");
+}
+
+.material-symbols {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+
+  /* Chrome */
+  -webkit-font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+
+  /* Safari */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+
+  /* Firefox */
+  -moz-font-feature-settings: "liga";
+  -moz-osx-font-smoothing: grayscale;
+}
+```
+
+### `material-theme.scss`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/material-theme.scss`
+
+
+```text
+@use "@angular/material" as mat;
+
+@include mat.core();
+
+$ya-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    density: (
+      scale: 0,
+    ),
+  )
+);
+
+:root {
+  @include mat.all-component-themes($ya-theme);
+
+  & {
+    --mat-app-background-color: #ffffff;
+    --mat-sidenav-container-shape: 0;
+    --mat-list-active-indicator-shape: 0;
+
+    --mat-table-background-color: #ffffff;
+    --mat-table-row-item-outline-color: rgba(0, 0, 0, 0.12);
+
+    --mat-divider-color: rgba(0, 0, 0, 0.12);
+
+    --mat-button-text-label-text-size: 14px;
+    --mat-button-text-label-text-weight: 400;
+    --mat-button-text-label-text-tracking: 0.0892857143em;
+    --mat-button-text-state-layer-color: #009e87;
+    --mat-button-text-label-text-color: #009e87;
+    --mat-button-text-with-icon-horizontal-padding: 12px;
+    --mat-button-text-container-shape: 4px;
+    --mat-button-text-container-height: 30px;
+    --mat-icon-button-icon-color: #009e87;
+    --mat-button-outlined-label-text-color: #009e87;
+    --mat-button-outlined-label-text-color: #009e87;
+
+    --mat-menu-container-color: #fff;
+    --mat-menu-divider-top-spacing: 0px;
+    --mat-menu-divider-bottom-spacing: 0px;
+    --mat-menu-item-label-text-weight: 400;
+
+    --mat-tab-active-indicator-color: #009e87;
+    --mat-tab-active-focus-indicator-color: #009e87;
+    --mat-tab-active-focus-label-text-color: #009e87;
+    --mat-tab-active-hover-indicator-color: #009e87;
+    --mat-tab-active-hover-label-text-color: #009e87;
+    --mat-tab-active-ripple-color: #009e87;
+    --mat-tab-active-label-text-color: #009e87;
+    --mat-tab-divider-color: rgba(0, 0, 0, 0.12);
+    --mat-tab-inactive-ripple-color: #009e87;
+    --mat-tab-inactive-label-text-color: rgba(0, 0, 0, 0.6);
+    --mat-tab-inactive-focus-label-text-color: rgba(0, 0, 0, 0.6);
+    --mat-tab-inactive-hover-label-text-color: rgba(0, 0, 0, 0.6);
+    --mat-tab-label-text-tracking: 0.0892857143em;
+
+    --mat-dialog-container-color: #fff;
+    --mat-dialog-container-shape: 10px;
+    --mat-dialog-container-elevation-shadow:
+      0px 11px 15px -7px rgba(0, 0, 0, 0.2),
+      0px 24px 38px 3px rgba(0, 0, 0, 0.14),
+      0px 9px 46px 8px rgba(0, 0, 0, 0.12);
+    --mat-dialog-container-max-width: 60vw;
+    --mat-dialog-actions-padding: 16px 24px;
+    --mat-dialog-content-padding: 20px 24px;
+    --mat-dialog-with-actions-content-padding: 20px 24px 0;
+    --mat-dialog-headline-padding: 6px 24px 13px;
+    --mat-dialog-subhead-line-height: 1rem;
+    --mat-dialog-subhead-size: 14px;
+
+    --mat-slide-toggle-track-height: 14px;
+    --mat-slide-toggle-track-width: 30px;
+    --mat-slide-toggle-selected-icon-size: 16px;
+    --mat-slide-toggle-unselected-icon-size: 16px;
+    --mat-slide-toggle-track-outline-width: 0;
+    --mat-slide-toggle-selected-track-outline-width: 0px;
+    --mat-slide-toggle-unselected-with-icon-handle-horizontal-margin: 0;
+    --mat-slide-toggle-unselected-pressed-handle-horizontal-margin: 0;
+    --mat-slide-toggle-selected-focus-state-layer-color: #009e97;
+    --mat-slide-toggle-selected-handle-color: #009e97;
+    --mat-slide-toggle-selected-hover-state-layer-color: #009e97;
+    --mat-slide-toggle-selected-pressed-state-layer-color: #009e97;
+    --mat-slide-toggle-selected-focus-track-color: #009e975f;
+    --mat-slide-toggle-selected-hover-track-color: #009e975f;
+    --mat-slide-toggle-selected-pressed-track-color: #009e975f;
+    --mat-slide-toggle-selected-track-color: #009e975f;
+    --mat-slide-toggle-with-icon-handle-size: 16px;
+    --mat-slide-toggle-pressed-handle-size: 16px;
+    --mat-slide-toggle-state-layer-size: 16px;
+    --mat-slide-toggle-selected-focus-handle-color: #009e97;
+    --mat-slide-toggle-selected-hover-handle-color: #009e97;
+    --mat-slide-toggle-selected-pressed-handle-color: #009e97;
+    --mat-slide-toggle-selected-with-icon-handle-horizontal-margin: 0 16px;
+    --mat-slide-toggle-selected-pressed-handle-horizontal-margin: 0 16px;
+    --mat-slide-toggle-selected-icon-color: #e0e2ec;
+
+    --mat-dialog-subhead-color: #fff;
+    --mat-dialog-headline-padding: 0 12px 0;
+    --mat-dialog-subhead-line-height: 48px;
+    --mat-dialog-with-actions-content-padding: 20px 12px 0;
+    --mat-dialog-actions-padding: 12px;
+
+    --mat-paginator-container-size: 24px;
+
+    --mat-datepicker-calendar-date-selected-state-background-color: #009e97;
+    --mat-datepicker-calendar-date-today-selected-state-outline-color: #009e97;
+    --mat-datepicker-calendar-date-today-outline-color: #009e97;
+    --mat-datepicker-calendar-container-background-color: #fff;
+    --mat-datepicker-calendar-container-elevation-shadow:
+      0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+      0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+
+    --mat-toolbar-container-background-color: var(--y-background-color);
+    --mat-toolbar-title-text-size: 20px;
+    --mat-toolbar-title-text-tracking: 0.0125em;
+  }
+}
+
+// Comment out the line below if you want to use the pre-defined typography utility classes.
+// For more information: https://material.angular.io/guide/typography#using-typography-styles-in-your-application.
+// @include mat.typography-hierarchy($ya-theme);
+
+// Comment out the line below if you want to use the deprecated `color` inputs.
+//@include mat.color-variants-backwards-compatibility($ya-theme);
+
+.mat-mdc-menu-panel {
+  box-shadow:
+    0 5px 5px -3px #0003,
+    0 8px 10px 1px #00000024,
+    0 3px 14px 2px #0000001f;
+}
+
+.mat-mdc-dialog-title {
+  background-color: var(--y-app-bar-background-color);
+}
+
+.mat-mdc-dialog-title::before {
+  display: none !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-title + .mat-mdc-dialog-content {
+  padding-top: 12px !important;
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-actions {
+  margin-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-content {
+  overflow: hidden;
+}
+```
+
+### `roboto.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto.css`
+
+
+```css
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 100;
+  src: url(roboto/Roboto-Thin.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 100;
+  src: url(roboto/Roboto-ThinItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: url(roboto/Roboto-Light.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 300;
+  src: url(roboto/Roboto-LightItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url(roboto/Roboto-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 400;
+  src: url(roboto/Roboto-RegularItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: url(roboto/Roboto-Medium.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 500;
+  src: url(roboto/Roboto-MediumItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  src: url(roboto/Roboto-Bold.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 700;
+  src: url(roboto/Roboto-BoldItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 900;
+  src: url(roboto/Roboto-Black.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: italic;
+  font-weight: 900;
+  src: url(roboto/Roboto-BlackItalic.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  font-style: normal;
+  font-weight: 400;
+  src: url(roboto/RobotoMono-Regular.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: "Roboto Mono";
+  font-style: normal;
+  font-weight: 700;
+  src: url(roboto/RobotoMono-Bold.woff2) format("woff2");
+}
+```
+
+### `scrollbar.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/scrollbar.css`
+
+
+```css
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: var(--y-vertical-scrollbar-width);
+  height: var(--y-horizontal-scrollbar-height);
+}
+
+*::-webkit-scrollbar-thumb {
+  height: 56px;
+  background-color: var(--y-scrollbar-thumb);
+  border-radius: 0;
+  border-left: var(--y-vertical-scrollbar-border) solid transparent;
+  border-right: var(--y-vertical-scrollbar-border) solid transparent;
+  border-top: var(--y-horizontal-scrollbar-border) solid transparent;
+  border-bottom: var(--y-horizontal-scrollbar-border) solid transparent;
+  background-clip: content-box;
+}
+```
+
+### `styles.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/styles.css`
+
+
+```css
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  position: relative;
+}
+
+/* Disable dashed border in menus etc. Only FF does this */
+::-moz-focus-inner {
+  border: 0;
+}
+
+body {
+  background-color: var(--y-background-color);
+  /* Without this FF font are too crispy */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.material-symbols.icon12 {
+  font-size: 12px !important;
+  height: 12px !important;
+  width: 12px !important;
+}
+
+.material-symbols.icon14 {
+  font-size: 14px !important;
+  height: 14px !important;
+  width: 14px !important;
+}
+
+.material-symbols.icon16 {
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.mat-mdc-slide-toggle {
+  line-height: 24px !important;
+}
+
+.dialog-full-size {
+  max-width: none !important;
+}
+
+.dialog-full-size .mat-mdc-dialog-surface {
+  padding: 24px;
+  border-radius: 0 !important;
+}
+
+.dialog-force-no-scrollbar .mat-mdc-tab-body-content {
+  overflow-y: hidden !important;
+}
+
+.form-content {
+  padding: 24px;
+  max-width: 600px;
+}
+
+.form-content mat-toolbar {
+  background-color: var(--y-background-color);
+  font-size: 12px;
+  padding: 0;
+}
+
+dd,
+dt,
+.small {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+}
+
+dt {
+  font-weight: bold;
+}
+
+.ya-link a .material-symbols,
+a.ya-link .material-symbols {
+  text-decoration: none !important;
+}
+
+a.ya-link.ya-header-link {
+  color: inherit;
+}
+
+.ya-menu .mat-mdc-menu-item {
+  line-height: 32px;
+  height: 32px;
+  font-size: 12px;
+  padding: 0 16px;
+  min-height: 32px;
+}
+
+.ya-menu .mat-mdc-menu-content .mat-mdc-menu-item .mdc-list-item__primary-text,
+.ya-menu .mat-mdc-menu-content .mat-mdc-menu-item .mat-mdc-menu-item-text {
+  font-size: 12px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ya-menu .mat-mdc-menu-item .material-symbols {
+  font-size: 14px !important;
+  height: 14px !important;
+  width: 14px !important;
+  margin-right: 3px;
+  font-weight: 600;
+}
+
+.ya-menu.mat-mdc-menu-panel {
+  min-height: 24px;
+  max-width: 350px;
+}
+
+.ng-invalid:not(.ng-pristine) > .date-time-input > input,
+.ng-invalid:not(.ng-pristine) > .binary-input > input,
+input.ng-invalid:not(.ng-pristine) {
+  border-color: var(--y-error-color) !important;
+}
+
+.ya-autocomplete .mat-mdc-option {
+  height: auto;
+  line-height: 16px;
+  font-size: 12px;
+  min-height: 24px;
+}
+
+.hide,
+.noDisplay {
+  display: none;
+}
+
+.section-divider {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.mat-mdc-tab-link:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.mat-mdc-tab-nav-bar.secondary .mat-mdc-tab-link,
+.mat-mdc-tab-group.secondary .mat-mdc-tab {
+  height: 36px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--y-accent);
+}
+
+.mat-mdc-dialog-content .hint {
+  font-size: 12px;
+}
+
+.mat-mdc-tab-nav-bar.small-tabs .mat-mdc-tab-link,
+.mat-mdc-tab-group.small-tabs .mat-mdc-tab {
+  height: 28px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action {
+  color: whitesmoke !important;
+}
+
+.mat-mdc-dialog-actions ya-button:not(:last-child) {
+  margin-right: 7px;
+}
+
+.mat-mdc-paginator {
+  background-color: inherit !important;
+}
+
+.mat-mdc-button-toggle-focus-overlay {
+  display: none;
+}
+
+h2 {
+  font:
+    500 20px / 32px Roboto,
+    sans-serif;
+  letter-spacing: 0.0125em;
+  margin: 0 0 16px;
+}
+
+h3 {
+  font:
+    400 16px / 28px Roboto,
+    sans-serif;
+  letter-spacing: 0.009375em;
+  margin: 0 0 16px;
+}
+
+h4 {
+  font:
+    400 16px / 24px Roboto,
+    sans-serif;
+  letter-spacing: 0.03125em;
+  margin: 0 0 16px;
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 12px;
+  letter-spacing: 0.0178571429em;
+}
+
+.elevation-z1 {
+  box-shadow:
+    0 2px 1px -1px #0003,
+    0 1px 1px #00000024,
+    0 1px 3px #0000001f;
+}
+
+@media print {
+  .mat-drawer,
+  .mat-toolbar {
+    display: none !important;
+  }
+
+  .page-content,
+  .mat-sidenav-container {
+    position: static !important;
+  }
+
+  .mat-drawer-content {
+    margin: 0 !important;
+  }
+
+  * {
+    overflow: visible !important;
+  }
+}
+```
+
+### `vars.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/vars.css`
+
+
+```css
+html {
+  /* RGB values, for opacity mixing */
+  --y-white-rgb: 255, 255, 255;
+  --y-black-rgb: 0, 0, 0;
+  --y-accent-rgb: 0, 158, 135;
+  --y-contrast-rgb: var(--y-black-rgb);
+
+  --y-accent: rgb(var(--y-accent-rgb));
+  --y-accent-foreground: #ffffff;
+  --y-border-color: rgba(var(--y-contrast-rgb), 0.1);
+
+  --y-scrollbar-thumb: #606060;
+  --y-horizontal-scrollbar-height: 16px;
+  --y-horizontal-scrollbar-border: 4px;
+  --y-vertical-scrollbar-width: 16px;
+  --y-vertical-scrollbar-border: 4px;
+
+  --y-background-color: #f7f7f7;
+  --y-app-bar-background-color: #212121;
+  --y-warning-color: #ff8c00;
+  --y-error-color: #ff0000;
+}
+
+html.dark {
+  --y-accent-rgb: 62, 166, 255;
+  --y-contrast-rgb: var(--y-white-rgb);
+}
+```

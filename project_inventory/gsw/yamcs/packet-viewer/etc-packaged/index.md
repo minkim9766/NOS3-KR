@@ -3,18 +3,74 @@
 
 **경로:** `gsw/yamcs/packet-viewer/etc-packaged/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `logging.properties`
 
-file--logging.properties
-file--mdb.yaml
-file--packet-viewer.yaml
+**경로:** `gsw/yamcs/packet-viewer/etc-packaged/logging.properties`
+
+
+```text
+handlers= java.util.logging.FileHandler, java.util.logging.ConsoleHandler
+
+java.util.logging.FileHandler.level = ALL
+java.util.logging.FileHandler.pattern = %h/.yamcs/log/yamcs.log
+java.util.logging.FileHandler.limit = 10000000
+java.util.logging.FileHandler.count = 10
+java.util.logging.FileHandler.formatter = org.yamcs.ui.LogFormatter
+
+java.util.logging.ConsoleHandler.level = WARNING
+java.util.logging.ConsoleHandler.formatter = org.yamcs.ui.LogFormatter
+
+
+org.yamcs.level=FINE
 ```
 
-## 항목
+### `mdb.yaml`
 
-- [`gsw/yamcs/packet-viewer/etc-packaged/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/etc-packaged/mdb.yaml`](file--mdb.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/etc-packaged/packet-viewer.yaml`](file--packet-viewer.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/packet-viewer/etc-packaged/mdb.yaml`
+
+
+```yaml
+quickstart:
+  # Configuration of the active loaders
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: xtce
+    args:
+      file: mdb/xtce.xml
+
+```
+
+### `packet-viewer.yaml`
+
+**경로:** `gsw/yamcs/packet-viewer/etc-packaged/packet-viewer.yaml`
+
+
+```yaml
+# A preprocessor is used to derive the time of the packet and to do checksum
+# computation. 
+packetPreprocessorClassName: org.yamcs.tctm.GenericPacketPreprocessor
+packetPreprocessorArgs:
+     timestampOffset: -1
+     seqCountOffset: -1
+
+# File formats define how local files are interpreted. A packetInputStream splits
+# the files in packets. When opening a file, the user selects one of the available
+# formats.
+#
+# Required keys: name, packetInputStreamClassName
+# Optional keys: packetInputStreamArgs, packetPreprocessorClassName,
+#                packetPreprocessorArgs, rootContainer
+#
+# If a packetPreprocessorClassName is not specified, the format uses the same one
+# as used for realtime packets.
+fileFormats:
+    - name: CCSDS Packets
+      packetInputStreamClassName: org.yamcs.tctm.GenericPacketInputStream
+      packetInputStreamArgs:
+          lengthFieldOffset: 4
+          maxPacketLength: 1500
+          lengthFieldLength: 2
+          lengthAdjustment: 7
+          initialBytesToStrip: 0
+```

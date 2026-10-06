@@ -3,18 +3,320 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `admin-page.component.css`
 
-file--admin-page.component.css
-file--admin-page.component.html
-file--admin-page.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/admin-page.component.css`
+
+
+```css
+mat-sidenav-container {
+  position: absolute;
+  top: 48px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--y-background-color);
+}
+
+mat-sidenav-container.message-bar-visible {
+  top: 96px;
+  /* 48 + 48*/
+}
+
+mat-sidenav {
+  width: 250px;
+  background-color: #181818;
+  border-right: 0 !important;
+}
+
+.sidenav-content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+mat-toolbar {
+  background-color: #181818;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: content-box;
+  color: #d3d3d3;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.navbar-logo {
+  text-align: center;
+  line-height: 0;
+}
+
+.navbar-logo img {
+  max-width: 100%;
+}
+
+.mat-toolbar.module-title {
+  min-height: 48px;
+}
+
+.mat-toolbar.module-title .mat-toolbar-row {
+  height: 48px;
+  font-weight: 400;
+}
+
+.mat-toolbar.module-title mat-icon {
+  font-size: 32px !important;
+  height: 32px !important;
+  width: 32px !important;
+  margin-right: 16px;
+}
 ```
 
-## 항목
+### `admin-page.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/admin-page.component.css`](file--admin-page.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/admin-page.component.html`](file--admin-page.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/admin-page.component.ts`](file--admin-page.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/admin-page.component.html`
+
+
+```html
+<ya-message-bar #messageBar />
+
+<mat-sidenav-container [class.message-bar-visible]="messageBar.show$ | async">
+  <mat-sidenav mode="side" [opened]="true" [disableClose]="true">
+    <div class="sidenav-content">
+      <mat-toolbar class="module-title">
+        <mat-toolbar-row>
+          <mat-icon>security</mat-icon>
+          Admin area
+        </mat-toolbar-row>
+      </mat-toolbar>
+
+      <mat-nav-list dense>
+        <ya-sidebar-nav-item activeWhen="/admin" routerLink="/admin" [exact]="true">
+          <mat-icon class="item-icon">recent_actors</mat-icon>
+          Action log
+        </ya-sidebar-nav-item>
+        @if (showAccessControlItem()) {
+          <ya-sidebar-nav-group
+            label="Access control"
+            icon="supervised_user_circle"
+            [active]="userManagementActive"
+            [expanded]="userManagementExpanded"
+            (toggle)="toggleUserManagementGroup()">
+            <ya-sidebar-nav-item
+              activeWhen="/admin/iam/users"
+              routerLink="/admin/iam/users"
+              [subitem]="true">
+              Users
+            </ya-sidebar-nav-item>
+            <ya-sidebar-nav-item
+              activeWhen="/admin/iam/service-accounts"
+              routerLink="/admin/iam/service-accounts"
+              [subitem]="true">
+              Service accounts
+            </ya-sidebar-nav-item>
+            <ya-sidebar-nav-item
+              activeWhen="/admin/iam/groups"
+              routerLink="/admin/iam/groups"
+              [subitem]="true">
+              Groups
+            </ya-sidebar-nav-item>
+            <ya-sidebar-nav-item
+              activeWhen="/admin/iam/roles"
+              routerLink="/admin/iam/roles"
+              [subitem]="true">
+              Roles
+            </ya-sidebar-nav-item>
+          </ya-sidebar-nav-group>
+        }
+        @if (showAccessControlItem()) {
+          <ya-sidebar-nav-item activeWhen="/admin/sessions" routerLink="/admin/sessions">
+            <mat-icon class="item-icon">devices</mat-icon>
+            Sessions
+          </ya-sidebar-nav-item>
+        }
+        @if (showServicesItem()) {
+          <ya-sidebar-nav-item activeWhen="/admin/services" routerLink="/admin/services">
+            <mat-icon class="item-icon">attractions</mat-icon>
+            Services
+          </ya-sidebar-nav-item>
+        }
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item
+            activeWhen="/admin/processor-types"
+            routerLink="/admin/processor-types">
+            <mat-icon class="item-icon">flip_camera_android</mat-icon>
+            Processor types
+          </ya-sidebar-nav-item>
+        }
+        <ya-sidebar-nav-item activeWhen="/admin/databases" routerLink="/admin/databases">
+          <mat-icon class="item-icon">database</mat-icon>
+          Databases
+        </ya-sidebar-nav-item>
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item activeWhen="/admin/replication" routerLink="/admin/replication">
+            <mat-icon class="item-icon">share</mat-icon>
+            Replication
+          </ya-sidebar-nav-item>
+        }
+        @if (showRocksDbItem()) {
+          <ya-sidebar-nav-group
+            label="RocksDB"
+            icon="dataset"
+            [active]="rocksDbActive"
+            [expanded]="rocksDbExpanded"
+            (toggle)="toggleRocksDbGroup()">
+            <ya-sidebar-nav-item
+              activeWhen="/admin/rocksdb/databases"
+              routerLink="/admin/rocksdb/databases"
+              [subitem]="true">
+              Open databases
+            </ya-sidebar-nav-item>
+          </ya-sidebar-nav-group>
+        }
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item activeWhen="/admin/http-traffic" routerLink="/admin/http-traffic">
+            <mat-icon class="item-icon">traffic</mat-icon>
+            HTTP traffic
+          </ya-sidebar-nav-item>
+        }
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item activeWhen="/admin/routes" routerLink="/admin/routes">
+            <mat-icon class="item-icon">api</mat-icon>
+            API routes
+          </ya-sidebar-nav-item>
+        }
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item activeWhen="/admin/leap-seconds" routerLink="/admin/leap-seconds">
+            <mat-icon class="item-icon">access_time</mat-icon>
+            Leap seconds
+          </ya-sidebar-nav-item>
+        }
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item activeWhen="/admin/threads" routerLink="/admin/threads">
+            <mat-icon class="item-icon">receipt</mat-icon>
+            Threads
+          </ya-sidebar-nav-item>
+        }
+        @if (showSystemInfo()) {
+          <ya-sidebar-nav-item activeWhen="/admin/system" routerLink="/admin/system">
+            <mat-icon class="item-icon">memory</mat-icon>
+            System
+          </ya-sidebar-nav-item>
+        }
+      </mat-nav-list>
+
+      <div style="flex: 1 1 auto"></div>
+      @if (config.logo) {
+        <div class="navbar-logo">
+          <img [src]="config.logo" />
+        </div>
+      }
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>
+```
+
+### `admin-page.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-page/admin-page.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import {
+  AuthService,
+  ConfigService,
+  User,
+  WebappSdkModule,
+  WebsiteConfig,
+} from '@yamcs/webapp-sdk';
+import { Subscription, filter } from 'rxjs';
+import { AppAppBaseToolbarLabel } from '../../../appbase/appbase-toolbar/appbase-toolbar-label.directive';
+import { AppAppBaseToolbar } from '../../../appbase/appbase-toolbar/appbase-toolbar.component';
+
+@Component({
+  templateUrl: './admin-page.component.html',
+  styleUrl: './admin-page.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppAppBaseToolbar, AppAppBaseToolbarLabel, WebappSdkModule],
+})
+export class AdminPageComponent implements OnDestroy {
+  user: User;
+
+  config: WebsiteConfig;
+
+  userManagementActive = false;
+  userManagementExpanded = false;
+  rocksDbActive = false;
+  rocksDbExpanded = false;
+
+  private routerSubscription: Subscription;
+
+  constructor(
+    configService: ConfigService,
+    authService: AuthService,
+    router: Router,
+  ) {
+    this.config = configService.getConfig();
+    this.user = authService.getUser()!;
+
+    this.routerSubscription = router.events
+      .pipe(filter((evt) => evt instanceof NavigationEnd))
+      .subscribe((evt: any) => {
+        const url = evt.url as string;
+        this.collapseAllGroups();
+        this.userManagementActive = false;
+        this.rocksDbActive = false;
+        if (url.match(/\/iam.*/)) {
+          this.userManagementActive = true;
+          this.userManagementExpanded = true;
+        } else if (url.match(/\/rocksdb.*/)) {
+          this.rocksDbActive = true;
+          this.rocksDbExpanded = true;
+        }
+      });
+  }
+
+  private collapseAllGroups() {
+    this.userManagementExpanded = false;
+    this.rocksDbExpanded = false;
+  }
+
+  toggleUserManagementGroup() {
+    const expanded = this.userManagementExpanded;
+    this.collapseAllGroups();
+    this.userManagementExpanded = !expanded;
+  }
+
+  toggleRocksDbGroup() {
+    const expanded = this.rocksDbExpanded;
+    this.collapseAllGroups();
+    this.rocksDbExpanded = !expanded;
+  }
+
+  showRocksDbItem() {
+    return this.user.hasSystemPrivilege('ControlArchiving');
+  }
+
+  showAccessControlItem() {
+    return this.user.hasSystemPrivilege('ControlAccess');
+  }
+
+  showServicesItem() {
+    return this.user.hasSystemPrivilege('ControlServices');
+  }
+
+  showSystemInfo() {
+    return this.user.hasSystemPrivilege('ReadSystemInfo');
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+  }
+}
+```

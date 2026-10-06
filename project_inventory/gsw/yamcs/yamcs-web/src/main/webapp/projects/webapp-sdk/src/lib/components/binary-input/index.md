@@ -3,18 +3,118 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `binary-input.component.css`
 
-file--binary-input.component.css
-file--binary-input.component.html
-file--binary-input.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/binary-input.component.css`
+
+
+```css
+.binary-input {
+  position: relative;
+}
+
+.binary-input input {
+  padding-left: 24px;
+}
+
+.hex-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  text-align: center;
+  color: darkgrey;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 4px;
+  font-weight: 300;
+}
 ```
 
-## 항목
+### `binary-input.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/binary-input.component.css`](file--binary-input.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/binary-input.component.html`](file--binary-input.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/binary-input.component.ts`](file--binary-input.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/binary-input.component.html`
+
+
+```html
+<div class="binary-input">
+  <input
+    #input
+    class="ya-input"
+    type="text"
+    autocomplete="off"
+    (keyup)="fireChange()"
+    (change)="fireChange()" />
+  <div class="hex-icon">0x</div>
+</div>
+```
+
+### `binary-input.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/binary-input/binary-input.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  forwardRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+  Validator,
+} from '@angular/forms';
+import { requireHex } from '../../validators';
+
+@Component({
+  selector: 'ya-binary-input',
+  templateUrl: './binary-input.component.html',
+  styleUrl: './binary-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaBinaryInput),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => YaBinaryInput),
+      multi: true,
+    },
+  ],
+})
+export class YaBinaryInput implements ControlValueAccessor, Validator {
+  @ViewChild('input', { static: true })
+  private inputComponent: ElementRef;
+
+  private onChange = (_: string | null) => {};
+
+  writeValue(value: any) {
+    this.inputComponent.nativeElement.value = value;
+    this.onChange(value);
+  }
+
+  fireChange() {
+    const value = this.inputComponent.nativeElement.value;
+    this.onChange(value);
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  validate(control: UntypedFormControl) {
+    return requireHex(control);
+  }
+}
+```

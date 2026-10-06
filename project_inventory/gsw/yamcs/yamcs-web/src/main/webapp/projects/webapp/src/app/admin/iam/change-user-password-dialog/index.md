@@ -3,16 +3,99 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/change-user-password-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `change-user-password-dialog.component.html`
 
-file--change-user-password-dialog.component.html
-file--change-user-password-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/change-user-password-dialog/change-user-password-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Change password of {{ user.name }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Password">
+      <input type="password" formControlName="password" />
+    </ya-field>
+
+    <ya-field label="Password confirmation">
+      <input type="password" formControlName="passwordConfirmation" />
+    </ya-field>
+  </form>
+  @if (form.errors?.passwordMismatch) {
+    <p>Confirmation does not match password</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button
+    appearance="primary"
+    mat-dialog-close
+    (click)="changePassword()"
+    [disabled]="!form.valid">
+    OK
+  </ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `change-user-password-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/change-user-password-dialog/change-user-password-dialog.component.html`](file--change-user-password-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/change-user-password-dialog/change-user-password-dialog.component.ts`](file--change-user-password-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/change-user-password-dialog/change-user-password-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  AbstractControl,
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { UserInfo, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+const PASSWORD_VALIDATOR: ValidatorFn = (control: AbstractControl) => {
+  const pw1 = control.get('password')!.value;
+  const pw2 = control.get('passwordConfirmation')!.value;
+  return pw1 && pw2 && pw1 !== pw2 ? { passwordMismatch: true } : null;
+};
+
+@Component({
+  selector: 'app-change-user-password-dialog',
+  templateUrl: './change-user-password-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ChangeUserPasswordDialogComponent {
+  form: UntypedFormGroup;
+  user: UserInfo;
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+    private yamcs: YamcsService,
+    formBuilder: UntypedFormBuilder,
+  ) {
+    this.user = data.user;
+    this.form = formBuilder.group(
+      {
+        password: new UntypedFormControl(null, Validators.required),
+        passwordConfirmation: new UntypedFormControl(null, Validators.required),
+      },
+      {
+        validator: PASSWORD_VALIDATOR,
+      },
+    );
+  }
+
+  changePassword() {
+    const formValue = this.form.value;
+    this.yamcs.yamcsClient.editUser(this.user.name, {
+      password: formValue.password,
+    });
+  }
+}
+```

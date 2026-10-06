@@ -3,18 +3,234 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `scrolling-parameter-table.component.css`
 
-file--scrolling-parameter-table.component.css
-file--scrolling-parameter-table.component.html
-file--scrolling-parameter-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/scrolling-parameter-table.component.css`
+
+
+```css
+.paused td {
+  font-style: italic;
+}
 ```
 
-## 항목
+### `scrolling-parameter-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/scrolling-parameter-table.component.css`](file--scrolling-parameter-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/scrolling-parameter-table.component.html`](file--scrolling-parameter-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/scrolling-parameter-table.component.ts`](file--scrolling-parameter-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/scrolling-parameter-table.component.html`
+
+
+```html
+@if (dataSource.data.length) {
+  <table mat-table [dataSource]="dataSource" class="ya-data-table expand" [class.paused]="paused">
+    <ng-container cdkColumnDef="generationTime">
+      <th mat-header-cell *cdkHeaderCellDef>Generation time</th>
+      <td mat-cell *cdkCellDef="let row">{{ (row.generationTime | datetime) || "-" }}</td>
+    </ng-container>
+    @for (parameter of model.parameters; track parameter; let i = $index) {
+      <ng-container [cdkColumnDef]="parameter">
+        <th mat-header-cell *cdkHeaderCellDef>
+          <a
+            [routerLink]="'/telemetry/parameters' + parameter"
+            [queryParams]="{ c: yamcs.context }">
+            {{ parameter }}
+          </a>
+          @if (showActions) {
+            <ya-more>
+              <button mat-menu-item (click)="moveLeft.emit(i)">Move left</button>
+              <button mat-menu-item (click)="moveRight.emit(i)">Move right</button>
+              <mat-divider />
+              <button mat-menu-item (click)="removeColumn.emit(parameter)">Remove column</button>
+            </ya-more>
+          }
+        </th>
+        <td mat-cell *cdkCellDef="let row">
+          @if (row.pvals[parameter]; as pval) {
+            @if (pval) {
+              <ya-expirable [pval]="pval">
+                {{ (pval.engValue | value) || "-" }}
+                @if (pval.rangeCondition === "LOW") {
+                  <span>&#8595;</span>
+                }
+                @if (pval.rangeCondition === "HIGH") {
+                  <span>&#8593;</span>
+                }
+              </ya-expirable>
+            }
+          } @else {
+            <span>-</span>
+          }
+        </td>
+      </ng-container>
+    }
+    <ng-container cdkColumnDef="actions">
+      <th mat-header-cell *cdkHeaderCellDef class="expand"></th>
+      <td mat-cell *cdkCellDef="let row"></td>
+    </ng-container>
+    <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
+
+@if (showActions) {
+  <p>&nbsp;</p>
+  Buffer size:
+  <select [formControl]="bufferSizeControl">
+    <option value="10">10</option>
+    <option value="25">25</option>
+    <option value="50">50</option>
+    <option value="75">75</option>
+    <option value="100">100</option>
+  </select>
+}
+```
+
+### `scrolling-parameter-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/scrolling-parameter-table/scrolling-parameter-table.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  ParameterValue,
+  Synchronizer,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+import { ParameterTableBuffer } from '../ParameterTableBuffer';
+import { ParameterTable } from '../ParameterTableModel';
+
+@Component({
+  selector: 'app-scrolling-parameter-table',
+  templateUrl: './scrolling-parameter-table.component.html',
+  styleUrl: './scrolling-parameter-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ScrollingParameterTable implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  model: ParameterTable = {
+    scroll: true,
+    parameters: [],
+  };
+
+  @Input()
+  buffer: ParameterTableBuffer;
+
+  @Input()
+  showActions: boolean;
+
+  @Input()
+  paused: boolean;
+
+  @Output()
+  removeColumn = new EventEmitter<string>();
+
+  @Output()
+  moveLeft = new EventEmitter<number>();
+
+  @Output()
+  moveRight = new EventEmitter<number>();
+
+  @Output()
+  bufferSize = new EventEmitter<number>();
+
+  dataSource = new MatTableDataSource<ScrollRecord>([]);
+
+  bufferSizeControl = new UntypedFormControl('10');
+  private bufferSizeControlSubscription: Subscription;
+
+  private syncSubscription: Subscription;
+
+  displayedColumns = ['generationTime', 'actions'];
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetector: ChangeDetectorRef,
+    synchronizer: Synchronizer,
+  ) {
+    this.syncSubscription = synchronizer.syncFast(() => {
+      if (!this.paused) {
+        this.refreshTable();
+      }
+    });
+
+    this.bufferSizeControl.valueChanges.subscribe(() => {
+      const val = this.bufferSizeControl.value;
+      if (val !== String(this.model.bufferSize)) {
+        this.bufferSize.emit(parseInt(val, 10));
+      }
+    });
+  }
+
+  ngOnInit() {
+    if (this.model.bufferSize) {
+      this.buffer.setSize(this.model.bufferSize);
+      this.bufferSizeControl.setValue(String(this.model.bufferSize));
+    }
+    this.refreshTable();
+  }
+
+  private refreshTable() {
+    const recs: ScrollRecord[] = [];
+    const snapshot = this.buffer.snapshot();
+    for (const sample of snapshot) {
+      const anyValue = this.findAnyMatchingParameterValue(sample);
+      if (anyValue) {
+        recs.push({
+          generationTime: anyValue.generationTime,
+          pvals: sample,
+        });
+      }
+    }
+
+    this.dataSource.data = recs;
+    this.changeDetector.detectChanges();
+  }
+
+  private findAnyMatchingParameterValue(sample: {
+    [key: string]: ParameterValue;
+  }) {
+    for (const name in sample) {
+      if (sample.hasOwnProperty(name)) {
+        if (this.model.parameters.indexOf(name) !== -1) {
+          return sample[name];
+        }
+      }
+    }
+  }
+
+  ngOnChanges() {
+    this.displayedColumns = [
+      'generationTime',
+      ...this.model.parameters,
+      'actions',
+    ];
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+    this.bufferSizeControlSubscription?.unsubscribe();
+  }
+}
+
+export interface ScrollRecord {
+  generationTime: string;
+  pvals: { [key: string]: ParameterValue };
+}
+```

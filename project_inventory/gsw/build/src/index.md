@@ -3,20 +3,30 @@
 
 **경로:** `gsw/build/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--libcryptolib.so
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/build/src/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`gsw/build/src/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`gsw/build/src/libcryptolib.so`](file--libcryptolib.so) — 빌드 산출물 (경로만)
-- [`gsw/build/src/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `gsw/build/src/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libcryptolib.so`
+
+**경로:** `gsw/build/src/libcryptolib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `gsw/build/src/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

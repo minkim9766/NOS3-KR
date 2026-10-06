@@ -3,18 +3,51 @@
 
 **경로:** `fsw/psp/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/fsw/shared/inc/`](inc/index) — 폴더
-- [`fsw/psp/fsw/shared/src/`](src/index) — 폴더
-- [`fsw/psp/fsw/shared/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/psp/fsw/shared/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for shared PSP component
+#
+######################################################################
+
+# This contains supplemental code to support running CFE
+# on a variety of targets.
+#
+# Note this shared PSP code is currently built against headers provided by the
+# target implementation.  This makes it implementation-specific even though
+# the same source code is used with multiple targets.
+
+# Build the shared implementation as a library
+add_library(psp-${CFE_PSP_TARGETNAME}-shared OBJECT
+    src/cfe_psp_error.c
+    src/cfe_psp_exceptionstorage.c
+    src/cfe_psp_memrange.c
+    src/cfe_psp_memutils.c
+    src/cfe_psp_module.c
+    src/cfe_psp_version.c
+)
+
+target_compile_definitions(psp-${CFE_SYSTEM_PSPNAME}-shared PRIVATE
+    $<TARGET_PROPERTY:psp_module_api,INTERFACE_COMPILE_DEFINITIONS>
+)
+
+target_include_directories(psp-${CFE_PSP_TARGETNAME}-shared PRIVATE
+    $<TARGET_PROPERTY:psp_module_api,INTERFACE_INCLUDE_DIRECTORIES>
+)
+```

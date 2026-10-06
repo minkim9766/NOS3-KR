@@ -3,18 +3,127 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Bytes.cpp`
 
-file--Bytes.cpp
-file--Bytes.hpp
-file--CMakeLists.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/Bytes.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ASTERIA/Types/GTest/Bytes.cpp
+// \author bocchino
+// \brief  cpp file for Bytes
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/Types/GTest/Bytes.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void Bytes ::compare(const Bytes& expected, const Bytes& actual) {
+    ASSERT_EQ(expected.size, actual.size);
+    for (size_t i = 0; i < expected.size; ++i)
+        ASSERT_EQ(expected.bytes[i], actual.bytes[i]) << "At i=" << i << "\n";
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
 ```
 
-## 항목
+### `Bytes.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/Bytes.cpp`](file--Bytes.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/Bytes.hpp`](file--Bytes.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/Bytes.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/Types/GTest/Bytes.hpp
+// \author bocchino
+// \brief  hpp file for Bytes
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_GTest_Bytes_HPP
+#define Fw_GTest_Bytes_HPP
+
+#include <gtest/gtest.h>
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+//! \class Bytes
+//! \brief A byte string for testing
+//!
+class Bytes {
+  public:
+    //! Construct a Bytes object
+    Bytes(const U8* const a_bytes,  //!< The byte array
+          const size_t a_size       //!< The size
+          )
+        : bytes(a_bytes), size(a_size) {}
+
+  public:
+    //! Compare two Bytes objects
+    static void compare(const Bytes& expected,  //! Expected value
+                        const Bytes& actual     //! Actual value
+    );
+
+  private:
+    //! The bytes
+    const U8* const bytes;
+
+    //! The size
+    const size_t size;
+};
+
+}  // namespace GTest
+
+}  // namespace Fw
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+if(BUILD_TESTING)
+    set(SOURCE_FILES
+      "${CMAKE_CURRENT_LIST_DIR}/Bytes.cpp"
+    )
+    set(MOD_DEPS
+      gtest
+      Fw/Types
+      Fw/Comp
+      Fw/Port
+    )
+    register_fprime_module()
+endif()
+```

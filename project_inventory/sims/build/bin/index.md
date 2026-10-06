@@ -3,32 +3,64 @@
 
 **경로:** `sims/build/bin/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `2026-08-26-nos3-sim-log.txt`
 
-file--2026-08-26-nos3-sim-log.txt
-file--2026-08-27-nos3-sim-log.txt
-file--2026-10-05-nos3-sim-log.txt
-file--cam.bin
-file--nos3-all-simulators
-file--nos3-sim-cmdbus-bridge
-file--nos3-simulator.xml
-file--nos3-single-simulator
-file--nos_engine_server_config.json
-file--sim_log_config.xml
-```
+**경로:** `sims/build/bin/2026-08-26-nos3-sim-log.txt`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`sims/build/bin/2026-08-26-nos3-sim-log.txt`](file--2026-08-26-nos3-sim-log.txt) — 빌드 산출물 (경로만)
-- [`sims/build/bin/2026-08-27-nos3-sim-log.txt`](file--2026-08-27-nos3-sim-log.txt) — 빌드 산출물 (경로만)
-- [`sims/build/bin/2026-10-05-nos3-sim-log.txt`](file--2026-10-05-nos3-sim-log.txt) — 빌드 산출물 (경로만)
-- [`sims/build/bin/cam.bin`](file--cam.bin) — 빌드 산출물 (경로만)
-- [`sims/build/bin/nos3-all-simulators`](file--nos3-all-simulators) — 빌드 산출물 (경로만)
-- [`sims/build/bin/nos3-sim-cmdbus-bridge`](file--nos3-sim-cmdbus-bridge) — 빌드 산출물 (경로만)
-- [`sims/build/bin/nos3-simulator.xml`](file--nos3-simulator.xml) — 빌드 산출물 (경로만)
-- [`sims/build/bin/nos3-single-simulator`](file--nos3-single-simulator) — 빌드 산출물 (경로만)
-- [`sims/build/bin/nos_engine_server_config.json`](file--nos_engine_server_config.json) — 빌드 산출물 (경로만)
-- [`sims/build/bin/sim_log_config.xml`](file--sim_log_config.xml) — 빌드 산출물 (경로만)
+### `2026-08-27-nos3-sim-log.txt`
+
+**경로:** `sims/build/bin/2026-08-27-nos3-sim-log.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `2026-10-05-nos3-sim-log.txt`
+
+**경로:** `sims/build/bin/2026-10-05-nos3-sim-log.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cam.bin`
+
+**경로:** `sims/build/bin/cam.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-all-simulators`
+
+**경로:** `sims/build/bin/nos3-all-simulators`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-sim-cmdbus-bridge`
+
+**경로:** `sims/build/bin/nos3-sim-cmdbus-bridge`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-simulator.xml`
+
+**경로:** `sims/build/bin/nos3-simulator.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-single-simulator`
+
+**경로:** `sims/build/bin/nos3-single-simulator`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos_engine_server_config.json`
+
+**경로:** `sims/build/bin/nos_engine_server_config.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sim_log_config.xml`
+
+**경로:** `sims/build/bin/sim_log_config.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

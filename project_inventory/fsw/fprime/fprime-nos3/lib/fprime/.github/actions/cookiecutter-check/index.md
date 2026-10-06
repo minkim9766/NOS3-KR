@@ -3,18 +3,66 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bootstrap.expect`
 
-file--bootstrap.expect
-file--component.expect
-file--deployment.expect
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/bootstrap.expect`
+
+
+```text
+set timeout 180
+spawn fprime-bootstrap project
+expect -re {.*Project name.*}
+send "MyProject\r"
+expect eof
 ```
 
-## 항목
+### `component.expect`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/bootstrap.expect`](file--bootstrap.expect) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/component.expect`](file--component.expect) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/deployment.expect`](file--deployment.expect) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/component.expect`
+
+
+```text
+set timeout 60
+spawn fprime-util new --component
+expect -re {.*Component name.*}
+send "MyComponent\r"
+expect -re {.*Component short description.*}
+send "test component\r"
+expect -re {.*Component namespace.*}
+send "Components\r"
+expect -re {.*Select component kind}
+send "1\r"
+expect -re {.*Enable Commands.*}
+send "1\r"
+expect -re {.*Enable Telemetry.*}
+send "1\r"
+expect -re {.*Enable Events.*}
+send "1\r"
+expect -re {.*Enable Parameters.*}
+send "1\r"
+expect -re {Add MyComponent to.*}
+send "yes\r"
+expect -re {Generate implementation files.*}
+send "yes\r"
+expect -re {.*Created new component.*}
+expect eof
+```
+
+### `deployment.expect`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/deployment.expect`
+
+
+```text
+set timeout 60
+spawn fprime-util new --deployment
+expect -re {Deployment name.*}
+send "MyDeployment\r"
+expect -re {.*Select communication driver type}
+send "1\r"
+expect -re "Add .*MyDeployment.*"
+send "yes\r"
+expect eof
+```

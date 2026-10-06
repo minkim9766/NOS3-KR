@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000000/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,16 +11,24 @@
 asdp/index
 predict/index
 validate/index
-file--.DS_Store
-file--2021.05.26_12.03.03.157_manifest.json
-file--test.json
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000000/asdp/`](asdp/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000000/predict/`](predict/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000000/validate/`](validate/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000000/.DS_Store`](file--.DS_Store) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000000/2021.05.26_12.03.03.157_manifest.json`](file--2021.05.26_12.03.03.157_manifest.json) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000000/test.json`](file--test.json) — 빌드 산출물 (경로만)
+### `.DS_Store`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000000/.DS_Store`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `2021.05.26_12.03.03.157_manifest.json`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000000/2021.05.26_12.03.03.157_manifest.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `test.json`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000000/test.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

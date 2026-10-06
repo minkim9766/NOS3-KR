@@ -3,18 +3,212 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SmTestTester.cpp`
 
-file--SmTestTester.cpp
-file--SmTestTester.hpp
-file--SmTestTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/SmTestTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SmTestTester.cpp
+// \author watney
+// \brief  cpp file for SmTest test harness implementation class
+// ======================================================================
+
+#include <cstring>
+
+#include "FppTest/state_machine/external_instance/test/ut/SmTestTester.hpp"
+#include "Fw/Types/ExternalString.hpp"
+#include "STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+SmTestTester::SmTestTester()
+    : SmTestGTestBase("SmTestTester", SmTestTester::MAX_HISTORY_SIZE),
+      component("SmTest") {
+    this->initComponents();
+    this->connectPorts();
+    this->component.setIdBase(ID_BASE);
+}
+
+SmTestTester::~SmTestTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void SmTestTester::schedIn_OK() {
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device1.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device2.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device3.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device4.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device5.state);
+    invoke_to_schedIn(0,0);
+    dispatchAll();
+    ASSERT_EQ(DeviceSm::ON, this->component.m_stateMachine_device1.state);
+    ASSERT_EQ(DeviceSm::ON, this->component.m_stateMachine_device2.state);
+    ASSERT_EQ(DeviceSm::ON, this->component.m_stateMachine_device3.state);
+    ASSERT_EQ(DeviceSm::ON, this->component.m_stateMachine_device4.state);
+    ASSERT_EQ(DeviceSm::ON, this->component.m_stateMachine_device5.state);
+    invoke_to_schedIn(0,0);
+    dispatchAll();
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device1.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device2.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device3.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device4.state);
+    ASSERT_EQ(DeviceSm::OFF, this->component.m_stateMachine_device5.state);
+
+    Fw::SmSignalBuffer data;
+    this->component.device3_stateMachineInvoke(HackSm_Interface::HackSm_Signals::CHECK_SIG, data);
+    dispatchAll();
+    ASSERT_EQ(HackSm::DIAG, this->component.m_stateMachine_device3.state);
+    invoke_to_schedIn(0,0);
+    dispatchAll();
+    ASSERT_EQ(HackSm::OFF, this->component.m_stateMachine_device3.state);
+
+}
+
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+void SmTestTester ::
+    dispatchAll()
+  {
+    while (this->component.m_queue.getMessagesAvailable() > 0)
+        this->component.doDispatch();
+  }
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+
+}  // end namespace FppTest
 ```
 
-## 항목
+### `SmTestTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/SmTestTester.cpp`](file--SmTestTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/SmTestTester.hpp`](file--SmTestTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/SmTestTestMain.cpp`](file--SmTestTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/SmTestTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SmTest/test/ut/Tester.hpp
+// \author watney
+// \brief  hpp file for SmTest test harness implementation class
+// ======================================================================
+
+#ifndef FppTest_SmTest_Tester_HPP
+#define FppTest_SmTest_Tester_HPP
+
+#include "SmTestGTestBase.hpp"
+#include "FppTest/state_machine/external_instance/SmTest.hpp"
+#include "STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+class SmTestTester : public SmTestGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static constexpr FwSizeType MAX_HISTORY_SIZE = 10;
+    // Instance ID supplied to the component instance under test
+    static constexpr FwSizeType TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static constexpr FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+    // The component id base
+    static constexpr FwDpIdType ID_BASE = 100;
+    // The max string length for string data
+    static constexpr FwSizeType MAX_STRING_LENGTH = 100;
+
+    //! Construct object Tester
+    //!
+    SmTestTester();
+
+    //! Destroy object Tester
+    //!
+    ~SmTestTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! schedIn OK
+    void schedIn_OK();
+
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for data product ports
+    // ----------------------------------------------------------------------
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+    void dispatchAll();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+
+    //! The component under test
+    SmTest component;
+};
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `SmTestTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/external_instance/test/ut/SmTestTestMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// SmTestTestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "FppTest/state_machine/external_instance/test/ut/SmTestTester.hpp"
+#include "Fw/Test/UnitTest.hpp"
+#include "STest/Random/Random.hpp"
+
+using namespace FppTest;
+
+TEST(schedIn, OK) {
+    COMMENT("schedIn OK");
+    SmTestTester tester;
+    tester.schedIn_OK();
+}
+
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```

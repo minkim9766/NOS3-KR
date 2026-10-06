@@ -3,20 +3,107 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--ComFprimeConfig.fpp
-file--ComFprimeSubtopologyConfig.cpp
-file--ComFprimeSubtopologyConfig.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/CMakeLists.txt`
+
+
+```cmake
+register_fprime_config(
+    EXCLUDE_FROM_ALL
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/ComFprimeSubtopologyConfig.cpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/ComFprimeSubtopologyConfig.hpp"
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/ComFprimeConfig.fpp"
+    DEPENDS
+        Fw_Types
+)
 ```
 
-## 항목
+### `ComFprimeConfig.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/ComFprimeConfig.fpp`](file--ComFprimeConfig.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/ComFprimeSubtopologyConfig.cpp`](file--ComFprimeSubtopologyConfig.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/ComFprimeSubtopologyConfig.hpp`](file--ComFprimeSubtopologyConfig.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/ComFprimeConfig.fpp`
+
+
+```fpp
+module ComFprimeConfig {
+    #Base ID for the ComFprime Subtopology, all components are offsets from this base ID
+    constant BASE_ID = 0x03000000
+    
+    module QueueSizes {
+        constant comQueue    = 50
+    }
+    
+    module StackSizes {
+        constant comQueue   = 64 * 1024
+    }
+
+    module Priorities {
+        constant comQueue   = 101
+    }
+
+    # Queue configuration constants
+    module QueueDepths {
+        constant events      = 100            
+        constant tlm         = 500            
+        constant file        = 100           
+    }
+
+    module QueuePriorities {
+        constant events      = 0              
+        constant tlm         = 2              
+        constant file        = 1             
+    }
+
+    # Buffer management constants
+    module BuffMgr {
+        constant frameAccumulatorSize  = 2048     
+        constant commsBuffSize         = 2048      
+        constant commsFileBuffSize     = 3000      
+        constant commsBuffCount        = 20      
+        constant commsFileBuffCount    = 30        
+        constant commsBuffMgrId        = 200      
+    }
+}
+```
+
+### `ComFprimeSubtopologyConfig.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/ComFprimeSubtopologyConfig.cpp`
+
+
+```cpp
+#include "ComFprimeSubtopologyConfig.hpp"
+
+namespace ComFprime {
+namespace Allocation {
+// This instance can be changed to use a different allocator in the ComFprime Subtopology
+Fw::MallocAllocator mallocatorInstance;
+Fw::MemAllocator& memAllocator = mallocatorInstance;
+}  // namespace Allocation
+}  // namespace ComFprime
+```
+
+### `ComFprimeSubtopologyConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/ComFprimeConfig/ComFprimeSubtopologyConfig.hpp`
+
+
+```cpp
+#ifndef COMFPRIMESUBTOPOLOGY_CONFIG_HPP
+#define COMFPRIMESUBTOPOLOGY_CONFIG_HPP
+
+#include "Fw/Types/MallocAllocator.hpp"
+
+namespace ComFprime {
+namespace Allocation {
+extern Fw::MemAllocator& memAllocator;
+}
+}  // namespace ComFprime
+
+#endif
+```

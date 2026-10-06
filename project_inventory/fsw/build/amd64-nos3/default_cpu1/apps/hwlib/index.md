@@ -3,24 +3,37 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/hwlib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
 sim/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--hwlib.so
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/sim/`](sim/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/hwlib.so`](file--hwlib.so) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/hwlib/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/hwlib/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `hwlib.so`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/hwlib/hwlib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/hwlib/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

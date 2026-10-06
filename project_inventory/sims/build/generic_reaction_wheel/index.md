@@ -3,20 +3,30 @@
 
 **경로:** `sims/build/generic_reaction_wheel/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--libgeneric_rw_sim.so
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/generic_reaction_wheel/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`sims/build/generic_reaction_wheel/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/generic_reaction_wheel/libgeneric_rw_sim.so`](file--libgeneric_rw_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/generic_reaction_wheel/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `sims/build/generic_reaction_wheel/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_rw_sim.so`
+
+**경로:** `sims/build/generic_reaction_wheel/libgeneric_rw_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `sims/build/generic_reaction_wheel/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

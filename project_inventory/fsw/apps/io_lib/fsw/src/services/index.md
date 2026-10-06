@@ -3,26 +3,3242 @@
 
 **경로:** `fsw/apps/io_lib/fsw/src/services/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cop1.c`
 
-file--cop1.c
-file--tc_sync.c
-file--tm_sdlp.c
-file--tm_sync.c
-file--trans_rs422.c
-file--trans_select.c
-file--trans_udp.c
+**경로:** `fsw/apps/io_lib/fsw/src/services/cop1.c`
+
+
+```c
+/*******************************************************************************
+ * File: cop1.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide the functionality for the receiver for the Communications Operation
+ *   Procedure-1 (COP-1), i.e. the Frame Acceptance and Reporting Mechanism-1
+ *   (FARM-1).
+ *
+ * Reference:
+ *   -_Communications Operation Procedure-1 Recommended Standard_, CCSDS 232.1-B-2,
+ *    September, 2010
+ *   -_TC Space Data Link Protocol Recommended Standard_, CCSDS 232.0-B-2, September,
+ *    2010
+ *
+ * Notes:
+ *   -The COP1_ProcessFrame function is the main entry point for handling Telecommand
+ *    Transfer Frames (TF).  A 'Higher Procedure', i.e. a function which calls
+ *    COP1_ProcessFrame, shall indicate the availability of a buffer large enough
+ *    to hold the TF by passing in a non-null destination buffer.  To signal that
+ *    there is not enough space available at the moment, the calling function
+ *    shall pass a NULL destination buffer pointer.  The Communication Link
+ *    Control Word (CLCW) will be updated to the 'Wait' state as necessary based
+ *    on this signal mechanism.
+ *
+ *   -Many of the functions to process transfer frames reuse code from Morpheus
+ *
+ *   -The use of 'bool' values for setters/getters assumes the underlying value
+ *    for true = 1, and the underlying value for false = 0.  If this were not so,
+ *    the CLCW flags would not be set or returned with the expected values.
+ *
+ * History:
+ *   03/16/2015  Alan Asp, Odyssey Space Research, LLC
+ *    * Created
+ *
+ ******************************************************************************/
+
+
+#include "cop1.h"
+#include "io_lib_events.h"
+#include "cfe.h"
+
+
+typedef enum
+{
+    COP1_CMD_UNKNOWN = 0,
+    COP1_CMD_UNLOCK  = 1,
+    COP1_CMD_SETVR   = 2
+} COP1_Commands;
+
+typedef enum
+{
+    COP1_SEQ_UNKNOWN  = 0,
+    COP1_SEQ_PASS     = 1,
+    COP1_SEQ_NEGATIVE = 2,
+    COP1_SEQ_POSITIVE = 3,
+    COP1_SEQ_LOCKOUT  = 4
+} COP1_SequenceValidation;
+
+
+static const uint16 COP1_CLCW_SIZE        = 4; /* number of octets for the CLCW */
+static const uint16 COP1_TF_CMDSEQ_OFFSET = 7; /* octet offset in a BC transfer frame to
+                                                  the commanded sequence number */
+static const uint16 COP1_COP_IN_EFFECT    = 1; /* value to set the COP in Effect field for COP1 */
+
+
+/*------------------------------------------------------------------------------
+ *
+ * Macros for reading and writing the fields in a Communications Link Control
+ * Word (CLCW).
+ * All of the macros are used in a similar way:
+ *
+ *   COP1_RD_CLCW_xxx(clcw)        -- Read field xxx from CLCW.
+ *   COP1_WR_CLCW_xxx(clcw,value)  -- Write value to field xxx of CLCW.
+ *
+ * Note that clcw is a reference to the actual CLCW structure,
+ * not to a pointer to the structure.  If using a pointer, one must
+ * refer to the structure as *pointer.
+ *
+ * The COP1_WR macros may refer to the 'clcw' more than once; thus
+ * the expression for 'clcw' must NOT contain any side effects.
+ *
+ *----------------------------------------------------------------------------*/
+#define COP1_RD_CLCW_CTRLWORDTYPE(clcw)      ((clcw).Status >> 7)
+#define COP1_WR_CLCW_CTRLWORDTYPE(clcw,val)  ((clcw).Status = ((clcw).Status & 0x7F) | \
+                                                              ((val) << 7))
+
+#define COP1_RD_CLCW_VERSION(clcw)           (((clcw).Status & 0x60) >> 5)
+#define COP1_WR_CLCW_VERSION(clcw,val)       ((clcw).Status = ((clcw).Status & 0x9F) | \
+                                                              (((val) << 5) & 0x60))
+
+#define COP1_RD_CLCW_STATUS(clcw)            (((clcw).Status & 0x1C) >> 2)
+#define COP1_WR_CLCW_STATUS(clcw,val)        ((clcw).Status = ((clcw).Status & 0xE3) | \
+                                                              (((val) << 2) & 0x1C))
+
+#define COP1_RD_CLCW_COPEFFECT(clcw)         ((clcw).Status & 0x03)
+#define COP1_WR_CLCW_COPEFFECT(clcw,val)     ((clcw).Status = ((clcw).Status & 0xFC) | \
+                                                              ((val) & 0x03))
+
+#define COP1_RD_CLCW_VC(clcw)                (((clcw).Channel & 0xFC) >> 2)
+#define COP1_WR_CLCW_VC(clcw,val)            ((clcw).Channel = ((clcw).Channel & 0x03) | \
+                                                               ((val) << 2))
+
+#define COP1_RD_CLCW_NORF_FLG(clcw)          ((clcw).Flags >> 7)
+#define COP1_WR_CLCW_NORF_FLG(clcw,val)      ((clcw).Flags = ((clcw).Flags & 0x7F) | \
+                                                             ((val) << 7))
+
+#define COP1_RD_CLCW_NOBITLOCK_FLG(clcw)     (((clcw).Flags & 0x40) >> 6)
+#define COP1_WR_CLCW_NOBITLOCK_FLG(clcw,val) ((clcw).Flags = ((clcw).Flags & 0xBF) | \
+                                                             (((val) & 0x01) << 6))
+
+#define COP1_RD_CLCW_LOCKOUT_FLG(clcw)       (((clcw).Flags & 0x20) >> 5)
+#define COP1_WR_CLCW_LOCKOUT_FLG(clcw,val)   ((clcw).Flags = ((clcw).Flags & 0xDF) | \
+                                                             (((val) & 0x01) << 5))
+
+#define COP1_RD_CLCW_WAIT_FLG(clcw)          (((clcw).Flags & 0x10) >> 4)
+#define COP1_WR_CLCW_WAIT_FLG(clcw,val)      ((clcw).Flags = ((clcw).Flags & 0xEF) | \
+                                                             (((val) & 0x01) << 4))
+
+#define COP1_RD_CLCW_RETRAN_FLG(clcw)        (((clcw).Flags & 0x08) >> 3)
+#define COP1_WR_CLCW_RETRAN_FLG(clcw,val)    ((clcw).Flags = ((clcw).Flags & 0xF7) | \
+                                                             (((val) & 0x01) << 3))
+
+#define COP1_RD_CLCW_FARMB_CTR(clcw)         (((clcw).Flags >> 1) & 0x03)
+#define COP1_WR_CLCW_FARMB_CTR(clcw,val)     ((clcw).Flags = ((clcw).Flags & 0xF9) | \
+                                                             (((val) & 0x03) << 1))
+
+#define COP1_INCR_CLCW_FARMB_CTR(clcw)       ((clcw).Flags = ((clcw).Flags & 0xF9) | \
+                                                             (((clcw).Flags + 0x02) & 0x06))
+
+
+/*------------------------------------------------------------------------------
+ *
+ * Prototypes for internal functions
+ *
+ *----------------------------------------------------------------------------*/
+static int32    COP1_BypassTf(TCTF_Hdr_t *tfPtr, COP1_Clcw_t *clcwPtr, uint8 *toBuffer,
+                              TCTF_ChannelService_t *channelService);
+static int32    COP1_AcceptTf(TCTF_Hdr_t *tfPtr, COP1_Clcw_t *clcwPtr, uint8 *toBuffer,
+                             TCTF_ChannelService_t *channelService);
+static uint16  COP1_GetTfCommand(TCTF_Hdr_t *tfPtr);
+static uint8   COP1_GetTfCommandedVr(TCTF_Hdr_t *tfPtr);
+static uint16  COP1_CheckTfSequence(uint8 seqNum, uint8 expSeqNum);
+static bool COP1_isInWrappedRange(uint8 lower, uint8 value, uint8 upper);
+
+
+
+/*
+ * Function: COP1_InitClcw
+ *
+ * Purpose:
+ *   Initialize the CLCW
+ *
+ * Arguments:
+ *   clcwPtr     : pointer to the CLCW
+ *   vcId        : the value of the virtual channel this CLCW reports on
+ *
+ * Return:
+ *   void
+ *
+ * Notes:
+ *  -Zeroing out the CLCW initially sets several values to their static defaults:
+ *     - Control Word Type (always 0)
+ *     - CLCW Version Number (b'00')
+ *
+ */
+int32 COP1_InitClcw(COP1_Clcw_t *clcwPtr, uint16 vcId)
+{
+    if (clcwPtr == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                          "COP1 Error: NULL clcw input.");
+
+        return COP1_BADINPUT_ERR;
+    }
+
+    CFE_PSP_MemSet(clcwPtr, 0, COP1_CLCW_SIZE);
+
+    COP1_WR_CLCW_COPEFFECT(*clcwPtr, COP1_COP_IN_EFFECT);
+
+    COP1_WR_CLCW_VC(*clcwPtr, vcId);
+
+    return COP1_SUCCESS;
+}
+
+
+/*
+ * Function: COP1_GetClcwCtrlWordType
+ *
+ * Purpose:
+ *   Return the CLCW control word type
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The control word type
+ *
+ * Notes:
+ *
+ */
+uint16 COP1_GetClcwCtrlWordType(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_CTRLWORDTYPE(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwVersion
+ *
+ * Purpose:
+ *   Return the CLCW version
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The version
+ *
+ * Notes:
+ *
+ */
+uint16 COP1_GetClcwVersion(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_VERSION(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_SetClcwStatus
+ *
+ * Purpose:
+ *   Set the CLCW status
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *   value  : the value to set the status
+ *
+ * Return:
+ *   void
+ *
+ * Notes:
+ *
+ */
+void COP1_SetClcwStatus(COP1_Clcw_t *clcwPtr, uint16 value)
+{
+    if (clcwPtr == NULL)
+    {
+        return;
+    }
+
+    COP1_WR_CLCW_STATUS(*clcwPtr, value);
+}
+
+
+/*
+ * Function: COP1_GetClcwStatus
+ *
+ * Purpose:
+ *   Return the CLCW status
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The status
+ *
+ * Notes:
+ *
+ */
+uint16 COP1_GetClcwStatus(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_STATUS(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwCopEffect
+ *
+ * Purpose:
+ *   Return the CLCW COP in Effect field
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The COP in Effect value
+ *
+ * Notes:
+ *
+ */
+uint16 COP1_GetClcwCopEffect(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_COPEFFECT(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwVcId
+ *
+ * Purpose:
+ *   Return the CLCW virtual channel ID
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The virtual channel ID
+ *
+ * Notes:
+ *
+ */
+uint16 COP1_GetClcwVcId(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_VC(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_SetClcwNoRf
+ *
+ * Purpose:
+ *   Set the 'no radio frequency available' flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *   value  : the value to set the 'no radio frequency available flag'
+ *
+ * Return:
+ *   void
+ *
+ * Notes:
+ *
+ */
+void COP1_SetClcwNoRf(COP1_Clcw_t *clcwPtr, bool value)
+{
+    if (clcwPtr == NULL)
+    {
+        return;
+    }
+
+    COP1_WR_CLCW_NORF_FLG(*clcwPtr, value);
+}
+
+
+/*
+ * Function: COP1_GetClcwNoRf
+ *
+ * Purpose:
+ *   Return the CLCW 'no radio frequency available' flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The 'no radio frequency available' flag
+ *
+ * Notes:
+ *
+ */
+bool COP1_GetClcwNoRf(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_NORF_FLG(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_SetClcwNoBitlock
+ *
+ * Purpose:
+ *   Set the 'no bitlock' flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *   value  : the value to set the 'no bitlock' flag
+ *
+ * Return:
+ *   void
+ *
+ * Notes:
+ *
+ */
+void COP1_SetClcwNoBitlock(COP1_Clcw_t *clcwPtr, bool value)
+{
+    if (clcwPtr == NULL)
+    {
+        return;
+    }
+
+    COP1_WR_CLCW_NOBITLOCK_FLG(*clcwPtr, value);
+}
+
+
+/*
+ * Function: COP1_GetClcwNoBitlock
+ *
+ * Purpose:
+ *   Return the CLCW 'no bitlock' flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The 'no bitlock' flag
+ *
+ * Notes:
+ *
+ */
+bool COP1_GetClcwNoBitlock(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_NOBITLOCK_FLG(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwLockout
+ *
+ * Purpose:
+ *   Return the CLCW lockout flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The lockout flag
+ *
+ * Notes:
+ *
+ */
+bool COP1_GetClcwLockout(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_LOCKOUT_FLG(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwWait
+ *
+ * Purpose:
+ *   Return the CLCW wait flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The wait flag
+ *
+ * Notes:
+ *
+ */
+bool COP1_GetClcwWait(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_WAIT_FLG(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwRetransmit
+ *
+ * Purpose:
+ *   Return the CLCW retransmit flag
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The retransmit flag
+ *
+ * Notes:
+ *
+ */
+bool COP1_GetClcwRetransmit(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_RETRAN_FLG(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwFarmbCtr
+ *
+ * Purpose:
+ *   Return the CLCW FARM-B counter
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The FARM-B counter
+ *
+ * Notes:
+ *
+ */
+uint16 COP1_GetClcwFarmbCtr(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return COP1_RD_CLCW_FARMB_CTR(*clcwPtr);
+}
+
+
+/*
+ * Function: COP1_GetClcwReport
+ *
+ * Purpose:
+ *   Return the report value
+ *
+ * Arguments:
+ *   clcwPtr: pointer to the CLCW
+ *
+ * Return:
+ *   The report value
+ *
+ * Notes:
+ *
+ */
+uint8 COP1_GetClcwReport(COP1_Clcw_t *clcwPtr)
+{
+    if (clcwPtr == NULL)
+    {
+        return 0;
+    }
+
+    return clcwPtr->Report;
+}
+
+
+/*
+ * Function: COP1_ProcessFrame
+ *
+ * Purpose:
+ *   Primary access point for processing a transfer frame.  Verifies the TF and
+ *   either responds to valid TF command frames or copies the data unit to a
+ *   destination buffer.
+ *
+ * Arguments:
+ *   toBuffer      : pointer to the destination buffer (Out)
+ *   clcwPtr       : pointer to the CLCW (In/Out)
+ *   tfPtr         : pointer to the transfer frame (In)
+ *   channelService: pointer to the identifiers and service type for the expected TF (In)
+ *
+ * Return:
+ *   number of bytes copied to toBuffer or an error code
+ *
+ * Notes:
+ *
+ */
+int32 COP1_ProcessFrame(uint8* toBuffer, COP1_Clcw_t *clcwPtr, TCTF_Hdr_t *tfPtr,
+                        TCTF_ChannelService_t *channelService)
+{
+    int32 retVal = 0;
+
+    if (tfPtr == NULL || clcwPtr == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                          "COP1 Error: COP1_ProcessFrame() Bad input.");
+        return COP1_BADINPUT_ERR;
+    }
+
+    /* Process frame if this is the correct destination service */
+    if (true == TCTF_IsValidTf(tfPtr, channelService))
+    {
+        if (TCTF_GetBypassFlag(tfPtr))
+        {
+            /* Process the bypass command */
+            retVal = COP1_BypassTf(tfPtr, clcwPtr, toBuffer, channelService);
+        }
+        else
+        {
+            /* Process the Accept TF. */
+            retVal = COP1_AcceptTf(tfPtr, clcwPtr, toBuffer, channelService);
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_INFORMATION,
+                          "COP1 Info: Received invalid transfer frame.");
+        retVal = COP1_INVALID_TF_ERR;
+    }
+
+    return retVal;
+}
+
+
+/*
+ * Function: COP1_BypassTf
+ *
+ * Purpose:
+ *   Process the bypass frame
+ *
+ * Arguments:
+ *   tfPtr         : pointer to the transfer frame
+ *   clcwPtr       : pointer to the CLCW
+ *   toBuffer      : pointer to the destination buffer for the transfer frame data unit
+ *   channelService: pointer to the identifiers and service type for the expected TF
+ *
+ * Return:
+ *   number of bytes copied to toBuffer or an error code
+ *
+ * Notes:
+ *  -As an internal function, assumes the calling function checked for null TF pointer
+ *  -Ref CCSDS 232.1-B-2, Table 6-1: FARM-1 State Table
+ *
+ */
+static int32 COP1_BypassTf(TCTF_Hdr_t *tfPtr, COP1_Clcw_t *clcwPtr, uint8 *toBuffer,
+                           TCTF_ChannelService_t *channelService)
+{
+    uint16 command = 0;
+    int32 retVal   = 0;
+
+    if (TCTF_CONTROL_FRAME == TCTF_GetCtlCmdFlag(tfPtr))
+    {
+        command = COP1_GetTfCommand(tfPtr);
+        if (COP1_CMD_UNLOCK == command)
+        {
+            /* Unlock the channel */
+            COP1_WR_CLCW_RETRAN_FLG(*clcwPtr, 0);
+            COP1_WR_CLCW_WAIT_FLG(*clcwPtr, 0);
+            COP1_WR_CLCW_LOCKOUT_FLG(*clcwPtr, 0);
+
+            COP1_INCR_CLCW_FARMB_CTR(*clcwPtr);
+
+            CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_INFORMATION,
+                              "COP1 Info: Cmd Transfer Frame UNLOCKED.");
+        }
+        else if (COP1_CMD_SETVR == command)
+        {
+            /* Set next expected frame number (FARM-1 must be 'unlocked' first) */
+            if (0 == COP1_RD_CLCW_LOCKOUT_FLG(*clcwPtr))
+            {
+                COP1_WR_CLCW_RETRAN_FLG(*clcwPtr, 0);
+                COP1_WR_CLCW_WAIT_FLG(*clcwPtr, 0);
+                clcwPtr->Report = COP1_GetTfCommandedVr(tfPtr);
+
+                CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_INFORMATION,
+                                  "COP1 Info: Cmd Transfer Frame counter set (SETVR).");
+            }
+            else /* Invalid Control Command Frame, discard and do nothing */
+            {
+                CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                                  "COP1 Error: FARM-1 must be unlocked "
+                                  "prior to SETVR");
+                retVal = COP1_FARM1_ERR;
+            }
+
+            COP1_INCR_CLCW_FARMB_CTR(*clcwPtr);
+        }
+        else /* An unrecognized command */
+        {
+            CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                    "Invalid Bypass Control Command.");
+            retVal = COP1_FARM1_ERR;
+        }
+    }
+    else  /* Data frame */
+    {
+        COP1_INCR_CLCW_FARMB_CTR(*clcwPtr);
+        retVal = (int32) TCTF_CopyData(toBuffer, tfPtr, channelService);
+    }
+
+    return retVal;
+}
+
+
+/*
+ * Function: COP1_AcceptTf
+ *
+ * Purpose:
+ *   Process the accept frame
+ *
+ * Arguments:
+ *   tfPtr         : pointer to the transfer frame
+ *   clcwPtr       : pointer to the CLCW
+ *   toBuffer      : pointer to the destination buffer for the transfer frame data unit
+ *   channelService: pointer to the identifiers and service type for the expected TF
+ *
+ * Return:
+ *   number of bytes copied to toBuffer or an error code
+ *
+ * Notes:
+ *  -As an internal function, assumes the calling function checked for a null TF pointer
+ *  -Ref CCSDS 232.1-B-2, Table 6-1: FARM-1 State Table.  Implementation varies slightly
+ *   for event number E3, as the retransmit flag is set regardless of 'Wait' state.
+ *  -To signal a lack of buffer space, the 'Higher Procedures' must transmit a NULL
+ *   destination buffer.
+ *  -Assumes the input buffer to copy the transfer frame data to can handle the maximum
+ *   transfer frame payload size.
+ *
+ */
+static int32 COP1_AcceptTf(TCTF_Hdr_t *tfPtr, COP1_Clcw_t *clcwPtr, uint8 *toBuffer,
+                          TCTF_ChannelService_t *channelService)
+{
+    uint8  seqNum    = tfPtr->Sequence;
+    uint8  expSeqNum = clcwPtr->Report;
+    uint16 sequence  = COP1_SEQ_UNKNOWN;
+    int32  retVal    = 0;
+
+    /* Verify the VC is not in lockout mode */
+    if (0 == COP1_RD_CLCW_LOCKOUT_FLG(*clcwPtr))
+    {
+        /* Perform the sequence validation */
+        sequence  = COP1_CheckTfSequence(seqNum, expSeqNum);
+
+        switch (sequence)
+        {
+            case COP1_SEQ_PASS:
+                if (toBuffer != NULL)
+                {
+                    /* Success case */
+                    /* Clear 'Wait' state, retransmit flag, update clcw expected seq. number */
+                    COP1_WR_CLCW_WAIT_FLG(*clcwPtr, 0);
+                    COP1_WR_CLCW_RETRAN_FLG(*clcwPtr, 0);
+                    clcwPtr->Report++;
+                    retVal = (int32) TCTF_CopyData(toBuffer, tfPtr, channelService);
+                }
+                else
+                {
+                    /* No buffer available, enter the 'Wait' state */
+                    COP1_WR_CLCW_WAIT_FLG(*clcwPtr, 1);
+                    COP1_WR_CLCW_RETRAN_FLG(*clcwPtr, 1);
+                    retVal = COP1_BADINPUT_ERR;
+                }
+
+                break;
+
+            case COP1_SEQ_POSITIVE:
+                /* Inside the positive part of the sliding window, retransmit expected frame */
+                COP1_WR_CLCW_RETRAN_FLG(*clcwPtr, 1);
+                CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                                  "COP1 Error: Inside Trans Frame Pos Window Edge");
+                retVal = COP1_FARM1_ERR;
+                break;
+
+            case COP1_SEQ_NEGATIVE:
+                /* Inside the negative edge of the sliding window, drop the frame */
+                CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                                  "COP1 Error: Inside Trans Frame Neg Window Edge");
+                retVal = COP1_FARM1_ERR;
+                break;
+
+            case COP1_SEQ_LOCKOUT:
+                /* Outside of the sliding window, enter 'Lockout' state */
+                COP1_WR_CLCW_LOCKOUT_FLG(*clcwPtr, 1);
+                CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                                  "COP1 Error: Transfer Frame Lockout Mode Entered.");
+                retVal = COP1_FARM1_ERR;
+                break;
+
+            default:
+                break;
+        }
+    }
+    else
+    {
+        /* System is in lockout mode  */
+        CFE_EVS_SendEvent(IO_LIB_COP1_EID, CFE_EVS_EventType_ERROR,
+                          "COP1 Error: Cmd Transfer Frame Rejected, In Lockout Mode.");
+        retVal = COP1_FARM1_ERR;
+    }
+
+    return retVal;
+}
+
+
+/*
+ * Function: COP1_GetTfCommand
+ *
+ * Purpose:
+ *   Return the command value of the transfer frame
+ *
+ * Arguments:
+ *   tfPtr  : pointer to the transfer frame
+ *
+ * Return:
+ *   An enumerated value representing the command
+ *
+ * Notes:
+ *  -As an internal function, assumes the calling function checked for a null pointer
+ *  -Command bit patterns from CCSDS 232.0-B-2
+ *
+ */
+static uint16 COP1_GetTfCommand(TCTF_Hdr_t *tfPtr)
+{
+    uint8 *bytePtr = (uint8 *)tfPtr;
+    uint16 command = COP1_CMD_UNKNOWN;
+    uint16 offset  = TCTF_PRIHDR_SIZE;
+
+    if (bytePtr[offset] == 0x00)
+    {
+        command = COP1_CMD_UNLOCK;
+    }
+
+    if (bytePtr[offset]   == 0x82 &&
+        bytePtr[offset+1] == 0x00)
+    {
+        command = COP1_CMD_SETVR;
+    }
+
+    return command;
+}
+
+
+/*
+ * Function: COP1_GetTfCommandedVr
+ *
+ * Purpose:
+ *   Return the commanded receiver frame sequence number of the next transfer frame
+ *
+ * Arguments:
+ *   tfPtr  : pointer to the transfer frame
+ *
+ * Return:
+ *   The commanded receiver frame sequence number
+ *
+ * Notes:
+ *  -As an internal function, assumes the calling function checked for a null pointer
+ *  -For a transfer frame with control command, there is no segment header (offset from
+ *   start of frame is constant)
+ *
+ */
+static uint8 COP1_GetTfCommandedVr(TCTF_Hdr_t *tfPtr)
+{
+    uint8 *bytePtr = (uint8 *)tfPtr;
+    uint16 offset  = COP1_TF_CMDSEQ_OFFSET;
+
+    return bytePtr[offset];
+}
+
+/*
+ * Function: COP1_CheckTfSequence
+ *
+ * Purpose:
+ *   Checks the COP-1 transfer frame sequence number against the expected value.
+ *
+ * Arguments:
+ *   seqNum    : sequence number of the transfer frame, a.k.a. N(S)
+ *   expSeqNum : expected sequence number of the transfer frame, a.k.a. V(R)
+ *
+ * Returns:
+ *   Enumeration value indicating whether the sequence number is correct, inside the
+ *   positive edge of the sliding window, inside the negative edge of the sliding window,
+ *   or outside the sliding window and thus in the lockout area.
+ *
+ * Notes:
+ *  -The COP1_isInWrappedRange checks both bounds, inclusive, so a check for equality
+ *   with the expected value needs to be performed first
+ *
+ */
+static uint16 COP1_CheckTfSequence(uint8 seqNum, uint8 expSeqNum)
+{
+    const uint8 HALF_SLIDING_WINDOW_WIDTH = (uint8)(COP1_SLIDING_WINDOW_WIDTH/2);
+
+    uint16 status        = COP1_SEQ_UNKNOWN;
+    uint8  posWindowEdge = expSeqNum + HALF_SLIDING_WINDOW_WIDTH - 1;
+    uint8  negWindowEdge = expSeqNum - HALF_SLIDING_WINDOW_WIDTH;
+
+    if (seqNum == expSeqNum)
+    {
+        status = COP1_SEQ_PASS;
+    }
+    /* Positive window */
+    else if (COP1_isInWrappedRange(expSeqNum, seqNum, posWindowEdge))
+    {
+        status = COP1_SEQ_POSITIVE;
+    }
+    /* Negative window */
+    else if (COP1_isInWrappedRange(negWindowEdge, seqNum, expSeqNum))
+    {
+        status = COP1_SEQ_NEGATIVE;
+    }
+    else
+    {
+        status = COP1_SEQ_LOCKOUT;
+    }
+
+    return status;
+}
+
+
+/*
+ * Function: COP1_isInWrappedRange
+ *
+ * Purpose:
+ *   Checks whether 'value' is between 'lower' and 'upper' given integer wrapping
+ *
+ * Arguments:
+ *   lower    : lower bounds, inclusive
+ *   value    : value being checked if in range
+ *   upper    : upper bounds, inclusive
+ *
+ * Returns:
+ *   True/false value indicating whether 'value' is between 'lower' and 'upper'
+ *
+ * Notes:
+ *
+ */
+static bool COP1_isInWrappedRange(uint8 lower, uint8 value, uint8 upper)
+{
+    bool result = false;
+
+    if (upper < lower)
+    {
+        result =  (lower <= value) || (value <= upper);
+    }
+    else
+    {
+        result = (lower <= value) && (value <= upper);
+    }
+
+    return result;
+}
+
+
 ```
 
-## 항목
+### `tc_sync.c`
 
-- [`fsw/apps/io_lib/fsw/src/services/cop1.c`](file--cop1.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/src/services/tc_sync.c`](file--tc_sync.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/src/services/tm_sdlp.c`](file--tm_sdlp.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/src/services/tm_sync.c`](file--tm_sync.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/src/services/trans_rs422.c`](file--trans_rs422.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/src/services/trans_select.c`](file--trans_select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/src/services/trans_udp.c`](file--trans_udp.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/src/services/tc_sync.c`
+
+
+```c
+/******************************************************************************/
+/** \file  tc_sync.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \brief Provides the TC Channel Synchronization service.
+*
+*   \par Modification History:
+*     - 2015-12-08 | Guy de Carufel | OSR | Code Started 
+*******************************************************************************/
+#include <stdlib.h>
+
+#include "tc_sync.h"
+#include "io_lib_utils.h"
+
+
+static uint8 prSeq[32]; 
+const static uint8 startSeq[2] = {0xeb, 0x90};
+const static uint8 tailSeq[8] = {0xc5, 0xc5, 0xc5, 0xc5, 0xc5, 0xc5, 0xc5, 0x79};
+
+
+/*****************************************************************************/
+/** \brief TC_SYNC_LibInit
+******************************************************************************/
+int32 TC_SYNC_LibInit(void)
+{
+   IO_LIB_UTIL_GenPseudoRandomSeq(&prSeq[0], 0x5f, 0xff);
+
+    return TC_SYNC_SUCCESS;
+}
+
+
+/*****************************************************************************/
+/** \brief TC_SYNC_GetTransferFrame
+******************************************************************************/
+int32 TC_SYNC_GetTransferFrame(uint8 *pTfBuff, uint8 *pCltu, 
+                               uint16 tfBuffSize, uint16 cltuLength, 
+                               bool derandomize)
+{
+    int32 iStatus = TC_SYNC_SUCCESS;
+    uint16 tfOffset = 0;
+    uint16 cltuOffset = 0;
+    uint8 *pCltuCursor = &pCltu[2];
+
+    if (pCltu == NULL || pTfBuff == NULL)
+    {
+        iStatus = TC_SYNC_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+    /* Get Start Sequence of CLTU and increment cltuOffset */
+    if (TC_SYNC_CheckStartSeq(pCltu, &cltuOffset) < 0)
+    {
+        iStatus = TC_SYNC_INVALID_CLTU;
+        goto end_of_function;
+    }
+
+    while(1)
+    {
+        iStatus = TC_SYNC_GetCodeBlockData(pTfBuff, pCltuCursor,
+                                         &tfOffset, &cltuOffset,
+                                         tfBuffSize, cltuLength);
+        /* An error occured. return error code. */
+        if (iStatus < 0)
+        {
+            break;
+        }
+        /* The tail sequence was found. Return length of TF. */
+        else if (iStatus == TC_SYNC_FOUND_TAIL_SEQ)
+        {
+            iStatus = tfOffset;
+            break;
+        }
+        pCltuCursor = &pCltu[cltuOffset];
+    }
+    
+    /* Derandomize if applicable */
+    if (iStatus > 0 && derandomize == true)
+    {
+        TC_SYNC_DeRandomizeFrame(&pTfBuff[0], tfOffset);
+    }
+
+end_of_function:
+    return iStatus;
+}
+
+
+/*****************************************************************************/
+/** \brief TC_SYNC_CheckStartSeq
+******************************************************************************/
+int32 TC_SYNC_CheckStartSeq(uint8 *pSeq, uint16 *pCltuOffset)
+{
+    int32 iStatus = TC_SYNC_SUCCESS;
+    
+    if (pSeq == NULL || pCltuOffset == NULL)
+    {
+        iStatus = TC_SYNC_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+    if (pSeq[0] != startSeq[0] || pSeq[1] != startSeq[1])
+    {
+        iStatus = TC_SYNC_INVALID_CLTU;
+    }
+    else
+    {
+        *pCltuOffset += TC_SYNC_START_SEQ_SIZE;
+    }
+
+end_of_function:
+    return iStatus;
+}
+
+
+/*****************************************************************************/
+/** \brief TC_SYNC_GetCodeBlockData
+******************************************************************************/
+int32 TC_SYNC_GetCodeBlockData(uint8 *pTfBuff, uint8 *pCodeBlock,
+                               uint16 *pTfOffset, uint16 *pCltuOffset,
+                               uint16 tfBuffSize, uint16 cltuMaxLength)
+{
+    int32 iStatus = TC_SYNC_SUCCESS;
+    uint8 byte = 0;
+    uint16 lengthCopied;
+    uint16 lengthRead; 
+
+    if (pTfBuff == NULL || pCodeBlock == NULL || 
+        pTfOffset == NULL || pCltuOffset == NULL)
+    {
+        iStatus = TC_SYNC_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+    lengthRead = *pCltuOffset + TC_SYNC_CODE_BLOCK_SIZE; 
+    if (lengthRead > cltuMaxLength)
+    {
+        iStatus = TC_SYNC_INVALID_CLTU;
+        goto end_of_function;
+    }
+
+    /* Check for tail sequence */
+    for (byte = 0; byte < TC_SYNC_TAIL_SEQ_SIZE; ++byte)
+    {
+        if (pCodeBlock[byte] != tailSeq[byte])
+        {
+            break;
+        }
+    }
+    /* We found the tail sequence. Done. */
+    if (byte == TC_SYNC_TAIL_SEQ_SIZE)
+    {
+        iStatus = TC_SYNC_FOUND_TAIL_SEQ;
+        goto end_of_function;
+    }
+
+    lengthCopied = *pTfOffset + TC_SYNC_CODE_BLOCK_DATA_SIZE;
+
+    /* If we've reached the end of the TF Buffer, the 
+     * CLTU message is too large for the buffer. */
+    if (lengthCopied > tfBuffSize)
+    {
+        iStatus = TC_SYNC_INVALID_LENGTH;
+        goto end_of_function;
+    }
+
+    /*Extract 7-bytes of information from code block */
+    CFE_PSP_MemCpy((void *) &pTfBuff[*pTfOffset], (void *) pCodeBlock, 
+                   TC_SYNC_CODE_BLOCK_DATA_SIZE);
+    
+    /* Update offsets of cursor location */
+    *pTfOffset = lengthCopied;
+    *pCltuOffset = lengthRead;
+
+end_of_function:
+    return iStatus;
+}
+
+
+/*****************************************************************************/
+/** \brief TC_SYNC_DeRandomizeFrame
+******************************************************************************/
+int32 TC_SYNC_DeRandomizeFrame(uint8 *pFrame, uint16 frameSize)
+{
+    return IO_LIB_UTIL_PseudoRandomize(pFrame, frameSize, prSeq);
+}
+```
+
+### `tm_sdlp.c`
+
+**경로:** `fsw/apps/io_lib/fsw/src/services/tm_sdlp.c`
+
+
+```c
+/******************************************************************************/
+/** \file  tm_sdlp.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \brief Function Definitions for TM_SDLP
+*
+*   \par
+*     Provides Telemetry Space Data Link Protocol (TM_SDLP) services
+*
+*   \par Modification History:
+*     - 2015-04-26 | Alan A. Asp | OSR | Code Started (originally in tmtf.c)
+*     - 2015-10-22 | Guy de Carufel | OSR | Migrated from tmtf.c. 
+*           Major revision: Comments, Structs, idle data, overflow, API.
+*******************************************************************************/
+
+#include "tm_sdlp.h"
+
+static int32 TM_SDLP_AddData(TM_SDLP_FrameInfo_t *pFrameInfo, uint8 *pData, 
+                             uint16 dataLength, bool isPacket);
+static int32 TM_SDLP_CopyToOverflow(TM_SDLP_OverflowInfo_t *pOverflow, 
+                                    uint8 *data, uint16 length, 
+                                    bool isPartial);
+static int32 TM_SDLP_CopyFromOverflow(TM_SDLP_FrameInfo_t *pFrameInfo);
+
+
+
+/*****************************************************************************/
+/** \brief TMTF_SDLP_InitIdlePacket
+******************************************************************************/
+int32 TM_SDLP_InitIdlePacket(CFE_MSG_Message_t *pIdlePacket, uint8 *pIdlePattern,
+                             uint16 bufferLength, uint32 patternBitLength)
+{
+    uint8 *pIdleData = NULL;
+    uint16 idleDataLength = 0;
+    uint32 bit = 0;
+    uint16 byte = 0;
+    uint16 bitOffset = 0;
+    uint16 byteIdx = 0;
+    uint16 patternLength = 0;
+    int32 iStatus = TM_SDLP_SUCCESS;
+    
+    if (pIdlePacket == NULL || pIdlePattern == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_InitIdlePacket Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+    if (patternBitLength == 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_InitIdlePacket Error: "
+                          "Input patternBitLength is 0.");
+        
+        iStatus = TM_SDLP_INVALID_LENGTH;
+        goto end_of_function;
+    }
+
+    /* Idle packet, as specified in CCSDS 133.0-B-1 */
+    CFE_MSG_Init(pIdlePacket, CFE_SB_ValueToMsgId(0x7ffU), bufferLength);
+    idleDataLength = CFE_SB_GetUserDataLength(pIdlePacket);
+    pIdleData = CFE_SB_GetUserData(pIdlePacket);
+
+    patternLength = patternBitLength / 8;
+    if (patternBitLength % 8 != 0) 
+    {
+        patternLength++;
+    }
+
+    /* Build the idle data from a provided pattern */
+    for (byte = 0; byte < idleDataLength; ++byte)
+    {
+        bit = (byte * 8) % patternBitLength;
+        byteIdx = bit / 8;
+        bitOffset = bit % 8;
+
+        pIdleData[byte] = (pIdlePattern[byteIdx] << bitOffset) |
+                          (pIdlePattern[(byteIdx + 1) % patternLength] >> 
+                           (8-bitOffset));
+    }
+
+end_of_function:
+    return iStatus;
+}
+
+
+/*****************************************************************************/
+/** \brief TMTF_SDLP_InitChannel
+******************************************************************************/
+int32 TM_SDLP_InitChannel(TM_SDLP_FrameInfo_t *pFrameInfo, 
+                          uint8 *pTfBuffer, uint8 *pOverflowBuffer,
+                          TM_SDLP_GlobalConfig_t *pGlobalConfig, 
+                          TM_SDLP_ChannelConfig_t *pChannelConfig)
+{
+    int32 iStatus = TM_SDLP_SUCCESS;
+    int32 dataFieldLength;
+    uint16 dataFieldOffset;
+    uint16 secHdrLength;
+    uint16 gvcid = 0;
+    uint8  sdlsSecurityHeaderLength = 0;
+    uint8  sdlsSecurityTrailerLength = 0;
+    char mutName[OS_MAX_API_NAME];
+    SecurityAssociation_t* sa_ptr = NULL;
+
+    if (pGlobalConfig == NULL || pChannelConfig == NULL || pFrameInfo == NULL ||
+        pOverflowBuffer == NULL || pTfBuffer == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_InitChannel Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+    secHdrLength = pChannelConfig->secHdrLength;
+
+    /* The secHdr Length must be between 1-63 bytes if present. 
+     * (TM_SDLP 4.1.3.1.3) */
+    if ((pChannelConfig->fshFlag == true && 
+         (secHdrLength > TMTF_SECHDR_MAX_LENGTH || secHdrLength < 1)) ||
+        (pChannelConfig->fshFlag == false && secHdrLength != 0))        
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_InitChannel Error: "
+                          "Invalid SecHdrLength:%d", secHdrLength);
+        
+        iStatus = TM_SDLP_INVALID_LENGTH;
+        goto end_of_function;
+    }
+
+    dataFieldLength = (int32) pGlobalConfig->frameLength;
+    dataFieldOffset = TMTF_PRIHDR_LENGTH;
+
+    if (secHdrLength > 0)
+    {
+        dataFieldOffset += secHdrLength + 1;
+    }
+
+    // Need SA information for security parameter lengths
+    // Query SA DB for active SA / SDLS parameters
+    if (sa_if == NULL) // This should not happen, but tested here for safety
+    {
+        printf(KRED "ERROR: SA DB Not initalized! -- CRYPTO_LIB_ERR_NO_INIT, Will Exit\n" RESET);
+        iStatus = CRYPTO_LIB_ERR_NO_INIT;
+    }
+    else
+    {
+        // CODE REVIEW - Use of MAP_IDs seems non-correct. They exist for TC specifically, but somehow overtime
+        // we've morphed and have a TYPE_TC and TYPE_TM enum - realistically MAP_IDs are a set of allowable values
+        // this might take some figurin'
+        iStatus = sa_if->sa_get_operational_sa_from_gvcid(0, (uint16)pGlobalConfig->scId, (uint16)pChannelConfig->vcId, 0, &sa_ptr);
+ 
+        if (iStatus != CRYPTO_LIB_SUCCESS) 
+        {   
+            printf(KRED "Error retrieving operational SA. Error code %d. scId = %d, vcId = %d \n" RESET, iStatus, pGlobalConfig->scId, pChannelConfig->vcId);
+            goto end_of_function;
+        }
+    }
+
+    // IF using SDLS
+    // TODO Review this if_statement
+    if (1)
+    {
+        sdlsSecurityHeaderLength = Crypto_Get_Security_Header_Length(sa_ptr);
+        dataFieldOffset += sdlsSecurityHeaderLength;
+    }
+
+    // Reduce available field length based on cumulative offset
+    dataFieldLength -= dataFieldOffset;
+
+    // IF using SDLS
+    if (1)
+    {
+        sdlsSecurityTrailerLength = Crypto_Get_Security_Trailer_Length(sa_ptr);
+        dataFieldLength -= sdlsSecurityTrailerLength;
+    }
+
+    if (pChannelConfig->ocfFlag == true)
+    {
+        dataFieldLength -= TMTF_OCF_LENGTH;
+    }
+
+    if (pGlobalConfig->hasErrCtrl == true)
+    {
+        dataFieldLength -= TMTF_ERR_CTRL_FIELD_LENGTH;
+    }
+
+#ifdef TM_DEBUG
+    printf("TM_SDLP Initializing channel:\n");
+    printf("\t Primary header length: \t%d\n", TMTF_PRIHDR_LENGTH);
+    printf("\t Secondary header length: \t%d\n", secHdrLength);
+    printf("\t\t SPI Length: 2 bytes\n");
+    printf("\t\t IV Length: %d bytes\n", sa_ptr->shivf_len);
+    printf("\t\t SNF Length Length: %d bytes\n", sa_ptr->shsnf_len);
+    printf("\t\t PLF Length: %d bytes\nEnable", sa_ptr->shplf_len);
+    printf("\t Security header length: \t%d\n", sdlsSecurityHeaderLength);
+    printf("\t Data field offset: \t%d\n", dataFieldOffset);
+    printf("\t Data field length: \t%d\n", dataFieldLength);
+    printf("\t Security trailer length: \t%d\n", sdlsSecurityTrailerLength);
+    printf("\t OCF Length: \t%d HARDCODED - to be changed\n", TMTF_OCF_LENGTH); // Todo, currently hardcoded
+    printf("\t FECF length: \t%d HARDCODED - to be changed\n", TMTF_ERR_CTRL_FIELD_LENGTH); //Todo, currently hardcoded
+#endif
+
+    if (dataFieldLength < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_InitChannel Error: "
+                          "Invalid Length Configuration.");
+        
+        iStatus = TM_SDLP_INVALID_LENGTH;
+        goto end_of_function;
+    }
+
+    /* Update the Transfer Frame Info */
+    pFrameInfo->dataFieldLength     = (uint16) dataFieldLength;
+    pFrameInfo->dataFieldOffset     = dataFieldOffset;
+    pFrameInfo->ocfOffset           = dataFieldOffset + (uint16) dataFieldLength;
+    pFrameInfo->freeOctets          = pFrameInfo->dataFieldLength;
+    pFrameInfo->currentDataOffset   = pFrameInfo->dataFieldOffset;
+    pFrameInfo->globConfig          = pGlobalConfig;
+    pFrameInfo->chnlConfig          = pChannelConfig;
+    pFrameInfo->frame               = (TMTF_PriHdr_t *) pTfBuffer; 
+    pFrameInfo->isFirstHdrPtrSet    = false;
+    pFrameInfo->isReady             = false;
+
+    if (pChannelConfig->ocfFlag == true)
+    {
+        pFrameInfo->errCtrlOffset   = pFrameInfo->ocfOffset + TMTF_OCF_LENGTH;
+    }
+    else
+    {
+        pFrameInfo->errCtrlOffset   = pFrameInfo->ocfOffset;
+    }
+    
+    /* Set the overflowInfo */
+    pFrameInfo->overflowInfo.buffSize      = pChannelConfig->overflowSize;
+    pFrameInfo->overflowInfo.freeOctets    = pChannelConfig->overflowSize;
+    pFrameInfo->overflowInfo.partialOctets = 0;
+    pFrameInfo->overflowInfo.dataStart     = pOverflowBuffer;
+    pFrameInfo->overflowInfo.dataEnd       = pOverflowBuffer;
+    pFrameInfo->overflowInfo.buffer        = pOverflowBuffer;
+
+    /* Initialize the TF buffer */
+    CFE_PSP_MemSet((void *)pTfBuffer, 0, pGlobalConfig->frameLength);
+    TMTF_SetScId(pFrameInfo->frame, pGlobalConfig->scId);
+    TMTF_SetVcId(pFrameInfo->frame, pChannelConfig->vcId);
+    TMTF_SetOcfFlag(pFrameInfo->frame, pChannelConfig->ocfFlag);
+
+    /* Initialize the Overflow buffer */
+    CFE_PSP_MemSet((void *)pOverflowBuffer, 0, pChannelConfig->overflowSize);
+    
+    /* Set secondary header flag and sec hdr length */
+    if (pChannelConfig->fshFlag == true)
+    {
+        TMTF_SetSecHdrFlag(pFrameInfo->frame, 1);
+        TMTF_SetSecHdrLength(pFrameInfo->frame, secHdrLength);
+    }
+
+    /* If we are using the VCP service (CCSDS packets) [TM_SDLP 4.1.2.7] 
+     * - Sync Flag set to 0
+     * - Packet Order flag set to 0
+     * - Segmentation Length ID: must be binary '11' 
+     *   */  
+    if (pChannelConfig->dataType == 0)
+    {
+        TMTF_SetSyncFlag(pFrameInfo->frame, 0);
+        TMTF_SetPacketOrderFlag(pFrameInfo->frame, 0);
+        TMTF_SetSegLengthId(pFrameInfo->frame, 3); 
+        TMTF_SetFirstHdrPtr(pFrameInfo->frame, TMTF_NO_FIRST_HDR_PTR);
+    }
+    /* If VCA service is used, set sync flag to 1. All other fields are
+     * undefined [TM_SDLP 4.1.2.7] */
+    else
+    {
+        TMTF_SetSyncFlag(pFrameInfo->frame, 1);
+    }
+
+    /* Create the Mutex */
+    gvcid = TMTF_GetGlobalVcId(pFrameInfo->frame);
+    sprintf(mutName, "TF Global VC ID %d", gvcid);
+    OS_MutSemCreate(&pFrameInfo->mutexId, mutName, 0); 
+
+    pFrameInfo->isInitialized = true;
+
+end_of_function:
+    return iStatus;
+}
+
+
+/*****************************************************************************/
+/** \brief TMTF_SDLP_FrameHasData
+******************************************************************************/
+int32 TM_SDLP_FrameHasData(TM_SDLP_FrameInfo_t *pFrameInfo)
+{
+    int32 hasData = 0;
+
+    if (pFrameInfo == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_FrameHasData Error: "
+                          "Input Pointer is Null.");
+        
+        hasData = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+#ifdef TM_DEBUG
+    printf("*** DATA LENGTH INFO!***\n");
+    printf("*** Free Octets: %d\n", pFrameInfo->freeOctets);
+    printf("*** dataFieldLength: %d\n", pFrameInfo->dataFieldLength);
+#endif
+    
+    if (pFrameInfo->freeOctets < pFrameInfo->dataFieldLength)
+    {
+        hasData = 1;
+    }
+
+end_of_function:
+    return hasData;
+}
+
+
+/******************************************************************************/
+/** \brief TM_SDLP_AddPacket
+*******************************************************************************/
+int32 TM_SDLP_AddPacket(TM_SDLP_FrameInfo_t *pFrameInfo, CFE_MSG_Message_t *pPacket)
+{
+    size_t length = 0;
+    int32 iStatus = TM_SDLP_SUCCESS;
+
+    if (pFrameInfo == NULL || pPacket == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddPacket Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    if (pFrameInfo->isInitialized == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddPacket Error: "
+                          "The channel is not initialized.");
+        
+        iStatus = TM_SDLP_FRAME_NOT_INIT;
+        goto end_of_function;
+    }
+    
+    CFE_MSG_GetSize(pPacket, &length);
+
+    OS_MutSemTake(pFrameInfo->mutexId);
+    iStatus = TM_SDLP_AddData(pFrameInfo, (uint8 *) pPacket, length, true);
+    OS_MutSemGive(pFrameInfo->mutexId);
+
+end_of_function:
+    return iStatus;
+}
+
+                           
+/******************************************************************************/
+/** \brief TM_SDLP_AddIdlePacket
+*******************************************************************************/
+int32 TM_SDLP_AddIdlePacket(TM_SDLP_FrameInfo_t *pFrameInfo,
+                            CFE_MSG_Message_t *pIdlePacket)
+{
+    int32 iStatus = TM_SDLP_SUCCESS;
+    uint16 lengthToCopy = 0;
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+
+    if (pFrameInfo == NULL || pIdlePacket == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddIdlePacket Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+
+    if (pFrameInfo->isInitialized == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddIdlePacket Error: "
+                          "The channel is not initialized.");
+        
+        iStatus = TM_SDLP_FRAME_NOT_INIT;
+        goto end_of_function;
+    }
+
+    OS_MutSemTake(pFrameInfo->mutexId);
+    
+    lengthToCopy = pFrameInfo->freeOctets;
+
+    /* If no free octets, no idle data to add. Done. */
+    if (lengthToCopy == 0)
+    {
+        OS_MutSemGive(pFrameInfo->mutexId);
+        iStatus = TM_SDLP_SUCCESS;
+        goto end_of_function;
+    }
+    /* Minimum length of idle packet is 7. */
+    else if (lengthToCopy < 7)
+    {
+        lengthToCopy = 7;
+    }
+
+    /* Get the Message ID from the Idle Packet*/
+    CFE_MSG_GetMsgId(pIdlePacket, &MsgId);
+
+    /* The Message ID of the idle buffer should always be 0x7ff (Idle Packet). */
+    if (CFE_SB_MsgIdToValue(MsgId) != 0x7ffU)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddIdlePacket Error: "
+                          "The IdlePacket has MsgId other than 0x7ff.");
+        
+        OS_MutSemGive(pFrameInfo->mutexId);
+        iStatus = TM_SDLP_ERROR;
+        goto end_of_function;
+    }
+
+    /* Set the idlePacket length in header to lengthToCopy */
+    CFE_MSG_SetSize(pIdlePacket,  lengthToCopy);
+    
+    /* Add the idle packet. May spill over to overflow buffer. */
+    /* iStatus should always return 0 free-octet if successful. */
+    iStatus = TM_SDLP_AddData(pFrameInfo, (uint8 *) pIdlePacket, lengthToCopy, 
+                              true);
+    OS_MutSemGive(pFrameInfo->mutexId);
+
+end_of_function:
+    return iStatus;
+}    
+
+
+/******************************************************************************/
+/** \brief TM_SDLP_AddVcaData
+*******************************************************************************/
+int32 TM_SDLP_AddVcaData(TM_SDLP_FrameInfo_t *pFrameInfo, uint8 *pData,
+                         uint16 dataLength)
+{
+    int32 iStatus = TM_SDLP_SUCCESS;
+
+    if (pFrameInfo == NULL || pData == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddVcaData Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    /* Check if the frame is initialized */
+    if (pFrameInfo->isInitialized == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_AddVcaData Error: "
+                          "The channel is not initialized.");
+        
+        iStatus = TM_SDLP_FRAME_NOT_INIT;
+        goto end_of_function;
+    }
+    
+    OS_MutSemTake(pFrameInfo->mutexId);
+    iStatus = TM_SDLP_AddData(pFrameInfo, pData, dataLength, false);
+    OS_MutSemGive(pFrameInfo->mutexId);
+
+end_of_function:
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief TM_SDLP_StartFrame
+*******************************************************************************/
+int32 TM_SDLP_StartFrame(TM_SDLP_FrameInfo_t *pFrameInfo) 
+{
+    uint16 lengthToCopy = 0;
+    uint16 lengthCopied = 0;
+    TM_SDLP_OverflowInfo_t *pOverflow;
+    int32 iStatus = TM_SDLP_SUCCESS;
+    
+    if (pFrameInfo == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_StartFrame Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    /* Check if frame has been initialized */
+    if (pFrameInfo->isInitialized == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_StartFrame Error: "
+                          "The channel is not initialized.");
+        
+        iStatus = TM_SDLP_FRAME_NOT_INIT;
+        goto end_of_function;
+    }
+    
+    OS_MutSemTake(pFrameInfo->mutexId);
+    
+    /* If the frame is already started, issue a warning. */
+    if (pFrameInfo->isReady == true)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_INFORMATION,
+                          "TM_SDLP_StartFrame: "
+                          "The frame was already started. Will continue.");
+    }
+    
+    /* Set Frame as ready */
+    pFrameInfo->isReady = true;
+    
+    pOverflow = &pFrameInfo->overflowInfo;
+    lengthToCopy = pOverflow->buffSize - pOverflow->freeOctets;
+
+    if (lengthToCopy > 0)
+    {
+        /* Only copy as much as TF allows */
+        if (lengthToCopy > pFrameInfo->dataFieldLength)
+        {
+            lengthToCopy = pFrameInfo->dataFieldLength;
+        }
+        
+        while (lengthToCopy > 0)
+        {
+            lengthCopied = TM_SDLP_CopyFromOverflow(pFrameInfo);
+            lengthToCopy -= lengthCopied;
+        }
+    }
+
+    OS_MutSemGive(pFrameInfo->mutexId);
+
+end_of_function:
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief TM_SDLP_SetOidFrame
+*******************************************************************************/
+int32 TM_SDLP_SetOidFrame(TM_SDLP_FrameInfo_t *pFrameInfo, 
+                          CFE_MSG_Message_t *pIdlePacket)
+{
+    int32 iStatus = TM_SDLP_SUCCESS;
+    uint8 *pIdleData = NULL;
+    
+    if (pFrameInfo == NULL || pIdlePacket == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_SetOidFrame Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    /* Check if frame has been initialized */
+    if (pFrameInfo->isInitialized == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_SetOidFrame Error: "
+                          "The channel is not initialized.");
+        
+        iStatus = TM_SDLP_FRAME_NOT_INIT;
+        goto end_of_function;
+    }
+
+    OS_MutSemTake(pFrameInfo->mutexId);
+
+    /* If the frame is not empty, This method should not be called. */
+    if (pFrameInfo->freeOctets != pFrameInfo->dataFieldLength)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_SetOidFrame Error: "
+                          "The frame is not empty. VC ID:%u",
+                          pFrameInfo->chnlConfig->vcId);
+        
+        OS_MutSemGive(pFrameInfo->mutexId);
+        iStatus = TM_SDLP_ERROR;
+        goto end_of_function;
+    }
+
+    pIdleData = CFE_SB_GetUserData(pIdlePacket);    
+
+    TMTF_SetFirstHdrPtr(pFrameInfo->frame, TMTF_OID_FIRST_HDR_PTR);
+    pFrameInfo->isFirstHdrPtrSet = true;
+    iStatus = TM_SDLP_AddData(pFrameInfo, pIdleData, pFrameInfo->dataFieldLength, 
+                              false);
+    
+    OS_MutSemGive(pFrameInfo->mutexId);
+
+end_of_function:
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief TM_SDLP_CompleteFrame
+*******************************************************************************/
+int32 TM_SDLP_CompleteFrame(TM_SDLP_FrameInfo_t *pFrameInfo,
+                            uint8 *pMcFrameCnt, uint8 *pOcf)
+{
+    //uint8 vcFrameCnt = 0;
+    int32 iStatus = TM_SDLP_SUCCESS;
+
+    if (pFrameInfo == NULL || pMcFrameCnt == NULL) 
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_CompleteFrame Error: "
+                          "Input Pointer is Null.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    /* Check if frame has been initialized */
+    if (pFrameInfo->isInitialized == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_CompleteFrame Error: "
+                          "The channel is not initialized.");
+        
+        iStatus = TM_SDLP_FRAME_NOT_INIT;
+        goto end_of_function;
+    }
+    
+    if (pFrameInfo->chnlConfig->ocfFlag == true && pOcf == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP_CompleteFrame Error: "
+                          "The Input OCF Pointer is NULL.");
+        
+        iStatus = TM_SDLP_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    OS_MutSemTake(pFrameInfo->mutexId);
+
+    /* Increment the master channel frame count */
+    *pMcFrameCnt = *pMcFrameCnt + 1;
+    TMTF_SetMcFrameCount(pFrameInfo->frame, *pMcFrameCnt);
+
+    /* Increment VC frame count if it is a virtual channel */
+    //if (pFrameInfo->chnlConfig->isMaster == false)
+    //{
+    //    vcFrameCnt = TMTF_IncrVcFrameCount(pFrameInfo->frame);
+    //}
+
+    /* If an OCF Field is present, set it. */
+    if (pFrameInfo->chnlConfig->ocfFlag)
+    {
+        TMTF_SetOcf(pFrameInfo->frame, pOcf, pFrameInfo->ocfOffset);
+    }
+   
+    /* If an ErrCtrl Field is present, set it. */
+    if (pFrameInfo->globConfig->hasErrCtrl)
+    {
+        TMTF_UpdateErrCtrlField(pFrameInfo->frame, pFrameInfo->errCtrlOffset);
+    }
+    
+    /* This may happen if the frame is filled by a partial Packet */
+    if (pFrameInfo->isFirstHdrPtrSet == false)
+    {
+        TMTF_SetFirstHdrPtr(pFrameInfo->frame, TMTF_NO_FIRST_HDR_PTR);
+    }
+
+    /* Reset frame metadata */
+    pFrameInfo->freeOctets          = pFrameInfo->dataFieldLength;
+    pFrameInfo->currentDataOffset   = pFrameInfo->dataFieldOffset;
+    pFrameInfo->isFirstHdrPtrSet    = false;
+    pFrameInfo->isReady             = false;
+
+    OS_MutSemGive(pFrameInfo->mutexId);
+
+end_of_function:
+    return iStatus;
+}
+
+
+/*******************************************************************************
+** Static Functions
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Add Generic Data to the Transfer Frame
+*
+*   \par Description/Algorithm
+*       Copies a data buffer to the TF data field at the next free octet.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Lower level function called by AddPacket, AddIdlePacket, AddVcaData
+*       - Data unit will be segmented into overflow buffer if frame is full.
+*       - Transfer frame will be populated with overflow data if frame is 
+*         empty prior to adding data.
+*       - isPacket flag is used to set the First Header Pointer to the start 
+*         of the suplied packet.
+*
+*   \param[in,out] pFrameInfo  Pointer to the Frame info/working struct.
+*   \param[in]     pData       Pointer to data buffer
+*   \param[in]     dataLength  Length of data to copy
+*   \param[in]     isPacket    Data is a packet (VCP PDU / Idle packet)
+*
+*   \return Frame FreeOctets
+*   \return TM_SDLP_FRAME_NOT_READY    If frame has not been started
+*   \return TM_SDLP_OVERFLOW_FULL      Data dropped. The overflow buffer is full
+*
+*   \see
+*       #TM_SDLP_AddPacket
+*       #TM_SDLP_AddIdlePacket
+*******************************************************************************/
+static int32 TM_SDLP_AddData(TM_SDLP_FrameInfo_t *pFrameInfo, uint8 *pData, 
+                             uint16 dataLength, bool isPacket)
+{
+    uint16 lengthToCopy = dataLength;
+    int32 iStatus = TM_SDLP_SUCCESS;
+    bool isPartial = false;
+
+    /* Check if the frame is ready to add new data. */
+    if (pFrameInfo->isReady == false)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP Error: "
+                          "The Frame is not ready. Call StartFrame().");
+        
+        iStatus = TM_SDLP_FRAME_NOT_READY;
+        goto end_of_function;
+    }
+
+    /* If data needs to be segmented, copy extra octets to overflow buffer */
+    if (pFrameInfo->freeOctets < lengthToCopy)
+    {
+        lengthToCopy = pFrameInfo->freeOctets;
+        if (lengthToCopy > 0)
+        {
+            isPartial = true;
+        }
+
+        iStatus = TM_SDLP_CopyToOverflow(&pFrameInfo->overflowInfo,
+                                      pData + lengthToCopy, 
+                                      dataLength - lengthToCopy, isPartial);
+        if (iStatus < 0)
+        {
+            goto end_of_function;
+        }
+    }
+
+    CFE_PSP_MemCpy((void *) ((char*)pFrameInfo->frame + pFrameInfo->currentDataOffset), 
+                   pData, lengthToCopy);
+    pFrameInfo->freeOctets -= lengthToCopy;
+
+    if ((isPacket == true) && (pFrameInfo->isFirstHdrPtrSet == false))
+    {
+        uint16 firstHdrPtr = pFrameInfo->currentDataOffset - 
+                             pFrameInfo->dataFieldOffset;
+        TMTF_SetFirstHdrPtr(pFrameInfo->frame, firstHdrPtr);
+        pFrameInfo->isFirstHdrPtrSet = true;
+    }
+    pFrameInfo->currentDataOffset += lengthToCopy;
+    iStatus = (int32) pFrameInfo->freeOctets;
+
+end_of_function:
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief Copy data to the end of the overflow queue
+*
+*   \par Description/Algorithm
+*       Copy data to overflow queue
+*
+*   \par Assumptions, External Events, and Notes:
+ *      - If overflow buffer is full, message is dropped in AddData
+ *      - The overflow queue is implemented as a sliding window buffer.
+ *      - Function called by AddData()
+ *      - Input pointers are checked by calling function. 
+*
+*   \param[in,out] pOverflow        Pointer to the Overflow info
+*   \param[in]     data             Pointer to the data to copy
+*   \param[in]     length           Length of the data to copy
+*   \param[in]     isPartial        Is data partial 
+*
+*   \return TM_SDLP_SUCCESS             If successful.
+*   \return TM_SDLP_INVALID_LENGTH      If an input length is invalid
+*   \return TM_SDLP_OVERFLOW_FULL       If overflow buffer is full
+*
+*   \see 
+*       #TM_SDLP_AddData
+*******************************************************************************/
+static int32 TM_SDLP_CopyToOverflow(TM_SDLP_OverflowInfo_t *pOverflow, uint8 *data, 
+                                    uint16 length, bool isPartial)
+{
+    int32 iStatus = TM_SDLP_SUCCESS;
+    uint16 lengthToEnd;
+
+    if (length > pOverflow->buffSize)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_ERROR,
+                          "TM_SDLP ERROR: "
+                          "Message Length too large for overflow Buffer.");
+       
+        iStatus = TM_SDLP_INVALID_LENGTH;
+        goto end_of_function;
+    }
+
+    /* If the buffer is full, drop message. */
+    if (length > pOverflow->freeOctets)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TM_SDLP_EID, CFE_EVS_EventType_INFORMATION,
+                          "TM_SDLP Warning: "
+                          "The Frame's OverflowBuffer is Full. Message Dropped.");
+       
+       iStatus = TM_SDLP_OVERFLOW_FULL;
+       goto end_of_function;
+    }
+
+    /* Get size left in buffer after dataEnd cursor */
+    lengthToEnd = pOverflow->buffSize - (pOverflow->dataEnd - pOverflow->buffer);
+
+    /* Copy the data at the dataEnd cursor */
+    if (length < lengthToEnd)
+    {
+        CFE_PSP_MemCpy(pOverflow->dataEnd, data, length);
+        pOverflow->dataEnd += length;
+    }
+    /* Wrap arround data in overflow buffer */
+    else
+    {
+        CFE_PSP_MemCpy(pOverflow->dataEnd, data, lengthToEnd);
+        CFE_PSP_MemCpy(pOverflow->buffer, data + lengthToEnd,
+                       length - lengthToEnd);
+        pOverflow->dataEnd = pOverflow->buffer + (length - lengthToEnd);
+    }
+    
+    /* If we are passing only partial data, set the partialOctets */
+    if (isPartial == true)
+    {
+        pOverflow->partialOctets = length;
+    }
+    
+    pOverflow->freeOctets -= length;
+
+end_of_function:
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief Copy one packet or partial octects from overflow queue.
+*
+*   \par Description/Algorithm
+*       Copy one packet or partial octects from the start of the overflow queue
+*       to the transfer frame.
+*
+*   \par Assumptions, External Events, and Notes:
+*      - The overflow queue is implemented as a sliding window buffer.
+*      - Function called by StartFrame()
+*      - Input pointers are checked by calling function. 
+*
+*   \param[out] pFrameInfo     Pointer to the Frame info/working struct.
+*
+*   \return lengthCopied    Length of data copied
+*
+*   \see 
+*       #TM_SDLP_StartFrame
+*******************************************************************************/
+static int32 TM_SDLP_CopyFromOverflow(TM_SDLP_FrameInfo_t *pFrameInfo)
+{
+    uint8 msgHdr[6];
+    CFE_MSG_Message_t* MsgPtr = (CFE_MSG_Message_t*) msgHdr;
+    size_t lengthToCopy;
+    size_t lengthToEnd;
+    bool setHeader;
+    size_t freeOctets;
+    TM_SDLP_OverflowInfo_t *pOverflow = &pFrameInfo->overflowInfo;
+
+    lengthToEnd = pOverflow->buffSize - 
+                  (pOverflow->dataStart - pOverflow->buffer);
+
+    freeOctets = pFrameInfo->freeOctets;
+
+    /* First Determine how many octets to copy from overflow buffer. */
+    
+    /* If there are partial octets, copy those. */
+    if (pFrameInfo->overflowInfo.partialOctets > 0)
+    {
+        lengthToCopy = pFrameInfo->overflowInfo.partialOctets;
+        setHeader = false;
+    }
+    /* Otherwise, copy the first packet */
+    else 
+    {
+        /* If the the lengthToEnd is shorter than the Packet Primary Header,
+         * Copy the header locally first. */
+        if (lengthToEnd < 6)
+        {
+            CFE_PSP_MemCpy((void *)msgHdr, (void *) pOverflow->dataStart, 
+                           lengthToEnd);
+            CFE_PSP_MemCpy((void *)(msgHdr + lengthToEnd), 
+                           (void *) pOverflow->buffer, 6 - lengthToEnd);
+            CFE_MSG_GetSize(MsgPtr, &lengthToCopy);
+        }
+        else
+        {
+            CFE_MSG_GetSize((CFE_MSG_Message_t *) pOverflow->dataStart, &lengthToCopy);
+        }
+        
+        setHeader = true;
+    }
+
+    /* Only copy as many octets as TF has free octets available */
+    if (freeOctets < lengthToCopy)
+    {
+        /* If we are passing a full packet, set the new value of partialOctets */
+        if (setHeader == true)
+        {
+            pFrameInfo->overflowInfo.partialOctets = lengthToCopy - freeOctets;
+        }
+        /* If we are passing partial octets, revise the partial octet value */
+        else
+        {
+            pFrameInfo->overflowInfo.partialOctets -= freeOctets;
+        }
+        
+        /* The length to copy is freeOctets */
+        lengthToCopy = freeOctets;
+    }
+    /* If we are copying partial octets and there is enough freeOctets for all
+     * partial octets, reset the partialOctets to 0. */
+    else if (setHeader == false)
+    {
+        pFrameInfo->overflowInfo.partialOctets = 0;
+    }
+
+    /* If the length to the end is greater than the length to copy, copy it. */
+    if (lengthToEnd > lengthToCopy)
+    {
+        freeOctets = TM_SDLP_AddData(pFrameInfo, pOverflow->dataStart, 
+                                     lengthToCopy, setHeader);
+        pOverflow->dataStart += lengthToCopy;
+    }
+    /* Wrap arround overflow buffer if required */
+    else
+    {
+        freeOctets = TM_SDLP_AddData(pFrameInfo, pOverflow->dataStart, 
+                                  lengthToEnd, setHeader);
+        freeOctets = TM_SDLP_AddData(pFrameInfo, pOverflow->buffer, 
+                                  lengthToCopy - lengthToEnd, setHeader);
+        pOverflow->dataStart = pOverflow->buffer + 
+                                 (lengthToCopy - lengthToEnd);
+    }
+    
+    /* Revise the number of free Octets in overflow buffer */
+    pOverflow->freeOctets += lengthToCopy;
+    pFrameInfo->freeOctets = freeOctets;
+
+    return lengthToCopy;
+}
+```
+
+### `tm_sync.c`
+
+**경로:** `fsw/apps/io_lib/fsw/src/services/tm_sync.c`
+
+
+```c
+/******************************************************************************/
+/** \file  tm_sync.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \brief Provides the TM Channel Synchronization service.
+*
+*   \par Modification History:
+*     - 2015-10-29 | Guy de Carufel | OSR | Code Started 
+*******************************************************************************/
+#include <stdlib.h>
+
+#include "tm_sync.h"
+#include "io_lib_utils.h"
+
+static uint8 prSeq[32]; 
+
+/*****************************************************************************/
+/** \brief TM_SYNC_LibInit
+******************************************************************************/
+int32 TM_SYNC_LibInit(void)
+{
+    IO_LIB_UTIL_GenPseudoRandomSeq(&prSeq[0], 0xa9, 0xff);
+
+    return TM_SYNC_SUCCESS;
+}
+
+
+/*****************************************************************************/
+/** \brief TM_SYNC_Synchronize
+******************************************************************************/
+int32 TM_SYNC_Synchronize(uint8 *pBuff, char *asmStr, uint8 asmSize, 
+                          uint16 frameSize, bool randomize)
+{
+    uint16 byte;
+    char *hexchar = asmStr;
+    int32 iStatus = TM_SYNC_SUCCESS;
+
+    if (pBuff == NULL || asmStr == NULL)
+    {
+        iStatus = TM_SYNC_INVALID_POINTER;
+        goto end_of_function;
+    }
+    
+    if (asmSize % 2 != 0 || asmSize < 4)
+    {
+        iStatus = TM_SYNC_INVALID_ASM_SIZE;
+        goto end_of_function;
+    }
+
+
+    /* Store the ASM into the buffer based on the fixed ASM String. */
+    for (byte = 0; byte < asmSize; ++byte)
+    {
+        sscanf(hexchar, "%2hhx", (uint8 *) &pBuff[byte]);
+        hexchar += 2;
+    }
+
+    if (randomize == true)
+    {
+        TM_SYNC_PseudoRandomize(&pBuff[asmSize], frameSize);
+    }
+
+    /* Return the full size of the CADU. */
+    iStatus = asmSize + frameSize;
+
+end_of_function:
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief TM_SYNC_PseudoRandomize
+*******************************************************************************/
+int32 TM_SYNC_PseudoRandomize(uint8 *pFrame, uint16 frameSize)
+{
+    return IO_LIB_UTIL_PseudoRandomize(pFrame, frameSize, prSeq);
+}
+```
+
+### `trans_rs422.c`
+
+**경로:** `fsw/apps/io_lib/fsw/src/services/trans_rs422.c`
+
+
+```c
+/*******************************************************************************
+* File: trans_rs422.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+* Purpose:
+*   Provides the functionality to communicate over an RS-422 serial port. 
+*   Suports VXWorks and POSIX OS.
+*
+* Reference:
+*   http://www.tldp.org/HOWTO/text/Serial-Programming-HOWTO
+*   http://linux.die.net/man/3/tcsetattr
+*   http://fabiobaltieri.com/2011/08/24/using-serial-ports-linux/ 
+*   http://stackoverflow.com/questions/25996171/
+*       linux-blocking-vs-non-blocking-serial-read
+*   http://www.vxdev.com/docs/vx55man/vxworks/guide/c-iosys.html
+*
+* Notes:
+*   1. The serial port is set to non-blocking to prevent lock-up if link is 
+*   interrupted and/or not all of the expected message is received. 
+*   2. The VTIME and VMIN take presendence over NON_BLOCKING. If VMIN and 
+*   VTIME > 0 (recommended), timer will only start if at least one byte is 
+*   received. Read will return after at least VMIN bytes are received,
+*   or VTIME timeout. VTIME is an intercharacter timout in this case. Use the 
+*   ReadTimeout function or use select with timeout at a higher level before 
+*   calling the TransRS422Read function to prevent indefinite blocking. 
+*
+* History:
+*   Apr 07, 2015  Guy de Carufel
+*    * Created
+*
+******************************************************************************/
+
+#include <errno.h>
+#include <string.h>
+
+#include "trans_rs422.h"
+
+
+/* Local Prototype */
+#ifndef _VXWORKS_OS_
+speed_t IO_TransRS422GetBaudRateMacro(int32 bps);
+#endif
+
+
+/** Initialize an RS422 serial port */
+int32 IO_TransRS422Init(IO_TransRS422Config_t * configIn)
+{
+    int fd;
+    IO_TransRS422Config_t * config = (IO_TransRS422Config_t *) configIn;
+    
+    if (config == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransRS422 Error: NULL Config input.");
+                          
+        return IO_TRANS_RS422_BADINPUT_ERR;
+    }
+
+#ifndef _VXWORKS_OS_
+    speed_t baudRate = IO_TransRS422GetBaudRateMacro(config->baudRate);
+    if (baudRate == -1)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransRS422 Error: Bad input baud rate.");
+        
+        return IO_TRANS_RS422_BAUDRATE_ERR;
+    }
+#endif
+
+    if (strcmp(config->device,"") == 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransRS422 Error: Bad config device.");
+                          
+        return IO_TRANS_RS422_BADDEVICE_ERR;
+    }
+
+    /* Open the serial port as read / write non-blocking. */ 
+    fd = open(config->device, IO_TRANS_RS422_OPEN_FLAGS, 0); 
+    if (fd < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransRS422 Error: Serial Port: \"%s\" "
+                          "Does not exist. Open failed.", config->device);
+        return IO_TRANS_RS422_OPEN_ERR;
+    }
+
+#ifdef _VXWORKS_OS_
+    /* Set the baudrate */
+    if(ioctl(fd, FIOBAUDRATE, config->baudRate) < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransRS422 Error: Bad input baud rate.");
+    
+        close(fd);
+        return IO_TRANS_RS422_BAUDRATE_ERR;
+    }
+
+    /* Set to raw mode */
+    ioctl(fd, FIOSETOPTIONS, OPT_RAW); 
+
+    /* Clear the buffer */
+    ioctl(fd, FIOFLUSH, 0);
+
+    /* Set hardware control flags */
+    if(ioctl(fd, SIO_HW_OPTS_SET, CS8 | CLOCAL | CREAD | config->cFlags) < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransRS422 Error: Attribute setting failed.");
+        close(fd);
+        return IO_TRANS_RS422_SETATTR_ERR;
+    }
+
+#else    
+    {
+        struct termios oldAttr;
+        struct termios setAttr;
+        struct termios newAttr;
+        
+        /* Get attributes of device */
+        tcgetattr(fd, &oldAttr);
+        
+        /* Set new attr config */
+        CFE_PSP_MemSet(&setAttr, 0x00, sizeof(setAttr)); //bzero(&setAttr, sizeof(setAttr));
+        /* Set controls
+         * Custom cFlags
+         * CS8: Set bit/parity/stopbits to 8N1
+         * CLOCAL: Ignore modem control
+         * CREAD: Enable Receiver */
+        setAttr.c_cflag = CS8 | CLOCAL | CREAD | config->cFlags;
+        /* Input config: ignore parity. */
+        setAttr.c_iflag = IGNPAR;
+        /* Output config: raw. */
+        setAttr.c_oflag = 0;
+
+        /* Set to non-cononical 
+         * (Since we are expecting binary data, we cannot rely on 
+         * New-Line ASCII characters) */
+        setAttr.c_lflag &= ~(ICANON);
+        setAttr.c_lflag &= ~(ECHO);
+            
+        /* Set non-canonical Control limits. */
+        /* VTIME in 100ms. Timer starts after first byte is received. */   
+        setAttr.c_cc[VTIME] = config->timeout / 100;  
+        /* Min number of bytes to return on read (or timeout) */
+        setAttr.c_cc[VMIN] = config->minBytes;            
+
+        /* Set baudrate */
+        //cfsetspeed(&setAttr, baudRate);
+        cfsetispeed(&setAttr, baudRate);
+        cfsetospeed(&setAttr, baudRate);
+
+        /* Flush device and set new options. */
+        tcflush(fd, TCIOFLUSH);
+        tcsetattr(fd, TCSANOW, &setAttr);
+
+        /* Verify that the configuration has been set correctly */
+        CFE_PSP_MemSet(&newAttr, 0x00, sizeof(newAttr)); //bzero(&newAttr, sizeof(newAttr));
+        tcgetattr(fd, &newAttr);
+
+        if (memcmp((void *) &newAttr, (void *) &setAttr, sizeof(setAttr)) != 0)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransRS422 Error: Attribute setting failed.");
+            tcsetattr(fd, TCSANOW, &oldAttr);
+            return IO_TRANS_RS422_SETATTR_ERR;
+        }
+    }
+#endif    
+
+    return (int32) fd;
+}
+
+
+/** Close the serial port connection */
+int32 IO_TransRS422Close(int32 fd)
+{
+    return (int32)close(fd);
+}
+
+
+/** Read numBytes from serial port with timeout (in us) */
+int32 IO_TransRS422ReadTimeout(int32 fd, uint8 *buffer, int32 numBytes, 
+                               int32 timeoutIn)
+{
+    struct timeval timeout;
+    fd_set fdSet;
+    int32 size = 0;
+    
+    FD_ZERO(&fdSet);
+    FD_SET(fd, &fdSet);
+
+    /* Wait on serial port for timeout time until some data
+     * is available. */
+    if (timeoutIn == IO_TRANS_PEND_FOREVER)
+    {
+        size = select(fd + 1, &fdSet, NULL, NULL, NULL);
+    }
+    else
+    {
+        timeout.tv_sec  = timeoutIn / 1000000;
+        timeout.tv_usec = timeoutIn % 1000000; 
+        size = select(fd + 1, &fdSet, NULL, NULL, &timeout);
+    }
+
+    /* Read the serial port if some data is available. */
+    if (size > 0)
+    {
+        size = IO_TransRS422Read(fd, buffer, numBytes);
+    }
+    
+    return size;
+}
+
+
+/** Read numBytes from serial port */
+int32 IO_TransRS422Read(int32 fd, uint8 *buffer, int32 numBytes)
+{
+    int totalRead = 0;
+    int readSize = 0;
+    int remainSize = 0;
+    char * cursor = (char *) buffer;
+
+    /* Loop until we read all numBytes or timeout. */
+    while (totalRead < numBytes)
+    {
+        remainSize = numBytes - totalRead;
+    
+        /* NOTE: Will not return until at least 1 byte is received
+         * if configured with minBytes > 0 and timeout > 0 */
+        readSize = read(fd, cursor, remainSize);
+        
+        /* End of Message or timeout */
+        if (readSize <= 0)
+        {
+            break;
+        }
+        
+        totalRead += readSize;
+        cursor += readSize;
+    }
+    
+    return totalRead; 
+}
+
+
+/** Write message to serial port */
+int32 IO_TransRS422Write(int32 fd, uint8 *msg, int32 size)
+{
+    int32 sizeOut = 0;
+    sizeOut = write(fd, (char *) msg, size);
+
+    if (sizeOut == -1)
+    {
+        if (errno == EBADF)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_RS422_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransRS422 Error: Write to bad device.");
+            return IO_TRANS_RS422_BADDEVICE_ERR;
+        }
+        else
+        {
+            return IO_TRANS_RS422_ERROR;
+        }
+    }
+
+    return sizeOut; 
+}
+
+
+#ifndef _VXWORKS_OS_
+/** Get baudrate macro from a bps input */
+speed_t IO_TransRS422GetBaudRateMacro(int32 bps)
+{
+    speed_t baudRate = B0;
+    
+    switch(bps)
+    {
+        case 19200:
+            baudRate = B19200;
+            break;
+        case 38400:
+            baudRate = B38400;
+            break;
+        case 57600:
+            baudRate = B57600;
+            break;
+        case 115200:
+            baudRate = B115200;
+            break;
+        case 230400:
+            baudRate = B230400;
+            break;
+        case 460800:
+            baudRate = B460800;
+            break;
+        case 921600:
+            baudRate = B921600;
+            break;
+        default:
+            return -1;
+    }
+
+    return baudRate;
+}
+#endif
+```
+
+### `trans_select.c`
+
+**경로:** `fsw/apps/io_lib/fsw/src/services/trans_select.c`
+
+
+```c
+/*******************************************************************************
+* File: trans_select.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+* Purpose:
+*   Provides the functionality to do synchronous I/O multiplexing with 
+*   different devices (UDP, RS422) with the use of the POSIX select library.
+*
+* Reference:
+*   http://linux.die.net/man/2/select
+*
+* Notes:
+*   1. Use this library if you want to read on multiple devices simultaneously
+*   2. For output, select will return the first available device. It will not
+*   send over multiple devices, but simply returns the next available device.
+*
+* History:
+*   June 1, 2015  Guy de Carufel
+*    * Created
+*
+******************************************************************************/
+
+#include <errno.h>
+#include <string.h>
+
+#include "cfe_psp.h"
+#include "trans_select.h"
+
+/*******************************************************************************
+                          Local Private Functions 
+*******************************************************************************/
+/** Local functions */
+static int32 IO_TransSelectCheckArgs(IO_TransSelect_t *pSet, int32 fd, 
+                                     int32 event)
+{
+    if (pSet == NULL)
+    {
+        if (event)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_SELECT_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransSelect Error: NULL Set input.");
+        }
+        return IO_TRANS_SELECT_NULL_SET_ERR;
+    }
+
+    if (fd < 0)
+    {
+        if (event)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_SELECT_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransSelect Error: Bad FD input.");
+        }
+        return IO_TRANS_SELECT_BAD_FD_ERR;
+    }
+    return IO_TRANS_SELECT_NO_ERROR;
+}
+
+static int32 IO_TransSelectCheckIOArgs(IO_TransSelect_t *pSet,int32 timeoutUSec)
+{
+    if (pSet == NULL)
+    {
+        return IO_TRANS_SELECT_NULL_SET_ERR;
+    }
+    if (pSet->iMaxFdNum < 0)
+    {
+        return IO_TRANS_SELECT_EMPTY_SET_ERR;
+    }
+    if (timeoutUSec < 0 && timeoutUSec != IO_TRANS_PEND_FOREVER)
+    {
+        return IO_TRANS_SELECT_INVALID_TIMEOUT_ERR;
+    }
+    
+    return IO_TRANS_SELECT_NO_ERROR;
+}
+
+
+/*******************************************************************************
+                                API Functions 
+*******************************************************************************/
+
+/** Initialize the set */
+int32 IO_TransSelectClear(IO_TransSelect_t *pSet) 
+{
+    int32 status = IO_TransSelectCheckArgs(pSet, 0, true);
+    if (status < 0)
+    {
+        return status;
+    }
+
+    pSet->iMaxFdNum = -1;
+    FD_ZERO(&pSet->fdSetFull);
+    FD_ZERO(&pSet->fdSetActive);
+   
+    return status;
+}
+
+
+/** Adds the specified fd from the set. */
+int32 IO_TransSelectAddFd(IO_TransSelect_t *pSet, int32 fd) 
+{
+    int32 status = IO_TransSelectCheckArgs(pSet, fd, true);
+    if (status < 0)
+    {
+        return status;
+    }
+    
+    if (fd > pSet->iMaxFdNum)
+    {
+        pSet->iMaxFdNum = fd;
+    }
+
+    FD_SET((int) fd, &pSet->fdSetFull);
+    
+    return status;
+}
+
+
+/** Removes the specifies fd from the set. */
+int32 IO_TransSelectRemoveFd(IO_TransSelect_t *pSet, int32 fd)
+{
+    uint32 ii = 0;
+    
+    int32 status = IO_TransSelectCheckArgs(pSet, fd, true);
+    if (status < 0)
+    {
+        return status;
+    }
+
+    FD_CLR((int) fd, &pSet->fdSetFull);
+                       
+    /* If fd was the previous max, look for the new max */
+    if (pSet->iMaxFdNum == fd)
+    {
+        pSet->iMaxFdNum = -1;
+        for (ii = 0; ii < fd; ++ii)
+        {
+            status = IO_TransSelectFdInFull(pSet, ii);
+            if(status == 1)
+            {
+                status = IO_TRANS_SELECT_NO_ERROR;
+                pSet->iMaxFdNum = ii;
+            }
+            else if (status < 0)
+            {
+                break;
+            }
+        }
+    }
+
+    return status;
+}
+
+/** Returns 1 (True) if the fd is in the full set. */
+int32 IO_TransSelectFdInFull(IO_TransSelect_t *pSet, int32 fd)
+{
+    int32 check = IO_TransSelectCheckArgs(pSet, fd, false);
+    if (check < 0)
+    {
+        return check;
+    }
+    
+    return (int32) FD_ISSET((int) fd, &pSet->fdSetFull);
+}
+
+
+/** Returns 1 (True) if the fd is in the active set. */
+int32 IO_TransSelectFdInActive(IO_TransSelect_t *pSet, int32 fd)
+{
+    int32 check = IO_TransSelectCheckArgs(pSet, fd, false);
+    if (check < 0)
+    {
+        return check;
+    }
+    
+    return (int32) FD_ISSET((int) fd, &pSet->fdSetActive);
+}
+
+
+/** Select Input from fd in set which has available data. */
+int32 IO_TransSelectInput(IO_TransSelect_t *pSet, int32 timeoutUSec)
+{
+    struct timeval timeout;
+    int32 size = 0;
+
+    int32 check = IO_TransSelectCheckIOArgs(pSet, timeoutUSec);
+    if (check < 0)
+    {
+        return check;
+    }
+
+    /* Set the active set as full set. */
+    CFE_PSP_MemCpy((void *) &pSet->fdSetActive, (void *) &pSet->fdSetFull, 
+               sizeof(fd_set));
+
+    /* Wait on devices until one is ready. */
+    if (timeoutUSec == IO_TRANS_PEND_FOREVER)
+    {
+        size = select(pSet->iMaxFdNum + 1, &pSet->fdSetActive, NULL,NULL,NULL);
+    }
+    else
+    {
+        timeout.tv_sec  = timeoutUSec / 1000000;
+        timeout.tv_usec = timeoutUSec % 1000000; 
+        size = select(pSet->iMaxFdNum + 1, &pSet->fdSetActive, NULL, NULL, 
+                      &timeout);
+    }
+    
+    return size;
+}
+
+
+/** Select output from available fd in set that would not block on write. */
+int32 IO_TransSelectOutput(IO_TransSelect_t *pSet, int32 timeoutUSec)
+{
+    struct timeval timeout;
+    int32 size = 0;
+    
+    int32 check = IO_TransSelectCheckIOArgs(pSet, timeoutUSec);
+    if (check < 0)
+    {
+        return check;
+    }
+    
+    /* Set the active set as full set. */
+    CFE_PSP_MemCpy((void *) &pSet->fdSetActive, (void *) &pSet->fdSetFull, 
+               sizeof(fd_set));
+
+    /* Wait on devices until one is ready. */
+    if (timeoutUSec == IO_TRANS_PEND_FOREVER)
+    {
+        size = select(pSet->iMaxFdNum + 1, NULL, &pSet->fdSetActive, NULL,NULL);
+    }
+    else
+    {
+        timeout.tv_sec  = timeoutUSec / 1000000;
+        timeout.tv_usec = timeoutUSec % 1000000; 
+        size = select(pSet->iMaxFdNum + 1, NULL, &pSet->fdSetActive, NULL, 
+                      &timeout);
+    }
+    
+    return size;
+}
+```
+
+### `trans_udp.c`
+
+**경로:** `fsw/apps/io_lib/fsw/src/services/trans_udp.c`
+
+
+```c
+/*******************************************************************************
+* File: trans_udp.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+* Purpose:
+*   Provides the functionality to communicate over a UDP socket. 
+*   Supports POSIX.
+*
+* Reference:
+*
+* Notes:
+*   1. Socket set to blocking with timeouts.
+*   2. Set timeouts to IO_TRANS_PEND_FOREVER or 0 to block forever.
+*   3. Timeouts for socket do not affect behavior of select if used.
+*   4. Use the IO_TransUdpRcv function if used with trans_select library.
+*
+* History:
+*   Apr 07, 2015  Guy de Carufel * Created
+*   June 2, 2015  Guy de Carufel * Revised API
+*
+******************************************************************************/
+
+#include <errno.h>
+#include <string.h>
+
+#include "trans_udp.h"
+
+/* Start additional includes for hostname snippet */
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+/* End additional includes for hostname snippet */
+
+
+/** Initialize (create, configure and bind) a UDP Socket */
+int32 IO_TransUdpInit(IO_TransUdpConfig_t * config, IO_TransUdp_t * udp)
+{
+    /* Create socket */
+    if (IO_TransUdpCreateSocket(udp) < 0)
+    {
+        return IO_TRANS_UDP_SOCKETCREATE_ERROR;
+    }
+
+    /* Configure socket */
+    if (IO_TransUdpConfigSocket(config, udp) < 0)
+    {
+        return IO_TRANS_UDP_SOCKETOPT_ERROR;
+    }
+
+    /* Bind socket */
+    if (IO_TransUdpBindSocket(udp) < 0)
+    {
+        return IO_TRANS_UDP_SOCKETBIND_ERROR;
+    }
+
+    return udp->sockId;
+}
+
+
+/** Create a IPv4 Datagram UDP Socket */
+int32 IO_TransUdpCreateSocket(IO_TransUdp_t *udp)
+{
+    if (udp == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument. ");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+
+    /* Create socket */
+    /* AF_INET: IPv4 */
+    /* SOCK_DGRAM: Datagram socket */
+    /* IPPROTO_UDP:  UDP socket */
+    udp->sockId = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+    if (udp->sockId < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: create socket failed. " 
+                          "errno:%d", errno);
+    }
+
+    return udp->sockId;
+}
+/** Set the UDP Socket sockAddr structure */
+int32 IO_TransUdpConfigSocket(IO_TransUdpConfig_t *config, IO_TransUdp_t *udp)
+{
+    int32 status = IO_TRANS_UDP_NO_ERROR;
+    uint32 uiAddr = INADDR_ANY;
+    struct timeval timeout;
+
+    if (udp == NULL || config == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument.");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+
+    if (udp->sockId < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Socket not created. Can't config.");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+
+    if ((config->timeoutRcv < 0 && config->timeoutRcv != IO_TRANS_PEND_FOREVER) ||
+        (config->timeoutSnd < 0 && config->timeoutSnd != IO_TRANS_PEND_FOREVER))
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Bad config timeout input.");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+
+    /* Initialize socket address structures */
+    CFE_PSP_MemSet((void *)&udp->sockAddr, 0x0, sizeof(struct sockaddr_in));
+    CFE_PSP_MemSet((void *)&udp->srcAddr, 0x0, sizeof(struct sockaddr_in));
+    CFE_PSP_MemSet((void *)&udp->destAddr, 0x0, sizeof(struct sockaddr_in));
+
+    /* Get IP address from cAddr */
+    /* NOTE: inet_aton errors out if cAddr = "0.0.0.0", the value of
+     * IO_TRANS_UDP_INADDR_ANY.  So if this is the case, set uiAddr to
+     * the system defined value of INADDR_ANY
+     * */
+    if (strcmp(config->cAddr, IO_TRANS_UDP_INADDR_ANY) == 0)
+    {
+        uiAddr = INADDR_ANY;
+    }
+    else
+    {
+        struct addrinfo hints, *res, *p;
+        void *addr;
+        memset(&hints, 0, sizeof hints);
+        hints.ai_family = AF_INET; // Use AF_UNSPEC for IPv6 support if needed
+        hints.ai_socktype = SOCK_STREAM;
+
+        if (getaddrinfo(config->cAddr, NULL, &hints, &res) == 0)
+        {
+            for (p = res; p != NULL; p = p->ai_next)
+            {
+                struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+                addr = &(ipv4->sin_addr);
+
+                // Convert to string and store in config->cAddr
+                if (inet_ntop(p->ai_family, addr, config->cAddr, INET_ADDRSTRLEN) != NULL)
+                {
+                    uiAddr = ipv4->sin_addr.s_addr;
+                    break;
+                }
+            }
+            freeaddrinfo(res);
+        }
+
+        status = (uiAddr == INADDR_ANY) ? INET_ATON_ERROR : 1;
+        if (status == INET_ATON_ERROR)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransUDP Error: Bad config addr input: %s",
+                              config->cAddr);
+            return IO_TRANS_UDP_BAD_INPUT_ERROR;
+        }
+    }
+
+    /* Save UDP Socket Addr structure */
+    udp->sockAddr.sin_family = AF_INET;
+    udp->sockAddr.sin_addr.s_addr = uiAddr;
+    udp->sockAddr.sin_port = htons(config->usPort);
+
+    /* Set Receive Timeout */
+    if (config->timeoutRcv != 0)
+    {
+        timeout.tv_sec = (long)(config->timeoutRcv / 1000);
+        timeout.tv_usec = (long)((config->timeoutRcv % 1000) * 1000);
+
+        if (setsockopt(udp->sockId, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout,
+                       sizeof(timeout)) < 0)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransUDP Error: Set option SO_RCVTIMEO failed. Timeout input: %d",
+                              config->timeoutRcv);
+
+            return IO_TRANS_UDP_SOCKETOPT_ERROR;
+        }
+    }
+
+    /* Set Send Timeout */
+    if (config->timeoutSnd != 0)
+    {
+        timeout.tv_sec = (long)(config->timeoutSnd / 1000);
+        timeout.tv_usec = (long)((config->timeoutSnd % 1000) * 1000);
+
+        if (setsockopt(udp->sockId, SOL_SOCKET, SO_SNDTIMEO, (char *)&timeout,
+                       sizeof(timeout)) < 0)
+        {
+            CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                              "IO_TransUDP Error: Set option SO_SNDTIMEO failed. Timeout input: %d",
+                              config->timeoutSnd);
+
+            return IO_TRANS_UDP_SOCKETOPT_ERROR;
+        }
+    }
+
+    return IO_TRANS_UDP_NO_ERROR;
+}
+
+
+
+/** Bind socket to srcAddr for receiving socket */
+int32 IO_TransUdpBindSocket(IO_TransUdp_t * udp)
+{
+    if (udp == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument. ");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+    
+    /* Bind socket to port */
+    if ((bind(udp->sockId, (struct sockaddr*)&udp->sockAddr, 
+              sizeof(struct sockaddr)) < 0))
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: bind socket failed. errno:%d", 
+                          errno);
+        return IO_TRANS_UDP_SOCKETBIND_ERROR; 
+    }
+
+    return IO_TRANS_UDP_NO_ERROR;
+}
+
+
+/** Close a UDP Socket */
+int32 IO_TransUdpCloseSocket(IO_TransUdp_t *udp)
+{
+    int32 status;
+
+    if (udp == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument. ");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+    
+    status = close(udp->sockId);
+
+    if (status < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Failed to close socket ID:%d, "
+                          "errno:%d", udp->sockId, errno);
+    }
+    
+    return status;
+}
+
+int32 IO_TransUdpSetDestAddr(IO_TransUdp_t *udp, char *destAddr, uint16 usPort)
+{
+    int32 status;
+    uint32 uiAddr = INADDR_ANY;
+
+    if (udp == NULL || destAddr == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument.");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+
+    struct addrinfo hints, *res, *p;
+    void *addr;
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;  // Use AF_UNSPEC for IPv6 support if needed
+    hints.ai_socktype = SOCK_STREAM;
+
+    if (getaddrinfo(destAddr, NULL, &hints, &res) == 0)
+    {
+        for (p = res; p != NULL; p = p->ai_next)
+        {
+            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+            addr = &(ipv4->sin_addr);
+
+            // Convert to string and store in destAddr
+            if (inet_ntop(p->ai_family, addr, destAddr, INET_ADDRSTRLEN) != NULL)
+            {
+                uiAddr = ipv4->sin_addr.s_addr;
+                break;
+            }
+        }
+        freeaddrinfo(res);
+    }
+
+    status = (uiAddr == INADDR_ANY) ? INET_ATON_ERROR : 1;
+    if (status == INET_ATON_ERROR)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Bad destAddr input: %s 0x%08X",
+                          destAddr, uiAddr);
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+
+    /* Initialize destination socket structure */
+    CFE_PSP_MemSet((void *)&udp->destAddr, 0x0, sizeof(struct sockaddr_in));
+
+    /* Save UDP Socket Destination Addr structure */
+    udp->destAddr.sin_family = AF_INET;
+    udp->destAddr.sin_addr.s_addr = uiAddr;
+    udp->destAddr.sin_port = htons(usPort);
+
+    CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_INFORMATION,
+                      "IO_TransUDP: Destination IP set to %s:%u",
+                      destAddr, usPort);
+
+    return IO_TRANS_UDP_NO_ERROR;
+}
+
+/** Receive message on blocking socket with select. 
+ *  Will timeout after selectTimout based on input argument. 
+ *  Do not use this function if you are using the IO_Trans_Select library. */
+int32 IO_TransUdpRcvTimeout(IO_TransUdp_t * udp, uint8 * buffer, int32 bufSize,
+                            int32 selectTimeout)
+{
+    struct timeval timeout;
+    fd_set fdSet;
+    int32 size = 0;
+    
+    if (udp == NULL || buffer == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument. ");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+    
+    FD_ZERO(&fdSet);
+    FD_SET(udp->sockId, &fdSet);
+
+    /* Wait on socket for timeout time until some data
+     * is available. */
+    if (selectTimeout == IO_TRANS_PEND_FOREVER)
+    {
+        size = select(udp->sockId + 1, &fdSet, NULL, NULL, NULL);
+    }
+    else
+    {
+        timeout.tv_sec  = selectTimeout / 1000000;
+        timeout.tv_usec = selectTimeout % 1000000; 
+        size = select(udp->sockId + 1, &fdSet, NULL, NULL, &timeout);
+    }
+
+    /* Read the Socket if some data is available. */
+    if (size > 0)
+    {
+        size = IO_TransUdpRcv(udp, buffer, bufSize);
+    }
+    
+    return size;
+}
+
+
+/** Receive message on blocking socket. 
+ *  Will block for timoutRcv msec based on udp configuration. */
+int32 IO_TransUdpRcv(IO_TransUdp_t *udp, uint8 *buffer, int32 bufSize)
+{
+    socklen_t addrLen = sizeof(struct sockaddr_in);
+    int32 msgSize;
+    
+    if (udp == NULL || buffer == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument. ");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+    
+    msgSize = recvfrom(udp->sockId, (void *) buffer, (size_t) bufSize, 0, 
+                       (struct sockaddr *)&udp->srcAddr, &addrLen);
+    
+    /* Return size of zero if timed out. */
+    if(msgSize == -1 && errno == EWOULDBLOCK)
+    {
+        msgSize = 0;
+    }
+    
+    return msgSize;
+}
+
+
+/** Send message on outbound socket */
+int32 IO_TransUdpSnd(IO_TransUdp_t *udp, uint8 * msgPtr, int32 size)
+{
+    int32 sizeOut;
+
+    if (udp == NULL || msgPtr == NULL)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID,CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: Null input argument. ");
+        return IO_TRANS_UDP_BAD_INPUT_ERROR;
+    }
+    
+    sizeOut = sendto(udp->sockId, (void *) msgPtr, (size_t) size, 0, 
+                       (struct sockaddr *) &udp->destAddr, 
+                       sizeof(struct sockaddr_in));
+
+    if (sizeOut < 0)
+    {
+        CFE_EVS_SendEvent(IO_LIB_TRANS_UDP_EID, CFE_EVS_EventType_ERROR,
+                          "IO_TransUDP Error: errno:%d on Send.", errno);
+        return sizeOut;
+    }
+
+    return sizeOut;
+}
+```

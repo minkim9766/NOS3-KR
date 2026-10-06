@@ -3,14 +3,21 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/_includes/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `initial-value.rst`
 
-file--initial-value.rst
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/_includes/initial-value.rst`
+
+
+```rst
+The value must be understandable for the used engineering type.
+
+For binary, use a hexadecimal notation.
+
+For booleans, use a value of ``true`` or ``false``.
+
+For arrays, specify a value in JSON format: ``[-3, -2.4, 5]``.
+
+For aggregates, specify a value in JSON format: ``{member1: 1, member2: 2}``.
 ```
-
-## 항목
-
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/_includes/initial-value.rst`](file--initial-value.rst) — UTF-8 텍스트 파일 본문 포함

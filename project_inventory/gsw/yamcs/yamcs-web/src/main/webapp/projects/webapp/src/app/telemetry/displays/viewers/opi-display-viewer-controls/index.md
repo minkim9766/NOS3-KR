@@ -3,16 +3,82 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer-controls/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `opi-display-viewer-controls.component.html`
 
-file--opi-display-viewer-controls.component.html
-file--opi-display-viewer-controls.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer-controls/opi-display-viewer-controls.component.html`
+
+
+```html
+@if (initialized$ | async) {
+  <ya-page-button [matMenuTriggerFor]="viewMenu" dropdown="true">View</ya-page-button>
+  <mat-menu
+    #viewMenu="matMenu"
+    class="ya-menu"
+    overlapTrigger="false"
+    xPosition="after"
+    yPosition="below">
+    <button mat-menu-item (click)="resetZoom()">
+      <mat-icon>aspect_ratio</mat-icon>
+      Actual size
+    </button>
+    <button mat-menu-item (click)="fitZoom()">
+      <mat-icon>fit_screen</mat-icon>
+      Zoom to fit
+    </button>
+    <button mat-menu-item (click)="zoomIn()">
+      <mat-icon>add_circle</mat-icon>
+      Zoom in
+    </button>
+    <button mat-menu-item (click)="zoomOut()">
+      <mat-icon>remove_circle_outline</mat-icon>
+      Zoom out
+    </button>
+  </mat-menu>
+}
 ```
 
-## 항목
+### `opi-display-viewer-controls.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer-controls/opi-display-viewer-controls.component.html`](file--opi-display-viewer-controls.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer-controls/opi-display-viewer-controls.component.ts`](file--opi-display-viewer-controls.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer-controls/opi-display-viewer-controls.component.ts`
+
+
+```typescript
+import { Component } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { OpiDisplayViewerComponent } from '../opi-display-viewer/opi-display-viewer.component';
+
+@Component({
+  selector: 'app-opi-display-viewer-controls',
+  templateUrl: './opi-display-viewer-controls.component.html',
+  imports: [WebappSdkModule],
+})
+export class OpiDisplayViewerControlsComponent {
+  initialized$ = new BehaviorSubject<boolean>(false);
+
+  viewer: OpiDisplayViewerComponent;
+
+  public init(viewer: OpiDisplayViewerComponent) {
+    this.viewer = viewer;
+    this.initialized$.next(true);
+  }
+
+  fitZoom() {
+    this.viewer.fitZoom();
+  }
+
+  zoomIn() {
+    this.viewer.zoomIn();
+  }
+
+  zoomOut() {
+    this.viewer.zoomOut();
+  }
+
+  resetZoom() {
+    this.viewer.resetZoom();
+  }
+}
+```

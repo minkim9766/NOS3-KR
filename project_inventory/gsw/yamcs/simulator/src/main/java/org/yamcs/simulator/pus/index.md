@@ -3,30 +3,1382 @@
 
 **경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractPusService.java`
 
-file--AbstractPusService.java
-file--Pus11Service.java
-file--Pus17Service.java
-file--Pus5Service.java
-file--PusSimulator.java
-file--PusTcPacket.java
-file--PusTime.java
-file--PusTmPacket.java
-file--PusTmTimePacket.java
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/AbstractPusService.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.yamcs.simulator.pus.PusSimulator.MAIN_APID;
+import static org.yamcs.simulator.pus.PusSimulator.ack;
+import static org.yamcs.simulator.pus.PusSimulator.nack;
+
+public abstract class AbstractPusService {
+    // start errors
+    static final int START_ERR_INVALID_PUS_SUBTYPE = 1;
+    static final int START_ERR_NOT_IMPLEMENTED = 2;
+
+    // completion errors
+    static final int COMPL_ERR_NOT_IMPLEMENTED = 2;
+    static final int COMPL_ERR_INVALID_EVENT_ID = 3;
+    static final int COMPL_ERR_SCHEDULE_TIME_IN_THE_PAST = 4;
+
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+    protected final PusSimulator pusSimulator;
+    protected final int pusType;
+
+    public AbstractPusService(PusSimulator pusSimulator, int pusType) {
+        this.pusSimulator = pusSimulator;
+        this.pusType = pusType;
+    }
+
+    public void start() {
+
+    }
+    public abstract void executeTc(PusTcPacket tc);
+    
+    public PusTmPacket newPacket(int subtype, int userDataLength) {
+        return new PusTmPacket(MAIN_APID, userDataLength, pusType, subtype);
+    }
+
+    public void ack_start(PusTcPacket tc) {
+        pusSimulator.transmitRealtimeTM(ack(tc, 3));
+    }
+
+    public void nack_start(PusTcPacket tc, int code) {
+        pusSimulator.transmitRealtimeTM(nack(tc, 4, code));
+    }
+
+    public void ack_completion(PusTcPacket tc) {
+        pusSimulator.transmitRealtimeTM(ack(tc, 7));
+    }
+
+    public void nack_completion(PusTcPacket tc, int code) {
+        pusSimulator.transmitRealtimeTM(nack(tc, 8, code));
+    }
+}
 ```
 
-## 항목
+### `Pus11Service.java`
 
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/AbstractPusService.java`](file--AbstractPusService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus11Service.java`](file--Pus11Service.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus17Service.java`](file--Pus17Service.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus5Service.java`](file--Pus5Service.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusSimulator.java`](file--PusSimulator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTcPacket.java`](file--PusTcPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTime.java`](file--PusTime.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTmPacket.java`](file--PusTmPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTmTimePacket.java`](file--PusTmTimePacket.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus11Service.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.utils.StringConverter;
+
+/**
+ * ST[11] time-based scheduling
+ * <p>
+ * The time-based scheduling service type provides the capability to command on-board application processes using
+ * requests pre­loaded on-board the spacecraft and released at their due time.
+ * 
+ */
+public class Pus11Service extends AbstractPusService {
+    ScheduledThreadPoolExecutor executor;
+
+    int count;
+    boolean enabled = true;
+    PriorityQueue<ScheduledCommand> commands = new PriorityQueue<>();
+    private ScheduledFuture<?> scheduledFuture;
+
+    // subschedule id -> subschedule status (true = enabled, false = disabled)
+    Map<Integer, Boolean> subschStatus = new HashMap<>();
+
+    Pus11Service(PusSimulator pusSimulator) {
+        super(pusSimulator, 11);
+    }
+
+    @Override
+    public void start() {
+        this.executor = pusSimulator.executor;
+    }
+
+    public synchronized void executeTc(PusTcPacket tc) {
+        switch (tc.getSubtype()) {
+        // TC[11,1] enable the time-based schedule execution function
+        case 1 -> {
+            ack_start(tc);
+            log.info("Enabling the time-based schedule execution");
+            enabled = true;
+            ack_completion(tc);
+        }
+        // TC[11,2] disable the time-based schedule execution function
+        case 2 -> {
+            ack_start(tc);
+            log.info("Disabling the time-based schedule execution");
+            enabled = false;
+            ack_completion(tc);
+        }
+        // TC[11,3] reset the time-based schedule
+        case 3 -> {
+            ack_start(tc);
+            log.info("Reseting the time-based schedule execution");
+            enabled = false;
+            commands.clear();
+            ack_completion(tc);
+        }
+        // TC[11,4] insert activities into the time-based schedule
+        case 4 -> insertActivities(tc);
+        // TC[11,5] delete time-based scheduled activities identified by request identifier
+        case 5 -> deleteByRequestId(tc);
+        // TC[11,6] delete the time-based scheduled activities identified by a filter
+        case 6 -> deleteByFilter(tc);
+        // TC[11,7] time-shift scheduled activities identified by request identifier
+        case 7 -> timeShiftById(tc);
+        // TC[11,8] time-shift the scheduled activities identified by a filter
+        case 8 -> timeShiftByFilter(tc);
+        // TC[11,9] detail-report time-based scheduled activities identified by request identifier
+        case 9 -> detailReportById(tc);
+        // TC[11,11] detail-report the time-based scheduled activities identified by a filter
+        case 11 -> detailReportByFilter(tc);
+        // TC[11,12] summary-report time-based scheduled activities identified by request identifier
+        case 12 -> summaryReportById(tc);
+        // TC[11,14] summary-report the time-based scheduled activities identified by a filter
+        case 14 -> summaryReportByFilter(tc);
+        // TC[11,15] time-shift all scheduled activities
+        case 15 -> timeShiftAll(tc);
+        // TC[11,16] detail-report all time-based scheduled activities
+        case 16 -> detailReportAll(tc);
+        // TC[11,17] summary-report all time-based scheduled activities
+        case 17 -> summaryReportAll(tc);
+        // TC[11,18] report the status of each time-based sub-schedule
+        case 18 -> scheduleStatusReport(tc);
+        // TC[11,20] enable time-based sub-schedules
+        case 20 -> enableSubschedule(tc);
+        // TC[11,21] disable time-based sub-schedules
+        case 21 -> disableSubschedule(tc);
+        // TC[11,22] create time-based scheduling groups
+        case 22 -> nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,23] delete time-based scheduling groups
+        case 23 -> nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,24] enable time-based scheduling groups
+        case 24 -> nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,25] disable time-based scheduling groups
+        case 25 -> nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        // TC[11,26] report the status of each time-based scheduling group
+        case 26 -> nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        default -> nack_start(tc, START_ERR_INVALID_PUS_SUBTYPE);
+        }
+    }
+
+    private void insertActivities(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int subschedule = bb.get() & 0xFF;
+        int n = bb.get() & 0xFF;
+
+        log.info("Received {} command(s) for subschedule {}", n, subschedule);
+
+        var now = PusTime.now();
+
+        synchronized (subschStatus) {
+            if (!subschStatus.containsKey(subschedule)) {
+                subschStatus.put(subschedule, true);
+            }
+        }
+        PusTime firstReleaseTime = null;
+
+        for (int i = 0; i < n; i++) {
+            PusTime releaseTime = PusTime.read(bb);
+            if (releaseTime.isBefore(now)) {
+                log.warn("Command schedule time {} is before now {}, rejecting command", releaseTime, now);
+                nack_completion(tc, COMPL_ERR_SCHEDULE_TIME_IN_THE_PAST);
+                return;
+            }
+
+            if (firstReleaseTime == null || releaseTime.isBefore(firstReleaseTime)) {
+                firstReleaseTime = releaseTime;
+            }
+            int length = (bb.getShort(bb.position() + 4) & 0xFFFF) + 7;
+            byte[] packet = new byte[length];
+            bb.get(packet);
+            log.info("Scheduling command {} at {}", StringConverter.arrayToHexString(packet), releaseTime);
+
+            ScheduledCommand sc = new ScheduledCommand(releaseTime, subschedule, new PusTcPacket(packet));
+            commands.add(sc);
+        }
+        scheduleNext();
+
+        ack_completion(tc);
+    }
+
+    private void deleteByRequestId(PusTcPacket tc) {
+        ack_start(tc);
+
+        ByteBuffer bb = tc.getUserDataBuffer();
+        filterById(bb, true);
+
+        ack_completion(tc);
+    }
+
+    private void deleteByFilter(PusTcPacket tc) {
+        ack_start(tc);
+
+        ByteBuffer bb = tc.getUserDataBuffer();
+        filterByFilter(bb, true);
+
+        ack_completion(tc);
+    }
+
+    private void timeShiftById(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+
+        int timeShiftMillis = bb.getInt();
+
+        var toShift = filterById(bb, true);
+
+        if (!toShift.isEmpty()) {
+            for (var cmd : toShift) {
+                cmd.releaseTime = cmd.releaseTime.shiftByMillis(timeShiftMillis);
+                commands.add(cmd);
+                log.info("Time-shifted command {} by {} milliseconds", cmd.tc, timeShiftMillis);
+            }
+            scheduleNext();
+        }
+
+        ack_completion(tc);
+    }
+
+    private void timeShiftByFilter(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+
+        int timeShiftMillis = bb.getInt();
+
+        var toShift = filterByFilter(bb, true);
+
+        if (!toShift.isEmpty()) {
+            for (var cmd : toShift) {
+                cmd.releaseTime = cmd.releaseTime.shiftByMillis(timeShiftMillis);
+                commands.add(cmd);
+                log.info("Time-shifted command {} by {} milliseconds", cmd.tc, timeShiftMillis);
+            }
+            scheduleNext();
+        }
+
+        ack_completion(tc);
+    }
+
+    private void timeShiftAll(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+
+        int timeShiftMillis = bb.getInt();
+
+        List<ScheduledCommand> updatedCommands = new ArrayList<>();
+
+        while (!commands.isEmpty()) {
+            ScheduledCommand cmd = commands.poll(); // Remove the command from the queue
+            cmd.releaseTime = cmd.releaseTime.shiftByMillis(timeShiftMillis); // Shift the command's release time
+            updatedCommands.add(cmd); // Add the updated command to the temporary list
+        }
+
+        commands.addAll(updatedCommands);
+        scheduleNext();
+
+        ack_completion(tc);
+    }
+
+    private void scheduleStatusReport(PusTcPacket tc) {
+        ack_start(tc);
+
+        synchronized (subschStatus) {
+            var pkt = newPacket(19, 4 + subschStatus.size() * 2);
+            var bb = pkt.getUserDataBuffer();
+
+            bb.putInt(subschStatus.size());
+            for (var me : subschStatus.entrySet()) {
+                bb.put(me.getKey().byteValue());
+                bb.put((byte) (me.getValue() ? 1 : 0));
+            }
+            pusSimulator.transmitRealtimeTM(pkt);
+        }
+
+        ack_completion(tc);
+    }
+
+    private void detailReportByFilter(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterByFilter(bb, false);
+        sendDetailReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void summaryReportById(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterById(bb, false);
+        sendSummaryReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void summaryReportByFilter(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterByFilter(bb, false);
+        sendSummaryReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void detailReportAll(PusTcPacket tc) {
+        ack_start(tc);
+        sendDetailReport(commands);
+        ack_completion(tc);
+    }
+
+    private void summaryReportAll(PusTcPacket tc) {
+        ack_start(tc);
+        sendSummaryReport(commands);
+        ack_completion(tc);
+    }
+
+    private void detailReportById(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        var cmds = filterById(bb, false);
+        sendDetailReport(cmds);
+        ack_completion(tc);
+    }
+
+    private void enableSubschedule(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int subschedule = bb.get() & 0xFF;
+        synchronized (subschStatus) {
+            subschStatus.put(subschedule, true);
+        }
+        log.info("Enabled subschedule {}", subschedule);
+        ack_completion(tc);
+    }
+
+    private void disableSubschedule(PusTcPacket tc) {
+        ack_start(tc);
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int subschedule = bb.get() & 0xFF;
+        synchronized (subschStatus) {
+            subschStatus.put(subschedule, false);
+        }
+        log.info("Disabled subschedule {}", subschedule);
+        ack_completion(tc);
+    }
+
+    private void sendSummaryReport(Collection<ScheduledCommand> cmds) {
+        var pkt = newPacket(13, 4 + cmds.size() * 15);
+        var bb = pkt.getUserDataBuffer();
+        bb.putShort((short) cmds.size());
+        for (var cmd : cmds) {
+            bb.put((byte) cmd.subschedule);
+            cmd.releaseTime.encode(bb);
+            encodeRequestId(bb, cmd.tc);
+        }
+        pusSimulator.transmitRealtimeTM(pkt);
+    }
+
+    private static final int MAX_DETAIL_REPORT_SIZE = 1400;
+
+    private void sendDetailReport(Collection<ScheduledCommand> cmds) {
+        Iterator<ScheduledCommand> iterator = cmds.iterator();
+
+        while (iterator.hasNext()) {
+            int totalSize = 4;
+            List<ScheduledCommand> batch = new ArrayList<>();
+
+            while (iterator.hasNext()) {
+                ScheduledCommand cmd = iterator.next();
+                int cmdSize = 9 + cmd.tc.getLength();
+
+                if (totalSize + cmdSize > MAX_DETAIL_REPORT_SIZE) {
+                    break;
+                }
+
+                batch.add(cmd);
+                totalSize += cmdSize;
+            }
+
+            var pkt = newPacket(10, totalSize);
+            var bb = pkt.getUserDataBuffer();
+
+            bb.putShort((short) batch.size());
+            for (var cmd : batch) {
+                bb.put((byte) cmd.subschedule);
+                cmd.releaseTime.encode(bb);
+                bb.put(cmd.tc.getBytes());
+            }
+            pusSimulator.transmitRealtimeTM(pkt);
+        }
+    }
+
+
+    private List<ScheduledCommand> filterById(ByteBuffer bb, boolean remove) {
+        List<ScheduledCommand> cmds = new ArrayList<>();
+        int n = bb.getShort() & 0xFFFF;
+        log.info("Filtering by {} id filters", n);
+        for (int i = 0; i < n; i++) {
+            int sourceId = bb.getShort() & 0xFFFF;
+            int apid = bb.getShort() & 0x07FF;
+            int seqCount = bb.getShort() & 0xFFFF;
+            log.info("Filter by ID source: {}, apid: {}, seqCount: {}", sourceId, apid, seqCount);
+            Iterator<ScheduledCommand> it = commands.iterator();
+
+            while (it.hasNext()) {
+                var cmd = it.next();
+                if (cmd.tc.getSourceId() == sourceId && cmd.tc.getAPID() == apid
+                        && cmd.tc.getSequenceCount() == seqCount) {
+                    cmds.add(cmd);
+                    if (remove) {
+                        it.remove();
+                    }
+                }
+            }
+        }
+        log.info("{} commands matched the filters", cmds.size());
+        return cmds;
+    }
+
+    private List<ScheduledCommand> filterByFilter(ByteBuffer bb, boolean remove) {
+
+        int type = bb.get() & 0xFF; // Type of time window (enumerated)
+
+        // First time tag (for "from time tag" types)
+        PusTime timeTag1 = (type == 1 || type == 2) ? PusTime.read(bb) : null;
+        // Second time tag (for "to time tag" types)
+        PusTime timeTag2 = (type == 1 || type == 3) ? PusTime.read(bb) : null;
+
+        BitSet subschedules = null;
+        // Read the number of sub-schedules
+        int n = bb.get() & 0xFF;
+        if (n > 0) {
+            subschedules = new BitSet();
+            for (int i = 0; i < n; i++) {
+                int subschedule = bb.get() & 0xFF;
+                subschedules.set(subschedule);
+            }
+        }
+        log.info("Filter start_time: {}, end_time: {}, subschedules: {}", timeTag1, timeTag2, subschedules);
+
+        // Iterate over scheduled commands and remove matching ones
+        Iterator<ScheduledCommand> iterator = commands.iterator();
+        List<ScheduledCommand> result = new ArrayList<>();
+        while (iterator.hasNext()) {
+            ScheduledCommand cmd = iterator.next();
+            if (subschedules == null || subschedules.get(cmd.subschedule)) {
+                boolean matches = switch (type) {
+                // "select all"
+                case 0 -> true;
+                // "from time tag to time tag"
+                case 1 -> !cmd.releaseTime.isBefore(timeTag1) && !cmd.releaseTime.isAfter(timeTag2);
+                // "from time tag"
+                case 2 -> !cmd.releaseTime.isBefore(timeTag1);
+                // "to time tag"
+                case 3 -> !cmd.releaseTime.isAfter(timeTag2);
+                default -> {
+                    log.warn("Unknown time window type: {}", type);
+                    yield false; // Default case for unknown type
+                }
+                };
+
+                if (matches) {
+                    result.add(cmd);
+                    if (remove) {
+                        log.info("Removing command {} scheduled at {}", cmd.tc, cmd.releaseTime);
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+
+        log.info("{} commands matched the filter", result.size());
+        return result;
+    }
+
+    static void encodeRequestId(ByteBuffer bb, PusTcPacket tc) {
+        bb.putShort((short) tc.getSourceId());
+        bb.putShort((short) tc.getAPID());
+        bb.putShort((short) tc.getSequenceCount());
+    }
+
+    private void runSchedule(PusTime now) {
+        while (true) {
+            var cmd = commands.peek();
+            if (cmd == null) {
+                break;
+            }
+            int c = cmd.releaseTime.compareTo(now);
+            if (c < 0) {
+                log.warn("Dropping command {} because its release time {} has passed (now: {})", cmd.tc,
+                        cmd.releaseTime, now);
+                commands.remove();
+            } else if (c == 0) {
+                synchronized (subschStatus) {
+                    if (!subschStatus.getOrDefault(cmd.subschedule, false)) {
+                        log.warn("Dropping command {} because the subschedule {} is disabled", cmd.tc,
+                                cmd.subschedule);
+                        commands.remove();
+                        continue;
+                    }
+                }
+                log.info("Executing command {}", cmd.tc);
+                commands.remove();
+                pusSimulator.processTc(cmd.tc);
+            } else {
+                scheduleNext();
+                break;
+            }
+        }
+    }
+
+    private void scheduleNext() {
+        var cmd = commands.peek();
+        if (cmd == null) {
+            return;
+        }
+        long millis = cmd.releaseTime.deltaMillis(PusTime.now());
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(false);
+        }
+        scheduledFuture = executor.schedule(() -> runSchedule(cmd.releaseTime), millis, TimeUnit.MILLISECONDS);
+    }
+
+    static class ScheduledCommand implements Comparable<ScheduledCommand> {
+        PusTime releaseTime;
+        final int subschedule;
+        final PusTcPacket tc;
+
+        public ScheduledCommand(PusTime releaseTime, int subschedule, PusTcPacket tc) {
+            super();
+            this.releaseTime = releaseTime;
+            this.subschedule = subschedule;
+            this.tc = tc;
+        }
+
+        @Override
+        public int compareTo(ScheduledCommand o) {
+            return this.releaseTime.compareTo(o.releaseTime);
+        }
+    }
+
+}
+```
+
+### `Pus17Service.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus17Service.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+
+public class Pus17Service extends AbstractPusService {
+    Pus17Service(PusSimulator pusSimulator) {
+        super(pusSimulator, 17);
+    }
+
+    @Override
+    public void executeTc(PusTcPacket tc) {
+
+        if (tc.getSubtype() != 1) {
+            log.info("invalid subtype {}, sending NACK start", tc.getSubtype());
+            nack_start(tc, START_ERR_INVALID_PUS_SUBTYPE);
+            return;
+        }
+
+        ack_start(tc);
+        pusSimulator.transmitRealtimeTM(newPacket(2, 0));
+        ack_completion(tc);
+    }
+
+}
+```
+
+### `Pus5Service.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/Pus5Service.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
+
+
+public class Pus5Service extends AbstractPusService {
+    int count;
+    boolean[] enabled = { true, true };
+
+    Pus5Service(PusSimulator pusSimulator) {
+        super(pusSimulator, 5);
+    }
+
+    @Override
+    public void start() {
+        pusSimulator.executor.scheduleAtFixedRate(() -> sendEvent(), 0, 1000, TimeUnit.MILLISECONDS);
+    }
+
+    public void sendEvent() {
+        var id = count % 5;
+        if (id == 0 && enabled[0]) {
+            // send event1
+            PusTmPacket packet = newPacket(1, 7);
+            ByteBuffer bb = packet.getUserDataBuffer();
+            bb.put((byte) 1);
+            bb.putShort((short) count);
+            bb.putFloat((float) (count + 3.14159265));
+
+            pusSimulator.transmitRealtimeTM(packet);
+        } else if (enabled[1]) {
+            // send event2 with subtype (severity level) id
+            byte[] msg = ("This is an event with subtype " + id).getBytes(StandardCharsets.UTF_8);
+            PusTmPacket packet = newPacket(id, 3 + msg.length);
+            ByteBuffer bb = packet.getUserDataBuffer();
+            bb.put((byte) 2);
+            bb.putShort((short) msg.length);
+            bb.put(msg);
+            pusSimulator.transmitRealtimeTM(packet);
+        }
+        count++;
+    }
+
+
+    public void executeTc(PusTcPacket tc) {
+        if (tc.getSubtype() == 5 ||tc.getSubtype() == 6 ) {
+            ack_start(tc);
+            enableDisableEvents(tc, tc.getSubtype() == 5);
+        } else if (tc.getSubtype() == 7) {
+            nack_start(tc, START_ERR_NOT_IMPLEMENTED);
+        } else {
+            log.info("invalid subtype {}, sending NACK start", tc.getSubtype());
+            nack_start(tc, START_ERR_INVALID_PUS_SUBTYPE);
+            return;
+        }
+    }
+
+    void enableDisableEvents(PusTcPacket tc, boolean enable) {
+        ByteBuffer bb = tc.getUserDataBuffer();
+        int n = bb.get() & 0xFF;
+        for (int i = 0; i < n; i++) {
+            int eventId = bb.get() & 0xFF;
+            if (eventId == 0 || eventId  > enabled.length) {
+                log.info("invalid event id {}, sending NACK start", eventId);
+                nack_completion(tc, COMPL_ERR_INVALID_EVENT_ID);
+                return;
+            }
+            enabled[eventId - 1] = enable;
+        }
+        ack_completion(tc);
+    }
+
+}
+```
+
+### `PusSimulator.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusSimulator.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.io.File;
+import java.nio.ByteBuffer;
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.simulator.AbstractSimulator;
+import org.yamcs.simulator.cfdp.CfdpCcsdsPacket;
+import org.yamcs.simulator.cfdp.CfdpReceiver;
+import org.yamcs.simulator.DHSHandler;
+import org.yamcs.simulator.EpsLvpduHandler;
+import org.yamcs.simulator.FlightDataHandler;
+import org.yamcs.simulator.PowerHandler;
+import org.yamcs.simulator.RCSHandler;
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.simulator.TcpTmTcLink;
+
+/**
+ * PUS (Packet Utilisation Standard) simulator.
+ * 
+ * Supports services:
+ * <ul>
+ * <li>ST[01] - request verification</li>
+ * <li>ST[03] - housekeeping</li>
+ * <li>ST[05] - event reporting - TODO</li>
+ * <li>ST[06] - memory management - TODO</li>
+ * <li>ST[09] - time management - only sending the time packet</li>
+ * <li>ST[11] - time based schedule</li>
+ * <li>ST[12] - on-board monitoring - TODO</li>
+ * <li>ST[13] - large packet transfer - TODO</li>
+ * <li>ST[15] - on-board storage and retrieval - TODO</li>
+ * <li>ST[17] - test</li>
+ * <li>ST[23] - file management - TODO</li>
+ * 
+ * <li>
+ * 
+ * </ul>
+ * 
+ */
+public class PusSimulator extends AbstractSimulator {
+    static final int MAIN_APID = 1;
+
+    static final int PUS_TYPE_ACK = 1;
+    static final int PUS_TYPE_HK = 3;
+    static final int PUS_TYPE_EVENT = 5;
+
+    static final int PUS_SUBTYPE_ACK_ACCEPTANCE = 1;
+    static final int PUS_SUBTYPE_NACK_ACCEPTANCE = 2;
+    static final int PUS_SUBTYPE_ACK_START = 3;
+    static final int PUS_SUBTYPE_NACK_START = 4;
+    static final int PUS_SUBTYPE_ACK_COMPLETION = 7;
+    static final int PUS_SUBTYPE_NACK_COMPLETION = 8;
+
+    static final int START_FAILURE_INVALID_VOLTAGE_NUM = 100;
+    private static final Logger log = LoggerFactory.getLogger(PusSimulator.class);
+
+    final Random random = new Random();
+
+    ScheduledThreadPoolExecutor executor;
+    TcpTmTcLink tmLink;
+
+    FlightDataHandler flightDataHandler;
+    DHSHandler dhsHandler;
+    PowerHandler powerDataHandler;
+    RCSHandler rcsHandler;
+    EpsLvpduHandler epslvpduHandler;
+    CfdpReceiver cfdpReceiver;
+    Pus5Service pus5Service;
+    Pus11Service pus11Service;
+    Pus17Service pus17Service;
+
+    protected BlockingQueue<PusTcPacket> pendingCommands = new ArrayBlockingQueue<>(100);
+
+    public PusSimulator(File dataDir) {
+        powerDataHandler = new PowerHandler();
+        rcsHandler = new RCSHandler();
+        epslvpduHandler = new EpsLvpduHandler();
+        flightDataHandler = new FlightDataHandler();
+        dhsHandler = new DHSHandler();
+        cfdpReceiver = new CfdpReceiver(this, dataDir);
+        pus5Service = new Pus5Service(this);
+        pus11Service = new Pus11Service(this);
+        pus17Service = new Pus17Service(this);
+    }
+
+    @Override
+    protected void doStart() {
+        executor = new ScheduledThreadPoolExecutor(1);
+        executor.scheduleAtFixedRate(() -> sendTimePacket(), 0, 4, TimeUnit.SECONDS);
+
+        executor.scheduleAtFixedRate(() -> sendFlightPacket(), 0, 200, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> sendHkTm(), 0, 1000, TimeUnit.MILLISECONDS);
+        // executor.scheduleAtFixedRate(() -> sendCfdp(), 0, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> executePendingCommands(), 0, 200, TimeUnit.MILLISECONDS);
+
+        pus5Service.start();
+        pus11Service.start();
+    }
+
+    private void sendFlightPacket() {
+        PusTmPacket packet = new PusTmPacket(MAIN_APID, 4 + flightDataHandler.dataSize(), PUS_TYPE_HK, 25);
+        ByteBuffer buffer = packet.getUserDataBuffer();
+        buffer.putInt(0);
+        flightDataHandler.fillPacket(buffer.slice());
+        transmitRealtimeTM(packet);
+    }
+
+    private void sendHkTm() {
+        try {
+            PusTmPacket packet = new PusTmPacket(MAIN_APID, 4 + powerDataHandler.dataSize(), PUS_TYPE_HK, 25);
+            ByteBuffer buffer = packet.getUserDataBuffer();
+            buffer.putInt(1);
+            powerDataHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+
+            packet = new PusTmPacket(MAIN_APID, 4 + dhsHandler.dataSize(), PUS_TYPE_HK, 25);
+            buffer = packet.getUserDataBuffer();
+            buffer.putInt(2);
+            dhsHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+
+            packet = new PusTmPacket(MAIN_APID, 4 + rcsHandler.dataSize(), PUS_TYPE_HK, 25);
+            buffer = packet.getUserDataBuffer();
+            buffer.putInt(3);
+            rcsHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+
+            packet = new PusTmPacket(MAIN_APID, 4 + epslvpduHandler.dataSize(), PUS_TYPE_HK, 25);
+            buffer = packet.getUserDataBuffer();
+            buffer.putInt(4);
+            epslvpduHandler.fillPacket(buffer.slice());
+            transmitRealtimeTM(packet);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void transmitRealtimeTM(PusTmPacket packet) {
+        packet.fillChecksum();
+        tmLink.sendPacket(packet.getBytes());
+    }
+
+    private void sendTimePacket() {
+        tmLink.sendImmediate(new PusTmTimePacket());
+    }
+
+    @Override
+    protected void doStop() {
+        executor.shutdownNow();
+    }
+
+    @Override
+    public void transmitCfdp(CfdpPacket packet) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void processTc(SimulatorCcsdsPacket tc) {
+        PusTcPacket pustc = (PusTcPacket) tc;
+        if (tc.getAPID() == CfdpCcsdsPacket.APID) {
+            // cfdpReceiver.processCfdp(tc.getUserDataBuffer());
+        } else {
+            transmitRealtimeTM(ack(pustc, 1));
+            try {
+                pendingCommands.put(pustc);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    private void switchBatteryOn(PusTcPacket commandPacket) {
+        int batNum = commandPacket.getUserDataBuffer().get(0);
+        if (batNum < 1 || batNum > 3) {
+            log.info("CMD: BATERRY ON {}, sending NACK start", batNum);
+            transmitRealtimeTM(nack(commandPacket, 4, START_FAILURE_INVALID_VOLTAGE_NUM));
+            return;
+        }
+        if (batNum != 2) {
+            log.info("CMD: BATERRY ON {} ACK start", batNum);
+            transmitRealtimeTM(ack(commandPacket, 3));
+        } else {
+            log.info("CMD: BATERRY ON {}, skip ACK start", batNum);
+        }
+
+        executor.schedule(() -> {
+            if (batNum == 3) {
+                int returnCode = random.nextInt(5);
+                log.info("CMD: BATERRY ON {}, sending failure completion with code {}", batNum, returnCode);
+                transmitRealtimeTM(nack(commandPacket, 8, returnCode));
+            } else {
+                powerDataHandler.setBatteryOn(batNum);
+                transmitRealtimeTM(ack(commandPacket, 7));
+            }
+        }, 1500, TimeUnit.MILLISECONDS);
+    }
+
+    private void switchBatteryOff(PusTcPacket commandPacket) {
+        transmitRealtimeTM(ack(commandPacket, 3));
+        int batNum = commandPacket.getUserDataBuffer().get(0);
+        log.info("CMD: BATERRY OFF {}", batNum);
+        executor.schedule(() -> {
+            powerDataHandler.setBatteryOff(batNum);
+            transmitRealtimeTM(ack(commandPacket, 7));
+        }, 500, TimeUnit.MILLISECONDS);
+    }
+
+    private void executePendingCommands() {
+        PusTcPacket commandPacket;
+        while ((commandPacket = pendingCommands.poll()) != null) {
+            try {
+                log.info("Received PUS TC : {} (now: {})", commandPacket, PusTime.now());
+                switch (commandPacket.getType()) {
+                case 5 -> pus5Service.executeTc(commandPacket);
+                case 11 -> pus11Service.executeTc(commandPacket);
+                case 17 -> pus17Service.executeTc(commandPacket);
+                case 25 -> {
+                    switch (commandPacket.getSubtype()) {
+                    case 1 -> switchBatteryOn(commandPacket);
+                    case 2 -> switchBatteryOff(commandPacket);
+                    default -> log.error("Invalid command  subtype {}", commandPacket.getSubtype());
+                    }
+                }
+                default -> log.warn("Unknown command type {}", commandPacket.getType());
+                }
+            } catch (Exception e) {
+                log.warn("Error executing command", e);
+            }
+        }
+    }
+
+    protected static PusTmPacket ack(PusTcPacket commandPacket, int subtype) {
+        PusTmPacket ackPacket = new PusTmPacket(MAIN_APID, 4, PUS_TYPE_ACK, subtype);
+
+        ByteBuffer bb = ackPacket.getUserDataBuffer();
+        bb.put(commandPacket.getBytes(), 0, 4);
+        return ackPacket;
+    }
+
+    public static PusTmPacket nack(PusTcPacket commandPacket, int subtype, int code) {
+        PusTmPacket ackPacket = new PusTmPacket(MAIN_APID, 8, PUS_TYPE_ACK, subtype);
+
+        ByteBuffer bb = ackPacket.getUserDataBuffer();
+        bb.put(commandPacket.getBytes(), 0, 4);
+        bb.putInt(code);
+        return ackPacket;
+    }
+
+    @Override
+    protected void setTmLink(TcpTmTcLink tmLink) {
+        this.tmLink = tmLink;
+    }
+
+    @Override
+    protected void setTm2Link(TcpTmTcLink tm2Link) {
+        // ignore only send packets on tmlink
+    }
+
+    @Override
+    protected void setLosLink(TcpTmTcLink losLink) {
+        // ignore only send packets on tmlink
+    }
+
+    @Override
+    public int maxTmDataSize() {
+        return 1500;
+    }
+}
+```
+
+### `PusTcPacket.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTcPacket.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * TC packets according to PUS standard
+ * ECSS-E-ST-70-41C 15 April 2016
+ * 
+ * 
+ * <pre>
+ *  Secondary header (5 bytes)
+ * 
+ *  version number - 4 bits
+ *  acknowledgement flags - 4 bits
+ *  service type  -   8 bits
+ *  service subtype  - 8 bits
+ *  source Id - 16 bits
+ * </pre>
+ * 
+ * 
+ */
+public class PusTcPacket extends SimulatorCcsdsPacket {
+    public static final int SH_OFFSET = 6;
+    public static final int DATA_OFFSET = SH_OFFSET + 5;
+
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+
+    public PusTcPacket(byte[] packet) {
+        super(packet);
+    }
+
+    public PusTcPacket(int apid, int userDataLength, int ackFlags, int type, int subtype) {
+        super(ByteBuffer.allocate(getPacketLength(userDataLength)));
+        setHeader(apid, 1, 1, 3, getSeq(apid));
+
+        bb.position(SH_OFFSET);
+        bb.put((byte) (0x20 + (ackFlags & 0x0F)));
+        bb.put((byte) type);
+        bb.put((byte) subtype);
+        int sourceId = 0;
+        bb.putShort((short) sourceId);
+    }
+
+    public void setType(int type) {
+        bb.put(SH_OFFSET + 1, (byte) type);
+    }
+
+    public int getType() {
+        return bb.get(SH_OFFSET + 1) & 0xFF;
+    }
+
+    public void setSubtype(int subtype) {
+        bb.put(SH_OFFSET + 2, (byte) subtype);
+    }
+
+    public int getSubtype() {
+        return bb.get(SH_OFFSET + 2) & 0xFF;
+    }
+
+    public int getSourceId() {
+        return bb.getShort(SH_OFFSET + 3) & 0xFFFF;
+    }
+
+    private static int getPacketLength(int userDataLength) {
+        return DATA_OFFSET + userDataLength + 2;// 2 bytes for the CRC
+    }
+
+    public int getAckFlags() {
+        return bb.get(DATA_OFFSET);
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(DATA_OFFSET);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset() - 2);
+        bb.position(bb.capacity() - 2);
+        bb.putShort((short) crc);
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("apid: ").append(getAPID())
+        .append(", type: ").append(getType())
+        .append(", subtype: ").append(getSubtype())
+        .append("\n");
+        appendBinaryData(sb);
+        return sb.toString();
+    }
+
+}
+```
+
+### `PusTime.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTime.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+
+/**
+ * PUS time used by the simulator is 1 byte for the pfield, 4 bytes seconds and 3 bytes sub-second
+ * 
+ * The time is started at 0 when the simulator starts and drifts with a constant drift
+ *
+ */
+public class PusTime implements Comparable<PusTime> {
+    public static final int LENGTH_BYTES = 8;
+    static final long NANOS_IN_SEC = 1000_000_000l;
+    static final long MAX_FRACTIONAL_PART = 0xFFFFFFl;
+    static final byte TIME_PFIELD = (byte) 0x2F;
+
+    static double drift = 1 + 1e-7;
+    static long t0 = System.nanoTime();
+
+    final int seconds;
+    // 4 bytes unsigned
+    final long fractionalTime;
+
+    public PusTime(int seconds, long fractionalTime) {
+        this.seconds = seconds;
+        this.fractionalTime = fractionalTime;
+    }
+
+    public void encode(ByteBuffer bb) {
+        bb.put(TIME_PFIELD);
+        bb.putInt(seconds);
+        bb.put((byte) (fractionalTime >> 16));
+        bb.putShort((short) (fractionalTime & 0xFFFF));
+
+    }
+
+    public static PusTime now() {
+        long nanos = System.nanoTime() - t0;
+        int sec = (int) (nanos / NANOS_IN_SEC);
+        double fine = drift * ((nanos % NANOS_IN_SEC) / (double) NANOS_IN_SEC);
+        while (fine > 1) {
+            sec++;
+            fine -= 1;
+        }
+        long fractionalTime = (long) (fine * MAX_FRACTIONAL_PART);
+        return new PusTime(sec, fractionalTime);
+    }
+
+    @Override
+    public String toString() {
+        return "PusTime [seconds=" + seconds + ", fractionalTime=" + fractionalTime + "]";
+    }
+
+    public static PusTime read(ByteBuffer bb) {
+        byte pfield = bb.get();
+        if (pfield != TIME_PFIELD) {
+            throw new IllegalArgumentException("Expected time pfield " + TIME_PFIELD + ", got " + pfield);
+        }
+        int seconds = bb.getInt();
+        int fractionalTime = ((bb.getShort() & 0xFFFF) << 8) + (bb.get() & 0xFF);
+        return new PusTime(seconds, fractionalTime);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (int) (fractionalTime ^ (fractionalTime >>> 32));
+        result = prime * result + seconds;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PusTime other = (PusTime) obj;
+        if (seconds != other.seconds)
+            return false;
+        if (fractionalTime != other.fractionalTime)
+            return false;
+        return true;
+    }
+
+    @Override
+    public int compareTo(PusTime other) {
+        if (this.seconds != other.seconds) {
+            return Integer.compare(this.seconds, other.seconds);
+        }
+        return Long.compare(this.fractionalTime, other.fractionalTime);
+    }
+
+    public long deltaMillis(PusTime other) {
+        int deltaSeconds = this.seconds - other.seconds;
+
+        long deltaFractionalTime = this.fractionalTime - other.fractionalTime;
+
+        if (deltaFractionalTime < 0) {
+            deltaSeconds -= 1;
+            deltaFractionalTime += MAX_FRACTIONAL_PART;
+        }
+        return deltaSeconds * 1000 + deltaFractionalTime * 1000 / MAX_FRACTIONAL_PART;
+    }
+
+    public boolean isBefore(PusTime other) {
+        return this.compareTo(other) < 0;
+    }
+
+    public boolean isAfter(PusTime other) {
+        return this.compareTo(other) > 0;
+    }
+
+    public PusTime shiftByMillis(int timeShiftMillis) {
+        long shiftNanos = timeShiftMillis * 1_000_000L;
+        long fractionalShift = (shiftNanos * MAX_FRACTIONAL_PART) / NANOS_IN_SEC;
+        long newFractionalTime = this.fractionalTime + fractionalShift;
+        int carryOverSeconds = 0;
+
+        if (newFractionalTime > MAX_FRACTIONAL_PART) {
+            carryOverSeconds = (int) (newFractionalTime / (MAX_FRACTIONAL_PART + 1));
+            newFractionalTime = newFractionalTime % (MAX_FRACTIONAL_PART + 1);
+        }
+
+        int newSeconds = this.seconds + timeShiftMillis / 1000 + carryOverSeconds;
+
+        return new PusTime(newSeconds, newFractionalTime);
+    }
+
+}
+```
+
+### `PusTmPacket.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTmPacket.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * TM packets according to PUS standard
+ * ECSS-E-ST-70-41C 15 April 2016
+ * 
+ * 
+ * <pre>
+ * Secondary header (16 bytes)
+ * 
+ *  version number - 4 bits
+ *  spacecraft time reference status - 4 bits
+ *  service type  -   8 bits
+ *  message subtype  - 8 bits
+ *  message type counter - 16 bits
+ *  destination Id - 16 bits
+ *  time - variable size but we use 9 bytes
+ * </pre>
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class PusTmPacket extends SimulatorCcsdsPacket {
+    public static final int SH_OFFSET = 6;
+    public static final int DATA_OFFSET = SH_OFFSET + 7 + PusTime.LENGTH_BYTES;
+
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+
+    protected static HashMap<Integer, AtomicInteger> countMap = new HashMap<>(2); // destination -> msgCounter
+
+    public PusTmPacket(byte[] packet) {
+        super(packet);
+    }
+
+    public PusTmPacket(int apid, int userDataLength, int type, int subtype) {
+        super(ByteBuffer.allocate(getPacketLength(userDataLength)));
+        setHeader(apid, 0, 1, 3, getSeq(apid));
+        bb.position(SH_OFFSET);
+        bb.put((byte) (0x21));
+        bb.put((byte) type);
+        bb.put((byte) subtype);
+        int destination = 0;
+        bb.putShort((short) getCount(destination));
+        bb.putShort((short) destination);
+        PusTime now = PusTime.now();
+        now.encode(bb);
+    }
+
+    public void setType(int type) {
+        bb.put(SH_OFFSET + 1, (byte) type);
+
+    }
+
+    public void setSubtype(int subtype) {
+        bb.put(SH_OFFSET + 2, (byte) subtype);
+    }
+
+    private static int getPacketLength(int userDataLength) {
+        return DATA_OFFSET + userDataLength + 2;// 2 bytes for the CRC
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(DATA_OFFSET);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset() - 2);
+        bb.position(bb.capacity() - 2);
+        bb.putShort((short) crc);
+    }
+
+    protected static int getCount(int apid) {
+        AtomicInteger count = countMap.computeIfAbsent(apid, a -> new AtomicInteger(0));
+        return count.getAndIncrement() & 0xFFFF;
+    }
+}
+```
+
+### `PusTmTimePacket.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/PusTmTimePacket.java`
+
+
+```java
+package org.yamcs.simulator.pus;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * PUS time packet APID = 0 no secondary header
+ * data is composed of
+ * 
+ * <pre>
+ * rate exponential value - 1 byte = 2 (reporting time every 2^2 = 4 seconds)
+ * time - 8 byes
+ * crc - 2 bytes
+ * </pre>
+ * 
+ * @author nm
+ *
+ */
+public class PusTmTimePacket extends SimulatorCcsdsPacket {
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+
+    public PusTmTimePacket() {
+        super(ByteBuffer.allocate(6 + 1 + PusTime.LENGTH_BYTES + 2));
+        setHeader(0, 1, 0, 3, getSeq(0));
+        bb.position(6);
+        bb.put((byte)2);
+        PusTime now = PusTime.now();
+        now.encode(bb);
+        fillChecksum();
+    }
+
+    public PusTmTimePacket(byte[] packet) {
+        super(packet);
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(6);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset()-2);
+        bb.position(bb.capacity()-2);
+        bb.putShort((short)crc);
+    }
+
+}
+```

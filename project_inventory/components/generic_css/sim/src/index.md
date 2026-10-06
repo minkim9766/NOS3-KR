@@ -3,22 +3,444 @@
 
 **경로:** `components/generic_css/sim/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_css_42_data_provider.cpp`
 
-file--generic_css_42_data_provider.cpp
-file--generic_css_data_point.cpp
-file--generic_css_data_provider.cpp
-file--generic_css_hardware_model.cpp
-file--generic_css_shmem_data_provider.cpp
+**경로:** `components/generic_css/sim/src/generic_css_42_data_provider.cpp`
+
+
+```cpp
+#include <generic_css_42_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_css42DataProvider,"GENERIC_CSS_42_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_css42DataProvider::Generic_css42DataProvider(const boost::property_tree::ptree& config) : SimData42SocketProvider(config)
+    {
+        sim_logger->trace("Generic_css42DataProvider::Generic_css42DataProvider:  Constructor executed");
+
+        connect_reader_thread_as_42_socket_client(
+            config.get("simulator.hardware-model.data-provider.hostname", "localhost"),
+            config.get("simulator.hardware-model.data-provider.port", 4227) );
+
+        _sc = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+        _scale_factor = config.get("simulator.hardware-model.data-provider.42-css-scale-factor", 1.0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_css42DataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_css42DataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        const boost::shared_ptr<Sim42DataPoint> dp42 = boost::dynamic_pointer_cast<Sim42DataPoint>(SimData42SocketProvider::get_data_point());
+
+        /* Prepare the specific data */
+        SimIDataPoint *dp = new Generic_cssDataPoint(_scale_factor, _sc, dp42);
+
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
 ```
 
-## 항목
+### `generic_css_data_point.cpp`
 
-- [`components/generic_css/sim/src/generic_css_42_data_provider.cpp`](file--generic_css_42_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/src/generic_css_data_point.cpp`](file--generic_css_data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/src/generic_css_data_provider.cpp`](file--generic_css_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/src/generic_css_hardware_model.cpp`](file--generic_css_hardware_model.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/src/generic_css_shmem_data_provider.cpp`](file--generic_css_shmem_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_css/sim/src/generic_css_data_point.cpp`
+
+
+```cpp
+/* Copyright (C) 2016 - 2021 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <generic_css_data_point.hpp>
+#include <ItcLogger/Logger.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_cssDataPoint::Generic_cssDataPoint(double count) : _not_parsed(false)
+    {
+        sim_logger->trace("Generic_cssDataPoint::Generic_cssDataPoint:  Defined Constructor executed");
+
+        /* Do calculations based on provided data */
+        std::vector<bool>   valid(6, true);
+        std::vector<float> illum(6, 0.0);
+        _generic_css_data = illum;
+        _generic_css_data[0] = count * 0.001;
+        _generic_css_data[1] = count * 0.001;
+        _generic_css_data[2] = count * 0.001;
+        _generic_css_data[3] = count * 0.001;
+        _generic_css_data[4] = count * 0.001;
+        _generic_css_data[5] = count * 0.001;
+    }
+
+    Generic_cssDataPoint::Generic_cssDataPoint(double scale_factor, int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp) : _dp(*dp), _sc(spacecraft), _scale_factor(scale_factor), _not_parsed(true)
+    {
+        sim_logger->trace("Generic_cssDataPoint::Generic_cssDataPoint:  42 Constructor executed");
+    }
+
+    Generic_cssDataPoint::Generic_cssDataPoint(double scale_factor, int valid0, int valid1, int valid2, int valid3, int valid4, int valid5,
+        double illum0, double illum1, double illum2, double illum3, double illum4, double illum5) : 
+        _scale_factor(scale_factor), _not_parsed(false)
+    {
+        std::vector<float> illum(6, 0.0);
+        _generic_css_data = illum;
+        _generic_css_data[0] = illum0/_scale_factor;
+        if (valid0 == 0) _generic_css_data[0] = 0.0;
+        _generic_css_data[1] = illum1/_scale_factor;
+        if (valid1 == 0) _generic_css_data[1] = 0.0;
+        _generic_css_data[2] = illum2/_scale_factor;
+        if (valid2 == 0) _generic_css_data[2] = 0.0;
+        _generic_css_data[3] = illum3/_scale_factor;
+        if (valid3 == 0) _generic_css_data[3] = 0.0;
+        _generic_css_data[4] = illum4/_scale_factor;
+        if (valid4 == 0) _generic_css_data[4] = 0.0;
+        _generic_css_data[5] = illum5/_scale_factor;
+        if (valid5 == 0) _generic_css_data[5] = 0.0;
+    }
+
+    void Generic_cssDataPoint::do_parsing(void) const
+    {
+        /* Initialize data */
+        std::vector<bool>   valid(6, false);
+        std::vector<float> illum(6, 0.0);
+        _generic_css_data = illum;
+
+        try{
+            /*
+            ** Declare 42 telemetry string prefix
+            ** 42 variables defined in `42/Include/42types.h`
+            ** 42 data stream defined in `42/Source/IPC/SimWriteToSocket.c`
+            */
+            std::string key0v;
+            key0v.append("SC[").append(std::to_string(_sc)).append("].CSS"); // SC[N].CSS
+            std::string key0i(key0v), key1v(key0v), key1i(key0v), key2v(key0v), key2i(key0v), key3v(key0v), key3i(key0v), key4v(key0v), key4i(key0v), key5v(key0v), key5i(key0v);
+            key0v.append("[0].Valid");
+            key0i.append("[0].Illum");
+            key1v.append("[1].Valid");
+            key1i.append("[1].Illum");
+            key2v.append("[2].Valid");
+            key2i.append("[2].Illum");
+            key3v.append("[3].Valid");
+            key3i.append("[3].Illum");
+            key4v.append("[4].Valid");
+            key4i.append("[4].Illum");
+            key5v.append("[5].Valid");
+            key5i.append("[5].Illum");
+
+            /* Parse 42 telemetry */
+            _generic_css_data[0] = std::stof(_dp.get_value_for_key(key0i)) / _scale_factor;
+            if (_dp.get_value_for_key(key0v) == "0") _generic_css_data[0] = 0.0;
+            _generic_css_data[1] = std::stof(_dp.get_value_for_key(key1i)) / _scale_factor;
+            if (_dp.get_value_for_key(key1v) == "0") _generic_css_data[1] = 0.0;
+            _generic_css_data[2] = std::stof(_dp.get_value_for_key(key2i)) / _scale_factor;
+            if (_dp.get_value_for_key(key2v) == "0") _generic_css_data[2] = 0.0;
+            _generic_css_data[3] = std::stof(_dp.get_value_for_key(key3i)) / _scale_factor;
+            if (_dp.get_value_for_key(key3v) == "0") _generic_css_data[3] = 0.0;
+            _generic_css_data[4] = std::stof(_dp.get_value_for_key(key4i)) / _scale_factor;
+            if (_dp.get_value_for_key(key4v) == "0") _generic_css_data[4] = 0.0;
+            _generic_css_data[5] = std::stof(_dp.get_value_for_key(key5i)) / _scale_factor;
+            if (_dp.get_value_for_key(key5v) == "0") _generic_css_data[5] = 0.0;
+
+            _not_parsed = false;
+        } 
+        catch(const std::exception& e) 
+        {
+            /* Force data to be set to known values */
+            std::vector<float> illum(6, 0.0);
+            _generic_css_data = illum; 
+            sim_logger->error("Generic_cssDataPoint::Generic_cssDataPoint:  Parsing exception %s", e.what());
+        }
+    }
+
+    /* Used for printing a representation of the data point */
+    std::string Generic_cssDataPoint::to_string(void) const
+    {
+        sim_logger->trace("Generic_cssDataPoint::to_string:  Executed");
+        std::stringstream output;
+        output << "Channel values: ";
+        for (unsigned int i = 0; i < _generic_css_data.size(); i++) {
+            output << _generic_css_data[i];
+            if (i < _generic_css_data.size() - 1) {
+                output << ", ";
+            }
+        }
+        return output.str();
+
+    }
+} /* namespace Nos3 */
+```
+
+### `generic_css_data_provider.cpp`
+
+**경로:** `components/generic_css/sim/src/generic_css_data_provider.cpp`
+
+
+```cpp
+#include <generic_css_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_cssDataProvider,"GENERIC_CSS_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_cssDataProvider::Generic_cssDataProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        sim_logger->trace("Generic_cssDataProvider::Generic_cssDataProvider:  Constructor executed");
+        _request_count = 0;
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_cssDataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_cssDataProvider::get_data_point:  Executed");
+
+        /* Prepare the provider data */
+        _request_count++;
+
+        /* Request a data point */
+        SimIDataPoint *dp = new Generic_cssDataPoint(_request_count);
+
+        /* Return the data point */
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
+```
+
+### `generic_css_hardware_model.cpp`
+
+**경로:** `components/generic_css/sim/src/generic_css_hardware_model.cpp`
+
+
+```cpp
+#include <generic_css_hardware_model.hpp>
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(Generic_cssHardwareModel,"GENERIC_CSS");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_cssHardwareModel::Generic_cssHardwareModel(const boost::property_tree::ptree& config) : SimIHardwareModel(config), _enabled(0)
+    {
+        /* Get the NOS engine connection string */
+        std::string connection_string = config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"); 
+        sim_logger->info("Generic_cssHardwareModel::Generic_cssHardwareModel:  NOS Engine connection string: %s.", connection_string.c_str());
+
+        /* Get a data provider */
+        std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "GENERIC_CSS_42_PROVIDER");
+        _generic_css_dp = SimDataProviderFactory::Instance().Create(dp_name, config);
+        sim_logger->info("Generic_cssHardwareModel::Generic_cssHardwareModel:  Data provider %s created.", dp_name.c_str());
+
+        /* Get on a protocol bus */
+        /* Note: Initialized defaults in case value not found in config file */
+       
+        std::string bus_name = "i2c_2";
+        int i2c_bus_address = 64; // 0x40
+        bus_name = config.get("simulator.hardware-model.i2c.bus", "i2c_2");
+        i2c_bus_address = config.get("simulator.hardware-model.i2c.address", 64);
+
+        _i2c_slave_connection = new I2CSlaveConnection(this, i2c_bus_address, connection_string, bus_name);
+        sim_logger->info("Generic_cssHardwareModel::Generic_cssHardwareModel:  Now on i2c bus name %s, address %d.", bus_name.c_str(), i2c_bus_address);
+    
+        // Get on the command bus
+        std::string time_bus_name = "command";
+        if (config.get_child_optional("hardware-model.connections")) 
+        {
+            // Loop through the connections for the hardware model
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("hardware-model.connections"))
+            {
+                // v.first is the name of the child
+                // v.second is the child tree
+                if (v.second.get("type", "").compare("time") == 0) // 
+                {
+                    time_bus_name = v.second.get("bus-name", "command");
+                    // Found it... don't need to go through any more items
+                    break; 
+                }
+            }
+        }
+        _time_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, time_bus_name));
+        sim_logger->info("Generic_cssHardwareModel::Generic_cssHardwareModel:  Now on time bus named %s.", time_bus_name.c_str());
+        /* Construction complete */
+        sim_logger->info("Generic_cssHardwareModel::Generic_cssHardwareModel:  Construction complete.");
+    }
+
+    Generic_cssHardwareModel::~Generic_cssHardwareModel(void)
+    {        
+        /* Close the protocol bus */
+        /* I2C cleanup currently unsupported */
+
+        /* Clean up the data provider */
+        delete _generic_css_dp;
+        _generic_css_dp = nullptr;
+
+        /* The bus will clean up the time node */
+    }
+
+    /* Automagically set up by the base class to be called */
+    void Generic_cssHardwareModel::command_callback(NosEngine::Common::Message msg)
+    {
+        // Get the data out of the message
+        NosEngine::Common::DataBufferOverlay dbf(const_cast<NosEngine::Utility::Buffer&>(msg.buffer));
+        sim_logger->info("Generic_cssHardwareModel::command_callback:  Received command: %s.", dbf.data);
+
+        // Do something with the data
+        std::string command = dbf.data;
+        std::string response = "Generic_cssHardwareModel::command_callback:  INVALID COMMAND! (Try HELP)";
+        boost::to_upper(command);
+        if (command.compare(0,4,"HELP") == 0) 
+        {
+            response = "Generic_cssHardwareModel::command_callback: Valid commands are HELP, ENABLE, DISABLE, or STOP";
+        }
+        else if (command.compare(0,6,"ENABLE") == 0) 
+        {
+            _enabled = GENERIC_CSS_SIM_SUCCESS;
+            response = "Generic_cssHardwareModel::command_callback:  Enabled";
+        }
+        else if (command.compare(0,7,"DISABLE") == 0) 
+        {
+            _enabled = GENERIC_CSS_SIM_ERROR;
+            response = "Generic_cssHardwareModel::command_callback:  Disabled";
+        }
+        else if (command.compare(0,4,"STOP") == 0) 
+        {
+            _keep_running = false;
+            response = "Generic_cssHardwareModel::command_callback:  Stopping";
+        }
+
+        // Send a reply
+        sim_logger->info("Generic_cssHardwareModel::command_callback:  Sending reply: %s.", response.c_str());
+        _command_node->send_reply_message_async(msg, response.size(), response.c_str());
+    }
+
+    void Generic_cssHardwareModel::create_generic_css_data(std::vector<uint8_t>& out_data)
+    {
+        boost::shared_ptr<Generic_cssDataPoint> data_point = boost::dynamic_pointer_cast<Generic_cssDataPoint>(_generic_css_dp->get_data_point());
+        std::vector<float> cssValues = data_point->getValues();
+
+        /* Prepare data size */
+        out_data.clear();
+        out_data.resize(12, 0x00);
+
+        sim_logger->debug("Generic_cssHardwareModel::create_generic_css_data:  Creating data, enabled=%d", _enabled);
+        if (_enabled == GENERIC_CSS_SIM_SUCCESS) 
+        {
+            out_data[0] = ((uint16_t) (cssValues[0] * 1000) & 0xFF00) >> 8;
+            out_data[1] = ((uint16_t) (cssValues[0] * 1000) & 0x00FF);
+            out_data[2] = ((uint16_t) (cssValues[1] * 1000) & 0xFF00) >> 8;
+            out_data[3] = ((uint16_t) (cssValues[1] * 1000) & 0x00FF);
+            out_data[4] = ((uint16_t) (cssValues[2] * 1000) & 0xFF00) >> 8;
+            out_data[5] = ((uint16_t) (cssValues[2] * 1000) & 0x00FF);
+            out_data[6] = ((uint16_t) (cssValues[3] * 1000) & 0xFF00) >> 8;
+            out_data[7] = ((uint16_t) (cssValues[3] * 1000) & 0x00FF);
+            out_data[8] = ((uint16_t) (cssValues[4] * 1000) & 0xFF00) >> 8;
+            out_data[9] = ((uint16_t) (cssValues[4] * 1000) & 0x00FF);
+            out_data[10] = ((uint16_t) (cssValues[5] * 1000) & 0xFF00) >> 8;
+            out_data[11] = ((uint16_t) (cssValues[5] * 1000) & 0x00FF);
+
+            /* Debugging print
+            sim_logger->debug("  css[0] = %f", cssValues[0]);
+            sim_logger->debug("    Converted = 0x%02x, 0x%02x", out_data[0], out_data[1]);
+            */ 
+        }
+    }
+
+    I2CSlaveConnection::I2CSlaveConnection(Generic_cssHardwareModel* hm, 
+        int bus_address, std::string connection_string, std::string bus_name)
+        : NosEngine::I2C::I2CSlave(bus_address, connection_string, bus_name)
+    {
+        _hardware_model = hm;
+    }
+
+    size_t I2CSlaveConnection::i2c_read(uint8_t *rbuf, size_t rlen)
+    {
+        _hardware_model->create_generic_css_data(_i2c_out_data);
+        sim_logger->debug("i2c_read: %s", SimIHardwareModel::uint8_vector_to_hex_string(_i2c_out_data).c_str());
+        for (size_t i = 0; i < rlen; i++) 
+        {
+            if (i < sizeof(_i2c_out_data))
+            {
+                rbuf[i] = _i2c_out_data[i];
+            }
+            else
+            {
+                rbuf[i] = 0x00;
+            }
+        }
+        return rlen;
+    }
+
+    size_t I2CSlaveConnection::i2c_write(const uint8_t *wbuf, size_t wlen)
+    {
+        std::vector<uint8_t> in_data(wbuf, wbuf + wlen);
+        sim_logger->debug("i2c_write: %s", SimIHardwareModel::uint8_vector_to_hex_string(in_data).c_str()); // log data
+        sim_logger->error("CSS sim does not support I2C write!");
+        return wlen;
+    }
+}
+```
+
+### `generic_css_shmem_data_provider.cpp`
+
+**경로:** `components/generic_css/sim/src/generic_css_shmem_data_provider.cpp`
+
+
+```cpp
+#include <generic_css_shmem_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_cssShmemDataProvider,"GENERIC_CSS_SHMEM_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_cssShmemDataProvider::Generic_cssShmemDataProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        sim_logger->trace("Generic_cssShmemDataProvider::Generic_cssShmemDataProvider:  Constructor executed");
+        const std::string shm_name = config.get("simulator.hardware-model.data-provider.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't le this go out of scope/get destroyed
+        _blackboard_data = static_cast<BlackboardData*>(_shm_region.get_address());
+        _scale_factor = config.get("simulator.hardware-model.data-provider.42-css-scale-factor", 1.0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_cssShmemDataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_cssShmemDataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        boost::shared_ptr<Generic_cssDataPoint> dp;
+        {
+            dp = boost::shared_ptr<Generic_cssDataPoint>(
+                new Generic_cssDataPoint(_scale_factor,
+                    _blackboard_data->CSSValid[0], _blackboard_data->CSSValid[1], _blackboard_data->CSSValid[2], 
+                    _blackboard_data->CSSValid[3], _blackboard_data->CSSValid[4], _blackboard_data->CSSValid[5], 
+                    _blackboard_data->CSSIllum[0], _blackboard_data->CSSIllum[1], _blackboard_data->CSSIllum[2], 
+                    _blackboard_data->CSSIllum[3], _blackboard_data->CSSIllum[4], _blackboard_data->CSSIllum[5]));
+        }
+        return dp;
+    }
+}
+```

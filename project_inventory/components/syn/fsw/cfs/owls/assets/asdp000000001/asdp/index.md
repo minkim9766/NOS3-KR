@@ -3,20 +3,42 @@
 
 **경로:** `components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mugshots/index
-file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dd.csv
-file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dqe.csv
-file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_sue.csv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/mugshots/`](mugshots/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dd.csv`](file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dd.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dqe.csv`](file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dqe.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_sue.csv`](file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_sue.csv) — UTF-8 텍스트 파일 본문 포함
+### `2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dd.csv`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dd.csv`
+
+
+```text
+bbox_area_min_pc10.0,bbox_area_min_pc50.0,bbox_area_min_pc90.0,disp_e2e_norm_pc10.0,disp_e2e_norm_pc50.0,disp_e2e_norm_pc90.0,speed_mean_pc10.0,speed_mean_pc50.0,speed_mean_pc90.0
+0.0016666666666666666,0.007999999999999998,0.03,0.00038063316244500917,0.0014615228472662004,0.01079410106274881,0.005226148280311975,0.012600706396953735,0.032217968033540344
+```
+
+### `2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dqe.csv`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dqe.csv`
+
+
+```text
+DQE
+0.9199999999999999
+```
+
+### `2019_06_21_dhm_false_low_unknown_grayscale_newport_01_sue.csv`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_sue.csv`
+
+
+```text
+SUE
+0.35809868003320877
+```

@@ -3,14 +3,17 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/test/int/logs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/test/int/logs/.gitignore`
+
+
+```text
+# output files from pytest and test API.
+*.xlsx
+*.xlsx#
+assets
+*.html
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/test/int/logs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함

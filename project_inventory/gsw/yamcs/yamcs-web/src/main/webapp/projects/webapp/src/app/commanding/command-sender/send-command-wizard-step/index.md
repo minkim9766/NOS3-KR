@@ -3,18 +3,79 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `send-command-wizard-step.component.css`
 
-file--send-command-wizard-step.component.css
-file--send-command-wizard-step.component.html
-file--send-command-wizard-step.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/send-command-wizard-step.component.css`
+
+
+```css
+span {
+  cursor: default;
+}
+
+span span {
+  opacity: 0.3;
+}
+
+span span.active {
+  opacity: 1;
+}
+
+mat-toolbar.sub {
+  border-bottom: 1px solid #d3d3d3;
+  background-color: #fff;
+  font-size: 12px;
+}
+
+.mat-toolbar-row {
+  height: 32px;
+  padding: 0 24px;
+}
+
+.mat-toolbar-multiple-rows {
+  min-height: 32px;
+}
 ```
 
-## 항목
+### `send-command-wizard-step.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/send-command-wizard-step.component.css`](file--send-command-wizard-step.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/send-command-wizard-step.component.html`](file--send-command-wizard-step.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/send-command-wizard-step.component.ts`](file--send-command-wizard-step.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/send-command-wizard-step.component.html`
+
+
+```html
+<mat-toolbar class="sub">
+  <mat-toolbar-row>
+    <span>
+      <span [class.active]="step == 1">1. Select command</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span [class.active]="step == 2">2. Configure command</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span [class.active]="step == 3">3. View report</span>
+    </span>
+  </mat-toolbar-row>
+</mat-toolbar>
+```
+
+### `send-command-wizard-step.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command-wizard-step/send-command-wizard-step.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-send-command-wizard-step',
+  templateUrl: './send-command-wizard-step.component.html',
+  styleUrl: './send-command-wizard-step.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SendCommandWizardStepComponent {
+  @Input()
+  step: number;
+}
+```

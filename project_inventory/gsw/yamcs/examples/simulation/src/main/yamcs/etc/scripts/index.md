@@ -3,16 +3,63 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `say_hi.sh`
 
-file--say_hi.sh
-file--simulate_los.py
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/scripts/say_hi.sh`
+
+
+```bash
+#!/bin/sh
+
+echo "Creating event"
+
+MSG="$(whoami) says hi"
+JSON_STRING=$(printf '{"message": "%s"}' "$MSG")
+
+curl -XPOST $YAMCS_URL/api/archive/$YAMCS_INSTANCE/events --silent -d "$JSON_STRING" --fail-with-body
 ```
 
-## 항목
+### `simulate_los.py`
 
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/scripts/say_hi.sh`](file--say_hi.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/scripts/simulate_los.py`](file--simulate_los.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/scripts/simulate_los.py`
+
+
+```python
+import argparse
+import os
+import time
+
+from yamcs.client import YamcsClient
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "-d",
+        "--duration",
+        help="LOS duration in seconds",
+        type=float,
+        default=60,
+    )
+    args = parser.parse_args()
+
+    client = YamcsClient.from_environment()
+    processor = client.get_processor(
+        instance=os.environ["YAMCS_INSTANCE"],
+        processor=os.environ["YAMCS_PROCESSOR"],
+    )
+
+    print("Starting LOS for", args.duration, "seconds")
+    processor.issue_command("/TSE/simulator/start_los")
+
+    time.sleep(args.duration)
+
+    print("Stopping LOS")
+    processor.issue_command("/TSE/simulator/stop_los")
+
+
+if __name__ == "__main__":
+    main()
+```

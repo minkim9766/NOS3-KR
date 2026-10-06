@@ -3,20 +3,170 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--Logger.cpp
-file--Logger.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/Logger.cpp`](file--Logger.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/Logger.hpp`](file--Logger.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(MOD_DEPS
+    Fw/Types
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Logger.cpp"
+)
+register_fprime_module()
+
+# Rules based unit testing
+set(UT_MOD_DEPS
+    STest
+    Fw/Types
+)
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/FakeLogger.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/LoggerRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/LoggerMain.cpp"
+)
+# STest Includes for this UT
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Logger.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/Logger.cpp`
+
+
+```cpp
+/**
+ * File: Logger.cpp
+ * Description: Framework logging implementation
+ * Author: mstarch
+ *
+ * This file adds in support to the core 'Fw' package, to separate it from Os and other loggers, and
+ * allow the architect of the system to select which core framework logging should be used.
+ */
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/String.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <cstdarg>
+#include <limits>
+
+namespace Fw {
+
+// Initial logger is NULL
+Logger* Logger::s_current_logger = nullptr;
+
+void Logger::log(const char* format, ...) {
+    Fw::String formatted_string;
+    // Forward the variable arguments to the vformat format implementation
+    va_list args;
+    va_start(args, format);
+    formatted_string.vformat(format, args);
+    va_end(args);
+    Logger::log(formatted_string);
+}
+
+void Logger::log(const StringBase& string) {
+    if (Logger::s_current_logger != nullptr) {
+        Logger::s_current_logger->writeMessage(string);
+    }
+}
+
+void Logger::registerLogger(Logger* logger) {
+    Logger::s_current_logger = logger;
+}
+
+}  // End namespace Fw
+```
+
+### `Logger.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/Logger.hpp`
+
+
+```cpp
+/**
+ * File: Logger.hpp
+ * Description: Framework logging support
+ * Author: mstarch
+ *
+ * This file adds in support to the core 'Fw' package, to separate it from Os and other loggers, and
+ * allow the architect of the system to select which core framework logging should be used.
+ */
+#ifndef Fw_Logger_hpp_
+#define Fw_Logger_hpp_
+#include <Fw/Deprecate.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/StringBase.hpp>
+
+// Unit testing predeclaration hook
+namespace LoggerRules {
+struct Register;
+}
+
+namespace Fw {
+class Logger {
+    friend struct LoggerRules::Register;
+
+  public:
+    //! \brief log a formated string with supplied arguments
+    //!
+    //! Logs a format string with the arguments filled-in. This delegates to StringBase.format, which in-turn
+    //! delegates to snprintf. This implies that the caller is fully responsible for handling the type safety of
+    //! the supplied format string. The format string uses C-style (printf function family) formatting.
+    //! \param format: format string
+    //! \param ...: var-args list of arguments to inject into format string.
+    static void log(const char* format, ...);
+
+    //! \brief log a string message directly
+    //!
+    //! Logs the string directly to the backing store without any formatting changes.
+    //! \param message: message to log
+    static void log(const Fw::StringBase& message);
+
+    //! \brief register a logger implementation
+    //!
+    //! This registers the supplied logger as the system logger used for calls to Fw::Logger::log.
+    //! \param logger: logger to register as the system logger
+    static void registerLogger(Logger* logger);
+
+    //! Virtual destructor
+    virtual ~Logger() = default;
+
+  protected:
+    //! \brief write the output of the log message
+    //!
+    //! Log implementations must provide this method used to write the output of a string to the log backing.
+    //!
+    //! \param message: message to log
+    virtual void writeMessage(const StringBase& message) = 0;
+
+  private:
+    static Logger* s_current_logger;  //!< Static logger to use when calling Fw::Logger::log function
+};
+}  // namespace Fw
+
+#endif
+```

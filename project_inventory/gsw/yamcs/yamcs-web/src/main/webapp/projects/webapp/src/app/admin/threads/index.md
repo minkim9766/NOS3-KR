@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ threads-table/index
 trace-element/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread/`](thread/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread-list/`](thread-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/threads-table/`](threads-table/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/`](trace-element/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

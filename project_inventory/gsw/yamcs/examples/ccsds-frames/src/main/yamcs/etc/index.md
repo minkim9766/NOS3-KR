@@ -3,24 +3,358 @@
 
 **경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-queue.yaml`
 
-file--command-queue.yaml
-file--extra_streams.sql
-file--logging.properties
-file--processor.yaml
-file--yamcs.ccsds-frames.yaml
-file--yamcs.yaml
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/command-queue.yaml`
+
+
+```yaml
+# Definition of command queues. Each queue has a name,
+# and optionally a preferred startup state.
+#
+# There are three possible states: 
+#   - enabled means the commands are sent immediately
+#   - blocked means the commands are accepted into the queue but need to be 
+#     manually sent 
+#   - disabled means the commands are rejected
+
+supervised:
+  state: blocked
+  minLevel: critical
+
+# If no state is configured, the queue will start with the same state that
+# it had on a previous run, defaulting to enabled.
+default:
+  #state: enabled
 ```
 
-## 항목
+### `extra_streams.sql`
 
-- [`gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/command-queue.yaml`](file--command-queue.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/extra_streams.sql`](file--extra_streams.sql) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/yamcs.ccsds-frames.yaml`](file--yamcs.ccsds-frames.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/extra_streams.sql`
+
+
+```text
+create table if not exists invalid_tm(rectime timestamp, seqNum long, packet binary, primary key(rectime, seqNum))
+insert into invalid_tm select * from invalid_tm_stream
+
+
+-- create the good and bad frame streams and tables. The definition has to match the one from org.yamcs.tctm.ccsds.FrameStreamHelper
+
+create stream good_frame_stream(rectime timestamp, seq int, ertime hres_timestamp, scid int, vcid int, data binary)
+create table if not exists good_frames(rectime timestamp, seq int, ertime hres_timestamp, scid int, vcid int, data binary, primary key(rectime, seq))
+insert into good_frames select * from good_frame_stream
+
+create stream bad_frame_stream(rectime timestamp, seq int, ertime hres_timestamp, data binary)
+create table if not exists bad_frames(rectime timestamp, seq int, ertime hres_timestamp, data binary, primary key(rectime, seq))
+insert into bad_frames select * from bad_frame_stream
+```
+
+### `logging.properties`
+
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/logging.properties`
+
+
+```text
+#rename this file to logging.properties in order to debug the SLE functionality
+
+
+handlers = java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = ALL
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.ConsoleFormatter
+
+org.yamcs.level = INFO
+
+
+org.yamcs.tctm.ccsds.level = FINE
+
+#this will cause all the outgoing frames to be printed in hex
+org.yamcs.tctm.ccsds.UdpTcFrameLink.level = ALL
+
+#this will cause the events to be also logged
+org.yamcs.events.EventProducer.level = ALL
+
+```
+
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/processor.yaml`
+
+
+```yaml
+# this file defines the different processors
+# A processor is where TM/TC processing happens inside Yamcs.
+#
+# Each processor uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+
+realtime:
+  services:
+    - class: org.yamcs.StreamTmPacketProvider
+    - class: org.yamcs.StreamTcCommandReleaser
+    - class: org.yamcs.tctm.StreamParameterProvider
+    - class: org.yamcs.algorithms.AlgorithmManager
+    # implements provider of parameters from sys_param stream (these are collected and sent on this stream by SystemParametersService service)
+    - class: org.yamcs.parameter.LocalParameterManager
+  config:
+    generateEvents: true #generate events for errors in TM decoding and running algorithms
+    subscribeAll: true
+    #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+    alarm:
+      parameterCheck: true
+      parameterServer: enabled
+      eventServer: enabled
+    tmProcessor:
+      #if container entries fit outside the binary packet, setting this to true will cause the error to be ignored, otherwise an exception will be printed in the yamcs logs
+      ignoreOutOfContainerEntries: false
+    #record all the parameters that have initial values at the start of the processor
+    recordInitialValues: true
+    #record the local values
+    recordLocalValues: true
+
+
+#used to perform step by step archive replays to displays,etc
+# initiated via web interface or Yamcs Studio.
+# should be renamed to ArchiveReplay
+Archive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+
+#used by the ParameterArchive when rebuilding the parameter archive
+# no need for parameter cache
+ParameterArchive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+#used for performing archive retrievals via replays (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+  config:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+```
+
+### `yamcs.ccsds-frames.yaml`
+
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/yamcs.ccsds-frames.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+    args:
+      streams:
+        - tm_realtime
+        - tm_dump
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers: ['jvm', 'fs']
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime" 
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.simulator.SimulatorCommander
+    args:
+      telnet:
+        port: 10023
+      tctm:
+        tmPort: 10015
+        tcPort: 10025
+        losPort: 10115
+        tm2Port: 10016
+      # Simulator can send some packets to test the performance of Yamcs. 
+      # Make sure the yamcs.simulator.yaml, mdb section contains a database generator for these packets, such that they are processed by Yamcs
+      # if numPackets is greater than 0, the simulator will send <numPackets> packets of size <packetSize> at each <interval> (in ms)
+      perfTest: 
+        numPackets: 0 
+        packetSize: 1476 #length of the performance testing packets
+        interval: 10 
+      frame: #send TM UDP frames 
+        tmPort: 10017
+        tmHost: "localhost"
+        type: AOS # AOS, TM or USLP
+        tmFrameLength: 1115
+        tmFrameFreq: 10 # how many frames to send per second. If the simulator does not produce so many frames, it will send idle frames
+
+dataLinks:
+  - name: UDP_FRAME_OUT
+    class: org.yamcs.tctm.ccsds.UdpTcFrameLink
+    host: localhost #host and port where to send the frames to
+    port: 10018
+    spacecraftId: 0xAB
+    maxFrameLength: 1024
+    cltuEncoding: BCH
+    #the following option can be commented out to randomize the CLTUs. Note that the simulator does not understand randmized data though.
+    #randomizeCltu: false 
+    #the following option can be used to skip randomization for certain virtual channels
+    #skipRandomizationForVcs: [1, 0]
+    errorDetection: CRC16
+    virtualChannels:
+         - vcId: 0
+           service: "PACKET"
+           commandPostprocessorClassName: org.yamcs.tctm.IssCommandPostprocessor
+           commandPostprocessorArgs:
+              errorDetection:
+                  type: 16-SUM
+              enforceEvenNumberOfBytes: true
+           stream: "tc_realtime" #which yamcs stream to get the data from
+           useCop1: true #enable FOP1 (the transmitter part of COP1, see CCSDS 232.1-B-2) for this VC
+           clcwStream: "clcw" #the name of the stream where the CLCW is received from, mandatory if FOP1 is used
+           initialClcwWait: 3600 #how many seconds to wait at startup for an initial CLCW, before going to state 6(initial). If not configured or negative, start directly in state 6
+  # The link below receives AOS frames (CCSDS 732.0-B-3) on three virtual channels and
+  # distributes them on the the three streams like the TCP links above
+  # This works as alternative to the TCP links 
+  - name: UDP_FRAME_IN
+    class: org.yamcs.tctm.ccsds.UdpTmFrameLink
+    port: 10017 #UDP port to listen to
+    #### Raw frame decoder example. It is commented out because the simulator does not support generating encoded frames
+    #rawFrameDecoder:
+    #   codec: NONE
+    #   interleavingDepth: 5 # 1, 2, 3, 4, 5 or 8
+    #   errorCorrectionCapability: 16 #8 or 16
+    #   derandomize: true
+    ### Frame type has to be AOS (CCSDS 732.0-B-3), TM (CCSDS 132.0-B-2) or USLP (CCSDS 732.1-B-1)
+    frameType: "AOS"
+    spacecraftId: 0xAB
+    frameLength: 1115 #decoded frame length
+    frameHeaderErrorControlPresent: true #2 bytes of reed-solomon (10,6) in the header of all frames
+    insertZoneLength: 0
+    errorDetection: CRC16 #NONE, CRC16 or CRC32 (only for USLP)
+    clcwStream: "clcw"    #publish the received CLCW (what they call OCF in the CCSDS AOS/TM/USLP standards) to this stream, to be used by the FOP1 
+    goodFrameStream: "good_frame_stream" #publish the good frames on this stream
+    badFrameStream: "bad_frame_stream"   #publish the bad frames on this stream
+    virtualChannels:
+          - vcId: 0
+            ocfPresent: true
+            service: "PACKET"  #supported services are PACKET(M_PDU) or VCA (using a custom handler configured with vcaHandlerClassName)
+            maxPacketLength: 2048
+            packetPreprocessorClassName: org.yamcs.tctm.IssPacketPreprocessor
+            stream: "tm_realtime" #which yamcs stream to put the data on
+          - vcId: 1
+            ocfPresent: true
+            service: "PACKET"
+            maxPacketLength: 2048
+            stripEncapsulationHeader: true # drop the header before passing the packet to the preprocessor
+            packetPreprocessorClassName: org.yamcs.tctm.GenericPacketPreprocessor
+            packetPreprocessorArgs:
+              timestampOffset: 2 #where to read the 8 bytes timestamp offset from
+              seqCountOffset: 10 #where to read the 4 bytes sequence count from
+              errorDetection: #last two bytes are used for the error detection
+                type: "CRC-16-CCIIT" 
+            stream: "tm2_realtime"
+            invalidPackets: DIVERT
+            invalidPacketsStream: invalid_tm_stream
+          - vcId: 2
+            ocfPresent: true
+            service: "PACKET" 
+            maxPacketLength: 2048
+            packetPreprocessorClassName: org.yamcs.tctm.IssPacketPreprocessor
+            stream: "tm_dump"
+          #vcId 63 is reserved for idle data and it does not have to be defined
+  - name: UDP_CUSTOM_CLTU_OUT
+    class: org.yamcs.tctm.ccsds.UdpTcFrameLink
+    enabledAtStartup: false
+    host: localhost #host and port where to send the frames to
+    port: 10019
+    spacecraftId: 0xAB
+    maxFrameLength: 1024
+    cltuEncoding: CUSTOM
+    cltuGeneratorClassName: org.yamcs.examples.ccsdsframes.SampleCltuGenerator
+    cltuGeneratorArgs:
+      frameMultiple: 256
+    virtualChannels:
+         - vcId: 0
+           service: "PACKET" 
+           commandPostprocessorClassName: org.yamcs.tctm.IssCommandPostprocessor
+           commandPostprocessorArgs:
+              errorDetection:
+                  type: 16-SUM
+              enforceEvenNumberOfBytes: true
+           stream: "tc_realtime" #which yamcs stream to get the data from
+           useCop1: true #enable FOP1 (the transmitter part of COP1, see CCSDS 232.1-B-2) for this VC
+           clcwStream: "clcw" #the name of the stream where the CLCW is received from, mandatory if FOP1 is used
+           initialClcwWait: 3600 #how many seconds to wait at startup for an initial CLCW, before going to state 6(initial). If not configured or negative, start directly in state 6
+
+mdb:
+  # Configuration of the active loaders
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: "sheet"
+    spec: "mdb/simulator-ccsds.xls"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/landing.xls"
+  - type: "org.yamcs.tse.TseLoader"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/tse/simulator.xls"
+  #Loads the performance testing mission database
+  - type: "org.yamcs.simulator.PerfMdbLoader"
+    args:
+      numPackets: 18
+      packetSize: 1476
+
+#Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+    - name: "tm2_realtime"
+      rootContainer: "/YSS/SIMULATOR/tm2_container"
+      processor: "realtime"
+    - name: "tm_dump"
+  invalidTm: "invalid_tm_stream"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_tse", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc:
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/yamcs/etc/yamcs.yaml`
+
+
+```yaml
+# System-wide services
+services:
+  - class: org.yamcs.http.HttpServer
+
+#instances (or domains). One yarch database will be created for each of them
+# instance specific properties go into the file yamcs.{instance}.yaml
+instances:
+  - ccsds-frames
+
+dataDir: /storage/yamcs-data
+
+#set the serverId if you want something else than hostname to be used in system parameters generated by yamcs
+#serverId: yamcs1
+
+# Secret key unique to a particular Yamcs installation.
+# This is used to provide cryptographic signing.
+secretKey: "changeme"
+
+yamcs-web:
+  tag: "Example: ccsds-frames"
+```

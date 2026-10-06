@@ -3,16 +3,16 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/displays/pictures/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Home.png`
 
-file--Home.png
-file--spaceapps.png
-```
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/displays/pictures/Home.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/displays/pictures/Home.png`](file--Home.png) — 바이너리 (경로만)
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/displays/pictures/spaceapps.png`](file--spaceapps.png) — 바이너리 (경로만)
+### `spaceapps.png`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/displays/pictures/spaceapps.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

@@ -3,22 +3,264 @@
 
 **경로:** `components/generic_reaction_wheel/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_rw_42cmd_data_provider.hpp`
 
-file--generic_rw_42cmd_data_provider.hpp
-file--generic_rw_data_point.hpp
-file--generic_rw_hardware_model.hpp
-file--generic_rw_shmem_data_provider.hpp
-file--generic_rw_sim_data_42socket_provider.hpp
+**경로:** `components/generic_reaction_wheel/sim/inc/generic_rw_42cmd_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_RW_42CMD_DATAPROVIDER_HPP
+#define NOS3_GENERIC_RW_42CMD_DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class GenericRW42CmdDataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        GenericRW42CmdDataProvider(const boost::property_tree::ptree& config);
+        ~GenericRW42CmdDataProvider(void) {};
+
+        void cmd_torque(int rw, double trq);
+
+    protected:
+        int16_t _sc;  /* Which spacecraft number to command in 42 */
+
+    private:
+        /* Disallow these */
+        GenericRW42CmdDataProvider& operator=(const GenericRW42CmdDataProvider&) {return *this;};
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_rw_data_point.hpp`
 
-- [`components/generic_reaction_wheel/sim/inc/generic_rw_42cmd_data_provider.hpp`](file--generic_rw_42cmd_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/sim/inc/generic_rw_data_point.hpp`](file--generic_rw_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/sim/inc/generic_rw_hardware_model.hpp`](file--generic_rw_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/sim/inc/generic_rw_shmem_data_provider.hpp`](file--generic_rw_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/sim/inc/generic_rw_sim_data_42socket_provider.hpp`](file--generic_rw_sim_data_42socket_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_reaction_wheel/sim/inc/generic_rw_data_point.hpp`
+
+
+```cpp
+/* Copyright (C) 2016 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_BARDATAPOINT_HPP
+#define NOS3_BARDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+
+#include <sim_42data_point.hpp>
+#include <sim_i_data_point.hpp>
+
+namespace Nos3
+{
+    class GenericRWDataPoint : public SimIDataPoint
+    {
+    public:
+        //GPSSimDataPoint(void) : _not_parsed(false) /* nothing to parse */ {};
+        GenericRWDataPoint(int16_t spacecraft, int16_t wheel, const boost::shared_ptr<Sim42DataPoint> dp);
+        GenericRWDataPoint(int16_t spacecraft, int16_t wheel, double momentum);
+        ~GenericRWDataPoint(void);
+        std::string to_string(void) const;
+
+        double get_momentum(void) const {parse_data_point(); return _momentum;}
+    private:
+        // Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        // Private data
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        int16_t _reactionwheel;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+        mutable double _momentum; // Momentum - Nms
+    };
+}
+
+#endif
+```
+
+### `generic_rw_hardware_model.hpp`
+
+**경로:** `components/generic_reaction_wheel/sim/inc/generic_rw_hardware_model.hpp`
+
+
+```cpp
+/* Copyright (C) 2016 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef GENERICRWHARDWAREMODEL_HPP
+#define GENERICRWHARDWAREMODEL_HPP
+
+#include<generic_rw_data_point.hpp>
+
+#include <sim_i_hardware_model.hpp>
+#include <Client/Bus.hpp>
+#include <Uart/Client/Uart.hpp>
+
+#include <atomic>
+
+
+
+/*
+** Defines
+*/
+#define RW_SIM_SUCCESS 0
+#define RW_SIM_ERROR   1
+
+namespace Nos3
+{
+    class GenericRWHardwareModel : public SimIHardwareModel
+    {
+    public:
+        GenericRWHardwareModel(const boost::property_tree::ptree& config);
+        ~GenericRWHardwareModel(void);
+        void run(void);
+        void uart_read_callback(const uint8_t *buf, size_t len);
+        void command_callback(NosEngine::Common::Message msg);
+    private:
+        void send_periodic_data(NosEngine::Common::SimTime time);
+        void create_rw_data(const GenericRWDataPoint& data_point, std::vector<uint8_t>& out_data);
+        std::string handle_command(std::string command);
+
+
+        std::uint8_t                            _enabled;
+        SimIDataProvider*                       _sdp;
+        std::unique_ptr<NosEngine::Client::Bus> _time_bus;
+        std::unique_ptr<NosEngine::Uart::Uart>  _uart_connection;
+        double                                  _prev_data_sent_time = 0;
+        double                                  _period = 0.1;
+        int                                     _wheel_number;
+    };
+}
+
+#endif
+```
+
+### `generic_rw_shmem_data_provider.hpp`
+
+**경로:** `components/generic_reaction_wheel/sim/inc/generic_rw_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_RW_DATAPROVIDER_HPP
+#define NOS3_GENERIC_RW_DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <generic_rw_data_point.hpp>
+#include <generic_rw_42cmd_data_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    /* Standard for a 42 data provider */
+    class GenericRWShmemDataProvider : public GenericRW42CmdDataProvider
+    {
+    public:
+        /* Constructors */
+        GenericRWShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~GenericRWShmemDataProvider(void) {};
+        GenericRWShmemDataProvider& operator=(const GenericRWShmemDataProvider&) {return *this;};
+
+        int16_t _reactionwheel;
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```
+
+### `generic_rw_sim_data_42socket_provider.hpp`
+
+**경로:** `components/generic_reaction_wheel/sim/inc/generic_rw_sim_data_42socket_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2016 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef GENERICRW42DATAPROVIDER_HPP
+#define GENERICRW42DATAPROVIDER_HPP
+
+#include <generic_rw_42cmd_data_provider.hpp>
+
+namespace Nos3
+{
+    class GenericRWData42SocketProvider : public GenericRW42CmdDataProvider
+    {
+    public:
+        GenericRWData42SocketProvider(const boost::property_tree::ptree& config);
+        ~GenericRWData42SocketProvider(void);
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+    private:
+        // Private helper methods
+        // Private data
+        int16_t _reactionwheel; // Which reaction wheel number to parse out of 42 data
+    };
+}
+
+#endif
+```

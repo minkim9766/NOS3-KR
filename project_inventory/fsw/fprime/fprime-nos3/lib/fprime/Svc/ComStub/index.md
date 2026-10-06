@@ -3,24 +3,337 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--ComStub.cpp
-file--ComStub.fpp
-file--ComStub.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/ComStub.cpp`](file--ComStub.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/ComStub.fpp`](file--ComStub.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/ComStub.hpp`](file--ComStub.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding diles
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/ComStub.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/ComStub.cpp"
+)
+set(MOD_DEPS
+    Fw/Logger
+)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/ComStub.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ComStubTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ComStubTestMain.cpp"
+)
+set(UT_MOD_DEPS
+    STest
+)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+```
+
+### `ComStub.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/ComStub.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ComStub.cpp
+// \author mstarch
+// \brief  cpp file for ComStub component implementation class
+// ======================================================================
+
+#include <Fw/Logger/Logger.hpp>
+#include <Svc/ComStub/ComStub.hpp>
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/BasicTypes.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+ComStub::ComStub(const char* const compName) : ComStubComponentBase(compName), m_reinitialize(true), m_retry_count(0) {}
+
+ComStub::~ComStub() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void ComStub::dataIn_handler(const FwIndexType portNum, Fw::Buffer& sendBuffer, const ComCfg::FrameContext& context) {
+    // A message should never get here if we need to reinitialize
+    FW_ASSERT(!this->m_reinitialize || !this->isConnected_comStatusOut_OutputPort(0));
+    if (this->isConnected_drvSendOut_OutputPort(0)) {
+        this->handleSynchronousSend(sendBuffer, context);
+    } else if (this->isConnected_drvAsyncSendOut_OutputPort(0)) {
+        this->handleAsynchronousSend(sendBuffer, context);
+    } else {
+        FW_ASSERT(0);  // Neither send port is connected, this should never happen
+    }
+}
+
+void ComStub::drvConnected_handler(const FwIndexType portNum) {
+    if (this->isConnected_comStatusOut_OutputPort(0) && m_reinitialize) {
+        Fw::Success radioSuccess = Fw::Success::SUCCESS;
+        this->m_reinitialize = false;
+        this->comStatusOut_out(0, radioSuccess);
+    }
+}
+
+void ComStub::drvReceiveIn_handler(const FwIndexType portNum,
+                                   Fw::Buffer& recvBuffer,
+                                   const Drv::ByteStreamStatus& recvStatus) {
+    if (recvStatus != Drv::ByteStreamStatus::OP_OK) {
+        // Receive failed - return buffer without processing
+        this->drvReceiveReturnOut_out(0, recvBuffer);
+    } else {
+        // Receive successful - forward data with empty context
+        ComCfg::FrameContext emptyContext;  // ComStub knows nothing about the received bytes, empty context
+        this->dataOut_out(0, recvBuffer, emptyContext);
+    }
+}
+
+void ComStub::drvAsyncSendReturnIn_handler(FwIndexType portNum,   //!< The port number
+                                           Fw::Buffer& fwBuffer,  //!< The buffer
+                                           const Drv::ByteStreamStatus& sendStatus) {
+    // This should never be called if the drvAsyncSendOut port is not connected
+    FW_ASSERT(this->isConnected_drvAsyncSendOut_OutputPort(0));
+    if (sendStatus == Drv::ByteStreamStatus::SEND_RETRY) {
+        // Driver indicates we should retry
+        this->handleAsyncRetry(fwBuffer);
+    } else {
+        // Return buffer ownership and send status
+        this->dataReturnOut_out(0, fwBuffer, this->m_storedContext);
+        this->m_reinitialize = (sendStatus.e != Drv::ByteStreamStatus::OP_OK);
+        this->m_retry_count = 0;  // Reset retry count
+        // Send Com status
+        Fw::Success comSuccess =
+            (sendStatus.e == Drv::ByteStreamStatus::OP_OK) ? Fw::Success::SUCCESS : Fw::Success::FAILURE;
+        this->comStatusOut_out(0, comSuccess);
+    }
+}
+
+void ComStub ::dataReturnIn_handler(FwIndexType portNum, Fw::Buffer& fwBuffer, const ComCfg::FrameContext& context) {
+    this->drvReceiveReturnOut_out(0, fwBuffer);
+}
+
+// ----------------------------------------------------------------------
+// Helper method implementations
+// ----------------------------------------------------------------------
+
+void ComStub::handleSynchronousSend(Fw::Buffer& sendBuffer, const ComCfg::FrameContext& context) {
+    Drv::ByteStreamStatus sendStatus = Drv::ByteStreamStatus::SEND_RETRY;
+    Fw::Success comSuccess = Fw::Success::FAILURE;
+
+    // Send to driver (and retry up to the retry limit)
+    for (FwIndexType i = 0; sendStatus == Drv::ByteStreamStatus::SEND_RETRY && i < RETRY_LIMIT; i++) {
+        sendStatus = this->drvSendOut_out(0, sendBuffer);
+    }
+
+    // Handle the send status
+    if (sendStatus == Drv::ByteStreamStatus::OP_OK) {
+        comSuccess = Fw::Success::SUCCESS;
+    } else if (sendStatus == Drv::ByteStreamStatus::SEND_RETRY) {
+        Fw::Logger::log("ComStub RETRY_LIMIT exceeded, skipped sending data");
+    } else {
+        // Other error - need to reinitialize
+        this->m_reinitialize = true;
+    }
+
+    // Return buffer and send status
+    this->dataReturnOut_out(0, sendBuffer, context);
+    this->comStatusOut_out(0, comSuccess);
+}
+
+void ComStub::handleAsynchronousSend(Fw::Buffer& sendBuffer, const ComCfg::FrameContext& context) {
+    this->m_storedContext = context;  // Store the context for async callback
+    this->drvAsyncSendOut_out(0, sendBuffer);
+}
+
+void ComStub::handleAsyncRetry(Fw::Buffer& fwBuffer) {
+    if (this->m_retry_count < this->RETRY_LIMIT) {
+        // Attempt retry if under the limit
+        this->m_retry_count++;
+        this->drvAsyncSendOut_out(0, fwBuffer);
+    } else {
+        // Exceeded retry limit - return buffer and notify failure
+        this->dataReturnOut_out(0, fwBuffer, this->m_storedContext);
+        Fw::Success comStatus = Fw::Success::FAILURE;
+        this->comStatusOut_out(0, comStatus);
+        Fw::Logger::log("ComStub RETRY_LIMIT exceeded, skipped sending data");
+        this->m_retry_count = 0;  // Reset retry count
+    }
+}
+
+}  // end namespace Svc
+```
+
+### `ComStub.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/ComStub.fpp`
+
+
+```fpp
+module Svc {
+    @ Communication adapter interface implementing communication adapter interface via a Drv.ByteStreamDriver
+    @ ComStub can use both synchronous and asynchronous byte stream drivers, users should connect the appropriate
+    @ based on their driver type
+    passive component ComStub {
+        import Com
+
+        # ----------------------------------------------------------------------
+        # Byte stream model (common)
+        # ----------------------------------------------------------------------
+
+        @ Ready signal when driver is connected
+        sync input port drvConnected: Drv.ByteStreamReady
+
+        @ Receive (read) data from driver. This gets forwarded to dataOut
+        sync input port drvReceiveIn: Drv.ByteStreamData
+
+        @ Returning ownership of buffer that came in on drvReceiveIn
+        output port drvReceiveReturnOut: Fw.BufferSend
+
+        # ----------------------------------------------------------------------
+        # Byte stream model (synchronous)
+        # ----------------------------------------------------------------------
+
+        @ Send (write) data to the driver. This gets invoked on dataIn invocation
+        output port drvSendOut: Drv.ByteStreamSend
+
+        # ----------------------------------------------------------------------
+        # Byte stream model (asynchronous)
+        # ----------------------------------------------------------------------
+    
+        @ Send (write) data to the driver asynchronously
+        output port drvAsyncSendOut: Fw.BufferSend
+
+        @ Callback from drvAsyncSendOut (retrieving status and ownership of sent buffer)
+        sync input port drvAsyncSendReturnIn: Drv.ByteStreamData
+
+    }
+}
+```
+
+### `ComStub.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/ComStub.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ComStub.hpp
+// \author mstarch
+// \brief  hpp file for ComStub component implementation class
+// ======================================================================
+
+#ifndef Svc_ComStub_HPP
+#define Svc_ComStub_HPP
+
+#include "Drv/ByteStreamDriverModel/ByteStreamStatusEnumAc.hpp"
+#include "Svc/ComStub/ComStubComponentAc.hpp"
+
+namespace Svc {
+
+class ComStub final : public ComStubComponentBase {
+    friend class ComStubTester;  //!< Allow UT Tester to access private members
+
+  public:
+    const FwIndexType RETRY_LIMIT = 10;
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object ComStub
+    //!
+    ComStub(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object ComStub
+    //!
+    ~ComStub() override;
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+  private:
+    //! Handler implementation for dataIn
+    //!
+    //! Comms data is coming in meaning there is a request for ComStub to send data on the wire
+    //! For ComStub, this means we send the data to the underlying driver (e.g. TCP/UDP/UART)
+    void dataIn_handler(const FwIndexType portNum, /*!< The port number*/
+                        Fw::Buffer& sendBuffer,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for drvConnected
+    //!
+    void drvConnected_handler(const FwIndexType portNum) override;
+
+    //! Handler implementation for drvReceiveIn
+    //!
+    //! Data is coming in from the driver (meaning it has been read from the wire).
+    //! ComStub forwards this to the dataOut port
+    void drvReceiveIn_handler(const FwIndexType portNum,
+                              /*!< The port number*/ Fw::Buffer& recvBuffer,
+                              const Drv::ByteStreamStatus& recvStatus) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Port receiving back ownership of buffer sent out on dataOut
+    void dataReturnIn_handler(FwIndexType portNum,   //!< The port number
+                              Fw::Buffer& fwBuffer,  //!< The buffer
+                              const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for drvAsyncSendReturnIn
+    //!
+    //! Buffer ownership and status returning from an async driver "send" operation (async callback)
+    void drvAsyncSendReturnIn_handler(FwIndexType portNum,   //!< The port number
+                                      Fw::Buffer& fwBuffer,  //!< The buffer
+                                      const Drv::ByteStreamStatus& recvStatus) override;
+
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+  private:
+    //! Handle synchronous sending of data
+    void handleSynchronousSend(Fw::Buffer& sendBuffer, const ComCfg::FrameContext& context);
+
+    //! Handle asynchronous sending of data
+    void handleAsynchronousSend(Fw::Buffer& sendBuffer, const ComCfg::FrameContext& context);
+
+    //! Handle retry logic for asynchronous sends
+    void handleAsyncRetry(Fw::Buffer& fwBuffer);
+
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+  private:
+    bool m_reinitialize;                   //!< Stores if a ready signal is needed on connection
+    ComCfg::FrameContext m_storedContext;  //!< Keep context of the last message sent in the asynchronous case
+    FwIndexType m_retry_count;             //!< Keep track of retry count in the asynchronous case
+};
+
+}  // end namespace Svc
+
+#endif
+```

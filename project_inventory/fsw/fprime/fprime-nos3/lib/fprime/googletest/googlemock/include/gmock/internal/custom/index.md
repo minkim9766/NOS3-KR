@@ -3,20 +3,138 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `gmock-generated-actions.h`
 
-file--gmock-generated-actions.h
-file--gmock-matchers.h
-file--gmock-port.h
-file--README.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/gmock-generated-actions.h`
+
+
+```c
+// IWYU pragma: private, include "gmock/gmock.h"
+// IWYU pragma: friend gmock/.*
+
+#ifndef GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_GENERATED_ACTIONS_H_
+#define GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_GENERATED_ACTIONS_H_
+
+#endif  // GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_GENERATED_ACTIONS_H_
 ```
 
-## 항목
+### `gmock-matchers.h`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/gmock-generated-actions.h`](file--gmock-generated-actions.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/gmock-matchers.h`](file--gmock-matchers.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/gmock-port.h`](file--gmock-port.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/gmock-matchers.h`
+
+
+```c
+// Copyright 2015, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Injection point for custom user configurations. See README for details
+
+// IWYU pragma: private, include "gmock/gmock.h"
+// IWYU pragma: friend gmock/.*
+
+#ifndef GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_MATCHERS_H_
+#define GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_MATCHERS_H_
+#endif  // GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_MATCHERS_H_
+```
+
+### `gmock-port.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/gmock-port.h`
+
+
+```c
+// Copyright 2015, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Injection point for custom user configurations. See README for details
+//
+// ** Custom implementation starts here **
+
+// IWYU pragma: private, include "gmock/gmock.h"
+// IWYU pragma: friend gmock/.*
+
+#ifndef GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_PORT_H_
+#define GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_PORT_H_
+
+#endif  // GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_CUSTOM_GMOCK_PORT_H_
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/README.md`
+
+
+```markdown
+# Customization Points
+
+The custom directory is an injection point for custom user configurations.
+
+## Header `gmock-port.h`
+
+The following macros can be defined:
+
+### Flag related macros:
+
+*   `GMOCK_DECLARE_bool_(name)`
+*   `GMOCK_DECLARE_int32_(name)`
+*   `GMOCK_DECLARE_string_(name)`
+*   `GMOCK_DEFINE_bool_(name, default_val, doc)`
+*   `GMOCK_DEFINE_int32_(name, default_val, doc)`
+*   `GMOCK_DEFINE_string_(name, default_val, doc)`
+*   `GMOCK_FLAG_GET(flag_name)`
+*   `GMOCK_FLAG_SET(flag_name, value)`
+```

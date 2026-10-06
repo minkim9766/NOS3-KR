@@ -3,18 +3,134 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cppcheck-xml2text.xslt`
 
-file--cppcheck-xml2text.xslt
-file--cpplint-xml2text.xslt
-file--cpplint_to_cppcheckxml.py
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/cppcheck-xml2text.xslt`
+
+
+```text
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:output method="text" encoding="UTF-8"/>
+<xsl:template match="/">## CppCheck <xsl:value-of select="//cppcheck/@version"/> Summary
+<xsl:if test="count(//error) > 0">
+| error | warning | style | performance | portability | information |
+| --- | --- | --- | --- | --- | --- |
+| <xsl:value-of select="count(//error[@severity='error'])"/> | <xsl:value-of select="count(//error[@severity='warning'])"/> | <xsl:value-of select="count(//error[@severity='style'])"/> | <xsl:value-of select="count(//error[@severity='performance'])"/> | <xsl:value-of select="count(//error[@severity='portability'])"/> | <xsl:value-of select="count(//error[@severity='information'])"/> |
+
+| severity | location | error id | issue |
+| --- | --- | --- | --- |
+<xsl:for-each select="results//error">| <xsl:value-of select="@severity"/> | <xsl:value-of select="location/@file"/>:<xsl:value-of select="location/@line"/> | <xsl:value-of select="@id"/> | <xsl:value-of select="@msg"/> |
+</xsl:for-each>
+</xsl:if>
+**<xsl:value-of select="count(//error[@severity='error'])"/> error(s) reported**
+</xsl:template>
+</xsl:stylesheet>
 ```
 
-## 항목
+### `cpplint-xml2text.xslt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/cppcheck-xml2text.xslt`](file--cppcheck-xml2text.xslt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/cpplint-xml2text.xslt`](file--cpplint-xml2text.xslt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/cpplint_to_cppcheckxml.py`](file--cpplint_to_cppcheckxml.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/cpplint-xml2text.xslt`
+
+
+```text
+<?xml version="1.0"?>
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:output method="text" encoding="UTF-8"/>
+<xsl:template match="/">## CppLint <xsl:value-of select="//cppcheck/@version"/> Summary
+<xsl:if test="count(//error) > 0">
+| error | warning | style |
+| --- | --- | --- |
+| <xsl:value-of select="count(//error[@severity='error'])"/> | <xsl:value-of select="count(//error[@severity='warning'])"/> | <xsl:value-of select="count(//error[@severity='style'])"/> | 
+
+| severity | location | error id | issue |
+| --- | --- | --- | --- |
+<xsl:for-each select="results//error">| <xsl:value-of select="@severity"/> | <xsl:value-of select="location/@file"/>:<xsl:value-of select="location/@line"/> | <xsl:value-of select="@id"/> | <xsl:value-of select="@msg"/> |
+</xsl:for-each>
+</xsl:if>
+**<xsl:value-of select="count(//error[@severity='error'])"/> error(s) reported**
+</xsl:template>
+</xsl:stylesheet>
+```
+
+### `cpplint_to_cppcheckxml.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/cpplint_to_cppcheckxml.py`
+
+
+```python
+#!/usr/bin/env python3
+
+# Convert output from Google's cpplint to the cppcheck XML format
+# Reads from stdin and writes to stderr (to mimic cppcheck)
+# https://stackoverflow.com/questions/14172232/how-to-make-cpplint-work-with-jenkins-warnings-plugin
+
+import re
+import sys
+import xml.sax.saxutils
+
+OUTPUT_FILE_XML_HEADER = """<?xml version="1.0" encoding="UTF-8"?>
+<results version="2">
+<cppcheck version="1.90"/>
+<errors>
+"""
+
+OUTPUT_FILE_XML_FOOTER = """</errors>
+</results>
+"""
+
+CPPLINT_ERR_REGEX = "([^:]*):([0-9]*):  ([^\[]*)\[([^\]]*)\] \[([0-9]*)\].*"
+CPPLINT_ERR_REGEX_NB_INFO = 5
+
+
+def cpplint_score_to_cppcheck_severity(err_score: int) -> str:
+    if err_score in {1, 2}:
+        return "style"
+    if err_score in {3, 4}:
+        return "warning"
+    return "error" if err_score == 5 else ""
+
+
+def write_if_relevant_error(
+    file_name: str, err_severity: str, err_label: str, err_msg: str, err_line: str
+) -> None:
+    if err_severity in {"warning", "error"}:
+        sys.stderr.write(
+            f"""<error id="{err_label}" severity="{err_severity}" msg={err_msg} verbose="">\n"""
+        )
+        sys.stderr.write(
+            f"""<location file="{file_name}" line="{err_line}" column="0"/>\n"""
+        )
+        sys.stderr.write("""</error>\n""")
+
+
+def fmt_report_from_cpplint_to_cppcheck() -> None:
+    sys.stderr.write(OUTPUT_FILE_XML_HEADER)
+    compiled_regex = re.compile(CPPLINT_ERR_REGEX)
+
+    for line in sys.stdin.readlines():
+        matched_regex = compiled_regex.match(line.strip())
+        if not matched_regex:
+            continue
+
+        matched_subgroups = matched_regex.groups()
+        if len(matched_subgroups) != CPPLINT_ERR_REGEX_NB_INFO:
+            continue
+
+        file_name, err_line, raw_err_msg, err_label, err_score = matched_subgroups
+        # Prepare the data to be used as attribute values
+        err_msg = xml.sax.saxutils.escape(raw_err_msg)
+        err_msg = xml.sax.saxutils.quoteattr(err_msg)
+
+        err_severity = cpplint_score_to_cppcheck_severity(int(err_score))
+
+        write_if_relevant_error(file_name, err_severity, err_label, err_msg, err_line)
+
+    sys.stderr.write(OUTPUT_FILE_XML_FOOTER)
+
+
+if __name__ == "__main__":
+    fmt_report_from_cpplint_to_cppcheck()
+```

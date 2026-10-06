@@ -3,14 +3,15 @@
 
 **경로:** `gsw/cosmos/config/tools/script_runner/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `script_runner.txt`
 
-file--script_runner.txt
+**경로:** `gsw/cosmos/config/tools/script_runner/script_runner.txt`
+
+
+```text
+LINE_DELAY 0.1
+#MONITOR_LIMITS
+#PAUSE_ON_RED
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/tools/script_runner/script_runner.txt`](file--script_runner.txt) — UTF-8 텍스트 파일 본문 포함

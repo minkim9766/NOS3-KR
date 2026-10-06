@@ -3,18 +3,122 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PosixTimeMain.cpp`
 
-file--PosixTimeMain.cpp
-file--PosixTimeTester.cpp
-file--PosixTimeTester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/PosixTimeMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Main.cpp
+// ----------------------------------------------------------------------
+
+#include "PosixTimeTester.hpp"
+
+TEST(Test, GetTime) {
+    Svc::PosixTimeTester tester("Tester");
+    tester.getTime();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `PosixTimeTester.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/PosixTimeMain.cpp`](file--PosixTimeMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/PosixTimeTester.cpp`](file--PosixTimeTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/PosixTimeTester.hpp`](file--PosixTimeTester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/PosixTimeTester.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// PosixTime/test/ut/Tester.cpp
+// ----------------------------------------------------------------------
+
+#include <strings.h>
+#include <cstdio>
+
+#include "PosixTimeTester.hpp"
+
+#define INSTANCE 0
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+PosixTimeTester ::PosixTimeTester(const char* const compName)
+    : PosixTimeGTestBase(compName, 0), component("PosixTime") {
+    this->init();
+    this->component.init(INSTANCE);
+    this->connect_to_timeGetPort(0, this->component.get_timeGetPort_InputPort(0));
+}
+
+PosixTimeTester ::~PosixTimeTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void PosixTimeTester ::getTime() {
+    Fw::Time time;
+    this->invoke_to_timeGetPort(0, time);
+    ASSERT_GT(time.getSeconds(), 0U);
+    ASSERT_GE(time.getUSeconds(), 0U);
+    ASSERT_LE(time.getUSeconds(), 999999U);
+}
+
+}  // namespace Svc
+```
+
+### `PosixTimeTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/ut/PosixTimeTester.hpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// PosixTimeTester.hpp
+// ----------------------------------------------------------------------
+
+#ifndef POSIX_TIME_TESTER_HPP
+#define POSIX_TIME_TESTER_HPP
+
+#include "PosixTimeGTestBase.hpp"
+#include "Svc/PosixTime/PosixTime.hpp"
+
+namespace Svc {
+
+class PosixTimeTester : public PosixTimeGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    explicit PosixTimeTester(const char* const compName);
+
+    ~PosixTimeTester();
+
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+  public:
+    void getTime();
+
+    // ----------------------------------------------------------------------
+    // The component under test
+    // ----------------------------------------------------------------------
+
+  private:
+    PosixTime component;
+};
+
+}  // namespace Svc
+
+#endif
+```

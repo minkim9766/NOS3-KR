@@ -3,40 +3,88 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Roboto-Black.woff2`
 
-file--Roboto-Black.woff2
-file--Roboto-BlackItalic.woff2
-file--Roboto-Bold.woff2
-file--Roboto-BoldItalic.woff2
-file--Roboto-Light.woff2
-file--Roboto-LightItalic.woff2
-file--Roboto-Medium.woff2
-file--Roboto-MediumItalic.woff2
-file--Roboto-Regular.woff2
-file--Roboto-RegularItalic.woff2
-file--Roboto-Thin.woff2
-file--Roboto-ThinItalic.woff2
-file--RobotoMono-Bold.woff2
-file--RobotoMono-Regular.woff2
-```
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Black.woff2`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Black.woff2`](file--Roboto-Black.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-BlackItalic.woff2`](file--Roboto-BlackItalic.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Bold.woff2`](file--Roboto-Bold.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-BoldItalic.woff2`](file--Roboto-BoldItalic.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Light.woff2`](file--Roboto-Light.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-LightItalic.woff2`](file--Roboto-LightItalic.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Medium.woff2`](file--Roboto-Medium.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-MediumItalic.woff2`](file--Roboto-MediumItalic.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Regular.woff2`](file--Roboto-Regular.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-RegularItalic.woff2`](file--Roboto-RegularItalic.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Thin.woff2`](file--Roboto-Thin.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-ThinItalic.woff2`](file--Roboto-ThinItalic.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/RobotoMono-Bold.woff2`](file--RobotoMono-Bold.woff2) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/RobotoMono-Regular.woff2`](file--RobotoMono-Regular.woff2) — 바이너리 (경로만)
+### `Roboto-BlackItalic.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-BlackItalic.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-Bold.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Bold.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-BoldItalic.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-BoldItalic.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-Light.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Light.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-LightItalic.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-LightItalic.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-Medium.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Medium.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-MediumItalic.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-MediumItalic.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-Regular.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Regular.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-RegularItalic.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-RegularItalic.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-Thin.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-Thin.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `Roboto-ThinItalic.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/Roboto-ThinItalic.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `RobotoMono-Bold.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/RobotoMono-Bold.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `RobotoMono-Regular.woff2`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/styles/roboto/RobotoMono-Regular.woff2`
+
+바이너리 파일입니다. 본문은 생략했습니다.

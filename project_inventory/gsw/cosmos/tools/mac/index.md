@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/tools/mac/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -28,23 +28,4 @@ TlmGrapher.app/index
 TlmViewer.app/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/tools/mac/CmdExtractor.app/`](CmdExtractor.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/CmdSender.app/`](CmdSender.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/CmdSequence.app/`](CmdSequence.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/CmdTlmServer.app/`](CmdTlmServer.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/ConfigEditor.app/`](ConfigEditor.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/DataViewer.app/`](DataViewer.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/HandbookCreator.app/`](HandbookCreator.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/Launcher.app/`](Launcher.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/LimitsMonitor.app/`](LimitsMonitor.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/OpenGLBuilder.app/`](OpenGLBuilder.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/PacketViewer.app/`](PacketViewer.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/Replay.app/`](Replay.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/ScriptRunner.app/`](ScriptRunner.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/TableManager.app/`](TableManager.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/TestRunner.app/`](TestRunner.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/TlmExtractor.app/`](TlmExtractor.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/TlmGrapher.app/`](TlmGrapher.app/index) — 폴더
-- [`gsw/cosmos/tools/mac/TlmViewer.app/`](TlmViewer.app/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

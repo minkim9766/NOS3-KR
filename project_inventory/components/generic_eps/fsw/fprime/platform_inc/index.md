@@ -3,16 +3,74 @@
 
 **경로:** `components/generic_eps/fsw/fprime/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_eps_msgids.h`
 
-file--generic_eps_msgids.h
-file--generic_eps_platform_cfg.h
+**경로:** `components/generic_eps/fsw/fprime/platform_inc/generic_eps_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_eps_msgids.h  $
+**
+** Purpose:
+**  Define GENERIC_EPS Message IDs
+**
+*************************************************************************/
+#ifndef _GENERIC_EPS_MSGIDS_H_
+#define _GENERIC_EPS_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define GENERIC_EPS_CMD_MID 0x191A
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define GENERIC_EPS_REQ_HK_MID 0x191B
+
+/*
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define GENERIC_EPS_HK_TLM_MID 0x091A
+
+#endif /* _GENERIC_EPS_MSGIDS_H_ */
 ```
 
-## 항목
+### `generic_eps_platform_cfg.h`
 
-- [`components/generic_eps/fsw/fprime/platform_inc/generic_eps_msgids.h`](file--generic_eps_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/fsw/fprime/platform_inc/generic_eps_platform_cfg.h`](file--generic_eps_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_eps/fsw/fprime/platform_inc/generic_eps_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_eps_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_eps Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_EPS_PLATFORM_CFG_H_
+#define _GENERIC_EPS_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_EPS Configuration
+*/
+#ifndef GENERIC_EPS_CFG
+#define GENERIC_EPS_CFG
+#define GENERIC_EPS_CFG_I2C_HANDLE  1
+#define GENERIC_EPS_CFG_I2C_SPEED   1000
+#define GENERIC_EPS_CFG_I2C_ADDRESS 0x2B // 7-bit address
+#define GENERIC_EPS_CFG_I2C_TIMEOUT 10
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_EPS_CFG_DEBUG
+#endif
+
+#endif /* _GENERIC_EPS_PLATFORM_CFG_H_ */
+```

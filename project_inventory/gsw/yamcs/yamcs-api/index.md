@@ -3,16 +3,81 @@
 
 **경로:** `gsw/yamcs/yamcs-api/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-api/src/`](src/index) — 폴더
-- [`gsw/yamcs/yamcs-api/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/yamcs-api/pom.xml`
+
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>yamcs-api</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: API</name>
+  <description>Used by external clients to communicate with Yamcs</description>
+
+  <licenses>
+    <license>
+      <name>GNU Lesser General Public License (LGPL)</name>
+      <url>https://www.gnu.org/licenses/lgpl-3.0.html</url>
+    </license>
+  </licenses>
+
+
+  <properties>
+    <javaModuleName>org.yamcs.api</javaModuleName>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${project.build.directory}/generated-resources/protobuf</directory>
+      </resource>
+    </resources>
+  
+    <plugins>
+      <plugin>
+        <groupId>org.yamcs</groupId>
+        <artifactId>yamcs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>protoc</goal>
+            </goals>
+            <configuration>
+              <writeDescriptorSet>true</writeDescriptorSet>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```

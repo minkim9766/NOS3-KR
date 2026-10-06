@@ -3,18 +3,217 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SeqDispatcherTester.cpp`
 
-file--SeqDispatcherTester.cpp
-file--SeqDispatcherTester.hpp
-file--SeqDispatcherTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/SeqDispatcherTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SeqDispatcher.hpp
+// \author zimri.leisher
+// \brief  cpp file for SeqDispatcher test harness implementation class
+// ======================================================================
+
+#include "SeqDispatcherTester.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+SeqDispatcherTester ::SeqDispatcherTester()
+    : SeqDispatcherGTestBase("SeqDispatcherTester", SeqDispatcherTester::MAX_HISTORY_SIZE), component("SeqDispatcher") {
+    this->connectPorts();
+    this->initComponents();
+}
+
+SeqDispatcherTester ::~SeqDispatcherTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void SeqDispatcherTester ::testDispatch() {
+    // test that it fails when we dispatch too many sequences
+    for (int i = 0; i < SeqDispatcherSequencerPorts; i++) {
+        sendCmd_RUN(0, 0, Fw::String("test"), Fw::Wait::WAIT);
+        this->component.doDispatch();
+        // no response cuz blocking
+        ASSERT_CMD_RESPONSE_SIZE(0);
+        ASSERT_EVENTS_SIZE(0);
+    }
+    ASSERT_TLM_sequencersAvailable(SeqDispatcherSequencerPorts - 1, 0);
+    this->clearHistory();
+    // all sequencers should be busy
+    sendCmd_RUN(0, 0, Fw::String("test"), Fw::Wait::WAIT);
+    this->component.doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, SeqDispatcher::OPCODE_RUN, 0, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->clearHistory();
+
+    this->invoke_to_seqDoneIn(0, 0, 0, Fw::CmdResponse::OK);
+    this->component.doDispatch();
+    ASSERT_EVENTS_SIZE(0);
+    // we should have gotten a cmd response now
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, SeqDispatcher::OPCODE_RUN, 0, Fw::CmdResponse::OK);
+
+    this->clearHistory();
+    // ok now we should be able to send another sequence
+    // let's test non blocking now
+    sendCmd_RUN(0, 0, Fw::String("test"), Fw::Wait::NO_WAIT);
+    this->component.doDispatch();
+
+    // should immediately return
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, SeqDispatcher::OPCODE_RUN, 0, Fw::CmdResponse::OK);
+    this->clearHistory();
+
+    // ok now check that if a sequence errors on block it will return error
+    this->invoke_to_seqDoneIn(1, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    this->component.doDispatch();
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, SeqDispatcher::OPCODE_RUN, 0, Fw::CmdResponse::EXECUTION_ERROR);
+}
+
+void SeqDispatcherTester::testLogStatus() {
+    this->sendCmd_RUN(0, 0, Fw::String("test"), Fw::Wait::WAIT);
+    this->component.doDispatch();
+    this->clearHistory();
+    this->sendCmd_LOG_STATUS(0, 0);
+    this->component.doDispatch();
+    ASSERT_EVENTS_SIZE(SeqDispatcherSequencerPorts);
+    ASSERT_EVENTS_LogSequencerStatus(0, 0, SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_BLOCK, "test");
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, SeqDispatcher::OPCODE_LOG_STATUS, 0, Fw::CmdResponse::OK);
+}
+
+void SeqDispatcherTester::seqRunOut_handler(FwIndexType portNum,            //!< The port number
+                                            const Fw::StringBase& filename  //!< The sequence file
+) {
+    this->pushFromPortEntry_seqRunOut(filename);
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `SeqDispatcherTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/SeqDispatcherTester.cpp`](file--SeqDispatcherTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/SeqDispatcherTester.hpp`](file--SeqDispatcherTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/SeqDispatcherTestMain.cpp`](file--SeqDispatcherTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/SeqDispatcherTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SeqDispatcher/test/ut/Tester.hpp
+// \author zimri.leisher
+// \brief  hpp file for SeqDispatcher test harness implementation class
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "SeqDispatcherGTestBase.hpp"
+#include "Svc/SeqDispatcher/SeqDispatcher.hpp"
+
+namespace Svc {
+
+class SeqDispatcherTester : public SeqDispatcherGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 10;
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+    //! Construct object SeqDispatcherTester
+    //!
+    SeqDispatcherTester();
+
+    //! Destroy object SeqDispatcherTester
+    //!
+    ~SeqDispatcherTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    void testDispatch();
+    void testLogStatus();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    void seqRunOut_handler(FwIndexType portNum,            //!< The port number
+                           const Fw::StringBase& filename  //!< The sequence file
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    SeqDispatcher component;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `SeqDispatcherTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/ut/SeqDispatcherTestMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// TestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "SeqDispatcherTester.hpp"
+
+TEST(Nominal, testDispatch) {
+    Svc::SeqDispatcherTester tester;
+    tester.testDispatch();
+}
+
+TEST(Nominal, testLogStatus) {
+    Svc::SeqDispatcherTester tester;
+    tester.testLogStatus();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

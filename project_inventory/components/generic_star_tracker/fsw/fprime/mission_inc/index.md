@@ -3,14 +3,33 @@
 
 **경로:** `components/generic_star_tracker/fsw/fprime/mission_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_star_tracker_perfids.h`
 
-file--generic_star_tracker_perfids.h
+**경로:** `components/generic_star_tracker/fsw/fprime/mission_inc/generic_star_tracker_perfids.h`
+
+
+```c
+/*******************************************************************************
+** File:
+**   $Id: generic_star_tracker_perfids.h $
+**
+** Purpose:
+**  Define GENERIC_STAR_TRACKER Performance IDs
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_STAR_TRACKER_PERFIDS_H_
+#define _GENERIC_STAR_TRACKER_PERFIDS_H_
+
+/*
+** define any performance id integer for the app - try to not have this
+** id conflict with other apps.  Performance IDs are used for cFE performance
+** metrics.
+*/
+#define GENERIC_STAR_TRACKER_PERF_ID 550
+
+#endif /* _GENERIC_STAR_TRACKER_PERFIDS_H_ */
 ```
-
-## 항목
-
-- [`components/generic_star_tracker/fsw/fprime/mission_inc/generic_star_tracker_perfids.h`](file--generic_star_tracker_perfids.h) — UTF-8 텍스트 파일 본문 포함

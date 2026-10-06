@@ -3,28 +3,165 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--AsyncByteStreamDriver.fpp
-file--ByteStreamDriver.fpp
-file--CMakeLists.txt
-file--Gpio.fpp
-file--I2c.fpp
-file--Spi.fpp
-file--Tick.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/AsyncByteStreamDriver.fpp`](file--AsyncByteStreamDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/ByteStreamDriver.fpp`](file--ByteStreamDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/Gpio.fpp`](file--Gpio.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/I2c.fpp`](file--I2c.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/Spi.fpp`](file--Spi.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/Tick.fpp`](file--Tick.fpp) — UTF-8 텍스트 파일 본문 포함
+### `AsyncByteStreamDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/AsyncByteStreamDriver.fpp`
+
+
+```fpp
+module Drv {
+    # In the asynchronous ByteStreamDriver interface, the send operation is non-blocking,
+    # and returns status through the sendReturnOut callback
+
+    @ Asynchronous ByteStreamDriver interface
+    interface AsyncByteStreamDriver {
+        @ Port invoked when the driver is ready to send/receive data
+        output port ready: Drv.ByteStreamReady
+
+        @ Port invoked by the driver when it receives data
+        output port $recv: Drv.ByteStreamData
+
+        @ Invoke this port to send data out the driver (asynchronous)
+        @ Status and ownership of the buffer are returned through the sendReturnOut callback
+        async input port $send: Fw.BufferSend
+
+        @ Port returning ownership of data received on $send port
+        output port sendReturnOut: Drv.ByteStreamData
+
+        @ Port receiving back ownership of data sent out on $recv port
+        guarded input port recvReturnIn: Fw.BufferSend
+    }
+}
+```
+
+### `ByteStreamDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/ByteStreamDriver.fpp`
+
+
+```fpp
+module Drv {
+    # In the synchronous ByteStreamDriver interface, the send operation is blocking
+    # and returns a send status
+
+    @ Synchronous ByteStreamDriver interface
+    interface ByteStreamDriver {
+        @ Port invoked when the driver is ready to send/receive data
+        output port ready: Drv.ByteStreamReady
+
+        @ Port invoked by the driver when it receives data
+        output port $recv: Drv.ByteStreamData
+
+        @ Invoke this port to send data out the driver (synchronous)
+        @ Status is returned, and ownership of the buffer is retained by the caller
+        guarded input port $send: Drv.ByteStreamSend
+
+        @ Port receiving back ownership of data sent out on $recv port
+        guarded input port recvReturnIn: Fw.BufferSend
+    }
+}
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+register_fprime_module(
+    Drv_Interfaces
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/AsyncByteStreamDriver.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/ByteStreamDriver.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Gpio.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/I2c.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Spi.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Tick.fpp"
+  INTERFACE
+)
+```
+
+### `Gpio.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/Gpio.fpp`
+
+
+```fpp
+module Drv {
+    interface Gpio {
+        @ Port used to write to a GPIO pin
+        sync input port gpioWrite: Drv.GpioWrite
+
+        @ Port used to read from a GPIO pin
+        sync input port gpioRead: Drv.GpioRead
+
+        @ Port used to indicate transition on the GPIO pin
+        output port gpioInterrupt: Svc.Cycle
+    }
+}
+```
+
+### `I2c.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/I2c.fpp`
+
+
+```fpp
+module Drv {
+    interface I2c {
+        @ Port for guarded synchronous writing to I2C
+        guarded input port write: Drv.I2c
+
+        @ Port for guarded synchronous reading from I2C
+        guarded input port read: Drv.I2c
+
+        @ Port for synchronous writing and reading from I2C
+        guarded input port writeRead: Drv.I2cWriteRead
+    }
+}
+```
+
+### `Spi.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/Spi.fpp`
+
+
+```fpp
+module Drv {
+    interface Spi {
+        @ Port to perform a synchronous read/write operation over the SPI bus
+        sync input port SpiReadWrite: Drv.SpiReadWrite
+    }
+}
+```
+
+### `Tick.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/Tick.fpp`
+
+
+```fpp
+module Drv {
+    interface Tick {
+        @ The cycle outputs. Meant to be connected to rate group driver
+        output port CycleOut: Svc.Cycle
+    }
+}
+```

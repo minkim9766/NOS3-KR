@@ -3,34 +3,2240 @@
 
 **경로:** `fsw/cfe/modules/time/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_cfe_time_extern_typedefs.h`
 
-file--default_cfe_time_extern_typedefs.h
-file--default_cfe_time_fcncodes.h
-file--default_cfe_time_interface_cfg.h
-file--default_cfe_time_internal_cfg.h
-file--default_cfe_time_mission_cfg.h
-file--default_cfe_time_msg.h
-file--default_cfe_time_msgdefs.h
-file--default_cfe_time_msgids.h
-file--default_cfe_time_msgstruct.h
-file--default_cfe_time_platform_cfg.h
-file--default_cfe_time_topicids.h
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_extern_typedefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_time_extern_typedefs module
+ */
+
+#ifndef CFE_TIME_EXTERN_TYPEDEFS_H
+#define CFE_TIME_EXTERN_TYPEDEFS_H
+
+#include "common_types.h"
+
+/**
+**  \brief Data structure used to hold system time values
+**
+**  \par Description
+**       The #CFE_TIME_SysTime_t data structure is used to hold time
+**       values.  Time is referred to as the elapsed time (in seconds
+**       and subseconds) since a specified epoch time.  The subseconds
+**       field contains the number of 2^(-32) second intervals that have
+**       elapsed since the epoch.
+**
+*/
+typedef struct CFE_TIME_SysTime
+{
+    uint32 Seconds;    /**< \brief Number of seconds since epoch */
+    uint32 Subseconds; /**< \brief Number of subseconds since epoch (LSB = 2^(-32) seconds) */
+} CFE_TIME_SysTime_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_FlagBit_Enum_t
+ */
+enum CFE_TIME_FlagBit
+{
+    /**
+     * @brief The spacecraft time has been set
+     */
+    CFE_TIME_FlagBit_CLKSET = 0,
+
+    /**
+     * @brief This instance of Time Services is flywheeling
+     */
+    CFE_TIME_FlagBit_FLYING = 1,
+
+    /**
+     * @brief The clock source is set to internal
+     */
+    CFE_TIME_FlagBit_SRCINT = 2,
+
+    /**
+     * @brief The clock signal is set to primary
+     */
+    CFE_TIME_FlagBit_SIGPRI = 3,
+
+    /**
+     * @brief The Time Server is in flywheel mode
+     */
+    CFE_TIME_FlagBit_SRVFLY = 4,
+
+    /**
+     * @brief This instance of Time Services was commanded into flywheel mode
+     */
+    CFE_TIME_FlagBit_CMDFLY = 5,
+
+    /**
+     * @brief One time STCF Adjustment is to be done in positive direction
+     */
+    CFE_TIME_FlagBit_ADDADJ = 6,
+
+    /**
+     * @brief 1 Hz STCF Adjustment is to be done in a positive direction
+     */
+    CFE_TIME_FlagBit_ADD1HZ = 7,
+
+    /**
+     * @brief Time Client Latency is applied in a positive direction
+     */
+    CFE_TIME_FlagBit_ADDTCL = 8,
+
+    /**
+     * @brief This instance of Time Services is a Time Server
+     */
+    CFE_TIME_FlagBit_SERVER = 9,
+
+    /**
+     * @brief The tone received is good compared to the last tone received
+     */
+    CFE_TIME_FlagBit_GDTONE = 10
+};
+
+/**
+ * @brief Bit positions of the various clock state flags
+ *
+ * @sa enum CFE_TIME_FlagBit
+ */
+typedef uint8 CFE_TIME_FlagBit_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_ClockState_Enum_t
+ */
+enum CFE_TIME_ClockState
+{
+    /**
+     *
+     * The spacecraft time has not been set since the last clock
+     * reset.  Times returned by clock routines have no relationship
+     * to any ground-based time reference.
+     *
+     */
+    CFE_TIME_ClockState_INVALID = -1,
+
+    /**
+     *
+     * The spacecraft time has been set at least once since the last
+     * clock reset, and it is synchronized with the primary on-board
+     * time base.  Times returned by clock routines can be trusted.
+     *
+     */
+    CFE_TIME_ClockState_VALID = 0,
+
+    /**
+     *
+     * The spacecraft time has been set at least once since the last
+     * clock reset, but it is not currently synchronized with the
+     * primary on-board time base.  Times returned by clock routines
+     * are a "best guess" based on a non-optimal oscillator.
+     *
+     */
+    CFE_TIME_ClockState_FLYWHEEL = 1
+};
+
+/**
+ * @brief Enumerated types identifying the quality of the current time
+ *
+ * \par Description
+ * The #CFE_TIME_ClockState_Enum_t enumerations identify the three recognized states of the current time.
+ * If the clock has never been successfully synchronized with the primary onboard clock source, the
+ * time is considered to be #CFE_TIME_ClockState_INVALID.  If the time is currently synchronized (i.e. - the
+ * primary synchronization mechanism has not been dropped for any significant amount of time), then
+ * the current time is considered to be #CFE_TIME_ClockState_VALID.  If the time had, at some point in the past,
+ * been synchronized, but the synchronization with the primary onboard clock has since been lost, then
+ * the time is considered to be #CFE_TIME_ClockState_FLYWHEEL.  Since different clocks drift at different rates
+ * from one another, the accuracy of the time while in #CFE_TIME_ClockState_FLYWHEEL is dependent upon the time
+ * spent in that state.
+ *
+ * @sa enum CFE_TIME_ClockState
+ */
+typedef int16 CFE_TIME_ClockState_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_SourceSelect_Enum_t
+ */
+enum CFE_TIME_SourceSelect
+{
+    /**
+     * @brief Use Internal Source
+     */
+    CFE_TIME_SourceSelect_INTERNAL = 1,
+
+    /**
+     * @brief Use External Source
+     */
+    CFE_TIME_SourceSelect_EXTERNAL = 2
+};
+
+/**
+ * @brief Clock Source Selection Parameters
+ *
+ * @sa enum CFE_TIME_SourceSelect
+ */
+typedef uint8 CFE_TIME_SourceSelect_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_ToneSignalSelect_Enum_t
+ */
+enum CFE_TIME_ToneSignalSelect
+{
+    /**
+     * @brief Primary Source
+     */
+    CFE_TIME_ToneSignalSelect_PRIMARY = 1,
+
+    /**
+     * @brief Redundant Source
+     */
+    CFE_TIME_ToneSignalSelect_REDUNDANT = 2
+};
+
+/**
+ * @brief Tone Signal Selection Parameters
+ *
+ * @sa enum CFE_TIME_ToneSignalSelect
+ */
+typedef uint8 CFE_TIME_ToneSignalSelect_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_AdjustDirection_Enum_t
+ */
+enum CFE_TIME_AdjustDirection
+{
+    /**
+     * @brief Add time adjustment
+     */
+    CFE_TIME_AdjustDirection_ADD = 1,
+
+    /**
+     * @brief Subtract time adjustment
+     */
+    CFE_TIME_AdjustDirection_SUBTRACT = 2
+};
+
+/**
+ * @brief STCF adjustment direction (for both one-time and 1Hz adjustments)
+ *
+ * @sa enum CFE_TIME_AdjustDirection
+ */
+typedef uint8 CFE_TIME_AdjustDirection_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_FlywheelState_Enum_t
+ */
+enum CFE_TIME_FlywheelState
+{
+    /**
+     * @brief Not in flywheel state
+     */
+    CFE_TIME_FlywheelState_NO_FLY = 0,
+
+    /**
+     * @brief In flywheel state
+     */
+    CFE_TIME_FlywheelState_IS_FLY = 1
+};
+
+/**
+ * @brief Fly-wheel status values
+ *
+ * @sa enum CFE_TIME_FlywheelState
+ */
+typedef uint8 CFE_TIME_FlywheelState_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_TIME_SetState_Enum_t
+ */
+enum CFE_TIME_SetState
+{
+    /**
+     * @brief Spacecraft time has not been set
+     */
+    CFE_TIME_SetState_NOT_SET = 0,
+
+    /**
+     * @brief Spacecraft time has been set
+     */
+    CFE_TIME_SetState_WAS_SET = 1
+};
+
+/**
+ * @brief Clock status values (has the clock been set to correct time)
+ *
+ * @sa enum CFE_TIME_SetState
+ */
+typedef uint8 CFE_TIME_SetState_Enum_t;
+
+#endif /* CFE_TIME_EXTERN_TYPEDEFS_H */
 ```
 
-## 항목
+### `default_cfe_time_fcncodes.h`
 
-- [`fsw/cfe/modules/time/config/default_cfe_time_extern_typedefs.h`](file--default_cfe_time_extern_typedefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_fcncodes.h`](file--default_cfe_time_fcncodes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_interface_cfg.h`](file--default_cfe_time_interface_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_internal_cfg.h`](file--default_cfe_time_internal_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_mission_cfg.h`](file--default_cfe_time_mission_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_msg.h`](file--default_cfe_time_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_msgdefs.h`](file--default_cfe_time_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_msgids.h`](file--default_cfe_time_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_msgstruct.h`](file--default_cfe_time_msgstruct.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_platform_cfg.h`](file--default_cfe_time_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/config/default_cfe_time_topicids.h`](file--default_cfe_time_topicids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_fcncodes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Time Services (CFE_TIME) command function codes
+ *
+ * @note
+ *   This file should be strictly limited to the command/function code (CC)
+ *   macro definitions.  Other definitions such as enums, typedefs, or other
+ *   macros should be placed in the msgdefs.h or msg.h files.
+ */
+#ifndef CFE_TIME_FCNCODES_H
+#define CFE_TIME_FCNCODES_H
+
+/*
+** Time task command packet command codes...
+*/
+/** \name Time Services Command Codes */
+/** \{ */
+
+/** \cfetimecmd Time No-Op
+**
+**  \par Description
+**       This command performs no other function than to increment the
+**       command execution counter. The command may be used to verify
+**       general aliveness of the Time Services task.
+**
+**  \cfecmdmnemonic \TIME_NOOP
+**
+**  \par Command Structure
+**       #CFE_TIME_NoopCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - The #CFE_TIME_NOOP_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Time
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_TIME_NOOP_CC 0 /* no-op command */
+
+/** \cfetimecmd Time Reset Counters
+**
+**  \par Description
+**       This command resets the following counters within the Time
+**       Services \link CFE_TIME_HousekeepingTlm_t Housekeeping Telemetry \endlink:
+**       - Command Execution Counter (\TIME_CMDPC)
+**       - Command Error Counter (\TIME_CMDEC)
+**       This command also resets the following counters within the
+**       Time Services \link CFE_TIME_DiagnosticTlm_t Diagnostic Telemetry \endlink:
+**       - Tone Signal Detected Software Bus Message Counter (\TIME_TSDETCNT)
+**       - Time at the Tone Data Software Bus Message Counter (\TIME_TATTCNT)
+**       - Tone Signal/Data Verify Counter (\TIME_VERIFYCNT)
+**       - Tone Signal/Data Error Counter (\TIME_VERIFYER)
+**       - Tone Signal Interrupt Counter (\TIME_TSISRCNT)
+**       - Tone Signal Interrupt Error Counter (\TIME_TSISRERR)
+**       - Tone Signal Task Counter (\TIME_TSTASKCNT)
+**       - Local 1 Hz Interrupt Counter (\TIME_1HZISRCNT)
+**       - Local 1 Hz Task Counter (\TIME_1HZTASKCNT)
+**       - Reference Time Version Counter (\TIME_VERSIONCNT)
+**
+**  \cfecmdmnemonic \TIME_RESETCTRS
+**
+**  \par Command Structure
+**       #CFE_TIME_ResetCountersCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will reset to 0
+**       - \b \c \TIME_CMDEC - command error counter will reset to 0
+**       - The #CFE_TIME_RESET_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Time
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is reset
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_TIME_RESET_COUNTERS_CC 1 /* reset counters */
+
+/** \cfetimecmd Request TIME Diagnostic Telemetry
+**
+**  \par Description
+**       This command requests that the Time Service generate a message
+**       containing various data values not included in the normal Time
+**       Service housekeeping message.  The command requests only a single
+**       copy of the diagnostic message.  Refer to #CFE_TIME_DiagnosticTlm_t for
+**       a description of the Time Service diagnostic message contents.
+**
+**  \cfecmdmnemonic \TIME_REQUESTDIAG
+**
+**  \par Command Structure
+**       #CFE_TIME_SendDiagnosticCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - Sequence Counter for #CFE_TIME_DiagnosticTlm_t will increment
+**       - The #CFE_TIME_DIAG_EID debug event message will be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Time
+**       Services receives the command, the event and telemetry is sent
+**       (although one or both may be filtered by EVS and TO) and the
+**       counter is incremented unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_TIME_SEND_DIAGNOSTIC_TLM_CC 2 /* request diagnostic hk telemetry */
+
+/** \cfetimecmd Set Time Source
+**
+**  \par Description
+**       This command selects the Time Service clock source.  Although the
+**       list of potential clock sources is mission specific and defined
+**       via configuration parameters, this command provides a common method
+**       for switching between the local processor clock and an external
+**       source for time data.<BR><BR>
+**       When commanded to accept external time data (GPS, MET, spacecraft
+**       time, etc.), the Time Server will enable input via an API function
+**       specific to the configuration definitions for the particular source.
+**       When commanded to use internal time data, the Time Server will ignore
+**       the external data.  However, the Time Server will continue to use the
+**       API function as the trigger to generate a "time at the tone" command
+**       packet regardless of the internal/external command selection.<BR><BR>
+**       Notes:
+**       - Operating in FLYWHEEL mode is not considered a choice related
+**         to clock source, but rather an element of the clock state.  See below
+**         for a description of the #CFE_TIME_SET_STATE_CC command.
+**       - This command is only valid when the #CFE_PLATFORM_TIME_CFG_SOURCE configuration
+**         parameter in the cfe_platform_cfg.h file has been set to true.
+**
+**  \cfecmdmnemonic \TIME_SETSOURCE
+**
+**  \par Command Structure
+**       #CFE_TIME_SetSourceCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_SOURCE - Diagnostic Telemetry point will indicate the
+**         command specified value
+**       - The #CFE_TIME_SOURCE_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - Invalid Source selection
+**         (a value other than #CFE_TIME_SourceSelect_INTERNAL or #CFE_TIME_SourceSelect_EXTERNAL was specified)
+**       - Time source selection not allowed on this platform
+**       <BR><BR>Evidence of failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - Command Error counter will increment
+**       - Error specific event message (either #CFE_TIME_SOURCE_CFG_EID or #CFE_TIME_SOURCE_ERR_EID)
+**
+**  \par Criticality
+**       Although clock source selection is important, this command is not critical.
+**
+**  \sa #CFE_TIME_SET_STATE_CC, #CFE_TIME_SET_SIGNAL_CC
+*/
+#define CFE_TIME_SET_SOURCE_CC 3 /* set clock source (int vs ext) */
+
+/** \cfetimecmd Set Time State
+**
+**  \par Description
+**       This command indirectly affects the Time Service on-board determination
+**       of clock state.  Clock state is a combination of factors, most significantly
+**       whether the spacecraft time has been accurately set, and whether Time Service
+**       is operating in FLYWHEEL mode.<BR><BR>
+**       This command may be used to notify the Time Server that spacecraft time is
+**       now correct, or that time is no longer correct.  This information will be
+**       distributed to Time Clients, and in turn, to any interested sub-systems.<BR><BR>
+**       Also, this command may be used to force a Time Server or Time Client into
+**       FLYWHEEL mode.  Use of FLYWHEEL mode is mainly for debug purposes although
+**       in extreme circumstances, it may be of value to force Time Service not to rely
+**       on normal time updates.  Note that when commanded into FLYWHEEL mode, the Time
+**       Service will remain so until receipt of another "set state" command setting the
+**       state into a mode other than FLYWHEEL.<BR><BR>
+**       Note also that setting the clock state to VALID or INVALID on a Time Client that
+**       is currently getting time updates from the Time Server will have very limited
+**       effect.  As soon as the Time Client receives the next time update, the VALID/INVALID
+**       selection will be set to that of the Time Server.  However, setting a Time Client
+**       to FLYWHEEL cannot be overridden by the Time Server since the Time Client will
+**       ignore time updates from the Time Server while in FLYWHEEL mode.
+**
+**  \cfecmdmnemonic \TIME_SETSTATE
+**
+**  \par Command Structure
+**       #CFE_TIME_SetStateCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STATEFLG - Housekeeping Telemetry point "may" indicate the
+**         command specified value (see above)
+**       - The #CFE_TIME_STATE_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - Invalid State selection
+**         (a value other than #CFE_TIME_ClockState_INVALID, #CFE_TIME_ClockState_VALID or
+**         #CFE_TIME_ClockState_FLYWHEEL was specified)
+**       - Time source selection not allowed on this platform
+**       <BR><BR>Evidence of failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - Command Error counter will increment
+**       - Error specific event message (#CFE_TIME_STATE_ERR_EID)
+**
+**  \par Criticality
+**       Setting Time Service into FLYWHEEL mode is not particularly hazardous, as
+**       the result may be that the calculation of spacecraft time is done using a
+**       less than optimal timer.  However, inappropriately setting the clock state
+**       to VALID (indicating that spacecraft time is accurate) may result in other
+**       sub-systems performing incorrect time based calculations.  The specific risk
+**       is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_SET_SOURCE_CC, #CFE_TIME_SET_SIGNAL_CC
+*/
+#define CFE_TIME_SET_STATE_CC 4 /* set clock state */
+
+/** \cfetimecmd Add Time to Tone Time Delay
+**
+**  \par Description
+**       This command is used to factor out a known, predictable latency between the
+**       Time Server and a particular Time Client.  The correction is applied (added)
+**       to the current time calculation for Time Clients, so this command has no
+**       meaning for Time Servers.  Each Time Client can have a unique latency setting.
+**       The latency value is a positive number of seconds and microseconds that represent
+**       the deviation from the time maintained by the Time Server.
+**
+**  \cfecmdmnemonic \TIME_ADDCLOCKLAT
+**
+**  \par Command Structure
+**       #CFE_TIME_AddDelayCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_LATENTS - Housekeeping Telemetry point indicating command specified values
+**       - \b \c \TIME_LATENTDIR - Diagnostic Telemetry point indicating commanded latency direction
+**       - The #CFE_TIME_DELAY_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Client
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_DELAY_CFG_EID or #CFE_TIME_DELAY_ERR_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_SUB_DELAY_CC
+*/
+#define CFE_TIME_ADD_DELAY_CC 5 /* add tone delay value */
+
+/** \cfetimecmd Subtract Time from Tone Time Delay
+**
+**  \par Description
+**       This command is used to factor out a known, predictable latency between the Time Server
+**       and a particular Time Client.  The correction is applied (subtracted) to the current time
+**       calculation for Time Clients, so this command has no meaning for Time Servers.  Each Time
+**       Client can have a unique latency setting.  The latency value is a positive number of seconds
+**       and microseconds that represent the deviation from the time maintained by the Time Server.<BR><BR>
+**       Note that it is unimaginable that the seconds value will ever be anything but zero.
+**
+**  \cfecmdmnemonic \TIME_SUBCLOCKLAT
+**
+**  \par Command Structure
+**       #CFE_TIME_SubDelayCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_LATENTS - Housekeeping Telemetry point indicating command specified values
+**       - \b \c \TIME_LATENTDIR - Diagnostic Telemetry point indicating commanded latency direction
+**       - The #CFE_TIME_DELAY_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Client
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_DELAY_CFG_EID or #CFE_TIME_DELAY_ERR_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_ADD_DELAY_CC
+*/
+#define CFE_TIME_SUB_DELAY_CC 6 /* sub tone delay value */
+
+/** \cfetimecmd Set Spacecraft Time
+**
+**  \par Description
+**       This command sets the spacecraft clock to a new value,
+**       regardless of the current setting (time jam). The new time
+**       value represents the desired offset from the mission-defined
+**       time epoch and takes effect immediately upon execution of
+**       this command.  Time Service will calculate a new STCF value
+**       based on the current MET and the desired new time using one
+**       of the following: <BR><BR>
+**       If Time Service is configured to compute current time as TAI<BR>
+**       - <B> STCF = (new time) - (current MET) </B>
+**       - <B> (current time) = (current MET) + STCF </B>
+**       <BR><BR>If Time Service is configured to compute current time as UTC
+**       - <B> STCF = ((new time) - (current MET)) + (Leap Seconds) </B>
+**       - <B> (current time) = ((current MET) + STCF) - (Leap Seconds) </B>
+**
+**  \cfecmdmnemonic \TIME_SETCLOCK
+**
+**  \par Command Structure
+**       #CFE_TIME_SetTimeCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STCFSECS - Housekeeping Telemetry point indicating newly calculated STCF seconds value
+**       - \b \c \TIME_STCFSUBSECS - Housekeeping Telemetry point indicating newly calculated STCF subseconds value
+**       - The #CFE_TIME_TIME_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_TIME_CFG_EID or #CFE_TIME_TIME_ERR_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_SET_MET_CC, #CFE_TIME_SET_STCF_CC, #CFE_TIME_SET_LEAP_SECONDS_CC
+*/
+#define CFE_TIME_SET_TIME_CC 7 /* set time */
+
+/** \cfetimecmd Set Mission Elapsed Time
+**
+**  \par Description
+**       This command sets the Mission Elapsed Timer (MET) to the specified value.<BR><BR>
+**       Note that the MET (as implemented for cFE Time Service) is a logical representation
+**       and not a physical timer.  Thus, setting the MET is not dependent on whether the
+**       hardware supports a MET register that can be written to.<BR><BR>
+**       Note also that Time Service "assumes" that during normal operation, the MET is
+**       synchronized to the tone signal.  Therefore, unless operating in FLYWHEEL mode,
+**       the sub-seconds portion of the MET will be set to zero at the next tone signal interrupt.<BR><BR>
+**       The new MET takes effect immediately upon execution of this command.
+**
+**  \cfecmdmnemonic \TIME_SETCLOCKMET
+**
+**  \par Command Structure
+**       #CFE_TIME_SetMETCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_METSECS - Housekeeping Telemetry point indicating new MET seconds value
+**       - \b \c \TIME_METSUBSECS - Housekeeping Telemetry point indicating new MET subseconds value
+**       - The #CFE_TIME_MET_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_MET_CFG_EID or #CFE_TIME_MET_ERR_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_SET_TIME_CC, #CFE_TIME_SET_STCF_CC, #CFE_TIME_SET_LEAP_SECONDS_CC
+*/
+#define CFE_TIME_SET_MET_CC 8 /* set MET */
+
+/** \cfetimecmd Set Spacecraft Time Correlation Factor
+**
+**  \par Description
+**       This command sets the Spacecraft Time Correlation Factor (STCF) to the specified value.
+**       This command differs from the previously described SET CLOCK in the nature of the command
+**       argument.  This command sets the STCF value directly, rather than extracting the STCF
+**       from a value representing the total of MET, STCF and optionally, Leap Seconds.  The new
+**       STCF takes effect immediately upon execution of this command.
+**
+**  \cfecmdmnemonic \TIME_SETCLOCKSTCF
+**
+**  \par Command Structure
+**       #CFE_TIME_SetSTCFCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STCFSECS - Housekeeping Telemetry point indicating new  STCF seconds value
+**       - \b \c \TIME_STCFSUBSECS - Housekeeping Telemetry point indicating new  STCF subseconds value
+**       - The #CFE_TIME_STCF_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_STCF_CFG_EID or #CFE_TIME_STCF_ERR_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_SET_TIME_CC, #CFE_TIME_SET_MET_CC, #CFE_TIME_SET_LEAP_SECONDS_CC
+*/
+#define CFE_TIME_SET_STCF_CC 9 /* set STCF */
+
+/** \cfetimecmd Set Leap Seconds
+**
+**  \par Description
+**       This command sets the spacecraft Leap Seconds to the specified value.
+**       Leap Seconds may be positive or negative, and there is no limit to the
+**       value except, of course, the limit imposed by the 16 bit signed integer
+**       data type.  The new Leap Seconds value takes effect immediately upon
+**       execution of this command.
+**
+**  \cfecmdmnemonic \TIME_SETCLOCKLEAP
+**
+**  \par Command Structure
+**       #CFE_TIME_SetLeapSecondsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_LEAPSECS - Housekeeping Telemetry point indicating new Leap seconds value
+**       - The #CFE_TIME_LEAPS_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_LEAPS_CFG_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_SET_TIME_CC, #CFE_TIME_SET_MET_CC, #CFE_TIME_SET_STCF_CC
+*/
+#define CFE_TIME_SET_LEAP_SECONDS_CC 10 /* set Leap Seconds */
+
+/** \cfetimecmd Add Delta to Spacecraft Time Correlation Factor
+**
+**  \par Description
+**       This command adjusts the Spacecraft Time Correlation Factor (STCF) by
+**       adding the specified value.  The new STCF takes effect immediately upon
+**       execution of this command.
+**
+**  \cfecmdmnemonic \TIME_ADDSTCFADJ
+**
+**  \par Command Structure
+**       #CFE_TIME_AddAdjustCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STCFSECS - Housekeeping Telemetry point indicating new STCF seconds value
+**       - \b \c \TIME_STCFSUBSECS - Housekeeping Telemetry point indicating new STCF subseconds value
+**       - The #CFE_TIME_DELTA_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_DELTA_ERR_EID or #CFE_TIME_DELTA_CFG_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_ADD_ADJUST_CC, #CFE_TIME_SUB_ADJUST_CC, #CFE_TIME_ADD_1HZ_ADJUSTMENT_CC,
+*#CFE_TIME_SUB_1HZ_ADJUSTMENT_CC
+*/
+#define CFE_TIME_ADD_ADJUST_CC 11 /* add one time STCF adjustment */
+
+/** \cfetimecmd Subtract Delta from Spacecraft Time Correlation Factor
+**
+**  \par Description
+**       This command adjusts the Spacecraft Time Correlation Factor (STCF) by subtracting the specified
+**       value.  The new STCF takes effect immediately upon execution of this command.
+**
+**  \cfecmdmnemonic \TIME_SUBSTCFADJ
+**
+**  \par Command Structure
+**       #CFE_TIME_SubAdjustCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STCFSECS - Housekeeping Telemetry point indicating new STCF seconds value
+**       - \b \c \TIME_STCFSUBSECS - Housekeeping Telemetry point indicating new STCF subseconds value
+**       - The #CFE_TIME_DELTA_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - An invalid number of microseconds was specified (must be less than 1 million)
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event messages will be issued (#CFE_TIME_DELTA_ERR_EID or #CFE_TIME_DELTA_CFG_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_ADD_ADJUST_CC, #CFE_TIME_ADD_1HZ_ADJUSTMENT_CC, #CFE_TIME_SUB_1HZ_ADJUSTMENT_CC
+*/
+#define CFE_TIME_SUB_ADJUST_CC 12 /* subtract one time STCF adjustment */
+
+/** \cfetimecmd Add Delta to Spacecraft Time Correlation Factor each 1Hz
+**
+**  \par Description
+**       This command has been updated to take actual sub-seconds (1/2^32 seconds)
+**       rather than micro-seconds as an input argument.  This change occurred
+**       after the determination was made that one micro-second is too large an
+**       increment for a constant 1Hz adjustment.<BR><BR>
+**       This command continuously adjusts the Spacecraft Time Correlation Factor (STCF)
+**       every second, by adding the specified value.  The adjustment to the STCF is
+**       applied in the Time Service local 1Hz interrupt handler.  As the local 1Hz
+**       interrupt is not synchronized to the tone signal, one cannot say when the
+**       adjustment will occur, other than once a second, at about the same time
+**       relative to the tone.<BR><BR>
+**       There was some debate about whether the maximum 1Hz clock drift correction
+**       factor would ever need to exceed some small fraction of a second.  But, the
+**       decision was made to provide the capability to make 1Hz adjustments greater
+**       than one second and leave it to the ground system to provide mission specific
+**       limits.
+**
+**  \cfecmdmnemonic \TIME_ADD1HZSTCF
+**
+**  \par Command Structure
+**       #CFE_TIME_Add1HZAdjustmentCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STCFSECS - Housekeeping Telemetry point indicating new STCF seconds value
+**       - \b \c \TIME_STCFSUBSECS - Housekeeping Telemetry point indicating new STCF subseconds value
+**       - The #CFE_TIME_1HZ_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event message will be issued (#CFE_TIME_1HZ_CFG_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_ADD_ADJUST_CC, #CFE_TIME_SUB_ADJUST_CC, #CFE_TIME_SUB_1HZ_ADJUSTMENT_CC
+*/
+#define CFE_TIME_ADD_1HZ_ADJUSTMENT_CC 13 /* add 1Hz STCF adjustment */
+
+/** \cfetimecmd Subtract Delta from Spacecraft Time Correlation Factor each 1Hz
+**
+**  \par Description
+**       This command has been updated to take actual sub-seconds (1/2^32 seconds)
+**       rather than micro-seconds as an input argument.  This change occurred
+**       after the determination was made that one micro-second is too large an
+**       increment for a constant 1Hz adjustment.<BR><BR>
+**       This command continuously adjusts the Spacecraft Time Correlation Factor (STCF)
+**       every second, by subtracting the specified value.  The adjustment to the STCF
+**       is applied in the Time Service local 1Hz interrupt handler.  As the local 1Hz
+**       interrupt is not synchronized to the tone signal, one cannot say when the
+**       adjustment will occur, other than once a second, at about the same time
+**       relative to the tone.<BR><BR>
+**       There was some debate about whether the maximum 1Hz clock drift correction
+**       factor would ever need to exceed some small fraction of a second.  But, the
+**       decision was made to provide the capability to make 1Hz adjustments greater
+**       than one second and leave it to the ground system to provide mission specific
+**       limits.
+**
+**  \cfecmdmnemonic \TIME_SUB1HZSTCF
+**
+**  \par Command Structure
+**       #CFE_TIME_Sub1HZAdjustmentCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will increment
+**       - \b \c \TIME_STCFSECS - Housekeeping Telemetry point indicating new STCF seconds value
+**       - \b \c \TIME_STCFSUBSECS - Housekeeping Telemetry point indicating new STCF subseconds value
+**       - The #CFE_TIME_1HZ_EID informational event message will be generated
+**
+**  \par Error Conditions
+**       - Platform receiving the command is not a Time Server
+**       <BR><BR>Evidence of Failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - command error counter will increment
+**       - Error specific event message will be issued (#CFE_TIME_1HZ_CFG_EID)
+**
+**  \par Criticality
+**       Inappropriately setting the clock may result in other sub-systems performing incorrect
+**       time based calculations.  The specific risk is dependent upon the behavior of those sub-systems.
+**
+**  \sa #CFE_TIME_ADD_ADJUST_CC, #CFE_TIME_SUB_ADJUST_CC, #CFE_TIME_ADD_1HZ_ADJUSTMENT_CC
+*/
+#define CFE_TIME_SUB_1HZ_ADJUSTMENT_CC 14 /* subtract 1Hz STCF adjustment */
+
+/** \cfetimecmd Set Tone Signal Source
+**
+**  \par Description
+**       This command selects the Time Service tone signal source.  Although the
+**       list of potential tone signal sources is mission specific, a common
+**       choice is the selection of primary or redundant tone signal.  The selection
+**       may be available to both the Time Server and Time Clients, depending on
+**       hardware configuration.<BR><BR>
+**       Notes:
+**       - This command is only valid when the #CFE_PLATFORM_TIME_CFG_SIGNAL configuration
+**         parameter in the cfe_platform_cfg.h file has been set to true.
+**
+**  \cfecmdmnemonic \TIME_SETSIGNAL
+**
+**  \par Command Structure
+**       #CFE_TIME_SetSignalCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TIME_CMDPC - command execution counter will
+**         increment
+**       - \b \c \TIME_SIGNAL - Diagnostic Telemetry point will indicate the
+**         command specified value
+**       - The #CFE_TIME_SIGNAL_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       - Invalid Signal selection
+**         (a value other than #CFE_TIME_ToneSignalSelect_PRIMARY or #CFE_TIME_ToneSignalSelect_REDUNDANT was specified)
+**       - Multiple Tone Signal Sources not available on this platform
+**       <BR><BR>Evidence of failure may be found in the following telemetry:
+**       - \b \c \TIME_CMDEC - Command Error counter will increment
+**       - Error specific event message (either #CFE_TIME_SIGNAL_CFG_EID or #CFE_TIME_SIGNAL_ERR_EID)
+**
+**  \par Criticality
+**       Although tone signal source selection is important, this command is not critical
+**
+**  \sa #CFE_TIME_SET_STATE_CC, #CFE_TIME_SET_SOURCE_CC
+*/
+#define CFE_TIME_SET_SIGNAL_CC 15 /* set clock signal (pri vs red) */
+/** \} */
+
+#endif
+```
+
+### `default_cfe_time_interface_cfg.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_interface_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Time Services (CFE_TIME) Application Public Definitions
+ *
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TIME_INTERFACE_CFG_H
+#define CFE_TIME_INTERFACE_CFG_H
+
+/**
+**  \cfetimecfg Default Time Format
+**
+**  \par Description:
+**      The following definitions select either UTC or TAI as the default
+**      (mission specific) time format.  Although it is possible for an
+**      application to request time in a specific format, most callers
+**      should use CFE_TIME_GetTime(), which returns time in the default
+**      format.  This avoids having to modify each individual caller
+**      when the default choice is changed.
+**
+**  \par Limits
+**      if CFE_MISSION_TIME_CFG_DEFAULT_TAI is defined as true then CFE_MISSION_TIME_CFG_DEFAULT_UTC must be
+**      defined as false.
+**      if CFE_MISSION_TIME_CFG_DEFAULT_TAI is defined as false then CFE_MISSION_TIME_CFG_DEFAULT_UTC must be
+**      defined as true.
+*/
+#define CFE_MISSION_TIME_CFG_DEFAULT_TAI true
+#define CFE_MISSION_TIME_CFG_DEFAULT_UTC false
+
+/**
+**  \cfetimecfg Default Time Format
+**
+**  \par Description:
+**      The following definition enables the use of a simulated time at
+**      the tone signal using a software bus message.
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TIME_CFG_FAKE_TONE true
+
+/**
+**  \cfetimecfg Default Time and Tone Order
+**
+**  \par Description:
+**      Time Services may be configured to expect the time at the tone
+**      data packet to either precede or follow the tone signal.  If the
+**      time at the tone data packet follows the tone signal, then the
+**      data within the packet describes what the time "was" at the tone.
+**      If the time at the tone data packet precedes the tone signal, then
+**      the data within the packet describes what the time "will be" at
+**      the tone.  One, and only one, of the following symbols must be set to true:
+**      - CFE_MISSION_TIME_AT_TONE_WAS
+**      - CFE_MISSION_TIME_AT_TONE_WILL_BE
+**      Note: If Time Services is defined as using a simulated tone signal
+**            (see #CFE_MISSION_TIME_CFG_FAKE_TONE above), then the tone data packet
+**            must follow the tone signal.
+**
+**  \par Limits
+**      Either CFE_MISSION_TIME_AT_TONE_WAS or CFE_MISSION_TIME_AT_TONE_WILL_BE must be set to true.
+**      They may not both be true and they may not both be false.
+*/
+#define CFE_MISSION_TIME_AT_TONE_WAS     true
+#define CFE_MISSION_TIME_AT_TONE_WILL_BE false
+
+/**
+**  \cfetimecfg Min and Max Time Elapsed
+**
+**  \par Description:
+**      Based on the definition of Time and Tone Order
+**      (CFE_MISSION_TIME_AT_TONE_WAS/WILL_BE) either the "time at the tone" signal or
+**      data packet will follow the other. This definition sets the valid window
+**      of time for the second of the pair to lag behind the first. Time
+**      Services will invalidate both the tone and packet if the second does not
+**      arrive within this window following the first.
+**
+**      For example, if the data packet follows the tone, it might be valid for
+**      the data packet to arrive between zero and 100,000 micro-seconds after
+**      the tone.  But, if the tone follows the packet, it might be valid
+**      only if the packet arrived between 200,000 and 700,000 micro-seconds
+**      before the tone.
+**
+**      Note: units are in micro-seconds
+**
+**  \par Limits
+**       0 to 999,999 decimal
+*/
+#define CFE_MISSION_TIME_MIN_ELAPSED 0
+#define CFE_MISSION_TIME_MAX_ELAPSED 200000
+
+/**
+**  \cfetimecfg Default Time Values
+**
+**  \par Description:
+**      Default time values are provided to avoid problems due to time
+**      calculations performed after startup but before commands can be
+**      processed.  For example, if the default time format is UTC then
+**      it is important that the sum of MET and STCF always exceed the
+**      value of Leap Seconds to prevent the UTC time calculation
+**     <tt>(time = MET + STCF - Leap Seconds) </tt> from resulting in a negative
+**     (very large) number.<BR><BR>
+**     Some past missions have also created known (albeit wrong) default
+**     timestamps.  For example, assume the epoch is defined as Jan 1, 1970
+**     and further assume the default time values are set to create a timestamp
+**     of Jan 1, 2000.  Even though the year 2000 timestamps are wrong, it
+**     may be of value to keep the time within some sort of bounds acceptable
+**     to the software.<BR><BR>
+**     Note: Sub-second units are in micro-seconds (0 to 999,999) and
+**           all values must be defined
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_MISSION_TIME_DEF_MET_SECS 1000
+#define CFE_MISSION_TIME_DEF_MET_SUBS 0
+
+#define CFE_MISSION_TIME_DEF_STCF_SECS 1000000
+#define CFE_MISSION_TIME_DEF_STCF_SUBS 0
+
+#define CFE_MISSION_TIME_DEF_LEAPS 37
+
+#define CFE_MISSION_TIME_DEF_DELAY_SECS 0
+#define CFE_MISSION_TIME_DEF_DELAY_SUBS 1000
+
+/**
+**  \cfetimecfg Default EPOCH Values
+**
+**  \par Description:
+**      Default ground time epoch values
+**      Note: these values are used only by the CFE_TIME_Print() API function
+**
+**  \par Limits
+**      Year - must be within 136 years
+**      Day - Jan 1 = 1, Feb 1 = 32, etc.
+**      Hour - 0 to 23
+**      Minute - 0 to 59
+**      Second - 0 to 59
+**      Micros - 0 to 999999
+*/
+#define CFE_MISSION_TIME_EPOCH_YEAR   1980
+#define CFE_MISSION_TIME_EPOCH_DAY    1
+#define CFE_MISSION_TIME_EPOCH_HOUR   0
+#define CFE_MISSION_TIME_EPOCH_MINUTE 0
+#define CFE_MISSION_TIME_EPOCH_SECOND 0
+#define CFE_MISSION_TIME_EPOCH_MICROS 0
+
+/**
+**  \cfetimecfg Time File System Factor
+**
+**  \par Description:
+**      Define the s/c vs file system time conversion constant...
+**
+**      Note: this value is intended for use only by CFE TIME API functions to
+**      convert time values based on the ground system epoch (s/c time) to
+**      and from time values based on the file system epoch (fs time).
+**
+**      FS time  = S/C time + factor
+**      S/C time = FS time - factor
+**
+**      Worksheet:
+**
+**      S/C epoch = Jan 1, 2005  (LRO ground system epoch)
+**      FS epoch  = Jan 1, 1980  (vxWorks DOS file system epoch)
+**
+**      Delta = 25 years, 0 days, 0 hours, 0 minutes, 0 seconds
+**
+**      Leap years = 1980, 1984, 1988, 1992, 1996, 2000, 2004
+**      (divisible by 4 -- except if by 100 -- unless also by 400)
+**
+**      1 year   =  31,536,000 seconds
+**      1 day    =      86,400 seconds
+**      1 hour   =       3,600 seconds
+**      1 minute =          60 seconds
+**
+**      25 years = 788,400,000 seconds
+**      7 extra leap days = 604,800 seconds
+**
+**      total delta = 789,004,800 seconds
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TIME_FS_FACTOR 789004800
+
+#endif
+```
+
+### `default_cfe_time_internal_cfg.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_internal_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Time Service (CFE_TIME) Application Private Config Definitions
+ *
+ * This provides default values for configurable items that are internal
+ * to this module and do NOT affect the interface(s) of this module.  Changes
+ * to items in this file only affect the local module and will be transparent
+ * to external entities that are using the public interface(s).
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TIME_INTERNAL_CFG_H
+#define CFE_TIME_INTERNAL_CFG_H
+
+/**
+**  \cfetimecfg Time Server or Time Client Selection
+**
+**  \par Description:
+**       This configuration parameter selects whether the Time task functions as a
+**       time "server" or "client".  A time server generates the "time at the tone"
+**       packet which is received by time clients.
+**
+**  \par Limits
+**       Enable one, and only one by defining either CFE_PLATFORM_TIME_CFG_SERVER or
+**       CFE_PLATFORM_TIME_CFG_CLIENT AS true.  The other must be defined as false.
+*/
+#define CFE_PLATFORM_TIME_CFG_SERVER true
+#define CFE_PLATFORM_TIME_CFG_CLIENT false
+
+/**
+** \cfetimecfg Time Tone In Big-Endian Order
+**
+** \par Description:
+**      If this configuration parameter is defined, the CFE time server will
+**      publish time tones with payloads in big-endian order, and time clients
+**      will expect the tones to be in big-endian order. This is useful for
+**      mixed-endian environments. This will become obsolete once EDS is
+**      available and the CFE time tone message is defined.
+*/
+#undef CFE_PLATFORM_TIME_CFG_BIGENDIAN
+
+/**
+**  \cfetimecfg Local MET or Virtual MET Selection for Time Servers
+**
+**  \par Description:
+**       Depending on the specific hardware system configuration, it may be possible
+**       for Time Servers to read the "local" MET from a h/w register rather than
+**       having to track the MET as the count of tone signal interrupts (virtual MET)
+**
+**       Time Clients must be defined as using a virtual MET.  Also, a Time Server
+**       cannot be defined as having both a h/w MET and an external time source (they
+**       both cannot synchronize to the same tone).
+**
+**       Note: "disable" this define (set to false) only for Time Servers with local hardware
+**       that supports a h/w MET that is synchronized to the tone signal !!!
+**
+**  \par Limits
+**       Only applies if #CFE_PLATFORM_TIME_CFG_SERVER is set to true.
+*/
+#define CFE_PLATFORM_TIME_CFG_VIRTUAL true
+
+/**
+**  \cfetimecfg Include or Exclude the Primary/Redundant Tone Selection Cmd
+**
+**  \par Description:
+**       Depending on the specific hardware system configuration, it may be possible
+**       to switch between a primary and redundant tone signal.  If supported by
+**       hardware, this definition will enable command interfaces to select the
+**       active tone signal. Both Time Clients and Time Servers support this feature.
+**       Note: Set the CFE_PLATFORM_TIME_CFG_SIGNAL define to true to enable tone signal commands.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TIME_CFG_SIGNAL false
+
+/**
+**  \cfetimecfg Include or Exclude the Internal/External Time Source Selection Cmd
+**
+**  \par Description:
+**       By default, Time Servers maintain time using an internal MET which may be a
+**       h/w register or software counter, depending on available hardware. The
+**       following definition enables command interfaces to switch between an
+**       internal MET, or external time data received from one of several supported
+**       external time sources. Only a Time Server may be configured to use external
+**       time data.
+**       Note: Set the CFE_PLATFORM_TIME_CFG_SOURCE define to true to include the Time Source
+**             Selection Command (command allows selection between the internal
+**             or external time source). Then choose the external source with the
+**             CFE_TIME_CFG_SRC_??? define.
+**
+**  \par Limits
+**       Only applies if #CFE_PLATFORM_TIME_CFG_SERVER is set to true.
+*/
+#define CFE_PLATFORM_TIME_CFG_SOURCE false
+
+/**
+**  \cfetimecfg Choose the External Time Source for Server only
+**
+**  \par Description:
+**       If #CFE_PLATFORM_TIME_CFG_SOURCE is set to true, then one of the following external time
+**       source types must also be set to true.  Do not set any of the external time
+**       source types to true unless #CFE_PLATFORM_TIME_CFG_SOURCE is set to true.
+**
+**  \par Limits
+**       -# If #CFE_PLATFORM_TIME_CFG_SOURCE is set to true then one and only one of the following
+**       three external time sources can and must be set true:
+**       #CFE_PLATFORM_TIME_CFG_SRC_MET, #CFE_PLATFORM_TIME_CFG_SRC_GPS, #CFE_PLATFORM_TIME_CFG_SRC_TIME
+**       -# Only applies if #CFE_PLATFORM_TIME_CFG_SERVER is set to true.
+*/
+#define CFE_PLATFORM_TIME_CFG_SRC_MET  false
+#define CFE_PLATFORM_TIME_CFG_SRC_GPS  false
+#define CFE_PLATFORM_TIME_CFG_SRC_TIME false
+
+/**
+**  \cfetimecfg Define the Max Delta Limits for Time Servers using an Ext Time Source
+**
+**  \par Description:
+**       If #CFE_PLATFORM_TIME_CFG_SOURCE is set to true and one of the external time sources is
+**       also set to true, then the delta time limits for range checking is used.
+**
+**       When a new time value is received from an external source, the value is
+**       compared against the "expected" time value. If the delta exceeds the
+**       following defined amount, then the new time data will be ignored. This range
+**       checking is only performed after the clock state has been commanded to
+**       "valid". Until then, external time data is accepted unconditionally.
+**
+**  \par Limits
+**       Applies only if both #CFE_PLATFORM_TIME_CFG_SERVER and #CFE_PLATFORM_TIME_CFG_SOURCE are set
+**       to true.
+*/
+#define CFE_PLATFORM_TIME_MAX_DELTA_SECS 0
+#define CFE_PLATFORM_TIME_MAX_DELTA_SUBS 500000
+
+/**
+**  \cfetimecfg Define the Local Clock Rollover Value in seconds and subseconds
+**
+**  \par Description:
+**       Specifies the capability of the local clock.  Indicates the time at which
+**       the local clock rolls over.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TIME_MAX_LOCAL_SECS 27
+#define CFE_PLATFORM_TIME_MAX_LOCAL_SUBS 0
+
+/**
+**  \cfetimecfg Define Timing Limits From One Tone To The Next
+**
+**  \par Description:
+**       Defines limits to the timing of the 1Hz tone signal. A tone signal is valid
+**       only if it arrives within one second (plus or minus the tone limit) from
+**       the previous tone signal.Units are microseconds as measured with the local
+**       clock.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TIME_CFG_TONE_LIMIT 20000
+
+/**
+**  \cfetimecfg Define Time to Start Flywheel Since Last Tone
+**
+**  \par Description:
+**       Define time to enter flywheel mode (in seconds since last tone data update)
+**       Units are microseconds as measured with the local clock.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TIME_CFG_START_FLY 2
+
+/**
+**  \cfetimecfg Define Periodic Time to Update Local Clock Tone Latch
+**
+**  \par Description:
+**       Define Periodic Time to Update Local Clock Tone Latch. Applies only when
+**       in flywheel mode. This define dictates the period at which the simulated
+**       'last tone' time is updated. Units are seconds.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TIME_CFG_LATCH_FLY 8
+
+/**
+**  \cfetimecfg Define TIME Task Priorities
+**
+**  \par Description:
+**       Defines the cFE_TIME Task priority.
+**       Defines the cFE_TIME Tone Task priority.
+**       Defines the cFE_TIME 1HZ Task priority.
+**
+**  \par Limits
+**       There is a lower limit of zero and an upper limit of 255 on these
+**       configuration parameters.  Remember that the meaning of each task
+**       priority is inverted -- a "lower" number has a "higher" priority.
+*/
+#define CFE_PLATFORM_TIME_START_TASK_PRIORITY 60
+#define CFE_PLATFORM_TIME_TONE_TASK_PRIORITY  25
+#define CFE_PLATFORM_TIME_1HZ_TASK_PRIORITY   25
+
+/**
+**  \cfetimecfg Define TIME Task Stack Sizes
+**
+**  \par Description:
+**       Defines the cFE_TIME Main Task Stack Size
+**       Defines the cFE_TIME Tone Task Stack Size
+**       Defines the cFE_TIME 1HZ Task Stack Size
+**
+**  \par Limits
+**       There is a lower limit of 2048 on these configuration parameters.  There
+**       are no restrictions on the upper limit however, the maximum stack size
+**       is system dependent and should be verified.  Most operating systems provide
+**       tools for measuring the amount of stack used by a task during operation. It
+**       is always a good idea to verify that no more than 1/2 of the stack is used.
+*/
+#define CFE_PLATFORM_TIME_START_TASK_STACK_SIZE CFE_PLATFORM_ES_DEFAULT_STACK_SIZE
+#define CFE_PLATFORM_TIME_TONE_TASK_STACK_SIZE  4096
+#define CFE_PLATFORM_TIME_1HZ_TASK_STACK_SIZE   8192
+
+#endif
+```
+
+### `default_cfe_time_mission_cfg.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_mission_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Time Services (CFE_TIME) Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TIME_MISSION_CFG_H
+#define CFE_TIME_MISSION_CFG_H
+
+#include "cfe_time_interface_cfg.h"
+
+#endif
+```
+
+### `default_cfe_time_msg.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_msg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Time Services (CFE_TIME) command and telemetry
+ *   message data types.
+ *
+ * This is a compatibility header for the "cfe_time_msg.h" file that has
+ * traditionally provided the message definitions for cFS apps.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TIME_MSG_H
+#define CFE_TIME_MSG_H
+
+#include "cfe_mission_cfg.h"
+#include "cfe_time_msgdefs.h"
+#include "cfe_time_msgstruct.h"
+
+#endif
+```
+
+### `default_cfe_time_msgdefs.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_msgdefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Time Services (CFE_TIME) command and telemetry
+ *   message constant definitions.
+ *
+ *  For CFE_TIME this is only the function/command code definitions
+ */
+#ifndef CFE_TIME_MSGDEFS_H
+#define CFE_TIME_MSGDEFS_H
+
+#include "cfe_time_fcncodes.h"
+
+/** \defgroup CFETIMEClkStates cFE Clock State Flag Defines
+ * \{
+ */
+#define CFE_TIME_FLAG_CLKSET 0x8000 /**< \brief The spacecraft time has been set */
+#define CFE_TIME_FLAG_FLYING 0x4000 /**< \brief This instance of Time Services is flywheeling */
+#define CFE_TIME_FLAG_SRCINT 0x2000 /**< \brief The clock source is set to "internal" */
+#define CFE_TIME_FLAG_SIGPRI 0x1000 /**< \brief The clock signal is set to "primary" */
+#define CFE_TIME_FLAG_SRVFLY 0x0800 /**< \brief The Time Server is in flywheel mode */
+#define CFE_TIME_FLAG_CMDFLY 0x0400 /**< \brief This instance of Time Services was commanded into flywheel mode */
+#define CFE_TIME_FLAG_ADDADJ 0x0200 /**< \brief One time STCF Adjustment is to be done in positive direction */
+#define CFE_TIME_FLAG_ADD1HZ 0x0100 /**< \brief 1 Hz STCF Adjustment is to be done in a positive direction */
+#define CFE_TIME_FLAG_ADDTCL 0x0080 /**< \brief Time Client Latency is applied in a positive direction */
+#define CFE_TIME_FLAG_SERVER 0x0040 /**< \brief This instance of Time Services is a Time Server */
+#define CFE_TIME_FLAG_GDTONE 0x0020 /**< \brief The tone received is good compared to the last tone received */
+#define CFE_TIME_FLAG_REFERR \
+    0x0010 /**< \brief GetReference read error, will be set if unable to get a consistent ref value */
+#define CFE_TIME_FLAG_UNUSED 0x000F /**< \brief Reserved flags - should be zero */
+/** \} */
+
+#endif
+```
+
+### `default_cfe_time_msgids.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Time Services (CFE_TIME) Application Message IDs
+ */
+#ifndef CFE_TIME_MSGIDS_H
+#define CFE_TIME_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_time_topicids.h"
+
+/*
+** cFE Command Message Id's
+*/
+#define CFE_TIME_CMD_MID      CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TIME_CMD_MSG      /* 0x1805 */
+#define CFE_TIME_SEND_HK_MID  CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TIME_SEND_HK_MSG  /* 0x180D */
+#define CFE_TIME_TONE_CMD_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TIME_TONE_CMD_MSG /* 0x1810 */
+#define CFE_TIME_1HZ_CMD_MID  CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TIME_1HZ_CMD_MSG  /* 0x1811 */
+
+/*
+** cFE Global Command Message Id's
+*/
+#define CFE_TIME_DATA_CMD_MID CFE_PLATFORM_CMD_MID_BASE_GLOB + CFE_MISSION_TIME_DATA_CMD_MSG /* 0x1860 */
+#define CFE_TIME_SEND_CMD_MID CFE_PLATFORM_CMD_MID_BASE_GLOB + CFE_MISSION_TIME_SEND_CMD_MSG /* 0x1862 */
+
+/*
+** CFE Telemetry Message Id's
+*/
+#define CFE_TIME_HK_TLM_MID   CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TIME_HK_TLM_MSG   /* 0x0805 */
+#define CFE_TIME_DIAG_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TIME_DIAG_TLM_MSG /* 0x0806 */
+
+#endif
+```
+
+### `default_cfe_time_msgstruct.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_msgstruct.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE Executive Services (TIME) Command and Telemetry packet definition file.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+#ifndef CFE_TIME_MSGSTRUCT_H
+#define CFE_TIME_MSGSTRUCT_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe_mission_cfg.h"
+#include "cfe_msg_hdr.h"
+
+/**
+ * \brief Generic no argument command
+ */
+typedef struct CFE_TIME_NoArgsCmd
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CFE_TIME_NoArgsCmd_t;
+
+/*
+ * A separate typedef for each of the commands that share this definition
+ * This follows the convention for command handler prototypes and allows
+ * each one to independently evolve as necessary.
+ */
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_NoopCmd_t;
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_ResetCountersCmd_t;
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_SendDiagnosticCmd_t;
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_1HzCmd_t;
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_ToneSignalCmd_t;
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_FakeToneCmd_t;
+typedef CFE_TIME_NoArgsCmd_t CFE_TIME_SendHkCmd_t;
+
+/**
+ * \brief Set leap seconds command payload
+ */
+typedef struct CFE_TIME_LeapsCmd_Payload
+{
+    int16 LeapSeconds;
+} CFE_TIME_LeapsCmd_Payload_t;
+
+/**
+ * \brief Set leap seconds command
+ */
+typedef struct CFE_TIME_SetLeapSecondsCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CFE_TIME_LeapsCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_SetLeapSecondsCmd_t;
+
+/**
+ * \brief Set clock state command payload
+ */
+typedef struct CFE_TIME_StateCmd_Payload
+{
+    CFE_TIME_ClockState_Enum_t ClockState; /**< \brief #CFE_TIME_ClockState_INVALID=Spacecraft time has
+                                  not been accurately set, #CFE_TIME_ClockState_VALID=Spacecraft clock
+                                  has been accurately set, #CFE_TIME_ClockState_FLYWHEEL=Force into
+                                  FLYWHEEL mode   */
+                                           /**< Selects the current clock state */
+} CFE_TIME_StateCmd_Payload_t;
+
+/**
+ * \brief Set clock state command
+ */
+typedef struct CFE_TIME_SetStateCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CFE_TIME_StateCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_SetStateCmd_t;
+
+/**
+ * \brief Set time data source command payload
+ */
+typedef struct CFE_TIME_SourceCmd_Payload
+{
+    int16 TimeSource; /**< \brief #CFE_TIME_SourceSelect_INTERNAL=Internal Source,
+                                  #CFE_TIME_SourceSelect_EXTERNAL=External Source   */
+                      /**< Selects either the "Internal" and "External" clock source */
+} CFE_TIME_SourceCmd_Payload_t;
+
+/**
+ * \brief Set time data source command
+ */
+typedef struct CFE_TIME_SetSourceCmd
+{
+    CFE_MSG_CommandHeader_t      CommandHeader; /**< \brief Command header */
+    CFE_TIME_SourceCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_SetSourceCmd_t;
+
+/**
+ * \brief Set tone signal source command payload
+ */
+typedef struct CFE_TIME_SignalCmd_Payload
+{
+    int16 ToneSource; /**< \brief #CFE_TIME_ToneSignalSelect_PRIMARY=Primary Source,
+                                  #CFE_TIME_ToneSignalSelect_REDUNDANT=Redundant Source   */
+                      /**< Selects either the "Primary" or "Redundant" tone signal source */
+} CFE_TIME_SignalCmd_Payload_t;
+
+/**
+ * \brief Set tone signal source command
+ */
+typedef struct CFE_TIME_SetSignalCmd
+{
+    CFE_MSG_CommandHeader_t      CommandHeader; /**< \brief Command header */
+    CFE_TIME_SignalCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_SetSignalCmd_t;
+
+/**
+ * \brief Generic seconds, microseconds command payload
+ */
+typedef struct CFE_TIME_TimeCmd_Payload
+{
+    uint32 Seconds;
+    uint32 MicroSeconds;
+} CFE_TIME_TimeCmd_Payload_t;
+
+/**
+ * \brief Generic seconds, microseconds argument command
+ */
+typedef struct CFE_TIME_TimeCmd
+{
+    CFE_MSG_CommandHeader_t    CommandHeader; /**< \brief Command header */
+    CFE_TIME_TimeCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_TimeCmd_t;
+
+/*
+ * A separate typedef for each of the commands that share this definition
+ * This follows the convention for command handler prototypes and allows
+ * each one to independently evolve as necessary.
+ */
+typedef CFE_TIME_TimeCmd_t CFE_TIME_AddDelayCmd_t;
+typedef CFE_TIME_TimeCmd_t CFE_TIME_SubDelayCmd_t;
+typedef CFE_TIME_TimeCmd_t CFE_TIME_SetMETCmd_t;
+typedef CFE_TIME_TimeCmd_t CFE_TIME_SetSTCFCmd_t;
+typedef CFE_TIME_TimeCmd_t CFE_TIME_AddAdjustCmd_t;
+typedef CFE_TIME_TimeCmd_t CFE_TIME_SubAdjustCmd_t;
+typedef CFE_TIME_TimeCmd_t CFE_TIME_SetTimeCmd_t;
+
+/**
+ * \brief Generic seconds, subseconds command payload
+ */
+typedef struct CFE_TIME_OneHzAdjustmentCmd_Payload
+{
+    uint32 Seconds;
+    uint32 Subseconds;
+} CFE_TIME_OneHzAdjustmentCmd_Payload_t;
+
+/**
+ * \brief Generic seconds, subseconds adjustment command
+ */
+typedef struct CFE_TIME_OneHzAdjustmentCmd
+{
+    CFE_MSG_CommandHeader_t               CommandHeader; /**< \brief Command header */
+    CFE_TIME_OneHzAdjustmentCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_OneHzAdjustmentCmd_t;
+
+/*
+ * A separate typedef for each of the commands that share this definition
+ * This follows the convention for command handler prototypes and allows
+ * each one to independently evolve as necessary.
+ */
+typedef CFE_TIME_OneHzAdjustmentCmd_t CFE_TIME_Add1HZAdjustmentCmd_t;
+typedef CFE_TIME_OneHzAdjustmentCmd_t CFE_TIME_Sub1HZAdjustmentCmd_t;
+
+/**
+ * \brief Time at tone data command payload
+ */
+typedef struct CFE_TIME_ToneDataCmd_Payload
+{
+    CFE_TIME_SysTime_t         AtToneMET;         /**< \brief MET at time of tone */
+    CFE_TIME_SysTime_t         AtToneSTCF;        /**< \brief STCF at time of tone */
+    int16                      AtToneLeapSeconds; /**< \brief Leap Seconds at time of tone */
+    CFE_TIME_ClockState_Enum_t AtToneState;       /**< \brief Clock state at time of tone */
+} CFE_TIME_ToneDataCmd_Payload_t;
+
+/**
+ * \brief Time at tone data command
+ */
+typedef struct CFE_TIME_ToneDataCmd
+{
+    CFE_MSG_CommandHeader_t        CommandHeader; /**< \brief Command header */
+    CFE_TIME_ToneDataCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TIME_ToneDataCmd_t;
+
+/*************************************************************************/
+
+/**
+**  \cfetimetlm Time Services Housekeeping Packet
+**/
+typedef struct CFE_TIME_HousekeepingTlm_Payload
+{
+    /*
+    ** Task command interface counters...
+    */
+    uint8 CommandCounter;      /**< \cfetlmmnemonic \TIME_CMDPC
+                                \brief Time Command Execution Counter */
+    uint8 CommandErrorCounter; /**< \cfetlmmnemonic \TIME_CMDEC
+                           \brief Time Command Error Counter */
+
+    /*
+    ** Clock state flags and "as calculated" clock state...
+    */
+    uint16 ClockStateFlags;                   /**< \cfetlmmnemonic \TIME_STATEFLG
+                                                   \brief State Flags */
+    CFE_TIME_ClockState_Enum_t ClockStateAPI; /**< \cfetlmmnemonic
+                              \TIME_APISTATE \brief API State */
+
+    /*
+    ** Leap Seconds...
+    */
+    int16 LeapSeconds; /**< \cfetlmmnemonic \TIME_LEAPSECS
+                            \brief Current Leaps Seconds */
+
+    /*
+    ** Current MET and STCF time values...
+    */
+    uint32 SecondsMET; /**< \cfetlmmnemonic \TIME_METSECS
+                            \brief Current MET (seconds) */
+    uint32 SubsecsMET; /**< \cfetlmmnemonic \TIME_METSUBSECS
+                            \brief Current MET (sub-seconds) */
+
+    uint32 SecondsSTCF; /**< \cfetlmmnemonic \TIME_STCFSECS
+                             \brief Current STCF (seconds) */
+    uint32 SubsecsSTCF; /**< \cfetlmmnemonic \TIME_STCFSUBSECS
+                             \brief Current STCF (sub-seconds) */
+
+/*
+** 1Hz STCF adjustment values (server only)...
+*/
+#if (CFE_PLATFORM_TIME_CFG_SERVER == true)
+    uint32 Seconds1HzAdj; /**< \cfetlmmnemonic \TIME_1HZADJSECS
+                               \brief Current 1 Hz SCTF adjustment (seconds) */
+    uint32 Subsecs1HzAdj; /**< \cfetlmmnemonic \TIME_1HZADJSSECS
+                               \brief Current 1 Hz SCTF adjustment (sub-seconds) */
+#endif
+
+/*
+** Time at tone delay values (client only)...
+*/
+#if (CFE_PLATFORM_TIME_CFG_CLIENT == true)
+    uint32 SecondsDelay; /**< \cfetlmmnemonic \TIME_1HZDLYSECS
+                              \brief Current 1 Hz SCTF Delay (seconds) */
+    uint32 SubsecsDelay; /**< \cfetlmmnemonic \TIME_1HZDLYSSECS
+                              \brief Current 1 Hz SCTF Delay (sub-seconds) */
+#endif
+} CFE_TIME_HousekeepingTlm_Payload_t;
+
+typedef struct CFE_TIME_HousekeepingTlm
+{
+    CFE_MSG_TelemetryHeader_t          TelemetryHeader; /**< \brief Telemetry header */
+    CFE_TIME_HousekeepingTlm_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_TIME_HousekeepingTlm_t;
+
+/*************************************************************************/
+
+/**
+**  \cfetimetlm Time Services Diagnostics Packet
+**/
+typedef struct CFE_TIME_DiagnosticTlm_Payload
+{
+    /*
+     ** Data values used to compute time (in reference to "tone")...
+     */
+    CFE_TIME_SysTime_t AtToneMET;   /**< \cfetlmmnemonic \TIME_TMETS
+                                               \brief MET at time of tone */
+    CFE_TIME_SysTime_t AtToneSTCF;  /**< \cfetlmmnemonic \TIME_STCFS
+                                               \brief STCF at time of tone */
+    CFE_TIME_SysTime_t AtToneDelay; /**< \cfetlmmnemonic \TIME_LATENTS
+                                               \brief Adjustment for slow tone detection */
+    CFE_TIME_SysTime_t AtToneLatch; /**< \cfetlmmnemonic \TIME_TVALIDS
+                                               \brief Local clock latched at time of tone */
+
+    int16 AtToneLeapSeconds;                  /**< \cfetlmmnemonic \TIME_LEAPS
+                                                   \brief Leap Seconds at time of tone */
+    CFE_TIME_ClockState_Enum_t ClockStateAPI; /**< \cfetlmmnemonic \TIME_APISTATE
+                                    \brief Clock state as per API */
+
+    /*
+     ** Data values that reflect the time (right now)...
+     */
+    CFE_TIME_SysTime_t TimeSinceTone; /**< \cfetlmmnemonic \TIME_ELAPSEDS
+                                                 \brief Time elapsed since the tone */
+    CFE_TIME_SysTime_t CurrentLatch;  /**< \cfetlmmnemonic \TIME_LOCALS
+                                                 \brief Local clock latched just "now" */
+    CFE_TIME_SysTime_t CurrentMET;    /**< \cfetlmmnemonic \TIME_METS
+                                                 \brief MET at this instant */
+    CFE_TIME_SysTime_t CurrentTAI;    /**< \cfetlmmnemonic \TIME_TAIS
+                                                 \brief TAI at this instant */
+    CFE_TIME_SysTime_t CurrentUTC;    /**< \cfetlmmnemonic \TIME_UTCS
+                                                 \brief UTC at this instant */
+
+    /*
+     ** Data values used to define the current clock state...
+     */
+    int16 ClockSetState;  /**< \cfetlmmnemonic \TIME_VALID
+                                     \brief Time has been "set" */
+    int16 ClockFlyState;  /**< \cfetlmmnemonic \TIME_FLYWHEEL
+                                     \brief Current fly-wheel state */
+    int16 ClockSource;    /**< \cfetlmmnemonic \TIME_SOURCE
+                                     \brief Internal vs external, etc. */
+    int16 ClockSignal;    /**< \cfetlmmnemonic \TIME_SIGNAL
+                                     \brief Primary vs redundant, etc. */
+    int16 ServerFlyState; /**< \cfetlmmnemonic \TIME_SRVFLY
+                                     \brief Used by clients only */
+    int16 Forced2Fly;     /**< \cfetlmmnemonic \TIME_CMD2FLY
+                                     \brief Commanded into fly-wheel */
+
+    /*
+     ** Clock state flags...
+     */
+    uint16 ClockStateFlags; /**< \cfetlmmnemonic \TIME_STATEFLAGS
+                                       \brief Clock State Flags */
+
+    /*
+     ** STCF adjustment direction values...
+     */
+    int16 OneTimeDirection; /**< \cfetlmmnemonic \TIME_ADJUSTDIR
+                                       \brief One time STCF adjustment direction (Add = 1,  Sub = 2) */
+    int16 OneHzDirection;   /**< \cfetlmmnemonic \TIME_1HZADJDIR
+                                       \brief 1Hz STCF adjustment direction */
+    int16 DelayDirection;   /**< \cfetlmmnemonic \TIME_LATENTDIR
+                                       \brief Client latency adjustment direction */
+
+    /*
+     ** STCF adjustment values...
+     */
+    CFE_TIME_SysTime_t OneTimeAdjust; /**< \cfetlmmnemonic \TIME_ADJUSTS
+                                                 \brief Previous one-time STCF adjustment */
+    CFE_TIME_SysTime_t OneHzAdjust;   /**< \cfetlmmnemonic \TIME_1HZADJS
+                                                 \brief Current 1Hz STCF adjustment */
+
+    /*
+     ** Most recent local clock latch values...
+     */
+    CFE_TIME_SysTime_t ToneSignalLatch; /**< \cfetlmmnemonic \TIME_TTS
+                                                   \brief  Local Clock latched at most recent tone signal */
+    CFE_TIME_SysTime_t ToneDataLatch;   /**< \cfetlmmnemonic \TIME_TDS
+                                                   \brief  Local Clock latched at arrival of tone data */
+
+    /*
+     ** Miscellaneous counters (subject to reset command)...
+     */
+    uint32 ToneMatchCounter;      /**< \cfetlmmnemonic \TIME_VERIFYCNT
+                                           \brief  Tone signal / data verification count */
+    uint32 ToneMatchErrorCounter; /**< \cfetlmmnemonic \TIME_VERIFYER
+                                       \brief  Tone signal / data verification error count */
+    uint32 ToneSignalCounter;     /**< \cfetlmmnemonic \TIME_TSDETCNT
+                                           \brief  Tone signal detected SB message count */
+    uint32 ToneDataCounter;       /**< \cfetlmmnemonic \TIME_TATTCNT
+                                           \brief  Time at the tone data SB message count */
+    uint32 ToneIntCounter;        /**< \cfetlmmnemonic \TIME_TSISRCNT
+                                           \brief  Tone signal ISR execution count */
+    uint32 ToneIntErrorCounter;   /**< \cfetlmmnemonic \TIME_TSISRERR
+                                       \brief  Tone signal ISR error count */
+    uint32 ToneTaskCounter;       /**< \cfetlmmnemonic \TIME_TSTASKCNT
+                                           \brief  Tone task execution count */
+    uint32 VersionCounter;        /**< \cfetlmmnemonic \TIME_VERSIONCNT
+                                           \brief  Count of mods to time at tone reference data (version) */
+    uint32 LocalIntCounter;       /**< \cfetlmmnemonic \TIME_1HZISRCNT
+                                           \brief  Local 1Hz ISR execution count */
+    uint32 LocalTaskCounter;      /**< \cfetlmmnemonic \TIME_1HZTASKCNT
+                                           \brief  Local 1Hz task execution count */
+
+    /*
+     ** Miscellaneous counters (not subject to reset command)...
+     */
+    uint32 VirtualMET; /**< \cfetlmmnemonic \TIME_LOGICALMET
+                                  \brief  Software MET */
+
+    /*
+     ** Time window verification values (converted from micro-secs)...
+     **
+     ** Regardless of whether the tone follows the time packet, or vice
+     **    versa, these values define the acceptable window of time for
+     **    the second event to follow the first.  The minimum value may
+     **    be as little as zero, and the maximum must be something less
+     **    than a second.
+     */
+    uint32 MinElapsed; /**< \cfetlmmnemonic \TIME_MINWINDOW
+                                  \brief Min tone signal / data pkt arrival window (Sub-seconds) */
+    uint32 MaxElapsed; /**< \cfetlmmnemonic \TIME_MAXWINDOW
+                                  \brief Max tone signal / data pkt arrival window (Sub-seconds) */
+
+    /*
+     ** Maximum local clock value (before roll-over)...
+     */
+    CFE_TIME_SysTime_t MaxLocalClock; /**< \cfetlmmnemonic \TIME_WRAPS
+                                                 \brief Max local clock value before rollover */
+
+    /*
+     ** Tone signal tolerance limits...
+     */
+    uint32 ToneOverLimit;  /**< \cfetlmmnemonic \TIME_MAXSS
+                                      \brief Max between tone signal interrupts */
+    uint32 ToneUnderLimit; /**< \cfetlmmnemonic \TIME_MINSS
+                                      \brief Min between tone signal interrupts */
+
+    /*
+     ** Reset Area...
+     */
+    uint32 DataStoreStatus; /**< \cfetlmmnemonic \TIME_ATASTSTAT
+                                       \brief Data Store status (preserved across processor reset) */
+} CFE_TIME_DiagnosticTlm_Payload_t;
+
+typedef struct CFE_TIME_DiagnosticTlm
+{
+    CFE_MSG_TelemetryHeader_t        TelemetryHeader; /**< \brief Telemetry header */
+    CFE_TIME_DiagnosticTlm_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_TIME_DiagnosticTlm_t;
+
+#endif
+```
+
+### `default_cfe_time_platform_cfg.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_platform_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Time Services (CFE_TIME) Application Platform Configuration Header File
+ *
+ * This is a compatibility header for the "platform_cfg.h" file that has
+ * traditionally provided both public and private config definitions
+ * for each CFS app.
+ *
+ * These definitions are now provided in two separate files, one for
+ * the public/mission scope and one for internal scope.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TIME_PLATFORM_CFG_H
+#define CFE_TIME_PLATFORM_CFG_H
+
+#include "cfe_time_mission_cfg.h"
+#include "cfe_time_internal_cfg.h"
+
+#endif
+```
+
+### `default_cfe_time_topicids.h`
+
+**경로:** `fsw/cfe/modules/time/config/default_cfe_time_topicids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Time Services (CFE_TIME) Application Topic IDs
+ */
+#ifndef CFE_TIME_TOPICIDS_H
+#define CFE_TIME_TOPICIDS_H
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Commands
+**
+**  \par Description:
+**      Portable message numbers for the cFE command messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TIME_CMD_MSG      5
+#define CFE_MISSION_TIME_SEND_HK_MSG  13
+#define CFE_MISSION_TIME_TONE_CMD_MSG 16
+#define CFE_MISSION_TIME_1HZ_CMD_MSG  17
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Global Messages
+**
+**  \par Description:
+**      Portable message numbers for the cFE global messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TIME_DATA_CMD_MSG 0
+#define CFE_MISSION_TIME_SEND_CMD_MSG 2
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Telemetry
+**
+**  \par Description:
+**      Portable message numbers for the cFE telemetry messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TIME_HK_TLM_MSG   5
+#define CFE_MISSION_TIME_DIAG_TLM_MSG 6
+
+#endif
+```

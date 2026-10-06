@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,84 +15,5426 @@ Models/index
 Posix/index
 Stub/index
 test/index
-file--CMakeLists.txt
-file--Condition.cpp
-file--Condition.hpp
-file--Console.cpp
-file--Console.hpp
-file--Cpu.cpp
-file--Cpu.hpp
-file--Delegate.hpp
-file--Directory.cpp
-file--Directory.hpp
-file--File.cpp
-file--File.hpp
-file--FileSystem.cpp
-file--FileSystem.hpp
-file--IntervalTimer.cpp
-file--IntervalTimer.hpp
-file--Memory.cpp
-file--Memory.hpp
-file--Mutex.cpp
-file--Mutex.hpp
-file--Os.cpp
-file--Os.hpp
-file--Queue.cpp
-file--Queue.hpp
-file--QueueString.hpp
-file--RawTime.cpp
-file--RawTime.hpp
-file--Task.cpp
-file--Task.hpp
-file--TaskString.hpp
-file--Types.fpp
-file--ValidatedFile.cpp
-file--ValidatedFile.hpp
-file--ValidateFile.hpp
-file--ValidateFileCommon.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/`](Darwin/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/`](Generic/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/`](Linux/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/`](Models/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/`](Posix/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/`](Stub/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Condition.cpp`](file--Condition.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Condition.hpp`](file--Condition.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Console.cpp`](file--Console.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Console.hpp`](file--Console.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Cpu.cpp`](file--Cpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Cpu.hpp`](file--Cpu.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Delegate.hpp`](file--Delegate.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Directory.cpp`](file--Directory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Directory.hpp`](file--Directory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/File.hpp`](file--File.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/FileSystem.cpp`](file--FileSystem.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/FileSystem.hpp`](file--FileSystem.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/IntervalTimer.cpp`](file--IntervalTimer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/IntervalTimer.hpp`](file--IntervalTimer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Memory.cpp`](file--Memory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Memory.hpp`](file--Memory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Mutex.cpp`](file--Mutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Mutex.hpp`](file--Mutex.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Os.cpp`](file--Os.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Os.hpp`](file--Os.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Queue.cpp`](file--Queue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Queue.hpp`](file--Queue.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/QueueString.hpp`](file--QueueString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/RawTime.cpp`](file--RawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/RawTime.hpp`](file--RawTime.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Task.cpp`](file--Task.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Task.hpp`](file--Task.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/TaskString.hpp`](file--TaskString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Types.fpp`](file--Types.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/ValidatedFile.cpp`](file--ValidatedFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/ValidatedFile.hpp`](file--ValidatedFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/ValidateFile.hpp`](file--ValidateFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/ValidateFileCommon.cpp`](file--ValidateFileCommon.cpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+
+####
+# WARNING: not for use outside of fprime/Os
+#
+# Adds a named os module (e.g. common code for an OSAL implementation). Helper to allow multiple commons per file.
+#
+# NAMES: list of named files to add to this module.  The first will be treated as the name of the module.
+#        i.e. File;Directory;FileSystem will contain the file, directory, and filesystem files in a module called File.
+# ARGN: extra MOD_DEPS to add
+####
+function(add_named_os_module NAMES)
+    # Get first element of list
+    list(GET NAMES 0 FIRST_ITEM)
+    set(OS_MODULE_NAME "Os_${FIRST_ITEM}")
+    # Clear variables
+    set(SOURCE_INPUTS)
+    set(HEADER_INPUTS)
+    # Add files for each name supplied
+    foreach (NAME IN LISTS NAMES)
+        list(APPEND SOURCE_INPUTS "${CMAKE_CURRENT_LIST_DIR}/${NAME}.cpp")
+        list(APPEND HEADER_INPUTS "${CMAKE_CURRENT_LIST_DIR}/${NAME}.hpp")
+    endforeach ()
+    # Set up module
+    register_fprime_module(
+          "${OS_MODULE_NAME}"
+        REQUIRES_IMPLEMENTATIONS
+          "Os_${FIRST_ITEM}"
+        SOURCES
+          ${SOURCE_INPUTS}
+        HEADERS
+          ${HEADER_INPUTS}
+        DEPENDS
+          Fw_Time
+          Fw_Types ${ARGN}
+    )
+    fprime_target_dependencies(Os PUBLIC "${OS_MODULE_NAME}")
+endfunction()
+
+####
+# WARNING: not for use outside of fprime/Os
+#
+# Adds a named os implementation supplied by fprime core. Helper to allow multiple implementations per file.
+#
+# NAMES: list of named files to add to this module.  The first will be treated as the name of the module.
+#        i.e. File;Directory;FileSystem will contain the file, directory, and filesystem files in a module called File.
+# SUFFIX: suffix to implementation (e.g. Posix)
+# ARGN: extra MOD_DEPS to add
+####
+function(add_fprime_supplied_os_module NAMES SUFFIX)
+    # Get first element of list
+    list(GET NAMES 0 FIRST_ITEM)
+
+    # Ensure expected files with expected filenames exist
+    if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/Default${FIRST_ITEM}.cpp")
+        message(FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/Default${FIRST_ITEM}.cpp does not exist.")
+    endif()
+
+    foreach (NAME IN LISTS NAMES)
+        if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/${NAME}.cpp")
+            message(FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/${NAME}.cpp does not exist.")
+        endif()
+        if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/${NAME}.hpp")
+            message(FATAL_ERROR "${CMAKE_CURRENT_LIST_DIR}/${NAME}.hpp does not exist.")
+        endif()
+    endforeach()
+
+    # Setup variables
+    set(OS_MODULE_NAME "Os_${FIRST_ITEM}_${SUFFIX}")
+    # Clear variables
+    set(SOURCE_INPUTS)
+    set(HEADERS_INPUTS)
+    # Add files for each name supplied
+    foreach (NAME IN LISTS NAMES)
+        list(APPEND SOURCE_INPUTS "${CMAKE_CURRENT_LIST_DIR}/${NAME}.cpp")
+        list(APPEND HEADERS_INPUTS "${CMAKE_CURRENT_LIST_DIR}/${NAME}.hpp")
+    endforeach ()
+    # Set up module
+    register_fprime_module(
+        "${OS_MODULE_NAME}_Implementation"
+      SOURCES
+        ${SOURCE_INPUTS}
+      HEADERS
+        ${HEADER_INPUTS}
+      DEPENDS
+        Fw_Time
+        Fw_Types
+        "Os_${FIRST_ITEM}"
+        ${ARGN}
+    )
+    register_fprime_implementation(
+         "${OS_MODULE_NAME}"
+      SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/Default${FIRST_ITEM}.cpp"
+      IMPLEMENTS
+        "Os_${FIRST_ITEM}"
+      DEPENDS
+        Fw_Time
+        Fw_Types
+        "${OS_MODULE_NAME}_Implementation"
+    )
+endfunction()
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Models")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Stub")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Posix")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Generic")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Linux")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Darwin")
+
+register_fprime_module(
+      Os
+    AUTOCODER_INPUTS
+      "${CMAKE_CURRENT_LIST_DIR}/Types.fpp"
+    SOURCES
+      "${CMAKE_CURRENT_LIST_DIR}/ValidateFileCommon.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/ValidatedFile.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/IntervalTimer.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/Os.cpp"
+    HEADERS
+      "${CMAKE_CURRENT_LIST_DIR}/ValidatedFile.hpp"
+      "${CMAKE_CURRENT_LIST_DIR}/Os.hpp"
+    DEPENDS
+      Fw_Time
+      Fw_Types
+)
+
+add_named_os_module(Console Fw_Logger)
+add_named_os_module("File;FileSystem;Directory" Utils_Hash)
+add_named_os_module(Task ${CMAKE_THREAD_LIBS_INIT})
+add_named_os_module("Mutex;Condition")
+add_named_os_module(Queue)
+add_named_os_module(Cpu)
+add_named_os_module(Memory)
+add_named_os_module(RawTime Fw_Buffer)
+
+### UTS ### Note: 3 separate UTs registered here.
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/OsTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/IntervalTimerTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/OsValidateFileTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/OsMutexBasicLockableTest.cpp"
+)
+register_fprime_ut()
+
+if (BUILD_TESTING)
+    set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/file/SyntheticFileSystem.cpp"
+    )
+    set(MOD_DEPS Fw_Types)
+    register_fprime_module(Os_Test_File_SyntheticFileSystem)
+endif()
+```
+
+### `Condition.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Condition.cpp`
+
+
+```cpp
+#include "Os/Condition.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+ConditionVariable::ConditionVariable() : m_delegate(*ConditionVariableInterface::getDelegate(m_handle_storage)) {}
+
+ConditionVariable::~ConditionVariable() {
+    m_delegate.~ConditionVariableInterface();
+}
+
+ConditionVariable::Status ConditionVariable::pend(Os::Mutex& mutex) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<ConditionVariableInterface*>(&this->m_handle_storage[0]));
+    if (this->m_lock != nullptr && this->m_lock != &mutex) {
+        return Status::ERROR_DIFFERENT_MUTEX;
+    };
+    this->m_lock = &mutex;
+    return this->m_delegate.pend(mutex);
+}
+void ConditionVariable::wait(Os::Mutex& mutex) {
+    Status status = this->pend(mutex);
+    FW_ASSERT(status == Status::OP_OK, static_cast<FwAssertArgType>(status));
+}
+void ConditionVariable::notify() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<ConditionVariableInterface*>(&this->m_handle_storage[0]));
+    this->m_delegate.notify();
+}
+void ConditionVariable::notifyAll() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<ConditionVariableInterface*>(&this->m_handle_storage[0]));
+    this->m_delegate.notifyAll();
+}
+
+ConditionVariableHandle* ConditionVariable::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const ConditionVariableInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+}  // namespace Os
+```
+
+### `Condition.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Condition.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Condition.hpp
+// \brief common function definitions for Os::ConditionVariables
+// ======================================================================
+#include "Os/Mutex.hpp"
+#include "Os/Os.hpp"
+
+#ifndef OS_CONDITION_HPP_
+#define OS_CONDITION_HPP_
+
+namespace Os {
+
+//! \brief Condition variable handle parent
+class ConditionVariableHandle {};
+
+//! \brief interface for condition variables
+//!
+//! Condition variables allow a program to block on a condition while atomically releasing an Os::Mutex and atomically
+//! reacquiring the mutex once the condition has been notified.
+class ConditionVariableInterface {
+  public:
+    enum Status {
+        OP_OK,                  //!<  Operation was successful
+        ERROR_MUTEX_NOT_HELD,   //!< When trying to wait but we don't hold the mutex
+        ERROR_DIFFERENT_MUTEX,  //!< When trying to use a different mutex than expected mutex
+        ERROR_NOT_IMPLEMENTED,  //!< When trying to use a feature that isn't implemented
+        NOT_SUPPORTED,          //!< ConditionVariable does not support operation
+        ERROR_OTHER             //!< All other errors
+    };
+
+    //! Default constructor
+    ConditionVariableInterface() = default;
+    //! Default destructor
+    virtual ~ConditionVariableInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    ConditionVariableInterface(const ConditionVariableInterface& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    virtual ConditionVariableInterface& operator=(const ConditionVariableInterface& other) = delete;
+
+    //! \brief wait on a condition variable
+    //!
+    //! Wait on a condition variable. This function will atomically unlock the provided mutex and block on the condition
+    //! in one step. Blocking will occur until a future `notify` or `notifyAll` call is made to this variable on another
+    //! thread of execution.
+    //!
+    //! \param mutex: mutex to unlock as part of this operation
+    //! \return status of the conditional wait
+    virtual Status pend(Os::Mutex& mutex) = 0;
+
+    //! \brief notify a single waiter on this condition variable
+    //!
+    //! Notify a single waiter on this condition variable. It is not necessary to hold the mutex supplied by the waiters
+    //! and it is advantageous not to hold the lock to prevent immediate re-blocking.
+    virtual void notify() = 0;
+
+    //! \brief notify all waiters on this condition variable
+    //!
+    //! Notify all waiters on this condition variable. It is not necessary to hold the mutex supplied by the waiters
+    //! and it is advantageous not to hold the lock to prevent immediate re-blocking.
+    virtual void notifyAll() = 0;
+
+    //! \brief return the underlying condition variable handle (implementation specific).
+    //! \return internal task handle representation
+    virtual ConditionVariableHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a Mutex delegate object
+    static ConditionVariableInterface* getDelegate(ConditionVariableHandleStorage& aligned_new_memory);
+};
+
+//! \brief condition variable implementation
+//!
+//! Condition variables allow a program to block on a condition while atomically releasing an Os::Mutex and atomically
+//! reacquiring the mutex once the condition has been notified.
+class ConditionVariable final : public ConditionVariableInterface {
+  public:
+    //! \brief default constructor
+    ConditionVariable();
+
+    //! \brief default virtual destructor
+    ~ConditionVariable() final;
+
+    //! \brief copy constructor is forbidden
+    ConditionVariable(const ConditionVariableInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    ConditionVariable(const ConditionVariableInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    ConditionVariableInterface& operator=(const ConditionVariableInterface& other) override = delete;
+
+    //! \brief wait on a condition variable
+    //!
+    //! Wait on a condition variable. This function will atomically unlock the provided mutex and block on the condition
+    //! in one step. Blocking will occur until a future `notify` or `notifyAll` call is made to this variable on another
+    //! thread of execution. This function delegates to the underlying implementation.
+    //!
+    //! \warning it is invalid to supply a mutex different from those supplied by others
+    //! \warning conditions *must* be rechecked after the condition variable unlocks
+    //! \warning the mutex must be locked by the calling task
+    //!
+    //! \param mutex: mutex to unlock as part of this operation
+    //! \return status of the conditional wait
+    Status pend(Os::Mutex& mutex) override;
+
+    //! \brief wait on a condition variable
+    //!
+    //! Wait on a condition variable. This function will atomically unlock the provided mutex and block on the condition
+    //! in one step. Blocking will occur until a future `notify` or `notifyAll` call is made to this variable on another
+    //! thread of execution. This function delegates to the underlying implementation.
+    //!
+    //! \warning it is invalid to supply a mutex different from those supplied by others
+    //! \warning conditions *must* be rechecked after the condition variable unlocks
+    //! \warning the mutex must be locked by the calling task
+    //!
+    //! \param mutex: mutex to unlock as part of this operation
+    void wait(Os::Mutex& mutex);
+
+    //! \brief notify a single waiter on this condition variable
+    //!
+    //! Notify a single waiter on this condition variable. It is not necessary to hold the mutex supplied by the waiters
+    //! and it is advantageous not to hold the lock to prevent immediate re-blocking. This function delegates to the
+    //! underlying implementation.
+    void notify() override;
+
+    //! \brief notify all waiters on this condition variable
+    //!
+    //! Notify all waiters on this condition variable. It is not necessary to hold the mutex supplied by the waiters
+    //! and it is advantageous not to hold the lock to prevent immediate re-blocking. This function delegates to the
+    //! underlying implementation.
+    void notifyAll() override;
+
+    //! \brief return the underlying condition variable handle (implementation specific). Delegates to implementation.
+    //! \return internal task handle representation
+    ConditionVariableHandle* getHandle() override;
+
+  private:
+    //! Pointer to mutex object previously used
+    Os::Mutex* m_lock = nullptr;
+
+    // This section is used to store the implementation-defined file handle. To Os::File and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    alignas(FW_HANDLE_ALIGNMENT)
+        ConditionVariableHandleStorage m_handle_storage;  //!< Storage for aligned FileHandle data
+    ConditionVariableInterface& m_delegate;               //!< Delegate for the real implementation
+};
+}  // namespace Os
+#endif  // OS_CONDITION_HPP_
+```
+
+### `Console.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Console.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Console.cpp
+// \brief common function implementation for Os::Console
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/Console.hpp>
+
+namespace Os {
+Console::Console()
+    : ConsoleInterface(),
+      Fw::Logger(),
+      m_handle_storage(),
+      m_delegate(*ConsoleInterface::getDelegate(m_handle_storage)) {}
+
+Console::~Console() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<ConsoleInterface*>(&this->m_handle_storage[0]));
+    m_delegate.~ConsoleInterface();
+}
+
+Console::Console(const Console& other)
+    : m_handle_storage(), m_delegate(*Console::getDelegate(m_handle_storage, &other.m_delegate)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<Console*>(&this->m_handle_storage[0]));
+}
+
+Console& Console::operator=(const Console& other) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<Console*>(&this->m_handle_storage[0]));
+    if (this != &other) {
+        this->m_delegate = *ConsoleInterface::getDelegate(m_handle_storage, &other.m_delegate);
+    }
+    return *this;
+}
+
+void Console::writeMessage(const CHAR* message, const FwSizeType size) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<ConsoleInterface*>(&this->m_handle_storage));
+    FW_ASSERT(message != nullptr || size == 0);
+    this->m_delegate.writeMessage(message, size);
+}
+
+void Console::writeMessage(const Fw::StringBase& message) {
+    this->writeMessage(message.toChar(), message.length());
+}
+
+ConsoleHandle* Console::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<ConsoleInterface*>(&this->m_handle_storage));
+    return this->m_delegate.getHandle();
+}
+
+void Console::write(const CHAR* message, const FwSizeType size) {
+    Console::getSingleton().writeMessage(message, size);
+}
+
+void Console::write(const Fw::StringBase& message) {
+    Console::getSingleton().writeMessage(message.toChar(), message.length());
+}
+
+void Console::init() {
+    // Force trigger on the fly singleton setup
+    (void)Console::getSingleton();
+}
+
+Console& Console::getSingleton() {
+    static Console s_singleton;
+    Fw::Logger::registerLogger(&s_singleton);
+    return s_singleton;
+}
+}  // namespace Os
+```
+
+### `Console.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Console.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Console.hpp
+// \brief common function definitions for Os::Console
+// ======================================================================
+#ifndef Os_Console_hpp_
+#define Os_Console_hpp_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Os/Console.hpp>
+#include <Os/Os.hpp>
+
+namespace Os {
+//! \brief Base class for storing implementation specific handle information
+struct ConsoleHandle {};
+
+// \brief Interface defining the properties of the console
+class ConsoleInterface {
+  public:
+    //! \brief Default constructor
+    ConsoleInterface() = default;
+
+    //! \brief Default destructor
+    virtual ~ConsoleInterface() = default;
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console with a bounded size.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    virtual void writeMessage(const CHAR* message, const FwSizeType size) = 0;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    virtual ConsoleHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a console delegate object
+    //!
+    //! This function must return a pointer to a `ConsoleInterface` object that contains the real implementation of
+    //! the console functions as defined by the implementor.  This function must do several things to be considered
+    //! correctly implemented:
+    //!
+    //! 1. Assert that their implementation fits within FW_HANDLE_MAX_SIZE.
+    //!    e.g. `static_assert(sizeof(PosixFileImplementation) <= sizeof Os::File::m_handle_storage,
+    //!        "FW_HANDLE_MAX_SIZE too small");`
+    //! 2. Assert that their implementation aligns within FW_HANDLE_ALIGNMENT.
+    //!    e.g. `static_assert((FW_HANDLE_ALIGNMENT % alignof(PosixFileImplementation)) == 0, "Bad handle alignment");`
+    //! 3. If to_copy is null, placement new their implementation into `aligned_placement_new_memory`
+    //!    e.g. `FileInterface* interface = new (aligned_placement_new_memory) PosixFileImplementation;`
+    //! 4. If to_copy is non-null, placement new using copy constructor their implementation into
+    //!    `aligned_placement_new_memory`
+    //!    e.g. `FileInterface* interface = new (aligned_placement_new_memory) PosixFileImplementation(*to_copy);`
+    //! 5. Return the result of the placement new
+    //!    e.g. `return interface;`
+    //!
+    //! \return result of placement new, must be equivalent to `aligned_placement_new_memory`
+    //!
+    static ConsoleInterface* getDelegate(ConsoleHandleStorage& aligned_placement_new_memory,
+                                         const ConsoleInterface* to_copy = nullptr);
+};
+
+class Console : public ConsoleInterface, public Fw::Logger {
+  public:
+    //! \brief Default constructor
+    Console();
+
+    //! \brief Default destructor
+    ~Console();
+
+    //! \brief copy constructor that copies the internal representation
+    Console(const Console& other);
+
+    //! \brief assignment operator that copies the internal representation
+    Console& operator=(const Console& other);
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console with a bounded size. This will delegate to the implementation defined write
+    //! method.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    void writeMessage(const CHAR* message, const FwSizeType size) override;
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console as stored as a StringBase
+    //!
+    //! \param message: raw message to write (StringBase)
+    void writeMessage(const Fw::StringBase& message) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    ConsoleHandle* getHandle() override;
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console as stored as a StringBase
+    //!
+    //! \param message: raw message to write (StringBase)
+    static void write(const Fw::StringBase& message);
+
+    //! \brief write message to the global console
+    //!
+    //! Write a message to the console with a bounded size. This will delegate to the global singleton
+    //! implementation.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    static void write(const CHAR* message, const FwSizeType size);
+
+    //! \brief initialize singleton
+    static void init();
+
+    //! \brief get a reference to singleton
+    //! \return reference to singleton
+    static Console& getSingleton();
+
+  private:
+    // This section is used to store the implementation-defined console handle. To Os::Console and fprime, this type
+    // is opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle
+    // in the byte-array here and set `handle` to that address for storage.
+    alignas(FW_HANDLE_ALIGNMENT) ConsoleHandleStorage m_handle_storage;  // Storage for the delegate
+    ConsoleInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+}  // namespace Os
+
+#endif
+```
+
+### `Cpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Cpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Cpu.hpp
+// \brief common function implementations for Os::Cpu
+// ======================================================================
+#include "Os/Cpu.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+
+Cpu::Cpu() : m_delegate(*CpuInterface::getDelegate(m_handle_storage)) {}
+
+Cpu::~Cpu() {
+    m_delegate.~CpuInterface();
+}
+
+void Cpu::init() {
+    (void)Cpu::getSingleton();
+}
+
+Cpu& Cpu::getSingleton() {
+    static Cpu _singleton;
+    return _singleton;
+}
+
+Cpu::Status Cpu::_getCount(FwSizeType& cpu_count) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<CpuInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate._getCount(cpu_count);
+}
+
+Cpu::Status Cpu::_getTicks(Ticks& ticks, FwSizeType cpu_index) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<CpuInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate._getTicks(ticks, cpu_index);
+}
+
+CpuHandle* Cpu::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<CpuInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+Cpu::Status Cpu::getCount(FwSizeType& cpu_count) {
+    return Cpu::getSingleton()._getCount(cpu_count);
+}
+
+Cpu::Status Cpu::getTicks(Ticks& ticks, FwSizeType cpu_index) {
+    return Cpu::getSingleton()._getTicks(ticks, cpu_index);
+}
+}  // namespace Os
+```
+
+### `Cpu.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Cpu.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Cpu.hpp
+// \brief common function definitions for Os::Cpu
+// ======================================================================
+#include "Os/Os.hpp"
+
+#ifndef OS_CPU_HPP_
+#define OS_CPU_HPP_
+
+namespace Os {
+
+//! \brief Cpu variable handle parent
+class CpuHandle {};
+
+//! \brief interface for cpu implementation
+class CpuInterface {
+  public:
+    using Status = Os::Generic::Status;
+    using Ticks = Os::Generic::UsedTotal;
+
+    //! Default constructor
+    CpuInterface() = default;
+    //! Default destructor
+    virtual ~CpuInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    CpuInterface(const CpuInterface& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    virtual CpuInterface& operator=(const CpuInterface& other) = delete;
+
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    virtual Status _getCount(FwSizeType& cpu_count) = 0;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    virtual Status _getTicks(Ticks& ticks, FwSizeType cpu_index) = 0;
+
+    //! \brief return the underlying cpu handle (implementation specific).
+    //! \return internal task handle representation
+    virtual CpuHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a Mutex delegate object
+    static CpuInterface* getDelegate(CpuHandleStorage& aligned_new_memory);
+};
+
+//! \brief cpu implementation
+class Cpu final : public CpuInterface {
+  public:
+    //! \brief default constructor
+    Cpu();
+
+    //! \brief default virtual destructor
+    ~Cpu() final;
+
+    //! \brief copy constructor is forbidden
+    Cpu(const CpuInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    Cpu(const CpuInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    CpuInterface& operator=(const CpuInterface& other) override = delete;
+
+    //-----------------------------------------------------------------------------
+    // Interface methods
+    //-----------------------------------------------------------------------------
+
+    //! \brief initialize the singleton
+    static void init();
+
+    //! \brief return singleton
+    static Cpu& getSingleton();
+
+    //-----------------------------------------------------------------------------
+    // Delegating methods
+    //-----------------------------------------------------------------------------
+
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    Status _getCount(FwSizeType& cpu_count) override;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! delegates to the underlying implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    Status _getTicks(Ticks& ticks, FwSizeType cpu_index) override;
+
+    //! \brief return the underlying cpu handle (implementation specific).
+    //! \return internal task handle representation
+    CpuHandle* getHandle() override;
+
+    //-----------------------------------------------------------------------------
+    // Static interface (singleton) methods
+    //-----------------------------------------------------------------------------
+
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps a singleton implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    static Status getCount(FwSizeType& cpu_count);
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! a singleton implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    static Status getTicks(Ticks& ticks, FwSizeType cpu_index);
+
+  private:
+    // This section is used to store the implementation-defined file handle. To Os::File and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    alignas(FW_HANDLE_ALIGNMENT) CpuHandleStorage m_handle_storage;  //!< Storage for aligned data
+    CpuInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+}  // namespace Os
+#endif  // OS_CONDITION_HPP_
+```
+
+### `Delegate.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Delegate.hpp`
+
+
+````cpp
+// ======================================================================
+// \title Os/Delegate.hpp
+// \brief helper functions to ease correct getDelegate implementations
+// ======================================================================
+#include <new>
+#include <type_traits>
+#include "Fw/Types/Assert.hpp"
+#include "Os/Os.hpp"
+#ifndef OS_DELEGATE_HPP_
+#define OS_DELEGATE_HPP_
+namespace Os {
+namespace Delegate {
+
+//! \brief Make a delegate of type Interface using Implementation without copy-constructor support (generic function)
+//!
+//! This function is a generic implementation of the `getDelegate` functions provided for each function within Os. This
+//! is templated over two types: Interface (e.g. TaskInterface) the interface the delegate supports, and Implementation
+//! the implementation of the interface. This function takes care of the critical requirements of the getDelegate
+//! function:
+//!   1. Ensure Implementation is derived from Interface
+//!   2. Ensure Implementation fits within FW_HANDLE_MAX_SIZE
+//!   3. Ensure Implementation alignment fits within FW_HANDLE_ALIGNMENT
+//!   4. Performs the correct placement new for normal constructors
+//!   5. Ensure the returned pointer is not nullptr
+//!
+//! Implementors of a `getDelegate` function may use this function by calling it and returning the result.
+//!
+//! > Neither Interface nor Implementation is allowed to support copy-constructors
+//!
+//! Example: TaskInterface getDelegate (Without Copy-Constructor)
+//!
+//! ```c++
+//! #include "Os/Delegate.hpp"
+//!
+//! namespace Os {
+//! TaskInterface* TaskInterface::getDelegate(HandleStorage& aligned_new_memory) {
+//!   return Os::Delegate::makeDelegate<TaskInterface, Os::Posix::Task::PosixTask>(aligned_new_memory);
+//! }
+//! }
+//! ```
+//! \tparam Interface: interface the delegate supports (e.g. TaskInterface)
+//! \tparam Implementation: implementation class of the delegate (e.g. PosixTask)
+//! \param aligned_new_memory: memory to be filled via placement new call
+//! \return pointer to implementation result of placement new
+template <class Interface, class Implementation, class StorageType>
+inline Interface* makeDelegate(StorageType& aligned_new_memory) {
+    // Ensure prerequisites before performing placement new
+    static_assert(std::is_base_of<Interface, Implementation>::value, "Implementation must derive from Interface");
+    static_assert(sizeof(Implementation) <= sizeof(StorageType), "Handle size not large enough");
+    static_assert((FW_HANDLE_ALIGNMENT % alignof(Implementation)) == 0, "Handle alignment invalid");
+    // Placement new the object and ensure non-null result
+    Implementation* interface = new (aligned_new_memory) Implementation;
+    FW_ASSERT(interface != nullptr);
+    return interface;
+}
+
+//! \brief Make a delegate of type Interface using Implementation with copy-constructor support (generic function)
+//!
+//! This function is a generic implementation of the `getDelegate` functions provided for each function within Os. This
+//! is templated over two types: Interface (e.g. TaskInterface) the interface the delegate supports, and Implementation
+//! the implementation of the interface. This function takes care of the critical requirements of the getDelegate
+//! function:
+//!   1. Ensure Implementation is derived from Interface
+//!   2. Ensure Implementation fits within FW_HANDLE_MAX_SIZE
+//!   3. Ensure Implementation alignment fits within FW_HANDLE_ALIGNMENT
+//!   4. Performs the correct placement new for normal and copy constructors
+//!   5. Ensure the returned pointer is not nullptr
+//!
+//! Implementors of a `getDelegate` function may use this function by calling it and returning the result.
+//!
+//! Example: FileInterface getDelegate Supporting Copy-Constructor
+//!
+//! ```c++
+//! #include "Os/Delegate.hpp"
+//!
+//! namespace Os {
+//! FileInterface* FileInterface::getDelegate(HandleStorage& aligned_new_memory, const FileInterface* to_copy) {
+//!   return Os::Delegate::makeDelegate<FileInterface, Os::Posix::File::PosixFile>(aligned_new_memory, to_copy);
+//! }
+//! }
+//! ```
+//! \tparam Interface: interface the delegate supports (e.g. FileInterface)
+//! \tparam Implementation: implementation class of the delegate (e.g. PosixFile)
+//! \param aligned_new_memory: memory to be filled via placement new call
+//! \return pointer to implementation result of placement new
+//! \param to_copy: pointer to Interface to be copied by copy constructor
+//! \return pointer to implementation result of placement new
+template <class Interface, class Implementation, class StorageType>
+inline Interface* makeDelegate(StorageType& aligned_new_memory, const Interface* to_copy) {
+    const Implementation* copy_me = reinterpret_cast<const Implementation*>(to_copy);
+    // Ensure prerequisites before performing placement new
+    static_assert(std::is_base_of<Interface, Implementation>::value, "Implementation must derive from Interface");
+    static_assert(sizeof(Implementation) <= sizeof(aligned_new_memory), "Handle size not large enough");
+    static_assert((FW_HANDLE_ALIGNMENT % alignof(Implementation)) == 0, "Handle alignment invalid");
+    // Placement new the object and ensure non-null result
+    Implementation* interface = nullptr;
+    if (to_copy == nullptr) {
+        interface = new (aligned_new_memory) Implementation;
+    } else {
+        interface = new (aligned_new_memory) Implementation(*copy_me);
+    }
+    FW_ASSERT(interface != nullptr);
+    return interface;
+}
+}  // namespace Delegate
+}  // namespace Os
+#endif
+````
+
+### `Directory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Directory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Directory.cpp
+// \brief common function implementation for Os::Directory
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/Directory.hpp>
+
+namespace Os {
+
+Directory::Directory()
+    : m_is_open(false), m_handle_storage(), m_delegate(*DirectoryInterface::getDelegate(m_handle_storage)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+}
+
+Directory::~Directory() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    if (this->m_is_open) {
+        this->close();
+    }
+    this->m_delegate.~DirectoryInterface();
+}
+
+// ------------------------------------------------------------
+// Directory operations delegating to implementation
+// ------------------------------------------------------------
+DirectoryHandle* Directory::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+Directory::Status Directory::open(const char* path, OpenMode mode) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    FW_ASSERT(mode >= 0 and mode < OpenMode::MAX_OPEN_MODE);
+    Status status = this->m_delegate.open(path, mode);
+    if (status == Status::OP_OK) {
+        this->m_is_open = true;
+    }
+    return status;
+}
+
+bool Directory::isOpen() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    return this->m_is_open;
+}
+Directory::Status Directory::rewind() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    if (not this->m_is_open) {
+        return Status::NOT_OPENED;
+    }
+    return this->m_delegate.rewind();
+}
+
+Directory::Status Directory::read(char* fileNameBuffer, FwSizeType bufSize) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    if (not this->m_is_open) {
+        return Status::NOT_OPENED;
+    }
+    FW_ASSERT(fileNameBuffer != nullptr);
+    Status status = this->m_delegate.read(fileNameBuffer, bufSize);
+    fileNameBuffer[bufSize - 1] = '\0';  // Guarantee null-termination
+    return status;
+}
+
+Directory::Status Directory::read(Fw::StringBase& filename) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    if (not this->m_is_open) {
+        return Status::NOT_OPENED;
+    }
+    return this->m_delegate.read(const_cast<char*>(filename.toChar()), filename.getCapacity());
+}
+
+void Directory::close() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<DirectoryInterface*>(&this->m_handle_storage[0]));
+    this->m_is_open = false;
+    return this->m_delegate.close();
+}
+
+// ------------------------------------------------------------
+// Common functions built on top of OS-specific functions
+// ------------------------------------------------------------
+
+Directory::Status Directory::getFileCount(FwSizeType& fileCount) {
+    if (not this->m_is_open) {
+        return Status::NOT_OPENED;
+    }
+    // Rewind to ensure we start from the beginning of the stream
+    if (this->rewind() != Status::OP_OK) {
+        return Status::OTHER_ERROR;
+    }
+    const FwSizeType loopLimit = std::numeric_limits<FwSizeType>::max();
+    FwSizeType count = 0;
+    char unusedBuffer[1];  // buffer must have size but is unused
+    Status readStatus = Status::OP_OK;
+    fileCount = 0;
+    // Count files by reading each file entry until there is NO_MORE_FILES
+    for (FwSizeType iter = 0; iter < loopLimit; ++iter) {
+        readStatus = this->read(unusedBuffer, sizeof(unusedBuffer));
+        if (readStatus == Status::NO_MORE_FILES) {
+            break;
+        } else if (readStatus != Status::OP_OK) {
+            return Status::OTHER_ERROR;
+        }
+        count++;
+    }
+    fileCount = count;
+    if (this->rewind() != Status::OP_OK) {
+        return Status::OTHER_ERROR;
+    }
+    return Status::OP_OK;
+}
+
+Directory::Status Directory::readDirectory(Fw::String filenameArray[],
+                                           const FwSizeType filenameArraySize,
+                                           FwSizeType& filenameCount) {
+    FW_ASSERT(filenameArray != nullptr);
+    FW_ASSERT(filenameArraySize > 0);
+    if (not this->m_is_open) {
+        return Status::NOT_OPENED;
+    }
+    // Rewind to ensure we start reading from the beginning of the stream
+    if (this->rewind() != Status::OP_OK) {
+        return Status::OTHER_ERROR;
+    }
+
+    Status readStatus = Status::OP_OK;
+    Status returnStatus = Status::OP_OK;
+    FwSizeType index;
+    filenameCount = 0;
+    // Iterate through the directory and read the filenames into the array
+    for (index = 0; index < filenameArraySize; index++) {
+        readStatus = this->read(filenameArray[index]);
+        if (readStatus == Status::NO_MORE_FILES) {
+            break;
+        } else if (readStatus != Status::OP_OK) {
+            return Status::OTHER_ERROR;
+        }
+    }
+    filenameCount = index;
+
+    if (this->rewind() != Status::OP_OK) {
+        return Status::OTHER_ERROR;
+    }
+
+    return returnStatus;
+}
+
+}  // namespace Os
+```
+
+### `Directory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Directory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Directory.hpp
+// \brief Os::Directory interface definition
+// ======================================================================
+
+#ifndef _OS_DIRECTORY_HPP_
+#define _OS_DIRECTORY_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/String.hpp>
+#include <Os/Os.hpp>
+
+namespace Os {
+
+struct DirectoryHandle {};
+
+class DirectoryInterface {
+  public:
+    enum Status {
+        OP_OK,           //!<  Operation was successful
+        DOESNT_EXIST,    //!<  Directory doesn't exist
+        NO_PERMISSION,   //!<  No permission to read directory
+        NOT_OPENED,      //!<  Directory hasn't been opened yet
+        NOT_DIR,         //!<  Path is not a directory
+        NO_MORE_FILES,   //!<  Directory stream has no more files
+        FILE_LIMIT,      //!<  Directory has more files than can be read
+        BAD_DESCRIPTOR,  //!<  Directory stream descriptor is invalid
+        ALREADY_EXISTS,  //!<  Directory already exists
+        NOT_SUPPORTED,   //!<  Operation is not supported by the current implementation
+        OTHER_ERROR,     //!<  A catch-all for other errors. Have to look in implementation-specific code
+    };
+
+    enum OpenMode {
+        READ,               //!<  Error if directory doesn't exist
+        CREATE_IF_MISSING,  //!<  Create directory if it doesn't exist
+        CREATE_EXCLUSIVE,   //!<  Create directory and error if it already exists
+        MAX_OPEN_MODE       //!<  Maximum value of OpenMode
+    };
+
+    //! \brief default constructor
+    DirectoryInterface() = default;
+
+    //! \brief default virtual destructor
+    virtual ~DirectoryInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    DirectoryInterface(const DirectoryInterface& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    DirectoryInterface& operator=(const DirectoryInterface& other) = delete;
+
+    //! \brief return the underlying Directory handle (implementation specific)
+    //! \return internal Directory handle representation
+    virtual DirectoryHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a Directory delegate object
+    static DirectoryInterface* getDelegate(DirectoryHandleStorage& aligned_new_memory);
+
+    // -----------------------------------------------------------------
+    // Directory operations to be implemented by an OSAL implementation
+    // -----------------------------------------------------------------
+    // These functions are to be overridden in each OS implementation
+    // See an example in in Os/Posix/Directory.hpp
+
+    //! \brief Open or create a directory
+    //!
+    //! Using the path provided, this function will open or create a directory.
+    //! Use OpenMode::READ to open an existing directory and error if the directory is not found
+    //! Use OpenMode::CREATE_IF_MISSING to open a directory, creating the directory if it doesn't exist
+    //! Use OpenMode::CREATE_EXCLUSIVE to open a directory, creating the directory and erroring if it already exists
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //!
+    //! \param path: path of directory to open
+    //! \param mode: enum (READ, CREATE_IF_MISSING, CREATE_EXCLUSIVE). See notes above for more information
+    //! \return status of the operation
+    virtual Status open(const char* path, OpenMode mode) = 0;
+
+    //! \brief Rewind directory stream
+    //!
+    //! Each read operation moves the seek position forward. This function resets the seek position to the beginning.
+    //!
+    //! \return status of the operation
+    virtual Status rewind() = 0;
+
+    //! \brief Get next filename from directory stream
+    //!
+    //! Write at most buffSize characters of the file name to fileNameBuffer and guarantee null-termination.
+    //! This function skips the current directory (.) and parent directory (..) entries.
+    //! Returns NO_MORE_FILES if there are no more files to read from the buffer.
+    //!
+    //! It is invalid to pass `nullptr` as fileNameBuffer.
+    //!
+    //! \param fileNameBuffer: buffer to store filename
+    //! \param buffSize: size of fileNameBuffer
+    //! \return status of the operation
+    virtual Status read(char* fileNameBuffer, FwSizeType buffSize) = 0;
+
+    //! \brief Get next filename from directory stream and write it to a Fw::StringBase object
+    //!
+    //! \param filename: Fw::StringBase (or derived) object to store filename in
+    //! \return status of the operation
+    // virtual Status read(Fw::StringBase& filename) = 0;
+
+    //! \brief Close directory
+    virtual void close() = 0;
+};
+
+//! \brief Directory class
+//!
+//! This class provides a common interface for directory operations, such as reading files in a directory
+//! and getting the number of files in a directory.
+class Directory final : public DirectoryInterface {
+  public:
+    //! \brief Constructor
+    Directory();
+
+    //! \brief Destructor
+    //!
+    //! Destructor will close the Directory if it is open
+    ~Directory() final;
+
+    //! \brief return the underlying Directory handle (implementation specific)
+    //! \return internal Directory handle representation
+    DirectoryHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific Directory member functions
+    // ------------------------------------------------------------
+    // These functions are overridden in each OS implementation (e.g. in Os/Posix/Directory.hpp)
+
+    //! \brief Open or create a directory
+    //!
+    //! Using the path provided, this function will open or create a directory.
+    //! Use OpenMode::READ to open an existing directory and error if the directory is not found
+    //! Use OpenMode::CREATE_IF_MISSING to open a directory, creating the directory if it doesn't exist
+    //! Use OpenMode::CREATE_EXCLUSIVE to open a directory, creating the directory and erroring if it already exists
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //!
+    //! \param path: path of directory to open
+    //! \param mode: enum (READ, CREATE_IF_MISSING, CREATE_EXCLUSIVE). See notes above for more information
+    //! \return status of the operation
+    Status open(const char* path, OpenMode mode) override;
+
+    //! \brief Check if Directory is open or not
+    //! \return true if Directory is open, false otherwise
+    bool isOpen();
+
+    //! \brief Rewind directory stream
+    //!
+    //! Each read operation moves the seek position forward. This function resets the seek position to the beginning.
+    //!
+    //! \return status of the operation
+    Status rewind() override;
+
+    //! \brief Get next filename from directory stream
+    //!
+    //! Write at most buffSize characters of the file name to fileNameBuffer and guarantee null-termination.
+    //! This function skips the current directory (.) and parent directory (..) entries.
+    //! Returns NO_MORE_FILES if there are no more files to read from the buffer.
+    //!
+    //! It is invalid to pass `nullptr` as fileNameBuffer.
+    //!
+    //! \param fileNameBuffer: buffer to store filename
+    //! \param buffSize: size of fileNameBuffer
+    //! \return status of the operation
+    Status read(char* fileNameBuffer, FwSizeType buffSize) override;
+
+    //! \brief Close directory
+    void close() override;
+
+    // ------------------------------------------------------------
+    // Common functions built on top of OS-specific functions
+    // ------------------------------------------------------------
+
+    //! \brief Get next filename from directory stream and write it to a Fw::StringBase object
+    //!
+    //! \param filename: Fw::StringBase (or derived) object to store filename in
+    //! \return status of the operation
+    Status read(Fw::StringBase& filename);
+
+    //! \brief Read the contents of the directory and store filenames in filenameArray of size arraySize.
+    //!
+    //! The function first rewinds the directory stream to ensure reading starts from the beginning.
+    //! After reading, it rewinds the directory stream again, resetting seek position to beginning.
+    //!
+    //! \param filenameArray: array to store filenames
+    //! \param arraySize: size of filenameArray
+    //! \param filenameCount: number of filenames written to filenameArray (output)
+    //! \return status of the operation
+    Status readDirectory(Fw::String filenameArray[], const FwSizeType arraySize, FwSizeType& filenameCount);
+
+    //! \brief Get the number of files in the directory.
+    //!
+    //! Counts the number of files in the directory by reading each file entry and writing the count to fileCount.
+    //!
+    //! The function first rewinds the directory stream to ensure counting starts from the beginning.
+    //! After counting, it rewinds the directory stream again, resetting seek position to beginning.
+    //!
+    //! \param fileCount Reference to a variable where the file count will be stored.
+    //! \return Status indicating the result of the operation.
+    Status getFileCount(FwSizeType& fileCount);
+
+  private:
+    bool m_is_open;  //!< Flag indicating if the directory has been open
+
+  private:
+    // This section is used to store the implementation-defined Directory handle. To Os::Directory and fprime, this type
+    // is opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    alignas(FW_HANDLE_ALIGNMENT) DirectoryHandleStorage m_handle_storage;  //!< Directory handle storage
+    DirectoryInterface& m_delegate;
+};
+
+}  // namespace Os
+
+#endif
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/File.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/File.cpp
+// \brief common function implementation for Os::File
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/File.hpp>
+
+extern "C" {
+#include <Utils/Hash/libcrc/lib_crc.h>  // borrow CRC
+}
+namespace Os {
+
+File::File() : m_crc_buffer(), m_handle_storage(), m_delegate(*FileInterface::getDelegate(m_handle_storage)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+}
+
+File::~File() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    if (this->m_mode != OPEN_NO_MODE) {
+        this->close();
+    }
+    m_delegate.~FileInterface();
+}
+
+File::File(const File& other)
+    : m_mode(other.m_mode),
+      m_path(other.m_path),
+      m_crc(other.m_crc),
+      m_crc_buffer(),
+      m_handle_storage(),
+      m_delegate(*FileInterface::getDelegate(m_handle_storage, &other.m_delegate)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+}
+
+File& File::operator=(const File& other) {
+    if (this != &other) {
+        this->m_mode = other.m_mode;
+        this->m_path = other.m_path;
+        this->m_crc = other.m_crc;
+        this->m_delegate = *FileInterface::getDelegate(m_handle_storage, &other.m_delegate);
+    }
+    return *this;
+}
+
+File::Status File::open(const CHAR* filepath, File::Mode requested_mode) {
+    return this->open(filepath, requested_mode, OverwriteType::NO_OVERWRITE);
+}
+
+File::Status File::open(const CHAR* filepath, File::Mode requested_mode, File::OverwriteType overwrite) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(nullptr != filepath);
+    FW_ASSERT(File::Mode::OPEN_NO_MODE < requested_mode && File::Mode::MAX_OPEN_MODE > requested_mode);
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    FW_ASSERT((0 <= overwrite) && (overwrite < OverwriteType::MAX_OVERWRITE_TYPE));
+    // Check for already opened file
+    if (this->isOpen()) {
+        return File::Status::INVALID_MODE;
+    }
+    File::Status status = this->m_delegate.open(filepath, requested_mode, overwrite);
+    if (status == File::Status::OP_OK) {
+        this->m_mode = requested_mode;
+        this->m_path = filepath;
+        // Reset any open CRC calculations
+        this->m_crc = File::INITIAL_CRC;
+    }
+
+    return status;
+}
+
+void File::close() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(this->m_mode < Mode::MAX_OPEN_MODE);
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    this->m_delegate.close();
+    this->m_mode = Mode::OPEN_NO_MODE;
+    this->m_path = nullptr;
+}
+
+bool File::isOpen() const {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    return this->m_mode != Mode::OPEN_NO_MODE;
+}
+
+File::Status File::size(FwSizeType& size_result) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    if (OPEN_NO_MODE == this->m_mode) {
+        return File::Status::NOT_OPENED;
+    }
+    return this->m_delegate.size(size_result);
+}
+
+File::Status File::position(FwSizeType& position_result) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        return File::Status::NOT_OPENED;
+    }
+    return this->m_delegate.position(position_result);
+}
+
+File::Status File::preallocate(FwSizeType offset, FwSizeType length) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        return File::Status::NOT_OPENED;
+    } else if (OPEN_READ == this->m_mode) {
+        return File::Status::INVALID_MODE;
+    }
+    return this->m_delegate.preallocate(offset, length);
+}
+
+File::Status File::seek(FwSignedSizeType offset, File::SeekType seekType) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT((0 <= seekType) && (seekType < SeekType::MAX_SEEK_TYPE));
+    // Cannot do a seek with a negative offset in absolute mode
+    FW_ASSERT((seekType == File::SeekType::RELATIVE) || (offset >= 0));
+    FW_ASSERT((0 <= this->m_mode) && (this->m_mode < Mode::MAX_OPEN_MODE));
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        return File::Status::NOT_OPENED;
+    }
+    return this->m_delegate.seek(offset, seekType);
+}
+
+File::Status File::seek_absolute(FwSizeType offset) {
+    Os::File::Status status = File::Status::OTHER_ERROR;
+    // If the offset can be represented by a signed value, then we can perform a single seek
+    if (static_cast<FwSizeType>(std::numeric_limits<FwSignedSizeType>::max()) >= offset) {
+        // Check that the bounding above is correct
+        FW_ASSERT(static_cast<FwSignedSizeType>(offset) >= 0);
+        status = this->seek(static_cast<FwSignedSizeType>(offset), File::SeekType::ABSOLUTE);
+    }
+    // Otherwise, a full seek to any value represented by FwSizeType can be performed
+    // by at most 3 seeks of a FwSignedSizeType. Two half seeks (rounded down) that are
+    // strictly bounded by std::numeric_limits<FwSignedSizeType>::max() and one seek of
+    // a possibile "odd" byte to ensure odds offsets do not introduce an off-by-one-error.
+    // Thus we perform 3 seeks to guarantee that we can reach any position.
+    else {
+        FwSignedSizeType half_offset = static_cast<FwSignedSizeType>(offset >> 1);
+        bool is_odd = (offset % 2) == 1;
+        status = this->seek(half_offset, File::SeekType::ABSOLUTE);
+        if (status == File::Status::OP_OK) {
+            status = this->seek(half_offset, File::SeekType::RELATIVE);
+        }
+        if (status == File::Status::OP_OK) {
+            status = this->seek((is_odd) ? 1 : 0, File::SeekType::RELATIVE);
+        }
+    }
+    return status;
+}
+
+File::Status File::flush() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(this->m_mode < Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        return File::Status::NOT_OPENED;
+    } else if (OPEN_READ == this->m_mode) {
+        return File::Status::INVALID_MODE;
+    }
+    return this->m_delegate.flush();
+}
+
+File::Status File::read(U8* buffer, FwSizeType& size) {
+    return this->read(buffer, size, WaitType::WAIT);
+}
+
+File::Status File::read(U8* buffer, FwSizeType& size, File::WaitType wait) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(this->m_mode < Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        size = 0;
+        return File::Status::NOT_OPENED;
+    } else if (OPEN_READ != this->m_mode) {
+        size = 0;
+        return File::Status::INVALID_MODE;
+    }
+    return this->m_delegate.read(buffer, size, wait);
+}
+
+File::Status File::write(const U8* buffer, FwSizeType& size) {
+    return this->write(buffer, size, WaitType::WAIT);
+}
+
+File::Status File::write(const U8* buffer, FwSizeType& size, File::WaitType wait) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(this->m_mode < Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        size = 0;
+        return File::Status::NOT_OPENED;
+    } else if (OPEN_READ == this->m_mode) {
+        size = 0;
+        return File::Status::INVALID_MODE;
+    }
+    return this->m_delegate.write(buffer, size, wait);
+}
+
+FileHandle* File::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+File::Status File::calculateCrc(U32& crc) {
+    File::Status status = File::Status::OP_OK;
+    FwSizeType size = FW_FILE_CHUNK_SIZE;
+    crc = 0;
+    for (FwSizeType i = 0; i < std::numeric_limits<FwSizeType>::max(); i++) {
+        status = this->incrementalCrc(size);
+        // Break on eof or error
+        if ((size != FW_FILE_CHUNK_SIZE) || (status != File::OP_OK)) {
+            break;
+        }
+    }
+    // When successful, finalize the CRC
+    if (status == File::OP_OK) {
+        status = this->finalizeCrc(crc);
+    }
+    return status;
+}
+
+File::Status File::incrementalCrc(FwSizeType& size) {
+    File::Status status = File::Status::OP_OK;
+    FW_ASSERT(size <= FW_FILE_CHUNK_SIZE);
+    if (OPEN_NO_MODE == this->m_mode) {
+        status = File::Status::NOT_OPENED;
+    } else if (OPEN_READ != this->m_mode) {
+        status = File::Status::INVALID_MODE;
+    } else {
+        // Read data without waiting for additional data to be available
+        status = this->read(this->m_crc_buffer, size, File::WaitType::NO_WAIT);
+        if (OP_OK == status) {
+            for (FwSizeType i = 0; i < size && i < FW_FILE_CHUNK_SIZE; i++) {
+                this->m_crc = static_cast<U32>(update_crc_32(this->m_crc, static_cast<CHAR>(this->m_crc_buffer[i])));
+            }
+        }
+    }
+    return status;
+}
+
+File::Status File::finalizeCrc(U32& crc) {
+    File::Status status = File::Status::OP_OK;
+    crc = this->m_crc;
+    this->m_crc = File::INITIAL_CRC;
+    return status;
+}
+
+File::Status File::readline(U8* buffer, FwSizeType& size, File::WaitType wait) {
+    const FwSizeType requested_size = size;
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(this->m_mode < Mode::MAX_OPEN_MODE);
+    // Check that the file is open before attempting operation
+    if (OPEN_NO_MODE == this->m_mode) {
+        size = 0;
+        return File::Status::NOT_OPENED;
+    } else if (OPEN_READ != this->m_mode) {
+        size = 0;
+        return File::Status::INVALID_MODE;
+    }
+    FwSizeType original_location;
+    File::Status status = this->position(original_location);
+    if (status != Os::File::Status::OP_OK) {
+        size = 0;
+        (void)this->seek_absolute(original_location);
+        return status;
+    }
+    FwSizeType read = 0;
+    // Loop reading chunk by chunk
+    for (FwSizeType i = 0; i < size; i += read) {
+        FwSizeType current_chunk_size = FW_MIN(size - i, FW_FILE_CHUNK_SIZE);
+        read = current_chunk_size;
+        status = this->read(buffer + i, read, wait);
+        if (status != File::Status::OP_OK) {
+            return status;
+        }
+        // EOF break out now
+        if (read == 0) {
+            size = i;
+            return Os::File::Status::OP_OK;
+        }
+        // Loop from i to i + current_chunk_size looking for `\n`
+        for (FwSizeType j = i; j < (i + read); j++) {
+            // Newline seek back to after it, return the size read
+            if (buffer[j] == '\n') {
+                size = j + 1;
+                // Ensure that the computation worked and there is not overflow
+                FW_ASSERT(size <= requested_size);
+                FW_ASSERT(std::numeric_limits<FwSizeType>::max() - size >= original_location);
+                (void)this->seek_absolute(original_location + j + 1);
+                return Os::File::Status::OP_OK;
+            }
+        }
+    }
+    // Failed to find newline within data available
+    return Os::File::Status::OTHER_ERROR;
+}
+}  // namespace Os
+```
+
+### `File.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/File.hpp`
+
+
+````cpp
+// ======================================================================
+// \title Os/File.hpp
+// \brief common function definitions for Os::File
+// ======================================================================
+#ifndef Os_File_hpp_
+#define Os_File_hpp_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Os.hpp>
+
+// Forward declaration for UTs
+namespace Os {
+namespace Test {
+namespace FileTest {
+struct Tester;
+}
+}  // namespace Test
+}  // namespace Os
+
+namespace Os {
+
+//! \brief base implementation of FileHandle
+//!
+struct FileHandle {};
+
+// This class encapsulates a very simple file interface that has the most often-used features
+class FileInterface {
+  public:
+    enum Mode {
+        OPEN_NO_MODE,     //!<  File mode not yet selected
+        OPEN_READ,        //!<  Open file for reading
+        OPEN_CREATE,      //!< Open file for writing and truncates file if it exists, ie same flags as creat()
+        OPEN_WRITE,       //!<  Open file for writing
+        OPEN_SYNC_WRITE,  //!<  Open file for writing; writes don't return until data is on disk
+        OPEN_APPEND,      //!< Open file for appending
+        MAX_OPEN_MODE     //!< Maximum value of mode
+    };
+
+    enum Status {
+        OP_OK,              //!<  Operation was successful
+        DOESNT_EXIST,       //!<  File doesn't exist (for read)
+        NO_SPACE,           //!<  No space left
+        NO_PERMISSION,      //!<  No permission to read/write file
+        BAD_SIZE,           //!<  Invalid size parameter
+        NOT_OPENED,         //!<  file hasn't been opened yet
+        FILE_EXISTS,        //!< file already exist (for CREATE with O_EXCL enabled)
+        NOT_SUPPORTED,      //!< Kernel or file system does not support operation
+        INVALID_MODE,       //!< Mode for file access is invalid for current operation
+        INVALID_ARGUMENT,   //!< Invalid argument passed in
+        NO_MORE_RESOURCES,  //!< No more available resources
+        OTHER_ERROR,        //!<  A catch-all for other errors. Have to look in implementation-specific code
+        MAX_STATUS          //!< Maximum value of status
+    };
+
+    enum OverwriteType {
+        NO_OVERWRITE,  //!< Do NOT overwrite existing files
+        OVERWRITE,     //!< Overwrite file when it exists and creation was requested
+        MAX_OVERWRITE_TYPE
+    };
+
+    enum SeekType {
+        RELATIVE,  //!< Relative seek from current file offset
+        ABSOLUTE,  //!< Absolute seek from beginning of file
+        MAX_SEEK_TYPE
+    };
+
+    enum WaitType {
+        NO_WAIT,  //!< Do not wait for read/write operation to finish
+        WAIT,     //!< Do wait for read/write operation to finish
+        MAX_WAIT_TYPE
+    };
+
+    virtual ~FileInterface() = default;
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! Open the file passed in with the given mode. If overwrite is set to OVERWRITE, then opening files in
+    //! OPEN_CREATE mode will clobber existing files. Set overwrite to NO_OVERWRITE to preserve existing files.
+    //! The status of the open request is returned from the function call. Delegates to the chosen
+    //! implementation's `open` function.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //! It is invalid to supply `overwrite` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \param overwrite: overwrite existing file on create
+    //! \return: status of the open
+    //!
+    virtual Status open(const char* path, Mode mode, OverwriteType overwrite) = 0;
+
+    //! \brief close the file, if not opened then do nothing
+    //!
+    //! Closes the file, if open. Otherwise this function does nothing. Delegates to the chosen implementation's
+    //! `closeInternal` function. `mode` is set to `OPEN_NO_MODE`.
+    //!
+    virtual void close() = 0;
+
+    //! \brief get size of currently open file
+    //!
+    //! Get the size of the currently open file and fill the size parameter. Return status of the operation.
+    //! \param size: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status size(FwSizeType& size_result) = 0;
+
+    //! \brief get file pointer position of the currently open file
+    //!
+    //! Get the current position of the read/write pointer of the open file.
+    //! \param position: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status position(FwSizeType& position_result) = 0;
+
+    //! \brief pre-allocate file storage
+    //!
+    //! Pre-allocates file storage with at least `length` storage starting at `offset`. No-op on implementations
+    //! that cannot pre-allocate.
+    //!
+    //! It is invalid to pass a negative `offset`.
+    //! It is invalid to pass a negative `length`.
+    //!
+    //! \param offset: offset into file
+    //! \param length: length after offset to preallocate
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status preallocate(FwSizeType offset, FwSizeType length) = 0;
+
+    //! \brief seek the file pointer to the given offset
+    //!
+    //! Seek the file pointer to the given `offset`. If `seekType` is set to `ABSOLUTE` then the offset is calculated
+    //! from the start of the file, and if it is set to `RELATIVE` it is calculated from the current position.
+    //!
+    //! \param offset: offset to seek to
+    //! \param seekType: `ABSOLUTE` for seeking from beginning of file, `RELATIVE` to use current position.
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status seek(FwSignedSizeType offset, SeekType seekType) = 0;
+
+    //! \brief flush file contents to storage
+    //!
+    //! Flushes the file contents to storage (i.e. out of the OS cache to disk). Does nothing in implementations
+    //! that do not support flushing.
+    //!
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status flush() = 0;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Read data from this file up to the `size` and store it in `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been read successfully read or the end of the file has been
+    //! reached. When `wait` is set to `NO_WAIT` it will return whatever data is currently available.
+    //!
+    //! `size` will be updated to the count of bytes actually read. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status read(U8* buffer, FwSizeType& size, WaitType wait) = 0;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Write data to this file up to the `size` from the `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been written successfully to disk. When `wait` is set to
+    //! `NO_WAIT` it will return once the data is sent to the OS.
+    //!
+    //! `size` will be updated to the count of bytes actually written. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data to write to disk, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    virtual Status write(const U8* buffer, FwSizeType& size, WaitType wait) = 0;
+
+    //! \brief returns the raw file handle
+    //!
+    //! Gets the raw file handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw file handle
+    //!
+    virtual FileHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a file delegate object
+    //!
+    //! This function must return a pointer to a `FileInterface` object that contains the real implementation of the
+    //! file functions as defined by the implementor.  This function must do several things to be considered correctly
+    //! implemented:
+    //!
+    //! 1. Assert that the supplied memory is non-null. e.g `FW_ASSERT(aligned_placement_new_memory != NULL);`
+    //! 2. Assert that their implementation fits within FW_HANDLE_MAX_SIZE.
+    //!    e.g. `static_assert(sizeof(PosixFileImplementation) <= sizeof Os::File::m_handle_storage,
+    //!        "FW_HANDLE_MAX_SIZE too small");`
+    //! 3. Assert that their implementation aligns within FW_HANDLE_ALIGNMENT.
+    //!    e.g. `static_assert((FW_HANDLE_ALIGNMENT % alignof(PosixFileImplementation)) == 0, "Bad handle alignment");`
+    //! 4. If to_copy is null, placement new their implementation into `aligned_placement_new_memory`
+    //!    e.g. `FileInterface* interface = new (aligned_placement_new_memory) PosixFileImplementation;`
+    //! 5. If to_copy is non-null, placement new using copy constructor their implementation into
+    //!    `aligned_placement_new_memory`
+    //!    e.g. `FileInterface* interface = new (aligned_placement_new_memory) PosixFileImplementation(*to_copy);`
+    //! 6. Return the result of the placement new
+    //!    e.g. `return interface;`
+    //!
+    //! \return result of placement new, must be equivalent to `aligned_placement_new_memory`
+    //!
+    static FileInterface* getDelegate(FileHandleStorage& aligned_placement_new_memory,
+                                      const FileInterface* to_copy = nullptr);
+};
+
+class File final : public FileInterface {
+    friend struct Os::Test::FileTest::Tester;
+
+  public:
+    //! \brief constructor
+    //!
+    File();
+    //! \brief destructor
+    //!
+    //! Destructor closes the file if it is open
+    ~File() final;
+
+    //! \brief copy constructor that copies the internal representation
+    File(const File& other);
+
+    //! \brief assignment operator that copies the internal representation
+    File& operator=(const File& other);
+
+    //! \brief determine if the file is open
+    //! \return true if file is open, false otherwise
+    //!
+    bool isOpen() const;
+
+    // ------------------------------------
+    // Functions supplying default values
+    // ------------------------------------
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! Open the file passed in with the given mode. Opening files with `OPEN_CREATE` mode will not clobber existing
+    //! files. Use other `open` method to set overwrite flag and clobber existing files. The status of the open
+    //! request is returned from the function call. Delegates to the chosen implementation's `open` function.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \return: status of the open
+    //!
+    Os::FileInterface::Status open(const char* path, Mode mode);
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Read data from this file up to the `size` and store it in `buffer`.  This version will
+    //! will block until the requested size has been read successfully read or the end of the file has been
+    //! reached.
+    //!
+    //! `size` will be updated to the count of bytes actually read. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status read(U8* buffer, FwSizeType& size);
+
+    //! \brief write data to this file from the supplied buffer bounded by size
+    //!
+    //! Write data from `buffer` up to the `size` and store it in this file. This call
+    //! will block until the requested size has been written. Otherwise, this call will write without blocking.
+    //!
+    //! `size` will be updated to the count of bytes actually written. Status will reflect the success/failure of
+    //! the write operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //!
+    //! \param buffer: memory location of data to write to file
+    //! \param size: size of data to write
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status write(const U8* buffer, FwSizeType& size);
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! Open the file passed in with the given mode. If overwrite is set to OVERWRITE, then opening files in
+    //! OPEN_CREATE mode will clobber existing files. Set overwrite to NO_OVERWRITE to preserve existing files.
+    //! The status of the open request is returned from the function call. Delegates to the chosen
+    //! implementation's `open` function.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //! It is invalid to supply `overwrite` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \param overwrite: overwrite existing file on create
+    //! \return: status of the open
+    //!
+    Os::FileInterface::Status open(const char* path, Mode mode, OverwriteType overwrite) override;
+
+    //! \brief close the file, if not opened then do nothing
+    //!
+    //! Closes the file, if open. Otherwise this function does nothing. Delegates to the chosen implementation's
+    //! `closeInternal` function. `mode` is set to `OPEN_NO_MODE`.
+    //!
+    void close() override;
+
+    //! \brief get size of currently open file
+    //!
+    //! Get the size of the currently open file and fill the size parameter. Return status of the operation.
+    //! \param size: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status size(FwSizeType& size_result) override;
+
+    //! \brief get file pointer position of the currently open file
+    //!
+    //! Get the current position of the read/write pointer of the open file.
+    //! \param position: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status position(FwSizeType& position_result) override;
+
+    //! \brief pre-allocate file storage
+    //!
+    //! Pre-allocates file storage with at least `length` storage starting at `offset`. No-op on implementations
+    //! that cannot pre-allocate.
+    //!
+    //! It is invalid to pass a negative `offset`.
+    //! It is invalid to pass a negative `length`.
+    //!
+    //! \param offset: offset into file
+    //! \param length: length after offset to preallocate
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status preallocate(FwSizeType offset, FwSizeType length) override;
+
+    //! \brief seek the file pointer to the given offset
+    //!
+    //! Seek the file pointer to the given `offset`. If `seekType` is set to `ABSOLUTE` then the offset is calculated
+    //! from the start of the file, and if it is set to `RELATIVE` it is calculated from the current position.
+    //!
+    //! \param offset: offset to seek to
+    //! \param seekType: `ABSOLUTE` for seeking from beginning of file, `RELATIVE` to use current position.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status seek(FwSignedSizeType offset, SeekType seekType) override;
+
+    //! \brief seek the file pointer to the given offset absolutely with the full range
+    //!
+    //! Seek the file pointer to the given `offset` absolutely from the beginning of the file. This function is
+    //! equivalent to calling `seek` with `ABSOLUTE` as the `seekType` with the exception that it can handle the
+    //! full range of `FwSizeType` values as returned by `size` and `position` calls.
+    //!
+    //! Internally, it will perform multiple seeks to reach the desired offset while never exceeding the signed
+    //! limit of the basic `seek` function.
+    //!
+    //! \param offset_unsigned: offset to absolutely seek to
+    //! \return OP_OK on success otherwise error status
+    Status seek_absolute(FwSizeType offset_unsigned);
+
+    //! \brief flush file contents to storage
+    //!
+    //! Flushes the file contents to storage (i.e. out of the OS cache to disk). Does nothing in implementations
+    //! that do not support flushing.
+    //!
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status flush() override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Read data from this file up to the `size` and store it in `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been read successfully read or the end of the file has been
+    //! reached. When `wait` is set to `NO_WAIT` it will return whatever data is currently available.
+    //!
+    //! `size` will be updated to the count of bytes actually read. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+
+    //!
+    Status read(U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief read a line from the file using `\n` as the delimiter
+    //!
+    //! Reads a single line from the file including the terminating '\n'. This will return an error if no line is
+    //! found within the specified buffer size. In the case of EOF, the line is read without the terminating '\n'.
+    //!
+    //! In the case of an error, this function will seek to the original location in the file. Otherwise, the
+    //! pointer will point to the first character after the `\n` or EOF in the case of no `\n`.
+    //!
+    //! It is invalid to send a null buffer.
+    //! It is invalid to send a size less than 0.
+    //! It is an error if the file is not opened for reading.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: maximum size of buffer to store the new line
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    Status readline(U8* buffer, FwSizeType& size, WaitType wait);
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Write data to this file up to the `size` from the `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been written successfully to disk. When `wait` is set to
+    //! `NO_WAIT` it will return once the data is sent to the OS.
+    //!
+    //! `size` will be updated to the count of bytes actually written. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data to write to disk, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status write(const U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief returns the raw file handle
+    //!
+    //! Gets the raw file handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw file handle
+    //!
+    FileHandle* getHandle() override;
+
+    //! \brief calculate the CRC32 of the entire file
+    //!
+    //! Calculates the CRC32 of the file's contents. The `crc` parameter will be updated to contain the CRC or 0 on
+    //! failure. Status will represent failure conditions. This call will be decomposed into calculations on
+    //! sections of the file `FW_FILE_CHUNK_SIZE` bytes long.
+    //!
+    //! This function requires that the file already be opened for "READ" mode.
+    //!
+    //! On error crc will be set to 0.
+    //!
+    //! \note: the file pointer will be positioned at the end of the file after this call.
+    //!
+    //! This function is equivalent to the following pseudo-code:
+    //!
+    //! ```
+    //! U32 crc;
+    //! do {
+    //!     size = FW_FILE_CHUNK_SIZE;
+    //!     m_file.incrementalCrc(size);
+    //! while (size == FW_FILE_CHUNK_SIZE);
+    //! m_file.finalize(crc);
+    //! ```
+    //! \param crc: U32 bit value to fill with CRC
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status calculateCrc(U32& crc);
+
+    //! \brief calculate the CRC32 of the next section of data
+    //!
+    //! Starting at the current file pointer, this will add `size` bytes of data to the currently calculated CRC.
+    //! Call `finalizeCrc` to retrieve the CRC or `calculateCrc` to perform a CRC on the entire file. This call will
+    //! not block waiting for data on the underlying read, nor will it reset the file position pointer. On error,
+    //! the current CRC results should be discarded by reopening the file or calling `finalizeCrc` and
+    //! discarding its result. `size` will be updated with the `size` actually read and used in the CRC calculation.
+    //!
+    //! This function requires that the file already be opened for "READ" mode.
+    //!
+    //! It is illegal for size to be less than or equal to 0 or greater than FW_FILE_CHUNK_SIZE.
+    //!
+    //! \param size: size of data to read for CRC
+    //! \return: status of the CRC calculation
+    //!
+    Status incrementalCrc(FwSizeType& size);
+
+    //! \brief finalize and retrieve the CRC value
+    //!
+    //! Finalizes the CRC computation and returns the CRC value. The `crc` value will be modified to contain the
+    //! crc or 0 on error. Note: this will reset any active CRC calculation and effectively re-initializes any
+    //! `incrementalCrc` calculation.
+    //!
+    //! On error crc will be set to 0.
+    //!
+    //! \param crc: value to fill
+    //! \return status of the CRC calculation
+    //!
+    Status finalizeCrc(U32& crc);
+
+  private:
+    static const U32 INITIAL_CRC = 0xFFFFFFFF;  //!< Initial value for CRC calculation
+
+    Mode m_mode = Mode::OPEN_NO_MODE;  //!< Stores mode for error checking
+    const CHAR* m_path = nullptr;      //!< Path last opened
+
+    U32 m_crc = File::INITIAL_CRC;  //!< Current CRC calculation
+    U8 m_crc_buffer[FW_FILE_CHUNK_SIZE];
+
+    // This section is used to store the implementation-defined file handle. To Os::File and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    //
+    alignas(FW_HANDLE_ALIGNMENT) FileHandleStorage m_handle_storage;  //!< Storage for aligned FileHandle data
+    FileInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+}  // namespace Os
+#endif
+````
+
+### `FileSystem.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/FileSystem.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/FileSystem.cpp
+// \brief common function implementation for Os::FileSystem
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/FileSystem.hpp>
+
+namespace Os {
+
+FileSystem::FileSystem() : m_handle_storage(), m_delegate(*FileSystemInterface::getDelegate(m_handle_storage)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+}
+
+FileSystem::~FileSystem() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    m_delegate.~FileSystemInterface();
+}
+
+FileSystemHandle* FileSystem::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+FileSystem::Status FileSystem::_removeDirectory(const char* path) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    return this->m_delegate._removeDirectory(path);
+}
+
+FileSystem::Status FileSystem::_removeFile(const char* path) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    return this->m_delegate._removeFile(path);
+}
+
+FileSystem::Status FileSystem::_rename(const char* sourcePath, const char* destPath) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(sourcePath != nullptr);
+    FW_ASSERT(destPath != nullptr);
+    return this->m_delegate._rename(sourcePath, destPath);
+}
+
+FileSystem::Status FileSystem::_getPathType(const char* path, PathType& pathType) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    return this->m_delegate._getPathType(path, pathType);
+}
+
+FileSystem::Status FileSystem::_getWorkingDirectory(char* path, FwSizeType bufferSize) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    FW_ASSERT(bufferSize > 0);  // because bufferSize=0 would trigger a malloc in some implementations (e.g. Posix)
+    return this->m_delegate._getWorkingDirectory(path, bufferSize);
+}
+
+FileSystem::Status FileSystem::_changeWorkingDirectory(const char* path) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    return this->m_delegate._changeWorkingDirectory(path);
+}
+
+FileSystem::Status FileSystem::_getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<FileSystemInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(path != nullptr);
+    return this->m_delegate._getFreeSpace(path, totalBytes, freeBytes);
+}
+
+void FileSystem::init() {
+    // Force trigger on the fly singleton setup
+    (void)FileSystem::getSingleton();
+}
+
+FileSystem& FileSystem::getSingleton() {
+    static FileSystem s_singleton;
+    return s_singleton;
+}
+
+// ------------------------------------------------------------
+// Static functions calling implementation-specific operations
+// ------------------------------------------------------------
+
+FileSystem::Status FileSystem::removeDirectory(const char* path) {
+    return FileSystem::getSingleton()._removeDirectory(path);
+}
+
+FileSystem::Status FileSystem::removeFile(const char* path) {
+    return FileSystem::getSingleton()._removeFile(path);
+}
+
+FileSystem::Status FileSystem::rename(const char* sourcePath, const char* destPath) {
+    return FileSystem::getSingleton()._rename(sourcePath, destPath);
+}
+
+FileSystem::Status FileSystem::getWorkingDirectory(char* path, FwSizeType bufferSize) {
+    return FileSystem::getSingleton()._getWorkingDirectory(path, bufferSize);
+}
+
+FileSystem::Status FileSystem::changeWorkingDirectory(const char* path) {
+    return FileSystem::getSingleton()._changeWorkingDirectory(path);
+}
+
+FileSystem::Status FileSystem::getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) {
+    return FileSystem::getSingleton()._getFreeSpace(path, totalBytes, freeBytes);
+}
+
+// ------------------------------------------------------------
+// Additional functions built on top of OS-specific operations
+// ------------------------------------------------------------
+
+FileSystem::Status FileSystem::createDirectory(const char* path, bool errorIfAlreadyExists) {
+    FW_ASSERT(path != nullptr);
+    Status status = Status::OP_OK;
+    Os::Directory dir;
+    // If errorIfAlreadyExists is true, use CREATE_EXCLUSIVE mode, otherwise use CREATE_IF_MISSING
+    Directory::OpenMode mode =
+        errorIfAlreadyExists ? Directory::OpenMode::CREATE_EXCLUSIVE : Directory::OpenMode::CREATE_IF_MISSING;
+    Directory::Status dirStatus = dir.open(path, mode);
+    dir.close();
+    if (dirStatus != Directory::OP_OK) {
+        return FileSystem::handleDirectoryError(dirStatus);
+    }
+    return status;
+}
+
+FileSystem::Status FileSystem::touch(const char* path) {
+    FW_ASSERT(path != nullptr);
+    Status status = Status::OP_OK;
+    Os::File file;
+    File::Status file_status = file.open(path, Os::File::OPEN_WRITE);
+    file.close();
+    if (file_status != File::OP_OK) {
+        status = FileSystem::handleFileError(file_status);
+    }
+    return status;
+}
+
+FileSystem::PathType FileSystem::getPathType(const char* path) {
+    FW_ASSERT(path != nullptr);
+    PathType pathType;
+    Status status = getSingleton()._getPathType(path, pathType);
+    if (status != Status::OP_OK) {
+        return PathType::NOT_EXIST;
+    }
+    return pathType;
+}  // end getPathType
+
+bool FileSystem::exists(const char* path) {
+    return FileSystem::getPathType(path) != PathType::NOT_EXIST;
+}  // end exists
+
+FileSystem::Status FileSystem::copyFile(const char* sourcePath, const char* destPath) {
+    FW_ASSERT(sourcePath != nullptr);
+    FW_ASSERT(destPath != nullptr);
+    Os::File source;
+    Os::File destination;
+    Os::File::Status fileStatus = source.open(sourcePath, Os::File::OPEN_READ);
+    if (fileStatus != Os::File::OP_OK) {
+        return FileSystem::handleFileError(fileStatus);
+    }
+    fileStatus = destination.open(destPath, Os::File::OPEN_WRITE);
+    if (fileStatus != Os::File::OP_OK) {
+        return FileSystem::handleFileError(fileStatus);
+    }
+
+    FwSizeType sourceFileSize = 0;
+    FileSystem::Status fs_status = FileSystem::getFileSize(sourcePath, sourceFileSize);
+    if (fs_status != FileSystem::Status::OP_OK) {
+        return fs_status;
+    }
+
+    fs_status = FileSystem::copyFileData(source, destination, sourceFileSize);
+
+    return fs_status;
+}  // end copyFile
+
+FileSystem::Status FileSystem::appendFile(const char* sourcePath, const char* destPath, bool createMissingDest) {
+    Os::File source;
+    Os::File destination;
+
+    // If requested, check if destination file exists and exit if does not exist
+    if (not createMissingDest and not FileSystem::exists(destPath)) {
+        return Status::DOESNT_EXIST;
+    }
+
+    Os::File::Status fileStatus = source.open(sourcePath, Os::File::OPEN_READ);
+    if (fileStatus != Os::File::OP_OK) {
+        return FileSystem::handleFileError(fileStatus);
+    }
+    fileStatus = destination.open(destPath, Os::File::OPEN_APPEND);
+    if (fileStatus != Os::File::OP_OK) {
+        return FileSystem::handleFileError(fileStatus);
+    }
+
+    FileSystem::Status fs_status = FileSystem::OP_OK;
+
+    FwSizeType sourceFileSize = 0;
+    fs_status = FileSystem::getFileSize(sourcePath, sourceFileSize);
+    if (fs_status != FileSystem::Status::OP_OK) {
+        return fs_status;
+    }
+
+    fs_status = FileSystem::copyFileData(source, destination, sourceFileSize);
+
+    return fs_status;
+}  // end appendFile
+
+FileSystem::Status FileSystem::moveFile(const char* source, const char* destination) {
+    Status status = Status::OP_OK;
+
+    // Try to rename the file
+    status = FileSystem::rename(source, destination);
+
+    // If rename fails because of cross-device rename, attempt to copy and remove instead
+    if (status == Status::EXDEV_ERROR) {
+        status = FileSystem::copyFile(source, destination);
+        if (status != Status::OP_OK) {
+            return status;
+        }
+        status = FileSystem::removeFile(source);
+    }
+
+    return status;
+}
+
+FileSystem::Status FileSystem::getFileSize(const char* path, FwSizeType& size) {
+    Os::File file;
+    Os::File::Status status = file.open(path, Os::File::OPEN_READ);
+    if (status != File::Status::OP_OK) {
+        return FileSystem::handleFileError(status);
+    }
+    status = file.size(size);
+    if (status != File::Status::OP_OK) {
+        return FileSystem::handleFileError(status);
+    }
+    return FileSystem::OP_OK;
+}
+
+// ------------------------------------------------------------
+// Internal helper functions
+// ------------------------------------------------------------
+
+FileSystem::Status FileSystem::handleFileError(File::Status fileStatus) {
+    FileSystem::Status status = FileSystem::OTHER_ERROR;
+
+    switch (fileStatus) {
+        case File::NO_SPACE:
+            status = FileSystem::NO_SPACE;
+            break;
+        case File::NO_PERMISSION:
+            status = FileSystem::NO_PERMISSION;
+            break;
+        case File::DOESNT_EXIST:
+            status = FileSystem::DOESNT_EXIST;
+            break;
+        default:
+            status = FileSystem::OTHER_ERROR;
+    }
+    return status;
+}  // end handleFileError
+
+FileSystem::Status FileSystem::handleDirectoryError(Directory::Status dirStatus) {
+    FileSystem::Status status = FileSystem::OTHER_ERROR;
+
+    switch (dirStatus) {
+        case Directory::DOESNT_EXIST:
+            status = FileSystem::DOESNT_EXIST;
+            break;
+        case Directory::NO_PERMISSION:
+            status = FileSystem::NO_PERMISSION;
+            break;
+        case Directory::ALREADY_EXISTS:
+            status = FileSystem::ALREADY_EXISTS;
+            break;
+        case Directory::NOT_SUPPORTED:
+            status = FileSystem::NOT_SUPPORTED;
+            break;
+        default:
+            status = FileSystem::OTHER_ERROR;
+    }
+    return status;
+}  // end handleFileError
+
+FileSystem::Status FileSystem::copyFileData(File& source, File& destination, FwSizeType size) {
+    static_assert(FILE_SYSTEM_FILE_CHUNK_SIZE != 0, "FILE_SYSTEM_FILE_CHUNK_SIZE must be >0");
+    U8 fileBuffer[FILE_SYSTEM_FILE_CHUNK_SIZE];
+    File::Status file_status;
+
+    FwSizeType copiedSize = 0;
+    FwSizeType chunkSize = FILE_SYSTEM_FILE_CHUNK_SIZE;
+
+    // Loop up to 2 times for each by, bounded to prevent infinite loop
+    const FwSizeType maximum =
+        (size > (std::numeric_limits<FwSizeType>::max() / 2)) ? std::numeric_limits<FwSizeType>::max() : size * 2;
+
+    // Copy the file in chunks - loop until all data is copied
+    FwSizeType i = 0;
+    for (copiedSize = 0; (copiedSize < size) && (i < maximum); copiedSize += chunkSize, i++) {
+        // chunkSize is FILE_SYSTEM_FILE_CHUNK_SIZE unless size-copiedSize is less than that
+        // in which case chunkSize is size-copiedSize, ensuring the last chunk reads the remaining data
+        chunkSize = FW_MIN(FILE_SYSTEM_FILE_CHUNK_SIZE, size - copiedSize);
+        file_status = source.read(fileBuffer, chunkSize, Os::File::WaitType::WAIT);
+        if (file_status != File::OP_OK) {
+            return FileSystem::handleFileError(file_status);
+        }
+        file_status = destination.write(fileBuffer, chunkSize, Os::File::WaitType::WAIT);
+        if (file_status != File::OP_OK) {
+            return FileSystem::handleFileError(file_status);
+        }
+    }
+
+    return FileSystem::OP_OK;
+}  // end copyFileData
+
+}  // namespace Os
+```
+
+### `FileSystem.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/FileSystem.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/FileSystem.hpp
+// \brief Os::FileSystem interface definition
+// ======================================================================
+
+#ifndef _OS_FILESYSTEM_HPP_
+#define _OS_FILESYSTEM_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Directory.hpp>
+#include <Os/File.hpp>
+#include <Os/Os.hpp>
+
+namespace Os {
+
+struct FileSystemHandle {};
+
+class FileSystemInterface {
+  public:
+    // Size of file chunks to use for file system operations (e.g. copyFile)
+    static constexpr FwSizeType FILE_SYSTEM_FILE_CHUNK_SIZE = FW_FILE_CHUNK_SIZE;  //!< Size of file system chunk
+
+    enum Status {
+        OP_OK,             //!<  Operation was successful
+        ALREADY_EXISTS,    //!<  File already exists
+        NO_SPACE,          //!<  No space left
+        NO_PERMISSION,     //!<  No permission to write
+        NOT_DIR,           //!<  Path is not a directory
+        IS_DIR,            //!< Path is a directory
+        NOT_EMPTY,         //!<  directory is not empty
+        INVALID_PATH,      //!< Path is too long, too many sym links, etc.
+        DOESNT_EXIST,      //!<  Path doesn't exist
+        FILE_LIMIT,        //!< Too many files or links
+        BUSY,              //!< Operand is in use by the system or by a process
+        NO_MORE_FILES,     //!<  Directory stream has no more files
+        BUFFER_TOO_SMALL,  //!<  Buffer size is too small to hold full path (for getWorkingDirectory)
+        EXDEV_ERROR,       // Operation not supported across devices (e.g. rename)
+        OVERFLOW_ERROR,    // Operation failed due to overflow in calculation of the result
+        NOT_SUPPORTED,     //!<  Operation is not supported by the current implementation
+        OTHER_ERROR,       //!<  other OS-specific error
+    };
+
+    enum PathType {
+        FILE,       //!< Path is a file
+        DIRECTORY,  //!< Path is a directory
+        OTHER,      //!< Path is not a file or directory, e.g. a socket
+        NOT_EXIST,  //!< Path does not exist
+    };
+
+    //! \brief default constructor
+    FileSystemInterface() = default;
+
+    //! \brief default virtual destructor
+    virtual ~FileSystemInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    FileSystemInterface(const FileSystemInterface& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    FileSystemInterface& operator=(const FileSystemInterface& other) = delete;
+
+    //! \brief return the underlying FileSystem handle (implementation specific)
+    //! \return internal FileSystem handle representation
+    virtual FileSystemHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a FileSystem delegate object
+    static FileSystemInterface* getDelegate(FileSystemHandleStorage& aligned_new_memory);
+
+    // ------------------------------------------------------------------
+    // FileSystem operations to be implemented by an OSAL implementation
+    // ------------------------------------------------------------------
+    // These functions are to be overridden in each OS implementation
+    // See an example in in Os/Posix/FileSystem.hpp
+
+    //! \brief Remove a directory at the specified path
+    //! \param path The path of the directory to remove
+    //! \return Status of the operation
+    virtual Status _removeDirectory(const char* path) = 0;
+
+    //! \brief Remove a file at the specified path
+    //! \param path The path of the file to remove
+    //! \return Status of the operation
+    virtual Status _removeFile(const char* path) = 0;
+
+    //! \brief Rename (or move) a file from source to destination
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    virtual Status _rename(const char* sourcePath, const char* destPath) = 0;
+
+    //! \brief Get filesystem free and total space in bytes on the filesystem containing the specified path
+    //! \param path The path on the filesystem to query
+    //! \param totalBytes Reference to store the total bytes on the filesystem
+    //! \param freeBytes Reference to store the free bytes on the filesystem
+    //! \return Status of the operation
+    virtual Status _getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) = 0;
+
+    //! \brief Get the type of the path (file, directory, etc.)
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check
+    //! \param pathType Reference to store the path type
+    //! \return Status of the operation
+    virtual Status _getPathType(const char* path, PathType& pathType) = 0;
+
+    //! \brief Get the current working directory
+    //! \param path Buffer to store the current working directory path
+    //! \param bufferSize Size of the buffer
+    //! \return Status of the operation
+    virtual Status _getWorkingDirectory(char* path, FwSizeType bufferSize) = 0;
+
+    //! \brief Change the current working directory to the specified path
+    //! \param path The path of the new working directory
+    //! \return Status of the operation
+    virtual Status _changeWorkingDirectory(const char* path) = 0;
+};
+
+//! \brief FileSystem class
+//!
+//! This class provides a common interface for file system operations.
+//! This class uses the singleton pattern and should be accessed through
+//! its static functions, for example using `Os::FileSystem::removeFile(path)`.
+class FileSystem final : public FileSystemInterface {
+  private:
+    FileSystem();  //!<  Constructor (private because singleton pattern)
+  public:
+    ~FileSystem() final;  //!<  Destructor
+
+    //! \brief return the underlying FileSystem handle (implementation specific)
+    //! \return internal FileSystem handle representation
+    FileSystemHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific FileSystem member functions
+    // ------------------------------------------------------------
+
+    //! \brief Remove a directory at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the directory to remove
+    //! \return Status of the operation
+    Status _removeDirectory(const char* path) override;
+
+    //! \brief Remove a file at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file to remove
+    //! \return Status of the operation
+    Status _removeFile(const char* path) override;
+
+    //! \brief Rename a file from source to destination
+    //!
+    //! If the rename fails due to a cross-device operation, this function should return EXDEV_ERROR
+    //! and moveFile can be used instead to force a copy-and-remove.
+    //!
+    //! It is invalid to pass `nullptr` as sourcePath or destPath.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    Status _rename(const char* sourcePath, const char* destPath) override;
+
+    //! \brief Get filesystem free and total space in bytes on the filesystem containing the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path on the filesystem to query
+    //! \param totalBytes Reference to store the total bytes on the filesystem
+    //! \param freeBytes Reference to store the free bytes on the filesystem
+    //! \return Status of the operation
+    Status _getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) override;
+
+    //! \brief Get the current working directory
+    //!
+    //! Writes the current working directory path to the provided buffer of size bufferSize.
+    //! If the buffer is too small to hold the full path, the function will return BUFFER_TOO_SMALL.
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to pass a bufferSize of 0.
+    //!
+    //! \param path Buffer to store the current working directory path
+    //! \param bufferSize Size of the buffer
+    //! \return Status of the operation
+    Status _getWorkingDirectory(char* path, FwSizeType bufferSize) override;
+
+    //! \brief Change the current working directory to the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the new working directory
+    //! \return Status of the operation
+    Status _changeWorkingDirectory(const char* path) override;
+
+    //! \brief Get the type of the path (file, directory, etc.)
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check
+    //! \param pathType Reference to store the path type
+    //! \return Status of the operation
+    Status _getPathType(const char* path, PathType& pathType) override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific FileSystem static functions
+    // ------------------------------------------------------------
+    // These are static variants that are exposed to the user, and call the above member functions
+
+    //! \brief Remove a directory at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the directory to remove
+    //! \return Status of the operation
+    static Status removeDirectory(const char* path);
+
+    //! \brief Remove a file at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file to remove
+    //! \return Status of the operation
+    static Status removeFile(const char* path);
+
+    //! \brief Rename a file from source to destination
+    //!
+    //! If the rename fails due to a cross-device operation, this function should return EXDEV_ERROR
+    //! and moveFile can be used instead to force a copy-and-remove.
+    //!
+    //! It is invalid to pass `nullptr` as sourcePath or destPath.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    static Status rename(const char* sourcePath, const char* destPath);
+
+    //! \brief Get filesystem free and total space in bytes on the filesystem containing the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path on the filesystem to query
+    //! \param totalBytes Reference to store the total bytes on the filesystem
+    //! \param freeBytes Reference to store the free bytes on the filesystem
+    //! \return Status of the operation
+    static Status getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes);
+
+    //! \brief Get the current working directory
+    //!
+    //! Writes the current working directory path to the provided buffer of size bufferSize.
+    //! If the buffer is too small to hold the full path, the function will return BUFFER_TOO_SMALL.
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to pass a bufferSize of 0.
+    //!
+    //! \param path Buffer to store the current working directory path
+    //! \param bufferSize Size of the buffer
+    //! \return Status of the operation
+    static Status getWorkingDirectory(char* path, FwSizeType bufferSize);
+
+    //! \brief Change the current working directory to the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the new working directory
+    //! \return Status of the operation
+    static Status changeWorkingDirectory(const char* path);
+
+    // ------------------------------------------------------------
+    // Additional functions built on top of OS-specific operations
+    // ------------------------------------------------------------
+
+    //! \brief Return true if the path exists, false otherwise
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check for existence
+    //! \return True if the path exists, false otherwise
+    static bool exists(const char* path);
+
+    //! \brief Return the type of the path (file, directory, or doesn't exist)
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check for existence
+    //! \return PathType enum representing the type of the path (FILE, DIRECTORY, NOT_EXIST)
+    static PathType getPathType(const char* path);
+
+    //! \brief Touch a file at the specified path, creating it if it doesn't exist
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file to touch
+    //! \return Status of the operation
+    static Status touch(const char* path);
+
+    //! \brief Create a new directory at the specified path.
+    //!
+    //! The optional errorIfAlreadyExists (default=false) parameter can be set to true
+    //! to return an error status if the directory already exists.
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path where the new directory will be created
+    //! \param errorIfAlreadyExists If true, returns an error if the directory already exists
+    //! \return Status of the operation
+    static Status createDirectory(const char* path, bool errorIfAlreadyExists = false);
+
+    //! \brief Append the source file to the destination file
+    //!
+    //! This function opens both files, and iteratively reads the source by chunks and writes
+    //! chunks to the destination.
+    //! If the destination file does not exist and createMissingDest is true, a new file is created.
+    //!
+    //! It is invalid to pass `nullptr` as either the source or destination path.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \param createMissingDest If true, creates a new file if the destination doesn't exist
+    //! \return Status of the operation
+    static Status appendFile(const char* sourcePath, const char* destPath, bool createMissingDest = false);
+
+    //! \brief Copy a file from the source path to the destination path
+    //!
+    //! This function opens both files, and iteratively reads the source by chunks and writes
+    //! chunks to the destination.
+    //!
+    //! It is invalid to pass `nullptr` as either the source or destination path.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    static Status copyFile(const char* sourcePath, const char* destPath);
+
+    //! \brief Move a file from sourcePath to destPath
+    //!
+    //! This is done by first trying to rename, and if renaming fails,
+    //! copy it and then remove the original
+    //!
+    //! It is invalid to pass `nullptr` as either the source or destination path.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    static Status moveFile(const char* sourcePath, const char* destPath);
+
+    //! \brief Get the size of the file (in bytes) at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file
+    //! \param size Reference to store the size of the file
+    //! \return Status of the operation
+    static Status getFileSize(const char* path, FwSizeType& size);
+
+  public:
+    //! \brief initialize singleton
+    static void init();
+
+    //! \brief get a reference to singleton
+    //! \return reference to singleton
+    static FileSystem& getSingleton();
+
+  private:
+    // ------------------------------------------------------------
+    // Internal helper functions
+    // ------------------------------------------------------------
+
+    //! \brief Convert a File::Status to a FileSystem::Status
+    static Status handleFileError(File::Status fileStatus);
+
+    //! \brief Convert a Directory::Status to a FileSystem::Status
+    static Status handleDirectoryError(Directory::Status dirStatus);
+
+    //! \brief A helper function that writes all the file information in the source
+    //! file to the destination file (replaces/appends to end/etc. depending
+    //! on destination file mode).
+    //!
+    //! Files must already be open and will remain open after this function
+    //! completes.
+    //!
+    //! @param source File to copy data from
+    //! @param destination File to copy data to
+    //! @param size The number of bytes to copy
+    static Status copyFileData(File& source, File& destination, FwSizeType size);
+
+  private:
+    // This section is used to store the implementation-defined FileSystem handle. To Os::FileSystem and fprime, this
+    // type is opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle
+    // in the byte-array here and set `handle` to that address for storage.
+
+    alignas(FW_HANDLE_ALIGNMENT) FileSystemHandleStorage m_handle_storage;  //!< FileSystem handle storage
+    FileSystemInterface& m_delegate;
+};
+
+}  // namespace Os
+
+#endif
+```
+
+### `IntervalTimer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/IntervalTimer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/IntervalTimer.cpp
+// \brief Implementation for Os::IntervalTimer
+// ======================================================================
+
+#include <Os/IntervalTimer.hpp>
+#include <cstring>
+
+namespace Os {
+
+IntervalTimer::IntervalTimer() : m_startTime(), m_stopTime() {}
+
+void IntervalTimer::start() {
+    this->m_startTime.now();
+}
+
+void IntervalTimer::stop() {
+    this->m_stopTime.now();
+}
+
+U32 IntervalTimer::getDiffUsec() const {
+    U32 result = 0;
+    Os::RawTime::Status status = this->m_stopTime.getDiffUsec(this->m_startTime, result);
+    if (status == Os::RawTime::Status::OP_OVERFLOW) {
+        // If the operation fails due to overflow, we return the max value
+        result = std::numeric_limits<U32>::max();
+    }
+    return result;
+}
+
+Os::RawTime::Status IntervalTimer::getTimeInterval(Fw::TimeInterval& interval) const {
+    return this->m_stopTime.getTimeInterval(this->m_startTime, interval);
+}
+}  // namespace Os
+```
+
+### `IntervalTimer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/IntervalTimer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/IntervalTimer.hpp
+// \brief Definition for Os::IntervalTimer
+// ======================================================================
+#ifndef _IntervalTimer_hpp_
+#define _IntervalTimer_hpp_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/RawTime.hpp>
+
+namespace Os {
+//! \brief Os::IntervalTimer measures time intervals using start/stop functionality.
+//!
+//! The IntervalTimer class provides methods to capture the start and stop times of an interval
+//! and calculate the difference between these times. It is useful for measuring the duration
+//! of operations or events. Intervals can be returned in Fw::TimeInterval or as a microsecond U32.
+//!
+//! \note The caller must ensure that the start() method is called before the stop() method to get
+//! a relevant time interval.
+//!
+//! \example
+//! IntervalTimer timer;
+//! timer.start();
+//! // Perform some operations
+//! timer.stop();
+//! Fw::TimeInterval interval = timer.getTimeInterval();
+class IntervalTimer {
+  public:
+    //! \brief Constructor
+    IntervalTimer();
+
+    //! \brief Destructor
+    ~IntervalTimer() = default;
+
+    //! \brief Capture the start time of the interval.
+    //!
+    //! This method records the current time as the start time of the interval for this timer instance.
+    void start();
+
+    //! \brief Capture the stop time of the interval.
+    //!
+    //! This method records the current time as the stop time of the interval for this timer instance.
+    void stop();
+
+    //! \brief Get the difference between start and stop times in microseconds.
+    //!
+    //! This method calculates and returns the time difference between the start and stop times
+    //! in microseconds. The start() and stop() methods must be called before calling this method.
+    //!
+    //! \warning Users should prefer the getTimeInterval() method for better error handling.
+    //! \warning This function will return the maximum U32 value if the time difference is too large to fit in a U32.
+    //! \warning This means the largest time difference that can be measured is 2^32 microseconds (about 71 minutes).
+    //!
+    //! \return U32: The time difference in microseconds.
+    U32 getDiffUsec() const;
+
+    //! \brief Get the time interval between the start and stop times.
+    //!
+    //! This method calculates and returns the time interval between the recorded start and stop times
+    //! as a Fw::TimeInterval object.
+    //!
+    //! \param interval [out] A reference to a Fw::TimeInterval object where the calculated interval will be stored.
+    //! \return bool: True if the interval was successfully calculated, false otherwise.
+    Os::RawTime::Status getTimeInterval(Fw::TimeInterval& interval) const;
+
+  private:
+    RawTime m_startTime;  //!< Stored start time
+    RawTime m_stopTime;   //!< Stored end time
+
+    //! Disabled (private) Copy Constructor
+    IntervalTimer(IntervalTimer&);
+
+};  // class IntervalTimer
+
+}  // namespace Os
+
+#endif
+```
+
+### `Memory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Memory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Memory.hpp
+// \brief common function implementations for Os::Memory
+// ======================================================================
+#include "Os/Memory.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+
+Memory::Memory() : m_delegate(*MemoryInterface::getDelegate(m_handle_storage)) {}
+
+Memory::~Memory() {
+    m_delegate.~MemoryInterface();
+}
+
+void Memory::init() {
+    (void)Memory::getSingleton();
+}
+
+Memory& Memory::getSingleton() {
+    static Memory _singleton;
+    return _singleton;
+}
+
+Memory::Status Memory::_getUsage(Os::Memory::Usage& memory_usage) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MemoryInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate._getUsage(memory_usage);
+}
+
+Memory::Status Memory::getUsage(Os::Memory::Usage& memory_usage) {
+    return Memory::getSingleton()._getUsage(memory_usage);
+}
+
+MemoryHandle* Memory::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MemoryInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+}  // namespace Os
+```
+
+### `Memory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Memory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Memory.hpp
+// \brief common function definitions for Os::Memory
+// ======================================================================
+#include "Os/Os.hpp"
+
+#ifndef OS_MEMORY_HPP_
+#define OS_MEMORY_HPP_
+
+namespace Os {
+
+//! \brief Memory variable handle parent
+class MemoryHandle {};
+
+//! \brief interface for memory implementation
+class MemoryInterface {
+  public:
+    using Status = Os::Generic::Status;
+    using Usage = Os::Generic::UsedTotal;
+
+    //! Default constructor
+    MemoryInterface() = default;
+    //! Default destructor
+    virtual ~MemoryInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    MemoryInterface(const MemoryInterface& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    virtual MemoryInterface& operator=(const MemoryInterface& other) = delete;
+
+    //! \brief get system memory usage
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return: ERROR when error occurs, OK otherwise.
+    virtual Status _getUsage(Usage& memory_usage) = 0;
+
+    //! \brief return the underlying memory handle (implementation specific).
+    //! \return internal task handle representation
+    virtual MemoryHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a Mutex delegate object
+    static MemoryInterface* getDelegate(MemoryHandleStorage& aligned_new_memory);
+};
+
+//! \brief memory implementation
+class Memory final : public MemoryInterface {
+  public:
+    //! \brief default constructor
+    Memory();
+
+    //! \brief default virtual destructor
+    ~Memory() final;
+
+    //! \brief copy constructor is forbidden
+    Memory(const MemoryInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    Memory(const MemoryInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    MemoryInterface& operator=(const MemoryInterface& other) override = delete;
+
+    //-----------------------------------------------------------------------------
+    // Interface methods
+    //-----------------------------------------------------------------------------
+  public:
+    //! \brief initialize the singleton
+    static void init();
+
+    //! \brief return singleton
+    static Memory& getSingleton();
+
+    //-----------------------------------------------------------------------------
+    // Delegating methods
+    //-----------------------------------------------------------------------------
+
+    //! \brief get system memory usage
+    //!
+    //! This method delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return:  ERROR when error occurs, OK otherwise.
+    Status _getUsage(Usage& memory_usage) override;
+
+    //! \brief return the underlying memory handle (implementation specific).
+    //! \return internal task handle representation
+    MemoryHandle* getHandle() override;
+
+    //-----------------------------------------------------------------------------
+    // Static interface (singleton) methods
+    //-----------------------------------------------------------------------------
+
+    //! \brief get system memory usage
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return: ERROR when error occurs, OK otherwise.
+    static Status getUsage(Usage& memory);
+
+  private:
+    // This section is used to store the implementation-defined file handle. To Os::File and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    alignas(FW_HANDLE_ALIGNMENT) MemoryHandleStorage m_handle_storage;  //!< Storage for aligned data
+    MemoryInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+}  // namespace Os
+#endif  // OS_CONDITION_HPP_
+```
+
+### `Mutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Mutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Mutex.cpp
+// \brief common function implementation for Os::Mutex
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/Mutex.hpp>
+
+namespace Os {
+
+Mutex::Mutex() : m_handle_storage(), m_delegate(*MutexInterface::getDelegate(m_handle_storage)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+}
+
+Mutex::~Mutex() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+    m_delegate.~MutexInterface();
+}
+
+MutexHandle* Mutex::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+Mutex::Status Mutex::take() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.take();
+}
+
+Mutex::Status Mutex::release() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.release();
+}
+
+void Mutex::lock() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+    Mutex::Status status = this->take();
+    FW_ASSERT(status == Mutex::Status::OP_OK,
+              static_cast<FwAssertArgType>(reinterpret_cast<PlatformPointerCastType>(this)), status);
+}
+
+void Mutex::unLock() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<MutexInterface*>(&this->m_handle_storage[0]));
+    Mutex::Status status = this->release();
+    FW_ASSERT(status == Mutex::Status::OP_OK,
+              static_cast<FwAssertArgType>(reinterpret_cast<PlatformPointerCastType>(this)), status);
+}
+
+ScopeLock::ScopeLock(Mutex& mutex) : m_mutex(mutex) {
+    this->m_mutex.lock();
+}
+
+ScopeLock::~ScopeLock() {
+    this->m_mutex.unLock();
+}
+
+}  // namespace Os
+```
+
+### `Mutex.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Mutex.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Mutex.hpp
+// \brief common definitions for Os::Mutex
+// ======================================================================
+#ifndef Os_Mutex_hpp
+#define Os_Mutex_hpp
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Os.hpp>
+
+namespace Os {
+
+struct MutexHandle {};
+
+class MutexInterface {
+  public:
+    enum Status {
+        OP_OK,           //!< Operation was successful
+        ERROR_BUSY,      //!< Mutex is busy
+        ERROR_DEADLOCK,  //!< Deadlock condition detected
+        NOT_SUPPORTED,   //!< Mutex does not support operation
+        ERROR_OTHER      //!< All other errors
+    };
+
+    //! \brief default constructor
+    MutexInterface() = default;
+
+    //! \brief default virtual destructor
+    virtual ~MutexInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    MutexInterface(const MutexInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    MutexInterface(const MutexInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    MutexInterface& operator=(const MutexInterface& other) = delete;
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal mutex handle representation
+    virtual MutexHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a Mutex delegate object
+    static MutexInterface* getDelegate(MutexHandleStorage& aligned_new_memory);
+
+    virtual Status take() = 0;     //!<  lock the mutex return status
+    virtual Status release() = 0;  //!<  unlock the mutex return status
+};
+
+class Mutex final : public MutexInterface {
+  public:
+    Mutex();         //!<  Constructor. Mutex is unlocked when created
+    ~Mutex() final;  //!<  Destructor
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal mutex handle representation
+    MutexHandle* getHandle() override;
+
+    Status take() override;            //!<  lock the mutex and get return status
+    Status release() override;         //!<  unlock the mutex and get return status
+    void lock();                       //!<  lock the mutex and assert success
+    void unLock();                     //!<  unlock the mutex and assert success
+    void unlock() { this->unLock(); }  //!<  alias for unLock to meet BasicLockable requirements
+
+  private:
+    // This section is used to store the implementation-defined mutex handle. To Os::Mutex and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    //
+    alignas(FW_HANDLE_ALIGNMENT) MutexHandleStorage m_handle_storage;  //!< Mutex handle storage
+    MutexInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+//! \brief locks a mutex within the current scope
+//!
+//! The scope lock will lock the associated mutex immediately and will ensure the mutex is unlock when the scope lock
+//! is destroyed.
+//!
+//! \warning it is unadvisable to dynamically allocate ScopeLock as this violates the implied usage.
+class ScopeLock {
+  public:
+    //! \brief construct the scope lock
+    //!
+    //! Will lock the supplied mutex and will unlock the mutex when this object goes out of scope.
+    //! \param mutex
+    explicit ScopeLock(Mutex& mutex);
+
+    //!\brief unlock the scoped mutex
+    ~ScopeLock();
+
+    //! \brief copy constructor is forbidden
+    ScopeLock(const ScopeLock& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    ScopeLock(const ScopeLock* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    ScopeLock& operator=(const ScopeLock& other) = delete;
+
+  private:
+    Mutex& m_mutex;  //!< Stores the mutex reference
+};
+}  // namespace Os
+
+#endif
+```
+
+### `Os.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Os.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Os.cpp
+// \brief common definitions for the OSAL layer
+// ======================================================================
+#include "Os/Os.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Os/Console.hpp"
+#include "Os/Cpu.hpp"
+#include "Os/FileSystem.hpp"
+#include "Os/Memory.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+
+void init() {
+    // Initialize all OSAL singletons
+    Os::Console::init();
+    Os::FileSystem::init();
+    Os::Cpu::init();
+    Os::Memory::init();
+    Os::Task::init();
+}
+
+}  // namespace Os
+```
+
+### `Os.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Os.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Os.hpp
+// \brief common definitions for the OSAL layer
+// ======================================================================
+#ifndef OS_OS_HPP_
+#define OS_OS_HPP_
+#include "Fw/FPrimeBasicTypes.hpp"
+
+//! Storage type for OSAL handles
+typedef U8 QueueHandleStorage[FW_QUEUE_HANDLE_MAX_SIZE];
+typedef U8 ConsoleHandleStorage[FW_CONSOLE_HANDLE_MAX_SIZE];
+typedef U8 MutexHandleStorage[FW_MUTEX_HANDLE_MAX_SIZE];
+typedef U8 FileHandleStorage[FW_FILE_HANDLE_MAX_SIZE];
+typedef U8 TaskHandleStorage[FW_TASK_HANDLE_MAX_SIZE];
+typedef U8 DirectoryHandleStorage[FW_DIRECTORY_HANDLE_MAX_SIZE];
+typedef U8 FileSystemHandleStorage[FW_FILESYSTEM_HANDLE_MAX_SIZE];
+typedef U8 ConditionVariableHandleStorage[FW_CONDITION_VARIABLE_HANDLE_MAX_SIZE];
+typedef U8 CpuHandleStorage[FW_CPU_HANDLE_MAX_SIZE];
+typedef U8 MemoryHandleStorage[FW_MEMORY_HANDLE_MAX_SIZE];
+typedef U8 RawTimeHandleStorage[FW_RAW_TIME_HANDLE_MAX_SIZE];
+
+namespace Os {
+namespace Generic {
+//! Generic OK/ERROR status
+enum Status {
+    OP_OK,  //!< Operation succeeded
+    ERROR,  //!< Operation failed
+};
+
+//! Generic used/total struct
+struct UsedTotal {
+    FwSizeType used;   //!< Used amount
+    FwSizeType total;  //!< Total amount
+};
+
+}  // namespace Generic
+
+//! \brief Initialize the OS Abstraction Layer (OSAL)
+//!
+//! - Initialize all singletons for the OSAL modules that use the singleton pattern
+void init();
+
+}  // namespace Os
+#endif
+```
+
+### `Queue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Queue.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Queue.cpp
+// \brief common function implementation for Os::Queue
+// ======================================================================
+#include "Os/Queue.hpp"
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/Serializable.hpp"
+
+namespace Os {
+
+FwSizeType Queue::s_queueCount = 0;
+#if FW_QUEUE_REGISTRATION
+QueueRegistry* Queue::s_queueRegistry = nullptr;
+#endif
+
+Queue::Queue() : m_name(""), m_depth(0), m_size(0), m_delegate(*QueueInterface::getDelegate(m_handle_storage)) {}
+
+Queue::~Queue() {
+    m_delegate.~QueueInterface();
+}
+
+QueueInterface::Status Queue ::create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<QueueInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(depth > 0);
+    FW_ASSERT(messageSize > 0);
+    // Check for previous creation call
+    if (this->m_depth > 0 || this->m_size > 0) {
+        return QueueInterface::Status::ALREADY_CREATED;
+    }
+    QueueInterface::Status status = this->m_delegate.create(name, depth, messageSize);
+    if (status == QueueInterface::Status::OP_OK) {
+        this->m_name = name;
+        this->m_depth = depth;
+        this->m_size = messageSize;
+        ScopeLock lock(Queue::getStaticMutex());
+        Queue::s_queueCount++;
+#if FW_QUEUE_REGISTRATION
+        if (Queue::s_queueRegistry != nullptr) {
+            Queue::s_queueRegistry->registerQueue(this);
+        }
+#endif
+    }
+    return status;
+}
+
+QueueInterface::Status Queue::send(const U8* buffer,
+                                   FwSizeType size,
+                                   FwQueuePriorityType priority,
+                                   QueueInterface::BlockingType blockType) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<QueueInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(buffer != nullptr);
+    // Check if initialized
+    if (this->m_depth == 0 || this->m_size == 0) {
+        return QueueInterface::Status::UNINITIALIZED;
+    }
+    // Check size before proceeding
+    else if (size > this->getMessageSize()) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    }
+    return this->m_delegate.send(buffer, size, priority, blockType);
+}
+
+QueueInterface::Status Queue::receive(U8* destination,
+                                      FwSizeType capacity,
+                                      QueueInterface::BlockingType blockType,
+                                      FwSizeType& actualSize,
+                                      FwQueuePriorityType& priority) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<QueueInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(destination != nullptr);
+    // Check if initialized
+    if (this->m_depth == 0 || this->m_size == 0) {
+        return QueueInterface::Status::UNINITIALIZED;
+    }
+    // Check capacity before proceeding
+    else if (capacity < this->getMessageSize()) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    }
+    return this->m_delegate.receive(destination, capacity, blockType, actualSize, priority);
+}
+
+FwSizeType Queue::getMessagesAvailable() const {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const QueueInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getMessagesAvailable();
+}
+
+FwSizeType Queue::getMessageHighWaterMark() const {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const QueueInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getMessageHighWaterMark();
+}
+
+QueueHandle* Queue::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const QueueInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+QueueInterface::Status Queue::send(const Fw::SerializeBufferBase& message,
+                                   FwQueuePriorityType priority,
+                                   QueueInterface::BlockingType blockType) {
+    return this->send(message.getBuffAddr(), message.getBuffLength(), priority, blockType);
+}
+
+QueueInterface::Status Queue::receive(Fw::SerializeBufferBase& destination,
+                                      QueueInterface::BlockingType blockType,
+                                      FwQueuePriorityType& priority) {
+    FwSizeType actualSize = 0;
+    destination.resetSer();  // Reset the buffer
+    QueueInterface::Status status =
+        this->receive(destination.getBuffAddrSer(), destination.getBuffCapacity(), blockType, actualSize, priority);
+    if (status == QueueInterface::Status::OP_OK) {
+        Fw::SerializeStatus serializeStatus =
+            destination.setBuffLen(static_cast<Fw::Serializable::SizeType>(actualSize));
+        if (serializeStatus != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+            status = QueueInterface::Status::SIZE_MISMATCH;
+        }
+    }
+    return status;
+}
+
+FwSizeType Queue::getDepth() const {
+    return this->m_depth;
+}
+
+FwSizeType Queue::getMessageSize() const {
+    return this->m_size;
+}
+
+const QueueString& Queue::getName() const {
+    return this->m_name;
+}
+
+FwSizeType Queue::getNumQueues() {
+    ScopeLock lock(Queue::getStaticMutex());
+    return Queue::s_queueCount;
+}
+
+Os::Mutex& Queue::getStaticMutex() {
+    static Os::Mutex s_mutex;
+    return s_mutex;
+}
+
+}  // namespace Os
+```
+
+### `Queue.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Queue.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Queue.hpp
+// \brief common function definitions for Os::Queue
+// ======================================================================
+#ifndef Os_Queue_hpp_
+#define Os_Queue_hpp_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/Os.hpp>
+#include <Os/QueueString.hpp>
+namespace Os {
+// Forward declaration for registry
+class QueueRegistry;
+
+//! \brief QueueHandle parent class
+class QueueHandle {};
+
+//! \brief base queue interface
+//!
+//! Queues are used internally to fprime in order to support the messaging between components. The
+//! QueueInterface is used to abstract away from the standard OS-based queue, allowing F prime support
+//! multiple OSes in a consistent way.
+//!
+class QueueInterface {
+  public:
+    //! \brief status returned from the queue send function
+    enum Status {
+        OP_OK,              //!<  message sent/received okay
+        ALREADY_CREATED,    //!<  creating an already created queue
+        EMPTY,              //!<  If non-blocking, all the messages have been drained.
+        UNINITIALIZED,      //!<  Queue wasn't initialized successfully
+        SIZE_MISMATCH,      //!<  attempted to send or receive with buffer too large, too small
+        SEND_ERROR,         //!<  message send error
+        RECEIVE_ERROR,      //!<  message receive error
+        INVALID_PRIORITY,   //!<  invalid priority requested
+        FULL,               //!<  Queue was full when attempting to send a message
+        NOT_SUPPORTED,      //!<  Queue feature is not supported
+        ALLOCATION_FAILED,  //!<  required memory could not be allocated
+        UNKNOWN_ERROR       //!<  Unexpected error; can't match with returns
+    };
+
+    //! \brief message type
+    enum BlockingType {
+        BLOCKING,    //!< Message will block until space is available
+        NONBLOCKING  //!< Message will return with status when space is unavailable
+    };
+
+    //! \brief default queue interface constructor
+    QueueInterface() = default;
+
+    //! \brief default queue destructor
+    virtual ~QueueInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    QueueInterface(const QueueInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    QueueInterface(const QueueInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    virtual QueueInterface& operator=(const QueueInterface& other) = delete;
+
+    //! \brief create queue storage
+    //!
+    //! Creates a queue ensuring sufficient storage to hold `depth` messages of `messageSize` size each. Resource
+    //! allocation is dependent on the underlying implementation and users should assume that resource allocation is
+    //! possible.
+    //!
+    //! \param name: name of queue
+    //! \param depth: depth of queue in number of messages
+    //! \param messageSize: size of an individual message
+    //! \return: status of the creation
+    virtual Status create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) = 0;
+
+    //! \brief send a message into the queue
+    //!
+    //! Send a message into the queue, providing the message data, size, priority, and blocking type. When
+    //! `blockType` is set to BLOCKING, this call will block on queue full. Otherwise, this will return an error
+    //! status on queue full.
+    //!
+    //! It is invalid to send a null buffer.
+    //! This method will block if the queue is full and blockType is set to BLOCKING
+    //!
+    //! \param buffer: message data
+    //! \param size: size of message data
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return: status of the send
+    virtual Status send(const U8* buffer, FwSizeType size, FwQueuePriorityType priority, BlockingType blockType) = 0;
+
+    //! \brief receive a message from the queue
+    //!
+    //! Receive a message from the queue, providing the message destination, capacity, priority, and blocking type.
+    //! When `blockType` is set to BLOCKING, this call will block on queue empty. Otherwise, this will return an
+    //! error status on queue empty. Actual size received and priority of message is set on success status.
+    //!
+    //! It is invalid to send a null buffer.
+    //! This method will block if the queue is empty and blockType is set to BLOCKING
+    //!
+    //! \param destination: destination for message data
+    //! \param capacity: maximum size of message data
+    //! \param blockType: BLOCKING to wait for message or NONBLOCKING to return error when queue is empty
+    //! \param actualSize: (output) actual size of message read
+    //! \param priority: (output) priority of message read
+    //! \return: status of the send
+    virtual Status receive(U8* destination,
+                           FwSizeType capacity,
+                           BlockingType blockType,
+                           FwSizeType& actualSize,
+                           FwQueuePriorityType& priority) = 0;
+
+    //! \brief get number of messages available
+    //!
+    //! Returns the number of messages currently available in the queue.
+    //!
+    //! \return number of messages available
+    virtual FwSizeType getMessagesAvailable() const = 0;
+
+    //! \brief get maximum messages stored at any given time
+    //!
+    //! Returns the maximum number of messages in this queue at any given time. This is the high-water mark for this
+    //! queue.
+    //! \return queue message high-water mark
+    virtual FwSizeType getMessageHighWaterMark() const = 0;
+
+    //! \brief return the underlying queue handle (implementation specific)
+    //! \return internal task handle representation
+    virtual QueueHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a queue delegate object
+    //!
+    //! This function must return a pointer to a `QueueInterface` object that contains the real implementation of the
+    //! queue functions as defined by the implementor.  This function must do several things to be considered correctly
+    //! implemented:
+    //!
+    //! 1. Assert that the supplied memory is non-null. e.g `FW_ASSERT(aligned_placement_new_memory != NULL);`
+    //! 2. Assert that their implementation fits within FW_HANDLE_MAX_SIZE.
+    //!    e.g. `static_assert(sizeof(PosixQueueImplementation) <= sizeof Os::Queue::m_handle_storage,
+    //!        "FW_HANDLE_MAX_SIZE to small");`
+    //! 3. Assert that their implementation aligns within FW_HANDLE_ALIGNMENT.
+    //!    e.g. `static_assert((FW_HANDLE_ALIGNMENT % alignof(PosixQueueImplementation)) == 0, "Bad handle alignment");`
+    //! 4. Placement new their implementation into `aligned_placement_new_memory`
+    //!    e.g. `TaskInterface* interface = new (aligned_placement_new_memory) PosixQueueImplementation;`
+    //! 5. Return the result of the placement new
+    //!    e.g. `return interface;`
+    //!
+    //! \return result of placement new, must be equivalent to `aligned_placement_new_memory`
+    //!
+    static QueueInterface* getDelegate(QueueHandleStorage& aligned_placement_new_memory);
+};
+
+class Queue final : public QueueInterface {
+  public:
+    //! \brief queue constructor
+    Queue();
+
+    //! \brief default queue destructor
+    virtual ~Queue();
+
+    //! \brief copy constructor is forbidden
+    Queue(const Queue& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    Queue(const Queue* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    QueueInterface& operator=(const QueueInterface& other) override = delete;
+
+    //! \brief create queue storage through delegate
+    //!
+    //! Creates a queue ensuring sufficient storage to hold `depth` messages of `messageSize` size each. This method
+    //! delegates to the underlying implementation. Resource allocation is dependent on the underlying implementation
+    //! and users should assume that resource allocation is possible.
+    //!
+    //! \param name: name of queue
+    //! \param depth: depth of queue in number of messages
+    //! \param messageSize: size of an individual message
+    //! \return: status of the creation
+    Status create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) override;
+
+    //! \brief send a message into the queue through delegate
+    //!
+    //! Send a message into the queue, providing the message data, size, priority, and blocking type. When
+    //! `blockType` is set to BLOCKING, this call will block on queue full. Otherwise, this will return an error
+    //! status on queue full. This method delegates to the underlying implementation.
+    //!
+    //! \warning It is invalid to send a null buffer
+    //! \warning This method will block if the queue is full and blockType is set to BLOCKING
+    //!
+    //! \param buffer: message data
+    //! \param size: size of message data
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return: status of the send
+    Status send(const U8* buffer, FwSizeType size, FwQueuePriorityType priority, BlockingType blockType) override;
+
+    //! \brief receive a message from the queue through delegate
+    //!
+    //! Receive a message from the queue, providing the message destination, capacity, priority, and blocking type.
+    //! When `blockType` is set to BLOCKING, this call will block on queue empty. Otherwise, this will return an
+    //! error status on queue empty. Actual size received and priority of message is set on success status. This method
+    //! delegates to the underlying implementation.
+    //!
+    //! \warning It is invalid to send a null buffer.
+    //! \warning This method will block if the queue is empty and blockType is set to BLOCKING
+    //!
+    //! \param destination: destination for message data
+    //! \param capacity: maximum size of message data
+    //! \param blockType: BLOCKING to wait for message or NONBLOCKING to return error when queue is empty
+    //! \param actualSize: (output) actual size of message read
+    //! \param priority: (output) priority of message read
+    //! \return: status of the send
+    Status receive(U8* destination,
+                   FwSizeType capacity,
+                   BlockingType blockType,
+                   FwSizeType& actualSize,
+                   FwQueuePriorityType& priority) override;
+
+    //! \brief get number of messages available
+    //!
+    //! Returns the number of messages currently available in the queue. This method delegates to the underlying
+    //! implementation.
+    //!
+    //! \return number of messages available
+    FwSizeType getMessagesAvailable() const override;
+
+    //! \brief get maximum messages stored at any given time through delegate
+    //!
+    //! Returns the maximum number of messages in this queue at any given time. This is the high-water mark for
+    //! this queue.
+    //! \return queue message high-water mark
+    FwSizeType getMessageHighWaterMark() const override;
+
+    //! \brief return the underlying queue handle (implementation specific). Delegates to implementation.
+    //! \return internal task handle representation
+    QueueHandle* getHandle() override;
+
+    //! \brief send a message to a queue
+    //!
+    //! Send a message to a queue with the given priority and block type. See: QueueInterface::send
+    //!
+    //! \warning This method will block if the queue is full and blockType is set to BLOCKING
+    //!
+    //! \param message: reference to serialize buffer storing message
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return status of the send
+    Status send(const Fw::SerializeBufferBase& message, FwQueuePriorityType priority, BlockingType blockType);
+
+    //! \brief receive a message from a queue
+    //!
+    //! Receive a message from a queue with the given block type. See: QueueInterface::receive. Note: this will entirely
+    //! overwrite the buffer.
+    //!
+    //! \warning This method will block if the queue is full and blockType is set to BLOCKING
+    //!
+    //! \param destination: reference to serialize buffer for storing message
+    //! \param priority: (output) priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return status of the send
+    Status receive(Fw::SerializeBufferBase& destination, BlockingType blockType, FwQueuePriorityType& priority);
+
+    //! \brief get the queue's depth in messages
+    FwSizeType getDepth() const;
+
+    //! \brief get the queue's message maximum size
+    FwSizeType getMessageSize() const;
+
+    //! \brief get the queue's name
+    const QueueString& getName() const;
+
+    //! \brief get number of queues system-wide
+    static FwSizeType getNumQueues();
+
+    //! \brief get static mutex
+    static Os::Mutex& getStaticMutex();
+
+  private:
+    QueueString m_name;              //!< queue name
+    FwSizeType m_depth;              //!< Queue depth
+    FwSizeType m_size;               //!< Maximum message size
+    static Os::Mutex s_countLock;    //!< Lock the count
+    static FwSizeType s_queueCount;  //!< Count of the number of queues
+
+#if FW_QUEUE_REGISTRATION
+  public:
+    //! \brief set QueueRegistry for tracking queues
+    //!
+    //! \param registry: registry to set
+    static void setRegistry(QueueRegistry* registry);
+
+  private:
+    static QueueRegistry* s_queueRegistry;  //!< Queue registry store
+#endif
+
+    // This section is used to store the implementation-defined file handle. To Os::File and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    //
+    alignas(FW_HANDLE_ALIGNMENT) QueueHandleStorage m_handle_storage;  //!< Storage for aligned handle
+    QueueInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+//! \brief queue registry interface
+//!
+//! The QueueRegistry is used to track queues in the system. There is intended to be a single, global, queue registry
+//! across the system. It is used to track queues and will receive a callback on the creation of each queue.
+class QueueRegistry {
+  public:
+    //! Default QueueRegistry
+    QueueRegistry() = default;
+    //! Default ~QueueRegistry
+    virtual ~QueueRegistry() = default;
+
+    //! \brief queue registry callback
+    //!
+    //! Register the queue with this queue registry. Must be implemented by QueueRegistry implementations.
+    //!
+    //! \param queue: queue being registered
+    virtual void registerQueue(Queue* queue) = 0;  //!< method called by queue init() methods to register a new queue
+};
+}  // namespace Os
+#endif
+```
+
+### `QueueString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/QueueString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   QueueString.hpp
+// @author F Prime
+// @brief  A string sized for an OS queue name
+// ======================================================================
+
+#ifndef OS_QUEUE_STRING_HPP
+#define OS_QUEUE_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/StringBase.hpp"
+
+namespace Os {
+
+class QueueString final : public Fw::StringBase {
+  public:
+    enum { STRING_SIZE = FW_QUEUE_NAME_BUFFER_SIZE, SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE) };
+
+    QueueString() : StringBase() { *this = ""; }
+
+    QueueString(const QueueString& src) : StringBase() { *this = src; }
+
+    QueueString(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit QueueString(const char* src) : StringBase() { *this = src; }
+
+    ~QueueString() {}
+
+    QueueString& operator=(const QueueString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    QueueString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    QueueString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Os
+
+#endif
+```
+
+### `RawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/RawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/RawTime.cpp
+// \brief common function implementation for Os::RawTime
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/RawTime.hpp>
+
+namespace Os {
+
+RawTime::RawTime() : m_handle_storage(), m_delegate(*RawTimeInterface::getDelegate(m_handle_storage)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<RawTimeInterface*>(&this->m_handle_storage[0]));
+}
+
+RawTime::~RawTime() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<RawTimeInterface*>(&this->m_handle_storage[0]));
+    m_delegate.~RawTimeInterface();
+}
+
+RawTime::RawTime(const RawTime& other)
+    : m_handle_storage(), m_delegate(*RawTimeInterface::getDelegate(m_handle_storage, &other.m_delegate)) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<RawTimeInterface*>(&this->m_handle_storage[0]));
+}
+
+RawTime& RawTime::operator=(const RawTime& other) {
+    if (this != &other) {
+        this->m_delegate = *RawTimeInterface::getDelegate(m_handle_storage, &other.m_delegate);
+    }
+    return *this;
+}
+
+RawTimeHandle* RawTime::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<RawTimeInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+RawTime::Status RawTime::now() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<RawTimeInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.now();
+}
+
+RawTime::Status RawTime::getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& result) const {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const RawTimeInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getTimeInterval(other, result);
+}
+
+Fw::SerializeStatus RawTime::serializeTo(Fw::SerializeBufferBase& buffer) const {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const RawTimeInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.serializeTo(buffer);
+}
+
+Fw::SerializeStatus RawTime::deserializeFrom(Fw::SerializeBufferBase& buffer) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<const RawTimeInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.deserializeFrom(buffer);
+}
+
+RawTime::Status RawTime::getDiffUsec(const RawTime& other, U32& result) const {
+    Fw::TimeInterval interval;
+    Status status = this->getTimeInterval(other, interval);
+    if (status != Status::OP_OK) {
+        return status;
+    }
+
+    // Check overflows in computation
+    U32 seconds = interval.getSeconds();
+    U32 useconds = interval.getUSeconds();
+    if (seconds > (std::numeric_limits<U32>::max() / 1000000)) {
+        result = std::numeric_limits<U32>::max();
+        return Status::OP_OVERFLOW;
+    }
+    U32 secToUsec = seconds * 1000000;
+    if (secToUsec > (std::numeric_limits<U32>::max() - useconds)) {
+        result = std::numeric_limits<U32>::max();
+        return Status::OP_OVERFLOW;
+    }
+    // No overflow, we can safely add values to get total microseconds
+    result = secToUsec + useconds;
+    return status;
+}
+
+bool RawTime::operator==(const RawTime& other) const {
+    Fw::TimeInterval interval;
+    Status status = this->getTimeInterval(other, interval);
+    // If we error out, then the values are either:
+    //    1) impossible to compare, in which case it's perfectly reasonable to consider them different, or
+    //    2) too far apart to fit in a TimeInterval, in which case they are definitely different
+    return status == Status::OP_OK && interval.getSeconds() == 0 && interval.getUSeconds() == 0;
+}
+
+}  // namespace Os
+```
+
+### `RawTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/RawTime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/RawTime.hpp
+// \brief common definitions for Os::RawTime
+// ======================================================================
+#ifndef OS_RAWTIME_HPP_
+#define OS_RAWTIME_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/TimeInterval.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Os/Os.hpp>
+
+namespace Os {
+
+struct RawTimeHandle {};
+
+class RawTime;  // Forward declaration
+
+class RawTimeInterface : public Fw::Serializable {
+  public:
+    // Serialization size for RawTime objects, configured in config/FpConfig.h
+    static const FwSizeType SERIALIZED_SIZE = FW_RAW_TIME_SERIALIZATION_MAX_SIZE;
+
+    enum Status {
+        OP_OK,           //!< Operation was successful
+        OP_OVERFLOW,     //!< Operation result caused an overflow
+        INVALID_PARAMS,  //!< Parameters invalid for current platform
+        NOT_SUPPORTED,   //!< RawTime does not support operation
+        OTHER_ERROR      //!< All other errors
+    };
+
+    //! \brief default constructor
+    RawTimeInterface() = default;
+
+    //! \brief default virtual destructor
+    virtual ~RawTimeInterface() = default;
+
+    //! \brief return the underlying RawTime handle (implementation specific)
+    //! \return internal RawTime handle representation
+    virtual RawTimeHandle* getHandle() = 0;
+
+    //! \brief provide a pointer to a RawTime delegate object
+    static RawTimeInterface* getDelegate(RawTimeHandleStorage& aligned_new_memory,
+                                         const RawTimeInterface* to_copy = nullptr);
+
+    // ------------------------------------------------------------------
+    // RawTime operations to be implemented by an OSAL implementation
+    // ------------------------------------------------------------------
+
+    //! \brief Get the current time.
+    //!
+    //! This function retrieves the current time and stores it in the RawTime object.
+    //! Each implementation should define its RawTimeHandle type for storing the time.
+    //!
+    //! \return Status indicating the result of the operation.
+    virtual Status now() = 0;
+
+    //! \brief Calculate the time interval between this and another raw time.
+    //!
+    //! This function calculates the time interval between the current raw time and another
+    //! specified raw time. The result is stored in the provided (output) interval object.
+    //!
+    //! \param other The other RawTimeHandle to compare against.
+    //! \param interval Output parameter to store the calculated time interval.
+    //! \return Status indicating the result of the operation.
+    virtual Status getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const = 0;
+
+    //! \brief Serialize the contents of the RawTimeInterface object into a buffer.
+    //!
+    //! This function serializes the contents of the RawTimeInterface object into the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to serialize the contents into.
+    //! \return Fw::SerializeStatus indicating the result of the serialization.
+    virtual Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& buffer) const = 0;
+
+    //! \brief Deserialize the contents of the RawTimeInterface object from a buffer.
+    //!
+    //! This function deserializes the contents of the RawTimeInterface object from the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to deserialize the contents from.
+    //! \return Fw::SerializeStatus indicating the result of the deserialization.
+    virtual Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& buffer) = 0;
+};
+
+class RawTime final : public RawTimeInterface {
+  public:
+    RawTime();         //!<  Constructor
+    ~RawTime() final;  //!<  Destructor
+
+    //! \brief copy constructor that copies the internal representation
+    RawTime(const RawTime& other);
+
+    //! \brief assignment operator that copies the internal representation
+    RawTime& operator=(const RawTime& other);
+
+    //! \brief return the underlying RawTime handle (implementation specific)
+    //! \return internal RawTime handle representation
+    RawTimeHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific RawTime member functions
+    // ------------------------------------------------------------
+
+    //! \brief Get the current time.
+    //!
+    //! This function retrieves the current time and stores it in the RawTime object.
+    //! Each implementation should define its RawTimeHandle type for storing the time.
+    //!
+    //! \return Status indicating the result of the operation.
+    Status now() override;
+
+    //! \brief Calculate the time interval between this and another raw time.
+    //!
+    //! This function calculates the time interval between the current raw time and another
+    //! specified raw time. The result is stored in the provided (output) interval object.
+    //!
+    //! \param other The other RawTimeHandle to compare against.
+    //! \param interval Output parameter to store the calculated time interval.
+    //! \return Status indicating the result of the operation.
+    Status getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const override;
+
+    //! \brief Serialize the contents of the RawTimeInterface object into a buffer.
+    //!
+    //! This function serializes the contents of the RawTimeInterface object into the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to serialize the contents into.
+    //! \return Fw::SerializeStatus indicating the result of the serialization.
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& buffer) const override;
+
+    //! \brief Deserialize the contents of the RawTimeInterface object from a buffer.
+    //!
+    //! This function deserializes the contents of the RawTimeInterface object from the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to deserialize the contents from.
+    //! \return Fw::SerializeStatus indicating the result of the deserialization.
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& buffer) override;
+
+    // ------------------------------------------------------------
+    // Common functions built on top of OS-specific functions
+    // ------------------------------------------------------------
+
+    //! \brief Calculate the difference in microseconds between two RawTime objects.
+    //!
+    //! This function calculates the difference in microseconds between the current RawTime object
+    //! and another RawTime object provided as a parameter.
+    //!
+    //! \warning This function will return Status::OP_OVERFLOW if the time difference is too large to fit in a U32.
+    //! \warning This means the largest time difference that can be measured is 2^32 microseconds (about 71 minutes).
+    //! \warning Users should prefer getTimeInterval() for larger intervals.
+    //!
+    //! \param other The other RawTime object to compare against.
+    //! \param result A reference to a U32 variable where the result will be stored.
+    //! \return Status indicating the result of the operation.
+    Status getDiffUsec(const RawTime& other, U32& result) const;
+
+    //! \brief Compare whether two RawTime objects are the same (i.e. refer to the same microsecond)
+    bool operator==(const RawTime& other) const;
+
+  private:
+    // This section is used to store the implementation-defined RawTime handle. To Os::RawTime and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store the handle in
+    // the byte-array here and set `m_handle_storage` to that address for storage.
+    //
+    alignas(FW_HANDLE_ALIGNMENT) RawTimeHandleStorage m_handle_storage;  //!< RawTime handle storage
+    RawTimeInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+}  // namespace Os
+
+#endif
+```
+
+### `Task.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Task.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Task.cpp
+// \brief common function implementation for Os::Task
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/Task.hpp>
+
+namespace Os {
+
+TaskInterface::Arguments::Arguments(const Fw::StringBase& name,
+                                    const Os::TaskInterface::taskRoutine routine,
+                                    void* const routine_argument,
+                                    const FwTaskPriorityType priority,
+                                    const FwSizeType stackSize,
+                                    const FwSizeType cpuAffinity,
+                                    const FwTaskIdType identifier)
+    : m_name(name),
+      m_routine(routine),
+      m_routine_argument(routine_argument),
+      m_priority(priority),
+      m_stackSize(stackSize),
+      m_cpuAffinity(cpuAffinity),
+      m_identifier(identifier) {
+    FW_ASSERT(routine != nullptr);
+}
+
+Task::TaskRoutineWrapper::TaskRoutineWrapper(Task& self) : m_task(self) {}
+
+void Task::TaskRoutineWrapper::run(void* wrapper_pointer) {
+    FW_ASSERT(wrapper_pointer != nullptr);
+    TaskRoutineWrapper& wrapper = *reinterpret_cast<TaskRoutineWrapper*>(wrapper_pointer);
+    FW_ASSERT(wrapper.m_user_function != nullptr);
+
+    wrapper.m_task.m_lock.lock();
+    Task::State state = wrapper.m_task.m_state;
+    wrapper.m_task.m_lock.unlock();
+    FW_ASSERT(state != Task::State::NOT_STARTED);
+    // Run once start code
+    if (state == Task::State::STARTING) {
+        wrapper.m_task.m_lock.lock();
+        wrapper.m_task.m_state = Task::State::RUNNING;
+        wrapper.m_task.m_lock.unlock();
+        wrapper.m_task.onStart();
+    }
+
+    // Call user function supplying the user argument
+    wrapper.m_user_function(wrapper.m_user_argument);
+}
+
+void Task::TaskRoutineWrapper::invoke() {
+    TaskRoutineWrapper::run(this);
+}
+
+TaskRegistry* Task::s_taskRegistry = nullptr;
+FwSizeType Task::s_numTasks = 0;
+Mutex Task::s_taskMutex;
+
+bool TaskInterface::isCooperative() {
+    return false;
+}
+
+Task::Task() : m_wrapper(*this), m_handle_storage(), m_delegate(*TaskInterface::getDelegate(m_handle_storage)) {}
+
+Task::~Task() {
+    // If a registry has been registered and the task has been started then remove task from the registry
+    if ((Task::s_taskRegistry != nullptr) && this->m_registered) {
+        Task::s_taskRegistry->removeTask(this);
+    }
+    m_delegate.~TaskInterface();
+}
+
+void Task::suspend() {
+    this->suspend(Task::SuspensionType::UNINTENTIONAL);
+}
+
+Task::State Task::getState() {
+    Task::State state;
+    this->m_lock.lock();
+    state = this->m_state;
+    this->m_lock.unlock();
+    return state;
+}
+
+Task::Status Task::start(const Fw::StringBase& name,
+                         const taskRoutine routine,
+                         void* const arg,
+                         const FwTaskPriorityType priority,
+                         const ParamType stackSize,
+                         const ParamType cpuAffinity,
+                         const ParamType identifier) {
+    FW_ASSERT(routine != nullptr);
+    return this->start(
+        Task::Arguments(name, routine, arg, priority, stackSize, cpuAffinity, static_cast<FwTaskIdType>(identifier)));
+}
+
+Task::Status Task::start(const Task::Arguments& arguments) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    FW_ASSERT(arguments.m_routine != nullptr);
+    this->m_name = arguments.m_name;
+    this->m_state = State::STARTING;
+
+    Arguments wrapped_arguments = arguments;
+    // Intercept routine and argument with the local wrapper
+    this->m_wrapper.m_user_function = arguments.m_routine;
+    this->m_wrapper.m_user_argument = arguments.m_routine_argument;
+    wrapped_arguments.m_routine = Task::TaskRoutineWrapper::run;
+    wrapped_arguments.m_routine_argument = &this->m_wrapper;
+
+    Task::Status status = this->m_delegate.start(wrapped_arguments);
+    if (status == Task::Status::OP_OK) {
+        Task::m_lock.lock();
+        this->m_priority = wrapped_arguments.m_priority;
+        Task::m_lock.unlock();
+        Task::s_taskMutex.lock();
+        Task::s_numTasks++;
+        Task::s_taskMutex.unlock();
+
+        // If a registry has been registered, register task to it
+        if (Task::s_taskRegistry) {
+            Task::s_taskRegistry->addTask(this);
+            this->m_registered = true;
+        }
+    }
+    return status;
+}
+
+void Task::onStart() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    this->m_delegate.onStart();
+}
+
+void Task::invokeRoutine() {
+    this->m_wrapper.invoke();
+}
+
+Task::Status Task::join() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    Task::Status status = Task::Status::INVALID_STATE;
+    Task::State state = this->getState();
+    if (state == Task::RUNNING || state == STARTING) {
+        status = this->m_delegate.join();
+        this->m_lock.lock();
+        if (status == Task::Status::OP_OK) {
+            this->m_state = Task::State::EXITED;
+        } else {
+            this->m_state = Task::State::UNKNOWN;
+        }
+        this->m_lock.unlock();
+    }
+    return status;
+}
+
+void Task::suspend(Task::SuspensionType suspensionType) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    this->m_delegate.suspend(suspensionType);
+    this->m_lock.lock();
+    this->m_state = (suspensionType == Task::SuspensionType::INTENTIONAL) ? State::SUSPENDED_INTENTIONALLY
+                                                                          : State::SUSPENDED_UNINTENTIONALLY;
+    this->m_lock.unlock();
+}
+
+void Task::resume() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    this->m_delegate.resume();
+}
+
+bool Task::isCooperative() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.isCooperative();
+}
+
+FwTaskPriorityType Task::getPriority() {
+    Os::ScopeLock lock(this->m_lock);
+    return this->m_priority;
+}
+
+TaskHandle* Task::getHandle() {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate.getHandle();
+}
+
+FwSizeType Task::getNumTasks() {
+    Task::s_taskMutex.lock();
+    FwSizeType num_tasks = Task::s_numTasks;
+    Task::s_taskMutex.unlock();
+    return num_tasks;
+}
+
+Os::TaskInterface::Status Task::_delay(Fw::TimeInterval interval) {
+    FW_ASSERT(&this->m_delegate == reinterpret_cast<TaskInterface*>(&this->m_handle_storage[0]));
+    return this->m_delegate._delay(interval);
+}
+
+Os::TaskInterface::Status Task::delay(Fw::TimeInterval interval) {
+    return Task::getSingleton()._delay(interval);
+}
+
+void Task::init() {
+    // Force trigger on the fly singleton setup
+    (void)Task::getSingleton();
+}
+
+Task& Task::getSingleton() {
+    static Task s_singleton;
+    return s_singleton;
+}
+
+void Task::registerTaskRegistry(TaskRegistry* registry) {
+    Task::s_taskRegistry = registry;
+}
+}  // namespace Os
+```
+
+### `Task.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Task.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Task.hpp
+// \brief common function definitions for Os::Task
+// ======================================================================
+#ifndef Os_Task_hpp_
+#define Os_Task_hpp_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/TimeInterval.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/Os.hpp>
+#include <Os/TaskString.hpp>
+
+#include <Fw/Deprecate.hpp>
+#include <limits>
+
+// Forward declare for UTs
+namespace Os {
+namespace Test {
+namespace Task {
+struct Tester;
+}
+}  // namespace Test
+}  // namespace Os
+
+namespace Os {
+
+// Forward declarations
+class TaskRegistry;
+
+//! Task handle representation
+class TaskHandle {};
+
+class TaskInterface {
+  public:
+    static constexpr FwSizeType TASK_DEFAULT = std::numeric_limits<FwSizeType>::max();
+    static constexpr FwTaskPriorityType TASK_PRIORITY_DEFAULT = std::numeric_limits<FwTaskPriorityType>::max();
+    enum Status {
+        OP_OK,             //!< message sent/received okay
+        INVALID_HANDLE,    //!< Task handle invalid
+        INVALID_PARAMS,    //!< started task with invalid parameters
+        INVALID_STACK,     //!< started with invalid stack size
+        UNKNOWN_ERROR,     //!< unexpected error return value
+        INVALID_AFFINITY,  //!< unable to set the task affinity
+        DELAY_ERROR,       //!< error trying to delay the task
+        JOIN_ERROR,        //!< error trying to join the task
+        ERROR_RESOURCES,   //!< unable to allocate more tasks
+        ERROR_PERMISSION,  //!< permissions error setting-up tasks
+        NOT_SUPPORTED,     //!< Task feature is not supported
+        INVALID_STATE,     //!< Task is in an invalid state for the operation
+    };
+
+    enum SuspensionType { INTENTIONAL, UNINTENTIONAL };
+
+    enum State { NOT_STARTED, STARTING, RUNNING, SUSPENDED_INTENTIONALLY, SUSPENDED_UNINTENTIONALLY, EXITED, UNKNOWN };
+
+    //! Prototype for task routine started in task context
+    typedef void (*taskRoutine)(void* ptr);
+
+    class Arguments {
+      public:
+        //! \brief construct a set of arguments to start a task
+        //!
+        //! Construct a set of arguments to start a task. It is illegal to supply a task routine that is
+        //! set to a nullptr.
+        //!
+        //! \param name: name of the task
+        //! \param routine: routine to run as part of this task
+        //! \param routine_argument: (optional) argument to supply to the task routine
+        //! \param priority: (optional) priority of this task
+        //! \param stackSize: (optional) size of stack supplied to this task
+        //! \param cpuAffinity: (optional) cpu affinity of this task. TODO: fix this into an array
+        //! \param identifier: (optional) identifier for this task
+        Arguments(const Fw::StringBase& name,
+                  const taskRoutine routine,
+                  void* const routine_argument = nullptr,
+                  const FwTaskPriorityType priority = TASK_PRIORITY_DEFAULT,
+                  const FwSizeType stackSize = TASK_DEFAULT,
+                  const FwSizeType cpuAffinity = TASK_DEFAULT,
+                  const FwTaskIdType identifier = static_cast<FwTaskIdType>(TASK_DEFAULT));
+
+      public:
+        const Os::TaskString m_name;
+        taskRoutine m_routine;
+        void* m_routine_argument;
+        FwTaskPriorityType m_priority;
+        FwSizeType m_stackSize;
+        FwSizeType m_cpuAffinity;
+        FwTaskIdType m_identifier;
+    };
+
+    //! \brief default constructor
+    TaskInterface() = default;
+
+    //! \brief default virtual destructor
+    virtual ~TaskInterface() = default;
+
+    //! \brief copy constructor is forbidden
+    TaskInterface(const TaskInterface& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    TaskInterface& operator=(const TaskInterface& other) = delete;
+
+    // =================
+    // Implementation functions (static) to be supplied by the linker
+    // =================
+
+    //! \brief provide a pointer to a task delegate object
+    //!
+    //! This function must return a pointer to a `TaskInterface` object that contains the real implementation of the
+    //! file functions as defined by the implementor.  This function must do several things to be considered correctly
+    //! implemented:
+    //!
+    //! 1. Assert that the supplied memory is non-null. e.g `FW_ASSERT(aligned_placement_new_memory != NULL);`
+    //! 2. Assert that their implementation fits within FW_HANDLE_MAX_SIZE.
+    //!    e.g. `static_assert(sizeof(PosixTaskImplementation) <= sizeof Os::Task::m_handle_storage,
+    //!        "FW_HANDLE_MAX_SIZE to small");`
+    //! 3. Assert that their implementation aligns within FW_HANDLE_ALIGNMENT.
+    //!    e.g. `static_assert((FW_HANDLE_ALIGNMENT % alignof(PosixTaskImplementation)) == 0, "Bad handle alignment");`
+    //! 4. Placement new their implementation into `aligned_placement_new_memory`
+    //!    e.g. `TaskInterface* interface = new (aligned_placement_new_memory) PosixTaskImplementation;`
+    //! 5. Return the result of the placement new
+    //!    e.g. `return interface;`
+    //!
+    //! \return result of placement new, must be equivalent to `aligned_placement_new_memory`
+    //!
+    static TaskInterface* getDelegate(TaskHandleStorage& aligned_placement_new_memory);
+
+    // =================
+    // Implementation functions (instance) to be supplied by the Os::TaskInterface children
+    // =================
+
+    //! \brief perform required task start actions
+    virtual void onStart() = 0;
+
+    //! \brief block until the task has ended
+    //!
+    //! Blocks the current (calling) task until this task execution has ended. Callers should ensure that any
+    //! signals required to stop this task have already been emitted or will be emitted by another task.
+    //!
+    //! \return status of the block
+    virtual Status join() = 0;
+
+    //! \brief suspend the task given the suspension type
+    //!
+    //! Suspends the task. Some implementations track if the suspension of a task was intentional or
+    //! unintentional. The supplied `suspensionType` parameter indicates that this was intentional or
+    //! unintentional. The type of suspension is also returned when calling `isSuspended`.
+    //!
+    //! \param suspensionType intentionality of the suspension
+    virtual void suspend(SuspensionType suspensionType) = 0;
+
+    //! \brief resume a suspended task
+    //!
+    //! Resumes this task. Not started, running, and exited tasks take no action.
+    //!
+    virtual void resume() = 0;
+
+    //! \brief delay the currently scheduled task using the given architecture
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    virtual Status _delay(Fw::TimeInterval interval) = 0;
+
+    //! \brief determine if the task requires cooperative multitasking
+    //!
+    //! Some task implementations require cooperative multitasking where the task execution is run by a user
+    //! defined task scheduler and not the operating system task scheduler. These tasks cooperatively on
+    //! multitask by doing one unit of work and return from the function.
+    //!
+    //! This function indicates if the task requires cooperative support.
+    //! The default implementation returns false.
+    //!
+    //! \return true when the task expects cooperation, false otherwise
+    virtual bool isCooperative();
+
+    //! \brief return the underlying task handle (implementation specific)
+    //! \return internal task handle representation
+    virtual TaskHandle* getHandle() = 0;
+
+    //! \brief start the task
+    //!
+    //! Starts the task given the supplied arguments.
+    //!
+    //! \param arguments: arguments supplied to the task start call
+    //! \return status of the task start
+    virtual Status start(const Arguments& arguments) = 0;
+};
+
+//! Task class intended to be used by the rest of the fprime system. This is final as it is not intended to be a
+//! parent class. Instead it wraps a delegate provided by `TaskInterface::getDelegate()` to provide system specific
+//! behaviour.
+class Task final : public TaskInterface {
+    friend struct Os::Test::Task::Tester;
+
+  public:
+    //! Wrapper for task routine that ensures `onStart()` is called once the task actually begins
+    class TaskRoutineWrapper {
+      public:
+        explicit TaskRoutineWrapper(Task& self);
+
+        //! \brief run the task routine wrapper
+        //!
+        //! Sets the Os::Task to started via the setStarted method. Then runs the user function passing in the
+        //! user argument.
+        //! \param task_pointer: pointer to TaskRoutineWrapper being run
+        static void run(void* task_pointer);
+
+        //! \brief invoke the run method with "self" as argument
+        void invoke();
+
+        Task& m_task;                           //!< Reference to owning task
+        taskRoutine m_user_function = nullptr;  //!< User function to run once started
+        void* m_user_argument = nullptr;        //!<  Argument to user function
+    };
+
+    //! \brief backwards-compatible parameter type
+    typedef FwSizeType ParamType;
+
+    //! \brief default constructor
+    Task();
+
+    //! \brief default virtual destructor
+    ~Task() final;
+
+    //! \brief copy constructor is forbidden
+    Task(const Task& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    Task& operator=(const Task& other) = delete;
+
+    //! \brief suspend the current task
+    //!
+    //! Suspend the current task unintentionally. If the user needs to indicate that the task was suspended
+    //! intentionally then a call to `suspend(SuspensionType::INTENTIONAL)` should be used.
+    void suspend();
+
+    //! \brief get the task's state
+    //!
+    //! Returns the task state: not started, running, suspended (intentionally), suspended (unintentionally),
+    //! and exited.
+    //!
+    //! \return task state
+    State getState();
+
+    //! \brief start this task
+    //!
+    //! Start this task with supplied name, task routine (run function), priority, stack, affinity, and task
+    //! identifier. These arguments are supplied into an Arguments class and that version of the function is called.
+    //! It is illegal to supply a nullptr as routine.
+    //!
+    //! \param name: name of the task to start
+    //! \param routine: user routine to run
+    //! \param arg: (optional) user argument to supply to task routine
+    //! \param priority: (optional) priority of this task
+    //! \param stackSize: (optional) stack size of this task
+    //! \param cpuAffinity: (optional) affinity of this task. Use `Task::start(Arguments&)` to supply affinity set.
+    //! \param identifier: (optional) identifier of this task
+    //! \return: status of the start call
+    DEPRECATED(Status start(const Fw::StringBase& name,
+                            const taskRoutine routine,
+                            void* const arg = nullptr,
+                            const FwTaskPriorityType priority = TASK_PRIORITY_DEFAULT,
+                            const ParamType stackSize = TASK_DEFAULT,
+                            const ParamType cpuAffinity = TASK_DEFAULT,
+                            const ParamType identifier = TASK_DEFAULT),
+               "Switch to Task::start(Arguments&)");
+
+    //! \brief start the task
+    //!
+    //! Starts the task given the supplied arguments. This is done via a task routine wrapper intermediary that
+    //! ensures that `setStarted` is called once the task has actually started to run. The task then runs the user
+    //! routine. This function may return before the new task begins to run.
+    //
+    //! It is illegal for arguments.m_routine to be null.
+    //!
+    //! \param arguments: arguments supplied to the task start call
+    //! \return status of the task start
+    Status start(const Arguments& arguments) override;
+
+    //! \brief perform delegate's required task start actions
+    void onStart() override;
+
+    //! \brief invoke the task's routine
+    //~
+    //! This will invoke the task's routine passing this as the argument to that call. This is used as a helper when
+    //! running this task (e.g. repetitive cooperative calls).
+    void invokeRoutine();
+
+    //! \brief join calling thread to this thread
+    //!
+    //! Note: this function is deprecated as the value_ptr object is not used anyway and should always be set
+    //! to nullptr.
+    //!
+    //! \param value_ptr must be set to nullptr
+    //! \return status of the join
+    DEPRECATED(Status join(void** value_ptr), "Please switch to argument free join.");
+
+    //! \brief block until the task has ended
+    //!
+    //! Blocks the current (calling) task until this task execution has ended. Callers should ensure that any
+    //! signals required to stop this task have already been emitted or will be emitted by another task.
+    //!
+    //! \return status of the block
+    Status join() override;  //!< Wait for task to finish
+
+    //! \brief suspend the task given the suspension type
+    //!
+    //! Suspends the task. Some implementations track if the suspension of a task was intentional or
+    //! unintentional. The supplied `suspensionType` parameter indicates that this was intentional or
+    //! unintentional. The type of suspension is also returned when calling `isSuspended`.
+    //!
+    //! \param suspensionType intentionality of the suspension
+    void suspend(SuspensionType suspensionType) override;
+
+    //! \brief resume a suspended task
+    //!
+    //! Resumes this task. Not started, running, and exited tasks take no action.
+    //!
+    void resume() override;
+
+    //! \brief delay the current task
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    Status _delay(Fw::TimeInterval interval) override;
+
+    //! \brief determine if the task is cooperative multitasking (implementation specific)
+    //! \return true if cooperative, false otherwise
+    bool isCooperative() override;
+
+    //! \brief get the task priority
+    FwTaskPriorityType getPriority();
+
+    //! \brief return the underlying task handle (implementation specific)
+    //! \return internal task handle representation
+    TaskHandle* getHandle() override;
+
+    //! \brief initialize singleton
+    static void init();
+
+    //! \brief get the current number of tasks
+    //! \return current number of tasks
+    static FwSizeType getNumTasks();
+
+    //! \brief register a task registry to track Threads
+    //!
+    static void registerTaskRegistry(TaskRegistry* registry);
+
+    //! \brief get a reference to singleton
+    //! \return reference to singleton
+    static Task& getSingleton();
+
+    //! \brief delay the current task
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    static Status delay(Fw::TimeInterval interval);
+
+  private:
+    static TaskRegistry* s_taskRegistry;  //!< Pointer to registered task registry
+    static FwSizeType s_numTasks;         //!< Stores the number of tasks created.
+    static Mutex s_taskMutex;             //!< Guards s_numTasks
+
+    TaskString m_name;  //!< Task object name
+    TaskInterface::State m_state = Task::NOT_STARTED;
+    Mutex m_lock;                       //!< Guards state transitions
+    TaskRoutineWrapper m_wrapper;       //!< Concrete storage for task routine wrapper
+    FwTaskPriorityType m_priority = 0;  // Storage of priority
+
+    bool m_registered = false;  //!< Was this task registered
+
+    // This section is used to store the implementation-defined file handle. To Os::File and fprime, this type is
+    // opaque and thus normal allocation cannot be done. Instead, we allow the implementor to store then handle in
+    // the byte-array here and set `handle` to that address for storage.
+    //
+    alignas(FW_HANDLE_ALIGNMENT) TaskHandleStorage m_handle_storage;  //!< Storage for aligned FileHandle data
+    TaskInterface& m_delegate;                                        //!< Delegate for the real implementation
+};
+
+class TaskRegistry {
+  public:
+    //! \brief default task registry constructor
+    TaskRegistry() = default;
+    //! \brief default task registry constructor
+    virtual ~TaskRegistry() = default;
+    //! \brief add supplied task to the registry
+    //!
+    //! \param task: pointer to task to register
+    virtual void addTask(Task* task) = 0;  //!< Add a task to the registry
+
+    //! \brief remove supplied task to the registry
+    //!
+    //! \param task: pointer to task to deregister
+    virtual void removeTask(Task* task) = 0;
+};
+}  // namespace Os
+
+#endif
+```
+
+### `TaskString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/TaskString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   TaskString.hpp
+// @author F Prime
+// @brief  A string sized for an OS task name
+// ======================================================================
+
+#ifndef OS_TASK_STRING_HPP
+#define OS_TASK_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/StringBase.hpp"
+
+namespace Os {
+
+class TaskString final : public Fw::StringBase {
+  public:
+    enum { STRING_SIZE = FW_TASK_NAME_BUFFER_SIZE, SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE) };
+
+    TaskString() : StringBase() { *this = ""; }
+
+    TaskString(const TaskString& src) : StringBase() { *this = src; }
+
+    TaskString(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit TaskString(const char* src) : StringBase() { *this = src; }
+
+    ~TaskString() {}
+
+    TaskString& operator=(const TaskString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    TaskString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    TaskString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Os
+
+#endif
+```
+
+### `Types.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Types.fpp`
+
+
+```fpp
+module Os {
+    type RawTime
+}
+```
+
+### `ValidatedFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/ValidatedFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ValidatedFile.cpp
+// \author bocchino
+// \brief  Os::ValidatedFile implementation
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Os/ValidatedFile.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+namespace Os {
+
+ValidatedFile ::ValidatedFile(const char* const fileName) : m_fileName(fileName), m_hashFileName(""), m_hashBuffer() {
+    Utils::Hash::addFileExtension(this->m_fileName, this->m_hashFileName);
+}
+
+Os::ValidateFile::Status ValidatedFile ::validate() {
+    const Os::ValidateFile::Status status =
+        Os::ValidateFile::validate(this->m_fileName.toChar(), this->m_hashFileName.toChar(), this->m_hashBuffer);
+    return status;
+}
+
+Os::ValidateFile::Status ValidatedFile ::createHashFile() {
+    const Os::ValidateFile::Status status = Os::ValidateFile::createValidation(
+        this->m_fileName.toChar(), this->m_hashFileName.toChar(), this->m_hashBuffer);
+    return status;
+}
+
+const Fw::StringBase& ValidatedFile ::getFileName() const {
+    return this->m_fileName;
+}
+
+const Fw::StringBase& ValidatedFile ::getHashFileName() const {
+    return this->m_hashFileName;
+}
+
+const Utils::HashBuffer& ValidatedFile ::getHashBuffer() const {
+    return this->m_hashBuffer;
+}
+
+}  // namespace Os
+```
+
+### `ValidatedFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/ValidatedFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ValidatedFile.hpp
+// \author bocchino
+// \brief  An fprime validated file
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef OS_ValidatedFile_HPP
+#define OS_ValidatedFile_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "Fw/Types/String.hpp"
+#include "Os/ValidateFile.hpp"
+
+namespace Os {
+
+//! A validated file
+class ValidatedFile {
+  public:
+    //! Construct a validated file
+    ValidatedFile(const char* const fileName  //!< The file name
+    );
+
+  public:
+    //! Validate the file
+    //! \return Status
+    Os::ValidateFile::Status validate();
+
+    //! Create the hash file
+    //! \return Status
+    Os::ValidateFile::Status createHashFile();
+
+  public:
+    //! Get the file name
+    //! \return The file name
+    const Fw::StringBase& getFileName() const;
+
+    //! Get the hash file name
+    //! \return The hash file name
+    const Fw::StringBase& getHashFileName() const;
+
+    //! Get the hash file buffer
+    //! \return The hash file buffer
+    const Utils::HashBuffer& getHashBuffer() const;
+
+  private:
+    //! The file name
+    Fw::String m_fileName;
+
+    //! The hash file name
+    Fw::String m_hashFileName;
+
+    //! The hash value after creating or loading a validation file
+    Utils::HashBuffer m_hashBuffer;
+};
+
+}  // namespace Os
+
+#endif
+```
+
+### `ValidateFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/ValidateFile.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author R. Bocchino, K. Dinkel
+ * \brief Defines a file class to validate files or generate a file validator file
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#ifndef _ValidateFile_hpp_
+#define _ValidateFile_hpp_
+
+#define VFILE_HASH_CHUNK_SIZE (256)
+
+#include <Utils/Hash/HashBuffer.hpp>
+
+namespace Os {
+
+namespace ValidateFile {
+
+// This class encapsulates a very simple file interface for validating files against their hash files
+// and creating validation files
+
+typedef enum {
+    // Did the validation hash match the file hash or not?
+    VALIDATION_OK,    //!<  The validation of the file passed
+    VALIDATION_FAIL,  //!<  The validation of the file did not pass
+    // Did we have issues reading in the file?
+    FILE_DOESNT_EXIST,   //!<  File doesn't exist (for read)
+    FILE_NO_PERMISSION,  //!<  No permission to read/write file
+    FILE_BAD_SIZE,       //!<  Invalid size parameter
+    // Did we have issues reading in the hash file?
+    VALIDATION_FILE_DOESNT_EXIST,   //!<  Validation file doesn't exist (for read)
+    VALIDATION_FILE_NO_PERMISSION,  //!<  No permission to read/write file
+    VALIDATION_FILE_BAD_SIZE,       //!<  Invalid size parameter
+    // Did something else go wrong?
+    NO_SPACE,     //!<  No space left on the device for writing
+    OTHER_ERROR,  //!<  A catch-all for other errors. Have to look in implementation-specific code
+} Status;
+
+// also return hash
+Status validate(const char* fileName, const char* hashFileName, Utils::HashBuffer& hashBuffer);
+//!< Validate the contents of a file 'fileName' against its hash
+
+// for backwards compatibility
+Status validate(const char* fileName, const char* hashFileName);  //!< Validate the contents of a file 'fileName'
+                                                                  //!< against its hash stored in 'hashFileName'
+
+// also return hash
+Status createValidation(const char* fileName, const char* hash, Utils::HashBuffer& hashBuffer);
+
+// for backwards compatibility
+Status createValidation(const char* fileName,
+                        const char* hashFileName);  //!< Create a validation of the file 'fileName' and store it in
+                                                    //!< in a file 'hashFileName'
+
+}  // namespace ValidateFile
+}  // namespace Os
+
+#endif
+```
+
+### `ValidateFileCommon.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/ValidateFileCommon.cpp`
+
+
+```cpp
+#include <Os/File.hpp>
+#include <Os/FileSystem.hpp>
+#include <Os/ValidateFile.hpp>
+#include <Utils/Hash/Hash.hpp>
+
+namespace Os {
+
+File::Status computeHash(const char* fileName, Utils::HashBuffer& hashBuffer) {
+    File::Status status;
+
+    // Open file:
+    File file;
+    status = file.open(fileName, File::OPEN_READ);
+    if (File::OP_OK != status) {
+        return status;
+    }
+
+    // Get the file size:
+    FileSystem::Status fs_status;
+    FwSizeType fileSize = 0;
+    fs_status = FileSystem::getFileSize(fileName, fileSize);  //!< gets the size of the file (in bytes) at location path
+    if (FileSystem::OP_OK != fs_status) {
+        return File::BAD_SIZE;
+    }
+    const FwSizeType max_itr = (fileSize / VFILE_HASH_CHUNK_SIZE + 1);
+
+    // Read all data from file and update hash:
+    Utils::Hash hash;
+    hash.init();
+    U8 buffer[VFILE_HASH_CHUNK_SIZE];
+    FwSizeType size = 0;
+    FwSizeType cnt = 0;
+    while (cnt <= max_itr) {
+        // Read out chunk from file:
+        size = sizeof(buffer);
+        status = file.read(buffer, size, Os::File::WaitType::NO_WAIT);
+        if (File::OP_OK != status) {
+            return status;
+        }
+        // If end of file, break:
+        if (size == 0) {
+            break;
+        }
+        // Add chunk to hash calculation:
+        hash.update(&buffer, static_cast<FwSizeType>(size));
+        cnt++;
+    }
+    file.close();
+
+    // We should not have left the loop because of cnt > max_itr:
+    FW_ASSERT(size == 0);
+    FW_ASSERT(cnt <= max_itr);
+
+    // Calculate hash:
+    Utils::HashBuffer computedHashBuffer;
+    hash.final(computedHashBuffer);
+    hashBuffer = computedHashBuffer;
+
+    return status;
+}
+
+File::Status readHash(const char* hashFileName, Utils::HashBuffer& hashBuffer) {
+    File::Status status;
+
+    // Open hash file:
+    File hashFile;
+    status = hashFile.open(hashFileName, File::OPEN_READ);
+    if (File::OP_OK != status) {
+        return status;
+    }
+
+    // Read hash from checksum file:
+    unsigned char savedHash[HASH_DIGEST_LENGTH];
+    FwSizeType size = static_cast<FwSizeType>(hashBuffer.getBuffCapacity());
+    status = hashFile.read(savedHash, size);
+    if (File::OP_OK != status) {
+        return status;
+    }
+    if (static_cast<FwSizeType>(size) != hashBuffer.getBuffCapacity()) {
+        return File::BAD_SIZE;
+    }
+    hashFile.close();
+
+    // Return the hash buffer:
+    Utils::HashBuffer savedHashBuffer(savedHash, static_cast<FwSizeType>(size));
+    hashBuffer = savedHashBuffer;
+
+    return status;
+}
+
+File::Status writeHash(const char* hashFileName, Utils::HashBuffer hashBuffer) {
+    // Open hash file:
+    File hashFile;
+    File::Status status;
+    status = hashFile.open(hashFileName, File::OPEN_WRITE);
+    if (File::OP_OK != status) {
+        return status;
+    }
+
+    // Write out the hash
+    FwSizeType size = static_cast<FwSizeType>(hashBuffer.getBuffLength());
+    status = hashFile.write(hashBuffer.getBuffAddr(), size, Os::File::WaitType::NO_WAIT);
+    if (File::OP_OK != status) {
+        return status;
+    }
+    if (static_cast<FwSizeType>(size) != hashBuffer.getBuffLength()) {
+        return File::BAD_SIZE;
+    }
+    hashFile.close();
+
+    return status;
+}
+
+// Enum and function for translating from a status to a validation status:
+typedef enum { FileType, HashFileType } StatusFileType;
+
+ValidateFile::Status translateStatus(File::Status status, StatusFileType type) {
+    switch (type) {
+        case FileType:
+            switch (status) {
+                case File::OP_OK:
+                    return ValidateFile::VALIDATION_OK;
+                case File::DOESNT_EXIST:
+                    return ValidateFile::FILE_DOESNT_EXIST;
+                case File::NO_SPACE:
+                    return ValidateFile::NO_SPACE;
+                case File::NO_PERMISSION:
+                    return ValidateFile::FILE_NO_PERMISSION;
+                case File::BAD_SIZE:
+                    return ValidateFile::FILE_BAD_SIZE;
+                case File::NOT_OPENED:
+                    return ValidateFile::OTHER_ERROR;
+                case File::OTHER_ERROR:
+                    return ValidateFile::OTHER_ERROR;
+                default:
+                    FW_ASSERT(0, status);
+            }
+            break;
+        case HashFileType:
+            switch (status) {
+                case File::OP_OK:
+                    return ValidateFile::VALIDATION_OK;
+                case File::DOESNT_EXIST:
+                    return ValidateFile::VALIDATION_FILE_DOESNT_EXIST;
+                case File::NO_SPACE:
+                    return ValidateFile::NO_SPACE;
+                case File::NO_PERMISSION:
+                    return ValidateFile::VALIDATION_FILE_NO_PERMISSION;
+                case File::BAD_SIZE:
+                    return ValidateFile::VALIDATION_FILE_BAD_SIZE;
+                case File::NOT_OPENED:
+                    return ValidateFile::OTHER_ERROR;
+                case File::OTHER_ERROR:
+                    return ValidateFile::OTHER_ERROR;
+                default:
+                    FW_ASSERT(0, status);
+            }
+            break;
+        default:
+            FW_ASSERT(0, type);
+    }
+
+    return ValidateFile::OTHER_ERROR;
+}
+
+ValidateFile::Status ValidateFile::validate(const char* fileName, const char* hashFileName) {
+    Utils::HashBuffer hashBuffer;  // pass by reference - final value is unused
+    return validate(fileName, hashFileName, hashBuffer);
+}
+
+ValidateFile::Status ValidateFile::validate(const char* fileName,
+                                            const char* hashFileName,
+                                            Utils::HashBuffer& hashBuffer) {
+    File::Status status;
+
+    // Read the hash file:
+    Utils::HashBuffer savedHash;
+    status = readHash(hashFileName, savedHash);
+    if (File::OP_OK != status) {
+        return translateStatus(status, HashFileType);
+    }
+
+    // Compute the file's hash:
+    Utils::HashBuffer computedHash;
+    status = computeHash(fileName, computedHash);
+    if (File::OP_OK != status) {
+        return translateStatus(status, FileType);
+    }
+
+    // Compare hashes and return:
+    if (savedHash != computedHash) {
+        return ValidateFile::VALIDATION_FAIL;
+    }
+
+    hashBuffer = savedHash;
+
+    return ValidateFile::VALIDATION_OK;
+}
+
+ValidateFile::Status ValidateFile::createValidation(const char* fileName,
+                                                    const char* hashFileName,
+                                                    Utils::HashBuffer& hashBuffer) {
+    File::Status status;
+
+    // Compute the file's hash:
+    status = computeHash(fileName, hashBuffer);
+    if (File::OP_OK != status) {
+        return translateStatus(status, FileType);
+    }
+
+    status = writeHash(hashFileName, hashBuffer);
+    if (File::OP_OK != status) {
+        return translateStatus(status, HashFileType);
+    }
+
+    return ValidateFile::VALIDATION_OK;
+}
+
+ValidateFile::Status ValidateFile::createValidation(const char* fileName, const char* hashFileName) {
+    Utils::HashBuffer hashBuffer;  // pass by reference - final value is unused
+    return createValidation(fileName, hashFileName, hashBuffer);
+}
+
+}  // namespace Os
+```

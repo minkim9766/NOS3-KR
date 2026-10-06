@@ -3,18 +3,133 @@
 
 **경로:** `components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_radio_app_test.rb`
 
-file--generic_radio_app_test.rb
-file--generic_radio_ast_test.rb
-file--generic_radio_device_test.rb
+**경로:** `components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/generic_radio_app_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_radio_lib.rb"
+
+
+safe_GENERIC_RADIO()
+
+##
+##   Housekeeping, request telemetry to be published on the software bus
+##
+GENERIC_RADIO_TEST_LOOP_COUNT.times do |n|
+  get_GENERIC_RADIO_hk()
+end
+
+##
+## NOOP, no operation but confirm correct counters increment
+##
+GENERIC_RADIO_TEST_LOOP_COUNT.times do |n|
+  GENERIC_RADIO_cmd("GENERIC_RADIO GENERIC_RADIO_NOOP_CC")
+end
+
+##
+## Reset counters, increment as done in NOOP and confirm ability to clear repeatably
+##
+GENERIC_RADIO_TEST_LOOP_COUNT.times do |n|
+  GENERIC_RADIO_cmd("GENERIC_RADIO GENERIC_RADIO_NOOP_CC")
+  cmd("GENERIC_RADIO GENERIC_RADIO_RST_COUNTERS_CC")
+  get_GENERIC_RADIO_hk()
+  check("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_COUNT == 0")
+  check("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_ERR_COUNT == 0")
+end
+
+##
+## injecting bad commmands, checking error counters increase
+##
+GENERIC_RADIO_TEST_LOOP_COUNT.times do |n|
+   # Bad length
+   cmd_cnt = tlm("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_COUNT")
+   cmd_err_cnt = tlm("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_ERR_COUNT")
+   cmd("GENERIC_RADIO GENERIC_RADIO_NOOP_CC with CCSDS_LENGTH #{n+2}") # Note +2 due to CCSDS already being +1
+   get_GENERIC_RADIO_hk()
+   check("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_COUNT == #{cmd_cnt}")
+   check("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+end
+
+for n in 6..(5 + GENERIC_RADIO_TEST_LOOP_COUNT)
+  # Bad command codes
+  cmd_cnt = tlm("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_COUNT")
+  cmd_err_cnt = tlm("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_ERR_COUNT")
+  cmd("GENERIC_RADIO GENERIC_RADIO_NOOP_CC with CCSDS_FC #{n+1}")
+  get_GENERIC_RADIO_hk()
+  check("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_COUNT == #{cmd_cnt}")
+  check("GENERIC_RADIO GENERIC_RADIO_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+end
 ```
 
-## 항목
+### `generic_radio_ast_test.rb`
 
-- [`components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/generic_radio_app_test.rb`](file--generic_radio_app_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/generic_radio_ast_test.rb`](file--generic_radio_ast_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/generic_radio_device_test.rb`](file--generic_radio_device_test.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/generic_radio_ast_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_radio_lib.rb"
+
+
+##
+## This script tests the cFS component in an automated scenario.
+## Currently this includes: 
+##   Hardware failure
+##
+
+
+##
+## Hardware failure
+##
+GENERIC_RADIO_TEST_LOOP_COUNT.times do |n|
+  generic_radio_prepare_ast()
+
+  # Disable sim and confirm device error counts increase
+  get_GENERIC_RADIO_hk()
+  dev_cmd_cnt = tlm("GENERIC_RADIO GENERIC_RADIO_HK_TLM DEVICE_COUNTER")
+  dev_cmd_err_cnt = tlm("GENERIC_RADIO GENERIC_RADIO_HK_TLM DEVICE_ERR_COUNT")
+
+  generic_radio_sim_disable()
+  
+  cmd("GENERIC_RADIO GENERIC_RADIO_NOOP_CC") #sending command that should fail due to sim disabled
+
+  get_GENERIC_RADIO_hk()
+
+  check("GENERIC_RADIO GENERIC_RADIO_HK_TLM DEVICE_COUNTER >= #{dev_cmd_cnt}")
+  check("GENERIC_RADIO GENERIC_RADIO_HK_TLM DEVICE_ERR_COUNT > #{dev_cmd_err_cnt}")
+
+  # Enable sim and confirm return to nominal operation
+  generic_radio_sim_enable()
+  get_GENERIC_RADIO_hk();
+  confirm_GENERIC_RADIO_data_loop()
+end
+```
+
+### `generic_radio_device_test.rb`
+
+**경로:** `components/generic_radio/gsw/GENERIC_RADIO/procedures/tests/generic_radio_device_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_radio_lib.rb"
+
+##
+## Enable / disable, control hardware communications
+##
+GENERIC_RADIO_TEST_LOOP_COUNT.times do |n|
+
+  safe_GENERIC_RADIO()
+
+  #radio does not have enable/disable functionality, so we just check the device is alive.
+  confirm_GENERIC_RADIO_data_loop()
+end
+```

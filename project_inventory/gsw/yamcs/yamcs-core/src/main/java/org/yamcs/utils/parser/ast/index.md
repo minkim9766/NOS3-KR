@@ -3,24 +3,216 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AndExpression.java`
 
-file--AndExpression.java
-file--Comparator.java
-file--Comparison.java
-file--Node.java
-file--OrExpression.java
-file--UnaryExpression.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/AndExpression.java`
+
+
+```java
+package org.yamcs.utils.parser.ast;
+
+import java.util.List;
+
+public class AndExpression implements Node {
+
+    private List<OrExpression> clauses;
+
+    public AndExpression(List<OrExpression> clauses) {
+        this.clauses = clauses;
+    }
+
+    public List<OrExpression> getClauses() {
+        return clauses;
+    }
+
+    @Override
+    public String toString(String indent) {
+        StringBuilder buf = new StringBuilder(indent)
+                .append(getClass().getSimpleName())
+                .append("\n");
+        for (OrExpression clause : clauses) {
+            buf.append(clause.toString(indent + " |"));
+        }
+        return buf.toString();
+    }
+}
 ```
 
-## 항목
+### `Comparator.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/AndExpression.java`](file--AndExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/Comparator.java`](file--Comparator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/Comparison.java`](file--Comparison.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/Node.java`](file--Node.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/OrExpression.java`](file--OrExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/UnaryExpression.java`](file--UnaryExpression.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/Comparator.java`
+
+
+```java
+package org.yamcs.utils.parser.ast;
+
+public enum Comparator {
+    EQUAL_TO,
+    GREATER_THAN,
+    GREATER_THAN_OR_EQUAL_TO,
+    HAS,
+    LESS_THAN,
+    LESS_THAN_OR_EQUAL_TO,
+    NOT_EQUAL_TO,
+    RE_EQUAL_TO,
+    RE_NOT_EQUAL_TO;
+}
+```
+
+### `Comparison.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/Comparison.java`
+
+
+```java
+package org.yamcs.utils.parser.ast;
+
+import java.util.regex.Pattern;
+
+public class Comparison implements Node {
+
+    /**
+     * Either a field name (in the case of a field comparison), or plain text (in the case of text search).
+     * <p>
+     * Always in lowercase.
+     */
+    public final String comparable;
+    public final Comparator comparator;
+
+    /**
+     * Value to compare against.
+     * <p>
+     * Always in lowercase, except when a regular expression match is done.
+     */
+    public final String value;
+
+    public final Pattern pattern;
+    public final byte[] binary;
+
+    public Comparison(String comparable, Comparator comparator, String value, Pattern pattern, byte[] binary) {
+        this.comparable = comparable.toLowerCase();
+        this.comparator = comparator;
+        this.pattern = pattern;
+        this.binary = binary;
+
+        if (value != null && pattern == null) {
+            this.value = value.toLowerCase();
+        } else { // Preserve case when pattern matching
+            this.value = value;
+        }
+    }
+
+    @Override
+    public String toString(String indent) {
+        return indent + getClass().getSimpleName() + "\n" +
+                indent + " |" + comparable + "\n" +
+                indent + " |" + comparator + "\n" +
+                indent + " |" + value;
+    }
+}
+```
+
+### `Node.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/Node.java`
+
+
+```java
+package org.yamcs.utils.parser.ast;
+
+public interface Node {
+
+    String toString(String indent);
+}
+```
+
+### `OrExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/OrExpression.java`
+
+
+```java
+package org.yamcs.utils.parser.ast;
+
+import java.util.List;
+
+public class OrExpression implements Node {
+
+    private List<UnaryExpression> clauses;
+
+    public OrExpression(List<UnaryExpression> clauses) {
+        this.clauses = clauses;
+    }
+
+    public List<UnaryExpression> getClauses() {
+        return clauses;
+    }
+
+    @Override
+    public String toString(String indent) {
+        StringBuilder buf = new StringBuilder(indent)
+                .append(getClass().getSimpleName())
+                .append("\n");
+        for (UnaryExpression clause : clauses) {
+            buf.append(clause.toString(indent + " |"));
+        }
+        return buf.toString();
+    }
+}
+```
+
+### `UnaryExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/UnaryExpression.java`
+
+
+```java
+package org.yamcs.utils.parser.ast;
+
+public class UnaryExpression implements Node {
+
+    private Comparison comparison;
+    private AndExpression andExpression;
+    private boolean not;
+
+    public UnaryExpression(Comparison comparison, boolean not) {
+        this.comparison = comparison;
+        this.not = not;
+    }
+
+    public UnaryExpression(AndExpression andExpression, boolean not) {
+        this.andExpression = andExpression;
+        this.not = not;
+    }
+
+    public Comparison getComparison() {
+        return comparison;
+    }
+
+    public boolean isNot() {
+        return not;
+    }
+
+    public AndExpression getAndExpression() {
+        return andExpression;
+    }
+
+    @Override
+    public String toString(String indent) {
+        StringBuilder buf = new StringBuilder(indent)
+                .append(getClass().getSimpleName())
+                .append("\n");
+        if (not) {
+            buf.append(indent).append(" |").append("NOT\n");
+        }
+        if (comparison != null) {
+            buf.append(comparison.toString(indent + " |")).append("\n");
+        } else {
+            buf.append(andExpression.toString(indent + " |"));
+        }
+        return buf.toString();
+    }
+}
+```

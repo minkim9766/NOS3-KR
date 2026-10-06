@@ -3,36 +3,680 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--Guard.hpp
-file--Harness.fpp
-file--Harness.hpp
-file--History.hpp
-file--main.cpp
-file--NoArgGuard.hpp
-file--Pick.hpp
-file--README.md
-file--SignalValueHistory.hpp
-file--TestAbsType.cpp
-file--TestAbsType.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Harness.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/TestAbsType.cpp"
+)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
 ```
 
-## 항목
+### `Guard.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Guard.hpp`](file--Guard.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Harness.fpp`](file--Harness.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Harness.hpp`](file--Harness.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/History.hpp`](file--History.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/NoArgGuard.hpp`](file--NoArgGuard.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Pick.hpp`](file--Pick.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/SignalValueHistory.hpp`](file--SignalValueHistory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/TestAbsType.cpp`](file--TestAbsType.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/TestAbsType.hpp`](file--TestAbsType.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Guard.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Guard.hpp
+// \author R. Bocchino
+// \brief  Template for test implementation of a state machine guard
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_Guard_HPP
+#define FppTest_SmHarness_Guard_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "FppTest/state_machine/internal/harness/SignalValueHistory.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+//! Test implementation of a state machine guard with a value argument
+template <typename Signal, typename T, FwSizeType size>
+class Guard {
+  public:
+    //! The call history type
+    using CallHistory = SignalValueHistory<Signal, T, size>;
+
+    //! Constructor
+    Guard() {}
+
+    //! Reset the guard to the initial state
+    void reset() {
+        this->m_callHistory.clear();
+        this->m_returnValue = false;
+    }
+
+    //! Clear the call history but keep the return value
+    void clearCallHistory() { this->m_callHistory.clear(); }
+
+    //! Call the guard
+    bool call(Signal signal,  //!< The signal
+              const T& arg    //!< The argument
+    ) const {
+        // Use const cast to update the history
+        const_cast<Guard<Signal, T, size>*>(this)->m_callHistory.push(signal, arg);
+        return this->m_returnValue;
+    }
+
+    //! Set the return value
+    void setReturnValue(bool returnValue  //!< The return value
+    ) {
+        this->m_returnValue = returnValue;
+    }
+
+    //! Get the call history
+    const CallHistory& getCallHistory() const { return this->m_callHistory; }
+
+  private:
+    //! The return value
+    bool m_returnValue = false;
+
+    //! The call history
+    CallHistory m_callHistory = {};
+};
+
+}  // namespace SmHarness
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `Harness.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Harness.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmHarness {
+
+    type TestAbsType
+
+    enum TestEnum { A, B, C }
+
+    array TestArray = [3] U32
+
+    struct TestStruct {
+      x: U32
+    }
+
+  }
+
+}
+```
+
+### `Harness.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Harness.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Harness.hpp
+// \author R. Bocchino
+// \brief  Header file for internal state machine test harness
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_HPP
+#define FppTest_SmHarness_HPP
+
+#include "FppTest/state_machine/internal/harness/Guard.hpp"
+#include "FppTest/state_machine/internal/harness/History.hpp"
+#include "FppTest/state_machine/internal/harness/NoArgGuard.hpp"
+#include "FppTest/state_machine/internal/harness/Pick.hpp"
+#include "FppTest/state_machine/internal/harness/SignalValueHistory.hpp"
+#include "FppTest/state_machine/internal/harness/TestAbsType.hpp"
+
+#endif
+```
+
+### `History.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/History.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  History.hpp
+// \author R. Bocchino
+// \brief  Header for a history of value items
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_History_HPP
+#define FppTest_SmHarness_History_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <array>
+#include <cstdlib>
+
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+//! A history of value items
+template <typename T, FwSizeType size>
+class History {
+  public:
+    //! Constructor
+    History() {}
+
+    //! Clear the history
+    void clear() { this->m_size = 0; }
+
+    //! Check two histories for equality
+    bool operator==(History& history  //!< The other history
+    ) const {
+        bool result = (this->m_size == history.m_size);
+        if (result) {
+            for (FwSizeType i = 0; i < this->m_size; i++) {
+                if (this->m_items[i] != history.m_items[i]) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    //! Push an item on the history
+    void push(const T& item  //!< The item
+    ) {
+        FW_ASSERT(m_size < size);
+        this->m_items[m_size] = T(item);
+        this->m_size++;
+    }
+
+    //! Get the history size
+    FwSizeType getSize() const { return this->m_size; }
+
+    //! Get the history item at an index
+    const T& getItemAt(FwIndexType index  //!< The index
+    ) const {
+        FW_ASSERT(static_cast<FwSizeType>(index) < this->m_size);
+        return this->m_items[static_cast<size_t>(index)];
+    }
+
+  private:
+    //! The history size
+    FwSizeType m_size = 0;
+
+    //! The items in the history
+    std::array<T, size> m_items = {};
+};
+
+}  // namespace SmHarness
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/main.cpp`
+
+
+```cpp
+// Main function so we can do a unit test build in this directory
+
+#include "Harness.hpp"
+
+int main(int argc, char** argv) {
+    return 0;
+}
+```
+
+### `NoArgGuard.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/NoArgGuard.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  NoArgGuard.hpp
+// \author R. Bocchino
+// \brief  Class for test implementation of a state machine guard
+//         with no argument value
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_NoArgGuard_HPP
+#define FppTest_SmHarness_NoArgGuard_HPP
+
+#include "FppTest/state_machine/internal/harness/History.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+//! Test implementation of a state machine guard with no argument value
+template <typename Signal, FwSizeType size>
+class NoArgGuard {
+  public:
+    //! Call history type
+    using CallHistory = History<Signal, size>;
+
+    //! Constructor
+    NoArgGuard() : m_callHistory() {}
+
+    //! Reset the guard to the initial state
+    void reset() {
+        this->m_callHistory.clear();
+        this->m_returnValue = false;
+    }
+
+    //! Clear the call history but keep the return value
+    void clearCallHistory() { this->m_callHistory.clear(); }
+
+    //! Call the guard
+    bool call(Signal signal  //!< The signal
+    ) const {
+        // Use const cast to update the history
+        const_cast<NoArgGuard<Signal, size>*>(this)->m_callHistory.push(signal);
+        return this->m_returnValue;
+    }
+
+    //! Set the return value
+    void setReturnValue(bool returnValue  //!< The return value
+    ) {
+        this->m_returnValue = returnValue;
+    }
+
+    //! Get the call history
+    const CallHistory& getCallHistory() const { return this->m_callHistory; }
+
+  private:
+    //! The return value
+    bool m_returnValue = false;
+
+    //! The call history
+    CallHistory m_callHistory;
+};
+
+}  // namespace SmHarness
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `Pick.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/Pick.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Pick.hpp
+// \author R. Bocchino
+// \brief  Header file for picking state machine test values
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_Pick_HPP
+#define FppTest_SmHarness_Pick_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <limits>
+
+#include "FppTest/state_machine/internal/harness/TestAbsType.hpp"
+#include "FppTest/state_machine/internal/harness/TestArrayArrayAc.hpp"
+#include "FppTest/state_machine/internal/harness/TestEnumEnumAc.hpp"
+#include "FppTest/state_machine/internal/harness/TestStructSerializableAc.hpp"
+#include "Fw/Types/String.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+namespace Pick {
+
+//! Pick a state machine ID
+static inline FwEnumStoreType stateMachineId() {
+    const U32 upper = FW_MIN(std::numeric_limits<FwEnumStoreType>::max(), std::numeric_limits<U32>::max());
+    const U32 id = STest::Pick::lowerUpper(0, upper);
+    return static_cast<FwEnumStoreType>(id);
+}
+
+//! Pick a TestAbsType value
+static inline TestAbsType testAbsType() {
+    const U32 data = STest::Pick::any();
+    return TestAbsType(data);
+}
+
+//! Pick a TestArray value
+static inline TestArray testArray() {
+    TestArray result;
+    for (FwIndexType i = 0; i < TestArray::SIZE; i++) {
+        result[static_cast<U32>(i)] = STest::Pick::any();
+    }
+    return result;
+}
+
+//! Pick a TestEnum value
+static inline TestEnum testEnum() {
+    const U32 u32Value = STest::Pick::startLength(0, TestEnum::NUM_CONSTANTS);
+    const TestEnum::T enumValue = static_cast<TestEnum::T>(u32Value);
+    return TestEnum(enumValue);
+}
+
+//! Pick a TestStruct value
+static inline TestStruct testStruct() {
+    const U32 x = STest::Pick::any();
+    return TestStruct(x);
+}
+
+//! Pick a string value
+static inline void string(Fw::StringBase& s,                           //!< The string value (output)
+                          FwSizeType maxLen = Fw::String::STRING_SIZE  //!< The max string length
+) {
+    const U32 size = STest::Pick::lowerUpper(0, static_cast<U32>(maxLen));
+    s = "";
+    for (U32 i = 0; i < size; i++) {
+        char c = static_cast<char>(STest::Pick::lowerUpper(32, 126));
+        Fw::String cString;
+        cString.format("%c", c);
+        s += cString;
+    }
+}
+
+}  // namespace Pick
+
+}  // namespace SmHarness
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/README.md`
+
+
+```markdown
+# state_machine/internal/harness
+
+Harness code for testing FPP internal state machines.
+```
+
+### `SignalValueHistory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/SignalValueHistory.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  SignalValueHistory.hpp
+// \author R. Bocchino
+// \brief  Template for a history of calls with signals and values
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_SignalValueHistory_HPP
+#define FppTest_SmHarness_SignalValueHistory_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <array>
+
+#include "FppTest/state_machine/internal/harness/History.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+//! A history with signals and values
+template <typename Signal, typename T, FwSizeType size>
+class SignalValueHistory {
+  public:
+    //! The signal history type
+    using SignalHistory = History<Signal, size>;
+
+    //! The value history type
+    using ValueHistory = History<T, size>;
+
+    //! Constructor
+    SignalValueHistory() : m_signals(), m_values() {}
+
+    //! Clear the history
+    void clear() {
+        this->m_size = 0;
+        this->m_signals.clear();
+        this->m_values.clear();
+    }
+
+    //! Check two histories for equality
+    bool operator==(SignalValueHistory& history  //!< The other history
+    ) const {
+        return (this->m_size == history.m_size) && (this->m_signals = history.m_signals) &&
+               (this->m_values = history.m_values);
+    }
+
+    //! Push an item on the history
+    void push(Signal signal,  //!< The signal
+              const T& value  //!< The value
+    ) {
+        FW_ASSERT(this->m_size < size, static_cast<FwAssertArgType>(this->m_size));
+        this->m_signals.push(signal);
+        this->m_values.push(value);
+        this->m_size++;
+    }
+
+    //! Get the history size
+    FwSizeType getSize() const { return this->m_size; }
+
+    //! Get the signal history
+    const SignalHistory& getSignals() const { return this->m_signals; }
+
+    //! Get the value history
+    const ValueHistory& getValues() const { return this->m_values; }
+
+  private:
+    //! The size of the history
+    FwSizeType m_size = 0;
+
+    //! The signal history
+    SignalHistory m_signals = {};
+
+    //! The values in the history
+    ValueHistory m_values = {};
+};
+
+}  // namespace SmHarness
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `TestAbsType.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/TestAbsType.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  TestAbsType.cpp
+// \author R. Bocchino
+// \brief  An abstract type for testing (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/state_machine/internal/harness/TestAbsType.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+#ifdef BUILD_UT
+std::ostream& operator<<(std::ostream& os, const TestAbsType& obj) {
+    Fw::String s;
+    obj.toString(s);
+    os << s;
+    return os;
+}
+#endif
+
+#if FW_SERIALIZABLE_TO_STRING
+void TestAbsType::toString(Fw::StringBase& sb) const {
+    static const char* formatString = "TestAbsType(%" PRIu32 ")";
+    sb.format(formatString, this->m_data);
+}
+#endif
+
+}  // namespace SmHarness
+
+}  // namespace FppTest
+```
+
+### `TestAbsType.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/TestAbsType.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  TestAbsType.hpp
+// \author R. Bocchino
+// \brief  An abstract type for testing
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_SmHarness_TestAbsType_HPP
+#define FppTest_SmHarness_TestAbsType_HPP
+
+#include <ostream>
+
+#include "Fw/Types/Serializable.hpp"
+#include "Fw/Types/String.hpp"
+
+namespace FppTest {
+
+namespace SmHarness {
+
+//! An abstract type for testing
+struct TestAbsType final : public Fw::Serializable {
+    //! The serialized size
+    static constexpr FwSizeType SERIALIZED_SIZE = sizeof(U32);
+
+    //! Default-argument constructor
+    TestAbsType() : m_data(0) {}
+
+    //! Supplied-argument constructor
+    TestAbsType(U32 data  //!< The data
+                )
+        : m_data(data) {}
+
+    //! Comparison operator
+    bool operator==(const TestAbsType& obj) const { return this->m_data == obj.m_data; }
+
+#ifdef BUILD_UT
+    //! Ostream operator
+    friend std::ostream& operator<<(std::ostream& os,       //!< The ostream
+                                    const TestAbsType& obj  //!< The object
+    );
+#endif
+
+    //! Serialize function
+    //! \return Status
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& sbb  //!< The serialize buffer base
+    ) const final {
+        return sbb.serializeFrom(this->m_data);
+    }
+
+    //! Deserialize method
+    //! \return status
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& sbb  //!< The serialize buffer base
+                                        ) final {
+        return sbb.deserializeTo(this->m_data);
+    }
+
+#if FW_SERIALIZABLE_TO_STRING
+    //! Convert TestAbsType to string
+    void toString(Fw::StringBase& sb  //!< The StringBase object to hold the result
+    ) const;
+#endif
+
+    //! The data
+    U32 m_data;
+};
+
+}  // namespace SmHarness
+
+}  // namespace FppTest
+
+#endif
+```

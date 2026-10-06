@@ -3,18 +3,116 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cat.py`
 
-file--cat.py
-file--property_writer.py
-file--redirector.py
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/cat.py`
+
+
+```python
+import argparse
+import sys
+from pathlib import Path
+
+
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Concatenate input files.")
+    parser.add_argument(
+        "--output",
+        type=argparse.FileType("w"),
+        help="Output file name",
+        default=sys.stdout,
+    )
+    parser.add_argument(
+        "file", type=Path, nargs="+", help="Files to concatenate together"
+    )
+    return parser.parse_args()
+
+
+def main():
+    """Main function to handle command line arguments and output."""
+    args = parse_args()
+    for file in args.file:
+        with open(file, "r") as file_handle:
+            print("".join(file_handle.readlines()), end="", file=args.output)
+
+
+if __name__ == "__main__":
+    main()
 ```
 
-## 항목
+### `property_writer.py`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/cat.py`](file--cat.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/property_writer.py`](file--property_writer.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/redirector.py`](file--redirector.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/property_writer.py`
+
+
+```python
+import argparse
+import sys
+from pathlib import Path
+
+
+DEFINE = "define_property({})"
+SET = "set_property({})"
+APPEND = "include(utilities)\nappend_list_property({})"
+
+
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Write properties to a file.")
+    parser.add_argument(
+        "directive",
+        type=str,
+        help="Directive: SET, APPEND, or DEFINE",
+        choices=["SET", "DEFINE", "APPEND"],
+    )
+    parser.add_argument(
+        "values", type=str, nargs="+", help="Value(s) to write to property call"
+    )
+    parser.add_argument(
+        "--file", type=Path, help="File to write the property to", default=None
+    )
+    parser.add_argument(
+        "--append",
+        action="store_true",
+        help="Append to the file instead of overwriting",
+        default=False,
+    )
+
+    parsed = parser.parse_args()
+    parsed.file = (
+        sys.stdout
+        if parsed.file is None
+        else open(parsed.file, "a" if parsed.append else "w")
+    )
+    return parsed
+
+
+def main():
+    """Main function to handle command line arguments and write properties."""
+    args = parse_args()
+    format_string = SET if args.directive == "SET" else DEFINE
+    print(format_string.format(" ".join(args.values)), file=args.file)
+
+
+if __name__ == "__main__":
+    main()
+```
+
+### `redirector.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/redirector.py`
+
+
+```python
+import sys
+import subprocess
+
+if len(sys.argv) < 2:
+    print("[ERROR] Supply output file then tool")
+    sys.exit(1)
+with open(sys.argv[1], "w") as file_handle:
+    sys.exit(subprocess.run(sys.argv[2:], stdout=file_handle).returncode)
+```

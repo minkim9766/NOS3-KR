@@ -3,18 +3,22 @@
 
 **경로:** `gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `close.png`
 
-file--close.png
-file--down.png
-file--up.png
-```
+**경로:** `gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/close.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/close.png`](file--close.png) — 바이너리 (경로만)
-- [`gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/down.png`](file--down.png) — 바이너리 (경로만)
-- [`gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/up.png`](file--up.png) — 바이너리 (경로만)
+### `down.png`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/down.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `up.png`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/resources/org/yamcs/images/up.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

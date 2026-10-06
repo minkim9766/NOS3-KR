@@ -3,68 +3,3627 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractAlgorithmExecutor.java`
 
-file--AbstractAlgorithmExecutor.java
-file--AbstractJavaExprExecutor.java
-file--ActiveAlgorithm.java
-file--AlgorithmEngine.java
-file--AlgorithmException.java
-file--AlgorithmExecListener.java
-file--AlgorithmExecutionContext.java
-file--AlgorithmExecutionResult.java
-file--AlgorithmExecutor.java
-file--AlgorithmExecutorFactory.java
-file--AlgorithmFunctions.java
-file--AlgorithmManager.java
-file--AlgorithmTextListener.java
-file--AlgorithmTrace.java
-file--EventLogFunctions.java
-file--InvalidAlgorithmOutputException.java
-file--JavaAlgorithmEngine.java
-file--JavaAlgorithmExecutorFactory.java
-file--JavaExprAlgorithmExecutionFactory.java
-file--LinksFunctions.java
-file--MathAlgorithmExecutor.java
-file--MathOperationEvaluator.java
-file--OutputValueBinding.java
-file--ScriptAlgorithmEngine.java
-file--ScriptAlgorithmExecutor.java
-file--ScriptAlgorithmExecutorFactory.java
-file--ValueBinding.java
-file--VerifierFunctions.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AbstractAlgorithmExecutor.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Algorithm.Scope;
+import org.yamcs.xtce.ArgumentInstanceRef;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.OnParameterUpdateTrigger;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterInstanceRef;
+import org.yamcs.xtce.TriggerSetType;
+
+/**
+ * Skeleton implementation for algorithms conforming to the XTCE {@link Algorithm} definition.
+ * <p>
+ * It collects all the inputs into an inputList and implements the triggering based on the mandatory parameters.
+ * 
+ */
+public abstract class AbstractAlgorithmExecutor implements AlgorithmExecutor {
+    final protected AlgorithmExecutionContext execCtx;
+    final protected Algorithm algorithmDef;
+    boolean firstUpdate = true;
+
+    static protected final Logger log = LoggerFactory.getLogger(AbstractAlgorithmExecutor.class);
+
+    // Collect all the input values here - the indexes match one to one the algorithm def input list
+    final protected List<RawEngValue> inputValues;
+
+    public AbstractAlgorithmExecutor(Algorithm algorithmDef, AlgorithmExecutionContext execCtx) {
+        this.algorithmDef = algorithmDef;
+        this.execCtx = execCtx;
+        List<InputParameter> l = algorithmDef.getInputList();
+        inputValues = new ArrayList<>(l.size());
+        for (int k = 0; k < l.size(); k++) {
+            inputValues.add(null);
+        }
+    }
+
+    /**
+     * update the parameters and return true if the algorithm should run
+     * 
+     * @param processingCtx
+     * @return true if the algorithm should run
+     */
+    @Override
+    public synchronized boolean update(ProcessingContext processingCtx) {
+
+        boolean skipRun = false;
+        List<InputParameter> l = algorithmDef.getInputList();
+
+        for (int k = 0; k < l.size(); k++) {
+            InputParameter inputParameter = l.get(k);
+            ParameterInstanceRef pref = inputParameter.getParameterInstance();
+            if (pref == null) {
+                ArgumentValue argval = getInputArgument(processingCtx, inputParameter.getArgumentRef());
+                if (argval != null) {
+                    updateInputArgument(k, inputParameter, argval);
+                    inputValues.set(k, argval);
+                }
+            } else {
+                ParameterValue pval = getInputParameter(processingCtx, pref);
+                if (pval != null) {
+                    updateInput(k, inputParameter, pval);
+                    inputValues.set(k, pval);
+                }
+            }
+
+            if (!skipRun && inputParameter.isMandatory() && inputValues.get(k) == null) {
+                log.trace("Not running algorithm {} because mandatory input {} is not present",
+                        algorithmDef.getName(),
+                        inputParameter.getEffectiveInputName());
+                skipRun = true;
+            }
+        }
+        firstUpdate = false;
+        // But run it only, if this satisfies an onParameterUpdate trigger
+        boolean triggered = false;
+        TriggerSetType triggerSet = algorithmDef.getTriggerSet();
+        if (triggerSet == null || triggerSet.isEmpty()) {
+            // In XTCE, verifier algorithms don't have explicit triggers
+            if (algorithmDef.getScope() == Scope.COMMAND_VERIFICATION) {
+                var parameterInputs = algorithmDef.getInputList().stream()
+                        .filter(input -> input.getParameterInstance() != null)
+                        .map(input -> input.getParameterInstance().getParameter())
+                        .collect(Collectors.toList());
+                if (!parameterInputs.isEmpty()) {
+                    for (var p : parameterInputs) {
+                        if (processingCtx.containsUpdate(p)) {
+                            triggered = true;
+                            break;
+                        }
+                    }
+                } else {
+                    triggered = true;
+                }
+            } else {
+                triggered = true;
+            }
+        } else {
+            for (OnParameterUpdateTrigger trigger : triggerSet.getOnParameterUpdateTriggers()) {
+                if (processingCtx.containsUpdate(trigger.getParameter())) {
+                    triggered = true;
+                    break;
+                }
+            }
+            if (!skipRun && !triggered && log.isTraceEnabled()) {
+                log.trace("Not running algorithm {} because the parameter update triggers are not satisfied: {}",
+                        algorithmDef.getName(),
+                        algorithmDef.getTriggerSet().getOnParameterUpdateTriggers());
+            }
+        }
+        boolean shouldRun = (!skipRun && triggered);
+        return shouldRun;
+    }
+
+    public ParameterValue getInputParameter(ProcessingContext processingCtx, ParameterInstanceRef pref) {
+        ParameterValue pval = null;
+        pval = processingCtx.getParameterInstance(pref);
+        if (pval == null) {
+            return null;
+        }
+
+        if (pref.getMemberPath() != null) {
+            ParameterValue memberValue = AggregateUtil.extractMember(pval, pref.getMemberPath());
+            if (memberValue == null) {
+                // this can happen for an array which does not have enough elements
+                log.debug("value {} does not have member path required by parameter reference {}",
+                        pval, pref);
+            }
+            pval = memberValue;
+        }
+        return pval;
+    }
+
+    public ArgumentValue getInputArgument(ProcessingContext processingCtx, ArgumentInstanceRef ref) {
+        ArgumentValue aval = processingCtx.getCmdArgument(ref.getArgument());
+        if (aval == null) {
+            return null;
+        }
+
+        if (ref.getMemberPath() != null) {
+            ArgumentValue memberValue = AggregateUtil.extractMember(aval, ref.getMemberPath());
+            if (memberValue == null) {
+                // this can happen for an array which does not have enough elements
+                log.debug("value {} does not have member path required by parameter reference {}",
+                        aval, ref);
+            }
+            aval = memberValue;
+        }
+        return aval;
+    }
+
+    /**
+     * Called when the given inputParameter receives a value. idx is the index of the inputParameter in the algorithm
+     * definition input list.
+     * <p>
+     * newValue can be either a {@link ParameterValue} or a {@link ArgumentValue}
+     * <p>
+     * Can be used by subclasses to perform specific actions;
+     * <p>
+     * Note that all values are also collected in the inputList
+     * 
+     * @param inputParameter
+     * @param newValue
+     */
+    protected void updateInput(int idx, InputParameter inputParameter, ParameterValue newValue) {
+    }
+
+    /**
+     * Called when the given inputParameter which contains a reference to an argument receives an argument value.
+     * <p>
+     * idx is the index of the inputParameter in the algorithm.
+     *
+     * @param idx
+     * @param inputParameter
+     * @param newValue
+     */
+    protected void updateInputArgument(int idx, InputParameter inputParameter, ArgumentValue newValue) {
+    }
+
+    /**
+     * Returns the output parameter with the given index.
+     * 
+     * @param idx
+     * @return
+     */
+    protected Parameter getOutputParameter(int idx) {
+        return algorithmDef.getOutputSet().get(idx).getParameter();
+    }
+
+    @Override
+    public AlgorithmExecutionContext getExecutionContext() {
+        return execCtx;
+    }
+
+    @Override
+    public Algorithm getAlgorithm() {
+        return algorithmDef;
+    }
+}
 ```
 
-## 항목
+### `AbstractJavaExprExecutor.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AbstractAlgorithmExecutor.java`](file--AbstractAlgorithmExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AbstractJavaExprExecutor.java`](file--AbstractJavaExprExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ActiveAlgorithm.java`](file--ActiveAlgorithm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmEngine.java`](file--AlgorithmEngine.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmException.java`](file--AlgorithmException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecListener.java`](file--AlgorithmExecListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutionContext.java`](file--AlgorithmExecutionContext.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutionResult.java`](file--AlgorithmExecutionResult.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutor.java`](file--AlgorithmExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutorFactory.java`](file--AlgorithmExecutorFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmFunctions.java`](file--AlgorithmFunctions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmManager.java`](file--AlgorithmManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmTextListener.java`](file--AlgorithmTextListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmTrace.java`](file--AlgorithmTrace.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/EventLogFunctions.java`](file--EventLogFunctions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/InvalidAlgorithmOutputException.java`](file--InvalidAlgorithmOutputException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/JavaAlgorithmEngine.java`](file--JavaAlgorithmEngine.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/JavaAlgorithmExecutorFactory.java`](file--JavaAlgorithmExecutorFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/JavaExprAlgorithmExecutionFactory.java`](file--JavaExprAlgorithmExecutionFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/LinksFunctions.java`](file--LinksFunctions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/MathAlgorithmExecutor.java`](file--MathAlgorithmExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/MathOperationEvaluator.java`](file--MathOperationEvaluator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/OutputValueBinding.java`](file--OutputValueBinding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ScriptAlgorithmEngine.java`](file--ScriptAlgorithmEngine.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ScriptAlgorithmExecutor.java`](file--ScriptAlgorithmExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ScriptAlgorithmExecutorFactory.java`](file--ScriptAlgorithmExecutorFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ValueBinding.java`](file--ValueBinding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/VerifierFunctions.java`](file--VerifierFunctions.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AbstractJavaExprExecutor.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.OutputParameter;
+
+public abstract class AbstractJavaExprExecutor extends AbstractAlgorithmExecutor {
+
+    public AbstractJavaExprExecutor(Algorithm algorithmDef, AlgorithmExecutionContext execCtx) {
+        super(algorithmDef, execCtx);
+    }
+
+    @Override
+    public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) throws AlgorithmException {
+        try {
+            List<ParameterValue> outputValues = new ArrayList<>(algorithmDef.getOutputList().size());
+            for (OutputParameter outputParam : algorithmDef.getOutputList()) {
+                ParameterValue pv = new ParameterValue(outputParam.getParameter());
+                pv.setGenerationTime(genTime);
+                pv.setAcquisitionTime(acqTime);
+                outputValues.add(pv);
+            }
+            Object returnValue = doExecute(acqTime, genTime, outputValues);
+
+            // remove the values which have not been set
+            int k = 0;
+            for (ParameterValue pv : outputValues) {
+                if (pv.getEngValue() != null || pv.getRawValue() != null) {
+                    outputValues.set(k++, pv);
+                }
+            }
+            outputValues.subList(k, outputValues.size()).clear();
+            return new AlgorithmExecutionResult(inputValues, returnValue, outputValues);
+
+        } catch (AlgorithmException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AlgorithmException(e);
+        }
+    }
+
+    protected abstract Object doExecute(long acqTime, long genTime, List<ParameterValue> outputValues);
+}
+```
+
+### `ActiveAlgorithm.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ActiveAlgorithm.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.events.EventProducer;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.protobuf.AlgorithmStatus;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Algorithm.Scope;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.TriggerSetType;
+
+import com.google.protobuf.util.Timestamps;
+
+/**
+ * This class stores some info related to one active algorithm
+ * 
+ * @author nm
+ *
+ */
+public class ActiveAlgorithm {
+    static final Logger log = LoggerFactory.getLogger(ActiveAlgorithm.class);
+    EventProducer eventProducer;
+
+    /**
+     * The MDB definition of the algorithm
+     */
+    final Algorithm algorithm;
+
+    /**
+     * The algorithm executor - responsible for collecting inputs and running the algorithm
+     */
+    final AlgorithmExecutor executor;
+
+    /**
+     * The context in which the algorithm runs
+     */
+    final AlgorithmExecutionContext context;
+
+    /**
+     * how many time the algorithm ran (successful or with error)
+     */
+    int runCount;
+    /**
+     * when the algorithm ran the last time
+     * <p>
+     * This is system (wall clock) time as returned by currentTimeMillis
+     */
+    long lastRun;
+
+    /**
+     * How long the algorithm ran in total nanoseconds
+     * <p>
+     * totalExecTimeNs/runCount can be used to determine how fast the algorithm is
+     */
+    long totalExecTimeNs;
+
+    /**
+     * How many times the algorithm run with error
+     */
+    int errorCount;
+
+    /**
+     * If the algorithm ever produced an error, this is the error message
+     */
+    private String errorMessage;
+    /**
+     * When the error has been produced
+     * <p>
+     * system (wall clock) time
+     */
+    private long errorTime;
+
+    /**
+     * Algorithm execution listeners
+     */
+    protected final CopyOnWriteArrayList<AlgorithmExecListener> execListeners = new CopyOnWriteArrayList<>();
+
+    public ActiveAlgorithm(Algorithm algorithm, AlgorithmExecutionContext context, AlgorithmExecutor executor) {
+        this.algorithm = algorithm;
+        this.context = context;
+        this.executor = executor;
+    }
+
+    void setError(long errorTime, String errorMessage) {
+        this.errorTime = errorTime;
+        this.errorMessage = errorMessage;
+        errorCount++;
+    }
+
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public AlgorithmExecutionContext getExecutionContext() {
+        return context;
+    }
+
+    public boolean update(ProcessingContext ctx) {
+        return executor.update(ctx);
+    }
+
+    public List<ParameterValue> runAlgorithm(long acqTime, long genTime, ProcessingContext ctx) {
+        runCount++;
+        List<ParameterValue> output;
+        lastRun = System.currentTimeMillis();
+
+        long t0 = System.nanoTime();
+        try {
+            AlgorithmExecutionResult result = executor.execute(acqTime, genTime, ctx);
+            propagateResultToListeners(result);
+            output = result.getOutputValues();
+        } catch (Exception e) {
+            output = Collections.emptyList();
+            setError(System.currentTimeMillis(), e.getMessage());
+            if (e instanceof AlgorithmException) {
+                propagateErrorToListeners(((AlgorithmException) e).inputValues, e.getMessage());
+                log.warn("Error executing algorithm: {}", e.getMessage());
+            } else {
+                log.error("Error executing algorithm", e);
+                propagateErrorToListeners(null, e.toString());
+            }
+
+            if (eventProducer != null) {
+                eventProducer.sendWarning(e.toString());
+            }
+        }
+        long t1 = System.nanoTime();
+        totalExecTimeNs += (t1 - t0);
+
+        return output;
+    }
+
+    private void propagateResultToListeners(AlgorithmExecutionResult result) {
+        try {
+            execListeners.forEach(
+                    l -> l.algorithmRun(result.getInputValues(), result.getReturnValue(), result.getOutputValues()));
+        } catch (Exception e) {
+            log.error("Error invoking algorithm listener", e);
+        }
+    }
+
+    protected void propagateErrorToListeners(List<RawEngValue> inputValues, String errorMsg) {
+        try {
+            execListeners.forEach(l -> l.algorithmError(inputValues, errorMsg));
+        } catch (Exception e) {
+            log.error("Error invoking algorithm listener", e);
+        }
+    }
+
+    public void addExecListener(AlgorithmExecListener listener) {
+        execListeners.add(listener);
+    }
+
+    public void removeExecListener(AlgorithmExecListener listener) {
+        execListeners.remove(listener);
+    }
+
+
+    /**
+     * 
+     * gets the last error message produced by the algorithm or null if it never produced an error message
+     */
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    /**
+     * gets the system time (wall clock time) when the last error message was produced
+     */
+    public long getErrorTime() {
+        return errorTime;
+    }
+
+    /**
+     * Gets the number of errors produced by the algorithm
+     */
+    public long getErrorCount() {
+        return errorCount;
+    }
+
+    public Scope getScope() {
+        return algorithm.getScope();
+    }
+
+    public AlgorithmStatus.Builder getStatus() {
+        AlgorithmStatus.Builder statusb = AlgorithmStatus.newBuilder()
+                .setActive(true)
+                .setRunCount(runCount)
+                .setErrorCount(errorCount);
+        if (errorMessage != null) {
+            statusb.setErrorMessage(errorMessage);
+            statusb.setErrorTime(Timestamps.fromMillis(errorTime));
+        }
+        statusb.setLastRun(Timestamps.fromMillis(lastRun));
+        statusb.setExecTimeNs(totalExecTimeNs);
+
+        return statusb;
+    }
+
+    /**
+     *
+     * @see {@link AlgorithmExecutor#getInputList()}
+     */
+    public List<InputParameter> getInputList() {
+        return executor.getInputList();
+    }
+
+    /**
+     *
+     * @see {@link AlgorithmExecutor#getOutputList()}
+     */
+    public List<OutputParameter> getOutputList() {
+        return executor.getOutputList();
+    }
+
+    public TriggerSetType getTriggerSet() {
+        return algorithm.getTriggerSet();
+    }
+
+    public String getName() {
+        return algorithm.getName();
+    }
+
+    @Override
+    public String toString() {
+        return "ActiveAlgorithm " + algorithm.getName() + "[runCount=" + runCount + ", lastRun=" + lastRun
+                + ", errorMessage=" + errorMessage + ", errorCount=" + errorCount + ", errorTime=" + errorTime + "]";
+    }
+}
+```
+
+### `AlgorithmEngine.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmEngine.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.Processor;
+import org.yamcs.YConfiguration;
+import org.yamcs.xtce.Algorithm;
+
+/**
+ * Handles algorithms for one language.
+ * <ul>
+ * <li>there is one AlgorithmEngine per language for the entire yamcs server</li>
+ * <li>for each AlgorithmManager (i.e. for each {@link Processor}) a new AlgorithmExecutorFactory is created</li>
+ * <li>then for each {@link Algorithm} a new {@link AlgorithmExecutor} is created</li>
+ * </ul>
+ * 
+ * @author nm
+ *
+ */
+public interface AlgorithmEngine {
+    /**
+     * Create an executor factory to be used for the given algorithm manager
+     * 
+     * @param algorithmManager
+     * @param config
+     *            - the configuration that was used for the AlgorithmManager in the processor.yaml
+     * @return
+     */
+    AlgorithmExecutorFactory makeExecutorFactory(AlgorithmManager algorithmManager, AlgorithmExecutionContext context,
+            String language, YConfiguration config);
+}
+```
+
+### `AlgorithmException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmException.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.List;
+
+import org.yamcs.parameter.RawEngValue;
+
+/**
+ * exception thrown when unexpected things happen during the loading and execution of algorithms.
+ * 
+ */
+@SuppressWarnings("serial")
+public class AlgorithmException extends RuntimeException {
+    List<RawEngValue> inputValues;
+
+    public AlgorithmException(String message) {
+        super(message);
+    }
+
+    /**
+     * When the error was encountered when executing an algorithm with the given inputs
+     * 
+     * @param inputValues
+     * @param message
+     */
+    public AlgorithmException(List<RawEngValue> inputValues, String message) {
+        super(message);
+        this.inputValues = inputValues;
+    }
+
+    public AlgorithmException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public AlgorithmException(Throwable cause) {
+        super(cause);
+    }
+}
+```
+
+### `AlgorithmExecListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecListener.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.List;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+
+public interface AlgorithmExecListener {
+    /**
+     * Called when the algorithm has run successfully
+     * 
+     * @param inputValues
+     *            - may be null if the algorithm does not have any input values or does not keep track of them
+     * @param returnValue
+     *            - may be null if the algorithm does not return anything
+     * @param outputValues
+     *            - may be empty if there is no output value
+     */
+    public void algorithmRun(List<RawEngValue> inputValues, Object returnValue, List<ParameterValue> outputValues);
+
+    /**
+     * Called when the algorithm produced an error
+     * 
+     * @param inputValues
+     * @param errorMsg
+     */
+    public default void algorithmError(List<RawEngValue> inputValues, String errorMsg) {
+
+    }
+
+}
+```
+
+### `AlgorithmExecutionContext.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutionContext.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.events.EventProducer;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.protobuf.AlgorithmStatus;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Algorithm.Scope;
+
+/**
+ * A context is a collection of active algorithms. Each algorithm has only one instance active in a given context.
+ * <p>
+ * There is normally a global context in a processor and a few contexts related to the command verifiers.
+ * <p>
+ * The {@link #process(long, ProcessingContext)} method will trigger calling all the active algorithms from this context in
+ * order.
+ *
+ */
+public class AlgorithmExecutionContext {
+    static final Log log = new Log(AlgorithmExecutionContext.class);
+
+    CopyOnWriteArrayList<ActiveAlgorithm> executionOrder = new CopyOnWriteArrayList<>();
+
+    // algorithm tracers fqn -> AlgorithmTrace
+    final Map<String, AlgorithmTrace> tracers = new HashMap<>();
+
+    // name used for debugging
+    final String contextName;
+
+    final ProcessorData procData;
+
+    final int maxErrCount;
+
+    // stores algorithms deactivated because of too many runtime errors
+    private Map<String, AlgorithmStatus> algorithmsInError = new HashMap<>();
+
+    public AlgorithmExecutionContext(String contextName, ProcessorData procData,
+            int maxErrCount) {
+        this.contextName = contextName;
+        this.procData = procData;
+        this.maxErrCount = maxErrCount;
+    }
+
+    /**
+     * Update the input data and run the affected algorithms
+     * <p>
+     * Add the result of the algorithms to the processing context
+     * 
+     */
+    public void process(long acqTime, ProcessingContext pctx) {
+        ParameterValueList tmParams = pctx.getTmParams();
+        ParameterValueList cmdParams = pctx.getCmdParams();
+        long genTime = acqTime;
+        if (tmParams != null && !tmParams.isEmpty()) {
+            genTime = tmParams.getFirst().getGenerationTime();
+        } else if (cmdParams != null && !cmdParams.isEmpty()) {
+            genTime = cmdParams.getFirst().getGenerationTime();
+        }
+        for (ActiveAlgorithm activeAlgo : executionOrder) {
+            boolean shouldRun = activeAlgo.update(pctx);
+            if (shouldRun) {
+                log.trace("Running algorithm {}", activeAlgo.getAlgorithm().getName());
+                List<ParameterValue> r = runAlgorithm(activeAlgo, acqTime, genTime, pctx);
+                if (r == null || r.isEmpty()) {
+                    continue;
+                }
+                if (activeAlgo.getScope() == Scope.GLOBAL) {
+                    if (tmParams != null) {
+                        tmParams.addAll(r);
+                    }
+                } else if (cmdParams != null) {
+                    for (ParameterValue pv : r) {
+                        if (pv.getParameter().isCommandParameter()) {
+                            cmdParams.add(pv);
+                        } else if (tmParams != null) {
+                            tmParams.add(pv);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    List<ParameterValue> runAlgorithm(ActiveAlgorithm activeAlgo, long acqTime, long genTime, ProcessingContext pctx) {
+        List<ParameterValue> params = activeAlgo.runAlgorithm(acqTime, genTime, pctx);
+        if (activeAlgo.getErrorCount() >= maxErrCount) {
+            Algorithm algo = activeAlgo.getAlgorithm();
+            log.warn("Algorithm {} has faulted {} times, deactivating", algo.getQualifiedName(),
+                    activeAlgo.getErrorCount());
+            AlgorithmStatus.Builder status = activeAlgo.getStatus()
+                    .setTraceEnabled(tracers.containsKey(algo.getQualifiedName()))
+                    .setActive(false);
+
+            status.setErrorMessage("Deactivated after " + maxErrCount + " errors. Last error: "
+                    + status.getErrorMessage());
+            algorithmsInError.put(algo.getQualifiedName(), status.build());
+
+            executionOrder.remove(activeAlgo);
+        }
+        return params;
+    }
+
+    public String getName() {
+        return contextName;
+    }
+
+    public boolean containsAlgorithm(String algoFqn) {
+        return executionOrder.stream().anyMatch(aa -> aa.getAlgorithm().getQualifiedName().equals(algoFqn));
+    }
+
+    public void addAlgorithm(ActiveAlgorithm activeAlgorithm) {
+        executionOrder.add(activeAlgorithm);
+    }
+
+    /**
+     * remove the active algorithm with the given identifier.
+     * <p>
+     * The algorithm will not be called in subsequent calls to {@link #process(long, ProcessingContext)}
+     * 
+     * @param algoFqn
+     * @return the active algorithm removed or null if there was no active algorithm
+     */
+    public ActiveAlgorithm removeAlgorithm(String algoFqn) {
+
+        Optional<ActiveAlgorithm> algo = getByFqn(algoFqn);
+        if (algo.isPresent()) {
+            executionOrder.remove(algo.get());
+            algo.get().executor.dispose();
+            return algo.get();
+        } else {
+            return null;
+        }
+    }
+
+    public ActiveAlgorithm removeAlgorithm(Algorithm algorithm) {
+        return removeAlgorithm(algorithm.getQualifiedName());
+    }
+
+    public List<ActiveAlgorithm> getActiveAlgorithms() {
+        return executionOrder;
+    }
+
+    public ProcessorData getProcessorData() {
+        return procData;
+    }
+
+    public Mdb getMdb() {
+        return procData.getMdb();
+    }
+
+    public EventProducer getEventProducer() {
+        return procData.getEventProducer();
+    }
+
+    public synchronized void enableTracing(Algorithm algo) {
+        String fqn = algo.getQualifiedName();
+        if (tracers.containsKey(fqn)) {
+            return;
+        }
+        AlgorithmTrace trace = new AlgorithmTrace();
+        tracers.put(fqn, trace);
+        Optional<ActiveAlgorithm> activeAlgo = getByFqn(fqn);
+
+        if (activeAlgo.isPresent()) {
+            activeAlgo.get().addExecListener(trace);
+        }
+    }
+
+    public synchronized void disableTracing(Algorithm algo) {
+        String fqn = algo.getQualifiedName();
+        AlgorithmTrace trace = tracers.remove(fqn);
+
+        if (trace != null) {
+            Optional<ActiveAlgorithm> activeAlgo = getByFqn(fqn);
+
+            if (activeAlgo.isPresent()) {
+                activeAlgo.get().removeExecListener(trace);
+            }
+        }
+    }
+
+    public synchronized AlgorithmTrace getTrace(String algoFqn) {
+        return tracers.get(algoFqn);
+    }
+
+    public void logTrace(String algoFqn, String msg) {
+        AlgorithmTrace trace = tracers.get(algoFqn);
+        if (trace != null) {
+            trace.addLog(msg);
+        }
+    }
+
+    public ActiveAlgorithm getAlgorithm(String algoFqn) {
+        return getByFqn(algoFqn).orElse(null);
+    }
+
+    public AlgorithmStatus getAlgorithmStatus(String algoFqn) {
+        Optional<ActiveAlgorithm> activeAlgo = getByFqn(algoFqn);
+
+        if (activeAlgo.isPresent()) {
+            return activeAlgo.get().getStatus().setTraceEnabled(tracers.containsKey(algoFqn)).build();
+        } else {
+            return algorithmsInError.getOrDefault(algoFqn, AlgorithmStatus.newBuilder().setActive(false).build());
+        }
+    }
+
+    private Optional<ActiveAlgorithm> getByFqn(String algoFqn) {
+        return executionOrder.stream()
+                .filter(aa -> aa.getAlgorithm().getQualifiedName().equals(algoFqn)).findAny();
+    }
+
+}
+```
+
+### `AlgorithmExecutionResult.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutionResult.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.commanding.VerificationResult;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+
+/**
+ * Describes the result of the algorithm execution, which consists of the following components:
+ * <ul>
+ * <li><b>Input Parameter Values (Optional)</b> - A list of parameters that were used as input to the algorithm.</li>
+ * <li><b>Output Parameter Values</b> - A list of {@link ParameterValue} objects that are propagated to Yamcs clients.
+ * </li>
+ * <li><b>Return Value</b> - This is not an output parameter but is specifically used for command verifiers (see the
+ * details below).</li>
+ * </ul>
+ * 
+ * <h3>Command Verifier Return Value</h3>
+ * <p>
+ * In older versions of Yamcs, the command verifier would return either a boolean value (True) indicating success or a
+ * String indicating failure. While this approach is still supported, the current preferred method is to use the custom
+ * {@link VerificationResult} class, which provides a more suitable representation of the verifier's result.
+ * </p>
+ */
+public class AlgorithmExecutionResult {
+    private final List<RawEngValue> inputValues;
+    private final List<ParameterValue> outputValues;
+    private final Object returnValue;
+
+    public AlgorithmExecutionResult(List<RawEngValue> inputValues, Object returnValue,
+            List<ParameterValue> outputValues) {
+        this.inputValues = inputValues;
+        this.returnValue = returnValue;
+        this.outputValues = outputValues;
+    }
+
+    public AlgorithmExecutionResult(Object returnValue, List<ParameterValue> outputValues) {
+        this(null, returnValue, outputValues);
+    }
+
+    public AlgorithmExecutionResult(List<ParameterValue> outputValues) {
+        this(null, null, outputValues);
+    }
+
+    /**
+     * Constructor for an algorithm result which returns exactly one value
+     * 
+     * @param outputValue
+     */
+    public AlgorithmExecutionResult(ParameterValue outputValue) {
+        this(null, null, Arrays.asList(outputValue));
+    }
+
+    public List<RawEngValue> getInputValues() {
+        return inputValues;
+    }
+
+    public List<ParameterValue> getOutputValues() {
+        return outputValues;
+    }
+
+    public Object getReturnValue() {
+        return returnValue;
+    }
+}
+```
+
+### `AlgorithmExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutor.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.List;
+
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.OutputParameter;
+
+/**
+ * Represents the execution context of one algorithm.
+ * 
+ * <p>
+ * An instance of this class will be created for each algorithm in each context.
+ * <p>
+ * The instance is reused upon each update of one or more of its InputParameters.
+ * 
+ */
+public interface AlgorithmExecutor {
+    Algorithm getAlgorithm();
+
+    /**
+     * This method is called each time new parameters are received (for example extracting them from a packet).
+     * <p>
+     * The executor should copy its inputs if updated or should use the list to determine if it should run.
+     * 
+     * @return true if the algorithm should run
+     */
+    boolean update(ProcessingContext processingCtx);
+
+    /**
+     * Runs the associated algorithm with the latest InputParameters.
+     * <p>
+     * Should throw an exception if there is an error within the algorithm.
+     * <p>
+     * The error message and error count will be remembered and available to external clients via the API.
+     * <p>
+     * The processing context parameter is passed if required to calibrate the output values. It shall not be updated by
+     * the executor as it is done in the {@link ActiveAlgorithm}
+     * 
+     * @param acqTime
+     * @param genTime
+     * @return the output parameters, if any
+     * 
+     */
+    AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext data) throws AlgorithmException;
+
+    /**
+     * 
+     * @return the execution context in which the executor activates
+     */
+    AlgorithmExecutionContext getExecutionContext();
+
+    /**
+     * Some algorithms have dynamic outputs which are not known until the algorithm is instantiated.
+     * <p>
+     * This method can be overridden to return the list of parameters those algorithms can provide as outputs.
+     * <p>
+     * The output list is used in the replays when only some parameters are to be extracted, in order to figure out
+     * which algorithms have to be run (only those providing the required parameters are run).
+     * <p>
+     * This list is used only if the algorithm definition includes no output list. If the algorithm definition includes
+     * an output list, this method is not called (and the algorithm executor will not be instantiated at all if the
+     * algorithm outputs are not required).
+     *
+     * @return list of parameters which can be provided as output
+     */
+    default List<OutputParameter> getOutputList() {
+        return getAlgorithm().getOutputList();
+    }
+
+    /**
+     * Same as above but it returns the list of parameters that this algorithm uses as input.
+     * 
+     * @return list of parameters that this algorithm uses as input
+     */
+    default List<InputParameter> getInputList() {
+        return getAlgorithm().getInputList();
+    }
+
+    /**
+     * Called when this executor instance is no longer used.
+     * <p>
+     * The default implementation does nothing. Inheriting classes may override to clean-up any resources.
+     */
+    default void dispose() {
+    }
+}
+```
+
+### `AlgorithmExecutorFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmExecutorFactory.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.List;
+
+import org.yamcs.xtce.CustomAlgorithm;
+
+/**
+ * Responsible for creating algorithm executors.
+ * <p>
+ * One such factory exists for every supported language.
+ * 
+ * @author nm
+ *
+ */
+public interface AlgorithmExecutorFactory {
+    /**
+     * Creates a new executor for the algorithm running in the execution context
+     * 
+     * @param alg
+     *            - the algorithm definition
+     * @param execCtx
+     *            - the algorithm execution context
+     * @return
+     * @throws AlgorithmException
+     */
+    AlgorithmExecutor makeExecutor(CustomAlgorithm alg, AlgorithmExecutionContext execCtx) throws AlgorithmException;
+
+    /**
+     * Returns all the languages supported by this factory.
+     * Used in order to not create new factories for the same language with different names (e.g. JavaScript and
+     * ECMAScript)
+     * 
+     * @return
+     */
+    List<String> getLanguages();
+}
+```
+
+### `AlgorithmFunctions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmFunctions.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.Processor;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.time.Instant;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.NumericDataType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.CalibratorProc;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.NumericCalibratorProc;
+
+/**
+ * Library of functions available from within Algorithm scripts using this naming scheme:
+ * <p>
+ * The java method {@code AlgorithmFunctions.[method]} is available in scripts as {@code Yamcs.[method]}
+ */
+public class AlgorithmFunctions {
+    private final Log log;
+    public static final String DEFAULT_SOURCE = "CustomAlgorithm";
+
+    private Mdb mdb;
+
+    @Deprecated // Moved to EventLogFunctions
+    private EventProducer eventProducer;
+
+    private final String yamcsInstance;
+    private final ProcessorData processorData;
+
+    private final AlgorithmExecutionContext context;
+
+    private final Processor processor;
+
+    public AlgorithmFunctions(Processor processor, AlgorithmExecutionContext context) {
+        this.yamcsInstance = processor.getInstance();
+
+        log = new Log(AlgorithmFunctions.class, yamcsInstance);
+        log.setContext(processor.getName());
+
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance);
+        eventProducer.setSource(DEFAULT_SOURCE);
+        this.mdb = processor.getMdb();
+        this.processorData = processor.getProcessorData();
+        this.processor = processor;
+        this.context = context;
+    }
+
+    /**
+     * Calibrate raw value according to the calibration rule of the given parameter
+     * 
+     * @return a Float or String object
+     */
+    public Object calibrate(int raw, String parameter) {
+        Parameter p = mdb.getParameter(parameter);
+        if (p != null) {
+            if (p.getParameterType() instanceof EnumeratedParameterType ptype) {
+                return ptype.calibrate(raw);
+            } else if (p.getParameterType() instanceof NumericDataType dtype) {
+                CalibratorProc c = processorData.getCalibrator(null, dtype);
+                if (c instanceof NumericCalibratorProc nc) {
+                    return nc.calibrate((double) raw);
+                }
+            }
+        } else {
+            log.warn("Cannot find parameter {} to calibrate {}", parameter, raw);
+        }
+        return null;
+    }
+
+    public String instance() {
+        return yamcsInstance;
+    }
+
+    public long processorTimeMillis() {
+        return processor.getCurrentTime();
+    }
+
+    public Instant processorTime() {
+        return Instant.get(processor.getCurrentTime());
+    }
+
+    private String getAlgoName() {
+        return new Throwable().getStackTrace()[2].getFileName();
+    }
+
+    /**
+     * Print a trace message in the Yamcs log. If tracing is enabled on the algorithm, it is also added to the trace
+     * log.
+     */
+    public void trace(String msg) {
+        if (log.isTraceEnabled()) {
+            log.trace(getAlgoName() + ": " + msg);
+        }
+        context.logTrace(getAlgoName(), msg);
+    }
+
+    /**
+     * Print a debug message in the Yamcs log. If tracing is enabled on the algorithm, it is also added to the trace
+     * log.
+     */
+    public void debug(String msg) {
+        if (log.isDebugEnabled()) {
+            log.debug(getAlgoName() + ": " + msg);
+        }
+        context.logTrace(getAlgoName(), msg);
+    }
+
+    /**
+     * Print a message in the Yamcs log. If tracing is enabled on the algorithm, it is also added to the trace log.
+     */
+    public void log(String msg) {
+        log.info(getAlgoName() + ": " + msg);
+        context.logTrace(getAlgoName(), msg);
+    }
+
+    /**
+     * Print a warning message in the Yamcs log. If tracing is enabled on the algorithm, it is also added to the trace
+     * log.
+     */
+    public void warn(String msg) {
+        log.warn(getAlgoName() + ": " + msg);
+        context.logTrace(getAlgoName(), msg);
+    }
+
+    /**
+     * Print an error message in the Yamcs log. If tracing is enabled on the algorithm, it is also added to the trace
+     * log.
+     */
+    public void error(String msg) {
+        log.error(getAlgoName() + ": " + msg);
+        context.logTrace(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void info(String msg) {
+        info(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void info(String type, String msg) {
+        log.warn("Deprecated: use EventLog.info instead of Yamcs.info");
+        eventProducer.sendInfo(type, msg);
+    }
+
+    @Deprecated
+    public void info(String source, String type, String msg) {
+        log.warn("Deprecated: use EventLog.info instead of Yamcs.info");
+        eventProducer.setSource(source);
+        eventProducer.sendInfo(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    @Deprecated
+    public void watch(String msg) {
+        watch(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void watch(String type, String msg) {
+        log.warn("Deprecated: use EventLog.watch instead of Yamcs.watch");
+        eventProducer.sendWatch(type, msg);
+    }
+
+    @Deprecated
+    public void watch(String source, String type, String msg) {
+        log.warn("Deprecated: use EventLog.watch instead of Yamcs.watch");
+        eventProducer.setSource(source);
+        eventProducer.sendWatch(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    @Deprecated
+    public void warning(String msg) {
+        warning(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void warning(String type, String msg) {
+        log.warn("Deprecated: use EventLog.warning instead of Yamcs.warning");
+        eventProducer.sendWarning(type, msg);
+    }
+
+    @Deprecated
+    public void warning(String source, String type, String msg) {
+        log.warn("Deprecated: use EventLog.warning instead of Yamcs.warning");
+        eventProducer.setSource(source);
+        eventProducer.sendWarning(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    @Deprecated
+    public void distress(String msg) {
+        distress(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void distress(String type, String msg) {
+        log.warn("Deprecated: use EventLog.distress instead of Yamcs.distress");
+        eventProducer.sendDistress(type, msg);
+    }
+
+    @Deprecated
+    public void distress(String source, String type, String msg) {
+        log.warn("Deprecated: use EventLog.distress instead of Yamcs.distress");
+        eventProducer.setSource(source);
+        eventProducer.sendDistress(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    @Deprecated
+    public void critical(String msg) {
+        critical(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void critical(String type, String msg) {
+        log.warn("Deprecated: use EventLog.critical instead of Yamcs.critical");
+        eventProducer.sendCritical(type, msg);
+    }
+
+    @Deprecated
+    public void critical(String source, String type, String msg) {
+        log.warn("Deprecated: use EventLog.critical instead of Yamcs.critical");
+        eventProducer.setSource(source);
+        eventProducer.sendCritical(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    @Deprecated
+    public void severe(String msg) {
+        severe(getAlgoName(), msg);
+    }
+
+    @Deprecated
+    public void severe(String type, String msg) {
+        log.warn("Deprecated: use EventLog.severe instead of Yamcs.severe");
+        eventProducer.sendSevere(type, msg);
+    }
+
+    @Deprecated
+    public void severe(String source, String type, String msg) {
+        log.warn("Deprecated: use EventLog.severe instead of Yamcs.severe");
+        eventProducer.setSource(source);
+        eventProducer.sendSevere(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    /**
+     * returns the processor name if the algorithm is running in a processor or null otherwise
+     */
+    public String processorName() {
+        return (processor == null) ? null : processor.getName();
+    }
+
+    /**
+     * Little endian to host
+     */
+    public long letohl(int value) {
+        long x = value & 0xFFFFFFFFl;
+        return (((x >> 24) & 0xff) + ((x >> 8) & 0xff00) + ((x & 0xff00) << 8) + ((x & 0xff) << 24));
+    }
+}
+```
+
+### `AlgorithmManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmManager.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
+
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorService;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterProvider;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.AlgorithmStatus;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.MathAlgorithm;
+import org.yamcs.xtce.NamedDescriptionIndex;
+import org.yamcs.xtce.OnPeriodicRateTrigger;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterInstanceRef;
+import org.yamcs.xtce.TriggerSetType;
+import org.yamcs.mdb.Mdb;
+
+import com.google.common.collect.Lists;
+import com.google.protobuf.util.Timestamps;
+
+/**
+ * Manages the provision of requested parameters that require the execution of one or more XTCE algorithms.
+ * <p>
+ * Upon initialization it will scan all algorithms, and schedule any that are to be triggered periodically.
+ * OutputParameters of all algorithms will be indexed, so that AlgorithmManager knows what parameters it can provide to
+ * the ParameterRequestManager.
+ * <p>
+ * Algorithms and any needed algorithms that require earlier execution, will be activated as soon as a request for one
+ * of its output parameters is registered.
+ * <p>
+ * Algorithm executors are created by {@link AlgorithmExecutorFactory} which themselves are created by the
+ * {@link AlgorithmEngine}. The algorithm engines are registered at server startup using the
+ * {@link #registerAlgorithmEngine(String, AlgorithmEngine)} method.
+ *
+ * javascript will be automatically registered as well as python if available.
+ */
+public class AlgorithmManager extends AbstractProcessorService
+        implements ParameterProvider, ProcessorService, ParameterProcessor {
+    static final String KEY_ALGO_NAME = "algoName";
+    static final String JDK_BUILTIN_NASHORN_ENGINE_NAME = "Oracle Nashorn";
+
+    Mdb mdb;
+
+    // Index of all available out params
+    NamedDescriptionIndex<Parameter> outParamIndex = new NamedDescriptionIndex<>();
+
+    HashSet<Parameter> requiredInParams = new HashSet<>(); // required by this class
+    ArrayList<Parameter> requestedOutParams = new ArrayList<>(); // requested by clients
+    ParameterProcessorManager parameterProcessorManager;
+
+    // this stores the algorithms which give an error at activation
+    Map<String, AlgorithmStatus> algorithmsInError = new HashMap<>();
+
+    // For scheduling OnPeriodicRate algorithms
+    ScheduledExecutorService timer;
+    AlgorithmExecutionContext globalCtx;
+
+    EventProducer eventProducer;
+
+    final static Map<String, AlgorithmEngine> algorithmEngines = new HashMap<>();
+
+    // language -> algorithm factory
+    final Map<String, AlgorithmExecutorFactory> factories = new HashMap<>();
+
+    final Map<CustomAlgorithm, CustomAlgorithm> algoOverrides = new HashMap<>();
+    private Set<AlgorithmTextListener> algorithmTextListeners = new CopyOnWriteArraySet<>();
+
+    final CopyOnWriteArrayList<AlgorithmExecutionContext> contexts = new CopyOnWriteArrayList<>();
+
+    static JavaAlgorithmEngine jae = new JavaAlgorithmEngine();
+    static {
+        registerScriptEngines();
+        registerAlgorithmEngine("Java", jae);
+        registerAlgorithmEngine("java", jae);
+        registerAlgorithmEngine("java-expression", jae);
+    }
+
+    int maxErrCount;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        Spec libspec = new Spec();
+        libspec.addOption("JavaScript", OptionType.LIST).withElementType(OptionType.STRING);
+        libspec.addOption("python", OptionType.LIST).withElementType(OptionType.STRING);
+        spec.addOption("libraries", OptionType.MAP).withSpec(libspec);
+        spec.addOption("maxErrorsBeforeAutomaticDeactivation", OptionType.INTEGER)
+                .withDescription("If an algorithm errors this number of times, it will be deactivated")
+                .withDefault(10);
+        return spec;
+    }
+
+    /**
+     * Create a ScriptEngineManager for each of the script engines available in the jre.
+     */
+    private static void registerScriptEngines() {
+        ScriptEngineManager sem = new ScriptEngineManager();
+        for (ScriptEngineFactory sef : sem.getEngineFactories()) {
+
+            // JDK11-14 are the last JDK versions to include a copy of Nashorn.
+            // Disable this copy, so that only Nashorn from the classpath is used.
+            // (both get detected by this loop with the same set of names).
+            if (JDK_BUILTIN_NASHORN_ENGINE_NAME.equals(sef.getEngineName())) {
+                continue;
+            }
+
+            List<String> engineNames = sef.getNames();
+            ScriptAlgorithmEngine engine = new ScriptAlgorithmEngine();
+            for (String name : engineNames) {
+                registerAlgorithmEngine(name, engine);
+            }
+        }
+    }
+
+    public static void registerAlgorithmEngine(String name, AlgorithmEngine eng) {
+        algorithmEngines.put(name, eng);
+    }
+
+    @Override
+    public void init(Processor processor, YConfiguration config, Object spec) {
+        super.init(processor, config, spec);
+
+        this.eventProducer = processor.getProcessorData().getEventProducer();
+        this.parameterProcessorManager = processor.getParameterProcessorManager();
+
+        this.parameterProcessorManager.addParameterProvider(this);
+        this.parameterProcessorManager.subscribeAll(this);
+        this.maxErrCount = config.getInt("maxErrorsBeforeAutomaticDeactivation", 10);
+
+        mdb = processor.getMdb();
+        timer = processor.getTimer();
+
+        globalCtx = new AlgorithmExecutionContext("global", processor.getProcessorData(), maxErrCount);
+        contexts.add(globalCtx);
+
+        for (Algorithm algo : mdb.getAlgorithms()) {
+            if (algo.getScope() == Algorithm.Scope.GLOBAL) {
+                loadAlgorithm(algo, globalCtx);
+            }
+        }
+    }
+
+    private void loadAlgorithm(Algorithm algo, AlgorithmExecutionContext ctx) {
+        for (OutputParameter oParam : algo.getOutputList()) {
+            outParamIndex.add(oParam.getParameter());
+        }
+        // Eagerly activate the algorithm if no outputs (with lazy activation,
+        // it would never trigger because there's nothing to subscribe to)
+        if (algo.getOutputList().isEmpty() && !ctx.containsAlgorithm(algo.getQualifiedName())) {
+            ActiveAlgorithm activeAlgo = activateAndInit(algo, ctx);
+            List<OutputParameter> outList = activeAlgo.getOutputList();
+            if (outList != null) {
+                for (OutputParameter oParam : outList) {
+                    outParamIndex.add(oParam.getParameter());
+                }
+            }
+        }
+
+        TriggerSetType tst = algo.getTriggerSet();
+        if (tst == null) {
+            eventProducer.sendWarning("No trigger set for algorithm '" + algo.getQualifiedName() + "'");
+        } else {
+            List<OnPeriodicRateTrigger> timedTriggers = tst.getOnPeriodicRateTriggers();
+            if (!timedTriggers.isEmpty()) {
+                final ActiveAlgorithm activeAlgo = activateAndInit(algo, ctx);
+                if (activeAlgo != null) {
+                    for (OnPeriodicRateTrigger trigger : timedTriggers) {
+                        timer.scheduleAtFixedRate(() -> {
+                            long t = processor.getCurrentTime();
+                            ProcessingContext processingCtx = ProcessingContext.createForTmProcessing(processor.getLastValueCache(),
+                                    t);
+                            List<ParameterValue> params = globalCtx.runAlgorithm(activeAlgo, t, t, processingCtx);
+                            processingCtx.addTmParams(params);
+                            parameterProcessorManager.process(processingCtx);
+                        }, 1000, trigger.getFireRate(), TimeUnit.MILLISECONDS);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void startProviding(Parameter paramDef) {
+        if (requestedOutParams.contains(paramDef)) {
+            return;
+        }
+
+        for (Algorithm algo : mdb.getAlgorithms()) {
+            for (OutputParameter oParam : algo.getOutputSet()) {
+                if (oParam.getParameter() == paramDef) {
+                    activateAndInit(algo, globalCtx);
+                    // Account for multiple algorithms writing to same parameter
+                    if (!requestedOutParams.contains(paramDef)) {
+                        requestedOutParams.add(paramDef);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Create a new algorithm execution context.
+     *
+     * @param name
+     *            - name of the context
+     * @return the newly created context
+     */
+    public AlgorithmExecutionContext createContext(String name) {
+        AlgorithmExecutionContext ctx = new AlgorithmExecutionContext(name, processor.getProcessorData(), maxErrCount);
+        contexts.add(ctx);
+        return ctx;
+    }
+
+    public void removeContext(AlgorithmExecutionContext ctx) {
+        contexts.remove(ctx);
+    }
+
+    /**
+     * Activate an algorithm in a context.
+     * <p>
+     * If the algorithm cannot be activated (e.g. error compiling) returns null.
+     */
+    public ActiveAlgorithm activateAlgorithm(Algorithm algorithm, AlgorithmExecutionContext execCtx)
+            throws AlgorithmException {
+        ActiveAlgorithm activeAlgo = execCtx.getAlgorithm(algorithm.getQualifiedName());
+        if (activeAlgo != null) {
+            throw new IllegalStateException("Algorithm " + algorithm.getQualifiedName() + " already active");
+        }
+
+        AlgorithmExecutor executor;
+
+        try {
+            executor = makeExecutor(algorithm, execCtx);
+        } catch (AlgorithmException e) {
+            AlgorithmStatus algst = AlgorithmStatus.newBuilder()
+                    .setErrorMessage("Failed to create executor"
+                            + ((e.getMessage() == null) ? "" : ": " + e.getMessage()))
+                    .setErrorTime(Timestamps.fromMillis(System.currentTimeMillis()))
+                    .build();
+            algorithmsInError.put(algorithm.getQualifiedName(), algst);
+            throw e;
+        }
+
+        algorithmsInError.remove(algorithm.getQualifiedName());
+
+        log.trace("Activating algorithm....{}", algorithm.getQualifiedName());
+        activeAlgo = new ActiveAlgorithm(algorithm, execCtx, executor);
+
+        subscribeRequiredParameters(activeAlgo);
+        execCtx.addAlgorithm(activeAlgo);
+
+        return activeAlgo;
+    }
+
+    private ActiveAlgorithm activateAndInit(Algorithm algorithm, AlgorithmExecutionContext execCtx) {
+        ActiveAlgorithm activeAlgo = execCtx.getAlgorithm(algorithm.getQualifiedName());
+        if (activeAlgo != null) {
+            return activeAlgo;
+        }
+        try {
+            activeAlgo = activateAlgorithm(algorithm, execCtx);
+        } catch (AlgorithmException e) {
+            return null;
+        }
+
+        // last value cache will contain the latest known values for all parameters
+        // including the initialValue
+        // TODO: should we also run the algorithm here???
+        log.debug("Updating algorithm with initial values");
+        activeAlgo.update(
+                ProcessingContext.createForTmProcessing(processor.getLastValueCache(), processor.getCurrentTime()));
+
+        return activeAlgo;
+    }
+
+    private void subscribeRequiredParameters(ActiveAlgorithm activeAlgo) {
+        enableBuffering(activeAlgo);
+
+        ArrayList<Parameter> newItems = new ArrayList<>();
+        for (Parameter param : getParametersOfInterest(activeAlgo)) {
+            if (!requiredInParams.contains(param)) {
+                requiredInParams.add(param);
+                // Recursively activate other algorithms on which this algorithm depends
+                if (canProvide(param)) {
+                    for (Algorithm algo : mdb.getAlgorithms()) {
+                        if (activeAlgo.getAlgorithm() != algo) {
+                            for (OutputParameter oParam : algo.getOutputSet()) {
+                                if (oParam.getParameter() == param) {
+                                    activateAndInit(algo, globalCtx);
+                                }
+                            }
+                        }
+                    }
+                } else { // Don't ask items to PRM that we can provide ourselves or command verifier context
+                    // parameters that PRM cannot provide
+                    if ((param.getDataSource() != DataSource.COMMAND)
+                            && param.getDataSource() != DataSource.COMMAND_HISTORY) {
+                        newItems.add(param);
+                    }
+                }
+            }
+        }
+        if (log.isTraceEnabled()) {
+            log.trace("For algorithm {}, subscribing to the prm for {}", activeAlgo.getName(), newItems);
+        }
+        if (!newItems.isEmpty()) {
+            parameterProcessorManager.subscribeToProviders(newItems);
+        }
+    }
+
+    // if the input parameters require old values, make sure the parameter LastValueCache is configured for it
+    private void enableBuffering(ActiveAlgorithm activeAlgo) {
+        for (InputParameter inputPara : activeAlgo.getInputList()) {
+            ParameterInstanceRef pref = inputPara.getParameterInstance();
+            if (pref != null && pref.requireOldValues()) {
+                if (pref.getInstance() < 0) {
+                    processor.getLastValueCache().enableBuffering(pref.getParameter(), -pref.getInstance() + 1);
+                } // else lastValueCache remembers anyway one value
+            }
+        }
+    }
+
+    AlgorithmExecutor makeExecutor(Algorithm algorithm, AlgorithmExecutionContext execCtx) throws AlgorithmException {
+        AlgorithmExecutor executor;
+        if (algorithm instanceof CustomAlgorithm) {
+            CustomAlgorithm calg = (CustomAlgorithm) algorithm;
+            AlgorithmExecutorFactory factory = getFactory(calg, execCtx);
+
+            try {
+                executor = factory.makeExecutor(calg, execCtx);
+            } catch (AlgorithmException e) {
+                log.warn("Failed to create algorithm executor", e);
+                throw new AlgorithmException("Failed to create executor for algorithm "
+                        + calg.getQualifiedName() + ": " + e, e);
+            }
+        } else if (algorithm instanceof MathAlgorithm) {
+            executor = new MathAlgorithmExecutor(algorithm, execCtx, (MathAlgorithm) algorithm);
+        } else {
+            throw new AlgorithmException("Algorithms of type " + algorithm.getClass() + " not yet implemented");
+        }
+
+        return executor;
+    }
+
+    private AlgorithmExecutorFactory getFactory(CustomAlgorithm calg, AlgorithmExecutionContext execCtx) {
+        String algLang = calg.getLanguage();
+        if (algLang == null) {
+            throw new AlgorithmException("no language specified for algorithm "
+                    + "'" + calg.getQualifiedName() + "'");
+        }
+        AlgorithmExecutorFactory factory = factories.get(algLang);
+        if (factory == null) {
+            AlgorithmEngine eng = algorithmEngines.get(algLang);
+            if (eng == null) {
+                throw new AlgorithmException("no algorithm engine found for language '" + algLang + "'");
+            }
+            factory = eng.makeExecutorFactory(this, execCtx, algLang, config);
+            factories.put(algLang, factory);
+            for (String s : factory.getLanguages()) {
+                factories.put(s, factory);
+            }
+        }
+        return factory;
+    }
+
+    @Override
+    public void startProvidingAll() {
+        for (Parameter p : outParamIndex.getObjects()) {
+            startProviding(p);
+        }
+    }
+
+    @Override
+    public void stopProviding(Parameter paramDef) {
+        if (requestedOutParams.remove(paramDef)) {
+            // Remove active algorithm (and any that are no longer needed as a consequence)
+            // We need to clean-up three more internal structures: requiredInParams, executionOrder and
+            // engineByAlgorithm
+            HashSet<Parameter> stillRequired = new HashSet<>(); // parameters still required by any other algorithm
+            for (Iterator<ActiveAlgorithm> it = Lists.reverse(globalCtx.executionOrder).iterator(); it.hasNext();) {
+                ActiveAlgorithm activeAlgo = it.next();
+                Algorithm algo = activeAlgo.getAlgorithm();
+                boolean keep = false;
+
+                // Keep if any other output parameters are still subscribed to
+                for (OutputParameter oParameter : algo.getOutputSet()) {
+                    if (requestedOutParams.contains(oParameter.getParameter())) {
+                        keep = true;
+                        break;
+                    }
+                    for (var otherAlgo : globalCtx.getActiveAlgorithms()) {
+                        if (getParametersOfInterest(otherAlgo).contains(oParameter.getParameter())) {
+                            keep = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!keep) {
+                    it.remove();
+                    globalCtx.removeAlgorithm(algo);
+                } else {
+                    stillRequired.addAll(getParametersOfInterest(activeAlgo));
+                }
+            }
+            requiredInParams.retainAll(stillRequired);
+        }
+    }
+
+    @Override
+    public boolean canProvide(Parameter p) {
+        return (outParamIndex.get(p.getQualifiedName()) != null);
+    }
+
+    @Override
+    public boolean canProvide(NamedObjectId itemId) {
+        try {
+            getParameter(itemId);
+        } catch (InvalidIdentification e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification {
+        Parameter p;
+        if (paraId.hasNamespace()) {
+            p = outParamIndex.get(paraId.getNamespace(), paraId.getName());
+        } else {
+            p = outParamIndex.get(paraId.getName());
+        }
+        if (p != null) {
+            return p;
+        } else {
+            throw new InvalidIdentification();
+        }
+    }
+
+    /**
+     * Called by PRM when new parameters are received.
+     * 
+     */
+    @Override
+    public void process(ProcessingContext processingCtx) {
+        for (AlgorithmExecutionContext ctx : contexts) {
+            ctx.process(processor.getCurrentTime(), processingCtx);
+        }
+    }
+
+    @Override
+    public void setParameterProcessor(ParameterProcessor parameterRequestManager) {
+        // do nothing, we're more interested in a ParameterRequestManager, which we're
+        // getting from the constructor
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        if (timer != null) {
+            timer.shutdownNow();
+        }
+        notifyStopped();
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public void addAlgorithmTextListener(AlgorithmTextListener listener) {
+        algorithmTextListeners.add(listener);
+    }
+
+    public void removeAlgorithmTextListener(AlgorithmTextListener listener) {
+        algorithmTextListeners.remove(listener);
+    }
+
+    public void clearAlgorithmOverride(CustomAlgorithm calg) {
+        CustomAlgorithm algOverr = algoOverrides.remove(calg);
+        if (algOverr == null) {
+            return;
+        }
+        globalCtx.removeAlgorithm(algOverr.getQualifiedName());
+        activateAndInit(calg, globalCtx);
+        notifyAlgorithmTextListeners(calg);
+    }
+
+    /**
+     * Override the algorithm
+     *
+     * @param calg
+     * @param text
+     */
+    public void overrideAlgorithm(CustomAlgorithm calg, String text) {
+        CustomAlgorithm algOverr = algoOverrides.remove(calg);
+        globalCtx.removeAlgorithm(calg.getQualifiedName());
+
+        AlgorithmExecutorFactory factory = getFactory(calg, globalCtx);
+
+        algOverr = calg.copy();
+        algOverr.setAlgorithmText(text);
+        algorithmsInError.remove(calg.getQualifiedName());
+
+        try {
+            AlgorithmExecutor executor = factory.makeExecutor(algOverr, globalCtx);
+            ActiveAlgorithm activeAlgo = new ActiveAlgorithm(algOverr, globalCtx, executor);
+            globalCtx.addAlgorithm(activeAlgo);
+
+        } catch (AlgorithmException e) {
+            log.warn("Failed to create algorithm executor", e);
+            eventProducer.sendCritical("Failed to create executor for algorithm "
+                    + algOverr.getQualifiedName() + ": " + e);
+            AlgorithmStatus.Builder status = AlgorithmStatus.newBuilder()
+                    .setErrorTime(Timestamps.fromMillis(System.currentTimeMillis()));
+            if (e.getMessage() != null) {
+                status.setErrorMessage(e.getMessage());
+            }
+            algorithmsInError.put(algOverr.getQualifiedName(), status.build());
+            return;
+        }
+
+        algoOverrides.put(calg, algOverr);
+        notifyAlgorithmTextListeners(calg);
+    }
+
+    public Collection<CustomAlgorithm> getAlgorithmOverrides() {
+        return algoOverrides.values();
+    }
+
+    public CustomAlgorithm getAlgorithmOverride(Algorithm algo) {
+        return algoOverrides.get(algo);
+    }
+
+    public void enableTracing(Algorithm algo) {
+        log.debug("Enabling tracing for algorithm {}", algo);
+        globalCtx.enableTracing(algo);
+    }
+
+    public void disableTracing(Algorithm algo) {
+        log.debug("Disabling tracing for algorithm {}", algo);
+        globalCtx.disableTracing(algo);
+    }
+
+    public AlgorithmTrace getTrace(Algorithm algo) {
+        return globalCtx.getTrace(algo.getQualifiedName());
+    }
+
+    public AlgorithmStatus getAlgorithmStatus(Algorithm algo) {
+        AlgorithmStatus status = algorithmsInError.get(algo.getQualifiedName());
+        return status == null ? globalCtx.getAlgorithmStatus(algo.getQualifiedName()) : status;
+    }
+
+    /**
+     * Returns all the parameters that this algorithm want to receive updates on. This includes not only the input
+     * parameters, but also any parameters that are part of the trigger set.
+     */
+    private static Set<Parameter> getParametersOfInterest(ActiveAlgorithm activeAlgo) {
+        Stream<Parameter> inputParams = activeAlgo.getInputList().stream()
+                .filter(ip -> ip.getParameterInstance() != null).map(ip -> ip.getParameterInstance()
+                        .getParameter());
+        if (activeAlgo.getTriggerSet() == null) {
+            return inputParams.collect(Collectors.toSet());
+        } else {
+            Stream<Parameter> triggerParams = activeAlgo.getTriggerSet().getOnParameterUpdateTriggers().stream()
+                    .map(t -> t.getParameter());
+            return Stream.concat(triggerParams, inputParams).collect(Collectors.toSet());
+        }
+    }
+
+    private void notifyAlgorithmTextListeners(CustomAlgorithm algorithm) {
+        var override = getAlgorithmOverride(algorithm);
+        var text = override != null ? override.getAlgorithmText() : algorithm.getAlgorithmText();
+        algorithmTextListeners.forEach(l -> l.algorithmTextUpdated(algorithm, text));
+    }
+}
+```
+
+### `AlgorithmTextListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmTextListener.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.xtce.CustomAlgorithm;
+
+public interface AlgorithmTextListener {
+
+    void algorithmTextUpdated(CustomAlgorithm algorithm, String text);
+}
+```
+
+### `AlgorithmTrace.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/AlgorithmTrace.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.ArrayDeque;
+import java.util.List;
+
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+
+import com.google.protobuf.util.Timestamps;
+
+public class AlgorithmTrace implements AlgorithmExecListener {
+    public static final int MAX_RUNS = 500;
+    public static final int MAX_LOGS = 500;
+
+    ArrayDeque<org.yamcs.protobuf.AlgorithmTrace.Run> runs = new ArrayDeque<>();
+    ArrayDeque<org.yamcs.protobuf.AlgorithmTrace.Log> logs = new ArrayDeque<>();
+
+    public void addLog(String msg) {
+        synchronized (logs) {
+            org.yamcs.protobuf.AlgorithmTrace.Log log = org.yamcs.protobuf.AlgorithmTrace.Log.newBuilder()
+                    .setTime(Timestamps.fromMillis(System.currentTimeMillis()))
+                    .setMsg(msg)
+                    .build();
+            if (logs.size() >= MAX_LOGS) {
+                logs.removeLast();
+            }
+            logs.addFirst(log);
+        }
+    }
+
+    @Override
+    public void algorithmRun(List<RawEngValue> inputValues, Object returnValue,
+            List<ParameterValue> outputValues) {
+        synchronized (runs) {
+            if (runs.size() >= MAX_RUNS) {
+                runs.removeLast();
+            }
+            org.yamcs.protobuf.AlgorithmTrace.Run.Builder runb = org.yamcs.protobuf.AlgorithmTrace.Run.newBuilder();
+            if (inputValues != null) {
+                for (RawEngValue rev : inputValues) {
+                    if (rev instanceof ParameterValue) {
+                        runb.addInputs(((ParameterValue) rev).toGpb());
+                    } else {
+                        runb.addInputs(((ArgumentValue) rev).toGpb());
+                    }
+                }
+            }
+            outputValues.forEach(pv -> runb.addOutputs(pv.toGpb()));
+            runb.setTime(Timestamps.fromMillis(System.currentTimeMillis()));
+            if (returnValue != null) {
+                runb.setReturnValue(returnValue.toString());
+            }
+            runs.addFirst(runb.build());
+        }
+    }
+
+    @Override
+    public void algorithmError(List<RawEngValue> inputValues, String errorMsg) {
+        synchronized (runs) {
+            if (runs.size() >= MAX_RUNS) {
+                runs.removeLast();
+            }
+            org.yamcs.protobuf.AlgorithmTrace.Run.Builder runb = org.yamcs.protobuf.AlgorithmTrace.Run.newBuilder();
+            // inputValues.forEach(pv -> runb.addInputs(pv.toGpb()));
+            runb.setError(errorMsg);
+            runb.setTime(Timestamps.fromMillis(System.currentTimeMillis()));
+
+            runs.addFirst(runb.build());
+        }
+    }
+
+    public org.yamcs.protobuf.AlgorithmTrace toProto() {
+        org.yamcs.protobuf.AlgorithmTrace.Builder trace = org.yamcs.protobuf.AlgorithmTrace.newBuilder();
+        synchronized (runs) {
+            trace.addAllRuns(runs);
+        }
+        synchronized (logs) {
+            trace.addAllLogs(logs);
+        }
+        return trace.build();
+    }
+
+}
+```
+
+### `EventLogFunctions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/EventLogFunctions.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.time.Instant;
+import java.util.Map;
+
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Library of functions available from within Algorithm scripts using this naming scheme:
+ * <p>
+ * The java method {@code EventLogFunctions.[method]} is available in scripts as {@code EventLog.[method]}
+ */
+public class EventLogFunctions {
+    public static final String DEFAULT_SOURCE = "CustomAlgorithm";
+
+    private final EventProducer eventProducer;
+
+    public EventLogFunctions(String yamcsInstance) {
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    private String getAlgoName() {
+        return new Throwable().getStackTrace()[2].getFileName();
+    }
+
+    public void info(String msg) {
+        info(getAlgoName(), msg);
+    }
+
+    public void info(String type, String msg) {
+        eventProducer.sendInfo(type, msg);
+    }
+
+    public void info(String source, String type, String msg) {
+        eventProducer.setSource(source);
+        eventProducer.sendInfo(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    public void info(Map<String, Object> event) {
+        record(EventSeverity.INFO, event);
+    }
+
+    public void watch(String msg) {
+        watch(getAlgoName(), msg);
+    }
+
+    public void watch(String type, String msg) {
+        eventProducer.sendWatch(type, msg);
+    }
+
+    public void watch(String source, String type, String msg) {
+        eventProducer.setSource(source);
+        eventProducer.sendWatch(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    public void watch(Map<String, Object> event) {
+        record(EventSeverity.WATCH, event);
+    }
+
+    public void warning(String msg) {
+        warning(getAlgoName(), msg);
+    }
+
+    public void warning(String type, String msg) {
+        eventProducer.sendWarning(type, msg);
+    }
+
+    public void warning(String source, String type, String msg) {
+        eventProducer.setSource(source);
+        eventProducer.sendWarning(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    public void warning(Map<String, Object> event) {
+        record(EventSeverity.WARNING, event);
+    }
+
+    public void distress(String msg) {
+        distress(getAlgoName(), msg);
+    }
+
+    public void distress(String type, String msg) {
+        eventProducer.sendDistress(type, msg);
+    }
+
+    public void distress(String source, String type, String msg) {
+        eventProducer.setSource(source);
+        eventProducer.sendDistress(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    public void distress(Map<String, Object> event) {
+        record(EventSeverity.DISTRESS, event);
+    }
+
+    public void critical(String msg) {
+        critical(getAlgoName(), msg);
+    }
+
+    public void critical(String type, String msg) {
+        eventProducer.sendCritical(type, msg);
+    }
+
+    public void critical(String source, String type, String msg) {
+        eventProducer.setSource(source);
+        eventProducer.sendCritical(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    public void critical(Map<String, Object> event) {
+        record(EventSeverity.CRITICAL, event);
+    }
+
+    public void severe(String msg) {
+        severe(getAlgoName(), msg);
+    }
+
+    public void severe(String type, String msg) {
+        eventProducer.sendSevere(type, msg);
+    }
+
+    public void severe(String source, String type, String msg) {
+        eventProducer.setSource(source);
+        eventProducer.sendSevere(type, msg);
+        eventProducer.setSource(DEFAULT_SOURCE);
+    }
+
+    public void severe(Map<String, Object> event) {
+        record(EventSeverity.SEVERE, event);
+    }
+
+    private void record(EventSeverity severity, Map<String, Object> event) {
+        var eventb = eventProducer.newEvent().setSeverity(severity);
+        for (var entry : event.entrySet()) {
+            switch (entry.getKey()) {
+            case "message":
+                eventb.setMessage((String) event.get("message"));
+                break;
+            case "type":
+                eventb.setType((String) event.get("type"));
+                break;
+            case "source":
+                eventb.setSource((String) event.get("source"));
+                break;
+            case "time":
+                var time = Instant.parse((String) event.get("time"));
+                eventb.setGenerationTime(TimeEncoding.fromUnixMillisec(time.toEpochMilli()));
+                break;
+            }
+        }
+        eventProducer.sendEvent(eventb.build());
+    }
+}
+```
+
+### `InvalidAlgorithmOutputException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/InvalidAlgorithmOutputException.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.xtce.Parameter;
+
+/**
+ * The output of the algorithm does not match the parameter it is supposed to be assigned to
+ *
+ */
+public class InvalidAlgorithmOutputException extends Exception {
+    final Parameter parameter;
+    final OutputValueBinding output;
+
+    public InvalidAlgorithmOutputException(Parameter parameter, OutputValueBinding output, String msg) {
+        super(msg);
+        this.parameter = parameter;
+        this.output = output;
+    }
+}
+```
+
+### `JavaAlgorithmEngine.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/JavaAlgorithmEngine.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.YConfiguration;
+
+public class JavaAlgorithmEngine implements AlgorithmEngine {
+    JavaAlgorithmExecutorFactory javaFactory = new JavaAlgorithmExecutorFactory();
+    JavaExprAlgorithmExecutionFactory javaExprFactory = new JavaExprAlgorithmExecutionFactory();
+
+    @Override
+    public AlgorithmExecutorFactory makeExecutorFactory(AlgorithmManager algorithmManager,
+            AlgorithmExecutionContext context, String language, YConfiguration config) {
+        if ("java".equalsIgnoreCase(language)) {
+            return javaFactory;
+        } else if ("java-expression".equalsIgnoreCase(language)) {
+            return javaExprFactory;
+        } else {
+            throw new IllegalArgumentException("Unknown lanaguage '" + language + "'");
+        }
+    }
+}
+```
+
+### `JavaAlgorithmExecutorFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/JavaAlgorithmExecutorFactory.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yaml.snakeyaml.Yaml;
+
+public class JavaAlgorithmExecutorFactory implements AlgorithmExecutorFactory {
+    private static final Logger log = LoggerFactory.getLogger(JavaAlgorithmExecutorFactory.class);
+
+    @Override
+    public AlgorithmExecutor makeExecutor(CustomAlgorithm alg, AlgorithmExecutionContext execCtx) {
+
+        Pattern p = Pattern.compile("([\\w\\$\\.]+)(\\(.*\\))?", Pattern.DOTALL);
+        Matcher m = p.matcher(alg.getAlgorithmText().trim());
+        if (!m.matches()) {
+            log.warn("Cannot parse algorithm text '{}'", alg.getAlgorithmText());
+            throw new IllegalArgumentException("Cannot parse algorithm text '" + alg.getAlgorithmText() + "'");
+        }
+        String className = m.group(1);
+
+        String s = m.group(2); // this includes the parentheses
+        Object arg = null;
+        if (s != null && s.length() > 2) {
+            // s.length>2 is to make sure there is something in between the parentheses
+            Yaml yaml = new Yaml();
+            arg = yaml.load(s.substring(1, s.length() - 1));
+        }
+
+        if (arg == null) {
+            return YObjectLoader.loadObject(className, alg, execCtx);
+        } else {
+            return YObjectLoader.loadObject(className, alg, execCtx, arg);
+        }
+    }
+
+    @Override
+    public List<String> getLanguages() {
+        return Arrays.asList("java", "Java");
+    }
+}
+```
+
+### `JavaExprAlgorithmExecutionFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/JavaExprAlgorithmExecutionFactory.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.List;
+
+import org.codehaus.commons.compiler.LocatedException;
+import org.codehaus.commons.compiler.Location;
+import org.codehaus.janino.SimpleCompiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Algorithm.Scope;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.OutputParameter;
+
+/**
+ * Generates executors for java-expression algorithms.
+ * <p>
+ * Each algorithm gets a class with the following body
+ * 
+ * <pre>
+ * class AlgorithmExecutor_algoName extends AbstractAlgorithmExecutor {
+ * 
+ *     AlgorithmExecutionResult execute(long acqTime, long genTime) throws AlgorithmException {
+ *        List&lt;ParameterValue&gt; outputValues = new ArrayList&lt;&gt;();
+ *        for(int i = 0; i &lt; algorithmDef.getOutputList().size; i++) {
+ *           outputValues.add(new ParameterValue());
+ *        }
+ *        execute_java_expr(inputValues.get(0), inputValues.get(1), ...);
+ *     }
+ * 
+ *     void execute_java_expr(
+ *         ParameterValue [input_name1],
+ *         ParameterValue [input_name2],
+ *         ...,
+ *         ParameterValue [output_name1],
+ *         ParameterValue [output_name2],
+ *         ...
+ *     ) throws AlgorithmException {
+ *           [algorithm_text]
+ *     }
+ * }
+ * </pre>
+ * 
+ * Where the input_nameX and output_nameY are the names of the inputs respectively outputs given in the algorithm
+ * definition and the algorithm_text is the text given in the algorithm definition.
+ * <p>
+ * The types of the inputs and outputs are {@link ParameterValue}
+ * <p>
+ * The output parameter generation time are initialised with the generation time of the parameter that triggered the
+ * algorithm but can be changed in the algorithm text.
+ * 
+ * 
+ */
+public class JavaExprAlgorithmExecutionFactory implements AlgorithmExecutorFactory {
+    static final Logger log = LoggerFactory.getLogger(ScriptAlgorithmExecutorFactory.class);
+
+    @Override
+    public AlgorithmExecutor makeExecutor(CustomAlgorithm alg, AlgorithmExecutionContext execCtx)
+            throws AlgorithmException {
+        String className = alg.getQualifiedName().replace("/", "_");
+
+        String code = generateClassCode(className, alg);
+        try {
+            log.debug("Compiling:\n{}", code);
+            SimpleCompiler compiler = new SimpleCompiler();
+            compiler.cook(code);
+            Class<? extends AlgorithmExecutor> cexprClass = (Class<? extends AlgorithmExecutor>) compiler
+                    .getClassLoader()
+                    .loadClass("org.yamcs.algorithms.javaexpr." + className);
+
+            Constructor<? extends AlgorithmExecutor> constructor = cexprClass
+                    .getConstructor(CustomAlgorithm.class, AlgorithmExecutionContext.class);
+            return constructor.newInstance(alg, execCtx);
+        } catch (LocatedException e) {
+            String msg = e.getMessage();
+            Location l = e.getLocation();
+            if (l != null) {
+                // we change the location in the message because it refers to the fabricated code
+                // it is still not perfect, if the expression is not properly closed
+                // , janino will complain about the next line that the user doesn't know about...
+                // TODO: keep track automatically of the line number
+                Location l1 = new Location(null, (short) (l.getLineNumber() - 25), l.getColumnNumber());
+                msg = l1.toString() + ": " + msg.substring(l.toString().length() + 1);
+            }
+            throw new AlgorithmException("Cannot compile expression '" + alg.getAlgorithmText() + "': " + msg, e);
+        } catch (Exception e) {
+            throw new AlgorithmException("Cannot compile expression '" + alg.getAlgorithmText() + "'", e);
+        }
+    }
+
+    @Override
+    public List<String> getLanguages() {
+        return Arrays.asList("java-expression", "Java-expression", "Java-Expression");
+    }
+
+    public static String generateClassCode(String className, CustomAlgorithm algorithmDef) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("package org.yamcs.algorithms.javaexpr;\n\n");
+
+        sb.append("import java.util.*;\n");
+        sb.append("import org.yamcs.xtce.CustomAlgorithm;\n");
+        sb.append("import org.yamcs.xtce.OutputParameter;\n");
+        sb.append("import org.yamcs.parameter.ParameterValue;\n");
+        sb.append("import org.yamcs.parameter.Value;\n");
+        sb.append("import org.yamcs.commanding.ArgumentValue;\n");
+        sb.append("import org.yamcs.algorithms.AlgorithmExecutionResult;\n");
+        sb.append("import org.yamcs.algorithms.AbstractJavaExprExecutor;\n");
+        sb.append("import org.yamcs.algorithms.AlgorithmExecutionContext;\n");
+        sb.append("import org.yamcs.algorithms.AlgorithmException;\n");
+
+        sb.append("\n");
+        sb.append("public class ").append(className).append(" extends AbstractJavaExprExecutor {\n");
+        sb.append("    public ").append(className)
+                .append("(CustomAlgorithm algorithmDef, AlgorithmExecutionContext execCtx) {\n"
+                        + "        super(algorithmDef, execCtx);\n"
+                        + "    }\n\n");
+
+        sb.append("    public Object doExecute(long acqTime, long genTime, List outputValues) "
+                + "throws AlgorithmException {\n");
+        sb.append("        Object result = null;\n");
+        if (algorithmDef.getScope() == Scope.COMMAND_VERIFICATION) {
+            sb.append("        result = ");
+        }
+        sb.append("        execute_java_expr(");
+
+        boolean first = true;
+        List<InputParameter> inputList = algorithmDef.getInputList();
+        for (int i = 0; i < inputList.size(); i++) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+            InputParameter inputParam = inputList.get(i);
+            if (inputParam.getParameterInstance() != null) {
+                sb.append("(ParameterValue) ");
+            } else {
+                sb.append("(ArgumentValue) ");
+            }
+            sb.append("inputValues.get(").append(i).append(")");
+        }
+
+        for (int i = 0; i < algorithmDef.getOutputList().size(); i++) {
+            sb.append(", ");
+            sb.append("(ParameterValue) outputValues.get(").append(i).append(")");
+        }
+        sb.append(");\n");
+        sb.append("        return result;\n");
+        sb.append("    }\n\n");
+        if (algorithmDef.getScope() == Scope.COMMAND_VERIFICATION) {
+            sb.append("    private Object execute_java_expr(");
+        } else {
+            sb.append("    private void execute_java_expr(");
+        }
+
+        first = true;
+        for (InputParameter inputParam : algorithmDef.getInputList()) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+            if (inputParam.getParameterInstance() != null) {
+                sb.append("ParameterValue ").append(inputParam.getEffectiveInputName());
+            } else {
+                sb.append("ArgumentValue ").append(inputParam.getEffectiveInputName());
+            }
+        }
+
+        for (OutputParameter outputParam : algorithmDef.getOutputList()) {
+            sb.append(", ");
+            sb.append("ParameterValue ").append(outputParam.getEffectiveOutputName());
+        }
+
+        sb.append(") {\n");
+        sb.append(algorithmDef.getAlgorithmText()).append("\n");
+        sb.append("    }\n\n");
+
+        sb.append("}");
+
+        return sb.toString();
+    }
+
+}
+```
+
+### `LinksFunctions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/LinksFunctions.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.management.LinkManager;
+
+/**
+ * Library of functions available from within Algorithm scripts using this naming scheme:
+ * <p>
+ * The java method {@code LinksFunctions.[method]} is available in scripts as {@code Links.[method]}
+ */
+public class LinksFunctions {
+
+    private final LinkManager linkManager;
+
+    public LinksFunctions(LinkManager linkManager) {
+        this.linkManager = linkManager;
+    }
+
+    public void enableLink(String linkName) {
+        linkManager.enableLink(linkName);
+    }
+
+    public void disableLink(String linkName) {
+        linkManager.disableLink(linkName);
+    }
+}
+```
+
+### `MathAlgorithmExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/MathAlgorithmExecutor.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.Arrays;
+
+import org.codehaus.commons.compiler.LocatedException;
+import org.codehaus.commons.compiler.Location;
+import org.codehaus.janino.SimpleCompiler;
+import org.yamcs.mdb.MathOperationCalibratorFactory;
+import org.yamcs.mdb.ParameterTypeUtils;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.MathAlgorithm;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Executes XTCE math algorithms {@link MathAlgorithm}
+ * 
+ * All the input parameters are converted to doubles and there is one single double output parameter
+ * 
+ * @author nm
+ *
+ */
+public class MathAlgorithmExecutor extends AbstractAlgorithmExecutor {
+    final Parameter outParam;
+    final double[] input;
+    final MathOperationEvaluator evaluator;
+
+    public MathAlgorithmExecutor(Algorithm algorithmDef, AlgorithmExecutionContext execCtx, MathAlgorithm algorithm) {
+        super(algorithmDef, execCtx);
+        OutputParameter op = algorithmDef.getOutputList().get(0);
+        outParam = op.getParameter();
+        input = new double[algorithmDef.getInputList().size()];
+        evaluator = getEvaluator(algorithm);
+    }
+
+    @Override
+    public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext pctx) {
+        ParameterValue pv = new ParameterValue(outParam);
+        pv.setAcquisitionTime(acqTime);
+        pv.setGenerationTime(genTime);
+        double value = evaluator.evaluate(input);
+        Value engValue = ParameterTypeUtils.getEngValue(outParam.getParameterType(), Double.valueOf(value));
+        if (engValue == null) {
+            execCtx.getProcessorData().getEventProducer()
+                    .sendWarning(getAlgorithm().getName(), "Cannot convert raw value from algorithm output "
+                            + "'" + value + "' into " + outParam.getParameterType());
+            pv.setInvalid();
+        } else {
+            pv.setEngValue(engValue);
+        }
+        return new AlgorithmExecutionResult(inputValues, value, Arrays.asList(pv));
+    }
+
+    @Override
+    protected void updateInput(int idx, InputParameter inputParameter, ParameterValue newValue) {
+        Value v = inputParameter.getParameterInstance().useCalibratedValue() ? newValue.getEngValue()
+                : newValue.getRawValue();
+
+        if (v == null) {
+            log.warn("Received null value for input parameter {}", inputParameter);
+            return;
+        }
+
+        if (!ValueUtility.processAsDouble(v, d -> {
+            input[idx] = d;
+        })) {
+            log.warn("Received null value for input parameter {}", inputParameter);
+        }
+    }
+
+    private MathOperationEvaluator getEvaluator(MathAlgorithm algo) {
+        StringBuilder sb = new StringBuilder();
+        String className = "MathOperationEvaluator" + algo.hashCode();
+        sb.append("package org.yamcs.algorithms.maeval;\n")
+                .append("public class ").append(className)
+                .append(" implements org.yamcs.algorithms.MathOperationEvaluator {\n")
+                .append("   public double evaluate(double[] input) {\n")
+                .append("       return ")
+                .append(MathOperationCalibratorFactory.getJavaExpression(algo.getOperation(), algo.getInputList()))
+                .append(";\n")
+                .append("   }\n")
+                .append("}\n");
+        String expr = sb.toString();
+        log.debug("Compiling math operation converted to java:\n {}", expr);
+        try {
+            SimpleCompiler compiler = new SimpleCompiler();
+            compiler.cook(expr);
+            Class<?> cexprClass = compiler.getClassLoader().loadClass("org.yamcs.algorithms.maeval." + className);
+            return (MathOperationEvaluator) cexprClass.getDeclaredConstructor().newInstance();
+        } catch (LocatedException e) {
+            String msg = e.getMessage();
+            Location l = e.getLocation();
+            if (l != null) {
+                // we change the location in the message because it refers to the fabricated code
+                // it is still not perfect, if the expression is not properly closed
+                // , janino will complain about the next line that the user doesn't know about...
+                Location l1 = new Location(null, (short) (l.getLineNumber() - 3), (short) (l.getColumnNumber() - 7));
+                msg = l1.toString() + ": " + msg.substring(l.toString().length() + 1);
+            }
+            throw new IllegalArgumentException("Cannot compile math operation converted to java:\n"
+                    + expr + "" + msg, e);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Cannot compile math operation converted to java:\n"
+                    + expr, e);
+        }
+    }
+
+}
+```
+
+### `MathOperationEvaluator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/MathOperationEvaluator.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+/**
+ * Interface used by the algorithms to evaluate math operations.
+ * 
+ *  Should be unified with what is used for the calibrations, 
+ *  once the calibrators will support using other parameters values as inputs
+ * 
+ * @author nm
+ *
+ */
+public interface MathOperationEvaluator {
+    double evaluate(double[] input);
+}
+```
+
+### `OutputValueBinding.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/OutputValueBinding.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+public class OutputValueBinding extends ValueBinding {
+
+    // raw value set by the algorithm it will be calibrated afterwards.
+    public Object rawValue;
+    
+    // Value as set by algorithm
+    public Object value;
+    
+    // Whether the value was updated. A user algorithm can optionally set
+    // this to false, to prevent adding the output parameter to a delivery.
+    public boolean updated = true;
+
+    @Override
+    public String toString() {
+        return "OutputValueBinding [rawValue=" + rawValue + ", value=" + value + ", updated=" + updated + "]";
+    }
+}
+```
+
+### `ScriptAlgorithmEngine.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ScriptAlgorithmEngine.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.script.ScriptEngineManager;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+
+public class ScriptAlgorithmEngine implements AlgorithmEngine {
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public AlgorithmExecutorFactory makeExecutorFactory(AlgorithmManager algorithmManager,
+            AlgorithmExecutionContext context, String language, YConfiguration config) {
+        List<String> libs = null;
+        Map<String, List<String>> libraries = (Map<String, List<String>>) config.get("libraries");
+        if (libraries != null) {
+            libs = libraries.get(language);
+        }
+        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+        scriptEngineManager.put("EventLog", new EventLogFunctions(algorithmManager.getYamcsInstance()));
+        scriptEngineManager.put("Verifier", new VerifierFunctions());
+        scriptEngineManager.put("Yamcs", new AlgorithmFunctions(algorithmManager.getProcessor(), context));
+
+        // add the link manager functions but only if the link manager is present (some units tests will not have this)
+        var ysi = YamcsServer.getServer().getInstance(algorithmManager.getYamcsInstance());
+        if (ysi != null) {
+            var linkManager = ysi.getLinkManager();
+            if (linkManager != null) {
+                scriptEngineManager.put("Links", new LinksFunctions(linkManager));
+            }
+        }
+
+        return new ScriptAlgorithmExecutorFactory(scriptEngineManager, language, libs);
+
+    }
+}
+```
+
+### `ScriptAlgorithmExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ScriptAlgorithmExecutor.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UncheckedIOException;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.script.Invocable;
+import javax.script.ScriptException;
+
+import org.codehaus.janino.SimpleCompiler;
+import org.openjdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.events.EventProducer;
+import org.yamcs.mdb.DataEncodingDecoder;
+import org.yamcs.mdb.ParameterTypeProcessor;
+import org.yamcs.mdb.ParameterTypeUtils;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.AbsoluteTimeDataType;
+import org.yamcs.xtce.BaseDataType;
+import org.yamcs.xtce.BinaryParameterType;
+import org.yamcs.xtce.BooleanParameterType;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.FloatParameterType;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.StringParameterType;
+
+/**
+ * Represents the execution context of one algorithm. An AlgorithmExecutor is reused upon each update of one or more of
+ * its InputParameters.
+ * <p>
+ * This class will create and compile on-the-fly ValueBinding implementations for every unique combination of raw and
+ * eng types.
+ */
+public class ScriptAlgorithmExecutor extends AbstractAlgorithmExecutor {
+    static final Logger log = LoggerFactory.getLogger(ScriptAlgorithmExecutor.class);
+
+    final Invocable invocable;
+    // stores both the function inputs and outputs
+    // the position of the inputs corresponds to the position of AlgorithmDef input respectively output List
+    final Object[] functionArgs;
+
+    final int numInputs;
+    final int numOutputs;
+
+    // Each ValueBinding class represent a unique raw/eng type combination (== key)
+    private static Map<String, Class<ValueBinding>> valueBindingClasses = Collections
+            .synchronizedMap(new HashMap<>());
+    ParameterTypeProcessor parameterTypeProcessor;
+    final String functionName;
+    final EventProducer eventProducer;
+    final String functionScript;
+
+    public ScriptAlgorithmExecutor(CustomAlgorithm algorithmDef, Invocable invocable, String functionName,
+            String functionScript, AlgorithmExecutionContext execCtx) {
+        super(algorithmDef, execCtx);
+        this.parameterTypeProcessor = new ParameterTypeProcessor(execCtx.getProcessorData());
+        this.functionName = functionName;
+        this.invocable = invocable;
+        this.eventProducer = execCtx.getEventProducer();
+        this.functionScript = functionScript;
+
+        numInputs = algorithmDef.getInputList().size();
+        List<OutputParameter> outputList = algorithmDef.getOutputList();
+        numOutputs = outputList.size();
+        functionArgs = new Object[numInputs + numOutputs];
+
+        // Set empty output bindings so that algorithms can write their attributes
+        for (int k = 0; k < numOutputs; k++) {
+            functionArgs[numInputs + k] = new OutputValueBinding();
+        }
+    }
+
+    @Override
+    protected void updateInput(int position, InputParameter inputParameter, ParameterValue newValue) {
+        doUpdateInput(position, inputParameter, newValue);
+    }
+
+    @Override
+    protected void updateInputArgument(int position, InputParameter inputParameter, ArgumentValue newValue) {
+        doUpdateInput(position, inputParameter, newValue);
+    }
+
+    private void doUpdateInput(int position, InputParameter inputParameter, RawEngValue newValue) {
+        ValueBinding valueBinding = (ValueBinding) functionArgs[position];
+        // First time for an inputParameter, it will create a ValueBinding object.
+        // Further calls will just update that object
+        if (valueBinding == null) {
+            valueBinding = toValueBinding(newValue);
+            functionArgs[position] = valueBinding;
+        }
+        if (valueBinding == null) {
+            return;
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("Algo {} updating input {} with value {}", algorithmDef.getName(),
+                    inputParameter.getEffectiveInputName(), newValue);
+        }
+        valueBinding.updateValue(newValue);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.yamcs.algorithms.AlgorithmExecutor#runAlgorithm(long, long)
+     */
+    @Override
+    public synchronized AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) {
+        if (log.isTraceEnabled()) {
+            logTraceInput();
+        }
+        try {
+            for (int k = 0; k < numOutputs; k++) {
+                OutputValueBinding outvb = (OutputValueBinding) functionArgs[numInputs + k];
+                outvb.value = null;
+                outvb.rawValue = null;
+            }
+
+            Object returnValue = invocable.invokeFunction(functionName, functionArgs);
+
+            if (log.isTraceEnabled()) {
+                logTraceOutput(returnValue);
+            }
+
+            List<ParameterValue> outputValues = new ArrayList<>();
+            List<OutputParameter> outputList = algorithmDef.getOutputList();
+            for (int k = 0; k < numOutputs; k++) {
+                OutputParameter outputParameter = outputList.get(k);
+                OutputValueBinding res = (OutputValueBinding) functionArgs[numInputs + k];
+                if (res.updated && (res.value != null || res.rawValue != null)) {
+                    ParameterValue pv = convertScriptOutputToParameterValue(outputParameter.getParameter(), res);
+                    pv.setAcquisitionTime(acqTime);
+                    pv.setGenerationTime(genTime);
+                    outputValues.add(pv);
+                }
+            }
+
+            return new AlgorithmExecutionResult(inputValues, returnValue, outputValues);
+        } catch (ScriptException e) {
+            String msg = getError(e);
+            throw new AlgorithmException(inputValues, msg);
+        } catch (NoSuchMethodException e) {
+            throw new AlgorithmException("Error while executing algorithm: " + e.getMessage());
+        } catch (InvalidAlgorithmOutputException e) {
+            eventProducer.sendWarning(getAlgorithm().getName(), e.getMessage());
+            throw new AlgorithmException(inputValues, e.getMessage());
+        }
+    }
+
+    String getError(ScriptException e) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(e.getMessage());
+        String line = getLine(functionScript, e.getLineNumber());
+        if (line != null) {
+            sb.append(":\n").append(line).append("\n");
+            if (e.getColumnNumber() >= 0) {
+                for (int i = 0; i < e.getColumnNumber(); i++) {
+                    sb.append(" ");
+                }
+                sb.append("^");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private String getLine(String script, int lineNumber) {
+        int n = 0;
+        try (BufferedReader bufReader = new BufferedReader(new StringReader(script))) {
+            String line;
+            while ((line = bufReader.readLine()) != null) {
+                if (++n == lineNumber) {
+                    return line;
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        return null;
+    }
+
+    private void logTraceInput() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Running algorithm ").append(algorithmDef.getName())
+                .append("( ");
+        int pos = 0;
+        for (InputParameter p : algorithmDef.getInputList()) {
+            if (pos != 0) {
+                sb.append(", ");
+            }
+            sb.append(p.getEffectiveInputName()).append(": ")
+                    .append(String.valueOf(functionArgs[pos]));
+            pos++;
+        }
+        sb.append(")");
+        log.trace(sb.toString());
+    }
+
+    private void logTraceOutput(Object returnValue) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("algorithm ").append(algorithmDef.getName())
+                .append(" outputs: ( ");
+        int pos = 0;
+        for (OutputParameter p : algorithmDef.getOutputList()) {
+            if (pos != 0) {
+                sb.append(", ");
+            }
+            sb.append(p.getOutputName()).append(": ")
+                    .append(String.valueOf(functionArgs[numInputs + pos]));
+            pos++;
+        }
+        sb.append(") returnValue: ").append(String.valueOf(returnValue));
+        log.trace(sb.toString());
+    }
+
+    /**
+     * converts the output of the algorithm to a value corresponding to a parameter type
+     * <p>
+     * Throws InvalidAlgorithmOutputException if the conversion cannot be made
+     */
+    private ParameterValue convertScriptOutputToParameterValue(Parameter parameter, OutputValueBinding binding)
+            throws InvalidAlgorithmOutputException {
+        ParameterValue pval = new ParameterValue(parameter);
+        ParameterType ptype = parameter.getParameterType();
+        DataEncoding de = null;
+
+        if (binding.rawValue != null) {
+            if (ptype instanceof BaseDataType) {
+                de = ((BaseDataType) ptype).getEncoding();
+            }
+
+            if (de != null) {
+                Value rawV = DataEncodingDecoder.getRawValue(de, binding.rawValue);
+                if (rawV == null) {
+                    throw new InvalidAlgorithmOutputException(parameter, binding,
+                            "Cannot convert raw value from algorithm output "
+                                    + "'" + binding.value + "' of type " + binding.value.getClass()
+                                    + " into values for the data encoding " + de);
+                } else {
+                    pval.setRawValue(rawV);
+                    if (binding.value == null) {
+                        parameterTypeProcessor.calibrate(pval);
+                    }
+                }
+            } else {
+                throw new InvalidAlgorithmOutputException(parameter, binding, "Algorithm provided raw value"
+                        + " but the parameter has no data encoding");
+            }
+        }
+
+        if (binding.value != null) {
+            Value v = getEngValue(ptype, binding.value);
+            if (v == null) {
+                throw new InvalidAlgorithmOutputException(parameter, binding,
+                        "Cannot convert algorithm output value "
+                                + "'" + binding.value + "' of type " + binding.value.getClass().getSimpleName()
+                                + " into values for the type "
+                                + ptype.getQualifiedName() + "(" + ptype.getClass().getSimpleName() + ")");
+            } else {
+                pval.setEngValue(v);
+            }
+        }
+        return pval;
+    }
+
+    private ValueBinding toValueBinding(RawEngValue pval) {
+        try {
+            Class<ValueBinding> clazz = getOrCreateValueBindingClass(pval);
+            if (clazz == null) {
+                return null;
+            }
+            Constructor<ValueBinding> constructor = clazz.getConstructor();
+            return constructor.newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not instantiate object of custom class", e);
+        }
+    }
+
+    private Class<ValueBinding> getOrCreateValueBindingClass(RawEngValue pval) {
+
+        String key;
+        if (pval.getRawValue() == null) {
+            key = "" + pval.getEngValue().getType().getNumber();
+        } else {
+            key = pval.getRawValue().getType().getNumber() + "_" + pval.getEngValue().getType().getNumber();
+        }
+
+        if (valueBindingClasses.containsKey(key)) {
+            return valueBindingClasses.get(key);
+        } else {
+            String className = "ValueBinding" + key;
+            StringBuilder source = new StringBuilder();
+            source.append("package org.yamcs.algorithms;\n");
+            source.append("import " + RawEngValue.class.getName() + ";\n")
+                    .append("public class " + className + " extends ValueBinding {\n");
+            StringBuilder updateValueSource = new StringBuilder("  public void updateValue(RawEngValue v) {\n")
+                    .append("    super.updateValue(v);\n");
+            if (pval.getRawValue() != null) {
+                updateValueSource.append(addValueType(source, pval.getRawValue(), true));
+            }
+            updateValueSource.append(addValueType(source, pval.getEngValue(), false));
+            updateValueSource.append("  }\n");
+
+            source.append(updateValueSource.toString());
+
+            source.append("  public String toString() {\n")
+                    .append("    return \"[");
+            if (pval.getRawValue() != null) {
+                source.append("r: \"+rawValue+\", ");
+            }
+            source.append("v: \"+value+\"]\";\n")
+                    .append("  }\n");
+
+            source.append("}");
+            try {
+                SimpleCompiler compiler = new SimpleCompiler();
+                if (log.isTraceEnabled()) {
+                    log.trace("Compiling this:\n{}\n", source);
+                }
+
+                compiler.cook(source.toString());
+                @SuppressWarnings("unchecked")
+                Class<ValueBinding> clazz = (Class<ValueBinding>) compiler.getClassLoader()
+                        .loadClass("org.yamcs.algorithms." + className);
+                valueBindingClasses.put(key, clazz);
+                return clazz;
+            } catch (Exception e) {
+                throw new IllegalStateException("Could not compile custom class: " + source.toString(), e);
+            }
+        }
+    }
+
+    /**
+     * Appends a raw or eng field with a getter of the given value
+     * 
+     * @return a matching code fragment to be included in the updateValue() method
+     */
+    private static String addValueType(StringBuilder source, Value v, boolean raw) {
+
+        if (v.getType() == Type.BINARY) {
+            if (raw) {
+                source.append("  public byte[] rawValue;\n");
+                return "    rawValue=v.getRawValue().getBinaryValue();\n";
+            } else {
+                source.append("  public byte[] value;\n");
+                return "    value=v.getEngValue().getBinaryValue();\n";
+            }
+        } else if (v.getType() == Type.DOUBLE) {
+            if (raw) {
+                source.append("  public double rawValue;\n");
+                return "    rawValue=v.getRawValue().getDoubleValue();\n";
+            } else {
+                source.append("  public double value;\n");
+                return "    value=v.getEngValue().getDoubleValue();\n";
+            }
+        } else if (v.getType() == Type.FLOAT) {
+            if (raw) {
+                source.append("  public float rawValue;\n");
+                return "    rawValue=v.getRawValue().getFloatValue();\n";
+            } else {
+                source.append("  public float value;\n");
+                return "    value=v.getEngValue().getFloatValue();\n";
+            }
+        } else if (v.getType() == Type.UINT32) {
+            if (raw) {
+                source.append("  public long rawValue;\n");
+                return "    rawValue=(long)Integer.toUnsignedLong(v.getRawValue().getUint32Value());\n";
+            } else {
+                source.append("  public long value;\n");
+                return "    value=(long)Integer.toUnsignedLong(v.getEngValue().getUint32Value());\n";
+            }
+        } else if (v.getType() == Type.SINT32) {
+            if (raw) {
+                source.append("  public int rawValue;\n");
+                return "    rawValue=v.getRawValue().getSint32Value();\n";
+            } else {
+                source.append("  public int value;\n");
+                return "    value=v.getEngValue().getSint32Value();\n";
+            }
+        } else if (v.getType() == Type.UINT64) {
+            if (raw) {
+                source.append("  public long rawValue;\n");
+                return "    rawValue=v.getRawValue().getUint64Value();\n";
+            } else {
+                source.append("  public long value;\n");
+                return "    value=v.getEngValue().getUint64Value();\n";
+            }
+        } else if (v.getType() == Type.SINT64) {
+            if (raw) {
+                source.append("  public long rawValue;\n");
+                return "    rawValue=v.getRawValue().getSint64Value();\n";
+            } else {
+                source.append("  public long value;\n");
+                return "    value=v.getEngValue().getSint64Value();\n";
+            }
+        } else if (v.getType() == Type.STRING) {
+            if (raw) {
+                source.append("  public String rawValue;\n");
+                return "    rawValue=v.getRawValue().getStringValue();\n";
+            } else {
+                source.append("  public String value;\n");
+                return "    value=v.getEngValue().getStringValue();\n";
+            }
+        } else if (v.getType() == Type.BOOLEAN) {
+            if (raw) {
+                source.append("  public boolean rawValue;\n");
+                return "    rawValue=v.getRawValue().getBooleanValue();\n";
+            } else {
+                source.append("  public boolean value;\n");
+                return "    value=v.getEngValue().getBooleanValue();\n";
+            }
+        } else if (v.getType() == Type.ENUMERATED) {
+            if (raw) {
+                throw new IllegalArgumentException("Unexpected raw value of type ENUMERATED");
+            } else {
+                source.append("  public String value;\n");
+                return "    value=v.getEngValue().getStringValue();\n";
+            }
+        } else if (v.getType() == Type.TIMESTAMP) {
+            if (raw) {
+                source.append("  public org.yamcs.time.Instant rawValue;\n");
+                return "    rawValue=org.yamcs.time.Instant.get(v.getRawValue().getTimestampValue());\n";
+            } else {
+                source.append("  public org.yamcs.time.Instant value;\n");
+                return "    value=org.yamcs.time.Instant.get(v.getEngValue().getTimestampValue());\n";
+            }
+        } else {
+            throw new IllegalArgumentException("Unexpected value of type " + v.getType());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return algorithmDef.getName() + " executor " + invocable;
+    }
+
+    public static Value getEngValue(ParameterType ptype, Object value) {
+        if (ptype instanceof IntegerParameterType) {
+            return ParameterTypeUtils.getEngIntegerValue((IntegerParameterType) ptype, value);
+        } else if (ptype instanceof FloatParameterType) {
+            return ParameterTypeUtils.getEngFloatValue((FloatParameterType) ptype, value);
+        } else if (ptype instanceof StringParameterType) {
+            if (value instanceof String) {
+                return ValueUtility.getStringValue((String) value);
+            } else {
+                return null;
+            }
+        } else if (ptype instanceof BooleanParameterType) {
+            if (value instanceof Boolean) {
+                return ValueUtility.getBooleanValue((Boolean) value);
+            } else {
+                return null;
+            }
+        } else if (ptype instanceof BinaryParameterType) {
+            if (value instanceof byte[]) {
+                return ValueUtility.getBinaryValue((byte[]) value);
+            } else {
+                return null;
+            }
+        } else if (ptype instanceof EnumeratedParameterType) {
+            if (value instanceof String) {
+                return ValueUtility.getStringValue((String) value);
+            } else {
+                return null;
+            }
+        } else if (ptype instanceof AbsoluteTimeDataType) {
+            if (value instanceof Instant v) {
+                return ValueUtility.getTimestampValue(v.getMillis());
+            } else if (value instanceof String v) {
+                long t = TimeEncoding.parse(v);
+                return ValueUtility.getTimestampValue(t);
+            } else if (value instanceof Double d) {
+                return ValueUtility.getTimestampValue(d.longValue());
+            } else if ((value instanceof ScriptObjectMirror som) && "Date".equals(som.getClassName())) {
+                long unixTime = ((Double) som.callMember("getTime")).longValue();
+                return ValueUtility.getTimestampValue(TimeEncoding.fromUnixMillisec(unixTime));
+            } else {
+                return null;
+            }
+        } else {
+            throw new IllegalStateException("Unknown parameter type '" + ptype + "'");
+        }
+    }
+
+}
+```
+
+### `ScriptAlgorithmExecutorFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ScriptAlgorithmExecutorFactory.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.yamcs.algorithms.AlgorithmManager.JDK_BUILTIN_NASHORN_ENGINE_NAME;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.script.Bindings;
+import javax.script.Invocable;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.OutputParameter;
+
+/**
+ * Handles the creation of algorithm executors for script algorithms for a given language and scriptEngine (currently
+ * javascript or python are supported).
+ * <p>
+ * Each algorithm is created as a function in the scriptEngine. There might be multiple executors for the same
+ * algorithm: for example in the command verifier there will be one algorithm executor for each command. However there
+ * will be only one function created in the script engine.
+ *
+ * 
+ */
+public class ScriptAlgorithmExecutorFactory implements AlgorithmExecutorFactory {
+    final ScriptEngine scriptEngine;
+    static final Logger log = LoggerFactory.getLogger(ScriptAlgorithmExecutorFactory.class);
+
+    public ScriptAlgorithmExecutorFactory(ScriptEngineManager scriptEngineManager, String language,
+            List<String> libraryNames) {
+
+        // Custom lookup instead of ScriptEngineManager.getEngineByName because we want
+        // to include the JDK11-14 builtin Nashorn in favour of Nashorn from the classpath.
+        ScriptEngineFactory factory = scriptEngineManager.getEngineFactories().stream()
+                .filter(candidate -> !JDK_BUILTIN_NASHORN_ENGINE_NAME.equals(candidate.getEngineName())
+                        && candidate.getNames().contains(language))
+                .findFirst()
+                .orElse(null);
+
+        if (factory != null) {
+            scriptEngine = factory.getScriptEngine();
+            scriptEngine.setBindings(scriptEngineManager.getBindings(), ScriptContext.GLOBAL_SCOPE);
+        } else {
+            throw new ConfigurationException("Cannot get a script engine for language " + language);
+        }
+
+        if (libraryNames != null) {
+            loadLibraries(libraryNames);
+        }
+
+        // Put engine bindings in shared global scope - we want the variables in the libraries to be global
+        Bindings commonBindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
+        Set<String> existingBindings = new HashSet<>(scriptEngineManager.getBindings().keySet());
+
+        existingBindings.retainAll(commonBindings.keySet());
+        if (!existingBindings.isEmpty()) {
+            throw new ConfigurationException(
+                    "Overlapping definitions found while loading libraries for language " + language + ": "
+                            + existingBindings);
+        }
+        commonBindings.putAll(scriptEngineManager.getBindings());
+        scriptEngineManager.setBindings(commonBindings);
+    }
+
+    private void loadLibraries(List<String> libraryNames) {
+        try {
+            for (String lib : libraryNames) {
+                log.debug("Loading library {}", lib);
+                File f = new File(lib);
+                if (!f.exists()) {
+                    throw new ConfigurationException("Algorithm library file '" + f + "' does not exist");
+                }
+                scriptEngine.put(ScriptEngine.FILENAME, f.getPath()); // Improves error msgs
+                if (f.isFile()) {
+                    try (FileReader fr = new FileReader(f)) {
+                        scriptEngine.eval(fr);
+                    }
+                } else {
+                    throw new ConfigurationException("Specified library is not a file: " + f);
+                }
+            }
+        } catch (IOException e) { // Force exit. User should fix this before continuing
+            throw new ConfigurationException("Cannot read from library file", e);
+        } catch (ScriptException e) { // Force exit. User should fix this before continuing
+            throw new ConfigurationException("Script error found in library file: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public ScriptAlgorithmExecutor makeExecutor(CustomAlgorithm calg, AlgorithmExecutionContext execCtx) {
+        String functionName = calg.getQualifiedName().replace("/", "_");
+        String functionScript = generateFunctionCode(functionName, calg);
+        log.debug("Evaluating script:\n{}", functionScript);
+        try {
+            // improve error messages as well as required for event generation to know from where it is called
+            scriptEngine.put(ScriptEngine.FILENAME, calg.getQualifiedName());
+            scriptEngine.eval(functionScript);
+        } catch (ScriptException e) {
+            String msg = "Error evaluating script " + functionScript + ": " + e.getMessage();
+            execCtx.getEventProducer().sendWarning(msg);
+            log.warn("Error while evaluating script {}: {}", functionScript, e.getMessage(), e);
+            throw new AlgorithmException(msg);
+        }
+        return new ScriptAlgorithmExecutor(calg, (Invocable) scriptEngine, functionName, functionScript, execCtx);
+    }
+
+    public static String generateFunctionCode(String functionName, CustomAlgorithm algorithmDef) {
+        StringBuilder sb = new StringBuilder();
+
+        String language = algorithmDef.getLanguage();
+        if ("JavaScript".equalsIgnoreCase(language)) {
+            sb.append("function ").append(functionName);
+        } else if ("python".equalsIgnoreCase(language)) {
+            sb.append("def ").append(functionName);
+        } else {
+            throw new IllegalArgumentException("Cannot execute scripts in " + language);
+        }
+        sb.append("(");
+
+        boolean firstParam = true;
+        for (InputParameter inputParameter : algorithmDef.getInputList()) {
+            // Default-define all input values to null to prevent ugly runtime errors
+            String argName = inputParameter.getEffectiveInputName();
+            if (firstParam) {
+                firstParam = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(argName);
+        }
+
+        // Set empty output bindings so that algorithms can write their attributes
+        for (OutputParameter outputParameter : algorithmDef.getOutputList()) {
+            String scriptName = outputParameter.getOutputName();
+            if (scriptName == null) {
+                scriptName = outputParameter.getParameter().getName();
+            }
+            if (firstParam) {
+                firstParam = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(scriptName);
+        }
+        sb.append(")");
+
+        if ("JavaScript".equalsIgnoreCase(language)) {
+            sb.append(" {\n");
+        } else if ("python".equalsIgnoreCase(language)) {
+            sb.append(":\n");
+        }
+
+        String[] a = algorithmDef.getAlgorithmText().split("\\r?\\n");
+        for (String l : a) {
+            sb.append("    ").append(l).append("\n");
+        }
+
+        if ("JavaScript".equalsIgnoreCase(language)) {
+            sb.append("}");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public List<String> getLanguages() {
+        return scriptEngine.getFactory().getNames();
+    }
+}
+```
+
+### `ValueBinding.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/ValueBinding.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
+import org.yamcs.time.Instant;
+
+/**
+ * A ParameterValue as passed to an algorithm. Actual implementations are generated on-the-fly.
+ */
+public abstract class ValueBinding {
+    public long acquisitionTimeMillis;
+    public long generationTimeMillis;
+    public AcquisitionStatus acquisitionStatus;
+    public MonitoringResult monitoringResult;
+    public RangeCondition rangeCondition;
+
+    public void updateValue(RawEngValue newValue) {
+        if (newValue instanceof ParameterValue) {
+            ParameterValue pv = (ParameterValue) newValue;
+            acquisitionStatus = pv.getAcquisitionStatus(false);
+            monitoringResult = pv.getMonitoringResult();
+            rangeCondition = pv.getRangeCondition();
+
+            acquisitionTimeMillis = pv.getAcquisitionTime();
+        }
+        generationTimeMillis = newValue.getGenerationTime();
+    }
+
+    public Instant generationTime() {
+        return Instant.get(generationTimeMillis);
+    }
+
+    public Instant acquisitionTime() {
+        return Instant.get(acquisitionTimeMillis);
+    }
+
+}
+```
+
+### `VerifierFunctions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/VerifierFunctions.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.commanding.VerificationResult;
+
+/**
+ * Library of functions available from within Algorithm scripts using this naming scheme:
+ * <p>
+ * The java method {@code VerifierFunctions.[method]} is available in scripts as {@code Verifier.[method]}
+ */
+public class VerifierFunctions {
+
+    /**
+     * Returns a successful verification result
+     */
+    public VerificationResult success() {
+        return success(null, null);
+    }
+
+    /**
+     * Returns a successful verification result with provided message
+     */
+    public VerificationResult success(String message) {
+        return success(message, null);
+    }
+
+    /**
+     * Returns a successful verification result with provided message, and a return value
+     */
+    public VerificationResult success(String message, Object value) {
+        return new VerificationResult(true, message, value);
+    }
+
+    /**
+     * Returns a failed verification result
+     */
+    public VerificationResult failure() {
+        return failure(null, null);
+    }
+
+    /**
+     * Returns a failed verification result with provided message
+     */
+    public VerificationResult failure(String message) {
+        return failure(message, null);
+    }
+
+    /**
+     * Returns a failed verification result with provided message, and a return value
+     */
+    public VerificationResult failure(String message, Object value) {
+        return new VerificationResult(false, message, value);
+    }
+
+    /**
+     * Create a new verification result
+     */
+    public VerificationResult createResult(boolean success) {
+        return new VerificationResult(success, null, null);
+    }
+}
+```

@@ -3,48 +3,3367 @@
 
 **경로:** `fsw/osal/src/os/portable/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-impl-bsd-select.c`
 
-file--os-impl-bsd-select.c
-file--os-impl-bsd-sockets.c
-file--os-impl-console-bsp.c
-file--os-impl-no-condvar.c
-file--os-impl-no-loader.c
-file--os-impl-no-network.c
-file--os-impl-no-select.c
-file--os-impl-no-shell.c
-file--os-impl-no-sockets.c
-file--os-impl-no-symtab.c
-file--os-impl-posix-dirs.c
-file--os-impl-posix-dl-loader.c
-file--os-impl-posix-dl-symtab.c
-file--os-impl-posix-files.c
-file--os-impl-posix-gettime.c
-file--os-impl-posix-io.c
-file--os-impl-posix-network.c
-file--README.txt
+**경로:** `fsw/osal/src/os/portable/os-impl-bsd-select.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: This file contains wrappers around the select() system call
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   FD_SET/FD_CLR/FD_ISSET macros and fd_set typedef
+ *   select()
+ *   clock_gettime() - for computing select timeouts
+ */
+#include <string.h>
+#include <errno.h>
+#include <time.h>
+
+#include "os-impl-select.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                LOCAL FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *          Convert an OS_FdSet (OSAL) structure into an fd_set (POSIX)
+ *          which can then be passed to the POSIX select function.
+ *
+ * returns: Highest numbered file descriptor in the output fd_set
+ *-----------------------------------------------------------------*/
+static int32 OS_FdSet_ConvertIn_Impl(int *os_maxfd, fd_set *os_set, const OS_FdSet *OSAL_set)
+{
+    size_t       offset;
+    size_t       bit;
+    osal_index_t id;
+    uint8        objids;
+    int          osfd;
+    int32        status;
+
+    status = OS_SUCCESS;
+    for (offset = 0; offset < sizeof(OSAL_set->object_ids); ++offset)
+    {
+        objids = OSAL_set->object_ids[offset];
+        bit    = 0;
+        while (objids != 0)
+        {
+            id = OSAL_INDEX_C((offset * 8) + bit);
+            if ((objids & 0x01) != 0 && id < OS_MAX_NUM_OPEN_FILES)
+            {
+                osfd = OS_impl_filehandle_table[id].fd;
+                if (osfd >= 0)
+                {
+                    if (osfd >= FD_SETSIZE || !OS_impl_filehandle_table[id].selectable)
+                    {
+                        /* out of range of select() implementation */
+                        status = OS_ERR_OPERATION_NOT_SUPPORTED;
+                    }
+                    else
+                    {
+                        FD_SET(osfd, os_set);
+                        if (osfd > *os_maxfd)
+                        {
+                            *os_maxfd = osfd;
+                        }
+                    }
+                }
+            }
+            ++bit;
+            objids >>= 1;
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------*/
+/**
+ * \brief Convert a POSIX fd_set structure into an OSAL OS_FdSet
+ *        which can then be returned back to the application.
+ *
+ * Local helper routine, not part of OSAL API.
+ *
+ * This un-sets bits in OSAL_set that are set in the OS_set
+ *
+ * \param[in]     OS_set   The fd_set from select
+ * \param[in,out] OSAL_set The OS_FdSet updated by this helper
+ */
+/*-----------------------------------------------------------------*/
+static void OS_FdSet_ConvertOut_Impl(fd_set *OS_set, OS_FdSet *OSAL_set)
+{
+    size_t       offset;
+    size_t       bit;
+    osal_index_t id;
+    uint8        objids;
+    int          osfd;
+
+    for (offset = 0; offset < sizeof(OSAL_set->object_ids); ++offset)
+    {
+        objids = OSAL_set->object_ids[offset];
+        bit    = 0;
+        while (objids != 0)
+        {
+            id = OSAL_INDEX_C((offset * 8) + bit);
+            if ((objids & 0x01) != 0 && id < OS_MAX_NUM_OPEN_FILES)
+            {
+                osfd = OS_impl_filehandle_table[id].fd;
+                if (osfd < 0 || !FD_ISSET(osfd, OS_set))
+                {
+                    OSAL_set->object_ids[offset] &= ~(1 << bit);
+                }
+            }
+            ++bit;
+            objids >>= 1;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *          Actual implementation of select() call
+ *          Used by SelectSingle and SelectMultiple implementations (below)
+ *-----------------------------------------------------------------*/
+static int32 OS_DoSelect(int maxfd, fd_set *rd_set, fd_set *wr_set, int32 msecs)
+{
+    int             os_status;
+    int32           return_code;
+    struct timeval  tv;
+    struct timeval *tvptr;
+    struct timespec ts_now;
+    struct timespec ts_end;
+
+    if (msecs > 0)
+    {
+        clock_gettime(CLOCK_MONOTONIC, &ts_now);
+        ts_end.tv_sec  = ts_now.tv_sec + (msecs / 1000);
+        ts_end.tv_nsec = ts_now.tv_nsec + (1000000 * (msecs % 1000));
+        if (ts_end.tv_nsec >= 1000000000)
+        {
+            ++ts_end.tv_sec;
+            ts_end.tv_nsec -= 1000000000;
+        }
+    }
+    else
+    {
+        /* Zero for consistency and to avoid possible confusion if not cleared */
+        memset(&ts_end, 0, sizeof(ts_end));
+    }
+
+    do
+    {
+        if (msecs < 0)
+        {
+            tvptr = NULL;
+        }
+        else if (msecs == 0)
+        {
+            tvptr      = &tv;
+            tv.tv_sec  = 0;
+            tv.tv_usec = 0;
+        }
+        else
+        {
+            tvptr = &tv;
+
+            clock_gettime(CLOCK_MONOTONIC, &ts_now);
+
+            /* note that the tv_sec and tv_usec/tv_nsec values are all signed longs, so OK to subtract */
+            tv.tv_sec  = ts_end.tv_sec - ts_now.tv_sec;
+            tv.tv_usec = (ts_end.tv_nsec - ts_now.tv_nsec) / 1000;
+
+            if (tv.tv_sec < 0 || (tv.tv_sec == 0 && tv.tv_usec < 0))
+            {
+                os_status = 0;
+                break;
+            }
+
+            if (tv.tv_usec < 0)
+            {
+                tv.tv_usec += 1000000;
+                --tv.tv_sec;
+            }
+        }
+
+        os_status = select(maxfd + 1, rd_set, wr_set, NULL, tvptr);
+    } while (os_status < 0 && (errno == EINTR || errno == EAGAIN));
+
+    if (os_status < 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else if (os_status == 0)
+    {
+        return_code = OS_ERROR_TIMEOUT;
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/****************************************************************************************
+                                SELECT API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs)
+{
+    int32                           return_code;
+    fd_set                          wr_set;
+    fd_set                          rd_set;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /*
+     * If called on a stream_id which does not support this
+     * operation, return immediately and do not invoke the system call
+     */
+    if (!impl->selectable)
+    {
+        return OS_ERR_OPERATION_NOT_SUPPORTED;
+    }
+
+    if (impl->fd >= FD_SETSIZE)
+    {
+        /* out of range of select() implementation */
+        return OS_ERR_OPERATION_NOT_SUPPORTED;
+    }
+
+    if (*SelectFlags != 0)
+    {
+        FD_ZERO(&wr_set);
+        FD_ZERO(&rd_set);
+        if (*SelectFlags & OS_STREAM_STATE_READABLE)
+        {
+            FD_SET(impl->fd, &rd_set);
+        }
+        if (*SelectFlags & OS_STREAM_STATE_WRITABLE)
+        {
+            FD_SET(impl->fd, &wr_set);
+        }
+
+        return_code = OS_DoSelect(impl->fd, &rd_set, &wr_set, msecs);
+
+        if (return_code == OS_SUCCESS)
+        {
+            if (!FD_ISSET(impl->fd, &rd_set))
+            {
+                *SelectFlags &= ~OS_STREAM_STATE_READABLE;
+            }
+            if (!FD_ISSET(impl->fd, &wr_set))
+            {
+                *SelectFlags &= ~OS_STREAM_STATE_WRITABLE;
+            }
+        }
+        else
+        {
+            *SelectFlags = 0;
+        }
+    }
+    else
+    {
+        /* Nothing to check for, return immediately. */
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    fd_set wr_set;
+    fd_set rd_set;
+    int    maxfd;
+    int32  return_code;
+
+    FD_ZERO(&rd_set);
+    FD_ZERO(&wr_set);
+    maxfd = -1;
+    if (ReadSet != NULL)
+    {
+        return_code = OS_FdSet_ConvertIn_Impl(&maxfd, &rd_set, ReadSet);
+        if (return_code != OS_SUCCESS)
+        {
+            return return_code;
+        }
+    }
+    if (WriteSet != NULL)
+    {
+        return_code = OS_FdSet_ConvertIn_Impl(&maxfd, &wr_set, WriteSet);
+        if (return_code != OS_SUCCESS)
+        {
+            return return_code;
+        }
+    }
+
+    if (maxfd >= 0)
+    {
+        return_code = OS_DoSelect(maxfd, &rd_set, &wr_set, msecs);
+    }
+    else
+    {
+        /*
+         * This return code will be used if the set(s) were
+         * both empty/NULL or otherwise did not contain valid filehandles.
+         */
+        return_code = OS_ERR_INVALID_ID;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if (ReadSet != NULL)
+        {
+            OS_FdSet_ConvertOut_Impl(&rd_set, ReadSet);
+        }
+        if (WriteSet != NULL)
+        {
+            OS_FdSet_ConvertOut_Impl(&wr_set, WriteSet);
+        }
+    }
+
+    return return_code;
+}
 ```
 
-## 항목
+### `os-impl-bsd-sockets.c`
 
-- [`fsw/osal/src/os/portable/os-impl-bsd-select.c`](file--os-impl-bsd-select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-bsd-sockets.c`](file--os-impl-bsd-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-console-bsp.c`](file--os-impl-console-bsp.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-condvar.c`](file--os-impl-no-condvar.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-loader.c`](file--os-impl-no-loader.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-network.c`](file--os-impl-no-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-select.c`](file--os-impl-no-select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-shell.c`](file--os-impl-no-shell.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-sockets.c`](file--os-impl-no-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-no-symtab.c`](file--os-impl-no-symtab.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-dirs.c`](file--os-impl-posix-dirs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-dl-loader.c`](file--os-impl-posix-dl-loader.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-dl-symtab.c`](file--os-impl-posix-dl-symtab.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-files.c`](file--os-impl-posix-files.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-gettime.c`](file--os-impl-posix-gettime.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-io.c`](file--os-impl-posix-io.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/os-impl-posix-network.c`](file--os-impl-posix-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/portable/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/portable/os-impl-bsd-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: This file contains the network functionality for
+ *      systems which implement the BSD-style socket API.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *  socket()
+ *  getsockopt()
+ *  setsockopt()
+ *  fcntl()
+ *  bind()
+ *  listen()
+ *  accept()
+ *  connect()
+ *  recvfrom()
+ *  sendto()
+ *  inet_pton()
+ *  ntohl()/ntohs()
+ *
+ * As well as any headers for the struct sockaddr type and any address families in use
+ */
+#include <string.h>
+#include <errno.h>
+
+#include "os-impl-sockets.h"
+#include "os-shared-file.h"
+#include "os-shared-select.h"
+#include "os-shared-sockets.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/*
+ * The OS layer may define a macro to set the proper flags on newly-opened sockets.
+ * If not set, then a default implementation is used, which uses fcntl() to set O_NONBLOCK
+ */
+#ifndef OS_IMPL_SOCKET_FLAGS
+#ifdef O_NONBLOCK
+#define OS_IMPL_SOCKET_FLAGS O_NONBLOCK
+#else
+#define OS_IMPL_SOCKET_FLAGS 0 /* do not set any flags */
+#endif
+#endif
+
+#ifndef OS_IMPL_SET_SOCKET_FLAGS
+#define OS_IMPL_SET_SOCKET_FLAGS(tok) OS_SetSocketDefaultFlags_Impl(tok)
+#endif
+
+typedef union
+{
+    char               data[OS_SOCKADDR_MAX_LEN];
+    struct sockaddr    sa;
+    struct sockaddr_in sa_in;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+    struct sockaddr_in6 sa_in6;
+#endif
+} OS_SockAddr_Accessor_t;
+
+/*
+ * Confirm that the abstract socket address buffer size (OS_SOCKADDR_MAX_LEN) is
+ * large enough to store any of the enabled address types.  If this is true, the
+ * size of the above union will match OS_SOCKADDR_MAX_LEN.  However, if any
+ * implementation-provided struct types are larger than this, the union will be
+ * larger, and this indicates a configuration error.
+ */
+CompileTimeAssert(sizeof(OS_SockAddr_Accessor_t) == OS_SOCKADDR_MAX_LEN, SockAddrSize);
+
+/*
+ * Default flags implementation: Set the O_NONBLOCK flag via fcntl().
+ * An implementation can also elect custom configuration by setting
+ * the OS_IMPL_SET_SOCKET_FLAGS macro to point to an alternate function.
+ */
+void OS_SetSocketDefaultFlags_Impl(const OS_object_token_t *token)
+{
+    OS_impl_file_internal_record_t *impl;
+    int                             os_flags;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    os_flags = fcntl(impl->fd, F_GETFL);
+    if (os_flags == -1)
+    {
+        /* No recourse if F_GETFL fails - just report the error and move on. */
+        OS_DEBUG("fcntl(F_GETFL): %s\n", strerror(errno));
+    }
+    else
+    {
+        os_flags |= OS_IMPL_SOCKET_FLAGS;
+        if (fcntl(impl->fd, F_SETFL, os_flags) == -1)
+        {
+            /* No recourse if F_SETFL fails - just report the error and move on. */
+            OS_DEBUG("fcntl(F_SETFL): %s\n", strerror(errno));
+        }
+    }
+
+    impl->selectable = true;
+}
+
+/****************************************************************************************
+                                    Sockets API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketOpen_Impl(const OS_object_token_t *token)
+{
+    int                             os_domain;
+    int                             os_type;
+    int                             os_proto;
+    int                             os_flags;
+    OS_impl_file_internal_record_t *impl;
+    OS_stream_internal_record_t *   stream;
+
+    impl   = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+    stream = OS_OBJECT_TABLE_GET(OS_stream_table, *token);
+
+    os_proto = 0;
+
+    switch (stream->socket_type)
+    {
+        case OS_SocketType_DATAGRAM:
+            os_type  = SOCK_DGRAM;
+            os_proto = IPPROTO_UDP;
+            break;
+
+        case OS_SocketType_STREAM:
+            os_type  = SOCK_STREAM;
+            os_proto = IPPROTO_TCP;
+            break;
+
+        default:
+            return OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    switch (stream->socket_domain)
+    {
+        case OS_SocketDomain_INET:
+            os_domain = AF_INET;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case OS_SocketDomain_INET6:
+            os_domain = AF_INET6;
+            break;
+#endif
+        default:
+            return OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    impl->fd = socket(os_domain, os_type, os_proto);
+    if (impl->fd < 0)
+    {
+        return OS_ERROR;
+    }
+
+    /*
+     * Setting the REUSEADDR flag helps during debugging when there might be frequent
+     * code restarts.  However if setting the option fails then it is not worth bailing out over.
+     */
+    os_flags = 1;
+    setsockopt(impl->fd, SOL_SOCKET, SO_REUSEADDR, &os_flags, sizeof(os_flags));
+
+    /*
+     * Set the standard options on the filehandle by default --
+     * this may set it to non-blocking mode if the implementation supports it.
+     * any blocking would be done explicitly via the select() wrappers
+     *
+     * NOTE: The implementation still generally works without this flag set, but
+     * nonblock mode does improve robustness in the event that multiple tasks
+     * attempt to accept new connections from the same server socket at the same time.
+     */
+    OS_IMPL_SET_SOCKET_FLAGS(token);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketBindAddress_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr)
+{
+    int                             os_result;
+    socklen_t                       addrlen;
+    const struct sockaddr *         sa;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    sa = (const struct sockaddr *)&Addr->AddrData;
+
+    switch (sa->sa_family)
+    {
+        case AF_INET:
+            addrlen = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrlen = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            addrlen = 0;
+            break;
+    }
+
+    if (addrlen == 0)
+    {
+        return OS_ERR_BAD_ADDRESS;
+    }
+
+    os_result = bind(impl->fd, sa, addrlen);
+    if (os_result < 0)
+    {
+        OS_DEBUG("bind: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketListen_Impl(const OS_object_token_t *token)
+{
+    int                             os_result;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    os_result = listen(impl->fd, 10);
+    if (os_result < 0)
+    {
+        OS_DEBUG("listen: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketConnect_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr, int32 timeout)
+{
+    int32                           return_code;
+    int                             os_status;
+    int                             sockopt;
+    socklen_t                       slen;
+    uint32                          operation;
+    const struct sockaddr *         sa;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    sa = (const struct sockaddr *)&Addr->AddrData;
+    switch (sa->sa_family)
+    {
+        case AF_INET:
+            slen = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            slen = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            slen = 0;
+            break;
+    }
+
+    if (slen != Addr->ActualLength)
+    {
+        return_code = OS_ERR_BAD_ADDRESS;
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+        os_status   = connect(impl->fd, sa, slen);
+        if (os_status < 0)
+        {
+            if (errno != EINPROGRESS)
+            {
+                OS_DEBUG("connect: %s\n", strerror(errno));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                /*
+                 * If the socket was created in nonblocking mode (O_NONBLOCK flag) then the connect
+                 * runs in the background and connect() returns EINPROGRESS.  In this case we still
+                 * want to provide the "normal" (blocking) semantics to the calling app, such that
+                 * when OS_SocketConnect() returns, the socket is ready for use.
+                 *
+                 * To provide consistent behavior to calling apps, this does a select() to wait
+                 * for the socket to become writable, meaning that the remote side is connected.
+                 *
+                 * An important point here is that the calling app can control the timeout.  If the
+                 * normal/blocking connect() was used, the OS/IP stack controls the timeout, and it
+                 * can be quite long.
+                 */
+                operation = OS_STREAM_STATE_WRITABLE;
+                if (impl->selectable)
+                {
+                    return_code = OS_SelectSingle_Impl(token, &operation, timeout);
+                }
+                if (return_code == OS_SUCCESS)
+                {
+                    if ((operation & OS_STREAM_STATE_WRITABLE) == 0)
+                    {
+                        return_code = OS_ERROR_TIMEOUT;
+                    }
+                    else
+                    {
+                        /*
+                         * The SO_ERROR socket flag should also read back zero.
+                         * If not zero, something went wrong during connect
+                         */
+                        sockopt   = 0;
+                        slen      = sizeof(sockopt);
+                        os_status = getsockopt(impl->fd, SOL_SOCKET, SO_ERROR, &sockopt, &slen);
+                        if (os_status < 0 || sockopt != 0)
+                        {
+                            return_code = OS_ERROR;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Graceful shutdown of a stream socket
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketShutdown_Impl(const OS_object_token_t *token, OS_SocketShutdownMode_t Mode)
+{
+    OS_impl_file_internal_record_t *conn_impl;
+    int32                           return_code;
+    int                             how;
+
+    conn_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /* Note that when called via the shared layer,
+     * the "Mode" arg has already been checked/validated. */
+    if (Mode == OS_SocketShutdownMode_SHUT_READ)
+    {
+        how = SHUT_RD;
+    }
+    else if (Mode == OS_SocketShutdownMode_SHUT_WRITE)
+    {
+        how = SHUT_WR;
+    }
+    else
+    {
+        how = SHUT_RDWR;
+    }
+
+    if (shutdown(conn_impl->fd, how) == 0)
+    {
+        return_code = OS_SUCCESS;
+    }
+    else
+    {
+        return_code = OS_ERROR;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAccept_Impl(const OS_object_token_t *sock_token, const OS_object_token_t *conn_token,
+                           OS_SockAddr_t *Addr, int32 timeout)
+{
+    int32                           return_code;
+    uint32                          operation;
+    socklen_t                       addrlen;
+    OS_impl_file_internal_record_t *sock_impl;
+    OS_impl_file_internal_record_t *conn_impl;
+
+    sock_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *sock_token);
+    conn_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *conn_token);
+
+    operation = OS_STREAM_STATE_READABLE;
+    if (sock_impl->selectable)
+    {
+        return_code = OS_SelectSingle_Impl(sock_token, &operation, timeout);
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if ((operation & OS_STREAM_STATE_READABLE) == 0)
+        {
+            return_code = OS_ERROR_TIMEOUT;
+        }
+        else
+        {
+            addrlen       = Addr->ActualLength;
+            conn_impl->fd = accept(sock_impl->fd, (struct sockaddr *)&Addr->AddrData, &addrlen);
+            if (conn_impl->fd < 0)
+            {
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                Addr->ActualLength = addrlen;
+
+                OS_IMPL_SET_SOCKET_FLAGS(conn_token);
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketRecvFrom_Impl(const OS_object_token_t *token, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr,
+                             int32 timeout)
+{
+    int32                           return_code;
+    int                             os_result;
+    int                             waitflags;
+    uint32                          operation;
+    struct sockaddr *               sa;
+    socklen_t                       addrlen;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    if (RemoteAddr == NULL)
+    {
+        sa      = NULL;
+        addrlen = 0;
+    }
+    else
+    {
+        addrlen = OS_SOCKADDR_MAX_LEN;
+        sa      = (struct sockaddr *)&RemoteAddr->AddrData;
+    }
+
+    operation = OS_STREAM_STATE_READABLE;
+    /*
+     * If "O_NONBLOCK" flag is set then use select()
+     * Note this is the only way to get a correct timeout
+     */
+    if (impl->selectable)
+    {
+        waitflags   = MSG_DONTWAIT;
+        return_code = OS_SelectSingle_Impl(token, &operation, timeout);
+    }
+    else
+    {
+        if (timeout == 0)
+        {
+            waitflags = MSG_DONTWAIT;
+        }
+        else
+        {
+            /* note timeout will not be honored if >0 */
+            waitflags = 0;
+        }
+        return_code = OS_SUCCESS;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if ((operation & OS_STREAM_STATE_READABLE) == 0)
+        {
+            return_code = OS_ERROR_TIMEOUT;
+        }
+        else
+        {
+            os_result = recvfrom(impl->fd, buffer, buflen, waitflags, sa, &addrlen);
+            if (os_result < 0)
+            {
+                if (errno == EAGAIN || errno == EWOULDBLOCK)
+                {
+                    return_code = OS_QUEUE_EMPTY;
+                }
+                else
+                {
+                    OS_DEBUG("recvfrom: %s\n", strerror(errno));
+                    return_code = OS_ERROR;
+                }
+            }
+            else
+            {
+                return_code = os_result;
+
+                if (RemoteAddr != NULL)
+                {
+                    RemoteAddr->ActualLength = addrlen;
+                }
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketSendTo_Impl(const OS_object_token_t *token, const void *buffer, size_t buflen,
+                           const OS_SockAddr_t *RemoteAddr)
+{
+    int                             os_result;
+    socklen_t                       addrlen;
+    const struct sockaddr *         sa;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    sa = (const struct sockaddr *)&RemoteAddr->AddrData;
+    switch (sa->sa_family)
+    {
+        case AF_INET:
+            addrlen = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrlen = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            addrlen = 0;
+            break;
+    }
+
+    if (addrlen != RemoteAddr->ActualLength)
+    {
+        return OS_ERR_BAD_ADDRESS;
+    }
+
+    os_result = sendto(impl->fd, buffer, buflen, MSG_DONTWAIT, sa, addrlen);
+    if (os_result < 0)
+    {
+        OS_DEBUG("sendto: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+
+    return os_result;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketGetInfo_Impl(const OS_object_token_t *token, OS_socket_prop_t *sock_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrInit_Impl(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    sa_family_t             sa_family;
+    socklen_t               addrlen;
+    OS_SockAddr_Accessor_t *Accessor;
+
+    memset(Addr, 0, sizeof(OS_SockAddr_t));
+    Accessor = (OS_SockAddr_Accessor_t *)&Addr->AddrData;
+
+    switch (Domain)
+    {
+        case OS_SocketDomain_INET:
+            sa_family = AF_INET;
+            addrlen   = sizeof(struct sockaddr_in);
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case OS_SocketDomain_INET6:
+            sa_family = AF_INET6;
+            addrlen   = sizeof(struct sockaddr_in6);
+            break;
+#endif
+        default:
+            sa_family = 0;
+            addrlen   = 0;
+            break;
+    }
+
+    if (addrlen == 0)
+    {
+        return OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    Addr->ActualLength     = OSAL_SIZE_C(addrlen);
+    Accessor->sa.sa_family = sa_family;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrToString_Impl(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    const void *                  addrbuffer;
+    const OS_SockAddr_Accessor_t *Accessor;
+
+    Accessor = (const OS_SockAddr_Accessor_t *)&Addr->AddrData;
+
+    switch (Accessor->sa.sa_family)
+    {
+        case AF_INET:
+            addrbuffer = &Accessor->sa_in.sin_addr;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrbuffer = &Accessor->sa_in6.sin6_addr;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+            break;
+    }
+
+    if (inet_ntop(Accessor->sa.sa_family, addrbuffer, buffer, buflen) == NULL)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrFromString_Impl(OS_SockAddr_t *Addr, const char *string)
+{
+    void *                  addrbuffer;
+    OS_SockAddr_Accessor_t *Accessor;
+
+    Accessor = (OS_SockAddr_Accessor_t *)&Addr->AddrData;
+
+    switch (Accessor->sa.sa_family)
+    {
+        case AF_INET:
+            addrbuffer = &Accessor->sa_in.sin_addr;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            addrbuffer = &Accessor->sa_in6.sin6_addr;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+            break;
+    }
+
+    /* This function is defined as returning 1 on success, not 0 */
+    if (inet_pton(Accessor->sa.sa_family, string, addrbuffer) != 1)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrGetPort_Impl(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    in_port_t                     sa_port;
+    const OS_SockAddr_Accessor_t *Accessor;
+
+    Accessor = (const OS_SockAddr_Accessor_t *)&Addr->AddrData;
+
+    switch (Accessor->sa.sa_family)
+    {
+        case AF_INET:
+            sa_port = Accessor->sa_in.sin_port;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            sa_port = Accessor->sa_in6.sin6_port;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+            break;
+    }
+
+    *PortNum = ntohs(sa_port);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrSetPort_Impl(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    in_port_t               sa_port;
+    OS_SockAddr_Accessor_t *Accessor;
+
+    sa_port  = htons(PortNum);
+    Accessor = (OS_SockAddr_Accessor_t *)&Addr->AddrData;
+
+    switch (Accessor->sa.sa_family)
+    {
+        case AF_INET:
+            Accessor->sa_in.sin_port = sa_port;
+            break;
+#ifdef OS_NETWORK_SUPPORTS_IPV6
+        case AF_INET6:
+            Accessor->sa_in6.sin6_port = sa_port;
+            break;
+#endif
+        default:
+            return OS_ERR_BAD_ADDRESS;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-console-bsp.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-console-bsp.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose:
+ *      Uses the BSP-provided "console write" function
+ *      Note this only supports a single console
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include <string.h>
+#include <errno.h>
+
+#include "osapi-printf.h"
+
+#include "bsp-impl.h"
+
+#include "os-impl-console.h"
+#include "os-shared-printf.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                CONSOLE OUTPUT
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ConsoleOutput_Impl(const OS_object_token_t *token)
+{
+    size_t                        StartPos;
+    size_t                        EndPos;
+    size_t                        WriteSize;
+    OS_console_internal_record_t *console;
+
+    console  = OS_OBJECT_TABLE_GET(OS_console_table, *token);
+    StartPos = console->ReadPos;
+    EndPos   = console->WritePos;
+
+    OS_BSP_Lock_Impl();
+
+    while (StartPos != EndPos)
+    {
+        if (StartPos > EndPos)
+        {
+            /* handle wrap */
+            WriteSize = console->BufSize - StartPos;
+        }
+        else
+        {
+            WriteSize = EndPos - StartPos;
+        }
+
+        OS_BSP_ConsoleOutput_Impl(&console->BufBase[StartPos], WriteSize);
+
+        StartPos += WriteSize;
+        if (StartPos >= console->BufSize)
+        {
+            /* handle wrap */
+            StartPos = 0;
+        }
+    }
+
+    OS_BSP_Unlock_Impl();
+
+    /* Update the global with the new read location */
+    console->ReadPos = StartPos;
+}
+```
+
+### `os-impl-no-condvar.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-condvar.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file   os-impl-no-condvar.c
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: All functions return OS_ERR_NOT_IMPLEMENTED.
+ * This is used when network functionality is disabled by config.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include <osapi.h>
+#include "os-shared-condvar.h"
+
+int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarLock_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarSignal_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarWait_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarDelete_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-no-loader.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-loader.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains a module loader implementation for systems
+ * that do not use dynamic modules. It returns OS_ERR_NOT_IMPLEMENTED
+ * for all calls.
+ */
+
+#include "os-shared-module.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-no-network.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains the network implementation for
+ * systems where OSAL_CONFIG_INCLUDE_NETWORK is false or otherwise
+ * do not provide any network functions.
+ *
+ */
+
+#include "os-shared-network.h"
+
+/****************************************************************************************
+                                    Network API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-no-select.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-select.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file   os-impl-no-select.c
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: All functions return OS_ERR_NOT_IMPLEMENTED.
+ * This is used when network functionality is disabled by config.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include <osapi.h>
+#include "os-shared-select.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                LOCAL FUNCTIONS
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                SELECT API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-no-shell.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-shell.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * No shell implementation, returns OS_ERR_NOT_IMPLEMENTED for calls
+ */
+
+#include "os-shared-shell.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-no-sockets.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: All functions return OS_ERR_NOT_IMPLEMENTED.
+ * This is used when network functionality is disabled by config.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "osapi-sockets.h"
+#include "os-shared-sockets.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                    Socket API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketOpen_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketBindAddress_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketListen_Impl(const OS_object_token_t *token)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketConnect_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr, int32 timeout)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketShutdown_Impl(const OS_object_token_t *token, OS_SocketShutdownMode_t Mode)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAccept_Impl(const OS_object_token_t *sock_token, const OS_object_token_t *conn_token,
+                           OS_SockAddr_t *Addr, int32 timeout)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketRecvFrom_Impl(const OS_object_token_t *token, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr,
+                             int32 timeout)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketSendTo_Impl(const OS_object_token_t *token, const void *buffer, size_t buflen,
+                           const OS_SockAddr_t *RemoteAddr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketGetInfo_Impl(const OS_object_token_t *token, OS_socket_prop_t *sock_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrInit_Impl(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrToString_Impl(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrFromString_Impl(OS_SockAddr_t *Addr, const char *string)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrGetPort_Impl(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no network configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrSetPort_Impl(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-no-symtab.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-no-symtab.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains a symbol table implementation for systems
+ * that do not use dynamic symbol lookups. It returns OS_ERR_NOT_IMPLEMENTED
+ * for all calls.
+ */
+
+#include "osapi-module.h"
+#include "os-shared-module.h"
+
+/*----------------------------------------------------------------
+ * Implementation for no dynamic loader configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no dynamic loader configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ * Implementation for no dynamic loader configuration
+ *
+ * See prototype for argument/return detail
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t SizeLimit)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-posix-dirs.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-dirs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file Contains all of the api calls for manipulating files
+ * in a file system / C library that implements the UNIX-style file API
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   stat()
+ *   mkdir()
+ *   rmdir()
+ *   opendir()
+ *   readdir()
+ *   closedir()
+ *   rewinddir()
+ */
+#include <string.h>
+#include <errno.h>
+
+#include "os-impl-dirs.h"
+#include "os-shared-dir.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirCreate_Impl(const char *local_path, uint32 access)
+{
+    struct stat st;
+    int32       return_code;
+
+    if (mkdir(local_path, S_IFDIR | S_IRWXU | S_IRWXG | S_IRWXO) < 0)
+    {
+        return_code = OS_ERROR;
+
+        if (errno == EEXIST)
+        {
+            /* Success if already exists and is a directory */
+            if (stat(local_path, &st) == 0 && S_ISDIR(st.st_mode))
+            {
+                return_code = OS_SUCCESS;
+            }
+        }
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirOpen_Impl(const OS_object_token_t *token, const char *local_path)
+{
+    DIR *                          dp = opendir(local_path);
+    OS_impl_dir_internal_record_t *impl;
+
+    if (dp == NULL)
+    {
+        return OS_ERROR;
+    }
+
+    impl     = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+    impl->dp = dp;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirClose_Impl(const OS_object_token_t *token)
+{
+    OS_impl_dir_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+
+    closedir(impl->dp);
+    impl->dp = NULL;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirRead_Impl(const OS_object_token_t *token, os_dirent_t *dirent)
+{
+    struct dirent *                de;
+    OS_impl_dir_internal_record_t *impl;
+    impl = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+
+    /* NOTE - the readdir() call is non-reentrant ....
+     * However, this is performed while the global dir table lock is taken.
+     * Therefore this ensures that only one such call can occur at any given time.
+     *
+     * Static analysis tools may warn about this because they do not know
+     * this function is externally serialized via the global lock.
+     */
+    /* cppcheck-suppress readdirCalled */
+    /* cppcheck-suppress nonreentrantFunctionsreaddir */
+    de = readdir(impl->dp);
+    if (de == NULL)
+    {
+        return OS_ERROR;
+    }
+
+    strncpy(dirent->FileName, de->d_name, sizeof(dirent->FileName) - 1);
+    dirent->FileName[sizeof(dirent->FileName) - 1] = 0;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirRewind_Impl(const OS_object_token_t *token)
+{
+    OS_impl_dir_internal_record_t *impl;
+    impl = OS_OBJECT_TABLE_GET(OS_impl_dir_table, *token);
+    rewinddir(impl->dp);
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirRemove_Impl(const char *local_path)
+{
+    if (rmdir(local_path) < 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-posix-dl-loader.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-dl-loader.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains a module loader implementation for systems
+ * that implement a POSIX-style dynamic module loader.  This includes
+ * RTEMS even if built without its native POSIX API.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * typically this must include dlfcn.h and whatever else is required
+ * to get the prototypes of these functions:
+ *
+ *   dlopen()
+ *   dlclose()
+ *   dlsym()
+ *   dlerror()
+ */
+#include <string.h>
+#include <stdlib.h>
+
+#include "os-impl-loader.h"
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                    Module Loader API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    int32                             status = OS_ERROR;
+    int                               dl_mode;
+    OS_impl_module_internal_record_t *impl;
+    OS_module_internal_record_t *     module;
+
+    impl   = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+    module = OS_OBJECT_TABLE_GET(OS_module_table, *token);
+
+    /*
+     * RTLD_NOW should instruct dlopen() to resolve all the symbols in the
+     * module immediately, as opposed to waiting until they are used.
+     * The latter (lazy mode) is non-deterministic - a resolution error on
+     * a rarely-used symbol could cause a random failure far in the future.
+     */
+    dl_mode = RTLD_NOW;
+
+    if ((module->flags & OS_MODULE_FLAG_LOCAL_SYMBOLS) != 0)
+    {
+        /*
+         * Do not add the symbols in this module to the global symbol table.
+         * This mode helps prevent any unanticipated references into this
+         * module, which can in turn prevent unloading via dlclose().
+         */
+        dl_mode |= RTLD_LOCAL;
+    }
+    else
+    {
+        /*
+         * Default mode - add symbols to the global symbol table, so they
+         * will be available to resolve symbols in future module loads.
+         * However, any such references will prevent unloading of this
+         * module via dlclose().
+         */
+        dl_mode |= RTLD_GLOBAL;
+    }
+
+    dlerror();
+    impl->dl_handle = dlopen(translated_path, dl_mode);
+    if (impl->dl_handle != NULL)
+    {
+        status = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error loading shared library: %s\n", dlerror());
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    int32                             status = OS_ERROR;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    /*
+    ** Attempt to close/unload the module
+    */
+    dlerror();
+    if (dlclose(impl->dl_handle) == 0)
+    {
+        impl->dl_handle = NULL;
+        status          = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error unloading shared library: %s\n", dlerror());
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    /*
+     * Limiting strictly to POSIX-defined API means there is no defined
+     * method to get information about a module contents.
+     *
+     * The "dlinfo()" function might return some interesting information
+     * but this is actually a non-posix extension / platform-defined API.
+     *
+     * This returns success - although there is no information to add here,
+     * the parent/shared layer information is still valid.
+     */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-posix-dl-symtab.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-dl-symtab.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file contains a module loader implementation for systems
+ * that implement a POSIX-style dynamic module loader.  This includes
+ * RTEMS even if built without its native POSIX API.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * typically this must include dlfcn.h and whatever else is required
+ * to get the prototypes of these functions:
+ *
+ *   dlsym()
+ *   dlerror()
+ *
+ * In POSIX these functions are grouped with the loader (dl) library
+ */
+#include <string.h>
+#include <stdlib.h>
+
+#include "os-impl-loader.h"
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/*
+ * Determine what to pass in for the first parameter of dlsym()
+ *
+ * If the "os-impl-loader.h" header already defined this, then use that.
+ *
+ * Otherwise, check if the C library provides an "RTLD_DEFAULT" symbol -
+ * This symbol is not POSIX standard but many implementations do provide it.
+ *
+ * Lastly, if nothing else works, use NULL.  This is technically undefined
+ * behavior per POSIX, but most implementations do seem to interpret this
+ * as referring to the complete process (base executable + all loaded modules).
+ */
+#ifndef OSAL_DLSYM_DEFAULT_HANDLE
+#ifdef RTLD_DEFAULT
+#define OSAL_DLSYM_DEFAULT_HANDLE RTLD_DEFAULT
+#else
+#define OSAL_DLSYM_DEFAULT_HANDLE NULL
+#endif
+#endif
+
+/****************************************************************************************
+                                    Symbol table API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericSymbolLookup_Impl(void *dl_handle, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    const char *dlError; /*  Pointer to error string   */
+    void *      Function;
+    int32       status;
+
+    status = OS_ERROR;
+
+    /*
+     * call dlerror() to clear any prior error that might have occurred.
+     */
+    dlerror();
+    Function = dlsym(dl_handle, SymbolName);
+    dlError  = dlerror();
+
+    /*
+     * For the POSIX DL implementation, if the symbol does not exist
+     * then dlerror() is supposed to return non-null.  This is intended
+     * to differentiate between valid symbols which are actually 0/NULL
+     * and invalid symbols that do not exist.
+     *
+     * Some implementations do _not_ implement this detail, and dlerror()
+     * still returns NULL after looking up an invalid symbol name.
+     *
+     * In practice, this is expected to be used for looking up functions
+     * and as such all valid symbols should be non-NULL, so NULL is considered
+     * an error even if the C library doesn't consider this an error.
+     */
+    if (dlError != NULL)
+    {
+        OS_DEBUG("Error: %s: %s\n", SymbolName, dlError);
+    }
+    else if (Function == NULL)
+    {
+        /* technically not an error per POSIX, but in practice should not happen */
+        OS_DEBUG("Error: %s: dlsym() returned NULL\n", SymbolName);
+    }
+    else
+    {
+        status = OS_SUCCESS;
+    }
+
+    *SymbolAddress = (cpuaddr)Function;
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    int32            status;
+    int32            local_status;
+    OS_object_iter_t iter;
+
+    /* First search global table */
+    status = OS_GenericSymbolLookup_Impl(OSAL_DLSYM_DEFAULT_HANDLE, SymbolAddress, SymbolName);
+
+    /* If not found iterate through module local symbols and break if found */
+    if (status != OS_SUCCESS)
+    {
+        OS_ObjectIdIterateActive(OS_OBJECT_TYPE_OS_MODULE, &iter);
+        while (OS_ObjectIdIteratorGetNext(&iter))
+        {
+            local_status = OS_ModuleSymbolLookup_Impl(&iter.token, SymbolAddress, SymbolName);
+            if (local_status == OS_SUCCESS)
+            {
+                status = local_status;
+                break;
+            }
+        }
+        OS_ObjectIdIteratorDestroy(&iter);
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    int32                             status;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    status = OS_GenericSymbolLookup_Impl(impl->dl_handle, SymbolAddress, SymbolName);
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *  POSIX DL does not provide
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t SizeLimit)
+{
+    /*
+     * Limiting strictly to POSIX-defined API means there is no defined
+     * method to get iterate over the symbol table.
+     *
+     * Some C libraries do offer an extension to provide this function, so
+     * if this becomes a requirement on those platforms, this function
+     * might need to move.
+     *
+     * Currently this is not a widely used/needed feature so it will report
+     * unimplemented here.
+     */
+
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-posix-files.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-files.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file Contains all of the api calls for manipulating files
+ * in a file system / C library that implements the POSIX-style file API
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   open()
+ *   stat()
+ *   chmod()
+ *   remove()
+ *   rename()
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+#include <time.h>
+
+#include "os-impl-files.h"
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                 Named File API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileOpen_Impl(const OS_object_token_t *token, const char *local_path, int32 flags, int32 access_mode)
+{
+    int                             os_perm;
+    int                             os_mode;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /*
+    ** Check for a valid access mode
+    ** For creating a file, OS_READ_ONLY does not make sense
+    */
+    switch (access_mode)
+    {
+        case OS_WRITE_ONLY:
+            os_perm = O_WRONLY;
+            break;
+        case OS_READ_ONLY:
+            os_perm = O_RDONLY;
+            break;
+        case OS_READ_WRITE:
+            os_perm = O_RDWR;
+            break;
+        default:
+            return OS_ERROR;
+    }
+
+    if (flags & OS_FILE_FLAG_CREATE)
+    {
+        os_perm |= O_CREAT;
+    }
+    if (flags & OS_FILE_FLAG_TRUNCATE)
+    {
+        os_perm |= O_TRUNC;
+    }
+
+    os_perm |= OS_IMPL_REGULAR_FILE_FLAGS;
+
+    os_mode = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH;
+
+    impl->fd = open(local_path, os_perm, os_mode);
+
+    if (impl->fd < 0)
+    {
+        OS_DEBUG("open(%s): %s\n", local_path, strerror(errno));
+        return OS_ERROR;
+    }
+
+    /*
+     * If the flags included O_NONBLOCK, then
+     * enable the "select" call on this handle.
+     */
+    impl->selectable = ((os_perm & O_NONBLOCK) != 0);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileStat_Impl(const char *local_path, os_fstat_t *FileStats)
+{
+    struct stat     st;
+    mode_t          readbits;
+    mode_t          writebits;
+    mode_t          execbits;
+    struct timespec filetime;
+
+    if (stat(local_path, &st) < 0)
+    {
+        return OS_ERROR;
+    }
+
+    FileStats->FileSize = st.st_size;
+
+    /*
+     * NOTE: Traditional timestamps are only a whole number of seconds (time_t)
+     * POSIX.1-2008 expands this to have a full "struct timespec" with nanosecond
+     * resolution.
+     *
+     * GLIBC (and likely other C libraries that use similar feature selection)
+     * will expose this value based on _POSIX_C_SOURCE or _XOPEN_SOURCE minimum
+     * values.  Otherwise this just falls back to standard 1-second resolution
+     * available via the "st_mtime" member.
+     */
+#if (_POSIX_C_SOURCE >= 200809L) || (_XOPEN_SOURCE >= 700)
+    /*
+     * Better - use the full resolution (seconds + nanoseconds) as specified in POSIX.1-2008
+     */
+    filetime = st.st_mtim;
+#else
+    /*
+     * Fallback - every POSIX-compliant implementation must expose "st_mtime" field.
+     */
+    filetime.tv_sec  = st.st_mtime;
+    filetime.tv_nsec = 0;
+#endif
+
+    FileStats->FileTime = OS_TimeAssembleFromNanoseconds(filetime.tv_sec, filetime.tv_nsec);
+
+    /* note that the "fst_mode" member is already zeroed by the caller */
+    if (S_ISDIR(st.st_mode))
+    {
+        FileStats->FileModeBits |= OS_FILESTAT_MODE_DIR;
+    }
+
+    /* always check world bits */
+    readbits  = S_IROTH;
+    writebits = S_IWOTH;
+    execbits  = S_IXOTH;
+
+    if (OS_IMPL_SELF_EUID == st.st_uid)
+    {
+        /* we own the file so use user bits for simplified perms */
+        readbits |= S_IRUSR;
+        writebits |= S_IWUSR;
+        execbits |= S_IXUSR;
+    }
+
+    if (OS_IMPL_SELF_EGID == st.st_gid)
+    {
+        /* our group owns the file so use group bits for simplified perms */
+        readbits |= S_IRGRP;
+        writebits |= S_IWGRP;
+        execbits |= S_IXGRP;
+    }
+
+    if (st.st_mode & readbits)
+    {
+        FileStats->FileModeBits |= OS_FILESTAT_MODE_READ;
+    }
+    if (st.st_mode & writebits)
+    {
+        FileStats->FileModeBits |= OS_FILESTAT_MODE_WRITE;
+    }
+    if (st.st_mode & execbits)
+    {
+        FileStats->FileModeBits |= OS_FILESTAT_MODE_EXEC;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileChmod_Impl(const char *local_path, uint32 access_mode)
+{
+    mode_t      readbits;
+    mode_t      writebits;
+    struct stat st;
+    int         fd;
+    int32       status;
+
+    /* Open file to avoid filename race potential */
+    fd = open(local_path, O_RDONLY, 0);
+    if (fd < 0)
+    {
+        fd = open(local_path, O_WRONLY, 0);
+        if (fd < 0)
+        {
+            OS_DEBUG("open(%s): %s (%d)\n", local_path, strerror(errno), errno);
+            return OS_ERROR;
+        }
+    }
+
+    /*
+     * NOTE: After this point, execution must proceed to the end of this routine
+     * so that the "fd" opened above can be properly closed.
+     */
+
+    /*
+     * In order to preserve any OTHER mode bits,
+     * first stat() the file and then modify the st_mode
+     * to match the desired access level.
+     *
+     * In particular, this should preserve the execute bit,
+     * which is generally not part of the OSAL API, but
+     * is important for the underlying OS.
+     */
+    if (fstat(fd, &st) < 0)
+    {
+        OS_DEBUG("fstat(%s): %s (%d)\n", local_path, strerror(errno), errno);
+        status = OS_ERROR;
+    }
+    else
+    {
+        /* always check world bits */
+        readbits  = S_IROTH;
+        writebits = S_IWOTH;
+
+        if (OS_IMPL_SELF_EUID == st.st_uid)
+        {
+            /* we own the file so use user bits */
+            readbits |= S_IRUSR;
+            writebits |= S_IWUSR;
+        }
+
+        if (OS_IMPL_SELF_EGID == st.st_gid)
+        {
+            /* our group owns the file so use group bits */
+            readbits |= S_IRGRP;
+            writebits |= S_IWGRP;
+        }
+
+        if (access_mode == OS_WRITE_ONLY || access_mode == OS_READ_WRITE)
+        {
+            /* set all "write" mode bits */
+            st.st_mode |= writebits;
+        }
+        else
+        {
+            /* clear all "write" mode bits */
+            st.st_mode &= ~writebits;
+        }
+
+        if (access_mode == OS_READ_ONLY || access_mode == OS_READ_WRITE)
+        {
+            /* set all "read" mode bits */
+            st.st_mode |= readbits;
+        }
+        else
+        {
+            /* clear all "read" mode bits */
+            st.st_mode &= ~readbits;
+        }
+
+        /* finally, write the modified mode back to the file */
+        if (fchmod(fd, st.st_mode) < 0)
+        {
+            /*
+             * These particular errnos generally indicate that the
+             * underlying filesystem does not support chmod()
+             *
+             * This is often the case for FAT / DOSFS filesystems
+             * which do not have UNIX-style permissions, or (in the
+             * case of EROFS) if the filesystem is mounted read-only.
+             */
+            if (errno == ENOTSUP || errno == ENOSYS || errno == EROFS)
+            {
+                status = OS_ERR_NOT_IMPLEMENTED;
+            }
+            else
+            {
+                OS_DEBUG("fchmod(%s): %s (%d)\n", local_path, strerror(errno), errno);
+                status = OS_ERROR;
+            }
+        }
+        else
+        {
+            status = OS_SUCCESS;
+        }
+    }
+
+    close(fd);
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileRemove_Impl(const char *local_path)
+{
+    if (remove(local_path) < 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileRename_Impl(const char *old_path, const char *new_path)
+{
+    if (rename(old_path, new_path) < 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-posix-gettime.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-gettime.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file contains implementation for OS_GetLocalTime() and OS_SetLocalTime()
+ * that map to the C library clock_gettime() and clock_settime() calls.
+ * This should be usable on any OS that supports those standard calls.
+ * The OS-specific code must \#include the correct headers that define the
+ * prototypes for these functions before including this implementation file.
+ *
+ * NOTE: The OS-specific header must also define which POSIX clock ID to use -
+ * this specifies the clockid_t parameter to use with clock_gettime().  In
+ * most cases this should be CLOCK_REALTIME to allow the clock to be set, and
+ * so the application will also see any manual/administrative clock changes.
+ *
+ * The clock ID is selected by defining the #OSAL_GETTIME_SOURCE_CLOCK macro.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must provide the prototypes of these functions:
+ *
+ *   clock_gettime()
+ *   clock_settime()
+ *
+ * and the "struct timespec" definition
+ */
+#include <string.h>
+#include <errno.h>
+
+#include "osapi-clock.h"
+#include "os-impl-gettime.h"
+#include "os-shared-clock.h"
+
+/****************************************************************************************
+                                FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetLocalTime_Impl(OS_time_t *time_struct)
+{
+    int             Status;
+    int32           ReturnCode;
+    struct timespec TimeSp;
+
+    Status = clock_gettime(OSAL_GETTIME_SOURCE_CLOCK, &TimeSp);
+
+    if (Status == 0)
+    {
+        *time_struct = OS_TimeAssembleFromNanoseconds(TimeSp.tv_sec, TimeSp.tv_nsec);
+        ReturnCode   = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error calling clock_gettime: %s\n", strerror(errno));
+        ReturnCode = OS_ERROR;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct)
+{
+    int             Status;
+    int32           ReturnCode;
+    struct timespec TimeSp;
+
+    TimeSp.tv_sec  = OS_TimeGetTotalSeconds(*time_struct);
+    TimeSp.tv_nsec = OS_TimeGetNanosecondsPart(*time_struct);
+
+    Status = clock_settime(OSAL_GETTIME_SOURCE_CLOCK, &TimeSp);
+
+    if (Status == 0)
+    {
+        ReturnCode = OS_SUCCESS;
+    }
+    else
+    {
+        ReturnCode = OS_ERROR;
+    }
+
+    return ReturnCode;
+}
+```
+
+### `os-impl-posix-io.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-io.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * This file contains generic calls for manipulating filehandles
+ * in a file system / C library that implements the UNIX-style file API
+ *
+ * These generic ops may apply to regular files, sockets, pipes, or
+ * special devices, depending on the OS in use.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   read()
+ *   write()
+ *   close()
+ */
+#include <string.h>
+#include <errno.h>
+
+#include "os-impl-io.h"
+#include "os-shared-file.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+/* some OS libraries (e.g. VxWorks) do not declare the API to be const-correct
+ * It can still use this generic implementation but the call to write() must be
+ * cast to a void* to avoid a warning.  The includer can define this if needed.
+ * If not defined, assume no cast is needed (fine for anything POSIX-compliant).
+ */
+#ifndef GENERIC_IO_CONST_DATA_CAST
+#define GENERIC_IO_CONST_DATA_CAST
+#endif
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericClose_Impl(const OS_object_token_t *token)
+{
+    int                             result;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    result = close(impl->fd);
+    if (result < 0)
+    {
+        /*
+         * close() can technically fail for various reasons, but
+         * there isn't much recourse if this call fails.  Just log
+         * the failure for debugging.
+         *
+         * POSIX also does not specify the state of the filehandle
+         * after a close() with an error.
+         *
+         * At least in  Linux/glibc the filehandle is always closed
+         * in the kernel and should not be used again or re-closed.
+         */
+        OS_DEBUG("close: %s\n", strerror(errno));
+    }
+    impl->fd = -1;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericSeek_Impl(const OS_object_token_t *token, int32 offset, uint32 whence)
+{
+    int                             where;
+    off_t                           os_result;
+    int32                           retval;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    switch (whence)
+    {
+        case OS_SEEK_SET:
+            where = SEEK_SET;
+            break;
+        case OS_SEEK_CUR:
+            where = SEEK_CUR;
+            break;
+        case OS_SEEK_END:
+            where = SEEK_END;
+            break;
+        default:
+            return OS_ERROR;
+    }
+
+    os_result = lseek(impl->fd, (off_t)offset, where);
+    if (os_result == (off_t)-1)
+    {
+        if (errno == ESPIPE)
+        {
+            /*
+             * this means the user tried to seek on a pipe, socket,
+             * or other fifo-like handle that doesn't support seeking.
+             *
+             * Use a different error code to differentiate from an
+             * error involving a bad whence/offset
+             */
+            retval = OS_ERR_OPERATION_NOT_SUPPORTED;
+        }
+        else
+        {
+            /*
+             * Most likely the "whence" and/or "offset" combo was not valid.
+             */
+            OS_DEBUG("lseek: %s\n", strerror(errno));
+            retval = OS_ERROR;
+        }
+    }
+    else
+    {
+        /*
+         * convert value to int32 type for returning to caller.
+         * Note that this could potentially overflow an int32
+         * for a large file seek.
+         */
+        retval = (int32)os_result;
+    }
+
+    return retval;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericRead_Impl(const OS_object_token_t *token, void *buffer, size_t nbytes, int32 timeout)
+{
+    int32                           return_code;
+    ssize_t                         os_result;
+    uint32                          operation;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    return_code = OS_SUCCESS;
+
+    if (nbytes > 0)
+    {
+        operation = OS_STREAM_STATE_READABLE;
+
+        /*
+         * If filehandle is set with O_NONBLOCK, then must call select() here.
+         *
+         * The "selectable" field should be set false for those file handles
+         * which the underlying OS does not support select() on.
+         *
+         * Note that a timeout will not work unless selectable is true.
+         */
+        if (impl->selectable)
+        {
+            return_code = OS_SelectSingle_Impl(token, &operation, timeout);
+        }
+
+        if (return_code == OS_SUCCESS && (operation & OS_STREAM_STATE_READABLE) != 0)
+        {
+            os_result = read(impl->fd, buffer, nbytes);
+            if (os_result < 0)
+            {
+                OS_DEBUG("read: %s\n", strerror(errno));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                /* type conversion from ssize_t to int32 for return */
+                return_code = (int32)os_result;
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericWrite_Impl(const OS_object_token_t *token, const void *buffer, size_t nbytes, int32 timeout)
+{
+    int32                           return_code;
+    ssize_t                         os_result;
+    uint32                          operation;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    return_code = OS_SUCCESS;
+
+    if (nbytes > 0)
+    {
+        operation = OS_STREAM_STATE_WRITABLE;
+
+        /*
+         * If filehandle is set with O_NONBLOCK, then must call select() here.
+         *
+         * The "selectable" field should be set false for those file handles
+         * which the underlying OS does not support select() on.
+         *
+         * Note that a timeout will not work unless selectable is true.
+         */
+        if (impl->selectable)
+        {
+            return_code = OS_SelectSingle_Impl(token, &operation, timeout);
+        }
+
+        if (return_code == OS_SUCCESS && (operation & OS_STREAM_STATE_WRITABLE) != 0)
+        {
+            /* on some system libraries for which the write() argument is not
+             * qualified correctly, it needs to be case to a void* here */
+            os_result = write(impl->fd, GENERIC_IO_CONST_DATA_CAST buffer, nbytes);
+            if (os_result < 0)
+            {
+                OS_DEBUG("write: %s\n", strerror(errno));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                /* type conversion from ssize_t to int32 for return */
+                return_code = (int32)os_result;
+            }
+        }
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-posix-network.c`
+
+**경로:** `fsw/osal/src/os/portable/os-impl-posix-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains the network functionality for
+ * systems which implement the POSIX-defined network hostname/id functions.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *  gethostname()
+ *  gethostid()
+ *
+ * Both of these routines should conform to X/Open 5 definition.
+ */
+#include <string.h>
+#include <errno.h>
+
+#include "os-impl-network.h"
+#include "os-shared-network.h"
+
+/****************************************************************************************
+                                    Network API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    int32 return_code;
+
+    if (gethostname(host_name, name_len) < 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        /*
+         * posix does not say that the name is always
+         * null terminated, so its worthwhile to ensure it
+         */
+        host_name[name_len - 1] = 0;
+        return_code             = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    /* gethostid() has no failure modes */
+    *IdBuf = gethostid();
+    return OS_SUCCESS;
+}
+```
+
+### `README.txt`
+
+**경로:** `fsw/osal/src/os/portable/README.txt`
+
+
+```text
+Files in this directory contain an implementation that adheres to a defined API
+that is applicable to more than one of the supported OS's, but not all.  For
+example, the BSD-style sockets API is implemented in VxWorks, RTEMS, and Linux.
+Therefore it is beneficial to put the code in here and let each implementation
+selectively include this rather than reinventing the wheel.
+
+```

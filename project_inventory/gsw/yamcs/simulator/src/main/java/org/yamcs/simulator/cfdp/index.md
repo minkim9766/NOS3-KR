@@ -3,18 +3,667 @@
 
 **경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CfdpCcsdsPacket.java`
 
-file--CfdpCcsdsPacket.java
-file--CfdpReceiver.java
-file--CfdpSender.java
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/CfdpCcsdsPacket.java`
+
+
+```java
+package org.yamcs.simulator.cfdp;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.simulator.SimulatorCcsdsPacket;
+
+public class CfdpCcsdsPacket extends SimulatorCcsdsPacket {
+    public static final int APID = 2045;
+    
+    public CfdpCcsdsPacket(int pduLength) {
+        super(ByteBuffer.allocate(6+pduLength));
+        setHeader(APID, 1, 0, 3, getSeq(APID));
+    }
+    
+    public CfdpCcsdsPacket(byte[] packet) {
+        super(packet);
+    }
+
+    @Override
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(6);
+        return bb.slice();
+    }
+
+    @Override
+    protected void fillChecksum() {
+    }
+}
 ```
 
-## 항목
+### `CfdpReceiver.java`
 
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/CfdpCcsdsPacket.java`](file--CfdpCcsdsPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/CfdpReceiver.java`](file--CfdpReceiver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/CfdpSender.java`](file--CfdpSender.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/CfdpReceiver.java`
+
+
+```java
+package org.yamcs.simulator.cfdp;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import com.csvreader.CsvWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.cfdp.DataFile;
+import org.yamcs.cfdp.FileDirective;
+import org.yamcs.cfdp.pdu.*;
+import org.yamcs.simulator.AbstractSimulator;
+import org.yamcs.cfdp.pdu.AckPacket.FileDirectiveSubtypeCode;
+import org.yamcs.cfdp.pdu.AckPacket.TransactionStatus;
+import org.yamcs.cfdp.pdu.FinishedPacket.FileStatus;
+import org.yamcs.utils.StringConverter;
+
+/**
+ * Receives CFDP files.
+ * <p>
+ * It doesn't store them but just print a message at the end of the reception.
+ * 
+ * @author nm
+ *
+ */
+public class CfdpReceiver {
+    private static final Logger log = LoggerFactory.getLogger(CfdpReceiver.class);
+    final AbstractSimulator simulator;
+    final File dataDir;
+    private DataFile cfdpDataFile = null;
+    List<SegmentRequest> missingSegments;
+    MetadataPacket metadata;
+    private SegmentRequest lastRequestedSegment;
+
+    public CfdpReceiver(AbstractSimulator simulator, File dataDir) {
+        this.simulator = simulator;
+        this.dataDir = dataDir;
+    }
+
+    public void processCfdp(ByteBuffer buffer) {
+        CfdpPacket packet = CfdpPacket.getCFDPPacket(buffer);
+        if (packet.getHeader().isFileDirective()) {
+            processFileDirective(packet);
+        } else {
+            processFileData((FileDataPacket) packet);
+        }
+    }
+
+    private void processFileDirective(CfdpPacket packet) {
+        switch (((FileDirective) packet).getFileDirectiveCode()) {
+        case EOF:
+            // 1 in 2 chance that we did not receive the EOF packet
+            if (Math.random() > 0.5) {
+                log.warn("EOF CFDP packet received and dropped (data loss simulation)");
+                break;
+            }
+            processEofPacket((EofPacket) packet);
+            break;
+        case FINISHED:
+            log.info("Finished CFDP packet received");
+            break;
+        case ACK:
+            log.info("ACK CFDP packet received");
+            break;
+        case METADATA:
+            processMetadataPacket((MetadataPacket) packet);
+            break;
+        case NAK:
+            log.info("NAK CFDP packet received");
+            break;
+        case PROMPT:
+            log.info("Prompt CFDP packet received");
+            break;
+        case KEEP_ALIVE:
+            log.info("KeepAlive CFDP packet received");
+            break;
+        default:
+            log.error("CFDP packet of unknown type received");
+            break;
+        }
+    }
+
+    private void processMetadataPacket(MetadataPacket packet) {
+        metadata = packet;
+        log.info("Metadata CFDP packet received");
+        long packetLength = metadata.getFileLength();
+        cfdpDataFile = new DataFile(packetLength);
+        missingSegments = null;
+
+        ProxyPutRequest proxyPutRequest = null;
+        ProxyTransmissionMode proxyTransmissionMode = null;
+        ProxyClosureRequest proxyClosureRequest = null;
+
+        if (metadata.getOptions() != null) {
+            for (TLV option : metadata.getOptions()) {
+                if (option instanceof ProxyPutRequest && proxyPutRequest == null) {
+                    proxyPutRequest = (ProxyPutRequest) option;
+                } else if (option instanceof ProxyTransmissionMode && proxyTransmissionMode == null) {
+                    proxyTransmissionMode = (ProxyTransmissionMode) option;
+                } else if (option instanceof ProxyClosureRequest && proxyClosureRequest == null) {
+                    proxyClosureRequest = (ProxyClosureRequest) option;
+                } else if (option instanceof DirectoryListingRequest) {
+                    sendDirectoryListingResponse(packet.getHeader(), (DirectoryListingRequest) option);
+                } else if (option instanceof ReservedMessageToUser) {
+                    log.warn("Ignoring reserved message to user " + ((ReservedMessageToUser) option).getMessageType()
+                            + ":" + StringConverter.arrayToHexString(((ReservedMessageToUser) option).getContent()));
+                } else {
+                    log.warn("Ignoring metadata option TLV: " + StringConverter.arrayToHexString(option.getValue()));
+                }
+            }
+        }
+
+        if (proxyPutRequest != null) {
+            executeProxyPutRequest(packet.getHeader(), proxyPutRequest, proxyTransmissionMode, proxyClosureRequest);
+        } else {
+            if (proxyTransmissionMode != null)
+                log.warn("Ignoring Proxy Transmission Mode, no Proxy Put Request specified");
+            if (proxyClosureRequest != null)
+                log.warn("Ignoring Proxy Closure Request, no Proxy Put Request specified");
+        }
+    }
+
+    private void sendDirectoryListingResponse(CfdpHeader header, DirectoryListingRequest request) {
+        File directory = new File(dataDir, request.getDirectoryName());
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return;
+        }
+
+        try {
+            File directoryListing = File.createTempFile("YamcsSim-dirlist-", ".tmp");
+            directoryListing.deleteOnExit();
+
+            CsvWriter writer = new CsvWriter(directoryListing.getPath());
+            for (File file : files) {
+                writer.writeRecord(new String[] { file.getName(), String.valueOf(file.isDirectory()),
+                        String.valueOf(file.length()), String.valueOf(file.lastModified()) });
+            }
+            writer.close();
+
+            log.info("Sending DirectoryListingResponse following request: " + request);
+            CfdpSender sender = new CfdpSender(simulator, (int) header.getSourceId(), directoryListing,
+                    request.getDirectoryFileName(),
+                    List.of(new DirectoryListingResponse(DirectoryListingResponse.ListingResponseCode.SUCCESSFUL,
+                            request.getDirectoryName(), request.getDirectoryFileName()),
+                            new OriginatingTransactionId(header.getSourceId(), header.getSequenceNumber())),
+                    new int[0]);
+            simulator.setCfdpSender(sender);
+            sender.addEndCallback(directoryListing::delete);
+            sender.start();
+            // TODO: according response
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void executeProxyPutRequest(CfdpHeader header, ProxyPutRequest proxyPutRequest,
+            ProxyTransmissionMode proxyTransmissionMode, ProxyClosureRequest proxyClosureRequest) {
+        if (proxyTransmissionMode != null
+                && proxyTransmissionMode.getTransmissionMode() == CfdpPacket.TransmissionMode.UNACKNOWLEDGED) {
+            log.warn(
+                    "Unacknowledged transmission requested but not implemented in simulator, defaulting to acknowledged");
+        }
+        if (proxyClosureRequest != null && proxyClosureRequest.isClosureRequested()) {
+            log.warn("Closure requested but not implemented in simulator, defaulting to acknowledged transmission");
+        }
+
+        try {
+            // WARNING: Only sends the file with the proxy put request, does not respond with correct messages
+            log.info("Starting upload following Proxy Put Request: " + proxyPutRequest);
+            CfdpSender sender = new CfdpSender(simulator, (int) proxyPutRequest.getDestinationEntityId(),
+                    new File(dataDir, proxyPutRequest.getSourceFileName()), proxyPutRequest.getDestinationFileName(),
+                    List.of(new OriginatingTransactionId(header.getSourceId(), header.getSequenceNumber())),
+                    new int[0]);
+            simulator.setCfdpSender(sender);
+            // TODO: send ProxyPutResponse afterwards // sender.addEndCallbacks();
+            sender.start();
+        } catch (FileNotFoundException e) {
+            log.error("File '" + proxyPutRequest.getSourceFileName() + "' does not exist!");
+        } catch (ClassCastException e) {
+            log.error("Failed to cast " + simulator + " to ColSimulator");
+        }
+    }
+
+    private void processEofPacket(EofPacket packet) {
+        ConditionCode code = packet.getConditionCode();
+        log.info("EOF CFDP packet received code={}, sending back ACK (EOF) packet", code);
+
+        CfdpHeader header = new CfdpHeader(
+                true,
+                true,
+                false,
+                false,
+                packet.getHeader().getEntityIdLength(),
+                packet.getHeader().getSequenceNumberLength(),
+                packet.getHeader().getSourceId(),
+                packet.getHeader().getDestinationId(),
+                packet.getHeader().getSequenceNumber());
+        AckPacket EofAck = new AckPacket(
+                FileDirectiveCode.EOF,
+                FileDirectiveSubtypeCode.FINISHED_BY_WAYPOINT_OR_OTHER,
+                code,
+                TransactionStatus.ACTIVE,
+                header);
+        transmitCfdp(EofAck);
+        if (code != ConditionCode.NO_ERROR) {
+            return;
+        }
+        log.info("ACK (EOF) sent, delaying a bit and sending Finished packet");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // checking the file completeness;
+        missingSegments = cfdpDataFile.getMissingChunks();
+        if (missingSegments.isEmpty()) {
+            if (metadata.getFileLength() > 0 || header.isLargeFile()) {
+                saveFile();
+            }
+
+            log.info("Sending back finished PDU");
+            header = new CfdpHeader(
+                    true, // file directive
+                    true, // towards sender
+                    false, // not acknowledged
+                    false, // no CRC
+                    packet.getHeader().getEntityIdLength(),
+                    packet.getHeader().getSequenceNumberLength(),
+                    packet.getHeader().getSourceId(),
+                    packet.getHeader().getDestinationId(),
+                    packet.getHeader().getSequenceNumber());
+
+            FinishedPacket finished = new FinishedPacket(ConditionCode.NO_ERROR,
+                    true, // data complete
+                    FileStatus.SUCCESSFUL_RETENTION,
+                    null,
+                    header);
+
+            transmitCfdp(finished);
+        } else {
+            sendMissingSegments(packet.getHeader(), missingSegments);
+        }
+    }
+
+    private void sendMissingSegments(CfdpHeader headerTemplate, List<SegmentRequest> missingSegments) {
+        CfdpHeader header = new CfdpHeader(
+                true, // file directive
+                true, // towards sender
+                false, // not acknowledged
+                false, // no CRC
+                headerTemplate.getEntityIdLength(),
+                headerTemplate.getSequenceNumberLength(),
+                headerTemplate.getSourceId(),
+                headerTemplate.getDestinationId(),
+                headerTemplate.getSequenceNumber());
+
+        int maxNumSeg = NakPacket.maxNumSegments(simulator.maxTmDataSize() - header.getLength());
+        if (missingSegments.size() > maxNumSeg) {
+            missingSegments = missingSegments.subList(0, maxNumSeg);
+        }
+
+        NakPacket nak = new NakPacket(
+                missingSegments.get(0).getSegmentStart(),
+                missingSegments.get(missingSegments.size() - 1).getSegmentEnd(),
+                missingSegments,
+                header);
+        lastRequestedSegment = missingSegments.get(missingSegments.size() - 1);
+
+        log.info("File not complete, sending NAK for {} segments covering {} - {} ", missingSegments.size(),
+                nak.getScopeStart(), nak.getScopeEnd());
+        transmitCfdp(nak);
+    }
+
+    private void saveFile() {
+        try {
+            File f = new File(dataDir, sanitize(metadata.getDestinationFilename()));
+            try (FileOutputStream fw = new FileOutputStream(f)) {
+                fw.write(cfdpDataFile.getData());
+                log.info("CFDP file saved in {}", f.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    String sanitize(String filename) {
+        return filename.replace("/", "_");
+    }
+
+    private void processFileData(FileDataPacket packet) {
+        if (missingSegments == null || missingSegments.isEmpty()) {
+            // we're not in "resending mode"
+            // 1 in 5 chance to 'lose' the packet
+            if (Math.random() > 0.8) {
+                log.warn("Received and dropped (data loss simulation) {}", packet);
+            } else {
+                log.info("Received {}", packet);
+                cfdpDataFile.addSegment(packet);
+            }
+        } else {
+            // we're in resending mode, no more data loss
+            cfdpDataFile.addSegment(packet);
+            missingSegments = cfdpDataFile.getMissingChunks();
+            log.info("Received missing data: {} still missing: {}; "
+                    + "recoveredSegments: {}, lastNumMissingSegmentsSent: {}",
+                    packet, missingSegments.size());
+
+            if (missingSegments.isEmpty()) {
+                saveFile();
+
+                CfdpHeader header = new CfdpHeader(
+                        true, // file directive
+                        true, // towards sender
+                        false, // not acknowledged
+                        false, // no CRC
+                        packet.getHeader().getEntityIdLength(),
+                        packet.getHeader().getSequenceNumberLength(),
+                        packet.getHeader().getSourceId(),
+                        packet.getHeader().getDestinationId(),
+                        packet.getHeader().getSequenceNumber());
+
+                FinishedPacket finished = new FinishedPacket(
+                        ConditionCode.NO_ERROR,
+                        true, // data complete
+                        FileStatus.SUCCESSFUL_RETENTION,
+                        null,
+                        header);
+
+                transmitCfdp(finished);
+            } else if (packet.getOffset() >= lastRequestedSegment.getSegmentStart()) {
+                sendMissingSegments(packet.getHeader(), missingSegments);
+            }
+        }
+
+    }
+
+    protected void transmitCfdp(CfdpPacket packet) {
+        simulator.transmitCfdp(packet);
+    }
+}
+```
+
+### `CfdpSender.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/CfdpSender.java`
+
+
+```java
+package org.yamcs.simulator.cfdp;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.cfdp.ChecksumCalculator;
+import org.yamcs.cfdp.ChecksumType;
+import org.yamcs.cfdp.pdu.*;
+import org.yamcs.cfdp.pdu.AckPacket.FileDirectiveSubtypeCode;
+import org.yamcs.cfdp.pdu.AckPacket.TransactionStatus;
+import org.yamcs.simulator.AbstractSimulator;
+
+public class CfdpSender {
+    final static int PDU_SIZE = 1000;
+    final static int ENTITY_ID_LENGTH = 1;
+    final static int SEQ_NR_LENGTH = 4;
+    final static int EOF_ACK_LIMIT = 5;
+
+    private static final Logger log = LoggerFactory.getLogger(CfdpReceiver.class);
+    static AtomicInteger sequenceNumberGenerator = new AtomicInteger();
+
+    final AbstractSimulator simulator;
+
+    File file;
+    static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    boolean hasToSendMetadata;
+    boolean dataFinished = false;
+    ArrayDeque<DataToResend> resendQueue = new ArrayDeque<>();
+
+    private ScheduledFuture<?> dataSenderFuture, eofSenderFuture;
+    private RandomAccessFile raf;
+    private int fileSize;
+    CfdpHeader directiveHeader;
+    final CfdpTransactionId cfdpTransactionId;
+    long myEntityId = 5;
+    long dataOffset = 0;
+    long checksum = 0;
+
+    private CfdpHeader dataHeader;
+    int eofAckCount = 0;
+
+    private String destinationFileName;
+    private List<TLV> metadataOptions;
+    // allow to simulate packet loss by skipping some pdus
+    int[] skippedPdus;
+    int skipIdx = 0;
+    int pduCount = 0;
+
+    private List<Runnable> endCallbacks = new ArrayList<>();
+
+    public CfdpSender(AbstractSimulator simulator, int destinationId, File file, String destinationFileName,
+            List<TLV> metadataOptions, int[] skippedPdus)
+            throws FileNotFoundException {
+        this.simulator = simulator;
+        this.file = file;
+        this.destinationFileName = destinationFileName;
+        this.metadataOptions = metadataOptions;
+        this.skippedPdus = skippedPdus;
+        this.raf = new RandomAccessFile(file, "r");
+        if (file.length() > Integer.MAX_VALUE) {
+            throw new UnsupportedOperationException("Large files not supported");
+        }
+        this.fileSize = (int) file.length();
+        this.cfdpTransactionId = new CfdpTransactionId(myEntityId, sequenceNumberGenerator.getAndIncrement());
+        directiveHeader = new CfdpHeader(
+                true, // it's a file directive
+                false, // it's sent towards the receiver
+                true, // acknowledged
+                false, // no CRC
+                ENTITY_ID_LENGTH, // entityIdLength
+                SEQ_NR_LENGTH, // seq nr length
+                cfdpTransactionId.getInitiatorEntity(), // my Entity Id
+                destinationId, // the id of the target
+                cfdpTransactionId.getSequenceNumber());
+
+        dataHeader = new CfdpHeader(
+                false, // it's file data
+                false, // it's sent towards the receiver
+                true, // acknowledged
+                false, // no CRC
+                ENTITY_ID_LENGTH,
+                SEQ_NR_LENGTH,
+                cfdpTransactionId.getInitiatorEntity(), // my Entity Id
+                destinationId, // the id of the target
+                cfdpTransactionId.getSequenceNumber());
+
+    }
+
+    public void start() {
+        hasToSendMetadata = true;
+        dataSenderFuture = executor.scheduleAtFixedRate(() -> {
+            if (hasToSendMetadata) {
+                sendMetadata();
+                hasToSendMetadata = false;
+            } else if (!dataFinished) {
+                sendData();
+            } else if (!resendQueue.isEmpty()) {
+                resendData();
+            }
+        }, 0, 100, TimeUnit.MILLISECONDS);
+
+    }
+
+    public void processCfdp(ByteBuffer buffer) {
+        CfdpPacket packet = CfdpPacket.getCFDPPacket(buffer);
+        executor.submit(() -> processIncomingPacket(packet));
+    }
+
+    private void processIncomingPacket(CfdpPacket packet) {
+        if (packet instanceof NakPacket) {
+            NakPacket nak = (NakPacket) packet;
+            resendQueue.clear();
+            for (SegmentRequest sr : nak.getSegmentRequests()) {
+                if (sr.getSegmentStart() == 0 && sr.getSegmentEnd() == 0) {
+                    hasToSendMetadata = true;
+                } else {
+                    for (long offset = sr.getSegmentStart(); offset < sr.getSegmentEnd(); offset += PDU_SIZE) {
+                        long end = Math.min(offset + PDU_SIZE, sr.getSegmentEnd());
+                        resendQueue.add(new DataToResend(offset, end));
+                    }
+                }
+            }
+        } else if (packet instanceof AckPacket) {
+            if (eofSenderFuture == null) {
+                log.error("EOF ACK received but EOF not sent");
+            } else {
+                log.info("CFDP received EOF ACK");
+                eofSenderFuture.cancel(true);
+            }
+        } else if (packet instanceof FinishedPacket) {
+            processFinishedPacket((FinishedPacket) packet);
+        }
+    }
+
+    private void sendData() {
+        long end = Math.min(dataOffset + PDU_SIZE, fileSize);
+        sendFileData(dataOffset, end, true);
+        dataOffset = end;
+        if (dataOffset == fileSize) {
+            eofSenderFuture = executor.scheduleAtFixedRate(() -> sendEof(), 0, 2000, TimeUnit.MILLISECONDS);
+            dataFinished = true;
+        }
+    }
+
+    private void resendData() {
+        DataToResend dtr = resendQueue.poll();
+        if (dtr == null) {
+            return;
+        }
+        sendFileData(dtr.start, dtr.end, false);
+    }
+
+    private void sendEof() {
+        eofAckCount++;
+        if (eofAckCount >= EOF_ACK_LIMIT) {
+            log.warn("EOF_ACK_LIMIT reached");
+            eofSenderFuture.cancel(false);
+        } else {
+            log.info("CFDP sending EOF");
+            EofPacket eof = new EofPacket(ConditionCode.NO_ERROR, checksum, fileSize, null, directiveHeader);
+            transmitCfdp(eof);
+        }
+    }
+
+    private void processFinishedPacket(FinishedPacket packet) {
+        log.info("CFDP data sending finished; code:{}, data complete: {}", packet.getConditionCode(),
+                packet.isDataComplete());
+        dataSenderFuture.cancel(true);
+        if (eofSenderFuture != null) {
+            eofSenderFuture.cancel(true);
+        }
+        AckPacket ack = new AckPacket(FileDirectiveCode.FINISHED, FileDirectiveSubtypeCode.FINISHED_BY_END_SYSTEM,
+                packet.getConditionCode(), TransactionStatus.TERMINATED, directiveHeader);
+        transmitCfdp(ack);
+        notifyEndCallbacks();
+    }
+
+    private void sendFileData(long start, long end, boolean addToChecksum) {
+        log.info("CFDP sending data [{}, {}]", start, end);
+        byte[] data = new byte[(int) (end - start)];
+        try {
+            raf.seek(start);
+            raf.readFully(data);
+        } catch (IOException e) {
+            log.warn("Error reading from file", e);
+            abort();
+        }
+        if (addToChecksum) {
+            checksum += ChecksumCalculator.calculateChecksum(data);
+            checksum &= 0xFFFFFFFF;
+        }
+
+        FileDataPacket fdp = new FileDataPacket(data, start, dataHeader);
+        transmitCfdp(fdp);
+    }
+
+    private void abort() {
+        dataSenderFuture.cancel(true);
+        if (eofSenderFuture != null) {
+            eofSenderFuture.cancel(true);
+        }
+    }
+
+    private void sendMetadata() {
+        MetadataPacket metadata = new MetadataPacket(false, ChecksumType.MODULAR, fileSize,
+                file.getPath(), destinationFileName, metadataOptions, directiveHeader);
+        transmitCfdp(metadata);
+    }
+
+    private void transmitCfdp(CfdpPacket packet) {
+        boolean skip = false;
+        while (skipIdx < skippedPdus.length && skippedPdus[skipIdx] < pduCount) {
+            skipIdx++;
+        }
+
+        if (skipIdx < skippedPdus.length) {
+            if (skippedPdus[skipIdx] == pduCount) {
+                log.info("Dropping (simulating packet loss) PDU {}: {}", pduCount, packet);
+                skip = true;
+            }
+        }
+        pduCount++;
+        if (!skip) {
+            simulator.transmitCfdp(packet);
+        }
+    }
+
+    static class DataToResend {
+        final long start;
+        final long end;
+
+        DataToResend(long start, long end) {
+            this.start = start;
+            this.end = end;
+        }
+    }
+
+    public void addEndCallback(Runnable runnable) {
+        endCallbacks.add(runnable);
+    }
+
+    public void removeEndCallback(Runnable runnable) {
+        endCallbacks.remove(runnable);
+    }
+
+    private void notifyEndCallbacks() {
+        for (Runnable runnable : endCallbacks) {
+            runnable.run();
+        }
+    }
+}
+```

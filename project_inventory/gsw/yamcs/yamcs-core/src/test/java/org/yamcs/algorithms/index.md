@@ -3,20 +3,500 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AlgorithmManagerErrorTest.java`
 
-file--AlgorithmManagerErrorTest.java
-file--MyParaProvider.java
-file--RefXtceAlgorithmTest.java
-file--XtceAlgorithmTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/AlgorithmManagerErrorTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.logging.Level;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.LoggingUtils;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorException;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.ValidationException;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.LastValueCache;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.AlgorithmStatus;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+
+public class AlgorithmManagerErrorTest {
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        TimeEncoding.setUp();
+        MdbFactory.reset();
+
+        // this test intentionally generates some errors which we don't want to see in the test output
+        LoggingUtils.configureLogging(Level.SEVERE);
+    }
+
+    static String instance = "errmdb";
+    private Mdb mdb;
+    private Processor processor;
+    private ParameterRequestManager prm;
+    AlgorithmManager algMgr;
+    Parameter p1, p2;
+
+    @BeforeEach
+    public void beforeEachTest() throws InitException, ProcessorException, ConfigurationException, ValidationException {
+        EventProducerFactory.setMockup(true);
+
+        mdb = MdbFactory.getInstance(instance);
+        p1 = mdb.getParameter("/ERRMDB/para1");
+        p2 = mdb.getParameter("/ERRMDB/para2");
+
+        algMgr = new AlgorithmManager();
+        processor = ProcessorFactory.create(instance, "AlgorithmManagerJavaTest", new MyParaProvider(), algMgr);
+        prm = processor.getParameterProcessorManager().getParameterRequestManager();
+    }
+
+    @Test
+    public void testAlgoError() throws InvalidIdentification {
+        Parameter algoErrPara1 = mdb.getParameter("/ERRMDB/AlgoError1");
+        Parameter algoErrPara2 = mdb.getParameter("/ERRMDB/AlgoError2");
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(algoErrPara1, algoErrPara2),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        Algorithm errAlg1 = mdb.getAlgorithm("/ERRMDB/algo_producing_error1");
+        Algorithm errAlg2 = mdb.getAlgorithm("/ERRMDB/algo_producing_error2");
+
+        AlgorithmStatus status1 = algMgr.getAlgorithmStatus(errAlg1);
+        assertEquals(status1.getRunCount(), 0);
+        assertTrue(status1.hasErrorMessage());
+
+        AlgorithmStatus status2 = algMgr.getAlgorithmStatus(errAlg2);
+        assertEquals(status2.getRunCount(), 0);
+        assertFalse(status2.hasErrorMessage());
+
+        ParameterValue pv1 = new ParameterValue(p1);
+        pv1.setEngValue(ValueUtility.getUint32Value(3));
+
+        algMgr.process(getProcessingData(pv1));
+        status1 = algMgr.getAlgorithmStatus(errAlg1);
+        // errAlg1 doesn't run at all
+        assertEquals(status1.getRunCount(), 0);
+        assertTrue(status1.hasErrorMessage());
+
+        // errAlg2 ran and produced error
+        status2 = algMgr.getAlgorithmStatus(errAlg2);
+        assertEquals(1, status2.getRunCount());
+        assertEquals(1, status2.getErrorCount());
+
+        assertTrue(status2.hasErrorMessage());
+    }
+
+    public static ProcessingContext getProcessingData(ParameterValue pv) {
+        ProcessingContext data = ProcessingContext.createForTmProcessing(new LastValueCache(), 0);
+        data.addTmParam(pv);
+        return data;
+    }
+}
 ```
 
-## 항목
+### `MyParaProvider.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/AlgorithmManagerErrorTest.java`](file--AlgorithmManagerErrorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/MyParaProvider.java`](file--MyParaProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/RefXtceAlgorithmTest.java`](file--RefXtceAlgorithmTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/XtceAlgorithmTest.java`](file--XtceAlgorithmTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/MyParaProvider.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterProvider;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Parameter;
+
+import com.google.common.util.concurrent.AbstractService;
+
+//used to avoid errors from prm that no provider for parameters
+// in realtiy parameters are handed manually to the algorithm manager
+class MyParaProvider extends AbstractService implements ParameterProvider {
+
+    @Override
+    public void init(Processor processor, YConfiguration config, Object spec) {
+        processor.getParameterProcessorManager().addParameterProvider(this);
+    }
+
+    @Override
+    public void setParameterProcessor(ParameterProcessor parameterProcessor) {
+    }
+
+    @Override
+    public void startProviding(Parameter paramDef) {
+    }
+
+    @Override
+    public void startProvidingAll() {
+
+    }
+
+    @Override
+    public void stopProviding(Parameter paramDef) {
+    }
+
+    @Override
+    public boolean canProvide(NamedObjectId paraId) {
+        return true;
+    }
+
+    @Override
+    public Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification {
+        return XtceAlgorithmTest.mdb.getParameter(paraId.getName());
+    }
+
+    @Override
+    public boolean canProvide(Parameter param) {
+        return true;
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStarted();
+    }
+
+}
+```
+
+### `RefXtceAlgorithmTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/RefXtceAlgorithmTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.ContainerProcessingResult;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.XtceTmExtractor;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterProvider;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Parameter;
+
+import com.google.common.util.concurrent.AbstractService;
+
+public class RefXtceAlgorithmTest {
+    static String instance = "refxtce";
+    private static Mdb mdb;
+    private static Processor proc;
+    private static ParameterRequestManager prm;
+
+    private static MyProcService mpp = new MyProcService();
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest(instance);
+        EventProducerFactory.setMockup(false);
+        MdbFactory.reset();
+        AlgorithmManager am = new AlgorithmManager();
+        proc = ProcessorFactory.create(instance, "XtceAlgorithmTest", mpp, am);
+        prm = proc.getParameterRequestManager();
+        mdb = proc.getMdb();
+    }
+
+    @Test
+    public void test1() {
+        Parameter param3 = mdb.getParameter("/RefXtce/param3");
+        Parameter param4 = mdb.getParameter("/RefXtce/param4");
+        List<ParameterValue> params = subscribe(param3, param4);
+
+        ByteBuffer buf = ByteBuffer.allocate(6);
+        buf.putFloat(0.2f);
+        buf.putShort((short) 10);
+        mpp.injectPacket(buf.array(), "/RefXtce/packet2");
+
+        assertEquals(2, params.size());
+        assertEquals(5.1, params.get(0).getEngValue().getFloatValue(), 1e-5);
+        assertEquals(5.1, params.get(1).getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void test2() {
+        List<ParameterValue> params = subscribe(mdb.getParameter("/RefXtce/param6"));
+        mpp.injectPacket(new byte[6], "/RefXtce/packet2");
+        assertEquals(1, params.size());
+        assertEquals(3.14, params.get(0).getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void test3() {
+        List<ParameterValue> params = subscribe(mdb.getParameter("/RefXtce/param7"));
+        ByteBuffer buf = ByteBuffer.allocate(6);
+        buf.putFloat(0.28f);
+        buf.putShort((short) 6);
+
+        mpp.injectPacket(buf.array(), "/RefXtce/packet2");
+
+        assertEquals(1, params.size());
+        assertEquals(3.14, params.get(0).getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testAvg4() {
+        List<ParameterValue> params = subscribe(mdb.getParameter("/RefXtce/avg4_result"));
+        ByteBuffer buf = ByteBuffer.allocate(6);
+        buf.putFloat(0.28f);
+        buf.putShort((short) 6);
+        mpp.injectPacket(buf.array(), "/RefXtce/packet2");
+
+        assertEquals(1, params.size());
+        assertEquals(3.14, params.get(0).getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testFlipFlop() {
+        Parameter param11 = mdb.getParameter("/RefXtce/param11");
+        List<ParameterValue> params = subscribe(param11);
+
+        ByteBuffer buf = ByteBuffer.allocate(6);
+        buf.putFloat(-10f);
+        buf.putShort((short) 10);
+        mpp.injectPacket(buf.array(), "/RefXtce/packet2");
+
+        assertEquals(0, params.size());
+        buf.rewind();
+        buf.putFloat(10);
+        buf.putShort((short) 10);
+        mpp.injectPacket(buf.array(), "/RefXtce/packet2");
+        assertEquals(1, params.size());
+
+        assertEquals(true, params.get(0).getEngValue().getBooleanValue());
+        params.clear();
+
+        buf.rewind();
+        buf.putFloat(-10f);
+        buf.putShort((short) 10);
+        mpp.injectPacket(buf.array(), "/RefXtce/packet2");
+        assertEquals(0, params.size());
+    }
+
+    List<ParameterValue> subscribe(Parameter... plist) {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(plist), (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+        return params;
+    }
+
+    static class MyProcService extends AbstractService implements ParameterProvider {
+        ParameterProcessorManager ppm;
+        XtceTmExtractor extractor;
+        Mdb mdb;
+
+        @Override
+        public void init(Processor processor, YConfiguration config, Object spec) {
+            this.ppm = processor.getParameterProcessorManager();
+            ppm.addParameterProvider(this);
+            mdb = processor.getMdb();
+            extractor = new XtceTmExtractor(mdb);
+            extractor.provideAll();
+        }
+
+        public void injectPacket(byte[] array, String name) {
+            ContainerProcessingResult cpr = extractor.processPacket(array, 0, 0, 0, mdb.getSequenceContainer(name));
+            ppm.process(cpr);
+        }
+
+        @Override
+        public void setParameterProcessor(ParameterProcessor parameterProcessor) {
+        }
+
+        @Override
+        public void startProviding(Parameter paramDef) {
+        }
+
+        @Override
+        public void startProvidingAll() {
+
+        }
+
+        @Override
+        public void stopProviding(Parameter paramDef) {
+        }
+
+        @Override
+        public boolean canProvide(NamedObjectId paraId) {
+            return true;
+        }
+
+        @Override
+        public Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification {
+            return mdb.getParameter(paraId.getName());
+        }
+
+        @Override
+        public boolean canProvide(Parameter param) {
+            return true;
+        }
+
+        @Override
+        protected void doStart() {
+            notifyStarted();
+        }
+
+        @Override
+        protected void doStop() {
+            notifyStopped();
+        }
+    }
+
+    public static class AvgAlgorithm extends AbstractAlgorithmExecutor {
+
+        public AvgAlgorithm(Algorithm algorithmDef, AlgorithmExecutionContext execCtx) {
+            super(algorithmDef, execCtx);
+        }
+
+        @Override
+        public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) {
+            AggregateValue v = (AggregateValue) inputValues.get(0).getEngValue();
+            float m1 = v.getMemberValue(0).getFloatValue();
+            int m2 = v.getMemberValue(1).getUint32Value();
+
+            ParameterValue pv = new ParameterValue(getOutputParameter(0));
+
+            pv.setEngValue(ValueUtility.getFloatValue((m1 + m2) / 2));
+
+            return new AlgorithmExecutionResult(pv);
+        }
+    }
+}
+```
+
+### `XtceAlgorithmTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/XtceAlgorithmTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+
+public class XtceAlgorithmTest {
+    static String instance = "BogusSAT";
+    static Mdb mdb;
+    private static Processor proc;
+    private static ParameterRequestManager prm;
+    private static ParameterProcessorManager ppm;
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest(instance);
+        EventProducerFactory.setMockup(false);
+        MdbFactory.reset();
+        AlgorithmManager am = new AlgorithmManager();
+        proc = ProcessorFactory.create(instance, "XtceAlgorithmTest", new MyParaProvider(), am);
+        ppm = proc.getParameterProcessorManager();
+        prm = ppm.getParameterRequestManager();
+
+        mdb = proc.getMdb();
+    }
+
+    @Test
+    public void test1() throws Exception {
+        Parameter bv = mdb.getParameter("/BogusSAT/SC001/BusElectronics/Battery_Voltage");
+        Parameter bsoc = mdb.getParameter("/BogusSAT/SC001/BusElectronics/Battery_State_Of_Charge");
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+
+        prm.addRequest(bsoc, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+        ParameterValue pv = new ParameterValue(bv);
+        pv.setEngValue(ValueUtility.getFloatValue(12.6f));
+        ppm.process(ProcessingContext.createForTestTm(pv));
+        assertEquals(1, params.size());
+        pv = params.get(0);
+        assertEquals(1.0d, pv.getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void test2() {
+        Parameter bv = mdb.getParameter("/BogusSAT/SC001/BusElectronics/Battery_Voltage");
+        Parameter bscc = mdb.getParameter("/BogusSAT/SC001/BusElectronics/Battery_State_Of_Charge_Custom");
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+
+        prm.addRequest(bscc, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+        ParameterValue pv = new ParameterValue(bv);
+        pv.setEngValue(ValueUtility.getFloatValue(12.6f));
+        ppm.process(ProcessingContext.createForTestTm(pv));
+        assertEquals(1, params.size());
+
+        pv = params.get(0);
+        assertEquals(0.6d, pv.getEngValue().getFloatValue(), 1e-5);
+    }
+}
+```

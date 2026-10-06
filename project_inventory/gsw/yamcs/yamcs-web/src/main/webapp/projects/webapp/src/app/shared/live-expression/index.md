@@ -3,14 +3,114 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/live-expression/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `live-expression.component.ts`
 
-file--live-expression.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/live-expression/live-expression.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { FormulaCompiler } from '@yamcs/opi';
+import {
+  NamedObjectId,
+  ParameterSubscription,
+  Synchronizer,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-live-expression',
+  template: '{{ result() }}',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class LiveExpressionComponent implements OnInit, OnDestroy {
+  @Input()
+  expression: string;
+
+  result = signal<any>(null);
+
+  private subscription: ParameterSubscription;
+  private dirty = false;
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    private synchronizer: Synchronizer,
+  ) {}
+
+  ngOnInit() {
+    const compiler = new FormulaCompiler();
+    const script = compiler.compile('=' + this.expression);
+
+    const parameters = script.getPVNames();
+    if (parameters.length) {
+      const ids = parameters.map((parameter) => ({ name: parameter }));
+      let idMapping: { [key: number]: NamedObjectId };
+      this.subscription = this.yamcs.yamcsClient.createParameterSubscription(
+        {
+          instance: this.yamcs.instance!,
+          processor: this.yamcs.processor!,
+          id: ids,
+          abortOnInvalid: true,
+          sendFromCache: true,
+          updateOnExpiration: true,
+          action: 'REPLACE',
+        },
+        (data) => {
+          if (data.mapping) {
+            idMapping = {
+              ...idMapping,
+              ...data.mapping,
+            };
+          }
+          for (const pval of data.values || []) {
+            if (pval.engValue) {
+              const id = idMapping[pval.numericId];
+              script.updateDataSource(id.name, {
+                value: utils.convertValue(pval.engValue),
+                acquisitionStatus: pval.acquisitionStatus,
+              });
+            }
+          }
+
+          if (this.result() === null) {
+            // First value: fast page update
+            const output = script.execute();
+            this.result.set(output);
+          } else {
+            // Throttle follow-on updates
+            this.dirty = true;
+          }
+        },
+      );
+    } else {
+      const output = script.execute();
+      this.result.set(output);
+    }
+
+    this.syncSubscription = this.synchronizer.syncFast(() => {
+      if (this.dirty) {
+        const output = script.execute();
+        this.result.set(output);
+        this.dirty = false;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription?.cancel();
+    this.syncSubscription?.unsubscribe();
+  }
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/live-expression/live-expression.component.ts`](file--live-expression.component.ts) — UTF-8 텍스트 파일 본문 포함

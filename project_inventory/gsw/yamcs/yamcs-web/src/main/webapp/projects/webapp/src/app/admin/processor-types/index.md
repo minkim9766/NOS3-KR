@@ -3,16 +3,59 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/processor-types/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `processor-types.component.html`
 
-file--processor-types.component.html
-file--processor-types.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/processor-types/processor-types.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Processor types" />
+
+  <ya-panel>
+    <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let row">{{ row }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `processor-types.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/processor-types/processor-types.component.html`](file--processor-types.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/processor-types/processor-types.component.ts`](file--processor-types.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/processor-types/processor-types.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './processor-types.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class ProcessorTypesComponent {
+  displayedColumns = ['name'];
+
+  dataSource = new MatTableDataSource<string>();
+
+  constructor(yamcs: YamcsService, title: Title) {
+    title.setTitle('Processor types');
+    yamcs.yamcsClient.getProcessorTypes().then((response) => {
+      this.dataSource.data = response.types || [];
+    });
+  }
+}
+```

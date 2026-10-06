@@ -3,18 +3,96 @@
 
 **경로:** `gsw/yamcs/packet-viewer/bin/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `lcp.bat`
 
-file--lcp.bat
-file--packet-viewer.bat
-file--packet-viewer.sh
+**경로:** `gsw/yamcs/packet-viewer/bin/lcp.bat`
+
+
+```text
+REM   Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+REM   reserved.
+
+set _CLASSPATHCOMPONENT=%1
+if ""%1""=="""" goto gotAllArgs
+shift
+
+:argCheck
+if ""%1""=="""" goto gotAllArgs
+set _CLASSPATHCOMPONENT=%_CLASSPATHCOMPONENT% %1
+shift
+goto argCheck
+
+:gotAllArgs
+set LOCALCLASSPATH=%_CLASSPATHCOMPONENT%;%LOCALCLASSPATH%
+
 ```
 
-## 항목
+### `packet-viewer.bat`
 
-- [`gsw/yamcs/packet-viewer/bin/lcp.bat`](file--lcp.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/bin/packet-viewer.bat`](file--packet-viewer.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/bin/packet-viewer.sh`](file--packet-viewer.sh) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/packet-viewer/bin/packet-viewer.bat`
+
+
+```text
+@echo off
+
+if "%OS%"=="Windows_NT" @setlocal
+
+rem %~dp0 is expanded pathname of the current script under NT
+set BASE=%~dp0..
+
+cd %BASE%
+
+set LOCALCLASSPATH=
+for %%i in ("%BASE%\lib\*.jar") do call "%BASE%\bin\lcp.bat" %%i
+for %%i in ("%BASE%\lib\ext\*.jar") do call "%BASE%\bin\lcp.bat" %%i
+set LOCALCLASSPATH=%LOCALCLASSPATH%;%BASE%\etc
+
+set JAVA=javaw.exe
+set JAVA_ARGS=-client -classpath "%LOCALCLASSPATH%"
+start %JAVA% %JAVA_ARGS%  org.yamcs.ui.packetviewer.PacketViewer
+
+if "%OS%"=="Windows_NT" @endlocal
+```
+
+### `packet-viewer.sh`
+
+**경로:** `gsw/yamcs/packet-viewer/bin/packet-viewer.sh`
+
+
+```bash
+#!/bin/sh
+
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+# Get standard environment variables
+PRGDIR=`dirname "$PRG"`
+YAMCS_HOME=`cd "$PRGDIR/.." ; pwd`
+
+# Add all necessary jars
+CLASSPATH="$YAMCS_HOME/lib/*:$YAMCS_HOME/lib/ext/*"
+# Add etc directory to load config resources
+CLASSPATH=$YAMCS_HOME/etc:$CLASSPATH:$YAMCS_HOME
+
+export CLASSPATH
+
+if [ -d "$JAVA_HOME" ]; then
+  _RUNJAVA="$JAVA_HOME/bin/java"
+else
+  _RUNJAVA=java
+fi
+
+exec "$_RUNJAVA" -Xmx128m org.yamcs.ui.packetviewer.PacketViewer "$@"
+```

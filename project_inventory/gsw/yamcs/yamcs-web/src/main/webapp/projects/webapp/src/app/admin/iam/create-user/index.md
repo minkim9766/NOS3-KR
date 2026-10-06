@@ -3,16 +3,142 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-user/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-user.component.html`
 
-file--create-user.component.html
-file--create-user.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-user/create-user.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar>
+    <ng-template app-admin-toolbar-label>
+      <ya-page-icon-button routerLink=".." icon="arrow_back" />
+      Create user
+    </ng-template>
+  </app-admin-toolbar>
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-field label="Username" hint="(required)">
+        <input formControlName="name" type="text" />
+      </ya-field>
+
+      <ya-field label="Display name" hint="(optional)">
+        <input formControlName="displayName" type="text" />
+      </ya-field>
+
+      <ya-field label="Email" hint="(optional)">
+        <input formControlName="email" type="text" />
+      </ya-field>
+
+      <ya-field-divider />
+
+      <ya-field label="Password" hint="(optional)">
+        <span class="hint">
+          User without a password may still be able to login if an external identity provider is
+          configured.
+        </span>
+        <input formControlName="password" type="password" />
+      </ya-field>
+
+      <ya-field label="Password confirmation">
+        <input formControlName="passwordConfirmation" type="password" />
+      </ya-field>
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="..">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</app-admin-page>
 ```
 
-## 항목
+### `create-user.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-user/create-user.component.html`](file--create-user.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-user/create-user.component.ts`](file--create-user.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-user/create-user.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import {
+  CreateUserRequest,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './create-user.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+  ],
+})
+export class CreateUserComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    title: Title,
+    private router: Router,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Create a user');
+    this.form = formBuilder.group({
+      name: new UntypedFormControl('', [Validators.required]),
+      displayName: new UntypedFormControl(),
+      email: new UntypedFormControl(),
+      password: new UntypedFormControl(),
+      passwordConfirmation: new UntypedFormControl(),
+    });
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    const options: CreateUserRequest = {
+      name: formValue.name,
+    };
+    if (formValue.displayName) {
+      options.displayName = formValue.displayName;
+    }
+    if (formValue.email) {
+      options.email = formValue.email;
+    }
+    if (formValue.password) {
+      if (formValue.password !== formValue.passwordConfirmation) {
+        alert('Password confirmation does not match password');
+        return;
+      }
+      options.password = formValue.password;
+    }
+    this.yamcs.yamcsClient
+      .createUser(options)
+      .then(() =>
+        this.router.navigateByUrl(`/admin/iam/users/${formValue.name}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

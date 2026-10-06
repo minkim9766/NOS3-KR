@@ -3,24 +3,248 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--RateGroupDriver.cpp
-file--RateGroupDriver.fpp
-file--RateGroupDriver.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/RateGroupDriver.cpp`](file--RateGroupDriver.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/RateGroupDriver.fpp`](file--RateGroupDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/RateGroupDriver.hpp`](file--RateGroupDriver.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/RateGroupDriver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/RateGroupDriver.cpp"
+)
+
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/RateGroupDriver/RateGroupDriver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/RateGroupDriverTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/RateGroupDriverImplTester.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `RateGroupDriver.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/RateGroupDriver.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/RateGroupDriver/RateGroupDriver.hpp>
+#include <cstdio>
+#include <cstring>
+
+namespace Svc {
+
+RateGroupDriver::RateGroupDriver(const char* compName)
+    : RateGroupDriverComponentBase(compName), m_ticks(0), m_rollover(1), m_configured(false) {}
+
+void RateGroupDriver::configure(const DividerSet& dividerSet) {
+    // check arguments
+    FW_ASSERT(dividerSet.dividers);
+    // verify port/table size matches
+    FW_ASSERT(FW_NUM_ARRAY_ELEMENTS(this->m_dividers) == this->getNum_CycleOut_OutputPorts(),
+              static_cast<FwAssertArgType>(FW_NUM_ARRAY_ELEMENTS(this->m_dividers)),
+              static_cast<FwAssertArgType>(this->getNum_CycleOut_OutputPorts()));
+    // copy provided array of dividers
+    for (FwIndexType entry = 0; entry < RateGroupDriver::DIVIDER_SIZE; entry++) {
+        // A port with an offset equal or bigger than the divisor is not accepted because it would never be called
+        FW_ASSERT((dividerSet.dividers[entry].offset == 0) ||
+                      (dividerSet.dividers[entry].offset < dividerSet.dividers[entry].divisor),
+                  static_cast<FwAssertArgType>(dividerSet.dividers[entry].offset),
+                  static_cast<FwAssertArgType>(dividerSet.dividers[entry].divisor));
+        this->m_dividers[entry] = dividerSet.dividers[entry];
+        // rollover value should be product of all dividers to make sure integer rollover doesn't jump cycles
+        // only use non-zero dividers
+        if (dividerSet.dividers[entry].divisor != 0) {
+            // Ensure that rollover will not overflow
+            FW_ASSERT((std::numeric_limits<FwSizeType>::max() / dividerSet.dividers[entry].divisor) >= this->m_rollover,
+                      static_cast<FwAssertArgType>(this->m_rollover),
+                      static_cast<FwAssertArgType>(dividerSet.dividers[entry].divisor));
+            this->m_rollover *= dividerSet.dividers[entry].divisor;
+        }
+    }
+    this->m_configured = true;
+}
+
+RateGroupDriver::~RateGroupDriver() {}
+
+void RateGroupDriver::CycleIn_handler(FwIndexType portNum, Os::RawTime& cycleStart) {
+    // Make sure that the dividers have been configured:
+    // If this asserts, add the configure() call to initialization.
+    FW_ASSERT(this->m_configured);
+
+    // Loop through each divider. For a given port, the port will be called when the divider value
+    // divides evenly into the number of ticks. For example, if the divider value for a port is 4,
+    // it would be called every fourth invocation of the CycleIn port.
+    for (FwIndexType entry = 0; entry < RateGroupDriver::DIVIDER_SIZE; entry++) {
+        if (this->m_dividers[entry].divisor != 0) {
+            if (this->isConnected_CycleOut_OutputPort(static_cast<FwIndexType>(entry))) {
+                if ((this->m_ticks % this->m_dividers[entry].divisor) == this->m_dividers[entry].offset) {
+                    this->CycleOut_out(static_cast<FwIndexType>(entry), cycleStart);
+                }
+            }
+        }
+    }
+
+    // rollover the tick value when the tick count reaches the rollover value
+    // the rollover value is the product of all the dividers. See comment in constructor.
+    this->m_ticks = (this->m_ticks + 1) % this->m_rollover;
+}
+
+}  // namespace Svc
+```
+
+### `RateGroupDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/RateGroupDriver.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A rate group driver component with input and output cycle ports
+  passive component RateGroupDriver {
+
+    @ Cycle input to the rate group driver
+    sync input port CycleIn: Cycle
+
+    @ Cycle output from the rate group driver
+    output port CycleOut: [RateGroupDriverRateGroupPorts] Cycle
+
+  }
+
+}
+```
+
+### `RateGroupDriver.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/RateGroupDriver.hpp`
+
+
+```cpp
+/**
+ * \author T. Canham
+ * \brief RateGroupDivider component implementation
+ *
+ * This component implements a divider function. A primary tick is invoked
+ * via the CycleIn port. The divider array then divides down the tick into
+ * CycleOut ports. The ports are called at the rate of
+ * input rate/divider[port]
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+
+#ifndef SVC_RATEGROUPDRIVER_HPP
+#define SVC_RATEGROUPDRIVER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Svc/RateGroupDriver/RateGroupDriverComponentAc.hpp>
+
+namespace Svc {
+
+//! \class RateGroupDriver
+//! \brief Implementation class for RateGroupDriver
+//!
+//! Takes the input from CycleIn and divides it.
+//! Output rate is CycleIn rate/divider[port]
+//!
+
+class RateGroupDriver final : public RateGroupDriverComponentBase {
+    friend class RateGroupDriverImplTester;
+
+  public:
+    //! Size of the divider table, provided as a constants to users passing the table in
+    static const FwIndexType DIVIDER_SIZE = NUM_CYCLEOUT_OUTPUT_PORTS;
+
+    //! \class Divider
+    //! \brief Struct describing a divider
+    struct Divider {
+        //! Initializes divisor and offset to 0 (unused)
+        Divider() : divisor(0), offset(0) {}
+        //! Initializes divisor and offset to passed-in pair
+        Divider(FwSizeType divisorIn, FwSizeType offsetIn) : divisor(divisorIn), offset(offsetIn) {}
+        //! Divisor
+        FwSizeType divisor;
+        //! Offset
+        FwSizeType offset;
+    };
+
+    //! \class DividerSet
+    //! \brief Struct containing an array of dividers
+    struct DividerSet {
+        //! Dividers
+        Divider dividers[Svc::RateGroupDriver::DIVIDER_SIZE];
+    };
+
+    //!  \brief RateGroupDriver constructor
+    //!
+    //!  The constructor takes the divider array and stores it
+    //!  for use when the CycleIn port is called.
+    //!
+    //!  \param compName component name
+    //!
+    RateGroupDriver(const char* compName);
+
+    //!  \brief RateGroupDriver configuration function
+    //!  \param dividersSet set of dividers used to divide down input tick
+
+    void configure(const DividerSet& dividersSet);
+
+    //!  \brief RateGroupDriverImpl destructor
+
+    ~RateGroupDriver();
+
+  private:
+    //! downcall for input port
+    //! NOTE: This port can execute in ISR context.
+    void CycleIn_handler(FwIndexType portNum, Os::RawTime& cycleStart);
+
+    //! divider array
+    Divider m_dividers[NUM_CYCLEOUT_OUTPUT_PORTS];
+
+    //! tick counter
+    FwSizeType m_ticks;
+
+    //! rollover counter
+    FwSizeType m_rollover;
+
+    //! has the configure method been called
+    bool m_configured;
+};
+
+}  // namespace Svc
+
+#endif
+```

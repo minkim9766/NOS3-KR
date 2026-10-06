@@ -3,18 +3,80 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `timestamp-tracker.component.css`
 
-file--timestamp-tracker.component.css
-file--timestamp-tracker.component.html
-file--timestamp-tracker.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/timestamp-tracker.component.css`
+
+
+```css
+.timestamp {
+  position: absolute;
+  bottom: 0;
+  background-color: transparent;
+}
+
+.box {
+  margin-top: 5px;
+  margin-right: 5px;
+  padding-left: 3px;
+  padding-right: 3px;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 10px;
+  line-height: 14px;
+  position: relative;
+  left: -50%;
+}
+
+.xvalue {
+  margin-left: 5px;
+  font-weight: bold;
+  color: white;
+  white-space: nowrap;
+}
 ```
 
-## 항목
+### `timestamp-tracker.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/timestamp-tracker.component.css`](file--timestamp-tracker.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/timestamp-tracker.component.html`](file--timestamp-tracker.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/timestamp-tracker.component.ts`](file--timestamp-tracker.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/timestamp-tracker.component.html`
+
+
+```html
+@if (legendData?.x) {
+  @if (timestampData) {
+    <div class="timestamp" style="pointer-events: none" [style.left]="timestampData.canvasx + 'px'">
+      <div class="box" [style.backgroundColor]="'black'">
+        <span class="xvalue">{{ timestampData.timestamp | datetime: false }}</span>
+      </div>
+    </div>
+  }
+}
+```
+
+### `timestamp-tracker.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/timestamp-tracker.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { DyLegendData, TimestampTrackerData } from '../parameter-plot/dygraphs';
+
+@Component({
+  selector: 'app-timestamp-tracker',
+  templateUrl: './timestamp-tracker.component.html',
+  styleUrl: './timestamp-tracker.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TimestampTrackerComponent {
+  @Input()
+  legendData?: DyLegendData; // Use this to hide timestamp when mouse leaves canvas
+
+  @Input()
+  timestampData: TimestampTrackerData;
+}
+```

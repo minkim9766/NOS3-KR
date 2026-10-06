@@ -3,22 +3,422 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--MutexRules.cpp
-file--MutexRules.hpp
-file--RulesHeaders.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/mutex/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/mutex/CommonTests.hpp"
+
+// ----------------------------------------------------------------------
+// Test Fixture
+// ----------------------------------------------------------------------
+
+std::unique_ptr<Os::Test::Mutex::Tester> get_tester_implementation() {
+    return std::unique_ptr<Os::Test::Mutex::Tester>(new Os::Test::Mutex::Tester());
+}
+
+FunctionalityTester::FunctionalityTester() : tester(get_tester_implementation()) {}
+
+void FunctionalityTester::SetUp() {
+    // No setup required
+}
+
+void FunctionalityTester::TearDown() {
+    // Ensure the mutex is unlocked for safe destruction
+    if (this->tester->m_state == Os::Test::Mutex::Tester::MutexState::LOCKED) {
+        this->tester->m_state = Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+        this->tester->m_mutex.unLock();
+    }
+}
+
+// ----------------------------------------------------------------------
+// Test Cases
+// ----------------------------------------------------------------------
+
+// Lock then unlock mutex
+TEST_F(FunctionalityTester, LockAndUnlockMutex) {
+    Os::Test::Mutex::Tester::LockMutex lock_rule;
+    Os::Test::Mutex::Tester::UnlockMutex unlock_rule;
+    lock_rule.apply(*tester);
+    unlock_rule.apply(*tester);
+}
+
+// Take then release mutex
+TEST_F(FunctionalityTester, TakeAndReleaseMutex) {
+    Os::Test::Mutex::Tester::TakeMutex take_rule;
+    Os::Test::Mutex::Tester::ReleaseMutex release_rule;
+    take_rule.apply(*tester);
+    release_rule.apply(*tester);
+}
+
+// Randomized sequence of conditioned take/release/lock/unlock
+TEST_F(FunctionalityTester, RandomizedInterfaceTesting) {
+    // Enumerate all rules and construct an instance of each
+    Os::Test::Mutex::Tester::TakeMutex take_rule;
+    Os::Test::Mutex::Tester::ReleaseMutex release_rule;
+    Os::Test::Mutex::Tester::LockMutex lock_rule;
+    Os::Test::Mutex::Tester::UnlockMutex unlock_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule<Os::Test::Mutex::Tester>* rules[] = {
+        &take_rule,
+        &release_rule,
+        &lock_rule,
+        &unlock_rule,
+    };
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario<Os::Test::Mutex::Tester> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario<Os::Test::Mutex::Tester> bounded("Bounded Random Rules Scenario", random, 100);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps.\n", numSteps);
+    // add one run of unlock for safe destruction
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/MutexRules.cpp`](file--MutexRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/MutexRules.hpp`](file--MutexRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/CommonTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/mutex/CommonTests.hpp
+// \brief GoogleTest fixture definitions used in common Mutex testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include <Os/Mutex.hpp>
+#include <Os/test/ut/mutex/RulesHeaders.hpp>
+
+#ifndef OS_TEST_UT_COMMON_MUTEX_TESTS_HPP
+#define OS_TEST_UT_COMMON_MUTEX_TESTS_HPP
+namespace Os {
+namespace Test {
+namespace Mutex {}  // namespace Mutex
+}  // namespace Test
+}  // namespace Os
+
+class FunctionalityTester : public ::testing::Test {
+  public:
+    //! Constructor
+    FunctionalityTester();
+
+    //! SetUp test fixture
+    void SetUp() override;
+
+    //! TearDown test fixture for safe destruction
+    void TearDown() override;
+
+    //! Tester/state implementation
+    std::unique_ptr<Os::Test::Mutex::Tester> tester;
+};
+
+#endif  // OS_TEST_UT_COMMON_MUTEX_TESTS_HPP
+```
+
+### `MutexRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/MutexRules.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/mutex/MutexRules.cpp
+// \brief rule implementations for common testing of mutex
+// ======================================================================
+
+#include "MutexRules.hpp"
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  LockMutex -> Lock a mutex successfully
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Mutex::Tester::LockMutex::LockMutex() : STest::Rule<Os::Test::Mutex::Tester>("LockMutex") {}
+
+bool Os::Test::Mutex::Tester::LockMutex::precondition(const Os::Test::Mutex::Tester& state) {
+    return state.m_state == Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+}
+
+void Os::Test::Mutex::Tester::LockMutex::action(Os::Test::Mutex::Tester& state) {
+    state.m_state = Os::Test::Mutex::Tester::MutexState::LOCKED;
+    state.m_mutex.lock();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  UnlockMutex -> Unlock a locked mutex successfully
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Mutex::Tester::UnlockMutex::UnlockMutex() : STest::Rule<Os::Test::Mutex::Tester>("UnlockMutex") {}
+
+bool Os::Test::Mutex::Tester::UnlockMutex::precondition(const Os::Test::Mutex::Tester& state) {
+    return state.m_state == Os::Test::Mutex::Tester::MutexState::LOCKED;
+}
+
+void Os::Test::Mutex::Tester::UnlockMutex::action(Os::Test::Mutex::Tester& state) {
+    state.m_state = Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+    state.m_mutex.unLock();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  TakeMutex -> Lock a mutex successfully
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Mutex::Tester::TakeMutex::TakeMutex() : STest::Rule<Os::Test::Mutex::Tester>("TakeMutex") {}
+
+bool Os::Test::Mutex::Tester::TakeMutex::precondition(const Os::Test::Mutex::Tester& state) {
+    return state.m_state == Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+}
+
+void Os::Test::Mutex::Tester::TakeMutex::action(Os::Test::Mutex::Tester& state) {
+    state.m_state = Os::Test::Mutex::Tester::MutexState::LOCKED;
+    Os::Mutex::Status status = state.m_mutex.take();
+    ASSERT_EQ(status, Os::Mutex::Status::OP_OK);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReleaseMutex -> Lock a mutex successfully
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Mutex::Tester::ReleaseMutex::ReleaseMutex() : STest::Rule<Os::Test::Mutex::Tester>("ReleaseMutex") {}
+
+bool Os::Test::Mutex::Tester::ReleaseMutex::precondition(const Os::Test::Mutex::Tester& state) {
+    return state.m_state == Os::Test::Mutex::Tester::MutexState::LOCKED;
+}
+
+void Os::Test::Mutex::Tester::ReleaseMutex::action(Os::Test::Mutex::Tester& state) {
+    state.m_state = Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+    Os::Mutex::Status status = state.m_mutex.release();
+    ASSERT_EQ(status, Os::Mutex::Status::OP_OK);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ProtectDataCheck: Lock a mutex, set data, assert data and unlock mutex
+// By running this concurrently with another thread, we can test the mutex does protect data
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Mutex::Tester::ProtectDataCheck::ProtectDataCheck()
+    : STest::Rule<Os::Test::Mutex::Tester>("ProtectDataCheck") {}
+
+bool Os::Test::Mutex::Tester::ProtectDataCheck::precondition(const Os::Test::Mutex::Tester& state) {
+    return true;
+}
+
+void Os::Test::Mutex::Tester::ProtectDataCheck::action(Os::Test::Mutex::Tester& state) {
+    state.m_mutex.lock();
+    state.m_state = Os::Test::Mutex::Tester::MutexState::LOCKED;
+
+    U32 randomValue = STest::Pick::any();
+    state.m_value = randomValue;
+    ASSERT_EQ(state.m_value, randomValue);
+
+    state.m_state = Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+    state.m_mutex.unLock();
+}
+```
+
+### `MutexRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/MutexRules.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/mutex/MutexRules.hpp
+// \brief rule definitions for common testing of mutex
+// ======================================================================
+// Stripped when compiled, here for IDEs
+#include "RulesHeaders.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  LockMutex: Lock a mutex successfully
+// ------------------------------------------------------------------------------------------------------
+struct LockMutex : public STest::Rule<Os::Test::Mutex::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    LockMutex();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Mutex::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Mutex::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  UnlockMutex: Unlock a mutex that is locked successfully
+// ------------------------------------------------------------------------------------------------------
+struct UnlockMutex : public STest::Rule<Os::Test::Mutex::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    UnlockMutex();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Mutex::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Mutex::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  TakeMutex: Take a mutex successfully
+// ------------------------------------------------------------------------------------------------------
+struct TakeMutex : public STest::Rule<Os::Test::Mutex::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    TakeMutex();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Mutex::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Mutex::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReleaseMutex: Take a mutex successfully
+// ------------------------------------------------------------------------------------------------------
+struct ReleaseMutex : public STest::Rule<Os::Test::Mutex::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    ReleaseMutex();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Mutex::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Mutex::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ProtectDataCheck: Check that data is protected by a mutex (running another task in parallel)
+// ------------------------------------------------------------------------------------------------------
+struct ProtectDataCheck : public STest::Rule<Os::Test::Mutex::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    ProtectDataCheck();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Mutex::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Mutex::Tester& state  //!< The test state
+    );
+};
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/RulesHeaders.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/mutex/RulesHeaders.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+#include <gtest/gtest.h>
+#include "Os/Mutex.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace Mutex {
+
+struct Tester {
+    //! State representation of a Mutex.
+    //!
+    enum MutexState {
+        UNINITIALIZED,  //!< Mutex is uninitialized
+        LOCKED,         //!< Mutex is locked
+        UNLOCKED        //!< Mutex is unlocked
+    };
+
+    //! Assert in Mutex.cpp for searching death text
+    static constexpr const char* ASSERT_IN_MUTEX_CPP = "Assert: \".*/Os/.*/Mutex\\.cpp:[0-9]+\"";
+
+    // Constructors that ensures the mutex is always valid
+    Tester() : m_mutex(), m_state(UNLOCKED) {}
+
+    // Destructor must be virtual
+    virtual ~Tester() = default;
+
+    //! Mutex under test
+    Os::Mutex m_mutex;
+
+    //! Shared value protected by the mutex for testing purposes
+    int m_value = 0;
+
+    //! Mutex state, for testing purposes
+    MutexState m_state = UNINITIALIZED;
+
+// Do NOT alter, adds rules to Tester as inner classes
+#include "MutexRules.hpp"
+};
+
+}  // namespace Mutex
+}  // namespace Test
+}  // namespace Os
+#endif  // __RULES_HEADERS__
+```

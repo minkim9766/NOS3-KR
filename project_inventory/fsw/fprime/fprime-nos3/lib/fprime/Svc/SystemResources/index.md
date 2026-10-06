@@ -3,24 +3,411 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--SystemResources.cpp
-file--SystemResources.fpp
-file--SystemResources.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/SystemResources.cpp`](file--SystemResources.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/SystemResources.fpp`](file--SystemResources.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/SystemResources.hpp`](file--SystemResources.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/SystemResources.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/SystemResources.cpp"
+)
+set(MOD_DEPS
+  Os
+)
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SystemResources.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SystemResourcesTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SystemResourcesTestMain.cpp"
+)
+register_fprime_ut()
+get_module_name("${CMAKE_CURRENT_LIST_DIR}")
+if (TARGET ${MODULE_NAME}_ut_exe)
+    target_compile_options(
+        ${MODULE_NAME}_ut_exe
+        PRIVATE
+        -Wno-conversion
+	# Implementation requires switch cascade
+        -Wno-implicit-fallthrough
+    )
+endif()
+
+```
+
+### `SystemResources.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/SystemResources.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SystemResourcesComponentImpl.cpp
+// \author sfregoso
+// \brief  cpp file for SystemResources component implementation class
+//
+// \copyright
+// Copyright 2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Svc/SystemResources/SystemResources.hpp>
+#include <cmath>  //isnan()
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+SystemResources ::SystemResources(const char* const compName)
+    : SystemResourcesComponentBase(compName), m_cpu_count(0), m_enable(true) {
+    // Structure initializations
+    m_mem.used = 0;
+    m_mem.total = 0;
+    for (U32 i = 0; i < CPU_COUNT; i++) {
+        m_cpu[i].used = 0;
+        m_cpu[i].total = 0;
+        m_cpu_prev[i].used = 0;
+        m_cpu_prev[i].total = 0;
+    }
+
+    if (Os::Cpu::getCount(m_cpu_count) == Os::Generic::ERROR) {
+        m_cpu_count = 0;
+    }
+
+    m_cpu_count = (m_cpu_count >= CPU_COUNT) ? CPU_COUNT : m_cpu_count;
+
+    m_cpu_tlm_functions[0] = &Svc::SystemResources::tlmWrite_CPU_00;
+    m_cpu_tlm_functions[1] = &Svc::SystemResources::tlmWrite_CPU_01;
+    m_cpu_tlm_functions[2] = &Svc::SystemResources::tlmWrite_CPU_02;
+    m_cpu_tlm_functions[3] = &Svc::SystemResources::tlmWrite_CPU_03;
+    m_cpu_tlm_functions[4] = &Svc::SystemResources::tlmWrite_CPU_04;
+    m_cpu_tlm_functions[5] = &Svc::SystemResources::tlmWrite_CPU_05;
+    m_cpu_tlm_functions[6] = &Svc::SystemResources::tlmWrite_CPU_06;
+    m_cpu_tlm_functions[7] = &Svc::SystemResources::tlmWrite_CPU_07;
+    m_cpu_tlm_functions[8] = &Svc::SystemResources::tlmWrite_CPU_08;
+    m_cpu_tlm_functions[9] = &Svc::SystemResources::tlmWrite_CPU_09;
+    m_cpu_tlm_functions[10] = &Svc::SystemResources::tlmWrite_CPU_10;
+    m_cpu_tlm_functions[11] = &Svc::SystemResources::tlmWrite_CPU_11;
+    m_cpu_tlm_functions[12] = &Svc::SystemResources::tlmWrite_CPU_12;
+    m_cpu_tlm_functions[13] = &Svc::SystemResources::tlmWrite_CPU_13;
+    m_cpu_tlm_functions[14] = &Svc::SystemResources::tlmWrite_CPU_14;
+    m_cpu_tlm_functions[15] = &Svc::SystemResources::tlmWrite_CPU_15;
+}
+
+SystemResources ::~SystemResources() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void SystemResources ::run_handler(const FwIndexType portNum, U32 tick_time_hz) {
+    if (m_enable) {
+        Cpu();
+        Mem();
+        PhysMem();
+    }
+}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void SystemResources ::ENABLE_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, SystemResourceEnabled enable) {
+    m_enable = (enable == SystemResourceEnabled::ENABLED);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+F32 SystemResources::compCpuUtil(Os::Cpu::Ticks current, Os::Cpu::Ticks previous) {
+    F32 util = 100.0f;
+    // Prevent divide by zero on fast-sample
+    if ((current.total - previous.total) != 0) {
+        // Compute CPU % Utilization
+        util = (static_cast<F32>(current.used - previous.used) / static_cast<F32>(current.total - previous.total)) *
+               100.0f;
+        util = std::isnan(util) ? 100.0f : util;
+    }
+    return util;
+}
+
+void SystemResources::Cpu() {
+    U32 count = 0;
+    F32 cpuAvg = 0;
+
+    for (U32 i = 0; i < m_cpu_count && i < CPU_COUNT; i++) {
+        Os::Cpu::Status status = Os::Cpu::getTicks(m_cpu[i], i);
+        // Best-effort calculations and telemetry
+        if (status == Os::Generic::OP_OK) {
+            F32 cpuUtil = compCpuUtil(m_cpu[i], m_cpu_prev[i]);
+            cpuAvg += cpuUtil;
+
+            // Send telemetry using telemetry output table
+            FW_ASSERT(this->m_cpu_tlm_functions[i]);
+            (this->*m_cpu_tlm_functions[i])(cpuUtil, Fw::Time());
+
+            // Store cpu used and total
+            m_cpu_prev[i] = m_cpu[i];
+            count++;
+        }
+    }
+
+    cpuAvg = (count == 0) ? 0.0f : (cpuAvg / static_cast<F32>(count));
+    this->tlmWrite_CPU(cpuAvg);
+}
+
+void SystemResources::Mem() {
+    if (Os::Memory::getUsage(m_mem) == Os::Generic::OP_OK) {
+        this->tlmWrite_MEMORY_TOTAL(m_mem.total / 1024);
+        this->tlmWrite_MEMORY_USED(m_mem.used / 1024);
+    }
+}
+
+void SystemResources::PhysMem() {
+    FwSizeType total = 0;
+    FwSizeType free = 0;
+
+    if (Os::FileSystem::getFreeSpace("/", total, free) == Os::FileSystem::OP_OK) {
+        this->tlmWrite_NON_VOLATILE_FREE(free / 1024);
+        this->tlmWrite_NON_VOLATILE_TOTAL(total / 1024);
+    }
+}
+
+}  // end namespace Svc
+```
+
+### `SystemResources.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/SystemResources.fpp`
+
+
+```fpp
+module Svc {
+
+  enum SystemResourceEnabled {
+    DISABLED = 0
+    ENABLED = 1
+  }
+
+  passive component SystemResources {
+
+    @ Run port
+    guarded input port run: [1] Svc.Sched
+    
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Time get port
+    time get port Time
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command received port
+    command recv port CmdDisp
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Text event port
+    text event port LogText
+
+    @ Event port
+    event port Log
+
+    @ Telemetry port
+    telemetry port Tlm
+
+
+    @ A command to enable or disable system resource telemetry
+    guarded command ENABLE(
+                            enable: SystemResourceEnabled @< whether or not system resource telemetry is enabled
+                          ) \
+      opcode 0
+
+    @ Total system memory in KB
+    telemetry MEMORY_TOTAL: U64 id 0 \
+      format "{} KB"
+
+    @ System memory used in KB
+    telemetry MEMORY_USED: U64 id 1 \
+      format "{} KB"
+
+    @ System non-volatile available in KB
+    telemetry NON_VOLATILE_TOTAL: U64 id 2 \
+      format "{} KB"
+
+    @ System non-volatile available in KB
+    telemetry NON_VOLATILE_FREE: U64 id 3 \
+      format "{} KB"
+
+    @ System's CPU Percentage
+    telemetry CPU: F32 id 4 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_00: F32 id 5 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_01: F32 id 6 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_02: F32 id 7 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_03: F32 id 8 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_04: F32 id 9 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_05: F32 id 10 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_06: F32 id 11 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_07: F32 id 12 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_08: F32 id 13 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_09: F32 id 14 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_10: F32 id 15 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_11: F32 id 16 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_12: F32 id 17 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_13: F32 id 18 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_14: F32 id 19 format "{.2f} percent"
+
+    @ System's CPU Percentage
+    telemetry CPU_15: F32 id 20 format "{.2f} percent"
+
+  }
+
+}
+```
+
+### `SystemResources.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/SystemResources.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SystemResourcesComponentImpl.hpp
+// \author Santos F. Fregoso
+// \brief  hpp file for SystemResources component implementation class
+//
+// \copyright
+// Copyright 2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef SystemResources_HPP
+#define SystemResources_HPP
+
+#include "Os/Cpu.hpp"
+#include "Os/FileSystem.hpp"
+#include "Os/Memory.hpp"
+#include "Svc/SystemResources/SystemResourcesComponentAc.hpp"
+
+namespace Svc {
+
+class SystemResources final : public SystemResourcesComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object SystemResources
+    //!
+    SystemResources(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object SystemResources
+    //!
+    ~SystemResources(void);
+
+    typedef void (SystemResourcesComponentBase::*cpuTlmFunc)(F32, Fw::Time) const;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for run
+    //!
+    void run_handler(const FwIndexType portNum, /*!< The port number*/
+                     U32 context                /*!< The call order*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for SYS_RES_ENABLE command handler
+    //! A command to enable or disable system resource telemetry
+    void ENABLE_cmdHandler(const FwOpcodeType opCode,   /*!< The opcode*/
+                           const U32 cmdSeq,            /*!< The command sequence number*/
+                           SystemResourceEnabled enable /*!< whether or not system resource telemetry is enabled*/
+    );
+
+  private:
+    void Cpu();
+    void Mem();
+    void PhysMem();
+    F32 compCpuUtil(Os::Cpu::Ticks current, Os::Cpu::Ticks previous);
+
+    static const U32 CPU_COUNT = 16; /*!< Maximum number of CPUs to report as telemetry */
+
+    cpuTlmFunc m_cpu_tlm_functions[CPU_COUNT]; /*!< Function pointer to specific CPU telemetry */
+    FwSizeType m_cpu_count;                    /*!< Number of CPUs used by the system */
+    Os::Memory::Usage m_mem;                   /*!< RAM memory information */
+    Os::Cpu::Ticks m_cpu[CPU_COUNT];           /*!< CPU information for each CPU on the system */
+    Os::Cpu::Ticks m_cpu_prev[CPU_COUNT];      /*!< Previous iteration CPU information */
+    bool m_enable;                             /*!< Send telemetry when TRUE.  Don't send when FALSE */
+};
+
+}  // end namespace Svc
+
+#endif
+```

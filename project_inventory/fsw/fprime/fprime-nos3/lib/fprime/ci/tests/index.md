@@ -3,24 +3,344 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `25-fputil-comp.bash`
 
-file--25-fputil-comp.bash
-file--30-ints.bash
-file--40-pylama.bash
-file--fputil.bash
-file--Framework.bash
-file--Ref.bash
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/25-fputil-comp.bash`
+
+
+```text
+#!/bin/bash
+####
+# 20-fputil.bash:
+#
+# Run the tests on the software through fp-util.
+####
+export SCRIPT_DIR="$(dirname ${BASH_SOURCE})/.."
+. "${SCRIPT_DIR}/helpers.bash"
+
+. ${SCRIPT_DIR}/tests/fputil.bash
+# Loop over deployments and targets
+deployment="${FPRIME_DIR}/Ref"
+component="SignalGen"
+echo -e "${BLUE}Testing ${deployment} against fprime-util targets: ${FPUTIL_TARGETS}${NOCOLOR}"
+export CHECK_TARGET_PLATFORM="native"
+for target in "impl" "impl --ut" "build" "build --ut"
+do
+    if [[ "${TEST_TYPE}" != "QUICK" ]] || [[ "${target}" == "generate" ]]
+    then
+        rm -rf "${deployment}/build-fprime-automatic-"*
+    fi
+    fputil_action "${deployment}" "${target}" "${component}"
+    if [[ "${TEST_TYPE}" != "QUICK" ]]
+    then
+        "${SCRIPT_DIR}/clean.bash" || fail_and_stop "Cleaning repository"
+    fi
+done
 ```
 
-## 항목
+### `30-ints.bash`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/25-fputil-comp.bash`](file--25-fputil-comp.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/30-ints.bash`](file--30-ints.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/40-pylama.bash`](file--40-pylama.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/fputil.bash`](file--fputil.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/Framework.bash`](file--Framework.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/Ref.bash`](file--Ref.bash) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/30-ints.bash`
+
+
+```text
+#!/bin/bash
+####
+# 30-ints.bash:
+#
+# Integration tests for CI
+####
+export CTEST_OUTPUT_ON_FAILURE=1
+
+export SCRIPT_DIR="$(dirname ${BASH_SOURCE})"
+. "${SCRIPT_DIR}/../helpers.bash"
+. ${SCRIPT_DIR}/fputil.bash
+
+#### NEEDED ENVIRONMENT ####
+export FPRIME_DIR="$(cd ${SCRIPT_DIR}/../..; pwd)"
+export LOG_DIR="${FPRIME_DIR}/ci-30-ints-logs-$(date +"%Y-%m-%dT%H%M%S")"
+mkdir -p "${LOG_DIR}"
+
+# Directory to be used for Integration CI test
+export FPUTIL_DEPLOYS="${FPRIME_DIR}/Ref"
+
+echo -e "${BLUE}Starting CI test ${FPUTIL_DEPLOYS} Ref${NOCOLOR}"
+
+# Run integration tests
+echo -e "${BLUE}Testing ${INT_DEPLOYS} against integration tests${NOCOLOR}"
+integration_test "${FPUTIL_DEPLOYS}"
+
+# Test Completed
+echo -e "${GREEN}CI test ${FPUTIL_DEPLOYS} Integration SUCCESSFUL${NOCOLOR}"
+
+archive_logs
+```
+
+### `40-pylama.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/40-pylama.bash`
+
+
+```text
+#!/bin/bash
+####
+# 40-pylama.bash:
+#
+# Perform static analysis on all the python code by running pylama.
+####
+export SCRIPT_DIR="$(dirname ${BASH_SOURCE})/.."
+. "${SCRIPT_DIR}/helpers.bash"
+
+echo -e "${BLUE}Running static analysis (pylama) on python code${NOCOLOR}"
+pylama -o ${SCRIPT_DIR}/pylama-ci.cfg ${FPRIME_DIR}
+
+RET_PYLAMA=$?
+
+if [[ ${RET_PYLAMA} -ne 0 ]]
+then 
+    # replace with fail_and_stop when all the current python issues have been resolved
+    warn_and_cont "Python code contains Errors and Warnings that must be resolved"
+fi
+
+```
+
+### `fputil.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/fputil.bash`
+
+
+```text
+#!/bin/bash
+####
+# fputil.bash:
+#
+# Helpers to test via FP util
+####
+set -e
+export FPUTIL_TARGETS=("generate" "generate --ut" "build" "build --all" "check --all")
+####
+# fputil_action:
+#
+# Runs an action for the FP util. This takes two parameters a target and a deployment. This assumes
+# prerequisite actions already exist.
+# :param target($1): command to run with FP util
+# :param deploy($2): deployment to run on
+####
+function fputil_action {
+    export WORKDIR="${1}"
+    export TARGET="${2}"
+    let JOBS="${JOBS:-$(( ( RANDOM % 100 )  + 1 ))}"
+    (
+        PLATFORM=""
+
+        cd "${WORKDIR}"
+        if [[ "${TARGET}" != "generate" ]] && [[ "${TARGET}" != "generate --ut" ]]
+        then
+	        echo "[INFO] FP Util in ${WORKDIR} running ${TARGET} with ${JOBS} jobs"
+            fprime-util ${TARGET} --jobs "${JOBS}" ${PLATFORM} > "${LOG_DIR}/${WORKDIR//\//_}_${TARGET/ /}.out.log" 2> "${LOG_DIR}/${WORKDIR//\//_}_${TARGET/ /}.err.log" \
+                || fail_and_stop "Failed to run '${TARGET}' in ${WORKDIR}"
+        else
+	        echo "[INFO] FP Util in ${WORKDIR} running ${TARGET}"
+            fprime-util ${TARGET} ${PLATFORM} ${CMAKE_EXTRA_SETTINGS} > "${LOG_DIR}/${WORKDIR//\//_}_${TARGET/ /}.out.log" 2> "${LOG_DIR}/${WORKDIR//\//_}_${TARGET/ /}.err.log" \
+                || fail_and_stop "Failed to run '${TARGET}' in ${WORKDIR}"
+        fi
+    ) || exit 1
+}
+export -f fputil_action
+####
+# integration_test:
+#
+# Runs the FPrime GDS and integration test layer for a deployment.
+# :param deploy($1): deployment to run on.
+####
+function integration_test {
+    export WORKDIR="${1}"
+    let JOBS="${JOBS:-$(( ( RANDOM % 100 )  + 1 ))}"
+
+    CMAKE_EXTRA_SETTINGS=""
+    PLATFORM=""
+
+    cd "${WORKDIR}"
+    fprime-util "generate" > "${LOG_DIR}/${WORKDIR//\//_}_pregen.out.log" 2> "${LOG_DIR}/${WORKDIR//\//_}_pregen.err.log" \
+        || fail_and_stop "Failed to generate before ${WORKDIR//\//_} building integration test"
+    cd "${WORKDIR}/"
+    fprime-util "build" --jobs "${JOBS}" ${PLATFORM} > "${LOG_DIR}/${WORKDIR//\//_}_${TARGET/ /}.out.log" 2> "${LOG_DIR}/${WORKDIR//\//_}_${TARGET/ /}.err.log" \
+        || fail_and_stop "Failed to build before integration test"
+
+    integration_test_run "${WORKDIR}"
+}
+export -f integration_test
+
+function integration_test_run {
+    export SLEEP_TIME="10"
+    export WORKDIR="${1}"
+    export PLATFORM="${2:-*}"
+    export BINARY=`basename "${WORKDIR}"`
+    export ROOTDIR="${WORKDIR}/build-artifacts"
+    (
+        cd "${WORKDIR}"
+        mkdir -p "${LOG_DIR}/gds-logs"
+        # Start the GDS layer and give it time to run
+        echo "[INFO] Starting headless GDS layer"
+        fprime-gds -n --dictionary "${ROOTDIR}/"${PLATFORM}"/${BINARY}/dict/${BINARY}TopologyDictionary.json" -g none -l "${LOG_DIR}/gds-logs" 1>${LOG_DIR}/gds-logs/fprime-gds.stdout.log 2>${LOG_DIR}/gds-logs/fprime-gds.stderr.log &
+        GDS_PID=$!
+        # run the app with valgrind in the background
+        if command -v valgrind &> /dev/null
+        then
+            valgrind  \
+                --tool=memcheck \
+                --error-exitcode=1 \
+                --verbose \
+                --leak-check=full \
+                --show-leak-kinds=all \
+                --track-origins=yes \
+                --log-file=${LOG_DIR}/gds-logs/valgrind.log \
+            ${ROOTDIR}/${PLATFORM}/${BINARY}/bin/${BINARY} -a 127.0.0.1 -p 50000 1>${LOG_DIR}/gds-logs/${BINARY}.stdout.log 2>${LOG_DIR}/gds-logs/${BINARY}.stderr.log &
+        else
+            ${ROOTDIR}/${PLATFORM}/${BINARY}/bin/${BINARY} -a 127.0.0.1 -p 50000 1>${LOG_DIR}/gds-logs/${BINARY}.stdout.log 2>${LOG_DIR}/gds-logs/${BINARY}.stderr.log &
+        fi
+        VALGRIND_PID=$!
+
+        echo "[INFO] Allowing GDS ${SLEEP_TIME} seconds to start"
+        sleep ${SLEEP_TIME}
+        # Check the above started successfully
+        ps -p ${GDS_PID} 2> /dev/null 1> /dev/null || fail_and_stop "Failed to run GDS layer headlessly"
+        ps -p ${VALGRIND_PID} 2> /dev/null 1> /dev/null || fail_and_stop "Failed to start ${BINARY} with Valgrind"
+        # Run integration tests
+        (
+            cd "${WORKDIR}"
+            if [[ "${DICTIONARY_PATH}" != "" ]]
+            then
+                DICTIONARY_ARGS="--dictionary ${WORKDIR}/${DICTIONARY_PATH}"
+            fi
+            echo "[INFO] Running ${WORKDIR}/test's pytest integration tests"
+            TIMEOUT="timeout"
+            if ! command -v ${TIMEOUT} &> /dev/null
+            then
+                TIMEOUT="gtimeout" # macOS homebrew "coreutils"
+            fi
+            TOP_CONFIG_ARGS="--deployment-config ${WORKDIR}/config.json"
+            ${TIMEOUT} --kill-after=10s 180s pytest ${DICTIONARY_ARGS} ${TOP_CONFIG_ARGS}
+        )
+        RET_PYTEST=$?
+        pkill -P $GDS_PID
+        kill $GDS_PID
+        sleep 2
+        # Kill Valgrind and get exit code
+        pkill -P $VALGRIND_PID
+        kill $VALGRIND_PID
+        wait $VALGRIND_PID
+        RET_MEMTEST=$?
+        # Report memory leaks if they occurred and the pytests were successful
+        if [ ${RET_MEMTEST} -ne 0 ] && [ ${RET_PYTEST} -eq 0 ]; then
+            cat "${LOG_DIR}/gds-logs/valgrind.log"
+            fail_and_stop "Integration tests on ${WORKDIR} contain memory leaks"
+        fi
+
+        pkill -KILL bin/${BINARY}
+        exit ${RET_PYTEST}
+    ) || fail_and_stop "Failed integration tests on ${WORKDIR}"
+}
+export -f integration_test_run
+
+
+
+```
+
+### `Framework.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/Framework.bash`
+
+
+```text
+#!/bin/bash
+####
+# Framework.bash:
+#
+# Run the tests on the software through fp-util.
+####
+export CTEST_OUTPUT_ON_FAILURE=1
+
+export SCRIPT_DIR="$(dirname ${BASH_SOURCE})"
+. "${SCRIPT_DIR}/../helpers.bash"
+. ${SCRIPT_DIR}/fputil.bash
+
+#### NEEDED ENVIRONMENT ####
+export FPRIME_DIR="$(cd ${SCRIPT_DIR}/../..; pwd)"
+export LOG_DIR="${FPRIME_DIR}/ci-Framework-logs-$(date +"%Y-%m-%dT%H%M%S")"
+mkdir -p "${LOG_DIR}"
+
+# Directory to be used for Framework CI test
+export FPUTIL_DEPLOYS="${FPRIME_DIR}"
+
+echo -e "${BLUE}Starting CI test ${FPUTIL_DEPLOYS} Ref${NOCOLOR}"
+
+export CMAKE_EXTRA_SETTINGS=""
+echo -e "${BLUE}Testing ${FPUTIL_DEPLOYS} against fprime-util targets: ${FPUTIL_TARGETS[@]}${NOCOLOR}"
+export CHECK_TARGET_PLATFORM="native"
+for target in "${FPUTIL_TARGETS[@]}"
+do
+    if [[ "${target}" == "generate" ]]
+    then
+        rm -rf "${FPUTIL_DEPLOYS}/build-fprime-automatic-"*
+    fi
+    fputil_action "${FPUTIL_DEPLOYS}" "${target}"
+done
+
+# Test Completed
+echo -e "${GREEN}CI test ${FPUTIL_DEPLOYS} Framework SUCCESSFUL${NOCOLOR}"
+
+archive_logs
+```
+
+### `Ref.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/tests/Ref.bash`
+
+
+```text
+#!/bin/bash
+####
+# Ref.bash:
+#
+# Run the tests on the software through fp-util.
+####
+export CTEST_OUTPUT_ON_FAILURE=1
+
+export SCRIPT_DIR="$(dirname ${BASH_SOURCE})"
+. "${SCRIPT_DIR}/../helpers.bash"
+. ${SCRIPT_DIR}/fputil.bash
+
+#### NEEDED ENVIRONMENT ####
+export FPRIME_DIR="$(cd ${SCRIPT_DIR}/../..; pwd)"
+export LOG_DIR="${FPRIME_DIR}/ci-Ref-logs-$(date +"%Y-%m-%dT%H%M%S")"
+mkdir -p "${LOG_DIR}"
+
+# Directory to be used for Ref CI test
+export FPUTIL_DEPLOYS="${FPRIME_DIR}/Ref"
+
+echo -e "${BLUE}Starting CI test ${FPUTIL_DEPLOYS} Ref${NOCOLOR}"
+
+export CMAKE_EXTRA_SETTINGS=""
+# For Ref deployment to disable FRAMEWORK UTS
+export CMAKE_EXTRA_SETTINGS="${CMAKE_EXTRA_SETTINGS} -DFPRIME_ENABLE_FRAMEWORK_UTS=OFF"
+ 
+echo -e "${BLUE}Testing ${FPUTIL_DEPLOYS} against fprime-util targets: ${FPUTIL_TARGETS[@]}${NOCOLOR}"
+
+export CHECK_TARGET_PLATFORM="native"
+for target in "${FPUTIL_TARGETS[@]}"
+do
+    if [[ "${target}" == "generate" ]]
+    then
+        rm -rf "${FPUTIL_DEPLOYS}/build-fprime-automatic-"*
+    fi
+    fputil_action "${FPUTIL_DEPLOYS}" "${target}"
+done
+
+# Test Completed
+echo -e "${GREEN}CI test ${FPUTIL_DEPLOYS} Ref SUCCESSFUL${NOCOLOR}"
+
+archive_logs
+```

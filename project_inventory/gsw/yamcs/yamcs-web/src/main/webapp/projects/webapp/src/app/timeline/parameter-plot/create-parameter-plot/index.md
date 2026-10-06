@@ -3,16 +3,218 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/create-parameter-plot/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-parameter-plot.component.html`
 
-file--create-parameter-plot.component.html
-file--create-parameter-plot.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/create-parameter-plot/create-parameter-plot.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Create band" />
+
+  <app-create-band-wizard-step step="2" />
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-stepper>
+        <ya-stepper-step label="General" [expanded]="true">
+          <ya-field label="Label" hint="(required)">
+            <input type="text" formControlName="name" style="width: 100%" />
+          </ya-field>
+
+          <ya-field label="Description" hint="(optional)">
+            <textarea formControlName="description" rows="3"></textarea>
+          </ya-field>
+
+          <app-parameter-plot-styles [form]="form" />
+        </ya-stepper-step>
+
+        @for (traceForm of traces.controls; track traceForm; let i = $index) {
+          <ya-stepper-step label="Trace {{ i + 1 }}" [expanded]="true">
+            <ya-stepper-step-actions>
+              <ya-icon-action
+                icon="arrow_drop_up"
+                matTooltip="Move up"
+                [disabled]="i === 0"
+                (click)="moveUp(i)" />
+              <ya-icon-action
+                icon="arrow_drop_down"
+                matTooltip="Move down"
+                [disabled]="i >= traces.controls.length - 1"
+                (click)="moveDown(i)" />
+              <ya-icon-action
+                icon="delete_outline"
+                matTooltip="Remove trace"
+                [disabled]="traces.controls.length <= 1"
+                (click)="removeTrace(i)" />
+              <ya-icon-action
+                icon="add_circle"
+                matTooltip="Add trace below"
+                (click)="addTrace(i)" />
+            </ya-stepper-step-actions>
+
+            <app-trace-styles [form]="traceForm" />
+          </ya-stepper-step>
+        }
+      </ya-stepper>
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="../.." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `create-parameter-plot.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/create-parameter-plot/create-parameter-plot.component.html`](file--create-parameter-plot.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/create-parameter-plot/create-parameter-plot.component.ts`](file--create-parameter-plot.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/create-parameter-plot/create-parameter-plot.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  BaseComponent,
+  CreateTimelineBandRequest,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+import { CreateBandWizardStepComponent } from '../../create-band-wizard-step/create-band-wizard-step.component';
+import { removeUnsetProperties } from '../../shared/properties';
+import { DEFAULT_COLORS, propertyInfo } from '../ParameterPlot';
+import { ParameterPlotStylesComponent } from '../parameter-plot-styles/parameter-plot-styles.component';
+import { TraceStylesComponent } from '../trace-styles/trace-styles.component';
+
+@Component({
+  selector: 'app-create-parameter-plot',
+  templateUrl: './create-parameter-plot.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CreateBandWizardStepComponent,
+    ParameterPlotStylesComponent,
+    TraceStylesComponent,
+    WebappSdkModule,
+  ],
+})
+export class CreateParameterPlotComponent extends BaseComponent {
+  form: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    super();
+    this.setTitle('Configure parameter plot');
+
+    this.form = formBuilder.group({
+      name: ['', [Validators.required]],
+      description: '',
+      traces: formBuilder.array([]),
+      properties: formBuilder.group({
+        frozen: [propertyInfo.frozen.defaultValue, [Validators.required]],
+        height: [propertyInfo.height.defaultValue, [Validators.required]],
+        minimum: [],
+        maximum: [],
+        zeroLineWidth: [
+          propertyInfo.zeroLineWidth.defaultValue,
+          [Validators.required],
+        ],
+        zeroLineColor: [
+          propertyInfo.zeroLineColor.defaultValue,
+          [Validators.required],
+        ],
+        minimumFractionDigits: [
+          propertyInfo.minimumFractionDigits.defaultValue,
+          [Validators.required],
+        ],
+        maximumFractionDigits: [
+          propertyInfo.maximumFractionDigits.defaultValue,
+          [Validators.required],
+        ],
+      }),
+    });
+    this.addTrace();
+  }
+
+  get traces() {
+    return this.form.controls['traces'] as FormArray;
+  }
+
+  addTrace(index?: number) {
+    const lookupIndex = index === undefined ? 0 : index + 1;
+    const hexColor = DEFAULT_COLORS[lookupIndex % DEFAULT_COLORS.length];
+    const traceForm = this.formBuilder.group({
+      parameter: ['', [Validators.required]],
+      lineColor: [hexColor, [Validators.required]],
+      visible: [true, [Validators.required]],
+      lineWidth: [1, [Validators.required]],
+      minMax: [true, [Validators.required]],
+      minMaxOpacity: [0.17, [Validators.required]],
+      fill: [false, [Validators.required]],
+      fillColor: ['#dddddd', [Validators.required]],
+    });
+
+    if (index !== undefined) {
+      this.traces.insert(index + 1, traceForm);
+    } else {
+      this.traces.push(traceForm);
+    }
+  }
+
+  removeTrace(index: number) {
+    this.traces.removeAt(index);
+  }
+
+  moveUp(index: number) {
+    const traceForm = this.traces.at(index);
+    this.traces.removeAt(index);
+    this.traces.insert(index - 1, traceForm);
+  }
+
+  moveDown(index: number) {
+    const traceForm = this.traces.at(index);
+    this.traces.removeAt(index);
+    this.traces.insert(index + 1, traceForm);
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    const options: CreateTimelineBandRequest = {
+      name: formValue.name,
+      description: formValue.description,
+      type: 'PARAMETER_PLOT',
+      shared: true,
+      properties: {},
+    };
+
+    for (const key in formValue.properties) {
+      const value = formValue.properties[key];
+      if (value !== null) {
+        options.properties![key] = value;
+      }
+    }
+
+    for (let i = 0; i < this.traces.length; i++) {
+      const traceForm = this.traces.at(i) as FormGroup;
+      for (const key in traceForm.controls) {
+        const propName = `trace_${i + 1}_${key}`;
+        const value = traceForm.controls[key].value;
+        options.properties![propName] = value;
+      }
+    }
+
+    removeUnsetProperties(options.properties || {});
+
+    this.yamcs.yamcsClient
+      .createTimelineBand(this.yamcs.instance!, options)
+      .then(() =>
+        this.router.navigateByUrl(`/timeline/bands?c=${this.yamcs.context}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

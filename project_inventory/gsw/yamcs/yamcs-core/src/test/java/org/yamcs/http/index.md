@@ -3,16 +3,78 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 api/index
-file--JwtHelperTest.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/`](api/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/JwtHelperTest.java`](file--JwtHelperTest.java) — UTF-8 텍스트 파일 본문 포함
+### `JwtHelperTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/JwtHelperTest.java`
+
+
+```java
+package org.yamcs.http;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.http.auth.JwtHelper;
+import org.yamcs.http.auth.JwtHelper.JwtDecodeException;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.gson.JsonObject;
+
+public class JwtHelperTest {
+
+    @BeforeAll
+    public static void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testUnsigned() throws JwtDecodeException {
+        String unsignedToken = JwtHelper.generateUnsignedToken("Yamcs", "someUser", 1000);
+
+        JsonObject claims = JwtHelper.decodeUnverified(unsignedToken);
+        assertEquals("Yamcs", claims.get("iss").getAsString());
+        assertEquals("someUser", claims.get("sub").getAsString());
+        assertEquals(1000L, claims.get("exp").getAsLong() - claims.get("iat").getAsLong());
+    }
+
+    @Test
+    public void testHS256() throws InvalidKeyException, NoSuchAlgorithmException, JwtDecodeException {
+        byte[] secret = "secret".getBytes();
+
+        String signedToken = JwtHelper.generateHS256Token("Yamcs", "someUser", secret, 1000);
+
+        JsonObject unverifiedClaims = JwtHelper.decodeUnverified(signedToken);
+        assertEquals("Yamcs", unverifiedClaims.get("iss").getAsString());
+        assertEquals("someUser", unverifiedClaims.get("sub").getAsString());
+        assertEquals(1000L, unverifiedClaims.get("exp").getAsLong() - unverifiedClaims.get("iat").getAsLong());
+
+        JsonObject verifiedClaims = JwtHelper.decode(signedToken, secret);
+        assertEquals("Yamcs", verifiedClaims.get("iss").getAsString());
+        assertEquals("someUser", verifiedClaims.get("sub").getAsString());
+        assertEquals(1000L, verifiedClaims.get("exp").getAsLong() - verifiedClaims.get("iat").getAsLong());
+
+        boolean throwsException = false;
+        try {
+            JwtHelper.decode(signedToken, "wrong-secret".getBytes());
+        } catch (JwtDecodeException e) {
+            throwsException = true;
+        }
+        assertTrue(throwsException);
+    }
+}
+```

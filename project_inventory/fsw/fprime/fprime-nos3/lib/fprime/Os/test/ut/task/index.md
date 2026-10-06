@@ -3,22 +3,798 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--RulesHeaders.hpp
-file--TaskRules.cpp
-file--TaskRules.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/task/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/task/CommonTests.hpp"
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Task.hpp"
+#include "Os/test/ut/task/RulesHeaders.hpp"
+
+static constexpr U32 RANDOM_BOUND = 1000;
+
+namespace Os {
+namespace Test {
+namespace Task {
+FwSizeType TestTaskInfo::s_task_count = 0;
+
+Tester::~Tester() {
+    this->m_tasks.erase(this->m_tasks.begin(), this->m_tasks.end());
+}
+
+TestTaskInfo::~TestTaskInfo() {
+    this->stop();
+}
+
+void TestTaskInfo::step() {
+    this->m_lock.lock();
+    // Read update and clear signal
+    if (this->m_signal) {
+        this->m_stage = (this->m_stage == Lifecycle::END) ? Lifecycle::END : static_cast<Lifecycle>(this->m_stage + 1);
+    }
+    this->m_signal = false;
+    this->m_lock.unlock();
+}
+
+void TestTaskInfo::signal() {
+    // Block waiting for m_signal to be false
+    this->m_lock.lock();
+    this->m_signal = true;
+    this->m_lock.unlock();
+}
+
+TestTaskInfo::Lifecycle TestTaskInfo::stage() {
+    Lifecycle stage = Lifecycle::UNSET;
+    this->m_lock.lock();
+    stage = this->m_stage;
+    this->m_lock.unlock();
+    return stage;
+}
+
+void TestTaskInfo::start(Os::Task::taskRoutine routine) {
+    Fw::String name("TaskName");
+    Os::Task::Arguments arguments(name, routine, this);
+    s_task_count += 1;
+    this->m_task.start(arguments);
+}
+
+void TestTaskInfo::stop() {
+    this->m_lock.lock();
+    Os::Task::State state = this->m_state;
+    this->m_lock.unlock();
+    // Not started task, break out
+    if (state == Os::Task::State::NOT_STARTED) {
+        return;
+    }
+    while (this->stage() != Lifecycle::END) {
+        this->signal();
+        // Run cooperative multitasking when necessary
+        Tester::getCurrentRegistry()->invokeRoutines();
+    }
+    this->m_task.join();
+}
+
+void TestTaskInfo::standard_task(void* argument) {
+    ASSERT_NE(argument, nullptr) << "Test provided bad argument pointer";
+    TestTaskInfo& task_info = *reinterpret_cast<TestTaskInfo*>(argument);
+    // On the first iteration set start-up items
+    if (task_info.stage() == TestTaskInfo::Lifecycle::UNSET) {
+        task_info.m_lock.lock();
+        task_info.m_stage = Lifecycle::BEGINNING;
+        task_info.m_state = Os::Task::RUNNING;
+        task_info.m_lock.unlock();
+    }
+    // Loop when the thread is not cooperative and lifecycle is not over
+    do {
+        task_info.step();
+    } while ((not task_info.m_task.isCooperative()) && (task_info.stage() != TestTaskInfo::Lifecycle::END));
+    // Update if in end stage
+    if (task_info.stage() == TestTaskInfo::Lifecycle::END) {
+        task_info.m_state = Os::Task::State::EXITED;
+    }
+}
+
+void TestTaskInfo::joining_task(void* argument) {
+    ASSERT_NE(argument, nullptr) << "Test provided bad argument pointer";
+    TestTaskInfo& task_info = *reinterpret_cast<TestTaskInfo*>(argument);
+    ASSERT_NE(task_info.m_other, nullptr) << "Other pointer not properly set";
+    // On the first iteration set start-up items
+    if (task_info.stage() == TestTaskInfo::Lifecycle::UNSET) {
+        task_info.m_lock.lock();
+        task_info.m_stage = Lifecycle::BEGINNING;
+        task_info.m_state = Os::Task::RUNNING;
+        task_info.m_lock.unlock();
+    }
+
+    do {
+        // Signal will come from test thread then this will join
+        if (task_info.stage() == TestTaskInfo::Lifecycle::MIDDLE) {
+            task_info.m_other->m_task.join();
+            task_info.m_lock.lock();
+            task_info.m_stage = TestTaskInfo::Lifecycle::END;
+            task_info.m_lock.unlock();
+            break;
+        }
+        task_info.step();
+    } while (not task_info.m_task.isCooperative());
+}
+
+Tester* Tester::s_current_registry = nullptr;
+
+Tester::Tester() {
+    Tester::s_current_registry = this;
+    Os::Task::registerTaskRegistry(this);
+}
+
+Tester* Tester::getCurrentRegistry() {
+    EXPECT_NE(s_current_registry, nullptr) << "Registry not properly initialized";
+    return s_current_registry;
+}
+
+void Tester::invokeRoutines() {
+    for (Os::Task* task : this->m_all_tasks) {
+        if (task->isCooperative()) {
+            task->invokeRoutine();
+        }
+    }
+}
+
+void Tester::addTask(Os::Task* task) {
+    this->m_last_task = task;
+    this->m_all_tasks.push_back(task);
+    ASSERT_GT(this->m_all_tasks.size(), 0) << "Where have all the tasks gone?";
+}
+
+void Tester::removeTask(Os::Task* task) {
+    ASSERT_GT(this->m_all_tasks.size(), 0) << "Where have all the tasks gone?";
+    this->m_last_task = nullptr;
+    size_t i = 0;
+    for (i = 0; i < this->m_all_tasks.size(); i++) {
+        if (task == this->m_all_tasks[i]) {
+            break;
+        }
+    }
+    ASSERT_LT(i, this->m_all_tasks.size()) << "Task not found";
+    this->m_all_tasks.erase(this->m_all_tasks.begin() + i);
+}
+}  // namespace Task
+}  // namespace Test
+}  // namespace Os
+
+// Ensure that a task can start
+TEST(Functionality, StartTask) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::Start rule;
+    rule.apply(tester);
+}
+
+// Ensure that a started task can be joined to
+TEST(Functionality, StartJoinTask) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::Start start_rule;
+    Os::Test::Task::Tester::Join join_rule;
+    start_rule.apply(tester);
+    join_rule.apply(tester);
+}
+
+// Ensure that state transitions work reliably
+TEST(Functionality, CheckState) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::CheckState check_rule;
+    Os::Test::Task::Tester::Start start_rule;
+    Os::Test::Task::Tester::Join join_rule;
+    check_rule.apply(tester);
+    start_rule.apply(tester);
+    check_rule.apply(tester);
+    join_rule.apply(tester);
+    check_rule.apply(tester);
+}
+
+// Ensure that delay works as expected
+TEST(Functionality, Delay) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::Delay rule;
+    rule.apply(tester);
+}
+
+// Ensure task counting works
+TEST(Functionality, CheckTaskCount) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::Start start_rule;
+    Os::Test::Task::Tester::CheckTaskCount check_rule;
+    check_rule.apply(tester);
+    start_rule.apply(tester);
+    check_rule.apply(tester);
+}
+
+// Ensure that a join on an unstarted thread returns a bad status
+TEST(Functionality, JoinInvalidState) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::JoinInvalidState rule;
+    rule.apply(tester);
+}
+
+// Ensure that a start with a nullptr causes an assertion failure
+TEST(Functionality, StartIllegalRoutine) {
+    Os::Test::Task::Tester tester;
+    Os::Test::Task::Tester::StartIllegalRoutine rule;
+    rule.apply(tester);
+}
+
+// Randomized testing for the win
+TEST(Functionality, RandomizedTesting) {
+    Os::Test::Task::Tester tester;
+    // Enumerate all rules and construct an instance of each
+    Os::Test::Task::Tester::Start start_rule;
+    Os::Test::Task::Tester::Join join_rule;
+    Os::Test::Task::Tester::CheckState check_state_rule;
+    Os::Test::Task::Tester::CheckTaskCount check_count_rule;
+    Os::Test::Task::Tester::JoinInvalidState invalid_join_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule<Os::Test::Task::Tester>* rules[] = {&start_rule, &join_rule, &check_state_rule, &check_count_rule,
+                                                    &invalid_join_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario<Os::Test::Task::Tester> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario<Os::Test::Task::Tester> bounded("Bounded Random Rules Scenario", random, RANDOM_BOUND);
+    // Run!
+    const U32 numSteps = bounded.run(tester);
+    printf("Ran %u steps.\n", numSteps);
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/TaskRules.cpp`](file--TaskRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/TaskRules.hpp`](file--TaskRules.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/CommonTests.hpp`
+
+
+```cpp
+//
+// Created by Michael Starch on 4/11/24.
+//
+#include "RulesHeaders.hpp"
+#ifndef OS_TEST_UT_TASK_COMMON_TESTS_HPP
+#define OS_TEST_UT_TASK_COMMON_TESTS_HPP
+#endif  // OS_TEST_UT_TASK_COMMON_TESTS_HPP
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/RulesHeaders.hpp`
+
+
+```cpp
+
+
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+
+#include <vector>
+#include "Os/Mutex.hpp"
+#include "Os/Task.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace Task {
+
+struct TestTaskInfo {
+    //! Test task life-cycle stages
+    enum Lifecycle {
+        BEGINNING = 0,  //!< The initial stage of the task
+        MIDDLE = 1,     //!< The task function has taken hold
+        END = 2,        //!< The task has been asked to exit
+        UNSET = -1,
+    };
+    static FwSizeType s_task_count;
+
+    Lifecycle m_stage = Lifecycle::UNSET;
+    Os::Mutex m_lock;
+    Os::Task::State m_state = Os::Task::State::NOT_STARTED;  //!< Shadow state of the task
+    Os::Task m_task;                                         //!< Task under test
+    std::shared_ptr<TestTaskInfo> m_other = nullptr;
+    bool m_signal = false;
+
+    ~TestTaskInfo();
+
+    //! Atomically step through lifecycle stages
+    void step();
+
+    //! Signal a step through lifecycle stage
+    void signal();
+
+    //! Get lifecycle stage
+    Lifecycle stage();
+
+    //! Stop and join thread
+    void stop();
+
+    //! Start the thread
+    void start(Os::Task::taskRoutine routine);
+
+    //! Standard task implementation which waits at each lifecycle stage
+    static void standard_task(void* argument);
+
+    //! Joining task implementation which waits at each lifecycle stage
+    static void joining_task(void* argument);
+};
+
+struct Tester : public Os::TaskRegistry {
+  private:
+    static constexpr U32 MAX_THREAD_COUNT = 100;
+    static constexpr U32 MAX_DELAY_MICRO_SECONDS = 10000;
+
+    std::vector<std::shared_ptr<TestTaskInfo>> m_tasks;
+    Os::Task* m_last_task = nullptr;
+    std::vector<Os::Task*> m_all_tasks;
+
+  public:
+    //! Constructor
+    Tester();
+    virtual ~Tester();
+
+    //! Get the current tester
+    static Tester* getCurrentRegistry();
+
+    //! Invoke cooperative tasks when looping
+    void invokeRoutines();
+
+    //! Add task to test registry
+    //! \param task: task to add
+    void addTask(Os::Task* task) override;
+
+    //! Remove task to test registry
+    //! \param task: task to add
+    void removeTask(Os::Task* task) override;
+
+    static Tester* s_current_registry;
+
+  public:
+    static void resetNumTasks() { Os::Task::s_numTasks = 0; }
+
+#include "TaskRules.hpp"
+};
+
+}  // namespace Task
+}  // namespace Test
+}  // namespace Os
+
+#endif
+```
+
+### `TaskRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/TaskRules.cpp`
+
+
+```cpp
+
+
+#include <sys/time.h>
+#include "Fw/Types/String.hpp"
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+
+void wait_for_state_with_timeout(Os::Test::Task::TestTaskInfo& info,
+                                 const Os::Test::Task::TestTaskInfo::Lifecycle& stage,
+                                 const FwSizeType delay_ms) {
+    // Loop waiting for transition in preparation for join (with timeout)
+    FwSizeType i = 0;
+    for (i = 0; i < (delay_ms * 100); i++) {
+        Os::Task::delay(Fw::TimeInterval(0, 10));
+        if (info.stage() == stage) {
+            break;
+        }
+        // Run cooperative multitasking when necessary
+        Os::Test::Task::Tester::getCurrentRegistry()->invokeRoutines();
+    }
+    ASSERT_LT(i, (delay_ms * 100)) << "Task did not find stage " << stage << " within " << delay_ms << "ms";
+    ASSERT_EQ(info.stage(), stage) << "Task lifecycle inconsistent";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Start
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::Start::Start() : STest::Rule<Os::Test::Task::Tester>("Start") {}
+
+bool Os::Test::Task::Tester::Start::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return state.m_tasks.size() < Os::Test::Task::Tester::MAX_THREAD_COUNT;
+}
+
+void Os::Test::Task::Tester::Start::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    std::shared_ptr<TestTaskInfo> new_task = std::make_shared<TestTaskInfo>();
+    new_task->m_state = Os::Task::State::STARTING;
+    state.m_tasks.push_back(new_task);
+
+    Fw::String name("StartRuleTask");
+    new_task->start(&TestTaskInfo::standard_task);
+    ASSERT_EQ(state.m_last_task, &new_task->m_task) << "New task not registered";
+    // Poke the task into the MIDDLE state
+    new_task->signal();
+    wait_for_state_with_timeout(*new_task, TestTaskInfo::MIDDLE, 100);
+    ASSERT_EQ(Os::Task::getNumTasks(), TestTaskInfo::s_task_count) << "Task count miss-match";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Join
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::Join::Join() : STest::Rule<Os::Test::Task::Tester>("Join") {}
+
+bool Os::Test::Task::Tester::Join::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return not state.m_tasks.empty();
+}
+
+void Os::Test::Task::Tester::Join::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    TestTaskInfo joiner_task;
+    const U32 random_index = STest::Pick::lowerUpper(0, state.m_tasks.size() - 1);
+
+    // Pop the middle
+    std::shared_ptr<TestTaskInfo> other_task = state.m_tasks[random_index];
+    state.m_tasks.erase(state.m_tasks.begin() + random_index);
+
+    // Set the other argument
+    joiner_task.m_other = other_task;
+
+    joiner_task.start(&TestTaskInfo::joining_task);
+
+    // Ensure it starts in the correct state for joining
+    ASSERT_EQ(other_task->stage(), TestTaskInfo::Lifecycle::MIDDLE);
+
+    // Poke the task into the MIDDLE state
+    joiner_task.signal();
+    wait_for_state_with_timeout(joiner_task, TestTaskInfo::MIDDLE, 100);
+
+    // Make the other task move from MIDDLE state to end state and wait for JOINED state
+    other_task->signal();
+    wait_for_state_with_timeout(joiner_task, TestTaskInfo::END, 100);
+    ASSERT_EQ(Os::Task::getNumTasks(), TestTaskInfo::s_task_count) << "Task count miss-match";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CheckState
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::CheckState::CheckState() : STest::Rule<Os::Test::Task::Tester>("CheckState") {}
+
+bool Os::Test::Task::Tester::CheckState::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Task::Tester::CheckState::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    std::shared_ptr<TestTaskInfo> task;
+    const U32 random_index = STest::Pick::lowerUpper(0, state.m_tasks.size());
+
+    // Allow small chance to check new task is in NOT_STARTED state
+    if (random_index >= state.m_tasks.size()) {
+        task = std::make_shared<TestTaskInfo>();
+    } else {
+        task = state.m_tasks[random_index];
+    }
+    ASSERT_EQ(task->m_task.getState(), task->m_state) << "Task state progression not as expected.";
+    ASSERT_EQ(Os::Task::getNumTasks(), TestTaskInfo::s_task_count) << "Task count miss-match";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Delay
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::Delay::Delay() : STest::Rule<Os::Test::Task::Tester>("Delay") {}
+
+bool Os::Test::Task::Tester::Delay::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Task::Tester::Delay::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    const U32 delay_micro_seconds = 5;  // STest::Pick::lowerUpper(0, MAX_DELAY_MICRO_SECONDS);
+    Fw::TimeInterval delay(delay_micro_seconds / 1000000, delay_micro_seconds % 1000000);
+
+    timeval start;
+    timeval end;
+    ASSERT_EQ(gettimeofday(&start, nullptr), 0) << "Failed to get time";
+    Os::Task::delay(delay);
+    ASSERT_EQ(gettimeofday(&end, nullptr), 0) << "Failed to get time";
+
+    U32 wall_clock_delay_micro = ((end.tv_sec - start.tv_sec) * 1000000) + (end.tv_usec - start.tv_usec);
+    ASSERT_GE(wall_clock_delay_micro, delay_micro_seconds);
+    ASSERT_LT(wall_clock_delay_micro, delay_micro_seconds + 100000) << "Delay not within 100ms";
+    ASSERT_EQ(Os::Task::getNumTasks(), TestTaskInfo::s_task_count) << "Task count miss-match";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CheckTaskCount
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::CheckTaskCount::CheckTaskCount() : STest::Rule<Os::Test::Task::Tester>("CheckTaskCount") {}
+
+bool Os::Test::Task::Tester::CheckTaskCount::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Task::Tester::CheckTaskCount::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    FwSizeType count = TestTaskInfo::s_task_count;
+    ASSERT_EQ(Os::Task::getNumTasks(), count) << "Task count miss-match";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  JoinInvalidState
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::JoinInvalidState::JoinInvalidState()
+    : STest::Rule<Os::Test::Task::Tester>("JoinInvalidState") {}
+
+bool Os::Test::Task::Tester::JoinInvalidState::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Task::Tester::JoinInvalidState::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    std::shared_ptr<TestTaskInfo> new_task = std::make_shared<TestTaskInfo>();
+    ASSERT_NE(new_task->m_task.join(), Os::Task::Status::OP_OK);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  StartIllegalRoutine
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Task::Tester::StartIllegalRoutine::StartIllegalRoutine()
+    : STest::Rule<Os::Test::Task::Tester>("StartIllegalRoutine") {}
+
+bool Os::Test::Task::Tester::StartIllegalRoutine::precondition(const Os::Test::Task::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Task::Tester::StartIllegalRoutine::action(Os::Test::Task::Tester& state  //!< The test state
+) {
+    std::shared_ptr<TestTaskInfo> new_task = std::make_shared<TestTaskInfo>();
+    state.m_tasks.push_back(new_task);
+
+    Fw::String name("StartRuleTask");
+    ASSERT_DEATH(new_task->start(nullptr), "Os/Task\\.cpp:") << "Failed to trap NULL routine";
+}
+```
+
+### `TaskRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/TaskRules.hpp`
+
+
+```cpp
+
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Start
+//
+// ------------------------------------------------------------------------------------------------------
+struct Start : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Start();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Join
+//
+// ------------------------------------------------------------------------------------------------------
+struct Join : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Join();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CheckState
+//
+// ------------------------------------------------------------------------------------------------------
+struct CheckState : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    CheckState();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Delay
+//
+// ------------------------------------------------------------------------------------------------------
+struct Delay : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Delay();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CheckTaskCount
+//
+// ------------------------------------------------------------------------------------------------------
+struct CheckTaskCount : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    CheckTaskCount();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Registry
+//
+// ------------------------------------------------------------------------------------------------------
+struct Registry : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Registry();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  JoinInvalidState
+//
+// ------------------------------------------------------------------------------------------------------
+struct JoinInvalidState : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    JoinInvalidState();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  StartIllegalRoutine
+//
+// ------------------------------------------------------------------------------------------------------
+struct StartIllegalRoutine : public STest::Rule<Os::Test::Task::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    StartIllegalRoutine();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Task::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Task::Tester& state  //!< The test state
+    );
+};
+```

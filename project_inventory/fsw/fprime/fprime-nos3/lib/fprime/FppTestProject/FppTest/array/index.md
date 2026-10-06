@@ -3,34 +3,784 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alias.fpp`
 
-file--alias.fpp
-file--array.fpp
-file--ArrayToStringTest.cpp
-file--CMakeLists.txt
-file--enum.fpp
-file--format.fpp
-file--FormatTest.cpp
-file--main.cpp
-file--README.md
-file--string.fpp
-file--struct.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/alias.fpp`
+
+
+```fpp
+type EA = E
+
+array ArrayOfAlias = [3] EA default [ E.A, E.B, E.C ]
+
+type AString = string size 32
+
+array AliasString = [3] AString
+
+type AliasOfArray = ArrayOfAlias
 ```
 
-## 항목
+### `array.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/alias.fpp`](file--alias.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/array.fpp`](file--array.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/ArrayToStringTest.cpp`](file--ArrayToStringTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/enum.fpp`](file--enum.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/format.fpp`](file--format.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/FormatTest.cpp`](file--FormatTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/string.fpp`](file--string.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/struct.fpp`](file--struct.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/array.fpp`
+
+
+```fpp
+array Uint32 = [2] U32;
+
+array Uint32Array = [3] Uint32;
+```
+
+### `ArrayToStringTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/ArrayToStringTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ArrayToStringTest.cpp
+// \author T. Chieu
+// \brief  cpp file for ArrayToStringTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/array/EnumArrayAc.hpp"
+#include "FppTest/array/StringArrayAc.hpp"
+#include "FppTest/array/StructArrayAc.hpp"
+#include "FppTest/array/Uint32ArrayArrayAc.hpp"
+#include "FppTest/array/AliasOfArrayAliasAc.hpp"
+#include "FppTest/array/AliasStringArrayAc.hpp"
+
+#include "FppTest/typed_tests/ArrayTest.hpp"
+
+#include "gtest/gtest.h"
+
+#include <sstream>
+
+// Test array string functions
+template <typename ArrayType>
+class ArrayToStringTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        FppTest::Array::setTestVals<ArrayType>(testVals);
+    }
+
+    typename ArrayType::ElementType testVals[ArrayType::SIZE];
+};
+
+using ArrayTypes = ::testing::Types<
+    Enum,
+    String,
+    Struct,
+    Uint32Array,
+    AliasString,
+    AliasOfArray
+>;
+TYPED_TEST_SUITE(ArrayToStringTest, ArrayTypes);
+
+// Test array toString() and ostream operator functions
+TYPED_TEST(ArrayToStringTest, ToString) {
+    TypeParam a(this->testVals);
+    std::stringstream buf1, buf2;
+
+    buf1 << a;
+
+    buf2 << "[ ";
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << this->testVals[i];
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/CMakeLists.txt`
+
+
+```cmake
+# ====================================================================== 
+# CMakeLists.txt
+# ====================================================================== 
+
+# We need to declare the FPP source files this way to invoke the autocoder.
+# However, only the UT build is allowed here.
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/alias.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/array.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/enum.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/string.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/struct.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/format.fpp"
+)
+register_fprime_module()
+
+# Declare dependencies on test modules
+set(UT_MOD_DEPS
+  Fw/Test
+  STest
+)
+
+# List all .cpp files as UT_SOURCE_FILES. Only the UT build is allowed.
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ArrayToStringTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FormatTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../utils/Utils.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+register_fprime_ut()
+```
+
+### `enum.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/enum.fpp`
+
+
+```fpp
+enum E {
+  A,
+  B,
+  C,
+}
+
+array Enum = [3] E default [ E.A, E.B, E.C ]
+```
+
+### `format.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/format.fpp`
+
+
+```fpp
+array FormatBool = [3] bool format "a {} b"
+
+array FormatU8 = [3] U8 format "a {} b"
+
+array FormatU16Dec = [3] U16 format "a {d} b"
+
+array FormatU32Oct = [3] U32 format "a {o} b"
+
+array FormatU64Hex = [3] U64 format "a {x} b"
+
+array FormatI8 = [3] I8 format "a {} b"
+
+array FormatI16Dec = [3] I16 format "a {d} b"
+
+array FormatI32Oct = [3] I32 format "a {o} b"
+
+array FormatI64Hex = [3] I64 format "a {x} b"
+
+array FormatF32e = [3] F32 format "a {.1e} b"
+
+array FormatF32f = [3] F32 format "a {.2f} b"
+
+array FormatF64g = [3] F64 format "a {.3g} b"
+
+array FormatString = [3] string format "% {}"
+
+array FormatChar = [3] U8 format "a {c} b"
+```
+
+### `FormatTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/FormatTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FormatTest.cpp
+// \author T. Chieu
+// \brief  cpp file for FormatTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/array/FormatBoolArrayAc.hpp"
+#include "FppTest/array/FormatCharArrayAc.hpp"
+#include "FppTest/array/FormatF32eArrayAc.hpp"
+#include "FppTest/array/FormatF32fArrayAc.hpp"
+#include "FppTest/array/FormatF64gArrayAc.hpp"
+#include "FppTest/array/FormatI16DecArrayAc.hpp"
+#include "FppTest/array/FormatI32OctArrayAc.hpp"
+#include "FppTest/array/FormatI64HexArrayAc.hpp"
+#include "FppTest/array/FormatI8ArrayAc.hpp"
+#include "FppTest/array/FormatStringArrayAc.hpp"
+#include "FppTest/array/FormatU16DecArrayAc.hpp"
+#include "FppTest/array/FormatU32OctArrayAc.hpp"
+#include "FppTest/array/FormatU64HexArrayAc.hpp"
+#include "FppTest/array/FormatU8ArrayAc.hpp"
+#include "FppTest/utils/Utils.hpp"
+
+#include "gtest/gtest.h"
+
+#include <sstream>
+#include <limits>
+
+// Tests FPP format strings
+class FormatTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        buf2 << "[ ";
+    }
+
+    std::stringstream buf1, buf2;
+};
+
+TEST_F(FormatTest, Bool) {
+    bool testVals[FormatBool::SIZE] = {true, true, false};
+    FormatBool a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatBool::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, U8) {
+    U8 testVals[FormatU8::SIZE] = {0, 100, std::numeric_limits<U8>::max()};
+    FormatU8 a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatU8::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << static_cast<U16>(testVals[i]) << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, U16Dec) {
+    U16 testVals[FormatU16Dec::SIZE] = {0, 100, std::numeric_limits<U16>::max()};
+    FormatU16Dec a(testVals);
+    
+    buf1 << a;
+    for (U32 i = 0; i < FormatU16Dec::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::dec << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, U32Oct) {
+    U32 testVals[FormatU32Oct::SIZE] = {0, 100, std::numeric_limits<U32>::max()};
+    FormatU32Oct a(testVals);
+    
+    buf1 << a;
+    for (U32 i = 0; i < FormatU32Oct::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::oct << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, U64Hex) {
+    U64 testVals[FormatU64Hex::SIZE] = 
+        {0, 100, std::numeric_limits<U64>::max()};
+    FormatU64Hex a(testVals);
+    
+    buf1 << a;
+    for (U32 i = 0; i < FormatU64Hex::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::hex << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, I8) {
+    I8 testVals[FormatI8::SIZE] = 
+        {std::numeric_limits<I8>::min(), 0, std::numeric_limits<I8>::max()};
+    FormatI8 a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatI8::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << static_cast<I16>(testVals[i]) << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, I16Dec) {
+    I16 testVals[FormatI16Dec::SIZE] = 
+        {std::numeric_limits<I16>::min(), 0, std::numeric_limits<I16>::max()};
+    FormatI16Dec a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatI16Dec::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::dec << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, I32Oct) {
+    I32 testVals[FormatI32Oct::SIZE] = 
+        {std::numeric_limits<I32>::min(), 0, std::numeric_limits<I32>::max()};
+    FormatI32Oct a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatI32Oct::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::oct << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+    
+}
+
+TEST_F(FormatTest, I64Hex) {
+    I64 testVals[FormatI64Hex::SIZE] = 
+        {std::numeric_limits<I64>::min(), 0, std::numeric_limits<I64>::max()};
+    FormatI64Hex a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatI64Hex::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::hex << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, F32E) {
+    F32 testVals[FormatF32e::SIZE] = 
+        {std::numeric_limits<F32>::min(), 0.0, std::numeric_limits<F32>::max()};
+    FormatF32e a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatF32e::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::setprecision(1) << std::scientific << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, F32F) {
+    F32 testVals[FormatF32f::SIZE] = 
+        {std::numeric_limits<F32>::min(), 0.0, std::numeric_limits<F32>::max()};
+    FormatF32f a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatF32f::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::setprecision(2) << std::fixed << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, F64G) {
+    F64 testVals[FormatF64g::SIZE] = 
+        {std::numeric_limits<F64>::min(), 0.0, std::numeric_limits<F64>::max()};
+    FormatF64g a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatF64g::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << std::setprecision(3) << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, String) {
+    Fw::ExternalString testVals[FormatString::SIZE];
+    char buf[FormatString::SIZE][FormatString::ELEMENT_BUFFER_SIZE];
+    for (U32 i = 0; i < FormatString::SIZE; i++) {
+        testVals[i].setBuffer(&buf[i][0], sizeof buf[i]);
+        FppTest::Utils::setString(&buf[i][0], sizeof buf[i]);
+    }
+
+    FormatString a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatString::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "% " << testVals[i].toChar();
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+
+TEST_F(FormatTest, Char) {
+    U8 testVals[FormatChar::SIZE] = 
+        {FppTest::Utils::getNonzeroU8(), FppTest::Utils::getNonzeroU8(), FppTest::Utils::getNonzeroU8()};
+    FormatChar a(testVals);
+
+    buf1 << a;
+    for (U32 i = 0; i < FormatChar::SIZE; i++) {
+        if (i > 0) {
+            buf2 << ", ";
+        }
+        buf2 << "a " << testVals[i] << " b";
+    }
+    buf2 << " ]";
+
+    ASSERT_STREQ(
+        buf1.str().c_str(),
+        buf2.str().c_str()
+    );
+}
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/main.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  main.cpp
+// \author T. Chieu
+// \brief  main cpp file for FPP array tests
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/array/EnumArrayAc.hpp"
+#include "FppTest/array/StringArrayAc.hpp"
+#include "FppTest/array/StructArrayAc.hpp"
+#include "FppTest/array/Uint32ArrayArrayAc.hpp"
+#include "FppTest/array/AliasOfArrayAliasAc.hpp"
+#include "FppTest/array/AliasStringArrayAc.hpp"
+#include "FppTest/typed_tests/ArrayTest.hpp"
+#include "FppTest/typed_tests/StringTest.hpp"
+#include "FppTest/utils/Utils.hpp"
+#include "Fw/Types/ExternalString.hpp"
+#include "Fw/Types/StringTemplate.hpp"
+#include "STest/Random/Random.hpp"
+#include "gtest/gtest.h"
+
+// Instantiate array tests
+using ArrayTestImplementations = ::testing::Types<
+    Enum,
+    String,
+    Struct,
+    Uint32Array
+>;
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ArrayTest, ArrayTestImplementations);
+
+// Specializations for default values
+template <>
+void FppTest::Array::setDefaultVals<Enum>(E (&a)[Enum::SIZE]) {
+    a[0] = E::A;
+    a[1] = E::B;
+    a[2] = E::C;
+}
+
+// Specialization for test values
+template<>
+void FppTest::Array::setTestVals<Enum>(E (&a)[Enum::SIZE]) {
+    a[0] = static_cast<E::T>(STest::Pick::startLength(
+        E::B,
+        E::NUM_CONSTANTS - 1
+    ));
+
+    for (U32 i = 1; i < Enum::SIZE; i++) {
+        a[i] = static_cast<E::T>(STest::Pick::startLength(
+            E::A,
+            E::NUM_CONSTANTS - 1
+        ));
+    }
+}
+
+static char stringDefaultValsBuffer[::String::SIZE][::String::ELEMENT_BUFFER_SIZE];
+
+template<>
+void FppTest::Array::setDefaultVals<String>
+    (Fw::ExternalString (&a)[::String::SIZE]) {
+    for (U32 i = 0; i < ::String::SIZE; i++) {
+        a[i].setBuffer(
+            stringDefaultValsBuffer[i],
+            ::String::ELEMENT_BUFFER_SIZE
+        );
+    }
+}
+
+static char stringTestValsBuffer[::String::SIZE][::String::ELEMENT_BUFFER_SIZE];
+
+template<>
+void FppTest::Array::setTestVals<String>
+    (Fw::ExternalString (&a)[::String::SIZE]) {
+    for (U32 i = 0; i < ::String::SIZE; i++) {
+        a[i].setBuffer(
+            stringTestValsBuffer[i],
+            ::String::ELEMENT_BUFFER_SIZE
+        );
+        FppTest::Utils::setString(
+            stringTestValsBuffer[i],
+            ::String::ELEMENT_BUFFER_SIZE, 1
+        );
+    }
+}
+
+template<>
+void FppTest::Array::setTestVals<Struct>(S (&a)[Struct::SIZE]) {
+    U32 b[3];
+    for (U32 i = 0; i < Struct::SIZE; i++) {
+        for (U32 j = 0; j < 3; j++) {
+            b[j] = FppTest::Utils::getNonzeroU32();
+        }
+        a[i].set(FppTest::Utils::getNonzeroU32(), b);
+    }
+}
+
+template<>
+void FppTest::Array::setTestVals<Uint32Array>(Uint32 (&a)[Uint32Array::SIZE]) {
+    Uint32 b;
+    for (U32 i = 0; i < Uint32Array::SIZE; i++) {
+        for (U32 j = 0; j < Uint32::SIZE; j++) {
+            b[j] = FppTest::Utils::getNonzeroU32();
+        }
+        a[i] = b;
+    }
+}
+
+static char stringAliasDefaultValsBuffer[::String::SIZE][::String::ELEMENT_BUFFER_SIZE];
+
+template<>
+void FppTest::Array::setDefaultVals<AliasString>
+    (Fw::ExternalString (&a)[::AliasString::SIZE]) {
+    for (U32 i = 0; i < ::AliasString::SIZE; i++) {
+        a[i].setBuffer(
+            stringAliasDefaultValsBuffer[i],
+            ::AliasString::ELEMENT_BUFFER_SIZE
+        );
+    }
+}
+
+static char stringAliasTestValsBuffer[::String::SIZE][::String::ELEMENT_BUFFER_SIZE];
+
+template<>
+void FppTest::Array::setTestVals<AliasString>(Fw::ExternalString (&a)[AliasString::SIZE]) {
+    for (U32 i = 0; i < ::AliasString::SIZE; i++) {
+        a[i].setBuffer(
+            stringAliasTestValsBuffer[i],
+            ::AliasString::ELEMENT_BUFFER_SIZE
+        );
+        FppTest::Utils::setString(
+            stringAliasTestValsBuffer[i],
+            ::AliasString::ELEMENT_BUFFER_SIZE, 1
+        );
+    }
+}
+
+template<>
+void FppTest::Array::setTestVals<AliasOfArray>(EA (&a)[AliasOfArray::SIZE]) {
+    a[0] = static_cast<EA::T>(STest::Pick::startLength(
+        EA::B,
+        EA::NUM_CONSTANTS - 1
+    ));
+
+    for (U32 i = 1; i < Enum::SIZE; i++) {
+        a[i] = static_cast<EA::T>(STest::Pick::startLength(
+            EA::A,
+            EA::NUM_CONSTANTS - 1
+        ));
+    }
+}
+
+// Specializations for multi element constructor
+template<>
+Enum FppTest::Array::getMultiElementConstructedArray<Enum>
+    (E (&a)[Enum::SIZE]) {
+    return Enum(a[0], a[1], a[2]);
+}
+
+template<>
+::String FppTest::Array::getMultiElementConstructedArray<::String>
+    (Fw::ExternalString (&a)[::String::SIZE]) {
+        return ::String(a[0], a[1], a[2]);
+}
+
+template<>
+Struct FppTest::Array::getMultiElementConstructedArray<Struct>
+    (S (&a)[Struct::SIZE]) {
+    return Struct(a[0], a[1], a[2]);
+}
+
+template<>
+Uint32Array FppTest::Array::getMultiElementConstructedArray<Uint32Array>
+    (Uint32 (&a)[Uint32Array::SIZE]) {
+    return Uint32Array(a[0], a[1], a[2]);
+}
+
+// Specializations for serialized size
+template <>
+U32 FppTest::Array::getSerializedSize<::String>
+    (Fw::ExternalString (&a)[::String::SIZE]) {
+    U32 serializedSize = 0;
+
+    for (U32 i = 0; i < ::String::SIZE; i++) {
+        serializedSize += static_cast<U32>(a[i].serializedSize());
+    }
+
+    return serializedSize;
+}
+
+// Instantiate string tests for arrays
+using StringTestImplementations = ::testing::Types<
+    Fw::StringTemplate<80>,
+    Fw::StringTemplate<100>
+>;
+INSTANTIATE_TYPED_TEST_SUITE_P(Array, StringTest, StringTestImplementations);
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+
+    return RUN_ALL_TESTS();
+}
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/README.md`
+
+
+```markdown
+# FppTest/array
+
+This directory contains unit tests for the FPP array code generator.
+
+* `ArrayToStringTest`: Tests array `toString()` and `ostream` operator functions
+* `FormatTest`: Tests FPP format strings
+
+To use this directory, you must have installed F Prime, and you must be inside 
+the F Prime Python virtual environment.
+
+* To build the tests, run `fprime-util build --ut`.
+* To run the tests, run `fprime-util check`.
+```
+
+### `string.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/string.fpp`
+
+
+```fpp
+array String = [3] string
+```
+
+### `struct.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/struct.fpp`
+
+
+```fpp
+struct S {
+  mU32: U32
+  mU32Arr: [3] U32
+}
+
+array Struct = [3] S
+```

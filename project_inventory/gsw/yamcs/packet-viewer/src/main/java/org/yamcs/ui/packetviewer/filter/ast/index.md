@@ -3,24 +3,192 @@
 
 **경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AndExpression.java`
 
-file--AndExpression.java
-file--Comparison.java
-file--Node.java
-file--Operator.java
-file--OrExpression.java
-file--UnaryExpression.java
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/AndExpression.java`
+
+
+```java
+package org.yamcs.ui.packetviewer.filter.ast;
+
+import java.util.List;
+
+public class AndExpression implements Node {
+
+    private List<UnaryExpression> clauses;
+
+    public AndExpression(List<UnaryExpression> clauses) {
+        this.clauses = clauses;
+    }
+
+    public List<UnaryExpression> getClauses() {
+        return clauses;
+    }
+
+    @Override
+    public String toString(String indent) {
+        StringBuilder buf = new StringBuilder(indent)
+                .append(getClass().getSimpleName())
+                .append("\n");
+        for (UnaryExpression clause : clauses) {
+            buf.append(clause.toString(indent + " |"));
+        }
+        return buf.toString();
+    }
+}
 ```
 
-## 항목
+### `Comparison.java`
 
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/AndExpression.java`](file--AndExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/Comparison.java`](file--Comparison.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/Node.java`](file--Node.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/Operator.java`](file--Operator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/OrExpression.java`](file--OrExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/UnaryExpression.java`](file--UnaryExpression.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/Comparison.java`
+
+
+```java
+package org.yamcs.ui.packetviewer.filter.ast;
+
+public class Comparison implements Node {
+
+    public final String ref;
+    public final Operator op;
+    public final String comparand;
+
+    public Comparison(String ref, Operator op, String comparand) {
+        this.ref = ref;
+        this.op = op;
+        this.comparand = comparand;
+    }
+
+    @Override
+    public String toString(String indent) {
+        return indent + getClass().getSimpleName() + "\n" +
+                indent + " |" + ref + "\n" +
+                indent + " |" + op + "\n" +
+                indent + " |" + comparand;
+    }
+}
+```
+
+### `Node.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/Node.java`
+
+
+```java
+package org.yamcs.ui.packetviewer.filter.ast;
+
+public interface Node {
+
+    String toString(String indent);
+}
+```
+
+### `Operator.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/Operator.java`
+
+
+```java
+package org.yamcs.ui.packetviewer.filter.ast;
+
+public enum Operator {
+    EQUAL_TO,
+    NOT_EQUAL_TO,
+    GREATER_THAN,
+    GREATER_THAN_OR_EQUAL_TO,
+    LESS_THAN,
+    LESS_THAN_OR_EQUAL_TO,
+    CONTAINS,
+    MATCHES;
+}
+```
+
+### `OrExpression.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/OrExpression.java`
+
+
+```java
+package org.yamcs.ui.packetviewer.filter.ast;
+
+import java.util.List;
+
+public class OrExpression implements Node {
+
+    private List<AndExpression> clauses;
+
+    public OrExpression(List<AndExpression> clauses) {
+        this.clauses = clauses;
+    }
+
+    public List<AndExpression> getClauses() {
+        return clauses;
+    }
+
+    @Override
+    public String toString(String indent) {
+        StringBuilder buf = new StringBuilder(indent)
+                .append(getClass().getSimpleName())
+                .append("\n");
+        for (AndExpression clause : clauses) {
+            buf.append(clause.toString(indent + " |"));
+        }
+        return buf.toString();
+    }
+}
+```
+
+### `UnaryExpression.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/ast/UnaryExpression.java`
+
+
+```java
+package org.yamcs.ui.packetviewer.filter.ast;
+
+public class UnaryExpression implements Node {
+
+    private Comparison comparison;
+    private OrExpression orExpression;
+    private boolean not;
+
+    public UnaryExpression(Comparison comparison, boolean not) {
+        this.comparison = comparison;
+        this.not = not;
+    }
+
+    public UnaryExpression(OrExpression orExpression, boolean not) {
+        this.orExpression = orExpression;
+        this.not = not;
+    }
+
+    public Comparison getComparison() {
+        return comparison;
+    }
+
+    public boolean isNot() {
+        return not;
+    }
+
+    public OrExpression getOrExpression() {
+        return orExpression;
+    }
+
+    @Override
+    public String toString(String indent) {
+        StringBuilder buf = new StringBuilder(indent)
+                .append(getClass().getSimpleName())
+                .append("\n");
+        if (not) {
+            buf.append(indent).append(" |").append("NOT\n");
+        }
+        if (comparison != null) {
+            buf.append(comparison.toString(indent + " |")).append("\n");
+        } else {
+            buf.append(orExpression.toString(indent + " |"));
+        }
+        return buf.toString();
+    }
+}
+```

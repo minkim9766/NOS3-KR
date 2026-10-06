@@ -3,16 +3,67 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/labels/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `labels.component.html`
 
-file--labels.component.html
-file--labels.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/labels/labels.component.html`
+
+
+```html
+@if (sortedLabels$ | async; as labels) {
+  @for (label of labels; track label) {
+    <ya-label>
+      {{ label.key }}
+      @if (label.value) {
+        :&nbsp;{{ label.value }}
+      }
+    </ya-label>
+  }
+}
 ```
 
-## 항목
+### `labels.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/labels/labels.component.html`](file--labels.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/labels/labels.component.ts`](file--labels.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/labels/labels.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { YaLabel } from '../label/label.component';
+
+interface Entry {
+  key: string;
+  value: string;
+}
+
+@Component({
+  selector: 'ya-labels',
+  templateUrl: './labels.component.html',
+  imports: [AsyncPipe, YaLabel],
+})
+export class YaLabels implements OnInit {
+  @Input()
+  dict: { [key: string]: string };
+
+  sortedLabels$ = new BehaviorSubject<Entry[]>([]);
+
+  ngOnInit() {
+    const entries: Entry[] = [];
+    if (this.dict) {
+      for (const k in this.dict) {
+        if (this.dict.hasOwnProperty(k)) {
+          entries.push({
+            key: k,
+            value: this.dict[k],
+          });
+        }
+      }
+    }
+    entries.sort((a, b) => a.key.localeCompare(b.key));
+    this.sortedLabels$.next(entries);
+  }
+}
+```

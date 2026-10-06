@@ -3,18 +3,228 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `LinuxSpiDriverTester.cpp`
 
-file--LinuxSpiDriverTester.cpp
-file--LinuxSpiDriverTester.hpp
-file--main.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/LinuxSpiDriverTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxSpiDriver.hpp
+// \author tcanham
+// \brief  cpp file for LinuxSpiDriver test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "LinuxSpiDriverTester.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 10
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+LinuxSpiDriverTester ::LinuxSpiDriverTester()
+    : LinuxSpiDriverTesterBase("Tester", MAX_HISTORY_SIZE), component("LinuxSpiDriver") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+LinuxSpiDriverTester ::~LinuxSpiDriverTester() {}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void LinuxSpiDriverTester ::connectPorts() {
+    // SpiReadWrite
+    this->connect_to_SpiReadWrite(0, this->component.get_SpiReadWrite_InputPort(0));
+
+    // Tlm
+    this->component.set_Tlm_OutputPort(0, this->get_from_Tlm(0));
+
+    // Time
+    this->component.set_Time_OutputPort(0, this->get_from_Time(0));
+
+    // Log
+    this->component.set_Log_OutputPort(0, this->get_from_Log(0));
+
+    // LogText
+    this->component.set_LogText_OutputPort(0, this->get_from_LogText(0));
+}
+
+void LinuxSpiDriverTester ::initComponents() {
+    this->init();
+    this->component.init(INSTANCE);
+
+    this->component.open(8, 0, SPI_FREQUENCY_1MHZ);
+}
+
+void LinuxSpiDriverTester::textLogIn(const FwEventIdType id,              //!< The event ID
+                                     Fw::Time& timeTag,                   //!< The time
+                                     const Fw::TextLogSeverity severity,  //!< The severity
+                                     const Fw::TextLogString& text        //!< The event string
+) {
+    TextLogEntry e = {id, timeTag, severity, text};
+
+    printTextLogHistoryEntry(e, stdout);
+}
+
+void LinuxSpiDriverTester::sendBuffer(BYTE* buffer, FwSizeType size) {
+    Fw::Buffer w;
+    w.setdata(reinterpret_cast<PlatformPointerCastType>(buffer));
+    w.setsize(size);
+
+    printf("WRITE: ");
+    for (FwSizeType byte = 0; byte < size; byte++) {
+        printf("0x%02X ", buffer[byte]);
+    }
+    printf("\n");
+
+    BYTE* rb = 0;
+    rb = new BYTE[size];
+
+    FW_ASSERT(rb);
+
+    Fw::Buffer r(0, 0, reinterpret_cast<PlatformPointerCastType>(rb), size);
+
+    this->invoke_to_SpiReadWrite(0, w, r);
+
+    BYTE* d = (BYTE*)r.getdata();
+    printf("READ: ");
+    for (FwSizeType byte = 0; byte < size; byte++) {
+        printf("0x%02X ", d[byte]);
+    }
+    printf("\n");
+
+    delete[] rb;
+}
+
+}  // end namespace Drv
 ```
 
-## 항목
+### `LinuxSpiDriverTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/LinuxSpiDriverTester.cpp`](file--LinuxSpiDriverTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/LinuxSpiDriverTester.hpp`](file--LinuxSpiDriverTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/LinuxSpiDriverTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxSpiDriver/test/ut/Tester.hpp
+// \author tcanham
+// \brief  hpp file for LinuxSpiDriver test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp"
+#include "LinuxSpiDriverGTestBase.hpp"
+
+namespace Drv {
+
+class LinuxSpiDriverTester : public LinuxSpiDriverTesterBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object LinuxSpiDriverTester
+    //!
+    LinuxSpiDriverTester();
+
+    //! Destroy object LinuxSpiDriverTester
+    //!
+    ~LinuxSpiDriverTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! To do
+    //!
+    void sendBuffer(U8* buffer, FwSizeType size);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+    void textLogIn(const FwEventIdType id,              //!< The event ID
+                   Fw::Time& timeTag,                   //!< The time
+                   const Fw::TextLogSeverity severity,  //!< The severity
+                   const Fw::TextLogString& text        //!< The event string
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    LinuxSpiDriverComponentImpl component;
+};
+
+}  // end namespace Drv
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/ut/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Main.cpp
+// ----------------------------------------------------------------------
+
+#include <cstdlib>
+#include "LinuxSpiDriverTester.hpp"
+
+// TEST(Test, NominalTlm) {
+//   Svc::LinuxSpiDriverTester tester;
+//   tester.nominalTlm();
+// }
+
+int main(int argc, char** argv) {
+    Drv::LinuxSpiDriverTester tester;
+
+    U8 buffer[argc - 1];
+
+    // scan args for bytes
+
+    for (int byte = 0; byte < argc - 1; byte++) {
+        buffer[byte] = strtol(argv[1 + byte], 0, 0);
+    }
+
+    tester.sendBuffer(buffer, sizeof(buffer));
+}
+```

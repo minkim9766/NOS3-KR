@@ -3,18 +3,600 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack-folder.component.css`
 
-file--stack-folder.component.css
-file--stack-folder.component.html
-file--stack-folder.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/stack-folder.component.css`
+
+
+```css
+.droparea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.droparea-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: rgba(27, 97, 185, 0.1);
+  border: 1px solid rgba(27, 97, 185, 1);
+  z-index: 10;
+}
+
+table {
+  user-select: none;
+}
 ```
 
-## 항목
+### `stack-folder.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/stack-folder.component.css`](file--stack-folder.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/stack-folder.component.html`](file--stack-folder.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/stack-folder.component.ts`](file--stack-folder.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/stack-folder.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Stacks">
+    @if (mayManageStacks()) {
+      <ya-page-button (clicked)="createStack()" icon="add_box">Create stack</ya-page-button>
+    }
+    @if (mayManageStacks()) {
+      <ya-page-button (clicked)="openUploadDialog()" icon="file_upload">
+        Upload stack
+        <input #uploader type="file" hidden accept=".xml,.ycs" multiple (change)="importStack()" />
+      </ya-page-button>
+    }
+    @if (mayManageStacks()) {
+      <ya-page-button (clicked)="createFolder()" icon="create_new_folder">
+        Create folder
+      </ya-page-button>
+    }
+    @if (mayManageStacks()) {
+      <ya-page-button
+        (clicked)="deleteSelectedStacks()"
+        [disabled]="!selection.hasValue()"
+        icon="delete">
+        Delete
+      </ya-page-button>
+    }
+  </ya-instance-toolbar>
+
+  <div
+    #droparea
+    class="droparea"
+    [class.active]="dragActive$ | async"
+    (dragenter)="dragEnter($event)">
+    <div
+      class="droparea-overlay"
+      [class.hide]="!(dragActive$ | async)"
+      (dragover)="dragOver($event)"
+      (dragleave)="dragLeave($event)"
+      (drop)="drop($event)"></div>
+
+    <ya-panel>
+      @if (breadcrumb$ | async; as breadcrumb) {
+        @if (breadcrumb.length) {
+          <ya-breadcrumb-trail>
+            <ya-breadcrumb
+              link="/procedures/stacks/browse"
+              [queryParams]="{ c: yamcs.context }"
+              icon="account_tree" />
+            @for (item of breadcrumb; track item) {
+              <ya-breadcrumb
+                [link]="item.route"
+                [queryParams]="{ c: yamcs.context }"
+                [label]="item.name" />
+            }
+          </ya-breadcrumb-trail>
+        }
+      }
+      @if (dataSource && dataSource.data.length) {
+        <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+          <ng-container cdkColumnDef="select">
+            <th
+              mat-header-cell
+              *cdkHeaderCellDef
+              class="checkbox"
+              (click)="cb.toggle(); $event.stopPropagation()">
+              <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+            </th>
+            <td
+              mat-cell
+              *cdkCellDef="let item"
+              class="checkbox"
+              (click)="cb.toggle(); $event.stopPropagation()">
+              <ya-table-checkbox
+                #cb
+                [dataSource]="dataSource"
+                [selection]="selection"
+                [item]="item" />
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="name">
+            <th mat-header-cell *cdkHeaderCellDef>Name</th>
+            <td mat-cell *cdkCellDef="let item">
+              @if (item.folder) {
+                <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+                  folder
+                </mat-icon>
+                <a
+                  [routerLink]="'/procedures/stacks/browse/' + item.name"
+                  [queryParams]="{ c: yamcs.context }"
+                  (click)="$event.stopPropagation()">
+                  {{ item.name | filename }}
+                </a>
+              } @else {
+                <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+                  description
+                </mat-icon>
+                <a
+                  [routerLink]="'/procedures/stacks/files/' + item.name"
+                  [queryParams]="{ c: yamcs.context }"
+                  (click)="$event.stopPropagation()"
+                  [title]="item.name | filename">
+                  {{ item.name | filename }}
+                </a>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="visibility">
+            <th mat-header-cell *cdkHeaderCellDef>Visibility</th>
+            <td mat-cell *cdkCellDef="let item">Private</td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="modified">
+            <th mat-header-cell *cdkHeaderCellDef>Date modified</th>
+            <td mat-cell *cdkCellDef="let item">
+              {{ (item.modified | datetime) || "-" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="expand"></th>
+            <td mat-cell *matCellDef="let item">
+              @if (!item.folder && mayManageStacks()) {
+                <ya-more>
+                  <button mat-menu-item (click)="renameFile(item)">Rename</button>
+                  <a mat-menu-item [href]="item.objectUrl" download>Download</a>
+                  <mat-divider />
+                  <button mat-menu-item (click)="deleteFile(item)">Delete</button>
+                </ya-more>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="formatWarning">
+            <th mat-header-cell *cdkHeaderCellDef></th>
+            <td mat-cell *cdkCellDef="let item" style="text-align: right">
+              @if (!item.folder) {
+                <span>
+                  @switch (item.name | filename | extension | lowercase) {
+                    @case ("xml") {
+                      <span></span>
+                    }
+                    @case ("ycs") {
+                      <span></span>
+                    }
+                    @default {
+                      <span>Unsupported format '{{ item.name | filename | extension }}'</span>
+                    }
+                  }
+                </span>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+          <tr
+            mat-row
+            *cdkRowDef="let row; columns: displayedColumns()"
+            [class.selected]="selection.isSelected(row)"
+            (click)="toggleOne(row)"></tr>
+        </table>
+      } @else {
+        @if (breadcrumb$ | async; as breadcrumb) {
+          @if (loaded && breadcrumb.length) {
+            <ya-empty-message>Empty directory.</ya-empty-message>
+          }
+          @if (loaded && !breadcrumb.length) {
+            <ya-empty-message headerTitle="Stacks">
+              <p>
+                Stacks are used to interactively execute a prepared set of steps. To start, either:
+              </p>
+              @if (mayManageStacks()) {
+                <p>
+                  <ya-button appearance="primary" (click)="createStack()">Create a stack</ya-button>
+                  or
+                  <ya-button (click)="openUploadDialog()">Import a stack</ya-button>
+                </p>
+              }
+            </ya-empty-message>
+          }
+        }
+      }
+    </ya-panel>
+  </div>
+</ya-instance-page>
+```
+
+### `stack-folder.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/stack-folder.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  AuthService,
+  ConfigService,
+  ListObjectsOptions,
+  ListObjectsResponse,
+  MessageService,
+  StorageClient,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import * as dnd from '../../../shared/dnd';
+import { CreateStackDialogComponent } from '../create-stack-dialog/create-stack-dialog.component';
+import { CreateStackFolderDialogComponent } from '../create-stack-folder-dialog/create-stack-folder-dialog.component';
+import { RenameStackDialogComponent } from '../rename-stack-dialog/rename-stack-dialog.component';
+
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './stack-folder.component.html',
+  styleUrl: './stack-folder.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StackFolderComponent implements OnDestroy {
+  @ViewChild('droparea', { static: true })
+  dropArea: ElementRef;
+
+  @ViewChild('uploader')
+  private uploaderEl: ElementRef<HTMLInputElement>;
+
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+  dragActive$ = new BehaviorSubject<boolean>(false);
+
+  displayedColumns = signal<string[]>([
+    'name',
+    'modified',
+    'actions',
+    'formatWarning',
+  ]);
+  dataSource = new MatTableDataSource<BrowseItem>([]);
+  selection = new SelectionModel<BrowseItem>(true, []);
+
+  private routerSubscription: Subscription;
+  private storageClient: StorageClient;
+
+  private bucket: string;
+
+  loaded = false;
+  converting = false;
+
+  constructor(
+    private dialog: MatDialog,
+    readonly yamcs: YamcsService,
+    title: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private messageService: MessageService,
+    private configService: ConfigService,
+  ) {
+    title.setTitle('Stacks');
+    this.storageClient = yamcs.createStorageClient();
+
+    this.bucket = configService.getStackBucket();
+
+    this.loadCurrentFolder();
+    this.routerSubscription = router.events
+      .pipe(filter((evt) => evt instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadCurrentFolder();
+      });
+
+    if (this.mayManageStacks()) {
+      this.displayedColumns.set(['select', ...this.displayedColumns()]);
+    }
+  }
+
+  private loadCurrentFolder() {
+    const options: ListObjectsOptions = {
+      delimiter: '/',
+    };
+
+    const routeSegments = this.route.snapshot.url;
+    if (routeSegments.length) {
+      options.prefix = routeSegments.map((s) => s.path).join('/') + '/';
+    }
+
+    this.storageClient.listObjects(this.bucket, options).then((dir) => {
+      this.updateBrowsePath();
+      this.changedir(dir);
+      this.loaded = true;
+    });
+  }
+
+  private changedir(dir: ListObjectsResponse) {
+    this.selection.clear();
+    const items: BrowseItem[] = [];
+    for (const prefix of dir.prefixes || []) {
+      items.push({
+        folder: true,
+        name: prefix,
+      });
+    }
+    for (const object of dir.objects || []) {
+      // Ignore fake objects that represent an empty directory
+      if (object.name.endsWith('/')) {
+        continue;
+      }
+      items.push({
+        folder: false,
+        name: object.name,
+        modified: object.created,
+        objectUrl: this.storageClient.getObjectURL(this.bucket, object.name),
+      });
+    }
+    this.dataSource.data = items;
+  }
+
+  toggleOne(row: BrowseItem) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  createStack() {
+    const dialogRef = this.dialog.open(CreateStackDialogComponent, {
+      width: '400px',
+      data: {
+        path: this.getCurrentPath(),
+        prefix: '',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl(
+          `/procedures/stacks/files/${result}?c=${this.yamcs.context}`,
+        );
+      }
+    });
+  }
+
+  createFolder() {
+    this.dialog
+      .open(CreateStackFolderDialogComponent, {
+        width: '400px',
+        data: {
+          bucket: this.bucket,
+          path: this.getCurrentPath(),
+        },
+      })
+      .afterClosed()
+      .subscribe({
+        next: () => this.loadCurrentFolder(),
+      });
+  }
+
+  openUploadDialog() {
+    this.uploaderEl.nativeElement.click();
+  }
+
+  importStack() {
+    let path = this.getCurrentPath();
+    // Full path should not have a leading slash
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
+
+    const files = this.uploaderEl.nativeElement.files;
+
+    const uploadPromises = [];
+    for (const key in files) {
+      if (!isNaN(parseInt(key, 10))) {
+        const file = files[key as any];
+        const fullPath = path ? path + '/' + file.name : file.name;
+        const prefix = '';
+        const objectName = prefix + fullPath;
+        const promise = this.storageClient.uploadObject(
+          this.bucket,
+          objectName,
+          file,
+        );
+        uploadPromises.push(promise);
+      }
+    }
+
+    Promise.all(uploadPromises)
+      .then(() => this.loadCurrentFolder())
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private getCurrentPath() {
+    let path = '';
+    for (const segment of this.route.snapshot.url) {
+      path += '/' + segment.path;
+    }
+    return path || '/';
+  }
+
+  deleteSelectedStacks() {
+    const deletableObjects: string[] = [];
+    const findObjectPromises = [];
+    for (const item of this.selection.selected) {
+      if (item.folder) {
+        findObjectPromises.push(
+          this.storageClient
+            .listObjects(this.bucket, {
+              prefix: item.name,
+            })
+            .then((response) => {
+              const objects = response.objects || [];
+              deletableObjects.push(...objects.map((o) => o.name));
+            }),
+        );
+      } else {
+        deletableObjects.push(item.name);
+      }
+    }
+
+    Promise.all(findObjectPromises).then(() => {
+      if (
+        confirm(
+          `You are about to delete ${deletableObjects.length} files. Are you sure you want to continue?`,
+        )
+      ) {
+        const deletePromises = [];
+        for (const object of deletableObjects) {
+          deletePromises.push(
+            this.storageClient.deleteObject(this.bucket, object),
+          );
+        }
+
+        Promise.all(deletePromises).then(() => {
+          this.loadCurrentFolder();
+        });
+      }
+    });
+  }
+
+  renameFile(item: BrowseItem) {
+    const dialogRef = this.dialog.open(RenameStackDialogComponent, {
+      data: {
+        name: item.name,
+      },
+      width: '400px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadCurrentFolder();
+      }
+    });
+  }
+
+  deleteFile(item: BrowseItem) {
+    if (confirm(`Are you sure you want to delete ${item.name}?`)) {
+      this.storageClient.deleteObject(this.bucket, item.name).then(() => {
+        this.loadCurrentFolder();
+      });
+    }
+  }
+
+  dragEnter(evt: DragEvent) {
+    this.dragActive$.next(true);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  dragOver(evt: DragEvent) {
+    // This event must be prevented. Otherwise drop doesn't trigger.
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  dragLeave(evt: DragEvent) {
+    this.dragActive$.next(false);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  drop(evt: DragEvent) {
+    const dataTransfer: any = evt.dataTransfer || {};
+    if (dataTransfer) {
+      let objectPrefix = this.getCurrentPath().substring(1);
+      if (objectPrefix !== '') {
+        objectPrefix += '/';
+      }
+
+      dnd.listDroppedFiles(dataTransfer).then((droppedFiles) => {
+        const uploadPromises: any[] = [];
+        for (const droppedFile of droppedFiles) {
+          let objectPath = objectPrefix + droppedFile._fullPath;
+          const promise = this.storageClient.uploadObject(
+            this.bucket,
+            objectPath,
+            droppedFile,
+          );
+          uploadPromises.push(promise);
+        }
+        Promise.all(uploadPromises).finally(() => {
+          this.loadCurrentFolder();
+        });
+      });
+    }
+    this.dragActive$.next(false);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  mayManageStacks() {
+    const user = this.authService.getUser()!;
+    return (
+      user.hasObjectPrivilege('ManageBucket', this.bucket) ||
+      user.hasSystemPrivilege('ManageAnyBucket')
+    );
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    for (const segment of this.route.snapshot.url) {
+      path += '/' + segment.path;
+      breadcrumb.push({
+        name: segment.path,
+        route: '/procedures/stacks/browse' + path,
+      });
+    }
+    this.breadcrumb$.next(breadcrumb);
+    return path || '/';
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+  }
+}
+
+export class BrowseItem {
+  folder: boolean;
+  name: string;
+  modified?: string;
+  objectUrl?: string;
+}
+
+export interface BreadCrumbItem {
+  name: string;
+  route: string;
+}
+```

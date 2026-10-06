@@ -3,172 +3,4894 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `OCS_arpa_inet.h`
 
-file--OCS_arpa_inet.h
-file--OCS_assert.h
-file--OCS_basetypes.h
-file--OCS_blkIo.h
-file--OCS_bsp-impl.h
-file--OCS_cbioLib.h
-file--OCS_complex.h
-file--OCS_ctype.h
-file--OCS_dirent.h
-file--OCS_dlfcn.h
-file--OCS_dosFsLib.h
-file--OCS_drv_hdisk_ataDrv.h
-file--OCS_errno.h
-file--OCS_errnoLib.h
-file--OCS_fcntl.h
-file--OCS_fenv.h
-file--OCS_float.h
-file--OCS_hostLib.h
-file--OCS_intLib.h
-file--OCS_inttypes.h
-file--OCS_ioLib.h
-file--OCS_iv.h
-file--OCS_loadLib.h
-file--OCS_locale.h
-file--OCS_logLib.h
-file--OCS_math.h
-file--OCS_memPartLib.h
-file--OCS_moduleLib.h
-file--OCS_mqueue.h
-file--OCS_msgQLib.h
-file--OCS_net_if.h
-file--OCS_netdb.h
-file--OCS_netinet_in.h
-file--OCS_netinet_tcp.h
-file--OCS_objLib.h
-file--OCS_poll.h
-file--OCS_pthread.h
-file--OCS_ramDiskCbio.h
-file--OCS_ramDrv.h
-file--OCS_sched.h
-file--OCS_semaphore.h
-file--OCS_semLib.h
-file--OCS_setjmp.h
-file--OCS_shellLib.h
-file--OCS_signal.h
-file--OCS_stat.h
-file--OCS_stdarg.h
-file--OCS_stdio.h
-file--OCS_stdlib.h
-file--OCS_string.h
-file--OCS_strings.h
-file--OCS_symLib.h
-file--OCS_sys_ioctl.h
-file--OCS_sys_ipc.h
-file--OCS_sys_mman.h
-file--OCS_sys_select.h
-file--OCS_sys_socket.h
-file--OCS_sys_time.h
-file--OCS_sys_times.h
-file--OCS_sys_types.h
-file--OCS_sys_un.h
-file--OCS_sys_wait.h
-file--OCS_sysLib.h
-file--OCS_taskLib.h
-file--OCS_taskVarLib.h
-file--OCS_termios.h
-file--OCS_tgmath.h
-file--OCS_time.h
-file--OCS_timers.h
-file--OCS_ulimit.h
-file--OCS_unistd.h
-file--OCS_unldLib.h
-file--OCS_usrLib.h
-file--OCS_version.h
-file--OCS_vxWorks.h
-file--OCS_wchar.h
-file--OCS_wctype.h
-file--OCS_xbdBlkDev.h
-file--OCS_xbdRamDisk.h
-file--README.md
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_arpa_inet.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for arpa/inet.h
+ */
+
+#ifndef OCS_ARPA_INET_H
+#define OCS_ARPA_INET_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in arpa/inet.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in arpa/inet.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in arpa/inet.h */
+/* ----------------------------------------- */
+
+extern const char *OCS_inet_ntop(int af, const void *cp, char *buf, size_t len);
+extern int         OCS_inet_pton(int af, const char *cp, void *buf);
+
+#endif /* OCS_ARPA_INET_H */
 ```
 
-## 항목
+### `OCS_assert.h`
 
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_arpa_inet.h`](file--OCS_arpa_inet.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_assert.h`](file--OCS_assert.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_basetypes.h`](file--OCS_basetypes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_blkIo.h`](file--OCS_blkIo.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_bsp-impl.h`](file--OCS_bsp-impl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_cbioLib.h`](file--OCS_cbioLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_complex.h`](file--OCS_complex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ctype.h`](file--OCS_ctype.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_dirent.h`](file--OCS_dirent.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_dlfcn.h`](file--OCS_dlfcn.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_dosFsLib.h`](file--OCS_dosFsLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_drv_hdisk_ataDrv.h`](file--OCS_drv_hdisk_ataDrv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_errno.h`](file--OCS_errno.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_errnoLib.h`](file--OCS_errnoLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_fcntl.h`](file--OCS_fcntl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_fenv.h`](file--OCS_fenv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_float.h`](file--OCS_float.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_hostLib.h`](file--OCS_hostLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_intLib.h`](file--OCS_intLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_inttypes.h`](file--OCS_inttypes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ioLib.h`](file--OCS_ioLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_iv.h`](file--OCS_iv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_loadLib.h`](file--OCS_loadLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_locale.h`](file--OCS_locale.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_logLib.h`](file--OCS_logLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_math.h`](file--OCS_math.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_memPartLib.h`](file--OCS_memPartLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_moduleLib.h`](file--OCS_moduleLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_mqueue.h`](file--OCS_mqueue.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_msgQLib.h`](file--OCS_msgQLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_net_if.h`](file--OCS_net_if.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_netdb.h`](file--OCS_netdb.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_netinet_in.h`](file--OCS_netinet_in.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_netinet_tcp.h`](file--OCS_netinet_tcp.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_objLib.h`](file--OCS_objLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_poll.h`](file--OCS_poll.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_pthread.h`](file--OCS_pthread.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ramDiskCbio.h`](file--OCS_ramDiskCbio.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ramDrv.h`](file--OCS_ramDrv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sched.h`](file--OCS_sched.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_semaphore.h`](file--OCS_semaphore.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_semLib.h`](file--OCS_semLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_setjmp.h`](file--OCS_setjmp.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_shellLib.h`](file--OCS_shellLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_signal.h`](file--OCS_signal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stat.h`](file--OCS_stat.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stdarg.h`](file--OCS_stdarg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stdio.h`](file--OCS_stdio.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stdlib.h`](file--OCS_stdlib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_string.h`](file--OCS_string.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_strings.h`](file--OCS_strings.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_symLib.h`](file--OCS_symLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_ioctl.h`](file--OCS_sys_ioctl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_ipc.h`](file--OCS_sys_ipc.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_mman.h`](file--OCS_sys_mman.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_select.h`](file--OCS_sys_select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_socket.h`](file--OCS_sys_socket.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_time.h`](file--OCS_sys_time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_times.h`](file--OCS_sys_times.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_types.h`](file--OCS_sys_types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_un.h`](file--OCS_sys_un.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_wait.h`](file--OCS_sys_wait.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sysLib.h`](file--OCS_sysLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_taskLib.h`](file--OCS_taskLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_taskVarLib.h`](file--OCS_taskVarLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_termios.h`](file--OCS_termios.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_tgmath.h`](file--OCS_tgmath.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_time.h`](file--OCS_time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_timers.h`](file--OCS_timers.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ulimit.h`](file--OCS_ulimit.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_unistd.h`](file--OCS_unistd.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_unldLib.h`](file--OCS_unldLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_usrLib.h`](file--OCS_usrLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_version.h`](file--OCS_version.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_vxWorks.h`](file--OCS_vxWorks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_wchar.h`](file--OCS_wchar.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_wctype.h`](file--OCS_wctype.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_xbdBlkDev.h`](file--OCS_xbdBlkDev.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_xbdRamDisk.h`](file--OCS_xbdRamDisk.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/inc/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_assert.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for assert.h
+ */
+
+#ifndef OCS_ASSERT_H
+#define OCS_ASSERT_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in assert.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in assert.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in assert.h */
+/* ----------------------------------------- */
+
+void OCS_assert(bool expression);
+
+#endif /* OCS_ASSERT_H */
+```
+
+### `OCS_basetypes.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_basetypes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub basic data types
+ */
+
+#ifndef OCS_BASETYPES_H
+#define OCS_BASETYPES_H
+
+/*
+ * NOTE: These header files are intentionally _not_ overridden
+ * in the replacement/override header directory, so this should
+ * pull in the actual (native system) version of these files.
+ *
+ * It is important to pull in these definitions first before any
+ * potential re-mapping (#define) statements are done.
+ */
+
+#include <stddef.h>  /* for correct size_t and ptrdiff_t types */
+#include <stdint.h>  /* for correct fixed-width integer types */
+#include <limits.h>  /* for correct INT_MAX, etc. */
+#include <stdbool.h> /* for correct boolean semantics */
+
+#endif /* OCS_BASETYPES_H */
+```
+
+### `OCS_blkIo.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_blkIo.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub basic data types
+ */
+
+#ifndef OCS_BLKIO_H
+#define OCS_BLKIO_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* The module and blk_dev types are used in several headers */
+typedef struct OCS_BLK_DEV
+{
+    int bd;
+} OCS_BLK_DEV;
+typedef OCS_BLK_DEV *OCS_BLK_DEV_ID;
+
+#endif /* OCS_BLKIO_H */
+```
+
+### `OCS_bsp-impl.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_bsp-impl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Purpose: Contains functions prototype definitions and variables declarations
+ *          for the OSAL BSP layer
+ *
+ * This is used to provide an abstract notion of certain platform-specific features:
+ *
+ *  - Startup arguments/options.  These are optional strings containing any
+ *    passed-in parameters from a bootloader/shell/etc.  Not all platforms
+ *    support this notion, but this provides a consistent access method for
+ *    those platforms that do pass startup options.
+ *
+ *  - Exit code.  This is the "status" passed back to the operating system
+ *    if/when the application terminates.  This is a numeric value with
+ *    platform-defined meaning.
+ *
+ *  - Low-level console output.  Provide direct, synchronous access to the
+ *    BSP-provided console or debug terminal device.
+ */
+
+#ifndef OCS_BSP_IMPL_H
+#define OCS_BSP_IMPL_H
+
+#include "OCS_basetypes.h"
+
+#define OCS_OS_BSP_CONSOLEMODE_NORMAL    0x2101
+#define OCS_OS_BSP_CONSOLEMODE_RED       0x2102
+#define OCS_OS_BSP_CONSOLEMODE_GREEN     0x2104
+#define OCS_OS_BSP_CONSOLEMODE_BLUE      0x2108
+#define OCS_OS_BSP_CONSOLEMODE_HIGHLIGHT 0x2110
+
+/********************************************************************/
+/* INTERNAL BSP IMPLEMENTATION FUNCTIONS                            */
+/********************************************************************/
+
+/*
+ * Lock and unlock stubs
+ */
+void OCS_OS_BSP_Lock_Impl(void);
+void OCS_OS_BSP_Unlock_Impl(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Low level raw console data output.  Writes a sequence of
+             characters directly to the BSP debug terminal or console device.
+
+             The string is not required to be null terminated, and
+             any control characters will be passed through.  Any
+             non-printable ASCII codes will have platform-defined
+             interpretation.
+
+       Note: This should write the string as-is without buffering.
+ ------------------------------------------------------------------*/
+extern void OCS_OS_BSP_ConsoleOutput_Impl(const char *Str, size_t DataLen);
+
+/*----------------------------------------------------------------
+
+    Purpose: Set the console output mode, if supported by the BSP.
+
+             Causes any future text written to the debug console to
+             be colored/highlighted accordingly.  Intended for use
+             with test applications where certain messages may need
+             visual distinction (e.g. failures).
+
+             See the OS_BSP_CONSOLEMODE constants for possible values.
+             Values may be bitwise OR'ed together.
+
+             This call is ignored if the BSP does not support console
+             control codes.
+ ------------------------------------------------------------------*/
+extern void OCS_OS_BSP_ConsoleSetMode_Impl(uint32_t ModeBits);
+
+#endif /* OCS_BSP_IMPL_H */
+```
+
+### `OCS_cbioLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_cbioLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for cbioLib.h
+ */
+
+#ifndef OCS_CBIOLIB_H
+#define OCS_CBIOLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in cbioLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in cbioLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in cbioLib.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_CBIOLIB_H */
+```
+
+### `OCS_complex.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_complex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for complex.h
+ */
+
+#ifndef OCS_COMPLEX_H
+#define OCS_COMPLEX_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in complex.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in complex.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in complex.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_COMPLEX_H */
+```
+
+### `OCS_ctype.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ctype.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ctype.h
+ */
+
+#ifndef OCS_CTYPE_H
+#define OCS_CTYPE_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in ctype.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in ctype.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in ctype.h */
+/* ----------------------------------------- */
+
+extern int OCS_isgraph(int c);
+
+#endif /* OCS_CTYPE_H */
+```
+
+### `OCS_dirent.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_dirent.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dirent.h
+ */
+
+#ifndef OCS_DIRENT_H
+#define OCS_DIRENT_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in dirent.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in dirent.h */
+/* ----------------------------------------- */
+
+typedef struct OCS_DIR OCS_DIR;
+
+struct OCS_dirent
+{
+    char d_name[4];
+};
+
+/* ----------------------------------------- */
+/* prototypes normally declared in dirent.h */
+/* ----------------------------------------- */
+
+extern int                OCS_closedir(OCS_DIR *dirp);
+extern OCS_DIR *          OCS_opendir(const char *name);
+extern struct OCS_dirent *OCS_readdir(OCS_DIR *dirp);
+extern void               OCS_rewinddir(OCS_DIR *dirp);
+
+#endif /* OCS_DIRENT_H */
+```
+
+### `OCS_dlfcn.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_dlfcn.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dlfcn.h
+ */
+
+#ifndef OCS_DLFCN_H
+#define OCS_DLFCN_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in dlfcn.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in dlfcn.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in dlfcn.h */
+/* ----------------------------------------- */
+
+extern int   OCS_dlclose(void *handle);
+extern char *OCS_dlerror(void);
+extern void *OCS_dlopen(const char *file, int flags);
+extern void *OCS_dlsym(void *handle, const char *name);
+
+#endif /* OCS_DLFCN_H */
+```
+
+### `OCS_dosFsLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_dosFsLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dosFsLib.h
+ */
+
+#ifndef OCS_DOSFSLIB_H
+#define OCS_DOSFSLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in dosFsLib.h */
+/* ----------------------------------------- */
+#define OCS_DOS_CHK_ONLY        0x00000001
+#define OCS_DOS_CHK_REPAIR      0x00000002
+#define OCS_DOS_CHK_VERB_0      0x0000ff00 /* verbosity level/flags */
+#define OCS_DOS_CHK_VERB_SILENT OCS_DOS_CHK_VERB_0
+#define OCS_DOS_OPT_BLANK       0x0002 /* create a clean boot block */
+
+/* ----------------------------------------- */
+/* types normally defined in dosFsLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in dosFsLib.h */
+/* ----------------------------------------- */
+extern OCS_STATUS OCS_dosFsVolFormat(char *path, int opt, OCS_FUNCPTR pPromptFunc);
+
+#endif /* OCS_DOSFSLIB_H */
+```
+
+### `OCS_drv_hdisk_ataDrv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_drv_hdisk_ataDrv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for drv/hdisk/ataDrv.h
+ */
+
+#ifndef OCS_DRV_HDISK_ATADRV_H
+#define OCS_DRV_HDISK_ATADRV_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+#include "OCS_blkIo.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in drv/hdisk/ataDrv.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in drv/hdisk/ataDrv.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in drv/hdisk/ataDrv.h */
+/* ----------------------------------------- */
+extern OCS_BLK_DEV *OCS_ataDevCreate(int ctrl, int drive, unsigned int nBlocks, unsigned int blkOffset);
+
+#endif /* OCS_DRV_HDISK_ATADRV_H */
+```
+
+### `OCS_errno.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_errno.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for errno.h
+ */
+
+#ifndef OCS_ERRNO_H
+#define OCS_ERRNO_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in errno.h */
+/* ----------------------------------------- */
+/* POSIX-specific  errnos */
+#define OCS_EINTR     0x1801
+#define OCS_EAGAIN    0x1802
+#define OCS_EEXIST    0x180a
+#define OCS_EINVAL    0x1803
+#define OCS_EMSGSIZE  0x1804
+#define OCS_ETIMEDOUT 0x1805
+#define OCS_ESPIPE    0x1806
+#define OCS_ENOTSUP   0x1807
+#define OCS_ENOSYS    0x1808
+#define OCS_EROFS     0x1809
+
+/* ----------------------------------------- */
+/* types normally defined in errno.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in errno.h */
+/* ----------------------------------------- */
+
+extern int OCS_errno;
+
+#endif /* OCS_ERRNO_H */
+```
+
+### `OCS_errnoLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_errnoLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for errnoLib.h
+ */
+
+#ifndef OCS_ERRNOLIB_H
+#define OCS_ERRNOLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in errnoLib.h  */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in errnoLib.h      */
+/* ----------------------------------------- */
+
+/* -----------------------------------------  */
+/* prototypes normally declared in errnoLib.h */
+/* -----------------------------------------  */
+
+extern int OCS_errnoGet(void);
+
+#endif /* OCS_ERRNOLIB_H */
+```
+
+### `OCS_fcntl.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_fcntl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for fcntl.h
+ */
+
+#ifndef OCS_FCNTL_H
+#define OCS_FCNTL_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in fcntl.h */
+/* ----------------------------------------- */
+
+/*
+ * note these constants are used as bitmasks and so
+ * they must be single bit flags to work properly.
+ *
+ * However, they are defined differently from a typical UNIX
+ * in order to increase the likelihood that a hard-coded value
+ * is caught by UT.
+ *
+ * These are exposed to apps through fcntl.h and sys/stat.h
+ */
+#define OCS_S_IRWXO 0x1110
+#define OCS_S_IRWXG 0x2220
+#define OCS_S_IRWXU 0x4440
+
+#define OCS_S_IXOTH 0x1000
+#define OCS_S_IXGRP 0x2000
+#define OCS_S_IXUSR 0x4000
+
+#define OCS_S_IROTH 0x0100
+#define OCS_S_IRGRP 0x0200
+#define OCS_S_IRUSR 0x0400
+
+#define OCS_S_IWOTH 0x0010
+#define OCS_S_IWGRP 0x0020
+#define OCS_S_IWUSR 0x0040
+
+#define OCS_S_IFDIR    0x0001
+#define OCS_S_ISDIR(x) (((x)&OCS_S_IFDIR) == OCS_S_IFDIR)
+
+#define OCS_O_RDONLY   0x1501
+#define OCS_O_WRONLY   0x1502
+#define OCS_O_RDWR     0x1503
+#define OCS_O_CREAT    0x1504
+#define OCS_O_TRUNC    0x1508
+#define OCS_O_NONBLOCK 0x1510
+
+#define OCS_F_GETFL 0x1D01
+#define OCS_F_SETFL 0x1D02
+#define OCS_F_GETFD 0x1D03
+#define OCS_F_SETFD 0x1D04
+#define OCS_F_DUPFD 0x1D05
+
+/* ----------------------------------------- */
+/* types normally defined in fcntl.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in fcntl.h */
+/* ----------------------------------------- */
+
+extern int OCS_fcntl(int fd, int cmd, ...);
+extern int OCS_open(const char *file, int oflag, ...);
+
+#endif /* OCS_FCNTL_H */
+```
+
+### `OCS_fenv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_fenv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for fenv.h
+ */
+
+#ifndef OCS_FENV_H
+#define OCS_FENV_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in fenv.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in fenv.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in fenv.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_FENV_H */
+```
+
+### `OCS_float.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_float.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for float.h
+ */
+
+#ifndef OCS_FLOAT_H
+#define OCS_FLOAT_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in float.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in float.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in float.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_FLOAT_H */
+```
+
+### `OCS_hostLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_hostLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for OCS_hostLib
+ */
+
+#ifndef OCS_HOSTLIB_H
+#define OCS_HOSTLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in hostLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in hostLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in hostLib.h */
+/* ----------------------------------------- */
+extern int OCS_hostGetByName(char *name);
+
+#endif /* OCS_HOSTLIB_H */
+```
+
+### `OCS_intLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_intLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for intLib.h
+ */
+
+#ifndef OCS_INTLIB_H
+#define OCS_INTLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in intLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in intLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in intLib.h */
+/* ----------------------------------------- */
+
+extern OCS_STATUS       OCS_intConnect(OCS_VOIDFUNCPTR *vector, OCS_VOIDFUNCPTR routine, int parameter);
+extern int              OCS_intDisable(int level);
+extern int              OCS_intEnable(int level);
+extern int              OCS_intLock(void);
+extern int              OCS_intUnlock(int lockKey);
+extern OCS_VOIDFUNCPTR *OCS_INUM_TO_IVEC(unsigned int ui);
+
+#endif /* OCS_INTLIB_H */
+```
+
+### `OCS_inttypes.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_inttypes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for inttypes.h
+ */
+
+#ifndef OCS_INTTYPES_H
+#define OCS_INTTYPES_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in inttypes.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in inttypes.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in inttypes.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_INTTYPES_H */
+```
+
+### `OCS_ioLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ioLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ioLib.h
+ */
+
+#ifndef OCS_IOLIB_H
+#define OCS_IOLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in ioLib.h */
+/* ----------------------------------------- */
+
+#define OCS_FIOCHKDSK  0x1E01
+#define OCS_FIOUNMOUNT 0x1E02
+#define OCS_FIONBIO    0x1E03
+
+/* ----------------------------------------- */
+/* types normally defined in ioLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in ioLib.h */
+/* ----------------------------------------- */
+
+extern int OCS_ioctl(int fd, unsigned long request, ...);
+
+#endif /* OCS_IOLIB_H */
+```
+
+### `OCS_iv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_iv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for iv.h
+ */
+
+#ifndef OCS_IV_H
+#define OCS_IV_H
+
+#include "OCS_basetypes.h"
+
+#endif /* OCS_IV_H */
+```
+
+### `OCS_loadLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_loadLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for loadLib.h
+ */
+
+#ifndef OCS_LOADLIB_H
+#define OCS_LOADLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_moduleLib.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in loadLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in loadLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in loadLib.h */
+/* ----------------------------------------- */
+
+extern OCS_MODULE_ID OCS_loadModule(int fd, unsigned int symFlag);
+
+#endif /* OCS_LOADLIB_H */
+```
+
+### `OCS_locale.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_locale.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for locale.h
+ */
+
+#ifndef OCS_LOCALE_H
+#define OCS_LOCALE_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in locale.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in locale.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in locale.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_LOCALE_H */
+```
+
+### `OCS_logLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_logLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for logLib.h
+ */
+
+#ifndef OCS_LOGLIB_H
+#define OCS_LOGLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in logLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in logLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in logLib.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_LOGLIB_H */
+```
+
+### `OCS_math.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_math.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for math.h
+ */
+
+#ifndef OCS_MATH_H
+#define OCS_MATH_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in math.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in math.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in math.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_MATH_H */
+```
+
+### `OCS_memPartLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_memPartLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for memPartLib.h
+ */
+
+#ifndef OCS_MEMPARTLIB_H
+#define OCS_MEMPARTLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in memPartLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in memPartLib.h */
+/* ----------------------------------------- */
+typedef struct OCS_PART *OCS_PART_ID;
+
+typedef struct
+{
+    unsigned long numBytesFree;     /* Number of Free Bytes in Partition       */
+    unsigned long numBlocksFree;    /* Number of Free Blocks in Partition      */
+    unsigned long maxBlockSizeFree; /* Maximum block size that is free.        */
+    unsigned long numBytesAlloc;    /* Number of Allocated Bytes in Partition  */
+    unsigned long numBlocksAlloc;   /* Number of Allocated Blocks in Partition */
+} OCS_MEM_PART_STATS;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in memPartLib.h */
+/* ----------------------------------------- */
+extern OCS_STATUS OCS_memPartShow(OCS_PART_ID partId, /* partition ID */
+                                  int         type /* 0 = statistics, 1 = statistics & list */);
+
+extern OCS_STATUS OCS_memPartInfoGet(OCS_PART_ID         partId, /* partition ID */
+                                     OCS_MEM_PART_STATS *ppartStats /* partition stats structure */);
+
+extern OCS_PART_ID OCS_memSysPartId;
+
+#endif /* OCS_MEMPARTLIB_H */
+```
+
+### `OCS_moduleLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_moduleLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for moduleLib.h
+ */
+
+#ifndef OCS_MODULELIB_H
+#define OCS_MODULELIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in moduleLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in moduleLib.h */
+/* ----------------------------------------- */
+typedef struct OCS_MODULE
+{
+    int m;
+} OCS_MODULE;
+typedef OCS_MODULE *OCS_MODULE_ID;
+
+typedef struct OCS_MODULE_INFO
+{
+    struct
+    {
+        unsigned long textAddr;
+        unsigned long textSize;
+        unsigned long dataAddr;
+        unsigned long dataSize;
+        unsigned long bssAddr;
+        unsigned long bssSize;
+    } segInfo;
+} OCS_MODULE_INFO;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in moduleLib.h */
+/* ----------------------------------------- */
+
+extern OCS_STATUS OCS_moduleInfoGet(OCS_MODULE_ID moduleId, OCS_MODULE_INFO *pModuleInfo);
+
+#endif /* OCS_MODULELIB_H */
+```
+
+### `OCS_mqueue.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_mqueue.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for mqueue.h
+ */
+
+#ifndef OCS_MQUEUE_H
+#define OCS_MQUEUE_H
+
+#include "OCS_basetypes.h"
+#include "OCS_sys_types.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in mqueue.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in mqueue.h */
+/* ----------------------------------------- */
+
+typedef int OCS_mqd_t;
+
+struct OCS_mq_attr
+{
+    unsigned int mq_maxmsg;
+    unsigned int mq_msgsize;
+};
+
+/* ----------------------------------------- */
+/* prototypes normally declared in mqueue.h */
+/* ----------------------------------------- */
+
+extern int         OCS_mq_close(OCS_mqd_t mqdes);
+extern OCS_mqd_t   OCS_mq_open(const char *name, int oflag, ...);
+extern OCS_ssize_t OCS_mq_receive(OCS_mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio);
+extern OCS_ssize_t OCS_mq_timedreceive(OCS_mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio,
+                                       const struct OCS_timespec *abs_timeout);
+extern int         OCS_mq_timedsend(OCS_mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio,
+                                    const struct OCS_timespec *abs_timeout);
+extern int         OCS_mq_unlink(const char *name);
+
+#endif /* OCS_MQUEUE_H */
+```
+
+### `OCS_msgQLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_msgQLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for msgQLib.h
+ */
+
+#ifndef OCS_MSGQLIB_H
+#define OCS_MSGQLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+#include "OCS_objLib.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in msgQLib.h */
+/* ----------------------------------------- */
+#define OCS_MSG_Q_FIFO             0x0
+#define OCS_MSG_Q_PRIORITY         0x1
+#define OCS_WIND_MSG_Q_OPTION_MASK (OCS_MSG_Q_FIFO | OCS_MSG_Q_PRIORITY)
+
+#define OCS_MSG_PRI_NORMAL 0
+#define OCS_MSG_PRI_URGENT 1
+
+/* ----------------------------------------- */
+/* types normally defined in msgQLib.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    int x;
+} OCS_MSG_Q;
+typedef OCS_MSG_Q *OCS_MSG_Q_ID;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in msgQLib.h */
+/* ----------------------------------------- */
+
+extern OCS_MSG_Q_ID OCS_msgQCreate(int maxMsgs, int maxMsgLength, int options);
+extern OCS_STATUS   OCS_msgQDelete(OCS_MSG_Q_ID msgQId);
+extern int          OCS_msgQReceive(OCS_MSG_Q_ID msgQId, char *buffer, OCS_UINT maxNBytes, int timeout);
+extern OCS_STATUS   OCS_msgQSend(OCS_MSG_Q_ID msgQId, char *buffer, OCS_UINT nBytes, int timeout, int priority);
+
+#endif /* OCS_MSGQLIB_H */
+```
+
+### `OCS_net_if.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_net_if.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for net/if.h
+ */
+
+#ifndef OCS_NET_IF_H
+#define OCS_NET_IF_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in net/if.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in net/if.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in net/if.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_NET_IF_H */
+```
+
+### `OCS_netdb.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_netdb.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for netdb.h
+ */
+
+#ifndef OCS_NETDB_H
+#define OCS_NETDB_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in netdb.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in netdb.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in netdb.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_NETDB_H */
+```
+
+### `OCS_netinet_in.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_netinet_in.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for netinet/in.h
+ */
+
+#ifndef OCS_NETINET_IN_H
+#define OCS_NETINET_IN_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in netinet/in.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in netinet/in.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in netinet/in.h */
+/* ----------------------------------------- */
+
+extern uint16_t OCS_htons(uint16_t hostshort);
+extern uint16_t OCS_ntohs(uint16_t netshort);
+extern uint32_t OCS_htonl(uint32_t hostlong);
+extern uint32_t OCS_ntohl(uint32_t netlong);
+
+#endif /* OCS_NETINET_IN_H */
+```
+
+### `OCS_netinet_tcp.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_netinet_tcp.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for netinet/tcp.h
+ */
+
+#ifndef OCS_NETINET_TCP_H
+#define OCS_NETINET_TCP_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in netinet/tcp.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in netinet/tcp.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in netinet/tcp.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_NETINET_TCP_H */
+```
+
+### `OCS_objLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_objLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for objLib.h
+ */
+
+#ifndef OCS_OBJLIB_H
+#define OCS_OBJLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in objLib.h */
+/* ----------------------------------------- */
+/* VxWorks-specific  errnos */
+#define OCS_M_objLib                 0x1810
+#define OCS_S_objLib_OBJ_ID_ERROR    (OCS_M_objLib | 1)
+#define OCS_S_objLib_OBJ_UNAVAILABLE (OCS_M_objLib | 2)
+#define OCS_S_objLib_OBJ_DELETED     (OCS_M_objLib | 3)
+#define OCS_S_objLib_OBJ_TIMEOUT     (OCS_M_objLib | 4)
+#define OCS_S_objLib_OBJ_NO_METHOD   (OCS_M_objLib | 5)
+
+/* ----------------------------------------- */
+/* types normally defined in objLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in objLib.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_OBJLIB_H */
+```
+
+### `OCS_poll.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_poll.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for poll.h
+ */
+
+#ifndef OCS_POLL_H
+#define OCS_POLL_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in poll.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in poll.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in poll.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_POLL_H */
+```
+
+### `OCS_pthread.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_pthread.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for pthread.h
+ */
+
+#ifndef OCS_PTHREAD_H
+#define OCS_PTHREAD_H
+
+#include "OCS_basetypes.h"
+#include "OCS_sched.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in pthread.h */
+/* ----------------------------------------- */
+
+#define OCS_PTHREAD_PRIO_INHERIT    0x1000
+#define OCS_PTHREAD_MUTEX_RECURSIVE 0x1001
+#define OCS_PTHREAD_EXPLICIT_SCHED  0x1002
+
+/* ----------------------------------------- */
+/* types normally defined in pthread.h */
+/* ----------------------------------------- */
+
+struct OCS_pthread
+{
+    int pthr;
+};
+
+struct OCS_pthread_key
+{
+    int pthr_key;
+};
+
+struct OCS_pthread_mutex
+{
+    int pthr_mut;
+};
+
+struct OCS_pthread_cond
+{
+    int pthr_cond;
+};
+
+struct OCS_pthread_attr
+{
+    int pthr_attr;
+};
+
+struct OCS_pthread_mutexattr
+{
+    int pthr_mattr;
+};
+
+struct OCS_pthread_condattr
+{
+    int pthr_cattr;
+};
+
+typedef struct OCS_pthread           OCS_pthread_t;
+typedef struct OCS_pthread_attr      OCS_pthread_attr_t;
+typedef struct OCS_pthread_mutex     OCS_pthread_mutex_t;
+typedef struct OCS_pthread_mutexattr OCS_pthread_mutexattr_t;
+typedef struct OCS_pthread_cond      OCS_pthread_cond_t;
+typedef struct OCS_pthread_condattr  OCS_pthread_condattr_t;
+typedef struct OCS_pthread_key       OCS_pthread_key_t;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in pthread.h */
+/* ----------------------------------------- */
+
+extern int  OCS_pthread_attr_destroy(OCS_pthread_attr_t *attr);
+extern int  OCS_pthread_attr_getschedparam(const OCS_pthread_attr_t *attr, struct OCS_sched_param *param);
+extern int  OCS_pthread_attr_init(OCS_pthread_attr_t *attr);
+extern int  OCS_pthread_attr_setinheritsched(OCS_pthread_attr_t *attr, int inherit);
+extern int  OCS_pthread_attr_setschedparam(OCS_pthread_attr_t *attr, const struct OCS_sched_param *param);
+extern int  OCS_pthread_attr_setschedpolicy(OCS_pthread_attr_t *attr, int policy);
+extern int  OCS_pthread_attr_setstacksize(OCS_pthread_attr_t *attr, size_t stacksize);
+extern int  OCS_pthread_cancel(OCS_pthread_t th);
+extern int  OCS_pthread_cond_broadcast(OCS_pthread_cond_t *cond);
+extern int  OCS_pthread_cond_destroy(OCS_pthread_cond_t *cond);
+extern int  OCS_pthread_cond_init(OCS_pthread_cond_t *cond, const OCS_pthread_condattr_t *cond_attr);
+extern int  OCS_pthread_cond_signal(OCS_pthread_cond_t *cond);
+extern int  OCS_pthread_cond_timedwait(OCS_pthread_cond_t *cond, OCS_pthread_mutex_t *mutex,
+                                       const struct OCS_timespec *abstime);
+extern int  OCS_pthread_cond_wait(OCS_pthread_cond_t *cond, OCS_pthread_mutex_t *mutex);
+extern int  OCS_pthread_create(OCS_pthread_t *newthread, const OCS_pthread_attr_t *attr, void *(*start_routine)(void *),
+                               void *arg);
+extern int  OCS_pthread_detach(OCS_pthread_t th);
+extern int  OCS_pthread_equal(OCS_pthread_t thread1, OCS_pthread_t thread2);
+extern void OCS_pthread_exit(void *retval);
+extern int  OCS_pthread_getschedparam(OCS_pthread_t target_thread, int *policy, struct OCS_sched_param *param);
+extern void *        OCS_pthread_getspecific(OCS_pthread_key_t key);
+extern int           OCS_pthread_key_create(OCS_pthread_key_t *key, void (*destr_function)(void *));
+extern int           OCS_pthread_mutexattr_destroy(OCS_pthread_mutexattr_t *attr);
+extern int           OCS_pthread_mutexattr_init(OCS_pthread_mutexattr_t *attr);
+extern int           OCS_pthread_mutexattr_setprotocol(OCS_pthread_mutexattr_t *attr, int protocol);
+extern int           OCS_pthread_mutexattr_settype(OCS_pthread_mutexattr_t *attr, int kind);
+extern int           OCS_pthread_mutex_destroy(OCS_pthread_mutex_t *mutex);
+extern int           OCS_pthread_mutex_init(OCS_pthread_mutex_t *mutex, const OCS_pthread_mutexattr_t *mutexattr);
+extern int           OCS_pthread_mutex_lock(OCS_pthread_mutex_t *mutex);
+extern int           OCS_pthread_mutex_unlock(OCS_pthread_mutex_t *mutex);
+extern OCS_pthread_t OCS_pthread_self(void);
+extern int OCS_pthread_setschedparam(OCS_pthread_t target_thread, int policy, const struct OCS_sched_param *param);
+extern int OCS_pthread_setschedprio(OCS_pthread_t target_thread, int prio);
+extern int OCS_pthread_setspecific(OCS_pthread_key_t key, const void *pointer);
+extern int OCS_pthread_sigmask(int how, const OCS_sigset_t *set, OCS_sigset_t *oldset);
+
+#endif /* OCS_PTHREAD_H */
+```
+
+### `OCS_ramDiskCbio.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ramDiskCbio.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ramDiskCbio.h
+ */
+
+#ifndef OCS_RAMDISKCBIO_H
+#define OCS_RAMDISKCBIO_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in ramDiskCbio.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in ramDiskCbio.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in ramDiskCbio.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_RAMDISKCBIO_H */
+```
+
+### `OCS_ramDrv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ramDrv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ramDrv.h
+ */
+
+#ifndef OCS_RAMDRV_H
+#define OCS_RAMDRV_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+#include "OCS_blkIo.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in ramDrv.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in ramDrv.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in ramDrv.h */
+/* ----------------------------------------- */
+extern OCS_BLK_DEV *OCS_ramDevCreate(char *ramAddr, int bytesPerSec, int secPerTrack, int nSectors, int secOffset);
+
+#endif /* OCS_RAMDRV_H */
+```
+
+### `OCS_sched.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sched.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sched.h
+ */
+
+#ifndef OCS_SCHED_H
+#define OCS_SCHED_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sched.h */
+/* ----------------------------------------- */
+#define OCS_SCHED_FIFO 0x1200
+#define OCS_SCHED_RR   0x1201
+
+/* ----------------------------------------- */
+/* types normally defined in sched.h */
+/* ----------------------------------------- */
+struct OCS_sched_param
+{
+    int sched_priority;
+};
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sched.h */
+/* ----------------------------------------- */
+
+extern int OCS_sched_get_priority_max(int policy);
+extern int OCS_sched_get_priority_min(int policy);
+
+#endif /* OCS_SCHED_H */
+```
+
+### `OCS_semaphore.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_semaphore.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for semaphore.h
+ */
+
+#ifndef OCS_SEMAPHORE_H
+#define OCS_SEMAPHORE_H
+
+#include "OCS_basetypes.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in semaphore.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in semaphore.h */
+/* ----------------------------------------- */
+
+typedef struct
+{
+    int s;
+} OCS_sem_t;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in semaphore.h */
+/* ----------------------------------------- */
+
+extern int OCS_sem_destroy(OCS_sem_t *sem);
+extern int OCS_sem_getvalue(OCS_sem_t *sem, int *sval);
+extern int OCS_sem_init(OCS_sem_t *sem, int pshared, unsigned int value);
+extern int OCS_sem_post(OCS_sem_t *sem);
+extern int OCS_sem_timedwait(OCS_sem_t *sem, const struct OCS_timespec *abstime);
+extern int OCS_sem_wait(OCS_sem_t *sem);
+
+#endif /* OCS_SEMAPHORE_H */
+```
+
+### `OCS_semLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_semLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for semLib.h
+ */
+
+#ifndef OCS_SEMLIB_H
+#define OCS_SEMLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in semLib.h */
+/* ----------------------------------------- */
+#define OCS_VX_BINARY_SEMAPHORE(x)   OCS_SEM x[1]
+#define OCS_VX_COUNTING_SEMAPHORE(x) OCS_SEM x[1]
+#define OCS_VX_MUTEX_SEMAPHORE(x)    OCS_SEM x[1]
+
+/* ----------------------------------------- */
+/* types normally defined in semLib.h */
+/* ----------------------------------------- */
+typedef char     OCS_SEM;
+typedef OCS_SEM *OCS_SEM_ID;
+
+/*for binary semaphores */
+typedef enum
+{
+    OCS_SEM_EMPTY = 0,
+    OCS_SEM_FULL  = 1
+} OCS_SEM_B_STATE;
+
+enum
+{
+    OCS_SEM_Q_FIFO               = 0x0,
+    OCS_SEM_Q_PRIORITY           = 0x1,
+    OCS_SEM_DELETE_SAFE          = 0x4,
+    OCS_SEM_INVERSION_SAFE       = 0x8,
+    OCS_SEM_EVENTSEND_ERR_NOTIFY = 0x10
+};
+
+/* ----------------------------------------- */
+/* prototypes normally declared in semLib.h */
+/* ----------------------------------------- */
+
+extern OCS_SEM_ID OCS_semBInitialize(OCS_SEM *pSemMem, int options, OCS_SEM_B_STATE initialState);
+extern OCS_SEM_ID OCS_semBCreate(int options, OCS_SEM_B_STATE initialState);
+extern OCS_SEM_ID OCS_semMInitialize(OCS_SEM *pSemMem, int options);
+extern OCS_SEM_ID OCS_semMCreate(int options);
+extern OCS_SEM_ID OCS_semCInitialize(OCS_SEM *pSemMem, int options, int initialCount);
+extern OCS_SEM_ID OCS_semCCreate(int flags, int count);
+
+extern OCS_STATUS OCS_semDelete(OCS_SEM_ID semId);
+extern OCS_STATUS OCS_semFlush(OCS_SEM_ID semId);
+extern OCS_STATUS OCS_semTake(OCS_SEM_ID semId, int timeout);
+extern OCS_STATUS OCS_semGive(OCS_SEM_ID semId);
+
+#endif /* OCS_SEMLIB_H */
+```
+
+### `OCS_setjmp.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_setjmp.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for setjmp.h
+ */
+
+#ifndef OCS_SETJMP_H
+#define OCS_SETJMP_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in setjmp.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in setjmp.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in setjmp.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SETJMP_H */
+```
+
+### `OCS_shellLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_shellLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for shellLib.h
+ */
+
+#ifndef OCS_SHELLLIB_H
+#define OCS_SHELLLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in shellLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in shellLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in shellLib.h */
+/* ----------------------------------------- */
+
+extern OCS_STATUS OCS_shellGenericInit(const char *config, int stackSize, const char *shellName, char **pShellName,
+                                       OCS_BOOL interactive, OCS_BOOL loginAccess, int fdin, int fdout, int fderr);
+
+#endif /* OCS_SHELLLIB_H */
+```
+
+### `OCS_signal.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_signal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for signal.h
+ */
+
+#ifndef OCS_SIGNAL_H
+#define OCS_SIGNAL_H
+
+#include "OCS_basetypes.h"
+#include "OCS_sys_types.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in signal.h */
+/* ----------------------------------------- */
+
+#define OCS_SIG_SETMASK 0x1100
+#define OCS_SIGHUP      0x1101
+#define OCS_SIGINT      0x1102
+#define OCS_SIGABRT     0x1103
+#define OCS_SIGSEGV     0x1104
+#define OCS_SIGBUS      0x1105
+#define OCS_SIGFPE      0x1106
+#define OCS_SIGILL      0x1107
+#define OCS_SIGRTMIN    0x1110
+#define OCS_SIGRTMAX    0x1120
+
+#define OCS_SIGEV_SIGNAL 0x1180
+
+/* ----------------------------------------- */
+/* types normally defined in signal.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    unsigned int ss;
+} OCS_sigset_t;
+
+struct OCS_sigevent
+{
+    int sigev_signo;
+    int sigev_notify;
+};
+
+typedef void (*OCS_sighandler_t)(int);
+typedef int OCS_sig_atomic_t;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in signal.h */
+/* ----------------------------------------- */
+
+extern int              OCS_kill(OCS_pid_t pid, int sig);
+extern int              OCS_sigaddset(OCS_sigset_t *set, int signo);
+extern int              OCS_sigdelset(OCS_sigset_t *set, int signo);
+extern int              OCS_sigemptyset(OCS_sigset_t *set);
+extern int              OCS_sigfillset(OCS_sigset_t *set);
+extern int              OCS_sigismember(const OCS_sigset_t *set, int signo);
+extern OCS_sighandler_t OCS_signal(int signum, OCS_sighandler_t handler);
+extern int              OCS_sigprocmask(int how, const OCS_sigset_t *set, OCS_sigset_t *oset);
+extern int              OCS_sigsuspend(const OCS_sigset_t *set);
+extern int              OCS_sigwait(const OCS_sigset_t *set, int *sig);
+
+#endif /* OCS_SIGNAL_H */
+```
+
+### `OCS_stat.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stat.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stat.h
+ */
+
+#ifndef OCS_STAT_H
+#define OCS_STAT_H
+
+#include "OCS_basetypes.h"
+#include "OCS_sys_types.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/stat.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/statvfs.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/stat.h */
+/* ----------------------------------------- */
+
+struct OCS_stat
+{
+    OCS_mode_t          st_mode;
+    OCS_off_t           st_size;
+    OCS_time_t          st_mtime;
+    struct OCS_timespec st_mtim;
+    OCS_uid_t           st_uid;
+    OCS_gid_t           st_gid;
+};
+
+/* ----------------------------------------- */
+/* types normally defined in sys/statvfs.h */
+/* ----------------------------------------- */
+struct OCS_statvfs
+{
+    OCS_off_t f_bsize;
+    OCS_off_t f_bfree;
+    OCS_off_t f_blocks;
+};
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/stat.h */
+/* ----------------------------------------- */
+
+extern int OCS_fchmod(int fd, OCS_mode_t mode);
+extern int OCS_chmod(const char *path, OCS_mode_t mode);
+extern int OCS_mkdir(const char *path, ...);
+extern int OCS_stat(const char *file, struct OCS_stat *buf);
+extern int OCS_fstat(int fd, struct OCS_stat *buf);
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/statvfs.h */
+/* ----------------------------------------- */
+
+extern int OCS_statvfs(const char *file, struct OCS_statvfs *buf);
+
+#endif /* OCS_STAT_H */
+```
+
+### `OCS_stdarg.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stdarg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdarg.h
+ */
+
+#ifndef OCS_STDARG_H
+#define OCS_STDARG_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdarg.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in stdarg.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    void *p;
+} OCS_va_list;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdarg.h */
+/* ----------------------------------------- */
+
+#define OCS_va_start(ap, last) ap.p = &last
+#define OCS_va_end(ap)
+
+#endif /* OCS_STDARG_H */
+```
+
+### `OCS_stdio.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stdio.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdio.h
+ */
+
+#ifndef OCS_STDIO_H
+#define OCS_STDIO_H
+
+#include "OCS_basetypes.h"
+#include "OCS_stdarg.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdio.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in stdio.h */
+/* ----------------------------------------- */
+typedef struct OCS_FILE OCS_FILE;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdio.h */
+/* ----------------------------------------- */
+
+extern int       OCS_fclose(OCS_FILE *stream);
+extern char *    OCS_fgets(char *s, int n, OCS_FILE *stream);
+extern OCS_FILE *OCS_fopen(const char *filename, const char *modes);
+extern int       OCS_fputs(const char *s, OCS_FILE *stream);
+extern int       OCS_remove(const char *filename);
+extern int       OCS_rename(const char *old, const char *nw);
+extern int       OCS_snprintf(char *s, size_t maxlen, const char *format, ...);
+extern int       OCS_vsnprintf(char *s, size_t maxlen, const char *format, OCS_va_list arg);
+extern int       OCS_printf(const char *format, ...);
+extern int       OCS_fprintf(OCS_FILE *fp, const char *format, ...);
+extern int       OCS_putchar(int c);
+
+extern OCS_FILE *OCS_stdin;
+extern OCS_FILE *OCS_stdout;
+extern OCS_FILE *OCS_stderr;
+
+#endif /* OCS_STDIO_H */
+```
+
+### `OCS_stdlib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_stdlib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdlib.h
+ */
+
+#ifndef OCS_STDLIB_H
+#define OCS_STDLIB_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdlib.h */
+/* ----------------------------------------- */
+
+#define OCS_EXIT_SUCCESS 0x0100
+#define OCS_EXIT_FAILURE 0x0101
+
+/* ----------------------------------------- */
+/* types normally defined in stdlib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdlib.h */
+/* ----------------------------------------- */
+
+extern void              OCS_abort(void);
+extern void              OCS_exit(int status);
+extern unsigned long int OCS_strtoul(const char *nptr, char **endptr, int base);
+extern int               OCS_system(const char *command);
+extern void *            OCS_malloc(size_t sz);
+extern void              OCS_free(void *ptr);
+
+#endif /* OCS_STDLIB_H */
+```
+
+### `OCS_string.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_string.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for string.h
+ */
+
+#ifndef OCS_STRING_H
+#define OCS_STRING_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in string.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in string.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in string.h */
+/* ----------------------------------------- */
+
+extern void * OCS_memchr(const void *s, int c, size_t n);
+extern void * OCS_memcpy(void *dest, const void *src, size_t n);
+extern void * OCS_memset(void *s, int c, size_t n);
+extern int    OCS_strcmp(const char *s1, const char *s2);
+extern char * OCS_strcpy(char *dest, const char *src);
+extern size_t OCS_strlen(const char *s);
+extern int    OCS_strncmp(const char *s1, const char *s2, size_t n);
+extern char * OCS_strncpy(char *dest, const char *src, size_t n);
+extern char * OCS_strchr(const char *s, int c);
+extern char * OCS_strrchr(const char *s, int c);
+extern char * OCS_strcat(char *dest, const char *src);
+extern char * OCS_strncat(char *dest, const char *src, size_t n);
+extern char * OCS_strerror(int errnum);
+
+#endif /* OCS_STRING_H */
+```
+
+### `OCS_strings.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_strings.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for strings.h
+ */
+
+#ifndef OCS_STRINGS_H
+#define OCS_STRINGS_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in strings.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in strings.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in strings.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_STRINGS_H */
+```
+
+### `OCS_symLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_symLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for symLib.h
+ */
+
+#ifndef OCS_SYMLIB_H
+#define OCS_SYMLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in symLib.h */
+/* ----------------------------------------- */
+#define OCS_LOAD_ALL_SYMBOLS 0x1A00
+#define OCS_SYM_FIND_BY_NAME 0x1A01
+
+/* ----------------------------------------- */
+/* types normally defined in symLib.h */
+/* ----------------------------------------- */
+typedef int       OCS_SYM_TYPE;
+typedef uintptr_t OCS_SYM_VALUE;
+typedef int       OCS_SYM_GROUP;
+
+typedef struct OCS_SYMBOL OCS_SYMBOL;
+typedef struct OCS_SYMTAB OCS_SYMTAB;
+
+typedef OCS_SYMTAB *OCS_SYMTAB_ID;
+typedef OCS_SYMBOL *OCS_SYMBOL_ID;
+
+typedef struct OCS_SYMBOL_DESC
+{
+    unsigned int  mask;
+    char *        name;
+    OCS_SYM_VALUE value;
+} OCS_SYMBOL_DESC;
+
+typedef OCS_BOOL (*OCS_symEach_Routine_t)(char *, OCS_SYM_VALUE, OCS_SYM_TYPE, OCS_Vx_usr_arg_t, OCS_SYM_GROUP);
+
+/* ----------------------------------------- */
+/* prototypes normally declared in symLib.h */
+/* ----------------------------------------- */
+
+extern OCS_SYMTAB_ID OCS_sysSymTbl;
+
+extern OCS_STATUS  OCS_symFindByName(OCS_SYMTAB_ID symTblId, char *name, char **pValue, OCS_SYM_TYPE *pType);
+extern OCS_SYMBOL *OCS_symEach(OCS_SYMTAB_ID symTblId, OCS_symEach_Routine_t routine, int routineArg);
+extern OCS_STATUS  OCS_symFind(OCS_SYMTAB_ID symTblId, OCS_SYMBOL_DESC *pSymbol);
+
+#endif /* OCS_SYMLIB_H */
+```
+
+### `OCS_sys_ioctl.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_ioctl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/ioctl.h
+ */
+
+#ifndef OCS_SYS_IOCTL_H
+#define OCS_SYS_IOCTL_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/ioctl.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/ioctl.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/ioctl.h */
+/* ----------------------------------------- */
+
+extern int OCS_ioctl(int fd, unsigned long request, ...);
+
+#endif /* OCS_SYS_IOCTL_H */
+```
+
+### `OCS_sys_ipc.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_ipc.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/ipc.h
+ */
+
+#ifndef OCS_SYS_IPC_H
+#define OCS_SYS_IPC_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/ipc.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/ipc.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/ipc.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SYS_IPC_H */
+```
+
+### `OCS_sys_mman.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_mman.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/mman.h
+ */
+
+#ifndef OCS_SYS_MMAN_H
+#define OCS_SYS_MMAN_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/mman.h */
+/* ----------------------------------------- */
+#define OCS_MAP_SHARED  0x2001
+#define OCS_MAP_PRIVATE 0x2002
+#define OCS_PROT_EXEC   0x2004
+#define OCS_PROT_READ   0x2008
+#define OCS_PROT_WRITE  0x2010
+#define OCS_PROT_NONE   0x2020
+#define OCS_MAP_FIXED   0x2080
+
+/* ----------------------------------------- */
+/* types normally defined in sys/mman.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/mman.h */
+/* ----------------------------------------- */
+void *OCS_mmap(void *addr, size_t length, int prot, int flags, int fd, OCS_off_t offset);
+int   OCS_munmap(void *addr, size_t length);
+
+#endif /* OCS_SYS_MMAN_H */
+```
+
+### `OCS_sys_select.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_select.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for OCS_sys_select
+ */
+
+#ifndef OCS_SYS_SELECT_H
+#define OCS_SYS_SELECT_H
+
+#include "OCS_basetypes.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/select.h */
+/* ----------------------------------------- */
+
+#define OCS_FD_SETSIZE 10
+
+/* ----------------------------------------- */
+/* types normally defined in sys/select.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    unsigned int fds;
+} OCS_fd_set;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/select.h */
+/* ----------------------------------------- */
+
+extern int OCS_select(int nfds, OCS_fd_set *readfds, OCS_fd_set *writefds, OCS_fd_set *exceptfds,
+                      struct OCS_timeval *timeout);
+
+extern void OCS_FD_SET(int fd, OCS_fd_set *set);
+extern int  OCS_FD_ISSET(int fd, OCS_fd_set *set);
+extern void OCS_FD_CLR(int fd, OCS_fd_set *set);
+extern void OCS_FD_ZERO(OCS_fd_set *set);
+
+#endif /* OCS_SYS_SELECT_H */
+```
+
+### `OCS_sys_socket.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_socket.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/socket.h
+ */
+
+#ifndef OCS_SYS_SOCKET_H
+#define OCS_SYS_SOCKET_H
+
+#include "OCS_basetypes.h"
+#include "OCS_sys_types.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/socket.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/socket.h */
+/* ----------------------------------------- */
+typedef size_t             OCS_socklen_t;
+typedef unsigned short int OCS_sa_family_t;
+
+struct OCS_sockaddr
+{
+    OCS_sa_family_t sa_family;
+};
+
+struct OCS_sockaddr_in
+{
+    OCS_sa_family_t sa_family;
+    uint16_t        sin_port;
+    uint32_t        sin_addr;
+};
+
+struct OCS_sockaddr_in6
+{
+    OCS_sa_family_t sa_family;
+    uint16_t        sin6_port;
+    uint32_t        sin6_addr[4];
+};
+
+enum
+{
+    OCS_EINPROGRESS = -2,
+    OCS_EWOULDBLOCK,
+    OCS_AF_INET,
+    OCS_AF_INET6,
+    OCS_SOCK_DGRAM,
+    OCS_SOCK_STREAM,
+    OCS_IPPROTO_UDP,
+    OCS_IPPROTO_TCP,
+    OCS_SOL_SOCKET,
+    OCS_SO_REUSEADDR,
+    OCS_SO_ERROR,
+    OCS_MSG_DONTWAIT,
+    OCS_SHUT_WR,
+    OCS_SHUT_RD,
+    OCS_SHUT_RDWR
+};
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/socket.h */
+/* ----------------------------------------- */
+
+extern int         OCS_accept(int fd, struct OCS_sockaddr *addr, OCS_socklen_t *addr_len);
+extern int         OCS_bind(int fd, const struct OCS_sockaddr *addr, OCS_socklen_t len);
+extern int         OCS_connect(int fd, const struct OCS_sockaddr *addr, OCS_socklen_t len);
+extern int         OCS_getsockopt(int fd, int level, int optname, void *optval, OCS_socklen_t *optlen);
+extern int         OCS_listen(int fd, int n);
+extern OCS_ssize_t OCS_recvfrom(int fd, void *buf, size_t n, int flags, struct OCS_sockaddr *addr,
+                                OCS_socklen_t *addr_len);
+extern OCS_ssize_t OCS_sendto(int fd, const void *buf, size_t n, int flags, const struct OCS_sockaddr *addr,
+                              OCS_socklen_t addr_len);
+extern int         OCS_setsockopt(int fd, int level, int optname, const void *optval, OCS_socklen_t optlen);
+extern int         OCS_shutdown(int fd, int how);
+extern int         OCS_socket(int domain, int type, int protocol);
+
+#endif /* OCS_SYS_SOCKET_H */
+```
+
+### `OCS_sys_time.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/time.h
+ */
+
+#ifndef OCS_SYS_TIME_H
+#define OCS_SYS_TIME_H
+
+#include "OCS_basetypes.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/time.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/time.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/time.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SYS_TIME_H */
+```
+
+### `OCS_sys_times.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_times.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/times.h
+ */
+
+#ifndef OCS_SYS_TIMES_H
+#define OCS_SYS_TIMES_H
+
+#include "OCS_basetypes.h"
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/times.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/times.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/times.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SYS_TIMES_H */
+```
+
+### `OCS_sys_types.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_types.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/types.h
+ */
+
+#ifndef OCS_SYS_TYPES_H
+#define OCS_SYS_TYPES_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/types.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/types.h */
+/* ----------------------------------------- */
+typedef ptrdiff_t          OCS_ssize_t;
+typedef long               OCS_off_t;
+typedef unsigned int       OCS_mode_t;
+typedef long               OCS_time_t;
+typedef int                OCS_pid_t;
+typedef int                OCS_gid_t;
+typedef int                OCS_uid_t;
+typedef unsigned short int OCS_u_short;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/types.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SYS_TYPES_H */
+```
+
+### `OCS_sys_un.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_un.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/un.h
+ */
+
+#ifndef OCS_SYS_UN_H
+#define OCS_SYS_UN_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/un.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/un.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/un.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SYS_UN_H */
+```
+
+### `OCS_sys_wait.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sys_wait.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/wait.h
+ */
+
+#ifndef OCS_SYS_WAIT_H
+#define OCS_SYS_WAIT_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/wait.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/wait.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sys/wait.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_SYS_WAIT_H */
+```
+
+### `OCS_sysLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_sysLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sysLib.h
+ */
+
+#ifndef OCS_SYSLIB_H
+#define OCS_SYSLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sysLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sysLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in sysLib.h */
+/* ----------------------------------------- */
+extern int OCS_sysClkRateGet(void);
+
+#endif /* OCS_SYSLIB_H */
+```
+
+### `OCS_taskLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_taskLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for taskLib.h
+ */
+
+#ifndef OCS_TASKLIB_H
+#define OCS_TASKLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in taskLib.h */
+/* ----------------------------------------- */
+#define OCS_VX_FP_TASK 0x1b01 /* execute with floating-point coprocessor support. */
+
+/* ----------------------------------------- */
+/* types normally defined in taskLib.h */
+/* ----------------------------------------- */
+typedef struct OCS_WIND_TCB
+{
+    int data;
+} OCS_WIND_TCB;
+
+typedef struct OCS_WIND_TCB *OCS_TASK_ID;
+
+typedef struct OCS_TASK_DESC
+{
+    OCS_TASK_ID tid;
+} OCS_TASK_DESC;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in taskInfo.h */
+/* ----------------------------------------- */
+
+extern const char *OCS_taskName(OCS_TASK_ID task_id);
+extern OCS_TASK_ID OCS_taskNameToId(const char *name);
+extern OCS_TASK_ID OCS_taskIdDefault(OCS_TASK_ID task_id);
+extern OCS_BOOL    OCS_taskIsReady(OCS_TASK_ID task_id);
+extern OCS_BOOL    OCS_taskIsSuspended(OCS_TASK_ID task_id);
+extern OCS_STATUS  OCS_taskGetInfo(OCS_TASK_ID task_id, OCS_TASK_DESC *desc);
+
+/* ----------------------------------------- */
+/* prototypes normally declared in taskLib.h */
+/* ----------------------------------------- */
+
+extern OCS_STATUS  OCS_taskActivate(OCS_TASK_ID tid);
+extern void        OCS_taskExit(int code);
+extern OCS_TASK_ID OCS_taskIdSelf(void);
+extern OCS_STATUS  OCS_taskDelay(int ticks);
+extern OCS_STATUS  OCS_taskDelete(OCS_TASK_ID tid);
+extern OCS_STATUS  OCS_taskDeleteForce(OCS_TASK_ID tid);
+extern OCS_STATUS  OCS_taskSuspend(OCS_TASK_ID tid);
+extern OCS_STATUS  OCS_taskResume(OCS_TASK_ID tid);
+extern OCS_STATUS  OCS_taskPrioritySet(OCS_TASK_ID tid, int newPriority);
+extern OCS_TASK_ID OCS_taskSpawn(char *name, int priority, int options, int stackSize, OCS_FUNCPTR entryPt, int arg1,
+                                 int arg2, int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9,
+                                 int arg10);
+
+OCS_STATUS OCS_taskInit(OCS_WIND_TCB *pTcb, char *name, int priority, int options, char *pStackBase, int stackSize,
+                        OCS_FUNCPTR entryPt, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7,
+                        int arg8, int arg9, int arg10);
+
+OCS_WIND_TCB *OCS_taskTcb(OCS_TASK_ID tid);
+
+#endif /* OCS_TASKLIB_H */
+```
+
+### `OCS_taskVarLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_taskVarLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for taskVarLib.h
+ */
+
+#ifndef OCS_TASKVARLIB_H
+#define OCS_TASKVARLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in taskVarLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in taskVarLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in taskVarLib.h */
+/* ----------------------------------------- */
+
+extern OCS_STATUS OCS_taskVarAdd(int tid, int *pVar);
+
+#endif /* OCS_TASKVARLIB_H */
+```
+
+### `OCS_termios.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_termios.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for termios.h
+ */
+
+#ifndef OCS_TERMIOS_H
+#define OCS_TERMIOS_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in termios.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in termios.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in termios.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_TERMIOS_H */
+```
+
+### `OCS_tgmath.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_tgmath.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for tgmath.h
+ */
+
+#ifndef OCS_TGMATH_H
+#define OCS_TGMATH_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in tgmath.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in tgmath.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in tgmath.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_TGMATH_H */
+```
+
+### `OCS_time.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for time.h
+ */
+
+#ifndef OCS_TIME_H
+#define OCS_TIME_H
+
+#include "OCS_basetypes.h"
+#include "OCS_signal.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in time.h */
+/* ----------------------------------------- */
+
+#define OCS_CLOCK_REALTIME  0x1301
+#define OCS_CLOCK_MONOTONIC 0x1302
+#define OCS_TIMER_ABSTIME   0x1701
+
+/* ----------------------------------------- */
+/* types normally defined in time.h */
+/* ----------------------------------------- */
+
+typedef int  OCS_clockid_t;
+typedef int  OCS_timer_t;
+typedef long OCS_suseconds_t;
+
+struct OCS_timespec
+{
+    OCS_time_t tv_sec;
+    long       tv_nsec;
+};
+
+struct OCS_timeval
+{
+    OCS_time_t      tv_sec;
+    OCS_suseconds_t tv_usec;
+};
+
+struct OCS_itimerspec
+{
+    struct OCS_timespec it_interval;
+    struct OCS_timespec it_value;
+};
+
+/* The TIMER_CONNECT_FUNC is a VxWorks extension for the timer_connect() API */
+typedef void (*OCS_TIMER_CONNECT_FUNC)(OCS_timer_t, int arg);
+
+/* ----------------------------------------- */
+/* prototypes normally declared in time.h */
+/* ----------------------------------------- */
+
+extern int OCS_clock_getres(OCS_clockid_t clock_id, struct OCS_timespec *res);
+extern int OCS_clock_gettime(OCS_clockid_t clock_id, struct OCS_timespec *tp);
+extern int OCS_clock_nanosleep(OCS_clockid_t clock_id, int flags, const struct OCS_timespec *req,
+                               struct OCS_timespec *rem);
+extern int OCS_clock_settime(OCS_clockid_t clock_id, const struct OCS_timespec *tp);
+extern int OCS_timer_create(OCS_clockid_t clock_id, struct OCS_sigevent *evp, OCS_timer_t *timerid);
+extern int OCS_timer_delete(OCS_timer_t timerid);
+extern int OCS_timer_gettime(OCS_timer_t timerid, struct OCS_itimerspec *value);
+extern int OCS_timer_settime(OCS_timer_t timerid, int flags, const struct OCS_itimerspec *value,
+                             struct OCS_itimerspec *ovalue);
+
+extern int OCS_timer_connect(OCS_timer_t timerid, OCS_TIMER_CONNECT_FUNC func, int arg);
+
+#endif /* OCS_TIME_H */
+```
+
+### `OCS_timers.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_timers.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for timers.h
+ */
+
+#ifndef OCS_TIMERS_H
+#define OCS_TIMERS_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in timers.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in timers.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in timers.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_TIMERS_H */
+```
+
+### `OCS_ulimit.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_ulimit.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ulimit.h
+ */
+
+#ifndef OCS_ULIMIT_H
+#define OCS_ULIMIT_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in ulimit.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in ulimit.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in ulimit.h */
+/* ----------------------------------------- */
+long OCS_ulimit(int cmd, long newlimit);
+
+#endif /* OCS_ULIMIT_H */
+```
+
+### `OCS_unistd.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_unistd.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for unistd.h
+ */
+
+#ifndef OCS_UNISTD_H
+#define OCS_UNISTD_H
+
+#include "OCS_basetypes.h"
+#include "OCS_sys_types.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in unistd.h */
+/* ----------------------------------------- */
+
+#define OCS_SEEK_SET      0x1C01
+#define OCS_SEEK_CUR      0x1C02
+#define OCS_SEEK_END      0x1C03
+#define OCS_STDIN_FILENO  0x1C04
+#define OCS_STDOUT_FILENO 0x1C05
+#define OCS_STDERR_FILENO 0x1C06
+
+/* ----------------------------------------- */
+/* types normally defined in unistd.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in unistd.h */
+/* ----------------------------------------- */
+
+extern int         OCS_close(int fd);
+extern OCS_gid_t   OCS_getegid(void);
+extern OCS_uid_t   OCS_geteuid(void);
+extern long int    OCS_gethostid(void);
+extern int         OCS_gethostname(char *name, size_t len);
+extern OCS_pid_t   OCS_getpid(void);
+extern OCS_off_t   OCS_lseek(int fd, OCS_off_t offset, int whence);
+extern OCS_ssize_t OCS_read(int fd, void *buf, size_t nbytes);
+extern int         OCS_rmdir(const char *path);
+extern long int    OCS_sysconf(int name);
+extern OCS_ssize_t OCS_write(int fd, const void *buf, size_t n);
+
+#endif /* OCS_UNISTD_H */
+```
+
+### `OCS_unldLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_unldLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for unldLib.h
+ */
+
+#ifndef OCS_UNLDLIB_H
+#define OCS_UNLDLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+#include "OCS_moduleLib.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in unldLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in unldLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in unldLib.h */
+/* ----------------------------------------- */
+extern OCS_STATUS OCS_unldByModuleId(OCS_MODULE_ID moduleId, int options);
+
+#endif /* OCS_UNLDLIB_H */
+```
+
+### `OCS_usrLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_usrLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for usrLib.h
+ */
+
+#ifndef OCS_USRLIB_H
+#define OCS_USRLIB_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in usrLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in usrLib.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in usrLib.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_USRLIB_H */
+```
+
+### `OCS_version.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for version.h
+ */
+
+#ifndef OCS_VERSION_H
+#define OCS_VERSION_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in version.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in version.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in version.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_VERSION_H */
+```
+
+### `OCS_vxWorks.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_vxWorks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for vxWorks.h
+ */
+
+#ifndef OCS_VXWORKS_H
+#define OCS_VXWORKS_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in vxWorks.h */
+/* ----------------------------------------- */
+enum
+{
+    OCS_ERROR = -1,
+    OCS_OK    = 0
+};
+
+enum
+{
+    OCS_WAIT_FOREVER = -1,
+    OCS_NO_WAIT      = 0
+};
+
+/* ----------------------------------------- */
+/* types normally defined in vxWorks.h */
+/* ----------------------------------------- */
+typedef int          OCS_STATUS;
+typedef bool         OCS_BOOL;
+typedef unsigned int OCS_UINT;
+typedef int8_t       OCS_INT8;
+typedef uint8_t      OCS_UINT8;
+typedef int16_t      OCS_INT16;
+typedef uint16_t     OCS_UINT16;
+typedef int32_t      OCS_INT32;
+typedef uint32_t     OCS_UINT32;
+
+typedef long OCS_Vx_usr_arg_t;
+
+/* Function pointers are used in many VxWorks modules. */
+/*
+ * NOTE: The FUNCPTR type in the actual library may be defined
+ * without arguments, e.g. "int (*FUNCPTR)()".  This is acceptable
+ * by some compilers but generally incompatible with the
+ * "-Wstrict-prototype" gcc warning option.  So in this override it
+ * is defined as an int argument.  This means that application code
+ * may need to cast it at the time of use (which is generally done anyway).
+ */
+typedef int (*OCS_FUNCPTR)(int);
+typedef void (*OCS_VOIDFUNCPTR)(void);
+
+/* ----------------------------------------- */
+/* prototypes normally declared in vxWorks.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_VXWORKS_H */
+```
+
+### `OCS_wchar.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_wchar.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for wchar.h
+ */
+
+#ifndef OCS_WCHAR_H
+#define OCS_WCHAR_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in wchar.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in wchar.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in wchar.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_WCHAR_H */
+```
+
+### `OCS_wctype.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_wctype.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for wctype.h
+ */
+
+#ifndef OCS_WCTYPE_H
+#define OCS_WCTYPE_H
+
+#include "OCS_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in wctype.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in wctype.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in wctype.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_WCTYPE_H */
+```
+
+### `OCS_xbdBlkDev.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_xbdBlkDev.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for xbdBlkDev.h
+ */
+
+#ifndef OCS_XBDBLKDEV_H
+#define OCS_XBDBLKDEV_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+#include "OCS_blkIo.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in xbdBlkDev.h */
+/* ----------------------------------------- */
+#define OCS_NULLDEV ((OCS_device_t)0)
+
+/* ----------------------------------------- */
+/* types normally defined in xbdBlkDev.h */
+/* ----------------------------------------- */
+typedef int OCS_device_t;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in xbdBlkDev.h */
+/* ----------------------------------------- */
+extern OCS_device_t OCS_xbdBlkDevCreateSync(OCS_BLK_DEV *bd, const char *name);
+extern OCS_STATUS   OCS_xbdBlkDevDelete(OCS_device_t dev, OCS_BLK_DEV **ppbd);
+
+#endif /* OCS_XBDBLKDEV_H */
+```
+
+### `OCS_xbdRamDisk.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/OCS_xbdRamDisk.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for xbdRamDisk.h
+ */
+
+#ifndef OCS_XBDRAMDISK_H
+#define OCS_XBDRAMDISK_H
+
+#include "OCS_basetypes.h"
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in xbdRamDisk.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in xbdRamDisk.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in xbdRamDisk.h */
+/* ----------------------------------------- */
+
+#endif /* OCS_XBDRAMDISK_H */
+```
+
+### `README.md`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/inc/README.md`
+
+
+```markdown
+ABOUT THE SYSTEM HEADER OVERRIDES
+=================================
+
+The "overrides" directory contains replacement versions of many system-provided 
+header files.  All replacement functions and types are identified using an 
+`OCS_` prefix.
+
+The header file that a particular source will use depends on the 
+way that the compiler include path is set up.  This is intentional.
+
+1. For test support code:
+
+This refers to all code _other_ than the unit actually being tested, including
+stub function implementations and test configuration.
+ 
+All coverage test recipes should include `ut-stubs/inc` in the INCLUDE_DIRECTORIES.
+These prototypes can be explicitly obtained by putting an `overrides/` prefix
+on the #include statement, for instance:
+    
+    #include <stdio.h>              <-- Gets the regular system version as usual
+    #include <overrides/stdio.h>    <-- Gets this replacement OCS version
+    
+Note that the two shouldn't conflict, so it is possible to include both where needed.
+  
+2. For code units under test:
+
+When compiling the actual unit under test with coverage instrumentation,
+the CMake recipe should add "ut-stubs/inc/overrides" into the INCLUDE_DIRECTORIES.
+This way, all source files compiled will find these replacements instead of
+the regular system header file.  So a statement like:
+
+    #include <stdio.h>              <-- Gets this replacement OCS version
+    
+This way it is possible to simply recompile the original source files and all the
+included system headers will be transparently replaced with these override versions.
+
+When using the file in this way, one must also provide a companion macro to
+divert the actual usage to the OCS namespace as well.  For instance:
+
+    #define fputs   OCS_fputs
+    
+Will cause all references to `fputs` in the subsequent code to refer to `OCS_fputs`
+instead.  
+
+Important Notes
+---------------
+
+Some notable exclusions exist to this general pattern.  These are cases where
+attempting to provide a reasonable alternate for the system header file would 
+be very difficult to do in a portable manner, so we must allow the system
+header to be used.  These cases are:
+
+    stdint.h  : Fixed-width types need to be correct for the host CPU.
+    limits.h  : The MIN/MAX macros need to be correct
+    stddef.h  : Macros like offsetof() and size_t/ptrdiff_t must be correct for the CPU
+    stdbool.h : Preserves correct boolean semantics
+
+ 
+Note that header files from all supported platforms (VxWorks, Rtems, Posix) may
+all be placed here.  Since the files are empty placeholders, they simply need to
+exist, and there is no need to duplicate this entire tree for every OS since they
+will overlap considerably.
+  
+```

@@ -3,16 +3,74 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/security/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `OpenIDAuthModuleTest.java`
 
-file--OpenIDAuthModuleTest.java
-file--Pbkdf2PasswordHasherTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/security/OpenIDAuthModuleTest.java`
+
+
+```java
+package org.yamcs.security;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+public class OpenIDAuthModuleTest {
+
+    @Test
+    public void testAuthorizationEncoding() {
+        // Example from https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1
+        var clientId = "s6BhdRkqt3";
+        var clientSecret = "7Fjfp0ZBr1KtDRbnfVdmIw";
+        var authorizationHeader = OpenIDAuthModule.generateAuthorizationHeader(clientId, clientSecret);
+        assertEquals("Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3", authorizationHeader);
+    }
+
+    @Test
+    public void testAuthorizationEncoding_specialChars() {
+        // Example from https://backstage.forgerock.com/docs/am/7/oauth2-guide/client-auth-header.html
+        var clientId = "example.com";
+        var clientSecret = "s=cr%t";
+        var authorizationHeader = OpenIDAuthModule.generateAuthorizationHeader(clientId, clientSecret);
+        assertEquals("Basic ZXhhbXBsZS5jb206cyUzRGNyJTI1dA==", authorizationHeader);
+    }
+}
 ```
 
-## 항목
+### `Pbkdf2PasswordHasherTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/security/OpenIDAuthModuleTest.java`](file--OpenIDAuthModuleTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/security/Pbkdf2PasswordHasherTest.java`](file--Pbkdf2PasswordHasherTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/security/Pbkdf2PasswordHasherTest.java`
+
+
+```java
+package org.yamcs.security;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import org.junit.jupiter.api.Test;
+
+public class Pbkdf2PasswordHasherTest {
+
+    @Test
+    public void hash_validate_ok() throws InvalidKeySpecException, NoSuchAlgorithmException {
+        PBKDF2PasswordHasher hasher = new PBKDF2PasswordHasher();
+        String password = "testtest";
+        String hash = hasher.createHash(password.toCharArray());
+        String secondHash = hasher.createHash(password.toCharArray());
+        assertNotEquals(hash, secondHash);
+
+        String wrongPassword = "wrong";
+        assertFalse(hasher.validatePassword(wrongPassword.toCharArray(), hash),
+                "Wrong password should not be accepted");
+
+        assertTrue(hasher.validatePassword(password.toCharArray(), hash), "Good password should be accepted");
+    }
+}
+```

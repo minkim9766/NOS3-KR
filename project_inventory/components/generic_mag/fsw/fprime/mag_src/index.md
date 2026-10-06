@@ -3,22 +3,625 @@
 
 **경로:** `components/generic_mag/fsw/fprime/mag_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_mag.cpp
-file--Generic_mag.fpp
-file--Generic_mag.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_mag/fsw/fprime/mag_src/docs/`](docs/index) — 폴더
-- [`components/generic_mag/fsw/fprime/mag_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/fsw/fprime/mag_src/Generic_mag.cpp`](file--Generic_mag.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/fsw/fprime/mag_src/Generic_mag.fpp`](file--Generic_mag.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/fsw/fprime/mag_src/Generic_mag.hpp`](file--Generic_mag.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_mag/fsw/fprime/mag_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared") #device.c
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_mag.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_mag.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_mag_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_mag_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+
+```
+
+### `Generic_mag.cpp`
+
+**경로:** `components/generic_mag/fsw/fprime/mag_src/Generic_mag.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_mag.cpp
+// \author jstar
+// \brief  cpp file for Generic_mag component implementation class
+// ======================================================================
+
+#include "mag_src/Generic_mag.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_mag ::
+    Generic_mag(const char* const compName) :
+      Generic_magComponentBase(compName)
+  {
+    uint32_t status = OS_SUCCESS;
+
+    nos_init_link();
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_MAG_DEVICE_ENABLED;
+
+    /* Open device specific protocols */
+    Generic_magSpi.deviceString = GENERIC_MAG_CFG_STRING;
+    Generic_magSpi.handle = GENERIC_MAG_CFG_HANDLE;
+    Generic_magSpi.baudrate = GENERIC_MAG_CFG_BAUD;
+    Generic_magSpi.spi_mode = GENERIC_MAG_CFG_SPI_MODE;
+    Generic_magSpi.bits_per_word = GENERIC_MAG_CFG_BITS_PER_WORD;
+    Generic_magSpi.bus = GENERIC_MAG_CFG_BUS;
+    Generic_magSpi.cs = GENERIC_MAG_CFG_CS;
+    status = spi_init_dev(&Generic_magSpi);
+    if (status == OS_SUCCESS)
+    {
+        printf("SPI device %s configured with baudrate %d \n", Generic_magSpi.deviceString, Generic_magSpi.baudrate);
+    }
+    else
+    {
+        printf("SPI device %s failed to initialize! \n", Generic_magSpi.deviceString);
+        status = OS_ERROR;
+    }
+
+    // status = spi_close_device(&Generic_magSpi);
+
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+  }
+
+  Generic_mag ::
+    ~Generic_mag()
+  {
+    uint32_t status = OS_SUCCESS;
+    
+    status = spi_close_device(&Generic_magSpi);
+
+    nos_destroy_link();
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_mag :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_mag :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_MAG_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      Generic_magSpi.deviceString = GENERIC_MAG_CFG_STRING;
+      Generic_magSpi.handle = GENERIC_MAG_CFG_HANDLE;
+      Generic_magSpi.baudrate = GENERIC_MAG_CFG_BAUD;
+      Generic_magSpi.spi_mode = GENERIC_MAG_CFG_SPI_MODE;
+      Generic_magSpi.bits_per_word = GENERIC_MAG_CFG_BITS_PER_WORD;
+      Generic_magSpi.bus = GENERIC_MAG_CFG_BUS;
+      Generic_magSpi.cs = GENERIC_MAG_CFG_CS;
+      status = spi_init_dev(&Generic_magSpi);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_MAG_DEVICE_ENABLED;
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Enable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Enable command failed to init SPI!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Enable failed, already Enabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_mag :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_MAG_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = spi_close_device(&Generic_magSpi);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_MAG_DEVICE_DISABLED;
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Disable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Disable command failed to close SPI!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Disable failed, already Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_mag :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_MAG_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      this->tlmWrite_MagneticIntensityX(Generic_magData.MagneticIntensityX);
+      this->tlmWrite_MagneticIntensityY(Generic_magData.MagneticIntensityY);
+      this->tlmWrite_MagneticIntensityZ(Generic_magData.MagneticIntensityZ);
+      this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+      this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+      this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+      this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+      this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+      Fw::LogStringArg log_msg("Requested Housekeeping!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      Fw::LogStringArg log_msg("HK Failed, Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }   
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+
+  }
+
+  void Generic_mag :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) 
+  {
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_MAG_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+      status = GENERIC_MAG_RequestData(&Generic_magSpi, &Generic_magData);
+      if (status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("RequestData command success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("RequestData command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("RequestData command failed, device disabled!\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    
+    this->tlmWrite_MagneticIntensityX(Generic_magData.MagneticIntensityX);
+    this->tlmWrite_MagneticIntensityY(Generic_magData.MagneticIntensityY);
+    this->tlmWrite_MagneticIntensityZ(Generic_magData.MagneticIntensityZ);
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_mag :: updateData_handler(const FwIndexType portNum, U32 context)
+  {
+    int32_t status = OS_SUCCESS;
+    
+    status = GENERIC_MAG_RequestData(&Generic_magSpi, &Generic_magData);
+
+    if(status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+      this->MAGout_out(0, Generic_magData.MagneticIntensityX, Generic_magData.MagneticIntensityY, Generic_magData.MagneticIntensityZ);
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+    }
+  }
+
+  void Generic_mag :: updateTlm_handler(const FwIndexType portNum, U32 context)
+  {
+    this->tlmWrite_MagneticIntensityX(Generic_magData.MagneticIntensityX);
+    this->tlmWrite_MagneticIntensityY(Generic_magData.MagneticIntensityY);
+    this->tlmWrite_MagneticIntensityZ(Generic_magData.MagneticIntensityZ);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+  }
+  
+  void Generic_mag :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  inline Generic_mag_ActiveState Generic_mag :: get_active_state(uint8_t DeviceEnabled)
+  {
+    Generic_mag_ActiveState state;
+
+    if(DeviceEnabled == GENERIC_MAG_DEVICE_ENABLED)
+    {
+      state.e = Generic_mag_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_mag_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+}
+```
+
+### `Generic_mag.fpp`
+
+**경로:** `components/generic_mag/fsw/fprime/mag_src/Generic_mag.fpp`
+
+
+```fpp
+module Components {
+    @ generic mag component from nos3
+    active component Generic_mag {
+
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+
+        @ MAG output port
+        output port MAGout: MagDataPort
+
+        @ Periodic Data MAG
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm MAG
+        async input port updateTlm: Svc.Sched
+        
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        @ Enable Command
+        async command ENABLE()
+
+        @ Disable Command
+        async command DISABLE()
+
+        @ NOOP Command
+        async command NOOP()
+
+        @ Request HouseKeeping Command
+        async command REQUEST_HOUSEKEEPING()
+
+        @ Reset Counters Command
+        async command RESET_COUNTERS()
+
+        @ Command to issue noop
+        async command REQUEST_DATA(
+        )
+
+        @ Greeting event with maximum greeting length of 30 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "Generic_mag: {}"
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabled: ActiveState
+
+         @ Magnetic Intensity X-Axis Parameter
+        telemetry MagneticIntensityX: I32
+
+         @ Magnetic Intensity Y-Axis Parameter
+        telemetry MagneticIntensityY: I32
+
+         @ Magnetic Intensity Z-Axis Parameter
+        telemetry MagneticIntensityZ: I32
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_mag.hpp`
+
+**경로:** `components/generic_mag/fsw/fprime/mag_src/Generic_mag.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_mag.hpp
+// \author jstar
+// \brief  hpp file for Generic_mag component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_mag_HPP
+#define Components_Generic_mag_HPP
+
+#include "mag_src/Generic_magComponentAc.hpp"
+#include "mag_src/Generic_mag_ActiveStateEnumAc.hpp"
+
+extern "C"{
+#include "generic_mag_device.h"
+#include "libspi.h"
+}
+  
+#include "nos_link.h"
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+} MAG_Hk_tlm_t;
+#define MAG_HK_TLM_LNGTH sizeof(MAG_Hk_tlm_t)
+
+#define GENERIC_MAG_DEVICE_DISABLED 0
+#define GENERIC_MAG_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_mag :
+    public Generic_magComponentBase
+  {
+
+    public:
+
+    spi_info_t Generic_magSpi;
+    GENERIC_MAG_Device_Data_tlm_t Generic_magData;
+    MAG_Hk_tlm_t HkTelemetryPkt;
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_mag object
+      Generic_mag(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_mag object
+      ~Generic_mag();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for command TODO
+      //!
+      //! TODO
+      // void TODO_cmdHandler(
+      //     FwOpcodeType opCode, //!< The opcode
+      //     U32 cmdSeq //!< The command sequence number
+      // ) override;
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+       void REQUEST_DATA_cmdHandler(
+          FwOpcodeType opCode, //!< The opcode
+          U32 cmdSeq //!< The command sequence number
+      ) override;
+
+      void updateData_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      inline Generic_mag_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

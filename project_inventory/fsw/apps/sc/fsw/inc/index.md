@@ -3,28 +3,2988 @@
 
 **경로:** `fsw/apps/sc/fsw/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sc_events.h`
 
-file--sc_events.h
-file--sc_msg.h
-file--sc_msgdefs.h
-file--sc_msgids.h
-file--sc_perfids.h
-file--sc_platform_cfg.h
-file--sc_rts.h
-file--sc_tbldefs.h
+**경로:** `fsw/apps/sc/fsw/inc/sc_events.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   his file contains the definitions of all of the events sent by
+ *   the Stored Command Processor
+ */
+#ifndef SC_EVENTS_H
+#define SC_EVENTS_H
+
+/**
+ * \defgroup cfsscevents CFS Stored Command Event IDs
+ * \{
+ */
+
+/**
+ * \brief SC Application Fatal Termination Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when the App exits
+ *  due to a fatal error condition
+ */
+#define SC_APP_EXIT_ERR_EID 1
+
+/**
+ * \brief SC Command Message Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a command is received, but it is not of the expected
+ *  length
+ */
+#define SC_LEN_ERR_EID 2
+
+/**
+ * \brief SC Create Pipe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when #CFE_SB_CreatePipe returns an
+ *  error
+ */
+#define SC_INIT_SB_CREATE_ERR_EID 3
+
+/**
+ * \brief SC Housekeeping Request Subscribe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when #CFE_SB_Subscribe to the Housekeeping
+ *  Request packet fails
+ */
+#define SC_INIT_SB_SUBSCRIBE_HK_ERR_EID 4
+
+/**
+ * \brief SC 1Hz Cycle Message Subscribe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when #CFE_SB_Subscribe to the 1 Hz
+ *  Request packet fails
+ */
+#define SC_INIT_SB_SUBSCRIBE_1HZ_ERR_EID 5
+
+/**
+ * \brief HS Command Message Subscribe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when #CFE_SB_Subscribe to the SC Command
+ *  Request packet fails
+ */
+#define SC_INIT_SB_SUBSCRIBE_CMD_ERR_EID 6
+
+/**
+ * \brief SC Initialization Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when the App has
+ *  completed initialization.
+ */
+#define SC_INIT_INF_EID 9
+
+/**
+ * \brief SC RTS Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a call to #CFE_TBL_Register for an RTS table failed
+ */
+#define SC_REGISTER_RTS_TBL_ERR_EID 10
+
+/**
+ * \brief SC ATS Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a call to #CFE_TBL_Register for an ATS table failed
+ */
+#define SC_REGISTER_ATS_TBL_ERR_EID 11
+
+/**
+ * \brief SC RTS Info Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when trying to register the RTS Info Table
+ *  dump only table fails
+ */
+#define SC_REGISTER_RTS_INFO_TABLE_ERR_EID 16
+
+/**
+ * \brief SC RTS Control Block Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when trying to register the RTS control block
+ *  dump only table fails
+ */
+#define SC_REGISTER_RTS_CTRL_BLK_TABLE_ERR_EID 17
+
+/**
+ * \brief SC ATS Info Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when trying to register the ATS Info Table
+ *  dump only table fails
+ */
+#define SC_REGISTER_ATS_INFO_TABLE_ERR_EID 18
+
+/**
+ * \brief SC ATS Control Block Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when trying to register the ATS control block
+ *  dump only table fails
+ */
+#define SC_REGISTER_ATS_CTRL_BLK_TABLE_ERR_EID 19
+
+/**
+ * \brief SC ATS Command Status Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when one of the ATS command status tables fails table
+ *  registration
+ */
+#define SC_REGISTER_ATS_CMD_STATUS_TABLE_ERR_EID 20
+
+/**
+ * \brief SC RTS Table Load Failure Count Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message indicates the number of RTS tables that failed
+ *  to load at startup. This can be either from failure to open the RTS file
+ *  or from a failure to load the RTS table.
+ */
+#define SC_RTS_LOAD_FAIL_COUNT_INFO_EID 21
+
+/**
+ * \brief SC ATS Execution Started Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS is started successfully
+ */
+#define SC_STARTATS_CMD_INF_EID 23
+
+/**
+ * \brief SC ATS Start Rejected Table Not Loaded Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_ATS_CC cmd failed because
+ *  the specified ATS was not loaded.
+ */
+#define SC_STARTATS_CMD_NOT_LDED_ERR_EID 24
+
+/**
+ * \brief SC ATS Start Rejected ATP Not Idle Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_ATS_CC command was issued
+ *  but there is already an ATS running
+ */
+#define SC_STARTATS_CMD_NOT_IDLE_ERR_EID 25
+
+/**
+ * \brief SC ATS Start Rejected ATS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when the ATS Id specified in the
+ *  #SC_START_ATS_CC command was invalid
+ */
+#define SC_STARTATS_CMD_INVLD_ID_ERR_EID 26
+
+/**
+ * \brief SC ATS Stopped Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_STOP_ATS_CC command successfully
+ *  stopped an ATS
+ */
+#define SC_STOPATS_CMD_INF_EID 27
+
+/**
+ * \brief SC ATS Stopped No ATS Running Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_STOP_ATS_CC command was issued
+ *  but there was no ATS running
+ */
+#define SC_STOPATS_NO_ATS_INF_EID 28
+
+/**
+ * \brief SC ATS All Commands Skipped Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS is begun, and all times for
+ *  the commands in the ATS exist in the past.
+ */
+#define SC_ATS_SKP_ALL_ERR_EID 29
+
+/**
+ * \brief SC ATS Some Commands Skipped Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS is started, and some of the
+ *  times for commands in the ATS exist in the past.
+ */
+#define SC_ATS_ERR_SKP_DBG_EID 30
+
+/**
+ * \brief SC ATS Switch Pending Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_SWITCH_ATS_CC command is issued and
+ *  the switch is scheduled
+ */
+#define SC_SWITCH_ATS_CMD_INF_EID 31
+
+/**
+ * \brief SC ATS Switch Command Rejected Destination ATS Not Loaded Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_SWITCH_ATS_CC command is issued, but the
+ *  ATS to switch to is not loaded
+ */
+#define SC_SWITCH_ATS_CMD_NOT_LDED_ERR_EID 32
+
+/**
+ * \brief SC ATS Switch Command Rejected ATP Is Idle Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_SWITCH_ATS_CC command is issued, but there
+ *  is not an ATS running to switch from
+ */
+#define SC_SWITCH_ATS_CMD_IDLE_ERR_EID 33
+
+/**
+ * \brief SC ATS Switch Completed Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS switch is scheduled and has been switched
+ */
+#define SC_ATS_SERVICE_SWTCH_INF_EID 34
+
+/**
+ * \brief SC ATS Switch Scheduled Destination ATS Empty Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS switch is scheduled, but there are no commands
+ *  (ie not loaded) in the destination ATS
+ */
+#define SC_SERVICE_SWITCH_ATS_CMD_LDED_ERR_EID 35
+
+/**
+ * \brief SC ATS Switch Scheduled ATP Is Idle Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS switch is scheduled, but there is no ATS running
+ *  This error will only occur is something gets corrupted
+ */
+#define SC_ATS_SERVICE_SWITCH_IDLE_ERR_EID 36
+
+/**
+ * \brief SC ATS Inline Switch Completed Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS is scheduled in-line and the switch is successful
+ */
+#define SC_ATS_INLINE_SWTCH_INF_EID 37
+
+/**
+ * \brief SC ATS Inline Switch Destination ATS Not Loaded Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS switch is scheduled, but there are no commands
+ *  (ie not loaded) in the destination ATS
+ */
+#define SC_ATS_INLINE_SWTCH_NOT_LDED_ERR_EID 38
+
+/**
+ * \brief SC ATS Jump Command All Commands Skipped Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_JUMP_ATS_CC command was issued, and the time to
+ *  jump to was passed all of the commands in the ATS
+ */
+#define SC_JUMPATS_CMD_STOPPED_ERR_EID 39
+
+/**
+ * \brief SC ATS Jump Command Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_JUMP_ATS_CC command was executed successfully
+ */
+#define SC_JUMP_ATS_INF_EID 40
+
+/**
+ * \brief SC ATS Jump Command No Active ATS Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_JUMP_ATS_CC command was received, but there
+ *  is no ATS currently running
+ */
+#define SC_JUMPATS_CMD_NOT_ACT_ERR_EID 41
+
+/**
+ * \brief SC Continue ATS On Failure Commanded State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_CONTINUE_ATS_ON_FAILURE_CC command was received, but the state
+ *  in the command was invalid
+ */
+#define SC_CONT_CMD_ERR_EID 42
+
+/**
+ * \brief SC Continue ATS On Failure Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when the #SC_CONTINUE_ATS_ON_FAILURE_CC command was received and
+ *  the state was changed successfully
+ */
+#define SC_CONT_CMD_DEB_EID 43
+
+/**
+ * \brief SC ATS Command Skipped Checksum Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a command from an ATS is about to be sent out
+ *  but it fails checksum validation
+ */
+#define SC_ATS_CHKSUM_ERR_EID 44
+
+/**
+ * \brief SC ATS Aborted Command Checksum Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS command that was about to be sent out
+ *  failed checksum validation, and the Continue-ATS-on_checksum-Failure flag was
+ *  set to 'FALSE'
+ */
+#define SC_ATS_ABT_ERR_EID 45
+
+/**
+ * \brief SC ATS Transmit Message Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS command is about to be sent out,
+ *  and the #CFE_SB_TransmitMsg call failed to send it
+ */
+#define SC_ATS_DIST_ERR_EID 46
+
+/**
+ * \brief SC ATS Command Skipped Due To Number Mismatch Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS command is about to be sent out,
+ *  but it's command number is not what was expected
+ */
+#define SC_ATS_MSMTCH_ERR_EID 47
+
+/**
+ * \brief SC ATS Command Skipped Due To Command Status Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS command is about to be send out,
+ *  but the command isn't marked as '#SC_LOADED'
+ */
+#define SC_ATS_SKP_ERR_EID 48
+
+/**
+ * \brief SC RTS Transmit Message Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS command was about to be sent out,
+ *  and #CFE_SB_TransmitMsg couldn't send the message
+ */
+#define SC_RTS_DIST_ERR_EID 49
+
+/**
+ * \brief SC RTS Stopped Due To Command Checksum Failure Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS command was about to be sent out,
+ *  but the command failed checksum validation
+ */
+#define SC_RTS_CHKSUM_ERR_EID 50
+
+/**
+ * \brief SC Reset Counters Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when the #SC_RESET_COUNTERS_CC command was received
+ */
+#define SC_RESET_DEB_EID 51
+
+/**
+ * \brief SC No-op Command Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *
+ *  This event message is issued when a #SC_NOOP_CC command has been received
+ */
+#define SC_NOOP_INF_EID 52
+
+/**
+ * \brief SC RTS Table Command Message ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when and RTS table is loaded, but there is an invalid
+ *  message Id in the command
+ */
+#define SC_RTS_INVLD_MID_ERR_EID 59
+
+/**
+ * \brief SC RTS Table Command Message Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when and RTS table is loaded, but there is an invalid
+ *  length in the command
+ */
+#define SC_RTS_LEN_ERR_EID 60
+
+/**
+ * \brief SC RTS Table Command Runs Off Buffer Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when and RTS table is loaded, but the command
+ *  runs off the end of the buffer
+ */
+#define SC_RTS_LEN_BUFFER_ERR_EID 61
+
+/**
+ * \brief SC RTS Table Data Detected That Would Exceed Buffer Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when and RTS table is loaded, but there
+ *  is non-zero data at the end when the size left is less than #SC_RTS_HDR_WORDS
+ */
+#define SC_RTS_LEN_TOO_LONG_ERR_EID 62
+
+/**
+ * \brief SC Command Pipe Message ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid message Id is received in the
+ *  command pipe
+ */
+#define SC_MID_ERR_EID 63
+
+/**
+ * \brief SC Command Code Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid command code was received in
+ *  the command pipe
+ */
+#define SC_INVLD_CMD_ERR_EID 64
+
+/**
+ * \brief SC RTS Info Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of the Rts Info table
+ *  failed
+ */
+#define SC_GET_ADDRESS_RTS_INFO_ERR_EID 65
+
+/**
+ * \brief SC RTS Control Block Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of the Rts Control Block table
+ *  failed
+ */
+#define SC_GET_ADDRESS_RTS_CTRL_BLCK_ERR_EID 66
+
+/**
+ * \brief SC ATS Info Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of the Ats Info table
+ *  failed
+ */
+#define SC_GET_ADDRESS_ATS_INFO_ERR_EID 67
+
+/**
+ * \brief SC ATS Control Block Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of the Ats Control Block table
+ *  failed
+ */
+#define SC_GET_ADDRESS_ATS_CTRL_BLCK_ERR_EID 68
+
+/**
+ * \brief SC ATS Command Status Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of an Ats Command Status table
+ *  failed
+ */
+#define SC_GET_ADDRESS_ATS_CMD_STAT_ERR_EID 69
+
+/**
+ * \brief SC RTS Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of an RTS table
+ *  failed
+ */
+#define SC_GET_ADDRESS_RTS_ERR_EID 70
+
+/**
+ * \brief SC ATS Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when getting the address of an ATS table
+ *  failed
+ */
+#define SC_GET_ADDRESS_ATS_ERR_EID 71
+
+/**
+ * \brief SC RTS Start Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_RTS_CC cmd is received and is successful
+ */
+#define SC_STARTRTS_CMD_DBG_EID 72
+
+/**
+ * \brief SC RTS Started Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS is started successfully
+ */
+#define SC_RTS_START_INF_EID 73
+
+/**
+ * \brief SC Start RTS Rejected Due To First Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS is started but the first command has an invalid length
+ */
+#define SC_STARTRTS_CMD_INVLD_LEN_ERR_EID 74
+
+/**
+ * \brief SC Start RTS Rejected Due To RTS Not Loaded Or In Use Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS is tried to be started, but the RTS is not
+ *  marked as #SC_LOADED
+ */
+#define SC_STARTRTS_CMD_NOT_LDED_ERR_EID 75
+
+/**
+ * \brief SC Start RTS Rejected RTS Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_RTS_CC command was received, but the
+ *  RTS is disabled
+ */
+#define SC_STARTRTS_CMD_DISABLED_ERR_EID 76
+
+/**
+ * \brief SC Start RTS Rejected RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_RTS_CC command was received, but the
+ *  RTS Id was invalid
+ */
+#define SC_STARTRTS_CMD_INVALID_ERR_EID 77
+
+/**
+ * \brief SC Stop RTS Command Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an #SC_STOP_RTS_CC command is received and exexuted successfully
+ */
+#define SC_STOPRTS_CMD_INF_EID 78
+
+/**
+ * \brief SC Stop RTS Rejected RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_STOP_RTS_CC command was rejected because the
+ *  RTS Id given was invalid
+ */
+#define SC_STOPRTS_CMD_ERR_EID 79
+
+/**
+ * \brief SC Disable RTS Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_DISABLE_RTS_CC command was received, and executed successfully
+ */
+#define SC_DISABLE_RTS_DEB_EID 80
+
+/**
+ * \brief SC Disable RTS Rejected RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_DISABLE_RTS_CC command was received,
+ *  but the RTS Id given was invalid
+ */
+#define SC_DISRTS_CMD_ERR_EID 81
+
+/**
+ * \brief SC Enable RTS Command ID Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_ENABLE_RTS_CC command was received, and executed successfully
+ */
+#define SC_ENABLE_RTS_DEB_EID 82
+
+/**
+ * \brief SC Enable RTS Rejected RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_DISABLE_RTS_CC command was received,
+ *  but the RTS Id given was invalid
+ */
+#define SC_ENARTS_CMD_ERR_EID 83
+
+/**
+ * \brief SC RTS Aborted Due To Command Exceeding Buffer Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when trying to get the next RTS command to execute,
+ *  and that command runs passed the end of the RTS table buffer
+ */
+#define SC_RTS_LNGTH_ERR_EID 84
+
+/**
+ * \brief SC RTS Aborted Due To Command Length Field Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when trying to get the next RTS command to execute,
+ *  and that command has an illegal length value in the command
+ */
+#define SC_RTS_CMD_LNGTH_ERR_EID 85
+
+/**
+ * \brief SC RTS Execution Completed Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS completes execution
+ */
+#define SC_RTS_COMPL_INF_EID 86
+
+/**
+ * \brief SC ATS Execution Completed Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event message is issued when an ATS completes execution
+ */
+#define SC_ATS_COMPL_INF_EID 87
+
+/**
+ * \brief SC Jump Command Skipped ATS Commands Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued a Jump Command is issued and
+ *  Some of the ATS commands were marked as skipped
+ */
+#define SC_JUMP_ATS_SKIPPED_DBG_EID 88
+
+/**
+ * \brief SC Append ATS Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates a failure to get the table data address from
+ *  cFE Table Services
+ */
+#define SC_GET_ADDRESS_APPEND_ERR_EID 92
+
+/**
+ * \brief SC Append ATS Table Registration Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates a failure to register the table with cFE Table Services
+ */
+#define SC_REGISTER_APPEND_TBL_ERR_EID 93
+
+/**
+ * \brief SC Append ATS Table Updated Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message signals that the Append ATS table has been updated.
+ */
+#define SC_UPDATE_APPEND_EID 97
+
+/**
+ * \brief SC Append ATS Table Appended Event ID
+ *
+ *  \par Type: INFORMATIONAL
+ *
+ *  \par Cause:
+ *  This event signals the successful completion of an Append ATS command.
+ */
+#define SC_APPEND_CMD_INF_EID 98
+
+/**
+ * \brief SC Append ATS Rejected ATS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_APPEND_ATS_CC command has failed
+ *  because the specified ATS command argument was not a valid ATS ID.
+ */
+#define SC_APPEND_CMD_ARG_ERR_EID 99
+
+/**
+ * \brief SC Append ATS Rejected Target ATS Table Empty Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_APPEND_ATS_CC command has failed
+ *  because the specified target ATS table is empty.  The Append ATS command
+ *  requires that both the source Append table and the target ATS table have
+ *  valid contents.
+ */
+#define SC_APPEND_CMD_TGT_ERR_EID 100
+
+/**
+ * \brief SC Append ATS Rejected Append Table Empty Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_APPEND_ATS_CC command has failed
+ *  because the source Append table is empty.  The Append ATS command requires
+ *  that both the source Append table and the target ATS table have valid
+ *  contents.
+ */
+#define SC_APPEND_CMD_SRC_ERR_EID 101
+
+/**
+ * \brief SC Append ATS Rejected Insufficent Space Left In ATS Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_APPEND_ATS_CC command has failed
+ *  because there is not room in the specified target ATS table to add the
+ *  contents of the Append table.
+ */
+#define SC_APPEND_CMD_FIT_ERR_EID 102
+
+/**
+ * \brief SC ATS Or Append Table Verification Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message signals the successful verification of an ATS or an
+ *     Append ATS table.
+ */
+#define SC_VERIFY_ATS_EID 103
+
+/**
+ * \brief SC ATS Or Append Table Verification Table Entry Command Number Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates an error during verification of an ATS
+ *  or an Append ATS table due to an invalid table entry. The cause is
+ *  a table entry with an invalid command number.
+ */
+#define SC_VERIFY_ATS_NUM_ERR_EID 104
+
+/**
+ * \brief SC ATS Or Append Table Data Detected That Would Exceed Buffer Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates an error during verification of an ATS
+ *  or an Append ATS table due to an invalid table entry. The cause is
+ *  a table entry that has a valid command number but the entry begins
+ *  at an offset too near the end of the table buffer to provide room
+ *  for even the smallest possible command packet.
+ *
+ *  This error can be corrected by setting the first data word which
+ *  follows the last valid table entry to zero. Note that the first
+ *  word in an ATS table entry is the entry command number.
+ */
+#define SC_VERIFY_ATS_END_ERR_EID 105
+
+/**
+ * \brief SC ATS Or Append Table Verification Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates an error during verification of an ATS
+ *  or an Append ATS table due to an invalid table entry. The cause is
+ *  a table entry with an invalid command packet length.
+ */
+#define SC_VERIFY_ATS_PKT_ERR_EID 106
+
+/**
+ * \brief SC ATS Or Append Table Verification Command Length Exceeds Buffer Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates an error during verification of an ATS
+ *  or an Append ATS table due to an invalid table entry. The cause is
+ *  a table entry with an otherwise valid command packet length that
+ *  would extend past the end of the table buffer.
+ */
+#define SC_VERIFY_ATS_BUF_ERR_EID 107
+
+/**
+ * \brief SC ATS Or Append Table Verification Duplicate Command Number Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates an error during verification of an ATS
+ *  or an Append ATS table due to an invalid table entry. The cause is
+ *  a table entry with an otherwise valid command number that is already
+ *  in use by an earlier table entry.
+ */
+#define SC_VERIFY_ATS_DUP_ERR_EID 109
+
+/**
+ * \brief SC ATS Or Append Table Verification Table Empty Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message indicates an error during verification of an ATS
+ *  or an Append ATS table due to the table having no entries.  This
+ *  error can only occur if the first entry in the table has a command
+ *  number equal to zero - the end of data marker.
+ */
+#define SC_VERIFY_ATS_MPT_ERR_EID 110
+
+/**
+ * \brief SC Table Manage Request Table ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued upon receipt of a table manage
+ *  request command that has an invalid table ID argument.
+ */
+#define SC_TABLE_MANAGE_ID_ERR_EID 111
+
+/**
+ * \brief SC RTS Table Manage Processing Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  The expectation is that this command is sent by cFE Table
+ *  Services only when the indicated RTS table has been updated.
+ *  Thus, after allowing cFE Table Services an opportunity to
+ *  manage the table, the call to re-acquire the table data
+ *  pointer is expected to return an indication that the table
+ *  data has been updated.  This event message is issued upon
+ *  receipt of any other function result.
+ */
+#define SC_TABLE_MANAGE_RTS_ERR_EID 112
+
+/**
+ * \brief SC ATS Table Manage Processing Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  The expectation is that this command is sent by cFE Table
+ *  Services only when the indicated ATS table has been updated.
+ *  Thus, after allowing cFE Table Services an opportunity to
+ *  manage the table, the call to re-acquire the table data
+ *  pointer is expected to return an indication that the table
+ *  data has been updated.  This event message is issued upon
+ *  receipt of any other function result.
+ */
+#define SC_TABLE_MANAGE_ATS_ERR_EID 113
+
+/**
+ * \brief SC ATS Append Table Manage Processing Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  The expectation is that this command is sent by cFE Table
+ *  Services only when the ATS Append table has been updated.
+ *  Thus, after allowing cFE Table Services an opportunity to
+ *  manage the table, the call to re-acquire the table data
+ *  pointer is expected to return an indication that the table
+ *  data has been updated.  This event message is issued upon
+ *  receipt of any other function result.
+ */
+#define SC_TABLE_MANAGE_APPEND_ERR_EID 114
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/**
+ * \brief SC Start RTS Group Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message is issued following the successful execution of
+ *  a #SC_START_RTS_GRP_CC command.
+ */
+#define SC_STARTRTSGRP_CMD_INF_EID 115
+
+/**
+ * \brief SC Start RTS Group RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_RTS_GRP_CC command was
+ *  rejected because the RTS group definition was invalid:
+ *  - First RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be greater than or equal to First RTS ID
+ */
+#define SC_STARTRTSGRP_CMD_ERR_EID 116
+
+/**
+ * \brief SC Stop RTS Group Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message is issued following the successful execution of
+ *  a #SC_STOP_RTS_GRP_CC command.
+ */
+#define SC_STOPRTSGRP_CMD_INF_EID 117
+
+/**
+ * \brief SC Stop RTS Group RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_STOP_RTS_GRP_CC command was
+ *  rejected because the RTS group definition was invalid:
+ *  - First RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be greater than or equal to First RTS ID
+ */
+#define SC_STOPRTSGRP_CMD_ERR_EID 118
+
+/**
+ * \brief SC Disable RTS Group Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message is issued following the successful execution of
+ *  a #SC_DISABLE_RTS_GRP_CC command.
+ */
+#define SC_DISRTSGRP_CMD_INF_EID 119
+
+/**
+ * \brief SC Disable RTS Group RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_DISABLE_RTS_GRP_CC command was
+ *  rejected because the RTS group definition was invalid:
+ *  - First RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be greater than or equal to First RTS ID
+ */
+#define SC_DISRTSGRP_CMD_ERR_EID 120
+
+/**
+ * \brief SC Enable RTS Group Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message is issued following the successful execution of
+ *  a #SC_ENABLE_RTS_GRP_CC command.
+ */
+#define SC_ENARTSGRP_CMD_INF_EID 121
+
+/**
+ * \brief SC Enable RTS Group RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_ENABLE_RTS_GRP_CC command was
+ *  rejected because the RTS group definition was invalid:
+ *  - First RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *  - Last RTS ID must be greater than or equal to First RTS ID
+ */
+#define SC_ENARTSGRP_CMD_ERR_EID 122
+#endif
+
+/**
+ * \brief SC Jump Command Entry Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_JUMP_ATS_CC command was issued, and the time to
+ *  jump to was less than or equal to a list entry.
+ */
+#define SC_JUMPATS_CMD_LIST_INF_EID 123
+
+/**
+ * \brief SC RTS Table Load Failed Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS table fails to load at startup.
+ *
+ *  The event text includes the RTS index and the result of the
+ *  #CFE_TBL_Load call.
+ */
+#define SC_RTS_LOAD_FAIL_DBG_EID 124
+
+/**
+ * \brief SC RTS Table Open Failed Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause:
+ *  This event message is issued when an RTS file fails to open at startup.
+ */
+#define SC_RTS_OPEN_FAIL_DBG_EID 125
+
+/**
+ * \brief SC Start RTS Group RTS Not Loaded Or In Use Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_RTS_GRP_CC command was received, but an
+ *  RTS is marked as #SC_LOADED
+ */
+#define SC_STARTRTSGRP_CMD_NOT_LDED_ERR_EID 126
+
+/**
+ * \brief SC Start RTS Group RTS Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when a #SC_START_RTS_GRP_CC command was received, but an
+ *  RTS is disabled
+ */
+#define SC_STARTRTSGRP_CMD_DISABLED_ERR_EID 127
+
+/**
+ * \brief SC Begin ATS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_BeginAts function
+ */
+#define SC_BEGINATS_INVLD_INDEX_ERR_EID 128
+
+/**
+ * \brief SC RTS Table Manage RTS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid RTS index is received
+ *  in the SC_ManageRtsTable function
+ */
+#define SC_TABLE_MANAGE_RTS_INV_INDEX_ERR_EID 129
+
+/**
+ * \brief SC ATS Table Manage ATS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_ManageAtsTable function
+ */
+#define SC_TABLE_MANAGE_ATS_INV_INDEX_ERR_EID 130
+
+/**
+ * \brief SC ATS Table Load ATS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_LoadAts function
+ */
+#define SC_LOADATS_INV_INDEX_ERR_EID 131
+
+/**
+ * \brief SC ATS Build Time Index ATS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_BuildTimeIndexTable function
+ */
+#define SC_BUILD_TIME_IDXTBL_ERR_EID 132
+
+/**
+ * \brief SC ATS Insert ATS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_Insert function
+ */
+#define SC_INSERTATS_INV_INDEX_ERR_EID 133
+
+/**
+ * \brief SC ATS Table Initialization Error ATS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_InitAtsTables function
+ */
+#define SC_INIT_ATSTBL_INV_INDEX_ERR_EID 134
+
+/**
+ * \brief SC RTS Table Initialization Error RTS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid RTS index is received
+ *  in the SC_LoadRts function
+ */
+#define SC_LOADRTS_INV_INDEX_ERR_EID 135
+
+/**
+ * \brief SC ATS Process Append ATS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid ATS index is received
+ *  in the SC_ProcessAppend function
+ */
+#define SC_PROCESS_APPEND_INV_INDEX_ERR_EID 136
+
+/**
+ * \brief SC RTS Kill RTS Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid RTS index is received
+ *  in the SC_KillRts function
+ */
+#define SC_KILLRTS_INV_INDEX_ERR_EID 137
+
+/**
+ * \brief SC RTS Autostart RTS ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *  This event message is issued when an invalid RTS ID is received
+ *  in the SC_AutoStartRts function
+ */
+#define SC_AUTOSTART_RTS_INV_ID_ERR_EID 138
+
+/**\}*/
+
+#endif
 ```
 
-## 항목
+### `sc_msg.h`
 
-- [`fsw/apps/sc/fsw/inc/sc_events.h`](file--sc_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_msg.h`](file--sc_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_msgdefs.h`](file--sc_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_msgids.h`](file--sc_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_perfids.h`](file--sc_perfids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_platform_cfg.h`](file--sc_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_rts.h`](file--sc_rts.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/inc/sc_tbldefs.h`](file--sc_tbldefs.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sc/fsw/inc/sc_msg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Stored Command (SC) command and telemetry
+ *   message data types.
+ *
+ * @note
+ *   Constants and enumerated types related to these message structures
+ *   are defined in sc_msgdefs.h.
+ */
+#ifndef SC_MSG_H
+#define SC_MSG_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include <cfe.h>
+#include <sc_platform_cfg.h>
+#include <sc_msgdefs.h>
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+#define SC_NUMBER_OF_RTS_IN_UINT16 16 /**< \brief Number of RTS represented in a uint16 */
+
+/************************************************************************
+ * Type Definitions
+ ************************************************************************/
+
+/**
+ * \defgroup cfssctlm CFS Stored Command Telemetry
+ * \{
+ */
+
+/**
+ *  \brief Housekeeping Packet Structure
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+
+    uint8 AtsNumber;                /**< \brief Current ATS number: 1 = ATS A, 2 = ATS B */
+    uint8 AtpState;                 /**< \brief Current ATP state: 2 = IDLE, 5 = EXECUTING */
+    uint8 ContinueAtsOnFailureFlag; /**< \brief Continue ATS execution on failure flag */
+
+    uint8 CmdErrCtr; /**< \brief Counts Request Errors */
+    uint8 CmdCtr;    /**< \brief Counts Ground Requests */
+    uint8 Padding8;  /**< \brief Structure padding */
+
+    uint16 SwitchPendFlag;  /**< \brief Switch pending flag: 0 = NO, 1 = YES */
+    uint16 NumRtsActive;    /**< \brief Number of RTSs currently active */
+    uint16 RtsNumber;       /**< \brief Next RTS number */
+    uint16 RtsActiveCtr;    /**< \brief Increments when an RTS is started without error */
+    uint16 RtsActiveErrCtr; /**< \brief Increments when an attempt to start an RTS fails */
+    uint16 AtsCmdCtr;       /**< \brief Total ATS cmd cnter counts commands sent by the ATS */
+    uint16 AtsCmdErrCtr;    /**< \brief Total ATS cmd Error ctr command errors in the ATS */
+    uint16 RtsCmdCtr;       /**< \brief Counts TOTAL rts cmds that were sent out from ALL active RTSs */
+    uint16 RtsCmdErrCtr;    /**< \brief Counts TOTAL number of errs from ALL RTSs that are active */
+    uint16 LastAtsErrSeq;   /**< \brief Last ATS Errant Sequence Num Values: 1 or 2 */
+    uint16 LastAtsErrCmd;   /**< \brief Last ATS Errant Command Num */
+    uint16 LastRtsErrSeq;   /**< \brief Last RTS Errant Sequence Num */
+    uint16 LastRtsErrCmd;   /**< \brief Offset in the RTS buffer for the last command error, in "words" */
+
+    uint16 AppendCmdArg;                   /**< \brief ATS selection argument from most recent Append ATS command */
+    uint16 AppendEntryCount;               /**< \brief Number of cmd entries in current Append ATS table */
+    uint16 AppendByteCount;                /**< \brief Size of cmd entries in current Append ATS table */
+    uint16 AppendLoadCount;                /**< \brief Total number of Append ATS table loads */
+    uint32 AtpCmdNumber;                   /**< \brief Current command number */
+    uint32 AtpFreeBytes[SC_NUMBER_OF_ATS]; /**< \brief Free Bytes in each ATS  */
+    uint32 NextRtsTime;                    /**< \brief Next RTS cmd Absolute Time */
+    uint32 NextAtsTime;                    /**< \brief Next ATS Command Time (seconds) */
+
+    uint16 RtsExecutingStatus[(SC_NUMBER_OF_RTS + (SC_NUMBER_OF_RTS_IN_UINT16 - 1)) / SC_NUMBER_OF_RTS_IN_UINT16];
+    /**< \brief RTS executing status bit map where each uint16 represents 16 RTS numbers.  Note: array
+     index numbers and bit numbers use base zero indexing, but RTS numbers use base one indexing.  Thus,
+     the LSB (bit zero) of uint16 array index zero represents RTS number 1, and bit one of uint16 array
+     index zero represents RTS number 2, etc.  If an RTS is IDLE, then the corresponding bit is zero.
+     If an RTS is EXECUTING, then the corresponding bit is one. */
+
+    uint16 RtsDisabledStatus[(SC_NUMBER_OF_RTS + (SC_NUMBER_OF_RTS_IN_UINT16 - 1)) / SC_NUMBER_OF_RTS_IN_UINT16];
+    /**< \brief RTS disabled status bit map where each uint16 represents 16 RTS numbers.  Note: array
+     index numbers and bit numbers use base zero indexing, but RTS numbers use base one indexing.  Thus,
+     the LSB (bit zero) of uint16 array index zero represents RTS number 1, and bit one of uint16 array
+     index zero represents RTS number 2, etc.  If an RTS is ENABLED, then the corresponding bit is zero.
+     If an RTS is DISABLED, then the corresponding bit is one. */
+} SC_HkTlm_t;
+
+/**\}*/
+
+/**
+ * \defgroup cfssccmdstructs CFS Stored Command Command Structures
+ * \{
+ */
+
+/**
+ *  \brief No Arguments Command
+ *
+ *  For command details see #SC_NOOP_CC, #SC_RESET_COUNTERS_CC, #SC_STOP_ATS_CC, #SC_SWITCH_ATS_CC
+ *  Also see #SC_SEND_HK_MID
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+} SC_NoArgsCmd_t;
+
+/**
+ *  \brief ATS Id Command
+ *
+ *  For command details see #SC_START_ATS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+
+    uint16 AtsId;   /**< \brief The ID of the ATS to start, 1 = ATS_A, 2 = ATS_B */
+    uint16 Padding; /**< \brief Structure padding */
+} SC_StartAtsCmd_t;
+
+/**
+ *  \brief RTS Id Command
+ *
+ *  For command details see #SC_START_RTS_CC, #SC_STOP_RTS_CC, #SC_DISABLE_RTS_CC, #SC_ENABLE_RTS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+
+    uint16 RtsId;   /**< \brief The ID of the RTS to start, 1 through #SC_NUMBER_OF_RTS */
+    uint16 Padding; /**< \brief Structure padding */
+} SC_RtsCmd_t;
+
+/**
+ *  \brief Jump running ATS to a new time Command
+ *
+ *  For command details see #SC_JUMP_ATS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+
+    uint32 NewTime; /**< \brief the time to 'jump' to */
+} SC_JumpAtsCmd_t;
+
+/**
+ *  \brief Continue ATS on failure command
+ *
+ *  For command details see #SC_CONTINUE_ATS_ON_FAILURE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+
+    uint16 ContinueState; /**< \brief true or false, to continue ATS after a failure  */
+    uint16 Padding;       /**< \brief Structure Padding */
+} SC_SetContinueAtsOnFailureCmd_t;
+
+/**
+ *  \brief Append to ATS Command
+ *
+ *  For command details see #SC_APPEND_ATS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+
+    uint16 AtsId;   /**< \brief The ID of the ATS to append to, 1 = ATS_A, 2 = ATS_B */
+    uint16 Padding; /**< \brief Structure Padding */
+} SC_AppendAtsCmd_t;
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/**
+ *  \brief RTS Group Command
+ *
+ *  For command details see #SC_START_RTS_GRP_CC, #SC_STOP_RTS_GRP_CC, #SC_DISABLE_RTS_GRP_CC, #SC_ENABLE_RTS_GRP_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command Header */
+
+    uint16 FirstRtsId; /**< \brief ID of the first RTS to act on, 1 through #SC_NUMBER_OF_RTS */
+    uint16 LastRtsId;  /**< \brief ID of the last RTS to act on, 1 through #SC_NUMBER_OF_RTS */
+} SC_RtsGrpCmd_t;
+#endif
+
+/**\}*/
+
+#endif
+```
+
+### `sc_msgdefs.h`
+
+**경로:** `fsw/apps/sc/fsw/inc/sc_msgdefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Stored Command (SC) command and telemetry
+ *   message constant definitions.
+ *
+ * @note
+ *   DO NOT PUT ANY TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE!
+ *   ADD THEM TO sc_msg.h IF NEEDED!
+ */
+#ifndef SC_MSGDEFS_H
+#define SC_MSGDEFS_H
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+/**
+ * \name Which processor runs next
+ * \{
+ */
+#define SC_ATP  0    /**< \brief ATP process next */
+#define SC_RTP  1    /**< \brief RTP process next */
+#define SC_NONE 0xFF /**< \brief No pending process */
+/**\}*/
+
+#define SC_MAX_TIME 0xFFFFFFFF /**< \brief Maximum time in SC */
+
+/**
+ * \name ATS/RTS Cmd Status macros
+ * \{
+ */
+#define SC_EMPTY           0 /**< \brief the object is not loaded */
+#define SC_LOADED          1 /**< \brief the object is loaded */
+#define SC_IDLE            2 /**< \brief the object is not executing */
+#define SC_EXECUTED        3 /**< \brief the object has completed executing */
+#define SC_SKIPPED         4 /**< \brief the object (ats command) was skipped */
+#define SC_EXECUTING       5 /**< \brief the object is currently executing */
+#define SC_FAILED_CHECKSUM 6 /**< \brief the object failed a checksum test */
+#define SC_FAILED_DISTRIB  7 /**< \brief the object could not be sent on the SWB */
+#define SC_STARTING        8 /**< \brief used when an inline switch is executed */
+/**\}*/
+
+/**
+ * \name Defines for each ATS
+ * \{
+ */
+#define SC_NO_ATS 0 /**<\ brief No ATS */
+#define SC_ATSA   1 /**< \brief ATS A */
+#define SC_ATSB   2 /**< \brief ATS B */
+/**\}*/
+
+/**
+ * \name constants for config parameters for which TIME to use
+ * \{
+ */
+#define SC_USE_CFE_TIME 0 /**< \brief Use cFE configured time */
+#define SC_USE_TAI      1 /**< \brief Use TAI Time */
+#define SC_USE_UTC      2 /**< \brief USE UTC Time */
+/**\}*/
+
+#define SC_INVALID_RTS_NUMBER 0 /**< \brief Invalid RTS number */
+
+#define SC_NUMBER_OF_ATS 2 /**< \brief the number of Absolute Time Sequences */
+
+/**
+ * \name SC Continue Flags
+ * \{
+ */
+#define SC_CONTINUE_TRUE  1 /**< \brief Continue on failure */
+#define SC_CONTINUE_FALSE 0 /**< \brief Do not continue on failure */
+/**\}*/
+
+/**
+ * \defgroup cfssccmdcodes CFS Stored Command Command Codes
+ * \{
+ */
+
+/**
+ * \brief Noop
+ *
+ *  \par Description
+ *       Implements the Noop command that insures the SC app is alive
+ *
+ *  \par Command Structure
+ *       #SC_NoArgsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_NOOP_INF_EID informational event message will be
+ *         generated when the command is received
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message #SC_LEN_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_RESET_COUNTERS_CC
+ */
+#define SC_NOOP_CC 0
+
+/**
+ * \brief Reset Counters
+ *
+ *  \par Description
+ *       Resets the SC housekeeping counters
+ *
+ *  \par Command Structure
+ *       #SC_NoArgsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will be cleared
+ *       - The #SC_STARTATS_CMD_INF_EID informational event message will be
+ *         generated when the command is received
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message #SC_LEN_ERR_EID
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_NOOP_CC
+ */
+#define SC_RESET_COUNTERS_CC 1
+
+/**
+ * \brief Start an ATS
+ *
+ *  \par Description
+ *       Starts the specified ATS
+ *
+ *  \par Command Structure
+ *       #SC_StartAtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - ATP is not idle
+ *       - ATS specified is not loaded
+ *       - Invalid ATS ID
+ *       - All command were skipped
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_STOP_ATS_CC
+ */
+#define SC_START_ATS_CC 2
+/**
+ * \brief Stop an ATS
+ *
+ *  \par Description
+ *       Stops the specified ATS
+ *
+ *  \par Command Structure
+ *       #SC_NoArgsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - the #SC_STOPATS_CMD_INF_EID event message will be generated
+ *
+ **
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_START_ATS_CC
+ */
+#define SC_STOP_ATS_CC 3
+
+/**
+ * \brief Start an RTS
+ *
+ *  \par Description
+ *       Starts the specified RTS
+ *
+ *  \par Command Structure
+ *       #SC_RtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_STARTRTS_CMD_DBG_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid command field in first RTS command
+ *       - RTS not loaded
+ *       - RTS already running
+ *       - RTS is disabled
+ *       - Invalid RTS ID
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - #SC_HkTlm_t.RtsActiveErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_STOP_RTS_CC
+ */
+#define SC_START_RTS_CC 4
+
+/**
+ * \brief Stop an RTS
+ *
+ *  \par Description
+ *       Stops the specified RTS
+ *
+ *  \par Command Structure
+ *       #SC_RtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_STOPRTS_CMD_INF_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - RTS ID is invalid
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_START_RTS_CC
+ */
+#define SC_STOP_RTS_CC 5
+
+/**
+ * \brief DISABLE an RTS
+ *
+ *  \par Description
+ *       Disables the specified RTS
+ *
+ *  \par Command Structure
+ *       #SC_RtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_DISABLE_RTS_DEB_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - RTS ID is invalid
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_ENABLE_RTS_CC
+ */
+#define SC_DISABLE_RTS_CC 6
+
+/**
+ * \brief Enable an RTS
+ *
+ *  \par Description
+ *       Enables the specified RTS
+ *
+ *  \par Command Structure
+ *       #SC_RtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_ENABLE_RTS_DEB_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - RTS ID is invalid
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_DISABLE_RTS_CC
+ */
+#define SC_ENABLE_RTS_CC 7
+
+/**
+ * \brief Switch the running ATS
+ *
+ *  \par Description
+ *       Switches the running ATS and the ATS no running
+ *
+ *  \par Command Structure
+ *       #SC_NoArgsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_SWITCH_ATS_CMD_INF_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Desitination ATS is not loaded
+ *       - There is no currently running ATS to switch from
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ */
+#define SC_SWITCH_ATS_CC 8
+
+/**
+ * \brief Jump the time in the running ATS
+ *
+ *  \par Description
+ *       Moves the 'current time' pointer in the ATS to another time
+ *
+ *  \par Command Structure
+ *       #SC_JumpAtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_JUMP_ATS_INF_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - All ATS Cmds were skipped in the jump, ATS is shut off
+ *       - No ATS is active
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ */
+#define SC_JUMP_ATS_CC 9
+
+/**
+ * \brief Set the Continue-On-Checksum-Failure flag
+ *
+ *  \par Description
+ *       Sets the flag which specifies whether or not to continue
+ *        processing an ATS if one of the commands in the ATS fails
+ *        checksum validation before being sent out.
+ *
+ *  \par Command Structure
+ *       #SC_SetContinueAtsOnFailureCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_CONT_CMD_DEB_EID will be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid State specified
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ */
+#define SC_CONTINUE_ATS_ON_FAILURE_CC 10
+
+/**
+ * \brief Append to an ATS table
+ *
+ *  \par Description
+ *       Adds contents of the Append table to the specified ATS table
+ *
+ *  \par Command Structure
+ *       #SC_AppendAtsCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - ATS specified is not loaded
+ *       - Invalid ATS ID
+ *       - Append table contents too large to fit in ATS free space
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - Error specific event message
+ *
+ *  \par Criticality
+ *       None
+ */
+#define SC_APPEND_ATS_CC 11
+
+/**
+ * \brief Request from cFE Table Services to manage a table
+ *
+ *  \par Description
+ *       This command signals a need for the host application (SC)
+ *       to allow cFE Table Services to manage the specified table.
+ *       For loadable tables, this command indicates that a table
+ *       update is available.  For dump only tables, this command
+ *       indicates that cFE Table Services wants to dump the table
+ *       data.  In either case, the host application must call the
+ *       table manage API function so that the pending function
+ *       can be executed within the context of the host.
+ *
+ *       Note: There is no reason for this command to be sent from
+ *       any source other than cFE Table Services.
+ *
+ *  \par Command Structure
+ *       #CFE_TBL_NotifyCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified via:
+ *       - cFE Table Services housekeeping telemetry
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Invalid table ID
+ *       - Unexpected result during manage of loadable table
+ *
+ *  \par Evidence of failure for this command may be verified via:
+ *       - cFE Table Services housekeeping telemetry
+ *       - Error specific SC event message
+ *
+ *  \par Criticality
+ *       None
+ */
+#define SC_MANAGE_TABLE_CC 12
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/**
+ * \brief START a group of RTS
+ *
+ *  \par Description
+ *       The load state for an RTS may be LOADED or NOT LOADED.
+ *       The enable state for an RTS may be ENABLED or DISABLED.
+ *       The run state for an RTS may be STARTED or STOPPED.
+ *       This command STARTS each RTS in the specified group that is
+ *       currently LOADED, ENABLED and STOPPED.
+ *
+ *  \par Command Structure
+ *       #SC_RtsGrpCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - #SC_STARTRTSGRP_CMD_INF_EID event will indicate the number of RTS
+ *         in the group that were actually STARTED by the command.
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid group definition, first RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be greater than or equal to first RTS ID
+ *       - If the group definition is valid the command will report success, regardless of
+ *         whether any RTS in the group is actually STARTED by the command.
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - The #SC_LEN_ERR_EID event will indicate invalid command packet length.
+ *       - The #SC_STARTRTSGRP_CMD_ERR_EID event will indicate invalid group definition.
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_STOP_RTS_GRP_CC
+ */
+#define SC_START_RTS_GRP_CC 13
+
+/**
+ * \brief STOP a group of RTS
+ *
+ *  \par Description
+ *       The load state for an RTS may be LOADED or NOT LOADED.
+ *       The enable state for an RTS may be ENABLED or DISABLED.
+ *       The run state for an RTS may be STARTED or STOPPED.
+ *       This command STOPS each RTS in the specified group that is currently STARTED.
+ *
+ *  \par Command Structure
+ *       #SC_RtsGrpCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_STOPRTSGRP_CMD_INF_EID event will indicate the number of RTS
+ *         in the group that were actually STOPPED by the command
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid group definition, first RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be greater than or equal to first RTS ID
+ *       - If the group definition is valid the command will report success, regardless of
+ *         whether any RTS in the group is actually STOPPED by the command.
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - The #SC_LEN_ERR_EID event will indicate invalid command packet length.
+ *       - The #SC_STOPRTSGRP_CMD_ERR_EID event will indicate invalid group definition.
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_START_RTS_GRP_CC
+ */
+#define SC_STOP_RTS_GRP_CC 14
+
+/**
+ * \brief DISABLE a group of RTS
+ *
+ *  \par Description
+ *       The enable state for an RTS may be ENABLED or DISABLED.
+ *       This command sets the enable state for the specified group of RTS to DISABLED.
+ *
+ *  \par Command Structure
+ *       #SC_RtsGrpCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_DISRTSGRP_CMD_INF_EID event will indicate the number of RTS
+ *         in the group that were changed from ENABLED to DISABLED by the command
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid group definition, first RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be greater than or equal to first RTS ID
+ *       - If the group definition is valid the command will report success, regardless of
+ *         whether the group contained an RTS that was not already DISABLED.
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - The #SC_LEN_ERR_EID event will indicate invalid command packet length.
+ *       - The #SC_DISRTSGRP_CMD_ERR_EID event will indicate invalid group definition.
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_ENABLE_RTS_GRP_CC
+ */
+#define SC_DISABLE_RTS_GRP_CC 15
+
+/**
+ * \brief ENABLE a group of RTS
+ *
+ *  \par Description
+ *       The enable state for an RTS may be ENABLED or DISABLED.
+ *       This command sets the enable state for the specified group of RTS to ENABLED.
+ *
+ *  \par Command Structure
+ *       #SC_RtsGrpCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #SC_HkTlm_t.CmdCtr will increment
+ *       - The #SC_ENARTSGRP_CMD_INF_EID event will indicate success and display the
+ *         number of RTS that were changed from DISABLED to ENABLED by the command.
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - Command packet length not as expected
+ *       - Invalid group definition, first RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be 1 through #SC_NUMBER_OF_RTS
+ *       - Invalid group definition, last RTS ID must be greater than or equal to first RTS ID
+ *       - If the group definition is valid the command will report success, regardless of
+ *         whether the group contained an RTS that was not already ENABLED.
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #SC_HkTlm_t.CmdErrCtr will increment
+ *       - The #SC_LEN_ERR_EID event will indicate invalid command packet length.
+ *       - The #SC_ENARTSGRP_CMD_ERR_EID event will indicate invalid group definition.
+ *
+ *  \par Criticality
+ *       None
+ *
+ *  \sa #SC_DISABLE_RTS_GRP_CC
+ */
+#define SC_ENABLE_RTS_GRP_CC 16
+
+#endif
+
+/**\}*/
+
+#ifndef SC_OMIT_DEPRECATED
+#define SC_START_RTSGRP_CC   SC_START_RTS_GRP_CC
+#define SC_STOP_RTSGRP_CC    SC_STOP_RTS_GRP_CC
+#define SC_DISABLE_RTSGRP_CC SC_DISABLE_RTS_GRP_CC
+#define SC_ENABLE_RTSGRP_CC  SC_ENABLE_RTS_GRP_CC
+#endif
+
+#endif
+```
+
+### `sc_msgids.h`
+
+**경로:** `fsw/apps/sc/fsw/inc/sc_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the message ID's used by Stored Command
+ */
+#ifndef SC_MSGIDS_H
+#define SC_MSGIDS_H
+
+/**
+ * \defgroup cfssccmdmid CFS Stored Command Command Message IDs
+ * \{
+ */
+
+#define SC_CMD_MID        (0x18A9) /**< \brief Msg ID for cmds to SC   */
+#define SC_SEND_HK_MID    (0x18AA) /**< \brief Msg ID to request SC HK */
+#define SC_1HZ_WAKEUP_MID (0x18AB) /**< \brief Msg ID to receive the 1Hz */
+
+/**\}*/
+
+/**
+ * \defgroup cfssctlmmid CFS Stored Command Telemetry Message IDs
+ * \{
+ */
+
+#define SC_HK_TLM_MID (0x08AA) /**< \brief Msg ID to send telemtry down on */
+
+/**\}*/
+
+#endif
+```
+
+### `sc_perfids.h`
+
+**경로:** `fsw/apps/sc/fsw/inc/sc_perfids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the cFE performance ID's used by Stored Command
+ */
+#ifndef SC_PERFIDS_H
+#define SC_PERFIDS_H
+
+/**
+ * \defgroup cfsscmissioncfg CFS Stored Command Mission Configuration
+ * \{
+ */
+
+#define SC_APPMAIN_PERF_ID 37 /**< \brief Application main performance ID */
+
+/**\}*/
+
+#endif
+```
+
+### `sc_platform_cfg.h`
+
+**경로:** `fsw/apps/sc/fsw/inc/sc_platform_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the platform configuration parameters used by
+ *   Stored Command
+ */
+#ifndef SC_PLATFORM_CFG_H
+#define SC_PLATFORM_CFG_H
+
+/**
+ * \defgroup cfsscplatformcfg CFS Stored Command Platform Configuration
+ * \{
+ */
+
+/**
+ * \brief  Max number of commands per second
+ *
+ *  \par Description:
+ *       Maximum number of commands that can be sent out by SC
+ *       in any given second.
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535), but should be kepoot relatively small to
+ *       avoid SC hogging the CPU
+ *
+ */
+#define SC_MAX_CMDS_PER_SEC 8
+
+/**
+ * \brief  Number of RTS's
+ *
+ *  \par Description:
+ *       The number of RTS's allowed in the system
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than 999.This parameter will dicate the size of
+ *       The RTS Info Table.
+ */
+#define SC_NUMBER_OF_RTS 64
+
+/**
+ * \brief Max buffer size for an ATS in uint16s
+ *
+ *  \par Description:
+ *       The max sizeof an ATS buffer in words (not bytes)
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535).
+ */
+#define SC_ATS_BUFF_SIZE 8000
+
+/**
+ * \brief Max buffer size for an Append ATS in uint16s
+ *
+ *  \par Description:
+ *       The max sizeof an Append ATS buffer in words (not bytes)
+ *  \par Limits:
+ *       This parameter cannot be larger than SC_ATS_BUFF_SIZE.
+ */
+#define SC_APPEND_BUFF_SIZE (SC_ATS_BUFF_SIZE / 2)
+
+/**
+ * \brief Max buffer size for an RTS in uint16s
+ *
+ *  \par Description:
+ *       The max size of an RTS buffer in WORDS (not bytes)
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535).
+ */
+#define SC_RTS_BUFF_SIZE 150
+
+/**
+ * \brief Max number of commands in each ATS
+ *
+ *  \par Description:
+ *       The maximum number of commands that are allowed in each ATS
+ *
+ *  \par Limits:
+ *       This parameter can't be larger than an unsigned 16 bit
+ *       integer (65535).
+ */
+#define SC_MAX_ATS_CMDS 1000
+
+/**
+ * \brief The last RTS that will be sent with an #SC_RTS_START_INF_EID event message
+ *
+ *  \par Description:
+ *       When all RTS's are started, the #SC_RTS_START_INF_EID event message is sent out.
+ *       This parameter suppreses that message for all RTS's over this number
+ *
+ *  \par Limits:
+ *       This parameter needs to be less than or equal to SC_NUMBER_OF_RTS
+ */
+#define SC_LAST_RTS_WITH_EVENTS 20
+
+/**
+ * \brief Minimum Packet Size
+ *
+ *  \par Description:
+ *       This parameter specifies the minumum size in bytes for an ATS or RTS command.
+ *  \par Limits:
+ *       This parameter must be greater than or equal to CFE_SB_CMD_HDR_SIZE and
+ *       less than or equal to CFE_MISSION_SB_MAX_SB_MSG_SIZE.
+ */
+#define SC_PACKET_MIN_SIZE 8
+
+/**
+ * \brief Maximum Packet Size
+ *
+ *  \par Description:
+ *       This parameter specifies the maximum size in bytes for an ATS or RTS command.
+ *  \par Limits:
+ *       This parameter must be greater than or equal to SC_PACKET_MIN_SIZE and
+ *       less than or equal to CFE_MISSION_SB_MAX_SB_MSG_SIZE.
+ */
+#define SC_PACKET_MAX_SIZE 256
+
+/**
+ * \brief Command Pipe Depth
+ *
+ *  \par Description:
+ *       Maximum number of messages that will be allowed in the
+ *       SC command pipe at one time. Used during initialization
+ *       in the call to #CFE_SB_CreatePipe
+ *
+ *  \par Limits:
+ *       This parameter must be greater than zero and less than or equal to
+ *       CFE_SB_MAX_PIPE_DEPTH.
+ */
+#define SC_PIPE_DEPTH 12
+
+/**
+ * \brief ATS Table Filenames
+ *
+ *  \par Description:
+ *       Filenames for the ATS tables loaded at startup are constructed by
+ *       appending a one digit table identifier plus the extension ".tbl"
+ *       to the base portion of the filename defined here.
+ *
+ *       The default definitions will create ATS filenames as follows:
+ *       "/cf/apps/sc_ats1.tbl or /cf/apps/sc_ats2.tbl"
+ *
+ *  \par Limits:
+ *       SC requires that this name be defined, but otherwise places no
+ *       limits on the definition.  If the named table file does not exist
+ *       at run time, or the table fails validation, then the table load
+ *       will fail.  Refer to #OS_MAX_PATH_LEN for filename length limits.
+ */
+#define SC_ATS_FILE_NAME "/cf/sc_ats"
+
+/**
+ * \brief Append ATS Table Filename
+ *
+ *  \par Description:
+ *       This name describes the default append ATS filename loaded at
+ *       startup.  Often the default Append ATS file contains only a
+ *       single unused table entry, and is used only to initialize the
+ *       table state as having data that may be patched.
+ *
+ *  \par Limits:
+ *       SC requires that this name be defined, but otherwise places no
+ *       limits on the definition.  If the named table file does not exist
+ *       at run time, or the table fails validation, then the table load
+ *       will fail.  Refer to #OS_MAX_PATH_LEN for filename length limits.
+ */
+#define SC_APPEND_FILE_NAME "/cf/sc_append.tbl"
+
+/**
+ * \brief RTS Table Filenames
+ *
+ *  \par Description:
+ *       Filenames for the RTS tables loaded at startup are constructed by
+ *       appending a one digit table identifier plus the extension ".tbl"
+ *       to the base portion of the filename defined here.
+ *
+ *       The default definitions will create RTS filenames as follows:
+ *       "/cf/apps/sc_rts001.tbl, /cf/apps/sc_rts002.tbl, etc"
+ *
+ *  \par Limits:
+ *       SC requires that this name be defined, but otherwise places no
+ *       limits on the definition.  If the named table file does not exist
+ *       at run time, or the table fails validation, then the table load
+ *       will fail.  Refer to #OS_MAX_PATH_LEN for filename length limits.
+ */
+#define SC_RTS_FILE_NAME "/cf/sc_rts"
+
+/**
+ * \brief ATS Table Object Names
+ *
+ *  \par Description:
+ *       Unique table object names are required for each table registered
+ *       with cFE Table Services.  ATS table object names are constructed
+ *       by appending a one digit table identifier to the base portion of
+ *       the object name defined here.
+ *
+ *       The default definitions will create ATS object names as follows:
+ *       "ATS_TBL1 or ATS_TBL2"
+ *
+ *  \par Limits:
+ *       SC requires that this name be defined, but otherwise places no
+ *       limits on the definition.  Refer to #CFE_MISSION_TBL_MAX_NAME_LENGTH for
+ *       specific information on limits related to table object names.
+ */
+#define SC_ATS_TABLE_NAME "ATS_TBL"
+
+/**
+ * \brief Append ATS Table Object Names
+ *
+ *  \par Description:
+ *       Unique table object names are required for each table registered
+ *       with cFE Table Services.  This is the table object name for the
+ *       Append ATS table.
+ *
+ *  \par Limits:
+ *       SC requires that this name be defined, but otherwise places no
+ *       limits on the definition.  Refer to #CFE_MISSION_TBL_MAX_NAME_LENGTH for
+ *       specific information on limits related to table object names.
+ */
+#define SC_APPEND_TABLE_NAME "APPEND_TBL"
+
+/**
+ * \brief RTS Table Object Names
+ *
+ *  \par Description:
+ *       Unique table object names are required for each table registered
+ *       with cFE Table Services.  RTS table object names are constructed
+ *       by appending a three digit table identifier to the base portion
+ *       of the object name defined here.
+ *
+ *       The default definitions will create RTS object names as follows:
+ *       "RTS_TBL001, RTS_TBL002, etc"
+ *
+ *  \par Limits:
+ *       SC requires that this name be defined, but otherwise places no
+ *       limits on the definition.  Refer to #CFE_MISSION_TBL_MAX_NAME_LENGTH for
+ *       specific information on limits related to table object names.
+ */
+#define SC_RTS_TABLE_NAME "RTS_TBL"
+
+/**
+ * \brief Name of the RTS Infomation Table
+ *
+ *  \par Description:
+ *       Name of the RTS Information Table
+ *  \par Limits:
+ *       Must be less than #CFE_MISSION_TBL_MAX_NAME_LENGTH
+ */
+#define SC_RTSINFO_TABLE_NAME "RTSINF_TBL"
+
+/**
+ * \brief Name of the RTP Control block table
+ *
+ *  \par Description:
+ *       Name of the RTP Control Block Table
+ *  \par Limits:
+ *       Must be less than #CFE_MISSION_TBL_MAX_NAME_LENGTH
+ */
+#define SC_RTP_CTRL_TABLE_NAME "RTPCTR_TBL"
+
+/**
+ * \brief Name of the ATS Infomation Table
+ *
+ *  \par Description:
+ *       Name of the ATS Information Table
+ *  \par Limits:
+ *       Must be less than #CFE_MISSION_TBL_MAX_NAME_LENGTH
+ */
+#define SC_ATSINFO_TABLE_NAME "ATSINF_TBL"
+
+/**
+ * \brief Name of the Append ATS Infomation Table
+ *
+ *  \par Description:
+ *       Name of the Append ATS Information Table
+ *  \par Limits:
+ *       Must be less than #CFE_MISSION_TBL_MAX_NAME_LENGTH
+ */
+#define SC_APPENDINFO_TABLE_NAME "APPINF_TBL"
+
+/**
+ * \brief Name of the ATP Control block table
+ *
+ *  \par Description:
+ *       Name of the ATP Control Block Table
+ *  \par Limits:
+ *       Must be less than #CFE_MISSION_TBL_MAX_NAME_LENGTH
+ */
+#define SC_ATS_CTRL_TABLE_NAME "ATPCTR_TBL"
+
+/**
+ * \brief Name Prefix of ATS Cmd Status Table
+ *
+ *  \par Description:
+ *       The prefix of the ATS Command Status table names. Note that actual table names
+ *       will have a 1 digit number postfixed to it depending on the
+ *       ATS number
+ *
+ *  \par Limits:
+ *       Total length must be less than #CFE_MISSION_TBL_MAX_NAME_LENGTH
+ */
+#define SC_ATS_CMD_STAT_TABLE_NAME "ATSCMD_TBL"
+
+/**
+ * \brief Defnies default state of Continue-Ats-On-Checksum-Failure Flag
+ *
+ *  \par Description:
+ *       This parameter specifies the default state to continue an ATS
+ *       when a command in the ATS fails checksum validation
+ *
+ *  \par Limits:
+ *       Must be true or false
+ */
+#define SC_CONT_ON_FAILURE_START true
+
+/**
+ * \brief Defines the TIME SC should use for its commands
+ *
+ *  \par Description:
+ *       This parameter defines what type of time SC should use for sending uot its commands
+ *
+ *  \par Limits:
+ *       Must be SC_USE_CFE_TIME, SC_USE_TAI, or SC_USE_UTC */
+#define SC_TIME_TO_USE SC_USE_CFE_TIME
+
+/**
+ * \brief Define inclusion state for RTS group commands
+ *
+ *  \par Description:
+ *       This parameter specifies the inclusion state for the
+ *       following RTS group commands: Start RTS group, Stop
+ *       RTS group, Enable RTS group and Disable RTS group.
+ *       RTS group commands affect a range of consecutive RTS
+ *       numbers.  When set to true, this definition results
+ *       in the inclusion of the group command handlers into
+ *       the SC source code.
+ *
+ *  \par Limits:
+ *       Must be defined as true or false
+ */
+#define SC_ENABLE_GROUP_COMMANDS true
+
+/**
+ * \brief Mission specific version number for SC application
+ *
+ *  \par Description:
+ *       An application version number consists of four parts:
+ *       major version number, minor version number, revision
+ *       number and mission specific revision number. The mission
+ *       specific revision number is defined here and the other
+ *       parts are defined in "sc_version.h".
+ *
+ *  \par Limits:
+ *       Must be defined as a numeric value that is greater than
+ *       or equal to zero.
+ */
+#define SC_MISSION_REV 0
+
+/**\}*/
+
+#endif
+```
+
+### `sc_rts.h`
+
+**경로:** `fsw/apps/sc/fsw/inc/sc_rts.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains autostart RTS IDs
+ */
+#ifndef SC_RTS_H
+#define SC_RTS_H
+
+/**
+ * \ingroup cfsscplatformcfg
+ * \{
+ */
+
+#define RTS_ID_AUTO_POWER_ON  1 /**< \brief Autostart RTS ID after power on (0 to disable) */
+#define RTS_ID_AUTO_PROCESSOR 2 /**< \brief Autostart RTS ID after processor reset (0 to disable) */
+
+/**\}*/
+
+#endif
+```
+
+### `sc_tbldefs.h`
+
+**경로:** `fsw/apps/sc/fsw/inc/sc_tbldefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Stored Command (SC) table structures
+ */
+#ifndef SC_TBLDEFS_H
+#define SC_TBLDEFS_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+#include <cfe.h>
+#include <sc_platform_cfg.h>
+
+/*************************************************************************
+ * Macro Definitions
+ *************************************************************************/
+#define SC_ATS_HEADER_SIZE (sizeof(SC_AtsEntryHeader_t)) /**< \brief ATS header size in bytes */
+#define SC_RTS_HEADER_SIZE (sizeof(SC_RtsEntryHeader_t)) /**< \brief RTS header size in bytes */
+// #define ENABLE_GROUND_OPERATIONS_EXERCISE //Define for Ground Operations Exercise, comment out if not performing NOS3 Scenario
+
+/**
+ * \defgroup cfscstblids ID definitions for cFE Table Services manage table request command
+ * \{
+ */
+#define SC_TBL_ID_ATS_0     (1)                                  /**< \brief ATS 0 Table ID */
+#define SC_TBL_ID_APPEND    (SC_TBL_ID_ATS_0 + SC_NUMBER_OF_ATS) /**< \brief Append Table ID */
+#define SC_TBL_ID_RTS_0     (SC_TBL_ID_APPEND + 1)               /**< \brief RTS 0 Table ID */
+#define SC_TBL_ID_RTS_INFO  (SC_TBL_ID_RTS_0 + SC_NUMBER_OF_RTS) /**< \brief RTS Info Table ID */
+#define SC_TBL_ID_RTP_CTRL  (SC_TBL_ID_RTS_INFO + 1)             /**< \brief RTS Control Table ID */
+#define SC_TBL_ID_ATS_INFO  (SC_TBL_ID_RTP_CTRL + 1)             /**< \brief ATS Info Table ID */
+#define SC_TBL_ID_ATP_CTRL  (SC_TBL_ID_ATS_INFO + 1)             /**< \brief ATS Control Table ID */
+#define SC_TBL_ID_ATS_CMD_0 (SC_TBL_ID_ATP_CTRL + 1)             /**< \brief ATS 0 Command Table ID */
+/**\}*/
+
+/************************************************************************
+ * Type Definitions
+ ************************************************************************/
+
+/**
+ *  \brief Absolute Value time tag for ATC's
+ */
+typedef uint32 SC_AbsTimeTag_t;
+
+/**
+ *  \brief Relative time tag for RTC's
+ */
+typedef uint32 SC_RelTimeTag_t;
+
+/**
+ *  \brief ATS Info Table Type - One of these records are kept for each ATS
+ */
+typedef struct
+{
+    uint16 AtsUseCtr;        /**< \brief How many times it has been used */
+    uint16 NumberOfCommands; /**< \brief number of commands in the ATS */
+    uint32 AtsSize;          /**< \brief size of the ATS */
+} SC_AtsInfoTable_t;
+
+/**
+ *  \brief ATP Control Block Type
+ */
+typedef struct
+{
+    uint8  AtpState;       /**< \brief execution state of the ATP */
+    uint8  AtsNumber;      /**< \brief current ATS running if any */
+    uint16 Padding;        /**< \brief Structure padding to align to 32-bit boundaries */
+    uint32 CmdNumber;      /**< \brief current cmd number to run if any */
+    uint16 TimeIndexPtr;   /**< \brief time index pointer for current cmd */
+    uint16 SwitchPendFlag; /**< \brief indicates that a buffer switch is waiting */
+} SC_AtpControlBlock_t;
+
+/**
+ *  \brief RTP Control Block Type
+ *
+ *  \note Now there is only really one RTP
+ *  This structure contains overall info for the next relative time
+ *  processor.
+ */
+typedef struct
+{
+    uint16 NumRtsActive; /**< \brief number of RTSs currently active */
+    uint16 RtsNumber;    /**< \brief next RTS number */
+} SC_RtpControlBlock_t;
+
+/**
+ *  \brief RTS info table entry type -One of these records is kept for each RTS
+ */
+typedef struct
+{
+    uint8           RtsStatus;       /**< \brief status of the RTS */
+    bool            DisabledFlag;    /**< \brief disabled/enabled flag */
+    uint8           CmdCtr;          /**< \brief Cmds executed in current rts */
+    uint8           CmdErrCtr;       /**< \brief errs in current RTS */
+    SC_AbsTimeTag_t NextCommandTime; /**< \brief next command time for RTS */
+    uint16          NextCommandPtr;  /**< \brief where next rts cmd is */
+    uint16          UseCtr;          /**< \brief how many times RTS is run */
+} SC_RtsInfoEntry_t;
+
+/**
+ *  \brief ATS Table Entry Header Type
+ */
+typedef struct
+{
+    uint16 Pad; /**< \brief Structure padding */
+
+    uint16 CmdNumber; /**< \brief command number, range = 1 to SC_MAX_ATS_CMDS */
+
+    uint16 TimeTag_MS; /**< \brief Time tag most significant 16 bits */
+    uint16 TimeTag_LS; /**< \brief Time tag least significant 16 bits */
+
+    /*
+     * Note: the command packet data is variable length,
+     *       the command packet header (not shown here),
+     *       comes directly after the time tag
+     */
+} SC_AtsEntryHeader_t;
+
+/**
+ * \brief ATS header and message header
+ */
+typedef struct
+{
+    SC_AtsEntryHeader_t Header; /**< \brief ATS header */
+    CFE_MSG_Message_t   Msg;    /**< \brief MSG header */
+} SC_AtsEntry_t;
+
+/**
+ * \brief RTS Command Header Type
+ */
+typedef struct
+{
+    SC_RelTimeTag_t TimeTag; /**< \brief Relative time tag */
+
+    /*
+     * Note: the command packet data is variable length,
+     *       the command packet header (not shown here),
+     *       comes directly after Time tag.
+     */
+} SC_RtsEntryHeader_t;
+
+/**
+ * \brief RTS header and message header
+ */
+typedef struct
+{
+    SC_RtsEntryHeader_t Header; /**< \brief RTS header */
+    CFE_MSG_Message_t   Msg;    /**< \brief MSG header */
+} SC_RtsEntry_t;
+
+#endif
+```

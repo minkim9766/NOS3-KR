@@ -3,18 +3,194 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `LinuxTimerTester.cpp`
 
-file--LinuxTimerTester.cpp
-file--LinuxTimerTester.hpp
-file--main.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/LinuxTimerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxTimer.hpp
+// \author tim
+// \brief  cpp file for LinuxTimer test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "LinuxTimerTester.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 10
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+LinuxTimerTester ::LinuxTimerTester()
+    : LinuxTimerGTestBase("Tester", MAX_HISTORY_SIZE), component("LinuxTimer"), m_numCalls(0) {
+    this->initComponents();
+    this->connectPorts();
+}
+
+LinuxTimerTester ::~LinuxTimerTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void LinuxTimerTester ::runCycles() {
+    this->m_numCalls = 5;
+    this->component.startTimer(1000);
+}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void LinuxTimerTester ::from_CycleOut_handler(const FwIndexType portNum, Os::RawTime& cycleStart) {
+    printf("TICK\n");
+
+    if (--this->m_numCalls == 0) {
+        this->component.quit();
+    }
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void LinuxTimerTester ::connectPorts() {
+    // CycleOut
+    this->component.set_CycleOut_OutputPort(0, this->get_from_CycleOut(0));
+}
+
+void LinuxTimerTester ::initComponents() {
+    this->init();
+    this->component.init(INSTANCE);
+}
+
+}  // end namespace Svc
 ```
 
-## 항목
+### `LinuxTimerTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/LinuxTimerTester.cpp`](file--LinuxTimerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/LinuxTimerTester.hpp`](file--LinuxTimerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/LinuxTimerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxTimer/test/ut/Tester.hpp
+// \author tim
+// \brief  hpp file for LinuxTimer test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "LinuxTimerGTestBase.hpp"
+#include "Svc/LinuxTimer/LinuxTimer.hpp"
+
+namespace Svc {
+
+class LinuxTimerTester : public LinuxTimerGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object LinuxTimerTester
+    //!
+    LinuxTimerTester();
+
+    //! Destroy object LinuxTimerTester
+    //!
+    ~LinuxTimerTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! To do
+    //!
+    void runCycles();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_CycleOut
+    //!
+    void from_CycleOut_handler(const FwIndexType portNum, /*!< The port number*/
+                               Os::RawTime& cycleStart    /*!< Cycle start timer value*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    LinuxTimer component;
+
+    U32 m_numCalls;
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/ut/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Main.cpp
+// ----------------------------------------------------------------------
+
+#include <Fw/Test/UnitTest.hpp>
+#include "LinuxTimerTester.hpp"
+
+TEST(Nominal, InitTest) {
+    TEST_CASE(103.1.1, "Cycle Test");
+    Svc::LinuxTimerTester tester;
+    tester.runCycles();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

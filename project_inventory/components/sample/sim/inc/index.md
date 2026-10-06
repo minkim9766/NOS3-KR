@@ -3,22 +3,247 @@
 
 **경로:** `components/sample/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sample_42_data_provider.hpp`
 
-file--sample_42_data_provider.hpp
-file--sample_data_point.hpp
-file--sample_data_provider.hpp
-file--sample_hardware_model.hpp
-file--sample_shmem_data_provider.hpp
+**경로:** `components/sample/sim/inc/sample_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_SAMPLE42DATAPROVIDER_HPP
+#define NOS3_SAMPLE42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <sample_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Sample42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Sample42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Sample42DataProvider(void) {};
+        Sample42DataProvider& operator=(const Sample42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `sample_data_point.hpp`
 
-- [`components/sample/sim/inc/sample_42_data_provider.hpp`](file--sample_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/sim/inc/sample_data_point.hpp`](file--sample_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/sim/inc/sample_data_provider.hpp`](file--sample_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/sim/inc/sample_hardware_model.hpp`](file--sample_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/sim/inc/sample_shmem_data_provider.hpp`](file--sample_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/sample/sim/inc/sample_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_SAMPLEDATAPOINT_HPP
+#define NOS3_SAMPLEDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class SampleDataPoint : public Sim42DataPoint
+    {
+    public:
+        /* Constructors */
+        SampleDataPoint(double count);
+        SampleDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+        SampleDataPoint(double x, double y, double z);
+        ~SampleDataPoint(void) {};
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        double      get_sample_data_x(void) const {parse_data_point(); return _sample_data[0];}
+        double      get_sample_data_y(void) const {parse_data_point(); return _sample_data[1];}
+        double      get_sample_data_z(void) const {parse_data_point(); return _sample_data[2];}
+        bool        is_sample_data_valid(void) const {parse_data_point(); return _sample_data_is_valid;}
+    
+    private:
+        /* Disallow these */
+        SampleDataPoint(void) {};
+        SampleDataPoint(const SampleDataPoint& sdp) : Sim42DataPoint(sdp) {};
+
+        // Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable bool   _sample_data_is_valid;
+        mutable double _sample_data[3];
+    };
+}
+
+#endif
+```
+
+### `sample_data_provider.hpp`
+
+**경로:** `components/sample/sim/inc/sample_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_SAMPLEDATAPROVIDER_HPP
+#define NOS3_SAMPLEDATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <sample_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class SampleDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        SampleDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~SampleDataProvider(void) {};
+        SampleDataProvider& operator=(const SampleDataProvider&) {return *this;};
+
+        mutable double _request_count;
+    };
+}
+
+#endif
+```
+
+### `sample_hardware_model.hpp`
+
+**경로:** `components/sample/sim/inc/sample_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_SAMPLEHARDWAREMODEL_HPP
+#define NOS3_SAMPLEHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Uart/Client/Uart.hpp> /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+
+#include <sim_i_data_provider.hpp>
+#include <sample_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Defines
+*/
+#define SAMPLE_SIM_SUCCESS 0
+#define SAMPLE_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class SampleHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        SampleHardwareModel(const boost::property_tree::ptree& config);
+        ~SampleHardwareModel(void);
+
+    private:
+        /* Private helper methods */
+        void create_sample_hk(std::vector<uint8_t>& out_data); 
+        void create_sample_data(std::vector<uint8_t>& out_data); 
+        void uart_read_callback(const uint8_t *buf, size_t len); /* Handle data the hardware receives from its protocol bus */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        /* Private data members */
+        std::unique_ptr<NosEngine::Uart::Uart>              _uart_connection; /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _sample_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::uint32_t                                       _count;
+        std::uint32_t                                       _config;
+        std::uint32_t                                       _status;
+    };
+}
+
+#endif
+```
+
+### `sample_shmem_data_provider.hpp`
+
+**경로:** `components/sample/sim/inc/sample_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_SAMPLE_SHMEM_DATA_PROVIDER_HPP
+#define NOS3_SAMPLE_SHMEM_DATA_PROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+#include <sample_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    class SampleShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        SampleShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~SampleShmemDataProvider(void) {};
+        SampleShmemDataProvider& operator=(const SampleShmemDataProvider&) {return *this;};
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

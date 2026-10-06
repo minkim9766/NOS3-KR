@@ -3,42 +3,3871 @@
 
 **경로:** `fsw/cfe/docs/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mnem_maps/index
-file--appdevguide_1.jpg
-file--cfe_api.dox
-file--cfe_es.dox
-file--cfe_evs.dox
-file--cfe_frontpage.dox
-file--cfe_glossary.dox
-file--cfe_sb.dox
-file--cfe_tbl.dox
-file--cfe_time.dox
-file--cfe_xref.dox
-file--cfs_versions.dox
-file--CFSLayers.jpg
-file--CFSPubSub.jpg
-file--evs_squelch_states.png
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/docs/src/mnem_maps/`](mnem_maps/index) — 폴더
-- [`fsw/cfe/docs/src/appdevguide_1.jpg`](file--appdevguide_1.jpg) — 바이너리 (경로만)
-- [`fsw/cfe/docs/src/cfe_api.dox`](file--cfe_api.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_es.dox`](file--cfe_es.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_evs.dox`](file--cfe_evs.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_frontpage.dox`](file--cfe_frontpage.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_glossary.dox`](file--cfe_glossary.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_sb.dox`](file--cfe_sb.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_tbl.dox`](file--cfe_tbl.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_time.dox`](file--cfe_time.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfe_xref.dox`](file--cfe_xref.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/cfs_versions.dox`](file--cfs_versions.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/CFSLayers.jpg`](file--CFSLayers.jpg) — 바이너리 (경로만)
-- [`fsw/cfe/docs/src/CFSPubSub.jpg`](file--CFSPubSub.jpg) — 바이너리 (경로만)
-- [`fsw/cfe/docs/src/evs_squelch_states.png`](file--evs_squelch_states.png) — 바이너리 (경로만)
+### `appdevguide_1.jpg`
+
+**경로:** `fsw/cfe/docs/src/appdevguide_1.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `cfe_api.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_api.dox`
+
+
+```text
+/**
+  \page cfeapi cFE Application Programmer's Interface (API) Reference
+  \section cfeapi_s1 Executive Services API
+  <UL>
+    <LI> \ref CFEAPIESEntryExit
+    <UL>
+      <LI> #CFE_ES_Main - \copybrief CFE_ES_Main
+      <LI> #CFE_ES_ResetCFE - \copybrief CFE_ES_ResetCFE
+    </UL>
+    <LI> \ref CFEAPIESAppControl
+    <UL>
+      <LI> #CFE_ES_RestartApp - \copybrief CFE_ES_RestartApp
+      <LI> #CFE_ES_ReloadApp - \copybrief CFE_ES_ReloadApp
+      <LI> #CFE_ES_DeleteApp - \copybrief CFE_ES_DeleteApp
+    </UL>
+    <LI> \ref CFEAPIESAppBehavior
+    <UL>
+      <LI> #CFE_ES_RunLoop - \copybrief CFE_ES_RunLoop
+      <LI> #CFE_ES_WaitForStartupSync - \copybrief CFE_ES_WaitForStartupSync
+      <LI> #CFE_ES_WaitForSystemState - \copybrief CFE_ES_WaitForSystemState
+      <LI> #CFE_ES_IncrementTaskCounter - \copybrief CFE_ES_IncrementTaskCounter
+      <LI> #CFE_ES_ExitApp - \copybrief CFE_ES_ExitApp
+    </UL>
+    <LI> \ref CFEAPIESInfo
+    <UL>
+      <LI> #CFE_ES_GetResetType - \copybrief CFE_ES_GetResetType
+      <LI> #CFE_ES_GetAppID - \copybrief CFE_ES_GetAppID
+      <LI> #CFE_ES_GetTaskID - \copybrief CFE_ES_GetTaskID
+      <LI> #CFE_ES_GetAppIDByName - \copybrief CFE_ES_GetAppIDByName
+      <LI> #CFE_ES_GetLibIDByName - \copybrief CFE_ES_GetLibIDByName
+      <LI> #CFE_ES_GetAppName - \copybrief CFE_ES_GetAppName
+      <LI> #CFE_ES_GetLibName - \copybrief CFE_ES_GetLibName
+      <LI> #CFE_ES_GetAppInfo - \copybrief CFE_ES_GetAppInfo
+      <LI> #CFE_ES_GetTaskInfo - \copybrief CFE_ES_GetTaskInfo
+      <LI> #CFE_ES_GetLibInfo - \copybrief CFE_ES_GetLibInfo
+      <LI> #CFE_ES_GetModuleInfo - \copybrief CFE_ES_GetModuleInfo
+    </UL>
+    <LI> \ref CFEAPIESChildTask
+    <UL>
+      <LI> #CFE_ES_CreateChildTask - \copybrief CFE_ES_CreateChildTask
+      <LI> #CFE_ES_GetTaskIDByName - \copybrief CFE_ES_GetTaskIDByName
+      <LI> #CFE_ES_GetTaskName - \copybrief CFE_ES_GetTaskName
+      <LI> #CFE_ES_DeleteChildTask - \copybrief CFE_ES_DeleteChildTask
+      <LI> #CFE_ES_ExitChildTask - \copybrief CFE_ES_ExitChildTask
+    </UL>
+    <LI> \ref CFEAPIESCritData
+    <UL>
+      <LI> #CFE_ES_RegisterCDS - \copybrief CFE_ES_RegisterCDS
+      <LI> #CFE_ES_GetCDSBlockIDByName - \copybrief CFE_ES_GetCDSBlockIDByName
+      <LI> #CFE_ES_GetCDSBlockName - \copybrief CFE_ES_GetCDSBlockName
+      <LI> #CFE_ES_CopyToCDS - \copybrief CFE_ES_CopyToCDS
+      <LI> #CFE_ES_RestoreFromCDS - \copybrief CFE_ES_RestoreFromCDS
+    </UL>
+    <LI> \ref CFEAPIESMemManage
+    <UL>
+      <LI> #CFE_ES_PoolCreate - \copybrief CFE_ES_PoolCreate
+      <LI> #CFE_ES_PoolCreateEx - \copybrief CFE_ES_PoolCreateEx
+      <LI> #CFE_ES_PoolCreateNoSem - \copybrief CFE_ES_PoolCreateNoSem
+      <LI> #CFE_ES_PoolDelete - \copybrief CFE_ES_PoolDelete
+      <LI> #CFE_ES_GetPoolBuf - \copybrief CFE_ES_GetPoolBuf
+      <LI> #CFE_ES_PutPoolBuf - \copybrief CFE_ES_PutPoolBuf
+      <LI> #CFE_ES_GetMemPoolStats - \copybrief CFE_ES_GetMemPoolStats
+      <LI> #CFE_ES_GetPoolBufInfo - \copybrief CFE_ES_GetPoolBufInfo
+    </UL>
+    <LI> \ref CFEAPIESPerfMon
+    <UL>
+      <LI> #CFE_ES_PerfLogEntry - \copybrief CFE_ES_PerfLogEntry
+      <LI> #CFE_ES_PerfLogExit - \copybrief CFE_ES_PerfLogExit
+      <LI> #CFE_ES_PerfLogAdd - \copybrief CFE_ES_PerfLogAdd
+    </UL>
+    <LI> \ref CFEAPIESGenCount
+    <UL>
+      <LI> #CFE_ES_RegisterGenCounter - \copybrief CFE_ES_RegisterGenCounter
+      <LI> #CFE_ES_DeleteGenCounter - \copybrief CFE_ES_DeleteGenCounter
+      <LI> #CFE_ES_IncrementGenCounter - \copybrief CFE_ES_IncrementGenCounter
+      <LI> #CFE_ES_SetGenCount - \copybrief CFE_ES_SetGenCount
+      <LI> #CFE_ES_GetGenCount - \copybrief CFE_ES_GetGenCount
+      <LI> #CFE_ES_GetGenCounterIDByName - \copybrief CFE_ES_GetGenCounterIDByName
+      <LI> #CFE_ES_GetGenCounterName - \copybrief CFE_ES_GetGenCounterName
+    </UL>
+    <LI> \ref CFEAPIESMisc
+    <UL>
+      <LI> #CFE_ES_BackgroundWakeup - \copybrief CFE_ES_BackgroundWakeup
+      <LI> #CFE_ES_CalculateCRC - \copybrief CFE_ES_CalculateCRC
+      <LI> #CFE_ES_WriteToSysLog - \copybrief CFE_ES_WriteToSysLog
+      <LI> #CFE_ES_ProcessAsyncEvent - \copybrief CFE_ES_ProcessAsyncEvent
+      <LI> #CFE_ES_StatusToString - \copybrief CFE_ES_StatusToString
+    </UL>
+    <LI> \ref CFEAPIESResourceID
+    <UL>
+      <LI> #CFE_ES_AppID_ToIndex - \copybrief CFE_ES_AppID_ToIndex
+      <LI> #CFE_ES_LibID_ToIndex - \copybrief CFE_ES_LibID_ToIndex
+      <LI> #CFE_ES_TaskID_ToIndex - \copybrief CFE_ES_TaskID_ToIndex
+      <LI> #CFE_ES_CounterID_ToIndex - \copybrief CFE_ES_CounterID_ToIndex
+    </UL>
+  </UL>
+
+  \section cfeapi_s2 Events Services API
+  <UL>
+    <LI> \ref CFEAPIEVSReg
+    <UL>
+      <LI> #CFE_EVS_Register - \copybrief CFE_EVS_Register
+    </UL>
+    <LI> \ref CFEAPIEVSSend
+    <UL>
+      <LI> #CFE_EVS_SendEvent - \copybrief CFE_EVS_SendEvent
+      <LI> #CFE_EVS_SendEventWithAppID - \copybrief CFE_EVS_SendEventWithAppID
+      <LI> #CFE_EVS_SendTimedEvent - \copybrief CFE_EVS_SendTimedEvent
+    </UL>
+    <LI> \ref CFEAPIEVSResetFilter
+    <UL>
+      <LI> #CFE_EVS_ResetFilter - \copybrief CFE_EVS_ResetFilter
+      <LI> #CFE_EVS_ResetAllFilters - \copybrief CFE_EVS_ResetAllFilters
+    </UL>
+  </UL>
+
+  \section cfeapi_s3 File Services API
+  <UL>
+    <LI> \ref CFEAPIFSHeader
+    <UL>
+	  <LI> #CFE_FS_ReadHeader - \copybrief CFE_FS_ReadHeader
+          <LI> #CFE_FS_InitHeader - \copybrief CFE_FS_InitHeader
+	  <LI> #CFE_FS_WriteHeader - \copybrief CFE_FS_WriteHeader
+	  <LI> #CFE_FS_SetTimestamp - \copybrief CFE_FS_SetTimestamp
+    </UL>
+    <LI> \ref CFEAPIFSUtil
+    <UL>
+          <LI> #CFE_FS_GetDefaultMountPoint - \copybrief CFE_FS_GetDefaultMountPoint
+          <LI> #CFE_FS_GetDefaultExtension - \copybrief CFE_FS_GetDefaultExtension
+          <LI> #CFE_FS_ParseInputFileNameEx - \copybrief CFE_FS_ParseInputFileNameEx
+          <LI> #CFE_FS_ParseInputFileName - \copybrief CFE_FS_ParseInputFileName
+	  <LI> #CFE_FS_ExtractFilenameFromPath - \copybrief CFE_FS_ExtractFilenameFromPath
+          <LI> #CFE_FS_BackgroundFileDumpRequest - \copybrief CFE_FS_BackgroundFileDumpRequest
+          <LI> #CFE_FS_BackgroundFileDumpIsPending - \copybrief CFE_FS_BackgroundFileDumpIsPending
+    </UL>
+  </UL>
+
+  \section cfeapi_s4 Message API
+  <UL>
+    <LI> \ref CFEAPIMSGHeader
+    <UL>
+      <LI> #CFE_MSG_Init - \copybrief CFE_MSG_Init
+    </UL>
+    <LI> \ref CFEAPIMSGHeaderPri
+    <UL>
+      <LI> #CFE_MSG_GetSize - \copybrief CFE_MSG_GetSize
+      <LI> #CFE_MSG_SetSize - \copybrief CFE_MSG_SetSize
+      <LI> #CFE_MSG_GetType - \copybrief CFE_MSG_GetType
+      <LI> #CFE_MSG_SetType - \copybrief CFE_MSG_SetType
+      <LI> #CFE_MSG_GetHeaderVersion - \copybrief CFE_MSG_GetHeaderVersion
+      <LI> #CFE_MSG_SetHeaderVersion - \copybrief CFE_MSG_SetHeaderVersion
+      <LI> #CFE_MSG_GetHasSecondaryHeader - \copybrief CFE_MSG_GetHasSecondaryHeader
+      <LI> #CFE_MSG_SetHasSecondaryHeader - \copybrief CFE_MSG_SetHasSecondaryHeader
+      <LI> #CFE_MSG_GetApId - \copybrief CFE_MSG_GetApId
+      <LI> #CFE_MSG_SetApId - \copybrief CFE_MSG_SetApId
+      <LI> #CFE_MSG_GetSegmentationFlag - \copybrief CFE_MSG_GetSegmentationFlag
+      <LI> #CFE_MSG_SetSegmentationFlag - \copybrief CFE_MSG_SetSegmentationFlag
+      <LI> #CFE_MSG_GetSequenceCount - \copybrief CFE_MSG_GetSequenceCount
+      <LI> #CFE_MSG_SetSequenceCount - \copybrief CFE_MSG_SetSequenceCount
+      <LI> #CFE_MSG_GetNextSequenceCount - \copybrief CFE_MSG_GetNextSequenceCount
+    </UL>
+    <LI> \ref CFEAPIMSGHeaderExt
+    <UL>
+      <LI> #CFE_MSG_GetEDSVersion - \copybrief CFE_MSG_GetEDSVersion
+      <LI> #CFE_MSG_SetEDSVersion - \copybrief CFE_MSG_SetEDSVersion
+      <LI> #CFE_MSG_GetEndian - \copybrief CFE_MSG_GetEndian
+      <LI> #CFE_MSG_SetEndian - \copybrief CFE_MSG_SetEndian
+      <LI> #CFE_MSG_GetPlaybackFlag - \copybrief CFE_MSG_GetPlaybackFlag
+      <LI> #CFE_MSG_SetPlaybackFlag - \copybrief CFE_MSG_SetPlaybackFlag
+      <LI> #CFE_MSG_GetSubsystem - \copybrief CFE_MSG_GetSubsystem
+      <LI> #CFE_MSG_SetSubsystem - \copybrief CFE_MSG_SetSubsystem
+      <LI> #CFE_MSG_GetSystem - \copybrief CFE_MSG_GetSystem
+      <LI> #CFE_MSG_SetSystem - \copybrief CFE_MSG_SetSystem
+    </UL>
+    <LI> \ref CFEAPIMSGHeaderSec
+    <UL>
+      <LI> #CFE_MSG_GenerateChecksum - \copybrief CFE_MSG_GenerateChecksum
+      <LI> #CFE_MSG_ValidateChecksum - \copybrief CFE_MSG_ValidateChecksum
+      <LI> #CFE_MSG_SetFcnCode - \copybrief CFE_MSG_SetFcnCode
+      <LI> #CFE_MSG_GetFcnCode - \copybrief CFE_MSG_GetFcnCode
+      <LI> #CFE_MSG_GetMsgTime - \copybrief CFE_MSG_GetMsgTime
+      <LI> #CFE_MSG_SetMsgTime - \copybrief CFE_MSG_SetMsgTime
+    </UL>
+    <LI> \ref CFEAPIMSGMsgId
+    <UL>
+      <LI> #CFE_MSG_GetMsgId - \copybrief CFE_MSG_GetMsgId
+      <LI> #CFE_MSG_SetMsgId - \copybrief CFE_MSG_SetMsgId
+      <LI> #CFE_MSG_GetTypeFromMsgId - \copybrief CFE_MSG_GetTypeFromMsgId
+    </UL>
+  </UL>
+
+  \section cfeapi_s5 Resource ID API
+  <UL>
+    <LI> cFE Resource Misc APIs
+    <UL>
+      <LI> #CFE_ResourceId_ToInteger - \copybrief CFE_ResourceId_ToInteger
+      <LI> #CFE_ResourceId_FromInteger - \copybrief CFE_ResourceId_FromInteger
+      <LI> #CFE_ResourceId_Equal - \copybrief CFE_ResourceId_Equal
+      <LI> #CFE_ResourceId_IsDefined - \copybrief CFE_ResourceId_IsDefined
+      <LI> #CFE_ResourceId_GetBase - \copybrief CFE_ResourceId_GetBase
+      <LI> #CFE_ResourceId_GetSerial - \copybrief CFE_ResourceId_GetSerial
+      <LI> #CFE_ResourceId_FindNext - \copybrief CFE_ResourceId_FindNext
+      <LI> #CFE_ResourceId_ToIndex - \copybrief CFE_ResourceId_ToIndex
+    </UL>
+  </UL>
+
+  \section cfeapi_s6 Software Bus Services API
+  <UL>
+    <LI> \ref CFEAPISBPipe
+    <UL>
+      <LI> #CFE_SB_CreatePipe - \copybrief CFE_SB_CreatePipe
+      <LI> #CFE_SB_DeletePipe - \copybrief CFE_SB_DeletePipe
+      <LI> #CFE_SB_PipeId_ToIndex - \copybrief CFE_SB_PipeId_ToIndex
+      <LI> #CFE_SB_SetPipeOpts - \copybrief CFE_SB_SetPipeOpts
+      <LI> #CFE_SB_GetPipeOpts - \copybrief CFE_SB_GetPipeOpts
+      <LI> #CFE_SB_GetPipeName - \copybrief CFE_SB_GetPipeName
+      <LI> #CFE_SB_GetPipeIdByName - \copybrief CFE_SB_GetPipeIdByName
+    </UL>
+    <LI> \ref CFEAPISBSubscription
+    <UL>
+      <LI> #CFE_SB_Subscribe - \copybrief CFE_SB_Subscribe
+      <LI> #CFE_SB_SubscribeEx - \copybrief CFE_SB_SubscribeEx
+      <LI> #CFE_SB_SubscribeLocal - \copybrief CFE_SB_SubscribeLocal
+      <LI> #CFE_SB_Unsubscribe - \copybrief CFE_SB_Unsubscribe
+      <LI> #CFE_SB_UnsubscribeLocal - \copybrief CFE_SB_UnsubscribeLocal
+    </UL>
+    <LI> \ref CFEAPISBMessage
+    <UL>
+      <LI> #CFE_SB_TransmitMsg - \copybrief CFE_SB_TransmitMsg
+      <LI> #CFE_SB_ReceiveBuffer - \copybrief CFE_SB_ReceiveBuffer
+    </UL>
+    <LI> \ref CFEAPISBZeroCopy
+    <UL>
+      <LI> #CFE_SB_AllocateMessageBuffer - \copybrief CFE_SB_AllocateMessageBuffer
+      <LI> #CFE_SB_ReleaseMessageBuffer - \copybrief CFE_SB_ReleaseMessageBuffer
+      <LI> #CFE_SB_TransmitBuffer - \copybrief CFE_SB_TransmitBuffer
+    </UL>
+    <LI> \ref CFEAPISBMessageCharacteristics
+    <UL>
+      <LI> #CFE_SB_SetUserDataLength - \copybrief CFE_SB_SetUserDataLength
+      <LI> #CFE_SB_TimeStampMsg - \copybrief CFE_SB_TimeStampMsg
+      <LI> #CFE_SB_MessageStringSet - \copybrief CFE_SB_MessageStringSet
+      <LI> #CFE_SB_GetUserData - \copybrief CFE_SB_GetUserData
+      <LI> #CFE_SB_GetUserDataLength - \copybrief CFE_SB_GetUserDataLength
+      <LI> #CFE_SB_MessageStringGet - \copybrief CFE_SB_MessageStringGet
+    </UL>
+    <LI> \ref CFEAPISBMessageID
+    <UL>
+      <LI> #CFE_SB_IsValidMsgId - \copybrief CFE_SB_IsValidMsgId
+      <LI> #CFE_SB_MsgId_Equal - \copybrief CFE_SB_MsgId_Equal
+      <LI> #CFE_SB_MsgIdToValue - \copybrief CFE_SB_MsgIdToValue
+      <LI> #CFE_SB_ValueToMsgId - \copybrief CFE_SB_ValueToMsgId
+    </UL>
+  </UL>
+
+  \section cfeapi_s7 Table Services API
+  <UL>
+    <LI> \ref CFEAPITBLRegistration
+    <UL>
+      <LI> #CFE_TBL_Register - \copybrief CFE_TBL_Register
+      <LI> #CFE_TBL_Share - \copybrief CFE_TBL_Share
+      <LI> #CFE_TBL_Unregister - \copybrief CFE_TBL_Unregister
+    </UL>
+    <LI> \ref CFEAPITBLManage
+    <UL>
+      <LI> #CFE_TBL_Load - \copybrief CFE_TBL_Load
+      <LI> #CFE_TBL_Update - \copybrief CFE_TBL_Update
+      <LI> #CFE_TBL_Validate - \copybrief CFE_TBL_Validate
+      <LI> #CFE_TBL_Manage - \copybrief CFE_TBL_Manage
+      <LI> #CFE_TBL_DumpToBuffer - \copybrief CFE_TBL_DumpToBuffer
+      <LI> #CFE_TBL_Modified - \copybrief CFE_TBL_Modified
+    </UL>
+    <LI> \ref CFEAPITBLAccess
+    <UL>
+      <LI> #CFE_TBL_GetAddress - \copybrief CFE_TBL_GetAddress
+      <LI> #CFE_TBL_GetAddresses - \copybrief CFE_TBL_GetAddresses
+      <LI> #CFE_TBL_ReleaseAddress - \copybrief CFE_TBL_ReleaseAddress
+      <LI> #CFE_TBL_ReleaseAddresses - \copybrief CFE_TBL_ReleaseAddresses
+    </UL>
+    <LI> \ref CFEAPITBLInfo
+    <UL>
+      <LI> #CFE_TBL_GetStatus - \copybrief CFE_TBL_GetStatus
+      <LI> #CFE_TBL_GetInfo - \copybrief CFE_TBL_GetInfo
+      <LI> #CFE_TBL_NotifyByMessage - \copybrief CFE_TBL_NotifyByMessage
+    </UL>
+  </UL>
+
+  \section cfeapi_s8 Time Services API
+  <UL>
+    <LI> \ref CFEAPITIMEGetCurrent
+    <UL>
+      <LI> #CFE_TIME_GetTime - \copybrief CFE_TIME_GetTime
+      <LI> #CFE_TIME_GetTAI - \copybrief CFE_TIME_GetTAI
+      <LI> #CFE_TIME_GetUTC - \copybrief CFE_TIME_GetUTC
+      <LI> #CFE_TIME_GetMET - \copybrief CFE_TIME_GetMET
+      <LI> #CFE_TIME_GetMETseconds - \copybrief CFE_TIME_GetMETseconds
+      <LI> #CFE_TIME_GetMETsubsecs - \copybrief CFE_TIME_GetMETsubsecs
+    </UL>
+    <LI> \ref CFEAPITIMEGetInfo
+    <UL>
+      <LI> #CFE_TIME_GetSTCF - \copybrief CFE_TIME_GetSTCF
+      <LI> #CFE_TIME_GetLeapSeconds - \copybrief CFE_TIME_GetLeapSeconds
+      <LI> #CFE_TIME_GetClockState - \copybrief CFE_TIME_GetClockState
+      <LI> #CFE_TIME_GetClockInfo - \copybrief CFE_TIME_GetClockInfo
+    </UL>
+    <LI> \ref CFEAPITIMEArithmetic
+    <UL>
+      <LI> #CFE_TIME_Add - \copybrief CFE_TIME_Add
+      <LI> #CFE_TIME_Subtract - \copybrief CFE_TIME_Subtract
+      <LI> #CFE_TIME_Compare - \copybrief CFE_TIME_Compare
+    </UL>
+    <LI> \ref CFEAPITIMEConvert
+    <UL>
+      <LI> #CFE_TIME_MET2SCTime - \copybrief CFE_TIME_MET2SCTime
+      <LI> #CFE_TIME_Sub2MicroSecs - \copybrief CFE_TIME_Sub2MicroSecs
+      <LI> #CFE_TIME_Micro2SubSecs - \copybrief CFE_TIME_Micro2SubSecs
+    </UL>
+    <LI> \ref CFEAPITIMEExternSource
+    <UL>
+      <LI> #CFE_TIME_ExternalTone - \copybrief CFE_TIME_ExternalTone
+      <LI> #CFE_TIME_ExternalMET - \copybrief CFE_TIME_ExternalMET
+      <LI> #CFE_TIME_ExternalGPS - \copybrief CFE_TIME_ExternalGPS
+      <LI> #CFE_TIME_ExternalTime - \copybrief CFE_TIME_ExternalTime
+      <LI> #CFE_TIME_RegisterSynchCallback - \copybrief CFE_TIME_RegisterSynchCallback
+      <LI> #CFE_TIME_UnregisterSynchCallback - \copybrief CFE_TIME_UnregisterSynchCallback
+    </UL>
+    <LI> \ref CFEAPITIMEMisc
+    <UL>
+      <LI> #CFE_TIME_Print - \copybrief CFE_TIME_Print
+      <LI> #CFE_TIME_Local1HzISR - \copybrief CFE_TIME_Local1HzISR
+    </UL>
+  </UL>
+**/
+```
+
+### `cfe_es.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_es.dox`
+
+
+```text
+/**
+  \page cfeesovr cFE Executive Services Overview
+
+  Executive Services (ES) is one of the five core Flight Executive components.
+  ES is the primary interface to the underlying Operating System, providing a
+  high level interface to system control facilities. The ES component is
+  responsible for starting up and restarting the cFE, starting up, shutting
+  down, and restarting cFE Applications, logging errors and performance data,
+  and providing a persistent memory store for cFE Applications.
+
+  The interfaces to the ES task include the Ground Interface (commands and
+  telemetry) and the Application Programmer Interfaces (APIs). The ES task
+  interfaces to the OS through the OS Abstraction Layer (OSAL) and platform
+  through the Platform Support Package (PSP).
+
+  The functionality provided by the ES task include Software Reset,
+  Application and Child Task Management, Basic File System, Performance Data
+  Collection, Critical Data Store, Memory Pool, System Log, Shell Command.
+
+  For additional detail on Executive Services, see the following sections:
+
+  <UL>
+    <LI> \subpage cfeesugterm <BR>
+    <LI> \subpage cfeesugswreset <BR>
+    <UL>
+       <LI> \subpage cfeesugresettype <BR>
+       <LI> \subpage cfeesugresetlog <BR>
+    </UL>
+    <LI> \subpage cfeesugappsrv <BR>
+    <UL>
+       <LI> \subpage cfeesugappstart <BR>
+       <LI> \subpage cfeesugappstop <BR>
+       <LI> \subpage cfeesugapprestart <BR>
+       <LI> \subpage cfeesugappreload <BR>
+       <LI> \subpage cfeesugapplist <BR>
+       <LI> \subpage cfeesugtasklist <BR>
+       <LI> \subpage cfeesugloadlibs <BR>
+    </UL>
+    <LI> \subpage cfeesugfilesrv <BR>
+    <LI> \subpage cfeesugperfsrv <BR>
+    <LI> \subpage cfeesugcdssrv <BR>
+    <LI> \subpage cfeesugmempoolsrv <BR>
+    <LI> \subpage cfeesugsyslogsrv <BR>
+    <LI> \subpage cfeesugversion <BR>
+    <LI> \subpage cfeesugfaq <BR>
+  </UL>
+
+**/
+
+/**
+  \page cfeesugterm Terminology
+
+  The following sections describe terminology that is very relevant to understanding
+  the Executive Services:
+
+    <UL>
+       <LI> \subpage cfeesugappterm <BR>
+       <LI> \subpage cfeesugtaskterm <BR>
+       <LI> \subpage cfeesugstartupterm <BR>
+    </UL>
+**/
+
+/**
+  \page cfeesugappterm "Application" and "cFE Application"
+
+  <CENTER><B>Application</B></CENTER>
+
+  The term 'Application' as defined in the \ref cfeglossary is <i> a set of
+  data and functions that is treated as a single entity by the cFE.  cFE
+  resources are allocated on a per-Application basis.  Applications are made up
+  of a Main Task and zero or more Child Tasks.</i>
+
+  <CENTER><B>cFE Application</B></CENTER>
+
+  A 'cFE Application' is an application that is external to the cFE and designed
+  to interface to the cFE through the APIs.  It is created through an entry in
+  the \ref cfeesugstartupterm (with the 'Object Type' field set to CFE_APP) or
+  by way of the #CFE_ES_START_APP_CC ground command.
+
+  When referring to one of the five applications internal to the cFE (ES, EVS,
+  SB, TIME or TBL), the term 'Service' or 'Core Application' is typically used.
+
+  A listing of cFE applications can be acquired by using the
+  #CFE_ES_QUERY_ALL_CC ground command. This listing will include the cFE
+  internal applications as well as cFE applications that are loaded and running.
+**/
+
+/**
+  \page cfeesugtaskterm "Task"
+
+  A Task is a thread of execution in the operating system, often associated with
+  a cFE Application. Each cFE Application has a Main task providing its CPU
+  context, stack and other OS resources. In addition, each cFE Application can
+  create multiple Child Tasks which are closely associated with the Parent Task
+  and cFE Application.
+
+  In a traditional Real Time Operating System such as vxWorks, the cFE
+  Application Main task and child tasks end up being mapped to these OS tasks in
+  the same shared memory space. For example, a Stored Command cFE Application
+  that consists of a cFE Main Task and 10 Relative Time Sequence Child Tasks
+  would have 11 tasks on a vxWorks system. The only association between these
+  tasks exists in the cFE.
+
+  In a memory protected process oriented Operating System, the intention is to
+  have a cFE Application implemented as a memory protected process with its own
+  virtual address space. In this Process Model, each cFE Child Task would be a
+  thread in the parent Process, much like a Unix process with multiple threads.
+  In this model, the Stored Command example with a cFE Main Task and 10 Relative
+  Time Sequence Child Tasks would consist of a Unix Process and 10 pthreads, all
+  under the same virtual address space.
+**/
+
+/**
+  \page cfeesugstartupterm "Startup Script"
+
+  The startup script is a text file, written by the user that contains a list of
+  entries (one entry for each application) and is used by the ES application for
+  automating the startup of applications. For a processor reset, ES checks
+  for the CFE_PLATFORM_ES_VOLATILE_STARTUP_FILE first, and if it doesn't exist
+  or for a power on reset ES uses the file passed in to #CFE_ES_Main
+  (typically CFE_PLATFORM_ES_NONVOL_STARTUP_FILE but dependent on the PSP).
+
+  The fields in a single entry include:
+  <TABLE>
+     <TR>
+        <TD> Object Type
+        <TD> <tt>CFE_APP</tt> for an Application, or <tt>CFE_LIB</tt> for a library.
+     <TR>
+        <TD> Path/Filename
+        <TD> This is a cFE Virtual filename, not a vxWorks device/pathname
+     <TR>
+        <TD> Entry Point
+        <TD> This is the name of the "main" function for App.
+     <TR>
+        <TD> CFE Name
+        <TD> The cFE name for the APP or Library
+     <TR>
+        <TD> Priority
+        <TD> This is the Priority of the App, not used for a Library
+     <TR>
+        <TD> Stack Size
+        <TD> This is the Stack size for the App, not used for a Library
+     <TR>
+        <TD> Load Address
+        <TD> This is the Optional Load Address for the App or Library. It is currently
+             not implemented so it should always be 0x0.
+     <TR>
+        <TD> Exception Action
+        <TD> This is the Action the cFE should take if the Application has an exception. <BR>
+             <UL>
+                <LI> 0        = Do a cFE Processor Reset <BR>
+                <LI> Non-Zero = Just restart the Application
+             </UL>
+  </TABLE>
+
+  Immediately after the cFE completes its initialization, the ES Application first
+  looks for the volatile startup script. The location in the file system is defined
+  by the cFE platform configuration parameter named #CFE_PLATFORM_ES_VOLATILE_STARTUP_FILE.
+  This configuration parameter contains a path as well as a filename. If the file
+  is found, ES begins to startup the applications that are listed in the file. If
+  ES does not find the file, it attempts to open the #CFE_PLATFORM_ES_NONVOL_STARTUP_FILE.
+
+  If ES finds the volatile startup script, the attempt to open the nonvolatile startup
+  script is bypassed.
+
+  Any errors encountered in the startup script processing are written to the
+  \ref cfeesugsyslogsrv. The \ref cfeesugsyslogsrv
+  may also contain positive acknowledge messages regarding the startup script processing.
+
+  The startup script delivered with the
+  cFE (<tt>cfe_es_startup.scr</tt>) also has some detailed information about the fields
+  and the settings.
+**/
+
+/**
+  \page cfeesugswreset Software Reset
+
+  The ES Software Reset provides a command to
+  \link #CFE_ES_RESTART_CC reset the cFE \endlink
+  as well as \link #CFE_ES_RESTART_APP_CC resetting individual applications.\endlink
+  Because applications are dependent on the cFE services, it is not possible
+  to reset the cFE without affecting the applications. Therefore, a command to reset the
+  cFE will also reset every application that is running at the time the command is received.
+
+  Also include is the Exception and Reset (ER) Log, which has a command for
+  \link #CFE_ES_WRITE_ER_LOG_CC dumping \endlink or \link #CFE_ES_CLEAR_ER_LOG_CC clearing \endlink
+  the log and telemetry to show the number of entries in the log.  In addition to the ER log,
+   the user may find information about the most recent reset in the ES task housekeeping telemetry.
+
+  The ES Software Reset also provides a command to
+  \link #CFE_ES_SET_MAX_PR_COUNT_CC set the maximum number of processor resets \endlink
+  before ES issues a power-on reset. There is a corresponding 'processor resets' counter
+  in ES housekeeping telemetry that may be \link #CFE_ES_RESET_PR_COUNT_CC reset through another
+  ES command.\endlink
+**/
+
+/**
+  \page cfeesugresettype Reset Types and Subtypes
+
+  The Reset Type is sent to the ground in the ES housekeeping packet and tells
+  how the current running version of the cFE was invoked. The possible Reset
+  Types expected in the telemetry field are #CFE_PSP_RST_TYPE_POWERON and
+  #CFE_PSP_RST_TYPE_PROCESSOR. There is a third Reset Type defined in the ES
+  code as #CFE_ES_APP_RESTART which applies only to restarting an individual
+  application and is covered in more detail in the section titled Application
+  and Child Task.
+
+  The Reset Subtype is also sent in the ES housekeeping packet and gives more
+  detail about the type of reset that started the execution of the current
+  running version of the cFE. The possible Reset Subtypes are
+  #CFE_PSP_RST_SUBTYPE_POWER_CYCLE, #CFE_PSP_RST_SUBTYPE_PUSH_BUTTON, #CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND,
+  #CFE_PSP_RST_SUBTYPE_HW_WATCHDOG, #CFE_PSP_RST_SUBTYPE_RESET_COMMAND, #CFE_PSP_RST_SUBTYPE_EXCEPTION,
+  #CFE_PSP_RST_SUBTYPE_UNDEFINED_RESET, #CFE_PSP_RST_SUBTYPE_HWDEBUG_RESET, #CFE_PSP_RST_SUBTYPE_BANKSWITCH_RESET.
+**/
+
+/**
+  \page cfeesugresetlog Exception and Reset (ER) Log
+
+  The Exception and Reset Log contains detailed information about past
+  resets and exceptions. To view the information the #CFE_ES_WRITE_ER_LOG_CC
+  command must be sent. This command will write the log to a binary file.
+  The path and filename may be specified in the command. If the filename
+  command field contains an empty string, the configuration parameter
+  #CFE_PLATFORM_ES_DEFAULT_ER_LOG_FILE is used to specify the path and filename.
+  Use the ground system to get the file and display the contents.  There
+  is also a command to clear the ER log, #CFE_ES_CLEAR_ER_LOG_CC.
+
+  The size of the ER log is defined by the platform configuration parameter
+  #CFE_PLATFORM_ES_ER_LOG_ENTRIES This log is preserved after a processor reset and
+  held in the ES reset area.
+
+  A count of the number of entries in the log is present in the ES
+  housekeeping telemetry. This count can be used with the configuration
+  parameter #CFE_PLATFORM_ES_ER_LOG_ENTRIES to calculate the fullness of the log.
+
+  The information contained in a single log entry is defined by the
+  structure CFE_ES_ERLog_t.
+**/
+
+/**
+  \page cfeesugappsrv Application and Child Task Management
+
+  The ES Application and Child Task Management provides the user with full
+  control over starting and stopping applications as well as querying
+  information regarding applications, tasks and library routines.
+
+  There is no command to start or stop a child task. Child tasks can
+  be controlled (started, stopped or deleted) only by the parent
+  application through an API call.
+
+  This provides a way for the user to load a set of library
+  routines, (via the startup script) without starting a corresponding
+  task. See the section related to library routines for more detail.
+
+  The ES task maintains a counter for the number of registered
+  applications, number of registered child tasks and the number of
+  registered libraries in the ES housekeeping data.
+**/
+
+/**
+  \page cfeesugappstart Starting an Application
+
+  There are two ways to start an application, through the ground
+  command #CFE_ES_START_APP_CC or through the startup script. In
+  either case, the object file must be loaded on board before the
+  command is sent or before the startup script is executed. The
+  startup script contains a list of applications and library
+  routines to load and start immediately after the cFE finishes
+  its startup sequence. The parameters in the command, match the
+  elements of an entry in the startup script.
+
+  The format of the Start Application command, is defined in the
+  structure #CFE_ES_StartAppCmd_t. The members of the structure
+  include, application name, entry point, filename, stack size,
+  load address, exception action and priority.
+
+  If the command fails for any reason, an error event will be sent
+  stating the reason for the failure. There may be additional
+  information in the system log that can be viewed by sending
+  the ES command to dump the system log.
+
+  After starting an application, the ES task sends an informational
+  event message displaying the application name, filename of the
+  object and the application ID. The new application will then show
+  up in the query list downloaded in response to the
+  #CFE_ES_QUERY_ALL_CC command.
+**/
+
+/**
+  \page cfeesugappstop Stopping an Application
+
+  Stopping an application can be done through the ground command
+  #CFE_ES_STOP_APP_CC. This command will terminate the application
+  execution and all child tasks created by the application, free
+  the system resources that it allocated and delete the corresponding
+  object file.
+
+  The process of stopping an application is done in a controlled manner
+  when the application is properly using the return code from the call
+  to the #CFE_ES_RunLoop. When the application properly uses this function,
+  the ES task starts a timer and (via the return code) tells the
+  application to exit at its own convenience. This gives the application
+  time to free its own resources and do any cleanup that may be required
+  before terminating itself by calling CFE_ES_ExitApp. If the timer expires
+  and the application still exists, then ES must 'kill' the application.
+  When the application is killed, ES attempts to cleanup the applications
+  resources as best it could. In this case there is no guarantee that all
+  the system resources are properly released.
+
+  The format of the Stop Application command, is defined in the structure
+  #CFE_ES_AppNameCmd_t. The only parameter in the command is an application
+  name.
+
+  If the command fails for any reason, an error event will be sent stating
+  the reason for the failure. There may be additional information in the
+  system log that can be viewed by sending the ES command to dump the
+  system log.
+
+  After stopping an application, the ES task sends a debug message stating
+  the name of the application. After executing the command, the application
+  (or any resources it allocated) should no longer be listed in any cFE
+  tables or files.
+**/
+
+/**
+  \page cfeesugapprestart Restarting an Application
+
+  The #CFE_ES_RESTART_APP_CC command is used to restart an application
+  using the same file name as the last start.
+
+  This command checks for file existence, the application is running,
+  and the application is not a core app.  If valid, the application restart
+  is requested.
+
+  When requested, ES stops the application, unloads the object file, loads the object file
+  using the previous file name, and restarts an application using the parameters
+  defined when the application was previously started, either through
+  the startup script or by way of the #CFE_ES_START_APP_CC command.
+**/
+
+/**
+  \page cfeesugappreload Reloading an Application
+
+  The #CFE_ES_RELOAD_APP_CC command is used to reload an application
+  using a new file name.
+
+  This command performs
+  the same actions as #CFE_ES_RESTART_APP_CC only using the new file.
+**/
+
+/**
+  \page cfeesugapplist Listing Current Applications
+
+  There are two options for receiving information about applications,
+  the #CFE_ES_QUERY_ONE_CC command can be used to get details about a
+  single application. This command takes an application name as its
+  only parameter and the application information is sent as a software
+  bus packet that can be telemetered to the ground.
+
+  Or the #CFE_ES_QUERY_ALL_CC command can be used to get information about
+  all the applications that are currently registered with ES. This command
+  writes the application data to a file and has a one parameter which
+  specifies the path and filename of the output file.
+
+  For either command, the following Application information is made available:
+
+  <UL>
+     <LI> <B>Application ID</B> - The Application ID assigned by the cFE to the Application <BR>
+     <LI> <B>Type Identifier</B> - Identifies whether the Application is a CORE App
+          or an EXTERNAL App <BR>
+     <LI> <B>Name</B> - The Application Name <BR>
+     <LI> <B>Entry Point</B> - The symbolic name for the entry point into the Application <BR>
+     <LI> <B>Filename</B> - The name of the file the Application was loaded from <BR>
+     <LI> <B>Stack Size</B> - The number of bytes allocated for the Application's stack <BR>
+     <LI> <B>Load Address</B> - The starting address of memory where the Application was loaded <BR>
+     <LI> <B>Load Size</B> - The size, in bytes, of the Application when loaded into memory <BR>
+     <LI> <B>Start Address</B> - The physical address that maps to the Entry Point <BR>
+     <LI> <B>Exception Action</B> - A flag that identifies whether the Processor should undergo
+          a Restart or whether just the Application should restart upon an exception condition
+          within the Application <BR>
+     <LI> <B>Priority</B> - The assigned priority for the Application <BR>
+     <LI> <B>Main Task ID</B> - The Task ID assigned to the main task associated with the Application <BR>
+     <LI> <B>Main Task Name</B> - The name of the main task associated with the Application <BR>
+     <LI> <B>Number of Child Tasks</B> - The number of child tasks spawned by the main task <BR>
+  </UL>
+
+  For a description of the format in which this data is dumped, see #CFE_ES_AppInfo_t.
+**/
+
+/**
+  \page cfeesugtasklist Listing Current Tasks
+
+  The #CFE_ES_QUERY_ALL_TASKS_CC command is used to get a list of child
+  tasks that are currently registered with ES.  The following information is
+  provided for each registered task:
+
+  <UL>
+     <LI> <B>Task ID</B> - The Task ID associated with the specified task<BR>
+     <LI> <B>Task Name</B> - The name of the Task <BR>
+     <LI> <B>Application ID</B> - The ID for the Application the Task is
+          associated with <BR>
+     <LI> <B>Application Name </B> - The name of the Application the Task is
+          associated with <BR>
+  </UL>
+**/
+
+/**
+  \page cfeesugloadlibs Loading Common Libraries
+
+  Library routines may be loaded only through the startup script. There
+  is an option that allows a library routine initialization function
+  to be executed after the library is loaded. Refer to the cFE Application
+  Developers Guide for more information regarding Library Routines and
+  startup scripts. The startup script delivered with the cFE
+  (<tt>cfe_es_startup.scr</tt>) also has some detailed information
+  about library routines.
+**/
+
+/**
+  \page cfeesugfilesrv Basic File System
+
+  ES provides minimal functionality to initialize, read, and write
+  cfe File headers.
+**/
+
+/**
+  \page cfeesugperfsrv Performance Data Collection
+
+  The Performance Data Collection  provides precise timing
+  information for each software application similar to
+  how a logic analyzer can trigger and filter data.
+
+  API calls are inserted by the development team at key points in the
+  code. The basic operation is to start the data collection, wait
+  some amount of time, then send the command to stop the data
+  collection. When the stop command is received, the ES task writes
+  all the data from the buffer to a file. The file can then be
+  imported to analysis tools for viewing. The size of the
+  buffer is configurable through the #CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE
+  platform configuration parameter.
+
+  Additional information follows:<BR>
+
+    <UL>
+       <LI> \subpage cfeesugperftrig <BR>
+       <LI> \subpage cfeesugperfstart <BR>
+       <LI> \subpage cfeesugperfstop <BR>
+       <LI> \subpage cfeesugperfview <BR>
+    </UL>
+**/
+
+/**
+  \page cfeesugperftrig Performance Data Collection Trigger Masks
+
+  The trigger mask is used to control
+  precisely when to start collecting the data. There is a bit in the
+  trigger mask for every marker used in the code. After a start command
+  is received, the trigger mask is read and dictates when to
+  begin storing data in the buffer.
+
+  If the trigger mask is set to all zeros, then the collection will begin
+  immediately after the start command and continue until a stop command
+  is received. In this case the buffer behaves in a 'circular' manner.
+**/
+
+/**
+  \page cfeesugperfstart Starting to Collect Performance Data
+
+  The #CFE_ES_START_PERF_DATA_CC command is used to start the data collection
+  process. The ES task sends a debug event when the command is received. It is
+  not possible to start a collection if the buffer-to-file write is in process
+  from an earlier collection. There is an ES telemetry point that can be used to
+  ensure there is not a buffer-to-file write in progress. This ES telemetry
+  point is called 'Perf Data to Write' and begins counting down from 'Data
+  Count' to zero. If this counter is zero, it is ok to send the start command.
+  If any errors are encountered when the start command is received, the details
+  will be displayed in an error event message.
+**/
+
+/**
+  \page cfeesugperfstop Stopping the Collection of Performance Data
+
+  The #CFE_ES_STOP_PERF_DATA_CC command is used to stop the data collection
+  process and write the buffer data to a file. The path and filename may be
+  specified in the command. If the filename command field contains an empty
+  string, the configuration parameter #CFE_PLATFORM_ES_DEFAULT_PERF_DUMP_FILENAME is
+  used to specify the path and filename.  The number of entries written to
+  the file is determined by the 'data count' variable, which is sent in the
+  ES housekeeping telemetry packet. To ensure cpu hogging does not occur
+  during the write process, ES creates a low priority child task to perform
+  the file write operation. This child task will write a number of entries,
+  then sleep for a short time to give tasks of lower priority a chance to
+  run. The number of entries between delays, and the delay time is displayed
+  in the debug event at the time the stop command is received.
+**/
+
+/**
+  \page cfeesugperfview Viewing the Collection of Performance Data
+
+  To view the performance data, the file created as a result of the stop
+  command must be transferred to the ground and imported into a
+  viewing tool.  See https://github.com/nasa/perfutils-java as an example.
+**/
+
+/**
+  \page cfeesugcdssrv Critical Data Store
+
+  Some missions are required, for health, safety and mission success criteria, to
+  survive Processor Resets.  These mission requirements frequently flow down to
+  Attitude Control and/or Command and Data Handling requirements that force an
+  Application developer to design a mechanism for retaining software state information
+  through a Processor Reset.  The cFE provides the Critical Data Store to
+  assist the developer in meeting these requirements.
+
+  The Critical Data Store is an area of memory that is not cleared during a Processor
+  Reset.  In addition, the contents of memory are validated when accessed with a Data
+  Integrity Value that helps to ensure the contents have not been corrupted.  Each
+  processor platform, through the design of its Board Support Package, can implement
+  this area of memory in a number of ways to ensure the contents survive a Processor
+  Reset.  Applications can allocate a section of this memory for their use in a way
+  similar to the \ref cfetblovr.
+
+  When an Application registers a Critical Data Store (CDS), the Executive Services
+  allocates a section of the Critical Data Store memory for the application's use and
+  assigns the Application specified name to the memory area.  The operator can find
+  and learn the characteristics of these Critical Data Stores by using the
+  \link #CFE_ES_DUMP_CDS_REGISTRY_CC Dump CDS Registry Command. \endlink  This command will
+  dump the contents of the CDS Registry maintained by the Executive Services into a
+  file that can be downlinked and examined by the operator.
+
+  The CDS Registry dump will identify the following information for each registered CDS:
+
+  <UL>
+     <LI> <B>Handle</B> - the numeric identifier used by an Application to access
+          the contents of the CDS <BR>
+     <LI> <B>Size</B> - the number of bytes allocated to the specified CDS <BR>
+     <LI> <B>Table Flag</B> - a flag that indicates whether the CDS is associated with a
+          \ref cfetblugcritical (when non-zero) or not (when equal to zero).
+     <LI> <B>Name</B> - a processor specific name that uniquely identifies the CDS.
+          The name comes in two parts, <tt>"AppName.CDSName"</tt>.  <tt>AppName</tt> identifies
+          which Application registered the CDS.  <tt>CDSName</tt> is the name the Application
+          assigned to the CDS.
+  </UL>
+
+  The format of the CDS Registry Dump File is a cFE Standard File header (see #CFE_FS_Header_t)
+  followed by one or more CDS Registry Dump File Records (see #CFE_ES_CDSRegDumpRec_t).
+**/
+
+/**
+  \page cfeesugmempoolsrv Memory Pool
+
+  Refer to the cFE Application Developers Guide for additional information.
+
+  Applications that are designed for generic missions, frequently have to wait
+  until run-time before allocating memory for buffers, data records, etc.
+
+  The cFE provides a memory allocation algorithm that may be used by an
+  application to manage its block of memory. The user provides a pointer to its
+  memory block and a list of block sizes and the cFE provides 'get' and 'put'
+  API's to the user for managing its memory pool.
+
+  Run-time memory allocation in an embedded system can be risky because of the
+  potential problem of memory fragmentation. Memory fragmentation is also
+  referred to as External Fragmentation and is defined in the wikipedia as:
+
+  \verbatim
+
+  External fragmentation is the phenomenon in which free storage becomes divided
+  into many small pieces over time. It is a weakness of certain storage
+  allocation algorithms, occurring when an application allocates and deallocates
+  ("frees") regions of storage of varying sizes, and the allocation algorithm
+  responds by leaving the allocated and deallocated regions interspersed. The
+  result is that, although free storage is available, it is effectively unusable
+  because it is divided into pieces that are too small to satisfy the demands of
+  the application. The term "external" refers to the fact that the unusable
+  storage is outside the allocated regions.
+
+  \endverbatim
+
+  To help prevent this from happening, the cFE has integrated a memory
+  allocation algorithm that is designed to create blocks at run-time, based on
+  the size of the blocks requested. After a reset, there are no blocks created,
+  the memory pool is said to be unconfigured. As requests for memory blocks are
+  made, the memory pool first tries to use blocks that have been created but are
+  no longer in use. If it cannot find an available block, it will create a new
+  one. The created blocks remain until a reset occurs.
+
+  This algorithm is recommended when the size of the requests and the peak rate
+  of requests can be pre-determined. It is highly recommended that adequate
+  margin is designed into the pool size. The memory pool should never get close
+  to being fully configured (i.e. not enough memory to create a new block). If
+  the memory does become fully configured, requests for new size blocks will
+  fail, regardless of whether the created blocks are in-use or not. The margin
+  on the memory pool can be monitored by viewing the 'free bytes' member of the
+  memory pool statistics. The memory pool statistics are dumped only when
+  commanded by way of the ES command #CFE_ES_SEND_MEM_POOL_STATS_CC.
+
+  A user of the ES memory pool begins by tailoring the memory pool for the
+  particular use, by defining a list of block sizes and allocating a block of
+  memory. These block size definitions simply give the memory pool a set of
+  sizes to choose from. They do not configure the memory pool in any way and
+  they do not affect the size of the pool. The cFE defines a default set of
+  block sizes in the cfe_platform_cfg.h file.
+
+  If the default block sizes are used, the application will create the pool
+  using the simpler #CFE_ES_PoolCreate API. This API takes a pointer to the
+  first byte of the memory pool (allocated by the application) and a size
+  parameter. The API returns a handle to be used for the get and put requests.
+
+  If the defaults are not sufficient, the user must define the block sizes and
+  use the #CFE_ES_PoolCreateEx API.
+
+  After receiving a positive response from the PoolCreate API, the memory pool
+  is ready to accept requests, but at this point it is completely unconfigured
+  (meaning there are no blocks created). The first valid request (via
+  #CFE_ES_GetPoolBuf API) after creating the pool will always cause the memory
+  pool to create a block and return a pointer to the new block. The size of the
+  block depends on the size definitions mentioned earlier. If there is not an
+  exact match between the requested and defined sizes, then the memory pool will
+  create and return the smallest block that meets the following criteria: is a
+  defined size and large enough to hold the request.
+
+  If another request for that size comes in before the first block was released
+  through the #CFE_ES_PutPoolBuf API, then the memory pool will create a second
+  block of that size and return a pointer to the second block. If both blocks
+  were then released through the #CFE_ES_PutPoolBuf API and the memory pool
+  statistics were dumped via the #CFE_ES_SEND_MEM_POOL_STATS_CC command, the number
+  of blocks created would be two. The number of 'free bytes' in the pool would
+  be the size of the pool minus the sum of the following items:
+    - the size of the two blocks created (even though they are not 'in-use').
+    - a buffer descriptor for each of the two blocks created (2 * 12 bytes)
+    - a 168 byte pool descriptor
+  Refer to the cFE Applications Developers Guide for more details.
+
+  This allocation algorithm does have its limits. There are certain conditions
+  that can place the memory pool in an undesired state. For instance, if a burst
+  of get requests were received for the same block size, the memory pool may
+  create a large number of blocks of that size. If this is a one-time burst,
+  the memory pool would be configured with this large number of blocks that may
+  no longer be needed. This scenario would use up the 'free bytes' margin in an
+  undesired way. It should be noted that once the blocks are created, they
+  cannot be deleted by any means other than a processor or power-on reset. It is
+  highly recommended that the memory pool statistics be carefully monitored to
+  ensure that the 'free-bytes' margin is sufficient (which is typically dictated
+  by mission requirements).
+
+  An operator can obtain information about an Application's Memory Pool by using
+  the \link #CFE_ES_SEND_MEM_POOL_STATS_CC Telemeter Memory Pool Statistics Command.
+  \endlink
+
+  This command will cause Executive Services to extract pertinent statistics
+  from the data used to manage the Memory Pool and telemeter them to the ground
+  in the \link #CFE_ES_MemStatsTlm_t Memory Pool Statistics Telemetry Packet.
+  \endlink
+
+  In order to obtain the statistics associated with a memory pool, the operator
+  <B>MUST</B> have the correct Memory Handle as reported by the Application who
+  owns the Memory Pool.  <B>It should be noted that an inappropriate Memory Pool
+  Handle can <em>(and likely will)</em> cause the system software to crash!</B>
+  Within the cFE itself, there are three cFE Core Applications that make use of
+  the Executive Services Memory Pool API.  These are Software Bus (SB), Event
+  Services (EVS) and Table Services (TBL).  Each of these cFE Core Applications
+  report their memory pool handles in telemetry.
+
+  The \link #CFE_ES_MemStatsTlm_t Memory Pool Statistics Telemetry Packet
+  \endlink contains the following information:
+
+  <UL>
+    <LI> <B>Memory Pool Handle</B> - the handle, as provided by the operator in the
+         \link #CFE_ES_SEND_MEM_POOL_STATS_CC Telemeter Memory Pool Statistics Command. \endlink
+         This repeating of the handle in telemetry ensures the operator knows which Memory
+         Pool Statistics are being viewed <BR>
+    <LI> <B>Pool Size</B> - The total size of the memory pool (in bytes)<BR>
+    <LI> <B>Number Blocks Requested</B> - The total number of memory blocks requested for allocation<BR>
+    <LI> <B>Number of Errors</B> - The total number of errors encountered when a block was released<BR>
+    <LI> <B>Number of Free Bytes</B> - The total number of bytes in the Memory Pool that have never
+         been allocated to a Memory Block<BR>
+    <LI> <B>Block Statistics</B> - For each specified size of memory block (of which there are
+         #CFE_MISSION_ES_POOL_MAX_BUCKETS), the following statistics are kept<BR>
+       <UL>
+          <LI> <B>Block Size</B> - The size, in bytes, of all blocks of this type<BR>
+          <LI> <B>Number of Blocks Allocated</B> - The number of this sized block which are currently
+               allocated and in use<BR>
+          <LI> <B>Number of Blocks Free</B> - The number of this size block which have been in use
+               previously but are no longer being used<BR>
+       </UL>
+  </UL>
+**/
+
+/**
+  \page cfeesugsyslogsrv System Log
+
+  The System Log is an array of bytes that contains back-to-back printf type
+  messages from applications. The cFE internal applications use this log when
+  errors are encountered during initialization before the Event Manager is fully
+  initialized. To view the information the #CFE_ES_WRITE_SYSLOG_CC command must
+  be sent. This command will write the log to a binary file. The path and
+  filename may be specified in the command. If the filename command field
+  contains an empty string, the configuration parameter
+  #CFE_PLATFORM_ES_DEFAULT_SYSLOG_FILE is used to specify the path and filename.  Use the
+  ground system to get the file and display the contents.  The
+  #CFE_ES_CLEAR_SYSLOG_CC is used to clear the System log.
+
+  The size of the System log is defined by the platform configuration parameter
+  #CFE_PLATFORM_ES_SYSTEM_LOG_SIZE. This log is preserved after a processor reset and
+  held in the ES reset area.
+
+  A count of the number of entries in the log is present in the ES housekeeping
+  telemetry.
+**/
+
+/**
+  \page cfeesugversion Version Identification
+
+  Version information is reported at startup, and upon receipt of a No-op command
+**/
+
+/**
+  \page cfeesugfaq Frequently Asked Questions about Executive Services
+
+  None submitted
+**/
+
+/**
+  \page cfeescmds cFE Executive Services Commands
+
+  Upon receipt of any command, the Executive Services application will confirm that the
+  message length embedded within the header (from `CFE_MSG_GetSize()`) matches the expected
+  length of that message, based on the size of the C structure defining that command.
+  If there is any discrepancy between the expected and actual message size, ES will generate
+  the #CFE_ES_LEN_ERR_EID event, increment the command error counter (\ES_CMDEC), and the
+  command will _not_ be accepted for processing.
+
+  The following is a list of commands that are processed by the cFE Executive Services Task.
+**/
+
+/**
+  \page cfeestlm  cFE Executive Services Telemetry
+
+  The following are telemetry packets generated by the cFE Executive Services Task.
+**/
+
+/**
+  \page cfeescfg  cFE Executive Services Configuration Parameters
+
+  The following are configuration parameters used to configure the cFE Executive Services
+  either for each platform or for a mission as a whole.
+**/
+```
+
+### `cfe_evs.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_evs.dox`
+
+
+```text
+/**
+  \page cfeevsovr cFE Event Services Overview
+
+  Event Services (EVS)  provides centralized control for the processing of event messages
+  originating from the EVS task itself, other cFE core applications (ES, SB, TIME, and TBL),
+  and from cFE applications.  Event messages are asynchronous messages that are used to
+  inform the operator of a significant event from within the context of a registered
+  application or core service.  EVS provides various ways to filter event
+  messages in order to manage event message generation.
+
+  Note for messages outside the context of a registered application (for example early
+  in app initialization or if registration fails) #CFE_ES_WriteToSysLog can be used
+  for reporting.
+
+  For more information on cFE Event Services, see the following sections:
+
+  <UL>
+    <LI> \subpage cfeevsugmsgformat <BR>
+    <LI> \subpage cfeevsuglog <BR>
+    <LI> \subpage cfeevsugmsgcntrl <BR>
+    <LI> \subpage cfeevsugmsgfilter <BR>
+    <LI> \subpage cfeevsugregistry <BR>
+    <LI> \subpage cfeevsugcounters <BR>
+    <LI> \subpage cfeevsugresetctrs <BR>
+    <LI> \subpage cfeevsugprocreset <BR>
+    <LI> \subpage cfeevsugsquelch <BR>
+    <LI> \subpage cfeevsugfaq <BR>
+  </UL>
+
+**/
+
+/**
+  \page cfeevsugmsgformat Event Message Format
+
+  Event messages are software bus messages that contain the following fields: <BR>
+
+  <UL>
+    <LI> Timestamp        <BR>
+    <LI> Event Type       <BR>
+    <LI> Spacecraft ID    <BR>
+    <LI> Processor ID     <BR>
+    <LI> Application Name <BR>
+    <LI> Event ID         <BR>
+    <LI> Message          <BR>
+  </UL>
+
+  The <i>Timestamp</i> corresponds to when the event was generated, in spacecraft time.
+  The <i>Event Type</i> is one of the following:  DEBUG, INFO, ERROR or CRITICAL.
+  The <i>Spacecraft ID</i> and <i>Processor ID</i> identify the spacecraft and processor
+  from which the event was generated.  Note that the <i>Spacecraft ID</i> is defined in the
+  cfe_mission_cfg.h file; The <i>Processor ID</i> is defined in the appropriate
+  cfe_platform_cfg.h file.
+  The <i>Application Name</i> refers to the Application that issued the event message
+  as specified on application startup (either startup script or app start command).
+  The <i>Event ID</i>  is an Application unique number that identifies the event.
+  The <i>Message</i> is an ASCII text string describing the
+  event.  Event messages may have parameters associated with the event message.
+  EVS formats the parameters such that they are part of the ASCII text string
+  that make up the event message.
+
+  In order to accommodate missions that have limited telemetry bandwidth, EVS
+  can be configured such that the ASCII text string part of the event message
+  is omitted, thus reducing the size of each event message.  This is referred
+  to as <i>Short Format</i>;  Event messages including the ASCII text string are referred
+  to as <i>Long Format</i>.  The default setting is specified in the cfe_platform_cfg.h file.
+  EVS also provides commands in order to set the mode (short or long).
+
+  Since the design of the cFE's Software Bus is based on run-time registration, no
+  predetermined message routing is defined, hence it is not truly correct to say
+  that events are generated as telemetry.  Technically, EVS generates events in
+  the form of software bus messages.  Applications such as Telemetry Output and
+  Data Storage can then subscribe to these messages making them telemetry.  For
+  the purposes of this document, any references to telemetry assumes that a telemetry
+  application subscribes to the EVS event software bus message and routes it to the
+  ground as telemetry.  Note that short format event messages on the Software Bus
+  have different message lengths than long form messages and do not include
+  any part of the long format message string.
+
+  The EVS can be configured via ground command to send event messages out one or
+  more message ports.  These message ports may include ports such as debug, console,
+  and UART.  Messages sent out of the message ports will be in ASCII text format.
+  This is generally used for lab purposes.  Note that the event mode (short or
+  long) does affect the event message content sent out these message ports.
+**/
+
+/**
+  \page cfeevsuglog Local Event Log
+
+  In addition to generating a software bus message, EVS logs the event message to a
+  Local Event Log.  Note that this is an optional feature that must be enabled via
+  the cfe_platform_cfg.h file.  The Local Event Log resides on the same processor
+  as the EVS which is used to store events without relying on an external bus.  In
+  multi-processor cFE configurations the Local Event Buffer preserves event messages
+  during non-deterministic processor initialization sequences and during failure
+  scenarios.  In order to obtain the contents of the Local Event Log, a command must
+  be sent to write the contents of the buffer to a file which can then be sent to the
+  ground via a file transfer mechanism.  Note that event messages stored in the EVS
+  Local Event Log are always long format messages and are not affected by the
+  event mode (short or long).
+
+  EVS provides a command in order to \link #CFE_EVS_CLEAR_LOG_CC clear the Local Event Log \endlink.
+
+  \section cfeevsuglog_s1 Local Event Log Mode
+
+  EVS can be configured to control the Local Event Log to either discard or overwrite
+  the contents of the log when it becomes full.  If the mode is set to overwrite, the
+  log is treated like a circular buffer, overwriting the oldest event message contained
+  in the log first.  This control is configured by default in the cfe_platform_cfg.h
+  file but can be modified by \link #CFE_EVS_SET_LOG_MODE_CC a command \endlink.
+**/
+
+/**
+  \page cfeevsugmsgcntrl Event Message Control
+
+  In order for an application to be serviced by EVS, it must be registered with EVS.
+  EVS provides various commands in order to control the event messages that are
+  generated as software bus messages.
+
+  \section cfeevsugmsgcntrl_s1 Event Message Control - By Type
+
+  The highest level of event message control that EVS provides is the ability to
+  enable and disable event message types.  As mentioned above, there are four event
+  types.  They are:
+
+  <OL>
+    <LI> DEBUG         <BR>
+    <LI> INFORMATION   <BR>
+    <LI> ERROR         <BR>
+    <LI> CRITICAL      <BR>
+  </OL>
+
+  When commands are sent to \link #CFE_EVS_ENABLE_EVENT_TYPE_CC enable \endlink
+  or \link #CFE_EVS_DISABLE_EVENT_TYPE_CC disable \endlink a particular type of event
+  message, ALL event messages of the specified type are affected.  Typically, event
+  messages of type DEBUG are disabled on-orbit.  Note that EVS provides the capability
+  to affect multiple types within one command using a bit mask.  Note also that the
+  configuration parameter #CFE_PLATFORM_EVS_DEFAULT_TYPE_FLAG in the cfe_platform_cfg.h file
+  specifies which event message types are enabled/disabled by default.
+
+  \section cfeevsugmsgcntrl_s2 Event Message Control - By Application
+
+  Commands are available to \link #CFE_EVS_ENABLE_APP_EVENTS_CC enable \endlink and
+  \link #CFE_EVS_DISABLE_APP_EVENTS_CC disable \endlink the generation of event messages
+  for a particular application.  The result is that ALL event messages for the specified
+  Application are affected (i.e. enabled or disabled).
+
+  \section cfeevsugmsgcntrl_s3 Event Message Control - By Event Type for an Application
+
+  EVS also provides the capability to \link #CFE_EVS_ENABLE_APP_EVENT_TYPE_CC enable \endlink
+  / \link #CFE_EVS_DISABLE_APP_EVENT_TYPE_CC disable \endlink an event type for a particular
+  application.  Note that EVS provides the capability to affect multiple event types
+  within one command using a bit mask.
+
+  \section cfeevsugmsgcntrl_s4 Event Message Control - Individual Events
+
+  There are two ways to control the generation of individual events depending on
+  whether the application's event message has been registered with EVS or not.
+
+  \subsection cfeevsugmsgcntrl_s4_1 Modifying a registered event message filter
+
+  When an application registers with EVS, the application has the option of specifying
+  the events that it wants to register for filtering along with the
+  \ref cfeevsugmsgfilter (only the Binary Filtering Scheme
+  exists currently).   Note that applications are limited in the number of events that
+  they can register for filtering (see #CFE_PLATFORM_EVS_MAX_EVENT_FILTERS in cfe_platform_cfg.h
+  for the mission defined limit).  The filtering method uses a mask to determine if the
+  message is forwarded to the software bus, making it available in telemetry (see
+  \ref cfeevsugmsgfilter for a description on filtering).  Commands are available to
+  \link #CFE_EVS_SET_FILTER_CC modify the filter mask \endlink for any registered event.
+
+  An on-orbit mission, for example, might be experiencing a problem resulting in an
+  application's event message being repeatedly issued,  flooding the downlink.  If the
+  event message for the application is registered with EVS, then a command can be issued
+  to set the event message filter to the specified value in order to prevent flooding of
+  the downlink.
+
+  \subsection cfeevsugmsgcntrl_s4_2 Adding/Removing an event message for filtering
+
+  Commands are also available to add filtering for those events that are not registered
+  for filtering.  Once an event is \link #CFE_EVS_ADD_EVENT_FILTER_CC registered for filtering \endlink,
+  the filter can be modified (see above) or \link #CFE_EVS_DELETE_EVENT_FILTER_CC removed \endlink.
+
+  An on-orbit mission, for example, might be experiencing a problem resulting in an event
+  message being repeatedly issued,  flooding the downlink. If the event message was not
+  registered with EVS for filtering then the ground can add (i.e. register) the offending
+  application's event for filtering (much like an application registers the event during
+  initialization).
+
+  EVS also supports the ability to \link #CFE_EVS_DELETE_EVENT_FILTER_CC remove \endlink
+  (i.e. unregister) an application's event message.  Once it is removed, the event will no
+  longer be filtered.  Note that commands issued to disable events by event type, by application
+  or by event type for an application are still valid and could affect this particular event.
+**/
+
+/**
+  \page cfeevsugmsgfilter Event Message Filtering
+
+  EVS uses a hexadecimal bit mask that controls how often a message is filtered.  An event's
+  filter mask is bit-wise ANDed with the event's event counter.  There is one event counter
+  for each event ID.  If the result of the ANDing is zero then the message is sent.
+
+  Filter masks can be set so that one out of 1, 2, 4, 8
+ events are sent.  Some examples of
+  masks that use this pattern are: (0x0000, Every one), (0x0001, One of every 2), (0x0003,
+  One of every 4), and (0x0007, One of every 8.
+
+  Filter masks can also be set so that only the first n events are sent.  For example, the
+  mask 0xFFFF generates one event message and then stops.  Note that when the filter counter
+  is reset to zero by command, this will restart the counting and enable n more events to be sent.
+
+  Event messages will be filtered until CFE_EVS_MAX_FILTER_COUNT events of the filtered
+  event ID from the application have been received. After this, the filtering will become locked
+  (no more of that event will be received by the ground) until the filter is either reset or
+  deleted by ground command. This is to prevent the counter from rolling over, which would cause
+  some filters to behave improperly. An event message will be sent when this maximum count is
+  reached.
+
+  The following shows an example of how filtering works using a filter mask of x'0001', resulting
+  in sending every other event:
+
+  <TABLE BORDER="1" CELLPADDING="2" WIDTH="100%">
+  <TR>
+    <TD> &nbsp;
+    <TD> <B>packet x</B>
+    <TD> <B>packet X+1</B>
+    <TD> <B>packet X+2</B>
+    <TD> <B>packet X+3</B>
+    <TD> <B>packet X+4</B>
+    <TD> <B>...</B>
+  <TR>
+    <TD> <B>Event ID counter</B>
+    <TD> x'0000'
+    <TD> x'0001'
+    <TD> x'0002'
+    <TD> x'0003'
+    <TD> x'0004'
+    <TD> &nbsp;
+  <TR>
+    <TD> <B>Event Filter mask</B>
+    <TD> x'0001'
+    <TD> x'0001'
+    <TD> x'0001'
+    <TD> x'0001'
+    <TD> x'0001'
+    <TD> &nbsp;
+  <TR>
+    <TD> <B>Bitwise AND results</B>
+    <TD> x'0000'
+    <TD> x'0001'
+    <TD> x'0000'
+    <TD> x'0001'
+    <TD> x'0000'
+    <TD> &nbsp;
+  <TR>
+    <TD> <B>Send event?</B>
+    <TD> Yes
+    <TD> No
+    <TD> Yes
+    <TD> No
+    <TD> Yes
+    <TD> &nbsp;
+  </TABLE>
+
+  In this example, the ground uses a filter mask of x'FFFE' resulting in the first two
+  events being sent and then no more.
+
+
+  <TABLE BORDER="1" CELLPADDING="2" WIDTH="100%">
+  <TR>
+    <TD> &nbsp;
+    <TD> <B>packet x</B>
+    <TD> <B>packet X+1</B>
+    <TD> <B>packet X+2</B>
+    <TD> <B>packet X+3</B>
+    <TD> <B>packet X+4</B>
+    <TD> <B>...</B>
+  <TR>
+    <TD> <B>Event ID counter</B>
+    <TD> x'0000'
+    <TD> x'0001'
+    <TD> x'0002'
+    <TD> x'0003'
+    <TD> x'0004'
+    <TD> &nbsp;
+  <TR>
+    <TD> <B>Event Filter mask</B>
+    <TD> x'FFFE'
+    <TD> x'FFFE'
+    <TD> x'FFFE'
+    <TD> x'FFFE'
+    <TD> x'FFFE'
+    <TD> &nbsp;
+  <TR>
+    <TD> <B>Bitwise AND results</B>
+    <TD> x'0000'
+    <TD> x'0000'
+    <TD> x'0002'
+    <TD> x'0002'
+    <TD> x'0004'
+    <TD> &nbsp;
+  <TR>
+    <TD> <B>Send event?</B>
+    <TD> Yes
+    <TD> Yes
+    <TD> No
+    <TD> No
+    <TD> No
+    <TD> &nbsp;
+  </TABLE>
+
+  See cfe_evs.h for predefined macro values which can be used for masks.
+**/
+
+/**
+  \page cfeevsugregistry EVS Registry
+
+  EVS maintains information on each registered application and all events registered
+  for an application.
+
+  The registry contains the following information for each Registered Application:
+
+  <UL>
+     <LI> Active Flag - If equal to FALSE (0), all events from this Application are Filtered <BR>
+     <LI> Event Count - Total number of events issued by this Application.  Note that this value
+     stop incrementing at 65535. <BR>
+     <BR>The following information for each Filtered Event (up to #CFE_PLATFORM_EVS_MAX_EVENT_FILTERS): <BR><BR>
+     <LI> Event ID - Event ID for event whose filter has been defined <BR>
+     <LI> Mask - Binary Filter mask value (see \ref cfeevsugmsgfilter for an explanation) <BR>
+     <LI> Count - Current number of times this Event ID has been issued by this Application <BR>
+  </UL>
+**/
+
+/**
+  \page cfeevsugcounters EVS Counters
+
+  There are 2 types of counters in EVS housekeeping telemetry:
+
+  <UL>
+    <LI> Total events sent counter <BR>
+    <LI> Number of events sent for each Application <BR>
+  </UL>
+
+  The difference is that the first one is the sum of all of the event messages sent.  Both of these
+  represent events that are actually sent (by EVS to the software bus).  If an event message is
+  filtered or disabled, neither counter is incremented.
+
+  There are other counters available that show how many event messages were generated by an App,
+  however, these are only available for those events that are registered for filtering hence if you
+  have a message that is not registered for filtering and the message type (e.g. DEBUG) is disabled
+  then you won't know if the event was ever issued by an application.  These counters are available
+  by sending a command to \link #CFE_EVS_WRITE_APP_DATA_FILE_CC write the EVS Application Data \endlink
+  and transferring the file to the ground.
+**/
+
+/**
+  \page cfeevsugresetctrs Resetting EVS Counters
+
+  As far as reset commands, there are 4 commands available:
+
+  <OL>
+    <LI>  \link #CFE_EVS_RESET_COUNTERS_CC Reset the total events sent counter \endlink <BR>
+    <LI>  \link #CFE_EVS_RESET_APP_COUNTER_CC Reset the events sent counter for a particular Application \endlink -
+          e.g. reset the LC application events counter  <BR>
+    <LI>  \link #CFE_EVS_RESET_FILTER_CC Reset all of the event counters for a particular registered event for a
+          particular Application \endlink - e.g. Reset event counter for Event ID 5 for the LC Application.<BR>
+    <LI>  \link #CFE_EVS_RESET_ALL_FILTERS_CC Reset all of the event counters for ALL registered events for
+          a particular App \endlink - e.g.  Reset all registered event counters for LC.<BR>
+  </OL>
+
+  Note that there is currently no way to reset ALL of the events sent counters for all of the Apps with one command.
+**/
+
+/**
+  \page cfeevsugprocreset Effects of a Processor Reset on EVS
+
+  On a processor reset, the EVS Registry is cleared such that applications must re-register
+  with EVS in order to use EVS services.  All counters are also cleared with the exceptions
+  of those listed below.
+
+  On a processor reset, the following EVS data is preserved (if the cFE is configured to
+  include an \ref cfeevsuglog):
+
+
+  <UL>
+     <LI> Local Event Log if the Local Event Log Mode is configured to Discard (1).  If the Local Event Log Mode is configured to Overwrite (0), the
+          contents of the log may be overwritten depending on the size and contents of the log prior to the reset. <BR>
+     <LI> Local Event Log Full Flag <BR>
+     <LI> Local Event Log overflow counter <BR>
+  </UL>
+
+  The Local Event Log Mode (overwrite/discard) is set to the configured value specified in the
+  cfe_platform_cfg.h file.  The default value is Discard (1).  Discard mode will guarantee the contents
+  of the event log are preserved over a processor restart.
+
+  This provides the ground with the capability to write the Local Event Log to a file and
+  transfer it to the ground in order to help debug a reset.
+**/
+
+/**
+  \page cfeevsugsquelch EVS squelching of misbehaving apps
+
+  Event squelching is an optional feature for suppressing excessive events from misbehaving apps. It
+  is enabled by setting #CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST to a nonzero positive value, and 
+  #CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC equal to or less than that value. 
+
+  #CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST controls the maximum events that can be sent at a given moment, 
+  and #CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC is the sustained event throughput per second. 
+  
+  The suppression mechanism initializes with #CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST * 1000 credits. 
+  Each event costs 1000 credits. Credits are restored at a rate of 
+  #CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC * 1000 up to a maximum balance of #CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST*1000, and the
+  maximum "debt" is -#CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST * 1000. When the credit count crosses from positive to negative, 
+  a squelched event message is emitted and events are supppressed, until the credit count becomes positive again.
+
+  Figure EVS-1 is a notional state diagram of the event squelching mechanism.
+
+  \image html evs_squelch_states.png "Figure EVS-1: EVS Squelching State Diagram"
+  \image latex evs_squelch_states.png "Figure EVS-1: EVS Squelching State Diagram"
+**/
+
+/**
+  \page cfeevsugfaq Frequently Asked Questions about Event Services
+
+  <B> (Q)
+     My telemetry stream is being flooded with the same event message.  How do I
+     make it stop?
+  </B> <BR> <BR> <I>
+     The most direct way to stop an event message from flooding your downlink
+     stream is to send a command to EVS to filter the offending event (see
+     \ref cfeevsugmsgcntrl or \link #CFE_EVS_SET_FILTER_CC \EVS_SETBINFLTRMASK \endlink).
+     In order to stop the event message from being sent, a bit mask of \c '0xFFFF' should
+     be used.  If the event is not currently registered for filtering, the event message
+     must be added using the command \link #CFE_EVS_ADD_EVENT_FILTER_CC \EVS_ADDEVTFLTR \endlink.
+  </I>
+
+  <B> (Q)
+     I filtered an event message and would now like to see it again.  What do I do in
+     order to see those events again?
+  </B> <BR> <BR> <I>
+     If the event message that you are interested is registered with EVS for filtering,
+     then you have 2 options:
+     -# You can use the \link #CFE_EVS_SET_FILTER_CC \EVS_SETBINFLTRMASK \endlink command
+        using a bit mask of \c '0x0000' which will result in getting all of the events for
+        that Event Id
+     -# You can remove the registration of that event with EVS
+        (see \link #CFE_EVS_DELETE_EVENT_FILTER_CC \EVS_DELEVTFLTR \endlink).
+
+        Note that option (1) is the preferred method. <BR>
+
+  </I>
+
+  <B> (Q)
+     What is the purpose of DEBUG event messages?
+  </B> <BR> <BR> <I>
+     Event message of type "DEBUG" are primarily used during flight software development
+     in order to provide information that is most likely not needed on orbit.  Some commands
+     send debug event messages as verification that a command request was received.  When
+     writing the EVS local event log to a file, for example, an event message of type DEBUG
+     is issued.  On orbit, this event message is probably not needed.  Instead, the command
+     counter is used for command verification.
+  </I>
+
+  <B> (Q)
+     How do I find out which events are registered for filtering?
+  </B> <BR> <BR> <I>
+     EVS provides a command (\link #CFE_EVS_WRITE_APP_DATA_FILE_CC  \EVS_WRITEAPPDATA2FILE \endlink)
+     which generates a file containing all of the applications that have registered with EVS and
+     all of the filters that are registered for each application.  Note that EVS merely generates
+     the file.  The file must be transferred to the ground in order to view it.
+  </I>
+
+  <B> (Q)
+     Why do I see event messages in my console window?
+  </B> <BR> <BR> <I>
+     By default, the events are configured to transmit out a "port" that shows event messages
+     in the console
+  </I>
+
+  <B> (Q)
+     What is the difference between event services and the ES System Log
+  </B> <BR> <BR> <I>
+     Events are within the context of an App or cFE Service (requires registration with ES).
+     The system log can be written to outside of the Application or cFE Service context,
+     for example during application startup to report errors before registration.
+  </I>
+**/
+
+/**
+**  \page cfeevscmds cFE Event Services Commands
+**
+**  Upon receipt of any command, the Event Services application will confirm that the
+**  message length embedded within the header (from `CFE_MSG_GetSize()`) matches the expected
+**  length of that message, based on the size of the C structure defining that command.
+**  If there is any discrepancy between the expected and actual message size, EVS will generate
+**  the #CFE_EVS_LEN_ERR_EID event, increment the command error counter (\EVS_CMDEC), and the
+**  command will _not_ be accepted for processing.
+**
+**  The following is a list of commands that are processed by the cFE Event Services Task.
+**/
+
+/**
+**  \page cfeevstlm  cFE Event Services Telemetry
+**
+**  The following are telemetry packets generated by the cFE Event Services Task.
+**/
+
+/**
+**  \page cfeevscfg  cFE Event Services Configuration Parameters
+**
+**  The following are configuration parameters used to configure the cFE Event Services
+**  either for each platform or for a mission as a whole.
+**/
+```
+
+### `cfe_frontpage.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_frontpage.dox`
+
+
+```text
+/**
+  \page cfefrontpage Core Flight Executive Documentation
+
+  <UL>
+    <LI> General Information and Concepts
+    <UL>
+       <LI> \subpage cfebackground
+       <LI> \subpage cfeappdocs
+       <LI> \subpage cfsversions
+       <LI> \subpage cfedependencies
+       <LI> \subpage cfeacronyms
+       <LI> \ref cfeglossary
+    </UL>
+    <LI> Executive Services (ES)
+    <UL>
+      <LI> \subpage cfeesovr
+      <LI> \subpage cfeescmds
+      <LI> \subpage cfeestlm
+      <LI> \subpage cfe_es_eventids.h "ES Event Message Reference"
+      <LI> \subpage cfeescfg
+    </UL>
+    <LI> Events Services (EVS)
+    <UL>
+      <LI> \subpage cfeevsovr
+      <LI> \subpage cfeevscmds
+      <LI> \subpage cfeevstlm
+      <LI> \subpage cfe_evs_eventids.h "EVS Event Message Reference"
+      <LI> \subpage cfeevscfg
+    </UL>
+    <LI> Software Bus Services (SB)
+    <UL>
+      <LI> \subpage cfesbovr
+      <LI> \subpage cfesbcmds
+      <LI> \subpage cfesbtlm
+      <LI> \subpage cfe_sb_eventids.h "SB Event Message Reference"
+      <LI> \subpage cfesbcfg
+    </UL>
+    <LI> Table Services (TBL)
+    <UL>
+      <LI> \subpage cfetblovr
+      <LI> \subpage cfetblcmds
+      <LI> \subpage cfetbltlm
+      <LI> \subpage cfe_tbl_eventids.h "TBL Event Message Reference"
+      <LI> \subpage cfetblcfg
+    </UL>
+    <LI> Time Services (TIME)
+    <UL>
+      <LI> \subpage cfetimeovr
+      <LI> \subpage cfetimecmds
+      <LI> \subpage cfetimetlm
+      <LI> \subpage cfe_time_eventids.h "TIME Event Message Reference"
+      <LI> \subpage cfetimecfg
+    </UL>
+    <LI> \subpage cfeevents
+    <LI> \subpage cfecmdmnems
+    <LI> \subpage cfetlmmnems
+    <LI> \ref cfeapi
+  </UL>
+
+**/
+
+/**
+  \page cfebackground Background
+
+  The Core Flight Executive (cFE) is an application development and run-time environment. The cFE
+  provides a set of core services including Software Bus (messaging), Time, Event (Alerts), Executive
+  (startup and runtime), and Table services. The cFE defines an application programming interface (API)
+  for each service which serves as the basis for application development. <BR>
+
+  The cFE Software Bus service provides a publish and subscribe messaging system that allows applications
+  to easily plug and play into the system. Applications subscribe to cFE services at runtime, making
+  system modifications easy. Facilitating rapid prototyping, new applications can be compiled, linked, loaded,
+  and started without requiring the entire system to be rebuilt.
+
+  \image html CFSPubSub.jpg
+
+  Each service comes complete with a built in application that allows users to interface with each service. To
+  support reuse and project independence, the cFE contains a configurable set of requirements and code. The configurable
+  parameters allow the cFE to be tailored for each environment including desk-top and closed loop simulation environments.
+  This provides the ability to run and test software applications on a developer's desktop and then deploy that same software
+  without changes to the embedded system. In addition the cFE includes the following software development tools:
+
+  <ul> <li> Unit Test Framework (UTF) for unit testing applications developed via the cFE </li>
+       <li> Software Timing Analyzer that provides visibility into the real-time performance of embedded systems software </li>
+       <li> Table Builder </li>
+       <li> Command and Telemetry utilities </li> </ul>
+
+   The cFE is one of the components of the Core Flight System (cFS), a platform and project independent reusable
+   software framework and set of reusable software applications. There are three key aspects to the cFS architecture:
+   a dynamic run-time environment, layered software, and a component based design. The combination of these key aspects
+   along with an implementation targeted to the embedded software domain makes it suitable for reuse on any number of
+   NASA flight projects and/or embedded software systems. <BR>
+
+   The pivotal design feature, abstracting the software architecture from the hardware and forming the basis of reuse,
+   is component layering. Each layer of the architecture "hides" its implementation and technology details from the other
+   layers by defining and using standard Application Programming Interfaces (APIs). The internals of a layer can be changed
+   without affecting other layers' internals and components. <BR>
+
+   \image html CFSLayers.jpg
+
+   The layers include an OS Abstraction Layer (OSAL), Platform Support Package (PSP) layer, core Flight Executive (cFE) layer,
+   and an Application layer. The cFE layer runs on top of the PSP and OSAL layers. The cFE comes complete with a build
+   environment, deployment guide, API reference guide, and provides a sample PSP. The OSAL is available open source and
+   once integrated into the cFE build environment, developers will be ready to build and run the system and start developing
+   their mission/project specific applications that easily plug and play into the system.
+
+   \section cfebackground_s1 Core Flight Executive (cFE) Goals
+
+   The main long term goal of the cFE is to form the basis for a platform and project
+   independent reusable software framework. The cFE with the OSAL allow the development
+   of portable embedded system software that is independent of a particular Real Time
+   Operating System and hardware platform. A secondary long term goal is to create a
+   standardized, product-line approach for development of embedded aerospace flight
+   software. <BR>
+
+   \subsection cfebackground_s1_1 Functional and Community Goals
+
+   The cFE allows embedded system software to be developed and tested on desktop workstations
+   and ported to the target platform without changing a single line of code, providing a shorter
+   development and debug time. The cFE is an enabler of software collaboration amongst all users
+   promoting the growth of the application and library layers where new applications, libraries,
+   tools, and lessons learned can be contributed and shared. <BR>
+
+   It is important for application developers to realize the long term and functional
+   goals of the cFE.  With a standard set of services providing a standard API, all
+   applications developed with the cFE have an opportunity to become useful on
+   future missions through code reuse.  In order to achieve this goal,
+   applications must be written with care to ensure that their code does not
+   have dependencies on specific hardware, software or compilers.  The cFE and
+   the underlying generic operating system API (OS API) have been designed to
+   insulate the cFE Application developer from hardware and software dependencies.
+   The developer, however, must make the effort to identify the proper methods
+   through the cFE and OS API to satisfy their software requirements and not
+   be tempted to take a "short-cut" and accomplish their goal with a direct
+   hardware or operating system software interface.
+**/
+
+/**
+  \page cfeappdocs Applicable Documents
+
+  <TABLE>
+     <TR>
+        <TH> Document Title
+        <TH> Link
+     <TR>
+        <TD> cFE System (L4) Requirements Document
+        <TD> cfe/docs/'cfe requirements.docx'
+     <TR>
+        <TD> cFE Functional (L5) Requirements Document
+        <TD> cfe/docs/cFE_FunctionalRequirements.csv
+     <TR>
+        <TD> cFE Application Developers Guide
+        <TD> cfe/docs/'cFE Application Developers Guide.md'
+     <TR>
+        <TD> cFE User's Guide (includes API)
+        <TD> Autogenerated from code, provided with releases in cFE repository
+     <TR>
+        <TD> OS Abstraction Layer (OSAL) API
+        <TD> Autogenerated from code, provided with releases in OSAL repository
+  </TABLE>
+**/
+
+/**
+  \page cfedependencies Dependencies
+
+  The Core Flight Executive (cFE) is required to be built with the Operating System Abstraction Layer (OSAL) and Platform Support Package (PSP)
+  components of the Core Flight System (cFS).  It is always recommended to build with the latest versions of each of the components as
+  backward compatibility may not be supported. <BR>
+
+  Several internal data structures within the cFE use the "char" data type.  This data type is typically 1 byte in storage size with a value
+  range -128 to 127 or 0 to 255.  The size of the "char" data type and whether or not the type is signed or unsigned can change across
+  platforms.  The cFE assumes use of the "char" data type as an <B> 8-bit type. </B>
+
+**/
+
+/**
+  \page cfeacronyms Acronyms
+
+  <TABLE>
+     <TR>
+        <TH> Acronym
+        <TH> Description
+     <TR>
+        <TD> AC
+        <TD> Attitude Control
+     <TR>
+        <TD> ACE
+        <TD> Attitude Control Electronics
+     <TR>
+        <TD> ACS
+        <TD> Attitude Control System
+     <TR>
+        <TD> API
+        <TD> Application Programming Interface
+     <TR>
+        <TD> APID
+        <TD> CCSDS Application ID
+     <TR>
+        <TD> App
+        <TD> Application
+     <TR>
+        <TD> CCSDS
+        <TD> Consultative Committee for Space Data Systems
+     <TR>
+        <TD> CDH, C&DH
+        <TD> Command and Data Handling
+     <TR>
+        <TD> cFE
+        <TD> core Flight Executive
+     <TR>
+        <TD> cFS
+        <TD> core Flight System
+     <TR>
+        <TD> CM
+        <TD> Configuration Management
+     <TR>
+        <TD> CMD
+        <TD> Command
+     <TR>
+        <TD> CPU
+        <TD> Central Processing Unit
+     <TR>
+        <TD> EDAC
+        <TD> Error Detection and Correction
+     <TR>
+        <TD> EEPROM
+        <TD> Electrically Erasable Programmable Read-Only Memory
+     <TR>
+        <TD> ES
+        <TD> Executive Services
+     <TR>
+        <TD> EVS
+        <TD> Event Services
+     <TR>
+        <TD> FC
+        <TD> Function Code
+     <TR>
+        <TD> FDC
+        <TD> Failure Detection and Correction
+     <TR>
+        <TD> FSW
+        <TD> Flight Software
+     <TR>
+        <TD> HW, H/W
+        <TD> Hardware
+     <TR>
+        <TD> ICD
+        <TD> Interface Control Document
+     <TR>
+        <TD> MET
+        <TD> Mission Elapsed Time
+     <TR>
+        <TD> MID
+        <TD> Message ID
+     <TR>
+        <TD> OS
+        <TD> Operating System
+     <TR>
+        <TD> OSAL
+        <TD> Operating System Abstraction Layer
+     <TR>
+        <TD> PID
+        <TD> Pipeline ID
+     <TR>
+        <TD> PKT
+        <TD> Packet
+     <TR>
+        <TD> PSP
+        <TD> Platform Support Package
+     <TR>
+        <TD> RAM
+        <TD> Random-Access Memory
+     <TR>
+        <TD> SB
+        <TD> Software Bus
+     <TR>
+        <TD> SDO
+        <TD> Solar Dynamics Observatory
+     <TR>
+        <TD> ST5
+        <TD> Space Technology Five
+     <TR>
+        <TD> STCF
+        <TD> Spacecraft Time Correlation Factor
+     <TR>
+        <TD> SW, S/W
+        <TD> Software
+     <TR>
+        <TD> TAI
+        <TD> International Atomic Time
+     <TR>
+        <TD> TBD
+        <TD> To Be Determined
+     <TR>
+        <TD> TBL
+        <TD> Table Services
+     <TR>
+        <TD> TID
+        <TD> Task ID
+     <TR>
+        <TD> TIME
+        <TD> Time Services
+     <TR>
+        <TD> TLM
+        <TD> Telemetry
+     <TR>
+        <TD> UTC
+        <TD> Coordinated Universal Time
+  </TABLE>
+**/
+```
+
+### `cfe_glossary.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_glossary.dox`
+
+
+```text
+/**
+  \page cfeglossary Glossary of Terms
+
+  <TABLE>
+     <TR>
+        <TH> Term
+        <TH> Definition
+     <TR>
+        <TD> \anchor cfeadg_application Application (or App)
+        <TD> A set of data and functions that is treated as a single entity
+             by the cFE.  cFE resources are allocated on a per-Application
+             basis.  Applications are made up of a Main Task and zero or
+             more Child Tasks.
+     <TR>
+        <TD> \anchor cfeadg_applicationid Application ID
+        <TD> A processor unique reference to an Application. <BR>
+             <B> NOTE: This is different from a CCSDS Application ID which is
+             referred to as an "APID." </B>
+     <TR>
+        <TD> \anchor cfeadg_api Application Programmer's Interface (API)
+        <TD> A set of routines, protocols, and tools for building software
+             applications
+     <TR>
+        <TD> \anchor cfeadg_psp Platform Support Package (PSP)
+        <TD> A collection of user-provided facilities that interface an OS
+             and the cFE with a specific hardware platform.  The PSP is
+             responsible for hardware initialization.
+     <TR>
+        <TD> \anchor cfeadg_childtask Child Task
+        <TD> A separate thread of execution that is spawned by an
+             Application's Main Task.
+     <TR>
+        <TD> \anchor cfeadg_command Command
+        <TD> A Software Bus Message defined by the receiving Application.
+             Commands can originate from other onboard Applications or
+             from the ground.
+     <TR>
+        <TD> \anchor cfeadg_cfe Core Flight Executive (cFE)
+        <TD> A runtime environment and a set of services for hosting FSW
+             Applications
+     <TR>
+        <TD> \anchor cfeadg_cds Critical Data Store (CDS)
+        <TD> A collection of data that is not modified by the OS or
+             cFE following a Processor Reset.
+     <TR>
+        <TD> \anchor cfeadg_crc Cyclic Redundancy Check
+        <TD> A polynomial based method for checking that a data set
+             has remained unchanged from one time period to another.
+     <TR>
+        <TD> \anchor cfeadg_developer Developer
+        <TD> Anyone who is coding a cFE Application.
+     <TR>
+        <TD> \anchor cfeadg_eventdata Event Data
+        <TD> Data describing an Event that is supplied to the cFE
+             Event Service. The cFE includes this data in an
+             \ref cfeadg_eventmessage "Event Message".
+     <TR>
+        <TD> \anchor cfeadg_eventfilter Event Filter
+        <TD> A numeric value (bit mask) used to determine how
+             frequently to output an application Event Message
+             defined by its \ref cfeadg_eventid "Event ID".
+     <TR>
+        <TD> \anchor cfeadg_eventformatmode Event Format Mode
+        <TD> Defines the Event Message Format downlink option: short or long.
+             The short format is used when there is limited telemetry bandwidth 
+             and is binary.  The long format is in ASCII and is used for
+             logging to a Local Event Log and to an Event Message Port.
+     <TR>
+        <TD> \anchor cfeadg_eventid Event ID
+        <TD> A numeric literal used to uniquely name an Application event.
+     <TR>
+        <TD> \anchor cfeadg_eventtype Event Type
+        <TD> A numeric literal used to identify the type of an Application event.
+             An event type may be #CFE_EVS_EventType_DEBUG, #CFE_EVS_EventType_INFORMATION,
+             #CFE_EVS_EventType_ERROR, or #CFE_EVS_EventType_CRITICAL.
+     <TR>
+        <TD> \anchor cfeadg_eventmessage Event Message
+        <TD> A data item used to notify the user and/or an external
+             \ref cfeadg_application "Application" of a significant event.
+             Event Messages include a time-stamp of when the message was
+             generated, a processor unique identifier, an
+             \ref cfeadg_applicationid "Application ID", the
+             \ref cfeadg_eventtype "Event Type" (DEBUG,INFO,ERROR or CRITICAL),
+             and \ref cfeadg_eventdata "Event Data".  An Event Message can
+             either be real-time or playback from a Local Event Log.
+  </TABLE>
+**/
+```
+
+### `cfe_sb.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_sb.dox`
+
+
+```text
+/**
+  \page cfesbovr cFE Software Bus Overview
+
+  The Software Bus (SB) handles communication between software tasks on a processor.
+  All tasks communicate with each other, with hardware devices, and with the ground
+  by sending command and telemetry messages.  The software bus provides an application
+  programming interface (API) to other tasks for sending and receiving messages.
+  This API is independent of the underlying operating system so that tasks can use
+  the same interface regardless of which processor they reside on.  Refer to the \ref cfeapi for detailed information about the API functions.
+
+  The software bus is used internally by the flight software, and normally does not
+  require attention from the ground.  However, because of the scalability and the
+  dynamic nature of the software bus, it is strongly recommended that each project
+  carefully review the SB statistics and SB memory pool to be sure adequate margin is
+  met on the configurable items.
+
+  The cFE software bus uses a dynamic protocol and builds its routing table at run-time through
+  the SB subscribe API's. Also the cFE software bus pipes are created at run-time through
+  the #CFE_SB_CreatePipe API. Because the routing is established, and pipes are created
+  at run-time, it is necessary to have a clear view of the routing details on command.
+  The cFE software bus allows the user to dump the routing table, the pipe table, the
+  message map and the statistics packet. Each of these items are described in detail
+  in the corresponding section of this document.
+
+  <UL>
+    <LI> \subpage cfesbugterms <BR>
+    <LI> \subpage cfesbugauto <BR>
+    <LI> \subpage cfesbugops <BR>
+    <LI> \subpage cfesbugfaq <BR>
+  </UL>
+**/
+
+/**
+  \page cfesbugterms Software Bus Terminology
+
+  In order to fully understand the Software Bus, it is imperative that the basic terms
+  used to describe its features are also understood.  Below are the critical terms that
+  help identify what the Software Bus accomplishes for each Application:
+
+  <UL>
+     <LI> \subpage cfesbugmsgs <BR>
+     <LI> \subpage cfesbugpipes <BR>
+     <LI> \subpage cfesbugsubs <BR>
+     <LI> \subpage cfesbugmem <BR>
+  </UL>
+**/
+
+/**
+  \page cfesbugmsgs Messages
+
+  The sole purpose of the software bus is to provide applications a way to send
+  messages to each other. The term message and the term packet are used
+  interchangeably throughout this document. A message is a combined set of bytes
+  with a predefined format that is used as the basis of communication on a spacecraft.
+  All commands, telemetry, and other data that are passed between the ground and
+  the spacecraft, and between subsystems of the spacecraft, are considered to be
+  messages. The most common message format is CCSDS (Consultative Committee for
+  Space Data Systems) in <a href="https://public.ccsds.org/Pubs/133x0b2.pdf">
+  CCSDS Space Packet Protocol</a>, but can be customized by replacing the message module.
+
+  There are two general types of messages - commands (or command packets) and
+  telemetry (or telemetry packets).  Command packets are sent to a particular
+  software task from the ground (or another task).  Telemetry packets are sent
+  from a particular software task to the ground (or other tasks).
+
+  The concept of a message identifier is utilized to provide abstraction
+  from header implementation, often abbreviated as message ID, MsgId, or MID.
+  Header and message identifier values should not be accessed directly to
+  avoid implementation specific dependencies.
+
+  Telemetry packets typically contain a timestamp that indicates when the packet
+  was produced.  Command packets typically contain a command code that identifies
+  the particular type of command.
+
+  The message module provides APIs for 'setting' and 'getting' the fields in the
+  header of the message.  The message module was separated from software bus
+  to enable users to customize message headers without requiring clone and
+  own of the entire cfe repository.  To customize, remove the built in msg
+  module from the build and replace with custom implementation.  See sample
+  target definitions folder for examples.
+
+  Following the header is the user defined message data.
+**/
+
+/**
+  \page cfesbugpipes Pipes
+
+  The destinations to which messages are sent are called pipes.  These are queues
+  that can hold messages  until they are read out and processed by a task.  Each
+  pipe is created at run-time through the #CFE_SB_CreatePipe API.  The pipe name
+  and the pipe depth are given as arguments in the API. The pipe identifier (or
+  PipeId) is given back to the caller after the API is executed. Each pipe can be
+  read by only one task, but a task may read more than one pipe. Only the pipe
+  owner is allowed to subscribe to messages on the pipe.
+
+  The Pipe IDs are specific to a particular processor (that is, the same ID number
+  may refer to a different pipe on each processor).  The pipe information for all
+  pipes that have been created, may be requested at anytime by sending the
+  \link #CFE_SB_WRITE_PIPE_INFO_CC 'Write Pipe Info' SB command \endlink. The software
+  bus also provides a set of figures regarding capacity, current utilization and high
+  water marks relevant to pipes. This information may be requested by sending the
+  command to \link #CFE_SB_SEND_SB_STATS_CC dump the SB statistics packet \endlink.
+**/
+
+/**
+  \page cfesbugsubs Subscriptions
+
+  A subscription is a run-time request for a particular message to be sent to a
+  particular pipe. If the caller of the subscribe API is not the owner of the
+  pipe, the request is rejected and an error event is sent. The application
+  that creates the pipe is considered the owner of the pipe. The pipe specified
+  in the subscription is sometimes referred to as the destination of the message.
+  There are a maximum number of destinations for a particular message. This
+  value is specified by the platform configuration parameter
+  #CFE_PLATFORM_SB_MAX_DEST_PER_PKT.
+
+  As subscriptions are received, the destinations are added to the head of a
+  linked list. During the sending of a message, the list is traversed beginning
+  at the head of the list. Therefore the message will first be sent to the last
+  subscriber. If an application has timing constraints and needs to receive a
+  message in the shortest possible time, the developer may consider holding off
+  its subscription until other applications have subscribed to the message.
+
+  The message limit specifies the maximum number of messages (with the specified
+  Message ID) that are allowed on the specified pipe at any time. This limit is
+  specified by the application at the time of the subscription. If the application
+  uses the #CFE_SB_Subscribe API, a message limit default value of four is used.
+  If this default value is not sufficient, the caller would use the
+  #CFE_SB_SubscribeEx API that allows the message limit to be specified.
+
+  The software bus also provides the user with an option to unsubscribe to a
+  message. The \link #CFE_SB_Unsubscribe unsubscribe API \endlink takes two
+  parameters, Message ID and Pipe ID. Only the owner of a pipe may unsubscribe
+  to messages on that pipe.
+**/
+
+/**
+  \page cfesbugmem Memory
+
+  The software bus statically allocates a block of memory for message buffers and
+  subscription blocks. The size of this memory block is defined by the platform configuration
+  parameter #CFE_PLATFORM_SB_BUF_MEMORY_BYTES. The memory is managed by the cFE ES memory
+  pool and is used only by the software bus. The ES memory pool allows an application to define
+  the block sizes for the pool at compile time. These sizes are defined by the platform
+  configuration parameters prefixed with CFE_SB_MEM_BLOCK_SIZE (for example, #CFE_PLATFORM_SB_MEM_BLOCK_SIZE_01).
+  It is recommended that a project tailor these values for the mission, based on the software
+  bus packet sizes.
+
+  At the time a message is sent, two buffers are allocated from the pool. One for a
+  buffer descriptor (CFE_SB_BufferD_t) and one for the size of the packet. Both buffers
+  are returned to the pool when the message has been received by all recipients. More
+  precisely, if there is one recipient for a message, the message buffers will be released
+  on the following call to CFE_SB_ReceiveBuffer for the pipe that received the buffer.
+
+  Also when subscriptions are received through the subscribe API's, the software bus
+  allocates a subscription block (CFE_SB_DestinationD_t) from the pool. The subscription
+  blocks are returned to the pool if and when the subscription is nullified through a
+  #CFE_SB_Unsubscribe call.
+
+  The software bus provides a set of figures regarding memory capacity, current memory
+  utilization and high water marks relevant to the SB memory pool. This information may be
+  requested by sending the command to dump the SB statistics packet. In addition, the
+  current memory utilization value and the 'unmarked memory' value (#CFE_PLATFORM_SB_BUF_MEMORY_BYTES
+  minus peak memory in use)  are sent in software bus housekeeping telemetry. The unmarked
+  memory value  should be monitored regularly to ensure that the value (in bytes) does not
+  continue to decline or approach zero. If this value were to approach zero, there is a
+  possibility that memory requests would fail which may inhibit the sending of a message.
+  The current memory utilization value should also be monitored to ensure the system
+  contains no memory leaks. The value (in bytes) should remain stable under nominal
+  conditions.
+  Refer to the ES users guide for more information regarding the ES Memory Pool.
+**/
+
+/**
+  \page cfesbugauto Autonomous Actions
+
+  The software bus is primarily a set of library routines that are called by other software
+  tasks to send and receive packets.  The software bus does not perform any operations
+  autonomously, except for sending event messages if errors are detected during the transfer
+  of packets.
+
+  As do other tasks, the SB task sends out housekeeping telemetry when requested through the
+  'Send Housekeeping Data' command.
+**/
+
+/**
+  \page cfesbugops Operation of the SB Software
+
+  <UL>
+     <LI> \subpage cfesbuginit <BR>
+     <LI> \subpage cfesbugreset <BR>
+     <LI> \subpage cfesbugrouting <BR>
+     <LI> \subpage cfesbugpktseqvals <BR>
+     <LI> \subpage cfesbugmsgpipeerr <BR>
+     <LI> \subpage cfesbugovererr <BR>
+     <LI> \subpage cfesbugeventfilt <BR>
+     <LI> \subpage cfesbugdiagdata <BR>
+     <LI> \subpage cfesbugroutcntrl <BR>
+     <LI> \subpage cfesbugqos <BR>
+     <LI> \subpage cfesbugknwnprob <BR>
+  </UL>
+**/
+
+/**
+  \page cfesbuginit Initialization
+
+  No action is required by the ground to initialize the software bus. The software bus initializes
+  internal data structures and tables the same way regardless of the type of reset.
+**/
+
+/**
+  \page cfesbugreset All Resets
+
+  The software bus does not preserve any information across a reset of any kind. The software bus
+  initializes internal data structures and tables the same way regardless of the type of reset.
+  The routing is reestablished as the system initializes. It is normal procedure for each task
+  of the system to create the pipe or pipes it needs and do all of its subscriptions during
+  task initialization.
+
+  After any reset the following statements are true:
+
+  <UL>
+     <LI> The routing table is cleared and does not contain any routes. <BR>
+     <LI> All subscriptions are lost and must be regenerated. <BR>
+     <LI> The pipe table contains no data, all pipes must be recreated. <BR>
+     <LI> Any packets in transit at the time of the reset are lost. <BR>
+     <LI> The sequence counters for telemetry packets will begin again with a value of one. <BR>
+  </UL>
+**/
+
+/**
+  \page cfesbugrouting Message Routing
+
+  In the software bus, all messages are processed in a similar way. The software bus uses the
+  Message ID and the packet length fields (contained in the header) for routing the message
+  to the destination pipe. If either of these two fields do not pass validation, the software
+  bus generates an error event and aborts the delivery process. The software bus performs some
+  validation checks by simply checking message header values against mission or platform
+  configuration parameters. Messages originating from various tasks or instruments are routed
+  to one or more pipes, where they wait until read by a task.  The routing configuration for
+  each message is established when applications call one of the SB subscribe APIs. The subscribe
+  APIs take a Message ID and a Pipe ID as parameters. The routing for each packet is stored in
+  SB memory and may be requested at any time by sending the 'Send Routing Info' command. The
+  software bus also provides a set of figures regarding capacity, current utilization and high
+  water marks relevant to the routing. This information may be requested by sending the command
+  to dump the SB statistics packet.
+**/
+
+/**
+  \page cfesbugpktseqvals Packet Sequence Values
+
+  The sequence count behavior depends on if the message is a command type or telemetry type.
+
+  The sequence counter for command messages is not altered by the software bus.
+
+  For a telemetry message, the behavior is controlled via API input parameters when sending.
+  When enabled, the software bus will populate the packet sequence
+  counter using an internal counter that gets initialized upon the first subscription to the
+  message (first message will have a packet sequence counter value of 1).  From that point on
+  each send request will increment the counter by one, regardless of the number of destinations
+  or if there is an active subscription.
+
+  After a rollover condition the sequence counter will be a value of zero for one instance.
+  The sequence counter is incremented after all the checks have passed prior to the actual
+  sending of the message. This includes the parameter checks and the memory allocation check.
+
+  When disabled, the original message will not be altered.  This method of message delivery
+  is recommended for situations where the sender did not generate the packet,
+  such as a network interface application passing a packet from a remote system to the local
+  software bus.
+**/
+
+/**
+  \page cfesbugmsgpipeerr Message Limit Error
+
+  Before placing a message on a pipe, the software bus checks the message limit to
+  ensure the maximum number of packets in transit to the destination is not exceeded.
+  If placing the message on the pipe would exceed the message limit, then the action
+  of sending to that pipe is aborted and the 'Message Limit Error' event is
+  sent. This condition will typically occur when an application that receives the
+  packets does not respond quickly enough, or if the sender of the packets produces
+  them too quickly.
+
+  This condition occurs often during development and during integration, for example
+  when a remote processor gets reset or a 1553 cable becomes disconnected.  Because
+  of the common occurrences, the event may have filtering associated with it. Any
+  filtering for this event would be performed by the cFE Event Services (EVS). Filtering
+  for SB events may be specified in the cFE platform configuration file or may be
+  commanded after the system initializes.
+
+  If this error occurs during nominal conditions, it could be an indication that the
+  'message limit' is not set correctly. The message limit is given at the time of the
+  subscription and given as a parameter in the subscribe API. With the #CFE_SB_Subscribe
+  API, the SB uses a default message limit value specified by #CFE_PLATFORM_SB_DEFAULT_MSG_LIMIT.
+  This constant is currently set to a value of four. If the default value is insufficient,
+  the message limit value can be specified in the #CFE_SB_SubscribeEx API.
+
+  A related failure is the pipe overflow condition, which can occur if the total number
+  of packets (of all kinds) sent to a particular pipe is too large.
+**/
+
+/**
+  \page cfesbugovererr Pipe Overflow Error
+
+  Another common error that occurs during the send process is the pipe overflow error.
+  This condition occurs if the total number of packets (of all kinds) sent to a particular
+  pipe is too large.  If this error occurs too frequently, it may be an indication that
+  the pipe depth is not set correctly. The pipe depth is given at the time the pipe is
+  created as a parameter in the #CFE_SB_CreatePipe API.
+**/
+
+/**
+  \page cfesbugeventfilt SB Event Filtering
+
+  Most filtering for SB events is performed by the cFE Event Services (EVS). Filtering for
+  SB events may be specified in the cFE platform configuration file or may be commanded
+  after the system initializes. There is no SB event log that limits the number of events
+  based on the capacity of the log, as in the heritage software bus.
+
+  There is one case in which events are filtered by the software bus instead of event services.
+  This occurs when the software bus needs to suppress events so that a fatal recursive event
+  condition does not transpire. Because error cases encountered when sending a message generate
+  an event, and events cause a message to be sent
+  a calling sequence could cause a stack overflow if the recursion is not properly terminated.
+  The cFE software bus detects this condition and properly terminates the recursion. This is
+  done by using a set of flags (one flag per event in the Send API) which determine whether
+  an API has relinquished its stack. If the software bus needs to send an event that may
+  cause recursion, the flag is set and the event is sent. If sending the event would cause
+  the same event again, the event call will be bypassed, terminating the
+  recursion. The result is that the user will see only one event instead of the many events
+  that would normally occur without the protection. The heritage software bus did not have
+  this condition because it stored events in the software bus event log and another thread
+  would read them out at a later time.
+**/
+
+/**
+  \page cfesbugdiagdata Diagnostic Data
+
+  The cFE software bus provides a set of commands to dump SB diagnostic data to help
+  troubleshoot problems or check configuration settings. These commands allow the
+  user to view the routing table, the pipe table or the message map. The message map
+  is a lookup table used during a send operation to give fast access to the routing
+  table index that corresponds to the message being sent.
+
+  The software bus also provides a statistics packet that can be used to tune the
+  configuration parameters. This information is sent to the ground in the form of
+  an SB packet when the corresponding command is received. The cFE limits the number
+  of system pipes, unique Message IDs, buffer memory, messages on a pipe and
+  subscriptions per Message ID. These limits are configurable through cFE platform
+  and mission configuration parameters. The statistics packet was designed to let
+  the project verify that these user settings provide the necessary margin to meet
+  requirements.
+
+  The SB statistics information shows 'Currently In Use' figures, 'High Water Mark'
+  figures and 'Max Allowed' figures for the following: buffer memory, messages on
+  each pipe (pipe depth stats), System Pipes, Unique Message IDs and total subscriptions.
+
+  Depending on the task-scheduling implementation details of the operating system, it is
+  possible to see the peak messages on a pipe occasionally exceed the depth of the pipe.
+  The "Peak Messages In Use" parameter is included in the SB statistics packet under the
+  pipe depth stats.
+**/
+
+/**
+  \page cfesbugroutcntrl Control of Packet Routing
+
+  The software bus allows the ground to disable and enable the sending of packets of a
+  specified Message ID to a specified pipe.  All destinations that are needed for normal
+  operation are enabled by default.  Modifying the routing of packets may be required
+  for the following reasons:
+
+  <UL>
+     <LI> In flight, one can enable diagnostic packets to see them on the ground. <BR>
+     <LI> During testing, one can disable a destination to simulate an anomaly.<BR>
+  </UL>
+**/
+
+/**
+  \page cfesbugqos Quality of Service
+
+  The software bus has a parameter in the #CFE_SB_SubscribeEx API named Quality, which means
+  Quality of Service (QOS) for off-board routing and is of the type #CFE_SB_Qos_t. This structure
+  has two members named priority and reliability. The Quality parameter is currently unused by
+  the software bus. It is a placeholder to be used with the future software bus capability of
+  inter-processor communication. Although currently the software bus does not implement quality
+  of service.
+
+  A default quality of services is provided via the #CFE_SB_DEFAULT_QOS macro.
+**/
+
+/**
+  \page cfesbugknwnprob Known Problem
+
+  The software bus may perform unexpectedly under an unlikely corner-case scenario. This
+  scenario was revealed in a stress test. The stress test was designed to deplete the Software
+  Bus memory pool by having a high priority application continuously send 1000 byte packets
+  to a lower priority application until the memory pool code returned an error code and sent
+  the following event. "CFE_ES:getPoolBuf err:Request won't fit in remaining memory" At this
+  point the higher priority sending application would stop executing. This would allow the
+  lower priority receiving application to begin receiving the 1000 byte packets. After the
+  receiving app processed all of the packets, the memory was restored to the memory pool as
+  expected. The SB memory-in-use telemetry was zero because there were no software bus
+  packets in transit. At this point any attempt to send a new-sized packet on the software
+  bus was be rejected. The ES memory pool stated that the "…Request won't fit in remaining
+  memory" even though there was currently no memory in use.
+
+  The simplest way to prevent this behavior is to ensure that there is margin when sizing the
+  SB memory pool. To check the margin, monitor the "Peak Memory in Use" vs. the configuration
+  parameter #CFE_PLATFORM_SB_BUF_MEMORY_BYTES which indicates the amount allocated.
+**/
+
+/**
+  \page cfesbugfaq Frequently Asked Questions about Software Bus
+
+  <B> (Q)
+     How is the memory pool handle (sent in SB housekeeping telemetry) intended to be used?
+  </B> <BR> <BR> <I>
+     The memory pool handle is used to analyze the SB memory pool statistics. The cFE ES
+     command (#CFE_ES_SEND_MEM_POOL_STATS_CC) to dump the memory pool statistics takes the pool handle
+     as a parameter. These statistics tell how the SB memory pool is configured and gives details
+     on margin. An improperly configured SB memory pool may inhibit communication. This may occur
+     if there is not enough margin to create a block of the size needed for a transfer. Refer to
+     the ES memory pool users guide for more details. \ref cfeesugmempoolsrv <BR>
+  </I>
+
+  <B> (Q)
+     When sending a message, what message header
+     fields are critical for routing the message?
+  </B> <BR> <BR> <I>
+     To route the message properly, the software bus uses only the Message ID and
+     packet length fields from the header of the message. If the packet length field
+     is incorrect, then the buffer allocation for the message will also be incorrect.
+     This may appear to the receiver as a truncated message or a message with unknown
+     data added to the end of the message.
+  </I>
+
+  <B> (Q)
+     How many copies of the message are performed in a typical message delivery?
+  </B> <BR> <BR> <I>
+     There is a single copy of the message performed when sending a message
+     (from the callers memory space) using CFE_SB_TransmitMsg.
+     When transmitting the message, the software bus copies the message from the
+     callers memory space into a buffer in the software bus memory space. There
+     is also the option to request a buffer from SB, write directly to the buffer
+     and send via CFE_SB_TransmitBuffer.  This is equivalent to the previous zero
+     copy implementation.
+     The #CFE_SB_ReceiveBuffer API gives the user back a pointer to the buffer. When
+     working with the buffers, the additional complexity to be aware of is the
+     buffer is only available to the app from the request to send (on the sending side),
+     or from the receive until the next receive on the same pipe on the receiving side.
+     If the data is required outside that scope, the app needs a local copy.
+  </I>
+
+  <B> (Q)
+     When does the software bus free the buffer during a typical message
+     delivery process? Or how long is the message, and the pointer to the buffer
+     in the #CFE_SB_ReceiveBuffer valid?
+  </B> <BR> <BR> <I>
+     After receiving a buffer by calling #CFE_SB_ReceiveBuffer, the buffer received is valid
+     until the next call to #CFE_SB_ReceiveBuffer with the same Pipe Id.
+     If the caller needs the message longer than the next call to
+     #CFE_SB_ReceiveBuffer, the caller must copy the message to its memory space.
+  </I>
+
+  <B> (Q)
+     The first parameter in the #CFE_SB_ReceiveBuffer API is a pointer to a pointer which
+     can get confusing. How can I be sure that the correct address is given for this
+     parameter.
+  </B> <BR> <BR> <I>
+     Typically a caller declares a ptr of type CFE_SB_Buffer_t (i.e. CFE_SB_Buffer_t *Ptr)
+     then gives the address of that pointer (&Ptr) as this parameter. After a successful
+     call to #CFE_SB_ReceiveBuffer, Ptr will point to the first byte of the software bus
+     buffer. This should be used as a read-only pointer. In systems with an MMU, writes
+     to this pointer may cause a memory protection fault.
+  </I>
+
+  <B> (Q)
+     Why am I not seeing expected Message Limit error events or Pipe Overflow events?
+  </B> <BR> <BR> <I>
+     It is possible the events are being filtered by cFE Event Services. The filtering
+     for this event may be specified in the platform configuration file or it may have
+     been commanded after the system initializes.<BR>
+     There is a corresponding counter for each of these conditions. First verify that
+     the condition is happening by viewing the counter in SB HK telemetry. If the
+     condition is happening, you can view the SB filter information through the EVS
+     App Data Main page by clicking the 'go to' button for SB. The event Id for these
+     events can be learned through a previous event or from the cfe_sb_eventids.h file.
+  </I>
+
+  <B> (Q)
+     Why does the SB provide event filtering through the platform configuration file?
+  </B> <BR> <BR> <I>
+     To give the user the ability to filter events before an EVS command can be sent.
+     During system initialization, there are many conditions occurring that can cause
+     a flood of SB events such as No Subscribers, Pipe Overflow and MsgId to Pipe errors.
+     This gives the user a way to limit these events.
+  </I>
+
+  <B> (Q)
+     Why does SB have so many debug event messages?
+  </B> <BR> <BR> <I>
+     The SB debug messages are positive acknowledgments that an action (like receiving a
+     cmd, creating a pipe or subscribing to a message) has occurred. They are intended to
+     help isolate system problems. For instance, if an expected response to a command is
+     not happening, it may be possible to repeat the scenario with the debug event turned
+     on to verify that the command was successfully received.
+  </I>
+
+  <B> (Q)
+     How is the QOS parameter in the #CFE_SB_SubscribeEx used by the software bus?
+  </B> <BR> <BR> <I>
+     The QOS parameter is currently unused by the software bus. It is a placeholder to be
+     used with the future software bus capability of inter-processor communication. Setting
+     the QOS as #CFE_SB_DEFAULT_QOS will ensure seamless integration when the software bus
+     is expanded to support inter-processor communication.
+  </I>
+
+  <B> (Q)
+     Can I confirm my software bus buffer was delivered?
+  </B> <BR> <BR> <I>
+     There is no built in mechanism for confirming delivery (it could span systems).
+     This could be accomplished by generating a response message from the receiver.
+  </I>
+**/
+
+/**
+**  \page cfesbcmds cFE Software Bus Commands
+**
+**  Upon receipt of any command, the Software Bus application will confirm that the
+**  message length embedded within the header (from `CFE_MSG_GetSize()`) matches the expected
+**  length of that message, based on the size of the C structure defining that command.
+**  If there is any discrepancy between the expected and actual message size, SB will generate
+**  the #CFE_SB_LEN_ERR_EID event, increment the command error counter (\SB_CMDEC), and the
+**  command will _not_ be accepted for processing.
+**
+**  The following is a list of commands that are processed by the cFE Software Bus Task.
+**/
+
+/**
+**  \page cfesbtlm  cFE Software Bus Telemetry
+**
+**  The following are telemetry packets generated by the cFE Software Bus Task.
+**/
+
+/**
+**  \page cfesbcfg  cFE Software Bus Configuration Parameters
+**
+**  The following are configuration parameters used to configure the cFE Software Bus
+**  either for each platform or for a mission as a whole.
+**/
+```
+
+### `cfe_tbl.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_tbl.dox`
+
+
+```text
+/**
+  \page cfetblovr cFE Table Services Overview
+
+  Applications often organize sets of their parameters into logical units called tables.  These are typically
+  constant parameters that can change the behavior of a flight software algorithm and are only intended
+  to be modified by operations personnel.  Examples of this would be attitude control gains, sensor
+  scalefactors, telemetry filter settings, etc.
+
+  Table Services (TBL) provides a centralized control of flight software tables. Operations personnel would
+  interact with TBL in order to dump the contents of current tables, load new table images, verify the contents
+  of a table image and manage Critical tables.
+
+  None of the cFE core applications (EVS, SB, ES, TIME, or TBL) use tables, and it is possible
+  to build cFE without Table Services if not needed or an alternative parameter management mechanism
+  is to be utilized.
+
+  For additional detail on Tables and how to manage them, see the following sections:
+
+  <UL>
+    <LI> \subpage cfetblugmanage <BR>
+    <LI> \subpage cfetblugtypes <BR>
+    <LI> \subpage cfetblugregistry <BR>
+    <LI> \subpage cfetblugtelemetry <BR>
+    <LI> \subpage cfetblugprocreset <BR>
+    <LI> \subpage cfetblugfaq <BR>
+  </UL>
+**/
+
+/**
+  \page cfetblugmanage Managing Tables
+
+  In order to effectively manage tables, an operator needs to understand how cFE Applications
+  manage tables from their end.  There are a number of methods that cFE Applications typically
+  use to manage their tables.  Each method is appropriate based upon the nature of the contents
+  of the table.
+
+  cFE Applications are required to periodically check to see if their table is to be validated,
+  updated (or in the case of dump-only tables, dumped).  Most Applications perform this periodic
+  management at the same time as housekeeping requests are processed.  This table management is
+  performed by the cFE Application that "owns" a table (ie - the cFE Application that registered
+  the table with cFE Table Services).  It is possible for cFE Applications to "share" a table with
+  other cFE Applications.  An Application that shares a table does not typically perform any of the
+  management duties associated with that table.
+
+  A table can have one of two different types and a number of different options.  These are
+  discussed further in later sections.  An operator should understand the chosen type and
+  selected options for a particular table before attempting to modify a table's contents.
+
+  To understand the methods of maintaining a table, it is important that the terminology be clear.
+  A table has two images: "Active" and "Inactive".  The Active table is the one that a cFE Application
+  is currently accessing when it executes.  The Inactive table is a copy of the Active table that
+  an operator (or on-board process such as a stored command processor) can manipulate and change
+  to have a newly desired set of data.
+
+  To create an Inactive table image on board, the operator would be required to perform a "Load" to the
+  table.  Loads are table images stored in on-board files.  The Load can contain either a complete
+  table image or just a part of a table image.  If the Load contains just a portion, the Inactive
+  image is first initialized with the contents of the Active image and then the portion identified
+  in the Load file is written on top of the Active image.  After the initial Load, an operator can
+  continue to manipulate the Inactive table image with additional partial table load images.  This
+  allows the operator to reconfigure the contents of multiple portions of the table before deciding
+  to "Validate" and/or "Activate" it.
+
+  Some cFE Applications provide special functions that will examine a table image to determine if
+  the contents are logically sound.  This function is referred to as the "Validation Function."  When
+  a cFE Application assigns a Validation Function to a table during the table registration process,
+  it is then requiring that a Validation be performed before the table can be Activated.  When an
+  operator requests a Validation of a table image, they are sending a request to the owning Application
+  to execute the associated Validation Function on that image.  The results of this function are then
+  reported in telemetry.  If the Validation is successful, the operator is free to perform a table
+  Activation.  If the Validation fails, the operator would be required to make additional changes
+  to the Inactive table image and attempt another Validation before commanding an Activation.
+
+  To change an Inactive table image into the Active table image, an operator must Activate a table.
+  When an operator sends the table Activation command, they are notifying the table's owning Application
+  that a new table image is available.  It is then up to the Application to determine when is the best
+  time to perform the "Update" of the table.  When an Application performs an Update, the contents of
+  the Inactive table image become the Active table image.
+**/
+
+/**
+  \page cfetblugtypes cFE Table Types and Table Options
+
+  A cFE Application Developer has several choices when creating a cFE Application.  There are
+  two basic types of tables: single buffered and double buffered.  In addition to these two basic types
+  there are a small variety of options possible with each table.  These options control special
+  characteristics of the table such as whether it is dump-only, critical or whether it has an
+  application defined location in memory.
+
+  Each choice has its advantages and disadvantages.  The developer chooses the appropriate type
+  based upon the requirements of the application.  Anyone operating a particular cFE Application
+  must understand the nature of the type and options selected for a particular table before they
+  can successfully understand how to perform updates, validations, etc.
+
+  For more information on the different types of tables available, see the following sections:
+
+  <UL>
+    <LI> Table Types <BR>
+    <UL>
+       <LI> \subpage cfetblugsnglbuff <BR>
+       <LI> \subpage cfetblugdblbuff <BR>
+    </UL>
+    <LI> Table Options <BR>
+    <UL>
+       <LI> \subpage cfetblugvalfunc <BR>
+       <LI> \subpage cfetblugcritical <BR>
+       <LI> \subpage cfetbluguserdef <BR>
+       <LI> \subpage cfetblugdumponly <BR>
+    </UL>
+  </UL>
+**/
+
+/**
+  \page cfetblugsnglbuff Single Buffered Tables
+
+  The default table type for a cFE Application to use is a single buffered table.  The principle
+  advantage of a single buffered table is that it can share one of several shared table buffers
+  for uploaded and pending table images.  Since many cFE Applications have relatively small tables
+  that are not changed at time critical moments or are not changed very often during a mission,
+  single buffered tables represent the most memory resource efficient method of being managed.
+
+  The number of single buffered tables that can have inactive table images being manipulated at one
+  time is specified by a TBL Services configuration parameter (#CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS) found
+  in the cfe_platform_cfg.h file associated with the processor in question.  This parameter identifies
+  the number of shared table buffers that are available.
+
+  Since inactive single buffered table images share a common resource, it may not be prudent for an
+  operator to load an image and then delay on the image's activation for an extended period of time.
+
+  Single buffered tables are allowed to be critical (see \ref cfetblugcritical), dump-only
+  (see \ref cfetblugdumponly) and/or have a user-defined address (see \ref cfetbluguserdef).
+**/
+
+/**
+  \page cfetblugdblbuff Double Buffered Tables
+
+  Under certain conditions, a cFE Application Developer may choose to use a double buffered table
+  type within their application.  Double buffered tables retain a dedicated inactive image of the
+  table data.  With a dedicated inactive table image available, double buffered tables are then
+  capable of efficiently swapping table contents and/or delaying the activation of a table's contents
+  for an indeterminate amount of time.
+
+  Some cFE Applications prefer to delay the Activation of a table until a specified time (e.g. - a
+  Spacecraft Ephemeris).  These tables are typically defined as double buffered tables so that the
+  Inactive image can be left sitting untouched for an extended period of time without interfering
+  with shared resources for other tables.  Then the Application can perform the Update when the time
+  is right.
+
+  Applications which have unusually large tables may decide to conserve memory resources by making
+  them double buffered.  This is because the shared buffers used by single buffered tables must be
+  sized to match the largest table.  If there is one table that is unusually large, there is little
+  reason to allocate up to #CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS number of buffers that size.  A double
+  buffered table will only allocate ONE extra buffer of that size.
+
+  Performance minded Applications that are required to perform processing with tight timing deadlines
+  may choose to use double buffered tables because the Update for a double buffered table is deterministic
+  and quick.
+**/
+
+/**
+  \page cfetblugvalfunc Tables with Validation Functions
+
+  Applications that associate Validation Functions with their tables when the tables are registered are
+  effectively requiring that the contents of a table be logically Validated before it is Activated. The
+  cFE will refuse to let a table with an associated Validation Function be Activated until a successful
+  Validation on the Inactive table image has occurred.
+
+  Tables that are NOT assigned a Validation Function are assumed to be valid regardless of the contents
+  of the table image. These tables do not require a Validation Command prior to Activation.
+**/
+
+/**
+  \page cfetblugcritical Critical Tables
+
+  Applications that must be able to recover quickly from a Processor Reset may select the "Critical" table
+  option when registering their table.  Table Services automatically creates a Critical Data Store for the
+  table and ensures that the contents of the Critical Data Store are updated whenever a Table Activation
+  occurs.
+
+  If a Processor Reset happens, when the Application attempts to Register the table again, Table Services
+  automatically locates the associated Critical Data Store and initializes the Table with the saved contents.
+**/
+
+/**
+  \page cfetbluguserdef User Defined Address Tables
+
+  In order to provide a mechanism for Flight Software Maintenance teams to quickly create a table image
+  for dumping contents of memory that isn't normally loaded by the ground, there is an option to create
+  User-Defined Address tables.  These tables, when they are first registered, provide a memory address
+  where the Active image of the table is to be maintained.  Normally, the address is specified by Table
+  Services from its memory pool.
+
+  By specifying the address, the Flight Software Maintenance team can create a Dump-Only table that contains
+  the contents of a data structure that is not normally accessible via telemetry or table dumps. Then, on
+  command, the Flight Software Maintenance team can periodically dump the data structure's contents to an
+  on-board file(s) that can then be transferred to the ground for later analysis.
+**/
+
+/**
+  \page cfetblugdumponly Dump Only Tables
+
+  On occasion, cFE Applications require a segment of memory in which the Application writes data.  The typical
+  cFE Table is not normally modified directly by an Application but only via Load and Activate commands from
+  either the Ground or Stored Command Processor.  However, for those situations where an Application wishes to
+  modify the contents of a data structure and the Application is limited in its telemetry bandwidth so that the
+  modified data cannot be telemetered, the Application can create a Dump-Only table.
+
+  Dump-Only tables are not allowed to be modified via the Load/Validate/Activate process most other tables are.
+  They are only supposed to be modified by onboard Applications.  The Operator can still command a Dump which will
+  be processed by the table's owning Application when it manages its tables.  By letting the Application perform
+  the dump, the Operator can feel confident that the table contents are a complete snapshot in time and not
+  corrupted by taking a snapshot while the Application was in the process of modifying its contents.
+**/
+
+/**
+  \page cfetblugregistry Table Registry
+
+  When Applications register tables, Table Services retains pertinent information on the table in the Table Registry.
+  The following information (along with other information that is less important for an operator) is kept for each table:
+
+  <UL>
+    <LI> The Application ID of the Application that Registered the table
+    <LI> The full name of the table
+    <LI> The size, in bytes, of the table
+    <LI> Pointers to the start addresses of the Table's image buffers, Active and Inactive (if appropriate)
+    <LI> A pointer to the start address of a Validation Function
+    <LI> A flag indicating whether a table image has been loaded into an Inactive buffer
+    <LI> A flag indicating whether the table is Critical and its associated CDS Handle if it is
+    <LI> A flag indicating whether the table has ever been loaded (initialized)
+    <LI> A flag indicating whether the table is Dump Only
+    <LI> A flag indicating whether the table has an Update Pending
+    <LI> A flag indicating whether the table is double buffered or not
+    <LI> The System Time when the Table was last Updated
+    <LI> The filename of the last file loaded into the table
+    <LI> The File Creation Time for the last file used to load the contents of the table
+  </UL>
+
+  This information can be obtained by either sending the Dump Registry command which will put all of the
+  information from the Table Registry into an onboard file for later downlink or the operator can send a
+  command to Telemeter the Registry Entry for a single table.  This will cause the pertinent registry entry
+  for a single table to be sent via a telemetry packet.
+
+  The API function CFE_TBL_Register() returns either CFE_SUCCESS or CFE_TBL_INFO_RECOVERED_TBL to indicate
+  that the table was successfully registered. The difference is whether the table data was recovered from
+  CDS as part of the registration. There are several error return values that describe why the function
+  failed to register the table but nothing related to why the restoration from CDS might have failed. There
+  is, however, a message written to the System Error Log by Table Services that can be dumped by the ground
+  to get this information. Note that failure to restore a table from CDS is not an expected error and
+  requires some sort of data corruption to occur.
+**/
+
+/**
+  \page cfetblugtelemetry Table Services Telemetry
+
+  Table Services produces two different telemetry packets.  The first packet, referred to as the Table
+  Services Housekeeping Packet, is routinely produced by Table Services upon receipt of the Housekeeping
+  Request message that is typically sent to all Applications by an on board scheduler.  The contents and
+  format of this packet are described in detail at #CFE_TBL_HousekeepingTlm_t.
+**/
+
+/**
+  \page cfetblugprocreset Effects of Processor Reset on Tables
+
+  When a processor resets, the Table Registry is re-initialized.  All Applications must, therefore, re-register
+  and re-initialize their tables.  The one exception, however, is if the Application has previously tagged a
+  table as "Critical" during Table Registration, then Table Services will attempt to locate a table image for
+  that table stored in the Critical Data Store.  Table Services also attempts to locate the Critical Table
+  Registry which is also maintained in the Critical Data Store.
+
+  If Table Services is able to find a valid table image for a Critical table in the Critical Data Store, the
+  contents of the table are automatically loaded into the table and the Application is notified that the
+  table does not require additional initialization.
+**/
+
+/**
+  \page cfetblugfaq Frequently Asked Questions about Table Services
+
+  <B> (Q)
+     Is it an error to load a table image that is smaller than the registered size?
+  </B> <BR> <BR> <I>
+     Table images that are smaller than the declared size of a table fall into one of two categories.
+
+     If the starting offset of the table image (as specified in the Table Image secondary file header) is
+     not equal to zero, then the table image is considered to be a "partial" table load.  Partial loads
+     are valid as long as a table has been previously loaded with a non-"partial" table image.
+
+     If the starting offset of the table image is zero and the size is less than the declared size
+     of the table, the image is considered "short" but valid.  This feature allows application developers
+     to use variable length tables.
+  </I>
+
+  <B> (Q)
+     I tried to validate a table and received the following event message that said the event failed:
+
+     <tt>MyApp validation failed for Inactive 'MyApp.MyTable', Status=0x####</tt>
+
+     What happened?
+  </B> <BR> <BR> <I>
+     The event message indicates the application who owns the table has discovered a problem with the
+     contents of the image.  The code number following the 'Status' keyword is defined by the Application.
+     The documentation for the specified Application should be referred to in order to identify the exact
+     nature of the problem.
+  </I>
+
+  <B> (Q)
+     What commands do I use to load a table with a new image?
+  </B> <BR> <BR> <I>
+     There are a number of steps required to load a table.
+     -# The operator needs to create a cFE Table Services compatible table image file with the
+        desired data contained in it.  This can be accomplished by creating a 'C' source file, compiling
+        it with the appropriate cross compiler for the onboard platform and then running the <tt>elf2cfetbl</tt>
+        utility on the resultant object file.
+     -# The file needs to be loaded into the onboard processor's filesystem using whichever file transfer
+        protocol is used for that mission.
+     -# The \link #CFE_TBL_LOAD_CC Load Command \endlink is sent next to tell Table Services to load the
+        table image file into the Inactive Table Image Buffer for the table identified in the file.
+     -# The \link #CFE_TBL_VALIDATE_CC Validate Command \endlink is then sent to validate the contents of
+        the inactive table image.  This will ensure the file was not corrupted or improperly defined.  The
+        results of the validation are reported in Table Services Housekeeping Telemetry.  If a table does
+        not have a validation function associated with it, the operator may wish to compare the computed
+        CRC to verify the table contents match what was intended.
+     -# Upon successful validation, the operator then sends the
+        \link #CFE_TBL_ACTIVATE_CC Activate Command. \endlink  The application owning the table should, within
+        a reasonable amount of time, perform a table update and send an event message.
+
+  </I>
+
+  <B> (Q)
+     What causes cFE Table Services to generate the following sys log message:
+
+     <tt> CFE_TBL:GetAddressInternal-App(\%d) attempt to access unowned Tbl Handle=\%d </tt>
+  </B> <BR> <BR> <I>
+     When an application sharing its table(s) with one or more applications is reloaded, the reloaded application's
+     table handle(s) are released.  cFE Table Services sees that the table(s) are shared and keeps a 'shadow' version
+     of the table in the Table Services registry.  The registry will show the released, shared tables with no name.
+     When the applications sharing the table attempt to access the table via the 'old', released handle, Table Services
+     will return an error code to the applications and generate the sys log message.  The applications may then unregister
+     the 'old' handle(s) in order to remove the released, shared table(s) from the Table Services registry and share the
+     newly loaded application table(s).
+  </I>
+
+  <B> (Q)
+     When does the Table Services Abort Table Load command need to be issued?
+  </B> <BR> <BR> <I>
+     The Abort command should be used whenever a table image has been loaded but the application has not yet activated it and
+     the operator no longer wants the table to be loaded.
+
+     The purpose of the Abort command is to free a previously allocated table buffer.  It should be noted, however, that multiple
+     table loads to the SAME table without an intervening activation or abort, will simply OVERWRITE the previous table load using
+     the SAME buffer.
+
+     Therefore, the most likely scenarios that would lead to a needed abort are as follows:
+     -# Operator loads a table and realizes immediately that the load is not wanted.
+     -# Operator loads a table and performs a validation on it. Regardless of whether
+        the table passes or fails the validation, if the operator no longer wants to
+        activate the table, the abort command should be issued.
+
+        It should be noted that a table image that fails activation is retained in the
+        inactive buffer for diagnosis, if necessary.  It is NOT released until it is
+        aborted or overwritten and successfully validated and activated.
+     -# A table image was loaded; the image was successfully validated; the command for
+        activation was sent; but the application fails to perform the activation.
+
+        The Abort command will free the table buffer and clear the activation request.
+
+        This situation can occur when either the application is improperly designed and
+        fails to adequately manage its tables (sometimes seen in the lab during development)
+        or the application is "hung" and not performing as it should.
+
+  </I>
+**/
+
+/**
+**  \page cfetblcmds cFE Table Services Commands
+**
+**  Upon receipt of any command, the Table Services application will confirm that the
+**  message length embedded within the header (from `CFE_MSG_GetSize()`) matches the expected
+**  length of that message, based on the size of the C structure defining that command.
+**  If there is any discrepancy between the expected and actual message size, TBL will generate
+**  the #CFE_TBL_LEN_ERR_EID event, increment the command error counter (\TBL_CMDEC), and the
+**  command will _not_ be accepted for processing.
+**
+**  The following is a list of commands that are processed by the cFE Table Services Task.
+**/
+
+/**
+**  \page cfetbltlm  cFE Table Services Telemetry
+**
+**  The following are telemetry packets generated by the cFE Table Services Task.
+**/
+
+/**
+**  \page cfetblcfg  cFE Table Services Configuration Parameters
+**
+**  The following are configuration parameters used to configure the cFE Table Services
+**  either for each platform or for a mission as a whole.
+**/
+```
+
+### `cfe_time.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_time.dox`
+
+
+```text
+/**
+  \page cfetimeovr cFE Time Services Overview
+
+  The cFE Time Service (TIME) is one of the cFE core services.  TIME provides time
+  correlation, distribution and synchronization services.  TIME exists in two varieties:
+  a Time Server responsible for maintaining the master time reference for all remote systems,
+  and a Time Client responsible for synchronizing to that master time reference.
+
+  Since TIME is a generic implementation aimed to meet the needs of a variety of
+  mission configurations, there are numerous configuration parameters, which dictate
+  the behavior of TIME (see cfe_mission_cfg.h and cfe_platform_cfg.h for the specific
+  mission configuration).
+
+  With the exception of those sections specific to Time Clients and Servers, this
+  document assumes the most common physical environment - one instantiation of cFE
+  installed on a single processor.  Therefore, TIME represents cFE Time Services
+  configured as a Time Server.
+
+  For additional detail on Time Services and how to manage it, see the following sections:
+
+  <UL>
+    <LI> \subpage cfetimeugcomponents <BR>
+    <LI> \subpage cfetimeugstruct <BR>
+    <LI> \subpage cfetimeugformat <BR>
+    <LI> \subpage cfetimeugconfig <BR>
+    <UL>
+       <LI> \subpage cfetimeugformsel <BR>
+       <LI> \subpage cfetimeugfaketone <BR>
+       <LI> \subpage cfetimeugtoneorder <BR>
+       <LI> \subpage cfetimeugtonewindow <BR>
+       <LI> \subpage cfetimeugserver <BR>
+       <LI> \subpage cfetimeugendian <BR>
+       <LI> \subpage cfetimeugvirtualmet <BR>
+       <LI> \subpage cfetimeugsource <BR>
+       <LI> \subpage cfetimeugsignal <BR>
+    </UL>
+    <LI> \subpage cfetimeugparadigm <BR>
+    <LI> \subpage cfetimeugflywheeling <BR>
+    <LI> \subpage cfetimeugstate <BR>
+    <LI> \subpage cfetimeuginit <BR>
+    <UL>
+       <LI> \subpage cfetimeugpoweron <BR>
+       <LI> \subpage cfetimeugprocessor <BR>
+    </UL>
+    <LI> \subpage cfetimeuginit <BR>
+    <UL>
+       <LI> \subpage cfetimeugpoweron <BR>
+       <LI> \subpage cfetimeugprocessor <BR>
+    </UL>
+    <LI> \subpage cfetimeugnormal <BR>
+    <UL>
+       <LI> \subpage cfetimeugclientops <BR>
+       <LI> \subpage cfetimeugserverops <BR>
+       <UL>
+          <LI> \subpage cfetimeugsettime <BR>
+          <LI> \subpage cfetimeugadjust <BR>
+          <LI> \subpage cfetimeugsetmet <BR>
+       </UL>
+    </UL>
+    <LI> \subpage cfetimeugfaq <BR>
+  </UL>
+**/
+
+/**
+  \page cfetimeugcomponents Time Components
+
+  Time knowledge is stored in several pieces, so that the time information can more
+  easily be manipulated and utilized. These components include:
+
+  The <B>Ground Epoch</B> is an arbitrary date and time that establishes the zero point
+  for spacecraft time calculations.  The selection of the epoch is mission specific,
+  although in the past, it was common to select the same epoch as defined for the
+  Operating System used by the computers hosting the ground system software.  Recent
+  mission epoch selections have also included using zero seconds after midnight,
+  Jan 1, 2001.
+
+  <B>Spacecraft Time</B> is the number of seconds (and fraction of a second) since the
+  ground epoch.  Spacecraft time is the sum of <B>Mission Elapsed Time</B> (MET) and the
+  <B>Spacecraft Time Correlation Factor</B> (STCF).  By definition, MET is a measure of
+  time since launch or separation.  However, for most missions the MET actually
+  represents the amount of time since powering on the hardware containing the MET
+  timer.  The STCF correlates the MET to the ground epoch.
+
+  The <B>Tone</B> is the signal that MET seconds have incremented.  In most hardware
+  configurations, the tone is synonymous with the <B>1 PPS</B> signal.  The tone signal
+  may be generated by a local hardware timer, or by an external event (GPS receiver,
+  spacewire time tick, 1553 bus signal, etc).  TIME may also be configured to
+  simulate the tone for lab environments that do not have the necessary hardware
+  to provide a tone signal.  Note that MET sub-seconds will be zero at the instant
+  of the tone.
+
+  <B>Time at the Tone</B> is the spacecraft time at the most recent "valid" tone.
+
+  <B>Time since the Tone</B> is the amount of time since the tone (usually less than one
+  second).   This value is often measured using the local processor clock.  Upon
+  detecting the tone signal, TIME stores the contents of the local processor clock
+  to facilitate this measurement.
+
+  Thus, <B>Current Spacecraft Time</B> is the sum of "time at the tone" and
+  "time since the tone".
+
+  <B>Leap Seconds</B> occur to keep clocks correlated to astronomical observations.  The
+  modern definition of a second (9,192,631,770 oscillations of a cesium-133 atom)
+  is constant while the earth's rotation has been slow by a small fraction of a
+  second per day.  The <B>International Earth Rotation and Reference System Service</B>
+  (IERS) maintains the count of leap seconds as a signed whole number that is
+  subject to update twice a year.  Although it is possible to have a negative
+  leap second count if the earth rotates too fast, it is highly unlikely.  The initial
+  count of leap seconds (10) was established in January of 1972 and the first leap second
+  was added to the initial count in June of 1972.  The most recent leap seconds are announced
+  by the International Earth Rotation Service (IERS): <a href="https://www.iers.org">
+  https://www.iers.org </a> in IERS Bulletin C (leap second announcements).  Search the IERS site
+  for "Bulletin C" to obtain the latest issue/announcement.
+**/
+
+/**
+  \page cfetimeugstruct Time Structure
+
+  The cFE implementation of the <B>System Time Structure</B> is a modified version of the
+  CCSDS Unsegmented Time Code (CUC) which includes 4 bytes of seconds, and 4 bytes of
+  subseconds, where a subsecond is equivalent to 1/(2^32) seconds.  The system time
+  structure is used by TIME to store current time, time at the tone, time since the
+  tone, the MET, the STCF and command arguments for time adjustments.  Note that typically
+  the 32 bits of seconds and the upper 16 bits of subseconds are used for time stamping
+  Software bus messages, but this is dependent on the underlying definition.
+
+  The system time structure is defined as follows:
+
+  \verbatim
+  typedef struct {
+        uint32      Seconds;      /* Number of seconds */
+        uint32      Subseconds;   /* Number of 2^(-32) subseconds */
+  } CFE_TIME_SysTime_t;
+  \endverbatim
+**/
+
+/**
+  \page cfetimeugformat Time Formats
+
+  <B>International Atomic Time</B> (TAI) is one of two time formats supported by cFE TIME.
+  TAI is the number of seconds and sub-seconds elapsed since the ground epoch as measured
+  with the atomic clock previously described.  TAI has no reference to leap seconds and is
+  calculated using the following equation:
+
+  \verbatim
+  TAI = MET + STCF
+  \endverbatim
+
+  It should be noted that TAI is only "true" TAI when the selected ground epoch is the same
+  as the TAI epoch (zero seconds after midnight, January 1, 1958).  However, nothing precludes
+  configuring cFE TIME to calculate time in the TAI format and setting the STCF to correlate
+  to any other epoch definition.
+
+  <B>Coordinated Universal Time</B> (UTC) is the other time format supported by cFE TIME.  UTC
+  differs from TAI in the fact that UTC includes a leap seconds adjustment.  TIME computes UTC
+  using the following equation:
+
+  \verbatim
+  UTC = TAI - Leap Seconds.
+  \endverbatim
+
+  The preceding UTC equation might seem to imply that TAI includes leap seconds and UTC does
+  not - which is not the case.  In fact, the UTC calculation includes a leap seconds adjustment
+  that subtracts leap seconds from the same time components used to create TAI.  Alternatively,
+  it might be less confusing to express the UTC equation as follows:
+
+  \verbatim
+  UTC = MET + STCF - Leap Seconds
+  \endverbatim
+**/
+
+/**
+  \page cfetimeugconfig Time Configuration
+
+  All configurations of TIME require a local processor source for a 1Hz interrupt and access
+  to a local clock with a resolution fine enough that it can be used to measure short periods
+  of elapsed time.  The local interrupt is used to wake-up TIME at a regular interval for the
+  purpose of verifying that the tone is being received.  The local clock is used to measure
+  time since the tone and to provide coarse verification that the tone is occurring at
+  approximately one second intervals.  The presumption is that the tone is the most accurate
+  timer in the system and, within reason, is to be trusted.  Note that nothing precludes the
+  use of the MET as the local clock, assuming the MET is both local and provides sub-second
+  data.  However, the tone must not be used as the source for the local 1Hz interrupt.
+
+  Consider the following brief description of three hypothetical hardware configurations.
+  These sample systems may be used as reference examples to help clarify the descriptions
+  of the various TIME configuration selections.
+
+  In the first system, there is no MET timer and therefore no tone signal.  The MET is a count
+  of the number of "fake" tones generated by TIME software.  There is no validation performed
+  regarding the quality of time data.  This hardware configuration is a common lab environment
+  using COTS equipment.
+
+  In the second system, the MET timer is a hardware register that is directly accessible by TIME.
+  When MET seconds increment, a processor interrupt signals the tone.  Upon detecting the tone,
+  TIME can read the MET to establish the time at the tone.  To verify that the tone is valid,
+  TIME need only validate that this tone signal occurred approximately one second after the
+  previous tone signal (as measured with the local clock).
+
+  In the third system, the MET is located on hardware connected via spacewire.  When MET seconds
+  increment, a spacewire time tick triggers a local processor interrupt to signal the tone.
+  Shortly after announcing the tone, the hardware containing the MET also generates a spacewire
+  data packet containing the MET value corresponding to the tone.  TIME must wait until both
+  the tone and data packet have been received before validating the tone.  The tone must have
+  occurred approximately one second after the previous tone signal and the data packet must
+  have been received within a specified window in time following the tone.
+
+  The hardware design choice for how the tone signal is distributed is not material to TIME
+  configuration.  The software detecting the tone need only call the cFE API function announcing
+  the arrival of the tone.  This function is designed to be called from interrupt handlers.
+
+  For detail on each of the individual configuration settings for cFE Time Services, see the
+  following sections:
+
+  <UL>
+     <LI> \subpage cfetimeugformsel <BR>
+     <LI> \subpage cfetimeugfaketone <BR>
+     <LI> \subpage cfetimeugtoneorder <BR>
+     <LI> \subpage cfetimeugtonewindow <BR>
+     <LI> \subpage cfetimeugserver <BR>
+     <LI> \subpage cfetimeugendian <BR>
+     <LI> \subpage cfetimeugvirtualmet <BR>
+     <LI> \subpage cfetimeugsource <BR>
+     <LI> \subpage cfetimeugsignal <BR>
+  </UL>
+**/
+
+/**
+  \page cfetimeugformsel Time Format Selection
+
+  Time format is defined in the mission configuration header file.
+
+  This selection defines the default time format as TAI or UTC.  The API functions
+  to get time in either specific format are still enabled, but the API function to
+  get time in the default format will follow this selection.   Enable one, and <B>only
+  one</B>, of the following time format definitions:
+
+  \verbatim
+  #define CFE_MISSION_TIME_CFG_DEFAULT_TAI  TRUE
+  #define CFE_MISSION_TIME_CFG_DEFAULT_UTC  FALSE
+  \endverbatim
+
+  or
+
+  \verbatim
+  #define CFE_MISSION_TIME_CFG_DEFAULT_TAI  FALSE
+  #define CFE_MISSION_TIME_CFG_DEFAULT_UTC  TRUE
+  \endverbatim
+
+  The choice of time format is a mission specific decision and is not directly
+  affected by the hardware configuration.
+
+  \sa #CFE_MISSION_TIME_CFG_DEFAULT_TAI, #CFE_MISSION_TIME_CFG_DEFAULT_UTC <BR>
+**/
+
+/**
+  \page cfetimeugfaketone Enabling Fake Tone Signal
+
+  The fake tone is defined in the mission configuration header file.
+
+  If this selection is set to TRUE, TIME will generate a "fake" tone signal by calling
+  the same API function as would be called upon detection of the "real" tone signal.
+  Enable the fake tone only for hardware configurations that do not provide a tone
+  signal.
+
+  \verbatim
+  #define CFE_MISSION_TIME_CFG_FAKE_TONE  TRUE
+  \endverbatim
+
+  Hypothetical hardware configuration number one (described above) would enable the fake tone signal.
+
+  \sa #CFE_MISSION_TIME_CFG_FAKE_TONE
+**/
+
+/**
+  \page cfetimeugtoneorder Selecting Tone and Data Ordering
+
+  Tone and data order is defined in the mission configuration header file.
+
+  This selection defines which comes first - the tone or the time at the
+  tone data.  Does the time data describe the tone that already occurred,
+  or the tone that has not yet occurred?  This decision may be driven by
+  the hardware design but can also be arbitrary.  Enable one, and only one,
+  of the following:
+
+  \verbatim
+  #define CFE_MISSION_TIME_AT_TONE_WAS
+  #define CFE_MISSION_TIME_AT_TONE_WILL_BE
+  \endverbatim
+
+  Hypothetical hardware configuration number three (described \ref cfetimeugconfig above) would
+  enable "time at the tone was".
+
+  \sa #CFE_MISSION_TIME_AT_TONE_WAS, #CFE_MISSION_TIME_AT_TONE_WILL_BE
+**/
+
+/**
+  \page cfetimeugtonewindow Specifying Tone and Data Window
+
+  The tone and data window is defined in the mission configuration header file.
+
+  In concert with the definition of tone and data order, this selection defines
+  the valid window in time for the second of the pair to follow the first.
+  Both must be defined, units are micro-seconds.
+
+  \verbatim
+  #define CFE_MISSION_TIME_MIN_ELAPSED  0
+  #define CFE_MISSION_TIME_MAX_ELAPSED  100000
+  \endverbatim
+
+  Hypothetical hardware configuration number three (described above) might use
+  these values which describe a window that begins immediately after the tone
+  and lasts for one tenth of a second.
+
+  \sa #CFE_MISSION_TIME_MIN_ELAPSED, #CFE_MISSION_TIME_MAX_ELAPSED
+**/
+
+/**
+  \page cfetimeugserver Specifying Time Server/Client
+
+  Configure TIME as a client only when the target system has multiple processors
+  running separate instantiations of the cFE.  One instantiation must be configured
+  as the server and the remainder configured as clients.  If the target system has
+  only one processor running the cFE, then TIME must be configured as a server.
+
+  Enable one, and only one, of the following definitions in the platform configuration
+  header file:
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_SERVER   TRUE
+  #define CFE_PLATFORM_TIME_CFG_CLIENT   FALSE
+  \endverbatim
+
+  or
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_SERVER   FALSE
+  #define CFE_PLATFORM_TIME_CFG_CLIENT   TRUE
+  \endverbatim
+
+  \sa #CFE_PLATFORM_TIME_CFG_SERVER, #CFE_PLATFORM_TIME_CFG_CLIENT
+**/
+
+/**
+  \page cfetimeugendian Specifying Time Tone Byte Order
+
+  By default, the CFE time tone message is a payload of integers in
+  platform-endian order (containing the tone's timestamp, the leap seconds,
+  and state information.) In some configurations, it may be better to
+  have the payload produced in big-endian order--particularly in mixed-endian
+  environments.
+
+  In order to force the tone message to be in big-endian order, you must
+  define the following:
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_BIGENDIAN
+  \endverbatim
+**/
+
+/**
+  \page cfetimeugvirtualmet Virtual MET
+
+  This configuration option refers to whether the MET is local to this instantiation
+  of TIME.  If the MET is not local then TIME must be configured as using a virtual MET.
+
+  Therefore, all TIME clients must be configured as using a virtual MET.  If the MET was
+  local to any TIME client, then that instantiation of TIME would have to be the server.
+
+  TIME servers must be configured as using a virtual MET
+**/
+
+/**
+  \page cfetimeugsource Specifying Time Source
+
+  TIME configuration provides the ability to specify where the source for time data
+  is originating - either internal or external.  In hypothetical system one, the MET
+  is internal.  In system two, TIME cannot directly read the MET, therefore time data
+  must be received from an external source.
+
+  This selection also enables a command interface to switch between internal and
+  external input.  When commanded to use internal time data, TIME will ignore the
+  external data.  However, TIME will continue to use the API function as the trigger
+  to generate a "time at the tone" command packet regardless of the internal/external
+  command selection.
+
+  Set the following definition to TRUE only for TIME servers using an external time data source.
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_SOURCE  TRUE
+  \endverbatim
+
+  The remainder of this section pertains only to TIME servers configured to accept
+  external time data.
+
+  When configured to accept external time data, TIME requires an additional definition
+  for the type of external data (GPS, MET, spacecraft time, etc.).  This selection
+  will enable an API function specific to the selected data type.  Regardless of how
+  the time data is received, the receiver need only pass the data to the appropriate
+  API function.
+
+  TIME servers using an external time data source must set one, and only one, of
+  the following to TRUE, for example:
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_SRC_MET   TRUE
+  #define CFE_PLATFORM_TIME_CFG_SRC_GPS   FALSE
+  #define CFE_PLATFORM_TIME_CFG_SRC_TIME  FALSE
+  \endverbatim
+
+  configuration definitions for the particular source.
+
+  If the cfe_platform_cfg.h file contains "#define CFE_PLATFORM_TIME_CFG_SOURCE  TRUE" then time is
+  configured to allow switching between internal and external time sources
+  (see #CFE_TIME_SET_SOURCE_CC).  If this configuration parameter is set to FALSE then
+  the command to set the source will be rejected.
+
+  If this configuration parameter is set to TRUE then ONE and ONLY ONE of the following configuration
+  parameters must also be set TRUE in order to specify the external time source, for example:
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_SRC_MET   TRUE
+  #define CFE_PLATFORM_TIME_CFG_SRC_GPS   FALSE
+  #define CFE_PLATFORM_TIME_CFG_SRC_TIME  FALSE
+  \endverbatim
+
+  Note that Internal MET source depends on available hardware.  It may be the local
+  count of tone signals, the contents of a hardware register or an OS specific time function.
+
+  Note also that when configured to use an external time source, commands to set the
+  time will be overwritten.
+
+
+  \sa #CFE_PLATFORM_TIME_CFG_SRC_MET, #CFE_PLATFORM_TIME_CFG_SRC_GPS, #CFE_PLATFORM_TIME_CFG_SRC_TIME
+**/
+
+/**
+  \page cfetimeugsignal Specifying Time Signal
+
+  Some hardware configurations support a primary and redundant tone signal selection.
+  Setting the following configuration definition to TRUE will result in enabling a TIME
+  command to select the active tone signal.
+
+  \verbatim
+  #define CFE_PLATFORM_TIME_CFG_SIGNAL  TRUE
+  \endverbatim
+
+  Note: this feature requires additional custom software to make the physical signal switch.
+
+  \sa #CFE_PLATFORM_TIME_CFG_SIGNAL
+**/
+
+/**
+  \page cfetimeugparadigm Time Services Paradigm(s)
+
+  In order for the cFE Time Services to work for a particular mission, the methods of
+  obtaining time, distributing time and translating time must follow some standard
+  paradigms used in previous missions.  The following describes this expected context:
+
+  Mission dependent hardware provides the Tone.  When this Tone message is received,
+  TIME latches the local time based on the local clock.  Note that in lab environments,
+  a simulated Tone capability exists which uses an SB message.  Mission dependent
+  hardware also provides the "time at the tone" message based on the hardware latched
+  time and the reference times stored by TIME Server. The TIME Client then updates
+  its local reference time based on the local hardware latched time at the Tone and
+  the provided Time-at-Tone message packet when certain checks (such as the Validity bit
+  being set) pass.
+
+  When used in an environment that includes multiple processors, each running a separate
+  instantiation of cFE software, the presumption is that TIME will be distributed in a
+  client/server relationship.  In this model, one processor will have TIME configured
+  as the server and the other processors as clients.  The TIME server will maintain the
+  various time components and publish a "time at the tone" message to provide synchronized
+  time to the TIME clients.  Environments that have only a single instance of TIME must be
+  configured as a TIME server.
+
+  In all configurations, the final step in calculating the time "right now" for any
+  instantiation of TIME is to use a local processor clock to measure the "time since the tone".
+
+  The specific MET hardware properties will determine whether the MET value can be modified.
+  However, the cFE design is such that there should never be a need to purposefully change or
+  reset the MET.
+
+  Regardless of the physical hardware implementation for the MET (elapsed seconds,
+  elapsed ticks, etc.), cFE TIME will convert the hardware MET value into a System Time
+  Format structure for time calculations and will report the converted value in telemetry.
+  cFE TIME will also maintain and report the STCF in a System Time Format structure.
+
+  cFE TIME has no knowledge of the current epoch; it is up to the user to keep time on the
+  spacecraft correlated to an epoch.  An exception might appear to be the epoch definition
+  required in the cFE mission configuration definition file.  However, this definition is for
+  use only by the API functions that convert spacecraft time and file system time, and the
+  API function that prints spacecraft time as a date and time text string.  The cFE "get time"
+  functions are independent of the ground epoch.
+
+  The mission configuration parameters, #CFE_MISSION_TIME_CFG_DEFAULT_TAI and #CFE_MISSION_TIME_CFG_DEFAULT_UTC
+  specify the default time format.  Applications are encouraged to use the #CFE_TIME_GetTime API,
+  which returns time in the format specified by this configuration parameter.
+**/
+
+
+/**
+  \page cfetimeugflywheeling Flywheeling
+
+  Flywheeling occurs when TIME is not getting a valid tone signal or external "time at the tone"
+  message.   While this has minimal impact on internal operations, it can result in the drifting
+  apart of times being stored by different spacecraft systems.
+
+  Flywheeling occurs when at least one of the following conditions is true:<BR>
+  <UL>
+     <LI> loss of tone signal <BR>
+     <LI> loss of "time at the tone" data packet <BR>
+     <LI> signal and packet not within valid window <BR>
+     <LI> commanded into fly-wheel mode <BR>
+  </UL>
+
+  If the TIME server is in Flywheel mode then the TIME client is also in flywheel mode.
+**/
+
+
+/**
+  \page cfetimeugstate Time State
+
+  Clock state is a combination of factors, most significantly whether the spacecraft time has
+  been accurately set and whether Time Service is operating in FLYWHEEL mode.   A ground
+  command is provided to set the state to reflect when the ground has determined the spacecraft
+  time is now correct, or that time is no longer correct.  This information will be distributed
+  to Time Clients, and in turn, to any interested sub-systems. If time has not been set then TIME
+  services reports the state of time as invalid, regardless of whether time is flywheeling or not.
+  Also, this command may be used to force a Time Server or Time Client into FLYWHEEL mode.
+  Use of FLYWHEEL mode is mainly for debug purposes although, in extreme circumstances, it
+  may be of value to force Time Service not to rely on normal time updates.  Note that when
+  commanded into FLYWHEEL mode, the Time  Service will remain so until receipt of another
+  "set state" command setting the  state into a mode other than FLYWHEEL.   Note also that
+  setting the clock state to VALID or INVALID on a Time Client that is currently getting
+  time updates from the Time Server will have very limited effect.  As soon as the Time
+  Client receives the next time update, the VALID/INVALID selection will be set to that of
+  the Time Server.  However, setting a Time Client to FLYWHEEL cannot be overridden by the
+  Time Server since the Time Client will ignore time updates from the Time Server while in
+  FLYWHEEL mode.
+**/
+
+
+/**
+  \page cfetimeuginit Initialization
+
+  No action is required by the ground to initialize the TIME software; however, time
+  variables in the TIME Server must be set by command to allow correct time to propagate.
+
+  For a description of what happens during each type of reset, see below: <BR>
+
+  <UL>
+     <LI> \subpage cfetimeugpoweron <BR>
+     <LI> \subpage cfetimeugprocessor <BR>
+  </UL>
+**/
+
+
+/**
+  \page cfetimeugpoweron Power-On Reset
+
+  TIME initializes all counters in housekeeping telemetry, sets the Validity
+  state to Invalid, and initializes the STCF, Leap Seconds, and 1 Hz Adjustment to zero.
+**/
+
+
+/**
+  \page cfetimeugprocessor Processor Reset
+
+  In the event of a processor reset, the following time values are preserved: <BR>
+  <UL>
+     <LI> MET <BR>
+     <LI> STCF <BR>
+     <LI> Leap Seconds <BR>
+     <LI> Clock Signal Selection <BR>
+     <LI> Current Time Client Delay (if applicable) <BR>
+  </UL>
+
+  Note that since it is virtually impossible for TIME services to validate the
+  actual data that is saved across a processor reset, a signature pattern is
+  written to the preserved area.  On a processor reset, TIME queries that
+  signature to make sure that it matches what is expected.  If the signature
+  does not match, then TIME is initialized as if a cFE power-on reset occurred.
+**/
+
+
+/**
+  \page cfetimeugnormal Normal Operation
+
+  The following sections describe the operator's responsibilities for maintaining
+  time under nominal conditions: <BR>
+
+  <UL>
+     <LI> \subpage cfetimeugclientops <BR>
+     <LI> \subpage cfetimeugserverops <BR>
+  </UL>
+**/
+
+
+/**
+  \page cfetimeugclientops Client
+
+  Under normal operation, TIME Client systems do not require any attention from the ground,
+  however TIME clients do provide commands to set the persistent latency between the server
+  and client.  Latency can be either added or subtracted  to the current TIME client time
+  calculation to account for the latency.
+**/
+
+
+/**
+  \page cfetimeugserverops Server
+
+  TIME Servers require maintenance by the operations team to ensure the spacecraft is maintaining
+  a time that can be successfully correlated to other entities.  The following sections describe
+  the commands that the operations team can use to help maintain a proper time reference: <BR>
+
+  <UL>
+     <LI> \subpage cfetimeugsettime <BR>
+     <LI> \subpage cfetimeugadjust <BR>
+     <LI> \subpage cfetimeugsetmet <BR>
+  </UL>
+**/
+
+
+/**
+  \page cfetimeugsettime Setting Time
+
+  The Time Server provides commands to set time.  The new time value represents the
+  desired offset from mission-defined time epoch and takes effect immediately upon
+  execution of this command.  Time Service will calculate a new STCF value based
+  on the current MET and the desired new time using one of the following:
+
+  If Time Service is configured to compute current time as TAI:
+
+  \verbatim
+  STCF = new time - current MET
+  current time =  current MET + STCF
+  \endverbatim
+
+  If Time Service is configured to compute current time as UTC:
+
+  \verbatim
+  STCF = ((new time) - (current MET)) + Leap Seconds
+  current time = ((current MET) + STCF) - Leap Seconds
+  \endverbatim
+
+  \sa #CFE_TIME_SET_TIME_CC
+**/
+
+
+/**
+  \page cfetimeugadjust Adjusting Time
+
+  The TIME Server includes commands to set the STCF, Leap Seconds,
+  and Validity state. The STCF should be set implicitly using the
+  #CFE_TIME_SET_TIME_CC or explicitly using #CFE_TIME_SET_STCF_CC.
+  TIME provides the ability to command a one time adjustment
+  (#CFE_TIME_ADD_ADJUST_CC and #CFE_TIME_SUB_ADJUST_CC)
+  to the current STCF.  In addition there is a 1Hz adjustment
+  (#CFE_TIME_ADD_1HZ_ADJUSTMENT_CC and #CFE_TIME_SUB_1HZ_ADJUSTMENT_CC)
+  that can be made to the STCF to compensate for oscillator drift.
+  Mission specific ground correlation should be used to assist in
+  determining the proper values to use. The Leap Seconds should be
+  set to the current TAI-UTC. Note that the International Earth
+  Rotation and Reference Systems Service Bulletin C, which defines
+  the current difference, reports it as UTC-TAI, and thus that value
+  must be negated. <B>The Leap Seconds value will always be a positive
+  number.</B> The Validity state does not have to be set to invalid to
+  change the STCF or Leap Seconds, and should be set to valid at
+  any time that the TIME Server time reference should be synchronized
+  to by the other systems.
+
+  \sa #CFE_TIME_ADD_ADJUST_CC, #CFE_TIME_SUB_ADJUST_CC, #CFE_TIME_SET_STCF_CC,
+  #CFE_TIME_ADD_1HZ_ADJUSTMENT_CC, #CFE_TIME_SUB_1HZ_ADJUSTMENT_CC, #CFE_TIME_SET_LEAP_SECONDS_CC
+**/
+
+
+/**
+  \page cfetimeugsetmet Setting MET
+
+  The TIME Server provides the capability to set the MET.  Note that the
+  MET (as implemented for cFE Time Service) is a logical representation
+  and not a physical timer.  Thus, setting the MET is not dependent on
+  whether the hardware supports a MET register that can be written to.
+  Note also that Time Service "assumes" that during normal operation,
+  the MET is synchronized to the tone signal.  Therefore, unless operating
+  in FLYWHEEL mode,  the sub-seconds portion of the MET will be set to zero
+  at the next tone signal interrupt.  The new MET takes effect immediately
+  upon execution of this command.
+
+  \sa #CFE_TIME_SET_MET_CC
+**/
+
+
+/**
+  \page cfetimeugfaq Frequently Asked Questions about Time Services
+
+  None submitted
+**/
+
+
+/**
+**  \page cfetimecmds cFE Time Services Commands
+**
+**  Upon receipt of any command, the Time Services application will confirm that the
+**  message length embedded within the header (from `CFE_MSG_GetSize()`) matches the expected
+**  length of that message, based on the size of the C structure defining that command.
+**  If there is any discrepancy between the expected and actual message size, TIME will generate
+**  the #CFE_TIME_LEN_ERR_EID event, increment the command error counter (\TIME_CMDEC), and the
+**  command will _not_ be accepted for processing.
+**
+**  The following is a list of commands that are processed by the cFE Time Services Task.
+**/
+
+/**
+**  \page cfetimetlm  cFE Time Services Telemetry
+**
+**  The following are telemetry packets generated by the cFE Time Services Task.
+**/
+
+/**
+**  \page cfetimecfg  cFE Time Services Configuration Parameters
+**
+**  The following are configuration parameters used to configure the cFE Time Services
+**  either for each platform or for a mission as a whole.
+**/
+```
+
+### `cfe_xref.dox`
+
+**경로:** `fsw/cfe/docs/src/cfe_xref.dox`
+
+
+```text
+/**
+**  \page cfeevents cFE Event Message Cross Reference
+**
+**  The following cross reference maps the text associated with each cFE Event
+**  Message to its Event Message Identifier.  A user can search this page for
+**  the text of the message they wish to learn more about and then click on the
+**  associated Event Message Identifier to obtain more information. <HR>
+**
+**/
+
+/**
+**  \page cfecmdmnems cFE Command Mnemonic Cross Reference
+**
+**  The following cross reference maps the cFE command codes to Command Mnemonics.
+**  To learn about the details of a particular command, click on its associated
+**  command code. <HR>
+**
+**/
+
+/**
+**  \page cfetlmmnems cFE Telemetry Mnemonic Cross Reference
+**
+**  The following cross reference maps the cFE telemetry packet members
+**  to their associated ground system telemetry mnemonics. <HR>
+**
+**/
+```
+
+### `cfs_versions.dox`
+
+**경로:** `fsw/cfe/docs/src/cfs_versions.dox`
+
+
+```text
+/**
+  \page cfsversions Version Numbers
+
+  \section cfsversions_s1 Version Number Semantics
+
+  The version number is a sequence of four numbers, generally separated by dots when written. These are, in order,
+  the Major number, the Minor number, the Revision number, and the Mission Revision number.
+
+  It is important to note that version numbers are only updated upon official releases of tagged
+  versions, \b NOT on development builds. We aim to follow the Semantic Versioning v2.0 specification 
+  with our versioning.
+
+  The MAJOR number is incremented on release to indicate when there is a change to an API
+  that may cause existing, correctly-written cFS components to stop working. It may also be incremented for a
+  release that contains changes deemed to be of similar impact, even if there are no actual changes to the API.
+
+  The MINOR number is incremented on release to indicate the addition of features to the API
+  which do not break the existing code.  It may also be incremented for a release that contains changes deemed
+  to be of similar impact, even if there are no actual updates to the API.
+
+  The REVISION number shall be incremented on changes that benefit from unique identification such as
+  bug fixes or major documentation updates.
+  The Revision number may also be updated if there are other changes contained within a release that make
+  it desirable for applications to distinguish one release from another.
+  WARNING: The revision number is set to the number 99 in development builds. To distinguish between development
+  builds refer to the BUILD_NUMBER and BUILD_BASELINE detailed in the section "Identifying Development Builds".
+
+  The Mission Rev Version number is set to zero in all official releases, and is reserved for the mission use.
+
+  \section cfsversions_s2 How and Where Defined
+
+  The version numbers are provided as simple macros defined in the cfe_version.h header file as part of the
+  API definition; these macros must expand to simple integer values, so that they can be used in simple if
+  directives by the macro preprocessor.
+
+  Note the Mission Rev number is provided for missions to be able to identify unique changes they have made to the released software (via clone and own). Specicifally, the values 1-254 are reserved for mission use to denote patches/customizations while 0 and 0xFF are reserved for cFS open-source development use (pending resolution of nasa/cFS#440).
+
+  \section cfsversions_s3 Identifying Development Builds
+
+  In order to distinguish between development versions, we also provide a BUILD_NUMBER.
+
+  The BUILD_NUMBER reflects the number of commits since the BUILD_BASELINE, a baseline git tag, for each particular
+  component. The BUILD_NUMBER integer monotonically increases for a given baseline. The BUILD_BASELINE
+  identifies the current development cycle and is a git tag with format vMAJOR.MINOR.REVISION. The Codename used in the version
+  string also refers to the current development cycle. When a new baseline tag and codename are created, the
+  BUILD_NUMBER resets to zero and begins increasing from a new baseline.
+
+  \section cfsversions_s4 Templates for the short and long version string
+
+  See cfe_version.h for the standard layout and definition of version information.
+  The apps and repositories follow the same pattern by replacing the CFE_ prefix with the appropriate
+  name; for example, osal uses OS_, psp uses CFE_PSP_IMPL, and so on.
+
+  Suggested pattern for development:
+  - CFSCOMPONENT_SRC_VERSION: REFERENCE_GIT_TAG"+dev"BUILD_NUMBER
+    - Example: "v6.8.0-rc1+dev123"
+  - CFSCOMPONENT_VERSION_STRING: "CFSCOMPONENT DEVELOPMENT BUILD "CFSCOMPONENT_SRC_VERSION" (Codename: CFSCONSTELLATION), Last Official Release: MAJOR.MINOR.REVISION"
+    - Example: "cFE DEVELOPMENT BUILD v6.8.0-rc1+dev123 (Codename: Bootes), Last Official Release: cfe v6.7.0"
+
+  Suggested pattern for official releases:
+  - CFSCOMPONENT_SRC_VERSION: OFFICIAL_GIT_TAG
+    - Example: "v7.0.0"
+  - COMPONENT_VERSION_STRING: "CFSCOMPONENT OFFICIAL RELEASE "CFSCOMPONENT_SRC_VERSION" (Codename: CFSCONSTELLATION)"
+    - Example: "cFE OFFICIAL RELEASE v7.0.0 (Codename: Caelum)"
+
+**/
+```
+
+### `CFSLayers.jpg`
+
+**경로:** `fsw/cfe/docs/src/CFSLayers.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CFSPubSub.jpg`
+
+**경로:** `fsw/cfe/docs/src/CFSPubSub.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `evs_squelch_states.png`
+
+**경로:** `fsw/cfe/docs/src/evs_squelch_states.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

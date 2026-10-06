@@ -3,7 +3,7 @@
 
 **경로:** `cfg/build/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,19 +12,30 @@ InOut/index
 nos3_defs/index
 sims/index
 temp_mission/index
-file--fsw_build.sh
-file--gsw_build.sh
-file--gsw_launch.sh
-file--launch.sh
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`cfg/build/InOut/`](InOut/index) — 폴더
-- [`cfg/build/nos3_defs/`](nos3_defs/index) — 폴더
-- [`cfg/build/sims/`](sims/index) — 폴더
-- [`cfg/build/temp_mission/`](temp_mission/index) — 폴더
-- [`cfg/build/fsw_build.sh`](file--fsw_build.sh) — 빌드 산출물 (경로만)
-- [`cfg/build/gsw_build.sh`](file--gsw_build.sh) — 빌드 산출물 (경로만)
-- [`cfg/build/gsw_launch.sh`](file--gsw_launch.sh) — 빌드 산출물 (경로만)
-- [`cfg/build/launch.sh`](file--launch.sh) — 빌드 산출물 (경로만)
+### `fsw_build.sh`
+
+**경로:** `cfg/build/fsw_build.sh`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `gsw_build.sh`
+
+**경로:** `cfg/build/gsw_build.sh`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `gsw_launch.sh`
+
+**경로:** `cfg/build/gsw_launch.sh`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `launch.sh`
+
+**경로:** `cfg/build/launch.sh`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

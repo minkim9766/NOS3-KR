@@ -3,16 +3,168 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/create-item-band/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-item-band.component.html`
 
-file--create-item-band.component.html
-file--create-item-band.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/create-item-band/create-item-band.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Create band" />
+
+  <app-create-band-wizard-step step="2" />
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-field label="Label" hint="(required)">
+        <input type="text" formControlName="name" />
+      </ya-field>
+
+      <ya-field label="Description" hint="(optional)">
+        <textarea formControlName="description" rows="3"></textarea>
+      </ya-field>
+
+      <ya-field label="Tags">
+        <ya-tag-select formControlName="tags" />
+      </ya-field>
+
+      <ya-field-divider />
+
+      <h4>Styles</h4>
+      <app-item-band-styles [form]="form" />
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="../.." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `create-item-band.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/create-item-band/create-item-band.component.html`](file--create-item-band.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/create-item-band/create-item-band.component.ts`](file--create-item-band.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/create-item-band/create-item-band.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import {
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { CreateBandWizardStepComponent } from '../../create-band-wizard-step/create-band-wizard-step.component';
+import { propertyInfo } from '../ItemBand';
+import { ItemBandStylesComponent } from '../item-band-styles/item-band-styles.component';
+
+@Component({
+  templateUrl: './create-item-band.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CreateBandWizardStepComponent,
+    ItemBandStylesComponent,
+    WebappSdkModule,
+  ],
+})
+export class CreateItemBandComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    title: Title,
+    formBuilder: UntypedFormBuilder,
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private router: Router,
+  ) {
+    title.setTitle('Configure Item Band');
+    this.form = formBuilder.group({
+      name: ['', [Validators.required]],
+      description: '',
+      properties: formBuilder.group({
+        frozen: [propertyInfo.frozen.defaultValue, [Validators.required]],
+        itemBackgroundColor: [
+          propertyInfo.itemBackgroundColor.defaultValue,
+          [Validators.required],
+        ],
+        itemBorderColor: [
+          propertyInfo.itemBorderColor.defaultValue,
+          [Validators.required],
+        ],
+        itemBorderWidth: [
+          propertyInfo.itemBorderWidth.defaultValue,
+          [Validators.required],
+        ],
+        itemCornerRadius: [
+          propertyInfo.itemCornerRadius.defaultValue,
+          [Validators.required],
+        ],
+        itemHeight: [
+          propertyInfo.itemHeight.defaultValue,
+          [Validators.required],
+        ],
+        itemMarginLeft: [
+          propertyInfo.itemMarginLeft.defaultValue,
+          [Validators.required],
+        ],
+        itemTextColor: [
+          propertyInfo.itemTextColor.defaultValue,
+          [Validators.required],
+        ],
+        itemTextOverflow: [
+          propertyInfo.itemTextOverflow.defaultValue,
+          [Validators.required],
+        ],
+        itemTextSize: [
+          propertyInfo.itemTextSize.defaultValue,
+          [Validators.required],
+        ],
+        marginBottom: [
+          propertyInfo.marginBottom.defaultValue,
+          [Validators.required],
+        ],
+        marginTop: [propertyInfo.marginTop.defaultValue, [Validators.required]],
+        multiline: [propertyInfo.multiline.defaultValue, [Validators.required]],
+        spaceBetweenItems: [
+          propertyInfo.spaceBetweenItems.defaultValue,
+          [Validators.required],
+        ],
+        spaceBetweenLines: [
+          propertyInfo.spaceBetweenLines.defaultValue,
+          [Validators.required],
+        ],
+      }),
+      tags: [[], []],
+    });
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+    this.yamcs.yamcsClient
+      .createTimelineBand(this.yamcs.instance!, {
+        name: formValue.name,
+        description: formValue.description,
+        type: 'ITEM_BAND',
+        shared: true,
+        tags: formValue.tags,
+        properties: formValue.properties,
+      })
+      .then(() =>
+        this.router.navigateByUrl(`/timeline/bands?c=${this.yamcs.context}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

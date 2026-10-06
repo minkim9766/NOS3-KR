@@ -3,24 +3,42 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/to_lab/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--libtblobj_cpu1_to_lab.tbl093bddede17a1605f68858b5e766b2b2dd6767f3.a
-file--Makefile
-file--to_lab.so
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/libtblobj_cpu1_to_lab.tbl093bddede17a1605f68858b5e766b2b2dd6767f3.a`](file--libtblobj_cpu1_to_lab.tbl093bddede17a1605f68858b5e766b2b2dd6767f3.a) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/to_lab.so`](file--to_lab.so) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/to_lab/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/to_lab/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libtblobj_cpu1_to_lab.tbl093bddede17a1605f68858b5e766b2b2dd6767f3.a`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/to_lab/libtblobj_cpu1_to_lab.tbl093bddede17a1605f68858b5e766b2b2dd6767f3.a`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/to_lab/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to_lab.so`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/to_lab/to_lab.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

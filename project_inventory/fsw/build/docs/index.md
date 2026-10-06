@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,45 +16,96 @@ lc-usersguide/index
 mission-doc/index
 osal-apiguide/index
 sc-usersguide/index
-file--cf-common.doxyfile
-file--cf-detaildesign.doxyfile
-file--cfe-common.doxyfile
-file--ds-common.doxyfile
-file--ds-detaildesign.doxyfile
-file--fm-common.doxyfile
-file--fm-detaildesign.doxyfile
-file--lc-common.doxyfile
-file--lc-detaildesign.doxyfile
-file--osal-common.doxyfile
-file--osal-detaildesign.doxyfile
-file--osconfig-example.h
-file--sc-common.doxyfile
-file--sc-detaildesign.doxyfile
-file--tgtsystem-content-amd64_nos3_default_cpu1.doxyfile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/docs/cf-usersguide/`](cf-usersguide/index) — 폴더
-- [`fsw/build/docs/cfe-usersguide/`](cfe-usersguide/index) — 폴더
-- [`fsw/build/docs/ds-usersguide/`](ds-usersguide/index) — 폴더
-- [`fsw/build/docs/fm-usersguide/`](fm-usersguide/index) — 폴더
-- [`fsw/build/docs/lc-usersguide/`](lc-usersguide/index) — 폴더
-- [`fsw/build/docs/mission-doc/`](mission-doc/index) — 폴더
-- [`fsw/build/docs/osal-apiguide/`](osal-apiguide/index) — 폴더
-- [`fsw/build/docs/sc-usersguide/`](sc-usersguide/index) — 폴더
-- [`fsw/build/docs/cf-common.doxyfile`](file--cf-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/cf-detaildesign.doxyfile`](file--cf-detaildesign.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/cfe-common.doxyfile`](file--cfe-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/ds-common.doxyfile`](file--ds-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/ds-detaildesign.doxyfile`](file--ds-detaildesign.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/fm-common.doxyfile`](file--fm-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/fm-detaildesign.doxyfile`](file--fm-detaildesign.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/lc-common.doxyfile`](file--lc-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/lc-detaildesign.doxyfile`](file--lc-detaildesign.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/osal-common.doxyfile`](file--osal-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/osal-detaildesign.doxyfile`](file--osal-detaildesign.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/osconfig-example.h`](file--osconfig-example.h) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/sc-common.doxyfile`](file--sc-common.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/sc-detaildesign.doxyfile`](file--sc-detaildesign.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/tgtsystem-content-amd64_nos3_default_cpu1.doxyfile`](file--tgtsystem-content-amd64_nos3_default_cpu1.doxyfile) — 빌드 산출물 (경로만)
+### `cf-common.doxyfile`
+
+**경로:** `fsw/build/docs/cf-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cf-detaildesign.doxyfile`
+
+**경로:** `fsw/build/docs/cf-detaildesign.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe-common.doxyfile`
+
+**경로:** `fsw/build/docs/cfe-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds-common.doxyfile`
+
+**경로:** `fsw/build/docs/ds-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds-detaildesign.doxyfile`
+
+**경로:** `fsw/build/docs/ds-detaildesign.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `fm-common.doxyfile`
+
+**경로:** `fsw/build/docs/fm-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `fm-detaildesign.doxyfile`
+
+**경로:** `fsw/build/docs/fm-detaildesign.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc-common.doxyfile`
+
+**경로:** `fsw/build/docs/lc-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc-detaildesign.doxyfile`
+
+**경로:** `fsw/build/docs/lc-detaildesign.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `osal-common.doxyfile`
+
+**경로:** `fsw/build/docs/osal-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `osal-detaildesign.doxyfile`
+
+**경로:** `fsw/build/docs/osal-detaildesign.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `osconfig-example.h`
+
+**경로:** `fsw/build/docs/osconfig-example.h`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc-common.doxyfile`
+
+**경로:** `fsw/build/docs/sc-common.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc-detaildesign.doxyfile`
+
+**경로:** `fsw/build/docs/sc-detaildesign.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `tgtsystem-content-amd64_nos3_default_cpu1.doxyfile`
+
+**경로:** `fsw/build/docs/tgtsystem-content-amd64_nos3_default_cpu1.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

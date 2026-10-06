@@ -3,24 +3,286 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--FprimeDeframer.cpp
-file--FprimeDeframer.fpp
-file--FprimeDeframer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/FprimeDeframer.cpp`](file--FprimeDeframer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/FprimeDeframer.fpp`](file--FprimeDeframer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/FprimeDeframer.hpp`](file--FprimeDeframer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeDeframer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeDeframer.cpp"
+)
+
+set(MOD_DEPS
+    Utils/Types
+    Svc/FprimeProtocol
+)
+
+register_fprime_module()
+
+
+#### UTs ####
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeDeframer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FprimeDeframerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FprimeDeframerTestMain.cpp"
+)
+set(UT_MOD_DEPS
+    STest
+)
+set(UT_AUTO_HELPERS ON)
+
+register_fprime_ut()
+```
+
+### `FprimeDeframer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/FprimeDeframer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeDeframer.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeDeframer component implementation class
+// ======================================================================
+
+#include "Svc/FprimeDeframer/FprimeDeframer.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/Assert.hpp"
+
+#include "Svc/FprimeProtocol/FrameHeaderSerializableAc.hpp"
+#include "Svc/FprimeProtocol/FrameTrailerSerializableAc.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+FprimeDeframer ::FprimeDeframer(const char* const compName) : FprimeDeframerComponentBase(compName) {}
+
+FprimeDeframer ::~FprimeDeframer() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FprimeDeframer ::dataIn_handler(FwIndexType portNum, Fw::Buffer& data, const ComCfg::FrameContext& context) {
+    if (data.getSize() < FprimeProtocol::FrameHeader::SERIALIZED_SIZE + FprimeProtocol::FrameTrailer::SERIALIZED_SIZE) {
+        // Incoming buffer is not long enough to contain a valid frame (header+trailer)
+        this->log_WARNING_HI_InvalidBufferReceived();
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+
+    // Header and Trailer objects to hold the deserialized data (types are autocoded by FPP)
+    FprimeProtocol::FrameHeader header;
+    FprimeProtocol::FrameTrailer trailer;
+
+    // ---------------- Validate Frame Header ----------------
+    // Deserialize transmitted header into the header object
+    auto deserializer = data.getDeserializer();
+    Fw::SerializeStatus status = header.deserialize(deserializer);
+    FW_ASSERT(status == Fw::SerializeStatus::FW_SERIALIZE_OK, status);
+    // Check that deserialized start_word token matches expected value (default start_word value in the FPP object)
+    const FprimeProtocol::FrameHeader defaultValue;
+    if (header.get_startWord() != defaultValue.get_startWord()) {
+        this->log_WARNING_HI_InvalidStartWord();
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+    // We expect the frame size to be size of header + body (of size specified in header) + trailer
+    const FwSizeType expectedFrameSize = FprimeProtocol::FrameHeader::SERIALIZED_SIZE + header.get_lengthField() +
+                                         FprimeProtocol::FrameTrailer::SERIALIZED_SIZE;
+    if (data.getSize() < expectedFrameSize) {
+        this->log_WARNING_HI_InvalidLengthReceived();
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+    // -------- Attempt to extract APID from Payload --------
+    // If PacketDescriptor translates to an invalid APID, let it default to FW_PACKET_UNKNOWN
+    // and let downstream components (e.g. custom router) handle it
+    FwPacketDescriptorType packetDescriptor;
+    status = deserializer.deserialize(packetDescriptor);
+    FW_ASSERT(status == Fw::SerializeStatus::FW_SERIALIZE_OK, status);
+    ComCfg::FrameContext contextCopy = context;
+    // If a valid descriptor is deserialized, set it in the context
+    if (packetDescriptor < ComCfg::APID::INVALID_UNINITIALIZED) {
+        contextCopy.set_apid(static_cast<ComCfg::APID::T>(packetDescriptor));
+    }
+
+    // ---------------- Validate Frame Trailer ----------------
+    // Deserialize transmitted trailer: trailer is at offset = len(header) + len(body)
+    status = deserializer.moveDeserToOffset(FprimeProtocol::FrameHeader::SERIALIZED_SIZE + header.get_lengthField());
+    FW_ASSERT(status == Fw::SerializeStatus::FW_SERIALIZE_OK, status);
+    status = trailer.deserialize(deserializer);
+    FW_ASSERT(status == Fw::SerializeStatus::FW_SERIALIZE_OK, status);
+    // Compute CRC over the transmitted data (header + body)
+    Utils::Hash hash;
+    Utils::HashBuffer computedCrc;
+    FwSizeType fieldToHashSize = header.get_lengthField() + FprimeProtocol::FrameHeader::SERIALIZED_SIZE;
+    hash.init();
+    // Add byte by byte to the hash
+    for (FwSizeType i = 0; i < fieldToHashSize; i++) {
+        hash.update(data.getData() + i, 1);
+    }
+    hash.final(computedCrc);
+    // Check that the CRC in the trailer of the frame matches the computed CRC
+    if (trailer.get_crcField() != computedCrc.asBigEndianU32()) {
+        this->log_WARNING_HI_InvalidChecksum();
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+
+    // ---------------- Extract payload from frame ----------------
+    // Shift data pointer to effectively remove the header
+    data.setData(data.getData() + FprimeProtocol::FrameHeader::SERIALIZED_SIZE);
+    // Shrink size to effectively remove the trailer (also removes the header)
+    data.setSize(data.getSize() - FprimeProtocol::FrameHeader::SERIALIZED_SIZE -
+                 FprimeProtocol::FrameTrailer::SERIALIZED_SIZE);
+    // Emit the deframed data
+    this->dataOut_out(0, data, contextCopy);
+}
+
+void FprimeDeframer ::dataReturnIn_handler(FwIndexType portNum,
+                                           Fw::Buffer& fwBuffer,
+                                           const ComCfg::FrameContext& context) {
+    this->dataReturnOut_out(0, fwBuffer, context);
+}
+
+}  // namespace Svc
+```
+
+### `FprimeDeframer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/FprimeDeframer.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for deframing input received from the ground
+  @ via a FrameAccumulator
+  passive component FprimeDeframer {
+
+    # ----------------------------------------------------------------------
+    # Deframer interface
+    # ----------------------------------------------------------------------
+
+    import Deframer
+
+    @ An invalid frame was received (too short to be a frame)
+    event InvalidBufferReceived \
+      severity warning high \
+      format "Frame dropped: The received buffer is not long enough to contain a valid frame (header + trailer)"
+
+    @ An invalid frame was received (start word is wrong)
+    event InvalidStartWord \
+      severity warning high \
+      format "Frame dropped: The received buffer does not start with the F Prime start word"
+
+    @ An invalid frame was received (length is wrong)
+    event InvalidLengthReceived \
+      severity warning high \
+      format "Frame dropped: The received buffer size cannot hold a frame of specified payload length"
+
+    @ An invalid frame was received (checksum mismatch)
+    event InvalidChecksum \
+      severity warning high \
+      format "Frame dropped: The transmitted frame checksum does not match that computed by the receiver"
+
+    ###############################################################################
+    # Standard AC Ports for Events 
+    ###############################################################################
+    @ Port for requesting the current time
+    time get port timeCaller
+
+    @ Port for sending textual representation of events
+    text event port logTextOut
+
+    @ Port for sending events to downlink
+    event port logOut
+  }
+
+}
+```
+
+### `FprimeDeframer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/FprimeDeframer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeDeframer.hpp
+// \author thomas-bc
+// \brief  hpp file for FprimeDeframer component implementation class
+// ======================================================================
+
+#ifndef Svc_FprimeDeframer_HPP
+#define Svc_FprimeDeframer_HPP
+
+#include "Svc/FprimeDeframer/FprimeDeframerComponentAc.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+namespace Svc {
+
+class FprimeDeframer final : public FprimeDeframerComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct FprimeDeframer object
+    FprimeDeframer(const char* const compName  //!< The component name
+    );
+
+    //! Destroy FprimeDeframer object
+    ~FprimeDeframer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for frame
+    //!
+    //! Port to receive framed data. The handler will strip the header and trailer from the frame
+    //! and pass the deframed data to the deframed output port.
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& data,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Port receiving back ownership of sent frame buffers
+    void dataReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& data,     //!< The buffer
+                              const ComCfg::FrameContext& context) override;
+};
+
+}  // namespace Svc
+
+#endif
+```

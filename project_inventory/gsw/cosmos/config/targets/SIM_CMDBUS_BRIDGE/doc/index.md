@@ -3,14 +3,10 @@
 
 **경로:** `gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/doc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cosmos_cmdtarget_def.png`
 
-file--cosmos_cmdtarget_def.png
-```
+**경로:** `gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/doc/cosmos_cmdtarget_def.png`
 
-## 항목
-
-- [`gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/doc/cosmos_cmdtarget_def.png`](file--cosmos_cmdtarget_def.png) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

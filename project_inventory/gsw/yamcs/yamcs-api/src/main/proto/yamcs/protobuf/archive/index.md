@@ -3,20 +3,1190 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `archive.proto`
 
-file--archive.proto
-file--index_service.proto
-file--parameter_archive_service.proto
-file--rocksdb_service.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/archive.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.archive;
+
+option java_package = "org.yamcs.protobuf";
+
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/api/httpbody.proto";
+import "yamcs/protobuf/pvalue/pvalue.proto";
+import "yamcs/protobuf/yamcs.proto";
+
+service StreamArchiveApi {
+  
+  // List parameter groups
+  rpc ListParameterGroups(ListParameterGroupsRequest) returns (ParameterGroupInfo) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/parameter-groups"
+    };
+  }
+  
+  // List parameter history
+  rpc ListParameterHistory(ListParameterHistoryRequest) returns (ListParameterHistoryResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/stream-archive/{instance}/parameters/{name*}"
+    };
+  }
+  
+  // Streams back parameter values
+  rpc StreamParameterValues(StreamParameterValuesRequest) returns (stream pvalue.ParameterData) {
+    option (yamcs.api.route) = {
+      post: "/api/stream-archive/{instance}:streamParameterValues"
+      body: "*"
+    };
+  }
+  
+  // Get parameter samples
+  rpc GetParameterSamples(GetParameterSamplesRequest) returns (pvalue.TimeSeries) {
+    option (yamcs.api.route) = {
+      get: "/api/stream-archive/{instance}/parameters/{name*}/samples"
+      field_mask_root: "sample"
+    };
+  }
+  
+  // Export parameter values in CSV format
+  rpc ExportParameterValues(ExportParameterValuesRequest) returns (stream yamcs.api.HttpBody) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}:exportParameterValues"
+      additional_bindings {
+        post: "/api/archive/{instance}:exportParameterValues"
+        body: "*"
+      }
+    };
+  }
+}
+
+// Retrieves parameters by performing a replay
+message StreamParameterValuesRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  optional google.protobuf.Timestamp start = 2;
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Parameter identifiers. Each identifier takes the form of
+  // a namespace and a name.
+  //
+  // For Yamcs-native naming only the name field is required and
+  // should be the fully qualified name. The namespace is only
+  // required when the name represents an alias of that parameter.
+  repeated NamedObjectId ids = 4;
+
+  // Since version 5.4.0, Yamcs records the name of the TM link on which
+  // a TM packet is received together with the packet (in the tm table).
+  // This option, if specified, allows retrieving as part of replay only
+  // the packets originally received on one of the links specified.
+  repeated string tmLinks = 5;
+}
+
+message ParameterGroupInfo {
+
+  // Parameter group names
+  repeated string groups = 2;
+}
+
+message ListParameterGroupsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+}
+
+message ListParameterHistoryRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Parameter name
+  optional string name = 2;
+  
+  // The zero-based row number at which to start outputting results. Default: ``0``.
+  optional int64 pos = 3;
+  
+  // The maximum number of returned records per page. Choose this value too high
+  // and you risk hitting the maximum response size limit enforced by the server.
+  // Default: ``100``.
+  optional int32 limit = 4;
+  
+  // Whether to filter out consecutive identical values. Default ``no``.
+  optional bool norepeat = 5;
+  
+  // Filter the lower bound of the parameter's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 6;
+  
+  // Filter the upper bound of the parameter's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 7;
+  
+  // The order of the returned results. Can be either ``asc`` or ``desc``.
+  // Default: ``desc``.
+  optional string order = 8;
+  
+  // Disable loading of parameters from the parameter cache. Default: ``false``.
+  optional bool norealtime = 9;
+  
+  // The name of the processor from which to use the parameter cache.
+  // Default: ``realtime``.
+  optional string processor = 10;
+  
+  // Specifies how to retrieve the parameters. Either ``ParameterArchive`` or
+  // ``replay``. If ``replay`` is specified, a replay processor will be created
+  // and data will be processed with the active Mission Database. Note that this
+  // is much slower than receiving data from the ParameterArchive.
+  //
+  // Default: ``ParameterArchive``.
+  optional string source = 11;
+  
+  // Do not perform a replay if the ``source=ParameterArchive`` and the parameter archive does not cover the last part of the requested time interval.
+  // Default: ``false``.
+  optional bool noreplay = 14;
+
+  // If set, truncate binary values to the specified byte length.
+  // This may be necessary when Yamcs contains large binary values.
+  optional int32 maxBytes = 13;
+
+  // Continuation token returned by a previous page response.
+  optional string next = 12;
+  
+
+}
+
+message ListParameterHistoryResponse {
+  repeated pvalue.ParameterValue parameter = 1;
+  
+  // Token indicating the response is only partial. More results can then
+  // be obtained by performing the same request (including all original
+  // query parameters) and setting the ``next`` parameter to this token.
+  optional string continuationToken = 2;
+}
+
+message GetParameterSamplesRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Parameter name
+  optional string name = 2;
+  
+  // Filter the lower bound of the parameter's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 3;
+  
+  // Filter the upper bound of the parameter's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 4;
+  
+  // Number of intervals to use. Default: ``500``.
+  optional int32 count = 5;
+  
+  // Disable loading of parameters from the parameter cache. Default: ``false``.
+  optional bool norealtime = 6;
+  
+  // Consider the raw value instead of the engineering value.
+  // Default is to use the engineering value 
+  optional bool useRawValue = 9;
+
+  // Milliseconds before a sample is considered expired. This property is
+  // used as a fallback, when the underlying parameter values have no
+  // implicit expiration time.
+  //
+  // Default: ``120000``.
+  optional uint64 gapTime = 10;
+
+  // The name of the processor from which to use the parameter cache.
+  // Default: ``realtime``.
+  optional string processor = 7;
+  
+  // Specifies how to retrieve the parameters. Either ``ParameterArchive`` or
+  // ``replay``. If ``replay`` is specified, a replay processor will be created
+  // and data will be processed with the active Mission Database. Note that
+  // this is much slower than receiving data from the ParameterArchive.
+  //
+  // Default: ``ParameterArchive``.
+  optional string source = 8;
+}
+
+message ExportParameterValuesRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Filter the lower bound of the parameter's generation time.
+  // Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // Filter the upper bound of the parameter's generation time.
+  // Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 3;
+  
+  // The parameters to add to the export.
+  repeated string parameters = 4;
+
+  // Identifier of a Parameter List, describing the parameters to
+  // export.
+  //
+  // This may be used as an alternative to the ``parameters`` field.
+  optional string list = 14;
+  
+  // Namespace used to display parameter names in csv header.
+  // Only used when no parameter ids were specified.
+  optional string namespace = 5;
+  
+  // Extra columns added to the CSV output:
+  //
+  //  * ``raw``: Raw parameter values
+  //  * ``monitoring``: Monitoring status
+  repeated string extra = 6;
+  
+  // Column delimiter. One of ``TAB``, ``COMMA`` or ``SEMICOLON``.
+  // Default: ``TAB``.
+  optional string delimiter = 7;
+
+  // When specified, only one value each for each interval is returned.
+  // The value is in milliseconds.
+  optional int32 interval = 8;
+
+  // If true, repeat the the previous value, if there is no value for
+  // the current timestamp. Default: ``false``.
+  optional bool preserveLastValue = 9;
+
+  // The zero-based row number at which to start outputting results. Default: ``0``.
+  optional int64 pos = 10;
+
+  // The maximum number of returned records. Default: unlimited.
+  optional int32 limit = 11;
+
+  // The order of the returned results. Can be either ``asc`` or ``desc``.
+  // Default: ``asc``.
+  optional string order = 12;
+
+  // Preferred filename, this is returned in a Content-Disposition HTTP header.
+  // If unset, Yamcs will determine a name. 
+  optional string filename = 13;
+
+  // Header row to include in the response.
+  // One of ``QUALIFIED_NAME``, ``SHORT_NAME`` or ``NONE``.
+  // Default: ``QUALIFIED_NAME``.
+  optional string header = 15;
+}
 ```
 
-## 항목
+### `index_service.proto`
 
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/archive.proto`](file--archive.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/index_service.proto`](file--index_service.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/parameter_archive_service.proto`](file--parameter_archive_service.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/rocksdb_service.proto`](file--rocksdb_service.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/index_service.proto`
+
+
+```text
+
+syntax="proto2";
+
+package yamcs.protobuf.archive;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "IndexServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/yamcs.proto";
+
+service IndexesApi {
+
+  // List command history index
+  rpc ListCommandHistoryIndex(ListCommandHistoryIndexRequest) returns (IndexResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/command-index"
+    };
+  }
+  
+  // List event index
+  rpc ListEventIndex(ListEventIndexRequest) returns (IndexResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/event-index"
+    };
+  }
+  
+  // List packet index
+  rpc ListPacketIndex(ListPacketIndexRequest) returns (IndexResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/packet-index"
+    };
+  }
+  
+  // List parameter index
+  rpc ListParameterIndex(ListParameterIndexRequest) returns (IndexResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/parameter-index"
+    };
+  }
+  
+  // List completeness index
+  rpc ListCompletenessIndex(ListCompletenessIndexRequest) returns (IndexResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/completeness-index"
+    };
+  }
+
+  // Streams back packet index records
+  rpc StreamPacketIndex(StreamPacketIndexRequest) returns (stream ArchiveRecord) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}:streamPacketIndex"
+      body: "*"
+    };
+  }
+  
+  // Streams back parameter index records
+  rpc StreamParameterIndex(StreamParameterIndexRequest) returns (stream ArchiveRecord) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}:streamParameterIndex"
+      body: "*"
+    };
+  }
+  
+  // Streams back processed parameter index records
+  rpc StreamCommandIndex(StreamCommandIndexRequest) returns (stream ArchiveRecord) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}:streamCommandIndex"
+      body: "*"
+    };
+  }
+  
+  // Streams back event index records
+  rpc StreamEventIndex(StreamEventIndexRequest) returns (stream ArchiveRecord) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}:streamEventIndex"
+      body: "*"
+    };
+  }
+  
+  // Streams back event index records
+  rpc StreamCompletenessIndex(StreamCompletenessIndexRequest) returns (stream ArchiveRecord) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}:streamCompletenessIndex"
+      body: "*"
+    };
+  }
+  
+  // Rebuild CCSDS TM Index
+  rpc RebuildCcsdsIndex(RebuildCcsdsIndexRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      label: "Rebuild CCSDS Index"
+      post: "/api/archive/{instance}:rebuildCcsdsIndex"
+      body: "*"
+    };
+  }
+}
+
+message ListCommandHistoryIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together. Default: ``2000``
+  optional int32 mergeTime = 2;
+  
+  // The maximum number of returned entries. Choose this value too high and you risk hitting
+  // the maximum response size limit enforced by the server. Default: ``1000``.
+  // Note that in general it is advised to control the size of the response via ``mergeTime``,
+  // rather than via ``limit``.
+  optional int32 limit = 3;
+  
+  // Filter the lower bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 4;
+  
+  // Filter the upper bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 5;
+  
+  // Continuation token returned by a previous page response.
+  optional string next = 6;
+  
+  // Filter on a specific command
+  repeated string name = 7;
+}
+
+message ListEventIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together. Default: ``2000``
+  optional int32 mergeTime = 2;
+  
+  // The maximum number of returned entries. Choose this value too high and you risk
+  // hitting the maximum response size limit enforced by the server. Default: ``1000``.
+  // Note that in general it is advised to control the size of the response via
+  // ``mergeTime``, rather than via ``limit``.
+  optional int32 limit = 3;
+  
+  // Filter the lower bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 4;
+  
+  // Filter the upper bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 5;
+  
+  // Continuation token returned by a previous page response.
+  optional string next = 6;
+  
+  // Filter on specific sources.
+  repeated string source = 7;
+}
+
+message ListPacketIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together. Default: ``2000``
+  optional int32 mergeTime = 2;
+  
+  // The maximum number of returned entries. Choose this value too high and you risk
+  // hitting the maximum response size limit enforced by the server. Default: ``1000``.
+  // Note that in general it is advised to control the size of the response via
+  // ``mergeTime``, rather than via ``limit``.
+  optional int32 limit = 3;
+  
+  // Filter the lower bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 4;
+  
+  // Filter the upper bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 5;
+  
+  // Continuation token returned by a previous page response.
+  optional string next = 6;
+  
+  // Filter on specific packet names.
+  repeated string name = 7;
+}
+
+message ListParameterIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together. Default: ``20000``
+  optional int32 mergeTime = 2;
+  
+  // The maximum number of returned entries. Choose this value too high and you risk
+  // hitting the maximum response size limit enforced by the server. Default: ``1000``.
+  // Note that in general it is advised to control the size of the response via
+  // ``mergeTime``, rather than via ``limit``.
+  optional int32 limit = 3;
+  
+  // Filter the lower bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 4;
+  
+  // Filter the upper bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 5;
+  
+  // Continuation token returned by a previous page response.
+  optional string next = 6;
+  
+  // Filter on specific parameter groups.
+  repeated string group = 7;
+}
+
+message ListCompletenessIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together. Default: unset
+  optional int32 mergeTime = 6;
+
+  // The maximum number of returned entries. Choose this value too high and you risk hitting
+  // the maximum response size limit enforced by the server. Default: ``1000``.
+  // Note that in general it is advised to control the size of the response via ``mergeTime``,
+  // rather than via ``limit``.
+  optional int32 limit = 2;
+
+  // Filter the lower bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 3;
+
+  // Filter the upper bound of the index entries. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 4;
+  
+  // Continuation token returned by a previous page response.
+  optional string next = 5;
+}
+
+message IndexResponse {
+  repeated IndexGroup group = 1;
+  
+  // Token indicating the response is only partial. More results can then
+  // be obtained by performing the same request (including all original
+  // query parameters) and setting the ``next`` parameter to this token.
+  optional string continuationToken = 2;
+}
+
+message IndexGroup {
+  optional NamedObjectId id = 1;
+  repeated IndexEntry entry = 2;
+}
+
+message IndexEntry {
+  optional string start = 1;
+  optional string stop = 2;
+  optional int32 count = 3;
+  optional int64 seqStart = 4;
+  optional int64 seqStop = 5;
+}
+
+message StreamPacketIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // The time at which to start retrieving index records.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // The time at which to stop retrieving index records.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Filter on specific packet names
+  repeated string names = 4;
+  
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together.
+  optional uint32 mergeTime = 5;
+}
+
+message StreamParameterIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // The time at which to start retrieving index records.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // The time at which to stop retrieving index records.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together.
+  optional int32 mergeTime = 4;
+}
+
+message StreamCommandIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // The time at which to start retrieving index records.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // The time at which to stop retrieving index records.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together.
+  optional int32 mergeTime = 4;
+}
+
+message StreamEventIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // The time at which to start retrieving index records.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // The time at which to stop retrieving index records.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together.
+  optional int32 mergeTime = 4;
+}
+
+message StreamCompletenessIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // The time at which to start retrieving index records.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // The time at which to stop retrieving index records.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Value in milliseconds that indicates the maximum gap before two consecutive index
+  // ranges are merged together.
+  optional uint32 mergeTime = 4;
+}
+
+message RebuildCcsdsIndexRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Range start (inclusive)
+  optional google.protobuf.Timestamp start = 2;
+
+  // Range stop (exclusive)
+  optional google.protobuf.Timestamp stop = 3;
+}
+```
+
+### `parameter_archive_service.proto`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/parameter_archive_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.archive;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "ParameterArchiveServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/archive/archive.proto";
+import "yamcs/protobuf/pvalue/pvalue.proto";
+import "yamcs/protobuf/yamcs.proto";
+
+service ParameterArchiveApi {
+
+  // Rebuild range
+  //
+  // The back filler has to be enabled for this purpose. The back filling process does not
+  // remove data but just overwrites it. That means that if the parameter replay returns
+  // less parameters than originally stored in the archive, the old parameters will still
+  // be found in the archive.
+  //
+  // It also means that if a replay returns the parameter of a different type than
+  // originally stored, the old ones will still be stored. This is because the parameter
+  // archive treats parameter with the same name but different type as different parameters.
+  // Each of them is given an id and the id is stored in the archive.
+  rpc RebuildRange(RebuildRangeRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}/parameterArchive:rebuild"
+      body: "*"
+      offloaded: true
+    };
+  }
+
+  // Get parameter samples
+  //
+  // This divides the query interval in a number of intervals and returns aggregated
+  // statistics (max, min, avg) about each interval.
+  //
+  // This operation is useful when making high-level overviews (such as plots) of a
+  // parameter's value over large time intervals without having to retrieve each
+  // and every individual parameter value.
+  //
+  // By default this operation fetches data from the parameter archive and/or
+  // parameter cache. If these services are not configured, you can still get
+  // correct results by specifying the option ``source=replay`` as detailed below.
+  rpc GetParameterSamples(GetParameterSamplesRequest) returns (pvalue.TimeSeries) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/parameters/{name*}/samples"
+      field_mask_root: "sample"
+    };
+  }
+  
+  // Get parameter ranges
+  //
+  // A range is a tuple ``(start, stop, value, count)`` that represents the time
+  // interval for which the parameter has been steadily coming in with the same
+  // value. This request is useful for retrieving an overview for parameters that
+  // change unfrequently in a large time interval. For example an on/off status
+  // of a device, or some operational status. Two consecutive ranges containing
+  // the same value will be returned if there was a gap in the data. The gap is
+  // determined according to the parameter expiration time configured in the
+  // Mission Database.
+  rpc GetParameterRanges(GetParameterRangesRequest) returns (pvalue.Ranges) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/parameters/{name*}/ranges"
+      field_mask_root: "range"
+    };
+  }
+  
+  // List parameter history
+  rpc ListParameterHistory(ListParameterHistoryRequest) returns (ListParameterHistoryResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/parameters/{name*}"
+    };
+  }
+
+  // Get information about the archived parameters.
+  //
+  // Each combination of (parameter name, raw type, engineering type) is assigned a
+  // unique parameter id.
+  // 
+  // The parameters are grouped such that the samples of all parameters from one group
+  // have the same timestamp. For example all parameters extracted from one TM packet
+  // have usually the same timestamp and are part of the same group.
+  //
+  // Each group is assigned a unique group id.
+  //
+  // A parameter can be part of multiple groups. For instance a parameter appearing
+  // in the header of a packet is part of all groups made by inherited containers
+  // (i.e. each packet with that header will compose another group).
+  //
+  // For each group, the parameter archive stores one common record for the timestamps
+  // and individual records for the raw and engineering values of each parameter. If a
+  // parameter appears in multiple groups, retrieving its value means combining
+  // (time-based merge operation) the records belonging to the groups in which the
+  // parameter appears.
+  //
+  // The response to this method contains the parameter id, name, engineering type,
+  // raw type and the groups of which this parameter is part of.
+  rpc GetArchivedParametersInfo(GetArchivedParametersInfoRequest) returns (ArchivedParametersInfoResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/parameter-archive/{instance}/pids"
+      additional_bindings {
+        get: "/api/archive/{instance}/parameterArchive/info/parameters"
+        deprecated: true
+      }
+    };
+  }
+
+  // For a given parameter id, get the list of segments available for that parameter.
+  // A segment contains multiple samples (maximum ~70 minutes) of the same parameter.
+  rpc GetArchivedParameterSegments(GetArchivedParameterSegmentsRequest) returns (ArchivedParameterSegmentsResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/parameter-archive/{instance}/pids/{pid}/segments"
+      additional_bindings {
+        get: "/api/archive/{instance}/parameterArchive/info/segments/{pid}"
+        deprecated: true
+      }
+    };
+  }
+
+  // For a given group id, get the list of parameters which are part of the group
+  rpc GetArchivedParameterGroup(GetArchivedParameterGroupRequest) returns (ArchivedParameterGroupResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/parameter-archive/{instance}/gids/{gid}"
+      additional_bindings {
+        get: "/api/archive/{instance}/parameterArchive/info/groups/{gid}"
+        deprecated: true
+      }
+    };
+  }
+
+  // Removes all the parameter archive data and related metadata. All the filling operations are stopped before
+  // and started after the purge.
+  //
+  // The rebuild operation has to be called to rebuild the past segments of the archive.
+  //
+  // Starting with Yamcs 5.9.0 the Parameter Archive is stored into a different column family ``parameter_archive``.
+  // Storing data into a separate column family gives better performance and the Parameter Archive rebuild operations
+  // are less disturbing for the other data (TM, TC, Events...). If the archive is from a previous version of Yamcs,
+  // the purge/rebuild can be used to move the parameter archive from the default column family to the separate column family.
+  rpc Purge(PurgeRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}/parameterArchive:purge"
+      body: "*"
+    };
+  }
+  
+  // Disables the automatic backfilling (rebuilding) of the parameter archive.
+  // See :manual:`services/instance/parameter-archive-service/#backfiller-options`
+  // 
+  // If the backfilling is already disabled, this operation has no effect.
+  // If there is a backfilling running, this call will not stop it. 
+  //
+  // Manual rebuild operations are still accepted.
+  //  
+  rpc DisableBackfilling(DisableBackfillingRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}/parameterArchive:disableBackfilling"
+      body: "*"
+    };
+  }
+  
+  // Enables the automatic backfilling (rebuilding) of the parameter archive. 
+  // If the backfilling is already enabled, this operation has no effect.
+  //  
+  rpc EnableBackfilling(EnableBackfillingRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/{instance}/parameterArchive:enableBackfilling"
+      body: "*"
+    };
+  }
+
+  // Receive backfill notifications
+  rpc SubscribeBackfilling(SubscribeBackfillingRequest) returns (stream SubscribeBackfillingData) {
+    option (yamcs.api.websocket) = {
+      topic: "backfilling"
+    };
+  }
+}
+
+message SubscribeBackfillingRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+}
+
+message SubscribeBackfillingData {
+
+  // Notification message when a backfill finished
+  message BackfillFinishedInfo {
+    // Range start
+    optional google.protobuf.Timestamp start = 1;
+
+    // Range stop
+    optional google.protobuf.Timestamp stop = 2;
+
+    // Number of processed parameters
+    optional uint64 processedParameters = 3;
+  }
+
+  // Recently finished backfills (bundled over a 5 second interval)
+  repeated BackfillFinishedInfo finished = 1;
+}
+
+// Note that the archive is built in segments of approximatively 70 minutes,
+// therefore the real start will be before the specified start and the real
+// stop will be after the specified stop.
+message RebuildRangeRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Start rebuilding from here. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 2;
+  
+  // Rebuild until here. Specify a date string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 3;
+}
+
+message PurgeRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+}
+
+message GetParameterRangesRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+
+  // Parameter name.
+  optional string name = 2;
+  
+  // Filter the lower bound of the parameter's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 3;
+  
+  // Filter the upper bound of the parameter's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 4;
+  
+  // Time in milliseconds. Any gap (detected based on parameter expiration) smaller than
+  // this will be ignored. However if the parameter changes value, the ranges will still
+  // be split.
+  optional int64 minGap = 5;
+  
+  // Time in milliseconds. If the distance between two subsequent values of the parameter
+  // is bigger than this value (but smaller than the parameter expiration), then an
+  // artificial gap will be constructed. This also applies if there is no parameter
+  // expiration defined for the parameter.
+  optional int64 maxGap = 6;
+  
+  // Disable loading of parameters from the parameter cache. Default: ``false``.
+  optional bool norealtime = 7;
+  
+  // The name of the processor from which to use the parameter cache. Default: ``realtime``.
+  optional string processor = 8;
+
+  // Specifies how to retrieve the parameters. Either ``ParameterArchive`` or
+  // ``replay``. If ``replay`` is specified, a replay processor will be created
+  // and data will be processed with the active Mission Database. Note that this
+  // is much slower than receiving data from the ParameterArchive.
+  //
+  // Default: ``ParameterArchive``.
+  optional string source = 9;
+
+  // Time in milliseconds of the minimum range to be returned. If the data changes more often,
+  //a new range will not be created but the data will be added to the old range.
+  optional int64 minRange = 10;
+
+  // Maximum number of distinct values to be returned. The maximum number
+  // applies across all ranges and is meant to limit the amount of data that
+  // is being retrieved. The retrieved data has a count for each value as well
+  // as a total count. The difference between the total count and the sum of the
+  // individual counts can be used to compute the number of unsent values.
+  optional int32 maxValues = 11;
+}
+
+// Get information about the parameters stored in the Parameter Archive 
+message GetArchivedParametersInfoRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Filter query. See :doc:`../filtering` for how to write a filter query.
+  //
+  // Literal text search matches against the field ``parameter``.
+  //
+  // Field comparisons can use any of the following fields:
+  //
+  // .. list-table::
+  //     :widths: 25 25 50
+  //
+  //     * - ``pid``
+  //       - number
+  //       -
+  //     * - ``parameter``
+  //       - string
+  //       -
+  //     * - ``rawType``
+  //       - enum
+  //       - One of ``float``, ``double``, ``uint32``, ``sint32``, ``binary``, ``string``,
+  //         ``timestamp``, ``uint64``, ``sint64``, ``boolean``, ``aggregate``, ``array``,
+  //         ``enumerated`` or ``none``.
+  //     * - ``gid``
+  //       - number
+  //       -
+  optional string filter = 4;
+
+  // The maximum number of returned parameters. Choose this value too
+  // high and you risk hitting the maximum response size limit enforced by the
+  // server. Default: ``100``
+  optional int32 limit = 7;
+
+  // Continuation token returned by a previous page response.
+  optional string next = 8;
+}
+
+message GetArchivedParameterSegmentsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Parameter ID
+  optional uint32 pid = 2;
+
+  // Include segments after ``start`` (inclusive)
+  optional google.protobuf.Timestamp start = 3;
+
+  // Include segments before ``stop`` (exclusive)
+  optional google.protobuf.Timestamp stop = 4;
+}
+
+// This message contains information about one parameter in the parameter archive.
+// Each (parameter name, raw type, engineering type) is assigned a unique id and all 
+// the samples are stored with that id.
+//
+// If an MDB change results in the parameter having a different engineering or raw type, 
+// a new pid will be allocated.
+//
+// This is why for the same parameter name, we can have multiple parameter ids.
+//
+// The parameter archive contains data even for parameters removed from the MDB.
+message ArchivedParameterInfo {
+  // Parameter ID
+  optional uint32 pid = 1;
+  
+  // Fully-qualified parameter name
+  optional string parameter = 2;
+  
+  // Raw type
+  optional Value.Type rawType = 3;
+  
+  // Engineering type
+  optional Value.Type engType = 4;
+  
+  // Groups where this parameter is included
+  repeated uint32 gids = 5;
+}
+
+message ArchivedParametersInfoResponse {
+  repeated ArchivedParameterInfo pids = 1;
+
+  // Token indicating the response is only partial. More results can then
+  // be obtained by performing the same request (including all original
+  // query parameters) and setting the ``next`` parameter to this token.
+  optional string continuationToken = 2;
+}
+
+message ArchiveParameterSegmentInfo {
+  // Multiple parameters are grouped such that all in one group have
+  // the same timestamps. For example: all parameters extracted from
+  // one TM packet usually have the same timestamp.
+  //
+  // This way we have a unique segment storing the timestamps for a
+  // group of parameters. The groupId can be used to retrieve all parameters
+  // from the same group.
+  optional uint32 groupId = 1;
+  
+  // Segment start
+  optional google.protobuf.Timestamp start = 2;
+  
+  // Segment end 
+  optional google.protobuf.Timestamp end = 3;
+  
+  // Number of samples in the segment
+  optional uint32 count = 4;
+}
+
+// Recorded segments for the requested parameter
+message ArchivedParameterSegmentsResponse {
+  optional ArchivedParameterInfo parameterInfo = 1;
+  repeated ArchiveParameterSegmentInfo segments = 2;
+}
+
+message GetArchivedParameterGroupRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Group identifier
+  optional uint32 gid = 2;
+}
+
+message ArchivedParameterGroupResponse {
+  // Group identifier
+  optional uint32 gid = 1;
+  
+  // Parameters belonging to the group
+  repeated ArchivedParameterInfo parameters = 2;
+}
+
+message EnableBackfillingRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+}
+
+message DisableBackfillingRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+}
+```
+
+### `rocksdb_service.proto`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/archive/rocksdb_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.archive;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "RocksDbServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/api/httpbody.proto";
+
+service RocksDbApi {
+  option (yamcs.api.label) = "RocksDB";
+
+  // List tablespaces
+  rpc ListTablespaces(google.protobuf.Empty) returns (ListRocksDbTablespacesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/rocksdb/tablespaces"
+    };
+  }
+
+  // Backup database
+  rpc BackupDatabase(BackupDatabaseRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/rocksdb/{tablespace}/{dbpath*}:backup"
+      log: "Tablespace {tablespace} backed up to {backupDir}"
+    };
+  }
+
+  // List databases
+  rpc ListDatabases(google.protobuf.Empty) returns (ListRocksDbDatabasesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/rocksdb/databases"
+    };
+  }
+
+  // Compact database
+  rpc CompactDatabase(CompactDatabaseRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/archive/rocksdb/{tablespace}/{dbpath**}:compact"
+      body: "*"
+      offloaded: true
+      log: "Compaction triggered on tablespace {tablespace}"
+    };
+  }
+
+  // Get a text-dump with general RocksDB info
+  rpc DescribeRocksDb(google.protobuf.Empty) returns (yamcs.api.HttpBody) {
+    option (yamcs.api.route) = {
+      label: "Describe RocksDB"
+      get: "/api/archive/rocksdb:describe"
+    };
+  }
+
+  // Get a text-dump describing a database
+  //
+  // This operation can be used to debug the inner workings of RocksDB database.
+  // For example the property rocksdb.estimate-table-readers-mem will provide an
+  // estimation of how much memory is used by the index and filter cache of
+  // RocksDB (note that the memory used by RocksDB is outside the java heap space).
+  //
+  // See also: https://github.com/facebook/rocksdb/blob/master/include/rocksdb/db.h
+  //
+  // The response contains a dump of various rocksdb properties for each column
+  // family. The single value properties are presented in a "name: value" list.
+  // The multiline properties are preceded by a line including the property name
+  // between dashes.
+  rpc DescribeDatabase(DescribeDatabaseRequest) returns (yamcs.api.HttpBody) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/rocksdb/{tablespace}/{dbpath**}:describe"
+    };
+  }
+}
+
+message ListRocksDbTablespacesResponse {
+  repeated RocksDbTablespaceInfo tablespaces = 1;
+}
+
+message RocksDbTablespaceInfo {
+  optional string name = 1;
+  optional string dataDir = 2;
+  repeated RocksDbDatabaseInfo databases = 3;
+}
+
+message ListRocksDbDatabasesResponse {
+  repeated RocksDbDatabaseInfo databases = 1;
+}
+
+message RocksDbDatabaseInfo {
+  optional string tablespace = 1;
+  optional string dataDir = 2;
+  optional string dbPath = 3;
+}
+
+message BackupDatabaseRequest {
+  optional string tablespace = 1;
+  optional string dbpath = 2;
+  optional string backupDir = 3;
+}
+
+message CompactDatabaseRequest {
+  optional string tablespace = 1;
+  optional string dbpath = 2;
+
+  // Column family
+  //
+  // Starting with Yamcs 5.9.0 the following column families are used:
+  //
+  // _metadata_
+  //     Stores information about tables, partitions
+  // rt_data
+  //     Stores the tm, pp and events tables
+  // parameter_archive
+  //     Stores the parameter archive
+  // default
+  //     Stores everything else: cmdhistory, alarms, completeness indices,
+  //     timeline, activities, users, buckets, ...
+  optional string cfname = 3;
+}
+
+message DescribeDatabaseRequest {
+  optional string tablespace = 1;
+  optional string dbpath = 2;
+}
+```

@@ -3,16 +3,143 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/ARDUCAM/lib/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `arducam_exp.rb`
 
-file--arducam_exp.rb
-file--arducam_lib.rb
+**경로:** `gsw/cosmos/COMPONENTS/ARDUCAM/lib/arducam_exp.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/tools/data_viewer/data_viewer_component'
+
+module Cosmos
+
+    class ArducamExp < DataViewerComponent
+
+        def initialize(parent, tab_name)
+            super(parent, tab_name)
+            @file = File.open(File.join(@log_file_directory, File.build_timestamped_filename(['ARDUCAM_EXP_TLM_T'], '.csv')), 'a+')
+            @file.write("CCSDS_PKT_VER,CCSDS_PKT_TYP,CCSDS_SEC_FLG,CCSDS_APID,CCSDS_SEQ_FLAGS,CCSDS_SEQ_COUNT,CCSDS_LENGTH,CCSDS_SECONDS,CCSDS_SUBSECS,DATA,MSG_COUNT,\n")
+        end
+
+        def process_packet(packet)
+            processed_text = ""
+            processed_text += "%3.3b, " % packet.read('CCSDS_PKT_VER')
+            processed_text += "%1.1b, " % packet.read('CCSDS_PKT_TYP')
+            processed_text += "%1.1b, " % packet.read('CCSDS_SEC_FLG')
+            processed_text += "%4.4x, " % packet.read('CCSDS_APID')
+            processed_text += "%2.2b, " % packet.read('CCSDS_SEQ_FLAGS')
+            processed_text += "%6.6d, " % packet.read('CCSDS_SEQ_COUNT')
+            processed_text += "%6.6d, " % packet.read('CCSDS_LENGTH')
+            processed_text += "%10.10d, " % packet.read('CCSDS_SECONDS')
+            processed_text += "%6.6d, " % packet.read('CCSDS_SUBSECS')
+            processed_text += "%s, " % (packet.read('CAM_DATA')).unpack('H*')
+            processed_text += "%10.10u, " % packet.read('MSG_COUNT')
+            
+            # Picture Test
+			fp = File.open('cam.jpg', 'ab+') 
+			IO.binwrite(fp, (packet.read('CAM_DATA')), mode: 'a')
+			fp.close
+            
+            if @processed_queue.length < 1000
+               @processed_queue << processed_text
+            end
+            @file.write(processed_text + "\n")
+            @file.flush
+        end
+    end
+end
 ```
 
-## 항목
+### `arducam_lib.rb`
 
-- [`gsw/cosmos/COMPONENTS/ARDUCAM/lib/arducam_exp.rb`](file--arducam_exp.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/ARDUCAM/lib/arducam_lib.rb`](file--arducam_lib.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/COMPONENTS/ARDUCAM/lib/arducam_lib.rb`
+
+
+```ruby
+# Library for ARDUCAM Target
+require 'cosmos'
+require 'cosmos/script'
+
+#
+# Definitions
+#
+ARDUCAM_CMD_SLEEP = 0.25
+ARDUCAM_RESPONSE_TIMEOUT = 5
+ARDUCAM_TEST_LOOP_COUNT = 1
+ARDUCAM_DEVICE_LOOP_COUNT = 5
+
+#
+# Functions
+#
+def get_arducam_hk()
+    cmd("ARDUCAM CAM_SEND_HK_CC")
+    wait_check_packet("ARDUCAM", "ARDUCAM_HK_TLM_T", 1, ARDUCAM_RESPONSE_TIMEOUT)
+    sleep(ARDUCAM_CMD_SLEEP)
+end
+
+def arducam_cmd(*command)
+    count = tlm("ARDUCAM ARDUCAM_HK_TLM_T COMMANDCOUNT") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd(*command)
+    get_arducam_hk()
+    current = tlm("ARDUCAM ARDUCAM_HK_TLM_T COMMANDCOUNT")
+    if (current != count)
+        # Try again
+        cmd(*command)
+        get_arducam_hk()
+        current = tlm("ARDUCAM ARDUCAM_HK_TLM_T COMMANDCOUNT")
+        if (current != count)
+            # Third times the charm
+            cmd(*command)
+            get_arducam_hk()
+            current = tlm("ARDUCAM ARDUCAM_HK_TLM_T COMMANDCOUNT")
+        end
+    end
+    check("ARDUCAM ARDUCAM_HK_TLM_T COMMANDCOUNT >= #{count}")
+end
+
+def safe_arducam()
+    get_arducam_hk()
+end
+
+def confirm_arducam_data()
+    dev_cmd_cnt = tlm("ARDUCAM ARDUCAM_HK_TLM_T DEVICE_COUNT")
+    dev_cmd_err_cnt = tlm("ARDUCAM ARDUCAM_HK_TLM_T DEVICE_ERR_COUNT")
+    cmd("ARDUCAM CAM_EXP3_CC")
+    get_arducam_hk()
+    # Note these checks assume default simulator configuration
+    check("ARDUCAM EXP_TLM_T CAM_FIFO_LENGTH >= 0")
+    check("ARDUCAM EXP_TLM_T CAM_FIFO_DATA != NULL")
+    get_arducam_hk()
+    check("ARDUCAM ARDUCAM_HK_TLM_T DEVICE_COUNT >= #{dev_cmd_cnt}")
+    check("ARDUCAM ARDUCAM_HK_TLM_T DEVICE_ERR_COUNT == #{dev_cmd_err_cnt}")
+end
+
+def confirm_arducam_data_loop()
+    ARDUCAM_DEVICE_LOOP_COUNT.times do |n|
+        confirm_arducam_data()
+    end
+end
+
+#
+# Simulator Functions
+#
+def arducam_prepare_ast()
+    # Get to known state
+    safe_arducam()
+
+    # Confirm data
+    confirm_arducam_data_loop()
+end
+
+def arducam_sim_set_status(status)
+    cmd("SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS with STATUS #{status}")
+end
+```

@@ -3,46 +3,3802 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ut_cfe_es_hooks.c`
 
-file--ut_cfe_es_hooks.c
-file--ut_cfe_es_stubs.c
-file--ut_cfe_evs_hooks.c
-file--ut_cfe_evs_stubs.c
-file--ut_cfe_fs_stubs.c
-file--ut_cfe_psp_memutils_stubs.c
-file--ut_cfe_sb_hooks.c
-file--ut_cfe_sb_stubs.c
-file--ut_cfe_tbl_hooks.c
-file--ut_cfe_tbl_stubs.c
-file--ut_cfe_time_stubs.c
-file--ut_osapi_stubs.c
-file--ut_osfileapi_stubs.c
-file--utassert.c
-file--utlist.c
-file--uttest.c
-file--uttools.c
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_es_hooks.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_es_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_es_hooks.c 1.1 2011/05/04 11:20:51EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Executive Services routines
+**
+** $Log: ut_cfe_es_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:51EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:36EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/03/07 17:54:30EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+
+int32 Ut_CFE_ES_RunLoopHook(uint32 *ExitStatus)
+{
+    if (*ExitStatus == CFE_ES_RunStatus_APP_RUN) {
+        return(true);
+    }
+    else { /* CFE_ES_APP_EXIT, CFE_ES_RunStatus_APP_ERROR */
+        return(false);
+    }
+}
 ```
 
-## 항목
+### `ut_cfe_es_stubs.c`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_es_hooks.c`](file--ut_cfe_es_hooks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_es_stubs.c`](file--ut_cfe_es_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_evs_hooks.c`](file--ut_cfe_evs_hooks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_evs_stubs.c`](file--ut_cfe_evs_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_fs_stubs.c`](file--ut_cfe_fs_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_psp_memutils_stubs.c`](file--ut_cfe_psp_memutils_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_sb_hooks.c`](file--ut_cfe_sb_hooks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_sb_stubs.c`](file--ut_cfe_sb_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_tbl_hooks.c`](file--ut_cfe_tbl_hooks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_tbl_stubs.c`](file--ut_cfe_tbl_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_time_stubs.c`](file--ut_cfe_time_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_osapi_stubs.c`](file--ut_osapi_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_osfileapi_stubs.c`](file--ut_osfileapi_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/utassert.c`](file--utassert.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/utlist.c`](file--utlist.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/uttest.c`](file--uttest.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/src/uttools.c`](file--uttools.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_es_stubs.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_es_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_es_stubs.c 1.2 2011/05/04 11:28:00EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Executive Services routines
+**
+** $Log: ut_cfe_es_stubs.c  $
+** Revision 1.2 2011/05/04 11:28:00EDT rmcgraw
+** Changed PoolCreateEx to have new parameter USE_MUTEX
+** Revision 1.1 2011/05/04 11:20:51EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:37EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.5 2011/03/31 14:53:04EDT rmcgraw
+** Added functionality and supressed compiler warnings
+** Revision 1.4 2011/03/23 17:08:18EDT rmcgraw
+** OS_ERROR to OS_SUCCESS for some OS file sys apis
+** Revision 1.3 2011/03/09 10:26:12EST rmcgraw
+** Added SetRtnCode logic to PoolCreateEx
+** Revision 1.2 2011/03/07 17:53:39EST sslegel
+** Added a default hook for ES_CFE_RunLoop
+** Added additional return code support
+** Revision 1.1 2011/02/15 11:13:01EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+/*
+** Include section
+*/
+
+#include "cfe.h"
+#include "ut_cfe_es_stubs.h"
+#include "ut_cfe_es_hooks.h"
+#include <string.h>
+
+Ut_CFE_ES_HookTable_t           Ut_CFE_ES_HookTable;
+Ut_CFE_ES_ReturnCodeTable_t     Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_MAX_INDEX];
+
+void Ut_CFE_ES_Reset(void)
+{
+    memset(&Ut_CFE_ES_HookTable, 0, sizeof(Ut_CFE_ES_HookTable));
+    memset(&Ut_CFE_ES_ReturnCodeTable, 0, sizeof(Ut_CFE_ES_ReturnCodeTable));
+
+    Ut_CFE_ES_SetFunctionHook(UT_CFE_ES_RUNLOOP_INDEX, &Ut_CFE_ES_RunLoopHook);
+}
+
+void Ut_CFE_ES_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_ES_RESETCFE_INDEX)             { Ut_CFE_ES_HookTable.CFE_ES_ResetCFE = FunPtr; }
+    else if (Index == UT_CFE_ES_RESTARTAPP_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_RestartApp = FunPtr; }
+    else if (Index == UT_CFE_ES_RELOADAPP_INDEX)            { Ut_CFE_ES_HookTable.CFE_ES_ReloadApp = FunPtr; }
+    else if (Index == UT_CFE_ES_DELETEAPP_INDEX)            { Ut_CFE_ES_HookTable.CFE_ES_DeleteApp = FunPtr; }
+    else if (Index == UT_CFE_ES_EXITAPP_INDEX)              { Ut_CFE_ES_HookTable.CFE_ES_ExitApp = FunPtr; }
+    else if (Index == UT_CFE_ES_RUNLOOP_INDEX)              { Ut_CFE_ES_HookTable.CFE_ES_RunLoop = FunPtr; }
+    else if (Index == UT_CFE_ES_WAITFORSTARTUPSYNC_INDEX)   { Ut_CFE_ES_HookTable.CFE_ES_WaitForStartupSync = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERAPP_INDEX)          { Ut_CFE_ES_HookTable.CFE_ES_RegisterApp = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPID_INDEX)             { Ut_CFE_ES_HookTable.CFE_ES_GetAppID = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPIDBYNAME_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_GetAppIDByName = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPNAME_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_GetAppName = FunPtr; }
+    else if (Index == UT_CFE_ES_GETAPPINFO_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_GetAppInfo = FunPtr; }
+    else if (Index == UT_CFE_ES_GETTASKINFO_INDEX)          { Ut_CFE_ES_HookTable.CFE_ES_GetTaskInfo = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERCHILDTASK_INDEX)    { Ut_CFE_ES_HookTable.CFE_ES_RegisterChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_CREATECHILDTASK_INDEX)      { Ut_CFE_ES_HookTable.CFE_ES_CreateChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_DELETECHILDTASK_INDEX)      { Ut_CFE_ES_HookTable.CFE_ES_DeleteChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_EXITCHILDTASK_INDEX)        { Ut_CFE_ES_HookTable.CFE_ES_ExitChildTask = FunPtr; }
+    else if (Index == UT_CFE_ES_INCREMENTTASKCOUNTER_INDEX) { Ut_CFE_ES_HookTable.CFE_ES_IncrementTaskCounter = FunPtr; }
+    else if (Index == UT_CFE_ES_WRITETOSYSLOG_INDEX)        { Ut_CFE_ES_HookTable.CFE_ES_WriteToSysLog = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERDRIVER_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_RegisterDriver = FunPtr; }
+    else if (Index == UT_CFE_ES_UNLOADDRIVER_INDEX)         { Ut_CFE_ES_HookTable.CFE_ES_UnloadDriver = FunPtr; }
+    else if (Index == UT_CFE_ES_CALCULATECRC_INDEX)         { Ut_CFE_ES_HookTable.CFE_ES_CalculateCRC = FunPtr; }
+    else if (Index == UT_CFE_ES_REGISTERCDS_INDEX)          { Ut_CFE_ES_HookTable.CFE_ES_RegisterCDS = FunPtr; }
+    else if (Index == UT_CFE_ES_COPYTOCDS_INDEX)            { Ut_CFE_ES_HookTable.CFE_ES_CopyToCDS = FunPtr; }
+    else if (Index == UT_CFE_ES_RESTOREFROMCDS_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_RestoreFromCDS = FunPtr; }
+    else if (Index == UT_CFE_ES_POOLCREATE_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_PoolCreate = FunPtr; }
+    else if (Index == UT_CFE_ES_POOLCREATEEX_INDEX)         { Ut_CFE_ES_HookTable.CFE_ES_PoolCreateEx = FunPtr; }
+    else if (Index == UT_CFE_ES_GETPOOLBUF_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_GetPoolBuf = FunPtr; }
+    else if (Index == UT_CFE_ES_GETPOOLBUFINFO_INDEX)       { Ut_CFE_ES_HookTable.CFE_ES_GetPoolBufInfo = FunPtr; }
+    else if (Index == UT_CFE_ES_PUTPOOLBUF_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_PutPoolBuf = FunPtr; }
+    else if (Index == UT_CFE_ES_GETMEMPOOLSTATS_INDEX)      { Ut_CFE_ES_HookTable.CFE_ES_GetMemPoolStats = FunPtr; }
+    else if (Index == UT_CFE_ES_PERFLOGADD_INDEX)           { Ut_CFE_ES_HookTable.CFE_ES_PerfLogAdd = FunPtr; }
+    else                                                    { printf("Unsupported ES Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_ES_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CFE_ES_MAX_INDEX) {
+        Ut_CFE_ES_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_ES_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported ES Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_ES_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_ES_ReturnCodeTable[Index].Count > 0) {
+        Ut_CFE_ES_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_ES_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_ES_GetResetType(uint32 *ResetSubtypePtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32  CFE_ES_ResetCFE(uint32 ResetType)
+{
+        /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RESETCFE_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RESETCFE_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RestartApp(uint32 AppID)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RESTARTAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RESTARTAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_ReloadApp(uint32 AppID, const char *AppFileName)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RELOADAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RELOADAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_DeleteApp(uint32 AppID)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_DELETEAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_DELETEAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+void CFE_ES_ExitApp(uint32 ExitStatus)
+{
+    return;
+}
+
+int32 CFE_ES_RunLoop(uint32 *ExitStatus)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_RUNLOOP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_RUNLOOP_INDEX].Value;
+
+    if (Ut_CFE_ES_HookTable.CFE_ES_RunLoop)
+        return Ut_CFE_ES_HookTable.CFE_ES_RunLoop(ExitStatus);
+
+    return true;
+}
+
+void CFE_ES_WaitForStartupSync(uint32 TimeOutMilliseconds)
+{
+    return;
+}
+
+int32 CFE_ES_RegisterApp(void)
+{
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_REGISTERAPP_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_REGISTERAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppID(uint32 *AppIdPtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppIDByName(uint32 *AppIdPtr, const char *AppName)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppName(char *AppName, uint32 AppId, uint32 BufferLength)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetAppInfo(CFE_ES_AppInfo_t *AppInfo, uint32 AppId)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetTaskInfo(CFE_ES_TaskInfo_t *TaskInfo, uint32 TaskId)
+{
+    return CFE_SUCCESS;
+}
+
+int32  CFE_ES_RegisterChildTask(void)
+{
+    return CFE_SUCCESS;
+}
+
+int32  CFE_ES_CreateChildTask(uint32                          *TaskIdPtr,
+                              const char                      *TaskName,
+                              CFE_ES_ChildTaskMainFuncPtr_t    FunctionPtr,
+                              uint32                          *StackPtr,
+                              uint32                           StackSize,
+                              uint32                           Priority,
+                              uint32                           Flags)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_CREATECHILDTASK_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_CREATECHILDTASK_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_ES_HookTable.CFE_ES_CreateChildTask)
+        return Ut_CFE_ES_HookTable.CFE_ES_CreateChildTask(TaskIdPtr, TaskName, FunctionPtr, StackPtr, StackSize, Priority, Flags);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_DeleteChildTask(uint32 TaskId)
+{
+    return CFE_SUCCESS;
+}
+
+void CFE_ES_ExitChildTask(void)
+{
+    return;
+}
+
+void  CFE_ES_IncrementTaskCounter(void)
+{
+    return;
+}
+
+int32 CFE_ES_WriteToSysLog(const char *SpecStringPtr, ...)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RegisterDriver(uint32 *DriverIdPtr, uint32 *DriverDescPtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_UnloadDriver(uint32 DriverId)
+{
+    return CFE_SUCCESS;
+}
+
+uint32 CFE_ES_CalculateCRC(const void *DataPtr, uint32 DataLength, uint32 InputCRC, uint32 TypeCRC)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RegisterCDS(CFE_ES_CDSHandle_t *HandlePtr, int32 BlockSize, const char *Name)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_CopyToCDS(CFE_ES_CDSHandle_t Handle, void *DataToCopy)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_RestoreFromCDS(void *RestoreToMemory, CFE_ES_CDSHandle_t Handle)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_PoolCreate(CFE_ES_MemHandle_t *HandlePtr, uint8 *MemPtr, uint32 Size)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_PoolCreateEx(CFE_ES_MemHandle_t *HandlePtr, uint8 *MemPtr, uint32 Size, uint32 NumBlockSizes, uint32 *BlockSizes, uint16 UseMutex)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_POOLCREATEEX_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_POOLCREATEEX_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetPoolBuf(uint32 **BufPtr, CFE_ES_MemHandle_t HandlePtr, uint32 Size)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_GETPOOLBUF_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_GETPOOLBUF_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_ES_HookTable.CFE_ES_GetPoolBuf)
+        return Ut_CFE_ES_HookTable.CFE_ES_GetPoolBuf(BufPtr,HandlePtr,Size);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetPoolBufInfo(CFE_ES_MemHandle_t HandlePtr, uint32 *BufPtr)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_PutPoolBuf(CFE_ES_MemHandle_t HandlePtr, uint32 *BufPtr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_ES_UseReturnCode(UT_CFE_ES_PUTPOOLBUF_INDEX))
+        return Ut_CFE_ES_ReturnCodeTable[UT_CFE_ES_PUTPOOLBUF_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_ES_GetMemPoolStats(CFE_ES_MemPoolStats_t *BufPtr, CFE_ES_MemHandle_t  Handle)
+{
+    return CFE_SUCCESS;
+}
+
+void CFE_ES_PerfLogAdd(uint32 Marker, uint32 EntryExit)
+{
+    return;
+}
+```
+
+### `ut_cfe_evs_hooks.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_evs_hooks.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_evs_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_evs_hooks.c 1.1 2011/05/04 11:20:52EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Event Services routines
+**
+** $Log: ut_cfe_evs_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:52EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:38EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.2 2011/03/04 14:56:05EST sslegel 
+** Added a event text length check
+** Revision 1.1 2011/02/15 11:13:01EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "utlist.h"
+#include "uttools.h"
+#include <string.h>
+
+UtListHead_t        EventQueue;
+
+typedef struct {
+    uint16      EventID;
+    uint16      EventType;
+    char        EventText[CFE_EVS_MAX_MESSAGE_LENGTH];
+} Ut_CFE_EVS_Event_t;
+
+void Ut_CFE_EVS_ClearEventQueue(void)
+{
+    UtList_Reset(&EventQueue);
+}
+
+uint32 Ut_CFE_EVS_GetEventQueueDepth(void)
+{
+    return(UtList_Depth(&EventQueue));
+}
+
+uint32 Ut_CFE_EVS_GetEventCount(uint16 EventID, uint16 EventType, char *EventText)
+{
+    UtListNode_t        *CurrentNode;
+    Ut_CFE_EVS_Event_t  *EventMessagePtr;
+    uint32               EventCount = 0;
+
+    CurrentNode = UtList_First(&EventQueue);
+    while (CurrentNode) {
+        EventMessagePtr = CurrentNode->Data;
+        if ((EventMessagePtr->EventID == EventID) &&
+            (EventMessagePtr->EventType == EventType) &&
+            (strncmp(EventText, EventMessagePtr->EventText, strlen(EventText)) == 0)) {
+            EventCount++;
+        }
+        CurrentNode = CurrentNode->Next;
+    }
+    return(EventCount);
+}
+
+int32 Ut_CFE_EVS_SendEventHook(uint16 EventID, uint16 EventType, char *EventText)
+{
+    Ut_CFE_EVS_Event_t  EventMessage;
+
+    if (strlen(EventText) >= CFE_EVS_MAX_MESSAGE_LENGTH) {
+        UtPrintf("WARNING - Event Message Too Long: %s", EventText);
+    }
+
+    EventMessage.EventID = EventID;
+    EventMessage.EventType = EventType;
+    strncpy(&EventMessage.EventText[0], EventText, CFE_EVS_MAX_MESSAGE_LENGTH);
+    UtList_Add(&EventQueue, &EventMessage, sizeof(EventMessage), 0);
+
+    if (EventType == CFE_EVS_EventType_DEBUG)
+        UtPrintf("DEBUG EVENT ID=%d %s\n", EventID, EventText);
+    else if (EventType == CFE_EVS_EventType_INFORMATION)
+        UtPrintf("INFO EVENT ID=%d %s\n", EventID, EventText);
+    else if (EventType == CFE_EVS_EventType_ERROR)
+        UtPrintf("ERROR EVENT ID=%d %s\n", EventID, EventText);
+    else if (EventType == CFE_EVS_EventType_CRITICAL)
+        UtPrintf("CRITICAL EVENT ID=%d %s\n", EventID, EventText);
+    else
+        UtPrintf("Invalid Event Type %d ID=%d %s\n", EventType, EventID, EventText);
+
+    return CFE_SUCCESS;
+}
+
+bool Ut_CFE_EVS_EventSent(uint16 EventID, uint16 EventType, char *EventText)
+{
+    UtListNode_t        *CurrentNode;
+    Ut_CFE_EVS_Event_t  *EventMessagePtr;
+
+    CurrentNode = UtList_First(&EventQueue);
+    while (CurrentNode) {
+        EventMessagePtr = CurrentNode->Data;
+        if ((EventMessagePtr->EventID == EventID) &&
+            (EventMessagePtr->EventType == EventType) &&
+            (strncmp(EventText, EventMessagePtr->EventText, strlen(EventText)) == 0)) {
+            return(true);
+        }
+        CurrentNode = CurrentNode->Next;
+    }
+    return(false);
+}
+```
+
+### `ut_cfe_evs_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_evs_stubs.c`
+
+
+```c
+/*
+**
+** File:  ut_cfe_evs_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_evs_stubs.c 1.1 2011/05/04 11:20:53EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Event Services routines
+**
+** $Log: ut_cfe_evs_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:53EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:38EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/02/15 11:13:02EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+/*
+** Include section
+*/
+
+#include "cfe.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include <string.h>
+
+Ut_CFE_EVS_HookTable_t          Ut_CFE_EVS_HookTable;
+Ut_CFE_EVS_ReturnCodeTable_t    Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_MAX_INDEX];
+
+void Ut_CFE_EVS_Reset(void)
+{
+    memset(&Ut_CFE_EVS_HookTable, 0, sizeof(Ut_CFE_EVS_HookTable));
+    memset(&Ut_CFE_EVS_ReturnCodeTable, 0, sizeof(Ut_CFE_EVS_ReturnCodeTable));
+
+    Ut_CFE_EVS_SetFunctionHook(UT_CFE_EVS_SENDEVENT_INDEX, &Ut_CFE_EVS_SendEventHook);
+    Ut_CFE_EVS_ClearEventQueue();
+}
+
+void Ut_CFE_EVS_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_EVS_REGISTER_INDEX)    { Ut_CFE_EVS_HookTable.CFE_EVS_Register = FunPtr; }
+    else if (Index == UT_CFE_EVS_SENDEVENT_INDEX)   { Ut_CFE_EVS_HookTable.CFE_EVS_SendEvent = FunPtr; }
+    else                                            { printf("Unsupported EVS Index In SetFunctionHook Call %u", Index); }
+}
+
+void Ut_CFE_EVS_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CFE_EVS_MAX_INDEX) {
+        Ut_CFE_EVS_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_EVS_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported EVS Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_EVS_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_EVS_ReturnCodeTable[Index].Count > 0) {
+        Ut_CFE_EVS_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_EVS_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_EVS_Register (void *Filters, uint16 NumEventFilters, uint16 FilterScheme)
+{
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_REGISTER_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_REGISTER_INDEX].Value;
+
+    if (Ut_CFE_EVS_HookTable.CFE_EVS_Register)
+        return(Ut_CFE_EVS_HookTable.CFE_EVS_Register(Filters, NumEventFilters, FilterScheme));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_SendEvent (uint16 EventID, uint16 EventType, const char *Spec, ... )
+{
+    char     BigBuf[CFE_EVS_MAX_MESSAGE_LENGTH];
+    va_list  Ptr;
+
+    va_start(Ptr, Spec);
+    vsprintf(BigBuf, Spec, Ptr);
+    va_end(Ptr);
+
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_SENDEVENT_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_SENDEVENT_INDEX].Value;
+
+    if (Ut_CFE_EVS_HookTable.CFE_EVS_SendEvent)
+         return(Ut_CFE_EVS_HookTable.CFE_EVS_SendEvent(EventID, EventType, BigBuf));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_SendTimedEvent (CFE_TIME_SysTime_t Time, uint16 EventID, uint16 EventType, const char *Spec, ... )
+{
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_SENDTIMEDEVENT_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_SENDTIMEDEVENT_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_SendEventWithAppID (uint16 EventID, uint16 EventType,uint32 AppID, const char *Spec, ... )
+{
+    if (Ut_CFE_EVS_UseReturnCode(UT_CFE_EVS_SENDEVENTWITHAPPID_INDEX))
+        return Ut_CFE_EVS_ReturnCodeTable[UT_CFE_EVS_SENDEVENTWITHAPPID_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_EVS_CleanUpApp (uint32 AppId)
+{
+    return CFE_SUCCESS;
+}
+```
+
+### `ut_cfe_fs_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_fs_stubs.c`
+
+
+```c
+/*
+**
+** File:  ut_cfe_fs_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_fs_stubs.c 1.1 2011/05/04 11:20:53EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE File system routines
+**
+** $Log: ut_cfe_fs_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:53EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:39EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.2 2011/03/22 14:19:02EDT rmcgraw
+** Use Rtn Code Added to CFE_FS_WriteHeader
+** Revision 1.1 2011/02/15 11:13:02EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_fs_stubs.h"
+#include <string.h>
+
+Ut_CFE_FS_HookTable_t           Ut_CFE_FS_HookTable;
+Ut_CFE_FS_ReturnCodeTable_t     Ut_CFE_FS_ReturnCodeTable[UT_CFE_FS_MAX_INDEX];
+
+void Ut_CFE_FS_Reset(void)
+{
+    memset(&Ut_CFE_FS_HookTable, 0, sizeof(Ut_CFE_FS_HookTable));
+    memset(&Ut_CFE_FS_ReturnCodeTable, 0, sizeof(Ut_CFE_FS_ReturnCodeTable));
+}
+
+void Ut_CFE_FS_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_FS_READHDR_INDEX)                  { Ut_CFE_FS_HookTable.CFE_FS_ReadHeader = FunPtr; }
+    else if (Index == UT_CFE_FS_WRITEHDR_INDEX)                 { Ut_CFE_FS_HookTable.CFE_FS_WriteHeader = FunPtr; }
+    else if (Index == UT_CFE_FS_SETTIMESTAMP_INDEX)             { Ut_CFE_FS_HookTable.CFE_FS_SetTimestamp = FunPtr; }
+    else if (Index == UT_CFE_FS_ISGZFILE_INDEX)                 { Ut_CFE_FS_HookTable.CFE_FS_IsGzFile = FunPtr; }
+    else if (Index == UT_CFE_FS_EXTRACTFILENAMEFROMPATH_INDEX)  { Ut_CFE_FS_HookTable.CFE_FS_ExtractFilenameFromPath = FunPtr; }
+    else if (Index == UT_CFE_FS_DECOMPRESS_INDEX)               { Ut_CFE_FS_HookTable.CFE_FS_Decompress = FunPtr; }
+    else                                                        { printf("Invalid FS Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_FS_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CFE_FS_MAX_INDEX) {
+        Ut_CFE_FS_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_FS_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported FS Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_FS_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_FS_ReturnCodeTable[Index].Count > 0) {
+        Ut_CFE_FS_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_FS_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_FS_ReadHeader(CFE_FS_Header_t *Hdr, int32 FileDes)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_FS_WriteHeader(int32 FileDes, CFE_FS_Header_t *Hdr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_FS_UseReturnCode(UT_CFE_FS_WRITEHDR_INDEX))
+        return Ut_CFE_FS_ReturnCodeTable[UT_CFE_FS_WRITEHDR_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_FS_SetTimestamp(int32 FileDes, CFE_TIME_SysTime_t NewTimestamp)
+{
+    return CFE_SUCCESS;
+}
+
+bool CFE_FS_IsGzFile(const char *FileName)
+{
+    return true;
+}
+
+int32 CFE_FS_ExtractFilenameFromPath(const char *OriginalPath, char *FileNameOnly)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_FS_Decompress( const char * SourceFile, const char * DestinationFile )
+{
+    return CFE_SUCCESS;
+}
+```
+
+### `ut_cfe_psp_memutils_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_psp_memutils_stubs.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_psp_memutils_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_psp_memutils_stubs.c 1.1 2011/05/04 11:20:54EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE PSP Memory Utilities routines
+**
+** $Log: ut_cfe_psp_memutils_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:54EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:39EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/02/15 11:13:02EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+/*
+**  Include Files
+*/
+#include "cfe.h"
+#include <string.h>
+
+int32 CFE_PSP_MemCpy(void *Dest, void *Src, uint32 Size)
+{
+    memcpy(Dest, Src, Size);
+    return(CFE_PSP_SUCCESS);
+}
+
+int32 CFE_PSP_MemSet(void *Dest, uint8 Value, uint32 Size)
+{
+    memset(Dest, Value, Size);
+    return(CFE_PSP_SUCCESS);
+}
+```
+
+### `ut_cfe_sb_hooks.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_sb_hooks.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_sb_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_sb_hooks.c 1.1 2011/05/04 11:20:55EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Software Bus routines
+**
+** $Log: ut_cfe_sb_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:55EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:40EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.3 2011/03/08 15:49:26EST sslegel
+** Changed the SB Create Pipe Hook so that if the pipe already exists then it just returns the existing pipe id.
+** Revision 1.2 2011/03/04 14:56:54EST sslegel
+** Added a define for the maximum number of pipes
+** Revision 1.1 2011/02/15 11:13:03EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "utlist.h"
+#include "uttools.h"
+#include <string.h>
+
+#define UT_CFE_SB_MAX_PIPES    32
+
+typedef struct {
+    char                PipeName[OS_MAX_API_NAME];
+    UtListHead_t        MsgQueue;
+    bool             InUse;
+} Ut_CFE_SB_PipeTableEntry_t;
+
+UtListHead_t                MsgQueue;
+Ut_CFE_SB_PipeTableEntry_t  PipeTable[UT_CFE_SB_MAX_PIPES];
+
+void Ut_CFE_SB_ClearMsgQueue(void)
+{
+    UtList_Reset(&MsgQueue);
+}
+
+uint32 Ut_CFE_SB_GetMsgQueueDepth(void)
+{
+    return(UtList_Depth(&MsgQueue));
+}
+
+uint32 Ut_CFE_SB_GetMsgCount(uint16 MessageID)
+{
+    UtListNode_t        *CurrentNode;
+    CFE_MSG_Message_t        *MessagePtr;
+    uint32               MessageCount = 0;
+
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(MessagePtr, &MsgId);
+
+    CurrentNode = UtList_First(&MsgQueue);
+    while (CurrentNode) {
+        MessagePtr = CurrentNode->Data;
+        if (MessageID == CFE_SB_MsgIdToValue(MsgId)) {
+            MessageCount++;
+        }
+        CurrentNode = CurrentNode->Next;
+    }
+    return(MessageCount);
+}
+
+int32 Ut_CFE_SB_TransmitMsgHook(CFE_MSG_Message_t *MsgPtr)
+{
+    UtList_Add(&MsgQueue, MsgPtr, CFE_MSG_GetSize(MsgPtr), 0, CFE_MSG_Size_t *Size);
+
+    UtPrintf("PKT: ");
+    UtPrintx(MsgPtr, (uint16)(CFE_MSG_GetSize(MsgPtr)), CFE_MSG_Size_t *Size);
+    return CFE_SUCCESS;
+}
+
+bool Ut_CFE_SB_PacketSent(uint16 MessageID)
+{
+    UtListNode_t        *CurrentNode;
+    CFE_MSG_Message_t        *MessagePtr;
+
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(MessagePtr, &MsgId);
+
+    CurrentNode = UtList_First(&MsgQueue);
+    while (CurrentNode) {
+        MessagePtr = CurrentNode->Data;
+        if (MessageID == CFE_SB_MsgIdToValue(MsgId)) {
+            return(true);
+        }
+        CurrentNode = CurrentNode->Next;
+    }
+    return(false);
+}
+
+void *Ut_CFE_SB_FindPacket(uint16 MessageID, uint32 MessageNumber)
+{
+    UtListNode_t        *CurrentNode;
+    CFE_MSG_Message_t        *MessagePtr;
+    uint32               MessageCount = 0;
+
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(MessagePtr, &MsgId);
+
+    CurrentNode = UtList_First(&MsgQueue);
+    while (CurrentNode) {
+        MessagePtr = CurrentNode->Data;
+        if (MessageID == CFE_SB_MsgIdToValue(MsgId)) {
+            MessageCount++;
+            if (MessageCount == MessageNumber) {
+                return(CurrentNode->Data);
+            }
+        }
+        CurrentNode = CurrentNode->Next;
+    }
+    return(NULL);
+}
+
+void Ut_CFE_SB_ClearPipes(void)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_SB_MAX_PIPES; i++) {
+        if (PipeTable[i].InUse == true) {
+            UtList_Reset(&PipeTable[i].MsgQueue);
+        }
+    }
+    memset(&PipeTable, 0, sizeof(PipeTable));
+}
+
+int32 Ut_CFE_SB_CreatePipe(char *PipeName)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_SB_MAX_PIPES; i++) {
+        if (PipeTable[i].InUse == false) {
+            strncpy(PipeTable[i].PipeName, PipeName, OS_MAX_API_NAME);
+            PipeTable[i].InUse = true;
+            return(i);
+        }
+    }
+    return(-1);
+}
+
+int32 Ut_CFE_SB_GetPipeDepth(CFE_SB_PipeId_t PipeId)
+{
+    return(UtList_Depth(&PipeTable[PipeId].MsgQueue));
+}
+
+int32 Ut_CFE_SB_FindPipe(char *PipeName)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_SB_MAX_PIPES; i++) {
+        if ((PipeTable[i].InUse == true) &&
+            (strncmp(PipeTable[i].PipeName, PipeName, strlen(PipeName)) == 0)) {
+            return(i);
+        }
+    }
+    return(-1);
+}
+
+void Ut_CFE_SB_AddMsgToPipe(void *MsgPtr, CFE_SB_PipeId_t PipeId)
+{
+    if (PipeTable[PipeId].InUse == true) {
+        UtList_Add(&PipeTable[PipeId].MsgQueue, MsgPtr, CFE_MSG_GetSize((CFE_MSG_Message_t *)MsgPtr), 0, CFE_MSG_Size_t *Size);
+    }
+    else {
+        printf("Error - Invalid PipeId\n");
+    }
+}
+
+int32 Ut_CFE_SB_CreatePipeHook(CFE_SB_PipeId_t *PipeIdPtr, uint16  Depth, char *PipeName)
+{
+    if (Ut_CFE_SB_FindPipe(PipeName) == -1) {
+        *PipeIdPtr = Ut_CFE_SB_CreatePipe(PipeName);
+    }
+    else {
+        *PipeIdPtr = Ut_CFE_SB_FindPipe(PipeName);
+    }
+    return(CFE_SUCCESS);
+}
+
+int32 Ut_CFE_SB_ReceiveBufferHook(CFE_MSG_Message_t * *BufPtr, CFE_SB_PipeId_t PipeId, int32 TimeOut)
+{
+    UtListNode_t        *CurrentNode;
+
+    if (PipeTable[PipeId].InUse == true) {
+
+        if (UtList_IsEmpty(&PipeTable[PipeId].MsgQueue) == false) {
+
+            CurrentNode = UtList_First(&PipeTable[PipeId].MsgQueue);
+            if (CurrentNode->Tag == true) {         /* Indicates buffer is in use */
+                UtList_DeleteFirst(&PipeTable[PipeId].MsgQueue);
+            }
+
+            if (UtList_IsEmpty(&PipeTable[PipeId].MsgQueue) == false) {
+
+                CurrentNode = UtList_First(&PipeTable[PipeId].MsgQueue);
+                CurrentNode->Tag = true;            /* Indicates buffer is in use */
+               *BufPtr = CurrentNode->Data;
+                return(CFE_SUCCESS);
+            }
+        }
+
+        if (TimeOut == CFE_SB_POLL) {
+            return(CFE_SB_NO_MESSAGE);
+        }
+        else {
+            return(CFE_SB_TIME_OUT);
+        }
+    }
+    else {
+        printf("Error - Invalid PipeId\n");
+        return(CFE_SB_NO_MESSAGE);
+    }
+}
+
+void Ut_CFE_MSG_InitHook(void *MsgPtr, CFE_SB_MsgId_t MsgId, uint16 Length, bool Clear)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_InitPkt ((CCSDS_PriHdr_t *)MsgPtr,(uint16)MsgId,Length,Clear);
+
+#endif
+} /* end Ut_CFE_MSG_InitHook */
+
+uint16 Ut_CFE_SB_MsgHdrSizeHook(CFE_SB_MsgId_t MsgId)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    uint16 size;
+    CCSDS_PriHdr_t  CCSDSPriHdr;
+    CCSDS_WR_SID(CCSDSPriHdr,MsgId);
+
+	  /* if secondary hdr is not present... */
+	  if(CCSDS_RD_SHDR(CCSDSPriHdr) == 0){
+
+	    size = sizeof(CCSDS_PriHdr_t);
+
+	  }else if(CCSDS_RD_TYPE(CCSDSPriHdr) == CCSDS_CMD){
+
+        size = sizeof(CFE_MSG_CommandHeader_t);
+
+	  }else{
+
+        size = sizeof(CFE_MSG_TelemetryHeader_t);
+	  }
+
+    return size;
+
+#endif
+}/* end Ut_CFE_SB_MsgHdrSizeHook */
+
+void *Ut_CFE_SB_GetUserDataHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+    uint8           *BytePtr;
+    CFE_SB_MsgId_t  MsgId;
+    uint16          HdrSize;
+
+    BytePtr = (uint8 *)MsgPtr;
+    MsgId   = CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+    HdrSize = CFE_SB_MsgHdrSize(MsgId);
+
+    return (BytePtr + HdrSize);
+#endif
+}/* end Ut_CFE_SB_GetUserDataHook */
+
+CFE_SB_MsgId_t Ut_CFE_SB_GetMsgIdHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    return CFE_MSG_GetMsgId(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+#endif
+}/* end Ut_CFE_SB_GetMsgIdHook */
+
+void Ut_CFE_MSG_SetMsgIdHook(CFE_MSG_Message_t * MsgPtr,
+                     CFE_SB_MsgId_t MsgId)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_WR_SID(MsgPtr->Hdr,MsgId);
+
+#endif
+}/* end Ut_CFE_MSG_SetMsgIdHook */
+
+uint16 Ut_CFE_SB_GetUserDataLengthHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+    uint16 TotalMsgSize;
+    uint16 HdrSize;
+
+    CFE_SB_MsgId_t MsgId;
+    MsgId = CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+    TotalMsgSize = CFE_MSG_GetSize(MsgPtr, CFE_MSG_Size_t *Size);
+    HdrSize = CFE_SB_MsgHdrSize(MsgId);
+
+    return (TotalMsgSize - HdrSize);
+#endif
+}/* end Ut_CFE_SB_GetUserDataLengthHook */
+
+void Ut_CFE_SB_SetUserDataLengthHook(CFE_MSG_Message_t * MsgPtr,uint16 DataLength)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    uint32 TotalMsgSize, HdrSize;
+    CFE_SB_MsgId_t MsgId;
+    MsgId = CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+    TotalMsgSize = CFE_MSG_GetSize(MsgPtr, CFE_MSG_Size_t *Size);
+    HdrSize = CFE_SB_MsgHdrSize(MsgId);
+
+    TotalMsgSize = HdrSize + DataLength;
+
+    CCSDS_WR_LEN(MsgPtr->Hdr,TotalMsgSize);
+
+#endif
+}/* end Ut_CFE_SB_SetUserDataLengthHook */
+
+uint16 Ut_CFE_SB_GetTotalMsgLengthHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    return CFE_MSG_GetSize(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t *Size);
+
+#endif
+}/* end Ut_CFE_SB_GetTotalMsgLengthHook */
+
+void Ut_CFE_SB_SetTotalMsgLengthHook(CFE_MSG_Message_t * MsgPtr,uint16 TotalLength)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_WR_LEN(MsgPtr->Hdr,TotalLength);
+
+#endif
+}/* end Ut_CFE_SB_SetTotalMsgLengthHook */
+
+CFE_TIME_SysTime_t Ut_CFE_SB_GetMsgTimeHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_TIME_SysTime_t  TimeFromMsg;
+    CFE_SB_TlmHdr_t     *TlmHdrPtr;
+
+    /* if msg type is a command or msg has no secondary hdr, return 0 */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_CMD)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        TimeFromMsg.Seconds    =  0;
+        TimeFromMsg.Subseconds =  0;
+    }else{
+        TlmHdrPtr = (CFE_SB_TlmHdr_t *)MsgPtr;
+
+        TimeFromMsg.Seconds    =  *((uint32 *)&TlmHdrPtr->Sec.Time[0]);
+
+        /* Get the 16 bit subsecond field from the header and place it in the    */
+        /* upper 16 bits of the 32 bit subsecond field of the CFE_TIME_SysTime_t */
+        TimeFromMsg.Subseconds =  *((uint16 *)&TlmHdrPtr->Sec.Time[4]) << 16;
+
+    }/* end if */
+
+    return TimeFromMsg;
+
+#endif
+}/* end Ut_CFE_SB_GetMsgTimeHook */
+
+int32 Ut_CFE_MSG_SetMsgTimeHook(CFE_MSG_Message_t * MsgPtr,
+                       CFE_TIME_SysTime_t Time)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_TlmHdr_t *TlmHdrPtr;
+
+   /* if msg type is a command or secondary header is not present... */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_CMD)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        return CFE_SB_WRONG_MSG_TYPE;
+    }/* end if */
+
+    TlmHdrPtr = (CFE_SB_TlmHdr_t *)MsgPtr;
+
+    *((uint32 *)&TlmHdrPtr->Sec.Time[0]) = Time.Seconds;
+    *((uint16 *)&TlmHdrPtr->Sec.Time[4]) = Time.Subseconds >> 16;
+
+    return CFE_SUCCESS;
+
+#endif
+}/* end Ut_CFE_MSG_SetMsgTimeHook */
+
+//FIXME - not sure what to do about this yet, want to avoid any dependencies on other api functions if possible.
+//void Ut_CFE_SB_TimeStampMsgHook(CFE_MSG_Message_t * MsgPtr)
+//{
+//    CFE_MSG_SetMsgTime(MsgPtr,CFE_TIME_GetTime());
+//
+//}/* end Ut_CFE_SB_TimeStampMsgHook */
+
+uint16 Ut_CFE_SB_GetCmdCodeHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_CmdHdr_t     *CmdHdrPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr, return 0 */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        return 0;
+    }/* end if */
+
+    /* Cast the input pointer to a Cmd Msg pointer */
+    CmdHdrPtr = (CFE_SB_CmdHdr_t *)MsgPtr;
+
+    return CCSDS_RD_FC(CmdHdrPtr->Sec);
+
+#endif
+}/* end Ut_CFE_SB_GetCmdCodeHook */
+
+int32 Ut_CFE_SB_SetCmdCodeHook(CFE_MSG_Message_t * MsgPtr,
+                      uint16 CmdCode)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_CmdHdr_t     *CmdHdrPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        return CFE_SB_WRONG_MSG_TYPE;
+    }/* end if */
+
+    /* Cast the input pointer to a Cmd Msg pointer */
+    CmdHdrPtr = (CFE_SB_CmdHdr_t *)MsgPtr;
+
+    CCSDS_WR_FC(CmdHdrPtr->Sec,CmdCode);
+
+    return CFE_SUCCESS;
+
+#endif
+
+}/* end Ut_CFE_SB_SetCmdCodeHook */
+
+uint16 Ut_CFE_SB_GetChecksumHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CFE_SB_CmdHdr_t     *CmdHdrPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        return 0;
+    }/* end if */
+
+    /* cast the input pointer to a Cmd Msg pointer */
+    CmdHdrPtr = (CFE_SB_CmdHdr_t *)MsgPtr;
+
+    return CCSDS_RD_CHECKSUM(CmdHdrPtr->Sec);
+
+#endif
+}/* end Ut_CFE_SB_GetChecksumHook */
+
+void Ut_CFE_SB_GenerateChecksumHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_CmdPkt_t    *CmdPktPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        return;
+    }/* end if */
+
+    CmdPktPtr = (CCSDS_CmdPkt_t *)MsgPtr;
+
+    CCSDS_LoadCheckSum(CmdPktPtr);
+
+#endif
+}/* end Ut_CFE_SB_GenerateChecksumHook */
+
+bool Ut_CFE_SB_ValidateChecksumHook(CFE_MSG_Message_t * MsgPtr)
+{
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+
+    CCSDS_CmdPkt_t    *CmdPktPtr;
+
+    /* if msg type is telemetry or there is no secondary hdr... */
+    if((CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_TLM)||(CCSDS_RD_SHDR(MsgPtr->Hdr) == 0)){
+        return false;
+    }/* end if */
+
+    CmdPktPtr = (CCSDS_CmdPkt_t *)MsgPtr;
+
+    return CCSDS_ValidCheckSum (CmdPktPtr);
+
+#endif
+}/* end Ut_CFE_SB_ValidateChecksumHook */
+
+void CCSDS_InitPkt (CCSDS_PriHdr_t  *PktPtr,
+                    uint16           StreamId,
+                    uint16           Length,
+                    bool          Clear )
+{
+   uint16     SeqCount;
+
+   /* Save the sequence count in case it must be preserved. */
+   SeqCount = CCSDS_RD_SEQ(*PktPtr);
+
+   /* Zero the entire packet if needed. */
+   if (Clear)  memset((void *)PktPtr, 0, Length);
+
+   /* Clear the primary header. */
+   CCSDS_CLR_PRI_HDR(*PktPtr);
+
+   /* Set the stream ID and length fields in the primary header. */
+   CCSDS_WR_SID(*PktPtr, StreamId);
+   CCSDS_WR_LEN(*PktPtr, Length);
+
+   /* Restore the sequence count if needed. */
+   if (!Clear)  CCSDS_WR_SEQ(*PktPtr, SeqCount);
+
+} /* END CCSDS_InitPkt() */
+
+void CCSDS_LoadCheckSum (CCSDS_CmdPkt_t *PktPtr)
+{
+   uint8    CheckSum;
+
+   /* Clear the checksum field so the new checksum is correct. */
+   CCSDS_WR_CHECKSUM(PktPtr->SecHdr, 0);
+
+   /* Compute and load new checksum. */
+   CheckSum = CCSDS_ComputeCheckSum(PktPtr);
+   CCSDS_WR_CHECKSUM(PktPtr->SecHdr, CheckSum);
+
+} /* END CCSDS_LoadCheckSum() */
+
+bool CCSDS_ValidCheckSum (CCSDS_CmdPkt_t *PktPtr)
+{
+
+   return (CCSDS_ComputeCheckSum(PktPtr) == 0);
+
+} /* END CCSDS_ValidCheckSum() */
+
+uint8 CCSDS_ComputeCheckSum (CCSDS_CmdPkt_t *PktPtr)
+{
+   uint16   PktLen   = CFE_MSG_GetSize(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t *Size);
+   uint8   *BytePtr  = (uint8 *)PktPtr;
+   uint8    CheckSum;
+
+   CheckSum = 0xFF;
+   while (PktLen--)  CheckSum ^= *(BytePtr++);
+
+   return CheckSum;
+
+} /* END CCSDS_ComputeCheckSum() */
+```
+
+### `ut_cfe_sb_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_sb_stubs.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_sb_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_sb_stubs.c 1.1 2011/05/04 11:20:56EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Software Bus routines
+**
+** $Log: ut_cfe_sb_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:56EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:41EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.2 2011/03/10 11:18:33EST sslegel
+** Added hook support to CFE_SB_Subscribe, CFE_SB_SubscribeEx, and CFE_SB_Unsunscribe
+** Revision 1.1 2011/02/15 11:13:03EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_sb_stubs.h"
+#include "ut_cfe_sb_hooks.h"
+
+Ut_CFE_SB_HookTable_t           Ut_CFE_SB_HookTable;
+Ut_CFE_SB_ReturnCodeTable_t     Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_MAX_INDEX];
+
+void Ut_CFE_SB_Reset(void)
+{
+    memset(&Ut_CFE_SB_HookTable, 0, sizeof(Ut_CFE_SB_HookTable));
+    memset(&Ut_CFE_SB_ReturnCodeTable, 0, sizeof(Ut_CFE_SB_ReturnCodeTable));
+
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_CREATEPIPE_INDEX, &Ut_CFE_SB_CreatePipeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SENDMSG_INDEX, &Ut_CFE_SB_TransmitMsgHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_RCVMSG_INDEX, &Ut_CFE_SB_ReceiveBufferHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_INITMSG_INDEX, &Ut_CFE_MSG_InitHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_MSGHDRSIZE_INDEX, &Ut_CFE_SB_MsgHdrSizeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETUSERDATA_INDEX, &Ut_CFE_SB_GetUserDataHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETMSGID_INDEX, &Ut_CFE_SB_GetMsgIdHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETMSGID_INDEX, &Ut_CFE_MSG_SetMsgIdHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETUSERDATALENGTH_INDEX, &Ut_CFE_SB_GetUserDataLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETUSERDATALENGTH_INDEX, &Ut_CFE_SB_SetUserDataLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETTOTALMSGLENGTH_INDEX, &Ut_CFE_SB_GetTotalMsgLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETTOTALMSGLENGTH_INDEX, &Ut_CFE_SB_SetTotalMsgLengthHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETMSGTIME_INDEX, &Ut_CFE_SB_GetMsgTimeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETMSGTIME_INDEX, &Ut_CFE_MSG_SetMsgTimeHook);
+//    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_TIMESTAMPMSG_INDEX, &Ut_CFE_SB_TimeStampMsgHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETCMDCODE_INDEX, &Ut_CFE_SB_GetCmdCodeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_SETCMDCODE_INDEX, &Ut_CFE_SB_SetCmdCodeHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GETCHECKSUM_INDEX, &Ut_CFE_SB_GetChecksumHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_GENERATECHECKSUM_INDEX, &Ut_CFE_SB_GenerateChecksumHook);
+    Ut_CFE_SB_SetFunctionHook(UT_CFE_SB_VALIDATECHECKSUM_INDEX, &Ut_CFE_SB_ValidateChecksumHook);
+
+    Ut_CFE_SB_ClearPipes();
+    Ut_CFE_SB_ClearMsgQueue();
+}
+
+void Ut_CFE_SB_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_SB_CREATEPIPE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_CreatePipe = FunPtr; }
+    else if (Index == UT_CFE_SB_DELETEPIPE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_DeletePipe = FunPtr; }
+    else if (Index == UT_CFE_SB_SUBSCRIBEEX_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_SubscribeEx = FunPtr; }
+    else if (Index == UT_CFE_SB_SUBSCRIBE_INDEX)          { Ut_CFE_SB_HookTable.CFE_SB_Subscribe = FunPtr; }
+    else if (Index == UT_CFE_SB_SUBSCRIBELOCAL_INDEX)     { Ut_CFE_SB_HookTable.CFE_SB_SubscribeLocal = FunPtr; }
+    else if (Index == UT_CFE_SB_UNSUBSCRIBE_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_Unsubscribe = FunPtr; }
+    else if (Index == UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX)   { Ut_CFE_SB_HookTable.CFE_SB_UnsubscribeLocal = FunPtr; }
+    else if (Index == UT_CFE_SB_SENDMSG_INDEX)            { Ut_CFE_SB_HookTable.CFE_SB_TransmitMsg = FunPtr; }
+    else if (Index == UT_CFE_SB_PASSMSG_INDEX)            { Ut_CFE_SB_HookTable.CFE_SB_PassMsg = FunPtr; }
+    else if (Index == UT_CFE_SB_RCVMSG_INDEX)             { Ut_CFE_SB_HookTable.CFE_SB_ReceiveBuffer = FunPtr; }
+    else if (Index == UT_CFE_SB_GETLASTSENDERID_INDEX)    { Ut_CFE_SB_HookTable.CFE_SB_GetLastSenderId = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYGETPTR_INDEX)     { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopyGetPtr = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYRELEASEPTR_INDEX) { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopyReleasePtr = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYSEND_INDEX)       { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopySend = FunPtr; }
+    else if (Index == UT_CFE_SB_ZEROCOPYPASS_INDEX)       { Ut_CFE_SB_HookTable.CFE_SB_ZeroCopyPass = FunPtr; }
+    else if (Index == UT_CFE_SB_INITMSG_INDEX)            { Ut_CFE_SB_HookTable.CFE_MSG_Init = FunPtr; }
+    else if (Index == UT_CFE_SB_MSGHDRSIZE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_MsgHdrSize = FunPtr; }
+    else if (Index == UT_CFE_SB_GETUSERDATA_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_GetUserData = FunPtr; }
+    else if (Index == UT_CFE_SB_GETMSGID_INDEX)           { Ut_CFE_SB_HookTable.CFE_SB_GetMsgId = FunPtr; }
+    else if (Index == UT_CFE_SB_SETMSGID_INDEX)           { Ut_CFE_SB_HookTable.CFE_MSG_SetMsgId = FunPtr; }
+    else if (Index == UT_CFE_SB_GETUSERDATALENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_GetUserDataLength = FunPtr; }
+    else if (Index == UT_CFE_SB_SETUSERDATALENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_SetUserDataLength = FunPtr; }
+    else if (Index == UT_CFE_SB_GETTOTALMSGLENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_GetTotalMsgLength = FunPtr; }
+    else if (Index == UT_CFE_SB_SETTOTALMSGLENGTH_INDEX)  { Ut_CFE_SB_HookTable.CFE_SB_SetTotalMsgLength = FunPtr; }
+    else if (Index == UT_CFE_SB_GETMSGTIME_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_GetMsgTime = FunPtr; }
+    else if (Index == UT_CFE_SB_SETMSGTIME_INDEX)         { Ut_CFE_SB_HookTable.CFE_MSG_SetMsgTime = FunPtr; }
+    else if (Index == UT_CFE_SB_TIMESTAMPMSG_INDEX)       { Ut_CFE_SB_HookTable.CFE_SB_TimeStampMsg = FunPtr; }
+    else if (Index == UT_CFE_SB_GETCMDCODE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_GetCmdCode = FunPtr; }
+    else if (Index == UT_CFE_SB_SETCMDCODE_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_SetCmdCode = FunPtr; }
+    else if (Index == UT_CFE_SB_GETCHECKSUM_INDEX)        { Ut_CFE_SB_HookTable.CFE_SB_GetChecksum = FunPtr; }
+    else if (Index == UT_CFE_SB_GENERATECHECKSUM_INDEX)   { Ut_CFE_SB_HookTable.CFE_SB_GenerateChecksum = FunPtr; }
+    else if (Index == UT_CFE_SB_VALIDATECHECKSUM_INDEX)   { Ut_CFE_SB_HookTable.CFE_SB_ValidateChecksum = FunPtr; }
+    else if (Index == UT_CFE_SB_CLEANUPAPP_INDEX)         { Ut_CFE_SB_HookTable.CFE_SB_CleanUpApp = FunPtr; }
+    else                                                  { printf("Unsupported SB Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_SB_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CFE_SB_MAX_INDEX) {
+        Ut_CFE_SB_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_SB_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported SB Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_SB_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_SB_ReturnCodeTable[Index].Count > 0) {
+        Ut_CFE_SB_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_SB_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_SB_CreatePipe (CFE_SB_PipeId_t *PipeIdPtr, uint16 Depth, const char *PipeName)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_CREATEPIPE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_CREATEPIPE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_CreatePipe)
+        return Ut_CFE_SB_HookTable.CFE_SB_CreatePipe(PipeIdPtr, Depth, PipeName);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_DeletePipe (CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_DELETEPIPE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_DELETEPIPE_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_SubscribeEx (CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId,
+                          CFE_SB_Qos_t Quality, uint16 MsgLim)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SUBSCRIBEEX_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SUBSCRIBEEX_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SubscribeEx)
+        return Ut_CFE_SB_HookTable.CFE_SB_SubscribeEx(MsgId, PipeId, Quality, MsgLim);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_Subscribe(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SUBSCRIBE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SUBSCRIBE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_Subscribe)
+        return Ut_CFE_SB_HookTable.CFE_SB_Subscribe(MsgId, PipeId);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_SubscribeLocal(CFE_SB_MsgId_t   MsgId, CFE_SB_PipeId_t  PipeId,uint16 MsgLim)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SUBSCRIBELOCAL_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SUBSCRIBELOCAL_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_Unsubscribe(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_UNSUBSCRIBE_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_UNSUBSCRIBE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_Unsubscribe)
+        return Ut_CFE_SB_HookTable.CFE_SB_Unsubscribe(MsgId, PipeId);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_UnsubscribeLocal(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_TransmitMsg (CFE_MSG_Message_t *MsgPtr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_SENDMSG_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_SENDMSG_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_TransmitMsg)
+        return Ut_CFE_SB_HookTable.CFE_SB_TransmitMsg(MsgPtr, true);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_PassMsg (CFE_MSG_Message_t *MsgPtr)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_PASSMSG_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_PASSMSG_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_ReceiveBuffer (CFE_MSG_Message_t * *BufPtr, CFE_SB_PipeId_t PipeId,
+                    int32 TimeOut)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_RCVMSG_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_RCVMSG_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_ReceiveBuffer)
+        return Ut_CFE_SB_HookTable.CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)BufPtr, PipeId, TimeOut);
+
+    return CFE_SUCCESS;
+}
+
+uint32  CFE_SB_GetLastSenderId(CFE_SB_SenderId_t **Ptr,CFE_SB_PipeId_t  PipeId)
+{
+    return CFE_SUCCESS;
+}
+
+CFE_MSG_Message_t  *CFE_SB_ZeroCopyGetPtr(uint16  MsgSize,CFE_SB_ZeroCopyHandle_t *BufferHandle)
+{
+    return NULL;
+}
+
+int32 CFE_SB_ZeroCopyReleasePtr(CFE_MSG_Message_t  *Ptr2Release,CFE_SB_ZeroCopyHandle_t BufferHandle)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_ZeroCopySend(CFE_MSG_Message_t   *MsgPtr, CFE_SB_ZeroCopyHandle_t BufferHandle)
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_ZeroCopyPass(CFE_MSG_Message_t   *MsgPtr, CFE_SB_ZeroCopyHandle_t BufferHandle)
+{
+    return CFE_SUCCESS;
+}
+
+void CFE_MSG_Init (void *MsgPtr, CFE_SB_MsgId_t MsgId, uint16 Length, bool Clear)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_MSG_Init)
+        Ut_CFE_SB_HookTable.CFE_MSG_Init(MsgPtr, MsgId, Length);
+
+    return;
+}
+
+uint16 CFE_SB_MsgHdrSize (CFE_SB_MsgId_t MsgId)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_MsgHdrSize)
+        return Ut_CFE_SB_HookTable.CFE_SB_MsgHdrSize(MsgId);
+
+    return CFE_SUCCESS;
+}
+
+void *CFE_SB_GetUserData(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetUserData)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetUserData(MsgPtr);
+
+    return  NULL;
+}
+
+CFE_SB_MsgId_t CFE_SB_GetMsgId (CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetMsgId)
+        return Ut_CFE_SB_HookTable.CFE_MSG_GetMsgId(MsgPtr, CFE_SB_MsgId_t *MsgId);
+
+    return CFE_SUCCESS;
+}
+
+void  CFE_MSG_SetMsgId (CFE_MSG_Message_t * MsgPtr, CFE_SB_MsgId_t MsgId)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_MSG_SetMsgId)
+        Ut_CFE_SB_HookTable.CFE_MSG_SetMsgId(MsgPtr,MsgId);
+
+    return;
+}
+
+uint16 CFE_SB_GetUserDataLength(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetUserDataLength)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetUserDataLength(MsgPtr);
+
+    return CFE_SUCCESS;
+}/* end CFE_SB_GetUserDataLength */
+
+void CFE_SB_SetUserDataLength(CFE_MSG_Message_t * MsgPtr,uint16 DataLength)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SetUserDataLength)
+        Ut_CFE_SB_HookTable.CFE_SB_SetUserDataLength(MsgPtr,DataLength);
+
+    return;
+}
+
+uint16 CFE_MSG_GetSize(CFE_MSG_Message_t * MsgPtr, CFE_MSG_Size_t *Size)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetTotalMsgLength)
+        return Ut_CFE_SB_HookTable.CFE_MSG_GetSize(MsgPtr, CFE_MSG_Size_t *Size);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_MSG_SetSize(CFE_MSG_Message_t * MsgPtr, uint16 TotalLength)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SetTotalMsgLength)
+        Ut_CFE_SB_HookTable.CFE_MSG_SetSize(MsgPtr, TotalLength);
+
+    return;
+}
+
+CFE_TIME_SysTime_t CFE_SB_GetMsgTime (CFE_MSG_Message_t * MsgPtr)
+{
+    CFE_TIME_SysTime_t  Time;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetMsgTime)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetMsgTime(MsgPtr);
+
+    Time.Seconds    =  0;
+    Time.Subseconds =  0;
+
+    return Time;
+}
+
+int32 CFE_MSG_SetMsgTime (CFE_MSG_Message_t * MsgPtr, CFE_TIME_SysTime_t time)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_MSG_SetMsgTime)
+        return Ut_CFE_SB_HookTable.CFE_MSG_SetMsgTime(MsgPtr, time);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_SB_TimeStampMsg (CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_TimeStampMsg)
+        Ut_CFE_SB_HookTable.CFE_SB_TimeStampMsg(MsgPtr);
+
+    return;
+}
+
+uint16 CFE_SB_GetCmdCode (CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetCmdCode)
+        return Ut_CFE_SB_HookTable.CFE_MSG_GetFcnCode(MsgPtr, CFE_MSG_FcnCode_t *FcnCode);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_SetCmdCode (CFE_MSG_Message_t * MsgPtr, uint16 CmdCode)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_SetCmdCode)
+        return Ut_CFE_SB_HookTable.CFE_MSG_SetFcnCode(MsgPtr, CmdCode);
+
+    return CFE_SUCCESS;
+}
+
+uint16 CFE_SB_GetChecksum(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GetChecksum)
+        return Ut_CFE_SB_HookTable.CFE_SB_GetChecksum(MsgPtr);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_SB_GenerateChecksum(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_GenerateChecksum)
+        Ut_CFE_SB_HookTable.CFE_SB_GenerateChecksum(MsgPtr);
+
+    return;
+}
+
+bool CFE_SB_ValidateChecksum(CFE_MSG_Message_t * MsgPtr)
+{
+    /* Check for Function Hook */
+    if (Ut_CFE_SB_HookTable.CFE_SB_ValidateChecksum)
+        return Ut_CFE_SB_HookTable.CFE_SB_ValidateChecksum(MsgPtr);
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_SB_CleanUpApp (uint32 AppId)
+{
+    /* Check for specified return */
+    if (Ut_CFE_SB_UseReturnCode(UT_CFE_SB_CLEANUPAPP_INDEX))
+        return Ut_CFE_SB_ReturnCodeTable[UT_CFE_SB_CLEANUPAPP_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+```
+
+### `ut_cfe_tbl_hooks.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_tbl_hooks.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_tbl_hooks.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_tbl_hooks.c 1.1 2011/05/04 11:20:57EDT rmcgraw Exp  $
+**
+** Purpose: Unit test hooks for cFE Table Services routines
+**
+** $Log: ut_cfe_tbl_hooks.c  $
+** Revision 1.1 2011/05/04 11:20:57EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:42EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.5 2011/03/04 14:59:12EST sslegel 
+** Added a define for the maximum number of tables
+** Fixed a memory leak in Ut_CFE_TBL_ClearTables
+** Fixed a bug in Ut_CFE_TBL_RegisterTable where the table buffer was not cleared after the memory was allocated
+** Revision 1.4 2011/02/21 16:15:32EST sslegel 
+** Renamed global tables
+** Revision 1.3 2011/02/18 15:57:42EST sslegel 
+** Added new hooks and return codes
+** Changed Ut_CFE_TBL_LoadHook to automatically call the table validate function
+** Revision 1.2 2011/02/17 16:34:26EST rmcgraw 
+** Tbl GetAdr Hook change to return TBL_UPDATED after a TBL load
+** Revision 1.1 2011/02/15 11:13:04EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "utlist.h"
+#include <string.h>
+
+#define UT_CFE_TBL_MAX_TABLES   32
+
+typedef struct {
+    bool                     InUse;
+    bool                     TblUpdatedFlag;
+    void                       *Buffer;
+    char                        Name[CFE_TBL_MAX_FULL_NAME_LEN];
+    uint32                      Size;
+    uint16                      TblOptionFlags;
+    CFE_TBL_CallbackFuncPtr_t   TblValidationFuncPtr;    
+} Ut_CFE_TBL_Registry_t;
+
+typedef struct {
+    bool                     InUse;
+    char                        Filename[OS_MAX_PATH_LEN];
+    void                       *TablePtr;
+} Ut_CFE_TBL_Images_t;
+
+Ut_CFE_TBL_Images_t     Ut_CFE_TBL_Images[UT_CFE_TBL_MAX_TABLES];
+Ut_CFE_TBL_Registry_t   Ut_CFE_TBL_Registry[UT_CFE_TBL_MAX_TABLES];
+
+int32 Ut_CFE_TBL_RegisterTable(const char *Name, uint32 Size, uint16 TblOptionFlags, CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_TBL_MAX_TABLES; i++) {
+        if (Ut_CFE_TBL_Registry[i].InUse == false) {
+            Ut_CFE_TBL_Registry[i].InUse = true;
+            Ut_CFE_TBL_Registry[i].TblUpdatedFlag = false;
+            Ut_CFE_TBL_Registry[i].Buffer = malloc(Size);
+            memset(Ut_CFE_TBL_Registry[i].Buffer, 0, Size);
+            strncpy(Ut_CFE_TBL_Registry[i].Name, Name, CFE_TBL_MAX_FULL_NAME_LEN);
+            Ut_CFE_TBL_Registry[i].Size = Size;
+            Ut_CFE_TBL_Registry[i].TblOptionFlags = TblOptionFlags;
+            Ut_CFE_TBL_Registry[i].TblValidationFuncPtr = TblValidationFuncPtr;
+            return(i);
+        }
+    }
+
+    return(-1);    
+}
+
+int32 Ut_CFE_TBL_AddTable(char *Filename, void *TablePtr)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_TBL_MAX_TABLES; i++) {
+        if (Ut_CFE_TBL_Images[i].InUse == false) {
+            Ut_CFE_TBL_Images[i].InUse = true;
+            strncpy(Ut_CFE_TBL_Images[i].Filename, Filename, OS_MAX_PATH_LEN);
+            Ut_CFE_TBL_Images[i].TablePtr = TablePtr;
+            return(i);
+        }
+    }
+
+    return(-1);
+}
+
+int32 Ut_CFE_TBL_LoadTable(CFE_TBL_Handle_t TblHandle, void *SrcDataPtr)
+{
+    if (Ut_CFE_TBL_Registry[TblHandle].InUse) {
+        memcpy(Ut_CFE_TBL_Registry[TblHandle].Buffer, SrcDataPtr, Ut_CFE_TBL_Registry[TblHandle].Size);
+        Ut_CFE_TBL_Registry[TblHandle].TblUpdatedFlag = true;
+        return(CFE_SUCCESS);
+    }
+    else {
+        return(CFE_TBL_ERR_INVALID_HANDLE);
+    }
+}
+
+void Ut_CFE_TBL_ClearTables(void)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_TBL_MAX_TABLES; i++) {
+        if (Ut_CFE_TBL_Registry[i].InUse == true &&
+            Ut_CFE_TBL_Registry[i].Buffer != NULL) {
+            free(Ut_CFE_TBL_Registry[i].Buffer);
+        }
+    }
+    memset(&Ut_CFE_TBL_Registry, 0, sizeof(Ut_CFE_TBL_Registry));
+    memset(&Ut_CFE_TBL_Images, 0, sizeof(Ut_CFE_TBL_Images));
+}
+
+int32 Ut_CFE_TBL_FindTable(char *Filename)
+{
+    uint32          i;
+
+    for (i=0; i < UT_CFE_TBL_MAX_TABLES; i++) {
+        if ((Ut_CFE_TBL_Images[i].InUse == true) &&
+            (strncmp(Ut_CFE_TBL_Images[i].Filename, Filename, strlen(Filename)) == 0)) {
+            return(i);
+        }
+    }
+    return(-1);
+}
+
+void *Ut_CFE_TBL_GetAddress(CFE_TBL_Handle_t TblHandle)
+{
+    if (Ut_CFE_TBL_Registry[TblHandle].InUse) {
+        return(Ut_CFE_TBL_Registry[TblHandle].Buffer);
+    }
+    else {
+        return(NULL);
+    }
+}
+
+int32 Ut_CFE_TBL_RegisterHook(CFE_TBL_Handle_t *TblHandlePtr, const char *Name, uint32 Size, uint16 TblOptionFlags, CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr)
+{
+    *TblHandlePtr = Ut_CFE_TBL_RegisterTable(Name, Size, TblOptionFlags, TblValidationFuncPtr);
+    return(CFE_SUCCESS);
+}
+
+int32 Ut_CFE_TBL_LoadHook(CFE_TBL_Handle_t TblHandle, CFE_TBL_SrcEnum_t SrcType, const void *SrcDataPtr)
+{
+    int32   TableIndex;
+    int32   Status;
+
+    TableIndex = Ut_CFE_TBL_FindTable((char *)SrcDataPtr);
+    if (TableIndex >= 0) {
+        if (Ut_CFE_TBL_Registry[TblHandle].TblValidationFuncPtr != NULL) {
+            Status = Ut_CFE_TBL_Registry[TblHandle].TblValidationFuncPtr(Ut_CFE_TBL_Images[TableIndex].TablePtr);
+            if (Status != CFE_SUCCESS)
+                return(Status);
+        }
+        return(Ut_CFE_TBL_LoadTable(TblHandle, Ut_CFE_TBL_Images[TableIndex].TablePtr));
+    }
+    else {
+        return(CFE_TBL_ERR_FILE_NOT_FOUND);
+    }
+}
+
+int32 Ut_CFE_TBL_GetAddressHook(void **TblPtr, CFE_TBL_Handle_t TblHandle)
+{
+    if ((*TblPtr = Ut_CFE_TBL_GetAddress(TblHandle)) != NULL) {
+
+        if(Ut_CFE_TBL_Registry[TblHandle].TblUpdatedFlag == true) {
+            Ut_CFE_TBL_Registry[TblHandle].TblUpdatedFlag = false;
+            return (CFE_TBL_INFO_UPDATED);
+        }
+        
+        return(CFE_SUCCESS);
+    }
+    else {
+        
+        return(CFE_TBL_ERR_INVALID_HANDLE);
+    }
+
+}
+```
+
+### `ut_cfe_tbl_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_tbl_stubs.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_tbl_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_tbl_stubs.c 1.1 2011/05/04 11:20:57EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Table Services routines
+**
+** $Log: ut_cfe_tbl_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:57EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:43EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.4 2011/03/10 11:19:20EST sslegel
+** Added return code support to CFE_TBL_GetInfo
+** Revision 1.3 2011/02/18 15:57:42EST sslegel
+** Added new hooks and return codes
+** Changed Ut_CFE_TBL_LoadHook to automatically call the table validate function
+** Revision 1.2 2011/02/17 16:34:27EST rmcgraw
+** Tbl GetAdr Hook change to return TBL_UPDATED after a TBL load
+** Revision 1.1 2011/02/15 11:13:04EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_tbl_stubs.h"
+#include "ut_cfe_tbl_hooks.h"
+#include <string.h>
+
+Ut_CFE_TBL_HookTable_t          Ut_CFE_TBL_HookTable;
+Ut_CFE_TBL_ReturnCodeTable_t    Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_MAX_INDEX];
+
+void Ut_CFE_TBL_Reset(void)
+{
+    memset(&Ut_CFE_TBL_HookTable, 0, sizeof(Ut_CFE_TBL_HookTable));
+    memset(&Ut_CFE_TBL_ReturnCodeTable, 0, sizeof(Ut_CFE_TBL_ReturnCodeTable));
+
+    Ut_CFE_TBL_SetFunctionHook(UT_CFE_TBL_REGISTER_INDEX, (void *)&Ut_CFE_TBL_RegisterHook);
+    Ut_CFE_TBL_SetFunctionHook(UT_CFE_TBL_LOAD_INDEX, (void *)&Ut_CFE_TBL_LoadHook);
+    Ut_CFE_TBL_SetFunctionHook(UT_CFE_TBL_GETADDRESS_INDEX, (void *)&Ut_CFE_TBL_GetAddressHook);
+
+    Ut_CFE_TBL_ClearTables();
+}
+
+void Ut_CFE_TBL_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_TBL_REGISTER_INDEX)      { Ut_CFE_TBL_HookTable.CFE_TBL_Register = FunPtr; }
+    else if (Index == UT_CFE_TBL_LOAD_INDEX)          { Ut_CFE_TBL_HookTable.CFE_TBL_Load = FunPtr; }
+    else if (Index == UT_CFE_TBL_MANAGE_INDEX)        { Ut_CFE_TBL_HookTable.CFE_TBL_Manage = FunPtr; }
+    else if (Index == UT_CFE_TBL_GETADDRESS_INDEX)    { Ut_CFE_TBL_HookTable.CFE_TBL_GetAddress = FunPtr; }
+    else if (Index == UT_CFE_TBL_GETADDRESSES_INDEX)  { Ut_CFE_TBL_HookTable.CFE_TBL_GetAddresses = FunPtr; }
+    else if (Index == UT_CFE_TBL_GETINFO_INDEX)       { Ut_CFE_TBL_HookTable.CFE_TBL_GetInfo = FunPtr; }
+    else                                              { printf("Unsupported TBL Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_TBL_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CFE_TBL_MAX_INDEX) {
+        Ut_CFE_TBL_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_TBL_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported TBL Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_TBL_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_TBL_ReturnCodeTable[Index].Count > 0) {
+        Ut_CFE_TBL_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_TBL_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+int32 CFE_TBL_Register( CFE_TBL_Handle_t *TblHandlePtr,
+                        const char   *Name,
+                        uint32  Size,
+                        uint16  TblOptionFlags,
+                        CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_REGISTER_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_REGISTER_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_Register)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_Register(TblHandlePtr, Name, Size, TblOptionFlags,TblValidationFuncPtr));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Share( CFE_TBL_Handle_t *TblHandlePtr,      /* Returned Handle */
+                     const char *TblName )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Unregister ( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Load( CFE_TBL_Handle_t TblHandle,
+                    CFE_TBL_SrcEnum_t SrcType,
+                    const void *SrcDataPtr )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_LOAD_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_LOAD_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_Load)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_Load(TblHandle, SrcType, SrcDataPtr));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Update( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetAddress( void **TblPtr,
+                          CFE_TBL_Handle_t TblHandle )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETADDRESS_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETADDRESS_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_GetAddress)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_GetAddress(TblPtr, TblHandle));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_ReleaseAddress( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetAddresses( void **TblPtrs[],
+                            uint16 NumTables,
+                            const CFE_TBL_Handle_t TblHandles[] )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETADDRESSES_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETADDRESSES_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_GetAddresses)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_GetAddresses(TblPtrs, NumTables, TblHandles));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_ReleaseAddresses( uint16 NumTables,
+                                const CFE_TBL_Handle_t TblHandles[] )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Validate( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_Manage( CFE_TBL_Handle_t TblHandle )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_MANAGE_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_MANAGE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_Manage)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_Manage(TblHandle));
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetStatus( CFE_TBL_Handle_t TblHandle )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETSTATUS_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETSTATUS_INDEX].Value;
+
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_GetInfo( CFE_TBL_Info_t *TblInfoPtr, const char *TblName )
+{
+    /* Check for specified return */
+    if (Ut_CFE_TBL_UseReturnCode(UT_CFE_TBL_GETINFO_INDEX))
+        return Ut_CFE_TBL_ReturnCodeTable[UT_CFE_TBL_GETINFO_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TBL_HookTable.CFE_TBL_GetInfo)
+        return(Ut_CFE_TBL_HookTable.CFE_TBL_GetInfo(TblInfoPtr, TblName));
+
+    return CFE_SUCCESS;
+}
+
+int32   CFE_TBL_DumpToBuffer( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32   CFE_TBL_Modified( CFE_TBL_Handle_t TblHandle )
+{
+    return CFE_SUCCESS;
+}
+
+int32 CFE_TBL_CleanUpApp (uint32 AppId)
+{
+    return CFE_SUCCESS;
+}
+```
+
+### `ut_cfe_time_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_cfe_time_stubs.c`
+
+
+```c
+/*
+**
+** File: ut_cfe_time_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_time_stubs.c 1.1 2011/05/04 11:20:58EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for cFE Time Services routines
+**
+** $Log: ut_cfe_time_stubs.c  $
+** Revision 1.1 2011/05/04 11:20:58EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:43EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/02/15 11:13:05EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_cfe_time_stubs.h"
+#include <string.h>
+
+Ut_CFE_TIME_HookTable_t         Ut_CFE_TIME_HookTable;
+Ut_CFE_TIME_ReturnCodeTable_t   Ut_CFE_TIME_ReturnCodeTable[UT_CFE_TIME_MAX_INDEX];
+
+void Ut_CFE_TIME_Reset(void)
+{
+    memset(&Ut_CFE_TIME_HookTable, 0, sizeof(Ut_CFE_TIME_HookTable));
+    memset(&Ut_CFE_TIME_ReturnCodeTable, 0, sizeof(Ut_CFE_TIME_ReturnCodeTable));
+}
+
+void Ut_CFE_TIME_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_CFE_TIME_GETTIME_INDEX)      { Ut_CFE_TIME_HookTable.CFE_TIME_GetTime = FunPtr; }
+    else                                              { printf("Unsupported TIME Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_CFE_TIME_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CFE_TIME_MAX_INDEX) {
+        Ut_CFE_TIME_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CFE_TIME_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported TIME Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_CFE_TIME_UseReturnCode(uint32 Index)
+{
+    if (Ut_CFE_TIME_ReturnCodeTable[Index].Count > 0) {
+        Ut_CFE_TIME_ReturnCodeTable[Index].Count--;
+        if (Ut_CFE_TIME_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+CFE_TIME_SysTime_t  CFE_TIME_GetTime(void)
+{
+    CFE_TIME_SysTime_t  Time;
+
+    /* Check for Function Hook */
+    if (Ut_CFE_TIME_HookTable.CFE_TIME_GetTime)
+        return Ut_CFE_TIME_HookTable.CFE_TIME_GetTime();
+
+    Time.Seconds = 0;
+    Time.Subseconds = 0;
+
+    return Time;
+}
+```
+
+### `ut_osapi_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_osapi_stubs.c`
+
+
+```c
+/*
+** File: ut_osapi_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_osapi_stubs.c 1.2 2011/05/16 16:25:35EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for OSAPI routines.
+**
+** $Log: ut_osapi_stubs.c  $
+** Revision 1.2 2011/05/16 16:25:35EDT rmcgraw
+** Added hook functionality to Count Semaphore APIs
+** Revision 1.4 2011/05/16 14:42:42EDT rmcgraw
+** Added SetRtnCode processing to Counting Semaphore APIs
+** Revision 1.3 2011/04/01 16:02:41EDT sslegel
+** Added (void) to unused parameters to avoid compiler warnings
+** Revision 1.2 2011/03/08 15:42:09EST rmcgraw
+** Added OS_CountSemGetIdByName
+** Revision 1.1 2011/02/15 11:13:05EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+*/
+
+/*
+** Include section
+*/
+#include "cfe.h"
+#include "ut_osapi_stubs.h"
+#include <time.h>
+#include <string.h>
+
+Ut_OSAPI_HookTable_t        Ut_OSAPI_HookTable;
+Ut_OSAPI_ReturnCodeTable_t  Ut_OSAPI_ReturnCodeTable[UT_OSAPI_MAX_INDEX];
+
+void Ut_OSAPI_Reset(void)
+{
+    memset(&Ut_OSAPI_HookTable, 0, sizeof(Ut_OSAPI_HookTable));
+    memset(&Ut_OSAPI_ReturnCodeTable, 0, sizeof(Ut_OSAPI_ReturnCodeTable));
+}
+
+void Ut_OSAPI_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_OSAPI_TASKDELAY_INDEX)       { Ut_OSAPI_HookTable.OS_TaskDelay = FunPtr; }
+    else if (Index == UT_OSAPI_BINSEMTAKE_INDEX)      { Ut_OSAPI_HookTable.OS_BinSemTake = FunPtr; }
+    else if (Index == UT_OSAPI_BINSEMTIMEDWAIT_INDEX) { Ut_OSAPI_HookTable.OS_BinSemTimedWait = FunPtr; }
+    else if (Index == UT_OSAPI_MUTSEMTAKE_INDEX)      { Ut_OSAPI_HookTable.OS_MutSemTake = FunPtr; }
+    else if (Index == UT_OSAPI_GETLOCALTIME_INDEX)    { Ut_OSAPI_HookTable.OS_GetLocalTime = FunPtr; }
+    else if (Index == UT_OSAPI_QUEUEGET_INDEX)        { Ut_OSAPI_HookTable.OS_QueueGet = FunPtr; }
+    else if (Index == UT_OSAPI_QUEUEPUT_INDEX)        { Ut_OSAPI_HookTable.OS_QueuePut = FunPtr; }
+    else if (Index == UT_OSAPI_TASKDELETE_INDEX)      { Ut_OSAPI_HookTable.OS_TaskDelete = FunPtr; }
+    else if (Index == UT_OSAPI_BINSEMGIVE_INDEX)      { Ut_OSAPI_HookTable.OS_BinSemGive = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMCREATE_INDEX)  { Ut_OSAPI_HookTable.OS_CountSemCreate = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMDELETE_INDEX)  { Ut_OSAPI_HookTable.OS_CountSemDelete = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMGIVE_INDEX)    { Ut_OSAPI_HookTable.OS_CountSemGive = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMTAKE_INDEX)    { Ut_OSAPI_HookTable.OS_CountSemTake = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX)   { Ut_OSAPI_HookTable.OS_CountSemTimedWait = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX) { Ut_OSAPI_HookTable.OS_CountSemGetIdByName = FunPtr; }
+    else if (Index == UT_OSAPI_COUNTSEMGETINFO_INDEX) { Ut_OSAPI_HookTable.OS_CountSemGetInfo = FunPtr; }
+    else                                              { printf("Unsupported OSAPI Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_OSAPI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_OSAPI_MAX_INDEX) {
+        Ut_OSAPI_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_OSAPI_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported OSAPI Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_OSAPI_UseReturnCode(uint32 Index)
+{
+    if (Ut_OSAPI_ReturnCodeTable[Index].Count > 0) {
+        Ut_OSAPI_ReturnCodeTable[Index].Count--;
+        if (Ut_OSAPI_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+/**********************************************************************************
+                                    TASK API
+**********************************************************************************/
+
+int32 OS_TaskCreate(uint32 *task_id, const char *task_name, osal_task_entry function_pointer, uint32 *stack_pointer,
+                    uint32 stack_size, uint32 priority, uint32 flags)
+{
+    (void) task_id;
+    (void) task_name;
+    (void) function_pointer;
+    (void) stack_pointer;
+    (void) stack_size;
+    (void) priority;
+    (void) flags;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_TaskDelete (uint32 task_id)
+{
+    if (Ut_OSAPI_HookTable.OS_TaskDelete)
+        return(Ut_OSAPI_HookTable.OS_TaskDelete(task_id));
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_TaskInstallDeleteHandler(osal_task_entry function_pointer)
+{
+    (void) function_pointer;
+
+    return(OS_SUCCESS);
+}
+
+void OS_TaskExit(void)
+{
+    return;
+}
+
+int32 OS_TaskDelay(uint32 millisecond)
+{
+    (void) millisecond;
+
+    if (Ut_OSAPI_HookTable.OS_TaskDelay)
+        return(Ut_OSAPI_HookTable.OS_TaskDelay(millisecond));
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_TaskSetPriority (uint32 task_id, uint32 new_priority)
+{
+    (void) task_id;
+    (void) new_priority;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_TaskRegister (void)
+{
+    return (OS_SUCCESS);
+}
+
+uint32 OS_TaskGetId (void)
+{
+    return (uint32)(7);
+}
+
+int32 OS_TaskGetIdByName (uint32 *task_id, const char *task_name)
+{
+    (void) task_id;
+    (void) task_name;
+
+    return (uint32)(7);
+}
+
+int32 OS_TaskGetInfo (uint32 task_id, OS_task_prop_t *task_prop)
+{
+    (void) task_id;
+
+    task_prop = NULL;        /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+/****************************************************************************************
+                              MESSAGE QUEUE API
+*****************************************************************************************/
+
+int32 OS_QueueCreate (uint32 *queue_id, const char *queue_name, uint32 queue_depth,
+                       uint32 data_size, uint32 flags)
+{
+    (void) queue_id;
+    (void) queue_name;
+    (void) queue_depth;
+    (void) data_size;
+    (void) flags;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueueDelete (uint32 queue_id)
+{
+    (void) queue_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueueGet (uint32 queue_id, void *data, uint32 size, uint32 *size_copied, int32 timeout)
+{
+    if (Ut_OSAPI_HookTable.OS_QueueGet)
+        return(Ut_OSAPI_HookTable.OS_QueueGet(queue_id, data, size, size_copied, timeout));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueuePut (uint32 queue_id, const void *data, uint32 size, uint32 flags)
+{
+    if (Ut_OSAPI_HookTable.OS_QueuePut)
+        return(Ut_OSAPI_HookTable.OS_QueuePut(queue_id, data, size, flags));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_QueueGetIdByName (uint32 *queue_id, const char *queue_name)
+{
+    (void) queue_id;
+    (void) queue_name;
+
+    return (OS_SUCCESS);
+}
+
+/******************************************************************************************
+                                  SEMAPHORE API
+******************************************************************************************/
+
+int32 OS_BinSemCreate (uint32 *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    (void) sem_id;
+    (void) sem_name;
+    (void) sem_initial_value;
+    (void) options;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemDelete (uint32 sem_id)
+{
+    (void) sem_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemGive (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_BinSemGive)
+        return(Ut_OSAPI_HookTable.OS_BinSemGive(sem_id));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemTake (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_BinSemTake)
+        return(Ut_OSAPI_HookTable.OS_BinSemTake(sem_id));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemTimedWait (uint32 sem_id, uint32 msecs)
+{
+    if (Ut_OSAPI_HookTable.OS_BinSemTimedWait)
+        return(Ut_OSAPI_HookTable.OS_BinSemTimedWait(sem_id, msecs));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_BinSemGetIdByName (uint32 *sem_id, const char *sem_name)
+{
+    (void) sem_name;
+
+    sem_id = NULL;             /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+int32 OS_BinSemGetInfo (uint32 sem_id, OS_bin_sem_prop_t *bin_prop)
+{
+    (void) sem_id;
+
+    bin_prop = NULL;        /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+int32 OS_CountSemCreate (uint32 *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMCREATE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMCREATE_INDEX].Value;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemCreate)
+        return(Ut_OSAPI_HookTable.OS_CountSemCreate(sem_id, sem_name, sem_initial_value, options));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_CountSemDelete (uint32 sem_id)
+{
+    (void) sem_id;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemDelete)
+        return(Ut_OSAPI_HookTable.OS_CountSemDelete(sem_id));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMDELETE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMDELETE_INDEX].Value;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_CountSemGive (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_CountSemGive)
+        return(Ut_OSAPI_HookTable.OS_CountSemGive(sem_id));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMGIVE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMGIVE_INDEX].Value;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_CountSemTake (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_CountSemTake)
+        return(Ut_OSAPI_HookTable.OS_CountSemTake(sem_id));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMTAKE_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMTAKE_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+int32 OS_CountSemTimedWait (uint32 sem_id, uint32 msecs)
+{
+    (void) sem_id;
+    (void) msecs;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemTimedWait)
+        return(Ut_OSAPI_HookTable.OS_CountSemTimedWait(sem_id,msecs));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+int32 OS_CountSemGetIdByName (uint32 *sem_id, const char *sem_name)
+{
+
+    if (Ut_OSAPI_HookTable.OS_CountSemGetIdByName)
+        return(Ut_OSAPI_HookTable.OS_CountSemGetIdByName(sem_id, sem_name));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+int32 OS_CountSemGetInfo (uint32 sem_id, OS_count_sem_prop_t *count_prop)
+{
+    (void) sem_id;
+    (void) count_prop;
+
+    if (Ut_OSAPI_HookTable.OS_CountSemGetInfo)
+        return(Ut_OSAPI_HookTable.OS_CountSemGetInfo(sem_id, count_prop));
+
+    if (Ut_OSAPI_UseReturnCode(UT_OSAPI_COUNTSEMGETINFO_INDEX))
+        return Ut_OSAPI_ReturnCodeTable[UT_OSAPI_COUNTSEMGETINFO_INDEX].Value;
+
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                  MUTEX API
+****************************************************************************************/
+
+int32 OS_MutSemCreate (uint32 *sem_id, const char *sem_name, uint32 options)
+{
+    (void) sem_id;
+    (void) sem_name;
+    (void) options;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemDelete (uint32 sem_id)
+{
+    (void) sem_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemGive (uint32 sem_id)
+{
+    (void) sem_id;
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemTake (uint32 sem_id)
+{
+    if (Ut_OSAPI_HookTable.OS_MutSemTake)
+        return(Ut_OSAPI_HookTable.OS_MutSemTake(sem_id));
+
+    return (OS_SUCCESS);
+}
+
+int32 OS_MutSemGetIdByName (uint32 *sem_id, const char *sem_name)
+{
+    (void) sem_name;
+
+    sem_id = NULL;             /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+int32 OS_MutSemGetInfo (uint32 sem_id, OS_mut_sem_prop_t *mut_prop)
+{
+    (void) sem_id;
+
+    mut_prop = NULL;        /* currently not implemented */
+    return(OS_INVALID_POINTER);
+}
+
+/****************************************************************************************
+                                  Time/Tick Related API
+****************************************************************************************/
+
+int32 OS_Milli2Ticks(uint32 milli_seconds)
+{
+    uint32 num_of_ticks,tick_duration_usec ;
+
+    tick_duration_usec = OS_Tick2Micros() ;
+
+    num_of_ticks = ( (milli_seconds * 1000) + tick_duration_usec -1 ) / tick_duration_usec ;
+
+    return(num_of_ticks) ;
+}
+
+int32 OS_Tick2Micros (void)
+{
+    return((1/(CLOCKS_PER_SEC))*1000);
+}
+
+int32 OS_GetLocalTime(OS_time_t *time_struct)
+{
+    if (Ut_OSAPI_HookTable.OS_GetLocalTime)
+        return(Ut_OSAPI_HookTable.OS_GetLocalTime(time_struct));
+
+    return (OS_SUCCESS);
+}
+
+/****************************************************************************************
+                                  Exception API
+****************************************************************************************/
+
+int32 OS_ExcAttachHandler(uint32 ExceptionNumber, void (*ExceptionHandler)(uint32, const void *,uint32), int32 Parameter)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_ExcEnable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_ExcDisable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+/****************************************************************************************
+                                  Floating Point Unit API
+****************************************************************************************/
+
+int32 OS_FPUExcAttachHandler(uint32 ExceptionNumber, void * ExceptionHandler, int32 Parameter)
+{
+    (void) ExceptionNumber;
+    (void) ExceptionHandler;
+    (void) Parameter;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcEnable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcDisable(int32 ExceptionNumber)
+{
+    (void) ExceptionNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcSetMask(uint32 Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_FPUExcGetMask(uint32 *Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+/****************************************************************************************
+                                  Interrupt API
+****************************************************************************************/
+
+int32 OS_IntAttachHandler(uint32 InterruptNumber, osal_task_entry InterruptHandler, int32 Parameter)
+{
+    (void) InterruptNumber;
+    (void) InterruptHandler;
+    (void) Parameter;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntEnable(int32 Level)
+{
+    (void) Level;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntDisable(int32 Level)
+{
+    (void) Level;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntUnlock (int32 IntLevel)
+{
+    (void) IntLevel;
+
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntLock (void)
+{
+    return(OS_SUCCESS);
+}
+
+int32 OS_IntSetMask(uint32 Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_IntGetMask(uint32 *Mask)
+{
+    (void) Mask;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+int32 OS_IntAck(int32 InterruptNumber)
+{
+    (void) InterruptNumber;
+
+    return(CFE_OSAPI_NOT_IMPLEMENTED);
+}
+
+/****************************************************************************************
+                                  Debug API
+****************************************************************************************/
+
+int32 OS_GetErrorName(int32 error_num, os_err_name_t * err_name)
+{
+    os_err_name_t local_name;
+    uint32 return_code;
+
+    return_code = OS_SUCCESS;
+
+    switch (error_num)
+    {
+        case OS_SUCCESS:
+            strcpy(local_name,"OS_SUCCESS"); break;
+        case OS_ERROR:
+            strcpy(local_name,"OS_ERROR"); break;
+        case OS_INVALID_POINTER:
+            strcpy(local_name,"OS_INVALID_POINTER"); break;
+        case OS_ERROR_ADDRESS_MISALIGNED:
+            strcpy(local_name,"OS_ADDRESS_MISALIGNED"); break;
+        case OS_ERROR_TIMEOUT:
+            strcpy(local_name,"OS_ERROR_TIMEOUT"); break;
+        case OS_INVALID_INT_NUM:
+            strcpy(local_name,"OS_INVALID_INT_NUM"); break;
+        case OS_SEM_FAILURE:
+            strcpy(local_name,"OS_SEM_FAILURE"); break;
+        case OS_SEM_TIMEOUT:
+            strcpy(local_name,"OS_SEM_TIMEOUT"); break;
+        case OS_QUEUE_EMPTY:
+            strcpy(local_name,"OS_QUEUE_EMPTY"); break;
+        case OS_QUEUE_FULL:
+            strcpy(local_name,"OS_QUEUE_FULL"); break;
+        case OS_QUEUE_TIMEOUT:
+            strcpy(local_name,"OS_QUEUE_TIMEOUT"); break;
+        case OS_QUEUE_INVALID_SIZE:
+            strcpy(local_name,"OS_QUEUE_INVALID_SIZE"); break;
+        case OS_QUEUE_ID_ERROR:
+            strcpy(local_name,"OS_QUEUE_ID_ERROR"); break;
+        case OS_ERR_NAME_TOO_LONG:
+            strcpy(local_name,"OS_ERR_NAME_TOO_LONG"); break;
+        case OS_ERR_NO_FREE_IDS:
+            strcpy(local_name,"OS_ERR_NO_FREE_IDS"); break;
+        case OS_ERR_NAME_TAKEN:
+            strcpy(local_name,"OS_ERR_NAME_TAKEN"); break;
+        case OS_ERR_INVALID_ID:
+            strcpy(local_name,"OS_ERR_INVALID_ID"); break;
+        case OS_ERR_NAME_NOT_FOUND:
+            strcpy(local_name,"OS_ERR_NAME_NOT_FOUND"); break;
+        case OS_ERR_SEM_NOT_FULL:
+            strcpy(local_name,"OS_ERR_SEM_NOT_FULL"); break;
+        case OS_ERR_INVALID_PRIORITY:
+            strcpy(local_name,"OS_ERR_INVALID_PRIORITY"); break;
+
+        default: strcpy(local_name,"ERROR_UNKNOWN");
+                 return_code = OS_ERROR;
+    }
+    strcpy((char*) err_name, local_name);
+    return return_code;
+}
+
+void OS_printf( const char *String, ...)
+{
+    va_list     ptr;
+    char msg_buffer [OS_BUFFER_SIZE];
+
+    va_start(ptr,String);
+    vsprintf(&msg_buffer[0], String, ptr);
+    va_end(ptr);
+
+    msg_buffer[OS_BUFFER_SIZE-1] = '\0';
+    printf("%s", &msg_buffer[0]); //FIXME??
+}
+```
+
+### `ut_osfileapi_stubs.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/ut_osfileapi_stubs.c`
+
+
+```c
+/*
+**
+** File: ut_osfileapi_stubs.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_osfileapi_stubs.c 1.1 2011/05/04 11:21:00EDT rmcgraw Exp  $
+**
+** Purpose: Unit test stubs for the OSAPI File Services routines
+**
+** $Log: ut_osfileapi_stubs.c  $
+** Revision 1.1 2011/05/04 11:21:00EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.1 2011/04/08 16:26:45EDT rmcgraw
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/src/project.pj
+** Revision 1.6 2011/03/31 14:53:05EDT rmcgraw
+** Added functionality and supressed compiler warnings
+** Revision 1.5 2011/03/30 09:58:57EDT rmcgraw
+** Added Hook and Return enhancements to Directory APIs
+** Revision 1.4 2011/03/24 13:14:55EDT rmcgraw
+** Added Hook and RtnCode functionality to OS_stat
+** Revision 1.3 2011/03/23 17:18:08EDT rmcgraw
+** correct OS_read return value
+** Revision 1.2 2011/03/23 17:08:19EDT rmcgraw
+** OS_ERROR to OS_SUCCESS for some OS file sys apis
+** Revision 1.1 2011/02/15 11:13:05EST sslegel
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/src/project.pj
+**
+*/
+
+#include "cfe.h"
+#include "ut_osfileapi_stubs.h"
+#include <string.h>
+
+Ut_OSFILEAPI_HookTable_t           Ut_OSFILEAPI_HookTable;
+Ut_OSFILEAPI_ReturnCodeTable_t     Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_MAX_INDEX];
+
+void Ut_OSFILEAPI_Reset(void)
+{
+    memset(&Ut_OSFILEAPI_HookTable, 0, sizeof(Ut_OSFILEAPI_HookTable));
+    memset(&Ut_OSFILEAPI_ReturnCodeTable, 0, sizeof(Ut_OSFILEAPI_ReturnCodeTable));
+}
+
+void Ut_OSFILEAPI_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if      (Index == UT_OSFILEAPI_CREAT_INDEX)    { Ut_OSFILEAPI_HookTable.OS_creat = FunPtr; }
+    else if (Index == UT_OSFILEAPI_WRITE_INDEX)    { Ut_OSFILEAPI_HookTable.OS_write = FunPtr; }
+    else if (Index == UT_OSFILEAPI_READ_INDEX)     { Ut_OSFILEAPI_HookTable.OS_read = FunPtr; }
+    else if (Index == UT_OSFILEAPI_OPENDIR_INDEX)  { Ut_OSFILEAPI_HookTable.OS_opendir = FunPtr; }
+    else if (Index == UT_OSFILEAPI_READDIR_INDEX)  { Ut_OSFILEAPI_HookTable.OS_readdir = FunPtr; }
+    else if (Index == UT_OSFILEAPI_CLOSE_INDEX)    { Ut_OSFILEAPI_HookTable.OS_close = FunPtr; }
+    else if (Index == UT_OSFILEAPI_OPEN_INDEX)     { Ut_OSFILEAPI_HookTable.OS_open = FunPtr; }
+    else if (Index == UT_OSFILEAPI_CLOSEDIR_INDEX) { Ut_OSFILEAPI_HookTable.OS_closedir = FunPtr; }
+    else if (Index == UT_OSFILEAPI_STAT_INDEX)     { Ut_OSFILEAPI_HookTable.OS_stat = FunPtr; }
+    else if (Index == UT_OSFILEAPI_FDGETINFO_INDEX){ Ut_OSFILEAPI_HookTable.OS_FDGetInfo = FunPtr; }
+    else                                           { printf("Unsupported OSFILEAPI Index In SetFunctionHook Call %u\n", Index); }
+}
+
+void Ut_OSFILEAPI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_OSFILEAPI_MAX_INDEX) {
+        Ut_OSFILEAPI_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_OSFILEAPI_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported OSFILEAPI Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+bool Ut_OSFILEAPI_UseReturnCode(uint32 Index)
+{
+    if (Ut_OSFILEAPI_ReturnCodeTable[Index].Count > 0) {
+        Ut_OSFILEAPI_ReturnCodeTable[Index].Count--;
+        if (Ut_OSFILEAPI_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+/*
+** Standard File system API
+*/
+
+int32 OS_creat  (const char *path, int32  access)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_CREAT_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_CREAT_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_creat)
+        return Ut_OSFILEAPI_HookTable.OS_creat(path, access);
+
+    return OS_ERROR;
+}
+
+int32 OS_open   (const char *path,  int32 access,  uint32  mode)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_OPEN_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_OPEN_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_open)
+        return Ut_OSFILEAPI_HookTable.OS_OpenCreate(osal_id_t *filedes, path, OS_FILE_FLAG_NONE,  access);
+
+    return OS_ERROR;
+}
+
+int32 OS_close (int32  filedes)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_CLOSE_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_CLOSE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_close)
+        return Ut_OSFILEAPI_HookTable.OS_close(filedes);
+
+    return OS_SUCCESS;
+}
+
+int32 OS_read  (int32  filedes, void *buffer, uint32 nbytes)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_READ_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_READ_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_read)
+        return Ut_OSFILEAPI_HookTable.OS_read(filedes, buffer, nbytes);
+
+    return OS_ERROR;
+}
+
+int32 OS_write (int32  filedes, void *buffer, uint32 nbytes)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_WRITE_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_WRITE_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_write)
+        return Ut_OSFILEAPI_HookTable.OS_write(filedes, buffer, nbytes);
+
+    return nbytes;
+}
+
+int32 OS_chmod  (const char *path, uint32 access)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_stat   (const char *path, os_fstat_t *filestats)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_STAT_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_STAT_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_stat)
+        return Ut_OSFILEAPI_HookTable.OS_stat(path, filestats);
+
+    return OS_ERROR;
+}
+
+int32 OS_lseek  (int32  filedes, int32 offset, uint32 whence)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_remove (const char *path)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_rename (const char *old, const char *new)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_cp (const char *src, const char *dest)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_mv (const char *src, const char *dest)
+{
+    return OS_SUCCESS;
+}
+
+/*
+** Directory API
+*/
+
+int32 OS_mkdir (const char *path, uint32 access)
+{
+    return OS_SUCCESS;
+}
+
+os_dirp_t OS_opendir (const char *path)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_OPENDIR_INDEX))
+        return (os_dirp_t)Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_OPENDIR_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_opendir)
+        return Ut_OSFILEAPI_HookTable.OS_opendir(path);
+
+    return NULL;
+}
+
+int32 OS_closedir (os_dirp_t directory)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_CLOSEDIR_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_CLOSEDIR_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_closedir)
+        return Ut_OSFILEAPI_HookTable.OS_closedir(directory);
+
+    return OS_SUCCESS;
+}
+
+os_dirent_t *  OS_readdir (os_dirp_t directory)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_READDIR_INDEX))
+        return (os_dirent_t *)Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_READDIR_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_readdir)
+        return Ut_OSFILEAPI_HookTable.OS_readdir(directory);
+
+    return NULL;
+}
+
+int32  OS_rmdir (const char *path)
+{
+    return OS_ERROR;
+}
+
+int32 OS_check_name_length(const char *path)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_ShellOutputToFile(char* Cmd, int32 OS_fd)
+{
+    return OS_SUCCESS;
+}
+
+int32 OS_FDGetInfo (int32 filedes, OS_FDTableEntry *fd_prop)
+{
+    /* Check for specified return */
+    if (Ut_OSFILEAPI_UseReturnCode(UT_OSFILEAPI_FDGETINFO_INDEX))
+        return Ut_OSFILEAPI_ReturnCodeTable[UT_OSFILEAPI_FDGETINFO_INDEX].Value;
+
+    /* Check for Function Hook */
+    if (Ut_OSFILEAPI_HookTable.OS_FDGetInfo)
+        return Ut_OSFILEAPI_HookTable.OS_FDGetInfo(filedes,fd_prop);
+
+    return OS_FS_ERR_INVALID_FD;
+}
+```
+
+### `utassert.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/utassert.c`
+
+
+```c
+
+/*
+ * Filename: utassert.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a standard set of asserts for use in unit tests.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utassert.h"
+#include "uttools.h"
+
+/*
+ * Local Data
+ */
+
+uint32      UtAssertPassCount = 0;
+uint32      UtAssertFailCount = 0;
+
+/*
+ * Function Definitions
+ */
+
+uint32 UtAssert_GetPassCount(void)
+{
+    return(UtAssertPassCount);
+}
+
+uint32 UtAssert_GetFailCount(void)
+{
+    return(UtAssertFailCount);
+}
+
+bool UtAssert(bool Expression, char *Description, char *File, uint32 Line)
+{
+    if (Expression) {
+        #ifdef UT_VERBOSE
+        printf("PASS: %s\n", Description);
+        #endif
+        UtAssertPassCount++;
+        return(true);
+    }
+    else {
+        printf("FAIL: %s, File: %s, Line: %u\n", Description, File, Line);
+        UtAssertFailCount++;
+        return(false);
+    }
+}
+```
+
+### `utlist.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/utlist.c`
+
+
+```c
+
+/*
+ * Filename: utlist.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a generic linked list data structure.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utlist.h"
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * Function Definitions
+ */
+
+UtListHead_t *UtList_Create(void)
+{
+    UtListHead_t *NewList;
+
+    NewList = malloc(sizeof(UtListHead_t));
+    NewList->First = NULL;
+    NewList->Last = NULL;
+    NewList->NumberOfEntries = 0;
+    return (NewList);
+}
+
+void UtList_Destroy(UtListHead_t *ListHead)
+{
+    UtList_Reset(ListHead);
+    free(ListHead);
+}
+
+void UtList_Reset(UtListHead_t *ListHead)
+{
+    while (!UtList_IsEmpty(ListHead)) {
+        UtList_DeleteFirst(ListHead);
+    }
+}
+
+void UtList_Add(UtListHead_t *ListHead, void *Data, uint32 DataSize, uint32 Tag)
+{
+    UtListNode_t *NewNode = NULL;
+    
+    NewNode = malloc(sizeof(UtListNode_t));
+    if (ListHead->NumberOfEntries == 0) {
+
+        ListHead->First = NewNode;
+        ListHead->Last = NewNode;
+        ListHead->NumberOfEntries++;
+
+        NewNode->Next = NULL;
+        NewNode->Prev = NULL;
+        NewNode->Tag = Tag;
+        NewNode->DataSize = DataSize;
+        NewNode->Data = malloc(DataSize);
+        memcpy(NewNode->Data, Data, DataSize);
+    }
+    else {
+
+        NewNode->Next = NULL;
+        NewNode->Prev = ListHead->Last;
+        NewNode->Tag = Tag;
+        NewNode->DataSize = DataSize;
+        NewNode->Data = malloc(DataSize);
+        memcpy(NewNode->Data, Data, DataSize);
+
+        ListHead->Last->Next = NewNode;
+        ListHead->Last = NewNode;
+        ListHead->NumberOfEntries++;
+    }
+}
+
+void UtList_DeleteFirst(UtListHead_t *ListHead)
+{
+    UtList_DeleteNode(ListHead, ListHead->First);
+}
+
+void UtList_DeleteLast(UtListHead_t *ListHead)
+{
+    UtList_DeleteNode(ListHead, ListHead->Last);
+}
+
+void UtList_DeleteNode(UtListHead_t *ListHead, UtListNode_t *DeleteNode)
+{
+   
+    if (!UtList_IsEmpty(ListHead)) {
+
+        if (ListHead->NumberOfEntries == 1) {
+            ListHead->First = NULL;
+            ListHead->Last = NULL;
+            ListHead->NumberOfEntries = 0;
+        }
+        else if (DeleteNode == ListHead->First) {
+            ListHead->First = DeleteNode->Next;
+            ListHead->First->Prev = NULL;
+            ListHead->NumberOfEntries--;
+        }
+        else if (DeleteNode == ListHead->Last) {
+            ListHead->Last = DeleteNode->Prev;
+            ListHead->Last->Next = NULL;
+            ListHead->NumberOfEntries--;        
+        }
+        else {
+            DeleteNode->Prev->Next = DeleteNode->Next;
+            DeleteNode->Next->Prev = DeleteNode->Prev;
+            ListHead->NumberOfEntries--;
+        }
+
+        free(DeleteNode->Data);
+        free(DeleteNode);
+    }
+}
+
+void UtList_RemoveFirst(UtListHead_t *ListHead, void *Data)
+{
+    UtList_RemoveNode(ListHead, Data, ListHead->First);
+}
+
+void UtList_RemoveLast(UtListHead_t *ListHead, void *Data)
+{
+    UtList_RemoveNode(ListHead, Data, ListHead->Last);
+}
+
+void UtList_RemoveNode(UtListHead_t *ListHead, void *Data, UtListNode_t *CurrentNode)
+{
+    if (!UtList_IsEmpty(ListHead)) {
+        memcpy(Data, CurrentNode->Data, CurrentNode->DataSize);
+        UtList_DeleteNode(ListHead, CurrentNode);
+    }
+}
+
+UtListNode_t *UtList_First(UtListHead_t *ListHead)
+{
+    return(ListHead->First);
+}
+
+UtListNode_t *UtList_Last(UtListHead_t *ListHead)
+{
+    return(ListHead->Last);
+}
+
+bool UtList_IsEmpty(UtListHead_t *ListHead)
+{
+    return(ListHead->NumberOfEntries == 0);
+}
+
+uint32 UtList_Depth(UtListHead_t *ListHead)
+{
+    return(ListHead->NumberOfEntries);
+}
+```
+
+### `uttest.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/uttest.c`
+
+
+```c
+
+/*
+ * Filename: uttest.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a standard way to execute unit tests.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "utassert.h"
+#include "utlist.h"
+
+/*
+ * Type Definitions
+ */
+
+typedef struct {
+    void    (*Test)(void);
+    void    (*Setup)(void);
+    void    (*Teardown)(void);
+    char     *TestName;
+} UtTestDataBaseEntry_t;
+
+/*
+ * Local Data
+ */
+
+UtListHead_t    UtTestDataBase;
+uint32          UtTestsExecutedCount = 0;
+
+/*
+ * Function Definitions
+ */
+
+void UtTest_Add(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), char *TestName)
+{
+    UtTestDataBaseEntry_t   UtTestDataBaseEntry;
+
+    UtTestDataBaseEntry.Test = Test;
+    UtTestDataBaseEntry.Setup = Setup;
+    UtTestDataBaseEntry.Teardown = Teardown;
+    UtTestDataBaseEntry.TestName = TestName;
+    UtList_Add(&UtTestDataBase, &UtTestDataBaseEntry, sizeof(UtTestDataBaseEntry_t), 0);
+}
+
+int UtTest_Run(void)
+{
+    uint32                   i;
+    UtListNode_t            *UtListNode;
+    UtTestDataBaseEntry_t   *UtTestDataBaseEntry;
+
+    if (UtTestDataBase.NumberOfEntries > 0) {
+
+        UtListNode = UtTestDataBase.First;
+        for (i=0; i < UtTestDataBase.NumberOfEntries; i++) {
+
+            UtTestDataBaseEntry = UtListNode->Data;
+
+            #ifdef UT_VERBOSE
+            if (strlen(UtTestDataBaseEntry->TestName) > 0) { printf("\nRunning Test: %s\n", UtTestDataBaseEntry->TestName); }
+            #endif
+
+            if (UtTestDataBaseEntry->Setup)    { UtTestDataBaseEntry->Setup(); }
+            if (UtTestDataBaseEntry->Test)     { UtTestDataBaseEntry->Test(); UtTestsExecutedCount++; }
+            if (UtTestDataBaseEntry->Teardown) { UtTestDataBaseEntry->Teardown(); }
+
+            UtListNode = UtListNode->Next;
+        }
+    }
+
+    printf("\n");
+    printf("Tests Executed:    %u\n", UtTestsExecutedCount);
+    printf("Assert Pass Count: %u\n", UtAssert_GetPassCount());
+    printf("Assert Fail Count: %u\n", UtAssert_GetFailCount());
+
+    UtList_Reset(&UtTestDataBase);
+
+    return (UtAssert_GetFailCount() > 0);
+}
+```
+
+### `uttools.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/src/uttools.c`
+
+
+```c
+
+/*
+ * Filename: uttools.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a set of tools for use in unit testing.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <ctype.h>
+
+/*
+ * Function Definitions
+ */
+
+bool UtMem2BinFile(void *Memory, char *Filename, uint32 Length)
+{
+    FILE   *fp;
+
+    if ((fp = fopen(Filename, "w"))) {
+        fwrite(Memory, Length, 1, fp);
+        fclose(fp);
+        return(true);
+    }
+    else {
+        printf("UtMem2BinFile: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        return(false);
+    }
+}
+
+bool UtBinFile2Mem(void *Memory, char *Filename, uint32 Length)
+{
+    FILE   *fp;
+
+    if ((fp = fopen(Filename, "r"))) {
+        fread(Memory, Length, 1, fp);
+        fclose(fp);
+        return(true);
+    }
+    else {
+        printf("UtBinFile2Mem: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        return(false);
+    }
+}
+
+bool UtMem2HexFile(void *Memory, char *Filename, uint32 Length)
+{
+    FILE        *fp;
+    uint32       i;
+    uint32       j;
+
+    if ((fp = fopen(Filename, "w"))) {
+
+        for (i=0; i < Length; i+=16) {
+            fprintf(fp, "   %06X: ", i);
+            for (j=0; j < 16; j++) {
+                if ((i+j) < Length)
+                    fprintf(fp, "%02X ", ((uint8 *)Memory)[i+j]);
+                else
+                    fprintf(fp, "   ");
+            }
+            fprintf(fp, " ");
+            for (j=0; j < 16; j++) {
+                if ((i+j) < Length)
+                    fprintf(fp, "%c", isprint(((uint8 *)Memory)[i+j]) ? ((uint8 *)Memory)[i+j] : '.');
+            }
+            fprintf(fp, "\n");
+        }
+        fclose(fp);
+        return(true);
+    }
+    else {
+        printf("UtMem2HexFile: Error Opening File: %s, %s\n", Filename, strerror(errno));
+        return(false);
+    }
+}
+
+void UtMemFill(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for(i=0; i < Length; i++) {
+        Byte_ptr[i] = i;
+    }
+}
+
+void UtPrintf(char *Spec, ...)
+{
+#ifdef UT_VERBOSE
+    va_list         Args;
+    static char     Text[256];
+
+    va_start(Args, Spec);
+    vsprintf(Text, Spec, Args);
+    va_end(Args);
+
+    printf("%s", Text);
+#else
+    (void)Spec;
+#endif
+}
+
+char *UtSprintf(char *Spec, ...)
+{
+    va_list         Args;
+    static char     Text[10][256];
+    static uint32   TextIndex = 0;
+
+    if (TextIndex >= 10) TextIndex = 0;
+
+    va_start(Args, Spec);
+    vsprintf(Text[TextIndex], Spec, Args);
+    va_end(Args);
+
+    return(Text[TextIndex++]);
+}
+
+void UtPrintx(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for (i=0; i < Length; i++) {
+        UtPrintf("%02X ", Byte_ptr[i]);
+    }
+    UtPrintf("\n");
+}
+
+bool UtMemCmpValue(void *Memory, uint8 Value, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for (i=0; i < Length; i++) {
+        if (Byte_ptr[i] != Value) {
+            return(false);
+        }
+    }
+    return (true);
+}
+
+bool UtMemCmpCount(void *Memory, uint32 Length)
+{
+    uint32 i;
+    uint8  *Byte_ptr = Memory;
+
+    for (i=0; i < Length; i++) {
+        if (Byte_ptr[i] != (i & 0xFF)) {
+           return(false);
+        }
+    }
+    return (true);
+}
+
+bool UtMem2BinFileCmp(void *Memory, char *Filename)
+{
+    FILE   *fp;
+    uint8  *MemByte = Memory;
+    int     FileByte;
+    bool Success;
+    uint32  i;
+
+    Success = true;
+    if ((fp = fopen(Filename, "r"))) {
+
+        for (i=0; (FileByte = fgetc(fp)) != EOF; i++) {
+            if (MemByte[i] != FileByte) {
+                Success = false;
+                printf("UtMem2BinFileCmp: Miscompare in file: %s, byte offset: %u, expected: %u, found: %u\n", Filename, i, MemByte[i], FileByte);
+                break;
+            }
+        }
+        fclose(fp);
+    }
+    else {
+        Success = false;
+        printf("UtMem2BinFileCmp: Error Opening File: %s, %s\n", Filename, strerror(errno));
+    }
+
+    return(Success);
+}
+
+```

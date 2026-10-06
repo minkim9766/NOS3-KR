@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,25 +14,203 @@ lib/index
 outputs/index
 procedures/index
 tools/index
-file--.git
-file--.gitignore
-file--Launcher
-file--Launcher.bat
-file--Rakefile
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/COMPONENTS/`](COMPONENTS/index) — 폴더
-- [`gsw/cosmos/config/`](config/index) — 폴더
-- [`gsw/cosmos/lib/`](lib/index) — 폴더
-- [`gsw/cosmos/outputs/`](outputs/index) — 폴더
-- [`gsw/cosmos/procedures/`](procedures/index) — 폴더
-- [`gsw/cosmos/tools/`](tools/index) — 폴더
-- [`gsw/cosmos/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/Launcher`](file--Launcher) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/Launcher.bat`](file--Launcher.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/Rakefile`](file--Rakefile) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `gsw/cosmos/.git`
+
+
+```text
+gitdir: ../../.git/modules/gsw/cosmos
+```
+
+### `.gitignore`
+
+**경로:** `gsw/cosmos/.gitignore`
+
+
+```text
+outputs/*
+Gemfile
+Gemfile.lock
+tmp
+COMPONENTS/
+procedures/tmp.rb
+build/
+config/tools/test_runner/test_runner.txt
+config/tools/cmd_tlm_server/cmd_tlm_server.txt
+config/system/system.txt
+```
+
+### `Launcher`
+
+**경로:** `gsw/cosmos/Launcher`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2014 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tools/tool_launch'
+tool_launch do
+  require 'cosmos/tools/launcher/launcher'
+  Cosmos::Launcher.run
+end
+```
+
+### `Launcher.bat`
+
+**경로:** `gsw/cosmos/Launcher.bat`
+
+
+```text
+call tools\Launcher.bat --config launcher.txt
+```
+
+### `Rakefile`
+
+**경로:** `gsw/cosmos/Rakefile`
+
+
+```text
+# encoding: ascii-8bit
+
+# Copyright 2014 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require 'cosmos'
+if ENV['DART_USERNAME']
+  require 'cosmos/dart/config/application'
+  Rails.application.load_tasks
+end
+
+def create_crc_file(official)
+  count = 0
+  ignore = [
+    # Add filenames here if you don't want them to be CRCed
+    "tools/mac/CmdExtractor.app/Contents/MacOS/CmdExtractor",
+    "tools/mac/CmdSender.app/Contents/MacOS/CmdSender",
+    "tools/mac/CmdTlmServer.app/Contents/MacOS/CmdTlmServer",
+    "tools/mac/DataViewer.app/Contents/MacOS/DataViewer",
+    "tools/mac/HandbookCreator.app/Contents/MacOS/HandbookCreator",
+    "tools/mac/Launcher.app/Contents/MacOS/Launcher",
+    "tools/mac/LimitsMonitor.app/Contents/MacOS/LimitsMonitor",
+    "tools/mac/OpenGLBuilder.app/Contents/MacOS/OpenGLBuilder",
+    "tools/mac/PacketViewer.app/Contents/MacOS/PacketViewer",
+    "tools/mac/Replay.app/Contents/MacOS/Replay",
+    "tools/mac/ScriptRunner.app/Contents/MacOS/ScriptRunner",
+    "tools/mac/TableManager.app/Contents/MacOS/TableManager",
+    "tools/mac/TestRunner.app/Contents/MacOS/TestRunner",
+    "tools/mac/TlmExtractor.app/Contents/MacOS/TlmExtractor",
+    "tools/mac/TlmGrapher.app/Contents/MacOS/TlmGrapher",
+    "tools/mac/TlmViewer.app/Contents/MacOS/TlmViewer",
+  ]
+  # Create the crc.txt file
+  crc = Cosmos::Crc32.new(Cosmos::Crc32::DEFAULT_POLY, Cosmos::Crc32::DEFAULT_SEED, true, false)
+  File.open("config/data/crc.txt",'w') do |file|
+    file.puts "USER_MODIFIED" unless official
+    Dir[File.join('lib','**','*')].each do |filename|
+      next if File.directory?(filename)
+      next if ignore.include?(filename)
+      file_data = File.open(filename, 'rb').read.gsub("\x0D\x0A", "\x0A")
+      file.puts "\"#{filename}\" #{sprintf("0x%08X", crc.calc(file_data))}"
+      count += 1
+    end
+    Dir[File.join('config','**','*')].each do |filename|
+      next if File.directory?(filename)
+      next if ignore.include?(filename)
+      next if File.basename(filename) == 'crc.txt'
+      file_data = File.open(filename, 'rb').read.gsub("\x0D\x0A", "\x0A")
+      file.puts "\"#{filename}\" #{sprintf("0x%08X", crc.calc(file_data))}"
+      count += 1
+    end
+    Dir[File.join('tools','**','*')].each do |filename|
+      next if File.directory?(filename)
+      next if ignore.include?(filename)
+      file_data = File.open(filename, 'rb').read.gsub("\x0D\x0A", "\x0A")
+      file.puts "\"#{filename}\" #{sprintf("0x%08X", crc.calc(file_data))}"
+      count += 1
+    end
+    Dir[File.join('procedures','**','*')].each do |filename|
+      next if File.directory?(filename)
+      next if ignore.include?(filename)
+      file_data = File.open(filename, 'rb').read.gsub("\x0D\x0A", "\x0A")
+      file.puts "\"#{filename}\" #{sprintf("0x%08X", crc.calc(file_data))}"
+      count += 1
+    end
+  end
+  puts "Created config/data/crc.txt with #{count} CRCs"
+end
+
+task :crc do
+  create_crc_file(false)
+end
+
+task :crc_official do
+  create_crc_file(true)
+end
+```
+
+### `README.md`
+
+**경로:** `gsw/cosmos/README.md`
+
+
+```markdown
+# SmallSat COSMOS Database
+This repository is to be used to capture command and telemetry definitions, test procedures / scripts, and operational scripts.
+
+## Launching a Specific Configuration
+
+From a terminal in this directory you have the following configuration options:
+* Baseline (all targets)
+  - `ruby Launcher`
+* NOS3
+  - `export MISSION_NAME=$(echo "NOS3")`
+  - `export PROCESSOR_ENDIANNESS=$(echo "LITTLE_ENDIAN")`
+  - `ruby Launcher -c nos3_launcher.txt --system nos3_system.txt`
+
+If the `PROCESSOR_ENDIANNESS` environmental variable is not explicitly set, it will default to `"LITTLE_ENDIAN"`.
+
+## Adding Components / Targets 
+Each component should have it's own target directory.
+For example, the sample component has the directory `./config/targets/SAMPLE`.
+The component target directory must be uppercase.
+This directory minimally contains:
+* `cmd_tlm` directory
+  - Text files containing the command and telemetry definitions
+  - May be a single file or multiple files, recommend one for command and one for telemetry
+* `target.txt` file
+  - List of ignored parameters that should not be shown
+  - Parameters are still interpreted by COSMOS and stored in the data archives
+
+After the component files exist, it will need to be added to the following:
+* `./config/system/MISSION_system.txt`
+* `./config/tools/cmd_tlm_server/cmd_tlm_server.txt`
+* `./config/tools/cmd_tlm_server/MISSION_cmd_tlm_server.txt`
+
+## Specific Mission Configurations
+Each mission configuration minimally requires the following files:
+* `./config/system/MISSION_system.txt`
+* `./config/tools/cmd_tlm_server/MISSION_cmd_tlm_server.txt`
+* `./config/tools/launcher/MISSION_cmd_tlm_server.txt`
+
+## References
+* [Ball Aerospace COSMOS documentation](https://cosmosrb.com/docs/home/)
+```

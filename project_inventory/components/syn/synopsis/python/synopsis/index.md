@@ -3,20 +3,1136 @@
 
 **경로:** `components/syn/synopsis/python/synopsis/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
-file--rule_ast.py
-file--rule_parser.py
-file--srd_to_json.py
+**경로:** `components/syn/synopsis/python/synopsis/.gitignore`
+
+
+```text
+parser.out
+parsetab.py
 ```
 
-## 항목
+### `rule_ast.py`
 
-- [`components/syn/synopsis/python/synopsis/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/python/synopsis/rule_ast.py`](file--rule_ast.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/python/synopsis/rule_parser.py`](file--rule_parser.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/python/synopsis/srd_to_json.py`](file--srd_to_json.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/syn/synopsis/python/synopsis/rule_ast.py`
+
+
+```python
+"""
+Abstract Syntax Tree representation for SYNOPSIS rules
+"""
+from itertools import product
+from json import JSONEncoder
+
+
+class RuleJSONEncoder(JSONEncoder):
+
+    def default(self, obj):
+        if hasattr(obj, '__json__'):
+            return obj.__json__()
+        else:
+            return JSONEncoder.default(self, obj)
+
+
+class JSONEncodable:
+
+
+    def _json(self):
+        raise NotImplementedError()
+
+
+    def __json__(self):
+        return {
+            '__type__': type(self).__name__,
+            '__contents__': self._json(),
+        }
+
+
+class Rule(JSONEncodable):
+
+
+    def __init__(self, variables, application, adjustment, max_applications):
+        self.variables = tuple(variables)
+
+        application.validate(self.variables)
+        self.application = application
+
+        adjustment.validate(self.variables)
+        self.adjustment = adjustment
+
+        self.max_applications = max_applications
+
+        unused = (
+            set(self.variables) -
+            (application.exposed_variables() | adjustment.exposed_variables())
+        )
+        if len(unused) > 0:
+            print(f'Warning: unused variables {unused}')
+
+
+    def apply(self, asdps):
+
+        total_adj_value = 0
+        n_applications = 0
+
+        for values in product(*(len(self.variables) * [asdps])):
+            assignment = dict(zip(self.variables, values))
+            assigned_ids = {
+                k: v['id']
+                for k, v in assignment.items()
+            }
+
+            if self.application.get_value(assignment, asdps):
+                n_applications += 1
+                adj_value = self.adjustment.get_value(assignment, asdps)
+                total_adj_value += adj_value
+                print(f'Applied rule with {assigned_ids}, adjustment = {adj_value}')
+
+            if ((self.max_applications is not None) and
+                (n_applications >= self.max_applications)):
+                break
+
+        return total_adj_value
+
+
+    def __repr__(self):
+        app_repr = repr(self.application)
+        adj_repr = repr(self.adjustment)
+        max_clause = (
+            '' if self.max_applications is None
+            else f', max_applications={self.max_applications}'
+        )
+        return f'RULE({self.variables}, {app_repr}, {adj_repr}{max_clause})'
+
+
+    def _json(self):
+        return {
+            'variables': list(self.variables),
+            'application': self.application,
+            'adjustment': self.adjustment,
+            'max_applications': self.max_applications,
+        }
+
+
+class Constraint(JSONEncodable):
+
+
+    def __init__(self, variables, application, sum_field, constraint_value):
+        self.variables = tuple(variables)
+
+        application.validate(self.variables)
+        self.application = application
+
+        if sum_field is not None:
+            sum_field.validate(self.variables)
+        self.sum_field = sum_field
+
+        self.constraint_value = constraint_value
+
+
+    def apply(self, asdps):
+        aggregate = 0
+
+        for values in product(*(len(self.variables) * [asdps])):
+            assignment = dict(zip(self.variables, values))
+
+            if self.application.get_value(assignment, asdps):
+                if self.sum_field is None:
+                    value = 1
+                else:
+                    value = self.sum_field.get_value(assignment, asdps)
+                aggregate += value
+
+        return (aggregate < self.constraint_value)
+
+
+    def __repr__(self):
+        app_repr = repr(self.application)
+        return f'RULE({self.variables}, {app_repr}, sum_field={self.sum_field}, constraint_value={self.constraint_value})'
+
+
+    def _json(self):
+        return {
+            'variables': list(self.variables),
+            'application': self.application,
+            'sum_field': self.sum_field,
+            'constraint_value': self.constraint_value,
+        }
+
+
+class ValueExpression:
+
+
+    def get_value(self, assignments, asdps):
+        raise NotImplementedError()
+
+
+    def validate(self, scope):
+        pass
+
+
+    def exposed_variables(self):
+        return set([])
+
+
+class ExistentialExpression(ValueExpression, JSONEncodable):
+
+
+    def __init__(self, variable, expression):
+        self.variable = variable
+        self.expression = expression
+
+
+    def validate(self, scope):
+        self.expression.validate(scope + (self.variable,))
+
+
+    def exposed_variables(self):
+        return (
+            self.expression.exposed_variables() -
+            set([self.variable])
+        )
+
+
+    def get_value(self, assignments, asdps):
+        for a in asdps:
+            new_assignemnts = dict(assignments)
+            new_assignemnts[self.variable] = a
+            try:
+                value = self.expression.get_value(new_assignemnts, asdps)
+            except KeyError:
+                # If assignment invalid, skip candidate for existential qualifier
+                continue
+            if value: return True
+        return False
+
+
+    def __str__(self):
+        return f'EXISTS {self.variable} : ({self.expression})'
+
+
+    def __repr__(self):
+        return f'ExistentialExpression({self.variable}, {repr(self.expression)})'
+
+
+    def _json(self):
+        return {
+            'variable': self.variable,
+            'expression': self.expression,
+        }
+
+
+class LogicalConstant(ValueExpression, JSONEncodable):
+
+
+    def __init__(self, value):
+        vtype = type(value)
+
+        if vtype == str:
+            if value.lower() == 'true':
+                self.value = True
+            elif value.lower() == 'false':
+                self.value = False
+            else:
+                raise ValueError(f'Unexpected logical constant value "{value}"')
+
+        elif vtype == bool:
+            self.value = value
+
+        else:
+            raise ValueError(f'Unexpected value type "{vtype}"')
+
+
+    def get_value(self, assignment, asdps):
+        return self.value
+
+
+    def __str__(self):
+        return f'{self.value}'
+
+
+    def __repr__(self):
+        return f'LogicalConstant({self.value})'
+
+
+    def _json(self):
+        return {
+            'value': self.value,
+        }
+
+
+class LogicalNot(ValueExpression, JSONEncodable):
+
+
+    def __init__(self, expression):
+        self.expression = expression
+
+
+    def validate(self, scope):
+        self.expression.validate(scope)
+
+
+    def exposed_variables(self):
+        return self.expression.exposed_variables()
+
+
+    def get_value(self, assignment, asdps):
+        return not self.expression.get_value(assignment, asdps)
+
+
+    def __str__(self):
+        return f'NOT {self.expression}'
+
+
+    def __repr__(self):
+        return f'LogicalNot({repr(self.expression)})'
+
+
+    def _json(self):
+        return {
+            'expression': self.expression,
+        }
+
+
+class BinaryLogicalExpression(ValueExpression, JSONEncodable):
+
+
+    def __init__(self, operator, left_expression, right_expression):
+        self.operator = operator
+        self.left_expression = left_expression
+        self.right_expression = right_expression
+
+
+    @staticmethod
+    def evaluate(operator, left_value, right_value):
+        if operator == 'AND':
+            return (left_value and right_value)
+        elif operator == 'OR':
+            return (left_value or right_value)
+        else:
+            raise ValueError(f'Unknown logical operator "{operator}"')
+
+
+    def get_value(self, assignment, asdps):
+        return BinaryLogicalExpression.evaluate(
+            self.operator,
+            self.left_expression.get_value(assignment, asdps),
+            self.right_expression.get_value(assignment, asdps),
+        )
+
+
+    def validate(self, scope):
+        self.left_expression.validate(scope)
+        self.right_expression.validate(scope)
+
+
+    def exposed_variables(self):
+        return (
+            self.left_expression.exposed_variables() |
+            self.right_expression.exposed_variables()
+        )
+
+
+    def __str__(self):
+        return f'({self.left_expression} {self.operator} {self.right_expression})'
+
+
+    def __repr__(self):
+        lrepr = repr(self.left_expression)
+        rrepr = repr(self.right_expression)
+        return f'BinaryLogicalExpression({self.operator}, {lrepr}, {rrepr})'
+
+
+    def _json(self):
+        return {
+            'operator': self.operator,
+            'left_expression': self.left_expression,
+            'right_expression': self.right_expression,
+        }
+
+
+class StringConstant(ValueExpression, JSONEncodable):
+
+
+    def __init__(self, value):
+        self.value = value
+
+
+    def get_value(self, assignment, asdps):
+        return self.value
+
+
+    def __str__(self):
+        return f'"{self.value}"'
+
+
+    def __repr__(self):
+        return f'StringConstant({self.value})'
+
+
+    def _json(self):
+        return {
+            'value': self.value,
+        }
+
+
+class ComparatorExpression(ValueExpression, JSONEncodable):
+
+
+    def __init__(self, comparator, left_expression, right_expression):
+        self.comparator = comparator
+        self.left_expression = left_expression
+        self.right_expression = right_expression
+
+
+    @staticmethod
+    def evaluate(comparator, left_value, right_value):
+        # TODO: Handle type mismatch
+        if comparator == '<':
+            return (left_value < right_value)
+        elif comparator == '<=':
+            return (left_value <= right_value)
+        elif comparator == '>':
+            return (left_value > right_value)
+        elif comparator == '>=':
+            return (left_value >= right_value)
+        elif comparator == '==':
+            return (left_value == right_value)
+        elif comparator == '!=':
+            return (left_value != right_value)
+        else:
+            raise ValueError(f'Unknown comparator "{comparator}"')
+
+
+    def get_value(self, assignment, asdps):
+        return ComparatorExpression.evaluate(
+            self.comparator,
+            self.left_expression.get_value(assignment, asdps),
+            self.right_expression.get_value(assignment, asdps),
+        )
+
+
+    def validate(self, scope):
+        self.left_expression.validate(scope)
+        self.right_expression.validate(scope)
+
+
+    def exposed_variables(self):
+        return (
+            self.left_expression.exposed_variables() |
+            self.right_expression.exposed_variables()
+        )
+
+
+    def __str__(self):
+        return f'({self.left_expression} {self.comparator} {self.right_expression})'
+
+
+    def __repr__(self):
+        lrepr = repr(self.left_expression)
+        rrepr = repr(self.right_expression)
+        return f'ComparatorExpression({self.comparator}, {lrepr}, {rrepr})'
+
+
+    def _json(self):
+        return {
+            'comparator': self.comparator,
+            'left_expression': self.left_expression,
+            'right_expression': self.right_expression,
+        }
+
+
+class ArithmeticExpression(ValueExpression): pass
+
+
+class ConstExpression(ArithmeticExpression, JSONEncodable):
+
+
+    def __init__(self, value):
+        self.value = float(value)
+
+
+    def get_value(self, assignment, asdps):
+        return self.value
+
+
+    def __str__(self):
+        return f'{self.value}'
+
+
+    def __repr__(self):
+        return f'ConstExpression({self.value})'
+
+
+    def _json(self):
+        return {
+            '__type__': type(self).__name__,
+            'value': self.value,
+        }
+
+
+class BinaryExpression(ArithmeticExpression, JSONEncodable):
+
+
+    def __init__(self, operator, left_expression, right_expression):
+        self.operator = operator
+        self.left_expression = left_expression
+        self.right_expression = right_expression
+
+
+    def validate(self, scope):
+        self.left_expression.validate(scope)
+        self.right_expression.validate(scope)
+
+
+    def exposed_variables(self):
+        return (
+            self.left_expression.exposed_variables() |
+            self.right_expression.exposed_variables()
+        )
+
+
+    @staticmethod
+    def evaluate(operator, left_value, right_value):
+        if operator == '*':
+            return (left_value * right_value)
+        elif operator == '+':
+            return (left_value + right_value)
+        elif operator == '-':
+            return (left_value - right_value)
+        else:
+            raise ValueError(f'Unknown operator "{operator}"')
+
+
+    def get_value(self, assignment, asdps):
+        return BinaryExpression.evaluate(
+            self.operator,
+            self.left_expression.get_value(assignment, asdps),
+            self.right_expression.get_value(assignment, asdps),
+        )
+
+
+    def __str__(self):
+        return f'({self.left_expression} {self.operator} {self.right_expression})'
+
+
+    def __repr__(self):
+        lrepr = repr(self.left_expression)
+        rrepr = repr(self.right_expression)
+        return f'BinaryExpression({self.operator}, {lrepr}, {rrepr})'
+
+
+    def _json(self):
+        return {
+            'operator': self.operator,
+            'left_expression': self.left_expression,
+            'right_expression': self.right_expression,
+        }
+
+
+class MinusExpression(ArithmeticExpression, JSONEncodable):
+
+
+    def __init__(self, expression):
+        self.expression = expression
+
+
+    def validate(self, scope):
+        self.expression.validate(scope)
+
+
+    def exposed_variables(self):
+        return self.expression.exposed_variables()
+
+
+    def get_value(self, assignment, asdps):
+        return -self.expression.get_value(assignment, asdps)
+
+
+    def __str__(self):
+        return f'-{self.expression}'
+
+
+    def __repr__(self):
+        return f'MinusExpression({repr(self.expression)})'
+
+
+    def _json(self):
+        return {
+            'expression': self.expression,
+        }
+
+
+class Field(ArithmeticExpression, JSONEncodable):
+
+
+    def __init__(self, variable_name, field_name, lineno):
+        self.variable_name = variable_name
+        self.field_name = field_name
+        self.lineno = lineno
+
+
+    def get_value(self, assignment, asdps):
+        return assignment[self.variable_name][self.field_name]
+
+
+    def validate(self, scope):
+        if self.variable_name not in scope:
+            raise ValueError(f'Variable "{self.variable_name}" not in scope (line {self.lineno})')
+
+
+    def exposed_variables(self):
+        return set([self.variable_name])
+
+
+    def __str__(self):
+        return f'{self.variable_name}.{self.field_name}'
+
+
+    def __repr__(self):
+        return f'Field({self.variable_name}, {self.field_name}, {self.lineno})'
+
+
+    def _json(self):
+        return {
+            'variable_name': self.variable_name,
+            'field_name': self.field_name,
+        }
+```
+
+### `rule_parser.py`
+
+**경로:** `components/syn/synopsis/python/synopsis/rule_parser.py`
+
+
+```python
+from ply.lex import lex
+from ply.yacc import yacc
+
+from rule_ast import *
+
+reserved = (
+    'BIN',
+    'DEFAULT',
+    'RULE',
+    'CONSTRAINT',
+    'APPLIES',
+    'ADJUST',
+    'UTILITY',
+    'MAXIMUM',
+    'APPLICATIONS',
+    'AND',
+    'OR',
+    'NOT',
+    'EXISTS',
+    'COUNT',
+    'SUM',
+    'LESS',
+    'THAN',
+    'TRUE',
+    'FALSE',
+)
+
+tokens = reserved + (
+    # Literals and constants
+    'ID', 'ICONST', 'FCONST', 'SCONST',
+
+    # Comparators
+    'LT', 'LE', 'GT', 'GE', 'EQ', 'NE',
+
+    # Operators
+    'PLUS', 'MINUS', 'TIMES',
+
+    # Delimiters
+    'LPAREN', 'RPAREN',
+    'COMMA', 'PERIOD', 'SEMI', 'COLON',
+)
+
+# Comparators
+t_LT = r'<'
+t_GT = r'>'
+t_LE = r'<='
+t_GE = r'>='
+t_EQ = r'=='
+t_NE = r'!='
+
+# Operators
+t_PLUS = r'\+'
+t_MINUS = r'-'
+t_TIMES = r'\*'
+
+# Delimeters
+t_LPAREN = r'\('
+t_RPAREN = r'\)'
+t_COMMA = r','
+t_PERIOD = r'\.'
+t_SEMI = r';'
+t_COLON = r':'
+
+RESERVED_MAP = { r.lower() : r for r in reserved }
+
+def t_ID(t):
+    r'[A-Za-z_][\w_]*'
+    t.type = RESERVED_MAP.get(t.value.lower(), "ID")
+    return t
+
+# Integer literal
+t_ICONST = r'\d+?'
+
+# Floating literal
+t_FCONST = r'((\d+)(\.\d+)(e(\+|-)?(\d+))? | (\d+)e(\+|-)?(\d+))'
+
+# String literal
+t_SCONST = r'\"([^\\\n]|(\\.))*?\"'
+
+
+def t_NEWLINE(t):
+    r'\n+'
+    t.lexer.lineno += t.value.count("\n")
+
+
+def t_comment(t):
+    r'\#(.)*?\n'
+    t.lexer.lineno += 1
+
+
+def t_error(t):
+    print("Illegal character %s" % repr(t.value[0]))
+    t.lexer.skip(1)
+
+
+# Ignore tabs and spaces
+t_ignore = ' \t'
+
+
+precedence = (
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES'),
+    ('right', 'UMINUS'),
+    ('left', 'AND', 'OR'),
+    ('right', 'NOT'),
+)
+
+
+def p_rule_file_bins(p):
+    """
+    rule_file : bin_list
+    """
+    p[0] = p[1]
+
+
+def p_rule_file_no_bins(p):
+    """
+    rule_file : rule_constraint_list
+    """
+    p[0] = {
+        'default': p[1]
+    }
+
+
+def p_bin_list(p):
+    """
+    bin_list : bin_definition
+             | bin_list bin_definition
+    """
+    p[0] = p[1]
+    if len(p) > 2:
+        duplicate_keys = set(p[2].keys()) & set(p[1].keys())
+        if len(duplicate_keys) > 0:
+            raise ValueError(f'Duplicate bin definitions: {duplicate_keys}')
+        p[0].update(p[2])
+
+
+def p_bin_definition(p):
+    """
+    bin_definition : BIN ICONST COLON rule_constraint_list
+                   | DEFAULT COLON rule_constraint_list
+    """
+    if len(p) == 4:
+        p[0] = {
+            'default': p[3]
+        }
+    else:
+        p[0] = {
+            int(p[2]): p[4]
+        }
+
+
+def p_rule_constraint_list(p):
+    """
+    rule_constraint_list : rule_constraint_list rule_declaration
+                         | rule_constraint_list constraint_declaration
+                         | rule_declaration
+                         | constraint_declaration
+    """
+    if len(p) == 2:
+        if type(p[1]) == Rule:
+            p[0] = {
+                'rules': [p[1]],
+                'constraints': [],
+            }
+        else:
+            p[0] = {
+                'rules': [],
+                'constraints': [p[1]],
+            }
+    else:
+        p[0] = p[1]
+        if type(p[2]) == Rule:
+            p[0]['rules'].append(p[2])
+        else:
+            p[0]['constraints'].append(p[2])
+
+
+def p_constraint_declaration(p):
+    """
+    constraint_declaration : CONSTRAINT variable_declaration COLON constraint_body SEMI
+    """
+    variable_list = p[2]
+    constraint_kwargs = p[4]
+    p[0] = Constraint(variable_list, **constraint_kwargs)
+
+
+def p_constraint_body(p):
+    """
+    constraint_body : applies_clause aggregate_expression LESS THAN constant_expression
+    """
+    p[0] = {
+        'application': p[1],
+        'sum_field': p[2],
+        'constraint_value': p[5],
+    }
+
+
+def p_aggregate_expression(p):
+    """
+    aggregate_expression : COUNT
+                         | SUM field
+    """
+    if len(p) == 2:
+        p[0] = None
+    else:
+        p[0] = p[2]
+
+
+def p_constant_expression(p):
+    """
+    constant_expression : ICONST
+                        | FCONST
+                        | MINUS ICONST
+                        | MINUS FCONST
+    """
+    if len(p) == 3:
+        p[0] = -float(p[2])
+    else:
+        p[0] = float(p[1])
+
+
+def p_rule_declaration(p):
+    """
+    rule_declaration : RULE variable_declaration COLON rule_body SEMI
+    """
+    variable_list = p[2]
+    rule_kwargs = p[4]
+    p[0] = Rule(variable_list, **rule_kwargs)
+
+
+def p_variable_declaration(p):
+    """
+    variable_declaration : LPAREN variable_decl_list RPAREN
+    """
+    variable_list = p[2]
+
+    # Check for duplicate variables
+    if len(variable_list) != len(set(variable_list)):
+        raise ValueError(
+            f'Line {p.lineno(1)}: Duplicate variables in list: {variable_list}'
+        )
+
+    p[0] = variable_list
+
+
+def p_variable_decl_list(p):
+    """
+    variable_decl_list : ID
+                       | variable_decl_list COMMA ID
+    """
+    if len(p) == 2:
+        p[0] = (p[1],)
+    else:
+        p[0] = p[1] + (p[3],)
+
+
+def p_rule_body(p):
+    """
+    rule_body : applies_clause adjust_clause
+              | applies_clause adjust_clause max_app_clause
+    """
+    if len(p) == 4:
+        max_applications = p[3]
+    else:
+        max_applications = None
+
+    p[0] = {
+        'application': p[1],
+        'adjustment': p[2],
+        'max_applications': max_applications,
+    }
+
+
+def p_applies_clause(p):
+    """
+    applies_clause : APPLIES conditional_expression
+    """
+    p[0] = p[2]
+
+
+def p_conditional_expression(p):
+    """
+    conditional_expression : comparator_expression
+                           | logical_constant
+                           | logical_expression
+                           | existential_expression
+    """
+    p[0] = p[1]
+
+
+def p_paren_conditional_expression(p):
+    """
+    conditional_expression : LPAREN conditional_expression RPAREN
+    """
+    p[0] = p[2]
+
+
+def p_existential_expression(p):
+    """
+    existential_expression : EXISTS ID COLON LPAREN conditional_expression RPAREN
+    """
+    if p[2] not in p[5].exposed_variables():
+        # Unused variable in existential expression
+        p[0] = p[5]
+
+    else:
+        p[0] = ExistentialExpression(p[2], p[5])
+
+
+def p_logical_expression(p):
+    """
+    logical_expression : conditional_expression AND conditional_expression
+                       | conditional_expression OR conditional_expression
+                       | NOT conditional_expression
+    """
+    if len(p) == 4:
+        # Binary Operator
+        if type(p[1]) == LogicalConstant and type(p[3]) == LogicalConstant:
+            p[0] = LogicalConstant(BinaryLogicalExpression.evaluate(
+                p[2],
+                p[1].value,
+                p[3].value,
+            ))
+        else:
+            p[0] = BinaryLogicalExpression(p[2], p[1], p[3])
+
+    else:
+        # Unary Operator
+        if type(p[2]) == LogicalConstant:
+            p[0] = LogicalConstant(not p[2].value)
+        else:
+            p[0] = LogicalNot(p[2])
+
+
+def p_logical_constant(p):
+    """
+    logical_constant : TRUE
+                     | FALSE
+    """
+    p[0] = LogicalConstant(p[1])
+
+
+def p_comparator(p):
+    """
+    comparator : LT
+               | LE
+               | GT
+               | GE
+               | EQ
+               | NE
+    """
+    p[0] = p[1]
+
+
+def p_value_expression(p):
+    """
+    value_expression : arithmetic_expression
+                     | string_expression
+    """
+    p[0] = p[1]
+
+
+def p_string_expression(p):
+    """
+    string_expression : SCONST
+    """
+    # Strip off quote marks
+    p[0] = StringConstant(p[1][1:-1])
+
+
+def p_comparator_expression(p):
+    """
+    comparator_expression : value_expression comparator value_expression
+    """
+    if ((type(p[1]) == ConstExpression and type(p[3]) == ConstExpression) or
+        (type(p[1]) == StringConstant and type(p[3]) == StringConstant)):
+        p[0] = LogicalConstant(ComparatorExpression.evaluate(
+            p[2],
+            p[1].value,
+            p[3].value
+        ))
+
+    else:
+        p[0] = ComparatorExpression(p[2], p[1], p[3])
+
+
+def p_adjust_clause(p):
+    """
+    adjust_clause : ADJUST UTILITY arithmetic_expression
+    """
+    p[0] = p[3]
+
+
+def p_max_app_clause(p):
+    """
+    max_app_clause : MAXIMUM APPLICATIONS ICONST
+    """
+    p[0] = int(p[3])
+
+
+def p_arithmetic_expression(p):
+    """
+    arithmetic_expression : field
+    """
+    p[0] = p[1]
+
+
+def p_unary_arithmetic_expression(p):
+    """
+    arithmetic_expression : MINUS arithmetic_expression %prec UMINUS
+    """
+
+    # If operand is constant, negate directly
+    if type(p[2]) == ConstExpression:
+        p[0] = ConstExpression(-p[2].value)
+
+    # Otherwise, represent negation
+    else:
+        p[0] = MinusExpression(p[2])
+
+
+def p_paren_arithmetic_expression(p):
+    """
+    arithmetic_expression : LPAREN arithmetic_expression RPAREN
+    """
+    p[0] = p[2]
+
+
+def p_binary_arithmetic_expression(p):
+    """
+    arithmetic_expression : arithmetic_expression TIMES arithmetic_expression
+                          | arithmetic_expression MINUS arithmetic_expression
+                          | arithmetic_expression PLUS arithmetic_expression
+    """
+
+    # If both expressions are constant, evaluate operation
+    if (type(p[1]) == ConstExpression) and (type(p[3]) == ConstExpression):
+        p[0] = ConstExpression(BinaryExpression.evaluate(
+            p[2],
+            p[1].value,
+            p[3].value,
+        ))
+
+    # Otherwise, represent binary operation
+    else:
+        p[0] = BinaryExpression(p[2], p[1], p[3])
+
+
+def p_const_arithmetic_expression(p):
+    """
+    arithmetic_expression : ICONST
+                          | FCONST
+    """
+    p[0] = ConstExpression(p[1])
+
+
+def p_field(p):
+    """
+    field : ID PERIOD ID
+    """
+    p[0] = Field(p[1], p[3], p.slice[1].lineno)
+
+
+SYNOPSIS_LEXER = lex()
+SYNOPSIS_PARSER = yacc()
+
+
+def parse_str(srd_str):
+    return SYNOPSIS_PARSER.parse(srd_str)
+
+
+def parse_file(filename):
+    with open(filename, 'r') as f:
+        return parse_str(f.read())
+
+
+def get_grammar():
+    lines = []
+    for name, obj in globals().items():
+        if name.startswith('p_') and 'p_error' not in name:
+            lines.append(obj.__doc__.replace(' : ', ' = '))
+    return '\n'.join(lines)
+```
+
+### `srd_to_json.py`
+
+**경로:** `components/syn/synopsis/python/synopsis/srd_to_json.py`
+
+
+```python
+#!/usr/bin/env python
+import json
+import argparse
+
+
+from rule_parser import parse_file
+from rule_ast import RuleJSONEncoder
+
+
+def compile_rules(input_file, output_file):
+
+    # Parse input
+    ast = parse_file(input_file)
+
+    # Save output
+    with open(output_file, 'w+') as f:
+        json.dump(ast, f, cls=RuleJSONEncoder, indent=2)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('input_file',
+        help='Input SYNOPSIS Rules Definition (SRD) file'
+    )
+    parser.add_argument('output_file',
+        help='Output JSON file'
+    )
+
+    args = parser.parse_args()
+    compile_rules(**vars(args))
+
+
+if __name__ == '__main__':
+    main()
+```

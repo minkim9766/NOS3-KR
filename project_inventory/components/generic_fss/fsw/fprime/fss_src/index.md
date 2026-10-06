@@ -3,22 +3,611 @@
 
 **경로:** `components/generic_fss/fsw/fprime/fss_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_fss.cpp
-file--Generic_fss.fpp
-file--Generic_fss.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_fss/fsw/fprime/fss_src/docs/`](docs/index) — 폴더
-- [`components/generic_fss/fsw/fprime/fss_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/fsw/fprime/fss_src/Generic_fss.cpp`](file--Generic_fss.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/fsw/fprime/fss_src/Generic_fss.fpp`](file--Generic_fss.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/fsw/fprime/fss_src/Generic_fss.hpp`](file--Generic_fss.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_fss/fsw/fprime/fss_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../platform_inc") #platform_cfg.h
+# include_directories("../../shared")
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_fss.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_fss.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_fss_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+ set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+
+ )
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_fss_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../platform_inc"
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+
+
+```
+
+### `Generic_fss.cpp`
+
+**경로:** `components/generic_fss/fsw/fprime/fss_src/Generic_fss.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_fss.cpp
+// \author jstar
+// \brief  cpp file for Generic_fss component implementation class
+// ======================================================================
+
+#include "fss_src/Generic_fss.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_fss ::
+    Generic_fss(const char* const compName) :
+      Generic_fssComponentBase(compName)
+  {
+    int32_t status = OS_SUCCESS;
+
+    /* Initialize HWLIB */
+    nos_init_link();
+
+    /*
+    ** Initialize hardware interface data
+    */ 
+    FssSpi.deviceString = GENERIC_FSS_CFG_STRING;
+    FssSpi.handle = GENERIC_FSS_CFG_HANDLE;
+    FssSpi.baudrate = GENERIC_FSS_CFG_BAUD;
+    FssSpi.spi_mode = GENERIC_FSS_CFG_SPI_MODE;
+    FssSpi.bits_per_word = GENERIC_FSS_CFG_BITS_PER_WORD;
+    FssSpi.bus = GENERIC_FSS_CFG_BUS;
+    FssSpi.cs = GENERIC_FSS_CFG_CS;
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_FSS_DEVICE_ENABLED;
+
+    /* Open device specific protocols */
+    status = spi_init_dev(&FssSpi);
+    if (status == OS_SUCCESS)
+    {
+        printf("SPI device %s configured with baudrate %d \n", FssSpi.deviceString, FssSpi.baudrate);
+    }
+    else
+    {
+        printf("SPI device %s failed to initialize! \n", FssSpi.deviceString);
+        status = OS_ERROR;
+    }
+
+    // status = spi_close_device(&FssSpi);
+
+  }
+
+  Generic_fss ::
+    ~Generic_fss()
+  {
+    // Close the device 
+    spi_close_device(&FssSpi);
+
+    nos_destroy_link();
+
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_fss :: updateData_handler(const FwIndexType portNum, U32 context)
+  {
+    int32_t status = OS_SUCCESS;
+  
+    status = GENERIC_FSS_RequestData(&FssSpi, &FSSData);
+
+    if(status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+      this->FSSout_out(0, FSSData.Alpha, FSSData.Beta, FSSData.ErrorCode);
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+    }
+  }
+
+  void Generic_fss :: updateTlm_handler(const FwIndexType portNum, U32 context)
+  {
+    this->tlmWrite_ALPHA(FSSData.Alpha);
+    this->tlmWrite_BETA(FSSData.Beta);
+    this->tlmWrite_ERRORCODE(FSSData.ErrorCode);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+  }
+
+  void Generic_fss :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_fss :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_FSS_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      FssSpi.deviceString = GENERIC_FSS_CFG_STRING;
+      FssSpi.handle = GENERIC_FSS_CFG_HANDLE;
+      FssSpi.baudrate = GENERIC_FSS_CFG_BAUD;
+      FssSpi.spi_mode = GENERIC_FSS_CFG_SPI_MODE;
+      FssSpi.bits_per_word = GENERIC_FSS_CFG_BITS_PER_WORD;
+      FssSpi.bus = GENERIC_FSS_CFG_BUS;
+      FssSpi.cs = GENERIC_FSS_CFG_CS;
+
+      status = spi_init_dev(&FssSpi);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_FSS_DEVICE_ENABLED;
+        HkTelemetryPkt.DeviceCount++;
+
+        Fw::LogStringArg log_msg("Enable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+
+        Fw::LogStringArg log_msg("Enable command failed to init SPI!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+
+      Fw::LogStringArg log_msg("Enable failed, already Enabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_fss :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_FSS_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = spi_close_device(&FssSpi);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_FSS_DEVICE_DISABLED;
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Disable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Disable command failed to close SPI!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Disable failed, already Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_fss :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_FSS_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      this->tlmWrite_ALPHA(FSSData.Alpha);
+      this->tlmWrite_BETA(FSSData.Beta);
+      this->tlmWrite_ERRORCODE(FSSData.ErrorCode);
+      this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+      this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+      this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+      this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+      this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+      Fw::LogStringArg log_msg("Requested Housekeeping!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      Fw::LogStringArg log_msg("HK Failed, Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_fss :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_fss :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq)
+  {
+    int32_t status = OS_SUCCESS;
+
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_FSS_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+      status = GENERIC_FSS_RequestData(&FssSpi, &FSSData);
+      if (status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("RequestData command success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);          
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("RequestData command failed\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("RequestData command failed, Device Disabled\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    }
+
+    this->tlmWrite_ALPHA(FSSData.Alpha);
+    this->tlmWrite_BETA(FSSData.Beta);
+    this->tlmWrite_ERRORCODE(FSSData.ErrorCode);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  inline Generic_fss_ActiveState Generic_fss :: get_active_state(uint8_t DeviceEnabled)
+  {
+    Generic_fss_ActiveState state;
+
+    if(DeviceEnabled == GENERIC_FSS_DEVICE_ENABLED)
+    {
+      state.e = Generic_fss_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_fss_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+}
+```
+
+### `Generic_fss.fpp`
+
+**경로:** `components/generic_fss/fsw/fprime/fss_src/Generic_fss.fpp`
+
+
+```fpp
+module Components {
+    @ fine sun sensor component from NOS3
+    active component Generic_fss {
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        @ FSS output port
+        output port FSSout: FSSDataPort
+
+        @ Periodic Data FSS
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm FSS
+        async input port updateTlm: Svc.Sched
+
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        @ NOOP Cmd
+        async command NOOP()
+
+        @ Reset Counters Cmd
+        async command RESET_COUNTERS()
+
+        @ Enable Cmd
+        async command ENABLE()
+
+        @ Disable Cmd
+        async command DISABLE()
+
+        @ Request Housekeeping
+        async command REQUEST_HOUSEKEEPING()
+
+        @ Command to request data
+        async command REQUEST_DATA(
+        )
+
+        @ Telemetry event
+        event TELEM(
+            log_info: string size 40
+        ) severity activity high format "Generic_fss: {}"
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        telemetry DeviceEnabled: ActiveState
+
+        @ Angle alpha
+        telemetry ALPHA: F32
+
+        @ Angle beta
+        telemetry BETA: F32
+
+        @ errorcode
+        telemetry ERRORCODE: U8
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_fss.hpp`
+
+**경로:** `components/generic_fss/fsw/fprime/fss_src/Generic_fss.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_fss.hpp
+// \author jstar
+// \brief  hpp file for Generic_fss component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_fss_HPP
+#define Components_Generic_fss_HPP
+
+#include "fss_src/Generic_fssComponentAc.hpp"
+#include "fss_src/Generic_fss_ActiveStateEnumAc.hpp"
+
+extern "C"{
+  #include "generic_fss_device.h"
+  #include "generic_fss_platform_cfg.h"
+  #include "libuart.h"
+  }
+
+#include "nos_link.h"
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+} FSS_Hk_tlm_t;
+#define FSS_HK_TLM_LNGTH sizeof(FSS_Hk_tlm_t)
+
+#define GENERIC_FSS_DEVICE_DISABLED 0
+#define GENERIC_FSS_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_fss :
+    public Generic_fssComponentBase
+  {
+
+    public:
+
+    spi_info_t FssSpi;
+    GENERIC_FSS_Device_Data_tlm_t FSSData;
+    FSS_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_fss object
+      Generic_fss(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_fss object
+      ~Generic_fss();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_DATA_cmdHandler(
+          FwOpcodeType opCode, //!< The opcode
+          U32 cmdSeq //!< The command sequence number
+      ) override;
+
+      void updateData_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      inline Generic_fss_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

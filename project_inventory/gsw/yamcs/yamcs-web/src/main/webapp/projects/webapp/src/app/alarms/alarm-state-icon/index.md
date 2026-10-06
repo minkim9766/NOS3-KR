@@ -3,16 +3,53 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-state-icon/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-state-icon.component.html`
 
-file--alarm-state-icon.component.html
-file--alarm-state-icon.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-state-icon/alarm-state-icon.component.html`
+
+
+```html
+@if (alarm.shelveInfo) {
+  <mat-icon matTooltip="Shelved">timer</mat-icon>
+} @else {
+  @if (alarm.pending) {
+    <mat-icon matTooltip="Pending">pending</mat-icon>
+  } @else if (alarm.processOK) {
+    @if (alarm.acknowledged) {
+      <mat-icon matTooltip="RTN, acknowledged">check_circle_outline</mat-icon>
+    } @else {
+      <mat-icon matTooltip="RTN, unacknowledged" class="unacked">notifications_none</mat-icon>
+    }
+  } @else {
+    @if (alarm.acknowledged) {
+      <mat-icon matTooltip="Active, acknowledged">check_circle</mat-icon>
+    } @else {
+      <mat-icon matTooltip="Active, unacknowledged" class="unacked">
+        notification_important
+      </mat-icon>
+    }
+  }
+}
 ```
 
-## 항목
+### `alarm-state-icon.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-state-icon/alarm-state-icon.component.html`](file--alarm-state-icon.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-state-icon/alarm-state-icon.component.ts`](file--alarm-state-icon.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-state-icon/alarm-state-icon.component.ts`
+
+
+```typescript
+import { Component, Input } from '@angular/core';
+import { Alarm, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-alarm-state-icon',
+  templateUrl: './alarm-state-icon.component.html',
+  imports: [WebappSdkModule],
+})
+export class AlarmStateIconComponent {
+  @Input()
+  alarm: Alarm;
+}
+```

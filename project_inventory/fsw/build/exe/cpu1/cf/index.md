@@ -3,244 +3,702 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 onair/index
-file--arducam.so
-file--cf.so
-file--cf_def_config.tbl
-file--cfe_assert.so
-file--cfe_es_startup.scr
-file--ci.so
-file--ci_lab.so
-file--cryptolib.so
-file--ds.so
-file--ds_file_tbl.tbl
-file--ds_filter_tbl.tbl
-file--fm.so
-file--fm_monitor.tbl
-file--generic_adcs.so
-file--generic_css.so
-file--generic_eps.so
-file--generic_fss.so
-file--generic_imu.so
-file--generic_mag.so
-file--generic_radio.so
-file--generic_rw.so
-file--generic_st.so
-file--generic_thruster.so
-file--generic_torquer.so
-file--hwlib.so
-file--Inp_ADAC.txt
-file--Inp_DI.txt
-file--Inp_DO.txt
-file--io_lib.so
-file--lc.so
-file--lc_def_adt.tbl
-file--lc_def_wdt.tbl
-file--libsynopsis.so
-file--mgr.so
-file--novatel_oem615.so
-file--sample.so
-file--sbn.so
-file--sbn_client.so
-file--sbn_conf_tbl.tbl
-file--sbn_tcp.so
-file--sc.so
-file--sc_ats1.tbl
-file--sc_rts001.tbl
-file--sc_rts002.tbl
-file--sc_rts003.tbl
-file--sc_rts004.tbl
-file--sc_rts005.tbl
-file--sc_rts006.tbl
-file--sc_rts007.tbl
-file--sc_rts008.tbl
-file--sc_rts009.tbl
-file--sc_rts010.tbl
-file--sc_rts011.tbl
-file--sc_rts012.tbl
-file--sc_rts013.tbl
-file--sc_rts014.tbl
-file--sc_rts015.tbl
-file--sc_rts016.tbl
-file--sc_rts017.tbl
-file--sc_rts018.tbl
-file--sc_rts019.tbl
-file--sc_rts020.tbl
-file--sc_rts021.tbl
-file--sc_rts022.tbl
-file--sc_rts023.tbl
-file--sc_rts024.tbl
-file--sc_rts025.tbl
-file--sc_rts026.tbl
-file--sc_rts027.tbl
-file--sc_rts028.tbl
-file--sc_rts029.tbl
-file--sc_rts030.tbl
-file--sc_rts031.tbl
-file--sc_rts032.tbl
-file--sc_rts033.tbl
-file--sc_rts034.tbl
-file--sc_rts035.tbl
-file--sc_rts036.tbl
-file--sc_rts037.tbl
-file--sc_rts038.tbl
-file--sc_rts039.tbl
-file--sc_rts040.tbl
-file--sc_rts041.tbl
-file--sc_rts042.tbl
-file--sc_rts043.tbl
-file--sc_rts044.tbl
-file--sc_rts045.tbl
-file--sc_rts046.tbl
-file--sc_rts047.tbl
-file--sc_rts048.tbl
-file--sc_rts049.tbl
-file--sc_rts050.tbl
-file--sc_rts051.tbl
-file--sc_rts052.tbl
-file--sc_rts053.tbl
-file--sc_rts054.tbl
-file--sc_rts055.tbl
-file--sc_rts056.tbl
-file--sc_rts057.tbl
-file--sc_rts058.tbl
-file--sc_rts059.tbl
-file--sc_rts060.tbl
-file--sc_rts061.tbl
-file--sc_rts062.tbl
-file--sc_rts063.tbl
-file--sc_rts064.tbl
-file--sch.so
-file--sch_def_msgtbl.tbl
-file--sch_def_schtbl.tbl
-file--syn.so
-file--synopsis.hpp
-file--to.so
-file--to_config.tbl
-file--to_lab.so
-file--to_lab_sub.tbl
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/`](onair/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/arducam.so`](file--arducam.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/cf.so`](file--cf.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/cf_def_config.tbl`](file--cf_def_config.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/cfe_assert.so`](file--cfe_assert.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/cfe_es_startup.scr`](file--cfe_es_startup.scr) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/ci.so`](file--ci.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/ci_lab.so`](file--ci_lab.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/cryptolib.so`](file--cryptolib.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/ds.so`](file--ds.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/ds_file_tbl.tbl`](file--ds_file_tbl.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/ds_filter_tbl.tbl`](file--ds_filter_tbl.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/fm.so`](file--fm.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/fm_monitor.tbl`](file--fm_monitor.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_adcs.so`](file--generic_adcs.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_css.so`](file--generic_css.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_eps.so`](file--generic_eps.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_fss.so`](file--generic_fss.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_imu.so`](file--generic_imu.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_mag.so`](file--generic_mag.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_radio.so`](file--generic_radio.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_rw.so`](file--generic_rw.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_st.so`](file--generic_st.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_thruster.so`](file--generic_thruster.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/generic_torquer.so`](file--generic_torquer.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/hwlib.so`](file--hwlib.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/Inp_ADAC.txt`](file--Inp_ADAC.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/Inp_DI.txt`](file--Inp_DI.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/Inp_DO.txt`](file--Inp_DO.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/io_lib.so`](file--io_lib.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/lc.so`](file--lc.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/lc_def_adt.tbl`](file--lc_def_adt.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/lc_def_wdt.tbl`](file--lc_def_wdt.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/libsynopsis.so`](file--libsynopsis.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/mgr.so`](file--mgr.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/novatel_oem615.so`](file--novatel_oem615.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sample.so`](file--sample.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sbn.so`](file--sbn.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sbn_client.so`](file--sbn_client.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sbn_conf_tbl.tbl`](file--sbn_conf_tbl.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sbn_tcp.so`](file--sbn_tcp.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc.so`](file--sc.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_ats1.tbl`](file--sc_ats1.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts001.tbl`](file--sc_rts001.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts002.tbl`](file--sc_rts002.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts003.tbl`](file--sc_rts003.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts004.tbl`](file--sc_rts004.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts005.tbl`](file--sc_rts005.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts006.tbl`](file--sc_rts006.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts007.tbl`](file--sc_rts007.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts008.tbl`](file--sc_rts008.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts009.tbl`](file--sc_rts009.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts010.tbl`](file--sc_rts010.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts011.tbl`](file--sc_rts011.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts012.tbl`](file--sc_rts012.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts013.tbl`](file--sc_rts013.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts014.tbl`](file--sc_rts014.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts015.tbl`](file--sc_rts015.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts016.tbl`](file--sc_rts016.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts017.tbl`](file--sc_rts017.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts018.tbl`](file--sc_rts018.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts019.tbl`](file--sc_rts019.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts020.tbl`](file--sc_rts020.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts021.tbl`](file--sc_rts021.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts022.tbl`](file--sc_rts022.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts023.tbl`](file--sc_rts023.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts024.tbl`](file--sc_rts024.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts025.tbl`](file--sc_rts025.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts026.tbl`](file--sc_rts026.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts027.tbl`](file--sc_rts027.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts028.tbl`](file--sc_rts028.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts029.tbl`](file--sc_rts029.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts030.tbl`](file--sc_rts030.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts031.tbl`](file--sc_rts031.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts032.tbl`](file--sc_rts032.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts033.tbl`](file--sc_rts033.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts034.tbl`](file--sc_rts034.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts035.tbl`](file--sc_rts035.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts036.tbl`](file--sc_rts036.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts037.tbl`](file--sc_rts037.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts038.tbl`](file--sc_rts038.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts039.tbl`](file--sc_rts039.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts040.tbl`](file--sc_rts040.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts041.tbl`](file--sc_rts041.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts042.tbl`](file--sc_rts042.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts043.tbl`](file--sc_rts043.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts044.tbl`](file--sc_rts044.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts045.tbl`](file--sc_rts045.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts046.tbl`](file--sc_rts046.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts047.tbl`](file--sc_rts047.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts048.tbl`](file--sc_rts048.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts049.tbl`](file--sc_rts049.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts050.tbl`](file--sc_rts050.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts051.tbl`](file--sc_rts051.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts052.tbl`](file--sc_rts052.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts053.tbl`](file--sc_rts053.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts054.tbl`](file--sc_rts054.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts055.tbl`](file--sc_rts055.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts056.tbl`](file--sc_rts056.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts057.tbl`](file--sc_rts057.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts058.tbl`](file--sc_rts058.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts059.tbl`](file--sc_rts059.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts060.tbl`](file--sc_rts060.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts061.tbl`](file--sc_rts061.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts062.tbl`](file--sc_rts062.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts063.tbl`](file--sc_rts063.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sc_rts064.tbl`](file--sc_rts064.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sch.so`](file--sch.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sch_def_msgtbl.tbl`](file--sch_def_msgtbl.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/sch_def_schtbl.tbl`](file--sch_def_schtbl.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/syn.so`](file--syn.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/synopsis.hpp`](file--synopsis.hpp) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/to.so`](file--to.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/to_config.tbl`](file--to_config.tbl) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/to_lab.so`](file--to_lab.so) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/to_lab_sub.tbl`](file--to_lab_sub.tbl) — 빌드 산출물 (경로만)
+### `arducam.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/arducam.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cf.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/cf.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cf_def_config.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/cf_def_config.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_assert.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/cfe_assert.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_es_startup.scr`
+
+**경로:** `fsw/build/exe/cpu1/cf/cfe_es_startup.scr`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ci.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/ci.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ci_lab.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/ci_lab.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cryptolib.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/cryptolib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/ds.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds_file_tbl.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/ds_file_tbl.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds_filter_tbl.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/ds_filter_tbl.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `fm.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/fm.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `fm_monitor.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/fm_monitor.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_adcs.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_adcs.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_css.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_css.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_eps.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_eps.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_fss.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_fss.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_imu.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_imu.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_mag.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_mag.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_radio.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_radio.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_rw.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_rw.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_st.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_st.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_thruster.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_thruster.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_torquer.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/generic_torquer.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `hwlib.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/hwlib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_ADAC.txt`
+
+**경로:** `fsw/build/exe/cpu1/cf/Inp_ADAC.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_DI.txt`
+
+**경로:** `fsw/build/exe/cpu1/cf/Inp_DI.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_DO.txt`
+
+**경로:** `fsw/build/exe/cpu1/cf/Inp_DO.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `io_lib.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/io_lib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/lc.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_def_adt.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/lc_def_adt.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_def_wdt.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/lc_def_wdt.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libsynopsis.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/libsynopsis.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `mgr.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/mgr.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `novatel_oem615.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/novatel_oem615.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sample.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/sample.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sbn.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/sbn.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sbn_client.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/sbn_client.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sbn_conf_tbl.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sbn_conf_tbl.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sbn_tcp.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/sbn_tcp.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_ats1.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_ats1.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts001.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts001.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts002.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts002.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts003.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts003.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts004.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts004.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts005.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts005.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts006.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts006.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts007.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts007.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts008.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts008.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts009.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts009.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts010.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts010.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts011.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts011.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts012.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts012.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts013.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts013.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts014.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts014.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts015.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts015.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts016.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts016.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts017.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts017.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts018.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts018.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts019.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts019.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts020.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts020.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts021.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts021.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts022.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts022.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts023.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts023.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts024.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts024.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts025.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts025.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts026.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts026.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts027.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts027.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts028.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts028.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts029.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts029.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts030.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts030.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts031.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts031.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts032.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts032.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts033.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts033.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts034.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts034.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts035.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts035.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts036.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts036.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts037.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts037.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts038.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts038.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts039.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts039.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts040.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts040.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts041.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts041.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts042.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts042.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts043.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts043.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts044.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts044.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts045.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts045.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts046.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts046.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts047.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts047.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts048.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts048.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts049.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts049.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts050.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts050.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts051.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts051.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts052.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts052.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts053.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts053.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts054.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts054.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts055.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts055.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts056.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts056.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts057.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts057.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts058.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts058.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts059.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts059.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts060.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts060.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts061.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts061.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts062.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts062.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts063.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts063.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts064.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sc_rts064.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sch.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/sch.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sch_def_msgtbl.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sch_def_msgtbl.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sch_def_schtbl.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/sch_def_schtbl.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `syn.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/syn.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `synopsis.hpp`
+
+**경로:** `fsw/build/exe/cpu1/cf/synopsis.hpp`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/to.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to_config.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/to_config.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to_lab.so`
+
+**경로:** `fsw/build/exe/cpu1/cf/to_lab.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to_lab_sub.tbl`
+
+**경로:** `fsw/build/exe/cpu1/cf/to_lab_sub.tbl`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

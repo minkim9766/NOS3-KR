@@ -3,26 +3,1132 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CRC32.cpp`
 
-file--CRC32.cpp
-file--CRC32.hpp
-file--lib_crc.c
-file--lib_crc.h
-file--lib_crc.txt
-file--README
-file--tst_crc.c
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/CRC32.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRC32.cpp
+// \author dinkel
+// \brief  cpp file for CRC32 implementation of Hash class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Utils/Hash/Hash.hpp>
+
+static_assert(sizeof(unsigned long) >= sizeof(U32), "CRC32 cannot fit in CRC32 library chosen types");
+
+
+namespace Utils {
+
+    Hash ::
+        Hash()
+    {
+        this->init();
+    }
+
+    Hash ::
+        ~Hash()
+    {
+    }
+
+    void Hash ::
+        hash(const void *const data, const FwSizeType len, HashBuffer& buffer)
+    {
+        HASH_HANDLE_TYPE local_hash_handle;
+        local_hash_handle = 0xffffffffL;
+        FW_ASSERT(data);
+        char c;
+        for(FwSizeType index = 0; index < len; index++) {
+            c = static_cast<const char*>(data)[index];
+            local_hash_handle = static_cast<HASH_HANDLE_TYPE>(update_crc_32(local_hash_handle, c));
+        }
+        HashBuffer bufferOut;
+        // For CRC32 we need to return the one's complement of the result:
+        Fw::SerializeStatus status = bufferOut.serialize(~(local_hash_handle));
+        FW_ASSERT( Fw::FW_SERIALIZE_OK == status );
+        buffer = bufferOut;
+    }
+
+    void Hash ::
+        init()
+    {
+        this->hash_handle = 0xffffffffL;
+    }
+
+    void Hash ::
+        update(const void *const data, FwSizeType len)
+    {
+        FW_ASSERT(data);
+        char c;
+        for(FwSizeType index = 0; index < len; index++) {
+            c = static_cast<const char*>(data)[index];
+            this->hash_handle = static_cast<HASH_HANDLE_TYPE>(update_crc_32(this->hash_handle, c));
+        }
+    }
+
+    void Hash ::
+        final(HashBuffer& buffer)
+    {
+        HashBuffer bufferOut;
+        // For CRC32 we need to return the one's complement of the result:
+        Fw::SerializeStatus status = bufferOut.serialize(~(this->hash_handle));
+        FW_ASSERT( Fw::FW_SERIALIZE_OK == status );
+        buffer = bufferOut;
+    }
+
+    void Hash ::
+      final(U32 &hashvalue)
+    {
+      FW_ASSERT(sizeof(this->hash_handle) == sizeof(U32));
+      // For CRC32 we need to return the one's complement of the result:
+      hashvalue = ~(this->hash_handle);
+    }
+
+    void Hash ::
+      setHashValue(HashBuffer &value)
+    {
+      Fw::SerializeStatus status = value.deserialize(this->hash_handle);
+      FW_ASSERT( Fw::FW_SERIALIZE_OK == status );
+      // Expecting `value` to already be one's complement; so doing one's complement
+      // here for correct hash updates
+      this->hash_handle = ~this->hash_handle;
+    }
+}
 ```
 
-## 항목
+### `CRC32.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/CRC32.cpp`](file--CRC32.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/CRC32.hpp`](file--CRC32.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/lib_crc.c`](file--lib_crc.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/lib_crc.h`](file--lib_crc.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/lib_crc.txt`](file--lib_crc.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/README`](file--README) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/tst_crc.c`](file--tst_crc.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/CRC32.hpp`
+
+
+```cpp
+#ifndef UTILS_CRC32_CONFIG_HPP
+#define UTILS_CRC32_CONFIG_HPP
+
+// Include the lic crc c library:
+extern "C" {
+    #include <Utils/Hash/libcrc/lib_crc.h>
+}
+
+//! Define the hash handle type for this 
+//! implementation. This is required.
+#ifndef HASH_HANDLE_TYPE
+#define HASH_HANDLE_TYPE U32
+#endif
+
+//! Define the size of a hash digest in bytes for this
+//! implementation. This is required.
+#ifndef HASH_DIGEST_LENGTH
+#define HASH_DIGEST_LENGTH (4)
+#endif
+
+//! Define the string to be used as a filename 
+//! extension (ie. file.txt.SHA256) for this
+//! implementation. This is required.
+#ifndef HASH_EXTENSION_STRING
+#define HASH_EXTENSION_STRING (".CRC32")
+#endif
+
+#endif
+```
+
+### `lib_crc.c`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/lib_crc.c`
+
+
+```c
+#include "lib_crc.h"
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   Library         : lib_crc                                       *
+    *   File            : lib_crc.c                                     *
+    *   Author          : Lammert Bies  1999-2008                       *
+    *   E-mail          : info@lammertbies.nl                           *
+    *   Language        : ANSI C                                        *
+    *                                                                   *
+    *                                                                   *
+    *   Description                                                     *
+    *   ===========                                                     *
+    *                                                                   *
+    *   The file lib_crc.c contains the private  and  public  func-     *
+    *   tions  used  for  the  calculation of CRC-16, CRC-CCITT and     *
+    *   CRC-32 cyclic redundancy values.                                *
+    *                                                                   *
+    *                                                                   *
+    *   Dependencies                                                    *
+    *   ============                                                    *
+    *                                                                   *
+    *   lib_crc.h       CRC definitions and prototypes                  *
+    *                                                                   *
+    *                                                                   *
+    *   Modification history                                            *
+    *   ====================                                            *
+    *                                                                   *
+    *   Date        Version Comment                                     *
+    *                                                                   *
+    *   2008-04-20  1.16    Added CRC-CCITT calculation for Kermit      *
+    *                                                                   *
+    *   2007-04-01  1.15    Added CRC16 calculation for Modbus          *
+    *                                                                   *
+    *   2007-03-28  1.14    Added CRC16 routine for Sick devices        *
+    *                                                                   *
+    *   2005-12-17  1.13    Added CRC-CCITT with initial 0x1D0F         *
+    *                                                                   *
+    *   2005-05-14  1.12    Added CRC-CCITT with start value 0          *
+    *                                                                   *
+    *   2005-02-05  1.11    Fixed bug in CRC-DNP routine                *
+    *                                                                   *
+    *   2005-02-04  1.10    Added CRC-DNP routines                      *
+    *                                                                   *
+    *   1999-02-21  1.01    Added FALSE and TRUE mnemonics              *
+    *                                                                   *
+    *   1999-01-22  1.00    Initial source                              *
+    *                                                                   *
+    \*******************************************************************/
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   #define P_xxxx                                                  *
+    *                                                                   *
+    *   The CRC's are computed using polynomials. The  coefficients     *
+    *   for the algorithms are defined by the following constants.      *
+    *                                                                   *
+    \*******************************************************************/
+
+#define                 P_16        0xA001
+#define                 P_32        0xEDB88320L
+#define                 P_CCITT     0x1021
+#define                 P_DNP       0xA6BC
+#define                 P_KERMIT    0x8408
+#define                 P_SICK      0x8005
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static int crc_tab...init                                       *
+    *   static unsigned ... crc_tab...[]                                *
+    *                                                                   *
+    *   The algorithms use tables with precalculated  values.  This     *
+    *   speeds  up  the calculation dramatically. The first time the    *
+    *   CRC function is called, the table for that specific  calcu-     *
+    *   lation  is set up. The ...init variables are used to deter-     *
+    *   mine if the initialization has taken place. The  calculated     *
+    *   values are stored in the crc_tab... arrays.                     *
+    *                                                                   *
+    *   The variables are declared static. This makes them  invisi-     *
+    *   ble for other modules of the program.                           *
+    *                                                                   *
+    \*******************************************************************/
+
+static int              crc_tab16_init          = CRC_FALSE;
+static int              crc_tab32_init          = CRC_FALSE;
+static int              crc_tabccitt_init       = CRC_FALSE;
+static int              crc_tabdnp_init         = CRC_FALSE;
+static int              crc_tabkermit_init      = CRC_FALSE;
+
+static unsigned short   crc_tab16[256];
+static unsigned long    crc_tab32[256];
+static unsigned short   crc_tabccitt[256];
+static unsigned short   crc_tabdnp[256];
+static unsigned short   crc_tabkermit[256];
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static void init_crc...tab();                                   *
+    *                                                                   *
+    *   Three local functions are used  to  initialize  the  tables     *
+    *   with values for the algorithm.                                  *
+    *                                                                   *
+    \*******************************************************************/
+
+static void             init_crc16_tab( void );
+static void             init_crc32_tab( void );
+static void             init_crcccitt_tab( void );
+static void             init_crcdnp_tab( void );
+static void             init_crckermit_tab( void );
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   unsigned short update_crc_ccitt( unsigned long crc, char c );   *
+    *                                                                   *
+    *   The function update_crc_ccitt calculates  a  new  CRC-CCITT     *
+    *   value  based  on the previous value of the CRC and the next     *
+    *   byte of the data to be checked.                                 *
+    *                                                                   *
+    \*******************************************************************/
+
+unsigned short update_crc_ccitt( unsigned short crc, char c ) {
+
+    unsigned short tmp, short_c;
+
+    short_c  = 0x00ff & (unsigned short) c;
+
+    if ( ! crc_tabccitt_init ) init_crcccitt_tab();
+
+    tmp = (crc >> 8) ^ short_c;
+    crc = (unsigned short)((crc << 8) ^ crc_tabccitt[tmp]);
+
+    return crc;
+
+}  /* update_crc_ccitt */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   unsigned short update_crc_sick(                                 *
+    *             unsigned long crc, char c, char prev_byte );          *
+    *                                                                   *
+    *   The function  update_crc_sick  calculates  a  new  CRC-SICK     *
+    *   value  based  on the previous value of the CRC and the next     *
+    *   byte of the data to be checked.                                 *
+    *                                                                   *
+    \*******************************************************************/
+
+unsigned short update_crc_sick( unsigned short crc, char c, char prev_byte ) {
+
+    unsigned short short_c, short_p;
+
+    short_c  =   0x00ff & (unsigned short) c;
+    short_p  =  (unsigned short)(( 0x00ff & (unsigned short) prev_byte ) << 8);
+
+    if ( crc & 0x8000 ) crc = (unsigned short)(( crc << 1 ) ^ P_SICK);
+    else                crc =   (unsigned short)(crc << 1);
+
+    crc &= 0xffff;
+    crc ^= ( short_c | short_p );
+
+    return crc;
+
+}  /* update_crc_sick */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   unsigned short update_crc_16( unsigned short crc, char c );     *
+    *                                                                   *
+    *   The function update_crc_16 calculates a  new  CRC-16  value     *
+    *   based  on  the  previous value of the CRC and the next byte     *
+    *   of the data to be checked.                                      *
+    *                                                                   *
+    \*******************************************************************/
+
+unsigned short update_crc_16( unsigned short crc, char c ) {
+
+    unsigned short tmp, short_c;
+
+    short_c = 0x00ff & (unsigned short) c;
+
+    if ( ! crc_tab16_init ) init_crc16_tab();
+
+    tmp =  crc       ^ short_c;
+    // Note: when masking by 0xff, range is limited to unsigned char
+    //       which fits within unsigned int.
+    crc = (crc >> 8) ^ crc_tab16[ (unsigned int)(tmp & 0xff) ];
+
+    return crc;
+
+}  /* update_crc_16 */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   unsigned short update_crc_kermit( unsigned short crc, char c ); *
+    *                                                                   *
+    *   The function update_crc_kermit calculates a  new  CRC value     *
+    *   based  on  the  previous value of the CRC and the next byte     *
+    *   of the data to be checked.                                      *
+    *                                                                   *
+    \*******************************************************************/
+
+unsigned short update_crc_kermit( unsigned short crc, char c ) {
+
+    unsigned short tmp, short_c;
+
+    short_c = 0x00ff & (unsigned short) c;
+
+    if ( ! crc_tabkermit_init ) init_crckermit_tab();
+
+    tmp =  crc       ^ short_c;
+    crc = (crc >> 8) ^ crc_tabkermit[ tmp & 0xff ];
+
+    return crc;
+
+}  /* update_crc_kermit */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   unsigned short update_crc_dnp( unsigned short crc, char c );    *
+    *                                                                   *
+    *   The function update_crc_dnp calculates a new CRC-DNP  value     *
+    *   based  on  the  previous value of the CRC and the next byte     *
+    *   of the data to be checked.                                      *
+    *                                                                   *
+    \*******************************************************************/
+
+unsigned short update_crc_dnp( unsigned short crc, char c ) {
+
+    unsigned short tmp, short_c;
+
+    short_c = 0x00ff & (unsigned short) c;
+
+    if ( ! crc_tabdnp_init ) init_crcdnp_tab();
+
+    tmp =  crc       ^ short_c;
+    crc = (crc >> 8) ^ crc_tabdnp[ tmp & 0xff ];
+
+    return crc;
+
+}  /* update_crc_dnp */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   unsigned long update_crc_32( unsigned long crc, char c );       *
+    *                                                                   *
+    *   The function update_crc_32 calculates a  new  CRC-32  value     *
+    *   based  on  the  previous value of the CRC and the next byte     *
+    *   of the data to be checked.                                      *
+    *                                                                   *
+    \*******************************************************************/
+
+unsigned long update_crc_32( unsigned long crc, char c ) {
+
+    unsigned long tmp, long_c;
+
+    long_c = 0x000000ffL & (unsigned long) c;
+
+    if ( ! crc_tab32_init ) init_crc32_tab();
+
+    tmp = crc ^ long_c;
+    crc = (crc >> 8) ^ crc_tab32[ tmp & 0xff ];
+
+    return crc;
+
+}  /* update_crc_32 */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static void init_crc16_tab( void );                             *
+    *                                                                   *
+    *   The function init_crc16_tab() is used  to  fill  the  array     *
+    *   for calculation of the CRC-16 with values.                      *
+    *                                                                   *
+    \*******************************************************************/
+
+static void init_crc16_tab( void ) {
+
+    int i, j;
+    unsigned short crc, c;
+
+    for (i=0; i<256; i++) {
+
+        crc = 0;
+        c   = (unsigned short) i;
+
+        for (j=0; j<8; j++) {
+
+            if ( (crc ^ c) & 0x0001 ) crc = ( crc >> 1 ) ^ P_16;
+            else                      crc =   crc >> 1;
+
+            c = c >> 1;
+        }
+
+        crc_tab16[i] = crc;
+    }
+
+    crc_tab16_init = CRC_TRUE;
+
+}  /* init_crc16_tab */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static void init_crckermit_tab( void );                         *
+    *                                                                   *
+    *   The function init_crckermit_tab() is used to fill the array     *
+    *   for calculation of the CRC Kermit with values.                  *
+    *                                                                   *
+    \*******************************************************************/
+
+static void init_crckermit_tab( void ) {
+
+    int i, j;
+    unsigned short crc, c;
+
+    for (i=0; i<256; i++) {
+
+        crc = 0;
+        c   = (unsigned short) i;
+
+        for (j=0; j<8; j++) {
+
+            if ( (crc ^ c) & 0x0001 ) crc = ( crc >> 1 ) ^ P_KERMIT;
+            else                      crc =   crc >> 1;
+
+            c = c >> 1;
+        }
+
+        crc_tabkermit[i] = crc;
+    }
+
+    crc_tabkermit_init = CRC_TRUE;
+
+}  /* init_crckermit_tab */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static void init_crcdnp_tab( void );                            *
+    *                                                                   *
+    *   The function init_crcdnp_tab() is used  to  fill  the  array    *
+    *   for calculation of the CRC-DNP with values.                     *
+    *                                                                   *
+    \*******************************************************************/
+
+static void init_crcdnp_tab( void ) {
+
+    int i, j;
+    unsigned short crc, c;
+
+    for (i=0; i<256; i++) {
+
+        crc = 0;
+        c   = (unsigned short) i;
+
+        for (j=0; j<8; j++) {
+
+            if ( (crc ^ c) & 0x0001 ) crc = ( crc >> 1 ) ^ P_DNP;
+            else                      crc =   crc >> 1;
+
+            c = c >> 1;
+        }
+
+        crc_tabdnp[i] = crc;
+    }
+
+    crc_tabdnp_init = CRC_TRUE;
+
+}  /* init_crcdnp_tab */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static void init_crc32_tab( void );                             *
+    *                                                                   *
+    *   The function init_crc32_tab() is used  to  fill  the  array     *
+    *   for calculation of the CRC-32 with values.                      *
+    *                                                                   *
+    \*******************************************************************/
+
+static void init_crc32_tab( void ) {
+
+    int i, j;
+    unsigned long crc;
+
+    for (i=0; i<256; i++) {
+
+        crc = (unsigned long) i;
+
+        for (j=0; j<8; j++) {
+
+            if ( crc & 0x00000001L ) crc = ( crc >> 1 ) ^ P_32;
+            else                     crc =   crc >> 1;
+        }
+
+        crc_tab32[i] = crc;
+    }
+
+    crc_tab32_init = CRC_TRUE;
+
+}  /* init_crc32_tab */
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   static void init_crcccitt_tab( void );                          *
+    *                                                                   *
+    *   The function init_crcccitt_tab() is used to fill the  array     *
+    *   for calculation of the CRC-CCITT with values.                   *
+    *                                                                   *
+    \*******************************************************************/
+
+static void init_crcccitt_tab( void ) {
+
+    int i, j;
+    unsigned short crc, c;
+
+    for (i=0; i<256; i++) {
+
+        crc = 0;
+        c   = (unsigned short)(((unsigned short) i) << 8);
+
+        for (j=0; j<8; j++) {
+
+            if ( (crc ^ c) & 0x8000 ) crc = (unsigned short)(( crc << 1 ) ^ P_CCITT);
+            else                      crc =   (unsigned short)(crc << 1);
+
+            c = (unsigned short)(c << 1);
+        }
+
+        crc_tabccitt[i] = crc;
+    }
+
+    crc_tabccitt_init = CRC_TRUE;
+
+}  /* init_crcccitt_tab */
+```
+
+### `lib_crc.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/lib_crc.h`
+
+
+```c
+    /*******************************************************************\
+    *                                                                   *
+    *   Library         : lib_crc                                       *
+    *   File            : lib_crc.h                                     *
+    *   Author          : Lammert Bies  1999-2008                       *
+    *   E-mail          : info@lammertbies.nl                           *
+    *   Language        : ANSI C                                        *
+    *                                                                   *
+    *                                                                   *
+    *   Description                                                     *
+    *   ===========                                                     *
+    *                                                                   *
+    *   The file lib_crc.h contains public definitions  and  proto-     *
+    *   types for the CRC functions present in lib_crc.c.               *
+    *                                                                   *
+    *                                                                   *
+    *   Dependencies                                                    *
+    *   ============                                                    *
+    *                                                                   *
+    *   none                                                            *
+    *                                                                   *
+    *                                                                   *
+    *   Modification history                                            *
+    *   ====================                                            *
+    *                                                                   *
+    *   Date        Version Comment                                     *
+    *                                                                   *
+    *   2008-04-20  1.16    Added CRC-CCITT routine for Kermit          *
+    *                                                                   *
+    *   2007-04-01  1.15    Added CRC16 calculation for Modbus          *
+    *                                                                   *
+    *   2007-03-28  1.14    Added CRC16 routine for Sick devices        *
+    *                                                                   *
+    *   2005-12-17  1.13    Added CRC-CCITT with initial 0x1D0F         *
+    *                                                                   *
+    *   2005-02-14  1.12    Added CRC-CCITT with initial 0x0000         *
+    *                                                                   *
+    *   2005-02-05  1.11    Fixed bug in CRC-DNP routine                *
+    *                                                                   *
+    *   2005-02-04  1.10    Added CRC-DNP routines                      *
+    *                                                                   *
+    *   2005-01-07  1.02    Changes in tst_crc.c                        *
+    *                                                                   *
+    *   1999-02-21  1.01    Added FALSE and TRUE mnemonics              *
+    *                                                                   *
+    *   1999-01-22  1.00    Initial source                              *
+    *                                                                   *
+    \*******************************************************************/
+
+#ifndef UTILS_HASH_LIB_CRC_HPP
+#define UTILS_HASH_LIB_CRC_HPP
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
+#define CRC_VERSION     "1.16"
+
+
+
+#define CRC_FALSE           0
+#define CRC_TRUE            1
+
+
+
+unsigned short          update_crc_16(     unsigned short crc, char c                 );
+unsigned long           update_crc_32(     unsigned long  crc, char c                 );
+unsigned short          update_crc_ccitt(  unsigned short crc, char c                 );
+unsigned short          update_crc_dnp(    unsigned short crc, char c                 );
+unsigned short          update_crc_kermit( unsigned short crc, char c                 );
+unsigned short          update_crc_sick(   unsigned short crc, char c, char prev_byte );
+
+#ifdef  __cplusplus
+}
+#endif
+
+#endif // UTILS_HASH_LIB_CRC_HPP
+```
+
+### `lib_crc.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/lib_crc.txt`
+
+
+```text
+
+
+
+   File      : lib_crc.txt
+   Date      : 2008-04-20
+   Author    : Lammert Bies
+   E-mail    : info@lammertbies.nl
+   Version   : 1.16
+
+   Contents  : Documentation for the CRC functions in lib_crc.c
+
+   Support   : http://www.lammertbies.nl/forum/viewforum.php?f=11
+
+
+
+   The file lib_crc.c contains source code for functions to calculate
+   five commonly used CRC values: CRC-16, CRC-32, CRC-DNP, CRC-SICK,
+   CRC-Kermit and CRC-CCITT. The functions can be freely used.
+
+   To calculate a CRC, the following three steps must be followed:
+
+   1. Initialize the CRC value. For CRC-16, CRC-SICK CRC-Kermit and CRC-DNP
+      the initial value of the CRC is 0. For CRC-CCITT and CRC-MODBUS,
+      the value 0xffff is used. CRC-32 starts with an initial value
+      of 0xffffffffL.
+
+   2. For each byte of the data starting with the first byte, call the
+      function update_crc_16(), update_crc_32(), update_crc_dnp(),
+      update_crc_sick(), update_crc_kermit() or update_crc_ccitt()
+      to recalculate the value of the CRC.
+
+   3. Only for CRC-32: When all bytes have been processed, take the
+      one's complement of the obtained CRC value.
+
+   4. Only for CRC-DNP: After all input processing, the one's complement
+      of the CRC is calculated and the two bytes of the CRC are swapped.
+
+   5. Only for CRC-Kermit and CRC-SICK: After all input processing, the
+      one's complement of the CRC is calculated and the two bytes of the CRC
+      are swapped.
+
+
+
+   An example of this calculation process can be found in the tst_crc.c
+   sample program. The program and other CRC implementations can be
+   tested with the test string "123456789" without the quotes. The
+   results should be:
+
+   CRC16        : BB3D
+   CRC16 Modbus : 4B37
+   CRC16 SICK   : 56A6
+   CRC-CCITT    : 0x31C3 (starting value 0x0000)
+   CRC-CCITT    : 0x29B1 (starting value 0xFFFF)
+   CRC-CCITT    : 0xE5CC (starting value 0x1D0F)
+   CRC-Kermit   : 0x8921
+   CRC-DNP      : 82EA
+   CRC32        : CBF43926
+
+
+
+   The example program tst_crc.exe can be invoked in three ways:
+
+   tst_crc -a
+
+      The program will prompt for an input string. All characters in the
+      input string are used for the CRC calculation, based on their ASCII
+      value.
+
+      Example input string: ABC
+         CRC16              = 0x4521
+         CRC16 (Modbus)     = 0x8550
+         CRC16 (Sick)       = 0xC3C1
+         CRC-CCITT (0x0000) = 0x3994
+         CRC-CCITT (0xffff) = 0xF508
+         CRC-CCITT (0x1d0f) = 0x2898
+         CRC-CCITT (Kermit) = 0xE359
+         CRC-DNP            = 0x5AD3
+         CRC32              = 0xA3830348
+
+   tst_crc -x
+
+      The program will prompt for an input string. All characters will
+      be filtered out, except for 0..9, a..f and A..F. The remaining characters
+      will be paired, and every pair of two characters represent the hexadecimal
+      value to be used for one byte in the CRC calculation. The result if an
+      odd number of valued characters is provided is undefined.
+
+      Example input string: 41 42 43
+         CRC16              = 0x4521
+         CRC16 (Modbus)     = 0x8550
+         CRC16 (Sick)       = 0xC3C1
+         CRC-CCITT (0x0000) = 0x3994
+         CRC-CCITT (0xffff) = 0xF508
+         CRC-CCITT (0x1d0f) = 0x2898
+         CRC-CCITT (Kermit) = 0xE359
+         CRC-DNP            = 0x5AD3
+         CRC32              = 0xA3830348
+
+      You see, that the result is the same as for the ASCII input "ABC". This
+      is, because A, B and C are represented in ASCII by the hexadecimal
+      values 41, 42 and 43. So it is obvious that the result should be
+      the same in both cases.
+
+   tst_crc file1 file2 ...
+
+      If neither the -a, nor the -x parameter is used, the test program
+      assumes that the parameters are file names. Each file is opened and
+      the CRC values are calculated.
+
+
+
+   The newest version of these files can be found at:
+
+        http://www.lammertbies.nl/download/lib_crc.zip
+
+   On-line CRC calculations of strings can be performed at:
+
+        http://www.lammertbies.nl/comm/info/crc-calculation.html
+
+   Support for the CRC routines in this library in the Error Detection and
+   Correction forum at
+
+        http://www.lammertbies.nl/forum/viewforum.php?f=11
+```
+
+### `README`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/README`
+
+
+```text
+This implementation provides the isf the CRC32 hash only, even though other hashes are provided in libcrc.
+
+Source code was obtained here: http://www.lammertbies.nl/comm/software/
+```
+
+### `tst_crc.c`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/tst_crc.c`
+
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "lib_crc.h"
+
+
+
+    /*******************************************************************\
+    *                                                                   *
+    *   Library         : lib_crc                                       *
+    *   File            : tst_crc.c                                     *
+    *   Author          : Lammert Bies  1999-2008                       *
+    *   E-mail          : info@lammertbies.nl                           *
+    *   Language        : ANSI C                                        *
+    *                                                                   *
+    *                                                                   *
+    *   Description                                                     *
+    *   ===========                                                     *
+    *                                                                   *
+    *   The file tst_crc.c contains a small  sample  program  which     *
+    *   demonstrates  the  use of the functions for calculating the     *
+    *   CRC-CCITT, CRC-16 and CRC-32 values of data. The file  cal-     *
+    *   culates  the three different CRC's for a file whose name is     *
+    *   either provided at the command  line,  or  typed  in  right     *
+    *   after the program has started.                                  *
+    *                                                                   *
+    *                                                                   *
+    *   Dependencies                                                    *
+    *   ============                                                    *
+    *                                                                   *
+    *   lib_crc.h       CRC definitions and prototypes                  *
+    *   lib_crc.c       CRC routines                                    *
+    *                                                                   *
+    *                                                                   *
+    *   Modification history                                            *
+    *   ====================                                            *
+    *                                                                   *
+    *   Date        Version Comment                                     *
+    *                                                                   *
+    *   2008-04-20  1.16    Added CRC-CCITT calculation for Kermit.     *
+    *                                                                   *
+    *   2007-05-01  1.15    Added CRC16 calculation for Modbus.         *
+    *                                                                   *
+    *   2007-03-28  1.14    Added CRC16 routine for  Sick  devices,     *
+    *                       electronic devices used for measurement     *
+    *                       and detection in industrial situations.     *
+    *                                                                   *
+    *   2005-12-17  1.13    Added CRC-CCITT with initial 0x1D0F         *
+    *                                                                   *
+    *   2005-02-14  1.12    Added CRC-CCITT with initial 0x0000         *
+    *                                                                   *
+    *   2005-02-05  1.11    Fixed post processing bug in CRC-DNP.       *
+    *                                                                   *
+    *   2005-02-04  1.10    Added the CRC calculation for  DNP 3.0,     *
+    *                       a protocol used  in  the  communication     *
+    *                       between remote units and masters in the     *
+    *                       electric utility industry.  The  method     *
+    *                       of  calculation  is the same as CRC-16,     *
+    *                       but with a different polynomial.            *
+    *                                                                   *
+    *   2005-01-07  1.02    Changed way program  is  used.  When  a     *
+    *                       commandline  parameter  is present, the     *
+    *                       program assumes it is a file, but  when     *
+    *                       invoked without a parameter the entered     *
+    *                       string is used to calculate the CRC.        *
+    *                                                                   *
+    *                       CRC's are now  printed  in  hexadecimal     *
+    *                       decimal format.                             *
+    *                                                                   *
+    *                       Let  CRC-CCITT  calculation  start with     *
+    *                       0xffff as this is used in  most  imple-     *
+    *                       mentations.                                 *
+    *                                                                   *
+    *   1999-02-21  1.01    none                                        *
+    *                                                                   *
+    *   1999-01-22  1.00    Initial source                              *
+    *                                                                   *
+    \*******************************************************************/
+
+#define MAX_STRING_SIZE	2048
+
+
+
+void main( int argc, char *argv[] ) {
+
+    char input_string[MAX_STRING_SIZE];
+    char *ptr, *dest, hex_val, prev_byte;
+    unsigned short crc_16, crc_16_modbus, crc_ccitt_ffff, crc_ccitt_0000, crc_ccitt_1d0f, crc_dnp, crc_sick, crc_kermit;
+    unsigned short low_byte, high_byte;
+    unsigned long crc_32;
+    int a, ch, do_ascii, do_hex;
+    FILE *fp;
+
+    do_ascii = CRC_FALSE;
+    do_hex   = CRC_FALSE;
+
+    printf( "\nCRC algorithm sample program\nLammert Bies,  Version " CRC_VERSION "\n\n" );
+
+    if ( argc < 2 ) {
+
+        printf( "Usage: tst_crc [-a|-x] file1 ...\n\n" );
+        printf( "    -a Program asks for ASCII input. Following parameters ignored.\n" );
+        printf( "    -x Program asks for hexadecimal input. Following parameters ignored.\n" );
+        printf( "       All other parameters are treated like filenames. The CRC values\n" );
+        printf( "       for each separate file will be calculated.\n" );
+
+        exit( 0 );
+    }
+
+    if ( ! strcmp( argv[1], "-a" )  ||  ! strcmp( argv[1], "-A" ) ) do_ascii = CRC_TRUE;
+    if ( ! strcmp( argv[1], "-x" )  ||  ! strcmp( argv[1], "-X" ) ) do_hex   = CRC_TRUE;
+
+    if ( do_ascii  ||  do_hex ) {
+
+        printf( "Input: " );
+        fgets( input_string, MAX_STRING_SIZE-1, stdin );
+    }
+
+    if ( do_ascii ) {
+
+        ptr = input_string;
+        while ( *ptr  &&  *ptr != '\r'  &&  *ptr != '\n' ) ptr++;
+        *ptr = 0;
+    }
+
+    if ( do_hex ) {
+
+        ptr  = input_string;
+        dest = input_string;
+
+        while( *ptr  &&  *ptr != '\r'  &&  *ptr != '\n' ) {
+
+            if ( *ptr >= '0'  &&  *ptr <= '9' ) *dest++ = (char) ( (*ptr) - '0'      );
+            if ( *ptr >= 'A'  &&  *ptr <= 'F' ) *dest++ = (char) ( (*ptr) - 'A' + 10 );
+            if ( *ptr >= 'a'  &&  *ptr <= 'f' ) *dest++ = (char) ( (*ptr) - 'a' + 10 );
+
+            ptr++;
+	}
+
+        * dest    = '\x80';
+        *(dest+1) = '\x80';
+    }
+
+
+
+    a = 1;
+
+    do {
+
+        crc_16         = 0;
+        crc_16_modbus  = 0xffff;
+        crc_dnp        = 0;
+        crc_sick       = 0;
+        crc_ccitt_0000 = 0;
+        crc_ccitt_ffff = 0xffff;
+        crc_ccitt_1d0f = 0x1d0f;
+        crc_kermit     = 0;
+        crc_32         = 0xffffffffL;
+
+
+
+        if ( do_ascii ) {
+
+            prev_byte = 0;
+            ptr       = input_string;
+
+            while ( *ptr ) {
+
+                crc_16         = update_crc_16(     crc_16,         *ptr            );
+                crc_16_modbus  = update_crc_16(     crc_16_modbus,  *ptr            );
+                crc_dnp        = update_crc_dnp(    crc_dnp,        *ptr            );
+                crc_sick       = update_crc_sick(   crc_sick,       *ptr, prev_byte );
+                crc_ccitt_0000 = update_crc_ccitt(  crc_ccitt_0000, *ptr            );
+                crc_ccitt_ffff = update_crc_ccitt(  crc_ccitt_ffff, *ptr            );
+                crc_ccitt_1d0f = update_crc_ccitt(  crc_ccitt_1d0f, *ptr            );
+                crc_kermit     = update_crc_kermit( crc_kermit,     *ptr            );
+                crc_32         = update_crc_32(     crc_32,         *ptr            );
+
+                prev_byte = *ptr;
+                ptr++;
+            }
+        }
+
+
+
+        else if ( do_hex ) {
+
+            prev_byte = 0;
+            ptr       = input_string;
+
+            while ( *ptr != '\x80' ) {
+
+                hex_val  = (char) ( ( * ptr     &  '\x0f' ) << 4 );
+                hex_val |= (char) ( ( *(ptr+1)  &  '\x0f' )      );
+
+                crc_16         = update_crc_16(     crc_16,         hex_val            );
+                crc_16_modbus  = update_crc_16(     crc_16_modbus,  hex_val            );
+                crc_dnp        = update_crc_dnp(    crc_dnp,        hex_val            );
+                crc_sick       = update_crc_sick(   crc_sick,       hex_val, prev_byte );
+                crc_ccitt_0000 = update_crc_ccitt(  crc_ccitt_0000, hex_val            );
+                crc_ccitt_ffff = update_crc_ccitt(  crc_ccitt_ffff, hex_val            );
+                crc_ccitt_1d0f = update_crc_ccitt(  crc_ccitt_1d0f, hex_val            );
+                crc_kermit     = update_crc_kermit( crc_kermit,     hex_val            );
+                crc_32         = update_crc_32(     crc_32,         hex_val            );
+
+                prev_byte = hex_val;
+                ptr      += 2;
+            }
+
+            input_string[0] = 0;
+        }
+
+
+
+        else {
+
+            prev_byte = 0;
+            fp        = fopen( argv[a], "rb" );
+
+            if ( fp != nullptr ) {
+
+                while( ( ch=fgetc( fp ) ) != EOF ) {
+
+                    crc_16         = update_crc_16(     crc_16,         (char) ch            );
+                    crc_16_modbus  = update_crc_16(     crc_16_modbus,  (char) ch            );
+                    crc_dnp        = update_crc_dnp(    crc_dnp,        (char) ch            );
+                    crc_sick       = update_crc_sick(   crc_sick,       (char) ch, prev_byte );
+                    crc_ccitt_0000 = update_crc_ccitt(  crc_ccitt_0000, (char) ch            );
+                    crc_ccitt_ffff = update_crc_ccitt(  crc_ccitt_ffff, (char) ch            );
+                    crc_ccitt_1d0f = update_crc_ccitt(  crc_ccitt_1d0f, (char) ch            );
+                    crc_kermit     = update_crc_kermit( crc_kermit,     (char) ch            );
+                    crc_32         = update_crc_32(     crc_32,         (char) ch            );
+
+                    prev_byte = (char) ch;
+                }
+
+                fclose( fp );
+            }
+
+            else printf( "%s : cannot open file\n", argv[a] );
+        }
+
+
+
+        crc_32    ^= 0xffffffffL;
+
+        crc_dnp    = ~crc_dnp;
+        low_byte   = (crc_dnp & 0xff00) >> 8;
+        high_byte  = (crc_dnp & 0x00ff) << 8;
+        crc_dnp    = low_byte | high_byte;
+
+        low_byte   = (crc_sick & 0xff00) >> 8;
+        high_byte  = (crc_sick & 0x00ff) << 8;
+        crc_sick   = low_byte | high_byte;
+
+        low_byte   = (crc_kermit & 0xff00) >> 8;
+        high_byte  = (crc_kermit & 0x00ff) << 8;
+        crc_kermit = low_byte | high_byte;
+
+        printf( "%s%s%s :\nCRC16              = 0x%04X      /  %u\n"
+                          "CRC16 (Modbus)     = 0x%04X      /  %u\n"
+                          "CRC16 (Sick)       = 0x%04X      /  %u\n"
+                          "CRC-CCITT (0x0000) = 0x%04X      /  %u\n"
+                          "CRC-CCITT (0xffff) = 0x%04X      /  %u\n"
+                          "CRC-CCITT (0x1d0f) = 0x%04X      /  %u\n"
+                          "CRC-CCITT (Kermit) = 0x%04X      /  %u\n"
+                          "CRC-DNP            = 0x%04X      /  %u\n"
+                          "CRC32              = 0x%08lX  /  %lu\n"
+                    , (   do_ascii  ||    do_hex ) ? "\""    : ""
+                    , ( ! do_ascii  &&  ! do_hex ) ? argv[a] : input_string
+                    , (   do_ascii  ||    do_hex ) ? "\""    : ""
+                    , crc_16,         crc_16
+                    , crc_16_modbus,  crc_16_modbus
+                    , crc_sick,       crc_sick
+                    , crc_ccitt_0000, crc_ccitt_0000
+                    , crc_ccitt_ffff, crc_ccitt_ffff
+                    , crc_ccitt_1d0f, crc_ccitt_1d0f
+                    , crc_kermit,     crc_kermit
+                    , crc_dnp,        crc_dnp
+                    , crc_32,         crc_32     );
+
+        a++;
+
+    } while ( a < argc );
+
+}  /* main (tst_crc.c) */
+```

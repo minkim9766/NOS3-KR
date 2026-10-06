@@ -3,16 +3,77 @@
 
 **경로:** `components/generic_star_tracker/fsw/fprime/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_star_tracker_msgids.h`
 
-file--generic_star_tracker_msgids.h
-file--generic_star_tracker_platform_cfg.h
+**경로:** `components/generic_star_tracker/fsw/fprime/platform_inc/generic_star_tracker_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_star_tracker_msgids.h  $
+**
+** Purpose:
+**  Define GENERIC_STAR_TRACKER Message IDs
+**
+*************************************************************************/
+#ifndef _GENERIC_STAR_TRACKER_MSGIDS_H_
+#define _GENERIC_STAR_TRACKER_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define GENERIC_STAR_TRACKER_CMD_MID 0x1935
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define GENERIC_STAR_TRACKER_REQ_HK_MID 0x1936
+
+/*
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define GENERIC_STAR_TRACKER_HK_TLM_MID     0x0935
+#define GENERIC_STAR_TRACKER_DEVICE_TLM_MID 0x0936
+
+#endif /* _GENERIC_STAR_TRACKER_MSGIDS_H_ */
 ```
 
-## 항목
+### `generic_star_tracker_platform_cfg.h`
 
-- [`components/generic_star_tracker/fsw/fprime/platform_inc/generic_star_tracker_msgids.h`](file--generic_star_tracker_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/fsw/fprime/platform_inc/generic_star_tracker_platform_cfg.h`](file--generic_star_tracker_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_star_tracker/fsw/fprime/platform_inc/generic_star_tracker_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_star_tracker_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_star_tracker Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_STAR_TRACKER_PLATFORM_CFG_H_
+#define _GENERIC_STAR_TRACKER_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_STAR_TRACKER Configuration
+*/
+#ifndef GENERIC_STAR_TRACKER_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_STAR_TRACKER_CFG_STRING      "usart_10"
+#define GENERIC_STAR_TRACKER_CFG_HANDLE      10
+#define GENERIC_STAR_TRACKER_CFG_BAUDRATE_HZ 115200
+#define GENERIC_STAR_TRACKER_CFG_MS_TIMEOUT  50 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_STAR_TRACKER_CFG_DEBUG
+#endif
+
+#endif /* _GENERIC_STAR_TRACKER_PLATFORM_CFG_H_ */
+```

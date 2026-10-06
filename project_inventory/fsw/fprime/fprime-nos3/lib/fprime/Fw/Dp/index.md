@@ -3,24 +3,657 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--Dp.fpp
-file--DpContainer.cpp
-file--DpContainer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/Dp.fpp`](file--Dp.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/DpContainer.cpp`](file--DpContainer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/DpContainer.hpp`](file--DpContainer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Dp.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/DpContainer.cpp"
+)
+set(MOD_DEPS Utils/Hash)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Dp.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestMain.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `Dp.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/Dp.fpp`
+
+
+```fpp
+module Fw {
+
+  # ----------------------------------------------------------------------
+  # Types
+  # ----------------------------------------------------------------------
+
+  enum DpState: U8 {
+    @ The untransmitted state
+    UNTRANSMITTED
+    @ The partially transmitted state
+    @ A data product is in this state from the start of transmission
+    @ until transmission is complete.
+    PARTIAL
+    @ The transmitted state
+    TRANSMITTED
+  } default UNTRANSMITTED
+
+  # ----------------------------------------------------------------------
+  # Ports
+  # ----------------------------------------------------------------------
+
+  @ Port for synchronously getting a data product buffer
+  @ Returns the status
+  @
+  @ On return, buffer should be set to a valid buffer large enough
+  @ to hold a data product packet with the requested data size (if
+  @ status is SUCCESS) or an invalid buffer (if status is FAILURE).
+  port DpGet(
+      @ The container ID (input)
+      $id: FwDpIdType
+      @ The data size of the requested buffer (input)
+      dataSize: FwSizeType
+      @ The buffer (output)
+      ref buffer: Fw.Buffer
+  ) -> Fw.Success
+
+  @ Port for sending a request for a data product buffer to
+  @ back a data product container. The request is for a buffer
+  @ large enough to hold a data product packet with the requested
+  @ data size.
+  port DpRequest(
+      @ The container ID
+      $id: FwDpIdType
+      @ The data size of the requested buffer
+      dataSize: FwSizeType
+  )
+
+  @ Port for receiving a response to a buffer request
+  port DpResponse(
+      @ The container ID
+      $id: FwDpIdType
+      @ The buffer
+      buffer: Fw.Buffer
+      @ The status
+      status: Fw.Success
+  )
+
+  @ Port for sending a data product buffer
+  port DpSend(
+      @ The container ID
+      $id: FwDpIdType
+      @ The buffer
+      buffer: Fw.Buffer
+  )
+
+}
+```
+
+### `DpContainer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/DpContainer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpContainer.cpp
+// \author bocchino
+// \brief  cpp file for DpContainer
+// ======================================================================
+
+#include <cstring>
+
+#include "Fw/Com/ComPacket.hpp"
+#include "Fw/Dp/DpContainer.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Fw {
+
+// ----------------------------------------------------------------------
+// Constructor
+// ----------------------------------------------------------------------
+
+DpContainer::DpContainer(FwDpIdType id, const Fw::Buffer& buffer)
+    : m_id(id), m_priority(0), m_timeTag(), m_procTypes(0), m_dpState(), m_dataSize(0), m_buffer(), m_dataBuffer() {
+    // Initialize the user data field
+    this->initUserDataField();
+    // Set the packet buffer
+    // This action also updates the data buffer
+    this->setBuffer(buffer);
+}
+
+DpContainer::DpContainer()
+    : m_id(0), m_priority(0), m_timeTag(), m_procTypes(0), m_dataSize(0), m_buffer(), m_dataBuffer() {
+    // Initialize the user data field
+    this->initUserDataField();
+}
+
+// ----------------------------------------------------------------------
+// Public member functions
+// ----------------------------------------------------------------------
+
+Fw::SerializeStatus DpContainer::deserializeHeader() {
+    FW_ASSERT(this->m_buffer.isValid());
+    auto deserializer = this->m_buffer.getDeserializer();
+
+    // Reset deserialization
+    Fw::SerializeStatus status = deserializer.moveDeserToOffset(Header::PACKET_DESCRIPTOR_OFFSET);
+
+    // Deserialize the packet type
+    if (status == Fw::FW_SERIALIZE_OK) {
+        FwPacketDescriptorType packetDescriptor;
+        status = deserializer.deserialize(packetDescriptor);
+        if (packetDescriptor != ComPacketType::FW_PACKET_DP) {
+            status = Fw::FW_SERIALIZE_FORMAT_ERROR;
+        }
+    }
+    // Deserialize the container id
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = deserializer.deserialize(this->m_id);
+    }
+    // Deserialize the priority
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = deserializer.deserialize(this->m_priority);
+    }
+    // Deserialize the time tag
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = deserializer.deserialize(this->m_timeTag);
+    }
+    // Deserialize the processing types
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = deserializer.deserialize(this->m_procTypes);
+    }
+    // Deserialize the user data
+    if (status == Fw::FW_SERIALIZE_OK) {
+        const FwSizeType requestedSize = sizeof this->m_userData;
+        FwSizeType receivedSize = requestedSize;
+        status = deserializer.deserialize(this->m_userData, receivedSize, Fw::Serialization::OMIT_LENGTH);
+        if (receivedSize != requestedSize) {
+            status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+        }
+    }
+    // Deserialize the data product state
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = deserializer.deserialize(this->m_dpState);
+    }
+    // Deserialize the data size
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = deserializer.deserializeSize(this->m_dataSize);
+    }
+    return status;
+}
+
+void DpContainer::serializeHeader() {
+    FW_ASSERT(this->m_buffer.isValid());
+    auto serializer = this->m_buffer.getSerializer();
+    // Serialize the packet type
+    Fw::SerializeStatus status =
+        serializer.serialize(static_cast<FwPacketDescriptorType>(Fw::ComPacketType::FW_PACKET_DP));
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the container id
+    status = serializer.serialize(this->m_id);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the priority
+    status = serializer.serialize(this->m_priority);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the time tag
+    status = serializer.serialize(this->m_timeTag);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the processing types
+    status = serializer.serialize(this->m_procTypes);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the user data
+    status = serializer.serialize(this->m_userData, static_cast<FwSizeType>(sizeof this->m_userData),
+                                  Fw::Serialization::OMIT_LENGTH);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the data product state
+    status = serializer.serialize(this->m_dpState);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Serialize the data size
+    status = serializer.serializeSize(this->m_dataSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Update the header hash
+    this->updateHeaderHash();
+}
+
+void DpContainer::setBuffer(const Buffer& buffer) {
+    // Set the buffer
+    this->m_buffer = buffer;
+    // Check that the buffer is large enough to hold a data product packet with
+    // zero-size data
+    const FwSizeType bufferSize = buffer.getSize();
+    FW_ASSERT(bufferSize >= MIN_PACKET_SIZE, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(MIN_PACKET_SIZE));
+    // Initialize the data buffer
+    U8* const buffAddr = buffer.getData();
+    const FwSizeType dataCapacity = buffer.getSize() - MIN_PACKET_SIZE;
+    // Check that data buffer is in bounds for packet buffer
+    const FwSizeType minBufferSize = DATA_OFFSET + dataCapacity;
+    FW_ASSERT(bufferSize >= minBufferSize, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(minBufferSize));
+    U8* const dataAddr = &buffAddr[DATA_OFFSET];
+    // Set the buffer
+    // This action also clears the serialization state in the buffer
+    this->m_dataBuffer.setExtBuffer(dataAddr, static_cast<Fw::Serializable::SizeType>(dataCapacity));
+    // Reset the data size
+    this->m_dataSize = 0;
+}
+
+Utils::HashBuffer DpContainer::getHeaderHash() const {
+    const FwSizeType bufferSize = this->m_buffer.getSize();
+    const FwSizeType minBufferSize = HEADER_HASH_OFFSET + HASH_DIGEST_LENGTH;
+    FW_ASSERT(bufferSize >= minBufferSize, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(minBufferSize));
+    const U8* const buffAddr = this->m_buffer.getData();
+    return Utils::HashBuffer(&buffAddr[HEADER_HASH_OFFSET], HASH_DIGEST_LENGTH);
+}
+
+Utils::HashBuffer DpContainer::computeHeaderHash() const {
+    const FwSizeType bufferSize = this->m_buffer.getSize();
+    FW_ASSERT(bufferSize >= Header::SIZE, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(Header::SIZE));
+    U8* const buffAddr = this->m_buffer.getData();
+    Utils::HashBuffer computedHash;
+    Utils::Hash::hash(buffAddr, Header::SIZE, computedHash);
+    return computedHash;
+}
+
+void DpContainer::setHeaderHash(const Utils::HashBuffer& hash) {
+    const FwSizeType bufferSize = this->m_buffer.getSize();
+    const FwSizeType minBufferSize = HEADER_HASH_OFFSET + HASH_DIGEST_LENGTH;
+    FW_ASSERT(bufferSize >= minBufferSize, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(minBufferSize));
+    U8* const buffAddr = this->m_buffer.getData();
+    (void)::memcpy(&buffAddr[HEADER_HASH_OFFSET], hash.getBuffAddr(), HASH_DIGEST_LENGTH);
+}
+
+void DpContainer::updateHeaderHash() {
+    this->setHeaderHash(this->computeHeaderHash());
+}
+
+Success::T DpContainer::checkHeaderHash(Utils::HashBuffer& storedHash, Utils::HashBuffer& computedHash) const {
+    storedHash = this->getHeaderHash();
+    computedHash = this->computeHeaderHash();
+    return (storedHash == computedHash) ? Success::SUCCESS : Success::FAILURE;
+}
+
+Utils::HashBuffer DpContainer::getDataHash() const {
+    const U8* const buffAddr = this->m_buffer.getData();
+    const FwSizeType dataHashOffset = this->getDataHashOffset();
+    const FwSizeType bufferSize = this->m_buffer.getSize();
+    FW_ASSERT(dataHashOffset + HASH_DIGEST_LENGTH <= bufferSize,
+              static_cast<FwAssertArgType>(dataHashOffset + HASH_DIGEST_LENGTH),
+              static_cast<FwAssertArgType>(bufferSize));
+    const U8* const dataHashAddr = &buffAddr[dataHashOffset];
+    return Utils::HashBuffer(dataHashAddr, HASH_DIGEST_LENGTH);
+}
+
+Utils::HashBuffer DpContainer::computeDataHash() const {
+    U8* const buffAddr = this->m_buffer.getData();
+    const U8* const dataAddr = &buffAddr[DATA_OFFSET];
+    const FwSizeType dataSize = this->getDataSize();
+    const FwSizeType bufferSize = this->m_buffer.getSize();
+    FW_ASSERT(DATA_OFFSET + dataSize <= bufferSize, static_cast<FwAssertArgType>(DATA_OFFSET + dataSize),
+              static_cast<FwAssertArgType>(bufferSize));
+    Utils::HashBuffer computedHash;
+    Utils::Hash::hash(dataAddr, dataSize, computedHash);
+    return computedHash;
+}
+
+void DpContainer::setDataHash(Utils::HashBuffer hash) {
+    U8* const buffAddr = this->m_buffer.getData();
+    const FwSizeType bufferSize = this->m_buffer.getSize();
+    const FwSizeType dataHashOffset = this->getDataHashOffset();
+    U8* const dataHashAddr = &buffAddr[dataHashOffset];
+    FW_ASSERT(dataHashOffset + HASH_DIGEST_LENGTH <= bufferSize,
+              static_cast<FwAssertArgType>(dataHashOffset + HASH_DIGEST_LENGTH),
+              static_cast<FwAssertArgType>(bufferSize));
+    ExternalSerializeBuffer serialBuffer(dataHashAddr, HASH_DIGEST_LENGTH);
+    hash.resetSer();
+    const Fw::SerializeStatus status = hash.copyRaw(serialBuffer, HASH_DIGEST_LENGTH);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+}
+
+void DpContainer::updateDataHash() {
+    this->setDataHash(this->computeDataHash());
+}
+
+Success::T DpContainer::checkDataHash(Utils::HashBuffer& storedHash, Utils::HashBuffer& computedHash) const {
+    storedHash = this->getDataHash();
+    computedHash = this->computeDataHash();
+    return (computedHash == storedHash) ? Success::SUCCESS : Success::FAILURE;
+}
+
+// ----------------------------------------------------------------------
+// Private member functions
+// ----------------------------------------------------------------------
+
+void DpContainer::initUserDataField() {
+    (void)::memset(this->m_userData, 0, sizeof this->m_userData);
+}
+
+}  // namespace Fw
+```
+
+### `DpContainer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/DpContainer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpContainer.hpp
+// \author bocchino
+// \brief  hpp file for DpContainer
+// ======================================================================
+
+#ifndef Fw_DpContainer_HPP
+#define Fw_DpContainer_HPP
+
+#include "Fw/Buffer/Buffer.hpp"
+#include "Fw/Dp/DpStateEnumAc.hpp"
+#include "Fw/Time/Time.hpp"
+#include "Fw/Types/SuccessEnumAc.hpp"
+#include "Utils/Hash/Hash.hpp"
+#include "config/FppConstantsAc.hpp"
+#include "config/ProcTypeEnumAc.hpp"
+
+// Forward declare for UTs
+namespace Fw {
+class DpContainerTester;
+}
+
+namespace Fw {
+
+//! A data product Container
+class DpContainer {
+    friend class Fw::DpContainerTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constants and Types
+    // ----------------------------------------------------------------------
+
+    //! A DpContainer packet header
+    struct Header {
+        //! The type of user data
+        using UserData = U8[DpCfg::CONTAINER_USER_DATA_SIZE];
+        //! The offset for the packet descriptor field
+        static constexpr FwSizeType PACKET_DESCRIPTOR_OFFSET = 0;
+        //! The offset for the id field
+        static constexpr FwSizeType ID_OFFSET = PACKET_DESCRIPTOR_OFFSET + sizeof(FwPacketDescriptorType);
+        //! The offset for the priority field
+        static constexpr FwDpPriorityType PRIORITY_OFFSET = ID_OFFSET + sizeof(FwDpIdType);
+        //! The offset for the time tag field
+        static constexpr FwSizeType TIME_TAG_OFFSET = PRIORITY_OFFSET + sizeof(FwDpPriorityType);
+        //! The offset for the processing types field
+        static constexpr FwSizeType PROC_TYPES_OFFSET = TIME_TAG_OFFSET + Time::SERIALIZED_SIZE;
+        //! The offset for the user data field
+        static constexpr FwSizeType USER_DATA_OFFSET = PROC_TYPES_OFFSET + sizeof(DpCfg::ProcType::SerialType);
+        //! The offset of the data product state field
+        static constexpr FwSizeType DP_STATE_OFFSET = USER_DATA_OFFSET + DpCfg::CONTAINER_USER_DATA_SIZE;
+        //! The offset for the data size field
+        static constexpr FwSizeType DATA_SIZE_OFFSET = DP_STATE_OFFSET + DpState::SERIALIZED_SIZE;
+        //! The header size
+        static constexpr FwSizeType SIZE = DATA_SIZE_OFFSET + sizeof(FwSizeStoreType);
+    };
+
+    //! The header hash offset
+    static constexpr FwSizeType HEADER_HASH_OFFSET = Header::SIZE;
+    //! The data offset
+    static constexpr FwSizeType DATA_OFFSET = HEADER_HASH_OFFSET + HASH_DIGEST_LENGTH;
+    //! The minimum packet size
+    //! Reserve space for the header, the header hash, and the data hash
+    //! This is also the number of non-data bytes in the packet
+    static constexpr FwSizeType MIN_PACKET_SIZE = Header::SIZE + 2 * HASH_DIGEST_LENGTH;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors and destructors
+    // ----------------------------------------------------------------------
+
+    //! Constructor for initialized container
+    DpContainer(FwDpIdType id,            //!< The container id
+                const Fw::Buffer& buffer  //!< The buffer
+    );
+
+    //! Constructor for container with default initialization
+    DpContainer();
+
+    //! Destructor
+    virtual ~DpContainer() {}
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Protected operators
+    // ----------------------------------------------------------------------
+
+    //! Copy assignment operator
+    DpContainer& operator=(const DpContainer& src) = default;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Get the container id
+    //! \return The id
+    FwDpIdType getId() const { return this->m_id; }
+
+    //! Get the data size
+    //! \return The data size
+    FwSizeType getDataSize() const { return this->m_dataSize; }
+
+    //! Get the packet buffer
+    //! \return The buffer
+    Fw::Buffer getBuffer() const { return this->m_buffer; }
+
+    //! Get the packet size corresponding to the data size
+    FwSizeType getPacketSize() const { return getPacketSizeForDataSize(this->m_dataSize); }
+
+    //! Get the priority
+    //! \return The priority
+    FwDpPriorityType getPriority() const { return this->m_priority; }
+
+    //! Get the time tag
+    //! \return The time tag
+    Fw::Time getTimeTag() const { return this->m_timeTag; }
+
+    //! Get the product state
+    Fw::DpState getState() const { return this->m_dpState; }
+
+    //! Get the processing types
+    //! \return The processing types
+    DpCfg::ProcType::SerialType getProcTypes() const { return this->m_procTypes; }
+
+    //! Get the data product state
+    DpState getDpState() const { return this->m_dpState; }
+
+    //! Deserialize the header from the packet buffer
+    //! Buffer must be valid, and its size must be at least MIN_PACKET_SIZE
+    //! Before calling this function, you should call checkHeaderHash() to
+    //! check the header hash
+    //! \return The serialize status
+    Fw::SerializeStatus deserializeHeader();
+
+    //! Serialize the header into the packet buffer and update the header hash
+    //! Buffer must be valid, and its size must be at least MIN_PACKET_SIZE
+    void serializeHeader();
+
+    //! Set the id
+    void setId(FwDpIdType id  //!< The id
+    ) {
+        this->m_id = id;
+    }
+
+    //! Set the priority
+    void setPriority(FwDpPriorityType priority  //!< The priority
+    ) {
+        this->m_priority = priority;
+    }
+
+    //! Set the time tag
+    void setTimeTag(Fw::Time timeTag  //!< The time tag
+    ) {
+        this->m_timeTag = timeTag;
+    }
+
+    //! Set the processing types bit mask
+    void setProcTypes(DpCfg::ProcType::SerialType procTypes  //!< The processing types
+    ) {
+        this->m_procTypes = procTypes;
+    }
+
+    //! Set the data product state
+    void setDpState(DpState dpState  //!< The data product state
+    ) {
+        this->m_dpState = dpState;
+    }
+
+    //! Set the data size
+    void setDataSize(FwSizeType dataSize  //!< The data size
+    ) {
+        this->m_dataSize = dataSize;
+    }
+
+    //! Set the packet buffer
+    void setBuffer(const Buffer& buffer  //!< The packet buffer
+    );
+
+    //! Invalidate the packet buffer
+    void invalidateBuffer() {
+        this->m_buffer = Fw::Buffer();
+        this->m_dataBuffer.clear();
+        this->m_dataSize = 0;
+    }
+
+    //! Get the stored header hash
+    //! \return The hash
+    Utils::HashBuffer getHeaderHash() const;
+
+    //! Compute the header hash from the header data
+    //! \return The hash
+    Utils::HashBuffer computeHeaderHash() const;
+
+    //! Set the header hash
+    void setHeaderHash(const Utils::HashBuffer& hash  //!< The hash
+    );
+
+    //! Compute and set the header hash
+    void updateHeaderHash();
+
+    //! Check the header hash
+    Success::T checkHeaderHash(Utils::HashBuffer& storedHash,   //!< The stored hash (output)
+                               Utils::HashBuffer& computedHash  //!< The computed hash (output)
+    ) const;
+
+    //! Get the data hash offset
+    FwSizeType getDataHashOffset() const {
+        // Data hash goes after the header, the header hash, and the data
+        return Header::SIZE + HASH_DIGEST_LENGTH + this->m_dataSize;
+    }
+
+    //! Get the stored data hash
+    //! \return The hash
+    Utils::HashBuffer getDataHash() const;
+
+    //! Compute the data hash from the data
+    //! \return The hash
+    Utils::HashBuffer computeDataHash() const;
+
+    //! Set the data hash
+    void setDataHash(Utils::HashBuffer hash  //!< The hash
+    );
+
+    //! Update the data hash
+    void updateDataHash();
+
+    //! Check the data hash
+    Success::T checkDataHash(Utils::HashBuffer& storedHash,   //!< The stored hash (output)
+                             Utils::HashBuffer& computedHash  //!< The computed hash (output)
+    ) const;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public static functions
+    // ----------------------------------------------------------------------
+
+    //! Get the packet size for a given data size
+    static constexpr FwSizeType getPacketSizeForDataSize(FwSizeType dataSize  //!< The data size
+    ) {
+        return Header::SIZE + dataSize + 2 * HASH_DIGEST_LENGTH;
+    }
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member functions
+    // ----------------------------------------------------------------------
+
+    //! Initialize the user data field
+    void initUserDataField();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member variables
+    // ----------------------------------------------------------------------
+
+    //! The user data
+    Header::UserData m_userData;
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Protected member variables
+    // ----------------------------------------------------------------------
+
+    //! The container id
+    //! This is a system-global id (component-local id + component base id)
+    FwDpIdType m_id;
+
+    //! The priority
+    FwDpPriorityType m_priority;
+
+    //! The time tag
+    Time m_timeTag;
+
+    //! The processing types
+    DpCfg::ProcType::SerialType m_procTypes;
+
+    //! The data product state
+    DpState m_dpState;
+
+    //! The data size
+    FwSizeType m_dataSize;
+
+    //! The packet buffer
+    Buffer m_buffer;
+
+    //! The data buffer
+    //! We use member copy semantics because m_dataBuffer points into m_buffer,
+    //! which is owned by this object
+    Fw::ExternalSerializeBufferWithMemberCopy m_dataBuffer;
+};
+
+}  // end namespace Fw
+
+#endif
+```

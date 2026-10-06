@@ -3,16 +3,81 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/select-range-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `select-range-dialog.component.html`
 
-file--select-range-dialog.component.html
-file--select-range-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/select-range-dialog/select-range-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Select range</h2>
+
+<mat-dialog-content class="ya-form">
+  <form [formGroup]="form">
+    <ya-field label="Start">
+      <ya-date-time-input formControlName="start" />
+    </ya-field>
+
+    <ya-field label="Stop">
+      <ya-date-time-input formControlName="stop" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="select()" [disabled]="!form.valid">OK</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `select-range-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/select-range-dialog/select-range-dialog.component.html`](file--select-range-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/select-range-dialog/select-range-dialog.component.ts`](file--select-range-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/select-range-dialog/select-range-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule, YamcsService, utils } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-select-range-dialog',
+  templateUrl: './select-range-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class SelectRangeDialogComponent {
+  form = new UntypedFormGroup({
+    start: new UntypedFormControl(null, Validators.required),
+    stop: new UntypedFormControl(null, Validators.required),
+  });
+
+  constructor(
+    private dialogRef: MatDialogRef<SelectRangeDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) data: any,
+    private yamcs: YamcsService,
+  ) {
+    let start = data.start;
+    let stop = data.stop;
+    if (!start || !stop) {
+      stop = this.yamcs.getMissionTime();
+      start = utils.subtractDuration(stop, 'PT1H');
+    }
+    this.form.setValue({
+      start: utils.toISOString(start),
+      stop: utils.toISOString(stop),
+    });
+  }
+
+  select() {
+    const start = utils.toDate(this.form.value['start']);
+    const stop = utils.toDate(this.form.value['stop']);
+    this.dialogRef.close({ start, stop });
+  }
+}
+```

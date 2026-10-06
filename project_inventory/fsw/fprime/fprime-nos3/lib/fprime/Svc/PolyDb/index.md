@@ -3,24 +3,236 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--PolyDb.cpp
-file--PolyDb.fpp
-file--PolyDb.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/PolyDb.cpp`](file--PolyDb.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/PolyDb.fpp`](file--PolyDb.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/PolyDb.hpp`](file--PolyDb.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PolyDb.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PolyDb.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+####
+# WARNING:
+#
+# This UT does not use auto-generate GTest files. DO NOT emulate.
+####
+
+set(UT_AUTO_HELPERS ON)
+
+set(UT_SOURCE_FILES
+    "${FPRIME_FRAMEWORK_PATH}/Svc/PolyDb/PolyDb.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PolyDbTestMain.cpp"
+#    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PolyDbTesterHelpers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PolyDbTester.cpp"
+)
+
+register_fprime_ut()
+```
+
+### `PolyDb.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/PolyDb.cpp`
+
+
+```cpp
+/*
+ * PolyDbImpl.cpp
+ *
+ *  Created on: May 13, 2014
+ *      Author: Timothy Canham
+ */
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/PolyDb/PolyDb.hpp>
+
+namespace Svc {
+PolyDb::PolyDb(const char* const name) : PolyDbComponentBase(name) {
+    // initialize all entries to stale
+    for (FwIndexType entry = 0; entry < Svc::PolyDbCfg::PolyDbEntry::NUM_CONSTANTS; entry++) {
+        this->m_db[entry].status = MeasurementStatus::STALE;
+    }
+}
+
+void PolyDb ::getValue_handler(FwIndexType portNum,
+                               const Svc::PolyDbCfg::PolyDbEntry& entry,
+                               Svc::MeasurementStatus& status,
+                               Fw::Time& time,
+                               Fw::PolyType& val) {
+    FW_ASSERT(entry.isValid(), entry.e);
+    status = this->m_db[entry.e].status;
+    time = this->m_db[entry.e].time;
+    val = this->m_db[entry.e].val;
+}
+
+void PolyDb ::setValue_handler(FwIndexType portNum,
+                               const Svc::PolyDbCfg::PolyDbEntry& entry,
+                               Svc::MeasurementStatus& status,
+                               Fw::Time& time,
+                               Fw::PolyType& val) {
+    FW_ASSERT(entry.isValid(), entry.e);
+    this->m_db[entry.e].status = status;
+    this->m_db[entry.e].time = time;
+    this->m_db[entry.e].val = val;
+}
+
+PolyDb::~PolyDb() {}
+
+}  // namespace Svc
+```
+
+### `PolyDb.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/PolyDb.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A polymorphic database component
+  passive component PolyDb {
+
+    @ Mutexed Port to get values
+    guarded input port getValue: Svc.Poly
+
+    @ Mutexed Port to set values
+    guarded input port setValue: Svc.Poly
+
+  }
+
+}
+```
+
+### `PolyDb.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/PolyDb.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief PolyDb is a database for storing telemetry for internal software use
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+#ifndef POLYDB_HPP_
+#define POLYDB_HPP_
+
+#include <Fw/Types/PolyType.hpp>
+#include <Svc/PolyDb/PolyDbComponentAc.hpp>
+
+namespace Svc {
+
+//! \class PolyDb
+//! \brief PolyDb Component Class
+//!
+//! This component allows the setting and retrieving of PolyType
+//! telemetry values. It be used as a central analog database
+//! that can decouple measurement sources from measurement users.
+//! The intent is that measurement sources would convert DNs (data numbers)
+//! to ENs (Engineering Numbers) to decouple the conversion as well.
+//!
+
+class PolyDb final : public PolyDbComponentBase {
+  public:
+    //!  \brief PolyDbImpl constructor
+    //!
+    //!  The constructor initializes the database to "MeasurementStatus::STALE."
+    //!  All values retrieved will have this status until the first
+    //!  update is received.
+    //!
+
+    explicit PolyDb(const char* const name);
+
+    //!  \brief PolyDbImpl destructor
+    //!
+    //!  The destructor is empty.
+    //!
+
+    virtual ~PolyDb();
+
+  protected:
+  private:
+    //!  \brief The value getter port handler
+    //!
+    //!  The getter port handler looks up the indicated entry
+    //!  in the database and copies the contents into the user
+    //!  supplied arguments status, time, and val.
+    //!
+    //!  \param portNum port number of request (always 0)
+    //!  \param entry entry to retrieve
+    //!  \param status last status of retrieved measurement
+    //!  \param time time tag of latest measurement
+    //!  \param val value of latest measurement
+
+    void getValue_handler(FwIndexType portNum,                       //!< The port number
+                          const Svc::PolyDbCfg::PolyDbEntry& entry,  //!< The entry to access
+                          Svc::MeasurementStatus& status,            //!< The command response argument
+                          Fw::Time& time,                            //!< The time of the measurement
+                          Fw::PolyType& val                          //!< The value to be passed
+                          ) override;
+
+    //!  \brief The value setter port handler
+    //!
+    //!  The setter port handler takes the values passed
+    //!  and updates the entry in the database
+    //!
+    //!  \param portNum port number of request (always 0)
+    //!  \param entry entry to retrieve
+    //!  \param status status of new measurement
+    //!  \param time time tag of new measurement
+    //!  \param val value of new measurement
+
+    void setValue_handler(FwIndexType portNum,                       //!< The port number
+                          const Svc::PolyDbCfg::PolyDbEntry& entry,  //!< The entry to access
+                          Svc::MeasurementStatus& status,            //!< The command response argument
+                          Fw::Time& time,                            //!< The time of the measurement
+                          Fw::PolyType& val                          //!< The value to be passed
+                          ) override;
+
+    //! \struct t_dbStruct
+    //! \brief PolyDb database structure
+    //!
+    //! This structure stores the latest values of the measurements.
+    //! The statuses are all initialized to MeasurementStatus::STALE by the constructor.
+    //!
+
+    struct t_dbStruct {
+        MeasurementStatus status;  //!< last status of measurement
+        Fw::PolyType val;          //!< the last value of the measurement
+        Fw::Time time;             //!< the timetag of the last measurement
+    } m_db[Svc::PolyDbCfg::PolyDbEntry::NUM_CONSTANTS];
+};
+}  // namespace Svc
+
+#endif /* POLYDB_HPP_ */
+```

@@ -3,24 +3,1029 @@
 
 **경로:** `fsw/apps/lc/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `lc_action_stubs.c`
 
-file--lc_action_stubs.c
-file--lc_app_stubs.c
-file--lc_cmds_stubs.c
-file--lc_custom_stubs.c
-file--lc_utils_stubs.c
-file--lc_watch_stubs.c
+**경로:** `fsw/apps/lc/unit-test/stubs/lc_action_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) routines that
+ *   handle actionpoint processing
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in lc_action header
+ */
+
+#include "lc_action.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_EvaluateRPN()
+ * ----------------------------------------------------
+ */
+uint8 LC_EvaluateRPN(uint16 APNumber)
+{
+    UT_GenStub_SetupReturnBuffer(LC_EvaluateRPN, uint8);
+
+    UT_GenStub_AddParam(LC_EvaluateRPN, uint16, APNumber);
+
+    UT_GenStub_Execute(LC_EvaluateRPN, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_EvaluateRPN, uint8);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SampleAPs()
+ * ----------------------------------------------------
+ */
+void LC_SampleAPs(uint16 StartIndex, uint16 EndIndex)
+{
+    UT_GenStub_AddParam(LC_SampleAPs, uint16, StartIndex);
+    UT_GenStub_AddParam(LC_SampleAPs, uint16, EndIndex);
+
+    UT_GenStub_Execute(LC_SampleAPs, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SampleSingleAP()
+ * ----------------------------------------------------
+ */
+void LC_SampleSingleAP(uint16 APNumber)
+{
+    UT_GenStub_AddParam(LC_SampleSingleAP, uint16, APNumber);
+
+    UT_GenStub_Execute(LC_SampleSingleAP, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ValidateADT()
+ * ----------------------------------------------------
+ */
+int32 LC_ValidateADT(void *TableData)
+{
+    UT_GenStub_SetupReturnBuffer(LC_ValidateADT, int32);
+
+    UT_GenStub_AddParam(LC_ValidateADT, void *, TableData);
+
+    UT_GenStub_Execute(LC_ValidateADT, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_ValidateADT, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ValidateRPN()
+ * ----------------------------------------------------
+ */
+int32 LC_ValidateRPN(const uint16 *RPNPtr, int32 *IndexValue, int32 *StackDepthValue)
+{
+    UT_GenStub_SetupReturnBuffer(LC_ValidateRPN, int32);
+
+    UT_GenStub_AddParam(LC_ValidateRPN, const uint16 *, RPNPtr);
+    UT_GenStub_AddParam(LC_ValidateRPN, int32 *, IndexValue);
+    UT_GenStub_AddParam(LC_ValidateRPN, int32 *, StackDepthValue);
+
+    UT_GenStub_Execute(LC_ValidateRPN, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_ValidateRPN, int32);
+}
 ```
 
-## 항목
+### `lc_app_stubs.c`
 
-- [`fsw/apps/lc/unit-test/stubs/lc_action_stubs.c`](file--lc_action_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/stubs/lc_app_stubs.c`](file--lc_app_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/stubs/lc_cmds_stubs.c`](file--lc_cmds_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/stubs/lc_custom_stubs.c`](file--lc_custom_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/stubs/lc_utils_stubs.c`](file--lc_utils_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/stubs/lc_watch_stubs.c`](file--lc_watch_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/lc/unit-test/stubs/lc_app_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Unit specification for the Core Flight System (CFS)
+ *   Limit Checker (LC) Application.
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in lc_app header
+ */
+
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "utgenstub.h"
+
+/************************************************************************
+** LC Global Data
+*************************************************************************/
+LC_OperData_t LC_OperData;
+LC_AppData_t  LC_AppData;
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_AppInit()
+ * ----------------------------------------------------
+ */
+int32 LC_AppInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_AppInit, int32);
+
+    UT_GenStub_Execute(LC_AppInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_AppInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_AppMain()
+ * ----------------------------------------------------
+ */
+void LC_AppMain(void)
+{
+    UT_GenStub_Execute(LC_AppMain, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_CreateDefinitionTables()
+ * ----------------------------------------------------
+ */
+int32 LC_CreateDefinitionTables(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_CreateDefinitionTables, int32);
+
+    UT_GenStub_Execute(LC_CreateDefinitionTables, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_CreateDefinitionTables, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_CreateResultTables()
+ * ----------------------------------------------------
+ */
+int32 LC_CreateResultTables(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_CreateResultTables, int32);
+
+    UT_GenStub_Execute(LC_CreateResultTables, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_CreateResultTables, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_CreateTaskCDS()
+ * ----------------------------------------------------
+ */
+int32 LC_CreateTaskCDS(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_CreateTaskCDS, int32);
+
+    UT_GenStub_Execute(LC_CreateTaskCDS, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_CreateTaskCDS, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_EvsInit()
+ * ----------------------------------------------------
+ */
+int32 LC_EvsInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_EvsInit, int32);
+
+    UT_GenStub_Execute(LC_EvsInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_EvsInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_LoadDefaultTables()
+ * ----------------------------------------------------
+ */
+int32 LC_LoadDefaultTables(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_LoadDefaultTables, int32);
+
+    UT_GenStub_Execute(LC_LoadDefaultTables, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_LoadDefaultTables, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SbInit()
+ * ----------------------------------------------------
+ */
+int32 LC_SbInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_SbInit, int32);
+
+    UT_GenStub_Execute(LC_SbInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_SbInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_TableInit()
+ * ----------------------------------------------------
+ */
+int32 LC_TableInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_TableInit, int32);
+
+    UT_GenStub_Execute(LC_TableInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_TableInit, int32);
+}
+```
+
+### `lc_cmds_stubs.c`
+
+**경로:** `fsw/apps/lc/unit-test/stubs/lc_cmds_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) routines that
+ *   handle command processing
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in lc_cmds header
+ */
+
+#include "lc_cmds.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_AppPipe()
+ * ----------------------------------------------------
+ */
+int32 LC_AppPipe(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(LC_AppPipe, int32);
+
+    UT_GenStub_AddParam(LC_AppPipe, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_AppPipe, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_AppPipe, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_HousekeepingReq()
+ * ----------------------------------------------------
+ */
+int32 LC_HousekeepingReq(const CFE_MSG_CommandHeader_t *MsgPtr)
+{
+    UT_GenStub_SetupReturnBuffer(LC_HousekeepingReq, int32);
+
+    UT_GenStub_AddParam(LC_HousekeepingReq, const CFE_MSG_CommandHeader_t *, MsgPtr);
+
+    UT_GenStub_Execute(LC_HousekeepingReq, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_HousekeepingReq, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_NoopCmd()
+ * ----------------------------------------------------
+ */
+void LC_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_NoopCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_NoopCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ResetAPStatsCmd()
+ * ----------------------------------------------------
+ */
+void LC_ResetAPStatsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_ResetAPStatsCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_ResetAPStatsCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ResetCmd()
+ * ----------------------------------------------------
+ */
+void LC_ResetCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_ResetCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_ResetCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ResetCounters()
+ * ----------------------------------------------------
+ */
+void LC_ResetCounters(void)
+{
+    UT_GenStub_Execute(LC_ResetCounters, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ResetResultsAP()
+ * ----------------------------------------------------
+ */
+void LC_ResetResultsAP(uint32 StartIndex, uint32 EndIndex, bool ResetCmd)
+{
+    UT_GenStub_AddParam(LC_ResetResultsAP, uint32, StartIndex);
+    UT_GenStub_AddParam(LC_ResetResultsAP, uint32, EndIndex);
+    UT_GenStub_AddParam(LC_ResetResultsAP, bool, ResetCmd);
+
+    UT_GenStub_Execute(LC_ResetResultsAP, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ResetResultsWP()
+ * ----------------------------------------------------
+ */
+void LC_ResetResultsWP(uint32 StartIndex, uint32 EndIndex, bool ResetCmd)
+{
+    UT_GenStub_AddParam(LC_ResetResultsWP, uint32, StartIndex);
+    UT_GenStub_AddParam(LC_ResetResultsWP, uint32, EndIndex);
+    UT_GenStub_AddParam(LC_ResetResultsWP, bool, ResetCmd);
+
+    UT_GenStub_Execute(LC_ResetResultsWP, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ResetWPStatsCmd()
+ * ----------------------------------------------------
+ */
+void LC_ResetWPStatsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_ResetWPStatsCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_ResetWPStatsCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SampleAPReq()
+ * ----------------------------------------------------
+ */
+void LC_SampleAPReq(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_SampleAPReq, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_SampleAPReq, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SetAPPermOffCmd()
+ * ----------------------------------------------------
+ */
+void LC_SetAPPermOffCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_SetAPPermOffCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_SetAPPermOffCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SetAPStateCmd()
+ * ----------------------------------------------------
+ */
+void LC_SetAPStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_SetAPStateCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_SetAPStateCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SetLCStateCmd()
+ * ----------------------------------------------------
+ */
+void LC_SetLCStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_SetLCStateCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_SetLCStateCmd, Basic, NULL);
+}
+```
+
+### `lc_custom_stubs.c`
+
+**경로:** `fsw/apps/lc/unit-test/stubs/lc_custom_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) mission specific
+ *   custom function template
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in lc_custom header
+ */
+
+#include "lc_custom.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_CustomFunction()
+ * ----------------------------------------------------
+ */
+uint8 LC_CustomFunction(uint16 WatchIndex, uint32 ProcessedWPData, const CFE_SB_Buffer_t *BufPtr,
+                        uint32 WDTCustomFuncArg)
+{
+    /*UT_GenStub_SetupReturnBuffer(LC_CustomFunction, uint8);
+
+    UT_GenStub_AddParam(LC_CustomFunction, uint16 , WatchIndex);
+    UT_GenStub_AddParam(LC_CustomFunction, uint32 , ProcessedWPData);
+    UT_GenStub_AddParam(LC_CustomFunction, const CFE_SB_Buffer_t* , BufPtr);
+    UT_GenStub_AddParam(LC_CustomFunction, uint32 , WDTCustomFuncArg);
+
+    UT_GenStub_Execute(LC_CustomFunction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_CustomFunction, uint8);*/
+    return UT_DEFAULT_IMPL(LC_CustomFunction);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ExecuteRTS()
+ * ----------------------------------------------------
+ */
+void LC_ExecuteRTS(uint16 RTSId)
+{
+    UT_GenStub_AddParam(LC_ExecuteRTS, uint16, RTSId);
+
+    UT_GenStub_Execute(LC_ExecuteRTS, Basic, NULL);
+}
+```
+
+### `lc_utils_stubs.c`
+
+**경로:** `fsw/apps/lc/unit-test/stubs/lc_utils_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) utility functions
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in lc_utils header
+ */
+
+#include "lc_utils.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ManageTables()
+ * ----------------------------------------------------
+ */
+int32 LC_ManageTables(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_ManageTables, int32);
+
+    UT_GenStub_Execute(LC_ManageTables, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_ManageTables, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_PerformMaintenance()
+ * ----------------------------------------------------
+ */
+int32 LC_PerformMaintenance(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_PerformMaintenance, int32);
+
+    UT_GenStub_Execute(LC_PerformMaintenance, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_PerformMaintenance, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_UpdateTaskCDS()
+ * ----------------------------------------------------
+ */
+int32 LC_UpdateTaskCDS(void)
+{
+    UT_GenStub_SetupReturnBuffer(LC_UpdateTaskCDS, int32);
+
+    UT_GenStub_Execute(LC_UpdateTaskCDS, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_UpdateTaskCDS, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_VerifyMsgLength()
+ * ----------------------------------------------------
+ */
+bool LC_VerifyMsgLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
+{
+    /* UT_GenStub_SetupReturnBuffer(LC_VerifyMsgLength, bool); */
+
+    /* UT_GenStub_AddParam(LC_VerifyMsgLength, const CFE_MSG_Message_t* , MsgPtr); */
+    /* UT_GenStub_AddParam(LC_VerifyMsgLength, size_t , ExpectedLength); */
+
+    /* UT_GenStub_Execute(LC_VerifyMsgLength, Basic, NULL); */
+
+    /* return UT_GenStub_GetReturnValue(LC_VerifyMsgLength, bool); */
+    return UT_DEFAULT_IMPL(LC_VerifyMsgLength) != 0;
+}
+```
+
+### `lc_watch_stubs.c`
+
+**경로:** `fsw/apps/lc/unit-test/stubs/lc_watch_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) routines that
+ *   handle watchpoint processing
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in lc_watch header
+ */
+
+#include "lc_watch.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_AddWatchpoint()
+ * ----------------------------------------------------
+ */
+LC_WatchPtList_t *LC_AddWatchpoint(const CFE_SB_MsgId_t MessageID)
+{
+    UT_GenStub_SetupReturnBuffer(LC_AddWatchpoint, LC_WatchPtList_t *);
+
+    UT_GenStub_AddParam(LC_AddWatchpoint, const CFE_SB_MsgId_t, MessageID);
+
+    UT_GenStub_Execute(LC_AddWatchpoint, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_AddWatchpoint, LC_WatchPtList_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_CheckMsgForWPs()
+ * ----------------------------------------------------
+ */
+void LC_CheckMsgForWPs(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(LC_CheckMsgForWPs, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(LC_CheckMsgForWPs, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_CheckMsgForWPs, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_CreateHashTable()
+ * ----------------------------------------------------
+ */
+void LC_CreateHashTable(void)
+{
+    UT_GenStub_Execute(LC_CreateHashTable, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_FloatCompare()
+ * ----------------------------------------------------
+ */
+uint8 LC_FloatCompare(uint16 WatchIndex, LC_MultiType_t *WPMultiType, LC_MultiType_t *CompareMultiType)
+{
+    UT_GenStub_SetupReturnBuffer(LC_FloatCompare, uint8);
+
+    UT_GenStub_AddParam(LC_FloatCompare, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_FloatCompare, LC_MultiType_t, WPMultiType);
+    UT_GenStub_AddParam(LC_FloatCompare, LC_MultiType_t, CompareMultiType);
+
+    UT_GenStub_Execute(LC_FloatCompare, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_FloatCompare, uint8);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_GetHashTableIndex()
+ * ----------------------------------------------------
+ */
+uint32 LC_GetHashTableIndex(CFE_SB_MsgId_t MessageID)
+{
+    UT_GenStub_SetupReturnBuffer(LC_GetHashTableIndex, uint32);
+
+    UT_GenStub_AddParam(LC_GetHashTableIndex, CFE_SB_MsgId_t, MessageID);
+
+    UT_GenStub_Execute(LC_GetHashTableIndex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_GetHashTableIndex, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_GetSizedWPData()
+ * ----------------------------------------------------
+ */
+bool LC_GetSizedWPData(uint16 WatchIndex, const uint8 *WPDataPtr, uint32 *SizedDataPtr)
+{
+    UT_GenStub_SetupReturnBuffer(LC_GetSizedWPData, bool);
+
+    UT_GenStub_AddParam(LC_GetSizedWPData, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_GetSizedWPData, const uint8 *, WPDataPtr);
+    UT_GenStub_AddParam(LC_GetSizedWPData, uint32 *, SizedDataPtr);
+
+    UT_GenStub_Execute(LC_GetSizedWPData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_GetSizedWPData, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_OperatorCompare()
+ * ----------------------------------------------------
+ */
+uint8 LC_OperatorCompare(uint16 WatchIndex, uint32 ProcessedWPData)
+{
+    UT_GenStub_SetupReturnBuffer(LC_OperatorCompare, uint8);
+
+    UT_GenStub_AddParam(LC_OperatorCompare, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_OperatorCompare, uint32, ProcessedWPData);
+
+    UT_GenStub_Execute(LC_OperatorCompare, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_OperatorCompare, uint8);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ProcessWP()
+ * ----------------------------------------------------
+ */
+void LC_ProcessWP(uint16 WatchIndex, const CFE_SB_Buffer_t *BufPtr, CFE_TIME_SysTime_t Timestamp)
+{
+    UT_GenStub_AddParam(LC_ProcessWP, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_ProcessWP, const CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(LC_ProcessWP, CFE_TIME_SysTime_t, Timestamp);
+
+    UT_GenStub_Execute(LC_ProcessWP, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_SignedCompare()
+ * ----------------------------------------------------
+ */
+uint8 LC_SignedCompare(uint16 WatchIndex, int32 WPValue, int32 CompareValue)
+{
+    UT_GenStub_SetupReturnBuffer(LC_SignedCompare, uint8);
+
+    UT_GenStub_AddParam(LC_SignedCompare, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_SignedCompare, int32, WPValue);
+    UT_GenStub_AddParam(LC_SignedCompare, int32, CompareValue);
+
+    UT_GenStub_Execute(LC_SignedCompare, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_SignedCompare, uint8);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_Uint32IsInfinite()
+ * ----------------------------------------------------
+ */
+bool LC_Uint32IsInfinite(uint32 Data)
+{
+    UT_GenStub_SetupReturnBuffer(LC_Uint32IsInfinite, bool);
+
+    UT_GenStub_AddParam(LC_Uint32IsInfinite, uint32, Data);
+
+    UT_GenStub_Execute(LC_Uint32IsInfinite, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_Uint32IsInfinite, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_Uint32IsNAN()
+ * ----------------------------------------------------
+ */
+bool LC_Uint32IsNAN(uint32 Data)
+{
+    UT_GenStub_SetupReturnBuffer(LC_Uint32IsNAN, bool);
+
+    UT_GenStub_AddParam(LC_Uint32IsNAN, uint32, Data);
+
+    UT_GenStub_Execute(LC_Uint32IsNAN, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_Uint32IsNAN, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_UnsignedCompare()
+ * ----------------------------------------------------
+ */
+uint8 LC_UnsignedCompare(uint16 WatchIndex, uint32 WPValue, uint32 CompareValue)
+{
+    UT_GenStub_SetupReturnBuffer(LC_UnsignedCompare, uint8);
+
+    UT_GenStub_AddParam(LC_UnsignedCompare, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_UnsignedCompare, uint32, WPValue);
+    UT_GenStub_AddParam(LC_UnsignedCompare, uint32, CompareValue);
+
+    UT_GenStub_Execute(LC_UnsignedCompare, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_UnsignedCompare, uint8);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_ValidateWDT()
+ * ----------------------------------------------------
+ */
+int32 LC_ValidateWDT(void *TableData)
+{
+    UT_GenStub_SetupReturnBuffer(LC_ValidateWDT, int32);
+
+    UT_GenStub_AddParam(LC_ValidateWDT, void *, TableData);
+
+    UT_GenStub_Execute(LC_ValidateWDT, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_ValidateWDT, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for LC_WPOffsetValid()
+ * ----------------------------------------------------
+ */
+bool LC_WPOffsetValid(uint16 WatchIndex, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(LC_WPOffsetValid, bool);
+
+    UT_GenStub_AddParam(LC_WPOffsetValid, uint16, WatchIndex);
+    UT_GenStub_AddParam(LC_WPOffsetValid, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(LC_WPOffsetValid, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(LC_WPOffsetValid, bool);
+}
+```

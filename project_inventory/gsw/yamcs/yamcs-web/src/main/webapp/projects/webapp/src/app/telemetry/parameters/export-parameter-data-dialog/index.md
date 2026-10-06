@@ -3,16 +3,156 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/export-parameter-data-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `export-parameter-data-dialog.component.html`
 
-file--export-parameter-data-dialog.component.html
-file--export-parameter-data-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/export-parameter-data-dialog/export-parameter-data-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Export parameter data</h2>
+
+<mat-dialog-content class="ya-form">
+  <form [formGroup]="form">
+    <ya-field label="Start" hint="(optional)">
+      <ya-date-time-input formControlName="start" />
+    </ya-field>
+
+    <ya-field label="Stop" hint="(optional)">
+      <ya-date-time-input formControlName="stop" />
+    </ya-field>
+
+    <ya-field label="CSV column delimiter">
+      <ya-select formControlName="delimiter" [options]="delimiterOptions" />
+    </ya-field>
+
+    <ya-field label="Interval (ms)" hint="(optional)">
+      <input formControlName="interval" class="ya-input" type="text" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-download-button
+    [link]="downloadURL$ | async"
+    appearance="primary"
+    (click)="closeDialog()"
+    [disabled]="!form.valid">
+    DOWNLOAD
+  </ya-download-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `export-parameter-data-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/export-parameter-data-dialog/export-parameter-data-dialog.component.html`](file--export-parameter-data-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/export-parameter-data-dialog/export-parameter-data-dialog.component.ts`](file--export-parameter-data-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/export-parameter-data-dialog/export-parameter-data-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+} from '@angular/core';
+import {
+  FormControl,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  DownloadParameterValuesOptions,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+@Component({
+  templateUrl: './export-parameter-data-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ExportParameterDataDialogComponent implements OnDestroy {
+  delimiterOptions: YaSelectOption[] = [
+    { id: 'COMMA', label: 'Comma' },
+    { id: 'SEMICOLON', label: 'Semicolon' },
+    { id: 'TAB', label: 'Tab' },
+  ];
+
+  private formChangeSubscription: Subscription;
+
+  downloadURL$ = new BehaviorSubject<string | null>(null);
+
+  form = new UntypedFormGroup({
+    start: new UntypedFormControl(null),
+    stop: new UntypedFormControl(null),
+    delimiter: new UntypedFormControl(null, Validators.required),
+    interval: new FormControl<number | null>(null),
+  });
+
+  constructor(
+    private dialogRef: MatDialogRef<ExportParameterDataDialogComponent>,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+  ) {
+    let start = data.start;
+    let stop = data.stop;
+    if (!start || !stop) {
+      stop = yamcs.getMissionTime();
+      start = utils.subtractDuration(stop, 'PT1H');
+    }
+
+    this.form.setValue({
+      start: data.start ? utils.toISOString(data.start) : '',
+      stop: data.stop ? utils.toISOString(data.stop) : '',
+      delimiter: 'TAB',
+      interval: '',
+    });
+
+    this.formChangeSubscription = this.form.valueChanges.subscribe(() => {
+      this.updateURL();
+    });
+
+    this.updateURL();
+  }
+
+  closeDialog() {
+    this.dialogRef.close(true);
+  }
+
+  private updateURL() {
+    if (this.form.valid) {
+      const dlOptions: DownloadParameterValuesOptions = {
+        parameters: this.data.parameter,
+        delimiter: this.form.value['delimiter'],
+      };
+      if (this.form.value['start']) {
+        dlOptions.start = utils.toISOString(this.form.value['start']);
+      }
+      if (this.form.value['stop']) {
+        dlOptions.stop = utils.toISOString(this.form.value['stop']);
+      }
+      if (this.form.value['interval']) {
+        dlOptions.interval = this.form.value['interval'];
+      }
+      const url = this.yamcs.yamcsClient.getParameterValuesDownloadURL(
+        this.yamcs.instance!,
+        dlOptions,
+      );
+      this.downloadURL$.next(url);
+    } else {
+      this.downloadURL$.next(null);
+    }
+  }
+
+  ngOnDestroy() {
+    this.formChangeSubscription?.unsubscribe();
+  }
+}
+```

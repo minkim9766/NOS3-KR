@@ -3,26 +3,389 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CoalesceExpression.java`
 
-file--CoalesceExpression.java
-file--CountExpression.java
-file--ExtractNumberExpression.java
-file--FunctionExpressionFactory.java
-file--SubstringExpression.java
-file--SumExpression.java
-file--UnhexExpression.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/CoalesceExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import org.yamcs.yarch.streamsql.Expression;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class CoalesceExpression extends Expression {
+    public CoalesceExpression(Expression[] args, boolean star) throws ParseException {
+        super(args);
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = children[0].getType();
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if (constantValue != null) {
+            code.append("const_" + getColumnName());
+        } else {
+            code.append(" org.yamcs.yarch.streamsql.funct.CoalesceExpression.coalesce(");
+            for (int i = 0; i < children.length; i++) {
+                if (i != 0) {
+                    code.append(", ");
+                }
+                children[i].fillCode_getValueReturn(code);
+            }
+            code.append(")");
+        }
+    }
+
+    public static Object coalesce(Object... objs) {
+        for (Object o : objs) {
+            if (o != null) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+}
 ```
 
-## 항목
+### `CountExpression.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/CoalesceExpression.java`](file--CoalesceExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/CountExpression.java`](file--CountExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/ExtractNumberExpression.java`](file--ExtractNumberExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/FunctionExpressionFactory.java`](file--FunctionExpressionFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/SubstringExpression.java`](file--SubstringExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/SumExpression.java`](file--SumExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/UnhexExpression.java`](file--UnhexExpression.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/CountExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.streamsql.CompilableAggregateExpression;
+import org.yamcs.yarch.streamsql.Expression;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class CountExpression extends CompilableAggregateExpression {
+
+    public CountExpression(Expression[] args, boolean star) throws ParseException {
+        super(args, star);
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = DataType.LONG;
+    }
+
+    @Override
+    protected void aggregateFillCode_Declarations(StringBuilder code) {
+        code.append("\tlong count;\n");
+
+    }
+
+    @Override
+    protected void aggregateFillCode_clear(StringBuilder code) {
+        code.append("\t\tcount=0;\n");
+    }
+
+    @Override
+    protected void aggregateFillCode_getValue(StringBuilder code) {
+        code.append("\t\treturn count;\n");
+
+    }
+
+    @Override
+    protected void aggregateFillCode_newData(StringBuilder code) throws StreamSqlException {
+        code.append("\t\tcount++");
+        code.append(";\n");
+    }
+}
+```
+
+### `ExtractNumberExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/ExtractNumberExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.streamsql.Expression;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class ExtractNumberExpression extends Expression {
+    String fname;
+    public ExtractNumberExpression(Expression[] children, boolean star, String fname) {
+        super(children);
+        this.fname = fname;        
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = DataType.INT;
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        code.append("org.yamcs.utils.ByteArrayUtils.");
+        code.append(fname);
+        code.append("(");
+        children[0].fillCode_getValueReturn(code);
+        code.append(", ");
+        children[1].fillCode_getValueReturn(code);
+        code.append(")");
+    }
+}
+```
+
+### `FunctionExpressionFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/FunctionExpressionFactory.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.AggregateListExpression;
+import org.yamcs.yarch.streamsql.Expression;
+import org.yamcs.yarch.streamsql.FirstValExpression;
+
+public class FunctionExpressionFactory {
+    static Map<String, FunctConfig> functions = new HashMap<>();
+    static {
+        addFunction("count", CountExpression.class);
+        addFunction("sum", SumExpression.class);
+        addFunction("aggregatelist", AggregateListExpression.class);
+        addFunction("firstval", FirstValExpression.class);
+        addFunction("substring", SubstringExpression.class);
+
+        functions.put("extract_short", new FunctConfig(ExtractNumberExpression.class, String.class, "decodeShort"));
+        functions.put("extract_ushort",
+                new FunctConfig(ExtractNumberExpression.class, String.class, "decodeUnsignedShort"));
+        functions.put("extract_int", new FunctConfig(ExtractNumberExpression.class, String.class, "decodeInt"));
+        functions.put("extract_u3bytes",
+                new FunctConfig(ExtractNumberExpression.class, String.class, "decodeUnsigned3Bytes"));
+
+        addFunction("unhex", UnhexExpression.class);
+        addFunction("coalesce", CoalesceExpression.class);
+    }
+
+    static void addFunction(String name, Class<? extends Expression> c) {
+        functions.put(name, new FunctConfig(c));
+    }
+
+    public static Expression get(String name, List<Expression> args, boolean star) throws ParseException {
+        Expression[] argsa = (args == null) ? new Expression[0] : args.toArray(new Expression[0]);
+        FunctConfig fc = functions.get(name.toLowerCase());
+        if (fc == null) {
+            throw new ParseException("unknown function '" + name + "'");
+        }
+        Class<?>[] argTypes = new Class<?>[2 + fc.extraArgTypes.length];
+        argTypes[0] = argsa.getClass();
+        argTypes[1] = boolean.class;
+        System.arraycopy(fc.extraArgTypes, 0, argTypes, 2, fc.extraArgTypes.length);
+
+        Object[] argValss = new Object[2 + fc.extraArgs.length];
+        argValss[0] = argsa;
+        argValss[1] = star;
+        System.arraycopy(fc.extraArgs, 0, argValss, 2, fc.extraArgs.length);
+
+        try {
+            return fc.functClass.getConstructor(argTypes).newInstance(argValss);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e) {
+            throw new ParseException(e.toString());
+        }
+    }
+
+    static class FunctConfig {
+        Class<? extends Expression> functClass;
+        Class<?>[] extraArgTypes;
+        Object[] extraArgs;
+
+        public FunctConfig(Class<? extends Expression> functClass, Class<?> argType, Object arg) {
+            this.functClass = functClass;
+            this.extraArgTypes = new Class<?>[] { argType };
+            this.extraArgs = new Object[] { arg };
+        }
+
+        public FunctConfig(Class<? extends Expression> functClass, Class<?> arg1Type, Object arg1, Class<?> arg2Type,
+                Object arg2) {
+            this.functClass = functClass;
+            this.extraArgTypes = new Class<?>[] { arg1Type, arg2Type };
+            this.extraArgs = new Object[] { arg1, arg2 };
+        }
+
+        public FunctConfig(Class<? extends Expression> functClass) {
+            this.functClass = functClass;
+            this.extraArgTypes = new Class<?>[0];
+            this.extraArgs = new Object[0];
+        }
+    }
+}
+```
+
+### `SubstringExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/SubstringExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import java.util.Arrays;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.Expression;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class SubstringExpression extends Expression {
+
+    public SubstringExpression(Expression[] args, boolean star) throws ParseException {
+        super(args);
+        if(args.length!=2 && args.length!=3) {
+            throw new ParseException("Invalid number of arguments, expected 2 (byte[], offset) or 3 (byte[], offset, length)");
+        }
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = children[0].getType();
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        code.append("org.yamcs.yarch.streamsql.funct.SubstringExpression.substring(");
+        children[0].fillCode_getValueReturn(code);
+        code.append(",");
+        children[1].fillCode_getValueReturn(code);
+        
+        code.append(")");
+    }
+    
+    static public byte[] substring(byte[] b, int offset) {
+        return  Arrays.copyOfRange(b, offset, b.length);
+    }
+    
+}
+```
+
+### `SumExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/SumExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import org.yamcs.yarch.streamsql.CompilableAggregateExpression;
+import org.yamcs.yarch.streamsql.Expression;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class SumExpression extends CompilableAggregateExpression {
+
+    public SumExpression(Expression[] args, boolean star) throws ParseException {
+        super(args, star);
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = children[0].getType();
+    }
+
+    @Override
+    protected void aggregateFillCode_Declarations(StringBuilder code) {
+        code.append("\t" + getType().primitiveJavaType() + " sum;\n");
+
+    }
+
+    @Override
+    protected void aggregateFillCode_clear(StringBuilder code) {
+        code.append("\t\tsum=0;\n");
+    }
+
+    @Override
+    protected void aggregateFillCode_getValue(StringBuilder code) {
+        code.append("\t\treturn sum;\n");
+
+    }
+
+    @Override
+    protected void aggregateFillCode_newData(StringBuilder code) throws StreamSqlException {
+        fillCode_InputDefVars(inputDef.getColumnDefinitions(), code);
+        
+        code.append("\t\tsum+=col" + children[0].getColumnName());
+        code.append(";\n");
+    }
+}
+```
+
+### `UnhexExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/UnhexExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql.funct;
+
+import java.util.Arrays;
+
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.streamsql.Expression;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public class UnhexExpression extends Expression {
+
+    public UnhexExpression(Expression[] args, boolean star) throws ParseException {
+        super(args);
+
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        if (children.length != 1) {
+            throw new StreamSqlException(ErrCode.WRONG_ARG_COUNT, "Invalid number of arguments, expected 1 (byte[])");
+        }
+       Expression ch0 = children[0];
+        if (ch0.getType() != DataType.STRING) {
+            throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "expected string");
+        }
+        if(ch0.isConstant()) {
+            this.constantValue = StringConverter.hexStringToArray((String)ch0.getConstantValue());
+        }
+        type = DataType.BINARY;
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if(constantValue!=null) {
+            code.append("const_"+getColumnName());
+        } else {
+            code.append(" org.yamcs.utils.StringConverter.hexStringToArray(");
+            children[0].fillCode_getValueReturn(code);
+            code.append(")");
+        }
+    }
+
+    static public byte[] substring(byte[] b, int offset) {
+        return Arrays.copyOfRange(b, offset, b.length);
+    }
+
+}
+```

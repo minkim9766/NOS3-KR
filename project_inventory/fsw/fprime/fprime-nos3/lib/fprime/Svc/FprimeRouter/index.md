@@ -3,24 +3,271 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--FprimeRouter.cpp
-file--FprimeRouter.fpp
-file--FprimeRouter.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/FprimeRouter.cpp`](file--FprimeRouter.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/FprimeRouter.fpp`](file--FprimeRouter.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/FprimeRouter.hpp`](file--FprimeRouter.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeRouter.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeRouter.cpp"
+)
+register_fprime_module()
+
+
+#### UTS ####
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeRouter.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FprimeRouterTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FprimeRouterTestMain.cpp"
+)
+set(UT_AUTO_HELPERS ON)
+
+register_fprime_ut()
+```
+
+### `FprimeRouter.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/FprimeRouter.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeRouter.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeRouter component implementation class
+// ======================================================================
+
+#include "Svc/FprimeRouter/FprimeRouter.hpp"
+#include "Fw/Com/ComPacket.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Logger/Logger.hpp"
+#include "config/APIDEnumAc.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+FprimeRouter ::FprimeRouter(const char* const compName) : FprimeRouterComponentBase(compName) {}
+
+FprimeRouter ::~FprimeRouter() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FprimeRouter ::dataIn_handler(FwIndexType portNum, Fw::Buffer& packetBuffer, const ComCfg::FrameContext& context) {
+    Fw::SerializeStatus status;
+    Fw::ComPacketType packetType = context.get_apid();
+    // Route based on received APID (packet type)
+    switch (packetType) {
+        // Handle a command packet
+        case Fw::ComPacketType::FW_PACKET_COMMAND: {
+            // Allocate a com buffer on the stack
+            Fw::ComBuffer com;
+            // Copy the contents of the packet buffer into the com buffer
+            status = com.setBuff(packetBuffer.getData(), packetBuffer.getSize());
+            if (status == Fw::FW_SERIALIZE_OK) {
+                // Send the com buffer - critical functionality so it is considered an error not to
+                // have the port connected. This is why we don't check isConnected() before sending.
+                this->commandOut_out(0, com, 0);
+            } else {
+                this->log_WARNING_HI_SerializationError(status);
+            }
+            break;
+        }
+        // Handle a file packet
+        case Fw::ComPacketType::FW_PACKET_FILE: {
+            // If the file uplink output port is connected, send the file packet. Otherwise take no action.
+            if (this->isConnected_fileOut_OutputPort(0)) {
+                // Copy buffer into a new allocated buffer. This lets us return the original buffer with dataReturnOut,
+                // and FprimeRouter can handle the deallocation of the file buffer when it returns on fileBufferReturnIn
+                Fw::Buffer packetBufferCopy = this->bufferAllocate_out(0, packetBuffer.getSize());
+                auto copySerializer = packetBufferCopy.getSerializer();
+                status = copySerializer.serialize(packetBuffer.getData(), packetBuffer.getSize(),
+                                                  Fw::Serialization::OMIT_LENGTH);
+                FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+                // Send the copied buffer out. It will come back on fileBufferReturnIn once the receiver is done with it
+                this->fileOut_out(0, packetBufferCopy);
+            }
+            break;
+        }
+        default: {
+            // Packet type is not known to the F Prime protocol. If the unknownDataOut port is
+            // connected, forward packet and context for further processing
+            if (this->isConnected_unknownDataOut_OutputPort(0)) {
+                // Copy buffer into a new allocated buffer. This lets us return the original buffer with dataReturnOut,
+                // and FprimeRouter can handle the deallocation of the unknown buffer when it returns on bufferReturnIn
+                Fw::Buffer packetBufferCopy = this->bufferAllocate_out(0, packetBuffer.getSize());
+                auto copySerializer = packetBufferCopy.getSerializer();
+                status = copySerializer.serialize(packetBuffer.getData(), packetBuffer.getSize(),
+                                                  Fw::Serialization::OMIT_LENGTH);
+                FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+                // Send the copied buffer out. It will come back on fileBufferReturnIn once the receiver is done with it
+                this->unknownDataOut_out(0, packetBufferCopy, context);
+            }
+        }
+    }
+
+    // Return ownership of the incoming packetBuffer
+    this->dataReturnOut_out(0, packetBuffer, context);
+}
+
+void FprimeRouter ::cmdResponseIn_handler(FwIndexType portNum,
+                                          FwOpcodeType opcode,
+                                          U32 cmdSeq,
+                                          const Fw::CmdResponse& response) {
+    // Nothing to do
+}
+
+void FprimeRouter ::fileBufferReturnIn_handler(FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->bufferDeallocate_out(0, fwBuffer);
+}
+
+}  // namespace Svc
+```
+
+### `FprimeRouter.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/FprimeRouter.fpp`
+
+
+```fpp
+module Svc {
+    @ Routes packets deframed by the Deframer to the rest of the system
+    passive component FprimeRouter {
+
+        # ----------------------------------------------------------------------
+        # Router interface
+        # ----------------------------------------------------------------------
+        import Router
+
+        @ Port for forwarding non-recognized packet types
+        @ Ownership of the buffer is retained by the FprimeRouter, meaning receiving
+        @ components should either process data synchronously, or copy the data if needed
+        output port unknownDataOut: Svc.ComDataWithContext
+
+        @ Port for allocating buffers
+        output port bufferAllocate: Fw.BufferGet
+
+        @ Port for deallocating buffers
+        output port bufferDeallocate: Fw.BufferSend
+
+        @ An error occurred while serializing a com buffer
+        event SerializationError(
+                status: U32 @< The status of the operation
+            ) \
+            severity warning high \
+            format "Serializing com buffer failed with status {}"
+
+        @ An error occurred while deserializing a packet
+        event DeserializationError(
+                status: U32 @< The status of the operation
+            ) \
+            severity warning high \
+            format "Deserializing packet type failed with status {}"
+
+
+        ###############################################################################
+        # Standard AC Ports for Events 
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+    }
+}
+```
+
+### `FprimeRouter.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/FprimeRouter.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeRouter.hpp
+// \author thomas-bc
+// \brief  hpp file for FprimeRouter component implementation class
+// ======================================================================
+
+#ifndef Svc_FprimeRouter_HPP
+#define Svc_FprimeRouter_HPP
+
+#include "Svc/FprimeRouter/FprimeRouterComponentAc.hpp"
+
+namespace Svc {
+
+class FprimeRouter final : public FprimeRouterComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct FprimeRouter object
+    FprimeRouter(const char* const compName  //!< The component name
+    );
+
+    //! Destroy FprimeRouter object
+    ~FprimeRouter();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for bufferIn
+    //! Receiving Fw::Buffer from Deframer
+    void dataIn_handler(FwIndexType portNum,                 //!< The port number
+                        Fw::Buffer& packetBuffer,            //!< The packet buffer
+                        const ComCfg::FrameContext& context  //!< The context object
+                        ) override;
+
+    // ! Handler for input port cmdResponseIn
+    // ! This is a no-op because FprimeRouter does not need to handle command responses
+    // ! but the port must be connected
+    void cmdResponseIn_handler(FwIndexType portNum,             //!< The port number
+                               FwOpcodeType opcode,             //!< The command opcode
+                               U32 cmdSeq,                      //!< The command sequence number
+                               const Fw::CmdResponse& response  //!< The command response
+                               ) override;
+
+    //! Handler implementation for fileBufferReturnIn
+    //!
+    //! Port for receiving ownership back of buffers sent on fileOut
+    void fileBufferReturnIn_handler(FwIndexType portNum,  //!< The port number
+                                    Fw::Buffer& fwBuffer  //!< The buffer
+                                    ) override;
+};
+}  // namespace Svc
+
+#endif
+```

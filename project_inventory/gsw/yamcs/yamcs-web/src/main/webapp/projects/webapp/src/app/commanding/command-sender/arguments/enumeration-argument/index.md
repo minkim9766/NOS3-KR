@@ -3,18 +3,203 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `enumeration-argument.component.css`
 
-file--enumeration-argument.component.css
-file--enumeration-argument.component.html
-file--enumeration-argument.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/enumeration-argument.component.css`
+
+
+```css
+.control-group {
+  display: flex;
+  align-items: center;
+}
 ```
 
-## 항목
+### `enumeration-argument.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/enumeration-argument.component.css`](file--enumeration-argument.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/enumeration-argument.component.html`](file--enumeration-argument.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/enumeration-argument.component.ts`](file--enumeration-argument.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/enumeration-argument.component.html`
+
+
+```html
+<ya-field [label]="label" [class.error]="err.invalid$ | async">
+  <ya-meta>{{ type.engType }}</ya-meta>
+
+  @if (description) {
+    <ya-help>
+      {{ description }}
+    </ya-help>
+  }
+
+  <ya-errors #err [controlName]="controlName" />
+  <div class="control-group">
+    <ya-select [formControl]="formControl" [options]="selectOptions$ | async" />
+    &nbsp;
+    <ya-icon-button
+      matTooltip="Lookup enumeration state"
+      (click)="openSelectEnumerationDialog()"
+      icon="search" />
+  </div>
+</ya-field>
+```
+
+### `enumeration-argument.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/enumeration-argument/enumeration-argument.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  ArgumentType,
+  EnumValue,
+  utils,
+  WebappSdkModule,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { SelectEnumerationDialogComponent } from '../../select-enumeration-dialog/select-enumeration-dialog.component';
+
+@Component({
+  selector: 'app-enumeration-argument',
+  templateUrl: './enumeration-argument.component.html',
+  styleUrl: './enumeration-argument.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => EnumerationArgumentComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => EnumerationArgumentComponent),
+      multi: true,
+    },
+  ],
+  imports: [WebappSdkModule],
+})
+export class EnumerationArgumentComponent
+  implements ControlValueAccessor, OnInit, Validator, OnDestroy
+{
+  @Input()
+  name: string;
+
+  @Input()
+  description?: string;
+
+  @Input()
+  type: ArgumentType;
+
+  @Input()
+  index?: number;
+
+  @Input()
+  dimensions?: number[];
+
+  formControl = new UntypedFormControl();
+
+  controlName: string;
+
+  selectOptions$ = new BehaviorSubject<YaSelectOption[]>([]);
+
+  private validators: ValidatorFn[] = [];
+  private onChange = (_: string | null) => {};
+  private subscriptions: Subscription[] = [];
+
+  constructor(private dialog: MatDialog) {}
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.formControl.valueChanges.subscribe(() => {
+        let value = this.formControl.value;
+        this.onChange(value);
+      }),
+    );
+
+    if (this.index === undefined) {
+      this.controlName = this.name;
+    } else {
+      this.controlName = String(this.index);
+    }
+
+    const selectOptions = [];
+    for (const enumValue of this.type.enumValue || []) {
+      selectOptions.push({
+        id: enumValue.label,
+        label: enumValue.label,
+      });
+    }
+    this.selectOptions$.next(selectOptions);
+
+    this.validators.push(Validators.required);
+  }
+
+  get label() {
+    if (this.index !== undefined) {
+      const index = utils.unflattenIndex(this.index, this.dimensions!);
+      return index.map((i) => '[' + i + ']').join('');
+    } else {
+      return this.name;
+    }
+  }
+
+  writeValue(obj: any) {
+    this.formControl.setValue(obj);
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  openSelectEnumerationDialog() {
+    this.dialog
+      .open(SelectEnumerationDialogComponent, {
+        width: '600px',
+        data: { type: this.type },
+        panelClass: ['no-padding-dialog'],
+      })
+      .afterClosed()
+      .subscribe((result: EnumValue) => {
+        if (result) {
+          this.writeValue(result.label);
+        }
+      });
+  }
+
+  validate(control: UntypedFormControl): ValidationErrors | null {
+    for (const validator of this.validators) {
+      const errors = validator(control);
+      if (errors) {
+        return errors;
+      }
+    }
+    return null;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+}
+```

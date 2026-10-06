@@ -3,22 +3,36 @@
 
 **경로:** `components/sample/fsw/standalone/build/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--CMakeCache.txt
-file--Makefile
-file--sample_checkout
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/sample/fsw/standalone/build/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`components/sample/fsw/standalone/build/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeCache.txt`](file--CMakeCache.txt) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/sample_checkout`](file--sample_checkout) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `components/sample/fsw/standalone/build/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCache.txt`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeCache.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `components/sample/fsw/standalone/build/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sample_checkout`
+
+**경로:** `components/sample/fsw/standalone/build/sample_checkout`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

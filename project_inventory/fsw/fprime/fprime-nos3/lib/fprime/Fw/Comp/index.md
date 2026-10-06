@@ -3,28 +3,465 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ActiveComponentBase.cpp`
 
-file--ActiveComponentBase.cpp
-file--ActiveComponentBase.hpp
-file--CMakeLists.txt
-file--PassiveComponentBase.cpp
-file--PassiveComponentBase.hpp
-file--QueuedComponentBase.cpp
-file--QueuedComponentBase.hpp
-file--README
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/ActiveComponentBase.cpp`
+
+
+```cpp
+#include <Fw/Comp/ActiveComponentBase.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/TaskString.hpp>
+
+namespace Fw {
+
+class ActiveComponentExitSerializableBuffer : public Fw::SerializeBufferBase {
+  public:
+    FwSizeType getBuffCapacity() const { return sizeof(m_buff); }
+
+    U8* getBuffAddr() { return m_buff; }
+
+    const U8* getBuffAddr() const { return m_buff; }
+
+  private:
+    U8 m_buff[sizeof(ActiveComponentBase::ACTIVE_COMPONENT_EXIT)];
+};
+
+ActiveComponentBase::ActiveComponentBase(const char* name) : QueuedComponentBase(name) {}
+
+ActiveComponentBase::~ActiveComponentBase() {}
+
+void ActiveComponentBase::init(FwEnumStoreType instance) {
+    QueuedComponentBase::init(instance);
+}
+
+#if FW_OBJECT_TO_STRING == 1
+const char* ActiveComponentBase::getToStringFormatString() {
+    return "ActComp: %s";
+}
+#endif
+
+void ActiveComponentBase::start(FwTaskPriorityType priority,
+                                FwSizeType stackSize,
+                                FwSizeType cpuAffinity,
+                                FwTaskIdType identifier) {
+    Os::TaskString taskName;
+
+#if FW_OBJECT_NAMES == 1
+    taskName = this->getObjName();
+#else
+    (void)taskName.format("ActComp_%" PRI_FwSizeType, Os::Task::getNumTasks());
+#endif
+    // Cooperative threads tasks externalize the task loop, and as such use the state machine as their task function
+    // Standard multithreading tasks use the task loop to respectively call the state machine
+    Os::Task::taskRoutine routine = (m_task.isCooperative()) ? this->s_taskStateMachine : this->s_taskLoop;
+    Os::Task::Arguments arguments(taskName, routine, this, priority, stackSize, cpuAffinity, identifier);
+    Os::Task::Status status = this->m_task.start(arguments);
+    FW_ASSERT(status == Os::Task::Status::OP_OK, static_cast<FwAssertArgType>(status));
+}
+
+void ActiveComponentBase::exit() {
+    ActiveComponentExitSerializableBuffer exitBuff;
+    SerializeStatus stat = exitBuff.serialize(static_cast<I32>(ACTIVE_COMPONENT_EXIT));
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    (void)this->m_queue.send(exitBuff, 0, Os::Queue::BlockingType::NONBLOCKING);
+}
+
+Os::Task::Status ActiveComponentBase::join() {
+    return this->m_task.join();
+}
+
+Os::Task::Status ActiveComponentBase::join(void** pointer) {
+    return this->m_task.join();
+}
+
+void ActiveComponentBase::s_taskStateMachine(void* component_pointer) {
+    FW_ASSERT(component_pointer != nullptr);
+    // cast void* back to active component
+    ActiveComponentBase* component = static_cast<ActiveComponentBase*>(component_pointer);
+
+    // Each invocation of this function runs a single stage of the thread lifecycle. This has moved the thread
+    // while loop to the top level such that it can be replaced by something else (e.g. cooperative thread
+    // dispatcher) and is not intrinsic to this code.
+    switch (component->m_stage) {
+        // The first stage the active component triggers the "preamble" call before moving into the dispatching
+        // stage of the component thread.
+        case Lifecycle::CREATED:
+            component->preamble();
+            component->m_stage = Lifecycle::DISPATCHING;
+            break;
+        // The second stage of the active component triggers the dispatching loop dispatching messages until an
+        // exit message is received.
+        case Lifecycle::DISPATCHING:
+            if (component->dispatch() == MsgDispatchStatus::MSG_DISPATCH_EXIT) {
+                component->m_stage = Lifecycle::FINALIZING;
+            }
+            break;
+        // The second-to-last stage is where the finalizer is called. This will transition to the final stage
+        // automatically after the finalizer is called
+        case Lifecycle::FINALIZING:
+            component->finalizer();
+            component->m_stage = Lifecycle::DONE;
+            break;
+        // The last stage does nothing, cooperative tasks live here forever, threaded tasks exit on this condition
+        case Lifecycle::DONE:
+            break;
+        default:
+            FW_ASSERT(0);
+            break;
+    }
+}
+
+void ActiveComponentBase::s_taskLoop(void* component_pointer) {
+    FW_ASSERT(component_pointer != nullptr);
+    ActiveComponentBase* component = static_cast<ActiveComponentBase*>(component_pointer);
+    // A non-cooperative task switching implementation is just a while-loop around the active component
+    // state-machine. Here the while loop is at top-level.
+    while (component->m_stage != ActiveComponentBase::Lifecycle::DONE) {
+        ActiveComponentBase::s_taskStateMachine(component);
+    }
+}
+
+ActiveComponentBase::MsgDispatchStatus ActiveComponentBase::dispatch() {
+    // Cooperative tasks should return rather than block when no messages are available
+    if (this->m_task.isCooperative() and m_queue.getMessagesAvailable() == 0) {
+        return MsgDispatchStatus::MSG_DISPATCH_EMPTY;
+    }
+    return this->doDispatch();
+}
+
+void ActiveComponentBase::preamble() {}
+
+void ActiveComponentBase::finalizer() {}
+
+}  // namespace Fw
 ```
 
-## 항목
+### `ActiveComponentBase.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/ActiveComponentBase.cpp`](file--ActiveComponentBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/ActiveComponentBase.hpp`](file--ActiveComponentBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/PassiveComponentBase.cpp`](file--PassiveComponentBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/PassiveComponentBase.hpp`](file--PassiveComponentBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/QueuedComponentBase.cpp`](file--QueuedComponentBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/QueuedComponentBase.hpp`](file--QueuedComponentBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/README`](file--README) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/ActiveComponentBase.hpp`
+
+
+```cpp
+/*
+ * ActiveComponentBase.hpp
+ *
+ *  Created on: Aug 14, 2012
+ *      Author: tcanham
+ */
+
+/*
+ * Description:
+ */
+#ifndef FW_ACTIVE_COMPONENT_BASE_HPP
+#define FW_ACTIVE_COMPONENT_BASE_HPP
+
+#include <Fw/Comp/QueuedComponentBase.hpp>
+#include <Fw/Deprecate.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Task.hpp>
+
+namespace Fw {
+class ActiveComponentBase : public QueuedComponentBase {
+  public:
+    void start(FwTaskPriorityType priority = Os::Task::TASK_PRIORITY_DEFAULT,
+               FwSizeType stackSize = Os::Task::TASK_DEFAULT,
+               FwSizeType cpuAffinity = Os::Task::TASK_DEFAULT,
+               FwTaskIdType identifier = static_cast<FwTaskIdType>(
+                   Os::Task::TASK_DEFAULT));  //!< called by instantiator when task is to be started
+    void exit();                              //!< exit task in active component
+    Os::Task::Status join();                  //!< Join the thread
+    DEPRECATED(Os::Task::Status join(void** value_ptr),
+               "Switch to .join()");  //!< Join to thread with discarded value_ptr
+
+    enum {
+        ACTIVE_COMPONENT_EXIT  //!< message to exit active component task
+    };
+
+  protected:
+    //! Tracks the lifecycle of the component
+    enum Lifecycle {
+        CREATED,      //!< Initial stage, call preamble
+        DISPATCHING,  //!< Component is dispatching messages
+        FINALIZING,   //!< Penultimate stage, call finalizer
+        DONE,         //!< Done, doing nothing
+    };
+
+    explicit ActiveComponentBase(const char* name);  //!< Constructor
+    virtual ~ActiveComponentBase();                  //!< Destructor
+    void init(FwEnumStoreType instance);             //!< initialization code
+    virtual void preamble();       //!< A function that will be called before the event loop is entered
+    MsgDispatchStatus dispatch();  //!< The function that will dispatching messages
+    virtual void finalizer();      //!< A function that will be called after exiting the loop
+    Os::Task m_task;               //!< task object for active component
+
+#if FW_OBJECT_TO_STRING == 1
+    virtual const char* getToStringFormatString();  //!< Format string for toString function
+#endif
+  private:
+    Lifecycle m_stage;                      //!< Lifecycle stage of the component
+    static void s_taskStateMachine(void*);  //!< Task lifecycle state machine
+    static void s_taskLoop(void*);          //!< Standard multi-threading task loop
+};
+
+}  // namespace Fw
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PassiveComponentBase.cpp"
+)
+# Note: no autocoding files, so basic includes must be hard-coded
+set(MOD_DEPS
+  Fw/Types
+  Fw/Obj
+  Fw/Port
+)
+register_fprime_module()
+# Makes active component its own library such that it can depend on Os where
+# passive components do not.
+list(APPEND MOD_DEPS Os Fw/Comp)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/QueuedComponentBase.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ActiveComponentBase.cpp"
+)
+register_fprime_module("Fw_CompQueued")
+```
+
+### `PassiveComponentBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/PassiveComponentBase.cpp`
+
+
+```cpp
+#include <Fw/Comp/PassiveComponentBase.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+
+#include <Fw/Types/ExternalString.hpp>
+
+namespace Fw {
+
+PassiveComponentBase::PassiveComponentBase(const char* name) : Fw::ObjBase(name), m_idBase(0), m_instance(0) {}
+
+#if FW_OBJECT_TO_STRING == 1
+const char* PassiveComponentBase::getToStringFormatString() {
+    return "Comp: %s";
+}
+
+void PassiveComponentBase::toString(char* buffer, FwSizeType size) {
+    FW_ASSERT(size > 0);
+    FW_ASSERT(buffer != nullptr);
+    Fw::FormatStatus status = Fw::ExternalString(buffer, static_cast<Fw::ExternalString::SizeType>(size))
+                                  .format(this->getToStringFormatString(),
+#if FW_OBJECT_NAMES == 1
+                                          this->m_objName.toChar()
+#else
+                                          "UNKNOWN"
+#endif
+                                  );
+    if (status != Fw::FormatStatus::SUCCESS) {
+        buffer[0] = 0;
+    }
+}
+#endif
+
+PassiveComponentBase::~PassiveComponentBase() {}
+
+void PassiveComponentBase::init(FwEnumStoreType instance) {
+    ObjBase::init();
+    this->m_instance = instance;
+}
+
+FwEnumStoreType PassiveComponentBase::getInstance() const {
+    return this->m_instance;
+}
+
+void PassiveComponentBase ::setIdBase(const FwIdType idBase) {
+    this->m_idBase = idBase;
+}
+
+FwIdType PassiveComponentBase ::getIdBase() const {
+    return this->m_idBase;
+}
+
+}  // namespace Fw
+```
+
+### `PassiveComponentBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/PassiveComponentBase.hpp`
+
+
+```cpp
+#ifndef FW_COMP_BASE_HPP
+#define FW_COMP_BASE_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class PassiveComponentBase : public Fw::ObjBase {
+  public:
+    //! Set the ID base
+    void setIdBase(const FwIdType  //< The new ID base
+    );
+    //! Get the ID base
+    //! \return The ID base
+    FwIdType getIdBase() const;
+
+  protected:
+    PassiveComponentBase(const char* name);  //!< Named constructor
+    virtual ~PassiveComponentBase();         //!< Destructor
+    void init(FwEnumStoreType instance);     //!< Initialization function
+    FwEnumStoreType getInstance() const;
+
+#if FW_OBJECT_TO_STRING == 1
+    virtual const char* getToStringFormatString();       //!< Return the format  for a generic component toString
+    void toString(char* str, FwSizeType size) override;  //!< returns string description of component
+#endif
+  private:
+    FwIdType m_idBase;           //!< ID base for opcodes etc.
+    FwEnumStoreType m_instance;  //!< instance of component object
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `QueuedComponentBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/QueuedComponentBase.cpp`
+
+
+```cpp
+#include <Fw/Comp/QueuedComponentBase.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/QueueString.hpp>
+
+#include <cstdio>
+
+namespace Fw {
+
+QueuedComponentBase::QueuedComponentBase(const char* name) : PassiveComponentBase(name), m_msgsDropped(0) {}
+
+QueuedComponentBase::~QueuedComponentBase() {}
+
+void QueuedComponentBase::init(FwEnumStoreType instance) {
+    PassiveComponentBase::init(instance);
+}
+
+#if FW_OBJECT_TO_STRING == 1
+const char* QueuedComponentBase::getToStringFormatString() {
+    return "QueueComp: %s";
+}
+#endif
+
+Os::Queue::Queue::Status QueuedComponentBase::createQueue(FwSizeType depth, FwSizeType msgSize) {
+    Os::QueueString queueName;
+#if FW_OBJECT_NAMES == 1
+    queueName = this->m_objName;
+#else
+    queueName.format("CompQ_%" PRI_FwSizeType, Os::Queue::getNumQueues());
+#endif
+    return this->m_queue.create(queueName, depth, msgSize);
+}
+
+FwSizeType QueuedComponentBase::getNumMsgsDropped() {
+    return this->m_msgsDropped;
+}
+
+void QueuedComponentBase::incNumMsgDropped() {
+    this->m_msgsDropped++;
+}
+
+}  // namespace Fw
+```
+
+### `QueuedComponentBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/QueuedComponentBase.hpp`
+
+
+```cpp
+/*
+ * ActiveComponentBase.hpp
+ *
+ *  Created on: Aug 14, 2012
+ *      Author: tcanham
+ */
+
+/*
+ * Description:
+ */
+#ifndef FW_QUEUED_COMPONENT_BASE_HPP
+#define FW_QUEUED_COMPONENT_BASE_HPP
+
+#include <Fw/Comp/PassiveComponentBase.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Queue.hpp>
+#include <Os/Task.hpp>
+
+namespace Fw {
+class QueuedComponentBase : public PassiveComponentBase {
+  public:
+    // Note: Had to make MsgDispatchStatus public for LLVM.
+    typedef enum {
+        MSG_DISPATCH_OK,     //!< Dispatch was normal
+        MSG_DISPATCH_EMPTY,  //!< No more messages in the queue
+        MSG_DISPATCH_ERROR,  //!< Errors dispatching messages
+        MSG_DISPATCH_EXIT    //!< A message was sent requesting an exit of the loop
+    } MsgDispatchStatus;
+
+  protected:
+    QueuedComponentBase(const char* name);  //!< Constructor
+    virtual ~QueuedComponentBase();         //!< Destructor
+    void init(FwEnumStoreType instance);    //!< initialization function
+    Os::Queue m_queue;                      //!< queue object for active component
+    Os::Queue::Status createQueue(FwSizeType depth, FwSizeType msgSize);
+    virtual MsgDispatchStatus doDispatch() = 0;  //!< method to dispatch a single message in the queue.
+#if FW_OBJECT_TO_STRING == 1
+    virtual const char* getToStringFormatString();  //!< Format string for toString function
+#endif
+    FwSizeType getNumMsgsDropped();  //!< return number of messages dropped
+    void incNumMsgDropped();         //!< increment the number of messages dropped
+  private:
+    FwSizeType m_msgsDropped;  //!< number of messages dropped from full queue
+};
+
+}  // namespace Fw
+#endif
+```
+
+### `README`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/README`
+
+
+```text
+File Contents:
+
+PassiveComponentBase.hpp(.cpp) - Passive Component base class
+QueuedComponentBase.hpp(.cpp) - Queued Component base class
+ActiveComponentBase.hpp(.cpp) - Active Component base class
+```

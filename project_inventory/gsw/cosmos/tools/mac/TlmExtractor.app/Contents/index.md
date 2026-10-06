@@ -3,18 +3,59 @@
 
 **경로:** `gsw/cosmos/tools/mac/TlmExtractor.app/Contents/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 MacOS/index
 Resources/index
-file--Info.plist
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/tools/mac/TlmExtractor.app/Contents/MacOS/`](MacOS/index) — 폴더
-- [`gsw/cosmos/tools/mac/TlmExtractor.app/Contents/Resources/`](Resources/index) — 폴더
-- [`gsw/cosmos/tools/mac/TlmExtractor.app/Contents/Info.plist`](file--Info.plist) — UTF-8 텍스트 파일 본문 포함
+### `Info.plist`
+
+**경로:** `gsw/cosmos/tools/mac/TlmExtractor.app/Contents/Info.plist`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleDisplayName</key>
+	<string>TlmExtractor</string>
+	<key>CFBundleExecutable</key>
+	<string>main.sh</string>
+	<key>CFBundleIconFile</key>
+	<string>appIcon.icns</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.ballaerospace.cosmos.TlmExtractor</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>TlmExtractor</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.0</string>
+	<key>CFBundleVersion</key>
+	<string>2.0</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.5.0</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2014 Ball Aerospace</string>
+	<key>NSMainNibFile</key>
+	<string>MainMenu</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>NSAppSleepDisabled</key>
+	<true/>
+	<key>LSAppNapIsDisabled</key>
+	<true/>
+</dict>
+</plist>
+```

@@ -3,16 +3,174 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/user/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `user.component.html`
 
-file--user.component.html
-file--user.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/user/user.component.html`
+
+
+```html
+@if (user$ | async; as user) {
+  <app-admin-page>
+    <app-admin-toolbar>
+      <ng-template app-admin-toolbar-label>
+        <ya-page-icon-button routerLink=".." icon="arrow_back" />
+        {{ user.displayName || user.name }}
+      </ng-template>
+
+      <ya-page-button routerLink="edit" icon="edit">Edit user</ya-page-button>
+      <ya-page-button
+        [disabled]="user.identities?.length"
+        (clicked)="showChangeUserPasswordDialog()"
+        icon="account_box">
+        Change password
+      </ya-page-button>
+    </app-admin-toolbar>
+
+    <ya-panel class="ya-link">
+      <dl class="dl-horizontal">
+        <dt>Username</dt>
+        <dd>{{ user.name }}</dd>
+        <dt>Display name</dt>
+        <dd>{{ user.displayName || "-" }}</dd>
+        <dt>Email</dt>
+        <dd>{{ user.email || "-" }}</dd>
+        <dt>Joined</dt>
+        <dd>{{ user.creationTime | datetime }}</dd>
+        <dt>Confirmed at</dt>
+        <dd>{{ (user.confirmationTime | datetime) || "never" }}</dd>
+        <dt>Last login</dt>
+        <dd>{{ (user.lastLoginTime | datetime) || "never" }}</dd>
+        <dt>Active</dt>
+        <dd>{{ user.active }}</dd>
+        <dt>Superuser</dt>
+        <dd>{{ user.superuser }}</dd>
+        <dt>Created by</dt>
+        <dd>
+          @if (user.createdBy) {
+            <a [routerLink]="['../' + user.createdBy.name]">{{ user.createdBy.name || "-" }}</a>
+          } @else {
+            -
+          }
+        </dd>
+      </dl>
+      <div class="section-divider">
+        <mat-divider />
+      </div>
+      <h4>{{ user.roles?.length || "0" }} assigned roles</h4>
+      @for (role of user.roles; track role) {
+        {{ role.name }}
+        <br />
+      }
+      @if (user.identities) {
+        <div class="section-divider">
+          <mat-divider />
+        </div>
+        <h4>External Identities</h4>
+        <table yaDataTable>
+          <tr>
+            <th>Identity</th>
+            <th>Provider</th>
+            <th></th>
+          </tr>
+          @for (identity of user.identities; track identity) {
+            <tr>
+              <td>{{ identity.identity }}</td>
+              <td>{{ identity.provider }}</td>
+              <td>
+                <ya-text-action icon="delete" (click)="deleteIdentity(identity)">
+                  DELETE
+                </ya-text-action>
+              </td>
+            </tr>
+          }
+        </table>
+      }
+    </ya-panel>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `user.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/user/user.component.html`](file--user.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/user/user.component.ts`](file--user.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/user/user.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ExternalIdentity,
+  MessageService,
+  UserInfo,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { ChangeUserPasswordDialogComponent } from '../change-user-password-dialog/change-user-password-dialog.component';
+
+@Component({
+  templateUrl: './user.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+  ],
+})
+export class UserComponent {
+  user$ = new BehaviorSubject<UserInfo | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private title: Title,
+    private dialog: MatDialog,
+    private messageService: MessageService,
+  ) {
+    // When clicking links pointing to this same component, Angular will not reinstantiate
+    // the component. Therefore subscribe to routeParams
+    route.paramMap.subscribe((params) => {
+      const username = params.get('username')!;
+      this.changeUser(username);
+    });
+  }
+
+  private changeUser(username: string) {
+    this.yamcs.yamcsClient.getUser(username).then((user) => {
+      this.user$.next(user);
+      this.title.setTitle(user.name);
+    });
+  }
+
+  deleteIdentity(identity: ExternalIdentity) {
+    if (
+      confirm(
+        `Are you sure you want to delete the ${identity.provider} identity?`,
+      )
+    ) {
+      const username = this.user$.value!.name;
+      this.yamcs.yamcsClient
+        .deleteIdentity(username, identity.provider)
+        .then(() => this.changeUser(username))
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+
+  showChangeUserPasswordDialog() {
+    this.dialog.open(ChangeUserPasswordDialogComponent, {
+      data: {
+        user: this.user$.value,
+      },
+      width: '400px',
+    });
+  }
+}
+```

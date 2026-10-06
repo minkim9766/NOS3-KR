@@ -3,20 +3,682 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `link-list.component.css`
 
-file--link-list.component.css
-file--link-list.component.html
-file--link-list.component.ts
-file--model.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/link-list.component.css`
+
+
+```css
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.table-wrapper td {
+  cursor: pointer;
+}
+
+tr.disabled td,
+tr.disabled td a {
+  font-style: italic;
+  color: #aaa;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-top: 12px;
+  margin-left: 10px;
+  font-family: Roboto, sans-serif;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.legend-item ya-led {
+  margin-right: 4px;
+}
 ```
 
-## 항목
+### `link-list.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/link-list.component.css`](file--link-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/link-list.component.html`](file--link-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/link-list.component.ts`](file--link-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/model.ts`](file--model.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/link-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Links">
+    @if (mayControlLinks()) {
+      <ya-page-button
+        (clicked)="enableSelectedLinks()"
+        [disabled]="!allowGroupEnable()"
+        icon="link">
+        Enable
+      </ya-page-button>
+    }
+    @if (mayControlLinks()) {
+      <ya-page-button
+        (clicked)="disableSelectedLinks()"
+        [disabled]="!allowGroupDisable()"
+        icon="link_off">
+        Disable
+      </ya-page-button>
+    }
+
+    @if (mayControlLinks()) {
+      <ya-page-button
+        [disabled]="selection.isEmpty()"
+        [matMenuTriggerFor]="moreActions"
+        dropdown="true">
+        More
+      </ya-page-button>
+    }
+    <mat-menu #moreActions class="ya-menu" yPosition="below" [overlapTrigger]="false">
+      <ng-template matMenuContent>
+        <button mat-menu-item (click)="resetCountersForSelectedLinks()">Reset counters</button>
+        @if (detailLink$ | async; as selectedItem) {
+          @if (selectedItem.link.actions) {
+            <mat-divider />
+            @for (action of selectedItem.link.actions; track action) {
+              <button
+                mat-menu-item
+                [disabled]="!action.enabled"
+                (click)="runAction(selectedItem.link.name, action)">
+                @if (action.style === "CHECK_BOX") {
+                  <mat-icon [style.visibility]="action.checked ? 'visible' : 'hidden'">
+                    check
+                  </mat-icon>
+                }
+                {{ action.label }}
+                @if (action.spec) {
+                  ...
+                }
+              </button>
+            }
+          }
+        }
+      </ng-template>
+    </mat-menu>
+  </ya-instance-toolbar>
+
+  <ya-detail-pane>
+    @if (detailLink$ | async; as selectedItem) {
+      <ya-detail-toolbar>Link detail</ya-detail-toolbar>
+      <div style="padding: 0 16px">
+        <app-link-detail [link]="selectedItem.link" />
+      </div>
+    } @else {
+      <ya-detail-toolbar>Select a link</ya-detail-toolbar>
+      @if (selection.hasValue()) {
+        <div style="padding: 0 16px">{{ selection.selected.length }} links selected</div>
+      }
+    }
+  </ya-detail-pane>
+
+  <div class="table-wrapper">
+    <ya-panel>
+      <app-links-page-tabs />
+      <ya-filter-bar style="margin-top: 16px">
+        <ya-search-filter
+          [formControl]="filterControl"
+          placeholder="Filter links"
+          (onArrowDown)="selectNext()"
+          (onArrowUp)="selectPrevious()"
+          (onEnter)="applySelection()" />
+        <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="links" />
+      </ya-filter-bar>
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        [trackBy]="tableTrackerFn"
+        class="ya-data-table expand">
+        <ng-container cdkColumnDef="select">
+          <th
+            mat-header-cell
+            *cdkHeaderCellDef
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+          </th>
+          <td
+            mat-cell
+            *cdkCellDef="let item"
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox
+              #cb
+              [dataSource]="dataSource"
+              [selection]="selection"
+              [item]="item" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let row" style="white-space: nowrap">
+            @if (row.link.parentName) {
+              <div style="display: inline-block; margin-right: 10px">
+                <app-link-status [link]="row.link" [parentLink]="row.parentLink" />
+              </div>
+            }
+            <a [routerLink]="['/links', row.link.name]" [queryParams]="{ c: yamcs.context }">
+              <ya-highlight [text]="row.link.name" [term]="filterControl.value" />
+            </a>
+            @if (row.hasChildren) {
+              <ya-icon-action
+                [icon]="row.expanded ? 'expand_more' : 'chevron_right'"
+                (click)="expandItem($event, row)" />
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="className">
+          <th mat-header-cell *matHeaderCellDef>Class</th>
+          <td mat-cell *matCellDef="let row">
+            <ya-highlight [text]="row.link.type" [term]="filterControl.value" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="status"></th>
+          <td mat-cell *matCellDef="let row" class="status" style="line-height: 0">
+            @if (!row.link.parentName) {
+              <app-link-status [link]="row.link" />
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="detailedStatus">
+          <th mat-header-cell *matHeaderCellDef>Detail</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.link.detailedStatus || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="in">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center">In</th>
+          <td mat-cell *matCellDef="let row" style="text-align: center">
+            {{ row.link.dataInCount | number }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="out">
+          <th mat-header-cell *matHeaderCellDef style="text-align: center">Out</th>
+          <td mat-cell *matCellDef="let row" style="text-align: center">
+            {{ row.link.dataOutCount | number }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row">
+            @if (mayControlLinks()) {
+              <ya-more>
+                <button
+                  mat-menu-item
+                  (click)="enableLink(row.link.name)"
+                  [disabled]="row.link.status !== 'DISABLED'">
+                  Enable link
+                </button>
+                <button
+                  mat-menu-item
+                  (click)="disableLink(row.link.name)"
+                  [disabled]="row.link.status === 'DISABLED'">
+                  Disable link
+                </button>
+                <mat-divider />
+                <button mat-menu-item (click)="resetCounters(row.link.name)">Reset counters</button>
+                @if (row.link.actions) {
+                  <mat-divider />
+                  @for (action of row.link.actions || []; track action) {
+                    <button
+                      mat-menu-item
+                      (click)="runAction(row.link.name, action)"
+                      [disabled]="!action.enabled">
+                      @if (action.style === "CHECK_BOX") {
+                        <mat-icon [style.visibility]="action.checked ? 'visible' : 'hidden'">
+                          check
+                        </mat-icon>
+                      }
+                      {{ action.label }}
+                      @if (action.spec) {
+                        ...
+                      }
+                    </button>
+                  }
+                }
+              </ya-more>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          (click)="toggleOne(row)"
+          [class.selected]="selection.isSelected(row)"
+          [class.disabled]="row.link.status === 'DISABLED'"></tr>
+      </table>
+
+      <div class="legend">
+        <div class="legend-item">
+          <ya-led color="rgba(0, 100, 0)" [fade]="false" />
+          OK
+        </div>
+        <div class="legend-item">
+          <ya-led color="rgba(0, 255, 0)" [fade]="false" />
+          OK, activity
+        </div>
+        <div class="legend-item">
+          <ya-led color="red" [fade]="false" />
+          Error
+        </div>
+        <div class="legend-item">
+          <ya-led color="#aaa" [fade]="false" />
+          Disabled
+        </div>
+      </div>
+    </ya-panel>
+  </div>
+</ya-instance-page>
+```
+
+### `link-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/link-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ActionInfo,
+  BaseComponent,
+  LinkEvent,
+  LinkSubscription,
+  WebappSdkModule,
+  YaColumnInfo,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { LinkDetailComponent } from '../link-detail/link-detail.component';
+import { LinkStatusComponent } from '../link-status/link-status.component';
+import { LinksPageTabsComponent } from '../links-page-tabs/links-page-tabs.component';
+import { LinkService } from '../shared/link.service';
+import { LinkItem } from './model';
+
+@Component({
+  templateUrl: './link-list.component.html',
+  styleUrl: './link-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    LinkDetailComponent,
+    LinkStatusComponent,
+    LinksPageTabsComponent,
+    WebappSdkModule,
+  ],
+})
+export class LinkListComponent
+  extends BaseComponent
+  implements AfterViewInit, OnDestroy
+{
+  filterControl = new UntypedFormControl();
+
+  // Link to show detail pane (only on single selection)
+  detailLink$ = new BehaviorSubject<LinkItem | null>(null);
+
+  columns: YaColumnInfo[] = [
+    { id: 'select', label: '', alwaysVisible: true },
+    { id: 'status', label: '', alwaysVisible: true },
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'className', label: 'Class name' },
+    { id: 'in', label: 'In count', visible: true },
+    { id: 'out', label: 'Out count', visible: true },
+    { id: 'detailedStatus', label: 'Detail', visible: true },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  dataSource = new MatTableDataSource<LinkItem>();
+  selection = new SelectionModel<LinkItem>(true, []);
+
+  private selectionSubscription: Subscription;
+  private linkSubscription: LinkSubscription;
+
+  private itemsByName: { [key: string]: LinkItem } = {};
+
+  constructor(
+    private route: ActivatedRoute,
+    private linkService: LinkService,
+  ) {
+    super();
+    this.setTitle('Links');
+
+    this.dataSource.filterPredicate = (item, filter) => {
+      return (
+        item.link.name.toLowerCase().indexOf(filter) >= 0 ||
+        item.link.type.toLowerCase().indexOf(filter) >= 0
+      );
+    };
+
+    this.selectionSubscription = this.selection.changed.subscribe(() => {
+      const selected = this.selection.selected;
+      if (selected.length === 1) {
+        this.detailLink$.next(selected[0]);
+      } else {
+        this.detailLink$.next(null);
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.dataSource.filter = queryParams.get('filter')!.toLowerCase();
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+
+      for (const item of this.selection.selected) {
+        if (this.dataSource.filteredData.indexOf(item) === -1) {
+          this.selection.deselect(item);
+        }
+      }
+    });
+
+    // Fetch with REST first, otherwise may take up to a second
+    // before we get an update via websocket.
+    this.yamcs.yamcsClient.getLinks(this.yamcs.instance!).then((links) => {
+      for (const link of links) {
+        const linkItem = { link, hasChildren: false, expanded: false };
+        this.itemsByName[link.name] = linkItem;
+      }
+      for (const link of links) {
+        // 2nd pass
+        if (link.parentName) {
+          const parent = this.itemsByName[link.parentName];
+          parent.hasChildren = true;
+          this.itemsByName[link.name].parentLink = parent.link;
+        }
+      }
+
+      this.updateDataSource();
+
+      this.linkSubscription = this.yamcs.yamcsClient.createLinkSubscription(
+        {
+          instance: this.yamcs.instance!,
+        },
+        (evt) => {
+          this.processLinkEvent(evt);
+        },
+      );
+    });
+  }
+
+  // trackBy is needed to prevent menu from closing when
+  // the link is updated.
+  tableTrackerFn = (index: number, item: LinkItem) => item.link.name;
+
+  expandItem($event: Event, item: LinkItem) {
+    item.expanded = !item.expanded;
+
+    // Unselect child links when parent is collapsed
+    if (!item.expanded) {
+      for (const selectedItem of this.selection.selected) {
+        if (
+          selectedItem.parentLink &&
+          selectedItem.parentLink.name === item.link.name
+        ) {
+          this.selection.deselect(selectedItem);
+        }
+      }
+    }
+
+    this.updateDataSource();
+
+    // Prevent row selection
+    $event.stopPropagation();
+  }
+
+  enableLink(link: string) {
+    this.yamcs.yamcsClient
+      .enableLink(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  disableLink(link: string) {
+    this.yamcs.yamcsClient
+      .disableLink(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  resetCounters(link: string) {
+    this.yamcs.yamcsClient
+      .resetLinkCounters(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  runAction(link: string, action: ActionInfo) {
+    this.linkService.runAction(link, action);
+  }
+
+  mayControlLinks() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlLinks');
+  }
+
+  private processLinkEvent(evt: LinkEvent) {
+    const linkNames: string[] = [];
+    for (const linkInfo of evt.links || []) {
+      linkNames.push(linkInfo.name);
+
+      // Update detail pane
+      const selectedItem = this.detailLink$.value;
+      if (selectedItem && selectedItem.link.name === linkInfo.name) {
+        selectedItem.link = linkInfo;
+        for (const subitem of Object.values(this.itemsByName)) {
+          if (subitem.link.parentName === linkInfo.name) {
+            subitem.parentLink = linkInfo;
+          }
+        }
+        this.detailLink$.next({ ...selectedItem });
+      }
+
+      if (linkInfo.name in this.itemsByName) {
+        this.itemsByName[linkInfo.name].link = linkInfo;
+      } else {
+        const linkItem = {
+          link: linkInfo,
+          hasChildren: false,
+          expanded: false,
+        };
+        this.itemsByName[linkInfo.name] = linkItem;
+      }
+
+      for (const item of Object.values(this.itemsByName)) {
+        if (item.parentLink && item.parentLink.name === linkInfo.name) {
+          item.parentLink = linkInfo;
+        }
+        if (linkInfo.parentName && linkInfo.parentName === item.link.name) {
+          item.hasChildren = true;
+        }
+      }
+    }
+
+    const toBeDeleted: string[] = [];
+    for (const itemName in this.itemsByName) {
+      if (linkNames.indexOf(itemName) === -1) {
+        const item = this.itemsByName[itemName];
+        this.selection.deselect(item);
+        toBeDeleted.push(itemName);
+      }
+    }
+    for (const itemName of toBeDeleted) {
+      delete this.itemsByName[itemName];
+    }
+
+    this.updateDataSource();
+
+    // Needed to show table updates in combination with trackBy
+    this.changeDetection.detectChanges();
+  }
+
+  private updateDataSource() {
+    const data = Object.values(this.itemsByName).filter((item) => {
+      const parentName = item.link.parentName;
+      if (!parentName) {
+        return true;
+      } else {
+        const parent = this.itemsByName[parentName];
+        return parent.expanded;
+      }
+    });
+    data.sort((x, y) => {
+      const xParts = x.link.name.split('.');
+      const yParts = y.link.name.split('.');
+      for (let i = 0; i < Math.max(xParts.length, yParts.length); i++) {
+        const xPart = i < xParts.length ? xParts[i] : '';
+        const yPart = i < yParts.length ? yParts[i] : '';
+        const cmp = xPart.localeCompare(yPart);
+        if (cmp !== 0) {
+          return cmp;
+        }
+      }
+      return 0;
+    });
+    this.dataSource.data = data;
+  }
+
+  allowGroupEnable() {
+    // Allow if at least one of the selected links is disabled
+    for (const item of this.selection.selected) {
+      if (item.link.disabled) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  allowGroupDisable() {
+    // Allow if at least one of the selected links is enabled
+    for (const item of this.selection.selected) {
+      if (!item.link.disabled) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  toggleOne(row: LinkItem) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+    this.openDetailPane();
+  }
+
+  enableSelectedLinks() {
+    for (const item of this.selection.selected) {
+      this.enableLink(item.link.name);
+    }
+  }
+
+  disableSelectedLinks() {
+    for (const item of this.selection.selected) {
+      this.disableLink(item.link.name);
+    }
+  }
+
+  resetCountersForSelectedLinks() {
+    for (const item of this.selection.selected) {
+      this.resetCounters(item.link.name);
+    }
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectNext() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem =
+        this.selection.selected[this.selection.selected.length - 1];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.clear();
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.clear();
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue() && this.selection.selected.length === 1) {
+      const item = this.selection.selected[0];
+      this.router.navigate(['/links', item.link.name], {
+        queryParams: { c: this.yamcs.context },
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.selectionSubscription?.unsubscribe();
+    this.linkSubscription?.cancel();
+  }
+}
+```
+
+### `model.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-list/model.ts`
+
+
+```typescript
+import { Link } from '@yamcs/webapp-sdk';
+
+export interface LinkItem {
+  link: Link;
+  hasChildren: boolean;
+  expanded: boolean;
+  parentLink?: Link;
+}
+```

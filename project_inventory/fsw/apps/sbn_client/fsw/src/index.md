@@ -3,40 +3,1707 @@
 
 **경로:** `fsw/apps/sbn_client/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_client.c`
 
-file--sbn_client.c
-file--sbn_client.h
-file--sbn_client_defs.h
-file--sbn_client_ingest.c
-file--sbn_client_ingest.h
-file--sbn_client_init.c
-file--sbn_client_logger.c
-file--sbn_client_logger.h
-file--sbn_client_minders.c
-file--sbn_client_minders.h
-file--sbn_client_utils.c
-file--sbn_client_utils.h
-file--sbn_client_version.h
-file--sbn_client_wrappers.c
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client.h"
+#include "sbn_client_ingest.h"
+#include "sbn_client_utils.h"
+
+/* Global variables */
+CFE_SBN_Client_PipeD_t PipeTbl[CFE_PLATFORM_SBN_CLIENT_MAX_PIPES];
+MsgId_to_pipes_t MsgId_Subscriptions[CFE_SBN_CLIENT_MSG_ID_TO_PIPE_ID_MAP_SIZE];
+int sbn_client_sockfd = 0;
+int sbn_client_cpuId = 0;
+// TODO: Our use of sockfd is not uniform. Should pass to each function XOR use as global
+// TODO: sbn_client_cpuId does not need to live here; perhaps it should go elsewhere
+
+
+void CFE_SBN_Client_InitPipeTbl(void)
+{
+    uint8  i;
+
+    for(i = 0; i < CFE_PLATFORM_SBN_CLIENT_MAX_PIPES; i++){
+        invalidate_pipe(&PipeTbl[i]);
+    }/* end for */
+    
+    
+}
+
+/**
+ * \brief Sends a local subscription over the wire to a peer.
+ *
+ * @param[in] SubType Whether this is a subscription or unsubscription.
+ * @param[in] MsgID The CCSDS message ID being (un)subscribed.
+ * @param[in] QoS The CCSDS quality of service being (un)subscribed.
+ * @param[in] Peer The Peer interface
+ */
+void SendSubToSbn(int SubType, CFE_SB_MsgId_t MsgID,
+    CFE_SB_Qos_t QoS)
+{
+    char Buf[SBN_PACKED_SUB_SZ] = {0};
+    Pack_t Pack;
+    Pack_Init(&Pack, Buf, SBN_PACKED_SUB_SZ, 0);
+    Pack_Int16(&Pack, 67); //KB: Size?
+    Pack_UInt8(&Pack, SubType);
+    Pack_UInt32(&Pack, 2); // cpuID
+    // Pack_UInt32(&Pack, 0x42); // spacecraft ID
+    Pack_UInt32(&Pack, 0x2A); // spacecraft ID
+    Pack_Data(&Pack, (void *)SBN_IDENT, (size_t)SBN_IDENT_LEN);
+    Pack_UInt16(&Pack, 1);
+
+    Pack_MsgID(&Pack, MsgID);
+    // Pack_UInt32(&Pack, 0x08FA);
+    Pack_Data(&Pack, &QoS, sizeof(QoS)); /* 2 uint8's */
+
+    // printf("SBN_CLIENT SendSubtoSbn: sockfd: %d SubType = %d, MsgID = %lu, MsgSz = %d, Msg = 0x", sbn_client_sockfd, SubType, MsgID.Value, Pack.BufUsed);
+    // for(size_t i = 0; i < Pack.BufUsed; i++)
+    // {
+    //     printf("%c", /*(uint8_t*)*/ Buf[i]);
+    // }
+    // printf("\n");
+    
+    size_t write_result = write_message(sbn_client_sockfd, Buf, Pack.BufUsed);
+    
+    if (write_result != Pack.BufUsed)
+    {
+      log_message("SBN_CLIENT: ERROR SendSubToSbn!!\n");
+    }
+    
+}/* end SendLocalSubToPeer */
+
+
+int32 recv_msg(int32 sockfd)
+{
+    unsigned char sbn_hdr_buffer[SBN_PACKED_HDR_SZ];
+    unsigned char msg[CFE_SBN_CLIENT_MAX_MESSAGE_SIZE];
+    SBN_MsgSz_t MsgSz;
+    SBN_MsgType_t MsgType;
+    uint32 CpuID;
+    uint32 SpacecraftID;
+    
+    int status = CFE_SBN_CLIENT_ReadBytes(sockfd, sbn_hdr_buffer, 
+                                          SBN_PACKED_HDR_SZ);
+    
+    if (status != CFE_SUCCESS)
+    {
+        printf("SBN_CLIENT: recv_msg call to CFE_SBN_CLIENT_ReadBytes returned" 
+               "status = %d\n", status);
+    }
+    else
+    {
+        Pack_t Pack;
+        Pack_Init(&Pack, sbn_hdr_buffer, SBN_PACKED_HDR_SZ, 0);
+        Unpack_Int16(&Pack, &MsgSz);
+        Unpack_UInt8(&Pack, &MsgType);
+        Unpack_UInt32(&Pack, &CpuID);
+        Unpack_UInt32(&Pack, &SpacecraftID);
+
+        //TODO: check cpuID and SpacecraftID to see if it is correct for this location? And check that it isn't the heartbeat
+        // if(MsgType != 0xA0)
+        // {
+        //     printf("SBN_CLIENT: recv_msg with MsgType = %d, CpuID = 0x%04x, SCID = 0x%04x, MsgSz = %d, Msg = 0x", MsgType, CpuID, SpacecraftID, MsgSz);
+        //     for(SBN_MsgSz_t i = 0; i < MsgSz; i++)
+        //     {
+        //         printf("%02x",msg[i]);
+        //     }
+        //     printf("\n");
+        // }
+
+
+        switch(MsgType)
+        {
+            case SBN_NO_MSG:
+                status = CFE_SBN_CLIENT_ReadBytes(sockfd, msg, MsgSz);
+                // printf("SBN_CLIENT: recv_msg with MsgType = %d, CpuID = 0x%04x, SCID = 0x%04x, MsgSz = %d, Msg = 0x", MsgType, CpuID, SpacecraftID, MsgSz);
+                // for(SBN_MsgSz_t i = 0; i < MsgSz; i++)
+                // {
+                //     printf("%02x",msg[i]);
+                //     // if(msg[i] != "\0")
+                //     // {
+                //     //     printf("%c", msg[i]);
+                //     // }
+                // }
+                // printf("\n");
+                break;
+            case SBN_SUB_MSG:
+                status = CFE_SBN_CLIENT_ReadBytes(sockfd, msg, MsgSz);
+                // printf("SBN_CLIENT: recv_msg with MsgType = %d, CpuID = 0x%04x, SCID = 0x%04x, MsgSz = %d, Msg = 0x", MsgType, CpuID, SpacecraftID, MsgSz);
+                // for(SBN_MsgSz_t i = 0; i < MsgSz; i++)
+                // {
+                //     printf("%02x",msg[i]);
+                //     // if(msg[i] != "\0")
+                //     // {
+                //         // printf("%c", msg[i]);
+                //     // }
+                // }
+                // printf("\n");
+                break;
+            case SBN_UNSUB_MSG:
+                status = CFE_SBN_CLIENT_ReadBytes(sockfd, msg, MsgSz);
+                // printf("SBN_CLIENT: recv_msg with MsgType = %d, CpuID = 0x%04x, SCID = 0x%04x, MsgSz = %d, Msg = 0x", MsgType, CpuID, SpacecraftID, MsgSz);
+                // for(SBN_MsgSz_t i = 0; i < MsgSz; i++)
+                // {
+                //     printf("%02x",msg[i]);
+                //     // if(msg[i] != "\0")
+                //     // {
+                //     //     printf("%c", msg[i]);
+                //     // }
+                // }
+                // printf("\n");
+                break;
+            case SBN_APP_MSG:
+                ingest_app_message(sockfd, MsgSz);
+                status = CFE_SUCCESS;
+                break;
+            case SBN_PROTO_MSG:      
+                status = CFE_SBN_CLIENT_ReadBytes(sockfd, msg, MsgSz);
+                // printf("SBN_CLIENT: recv_msg with MsgType = %d, CpuID = 0x%04x, SCID = 0x%04x, MsgSz = %d, Msg = 0x", MsgType, CpuID, SpacecraftID, MsgSz);
+                // for(SBN_MsgSz_t i = 0; i < MsgSz; i++)
+                // {
+                //     printf("%02x",msg[i]);
+                //     // if(msg[i] != "\0")
+                //     // {
+                //     //     printf("%c", msg[i]);
+                //     // }
+                // }
+                // printf("\n");
+                break;
+            case SBN_HEARTBEAT_MSG:
+                status = CFE_SBN_CLIENT_ReadBytes(sockfd, msg, MsgSz);
+                break;
+
+            default:
+                log_message("SBN_CLIENT: ERROR - recv_msg unrecognized type %d\n", MsgType);
+                status =  CFE_EVS_EventType_ERROR; //TODO: change error
+        }
+        
+    }
+    
+    return status;
+}
+
 ```
 
-## 항목
+### `sbn_client.h`
 
-- [`fsw/apps/sbn_client/fsw/src/sbn_client.c`](file--sbn_client.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client.h`](file--sbn_client.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_defs.h`](file--sbn_client_defs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_ingest.c`](file--sbn_client_ingest.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_ingest.h`](file--sbn_client_ingest.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_init.c`](file--sbn_client_init.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_logger.c`](file--sbn_client_logger.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_logger.h`](file--sbn_client_logger.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_minders.c`](file--sbn_client_minders.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_minders.h`](file--sbn_client_minders.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_utils.c`](file--sbn_client_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_utils.h`](file--sbn_client_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_version.h`](file--sbn_client_version.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/src/sbn_client_wrappers.c`](file--sbn_client_wrappers.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_h_
+#define _sbn_client_h_
+
+/************************************************************************
+** Includes
+*************************************************************************/
+
+#include "sbn_interfaces.h"
+
+/************************************************************************
+** Constants Definitions
+*************************************************************************/
+#define SBN_CLIENT_SUCCESS                      OS_SUCCESS
+
+#define CFE_SBN_CLIENT_NOT_IN_USE               0
+#define CFE_SBN_CLIENT_IN_USE                   1
+#define CFE_SBN_CLIENT_UNUSED_QUEUE             0xFFFF
+#define CFE_SBN_CLIENT_BAD_ARGUMENT             CFE_SB_BAD_ARGUMENT
+// Do not use CFE_SB_INVALID_PIPE for an invalid pipe: SBN_Client maps the PipeId directly to an index
+#define CFE_SBN_CLIENT_INVALID_PIPE             CFE_SB_PIPEID_C(CFE_RESOURCEID_RESERVED)
+#define SBN_CLIENT_NO_STATUS_SET                0xFFFF
+#define SBN_CLIENT_BAD_SOCK_FD_EID              0x0100
+#define CFE_SBN_CLIENT_CR_PIPE_BAD_ARG_EID      1002
+#define CFE_SBN_CLIENT_MAX_PIPES_MET            1003
+#define CFE_SBN_CLIENT_MAX_PIPES_MET_EID        1004
+#define CFE_SBN_CLIENT_CR_PIPE_ERR_EID          1005
+#define CFE_SBN_CLIENT_PIPE_ADDED_EID           1006
+#define CFE_SBN_CLIENT_PIPE_DELETED_EID         1007
+#define CFE_SBN_CLIENT_MAX_MSG_IDS_MET          0xFF
+#define CFE_SBN_CLIENT_MAX_MSG_IDS_MET_EID      1009
+#define CFE_SBN_CLIENT_PIPE_BROKEN_ERR          1010
+#define CFE_SBN_CLIENT_PIPE_CLOSED_ERR          1011
+#define CFE_SBN_CLIENT_PIPE_CR_ERR              ((int32)0xca001005)
+#define SBN_CLIENT_HEART_THREAD_CREATE_EID      1012
+#define SBN_CLIENT_RECEIVE_THREAD_CREATE_EID    1013
+
+#define CFE_SBN_CLIENT_INVALID_MSG_ID           CFE_SB_INVALID_MSG_ID
+#define CFE_SBN_CLIENT_NO_PROTOCOL              0
+
+#define SERVER_SOCKET_ERROR                     -1
+#define SERVER_INET_PTON_SRC_ERROR              -2
+#define SERVER_INET_PTON_INVALID_AF_ERROR       -3
+#define SERVER_CONNECT_ERROR                    -4
+
+
+/*************************************************************************
+** Exported Functions
+*************************************************************************/
+
+void CFE_SBN_Client_InitPipeTbl(void);
+int32 recv_msg(int32);
+void SendSubToSbn(int, CFE_SB_MsgId_t, CFE_SB_Qos_t);
+
+#endif /* _sbn_client_h_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sbn_client_defs.h`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_defs.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_defs_h_
+#define _sbn_client_defs_h_
+
+/* Refer to sbn_cont_tbl.c to make sure port and ip_addr match
+ * SBN is running here: <- Should be in the platform config */
+#define SBN_CLIENT_PORT    2234
+#define SBN_CLIENT_IP_ADDR "sc01-nos-fsw"
+
+#define CFE_SBN_CLIENT_MSG_ID_TO_PIPE_ID_MAP_SIZE   32
+#define SBN_HEARTBEAT_MSG                           0xA0
+#define CFE_SBN_CLIENT_MAX_MESSAGE_SIZE             CFE_MISSION_SB_MAX_SB_MSG_SIZE
+#define CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE         4
+#define CFE_PLATFORM_SBN_CLIENT_MAX_PIPES           5 /* CFE_PLATFORM_SB_MAX_PIPES could be used */
+#define CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH      32
+
+#endif /* _sbn_client_defs_h_ */
+```
+
+### `sbn_client_ingest.c`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_ingest.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include <pthread.h>
+#include <string.h>
+
+#include "sbn_client_ingest.h"
+
+pthread_mutex_t receive_mutex      = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t  received_condition = PTHREAD_COND_INITIALIZER;
+
+/* TODO: Using memcpy to move message into pipe. What about pointer passing?
+ *    Can we only look to msgId then memcpy only that then read directly
+ *    into pipe? This could speed things up... 
+ * passing pointers will only work here if it is guaranteed that the message 
+ * will not be destroyed.  SBN may not be able to provide that assurance */
+
+void ingest_app_message(int SockFd, SBN_MsgSz_t MsgSz)
+{
+    int            status, i;
+    bool           at_least_1_pipe_is_in_use = false;
+    unsigned char  msg_buffer[CFE_SBN_CLIENT_MAX_MESSAGE_SIZE];
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_Message_t* MsgPtr = (CFE_MSG_Message_t*) msg_buffer;
+    
+    status = CFE_SBN_CLIENT_ReadBytes(SockFd, msg_buffer, MsgSz);
+    // printf("SBN_CLIENT: Ingest Msg with size %d, data = 0x", MsgSz);
+    // for(SBN_MsgSz_t i = 0; i < MsgSz; i++)
+    // {
+    //     printf("%02x",msg_buffer[i]);
+    // }
+    // printf("\n");
+    
+    if (status != CFE_SUCCESS)
+    {
+        char error_message[61];
+        
+        snprintf(error_message, sizeof(error_message), 
+          "CFE_SBN_CLIENT_ReadBytes returned a bad status = 0x%08X\n", status);
+        log_message(error_message);
+        
+        return;
+    }
+
+    CFE_MSG_GetMsgId(MsgPtr, &MsgId);
+    
+    pthread_mutex_lock(&receive_mutex);
+    
+    /* Put message into pipe */    
+    for(i = 0; i < CFE_PLATFORM_SBN_CLIENT_MAX_PIPES; i++)
+    {    
+        if (PipeTbl[i].InUse == CFE_SBN_CLIENT_IN_USE)
+        {
+            int j;
+            
+            at_least_1_pipe_is_in_use = true;
+            
+            for(j = 0; j < CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE; j++)
+            {
+                if (CFE_SB_MsgIdToValue(PipeTbl[i].SubscribedMsgIds[j]) == CFE_SB_MsgIdToValue(MsgId))
+                {
+                    if (PipeTbl[i].NumberOfMessages == CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)
+                    {
+                        /* TODO: handle error pipe overflow */
+                        log_message("SBN_CLIENT: ERROR pipe overflow");
+                        
+                        pthread_mutex_unlock(&receive_mutex);
+                        return;
+                    }
+                    else /* message is put into pipe */
+                    {    
+                        log_message("App message received: MsgId 0x%08X", MsgId);
+                        
+                        memcpy(PipeTbl[i].Messages[message_entry_point(PipeTbl[i])], msg_buffer, MsgSz);
+                        PipeTbl[i].NumberOfMessages++;
+                        
+                        pthread_mutex_unlock(&receive_mutex);
+
+                        /* only a received message should send signal */
+                        pthread_cond_signal(&received_condition);
+                        
+                        return;
+                    } /* end if */
+                    
+                }/* end if */
+                 
+            } /* end for */
+            
+        } /* end if */
+    
+    } /* end for */
+    
+    if (at_least_1_pipe_is_in_use)
+    {
+        log_message("SBN_CLIENT: ERROR no subscription for this msgid");  
+    }
+    else
+    {
+        log_message("SBN_CLIENT: No pipes are in use");
+    }
+    
+    pthread_mutex_unlock(&receive_mutex);
+}
+```
+
+### `sbn_client_ingest.h`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_ingest.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_ingest_h_
+#define _sbn_client_ingest_h_
+
+#include "sbn_interfaces.h"
+#include "sbn_client_utils.h"
+
+
+/**
+ * Extern reference to sbn client pipe table.
+ * Allows the message ingest to fill the pipe
+ */
+extern CFE_SBN_Client_PipeD_t PipeTbl[CFE_PLATFORM_SBN_CLIENT_MAX_PIPES];
+ 
+ /****************** Function Prototypes **********************/
+ 
+ /** @defgroup SBNCLIENTIngest 
+  * @{
+  */
+ 
+ /*****************************************************************************/
+ /** 
+ ** \brief Receive an app message and direct it into pipe.
+ **
+ ** \par Description
+ **          This routine reads the given number of bytes from the given socket,
+ **          which becomes the message.  The message is then copied into the
+ **          correct pipe for the message's id.
+ **
+ ** \par Assumptions, External Events, and Notes:
+ **          The socket has been setup and receives app messages.
+ **
+ ** \param[in]  SockFd       A socket file descriptor that connects to the 
+ **                          that delivers app messages. 
+ **
+ ** \param[in]  MsgSz        The number of bytes to read for the message.
+ **
+ **/
+void ingest_app_message(int SockFd, SBN_MsgSz_t MsgSz);
+ 
+ /**@}*/
+#endif /* _sbn_client_ingest_h_ */
+```
+
+### `sbn_client_init.c`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_init.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include <pthread.h>
+
+#include "sbn_client.h"
+#include "sbn_client_minders.h"
+#include "sbn_client_utils.h"
+
+/* Start additional includes for hostname snippet */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+/* End additional includes for hostname snippet */
+
+
+
+extern int sbn_client_sockfd;
+extern int sbn_client_cpuId;
+
+pthread_t receive_thread_id;
+pthread_t heart_thread_id;
+
+int32 SBN_Client_Init(void)
+{
+    int32 status = SBN_CLIENT_NO_STATUS_SET;
+    int heart_thread_status = 0;
+    int receive_thread_status = 0;
+
+    log_message("SBN_Client Resolving Name %s\n", SBN_CLIENT_IP_ADDR);
+
+    struct addrinfo hints, *res, *p;
+    char Addr[INET_ADDRSTRLEN] = "0.0.0.0"; // Default fallback address
+    void *addr;
+    
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;  // Use AF_UNSPEC for IPv6 support if needed
+    hints.ai_socktype = SOCK_STREAM;
+
+    if (getaddrinfo(SBN_CLIENT_IP_ADDR, NULL, &hints, &res) == 0)
+    {
+        for (p = res; p != NULL; p = p->ai_next)
+        {
+            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+            addr = &(ipv4->sin_addr);
+
+            // Convert to string and store in Addr
+            if (inet_ntop(p->ai_family, addr, Addr, sizeof(Addr)) != NULL)
+            {
+                break;
+            }
+        }
+        freeaddrinfo(res);
+    }
+
+    log_message("SBN_Client Resolved %s to %s\n", SBN_CLIENT_IP_ADDR, Addr);
+    log_message("SBN_Client Connecting to %s, %d\n", Addr, SBN_CLIENT_PORT);
+
+    sbn_client_sockfd = connect_to_server(Addr, SBN_CLIENT_PORT);
+    sbn_client_cpuId = 2; /* TODO: hardcoded, but should be set by cFS SBN ?? */
+
+    if (sbn_client_sockfd < 0)
+    {
+        log_message("SBN_CLIENT: ERROR Failed to get sbn_client_sockfd, cannot continue.");
+        status = SBN_CLIENT_BAD_SOCK_FD_EID;
+    }
+    else
+    {
+        log_message("SBN_Client Connected to %s:%d, sockfd=%d\n", Addr, SBN_CLIENT_PORT, sbn_client_sockfd);
+        CFE_SBN_Client_InitPipeTbl();
+
+        /* heartbeat thread establishes live connection */
+        heart_thread_status = pthread_create(&heart_thread_id, NULL, SBN_Client_HeartbeatMinder, NULL);
+        status = check_pthread_create_status(heart_thread_status, SBN_CLIENT_HEART_THREAD_CREATE_EID);
+
+        /* receive thread monitors for messages */
+        if (status == SBN_CLIENT_SUCCESS)
+        {
+            log_message("SBN Client Created Heart pthread");
+            receive_thread_status = pthread_create(&receive_thread_id, NULL, SBN_Client_ReceiveMinder, NULL);
+            status = check_pthread_create_status(receive_thread_status, SBN_CLIENT_RECEIVE_THREAD_CREATE_EID);
+        }
+    }
+
+    if (status != SBN_CLIENT_SUCCESS)
+    {
+        log_message("SBN_Client_Init error %d\n", status);
+    }
+    else
+    {
+        log_message("SBN Client Created Receive pthread, init success!");
+    }
+
+    return status;
+} /* end SBN_Client_Init */
+```
+
+### `sbn_client_logger.c`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_logger.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_logger.h"
+
+int32 log_message(const char * format, ...)
+{
+  int32 num_char_written;
+  va_list vl;
+  char error_message[MAX_LOG_MESSAGE_SIZE];
+
+  va_start(vl, format);
+   
+  num_char_written = vsnprintf(error_message, MAX_LOG_MESSAGE_SIZE, format, vl);
+  
+  va_end(vl);
+  
+  /* TODO: puts should be changed to put messages into a file or send event in 
+  ** order to reduce spamming when multiple errors are encountered */
+  puts(error_message);
+  
+  return num_char_written;
+}
+```
+
+### `sbn_client_logger.h`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_logger.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_logger_h_
+#define _sbn_client_logger_h_
+
+#include <stdio.h>
+#include <stdarg.h>
+
+/* common_types.h are cFE defined types */
+#include "common_types.h"
+
+
+
+#define MAX_LOG_MESSAGE_SIZE   80
+
+/******************************************************************************
+** File: sbn_client_logger.h
+**
+** Purpose:
+**      This header file contains the definition of the cFS sbn_client app's 
+**      logging functions.  The log function is called for important events
+**      (i.e. error output).  Currently it outputs the message, but this can
+**      (and should!) be updated to put them in a file or something else to
+**      reduce output when lots of errors happen quickly.
+**
+** Author:   A.Gibson/587
+**
+******************************************************************************/
+/****************** Function Prototypes **********************/
+
+/** @defgroup SBNCLIENTLogger sbn_client logger
+ * @{
+ */
+
+/*****************************************************************************/
+/** 
+** \brief Initialized the client by connecting to SBN.
+**
+** \par Description
+**          This function takes a variable argument stream to create a message
+**          for output.  Commonly used for important events that a user needs
+**          to be informed about
+**
+** \par Assumptions, External Events, and Notes:
+**          Needs updated to put messages somewhere like a file, or 
+**          alternatively have a level of output (DEBUG, INFO, ERROR) to select
+**          when a message should be displayed.
+**
+**
+** \return Number of characters successfully written to the message
+**
+*/
+int32 log_message(const char * format, ...);
+/**@}*/
+
+#endif /* _sbn_client_init_h_ */
+```
+
+### `sbn_client_minders.c`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_minders.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include <unistd.h>
+
+#include "sbn_client.h"
+#include "sbn_client_minders.h"
+#include "sbn_client_utils.h"
+
+#define SECONDS_BETWEEN_HEARTBEATS   5
+
+extern int sbn_client_sockfd;
+
+bool continue_heartbeat = true;
+bool continue_receive_check = true;
+
+
+void *SBN_Client_HeartbeatMinder(void *vargp)
+{
+    if(SECONDS_BETWEEN_HEARTBEATS != 0)
+    {
+        while(continue_heartbeat) /* TODO: check run state? */
+        {
+            
+            if (sbn_client_sockfd != 0)
+            {
+                send_heartbeat(sbn_client_sockfd);
+            } /* end if */
+            
+            sleep(SECONDS_BETWEEN_HEARTBEATS);
+        } /* end while */
+    }
+    
+    return NULL;
+} /* end SBN_Client_HeartbeatMinder */
+
+
+void *SBN_Client_ReceiveMinder(void *vargp)
+{
+    int32 status;
+    int32 consec_error_count = 0;
+    
+    while(continue_receive_check) /* TODO: check run state? */
+    {
+        status = recv_msg(sbn_client_sockfd); /* TODO: pass message pointer? */
+        /* On heartbeats, need to update known liveness state of SBN
+        ** On other messages, need to make available for next CFE_SB_ReceiveBuffer call */
+        
+        if (status != CFE_SUCCESS)
+        {
+            log_message("Receive message returned error 0x%08X\n", status);
+            consec_error_count++;
+        }
+        else
+        {
+            consec_error_count = 0;
+        } /* end if */
+
+        if (5 == consec_error_count) {
+            continue_heartbeat = false;
+            continue_receive_check = false;
+        }
+        
+    } /* end while */
+    
+    return NULL;
+} /* end SBN_Client_ReceiveMinder */
+```
+
+### `sbn_client_minders.h`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_minders.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_minders_h_
+#define _sbn_client_minders_h_
+
+void *SBN_Client_HeartbeatMinder(void *);
+void *SBN_Client_ReceiveMinder(void *);
+
+#endif /* _sbn_client_minders_h_ */
+```
+
+### `sbn_client_utils.c`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_utils.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include <unistd.h>
+#include <errno.h>
+#include <arpa/inet.h>
+// #include <stdlib.h>
+
+/* Start additional includes for hostname snippet */
+#include<sys/socket.h>
+#include<netdb.h>	//hostent
+#include<arpa/inet.h>
+
+/* End additional includes for hostname snippet */
+
+#include "sbn_client_utils.h"
+
+extern CFE_SBN_Client_PipeD_t PipeTbl[CFE_PLATFORM_SBN_CLIENT_MAX_PIPES];
+
+struct sockaddr_in server_address;
+
+
+int32 check_pthread_create_status(int status, int32 errorId)
+{
+    int32 thread_status;
+    
+    if (status == 0)
+    {
+        thread_status = SBN_CLIENT_SUCCESS; 
+    }
+    else
+    {
+        switch(status)
+        {
+            case EAGAIN:
+            log_message("Create thread error = EAGAIN");
+            break;
+            
+            case EINVAL:
+            log_message("Create thread error = EINVAL");
+            break;
+            
+            case EPERM:
+            log_message("Create thread error = EPERM");
+            break;
+            
+            default:
+            printf("Unknown thread creation error = %d\n", status);        
+        }
+        
+        perror("pthread_create error");
+        
+        thread_status = errorId;
+    }/* end if */
+    
+    return thread_status;
+}
+
+/* message_entry_point determines which slot a new message enters the pipe.
+ * the mod allows it to go around the bend easily, i.e. 2 + 4 % 5 = 1, 
+ * slots 2,3,4,0 are taken so 1 is entry */
+int message_entry_point(CFE_SBN_Client_PipeD_t pipe)
+{
+    return (pipe.ReadMessage + pipe.NumberOfMessages) % 
+        CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+}
+
+int CFE_SBN_CLIENT_ReadBytes(int sockfd, unsigned char *msg_buffer, 
+                             size_t MsgSz)
+{
+    int bytes_received = 0;
+    int total_bytes_recd = 0;
+    
+    /* TODO:Some kind of timeout on this? */
+    while (total_bytes_recd != MsgSz)
+    {
+        bytes_received = read(sockfd, msg_buffer + total_bytes_recd, 
+                              MsgSz - total_bytes_recd);
+        
+        if (bytes_received < 0)
+        {
+            /* TODO:ERROR socket is dead somehow */       
+            log_message("SBN_CLIENT: ERROR CFE_SBN_CLIENT_PIPE_BROKEN_ERR\n");
+            return CFE_SBN_CLIENT_PIPE_BROKEN_ERR;
+        }
+        else if (bytes_received == 0)
+        {
+            /* TODO:ERROR closed remotely */
+            log_message("SBN_CLIENT: ERROR CFE_SBN_CLIENT_PIPE_CLOSED_ERR: %s\n", strerror(errno));
+            return CFE_SBN_CLIENT_PIPE_CLOSED_ERR;
+        }
+        
+        total_bytes_recd += bytes_received;
+    }
+    // 
+    // log_message("CFE_SBN_CLIENT_ReadBytes THIS MESSAGE:");
+    // int i =0;
+    // for (i = 0; i < MsgSz; i++)
+    // {
+    //     printf("0x%02X ", msg_buffer[i]);
+    // }
+    // printf("\n");
+    
+    return CFE_SUCCESS;
+}
+
+void invalidate_pipe(CFE_SBN_Client_PipeD_t *pipe)
+{
+    int i;
+    
+    pipe->InUse         = CFE_SBN_CLIENT_NOT_IN_USE;
+    pipe->SysQueueId    = CFE_SBN_CLIENT_UNUSED_QUEUE;
+    pipe->PipeId        = CFE_SBN_CLIENT_INVALID_PIPE;
+    /* SB always holds one message so Number of messages should always be a minimum of 1 */
+    pipe->NumberOfMessages = 1;
+    /* Message to be read will be incremented after receive is called */
+    /* Therefore initial next message is the last in the chain */
+    pipe->ReadMessage = CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1;
+    memset(&pipe->PipeName[0],0,OS_MAX_API_NAME);
+    
+    for(i = 0; i < CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE; i++)
+    {
+        pipe->SubscribedMsgIds[i] = CFE_SBN_CLIENT_INVALID_MSG_ID;
+    }
+}
+
+size_t write_message(int sockfd, char *buffer, size_t size)
+{
+  size_t result;
+  
+  result = write(sockfd, buffer, size);
+
+//   printf("sbn_client_utils: write_message: sockfd: %d, size: %lu, buffer: 0x", sockfd, size);
+//   for(size_t i = 0; i < size; i++)
+//   {
+//       printf("%02x", (uint8_t*) buffer[i]);
+//   }
+//   printf("\n");
+  
+  return result;
+}
+    
+uint32 CFE_SBN_Client_GetPipeIdx(CFE_SB_PipeId_t PipeId)
+{
+    uint32 PipeIdx = (uint32) CFE_RESOURCEID_UNWRAP(PipeId);
+    /* Quick check because PipeId should match PipeIdx */
+    if (CFE_RESOURCEID_TEST_EQUAL(PipeTbl[PipeIdx].PipeId, PipeId)
+        && PipeTbl[PipeIdx].InUse == CFE_SBN_CLIENT_IN_USE)
+    {
+        return PipeIdx;
+    }
+    else
+    {
+        int i;
+    
+        for(i=0;i<CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;i++)
+        {
+
+            if(CFE_RESOURCEID_TEST_EQUAL(PipeTbl[i].PipeId, PipeId)
+               && PipeTbl[i].InUse == CFE_SBN_CLIENT_IN_USE)
+            {
+                return i;
+            }/* end if */
+
+        } /* end for */
+    
+        /* Pipe ID not found */
+        return (uint32) CFE_RESOURCEID_UNWRAP(CFE_SBN_CLIENT_INVALID_PIPE);
+    }/* end if */
+  
+}/* end CFE_SBN_Client_GetPipeIdx */
+
+uint8 CFE_SBN_Client_GetMessageSubscribeIndex(CFE_SB_PipeId_t PipeId)
+{
+    uint32 PipeIdx = (uint32) CFE_RESOURCEID_UNWRAP(PipeId);
+    int i;
+    
+    for (i = 0; i < CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE; i++)
+    {
+        if (CFE_SB_MsgIdToValue(PipeTbl[PipeIdx].SubscribedMsgIds[i]) == CFE_SB_MsgIdToValue(CFE_SBN_CLIENT_INVALID_MSG_ID))
+        {
+            return i;
+        }
+    }
+    
+    return CFE_SBN_CLIENT_MAX_MSG_IDS_MET;
+}
+
+// TODO: Could match the new CFE_MSG_GetMsgId semantics...
+CFE_SB_MsgId_t CFE_SBN_Client_GetMsgId(CFE_MSG_Message_t * MsgPtr)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+
+    //uint32            SubSystemId;
+
+    CFE_MSG_GetMsgId(MsgPtr, &MsgId);
+
+    // TODO: Not sure if the type and subsystem still need to be captured...
+    //if ( CCSDS_RD_TYPE(MsgPtr->Hdr) == CCSDS_CMD)
+    //  MsgId = MsgId | CFE_SB_CMD_MESSAGE_TYPE;
+
+    /* Add in the SubSystem ID as needed */
+    //SubSystemId = CCSDS_RD_SUBSYSTEM_ID(MsgPtr->SpacePacket.ApidQ);
+    //MsgId = (MsgId | (SubSystemId << 8));
+
+    return MsgId;
+}/* end CFE_SBN_Client_GetMsgId */
+
+// TODO: return value?
+int send_heartbeat(int sockfd)
+{
+    int retval;
+    char sbn_header[SBN_PACKED_HDR_SZ] = {0};
+    
+    Pack_t Pack;
+    Pack_Init(&Pack, sbn_header, 0 + SBN_PACKED_HDR_SZ, 0);
+    
+    Pack_UInt16(&Pack, 0);
+    Pack_UInt8(&Pack, SBN_HEARTBEAT_MSG);
+    // TODO: should not hardcode CpuID (2) and Spacecraft ID (0x42)
+    Pack_UInt32(&Pack, 2);
+    // Pack_UInt32(&Pack, 0x42);
+    Pack_UInt32(&Pack, 0x2A);
+
+    // printf("Sending Client Heartbeat, Proc: %lu, SCID, %lu, Type: %d, MsgSz: %lu, Msg 0x", 2, 0x2A, SBN_HEARTBEAT_MSG, sizeof(sbn_header));
+    // uint8_t * msg_char = (uint8_t*) Pack.Buf;
+    // for(size_t i = 0; i < sizeof(sbn_header); i++)
+    // {
+    //     printf("%02x", (uint8_t*) msg_char[i]);
+    // }
+    // printf("\n");
+    
+    retval = write(sockfd, sbn_header, sizeof(sbn_header));
+    
+    return retval;
+}
+
+CFE_MSG_Size_t CFE_SBN_Client_GetTotalMsgLength(const CFE_MSG_Message_t * MsgPtr)
+{
+    CFE_MSG_Size_t MsgSize = 0;
+
+    CFE_MSG_GetSize(MsgPtr, &MsgSize);
+
+    return MsgSize;
+}/* end CFE_SBN_Client_GetTotalMsgLength */
+
+int connect_to_server(const char *server_ip, uint16_t server_port)
+{
+    int sockfd, address_converted, connection;
+        
+    sleep(5);
+
+    /* Create an ipv4 TCP socket */
+    sockfd = socket(AF_INET, SOCK_STREAM, CFE_SBN_CLIENT_NO_PROTOCOL);
+
+    /* Socket error */
+    if (sockfd < 0)
+    {
+        switch(errno)
+        {
+            case EACCES:
+            case EAFNOSUPPORT:
+            case EINVAL:
+            case EMFILE:
+            case ENOBUFS:
+            case ENOMEM:
+            case EPROTONOSUPPORT:
+                log_message("Socket err = %s", strerror(errno));
+                break;  
+            
+            default:
+                log_message("Unknown socket error = %s", strerror(errno));  
+        }
+        
+        return SERVER_SOCKET_ERROR;
+    }
+    
+    memset(&server_address, '0', sizeof(server_address));
+
+    server_address.sin_family = AF_INET;
+    server_address.sin_port = htons(server_port);
+
+
+    // /* 
+    //     DNS Resolution for FSW Container 
+    //     Start hostname snippet from: https://stackoverflow.com/questions/38002016/problems-with-gethostbyname-c
+    // */
+    // struct hostent *he;
+    // struct in_addr **addr_list;
+    // int i;
+
+    // if ( (he = gethostbyname(server_ip) ) != NULL) 
+    // {
+    //     addr_list = (struct in_addr **) he->h_addr_list;
+    //     for(i = 0; addr_list[i] != NULL; i++) 
+    //     {
+    //         //Return the first one;
+    //         strcpy(&server_address.sin_addr, inet_ntoa(*addr_list[i]) );
+    //         break;
+    //     }
+    // }
+    // /* 
+    //     End hostname snippet from: https://stackoverflow.com/questions/38002016/problems-with-gethostbyname-c
+    // */
+
+    address_converted = inet_pton(AF_INET, server_ip, &server_address.sin_addr);
+    
+    /* inet_pton can have two separate errors, a value of 1 is success. */
+    if (address_converted == 0)
+    {
+        perror("connect_to_server inet_pton 0 error");
+        return SERVER_INET_PTON_SRC_ERROR;
+    }
+
+    if (address_converted == -1)
+    {
+        perror("connect_to_server inet_pton -1 error");
+        return SERVER_INET_PTON_INVALID_AF_ERROR;
+    }
+
+    connection = connect(sockfd, (struct sockaddr *)&server_address,
+                         sizeof(server_address));
+    
+    /* Connect error */
+    if (connection < 0)
+    {
+        switch(errno)
+        {
+            case EACCES:
+            case EPERM:
+            case EADDRINUSE:
+            case EADDRNOTAVAIL:
+            case EAFNOSUPPORT:
+            case EAGAIN:
+            case EALREADY:
+            case EBADF:
+            case ECONNREFUSED:
+            case EFAULT:
+            case EINPROGRESS:
+            case EINTR:
+            case EISCONN:
+            case ENETUNREACH:
+            case ENOTSOCK:
+            case EPROTOTYPE:
+            case ETIMEDOUT:
+                log_message("connect err = %s", strerror(errno));
+                break;
+            
+            default:
+                log_message("Unknown connect error = %s", strerror(errno)); 
+        }
+        
+        log_message("SERVER_CONNECT_ERROR: Connect failed error: %d\n", connection);
+        return SERVER_CONNECT_ERROR;
+    }
+
+    return sockfd;
+}
+```
+
+### `sbn_client_utils.h`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_utils.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_utils_h_
+#define _sbn_client_utils_h_
+
+#include <stdint.h>
+#include <stdarg.h>
+
+#include "sbn_pack.h"
+#include "sbn_client.h"
+#include "sbn_client_logger.h"
+#include "sbn_client_defs.h"
+
+/************************************************************************
+** Type Definitions
+*************************************************************************/
+
+/* TODO: Doxygen comments */
+typedef struct {
+    uint8             InUse;
+    CFE_SB_PipeId_t   PipeId;
+    char              PipeName[OS_MAX_API_NAME];
+    char              AppName[OS_MAX_API_NAME];
+    uint8             Opts;
+    uint8             Spare;
+    uint32            AppId;
+    uint32            SysQueueId;
+    uint32            LastSender;
+    uint16            QueueDepth;
+    uint16            SendErrors;
+    uint32            NumberOfMessages;
+    uint32            ReadMessage;
+    unsigned char     Messages[CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH][CFE_SBN_CLIENT_MAX_MESSAGE_SIZE];
+    CFE_SB_MsgId_t    SubscribedMsgIds[CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE];
+} CFE_SBN_Client_PipeD_t;
+
+/* TODO: Doxygen comments */
+typedef struct {
+  int  msgId;
+  int  pipeIds[CFE_PLATFORM_SBN_CLIENT_MAX_PIPES];
+} MsgId_to_pipes_t;
+
+
+
+int32 check_pthread_create_status(int, int32);
+int message_entry_point(CFE_SBN_Client_PipeD_t);
+int CFE_SBN_CLIENT_ReadBytes(int, unsigned char *, size_t);
+void invalidate_pipe(CFE_SBN_Client_PipeD_t *);
+size_t write_message(int, char *, size_t);
+uint32 CFE_SBN_Client_GetPipeIdx(CFE_SB_PipeId_t);
+uint8 CFE_SBN_Client_GetMessageSubscribeIndex(CFE_SB_PipeId_t);
+CFE_SB_MsgId_t CFE_SBN_Client_GetMsgId(CFE_MSG_Message_t *);
+int send_heartbeat(int);
+CFE_MSG_Size_t CFE_SBN_Client_GetTotalMsgLength(const CFE_MSG_Message_t *);
+int connect_to_server(const char *, uint16_t);
+
+#endif /* _sbn_client_utils_h_ */
+
+```
+
+### `sbn_client_version.h`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_version.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_version_h_
+#define _sbn_client_version_h_
+
+#define SBN_CLIENT_MAJOR_VERSION    1
+#define SBN_CLIENT_MINOR_VERSION    1
+#define SBN_CLIENT_REVISION         0
+#define SBN_CLIENT_MISSION_REV      0
+
+#endif /* _sbn_client_version_h_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sbn_client_wrappers.c`
+
+**경로:** `fsw/apps/sbn_client/fsw/src/sbn_client_wrappers.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include <pthread.h>
+#include <math.h>
+#include <time.h>
+#include <errno.h>
+
+#include "sbn_client.h"
+#include "sbn_client_utils.h"
+#include "sbn_client_wrappers.h"
+
+extern CFE_SBN_Client_PipeD_t PipeTbl[CFE_PLATFORM_SBN_CLIENT_MAX_PIPES];
+extern int sbn_client_sockfd;
+extern int sbn_client_cpuId;
+extern pthread_mutex_t receive_mutex;
+extern pthread_cond_t  received_condition;
+
+int32 __wrap_CFE_SB_CreatePipe(CFE_SB_PipeId_t *PipeIdPtr, uint16 Depth, const char *PipeName)
+{
+    uint32 i;
+    int32 status = CFE_SBN_CLIENT_MAX_PIPES_MET;
+
+    log_message("Enter Create Pipe. %s\n", __func__);
+    
+    /* TODO:AppId is static for now */
+    
+    /* TODO:caller name is static for now */    
+    /* caller name will not require NULL terminator */
+    
+    /* TODO: determine if semaphore is necessary */
+    
+    /* sets user's pipe id value to 'invalid' for error cases */
+    if(PipeIdPtr != NULL)
+    {
+        log_message("Create Pipe, PipeID Not Null. PipeID: %d\n", *PipeIdPtr);
+        *PipeIdPtr = CFE_SBN_CLIENT_INVALID_PIPE;
+    }/* end if */
+    
+    /* verify input parameters are valid */
+    if((PipeIdPtr == NULL)||(Depth > CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)||(Depth == 0))
+    {
+        status = CFE_SBN_CLIENT_BAD_ARGUMENT;
+    }
+    else
+    {
+        
+        for(i = 0; i<CFE_PLATFORM_SBN_CLIENT_MAX_PIPES; i++)
+        {
+          
+            if (PipeTbl[i].InUse != CFE_SBN_CLIENT_IN_USE)
+            {
+                log_message("Enter Pipe Tbl If. %s\n", __func__);
+                // TODO:Initialize pipe
+                PipeTbl[i].InUse = CFE_SBN_CLIENT_IN_USE;
+                //PipeTbl[i].SysQueueId = ?
+                PipeTbl[i].PipeId = CFE_ResourceId_FromInteger(i);
+                //PipeTbl[i].QueueDepth = ?
+                //PipeTbl[i].AppId = ?
+                PipeTbl[i].SendErrors = 0;
+                //strcpy(&CFE_SB.PipeTbl[PipeTblIdx].AppName[0],&AppName[0]); TODO: is App name required? will cfs proxy handle it?
+                strncpy(&PipeTbl[i].PipeName[0], PipeName, OS_MAX_API_NAME); //TODO: Use different value for size?
+                //TODO: init Messages to empty?
+
+                *PipeIdPtr = CFE_ResourceId_FromInteger(i);
+
+                log_message("Pipe Info:\n PipeTbl[i].PipeID: %d\n PipeIDPtr: %d\n PipeName: %s\n", PipeTbl[i].PipeId, *PipeIdPtr, PipeName);
+
+                status = SBN_CLIENT_SUCCESS;
+                break;
+            }/* end if */
+            
+        }/* end for */
+        
+    }/* end if */
+        
+    return status;
+} /* end __wrap_CFE_SB_CreatePipe */
+
+int32 __wrap_CFE_SB_DeletePipe(CFE_SB_PipeId_t PipeId)
+{
+    uint8 i;
+
+    for(i = 0; i < CFE_PLATFORM_SBN_CLIENT_MAX_PIPES; i++)
+    {
+        if (CFE_RESOURCEID_TEST_EQUAL(PipeTbl[i].PipeId, PipeId))
+        {
+            if (PipeTbl[i].InUse == CFE_SBN_CLIENT_IN_USE)
+            {
+                invalidate_pipe(&PipeTbl[i]);
+                return CFE_SUCCESS;
+            }
+            else
+            {
+                //TODO:error
+                return -1;
+            }
+            
+        }
+        
+    }
+    
+    //TODO: if we get here no pipes matched, error
+    
+    return -2;
+} /* end __wrap_CFE_SB_DeletePipe */
+
+int32 __wrap_CFE_SB_Subscribe(CFE_SB_MsgId_t  MsgId, CFE_SB_PipeId_t PipeId)
+{
+    uint32 PipeIdx;
+    uint8 MsgIdIdx;
+    CFE_SB_Qos_t QoS;
+  
+    /* take semaphore to prevent a task switch during this call NOTE:is this necessary for sbn_client?*/
+  
+    /* get task id for events NOTE: probably not necessary for sbn_client*/
+  
+    /* get the callers Application Id  NOTE: we already have this locally*/
+  
+    /* check that the pipe has been created */
+
+    if (CFE_RESOURCEID_TEST_EQUAL(PipeId, CFE_SBN_CLIENT_INVALID_PIPE))
+    {
+      //TODO:Error here
+      return CFE_SBN_CLIENT_BAD_ARGUMENT;
+    }
+  
+    /* check that the requestor is the owner of the pipe NOTE: not necessary because there can be only 1 app? */
+  
+    /* check message id key and scope NOTE: do the same as cfe_sb_api?*/
+  
+    /* Convert the API MsgId into the SB internal representation MsgKey NOTE: not sure what this does yet*/
+  
+    /* check for duplicate subscription */  
+  
+    /* check for multiple subscriptions to same pipe? TODO: not sure how this is done */
+  
+    /* Get the index to the first available element in the routing table NOTE:how does routing table work? do I need it?*/
+  
+    MsgIdIdx = CFE_SBN_Client_GetMessageSubscribeIndex(PipeId);
+    //printf("MsgIdIdx = %d\n", MsgIdIdx);
+    if (MsgIdIdx == CFE_SBN_CLIENT_MAX_MSG_IDS_MET)
+    {
+        //TODO:Error here
+        return CFE_SBN_CLIENT_BAD_ARGUMENT;
+    }
+    
+    PipeIdx = CFE_SBN_Client_GetPipeIdx(PipeId);
+    PipeTbl[PipeIdx].SubscribedMsgIds[MsgIdIdx] = MsgId;
+    
+    QoS.Priority = 0x00;
+    QoS.Reliability = 0x00;
+    
+    SendSubToSbn(SBN_SUB_MSG, MsgId, QoS);
+    
+    return CFE_SUCCESS;
+} /* end __wrap_CFE_SB_Subscribe */
+
+int32 __wrap_CFE_SB_SubscribeEx(CFE_SB_MsgId_t  MsgId, CFE_SB_PipeId_t PipeId, 
+                                CFE_SB_Qos_t Quality, uint16 MsgLim)
+{
+    printf ("SBN_CLIENT: ERROR CFE_SB_SubscribeEx not yet implemented\n");
+    return -1;
+} /* end __wrap_CFE_SB_Subscribe */
+
+int32 __wrap_CFE_SB_SubscribeLocal(CFE_SB_MsgId_t  MsgId, 
+                                   CFE_SB_PipeId_t PipeId, 
+                                   uint16 MsgLim)
+{
+    printf ("SBN_CLIENT: ERROR CFE_SB_SubscribeLocal not yet implemented\n");
+    return -1;
+} /* end __wrap_CFE_SB_SubscribeLocal */
+
+int32 __wrap_CFE_SB_Unsubscribe(CFE_SB_MsgId_t  MsgId, CFE_SB_PipeId_t PipeId)
+{
+    printf ("SBN_CLIENT: ERROR CFE_SB_Unsubscribe not yet implemented\n");
+    return -1;
+} /* end __wrap_CFE_SB_Unsubscribe */
+
+int32 __wrap_CFE_SB_UnsubscribeLocal(CFE_SB_MsgId_t  MsgId, 
+                                     CFE_SB_PipeId_t PipeId)
+{
+    printf ("SBN_CLIENT: ERROR CFE_SB_UnsubscribeLocal not yet implemented\n");
+    return -1;
+} /* end __wrap_CFE_SB_UnsubscribeLocal */
+
+uint32 __wrap_CFE_SB_TransmitMsg(const CFE_MSG_Message_t *MsgPtr, bool IncrementSequenceCount)
+{
+    char *buffer;
+    CFE_MSG_Size_t msg_size = CFE_SBN_Client_GetTotalMsgLength(MsgPtr);
+
+    size_t write_result, total_size = msg_size + SBN_PACKED_HDR_SZ;
+    Pack_t Pack;
+
+    if (total_size > CFE_SBN_CLIENT_MAX_MESSAGE_SIZE)
+    {
+        return CFE_SB_MSG_TOO_BIG;
+    }
+
+    buffer = malloc(total_size);
+
+    Pack_Init(&Pack, buffer, total_size, 0);
+
+    Pack_UInt16(&Pack, msg_size);
+    Pack_UInt8(&Pack, SBN_APP_MSG);
+    Pack_UInt32(&Pack, sbn_client_cpuId);
+    // Pack_UInt32(&Pack, 0x42);
+    Pack_UInt32(&Pack, 0x2A);
+
+    memcpy(buffer + SBN_PACKED_HDR_SZ, MsgPtr, msg_size);
+
+    write_result = write_message(sbn_client_sockfd, buffer, total_size);
+
+    if (write_result != total_size)
+    {
+        // TODO: This isn't an allocation error, but must return an error that CFE_SB_TransmitMsg would return, is there a better choice here?
+        return CFE_SB_BUF_ALOC_ERR;
+    }
+
+    free(buffer);
+
+    return CFE_SUCCESS;
+} /* end __wrap_CFE_SB_TransmitMsg */
+
+int32 __wrap_CFE_SB_ReceiveBuffer(CFE_SB_Buffer_t **BufPtr, CFE_SB_PipeId_t PipeId, int32 TimeOut)
+{
+    uint32          PipeIdx;
+    int32           status = CFE_SUCCESS;
+    struct timespec enter_time;
+    
+    clock_gettime(CLOCK_MONOTONIC, &enter_time);
+    
+    if (BufPtr == NULL)
+    {  
+        log_message("SBN_CLIENT: BUFFER POINTER IS NULL!");
+        status = CFE_SB_BAD_ARGUMENT;
+    }
+    else if (TimeOut < -1)
+    {
+        log_message("SBN_CLIENT: TIMEOUT IS LESS THAN -1!");
+        status = CFE_SB_BAD_ARGUMENT;
+    }
+    else
+    {
+        if (CFE_RESOURCEID_TEST_EQUAL(PipeId, CFE_SBN_CLIENT_INVALID_PIPE))
+        {
+            log_message("SBN_CLIENT: ERROR INVALID PIPE ERROR!");
+            status = CFE_SB_BAD_ARGUMENT;
+        }
+    } /* end if */
+    
+    if (status == CFE_SUCCESS)
+    {
+        PipeIdx = CFE_SBN_Client_GetPipeIdx(PipeId);
+        int lock_mutex_status = 0;
+        int wait_mutex_status = 0;
+        int unlock_mutex_status = 0;
+        CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[PipeIdx];
+    
+        lock_mutex_status = pthread_mutex_lock(&receive_mutex);
+        
+        /* Number of messages must be 2 or more otherwise no new messages are
+         * in the pipe */
+        if (pipe->NumberOfMessages < 2 && lock_mutex_status == 0)
+        {
+            
+            if (TimeOut == CFE_SB_POLL)
+            {
+                status = CFE_SB_NO_MESSAGE;
+            }
+            else if (TimeOut == CFE_SB_PEND_FOREVER)
+            {
+                wait_mutex_status = pthread_cond_wait(&received_condition, 
+                                                      &receive_mutex);
+            }
+            else /* Timout set to value */
+            {
+                struct timespec future_timeout;
+          
+                /* set future time for timeout check to entry time + timeout 
+                 * milliseconds */
+                future_timeout.tv_sec = enter_time.tv_sec;
+                future_timeout.tv_nsec = enter_time.tv_nsec + (TimeOut * pow(10, 6));
+          
+                /* when nsec greater than 1 second perform update to seconds and 
+                 * nanoseconds */
+                if (future_timeout.tv_nsec >= pow(10, 9))
+                {
+                  future_timeout.tv_sec += future_timeout.tv_nsec / pow(10, 9);
+                  future_timeout.tv_nsec = future_timeout.tv_nsec % (long) pow(10, 9);
+                }
+          
+                wait_mutex_status = pthread_cond_timedwait(&received_condition, 
+                                                           &receive_mutex, 
+                                                           &future_timeout);
+                  
+            } /* end if */
+            
+        } /* end if */
+        
+        if (lock_mutex_status == 0)
+        {
+            
+            if (wait_mutex_status != 0)
+            {
+                
+                switch (wait_mutex_status)
+                {
+                    case ETIMEDOUT:
+                        status = CFE_SB_TIME_OUT;
+                        break;
+                    default:
+                        status = CFE_SB_PIPE_RD_ERR;
+                }
+                
+            }
+        
+            if (status == CFE_SUCCESS)
+            {
+                /* must progress to next message in pipe because currently 
+                 * pointed to message is the last message that was read */
+                uint32 next_msg = (pipe->ReadMessage + 1) % 
+                  CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+                pipe->ReadMessage = next_msg;
+        
+                *BufPtr = (CFE_SB_Buffer_t *)(&(pipe->Messages[next_msg]));
+        
+                pipe->NumberOfMessages -= 1;
+                status = CFE_SUCCESS;
+            } /* end if */
+            
+            unlock_mutex_status = pthread_mutex_unlock(&receive_mutex);
+
+            if (unlock_mutex_status != 0)
+            {
+              status = CFE_SB_PIPE_RD_ERR;
+            } /* end if */
+            
+        }
+        else
+        {
+            status = CFE_SB_PIPE_RD_ERR;
+        } /* end if */
+    
+        if (status != CFE_SUCCESS)
+        {
+            *BufPtr = NULL;
+        } /* end if */
+    
+    } /* end if */
+    
+    return status;
+} /* end __wrap_CFE_SB_ReceiveBuffer */
+
+// Zero copy is not implemented
+CFE_SB_Buffer_t * __wrap_CFE_SB_AllocateMessageBuffer(size_t MsgSize) {
+    printf ("SBN_CLIENT: ERROR %s not implemented\n", __func__);
+    return NULL;
+}
+
+CFE_Status_t __wrap_CFE_SB_ReleaseMessageBuffer(CFE_SB_Buffer_t *BufPtr) {
+    printf ("SBN_CLIENT: ERROR %s not implemented\n", __func__);
+    return -1;
+}
+
+CFE_Status_t __wrap_CFE_SB_TransmitBuffer(CFE_SB_Buffer_t *BufPtr, bool IncrementSequenceCount) {
+    printf ("SBN_CLIENT: ERROR %s not implemented\n", __func__);
+    return -1;
+}
+```

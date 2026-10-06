@@ -3,18 +3,173 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-info-tab.component.css`
 
-file--table-info-tab.component.css
-file--table-info-tab.component.html
-file--table-info-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/table-info-tab.component.css`
+
+
+```css
+.enum {
+  border-bottom: 1px dotted #888;
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `table-info-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/table-info-tab.component.css`](file--table-info-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/table-info-tab.component.html`](file--table-info-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/table-info-tab.component.ts`](file--table-info-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/table-info-tab.component.html`
+
+
+```html
+@if (table$ | async; as table) {
+  <ya-panel>
+    <h3>Key</h3>
+    <table yaDataTable class="expand">
+      <tr>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Extra</th>
+        <th class="expand"></th>
+      </tr>
+      @for (column of table.keyColumn; track column) {
+        <tr>
+          <td>{{ column.name }}</td>
+          <td>
+            @if (column.type === "ENUM") {
+              <span (click)="showEnum(column)" matTooltip="Show enum states" class="enum">
+                {{ column.type }}
+              </span>
+            }
+            @if (column.type !== "ENUM") {
+              {{ column.type }}
+            }
+          </td>
+          <td>
+            {{ column.autoIncrement ? "auto_increment" : "-" }}
+          </td>
+          <td></td>
+        </tr>
+      }
+    </table>
+    <p>&nbsp;</p>
+    <h3>Value</h3>
+    <table yaDataTable>
+      <tr>
+        <th>Column</th>
+        <th>Type</th>
+        <th>Extra</th>
+        <th class="expand"></th>
+      </tr>
+      @for (column of table.valueColumn; track column) {
+        <tr>
+          <td>{{ column.name }}</td>
+          <td>
+            @if (column.type === "ENUM") {
+              <span (click)="showEnum(column)" matTooltip="Show enum states" class="enum">
+                {{ column.type }}
+              </span>
+            }
+            @if (column.type !== "ENUM") {
+              {{ column.type }}
+            }
+          </td>
+          <td>
+            {{ column.autoIncrement ? "auto_increment" : "-" }}
+          </td>
+          <td></td>
+        </tr>
+      }
+    </table>
+    <p>&nbsp;</p>
+    <h3>Options</h3>
+    <dl class="dl-horizontal">
+      <dt>Format version</dt>
+      <dd>{{ table.formatVersion }}</dd>
+      <dt>Storage engine</dt>
+      <dd>{{ table.storageEngine }}</dd>
+      <dt>Tablespace</dt>
+      <dd>{{ table.tablespace || "-" }}</dd>
+      <dt>Compressed</dt>
+      <dd>{{ table.compressed ? "yes" : "no" }}</dd>
+      <dt>Histogram</dt>
+      <dd>
+        @if (table.histogramColumn) {
+          @for (col of table.histogramColumn; track col; let last = $last) {
+            {{ col }}
+            @if (!last) {
+              <span>,</span>
+            }
+          }
+        }
+        @if (!table.histogramColumn) {
+          -
+        }
+      </dd>
+      <dt>Partition by</dt>
+      <dd>{{ (table.partitioningInfo?.type | lowercase) || "-" }}</dd>
+      @if (table.partitioningInfo?.timeColumn) {
+        <dt>Time partition column</dt>
+        <dd>
+          {{ table.partitioningInfo?.timeColumn }}('{{
+            table.partitioningInfo?.timePartitionSchema
+          }}')
+        </dd>
+      }
+      @if (table.partitioningInfo?.valueColumn) {
+        <dt>Value partition column</dt>
+        <dd>
+          {{ table.partitioningInfo?.valueColumn }}
+        </dd>
+      }
+    </dl>
+  </ya-panel>
+}
+```
+
+### `table-info-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/table-info-tab.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import {
+  Column,
+  Table,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { ShowEnumDialogComponent } from '../show-enum-dialog/show-enum-dialog.component';
+
+@Component({
+  templateUrl: './table-info-tab.component.html',
+  styleUrl: './table-info-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TableInfoTabComponent {
+  table$: Promise<Table>;
+
+  constructor(
+    route: ActivatedRoute,
+    yamcs: YamcsService,
+    private dialog: MatDialog,
+  ) {
+    const parent = route.snapshot.parent!;
+    const database = parent.parent!.paramMap.get('database')!;
+    const name = parent.paramMap.get('table')!;
+    this.table$ = yamcs.yamcsClient.getTable(database, name);
+  }
+
+  showEnum(column: Column) {
+    this.dialog.open(ShowEnumDialogComponent, {
+      width: '400px',
+      data: { column },
+    });
+  }
+}
+```

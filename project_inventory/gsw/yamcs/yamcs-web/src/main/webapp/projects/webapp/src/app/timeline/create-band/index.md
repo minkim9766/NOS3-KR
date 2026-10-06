@@ -3,18 +3,345 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-band.component.css`
 
-file--create-band.component.css
-file--create-band.component.html
-file--create-band.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/create-band.component.css`
+
+
+```css
+div.category-title {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 1em;
+}
+
+a.band-type {
+  display: inline-block;
+  width: 260px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  vertical-align: top;
+  text-decoration: none;
+}
+
+.card {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.card-title {
+  align-items: center;
+  display: flex;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.card-content {
+  padding: 0 15px 15px;
+  min-height: 2.4em;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.card-preview {
+  height: 30px;
+  line-height: 0;
+  pointer-events: none;
+}
+
+a.band-type:hover .card {
+  background-color: #f2f2f2;
+}
 ```
 
-## 항목
+### `create-band.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/create-band.component.css`](file--create-band.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/create-band.component.html`](file--create-band.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/create-band.component.ts`](file--create-band.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/create-band.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button routerLink=".." [queryParams]="{ c: yamcs.context }" icon="arrow_back" />
+      Create band
+    </ng-template>
+  </ya-instance-toolbar>
+
+  <app-create-band-wizard-step step="1"></app-create-band-wizard-step>
+
+  <ya-panel>
+    <div class="category-title">General</div>
+    <div class="band-type-list">
+      <a class="band-type" routerLink="time-ruler" [queryParams]="{ c: yamcs.context }">
+        <div class="card">
+          <div class="card-title">Time ruler</div>
+          <div class="card-content">Display absolute time, formatted in a timezone of choice.</div>
+          <div class="card-preview" #timeRuler></div>
+        </div>
+      </a>
+      <a class="band-type" routerLink="item-band" [queryParams]="{ c: yamcs.context }">
+        <div class="card">
+          <div class="card-title">Item band</div>
+          <div class="card-content">Show a selection of timeline items.</div>
+          <div class="card-preview" #itemBand></div>
+        </div>
+      </a>
+      <a class="band-type" routerLink="spacer" [queryParams]="{ c: yamcs.context }">
+        <div class="card">
+          <div class="card-title">Spacer</div>
+          <div class="card-content">
+            Insert empty vertical space.
+            <br />
+            <br />
+          </div>
+          <div class="card-preview" #spacer></div>
+        </div>
+      </a>
+    </div>
+
+    <p>&nbsp;</p>
+    <div class="category-title">Yamcs content</div>
+    <div class="band-type-list">
+      <a class="band-type" routerLink="parameter-plot" [queryParams]="{ c: yamcs.context }">
+        <div class="card">
+          <div class="card-title">Parameter plot</div>
+          <div class="card-content">Plot the values of a numeric parameter.</div>
+          <div class="card-preview" #parameterPlot></div>
+        </div>
+      </a>
+      <a class="band-type" routerLink="parameter-states" [queryParams]="{ c: yamcs.context }">
+        <div class="card">
+          <div class="card-title">Parameter states</div>
+          <div class="card-content">Show state transitions of a parameter.</div>
+          <div class="card-preview" #parameterStates></div>
+        </div>
+      </a>
+      <a class="band-type" routerLink="command-band" [queryParams]="{ c: yamcs.context }">
+        <div class="card">
+          <div class="card-title">Commands</div>
+          <div class="card-content">
+            Display issued commands.
+            <br />
+            <br />
+          </div>
+          <div class="card-preview" #commandBand></div>
+        </div>
+      </a>
+    </div>
+  </ya-panel>
+</ya-instance-page>
+```
+
+### `create-band.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/create-band.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  viewChild,
+} from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import {
+  Banner,
+  ItemBand,
+  LinePlot,
+  StateBand,
+  Timeline,
+  TimeRuler,
+} from '@fqqb/timeline';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { CreateBandWizardStepComponent } from '../create-band-wizard-step/create-band-wizard-step.component';
+
+@Component({
+  templateUrl: './create-band.component.html',
+  styleUrl: './create-band.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CreateBandWizardStepComponent, WebappSdkModule],
+})
+export class CreateBandComponent implements AfterViewInit, OnDestroy {
+  previewHeight = 30;
+
+  timeRulerContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('timeRuler');
+  timeRulerPreview?: Timeline;
+
+  itemBandContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('itemBand');
+  itemBandPreview?: Timeline;
+
+  spacerContainer = viewChild.required<ElementRef<HTMLDivElement>>('spacer');
+  spacerPreview?: Timeline;
+
+  parameterPlotContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('parameterPlot');
+  parameterPlotPreview?: Timeline;
+
+  parameterStatesContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('parameterStates');
+  parameterStatesPreview?: Timeline;
+
+  commandBandContainer =
+    viewChild.required<ElementRef<HTMLDivElement>>('commandBand');
+  commandBandPreview?: Timeline;
+
+  constructor(
+    title: Title,
+    readonly yamcs: YamcsService,
+  ) {
+    title.setTitle('Create a band');
+  }
+
+  ngAfterViewInit(): void {
+    this.createTimeRulerPreview();
+    this.createItemBandPreview();
+    this.createSpacerPreview();
+    this.createParameterPlotPreview();
+    this.createParameterStatesPreview();
+    this.createCommandBandPreview();
+  }
+
+  private createTimeRulerPreview() {
+    const target = this.timeRulerContainer().nativeElement;
+    target.style.height = `${this.previewHeight + 1}px`;
+    this.timeRulerPreview = new Timeline(target);
+    this.timeRulerPreview.sidebar = undefined;
+    this.timeRulerPreview.tool = undefined;
+    this.timeRulerPreview.background = 'transparent';
+
+    const start = new Date();
+    start.setUTCHours(0, 0, 0, 0);
+    const stop = new Date(start.getTime());
+    stop.setUTCMinutes(30);
+    this.timeRulerPreview.setViewRange(start.getTime(), stop.getTime());
+
+    const band = new TimeRuler(this.timeRulerPreview);
+    band.timezone = 'UTC';
+    band.contentHeight = this.previewHeight;
+  }
+
+  private createItemBandPreview() {
+    const target = this.itemBandContainer().nativeElement;
+    target.style.height = `${this.previewHeight + 1}px`;
+    this.itemBandPreview = new Timeline(target);
+    this.itemBandPreview.sidebar = undefined;
+    this.itemBandPreview.tool = undefined;
+    this.itemBandPreview.background = 'transparent';
+    this.itemBandPreview.setViewRange(0, 100);
+
+    const band = new ItemBand(this.itemBandPreview);
+    band.itemHeight = this.previewHeight;
+    band.paddingTop = 0;
+    band.paddingBottom = 0;
+    band.items = [
+      { start: 10, stop: 30, label: 'A' },
+      { start: 50, stop: 60, label: 'B' },
+      { start: 80, stop: 95, label: 'C' },
+    ];
+  }
+
+  private createSpacerPreview() {
+    const target = this.spacerContainer().nativeElement;
+    target.style.height = `${this.previewHeight + 1}px`;
+    this.spacerPreview = new Timeline(target);
+    this.spacerPreview.sidebar = undefined;
+    this.spacerPreview.tool = undefined;
+    this.spacerPreview.background = 'transparent';
+
+    const band = new Banner(this.spacerPreview);
+    band.text = '[empty space]';
+    band.contentHeight = this.previewHeight;
+    band.paddingTop = 0;
+    band.paddingBottom = 0;
+  }
+
+  private createParameterPlotPreview() {
+    const target = this.parameterPlotContainer().nativeElement;
+    target.style.height = `${this.previewHeight + 1}px`;
+    this.parameterPlotPreview = new Timeline(target);
+    this.parameterPlotPreview.sidebar = undefined;
+    this.parameterPlotPreview.tool = undefined;
+    this.parameterPlotPreview.background = 'transparent';
+    this.parameterPlotPreview.setViewRange(0, 50);
+
+    const band = new LinePlot(this.parameterPlotPreview);
+    band.contentHeight = this.previewHeight;
+    band.paddingTop = 0;
+    band.paddingBottom = 0;
+    band.fill = 'lime';
+    band.labelBackground = 'rgba(255, 255, 255, 0.75)';
+    const points = new Map();
+    for (let i = 0; i < 50; i += 0.01) {
+      points.set(i, Math.sin(i));
+    }
+    band.lines = [
+      {
+        points,
+        pointRadius: 0,
+      },
+    ];
+  }
+
+  private createParameterStatesPreview() {
+    const target = this.parameterStatesContainer().nativeElement;
+    target.style.height = `${this.previewHeight + 1}px`;
+    this.parameterStatesPreview = new Timeline(target);
+    this.parameterStatesPreview.sidebar = undefined;
+    this.parameterStatesPreview.tool = undefined;
+    this.parameterStatesPreview.background = 'transparent';
+    this.parameterStatesPreview.setViewRange(0, 100);
+
+    const band = new StateBand(this.parameterStatesPreview);
+    band.contentHeight = this.previewHeight;
+    band.paddingTop = 0;
+    band.paddingBottom = 0;
+    band.states = [
+      { time: 0, label: 'ON', background: '#8dd3c7' },
+      { time: 30, label: 'OFF', background: '#fdb462' },
+      { time: 50, label: 'ON', background: '#8dd3c7' },
+      { time: 80, label: 'OFF', background: '#fdb462' },
+    ];
+  }
+
+  private createCommandBandPreview() {
+    const target = this.commandBandContainer().nativeElement;
+    target.style.height = `${this.previewHeight + 1}px`;
+    this.commandBandPreview = new Timeline(target);
+    this.commandBandPreview.sidebar = undefined;
+    this.commandBandPreview.tool = undefined;
+    this.commandBandPreview.background = 'transparent';
+    this.commandBandPreview.setViewRange(0, 100);
+
+    const band = new ItemBand(this.commandBandPreview);
+    band.itemHeight = this.previewHeight;
+    band.paddingTop = 0;
+    band.paddingBottom = 0;
+    band.items = [
+      { start: 10, label: 'A' },
+      { start: 50, label: 'B' },
+      { start: 80, label: 'C' },
+    ];
+  }
+
+  ngOnDestroy(): void {
+    this.timeRulerPreview?.disconnect();
+    this.itemBandPreview?.disconnect();
+    this.spacerPreview?.disconnect();
+    this.parameterPlotPreview?.disconnect();
+    this.parameterStatesPreview?.disconnect();
+    this.commandBandPreview?.disconnect();
+  }
+}
+```

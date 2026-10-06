@@ -3,30 +3,1001 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CompactFormatter.java`
 
-file--CompactFormatter.java
-file--ConsoleFormatter.java
-file--GlobalFilter.java
-file--JournalFormatter.java
-file--Log.java
-file--SyslogHandler.java
-file--WatchedFileHandler.java
-file--YamcsLogManager.java
-file--YamcsLogRecord.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/CompactFormatter.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+
+public class CompactFormatter extends Formatter {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd HH:mm:ss.SSS");
+    Date d = new Date();
+
+    @Override
+    public String format(LogRecord r) {
+        StringBuffer sb = new StringBuffer();
+
+        d.setTime(r.getMillis());
+        sb.append(sdf.format(d)).append(" ");
+
+        String yamcsInstance = "_global";
+        if (r instanceof YamcsLogRecord) {
+            YamcsLogRecord yRec = (YamcsLogRecord) r;
+            if (yRec.getYamcsInstance() != null) {
+                yamcsInstance = yRec.getYamcsInstance();
+            }
+        }
+        sb.append(yamcsInstance).append(" ").append("[").append(r.getThreadID()).append("] ");
+
+        String name = r.getLoggerName();
+        sb.append(name);
+
+        if (r instanceof YamcsLogRecord) {
+            YamcsLogRecord yRec = (YamcsLogRecord) r;
+            if (yRec.getContext() != null) {
+                sb.append("[").append(yRec.getContext()).append("]");
+            }
+        }
+        sb.append(" ");
+
+        sb.append("[").append(r.getLevel()).append("] ").append(r.getMessage());
+
+        Throwable t = r.getThrown();
+        if (t != null) {
+            sb.append(": ").append(t.toString()).append("\n");
+            for (StackTraceElement ste : t.getStackTrace()) {
+                sb.append("\t").append(ste.toString()).append("\n");
+            }
+            Throwable cause = t.getCause();
+            while (cause != null && cause != t) {
+                sb.append("Caused by: ").append(cause.toString()).append("\n");
+                for (StackTraceElement ste : cause.getStackTrace()) {
+                    sb.append("\t").append(ste.toString()).append("\n");
+                }
+                cause = cause.getCause();
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+}
 ```
 
-## 항목
+### `ConsoleFormatter.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/CompactFormatter.java`](file--CompactFormatter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/ConsoleFormatter.java`](file--ConsoleFormatter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/GlobalFilter.java`](file--GlobalFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/JournalFormatter.java`](file--JournalFormatter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/Log.java`](file--Log.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/SyslogHandler.java`](file--SyslogHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/WatchedFileHandler.java`](file--WatchedFileHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/YamcsLogManager.java`](file--YamcsLogManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/YamcsLogRecord.java`](file--YamcsLogRecord.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/ConsoleFormatter.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
+/**
+ * Specifically intended for short-term console output. It contains the bare minimum of information. Memory optimization
+ * is 'good enough' for console output.
+ * 
+ * Features:
+ * <ul>
+ * <li>Hides the day, only the hour is shown
+ * <li>Hides severities, except for 'WARNING' and 'ERROR'
+ * <li>Hides the method name
+ * <li>Supports minimal colors
+ * </ul>
+ */
+public class ConsoleFormatter extends Formatter {
+
+    private static final String COLOR_PREFIX = "\033[";
+    private static final String COLOR_SUFFIX = "m";
+    private static final String COLOR_RESET = "\033[0;0m";
+
+    private boolean enableAnsiColors = true;
+    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+    private Date d = new Date();
+
+    public void setEnableAnsiColors(boolean enableAnsiColors) {
+        this.enableAnsiColors = enableAnsiColors;
+    }
+
+    @Override
+    public String format(LogRecord r) {
+        StringBuilder sb = new StringBuilder();
+
+        d.setTime(r.getMillis());
+        sb.append(sdf.format(d)).append(" ");
+
+        String yamcsInstance = "_global";
+        if (r instanceof YamcsLogRecord) {
+            YamcsLogRecord yRec = (YamcsLogRecord) r;
+            if (yRec.getYamcsInstance() != null) {
+                yamcsInstance = yRec.getYamcsInstance();
+            }
+        }
+        sb.append(yamcsInstance).append(" ").append("[").append(r.getThreadID()).append("] ");
+
+        String name = r.getLoggerName();
+        if (name.lastIndexOf('.') != -1) {
+            name = name.substring(name.lastIndexOf('.') + 1);
+        }
+        if (r instanceof YamcsLogRecord) {
+            YamcsLogRecord yRec = (YamcsLogRecord) r;
+            if (yRec.getContext() != null) {
+                name += " [" + yRec.getContext() + "]";
+            }
+        }
+
+        if (enableAnsiColors) {
+            colorize(sb, name, 0, 36);
+            sb.append(" ");
+            if (r.getLevel() == Level.WARNING || "stdout".equals(name)) {
+                colorize(sb, formatMessage(r), 0, 33);
+            } else if (r.getLevel() == Level.SEVERE || "stderr".equals(name)) {
+                colorize(sb, formatMessage(r), 0, 31);
+            } else {
+                sb.append(formatMessage(r));
+            }
+        } else {
+            sb.append(name).append(": ");
+            sb.append(r.getLevel().toString()).append(" ").append(formatMessage(r));
+        }
+
+        Throwable t = r.getThrown();
+        if (t != null) {
+            sb.append(": ").append(t.toString()).append("\n");
+            for (StackTraceElement ste : t.getStackTrace()) {
+                sb.append("\t").append(ste.toString()).append("\n");
+            }
+            Throwable cause = t.getCause();
+            while (cause != null && cause != t) {
+                sb.append("Caused by: ").append(cause.toString()).append("\n");
+                for (StackTraceElement ste : cause.getStackTrace()) {
+                    sb.append("\t").append(ste.toString()).append("\n");
+                }
+                cause = cause.getCause();
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    private static void colorize(StringBuilder buf, String s, int brightness, int ansiColor) {
+        buf.append(COLOR_PREFIX).append(brightness).append(';').append(ansiColor).append(COLOR_SUFFIX);
+        buf.append(s);
+        buf.append(COLOR_RESET);
+    }
+}
+```
+
+### `GlobalFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/GlobalFilter.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
+
+import org.yamcs.YamcsServer;
+
+/**
+ * A filter that discards log messages that are specific to a Yamcs instance.
+ */
+public class GlobalFilter implements Filter {
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        if (record instanceof YamcsLogRecord) {
+            String yamcsInstance = ((YamcsLogRecord) record).getYamcsInstance();
+            return yamcsInstance == null || YamcsServer.GLOBAL_INSTANCE.equals(yamcsInstance);
+        }
+        return true;
+    }
+}
+```
+
+### `JournalFormatter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/JournalFormatter.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
+/**
+ * A minimalistic formatter that is intended for use with systems that use the systemd journal. Useful for quick error
+ * detection. Characteristics:
+ * 
+ * <ul>
+ * <li>Does not print timestamps (responsibility of journald)
+ * <li>Does not print full stack traces
+ * <li>Does not print Yamcs instance or logger names
+ * <li>Converts level messages to syslog conventions which journald also applies
+ * </ul>
+ * 
+ * Note that this class is just a formatter. It does not actually integrate with the systemd journal. If you want to do
+ * so you could configure a {@link ConsoleHandler} that uses this formatter and then somehow send the console output to
+ * journald (for example by using a systemd service unit).
+ */
+public class JournalFormatter extends Formatter {
+
+    // Note that there appears to be no way to make use of custom fields other
+    // than priority levels when letting journald interpret stdout. It would have
+    // been nice if we could for example introduce custom fields "instance" and
+    // "logger", but it seems like we can't without really implementing a journald
+    // domain socket client (some other day ...).
+
+    @Override
+    public String format(LogRecord r) {
+        StringBuffer sb = new StringBuffer()
+                .append("<").append(toSeverity(r.getLevel())).append(">");
+
+        if (r instanceof YamcsLogRecord) {
+            YamcsLogRecord yRec = (YamcsLogRecord) r;
+            if (yRec.getContext() != null) {
+                sb.append(yRec.getContext()).append(": ");
+            }
+        }
+        sb.append(formatMessage(r));
+
+        Throwable t = r.getThrown();
+        if (t != null) {
+            sb.append(": ").append(t.toString());
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    private static int toSeverity(Level level) {
+        if (level == Level.SEVERE) {
+            return 3; // Error
+        } else if (level == Level.WARNING) {
+            return 4; // Warning
+        } else if (level == Level.FINE || level == Level.FINER || level == Level.FINEST) {
+            return 7; // Debug
+        } else {
+            return 6; // Informational
+        }
+    }
+}
+```
+
+### `Log.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/Log.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.slf4j.helpers.FormattingTuple;
+import org.slf4j.helpers.MessageFormatter;
+
+public class Log {
+
+    // Kill switch used to force stdout logging
+    private static Level stdoutLoggingLevel;
+
+    private final Logger julLogger;
+    private String yamcsInstance;
+    private String context;
+
+    public Log(Class<?> clazz) {
+        julLogger = Logger.getLogger(clazz.getName());
+    }
+
+    public Log(Class<?> clazz, String yamcsInstance) {
+        julLogger = Logger.getLogger(clazz.getName());
+        this.yamcsInstance = yamcsInstance;
+    }
+
+    public Logger getJulLogger() {
+        return julLogger;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    /**
+     * Send a log message at INFO level.
+     */
+    public void info(String msg) {
+        if (julLogger.isLoggable(Level.INFO)) {
+            log(Level.INFO, msg, null);
+        }
+    }
+
+    /**
+     * Send a log message at INFO level.
+     */
+    public void info(String msg, Throwable t) {
+        if (julLogger.isLoggable(Level.INFO)) {
+            log(Level.INFO, msg, t);
+        }
+    }
+
+    /**
+     * Send a log message at INFO level using SLF4J-style formatting. The last argument may be a {@link Throwable}.
+     */
+    public void info(String msg, Object... args) {
+        if (julLogger.isLoggable(Level.INFO)) {
+            FormattingTuple ft = MessageFormatter.arrayFormat(msg, args);
+            log(Level.INFO, ft.getMessage(), ft.getThrowable());
+        }
+    }
+
+    public boolean isDebugEnabled() {
+        return julLogger.isLoggable(Level.FINE);
+    }
+
+    /**
+     * Send a log message at DEBUG level.
+     */
+    public void debug(String msg) {
+        if (julLogger.isLoggable(Level.FINE)) {
+            log(Level.FINE, msg, null);
+        }
+    }
+
+    /**
+     * Send a log message at DEBUG level.
+     */
+    public void debug(String msg, Throwable t) {
+        if (julLogger.isLoggable(Level.FINE)) {
+            log(Level.FINE, msg, t);
+        }
+    }
+
+    /**
+     * Send a log message at DEBUG level using SLF4J-style formatting. The last argument may be a {@link Throwable}.
+     */
+    public void debug(String msg, Object... args) {
+        if (julLogger.isLoggable(Level.FINE)) {
+            FormattingTuple ft = MessageFormatter.arrayFormat(msg, args);
+            log(Level.FINE, ft.getMessage(), ft.getThrowable());
+        }
+    }
+
+    public boolean isTraceEnabled() {
+        return julLogger.isLoggable(Level.FINEST);
+    }
+
+    /**
+     * Send a log message at TRACE level.
+     */
+    public void trace(String msg) {
+        if (julLogger.isLoggable(Level.FINEST)) {
+            log(Level.FINEST, msg, null);
+        }
+    }
+
+    /**
+     * Send a log message at TRACE level.
+     */
+    public void trace(String msg, Throwable t) {
+        if (julLogger.isLoggable(Level.FINEST)) {
+            log(Level.FINEST, msg, t);
+        }
+    }
+
+    /**
+     * Send a log message at TRACE level using SLF4J-style formatting. The last argument may be a {@link Throwable}.
+     */
+    public void trace(String msg, Object... args) {
+        if (julLogger.isLoggable(Level.FINEST)) {
+            FormattingTuple ft = MessageFormatter.arrayFormat(msg, args);
+            log(Level.FINEST, ft.getMessage(), ft.getThrowable());
+        }
+    }
+
+    /**
+     * Send a log message at WARN level.
+     */
+    public void warn(String msg) {
+        if (julLogger.isLoggable(Level.WARNING)) {
+            log(Level.WARNING, msg, null);
+        }
+    }
+
+    /**
+     * Send a log message at WARN level.
+     */
+    public void warn(String msg, Throwable t) {
+        if (julLogger.isLoggable(Level.WARNING)) {
+            log(Level.WARNING, msg, t);
+        }
+    }
+
+    /**
+     * Send a log message at WARN level using SLF4J-style formatting. The last argument may be a {@link Throwable}.
+     */
+    public void warn(String msg, Object... args) {
+        if (julLogger.isLoggable(Level.WARNING)) {
+            FormattingTuple ft = MessageFormatter.arrayFormat(msg, args);
+            log(Level.WARNING, ft.getMessage(), ft.getThrowable());
+        }
+    }
+
+    /**
+     * Send a log message at ERROR level.
+     */
+    public void error(String msg) {
+        if (julLogger.isLoggable(Level.SEVERE)) {
+            log(Level.SEVERE, msg, null);
+        }
+    }
+
+    /**
+     * Send a log message at ERROR level.
+     */
+    public void error(String msg, Throwable t) {
+        if (julLogger.isLoggable(Level.SEVERE)) {
+            log(Level.SEVERE, msg, t);
+        }
+    }
+
+    /**
+     * Send a log message at ERROR level using SLF4J-style formatting. The last argument may be a {@link Throwable}.
+     */
+    public void error(String msg, Object... args) {
+        if (julLogger.isLoggable(Level.SEVERE)) {
+            FormattingTuple ft = MessageFormatter.arrayFormat(msg, args);
+            log(Level.SEVERE, ft.getMessage(), ft.getThrowable());
+        }
+    }
+
+    protected void log(Level level, String msg, Throwable t) {
+        YamcsLogRecord rec = new YamcsLogRecord(level, msg, yamcsInstance);
+        rec.setLoggerName(julLogger.getName());
+        rec.setThrown(t);
+        rec.setContext(context);
+
+        if (stdoutLoggingLevel != null) {
+            logToStdOut(rec);
+        } else {
+            julLogger.log(rec);
+        }
+    }
+
+    private void logToStdOut(YamcsLogRecord rec) {
+        if (rec.getLevel().intValue() >= stdoutLoggingLevel.intValue()) {
+            StringBuilder sb = new StringBuilder("[")
+                    .append(rec.getLevel())
+                    .append("] ")
+                    .append(rec.getMessage());
+            if (rec.getThrown() != null) {
+                sb.append(": " + rec.getThrown());
+            }
+            System.out.println(sb.toString());
+        }
+    }
+
+    /**
+     * Force all log message to be printed on stdout instead of the configured logger. This may be of use for short
+     * tests and scripts.
+     */
+    public static void forceStandardStreams(Level level) {
+        stdoutLoggingLevel = level;
+    }
+}
+```
+
+### `SyslogHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/SyslogHandler.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
+
+/**
+ * JUL appender that emits to syslogd over UDP with messages formatted according to RFC 3164 (BSD syslog).
+ */
+public class SyslogHandler extends Handler {
+    // limit the log message size. The whole message converted to bytes should be smaller than 65K max datagram size
+    public static final int MAX_LENGTH = 10000;
+
+    private static final String TAG = "yamcs";
+    private long pid;
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("MMM dd HH:mm:ss", Locale.US);
+    private Date d = new Date();
+
+    private DatagramSocket socket;
+
+    private InetAddress host;
+    private int port;
+
+    private int facility;
+    private String hostname;
+
+    public SyslogHandler() throws SocketException, UnknownHostException {
+        sdf.setTimeZone(TimeZone.getDefault()); // emit local time as per RFC 3164
+        socket = new DatagramSocket();
+        hostname = InetAddress.getLocalHost().getHostName();
+        pid = ProcessHandle.current().pid();
+
+        String host = getProperty("host", null);
+        if (host == null) {
+            setHost(InetAddress.getLoopbackAddress());
+        } else {
+            setHost(InetAddress.getByName(host));
+        }
+
+        setPort(getIntProperty("port", 514));
+        setLevel(getLevelProperty("level", Level.ALL));
+        setFacility(getIntProperty("facility", 1)); // 1 == user-level messages
+    }
+
+    public void setHost(InetAddress host) {
+        this.host = host;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setFacility(int facility) {
+        this.facility = facility;
+    }
+
+    private int getIntProperty(String name, int defaultValue) {
+        String property = getProperty(name, Integer.toString(defaultValue));
+        return Integer.parseInt(property);
+    }
+
+    private Level getLevelProperty(String name, Level defaultValue) {
+        String val = getProperty(name, null);
+        if (val == null) {
+            return defaultValue;
+        }
+        Level l = Level.parse(val.trim());
+        return l != null ? l : defaultValue;
+    }
+
+    private String getProperty(String name, String defaultValue) {
+        LogManager manager = LogManager.getLogManager();
+        String qname = getClass().getName() + "." + name;
+        String property = manager.getProperty(qname);
+        return property != null ? property : defaultValue;
+    }
+
+    @Override
+    public synchronized void publish(LogRecord record) {
+        if (!isLoggable(record)) {
+            return;
+        }
+
+        StringBuilder buf = new StringBuilder();
+        int pri = (facility * 8) + toSeverity(record.getLevel());
+        buf.append("<").append(pri).append(">");
+
+        d.setTime(record.getMillis());
+        buf.append(sdf.format(d));
+        buf.append(' ');
+
+        buf.append(hostname);
+        buf.append(' ');
+
+        buf.append(TAG).append("[").append(pid).append("]");
+
+        if (record.getMessage() != null) {
+            buf.append(": ");
+            buf.append(record.getMessage());
+        }
+        if (record.getThrown() != null) {
+            buf.append(" [");
+            buf.append(record.getThrown().getClass().getName());
+            if (record.getThrown().getMessage() != null) {
+                buf.append(": ").append(record.getThrown().getMessage());
+            }
+            buf.append("]");
+        }
+        int length = buf.length();
+        if (length > MAX_LENGTH) {
+            buf.setLength(MAX_LENGTH);
+            buf.append(" (").append(length - MAX_LENGTH).append(" characters suppressed)");
+        }
+
+        byte[] b = buf.toString().getBytes();
+        DatagramPacket packet = new DatagramPacket(b, b.length, host, port);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static int toSeverity(Level level) {
+        if (level == Level.SEVERE) {
+            return 3; // Error
+        } else if (level == Level.WARNING) {
+            return 4; // Warning
+        } else if (level == Level.FINE || level == Level.FINER || level == Level.FINEST) {
+            return 7; // Debug
+        } else {
+            return 6; // Informational
+        }
+    }
+
+    @Override
+    public void flush() {
+        // no flush necessary, messages are sent immediately
+    }
+
+    @Override
+    public void close() throws SecurityException {
+        if (socket != null) {
+            socket.close();
+        }
+    }
+}
+```
+
+### `WatchedFileHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/WatchedFileHandler.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.util.logging.ErrorManager;
+import java.util.logging.FileHandler;
+import java.util.logging.Filter;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.LogRecord;
+import java.util.logging.XMLFormatter;
+
+/**
+ * File handler that watches the file it is logging to. If the file changes, it gets closed and reopened with the same
+ * filename.
+ * <p>
+ * This handler is useful for when log rotation is to be handled outside of the standard Java Logging system, for
+ * example with a program like logrotate. Without the watch-functionality it would keep writing to the old (rotated)
+ * file.
+ */
+public class WatchedFileHandler extends Handler {
+
+    private Path watchedFile;
+    private FileHandler wrappedHandler;
+
+    private Thread fileWatcher;
+
+    public WatchedFileHandler() throws IOException {
+        String filename = getProperty("filename", "yamcs.log");
+        watchedFile = Paths.get(filename);
+
+        wrappedHandler = new FileHandler(filename, true /* append */);
+        setLevel(getLevelProperty("level", Level.ALL));
+        setFilter(getFilterProperty("filter", null));
+        setFormatter(getFormatterProperty("formatter", new XMLFormatter()));
+        try {
+            setEncoding(getProperty("encoding", null));
+        } catch (SecurityException | UnsupportedEncodingException e) {
+            // Ignore
+        }
+
+        fileWatcher = new FileWatcher();
+        fileWatcher.start();
+    }
+
+    private synchronized void reopenFile() {
+        Level oldLevel = getLevel();
+        Filter oldFilter = getFilter();
+        Formatter oldFormatter = getFormatter();
+        String oldEncoding = getEncoding();
+
+        setLevel(Level.OFF);
+
+        wrappedHandler.close();
+        try {
+            wrappedHandler = new FileHandler(watchedFile.toString(), true);
+        } catch (IOException e) {
+            // Avoid throwing
+            reportError(null, e, ErrorManager.OPEN_FAILURE);
+        }
+
+        setFilter(oldFilter);
+        setFormatter(oldFormatter);
+        try {
+            setEncoding(oldEncoding);
+        } catch (SecurityException | UnsupportedEncodingException e) {
+            // Ignore
+        }
+        setLevel(oldLevel);
+    }
+
+    @Override
+    public synchronized void publish(LogRecord record) {
+        wrappedHandler.publish(record);
+    }
+
+    @Override
+    public synchronized void flush() {
+        wrappedHandler.flush();
+    }
+
+    @Override
+    public synchronized void close() throws SecurityException {
+        fileWatcher.interrupt();
+        wrappedHandler.close();
+    }
+
+    @Override
+    public synchronized void setEncoding(String encoding) throws SecurityException, UnsupportedEncodingException {
+        wrappedHandler.setEncoding(encoding);
+    }
+
+    @Override
+    public synchronized void setFormatter(Formatter newFormatter) throws SecurityException {
+        wrappedHandler.setFormatter(newFormatter);
+    }
+
+    @Override
+    public synchronized void setErrorManager(ErrorManager em) {
+        wrappedHandler.setErrorManager(em);
+    }
+
+    @Override
+    public synchronized void setFilter(Filter newFilter) throws SecurityException {
+        wrappedHandler.setFilter(newFilter);
+    }
+
+    @Override
+    public synchronized void setLevel(Level newLevel) throws SecurityException {
+        wrappedHandler.setLevel(newLevel);
+    }
+
+    @Override
+    public boolean isLoggable(LogRecord record) {
+        return wrappedHandler.isLoggable(record);
+    }
+
+    @Override
+    public String getEncoding() {
+        return wrappedHandler.getEncoding();
+    }
+
+    @Override
+    public ErrorManager getErrorManager() {
+        return wrappedHandler.getErrorManager();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return wrappedHandler.getFilter();
+    }
+
+    @Override
+    public Level getLevel() {
+        return wrappedHandler.getLevel();
+    }
+
+    @Override
+    public Formatter getFormatter() {
+        return wrappedHandler.getFormatter();
+    }
+
+    private Level getLevelProperty(String name, Level defaultValue) {
+        String val = getProperty(name, null);
+        if (val == null) {
+            return defaultValue;
+        }
+        Level l = Level.parse(val.trim());
+        return l != null ? l : defaultValue;
+    }
+
+    private Filter getFilterProperty(String name, Filter defaultValue) {
+        String val = getProperty(name, null);
+        try {
+            if (val != null) {
+                Class<?> clz = ClassLoader.getSystemClassLoader().loadClass(val);
+                return (Filter) clz.getDeclaredConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return defaultValue;
+    }
+
+    private Formatter getFormatterProperty(String name, Formatter defaultValue) {
+        String val = getProperty(name, null);
+        try {
+            if (val != null) {
+                Class<?> clz = ClassLoader.getSystemClassLoader().loadClass(val);
+                return (Formatter) clz.getDeclaredConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+        return defaultValue;
+    }
+
+    private String getProperty(String name, String defaultValue) {
+        LogManager manager = LogManager.getLogManager();
+        String qname = getClass().getName() + "." + name;
+        String property = manager.getProperty(qname);
+        return property != null ? property : defaultValue;
+    }
+
+    private class FileWatcher extends Thread {
+
+        @Override
+        public void run() {
+            Path parent = watchedFile.getParent();
+            try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+                parent.register(watchService, StandardWatchEventKinds.ENTRY_DELETE);
+                while (true) {
+                    WatchKey key = watchService.take();
+                    for (WatchEvent<?> event : key.pollEvents()) {
+                        Path relpath = (Path) event.context();
+                        if (parent.resolve(relpath).equals(watchedFile)) {
+                            reopenFile();
+                        }
+                    }
+                    key.reset();
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+    }
+}
+```
+
+### `YamcsLogManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/YamcsLogManager.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.LogManager;
+
+/**
+ * Customized version of {@link LogManager} so that we can keep logging from within shutdown hooks.
+ * <p>
+ * This LogManager must be activated early via a JVM property <code>java.util.logging.manager</code>
+ */
+public class YamcsLogManager extends LogManager {
+
+    /**
+     * Does nothing.
+     */
+    @Override
+    public void reset() {
+        // This gets called via a shutdown hook.
+        // Override to do nothing by default.
+    }
+
+    private void internalReset() {
+        super.reset();
+    }
+
+    public static LogManager setup(InputStream inputStream) throws IOException {
+        LogManager logManager = getLogManager();
+        if (logManager instanceof YamcsLogManager) {
+            ((YamcsLogManager) logManager).internalReset();
+        }
+        logManager.readConfiguration(inputStream);
+        return logManager;
+    }
+
+    /**
+     * Reset the logging configuration
+     */
+    public static void shutdown() {
+        LogManager logManager = getLogManager();
+        if (logManager instanceof YamcsLogManager) { // Not the case in unit tests
+            ((YamcsLogManager) logManager).internalReset();
+        }
+    }
+}
+```
+
+### `YamcsLogRecord.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/YamcsLogRecord.java`
+
+
+```java
+package org.yamcs.logging;
+
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
+public class YamcsLogRecord extends LogRecord {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * @serial Yamcs instance where this log message originated
+     */
+    private String yamcsInstance;
+
+    /**
+     * @serial Additional context desciption.
+     */
+    private String context;
+
+    public YamcsLogRecord(Level level, String msg, String yamcsInstance) {
+        super(level, msg);
+        this.yamcsInstance = yamcsInstance;
+    }
+
+    public void setYamcsInstance(String yamcsInstance) {
+        this.yamcsInstance = yamcsInstance;
+    }
+
+    public String getYamcsInstance() {
+        return yamcsInstance;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    public String getContext() {
+        return context;
+    }
+}
+```

@@ -3,42 +3,1089 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-arguments-form.component.css`
 
-file--command-arguments-form.component.css
-file--command-arguments-form.component.html
-file--command-arguments-form.component.ts
-file--command-comment-form.component.html
-file--command-comment-form.component.ts
-file--command-form.component.html
-file--command-form.component.ts
-file--command-options-form.component.html
-file--command-options-form.component.ts
-file--CommandConfiguration.ts
-file--stack-advancement-form.component.html
-file--stack-advancement-form.component.ts
-file--stack-comment-form.component.html
-file--stack-comment-form.component.ts
-file--TemplateProvider.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-arguments-form.component.css`
+
+
+```css
+.hasInitial {
+  display: none;
+}
+
+.showAll .hasInitial {
+  display: block;
+}
 ```
 
-## 항목
+### `command-arguments-form.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-arguments-form.component.css`](file--command-arguments-form.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-arguments-form.component.html`](file--command-arguments-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-arguments-form.component.ts`](file--command-arguments-form.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-comment-form.component.html`](file--command-comment-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-comment-form.component.ts`](file--command-comment-form.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-form.component.html`](file--command-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-form.component.ts`](file--command-form.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-options-form.component.html`](file--command-options-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-options-form.component.ts`](file--command-options-form.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/CommandConfiguration.ts`](file--CommandConfiguration.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-advancement-form.component.html`](file--stack-advancement-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-advancement-form.component.ts`](file--stack-advancement-form.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-comment-form.component.html`](file--stack-comment-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-comment-form.component.ts`](file--stack-comment-form.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/TemplateProvider.ts`](file--TemplateProvider.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-arguments-form.component.html`
+
+
+```html
+<ng-container [formGroup]="formGroup">
+  <div formGroupName="args" [class.showAll]="showAll$ | async">
+    @if (!(hasArguments$ | async)) {
+      No arguments
+    }
+
+    @for (argument of arguments; track argument; let first = $first) {
+      @if (!first) {
+        <br />
+      }
+      <app-argument
+        [name]="argument.name"
+        [description]="argument.description"
+        [type]="argument.type"
+        [initialValue]="argument.initialValue"
+        [templateProvider]="templateProvider" />
+    }
+
+    @for (argument of argumentsWithInitial; track argument; let first = $first) {
+      @if (!first || arguments.length) {
+        <br class="hasInitial" />
+      }
+      <app-argument
+        [name]="argument.name"
+        [description]="argument.description"
+        [type]="argument.type"
+        [initialValue]="argument.initialValue"
+        [templateProvider]="templateProvider"
+        class="hasInitial" />
+    }
+
+    @if (config.collapseInitializedArguments) {
+      @if (argumentsWithInitial.length && !(showAll$ | async)) {
+        @if (arguments.length) {
+          <br />
+        }
+        <ya-text-action (click)="showAll$.next(true)" icon="double_arrow">
+          Show {{ argumentsWithInitial.length }}
+          @if (argumentsWithInitial.length === 1) {
+            argument
+          } @else {
+            arguments
+          }
+          with defaults
+        </ya-text-action>
+      }
+    }
+  </div>
+</ng-container>
+```
+
+### `command-arguments-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-arguments-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+} from '@angular/core';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  UntypedFormControl,
+} from '@angular/forms';
+import {
+  Argument,
+  ArgumentMember,
+  ArgumentType,
+  Command,
+  ConfigService,
+  WebappSdkModule,
+  WebsiteConfig,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import {
+  ArgumentComponent,
+  renderValue,
+} from '../arguments/argument/argument.component';
+import { TemplateProvider } from './TemplateProvider';
+
+@Component({
+  selector: 'app-command-arguments-form',
+  templateUrl: './command-arguments-form.component.html',
+  styleUrl: './command-arguments-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ArgumentComponent, WebappSdkModule],
+})
+export class CommandArgumentsForm implements OnChanges {
+  @Input()
+  formGroup: FormGroup;
+
+  @Input()
+  command: Command;
+
+  @Input()
+  templateProvider: TemplateProvider;
+
+  arguments: Argument[] = [];
+  argumentsWithInitial: Argument[] = [];
+  showAll$ = new BehaviorSubject<boolean>(false);
+  hasArguments$ = new BehaviorSubject<boolean>(false);
+
+  config: WebsiteConfig;
+
+  constructor(configService: ConfigService) {
+    this.config = configService.getConfig();
+    this.showAll$.next(!this.config.collapseInitializedArguments);
+  }
+
+  ngOnChanges(): void {
+    if (!this.formGroup.contains('args')) {
+      this.formGroup.addControl('args', new FormGroup({}));
+    }
+
+    this.arguments = [];
+    this.argumentsWithInitial = [];
+    this.showAll$.next(!this.config.collapseInitializedArguments);
+    for (const key in this.argsGroup.controls) {
+      this.argsGroup.removeControl(key);
+    }
+    this.argsGroup.reset();
+
+    if (!this.command) {
+      return;
+    }
+
+    // Order command definitions top-down
+    const commandHierarchy: Command[] = [];
+    let c: Command | undefined = this.command;
+    while (c) {
+      commandHierarchy.unshift(c);
+      c = c.baseCommand;
+    }
+
+    const assignments = new Map<string, string>();
+    for (const c of commandHierarchy) {
+      if (c.argument) {
+        for (const argument of c.argument) {
+          if (this.templateProvider) {
+            const previousValue = this.templateProvider.getAssignment(
+              argument.name,
+            );
+            if (previousValue !== undefined) {
+              const stringValue = renderValue(previousValue);
+              let initialValue = argument.initialValue;
+              if (
+                argument.type.engType === 'boolean' &&
+                initialValue !== undefined
+              ) {
+                initialValue =
+                  '' + (argument.type.oneStringValue === initialValue);
+              }
+              if (stringValue === initialValue) {
+                this.argumentsWithInitial.push(argument);
+              } else {
+                this.arguments.push(argument);
+              }
+              continue;
+            }
+          }
+
+          let initialized = argument.initialValue !== undefined;
+          if (initialized && argument.type.engType === 'aggregate') {
+            const aggregateValue = JSON.parse(argument.initialValue!);
+            initialized = this.isAggregateFullyInitialized(
+              argument,
+              aggregateValue,
+            );
+          }
+
+          if (initialized) {
+            this.argumentsWithInitial.push(argument);
+          } else {
+            this.arguments.push(argument);
+          }
+        }
+      }
+      if (c.argumentAssignment) {
+        for (const assignment of c.argumentAssignment) {
+          assignments.set(assignment.name, assignment.value);
+        }
+      }
+    }
+
+    // Assignments cannot be overriden by user, so filter them out
+    this.arguments = this.arguments.filter(
+      (argument) => !assignments.has(argument.name),
+    );
+    this.argumentsWithInitial = this.argumentsWithInitial.filter(
+      (argument) => !assignments.has(argument.name),
+    );
+
+    for (const arg of this.arguments) {
+      this.addControl(arg, this.templateProvider);
+    }
+    for (const arg of this.argumentsWithInitial) {
+      this.addControl(arg, this.templateProvider);
+    }
+
+    this.hasArguments$.next(
+      this.arguments.length > 0 || this.argumentsWithInitial.length > 0,
+    );
+  }
+
+  get argsGroup() {
+    return this.formGroup.get('args') as FormGroup;
+  }
+
+  private addControl(argument: Argument, templateProvider: TemplateProvider) {
+    if (argument.type.engType === 'aggregate') {
+      // this.argsGroup.addControl(argument.name, new UntypedFormGroup({}));
+      // this.addAggregateControl(argument, templateProvider);
+    } else if (argument.type.engType.endsWith('[]')) {
+      // this.argsGroup.addControl(argument.name, new UntypedFormArray([]));
+    } else {
+      let initialValue;
+      if (argument.type.engType === 'boolean' && argument.initialValue) {
+        initialValue =
+          '' + (argument.initialValue === argument.type.oneStringValue);
+      } else {
+        initialValue = argument.initialValue;
+      }
+
+      if (templateProvider) {
+        const previousValue = templateProvider.getAssignment(argument.name);
+        if (previousValue !== undefined) {
+          initialValue = renderValue(previousValue);
+        }
+      }
+
+      if (initialValue === undefined) {
+        initialValue = '';
+      }
+
+      this.argsGroup.addControl(
+        argument.name,
+        new UntypedFormControl(initialValue),
+      );
+    }
+  }
+
+  private isArgumentWithInitialValue(argumentName: string) {
+    for (const arg of this.argumentsWithInitial) {
+      if (arg.name === argumentName) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private isAggregateFullyInitialized(
+    argument: Argument | ArgumentMember,
+    value: { [key: string]: any },
+  ) {
+    for (const member of argument.type.member || []) {
+      if (
+        !value.hasOwnProperty(member.name) &&
+        argument.initialValue === undefined
+      ) {
+        return false;
+      } else if (member.type.engType === 'aggregate') {
+        const subValue: { [key: string]: any } = value[member.name];
+        if (!this.isAggregateFullyInitialized(member, subValue)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  getResult(): { [key: string]: any } {
+    const assignments: { [key: string]: any } = {};
+    for (const arg of [...this.arguments, ...this.argumentsWithInitial]) {
+      if (arg.type.engType === 'aggregate') {
+        const subform = this.argsGroup.get(arg.name) as FormGroup;
+        assignments[arg.name] = this.getMemberAssignments(subform, arg.type);
+      } else if (arg.type.engType.endsWith('[]')) {
+        const subarray = this.argsGroup.get(arg.name) as FormArray;
+        assignments[arg.name] = this.getArrayAssignment(
+          subarray,
+          arg.type.elementType!,
+        );
+      } else {
+        const control = this.argsGroup.controls[arg.name];
+        if (!this.isArgumentWithInitialValue(arg.name) || control.dirty) {
+          if (arg.type.engType === 'boolean') {
+            assignments[arg.name] = this.argsGroup.value[arg.name] === 'true';
+          } else {
+            // String is better at representing large numbers or precision
+            // to the server. Some inputs (hex) store a non-string value,
+            // so convert it here.
+            assignments[arg.name] = String(this.argsGroup.value[arg.name]);
+          }
+        }
+      }
+    }
+    return assignments;
+  }
+
+  private getMemberAssignments(form: FormGroup, argumentType: ArgumentType) {
+    const result: { [key: string]: any } = {};
+    for (const member of argumentType.member || []) {
+      if (member.type.engType === 'aggregate') {
+        const subform = form.get(member.name) as FormGroup;
+        result[member.name] = this.getMemberAssignments(subform, member.type);
+      } else if (member.type.engType.endsWith('[]')) {
+        const subarray = form.get(member.name) as FormArray;
+        result[member.name] = this.getArrayAssignment(
+          subarray,
+          member.type.elementType!,
+        );
+      } else if (member.type.engType === 'boolean') {
+        const control = form.get(member.name) as FormControl;
+        result[member.name] = control.value === 'true';
+      } else {
+        const control = form.get(member.name) as FormControl;
+        result[member.name] = control.value;
+      }
+    }
+    return result;
+  }
+
+  getArrayAssignment(array: FormArray, elementType: ArgumentType) {
+    let result: { [key: string]: any } = [];
+    for (const control of array.controls) {
+      if (elementType.engType === 'aggregate') {
+        const subform = control as FormGroup;
+        result.push(this.getMemberAssignments(subform, elementType));
+      } else if (elementType.engType.endsWith('[]')) {
+        const subarray = control as FormArray;
+        result.push(this.getArrayAssignment(subarray, elementType));
+      } else if (elementType.engType === 'boolean') {
+        result.push(control.value === 'true');
+      } else {
+        result.push(control.value);
+      }
+    }
+    return result;
+  }
+}
+```
+
+### `command-comment-form.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-comment-form.component.html`
+
+
+```html
+<ng-container [formGroup]="formGroup">
+  Attach a comment to this command.
+  <textarea formControlName="comment" rows="5" style="width: 100%; resize: none"></textarea>
+</ng-container>
+```
+
+### `command-comment-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-comment-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { TemplateProvider } from './TemplateProvider';
+
+@Component({
+  selector: 'app-command-comment-form',
+  templateUrl: './command-comment-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CommandCommentForm implements OnInit, OnChanges {
+  @Input()
+  formGroup: FormGroup;
+
+  @Input()
+  templateProvider: TemplateProvider;
+
+  ngOnInit(): void {
+    this.formGroup.addControl('comment', new FormControl(''));
+  }
+
+  ngOnChanges(): void {
+    if (this.templateProvider) {
+      this.formGroup.patchValue({
+        comment: this.templateProvider.getComment() || '',
+      });
+    }
+  }
+
+  getResult() {
+    return this.formGroup.value['comment'] || undefined;
+  }
+}
+```
+
+### `command-form.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-form.component.html`
+
+
+```html
+<form [formGroup]="form" class="ya-form">
+  <ya-stepper>
+    <ng-content select="[head]" />
+
+    <ya-stepper-step label="Arguments" [expanded]="true">
+      <app-command-arguments-form
+        [formGroup]="form"
+        [templateProvider]="templateProvider"
+        [command]="command" />
+    </ya-stepper-step>
+
+    @if (showCommandOptions()) {
+      <ya-stepper-step label="Advanced options">
+        <app-command-options-form [formGroup]="form" [templateProvider]="templateProvider" />
+      </ya-stepper-step>
+    }
+
+    @if (stackMode) {
+      <ya-stepper-step label="Stack comment">
+        <app-stack-comment-form [formGroup]="form" [templateProvider]="templateProvider" />
+      </ya-stepper-step>
+
+      <ya-stepper-step label="Stack advancement">
+        <app-stack-advancement-form
+          [formGroup]="form"
+          [templateProvider]="templateProvider"
+          [command]="command" />
+      </ya-stepper-step>
+    } @else {
+      <ya-stepper-step label="Comment">
+        <app-command-comment-form [formGroup]="form" [templateProvider]="templateProvider" />
+      </ya-stepper-step>
+    }
+
+    <ng-content select="[tail]" />
+  </ya-stepper>
+</form>
+```
+
+### `command-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  viewChild,
+} from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import {
+  AuthService,
+  Command,
+  User,
+  WebappSdkModule,
+  YaStepper,
+  YaStepperStep,
+} from '@yamcs/webapp-sdk';
+import { CommandArgumentsForm } from './command-arguments-form.component';
+import { CommandCommentForm } from './command-comment-form.component';
+import { CommandOptionsForm } from './command-options-form.component';
+import { CommandConfiguration } from './CommandConfiguration';
+import { StackAdvancementForm } from './stack-advancement-form.component';
+import { StackCommentForm } from './stack-comment-form.component';
+import { TemplateProvider } from './TemplateProvider';
+
+@Component({
+  selector: 'app-command-form',
+  templateUrl: './command-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommandArgumentsForm,
+    CommandCommentForm,
+    CommandOptionsForm,
+    StackAdvancementForm,
+    StackCommentForm,
+    WebappSdkModule,
+    YaStepper,
+    YaStepperStep,
+  ],
+})
+export class CommandFormComponent {
+  private user: User;
+
+  @Input()
+  command: Command;
+
+  @Input()
+  templateProvider: TemplateProvider;
+
+  @Input()
+  stackMode = false;
+
+  commandArgumentsForm = viewChild.required(CommandArgumentsForm);
+  commandOptionsForm = viewChild(CommandOptionsForm);
+  commandCommentForm = viewChild(CommandCommentForm);
+  stackCommentForm = viewChild(StackCommentForm);
+  stackAdvancementForm = viewChild(StackAdvancementForm);
+
+  // At the top level, group all blocks in a single form,
+  // makes it more convenient to check combined validation state.
+  form = new FormGroup({});
+
+  constructor(authService: AuthService) {
+    this.user = authService.getUser()!;
+  }
+
+  showCommandOptions() {
+    return this.user.hasSystemPrivilege('CommandOptions');
+  }
+
+  getResult(optionsStruct = false): CommandConfiguration {
+    const commandArgumentsForm = this.commandArgumentsForm();
+    const args = commandArgumentsForm.getResult();
+
+    const commandOptionsForm = this.commandOptionsForm();
+    const extra = commandOptionsForm?.getResult(optionsStruct) ?? {};
+    const stream = commandOptionsForm?.getStream();
+
+    let comment;
+    let advancement;
+    if (this.stackMode) {
+      const stackCommentForm = this.stackCommentForm();
+      comment = stackCommentForm?.getResult();
+
+      const stackAdvancementForm = this.stackAdvancementForm();
+      advancement = stackAdvancementForm?.getResult();
+    } else {
+      const commandCommentForm = this.commandCommentForm();
+      comment = commandCommentForm?.getResult();
+    }
+
+    return {
+      args,
+      extra,
+      stream,
+      comment,
+      advancement,
+    };
+  }
+}
+```
+
+### `command-options-form.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-options-form.component.html`
+
+
+```html
+<ng-container [formGroup]="formGroup">
+  <ya-field label="Stream">
+    <span class="hint">Override the stream the command is sent through.</span>
+    <br />
+    <ya-select [options]="streamOptions$ | async" formControlName="stream" [showClear]="true" />
+  </ya-field>
+
+  @for (extra of commandOptions; track extra) {
+    @switch (extra.type) {
+      @case ("BOOLEAN") {
+        <ya-field [label]="extra.verboseName || extra.id">
+          @if (extra.help) {
+            <span class="hint" [innerHTML]="extra.help"></span>
+          }
+
+          <div class="radio-group">
+            <label
+              class="radio"
+              [class.checked]="formGroup.controls['extra__' + extra.id].value === 'true'">
+              <input type="radio" [formControlName]="'extra__' + extra.id" value="true" />
+              true
+            </label>
+            <label
+              class="radio"
+              [class.checked]="formGroup.controls['extra__' + extra.id].value === 'false'">
+              <input type="radio" [formControlName]="'extra__' + extra.id" value="false" />
+              false
+            </label>
+          </div>
+        </ya-field>
+      }
+      @case ("TIMESTAMP") {
+        <ya-field [label]="extra.verboseName || extra.id">
+          @if (extra.help) {
+            <ya-help [dialogTitle]="extra.verboseName || extra.id">
+              <div [innerHTML]="extra.help"></div>
+            </ya-help>
+          }
+          <ya-date-time-input
+            [formControlName]="'extra__' + extra.id"
+            [showMillis]="true"
+            [showClear]="true"
+            [showNow]="true" />
+        </ya-field>
+      }
+      @default {
+        <ya-field [label]="extra.verboseName || extra.id">
+          @if (extra.help) {
+            <ya-help [dialogTitle]="extra.verboseName || extra.id">
+              <div [innerHTML]="extra.help"></div>
+            </ya-help>
+          }
+          <input type="text" [formControlName]="'extra__' + extra.id" />
+        </ya-field>
+      }
+    }
+  }
+</ng-container>
+```
+
+### `command-options-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/command-options-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import {
+  CommandOption,
+  ConfigService,
+  Value,
+  WebappSdkModule,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { renderValue } from '../arguments/argument/argument.component';
+import { TemplateProvider } from './TemplateProvider';
+
+@Component({
+  selector: 'app-command-options-form',
+  templateUrl: './command-options-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CommandOptionsForm implements OnInit, OnChanges {
+  @Input()
+  formGroup: FormGroup;
+
+  @Input()
+  templateProvider: TemplateProvider;
+
+  commandOptions: CommandOption[];
+
+  streamOptions$ = new BehaviorSubject<YaSelectOption[]>([]);
+
+  constructor(configService: ConfigService) {
+    this.commandOptions = configService.getCommandOptions();
+
+    const streamOptions: YaSelectOption[] = configService
+      .getTcStreams()
+      .map((streamName) => ({ id: streamName, label: streamName }));
+    this.streamOptions$.next(streamOptions);
+  }
+
+  ngOnInit(): void {
+    this.formGroup.addControl('stream', new FormControl(''));
+    for (const option of this.commandOptions) {
+      this.formGroup.addControl('extra__' + option.id, new FormControl(null));
+    }
+  }
+
+  ngOnChanges(): void {
+    if (this.templateProvider) {
+      for (const option of this.commandOptions || []) {
+        const previousValue = this.templateProvider.getOption(
+          option.id,
+          option.type,
+        );
+        if (previousValue !== undefined) {
+          this.formGroup.controls['extra__' + option.id].setValue(
+            renderValue(previousValue),
+          );
+        }
+      }
+    }
+  }
+
+  getStream() {
+    const control = this.formGroup.controls['stream'];
+    return control.value || undefined;
+  }
+
+  getResult(struct = false) {
+    const extra: { [key: string]: Value } = {};
+    for (const id in this.formGroup.controls) {
+      if (id.startsWith('extra__')) {
+        const control = this.formGroup.controls[id];
+        if (control.value !== null) {
+          const optionId = id.replace('extra__', '');
+
+          if (struct) {
+            extra[optionId] = this.toStructValue(optionId, control.value);
+          } else {
+            extra[optionId] = this.toYamcsValue(optionId, control.value);
+          }
+        }
+      }
+    }
+    return extra;
+  }
+
+  private toStructValue(optionId: string, controlValue: any): any {
+    let option: CommandOption;
+    for (const candidate of this.commandOptions) {
+      if (candidate.id === optionId) {
+        option = candidate;
+      }
+    }
+    switch (option!.type) {
+      case 'BOOLEAN':
+        return controlValue === 'true';
+      case 'NUMBER':
+        return Number(controlValue);
+      default:
+        return String(controlValue);
+    }
+  }
+
+  private toYamcsValue(optionId: string, controlValue: any): Value {
+    let option: CommandOption;
+    for (const candidate of this.commandOptions) {
+      if (candidate.id === optionId) {
+        option = candidate;
+      }
+    }
+    switch (option!.type) {
+      case 'BOOLEAN':
+        if (controlValue === 'true') {
+          return { type: 'BOOLEAN', booleanValue: true };
+        }
+        return { type: 'BOOLEAN', booleanValue: false };
+      case 'NUMBER':
+        return { type: 'SINT32', sint32Value: Number(controlValue) };
+      default:
+        return { type: 'STRING', stringValue: String(controlValue) };
+    }
+  }
+}
+```
+
+### `CommandConfiguration.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/CommandConfiguration.ts`
+
+
+```typescript
+import { AdvancementParams } from '@yamcs/webapp-sdk';
+
+export interface CommandConfiguration {
+  args: { [key: string]: any };
+  extra: { [key: string]: any };
+  stream?: string;
+  comment?: string;
+  advancement?: AdvancementParams;
+}
+```
+
+### `stack-advancement-form.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-advancement-form.component.html`
+
+
+```html
+<ng-container [formGroup]="formGroup">
+  <ng-container formGroupName="advancement">
+    <ya-field>
+      <ng-template ya-field-label>
+        Advance when
+        <app-advance-ack-help
+          [verifiers]="verifierAcknowledgments"
+          [extra]="extraAcknowledgments" />
+      </ng-template>
+
+      <div style="display: flex; align-items: flex-start">
+        <ya-select
+          #ackSelect
+          [options]="ackOptions"
+          formControlName="acknowledgment"
+          emptyOption="Inherit" />
+        @if (custom) {
+          <input type="text" formControlName="ackCustom" style="width: 200px; margin-left: -1px" />
+        }
+      </div>
+    </ya-field>
+
+    <ya-field label="Wait (ms)">
+      <ya-help dialogTitle="Wait time">
+        <p>Wait time before advancing to the next command in the stack.</p>
+        <p>This triggers after successful acknowledgment.</p>
+      </ya-help>
+
+      <input type="number" formControlName="wait" placeholder="Inherit" step="1000" min="0" />
+    </ya-field>
+  </ng-container>
+</ng-container>
+```
+
+### `stack-advancement-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-advancement-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import {
+  AcknowledgmentInfo,
+  AdvancementParams,
+  Command,
+  WebappSdkModule,
+  YamcsService,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { AdvanceAckHelpComponent } from '../../../procedures/run-stack/advance-ack-help/advance-ack-help.component';
+import { AppMarkdownInput } from '../../../shared/markdown-input/markdown-input.component';
+import { TemplateProvider } from './TemplateProvider';
+
+@Component({
+  selector: 'app-stack-advancement-form',
+  templateUrl: './stack-advancement-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdvanceAckHelpComponent, AppMarkdownInput, WebappSdkModule],
+})
+export class StackAdvancementForm implements OnInit, OnChanges {
+  @Input()
+  formGroup: FormGroup;
+
+  @Input()
+  command: Command;
+
+  @Input()
+  templateProvider: TemplateProvider;
+
+  verifierAcknowledgments: AcknowledgmentInfo[] = [];
+  extraAcknowledgments: AcknowledgmentInfo[] = [];
+  ackOptions: YaSelectOption[] = [
+    { id: '', label: 'Inherit' },
+    { id: 'Acknowledge_Queued', label: 'Queued', group: true },
+    { id: 'Acknowledge_Released', label: 'Released' },
+    { id: 'Acknowledge_Sent', label: 'Sent' },
+    { id: 'CommandComplete', label: 'Completed' },
+  ];
+
+  constructor(private yamcs: YamcsService) {}
+
+  ngOnInit(): void {
+    this.verifierAcknowledgments = [];
+
+    // Order command definitions top-down
+    const commandHierarchy: Command[] = [];
+    let c: Command | undefined = this.command;
+    while (c) {
+      commandHierarchy.unshift(c);
+      c = c.baseCommand;
+    }
+    for (const command of commandHierarchy) {
+      for (const verifier of command.verifier ?? []) {
+        this.verifierAcknowledgments.push({
+          name: `Verifier_${verifier.stage}`,
+        });
+      }
+    }
+    let first = true;
+    for (const verifier of this.verifierAcknowledgments) {
+      this.ackOptions.push({
+        id: verifier.name,
+        label: verifier.name,
+        group: first,
+      });
+      first = false;
+    }
+
+    this.extraAcknowledgments =
+      this.yamcs.getProcessor()?.acknowledgments ?? [];
+    first = true;
+    for (const ack of this.extraAcknowledgments) {
+      this.ackOptions.push({
+        id: ack.name,
+        label: ack.name.replace('Acknowledge_', ''),
+        group: first,
+      });
+      first = false;
+    }
+
+    this.ackOptions.push({
+      id: 'custom',
+      label: 'Custom',
+      group: true,
+    });
+  }
+
+  ngOnChanges(): void {
+    if (!this.formGroup.contains('advancement')) {
+      const advancementGroup = new FormGroup({
+        acknowledgment: new FormControl(''),
+        ackCustom: new FormControl(''),
+        wait: new FormControl(null),
+      });
+      this.formGroup.addControl('advancement', advancementGroup);
+
+      advancementGroup.valueChanges.subscribe((result) => {
+        if (result.acknowledgment !== 'custom') {
+          advancementGroup.patchValue(
+            { ackCustom: undefined },
+            {
+              emitEvent: false,
+            },
+          );
+        }
+      });
+    }
+
+    if (this.templateProvider) {
+      this.formGroup.patchValue({
+        comment: this.templateProvider.getComment() || '',
+        stream: this.templateProvider.getStream() || '',
+      });
+
+      const advancement = this.templateProvider.getAdvancementParams();
+      if (advancement) {
+        const match = this.ackOptions.find(
+          (el) => el.id === advancement.acknowledgment,
+        );
+        const acknowledgment = match ? match.id : 'custom';
+        const ackCustom =
+          acknowledgment === 'custom' ? advancement.acknowledgment : '';
+        let wait = advancement.wait ?? null;
+        this.advancementGroup.patchValue({
+          acknowledgment,
+          ackCustom,
+          wait,
+        });
+      }
+    }
+  }
+
+  get advancementGroup() {
+    return this.formGroup.controls['advancement'] as FormGroup;
+  }
+
+  get custom() {
+    return this.advancementGroup.controls['acknowledgment'].value === 'custom';
+  }
+
+  getResult(): AdvancementParams | undefined {
+    let acknowledgment = this.advancementGroup.get('acknowledgment')?.value;
+    if (acknowledgment === 'custom') {
+      acknowledgment = this.advancementGroup.get('ackCustom')?.value?.trim();
+    }
+
+    const wait = this.advancementGroup.get('wait')?.value ?? undefined;
+    if (acknowledgment || wait !== undefined) {
+      return { acknowledgment, wait };
+    } else {
+      return undefined;
+    }
+  }
+}
+```
+
+### `stack-comment-form.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-comment-form.component.html`
+
+
+```html
+<ng-container [formGroup]="formGroup">
+  Show a note to users of this stack.
+  <app-markdown-input formControlName="comment" />
+</ng-container>
+```
+
+### `stack-comment-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/stack-comment-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AppMarkdownInput } from '../../../shared/markdown-input/markdown-input.component';
+import { TemplateProvider } from './TemplateProvider';
+
+@Component({
+  selector: 'app-stack-comment-form',
+  templateUrl: './stack-comment-form.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppMarkdownInput, WebappSdkModule],
+})
+export class StackCommentForm implements OnChanges {
+  @Input()
+  formGroup: FormGroup;
+
+  @Input()
+  templateProvider: TemplateProvider;
+
+  ngOnChanges(): void {
+    if (!this.formGroup.contains('comment')) {
+      this.formGroup.addControl('comment', new FormControl(''));
+    }
+
+    if (this.templateProvider) {
+      this.formGroup.patchValue({
+        comment: this.templateProvider.getComment() || '',
+      });
+    }
+  }
+
+  getResult() {
+    return this.formGroup.value['comment'] || undefined;
+  }
+}
+```
+
+### `TemplateProvider.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-form/TemplateProvider.ts`
+
+
+```typescript
+import { AdvancementParams, CommandOptionType, Value } from '@yamcs/webapp-sdk';
+
+export interface TemplateProvider {
+  getAssignment(name: string): Value | void;
+  getOption(id: string, expectedType: CommandOptionType): Value | void;
+  getComment(): string | void;
+  getStream(): string | void;
+  getAdvancementParams(): AdvancementParams | undefined;
+}
+```

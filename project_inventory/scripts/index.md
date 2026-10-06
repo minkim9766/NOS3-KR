@@ -3,7 +3,7 @@
 
 **경로:** `scripts/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,28 +11,880 @@
 cfg/index
 fsw/index
 gsw/index
-file--build_sim.sh
-file--checkout.sh
-file--ci_launch.sh
-file--debug.sh
-file--env.sh
-file--log.sh
-file--sidecar.sh
-file--stop.sh
-file--system_tests.sh
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`scripts/cfg/`](cfg/index) — 폴더
-- [`scripts/fsw/`](fsw/index) — 폴더
-- [`scripts/gsw/`](gsw/index) — 폴더
-- [`scripts/build_sim.sh`](file--build_sim.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/checkout.sh`](file--checkout.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/ci_launch.sh`](file--ci_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/debug.sh`](file--debug.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/env.sh`](file--env.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/log.sh`](file--log.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/sidecar.sh`](file--sidecar.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/stop.sh`](file--stop.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/system_tests.sh`](file--system_tests.sh) — UTF-8 텍스트 파일 본문 포함
+### `build_sim.sh`
+
+**경로:** `scripts/build_sim.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+chmod g+s $BASE_DIR/sims
+mkdir -p $BASE_DIR/sims/build
+$DFLAGS_CPUS -v $BASE_DIR:$BASE_DIR --name "nos_build_sim" -w $BASE_DIR $DBOX make -j$NUM_CPUS build-sim
+```
+
+### `checkout.sh`
+
+**경로:** `scripts/checkout.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[1]}" )/scripts" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+export SC_NUM="sc01"
+export SC_NETNAME="nos3-"$SC_NUM
+export SC_CFG_FILE="-f nos3-simulator.xml" #"-f sc0"$i"_nos3_simulator.xml"
+
+##
+## Create Networks
+##
+echo "Create ground networks..."
+$DNETWORK create \
+    --driver=bridge \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    nos3-core
+echo ""
+
+echo "Create spacecraft network..."
+$DNETWORK create $SC_NETNAME 2> /dev/null
+echo ""
+
+# Debugging
+# Replace `--tab` with `--window-with-profile=KeepOpen` once you've created this gnome-terminal profile manually
+echo "NOS Core..."
+gnome-terminal --tab --title="NOS Engine Server" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-nos-engine-server"  -h nos-engine-server --network=$SC_NETNAME -w $SIM_BIN $DBOX /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+gnome-terminal --tab --title="NOS Time Driver"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos_time_driver" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE time
+gnome-terminal --tab --title="NOS Terminal"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-terminal"        --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE stdio-terminal
+echo ""
+
+
+##
+## HOW TO CHECKOUT
+##
+# Rename for your simulator under test in this file below to allow checkout, uncomment if already exists
+# Change configuration for your selected component (if using 42 for data)
+#   Modify ./cfg/nos3-mission.xml to use `<sc-1-cfg>sc-minimal-config.xml</sc-1-cfg>` 
+#   Modify ./cfg/sc_minimal-config.xml to enable your specific component to test
+# Manually build checkout: (sample shown as reference)
+#   make debug
+#   cd ./components/sample/fsw/standalone
+#   mkdir build
+#   cd build
+#   cmake .. -DTGTNAME=cpu1
+#   make
+#   exit
+# Run `make clean; make; make checkout`
+#   Double check everything running as expected
+#   Run tests as needed
+# Run `make stop` and repeat until feature complete
+echo "Checkout..."
+
+
+##
+## Arducam
+##
+# gnome-terminal --tab --title="Arducam Sim"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-cam-sim"   --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE camsim
+# gnome-terminal --title="Arducam Checkout"   -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-arducam_checkout"   --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/arducam/fsw/standalone/build/arducam_checkout
+
+
+##
+## Coarse Sun Sensor (CSS)
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+# gnome-terminal --tab --title=$SC_NUM" - CSS Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-css-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-css-sim
+# gnome-terminal --title="CSS Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-css-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_css/fsw/standalone/build/generic_css_checkout
+
+
+##
+## Magnetometer
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+# gnome-terminal --tab --title="Mag Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-generic-mag-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-mag-sim
+# gnome-terminal --title="Mag Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-mag-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_mag/fsw/standalone/build/generic_mag_checkout
+
+
+##
+## Electrical Power System (EPS)
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+# gnome-terminal --tab --title=$SC_NUM" - EPS Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-eps-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-eps-sim
+# gnome-terminal --title="EPS Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-eps-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_eps/fsw/standalone/build/generic_eps_checkout
+
+
+##
+## Inertial Measurement Unit (IMU)
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+gnome-terminal --tab --title="IMU Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-generic-imu-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-imu-sim
+gnome-terminal --title="IMU Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-generic-imu-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_imu/fsw/standalone/build/generic_imu_checkout
+
+
+##
+## Generic Radio
+##
+# gnome-terminal --title="Radio Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-generic-radio-checkout" -h nos-fsw --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_radio/fsw/standalone/build/generic_radio_checkout
+# sleep 1
+# gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    -h radio-sim --network=$SC_NETNAME --network-alias=radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+
+
+##
+## Fine Sun Sensor (FSS)
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+# gnome-terminal --tab --title=$SC_NUM" - FSS Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-fss-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-fss-sim
+# gnome-terminal --title="FSS Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-fss-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_fss/fsw/standalone/build/generic_fss_checkout
+
+
+##
+## novatel_oem615 GPS
+##
+#rm -rf $USER_NOS3_DIR/42/NOS3InOut
+#cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+#xhost +local:*
+#gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+#echo ""
+# gnome-terminal --tab --title="gps"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-gps"   --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE gps
+# gnome-terminal --title="novatel_oem615_checkout"   -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-novatel-oem615-checkout"   --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/novatel_oem615/fsw/standalone/build/novatel_oem615_checkout
+
+
+##
+## Reaction Wheels (RW)
+##
+#rm -rf $USER_NOS3_DIR/42/NOS3InOut
+#cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+#xhost +local:*
+#gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+#echo ""
+# gnome-terminal --tab --title=$SC_NUM" - RW 0 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim0"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim0
+# gnome-terminal --tab --title=$SC_NUM" - RW 1 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim1"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim1
+# gnome-terminal --tab --title=$SC_NUM" - RW 2 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim2"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim2
+# gnome-terminal --title="RW Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-rw-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_reaction_wheel/fsw/standalone/build/generic_reaction_wheel_checkout
+
+
+##
+## Sample
+##
+gnome-terminal --tab --title="Sample Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-sample-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE sample-sim
+gnome-terminal --title="Sample Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-sample-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/sample/fsw/standalone/build/sample_checkout
+
+
+##
+## Star Tracker
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"_fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+# gnome-terminal --tab --title=$SC_NUM" - StarTrk Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-startrk-sim"  --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-star-tracker-sim
+# gnome-terminal --title="Star Tracker Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-generic-star-tracker-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_star_tracker/fsw/standalone/build/generic_star_tracker_checkout
+
+
+##
+## Thruster
+##
+#rm -rf $USER_NOS3_DIR/42/NOS3InOut
+#cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+#xhost +local:*
+#gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+#echo ""
+# gnome-terminal --tab --title=$SC_NUM" - Thruster Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-thruster_sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-thruster-sim
+# gnome-terminal --title="Thruster Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-thruster-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_thruster/fsw/standalone/build/generic_thruster_checkout
+
+
+##
+## Torquer
+##
+# rm -rf $USER_NOS3_DIR/42/NOS3InOut
+# cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+# xhost +local:*
+# gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+# echo ""
+# gnome-terminal --tab --title=$SC_NUM" - Torquer Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-torquer-sim" -h trq-sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-torquer-sim
+# gnome-terminal --title="Torquer Checkout" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-torquer-checkout" --network=$SC_NETNAME -w $BASE_DIR $DBOX ./components/generic_torquer/fsw/standalone/build/generic_torquer_checkout
+# sleep 1
+# urlIP=$(docker container inspect sc01_sample_checkout | grep -i IPAddress | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+# sleep 10
+# firefox ${urlIP}:5000
+
+echo ""
+```
+
+### `ci_launch.sh`
+
+**경로:** `scripts/ci_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+set -e
+
+# Default GSW is cosmos
+GSW="cosmos"
+
+# Parse GSW selection
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --use-yamcs)
+      GSW="yamcs"
+      shift
+      ;;
+    --use-cosmos-gui)
+      GSW="cosmos-gui"
+      shift
+      ;;      
+    --use-cosmos)
+      GSW="cosmos"
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      echo "Usage: $0 [--use-cosmos | --use-cosmos-gui | --use-yamcs]"
+      exit 1
+      ;;
+  esac
+done
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source "$SCRIPT_DIR/env.sh"
+
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+mkdir -p $FSW_DIR/data/{cam,evs,hk,inst}
+mkdir -p /tmp/nos3/data/{cam,evs,hk,inst} /tmp/nos3/uplink
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2>/dev/null || true
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2>/dev/null || true
+
+$DNETWORK rm nos3-core 2>/dev/null || true
+$DNETWORK create \
+    --driver=bridge \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    nos3-core
+
+echo "Launch GSW..."
+
+if [ "$GSW" == "cosmos" ]; then
+  echo "Launching COSMOS..."
+  $DCALL run -d --name cosmos-openc3-operator-1 \
+      --log-driver json-file --log-opt max-size=5m --log-opt max-file=3 \
+      -v "$GSW_DIR/config:/cosmos/config:ro" \
+      -v "$GSW_DIR:/cosmos" \
+      -v "$BASE_DIR/scripts:/scripts:ro" \
+      -v /tmp/nos3:/tmp/nos3 \
+      --network=nos3-core \
+      -v /tmp/.X11-unix:/tmp/.X11-unix:ro \
+      -e DISPLAY=$DISPLAY \
+      -e QT_X11_NO_MITSHM=1 \
+      -e PROCESSOR_ENDIANNESS="LITTLE_ENDIAN" \
+      -w /cosmos/tools \
+      ballaerospace/cosmos:4.5.0 tail -f /dev/null
+
+  sleep 5
+  $DCALL exec cosmos-openc3-operator-1 bash -c "apt update && apt install -y xvfb"
+  $DCALL exec -d cosmos-openc3-operator-1 bash -c "xvfb-run ruby CmdTlmServer /cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt"
+
+elif [ "$GSW" == "cosmos-gui" ]; then
+    $DFLAGS -v $BASE_DIR:$BASE_DIR -dit -v /tmp/nos3:/tmp/nos3 -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 -e PROCESSOR_ENDIANNESS="LITTLE_ENDIAN" -w $GSW_DIR --name cosmos-openc3-operator-1 --network=nos3-core ballaerospace/cosmos:4.5.0
+
+    echo ""
+    echo "Please quickly click the COSMOS Ok button to launch"
+    echo "Afterwards click the top left COSMOS button in the NOS3 Launcher"
+    sleep 20
+    echo ""
+    echo "If you haven't fully started COSMOS by now, you're too late ... start over"
+    echo ""
+
+elif [ "$GSW" == "yamcs" ]; then
+  echo "Launching YAMCS..."
+  YAMCS_CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+  YAMCS_SCRIPT_DIR=$YAMCS_CFG_BUILD_DIR
+  source $YAMCS_SCRIPT_DIR/env.sh
+
+  # rm -rf $USER_NOS3_DIR/yamcs 2> /dev/null
+  cp -r $BASE_DIR/gsw/yamcs $USER_NOS3_DIR/
+  echo "Directories Created"
+
+  $DCALL run -dit \
+      --name cosmos-openc3-operator-1 \
+      --hostname cosmos \
+      --network=nos3-core \
+      --network-alias=cosmos \
+      -p 8090:8090 -p 5012:5012 \
+      -e COMPONENT_DIR=$COMPONENT_DIR \
+      -v $BASE_DIR:$BASE_DIR \
+      -v $USER_NOS3_DIR:$USER_NOS3_DIR \
+      -w $USER_NOS3_DIR/yamcs \
+      $DBOX \
+      mvn -Dmaven.repo.local=$USER_NOS3_DIR/.m2/repository -DCOMPONENT_DIR=$COMPONENT_DIR yamcs:run
+
+  if ! pidof firefox > /dev/null; then
+      echo "Opening Firefox to localhost:8090..."
+      sleep 30 && firefox localhost:8090 &
+  fi
+fi
+
+### Connections
+$DCALL run -dit --name nos-terminal --network=nos3-core \
+    -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+    ./nos3-single-simulator -f nos3-simulator.xml stdio-terminal
+
+$DCALL run -dit --name nos-udp-terminal --network=nos3-core \
+    -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+    ./nos3-single-simulator -f nos3-simulator.xml udp-terminal
+
+$DCALL run -dit --name nos-sim-bridge --network=nos3-core \
+    -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+    ./nos3-sim-cmdbus-bridge -f nos3-simulator.xml
+
+CFG_FILE="-f nos3-simulator.xml"
+
+$DCALL run -dit --name nos-time-driver --network=nos3-core \
+    --log-driver json-file --log-opt max-size=5m --log-opt max-file=3 \
+    -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+    ./nos3-single-simulator -f nos3-simulator.xml time
+
+SATNUM=1
+for (( i=1; i<=$SATNUM; i++ )); do
+    SC_NUM="sc0"$i
+    SC_NET="nos3-"$SC_NUM
+    CFG_FILE="-f nos3-simulator.xml"
+
+    $DNETWORK rm $SC_NET 2>/dev/null || true
+    $DNETWORK create $SC_NET
+
+    echo "$SC_NUM - Create spacecraft network..."
+    echo "$SC_NUM - Connect GSW to spacecraft network..."
+    $DNETWORK connect $SC_NET cosmos-openc3-operator-1 --alias cosmos --alias active-gs
+
+    echo "$SC_NUM - 42..."
+    rm -rf $USER_NOS3_DIR/42/NOS3InOut
+    cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+    xhost +local:*
+    $DCALL run -d --name ${SC_NUM}-fortytwo -h fortytwo --network=$SC_NET \
+        --log-driver json-file --log-opt max-size=5m --log-opt max-file=3 \
+        -e DISPLAY=$DISPLAY -v "$USER_NOS3_DIR:$USER_NOS3_DIR" \
+        -v /tmp/.X11-unix:/tmp/.X11-unix:ro -w "$USER_NOS3_DIR/42" $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+
+    echo "$SC_NUM - Flight Software..."
+    $DCALL run -dit --name ${SC_NUM}_nos_fsw -h nos-fsw --network=$SC_NET \
+        -v "$BASE_DIR:$BASE_DIR" -v "$FSW_DIR:$FSW_DIR" -v "$SCRIPT_DIR:$SCRIPT_DIR" \
+        -e USER=$(whoami) -e LD_LIBRARY_PATH=$FSW_DIR:/usr/lib:/usr/local/lib \
+        -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice \
+        $DBOX bash -c "exec ./core-cpu1 -R PO"
+
+    echo "$SC_NUM - CryptoLib..."
+    $DCALL run -d --name ${SC_NUM}-cryptolib --network=$SC_NET \
+        --log-driver json-file --log-opt max-size=5m --log-opt max-file=3 \
+        --network-alias=cryptolib \
+        -v "$BASE_DIR:$BASE_DIR" -w "$BASE_DIR/gsw/build" $DBOX ./support/standalone
+
+    echo "$SC_NUM - Simulators..."
+    echo "$SC_NUM - NOS Engine Server..."
+    $DCALL run -dit --name ${SC_NUM}-nos-engine-server -h nos-engine-server --network=$SC_NET \
+        --log-driver json-file --log-opt max-size=5m --log-opt max-file=3 \
+        -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+        /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+
+    $DCALL run -dit --name ${SC_NUM}-truth42sim --network=$SC_NET \
+        -h truth42sim --log-driver json-file --log-opt max-size=5m --log-opt max-file=3 \
+        -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+        ./nos3-single-simulator $CFG_FILE truth42sim
+
+    for sim in \
+        camsim generic-css-sim generic-eps-sim generic-fss-sim \
+        gps generic-imu-sim generic-mag-sim \
+        generic-reactionwheel-sim0 generic-reactionwheel-sim1 \
+        generic-reactionwheel-sim2 generic-radio-sim sample-sim \
+        generic-star-tracker-sim generic-thruster-sim generic-torquer-sim; do
+
+        if [[ "$sim" == "generic_radio_sim" ]]; then
+            $DCALL run -d --name ${SC_NUM}-${sim} --network=$SC_NET \
+                -h radio-sim --network-alias=radio-sim \
+                -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+                ./nos3-single-simulator $CFG_FILE $sim
+        else
+            $DCALL run -d --name ${SC_NUM}_${sim} --network=$SC_NET \
+                -v "$SIM_DIR:$SIM_DIR" -w "$SIM_BIN" $DBOX \
+                ./nos3-single-simulator $CFG_FILE $sim
+        fi
+    done
+
+    $DNETWORK connect --alias nos-time-driver $SC_NET nos-time-driver
+
+    echo "Connecting ground simulators to spacecraft network..."
+    $DNETWORK connect $SC_NET nos-terminal
+    $DNETWORK connect $SC_NET nos-udp-terminal
+    $DNETWORK connect $SC_NET nos-sim-bridge
+done
+
+echo "Docker headless launch script completed!"
+```
+
+### `debug.sh`
+
+**경로:** `scripts/debug.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+mkdir -p $BASE_DIR/fsw/build
+$DFLAGS_CPUS -v $USER_FPRIME_PATH:$USER_FPRIME_PATH -v $BASE_DIR:$BASE_DIR -v $USER_NOS3_DIR:$USER_NOS3_DIR -v $MVN_DIR:$MVN_DIR -p 8090:8090 -p 5012:5012  -w $BASE_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice -e LD_LIBRARY_PATH="/usr/local/lib" --name "nos3_debug" $DBOX bash
+```
+
+### `env.sh`
+
+**경로:** `scripts/env.sh`
+
+
+```bash
+#!/bin/bash
+#
+# Convenience script for NOS3 development
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASE_DIR=$(cd `dirname $SCRIPT_DIR` && pwd)
+FSW_DIR=$BASE_DIR/fsw/build/exe/cpu1
+GSW_BIN=$BASE_DIR/gsw/cosmos/build/openc3-cosmos-nos3
+GSW_DIR=$BASE_DIR/gsw/cosmos
+SIM_DIR=$BASE_DIR/sims/build
+SIM_BIN=$SIM_DIR/bin
+COMPONENT_DIR=$SCRIPT_DIR/../components
+
+if [ -d $SIM_DIR/bin ]; then
+    SIMS=$(ls $SIM_BIN/nos3*simulator) 
+fi 
+
+DATE=$(date "+%Y%m%d%H%M")
+NUM_CPUS="$( nproc )"
+
+USERDIR=$(cd ~/ && pwd)
+USER_NOS3_DIR=$(cd ~/ && pwd)/.nos3
+USER_FPRIME_PATH=$USERDIR/.cookiecutter_replay
+USER_YAMCS_PATH=$USER_NOS3_DIR/.m2
+OPENC3_DIR=$USER_NOS3_DIR/openc3
+OPENC3_PATH=$OPENC3_DIR/openc3.sh
+OPENC3_CLI="$OPENC3_DIR/openc3.sh cli"
+OPENC3_CLIROOT="$OPENC3_DIR/openc3.sh cliroot"
+
+INFLUXDB_DB=ait
+INFLUXDB_ADMIN_USER=ait
+INFLUXDB_ADMIN_PASSWORD=admin_password
+
+DOCKER_COMPOSE_COMMAND="docker compose"
+${DOCKER_COMPOSE_COMMAND} version &> /dev/null
+if [ "$?" -ne 0 ]; then
+  DOCKER_COMPOSE_COMMAND="docker-compose"
+fi
+
+###
+### Notes: 
+###   Podman and/or Docker on RHEL not yet supported
+###
+#if [ -f "/etc/redhat-release" ]; then
+#    DCALL="docker"
+#    DFLAGS="docker run --rm -it -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -u $(id -u $(stat -c '%U' $SCRIPT_DIR/env.sh)):$(getent group $(stat -c '%G' $SCRIPT_DIR/env.sh) | cut -d: -f3)"
+#    DFLAGS_CPUS="$DFLAGS --cpus=$NUM_CPUS"
+#    DCREATE="docker create --rm -it"
+#    DNETWORK="docker network"
+#else
+    DCALL="docker"
+    DFLAGS="docker run --rm -it -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -u $(id -u $(stat -c '%U' $SCRIPT_DIR/env.sh)):$(getent group $(stat -c '%G' $SCRIPT_DIR/env.sh) | cut -d: -f3)"
+    DFLAGS_CPUS="$DFLAGS --cpus=$NUM_CPUS"
+    DCREATE="docker create --rm -it"
+    DNETWORK="docker network"
+#fi
+
+DBOX="ivvitc/nos3-64:20260619"
+
+# Radio Config
+RADIO_TX_FSW_PORT=5010
+RADIO_RX_FSW_PORT=5011
+
+# CryptoLib Ground Config
+CRYPTO_RX_GROUND_PORT=6010
+CRYPTO_TX_GROUND_PORT=6011
+CRYPTO_TX_RADIO_PORT=8010
+CRYPTO_RX_RADIO_PORT=8011
+
+# Debugging
+#echo "Script directory = " $SCRIPT_DIR
+#echo "Base directory   = " $BASE_DIR
+#echo "DFLAGS           = " $DFLAGS
+#echo "FSW directory    = " $FSW_DIR
+#echo "GSW bin          = " $GSW_BIN
+#echo "GSW directory    = " $GSW_DIR
+#echo "Sim directory    = " $SIM_BIN
+#echo "Sim list         = " $SIMS
+#echo "Docker flags     = " $DFLAGS
+#echo "Docker create    = " $DCREATE
+#echo "Docker network   = " $DNETWORK
+#echo "Date             = " $DATE
+#echo "Local user .nos3 = " $USER_NOS3_DIR
+#echo "OpenC3 directory = " $OPENC3_DIR
+#echo "OpenC3 path      = " $OPENC3_PATH
+```
+
+### `log.sh`
+
+**경로:** `scripts/log.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+BASE_DIR=$(cd `dirname $SCRIPT_DIR`/.. && pwd)
+DATE=$(date "+%Y%m%d_%H%M")
+CAP_NAME=$DATE'_console.txt'
+
+echo "Move minicom.cap for archival..."
+mv $BASE_DIR/minicom.cap $BASE_DIR/gsw/cosmos/outputs/logs/$CAP_NAME 2> /dev/null
+
+#echo "/tmp/data for archival..."
+#mv /tmp/data $BASE_DIR/gsw/cosmos/outputs/logs/data 2> /dev/null
+
+echo "Processing L0 CSVs..."
+cd $SCRIPT_DIR
+./l0.sh
+
+echo "Tar COSMOS files..."
+cd $BASE_DIR/gsw/cosmos/outputs/logs
+tar -czvf $BASE_DIR/$DATE.tar.gz 20* data && yes | rm $BASE_DIR/gsw/cosmos/outputs/logs/20* && yes | rm -r $BASE_DIR/gsw/cosmos/outputs/logs/data
+```
+
+### `sidecar.sh`
+
+**경로:** `scripts/sidecar.sh`
+
+
+```bash
+#!/usr/bin/env bash
+
+# Default values
+PROTOCOL=http
+SERVER=localhost
+PORT=8090
+INSTANCE=nos3
+PROCESSOR=realtime
+#COMMAND="/CFS/CMD/TO_ENABLE_OUTPUT"
+COMMAND="/CFS/CMD/CFE_ES_NOOP"
+TLS_VERIFY=False
+
+#
+PIP=/usr/bin/pip3
+PYTHON=python3
+
+usage() {
+  cat <<-EOF
+  
+  Usage: $0 [-h] [-d] [-P] [-s] [-p] [-i] [-c] [-t] [-R] [-w]
+  
+  Purpose: a script to disable, enable links, and issue a command to a Yamcs server's instance on a specific processor.
+
+  Eg.:
+    $0 -h
+    $0 -d
+    $0 -P http -s localhost -p 8090 -i nos3
+    $0 -w
+    etc.
+  
+  Required Arguments:
+
+  Options:
+    -h | --help       help
+    -d | --defaults   use default configurations. Other arguments will be ignored.
+    -P | --protocol   <http|https>,       Default: http
+    -s | --server     server's address,   Default: localhost
+    -p | --port       service's port,     Default: 8090
+    -i | --instance   instance on server, Default: nos3
+    -c | --command    command to issue,   Default: /CFS/CMD/CFE_ES_NOOP, invoke /CFS/CMD/TO_ENABLE_OUTPUT to enable telemetry outputs
+    -t | --tls_verify                     Default: False
+    -R | --processor                      Default: realtime
+    -w | --write                          Echo default values to stdout
+
+EOF
+}
+
+params="$(getopt -o :h,d,P:s:p:i:c:t:R,w -l 'help,defaults,protocol:,server:,port:,instance:,command:,tls_verify:,processor,write' --name "$(basename $0)" -- "$@")"
+
+# Check if getopt encountered an error
+if [ $? -ne 0 ]; then
+  echo
+  echo "ERROR: Invalid option or missing argument: $@" >&2
+  usage
+  exit 1
+fi
+
+if [ $# -eq 0 ]; then
+  echo
+  echo "ERROR: no arguments provided: $@" >&2
+  usage
+  exit 1
+fi
+
+eval set -- "$params"
+unset params
+
+while true; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -d|--defaults)
+      echo; echo "[INFO] Will use default values. Other arguments will be ignored."
+      shift
+      break
+      ;;     
+    -P|--protocol)
+      PROTOCOL="$2"
+      shift 2
+      ;;      
+    -s|--server)
+      SERVER="$2"
+      shift 2
+      ;;
+    -p|--port)
+      PORT="$2"
+      shift 2
+      ;;
+    -i|--instance)
+      INSTANCE="$2"
+      shift 2
+      ;;
+    -c|--command)
+      COMMAND="$2"
+      shift 2
+      ;;
+    -t|--tls_verify)
+      TLS_VERIFY="$2"
+      shift 2
+      ;;
+    -w|--write)
+      echo
+      echo "[INFO] defaults are ${PROTOCOL}://${SERVER}:${PORT} on instance: $INSTANCE, with command: $COMMAND, using processor: $PROCESSOR"
+      echo
+      exit
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      echo "Unrecognized option '$1'"
+      usage
+      exit
+      ;;
+  esac
+
+done
+
+echo
+echo "Attempting to connect to yamcs on:"
+echo "  ${PROTOCOL}://${SERVER}:${PORT} on instance: $INSTANCE, with command: $COMMAND, using processor: $PROCESSOR"
+echo
+
+#curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/radio-in:disable
+#curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/radio-out:disable
+curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/truth42-in:disable
+#curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/debug-in:disable
+
+sleep 5
+
+#curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/radio-in:enable
+#curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/radio-out:enable
+curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/truth42-in:enable
+
+exit_status=$?
+
+if [ $exit_status -eq 0 ]; then
+
+  ${PIP} install --break-system-packages --user --upgrade yamcs-client && \
+
+  ${PYTHON} <<EOF
+import sys
+
+from yamcs.client import YamcsClient
+
+SERVER='${SERVER}'
+PORT=${PORT}
+INSTANCE='${INSTANCE}'
+PROTOCOL='${PROTOCOL}'
+COMMAND='${COMMAND}'
+TLS_VERIFY='${TLS_VERIFY}'
+PROCESSOR='${PROCESSOR}'
+
+client = YamcsClient(f"{PROTOCOL}://{SERVER}:{PORT}", tls_verify=f"{TLS_VERIFY}")
+processor = client.get_processor(instance=f"{INSTANCE}", processor=f"{PROCESSOR}")
+
+command_name = f"{COMMAND}"
+arguments = {} # Example arguments, NOT RELEVANT FOR NOOP command
+
+command_handle = processor.issue_command(command_name, args=arguments)
+
+print(f"Issued command: {command_handle}")
+EOF
+
+else
+  echo
+  echo "FAILED: curl -k -X POST ${PROTOCOL}://${SERVER}:${PORT}/api/links/nos3/truth42-in:enable"
+  echo
+  exit 0
+fi
+```
+
+### `stop.sh`
+
+**경로:** `scripts/stop.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+# NOS3 GPIO
+rm -rf /tmp/gpio_fake
+
+# NOS3 Stored HK
+rm -rf $BASE_DIR/fsw/build/exe/cpu1/scratch/*
+
+# Docker stop
+cd $SCRIPT_DIR; $DFLAG compose down > /dev/null 2>&1
+$DCALL ps --filter ancestor="$DBOX" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="sc_*" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="nos_*" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="ait*" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="influxdb*" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="ttc-command*" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="openc3*" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter ancestor="ballaerospace/cosmos:4.5.0" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+$DCALL ps --filter=name="cosmos-openc3-operator-1" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+
+# Intentionally wait to complete
+wait 
+
+# Docker cleanup
+$DCALL container prune -f > /dev/null 2>&1
+$DNETWORK ls --filter=name="nos" | xargs $DNETWORK rm > /dev/null 2>&1
+$DNETWORK ls --filter=name="cosmos-openc3-operator-1" | xargs $DNETWORK rm > /dev/null 2>&1
+rm /dev/shm/Blackboard 2> /dev/null
+
+# 42
+rm -rf $USER_NOS3_DIR/42/NOS3InOut
+rm -rf /tmp/gpio*
+
+# COSMOS
+yes | rm $GSW_DIR/Gemfile > /dev/null 2>&1
+yes | rm $GSW_DIR/Gemfile.lock > /dev/null 2>&1
+
+exit 0
+```
+
+### `system_tests.sh`
+
+**경로:** `scripts/system_tests.sh`
+
+
+```bash
+#!/bin/bash 
+set -e
+
+# Sleep for a moment to sensure the system is up and running
+sleep 10
+
+# Set of System Tests to be called
+
+#Sample
+docker exec -it cosmos-openc3-operator-1 ruby $SYSTEM_TEST_FILE_PATH
+```

@@ -3,18 +3,264 @@
 
 **경로:** `fsw/osal/src/bsp/generic-vxworks/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bsp_console.c`
 
-file--bsp_console.c
-file--bsp_start.c
-file--generic_vxworks_bsp_internal.h
+**경로:** `fsw/osal/src/bsp/generic-vxworks/src/bsp_console.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File:  bsp_console.c
+ *
+ * Purpose:
+ *   OSAL BSP debug console abstraction
+ */
+
+#include <string.h>
+#include <unistd.h>
+#include <stdio.h>
+
+#include "generic_vxworks_bsp_internal.h"
+#include "bsp-impl.h"
+
+/****************************************************************************************
+                    BSP CONSOLE IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*----------------------------------------------------------------
+   OS_BSP_ConsoleOutput_Impl
+   See full description in header
+ ------------------------------------------------------------------*/
+void OS_BSP_ConsoleOutput_Impl(const char *Str, size_t DataLen)
+{
+    while (DataLen > 0)
+    {
+        putchar(*Str);
+        ++Str;
+        --DataLen;
+    }
+}
+
+/*----------------------------------------------------------------
+   OS_BSP_ConsoleSetMode_Impl() definition
+   See full description in header
+ ------------------------------------------------------------------*/
+void OS_BSP_ConsoleSetMode_Impl(uint32 ModeBits)
+{
+    /* ignored; not implemented */
+}
 ```
 
-## 항목
+### `bsp_start.c`
 
-- [`fsw/osal/src/bsp/generic-vxworks/src/bsp_console.c`](file--bsp_console.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/bsp/generic-vxworks/src/bsp_start.c`](file--bsp_start.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/bsp/generic-vxworks/src/generic_vxworks_bsp_internal.h`](file--generic_vxworks_bsp_internal.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/bsp/generic-vxworks/src/bsp_start.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * File:  bsp_start.c
+ *
+ * Purpose:
+ *  OSAL main entry point.
+ */
+
+/*
+**  Include Files
+*/
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+
+#include "generic_vxworks_bsp_internal.h"
+
+OS_BSP_GenericVxWorksGlobalData_t OS_BSP_GenericVxWorksGlobal;
+
+/* ---------------------------------------------------------
+    OS_BSP_Lock_Impl()
+
+     Helper function to get exclusive access to BSP
+   --------------------------------------------------------- */
+void OS_BSP_Lock_Impl(void)
+{
+    int status;
+
+    status = semTake(OS_BSP_GenericVxWorksGlobal.AccessMutex, WAIT_FOREVER);
+    if (status != OK)
+    {
+        BSP_DEBUG("semTake: errno=%d\n", errno);
+    }
+}
+
+/* ---------------------------------------------------------
+    OS_BSP_Unlock_Impl()
+
+     Helper function to release exclusive access to BSP
+   --------------------------------------------------------- */
+void OS_BSP_Unlock_Impl(void)
+{
+    int status;
+
+    status = semGive(OS_BSP_GenericVxWorksGlobal.AccessMutex);
+    if (status != OK)
+    {
+        BSP_DEBUG("semGive: errno=%d\n", errno);
+    }
+}
+
+/* ---------------------------------------------------------
+    OS_BSP_Shutdown_Impl()
+
+     Helper function to abort the running task
+   --------------------------------------------------------- */
+void OS_BSP_Shutdown_Impl(void)
+{
+    abort();
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    vxWorks/BSP Application entry point.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    integer return code, with zero indicating normal exit, nonzero
+**    indicating an off-nominal condition
+*/
+
+int OS_BSPMain(void)
+{
+    /*
+     * Initially clear the global object (this contains return code)
+     */
+    memset(&OS_BSP_Global, 0, sizeof(OS_BSP_Global));
+    memset(&OS_BSP_GenericVxWorksGlobal, 0, sizeof(OS_BSP_GenericVxWorksGlobal));
+
+    /*
+     * Initialize the low level access sem
+     */
+    OS_BSP_GenericVxWorksGlobal.AccessMutex = semMInitialize(OS_BSP_GenericVxWorksGlobal.AccessMutexMem,
+                                                             SEM_Q_PRIORITY | SEM_INVERSION_SAFE | SEM_DELETE_SAFE);
+
+    if (OS_BSP_GenericVxWorksGlobal.AccessMutex == (SEM_ID)0)
+    {
+        BSP_DEBUG("semMInitialize: errno=%d\n", errno);
+    }
+
+    /*
+     * Call application specific entry point.
+     * This should set up all user tasks and resources, then return
+     */
+    OS_Application_Startup();
+
+    /*
+     * OS_Application_Run() implements the background task.
+     * The user application may provide this, or a default implementation
+     * is used which just calls OS_IdleLoop().
+     */
+    OS_Application_Run();
+
+    /*
+     * Return to shell with the current status code
+     */
+    return OS_BSP_Global.AppStatus;
+}
+```
+
+### `generic_vxworks_bsp_internal.h`
+
+**경로:** `fsw/osal/src/bsp/generic-vxworks/src/generic_vxworks_bsp_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Purpose:
+ *   Header file for internal data to the VxWorks BSP
+ */
+
+#ifndef GENERIC_VXWORKS_BSP_INTERNAL_H
+#define GENERIC_VXWORKS_BSP_INTERNAL_H
+
+/*
+** OSAL includes
+*/
+#include "bsp-impl.h"
+
+#include <semLib.h>
+
+/*
+** BSP types
+*/
+typedef struct
+{
+    SEM_ID AccessMutex;
+    VX_MUTEX_SEMAPHORE(AccessMutexMem);
+} OS_BSP_GenericVxWorksGlobalData_t;
+
+/*
+ * Global Data object
+ */
+extern OS_BSP_GenericVxWorksGlobalData_t OS_BSP_GenericVxWorksGlobal;
+
+#endif /* GENERIC_VXWORKS_BSP_INTERNAL_H */
+```

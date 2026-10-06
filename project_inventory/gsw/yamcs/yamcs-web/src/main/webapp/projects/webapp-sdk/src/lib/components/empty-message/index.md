@@ -3,18 +3,81 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `empty-message.component.css`
 
-file--empty-message.component.css
-file--empty-message.component.html
-file--empty-message.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/empty-message.component.css`
+
+
+```css
+.frame {
+  display: inline-block;
+  width: 412px;
+  border-radius: 10px;
+  box-shadow: 0px 10px 16px -8px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+  font:
+    400 12px / 24px Roboto,
+    sans-serif;
+}
+
+.frame .header {
+  border-bottom: 1px solid #d3d3d3;
+  height: 64px;
+  line-height: 64px;
+  padding-left: 24px;
+  position: relative;
+  text-align: left;
+  font-size: large;
+}
+
+.frame .body {
+  padding: 24px;
+  text-align: left;
+}
 ```
 
-## 항목
+### `empty-message.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/empty-message.component.css`](file--empty-message.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/empty-message.component.html`](file--empty-message.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/empty-message.component.ts`](file--empty-message.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/empty-message.component.html`
+
+
+```html
+<div style="width: 100%; text-align: center">
+  <div class="frame" [style.marginTop]="marginTop">
+    @if (headerTitle) {
+      <div class="header">
+        {{ headerTitle }}
+      </div>
+    }
+    <div class="body">
+      <ng-content />
+    </div>
+  </div>
+</div>
+```
+
+### `empty-message.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/empty-message/empty-message.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'ya-empty-message',
+  templateUrl: './empty-message.component.html',
+  styleUrl: './empty-message.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [],
+})
+export class YaEmptyMessage {
+  @Input()
+  headerTitle: string;
+
+  @Input()
+  marginTop = '50px';
+}
+```

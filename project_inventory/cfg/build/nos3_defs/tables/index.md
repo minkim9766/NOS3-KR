@@ -3,72 +3,184 @@
 
 **경로:** `cfg/build/nos3_defs/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cf_def_config.c`
 
-file--cf_def_config.c
-file--ds_file_tbl.c
-file--ds_filter_tbl.c
-file--ds_indices.h
-file--fm_freespace.c
-file--hk_cpy_tbl.c
-file--lc_def_adt.c
-file--lc_def_wdt.c
-file--sc_ats1.c
-file--sc_rts001.c
-file--sc_rts003.c
-file--sc_rts005.c
-file--sc_rts025.c
-file--sc_rts026.c
-file--sc_rts027.c
-file--sc_rts028.c
-file--sc_rts029.c
-file--sc_rts030.c
-file--sc_rts031.c
-file--sc_rts032.c
-file--sc_rts033.c
-file--sc_rts034.c
-file--sc_rts035.c
-file--sc_rts036.c
-file--sc_rts037.c
-file--sch_def_msgtbl.c
-file--sch_def_schtbl.c
-file--sch_def_schtbl.c.10HzADCS
-file--to_config.c
-file--to_lab_sub.c
-```
+**경로:** `cfg/build/nos3_defs/tables/cf_def_config.c`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`cfg/build/nos3_defs/tables/cf_def_config.c`](file--cf_def_config.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/ds_file_tbl.c`](file--ds_file_tbl.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/ds_filter_tbl.c`](file--ds_filter_tbl.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/ds_indices.h`](file--ds_indices.h) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/fm_freespace.c`](file--fm_freespace.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/hk_cpy_tbl.c`](file--hk_cpy_tbl.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/lc_def_adt.c`](file--lc_def_adt.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/lc_def_wdt.c`](file--lc_def_wdt.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_ats1.c`](file--sc_ats1.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts001.c`](file--sc_rts001.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts003.c`](file--sc_rts003.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts005.c`](file--sc_rts005.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts025.c`](file--sc_rts025.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts026.c`](file--sc_rts026.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts027.c`](file--sc_rts027.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts028.c`](file--sc_rts028.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts029.c`](file--sc_rts029.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts030.c`](file--sc_rts030.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts031.c`](file--sc_rts031.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts032.c`](file--sc_rts032.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts033.c`](file--sc_rts033.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts034.c`](file--sc_rts034.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts035.c`](file--sc_rts035.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts036.c`](file--sc_rts036.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sc_rts037.c`](file--sc_rts037.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sch_def_msgtbl.c`](file--sch_def_msgtbl.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sch_def_schtbl.c`](file--sch_def_schtbl.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/sch_def_schtbl.c.10HzADCS`](file--sch_def_schtbl.c.10HzADCS) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/to_config.c`](file--to_config.c) — 빌드 산출물 (경로만)
-- [`cfg/build/nos3_defs/tables/to_lab_sub.c`](file--to_lab_sub.c) — 빌드 산출물 (경로만)
+### `ds_file_tbl.c`
+
+**경로:** `cfg/build/nos3_defs/tables/ds_file_tbl.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds_filter_tbl.c`
+
+**경로:** `cfg/build/nos3_defs/tables/ds_filter_tbl.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds_indices.h`
+
+**경로:** `cfg/build/nos3_defs/tables/ds_indices.h`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `fm_freespace.c`
+
+**경로:** `cfg/build/nos3_defs/tables/fm_freespace.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `hk_cpy_tbl.c`
+
+**경로:** `cfg/build/nos3_defs/tables/hk_cpy_tbl.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_def_adt.c`
+
+**경로:** `cfg/build/nos3_defs/tables/lc_def_adt.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_def_wdt.c`
+
+**경로:** `cfg/build/nos3_defs/tables/lc_def_wdt.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_ats1.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_ats1.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts001.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts001.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts003.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts003.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts005.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts005.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts025.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts025.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts026.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts026.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts027.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts027.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts028.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts028.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts029.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts029.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts030.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts030.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts031.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts031.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts032.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts032.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts033.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts033.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts034.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts034.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts035.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts035.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts036.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts036.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc_rts037.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sc_rts037.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sch_def_msgtbl.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sch_def_msgtbl.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sch_def_schtbl.c`
+
+**경로:** `cfg/build/nos3_defs/tables/sch_def_schtbl.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sch_def_schtbl.c.10HzADCS`
+
+**경로:** `cfg/build/nos3_defs/tables/sch_def_schtbl.c.10HzADCS`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to_config.c`
+
+**경로:** `cfg/build/nos3_defs/tables/to_config.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `to_lab_sub.c`
+
+**경로:** `cfg/build/nos3_defs/tables/to_lab_sub.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,16 +3,67 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/record/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `record.component.html`
 
-file--record.component.html
-file--record.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/record/record.component.html`
+
+
+```html
+<ya-attr-list>
+  @for (column of table.keyColumn; track column) {
+    <ya-attr>
+      <ng-template ya-attr-label>
+        <mat-icon class="icon12" style="color: gold" matTooltip="Key Column">vpn_key</mat-icon>
+        {{ column.name }}
+      </ng-template>
+      {{ (record.column | columnValue: column.name | value) || "-" }}
+    </ya-attr>
+  }
+
+  @for (column of table.valueColumn; track column) {
+    <ya-attr [label]="column.name">
+      @if (
+        column.type === "BINARY" ||
+        (column.type !== "PROTOBUF(com.google.protobuf.Struct)" &&
+          column.type.startsWith("PROTOBUF"))
+      ) {
+        @if (record.column | columnValue: column.name; as value) {
+          <app-hex [base64String]="value.binaryValue" />
+        } @else {
+          -
+        }
+      } @else {
+        {{ (record.column | columnValue: column.name | value) || "-" }}
+      }
+    </ya-attr>
+  }
+</ya-attr-list>
 ```
 
-## 항목
+### `record.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/record/record.component.html`](file--record.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/record/record.component.ts`](file--record.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/record/record.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Record, Table, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { HexComponent } from '../../../shared/hex/hex.component';
+import { ColumnValuePipe } from '../shared/column-value.pipe';
+
+@Component({
+  selector: 'app-record',
+  templateUrl: './record.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ColumnValuePipe, HexComponent, WebappSdkModule],
+})
+export class RecordComponent {
+  @Input()
+  table: Table;
+
+  @Input()
+  record: Record;
+}
+```

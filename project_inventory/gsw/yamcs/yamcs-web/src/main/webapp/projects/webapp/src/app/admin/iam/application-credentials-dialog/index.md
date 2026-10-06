@@ -3,16 +3,60 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/application-credentials-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `application-credentials-dialog.component.html`
 
-file--application-credentials-dialog.component.html
-file--application-credentials-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/application-credentials-dialog/application-credentials-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Service account created</h2>
+
+<mat-dialog-content>
+  <p>
+    The service account '{{ data.name }}' was created successfully. You can use this account to
+    connect an application to Yamcs.
+  </p>
+
+  <dl class="dl-horizontal">
+    <dt>Application ID</dt>
+    <dd>
+      <pre>{{ data.applicationId }}</pre>
+    </dd>
+    <dt>Application Secret</dt>
+    <dd>
+      <pre>{{ data.applicationSecret }}</pre>
+    </dd>
+  </dl>
+
+  <strong>Important:</strong>
+  Take note of these application credentials. It is not possible to display them after closing this
+  dialog.
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button appearance="primary" mat-dialog-close>CLOSE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `application-credentials-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/application-credentials-dialog/application-credentials-dialog.component.html`](file--application-credentials-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/application-credentials-dialog/application-credentials-dialog.component.ts`](file--application-credentials-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/application-credentials-dialog/application-credentials-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-application-credentials-dialog',
+  templateUrl: './application-credentials-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ApplicationCredentialsDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) readonly data: any) {}
+}
+```

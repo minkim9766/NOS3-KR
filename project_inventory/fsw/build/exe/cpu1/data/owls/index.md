@@ -3,30 +3,55 @@
 
 **경로:** `fsw/build/exe/cpu1/data/owls/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 assets/index
 bundle/index
-file--db_blank.db
-file--db_new.db
-file--empty_rules.json
-file--owls_asdpdb_20230815.db
-file--owls_similarity_config.json
-file--owls_similarity_config.template
-file--syn_demo.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/data/owls/assets/`](assets/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/bundle/`](bundle/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/db_blank.db`](file--db_blank.db) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/db_new.db`](file--db_new.db) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/empty_rules.json`](file--empty_rules.json) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/owls_asdpdb_20230815.db`](file--owls_asdpdb_20230815.db) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/owls_similarity_config.json`](file--owls_similarity_config.json) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/owls_similarity_config.template`](file--owls_similarity_config.template) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/syn_demo.py`](file--syn_demo.py) — 빌드 산출물 (경로만)
+### `db_blank.db`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/db_blank.db`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `db_new.db`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/db_new.db`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `empty_rules.json`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/empty_rules.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `owls_asdpdb_20230815.db`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/owls_asdpdb_20230815.db`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `owls_similarity_config.json`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/owls_similarity_config.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `owls_similarity_config.template`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/owls_similarity_config.template`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `syn_demo.py`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/syn_demo.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

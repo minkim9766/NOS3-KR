@@ -3,18 +3,95 @@
 
 **경로:** `gsw/yamcs/examples/perftest2/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/perftest2/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/perftest2/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/perftest2/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/perftest2/pom.xml`
+
+
+```xml
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>perftest2</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: Examples :: Perftest2</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>simulator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-tse</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `README.md`
+
+**경로:** `gsw/yamcs/examples/perftest2/README.md`
+
+
+```markdown
+This configuration is used to asses the performance of Yamcs for processing telemetry. 
+
+Please see the perftest1 for a description of the parameters.
+
+This configuration differs from perftest1:
+- the realtime parameter archive filler is disabled, the backfiller is used to post-process the data.
+- the parameter cache only caches certain parameters, so not all parameters are processed in realtime.
+   Those which have alarms are and also those requested by users (e.g. all the parameters shown in the displays). 
+- the maxSegmentSize of the parameter archive has been set to 200. This means that when the backfiller runs, it will accumulate in memory maximum 200 samples for each parameter in each group; incresing that number will reduce the archive size (becuase data can be compressed better) at the expense of RAM.
+
+The peformance which can be reached with this configuration on a quad core i5-1345U CPU (SSD disk):
+
+ numPackets: 200
+ interval: 100 (millisec)
+ packetSize: 1476 (+16 bytes headers)
+ percentangeParamWithAlarms: 5
+
+resulting in 
+TM packet rate: 2000 packets/second, about 22Mbps incoming data rate.
+TM parameter rate: 369 x 200 = 73800 parameters sampled at 10Hz -> 738000 samples/sec
+Among the 73800, 3690 parameters are monitored (because they have alarms), the other are not extracted in realtime (unless some client subscribes to them), only during the parameter archive backfilling.
+
+When there is not backfilling and only one web client connected, the load is about 50%.
+
+During the backfilling, the speed of parameter archive processing is about 2 millions samples/second, so about 2.5 times faster than real time.
+That means one cannot run too often the backfilling: the parameter archive interval is 139 minutes, any backfilling process will process data from an entire interval. One interval requires 50 minutes to process in full. 
+
+```

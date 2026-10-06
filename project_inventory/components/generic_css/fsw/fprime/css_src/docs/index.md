@@ -3,14 +3,78 @@
 
 **경로:** `components/generic_css/fsw/fprime/css_src/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sdd.md`
 
-file--sdd.md
+**경로:** `components/generic_css/fsw/fprime/css_src/docs/sdd.md`
+
+
+```markdown
+# Components::Generic_css
+
+generic_css
+
+## Usage Examples
+Add usage examples here
+
+### Diagrams
+Add diagrams here
+
+### Typical Usage
+And the typical usage of the component here
+
+## Class Diagram
+Add a class diagram here
+
+## Port Descriptions
+| Name | Description |
+|---|---|
+|---|---|
+
+## Component States
+Add component states in the chart below
+| Name | Description |
+|---|---|
+|---|---|
+
+## Sequence Diagrams
+Add sequence diagrams here
+
+## Parameters
+| Name | Description |
+|---|---|
+|---|---|
+
+## Commands
+| Name | Description |
+|---|---|
+|---|---|
+
+## Events
+| Name | Description |
+|---|---|
+|---|---|
+
+## Telemetry
+| Name | Description |
+|---|---|
+|---|---|
+
+## Unit Tests
+Add unit test descriptions in the chart below
+| Name | Description | Output | Coverage |
+|---|---|---|---|
+|---|---|---|---|
+
+## Requirements
+Add requirements in the chart below
+| Name | Description | Validation |
+|---|---|---|
+|---|---|---|
+
+## Change Log
+| Date | Description |
+|---|---|
+|---| Initial Draft |
 ```
-
-## 항목
-
-- [`components/generic_css/fsw/fprime/css_src/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함

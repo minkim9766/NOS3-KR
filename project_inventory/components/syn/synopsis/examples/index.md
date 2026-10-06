@@ -3,22 +3,355 @@
 
 **경로:** `components/syn/synopsis/examples/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `empty_rules.json`
 
-file--empty_rules.json
-file--owls_similarity_config.json
-file--sfi_rules.srd
-file--sfi_rules_config.json
-file--sfi_similarity_config.json
+**경로:** `components/syn/synopsis/examples/empty_rules.json`
+
+
+```json
+{}
 ```
 
-## 항목
+### `owls_similarity_config.json`
 
-- [`components/syn/synopsis/examples/empty_rules.json`](file--empty_rules.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/examples/owls_similarity_config.json`](file--owls_similarity_config.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/examples/sfi_rules.srd`](file--sfi_rules.srd) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/examples/sfi_rules_config.json`](file--sfi_rules_config.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/examples/sfi_similarity_config.json`](file--sfi_similarity_config.json) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/syn/synopsis/examples/owls_similarity_config.json`
+
+
+```json
+{
+  "functions": {
+    "default": [
+      {
+        "key": ["owls", "helm"],
+        "function": {
+          "diversity_descriptor": [
+            "bbox_area_min_pc10.0",
+            "bbox_area_min_pc50.0",
+            "bbox_area_min_pc90.0",
+            "disp_e2e_norm_pc10.0",
+            "disp_e2e_norm_pc50.0",
+            "disp_e2e_norm_pc90.0",
+            "speed_mean_pc10.0",
+            "speed_mean_pc50.0",
+            "speed_mean_pc90.0"
+          ],
+          "weights": [
+            1e6,
+            1e5,
+            1e4,
+            1e5,
+            1e4,
+            1e3,
+            1e3,
+            1e3,
+            1e2
+          ],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 42.0
+          }
+        }
+      }
+    ]
+  },
+  "alphas": {
+    "default": 1.0
+  }
+}
+```
+
+### `sfi_rules.srd`
+
+**경로:** `components/syn/synopsis/examples/sfi_rules.srd`
+
+
+```text
+# Rules for Surface Fluorescence Imager (SFI) Instrument use case
+
+# Default rules across bins
+DEFAULT:
+
+# If a context image has no associated zoom observation, subtract half its SUE
+RULE (x):
+APPLIES x.instrument == "SFI" AND x.type == "cntx"
+    AND NOT EXISTS y: (
+        y.instrument == "SFI" AND y.type == "zoom"
+        AND x.time == y.cntx_time
+    )
+ADJUST UTILITY -0.5 * x.final_science_utility_estimate;
+```
+
+### `sfi_rules_config.json`
+
+**경로:** `components/syn/synopsis/examples/sfi_rules_config.json`
+
+
+```json
+{
+  "default": {
+    "rules": [
+      {
+        "__type__": "Rule",
+        "__contents__": {
+          "variables": [
+            "x"
+          ],
+          "application": {
+            "__type__": "BinaryLogicalExpression",
+            "__contents__": {
+              "operator": "AND",
+              "left_expression": {
+                "__type__": "BinaryLogicalExpression",
+                "__contents__": {
+                  "operator": "AND",
+                  "left_expression": {
+                    "__type__": "ComparatorExpression",
+                    "__contents__": {
+                      "comparator": "==",
+                      "left_expression": {
+                        "__type__": "Field",
+                        "__contents__": {
+                          "variable_name": "x",
+                          "field_name": "instrument"
+                        }
+                      },
+                      "right_expression": {
+                        "__type__": "StringConstant",
+                        "__contents__": {
+                          "value": "SFI"
+                        }
+                      }
+                    }
+                  },
+                  "right_expression": {
+                    "__type__": "ComparatorExpression",
+                    "__contents__": {
+                      "comparator": "==",
+                      "left_expression": {
+                        "__type__": "Field",
+                        "__contents__": {
+                          "variable_name": "x",
+                          "field_name": "type"
+                        }
+                      },
+                      "right_expression": {
+                        "__type__": "StringConstant",
+                        "__contents__": {
+                          "value": "cntx"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "right_expression": {
+                "__type__": "LogicalNot",
+                "__contents__": {
+                  "expression": {
+                    "__type__": "ExistentialExpression",
+                    "__contents__": {
+                      "variable": "y",
+                      "expression": {
+                        "__type__": "BinaryLogicalExpression",
+                        "__contents__": {
+                          "operator": "AND",
+                          "left_expression": {
+                            "__type__": "BinaryLogicalExpression",
+                            "__contents__": {
+                              "operator": "AND",
+                              "left_expression": {
+                                "__type__": "ComparatorExpression",
+                                "__contents__": {
+                                  "comparator": "==",
+                                  "left_expression": {
+                                    "__type__": "Field",
+                                    "__contents__": {
+                                      "variable_name": "y",
+                                      "field_name": "instrument"
+                                    }
+                                  },
+                                  "right_expression": {
+                                    "__type__": "StringConstant",
+                                    "__contents__": {
+                                      "value": "SFI"
+                                    }
+                                  }
+                                }
+                              },
+                              "right_expression": {
+                                "__type__": "ComparatorExpression",
+                                "__contents__": {
+                                  "comparator": "==",
+                                  "left_expression": {
+                                    "__type__": "Field",
+                                    "__contents__": {
+                                      "variable_name": "y",
+                                      "field_name": "type"
+                                    }
+                                  },
+                                  "right_expression": {
+                                    "__type__": "StringConstant",
+                                    "__contents__": {
+                                      "value": "zoom"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right_expression": {
+                            "__type__": "ComparatorExpression",
+                            "__contents__": {
+                              "comparator": "==",
+                              "left_expression": {
+                                "__type__": "Field",
+                                "__contents__": {
+                                  "variable_name": "x",
+                                  "field_name": "time"
+                                }
+                              },
+                              "right_expression": {
+                                "__type__": "Field",
+                                "__contents__": {
+                                  "variable_name": "y",
+                                  "field_name": "cntx_time"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "adjustment": {
+            "__type__": "BinaryExpression",
+            "__contents__": {
+              "operator": "*",
+              "left_expression": {
+                "__type__": "ConstExpression",
+                "__contents__": {
+                  "__type__": "ConstExpression",
+                  "value": -0.5
+                }
+              },
+              "right_expression": {
+                "__type__": "Field",
+                "__contents__": {
+                  "variable_name": "x",
+                  "field_name": "final_science_utility_estimate"
+                }
+              }
+            }
+          },
+          "max_applications": null
+        }
+      }
+    ],
+    "constraints": []
+  }
+}
+```
+
+### `sfi_similarity_config.json`
+
+**경로:** `components/syn/synopsis/examples/sfi_similarity_config.json`
+
+
+```json
+{
+  "functions": {
+    "default": [
+      {
+        "key": ["SFI", "zoom"],
+        "function": {
+          "diversity_descriptor": [
+            "DD01",
+            "DD02",
+            "DD03",
+            "DD04",
+            "DD05",
+            "DD06",
+            "DD07",
+            "DD08",
+            "DD09",
+            "DD10",
+            "DD11",
+            "DD12",
+            "DD13",
+            "DD14",
+            "DD15",
+            "DD16"
+          ],
+          "weights": [
+            1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0
+          ],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 1.5
+          }
+        }
+      },
+      {
+        "key": ["SFI", "flat"],
+        "function": {
+          "diversity_descriptor": ["DD01"],
+          "weights": [1.0],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 1.0
+          }
+        }
+      },
+      {
+        "key": ["SFI", "cntx"],
+        "function": {
+          "diversity_descriptor": [
+            "DD01", "DD02", "DD03", "DD04",
+            "DD05", "DD06", "DD07", "DD08",
+            "DD09", "DD10", "DD11", "DD12",
+            "DD13", "DD14", "DD15", "DD16",
+            "DD17", "DD18", "DD19", "DD20",
+            "DD21", "DD22", "DD23", "DD24",
+            "DD25", "DD26", "DD27", "DD28",
+            "DD29", "DD30", "DD31", "DD32",
+            "DD33", "DD34", "DD35", "DD36",
+            "DD37", "DD38", "DD39", "DD40",
+            "DD41", "DD42", "DD43", "DD44",
+            "DD45", "DD46", "DD47", "DD48",
+            "DD49", "DD50", "DD51", "DD52",
+            "DD53", "DD54", "DD55", "DD56",
+            "DD57", "DD58", "DD59", "DD60",
+            "DD61", "DD62", "DD63", "DD64"
+          ],
+          "weights": [
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+            1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0
+          ],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 5.5
+          }
+        }
+      }
+    ]
+  },
+  "alphas": {
+    "default": 1.0
+  }
+}
+```

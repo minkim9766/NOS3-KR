@@ -3,16 +3,85 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `role.component.html`
 
-file--role.component.html
-file--role.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role/role.component.html`
+
+
+```html
+@if (role$ | async; as role) {
+  <app-admin-page>
+    <app-admin-toolbar [label]="role.name" />
+
+    <ya-panel class="ya-link">
+      <h4>Description</h4>
+      <div style="white-space: pre-wrap">{{ role.description || "-" }}</div>
+      <br />
+      <div class="section-divider">
+        <mat-divider />
+      </div>
+      <h4>{{ role.systemPrivileges?.length || 0 }} assigned system privileges</h4>
+      @for (privilege of role.systemPrivileges; track privilege) {
+        <div>
+          {{ privilege }}
+        </div>
+      }
+      <br />
+      <div class="section-divider">
+        <mat-divider />
+      </div>
+      <h4>{{ role.objectPrivileges?.length || 0 }} assigned object privileges</h4>
+      <dl>
+        @for (privilege of role.objectPrivileges; track privilege) {
+          <dt>{{ privilege.type }}</dt>
+          <dd>{{ privilege.objects }}</dd>
+        }
+      </dl>
+    </ya-panel>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `role.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role/role.component.html`](file--role.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role/role.component.ts`](file--role.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role/role.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { RoleInfo, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './role.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class RoleComponent {
+  role$ = new BehaviorSubject<RoleInfo | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private title: Title,
+  ) {
+    route.paramMap.subscribe((params) => {
+      const name = params.get('name')!;
+      this.changeRole(name);
+    });
+  }
+
+  private changeRole(name: string) {
+    this.yamcs.yamcsClient.getRole(name).then((role) => {
+      this.role$.next(role);
+      this.title.setTitle(role.name);
+    });
+  }
+}
+```

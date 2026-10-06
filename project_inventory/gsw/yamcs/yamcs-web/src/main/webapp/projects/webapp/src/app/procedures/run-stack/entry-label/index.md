@@ -3,18 +3,61 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `entry-label.component.css`
 
-file--entry-label.component.css
-file--entry-label.component.html
-file--entry-label.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/entry-label.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  background-color: inherit;
+  font-size: 12px;
+  font-weight: normal;
+  font-family: "Roboto Mono", monospace;
+  line-height: 12px;
+  letter-spacing: 0.02em;
+  color: rgba(0, 0, 0, 0.654);
+  padding: 2px;
+  margin-bottom: 5px;
+}
+
+span {
+  margin-left: 5px;
+}
 ```
 
-## 항목
+### `entry-label.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/entry-label.component.css`](file--entry-label.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/entry-label.component.html`](file--entry-label.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/entry-label.component.ts`](file--entry-label.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/entry-label.component.html`
+
+
+```html
+<mat-icon class="icon12">{{ icon() }}</mat-icon>
+<span>{{ text() }}</span>
+```
+
+### `entry-label.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/entry-label.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'app-entry-label',
+  templateUrl: './entry-label.component.html',
+  styleUrl: './entry-label.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon],
+})
+export class EntryLabel {
+  icon = input.required<string>();
+  text = input.required<string>();
+}
+```

@@ -3,16 +3,49 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Seq/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--Seq.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Seq/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Seq.fpp"
+)
+
+set(MOD_DEPS
+    Fw/Port
+)
+
+register_fprime_module()
 ```
 
-## 항목
+### `Seq.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Seq/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Seq/Seq.fpp`](file--Seq.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Seq/Seq.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Port to request a sequence be run
+  port CmdSeqIn(
+                 filename: string size 240 @< The sequence file
+               )
+
+  @ Port to cancel a sequence
+  port CmdSeqCancel
+
+}
+
+```

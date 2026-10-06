@@ -3,18 +3,172 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-states-tooltip.component.css`
 
-file--parameter-states-tooltip.component.css
-file--parameter-states-tooltip.component.html
-file--parameter-states-tooltip.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/parameter-states-tooltip.component.css`
+
+
+```css
+.ya-tooltip {
+  position: absolute;
+  display: none;
+  white-space: pre;
+  border-radius: 2px;
+  max-width: 350px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--y-border-color);
+  font-family: Roboto, sans-serif;
+  font-size: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+table {
+  width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+td {
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+tr.most-frequent {
+  background: #eee;
+}
 ```
 
-## 항목
+### `parameter-states-tooltip.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/parameter-states-tooltip.component.css`](file--parameter-states-tooltip.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/parameter-states-tooltip.component.html`](file--parameter-states-tooltip.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/parameter-states-tooltip.component.ts`](file--parameter-states-tooltip.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/parameter-states-tooltip.component.html`
+
+
+```html
+<div #tt class="ya-tooltip">
+  {{ start() | datetime }} to
+  <br />
+  {{ (stop() | datetime) || "-" }}
+  <br />
+  <br />
+  <table>
+    @for (item of legend(); track item.label) {
+      <tr [class.most-frequent]="item.mostFrequent">
+        <td width="1">
+          <span [style.color]="item.color">⬤</span>
+        </td>
+        <td>
+          @if (item.label === "__OTHER") {
+            Other
+          } @else {
+            {{ item.label }}
+          }
+        </td>
+        <td>
+          @if (item.count > 0) {
+            {{ item.count }} x
+          } @else {
+            -
+          }
+        </td>
+      </tr>
+    }
+  </table>
+</div>
+```
+
+### `parameter-states-tooltip.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/parameter-states-tooltip.component.ts`
+
+
+```typescript
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
+import { Item } from '@fqqb/timeline';
+import { DateTimePipe, Formatter } from '@yamcs/webapp-sdk';
+import { LegendEntry } from '../LegendEntry';
+import { State } from '../State';
+import { StateLegend } from '../StateLegend';
+
+@Component({
+  selector: 'app-parameter-states-tooltip',
+  templateUrl: './parameter-states-tooltip.component.html',
+  styleUrl: './parameter-states-tooltip.component.css',
+  imports: [CommonModule, DateTimePipe],
+})
+export class ParameterStatesTooltipComponent {
+  @ViewChild('tt', { static: true })
+  tt: ElementRef<HTMLDivElement>;
+
+  start = signal<Date | null>(null);
+  stop = signal<Date | null>(null);
+  legend = signal<LegendEntry[]>([]);
+
+  constructor(private formatter: Formatter) {}
+
+  show(left: number, top: number, legend: StateLegend, item?: Item) {
+    let state: State | undefined = undefined;
+    if (item) {
+      this.start.set(new Date(item.start));
+      this.stop.set(item.stop ? new Date(item.stop) : null);
+      state = item.data.range;
+    }
+
+    const richEntries: LegendEntry[] = [];
+
+    let mostFrequentEntry: LegendEntry | undefined = undefined;
+    for (const [label, color] of legend.entries()) {
+      if (label === '__OTHER') {
+        const entry: LegendEntry = {
+          label,
+          color,
+          count: state?.otherCount || 0,
+          mostFrequent: false,
+        };
+        richEntries.push(entry);
+      } else {
+        let count = 0;
+        if (state) {
+          for (const countedValue of state.values) {
+            if (countedValue.value === label) {
+              count = countedValue.count;
+              break;
+            }
+          }
+        }
+
+        const entry: LegendEntry = { label, color, count, mostFrequent: false };
+        richEntries.push(entry);
+
+        if (
+          mostFrequentEntry === undefined ||
+          count > mostFrequentEntry.count
+        ) {
+          mostFrequentEntry = entry;
+        }
+      }
+    }
+    if (mostFrequentEntry) {
+      mostFrequentEntry.mostFrequent = true;
+    }
+    this.legend.set(richEntries);
+
+    const el = this.tt.nativeElement;
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+    el.style.display = 'block';
+  }
+
+  hide() {
+    const el = this.tt.nativeElement;
+    el.style.display = 'none';
+  }
+}
+```

@@ -3,14 +3,52 @@
 
 **경로:** `gsw/yamcs/tests/src/test/resources/RealtimeParchive/instance-templates/templ1/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `template.yaml`
 
-file--template.yaml
+**경로:** `gsw/yamcs/tests/src/test/resources/RealtimeParchive/instance-templates/templ1/template.yaml`
+
+
+```yaml
+services:  
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+  - class: org.yamcs.parameterarchive.ParameterArchive
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime"
+  - class: org.yamcs.archive.CommandHistoryRecorder
+
+dataLinks:
+  - name: tm_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$PacketProvider
+    stream: tm_realtime
+  - name: pp_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$ParameterProvider
+    stream: pp_realtime
+  - name: tc_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$TcDataLink
+    stream: tc_realtime
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+
+streamConfig:
+  tm: ["tm_realtime", "tm_dump"]
+  cmdHist: ["cmdhist_realtime",  "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["sys_param", "pp_realtime", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc: 
+    - name: "tc_realtime"
+      processor: "realtime"
 ```
-
-## 항목
-
-- [`gsw/yamcs/tests/src/test/resources/RealtimeParchive/instance-templates/templ1/template.yaml`](file--template.yaml) — UTF-8 텍스트 파일 본문 포함

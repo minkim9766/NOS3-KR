@@ -3,14 +3,38 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Trap/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `TrapHandler.hpp`
 
-file--TrapHandler.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Trap/TrapHandler.hpp`
+
+
+```cpp
+#ifndef FW_TRAP_HPP
+#define FW_TRAP_HPP
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Fw {
+/**
+ * TrapHandler:
+ *   A framework class used to handle traps that occur during the execution of the
+ * the F' framework. Must be registered with a trap register. The user should
+ * inherit from this class and ensure that the doTrap function is implemented. The
+ * default implementation will be do-nothing.
+ */
+class TrapHandler {
+  public:
+    TrapHandler() {};           //!< constructor
+    virtual ~TrapHandler() {};  //!< destructor
+    /**
+     * Handles the incoming trap.
+     * Note: if user does not supply an implementer of this
+     *       function, a do-nothing version will be run.
+     * \param trap: trap number
+     */
+    virtual void doTrap(U32 trap) = 0;
+};
+}  // namespace Fw
+#endif
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Trap/TrapHandler.hpp`](file--TrapHandler.hpp) — UTF-8 텍스트 파일 본문 포함

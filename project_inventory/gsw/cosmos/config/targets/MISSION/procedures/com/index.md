@@ -3,18 +3,112 @@
 
 **경로:** `gsw/cosmos/config/targets/MISSION/procedures/com/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfs.rb`
 
-file--cfs.rb
-file--cfs_radio.rb
-file--debug.rb
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/com/cfs.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'cfs_lib.rb'
+
+##
+## This script tests the standard cFS application aliveness.
+##
+
+# CCSDS File Delivery Protocol (CF)
+CFS_TEST_LOOP_COUNT.times do |n|
+    get_cf_hk()
+    cf_cmd("CFS CF_NOOP")
+end
+
+# Data Storage (DS)
+CFS_TEST_LOOP_COUNT.times do |n|
+    get_ds_hk()
+    ds_cmd("CFS DS_NOOP")
+end
+
+# File Manager (FM)
+CFS_TEST_LOOP_COUNT.times do |n|
+    get_fm_hk()
+    fm_cmd("CFS FM_NOOP")
+end
+
+# Limit Checker (LC)
+CFS_TEST_LOOP_COUNT.times do |n|
+    get_lc_hk()
+    lc_cmd("CFS LC_NOOP")
+end
+
+# Stored Commands (SC)
+CFS_TEST_LOOP_COUNT.times do |n|
+    get_sc_hk()
+    sc_cmd("CFS SC_NOOP")
+end
 ```
 
-## 항목
+### `cfs_radio.rb`
 
-- [`gsw/cosmos/config/targets/MISSION/procedures/com/cfs.rb`](file--cfs.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/MISSION/procedures/com/cfs_radio.rb`](file--cfs_radio.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/MISSION/procedures/com/debug.rb`](file--debug.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/com/cfs_radio.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'cfs_lib_radio.rb'
+
+##
+## This script tests the standard cFS application aliveness.
+## Specifically using the radio interface instead of debug.
+##
+
+# CCSDS File Delivery Protocol (CF)
+CFS_RADIO_TEST_LOOP_COUNT.times do |n|
+    get_cf_hk_radio()
+    cf_cmd_radio("CFS_RADIO CF_NOOP")
+end
+
+# Data Storage (DS)
+CFS_RADIO_TEST_LOOP_COUNT.times do |n|
+    get_ds_hk_radio()
+    ds_cmd_radio("CFS_RADIO DS_NOOP")
+end
+
+# File Manager (FM)
+CFS_RADIO_TEST_LOOP_COUNT.times do |n|
+    get_fm_hk_radio()
+    fm_cmd_radio("CFS_RADIO FM_NOOP")
+end
+
+# Limit Checker (LC)
+CFS_RADIO_TEST_LOOP_COUNT.times do |n|
+    get_lc_hk_radio()
+    lc_cmd_radio("CFS_RADIO LC_NOOP")
+end
+
+# Stored Commands (SC)
+CFS_RADIO_TEST_LOOP_COUNT.times do |n|
+    get_sc_hk_radio()
+    sc_cmd_radio("CFS_RADIO SC_NOOP")
+end
+```
+
+### `debug.rb`
+
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/com/debug.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "cfs_lib.rb"
+
+# Enable debug interface
+cmd("TO_DEBUG TO_DEBUG_ENABLE_OUTPUT_CC with DEST_IP 'cosmos', DEST_PORT 5013")
+
+# Check debug aliveness
+get_sc_hk()
+```

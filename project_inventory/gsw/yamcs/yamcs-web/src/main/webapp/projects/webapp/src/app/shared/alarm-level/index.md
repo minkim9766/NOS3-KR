@@ -3,18 +3,197 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-level.component.css`
 
-file--alarm-level.component.css
-file--alarm-level.component.html
-file--alarm-level.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/alarm-level.component.css`
+
+
+```css
+svg {
+  display: inline-block;
+}
+
+.inlimits .r1,
+.inlimits .r2,
+.inlimits .r3,
+.inlimits .r4,
+.inlimits .r5 {
+  fill: #00c752;
+}
+
+.inlimits.grayscale .r1,
+.inlimits.grayscale .r2,
+.inlimits.grayscale .r3,
+.inlimits.grayscale .r4,
+.inlimits.grayscale .r5 {
+  fill: #ccc;
+}
+
+.watch .r1 {
+  fill: #ff8c00;
+}
+
+.watch.grayscale .r1 {
+  fill: #a0a0a0;
+}
+
+.watch .r2,
+.watch .r3,
+.watch .r4,
+.watch .r5 {
+  fill: #ccc;
+}
+
+.warning .r1,
+.warning .r2 {
+  fill: #ff8c00;
+}
+
+.warning.grayscale .r1,
+.warning.grayscale .r2 {
+  fill: #a0a0a0;
+}
+
+.warning .r3,
+.warning .r4,
+.warning .r5 {
+  fill: #ccc;
+}
+
+.distress .r1,
+.distress .r2,
+.distress .r3 {
+  fill: #f00;
+}
+
+.distress.grayscale .r1,
+.distress.grayscale .r2,
+.distress.grayscale .r3 {
+  fill: #a0a0a0;
+}
+
+.distress .r4,
+.distress .r5 {
+  fill: #ccc;
+}
+
+.critical .r1,
+.critical .r2,
+.critical .r3,
+.critical .r4 {
+  fill: #f00;
+}
+
+.critical.grayscale .r1,
+.critical.grayscale .r2,
+.critical.grayscale .r3,
+.critical.grayscale .r4 {
+  fill: #a0a0a0;
+}
+
+.critical .r5 {
+  fill: #ccc;
+}
+
+.severe .r1,
+.severe .r2,
+.severe .r3,
+.severe .r4,
+.severe .r5 {
+  fill: #f00;
+}
+
+.severe.grayscale .r1,
+.severe.grayscale .r2,
+.severe.grayscale .r3,
+.severe.grayscale .r4,
+.severe.grayscale .r5 {
+  fill: #a0a0a0;
+}
+
+@media print {
+  svg {
+    print-color-adjust: exact;
+  }
+}
 ```
 
-## 항목
+### `alarm-level.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/alarm-level.component.css`](file--alarm-level.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/alarm-level.component.html`](file--alarm-level.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/alarm-level.component.ts`](file--alarm-level.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/alarm-level.component.html`
+
+
+```html
+@switch (level) {
+  @case ("IN_LIMITS") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'inlimits', tooltip: 'In limits' }" />
+  }
+  @case ("NORMAL") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'inlimits', tooltip: 'In limits' }" />
+  }
+  @case ("WATCH") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'watch', tooltip: 'Watch' }" />
+  }
+  @case ("WARNING") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'warning', tooltip: 'Warning' }" />
+  }
+  @case ("DISTRESS") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'distress', tooltip: 'Distress' }" />
+  }
+  @case ("CRITICAL") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'critical', tooltip: 'Critical' }" />
+  }
+  @case ("SEVERE") {
+    <ng-container *ngTemplateOutlet="img; context: { level: 'severe', tooltip: 'Severe' }" />
+  }
+}
+
+<ng-template #img let-level="level" let-tooltip="tooltip">
+  <svg
+    width="29"
+    height="5"
+    viewBox="0 0 58 10"
+    [ngClass]="level"
+    [class.grayscale]="grayscale"
+    [matTooltip]="tooltip">
+    <rect x="0" width="10" height="10" class="r1" />
+    <rect x="12" width="10" height="10" class="r2" />
+    <rect x="24" width="10" height="10" class="r3" />
+    <rect x="36" width="10" height="10" class="r4" />
+    <rect x="48" width="10" height="10" class="r5" />
+  </svg>
+</ng-template>
+```
+
+### `alarm-level.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/alarm-level.component.ts`
+
+
+```typescript
+import { NgClass, NgTemplateOutlet } from '@angular/common';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+} from '@angular/core';
+import { MatTooltip } from '@angular/material/tooltip';
+
+@Component({
+  selector: 'app-alarm-level',
+  templateUrl: './alarm-level.component.html',
+  styleUrl: './alarm-level.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatTooltip, NgClass, NgTemplateOutlet],
+})
+export class AlarmLevelComponent {
+  @Input()
+  level: string;
+
+  @Input({ transform: booleanAttribute })
+  grayscale = false;
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/packet-viewer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,17 +14,53 @@ etc-packaged/index
 mdb-packaged/index
 src/index
 tm-data/index
-file--.gitignore
-file--pom.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/packet-viewer/bin/`](bin/index) — 폴더
-- [`gsw/yamcs/packet-viewer/etc/`](etc/index) — 폴더
-- [`gsw/yamcs/packet-viewer/etc-packaged/`](etc-packaged/index) — 폴더
-- [`gsw/yamcs/packet-viewer/mdb-packaged/`](mdb-packaged/index) — 폴더
-- [`gsw/yamcs/packet-viewer/src/`](src/index) — 폴더
-- [`gsw/yamcs/packet-viewer/tm-data/`](tm-data/index) — 폴더
-- [`gsw/yamcs/packet-viewer/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `gsw/yamcs/packet-viewer/.gitignore`
+
+
+```text
+/cache/
+
+```
+
+### `pom.xml`
+
+**경로:** `gsw/yamcs/packet-viewer/pom.xml`
+
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>packet-viewer</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: Packet Viewer</name>
+
+  <properties>
+    <javaModuleName>org.yamcs.packetviewer</javaModuleName>
+  </properties>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.swinglabs.swingx</groupId>
+      <artifactId>swingx-core</artifactId>
+      <version>1.6.5-1</version>
+    </dependency>
+  </dependencies>
+</project>
+```

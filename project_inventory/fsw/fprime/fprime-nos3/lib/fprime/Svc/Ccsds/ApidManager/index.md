@@ -3,24 +3,289 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--ApidManager.cpp
-file--ApidManager.fpp
-file--ApidManager.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/ApidManager.cpp`](file--ApidManager.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/ApidManager.fpp`](file--ApidManager.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/ApidManager.hpp`](file--ApidManager.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `ApidManager.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/ApidManager.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ApidManager.cpp
+// \author thomas-bc
+// \brief  cpp file for ApidManager component implementation class
+// ======================================================================
+
+#include "Svc/Ccsds/ApidManager/ApidManager.hpp"
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+ApidManager ::ApidManager(const char* const compName) : ApidManagerComponentBase(compName) {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+U16 ApidManager ::validateApidSeqCountIn_handler(FwIndexType portNum, const ComCfg::APID& apid, U16 receivedSeqCount) {
+    U16 expectedSequenceCount = this->getAndIncrementSeqCount(apid);
+    if (receivedSeqCount != expectedSequenceCount && receivedSeqCount != SEQUENCE_COUNT_ERROR) {
+        // Likely a packet was dropped or out of order
+        this->log_WARNING_LO_UnexpectedSequenceCount(receivedSeqCount, expectedSequenceCount);
+        // Synchronize onboard count with received number so that count can keep going
+        this->setNextSeqCount(apid, static_cast<U16>(receivedSeqCount + 1));
+    }
+    return receivedSeqCount;
+}
+
+U16 ApidManager ::getApidSeqCountIn_handler(FwIndexType portNum, const ComCfg::APID& apid, U16 unused) {
+    return this->getAndIncrementSeqCount(apid);
+}
+
+// ----------------------------------------------------------------------
+// Helpers
+// ----------------------------------------------------------------------
+
+U16 ApidManager ::getAndIncrementSeqCount(ComCfg::APID::T apid) {
+    U16 seqCount = SEQUENCE_COUNT_ERROR;  // Default to error value
+    // Search the APID in the sequence table
+    for (U16 i = 0; i < MAX_TRACKED_APIDS; i++) {
+        if (this->m_apidSequences[i].apid == apid) {
+            seqCount = this->m_apidSequences[i].sequenceCount;
+            // Increment entry for next call
+            this->m_apidSequences[i].sequenceCount =
+                static_cast<U16>((seqCount + 1) % (1 << SpacePacketSubfields::SeqCountWidth));
+            return seqCount;  // Return the current sequence count
+        }
+    }
+    // If not found, search for an uninitialized entry to track this APID
+    for (U16 i = 0; i < MAX_TRACKED_APIDS; i++) {
+        if (this->m_apidSequences[i].apid == ComCfg::APID::INVALID_UNINITIALIZED) {
+            this->m_apidSequences[i].apid = apid;               // Initialize this entry with the new APID
+            seqCount = this->m_apidSequences[i].sequenceCount;  // Entries default to 0 unless otherwise specified
+            // Increment entry for next call
+            this->m_apidSequences[i].sequenceCount =
+                static_cast<U16>((seqCount + 1) % (1 << SpacePacketSubfields::SeqCountWidth));
+            return seqCount;  // Return the initialized sequence count
+        }
+    }
+    this->log_WARNING_HI_ApidTableFull(apid);
+    return SEQUENCE_COUNT_ERROR;
+}
+
+void ApidManager::setNextSeqCount(ComCfg::APID::T apid, U16 seqCount) {
+    for (U16 i = 0; i < MAX_TRACKED_APIDS; i++) {
+        if (this->m_apidSequences[i].apid == apid) {
+            this->m_apidSequences[i].sequenceCount = seqCount;
+            return;
+        }
+    }
+    // This code should not be reachable with the if statement in validateApidSeqCountIn_handler
+    FW_ASSERT(false, static_cast<FwAssertArgType>(apid));
+}
+
+}  // namespace Ccsds
+}  // namespace Svc
+```
+
+### `ApidManager.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/ApidManager.fpp`
+
+
+```fpp
+module Svc {
+module Ccsds {
+    @ Maps output of ComQueue to CCSDS APIDs
+    passive component ApidManager {
+
+        @ Port to validate a given sequence count for a given APID
+        guarded input port validateApidSeqCountIn: Ccsds.ApidSequenceCount
+
+        @ Port to request a sequence count for a given APID
+        guarded input port getApidSeqCountIn: Ccsds.ApidSequenceCount
+
+        @ Deframing received an unexpected sequence count
+        event UnexpectedSequenceCount(transmitted: U16, expected: U16) \
+            severity warning low \
+            format "Unexpected sequence count received. Packets may have been dropped. Transmitted: {} | Expected on board: {}"
+
+        @ Received an unregistered APID
+        event ApidTableFull(invalidApidValue: U16) \
+            severity warning high \
+            format "APID Table is full, cannot generate or check sequence counts for APID: {}"
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+    }
+}
+}
+```
+
+### `ApidManager.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/ApidManager.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ApidManager.hpp
+// \author thomas-bc
+// \brief  hpp file for ApidManager component implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_ApidManager_HPP
+#define Svc_Ccsds_ApidManager_HPP
+
+#include "Fw/Com/ComPacket.hpp"
+#include "Svc/Ccsds/ApidManager/ApidManagerComponentAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+static_assert(ComCfg::APID::SPP_IDLE_PACKET == 0x07FF,
+              "SPP_IDLE_PACKET must exist and equal 0x07FF (as specified by standard)");
+static_assert(ComCfg::APID::INVALID_UNINITIALIZED == 0x0800,
+              "Invalid APID must be 0x0800 (11 bits values allow 0-2047)");
+static_assert(ComCfg::APID::FW_PACKET_COMMAND == Fw::ComPacketType::FW_PACKET_COMMAND,
+              "APID FW_PACKET_COMMAND must exist, used by the Framework");
+static_assert(ComCfg::APID::FW_PACKET_TELEM == Fw::ComPacketType::FW_PACKET_TELEM,
+              "APID FW_PACKET_TELEM must exist, used by the Framework");
+static_assert(ComCfg::APID::FW_PACKET_LOG == Fw::ComPacketType::FW_PACKET_LOG,
+              "APID FW_PACKET_LOG must exist, used by the Framework");
+static_assert(ComCfg::APID::FW_PACKET_FILE == Fw::ComPacketType::FW_PACKET_FILE,
+              "APID FW_PACKET_FILE must exist, used by the Framework");
+static_assert(ComCfg::APID::FW_PACKET_PACKETIZED_TLM == Fw::ComPacketType::FW_PACKET_PACKETIZED_TLM,
+              "APID FW_PACKET_PACKETIZED_TLM must exist, used by the Framework");
+static_assert(ComCfg::APID::FW_PACKET_UNKNOWN == Fw::ComPacketType::FW_PACKET_UNKNOWN,
+              "APID FW_PACKET_UNKNOWN must exist, used by the Framework");
+
+class ApidManager final : public ApidManagerComponentBase {
+    friend class ApidManagerTester;  //!< Friend class for testing
+
+  public:
+    static constexpr U16 MAX_TRACKED_APIDS = ComCfg::APID::NUM_CONSTANTS;
+    static constexpr U16 SEQUENCE_COUNT_ERROR = std::numeric_limits<U16>::max();
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct ApidManager object
+    ApidManager(const char* const compName  //!< The component name
+    );
+
+    //! Destroy ApidManager object
+    ~ApidManager() = default;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for validateApidSeqCountIn
+    U16 validateApidSeqCountIn_handler(FwIndexType portNum,  //!< The port number
+                                       const ComCfg::APID& apid,
+                                       U16 seqCount) override;
+
+    //! Handler implementation for validateApidSeqCountIn
+    U16 getApidSeqCountIn_handler(FwIndexType portNum,  //!< The port number
+                                  const ComCfg::APID& apid,
+                                  U16 seqCount) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------------
+    //! Get the sequence count for a given APID and increment it for the next
+    //! Wraps around at 14 bits
+    U16 getAndIncrementSeqCount(ComCfg::APID::T apid);
+
+    //! Set the next expected sequence count for a given APID
+    void setNextSeqCount(ComCfg::APID::T apid, U16 seqCount);
+
+    //! This struct helps track sequence counts per APID
+    //! Future work: update to using a map from Fw/DataStructures when available
+    struct ApidSequenceEntry {
+        ComCfg::APID::T apid = ComCfg::APID::INVALID_UNINITIALIZED;
+        U16 sequenceCount = 0;
+    };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+    ApidSequenceEntry m_apidSequences[MAX_TRACKED_APIDS];
+};
+
+}  // namespace Ccsds
+}  // namespace Svc
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/ApidManager/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/devel/docs/reference/api/cmake/API/
+#
+####
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ApidManager.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/ApidManager.fpp"
+)
+
+
+
+### Unit Tests ###
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ApidManagerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ApidManagerTester.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/ApidManager.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+    STest
+  UT_AUTO_HELPERS
+)
+```

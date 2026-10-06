@@ -3,22 +3,602 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--DpDemo.cpp
-file--DpDemo.fpp
-file--DpDemo.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/DpDemo.cpp`](file--DpDemo.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/DpDemo.fpp`](file--DpDemo.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/DpDemo.hpp`](file--DpDemo.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/CMakeLists.txt`
+
+
+```cmake
+####
+# F Prime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/reference/api/cmake/API/
+#
+####
+
+register_fprime_library(
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/DpDemo.fpp"
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/DpDemo.cpp"
+)
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/DpDemo.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DpDemo.cpp"
+)
+```
+
+### `DpDemo.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/DpDemo.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpDemo.cpp
+// \author jawest
+// \brief  cpp file for DpDemo component implementation class
+// ======================================================================
+
+#include "Ref/DpDemo/DpDemo.hpp"
+
+namespace Ref {
+
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    DpDemo ::DpDemo(const char* const compName) : DpDemoComponentBase(compName) {
+        this->selectedColor = DpDemo_ColorEnum::RED;
+        this->numRecords = 0;
+        this->dpPriority = 0;
+    }
+
+    DpDemo ::~DpDemo() {}
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    void DpDemo ::run_handler(FwIndexType portNum, U32 context) {
+        // If a Data product is being generated, store records
+        if (this->dpInProgress) {
+            this->dpContainer.serializeRecord_StringRecord(Fw::String("Test string"));
+            this->dpContainer.serializeRecord_BooleanRecord(true);
+            this->dpContainer.serializeRecord_I32Record(-100);
+            this->dpContainer.serializeRecord_F64Record(1.25);
+            this->dpContainer.serializeRecord_U32ArrayRecord(DpDemo_U32Array(1, 2, 3, 4, 5));
+            this->dpContainer.serializeRecord_F32ArrayRecord(DpDemo_F32Array(1.1f, 2.2f, 3.3f));
+            this->dpContainer.serializeRecord_BooleanArrayRecord(DpDemo_BooleanArray(true, false));
+            // Array Records
+            // Array record of strings
+            Fw::String str0("String array element 0");
+            Fw::String str1("String array element 1");
+            Fw::String str2("String array element 2");
+            const Fw::StringBase* strings[3] = { &str0, &str1, &str2 };
+            this->dpContainer.serializeRecord_StringArrayRecord(strings, 3);
+            // Array record of arrays
+            const DpDemo_StringArray arrayArray[1] = { 
+                DpDemo_StringArray(
+                    Fw::String("0 - String array record element 0"),
+                    Fw::String("0 - String array record element 1")
+                )
+            };
+            this->dpContainer.serializeRecord_ArrayArrayRecord(arrayArray, 1);
+            // Array record of structs
+            const DpDemo_StructWithStringMembers structArray[2] = { 
+                DpDemo_StructWithStringMembers(
+                    Fw::String("0 - String member"),
+                    DpDemo_StringArray(
+                        Fw::String("0 - String array element 0"),
+                        Fw::String("0 - String array element 1")
+                    )
+                ),
+                DpDemo_StructWithStringMembers(
+                    Fw::String("1 - String member"),
+                    DpDemo_StringArray(
+                        Fw::String("1 - String array element 0"),
+                        Fw::String("1 - String array element 1")
+                    )
+                )
+            };
+            this->dpContainer.serializeRecord_StructArrayRecord(structArray, 2);
+            this->dpContainer.serializeRecord_ArrayOfStringArrayRecord(
+                DpDemo_ArrayOfStringArray(
+                    DpDemo_StringArray(
+                        Fw::String("0 - String array element 0"),
+                        Fw::String("0 - String array element 1")
+                    ),
+                    DpDemo_StringArray(
+                        Fw::String("1 - String array element 0"),
+                        Fw::String("1 - String array element 1")
+                    ),
+                    DpDemo_StringArray(
+                        Fw::String("2 - String array element 0"),
+                        Fw::String("2 - String array element 1")
+                    )
+                )
+            );
+            this->dpContainer.serializeRecord_ArrayOfStructsRecord(
+                DpDemo_ArrayOfStructs(
+                    DpDemo_StructWithStringMembers(
+                        Fw::String("0 - String member"),
+                        DpDemo_StringArray(
+                            Fw::String("0 - String array element 0"),
+                            Fw::String("0 - String array element 1")
+                        )
+                    ),
+                    DpDemo_StructWithStringMembers(
+                        Fw::String("1 - String member"),
+                        DpDemo_StringArray(
+                            Fw::String("1 - String array element 0"),
+                            Fw::String("1 - String array element 1")
+                        )
+                    ),
+                    DpDemo_StructWithStringMembers(
+                        Fw::String("2 - String member"),
+                        DpDemo_StringArray(
+                            Fw::String("2 - String array element 0"),
+                            Fw::String("2 - String array element 1")
+                        )
+                    )
+                )
+            );
+            this->dpContainer.serializeRecord_EnumArrayRecord(DpDemo_EnumArray(DpDemo_ColorEnum::RED, DpDemo_ColorEnum::GREEN, DpDemo_ColorEnum::BLUE));
+            this->dpContainer.serializeRecord_StructWithEverythingRecord(DpDemo_StructWithEverything(
+                -1,
+                2.5,
+                Fw::String("String Member"),
+                false,
+                this->selectedColor,
+                { 
+                    DpDemo_U32Array(1, 2, 3, 4, 5), 
+                    DpDemo_U32Array(6, 7, 8, 9, 10)
+                },
+                DpDemo_F32Array(4.4f, 5.5f, 6.6f),
+                DpDemo_U32Array(6, 7, 8, 9, 10),
+                DpDemo_EnumArray(DpDemo_ColorEnum::RED, DpDemo_ColorEnum::GREEN, DpDemo_ColorEnum::BLUE),
+                DpDemo_StringArray(
+                    Fw::String("String array element 0"),
+                    Fw::String("String array element 1")
+                ),
+                DpDemo_BooleanArray(true, false),
+                DpDemo_StructWithStringMembers(
+                    Fw::String("String member"),
+                    DpDemo_StringArray(
+                        Fw::String("String array element 0"),
+                        Fw::String("String array element 1")
+                    )
+                ),
+                DpDemo_ArrayOfStringArray(
+                    DpDemo_StringArray(
+                        Fw::String("0 - String array element 0"),
+                        Fw::String("0 - String array element 1")
+                    ),
+                    DpDemo_StringArray(
+                        Fw::String("1 - String array element 0"),
+                        Fw::String("1 - String array element 1")
+                    ),
+                    DpDemo_StringArray(
+                        Fw::String("2 - String array element 0"),
+                        Fw::String("2 - String array element 1")
+                    )
+                )
+            ));
+            this->log_ACTIVITY_LO_DpComplete(this->numRecords);
+            this->cleanupAndSendDp();
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    void DpDemo ::SelectColor_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Ref::DpDemo_ColorEnum color) {
+        this->selectedColor = color;
+        log_ACTIVITY_HI_ColorSelected(color);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    void DpDemo ::Dp_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, DpDemo_DpReqType reqType, U32 priority) {
+
+        // make sure DPs are available
+        if (!this->isConnected_productGetOut_OutputPort(0) || !this->isConnected_productRequestOut_OutputPort(0)) {
+            this->log_WARNING_HI_DpsNotConnected();
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+            return;
+        }
+
+        this->numRecords = 15; // 15 records in current demo
+        FwSizeType dpSize = DpDemo_StringAlias::SERIALIZED_SIZE +
+                            sizeof(DpDemo_BoolAlias) +
+                            sizeof(DpDemo_I32Alias) +
+                            sizeof(DpDemo_F64Alias) +
+                            DpDemo_U32Array::SERIALIZED_SIZE +
+                            DpDemo_F32Array::SERIALIZED_SIZE +
+                            DpDemo_BooleanArray::SERIALIZED_SIZE +
+                            DpDemo_EnumArray::SERIALIZED_SIZE +
+                            DpDemo_StringArray::SERIALIZED_SIZE +
+                            DpDemo_StructWithEverything::SERIALIZED_SIZE + 
+                            DpDemo_StructWithStringMembers::SERIALIZED_SIZE +
+                            (DpDemo_StringArray::SERIALIZED_SIZE * 3) +
+                            (DpDemo_StringArray::SERIALIZED_SIZE * 1) +
+                            (DpDemo_StructWithStringMembers::SERIALIZED_SIZE * 2) +
+                            DpDemo_ArrayOfStringArray::SERIALIZED_SIZE +
+                            (numRecords * sizeof(FwDpIdType));
+
+        this->dpPriority = static_cast<FwDpPriorityType>(priority);
+        this->log_ACTIVITY_LO_DpMemRequested(dpSize);
+        if(reqType == DpDemo_DpReqType::IMMEDIATE) {
+            Fw::Success stat = this->dpGet_DpDemoContainer(dpSize, this->dpContainer);
+            // make sure we got the memory we wanted
+            if (Fw::Success::FAILURE == stat) {
+                this->log_WARNING_HI_DpMemoryFail();
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+            } else {
+                this->dpInProgress = true;
+                this->log_ACTIVITY_LO_DpStarted(numRecords);
+                this->log_ACTIVITY_LO_DpMemReceived(this->dpContainer.getBuffer().getSize());
+                // override priority with requested priority
+                this->dpContainer.setPriority(priority);
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+            }
+        }
+        else if (reqType == DpDemo_DpReqType::ASYNC) {
+            this->dpRequest_DpDemoContainer(dpSize);
+        }
+        else {
+            // should never get here
+            FW_ASSERT(0, reqType.e);
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for data products
+    // ----------------------------------------------------------------------
+
+    void DpDemo ::dpRecv_DpDemoContainer_handler(DpContainer& container, Fw::Success::T status) {
+        // Make sure we got the buffer we wanted or quit
+        if (Fw::Success::SUCCESS == status) {
+            this->dpContainer = container;
+            this->dpInProgress = true;
+            // set previously requested priority
+            this->dpContainer.setPriority(this->dpPriority);
+            this->log_ACTIVITY_LO_DpStarted(this->numRecords);
+        } else {
+            this->log_WARNING_HI_DpMemoryFail();
+            // cleanup
+            this->dpInProgress = false;
+            this->numRecords = 0;
+        }
+    }
+
+    void DpDemo ::cleanupAndSendDp() {
+        this->dpSend(this->dpContainer);
+        this->dpInProgress = false;
+        this->numRecords = 0;
+    }
+
+}  // namespace Ref
+```
+
+### `DpDemo.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/DpDemo.fpp`
+
+
+```fpp
+module Ref {
+    @ DP Demo
+    active component DpDemo {
+
+        enum ColorEnum {
+            RED
+            GREEN
+            BLUE
+        }
+
+        enum DpReqType {
+            IMMEDIATE
+            ASYNC
+        }
+
+        type StringAlias = string
+        type BoolAlias = bool
+        type I32Alias = I32
+        type F64Alias = F64
+
+        @ Array of floats
+        array F32Array = [3] F32
+
+        @ Array of integers
+        array U32Array = [5] U32
+
+        @ Array of strings
+        array StringArray = [2] string
+
+        @ Array of array of strings
+        array ArrayOfStringArray = [3] StringArray
+
+        @ Array of booleans
+        array BooleanArray = [2] bool
+
+        @ Array of enumerations
+        array EnumArray = [3] ColorEnum
+
+        array ArrayOfStructs = [3] StructWithStringMembers
+
+        struct ColorInfoStruct {
+            Color: ColorEnum
+        }
+
+        struct StructWithStringMembers {
+            stringMember: string,
+            stringArrayMember: StringArray
+        }
+
+        struct StructWithEverything {
+            integerMember: I32Alias,
+            floatMember: F32,
+            stringMember: string,
+            booleanMember: bool,
+            enumMember: ColorEnum,
+            arrayMemberU32: [2] U32Array,
+            F32Array: F32Array,
+            U32Array: U32Array,
+            enumArray: EnumArray
+            stringArray: StringArray,
+            booleanArray: BooleanArray,
+            structWithStrings: StructWithStringMembers
+            nestedArrays: ArrayOfStringArray
+        }
+
+        @ Select color
+        async command SelectColor(color: ColorEnum) opcode 0
+
+        @ Command for generating a DP
+        sync command Dp(reqType: DpReqType, $priority: U32)
+        
+        @ Color selected event
+        event ColorSelected(color: ColorEnum) severity activity high id 0 format "Color selected {}"
+
+        @ DP started event
+        event DpStarted(records: U32) \
+            severity activity low \
+            id 1 \
+            format "Writing {} DP records"
+
+        @ DP complete event
+        event DpComplete(records: U32) \
+            severity activity low \
+            id 2 \
+            format "Finished writing {} DP records"
+
+        event DpRecordFull(records: U32, bytes: U32) \
+            severity warning low \
+            id 3 \
+            format "DP container full with {} records and {} bytes. Closing DP."
+
+        event DpMemRequested($size: FwSizeType) \
+            severity activity low \
+            id 4 \
+            format "Requesting {} bytes for DP"
+
+        event DpMemReceived($size: FwSizeType) \
+            severity activity low \
+            id 5 \
+            format "Received {} bytes for DP"
+
+        event DpMemoryFail \
+            severity warning high \
+            id 6 \
+            format "Failed to acquire a DP buffer"
+
+        event DpsNotConnected \
+            severity warning high \
+            id 7 \
+            format "DP Ports not connected!"
+
+        @ Example port: receiving calls from the rate group
+        sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @ Port to set the value of a parameter
+        param set port prmSetOut
+
+        @ Data product get port
+        product get port productGetOut
+
+        @ Data product request port
+        product request port productRequestOut
+
+        @ Data product receive port
+        async product recv port productRecvIn
+
+        @ Data product send port
+        product send port productSendOut
+
+        @ Data product record - struct record
+        product record ColorInfoStructRecord: ColorInfoStruct id 0
+
+        @ Data product record - enum
+        product record ColorEnumRecord: ColorEnum id 1
+
+        @ Data product record - string
+        product record StringRecord: StringAlias id 2
+
+        @ Data product record - boolean
+        product record BooleanRecord: BoolAlias id 3
+
+        @ Data product record - I32
+        product record I32Record: I32Alias id 4
+
+        @ Data product record - F64
+        product record F64Record: F64Alias id 5
+
+        @ Data product record - U32 array record
+        product record U32ArrayRecord: U32Array id 6
+
+        @ Data product record - F32 array record
+        product record F32ArrayRecord: F32Array id 7
+
+        @ Data product record - boolean array record
+        product record BooleanArrayRecord: BooleanArray id 8
+
+        @ Data product record - enum array record
+        product record EnumArrayRecord: EnumArray id 9
+
+        @ Data product record - string array record
+        product record StringArrayRecord: string array id 10
+
+        @ Data product record - array record (structs)
+        product record StructArrayRecord: StructWithStringMembers array id 11
+
+        @ Data product record - array record (arrays)
+        product record ArrayArrayRecord: StringArray array id 12
+
+        @ Data product record - array record (string arrays)
+        product record ArrayOfStringArrayRecord: ArrayOfStringArray id 13
+
+        @ Data product record - struct record
+        product record StructWithEverythingRecord: StructWithEverything id 14
+
+        @ Data product record - array of structs
+        product record ArrayOfStructsRecord: ArrayOfStructs id 15
+
+        @ Data product container
+        product container DpDemoContainer id 0 default priority 10
+
+    }
+}
+```
+
+### `DpDemo.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/DpDemo.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpDemo.hpp
+// \author jawest
+// \brief  hpp file for DpDemo component implementation class
+// ======================================================================
+
+#ifndef Ref_DpDemo_HPP
+#define Ref_DpDemo_HPP
+
+#include "Ref/DpDemo/DpDemoComponentAc.hpp"
+
+namespace Ref {
+
+class DpDemo final : public DpDemoComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct DpDemo object
+    DpDemo(const char* const compName  //!< The component name
+    );
+
+    //! Destroy DpDemo object
+    ~DpDemo();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for run
+    //!
+    //! Example port: receiving calls from the rate group
+    void run_handler(FwIndexType portNum,  //!< The port number
+                     U32 context           //!< The call order
+                     ) override;
+
+    //! Handler implementation for command SelectColor
+    //!
+    //! Select color
+    void SelectColor_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                U32 cmdSeq,           //!< The command sequence number
+                                Ref::DpDemo_ColorEnum color) override;
+
+    //! Handler implementation for command Dp
+    //!
+    //! Command for generating a DP
+    void Dp_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                       U32 cmdSeq,           //!< The command sequence number
+                       DpDemo_DpReqType reqType,
+                       U32 priority) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for data products
+    // ----------------------------------------------------------------------
+
+    //! Receive a container of type DpDemoContainer
+    void dpRecv_DpDemoContainer_handler(DpContainer& container,  //!< The container
+                                        Fw::Success::T status    //!< The container status
+                                        ) override;
+
+    // DP cleanup helper
+    void cleanupAndSendDp();
+
+    // Member variables
+    DpDemo_ColorEnum selectedColor;
+    U32 numRecords;
+    U32 dpPriority;
+    DpContainer dpContainer;
+    bool dpInProgress;
+};
+
+}  // namespace Ref
+
+#endif
+```

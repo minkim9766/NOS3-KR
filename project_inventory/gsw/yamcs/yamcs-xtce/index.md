@@ -3,22 +3,12024 @@
 
 **경로:** `gsw/yamcs/yamcs-xtce/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--SpaceSystemV1.0.xsd
-file--SpaceSystemV1.1.xsd
-file--SpaceSystemV1.2.xsd
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-xtce/src/`](src/index) — 폴더
-- [`gsw/yamcs/yamcs-xtce/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/SpaceSystemV1.0.xsd`](file--SpaceSystemV1.0.xsd) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/SpaceSystemV1.1.xsd`](file--SpaceSystemV1.1.xsd) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/SpaceSystemV1.2.xsd`](file--SpaceSystemV1.2.xsd) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/yamcs-xtce/pom.xml`
+
+
+```xml
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>yamcs-xtce</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: XTCE</name>
+
+  <properties>
+    <javaModuleName>org.yamcs.xtce</javaModuleName>
+    <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `SpaceSystemV1.0.xsd`
+
+**경로:** `gsw/yamcs/yamcs-xtce/SpaceSystemV1.0.xsd`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+Style Notes, used througout the schema:
+
+	- Element and Type names begin with a capitol letter.
+	- Type names end with the word "Type".
+	- Attribute names begin with a lowercase letter.
+	- Usually, when the UML class diagram references classes, W3C Elements are used, and whenever
+	  the UML refenceces simple types (strings, ints), W3C Attributes are used.  In general, 
+	  attributes are preferred over elements because they're easier to deal with 
+	  in SAX and DOM, but whenever the Element/Attribute may one day carry metadata,
+	  elements should be used.  One exception, is enumerated classes, because enumerations 
+	  may be defined for attributes but not for elements.
+	- Bias toward self-describing names over short, bandwidth conserving ones.
+	- Use mixed case in names rather than underscores to combine multiple words (camelCase).
+	- A documentation annotation is included in every element and type definition.  Annotations for a type are 
+        included with the type definition, use of the type is annotated in the element definition.
+	- Hints on units (for values with units) are provided in the names of attributes and 
+	  elements (e.g. "dataRateInBPS" is preferred over "dataRate" OR "frameLengthInBits" is 
+	  preferred over "frameLength").
+	- Major elements or any elements used multiple times are first defined with a complexType definition
+	- All collections are put inside either a "List" element or a "Set" Element depending on whether the collection
+	  is ordered or unordered.
+	- Simplicity in the XML files is favored over simplicity in the Schema
+	- Whenever an additional validity check must be performed that is not describable in the schema language, 
+	  an appinfo annotation describes that validity check.
+-->
+<schema targetNamespace="http://www.omg.org/space/xtce" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xtce="http://www.omg.org/space/xtce" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+	<annotation>
+		<documentation>OMG Document Number: dtc/2005-01-05</documentation>
+		<documentation>$Id: SpaceSystemV1.0.xsd 154 2005-04-22 14:17:11Z shaya $</documentation>
+		<documentation xml:lang="en">This is the master schema for the OMG Space Domain Task Force XML Telemetric and Command data Exchange (XTCE) format.</documentation>
+	</annotation>
+	<!--******** SpaceSystem -->
+	<element name="SpaceSystem" type="xtce:SpaceSystemType" nillable="true">
+		<annotation>
+			<documentation>The ROOT Element</documentation>
+		</annotation>
+		<key name="parameterNameKey">
+			<annotation>
+				<documentation>ensure unique parameter name at the system level</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/ParameterSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="metaCommandNameKey">
+			<annotation>
+				<documentation>ensure unique metaCommand name at the system level</documentation>
+			</annotation>
+			<selector xpath="xtce:MetaCommandData/MetaCommandSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="algorithmNameKey">
+			<annotation>
+				<documentation>ensure unique algorithm name at the system level</documentation>
+			</annotation>
+			<selector xpath="xtce:AlgorithmSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="serviceNameKey">
+			<annotation>
+				<documentation>ensure unique service name at the system level</documentation>
+			</annotation>
+			<selector xpath="xtce:ServiceSet/*"/>
+			<field xpath="@name"/>
+		</key>
+	</element>
+	<complexType name="SpaceSystemType" mixed="false">
+		<annotation>
+			<documentation>SpaceSystem is a collection of SpaceSystem(s) including space assets, ground assets, multi-satellite systems and sub-systems.  A SpaceSystem is the root element for the set of data necessary to monitor and command an arbitrary space device - this includes the binary decomposition the data streams going into and out of a device.</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="Header" type="xtce:HeaderType" minOccurs="0"/>
+					<element name="TelemetryMetaData" type="xtce:TelemetryMetaDataType" minOccurs="0"/>
+					<element name="CommandMetaData" type="xtce:CommandMetaDataType" minOccurs="0"/>
+					<element name="ServiceSet" minOccurs="0">
+						<annotation>
+							<documentation>A service is a logical grouping of container and/or messages.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="Service" type="xtce:ServiceType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Defaults" minOccurs="0">
+						<annotation>
+							<documentation>Defaults has default data encoding for ParameterTypes and ArgumentTypes and default parameter time association that will be applied to all Parameters within this SpaceSystem.  These defaults may be overidden by sub-SpaceSystems or by the Types or Parameters themselves.  Defaults simply provides a means to avoid repeating attributes such as ‘bit order’ for every Type definition.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="DefaultDataEncoding" type="xtce:DataEncodingType" minOccurs="0">
+									<annotation>
+										<documentation>Since the data encoding (bit order and byte order) is normally the same throughout a spacesystem, using this element allows that data encoding to be specified as a default.</documentation>
+									</annotation>
+								</element>
+								<element name="ParameterTimeAssociation" type="xtce:TimeAssociationType" minOccurs="0">
+									<annotation>
+										<documentation>Default time to associate each ParameterInstance with.</documentation>
+									</annotation>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element ref="xtce:SpaceSystem" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandMetaDataType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Command Meta Data contains information about commands</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterTypeSet" type="xtce:ParameterTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation>A list of parameter types</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSet" type="xtce:ParameterSetType" minOccurs="0">
+				<annotation>
+					<documentation>Parameters referenced by MetaCommands.  This Parameter Set is located here so that MetaCommand data can be built independantly of TelemetryMetaData.</documentation>
+				</annotation>
+			</element>
+			<element name="ArgumentTypeSet" minOccurs="0">
+				<complexType>
+					<choice maxOccurs="unbounded">
+						<element name="StringArgumentType" type="xtce:StringDataType"/>
+						<element name="EnumeratedArgumentType" type="xtce:EnumeratedDataType"/>
+						<element name="IntegerArgumentType">
+							<complexType>
+								<complexContent>
+									<extension base="xtce:IntegerDataType">
+										<sequence>
+											<element name="DefaultAlarm" type="xtce:NumericAlarmConditionType" minOccurs="0"/>
+											<element name="ContextAlarmList" minOccurs="0">
+												<complexType>
+													<sequence>
+														<element name="ContextAlarm" type="xtce:ContextAlarmType" maxOccurs="unbounded"/>
+													</sequence>
+												</complexType>
+											</element>
+										</sequence>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+						<element name="BinaryArgumentType" type="xtce:BinaryDataType"/>
+						<element name="FloatArgumentType">
+							<complexType>
+								<complexContent>
+									<extension base="xtce:FloatDataType">
+										<sequence>
+											<element name="DefaultAlarm" type="xtce:NumericAlarmConditionType" minOccurs="0"/>
+											<element name="ContextAlarmList" minOccurs="0">
+												<complexType>
+													<sequence>
+														<element name="ContextAlarm" type="xtce:ContextAlarmType" maxOccurs="unbounded"/>
+													</sequence>
+												</complexType>
+											</element>
+										</sequence>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+						<element name="BooleanArgumentType" type="xtce:BooleanDataType"/>
+						<element name="RelativeTimeAgumentType" type="xtce:RelativeTimeDataType"/>
+						<element name="AbsoluteTimeArgumentType" type="xtce:AbsoluteTimeDataType"/>
+						<element name="ArgumementArrayType">
+							<complexType>
+								<attribute name="arrayType" type="xtce:NameReferenceType" use="required"/>
+								<attribute name="numberOfDimensions" type="positiveInteger" use="required"/>
+							</complexType>
+						</element>
+					</choice>
+				</complexType>
+			</element>
+			<element name="MetaCommandSet">
+				<annotation>
+					<documentation>A set of Command Definitions</documentation>
+				</annotation>
+				<complexType>
+					<choice maxOccurs="unbounded">
+						<element name="MetaCommand" type="xtce:MetaCommandType">
+							<annotation>
+								<documentation>All commands to be sent on this mission are listed here.  In addition this area has verification and validation information</documentation>
+							</annotation>
+							<key name="ArgumentNameKey">
+								<selector xpath="xtce:ArgumentList/*"/>
+								<field xpath="@name"/>
+							</key>
+						</element>
+						<element name="MetaCommandRef" type="xtce:NameReferenceType">
+							<annotation>
+								<documentation>Used to include a MetaCommand defined in another sub-system in this sub-system.</documentation>
+							</annotation>
+						</element>
+						<element name="BlockMetaCommand">
+							<annotation>
+								<documentation>BlockMetaCommands are simply a list of individual MetaCommands that can be packaged up in a single BlockMetaCommand.</documentation>
+							</annotation>
+							<complexType>
+								<complexContent>
+									<extension base="xtce:NameDescriptionType">
+										<sequence>
+											<element name="MetaCommandStepList">
+												<complexType>
+													<sequence>
+														<element name="MetaCommandStep" maxOccurs="unbounded">
+															<complexType>
+																<sequence>
+																	<element name="ArgumentList" minOccurs="0">
+																		<complexType>
+																			<sequence>
+																				<element name="Argument" maxOccurs="unbounded">
+																					<complexType>
+																						<attribute name="name" type="string" use="required"/>
+																						<attribute name="value" type="string" use="required"/>
+																					</complexType>
+																				</element>
+																			</sequence>
+																		</complexType>
+																	</element>
+																</sequence>
+																<attribute name="metaCommandRef" type="xtce:NameReferenceType" use="required"/>
+															</complexType>
+														</element>
+													</sequence>
+												</complexType>
+											</element>
+										</sequence>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+					</choice>
+				</complexType>
+			</element>
+			<element name="CommandContainerSet" type="xtce:CommandContainerSetType" minOccurs="0">
+				<annotation>
+					<documentation>The Command Container defines the construction of a Command.</documentation>
+				</annotation>
+			</element>
+			<element name="StreamSet" type="xtce:StreamSetType" minOccurs="0"/>
+			<element name="AlgorithmSet" type="xtce:AlgorithmSetType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="TelemetryMetaDataType" mixed="false">
+		<annotation>
+			<documentation>All the data about telemetry is contained in TelemetryMetaData</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterTypeSet" type="xtce:ParameterTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation>A list of parameter types</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSet" type="xtce:ParameterSetType" minOccurs="0">
+				<annotation>
+					<documentation>A list of Parameters for this Space System.  </documentation>
+				</annotation>
+			</element>
+			<element name="ContainerSet" type="xtce:ContainerSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Holds the list of all potential container definitions for telemetry. Containers may parts of packets or TDM, and then groups of the containers, and then an entire entity -- such as a packet.  In order to maximize re-used for duplication, the pieces may defined once here, and then assembled as needed into larger structures, also here.</documentation>
+				</annotation>
+				<key name="ContainerKey2">
+					<selector xpath="Container"/>
+					<field xpath="Id"/>
+				</key>
+			</element>
+			<element name="MessageSet" minOccurs="0">
+				<annotation>
+					<documentation>Messages are an alternative method of uniquely identifying containers within a Service.  A message provides a test in the form of MatchCriteria to match to a container.  A simple example might be: [When minorframeID=21, the message is the 21st minorframe container.  The collection of messages to search thru will be bound by a Service.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Message" maxOccurs="unbounded">
+							<complexType>
+								<complexContent>
+									<extension base="xtce:NameDescriptionType">
+										<sequence>
+											<element name="MatchCriteria" type="xtce:MatchCriteriaType"/>
+											<element name="ContainRef" type="xtce:ContainerRefType">
+												<annotation>
+													<documentation>The ContainerRef should point to ROOT container that will describe an entire packet/minor frame or chunk of telemetry.</documentation>
+												</annotation>
+											</element>
+										</sequence>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+					</sequence>
+					<attribute name="name" type="string"/>
+				</complexType>
+			</element>
+			<element name="StreamSet" type="xtce:StreamSetType" minOccurs="0"/>
+			<element name="AlgorithmSet" type="xtce:AlgorithmSetType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="ServiceRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to a Service</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:NameReferenceType">
+				<attribute name="serviceRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="AlgorithmSetType" mixed="false">
+		<annotation>
+			<documentation>An unordered collection of algorithms</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="CustomAlgorithm" type="xtce:InputOutputTriggerAlgorithmType"/>
+			<element name="MathAlgorithm" type="xtce:MathAlgorithmType"/>
+		</choice>
+	</complexType>
+	<!--******** End of Top Level SpaceSystem Schema -->
+	<!--************************************************-->
+	<!--******** Packaging Schema -->
+	<annotation>
+		<documentation xml:lang="en">This schema definies the dictionary for containers, which in turn describe the physical composition of data in a communication system</documentation>
+	</annotation>
+	<complexType name="ContainerType" abstract="true" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">An abstract block of data; used as the base type for more specific container types</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<annotation>
+						<documentation>RateInStream is used to:  a) generate alarms when the Container is updated too frequently or too infrequently, b) provide some 'guidelines' for generating forward link containers, c) provide some guidelines for spacecraft simulators to generate telemetry containers.  If necessary, these rates may be defined on a per stream basis.</documentation>
+						<appinfo>The software should check that any Stream names referenced in the RateInStreamSet actually exist.</appinfo>
+					</annotation>
+					<element name="DefaultRateInStream" type="xtce:RateInStreamType" minOccurs="0"/>
+					<element name="RateInStreamSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="RateInStream" maxOccurs="unbounded">
+									<complexType>
+										<complexContent>
+											<extension base="xtce:RateInStreamType">
+												<attribute name="streamRef" type="xtce:NameReferenceType" use="required"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="BinaryEncoding" type="xtce:BinaryDataEncodingType" minOccurs="0">
+						<annotation>
+							<documentation>May be used to indicate error detection and correction, chage byte order,  provide the size (when it can't be derived), or perform some custom processing.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SequenceContainerType">
+		<annotation>
+			<documentation>A list of raw parameters, parameter segments, stream segments, containers, or container segments.  Sequence containers may inherit from other sequence containers; when they do, the sequence in the parent SequenceContainer is 'inherited' and if the location of entries in the child sequence is not specified, it is assumed to start where the parent sequence ended.  Parent sequence containers may be marked as "abstract".  The idle pattern is part of any unallocated space in the Container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ContainerType">
+				<sequence>
+					<element name="EntryList" type="xtce:EntryListType"/>
+					<element name="BaseContainer" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="RestrictionCriteria">
+									<annotation>
+										<documentation>Given that this Container is the Base container type, RestrictionCriteria lists conditions that must be true for this Container to be 'this' subContainer type.  May be a simple Comparison List, a Boolean Expression, and/or in a Graph of containers established by the NextContainer</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:MatchCriteriaType">
+												<choice>
+													<element name="NextContainer" type="xtce:ContainerRefType" minOccurs="0"/>
+												</choice>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="abstract" type="boolean"/>
+				<attribute name="idlePattern" type="xtce:FixedIntegerValueType" default="0x0"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SequenceEntryType">
+		<annotation>
+			<documentation>An abstract type used by sequence containers.  An entry contains a location in the container.  The location may be either fixed or dynamic, absolute (to the start or end of the enclosing container, or relative (to either the previous or subsequent entry).  Entries may also repeat.</documentation>
+		</annotation>
+		<sequence>
+			<element name="LocationInContainerInBits" minOccurs="0">
+				<annotation>
+					<documentation>If no LocationInContainer value is given, the entry is assumed to begin immediately after the previous entry.</documentation>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerValueType">
+							<attribute name="referenceLocation" default="previousEntry">
+								<annotation>
+									<documentation>The location may be relative to the start of the container (containerStart), relatitive to the end of the previous entry (previousEntry), relative to the end of the container (containerEnd), or relative to the entry that follows this one (nextEntry).  If going forward (containerStart and previousEntry) then, then the location refers to the start of the Entry.  If going backwards (containerEnd and nextEntry) then, the location refers to the end of the entry.</documentation>
+								</annotation>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="containerStart"/>
+										<enumeration value="containerEnd"/>
+										<enumeration value="previousEntry"/>
+										<enumeration value="nextEntry"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="RepeatEntry" type="xtce:RepeatType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en" >May be used when this entry repeats itself in the sequence container.  If not supplied, the entry does not repeat.</documentation>
+				</annotation>
+			</element>
+			<element name="IncludeCondition" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation>This entry will only be included in the sequence when this condition is true.  If no IncludeCondition is given, then it is will be included.  A parameter that is not included will be treated as if it did not exist in the sequence at all.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ContainerRefType">
+		<annotation>
+			<documentation xml:lang="en" >Holds a reference to a container</documentation>
+		</annotation>
+		<attribute name="containerRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en" >name of container</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="MessageRefType">
+		<annotation>
+			<documentation xml:lang="en" >Holds a reference to a message</documentation>
+		</annotation>
+		<attribute name="messageRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en" >name of container</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ServiceType">
+		<annotation>
+			<documentation xml:lang="en" >Holds a set of services, logical groups of containers  OR messages (not both).</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MessageRefSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="MessageRef" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="ContainerRefSet">
+						<complexType>
+							<sequence>
+								<element name="ContainerRef" type="xtce:ContainerRefType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerSetType">
+		<annotation>
+			<documentation>Unordered Set of Containers</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="SequenceContainer" type="xtce:SequenceContainerType">
+				<annotation>
+					<documentation>SequenceContainers define sequences of parameters or other containers.  </documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="EntryListType" mixed="false">
+		<annotation>
+			<documentation>Contains an ordered list of Entries.  Used in Sequence Container</documentation>
+		</annotation>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="ParameterRefEntry" type="xtce:ParameterRefEntryType"/>
+			<element name="ParameterSegmentRefEntry" type="xtce:ParameterSegmentRefEntryType"/>
+			<element name="ContainerRefEntry" type="xtce:ContainerRefEntryType"/>
+			<element name="ContainerSegmentRefEntry" type="xtce:ContainerSegmentRefEntryType"/>
+			<element name="StreamSegmentEntry" type="xtce:StreamSegmentEntryType"/>
+			<element name="IndirectParameterRefEntry" type="xtce:IndirectParameterRefEntryType"/>
+			<element name="ArrayParameterRefEntry" type="xtce:ArrayParameterRefEntryType"/>
+		</choice>
+	</complexType>
+	<complexType name="ParameterRefEntryType">
+		<annotation>
+			<documentation>An entry that is a single Parameter</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterSegmentRefEntryType">
+		<annotation>
+			<documentation>An entry that is only a portion of a parameter value indicating that the entire parameter value must be assembled from other parameter segments.   It is assumed that parameter segments happen sequentially in time, that is the first part if a telemetry parameter first, however (and there's always a however), if this is not the case the order of this parameter segment may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="positiveInteger"/>
+				<attribute name="sizeInBits" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerRefEntryType">
+		<annotation>
+			<documentation>An entry that is simply a reference to another container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerSegmentRefEntryType">
+		<annotation>
+			<documentation>An entry that is only a portion of a parameter value indicating that the entire parameter value must be assembled from other parameter segments.   It is assumed that parameter segments happen sequentially in time, that is the first part if a telemetry parameter first, however (and there's always a however), if this is not the case the order of this parameter segment may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="positiveInteger"/>
+				<attribute name="sizeInBits" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StreamSegmentEntryType">
+		<annotation>
+			<documentation>An entry that is a portion of a stream (streams are by definition, assumed continuous)   It is assumed that stream segments happen sequentially in time, that is the first part if a steam first, however, if this is not the case the order of the stream segments may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="streamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="positiveInteger"/>
+				<attribute name="sizeInBits" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IndirectParameterRefEntryType">
+		<annotation>
+			<documentation>An entry whose name is given by the value of a ParamameterInstance.  This entry may be used to implement dwell telemetry streams.  The value of the parameter in ParameterInstance must use either the name of the Parameter or its alias.  If it's an alias name, the alias namespace is supplied as an attribute.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<sequence>
+					<element name="ParameterInstance" type="xtce:ParameterInstanceRefType"/>
+				</sequence>
+				<attribute name="aliasNameSpace" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayParameterRefEntryType">
+		<annotation>
+			<documentation>An entry that is an array parameter.  This entry is somewhat special because the entry may represent only a part of the Array and it's important to decribe which diminsions of the array come first in the sequence as well as the size of the array.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<sequence>
+					<element name="DimensionList">
+						<annotation>
+							<documentation>Where the Dimension list is in this form:  Array[1stDim][2ndDim][lastDim].  The last dimension is assumed to be the least significant - that is this dimension will cycle through it's combination before the next to last dimension changes.  The order MUST ascend or the array will need to be broken out entry by entry. </documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="Dimension" maxOccurs="unbounded">
+									<annotation>
+										<documentation>For partial entries of an array, the starting and ending index for each dimension, OR the Size must be specified.  Indexes are zero based.</documentation>
+										<appinfo>For an ArrayParameterType of size N, their should be N Dimensions</appinfo>
+										<appinfo>An array made up by multiple Entries should not have index's that overlap, but should be continuous.</appinfo>
+									</annotation>
+									<complexType mixed="false">
+										<sequence>
+											<element name="StartingIndex" type="xtce:IntegerValueType">
+												<annotation>
+													<documentation>zero based index</documentation>
+												</annotation>
+											</element>
+											<element name="EndingIndex" type="xtce:IntegerValueType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="lastEntryForThisArrayInstance" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RateInStreamType">
+		<annotation>
+			<documentation>Used in packaging to define the expected rate that any individual container will be in a Stream</documentation>
+		</annotation>
+		<attribute name="basis" default="perSecond">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="perSecond"/>
+					<enumeration value="perContainerUpdate"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="minimumValue" type="double"/>
+		<attribute name="maximumValue" type="double"/>
+	</complexType>
+	<!--******** End of Packaging Schema -->
+	<!--************************************************-->
+	<!--******** Telemetry Schema -->
+	<complexType name="ParameterPropertiesType" mixed="false">
+		<annotation>
+			<documentation>A wrapper for those properties that are unique to telemetry parameters.</documentation>
+		</annotation>
+		<sequence>
+			<element name="SystemName" type="string" minOccurs="0">
+				<annotation>
+					<documentation>Optional.  Normally used when the database is built in a flat, non-hierarchical format</documentation>
+				</annotation>
+			</element>
+			<element name="ValidityCondition" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation>Optional condition that must be true for this Parameter to be valid</documentation>
+				</annotation>
+			</element>
+			<element name="PhysicalAddressSet" minOccurs="0">
+				<annotation>
+					<documentation>One or more physical addresses may be associated with each Parameter.  Examples of phyical addresses include a location on the spacecraft or a location on a data collection bus. </documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="PhysicalAddress" minOccurs="0" maxOccurs="unbounded">
+							<annotation>
+								<documentation xml:lang="en" >Contains the address (e.g., channel information) required to process the spacecraft telemetry streams. May be an onboard  id, a mux address, or a physical location.</documentation>
+								<documentation xml:lang="en" >Contains the address (channel information) required to process the spacecraft telemetry streams</documentation>
+							</annotation>
+							<complexType>
+								<complexContent>
+									<extension base="xtce:PhysicalAddressType"/>
+								</complexContent>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="TimeAssociation" type="xtce:TimeAssociationType" minOccurs="0">
+				<annotation>
+					<documentation>This time will overide any Default value for TimeAssociation. </documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="dataSource" use="optional">
+			<annotation>
+				<documentation>A telemetered Parameter is one that will have values in telemetry.  A derived Parameter is one that is calculated, usually be an Algorithm.  A constant Parameter is  one that is used as a constant in the system (e.g. a vehicle id).  A local Parameter is one that is used purely on the ground (e.g. a ground command counter).</documentation>
+			</annotation>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="telemetered"/>
+					<enumeration value="derived"/>
+					<enumeration value="constant"/>
+					<enumeration value="local"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="readOnly" type="boolean" use="optional" default="false">
+			<annotation>
+				<documentation>A Parameter marked as 'readOnly' true is constant and non-settable</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="TimeAssociationType">
+		<annotation>
+			<documentation>Telemetry parameter instances are oftentimes "time-tagged" with a timing signal either provided on the ground or on  the space system.  This data element allows one to specify which of possibly many AbsoluteTimeParameters to use to "time-tag" parameter instances with.  </documentation>
+			<appinfo>The parameter ref must be to an AbsoluteTime Parameter</appinfo>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="interpolateTime" type="boolean" default="true">
+					<annotation>
+						<documentation xml:lang="en" >If true, then the current value of the AbsoluteTime will be projected to current time.  I.E., if the value of the AbsoluteTime parameter was set 10 seconds ago, then 10 seconds will be added to it's value before associating this time with the parameter.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="offset" type="date">
+					<annotation>
+						<documentation>The offset is used to supply a relative time offset from the time association and to this parameter</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="ParameterInstanceRefType">
+		<annotation>
+			<documentation>A reference to an instance of a Parameter.   Used when the value of a parameter is required for a calculation or as an index value.  A positive value for instance is forward in time, a negative value for count is backward in time, a 0 value for count means use the current value of the parameter or the first value in a container.</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:ParameterRefType">
+				<attribute name="instance" type="integer" default="0"/>
+				<attribute name="useCalibratedValue" type="boolean" default="true"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="ParameterRefType">
+		<annotation>
+			<documentation xml:lang="en" >A reference to a Parameter. Uses Unix ‘like’ naming across the SpaceSystem Tree (e.g., SimpleSat/Bus/EPDS/BatteryOne/Voltage).  To reference an individual member of an array use the zero based bracket notation commonly used in languages like C, C++, and Java.</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:NameReferenceType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="PhysicalAddressType" mixed="false">
+		<annotation>
+			<documentation>When it's important to know the physical address(s) on the spacecraft that this parameter may be collected from, use this.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="SubAddress" type="xtce:PhysicalAddressType" minOccurs="0"/>
+		</sequence>
+		<attribute name="sourceName" type="string"/>
+		<attribute name="sourceAddress" type="string"/>
+	</complexType>
+	<complexType name="ParameterTypeSetType">
+		<annotation>
+			<documentation xml:lang="en" >Holds the list of parameter definitions. A Parameter is a description of something that can have a value; it is not the value itself.   </documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="StringParameterType" type="xtce:StringDataType"/>
+			<element name="EnumeratedParameterType" type="xtce:EnumeratedDataType"/>
+			<element name="IntegerParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:NumericAlarmConditionType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" type="xtce:ContextAlarmType" maxOccurs="unbounded"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="BinaryParameterType" type="xtce:BinaryDataType"/>
+			<element name="FloatParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:FloatDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:NumericAlarmConditionType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" type="xtce:ContextAlarmType" maxOccurs="unbounded"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="BooleanParameterType" type="xtce:BooleanDataType"/>
+			<element name="RelativeTimeParameterType" type="xtce:RelativeTimeDataType"/>
+			<element name="AbsoluteTimeParameterType" type="xtce:AbsoluteTimeDataType"/>
+			<element name="ArrayParameterType">
+				<annotation>
+					<documentation>An array type.  Will be an array of parameters of the type referenced in 'arrayTypeRef' and have the number of array dimensions as specified in 'numberOfDimensions' </documentation>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:NameDescriptionType">
+							<attribute name="arrayTypeRef" type="xtce:NameReferenceType" use="required"/>
+							<attribute name="numberOfDimensions" type="positiveInteger" use="required"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<!--******** End of Telemetry Schema -->
+	<!--************************************************-->
+	<!--******** Command Schema -->
+	<!--CommandDefinitionType -->
+	<complexType name="MetaCommandType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en" >A type definition used as the base type for a CommandDefinition</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="BaseMetaCommand" minOccurs="0">
+						<annotation>
+							<documentation>The MetaCommand is derived from this Base.  Arguments of the base MetaCommand are further specified.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ArgumentAssignmentList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ArgumentAssignment" maxOccurs="unbounded">
+												<complexType>
+													<attribute name="argumentName" type="xtce:NameReferenceType" use="required"/>
+													<attribute name="argumentValue" type="string" use="required"/>
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="metaCommandRef" type="xtce:NameReferenceType" use="required"/>
+						</complexType>
+					</element>
+					<element name="SystemName" type="string" minOccurs="0">
+						<annotation>
+							<documentation>Optional.  Normally used when the database is built in a flat, non-hierarchical format</documentation>
+						</annotation>
+					</element>
+					<element name="ArgumentList" minOccurs="0">
+						<annotation>
+							<documentation>Many commands have one or more options.  These are called command arguments.  Command arguments may be of any of the standard data types.  MetaCommand arguments are local to the MetaCommand.</documentation>
+						</annotation>
+						<complexType>
+							<choice maxOccurs="unbounded">
+								<element name="Argument" maxOccurs="unbounded">
+									<annotation>
+										<appinfo>Need to ensure that the named types actually exist</appinfo>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:NameDescriptionType">
+												<attribute name="argumentTypeRef" type="xtce:NameReferenceType" use="required"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</choice>
+						</complexType>
+					</element>
+					<element name="CommandContainer" type="xtce:CommandContainerType" minOccurs="0">
+						<annotation>
+							<documentation>Tells how to package this command</documentation>
+						</annotation>
+					</element>
+					<element name="TransmissionConstraintList" minOccurs="0">
+						<annotation>
+							<documentation>Appended to the TramsmissionConstraint List of the base command.  Constraints are checked in order.  </documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="TransmissionConstraint" maxOccurs="unbounded">
+									<annotation>
+										<documentation>A CommandTransmission constraint is used to check that the command can be run in the current operating mode and may block the transmission of the command if the constraint condition is true.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:MatchCriteriaType">
+												<attribute name="timeOut" type="xtce:RelativeTimeType">
+													<annotation>
+														<documentation>Pause during timeOut, fail when the timeout passes</documentation>
+													</annotation>
+													<!-- removed for CASTOR: default="PT0S" -->
+												</attribute>
+												<attribute name="suspendable" type="boolean" default="false">
+													<annotation>
+														<documentation>Indicates whether the contraints for a Command may be suspended.</documentation>
+													</annotation>
+												</attribute>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="DefaultSignificance" type="xtce:SignificanceType" minOccurs="0">
+						<annotation>
+							<documentation>Some Command and Control Systems may require special user access our confirmations before transmitting commands with certain levels.  Will inherit any level defined in the Base MetaCommand.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextSignificanceList" minOccurs="0">
+						<annotation>
+							<documentation>Used when the significance of a command varies by the operating context</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextSignificance" maxOccurs="unbounded">
+									<complexType>
+										<sequence>
+											<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+											<element name="Significance" type="xtce:SignificanceType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Interlock" minOccurs="0">
+						<annotation>
+							<documentation>An Interlock is a type of Constraint, but not on Command instances of this MetaCommand; Interlocks apply instead to the next command.  An Interlock will block successive commands until this command has reached a certain stage (through verifications).  Interlocks are scoped to a SpaceSystem basis.</documentation>
+						</annotation>
+						<complexType>
+							<attribute name="scopeToSpaceSystem" type="xtce:NameReferenceType">
+								<annotation>
+									<documentation>The name of a SpaceSystem this Interlock applies to.  By default, it only applies to the SpaceSystem that contains this MetaCommand.</documentation>
+								</annotation>
+							</attribute>
+							<attribute name="verificationToWaitFor" default="complete">
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="transferredToRange"/>
+										<enumeration value="sentFromRange"/>
+										<enumeration value="received"/>
+										<enumeration value="accepted"/>
+										<enumeration value="queued"/>
+										<enumeration value="executing"/>
+										<enumeration value="complete"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+							<attribute name="verificationProgressPercentage" type="decimal">
+								<annotation>
+									<documentation>Only applies when the verificationToWaitFor attribute is 'queued' or 'executing'.</documentation>
+								</annotation>
+							</attribute>
+							<attribute name="suspendable" type="boolean" default="false">
+								<annotation>
+									<documentation>A flag that indicates that under special circumstances, this Interlock can be suspended.</documentation>
+								</annotation>
+							</attribute>
+						</complexType>
+					</element>
+					<element name="Verifiers" minOccurs="0">
+						<annotation>
+							<documentation>A Command Verifier is a conditional check on the telemetry from a SpaceSystem that provides positive indication on the successful execution of a command.  Completed verifiers are added to the Base MetaCommand verifiers.  All others will replace a verifier defined in a Base MetaCommand.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="TransferredToRangeVerifier" minOccurs="0">
+									<annotation>
+										<documentation>Transferred to range means the command has been received by a the network that connects the ground system to the spacecraft.  Obviously, this verifier must come from something other than the spacecraft. </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="SentFromRangeVerifier" minOccurs="0">
+									<annotation>
+										<documentation>Sent from range means the command has been transmitted to the spacecraft by a the network that connects the ground system to the spacecraft.  Obviously, this verifier must come from something other than the spacecraft. </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="ReceivedVerifier" minOccurs="0">
+									<annotation>
+										<documentation>A verifier that simply means the SpaceSystem has received the command.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="AcceptedVerifier" minOccurs="0">
+									<annotation>
+										<documentation>A verifier that means the SpaceSystem has accepted the command</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="QueuedVerifier" minOccurs="0">
+									<annotation>
+										<documentation>A verifyer that means the command is scheduled for execution by the SpaceSystem.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="ExecutionVerifier" minOccurs="0">
+									<annotation>
+										<documentation>A verifier that indicates that the command is being executed.  An optional Element indicates how far along the command has progressed either as a fixed value or an (possibly scaled) ParameterInstance value.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType">
+												<sequence minOccurs="0">
+													<element name="PercentComplete" type="xtce:DecimalValueType"/>
+												</sequence>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="CompleteVerifier" minOccurs="0" maxOccurs="unbounded">
+									<annotation>
+										<documentation>A possible set of verifiers that all must be true for the command be considered completed.  </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType">
+												<sequence minOccurs="0">
+													<element name="ReturnParmRef" type="xtce:ParameterRefType"/>
+												</sequence>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="FailedVerifier" type="xtce:CommandVerifierType" minOccurs="0">
+									<annotation>
+										<documentation>When true, indicates that the command failed.  timeToWait is how long to wait for the FailedVerifier to test true.</documentation>
+									</annotation>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="ParameterToSetList" minOccurs="0">
+						<annotation>
+							<documentation>Parameters that are set with a new value after the command has been sent.  Appended to the Base Command list</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ParameterToSet" maxOccurs="unbounded">
+									<annotation>
+										<documentation>Sets a Parameter to a new value after the command has been verified (all verifications have passed)</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:ParameterToSetType">
+												<attribute name="verifierToTriggerOn" default="release">
+													<simpleType>
+														<restriction base="string">
+															<enumeration value="release"/>
+															<enumeration value="transferredToRange"/>
+															<enumeration value="sentFromRange"/>
+															<enumeration value="received"/>
+															<enumeration value="accepted"/>
+															<enumeration value="queued"/>
+															<enumeration value="executing"/>
+															<enumeration value="complete"/>
+															<enumeration value="failed"/>
+														</restriction>
+													</simpleType>
+												</attribute>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="abstract" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandContainerEntryListType" mixed="false">
+		<annotation>
+			<documentation>Similar to an EntryList type but also may include command arguments or -as a convenience - fixed value entries.</documentation>
+		</annotation>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="ParameterRefEntry" type="xtce:ParameterRefEntryType"/>
+			<element name="ParameterSegmentRefEntry" type="xtce:ParameterSegmentRefEntryType"/>
+			<element name="ContainerRefEntry" type="xtce:ContainerRefEntryType"/>
+			<element name="ContainerSegmentRefEntry" type="xtce:ContainerSegmentRefEntryType"/>
+			<element name="StreamSegmentEntry" type="xtce:StreamSegmentEntryType"/>
+			<element name="IndirectParameterRefEntry" type="xtce:IndirectParameterRefEntryType"/>
+			<element name="ArrayParameterRefEntry" type="xtce:ArrayParameterRefEntryType"/>
+			<element name="ArgumentRefEntry">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:SequenceEntryType">
+							<attribute name="argumentRef" type="xtce:NameReferenceType" use="required"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="ArrayArgumentRefEntry" type="xtce:ArrayParameterRefEntryType"/>
+			<element name="FixedValueEntry">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:SequenceEntryType">
+							<attribute name="binaryValue" type="hexBinary" use="required"/>
+							<attribute name="sizeInBits" type="integer"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="CommandContainerType" mixed="false">
+		<annotation>
+			<documentation>The Key = Command Op Code.  Each MetaCommand may have one CommandContainer.  The sequence may now contain command fields</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:ContainerType">
+				<sequence>
+					<element name="EntryList" type="xtce:CommandContainerEntryListType"/>
+					<element name="BaseContainer" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="RestrictionCriteria" minOccurs="0">
+									<annotation>
+										<documentation>Given that this Container is the Base container type, RestrictionCriteria lists conditions that must be true for this Container to be 'this' subContainer type.  May be a simple Comparison List, a Boolean Expression, and/or in a Graph of containers established by the NextContainer</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:MatchCriteriaType">
+												<choice>
+													<element name="NextContainer" type="xtce:ContainerRefType" minOccurs="0"/>
+												</choice>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandVerifierType">
+		<annotation>
+			<documentation>A command verifier is used to check that the command has be successfully executed. Command Verifiers may be either a Custom Algorithm or a Boolean Check or the presence of a Container for a relative change in the value of a Parameter.  The timeToWait is a time period where the verification must test true.</documentation>
+		</annotation>
+		<choice>
+			<element name="Comparison" type="xtce:ComparisonType"/>
+			<element name="ComparisonList">
+				<annotation>
+					<documentation>All comparisons must be true</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Comparison" type="xtce:ComparisonType" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="BooleanExpression" type="xtce:BooleanExpressionType"/>
+			<element name="ContainerRef" type="xtce:ContainerRefType">
+				<annotation>
+					<documentation>When verification is the existance of a Container</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterValueChange">
+				<annotation>
+					<documentation>Used to look for relative change in a Parameter value.  Only usefull for numeric Parameters</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="ParameterRef" type="xtce:ParameterRefType"/>
+						<element name="Change">
+							<complexType>
+								<attribute name="value" type="decimal" use="required"/>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="CustomAlgorithm" type="xtce:InputAlgorithmType"/>
+		</choice>
+		<attribute name="timeToWait" type="xtce:RelativeTimeType" use="required">
+			<annotation>
+				<documentation>Specifies how much time to provide for the verification.  </documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ParameterToSetType">
+		<annotation>
+			<documentation>Used by Meta Command to indicate ground Parameters that should be set after completion of a command.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterRef" type="xtce:ParameterRefType"/>
+			<element name="Derivation" type="xtce:MathOperationType"/>
+		</sequence>
+	</complexType>
+	<complexType name="CommandContainerSetType">
+		<annotation>
+			<documentation>Contains an unordered Set of Command Containers</documentation>
+		</annotation>
+		<sequence>
+			<element name="CommandContainer" type="xtce:SequenceContainerType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="SignificanceType" mixed="false">
+		<annotation>
+			<documentation>Significance provides some cautionary information about the potential consequence of each MetaCommand.</documentation>
+		</annotation>
+		<attribute name="spaceSystemAtRisk" type="xtce:NameReferenceType">
+			<annotation>
+				<documentation>If none is supplied, then the current SpaceSystem is assumed to be the one at risk by the issuance of this command</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="reasonForWarning" type="string"/>
+		<attribute name="consequenceLevel">
+			<annotation>
+				<documentation>No specific meanings have been assigned to these different levels, but they mirror the Alarm levels of Telemetry.</documentation>
+			</annotation>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="none"/>
+					<enumeration value="watch"/>
+					<enumeration value="warning"/>
+					<enumeration value="distress"/>
+					<enumeration value="critical"/>
+					<enumeration value="severe"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<!--******** End of Command Definition Schema -->
+	<!--************************************************-->
+	<!--******** Algorithm Schema -->
+	<annotation>
+		<documentation xml:lang="en" >This schema defines the structure for an Algorithm.   An Algorithm may be one of a growing set of pre-defined algorithms or a named escape into a user defined algorithm where (depending on the system) the name of the algorithm may be a java class, a function in a shared library, an external program or some other reference to an outside algorithm.  At some later date, this schema may also allow the logic of the user defined algorithm to be defined within the instance document itself (perhaps using MathML?).</documentation>
+	</annotation>
+	<complexType name="SimpleAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en" >The simplest form of algorithm, a SimpleAlgorithmType contains an area for a free-form pseudo code description of the algorithm plus a Set of references to external algorithms.  External algorithms are usually unique to a ground system type.   Multiple external algorithms are possible because XTCE documents may be used across multiple ground systems.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="AlgorithmText" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en" >This optional element may be used to enter Pseudo or actual code for the algorithm.  The language for the algorithm is specified with the language attribute</documentation>
+						</annotation>
+						<complexType>
+							<simpleContent>
+								<extension base="string">
+									<attribute name="language" type="string" default="pseudo"/>
+								</extension>
+							</simpleContent>
+						</complexType>
+					</element>
+					<element name="ExternalAlgorithmSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="ExternalAlgorithm" maxOccurs="unbounded">
+									<annotation>
+										<documentation>This is the external algorithm.  Multiple entries are provided so that the same database may be used for multiple implementation s</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="implementationName" type="string" use="required"/>
+										<attribute name="algorithmLocation" type="string" use="required"/>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputAlgorithmType">
+		<annotation>
+			<documentation>A set of labeled inputs is added to the SimpleAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SimpleAlgorithmType">
+				<sequence>
+					<element name="InputSet" minOccurs="0">
+						<complexType>
+							<choice maxOccurs="unbounded">
+								<element name="ParameterInstanceRef">
+									<annotation>
+										<documentation>Names an input parameter to the algorithm.  There are two attributes to InputParm, inputName and parameterName. parameterName is a parameter reference name for a parameter that will be used in this algorithm.  inputName is an optional "friendly" name for the input parameter. </documentation>
+									</annotation>
+									<complexType>
+										<simpleContent>
+											<extension base="xtce:ParameterInstanceRefType">
+												<attribute name="inputName" type="string"/>
+											</extension>
+										</simpleContent>
+									</complexType>
+								</element>
+								<element name="Constant" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en" >Names and provides a value for a constant input to the algorithm.  There are two attributes to Constant, constantName and value.  constantName is a variable name in the algorithm to be executed.  value is the value of the constant to be used.</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="constantName" type="string"/>
+										<attribute name="value" type="string" use="required"/>
+									</complexType>
+								</element>
+							</choice>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputOutputAlgorithmType">
+		<annotation>
+			<documentation>A set of labled outputs are added to the SimpleInputAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:InputAlgorithmType">
+				<sequence>
+					<element name="OutputSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="OutputParameterRef" maxOccurs="unbounded">
+									<annotation>
+										<documentation>Names an output parameter to the algorithm.  There are two attributes to OutputParm, outputName and parameterName. parameterName is a parameter reference name for a parameter that will be updated by this algorithm.  outputName is an optional "friendly" name for the output parameter.</documentation>
+									</annotation>
+									<complexType>
+										<simpleContent>
+											<extension base="xtce:ParameterRefType">
+												<attribute name="outputName" type="string"/>
+											</extension>
+										</simpleContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="thread" type="boolean" use="optional"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputOutputTriggerAlgorithmType">
+		<annotation>
+			<documentation>A set of labled triggers is added to the SimpleInputOutputAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:InputOutputAlgorithmType">
+				<sequence>
+					<element name="TriggerSet" type="xtce:TriggerType" minOccurs="0"/>
+				</sequence>
+				<attribute name="triggerContainer" type="xtce:NameType" use="optional">
+					<annotation>
+						<documentation xml:lang="en" >First telemetry container from which the output parameter should be calculated.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="priority" type="integer" use="optional">
+					<annotation>
+						<documentation xml:lang="en" >Algorithm processing priority.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CalibratorType">
+		<annotation>
+			<documentation xml:lang="en" >Calibrators are normally used to convert to and from bit compacted numerical data</documentation>
+		</annotation>
+		<choice>
+			<element name="SplineCalibrator">
+				<annotation>
+					<documentation xml:lang="en" >A calibration type where a segmented line in a raw vs calibrated plane is described using a set of points.  Raw values are converted to calibrated values by finding a position on the line coorosponding to the raw value. The algorithm triggers on the input parameter.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="SplinePoint" type="xtce:SplinePointType" minOccurs="2" maxOccurs="unbounded"/>
+					</sequence>
+					<attribute name="order" type="positiveInteger" default="1"/>
+					<attribute name="extrapolate" type="boolean" default="false"/>
+				</complexType>
+			</element>
+			<element name="PolynomialCalibrator" type="xtce:PolynomialType">
+				<annotation>
+					<documentation>A calibration type where a curve in a raw vs calibrated plane is described using a set of polynomial coefficients.  Raw values are converted to calibrated values by finding a position on the curve corresponding to the raw value. The first coefficient belongs with the X^0 term, the next coefficient belongs to the X^1 term and so on. </documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="name" type="string" use="optional"/>
+	</complexType>
+	<complexType name="MathAlgorithmType">
+		<annotation>
+			<documentation>A simple mathematical operation</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MathOperation">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:MathOperationType">
+									<sequence>
+										<element name="TriggerSet" type="xtce:TriggerType"/>
+									</sequence>
+									<attribute name="outputParameterRef" type="xtce:NameReferenceType" use="required"/>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TriggerType">
+		<annotation>
+			<documentation>A trigger is used to initiate the processing of some algorithm.  A trigger may be based on an update of a Parameter or on a time basis.  Triggers may also have a rate that limits their firing to a 1/rate basis.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="ParameterRef" minOccurs="0">
+				<annotation>
+					<documentation>Names a parameter that upon change will start the execution of the algorithm.  Holds a parameter reference name for a parameter that when it changes, will cause this algorithm to be executed.</documentation>
+				</annotation>
+				<complexType>
+					<simpleContent>
+						<extension base="xtce:ParameterRefType">
+							<attribute name="triggerName" type="string"/>
+						</extension>
+					</simpleContent>
+				</complexType>
+			</element>
+			<element name="TriggerFrequency" type="xtce:RelativeTimeType" minOccurs="0"/>
+		</choice>
+		<attribute name="name" type="string" use="optional"/>
+		<attribute name="triggerRate" type="nonNegativeInteger" use="optional" default="1"/>
+	</complexType>
+	<!--******** End of Algorithm Schema -->
+	<!--******** Stream Definitions Schema -->
+	<annotation>
+		<documentation xml:lang="en" >This schema provides a language for defining binary stream data.</documentation>
+	</annotation>
+	<complexType name="FrameStreamType">
+		<annotation>
+			<documentation xml:lang="en" >The top level type definition for all data streams that are frame based.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:PCMStreamType">
+				<sequence>
+					<choice>
+						<element name="ContainerRef" type="xtce:ContainerRefType">
+							<annotation>
+								<documentation>This Container (usually abstract) is the container that is in the fixed frame stream.  Normally, this is an generalcontainer type from which many specific containers are inherited.</documentation>
+							</annotation>
+						</element>
+						<element name="ServiceRef" type="xtce:ServiceRefType"/>
+					</choice>
+					<element name="StreamRef" type="xtce:StreamRefType" minOccurs="0">
+						<annotation>
+							<documentation>This is a reference to a connecting stream - say a custom stream.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FixedFrameStreamType">
+		<annotation>
+			<documentation xml:lang="en" >For streams that contain a series of frames with a fixed frame length where the frames are found by looking for a marker in the data.  This marker is sometimes called the frame sync pattern and sometimes the Asynchronous Sync Marker (ASM).</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FrameStreamType">
+				<sequence>
+					<element name="SyncStrategy">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:SyncStrategyType">
+									<sequence>
+										<element name="SyncPattern">
+											<annotation>
+												<documentation xml:lang="en" >The pattern of bits used to look for frame synchronization.</documentation>
+											</annotation>
+											<complexType>
+												<attribute name="pattern" type="hexBinary" use="required">
+													<annotation>
+														<documentation>CCSDS ASM for non-turbocoded frames = 1acffc1d</documentation>
+													</annotation>
+												</attribute>
+												<attribute name="bitLocationFromStartOfContainer" type="integer" default="0"/>
+												<attribute name="mask" type="hexBinary"/>
+												<attribute name="maskLengthInBits" type="positiveInteger">
+													<annotation>
+														<documentation>truncate the mask from the left</documentation>
+													</annotation>
+												</attribute>
+												<attribute name="patternLengthInBits" type="positiveInteger" use="required">
+													<annotation>
+														<documentation>truncate the pattern from the left</documentation>
+													</annotation>
+												</attribute>
+											</complexType>
+										</element>
+									</sequence>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="syncApertureInBits" type="nonNegativeInteger" default="0">
+					<annotation>
+						<documentation>Allowed slip (in bits) in either direction for the sync pattern</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="frameLengthInBits" type="long" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="VariableFrameStreamType">
+		<annotation>
+			<documentation xml:lang="en" >For streams that contain a series of frames with a variable frame length where the frames are found by looking for a series of one's or zero's (usually one's).  The series is called the flag.   in the PCM stream that are usually made to be illegal in the PCM stream by zero or one bit insertion.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FrameStreamType">
+				<sequence>
+					<element name="SyncStrategy">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:SyncStrategyType">
+									<sequence>
+										<element name="Flag">
+											<annotation>
+												<documentation xml:lang="en" >The pattern of bits used to look for frame synchronization.</documentation>
+											</annotation>
+											<complexType>
+												<attribute name="flagSizeInBits" type="positiveInteger" default="6"/>
+												<attribute name="flagBitType" default="ones">
+													<simpleType>
+														<restriction base="string">
+															<enumeration value="zeros"/>
+															<enumeration value="ones"/>
+														</restriction>
+													</simpleType>
+												</attribute>
+											</complexType>
+										</element>
+									</sequence>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CustomStreamType">
+		<annotation>
+			<documentation xml:lang="en" >A stream type where some level of custom processing (e.g. convolutional, encryption, compression) is performed.  Has a reference to external algorithms for encoding and decoding algorithms.</documentation>
+			<appinfo>Must check to ensure that the attributes encodedStreamRef and decodedStreamRef point to valid Streams</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:PCMStreamType">
+				<sequence>
+					<element name="EncodingAlgorithm" type="xtce:InputAlgorithmType"/>
+					<element name="DecodingAlgorithm" type="xtce:InputOutputAlgorithmType">
+						<annotation>
+							<documentation>Algorithm outputs may be used to set decoding quality parameters.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="encodedStreamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="decodedStreamRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="PCMStreamType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en" >A PCM Stream Type is the high level definition for all Pulse Code Modulated (PCM) (i.e., binary) streams.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="bitRateInBPS" type="double"/>
+				<attribute name="pcmType" default="NRZL">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="NRZL"/>
+							<enumeration value="NRZM"/>
+							<enumeration value="NRZS"/>
+							<enumeration value="BiPhaseL"/>
+							<enumeration value="BiPhaseM"/>
+							<enumeration value="BiPhaseS"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="inverted" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StreamRefType">
+		<annotation>
+			<documentation xml:lang="en" >Holds a reference to a stream</documentation>
+		</annotation>
+		<attribute name="streamRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en" >name of reference stream</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="StreamSetType">
+		<annotation>
+			<documentation>Contains an unordered set of Streams.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="FixedFrameStream" type="xtce:FixedFrameStreamType"/>
+			<element name="VariableFrameStream" type="xtce:VariableFrameStreamType"/>
+			<element name="CustomStream" type="xtce:CustomStreamType"/>
+		</choice>
+	</complexType>
+	<complexType name="FixedFrameSyncStrategyType">
+		<annotation>
+			<documentation>A Sync Strategy specifies the requirements to deem a PCM Fixed Frame Stream "in-sync" or out of sync.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SyncStrategyType">
+				<sequence>
+					<element name="SyncPattern">
+						<annotation>
+							<documentation xml:lang="en" >The pattern of bits used to look for frame synchronization.</documentation>
+						</annotation>
+						<complexType>
+							<attribute name="pattern" type="hexBinary" use="required"/>
+							<attribute name="bitLocation" type="integer" default="0"/>
+							<attribute name="mask" type="hexBinary"/>
+							<attribute name="maskLengthInBits" type="positiveInteger"/>
+							<attribute name="patternLengthInBits" type="positiveInteger" use="required"/>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SyncStrategyType">
+		<annotation>
+			<documentation>A Sync Strategy specifies the strategy on how to find frames within a stream of PCM data.  The sync strategy is based upon a state machine that begins in the 'Search' state until the first sync marker is found.  Then it goes into the 'Verify' state until a specified number of successive good sync markers are found.  Then, the state machine goes into the 'Lock' state, in the 'Lock' state frames are considered good.  Should a sync marker be missed in the 'Lock' state, the state machine will transition into the 'Check' state, if the next sync marker is where it's expected within a specified number of frames, then the state machine will transition back to the 'Lock' state, it not it will transition back to 'Search'.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="AutoInvert" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en" >After serching for the frame sync marker for some number of bitss, it may be desirable to invert the incoming data, and then look for frame sync.  In some cases this will require an external algorithm</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="InvertAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0"/>
+					</sequence>
+					<attribute name="badFramesToAutoInvert" type="positiveInteger" default="1024"/>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="verifyToLockGoodFrames" type="nonNegativeInteger" default="4"/>
+		<attribute name="checkToLockGoodFrames" type="nonNegativeInteger" default="1"/>
+		<attribute name="maxBitErrorsInSyncPattern" type="nonNegativeInteger" default="0">
+			<annotation>
+				<documentation>Maximum number of bit errors in the sync pattern (marker).</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--******** End of Stream Definition Schema -->
+	<!--************************************************-->
+	<!--******** DataTypes-->
+	<complexType name="AbsoluteTimeDataType">
+		<annotation>
+			<documentation>Used to contain an absolute time. Contains an absolute (to a known epoch) time.  Use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e the format ss.ss... with any number of digits after the decimal point is supported. 
+</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTimeDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseDataType" abstract="true">
+		<annotation>
+			<documentation>An abstract type used by within the schema to derive other data types by the ground system.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="UnitSet">
+						<complexType>
+							<sequence>
+								<element name="Unit" type="xtce:UnitType" minOccurs="0" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<choice minOccurs="0">
+						<element name="BinaryDataEncoding" type="xtce:BinaryDataEncodingType"/>
+						<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType"/>
+						<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType"/>
+						<element name="StringDataEncoding" type="xtce:StringDataEncodingType"/>
+					</choice>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseTimeDataType" abstract="true">
+		<annotation>
+			<documentation>An abstract type used by within the schema to describe derive other data types by the ground system.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<sequence minOccurs="0">
+						<element name="Encoding">
+							<annotation>
+								<documentation>Scale and offset are used in a y =mx +b type relationship (m is the scale and b is the offset) to make adjustmets to the encoded value to that it matches the time units.  Binary Encoded time is typically used with a user supplied transform algorithm to convert time data formats that are too difficult to describe in XTCE.</documentation>
+							</annotation>
+							<complexType>
+								<choice>
+									<element name="BinaryDataEncoding" type="xtce:BinaryDataEncodingType"/>
+									<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType"/>
+									<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType"/>
+									<element name="StringDataEncoding" type="xtce:StringDataEncodingType"/>
+								</choice>
+								<attribute name="units" default="seconds">
+									<simpleType>
+										<restriction base="string">
+											<enumeration value="seconds"/>
+											<enumeration value="years"/>
+											<enumeration value="picoseconds"/>
+											<enumeration value="days"/>
+											<enumeration value="month"/>
+										</restriction>
+									</simpleType>
+								</attribute>
+								<attribute name="scale" type="double" default="1"/>
+								<attribute name="offset" type="double" default="0"/>
+							</complexType>
+						</element>
+					</sequence>
+					<sequence minOccurs="0">
+						<element name="ReferenceTime" type="xtce:ReferenceTimeType"/>
+					</sequence>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryDataType">
+		<annotation>
+			<documentation>Contains an arbitrarily large binary value </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<attribute name="initialValue" type="hexBinary"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanDataType">
+		<annotation>
+			<documentation>Contains a boolean value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<attribute name="initialValue" type="boolean"/>
+				<attribute name="oneStringValue" type="string" default="True"/>
+				<attribute name="zeroStringValue" type="string" default="False"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumeratedDataType">
+		<annotation>
+			<documentation>Contains an enumerated value - a value that has both an integral and a string representation.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="EnumerationList">
+						<complexType>
+							<sequence>
+								<element name="Enumeration" type="xtce:ValueEnumerationType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatDataType">
+		<annotation>
+			<documentation>Contains a floating point value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericDataType">
+				<attribute name="initialValue" type="decimal"/>
+				<attribute name="sizeInBits" default="32">
+					<simpleType>
+						<restriction base="positiveInteger">
+							<enumeration value="32"/>
+							<enumeration value="64"/>
+							<enumeration value="128"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IntegerDataType">
+		<annotation>
+			<documentation>Contains an integral value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericDataType">
+				<attribute name="initialValue" type="integer">
+					<annotation>
+						<documentation>base 10 integer value</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="positiveInteger" default="32"/>
+				<attribute name="signed" type="boolean" default="true"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NumericDataType">
+		<annotation>
+			<documentation>An abstract type that is a super type of either an Integer or Float Data type.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="ToString" type="xtce:NumberToStringType" minOccurs="0"/>
+					<element name="ValidRange" minOccurs="0">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:DecimalRangeType"/>
+							</complexContent>
+						</complexType>
+					</element>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" type="xtce:ContextCalibratorType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RelativeTimeDataType">
+		<annotation>
+			<documentation>Used to contain a relative time value.  Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTimeDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="StringDataType">
+		<annotation>
+			<documentation>Contains a String Value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="SizeRangeInCharacters" type="xtce:IntegerRangeType" minOccurs="0"/>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" type="xtce:ContextCalibratorType"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="string"/>
+				<attribute name="restrictionPattern" type="string"/>
+				<attribute name="characterWidth">
+					<simpleType>
+						<restriction base="integer">
+							<enumeration value="8"/>
+							<enumeration value="16"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="DataEncodingType">
+		<annotation>
+			<documentation xml:lang="en" >Describes how a particular piece of data is sent or received from some non-native, off-platform device. (e.g. a spacecraft)</documentation>
+		</annotation>
+		<sequence>
+			<element name="ErrorDetectCorrect" type="xtce:ErrorDetectCorrectType" minOccurs="0"/>
+			<element name="ByteOrderList" type="xtce:ByteOrderType" minOccurs="0">
+				<annotation>
+					<documentation>Used to describe an arbitrary byte order in multibyte parameters.  First byte in list is the first in the stream.  Byte significance is the is highest for most significant bytes.  If not included, it is assumed that the most significant byte is first, least significant byte last.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="bitOrder" default="mostSignificantBitFirst">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="leastSignificantBitFirst"/>
+					<enumeration value="mostSignificantBitFirst"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<complexType name="IntegerDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en" >For all major encodings of integer data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<annotation>
+							<documentation>Use when different calibrations must be used on the Parameter in different contexts.  Use the first one that tests true</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" maxOccurs="unbounded">
+									<complexType>
+										<sequence>
+											<element name="UseWhenCondition" type="xtce:BooleanExpressionType"/>
+											<element name="Calibrator" type="xtce:CalibratorType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="encoding" default="unsigned">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="unsigned"/>
+							<enumeration value="signMagnitude"/>
+							<enumeration value="twosCompliment"/>
+							<enumeration value="onesCompliment"/>
+							<enumeration value="BCD"/>
+							<enumeration value="packedBCD"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="sizeInBits" type="positiveInteger" default="8"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en" >For common encodings of floating point data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<annotation>
+							<documentation>Use when different calibrations must be used on the Parameter in different contexts.  Use the first one that tests true</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" maxOccurs="unbounded">
+									<complexType>
+										<sequence>
+											<element name="UseWhenCondition" type="xtce:BooleanExpressionType"/>
+											<element name="Calibrator" type="xtce:CalibratorType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="encoding" default="IEEE754_1985">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="IEEE754_1985"/>
+							<enumeration value="MILSTD_1750A"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="sizeInBits" default="32">
+					<simpleType>
+						<restriction base="positiveInteger">
+							<enumeration value="32"/>
+							<enumeration value="64"/>
+							<enumeration value="128"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en" >For common encodings of string data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<annotation>
+							<documentation>Use when different calibrations must be used on the Parameter in different contexts.  Use the first one that tests true</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" maxOccurs="unbounded">
+									<complexType>
+										<sequence>
+											<element name="UseWhenCondition" type="xtce:BooleanExpressionType"/>
+											<element name="Calibrator" type="xtce:CalibratorType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="SizeInBits">
+						<complexType>
+							<choice>
+								<element name="Fixed" type="xtce:IntegerValueType"/>
+								<element name="TerminationChar" type="hexBinary">
+									<annotation>
+										<documentation>Like C strings, they are terminated with a special string, usually a null character.</documentation>
+									</annotation>
+									<!-- default="00" (does not work with CASTOR 0.9.5.3) -->
+								</element>
+								<element name="LeadingSize">
+									<annotation>
+										<documentation>Like PASCAL strings, the size of the string is given as an integer at the start of the string.  SizeTag must be an unsigned Integer</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="sizeInBitsOfSizeTag" type="positiveInteger" default="16"/>
+									</complexType>
+								</element>
+							</choice>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="encoding" default="UTF-8">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="UTF-8"/>
+							<enumeration value="UTF-16"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en" >For binary data or for integer, float, string, or time data that is not in any of the known encoding formats.  For any data that is not encoded in any of the known integer, float, string, or time data formats use a To/From transform algorithm.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="SizeInBits" type="xtce:IntegerValueType"/>
+					<element name="FromBinaryTransformAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation>Used to convert binary data to an application data type</documentation>
+						</annotation>
+					</element>
+					<element name="ToBinaryTransformAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation>Used to convert binary data from an application data type to binary data</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="EpochType">
+		<annotation>
+			<documentation>Epochs may be specified as a date or TAI (which correlates to 1 January 1958)</documentation>
+		</annotation>
+		<union memberTypes="date">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="TAI"/>
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	<!--******** DataTypes-->
+	<!--************************************************-->
+	<!--******** Common Types Schema -->
+	<!-- Basic elements used for in all dictionaries -->
+	<complexType name="AliasSetType">
+		<annotation>
+			<documentation>Contains an unordered collection of Alias's</documentation>
+		</annotation>
+		<sequence>
+			<element name="Alias" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en" >Used to contain an alias (alternate) name or ID for the the object.   For example, a parameter may have a mnemonic, an on-board id, and special IDs used by various ground software applications; all of these are alias's.  Some ground system processing equipent has some severe naming restrictions on parameters (e.g., names must less then 12 characters, single case or integral id's only); their alias's provide a means of capturing each name in a "nameSpace".</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="nameSpace" type="string" use="required"/>
+					<attribute name="alias" type="string" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ANDedConditionsType">
+		<annotation>
+			<documentation>A list of boolean comparisons, or boolean groups that are logically ANDed together.  Any ORed conditions in the list are evaluated first.</documentation>
+		</annotation>
+		<choice minOccurs="2" maxOccurs="unbounded">
+			<element name="Condition" type="xtce:ComparisonCheckType"/>
+			<element name="ORedConditions" type="xtce:ORedConditionsType"/>
+		</choice>
+	</complexType>
+	<simpleType name="BinaryType">
+		<annotation>
+			<documentation>A simple restriction on string for hexadecimal numbers.  Must be in 0b or 0B form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[bB][0-1]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="BooleanExpressionType">
+		<annotation>
+			<documentation>Holds an arbitrarily complex boolean expression</documentation>
+		</annotation>
+		<choice>
+			<element name="Condition" type="xtce:ComparisonCheckType"/>
+			<element name="ANDedConditions" type="xtce:ANDedConditionsType"/>
+			<element name="ORedConditions" type="xtce:ORedConditionsType"/>
+		</choice>
+	</complexType>
+	<complexType name="ByteOrderType">
+		<annotation>
+			<documentation>An ordered list of bytes where the order of the bytes is in stream order.  Each byte has an attribute giving its significance.</documentation>
+			<appinfo>The software must check to ensure that the significance of each byte is unique, and does not contain bytes of greater significance greater than the size of the object</appinfo>
+		</annotation>
+		<sequence minOccurs="2" maxOccurs="unbounded">
+			<element name="Byte">
+				<complexType>
+					<attribute name="byteSignificance" type="nonNegativeInteger" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ComparisonCheckType">
+		<annotation>
+			<documentation xml:lang="en" >A ParameterInstanceRef to a value or another parameter instance</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+			<element name="ComparisonOperator" type="xtce:ComparisonOperatorsType"/>
+			<choice>
+				<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+					<annotation>
+						<documentation>Parameter is assumed to be of the same type as the comparison Parameter</documentation>
+					</annotation>
+				</element>
+				<element name="Value" type="string">
+					<annotation>
+						<documentation>Value is assumed to be of the same type as the comparison Parameter</documentation>
+					</annotation>
+				</element>
+			</choice>
+		</sequence>
+	</complexType>
+	<complexType name="ComparisonType">
+		<annotation>
+			<documentation>A simple ParameterInstanceRef to value comparison.  The string supplied in the value attribute needs to be converted to a type matching the Parameter being compared to.  Numerical values are assumed to be base 10 unless proceeded by 0x (hexadecimal), 0o (octal), or 0b (binary).  The value is truncated  to use the least significant bits that match the bit size of the Parameter being compared to.</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="comparisonOperator" type="xtce:ComparisonOperatorsType" default="=="/>
+				<attribute name="value" type="string" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<simpleType name="ComparisonOperatorsType">
+		<annotation>
+			<documentation xml:lang="en" >Operators to use when testing a boolean condition for a validity check</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="=="/>
+			<enumeration value="!="/>
+			<enumeration value="&lt;"/>
+			<enumeration value="&lt;="/>
+			<enumeration value="&gt;"/>
+			<enumeration value="&gt;="/>
+		</restriction>
+	</simpleType>
+	<complexType name="ContextCalibratorType">
+		<annotation>
+			<documentation>Context calibrations are applied when the ContextMatch is true.  Context calibrators overide Default calibrators</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+			<element name="Calibrator" type="xtce:CalibratorType"/>
+			<!-- <element name="Context" type="xtce:MatchCriteriaType"/> -->
+		</sequence>
+	</complexType>
+	<complexType name="DecimalValueType">
+		<annotation>
+			<documentation>Contains an Numeric value; value may be provided directly or via the value in a parameter.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue" type="decimal"/>
+			<element name="DynamicValue">
+				<annotation>
+					<documentation>Uses a parameter  to for the value.  The parameter value may be optionally adjusted by a Linear function or use a series of boolean expressions to lookup the value.  Anything more complex and a DynamicValue with a CustomAlgorithm may be used  </documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+						<element name="LinearAdjustment" minOccurs="0">
+							<annotation>
+								<documentation>A slope and intercept may be applied to scale or shift the value of the parameter in the dynamic value</documentation>
+							</annotation>
+							<complexType>
+								<attribute name="slope" type="decimal" default="0"/>
+								<attribute name="intercept" type="decimal" default="0"/>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="ErrorDetectCorrectType">
+		<annotation>
+			<documentation xml:lang="en" >A simple element that provides for simple, but common error checking and detection.</documentation>
+		</annotation>
+		<choice>
+			<element name="Parity">
+				<annotation>
+					<documentation xml:lang="en" >Bit position starts with 'zero'.</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="type" use="required">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="Even"/>
+								<enumeration value="Odd"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+					<attribute name="bitsFromReference" type="nonNegativeInteger" use="required"/>
+					<attribute name="reference" default="start">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="start"/>
+								<enumeration value="end"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+				</complexType>
+			</element>
+			<element name="CRC">
+				<annotation>
+					<documentation xml:lang="en" >Cyclic Redundancy Check definition. Legal values for coefficient's are 0 or 1. Exponents must be integer values.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Polynomial" type="xtce:PolynomialType"/>
+					</sequence>
+					<attribute name="bitsFromReference" type="nonNegativeInteger"/>
+					<attribute name="reference" default="start">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="start"/>
+								<enumeration value="end"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="FixedIntegerValueType">
+		<annotation>
+			<documentation>A simple union type combining integer, octal, binary, and hexadecimal types</documentation>
+		</annotation>
+		<union memberTypes="integer xtce:HexadecimalType xtce:OctalType xtce:BinaryType"/>
+	</simpleType>
+	<complexType name="HeaderType">
+		<annotation>
+			<documentation xml:lang="en" >Schema for a Header record.  A header contains general information about the system or subsystem.</documentation>
+		</annotation>
+		<sequence>
+			<element name="AuthorSet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="Author" type="string" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="NoteSet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="Note" type="string" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="HistorySet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="History" type="string" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="version" type="string"/>
+		<attribute name="date" type="string"/>
+		<attribute name="classification" type="string" default="NotClassified"/>
+		<attribute name="classificationInstructions" type="string"/>
+		<attribute name="validationStatus" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="Unknown"/>
+					<enumeration value="Working"/>
+					<enumeration value="Draft"/>
+					<enumeration value="Test"/>
+					<enumeration value="Validated"/>
+					<enumeration value="Released"/>
+					<enumeration value="Withdrawn"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<simpleType name="HexadecimalType">
+		<annotation>
+			<documentation>A simple restriction on string for hexadecimal numbers.  Must be in 0x or 0X form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[xX][0-9a-fA-F]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="IntegerValueType">
+		<annotation>
+			<documentation>Contains an Integer value; value may be provided directly or via the value in a parameter.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue" type="xtce:FixedIntegerValueType"/>
+			<element name="DynamicValue">
+				<annotation>
+					<documentation>Uses a parameter  to for the value.  The parameter value may be optionally adjusted by a Linear function or use a series of boolean expressions to lookup the value.  Anything more complex and a DynamicValue with a CustomAlgorithm may be used  </documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+						<element name="LinearAdjustment" minOccurs="0">
+							<annotation>
+								<documentation>A slope and intercept may be applied to scale or shift the value of the parameter in the dynamic value</documentation>
+							</annotation>
+							<complexType>
+								<attribute name="slope" type="integer" default="0"/>
+								<attribute name="intercept" type="integer" default="0"/>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="DiscreteLookupList">
+				<annotation>
+					<documentation>Lookup a value using the lookup list supplied.  Use the first match found.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="DiscreteLookup" maxOccurs="unbounded">
+							<complexType>
+								<complexContent>
+									<extension base="xtce:MatchCriteriaType">
+										<attribute name="value" type="integer" use="required"/>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="MathOperatorsType">
+		<annotation>
+			<documentation xml:lang="en" >Mathematical operators</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="+"/>
+			<enumeration value="-"/>
+			<enumeration value="mult"/>
+			<enumeration value="div"/>
+			<enumeration value="mod"/>
+			<enumeration value="exp"/>
+			<enumeration value="bitor"/>
+			<enumeration value="bitand"/>
+			<enumeration value="bitxor"/>
+		</restriction>
+	</simpleType>
+	<complexType name="MatchCriteriaType">
+		<annotation>
+			<documentation>Contains either a simple Comparison, a ComparisonList, an arbitrarily complex BooleanExpression or an escape to an externally defined algorithm</documentation>
+		</annotation>
+		<choice>
+			<element name="Comparison" type="xtce:ComparisonType">
+				<annotation>
+					<documentation>A simple comparison check</documentation>
+				</annotation>
+			</element>
+			<element name="ComparisonList">
+				<annotation>
+					<documentation>All comparisons must be true</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Comparison" type="xtce:ComparisonType" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="BooleanExpression" type="xtce:BooleanExpressionType">
+				<annotation>
+					<documentation>An arbitrarily complex boolean expression</documentation>
+				</annotation>
+			</element>
+			<element name="CustomAlgorithm" type="xtce:InputAlgorithmType">
+				<annotation>
+					<documentation>An escape to an externally defined algorithm</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="MathOperationType">
+		<annotation>
+			<documentation xml:lang="en" >A simple math operation</documentation>
+		</annotation>
+		<sequence>
+			<choice>
+				<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+				<element name="Value" type="string">
+					<annotation>
+						<documentation>Value is assumed to be of the same type as the  Parameter</documentation>
+					</annotation>
+				</element>
+			</choice>
+			<sequence minOccurs="0">
+				<element name="Operator" type="xtce:MathOperatorsType"/>
+				<choice>
+					<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+					<element name="Value" type="string">
+						<annotation>
+							<documentation>Value is assumed to be of the same type as the Parameter</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</sequence>
+		</sequence>
+	</complexType>
+	<simpleType name="NameType">
+		<annotation>
+			<documentation xml:lang="en" >Used for "directory" style unique names.  We need to preclude '.', '/', ':", "[" and "]".   Only letters, digits, '_', ' ' and "-" are allowed </documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="[a-zA-Z0-9_\- ]*"/>
+		</restriction>
+	</simpleType>
+	<complexType name="NameDescriptionType">
+		<annotation>
+			<documentation xml:lang="en" >The type definition used by most elements that require a name with optional descriptions.  The short description is intended to be used for quick "memory jogger" descriptions of the object.   </documentation>
+		</annotation>
+		<sequence>
+			<element name="LongDescription" type="string" minOccurs="0">
+				<annotation>
+					<documentation>The Long Description is intended to be used for explanitory descriptions of the object and may include HTML markup.  Long Decriptions are of unbounded length</documentation>
+				</annotation>
+			</element>
+			<element name="AliasSet" type="xtce:AliasSetType" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="xtce:NameType" use="required"/>
+		<attribute name="shortDescription" type="string" use="optional">
+			<annotation>
+				<documentation>It is strongly recommended that the short description be kept under 80 characters in length</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<simpleType name="NameReferenceType">
+		<annotation>
+			<documentation xml:lang="en" >Used when referencing a directory style "NameType".   No characters are prohibited.</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="NumberToStringType">
+		<annotation>
+			<documentation xml:lang="en" >There are two ways numeric data can be changed to string data: using a Java style NumberFormat, or using an enumerated list.   Enumerated lists can be assigned to a single value or a value range.</documentation>
+		</annotation>
+		<choice>
+			<choice maxOccurs="unbounded">
+				<element name="ValueEnumeration" type="xtce:ValueEnumerationType">
+					<annotation>
+						<documentation xml:lang="en" >A number or range assigned to a string.</documentation>
+					</annotation>
+				</element>
+				<element name="RangeEnumeration">
+					<annotation>
+						<documentation xml:lang="en" >A string value associated with a numerical range.</documentation>
+					</annotation>
+					<complexType>
+						<complexContent>
+							<extension base="xtce:DecimalRangeType">
+								<attribute name="label" type="string" use="required"/>
+							</extension>
+						</complexContent>
+					</complexType>
+				</element>
+			</choice>
+			<element name="NumberFormat">
+				<complexType>
+					<attribute name="numberBase" type="xtce:RadixType" use="optional"/>
+					<attribute name="minimumFractionDigits" type="nonNegativeInteger" use="optional"/>
+					<attribute name="maximumFractionDigits" type="nonNegativeInteger" use="optional"/>
+					<attribute name="minimumIntegerDigits" type="nonNegativeInteger" use="optional"/>
+					<attribute name="maximumIntegerDigits" type="nonNegativeInteger" use="optional"/>
+					<attribute name="negativeSuffix" type="string" use="optional"/>
+					<attribute name="positiveSuffix" type="string" use="optional"/>
+					<attribute name="negativePrefix" type="string" use="optional" default="-"/>
+					<attribute name="positivePrefix" type="string" use="optional"/>
+					<attribute name="showThousandsGrouping" type="boolean" use="optional" default="true"/>
+					<attribute name="notation" use="optional" default="normal">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="normal"/>
+								<enumeration value="scientific"/>
+								<enumeration value="engineering"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="OctalType">
+		<annotation>
+			<documentation>A simple restriction on string for hexadecimal numbers.  Must be in 0o or 0O form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[oO][0-7]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ORedConditionsType">
+		<annotation>
+			<documentation>A list of boolean comparisons, or boolean groups that are logically ORed together.  Any ANDed conditions in the list are evaluated first.</documentation>
+		</annotation>
+		<choice minOccurs="2" maxOccurs="unbounded">
+			<element name="Condition" type="xtce:ComparisonCheckType"/>
+			<element name="ANDedConditions" type="xtce:ANDedConditionsType"/>
+		</choice>
+	</complexType>
+	<complexType name="ParameterSetType">
+		<annotation>
+			<documentation>Used by both the TelemetryMetaData and the CommandMetaData components each may be built independently.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="Parameter">
+				<annotation>
+					<appinfo>Need to ensure that the named types actually exist</appinfo>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:NameDescriptionType">
+							<sequence>
+								<element name="ParameterProperties" type="xtce:ParameterPropertiesType" minOccurs="0"/>
+							</sequence>
+							<attribute name="parameterTypeRef" type="xtce:NameReferenceType" use="required"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="ParameterRef" type="xtce:ParameterRefType">
+				<annotation>
+					<documentation>Used to include a Parameter defined in another sub-system in this sub-system.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="PolynomialType">
+		<annotation>
+			<documentation xml:lang="en" >A polynomial expression.  For example: 3 + 2x</documentation>
+		</annotation>
+		<sequence>
+			<element name="Term" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en" >A term in a polynomial expresssion. </documentation>
+				</annotation>
+				<complexType>
+					<attribute name="coefficient" type="double" use="required"/>
+					<attribute name="exponent" type="double" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="PropertyType">
+		<annotation>
+			<documentation>Used for custom user properties</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence minOccurs="0" maxOccurs="unbounded">
+					<element name="Property" type="xtce:PropertyType"/>
+				</sequence>
+				<attribute name="value" type="string" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="RadixType">
+		<annotation>
+			<documentation xml:lang="en" >Specifies the number base</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="Decimal"/>
+			<enumeration value="Hexadecimal"/>
+			<enumeration value="Octal"/>
+			<enumeration value="Binary"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ReferenceTimeType">
+		<annotation>
+			<documentation>Most time values are relative to another time e.g. seconds are relative to minutes, minutes are relative to hours.  This type is used to describe this relationship starting with the least significant time Parameter to and progressing to the most significant time parameter.  </documentation>
+		</annotation>
+		<choice>
+			<element name="OffsetFrom" type="xtce:ParameterInstanceRefType"/>
+			<element name="Epoch" type="xtce:EpochType"/>
+		</choice>
+	</complexType>
+	<simpleType name="RelativeTimeType">
+		<annotation>
+			<documentation>Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<restriction base="duration"/>
+	</simpleType>
+	<complexType name="RepeatType">
+		<annotation>
+			<documentation xml:lang="en" >Hold a structure that can be repeated X times, where X is the Count</documentation>
+		</annotation>
+		<sequence>
+			<element name="Count" type="xtce:IntegerValueType">
+				<annotation>
+					<documentation xml:lang="en" >Value (either fixed or dynamic) that contains the count of repeated structures.</documentation>
+				</annotation>
+			</element>
+			<element name="Offset" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en" >Indicates the distance between repeating entries (the last bit of one entry to the start bit of the next entry)</documentation>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerValueType">
+							<attribute name="offsetSizeInBits" type="positiveInteger" default="1"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="SplinePointType">
+		<annotation>
+			<documentation xml:lang="en" >a spline is a set on points from which a curve may be drawn to interpolate raw to calibrated values</documentation>
+		</annotation>
+		<attribute name="order" type="positiveInteger" default="1"/>
+		<attribute name="raw" type="double" use="required"/>
+		<attribute name="calibrated" type="double" use="required"/>
+	</complexType>
+	<complexType name="UnitType" mixed="true">
+		<annotation>
+			<documentation>Used to hold the unit(s) plus possibly the exponents for the units</documentation>
+		</annotation>
+		<attribute name="power" type="decimal" use="optional" default="1"/>
+		<attribute name="factor" type="string" default="1"/>
+		<attribute name="description" type="string"/>
+	</complexType>
+	<complexType name="ValueEnumerationType">
+		<annotation>
+			<documentation>Contains a value and an associated string label</documentation>
+		</annotation>
+		<attribute name="value" type="integer" use="required"/>
+		<attribute name="label" type="string" use="required"/>
+	</complexType>
+	<!--Types used with alarms-->
+	<complexType name="AlarmConditionsType">
+		<annotation>
+			<documentation>When the alarm is determined by boolean logic</documentation>
+		</annotation>
+		<sequence>
+			<element name="WatchAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="WarningAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="DistressAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="CritialAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="SevereAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="AlarmRangesType">
+		<annotation>
+			<documentation>Contains five ranges: Watch, Warning, Distress, Critical, and Severe each in increasing severity.  Normally, only the Warning and Critical ranges are used and the color yellow is associated with Warning and the color red is associated with Critical.   The ranges given are valid for numbers lower than the min and higher than the max values.   These ranges should not overlap, but if they do, assume the most severe range is to be applied.  All ranges are optional and it is quite allowed for there to be only one end of the range. </documentation>
+		</annotation>
+		<sequence>
+			<element name="WatchRange" type="xtce:DecimalRangeType" minOccurs="0"/>
+			<element name="WarningRange" type="xtce:DecimalRangeType" minOccurs="0"/>
+			<element name="DistressRange" type="xtce:DecimalRangeType" minOccurs="0"/>
+			<element name="CriticalRange" type="xtce:DecimalRangeType" minOccurs="0"/>
+			<element name="SevereRange" type="xtce:DecimalRangeType" minOccurs="0"/>
+		</sequence>
+		<attribute name="appliesToCalibratedValues" type="boolean" default="true"/>
+	</complexType>
+	<complexType name="ContextAlarmType">
+		<annotation>
+			<documentation>Context alarms are applied when the ContextMatch is true.  Context alarms override Default alarms</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericAlarmConditionType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="DecimalRangeType">
+		<annotation>
+			<documentation xml:lang="en" >A range of numbers.  "minInclusive", "minExclusive", "maxInclusive" and "maxExclusive" attributes are borrowed from the W3C schema language.</documentation>
+		</annotation>
+		<attribute name="minInclusive" type="decimal"/>
+		<attribute name="minExclusive" type="decimal"/>
+		<attribute name="maxInclusive" type="decimal"/>
+		<attribute name="maxExclusive" type="decimal"/>
+	</complexType>
+	<complexType name="IntegerRangeType">
+		<annotation>
+			<documentation xml:lang="en" >An integral range of numbers.  "min", and "max".</documentation>
+		</annotation>
+		<attribute name="min" type="integer"/>
+		<attribute name="max" type="integer"/>
+	</complexType>
+	<complexType name="NumericAlarmConditionType">
+		<annotation>
+			<documentation>Alarms associated with numeric data types</documentation>
+		</annotation>
+		<choice>
+			<sequence>
+				<element name="StaticAlarmRanges" type="xtce:AlarmRangesType" minOccurs="0">
+					<annotation>
+						<documentation>StaticAlarmRanges are used to trigger alarms when the parameter value passes some threshold value</documentation>
+					</annotation>
+				</element>
+				<element name="ChangePerSecondAlarmRanges" type="xtce:AlarmRangesType" minOccurs="0">
+					<annotation>
+						<documentation>ChangePerSecondAlarmRanges are used to trigger alarms when the parameter value's rate-of-change passes some threshold value.  An alarm condition that triggers when the value changes too fast (or too slow)</documentation>
+					</annotation>
+				</element>
+			</sequence>
+			<element name="ConditionalAlarm">
+				<annotation>
+					<documentation>A MatchCriteria may be specifiec for each of the 5 alarm levels.  Each level is optional and the alarm should be the highest level to test true.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="StaticAlarmConditions" type="xtce:AlarmConditionsType" minOccurs="0"/>
+						<element name="ChangePerSecondAlarmConditions" type="xtce:AlarmConditionsType" minOccurs="0"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="CustomAlarm" type="xtce:InputAlgorithmType">
+				<annotation>
+					<documentation>An escape for ridiculously complex alarm conditions.  Will trigger on changes to the  containing Parameter.  </documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="minViolations" type="positiveInteger" default="1">
+			<annotation>
+				<documentation>Number of successive values of the Parameter for the Alarm to trigger.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--******** End of Common Types Schema -->
+</schema>
+```
+
+### `SpaceSystemV1.1.xsd`
+
+**경로:** `gsw/yamcs/yamcs-xtce/SpaceSystemV1.1.xsd`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+Style Notes, used throughout the schema:
+
+	- Element and Type names begin with a capital letter.
+	- Type names end with the word "Type".
+	- Attribute names begin with a lowercase letter.
+	- Usually, when the UML class diagram references classes, W3C Elements are used, and whenever
+	  the UML references simple types (strings, ints), W3C Attributes are used.  In general, 
+	  attributes are preferred over elements because they're easier to deal with 
+	  in SAX and DOM, but whenever the Element/Attribute may one day carry metadata,
+	  elements should be used.  One exception, is enumerated classes, because enumerations 
+	  may be defined for attributes but not for elements.
+	- Bias toward self-describing names over short, bandwidth conserving ones.
+	- Use mixed case in names rather than underscores to combine multiple words (camelCase).
+	- A documentation annotation is included in every element and type definition.  Annotations for a type are 
+        included with the type definition, use of the type is annotated in the element definition.
+	- Hints on units (for values with units) are provided in the names of attributes and 
+	  elements (e.g. "dataRateInBPS" is preferred over "dataRate" OR "frameLengthInBits" is 
+	  preferred over "frameLength").
+	- Major elements or any elements used multiple times are first defined with a complexType definition
+	- All collections are put inside either a "List" element or a "Set" Element depending on whether the collection
+	  is ordered or unordered.
+	- Simplicity in the XML files is favored over simplicity in the Schema
+	- Whenever an additional validity check must be performed that is not describable in the schema language, 
+	  an appinfo annotation describes that validity check.
+-->
+<schema xmlns:xtce="http://www.omg.org/space/xtce" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.omg.org/space/xtce" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.1">
+	<annotation>
+		<documentation xml:lang="en">OMG Document Number: dtc/2006-11-02</documentation>
+		<documentation xml:lang="en">$Id: SpaceSystemV1.1.xsd 203 2006-11-14 03:34:58Z bkizzort $</documentation>
+		<documentation xml:lang="en">This is the master schema for the OMG Space Domain Task Force XML Telemetric and Command data Exchange (XTCE) format.</documentation>
+	</annotation>
+	<!--******** SpaceSystem -->
+	<element name="SpaceSystem" type="xtce:SpaceSystemType" nillable="true">
+		<annotation>
+			<documentation xml:lang="en">The ROOT Element</documentation>
+		</annotation>
+		<key name="parameterNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique parameter name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/ParameterSet/* | xtce:CommandMetaData/ParameterSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="parameterTypeNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique parameter type name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/ParameterTypeSet/* | xtce:CommandMetaData/ParameterTypeSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="metaCommandNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique metaCommand name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:MetaCommandData/MetaCommandSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="algorithmNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique algorithm name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/AlgorithmSet/* | xtce:CommandMetaData/AlgorithmSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="streamNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique stream name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/StreamSet/* | xtce:CommandMetaData/StreamSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="serviceNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique service name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:ServiceSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="containerNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a container stream name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/ContainerSet/* | xtce:CommandMetaData/ContainerSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="messageNameKey">
+			<selector xpath="xtce:TelemetryMetaData/MessageSet/*"/>
+			<field xpath="@name"/>
+		</key>
+	</element>
+	<complexType name="SpaceSystemType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">SpaceSystem is a collection of SpaceSystem(s) including space assets, ground assets, multi-satellite systems and sub-systems.  A SpaceSystem is the root element for the set of data necessary to monitor and command an arbitrary space device - this includes the binary decomposition the data streams going into and out of a device.</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="Header" type="xtce:HeaderType" minOccurs="0"/>
+					<element name="TelemetryMetaData" type="xtce:TelemetryMetaDataType" minOccurs="0"/>
+					<element name="CommandMetaData" type="xtce:CommandMetaDataType" minOccurs="0"/>
+					<element name="ServiceSet" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A service is a logical grouping of container and/or messages.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="Service" type="xtce:ServiceType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element ref="xtce:SpaceSystem" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+				<attribute name="operationalStatus" type="token" use="optional"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandMetaDataType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Command Meta Data contains information about commands</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterTypeSet" type="xtce:ParameterTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of parameter types</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSet" type="xtce:ParameterSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Parameters referenced by MetaCommands.  This Parameter Set is located here so that MetaCommand data can be built independently of TelemetryMetaData.</documentation>
+				</annotation>
+			</element>
+			<element name="ArgumentTypeSet" type="xtce:ArgumentTypeSetType" minOccurs="0"/>
+			<element name="MetaCommandSet">
+				<annotation>
+					<documentation xml:lang="en">A set of Command Definitions</documentation>
+				</annotation>
+				<complexType>
+					<choice maxOccurs="unbounded">
+						<element name="MetaCommand" type="xtce:MetaCommandType">
+							<annotation>
+								<documentation xml:lang="en">All commands to be sent on this mission are listed here.  In addition this area has verification and validation information</documentation>
+							</annotation>
+							<key name="ArgumentNameKey">
+								<selector xpath="xtce:ArgumentList/*"/>
+								<field xpath="@name"/>
+							</key>
+						</element>
+						<element name="MetaCommandRef" type="xtce:NameReferenceType">
+							<annotation>
+								<documentation xml:lang="en">Used to include a MetaCommand defined in another sub-system in this sub-system.</documentation>
+							</annotation>
+						</element>
+						<element name="BlockMetaCommand">
+							<annotation>
+								<documentation xml:lang="en">BlockMetaCommands are simply a list of individual MetaCommands that can be packaged up in a single BlockMetaCommand.</documentation>
+							</annotation>
+							<complexType>
+								<complexContent>
+									<extension base="xtce:NameDescriptionType">
+										<sequence>
+											<element name="MetaCommandStepList">
+												<complexType>
+													<sequence>
+														<element name="MetaCommandStep" maxOccurs="unbounded">
+															<complexType>
+																<sequence>
+																	<element name="ArgumentList" minOccurs="0">
+																		<complexType>
+																			<sequence>
+																				<element name="Argument" maxOccurs="unbounded">
+																					<complexType>
+																						<attribute name="name" type="string" use="required"/>
+																						<attribute name="value" type="string" use="required"/>
+																					</complexType>
+																				</element>
+																			</sequence>
+																		</complexType>
+																	</element>
+																</sequence>
+																<attribute name="metaCommandRef" type="xtce:NameReferenceType" use="required"/>
+															</complexType>
+														</element>
+													</sequence>
+												</complexType>
+											</element>
+										</sequence>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+					</choice>
+				</complexType>
+			</element>
+			<element name="CommandContainerSet" type="xtce:CommandContainerSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The Command Container defines the construction of a Command.</documentation>
+				</annotation>
+			</element>
+			<element name="StreamSet" type="xtce:StreamSetType" minOccurs="0"/>
+			<element name="AlgorithmSet" type="xtce:AlgorithmSetType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="TelemetryMetaDataType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">All the data about telemetry is contained in TelemetryMetaData</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterTypeSet" type="xtce:ParameterTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of parameter types</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSet" type="xtce:ParameterSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of Parameters for this Space System.  </documentation>
+				</annotation>
+			</element>
+			<element name="ContainerSet" type="xtce:ContainerSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Holds the list of all potential container definitions for telemetry. Containers may parts of packets or TDM, and then groups of the containers, and then an entire entity -- such as a packet.  In order to maximize re-used for duplication, the pieces may defined once here, and then assembled as needed into larger structures, also here.</documentation>
+				</annotation>
+				<key name="ContainerKey2">
+					<selector xpath="Container"/>
+					<field xpath="Id"/>
+				</key>
+			</element>
+			<element name="MessageSet" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Messages are an alternative method of uniquely identifying containers within a Service.  A message provides a test in the form of MatchCriteria to match to a container.  A simple example might be: [When minorframeID=21, the message is the 21st minorframe container.  The collection of messages to search thru will be bound by a Service.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Message" maxOccurs="unbounded">
+							<complexType>
+								<complexContent>
+									<extension base="xtce:NameDescriptionType">
+										<sequence>
+											<element name="MatchCriteria" type="xtce:MatchCriteriaType"/>
+											<element name="ContainRef" type="xtce:ContainerRefType">
+												<annotation>
+													<documentation xml:lang="en">The ContainerRef should point to ROOT container that will describe an entire packet/minor frame or chunk of telemetry.</documentation>
+												</annotation>
+											</element>
+										</sequence>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+					</sequence>
+					<attribute name="name" type="string"/>
+				</complexType>
+			</element>
+			<element name="StreamSet" type="xtce:StreamSetType" minOccurs="0"/>
+			<element name="AlgorithmSet" type="xtce:AlgorithmSetType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="ServiceRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to a Service</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:NameReferenceType">
+				<attribute name="serviceRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="AlgorithmSetType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">An unordered collection of algorithms</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="CustomAlgorithm" type="xtce:InputOutputTriggerAlgorithmType"/>
+			<element name="MathAlgorithm" type="xtce:MathAlgorithmType"/>
+		</choice>
+	</complexType>
+	<!--******** End of Top Level SpaceSystem Schema -->
+	<!--************************************************-->
+	<!--******** Packaging Schema -->
+	<annotation>
+		<documentation xml:lang="en">This schema defines the dictionary for containers, which in turn describe the physical composition of data in a communication system</documentation>
+	</annotation>
+	<complexType name="ContainerType" abstract="true" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">An abstract block of data; used as the base type for more specific container types</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<annotation>
+						<documentation xml:lang="en">RateInStream is used to:  a) generate alarms when the Container is updated too frequently or too infrequently, b) provide some 'guidelines' for generating forward link containers, c) provide some guidelines for spacecraft simulators to generate telemetry containers.  If necessary, these rates may be defined on a per stream basis.</documentation>
+						<appinfo>The software should check that any Stream names referenced in the RateInStreamSet actually exist.</appinfo>
+					</annotation>
+					<element name="DefaultRateInStream" type="xtce:RateInStreamType" minOccurs="0"/>
+					<element name="RateInStreamSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="RateInStream" maxOccurs="unbounded">
+									<complexType>
+										<complexContent>
+											<extension base="xtce:RateInStreamType">
+												<attribute name="streamRef" type="xtce:NameReferenceType" use="required"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="BinaryEncoding" type="xtce:BinaryDataEncodingType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">May be used to indicate error detection and correction, change byte order,  provide the size (when it can't be derived), or perform some custom processing.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SequenceContainerType">
+		<annotation>
+			<documentation xml:lang="en">A list of raw parameters, parameter segments, stream segments, containers, or container segments.  Sequence containers may inherit from other sequence containers; when they do, the sequence in the parent SequenceContainer is 'inherited' and if the location of entries in the child sequence is not specified, it is assumed to start where the parent sequence ended.  Parent sequence containers may be marked as "abstract".  The idle pattern is part of any unallocated space in the Container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ContainerType">
+				<sequence>
+					<element name="EntryList" type="xtce:EntryListType"/>
+					<element name="BaseContainer" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="RestrictionCriteria">
+									<annotation>
+										<documentation xml:lang="en">Given that this Container is the Base container type, RestrictionCriteria lists conditions that must be true for this Container to be 'this' subContainer type.  May be a simple Comparison List, a Boolean Expression, and/or in a Graph of containers established by the NextContainer</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:MatchCriteriaType">
+												<choice>
+													<element name="NextContainer" type="xtce:ContainerRefType" minOccurs="0"/>
+												</choice>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="abstract" type="boolean"/>
+				<attribute name="idlePattern" type="xtce:FixedIntegerValueType" default="0x0"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SequenceEntryType">
+		<annotation>
+			<documentation xml:lang="en">An abstract type used by sequence containers.  An entry contains a location in the container.  The location may be either fixed or dynamic, absolute (to the start or end of the enclosing container, or relative (to either the previous or subsequent entry).  Entries may also repeat.</documentation>
+		</annotation>
+		<sequence>
+			<element name="LocationInContainerInBits" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">If no LocationInContainer value is given, the entry is assumed to begin immediately after the previous entry.</documentation>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerValueType">
+							<attribute name="referenceLocation" default="previousEntry">
+								<annotation>
+									<documentation xml:lang="en">The location may be relative to the start of the container (containerStart), relative to the end of the previous entry (previousEntry), relative to the end of the container (containerEnd), or relative to the entry that follows this one (nextEntry).  If going forward (containerStart and previousEntry) then the location refers to the start of the Entry.  If going backwards (containerEnd and nextEntry) then, the location refers to the end of the entry.</documentation>
+								</annotation>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="containerStart"/>
+										<enumeration value="containerEnd"/>
+										<enumeration value="previousEntry"/>
+										<enumeration value="nextEntry"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="RepeatEntry" type="xtce:RepeatType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">May be used when this entry repeats itself in the sequence container.  If not supplied, the entry does not repeat.</documentation>
+				</annotation>
+			</element>
+			<element name="IncludeCondition" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">This entry will only be included in the sequence when this condition is true.  If no IncludeCondition is given, then it is will be included.  A parameter that is not included will be treated as if it did not exist in the sequence at all.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ContainerRefType">
+		<annotation>
+			<documentation xml:lang="en">Holds a reference to a container</documentation>
+		</annotation>
+		<attribute name="containerRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">name of container</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="MessageRefType">
+		<annotation>
+			<documentation xml:lang="en">Holds a reference to a message</documentation>
+		</annotation>
+		<attribute name="messageRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">name of message</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ServiceType">
+		<annotation>
+			<documentation xml:lang="en">Holds a set of services, logical groups of containers  OR messages (not both).</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<choice>
+					<element name="MessageRefSet">
+						<complexType>
+							<sequence>
+								<element name="MessageRef" type="xtce:MessageRefType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="ContainerRefSet">
+						<complexType>
+							<sequence>
+								<element name="ContainerRef" type="xtce:ContainerRefType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerSetType">
+		<annotation>
+			<documentation xml:lang="en">Unordered Set of Containers</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="SequenceContainer" type="xtce:SequenceContainerType">
+				<annotation>
+					<documentation xml:lang="en">SequenceContainers define sequences of parameters or other containers.  </documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="EntryListType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Contains an ordered list of Entries.  Used in Sequence Container</documentation>
+		</annotation>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="ParameterRefEntry" type="xtce:ParameterRefEntryType"/>
+			<element name="ParameterSegmentRefEntry" type="xtce:ParameterSegmentRefEntryType"/>
+			<element name="ContainerRefEntry" type="xtce:ContainerRefEntryType"/>
+			<element name="ContainerSegmentRefEntry" type="xtce:ContainerSegmentRefEntryType"/>
+			<element name="StreamSegmentEntry" type="xtce:StreamSegmentEntryType"/>
+			<element name="IndirectParameterRefEntry" type="xtce:IndirectParameterRefEntryType"/>
+			<element name="ArrayParameterRefEntry" type="xtce:ArrayParameterRefEntryType"/>
+		</choice>
+	</complexType>
+	<complexType name="ParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is a single Parameter</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterSegmentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is only a portion of a parameter value indicating that the entire parameter value must be assembled from other parameter segments.   It is assumed that parameter segments happen sequentially in time, that is the first part if a telemetry parameter first, however (and there's always a however), if this is not the case the order of this parameter segment may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="positiveInteger"/>
+				<attribute name="sizeInBits" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is simply a reference to another container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerSegmentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is only a portion of a container indicating that the entire container must be assembled from other container segments.   It is assumed that container segments happen sequentially in time, that is the first part of a container is first, however (and there's always a however), if this is not the case the order of this container segment may be supplied with the order attribute where the first segment order="0".  Each instance of a container cannot overlap in the overall sequence with another instance</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="positiveInteger"/>
+				<attribute name="sizeInBits" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StreamSegmentEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is a portion of a stream (streams are by definition, assumed continuous)   It is assumed that stream segments happen sequentially in time, that is the first part if a steam first, however, if this is not the case the order of the stream segments may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="streamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="positiveInteger"/>
+				<attribute name="sizeInBits" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IndirectParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry whose name is given by the value of a ParamameterInstance.  This entry may be used to implement dwell telemetry streams.  The value of the parameter in ParameterInstance must use either the name of the Parameter or its alias.  If it's an alias name, the alias namespace is supplied as an attribute.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<sequence>
+					<element name="ParameterInstance" type="xtce:ParameterInstanceRefType"/>
+				</sequence>
+				<attribute name="aliasNameSpace" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is an array parameter.  This entry is somewhat special because the entry may represent only a part of the Array and it's important to describe which dimensions of the array come first in the sequence as well as the size of the array.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<sequence>
+					<element name="DimensionList">
+						<annotation>
+							<documentation xml:lang="en">Where the Dimension list is in this form:  Array[1stDim][2ndDim][lastDim].  The last dimension is assumed to be the least significant - that is this dimension will cycle through its combination before the next to last dimension changes.  The order MUST ascend or the array will need to be broken out entry by entry. </documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="Dimension" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">For partial entries of an array, the starting and ending index for each dimension, OR the Size must be specified.  Indexes are zero based.</documentation>
+										<appinfo>For an ArrayParameterType of size N, their should be N Dimensions</appinfo>
+										<appinfo>An array made up by multiple Entries should not have indexes that overlap, but should be continuous.</appinfo>
+									</annotation>
+									<complexType mixed="false">
+										<sequence>
+											<element name="StartingIndex" type="xtce:IntegerValueType">
+												<annotation>
+													<documentation xml:lang="en">zero based index</documentation>
+												</annotation>
+											</element>
+											<element name="EndingIndex" type="xtce:IntegerValueType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="lastEntryForThisArrayInstance" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RateInStreamType">
+		<annotation>
+			<documentation xml:lang="en">Used in packaging to define the expected rate that any individual container will be in a Stream</documentation>
+		</annotation>
+		<attribute name="basis" default="perSecond">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="perSecond"/>
+					<enumeration value="perContainerUpdate"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="minimumValue" type="double"/>
+		<attribute name="maximumValue" type="double"/>
+	</complexType>
+	<!--******** End of Packaging Schema -->
+	<!--************************************************-->
+	<!--******** Telemetry Schema -->
+	<complexType name="ParameterPropertiesType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">A wrapper for those properties that are unique to telemetry parameters.</documentation>
+		</annotation>
+		<sequence>
+			<element name="SystemName" type="string" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional.  Normally used when the database is built in a flat, non-hierarchical format</documentation>
+				</annotation>
+			</element>
+			<element name="ValidityCondition" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional condition that must be true for this Parameter to be valid</documentation>
+				</annotation>
+			</element>
+			<element name="PhysicalAddressSet" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">One or more physical addresses may be associated with each Parameter.  Examples of physical addresses include a location on the spacecraft or a location on a data collection bus. </documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="PhysicalAddress" minOccurs="0" maxOccurs="unbounded">
+							<annotation>
+								<documentation xml:lang="en">Contains the address (e.g., channel information) required to process the spacecraft telemetry streams. May be an onboard  id, a mux address, or a physical location.</documentation>
+								<documentation xml:lang="en">Contains the address (channel information) required to process the spacecraft telemetry streams</documentation>
+							</annotation>
+							<complexType>
+								<complexContent>
+									<extension base="xtce:PhysicalAddressType"/>
+								</complexContent>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="TimeAssociation" type="xtce:TimeAssociationType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">This time will override any Default value for TimeAssociation. </documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="dataSource" use="optional">
+			<annotation>
+				<documentation xml:lang="en">A telemetered Parameter is one that will have values in telemetry.  A derived Parameter is one that is calculated, usually be an Algorithm.  A constant Parameter is  one that is used as a constant in the system (e.g. a vehicle id).  A local Parameter is one that is used purely on the ground (e.g. a ground command counter).</documentation>
+			</annotation>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="telemetered"/>
+					<enumeration value="derived"/>
+					<enumeration value="constant"/>
+					<enumeration value="local"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="readOnly" type="boolean" use="optional" default="false">
+			<annotation>
+				<documentation xml:lang="en">A Parameter marked as 'readOnly' true is constant and non-settable</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="TimeAssociationType">
+		<annotation>
+			<documentation xml:lang="en">Telemetry parameter instances are oftentimes "time-tagged" with a timing signal either provided on the ground or on  the space system.  This data element allows one to specify which of possibly many AbsoluteTimeParameters to use to "time-tag" parameter instances with.  </documentation>
+			<appinfo>The parameter ref must be to an AbsoluteTime Parameter</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="interpolateTime" type="boolean" default="true">
+					<annotation>
+						<documentation xml:lang="en">If true, then the current value of the AbsoluteTime will be projected to current time.  In other words, if the value of the AbsoluteTime parameter was set 10 seconds ago, then 10 seconds will be added to its value before associating this time with the parameter.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="offset" type="date">
+					<annotation>
+						<documentation xml:lang="en">The offset is used to supply a relative time offset from the time association and to this parameter</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterInstanceRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to an instance of a Parameter.   Used when the value of a parameter is required for a calculation or as an index value.  A positive value for instance is forward in time, a negative value for count is backward in time, a 0 value for count means use the current value of the parameter or the first value in a container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterRefType">
+				<attribute name="instance" type="integer" default="0"/>
+				<attribute name="useCalibratedValue" type="boolean" default="true"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to a Parameter. Uses Unix ‘like’ naming across the SpaceSystem Tree (e.g., SimpleSat/Bus/EPDS/BatteryOne/Voltage).  To reference an individual member of an array use the zero based bracket notation commonly used in languages like C, C++, and Java.</documentation>
+		</annotation>
+		<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+	</complexType>
+	<complexType name="PhysicalAddressType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">When it's important to know the physical address(s) on the spacecraft that this parameter may be collected from, use this.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="SubAddress" type="xtce:PhysicalAddressType" minOccurs="0"/>
+		</sequence>
+		<attribute name="sourceName" type="string"/>
+		<attribute name="sourceAddress" type="string"/>
+	</complexType>
+	<complexType name="ParameterTypeSetType">
+		<annotation>
+			<documentation xml:lang="en">Holds the list of parameter type definitions. A Parameter is a description of something that can have a value; it is not the value itself.   </documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="StringParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:StringDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:StringAlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" maxOccurs="unbounded">
+												<complexType>
+													<complexContent>
+														<extension base="xtce:StringAlarmType">
+															<sequence>
+																<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+															</sequence>
+														</extension>
+													</complexContent>
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="EnumeratedParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:EnumeratedDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:EnumerationAlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm">
+												<complexType>
+													<complexContent>
+														<extension base="xtce:EnumerationAlarmType">
+															<sequence>
+																<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+															</sequence>
+														</extension>
+													</complexContent>
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="IntegerParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:NumericAlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" type="xtce:NumericContextAlarmType" maxOccurs="unbounded"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="BinaryParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:BinaryDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:AlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" maxOccurs="unbounded">
+												<complexType>
+													<complexContent>
+														<extension base="xtce:AlarmType">
+															<sequence>
+																<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+															</sequence>
+														</extension>
+													</complexContent>
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="FloatParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:FloatDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:NumericAlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" type="xtce:NumericContextAlarmType" maxOccurs="unbounded"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="BooleanParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:BooleanDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:BooleanAlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" maxOccurs="unbounded">
+												<complexType>
+													<complexContent>
+														<extension base="xtce:BooleanAlarmType">
+															<sequence>
+																<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+															</sequence>
+														</extension>
+													</complexContent>
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="RelativeTimeParameterType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:RelativeTimeDataType">
+							<sequence>
+								<element name="DefaultAlarm" type="xtce:TimeAlarmType" minOccurs="0"/>
+								<element name="ContextAlarmList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ContextAlarm" type="xtce:TimeContextAlarmType" maxOccurs="unbounded"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="AbsoluteTimeParameterType" type="xtce:AbsoluteTimeDataType"/>
+			<element name="ArrayParameterType" type="xtce:ArrayDataTypeType">
+				<annotation>
+					<documentation xml:lang="en">An array type.  Will be an array of parameters of the type referenced in 'arrayTypeRef' and have the number of array dimensions as specified in 'numberOfDimensions' </documentation>
+				</annotation>
+			</element>
+			<element name="AggregateParameterType" type="xtce:AggregateDataType">
+				<annotation>
+					<documentation xml:lang="en">AggegateParameters are analogous to a C struc, they are an aggregation of related data items.  Each of these data items is defined here as a 'Member' </documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<!--******** End of Telemetry Schema -->
+	<!--************************************************-->
+	<!--******** Command Schema -->
+	<!--CommandDefinitionType -->
+	<complexType name="ArgumentTypeSetType">
+		<annotation>
+			<documentation xml:lang="en">Holds the list of argument type definitions. </documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="StringArgumentType" type="xtce:StringDataType"/>
+			<element name="EnumeratedArgumentType" type="xtce:EnumeratedDataType"/>
+			<element name="IntegerArgumentType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerDataType">
+							<sequence>
+								<element name="ValidRangeSet" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">Numerical ranges that define the universe of valid values for this argument.  Used to further bound argument values inside the ValidRange for the overall Data Type</documentation>
+									</annotation>
+									<complexType>
+										<sequence>
+											<element name="ValidRange" type="xtce:IntegerRangeType" maxOccurs="unbounded"/>
+										</sequence>
+										<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true"/>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="BinaryArgumentType" type="xtce:BinaryDataType"/>
+			<element name="FloatArgumentType">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:FloatDataType">
+							<sequence>
+								<element name="ValidRangeSet" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">Numerical ranges that define the universe of valid values for this argument.  Used to further bound argument values inside the ValidRange for the overall Data Type</documentation>
+									</annotation>
+									<complexType>
+										<sequence>
+											<element name="ValidRange" type="xtce:FloatRangeType" maxOccurs="unbounded"/>
+										</sequence>
+										<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true"/>
+									</complexType>
+								</element>
+							</sequence>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="BooleanArgumentType" type="xtce:BooleanDataType"/>
+			<element name="RelativeTimeAgumentType" type="xtce:RelativeTimeDataType"/>
+			<element name="AbsoluteTimeArgumentType" type="xtce:AbsoluteTimeDataType"/>
+			<element name="ArrayArgumentType" type="xtce:ArrayDataTypeType"/>
+			<element name="AggregateArgumentType" type="xtce:AggregateDataType"/>
+		</choice>
+	</complexType>
+	<complexType name="MetaCommandType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">A type definition used as the base type for a CommandDefinition</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="BaseMetaCommand" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The MetaCommand is derived from this Base.  Arguments of the base MetaCommand are further specified.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ArgumentAssignmentList" minOccurs="0">
+									<complexType>
+										<sequence>
+											<element name="ArgumentAssignment" maxOccurs="unbounded">
+												<complexType>
+													<attribute name="argumentName" type="xtce:NameReferenceType" use="required"/>
+													<attribute name="argumentValue" type="string" use="required"/>
+												</complexType>
+											</element>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="metaCommandRef" type="xtce:NameReferenceType" use="required"/>
+						</complexType>
+					</element>
+					<element name="SystemName" type="string" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optional.  Normally used when the database is built in a flat, non-hierarchical format</documentation>
+						</annotation>
+					</element>
+					<element name="ArgumentList" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Many commands have one or more options.  These are called command arguments.  Command arguments may be of any of the standard data types.  MetaCommand arguments are local to the MetaCommand.</documentation>
+						</annotation>
+						<complexType>
+							<choice maxOccurs="unbounded">
+								<element name="Argument" maxOccurs="unbounded">
+									<annotation>
+										<appinfo>Need to ensure that the named types actually exist</appinfo>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:NameDescriptionType">
+												<attribute name="argumentTypeRef" type="xtce:NameReferenceType" use="required"/>
+												<attribute name="initialValue" type="string">
+													<annotation>
+														<documentation xml:lang="en">Used to set the initial calibrated values of Arguments.  Will overwrite an initial value defined for the ArgumentType.  For integer types base 10 (decimal) form is assumed unless: if proceeded by a 0b or 0B, value is in base two (binary form, if proceeded by a 0o or 0O, values is in base 8 (octal) form, or if proceeded by a 0x or 0X, value is in base 16 (hex) form.  Floating point types may be specified in normal (100.0) or scientific (1.0e2) form.  Time types are specified using the ISO 8601 formats described for XTCE time data types.  Initial values for string types, may include C language style (\n, \t, \", \\, etc.) escape sequences.  Initial values for Array or Aggregate types may not be set.</documentation>
+													</annotation>
+												</attribute>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</choice>
+						</complexType>
+					</element>
+					<element name="CommandContainer" type="xtce:CommandContainerType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Tells how to package this command</documentation>
+						</annotation>
+					</element>
+					<element name="TransmissionConstraintList" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Appended to the TramsmissionConstraint List of the base command.  Constraints are checked in order.  </documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="TransmissionConstraint" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">A CommandTransmission constraint is used to check that the command can be run in the current operating mode and may block the transmission of the command if the constraint condition is true.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:MatchCriteriaType">
+												<attribute name="timeOut" type="xtce:RelativeTimeType">
+													<annotation>
+														<documentation xml:lang="en">Pause during timeOut, fail when the timeout passes</documentation>
+													</annotation>
+													<!-- removed for CASTOR: default="PT0S" -->
+												</attribute>
+												<attribute name="suspendable" type="boolean" default="false">
+													<annotation>
+														<documentation xml:lang="en">Indicates whether the constraints for a Command may be suspended.</documentation>
+													</annotation>
+												</attribute>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="DefaultSignificance" type="xtce:SignificanceType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Some Command and Control Systems may require special user access or confirmations before transmitting commands with certain levels.  The level is inherited from the Base MetaCommand.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextSignificanceList" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used when the significance (possible consequence) of a command varies by the operating context</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextSignificance" maxOccurs="unbounded">
+									<complexType>
+										<sequence>
+											<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+											<element name="Significance" type="xtce:SignificanceType"/>
+										</sequence>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="Interlock" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">An Interlock is a type of Constraint, but not on Command instances of this MetaCommand; Interlocks apply instead to the next command.  An Interlock will block successive commands until this command has reached a certain stage (through verifications).  Interlocks are scoped to a SpaceSystem basis.</documentation>
+						</annotation>
+						<complexType>
+							<attribute name="scopeToSpaceSystem" type="xtce:NameReferenceType">
+								<annotation>
+									<documentation xml:lang="en">The name of a SpaceSystem this Interlock applies to.  By default, it only applies to the SpaceSystem that contains this MetaCommand.</documentation>
+								</annotation>
+							</attribute>
+							<attribute name="verificationToWaitFor" type="xtce:VerifierEnumerationType" default="complete"/>
+							<attribute name="verificationProgressPercentage" type="decimal">
+								<annotation>
+									<documentation xml:lang="en">Only applies when the verificationToWaitFor attribute is 'queued' or 'executing'.</documentation>
+								</annotation>
+							</attribute>
+							<attribute name="suspendable" type="boolean" default="false">
+								<annotation>
+									<documentation xml:lang="en">A flag that indicates that under special circumstances, this Interlock can be suspended.</documentation>
+								</annotation>
+							</attribute>
+						</complexType>
+					</element>
+					<element name="VerifierSet" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A Command Verifier is a conditional check on the telemetry from a SpaceSystem that that provides positive indication on the processing state of a command.  There are eight different verifiers each associated with difference states in command processing: TransferredToRange, TransferredFromRange, Received, Accepted, Queued, Execution, Complete, and Failed.  There may be multiple ‘complete’ verifiers. ‘Complete’ verifiers are added to the Base MetaCommand ‘Complete’ verifier list.  All others will overide a verifier defined in a Base MetaCommand.  </documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="TransferredToRangeVerifier" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">Transferred to range means the command has been received to the network that connects the ground system to the spacecraft.  Obviously, this verifier must come from something other than the spacecraft. </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="SentFromRangeVerifier" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">Sent from range means the command has been transmitted to the spacecraft by the network that connects the ground system to the spacecraft.  Obviously, this verifier must come from something other than the spacecraft. </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="ReceivedVerifier" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">A verifier that simply means the SpaceSystem has received the command.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="AcceptedVerifier" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">A verifier that means the SpaceSystem has accepted the command</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="QueuedVerifier" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">A verifer that means the command is scheduled for execution by the SpaceSystem.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType"/>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="ExecutionVerifier" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">A verifier that indicates that the command is being executed.  An optional Element indicates how far along the command has progressed either as a fixed value or an (possibly scaled) ParameterInstance value.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType">
+												<sequence minOccurs="0">
+													<element name="PercentComplete" type="xtce:DecimalValueType"/>
+												</sequence>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="CompleteVerifier" minOccurs="0" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">A possible set of verifiers that all must be true for the command be considered completed.  </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:CommandVerifierType">
+												<sequence minOccurs="0">
+													<element name="ReturnParmRef" type="xtce:ParameterRefType"/>
+												</sequence>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="FailedVerifier" type="xtce:CommandVerifierType" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">When true, indicates that the command failed.  timeToWait is how long to wait for the FailedVerifier to test true.</documentation>
+									</annotation>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="ParameterToSetList" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Parameters that are set with a new value after the command has been sent.  Appended to the Base Command list</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ParameterToSet" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">Sets a Parameter to a new value (either from a derivation or explicitly) after the command has been verified (all verifications have passed)</documentation>
+										<appinfo>Value type must match Parameter type</appinfo>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:ParameterRefType">
+												<choice>
+													<element name="Derivation">
+														<annotation>
+															<documentation>Result of the MathOperation will be the new Parameter value</documentation>
+														</annotation>
+														<complexType>
+															<complexContent>
+																<extension base="xtce:MathOperationType"/>
+															</complexContent>
+														</complexType>
+													</element>
+													<element name="NewValue" type="string"/>
+												</choice>
+												<attribute name="setOnVerification" type="xtce:VerifierEnumerationType" default="complete"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+					<element name="ParametersToSuspendAlarmsOnSet" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Sometimes it is necessary to suspend alarms - particularly 'change' alarms for commands that will change the value of a Parameter</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ParameterToSuspendAlarmsOn" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">Will suspend all Alarms associated with this Parameter for the given suspense time after the given verifier</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:ParameterRefType">
+												<attribute name="suspenseTime" type="xtce:RelativeTimeType" use="required"/>
+												<attribute name="verifierToTriggerOn" type="xtce:VerifierEnumerationType" default="release"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="abstract" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandContainerEntryListType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Similar to an EntryList type but also may include command arguments or -as a convenience - fixed value entries.</documentation>
+		</annotation>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="ParameterRefEntry" type="xtce:ParameterRefEntryType"/>
+			<element name="ParameterSegmentRefEntry" type="xtce:ParameterSegmentRefEntryType"/>
+			<element name="ContainerRefEntry" type="xtce:ContainerRefEntryType"/>
+			<element name="ContainerSegmentRefEntry" type="xtce:ContainerSegmentRefEntryType"/>
+			<element name="StreamSegmentEntry" type="xtce:StreamSegmentEntryType"/>
+			<element name="IndirectParameterRefEntry" type="xtce:IndirectParameterRefEntryType"/>
+			<element name="ArrayParameterRefEntry" type="xtce:ArrayParameterRefEntryType"/>
+			<element name="ArgumentRefEntry">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:SequenceEntryType">
+							<attribute name="argumentRef" type="xtce:NameReferenceType" use="required"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="ArrayArgumentRefEntry" type="xtce:ArrayParameterRefEntryType"/>
+			<element name="FixedValueEntry">
+				<complexType>
+					<complexContent>
+						<extension base="xtce:SequenceEntryType">
+							<attribute name="binaryValue" type="hexBinary" use="required"/>
+							<attribute name="sizeInBits" type="integer"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="CommandContainerType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">The Key = Command Op Code.  Each MetaCommand may have one CommandContainer.  The sequence may now contain command fields</documentation>
+		</annotation>
+		<complexContent mixed="false">
+			<extension base="xtce:ContainerType">
+				<sequence>
+					<element name="EntryList" type="xtce:CommandContainerEntryListType"/>
+					<element name="BaseContainer" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="RestrictionCriteria" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">Given that this Container is the Base container type, RestrictionCriteria lists conditions that must be true for this Container to be 'this' subContainer type.  May be a simple Comparison List, a Boolean Expression, and/or in a Graph of containers established by the NextContainer</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:MatchCriteriaType">
+												<choice>
+													<element name="NextContainer" type="xtce:ContainerRefType" minOccurs="0"/>
+												</choice>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+							<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandVerifierType">
+		<annotation>
+			<documentation xml:lang="en">A command verifier is used to check that the command has been successfully executed. Command Verifiers may be either a Custom Algorithm or a Boolean Check or the presence of a Container for a relative change in the value of a Parameter.  The CheckWindow is a time period where the verification must test true to pass.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:OptionalNameDescriptionType">
+				<sequence>
+					<choice>
+						<element name="ComparisonList">
+							<annotation>
+								<documentation xml:lang="en">All comparisons must be true</documentation>
+							</annotation>
+							<complexType>
+								<sequence>
+									<element name="Comparison" type="xtce:ComparisonType" maxOccurs="unbounded"/>
+								</sequence>
+							</complexType>
+						</element>
+						<element name="ContainerRef" type="xtce:ContainerRefType">
+							<annotation>
+								<documentation xml:lang="en">When verification is a new instance the referenced Container</documentation>
+							</annotation>
+						</element>
+						<element name="ParameterValueChange">
+							<annotation>
+								<documentation xml:lang="en">Used to look for relative change in a Parameter value.  Only useful for numeric Parameters</documentation>
+							</annotation>
+							<complexType>
+								<sequence>
+									<element name="ParameterRef" type="xtce:ParameterRefType"/>
+									<element name="Change">
+										<complexType>
+											<attribute name="value" type="decimal" use="required"/>
+										</complexType>
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+						<element name="CustomAlgorithm" type="xtce:InputAlgorithmType"/>
+						<element name="BooleanExpression" type="xtce:BooleanExpressionType"/>
+						<element name="Comparison" type="xtce:ComparisonType"/>
+					</choice>
+					<choice>
+						<element name="CheckWindow">
+							<complexType>
+								<attribute name="timeToStartChecking" type="xtce:RelativeTimeType"/>
+								<attribute name="timeToStopChecking" type="xtce:RelativeTimeType" use="required"/>
+								<attribute name="timeWindowIsRelativeTo" default="timeLastVerifierPassed">
+									<simpleType>
+										<restriction base="string">
+											<enumeration value="commandRelease"/>
+											<enumeration value="timeLastVerifierPassed"/>
+										</restriction>
+									</simpleType>
+								</attribute>
+							</complexType>
+						</element>
+						<element name="CheckWindowAlgorithms">
+							<annotation>
+								<documentation xml:lang="en">Used when times must be calculated</documentation>
+							</annotation>
+							<complexType>
+								<sequence>
+									<element name="StartCheck" type="xtce:InputAlgorithmType"/>
+									<element name="StopTime" type="xtce:InputAlgorithmType"/>
+								</sequence>
+							</complexType>
+						</element>
+					</choice>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterToSetType">
+		<annotation>
+			<documentation xml:lang="en">Used by Meta Command to indicate ground Parameters that should be set after completion of a command.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterRef" type="xtce:ParameterRefType"/>
+			<element name="Derivation" type="xtce:MathOperationType"/>
+		</sequence>
+	</complexType>
+	<complexType name="CommandContainerSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered Set of Command Containers</documentation>
+		</annotation>
+		<sequence>
+			<element name="CommandContainer" type="xtce:SequenceContainerType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="SignificanceType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Significance provides some cautionary information about the potential consequence of each MetaCommand.</documentation>
+		</annotation>
+		<attribute name="spaceSystemAtRisk" type="xtce:NameReferenceType">
+			<annotation>
+				<documentation xml:lang="en">If none is supplied, then the current SpaceSystem is assumed to be the one at risk by the issuance of this command</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="reasonForWarning" type="string"/>
+		<attribute name="consequenceLevel">
+			<annotation>
+				<documentation xml:lang="en">No specific meanings have been assigned to these different levels, but they mirror the Alarm levels of Telemetry.</documentation>
+			</annotation>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="none"/>
+					<enumeration value="watch"/>
+					<enumeration value="warning"/>
+					<enumeration value="distress"/>
+					<enumeration value="critical"/>
+					<enumeration value="severe"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<simpleType name="VerifierEnumerationType">
+		<annotation>
+			<documentation xml:lang="en">An enumerated list of verifier types</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="release"/>
+			<enumeration value="transferredToRange"/>
+			<enumeration value="sentFromRange"/>
+			<enumeration value="received"/>
+			<enumeration value="accepted"/>
+			<enumeration value="queued"/>
+			<enumeration value="executing"/>
+			<enumeration value="complete"/>
+			<enumeration value="failed"/>
+		</restriction>
+	</simpleType>
+	<!--******** End of Command Definition Schema -->
+	<!--************************************************-->
+	<!--******** Algorithm Schema -->
+	<annotation>
+		<documentation xml:lang="en">This schema defines the structure for an Algorithm.   An Algorithm may be one of a growing set of pre-defined algorithms or a named escape into a user defined algorithm where (depending on the system) the name of the algorithm may be a java class, a function in a shared library, an external program or some other reference to an outside algorithm.  At some later date, this schema may also allow the logic of the user defined algorithm to be defined within the instance document itself (perhaps using MathML?).</documentation>
+	</annotation>
+	<complexType name="SimpleAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">The simplest form of algorithm, a SimpleAlgorithmType contains an area for a free-form pseudo code description of the algorithm plus a Set of references to external algorithms.  External algorithms are usually unique to a ground system type.   Multiple external algorithms are possible because XTCE documents may be used across multiple ground systems.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="AlgorithmText" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This optional element may be used to enter Pseudo or actual code for the algorithm.  The language for the algorithm is specified with the language attribute</documentation>
+						</annotation>
+						<complexType>
+							<simpleContent>
+								<extension base="string">
+									<attribute name="language" type="string" default="pseudo"/>
+								</extension>
+							</simpleContent>
+						</complexType>
+					</element>
+					<element name="ExternalAlgorithmSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="ExternalAlgorithm" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">This is the external algorithm.  Multiple entries are provided so that the same database may be used for multiple implementation s</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="implementationName" type="string" use="required"/>
+										<attribute name="algorithmLocation" type="string" use="required"/>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">A set of labeled inputs is added to the SimpleAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SimpleAlgorithmType">
+				<sequence>
+					<element name="InputSet" minOccurs="0">
+						<complexType>
+							<choice maxOccurs="unbounded">
+								<element name="ParameterInstanceRef">
+									<annotation>
+										<documentation xml:lang="en">Names an input parameter to the algorithm.  There are two attributes to InputParm, inputName and parameterName. parameterName is a parameter reference name for a parameter that will be used in this algorithm.  inputName is an optional "friendly" name for the input parameter. </documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:ParameterInstanceRefType">
+												<attribute name="inputName" type="string"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+								<element name="Constant" minOccurs="0">
+									<annotation>
+										<documentation xml:lang="en">Names and provides a value for a constant input to the algorithm.  There are two attributes to Constant, constantName and value.  constantName is a variable name in the algorithm to be executed.  value is the value of the constant to be used.</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="constantName" type="string"/>
+										<attribute name="value" type="string" use="required"/>
+									</complexType>
+								</element>
+							</choice>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputOutputAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">A set of labeled outputs are added to the SimpleInputAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:InputAlgorithmType">
+				<sequence>
+					<element name="OutputSet" minOccurs="0">
+						<complexType>
+							<sequence>
+								<element name="OutputParameterRef" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">Names an output parameter to the algorithm.  There are two attributes to OutputParm, outputName and parameterName. parameterName is a parameter reference name for a parameter that will be updated by this algorithm.  outputName is an optional "friendly" name for the output parameter.</documentation>
+									</annotation>
+									<complexType>
+										<complexContent>
+											<extension base="xtce:ParameterRefType">
+												<attribute name="outputName" type="string"/>
+											</extension>
+										</complexContent>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="thread" type="boolean" use="optional"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputOutputTriggerAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">A set of labeled triggers is added to the SimpleInputOutputAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:InputOutputAlgorithmType">
+				<sequence>
+					<element name="TriggerSet" type="xtce:TriggerSetType" minOccurs="0"/>
+				</sequence>
+				<attribute name="triggerContainer" type="xtce:NameType" use="optional">
+					<annotation>
+						<documentation xml:lang="en">First telemetry container from which the output parameter should be calculated.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="priority" type="integer" use="optional">
+					<annotation>
+						<documentation xml:lang="en">Algorithm processing priority.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Calibrators are normally used to convert to and from bit compacted numerical data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:OptionalNameDescriptionType">
+				<choice>
+					<element name="SplineCalibrator">
+						<annotation>
+							<documentation xml:lang="en">A calibration type where a segmented line in a raw vs calibrated plane is described using a set of points.  Raw values are converted to calibrated values by finding a position on the line corresponding  to the raw value. The algorithm triggers on the input parameter.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="SplinePoint" type="xtce:SplinePointType" minOccurs="2" maxOccurs="unbounded"/>
+							</sequence>
+							<attribute name="order" type="positiveInteger" default="1"/>
+							<attribute name="extrapolate" type="boolean" default="false"/>
+						</complexType>
+					</element>
+					<element name="PolynomialCalibrator" type="xtce:PolynomialType">
+						<annotation>
+							<documentation xml:lang="en">A calibration type where a curve in a raw vs calibrated plane is described using a set of polynomial coefficients.  Raw values are converted to calibrated values by finding a position on the curve corresponding to the raw value. The first coefficient belongs with the X^0 term, the next coefficient belongs to the X^1 term and so on. </documentation>
+						</annotation>
+					</element>
+					<element name="MathOperationCalibrator">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:MathOperationType"/>
+							</complexContent>
+						</complexType>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MathAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">A simple mathematical operation</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MathOperation">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:MathOperationType">
+									<sequence>
+										<element name="TriggerSet" type="xtce:TriggerSetType"/>
+									</sequence>
+									<attribute name="outputParameterRef" type="xtce:NameReferenceType" use="required"/>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TriggerSetType">
+		<annotation>
+			<documentation xml:lang="en">A trigger is used to initiate the processing of some algorithm.  A trigger may be based on an update of a Parameter or on a time basis.  Triggers may also have a rate that limits their firing to a 1/rate basis.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="OnParameterUpdateTrigger">
+				<annotation>
+					<documentation xml:lang="en">Names a parameter that upon change will start the execution of the algorithm.  Holds a parameter reference name for a parameter that when it changes, will cause this algorithm to be executed.</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				</complexType>
+			</element>
+			<element name="OnContainerUpdateTrigger">
+				<complexType>
+					<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+				</complexType>
+			</element>
+			<element name="OnPeriodicRateTrigger">
+				<complexType>
+					<attribute name="fireRateInSeconds" type="decimal" use="required"/>
+				</complexType>
+			</element>
+		</choice>
+		<attribute name="name" type="string" use="optional"/>
+		<attribute name="triggerRate" type="nonNegativeInteger" use="optional" default="1"/>
+	</complexType>
+	<!--******** End of Algorithm Schema -->
+	<!--******** Stream Definitions Schema -->
+	<annotation>
+		<documentation xml:lang="en">This schema provides a language for defining binary stream data.</documentation>
+	</annotation>
+	<complexType name="FrameStreamType">
+		<annotation>
+			<documentation xml:lang="en">The top level type definition for all data streams that are frame based.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:PCMStreamType">
+				<sequence>
+					<choice>
+						<element name="ContainerRef" type="xtce:ContainerRefType">
+							<annotation>
+								<documentation xml:lang="en">This Container (usually abstract) is the container that is in the fixed frame stream.  Normally, this is a general container type from which many specific containers are inherited.</documentation>
+							</annotation>
+						</element>
+						<element name="ServiceRef" type="xtce:ServiceRefType"/>
+					</choice>
+					<element name="StreamRef" type="xtce:StreamRefType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This is a reference to a connecting stream - say a custom stream.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FixedFrameStreamType">
+		<annotation>
+			<documentation xml:lang="en">For streams that contain a series of frames with a fixed frame length where the frames are found by looking for a marker in the data.  This marker is sometimes called the frame sync pattern and sometimes the Asynchronous Sync Marker (ASM).  This marker need not be contiguous although it usually is.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FrameStreamType">
+				<sequence>
+					<element name="SyncStrategy">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:SyncStrategyType">
+									<sequence>
+										<element name="SyncPattern">
+											<annotation>
+												<documentation xml:lang="en">The pattern of bits used to look for frame synchronization.</documentation>
+											</annotation>
+											<complexType>
+												<attribute name="pattern" type="hexBinary" use="required">
+													<annotation>
+														<documentation xml:lang="en">CCSDS ASM for non-turbocoded frames = 1acffc1d</documentation>
+													</annotation>
+												</attribute>
+												<attribute name="bitLocationFromStartOfContainer" type="integer" default="0"/>
+												<attribute name="mask" type="hexBinary"/>
+												<attribute name="maskLengthInBits" type="positiveInteger">
+													<annotation>
+														<documentation xml:lang="en">truncate the mask from the left</documentation>
+													</annotation>
+												</attribute>
+												<attribute name="patternLengthInBits" type="positiveInteger" use="required">
+													<annotation>
+														<documentation xml:lang="en">truncate the pattern from the left</documentation>
+													</annotation>
+												</attribute>
+											</complexType>
+										</element>
+									</sequence>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="syncApertureInBits" type="nonNegativeInteger" default="0">
+					<annotation>
+						<documentation xml:lang="en">Allowed slip (in bits) in either direction for the sync pattern</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="frameLengthInBits" type="long" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="VariableFrameStreamType">
+		<annotation>
+			<documentation xml:lang="en">For streams that contain a series of frames with a variable frame length where the frames are found by looking for a series of one's or zero's (usually one's).  The series is called the flag.   in the PCM stream that are usually made to be illegal in the PCM stream by zero or one bit insertion.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FrameStreamType">
+				<sequence>
+					<element name="SyncStrategy">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:SyncStrategyType">
+									<sequence>
+										<element name="Flag">
+											<annotation>
+												<documentation xml:lang="en">The pattern of bits used to look for frame synchronization.</documentation>
+											</annotation>
+											<complexType>
+												<attribute name="flagSizeInBits" type="positiveInteger" default="6"/>
+												<attribute name="flagBitType" default="ones">
+													<simpleType>
+														<restriction base="string">
+															<enumeration value="zeros"/>
+															<enumeration value="ones"/>
+														</restriction>
+													</simpleType>
+												</attribute>
+											</complexType>
+										</element>
+									</sequence>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CustomStreamType">
+		<annotation>
+			<documentation xml:lang="en">A stream type where some level of custom processing (e.g. convolutional, encryption, compression) is performed.  Has a reference to external algorithms for encoding and decoding algorithms.</documentation>
+			<appinfo>Must check to ensure that the attributes encodedStreamRef and decodedStreamRef point to valid Streams</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:PCMStreamType">
+				<sequence>
+					<element name="EncodingAlgorithm" type="xtce:InputAlgorithmType"/>
+					<element name="DecodingAlgorithm" type="xtce:InputOutputAlgorithmType">
+						<annotation>
+							<documentation xml:lang="en">Algorithm outputs may be used to set decoding quality parameters.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="encodedStreamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="decodedStreamRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="PCMStreamType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A PCM Stream Type is the high level definition for all Pulse Code Modulated (PCM) (i.e., binary) streams.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="bitRateInBPS" type="double"/>
+				<attribute name="pcmType" default="NRZL">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="NRZL"/>
+							<enumeration value="NRZM"/>
+							<enumeration value="NRZS"/>
+							<enumeration value="BiPhaseL"/>
+							<enumeration value="BiPhaseM"/>
+							<enumeration value="BiPhaseS"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="inverted" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StreamRefType">
+		<annotation>
+			<documentation xml:lang="en">Holds a reference to a stream</documentation>
+		</annotation>
+		<attribute name="streamRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">name of reference stream</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="StreamSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered set of Streams.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="FixedFrameStream" type="xtce:FixedFrameStreamType"/>
+			<element name="VariableFrameStream" type="xtce:VariableFrameStreamType"/>
+			<element name="CustomStream" type="xtce:CustomStreamType"/>
+		</choice>
+	</complexType>
+	<complexType name="SyncStrategyType">
+		<annotation>
+			<documentation xml:lang="en">A Sync Strategy specifies the strategy on how to find frames within a stream of PCM data.  The sync strategy is based upon a state machine that begins in the 'Search' state until the first sync marker is found.  Then it goes into the 'Verify' state until a specified number of successive good sync markers are found.  Then, the state machine goes into the 'Lock' state, in the 'Lock' state frames are considered good.  Should a sync marker be missed in the 'Lock' state, the state machine will transition into the 'Check' state, if the next sync marker is where it's expected within a specified number of frames, then the state machine will transition back to the 'Lock' state, it not it will transition back to 'Search'.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="AutoInvert" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">After searching for the frame sync marker for some number of bits, it may be desirable to invert the incoming data, and then look for frame sync.  In some cases this will require an external algorithm</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="InvertAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0"/>
+					</sequence>
+					<attribute name="badFramesToAutoInvert" type="positiveInteger" default="1024"/>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="verifyToLockGoodFrames" type="nonNegativeInteger" default="4"/>
+		<attribute name="checkToLockGoodFrames" type="nonNegativeInteger" default="1"/>
+		<attribute name="maxBitErrorsInSyncPattern" type="nonNegativeInteger" default="0">
+			<annotation>
+				<documentation xml:lang="en">Maximum number of bit errors in the sync pattern (marker).</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--******** End of Stream Definition Schema -->
+	<!--************************************************-->
+	<!--******** DataTypes-->
+	<complexType name="AbsoluteTimeDataType">
+		<annotation>
+			<documentation xml:lang="en">Used to contain an absolute time. Contains an absolute (to a known epoch) time.  Use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e. the format ss.ss... with any number of digits after the decimal point is supported. 
+</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTimeDataType">
+				<attribute name="initialValue" type="dateTime"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AggregateDataType">
+		<annotation>
+			<documentation>Contains multiple values (as members) of any type</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MemberList">
+						<annotation>
+							<documentation>Order is important only if the name of the AggregateParameter or Aggregate Argument is directly referenced in SequenceContainers.  In this case the members are assued to be added sequentially (in the order listed here) into the Container.</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="Member" maxOccurs="unbounded">
+									<annotation>
+										<documentation>Each member of the Aggregate Data has a name and a reference to another DataType.  The other DataType may be any other  DataType.  Circular references are not allowed.</documentation>
+										<appinfo>ensure no circular references</appinfo>
+									</annotation>
+									<complexType>
+										<attribute name="name" type="xtce:NameType" use="required"/>
+										<attribute name="typeRef" type="xtce:NameReferenceType" use="required"/>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayDataTypeType">
+		<annotation>
+			<documentation xml:lang="en">An array of values of the type referenced in 'arrayTypeRef' and have the number of array dimensions as specified in 'numberOfDimensions' </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="arrayTypeRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="numberOfDimensions" type="positiveInteger" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">An abstract type used by within the schema to derive other data types by the ground system.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="UnitSet">
+						<complexType>
+							<sequence>
+								<element name="Unit" type="xtce:UnitType" minOccurs="0" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+					<choice minOccurs="0">
+						<element name="BinaryDataEncoding" type="xtce:BinaryDataEncodingType"/>
+						<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType"/>
+						<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType"/>
+						<element name="StringDataEncoding" type="xtce:StringDataEncodingType"/>
+					</choice>
+				</sequence>
+				<attribute name="baseType" type="xtce:NameReferenceType">
+					<annotation>
+						<documentation xml:lang="en">Used to derive one Data Type from another - will inherit all the attributes from the baseType any of which may be redefined in this type definition.  </documentation>
+						<appinfo>Must be derived from a like type (e.g,, String from String).  No circular derivations.    </appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">An abstract type used by within the schema to describe derive other data types by the ground system.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<sequence minOccurs="0">
+						<element name="Encoding">
+							<annotation>
+								<documentation xml:lang="en">Scale and offset are used in a y =mx +b type relationship (m is the scale and b is the offset) to make adjustments to the encoded value to that it matches the time units.  Binary Encoded time is typically used with a user supplied transform algorithm to convert time data formats that are too difficult to describe in XTCE.</documentation>
+							</annotation>
+							<complexType>
+								<choice>
+									<element name="BinaryDataEncoding" type="xtce:BinaryDataEncodingType"/>
+									<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType"/>
+									<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType"/>
+									<element name="StringDataEncoding" type="xtce:StringDataEncodingType"/>
+								</choice>
+								<attribute name="units" type="xtce:TimeUnits" default="seconds"/>
+								<attribute name="scale" type="double" default="1"/>
+								<attribute name="offset" type="double" default="0"/>
+							</complexType>
+						</element>
+					</sequence>
+					<sequence minOccurs="0">
+						<element name="ReferenceTime" type="xtce:ReferenceTimeType"/>
+					</sequence>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryDataType">
+		<annotation>
+			<documentation xml:lang="en">Contains an arbitrarily large binary value </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<attribute name="initialValue" type="hexBinary">
+					<annotation>
+						<documentation xml:lang="en">Extra bits are truncated from the MSB (leftmost)</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanDataType">
+		<annotation>
+			<documentation xml:lang="en">Contains a boolean value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Initial value is always given in calibrated form. </documentation>
+						<appinfo>Initial value must match either the oneStringValue or the zeroStringValue</appinfo>
+					</annotation>
+				</attribute>
+				<attribute name="oneStringValue" type="string" default="True"/>
+				<attribute name="zeroStringValue" type="string" default="False"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumeratedDataType">
+		<annotation>
+			<documentation xml:lang="en">Contains an enumerated value - a value that has both an integral and a string representation.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="EnumerationList">
+						<complexType>
+							<sequence>
+								<element name="Enumeration" type="xtce:ValueEnumerationType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Initial value is always given in calibrated form.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatDataType">
+		<annotation>
+			<documentation xml:lang="en">Contains a floating point value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericDataType">
+				<sequence>
+					<element name="ValidRange" type="xtce:FloatRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The Valid Range bounds the universe of possible values this Parameter may have.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="double">
+					<annotation>
+						<documentation xml:lang="en">Initial value is always given in calibrated form</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" default="32">
+					<simpleType>
+						<restriction base="positiveInteger">
+							<enumeration value="32"/>
+							<enumeration value="64"/>
+							<enumeration value="128"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IntegerDataType">
+		<annotation>
+			<documentation xml:lang="en">Contains an integral value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericDataType">
+				<sequence>
+					<element name="ValidRange" type="xtce:IntegerRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The Valid Range bounds the universe of possible values this Parameter may have.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="xtce:FixedIntegerValueType">
+					<annotation>
+						<documentation xml:lang="en">Initial value is always given in calibrated form.  Default is base 10 form; binary, octal, or hexadecimal values may be given by preceding value with 0[b|B], 0[o|O|, 0[x|X] respectively.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="positiveInteger" default="32"/>
+				<attribute name="signed" type="boolean" default="true"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NumericDataType">
+		<annotation>
+			<documentation xml:lang="en">An abstract type that is a super type of either an Integer or Float Data type.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="ToString" minOccurs="0">
+						<complexType>
+							<complexContent>
+								<extension base="xtce:NumberToStringType"/>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RelativeTimeDataType">
+		<annotation>
+			<documentation xml:lang="en">Used to contain a relative time value.  Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTimeDataType">
+				<attribute name="initialValue" type="duration"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringDataType">
+		<annotation>
+			<documentation xml:lang="en">Contains a String Value</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="SizeRangeInCharacters" type="xtce:IntegerRangeType" minOccurs="0"/>
+				</sequence>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Initial values for string types, may include C language style (\n, \t, \", \\, etc.) escape sequences.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="restrictionPattern" type="string">
+					<annotation>
+						<documentation xml:lang="en">restriction pattern is a regular expression</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="characterWidth">
+					<simpleType>
+						<restriction base="integer">
+							<enumeration value="8"/>
+							<enumeration value="16"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="DataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">Describes how a particular piece of data is sent or received from some non-native, off-platform device. (e.g. a spacecraft)</documentation>
+		</annotation>
+		<sequence>
+			<element name="ErrorDetectCorrect" type="xtce:ErrorDetectCorrectType" minOccurs="0"/>
+			<element name="ByteOrderList" type="xtce:ByteOrderType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Used to describe an arbitrary byte order in multibyte parameters.  First byte in list is the first in the stream.  Byte significance is the highest for most significant bytes.  If not included, it is assumed that the most significant byte is first, least significant byte last.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="bitOrder" default="mostSignificantBitFirst">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="leastSignificantBitFirst"/>
+					<enumeration value="mostSignificantBitFirst"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<complexType name="IntegerDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">For all major encodings of integer data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Use when different calibrations must be used on the Parameter in different contexts.  Use the first one that tests true</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" type="xtce:ContextCalibratorType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="encoding" default="unsigned">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="unsigned"/>
+							<enumeration value="signMagnitude"/>
+							<enumeration value="twosCompliment"/>
+							<enumeration value="onesCompliment"/>
+							<enumeration value="BCD"/>
+							<enumeration value="packedBCD"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="sizeInBits" type="positiveInteger" default="8"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">For common encodings of floating point data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0"/>
+					<element name="ContextCalibratorList" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Use when different calibrations must be used on the Parameter in different contexts.  Use the first one that tests true</documentation>
+						</annotation>
+						<complexType>
+							<sequence>
+								<element name="ContextCalibrator" type="xtce:ContextCalibratorType" maxOccurs="unbounded"/>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="encoding" default="IEEE754_1985">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="IEEE754_1985"/>
+							<enumeration value="MILSTD_1750A"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="sizeInBits" default="32">
+					<simpleType>
+						<restriction base="positiveInteger">
+							<enumeration value="32"/>
+							<enumeration value="64"/>
+							<enumeration value="128"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">For common encodings of string data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="SizeInBits">
+						<complexType>
+							<choice>
+								<element name="Fixed" type="xtce:IntegerValueType"/>
+								<element name="TerminationChar" type="hexBinary">
+									<annotation>
+										<documentation xml:lang="en">Like C strings, they are terminated with a special string, usually a null character.</documentation>
+									</annotation>
+									<!-- default="00" (does not work with CASTOR 0.9.5.3) -->
+								</element>
+								<element name="LeadingSize">
+									<annotation>
+										<documentation xml:lang="en">Like PASCAL strings, the size of the string is given as an integer at the start of the string.  SizeTag must be an unsigned Integer</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="sizeInBitsOfSizeTag" type="positiveInteger" default="16"/>
+									</complexType>
+								</element>
+							</choice>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="encoding" default="UTF-8">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="UTF-8"/>
+							<enumeration value="UTF-16"/>
+						</restriction>
+					</simpleType>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">For binary data or for integer, float, string, or time data that is not in any of the known encoding formats.  For any data that is not encoded in any of the known integer, float, string, or time data formats use a To/From transform algorithm.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="SizeInBits" type="xtce:IntegerValueType"/>
+					<element name="FromBinaryTransformAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used to convert binary data to an application data type</documentation>
+						</annotation>
+					</element>
+					<element name="ToBinaryTransformAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used to convert binary data from an application data type to binary data</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="EpochType">
+		<annotation>
+			<documentation xml:lang="en">Epochs may be specified as a date or TAI (which correlates to 1 January 1958)</documentation>
+		</annotation>
+		<union memberTypes="date">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="TAI"/>
+				</restriction>
+			</simpleType>
+		</union>
+	</simpleType>
+	<!--******** DataTypes-->
+	<!--************************************************-->
+	<!--******** Common Types Schema -->
+	<!-- Basic elements used for in all dictionaries -->
+	<complexType name="AliasSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered collection of Alias's</documentation>
+		</annotation>
+		<sequence>
+			<element name="Alias" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Used to contain an alias (alternate) name or ID for the object.   For example, a parameter may have a mnemonic, an on-board id, and special IDs used by various ground software applications; all of these are alias's.  Some ground system processing equipment has some severe naming restrictions on parameters (e.g., names must less then 12 characters, single case or integral id's only); their alias's provide a means of capturing each name in a "nameSpace".</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="nameSpace" type="string" use="required"/>
+					<attribute name="alias" type="string" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ANDedConditionsType">
+		<annotation>
+			<documentation xml:lang="en">A list of boolean comparisons, or boolean groups that are logically ANDed together.  Any ORed conditions in the list are evaluated first.</documentation>
+		</annotation>
+		<choice minOccurs="2" maxOccurs="unbounded">
+			<element name="Condition" type="xtce:ComparisonCheckType"/>
+			<element name="ORedConditions" type="xtce:ORedConditionsType"/>
+		</choice>
+	</complexType>
+	<simpleType name="BinaryType">
+		<annotation>
+			<documentation xml:lang="en">A simple restriction on string for hexadecimal numbers.  Must be in 0b or 0B form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[bB][0-1]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="BooleanExpressionType">
+		<annotation>
+			<documentation xml:lang="en">Holds an arbitrarily complex boolean expression</documentation>
+		</annotation>
+		<choice>
+			<element name="Condition" type="xtce:ComparisonCheckType"/>
+			<element name="ANDedConditions" type="xtce:ANDedConditionsType"/>
+			<element name="ORedConditions" type="xtce:ORedConditionsType"/>
+		</choice>
+	</complexType>
+	<complexType name="ByteOrderType">
+		<annotation>
+			<documentation xml:lang="en">An ordered list of bytes where the order of the bytes is in stream order.  Each byte has an attribute giving its significance.</documentation>
+			<appinfo>The software must check to ensure that the significance of each byte is unique, and does not contain bytes of greater significance greater than the size of the object</appinfo>
+		</annotation>
+		<sequence minOccurs="2" maxOccurs="unbounded">
+			<element name="Byte">
+				<complexType>
+					<attribute name="byteSignificance" type="nonNegativeInteger" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ComparisonCheckType">
+		<annotation>
+			<documentation xml:lang="en">A ParameterInstanceRef to a value or another parameter instance</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+			<element name="ComparisonOperator" type="xtce:ComparisonOperatorsType"/>
+			<choice>
+				<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+					<annotation>
+						<documentation xml:lang="en">Parameter is assumed to be of the same type as the comparison Parameter</documentation>
+					</annotation>
+				</element>
+				<element name="Value" type="string">
+					<annotation>
+						<documentation xml:lang="en">Value is assumed to be of the same type as the comparison Parameter</documentation>
+					</annotation>
+				</element>
+			</choice>
+		</sequence>
+	</complexType>
+	<complexType name="ComparisonType">
+		<annotation>
+			<documentation xml:lang="en">A simple ParameterInstanceRef to value comparison.  The string supplied in the value attribute needs to be converted to a type matching the Parameter being compared to.  Numerical values are assumed to be base 10 unless proceeded by 0x (hexadecimal), 0o (octal), or 0b (binary).  The value is truncated  to use the least significant bits that match the bit size of the Parameter being compared to.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="comparisonOperator" type="xtce:ComparisonOperatorsType" default="=="/>
+				<attribute name="value" type="string" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="ComparisonOperatorsType">
+		<annotation>
+			<documentation xml:lang="en">Operators to use when testing a boolean condition for a validity check</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="=="/>
+			<enumeration value="!="/>
+			<enumeration value="&lt;"/>
+			<enumeration value="&lt;="/>
+			<enumeration value=">"/>
+			<enumeration value=">="/>
+		</restriction>
+	</simpleType>
+	<complexType name="ContextCalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Context calibrations are applied when the ContextMatch is true.  Context calibrators overide Default calibrators</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+			<element name="Calibrator" type="xtce:CalibratorType"/>
+			<!-- <element name="Context" type="xtce:MatchCriteriaType"/> -->
+		</sequence>
+	</complexType>
+	<complexType name="DecimalValueType">
+		<annotation>
+			<documentation xml:lang="en">Contains a Numeric value; value may be provided directly or via the value in a parameter.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue" type="decimal"/>
+			<element name="DynamicValue">
+				<annotation>
+					<documentation xml:lang="en">Uses a parameter instance to obtain the value.  The parameter value may be optionally adjusted by a Linear function or use a series of boolean expressions to lookup the value.  Anything more complex and a DynamicValue with a CustomAlgorithm may be used  </documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+						<element name="LinearAdjustment" minOccurs="0">
+							<annotation>
+								<documentation xml:lang="en">A slope and intercept may be applied to scale or shift the value of the parameter in the dynamic value</documentation>
+							</annotation>
+							<complexType>
+								<attribute name="slope" type="decimal" default="0"/>
+								<attribute name="intercept" type="decimal" default="0"/>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="DescriptionType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">An abstract type definition used as the base for NameDescriptionType or OptionalNameDescriptionType.  The short description is intended to be used for quick "memory jogger" descriptions of the object.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="LongDescription" type="string" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The Long Description is intended to be used for explanatory descriptions of the object and may include HTML markup.  Long Descriptions are of unbounded length</documentation>
+				</annotation>
+			</element>
+			<element name="AliasSet" type="xtce:AliasSetType" minOccurs="0"/>
+			<element name="AncillaryDataSet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="AncillaryData" maxOccurs="unbounded">
+							<annotation>
+								<documentation xml:lang="en">Use for any other data associated with each named object.  May be used to include administrative data (e.g., version, CM or tags) or potentially any MIME type.  Data may be included  or given as an href. </documentation>
+							</annotation>
+							<complexType>
+								<simpleContent>
+									<extension base="string">
+										<attribute name="name" type="string" use="required"/>
+										<attribute name="mimeType" type="string" default="text/plain"/>
+										<attribute name="href" type="anyURI"/>
+									</extension>
+								</simpleContent>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="shortDescription" type="string" use="optional">
+			<annotation>
+				<documentation xml:lang="en">It is strongly recommended that the short description be kept under 80 characters in length</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ErrorDetectCorrectType">
+		<annotation>
+			<documentation xml:lang="en">A simple element that provides for simple, but common error checking and detection.</documentation>
+		</annotation>
+		<choice>
+			<element name="Parity">
+				<annotation>
+					<documentation xml:lang="en">Bit position starts with 'zero'.</documentation>
+				</annotation>
+				<complexType>
+					<attribute name="type" use="required">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="Even"/>
+								<enumeration value="Odd"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+					<attribute name="bitsFromReference" type="nonNegativeInteger" use="required"/>
+					<attribute name="reference" default="start">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="start"/>
+								<enumeration value="end"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+				</complexType>
+			</element>
+			<element name="CRC">
+				<annotation>
+					<documentation xml:lang="en">Cyclic Redundancy Check (CRC) definition. Legal values for coefficient's are 0 or 1. Exponents must be integer values.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Polynomial" type="xtce:PolynomialType"/>
+					</sequence>
+					<attribute name="bitsFromReference" type="nonNegativeInteger"/>
+					<attribute name="reference" default="start">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="start"/>
+								<enumeration value="end"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="FixedIntegerValueType">
+		<annotation>
+			<documentation xml:lang="en">A simple union type combining integer, octal, binary, and hexadecimal types</documentation>
+		</annotation>
+		<union memberTypes="integer xtce:HexadecimalType xtce:OctalType xtce:BinaryType"/>
+	</simpleType>
+	<complexType name="HeaderType">
+		<annotation>
+			<documentation xml:lang="en">Schema for a Header record.  A header contains general information about the system or subsystem.</documentation>
+		</annotation>
+		<sequence>
+			<element name="AuthorSet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="Author" type="string" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="NoteSet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="Note" type="string" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="HistorySet" minOccurs="0">
+				<complexType>
+					<sequence>
+						<element name="History" type="string" minOccurs="0" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+		</sequence>
+		<attribute name="version" type="string"/>
+		<attribute name="date" type="string"/>
+		<attribute name="classification" type="string" default="NotClassified"/>
+		<attribute name="classificationInstructions" type="string"/>
+		<attribute name="validationStatus" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="Unknown"/>
+					<enumeration value="Working"/>
+					<enumeration value="Draft"/>
+					<enumeration value="Test"/>
+					<enumeration value="Validated"/>
+					<enumeration value="Released"/>
+					<enumeration value="Withdrawn"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
+	<simpleType name="HexadecimalType">
+		<annotation>
+			<documentation xml:lang="en">A simple restriction on string for hexadecimal numbers.  Must be in 0x or 0X form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[xX][0-9a-fA-F]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="IntegerValueType">
+		<annotation>
+			<documentation xml:lang="en">Contains an Integer value; value may be provided directly or via the value in a parameter.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue" type="xtce:FixedIntegerValueType"/>
+			<element name="DynamicValue">
+				<annotation>
+					<documentation xml:lang="en">Uses a parameter instance to obtain the value.  The parameter value may be optionally adjusted by a Linear function or use a series of boolean expressions to lookup the value.  Anything more complex and a DynamicValue with a CustomAlgorithm may be used  </documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType"/>
+						<element name="LinearAdjustment" minOccurs="0">
+							<annotation>
+								<documentation xml:lang="en">A slope and intercept may be applied to scale or shift the value of the parameter in the dynamic value</documentation>
+							</annotation>
+							<complexType>
+								<attribute name="slope" type="integer" default="0"/>
+								<attribute name="intercept" type="integer" default="0"/>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="DiscreteLookupList">
+				<annotation>
+					<documentation xml:lang="en">Lookup a value using the lookup list supplied.  Use the first match found.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="DiscreteLookup" maxOccurs="unbounded">
+							<complexType>
+								<complexContent>
+									<extension base="xtce:MatchCriteriaType">
+										<attribute name="value" type="integer" use="required"/>
+									</extension>
+								</complexContent>
+							</complexType>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="MathOperatorsType">
+		<annotation>
+			<documentation xml:lang="en">Mathematical operators</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="+"/>
+			<enumeration value="-"/>
+			<enumeration value="*"/>
+			<enumeration value="/"/>
+			<enumeration value="%"/>
+			<enumeration value="^"/>
+			<enumeration value="y^x"/>
+			<enumeration value="ln"/>
+			<enumeration value="log"/>
+			<enumeration value="e^x"/>
+			<enumeration value="1/x"/>
+			<enumeration value="x!"/>
+			<enumeration value="tan"/>
+			<enumeration value="cos"/>
+			<enumeration value="sin"/>
+			<enumeration value="atan"/>
+			<enumeration value="acos"/>
+			<enumeration value="asin"/>
+			<enumeration value="tanh"/>
+			<enumeration value="cosh"/>
+			<enumeration value="sinh"/>
+			<enumeration value="atanh"/>
+			<enumeration value="acosh"/>
+			<enumeration value="asinh"/>
+			<enumeration value="swap"/>
+		</restriction>
+	</simpleType>
+	<complexType name="MatchCriteriaType">
+		<annotation>
+			<documentation xml:lang="en">Contains either a simple Comparison, a ComparisonList, an arbitrarily complex BooleanExpression or an escape to an externally defined algorithm</documentation>
+		</annotation>
+		<choice>
+			<element name="Comparison" type="xtce:ComparisonType">
+				<annotation>
+					<documentation xml:lang="en">A simple comparison check</documentation>
+				</annotation>
+			</element>
+			<element name="ComparisonList">
+				<annotation>
+					<documentation xml:lang="en">All comparisons must be true</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="Comparison" type="xtce:ComparisonType" maxOccurs="unbounded"/>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="BooleanExpression" type="xtce:BooleanExpressionType">
+				<annotation>
+					<documentation xml:lang="en">An arbitrarily complex boolean expression</documentation>
+				</annotation>
+			</element>
+			<element name="CustomAlgorithm" type="xtce:InputAlgorithmType">
+				<annotation>
+					<documentation xml:lang="en">An escape to an externally defined algorithm</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="MathOperationType">
+		<annotation>
+			<documentation xml:lang="en">Postfix (aka Reverse Polish Notation (RPN)) notation is used to describe mathmatical equations. It uses a stack where operands (either fixed values or ParameterInstances) are pushed onto the stack from first to last in the XML. As the operators are specified, each pops off operands as it evaluates them, and pushes the result back onto the stack. In this case postfix is used to avoid having to specify parenthesis. To convert from infix to postfix, use Dijkstra's "shunting yard" algorithm.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="ValueOperand" type="double">
+				<annotation>
+					<documentation xml:lang="en">Use a constant in the calculation</documentation>
+				</annotation>
+			</element>
+			<element name="ThisParameterOperand">
+				<annotation>
+					<documentation xml:lang="en">Use the value of this parameter in the calculation</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterInstanceRefOperand" type="xtce:ParameterInstanceRefType">
+				<annotation>
+					<documentation xml:lang="en">Use the value of another Parameter in the calculation</documentation>
+				</annotation>
+			</element>
+			<element name="Operator" type="xtce:MathOperatorsType">
+				<annotation>
+					<documentation xml:lang="en">Binary operators: +, -, *, /, %, ^ operate on the top two values in the stack, leaving the result on the top of the stack.  Unary operators: 1/x, x!, e^x, ln, log, and trigonometric operators operate on the top member of the stack also leaving the result on the top of the stack.  'ln' is a natural log where 'log' is a base 10 logarithm.  Trigonometric operators use degrees.  'swap' swaps the top two members of the stack.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="NameType">
+		<annotation>
+			<documentation xml:lang="en">Used for "directory" style unique names.  We need to preclude spaces, '.', '/', ':", "[" and "]".   Only letters, digits, '_', ' ' and "-" are allowed </documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="[a-zA-Z0-9_\-]*"/>
+		</restriction>
+	</simpleType>
+	<complexType name="NameDescriptionType">
+		<annotation>
+			<documentation xml:lang="en">The type definition used by most elements that require a name with optional descriptions.   </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DescriptionType">
+				<attribute name="name" type="xtce:NameType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="NameReferenceType">
+		<annotation>
+			<documentation xml:lang="en">Used when referencing a directory style "NameType".   All characters are legal.  All name references use a Unix ‘like’ name referencing mechanism across the SpaceSystem Tree (e.g., SimpleSat/Bus/EPDS/BatteryOne/Voltage) where the '/', ‘..’ and ‘.’ are used to navigate through the hierarchy.  The use of an unqualified name will search for an item in the current SpaceSystem first, then if none is found, in progressively higher SpaceSystems.  A SpaceSystem is a name space (i.e., a named type declared in MetaCommandData is also declared in TelemetryMetaData - and vice versa).</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="NumberToStringType">
+		<annotation>
+			<documentation xml:lang="en">There are two ways numeric data can be changed to string data: using a Java style NumberFormat, or using an enumerated list.   Enumerated lists can be assigned to a single value or a value range.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:OptionalNameDescriptionType">
+				<choice>
+					<choice maxOccurs="unbounded">
+						<element name="ValueEnumeration" type="xtce:ValueEnumerationType">
+							<annotation>
+								<documentation xml:lang="en">A number or range assigned to a string.</documentation>
+							</annotation>
+						</element>
+						<element name="RangeEnumeration" type="xtce:FloatRangeType">
+							<annotation>
+								<documentation xml:lang="en">A string value associated with a numerical range.</documentation>
+							</annotation>
+						</element>
+					</choice>
+					<element name="NumberFormat">
+						<complexType>
+							<attribute name="numberBase" type="xtce:RadixType" use="optional"/>
+							<attribute name="minimumFractionDigits" type="nonNegativeInteger" use="optional"/>
+							<attribute name="maximumFractionDigits" type="nonNegativeInteger" use="optional"/>
+							<attribute name="minimumIntegerDigits" type="nonNegativeInteger" use="optional"/>
+							<attribute name="maximumIntegerDigits" type="nonNegativeInteger" use="optional"/>
+							<attribute name="negativeSuffix" type="string" use="optional"/>
+							<attribute name="positiveSuffix" type="string" use="optional"/>
+							<attribute name="negativePrefix" type="string" use="optional" default="-"/>
+							<attribute name="positivePrefix" type="string" use="optional"/>
+							<attribute name="showThousandsGrouping" type="boolean" use="optional" default="true"/>
+							<attribute name="notation" use="optional" default="normal">
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="normal"/>
+										<enumeration value="scientific"/>
+										<enumeration value="engineering"/>
+									</restriction>
+								</simpleType>
+							</attribute>
+						</complexType>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="OctalType">
+		<annotation>
+			<documentation xml:lang="en">A simple restriction on string for hexadecimal numbers.  Must be in 0o or 0O form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[oO][0-7]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="OptionalNameDescriptionType">
+		<annotation>
+			<documentation xml:lang="en">The type definition used by most elements that have an optional name with optional descriptions.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DescriptionType">
+				<attribute name="name" type="xtce:NameType" use="optional"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ORedConditionsType">
+		<annotation>
+			<documentation xml:lang="en">A list of boolean comparisons, or boolean groups that are logically ORed together.  Any ANDed conditions in the list are evaluated first.</documentation>
+		</annotation>
+		<choice minOccurs="2" maxOccurs="unbounded">
+			<element name="Condition" type="xtce:ComparisonCheckType"/>
+			<element name="ANDedConditions" type="xtce:ANDedConditionsType"/>
+		</choice>
+	</complexType>
+	<complexType name="ParameterSetType">
+		<annotation>
+			<documentation xml:lang="en">Used by both the TelemetryMetaData and the CommandMetaData components each may be built independently.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="Parameter">
+				<annotation>
+					<appinfo>Need to ensure that the named types actually exist</appinfo>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:NameDescriptionType">
+							<sequence>
+								<element name="ParameterProperties" type="xtce:ParameterPropertiesType" minOccurs="0"/>
+							</sequence>
+							<attribute name="parameterTypeRef" type="xtce:NameReferenceType" use="required"/>
+							<attribute name="initialValue" type="string" use="optional">
+								<annotation>
+									<documentation xml:lang="en">Used to set the initial calibrated values of Parameters.  Will overwrite an initial value defined for the ParameterType.  For integer types base 10 (decimal) form is assumed unless: if proceeded by a 0b or 0B, value is in base two (binary form, if proceeded by a 0o or 0O, values is in base 8 (octal) form, or if proceeded by a 0x or 0X, value is in base 16 (hex) form.  Floating point types may be specified in normal (100.0) or scientific (1.0e2) form.  Time types are specified using the ISO 8601 formats described for XTCE time data types.  Initial values for string types, may include C language style (\n, \t, \", \\, etc.) escape sequences.  Initial values for Array or Aggregate types may not be set.</documentation>
+									<appinfo>The value type must match the Parameter type</appinfo>
+								</annotation>
+							</attribute>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+			<element name="ParameterRef" type="xtce:ParameterRefType">
+				<annotation>
+					<documentation xml:lang="en">Used to include a Parameter defined in another sub-system in this sub-system.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="PolynomialType">
+		<annotation>
+			<documentation xml:lang="en">A polynomial expression.  For example: 3 + 2x</documentation>
+		</annotation>
+		<sequence>
+			<element name="Term" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">A term in a polynomial expression. </documentation>
+				</annotation>
+				<complexType>
+					<attribute name="coefficient" type="double" use="required"/>
+					<attribute name="exponent" type="double" use="required"/>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="RadixType">
+		<annotation>
+			<documentation xml:lang="en">Specifies the number base</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="Decimal"/>
+			<enumeration value="Hexadecimal"/>
+			<enumeration value="Octal"/>
+			<enumeration value="Binary"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ReferenceTimeType">
+		<annotation>
+			<documentation xml:lang="en">Most time values are relative to another time e.g. seconds are relative to minutes, minutes are relative to hours.  This type is used to describe this relationship starting with the least significant time Parameter to and progressing to the most significant time parameter.  </documentation>
+		</annotation>
+		<choice>
+			<element name="OffsetFrom" type="xtce:ParameterInstanceRefType"/>
+			<element name="Epoch" type="xtce:EpochType"/>
+		</choice>
+	</complexType>
+	<simpleType name="RelativeTimeType">
+		<annotation>
+			<documentation xml:lang="en">Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<restriction base="duration"/>
+	</simpleType>
+	<complexType name="RepeatType">
+		<annotation>
+			<documentation xml:lang="en">Hold a structure that can be repeated X times, where X is the Count</documentation>
+		</annotation>
+		<sequence>
+			<element name="Count" type="xtce:IntegerValueType">
+				<annotation>
+					<documentation xml:lang="en">Value (either fixed or dynamic) that contains the count of repeated structures.</documentation>
+				</annotation>
+			</element>
+			<element name="Offset" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Indicates the distance between repeating entries (the last bit of one entry to the start bit of the next entry)</documentation>
+				</annotation>
+				<complexType>
+					<complexContent>
+						<extension base="xtce:IntegerValueType">
+							<attribute name="offsetSizeInBits" type="positiveInteger" default="1"/>
+						</extension>
+					</complexContent>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="SplinePointType">
+		<annotation>
+			<documentation xml:lang="en">a spline is a set on points from which a curve may be drawn to interpolate raw to calibrated values</documentation>
+		</annotation>
+		<attribute name="order" type="positiveInteger" default="1"/>
+		<attribute name="raw" type="double" use="required"/>
+		<attribute name="calibrated" type="double" use="required"/>
+	</complexType>
+	<simpleType name="TimeUnits">
+		<annotation>
+			<documentation xml:lang="en">base time units.  days, months, years have obvoius ambiguity and should be avoided</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="seconds"/>
+			<enumeration value="picoSeconds"/>
+			<enumeration value="days"/>
+			<enumeration value="months"/>
+			<enumeration value="years"/>
+		</restriction>
+	</simpleType>
+	<complexType name="UnitType" mixed="true">
+		<annotation>
+			<documentation xml:lang="en">Used to hold the unit(s) plus possibly the exponent and factor for the units</documentation>
+		</annotation>
+		<attribute name="power" type="decimal" use="optional" default="1"/>
+		<attribute name="factor" type="string" default="1"/>
+		<attribute name="description" type="string"/>
+	</complexType>
+	<complexType name="ValueEnumerationType">
+		<annotation>
+			<documentation xml:lang="en">Contains a value and an associated string label</documentation>
+		</annotation>
+		<attribute name="value" type="integer" use="required"/>
+		<attribute name="label" type="string" use="required"/>
+	</complexType>
+	<!--Types used with alarms-->
+	<simpleType name="AlarmLevels">
+		<annotation>
+			<documentation xml:lang="en">An enumerated list of the possible alarm levels</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="normal"/>
+			<enumeration value="watch"/>
+			<enumeration value="warning"/>
+			<enumeration value="distress"/>
+			<enumeration value="critical"/>
+			<enumeration value="severe"/>
+		</restriction>
+	</simpleType>
+	<complexType name="AlarmConditionsType">
+		<annotation>
+			<documentation xml:lang="en">When the alarm is determined by boolean logic</documentation>
+		</annotation>
+		<sequence>
+			<element name="WatchAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="WarningAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="DistressAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="CriticalAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+			<element name="SevereAlarm" type="xtce:MatchCriteriaType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="AlarmRangesType">
+		<annotation>
+			<documentation xml:lang="en">Contains five ranges: Watch, Warning, Distress, Critical, and Severe each in increasing severity.  Normally, only the Warning and Critical ranges are used and the color yellow is associated with Warning and the color red is associated with Critical.   The ranges given are valid for numbers lower than the min and higher than the max values.   These ranges should not overlap, but if they do, assume the most severe range is to be applied.  All ranges are optional and it is quite allowed for there to be only one end of the range.  Range values are in calibrated engineering units.</documentation>
+		</annotation>
+		<sequence>
+			<element name="WatchRange" type="xtce:FloatRangeType" minOccurs="0"/>
+			<element name="WarningRange" type="xtce:FloatRangeType" minOccurs="0"/>
+			<element name="DistressRange" type="xtce:FloatRangeType" minOccurs="0"/>
+			<element name="CriticalRange" type="xtce:FloatRangeType" minOccurs="0"/>
+			<element name="SevereRange" type="xtce:FloatRangeType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="AlarmType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Alarms associated with numeric data types</documentation>
+		</annotation>
+		<choice minOccurs="0">
+			<element name="AlarmConditions" type="xtce:AlarmConditionsType">
+				<annotation>
+					<documentation xml:lang="en">A MatchCriteria may be specified for each of the 5 alarm levels.  Each level is optional and the alarm should be the highest level to test true.</documentation>
+				</annotation>
+			</element>
+			<element name="CustomAlarm" type="xtce:InputAlgorithmType">
+				<annotation>
+					<documentation xml:lang="en">An escape for ridiculously complex alarm conditions.  Will trigger on changes to the  containing Parameter.  </documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="minViolations" type="positiveInteger" default="1">
+			<annotation>
+				<documentation xml:lang="en">Number of successive instances that meet the alarm conditions for the Alarm to trigger.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="BinaryAlarmConditionType">
+		<annotation>
+			<documentation xml:lang="en">Alarm conditions for Binary types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarm conditions for Boolean types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatRangeType">
+		<annotation>
+			<documentation xml:lang="en">A range of numbers.  "minInclusive", "minExclusive", "maxInclusive" and "maxExclusive" attributes are borrowed from the W3C schema language.</documentation>
+		</annotation>
+		<attribute name="minInclusive" type="double"/>
+		<attribute name="minExclusive" type="double"/>
+		<attribute name="maxInclusive" type="double"/>
+		<attribute name="maxExclusive" type="double"/>
+	</complexType>
+	<complexType name="EnumerationAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarm conditions for Enumerations</documentation>
+			<appinfo>An additional check needs to be performed to ensure that the enumeration values in the alarms are legal enumeration values for the Parameter</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="EnumerationAlarmList">
+						<complexType>
+							<sequence>
+								<element name="EnumerationAlarm" maxOccurs="unbounded">
+									<complexType>
+										<attribute name="alarmLevel" type="xtce:AlarmLevels" use="required"/>
+										<attribute name="enumerationValue" type="string" use="required"/>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="defaultAlarmLevel" type="xtce:AlarmLevels" default="normal"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IntegerRangeType">
+		<annotation>
+			<documentation xml:lang="en">An integral range of numbers.  "min", and "max".</documentation>
+		</annotation>
+		<attribute name="minInclusive" type="xtce:FixedIntegerValueType"/>
+		<attribute name="maxInclusive" type="xtce:FixedIntegerValueType"/>
+	</complexType>
+	<complexType name="NumericContextAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Context alarms are applied when the ContextMatch is true.  Context alarms override Default alarms</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NumericAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarms associated with numeric data types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="StaticAlarmRanges" type="xtce:AlarmRangesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">StaticAlarmRanges are used to trigger alarms when the parameter value passes some threshold value</documentation>
+						</annotation>
+					</element>
+					<element name="ChangeAlarmRanges" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">ChangeAlarmRanges are used to trigger alarms when the parameter value's rate-of-change is either too fast or too slow.   The change may be with respect to time (the default) or with respect to samples (delta alarms) - the changeType attribute determines this.  The change may also be ether relative (as a percentage change) or absolute as set by the changeBasis attribute.  The alarm also requires the spanOfInterest in both samples and seconds to have passed before it is to trigger.  For time based rate of change alarms, the time specified in spanOfInterestInSeconds is used to calculate the change.  For sample based rate of change alarms, the change is calulated over the number of samples specified in spanOfInterestInSeconds.</documentation>
+						</annotation>
+						<complexType>
+							<complexContent>
+								<extension base="xtce:AlarmRangesType">
+									<attribute name="changeType" default="changePerSecond">
+										<simpleType>
+											<restriction base="string">
+												<enumeration value="changePerSecond"/>
+												<enumeration value="changePerSample"/>
+											</restriction>
+										</simpleType>
+									</attribute>
+									<attribute name="changeBasis" default="absoluteChange">
+										<simpleType>
+											<restriction base="string">
+												<enumeration value="absoluteChange"/>
+												<enumeration value="percentageChange"/>
+											</restriction>
+										</simpleType>
+									</attribute>
+									<attribute name="spanOfInterestInSamples" type="positiveInteger" default="1"/>
+									<attribute name="spanOfInterestInSeconds" type="decimal" default="0"/>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarm conditions for Strings</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="StringAlarmList">
+						<complexType>
+							<sequence>
+								<element name="StringAlarm" maxOccurs="unbounded">
+									<annotation>
+										<documentation xml:lang="en">Pattern may be a regular expression</documentation>
+									</annotation>
+									<complexType>
+										<attribute name="alarmLevel" type="xtce:AlarmLevels" use="required"/>
+										<attribute name="matchPattern" type="string" use="required"/>
+									</complexType>
+								</element>
+							</sequence>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="defaultAlarmLevel" type="xtce:AlarmLevels" default="normal"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TimeAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarms associated with time data types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="StaticAlarmRanges" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">StaticAlarmRanges are used to trigger alarms when the parameter value passes some threshold value</documentation>
+						</annotation>
+						<complexType>
+							<complexContent>
+								<extension base="xtce:AlarmRangesType">
+									<attribute name="timeUnits" type="xtce:TimeUnits" default="seconds"/>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+					<element name="ChangePerSecondAlarmRanges" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">ChangePerSecondAlarmRanges are used to trigger alarms when the parameter value's rate-of-change passes some threshold value.  An alarm condition that triggers when the value changes too fast (or too slow)</documentation>
+						</annotation>
+						<complexType>
+							<complexContent>
+								<extension base="xtce:AlarmRangesType">
+									<attribute name="timeUnits" type="xtce:TimeUnits" default="seconds"/>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TimeAlarmConditionType">
+		<annotation>
+			<documentation xml:lang="en">Alarm conditions for Time types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="TimeContextAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Context alarms are applied when the ContextMatch is true.  Context alarms override Default alarms</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:TimeAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:MatchCriteriaType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--******** End of Common Types Schema -->
+</schema>
+```
+
+### `SpaceSystemV1.2.xsd`
+
+**경로:** `gsw/yamcs/yamcs-xtce/SpaceSystemV1.2.xsd`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+Style Notes, used throughout the schema:
+
+	- Element and Type names begin with a capital letter.
+	- Type names end with the word "Type".
+	- Attribute names begin with a lowercase letter.
+	- Usually, when the UML class diagram references classes, W3C Elements are used, and whenever
+	  the UML references simple types (strings, ints), W3C Attributes are used.  In general, 
+	  attributes are preferred over elements because they're easier to deal with 
+	  in SAX and DOM, but whenever the Element/Attribute may one day carry metadata,
+	  elements should be used.  One exception, is enumerated classes, because enumerations 
+	  may be defined for attributes but not for elements.
+	- Bias toward self-describing names over short, bandwidth conserving ones.
+	- Use mixed case in names rather than underscores to combine multiple words (camelCase).
+	- A documentation annotation is included in every element and type definition.  Annotations for a type are 
+        included with the type definition, use of the type is annotated in the element definition.
+	- Hints on units (for values with units) are provided in the names of attributes and 
+	  elements (e.g. "dataRateInBPS" is preferred over "dataRate" OR "frameLengthInBits" is 
+	  preferred over "frameLength").
+	- Major elements or any elements used multiple times are first defined with a complexType definition
+	- All collections are put inside either a "List" element or a "Set" Element depending on whether the collection
+	  is ordered or unordered.
+	- Simplicity in the XML files is favored over simplicity in the Schema
+	- Whenever an additional validity check must be performed that is not describable in the schema language, 
+	  an appinfo annotation describes that validity check.
+-->
+<schema xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.omg.org/spec/XTCE/20180204" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.2">
+	<import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/03/xml.xsd"/>
+	<annotation>
+		<documentation xml:lang="en">This XML Schema Definition (XSD) defines syntax with concrete semantics for describing space or remote device telemetry and commanding in a platform and program independent manner.</documentation>
+	</annotation>
+	<!--******** SpaceSystem *********************-->
+	<element name="SpaceSystem" type="xtce:SpaceSystemType" nillable="true">
+		<annotation>
+			<documentation xml:lang="en">The top-level SpaceSystem is the root element for the set of metadata necessary to monitor and command a space device, such as a satellite.  A SpaceSystem defines a namespace.  Metadata areas include:  packets/minor frames layout, telemetry, calibration, alarm, algorithms, streams and commands.  A SpaceSystem may have child SpaceSystems, forming a SpaceSystem tree. See SpaceSystemType.</documentation>
+		</annotation>
+		<key name="parameterNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique parameter name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/xtce:ParameterSet/xtce:Parameter|xtce:CommandMetaData/xtce:ParameterSet/xtce:Parameter"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="parameterTypeNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique parameter type name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/xtce:ParameterTypeSet/*|xtce:CommandMetaData/xtce:ParameterTypeSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="metaCommandNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique metaCommand name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:CommandMetaData/xtce:MetaCommandSet/xtce:MetaCommand"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="algorithmNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique algorithm name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/xtce:AlgorithmSet/*|xtce:CommandMetaData/xtce:AlgorithmSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="streamNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique stream name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/xtce:StreamSet/*|xtce:CommandMetaData/xtce:StreamSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="serviceNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique service name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:ServiceSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="containerNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a container stream name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:TelemetryMetaData/xtce:ContainerSet/*|xtce:CommandMetaData/xtce:CommandContainerSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="messageNameKey">
+			<selector xpath="xtce:TelemetryMetaData/xtce:MessageSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="argumentTypeNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique argument type name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:CommandMetaData/xtce:ArgumentTypeSet/*|xtce:CommandMetaData/xtce:ParameterTypeSet/*"/>
+			<field xpath="@name"/>
+		</key>
+		<key name="blockMetaCommandNameKey">
+			<annotation>
+				<documentation xml:lang="en">This key ensures a unique BlockMetaCommand name at the system level.</documentation>
+			</annotation>
+			<selector xpath="xtce:CommandMetaData/xtce:MetaCommandSet/xtce:BlockMetaCommand"/>
+			<field xpath="@name"/>
+		</key>
+	</element>
+	<complexType name="SpaceSystemType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">SpaceSystem is a collection of SpaceSystem(s) including space assets, ground assets, multi-satellite systems and sub-systems.  A SpaceSystem is the root element for the set of data necessary to monitor and command an arbitrary space device - this includes the binary decomposition the data streams going into and out of a device.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="Header" type="xtce:HeaderType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The Header element contains optional descriptive information about this SpaceSystem or the document as a whole when specified at the root SpaceSystem.</documentation>
+						</annotation>
+					</element>
+					<element name="TelemetryMetaData" type="xtce:TelemetryMetaDataType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This element contains descriptions of the telemetry created on the space asset/device and sent to other data consumers.</documentation>
+						</annotation>
+					</element>
+					<element name="CommandMetaData" type="xtce:CommandMetaDataType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This element contains descriptions of the commands and their associated constraints and verifications that can be sent to the space asset/device.</documentation>
+						</annotation>
+					</element>
+					<element name="ServiceSet" type="xtce:ServiceSetType" minOccurs="0"/>
+					<element ref="xtce:SpaceSystem" minOccurs="0" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="en">Additional SpaceSystem elements may be used like namespaces to segregate portions of the space asset/device into convenient groupings or may be used to specialize a product line generic SpaceSystem to a specific asset instance.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="operationalStatus" type="token" use="optional">
+					<annotation>
+						<documentation xml:lang="en">Optional descriptive attribute for document owner convenience.</documentation>
+					</annotation>
+				</attribute>
+				<attribute ref="xml:base"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandMetaDataType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Describe command related metadata. Items defined in this area may refer to items defined in TelemetryMetaData.  See TelemetryMetaDataType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterTypeSet" type="xtce:ParameterTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of parameter types.</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSet" type="xtce:ParameterSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Parameters referenced by MetaCommands.  This Parameter Set is located here so that MetaCommand data can be built independently of TelemetryMetaData.</documentation>
+				</annotation>
+			</element>
+			<element name="ArgumentTypeSet" type="xtce:ArgumentTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of argument types.  MetaCommand definitions can contain arguments and parameters.  Arguments are user provided to the specific command definition.  Parameters are provided/calculated/determined by the software creating the command instance.  As a result, arguments contain separate type information.  In some cases, arguments have different descriptive characteristics.</documentation>
+				</annotation>
+			</element>
+			<element name="MetaCommandSet" type="xtce:MetaCommandSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of command definitions with their arguments, parameters, and container encoding descriptions.</documentation>
+				</annotation>
+			</element>
+			<element name="CommandContainerSet" type="xtce:CommandContainerSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Similar to the ContainerSet for telemetry, the CommandContainerSet contains containers that can be referenced/shared by MetaCommand definitions.</documentation>
+				</annotation>
+			</element>
+			<element name="StreamSet" type="xtce:StreamSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Contains an unordered set of Streams.</documentation>
+				</annotation>
+			</element>
+			<element name="AlgorithmSet" type="xtce:AlgorithmSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Contains an unordered set of Algorithms.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="TelemetryMetaDataType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">All the data about telemetry is contained in TelemetryMetaData</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterTypeSet" type="xtce:ParameterTypeSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of parameter types</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSet" type="xtce:ParameterSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A list of Parameters for this Space System.  </documentation>
+				</annotation>
+			</element>
+			<element name="ContainerSet" type="xtce:ContainerSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Holds the list of all potential container definitions for telemetry. Containers may parts of packets or TDM, and then groups of the containers, and then an entire entity -- such as a packet.  In order to maximize re-used for duplication, the pieces may defined once here, and then assembled as needed into larger structures, also here.</documentation>
+				</annotation>
+			</element>
+			<element name="MessageSet" type="xtce:MessageSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Messages are an alternative method of uniquely identifying containers within a Service.  A message provides a test in the form of MatchCriteria to match to a container.  A simple example might be: [When minorframeID=21, the message is the 21st minorframe container.  The collection of messages to search thru will be bound by a Service.</documentation>
+				</annotation>
+			</element>
+			<element name="StreamSet" type="xtce:StreamSetType" minOccurs="0"/>
+			<element name="AlgorithmSet" type="xtce:AlgorithmSetType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<!--****** End of Top Level SpaceSystem Schema *****-->
+	<!--*************************************************************-->
+	<!--****** Packaging Schema *******************************-->
+	<annotation>
+		<documentation xml:lang="en">This schema defines the dictionary for containers, which in turn describe the physical composition of data in a communication system</documentation>
+	</annotation>
+	<complexType name="ArgumentArgumentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ArgumentRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="argumentRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentArrayArgumentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ArrayParameterRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<sequence minOccurs="0">
+					<annotation>
+						<documentation xml:lang="en">Only used for subsetting an array.  The array's true dimension sizes are set in the Type.</documentation>
+					</annotation>
+					<element name="DimensionList" type="xtce:ArgumentDimensionListType">
+						<annotation>
+							<documentation xml:lang="en">The dimension here if used for subsetting must be less than the ones in the type.  It's not a subset if its the same size.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="argumentRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="lastEntryForThisArrayInstance" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentArrayParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ArrayParameterRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<sequence minOccurs="0">
+					<annotation>
+						<documentation xml:lang="en">Only used for subsetting an array.  The array's true dimension sizes are set in the Type.</documentation>
+					</annotation>
+					<element name="DimensionList" type="xtce:DimensionListType">
+						<annotation>
+							<documentation xml:lang="en">The dimension here if used for subsetting must be less than the ones in the type.  It's not a subset if its the same size.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="lastEntryForThisArrayInstance" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentContainerRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ContainerRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentContainerSegmentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ContainerSegmentRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="xtce:PositiveLongType"/>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentFixedValueEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to FixedValueEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="name" type="string" use="optional">
+					<annotation>
+						<documentation xml:lang="en">An optional name for the fixed/constant field in the sequence.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="binaryValue" type="hexBinary" use="required">
+					<annotation>
+						<documentation xml:lang="en">The fixed/constant value that should be encoded into the sequence.  This value provided should have sufficient bit length to accomodate the size in bits.  If the value is larger, the most significant unnecessary bits are dropped.  The value provided should be in network byte order for encoding.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required">
+					<annotation>
+						<documentation xml:lang="en">The number of bits that this fixed/constant value should occupy in the sequence.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentIndirectParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to IndirectParameterRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<sequence>
+					<element name="ParameterInstance" type="xtce:ParameterInstanceRefType"/>
+				</sequence>
+				<attribute name="aliasNameSpace" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ParameterRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentParameterSegmentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ParameterSegmentRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="xtce:PositiveLongType"/>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentStreamSegmentEntryType">
+		<annotation>
+			<documentation xml:lang="en">Identical to StreamRefEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentSequenceEntryType">
+				<attribute name="streamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="xtce:PositiveLongType"/>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayParameterRefEntryType">
+		<annotation>
+			<documentation>Describe an entry that is an array parameter. Specify the dimension sizes if you subsetting the array (the number of dimensions shall match the number defined in the parameter’s type definition), otherwise the ones in the ParameterType are assumed.  See SequenceEntryType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<sequence minOccurs="0">
+					<annotation>
+						<documentation>Only used for subsetting an array.  The array's maximum dimension sizes are set in the type.  When a DimensionList is not used, the array is the full size provided in the type.</documentation>
+					</annotation>
+					<element name="DimensionList" type="xtce:DimensionListType">
+						<annotation>
+							<documentation>The dimension here if used for subsetting must be less than the ones in the type.  It's not a subset if its the same size.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseAlarmType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Supplies an optional non-reference-able name and short description for alarms. Also includes an optional ancillary data for any special local flags, note that these may not necessarily transfer to another recipient of an instance document.</documentation>
+		</annotation>
+		<sequence>
+			<element name="AncillaryDataSet" type="xtce:AncillaryDataSetType" minOccurs="0"/>
+		</sequence>
+		<attribute name="name" type="string" use="optional">
+			<annotation>
+				<documentation xml:lang="en">The alarm definition may be named.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="shortDescription" type="xtce:ShortDescriptionType">
+			<annotation>
+				<documentation xml:lang="en">An optional brief description of this alarm definition.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="BaseContainerType">
+		<annotation>
+			<documentation xml:lang="en">Describe a child/parent container inheritance relationship.  Describe constraints with RestrictionCriteria, conditions that must be true for this container to be an extension of the parent container.  A constraint can be used to convey the identifying features of the telemetry format such as the CCSDS application id or minor-frame id.  See RestrictionCriteriaType and SequenceContainerType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="RestrictionCriteria" type="xtce:RestrictionCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Contains the conditions that must evaluate to true in order for this container to be an extension of the parent container.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="containerRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">Reference to the container that this container extends.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ContainerType" abstract="true" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">An abstract block of data; used as the base type for more specific container types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<annotation>
+						<documentation xml:lang="en">RateInStream is used to:  a) generate alarms when the Container is updated too frequently or too infrequently, b) provide some 'guidelines' for generating forward link containers, c) provide some guidelines for spacecraft simulators to generate telemetry containers.  If necessary, these rates may be defined on a per stream basis.</documentation>
+						<appinfo>The software should check that any Stream names referenced in the RateInStreamSet actually exist.</appinfo>
+					</annotation>
+					<element name="DefaultRateInStream" type="xtce:RateInStreamType" minOccurs="0"/>
+					<element name="RateInStreamSet" type="xtce:RateInStreamSetType" minOccurs="0"/>
+					<element name="BinaryEncoding" type="xtce:BinaryDataEncodingType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">May be used to indicate error detection and correction, change byte order,  provide the size (when it can't be derived), or perform some custom processing.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerRefSetType">
+		<sequence>
+			<element name="ContainerRef" type="xtce:ContainerRefType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ContainerRefType">
+		<annotation>
+			<documentation xml:lang="en">Holds a reference to a container</documentation>
+		</annotation>
+		<attribute name="containerRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">name of container</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ContainerRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is simply a reference to another container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerSegmentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is only a portion of a container indicating that the entire container must be assembled from other container segments.   It is assumed that container segments happen sequentially in time, that is the first part of a container is first, however (and there's always a however), if this is not the case the order of this container segment may be supplied with the order attribute where the first segment order="0".  Each instance of a container cannot overlap in the overall sequence with another instance</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="xtce:PositiveLongType"/>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContainerSetType">
+		<annotation>
+			<documentation xml:lang="en">Unordered Set of Containers</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="SequenceContainer" type="xtce:SequenceContainerType">
+				<annotation>
+					<documentation xml:lang="en">SequenceContainers define sequences of parameters or other containers.  </documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="EntryListType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Contains an ordered list of Entries.  Used in Sequence Container</documentation>
+		</annotation>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="ParameterRefEntry" type="xtce:ParameterRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a Parameter to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSegmentRefEntry" type="xtce:ParameterSegmentRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a portion of a Parameter to be a part of this container layout definition.  This is used when the Parameter is reported in fractional parts in the container before being fully updated.</documentation>
+				</annotation>
+			</element>
+			<element name="ContainerRefEntry" type="xtce:ContainerRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify the content of another Container to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ContainerSegmentRefEntry" type="xtce:ContainerSegmentRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a portion of another Container to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="StreamSegmentEntry" type="xtce:StreamSegmentEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a portion of a Stream to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="IndirectParameterRefEntry" type="xtce:IndirectParameterRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a previous (not last reported) value of a Parmeter to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ArrayParameterRefEntry" type="xtce:ArrayParameterRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify an Array Type Parameter to be a part of this container layout definition when the Container does not populate the entire space of the Array contents.  If the entire space of the Array is populated, a tolerant implementation will accept ParameterRefEntry also.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="IndirectParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry whose name is given by the value of a ParamameterInstance.  This entry may be used to implement dwell telemetry streams.  The value of the parameter in ParameterInstance must use either the name of the Parameter or its alias.  If it's an alias name, the alias namespace is supplied as an attribute.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<sequence>
+					<element name="ParameterInstance" type="xtce:ParameterInstanceRefType"/>
+				</sequence>
+				<attribute name="aliasNameSpace" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="LocationInContainerInBitsType">
+		<annotation>
+			<documentation xml:lang="en">Describe the absolute or relative bit location of an entry in a container.  The "referenceLocation" attribute specifies the starting bit anchor.  If no referenceLocation value is given, the entry is assumed to begin at the first bit position after the previous entry.  Each container starts at bit 0, thus "containerStart" is an offset from 0.  Negative container start bits are before the container and are implementation dependent – these should be flagged as likely errors.  "containerEnd" is given as a positive offset from the end of the container, thus a container end of 0 is exactly at the end of the container.  Negative container end addresses are after the container and are implementation dependent – these should be flagged as likely errors.  Positive "previouEntry" values are offsets from the previous entry – zero (0) is the default which means it follows contiguously from the last occupied bit of the previous entry.  A value of one means it is offset 1-bit from the previous entry, and a value of negative 1 (-1) means it overlaps the previous entry by one bit, and so forth. The "nextEntry" attribute value is proposed for deprecation and should be avoided.  See SequenceEntryType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:IntegerValueType">
+				<attribute name="referenceLocation" type="xtce:ReferenceLocationType" default="previousEntry">
+					<annotation>
+						<documentation xml:lang="en">Defines the relative reference used to interpret the start bit position.  The default is 0 bits from the end of the previousEntry, which makes the entry contiguous.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentLocationInContainerInBitsType">
+		<annotation>
+			<documentation xml:lang="en">Identical to LocationInContainerInBitsType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentIntegerValueType">
+				<attribute name="referenceLocation" type="xtce:ReferenceLocationType" default="previousEntry"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MessageRefType">
+		<annotation>
+			<documentation xml:lang="en">Holds a reference to a message</documentation>
+		</annotation>
+		<attribute name="messageRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">name of message</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ParameterRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is a single Parameter</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterSegmentRefEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is only a portion of a parameter value indicating that the entire parameter value must be assembled from other parameter segments.   It is assumed that parameter segments happen sequentially in time, that is the first part if a telemetry parameter first, however (and there's always a however), if this is not the case the order of this parameter segment may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="xtce:PositiveLongType"/>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SequenceContainerType">
+		<annotation>
+			<documentation xml:lang="en">Describes the binary layout/packing of data and also related properties, including an entry list of parameters, parameter segments, array parameters, stream segments, containers, and container segments.  Sequence containers may extend other sequence containers (see BaseContainerType).   The parent container’s entries are placed before the entries in the child container forming one entry list.  An inheritance chain may be formed using this mechanism, but only one entry list is being created.  Sequence containers may be marked as "abstract", when this occurs an instance of it cannot itself be created.  The idle pattern is part of any unallocated space in the container.  See EntryListType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ContainerType">
+				<sequence>
+					<element name="EntryList" type="xtce:EntryListType">
+						<annotation>
+							<documentation xml:lang="en">List of item entries to pack/encode into this container definition.</documentation>
+						</annotation>
+					</element>
+					<element name="BaseContainer" type="xtce:BaseContainerType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optional inheritance for this container from another named container.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="abstract" type="boolean" default="false">
+					<annotation>
+						<documentation xml:lang="en">Abstract container definitions that are not instantiated, rather only used as bases to inherit from to create specialized container definitions.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="idlePattern" type="xtce:FixedIntegerValueType" default="0x0">
+					<annotation>
+						<documentation xml:lang="en">The idle pattern is part of any unallocated space in the container.  This is uncommon.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SequenceEntryType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Defines an abstract schema type used to create other entry types. Describe an entry’s location in the container (See LocationInContainerInBitsType). The location may be fixed or dynamic, absolute or relative. Entries may be included depending on the value of a condition (See IncludeConditionType), and entries may also repeat (see RepeatEntryType). The entry’s IncludeCondition resolves to true, it is fully-resolved when its size is computable after RepeatEntry has been accounted for and then offset by LocationInContainer. See EntryListType, IncludeConditionType, RepeatEntryType and LocationInContainerInBitsType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="LocationInContainerInBits" type="xtce:LocationInContainerInBitsType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The start bit 0 position for each container is local to the container, but does include space occupied by inherited containers.  When a container is "included", as opposed to inherited, then the interpreting implementation takes into account the start bit position of the referring container when finally assembling the start bits for the post-processed entry content.  The default start bit for any entry is 0 bits from the previous entry, making the content contiguous when this element is not used.</documentation>
+				</annotation>
+			</element>
+			<element name="RepeatEntry" type="xtce:RepeatType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">May be used when this entry repeats itself in the sequence container.  When an entry repeats, it effectively specifies that the same entry is reported more than once in the container and has the same physical meaning.  This should not be construed to be equivalent to arrays.</documentation>
+				</annotation>
+			</element>
+			<element name="IncludeCondition" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">This entry will only be included in the sequence when this condition is true, otherwise it is always included.  When the include condition evaluates to false, it is as if the entry does not exist such that any start bit interpretations cannot take into account the space that would have been occupied if this included condition were true.</documentation>
+				</annotation>
+			</element>
+			<element name="TimeAssociation" type="xtce:TimeAssociationType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional timing information associated with this entry.</documentation>
+				</annotation>
+			</element>
+			<element name="AncillaryDataSet" type="xtce:AncillaryDataSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional ancillary data associated with this element.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="shortDescription" type="xtce:ShortDescriptionType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">Optional short description for this entry element.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ArgumentSequenceEntryType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to a SequenceEntryType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<element name="LocationInContainerInBits" type="xtce:ArgumentLocationInContainerInBitsType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The start bit 0 position for each container is local to the container, but does include space occupied by inherited containers.  When a container is "included", as opposed to inherited, then the interpreting implementation takes into account the start bit position of the referring container when finally assembling the start bits for the post-processed entry content.  The default start bit for any entry is 0 bits from the previous entry, making the content contiguous when this element is not used.</documentation>
+				</annotation>
+			</element>
+			<element name="RepeatEntry" type="xtce:ArgumentRepeatType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">May be used when this entry repeats itself in the sequence container.  When an entry repeats, it effectively specifies that the same entry is reported more than once in the container and has the same physical meaning.  This should not be construed to be equivalent to arrays.</documentation>
+				</annotation>
+			</element>
+			<element name="IncludeCondition" type="xtce:ArgumentMatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">This entry will only be included in the sequence when this condition is true, otherwise it is always included.  When the include condition evaluates to false, it is as if the entry does not exist such that any start bit interpretations cannot take into account the space that would have been occupied if this included condition were true.</documentation>
+				</annotation>
+			</element>
+			<element name="AncillaryDataSet" type="xtce:AncillaryDataSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Ancillary data associated with this entry.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="shortDescription" type="xtce:ShortDescriptionType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">Optional short description for this entry element.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ServiceType">
+		<annotation>
+			<documentation xml:lang="en">Holds a set of services, logical groups of containers  OR messages (not both).</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<choice>
+					<element name="MessageRefSet" type="xtce:MessageRefSetType"/>
+					<element name="ContainerRefSet" type="xtce:ContainerRefSetType"/>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StreamSegmentEntryType">
+		<annotation>
+			<documentation xml:lang="en">An entry that is a portion of a stream (streams are by definition, assumed continuous)   It is assumed that stream segments happen sequentially in time, that is the first part if a steam first, however, if this is not the case the order of the stream segments may be supplied with the order attribute where the first segment order="0".</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SequenceEntryType">
+				<attribute name="streamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="order" type="xtce:PositiveLongType"/>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MessageType">
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MatchCriteria" type="xtce:MatchCriteriaType"/>
+					<element name="ContainerRef" type="xtce:ContainerRefType">
+						<annotation>
+							<documentation xml:lang="en">The ContainerRef should point to ROOT container that will describe an entire packet/minor frame or chunk of telemetry.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MessageSetType">
+		<complexContent>
+			<extension base="xtce:OptionalNameDescriptionType">
+				<sequence>
+					<element name="Message" type="xtce:MessageType" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RateInStreamSetType">
+		<sequence>
+			<element name="RateInStream" type="xtce:RateInStreamWithStreamNameType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="RateInStreamType">
+		<annotation>
+			<documentation xml:lang="en">Define the expected appearance (rate) of a container in a stream where the rate is defined on either a perSecond or perContainer update basis.  Many programs and platforms have variable reporting rates for containers and these can be commanded.  As a result, this element is only useful to some users and generally does not affect the processing of the received containers themselves.  See ContainerType.</documentation>
+		</annotation>
+		<attribute name="basis" type="xtce:BasisType" default="perSecond">
+			<annotation>
+				<documentation xml:lang="en">The measurement unit basis for the minimum and maximum appearance count values.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="minimumValue" type="double">
+			<annotation>
+				<documentation xml:lang="en">The minimum rate for the specified basis for which this container should appear in the stream.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maximumValue" type="double">
+			<annotation>
+				<documentation xml:lang="en">The maximum rate for the specified basis for which this container should appear in the stream.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="RateInStreamWithStreamNameType">
+		<annotation>
+			<documentation xml:lang="en">Define the expected appearance (rate) of a container in a named stream where the rate is defined on either a perSecond or perContainer update basis.  Many programs and platforms have variable reporting rates for containers and these can be commanded.  As a result, this element is only useful to some users and generally does not affect the processing of the received containers themselves.  See ContainerType and RateInStreamType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:RateInStreamType">
+				<attribute name="streamRef" type="xtce:NameReferenceType" use="required">
+					<annotation>
+						<documentation xml:lang="en">Reference to a named stream for which this rate specification applies.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="ReferenceLocationType">
+		<annotation>
+			<documentation xml:lang="en">The location may be relative to the start of the container (containerStart), relative to the end of the previous entry (previousEntry), relative to the end of the container (containerEnd), or relative to the entry that follows this one (nextEntry). If going forward (containerStart and previousEntry) then the location refers to the start of the									Entry. If going backwards (containerEnd and nextEntry) then, the location refers to the end of the entry.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="containerStart"/>
+			<enumeration value="containerEnd"/>
+			<enumeration value="previousEntry"/>
+			<enumeration value="nextEntry"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="ReferencePointType">
+		<restriction base="string">
+			<enumeration value="start"/>
+			<enumeration value="end"/>
+		</restriction>
+	</simpleType>
+	<complexType name="RestrictionCriteriaType">
+		<annotation>
+			<documentation xml:lang="en">Define one or more conditions (constraints) for container inheritance. A container is instantiable if its constraints are true.  Constraint conditions may be a comparison, a list of comparisons, a boolean expression, or a graph of containers that are instantiable (if all containers are instantiable the condition is true).  See BaseContainerType, ComparisonType, ComparisonListType, BooleanExpressionType and NextContainerType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:MatchCriteriaType">
+				<choice>
+					<element name="NextContainer" type="xtce:ContainerRefType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Reference to the named container that must follow this container in the stream sequence.</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--****** End of Packaging Schema **********************-->
+	<!--*************************************************************-->
+	<!--****** Telemetry Schema *******************************-->
+	<annotation>
+		<documentation xml:lang="en">This schema defines the dictionary for telemetry</documentation>
+	</annotation>
+	<complexType name="AbsoluteTimeParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe an absolute time parameter type relative to a known epoch (such as TAI).  The string representation of this time should use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e. the format ss.ss... with any number of digits after the decimal point is supported.  See TAIType, IntegerDataEncoding and AbsoluteTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AbsoluteTimeDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="AggregateParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe a complex data type analogous to a C-struct. Each field of the data type is called a Member.  Each Member is part of the MemberList which forms the list of items to be placed under this data type’s name.  The MemberList defines a data block and block’s size is defined by the DataEncodings of each Member’s type reference. The data members are ordered and contiguous in the MemberList element (packed).  Each member may be addressed by the dot syntax similar to C such as P.voltage if P is the referring parameter and voltage is of a member of P’s aggregate type.  See MemberType, MemberListType, DataEncodingType, NameReferenceType, and AggregateDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AggregateDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe an array parameter type.  The size and number of dimensions are described here. See ArrayParameterRefEntryType, NameReferenceType and ArrayDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArrayDataTypeType">
+				<sequence>
+					<element name="DimensionList" type="xtce:DimensionListType">
+						<annotation>
+							<documentation xml:lang="en">Describe the dimensions of this array.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe a binary engineering/calibrated parameter type (sometimes called a “blob type”). It may be of fixed or variable length, and has an optional encoding and decoding algorithm that may be defined to transform the data between space and ground.  See BinaryDataEncodingType, IntegerValueType, InputAlgorithmType and BinaryDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BinaryDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:BinaryAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optionally describe an alarm monitoring specification that is effective whenever a contextual alarm definition does not take precedence.</documentation>
+						</annotation>
+					</element>
+					<element name="BinaryContextAlarmList" type="xtce:BinaryContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optionally describe one or more alarm monitoring specifications that are effective whenever a contextual match definition evaluates to true.  The first match that evaluates to true takes precedence.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe a boolean parameter type which has two values only: ‘True’ (1) or ‘False’ (0). The values one and zero may be mapped to a specific string using the attributes oneStringValue and zeroStringValue.  This type is a simplified form of the EnumeratedDataType.  See IntegerDataEncoding and BooleanDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BooleanDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:BooleanAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optionally describe an alarm monitoring specification that is effective whenever a contextual alarm definition does not take precedence.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextAlarmList" type="xtce:BooleanContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optionally describe one or more alarm monitoring specifications that are effective whenever a contextual match definition evaluates to true.  The first match that evaluates to true takes precedence.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumeratedParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe an enumerated parameter type.  The enumeration list consists of label/value pairs. See EnumerationListType, IntegerDataEncodingType and EnumeratedDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:EnumeratedDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:EnumerationAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Describe labels for this parameter that should be in an alarm state.  The default definition applies when there are no context alarm definitions or all the context alarm definitions evaluate to false in their matching criteria.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextAlarmList" type="xtce:EnumerationContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Describe labels for this parameter that should be in an alarm state when another parameter and value combination evaluates to true using the described matching criteria.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumerationContextAlarmListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered collection of context enumeration alarms, duplicates are valid. Process the contexts in list order. See EnumerationContextAlarmType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextAlarm" type="xtce:EnumerationContextAlarmType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe the alarm matching context criteria and the alarm definition itself.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="FloatParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe a floating point parameter type.  Several encodings are supported.  Calibrated integer to float relationships should be described with this data type. Use the data encoding to define calibrators.  Joins integer as one of the numerics. See FloatDataEncodingType, IntegerDataEncodingType and FloatDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FloatDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:NumericAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Default alarm definitions are those which do not adjust definition logic based on the value of other parameters.  Other parameters may participate in the determination of an alarm condition for this parameter, but the definition logic of the alarm on this parameter is constant.  If the alarming logic on this parameter changes based on the value of other parameters, then it is a ContextAlarm and belongs in the ContextAlarmList element.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextAlarmList" type="xtce:NumericContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Context alarm definitions are those which adjust the definition logic for this parameter based on the value of other parameters.  A context which evaluates to being in effect, based on the testing of another parameter, takes precedence over the default alarms in the DefaultAlarm element.  If the no context alarm evaluates to being in effect, based on the testing of another parameter, then the default alarm definitions from the DefaultAlarm element will remain in effect.  If multiple contexts evaluate to being in effect, then the first one that appears will take precedence.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IntegerParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe an integer parameter type. Several are supported. Calibrated integer to integer relationships should be described with this data type. Use the integer data encoding to define calibrators. Joins float as one of the numerics. See IntegerDataEncoding and IntegerDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:IntegerDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:NumericAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Default alarm definitions are those which do not adjust definition logic based on the value of other parameters. Other parameters may participate in the determination of an alarm condition for this parameter, but the definition logic of the alarm on this parameter is constant. If the alarming logic on this parameter changes based on the value of other parameters, then it is a ContextAlarm and belongs in the ContextAlarmList element.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextAlarmList" type="xtce:NumericContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Context alarm definitions are those which adjust the definition logic for this parameter based on the value of other parameters. A context which evaluates to being in effect, based on the testing of another parameter, takes precedence over the default alarms in the DefaultAlarm element. If the no context alarm evaluates to being in effect, based on the testing of another parameter, then the default alarm definitions from the DefaultAlarm element will remain in effect. If multiple contexts evaluate to being in effect, then the first one that appears will take precedence.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MessageRefSetType">
+		<sequence>
+			<element name="MessageRef" type="xtce:MessageRefType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="NumericContextAlarmListType">
+		<annotation>
+			<documentation xml:lang="en">An ordered collection of numeric alarms associated with a context. A context is an alarm definition on a parameter which is valid only in the case of a test on the value of other parameters. Process the contexts in list order. Used by both FloatParameterType and IntegerParameterType. See NumericContextAlarmType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextAlarm" type="xtce:NumericContextAlarmType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">A contextual alarm definition for the parameter that uses this type that is valid when a test against the value of one or more other parameters evaluates to true.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ParameterInstanceRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to an instance of a Parameter.   Used when the value of a parameter is required for a calculation or as an index value.  A positive value for instance is forward in time, a negative value for count is backward in time, a 0 value for count means use the current value of the parameter or the first value in a container.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterRefType">
+				<attribute name="instance" type="long" default="0"/>
+				<attribute name="useCalibratedValue" type="boolean" default="true"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterPropertiesType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Describes extended properties/attributes of Parameter definitions.</documentation>
+		</annotation>
+		<sequence>
+			<element name="SystemName" type="string" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional.  Normally used when the database is built in a flat, non-hierarchical format.</documentation>
+				</annotation>
+			</element>
+			<element name="ValidityCondition" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional condition that must be true for this Parameter to be valid.</documentation>
+				</annotation>
+			</element>
+			<element name="PhysicalAddressSet" type="xtce:PhysicalAddressSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">When present, this set of elements describes physical address location(s) of the parameter where it is stored.  Typically this is on the data source, although that is not constrained by this schema.</documentation>
+				</annotation>
+			</element>
+			<element name="TimeAssociation" type="xtce:TimeAssociationType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">This time will override any Default value for TimeAssociation.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="dataSource" type="xtce:TelemetryDataSourceType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">This attribute describes the nature of the source entity for which this parameter receives a value.  Implementations assign different attributes/properties internally to a parameter based on the anticipated data source.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="readOnly" type="boolean" use="optional" default="false">
+			<annotation>
+				<documentation xml:lang="en">A Parameter marked as 'readOnly' true is non-settable by users and applications/services that do not represent the data source itself.  Note that a slight conceptual overlap exists here between the 'dataSource' attribute and this attribute when the data source is 'constant'.  For a constant data source, then 'readOnly' should be 'true'.  Application implementations may choose to implicitly enforce this.  Some implementations have both concepts of a Parameter that is settable or non-settable and a Constant in different parts of their internal data model.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="persistence" type="boolean" default="true">
+			<annotation>
+				<documentation xml:lang="en">A Parameter marked to persist should retain the latest value through resets/restarts to the extent that is possible or defined in the implementation.  The net effect is that the initial/default value on a Parameter is only seen once or when the system has a reset to revert to initial/default values.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describe the properties of a telemetry parameter, including its data type (parameter type). The bulk of properties associated with a telemetry parameter are in its parameter type. The initial value specified here, overrides the initial value in the parameter type. A parameter may be local, in which case its parameter type would have no data encodings. Ideally such a definition would also set data source in parameter properties to ‘local’ but the syntax does not enforce this. See BaseDataType, BaseTimeDataType, and NameReferenceType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="ParameterProperties" type="xtce:ParameterPropertiesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Specify additional properties for this Parameter used by the implementation of tailor the behavior and attributes of the Parameter.  When not specified, the defaults on the ParameterProperties element attributes are assumed.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="parameterTypeRef" type="xtce:NameReferenceType" use="required">
+					<annotation>
+						<documentation xml:lang="en">Specify the reference to the parameter type from the ParameterTypeSet area using the path reference rules, either local to this SpaceSystem, relative, or absolute.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="initialValue" type="string" use="optional">
+					<annotation>
+						<documentation xml:lang="en">Specify as: integer data type using xs:integer, float data type using xs:double, string data type using xs:string, boolean data type using xs:boolean, binary data type using xs:hexBinary, enum data type using label name, relative time data type using xs:duration, absolute time data type using xs:dateTime.  Values must not exceed the characteristics for the data type or this is a validation error. Takes precedence over an initial value given in the data type. Values are calibrated unless there is an option to override it.</documentation>
+						<appinfo>The value type must match the Parameter type</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterTypeSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an unordered collection of parameter type definitions.  These types named for the engineering/calibrated type of the parameter.  See BaseDataType and BaseTimeDataType.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="StringParameterType" type="xtce:StringParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of a character string.</documentation>
+				</annotation>
+			</element>
+			<element name="EnumeratedParameterType" type="xtce:EnumeratedParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of an enumeration.</documentation>
+				</annotation>
+			</element>
+			<element name="IntegerParameterType" type="xtce:IntegerParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of an integer.</documentation>
+				</annotation>
+			</element>
+			<element name="BinaryParameterType" type="xtce:BinaryParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of a binary (usually hex represented).</documentation>
+				</annotation>
+			</element>
+			<element name="FloatParameterType" type="xtce:FloatParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of a decimal.</documentation>
+				</annotation>
+			</element>
+			<element name="BooleanParameterType" type="xtce:BooleanParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of a boolean enumeration.</documentation>
+				</annotation>
+			</element>
+			<element name="RelativeTimeParameterType" type="xtce:RelativeTimeParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of a duration in time.</documentation>
+				</annotation>
+			</element>
+			<element name="AbsoluteTimeParameterType" type="xtce:AbsoluteTimeParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of an instant in time.</documentation>
+				</annotation>
+			</element>
+			<element name="ArrayParameterType" type="xtce:ArrayParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of an array of a primitive type.</documentation>
+				</annotation>
+			</element>
+			<element name="AggregateParameterType" type="xtce:AggregateParameterType">
+				<annotation>
+					<documentation xml:lang="en">Describe a parameter type that has an engineering/calibrated value in the form of a structure of parameters of other types.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="ParameterRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to a Parameter. Uses Unix ‘like’ naming across the SpaceSystem Tree (e.g., SimpleSat/Bus/EPDS/BatteryOne/Voltage).  To reference an individual member of an array use the zero based bracket notation commonly used in languages like C, C++, and Java.</documentation>
+		</annotation>
+		<attribute name="parameterRef" type="xtce:NameReferenceType" use="required"/>
+	</complexType>
+	<complexType name="PhysicalAddressSetType">
+		<annotation>
+			<documentation xml:lang="en">One or more physical addresses may be associated with each Parameter.  Examples of physical addresses include a location on the spacecraft or a location on a data collection bus. </documentation>
+		</annotation>
+		<sequence>
+			<element name="PhysicalAddress" type="xtce:PhysicalAddressType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Contains the address (e.g., channel information) required to process the spacecraft telemetry streams. May be an onboard  id, a mux address, or a physical location.</documentation>
+					<documentation xml:lang="en">Contains the address (channel information) required to process the spacecraft telemetry streams</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="PhysicalAddressType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Describe the physical address(s) that this parameter is collected from.  Examples of physical addresses include a memory location on the spacecraft or a location on a data collection bus, with the source identified with a descriptive name for the region of memory, such as RAM, Flash, EEPROM, and other possibilities that can be adapted for program specific usage.</documentation>
+		</annotation>
+		<sequence>
+			<element name="SubAddress" type="xtce:PhysicalAddressType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A sub-address may be used to further specify the location if it fractionally occupies the address.  Additional possibilities exist for separating partitions of memory or other address based storage mechanisms.  This specification does not specify spacecraft specific hardware properties, so usage of addressing information is largely program and platform specific.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="sourceName" type="string">
+			<annotation>
+				<documentation xml:lang="en">A descriptive name for the location, such as a memory type, where this address is located.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="sourceAddress" type="string">
+			<annotation>
+				<documentation xml:lang="en">The address within the memory location.  This specification does not specify program and hardware specific attributes, such as address size and address region starting location.  These are part of the spacecraft hardware properties.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ServiceSetType">
+		<annotation>
+			<documentation xml:lang="en">A service is a logical grouping of container and/or messages.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Service" type="xtce:ServiceType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="StringParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describes a string parameter type. Three forms are supported: fixed length, variable length and variable length using a prefix. See StringDataEncodingType and StringDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:StringDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:StringAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Default alarm definitions are those which do not adjust definition logic based on the value of other parameters.  Other parameters may participate in the determination of an alarm condition for this parameter, but the definition logic of the alarm on this parameter is constant.  If the alarming logic on this parameter changes based on the value of other parameters, then it is a ContextAlarm and belongs in the ContextAlarmList element.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextAlarmList" type="xtce:StringContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Context alarm definitions are those which adjust the definition logic for this parameter based on the value of other parameters.  A context which evaluates to being in effect, based on the testing of another parameter, takes precedence over the default alarms in the DefaultAlarm element.  If the no context alarm evaluates to being in effect, based on the testing of another parameter, then the default alarm definitions from the DefaultAlarm element will remain in effect.  If multiple contexts evaluate to being in effect, then the first one that appears will take precedence.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RelativeTimeParameterType">
+		<annotation>
+			<documentation xml:lang="en">Describes a relative time parameter type. Relative time parameters are time offsets (e.g. 10 second, 1.24 milliseconds, etc.) See IntegerDataEncodingType, FloatDataEncoding and RelativeTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:RelativeTimeDataType">
+				<sequence>
+					<element name="DefaultAlarm" type="xtce:TimeAlarmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Default alarm definitions are those which do not adjust definition logic based on the value of other parameters.  Other parameters may participate in the determination of an alarm condition for this parameter, but the definition logic of the alarm on this parameter is constant.  If the alarming logic on this parameter changes based on the value of other parameters, then it is a ContextAlarm and belongs in the ContextAlarmList element.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextAlarmList" type="xtce:TimeContextAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Context alarm definitions are those which adjust the definition logic for this parameter based on the value of other parameters.  A context which evaluates to being in effect, based on the testing of another parameter, takes precedence over the default alarms in the DefaultAlarm element.  If the no context alarm evaluates to being in effect, based on the testing of another parameter, then the default alarm definitions from the DefaultAlarm element will remain in effect.  If multiple contexts evaluate to being in effect, then the first one that appears will take precedence.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="TelemetryDataSourceType">
+		<annotation>
+			<documentation xml:lang="en">A telemetered Parameter is one that will have values in telemetry. A derived Parameter is one that is calculated, usually by an Algorithm. A constant Parameter is one that is used as a constant in the system (e.g. a vehicle id). A local Parameter is one that is used purely by the software locally (e.g. a ground command counter). A ground Parameter is one that is generated by an asset which is not the spacecraft.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="telemetered"/>
+			<enumeration value="derived"/>
+			<enumeration value="constant"/>
+			<enumeration value="local"/>
+			<enumeration value="ground"/>
+		</restriction>
+	</simpleType>
+	<complexType name="TimeAssociationType">
+		<annotation>
+			<documentation xml:lang="en">Describes a time association consisting of an instance of an absolute time parameter (parameterRef) and this entry.  Because telemetry parameter instances are oftentimes "time-tagged" with a timing signal either provided on the ground or on the space system.  This data element allows one to specify which of possibly many AbsoluteTimeParameters to use to "time-tag" parameter instances with.  See AbsoluteTimeParameterType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="interpolateTime" type="boolean" default="true">
+					<annotation>
+						<documentation xml:lang="en">If true, then the current value of the AbsoluteTime will be projected to current time.  In other words, if the value of the AbsoluteTime parameter was set 10 seconds ago, then 10 seconds will be added to its value before associating this time with the parameter.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="offset" type="double">
+					<annotation>
+						<documentation xml:lang="en">The offset is used to supply a relative time offset from the time association and to this parameter</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="unit" type="xtce:TimeAssociationUnitType" default="si_second">
+					<annotation>
+						<documentation xml:lang="en">Specify the units the offset is in, the default is si_second.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="TimeWindowIsRelativeToType">
+		<restriction base="string">
+			<enumeration value="commandRelease"/>
+			<enumeration value="timeLastVerifierPassed"/>
+		</restriction>
+	</simpleType>
+	<!--****** End of Telemetry Schema ***********************-->
+	<!--*************************************************************-->
+	<!--****** Command Schema *******************************-->
+	<annotation>
+		<documentation xml:lang="en">This schema defines the dictionary for commanding</documentation>
+	</annotation>
+	<complexType name="AbsoluteTimeArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describe an absolute time argument type relative to a known epoch (such as TAI).  The string representation of this time should use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e. the format ss.ss... with any number of digits after the decimal point is supported.  See TAIType, IntegerDataEncoding and AbsoluteTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentAbsoluteTimeDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describe an array argument type.  The size and number of dimension are described here. See ArrayParameterRefEntryType, NameReferenceType and ArrayDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArrayDataTypeType">
+				<sequence>
+					<element name="DimensionList" type="xtce:ArgumentDimensionListType">
+						<annotation>
+							<documentation xml:lang="en">Describe the dimensions of this array.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AggregateArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describe a complex data type analogous to a C-struct. Each field of the data type is called a Member.  Each Member is part of the MemberList which forms the list of items to be placed under this data type’s name.  The MemberList defines a data block and block’s size is defined by the DataEncodings of each Member’s type reference. The data members are ordered and contiguous in the MemberList element (packed).  Each member may be addressed by the dot syntax similar to C such as P.voltage if P is the referring parameter and voltage is of a member of P’s aggregate type.  See MemberType, MemberListType, DataEncodingType, NameReferenceType, and AggregateDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AggregateDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentAssignmentListType">
+		<annotation>
+			<documentation xml:lang="en">Argument Assignments specialize a MetaCommand or BlockMetaCommand when inheriting from another MetaCommand.  General argument values can be restricted to specific values to further specialize the MetaCommand.  Use it to ‘narrow’ a MetaCommand from its base MetaCommand by specifying values of arguments for example, a power command may be narrowed to a power on’ command by assigning the value of an argument to ‘on’.  See ArgumentAssignmentType and MetaCommandType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ArgumentAssignment" type="xtce:ArgumentAssignmentType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Specialize this command definition when inheriting from a more general MetaCommand by restricting the specific values of otherwise general arguments.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentAssignmentType">
+		<annotation>
+			<documentation xml:lang="en">Describe an assignment of an argument with a calibrated/engineering value. See ArgumentAssignmentListType.</documentation>
+		</annotation>
+		<attribute name="argumentName" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">The named argument from the base MetaCommand to assign/restrict with a value.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="argumentValue" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">Specify value as a string compliant with the XML schema (xs) type specified for each XTCE type: integer=xs:integer; float=xs:double; string=xs:string; boolean=xs:boolean; binary=xs:hexBinary; enum=xs:string from EnumerationList; relative time=xs:duration; absolute time=xs:dateTime.  Supplied value must be within the ValidRange specified for the type.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ArgumentComparisonType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ComparisonType but supports argument instance references.</documentation>
+		</annotation>
+		<choice>
+			<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+				<annotation>
+					<documentation xml:lang="en">This parameter instance is being compared to the value in the parent element using the comparison defined there also.</documentation>
+				</annotation>
+			</element>
+			<element name="ArgumentInstanceRef" type="xtce:ArgumentInstanceRefType">
+				<annotation>
+					<documentation xml:lang="en">This argument instance is being compared to the value in the parent element using the comparison defined there also.</documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="comparisonOperator" type="xtce:ComparisonOperatorsType" default="==">
+			<annotation>
+				<documentation xml:lang="en">Comparison operator to use with equality being the common default.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="value" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">Specify as: integer data type using xs:integer, float data type using xs:double, string data type using xs:string, boolean data type using xs:boolean, binary data type using xs:hexBinary, enum data type using label name, relative time data type using xs:duration, absolute time data type using xs:dateTime.  Values must not exceed the characteristics for the data type or this is a validation error. Takes precedence over an initial value given in the data type. Values are calibrated unless there is an option to override it.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ArgumentComparisonCheckType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ComparisonCheckType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseConditionsType">
+				<sequence>
+					<choice>
+						<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+							<annotation>
+								<documentation xml:lang="en">Left hand side parameter instance.</documentation>
+							</annotation>
+						</element>
+						<element name="ArgumentInstanceRef" type="xtce:ArgumentInstanceRefType">
+							<annotation>
+								<documentation xml:lang="en">Left hand side argument instance.</documentation>
+							</annotation>
+						</element>
+					</choice>
+					<element name="ComparisonOperator" type="xtce:ComparisonOperatorsType">
+						<annotation>
+							<documentation xml:lang="en">Comparison operator.</documentation>
+						</annotation>
+					</element>
+					<choice>
+						<choice>
+							<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+								<annotation>
+									<documentation xml:lang="en">Right hand side parameter instance.  Parameter is assumed to be of the same type as the comparison Argument or Parameter.</documentation>
+								</annotation>
+							</element>
+							<element name="ArgumentInstanceRef" type="xtce:ArgumentInstanceRefType">
+								<annotation>
+									<documentation xml:lang="en">Right hand side argument instance.  Argument is assumed to be of the same type as the comparison Argument or Parameter.</documentation>
+								</annotation>
+							</element>
+						</choice>
+						<element name="Value" type="string">
+							<annotation>
+								<documentation xml:lang="en">Specify as: integer data type using xs:integer, float data type using xs:double, string data type using xs:string, boolean data type using xs:boolean, binary data type using xs:hexBinary, enum data type using label name, relative time data type using xs:duration, absolute time data type using xs:dateTime.  Values must not exceed the characteristics for the data type or this is a validation error. Takes precedence over an initial value given in the data type. Values are calibrated unless there is an option to override it.</documentation>
+							</annotation>
+						</element>
+					</choice>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentComparisonListType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ComparisonListType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Comparison" type="xtce:ArgumentComparisonType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">List of Comparison elements must all be true for the comparison to evaluate to true.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentDiscreteLookupType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ArgumentDiscreteLookupType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentMatchCriteriaType">
+				<attribute name="value" type="long" use="required">
+					<annotation>
+						<documentation xml:lang="en">Value to use when the lookup conditions are true.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentDiscreteLookupListType">
+		<annotation>
+			<documentation xml:lang="en">Identical to DiscreteLookupListType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<element name="DiscreteLookup" type="xtce:ArgumentDiscreteLookupType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe a lookup condition set using discrete values from arguments and/or parameters.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentDynamicValueType">
+		<annotation>
+			<documentation xml:lang="en">Identical to DynamicValueType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<choice>
+				<element name="ArgumentInstanceRef" type="xtce:ArgumentInstanceRefType">
+					<annotation>
+						<documentation xml:lang="en">Retrieve the value by referencing the value of an Argument.</documentation>
+					</annotation>
+				</element>
+				<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+					<annotation>
+						<documentation xml:lang="en">Retrieve the value by referencing the value of a Parameter.</documentation>
+					</annotation>
+				</element>
+			</choice>
+			<element name="LinearAdjustment" type="xtce:LinearAdjustmentType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A slope and intercept may be applied to scale or shift the value selected from the argument or parameter.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentInputAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">Identical to InputAlgorithmType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SimpleAlgorithmType">
+				<sequence>
+					<element name="InputSet" type="xtce:ArgumentInputSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The InputSet describes the list of arguments and/or parameters that should be made available as input arguments to the algorithm.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentInputSetType">
+		<annotation>
+			<documentation xml:lang="en">Identical to InputSetType but supports argument instance references.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="InputParameterInstanceRef" type="xtce:InputParameterInstanceRefType">
+				<annotation>
+					<documentation xml:lang="en">Reference a parameter to serve as an input to the algorithm.</documentation>
+				</annotation>
+			</element>
+			<element name="InputArgumentInstanceRef" type="xtce:ArgumentInstanceRefType">
+				<annotation>
+					<documentation xml:lang="en">Reference an argument to serve as an input to the algorithm.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="ArgumentInstanceRefType">
+		<annotation>
+			<documentation xml:lang="en">An argument instance is the name of an argument as the reference is always resolved locally to the metacommand.</documentation>
+		</annotation>
+		<attribute name="argumentRef" type="xtce:NameType" use="required">
+			<annotation>
+				<documentation xml:lang="en">Give the name of the argument.  There is no path, this is a local reference.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="useCalibratedValue" type="boolean" default="true">
+			<annotation>
+				<documentation xml:lang="en">Typically the calibrated/engineering value is used and that is the default.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ArgumentListType">
+		<annotation>
+			<documentation xml:lang="en">Defines a list of Arguments for a command definition.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Argument" type="xtce:ArgumentType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Defines an Argument for a command definition.  Arguments are local to the MetaCommand, BlockMetaCommand, and those that inherit from the definition.</documentation>
+					<appinfo>Need to ensure that the named types actually exist</appinfo>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentBooleanExpressionType">
+		<annotation>
+			<documentation xml:lang="en">Identical to BooleanExpressionType but supports argument instance references.</documentation>
+		</annotation>
+		<choice>
+			<element name="Condition" type="xtce:ArgumentComparisonCheckType">
+				<annotation>
+					<documentation xml:lang="en">Condition elements describe a test similar to the Comparison element except that the arguments/parameters used have additional flexibility.</documentation>
+				</annotation>
+			</element>
+			<element name="ANDedConditions" type="xtce:ArgumentANDedConditionsType">
+				<annotation>
+					<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the arguments/parameters used are more flexible.</documentation>
+				</annotation>
+			</element>
+			<element name="ORedConditions" type="xtce:ArgumentORedConditionsType">
+				<annotation>
+					<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the arguments/parameters used are more flexible.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="ArgumentANDedConditionsType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ANDedConditionsType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseConditionsType">
+				<choice minOccurs="2" maxOccurs="unbounded">
+					<element name="Condition" type="xtce:ArgumentComparisonCheckType">
+						<annotation>
+							<documentation xml:lang="en">Condition elements describe a test similar to the Comparison element except that the arguments/parameters used have additional flexibility for the compare.</documentation>
+						</annotation>
+					</element>
+					<element name="ORedConditions" type="xtce:ArgumentORedConditionsType">
+						<annotation>
+							<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the arguments/parameters used are more flexible and the and/or for multiple checks can be specified.</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentORedConditionsType">
+		<annotation>
+			<documentation xml:lang="en">Identical to ORedConditionsType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseConditionsType">
+				<choice minOccurs="2" maxOccurs="unbounded">
+					<element name="Condition" type="xtce:ArgumentComparisonCheckType">
+						<annotation>
+							<documentation xml:lang="en">Condition elements describe a test similar to the Comparison element except that the arguments/parameters used have additional flexibility for the compare.</documentation>
+						</annotation>
+					</element>
+					<element name="ANDedConditions" type="xtce:ArgumentANDedConditionsType">
+						<annotation>
+							<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the arguments/parameters used are more flexible and the and/or for multiple checks can be specified.</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentMatchCriteriaType">
+		<annotation>
+			<documentation xml:lang="en">Identical to MatchCriteriaType but supports argument instance references.</documentation>
+		</annotation>
+		<choice>
+			<element name="Comparison" type="xtce:ArgumentComparisonType">
+				<annotation>
+					<documentation xml:lang="en">A simple comparison check involving a single test of an argument or parameter value.</documentation>
+				</annotation>
+			</element>
+			<element name="ComparisonList" type="xtce:ArgumentComparisonListType">
+				<annotation>
+					<documentation xml:lang="en">A series of simple comparison checks with an implicit 'and' in that they all must be true for the overall condition to be true.</documentation>
+				</annotation>
+			</element>
+			<element name="BooleanExpression" type="xtce:ArgumentBooleanExpressionType">
+				<annotation>
+					<documentation xml:lang="en">An arbitrarily complex boolean expression that has additional flexibility on the terms beyond the Comparison and ComparisonList elements.</documentation>
+				</annotation>
+			</element>
+			<element name="CustomAlgorithm" type="xtce:ArgumentInputAlgorithmType">
+				<annotation>
+					<documentation xml:lang="en">An escape to an externally defined algorithm.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="ArgumentType">
+		<annotation>
+			<documentation xml:lang="en">An Argument has a name and can take on values with the underlying value type described by the ArgumentTypeRef. Describe the properties of a command argument referring to a data type (argument type). The bulk of properties associated with a command argument are in its argument type. The initial value specified here, overrides the initial value in the argument type. See BaseDataType, BaseTimeDataType and NameReferenceType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="argumentTypeRef" type="xtce:NameReferenceType" use="required">
+					<annotation>
+						<documentation xml:lang="en">Specify the reference to the argument type from the ArgumentTypeSet area using the path reference rules, either local to this SpaceSystem, relative, or absolute.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Specify as: integer data type using xs:integer, float data type using xs:double, string data type using xs:string, boolean data type using xs:boolean, binary data type using xs:hexBinary, enum data type using label name, relative time data type using xs:duration, absolute time data type using xs:dateTime.  Values must not exceed the characteristics for the data type or this is a validation error. Takes precedence over an initial value given in the data type. Values are calibrated unless there is an option to override it.</documentation>
+						<appinfo>The value type must match the Argument type</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentTypeSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an unordered collection of argument type definitions.  These types named for the engineering/calibrated type of the argument.  See BaseDataType and BaseTimeDataType.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="StringArgumentType" type="xtce:StringArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of a character string.</documentation>
+				</annotation>
+			</element>
+			<element name="EnumeratedArgumentType" type="xtce:EnumeratedArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of an enumeration.</documentation>
+				</annotation>
+			</element>
+			<element name="IntegerArgumentType" type="xtce:IntegerArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of an integer.</documentation>
+				</annotation>
+			</element>
+			<element name="BinaryArgumentType" type="xtce:BinaryArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of a binary (usually hex represented).</documentation>
+				</annotation>
+			</element>
+			<element name="FloatArgumentType" type="xtce:FloatArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of a decimal.</documentation>
+				</annotation>
+			</element>
+			<element name="BooleanArgumentType" type="xtce:BooleanArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of a boolean enumeration.</documentation>
+				</annotation>
+			</element>
+			<element name="RelativeTimeAgumentType" type="xtce:RelativeTimeArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of a duration in time.</documentation>
+				</annotation>
+			</element>
+			<element name="AbsoluteTimeArgumentType" type="xtce:AbsoluteTimeArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of an instant in time.</documentation>
+				</annotation>
+			</element>
+			<element name="ArrayArgumentType" type="xtce:ArrayArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of an array of a primitive type.</documentation>
+				</annotation>
+			</element>
+			<element name="AggregateArgumentType" type="xtce:AggregateArgumentType">
+				<annotation>
+					<documentation xml:lang="en">Describe an argument type that has an engineering/calibrated value in the form of a structure of arguments of other types.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="BaseMetaCommandType">
+		<annotation>
+			<documentation xml:lang="en">When specified, a BaseMetaCommand element identifies that this MetaCommand inherits (extends) another MetaCommand.  It’s required ArgumentAssignmentList narrows or this command from the parent.  This is typically used when specializing a generic MetaCommand to a specific MetaCommand.  See MetaCommandType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ArgumentAssignmentList" type="xtce:ArgumentAssignmentListType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Argument Assignments specialize a MetaCommand or BlockMetaCommand when inheriting from another MetaCommand.  General argument values can be restricted to specific values to further specialize the MetaCommand.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="metaCommandRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">Reference to the MetaCommand definition that this MetaCommand extends.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="BinaryArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Defines a binary engineering/calibrated argument type (often called “blob type”). The binary data may be of fixed or variable length, and has an optional encoding and decoding algorithm that may be defined to transform the data between space and ground.  See BinaryDataEncodingType, IntegerValueType, InputAlgorithmType, and BinaryDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBinaryDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="BlockMetaCommandType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered grouping of MetaCommands into a list, duplicates are valid. The block contains argument values fully specified.  See MetaCommandStepListType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MetaCommandStepList" type="xtce:MetaCommandStepListType">
+						<annotation>
+							<documentation xml:lang="en">List of the MetaCommands to include in this BlockMetaCommand.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Defines a boolean argument type which has two values only: ‘True’ (1) or ‘False’ (0). The values one and zero may be mapped to a specific string using the attributes oneStringValue and zeroStringValue.  This type is a simplified form of the EnumeratedDataType.  See IntegerDataEncoding and BooleanDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBooleanDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandContainerEntryListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an entry list for a CommandContainer which is associated with a MetaCommand. The entry list for a MetaCommand CommandContainer element operates in a similar fashion as the entry list element for a SequenceContainer element.  It adds fixed value and argument entries to the entry list not present in sequence containers.  See MetaCommandType, CommandContainerType and EntryListType.</documentation>
+		</annotation>
+		<choice minOccurs="0" maxOccurs="unbounded">
+			<element name="ParameterRefEntry" type="xtce:ArgumentParameterRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a Parameter to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ParameterSegmentRefEntry" type="xtce:ArgumentParameterSegmentRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a portion of a Parameter to be a part of this container layout definition.  This is used when the Parameter is reported in fractional parts in the container before being fully updated.</documentation>
+				</annotation>
+			</element>
+			<element name="ContainerRefEntry" type="xtce:ArgumentContainerRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify the content of another Container to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ContainerSegmentRefEntry" type="xtce:ArgumentContainerSegmentRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a portion of another Container to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="StreamSegmentEntry" type="xtce:ArgumentStreamSegmentEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a portion of a Stream to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="IndirectParameterRefEntry" type="xtce:ArgumentIndirectParameterRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify a previous (not last reported) value of a Parmeter to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ArrayParameterRefEntry" type="xtce:ArgumentArrayParameterRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify an Array Type Parameter to be a part of this container layout definition when the Container does not populate the entire space of the Array contents.  If the entire space of the Array is populated, a tolerant implementation will accept ParameterRefEntry also.</documentation>
+				</annotation>
+			</element>
+			<element name="ArgumentRefEntry" type="xtce:ArgumentArgumentRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify an Argument to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+			<element name="ArrayArgumentRefEntry" type="xtce:ArgumentArrayArgumentRefEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify an Array Type Argument to be a part of this container layout definition when the Container does not populate the entire space of the Array contents.  If the entire space of the Array is populated, a tolerant implementation will accept ArgumentRefEntry also.</documentation>
+				</annotation>
+			</element>
+			<element name="FixedValueEntry" type="xtce:ArgumentFixedValueEntryType">
+				<annotation>
+					<documentation xml:lang="en">Specify an immutable value to be a part of this container layout definition.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="CommandContainerSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered Set of Command Containers</documentation>
+		</annotation>
+		<sequence>
+			<element name="CommandContainer" type="xtce:SequenceContainerType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="CommandContainerType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Describe a MetaCommand command container.  The command container may contain arguments, parameters, other basic containers, and fixed values.  Arguments are supplied by the user of a commanding application; parameters are supplied by the controlling system.  Parameters and arguments map source data types to encodings.   See MetaCommandType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ContainerType">
+				<sequence>
+					<element name="EntryList" type="xtce:CommandContainerEntryListType">
+						<annotation>
+							<documentation xml:lang="en">List of item entries to pack/encode into this container definition.</documentation>
+						</annotation>
+					</element>
+					<element name="BaseContainer" type="xtce:BaseContainerType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">When a MetaCommand inherits/extends another MetaCommand, this references the CommandContainer from the BaseMetaCommand.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="CommandVerifierType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A command verifier is used to check that the command has been successfully executed. Command Verifiers may be either a Custom Algorithm or a Boolean Check or the presence of a Container for a relative change in the value of a Parameter.  The CheckWindow is a time period where the verification must test true to pass.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:OptionalNameDescriptionType">
+				<sequence>
+					<choice>
+						<element name="ComparisonList" type="xtce:ComparisonListType">
+							<annotation>
+								<documentation xml:lang="en">Verification is a list of comparisons.</documentation>
+							</annotation>
+						</element>
+						<element name="ContainerRef" type="xtce:ContainerRefType">
+							<annotation>
+								<documentation xml:lang="en">Verification is a new instance of the referenced container. For example, sending a command to download memory then receiving a packet with the memory download would be verified upon receipt of the packet.</documentation>
+							</annotation>
+						</element>
+						<element name="ParameterValueChange" type="xtce:ParameterValueChangeType">
+							<annotation>
+								<documentation xml:lang="en">Verification is a telemetry parameter value change on the ground.  For example, a command counter.</documentation>
+							</annotation>
+						</element>
+						<element name="CustomAlgorithm" type="xtce:InputAlgorithmType">
+							<annotation>
+								<documentation xml:lang="en">Verification is outside the scope of regular command and telemetry processing.</documentation>
+							</annotation>
+						</element>
+						<element name="BooleanExpression" type="xtce:BooleanExpressionType">
+							<annotation>
+								<documentation xml:lang="en">Verification is a boolean expression of conditions.</documentation>
+							</annotation>
+						</element>
+						<element name="Comparison" type="xtce:ComparisonType">
+							<annotation>
+								<documentation xml:lang="en">Verification is a single comparison.</documentation>
+							</annotation>
+						</element>
+					</choice>
+					<choice>
+						<element name="CheckWindow" type="xtce:CheckWindowType">
+							<annotation>
+								<documentation xml:lang="en">Define a time window for checking for verification.</documentation>
+							</annotation>
+						</element>
+						<element name="CheckWindowAlgorithms" type="xtce:CheckWindowAlgorithmsType">
+							<annotation>
+								<documentation xml:lang="en">Define a time window algorithmically for verification.</documentation>
+							</annotation>
+						</element>
+					</choice>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumeratedArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describes an enumerated argument type.  The enumeration list consists of label/value pairs. See EnumerationListType, IntegerDataEncodingType and EnumeratedDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentEnumeratedDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describe a floating point argument type.  Several encodings are supported.  Calibrated integer to float relationships should be described with this data type. Use the data encoding to define calibrators.  Joins integer as one of the numerics. See FloatDataEncodingType, IntegerDataEncodingType and FloatDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentFloatDataType">
+				<sequence>
+					<element name="ValidRangeSet" type="xtce:ValidFloatRangeSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Provides additional platform/program specific ranging information.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IntegerArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describes an integer argument type. Several encodings supported.  Calibrated integer to integer relationships should be described with this data type. Use the integer data encoding to define calibrators. Joins float as one of the numerics. See IntegerDataEncoding and IntegerDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentIntegerDataType">
+				<sequence>
+					<element name="ValidRangeSet" type="xtce:ValidIntegerRangeSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Provides additional platform/program specific ranging information.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MetaCommandSetType">
+		<annotation>
+			<documentation xml:lang="en">Describes an unordered collection of command definitions.  Duplicates are invalid based on the name attribute of MetaCommand and BlockMetaCommand.  See MetaCommandType and BlockMetaCommandType.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="MetaCommand" type="xtce:MetaCommandType">
+				<annotation>
+					<documentation xml:lang="en">All atomic commands to be sent on this mission are listed here.  In addition this area has verification and validation information.</documentation>
+				</annotation>
+				<key name="ArgumentNameKey">
+					<selector xpath="xtce:ArgumentList/*"/>
+					<field xpath="@name"/>
+				</key>
+			</element>
+			<element name="MetaCommandRef" type="xtce:NameReferenceType">
+				<annotation>
+					<documentation xml:lang="en">Used to include a MetaCommand defined in another sub-system in this sub-system.</documentation>
+				</annotation>
+			</element>
+			<element name="BlockMetaCommand" type="xtce:BlockMetaCommandType">
+				<annotation>
+					<documentation xml:lang="en">Used to define a command that includes more than one atomic MetaCommand definition.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="MetaCommandStepListType">
+		<annotation>
+			<documentation xml:lang="en">Describe the list of MetaCommand definitions that form the block command.  Contains an ordered list of MetaCommandSteps where each step is a MetaCommand with associated arguments, duplicates are valid.  See BlockMetaCommandType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="MetaCommandStep" type="xtce:MetaCommandStepType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">A MetaCommand with specific specified argument values to include in the BlockMetaCommand.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="MetaCommandStepType">
+		<annotation>
+			<documentation>Describe a MetaCommand step, consisting MetaCommand reference and argument list. See MetaCommandStepListType and NameReferenceType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ArgumentAssigmentList" type="xtce:ArgumentAssignmentListType" minOccurs="0"/>
+		</sequence>
+		<attribute name="metaCommandRef" type="xtce:NameReferenceType" use="required"/>
+	</complexType>
+	<complexType name="MetaCommandType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Describe a command which consists of an abstract portion (MetaCommand) and an optional packaging portion (MetaCommand CommandContainer).  An argument list is provided. MetaCommand may extend other MetaCommands and their CommandContainer may extend other CommandContainer or SequenceContainers.  A MetaCommand’s CommandContainer is private except as referred to in BaseMetaCommand (they are not visible to other containers and cannot be used in an entry list). MetaCommands may also define various other behavioral aspects of a command such as command verifiers.  See CommandContainerType, ArgumentListType, BaseMetaCommandType and BaseContainerType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="BaseMetaCommand" type="xtce:BaseMetaCommandType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optional inheritance for this MetaCommand from another named MetaCommand.</documentation>
+						</annotation>
+					</element>
+					<element name="SystemName" type="string" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Optional.  Normally used when the database is built in a flat, non-hierarchical format.  May be used by implementations to group MetaCommands together.</documentation>
+						</annotation>
+					</element>
+					<element name="ArgumentList" type="xtce:ArgumentListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Many commands have one or more options.  These are called command arguments.  Command arguments may be of any of the standard data types.  MetaCommand arguments are local to the MetaCommand, but may be referenced in inherited MetaCommand definitions, generally to apply Argument Assignments to the values.</documentation>
+						</annotation>
+					</element>
+					<element name="CommandContainer" type="xtce:CommandContainerType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Tells how to package/encode this command definition in binary form.</documentation>
+						</annotation>
+					</element>
+					<element name="TransmissionConstraintList" type="xtce:TransmissionConstraintListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">List of constraints to check when sending this command.</documentation>
+						</annotation>
+					</element>
+					<element name="DefaultSignificance" type="xtce:SignificanceType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Some Command and Control Systems may require special user access or confirmations before transmitting commands with certain levels.  The level is inherited from the Base MetaCommand.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextSignificanceList" type="xtce:ContextSignificanceListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Some Command and Control Systems may require special user access or confirmations before transmitting commands with certain levels.  In addition to the default, Significance can be defined in contexts where it changes based on the values of parameters.</documentation>
+						</annotation>
+					</element>
+					<element name="Interlock" type="xtce:InterlockType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">An Interlock is a type of Constraint, but not on Command instances of this MetaCommand; Interlocks apply instead to the next command.  An Interlock will block successive commands until this command has reached a certain stage (through verifications).  Interlocks are scoped to a SpaceSystem basis.</documentation>
+						</annotation>
+					</element>
+					<element name="VerifierSet" type="xtce:VerifierSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Functional list of conditions/changes to check after sending this command to determine success or failure.</documentation>
+						</annotation>
+					</element>
+					<element name="ParameterToSetList" type="xtce:ParameterToSetListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">List of parameters to set new values upon completion of sending this command.</documentation>
+						</annotation>
+					</element>
+					<element name="ParametersToSuspendAlarmsOnSet" type="xtce:ParametersToSuspendAlarmsOnSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">List of parameters to suspend alarm processing/detection upon completion of sending this command.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="abstract" type="boolean" default="false">
+					<annotation>
+						<documentation xml:lang="en">Abstract MetaCommand definitions that are not instantiated, rather only used as bases to inherit from to create specialized command definitions.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RelativeTimeArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describes a relative time argument type. Relative time parameters are time offsets (e.g. 10 second, 1.24 milliseconds, etc.) See IntegerDataEncodingType, FloatDataEncoding and RelativeTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentRelativeTimeDataType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="SignificanceType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">Significance provides some cautionary information about the potential consequence of each MetaCommand.</documentation>
+		</annotation>
+		<attribute name="spaceSystemAtRisk" type="xtce:NameReferenceType">
+			<annotation>
+				<documentation xml:lang="en">If none is supplied, then the current SpaceSystem is assumed to be the one at risk by the issuance of this command</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="reasonForWarning" type="string"/>
+		<attribute name="consequenceLevel" type="xtce:ConsequenceLevelType" default="normal"/>
+	</complexType>
+	<complexType name="StringArgumentType">
+		<annotation>
+			<documentation xml:lang="en">Describes a string parameter type. Three forms are supported: fixed length, variable length and variable length using a prefix. See StringDataEncodingType and StringDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentStringDataType"/>
+		</complexContent>
+	</complexType>
+	<!--*************************************************************-->
+	<!--******** Types used with Cmd Execution Control ****-->
+	<complexType name="AcceptedVerifierType">
+		<annotation>
+			<documentation xml:lang="en">A verifier that means the SpaceSystem has accepted the command</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="CheckWindowType">
+		<annotation>
+			<documentation xml:lang="en">Used by CommandVerifiers to limit the time allocated to check for the verification.  See CheckWindowAlgorithmsType.</documentation>
+		</annotation>
+		<attribute name="timeToStartChecking" type="xtce:RelativeTimeType"/>
+		<attribute name="timeToStopChecking" type="xtce:RelativeTimeType" use="required"/>
+		<attribute name="timeWindowIsRelativeTo" type="xtce:TimeWindowIsRelativeToType" default="timeLastVerifierPassed"/>
+	</complexType>
+	<complexType name="CheckWindowAlgorithmsType">
+		<annotation>
+			<documentation xml:lang="en">Used by CommandVerifiers to limit the time allocated to check for the verification.  See CommandVerifierType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="StartCheck" type="xtce:InputAlgorithmType"/>
+			<element name="StopTime" type="xtce:InputAlgorithmType"/>
+		</sequence>
+	</complexType>
+	<complexType name="CompleteVerifierType">
+		<annotation>
+			<documentation xml:lang="en">A possible set of verifiers that all must be true for the command be considered completed.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType">
+				<sequence minOccurs="0">
+					<element name="ReturnParmRef" type="xtce:ParameterRefType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContextSignificanceType">
+		<annotation>
+			<documentation xml:lang="en">Describe a significance level for a MetaCommand definition where the significance level depends on matching a context value.  See ContextMatchType and SignificanceType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextMatch" type="xtce:ContextMatchType">
+				<annotation>
+					<documentation xml:lang="en">Describe the context matching value and source that will enable the Significance listed in the Significance element.</documentation>
+				</annotation>
+			</element>
+			<element name="Significance" type="xtce:SignificanceType">
+				<annotation>
+					<documentation xml:lang="en">Describe the signficance of this MetaCommand definition.  See SignificanceType.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ContextSignificanceListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered list of ContextSignificance elements where the significance on the first context match to test true is used as the significance of the MetaCommand.  If there is a DefaultSignificance, it is overrideen by the matching context.  See ContextSignificantType and MetaCommandType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextSignificance" type="xtce:ContextSignificanceType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe a significance level for a MetaCommand definition where the significance level depends on matching a context value.  See ContextMatchType and SignificanceType.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ExecutionVerifierType">
+		<annotation>
+			<documentation xml:lang="en">A verifier that indicates that the command is being executed.  An optional Element indicates how far along the command has progressed either as a fixed value or an (possibly scaled) ParameterInstance value.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType">
+				<sequence minOccurs="0">
+					<element name="PercentComplete" type="xtce:PercentCompleteType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FailedVerifierType">
+		<annotation>
+			<documentation xml:lang="en">When true, indicates that the command failed.  timeToWait is how long to wait for the FailedVerifier to test true.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType">
+				<sequence minOccurs="0">
+					<element name="ReturnParmRef" type="xtce:ParameterRefType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InterlockType">
+		<annotation>
+			<documentation xml:lang="en">Describe a type of constraint on the next command, rather than this command. Interlocks apply only to the next command.  An interlock will block successive commands until this command has reached a certain stage of verifier.  Interlocks are scoped to a SpaceSystem basis:  they by default apply to the SpaceSystem the MetaCommand is defined in but this may be overridden.  See MetaCommandType and VerifierSetType.</documentation>
+		</annotation>
+		<attribute name="scopeToSpaceSystem" type="xtce:NameReferenceType">
+			<annotation>
+				<documentation xml:lang="en">The name of a SpaceSystem this Interlock applies to.  By default, it only applies to the SpaceSystem that contains this MetaCommand.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="verificationToWaitFor" type="xtce:VerifierEnumerationType" default="complete">
+			<annotation>
+				<documentation xml:lang="en">The verification stage of the command that releases the interlock, with the default being complete.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="verificationProgressPercentage" type="double">
+			<annotation>
+				<documentation xml:lang="en">Only applies when the verificationToWaitFor attribute is 'queued' or 'executing'.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="suspendable" type="boolean" default="false">
+			<annotation>
+				<documentation xml:lang="en">A flag that indicates that under special circumstances, this Interlock can be suspended.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ParameterToSetType">
+		<annotation>
+			<documentation xml:lang="en">Sets a Parameter to a new value (either from a derivation or explicitly) after the command has been verified (all verifications have passed).</documentation>
+			<appinfo>Value type must match Parameter type.</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterRefType">
+				<choice>
+					<element name="Derivation" type="xtce:MathOperationType">
+						<annotation>
+							<documentation xml:lang="en">Specify a MathOperation to use to set the Parameter value.  See MathOperationType.</documentation>
+						</annotation>
+					</element>
+					<element name="NewValue" type="string">
+						<annotation>
+							<documentation xml:lang="en">Specify value as a string compliant with the XML schema (xs) type specified for each XTCE type: integer=xs:integer; float=xs:double; string=xs:string; boolean=xs:boolean; binary=xs:hexBinary; enum=xs:string from EnumerationList; relative time= xs:duration; absolute time=xs:dateTime.  Supplied value must be within the ValidRange specified for the Parameter and appropriate for the type.</documentation>
+						</annotation>
+					</element>
+				</choice>
+				<attribute name="setOnVerification" type="xtce:VerifierEnumerationType" default="complete">
+					<annotation>
+						<documentation xml:lang="en">This attribute provides more specific control over when the Parameter value is set.  By default, it is when the command have all verifications complete.  See VerifierEnumerationType.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterToSetListType">
+		<annotation>
+			<documentation xml:lang="en">Parameters that are set with a new value after the command has been sent.  Appended to the Base Command list</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterToSet" type="xtce:ParameterToSetType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ParameterToSuspendAlarmsOnType">
+		<annotation>
+			<documentation xml:lang="en">Will suspend all Alarms associated with this Parameter for the given suspense time after the given verifier</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterRefType">
+				<attribute name="suspenseTime" type="xtce:RelativeTimeType" use="required"/>
+				<attribute name="verifierToTriggerOn" type="xtce:VerifierEnumerationType" default="release"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParametersToSuspendAlarmsOnSetType">
+		<annotation>
+			<documentation xml:lang="en">Sometimes it is necessary to suspend alarms - particularly 'change' alarms for commands that will change the value of a Parameter</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterToSuspendAlarmsOn" type="xtce:ParameterToSuspendAlarmsOnType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ParameterValueChangeType">
+		<annotation>
+			<documentation xml:lang="en">A parameter change in value or specified delta change in value.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterRef" type="xtce:ParameterRefType"/>
+			<element name="Change" type="xtce:ChangeValueType"/>
+		</sequence>
+	</complexType>
+	<complexType name="QueuedVerifierType">
+		<annotation>
+			<documentation xml:lang="en">A verifer that means the command is scheduled for execution by the SpaceSystem.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="ReceivedVerifierType">
+		<annotation>
+			<documentation xml:lang="en">A verifier that simply means the SpaceSystem has received the command.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="SentFromRangeVerifierType">
+		<annotation>
+			<documentation xml:lang="en">Sent from range means the command has been transmitted to the spacecraft by the network that connects the ground system to the spacecraft.  Obviously, this verifier must come from something other than the spacecraft. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType"/>
+		</complexContent>
+	</complexType>
+	<simpleType name="TimeAssociationUnitType">
+		<annotation>
+			<documentation>Time units the time association decimal value is in.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="si_nanosecond"/>
+			<enumeration value="si_microsecond"/>
+			<enumeration value="si_millsecond"/>
+			<enumeration value="si_second"/>
+			<enumeration value="minute"/>
+			<enumeration value="day"/>
+			<enumeration value="julianYear"/>
+		</restriction>
+	</simpleType>
+	<complexType name="TransferredToRangeVerifierType">
+		<annotation>
+			<documentation xml:lang="en">Transferred to range means the command has been received to the network that connects the ground system to the spacecraft.  Obviously, this verifier must come from something other than the spacecraft. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:CommandVerifierType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="TransmissionConstraintType">
+		<annotation>
+			<documentation xml:lang="en">A CommandTransmission constraint is used to check that the command can be run in the current operating mode and may block the transmission of the command if the constraint condition is true.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:MatchCriteriaType">
+				<attribute name="timeOut" type="xtce:RelativeTimeType">
+					<annotation>
+						<documentation xml:lang="en">Pause during timeOut, fail when the timeout passes</documentation>
+					</annotation>
+					<!-- removed for CASTOR: default="PT0S" -->
+				</attribute>
+				<attribute name="suspendable" type="boolean" default="false">
+					<annotation>
+						<documentation xml:lang="en">Indicates whether the constraints for a Command may be suspended.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TransmissionConstraintListType">
+		<annotation>
+			<documentation xml:lang="en">Appended to the TramsmissionConstraint List of the base command.  Constraints are checked in order.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="TransmissionConstraint" type="xtce:TransmissionConstraintType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<simpleType name="VerifierEnumerationType">
+		<annotation>
+			<documentation xml:lang="en">An enumerated list of verifier types</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="release"/>
+			<enumeration value="transferredToRange"/>
+			<enumeration value="sentFromRange"/>
+			<enumeration value="received"/>
+			<enumeration value="accepted"/>
+			<enumeration value="queued"/>
+			<enumeration value="executing"/>
+			<enumeration value="complete"/>
+			<enumeration value="failed"/>
+		</restriction>
+	</simpleType>
+	<complexType name="VerifierSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe a collection of unordered verifiers.  A command verifier is a conditional check on the telemetry from a SpaceSystem that that provides positive indication on the processing state of a command.  There are eight different verifiers each associated with difference states in command processing: TransferredToRange, TransferredFromRange, Received, Accepted, Queued, Execution, Complete, and Failed.  There may be multiple ‘complete’ and 'execution' verifiers. If the MetaCommand is part of an inheritance relation (BaseMetaCommand), the 'complete' and 'execution' verifier sets are appended to any defined in the parent MetaCommand. All others will override a verifier defined in a BaseMetaCommand.  Duplicate verifiers in the list of CompleteVerifiers and ExecutionVerifiers before and after appending to the verifiers in BaseMetaCommand should be avoided. See MetaCommandType and BaseMetaCommandType for additional information.</documentation>
+		</annotation>
+		<sequence>
+			<element name="TransferredToRangeVerifier" type="xtce:TransferredToRangeVerifierType" minOccurs="0"/>
+			<element name="SentFromRangeVerifier" type="xtce:SentFromRangeVerifierType" minOccurs="0"/>
+			<element name="ReceivedVerifier" type="xtce:ReceivedVerifierType" minOccurs="0"/>
+			<element name="AcceptedVerifier" type="xtce:AcceptedVerifierType" minOccurs="0"/>
+			<element name="QueuedVerifier" type="xtce:QueuedVerifierType" minOccurs="0"/>
+			<element name="ExecutionVerifier" type="xtce:ExecutionVerifierType" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="CompleteVerifier" type="xtce:CompleteVerifierType" minOccurs="0" maxOccurs="unbounded"/>
+			<element name="FailedVerifier" type="xtce:FailedVerifierType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<!--******** End of Command Schema *********************-->
+	<!--*************************************************************-->
+	<!--****** Algorithm Schema ********************************-->
+	<annotation>
+		<documentation xml:lang="en">This schema defines the structure for an Algorithm.   An Algorithm may be one of a growing set of pre-defined algorithms or a named escape into a user defined algorithm where (depending on the system) the name of the algorithm may be a java class, a function in a shared library, an external program or some other reference to an outside algorithm.  At some later date, this schema may also allow the logic of the user defined algorithm to be defined within the instance document itself (perhaps using MathML?).</documentation>
+	</annotation>
+	<complexType name="AlgorithmTextType">
+		<annotation>
+			<documentation xml:lang="en">This optional element may be used to enter Pseudo or actual code for the algorithm.  The language for the algorithm is specified with the language attribute</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="string">
+				<attribute name="language" type="string" default="pseudo"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="BaseTriggerType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base type for the various triggers, purely to improve the mappings created by data binding compilers.</documentation>
+		</annotation>
+	</complexType>
+	<complexType name="ChecksumType">
+		<annotation>
+			<documentation>Describe checksum information.</documentation>
+		</annotation>
+		<sequence>
+			<element name="InputAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+				<annotation>
+					<documentation>Assumed to return the computed checksum.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="bitsFromReference" type="xtce:NonNegativeLongType"/>
+		<attribute name="reference" type="xtce:ReferencePointType" default="start"/>
+		<attribute name="name" use="required">
+			<annotation>
+				<documentation>Qualified list of name checksum algorithms. If custom is chosen, InputAlgorithm must be set.</documentation>
+			</annotation>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="unix_sum"/>
+					<enumeration value="sum8"/>
+					<enumeration value="sum16"/>
+					<enumeration value="sum24"/>
+					<enumeration value="sum32"/>
+					<enumeration value="fletcher4"/>
+					<enumeration value="fletcher8"/>
+					<enumeration value="fletcher16"/>
+					<enumeration value="fletcher32"/>
+					<enumeration value="adler32"/>
+					<enumeration value="luhn"/>
+					<enumeration value="verhoeff"/>
+					<enumeration value="damm"/>
+					<enumeration value="custom">
+						<annotation>
+							<documentation>Document a custom checksum algorithm</documentation>
+						</annotation>
+					</enumeration>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="hashSizeInBits" type="xtce:PositiveLongType"/>
+	</complexType>
+	<complexType name="ConstantType">
+		<annotation>
+			<documentation xml:lang="en">Names and provides a value for a constant input to the algorithm.  There are two attributes to Constant, constantName and value.  constantName is a variable name in the algorithm to be executed.  value is the value of the constant to be used.</documentation>
+		</annotation>
+		<attribute name="constantName" type="string"/>
+		<attribute name="value" type="string" use="required"/>
+	</complexType>
+	<complexType name="ContextCalibratorListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered list of calibrators with a context match.  Useful when different calibrations must be used depending on a matching value.  The first context that matches determines which calibrator to use. See IntegerDataEncodingType and FloatDataEncodingType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextCalibrator" type="xtce:ContextCalibratorType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe a calibrator that depends on a matching value using a ContextMatch.  When the context matches for the calibrator, the default calibrator is overridden, if it exists.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ExternalAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">This is the external algorithm.  Multiple entries are provided so that the same database may be used for multiple implementation s</documentation>
+		</annotation>
+		<attribute name="implementationName" type="string" use="required"/>
+		<attribute name="algorithmLocation" type="string" use="required"/>
+	</complexType>
+	<complexType name="ExternalAlgorithmSetType">
+		<sequence>
+			<element name="ExternalAlgorithm" type="xtce:ExternalAlgorithmType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="InputAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">A set of labeled inputs is added to the SimpleAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SimpleAlgorithmType">
+				<sequence>
+					<element name="InputSet" type="xtce:InputSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The InputSet describes the list of parameters that should be made available as input arguments to the algorithm.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputOutputAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">A set of labeled outputs are added to the SimpleInputAlgorithmType</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:InputAlgorithmType">
+				<sequence>
+					<element name="OutputSet" type="xtce:OutputSetType" minOccurs="0"/>
+				</sequence>
+				<attribute name="thread" type="boolean" use="optional" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputOutputTriggerAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">Input output algorithm is extended with a set of labeled triggers. See InputOutputAlgorithmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:InputOutputAlgorithmType">
+				<sequence>
+					<element name="TriggerSet" type="xtce:TriggerSetType" minOccurs="0"/>
+				</sequence>
+				<attribute name="triggerContainer" type="xtce:NameReferenceType" use="optional">
+					<annotation>
+						<documentation xml:lang="en">First telemetry container from which the output parameter should be calculated.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="priority" type="int" use="optional">
+					<annotation>
+						<documentation xml:lang="en">Algorithm processing priority. If more than one algorithm is triggered by the same container, the lowest priority algorithm should be calculated first.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputParameterInstanceRefType">
+		<annotation>
+			<documentation xml:lang="en">Names an input parameter to the algorithm.  There are two attributes to InputParm, inputName and parameterName. parameterName is a parameter reference name for a parameter that will be used in this algorithm.  inputName is an optional "friendly" name for the input parameter. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="inputName" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="InputSetType">
+		<choice maxOccurs="unbounded">
+			<element name="InputParameterInstanceRef" type="xtce:InputParameterInstanceRefType"/>
+			<element name="Constant" type="xtce:ConstantType" minOccurs="0"/>
+		</choice>
+	</complexType>
+	<complexType name="MathAlgorithmType">
+		<annotation>
+			<documentation xml:lang="en">Describe a postfix (Reverse Polish Notation (RPN)) notation based mathmatical equations. See MathOperationType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MathOperation" type="xtce:TriggeredMathOperationType">
+						<annotation>
+							<documentation xml:lang="en">The contents of the Math Operation as an algorithm definition in RPN.  See TriggeredMathOperationType.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="OnContainerUpdateTriggerType">
+		<annotation>
+			<documentation xml:lang="en">Describe a reference to container that triggers an event when the telemetry container referred to is updated (processed).  See TriggerSetType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTriggerType">
+				<attribute name="containerRef" type="xtce:NameReferenceType" use="required">
+					<annotation>
+						<documentation xml:lang="en">Reference to the Container whose update/receipt triggers this algorithm to evaluate.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="OnPeriodicRateTriggerType">
+		<annotation>
+			<documentation xml:lang="en">Describe a periodic time basis to trigger an event.  See TriggerSetType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTriggerType">
+				<attribute name="fireRateInSeconds" type="double" use="required">
+					<annotation>
+						<documentation xml:lang="en">The periodic rate in time in which this algorithm is triggered to evaluate.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="OnParameterUpdateTriggerType">
+		<annotation>
+			<documentation xml:lang="en">Describe a reference to parameter that triggers an event when the telemetry parameter referred to is updated (processed) with a new value.  See TriggerSetType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTriggerType">
+				<attribute name="parameterRef" type="xtce:NameReferenceType" use="required">
+					<annotation>
+						<documentation xml:lang="en">Reference to the Parameter whose update triggers this algorithm to evaluate.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="OutputParameterRefType">
+		<annotation>
+			<documentation xml:lang="en">Names an output parameter to the algorithm.  There are two attributes to OutputParm, outputName and parameterName. parameterName is a parameter reference name for a parameter that will be updated by this algorithm.  outputName is an optional "friendly" name for the output parameter.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterRefType">
+				<attribute name="outputName" type="string"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="OutputSetType">
+		<sequence>
+			<element name="OutputParameterRef" type="xtce:OutputParameterRefType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="SimpleAlgorithmType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">The simplest form of algorithm, a SimpleAlgorithmType contains an area for a free-form pseudo code description of the algorithm plus a Set of references to external algorithms.  External algorithms are usually unique to a ground system type.   Multiple external algorithms are possible because XTCE documents may be used across multiple ground systems.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="AlgorithmText" type="xtce:AlgorithmTextType" minOccurs="0"/>
+					<element name="ExternalAlgorithmSet" type="xtce:ExternalAlgorithmSetType" minOccurs="0"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TriggeredMathOperationType">
+		<complexContent>
+			<extension base="xtce:MathOperationType">
+				<sequence>
+					<element name="TriggerSet" type="xtce:TriggerSetType"/>
+				</sequence>
+				<attribute name="outputParameterRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TriggerSetType">
+		<annotation>
+			<documentation xml:lang="en">A trigger is used to initiate the processing of some algorithm.  A trigger may be based on an update of a Parameter, receipt of a Container, or on a time basis.  Triggers may also have a maximum rate that limits how often the trigger can be invoked.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="OnParameterUpdateTrigger" type="xtce:OnParameterUpdateTriggerType">
+				<annotation>
+					<documentation xml:lang="en">This element instructs the trigger to invoke the algorithm evaluation when a Parameter update is received.</documentation>
+				</annotation>
+			</element>
+			<element name="OnContainerUpdateTrigger" type="xtce:OnContainerUpdateTriggerType">
+				<annotation>
+					<documentation xml:lang="en">This element instructs the trigger to invoke the algorithm evaluation when a Container is received.</documentation>
+				</annotation>
+			</element>
+			<element name="OnPeriodicRateTrigger" type="xtce:OnPeriodicRateTriggerType">
+				<annotation>
+					<documentation xml:lang="en">This element instructs the trigger to invoke the algorithm evaluation using a timer.</documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="name" type="string" use="optional">
+			<annotation>
+				<documentation xml:lang="en">Triggers may optionally be named.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="triggerRate" type="xtce:NonNegativeLongType" use="optional" default="1">
+			<annotation>
+				<documentation xml:lang="en">This attribute is a maximum rate that constrains how quickly this trigger may evaluate the algorithm to avoid flooding the implementation.  The default is once per second.  Setting to 0 results in no maximum.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--*************************************************************-->
+	<!--******** Calibrator Algorithm Types ***********************-->
+	<complexType name="BaseCalibratorType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Supplies an optional non-reference-able name and short description for calibrators.  Also includes an optional ancillary data for any special local flags, note that these may not necessarily transfer to another recipient of an instance document.</documentation>
+		</annotation>
+		<sequence>
+			<element name="AncillaryDataSet" type="xtce:AncillaryDataSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional additional ancillary information for this calibrator/algorithm</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="name" type="string">
+			<annotation>
+				<documentation xml:lang="en">Optional name for this calibrator/algorithm</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="shortDescription" type="xtce:ShortDescriptionType">
+			<annotation>
+				<documentation xml:lang="en">Optional description for this calibrator/algorithm</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="CalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Describe a calibrator to transform a source data type raw/uncalibrated value (e.g. an integer count from a spacecraft) to an engineering unit/calibrated value for users (e.g. a float).</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseCalibratorType">
+				<choice>
+					<element name="SplineCalibrator" type="xtce:SplineCalibratorType">
+						<annotation>
+							<documentation xml:lang="en">Describes a calibrator in the form of a piecewise defined function</documentation>
+						</annotation>
+					</element>
+					<element name="PolynomialCalibrator" type="xtce:PolynomialCalibratorType">
+						<annotation>
+							<documentation xml:lang="en">Describes a calibrator in the form of a polynomial function</documentation>
+						</annotation>
+					</element>
+					<element name="MathOperationCalibrator" type="xtce:MathOperationCalibratorType">
+						<annotation>
+							<documentation xml:lang="en">Describes a calibrator in the form of a user/program/implementation defined function</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ChangeValueType">
+		<annotation>
+			<documentation xml:lang="en">Describe a change value used to test verification status. See CommandVerifierType.</documentation>
+		</annotation>
+		<attribute name="value" type="double" use="required">
+			<annotation>
+				<documentation xml:lang="en">Value as a floating point number.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="MathOperationCalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Describe a mathematical function for calibration where the mathematical function is defined using the MathOperationType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseCalibratorType">
+				<choice maxOccurs="unbounded">
+					<annotation>
+						<documentation xml:lang="en">Describe a postfix (aka Reverse Polish Notation (RPN)) expression for mathematical equations. It uses a stack where operands (either fixed values or ParameterInstances) are pushed onto the stack from first to last in the XML. As the operators are specified, each pops off operands as it evaluates them, and pushes the result back onto the stack. For example, the stack, 4 8 /, would result as 0.5.  In this case postfix is used to avoid having to specify parenthesis. To convert from infix to postfix, use Dijkstra's "shunting yard" algorithm.</documentation>
+					</annotation>
+					<element name="ValueOperand" type="string">
+						<annotation>
+							<documentation xml:lang="en">Use a constant in the calculation.</documentation>
+						</annotation>
+					</element>
+					<element name="ThisParameterOperand" type="string" fixed="">
+						<annotation>
+							<documentation xml:lang="en">Use the value of this parameter in the calculation. It is the calibrator's value only.  If the raw value is needed, specify it explicitly using ParameterInstanceRefOperand. Note this element has no content.</documentation>
+						</annotation>
+					</element>
+					<element name="Operator" type="xtce:MathOperatorsType">
+						<annotation>
+							<documentation xml:lang="en">All operators utilize operands on the top values in the stack and leaving the result on the top of the stack.  Ternary operators utilize the top three operands on the stack, binary operators utilize the top two operands on the stack, and unary operators use the top operand on the stack.</documentation>
+						</annotation>
+					</element>
+					<element name="ParameterInstanceRefOperand" type="xtce:ParameterInstanceRefType">
+						<annotation>
+							<documentation xml:lang="en">This element is used to reference the last received/assigned value of any Parameter in this math operation.</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="PolynomialCalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Describe a polynomial equation for calibration. This is a calibration type where a curve in a raw vs calibrated plane is described using a set of polynomial coefficients.  Raw values are converted to calibrated values by finding a position on the curve corresponding to the raw value. The first coefficient belongs with the X^0 term, the next coefficient belongs to the X^1 term and so on. See CalibratorType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseCalibratorType">
+				<sequence>
+					<element name="Term" type="xtce:TermType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="en">A single term in the polynomial function.</documentation>
+							<appinfo>Generally only up to second order powers are reflexive.  Implementations may limit the maximum number of terms supported.</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="SplineCalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Describe a spline function for calibration using a set of at least 2 points.  Raw values are converted to calibrated values by finding a position on the line corresponding to the raw value.  The line may be interpolated and/or extrapolated as needed. The interpolation order may be specified for all the points and overridden on individual points.  The algorithm triggers on the input parameter. See CalibratorType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseCalibratorType">
+				<sequence>
+					<element name="SplinePoint" type="xtce:SplinePointType" minOccurs="2" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="en">Describes a single point of the spline or piecewise function.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="order" type="xtce:NonNegativeLongType" default="1">
+					<annotation>
+						<documentation xml:lang="en">The interpolation order to apply to the overall spline function.  Order 0 is no slope between the points (flat).  Order 1 is linear interpolation.  Order 2 would be quadratic and in this special case, 3 points would be required, etc.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="extrapolate" type="boolean" default="false">
+					<annotation>
+						<documentation xml:lang="en">Extrapolation allows the closest outside point and the associated interpolation to extend outside of the range of the points in the spline function.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--******** End of Algorithm Schema *********************-->
+	<!--*************************************************************-->
+	<!--******** Stream Definitions Schema *******************-->
+	<annotation>
+		<documentation xml:lang="en">This schema provides a language for defining binary stream data.</documentation>
+	</annotation>
+	<complexType name="AutoInvertType">
+		<annotation>
+			<documentation xml:lang="en">After searching for the frame sync marker for some number of bits, it may be desirable to invert the incoming data, and then look for frame sync.  In some cases this will require an external algorithm</documentation>
+		</annotation>
+		<sequence>
+			<element name="InvertAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0"/>
+		</sequence>
+		<attribute name="badFramesToAutoInvert" type="xtce:PositiveLongType" default="1024"/>
+	</complexType>
+	<complexType name="CustomStreamType">
+		<annotation>
+			<documentation xml:lang="en">A stream type where some level of custom processing (e.g. convolutional, encryption, compression) is performed.  Has a reference to external algorithms for encoding and decoding algorithms.</documentation>
+			<appinfo>Must check to ensure that the attributes encodedStreamRef and decodedStreamRef point to valid Streams</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:PCMStreamType">
+				<sequence>
+					<element name="EncodingAlgorithm" type="xtce:InputAlgorithmType"/>
+					<element name="DecodingAlgorithm" type="xtce:InputOutputAlgorithmType">
+						<annotation>
+							<documentation xml:lang="en">Algorithm outputs may be used to set decoding quality parameters.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="encodedStreamRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="decodedStreamRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="FlagBitType">
+		<restriction base="string">
+			<enumeration value="zeros"/>
+			<enumeration value="ones"/>
+		</restriction>
+	</simpleType>
+	<complexType name="FlagType">
+		<annotation>
+			<documentation xml:lang="en">The pattern of bits used to look for frame synchronization.</documentation>
+		</annotation>
+		<attribute name="flagSizeInBits" type="xtce:PositiveLongType" default="6"/>
+		<attribute name="flagBitType" type="xtce:FlagBitType" default="ones"/>
+	</complexType>
+	<complexType name="FrameStreamType">
+		<annotation>
+			<documentation xml:lang="en">The top level type definition for all data streams that are frame based.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:PCMStreamType">
+				<sequence>
+					<choice>
+						<element name="ContainerRef" type="xtce:ContainerRefType">
+							<annotation>
+								<documentation xml:lang="en">This Container (usually abstract) is the container that is in the fixed frame stream.  Normally, this is a general container type from which many specific containers are inherited.</documentation>
+							</annotation>
+						</element>
+						<element name="ServiceRef" type="xtce:ServiceRefType"/>
+					</choice>
+					<element name="StreamRef" type="xtce:StreamRefType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This is a reference to a connecting stream - say a custom stream.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FixedFrameStreamType">
+		<annotation>
+			<documentation xml:lang="en">For streams that contain a series of frames with a fixed frame length where the frames are found by looking for a marker in the data.  This marker is sometimes called the frame sync pattern and sometimes the Asynchronous Sync Marker (ASM).  This marker need not be contiguous although it usually is.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FrameStreamType">
+				<sequence>
+					<element name="SyncStrategy" type="xtce:FixedFrameSyncStrategyType"/>
+				</sequence>
+				<attribute name="syncApertureInBits" type="xtce:NonNegativeLongType" default="0">
+					<annotation>
+						<documentation xml:lang="en">Allowed slip (in bits) in either direction for the sync pattern</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="frameLengthInBits" type="long" use="required"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FixedFrameSyncStrategyType">
+		<annotation>
+			<documentation xml:lang="en">Describe a sync pattern and an optional reference to an algorithm used to invert the stream if the frame sync pattern is not found. See FixedFrameStreamType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:SyncStrategyType">
+				<sequence>
+					<element name="SyncPattern" type="xtce:SyncPatternType">
+						<annotation>
+							<documentation xml:lang="en">The pattern of bits used to look for frame synchronization.  See SyncPatternType.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="PCMStreamType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A PCM Stream Type is the high level definition for all Pulse Code Modulated (PCM) (i.e., binary) streams.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="bitRateInBPS" type="double"/>
+				<attribute name="pcmType" type="xtce:PCMType" default="NRZL"/>
+				<attribute name="inverted" type="boolean" default="false"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="PCMType">
+		<restriction base="string">
+			<enumeration value="NRZL"/>
+			<enumeration value="NRZM"/>
+			<enumeration value="NRZS"/>
+			<enumeration value="BiPhaseL"/>
+			<enumeration value="BiPhaseM"/>
+			<enumeration value="BiPhaseS"/>
+		</restriction>
+	</simpleType>
+	<complexType name="StreamRefType">
+		<annotation>
+			<documentation xml:lang="en">Holds a reference to a stream</documentation>
+		</annotation>
+		<attribute name="streamRef" type="xtce:NameReferenceType" use="required">
+			<annotation>
+				<documentation xml:lang="en">name of reference stream</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="StreamSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered set of Streams.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="FixedFrameStream" type="xtce:FixedFrameStreamType"/>
+			<element name="VariableFrameStream" type="xtce:VariableFrameStreamType"/>
+			<element name="CustomStream" type="xtce:CustomStreamType"/>
+		</choice>
+	</complexType>
+	<complexType name="SyncStrategyType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A Sync Strategy specifies the strategy on how to find frames within a stream of PCM data.  The sync strategy is based upon a state machine that begins in the 'Search' state until the first sync marker is found.  Then it goes into the 'Verify' state until a specified number of successive good sync markers are found.  Then, the state machine goes into the 'Lock' state, in the 'Lock' state frames are considered good.  Should a sync marker be missed in the 'Lock' state, the state machine will transition into the 'Check' state, if the next sync marker is where it's expected within a specified number of frames, then the state machine will transition back to the 'Lock' state, it not it will transition back to 'Search'.  </documentation>
+		</annotation>
+		<sequence>
+			<element name="AutoInvert" type="xtce:AutoInvertType" minOccurs="0"/>
+		</sequence>
+		<attribute name="verifyToLockGoodFrames" type="xtce:NonNegativeLongType" default="4"/>
+		<attribute name="checkToLockGoodFrames" type="xtce:NonNegativeLongType" default="1"/>
+		<attribute name="maxBitErrorsInSyncPattern" type="xtce:NonNegativeLongType" default="0">
+			<annotation>
+				<documentation xml:lang="en">Maximum number of bit errors in the sync pattern (marker).</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="SyncPatternType">
+		<annotation>
+			<documentation xml:lang="en">The pattern of bits used to look for frame synchronization.</documentation>
+		</annotation>
+		<attribute name="pattern" type="hexBinary" use="required">
+			<annotation>
+				<documentation xml:lang="en">CCSDS ASM for non-turbocoded frames = 1acffc1d</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="bitLocationFromStartOfContainer" type="long" default="0"/>
+		<attribute name="mask" type="hexBinary"/>
+		<attribute name="maskLengthInBits" type="xtce:PositiveLongType">
+			<annotation>
+				<documentation xml:lang="en">truncate the mask from the left</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="patternLengthInBits" type="xtce:PositiveLongType" use="required">
+			<annotation>
+				<documentation xml:lang="en">truncate the pattern from the left</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="VariableFrameStreamType">
+		<annotation>
+			<documentation xml:lang="en">For streams that contain a series of frames with a variable frame length where the frames are found by looking for a series of one's or zero's (usually one's).  The series is called the flag.   in the PCM stream that are usually made to be illegal in the PCM stream by zero or one bit insertion.  </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FrameStreamType">
+				<sequence>
+					<element name="SyncStrategy" type="xtce:VariableFrameSyncStrategyType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="VariableFrameSyncStrategyType">
+		<complexContent>
+			<extension base="xtce:SyncStrategyType">
+				<sequence>
+					<element name="Flag" type="xtce:FlagType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!--******** End of Stream Definition Schema ************-->
+	<!--*************************************************************-->
+	<!--******** DataTypes ***************************************-->
+	<complexType name="ArgumentAbsoluteTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing an absolute time data type. Contains an absolute (to a known epoch) time.  Use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e. the format ss.ss... with any number of digits after the decimal point is supported. See AbsoluteTimeParameterType and AbsoluteTimeArgumentType.  See AbsouteTimeParameterType, AbsoluteTimeArgumentType and BaseTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseTimeDataType">
+				<attribute name="initialValue" type="dateTime">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AbsoluteTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing an absolute time data type. Contains an absolute (to a known epoch) time.  Use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e. the format ss.ss... with any number of digits after the decimal point is supported. See AbsoluteTimeParameterType and AbsoluteTimeArgumentType.  See AbsouteTimeParameterType, AbsoluteTimeArgumentType and BaseTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTimeDataType">
+				<attribute name="initialValue" type="dateTime">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AggregateDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing a complex data type analogous to a C-struct. Each field of the data type is called a Member.  Each Member is part of the MemberList which forms the list of items to be placed under this data type’s name.  The MemberList defines a data block and block’s size is defined by the DataEncodings of each Member’s type reference. The data members are ordered and contiguous in the MemberList element (packed).  Each member may be addressed by the dot syntax similar to C such as P.voltage if P is the referring parameter and voltage is of a member of P’s aggregate type.  See MemberType, MemberListType, DataEncodingType, NameReferenceType, AggregateParameterType and AggregateArgumentType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="MemberList" type="xtce:MemberListType">
+						<annotation>
+							<documentation xml:lang="en">Ordered list of the members of the aggregate/structure.  Members are contiguous.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArrayDataTypeType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing an array data type.  The number of and size of each dimension is defined in its two child types. See NameReferenceType, ArrayArgumentType and ArrayParameterType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="arrayTypeRef" type="xtce:NameReferenceType" use="required">
+					<annotation>
+						<documentation xml:lang="en">Reference to the data type that represents the type of the elements for this array.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">An abstract schema type used by within the schema to derive the other simple/primitive engineering form data types:  BooleanDataType, BinaryDataType, StringDataType, EnumeratedDataType, FloatDataType and IntegerDataType.  The encoding elements are optional because they describe the raw wire encoded form of the data type.  Encoding is only necessary when the type is telemetered in some form.  Local variables and derived typically do not require encoding.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="UnitSet" type="xtce:UnitSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">When appropriate, describe the units of measure that are represented by this parameter value.</documentation>
+						</annotation>
+					</element>
+					<choice minOccurs="0">
+						<element name="BinaryDataEncoding" type="xtce:BinaryDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">Binary encoding is typically a "pass through" raw encoding form where one of the more common encodings is not required for the parameter.  A custom transformation capability is available if needed.</documentation>
+							</annotation>
+						</element>
+						<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">Float encoding is a common encoding where the raw binary is in a form that gets interpreted as a decimal numeric value.</documentation>
+							</annotation>
+						</element>
+						<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">Integer encoding is a common encoding where the raw binary is in a form that gets interpreted as an integral value, either signed or unsigned.</documentation>
+							</annotation>
+						</element>
+						<element name="StringDataEncoding" type="xtce:StringDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">String encoding is a common encoding where the raw binary is in a form that gets interpreted as a character sequence.</documentation>
+							</annotation>
+						</element>
+					</choice>
+				</sequence>
+				<attribute name="baseType" type="xtce:NameReferenceType">
+					<annotation>
+						<appinfo>Must be derived from a like type (e.g,, String from String).  No circular derivations.</appinfo>
+						<documentation xml:lang="en">Used to derive one Data Type from another - will inherit all the attributes from the baseType any of which may be redefined in this type definition.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentBaseDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to BaseDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="UnitSet" type="xtce:UnitSetType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">When appropriate, describe the units of measure that are represented by this argument value.</documentation>
+						</annotation>
+					</element>
+					<choice minOccurs="0">
+						<element name="BinaryDataEncoding" type="xtce:ArgumentBinaryDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">Binary encoding is typically a "pass through" raw encoding form where one of the more common encodings is not required for the argument.  A custom transformation capability is available if needed.</documentation>
+							</annotation>
+						</element>
+						<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">Float encoding is a common encoding where the raw binary is in a form that gets interpreted as a decimal numeric value.</documentation>
+							</annotation>
+						</element>
+						<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">Integer encoding is a common encoding where the raw binary is in a form that gets interpreted as an integral value, either signed or unsigned.</documentation>
+							</annotation>
+						</element>
+						<element name="StringDataEncoding" type="xtce:ArgumentStringDataEncodingType">
+							<annotation>
+								<documentation xml:lang="en">String encoding is a common encoding where the raw binary is in a form that gets interpreted as a character sequence.</documentation>
+							</annotation>
+						</element>
+					</choice>
+				</sequence>
+				<attribute name="baseType" type="xtce:NameReferenceType">
+					<annotation>
+						<appinfo>Must be derived from a like type (e.g,, String from String).  No circular derivations.</appinfo>
+						<documentation xml:lang="en">Used to derive one Data Type from another - will inherit all the attributes from the baseType any of which may be redefined in this type definition.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentBaseTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to BaseTimeDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="Encoding" type="xtce:EncodingType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Describes how the raw base counts of the time type are encoded/decoded.</documentation>
+						</annotation>
+					</element>
+					<element name="ReferenceTime" type="xtce:ReferenceTimeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Describes origin (epoch or reference) of this time type.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="baseType" type="xtce:NameReferenceType">
+					<annotation>
+						<documentation xml:lang="en">Extend another absolute or relative time type.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BaseTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">An abstract schema type used within the schema to derive other time based data types: RelativeTimeDataType and AbsoluteTimeDataType.  An absolute time data type is a telemetered source/destination data type.  A data encoding must be set.  An optional epoch may be set.  Time types are an exception to other primitives because, if the time data type is not telemetered, it still must have a data encoding set.  See DataEncodingType, AbsoluteTimeDataType and RelativeTimeDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<sequence>
+					<element name="Encoding" type="xtce:EncodingType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Describes how the raw base counts of the time type are encoded/decoded.</documentation>
+						</annotation>
+					</element>
+					<element name="ReferenceTime" type="xtce:ReferenceTimeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Describes origin (epoch or reference) of this time type.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="baseType" type="xtce:NameReferenceType">
+					<annotation>
+						<documentation xml:lang="en">Extend another absolute or relative time type.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentBinaryDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to BinaryDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseDataType">
+				<attribute name="initialValue" type="hexBinary">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.  Extra bits are truncated from the MSB (leftmost).</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing a binary data engineering/calibrated type (often called “blob type”). The binary data may be of fixed or variable length, and has an optional encoding and decoding algorithm that may be defined to transform the data between space and ground.  See BaseDataType, BinaryParameterType and BinaryArgumentType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<attribute name="initialValue" type="hexBinary">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.  Extra bits are truncated from the MSB (leftmost).</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentBooleanDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to BooleanDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseDataType">
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<appinfo>Initial value must match either the oneStringValue or the zeroStringValue</appinfo>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="oneStringValue" type="string" default="True">
+					<annotation>
+						<documentation xml:lang="en">Enumeration string representing the 1 value, with the default being 'True'.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="zeroStringValue" type="string" default="False">
+					<annotation>
+						<documentation xml:lang="en">Enumeration string representing the 0 value, with the default being 'False'.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing a boolean data type which has two values only: ‘True’ (1) or ‘False’ (0). The values one and zero may be mapped to a specific string using the attributes oneStringValue and zeroStringValue.  This type is a simplified form of the EnumeratedDataType.  See BaseDataType, BooleanParameterType and BooleanArgumentType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<appinfo>Initial value must match either the oneStringValue or the zeroStringValue</appinfo>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="oneStringValue" type="string" default="True">
+					<annotation>
+						<documentation xml:lang="en">Enumeration string representing the 1 value, with the default being 'True'.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="zeroStringValue" type="string" default="False">
+					<annotation>
+						<documentation xml:lang="en">Enumeration string representing the 0 value, with the default being 'False'.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="DimensionType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">For partial entries of an array, the starting and ending index for each dimension, OR the Size must be specified.  Indexes are zero based.</documentation>
+		</annotation>
+		<sequence>
+			<element name="StartingIndex" type="xtce:IntegerValueType">
+				<annotation>
+					<documentation xml:lang="en">zero based index</documentation>
+				</annotation>
+			</element>
+			<element name="EndingIndex" type="xtce:IntegerValueType"/>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentDimensionType">
+		<annotation>
+			<documentation xml:lang="en">Identical to DimensionType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<element name="StartingIndex" type="xtce:ArgumentIntegerValueType">
+				<annotation>
+					<documentation xml:lang="en">zero based index</documentation>
+				</annotation>
+			</element>
+			<element name="EndingIndex" type="xtce:ArgumentIntegerValueType"/>
+		</sequence>
+	</complexType>
+	<complexType name="DimensionListType">
+		<annotation>
+			<documentation xml:lang="en">Where the Dimension list is in this form:  Array[1stDim][2ndDim][lastDim].  The last dimension is assumed to be the least significant - that is this dimension will cycle through its combination before the next to last dimension changes.  The order MUST ascend or the array will need to be broken out entry by entry. </documentation>
+		</annotation>
+		<sequence>
+			<element name="Dimension" type="xtce:DimensionType" maxOccurs="unbounded">
+				<annotation>
+					<appinfo>For an ArrayParameterType of size N, their should be N Dimensions</appinfo>
+					<appinfo>An array made up by multiple Entries should not have indexes that overlap, but should be continuous.</appinfo>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentDimensionListType">
+		<annotation>
+			<documentation xml:lang="en">Identical to DimensionListType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Dimension" type="xtce:ArgumentDimensionType" maxOccurs="unbounded">
+				<annotation>
+					<appinfo>For an ArrayParameterType of size N, their should be N Dimensions</appinfo>
+					<appinfo>An array made up by multiple Entries should not have indexes that overlap, but should be continuous.</appinfo>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentEnumeratedDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to EnumeratedDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseDataType">
+				<sequence>
+					<element name="EnumerationList" type="xtce:EnumerationListType">
+						<annotation>
+							<documentation xml:lang="en">Unordered list of label/value pairs where values cannot be duplicated.</documentation>
+							<appinfo>Check that values do not overlap in the mappings.</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.  Use the label, it must be in the enumeration list to be valid.</documentation>
+						<appinfo>Label must be in the enumeration list to be valid.</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumeratedDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Describes an enumerated parameter type.  The enumeration list consists of label/value pairs. See EnumerationListType, EnumeratedParameterType and EnumeratedArgumentType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="EnumerationList" type="xtce:EnumerationListType">
+						<annotation>
+							<documentation xml:lang="en">Unordered list of label/value pairs where values cannot be duplicated.</documentation>
+							<appinfo>Check that values do not overlap in the mappings.</appinfo>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.  Use the label, it must be in the enumeration list to be valid.</documentation>
+						<appinfo>Label must be in the enumeration list to be valid.</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumerationListType">
+		<sequence>
+			<element name="Enumeration" type="xtce:ValueEnumerationType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentFloatDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to FloatDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseDataType">
+				<sequence>
+					<element name="ToString" type="xtce:ToStringType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This element provides the implementation with assistance rendering the value as a string for users.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="double">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:FloatSizeInBitsType" default="32">
+					<annotation>
+						<documentation xml:lang="en">Optional hint to the implementation about the size of the engineering/calibrated data type to use internally.  Generally this can be determined by examination of the space required to capture the full range of the encoding, but it is not always clear when calibrators are in use.  A tolerant implementation will endeavor to always make sufficient size engineering data types to capture the entire range of possible values.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="FloatDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base schema type for describing a floating point engineering/calibrated data type. Several encodings are supported.  Calibrated integer to float relationships should be described with this data type. Use the data encoding to define calibrators.  Joins integer as one of the numerics. See BaseDataType, FloatParameterType and FloatArgumentType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="ToString" type="xtce:ToStringType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This element provides the implementation with assistance rendering the value as a string for users.</documentation>
+						</annotation>
+					</element>
+					<element name="ValidRange" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The Valid Range provides additional boundary/constraint information beyond that of the data encoding in the range of possible values that are meaningful to this parameter.  Not to be construed as an alarm definition, violations of the valid range make a parameter value "unreasonable", as opposed to reasonable to be reported, but in a state which should be of concern.</documentation>
+						</annotation>
+						<complexType>
+							<complexContent>
+								<extension base="xtce:FloatRangeType">
+									<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true">
+										<annotation>
+											<documentation xml:lang="en">By default and general recommendation, the valid range is specified in engineering/calibrated values, although this can be adjusted.</documentation>
+										</annotation>
+									</attribute>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="double">
+					<annotation>
+						<documentation xml:lang="en">Initial value is always given in calibrated form</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:FloatSizeInBitsType" default="32">
+					<annotation>
+						<documentation xml:lang="en">Optional hint to the implementation about the size of the engineering/calibrated data type to use internally.  Generally this can be determined by examination of the space required to capture the full range of the encoding, but it is not always clear when calibrators are in use.  A tolerant implementation will endeavor to always make sufficient size engineering data types to capture the entire range of possible values.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentIntegerDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to IntegerDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseDataType">
+				<sequence>
+					<element name="ToString" type="xtce:ToStringType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This element provides the implementation with assistance rendering the value as a string for users.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="xtce:FixedIntegerValueType">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.  Default is base 10 form; binary, octal, or hexadecimal values may be given by preceding value with 0[b|B], 0[o|O|, 0[x|X] respectively.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" default="32">
+					<annotation>
+						<documentation xml:lang="en">Optional hint to the implementation about the size of the engineering/calibrated data type to use internally.  Generally this can be determined by examination of the space required to capture the full range of the encoding, but it is not always clear when calibrators are in use.  A tolerant implementation will endeavor to always make sufficient size engineering data types to capture the entire range of possible values.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="signed" type="boolean" default="true">
+					<annotation>
+						<documentation xml:lang="en">Flag indicating if the engineering/calibrated data type used should support signed representation.  This should not be confused with the encoding type for the raw value.  The default is true.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="IntegerDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Describe an integer engineering/calibrated data type. Several encodings are supported.  See BaseDataType, IntegerParameterType and IntegerArgumentType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="ToString" type="xtce:ToStringType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">This element provides the implementation with assistance rendering the value as a string for users.</documentation>
+						</annotation>
+					</element>
+					<element name="ValidRange" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The Valid Range provides additional boundary/constraint information beyond that of the data encoding in the range of possible values that are meaningful to this parameter.  Not to be construed as an alarm definition, violations of the valid range make a parameter value "unreasonable", as opposed to reasonable to be reported, but in a state which should be of concern.</documentation>
+						</annotation>
+						<complexType>
+							<complexContent>
+								<extension base="xtce:IntegerRangeType">
+									<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true">
+										<annotation>
+											<documentation xml:lang="en">By default and general recommendation, the valid range is specified in engineering/calibrated values, although this can be adjusted.</documentation>
+										</annotation>
+									</attribute>
+								</extension>
+							</complexContent>
+						</complexType>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="long">
+					<annotation>
+						<documentation xml:lang="en">Default/Initial value is always given in calibrated form.  Default is base 10 form; binary, octal, or hexadecimal values may be given by preceding value with 0[b|B], 0[o|O|, 0[x|X] respectively.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" default="32">
+					<annotation>
+						<documentation xml:lang="en">Optional hint to the implementation about the size of the engineering/calibrated data type to use internally.  Generally this can be determined by examination of the space required to capture the full range of the encoding, but it is not always clear when calibrators are in use.  A tolerant implementation will endeavor to always make sufficient size engineering data types to capture the entire range of possible values.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="signed" type="boolean" default="true">
+					<annotation>
+						<documentation xml:lang="en">Flag indicating if the engineering/calibrated data type used should support signed representation.  This should not be confused with the encoding type for the raw value.  The default is true.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MemberType">
+		<annotation>
+			<documentation xml:lang="en">Describe a member field in an AggregateDataType. Each member has a name and a type reference to a data type for the aggregate member name.  If this aggregate is a Parameter aggregate, then the typeRef is a parameter type reference.  If this aggregate is an Argument aggregate, then the typeRef is an argument type reference.  References to an array data type is currently not supported. Circular references are not allowed.  See MemberListType. AggregateParameterType and AggregateArgumentType.</documentation>
+			<appinfo>ensure no circular references</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NameDescriptionType">
+				<attribute name="typeRef" type="xtce:NameReferenceType" use="required"/>
+				<attribute name="initialValue" type="string" use="optional">
+					<annotation>
+						<documentation xml:lang="en">Used to set the initial calibrated values of Parameters.  Will overwrite an initial value defined for the ParameterType.  For integer types base 10 (decimal) form is assumed unless: if proceeded by a 0b or 0B, value is in base two (binary form, if proceeded by a 0o or 0O, values is in base 8 (octal) form, or if proceeded by a 0x or 0X, value is in base 16 (hex) form.  Floating point types may be specified in normal (100.0) or scientific (1.0e2) form.  Time types are specified using the ISO 8601 formats described for XTCE time data types.  Initial values for string types, may include C language style (\n, \t, \", \\, etc.) escape sequences.</documentation>
+						<appinfo>The value type must match the Parameter type</appinfo>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MemberListType">
+		<annotation>
+			<documentation>Order is important only if the name of the AggregateParameter or Aggregate Argument is directly referenced in SequenceContainers.  In this case the members are assued to be added sequentially (in the order listed here) into the Container.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Member" type="xtce:MemberType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentRelativeTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Used to contain a relative time value.  Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseTimeDataType">
+				<attribute name="initialValue" type="duration"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="RelativeTimeDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Used to contain a relative time value.  Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseTimeDataType">
+				<attribute name="initialValue" type="duration"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ArgumentStringDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Identical to StringDataType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ArgumentBaseDataType">
+				<sequence>
+					<element name="SizeRangeInCharacters" type="xtce:IntegerRangeType" minOccurs="0"/>
+				</sequence>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Initial values for string types, may include C language style (\n, \t, \", \\, etc.) escape sequences.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="restrictionPattern" type="string">
+					<annotation>
+						<documentation xml:lang="en">restriction pattern is a regular expression</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="characterWidth" type="xtce:CharacterWidthType"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringDataType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Defines a base schema type for StringParameterType and StringArgumentType, adding initial value, restriction pattern, character width, and size range in characters.  The initial value if set is the initial value of all instances of the child types.  The restriction pattern is a regular expression enforcing the string value to this pattern.  The character width is on the local data type side.  And the size range in character restricts the character set.  For telemetered values, if the restriction pattern of size range in character is not met, the item is invalid. See BaseDataType, StringParameterType, StringArgumentType, CharacterWidthType and IntegerRangeType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseDataType">
+				<sequence>
+					<element name="SizeRangeInCharacters" type="xtce:IntegerRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">The size in bits may be greater than or equal to minInclusive.  It may be less than or equal to maxInclusive.  They both may be set indicating a closed range.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="initialValue" type="string">
+					<annotation>
+						<documentation xml:lang="en">Initial values for string types, may include C language style (\n, \t, \", \\, etc.) escape sequences.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="restrictionPattern" type="string">
+					<annotation>
+						<documentation xml:lang="en">restriction pattern is a regular expression</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="characterWidth" type="xtce:CharacterWidthType"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="UnitSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered collection of units that form a unit-expression.  Units may be described for both calibrated/engineering values and also potentially uncalibrated/raw values.  See UnitType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Unit" type="xtce:UnitType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe the exponent, factor, form, and description for a unit.  The attributes are optional because different programs use this element in different ways, depending on vendor support.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ValidFloatRangeSetType">
+		<annotation>
+			<documentation xml:lang="en">Numerical ranges that define the universe of valid values for this argument.  A single range is the most common, although it is possible to define multiple ranges when the valid values are not contiguous.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ValidRange" type="xtce:FloatRangeType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">A valid range constrains the whole set of possible values that could be encoded by the data type to a more "valid" or "reasonable" set of values.  This should be treated as a boundary check in an implementation to validate the input or output value.  Typically, only 1 range is used.  In cases where multiple ranges are used, then the value is valid when it is valid in any of the provided ranges.  Implementations may also use these ranges to enhance user interface displays and other visualization widgets as appropriate for the type.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true">
+			<annotation>
+				<documentation xml:lang="en">By default and general recommendation, the valid range is specified in engineering/calibrated values, although this can be adjusted.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ValidIntegerRangeSetType">
+		<annotation>
+			<documentation xml:lang="en">Numerical ranges that define the universe of valid values for this argument.  A single range is the most common, although it is possible to define multiple ranges when the valid values are not contiguous.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ValidRange" type="xtce:IntegerRangeType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">A valid range constrains the whole set of possible values that could be encoded by the data type to a more "valid" or "reasonable" set of values.  This should be treated as a boundary check in an implementation to validate the input or output value.  Typically, only 1 range is used.  In cases where multiple ranges are used, then the value is valid when it is valid in any of the provided ranges.  Implementations may also use these ranges to enhance user interface displays and other visualization widgets as appropriate for the type.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="validRangeAppliesToCalibrated" type="boolean" default="true">
+			<annotation>
+				<documentation xml:lang="en">By default and general recommendation, the valid range is specified in engineering/calibrated values, although this can be adjusted.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--*************************************************************-->
+	<!--******** Data Types used with Encoding **************-->
+	<simpleType name="BitOrderType">
+		<annotation>
+			<documentation xml:lang="en">Defines two bit-order types: most significant bit first and least significant bit first.  See DataEncodingType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="leastSignificantBitFirst"/>
+			<enumeration value="mostSignificantBitFirst"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ArgumentBinaryDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">Identical to BinaryDataEncodingType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="SizeInBits" type="xtce:ArgumentIntegerValueType">
+						<annotation>
+							<documentation xml:lang="en">Number of bits this value occupies on the stream being encoded/decoded.</documentation>
+						</annotation>
+					</element>
+					<element name="FromBinaryTransformAlgorithm" type="xtce:ArgumentInputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used to convert binary data to an application data type</documentation>
+						</annotation>
+					</element>
+					<element name="ToBinaryTransformAlgorithm" type="xtce:ArgumentInputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used to convert binary data from an application data type to binary data</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">Describe binary data that is unmolested in the decoding/encoding or cannot be represented in any of the other data encoding formats.  Optionally use the FromBinaryTransformAlgorithm and ToBinaryTransformAlgorithm element to describe the transformation process.  See InputAlgorithmType for the transformation structure.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="SizeInBits" type="xtce:IntegerValueType">
+						<annotation>
+							<documentation xml:lang="en">Number of bits this value occupies on the stream being encoded/decoded.</documentation>
+						</annotation>
+					</element>
+					<element name="FromBinaryTransformAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used to convert binary data to an application data type</documentation>
+						</annotation>
+					</element>
+					<element name="ToBinaryTransformAlgorithm" type="xtce:InputAlgorithmType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Used to convert binary data from an application data type to binary data</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ByteType">
+		<attribute name="byteSignificance" type="xtce:NonNegativeLongType" use="required"/>
+	</complexType>
+	<simpleType name="CharacterWidthType">
+		<restriction base="integer">
+			<enumeration value="8"/>
+			<enumeration value="16"/>
+		</restriction>
+	</simpleType>
+	<complexType name="CRCType">
+		<annotation>
+			<documentation xml:lang="en">Cyclic Redundancy Check (CRC) definition. The polynomial coefficients for the CRC 
+are defined as a truncated hex value.  The coefficient for the nth bit of an n-bit CRC will always be 1 and is not 
+represented in the truncated hex value.  For example, the truncated hex value of CRC-32 (width=32 bits) used in the 
+Ethernet specification is 0x04C11DB7, where each non-zero bit of the truncated hex represents a coefficient of 1 in
+the polynomial and the bit position represents the exponent. There may also be an initial remainder "InitRemainder" 
+and a final XOR "FinalXOR" to fully specify the CRC.  reflectData and reflectRemainder may also be specified to 
+reverse the bit order in the incoming data and/or the result.
+      </documentation>
+		</annotation>
+		<sequence>
+			<element name="Polynomial" type="hexBinary"/>
+			<element name="InitRemainder" type="hexBinary" minOccurs="0"/>
+			<element name="FinalXOR" type="hexBinary" minOccurs="0"/>
+		</sequence>
+		<attribute name="width" type="xtce:PositiveLongType"/>
+		<attribute name="reflectData" type="boolean" default="false"/>
+		<attribute name="reflectRemainder" type="boolean" default="false"/>
+		<attribute name="bitsFromReference" type="xtce:NonNegativeLongType"/>
+		<attribute name="reference" type="xtce:ReferencePointType" default="start"/>
+	</complexType>
+	<complexType name="DataEncodingType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Describes how a particular piece of data is sent or received from some non-native, off-platform device. (e.g. a spacecraft)</documentation>
+		</annotation>
+		<sequence>
+			<element name="ErrorDetectCorrect" type="xtce:ErrorDetectCorrectType" minOccurs="0"/>
+		</sequence>
+		<attribute name="bitOrder" type="xtce:BitOrderType" default="mostSignificantBitFirst"/>
+		<attribute name="byteOrder" type="xtce:ByteOrderType" default="mostSignificantByteFirst"/>
+	</complexType>
+	<complexType name="EncodingType">
+		<annotation>
+			<documentation xml:lang="en">Describe the data encoding for a time data type.  It includes the units and other attributes scale and offset.  Use scale and offset to describe a y=mx+b relationship (where m is the slope/scale and b is the intercept/offset) to make adjustments to the encoded time value so that it matches the time units.  For binary encoded time use transform algorithms to convert time data formats that are too difficult to describe in XTCE. See AbsoluteTimeDataType and RelativeTimeDataType.</documentation>
+		</annotation>
+		<choice>
+			<element name="BinaryDataEncoding" type="xtce:BinaryDataEncodingType">
+				<annotation>
+					<documentation xml:lang="en">Binary encoding is typically a "pass through" raw encoding form where one of the more common encodings is not required for the parameter.  A custom transformation capability is available if needed.</documentation>
+				</annotation>
+			</element>
+			<element name="FloatDataEncoding" type="xtce:FloatDataEncodingType">
+				<annotation>
+					<documentation xml:lang="en">Float encoding is a common encoding where the raw binary is in a form that gets interpreted as a decimal numeric value.</documentation>
+				</annotation>
+			</element>
+			<element name="IntegerDataEncoding" type="xtce:IntegerDataEncodingType">
+				<annotation>
+					<documentation xml:lang="en">Integer encoding is a common encoding where the raw binary is in a form that gets interpreted as an integral value, either signed or unsigned.</documentation>
+				</annotation>
+			</element>
+			<element name="StringDataEncoding" type="xtce:StringDataEncodingType">
+				<annotation>
+					<documentation xml:lang="en">String encoding is a common encoding where the raw binary is in a form that gets interpreted as a character sequence.</documentation>
+				</annotation>
+			</element>
+		</choice>
+		<attribute name="units" type="xtce:TimeUnitsType" default="seconds">
+			<annotation>
+				<documentation xml:lang="en">Time units, with the default being in seconds.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="scale" type="double" default="1">
+			<annotation>
+				<documentation xml:lang="en">Linear slope used as a shorter form of specifying a calibrator to convert between the raw value and the engineering units.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="offset" type="double" default="0">
+			<annotation>
+				<documentation xml:lang="en">Linear intercept used as a shorter form of specifying a calibrator to convert between the raw value and the engineering units.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<simpleType name="EpochType">
+		<annotation>
+			<documentation xml:lang="en">Epochs may be specified as an xs date where time is implied to be 00:00:00, xs dateTime, or string enumeration of common epochs.  The enumerations are TAI (used by CCSDS and others), J2000, UNIX (also known as POSIX), and GPS.</documentation>
+		</annotation>
+		<union memberTypes="date dateTime xtce:EpochTimeEnumsType"/>
+	</simpleType>
+	<complexType name="FloatDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">For common encodings of floating point data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Calibrator to be applied to the raw uncalibrated value to arrive at the engineering/calibrated value when no Context Calibrators are provided or evaluate to true, based on their MatchCriteria.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextCalibratorList" type="xtce:ContextCalibratorListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Calibrator to be applied to the raw uncalibrated value to arrive at the engineering/calibrated value when a MatchCriteria evaluates to true.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="encoding" type="xtce:FloatEncodingType" default="IEEE754_1985">
+					<annotation>
+						<documentation xml:lang="en">Specifies real/decimal numeric value to raw encoding method, with the default being "IEEE754_1985".</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:FloatEncodingSizeInBitsType" default="32">
+					<annotation>
+						<documentation xml:lang="en">Number of bits to use for the float raw encoding method, with 32 being the default.  Not every number of bits is valid for each encoding method.</documentation>
+						<appinfo>Verify the number of bits for encoding is valid for the encoding method.</appinfo>
+					</annotation>
+				</attribute>
+				<attribute name="changeThreshold" type="double" use="optional">
+					<annotation>
+						<documentation>A changeThreshold may optionally be specified to inform systems of the minimum change in value that is significant.  This is used by some systems to limit the telemetry processing and/or recording requirements. If the value is unspecified or zero, any change is significant.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="FloatEncodingSizeInBitsType">
+		<restriction base="unsignedShort">
+			<enumeration value="16">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 16 bit encoding size is only valid in cases of IEEE754 and vendor specific MILSTD_1750A variation that is not a part of the standard.  This is not meant to preclude use in the event that future floating point formats may also define this value.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="32">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 32 bit encoding size is only valid in cases of IEEE754_1985, IEEE754, MILSTD_1750A, DEC, IBM, and TI.  This is not meant to preclude use in the event that future floating point formats may also define this value.  The IEEE754 enumeration and the IEEE754_1985 enumeration are allowed in this case and the interpretation is the same.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="40">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 40 bit encoding size is only valid in the case of TI.  This is not meant to preclude use in the event that future floating point formats may also define this value.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="48">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 48 bit encoding size is only valid in the case of MILSTD_1750A.  This is not meant to preclude use in the event that future floating point formats may also define this value.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="64">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 64 bit encoding size is only valid in cases of IEEE754_1985, IEEE754, DEC, and IBM.  This is not meant to preclude use in the event that future floating point formats may also define this value.  The IEEE754 enumeration and the IEEE754_1985 enumeration are allowed in this case and the interpretation is the same.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="80">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 80 bit encoding size is only valid in the case of IEEE754_1985.  This is not meant to preclude use in the event that future floating point formats may also define this value.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="128">
+				<annotation>
+					<documentation xml:lang="en">At the time of this writing, 128 bit encoding size is only valid in the case of IEEE754_1985 and IEEE754.  This is not meant to preclude use in the event that future floating point formats may also define this value.  The IEEE754 enumeration and the IEEE754_1985 enumeration are allowed in this case and the interpretation is the same.</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="FloatEncodingType">
+		<restriction base="string">
+			<enumeration value="IEEE754_1985"/>
+			<enumeration value="IEEE754"/>
+			<enumeration value="MILSTD_1750A"/>
+			<enumeration value="DEC"/>
+			<enumeration value="IBM"/>
+			<enumeration value="TI"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="FloatSizeInBitsType">
+		<restriction base="xtce:PositiveLongType">
+			<enumeration value="32"/>
+			<enumeration value="64"/>
+			<enumeration value="128"/>
+		</restriction>
+	</simpleType>
+	<complexType name="IntegerDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">For all major encodings of integer data</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<sequence>
+					<element name="DefaultCalibrator" type="xtce:CalibratorType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Calibrator to be applied to the raw uncalibrated value to arrive at the engineering/calibrated value when no Context Calibrators are provided or evaluate to true, based on their MatchCriteria.</documentation>
+						</annotation>
+					</element>
+					<element name="ContextCalibratorList" type="xtce:ContextCalibratorListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Calibrator to be applied to the raw uncalibrated value to arrive at the engineering/calibrated value when a MatchCriteria evaluates to true.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="encoding" type="xtce:IntegerEncodingType" default="unsigned">
+					<annotation>
+						<documentation xml:lang="en">Specifies integer numeric value to raw encoding method, with the default being "unsigned".</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="sizeInBits" type="xtce:PositiveLongType" default="8">
+					<annotation>
+						<documentation xml:lang="en">Number of bits to use for the raw encoding, with 8 being the default.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="changeThreshold" type="xtce:NonNegativeLongType" use="optional">
+					<annotation>
+						<documentation xml:lang="en">A changeThreshold may optionally be specified to inform systems of the minimum change in value that is significant.  This is used by some systems to limit the telemetry processing and/or recording requirements, such as for an analog-to-digital converter that dithers in the least significant bit. If the value    is unspecified or zero, any change is significant.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="IntegerEncodingType">
+		<restriction base="string">
+			<enumeration value="unsigned"/>
+			<enumeration value="signMagnitude"/>
+			<enumeration value="twosComplement"/>
+			<enumeration value="onesComplement"/>
+			<enumeration value="BCD"/>
+			<enumeration value="packedBCD"/>
+		</restriction>
+	</simpleType>
+	<complexType name="LeadingSizeType">
+		<annotation>
+			<documentation xml:lang="en">Like PASCAL strings, the size of the string is given as an integer at the start of the string.  SizeTag must be an unsigned Integer</documentation>
+		</annotation>
+		<attribute name="sizeInBitsOfSizeTag" type="xtce:PositiveLongType" default="16"/>
+	</complexType>
+	<simpleType name="ParityFormType">
+		<restriction base="string">
+			<enumeration value="Even"/>
+			<enumeration value="Odd"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ParityType">
+		<annotation>
+			<documentation xml:lang="en">Bit position starts with 'zero'.</documentation>
+		</annotation>
+		<attribute name="type" type="xtce:ParityFormType" use="required"/>
+		<attribute name="bitsFromReference" type="xtce:NonNegativeLongType" use="required"/>
+		<attribute name="reference" type="xtce:ReferencePointType" default="start"/>
+	</complexType>
+	<complexType name="SizeInBitsType">
+		<sequence>
+			<element name="Fixed">
+				<annotation>
+					<documentation xml:lang="en">This is the simplest case of a string data type where the encoding size of the string does not change.</documentation>
+				</annotation>
+				<complexType>
+					<sequence>
+						<element name="FixedValue" type="xtce:PositiveLongType">
+							<annotation>
+								<documentation xml:lang="en">Size in bits of this string data type for both the memory allocation in the implementing software and also the size in bits for this parameter when it appears in a container.</documentation>
+							</annotation>
+						</element>
+					</sequence>
+				</complexType>
+			</element>
+			<element name="TerminationChar" type="hexBinary" default="00" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The termination character that represents the end of the string contents.  For C and most strings, this is null (00), which is the default.</documentation>
+				</annotation>
+			</element>
+			<element name="LeadingSize" type="xtce:LeadingSizeType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">In some string implementations, the size of the string contents (not the memory allocation size) is determined by a leading numeric value.  This is sometimes referred to as Pascal strings.  If a LeadingSize is specified, then the TerminationChar element does not have a functional meaning.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentVariableStringType">
+		<annotation>
+			<documentation>Identical to VariableStringType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<choice>
+				<element name="DynamicValue" type="xtce:ArgumentDynamicValueType">
+					<annotation>
+						<documentation xml:lang="en">Determine the container size in bits by interrogating an instance of a parameter or argument.</documentation>
+					</annotation>
+				</element>
+				<element name="DiscreteLookupList" type="xtce:ArgumentDiscreteLookupListType">
+					<annotation>
+						<documentation xml:lang="en">Determine the container size in bits by interrogating an instance of a parameter or argument and selecting a specified value based on tests of the value of that parameter or argument.</documentation>
+					</annotation>
+				</element>
+			</choice>
+			<element name="LeadingSize" type="xtce:LeadingSizeType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">In some string implementations, the size of the string contents (not the memory allocation size) is determined by a leading numeric value.  This is sometimes referred to as Pascal strings.  If a LeadingSize is specified, then the TerminationChar element does not have a functional meaning.</documentation>
+				</annotation>
+			</element>
+			<element name="TerminationChar" type="hexBinary" default="00" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The termination character that represents the end of the string contents.  For C and most strings, this is null (00), which is the default.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="maxSizeInBits" type="xtce:PositiveLongType" use="required">
+			<annotation>
+				<documentation xml:lang="en">The upper bound of the size of this string data type so that the implementation can reserve/allocate enough memory to capture all reported instances of the string.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="VariableStringType">
+		<annotation>
+			<documentation xml:lang="en">Describe a variable string whose length may change between samples.</documentation>
+		</annotation>
+		<sequence>
+			<choice>
+				<element name="DynamicValue" type="xtce:DynamicValueType">
+					<annotation>
+						<documentation xml:lang="en">Determine the container size in bits by interrogating an instance of a parameter.</documentation>
+					</annotation>
+				</element>
+				<element name="DiscreteLookupList" type="xtce:DiscreteLookupListType">
+					<annotation>
+						<documentation xml:lang="en">Determine the container size in bits by interrogating an instance of a parameter and selecting a specified value based on tests of the value of that parameter.</documentation>
+					</annotation>
+				</element>
+			</choice>
+			<element name="LeadingSize" type="xtce:LeadingSizeType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">In some string implementations, the size of the string contents (not the memory allocation size) is determined by a leading numeric value.  This is sometimes referred to as Pascal strings.  If a LeadingSize is specified, then the TerminationChar element does not have a functional meaning.</documentation>
+				</annotation>
+			</element>
+			<element name="TerminationChar" type="hexBinary" default="00" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The termination character that represents the end of the string contents.  For C and most strings, this is null (00), which is the default.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="maxSizeInBits" type="xtce:PositiveLongType" use="required">
+			<annotation>
+				<documentation xml:lang="en">The upper bound of the size of this string data type so that the implementation can reserve/allocate enough memory to capture all reported instances of the string.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="ArgumentStringDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">Identical to StringDataEncodingType but supports argument instance references.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<choice>
+					<element name="SizeInBits" type="xtce:SizeInBitsType">
+						<annotation>
+							<documentation xml:lang="en">Static length strings do not change in overall length between samples.   They may terminate before the end of their buffer using a terminating character, or by various lookups, or calculations.  But they have a maximum fixed size, and the data itself is always within that maximum size.</documentation>
+						</annotation>
+					</element>
+					<element name="Variable" type="xtce:ArgumentVariableStringType">
+						<annotation>
+							<documentation xml:lang="en">Variable length strings are those where the space occupied in a container can vary.  If the string has variable content but occupies the same amount of space when encoded should use the SizeInBits element.  Specification of a variable length string needs to consider that the implementation needs to allocate space to store the string.  Specify the maximum possible length of the string data type for memory purposes and also specify the bit size of the string to use in containers with the dynamic elements.</documentation>
+						</annotation>
+					</element>
+				</choice>
+				<attribute name="encoding" type="xtce:StringEncodingType" default="UTF-8">
+					<annotation>
+						<documentation xml:lang="en">The character set encoding of this string data type.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringDataEncodingType">
+		<annotation>
+			<documentation xml:lang="en">Describe common encodings of string data: UTF-8 and UTF-16. See StringDataType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DataEncodingType">
+				<choice>
+					<element name="SizeInBits" type="xtce:SizeInBitsType">
+						<annotation>
+							<documentation xml:lang="en">Static length strings do not change in overall length between samples.   They may terminate before the end of their buffer using a terminating character, or by various lookups, or calculations.  But they have a maximum fixed size, and the data itself is always within that maximum size.</documentation>
+						</annotation>
+					</element>
+					<element name="Variable" type="xtce:VariableStringType">
+						<annotation>
+							<documentation xml:lang="en">Variable length strings are those where the space occupied in a container can vary.  If the string has variable content but occupies the same amount of space when encoded should use the SizeInBits element.  Specification of a variable length string needs to consider that the implementation needs to allocate space to store the string.  Specify the maximum possible length of the string data type for memory purposes and also specify the bit size of the string to use in containers with the dynamic elements.</documentation>
+						</annotation>
+					</element>
+				</choice>
+				<attribute name="encoding" type="xtce:StringEncodingType" default="UTF-8">
+					<annotation>
+						<documentation xml:lang="en">The character set encoding of this string data type.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="StringEncodingType">
+		<annotation>
+			<documentation xml:lang="en">Defines string encodings.  US-ASCII (7-bit), ISO-8859-1 (8-bit Extended ASCII), Windows-1252 (8-bit Extended ASCII), UTF-8 (Unicode), UTF-16 (Unicode with Byte Order Mark), UTF-16LE (Unicode Little Endian), UTF-16BE (Unicode Big Endian).  See StringDataEncodingType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="US-ASCII"/>
+			<enumeration value="ISO-8859-1"/>
+			<enumeration value="Windows-1252"/>
+			<enumeration value="UTF-8"/>
+			<enumeration value="UTF-16">
+				<annotation>
+					<documentation xml:lang="en">With UTF-16, encoded bits must be prepended with a Byte Order Mark.  This mark indicates whether the data is encoded in big or little endian.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="UTF-16LE">
+				<annotation>
+					<documentation xml:lang="en">With UTF-16LE, encoded bits will always be represented as little endian.  Bits are not prepended with a Byte Order Mark.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="UTF-16BE">
+				<annotation>
+					<documentation xml:lang="en">With UTF-16BE, encoded bits will always be represented as big endian.  Bits are not prepended with a Byte Order Mark.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="UTF-32">
+				<annotation>
+					<documentation xml:lang="en">With UTF-32, encoded bits must be prepended with a Byte Order Mark.  This mark indicates whether the data is encoded in big or little endian.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="UTF-32LE">
+				<annotation>
+					<documentation xml:lang="en">With UTF-32LE, encoded bits will always be represented as little endian.  Bits are not prepended with a Byte Order Mark.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="UTF-32BE">
+				<annotation>
+					<documentation xml:lang="en">With UTF-32BE, encoded bits will always be represented as big endian.  Bits are not prepended with a Byte Order Mark.</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<complexType name="ToStringType">
+		<sequence>
+			<element name="NumberFormat" type="xtce:NumberFormatType" minOccurs="1" maxOccurs="1">
+				<annotation>
+					<documentation xml:lang="en">This element describes how a numeric value should be represented in engineering/calibrated form.  The defaults reflect the most common form.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="EpochTimeEnumsType">
+		<annotation>
+			<documentation xml:lang="en">Union values of common epoch definitions for document convenience.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="TAI"/>
+			<enumeration value="J2000"/>
+			<enumeration value="UNIX"/>
+			<enumeration value="GPS"/>
+		</restriction>
+	</simpleType>
+	<!--******** DataTypes **************************************-->
+	<!--*************************************************************-->
+	<!--******** Common Types Schema **********************-->
+	<!-- Basic elements used for in all dictionaries -->
+	<complexType name="AlgorithmSetType" mixed="false">
+		<annotation>
+			<documentation xml:lang="en">An unordered collection of algorithms</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="CustomAlgorithm" type="xtce:InputOutputTriggerAlgorithmType"/>
+			<element name="MathAlgorithm" type="xtce:MathAlgorithmType"/>
+		</choice>
+	</complexType>
+	<complexType name="AliasSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered collection of Alias elements to describe alternate names or IDs for this named item.</documentation>
+			<appinfo>Applications should enforce uniqueness of individual nameSpace attribute values.  Aliases are usually unique within the same nameSpace attribute value, depending on the physical meaning of that nameSpace.  There are some cases where Alias values can be duplicated in a single nameSpace value.</appinfo>
+		</annotation>
+		<sequence>
+			<element name="Alias" type="xtce:AliasType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">An alternate name, ID number, and sometimes flight software variable name in the code for this item.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="AliasType">
+		<annotation>
+			<documentation xml:lang="en">Used to contain an alias (alternate) name or ID for the object.   For example, a parameter may have a mnemonic, an on-board id, and special IDs used by various ground software applications; all of these are alias's.  Some ground system processing equipment has some severe naming restrictions on parameters (e.g., names must less then 12 characters, single case or integral id's only); their alias's provide a means of capturing each name in a "nameSpace".  Note: the name is not reference-able (it cannot be used in a name reference substituting for the name of the item of interest).  See NameDescriptionType.</documentation>
+		</annotation>
+		<attribute name="nameSpace" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">Aliases should be grouped together in a "namespace" so that they can be switched in and out of data extractions.  The namespace generally identifies the purpose of the alternate name, whether for software variable names, additional operator names, or whatever the purpose.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="alias" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The alternate name or ID to use.  The alias does not have the restrictions that apply to name attributes.  This is useful for capturing legacy identifiers for systems with unusual naming conventions.  It is also useful for capturing variable names in software, amongst other things.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="AncillaryDataType">
+		<annotation>
+			<documentation xml:lang="en">Use for any other data associated with a named item.  May be used to include administrative data (e.g., version, CM or tags) or potentially any MIME type.  Data may be included or given as an href.</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="string">
+				<attribute name="name" type="string" use="required">
+					<annotation>
+						<documentation xml:lang="en">Identifier for this Ancillary Data characteristic, feature, or data.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="mimeType" type="string" default="text/plain">
+					<annotation>
+						<documentation xml:lang="en">Optional text encoding method for the element text content of this element.  The default is "text/plain".</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="href" type="anyURI">
+					<annotation>
+						<documentation xml:lang="en">Optional Uniform Resource Identifier for this characteristic, feature, or data.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<complexType name="AncillaryDataSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an unordered collection of ancillary data.  AncillaryData elements capture platform/program/implementation specific data about the parent element object that is non-standard and would not fit into the schema.  See AncillaryDataType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="AncillaryData" type="xtce:AncillaryDataType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Optional list of AncillaryData elements associated with this item.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ANDedConditionsType">
+		<annotation>
+			<documentation xml:lang="en">Describe two or more conditions that are logically anded together. Conditions may be a mix of Condition and ORedCondition.   See ORedConditionType and BooleanExpressionType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseConditionsType">
+				<choice minOccurs="2" maxOccurs="unbounded">
+					<element name="Condition" type="xtce:ComparisonCheckType">
+						<annotation>
+							<documentation xml:lang="en">Condition elements describe a test similar to the Comparison element except that the parameters used have additional flexibility for the compare.</documentation>
+						</annotation>
+					</element>
+					<element name="ORedConditions" type="xtce:ORedConditionsType">
+						<annotation>
+							<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the parameters used are more flexible and the and/or for multiple checks can be specified.</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AuthorSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an unordered collection of authors.  See AuthorType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Author" type="xtce:AuthorType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Contains information about an author, maintainer, or data source regarding this document.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="AuthorType">
+		<annotation>
+			<documentation xml:lang="en">Type definition that describes the format of the contents of the Author element.</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="BaseConditionsType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">A base type for boolean expression related elements that improves the mapping produced by data binding tools.</documentation>
+		</annotation>
+	</complexType>
+	<simpleType name="BinaryType">
+		<annotation>
+			<documentation xml:lang="en">A simple restriction on string for hexadecimal numbers.  Must be in 0b or 0B form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[bB][0-1]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="BooleanExpressionType">
+		<annotation>
+			<documentation xml:lang="en">Holds an arbitrarily complex boolean expression</documentation>
+		</annotation>
+		<choice>
+			<element name="Condition" type="xtce:ComparisonCheckType">
+				<annotation>
+					<documentation xml:lang="en">Condition elements describe a test similar to the Comparison element except that the parameters used have additional flexibility.</documentation>
+				</annotation>
+			</element>
+			<element name="ANDedConditions" type="xtce:ANDedConditionsType">
+				<annotation>
+					<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the parameters used are more flexible.</documentation>
+				</annotation>
+			</element>
+			<element name="ORedConditions" type="xtce:ORedConditionsType">
+				<annotation>
+					<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the parameters used are more flexible.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="ByteOrderType">
+		<annotation>
+			<documentation xml:lang="en">Describe a byte order: big/little or byte list.</documentation>
+		</annotation>
+		<union memberTypes="xtce:ByteOrderCommonType xtce:ByteOrderArbitraryType"/>
+	</simpleType>
+	<simpleType name="ByteOrderCommonType">
+		<annotation>
+			<documentation xml:lang="en">Common byte orderings: most significant byte first (also known as big endian) and least significant byte first (also known as little endian).</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="mostSignificantByteFirst"/>
+			<enumeration value="leastSignificantByteFirst"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="ByteOrderArbitraryType">
+		<annotation>
+			<documentation xml:lang="en">Describe a byte order using a byte list. The list is viewed as representing memory, the first item in the list is address 0. For mostSignificantByteFirst/big endian, the high order byte is the first byte in the list and has the highest significance followed by the less significant bytes ending with the least significant byte. For leastSignificantByteFirst/little endian, the first byte starts with the least significant byte which is first in the least and ends at the highest significant byte. For example given the value 0x0A0B0C0D the following example orderings can be formed. For mostSignificantByteFirst/big endian the significances would be listed as 3 (0x0A), 2 (0x0B), 1 (0x0C), 0 (0x0D) with ‘3’ being first in the list, and for leastSignificantByteFirst/little endian as 0 (0x0D), 1 (0x0C), 2 (0x0B), 3 (0x0A) with ‘0’ being first in the list. See DataEncodingType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="(0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15)(,(0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15))*"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ComparisonCheckType">
+		<annotation>
+			<documentation xml:lang="en">Describe the comparison between the instance (value) of a parameter against either a specified value or another parameter instance.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseConditionsType">
+				<sequence>
+					<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+						<annotation>
+							<documentation xml:lang="en">Left hand side parameter instance.</documentation>
+						</annotation>
+					</element>
+					<element name="ComparisonOperator" type="xtce:ComparisonOperatorsType">
+						<annotation>
+							<documentation xml:lang="en">Comparison operator.</documentation>
+						</annotation>
+					</element>
+					<choice>
+						<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+							<annotation>
+								<documentation xml:lang="en">Right hand side parameter instance.  Parameter is assumed to be of the same type as the comparison Parameter.</documentation>
+							</annotation>
+						</element>
+						<element name="Value" type="string">
+							<annotation>
+								<documentation xml:lang="en">Right hand side value.  Specify as: integer data type using xs:integer, float data type using xs:double, string data type using xs:string, boolean data type using xs:boolean, binary data type using xs:hexBinary, enum data type using label name, relative time data type using xs:duration, absolute time data type using xs:dateTime.  Values must not exceed the characteristics for the data type or this is a validation error. Takes precedence over an initial value given in the data type. Values are calibrated unless there is an option to override it.</documentation>
+							</annotation>
+						</element>
+					</choice>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ComparisonListType">
+		<annotation>
+			<documentation xml:lang="en">All comparisons must be true</documentation>
+		</annotation>
+		<sequence>
+			<element name="Comparison" type="xtce:ComparisonType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">List of Comparison elements must all be true for the comparison to evaluate to true.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="ComparisonOperatorsType">
+		<annotation>
+			<documentation xml:lang="en">Operators to use when testing a boolean condition for a validity check</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="=="/>
+			<enumeration value="!="/>
+			<enumeration value="&lt;"/>
+			<enumeration value="&lt;="/>
+			<enumeration value=">"/>
+			<enumeration value=">="/>
+		</restriction>
+	</simpleType>
+	<complexType name="ComparisonType">
+		<annotation>
+			<documentation xml:lang="en">A simple ParameterInstanceRef to value comparison.  The string supplied in the value attribute needs to be converted to a type matching the Parameter being compared to.  Numerical values are assumed to be base 10 unless proceeded by 0x (hexadecimal), 0o (octal), or 0b (binary).  The value is truncated  to use the least significant bits that match the bit size of the Parameter being compared to.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:ParameterInstanceRefType">
+				<attribute name="comparisonOperator" type="xtce:ComparisonOperatorsType" default="==">
+					<annotation>
+						<documentation xml:lang="en">Operator to use for the comparison with the common equality operator as the default.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="value" type="string" use="required">
+					<annotation>
+						<documentation xml:lang="en">Specify value as a string compliant with the XML schema (xs) type specified for each XTCE type: integer=xs:integer; float=xs:double; string=xs:string; boolean=xs:boolean; binary=xs:hexBinary; enum=xs:string from EnumerationList; relative time= xs:duration; absolute time=xs:dateTime.  Supplied value must be within the ValidRange specified for the type.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ContextCalibratorType">
+		<annotation>
+			<documentation xml:lang="en">Context calibrations are applied when the ContextMatch is true.  Context calibrators overide Default calibrators</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextMatch" type="xtce:ContextMatchType"/>
+			<element name="Calibrator" type="xtce:CalibratorType"/>
+		</sequence>
+	</complexType>
+	<complexType name="ContextMatchType">
+		<annotation>
+			<documentation xml:lang="en">A MatchCriteriaType used for Context selection.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:MatchCriteriaType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="CustomAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe a custom, algorithmic alarm condition. The algorithm is assumed to return a boolean value: true or false. See AlarmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseAlarmType">
+				<sequence>
+					<element name="InputAlgorithm" type="xtce:InputAlgorithmType">
+						<annotation>
+							<documentation xml:lang="en">Algorithm returns a boolean.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="PercentCompleteType">
+		<annotation>
+			<documentation xml:lang="en">Describe a percentage complete that is fixed from 0 to 100, or as value from a parameter. See ExecutionVerifierType.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue">
+				<annotation>
+					<documentation xml:lang="en">0 to 100 percent</documentation>
+				</annotation>
+				<simpleType>
+					<restriction base="double">
+						<minInclusive value="0.0"/>
+						<maxInclusive value="100.0"/>
+					</restriction>
+				</simpleType>
+			</element>
+			<element name="DynamicValue" type="xtce:DynamicValueType">
+				<annotation>
+					<documentation xml:lang="en">Uses a parameter instance to obtain the value. The parameter value may be optionally adjusted by a Linear function or use a series of boolean expressions to lookup the value. Anything more complex and a DynamicValue with a CustomAlgorithm may be used.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="DescriptionType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Defines an abstract schema type used as basis for NameDescriptionType and OptionalNameDescriptionType, includes an attribute for a short description and an element for a longer unbounded description.  This type also provides alias set and ancillary data set  See AliasSetType and AncillaryDataSetType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="LongDescription" type="xtce:LongDescriptionType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Optional long form description to be used for explanatory descriptions of this item and may include HTML markup using CDATA.  Long Descriptions are of unbounded length.</documentation>
+				</annotation>
+			</element>
+			<element name="AliasSet" type="xtce:AliasSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Used to contain an alias (alternate) name or ID for this item.   See AliasSetType for additional explanation.</documentation>
+				</annotation>
+			</element>
+			<element name="AncillaryDataSet" type="xtce:AncillaryDataSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">Use for any non-standard data associated with this named item.  See AncillaryDataSetType for additional explanation.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="shortDescription" type="xtce:ShortDescriptionType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">Optional short description to be used for explanation of this item.  It is recommended that the short description be kept under 80 characters in length.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="DiscreteLookupListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered table of integer values and associated conditions, forming a lookup table. The list may have duplicates.  The table is evaluated from first to last, the first condition to be true returns the value associated with it.  See DiscreteLookupType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="DiscreteLookup" type="xtce:DiscreteLookupType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe a lookup condition set using discrete values from parameters.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="DynamicValueType">
+		<annotation>
+			<documentation xml:lang="en">Uses a parameter instance to obtain the value.  The parameter value may be optionally adjusted by a Linear function or use a series of boolean expressions to lookup the value.  Anything more complex and a DynamicValue with a CustomAlgorithm may be used  </documentation>
+		</annotation>
+		<sequence>
+			<element name="ParameterInstanceRef" type="xtce:ParameterInstanceRefType">
+				<annotation>
+					<documentation xml:lang="en">Retrieve the value by referencing the value of a Parameter.</documentation>
+				</annotation>
+			</element>
+			<element name="LinearAdjustment" type="xtce:LinearAdjustmentType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">A slope and intercept may be applied to scale or shift the value selected from the argument or parameter.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="ErrorDetectCorrectType">
+		<annotation>
+			<documentation>Describe error detection/correction algorithm.</documentation>
+		</annotation>
+		<choice>
+			<element name="Checksum" type="xtce:ChecksumType"/>
+			<element name="CRC" type="xtce:CRCType"/>
+			<element name="Parity" type="xtce:ParityType"/>
+		</choice>
+	</complexType>
+	<simpleType name="FixedIntegerValueType">
+		<annotation>
+			<documentation xml:lang="en">A simple union type combining integer, octal, binary, and hexadecimal types</documentation>
+		</annotation>
+		<union memberTypes="integer xtce:HexadecimalType xtce:OctalType xtce:BinaryType"/>
+	</simpleType>
+	<complexType name="HeaderType">
+		<annotation>
+			<documentation xml:lang="en">Schema for a Header record.  A header contains general information about the system or subsystem.</documentation>
+		</annotation>
+		<sequence>
+			<element name="AuthorSet" type="xtce:AuthorSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The AuthorSet contains optional contact information for this document.</documentation>
+				</annotation>
+			</element>
+			<element name="NoteSet" type="xtce:NoteSetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The NoteSet contains optional technical information related to the content of this document.</documentation>
+				</annotation>
+			</element>
+			<element name="HistorySet" type="xtce:HistorySetType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">The HistorySet contains optional evolutionary information for data contained in this document.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="version" type="string">
+			<annotation>
+				<documentation xml:lang="en">This attribute contains an optional version descriptor for this document.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="date" type="string">
+			<annotation>
+				<documentation xml:lang="en">This attribute contains an optional date to be associated with this document.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="classification" type="string" default="NotClassified">
+			<annotation>
+				<documentation xml:lang="en">This attribute contains optional classification status for use by programs for which that is applicable.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="classificationInstructions" type="string">
+			<annotation>
+				<documentation xml:lang="en">This attribute contains an optional additional instructions attribute to be interpreted by programs that use this attribute.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="validationStatus" type="xtce:ValidationStatusType" use="required">
+			<annotation>
+				<documentation xml:lang="en">This attribute contains a flag describing the state of this document in the evolution of the project using it.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<simpleType name="HexadecimalType">
+		<annotation>
+			<documentation xml:lang="en">A simple restriction on string for hexadecimal numbers.  Must be in 0x or 0X form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[xX][0-9a-fA-F]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="HistorySetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an unordered collection of History elements.  Usage is user defined.  See HistoryType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="History" type="xtce:HistoryType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Contains a history record related to the evolution of this document.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="HistoryType">
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="IntegerValueType">
+		<annotation>
+			<documentation xml:lang="en">Contains an Integer value; value may be provided directly or via the value in a parameter.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue" type="long">
+				<annotation>
+					<documentation xml:lang="en">Use a fixed integer value.</documentation>
+				</annotation>
+			</element>
+			<element name="DynamicValue" type="xtce:DynamicValueType">
+				<annotation>
+					<documentation xml:lang="en">Determine the value by interrogating an instance of a parameter.</documentation>
+				</annotation>
+			</element>
+			<element name="DiscreteLookupList" type="xtce:DiscreteLookupListType">
+				<annotation>
+					<documentation xml:lang="en">Determine the value by interrogating an instance of a parameter and selecting a specified value based on tests of the value of that parameter.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="ArgumentIntegerValueType">
+		<annotation>
+			<documentation xml:lang="en">Identical to IntegerValueType but supports argument instance references.</documentation>
+		</annotation>
+		<choice>
+			<element name="FixedValue" type="long">
+				<annotation>
+					<documentation xml:lang="en">Use a fixed integer value.</documentation>
+				</annotation>
+			</element>
+			<element name="DynamicValue" type="xtce:ArgumentDynamicValueType">
+				<annotation>
+					<documentation xml:lang="en">Determine the value by interrogating an instance of an argument or parameter.</documentation>
+				</annotation>
+			</element>
+			<element name="DiscreteLookupList" type="xtce:ArgumentDiscreteLookupListType">
+				<annotation>
+					<documentation xml:lang="en">Determine the value by interrogating an instance of an argument or parameter and selecting a specified value based on tests of the value of that argument or parameter.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="LongDescriptionType">
+		<annotation>
+			<documentation xml:lang="en">The Long Description is intended to be used for explanatory descriptions of the object and may include HTML markup.  Long Descriptions are of unbounded length</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<simpleType name="MathOperatorsType">
+		<annotation>
+			<documentation xml:lang="en">Mathematical operators used in the math operation.  Behavior of each operator on the stack is described using notation (before -- after), where "before" represents the stack before execution of the operator and "after" represent the stack after execution.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="+">
+				<annotation>
+					<documentation xml:lang="en">addition (x1 x2 -- x1+x2)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="-">
+				<annotation>
+					<documentation xml:lang="en">subtraction (x1 x2 -- x1-x2)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="*">
+				<annotation>
+					<documentation xml:lang="en">multiplication (x1 x2 -- x1*x2)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="/">
+				<annotation>
+					<documentation xml:lang="en">division (x1 x2 -- x1/x2)</documentation>
+					<appinfo>An undefined condition exists if x2 is 0</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="%">
+				<annotation>
+					<documentation xml:lang="en">modulo (x1 x2 -- x3) Divide x1 by x2, giving the modulo x3</documentation>
+					<appinfo>An undefined condition exists if x2 is 0.  Implementations should verify modulo versus remainder behavior.</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="^">
+				<annotation>
+					<documentation xml:lang="en">power function (x1 x2 -- x1**x2)</documentation>
+					<appinfo>An undefined condition exists if an imaginary number is the result.  Imaginary numbers are not supported</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="y^x">
+				<annotation>
+					<documentation xml:lang="en">reverse power function (x1 x2 -- x2**x1)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="ln">
+				<annotation>
+					<documentation xml:lang="en">natural (base e) logarithm (x -- ln(x))</documentation>
+					<appinfo>An undefined condition exists if x is less than or equal to 0</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="log">
+				<annotation>
+					<documentation xml:lang="en">base-10 logarithm (x-- log(x))</documentation>
+					<appinfo>An undefined condition exists if x is less than or equal to 0</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="e^x">
+				<annotation>
+					<documentation xml:lang="en">exponentiation (x -- exp(x))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="1/x">
+				<annotation>
+					<documentation xml:lang="en">inversion (x -- 1/x)</documentation>
+					<appinfo>An undefined condition exists if x is less than 0</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="x!">
+				<annotation>
+					<documentation xml:lang="en">factorial (x -- x!)</documentation>
+					<appinfo>An undefined condition exists if x is less than 0</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="tan">
+				<annotation>
+					<documentation xml:lang="en">tangent (x -- tan(x)) radians</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="cos">
+				<annotation>
+					<documentation xml:lang="en">cosine (x -- cos(x)) radians</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="sin">
+				<annotation>
+					<documentation xml:lang="en">sine (x -- sin(x)) radians</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="atan">
+				<annotation>
+					<documentation xml:lang="en">arctangent (x -- atan(x)) radians</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="atan2">
+				<annotation>
+					<documentation xml:lang="en">arctangent (x1 x2 -- atan2(x2, x1)) radians</documentation>
+					<appinfo>An undefined condition exists if x1 and x2 are 0</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="acos">
+				<annotation>
+					<documentation xml:lang="en">arccosine (x -- acos(x)) radians</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="asin">
+				<annotation>
+					<documentation xml:lang="en">arcsine (x -- asin(x)) radians</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="tanh">
+				<annotation>
+					<documentation xml:lang="en">hyperbolic tangent (x -- tanh(x))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="cosh">
+				<annotation>
+					<documentation xml:lang="en">hyperbolic cosine (x -- cosh(x))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="sinh">
+				<annotation>
+					<documentation xml:lang="en">hyperbolic sine (x -- sinh(x))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="atanh">
+				<annotation>
+					<documentation xml:lang="en">hyperbolic arctangent (x -- atanh(x))</documentation>
+					<appinfo>An undefined condition exists if x is outside the range [-1.0,+1.0]</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="acosh">
+				<annotation>
+					<documentation xml:lang="en">hyperbolic arccosine (x -- acosh(x))</documentation>
+					<appinfo>An undefined condition exists if n is less than 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="asinh">
+				<annotation>
+					<documentation xml:lang="en">hyperbolic arcsine (x -- asinh(x))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="swap">
+				<annotation>
+					<documentation xml:lang="en">swap the top two stack items (x1 x2 -- x2 x1)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="drop">
+				<annotation>
+					<documentation xml:lang="en">Remove top item from the stack (x -- )</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="dup">
+				<annotation>
+					<documentation xml:lang="en">Duplicate top item on the stack (x -- x x)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="over">
+				<annotation>
+					<documentation xml:lang="en">Duplicate top item on the stack (x1 x2 -- x1 x2 x1)</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="&lt;&lt;">
+				<annotation>
+					<documentation xml:lang="en">signed bitwise left shift (x1 x2 -- x1 &lt;&lt; x2)</documentation>
+					<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="&gt;&gt;">
+				<annotation>
+					<documentation xml:lang="en">signed bitwise right shift (x1 x2 -- x1 &gt;&gt; x2)</documentation>
+					<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="&amp;">
+				<annotation>
+					<documentation xml:lang="en">bitwise and (x1 x2 -- x1 &amp; x2)</documentation>
+					<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="|">
+				<annotation>
+					<documentation xml:lang="en">bitwise or (x1 x2 -- x1 | x2)</documentation>
+					<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="&amp;&amp;">
+				<annotation>
+					<documentation xml:lang="en">logical and (x1 x2 -- x1 &amp;&amp; x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="||">
+				<annotation>
+					<documentation xml:lang="en">logical or (x1 x2 -- x1 || x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="!">
+				<annotation>
+					<documentation xml:lang="en">logical not (x1 x2 -- x1 ! x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="abs">
+				<annotation>
+					<documentation xml:lang="en">absolute value (x1 -- abs(x1))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="div">
+				<annotation>
+					<documentation xml:lang="en">Euclidean division quotient (x1 -- div(x1))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="int">
+				<annotation>
+					<documentation xml:lang="en">integer part (x1 -- int(x1))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="&gt;">
+				<annotation>
+					<documentation xml:lang="en">greater than x,y (x1 x2 -- x1 &gt; x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="&gt;=">
+				<annotation>
+					<documentation xml:lang="en">greater than or equal x,y (x1 x2 -- x1 &gt;= x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="&lt;">
+				<annotation>
+					<documentation xml:lang="en">less than x,y (x1 x2 -- x1 &lt; x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="&lt;=">
+				<annotation>
+					<documentation xml:lang="en">less than or equal x,y (x1 x2 -- x1 &lt;= x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="==">
+				<annotation>
+					<documentation xml:lang="en">equal x,y (x1 x2 -- x1 == x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="!=">
+				<annotation>
+					<documentation xml:lang="en">not equal x,y (x1 x2 -- x1 != x2)</documentation>
+					<appinfo>The result of this can only be 0 or 1</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="min">
+				<annotation>
+					<documentation xml:lang="en">minimum of x,y (x1 x2 -- min(x1, x2))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="max">
+				<annotation>
+					<documentation xml:lang="en">maximum of x,y (x1 x2 -- max(x1, x2))</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="xor">
+				<annotation>
+					<documentation xml:lang="en">Bitwise exclusive or (XOR) (x1 x2 -- x1 xor x2)</documentation>
+					<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+				</annotation>
+			</enumeration>
+			<enumeration value="~">
+				<annotation>
+					<documentation xml:lang="en">Bitwise not operation (x1 x2 -- x1 ~ x2) The result of this can only be 0 or 1</documentation>
+					<appinfo>Limitation from SEI INT13-C. Use bitwise operators only on unsigned operands</appinfo>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<complexType name="MatchCriteriaType">
+		<annotation>
+			<documentation xml:lang="en">Contains either a simple Comparison, a ComparisonList, an arbitrarily complex BooleanExpression or an escape to an externally defined algorithm</documentation>
+		</annotation>
+		<choice>
+			<element name="Comparison" type="xtce:ComparisonType">
+				<annotation>
+					<documentation xml:lang="en">A simple comparison check involving a single test of a parameter value.</documentation>
+				</annotation>
+			</element>
+			<element name="ComparisonList" type="xtce:ComparisonListType">
+				<annotation>
+					<documentation xml:lang="en">A series of simple comparison checks with an implicit 'and' in that they all must be true for the overall condition to be true.</documentation>
+				</annotation>
+			</element>
+			<element name="BooleanExpression" type="xtce:BooleanExpressionType">
+				<annotation>
+					<documentation xml:lang="en">An arbitrarily complex boolean expression that has additional flexibility on the terms beyond the Comparison and ComparisonList elements.</documentation>
+				</annotation>
+			</element>
+			<element name="CustomAlgorithm" type="xtce:InputAlgorithmType">
+				<annotation>
+					<documentation xml:lang="en">An escape to an externally defined algorithm.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<complexType name="MathOperationType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Postfix (aka Reverse Polish Notation (RPN)) notation is used to describe mathmatical equations. It uses a stack where operands (either fixed values or ParameterInstances) are pushed onto the stack from first to last in the XML. As the operators are specified, each pops off operands as it evaluates them, and pushes the result back onto the stack. In this case postfix is used to avoid having to specify parenthesis. To convert from infix to postfix, use Dijkstra's "shunting yard" algorithm.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:MathOperationCalibratorType"/>
+		</complexContent>
+	</complexType>
+	<simpleType name="NameType">
+		<annotation>
+			<documentation>Defines a name where all characters are allowed except '.', '[', ']', ':',  ' ', and '/'.  See NameDescriptionType.</documentation>
+		</annotation>
+		<restriction base="normalizedString">
+			<pattern value="[^./:\[\] ]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="NameDescriptionType">
+		<annotation>
+			<documentation xml:lang="en">Defines a base schema type definition used by many other schema types throughout schema.  Use it to describe a name with optional descriptions, aliases, and ancillary data.  See NameType, LongDescriptionType, ShortDescriptionType, AliasSetType and AncillaryDataSetType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DescriptionType">
+				<attribute name="name" type="xtce:NameType" use="required">
+					<annotation>
+						<documentation xml:lang="en">The name of this defined item.  See NameType for restriction information.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="NameReferenceType">
+		<annotation>
+			<documentation>Describe a reference to a named item in an XTCE instance document.  The named must be of schema type NameType.  All name references use a Unix style file system name format where the SpaceSystem names form a path in the SpaceSystem tree. The following characters are reserved for the path: '/', ‘..’ and ‘.’ (multiple consecutive ‘/’s are treated as one).  The path portion is similar to the directory path used in file system names and the path characters have similar meaning (e.g., SimpleSat/Bus/EPDS/BatteryOne/Voltage). There are three overall forms for name references:  absolute path, relative path and just the name.  The first two forms are called qualified name references; the last form is called an unqualified name reference.  The unqualified form refers to an item in the SpaceSystem the reference is used in.  The unqualified form refers to an item in the SpaceSystem the reference is used in.  It is illegal for a name reference to point to no item (“a dangling name reference”).</documentation>
+		</annotation>
+		<restriction base="normalizedString">
+			<pattern value="/?(([^./:\[\]]+|\.|\.\.)/)*([^./:\[\]]+)+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="NoteSetType">
+		<annotation>
+			<documentation xml:lang="en">Contains an unordered collection of Notes.  Usage is user defined.  See NoteType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Note" type="xtce:NoteType" minOccurs="0" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Contains a program defined technical note regarding this document.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<simpleType name="NoteType">
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="NumberFormatType">
+		<annotation>
+			<documentation xml:lang="en">This type describes how a numeric value should be represented in engineering/calibrated form.  The defaults reflect the most common form.</documentation>
+		</annotation>
+		<attribute name="numberBase" type="xtce:RadixType" use="optional" default="Decimal">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to the radix.  Default is base 10.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="minimumFractionDigits" type="xtce:NonNegativeLongType" use="optional" default="0">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to the minimum number of fractional digits.  The default is 0.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maximumFractionDigits" type="xtce:NonNegativeLongType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to the maximum or upper bound of the number of digits.  There is no default.  No value specified should be interpreted as no upper bound such that all requires digits are used to fully characterize the value.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="minimumIntegerDigits" type="xtce:NonNegativeLongType" use="optional" default="1">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to the minimum number of integer digits.  The default is 1.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maximumIntegerDigits" type="xtce:NonNegativeLongType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to the maximum or upper bound of the integer digits.  There is no default.  No value specified should be interpreted as no upper bound such that all requires digits are used to fully characterize the value.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="negativeSuffix" type="string" use="optional" default="">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to negative values.  This attribute specifies the character or characters that should be appended to the numeric value to indicate negative values.  The default is none.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="positiveSuffix" type="string" use="optional" default="">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to positive values.  This attribute specifies the character or characters that should be appended to the numeric value to indicate positive values.  The default is none.  Zero is considered to be specific to the implementation/platform and is not implied here.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="negativePrefix" type="string" use="optional" default="-">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to negative values.  This attribute specifies the character or characters that should be prepended to the numeric value to indicate negative values.  The default is a minus character "-".</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="positivePrefix" type="string" use="optional" default="">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to positive values.  This attribute specifies the character or characters that should be prepended to the numeric value to indicate positive values.  The default is none.  Zero is considered to be specific to the implementation/platform and is not implied here.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="showThousandsGrouping" type="boolean" use="optional" default="false">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to larger values.  Groupings by thousand are specific to locale, so the schema only specifies whether they will be present and not which character separators are used.  The default is false.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="notation" type="xtce:FloatingPointNotationType" use="optional" default="normal">
+			<annotation>
+				<documentation xml:lang="en">Describes how the engineering/calibrated value of this number should be displayed with respect to notation.  Engineering, scientific, or traditional decimal notation may be specified.  The precise characters used is locale specific for the implementation/platform.  The default is "normal" for the traditional notation.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<simpleType name="OctalType">
+		<annotation>
+			<documentation xml:lang="en">A simple restriction on string for hexadecimal numbers.  Must be in 0o or 0O form.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="0[oO][0-7]+"/>
+		</restriction>
+	</simpleType>
+	<complexType name="OptionalNameDescriptionType">
+		<annotation>
+			<documentation xml:lang="en">The type definition used by most elements that have an optional name with optional descriptions.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:DescriptionType">
+				<attribute name="name" type="xtce:NameType" use="optional">
+					<annotation>
+						<documentation xml:lang="en">Optional name of this defined item.  See NameType for restriction information.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ORedConditionsType">
+		<annotation>
+			<documentation xml:lang="en">Describe two or more conditions that are logically ored together. Conditions may be a mix of Condition and ANDedCondition.   See ORedConditionType and BooleanExpressionType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseConditionsType">
+				<choice minOccurs="2" maxOccurs="unbounded">
+					<element name="Condition" type="xtce:ComparisonCheckType">
+						<annotation>
+							<documentation xml:lang="en">Condition elements describe a test similar to the Comparison element except that the parameters used have additional flexibility for the compare.</documentation>
+						</annotation>
+					</element>
+					<element name="ANDedConditions" type="xtce:ANDedConditionsType">
+						<annotation>
+							<documentation xml:lang="en">This element describes tests similar to the ComparisonList element except that the parameters used are more flexible and the and/or for multiple checks can be specified.</documentation>
+						</annotation>
+					</element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="ParameterSetType">
+		<annotation>
+			<documentation xml:lang="en">Describe an unordered collection of parameters where duplicates defined by the Parameter name attribute are invalid. The ParameterSet exists in both the TelemetryMetaData and the CommandMetaData element so that each may be built independently but from a single namespace.  See TelemetryMetaDataType and CommandMetaDataType.</documentation>
+		</annotation>
+		<choice maxOccurs="unbounded">
+			<element name="Parameter" type="xtce:ParameterType">
+				<annotation>
+					<documentation xml:lang="en">Defines a named and typed Parameter.</documentation>
+					<appinfo>Need to ensure that the named types actually exist</appinfo>
+				</annotation>
+			</element>
+			<element name="ParameterRef" type="xtce:ParameterRefType">
+				<annotation>
+					<documentation xml:lang="en">Used to include a Parameter defined in another sub-system in this sub-system.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="RadixType">
+		<annotation>
+			<documentation xml:lang="en">Specifies the number base</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="Decimal"/>
+			<enumeration value="Hexadecimal"/>
+			<enumeration value="Octal"/>
+			<enumeration value="Binary"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="RangeFormType">
+		<annotation>
+			<documentation>Defines whether the defined range between the minimum and maximum is the outside or inside the range being defined. The default, outside matches values less than the minimum and greater than the maximum.  Inside matches values between the minimum and maximum.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="outside"/>
+			<enumeration value="inside"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ReferenceTimeType">
+		<annotation>
+			<documentation xml:lang="en">Most time values are relative to another time e.g. seconds are relative to minutes, minutes are relative to hours.  This type is used to describe this relationship starting with the least significant time Parameter to and progressing to the most significant time parameter.  </documentation>
+		</annotation>
+		<choice>
+			<element name="OffsetFrom" type="xtce:ParameterInstanceRefType"/>
+			<element name="Epoch" type="xtce:EpochType">
+				<annotation>
+					<documentation xml:lang="en">Epochs may be specified as an xs date where time is implied to be 00:00:00, xs dateTime, or string enumeration of common epochs.  The enumerations are TAI (used by CCSDS and others), J2000, UNIX (also known as POSIX), and GPS.</documentation>
+				</annotation>
+			</element>
+		</choice>
+	</complexType>
+	<simpleType name="RelativeTimeType">
+		<annotation>
+			<documentation xml:lang="en">Used to describe a relative time.  Normally used for time offsets.  A Relative time is expressed as PnYn MnDTnH nMnS, where nY represents the number of years, nM the number of months, nD the number of days, 'T' is the date/time separator, nH the number of hours, nM the number of minutes and nS the number of seconds. The number of seconds can include decimal digits to arbitrary precision.  For example, to indicate a duration of 1 year, 2 months, 3 days, 10 hours, and 30 minutes, one would write: P1Y2M3DT10H30M. One could also indicate a duration of minus 120 days as: -P120D.  An extension of Schema duration type. </documentation>
+		</annotation>
+		<restriction base="duration"/>
+	</simpleType>
+	<complexType name="RepeatType">
+		<annotation>
+			<documentation xml:lang="en">Hold a structure that can be repeated X times, where X is the Count</documentation>
+		</annotation>
+		<sequence>
+			<element name="Count" type="xtce:IntegerValueType">
+				<annotation>
+					<documentation xml:lang="en">Value (either fixed or dynamic) that contains the count of repeated structures.</documentation>
+				</annotation>
+			</element>
+			<element name="Offset" type="xtce:IntegerValueType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="ArgumentRepeatType">
+		<annotation>
+			<documentation xml:lang="en">Identical to RepeatType but supports argument instance references.</documentation>
+		</annotation>
+		<sequence>
+			<element name="Count" type="xtce:ArgumentIntegerValueType">
+				<annotation>
+					<documentation xml:lang="en">Value (either fixed or dynamic) that contains the count of repeated structures.</documentation>
+				</annotation>
+			</element>
+			<element name="Offset" type="xtce:ArgumentIntegerValueType" minOccurs="0"/>
+		</sequence>
+	</complexType>
+	<complexType name="ServiceRefType">
+		<annotation>
+			<documentation xml:lang="en">A reference to a Service</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="xtce:NameReferenceType">
+				<attribute name="serviceRef" type="xtce:NameReferenceType" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType>
+	<simpleType name="ShortDescriptionType">
+		<annotation>
+			<documentation xml:lang="en">It is strongly recommended that the short description be kept under 80 characters in length</documentation>
+		</annotation>
+		<restriction base="string"/>
+	</simpleType>
+	<complexType name="SplinePointType">
+		<annotation>
+			<documentation xml:lang="en">A spline, or piecewise defined function, is a set on points from which a curve may be drawn to interpolate raw to calibrated values</documentation>
+		</annotation>
+		<attribute name="order" type="xtce:NonNegativeLongType" default="1">
+			<annotation>
+				<documentation xml:lang="en">The order of a SplineCalibrator refers to the interpolation function.  Order 0 is a flat line from the defined point (inclusive) to the next point (exclusive).  Order 1 is linear interpolation between two points.  Order 2 is quadratic fit and requires at least 3 points (unusual case).  This order is generally not needed, but may be used to override the interpolation order for this point.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="raw" type="double" use="required">
+			<annotation>
+				<documentation xml:lang="en">The raw encoded value.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="calibrated" type="double" use="required">
+			<annotation>
+				<documentation xml:lang="en">The engineering/calibrated value associated with the raw value for this point.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="TermType">
+		<annotation>
+			<documentation xml:lang="en">A term in a polynomial expression.</documentation>
+		</annotation>
+		<attribute name="coefficient" type="double" use="required">
+			<annotation>
+				<documentation xml:lang="en">The coefficient in a single term of a polynomial expression.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="exponent" type="xtce:NonNegativeLongType" use="required">
+			<annotation>
+				<documentation xml:lang="en">The exponent in a single term of a polynomial expression.  Should negative exponents be required, use a Math Calibrator style of definition for this type.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<simpleType name="TimeUnitsType">
+		<annotation>
+			<documentation xml:lang="en">base time units.  days, months, years have obvoius ambiguity and should be avoided</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="seconds"/>
+			<enumeration value="picoSeconds"/>
+			<enumeration value="days"/>
+			<enumeration value="months"/>
+			<enumeration value="years"/>
+		</restriction>
+	</simpleType>
+	<complexType name="UnitType" mixed="true">
+		<annotation>
+			<documentation xml:lang="en">Describe the exponent, factor, form, and description for a unit.  The unit itself is in element Unit in UnitSet.  See UnitSetType.  The attributes are optional because different programs use this element in different ways, depending on vendor support.</documentation>
+		</annotation>
+		<attribute name="power" type="double" use="optional" default="1">
+			<annotation>
+				<documentation xml:lang="en">Optional attribute used in conjunction with the "factor" attribute where some programs choose to specify the unit definition with these machine processable algebraic features.  For example, a unit text of "meters" may have a "power" attribute of 2, resulting "meters squared" as the actual unit.  This is not commonly used.  The most common method for "meters squared" is to use the text content of the Unit element in a form like "m^2".</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="factor" type="string" use="optional" default="1">
+			<annotation>
+				<documentation xml:lang="en">Optional attribute used in conjunction with the "power" attribute where some programs choose to specify the unit definition with these machine processable algebraic features.  For example, a unit text of "meters" may have a "factor" attribute of 2, resulting "2 times meters" as the actual unit.  This is not commonly used.  The most common method for "2 times meters" is to use the text content of the Unit element in a form like "2*m".</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="description" type="xtce:ShortDescriptionType" use="optional">
+			<annotation>
+				<documentation xml:lang="en">A description of the unit, which may be for expanded human readability or for specification of the nature/property of the unit.  For example, meters per second squared is of a nature/property of acceleration.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="form" type="xtce:UnitFormType" use="optional" default="calibrated">
+			<annotation>
+				<documentation xml:lang="en">The default value "calibrated" is most common practice to specify units at the engineering/calibrated value, it is possible to specify an additional Unit element for the raw/uncalibrated value.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<simpleType name="ValidationStatusType">
+		<restriction base="string">
+			<enumeration value="Unknown"/>
+			<enumeration value="Working"/>
+			<enumeration value="Draft"/>
+			<enumeration value="Test"/>
+			<enumeration value="Validated"/>
+			<enumeration value="Released"/>
+			<enumeration value="Withdrawn"/>
+		</restriction>
+	</simpleType>
+	<complexType name="ValueEnumerationType">
+		<annotation>
+			<documentation xml:lang="en">Describe a value and an associated string label, see EnumerationListType.</documentation>
+		</annotation>
+		<attribute name="value" type="long" use="required">
+			<annotation>
+				<documentation xml:lang="en">Numeric raw/uncalibrated value to associate with a string enumeration label.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maxValue" type="long">
+			<annotation>
+				<documentation xml:lang="en">If max value is given, the label maps to a range where value is less than or equal to maxValue. The range is inclusive.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="label" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">String enumeration label to apply to this value definition in the enumeration.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="shortDescription" type="xtce:ShortDescriptionType">
+			<annotation>
+				<documentation xml:lang="en">An optional additional string description can be specified for this enumeration label to provide extended information if desired.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<!--*************************************************************-->
+	<!--******** Types used with alarms ***********************-->
+	<complexType name="AlarmConditionsType">
+		<annotation>
+			<documentation xml:lang="en">Describe up to six levels: Normal, Watch, Warning, Distress, Critical, and Severe of conditions the alarm will trigger when true. The types are conditions available are a single comparison, a comparison list, a discrete lookup list, and custom algorithm.   See MatchCriteriaType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="WatchAlarm" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An alarm state of least concern.  Considered to be below the most commonly used Warning level.</documentation>
+				</annotation>
+			</element>
+			<element name="WarningAlarm" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An alarm state of concern that represents the most commonly used minimum concern level for many software applications.</documentation>
+				</annotation>
+			</element>
+			<element name="DistressAlarm" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An alarm state of concern in between the most commonly used Warning and Critical levels.</documentation>
+				</annotation>
+			</element>
+			<element name="CriticalAlarm" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An alarm state of concern that represents the most commonly used maximum concern level for many software applications.</documentation>
+				</annotation>
+			</element>
+			<element name="SevereAlarm" type="xtce:MatchCriteriaType" minOccurs="0">
+				<annotation>
+					<documentation xml:lang="en">An alarm state of highest concern.  Considered to be above the most commonly used Critical level.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="AlarmRangesType">
+		<annotation>
+			<documentation xml:lang="en">Describe up to six ranges where either less severe ranges are a subset of more severe ranges (outside), or more severe ranges are a subset of less severe ranges (inside). In both forms, the undefined least severe range is normal. Range values are in calibrated engineering units. See FloatRangeType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseAlarmType">
+				<sequence>
+					<element name="WatchRange" type="xtce:FloatRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A range of least concern. Considered to be below the most commonly used Warning level.</documentation>
+						</annotation>
+					</element>
+					<element name="WarningRange" type="xtce:FloatRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A range of concern that represents the most commonly used minimum concern level for many software applications.</documentation>
+						</annotation>
+					</element>
+					<element name="DistressRange" type="xtce:FloatRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A range of concern in between the most commonly used Warning and Critical levels.</documentation>
+						</annotation>
+					</element>
+					<element name="CriticalRange" type="xtce:FloatRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A range of concern that represents the most commonly used maximum concern level for many software applications.</documentation>
+						</annotation>
+					</element>
+					<element name="SevereRange" type="xtce:FloatRangeType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">A range of highest concern. Considered to be above the most commonly used Critical level.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="rangeForm" type="xtce:RangeFormType" default="outside">
+					<annotation>
+						<documentation xml:lang="en">A value of outside specifies that the most severe range is outside all the other ranges: -severe -critical -distress -warning -watch normal +watch +warning +distress +critical +severe. A value of inside "inverts" these bands: -green -watch -warning -distress -critical severe +critical +distress +warning +watch. The most common form used is "outside" and is the default.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AlarmType" abstract="true">
+		<annotation>
+			<documentation xml:lang="en">Defines a base schema type used to build up the other data type specific alarm types. The definition includes a count to go into alarm (minViolations – the counts to go out of alarm is the same), a condition style alarm and a custom alarm. See AlarmConditionType, CustomAlgorithmType, BinaryAlarmConditionType, BooleanAlarmType, BinaryContextAlarmType, EnumerationAlarmType, NumericAlarmType, StringAlarmType, TimeAlarmType, TimeAlarmConditionType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseAlarmType">
+				<sequence>
+					<choice minOccurs="0">
+						<element name="AlarmConditions" type="xtce:AlarmConditionsType">
+							<annotation>
+								<documentation xml:lang="en">A MatchCriteria may be specified for each of the 5 alarm levels. Each level is optional and the alarm should be the highest level to test true.</documentation>
+							</annotation>
+						</element>
+						<element name="CustomAlarm" type="xtce:CustomAlarmType">
+							<annotation>
+								<documentation xml:lang="en">An escape for ridiculously complex alarm conditions. Will trigger on changes to the containing Parameter.</documentation>
+							</annotation>
+						</element>
+					</choice>
+				</sequence>
+				<attribute name="minViolations" type="xtce:PositiveLongType" default="1">
+					<annotation>
+						<documentation xml:lang="en">The number of successive instances that meet the alarm conditions for the alarm to trigger. The default is 1.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="minConformance" type="xtce:PositiveLongType">
+					<annotation>
+						<documentation xml:lang="en">Optionally specify the number of successive instances that do not meet the alarm conditions to leave the alarm state. If this attribute is not specified, it is treated as being equal to minViolations (symmetric).</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="AlarmMultiRangesType">
+		<annotation>
+			<documentation xml:lang="en">Describe any number of alarm ranges, each with its own level (normal, warning, watch, distress, critical, severe) and range form (inside or outside). Ranges may overlap, be disjoint and so forth. Ranges within the value sprectrum non-specified are non-normal. The most severe range level of value within the ranges is the level of the alarm. Range values are in calibrated engineering units. See FloatRangeType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:BaseAlarmType">
+				<sequence>
+					<element name="Range" type="xtce:MultiRangeType" maxOccurs="unbounded">
+						<annotation>
+							<documentation xml:lang="en">Describe any number of alarm ranges, each with its own level (normal, warning, watch, distress, critical, severe) and range form (inside or outside). Ranges may overlap, be disjoint and so forth. Ranges within the value sprectrum non-specified are non-normal. The most severe range level of value within the ranges is the level of the alarm. Range values are in calibrated engineering units. See FloatRangeType.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="BasisType">
+		<annotation>
+			<documentation xml:lang="en">Defines to type of update rates: perSecond and perContainerUpdate.  See RateInStreamType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="perSecond"/>
+			<enumeration value="perContainerUpdate"/>
+		</restriction>
+	</simpleType>
+	<complexType name="BinaryAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe alarm conditions specific to the binary data type, extends the basic AlarmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarm conditions for Boolean types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType"/>
+		</complexContent>
+	</complexType>
+	<complexType name="BinaryContextAlarmListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered collection of context binary alarms, duplicates are valid.  Process the contexts in list order.  See BinaryContextAlarmType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextAlarm" type="xtce:BinaryContextAlarmType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="BinaryContextAlarmType">
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:ContextMatchType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanContextAlarmType">
+		<complexContent>
+			<extension base="xtce:BooleanAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:ContextMatchType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="BooleanContextAlarmListType">
+		<sequence>
+			<element name="ContextAlarm" type="xtce:BooleanContextAlarmType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="ChangeAlarmRangesType">
+		<annotation>
+			<documentation xml:lang="en">Describe an alarm when the parameter value's rate-of-change is either too fast or too slow. The change may be with respect to time (the default) or with respect to samples (delta alarms). Use the changeType attribute to select the type: changePerSecond (time) or changePerSample (delta). The change may also be ether relative (as a percentage change) or absolute as set by the changeBasis attribute. (Delta alarms are typically absolute but percentage is conceivable). The alarm also requires the spanOfInterest in both samples and seconds to have passed before it is to trigger. For time based rate of change alarms, the time specified in spanOfInterestInSeconds is used to calculate the change. For sample based rate of change alarms, the change is calculated over the number of samples specified in spanOfInterestInSamples. A typical delta alarm would set: changeType=changePerSample, changeBasis=absoluteChange, spanOfInterestInSamples=1. A typical time based version would set: changeType=changePerSecond, changeBasis=percentageChange, and spaceOfInterestInSeconds=1. To set the ranges use maxInclusive, the following definition applies: | Normal.maxInclusive | &lt;= | Watch.maxInclusive | &lt;= | Warning.maxInclusive | &lt;= | Distress.maxInclusive | &lt;= | Critical.maxInclusive | &lt;= | Severe.maxInclusive |. And it is further assumed the absolute value of each range and sampled value it taken to evaluate the alarm. See NumericAlarmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmRangesType">
+				<attribute name="changeType" type="xtce:ChangeSpanType" default="changePerSecond"/>
+				<attribute name="changeBasis" type="xtce:ChangeBasisType" default="absoluteChange"/>
+				<attribute name="spanOfInterestInSamples" type="xtce:PositiveLongType" default="1"/>
+				<attribute name="spanOfInterestInSeconds" type="double" default="0"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="ChangeBasisType">
+		<annotation>
+			<documentation xml:lang="en">Defines absoluteChange and percentageChange for use in rate of change alarms. Used by ChangeAlarmRangesType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="absoluteChange"/>
+			<enumeration value="percentageChange"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="ConcernLevelsType">
+		<annotation>
+			<documentation xml:lang="en">Defines six levels: Normal, Watch, Warning, Distress, Critical and Severe. Typical implementations color the "normal" level as green, "warning" level as yellow, and "critical" level as red. These level definitions are used throughout the alarm definitions. Some systems provide a greater fidelity with the additional levels provided here. The "normal" level is not typically needed because "normal" should be construed as none of the concern levels evaluating to true. For cases where definiing "normal" is needed, refer to the specific alarm definition types.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="normal"/>
+			<enumeration value="watch"/>
+			<enumeration value="warning"/>
+			<enumeration value="distress"/>
+			<enumeration value="critical"/>
+			<enumeration value="severe"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="ConsequenceLevelType">
+		<annotation>
+			<documentation>Defines the criticality level of a command.  Criticality levels follow ISO 14950.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="normal">
+				<annotation>
+					<documentation>Normal command.  Corresponds to ISO 14950 Level D telecommand criticality.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="vital">
+				<annotation>
+					<documentation>Command that is not a critical command but is essential to the success of the mission and, if sent at the wrong time, could cause momentary loss of the mission.  Corresponds to ISO 14950 Level C telecommand criticality.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="critical">
+				<annotation>
+					<documentation>Command that, if executed at the wrong time or in the wrong configuration, could cause irreversible loss or damage for the mission.  Corresponds to ISO 14950 Level B telecommand criticality.  Some space programs have called this "restricted" and may be implemented with a secondary confirmation before transmission.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="forbidden">
+				<annotation>
+					<documentation>Command that is not expected to be used for nominal or foreseeable contingency operations, that is included for unforeseen contingency operations, and that could cause irreversible damage if executed at the wrong time or in the wrong configuration.  Corresponds to ISO 14950 Level A telecommand criticality.  Some space programs have called this "prohibited".</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="user1">
+				<annotation>
+					<documentation>In the event that a program uses this value, that program will need to define the meaning of this value to their system.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="user2">
+				<annotation>
+					<documentation>In the event that a program uses this value, that program will need to define the meaning of this value to their system.</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType>
+	<simpleType name="ChangeSpanType">
+		<annotation>
+			<documentation xml:lang="en">Defines a changePerSecond and changePerSample for use in rate of change alarms. Used by ChangeAlarmRangesType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="changePerSecond"/>
+			<enumeration value="changePerSample"/>
+		</restriction>
+	</simpleType>
+	<complexType name="DiscreteLookupType">
+		<annotation>
+			<documentation xml:lang="en">Describe a discrete value lookup and the value associated when the lookup evaluates to true.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:MatchCriteriaType">
+				<attribute name="value" type="long" use="required">
+					<annotation>
+						<documentation xml:lang="en">Value to use when the lookup conditions are true.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumerationAlarmLevelType">
+		<annotation>
+			<documentation xml:lang="en">Describe an alarm level and its enumeration label to trigger from. See EnumeratedAlarmType and EnumeratedParameterType.</documentation>
+		</annotation>
+		<attribute name="alarmLevel" type="xtce:ConcernLevelsType" use="required">
+			<annotation>
+				<documentation xml:lang="en">Defines six levels: Normal, Watch, Warning, Distress, Critical and Severe. Typical implementations color the "normal" level as green, "warning" level as yellow, and "critical" level as red. In the case of enumeration alarms, the "normal" is assumed by implementations to be any label not otherwise in an alarm state.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="enumerationLabel" type="string" use="required">
+			<annotation>
+				<documentation xml:lang="en">The enumeration label is the engineering/calibrated value for enumerated types.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="EnumerationAlarmListType">
+		<sequence>
+			<element name="EnumerationAlarm" type="xtce:EnumerationAlarmLevelType" maxOccurs="unbounded">
+				<annotation>
+					<documentation xml:lang="en">Describe an alarm state for an enumeration label where the label is engineer/calibrated value. Note that labels may represent multiple raw/uncalbrated values.</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
+	<complexType name="EnumerationContextAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe a context that when true the alarm condition may be evaluated. See ContextMatchType and EnumerationAlarmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:EnumerationAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:ContextMatchType">
+						<annotation>
+							<documentation xml:lang="en">Describe a context in terms of a parameter and value that when true enables the context alarm definition.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="EnumerationAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe alarm conditions specific to the enumeration data type, extends the basic AlarmType with an EnumerationAlarmList. The alarms are described using the label (engineering/calibrated value) of the enumerated parameter. Enumeration labels may represent several raw/uncalibrated values, so as a result, a single alarm definition here may represent multiple raw values in the enumerated parameter. It is not necessary to define an alarm for raw/uncalibrated values that do not map to an enumeration. Implementations should implicitly define this as an alarm case, of which the manifestation of that is program/implementation specific. See EnumeratedParameterType.</documentation>
+			<appinfo>An additional check needs to be performed to ensure that the enumeration values in the alarms are valid enumeration values for the Parameter</appinfo>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="EnumerationAlarmList" type="xtce:EnumerationAlarmListType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">List of alarm state definitions for this enumerated type.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+				<attribute name="defaultAlarmLevel" type="xtce:ConcernLevelsType" default="normal">
+					<annotation>
+						<documentation xml:lang="en">Alarm state name for when no enumeration alarms evaluate to true. This defaults to "normal", which is almost always the case. Setting it to another alarm state permits a form of "inverted logic" where the alarm list can specify the normal states instead of the alarm states.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="FloatingPointNotationType">
+		<restriction base="string">
+			<enumeration value="normal"/>
+			<enumeration value="scientific"/>
+			<enumeration value="engineering"/>
+		</restriction>
+	</simpleType>
+	<complexType name="FloatRangeType">
+		<annotation>
+			<documentation xml:lang="en">Describe a floating point based range, several types of ranges are supported -- one sided and two sided, inclusive or exclusive.  It would not make sense to set two mins or maxes. Used in a number of locations related to ranges: ValidFloatRangeSetType or AlarmRangeType for example.</documentation>
+			<appinfo>Verify that the combination provided is usable.</appinfo>
+		</annotation>
+		<attribute name="minInclusive" type="double">
+			<annotation>
+				<documentation xml:lang="en">Minimum decimal/real number value including itself.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="minExclusive" type="double">
+			<annotation>
+				<documentation xml:lang="en">Minimum decimal/real number value excluding itself.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maxInclusive" type="double">
+			<annotation>
+				<documentation xml:lang="en">Maximum decimal/real number value including itself.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maxExclusive" type="double">
+			<annotation>
+				<documentation xml:lang="en">Maximum decimal/real number value excluding itself.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="IntegerRangeType">
+		<annotation>
+			<documentation xml:lang="en">Describe an integral based range: minInclusive and maxInclusive. Used in a number of locations related to ranges: ValidIntegerRangeSetType for example.</documentation>
+		</annotation>
+		<attribute name="minInclusive" type="long">
+			<annotation>
+				<documentation xml:lang="en">Minimum integer value including itself.</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="maxInclusive" type="long">
+			<annotation>
+				<documentation xml:lang="en">Maximum integer value including itself.</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+	<complexType name="LinearAdjustmentType">
+		<annotation>
+			<documentation xml:lang="en">A slope and intercept may be applied to scale or shift the value of the parameter in the dynamic value</documentation>
+		</annotation>
+		<attribute name="slope" type="double"/>
+		<attribute name="intercept" type="double" default="0"/>
+	</complexType>
+	<complexType name="MultiRangeType">
+		<annotation>
+			<documentation xml:lang="en">The alarm multi-range element type permits users to define multiple alarm ranges in a sequence that goes beyond the more typical "inside" and "outside" range definitions. It can be thought of as a "barber pole" definition.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:FloatRangeType">
+				<attribute name="rangeForm" type="xtce:RangeFormType" default="outside">
+					<annotation>
+						<documentation xml:lang="en">A value of outside specifies that the most severe range is outside all the other ranges: -severe -critical -distress -warning -watch normal +watch +warning +distress +critical +severe. A value of inside "inverts" these bands: -green -watch -warning -distress -critical severe +critical +distress +warning +watch. The most common form used is "outside" and is the default.</documentation>
+					</annotation>
+				</attribute>
+				<attribute name="level" type="xtce:ConcernLevelsType">
+					<annotation>
+						<documentation xml:lang="en">The level of concern for this alarm definition.</documentation>
+					</annotation>
+				</attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NumericAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe alarm conditions specific to the numeric data types, extends the basic AlarmType with StaticAlarmRanges and ChangeAlarmRanges. See FloatParameterType and IntegerParameterType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="StaticAlarmRanges" type="xtce:AlarmRangesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">StaticAlarmRanges are used to trigger alarms when the parameter value passes some threshold value.</documentation>
+						</annotation>
+					</element>
+					<element name="ChangeAlarmRanges" type="xtce:ChangeAlarmRangesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">ChangeAlarmRanges are used to trigger alarms when the parameter value changes by a rate or quantity from a reference.</documentation>
+						</annotation>
+					</element>
+					<element name="AlarmMultiRanges" type="xtce:AlarmMultiRangesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">Similar to but more lenient form of StaticAlarmRanges.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="NumericContextAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe a parameter dependent context, that when evaluates to true, enables the use of this alarm definition. See ContextMatchType and NumericAlarmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:NumericAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:ContextMatchType">
+						<annotation>
+							<documentation xml:lang="en">Contains the evaluation criteria for a parameter dependent test, that when evaluates to true, enables this alarm definition.</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringAlarmLevelType">
+		<annotation>
+			<documentation xml:lang="en">Describe a string alarm condition based on matching a regular expression.  The level and regular expression are described.  The specific implementation of the regular expression syntax is not specified in the schema at this time.  See StringAlarmListType.</documentation>
+		</annotation>
+		<attribute name="alarmLevel" type="xtce:ConcernLevelsType" use="required"/>
+		<attribute name="matchPattern" type="string" use="required"/>
+	</complexType>
+	<complexType name="StringAlarmListType">
+		<annotation>
+			<documentation xml:lang="en">Describe an ordered collection of string alarms, where duplicates are valid. Evaluate the alarms in list order. The first to evaluate to true takes precedence.  See StringAlarmLevelType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="StringAlarm" type="xtce:StringAlarmLevelType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="StringAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe alarms specific to the string data type, extends the basic AlarmType, while adding a StringAlarmList and defaultAlarmLevel attribute. The string alarm list is evaluated in list order. See ConcernsLevelsType and StringAlarmListType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="StringAlarmList" type="xtce:StringAlarmListType" minOccurs="0"/>
+				</sequence>
+				<attribute name="defaultAlarmLevel" type="xtce:ConcernLevelsType" default="normal"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringContextAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Describe a context that when true the alarm may be evaluated.  See ContextMatchType and StringAlarmType.</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:StringAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:ContextMatchType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="StringContextAlarmListType">
+		<annotation>
+			<documentation xml:lang="en">An ordered collection of numeric alarms associated with a context. Process the contexts in list order. See StringContextAlarmType.</documentation>
+		</annotation>
+		<sequence>
+			<element name="ContextAlarm" type="xtce:StringContextAlarmType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="TimeAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Alarms associated with time data types</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:AlarmType">
+				<sequence>
+					<element name="StaticAlarmRanges" type="xtce:TimeAlarmRangesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">StaticAlarmRanges are used to trigger alarms when the parameter value passes some threshold value</documentation>
+						</annotation>
+					</element>
+					<element name="ChangePerSecondAlarmRanges" type="xtce:TimeAlarmRangesType" minOccurs="0">
+						<annotation>
+							<documentation xml:lang="en">ChangePerSecondAlarmRanges are used to trigger alarms when the parameter value's rate-of-change passes some threshold value.  An alarm condition that triggers when the value changes too fast (or too slow)</documentation>
+						</annotation>
+					</element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TimeAlarmRangesType">
+		<complexContent>
+			<extension base="xtce:AlarmRangesType">
+				<attribute name="timeUnits" type="xtce:TimeUnitsType" default="seconds"/>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TimeContextAlarmListType">
+		<sequence>
+			<element name="ContextAlarm" type="xtce:TimeContextAlarmType" maxOccurs="unbounded"/>
+		</sequence>
+	</complexType>
+	<complexType name="TimeContextAlarmType">
+		<annotation>
+			<documentation xml:lang="en">Context alarms are applied when the ContextMatch is true.  Context alarms override Default alarms</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="xtce:TimeAlarmType">
+				<sequence>
+					<element name="ContextMatch" type="xtce:ContextMatchType"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<simpleType name="NonNegativeLongType">
+		<annotation>
+			<documentation>XTCE-specific replacement for xtce:NonNegativeLongType which more cleanly maps to native data types.</documentation>
+		</annotation>
+		<restriction base="long">
+			<minInclusive value="0"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="PositiveLongType">
+		<annotation>
+			<documentation>XTCE-specific replacement for xtce:PositiveLongType which more cleanly maps to native data types.</documentation>
+		</annotation>
+		<restriction base="long">
+			<minInclusive value="1"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="UnitFormType">
+		<annotation>
+			<documentation>Optionally specify if this information pertains to something other than the calibrated/engineering value.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="calibrated"/>
+			<enumeration value="uncalibrated"/>
+			<enumeration value="raw"/>
+		</restriction>
+	</simpleType>
+	<!--******** End of Common Types Schema **************-->
+	<!--*************************************************************-->
+</schema>
+```

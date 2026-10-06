@@ -3,16 +3,38 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/targets/CFS/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmd_tlm/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/outputs/tmp/config/targets/CFS/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/targets/CFS/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/CFS/target.txt`
+
+
+```text
+#
+# Required Libraries
+#
+REQUIRE 'bit_field_conversion.rb'
+REQUIRE 'cosmos_cfs_config.rb'
+
+# Ignored Parameters
+# IGNORE_PARAMETER parameter_name
+
+# CCSDS 
+IGNORE_PARAMETER CCSDS_STREAMID
+IGNORE_PARAMETER CCSDS_SEQUENCE
+IGNORE_PARAMETER CCSDS_LENGTH
+IGNORE_PARAMETER CCSDS_SPARE
+IGNORE_PARAMETER CCSDS_FC  
+IGNORE_PARAMETER CCSDS_CHECKSUM 
+
+IGNORE_PARAMETER PADDING
+```

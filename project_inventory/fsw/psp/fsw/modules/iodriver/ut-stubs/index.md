@@ -3,18 +3,143 @@
 
 **경로:** `fsw/psp/fsw/modules/iodriver/ut-stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--iodriver_base_stubs.c
-file--iodriver_impl_stubs.c
+**경로:** `fsw/psp/fsw/modules/iodriver/ut-stubs/CMakeLists.txt`
+
+
+```cmake
+add_cfe_coverage_stubs(iodriver
+    iodriver_base_stubs.c
+    iodriver_impl_stubs.c
+)
+
+#target_compile_definitions(coverage-iodriver-stubs PRIVATE
+#    _CFE_PSP_MODULE_
+#)
+#target_include_directories(coverage-iodriver-stubs PUBLIC
+#    $<TARGET_PROPERTY:iodriver,INTERFACE_INCLUDE_DIRECTORIES>
+#)
+#target_link_libraries(coverage-iodriver-stubs PRIVATE
+#    psp_module_api
+#    ut_assert
+#)
 ```
 
-## 항목
+### `iodriver_base_stubs.c`
 
-- [`fsw/psp/fsw/modules/iodriver/ut-stubs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/ut-stubs/iodriver_base_stubs.c`](file--iodriver_base_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/ut-stubs/iodriver_impl_stubs.c`](file--iodriver_impl_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/fsw/modules/iodriver/ut-stubs/iodriver_base_stubs.c`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in iodriver_base header
+ */
+
+#include "iodriver_base.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_PSP_IODriver_Command()
+ * ----------------------------------------------------
+ */
+int32 CFE_PSP_IODriver_Command(const CFE_PSP_IODriver_Location_t *Location, uint32 CommandCode,
+                               CFE_PSP_IODriver_Arg_t Arg)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_PSP_IODriver_Command, int32);
+
+    UT_GenStub_AddParam(CFE_PSP_IODriver_Command, const CFE_PSP_IODriver_Location_t *, Location);
+    UT_GenStub_AddParam(CFE_PSP_IODriver_Command, uint32, CommandCode);
+    UT_GenStub_AddParam(CFE_PSP_IODriver_Command, CFE_PSP_IODriver_Arg_t, Arg);
+
+    UT_GenStub_Execute(CFE_PSP_IODriver_Command, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_PSP_IODriver_Command, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_PSP_IODriver_FindByName()
+ * ----------------------------------------------------
+ */
+int32 CFE_PSP_IODriver_FindByName(const char *DriverName, uint32 *PspModuleId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_PSP_IODriver_FindByName, int32);
+
+    UT_GenStub_AddParam(CFE_PSP_IODriver_FindByName, const char *, DriverName);
+    UT_GenStub_AddParam(CFE_PSP_IODriver_FindByName, uint32 *, PspModuleId);
+
+    UT_GenStub_Execute(CFE_PSP_IODriver_FindByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_PSP_IODriver_FindByName, int32);
+}
+```
+
+### `iodriver_impl_stubs.c`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/ut-stubs/iodriver_impl_stubs.c`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in iodriver_impl header
+ */
+
+#include "iodriver_impl.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_PSP_IODriver_GetMutex()
+ * ----------------------------------------------------
+ */
+osal_id_t CFE_PSP_IODriver_GetMutex(uint32 PspModuleId, int32 DeviceHash)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_PSP_IODriver_GetMutex, osal_id_t);
+
+    UT_GenStub_AddParam(CFE_PSP_IODriver_GetMutex, uint32, PspModuleId);
+    UT_GenStub_AddParam(CFE_PSP_IODriver_GetMutex, int32, DeviceHash);
+
+    UT_GenStub_Execute(CFE_PSP_IODriver_GetMutex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_PSP_IODriver_GetMutex, osal_id_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_PSP_IODriver_HashMutex()
+ * ----------------------------------------------------
+ */
+int32 CFE_PSP_IODriver_HashMutex(int32 StartHash, int32 Datum)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_PSP_IODriver_HashMutex, int32);
+
+    UT_GenStub_AddParam(CFE_PSP_IODriver_HashMutex, int32, StartHash);
+    UT_GenStub_AddParam(CFE_PSP_IODriver_HashMutex, int32, Datum);
+
+    UT_GenStub_Execute(CFE_PSP_IODriver_HashMutex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_PSP_IODriver_HashMutex, int32);
+}
+```

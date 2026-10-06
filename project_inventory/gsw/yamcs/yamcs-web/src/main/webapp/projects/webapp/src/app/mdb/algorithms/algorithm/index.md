@@ -3,16 +3,70 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm.component.html`
 
-file--algorithm.component.html
-file--algorithm.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm/algorithm.component.html`
+
+
+```html
+@if (algorithm$ | async; as algorithm) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        @if (algorithm.qualifiedName | spaceSystemName; as spaceSystemName) {
+          <a
+            routerLink="/mdb/algorithms"
+            [queryParams]="{ c: yamcs.context, filter: spaceSystemName }"
+            class="ya-link ya-header-link">
+            {{ spaceSystemName }}
+          </a>
+          /{{ algorithm.qualifiedName | shortName }}
+          <ya-title-copy [text]="algorithm.qualifiedName" />
+        }
+      </ng-template>
+    </ya-instance-toolbar>
+    <ya-panel>
+      <app-algorithm-detail [algorithm]="algorithm" />
+    </ya-panel>
+  </ya-instance-page>
+}
 ```
 
-## 항목
+### `algorithm.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm/algorithm.component.html`](file--algorithm.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm/algorithm.component.ts`](file--algorithm.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm/algorithm.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Algorithm, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { AlgorithmDetailComponent } from '../algorithm-detail/algorithm-detail.component';
+
+@Component({
+  templateUrl: './algorithm.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlgorithmDetailComponent, WebappSdkModule],
+})
+export class AlgorithmComponent {
+  algorithm$: Promise<Algorithm>;
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    title: Title,
+  ) {
+    const qualifiedName = route.snapshot.paramMap.get('qualifiedName')!;
+    this.algorithm$ = yamcs.yamcsClient.getAlgorithm(
+      this.yamcs.instance!,
+      qualifiedName,
+    );
+    this.algorithm$.then((algorithm) => {
+      title.setTitle(algorithm.name);
+    });
+  }
+}
+```

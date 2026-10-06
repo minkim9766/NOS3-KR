@@ -3,18 +3,22 @@
 
 **경로:** `fsw/apps/ds/docs/users_guide_historical/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CFS_DS_User_Guide_Doc_No_582-2013-001 Source Files.zip`
 
-file--CFS_DS_User_Guide_Doc_No_582-2013-001%20Source%20Files.zip
-file--CFS_DS_User_Guide_Doc_No_582-2013-001.docx
-file--CFS_DS_User_Guide_Doc_No_582-2013-001.pdf
-```
+**경로:** `fsw/apps/ds/docs/users_guide_historical/CFS_DS_User_Guide_Doc_No_582-2013-001 Source Files.zip`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/apps/ds/docs/users_guide_historical/CFS_DS_User_Guide_Doc_No_582-2013-001 Source Files.zip`](file--CFS_DS_User_Guide_Doc_No_582-2013-001%20Source%20Files.zip) — 바이너리 (경로만)
-- [`fsw/apps/ds/docs/users_guide_historical/CFS_DS_User_Guide_Doc_No_582-2013-001.docx`](file--CFS_DS_User_Guide_Doc_No_582-2013-001.docx) — 바이너리 (경로만)
-- [`fsw/apps/ds/docs/users_guide_historical/CFS_DS_User_Guide_Doc_No_582-2013-001.pdf`](file--CFS_DS_User_Guide_Doc_No_582-2013-001.pdf) — 바이너리 (경로만)
+### `CFS_DS_User_Guide_Doc_No_582-2013-001.docx`
+
+**경로:** `fsw/apps/ds/docs/users_guide_historical/CFS_DS_User_Guide_Doc_No_582-2013-001.docx`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CFS_DS_User_Guide_Doc_No_582-2013-001.pdf`
+
+**경로:** `fsw/apps/ds/docs/users_guide_historical/CFS_DS_User_Guide_Doc_No_582-2013-001.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

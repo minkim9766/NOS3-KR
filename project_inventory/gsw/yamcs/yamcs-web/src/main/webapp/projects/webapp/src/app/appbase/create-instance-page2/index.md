@@ -3,18 +3,173 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-instance-page2.component.css`
 
-file--create-instance-page2.component.css
-file--create-instance-page2.component.html
-file--create-instance-page2.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/create-instance-page2.component.css`
+
+
+```css
+.form-content {
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `create-instance-page2.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/create-instance-page2.component.css`](file--create-instance-page2.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/create-instance-page2.component.html`](file--create-instance-page2.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/create-instance-page2.component.ts`](file--create-instance-page2.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/create-instance-page2.component.html`
+
+
+```html
+<ya-message-bar #messageBar />
+
+<app-appbase-toolbar>
+  <ng-template app-appbase-toolbar-label>
+    <ya-page-icon-button routerLink=".." icon="arrow_back" />
+    Create an instance
+  </ng-template>
+</app-appbase-toolbar>
+
+<app-create-instance-wizard-step step="2" />
+
+@if (template$ | async; as template) {
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate>
+      <ya-field label="Instance name">
+        <input formControlName="name" type="text" />
+      </ya-field>
+
+      @for (v of template?.variables; track v) {
+        @if (v.choices) {
+          <ya-field [label]="v.label || v.name">
+            @if (v.help) {
+              <ya-help [dialogTitle]="v.label || v.name">
+                <div [innerHTML]="v.help"></div>
+              </ya-help>
+            }
+            <ya-select [formControlName]="v.name">
+              @for (choice of v.choices; track choice) {
+                <ya-option [id]="choice" [label]="choice" />
+              }
+            </ya-select>
+          </ya-field>
+        } @else {
+          <ya-field [label]="v.label || v.name">
+            @if (v.help) {
+              <ya-help [dialogTitle]="v.label || v.name">
+                <div [innerHTML]="v.help"></div>
+              </ya-help>
+            }
+            <input [formControlName]="v.name" type="text" />
+          </ya-field>
+        }
+      }
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="/">CANCEL</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+}
+```
+
+### `create-instance-page2.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page2/create-instance-page2.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  InstanceTemplate,
+  MessageService,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { CreateInstanceWizardStepComponent } from '../create-instance-wizard-step/create-instance-wizard-step.component';
+
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AppAppBaseToolbarLabel } from '../appbase-toolbar/appbase-toolbar-label.directive';
+import { AppAppBaseToolbar } from '../appbase-toolbar/appbase-toolbar.component';
+
+@Component({
+  templateUrl: './create-instance-page2.component.html',
+  styleUrl: './create-instance-page2.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AppAppBaseToolbar,
+    AppAppBaseToolbarLabel,
+    CreateInstanceWizardStepComponent,
+    WebappSdkModule,
+  ],
+})
+export class CreateInstancePage2Component {
+  form: UntypedFormGroup;
+  template$ = new BehaviorSubject<InstanceTemplate | null>(null);
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    private router: Router,
+    private messageService: MessageService,
+    title: Title,
+    route: ActivatedRoute,
+  ) {
+    title.setTitle('Create an instance');
+    this.form = formBuilder.group({
+      name: new UntypedFormControl('', [Validators.required]),
+    });
+
+    const templateId = route.snapshot.paramMap.get('template')!;
+    yamcs.yamcsClient.getInstanceTemplate(templateId).then((template) => {
+      this.template$.next(template);
+      for (const variable of template.variables || []) {
+        const validators = variable.required ? [Validators.required] : [];
+        let initialValue = variable.choices ? variable.choices[0] : undefined;
+        if (variable.initial !== undefined) {
+          initialValue = variable.initial;
+        }
+
+        this.form.addControl(
+          variable.name,
+          new UntypedFormControl(initialValue, validators),
+        );
+      }
+    });
+  }
+
+  onConfirm() {
+    const template = this.template$.value!;
+    const templateArgs: { [key: string]: string } = {};
+    for (const variable of template.variables || []) {
+      if (this.form.get(variable.name)!.value) {
+        templateArgs[variable.name] = this.form.get(variable.name)!.value;
+      }
+    }
+
+    this.yamcs.yamcsClient
+      .createInstance({
+        name: this.form.get('name')!.value,
+        template: template.name,
+        templateArgs,
+      })
+      .then(() => this.router.navigateByUrl('/'))
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

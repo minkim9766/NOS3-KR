@@ -3,24 +3,244 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--FprimeFramer.cpp
-file--FprimeFramer.fpp
-file--FprimeFramer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/FprimeFramer.cpp`](file--FprimeFramer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/FprimeFramer.fpp`](file--FprimeFramer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/FprimeFramer.hpp`](file--FprimeFramer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/documentation/reference
+#
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeFramer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeFramer.cpp"
+)
+
+set(MOD_DEPS
+  Svc/FprimeProtocol
+)
+
+register_fprime_module()
+
+
+### Unit Tests ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeFramer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FprimeFramerTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FprimeFramerTester.cpp"
+)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+```
+
+### `FprimeFramer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/FprimeFramer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFramer.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeFramer component implementation class
+// ======================================================================
+
+#include "Svc/FprimeFramer/FprimeFramer.hpp"
+#include "Svc/FprimeProtocol/FrameHeaderSerializableAc.hpp"
+#include "Svc/FprimeProtocol/FrameTrailerSerializableAc.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+FprimeFramer ::FprimeFramer(const char* const compName) : FprimeFramerComponentBase(compName) {}
+
+FprimeFramer ::~FprimeFramer() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void FprimeFramer ::dataIn_handler(FwIndexType portNum, Fw::Buffer& data, const ComCfg::FrameContext& context) {
+    FprimeProtocol::FrameHeader header;
+    FprimeProtocol::FrameTrailer trailer;
+
+    // Full size of the frame will be size of header + data + trailer
+    FwSizeType frameSize =
+        FprimeProtocol::FrameHeader::SERIALIZED_SIZE + data.getSize() + FprimeProtocol::FrameTrailer::SERIALIZED_SIZE;
+    FW_ASSERT(data.getSize() <= std::numeric_limits<FprimeProtocol::TokenType>::max(),
+              static_cast<FwAssertArgType>(frameSize));
+    FW_ASSERT(frameSize <= std::numeric_limits<Fw::Buffer::SizeType>::max(), static_cast<FwAssertArgType>(frameSize));
+
+    // Allocate frame buffer
+    Fw::Buffer frameBuffer = this->bufferAllocate_out(0, frameSize);
+    auto frameSerializer = frameBuffer.getSerializer();
+    Fw::SerializeStatus status;
+
+    // Serialize the header
+    // 0xDEADBEEF is already set as the default value for the header startWord field in the FPP type definition
+    header.set_lengthField(static_cast<FprimeProtocol::TokenType>(data.getSize()));
+    status = frameSerializer.serialize(header);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Serialize the data
+    status = frameSerializer.serialize(data.getData(), data.getSize(), Fw::Serialization::OMIT_LENGTH);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Serialize the trailer (with CRC computation)
+    Utils::HashBuffer hashBuffer;
+    Utils::Hash::hash(frameBuffer.getData(), frameSize - HASH_DIGEST_LENGTH, hashBuffer);
+    trailer.set_crcField(hashBuffer.asBigEndianU32());
+    status = frameSerializer.serialize(trailer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Send the full frame out - this port shall always be connected
+    this->dataOut_out(0, frameBuffer, context);
+    // Return original (unframed) data buffer ownership back to its sender - always connected
+    this->dataReturnOut_out(0, data, context);
+}
+
+void FprimeFramer ::comStatusIn_handler(FwIndexType portNum, Fw::Success& condition) {
+    if (this->isConnected_comStatusOut_OutputPort(portNum)) {
+        this->comStatusOut_out(portNum, condition);
+    }
+}
+
+void FprimeFramer ::dataReturnIn_handler(FwIndexType portNum,
+                                         Fw::Buffer& frameBuffer,
+                                         const ComCfg::FrameContext& context) {
+    // dataReturnIn is the allocated buffer coming back from the ComManager (e.g. ComStub) component
+    this->bufferDeallocate_out(0, frameBuffer);
+}
+
+}  // namespace Svc
+```
+
+### `FprimeFramer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/FprimeFramer.fpp`
+
+
+```fpp
+module Svc {
+    @ Framer implementation for the F Prime protocol
+    passive component FprimeFramer {
+
+        import Framer
+
+        # ----------------------------------------------------------------------
+        # Allocation of buffers
+        # ----------------------------------------------------------------------
+
+        @ Port for allocating buffers to hold framed data
+        output port bufferAllocate: Fw.BufferGet
+
+        @ Port for deallocating buffers allocated for framed data
+        output port bufferDeallocate: Fw.BufferSend
+
+        # ----------------------------------------------------------------------
+        # Standard AC Ports
+        # ----------------------------------------------------------------------
+        @ Port for requesting the current time
+        time get port timeCaller
+
+    }
+}
+```
+
+### `FprimeFramer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/FprimeFramer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFramer.hpp
+// \author thomas-bc
+// \brief  hpp file for FprimeFramer component implementation class
+// ======================================================================
+
+#ifndef Svc_FprimeFramer_HPP
+#define Svc_FprimeFramer_HPP
+
+#include "Svc/FprimeFramer/FprimeFramerComponentAc.hpp"
+
+namespace Svc {
+
+class FprimeFramer final : public FprimeFramerComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct FprimeFramer object
+    FprimeFramer(const char* const compName  //!< The component name
+    );
+
+    //! Destroy FprimeFramer object
+    ~FprimeFramer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for comStatusIn
+    //!
+    //! Port receiving the general status from the downstream component
+    //! indicating it is ready or not-ready for more input
+    void comStatusIn_handler(FwIndexType portNum,    //!< The port number
+                             Fw::Success& condition  //!< Condition success/failure
+                             ) override;
+
+    //! Handler implementation for dataIn
+    //!
+    //! Port to receive data to frame, in a Fw::Buffer with optional context
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& data,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Buffer coming from a deallocate call in a ComDriver component
+    void dataReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& data,
+                              const ComCfg::FrameContext& context) override;
+
+    // ----------------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------------
+
+    //! Helper function to send the framed data out of the component
+    //! This sequentially calls both frameDataOut and frameStreamOut ports if connected
+    void framedOut_helper(Fw::Buffer& frameBuffer, const ComCfg::FrameContext& context);
+};
+
+}  // namespace Svc
+
+#endif
+```

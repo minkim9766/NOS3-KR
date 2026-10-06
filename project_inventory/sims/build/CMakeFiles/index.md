@@ -3,30 +3,55 @@
 
 **경로:** `sims/build/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 3.26.0/index
 pkgRedirects/index
-file--cmake.check_cache
-file--CMakeConfigureLog.yaml
-file--CMakeDirectoryInformation.cmake
-file--Makefile.cmake
-file--Makefile2
-file--progress.marks
-file--TargetDirectories.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/CMakeFiles/3.26.0/`](3.26.0/index) — 폴더
-- [`sims/build/CMakeFiles/pkgRedirects/`](pkgRedirects/index) — 폴더
-- [`sims/build/CMakeFiles/cmake.check_cache`](file--cmake.check_cache) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/CMakeConfigureLog.yaml`](file--CMakeConfigureLog.yaml) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/Makefile.cmake`](file--Makefile.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/Makefile2`](file--Makefile2) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/TargetDirectories.txt`](file--TargetDirectories.txt) — 빌드 산출물 (경로만)
+### `cmake.check_cache`
+
+**경로:** `sims/build/CMakeFiles/cmake.check_cache`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeConfigureLog.yaml`
+
+**경로:** `sims/build/CMakeFiles/CMakeConfigureLog.yaml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `sims/build/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile.cmake`
+
+**경로:** `sims/build/CMakeFiles/Makefile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile2`
+
+**경로:** `sims/build/CMakeFiles/Makefile2`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `sims/build/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `TargetDirectories.txt`
+
+**경로:** `sims/build/CMakeFiles/TargetDirectories.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

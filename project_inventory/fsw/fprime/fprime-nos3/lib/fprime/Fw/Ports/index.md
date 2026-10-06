@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ Signal/index
 SuccessCondition/index
 ```
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/CompletionStatus/`](CompletionStatus/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/Ready/`](Ready/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/Signal/`](Signal/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/SuccessCondition/`](SuccessCondition/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,16 +3,79 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `container.component.html`
 
-file--container.component.html
-file--container.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container/container.component.html`
+
+
+```html
+@if (container$ | async; as container) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        @if (container.qualifiedName | spaceSystemName; as spaceSystemName) {
+          <a
+            routerLink="/mdb/containers"
+            [queryParams]="{ c: yamcs.context, filter: spaceSystemName }"
+            class="ya-link ya-header-link">
+            {{ spaceSystemName }}
+          </a>
+          /{{ container.qualifiedName | shortName }}
+          <ya-title-copy [text]="container.qualifiedName" />
+        }
+      </ng-template>
+    </ya-instance-toolbar>
+
+    <ya-panel>
+      <app-container-detail [container]="container" />
+    </ya-panel>
+  </ya-instance-page>
+}
 ```
 
-## 항목
+### `container.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container/container.component.html`](file--container.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container/container.component.ts`](file--container.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container/container.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Container, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ContainerDetailComponent } from '../container-detail/container-detail.component';
+
+@Component({
+  templateUrl: './container.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ContainerDetailComponent, WebappSdkModule],
+})
+export class ContainerComponent {
+  container$ = new BehaviorSubject<Container | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private title: Title,
+  ) {
+    // When clicking links pointing to this same component, Angular will not reinstantiate
+    // the component. Therefore subscribe to routeParams
+    route.paramMap.subscribe((params) => {
+      const qualifiedName = params.get('qualifiedName')!;
+      this.changeContainer(qualifiedName);
+    });
+  }
+
+  changeContainer(qualifiedName: string) {
+    this.yamcs.yamcsClient
+      .getContainer(this.yamcs.instance!, qualifiedName)
+      .then((container) => {
+        this.container$.next(container);
+        this.title.setTitle(container.name);
+      });
+  }
+}
+```

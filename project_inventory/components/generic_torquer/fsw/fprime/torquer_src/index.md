@@ -3,22 +3,762 @@
 
 **경로:** `components/generic_torquer/fsw/fprime/torquer_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_torquer.cpp
-file--Generic_torquer.fpp
-file--Generic_torquer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_torquer/fsw/fprime/torquer_src/docs/`](docs/index) — 폴더
-- [`components/generic_torquer/fsw/fprime/torquer_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/fsw/fprime/torquer_src/Generic_torquer.cpp`](file--Generic_torquer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/fsw/fprime/torquer_src/Generic_torquer.fpp`](file--Generic_torquer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/fsw/fprime/torquer_src/Generic_torquer.hpp`](file--Generic_torquer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_torquer/fsw/fprime/torquer_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+# include_directories("../../shared/") #device.h
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc") #platform_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_torquer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_torquer.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_torquer_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+set(MOD_DEPS
+  Fw_Types
+  ${ITC_Common_LIBRARIES}
+  ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_torquer_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+```
+
+### `Generic_torquer.cpp`
+
+**경로:** `components/generic_torquer/fsw/fprime/torquer_src/Generic_torquer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_torquer.cpp
+// \author jstar
+// \brief  cpp file for Generic_torquer component implementation class
+// ======================================================================
+
+#include <string>
+#include "torquer_src/Generic_torquer.hpp"
+#include <Fw/Logger/Logger.hpp>
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_torquer ::
+    Generic_torquer(const char* const compName) :
+      Generic_torquerComponentBase(compName)
+
+  {
+    int32_t status = OS_SUCCESS;
+    /* Initialize HWLIB */
+    nos_init_link();
+    
+    /* Open device specific protocols */
+    
+    for(int i = 0; i < 3; i++){
+      HkTelemetryPkt.trqHk[i].Direction = 0;
+      HkTelemetryPkt.trqHk[i].PercentOn = 0;
+      HkTelemetryPkt.trqDevice[i].trq_num = i;
+      HkTelemetryPkt.trqDevice[i].timer_period_ns = GENERIC_TORQUER_CFG_PERIOD;
+      HkTelemetryPkt.trqDevice[i].timerfd = 0;
+      HkTelemetryPkt.trqDevice[i].direction_pin_fd = 0;
+      HkTelemetryPkt.trqDevice[i].timer_high_ns = 0;
+      HkTelemetryPkt.trqDevice[i].positive_direction = false;
+      HkTelemetryPkt.trqDevice[i].enabled = false;
+
+      status = trq_init(&HkTelemetryPkt.trqDevice[i]);
+      if (status == OS_SUCCESS)
+      {
+          printf("Torquer %d initialized successfully \n", i);
+      }
+      else
+      {
+          printf("Torquer %d device failed to initialize with error %d!\n", i, status);
+      }
+
+    }
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_TORQUER_DEVICE_ENABLED;
+
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    
+  }
+
+  Generic_torquer ::
+    ~Generic_torquer()
+  {
+    for(uint8_t i = 0; i < 3; i++)
+    {
+      trq_close(&HkTelemetryPkt.trqDevice[i]);
+    }
+    nos_destroy_link();
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_torquer :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    // OS_printf("NOOP Command Successful!\n");
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_torquer :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    // OS_printf("Reset Counters command successful!\n");
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_torquer :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_TORQUER_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      for(uint8_t i = 0; i < 3; i++)
+      {
+        status += trq_command(&HkTelemetryPkt.trqDevice[i], 0, 0);
+        HkTelemetryPkt.trqHk[i].Direction = 0;
+        HkTelemetryPkt.trqHk[i].PercentOn = 0;
+      }
+
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        HkTelemetryPkt.DeviceEnabled = GENERIC_TORQUER_DEVICE_ENABLED;
+        Fw::LogStringArg log_msg("Enable Torquer Command Successful!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Enable Torquer Command Successful!\n");
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Enable Failed: Commanding Failed");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Enable Failed Commanding Torquer\n");
+      }
+
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Enable Failed: Already Enabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      // OS_printf("Enable Failed: Already Enabled!\n");
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->tlmWrite_Percent_0(HkTelemetryPkt.trqHk[0].PercentOn);
+    this->tlmWrite_Percent_1(HkTelemetryPkt.trqHk[1].PercentOn);
+    this->tlmWrite_Percent_2(HkTelemetryPkt.trqHk[2].PercentOn);
+
+    this->tlmWrite_Direction_0(HkTelemetryPkt.trqHk[0].Direction);
+    this->tlmWrite_Direction_1(HkTelemetryPkt.trqHk[1].Direction);
+    this->tlmWrite_Direction_2(HkTelemetryPkt.trqHk[2].Direction);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_torquer :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_TORQUER_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      for(uint8_t i = 0; i < 3; i++)
+      {
+        trq_command(&HkTelemetryPkt.trqDevice[i], 0, 0);
+        HkTelemetryPkt.trqHk[i].Direction = 0;
+        HkTelemetryPkt.trqHk[i].PercentOn = 0;
+      }
+
+      HkTelemetryPkt.DeviceCount++;
+      HkTelemetryPkt.DeviceEnabled = GENERIC_TORQUER_DEVICE_DISABLED;
+
+      Fw::LogStringArg log_msg("Disabled Successfully!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Disabled Successfully!\n");
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Disable Failed: Already Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      // OS_printf("Disable Failed: Already Disabled!\n");
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->tlmWrite_Percent_0(HkTelemetryPkt.trqHk[0].PercentOn);
+    this->tlmWrite_Percent_1(HkTelemetryPkt.trqHk[1].PercentOn);
+    this->tlmWrite_Percent_2(HkTelemetryPkt.trqHk[2].PercentOn);
+
+    this->tlmWrite_Direction_0(HkTelemetryPkt.trqHk[0].Direction);
+    this->tlmWrite_Direction_1(HkTelemetryPkt.trqHk[1].Direction);
+    this->tlmWrite_Direction_2(HkTelemetryPkt.trqHk[2].Direction);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_torquer :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->tlmWrite_Percent_0(HkTelemetryPkt.trqHk[0].PercentOn);
+    this->tlmWrite_Percent_1(HkTelemetryPkt.trqHk[1].PercentOn);
+    this->tlmWrite_Percent_2(HkTelemetryPkt.trqHk[2].PercentOn);
+
+    this->tlmWrite_Direction_0(HkTelemetryPkt.trqHk[0].Direction);
+    this->tlmWrite_Direction_1(HkTelemetryPkt.trqHk[1].Direction);
+    this->tlmWrite_Direction_2(HkTelemetryPkt.trqHk[2].Direction);
+
+    Fw::LogStringArg log_msg("Requested Housekeeping!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    // OS_printf("Requested Housekeeping!\n");
+
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_torquer :: ALL_CONFIG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, U8 Percent_0, U8 Direction_0, U8 Percent_1, U8 Direction_1, U8 Percent_2, U8 Direction_2){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_TORQUER_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status += GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[0], &HkTelemetryPkt.trqDevice[0], Percent_0, Direction_0);
+      status += GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[1], &HkTelemetryPkt.trqDevice[1], Percent_1, Direction_1);
+      status += GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[2], &HkTelemetryPkt.trqDevice[2], Percent_2, Direction_2);
+
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Successfully Set all Torquers!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Successfully Set all Torquers!\n");
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Failed to Set All Torquers!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Failed to Set All Torquers!\n");
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Failed: Device Disabled");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      // OS_printf("Failed: Device Disabled!\n");
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->tlmWrite_Percent_0(HkTelemetryPkt.trqHk[0].PercentOn);
+    this->tlmWrite_Percent_1(HkTelemetryPkt.trqHk[1].PercentOn);
+    this->tlmWrite_Percent_2(HkTelemetryPkt.trqHk[2].PercentOn);
+
+    this->tlmWrite_Direction_0(HkTelemetryPkt.trqHk[0].Direction);
+    this->tlmWrite_Direction_1(HkTelemetryPkt.trqHk[1].Direction);
+    this->tlmWrite_Direction_2(HkTelemetryPkt.trqHk[2].Direction);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_torquer :: GENERIC_TORQUER_CONFIG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Generic_torquer_tq_num torquerNum, U8 Percent, U8 Direction) {
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_TORQUER_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[torquerNum.e], &HkTelemetryPkt.trqDevice[torquerNum.e], Percent, Direction);
+
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        char configMsg[40];
+        sprintf(configMsg, "Successfully Set Torquer %d!", torquerNum.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Successfully Set Torquer %d!\n", torquerNum.e);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        char configMsg[40];
+        sprintf(configMsg, "Faied to set Torquer %d!", torquerNum.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Failed to Set Torquer %d!\n", torquerNum.e);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Failed: Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);;
+      // OS_printf("Failed: Device Disabled!\n");
+    }
+    
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->tlmWrite_Percent_0(HkTelemetryPkt.trqHk[0].PercentOn);
+    this->tlmWrite_Percent_1(HkTelemetryPkt.trqHk[1].PercentOn);
+    this->tlmWrite_Percent_2(HkTelemetryPkt.trqHk[2].PercentOn);
+
+    this->tlmWrite_Direction_0(HkTelemetryPkt.trqHk[0].Direction);
+    this->tlmWrite_Direction_1(HkTelemetryPkt.trqHk[1].Direction);
+    this->tlmWrite_Direction_2(HkTelemetryPkt.trqHk[2].Direction);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  inline Generic_torquer_ActiveState Generic_torquer :: get_active_state(uint8_t DeviceEnabled){
+    Generic_torquer_ActiveState state;
+
+    if(DeviceEnabled == GENERIC_TORQUER_DEVICE_ENABLED)
+    {
+      state.e = Generic_torquer_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_torquer_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+  void Generic_torquer :: TORQin_handler( FwIndexType portNum, U8 Percent_0, U8 Direction_0, U8 Percent_1, U8 Direction_1, U8 Percent_2, U8 Direction_2)
+  {
+    int32_t status = OS_SUCCESS;
+
+    status += GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[0], &HkTelemetryPkt.trqDevice[0], Percent_0, Direction_0);
+    status += GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[1], &HkTelemetryPkt.trqDevice[1], Percent_1, Direction_1);
+    status += GENERIC_TORQUER_Config(&HkTelemetryPkt.trqHk[2], &HkTelemetryPkt.trqDevice[2], Percent_2, Direction_2);
+
+    if(status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+    }
+  }
+
+  void Generic_torquer :: updateTlm_handler(const FwIndexType portNum, U32 context)
+  {
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_Percent_0(HkTelemetryPkt.trqHk[0].PercentOn);
+    this->tlmWrite_Percent_1(HkTelemetryPkt.trqHk[1].PercentOn);
+    this->tlmWrite_Percent_2(HkTelemetryPkt.trqHk[2].PercentOn);
+    this->tlmWrite_Direction_0(HkTelemetryPkt.trqHk[0].Direction);
+    this->tlmWrite_Direction_1(HkTelemetryPkt.trqHk[1].Direction);
+    this->tlmWrite_Direction_2(HkTelemetryPkt.trqHk[2].Direction);
+  }
+
+}
+```
+
+### `Generic_torquer.fpp`
+
+**경로:** `components/generic_torquer/fsw/fprime/torquer_src/Generic_torquer.fpp`
+
+
+```fpp
+module Components {
+    @ Satellite Torquer
+    active component Generic_torquer {
+
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        @ Torquer Number
+        enum tq_num {
+            Torquer_0 @< Torquer 0
+            Torquer_1 @< Torquer 1
+            Torquer_2 @< Torquer 2
+        }
+
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+        
+        @ Torquer input port
+        async input port TORQin: TORQDataPort
+
+        @ Update Tlm
+        async input port updateTlm: Svc.Sched
+
+         @ NOOP Cmd
+        async command NOOP(
+        )
+
+         @ RESET COUNTERS cmd
+        async command RESET_COUNTERS(
+        )
+
+        async command ENABLE(
+        )
+
+        async command DISABLE(
+        )
+
+        async command REQUEST_HOUSEKEEPING(
+        )
+
+        async command ALL_CONFIG(
+            Percent_0: U8 @< Percent speed of rotation: (0-100)
+            Direction_0: U8 @< Direction of rotation (0 or 1)
+            Percent_1: U8 @< Percent speed of rotation: (0-100)
+            Direction_1: U8 @< Direction of rotation (0 or 1)
+            Percent_2: U8 @< Percent speed of rotation: (0-100)
+            Direction_2: U8 @< Direction of rotation (0 or 1)
+        )
+
+        @ Command to issue greeting with maximum length of 20 characters
+        async command GENERIC_TORQUER_CONFIG(
+            torquerNum: tq_num @< Torquer Number
+            Percent: U8 @< Percent speed of rotation: (0 - 100)
+            Direction: U8 @< Direction of rotation (0 or 1)
+        )
+
+        @ Greeting event with maximum greeting length of 30 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "Generic_torquer: {}"
+
+         @ Command Count
+        telemetry CommandCount: U32
+
+         @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+         @ Device Count
+        telemetry DeviceCount: U32
+
+         @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+         @ Device Enable State
+        telemetry DeviceEnabled: ActiveState
+
+        @ A count of the number of greetings issued
+        telemetry Percent_0: U8
+        
+        @ A count of the number of greetings issued
+        telemetry Direction_0: U8
+        
+        @ A count of the number of greetings issued
+        telemetry Percent_1: U8
+        
+        @ A count of the number of greetings issued
+        telemetry Direction_1: U8
+        
+        @ A count of the number of greetings issued
+        telemetry Percent_2: U8
+        
+        @ A count of the number of greetings issued
+        telemetry Direction_2: U8
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_torquer.hpp`
+
+**경로:** `components/generic_torquer/fsw/fprime/torquer_src/Generic_torquer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_torquer.hpp
+// \author jstar
+// \brief  hpp file for Generic_torquer component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_torquer_HPP
+#define Components_Generic_torquer_HPP
+
+#include "torquer_src/Generic_torquerComponentAc.hpp"
+#include "torquer_src/Generic_torquer_tq_numEnumAc.hpp"
+#include "torquer_src/Generic_torquer_ActiveStateEnumAc.hpp"
+
+extern "C"{
+#include "generic_torquer_device.h"
+#include "libtrq.h"
+}
+
+#include "nos_link.h"
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+    trq_info_t                      trqDevice[3];
+    GENERIC_TORQUER_Device_tlm_t    trqHk[3];
+} TORQUER_Hk_tlm_t;
+#define TORQUER_HK_TLM_LNGTH sizeof(TORQUER_Hk_tlm_t)
+
+#define GENERIC_TORQUER_DEVICE_DISABLED 0
+#define GENERIC_TORQUER_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_torquer :
+    public Generic_torquerComponentBase
+  {
+
+    public:
+
+      TORQUER_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_torquer object
+      Generic_torquer(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_torquer object
+      ~Generic_torquer();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for command TODO
+      //!
+      //! TODO
+      /*void TODO_cmdHandler(
+          FwOpcodeType opCode, //!< The opcode
+          U32 cmdSeq //!< The command sequence number
+      ) override;*/
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void ALL_CONFIG_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        U8 Percent_0,
+        U8 Direction_0,
+        U8 Percent_1,
+        U8 Direction_1,
+        U8 Percent_2,
+        U8 Direction_2
+      ) override;
+
+      void GENERIC_TORQUER_CONFIG_cmdHandler(
+          FwOpcodeType opCode, //!< The opcode
+          U32 cmdSeq, //!< The command sequence number
+          Generic_torquer_tq_num torquerNum,
+          U8 Percent, //!< Greeting to repeat in the Hello event
+          U8 Direction
+
+      ) override;
+
+      void TORQin_handler(
+        FwIndexType portNum,
+        U8 Percent_0,
+        U8 Direction_0,
+        U8 Percent_1,
+        U8 Direction_1,
+        U8 Percent_2,
+        U8 Direction_2
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum,
+        U32 context
+      ) override;
+
+      
+      inline Generic_torquer_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

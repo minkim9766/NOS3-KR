@@ -3,18 +3,19 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/raw_telemetry_data/data_physics_generation/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 Errors/index
 No_Errors/index
-file--infoData.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/raw_telemetry_data/data_physics_generation/Errors/`](Errors/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/raw_telemetry_data/data_physics_generation/No_Errors/`](No_Errors/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/raw_telemetry_data/data_physics_generation/infoData.txt`](file--infoData.txt) — 빌드 산출물 (경로만)
+### `infoData.txt`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/raw_telemetry_data/data_physics_generation/infoData.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,18 +3,98 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `verify-icon.component.css`
 
-file--verify-icon.component.css
-file--verify-icon.component.html
-file--verify-icon.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/verify-icon.component.css`
+
+
+```css
+:host {
+  line-height: 0;
+  font-size: 0;
+}
+
+.ok {
+  color: #00c752;
+}
+
+.pending {
+  color: grey;
+  animation: yspin 2s infinite linear;
+}
+
+.cancelled {
+  color: grey;
+}
+
+.failed {
+  color: var(--y-error-color);
+}
+
+.nvl {
+  color: grey;
+}
+
+@keyframes yspin {
+  0% {
+    -webkit-transform: rotate(0deg) scaleX(-1);
+    transform: rotate(0deg) scaleX(-1);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg) scaleX(-1);
+    transform: rotate(359deg) scaleX(-1);
+  }
+}
 ```
 
-## 항목
+### `verify-icon.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/verify-icon.component.css`](file--verify-icon.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/verify-icon.component.html`](file--verify-icon.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/verify-icon.component.ts`](file--verify-icon.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/verify-icon.component.html`
+
+
+```html
+@if (comparison.status) {
+  @switch (comparison.status()) {
+    @case ("ok") {
+      <mat-icon matTooltip="Condition satisfied" class="icon16 ok">check_circle_outline</mat-icon>
+    }
+    @case ("pending") {
+      <mat-icon matTooltip="Verifying condition" class="icon16 pending">sync</mat-icon>
+    }
+    @case ("nok") {
+      <mat-icon matTooltip="Condition not satisfied" class="icon16 failed">highlight_off</mat-icon>
+    }
+    @case ("cancelled") {
+      <mat-icon matTooltip="Verification cancelled" class="icon16 cancelled">block</mat-icon>
+    }
+  }
+} @else {
+  <mat-icon matTooltip="Unknown" class="icon16 nvl">lens</mat-icon>
+}
+```
+
+### `verify-icon.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/verify-icon.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { NamedParameterValue } from '../stack-file/StackedEntry';
+
+@Component({
+  selector: 'app-verify-icon',
+  templateUrl: './verify-icon.component.html',
+  styleUrl: './verify-icon.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class VerifyIconComponent {
+  @Input()
+  comparison: NamedParameterValue;
+}
+```

@@ -3,46 +3,3605 @@
 
 **경로:** `fsw/osal/src/os/rtems/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-impl-binsem.c`
 
-file--os-impl-binsem.c
-file--os-impl-common.c
-file--os-impl-console.c
-file--os-impl-countsem.c
-file--os-impl-dirs.c
-file--os-impl-errors.c
-file--os-impl-files.c
-file--os-impl-filesys.c
-file--os-impl-heap.c
-file--os-impl-idmap.c
-file--os-impl-loader.c
-file--os-impl-mutex.c
-file--os-impl-network.c
-file--os-impl-no-module.c
-file--os-impl-queues.c
-file--os-impl-tasks.c
-file--os-impl-timebase.c
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-binsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-binsem.h"
+#include "os-shared-binsem.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/*
+ * Define all of the RTEMS semaphore attributes
+ * 3. OSAL Binary Semaphore attributes
+ *    This is a simple binary semaphore used for synchronization. It does not
+ *    allow nested calls ( nor should it ) It should not be used for mutual exclusion.
+ */
+
+#define OSAL_BINARY_SEM_ATTRIBS (RTEMS_SIMPLE_BINARY_SEMAPHORE | RTEMS_PRIORITY)
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+/*  tables for the properties of objects */
+
+/* Tables where the OS object information is stored */
+OS_impl_binsem_internal_record_t OS_impl_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+/****************************************************************************************
+                                  SEMAPHORE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_BinSemAPI_Impl_Init(void)
+{
+    memset(OS_impl_bin_sem_table, 0, sizeof(OS_impl_bin_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    rtems_status_code                 status;
+    rtems_name                        r_name;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /*
+    ** RTEMS task names are 4 byte integers.
+    ** It is convenient to use the OSAL ID in here, as we know it is already unique
+    ** and trying to use the real name would be less than useful (only 4 chars)
+    */
+    r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+
+    /* Check to make sure the sem value is going to be either 0 or 1 */
+    if (sem_initial_value > 1)
+    {
+        sem_initial_value = 1;
+    }
+
+    /* Create RTEMS Semaphore */
+    status = rtems_semaphore_create(r_name, sem_initial_value, OSAL_BINARY_SEM_ATTRIBS, 0, &(impl->id));
+
+    /* check if Create failed */
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_create error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemDelete_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                 status;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    status = rtems_semaphore_delete(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_delete error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGive_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                 status;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    status = rtems_semaphore_release(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_release error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemFlush_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                 status;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* Give Semaphore */
+    status = rtems_semaphore_flush(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_flush error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTake_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                 status;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    status = rtems_semaphore_obtain(impl->id, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+    /*
+    ** If the semaphore is flushed, this function will return
+    ** RTEMS_UNSATISFIED. If this happens, the OSAL does not want to return
+    ** an error, it would be inconsistent with the other ports
+    **
+    ** I currently do not know of any other reasons this call would return
+    **  RTEMS_UNSATISFIED, so I think it is OK.
+    */
+    if (status != RTEMS_SUCCESSFUL && status != RTEMS_UNSATISFIED)
+    {
+        OS_DEBUG("Unhandled semaphore_obtain error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    rtems_status_code                 status;
+    int                               TimeInTicks;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    if (OS_Milli2Ticks(msecs, &TimeInTicks) != OS_SUCCESS)
+    {
+        return OS_ERROR;
+    }
+
+    status = rtems_semaphore_obtain(impl->id, RTEMS_WAIT, TimeInTicks);
+
+    if (status == RTEMS_TIMEOUT)
+    {
+        return OS_SEM_TIMEOUT;
+    }
+
+    /* See BinSemWait regarding UNSATISFIED */
+    if (status != RTEMS_SUCCESSFUL && status != RTEMS_UNSATISFIED)
+    {
+        OS_DEBUG("Unhandled semaphore_obtain error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGetInfo_Impl(const OS_object_token_t *token, OS_bin_sem_prop_t *bin_prop)
+{
+    /* RTEMS has no API for obtaining the current value of a semaphore */
+    return OS_SUCCESS;
+}
 ```
 
-## 항목
+### `os-impl-common.c`
 
-- [`fsw/osal/src/os/rtems/src/os-impl-binsem.c`](file--os-impl-binsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-common.c`](file--os-impl-common.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-console.c`](file--os-impl-console.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-countsem.c`](file--os-impl-countsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-dirs.c`](file--os-impl-dirs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-errors.c`](file--os-impl-errors.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-files.c`](file--os-impl-files.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-filesys.c`](file--os-impl-filesys.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-heap.c`](file--os-impl-heap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-idmap.c`](file--os-impl-idmap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-loader.c`](file--os-impl-loader.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-mutex.c`](file--os-impl-mutex.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-network.c`](file--os-impl-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-no-module.c`](file--os-impl-no-module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-queues.c`](file--os-impl-queues.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-tasks.c`](file--os-impl-tasks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/src/os-impl-timebase.c`](file--os-impl-timebase.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-common.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+
+RTEMS_GlobalVars_t RTEMS_GlobalVars = {0};
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_API_Init
+
+   Purpose: Initialize the tables that the OS API uses to keep track of information
+            about objects
+
+   returns: OS_SUCCESS or OS_ERROR
+---------------------------------------------------------------------------------------*/
+int32 OS_API_Impl_Init(osal_objtype_t idtype)
+{
+    int32 return_code;
+
+    return_code = OS_Rtems_TableMutex_Init(idtype);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    switch (idtype)
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            return_code = OS_Rtems_TaskAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            return_code = OS_Rtems_QueueAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            return_code = OS_Rtems_BinSemAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            return_code = OS_Rtems_CountSemAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            return_code = OS_Rtems_MutexAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            return_code = OS_Rtems_ModuleAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_TIMEBASE:
+            return_code = OS_Rtems_TimeBaseAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            return_code = OS_Rtems_StreamAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_DIR:
+            return_code = OS_Rtems_DirAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_FILESYS:
+            return_code = OS_Rtems_FileSysAPI_Impl_Init();
+            break;
+        default:
+            break;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_IdleLoop_Impl()
+{
+    RTEMS_GlobalVars.IdleTaskId = rtems_task_self();
+    rtems_task_suspend(RTEMS_SELF);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ApplicationShutdown_Impl()
+{
+    /* Note that setting the IdleTaskId and suspending
+     * the idle task is not an atomic operation, so there
+     * is a remote chance that this could attempt to
+     * resume a task that is not yet suspended. */
+    rtems_task_resume(RTEMS_GlobalVars.IdleTaskId);
+}
+```
+
+### `os-impl-console.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-console.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-shared-printf.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+#define OSAL_CONSOLE_STREAM stdout
+/*
+ * By default use the stdout stream for the console (OS_printf)
+ */
+#define OSAL_CONSOLE_FILENO STDOUT_FILENO
+
+/*
+ * By default the console output is always asynchronous
+ * (equivalent to "OS_UTILITY_TASK_ON" being set)
+ *
+ * This option was removed from osconfig.h and now is
+ * assumed to always be on.
+ */
+#define OS_CONSOLE_ASYNC          true
+#define OS_CONSOLE_TASK_PRIORITY  OS_UTILITYTASK_PRIORITY
+#define OS_CONSOLE_TASK_STACKSIZE OS_UTILITYTASK_STACK_SIZE
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+/* Console device */
+typedef struct
+{
+    rtems_id data_sem;
+    int      out_fd;
+} OS_impl_console_internal_record_t;
+
+/* Tables where the OS object information is stored */
+OS_impl_console_internal_record_t OS_impl_console_table[OS_MAX_CONSOLES];
+
+/********************************************************************/
+/*                 CONSOLE OUTPUT                                   */
+/********************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ConsoleWakeup_Impl(const OS_object_token_t *token)
+{
+    OS_impl_console_internal_record_t *local;
+
+    local = OS_OBJECT_TABLE_GET(OS_impl_console_table, *token);
+
+    /* post the sem for the utility task to run */
+    rtems_semaphore_release(local->data_sem);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+static void OS_ConsoleTask_Entry(rtems_task_argument arg)
+{
+    OS_object_token_t                  token;
+    OS_impl_console_internal_record_t *local;
+
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_CONSOLE, OS_ObjectIdFromInteger(arg), &token) ==
+        OS_SUCCESS)
+    {
+        local = OS_OBJECT_TABLE_GET(OS_impl_console_table, token);
+
+        /* Loop forever (unless shutdown is set) */
+        while (OS_SharedGlobalVars.GlobalState != OS_SHUTDOWN_MAGIC_NUMBER)
+        {
+            OS_ConsoleOutput_Impl(&token);
+            rtems_semaphore_obtain(local->data_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+        }
+        OS_ObjectIdRelease(&token);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ConsoleCreate_Impl(const OS_object_token_t *token)
+{
+    OS_impl_console_internal_record_t *local;
+    OS_console_internal_record_t *     console;
+    int32                              return_code;
+    rtems_name                         r_name;
+    rtems_id                           r_task_id;
+    rtems_status_code                  status;
+
+    local   = OS_OBJECT_TABLE_GET(OS_impl_console_table, *token);
+    console = OS_OBJECT_TABLE_GET(OS_console_table, *token);
+
+    if (OS_ObjectIndexFromToken(token) == 0)
+    {
+        return_code   = OS_SUCCESS;
+        local->out_fd = OSAL_CONSOLE_FILENO;
+
+        if (console->IsAsync)
+        {
+            OS_DEBUG("%s(): Starting Async Console Handler\n", __func__);
+            /*
+            ** RTEMS task names are 4 byte integers.
+            ** It is convenient to use the OSAL ID in here, as we know it is already unique
+            ** and trying to use the real name would be less than useful (only 4 chars)
+            */
+            r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+            status = rtems_semaphore_create(r_name, 0, RTEMS_PRIORITY, 0, &local->data_sem);
+            if (status != RTEMS_SUCCESSFUL)
+            {
+                return_code = OS_SEM_FAILURE;
+            }
+            else
+            {
+                status = rtems_task_create(r_name, OS_CONSOLE_TASK_PRIORITY, OS_CONSOLE_TASK_STACKSIZE,
+                                           RTEMS_PREEMPT | RTEMS_NO_ASR | RTEMS_NO_TIMESLICE | RTEMS_INTERRUPT_LEVEL(0),
+                                           RTEMS_LOCAL, &r_task_id);
+
+                /* check if task_create failed */
+                if (status != RTEMS_SUCCESSFUL)
+                {
+                    /* Provide some feedback as to why this failed */
+                    OS_DEBUG("rtems_task_create failed: %s\n", rtems_status_text(status));
+                    rtems_semaphore_delete(local->data_sem);
+                    return_code = OS_ERROR;
+                }
+                else
+                {
+                    /* will place the task in 'ready for scheduling' state */
+                    status = rtems_task_start(r_task_id,                    /*rtems task id*/
+                                              OS_ConsoleTask_Entry,         /* task entry point */
+                                              (rtems_task_argument)r_name); /* passed argument  */
+
+                    if (status != RTEMS_SUCCESSFUL)
+                    {
+                        OS_printf("rtems_task_start failed: %s\n", rtems_status_text(status));
+                        rtems_task_delete(r_task_id);
+                        rtems_semaphore_delete(local->data_sem);
+                        return_code = OS_ERROR;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        /* only one physical console device is implemented */
+        return_code = OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-countsem.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-countsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-countsem.h"
+
+#include "os-shared-countsem.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+#define MAX_SEM_VALUE 0x7FFFFFFF
+
+/*
+ * Define all of the RTEMS semaphore attributes
+ * 4. OSAL Counting Semaphore attributes
+ *     This is a counting semaphore with priority wait order.
+ */
+
+#define OSAL_COUNT_SEM_ATTRIBS (RTEMS_PRIORITY)
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/*  tables for the properties of objects */
+OS_impl_countsem_internal_record_t OS_impl_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_CountSemAPI_Impl_Init(void)
+{
+    memset(OS_impl_count_sem_table, 0, sizeof(OS_impl_count_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    rtems_status_code                   status;
+    rtems_name                          r_name;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    /*
+    ** Verify that the semaphore maximum value is not too high
+    */
+    if (sem_initial_value > MAX_SEM_VALUE)
+    {
+        return OS_INVALID_SEM_VALUE;
+    }
+
+    /*
+    ** RTEMS task names are 4 byte integers.
+    ** It is convenient to use the OSAL ID in here, as we know it is already unique
+    ** and trying to use the real name would be less than useful (only 4 chars)
+    */
+    r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+    status = rtems_semaphore_create(r_name, sem_initial_value, OSAL_COUNT_SEM_ATTRIBS, 0, &(impl->id));
+
+    /* check if Create failed */
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_create error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemDelete_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                   status;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    status = rtems_semaphore_delete(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_delete error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGive_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                   status;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    status = rtems_semaphore_release(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_release error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTake_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                   status;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    status = rtems_semaphore_obtain(impl->id, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_obtain error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    rtems_status_code                   status;
+    int                                 TimeInTicks;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    if (OS_Milli2Ticks(msecs, &TimeInTicks) != OS_SUCCESS)
+    {
+        return OS_ERROR;
+    }
+
+    status = rtems_semaphore_obtain(impl->id, RTEMS_WAIT, TimeInTicks);
+    if (status == RTEMS_TIMEOUT)
+    {
+        return OS_SEM_TIMEOUT;
+    }
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_obtain error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGetInfo_Impl(const OS_object_token_t *token, OS_count_sem_prop_t *count_prop)
+{
+    /* RTEMS does not provide an API to get the value */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-dirs.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-dirs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-shared-dir.h"
+
+#include <fcntl.h>
+#include <dirent.h>
+#include <sys/stat.h>
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                     GLOBALS
+ ***************************************************************************************/
+
+/*
+ * The directory handle table.
+ */
+DIR *OS_impl_dir_table[OS_MAX_NUM_OPEN_DIRS];
+
+/****************************************************************************************
+                         IMPLEMENTATION-SPECIFIC ROUTINES
+             These are specific to this particular operating system
+ ****************************************************************************************/
+
+/* --------------------------------------------------------------------------------------
+    Name: OS_Rtems_DirAPI_Impl_Init
+
+    Purpose: Directory table initialization
+
+    Returns: OS_SUCCESS if success
+ ---------------------------------------------------------------------------------------*/
+int32 OS_Rtems_DirAPI_Impl_Init(void)
+{
+    memset(OS_impl_dir_table, 0, sizeof(OS_impl_dir_table));
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-errors.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-errors.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-shared-errors.h"
+
+const OS_ErrorTable_Entry_t OS_IMPL_ERROR_NAME_TABLE[] = {{0, NULL}};
+```
+
+### `os-impl-files.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-files.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-files.h"
+#include "os-shared-file.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                     GLOBALS
+ ***************************************************************************************/
+
+/*
+ * The global file handle table.
+ *
+ * This is shared by all OSAL entities that perform low-level I/O.
+ */
+/* The file/stream table is referenced by multiple entities, i.e. sockets, select, etc */
+OS_impl_file_internal_record_t OS_impl_filehandle_table[OS_MAX_NUM_OPEN_FILES];
+
+/****************************************************************************************
+                         IMPLEMENTATION-SPECIFIC ROUTINES
+             These are specific to this particular operating system
+ ****************************************************************************************/
+
+/* --------------------------------------------------------------------------------------
+    Name: OS_Rtems_StreamAPI_Impl_Init
+
+    Purpose: File/Stream subsystem global initialization
+
+    Returns: OS_SUCCESS if success
+ ---------------------------------------------------------------------------------------*/
+int32 OS_Rtems_StreamAPI_Impl_Init(void)
+{
+    uint32 local_id;
+
+    /*
+     * init all filehandles to -1, which is always invalid.
+     * this isn't strictly necessary but helps when debugging.
+     */
+    for (local_id = 0; local_id < OS_MAX_NUM_OPEN_FILES; ++local_id)
+    {
+        OS_impl_filehandle_table[local_id].fd = -1;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-filesys.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-filesys.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+
+#include <fcntl.h>
+#include <dirent.h>
+#include <sys/statvfs.h>
+
+#include <rtems/blkdev.h>
+#include <rtems/diskdevs.h>
+#include <rtems/error.h>
+#include <rtems/fsmount.h>
+#include <rtems/ramdisk.h>
+#include <rtems/rtems-rfs.h>
+#include <rtems/rtems-rfs-format.h>
+
+#include "os-shared-filesys.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                   Data Types
+****************************************************************************************/
+
+typedef struct
+{
+    char blockdev_name[OS_MAX_PATH_LEN];
+
+    struct ramdisk *allocated_disk;
+
+    /* other data to pass to "mount" when mounting this disk */
+    const char *               mount_fstype;
+    rtems_filesystem_options_t mount_options;
+    const void *               mount_data;
+} OS_impl_filesys_internal_record_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/*
+ * The prefix used for "real" device nodes on this platform
+ */
+const char OS_RTEMS_DEVICEFILE_PREFIX[] = "/dev/";
+
+/*
+ * The implementation-specific file system state table.
+ * This keeps record of the RTEMS driver and mount options for each filesystem
+ */
+OS_impl_filesys_internal_record_t OS_impl_filesys_table[OS_MAX_FILE_SYSTEMS];
+
+/****************************************************************************************
+                                    Filesys API
+ ***************************************************************************************/
+
+/* --------------------------------------------------------------------------------------
+    Name: OS_Posix_FileSysAPI_Impl_Init
+
+    Purpose: Filesystem API global initialization
+
+    Returns: OS_SUCCESS if success
+ ---------------------------------------------------------------------------------------*/
+int32 OS_Rtems_FileSysAPI_Impl_Init(void)
+{
+    /* clear the local filesys table */
+    memset(OS_impl_filesys_table, 0, sizeof(OS_impl_filesys_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStartVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *     local;
+    OS_impl_filesys_internal_record_t *impl;
+    rtems_status_code                  sc;
+    int32                              return_code;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_filesys_table, *token);
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    return_code = OS_ERR_NOT_IMPLEMENTED;
+    memset(impl, 0, sizeof(*impl));
+
+    /*
+     * Determine basic type of filesystem, if not already known
+     */
+    if (local->fstype == OS_FILESYS_TYPE_UNKNOWN &&
+        strncmp(local->device_name, OS_RTEMS_DEVICEFILE_PREFIX, sizeof(OS_RTEMS_DEVICEFILE_PREFIX) - 1) == 0)
+    {
+        /*
+         * If referring to a real device in the /dev filesystem,
+         * then assume it is a normal disk.
+         */
+        local->fstype = OS_FILESYS_TYPE_NORMAL_DISK;
+    }
+
+    /*
+     * Take action based on the type of volume
+     */
+    switch (local->fstype)
+    {
+        case OS_FILESYS_TYPE_FS_BASED:
+        {
+            /*
+             * This "mount" type is basically not a mount at all,
+             * No new filesystem is created, just put the files in a
+             * directory under the root FS.
+             *
+             * This is basically a pass-thru/no-op mode for compatibility
+             * with FS_BASED entries in existing volume tables.
+             */
+            return_code = OS_SUCCESS;
+            break;
+        }
+        case OS_FILESYS_TYPE_VOLATILE_DISK:
+        {
+            OS_DEBUG("No RAMDISK available at address %p\n", local->address);
+
+            impl->allocated_disk = ramdisk_allocate(local->address, local->blocksize, local->numblocks, false);
+
+            if (impl->allocated_disk == NULL)
+            {
+                OS_DEBUG("ramdisk_allocate() failed\n");
+                return_code = OS_INVALID_POINTER;
+                break;
+            }
+
+            impl->mount_fstype  = RTEMS_FILESYSTEM_TYPE_RFS;
+            impl->mount_options = RTEMS_FILESYSTEM_READ_WRITE;
+            snprintf(impl->blockdev_name, sizeof(impl->blockdev_name), "%s%c", RAMDISK_DEVICE_BASE_NAME,
+                     (int)OS_ObjectIndexFromToken(token) + 'a');
+
+            sc = rtems_blkdev_create(impl->blockdev_name, local->blocksize, local->numblocks, ramdisk_ioctl,
+                                     impl->allocated_disk);
+            if (sc != RTEMS_SUCCESSFUL)
+            {
+                OS_DEBUG("rtems_blkdev_create() failed: %s.\n", rtems_status_text(sc));
+                return_code = OS_ERROR;
+            }
+            else
+            {
+                OS_DEBUG("RAM disk initialized: volume=%s device=%s address=0x%08lX\n", local->volume_name,
+                         impl->blockdev_name, (unsigned long)local->address);
+
+                return_code = OS_SUCCESS;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    /*
+     * If the operation was generally successful but a (real) FS
+     * mount point was not supplied, then generate one now.
+     *
+     * The path will be simply /<VOLNAME>
+     */
+    if (return_code == OS_SUCCESS && local->system_mountpt[0] == 0)
+    {
+        local->system_mountpt[0]                                 = '/';
+        local->system_mountpt[sizeof(local->system_mountpt) - 1] = 0;
+        strncpy(&local->system_mountpt[1], local->volume_name, sizeof(local->system_mountpt) - 2);
+        OS_DEBUG("OSAL: using mount point %s for %s\n", local->system_mountpt, local->volume_name);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStopVolume_Impl(const OS_object_token_t *token)
+{
+    OS_impl_filesys_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filesys_table, *token);
+
+    /*
+     * If this was a dynamically allocated disk, then unlink it.
+     */
+    if (impl->allocated_disk != NULL)
+    {
+        unlink(impl->blockdev_name);
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysFormatVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *     local;
+    OS_impl_filesys_internal_record_t *impl;
+    rtems_rfs_format_config            config;
+    int32                              return_code;
+    int                                sc;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_filesys_table, *token);
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    return_code = OS_ERR_NOT_IMPLEMENTED;
+
+    switch (local->fstype)
+    {
+        case OS_FILESYS_TYPE_FS_BASED:
+        {
+            /*
+             * In this mode a format is a no-op, as it is simply a directory
+             * within an already existing and mounted filesystem.
+             *
+             * This needs to return success for backward compatibility even
+             * though it is inappropriate to "format" this type of FS.
+             *
+             * It could clear the directory, but that might risk deleting
+             * something unintentional, so it is better to leave it alone.
+             */
+            return_code = OS_SUCCESS;
+            break;
+        }
+        case OS_FILESYS_TYPE_VOLATILE_DISK:
+        {
+            /*
+            ** Format the RAM disk with the RFS file system
+            */
+            memset(&config, 0, sizeof(config));
+            config.inode_overhead = 30;
+            sc                    = rtems_rfs_format(impl->blockdev_name, &config);
+            if (sc < 0)
+            {
+                OS_DEBUG("OSAL: Error: RFS format of %s failed: %s\n", impl->blockdev_name, strerror(errno));
+                return_code = OS_FS_ERR_DRIVE_NOT_CREATED;
+            }
+            else
+            {
+                return_code = OS_SUCCESS;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysMountVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *     local;
+    OS_impl_filesys_internal_record_t *impl;
+    struct stat                        stat_buf;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_filesys_table, *token);
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    /*
+     * This will do a mkdir() for the mount point if it does
+     * not already exist.
+     */
+    if (stat(local->system_mountpt, &stat_buf) != 0)
+    {
+        if (mkdir(local->system_mountpt, S_IFDIR | S_IRWXU | S_IRWXG | S_IRWXO) < 0)
+        {
+            OS_DEBUG("ERROR: Cannot create mount point %s: %s\n", local->system_mountpt, strerror(errno));
+            return OS_FS_ERR_DRIVE_NOT_CREATED;
+        }
+    }
+    else if (!S_ISDIR(stat_buf.st_mode))
+    {
+        OS_DEBUG("ERROR: Volume %s exists and is not a directory\n", local->system_mountpt);
+        return OS_FS_ERR_DRIVE_NOT_CREATED;
+    }
+
+    /*
+     * Only do the mount() syscall for real devices.
+     * For other types of filesystem mounts (e.g. FS_BASED), this is a no-op
+     */
+    if (local->fstype == OS_FILESYS_TYPE_VOLATILE_DISK || local->fstype == OS_FILESYS_TYPE_NORMAL_DISK)
+    {
+        /*
+        ** Mount the Disk
+        */
+        if (mount(impl->blockdev_name, local->system_mountpt, impl->mount_fstype, impl->mount_options,
+                  impl->mount_data) != 0)
+        {
+            OS_DEBUG("OSAL: Error: mount of %s to %s failed: %s\n", impl->blockdev_name, local->system_mountpt,
+                     strerror(errno));
+            return OS_ERROR;
+        }
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysUnmountVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *local;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    if (local->fstype == OS_FILESYS_TYPE_VOLATILE_DISK || local->fstype == OS_FILESYS_TYPE_NORMAL_DISK)
+    {
+        /*
+        ** Try to unmount the disk
+        */
+        if (unmount(local->system_mountpt) < 0)
+        {
+            OS_DEBUG("OSAL: RTEMS unmount of %s failed :%s\n", local->system_mountpt, strerror(errno));
+            return OS_ERROR;
+        }
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStatVolume_Impl(const OS_object_token_t *token, OS_statvfs_t *result)
+{
+    OS_filesys_internal_record_t *local;
+    struct statvfs                stat_buf;
+    int32                         return_code;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    if (statvfs(local->system_mountpt, &stat_buf) != 0)
+    {
+        /*
+         * The ENOSYS error means it is not implemented at the system level.
+         * This should translate to the OS_ERR_NOT_IMPLEMENTED OSAL code.
+         */
+        if (errno == ENOSYS)
+        {
+            return_code = OS_ERR_NOT_IMPLEMENTED;
+        }
+        else
+        {
+            OS_DEBUG("%s: %s\n", local->system_mountpt, strerror(errno));
+            return_code = OS_ERROR;
+        }
+    }
+    else
+    {
+        result->block_size   = stat_buf.f_bsize;
+        result->blocks_free  = stat_buf.f_bfree;
+        result->total_blocks = stat_buf.f_blocks;
+
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysCheckVolume_Impl(const OS_object_token_t *token, bool repair)
+{
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+```
+
+### `os-impl-heap.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-heap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-shared-heap.h"
+
+/****************************************************************************************
+                                     HEAP API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_HeapGetInfo_Impl(OS_heap_prop_t *heap_prop)
+{
+    OSAL_HEAP_INFO_BLOCK info;
+    int                  status;
+
+    status = malloc_info(&info);
+
+    if (status != 0)
+    {
+        return OS_ERROR;
+    }
+
+    heap_prop->free_bytes         = (uint32)info.Free.total;
+    heap_prop->free_blocks        = (uint32)info.Free.number;
+    heap_prop->largest_free_block = (uint32)info.Free.largest;
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-idmap.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-idmap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-shared-idmap.h"
+#include "os-impl-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+#define OSAL_TABLE_MUTEX_ATTRIBS (RTEMS_PRIORITY | RTEMS_BINARY_SEMAPHORE | RTEMS_INHERIT_PRIORITY)
+
+/****************************************************************************************
+                                     GLOBALS
+ ***************************************************************************************/
+
+static OS_impl_objtype_lock_t OS_task_table_lock;
+static OS_impl_objtype_lock_t OS_queue_table_lock;
+static OS_impl_objtype_lock_t OS_bin_sem_table_lock;
+static OS_impl_objtype_lock_t OS_mutex_table_lock;
+static OS_impl_objtype_lock_t OS_count_sem_table_lock;
+static OS_impl_objtype_lock_t OS_stream_table_lock;
+static OS_impl_objtype_lock_t OS_dir_table_lock;
+static OS_impl_objtype_lock_t OS_timebase_table_lock;
+static OS_impl_objtype_lock_t OS_timecb_table_lock;
+static OS_impl_objtype_lock_t OS_module_table_lock;
+static OS_impl_objtype_lock_t OS_filesys_table_lock;
+static OS_impl_objtype_lock_t OS_console_lock;
+static OS_impl_objtype_lock_t OS_condvar_lock;
+
+OS_impl_objtype_lock_t *const OS_impl_objtype_lock_table[OS_OBJECT_TYPE_USER] = {
+    [OS_OBJECT_TYPE_UNDEFINED]   = NULL,
+    [OS_OBJECT_TYPE_OS_TASK]     = &OS_task_table_lock,
+    [OS_OBJECT_TYPE_OS_QUEUE]    = &OS_queue_table_lock,
+    [OS_OBJECT_TYPE_OS_COUNTSEM] = &OS_count_sem_table_lock,
+    [OS_OBJECT_TYPE_OS_BINSEM]   = &OS_bin_sem_table_lock,
+    [OS_OBJECT_TYPE_OS_MUTEX]    = &OS_mutex_table_lock,
+    [OS_OBJECT_TYPE_OS_STREAM]   = &OS_stream_table_lock,
+    [OS_OBJECT_TYPE_OS_DIR]      = &OS_dir_table_lock,
+    [OS_OBJECT_TYPE_OS_TIMEBASE] = &OS_timebase_table_lock,
+    [OS_OBJECT_TYPE_OS_TIMECB]   = &OS_timecb_table_lock,
+    [OS_OBJECT_TYPE_OS_MODULE]   = &OS_module_table_lock,
+    [OS_OBJECT_TYPE_OS_FILESYS]  = &OS_filesys_table_lock,
+    [OS_OBJECT_TYPE_OS_CONSOLE]  = &OS_console_lock,
+    [OS_OBJECT_TYPE_OS_CONDVAR]  = &OS_condvar_lock,
+};
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_Lock_Global_Impl(osal_objtype_t idtype)
+{
+    OS_impl_objtype_lock_t *impl;
+    rtems_status_code       rtems_sc;
+
+    impl = OS_impl_objtype_lock_table[idtype];
+
+    if (impl != NULL)
+    {
+        rtems_sc = rtems_semaphore_obtain(impl->id, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("OS_Lock_Global_Impl: rtems_semaphore_obtain failed: %s\n", rtems_status_text(rtems_sc));
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_Unlock_Global_Impl(osal_objtype_t idtype)
+{
+    OS_impl_objtype_lock_t *impl;
+    rtems_status_code       rtems_sc;
+
+    impl = OS_impl_objtype_lock_table[idtype];
+
+    if (impl != NULL)
+    {
+        rtems_sc = rtems_semaphore_release(impl->id);
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("OS_Unlock_Global_Impl: rtems_semaphore_release failed: %s\n", rtems_status_text(rtems_sc));
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_WaitForStateChange_Impl(osal_objtype_t idtype, uint32 attempts)
+{
+    rtems_interval wait_ticks;
+
+    if (attempts <= 10)
+    {
+        wait_ticks = attempts * attempts;
+    }
+    else
+    {
+        wait_ticks = 100;
+    }
+
+    OS_Unlock_Global_Impl(idtype);
+    rtems_task_wake_after(wait_ticks);
+    OS_Lock_Global_Impl(idtype);
+}
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_Rtems_TableMutex_Init
+
+   Purpose: Initialize the tables that the OS API uses to keep track of information
+            about objects
+
+   returns: OS_SUCCESS or OS_ERROR
+---------------------------------------------------------------------------------------*/
+int32 OS_Rtems_TableMutex_Init(osal_objtype_t idtype)
+{
+    OS_impl_objtype_lock_t *impl;
+    rtems_status_code       rtems_sc;
+
+    impl = OS_impl_objtype_lock_table[idtype];
+    if (impl == NULL)
+    {
+        return OS_SUCCESS;
+    }
+
+    /* Initialize the table mutex for the given idtype */
+    rtems_sc = rtems_semaphore_create(idtype, 1, OSAL_TABLE_MUTEX_ATTRIBS, 0, &impl->id);
+    if (rtems_sc != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Error: rtems_semaphore_create failed: %s\n", rtems_status_text(rtems_sc));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-loader.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-loader.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include "os-rtems.h"
+#include "os-impl-loader.h"
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+#include <rtems/rtl/rtl.h>
+
+/****************************************************************************************
+                                   TYPEDEFS
+ ***************************************************************************************/
+
+#ifdef OS_RTEMS_4_DEPRECATED
+
+typedef rtems_rtl_obj_t rtems_rtl_obj; /* Alias for RTEMS 4.11 */
+
+#endif
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+OS_impl_module_internal_record_t OS_impl_module_table[OS_MAX_MODULES];
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_ModuleAPI_Impl_Init(void)
+{
+    memset(OS_impl_module_table, 0, sizeof(OS_impl_module_table));
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                HELPER ROUTINES
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+
+ * This callback checks symbols in the RTL unresolved record list
+ * NOTE: Right now this considers any unresolved items to be a failure.
+ * This could be fine-tuned later.
+ *
+ *-----------------------------------------------------------------*/
+static bool OS_rtems_rtl_check_unresolved(OSAL_UNRESOLV_REC_TYPE *rec, void *data)
+{
+    int32 *status = data;
+
+    switch (rec->type)
+    {
+        case OSAL_UNRESOLVED_SYMBOL:
+            OS_DEBUG("unresolved symbol: %s\n", rec->rec.name.name);
+            *status = OS_ERROR;
+            break;
+        case rtems_rtl_unresolved_reloc:
+            *status = OS_ERROR;
+            break;
+        default:
+            break;
+    }
+    return false;
+}
+
+/****************************************************************************************
+                                    Module Loader API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    int32                             status = OS_ERROR;
+    int                               unresolved;
+    void *                            dl_handle;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    dlerror();
+    dl_handle = dlopen(translated_path, RTLD_NOW | RTLD_GLOBAL);
+    if (dl_handle == NULL)
+    {
+        OS_DEBUG("Error loading shared library: %s\n", dlerror());
+        status = OS_ERROR;
+    }
+    else if (dlinfo(dl_handle, RTLD_DI_UNRESOLVED, &unresolved) < 0)
+    {
+        /* should never happen */
+        OS_DEBUG("dlinfo error checking unresolved status\n");
+        status = OS_ERROR;
+    }
+    else if (unresolved)
+    {
+        /*
+         * Note that RTEMS is a little different than traditional POSIX
+         * in that even with RTLD_NOW specified, dlopen() will still return
+         * success if there are unresolved symbols.  RTEMS has implemented
+         * it this way to allow cross/circular dependencies.
+         *
+         * However, OSAL applications are not anticipated to have circular
+         * dependencies such as this.  So this explicitly checks if unresolved
+         * symbols are present after loading, and if so, do additional checks.
+         *
+         * It is possible that not every unresolved situation indicates failure.
+         * The "check_unresolved" helper should verify if the condition
+         * is acceptable.  If not acceptable, it sets the status back to an error.
+         */
+
+        OS_DEBUG("Module has unresolved externals\n");
+        status = OS_SUCCESS; /* note - not final, probably overridden */
+        OSAL_UNRESOLVED_ITERATE(OS_rtems_rtl_check_unresolved, &status);
+    }
+    else
+    {
+        status = OS_SUCCESS;
+    }
+
+    if (status == OS_SUCCESS)
+    {
+        /* success: save for future use */
+        impl->dl_handle = dl_handle;
+    }
+    else if (dl_handle != NULL)
+    {
+        /*
+         * When returning non-success based on one of the
+         * subsequent verifications, also dlclose() the handle
+         * to avoid leaking resources.
+         */
+        dlclose(dl_handle);
+        dl_handle = NULL;
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    int32                             status = OS_ERROR;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    /*
+    ** Attempt to close/unload the module
+    */
+    dlerror();
+    if (dlclose(impl->dl_handle) == 0)
+    {
+        impl->dl_handle = NULL;
+        status          = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error unloading shared library: %s\n", dlerror());
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    rtems_rtl_obj *                   obj;
+    OS_impl_module_internal_record_t *impl;
+    int32                             status = OS_ERROR;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    /* Lock RTEMS runtime loader */
+    if (rtems_rtl_lock() != NULL)
+    {
+        /* Get RTL object from handle and populate section info */
+        obj = rtems_rtl_check_handle(impl->dl_handle);
+
+        if (obj != NULL)
+        {
+            module_prop->addr.valid        = true;
+            module_prop->addr.code_address = (cpuaddr)obj->text_base;
+            module_prop->addr.code_size    = (cpuaddr)rtems_rtl_obj_text_size(obj);
+            module_prop->addr.data_address = (cpuaddr)obj->data_base;
+            module_prop->addr.data_size    = (cpuaddr)rtems_rtl_obj_data_size(obj);
+            module_prop->addr.bss_address  = (cpuaddr)obj->bss_base;
+            module_prop->addr.bss_size     = (cpuaddr)rtems_rtl_obj_bss_size(obj);
+
+            status = OS_SUCCESS;
+        }
+
+        /* Unlock RTEMS runtime loader, report error if applicable */
+        rtems_rtl_unlock();
+
+        if (obj == NULL)
+        {
+            OS_DEBUG("Error getting object information from handle\n");
+            module_prop->addr.valid = false;
+        }
+    }
+    else
+    {
+        OS_DEBUG("Error locking RTEMS runtime loader\n");
+        module_prop->addr.valid = false;
+    }
+
+    return status;
+}
+```
+
+### `os-impl-mutex.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-mutex.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-mutex.h"
+
+#include "os-shared-mutex.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/*
+ * Define all of the RTEMS semaphore attributes
+ *    In RTEMS, a MUTEX is defined as a binary semaphore
+ *    It allows nested locks, priority wait order, and supports priority inheritance
+ */
+
+#define OSAL_MUTEX_ATTRIBS (RTEMS_PRIORITY | RTEMS_BINARY_SEMAPHORE | RTEMS_INHERIT_PRIORITY)
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/* Tables where the OS object information is stored */
+OS_impl_mutex_internal_record_t OS_impl_mutex_table[OS_MAX_MUTEXES];
+
+/****************************************************************************************
+                                  MUTEX API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_MutexAPI_Impl_Init(void)
+{
+    memset(OS_impl_mutex_table, 0, sizeof(OS_impl_mutex_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    rtems_status_code                status;
+    rtems_name                       r_name;
+    OS_impl_mutex_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    /*
+    ** Try to create the mutex
+    */
+    r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+    status = rtems_semaphore_create(r_name, 1, OSAL_MUTEX_ATTRIBS, 0, &impl->id);
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_create error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemDelete_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                status;
+    OS_impl_mutex_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    status = rtems_semaphore_delete(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        /* clean up? */
+        OS_DEBUG("Unhandled semaphore_delete error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGive_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                status;
+    OS_impl_mutex_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    /* Give the mutex */
+    status = rtems_semaphore_release(impl->id);
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_release error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemTake_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                status;
+    OS_impl_mutex_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    status = rtems_semaphore_obtain(impl->id, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled semaphore_obtain error: %s\n", rtems_status_text(status));
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGetInfo_Impl(const OS_object_token_t *token, OS_mut_sem_prop_t *mut_prop)
+{
+    /* RTEMS provides no additional info */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-network.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-sockets.h"
+#include "os-shared-network.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    /* RTEMS does not have the GetHostId call -
+     * it is deprecated in other OS's anyway and not a good idea to use it
+     */
+    return OS_ERR_NOT_IMPLEMENTED;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    int32 return_code;
+
+    if (gethostname(host_name, name_len) < 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        /*
+         * posix does not say that the name is always
+         * null terminated, so its worthwhile to ensure it
+         */
+        host_name[name_len - 1] = 0;
+        return_code             = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-no-module.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-no-module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include "os-rtems.h"
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_ModuleAPI_Impl_Init(void)
+{
+    /* nothing to init, but needs to return SUCCESS to allow the rest of OSAL to work */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-queues.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-queues.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-queues.h"
+
+#include "os-shared-queue.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/* Tables where the OS object information is stored */
+OS_impl_queue_internal_record_t OS_impl_queue_table[OS_MAX_QUEUES];
+
+/****************************************************************************************
+                                MESSAGE QUEUE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_QueueAPI_Impl_Init(void)
+{
+    memset(OS_impl_queue_table, 0, sizeof(OS_impl_queue_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    rtems_status_code                status;
+    rtems_name                       r_name;
+    OS_impl_queue_internal_record_t *impl;
+    OS_queue_internal_record_t *     queue;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+    queue = OS_OBJECT_TABLE_GET(OS_queue_table, *token);
+
+    /*
+    ** RTEMS task names are 4 byte integers.
+    ** It is convenient to use the OSAL queue ID in here, as we know it is already unique
+    ** and trying to use the real queue name would be less than useful (only 4 chars)
+    */
+    r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+
+    /*
+    ** Create the message queue.
+    ** The queue attributes are set to default values; the waiting order
+    ** (RTEMS_FIFO or RTEMS_PRIORITY) is irrelevant since only one task waits
+    ** on each queue.
+    */
+    status = rtems_message_queue_create(r_name,           /* 32-bit RTEMS object name; not used */
+                                        queue->max_depth, /* maximum number of messages in queue (queue depth) */
+                                        queue->max_size,  /* maximum size in bytes of a message */
+                                        RTEMS_FIFO | RTEMS_LOCAL, /* attributes (default) */
+                                        &(impl->id)               /* object ID returned for queue */
+    );
+
+    /*
+    ** If the operation failed, report the error
+    */
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled queue_create error: %s\n", rtems_status_text(status));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueDelete_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                status;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    /* Try to delete the queue */
+    status = rtems_message_queue_delete(impl->id);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled queue_delete error: %s\n", rtems_status_text(status));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGet_Impl(const OS_object_token_t *token, void *data, size_t size, size_t *size_copied, int32 timeout)
+{
+    int32             return_code;
+    rtems_status_code status;
+    rtems_interval    ticks;
+    int               tick_count;
+    rtems_option      option_set;
+    /* Implementation read size */
+    size_t                           impl_size;
+    rtems_id                         rtems_queue_id;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    rtems_queue_id = impl->id;
+
+    /* Get Message From Message Queue */
+    if (timeout == OS_PEND)
+    {
+        option_set = RTEMS_WAIT;
+        ticks      = RTEMS_NO_TIMEOUT;
+    }
+    else if (timeout == OS_CHECK)
+    {
+        option_set = RTEMS_NO_WAIT;
+        ticks      = RTEMS_NO_TIMEOUT;
+    }
+    else
+    {
+        option_set = RTEMS_WAIT;
+
+        /* msecs rounded to the closest system tick count */
+        if (OS_Milli2Ticks(timeout, &tick_count) != OS_SUCCESS)
+        {
+            return OS_ERROR;
+        }
+
+        ticks = (rtems_interval)tick_count;
+    }
+
+    /*
+     ** Pend until a message arrives.
+     */
+    status = rtems_message_queue_receive(rtems_queue_id, /* message queue descriptor */
+                                         data,           /* pointer to message buffer */
+                                         &impl_size,     /* returned size of message */
+                                         option_set,     /* wait option */
+                                         ticks           /* timeout */
+    );
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        *size_copied = OSAL_SIZE_C(0);
+
+        /* Map the rtems error to the most appropriate OSAL return code */
+        if ((timeout == OS_PEND) && (status != RTEMS_TIMEOUT))
+        {
+            /* OS_PEND was supposed to pend forever until a message arrived
+             * so something else is wrong.  Otherwise, at this point the only
+             * "acceptable" errno is TIMEDOUT for the other cases.
+             */
+            return_code = OS_ERROR;
+        }
+        else if (status == RTEMS_UNSATISFIED)
+        {
+            return_code = OS_QUEUE_EMPTY;
+        }
+        else if (status == RTEMS_TIMEOUT)
+        {
+            return_code = OS_QUEUE_TIMEOUT;
+        }
+        else
+        {
+            /* Something else went wrong */
+            return_code = OS_ERROR;
+            OS_DEBUG("Unhandled queue_receive error: %s\n", rtems_status_text(status));
+        }
+    }
+    else
+    {
+        *size_copied = OSAL_SIZE_C(impl_size);
+        return_code  = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueuePut_Impl(const OS_object_token_t *token, const void *data, size_t size, uint32 flags)
+{
+    rtems_status_code                status;
+    rtems_id                         rtems_queue_id;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    rtems_queue_id = impl->id;
+
+    /* Write the buffer pointer to the queue.  If an error occurred, report it
+    ** with the corresponding SB status code.
+    */
+    status = rtems_message_queue_send(rtems_queue_id, /* message queue descriptor */
+                                      data,           /* pointer to message */
+                                      size            /* length of message */
+    );
+
+    if (status == RTEMS_TOO_MANY)
+    {
+        /*
+        ** Queue is full.
+        */
+        return OS_QUEUE_FULL;
+    }
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        /*
+        ** Unexpected error while writing to queue.
+        */
+        OS_DEBUG("Unhandled queue_send error: %s\n", rtems_status_text(status));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGetInfo_Impl(const OS_object_token_t *token, OS_queue_prop_t *queue_prop)
+{
+    /* No extra info for queues in the OS implementation */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-tasks.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-tasks.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      This file contains some of the OS APIs abstraction layer for RTEMS
+ *      This has been tested against the current RTEMS 4.11 release branch
+ *
+ *      NOTE: This uses only the "Classic" RTEMS API.  It is intended to
+ *      work on RTEMS targets that do not provide the POSIX API, i.e.
+ *      when "--disable-posix" is given during the configuration stage.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-rtems.h"
+#include "os-impl-tasks.h"
+
+#include "os-shared-task.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+#include "osapi-printf.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+/* Tables where the OS object information is stored */
+OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_RtemsEntry
+
+   Purpose: A Simple RTEMS-compatible entry point that calls the common task entry function
+
+   NOTES: This wrapper function is only used locally by OS_TaskCreate below
+
+---------------------------------------------------------------------------------------*/
+static rtems_task OS_RtemsEntry(rtems_task_argument arg)
+{
+    OS_TaskEntryPoint(OS_ObjectIdFromInteger(arg));
+}
+
+/****************************************************************************************
+                                    TASK API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_TaskAPI_Impl_Init(void)
+{
+    memset(OS_impl_task_table, 0, sizeof(OS_impl_task_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    rtems_status_code               status;
+    rtems_name                      r_name;
+    rtems_mode                      r_mode;
+    rtems_attribute                 r_attributes;
+    OS_impl_task_internal_record_t *impl;
+    OS_task_internal_record_t *     task;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+    task = OS_OBJECT_TABLE_GET(OS_task_table, *token);
+
+    /*
+    ** RTEMS task names are 4 byte integers.
+    ** It is convenient to use the OSAL task ID in here, as we know it is already unique
+    ** and trying to use the real task name would be less than useful (only 4 chars)
+    */
+    r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+    r_mode = RTEMS_PREEMPT | RTEMS_NO_ASR | RTEMS_NO_TIMESLICE | RTEMS_INTERRUPT_LEVEL(0);
+
+    /*
+    ** see if the user wants floating point enabled. If
+    ** so, then set the correct option.
+    */
+    r_attributes = RTEMS_LOCAL;
+    if (flags & OS_FP_ENABLED)
+    {
+        r_attributes |= RTEMS_FLOATING_POINT;
+    }
+
+    status = rtems_task_create(r_name, task->priority, task->stack_size, r_mode, r_attributes, &impl->id);
+
+    /* check if task_create failed */
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        /* Provide some feedback as to why this failed */
+        OS_printf("rtems_task_create failed: %s\n", rtems_status_text(status));
+        return OS_ERROR;
+    }
+
+    /* will place the task in 'ready for scheduling' state */
+    status = rtems_task_start(impl->id,                        /*rtems task id*/
+                              (rtems_task_entry)OS_RtemsEntry, /* task entry point */
+                              (rtems_task_argument)r_name);    /* passed argument  */
+
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_printf("rtems_task_start failed: %s\n", rtems_status_text(status));
+        rtems_task_delete(impl->id);
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /*
+    ** Try to delete the task
+    ** If this fails, not much recourse - the only potential cause of failure
+    ** to cancel here is that the thread ID is invalid because it already exited itself,
+    ** and if that is true there is nothing wrong - everything is OK to continue normally.
+    */
+
+    rtems_task_delete(impl->id);
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDetach_Impl(const OS_object_token_t *token)
+{
+    /* No-op on RTEMS */
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TaskExit_Impl()
+{
+    rtems_task_delete(RTEMS_SELF);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelay_Impl(uint32 milli_second)
+{
+    int   tick_count;
+    int32 return_code;
+
+    return_code = OS_Milli2Ticks(milli_second, &tick_count);
+
+    if (return_code != OS_SUCCESS)
+    {
+        /*
+         * always want to do some form of delay, because if
+         * this function becomes a no-op then this might create a
+         * tight loop that doesn't ever yield the CPU - effectively
+         * locking the system in an RTOS environment.
+         */
+        tick_count = 10;
+    }
+
+    /*
+    ** Always successful ( from RTEMS docs )
+    */
+    rtems_task_wake_after((rtems_interval)tick_count);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskSetPriority_Impl(const OS_object_token_t *token, osal_priority_t new_priority)
+{
+    rtems_task_priority             old_pri;
+    rtems_status_code               status;
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /* Set RTEMS Task Priority */
+    status = rtems_task_set_priority(impl->id, new_priority, &old_pri);
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Unhandled task_set_priority error: %s\n", rtems_status_text(status));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskMatch_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /*
+    ** Get RTEMS Task Id
+    */
+    if (rtems_task_self() != impl->id)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskRegister_Impl(osal_id_t global_task_id)
+{
+    /*
+     * This is supposed to maintain the "reverse lookup" information used
+     * to map an RTEMS task ID back into an OSAL ID.
+     *
+     * Originally this used "task variables" which got deprecated.
+     * So this changed to "task notes" which are also now deprecated in 4.11.
+     *
+     * So there is now no documented per-task thread local storage facility in RTEMS
+     * with these two options gone.  RTEMS does seem to have TLS, but there is just
+     * no published (non-deprecated) API to access it.
+     *
+     * Right now this does nothing and the OS_TaskGetId() must brute-force it.
+     *
+     * An alternative for performance improvements might be to use a locally maintained
+     * hash table here.
+     */
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+osal_id_t OS_TaskGetId_Impl(void)
+{
+    osal_id_t         global_task_id;
+    rtems_id          task_self;
+    rtems_name        self_name;
+    rtems_status_code status;
+
+    task_self = rtems_task_self();
+    /* When the task was created the OSAL ID was used as the "classic name",
+     * which gives us an easy way to map it back again.  However, if this
+     * API is invoked from a non-OSAL task (i.e. the "root" task) then it is
+     * possible that rtems_object_get_classic_name() succeeds but the result
+     * is not actually an OSAL task ID. */
+    status = rtems_object_get_classic_name(task_self, &self_name);
+    if (status == RTEMS_SUCCESSFUL)
+    {
+        global_task_id = OS_ObjectIdFromInteger(self_name);
+
+        if (OS_ObjectIdToType_Impl(global_task_id) != OS_OBJECT_TYPE_OS_TASK)
+        {
+            /* not an OSAL task */
+            global_task_id = OS_OBJECT_ID_UNDEFINED;
+        }
+    }
+    else
+    {
+        global_task_id = OS_OBJECT_ID_UNDEFINED;
+    }
+
+    return global_task_id;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskGetInfo_Impl(const OS_object_token_t *token, OS_task_prop_t *task_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskValidateSystemData_Impl(const void *sysdata, size_t sysdata_size)
+{
+    if (sysdata == NULL || sysdata_size != sizeof(rtems_id))
+    {
+        return OS_INVALID_POINTER;
+    }
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool OS_TaskIdMatchSystemData_Impl(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    const rtems_id *                target = (const rtems_id *)ref;
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    return (*target == impl->id);
+}
+```
+
+### `os-impl-timebase.c`
+
+**경로:** `fsw/osal/src/os/rtems/src/os-impl-timebase.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  rtems
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include "os-rtems.h"
+
+#include "os-shared-common.h"
+#include "os-shared-timebase.h"
+#include "os-shared-idmap.h"
+
+#include "osapi-printf.h"
+
+/****************************************************************************************
+                                INTERNAL FUNCTION PROTOTYPES
+ ***************************************************************************************/
+
+void OS_UsecsToTicks(uint32 usecs, rtems_interval *ticks);
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/*
+ * Prefer to use the MONOTONIC clock if available, as it will not get disrupted by setting
+ * the time like the REALTIME clock will.
+ */
+#ifndef OS_PREFERRED_CLOCK
+#ifdef _POSIX_MONOTONIC_CLOCK
+#define OS_PREFERRED_CLOCK CLOCK_MONOTONIC
+#else
+#define OS_PREFERRED_CLOCK CLOCK_REALTIME
+#endif
+#endif
+
+/****************************************************************************************
+                                    LOCAL TYPEDEFS
+ ***************************************************************************************/
+
+typedef struct
+{
+    rtems_id       rtems_timer_id;
+    rtems_id       tick_sem;
+    rtems_id       handler_mutex;
+    rtems_id       handler_task;
+    uint8          simulate_flag;
+    uint8          reset_flag;
+    rtems_interval interval_ticks;
+    uint32         configured_start_time;
+    uint32         configured_interval_time;
+} OS_impl_timebase_internal_record_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+OS_impl_timebase_internal_record_t OS_impl_timebase_table[OS_MAX_TIMEBASES];
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBaseLock_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    rtems_semaphore_obtain(impl->handler_mutex, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBaseUnlock_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    rtems_semaphore_release(impl->handler_mutex);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           An ISR to service a timer tick interrupt, which in turn
+ *           posts a semaphore so the user task can execute
+ *
+ *-----------------------------------------------------------------*/
+static rtems_timer_service_routine OS_TimeBase_ISR(rtems_id rtems_timer_id, void *arg)
+{
+    OS_VoidPtrValueWrapper_t            user_data;
+    OS_object_token_t                   token;
+    OS_impl_timebase_internal_record_t *local;
+
+    user_data.opaque_arg = arg;
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMEBASE, user_data.id, &token) == OS_SUCCESS)
+    {
+        local = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, token);
+
+        /*
+         * Reset the timer, but only if an interval was selected
+         */
+        if (local->interval_ticks > 0)
+        {
+            rtems_timer_fire_after(rtems_timer_id, local->interval_ticks, OS_TimeBase_ISR, user_data.opaque_arg);
+        }
+
+        /*
+         * RTEMS OS timers implemented with an ISR callback
+         * this must be downgraded to an ordinary task context
+         *
+         * This is accomplished by just releasing a semaphore here.
+         */
+        rtems_semaphore_release(local->tick_sem);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Pends on the semaphore for the next timer tick
+ *
+ *-----------------------------------------------------------------*/
+static uint32 OS_TimeBase_WaitImpl(osal_id_t timebase_id)
+{
+    OS_object_token_t                   token;
+    OS_impl_timebase_internal_record_t *impl;
+    uint32                              tick_time;
+
+    tick_time = 0;
+
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMEBASE, timebase_id, &token) == OS_SUCCESS)
+    {
+        impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, token);
+
+        /*
+         * Pend for the tick arrival
+         */
+        rtems_semaphore_obtain(impl->tick_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT);
+
+        /*
+         * Determine how long this tick was.
+         * Note that there are plenty of ways this become wrong if the timer
+         * is reset right around the time a tick comes in.  However, it is
+         * impossible to guarantee the behavior of a reset if the timer is running.
+         * (This is not an expected use-case anyway; the timer should be set and forget)
+         */
+        if (impl->reset_flag == 0)
+        {
+            tick_time = impl->configured_interval_time;
+        }
+        else
+        {
+            tick_time        = impl->configured_start_time;
+            impl->reset_flag = 0;
+        }
+    }
+
+    return tick_time;
+}
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Rtems_TimeBaseAPI_Impl_Init(void)
+{
+    /*
+    ** Store the clock accuracy for 1 tick.
+    */
+    rtems_interval ticks_per_sec = rtems_clock_get_ticks_per_second();
+
+    if (ticks_per_sec <= 0)
+    {
+        return OS_ERROR;
+    }
+
+    /*
+     * For the global ticks per second, use the value direct from RTEMS
+     */
+    OS_SharedGlobalVars.TicksPerSecond = (int32)ticks_per_sec;
+
+    /*
+     * Compute the clock accuracy in Nanoseconds (ns per tick)
+     * This really should be an exact/whole number result; otherwise this
+     * will round to the nearest nanosecond.
+     */
+    RTEMS_GlobalVars.ClockAccuracyNsec =
+        (1000000000 + (OS_SharedGlobalVars.TicksPerSecond / 2)) / OS_SharedGlobalVars.TicksPerSecond;
+
+    /*
+     * Finally compute the Microseconds per tick
+     * This must further round again to the nearest microsecond, so it is undesirable to use
+     * this for time computations if the result is not exact.
+     */
+    OS_SharedGlobalVars.MicroSecPerTick = (RTEMS_GlobalVars.ClockAccuracyNsec + 500) / 1000;
+
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                INTERNAL FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose:  Convert Microseconds to a number of ticks.
+ *
+ *-----------------------------------------------------------------*/
+void OS_UsecsToTicks(uint32 usecs, rtems_interval *ticks)
+{
+    uint32 result;
+
+    /*
+     * In order to compute without overflowing a 32 bit integer,
+     * this is done in 2 parts -
+     * the fractional seconds first then add any whole seconds.
+     * the fractions are rounded UP so that this is guaranteed to produce
+     * a nonzero number of ticks for a nonzero number of microseconds.
+     */
+
+    result = (1000 * (usecs % 1000000) + RTEMS_GlobalVars.ClockAccuracyNsec - 1) / RTEMS_GlobalVars.ClockAccuracyNsec;
+
+    if (usecs >= 1000000)
+    {
+        result += (usecs / 1000000) * OS_SharedGlobalVars.TicksPerSecond;
+    }
+
+    *ticks = (rtems_interval)result;
+}
+
+/****************************************************************************************
+                                   Time Base API
+ ***************************************************************************************/
+
+/* The user may specify whether to use priority inheritance on mutexes via osconfig.h */
+#define OSAL_TIMEBASE_MUTEX_ATTRIBS RTEMS_PRIORITY | RTEMS_BINARY_SEMAPHORE | RTEMS_INHERIT_PRIORITY
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Wrapper function used by OS_TimeBaseCreate_Impl to
+ *           convert the rtems_task_argument on newly created
+ *           timebase task into an osal_id_t used by the
+ *           OS_TimeBase_CallbackThread.
+ *
+ *-----------------------------------------------------------------*/
+static void OS_TimeBase_CallbackThreadEntry(rtems_task_argument arg)
+{
+    osal_id_t id;
+    id = OS_ObjectIdFromInteger(arg);
+    OS_TimeBase_CallbackThread(id);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseCreate_Impl(const OS_object_token_t *token)
+{
+    int32                               return_code;
+    rtems_status_code                   rtems_sc;
+    OS_impl_timebase_internal_record_t *local;
+    rtems_name                          r_name;
+    OS_timebase_internal_record_t *     timebase;
+
+    return_code = OS_SUCCESS;
+    local       = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    timebase    = OS_OBJECT_TABLE_GET(OS_timebase_table, *token);
+
+    /*
+     * The RTEMS classic name for dependent resources
+     */
+    r_name = OS_ObjectIdToInteger(OS_ObjectIdFromToken(token));
+
+    /*
+     * Set up the necessary OS constructs
+     *
+     * If an external sync function is used then there is nothing to do here -
+     * we simply call that function and it should synchronize to the time source.
+     *
+     * If no external sync function is provided then this will set up an RTEMS
+     * timer to locally simulate the timer tick using the CPU clock.
+     */
+    local->simulate_flag = (timebase->external_sync == NULL);
+    if (local->simulate_flag)
+    {
+        timebase->external_sync = OS_TimeBase_WaitImpl;
+
+        /*
+         * The tick_sem is a simple semaphore posted by the ISR and taken by the
+         * timebase helper task (created later).
+         */
+        rtems_sc =
+            rtems_semaphore_create(r_name, 0, RTEMS_SIMPLE_BINARY_SEMAPHORE | RTEMS_PRIORITY, 0, &local->tick_sem);
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("Error: Tick Sem could not be created: %d\n", (int)rtems_sc);
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+
+        /*
+         * The handler_mutex is deals with access to the callback list for this timebase
+         */
+        rtems_sc = rtems_semaphore_create(r_name, 1, OSAL_TIMEBASE_MUTEX_ATTRIBS, 0, &local->handler_mutex);
+
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("Error: Handler Mutex could not be created: %d\n", (int)rtems_sc);
+            rtems_semaphore_delete(local->tick_sem);
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+
+        rtems_sc = rtems_timer_create(r_name, &local->rtems_timer_id);
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("Error: Timer object could not be created: %d\n", (int)rtems_sc);
+            rtems_semaphore_delete(local->handler_mutex);
+            rtems_semaphore_delete(local->tick_sem);
+            return_code = OS_TIMER_ERR_UNAVAILABLE;
+        }
+    }
+
+    /*
+     * Spawn a dedicated time base handler thread
+     *
+     * This alleviates the need to handle expiration in the context of a signal handler -
+     * The handler thread can call a BSP synchronized delay implementation as well as the
+     * application callback function.  It should run with elevated priority to reduce latency.
+     *
+     * Note the thread will not actually start running until this function exits and releases
+     * the global table lock.
+     */
+    if (return_code == OS_SUCCESS)
+    {
+        /* note on the priority - rtems is inverse (like vxworks) so that the lowest numeric
+         * value will preempt other threads in the ready state.
+         * Using "RTEMS_MINIMUM_PRIORITY + 1" because rtems seems to not schedule it at all if
+         * the priority is set to RTEMS_MINIMUM_PRIORITY.
+         */
+        rtems_sc = rtems_task_create(r_name, RTEMS_MINIMUM_PRIORITY + 1, 0,
+                                     RTEMS_PREEMPT | RTEMS_NO_ASR | RTEMS_NO_TIMESLICE | RTEMS_INTERRUPT_LEVEL(0),
+                                     RTEMS_LOCAL, &local->handler_task);
+
+        /* check if task_create failed */
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            /* Provide some feedback as to why this failed */
+            OS_printf("rtems_task_create failed: %s\n", rtems_status_text(rtems_sc));
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+        else
+        {
+            /* will place the task in 'ready for scheduling' state */
+            rtems_sc = rtems_task_start(local->handler_task,             /* rtems task id */
+                                        OS_TimeBase_CallbackThreadEntry, /* task entry point */
+                                        (rtems_task_argument)r_name);    /* passed argument  */
+
+            if (rtems_sc != RTEMS_SUCCESSFUL)
+            {
+                OS_printf("rtems_task_start failed: %s\n", rtems_status_text(rtems_sc));
+                rtems_task_delete(local->handler_task);
+                return_code = OS_TIMER_ERR_INTERNAL;
+            }
+        }
+
+        if (return_code != OS_SUCCESS)
+        {
+            /* Also delete the resources we allocated earlier */
+            rtems_timer_delete(local->rtems_timer_id);
+            rtems_semaphore_delete(local->handler_mutex);
+            rtems_semaphore_delete(local->tick_sem);
+            return return_code;
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseSet_Impl(const OS_object_token_t *token, uint32 start_time, uint32 interval_time)
+{
+    OS_VoidPtrValueWrapper_t            user_data;
+    OS_impl_timebase_internal_record_t *local;
+    int32                               return_code;
+    int                                 status;
+    rtems_interval                      start_ticks;
+    OS_timebase_internal_record_t *     timebase;
+
+    local       = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    timebase    = OS_OBJECT_TABLE_GET(OS_timebase_table, *token);
+    return_code = OS_SUCCESS;
+
+    /* There is only something to do here if we are generating a simulated tick */
+    if (local->simulate_flag)
+    {
+        /*
+        ** Note that UsecsToTicks() already protects against intervals
+        ** less than os_clock_accuracy -- no need for extra checks which
+        ** would actually possibly make it less accurate.
+        **
+        ** Still want to preserve zero, since that has a special meaning.
+        */
+
+        if (start_time <= 0)
+        {
+            interval_time = 0; /* cannot have interval without start */
+        }
+
+        if (interval_time <= 0)
+        {
+            local->interval_ticks = 0;
+        }
+        else
+        {
+            OS_UsecsToTicks(interval_time, &local->interval_ticks);
+        }
+
+        /*
+        ** The defined behavior is to not arm the timer if the start time is zero
+        ** If the interval time is zero, then the timer will not be re-armed.
+        */
+        if (start_time > 0)
+        {
+            /*
+            ** Convert from Microseconds to the timeout
+            */
+            OS_UsecsToTicks(start_time, &start_ticks);
+
+            memset(&user_data, 0, sizeof(user_data));
+
+            /* cppcheck-suppress unreadVariable // intentional use of other union member */
+            user_data.id = OS_ObjectIdFromToken(token);
+
+            status = rtems_timer_fire_after(local->rtems_timer_id, start_ticks, OS_TimeBase_ISR, user_data.opaque_arg);
+            if (status != RTEMS_SUCCESSFUL)
+            {
+                return_code = OS_TIMER_ERR_INTERNAL;
+            }
+            else
+            {
+                local->configured_start_time    = (10000 * start_ticks) / OS_SharedGlobalVars.TicksPerSecond;
+                local->configured_interval_time = (10000 * local->interval_ticks) / OS_SharedGlobalVars.TicksPerSecond;
+                local->configured_start_time *= 100;
+                local->configured_interval_time *= 100;
+
+                if (local->configured_start_time != start_time)
+                {
+                    OS_DEBUG("WARNING: timer %lu start_time requested=%luus, configured=%luus\n",
+                             OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), (unsigned long)start_time,
+                             (unsigned long)local->configured_start_time);
+                }
+                if (local->configured_interval_time != interval_time)
+                {
+                    OS_DEBUG("WARNING: timer %lu interval_time requested=%luus, configured=%luus\n",
+                             OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), (unsigned long)interval_time,
+                             (unsigned long)local->configured_interval_time);
+                }
+
+                if (local->interval_ticks > 0)
+                {
+                    timebase->accuracy_usec = local->configured_interval_time;
+                }
+                else
+                {
+                    timebase->accuracy_usec = local->configured_start_time;
+                }
+            }
+        }
+    }
+
+    if (local->reset_flag == 0 && return_code == OS_SUCCESS)
+    {
+        local->reset_flag = 1;
+    }
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseDelete_Impl(const OS_object_token_t *token)
+{
+    rtems_status_code                   rtems_sc;
+    OS_impl_timebase_internal_record_t *local;
+    int32                               return_code;
+
+    local       = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    return_code = OS_SUCCESS;
+
+    /*
+    ** Delete the tasks and timer OS constructs first, then delete the
+    ** semaphores.  If the task/timer is running it might try to use them.
+    */
+    if (local->simulate_flag)
+    {
+        rtems_sc = rtems_timer_delete(local->rtems_timer_id);
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("Error deleting rtems timer: %s\n", rtems_status_text(rtems_sc));
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+    }
+
+    rtems_sc = rtems_task_delete(local->handler_task);
+    if (rtems_sc != RTEMS_SUCCESSFUL)
+    {
+        OS_DEBUG("Error deleting timebase helper task: %s\n", rtems_status_text(rtems_sc));
+        return_code = OS_TIMER_ERR_INTERNAL;
+    }
+
+    /*
+     * If any delete/cleanup calls fail, unfortunately there is no recourse.
+     * Just report the error via OS_DEBUG and the resource will be leaked.
+     */
+    if (return_code == OS_SUCCESS)
+    {
+        rtems_sc = rtems_semaphore_delete(local->handler_mutex);
+        if (rtems_sc != RTEMS_SUCCESSFUL)
+        {
+            OS_DEBUG("Error deleting handler mutex: %s\n", rtems_status_text(rtems_sc));
+        }
+
+        if (local->simulate_flag)
+        {
+            rtems_sc = rtems_semaphore_delete(local->tick_sem);
+            if (rtems_sc != RTEMS_SUCCESSFUL)
+            {
+                OS_DEBUG("Error deleting tick semaphore: %s\n", rtems_status_text(rtems_sc));
+            }
+            local->simulate_flag = 0;
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseGetInfo_Impl(const OS_object_token_t *token, OS_timebase_prop_t *timer_prop)
+{
+    return OS_SUCCESS;
+}
+```

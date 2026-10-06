@@ -3,116 +3,10160 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractArchiveFiller.java`
 
-file--AbstractArchiveFiller.java
-file--AggrrayBuilder.java
-file--AggrrayIterator.java
-file--BackFiller.java
-file--BackFillerListener.java
-file--BackFillerTask.java
-file--BaseSegment.java
-file--BasicParameterList.java
-file--BinaryValueSegment.java
-file--BooleanValueSegment.java
-file--ConsumerAbortException.java
-file--DoubleValueSegment.java
-file--FastPFORFactory.java
-file--FillerLock.java
-file--FloatCompressor.java
-file--FloatValueSegment.java
-file--IntValueSegment.java
-file--LongValueSegment.java
-file--MultiParameterRetrieval.java
-file--MultiParameterValueSegment.java
-file--MultipleParameterRequest.java
-file--MultiSegmentIterator.java
-file--ObjectSegment.java
-file--ParameterArchive.java
-file--ParameterArchiveException.java
-file--ParameterGroupIdDb.java
-file--ParameterId.java
-file--ParameterIdDb.java
-file--ParameterIdValueList.java
-file--ParameterInfoRetrieval.java
-file--ParameterIterator.java
-file--ParameterStatusSegment.java
-file--ParametersValueRequest.java
-file--ParameterValueArray.java
-file--ParameterValueSegment.java
-file--ParchiveIterator.java
-file--PGSegment.java
-file--RdbIteratorWithOptions.java
-file--RealtimeArchiveFiller.java
-file--SegmentEncoderDecoder.java
-file--SegmentIterator.java
-file--SegmentKey.java
-file--SimpleParameterIterator.java
-file--SingleParameterRetrieval.java
-file--SortedTimeSegment.java
-file--StringValueSegment.java
-file--SynchronizedParameterValueSegment.java
-file--SynchronizedPGSegment.java
-file--test-result.txt
-file--TimedValue.java
-file--ValueConsumer.java
-file--ValueSegment.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/AbstractArchiveFiller.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.MemoryType;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Archive filler that creates segments of max size .
+ * 
+ */
+abstract class AbstractArchiveFiller implements ParameterConsumer {
+    final ParameterArchive parameterArchive;
+    final protected Log log;
+
+    long numParams = 0;
+    static int DEFAULT_MAX_SEGMENT_SIZE = 5000;
+    static MemoryPoolMXBean memoryBean = getMemoryBean();
+    protected final ParameterIdDb parameterIdMap;
+    protected final ParameterGroupIdDb parameterGroupIdMap;
+
+    // ignore any data older than this
+    // when doing backfilling, there is a warming up interval - the replay is started with older data
+    // for the realtime filler this is not used and left to default
+    protected long collectionStart = TimeEncoding.NEGATIVE_INFINITY;
+
+    protected int maxSegmentSize;
+    boolean aborted = false;
+
+    public AbstractArchiveFiller(ParameterArchive parameterArchive) {
+        this.parameterArchive = parameterArchive;
+        this.parameterIdMap = parameterArchive.getParameterIdDb();
+        this.parameterGroupIdMap = parameterArchive.getParameterGroupIdDb();
+        log = new Log(getClass(), parameterArchive.getYamcsInstance());
+        this.maxSegmentSize = parameterArchive.getMaxSegmentSize();
+        log.debug("Archive filler task maxSegmentSize: {} ", maxSegmentSize);
+    }
+
+    void setCollectionStart(long collectionStart) {
+        this.collectionStart = collectionStart;
+    }
+
+    /**
+     * adds the parameters to the pgSegments structure
+     * 
+     * parameters older than collectionSegmentStart are ignored.
+     * 
+     * 
+     * @param items
+     * @return
+     */
+    void processParameters(List<ParameterValue> items) {
+        Map<Long, BasicParameterList> m = new HashMap<>();
+        for (ParameterValue pv : items) {
+            long t = pv.getGenerationTime();
+            if (t < collectionStart) {
+                continue;
+            }
+
+            if (pv.getParameterQualifiedName() == null) {
+                log.warn("No qualified name for parameter value {}, ignoring", pv);
+                continue;
+            }
+            Value engValue = pv.getEngValue();
+            if (engValue == null) {
+                log.warn("Ignoring parameter without engineering value: {} ", pv.getParameterQualifiedName());
+                continue;
+            }
+            BasicParameterList l = m.computeIfAbsent(t, x -> new BasicParameterList(parameterIdMap));
+            l.add(pv);
+        }
+        for (Map.Entry<Long, BasicParameterList> entry : m.entrySet()) {
+            long t = entry.getKey();
+            BasicParameterList pvList = entry.getValue();
+            pvList.sort();
+            processParameters(t, pvList);
+            numParams += pvList.size();
+        }
+    }
+
+    @Override
+    public void updateItems(int subscriptionId, List<ParameterValue> items) {
+        if (oomImminent()) {
+            return;
+        }
+
+        processParameters(items);
+    }
+
+    public long getNumProcessedParameters() {
+        return numParams;
+    }
+
+    /**
+     * If the archive filling has been aborted (due to imminent OOM) this returns true
+     */
+    boolean isAborted() {
+        return aborted;
+    }
+
+    protected abstract void processParameters(long t, BasicParameterList pvList);
+
+    protected abstract void abort();
+
+    private boolean oomImminent() {
+        if (memoryBean != null && memoryBean.isCollectionUsageThresholdExceeded()) {
+            aborted = true;
+            String msg = "Aborting parameter archive filling due to imminent out of memory. Consider decreasing the maxSegmentSize (current value is "
+                    + maxSegmentSize + ").";
+            log.error(msg);
+            abort();
+            System.gc();
+            return true;
+        }
+        return false;
+    }
+
+    static MemoryPoolMXBean getMemoryBean() {
+        for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
+            if (pool.getType() == MemoryType.HEAP && pool.isCollectionUsageThresholdSupported()
+                    && pool.getName().toLowerCase().contains("old")) {
+                long threshold = (long) Math.floor(pool.getUsage().getMax() * 0.90);
+                pool.setCollectionUsageThreshold(threshold);
+                return pool;
+            }
+        }
+        return null;
+    }
+}
 ```
 
-## 항목
+### `AggrrayBuilder.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/AbstractArchiveFiller.java`](file--AbstractArchiveFiller.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/AggrrayBuilder.java`](file--AggrrayBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/AggrrayIterator.java`](file--AggrrayIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BackFiller.java`](file--BackFiller.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BackFillerListener.java`](file--BackFillerListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BackFillerTask.java`](file--BackFillerTask.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BaseSegment.java`](file--BaseSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BasicParameterList.java`](file--BasicParameterList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BinaryValueSegment.java`](file--BinaryValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BooleanValueSegment.java`](file--BooleanValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ConsumerAbortException.java`](file--ConsumerAbortException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/DoubleValueSegment.java`](file--DoubleValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FastPFORFactory.java`](file--FastPFORFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FillerLock.java`](file--FillerLock.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FloatCompressor.java`](file--FloatCompressor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FloatValueSegment.java`](file--FloatValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/IntValueSegment.java`](file--IntValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/LongValueSegment.java`](file--LongValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultiParameterRetrieval.java`](file--MultiParameterRetrieval.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultiParameterValueSegment.java`](file--MultiParameterValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultipleParameterRequest.java`](file--MultipleParameterRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultiSegmentIterator.java`](file--MultiSegmentIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ObjectSegment.java`](file--ObjectSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterArchive.java`](file--ParameterArchive.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterArchiveException.java`](file--ParameterArchiveException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterGroupIdDb.java`](file--ParameterGroupIdDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterId.java`](file--ParameterId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterIdDb.java`](file--ParameterIdDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterIdValueList.java`](file--ParameterIdValueList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterInfoRetrieval.java`](file--ParameterInfoRetrieval.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterIterator.java`](file--ParameterIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterStatusSegment.java`](file--ParameterStatusSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParametersValueRequest.java`](file--ParametersValueRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterValueArray.java`](file--ParameterValueArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterValueSegment.java`](file--ParameterValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParchiveIterator.java`](file--ParchiveIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/PGSegment.java`](file--PGSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/RdbIteratorWithOptions.java`](file--RdbIteratorWithOptions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/RealtimeArchiveFiller.java`](file--RealtimeArchiveFiller.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SegmentEncoderDecoder.java`](file--SegmentEncoderDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SegmentIterator.java`](file--SegmentIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SegmentKey.java`](file--SegmentKey.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SimpleParameterIterator.java`](file--SimpleParameterIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SingleParameterRetrieval.java`](file--SingleParameterRetrieval.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SortedTimeSegment.java`](file--SortedTimeSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/StringValueSegment.java`](file--StringValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SynchronizedParameterValueSegment.java`](file--SynchronizedParameterValueSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SynchronizedPGSegment.java`](file--SynchronizedPGSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/test-result.txt`](file--test-result.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/TimedValue.java`](file--TimedValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ValueConsumer.java`](file--ValueConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ValueSegment.java`](file--ValueSegment.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/AggrrayBuilder.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.utils.IntArray;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+/**
+ * builds aggregate or array values out of members extracted from the parameter archive.
+ *
+ */
+public class AggrrayBuilder {
+
+    Map<Integer, BasicValueBuilder> builders = new HashMap<>();
+
+    ValueBuilder rootBuilder;
+    String fqn;
+
+    AggrrayBuilder(ParameterId... pids) {
+        for (ParameterId pid : pids) {
+            addParameterId(pid);
+        }
+    }
+
+    private void addParameterId(ParameterId pid) {
+        PathElement[] path = AggregateUtil.parseReference(pid.getParamFqn());
+
+        AggregateValueBuilder builder = processRoot(pid, path[0], path.length == 1);
+
+        if (builder == null) {
+            assert (path.length == 1);
+            // special case: parameter is an array of basic elements
+            // they are already processed in the processRoot
+            return;
+        }
+
+        PathElement pe0 = path[0];
+        if (pe0.getIndex() == null) {
+            builder = (AggregateValueBuilder) rootBuilder;
+        } else {
+            builder = createOrVerifyArrayElement((ArrayValueBuilder) rootBuilder, IntArray.wrap(pe0.getIndex()));
+        }
+
+        for (int i = 1; i < path.length - 1; i++) {
+            builder = addAndCheckAggrPathElement(builder, path[i]);
+        }
+
+        // last one is special: of basic type or array of basic type
+        BasicValueBuilder bvb = getBasicValueBuilder(pid);
+
+        PathElement pe = path[path.length - 1];
+        IntArray idx = pe.getIndex() == null ? null : IntArray.wrap(pe.getIndex());
+        if (idx == null) {
+            builder.addMember(pe.getName(), bvb);
+        } else {
+            ArrayValueBuilder arrb = createOrVerifyArrayMember(builder, pe.getName());
+            arrb.addElement(idx, bvb);
+        }
+    }
+
+    private BasicValueBuilder getBasicValueBuilder(ParameterId pid) {
+        BasicValueBuilder bvb = new BasicValueBuilder();
+        builders.put(pid.getPid(), bvb);
+        return bvb;
+    }
+
+    // creates the necessary root structure for path[0] and returns
+    // the aggregate builder where the sub-elements have to be added
+    // if the root is an array, returns null
+    private AggregateValueBuilder processRoot(ParameterId pid, PathElement pe0, boolean basicArray) {
+        // verify the qualified name
+        if (fqn == null) {
+            fqn = pe0.getName();
+        } else {
+            if (!fqn.equals(pe0.getName())) {
+                throw new ParameterArchiveException("Invalid parameter id found for aggregate or array: fqn is '"
+                        + pe0.getName() + " while expecting from the first parameter '" + fqn + "'");
+            }
+        }
+
+        IntArray idx = pe0.getIndex() == null ? null : IntArray.wrap(pe0.getIndex());
+        if (idx == null) { // root is an aggregate
+            if (rootBuilder == null) {
+                rootBuilder = new AggregateValueBuilder();
+            } else {
+                if (!(rootBuilder instanceof AggregateValueBuilder)) {
+                    throw new ParameterArchiveException("parameter is not an aggregate");
+                }
+            }
+            return (AggregateValueBuilder) rootBuilder;
+        } else { // root is an array
+            if (rootBuilder == null) {
+                rootBuilder = new ArrayValueBuilder();
+            } else {
+                if (!(rootBuilder instanceof ArrayValueBuilder)) {
+                    throw new ParameterArchiveException("parameter is not an array");
+                }
+            }
+            if (basicArray) {// special case, elements of the array are basic
+                BasicValueBuilder bvb = getBasicValueBuilder(pid);
+                ((ArrayValueBuilder) rootBuilder).addElement(idx, bvb);
+
+                return null;
+            } else {
+                return createOrVerifyArrayElement((ArrayValueBuilder) rootBuilder, idx);
+            }
+        }
+    }
+
+    private AggregateValueBuilder addAndCheckAggrPathElement(AggregateValueBuilder aggb, PathElement pe) {
+        if (pe.getIndex() == null) {
+            return createOrVerifyAggregateMember(aggb, pe.getName());
+        } else {
+            ArrayValueBuilder arrb = createOrVerifyArrayMember(aggb, pe.getName());
+            return createOrVerifyArrayElement(arrb, IntArray.wrap(pe.getIndex()));
+        }
+    }
+
+    // creates and returns the element idx verifying also that it is an aggregate
+    private AggregateValueBuilder createOrVerifyArrayElement(ArrayValueBuilder arrb, IntArray idx) {
+        ValueBuilder builder = arrb.getElement(idx);
+        if (builder == null) {
+            AggregateValueBuilder aggb = new AggregateValueBuilder();
+            arrb.addElement(idx, aggb);
+            return aggb;
+        } else {
+            if (builder instanceof AggregateValueBuilder) {
+                return (AggregateValueBuilder) builder;
+            } else {
+                throw new ParameterArchiveException(
+                        "Expected " + idx + " element index to be an aggregate but it is " + builder.getClass());
+            }
+        }
+    }
+
+    ArrayValueBuilder createOrVerifyArrayMember(AggregateValueBuilder aggb, String member) {
+        ValueBuilder builder = aggb.getMember(member);
+        if (builder == null) {
+            ArrayValueBuilder arrb = new ArrayValueBuilder();
+            aggb.addMember(member, arrb);
+            return arrb;
+        } else {
+            if (builder instanceof ArrayValueBuilder) {
+                return (ArrayValueBuilder) builder;
+            } else {
+                throw new ParameterArchiveException(
+                        "Expected '" + member + "' to be an array but it is " + builder.getClass());
+            }
+        }
+    }
+
+    AggregateValueBuilder createOrVerifyAggregateMember(AggregateValueBuilder aggb, String member) {
+        ValueBuilder builder = aggb.getMember(member);
+        if (builder == null) {
+            AggregateValueBuilder arrb = new AggregateValueBuilder();
+            aggb.addMember(member, arrb);
+            return arrb;
+        } else {
+            if (builder instanceof AggregateValueBuilder) {
+                return (AggregateValueBuilder) builder;
+            } else {
+                throw new ParameterArchiveException(
+                        "Expected '" + member + "' to be an aggregate but it is " + builder.getClass());
+            }
+        }
+    }
+
+    public void setValue(ParameterId pid, Value v) {
+        BasicValueBuilder bvb = builders.get(pid.getPid());
+        if (bvb == null) {
+            throw new IllegalArgumentException("Unknown parameter " + pid);
+        }
+        bvb.setValue(v);
+    }
+
+    public Value build() {
+        return rootBuilder.build();
+    }
+
+    public void clear() {
+        rootBuilder.clear();
+    }
+
+    interface ValueBuilder {
+        Value build();
+
+        void clear();
+    }
+
+    class BasicValueBuilder implements ValueBuilder {
+        Value v;
+
+        @Override
+        public Value build() {
+            return v;
+        }
+
+        public void setValue(Value v) {
+            this.v = v;
+        }
+
+        @Override
+        public void clear() {
+            this.v = null;
+        }
+
+    }
+
+    class ArrayValueBuilder implements ValueBuilder {
+        Map<IntArray, ValueBuilder> elements = new LinkedHashMap<>();
+        int[] dim = null;
+        int numDim = -1;
+
+        public void addElement(IntArray idx, ValueBuilder b) {
+            if (numDim == -1) {
+                numDim = idx.size();
+            } else if (numDim != idx.size()) {
+                throw new ParameterArchiveException("Invalid number of dimensions for index '" + idx
+                        + "'; expected " + numDim);
+            }
+            if (elements.containsKey(idx)) {
+                throw new ParameterArchiveException("Duplicate member '" + idx + "'");
+            }
+            elements.put(idx, b);
+        }
+
+        public ValueBuilder getElement(IntArray idx) {
+            return elements.get(idx);
+        }
+
+        @Override
+        public ArrayValue build() {
+            if (dim == null) {
+                dim = new int[numDim];
+            }
+
+            Map<IntArray, Value> values = new HashMap<>();
+            Type valueType = null;
+            
+            for (Map.Entry<IntArray, ValueBuilder> me : elements.entrySet()) {
+                Value v = me.getValue().build();
+                if (v != null) {
+                    values.put(me.getKey(), v);
+                    valueType = v.getType();
+                }
+            }
+            
+            for (int i = 0; i < numDim; i++) {
+                int k = i;
+                dim[i] = values.keySet().stream().mapToInt(a -> a.get(k)).max().getAsInt() + 1;
+            }
+
+            ArrayValue av = new ArrayValue(dim, valueType);
+            for (var me : values.entrySet()) {
+                av.setElementValue(me.getKey().array(), me.getValue());
+            }
+            return av;
+        }
+
+        @Override
+        public void clear() {
+            this.dim = null;
+            for (ValueBuilder vb : elements.values()) {
+                vb.clear();
+            }
+        }
+    }
+
+    class AggregateValueBuilder implements ValueBuilder {
+        Map<String, ValueBuilder> members = new LinkedHashMap<>();
+        AggregateMemberNames names;
+
+        public void addMember(String name, ValueBuilder b) {
+            if (members.containsKey(name)) {
+                throw new ParameterArchiveException("Duplicate member '" + name + "'");
+            }
+            members.put(name, b);
+        }
+
+        public ValueBuilder getMember(String name) {
+            return members.get(name);
+        }
+
+        @Override
+        public AggregateValue build() {
+            if (names == null) {
+                names = AggregateMemberNames.get(members.keySet().toArray(new String[0]));
+            }
+            AggregateValue av = new AggregateValue(names);
+            for (Map.Entry<String, ValueBuilder> me : members.entrySet()) {
+                Value v = me.getValue().build();
+                if (v == null) {
+                    throw new ParameterArchiveException("No value for member '" + me.getKey() + "'");
+                }
+                av.setMemberValue(me.getKey(), me.getValue().build());
+            }
+            return av;
+        }
+
+        @Override
+        public void clear() {
+            for (ValueBuilder vb : members.values()) {
+                vb.clear();
+            }
+        }
+    }
+
+}
+```
+
+### `AggrrayIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/AggrrayIterator.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.NoSuchElementException;
+
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.Value;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+/**
+ * Iterates over parameter archive segments storing components of an aggregate or array value and reconstructs the
+ * aggregate/array value from those components.
+ * <p>
+ * All the values belong to a single parameter group whose id is passed in the constructor.
+ */
+public class AggrrayIterator implements ParameterIterator {
+    final MultiSegmentIterator it;
+    final ParameterRetrievalOptions req;
+    final ParameterId parameterId;
+    MultiParameterValueSegment currentSegment;
+    int pos;
+
+    AggrrayBuilder engBuilder;
+    AggrrayBuilder rawBuilder;
+    ParameterId[] members;
+    TimedValue currentValue;
+
+    public AggrrayIterator(ParameterArchive parchive, ParameterId parameterId, int parameterGroupId,
+            ParameterRetrievalOptions req) {
+        ParameterIdDb pidDb = parchive.getParameterIdDb();
+
+        members = pidDb.getAggarrayComponents(parameterId.getPid(), parameterGroupId);
+        this.it = new MultiSegmentIterator(parchive, members, parameterGroupId, req);
+        this.req = req;
+        this.parameterId = parameterId;
+        if (req.retrieveEngValues()) {
+            engBuilder = new AggrrayBuilder(members);
+        }
+        if (req.retrieveRawValues() && parameterId.hasRawValue()) {
+            rawBuilder = new AggrrayBuilder(members);
+        }
+
+        if (it.isValid()) {
+            init();
+        }
+    }
+
+    private void init() {
+        currentSegment = it.value();
+        SortedTimeSegment timeSegment = currentSegment.timeSegment;
+
+        if (req.ascending()) {
+            pos = timeSegment.lowerBound(req.start());
+        } else {
+            pos = timeSegment.higherBound(req.stop());
+        }
+        if (valid(timeSegment, pos) || advancePos()) {
+            while (true) {
+                if (readCurrentValue()) {
+                    break;
+                }
+                if (!advancePos()) {
+                    break;
+                }
+            }
+        } else {
+            finished();
+        }
+    }
+
+    @Override
+    public void close() {
+        it.close();
+    }
+
+    @Override
+    public boolean isValid() {
+        return currentValue != null;
+    }
+
+    @Override
+    public TimedValue value() {
+        if (currentValue == null) {
+            throw new NoSuchElementException();
+        }
+        return currentValue;
+    }
+
+    // this must be called when the currentSegment and pos are valid (i.e. currentSegment!=null and pos is inside the
+    // segment)
+    // it builds the currentValue if there is at least a value for any component and returns true
+    // otherwise (i.e. the values at the current position are all null, may happen because the parameter archive has
+    // gaps) it returns false
+    private boolean readCurrentValue() {
+
+        long t = currentSegment.timeSegment.getTime(pos);
+
+        ParameterStatus paramStatus = null;
+        boolean foundOne = false;
+        if (engBuilder != null) {
+            engBuilder.clear();
+        }
+        if (rawBuilder != null) {
+            rawBuilder.clear();
+        }
+
+        for (int i = 0; i < currentSegment.numParameters(); i++) {
+            var pvs = currentSegment.getPvs(i);
+            if (pvs != null) {
+                if (engBuilder != null) {
+                    Value v = pvs.getEngValue(pos);
+                    if (v != null) {
+                        foundOne = true;
+                        engBuilder.setValue(members[i], v);
+                    }
+                }
+                if (rawBuilder != null) {
+                    Value v = pvs.getRawValue(pos);
+                    if (v != null) {
+                        foundOne = true;
+                        rawBuilder.setValue(members[i], v);
+                    }
+                }
+            }
+        }
+        if (foundOne) {
+            Value engValue = null;
+            Value rawValue = null;
+
+            if (engBuilder != null) {
+                engValue = engBuilder.build();
+            }
+            if (rawBuilder != null) {
+                rawValue = rawBuilder.build();
+            }
+            currentValue = new TimedValue(t, engValue, rawValue, paramStatus);
+        }
+        return foundOne;
+    }
+
+    // advance the pos/it and return true if the position is valid
+    private boolean advancePos() {
+        boolean validPosition = false;
+        var timeSegment = currentSegment.timeSegment;
+        if (req.ascending()) {
+            pos++;
+            if (pos >= timeSegment.size()) {
+                it.next();
+                if (it.isValid()) {
+                    currentSegment = it.value();
+                    pos = 0;
+                    validPosition = true;
+                } else {
+                    finished();
+                }
+            } else if (timeSegment.getTime(pos) >= req.stop()) {
+                finished();
+            } else {
+                validPosition = true;
+            }
+        } else {
+            pos--;
+            if (pos < 0) {
+                it.next();
+                if (it.isValid()) {
+                    currentSegment = it.value();
+                    pos = currentSegment.timeSegment.size() - 1;
+                    validPosition = true;
+                } else {
+                    finished();
+                }
+            } else if (timeSegment.getTime(pos) <= req.start()) {
+                finished();
+            } else {
+                validPosition = true;
+            }
+        }
+        return validPosition;
+    }
+
+    private void finished() {
+        it.close();
+        currentSegment = null;
+        currentValue = null;
+    }
+
+    @Override
+    public void next() {
+        if (currentSegment == null) {
+            throw new NoSuchElementException();
+        }
+        while (true) {
+            if (!advancePos()) {
+                break;
+            }
+            if (readCurrentValue()) {
+                break;
+            }
+        }
+    }
+
+    private boolean valid(SortedTimeSegment timeSegment, int pos) {
+        if (req.ascending()) {
+            return pos < timeSegment.size() && timeSegment.getTime(pos) < req.stop();
+        } else {
+            return pos >= 0 && timeSegment.getTime(pos) > req.start();
+        }
+    }
+
+    @Override
+    public ParameterId getParameterId() {
+        return parameterId;
+    }
+
+    @Override
+    public int getParameterGroupId() {
+        return it.getParameterGroupId();
+    }
+}
+```
+
+### `BackFiller.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BackFiller.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.archive.ReplayOptions;
+import org.yamcs.logging.Log;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.LongArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+/**
+ * Back-fills the parameter archive by triggering replays: - either regularly scheduled replays - or monitor data
+ * streams (tm, param) and keep track of which segments have to be rebuild
+ * 
+ */
+public class BackFiller implements StreamSubscriber {
+    List<Schedule> schedules;
+    long t0;
+    int runCount;
+
+    final ParameterArchive parchive;
+
+    long warmupTime;
+    final TimeService timeService;
+    static AtomicInteger count = new AtomicInteger();
+    private final Log log;
+    final ScheduledThreadPoolExecutor executor;
+
+    // set of segments that have to be rebuilt following monitoring of streams
+    private Map<Long, StreamUpdate> streamUpdates;
+    // streams which are monitored
+    private List<Stream> subscribedStreams;
+
+    // after how many backfilling tasks to trigger a parchive.compact()
+    int compactFrequency = -1;
+
+    int compactCount = 0;
+    long quietPeriodThreshold;
+
+    private List<BackFillerListener> listeners = new CopyOnWriteArrayList<>();
+    private List<StreamUpdatePolicyEnter> streamUpdatePolicy = new ArrayList<>();
+
+    private boolean automaticBackfillingEnabled = true;
+    private List<Future<?>> scheduledFutures = new ArrayList<>();
+
+    /**
+     * 
+     * Constructs a new BackFiller
+     * <p>
+     * The backfiller is used for manual requests and also by automatic backfilling.
+     * <p>
+     * defaultAutomaticBackfilling is used as default for whether to schedule or not backfillings. If the realtime
+     * filler is enabled, the automatic backfilling is disabled by default.
+     */
+    BackFiller(ParameterArchive parchive, YConfiguration config, boolean defaultAutomaticBackfilling) {
+        this.parchive = parchive;
+        this.log = new Log(BackFiller.class, parchive.getYamcsInstance());
+        parseConfig(config, defaultAutomaticBackfilling);
+        timeService = YamcsServer.getTimeService(parchive.getYamcsInstance());
+        executor = new ScheduledThreadPoolExecutor(1,
+                new ThreadFactoryBuilder().setNameFormat("ParameterArchive-BackFiller-" + parchive.getYamcsInstance())
+                        .build());
+    }
+
+    public static Spec getSpec() {
+        Spec spec = new Spec();
+
+        spec.addOption("warmupTime", OptionType.INTEGER).withDefault(60);
+        spec.addOption("automaticBackfilling", OptionType.BOOLEAN).withAliases("enabled").withRequired(false);
+        spec.addOption("monitorStreams", OptionType.LIST).withElementType(OptionType.STRING);
+        spec.addOption("streamUpdateFillFrequency", OptionType.INTEGER)
+                .withDeprecationMessage("Please use the streamUpdateFillPolicy").withDefault(3600);
+
+        Spec policyEntry = new Spec();
+        policyEntry.addOption("dataAge", OptionType.FLOAT).withRequired(true);
+        policyEntry.addOption("fillFrequency", OptionType.INTEGER).withDefault(3600);
+        policyEntry.addOption("quietThreshold", OptionType.INTEGER).withDefault(60);
+        spec.addOption("streamUpdateFillPolicy", OptionType.LIST).withElementType(OptionType.MAP).withSpec(policyEntry);
+
+        Spec schedSpec = new Spec();
+        schedSpec.addOption("startInterval", OptionType.INTEGER);
+        schedSpec.addOption("numIntervals", OptionType.INTEGER);
+
+        spec.addOption("schedule", OptionType.MAP).withSpec(schedSpec);
+        spec.addOption("compactFrequency", OptionType.INTEGER).withDefault(-1);
+
+        return spec;
+    }
+
+    synchronized void scheduleAutoFillers() {
+        if (!this.automaticBackfillingEnabled) {
+            return;
+        }
+
+        if (schedules != null && !schedules.isEmpty()) {
+            int c = 0;
+            for (Schedule s : schedules) {
+                if (s.frequency == -1) {
+                    c++;
+                    continue;
+                }
+                var f = executor.scheduleAtFixedRate(() -> {
+                    runSchedule(s);
+                }, 0, s.frequency, TimeUnit.SECONDS);
+                scheduledFutures.add(f);
+            }
+            if (c > 0) {
+                long now = timeService.getMissionTime();
+                t0 = ParameterArchive.getIntervalStart(now);
+
+                var f = executor.schedule(() -> {
+                    runSegmentSchedules();
+                }, t0 - now, TimeUnit.MILLISECONDS);
+
+                scheduledFutures.add(f);
+            }
+        }
+
+        if (subscribedStreams != null && !subscribedStreams.isEmpty()) {
+            var f = executor.scheduleAtFixedRate(() -> {
+                checkStreamUpdates();
+            }, 5, 5, TimeUnit.SECONDS);
+            scheduledFutures.add(f);
+        }
+    }
+
+    public synchronized void enableAutomaticBackfilling(boolean enable) {
+        if (this.automaticBackfillingEnabled == enable) {
+            log.debug("automatic backfilling is already {}", automaticBackfillingEnabled ? "enabled" : "disabled");
+            return;
+        }
+        for (var f : scheduledFutures) {
+            f.cancel(true);
+        }
+        scheduledFutures.clear();
+        this.automaticBackfillingEnabled = enable;
+
+        if (enable) {
+            scheduleAutoFillers();
+        }
+
+        log.debug("automatic backfilling has been {}", automaticBackfillingEnabled ? "enabled" : "disabled");
+    }
+
+    private void parseConfig(YConfiguration config, boolean defaultAutomaticBackfilling) {
+        this.warmupTime = 1000L * config.getInt("warmupTime", 60);
+        this.automaticBackfillingEnabled = config.getBoolean("automaticBackfilling",
+                defaultAutomaticBackfilling);
+
+        this.compactFrequency = config.getInt("compactFrequency", -1);
+
+        if (config.containsKey("schedule")) {
+            List<YConfiguration> l = config.getConfigList("schedule");
+            schedules = new ArrayList<>(l.size());
+            for (YConfiguration sch : l) {
+                int segstart = sch.getInt("startSegment");
+                int numseg = sch.getInt("numSegments");
+                long interval = sch.getInt("interval", -1);
+                Schedule s = new Schedule(segstart, numseg, interval);
+                schedules.add(s);
+            }
+        }
+
+        List<String> monitoredStreams;
+        if (config.containsKey("monitorStreams")) {
+            monitoredStreams = config.getList("monitorStreams");
+        } else {
+            StreamConfig sc = StreamConfig.getInstance(parchive.getYamcsInstance());
+            monitoredStreams = new ArrayList<>();
+            sc.getEntries(StandardStreamType.TM).forEach(sce -> monitoredStreams.add(sce.getName()));
+            sc.getEntries(StandardStreamType.PARAM).forEach(sce -> monitoredStreams.add(sce.getName()));
+        }
+
+        if (!monitoredStreams.isEmpty()) {
+            if (config.containsKey("streamUpdateFillPolicy")) {
+                if (monitoredStreams.isEmpty()) {
+                    log.warn("Monitored streams is empty, the streamUpdateFillPolicy will not be used");
+                }
+                List<YConfiguration> l = config.getConfigList("streamUpdateFillPolicy");
+                for (YConfiguration sch : l) {
+                    long dataAge = (long) (sch.getDouble("dataAge") * 3600_000);
+                    long fillFrequency = sch.getLong("fillFrequency", 3600) * 1000;
+                    long quietThreshold = sch.getLong("quietThreshold") * 1000;
+                    streamUpdatePolicy.add(new StreamUpdatePolicyEnter(dataAge, fillFrequency, quietThreshold));
+                }
+                streamUpdatePolicy.sort(Comparator.comparingLong(StreamUpdatePolicyEnter::dataAge));
+            } else if (config.containsKey("streamUpdateFillFrequency")) {
+                var streamUpdateFillFrequency = 1000 * config.getLong("streamUpdateFillFrequency", 3600);
+                streamUpdatePolicy.add(new StreamUpdatePolicyEnter(-1, streamUpdateFillFrequency, -1));
+            } else {
+                streamUpdatePolicy.add(new StreamUpdatePolicyEnter(-3600_000, 600_000, 10_000));
+                streamUpdatePolicy.add(new StreamUpdatePolicyEnter(7200_000, -1, 60_000));
+            }
+
+            streamUpdates = new HashMap<>();
+            subscribedStreams = new ArrayList<>(monitoredStreams.size());
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(parchive.getYamcsInstance());
+            for (String streamName : monitoredStreams) {
+                Stream s = ydb.getStream(streamName);
+                if (s == null) {
+                    throw new ConfigurationException(
+                            "Cannot find stream '" + s + "' required for the parameter archive backfiller");
+                }
+                s.addSubscriber(this);
+                subscribedStreams.add(s);
+            }
+        }
+    }
+
+    public Future<?> scheduleFillingTask(long start, long stop) {
+        return executor.schedule(() -> runTask(start, stop), 0, TimeUnit.SECONDS);
+    }
+
+    private void runTask(long start, long stop) {
+        try {
+            start = ParameterArchive.getIntervalStart(start);
+            stop = ParameterArchive.getIntervalEnd(stop) + 1;
+
+            BackFillerTask bft = new BackFillerTask(parchive);
+            bft.setCollectionStart(start);
+            String timePeriod = '[' + TimeEncoding.toString(start) + "-" + TimeEncoding.toString(stop) + ')';
+            log.debug("Starting parameter archive fillup for interval {}", timePeriod);
+            long t0 = System.nanoTime();
+            long replayStart;
+            if (start < TimeEncoding.MIN_INSTANT + warmupTime) {
+                replayStart = TimeEncoding.MIN_INSTANT;
+            } else {
+                replayStart = start - warmupTime;
+            }
+
+            ReplayOptions rrb = ReplayOptions.getAfapReplay(replayStart, stop, false);
+            Processor proc = ProcessorFactory.create(parchive.getYamcsInstance(),
+                    "ParameterArchive-backfilling_" + count.incrementAndGet(), "ParameterArchive", "internal",
+                    rrb);
+            bft.setProcessor(proc);
+            proc.getParameterRequestManager().subscribeAll(bft);
+
+            proc.start();
+            proc.awaitTerminated();
+            if (bft.aborted) {
+                log.warn("Parameter archive fillup for interval {} aborted", timePeriod);
+            } else {
+                bft.flush();
+                long t1 = System.nanoTime();
+                log.debug("Parameter archive fillup for interval {} finished, processed {} samples in {} millisec",
+                        timePeriod, bft.getNumProcessedParameters(), (t1 - t0) / 1_000_000);
+                for (BackFillerListener listener : listeners) {
+                    listener.onBackfillFinished(start, stop, bft.getNumProcessedParameters());
+                }
+            }
+            if (compactFrequency != -1 && ++compactCount >= compactFrequency) {
+                compactCount = 0;
+                parchive.compact();
+            }
+        } catch (Exception e) {
+            log.error("Error when running the archive filler task", e);
+        }
+        log.debug("After backilling filler lock count: {}", parchive.getFillerLock().lockCount());
+
+        if (log.isTraceEnabled()) {
+            log.trace("Filler locks: {}", parchive.getFillerLock().toString());
+        }
+    }
+
+    private void runSchedule(Schedule s) {
+        if (!automaticBackfillingEnabled) {
+            return;
+        }
+        long start, stop;
+        long intervalDuration = ParameterArchive.getIntervalDuration();
+        if (s.frequency == -1) {
+            start = t0 + (runCount - s.intervalStart) * intervalDuration;
+            stop = start + s.numIntervals * intervalDuration - 1;
+        } else {
+            long now = timeService.getMissionTime();
+            start = now - s.intervalStart * intervalDuration;
+            stop = start + s.numIntervals * intervalDuration - 1;
+        }
+        runTask(start, stop);
+    }
+
+    private void checkStreamUpdates() {
+        if (!automaticBackfillingEnabled) {
+            return;
+        }
+
+        LongArray rebuildIntervals;
+        synchronized (streamUpdates) {
+            if (streamUpdates.isEmpty()) {
+                return;
+            }
+            // wall clock time is used to compare with the lastUpdate and lastRebuild since these are set by the
+            // System.currentTime
+            var nowWc = System.currentTimeMillis();
+            // mission time is used to compare with the interval time to get the data age
+            var nowMt = timeService.getMissionTime();
+            rebuildIntervals = new LongArray(streamUpdates.size());
+
+            var it = streamUpdates.entrySet().iterator();
+
+            while (it.hasNext()) {
+                var streamUpdateEntry = it.next();
+                long age = nowMt - streamUpdateEntry.getKey();
+
+                var applicablePolicyEntry = streamUpdatePolicy.get(0);
+                for (int i = 1; i < streamUpdatePolicy.size(); i++) {
+                    var supe = streamUpdatePolicy.get(i);
+                    if (age < supe.dataAge) {
+                        break;
+                    }
+                    applicablePolicyEntry = supe;
+                }
+                var streamUpdate = streamUpdateEntry.getValue();
+                if (applicablePolicyEntry.fillFrequency > 0
+                        && nowWc - streamUpdate.lastRebuild > applicablePolicyEntry.fillFrequency) {
+                    rebuildIntervals.add(streamUpdateEntry.getKey());
+                    streamUpdate.lastRebuild = nowWc;
+                    it.remove();
+                } else if (applicablePolicyEntry.quietThreshold > 0
+                        && nowWc - streamUpdate.lastUpdate > applicablePolicyEntry.quietThreshold) {
+                    rebuildIntervals.add(streamUpdateEntry.getKey());
+                    it.remove();
+                }
+            }
+        }
+        rebuildIntervals.sort();
+
+        for (int i = 0; i < rebuildIntervals.size(); i++) {
+            int j;
+            for (j = i; j < rebuildIntervals.size() - 1; j++) {
+                if (ParameterArchive.getIntervalEnd(rebuildIntervals.get(j)) != rebuildIntervals.get(j + 1)) {
+                    break;
+                }
+            }
+            runTask(rebuildIntervals.get(i), ParameterArchive.getIntervalEnd(rebuildIntervals.get(j)));
+            i = j;
+        }
+    }
+
+    // runs all schedules with interval -1
+    private void runSegmentSchedules() {
+        if (!automaticBackfillingEnabled) {
+            return;
+        }
+        for (Schedule s : schedules) {
+            if (s.frequency == -1) {
+                runSchedule(s);
+            }
+        }
+        runCount++;
+    }
+
+    static class Schedule {
+        public Schedule(int intervalStart, int numIntervals, long frequency) {
+            this.intervalStart = intervalStart;
+            this.numIntervals = numIntervals;
+            this.frequency = frequency;
+        }
+
+        int intervalStart;
+        int numIntervals;
+        long frequency;
+    }
+
+    public void shutDown() throws InterruptedException {
+        if (subscribedStreams != null) {
+            for (Stream s : subscribedStreams) {
+                s.removeSubscriber(this);
+            }
+        }
+        executor.shutdown();
+        executor.awaitTermination(10, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void onTuple(Stream stream, Tuple tuple) {
+        long gentime = tuple.getTimestampColumn(StandardTupleDefinitions.GENTIME_COLUMN);
+        if (gentime == TimeEncoding.INVALID_INSTANT) {
+            log.warn("Ignorning tuple with invalid gentime {}", tuple);
+            return;
+        }
+        long t0 = ParameterArchive.getIntervalStart(gentime);
+        synchronized (streamUpdates) {
+            long now = System.currentTimeMillis();
+            var streamUpdate = streamUpdates.computeIfAbsent(t0, t -> new StreamUpdate(now));
+            streamUpdate.lastUpdate = now;
+        }
+    }
+
+    @Override
+    public void streamClosed(Stream stream) {
+        log.debug("Stream {} closed", stream.getName());
+    }
+
+    public void addListener(BackFillerListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(BackFillerListener listener) {
+        listeners.remove(listener);
+    }
+
+    static class StreamUpdate {
+        long lastUpdate;
+        long lastRebuild;
+
+        StreamUpdate(long lastRebuild) {
+            this.lastRebuild = lastRebuild;
+        }
+    }
+
+    /**
+     * all values are milliseconds
+     */
+    static record StreamUpdatePolicyEnter(long dataAge, long fillFrequency, long quietThreshold) {
+        @Override
+        public String toString() {
+            return String.format("StreamUpdatePolicyEnter{dataAge=%.2f h, fillFrequency=%.2f s, quietThreshold=%.2f s}",
+                    dataAge / 3600000.0, fillFrequency / 1000.0, quietThreshold / 1000.0);
+        }
+    }
+}
+```
+
+### `BackFillerListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BackFillerListener.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+public interface BackFillerListener {
+
+    /**
+     * Called when a backfilling task finished
+     */
+    void onBackfillFinished(long start, long stop, long processedParameters);
+}
+```
+
+### `BackFillerTask.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BackFillerTask.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.Processor;
+import org.yamcs.utils.TimeEncoding;
+
+import static org.yamcs.parameterarchive.ParameterArchive.*;
+
+class BackFillerTask extends AbstractArchiveFiller {
+    // ParameterGroup_id -> PGSegment
+    protected Map<Integer, PGSegment> pgSegments = new HashMap<>();
+    private Processor processor;
+    long coverageEnd = TimeEncoding.NEGATIVE_INFINITY;
+    private final FillerLock fillerLock;
+    private final Map<LockFailureKey, LockFailureCount> lockFailureCount = new HashMap<>();
+
+    public BackFillerTask(ParameterArchive parameterArchive) {
+        super(parameterArchive);
+        this.fillerLock = parameterArchive.getFillerLock();
+    }
+
+    void flush() {
+        for (PGSegment pgs : pgSegments.values()) {
+            writeToArchive(pgs);
+            fillerLock.unlock(pgs.getInterval(), pgs.getParameterGroupId());
+            var segEnd = pgs.getSegmentEnd();
+            if (segEnd <= parameterArchive.maxCoverageEnd()) {
+                coverageEnd = Math.max(coverageEnd, segEnd);
+            }
+        }
+        parameterArchive.updateCoverageEnd(coverageEnd);
+    }
+
+    public void setProcessor(Processor proc) {
+        this.processor = proc;
+    }
+
+    protected void writeToArchive(PGSegment pgSegment) {
+        try {
+            long t0 = System.nanoTime();
+            parameterArchive.writeToArchive(pgSegment);
+            long d = System.nanoTime() - t0;
+            log.debug("Wrote segment {} to archive in {} millisec", pgSegment, d / 1000_000);
+        } catch (RocksDBException | IOException e) {
+            log.error("Error writing segment to archive", e);
+            throw new ParameterArchiveException("Error writing segment to archive", e);
+        }
+        var segEnd = pgSegment.getSegmentEnd();
+        if (segEnd <= parameterArchive.maxCoverageEnd()) {
+            coverageEnd = Math.max(coverageEnd, segEnd);
+        }
+    }
+
+    @Override
+    protected void processParameters(long t, BasicParameterList pvList) {
+        try {
+            var pg = parameterGroupIdMap.getGroup(pvList.getPids());
+            var parameterGroupId = pg.id;
+            var interval = getInterval(t);
+            PGSegment pgs = pgSegments.get(parameterGroupId);
+
+            if (pgs == null) {
+                if (!fillerLock.try_lock(interval, parameterGroupId, this)) {
+                    var lfc = lockFailureCount.computeIfAbsent(new LockFailureKey(interval, parameterGroupId),
+                            k -> new LockFailureCount());
+                    lfc.increment();
+                    if (lfc.count == 1 || lfc.count % 100 == 0) {
+                        log.warn(
+                                "Failed to aquire lock {} for interval {} parameter group {} (backfiller overlapping with realtime filler?); dropping parameters ",
+                                lfc.count > 1 ? "(" + lfc.count + " times already)" : "",
+                                TimeEncoding.toString(interval), parameterGroupId);
+                    }
+                    return;
+                }
+                pgs = new PGSegment(parameterGroupId, interval, pg.pids.size());
+                pgs.addRecord(t, pvList);
+                pgSegments.put(parameterGroupId, pgs);
+            } else if (interval != pgs.getInterval()) {
+                writeToArchive(pgs);
+                fillerLock.unlock(pgs.getInterval(), parameterGroupId);
+
+                if (!fillerLock.try_lock(interval, parameterGroupId, this)) {
+                    log.warn(
+                            "Failed to aquire lock for interval {} parameter group {} (backfiller overlapping with realtime filler?); dropping parameters ",
+                            TimeEncoding.toString(interval), parameterGroupId);
+                    return;
+                }
+                var pgs1 = new PGSegment(parameterGroupId, interval, pg.pids.size());
+                pgs1.addRecord(t, pvList);
+                pgSegments.put(parameterGroupId, pgs1);
+            } else if (pgs.size() >= maxSegmentSize) {
+                pgs.freeze();
+                writeToArchive(pgs);
+
+                var pgs1 = new PGSegment(parameterGroupId, interval, pg.pids.size());
+                pgs1.addRecord(t, pvList);
+                pgs1.continueSegment(pgs);
+                pgSegments.put(parameterGroupId, pgs1);
+            } else {
+                pgs.addRecord(t, pvList);
+            }
+
+        } catch (RocksDBException e) {
+            log.error("Error writing to the parameter archive", e);
+        }
+    }
+
+    @Override
+    protected void abort() {
+        processor.stopAsync();
+    }
+
+    static record LockFailureKey(long interval, int parameterGroupId) {
+    }
+
+    static class LockFailureCount {
+        int count = 0;
+
+        void increment() {
+            count++;
+        }
+    }
+}
+```
+
+### `BaseSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BaseSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.utils.DecodingException;
+
+/**
+ * Base class for all segments of values, timestamps or ParameterStatus
+ */
+public abstract class BaseSegment {
+    // in SortedTimeValueSegmentV1, timestamps are relative to the segment start
+    @Deprecated
+    public static final byte FORMAT_ID_SortedTimeValueSegmentV1 = 1;
+
+    public static final byte FORMAT_ID_ParameterStatusSegment = 2;
+    public static final byte FORMAT_ID_GenericValueSegment = 10;
+    public static final byte FORMAT_ID_IntValueSegment = 11;
+    public static final byte FORMAT_ID_StringValueSegment = 13;
+
+    // public static final byte FORMAT_ID_OldBooleanValueSegment = 15;
+    public static final byte FORMAT_ID_FloatValueSegment = 16;
+    public static final byte FORMAT_ID_DoubleValueSegment = 17;
+    public static final byte FORMAT_ID_LongValueSegment = 18;
+    public static final byte FORMAT_ID_BinaryValueSegment = 19;
+    public static final byte FORMAT_ID_BooleanValueSegment = 20;
+
+    // in _SortedTimeValueSegmentV2 timestamps are relative to the interval start
+    // this has the advantage that we can merge the segments without change (in RocksDB)
+    public static final byte FORMAT_ID_SortedTimeValueSegmentV2 = 21;
+
+    // starting with Yamcs 5.9.8/5.10.0 we store in the gap segment the starting index of the segment into the interval
+    // in order to allow merging segments later.
+    public static final byte FORMAT_ID_GapSegment = 22;
+
+    protected byte formatId;
+
+    BaseSegment(byte formatId) {
+        this.formatId = formatId;
+    }
+
+    public abstract void writeTo(ByteBuffer buf);
+
+
+
+    public void makeWritable() {
+    }
+    /**
+     *
+     * @return a high approximation for the serialized size in order to allocate a ByteBuffer big enough
+     */
+    public abstract int getMaxSerializedSize();
+
+    public void consolidate() {
+    };
+
+    public byte getFormatId() {
+        return formatId;
+    }
+
+    public static BaseSegment parseSegment(byte formatId, long segmentStart, ByteBuffer bb) throws DecodingException {
+        switch (formatId) {
+        case FORMAT_ID_ParameterStatusSegment:
+            return ParameterStatusSegment.parseFrom(bb);
+        case FORMAT_ID_SortedTimeValueSegmentV1:
+            return SortedTimeSegment.parseFromV1(bb, segmentStart);
+        case FORMAT_ID_IntValueSegment:
+            return IntValueSegment.parseFrom(bb);
+        case FORMAT_ID_StringValueSegment:
+            return StringValueSegment.parseFrom(bb);
+        case FORMAT_ID_BooleanValueSegment:
+            return BooleanValueSegment.parseFrom(bb);
+        case FORMAT_ID_FloatValueSegment:
+            return FloatValueSegment.parseFrom(bb);
+        case FORMAT_ID_DoubleValueSegment:
+            return DoubleValueSegment.parseFrom(bb);
+        case FORMAT_ID_LongValueSegment:
+            return LongValueSegment.parseFrom(bb);
+        case FORMAT_ID_BinaryValueSegment:
+            return BinaryValueSegment.parseFrom(bb);
+        case FORMAT_ID_SortedTimeValueSegmentV2:
+            return SortedTimeSegment.parseFromV2(bb, segmentStart);
+        default:
+            throw new DecodingException("Invalid format id " + formatId);
+        }
+    }
+
+    public abstract int size();
+}
+```
+
+### `BasicParameterList.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BasicParameterList.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.IntHashSet;
+
+/**
+ * Builds list of parameter id and parameter value.
+ * <p>
+ * The list can be sorted on parameter ids using the {@link #sort()} method
+ * <p>
+ * Any parameter which is not in the ParameterIdDb will be added. This includes the aggregates and arrays.
+ * <p>
+ * In order to handle the case when the same parameter has multiple values (with the same timestamp), we have a chain of
+ * these lists. The first list in the chain contains maximum of parameter values, the next in chain contains the next
+ * values for the parameters that have already some value in the first list and so on such that each list of the chain
+ * contains only one single value for each parameter.
+ * <p>
+ * Note that elements of arrays are considered different parameters, not duplicates of the same parameter.
+ * 
+ */
+class BasicParameterList {
+    final ParameterIdDb parameterIdMap;
+    final IntArray idArray;
+    // unique parameter ids for this list
+    final IntHashSet uniquePids = new IntHashSet();
+
+    final List<BasicParameterValue> pvList;
+    BasicParameterList next = null;
+
+    public BasicParameterList(ParameterIdDb parameterIdMap) {
+        this.parameterIdMap = parameterIdMap;
+        this.idArray = new IntArray();
+        this.pvList = new ArrayList<>();
+    }
+
+    // used for unit tests
+    BasicParameterList(IntArray idArray, List<BasicParameterValue> pvList) {
+        this.idArray = idArray;
+        this.parameterIdMap = null;
+        this.pvList = pvList;
+    }
+
+    // add the parameter to the list but also expand if it is an aggregate or array
+    void add(ParameterValue pv) {
+        String fqn = pv.getParameterQualifiedName();
+        if (pv.getEngValue() instanceof AggregateValue) {
+            IntArray aggrray = new IntArray();
+            add(fqn, pv, aggrray);
+
+            Type engType = pv.getEngValue().getType();
+            Type rawType = (pv.getRawValue() == null) ? null : pv.getRawValue().getType();
+
+            parameterIdMap.createAndGetAggrray(fqn, engType, rawType, aggrray);
+        } else if (pv.getEngValue() instanceof ArrayValue arrv) {
+            // for the moment we have no way to store empty arrays in the parameter archive, so we just skip over
+            if (!arrv.isEmpty()) {
+                IntArray aggrray = new IntArray();
+                add(fqn, pv, aggrray);
+                Type engType = pv.getEngValue().getType();
+                Type rawType = (pv.getRawValue() == null) ? null : pv.getRawValue().getType();
+
+                parameterIdMap.createAndGetAggrray(fqn, engType, rawType, aggrray);
+            }
+        } else {
+            add(fqn, pv, null);
+        }
+    }
+
+    void add(String name, BasicParameterValue pv, IntArray aggrray) {
+        Value engValue = pv.getEngValue();
+        Value rawValue = pv.getRawValue();
+        Type engType = engValue.getType();
+        Type rawType = (rawValue == null) ? null : rawValue.getType();
+
+        if (engValue instanceof AggregateValue) {
+            addAggregate(name, pv, aggrray);
+        } else if (engValue instanceof ArrayValue) {
+            addArray(name, pv, aggrray);
+        } else {
+            int parameterId = parameterIdMap.createAndGet(name, engType, rawType);
+            doAdd(parameterId, pv);
+            if (aggrray != null) {
+                aggrray.add(parameterId);
+            }
+        }
+    }
+
+    private void addAggregate(String name, BasicParameterValue pv, IntArray aggrray) {
+        AggregateValue engValue = (AggregateValue) pv.getEngValue();
+        AggregateValue rawValue = (AggregateValue) pv.getRawValue();
+
+        int n = engValue.numMembers();
+        for (int i = 0; i < n; i++) {
+            String mname = engValue.getMemberName(i);
+            Value mEngvalue = engValue.getMemberValue(i);
+            BasicParameterValue pv1 = new BasicParameterValue();
+            pv1.setStatus(pv.getStatus());
+            pv1.setEngValue(mEngvalue);
+            pv1.setGenerationTime(pv.getGenerationTime());
+
+            if (rawValue != null) {
+                Value mRawValue = rawValue.getMemberValue(i);
+                pv1.setRawValue(mRawValue);
+            }
+            add(name + "." + mname, pv1, aggrray);
+        }
+    }
+
+    private void addArray(String name, BasicParameterValue pv, IntArray aggrray) {
+        ArrayValue engValue = (ArrayValue) pv.getEngValue();
+        ArrayValue rawValue = (ArrayValue) pv.getRawValue();
+
+        int[] dim = engValue.getDimensions();
+        int n = dim.length;
+        int[] idx = new int[n];
+
+        while (true) {
+            String mname = toIndexSpecifier(idx);
+            Value mEngvalue = engValue.getElementValue(idx);
+            BasicParameterValue pv1 = new BasicParameterValue();
+            pv1.setStatus(pv.getStatus());
+            pv1.setEngValue(mEngvalue);
+            if (rawValue != null) {
+                Value mRawValue = rawValue.getElementValue(idx);
+                pv1.setRawValue(mRawValue);
+            }
+            add(name + mname, pv1, aggrray);
+
+            int k = n - 1;
+            while (k >= 0 && ++idx[k] >= dim[k]) {
+                k--;
+            }
+            if (k < 0) {
+                break;
+            }
+            while (++k < n) {
+                idx[k] = 0;
+            }
+        }
+    }
+
+    private void doAdd(int pid, BasicParameterValue pv) {
+        if (uniquePids.add(pid)) {
+            idArray.add(pid);
+            pvList.add(pv);
+        } else {
+            if (next == null) {
+                next = new BasicParameterList(parameterIdMap);
+            }
+            next.doAdd(pid, pv);
+        }
+    }
+
+    private static String toIndexSpecifier(int[] dims) {
+        String[] dimStrings = Arrays.stream(dims).mapToObj(String::valueOf).toArray(String[]::new);
+        return "[" + String.join("][", dimStrings) + "]";
+    }
+
+    public int size() {
+        return idArray.size();
+    }
+
+    public IntArray getPids() {
+        return idArray;
+    }
+
+    public List<BasicParameterValue> getValues() {
+        return pvList;
+    }
+
+    /**
+     * returns the next list containing values for parameters that already had a value in this list
+     * <p>
+     * If there are no parameters with two values, this returns null
+     */
+    public BasicParameterList next() {
+        return next;
+    }
+
+    // sort the parameters by id
+    public void sort() {
+        idArray.sort(pvList);
+        if (next != null) {
+            next.sort();
+        }
+    }
+
+    public String toString() {
+        return pvList.toString();
+    }
+}
+```
+
+### `BinaryValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BinaryValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class BinaryValueSegment extends ObjectSegment<byte[]> implements ValueSegment {
+    static BinarySerializer serializer = new BinarySerializer();
+
+    BinaryValueSegment(boolean buildForSerialisation) {
+        super(serializer, buildForSerialisation);
+    }
+
+    public static final int MAX_UTF8_CHAR_LENGTH = 3; // I've seen this in protobuf somwhere
+    protected List<String> values;
+
+    @Override
+    public Value getValue(int index) {
+        return ValueUtility.getBinaryValue(get(index));
+    }
+
+    @Override
+    public void insert(int pos, Value value) {
+        add(pos, value.getBinaryValue());
+    }
+
+    @Override
+    public void add(Value v) {
+        add(v.getBinaryValue());
+    }
+
+    public static BinaryValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        BinaryValueSegment r = new BinaryValueSegment(false);
+        r.parse(bb);
+        return r;
+    }
+
+    static class BinarySerializer implements ObjectSerializer<byte[]> {
+        @Override
+        public byte getFormatId() {
+            return BaseSegment.FORMAT_ID_BinaryValueSegment;
+        }
+
+        @Override
+        public byte[] deserialize(byte[] b) throws DecodingException {
+            return b;
+        }
+
+        @Override
+        public byte[] serialize(byte[] b) {
+            return b;
+        }
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        return new ValueArray(getRangeArray(posStart, posStop, ascending));
+    }
+}
+```
+
+### `BooleanValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/BooleanValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.BooleanArray;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.VarIntUtil;
+
+/**
+ * Boolean value segment uses a boolean array backed by a long[] to represent the boolean values as a set of bits
+ * 
+ */
+public class BooleanValueSegment extends BaseSegment implements ValueSegment {
+    BooleanArray ba;
+
+    public BooleanValueSegment() {
+        super(FORMAT_ID_BooleanValueSegment);
+        ba = new BooleanArray();
+    }
+
+    @Override
+    public void insert(int pos, Value value) {
+        ba.add(pos, value.getBooleanValue());
+    }
+
+    @Override
+    public void add(Value value) {
+        ba.add(value.getBooleanValue());
+    }
+
+    /**
+     * write the segment to buffer
+     * 
+     * @param bb
+     */
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        VarIntUtil.writeVarInt32(bb, ba.size());
+
+        long[] la = ba.toLongArray();
+        VarIntUtil.writeVarInt32(bb, la.length);
+
+        for (long l : la) {
+            bb.putLong(l);
+        }
+    }
+
+    private void parse(ByteBuffer bb) throws DecodingException {
+        int size = VarIntUtil.readVarInt32(bb);
+        int n = VarIntUtil.readVarInt32(bb);
+        long[] la = new long[n];
+        for (int i = 0; i < n; i++) {
+            la[i] = bb.getLong();
+        }
+        ba = BooleanArray.valueOf(la, size);
+    }
+
+    public static BooleanValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        BooleanValueSegment r = new BooleanValueSegment();
+        r.parse(bb);
+        return r;
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        // 4 bytes max for the segment size
+        // 4 bytes max for the long array length
+        // 8 bytes for each 64 bits, rounded up
+        return 16 + ba.size() / 8;
+    }
+
+    @Override
+    public Value getValue(int index) {
+        return ValueUtility.getBooleanValue(ba.get(index));
+    }
+
+    static BooleanValueSegment consolidate(List<Value> values) {
+        BooleanValueSegment bvs = new BooleanValueSegment();
+        int n = values.size();
+
+        bvs.ba = new BooleanArray(n);
+        for (int i = 0; i < n; i++) {
+            bvs.ba.add(i, values.get(i).getBooleanValue());
+        }
+        return bvs;
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        ValueArray r = new ValueArray(Type.BOOLEAN, posStop - posStart);
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r.setValue(i - posStart, ba.get(i));
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r.setValue(posStop - i, ba.get(i));
+            }
+        }
+
+        return r;
+    }
+
+    /**
+     * returns the size of the BitSet storing the values - this will round up to the size of long
+     */
+    @Override
+    public int size() {
+        return ba.size();
+    }
+
+    @Override
+    public String toString() {
+        return "BooleanValueSegment [ba=" + ba + "]";
+    }
+}
+```
+
+### `ConsumerAbortException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ConsumerAbortException.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+/**
+ * 
+ * Use this in the consumers to signal that they don't want anymore data. Any suggestion for a less ugly way to achive
+ * the same result is welcome.
+ * 
+ */
+public class ConsumerAbortException extends RuntimeException {
+    private static final long serialVersionUID = 1L;
+}
+```
+
+### `DoubleValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/DoubleValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.DoubleArray;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.VarIntUtil;
+
+public class DoubleValueSegment extends BaseSegment implements ValueSegment {
+    final static byte SUBFORMAT_ID_RAW = 0;
+
+    DoubleArray values;
+
+    DoubleValueSegment() {
+        super(FORMAT_ID_DoubleValueSegment);
+        values = new DoubleArray();
+    }
+
+    @Override
+    public void insert(int pos, Value value) {
+        values.add(pos, value.getDoubleValue());
+    }
+
+    @Override
+    public void add(Value value) {
+        values.add(value.getDoubleValue());
+    }
+
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        bb.put(SUBFORMAT_ID_RAW);
+        int n = values.size();
+        VarIntUtil.writeVarInt32(bb, n);
+        for (int i = 0; i < n; i++) {
+            bb.putDouble(values.get(i));
+        }
+    }
+
+    private void parse(ByteBuffer bb) throws DecodingException {
+        byte fid = bb.get();
+        if (fid != SUBFORMAT_ID_RAW) {
+            throw new DecodingException("Uknown sub format id: " + fid);
+        }
+        int n = VarIntUtil.readVarInt32(bb);
+        values = new DoubleArray(n);
+
+        for (int i = 0; i < n; i++) {
+            values.add(bb.getDouble());
+        }
+    }
+
+    public static DoubleValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        DoubleValueSegment r = new DoubleValueSegment();
+        r.parse(bb);
+        return r;
+    }
+
+    @Override
+    public Value getValue(int index) {
+        return ValueUtility.getDoubleValue(values.get(index));
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        return 4 + 8 * values.size();
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        double[] r = new double[posStop - posStart];
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r[i - posStart] = values.get(i);
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r[posStop - i] = values.get(i);
+            }
+        }
+
+        return new ValueArray(r);
+    }
+
+    @Override
+    public int size() {
+        return values.size();
+    }
+
+    @Override
+    public String toString() {
+        return "DoubleValueSegment [values=" + values + "]";
+    }
+
+}
+```
+
+### `FastPFORFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FastPFORFactory.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import me.lemire.integercompression.FastPFOR128;
+
+/**
+ * Because the FastPFOR codec uses quite some memory, 
+ * we use this factory to limit the number of created objects to one per thread
+ * 
+ * 
+ * @author Nicolae Mihalache
+ *
+ */
+public class FastPFORFactory {
+    static ThreadLocal<FastPFOR128> tl = new ThreadLocal<FastPFOR128>(){
+        @Override
+        protected FastPFOR128 initialValue() {
+            return new FastPFOR128();
+        };
+    };
+    
+    public static FastPFOR128 get() {
+        return tl.get();
+    }
+}
+```
+
+### `FillerLock.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FillerLock.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+/**
+ * Handle locking parameter archive intervals in order to avoid different fillers filling up the same interval
+ * concurrently.
+ * <p>
+ * The locking is done per parameter group id
+ */
+public class FillerLock {
+    private final ConcurrentMap<LockKey, Object> locks = new ConcurrentHashMap<>();
+
+    /**
+     * try to acquire the filler lock for the given interval and pgid with the given holder.
+     * <p>
+     * return true if the lock could be acquired and false otherwise.
+     * <p>
+     * If the holder is the same one that acquired the lock in the first place, then return true;
+     */
+    public boolean try_lock(long interval, int pgid, Object holder) {
+        var existing = locks.putIfAbsent(new LockKey(interval, pgid), holder);
+        return existing == null || existing == holder;
+    }
+
+    /**
+     * unlock the filler lock for the given interval and pgid
+     */
+    public void unlock(long interval, int pgid) {
+        locks.remove(new LockKey(interval, pgid));
+    }
+
+    public int lockCount() {
+        return locks.size();
+    }
+
+    static record LockKey(long interval, int pgid) {
+    }
+
+    public String toString() {
+        return locks.toString();
+    }
+}
+```
+
+### `FloatCompressor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FloatCompressor.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.utils.BitReader;
+import org.yamcs.utils.BitWriter;
+
+/**
+ * Implements the floating point compression scheme described here:
+ * http://www.vldb.org/pvldb/vol8/p1816-teller.pdf
+ * 
+ * @author nm
+ *
+ */
+public class FloatCompressor {
+   /**
+    * *compress the first n elements from the array of floats into the ByteBuffer
+    * */
+    static public void compress(float[] fa, int n, ByteBuffer bb) {
+        BitWriter bw=new BitWriter(bb);
+
+        int xor;
+        int prevV = Float.floatToRawIntBits(fa[0]);
+        bw.write(prevV, 32);
+        
+        int prevLz = 100; //such that the first comparison lz>=prevLz will fail
+        int prevTz = 0;
+
+        for(int i=1; i<n; i++) {
+            int v = Float.floatToRawIntBits(fa[i]);
+            xor = v^prevV;
+            //If XOR with the previous is zero (same value), store single ‘0’ bit
+            if(xor==0) {
+                bw.write(0, 1);
+            } else {
+                //When XOR is non-zero, calculate the number of leading and trailing zeros in the XOR, store bit ‘1’ followed
+                // by either a) or b):
+                bw.write(1, 1);
+                int lz = Integer.numberOfLeadingZeros(xor);
+                int tz = Integer.numberOfTrailingZeros(xor);
+                if((lz>=prevLz) && (tz>=prevTz) &&(lz<prevLz+7)) {
+                	//if((lz==prevLz)&&(tz==prevTz)) {
+                    //(a) (Control bit ‘0’) If the block of meaningful bits falls within the block of previous meaningful bits,
+                    //i.e., there are at least as many leading zeros and as many trailing zeros as with the previous value,
+                    //use that information for the block position and just store the meaningful XORed value.
+                    bw.write(0, 1);
+                    bw.write(xor>>prevTz, 32-prevLz-prevTz);
+                } else {
+                    //(b) (Control bit ‘1’) Store the length of the number  of leading zeros in the next 5 bits, then store the
+                    // length of the meaningful XORed value in the next 6 bits. Finally store the meaningful bits of the XORed value.
+                    int mb = 32-lz-tz; //meaningful bits
+                    
+                    bw.write(1, 1);
+                    bw.write(lz, 5);
+                    bw.write(mb, 5);
+                    bw.write(xor>>tz, mb);
+                    prevLz = lz;
+                    prevTz = tz;
+                }
+
+            }
+            prevV = v;
+        }
+        bw.flush();
+    }
+
+    public static float[] decompress(ByteBuffer bb, int n) {
+        BitReader br = new BitReader(bb);
+        float[] fa = new float[n];
+        int xor;
+        int v = (int)br.read(32);
+        fa[0] = Float.intBitsToFloat(v);
+        
+        int lz = 0; //leading zeros
+        int tz = 0; //trailing zeros
+        int mb = 0; //meaningful bits
+        for(int i=1; i<fa.length; i++) {
+            int bit = br.read(1);
+            if(bit==0) {
+                //same with the previous value
+                fa[i]=fa[i-1];
+            } else {
+            	
+                bit = br.read(1);
+                if(bit==0) {//the block of meaningful bits falls within the block of previous meaningful bits,
+                    xor = br.read(mb)<<tz;
+                    v = xor^v;
+                } else {
+                    lz = br.read(5);
+                    mb = br.read(5);
+                    //this happens when mb is 32 and overflows the 5 bits
+                    if(mb==0) mb=32;
+                    tz = 32-lz-mb;
+                    xor = br.read(mb)<<tz;
+                    v = xor^v;
+                }
+                fa[i] = Float.intBitsToFloat(v);
+            }
+        }
+        
+        return fa;
+    }
+
+    public static void compress(float[] fa, ByteBuffer bb) {
+        compress(fa, fa.length, bb);
+    }
+}
+
+
+
+
+```
+
+### `FloatValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/FloatValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.FloatArray;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.VarIntUtil;
+
+public class FloatValueSegment extends BaseSegment implements ValueSegment {
+    final static byte SUBFORMAT_ID_RAW = 0;
+    final static byte SUBFORMAT_ID_COMPRESSED = 1;
+
+    FloatArray values;
+
+    FloatValueSegment() {
+        super(FORMAT_ID_FloatValueSegment);
+        values = new FloatArray();
+    }
+
+    @Override
+    public void insert(int pos, Value value) {
+        values.add(pos, value.getFloatValue());
+    }
+
+    @Override
+    public void add(Value value) {
+        values.add(value.getFloatValue());
+    }
+
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        int position = bb.position();
+
+        // try to write it compressed, if we get an buffer overflow, revert to raw encoding
+        bb.put(SUBFORMAT_ID_COMPRESSED);
+        int n = values.size();
+        VarIntUtil.writeVarInt32(bb, n);
+
+        try {
+            FloatCompressor.compress(values.array(), values.size(), bb);
+        } catch (BufferOverflowException e) {
+            bb.position(position);
+            writeRaw(bb);
+        }
+    }
+
+    private void writeRaw(ByteBuffer bb) {
+        bb.put(SUBFORMAT_ID_RAW);
+        int n = values.size();
+        VarIntUtil.writeVarInt32(bb, n);
+        for (int i = 0; i < n; i++) {
+            bb.putFloat(values.get(i));
+        }
+    }
+
+    private void parse(ByteBuffer bb) throws DecodingException {
+        byte b = bb.get();
+        int n = VarIntUtil.readVarInt32(bb);
+        float[] floats;
+        if (b == SUBFORMAT_ID_RAW) {
+            floats = new float[n];
+            for (int i = 0; i < n; i++) {
+                floats[i] = bb.getFloat();
+            }
+        } else if (b == SUBFORMAT_ID_COMPRESSED) {
+            floats = FloatCompressor.decompress(bb, n);
+        } else {
+            throw new DecodingException("Unknown SUBFORMAT_ID: " + b);
+        }
+        values = FloatArray.wrap(floats);
+    }
+
+    public static FloatValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        FloatValueSegment r = new FloatValueSegment();
+        r.parse(bb);
+        return r;
+    }
+
+    @Override
+    public Value getValue(int index) {
+        return ValueUtility.getFloatValue(values.get(index));
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        return 5 + 4 * values.size() + 1;
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        float[] r = new float[posStop - posStart];
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r[i - posStart] = values.get(i);
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r[posStop - i] = values.get(i);
+            }
+        }
+
+        return new ValueArray(r);
+    }
+
+    @Override
+    public int size() {
+        return values.size();
+    }
+
+    @Override
+    public String toString() {
+        return "FloatValueSegment [values=" + values + "]";
+    }
+
+}
+```
+
+### `IntValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/IntValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.VarIntUtil;
+
+import me.lemire.integercompression.FastPFOR128;
+import me.lemire.integercompression.IntWrapper;
+
+/**
+ * 32 bit integers encoded as deltas of deltas (good if the values are relatively constant or in increasing order)
+ * 
+ * @author nm
+ *
+ */
+public class IntValueSegment extends BaseSegment implements ValueSegment {
+    final static int SUBFORMAT_ID_RAW = 0; // uncompressed
+    final static int SUBFORMAT_ID_DELTAZG_FPF128_VB = 1; // compressed with DeltaZigzag and then FastPFOR128 plus
+                                                         // VariableByte for remaining
+    final static int SUBFORMAT_ID_DELTAZG_VB = 2; // compressed with DeltaZigzag plus VariableByte
+
+    private boolean signed;
+    IntArray values;
+
+    IntValueSegment(boolean signed) {
+        super(FORMAT_ID_IntValueSegment);
+        values = new IntArray();
+        this.signed = signed;
+    }
+
+    private IntValueSegment() {
+        super(FORMAT_ID_IntValueSegment);
+    }
+
+    @Override
+    public void insert(int pos, Value value) {
+        var v = signed ? value.getSint32Value() : value.getUint32Value();
+        values.add(pos, v);
+    }
+
+    @Override
+    public void add(Value value) {
+        var v = signed ? value.getSint32Value() : value.getUint32Value();
+        values.add(v);
+    }
+
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        int position = bb.position();
+        // try first to write compressed, if we fail (for random data we may exceed the buffer) then write in raw format
+        try {
+            writeCompressed(bb);
+        } catch (IndexOutOfBoundsException | BufferOverflowException e) {
+            bb.position(position);
+            writeRaw(bb);
+        }
+    }
+
+    private void writeCompressed(ByteBuffer bb) {
+        int[] ddz = VarIntUtil.encodeDeltaDeltaZigZag(values);
+
+        FastPFOR128 fastpfor = FastPFORFactory.get();
+        int size = ddz.length;
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+        int[] xc = new int[size];
+
+        fastpfor.compress(ddz, inputoffset, size, xc, outputoffset);
+        if (outputoffset.get() == 0) {
+            // fastpfor didn't compress anything, probably there were too few datapoints
+            writeHeader(SUBFORMAT_ID_DELTAZG_VB, bb);
+        } else {
+            writeHeader(SUBFORMAT_ID_DELTAZG_FPF128_VB, bb);
+            int length = outputoffset.get();
+            for (int i = 0; i < length; i++) {
+                bb.putInt(xc[i]);
+            }
+        }
+
+        // write the remaining bytes varint compressed
+        for (int i = inputoffset.get(); i < size; i++) {
+            VarIntUtil.writeVarInt32(bb, ddz[i]);
+        }
+    }
+
+    private void writeRaw(ByteBuffer bb) {
+        writeHeader(SUBFORMAT_ID_RAW, bb);
+        int n = values.size();
+        for (int i = 0; i < n; i++) {
+            bb.putInt(values.get(i));
+        }
+    }
+
+    // write header:
+    // 1st byte: spare signed/unsigned subformatid
+    // 3 bits 1 bit 4 bits
+    // 2nd+ bytes: varint of n
+    private void writeHeader(int subFormatId, ByteBuffer bb) {
+        int x = signed ? 1 : 0;
+        x = (x << 4) | subFormatId;
+        bb.put((byte) x);
+        VarIntUtil.writeVarInt32(bb, values.size());
+    }
+
+    static public IntValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        IntValueSegment r = new IntValueSegment();
+        r.parse(bb);
+        return r;
+    }
+
+    private void parse(ByteBuffer bb) throws DecodingException {
+        byte x = bb.get();
+        int subFormatId = x & 0xF;
+        signed = (((x >> 4) & 1) == 1);
+        int n = VarIntUtil.readVarInt32(bb);
+
+        switch (subFormatId) {
+        case SUBFORMAT_ID_RAW:
+            parseRaw(bb, n);
+            break;
+        case SUBFORMAT_ID_DELTAZG_FPF128_VB: // intentional fall through
+        case SUBFORMAT_ID_DELTAZG_VB:
+            parseCompressed(bb, n, subFormatId);
+            break;
+        default:
+            throw new DecodingException("Unknown subformatId: " + subFormatId);
+        }
+    }
+
+    private void parseRaw(ByteBuffer bb, int n) {
+        values = new IntArray(n);
+        for (int i = 0; i < n; i++) {
+            values.add(bb.getInt());
+        }
+    }
+
+    private void parseCompressed(ByteBuffer bb, int n, int subFormatId) throws DecodingException {
+        int[] ddz = new int[n];
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+        int position = bb.position();
+
+        if (subFormatId == SUBFORMAT_ID_DELTAZG_FPF128_VB) {
+            int[] x = new int[(bb.limit() - bb.position()) / 4];
+            for (int i = 0; i < x.length; i++) {
+                x[i] = bb.getInt();
+            }
+            FastPFOR128 fastpfor = FastPFORFactory.get();
+            fastpfor.uncompress(x, inputoffset, x.length, ddz, outputoffset);
+            bb.position(position + inputoffset.get() * 4);
+        }
+
+        for (int i = outputoffset.get(); i < n; i++) {
+            ddz[i] = VarIntUtil.readVarInt32(bb);
+        }
+        values = IntArray.wrap(VarIntUtil.decodeDeltaDeltaZigZag(ddz));
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        return 5 + 4 * values.size(); // 1+for format id + 4 for the size plus 4 for each element
+    }
+
+    @Override
+    public Value getValue(int index) {
+        if (signed) {
+            return ValueUtility.getSint32Value(values.get(index));
+        } else {
+            return ValueUtility.getUint32Value(values.get(index));
+        }
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        int[] r = new int[posStop - posStart];
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r[i - posStart] = values.get(i);
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r[posStop - i] = values.get(i);
+            }
+        }
+
+        if (signed) {
+            return new ValueArray(Type.SINT32, r);
+        } else {
+            return new ValueArray(Type.UINT32, r);
+        }
+    }
+
+    @Override
+    public int size() {
+        return values.size();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        IntValueSegment other = (IntValueSegment) obj;
+        if (signed != other.signed)
+            return false;
+        if (values == null) {
+            if (other.values != null)
+                return false;
+        } else if (!values.equals(other.values))
+            return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return values.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "IntValueSegment [signed=" + signed + ", values=" + values + "]";
+    }
+
+}
+```
+
+### `LongValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/LongValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.LongArray;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.VarIntUtil;
+
+public class LongValueSegment extends BaseSegment implements ValueSegment {
+
+    final static int SUBFORMAT_ID_RAW = 0;
+    LongArray values;
+
+    // all possible types that can be stored by this segment
+    static final Type[] types = new Type[] { Type.UINT64, Type.SINT64, Type.TIMESTAMP };
+    int numericType;// index in the array above
+
+    LongValueSegment(Type type) {
+        super(FORMAT_ID_LongValueSegment);
+        values = new LongArray();
+        this.numericType = getNumericType(type);
+    }
+
+
+    private LongValueSegment() {
+        super(FORMAT_ID_LongValueSegment);
+    }
+
+    @Override
+    public void insert(int pos, Value value) {
+        Type type = value.getType();
+        if (type == Type.UINT64) {
+            values.add(pos, value.getUint64Value());
+        } else if (type == Type.SINT64) {
+            values.add(pos, value.getSint64Value());
+        } else {
+            values.add(pos, value.getTimestampValue());
+        }
+    }
+
+    @Override
+    public void add(Value value) {
+        Type type = value.getType();
+        if (type == Type.UINT64) {
+            values.add(value.getUint64Value());
+        } else if (type == Type.SINT64) {
+            values.add(value.getSint64Value());
+        } else {
+            values.add(value.getTimestampValue());
+        }
+    }
+
+    private int getNumericType(Type type) {
+        for (int i = 0; i < types.length; i++) {
+            if (types[i] == type) {
+                return i;
+            }
+        }
+        throw new IllegalStateException();
+    }
+
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        writeHeader(SUBFORMAT_ID_RAW, bb);
+        int n = values.size();
+        VarIntUtil.writeVarInt32(bb, n);
+        for (int i = 0; i < n; i++) {
+            bb.putLong(values.get(i));
+        }
+    }
+
+    // write header:
+    // 1st byte: spare type subformatid
+    // 2 bits 2 bits 4 bits
+    private void writeHeader(int subFormatId, ByteBuffer bb) {
+        int x = (numericType << 4) | subFormatId;
+        bb.put((byte) x);
+    }
+
+    private void parse(ByteBuffer bb) throws DecodingException {
+        byte x = bb.get();
+        int subFormatId = x & 0xF;
+        if (subFormatId != SUBFORMAT_ID_RAW)
+            throw new DecodingException("Unknown subformatId " + subFormatId + " for LongValueSegment");
+
+        numericType = (x >> 4) & 3;
+
+        int n = VarIntUtil.readVarInt32(bb);
+
+        if (bb.limit() - bb.position() < 8 * n) {
+            throw new DecodingException("Cannot decode long segment: expected " + (8 * n) + " bytes and only "
+                    + (bb.limit() - bb.position()) + " available");
+        }
+        values = new LongArray(n);
+        for (int i = 0; i < n; i++) {
+            values.add(bb.getLong());
+        }
+    }
+
+    public static LongValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        LongValueSegment r = new LongValueSegment();
+        r.parse(bb);
+        return r;
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        return 4 + 8 * values.size(); // 4 for the size plus 8 for each element
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        long[] r = new long[posStop - posStart];
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r[i - posStart] = values.get(i);
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r[posStop - i] = values.get(i);
+            }
+        }
+        return new ValueArray(types[numericType], r);
+    }
+
+    @Override
+    public Value getValue(int index) {
+        if (numericType == 0) {
+            return ValueUtility.getUint64Value(values.get(index));
+        } else if (numericType == 1) {
+            return ValueUtility.getSint64Value(values.get(index));
+        } else {
+            return ValueUtility.getTimestampValue(values.get(index));
+        }
+    }
+
+    @Override
+    public int size() {
+        return values.size();
+    }
+
+    @Override
+    public String toString() {
+        return "LongValueSegment [values=" + values + ", numericType=" + numericType + "]";
+    }
+
+}
+```
+
+### `MultiParameterRetrieval.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultiParameterRetrieval.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.io.IOException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.function.Consumer;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+/**
+ * Retrieves multiple parameters from the Parameter Archive.
+ * 
+ * <p>
+ * The Parameter Archive stores parameters in segments - one segment contains multiple values for the same parameter.
+ * Even more, the values of one parameter may be split into multiple groups.
+ * <p>
+ * This class will merge (interleave) the segments such as the output is a list of parameters at each timestamp.
+ * <p>
+ * If we imagine the parameter values as a matrix where one line corresponds to all parameters timestamped at one
+ * specific time, the purpose of this class is to transform from columns (Parameter Archive representation) to rows
+ * (user requested representation)
+ *
+ */
+public class MultiParameterRetrieval {
+    final ParameterArchive parchive;
+    final MultipleParameterRequest mpvr;
+    final AggrrayBuilder[] aggarrayBuilders;
+
+    SegmentEncoderDecoder vsEncoder = new SegmentEncoderDecoder();
+    private final Log log;
+
+    public MultiParameterRetrieval(ParameterArchive parchive, MultipleParameterRequest mpvr) {
+        this.parchive = parchive;
+        this.mpvr = mpvr;
+        this.aggarrayBuilders = new AggrrayBuilder[0];
+        this.log = new Log(this.getClass(), parchive.getYamcsInstance());
+    }
+
+    public void retrieve(Consumer<ParameterIdValueList> consumer) throws RocksDBException, IOException {
+        log.trace("Starting a parameter retrieval: {}", mpvr);
+
+        ParameterGroupIdDb pgDb = parchive.getParameterGroupIdDb();
+        PriorityQueue<ParameterIterator> queue = new PriorityQueue<>(new IteratorComparator(mpvr.ascending));
+        int[] parameterGroupIds = mpvr.parameterGroupIds;
+
+        for (int i = 0; i < mpvr.parameterIds.length; i++) {
+            ParameterId paraId = mpvr.parameterIds[i];
+            ParameterRetrievalOptions req = ParameterRetrievalOptions.newBuilder().withStartStop(mpvr.start, mpvr.stop)
+                    .withAscending(mpvr.ascending).withRetrieveEngineeringValues(mpvr.retrieveEngValues)
+                    .withRetrieveRawValues(mpvr.retrieveRawValues && paraId.hasRawValue())
+                    .withRetrieveParameterStatus(mpvr.retrieveParamStatus).build();
+
+            if (parameterGroupIds != null) {
+                queueIterator(queue, paraId, parameterGroupIds[i], req);
+            } else {
+                int pid0 = paraId.isSimple() ? paraId.getPid() : paraId.getComponents().get(0);
+                for (int pgid : pgDb.getAllGroups(pid0)) {
+                    queueIterator(queue, paraId, pgid, req);
+                }
+            }
+        }
+        log.trace("Got {} parallel iterators", queue.size());
+
+        Merger merger = new Merger(mpvr, consumer);
+
+        ParameterIterator it = null;
+        try {
+            while (!queue.isEmpty()) {
+                it = queue.poll();
+                merger.process(it.getParameterId(), it.getParameterGroupId(), it.value());
+
+                if (merger.sentEnough())
+                    return;
+
+                it.next();
+                if (it.isValid()) {
+                    queue.add(it);
+                }
+            }
+            merger.flush();
+        } catch (ConsumerAbortException e) {
+            log.debug("Stopped early due to receiving ConsumerAbortException");
+        } finally {
+            if (it != null) {
+                it.close();
+            }
+            queue.forEach(it1 -> it1.close());
+        }
+        log.trace("Retrieval finished");
+    }
+
+    private void queueIterator(PriorityQueue<ParameterIterator> queue,
+            ParameterId paraId, int pgid, ParameterRetrievalOptions req) {
+        ParameterIterator it;
+        if (paraId.isSimple()) {
+            it = new SimpleParameterIterator(parchive, paraId, pgid, req);
+        } else {
+            it = new AggrrayIterator(parchive, paraId, pgid, req);
+        }
+        if (it.isValid()) {
+            queue.add(it);
+        } else {
+            it.close();
+        }
+    }
+
+    /**
+     * Merge values from the parallel iterators taking care that parameters from the same group end up in the same list
+     *
+     */
+    static class Merger {
+        int count = 0;
+        // group id -> parameter list
+        Map<Integer, ParameterIdValueList> values = new HashMap<>();
+        long curTime = TimeEncoding.INVALID_INSTANT;
+
+        final MultipleParameterRequest mpvr;
+        final Consumer<ParameterIdValueList> consumer;
+
+        public Merger(MultipleParameterRequest mpvr, Consumer<ParameterIdValueList> consumer) {
+            this.mpvr = mpvr;
+            this.consumer = consumer;
+        }
+
+        void process(ParameterId paraId, int pgid, TimedValue tv) {
+            long t = tv.instant;
+            if (t != curTime) {
+                flush();
+                curTime = t;
+            }
+            ParameterIdValueList vlist = values.computeIfAbsent(pgid, k1 -> new ParameterIdValueList(tv.instant));
+
+            ParameterValue pv = new ParameterValue(paraId.getParamFqn());
+            pv.setGenerationTime(tv.instant);
+
+            if (tv.engValue != null) {
+                pv.setEngValue(tv.engValue);
+            }
+            if (tv.rawValue != null) {
+                pv.setRawValue(tv.rawValue);
+            }
+            if (tv.paramStatus != null) {
+                ParameterStatus ps = tv.paramStatus;
+                if (ps.hasAcqStatus()) {
+                    pv.setAcqStatus(ps.getAcqStatus());
+                } else if (ps.hasAcquisitionStatus()) {
+                    pv.setAcqStatus(
+                            org.yamcs.parameter.ParameterStatus.getAcquisitionStatus(ps.getAcquisitionStatus()));
+                }
+
+                if (ps.hasMonitoringResult()) {
+                    pv.setMonitoringResult(ps.getMonitoringResult());
+                }
+                if (ps.getAlarmRangeCount() > 0) {
+                    pv.addAlarmRanges(ps.getAlarmRangeList());
+                }
+                if (ps.hasExpireMillis()) {
+                    pv.setExpireMillis(ps.getExpireMillis());
+                }
+                if (ps.hasRangeCondition()) {
+                    pv.setRangeCondition(ps.getRangeCondition());
+                }
+            }
+
+            vlist.add(paraId.getPid(), pv);
+        }
+
+        public void flush() {
+            for (ParameterIdValueList pvlist : values.values()) {
+                consumer.accept(pvlist);
+                count++;
+                if (sentEnough()) {
+                    break;
+                }
+            }
+            values.clear();
+        }
+
+        boolean sentEnough() {
+            return mpvr.limit > 0 && count >= mpvr.limit;
+        }
+
+    }
+
+    static class IteratorComparator implements Comparator<ParameterIterator> {
+        final boolean ascending;
+
+        public IteratorComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(ParameterIterator it1, ParameterIterator it2) {
+            TimedValue pvs1 = it1.value();
+            TimedValue pvs2 = it2.value();
+
+            int c = ascending ? Long.compare(pvs1.instant, pvs2.instant)
+                    : Long.compare(pvs2.instant, pvs1.instant);
+
+            if (c != 0) {
+                return c;
+            }
+            //
+            // make sure the parameters are extracted in the order of their id
+            // (rather than some random order from PriorityQueue)
+            return Integer.compare(it1.getParameterId().getPid(), it2.getParameterId().getPid());
+        }
+    }
+}
+```
+
+### `MultiParameterValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultiParameterValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.List;
+
+/**
+ * A collection of ParameterValueSegment with a common timeSegment.
+ * <p>
+ * Some of the segments may be null in case they contained no data (i.e. only gaps)
+ */
+public class MultiParameterValueSegment {
+    ParameterId[] pids;
+    SortedTimeSegment timeSegment;
+    List<ParameterValueSegment> pvSegments;
+
+    public MultiParameterValueSegment(ParameterId[] pids, SortedTimeSegment timeSegment,
+            List<ParameterValueSegment> pvSegments) {
+        if (pids.length != pvSegments.size()) {
+            throw new IllegalArgumentException("number of segments " + pvSegments.size()
+                    + " does not correspond to the number of parameters " + pids.length);
+        }
+        this.timeSegment = timeSegment;
+        this.pvSegments = pvSegments;
+    }
+
+    public MultiParameterValueSegment(SortedTimeSegment timeSegment) {
+        this.timeSegment = timeSegment;
+    }
+
+    @Override
+    public String toString() {
+        return "ParameterValueSegment[size: " + timeSegment.size() + "]";
+    }
+
+    public long getSegmentStart() {
+        return timeSegment.getSegmentStart();
+    }
+
+    public long getSegmentEnd() {
+        return timeSegment.getSegmentEnd();
+    }
+
+    public int size() {
+        return timeSegment.size();
+    }
+
+    public ParameterValueSegment getPvs(int idx) {
+        return pvSegments.get(idx);
+    }
+
+    public int numParameters() {
+        return pvSegments.size();
+    }
+}
+```
+
+### `MultipleParameterRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultipleParameterRequest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.Arrays;
+
+import org.yamcs.utils.TimeEncoding;
+
+public class MultipleParameterRequest {
+
+    final ParameterId[] parameterIds;
+
+    final long start;
+    final long stop;
+    final boolean ascending;
+    final boolean retrieveEngValues;
+    final boolean retrieveParamStatus;
+    final boolean retrieveRawValues;
+    final int[] parameterGroupIds;
+
+    int limit = -1;
+
+    public MultipleParameterRequest(long start, long stop, ParameterId[] parameterIds, boolean ascending) {
+        this(start, stop, parameterIds, null, ascending, true, true, true);
+    }
+
+    public MultipleParameterRequest(long start, long stop, ParameterId[] parameterIds, int[] parameterGroupIds,
+            boolean ascending, boolean retrieveEngValues, boolean retrieveRawValues, boolean retrieveParamStatus) {
+
+        if (parameterGroupIds != null && parameterGroupIds.length != parameterIds.length) {
+            throw new IllegalArgumentException("Different number of parameter ids than parameter group ids");
+        }
+        this.parameterIds = parameterIds;
+        this.start = start;
+        this.stop = stop;
+        this.ascending = ascending;
+        this.retrieveRawValues = retrieveRawValues;
+        this.retrieveEngValues = retrieveEngValues;
+        this.retrieveParamStatus = retrieveParamStatus;
+        this.parameterGroupIds = parameterGroupIds;
+    }
+
+    public boolean isRetrieveEngValues() {
+        return retrieveEngValues;
+    }
+
+    public boolean isRetrieveParamStatus() {
+        return retrieveParamStatus;
+    }
+
+    public ParameterId[] getParameterIds() {
+        return parameterIds;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public long getStop() {
+        return stop;
+    }
+
+    public boolean isAscending() {
+        return ascending;
+    }
+
+    public int getLimit() {
+        return limit;
+    }
+
+    /**
+     * retrieve a limited number of "lines"
+     * negative means no limit
+     * 
+     * @param limit
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    @Override
+    public String toString() {
+        return "MultipleParameterRequest [parameterIds=" + Arrays.toString(parameterIds)
+                + ", start=" + TimeEncoding.toString(start) + ", stop=" + TimeEncoding.toString(stop) + ", ascending="
+                + ascending + ", retrieveRawValues=" + retrieveRawValues + ", retrieveEngValues=" + retrieveEngValues
+                + ", retrieveParamStatus=" + retrieveParamStatus + ", limit=" + limit + "]";
+    }
+
+}
+```
+
+### `MultiSegmentIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/MultiSegmentIterator.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.yamcs.parameterarchive.ParameterArchive.getIntervalEnd;
+import static org.yamcs.parameterarchive.ParameterArchive.getIntervalStart;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameterarchive.ParameterArchive.Partition;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.yarch.rocksdb.AscendingRangeIterator;
+import org.yamcs.yarch.rocksdb.DbIterator;
+import org.yamcs.yarch.rocksdb.DescendingRangeIterator;
+
+/**
+ * Same as {@link SegmentIterator} but provides segments for multiple parameters from the same group in one step.
+ * <p>
+ * Since Yamcs 5.9.4, with the introduction of the sparseGroup, some segments in the returned MultiParameterValueSegment
+ * may be null if they contain no data
+ *
+ */
+public class MultiSegmentIterator implements ParchiveIterator<MultiParameterValueSegment> {
+    private final int parameterGroupId;
+    private final ParameterId[] pids;
+
+    ParameterArchive parchive;
+
+    List<Partition> partitions;
+
+    // iterates over partitions
+    Iterator<Partition> topIt;
+
+    // iterates over segments in one partition
+    SubIterator subIt;
+
+    final boolean ascending, retrieveEngValues, retrieveRawValues, retrieveParameterStatus;
+
+    MultiParameterValueSegment curValue;
+    final long start, stop;
+
+    // iterates over the segments in the realtime filler
+    Iterator<MultiParameterValueSegment> rtIterator;
+    final RealtimeArchiveFiller rtfiller;
+
+    public MultiSegmentIterator(ParameterArchive parchive, ParameterId[] pids, int parameterGroupId,
+            ParameterRetrievalOptions req) {
+        this.pids = pids;
+        this.parameterGroupId = parameterGroupId;
+        this.parchive = parchive;
+        this.start = req.start();
+        this.stop = req.stop();
+        this.ascending = req.ascending();
+        this.retrieveEngValues = req.retrieveEngValues();
+        this.retrieveRawValues = req.retrieveRawValues();
+        this.retrieveParameterStatus = req.retrieveParameterStatus();
+
+        partitions = parchive.getPartitions(getIntervalStart(start), getIntervalEnd(stop), req.ascending());
+        topIt = partitions.iterator();
+
+        rtfiller = parchive.getRealtimeFiller();
+
+        if (rtfiller != null && !ascending) {
+            rtIterator = rtfiller.getSegments(pids, parameterGroupId, ascending).iterator();
+        }
+        next();
+    }
+
+    public boolean isValid() {
+        return curValue != null;
+    }
+
+    public MultiParameterValueSegment value() {
+        return curValue;
+    }
+
+    public void next() {
+        // descending with a realtime filler: retrieve first the values from the realtime that are in range
+        if (!ascending && rtIterator != null) {
+            curValue = null;
+            while (rtIterator.hasNext()) {
+                curValue = rtIterator.next();
+                if (curValue.getSegmentStart() <= stop && curValue.getSegmentEnd() >= start) {
+                    break;
+                } else {
+                    curValue = null;
+                }
+            }
+            if (curValue == null) {
+                rtIterator = null;
+            } else {
+                return;
+            }
+        }
+
+        subIt = getPartitionIterator();
+        if (subIt != null) {
+            curValue = subIt.value();
+            subIt.next();
+            return;
+        } else {
+            curValue = null;
+        }
+
+        // ascending with a realtime filler: retrieve at the end the values from the realtime that are in range
+        if (ascending && rtfiller != null) {
+            if (rtIterator == null) {
+                rtIterator = rtfiller.getSegments(pids, parameterGroupId, ascending).iterator();
+            }
+            long lastSegmentTime = curValue == null ? start : curValue.getSegmentEnd();
+            curValue = null;
+
+            while (rtIterator.hasNext()) {
+                curValue = rtIterator.next();
+                if (curValue.getSegmentStart() <= stop && curValue.getSegmentEnd() >= lastSegmentTime) {
+                    break;
+                } else {
+                    curValue = null;
+                }
+            }
+            if (curValue == null) {
+                rtIterator = null;
+            }
+        }
+    }
+
+    private SubIterator getPartitionIterator() {
+        while (subIt == null || !subIt.isValid()) {
+            if (topIt.hasNext()) {
+                Partition p = topIt.next();
+                close(subIt);
+                subIt = new SubIterator(p);
+            } else {
+                close(subIt);
+                return null;
+            }
+        }
+        return subIt;
+    }
+
+    /**
+     * Close the underlying rocks iterator if not already closed
+     */
+    public void close() {
+        close(subIt);
+    }
+
+    private void close(SubIterator pit) {
+        if (pit != null) {
+            pit.close();
+        }
+    }
+
+    public int getParameterGroupId() {
+        return parameterGroupId;
+    }
+
+    class SubIterator {
+        final Partition partition;
+        private SegmentKey currentKey;
+        SegmentEncoderDecoder segmentEncoder = new SegmentEncoderDecoder();
+        SortedTimeSegment currentTimeSegment;
+
+        /**
+         * The dbIterator iterates over the time segments. The other segments (eng value, raw value, status) are
+         * retrieved using another iterator in the {@link #value() function}
+         *
+         */
+        DbIterator dbIterator;
+        boolean valid;
+
+        public SubIterator(Partition partition) {
+            this.partition = partition;
+            RocksIterator iterator;
+            try {
+                iterator = parchive.getIterator(partition);
+            } catch (RocksDBException | IOException e) {
+                throw new ParameterArchiveException("Failed to create iterator", e);
+            }
+
+            int timeParaId = parchive.getParameterIdDb().getTimeParameterId();
+
+            var startk = new SegmentKey(timeParaId, parameterGroupId, ParameterArchive.getIntervalStart(start),
+                    SegmentKey.TYPE_ENG_VALUE);
+            byte[] rangeStart = partition.version == 0 ? startk.encodeV0() : startk.encode();
+            var stopk = new SegmentKey(timeParaId, parameterGroupId, stop, SegmentKey.TYPE_ENG_VALUE);
+            byte[] rangeStop = partition.version == 0 ? stopk.encodeV0() : stopk.encode();
+            if (ascending) {
+                dbIterator = new AscendingRangeIterator(iterator, rangeStart, rangeStop);
+            } else {
+                dbIterator = new DescendingRangeIterator(iterator, rangeStart, rangeStop);
+            }
+            next();
+        }
+
+        public void next() {
+            if (!dbIterator.isValid()) {
+                valid = false;
+                return;
+            }
+            valid = true;
+            currentKey = this.partition.version == 0 ? SegmentKey.decodeV0(dbIterator.key())
+                    : SegmentKey.decode(dbIterator.key());
+            try {
+                currentTimeSegment = (SortedTimeSegment) SegmentEncoderDecoder.decode(dbIterator.value(),
+                        currentKey.segmentStart);
+            } catch (DecodingException e) {
+                throw new DatabaseCorruptionException("Cannot decode time segment", e);
+            }
+
+            if (ascending) {
+                dbIterator.next();
+            } else {
+                dbIterator.prev();
+            }
+        }
+
+        SegmentKey key() {
+            return currentKey;
+        }
+
+        MultiParameterValueSegment value() {
+            if (!valid) {
+                throw new NoSuchElementException();
+            }
+
+            List<ParameterValueSegment> pvSegments = new ArrayList<>(pids.length);
+
+            long segStart = currentKey.segmentStart;
+            try (RocksIterator it = parchive.getIterator(partition)) {
+                for (int i = 0; i < pids.length; i++) {
+                    int pid = pids[i].getPid();
+                    SegmentKey key = new SegmentKey(pid, parameterGroupId, segStart, (byte) 0);
+                    it.seek(partition.version == 0 ? key.encodeV0() : key.encode());
+                    if (!it.isValid()) {
+                        throw new DatabaseCorruptionException(
+                                "Cannot find any record for parameter id " + pid + " at start " + segStart);
+                    }
+                    ValueSegment engValueSegment = null;
+                    ValueSegment rawValueSegment = null;
+                    ParameterStatusSegment parameterStatusSegment = null;
+                    SortedIntArray gaps = null;
+                    boolean found = false;
+                    while (it.isValid()) {
+                        key = partition.version == 0 ? SegmentKey.decodeV0(it.key()) : SegmentKey.decode(it.key());
+                        if (key.parameterId != pid || key.parameterGroupId != parameterGroupId) {
+                            break;
+                        }
+                        byte type = key.type;
+                        if (key.segmentStart != segStart) {
+                            break;
+                        }
+                        found = true;
+                        switch (type) {
+                        case SegmentKey.TYPE_ENG_VALUE:
+                            if (retrieveEngValues || retrieveRawValues) {
+                                engValueSegment = (ValueSegment) SegmentEncoderDecoder.decode(it.value(), segStart);
+                            }
+                            break;
+                        case SegmentKey.TYPE_RAW_VALUE:
+                            if (retrieveRawValues) {
+                                rawValueSegment = (ValueSegment) SegmentEncoderDecoder.decode(it.value(), segStart);
+                            }
+                            break;
+                        case SegmentKey.TYPE_PARAMETER_STATUS:
+                            if (retrieveParameterStatus) {
+                                parameterStatusSegment = (ParameterStatusSegment) SegmentEncoderDecoder.decode(
+                                        it.value(),
+                                        segStart);
+                            }
+                            break;
+                        case SegmentKey.TYPE_GAPS:
+                            gaps = SegmentEncoderDecoder.decodeGaps(it.value());
+                            break;
+                        }
+                        it.next();
+                    }
+                    if (retrieveRawValues && rawValueSegment == null) {
+                        rawValueSegment = engValueSegment;
+                    }
+                    if (!retrieveEngValues) {
+                        engValueSegment = null;
+                    }
+                    if (found) {
+                        pvSegments.add(
+                                new ParameterValueSegment(pid, currentTimeSegment, engValueSegment, rawValueSegment,
+                                        parameterStatusSegment, gaps));
+                    } else {
+                        pvSegments.add(null);
+                    }
+                }
+                MultiParameterValueSegment pvs = new MultiParameterValueSegment(pids, currentTimeSegment, pvSegments);
+                return pvs;
+            } catch (DecodingException e) {
+                throw new DatabaseCorruptionException(e);
+            } catch (RocksDBException | IOException e) {
+                throw new ParameterArchiveException("Failded extracting data from the parameter archive", e);
+            }
+        }
+
+        boolean isValid() {
+            return valid;
+        }
+
+        void close() {
+            if (dbIterator != null) {
+                dbIterator.close();
+            }
+        }
+    }
+
+}
+```
+
+### `ObjectSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ObjectSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.lang.reflect.Array;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import me.lemire.integercompression.FastPFOR128;
+import me.lemire.integercompression.IntWrapper;
+
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.VarIntUtil;
+
+/**
+ * Segment for all non primitive types.
+ * <p>
+ * Each element is encoded to a binary that is not compressed. The compression of the segment (if any) is realized by
+ * not repeating elements.
+ * <p>
+ * Finds best encoding among:
+ * <ul>
+ * <li>raw - list of values stored verbatim, each preceded by its size varint32 encoded</li>
+ * <li>enum - the list of unique values are stored at the beginning of the segment.
+ * <p>
+ * Each value has an implicit id (the order in the list). The rest of the segment is the list of ids and can be encoded
+ * in one of the following formats
+ * <ul>
+ * <li>VB: varint32 of each id</li>
+ * <li>FPROF: coded with the FPROF codec + varint32 of remaining</li>
+ * <li>RLE: run length encoded</li>
+ * </ul>
+ * </ul>
+ *
+ */
+public abstract class ObjectSegment<E> extends BaseSegment {
+    final static byte SUBFORMAT_ID_RAW = 0;
+    final static byte SUBFORMAT_ID_ENUM_RLE = 1;
+    final static byte SUBFORMAT_ID_ENUM_VB = 2;
+    final static byte SUBFORMAT_ID_ENUM_FPROF = 3;
+
+    // this is set only during deserialisation.
+    boolean runLengthEncoded = false;
+
+    // one of the lists below is used depending whether runLengthEncoded is true or false
+    List<E> objectList;
+
+    List<E> rleObjectList;
+    IntArray rleCounts;
+
+    int size = 0;
+    final ObjectSerializer<E> objSerializer;
+
+    // temporary fields used during the construction before serialisation - could be probably refactored into some
+    // builder which returns another object in the consolidate method
+    Map<HashableByteArray, Integer> valuemap;
+    IntArray rleValues;
+    IntArray enumValues;
+    List<HashableByteArray> unique;
+
+    int rawSize;
+    int enumRawSize;
+    int enumRleSize;
+
+    boolean consolidated = false;
+    boolean writable = false;
+
+    /**
+     * b
+     * 
+     * @param objSerializer
+     * @param buildForSerialisation
+     *            - is set to true at the construction and false at deserialisation
+     */
+    ObjectSegment(ObjectSerializer<E> objSerializer, boolean buildForSerialisation) {
+        super(objSerializer.getFormatId());
+        this.objSerializer = objSerializer;
+
+        if (buildForSerialisation) {
+            writable = true;
+            objectList = new ArrayList<E>();
+            unique = new ArrayList<HashableByteArray>();
+            valuemap = new HashMap<>();
+            enumValues = new IntArray();
+        } // else in the parseFrom will construct the necessary fields
+    }
+
+    /**
+     * add element to the end of the segment
+     * 
+     * @param e
+     */
+    public void add(E e) {
+        if (!writable) {
+            throw new UnsupportedOperationException("Segment is not writable");
+        }
+        byte[] b = objSerializer.serialize(e);
+        HashableByteArray se = new HashableByteArray(b);
+        int valueId;
+        if (valuemap.containsKey(se)) {
+            valueId = valuemap.get(se);
+            se = unique.get(valueId); // release the old se object to garbage
+            e = objectList.get(enumValues.indexOf(valueId));// release the old e object to garbage
+        } else {
+            valueId = unique.size();
+            valuemap.put(se, valueId);
+            unique.add(se);
+        }
+        enumValues.add(valueId);
+        objectList.add(e);
+        size++;
+    }
+
+    public void add(int pos, E e) {
+        if (!writable) {
+            throw new UnsupportedOperationException("Segment is not writable");
+        }
+        if (pos == size) {
+            add(e);
+            return;
+        }
+        byte[] b = objSerializer.serialize(e);
+        HashableByteArray se = new HashableByteArray(b);
+        int valueId;
+        if (valuemap.containsKey(se)) {
+            valueId = valuemap.get(se);
+            se = unique.get(valueId); // release the old se object to garbage
+            e = objectList.get(enumValues.indexOf(valueId));// release the old e object to garbage
+        } else {
+            valueId = unique.size();
+            valuemap.put(se, valueId);
+            unique.add(se);
+        }
+        enumValues.add(pos, valueId);
+        objectList.add(pos, e);
+        size++;
+    }
+
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        if (!consolidated) {
+            throw new IllegalStateException("The segment has to be consolidated before serialization can take place");
+        }
+
+        boolean encoded = false;
+        int position = bb.position();
+        try { // first try to encode them as Rle or EnuFprof
+            if (enumRleSize <= enumRawSize && enumRleSize <= rawSize) {
+                encoded = writeEnumRle(bb);
+            } else if (enumRawSize < enumRleSize && enumRawSize <= rawSize) {
+                encoded = writeEnumFprof(bb);
+            }
+        } catch (IndexOutOfBoundsException | BufferOverflowException e) {
+            // ignore -> encoded = false;
+        }
+        // if the resulted size is bigger than raw encoding, then encode it raw
+        if (!encoded) {
+            bb.position(position);
+            writeRaw(bb);
+        }
+    }
+
+    public void writeRaw(ByteBuffer bb) {
+        bb.put(SUBFORMAT_ID_RAW);
+
+        // write the size
+        VarIntUtil.writeVarInt32(bb, objectList.size());
+        // then write the values
+        for (int i = 0; i < size; i++) {
+            byte[] b = unique.get(enumValues.get(i)).b;
+            VarIntUtil.writeVarInt32(bb, b.length);
+            bb.put(b);
+        }
+    }
+
+    boolean writeEnumFprof(ByteBuffer bb) {
+        int position = bb.position();
+        bb.put(SUBFORMAT_ID_ENUM_FPROF);
+        // first write the enum values
+        VarIntUtil.writeVarInt32(bb, unique.size());
+        for (int i = 0; i < unique.size(); i++) {
+            byte[] b = unique.get(i).b;
+            VarIntUtil.writeVarInt32(bb, b.length);
+            bb.put(b);
+        }
+
+        // then writes the enum ids
+        VarIntUtil.writeVarInt32(bb, size);
+
+        FastPFOR128 fastpfor = FastPFORFactory.get();
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+        int[] out = new int[size];
+        int[] in = enumValues.array();
+        fastpfor.compress(in, inputoffset, size, out, outputoffset);
+        if (outputoffset.get() == 0) {
+            // fastpfor didn't compress anything, probably there were too few datapoints
+            bb.put(position, SUBFORMAT_ID_ENUM_VB);
+        } else {
+            // write the fastpfor output
+            for (int i = 0; i < outputoffset.get(); i++) {
+                bb.putInt(out[i]);
+            }
+        }
+        // write the remaining bytes varint compressed
+        for (int i = inputoffset.get(); i < size; i++) {
+            VarIntUtil.writeVarInt32(bb, in[i]);
+        }
+        return true;
+    }
+
+    boolean writeEnumRle(ByteBuffer bb) {
+        bb.put(SUBFORMAT_ID_ENUM_RLE);
+        // first write the enum values
+        VarIntUtil.writeVarInt32(bb, unique.size());
+        for (int i = 0; i < unique.size(); i++) {
+            byte[] b = unique.get(i).b;
+            VarIntUtil.writeVarInt32(bb, b.length);
+            bb.put(b);
+        }
+        // then write the rleCounts
+        VarIntUtil.writeVarInt32(bb, rleCounts.size());
+
+        for (int i = 0; i < rleCounts.size(); i++) {
+            VarIntUtil.writeVarInt32(bb, rleCounts.get(i));
+        }
+        // and write the rleValues
+        for (int i = 0; i < rleCounts.size(); i++) {
+            VarIntUtil.writeVarInt32(bb, rleValues.get(i));
+        }
+        return true;
+    }
+
+    protected void parse(ByteBuffer bb) throws DecodingException {
+        byte formatId = bb.get();
+        try {
+            switch (formatId) {
+            case SUBFORMAT_ID_RAW:
+                parseRaw(bb);
+                break;
+            case SUBFORMAT_ID_ENUM_VB: // intentional fall trough
+            case SUBFORMAT_ID_ENUM_FPROF:// intentional fall trough
+            case SUBFORMAT_ID_ENUM_RLE:
+                parseEnum(formatId, bb);
+                break;
+            default:
+                throw new DecodingException("Unknown subformatid: " + formatId);
+            }
+        } catch (DecodingException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DecodingException("Cannot decode object segment subformatId " + formatId, e);
+        }
+    }
+
+    private void parseRaw(ByteBuffer bb) throws DecodingException {
+        size = VarIntUtil.readVarInt32(bb);
+        objectList = new ArrayList<E>(size);
+        for (int i = 0; i < size; i++) {
+            int l = VarIntUtil.readVarInt32(bb);
+            byte[] b = new byte[l];
+            bb.get(b);
+            E e = objSerializer.deserialize(b);
+            objectList.add(e);
+        }
+    }
+
+    void parseEnum(int formatId, ByteBuffer bb) throws DecodingException {
+        int n = VarIntUtil.readVarInt32(bb);
+        List<E> uniqueValues = new ArrayList<E>();
+        for (int i = 0; i < n; i++) {
+            int l = VarIntUtil.readVarInt32(bb);
+            byte[] b = new byte[l];
+            bb.get(b);
+            E e = objSerializer.deserialize(b);
+            uniqueValues.add(e);
+        }
+
+        if (formatId == SUBFORMAT_ID_ENUM_RLE) {
+            parseEnumRle(uniqueValues, bb);
+        } else {
+            parseEnumNonRle(formatId, uniqueValues, bb);
+        }
+    }
+
+    private void parseEnumNonRle(int formatId, List<E> uniqueValues, ByteBuffer bb) throws DecodingException {
+        size = VarIntUtil.readVarInt32(bb);
+        int position = bb.position();
+
+        int[] enumValues = new int[size];
+
+        IntWrapper outputoffset = new IntWrapper(0);
+        if (formatId == SUBFORMAT_ID_ENUM_FPROF) {
+            int[] x = new int[(bb.limit() - position) / 4];
+            for (int i = 0; i < x.length; i++) {
+                x[i] = bb.getInt();
+            }
+            IntWrapper inputoffset = new IntWrapper(0);
+            FastPFOR128 fastpfor = FastPFORFactory.get();
+            fastpfor.uncompress(x, inputoffset, x.length, enumValues, outputoffset);
+            bb.position(position + inputoffset.get() * 4);
+        }
+
+        for (int i = outputoffset.get(); i < size; i++) {
+            enumValues[i] = VarIntUtil.readVarInt32(bb);
+        }
+        objectList = new ArrayList<E>(size);
+        for (int i = 0; i < size; i++) {
+            objectList.add(uniqueValues.get(enumValues[i]));
+        }
+    }
+
+    private void parseEnumRle(List<E> uniqueValues, ByteBuffer bb) throws DecodingException {
+        int countNum = VarIntUtil.readVarInt32(bb);
+        rleCounts = new IntArray(countNum);
+        size = 0;
+        for (int i = 0; i < countNum; i++) {
+            int c = VarIntUtil.readVarInt32(bb);
+            rleCounts.add(c);
+            size += c;
+        }
+        rleObjectList = new ArrayList<>(countNum);
+
+        for (int i = 0; i < countNum; i++) {
+            int c = VarIntUtil.readVarInt32(bb);
+            rleObjectList.add(uniqueValues.get(c));
+        }
+        runLengthEncoded = true;
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        if (!consolidated) {
+            throw new IllegalStateException("The segment has to be consolidated before serialization can take place");
+        }
+        return rawSize;
+    }
+
+    public E[] getRangeArray(int posStart, int posStop, boolean ascending) {
+        if (posStart >= posStop)
+            throw new IllegalArgumentException("posStart has to be smaller than posStop");
+        if (runLengthEncoded) {
+            if (ascending) {
+                return getRleRangeAscending(posStart, posStop);
+            } else {
+                return getRleRangeDescending(posStart, posStop);
+            }
+        } else {
+            return getNonRleRange(posStart, posStop, ascending);
+        }
+
+    }
+
+    E[] getNonRleRange(int posStart, int posStop, boolean ascending) {
+        @SuppressWarnings("unchecked")
+        E[] r = (E[]) Array.newInstance(objectList.get(0).getClass(), posStop - posStart);
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r[i - posStart] = objectList.get(i);
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r[posStop - i] = objectList.get(i);
+            }
+        }
+
+        return r;
+    }
+
+    E[] getRleRangeAscending(int posStart, int posStop) {
+        int n = posStop - posStart;
+        @SuppressWarnings("unchecked")
+        E[] r = (E[]) Array.newInstance(rleObjectList.get(0).getClass(), n);
+
+        int k = posStart;
+        int i = 0;
+        while (k >= rleCounts.get(i)) {
+            k -= rleCounts.get(i++);
+        }
+        int pos = 0;
+
+        while (pos < n) {
+            r[pos++] = rleObjectList.get(i);
+            k++;
+            if (k >= rleCounts.get(i)) {
+                i++;
+                k = 0;
+            }
+        }
+        return r;
+    }
+
+    public E[] getRleRangeDescending(int posStart, int posStop) {
+        if (posStop >= size)
+            throw new IndexOutOfBoundsException("Index: " + posStop + " size: " + size);
+
+        int n = posStop - posStart;
+        @SuppressWarnings("unchecked")
+        E[] r = (E[]) Array.newInstance(rleObjectList.get(0).getClass(), n);
+
+        int k = size - posStop;
+        int i = rleCounts.size() - 1;
+        while (k > rleCounts.get(i)) {
+            k -= rleCounts.get(i--);
+        }
+        k = rleCounts.get(i) - k;
+
+        int pos = 0;
+
+        while (true) {
+            r[pos++] = rleObjectList.get(i);
+            if (pos == n)
+                break;
+
+            k--;
+            if (k < 0) {
+                i--;
+                k = rleCounts.get(i) - 1;
+            }
+        }
+        return r;
+    }
+
+    public E get(int index) {
+        if (runLengthEncoded) {
+            int k = 0;
+            int i = 0;
+            while (k <= index) {
+                k += rleCounts.get(i);
+                i++;
+            }
+            return rleObjectList.get(i - 1);
+        } else {
+            return objectList.get(index);
+        }
+    }
+
+    /**
+     * the number of elements in this segment (not taking into account any compression due to run-length encoding)
+     * 
+     * @return
+     */
+    @Override
+    public int size() {
+        return size;
+    }
+
+    public void consolidate() {
+        rleCounts = new IntArray();
+        rleValues = new IntArray();
+
+        rawSize = enumRawSize = enumRleSize = 1; // subFormatId byte
+
+        rawSize += VarIntUtil.getEncodedSize(size);
+        enumRawSize += VarIntUtil.getEncodedSize(size) + VarIntUtil.getEncodedSize(unique.size());
+        enumRleSize += VarIntUtil.getEncodedSize(unique.size());
+
+        for (int i = 0; i < size; i++) {
+            int valueId = enumValues.get(i);
+            byte[] b = unique.get(valueId).b;
+            rawSize += VarIntUtil.getEncodedSize(b.length) + b.length;
+            enumRawSize += VarIntUtil.getEncodedSize(valueId);
+
+            boolean rleAdded = false;
+            int rleId = rleValues.size() - 1;
+            if (rleId >= 0) {
+                int lastValueId = rleValues.get(rleId);
+                if (valueId == lastValueId) {
+                    rleCounts.set(rleId, rleCounts.get(rleId) + 1);
+                    rleAdded = true;
+                }
+            }
+            if (!rleAdded) {
+                rleCounts.add(1);
+                rleValues.add(valueId);
+            }
+        }
+
+        for (int i = 0; i < unique.size(); i++) {
+            HashableByteArray se = unique.get(i);
+            byte[] b = se.b;
+            int s = VarIntUtil.getEncodedSize(b.length) + b.length;
+            enumRawSize += s;
+            enumRleSize += s;
+        }
+
+        enumRleSize += VarIntUtil.getEncodedSize(rleCounts.size());
+        for (int i = 0; i < rleCounts.size(); i++) {
+            enumRleSize += VarIntUtil.getEncodedSize(rleCounts.get(i)) + VarIntUtil.getEncodedSize(rleValues.get(i));
+        }
+
+        consolidated = true;
+    }
+
+    @Override
+    public void makeWritable() {
+        if (writable) {
+            return;
+        }
+        unique = new ArrayList<HashableByteArray>();
+        valuemap = new HashMap<>();
+        enumValues = new IntArray();
+
+        if (runLengthEncoded) {
+            objectList = new ArrayList<E>(size);
+
+            for (int i = 0; i < rleObjectList.size(); i++) {
+                var o = rleObjectList.get(i);
+                byte[] b = objSerializer.serialize(o);
+                HashableByteArray se = new HashableByteArray(b);
+                int idx = valuemap.computeIfAbsent(se, k -> {
+                    int newIdx = unique.size();
+                    unique.add(k);
+                    return newIdx;
+                });
+
+                for (int k = 0; k < rleCounts.get(i); k++) {
+                    objectList.add(o);
+                    enumValues.add(idx);
+                }
+            }
+            runLengthEncoded = false;
+        } else {
+            for (var o : objectList) {
+                byte[] b = objSerializer.serialize(o);
+                HashableByteArray se = new HashableByteArray(b);
+                int idx = valuemap.computeIfAbsent(se, k -> {
+                    int newIdx = unique.size();
+                    unique.add(k);
+                    return newIdx;
+                });
+
+                enumValues.add(idx);
+            }
+        }
+        writable = true;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ObjectSegment other = (ObjectSegment) obj;
+        if (unique == null) {
+            if (other.unique != null)
+                return false;
+        } else if (!unique.equals(other.unique))
+            return false;
+        if (enumValues == null) {
+            if (other.enumValues != null)
+                return false;
+        } else if (!enumValues.equals(other.enumValues))
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName() + "[");
+
+        if (runLengthEncoded) {
+            for (int i = 0; i < rleCounts.size(); i++) {
+                E value = rleObjectList.get(i);
+                int count = rleCounts.get(i);
+                for (int j = 0; j < count; j++) {
+                    sb.append(value).append(", ");
+                }
+            }
+        } else {
+            for (E value : objectList) {
+                sb.append(value).append(", ");
+            }
+        }
+
+        // Remove the trailing comma and space, if any
+        if (sb.length() > 19) {
+            sb.setLength(sb.length() - 2);
+        }
+
+        sb.append("]");
+        return sb.toString();
+    }
+}
+
+/**
+ * wrapper around byte[] to allow it to be used in HashMaps
+ */
+class HashableByteArray {
+    private int hash = 0;
+    final byte[] b;
+
+    public HashableByteArray(byte[] b) {
+        this.b = b;
+    }
+
+    @Override
+    public int hashCode() {
+        if (hash == 0) {
+            hash = Arrays.hashCode(b);
+        }
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        HashableByteArray other = (HashableByteArray) obj;
+
+        if (hashCode() != other.hashCode())
+            return false;
+
+        if (!Arrays.equals(b, other.b))
+            return false;
+        return true;
+    }
+
+}
+
+interface ObjectSerializer<E> {
+    byte getFormatId();
+
+    E deserialize(byte[] b) throws DecodingException;
+
+    byte[] serialize(E e);
+}
+```
+
+### `ParameterArchive.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterArchive.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.yamcs.yarch.rocksdb.RdbStorageEngine.TBS_INDEX_SIZE;
+import static org.yamcs.yarch.rocksdb.RdbStorageEngine.dbKey;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ReadOptions;
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
+import org.rocksdb.WriteBatch;
+import org.rocksdb.WriteOptions;
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.parameterarchive.ParameterGroupIdDb.ParameterGroup;
+import org.yamcs.time.Instant;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.IntHashSet;
+import org.yamcs.utils.PartitionedTimeInterval;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.TimePartitionInfo;
+import org.yamcs.yarch.TimePartitionSchema;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.rocksdb.AscendingRangeIterator;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.rocksdb.YRDB;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord.Type;
+
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TimeBasedPartition;
+
+/**
+ * 
+ * The parameter archive stores data in partitions(optional) -> intervals -> segments.
+ * <p>
+ * A partition covers one year/month/day and each partition has its own RocksDB database.
+ * <p>
+ * An interval covers 2^23 millisec (=~ 139 minutes) - so for any timestamp (Yamcs time) we know exactly in which
+ * interval it falls.
+ * <p>
+ * A segment covers at most maxSegmentSize samples for one parameter. The segments do not cover a fixed period of time;
+ * we use them to avoid intervals getting very large; usually (1Hz or less frequency data) there is only one segment in
+ * an interval.
+ *
+ * <p>
+ * Segments cannot span across intervals.
+ * 
+ * <p>
+ * When new data has been received in the past, the whole interval has to be re-created (by doing a replay); that likely
+ * means a new split of the respective interval into segments.
+ * 
+ */
+public class ParameterArchive extends AbstractYamcsService {
+    /**
+     * 
+     * version 0 - before Yamcs 5.10
+     * <p>
+     * version 1 - starting with Yamcs 5.10
+     * <ul>
+     * <li>uses the RocksDB merge operator</li>
+     * <li>sorts properly the timestamps</li>
+     * </ul>
+     */
+    public static final int VERSION = 1;
+
+    public static final boolean STORE_RAW_VALUES = true;
+
+    public static final int NUMBITS_MASK = 23; // 2^23 milliseconds =~ 139 minutes per interval
+    public static final int TIMESTAMP_MASK = (0xFFFFFFFF >>> (32 - NUMBITS_MASK));
+    public static final long INTERVAL_MASK = ~TIMESTAMP_MASK;
+
+    // from Yamcs 5.9.0, store the parameter archive data into a separate Column Family with this name
+    public static final String CF_NAME = "parameter_archive";
+
+    // how long in the future (compared to mission time) to allow data part of the coverage
+    private long coverageEndDelta = 3600_000;
+
+    private ParameterIdDb parameterIdDb;
+
+    private Tablespace tablespace;
+
+    TimePartitionSchema partitioningSchema;
+
+    // the tablespace record holding partition information
+    TablespaceRecord pinfoTablespaceRecord;
+
+    private PartitionedTimeInterval<Partition> partitions = new PartitionedTimeInterval<>();
+
+    TimeService timeService;
+    private BackFiller backFiller;
+    private RealtimeArchiveFiller realtimeFiller;
+    YConfiguration realtimeFillerConfig;
+    YConfiguration backFillerConfig;
+    boolean realtimeFillerEnabled;
+    int maxSegmentSize;
+    boolean sparseGroups;
+    double minimumGroupOverlap;
+
+    AtomicLong coverageEnd = new AtomicLong(TimeEncoding.NEGATIVE_INFINITY);
+
+    final FillerLock fillerLock = new FillerLock();
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("backFiller", OptionType.MAP).withSpec(BackFiller.getSpec());
+        spec.addOption("realtimeFiller", OptionType.MAP).withSpec(RealtimeArchiveFiller.getSpec());
+        spec.addOption(YarchDatabaseInstance.PART_CONF_KEY, OptionType.STRING).withAliases("partitioningSchema")
+                .withChoices("YYYY/DOY", "YYYY/MM", "YYYY", "none");
+        spec.addOption("maxSegmentSize", OptionType.INTEGER).withDefault(500);
+        spec.addOption("sparseGroups", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("minimumGroupOverlap", OptionType.FLOAT).withDefault(0.5);
+        spec.addOption("coverageEndDelta", OptionType.INTEGER).withDefault(60)
+                .withDescription("how long in the future in seconds (compared to mission time) "
+                        + "to allow data part of the coverage)");
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        tablespace = RdbStorageEngine.getInstance().getTablespace(ydb);
+        this.maxSegmentSize = config.getInt("maxSegmentSize");
+
+        if (config.containsKey("realtimeFiller")) {
+            realtimeFillerConfig = config.getConfig("realtimeFiller");
+            realtimeFillerEnabled = realtimeFillerConfig.getBoolean("enabled", false);
+            log.debug("realtimeFillerConfig: {}", realtimeFillerConfig);
+        } else {
+            realtimeFillerEnabled = false;
+        }
+
+        partitioningSchema = ydb.getTimePartitioningSchema(config);
+        this.backFillerConfig = config.getConfigOrEmpty("backFiller");
+        this.backFiller = new BackFiller(this, backFillerConfig, !realtimeFillerEnabled);
+
+        sparseGroups = config.getBoolean("sparseGroups");
+        minimumGroupOverlap = config.getDouble("minimumGroupOverlap");
+        coverageEndDelta = config.getLong("coverageEndDelta") * 1000;
+
+        try {
+            TablespaceRecord.Type trType = TablespaceRecord.Type.PARCHIVE_PINFO;
+            List<TablespaceRecord> trl = tablespace.filter(trType, yamcsInstance, trb -> true);
+            if (trl.size() > 1) {
+                throw new DatabaseCorruptionException(
+                        "More than one tablespace record of type " + trType.name() + " for instance " + yamcsInstance);
+            }
+            parameterIdDb = new ParameterIdDb(yamcsInstance, tablespace, sparseGroups, minimumGroupOverlap);
+
+            if (trl.isEmpty()) { // new database
+                initializeDb();
+            } else {// existing database
+                pinfoTablespaceRecord = trl.get(0);
+
+                if (pinfoTablespaceRecord.hasPartitioningSchema()) {
+                    partitioningSchema = TimePartitionSchema.getInstance(pinfoTablespaceRecord.getPartitioningSchema());
+                }
+                readPartitions();
+                if (partitions.isEmpty() && partitioningSchema == null) {
+                    partitions.insert(new Partition(
+                            pinfoTablespaceRecord.hasParchiveCf() ? pinfoTablespaceRecord.getParchiveCf() : null,
+                            pinfoTablespaceRecord.getParchiveVersion()));
+                }
+
+                coverageEnd.set(getCoverageEnd(maxCoverageEnd()));
+            }
+
+        } catch (RocksDBException | IOException | DecodingException e) {
+            throw new InitException(e);
+        }
+    }
+
+    /**
+     * Called in the init function to initialize the database
+     */
+    private void initializeDb() throws RocksDBException {
+        log.debug("initializing db");
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(Type.PARCHIVE_PINFO);
+        if (partitioningSchema != null) {
+            trb.setPartitioningSchema(partitioningSchema.getName());
+        } else {
+            partitions.insert(new Partition(CF_NAME, VERSION));
+        }
+        trb.setParchiveCf(CF_NAME);
+        trb.setParchiveVersion(VERSION);
+        pinfoTablespaceRecord = tablespace.createMetadataRecord(yamcsInstance, trb);
+    }
+
+    public TimePartitionSchema getPartitioningSchema() {
+        return partitioningSchema;
+    }
+
+    /**
+     * Called in the init function to read the existing partitions
+     */
+    private void readPartitions() throws IOException, RocksDBException {
+        YRDB db = tablespace.getRdb();
+        byte[] range = new byte[TBS_INDEX_SIZE];
+        ByteArrayUtils.encodeInt(pinfoTablespaceRecord.getTbsIndex(), range, 0);
+
+        try (AscendingRangeIterator it = new AscendingRangeIterator(db.newIterator(), range, range)) {
+            while (it.isValid()) {
+                TimeBasedPartition tbp = TimeBasedPartition.parseFrom(it.value());
+                String cfName = tbp.hasPartitionCf() ? tbp.getPartitionCf() : null;
+
+                Partition p = new Partition(tbp.getPartitionStart(), tbp.getPartitionEnd(), tbp.getPartitionDir(),
+                        cfName, tbp.getParchiveVersion());
+                if (partitions.insert(p, 0) == null) {
+                    throw new DatabaseCorruptionException("Partition " + p + " overlaps with existing partitions");
+                }
+                it.next();
+            }
+        }
+    }
+
+    public ParameterIdDb getParameterIdDb() {
+        return parameterIdDb;
+    }
+
+    public ParameterGroupIdDb getParameterGroupIdDb() {
+        return parameterIdDb.getParameterGroupIdDb();
+    }
+
+    public void updateCoverageEnd(long t) {
+        long t0 = coverageEnd.getAndUpdate(current -> Math.max(current, t));
+        if (t != t0 && log.isDebugEnabled()) {
+            log.debug("Updated coverageEnd from {} to {}", TimeEncoding.toString(t0), TimeEncoding.toString(t));
+        }
+    }
+
+    /**
+     * Sets the {@link #coverageEnd} to negative infinity
+     * <p>
+     * This method is used mostly in unit tests
+     */
+    public void resetCoverageEnd() {
+        coverageEnd.set(TimeEncoding.NEGATIVE_INFINITY);
+    }
+
+    public void writeToArchive(PGSegment pgs) throws RocksDBException, IOException {
+        pgs.consolidate();
+        Partition p = createAndGetPartition(pgs.getInterval());
+        YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+        ColumnFamilyHandle cfh = cfh(rdb, p);
+
+        try (WriteBatch writeBatch = new WriteBatch(); WriteOptions wo = new WriteOptions()) {
+            if (p.version == 0) {
+                writeToBatchVersion0(cfh, writeBatch, pgs);
+            } else {
+                writeToBatch(rdb, cfh, writeBatch, pgs);
+            }
+            rdb.write(wo, writeBatch);
+        }
+    }
+
+    public void writeToArchive(long interval, Collection<PGSegment> pgList) throws RocksDBException, IOException {
+        Partition p = createAndGetPartition(interval);
+        YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+
+        ColumnFamilyHandle cfh = cfh(rdb, p);
+        long maxTime = Instant.MIN_INSTANT;
+
+        try (WriteBatch writeBatch = new WriteBatch(); WriteOptions wo = new WriteOptions()) {
+            for (PGSegment pgs : pgList) {
+                pgs.consolidate();
+                assert (interval == pgs.getInterval());
+                if (p.version == 0) {
+                    writeToBatchVersion0(cfh, writeBatch, pgs);
+                } else {
+                    writeToBatch(rdb, cfh, writeBatch, pgs);
+                }
+                maxTime = Math.max(maxTime, pgs.getSegmentEnd());
+            }
+            rdb.write(wo, writeBatch);
+        }
+        updateCoverageEnd(maxTime);
+    }
+
+    // write data to the archive using the merge operator.
+    // first segment has to be written with put, the subsequent ones with merge
+    // the merge operator will merge the segments into intervals
+    private void writeToBatch(YRDB rdb, ColumnFamilyHandle cfh, WriteBatch writeBatch, PGSegment pgs)
+            throws RocksDBException {
+        log.trace("Writing {}", pgs);
+        int pgid = pgs.getParameterGroupId();
+
+        var pgParams = getParameterGroupIdDb().getParameterGroup(pgid);
+        IntHashSet orphans = null;
+
+        if (pgs.isFirstInInterval() && pgParams.size() != pgs.numParameters()) {
+            // we store here all parameters that are part of this group but not part of the first segment of the
+            // interval
+            orphans = new IntHashSet(pgParams);
+        }
+
+        // write the time segment
+        SortedTimeSegment timeSegment = pgs.getTimeSegment();
+        byte[] timeKey = new SegmentKey(parameterIdDb.timeParameterId, pgs.getParameterGroupId(),
+                pgs.getInterval(), SegmentKey.TYPE_ENG_VALUE).encode();
+        byte[] timeValue = SegmentEncoderDecoder.encode(timeSegment);
+        if (pgs.isFirstInInterval()) {
+            writeBatch.put(cfh, timeKey, timeValue);
+        } else {
+            writeBatch.merge(cfh, timeKey, timeValue);
+        }
+        // and then the consolidated value segments
+        for (var pvs : pgs.pvSegments) {
+            log.trace("Writing {}", pvs);
+
+            int parameterId = pvs.pid;
+            if (orphans != null) {
+                orphans.remove(parameterId);
+            }
+            if (pvs.numGaps() + pvs.numValues() != timeSegment.size()) {
+                String pname = parameterIdDb.getParameterFqnById(parameterId);
+                throw new IllegalStateException(
+                        "Trying to write to archive an engineering value segment whose number of values ("
+                                + pvs.numValues()
+                                + ") + number of gaps (" + pvs.numGaps() + ") is different than the time segment ("
+                                + timeSegment.size() + ") " + "for parameterId: " + parameterId + "(" + pname
+                                + ") and segment: [" + TimeEncoding.toString(timeSegment.getSegmentStart()) + " - "
+                                + TimeEncoding.toString(timeSegment.getSegmentEnd()) + "]");
+            }
+            BaseSegment vs = pvs.getConsolidatedEngValueSegment();
+            BaseSegment rvs = pvs.getConsolidatedRawValueSegment();
+            BaseSegment pss = pvs.getConsolidatedParmeterStatusSegment();
+            SortedIntArray gaps = pvs.getGaps();
+            byte[] gapKey = new SegmentKey(parameterId, pgid, pgs.getInterval(), SegmentKey.TYPE_GAPS).encode();
+
+            if (!pgs.isFirstInInterval() && pgs.wasPreviousGap(pvs.pid)) {
+                byte[] gapValue = SegmentEncoderDecoder.encodeGaps(0, pgs.segmentIdxInsideInterval);
+                writeBatch.merge(cfh, gapKey, gapValue);
+            }
+
+            byte[] engKey = new SegmentKey(parameterId, pgs.getParameterGroupId(), pgs.getInterval(),
+                    SegmentKey.TYPE_ENG_VALUE).encode();
+            byte[] engValue = SegmentEncoderDecoder.encode(vs);
+            if (pgs.isFirstInInterval() || pgs.wasPreviousGap(pvs.pid)) {
+                writeBatch.put(cfh, engKey, engValue);
+            } else {
+                writeBatch.merge(cfh, engKey, engValue);
+            }
+
+            if (STORE_RAW_VALUES && rvs != null) {
+                byte[] rawKey = new SegmentKey(parameterId, pgid, pgs.getInterval(), SegmentKey.TYPE_RAW_VALUE)
+                        .encode();
+                byte[] rawValue = SegmentEncoderDecoder.encode(rvs);
+                if (pgs.isFirstInInterval() || pgs.wasPreviousGap(pvs.pid)) {
+                    writeBatch.put(cfh, rawKey, rawValue);
+                } else {
+                    writeBatch.merge(cfh, rawKey, rawValue);
+                }
+            }
+
+            byte[] pssKey = new SegmentKey(parameterId, pgid, pgs.getInterval(), SegmentKey.TYPE_PARAMETER_STATUS)
+                    .encode();
+            byte[] pssValue = SegmentEncoderDecoder.encode(pss);
+            if (pgs.isFirstInInterval() || pgs.wasPreviousGap(pvs.pid)) {
+                writeBatch.put(cfh, pssKey, pssValue);
+            } else {
+                writeBatch.merge(cfh, pssKey, pssValue);
+            }
+
+            if (gaps != null) {
+                byte[] gapsValue = SegmentEncoderDecoder.encodeGaps(pgs.segmentIdxInsideInterval, gaps);
+                if (pgs.isFirstInInterval()) {
+                    writeBatch.put(cfh, gapKey, gapsValue);
+                } else {
+                    writeBatch.merge(cfh, gapKey, gapsValue);
+                }
+            } else if (pgs.isFirstInInterval()) {
+                if (rdb.get(cfh, gapKey) != null) {
+                    writeBatch.delete(cfh, gapKey);
+                }
+            }
+        }
+        if (orphans != null) {
+            // there might have been previously (in the previous fillings) records containing these parameters, we have
+            // to remove them
+            for (int pid : orphans) {
+                var key = new SegmentKey(pid, pgid, pgs.getInterval(),
+                        SegmentKey.TYPE_PARAMETER_STATUS);
+                byte[] statusKey = key.encode();
+                if (rdb.get(cfh, statusKey) != null) {
+                    writeBatch.delete(cfh, statusKey);
+
+                    key.type = SegmentKey.TYPE_RAW_VALUE;
+                    writeBatch.delete(cfh, key.encode());
+
+                    key.type = SegmentKey.TYPE_ENG_VALUE;
+                    writeBatch.delete(cfh, key.encode());
+
+                    key.type = SegmentKey.TYPE_GAPS;
+                    writeBatch.delete(cfh, key.encode());
+                }
+            }
+        }
+        if (!pgs.isFirstInInterval() && pgs.currentFullGaps != null && pgs.currentFullGaps.size() > 0) {
+            // insert gap records for parameters appearing in the interval in the previous segments but not in this one
+            for (int pid : pgs.currentFullGaps) {
+
+                byte[] rawKey = new SegmentKey(pid, pgid, pgs.getInterval(), SegmentKey.TYPE_GAPS).encode();
+                byte[] rawValue = SegmentEncoderDecoder.encodeGaps(pgs.segmentIdxInsideInterval,
+                        pgs.segmentIdxInsideInterval + pgs.size());
+                writeBatch.merge(cfh, rawKey, rawValue);
+            }
+        }
+    }
+
+    // writes to the archive without using the rocksdb merge operator (which merges segments together into intervals).
+    // The segment start (instead of the interval start) is part of the key which means that we need to remove old
+    // data as it may have a different segment start resulting into a different key.
+    //
+    private void writeToBatchVersion0(ColumnFamilyHandle cfh, WriteBatch writeBatch, PGSegment pgs)
+            throws RocksDBException {
+        removeOldOverlappingSegments(cfh, writeBatch, pgs);
+
+        // write the time segment
+        SortedTimeSegment timeSegment = pgs.getTimeSegment();
+        byte[] timeKey = new SegmentKey(parameterIdDb.timeParameterId, pgs.getParameterGroupId(),
+                pgs.getSegmentStart(), SegmentKey.TYPE_ENG_VALUE).encodeV0();
+        byte[] timeValue = SegmentEncoderDecoder.encode(timeSegment);
+        writeBatch.put(cfh, timeKey, timeValue);
+
+        // and then the consolidated value segments
+
+        for (var pvs : pgs.pvSegments) {
+            int parameterId = pvs.pid;
+
+            if (pvs.numGaps() + pvs.numValues() != timeSegment.size()) {
+                String pname = parameterIdDb.getParameterFqnById(parameterId);
+                throw new IllegalStateException(
+                        "Trying to write to archive an engineering value segment whose number of values ("
+                                + pvs.numValues()
+                                + ") + number of gaps (" + pvs.numGaps() + ") is different than the time segment ("
+                                + timeSegment.size() + ") " + "for parameterId: " + parameterId + "(" + pname
+                                + ") and segment: [" + TimeEncoding.toString(timeSegment.getSegmentStart()) + " - "
+                                + TimeEncoding.toString(timeSegment.getSegmentEnd()) + "]");
+            }
+            BaseSegment vs = pvs.getConsolidatedEngValueSegment();
+            BaseSegment rvs = pvs.getConsolidatedRawValueSegment();
+            BaseSegment pss = pvs.getConsolidatedParmeterStatusSegment();
+            SortedIntArray gaps = pvs.getGaps();
+
+            byte[] engKey = new SegmentKey(parameterId, pgs.getParameterGroupId(), pgs.getSegmentStart(),
+                    SegmentKey.TYPE_ENG_VALUE).encodeV0();
+            byte[] engValue = SegmentEncoderDecoder.encode(vs);
+            writeBatch.put(cfh, engKey, engValue);
+
+            if (STORE_RAW_VALUES && rvs != null) {
+                byte[] rawKey = new SegmentKey(parameterId, pgs.getParameterGroupId(), pgs.getSegmentStart(),
+                        SegmentKey.TYPE_RAW_VALUE).encodeV0();
+                byte[] rawValue = SegmentEncoderDecoder.encode(rvs);
+                writeBatch.put(cfh, rawKey, rawValue);
+            }
+
+            byte[] pssKey = new SegmentKey(parameterId, pgs.getParameterGroupId(), pgs.getSegmentStart(),
+                    SegmentKey.TYPE_PARAMETER_STATUS).encodeV0();
+            byte[] pssValue = SegmentEncoderDecoder.encode(pss);
+            writeBatch.put(cfh, pssKey, pssValue);
+
+            if (gaps != null) {
+                byte[] rawKey = new SegmentKey(parameterId, pgs.getParameterGroupId(), pgs.getSegmentStart(),
+                        SegmentKey.TYPE_GAPS).encodeV0();
+                byte[] rawValue = SegmentEncoderDecoder.encodeGaps(pgs.getSegmentIdxInsideInterval(), gaps);
+                writeBatch.put(cfh, rawKey, rawValue);
+            }
+        }
+    }
+
+    private void removeOldOverlappingSegments(ColumnFamilyHandle cfh, WriteBatch writeBatch, PGSegment pgs)
+            throws RocksDBException {
+        long segStart = pgs.getSegmentStart();
+        long segEnd = pgs.getSegmentEnd();
+        int pgid = pgs.getParameterGroupId();
+
+        byte[] timeKeyStart = new SegmentKey(parameterIdDb.timeParameterId, pgid, segStart, (byte) 0).encodeV0();
+        byte[] timeKeyEnd = new SegmentKey(parameterIdDb.timeParameterId, pgid, segEnd, Byte.MAX_VALUE)
+                .encodeV0();
+        deleteRange(cfh, writeBatch, timeKeyStart, timeKeyEnd);
+
+        for (var pvs : pgs.pvSegments) {
+            int pid = pvs.pid;
+
+            byte[] paraKeyStart = new SegmentKey(pid, pgid, segStart, (byte) 0).encodeV0();
+            byte[] paraKeyEnd = new SegmentKey(pid, pgid, segEnd, Byte.MAX_VALUE).encodeV0();
+            deleteRange(cfh, writeBatch, paraKeyStart, paraKeyEnd);
+        }
+    }
+
+    private void deleteRange(ColumnFamilyHandle cfh, WriteBatch writeBatch, byte[] start, byte[] end)
+            throws RocksDBException {
+        if (cfh != null) {
+            writeBatch.deleteRange(cfh, start, end);
+        } else {
+            writeBatch.deleteRange(start, end);
+        }
+    }
+
+    /**
+     * get partition for interval, creating it if it doesn't exist
+     * 
+     * @param intervalStart
+     * @throws RocksDBException
+     */
+    private Partition createAndGetPartition(long intervalStart) throws RocksDBException {
+        synchronized (partitions) {
+            Partition p = partitions.getFit(intervalStart);
+            if (p == null) {
+                TimePartitionInfo pinfo = partitioningSchema.getPartitionInfo(intervalStart);
+                p = new Partition(pinfo.getStart(), pinfo.getEnd(), pinfo.getDir(), CF_NAME, VERSION);
+                p = partitions.insert(p, 60000L);
+                assert p != null;
+                TimeBasedPartition tbp = TimeBasedPartition.newBuilder().setPartitionDir(p.partitionDir)
+                        .setPartitionStart(p.getStart()).setPartitionEnd(p.getEnd())
+                        .setPartitionCf(p.cfName)
+                        .setParchiveVersion(p.version)
+                        .build();
+                byte[] key = new byte[TBS_INDEX_SIZE + 8];
+                ByteArrayUtils.encodeInt(pinfoTablespaceRecord.getTbsIndex(), key, 0);
+                ByteArrayUtils.encodeLong(pinfo.getStart(), key, TBS_INDEX_SIZE);
+                tablespace.putData(key, tbp.toByteArray());
+            }
+            return p;
+        }
+    }
+
+    /**
+     * Rebuild the parameter archive between start and stop. The times will be adjusted to build full intervals.
+     * <p>
+     * Both start and stop can be left unspecified (by setting them to {@link TimeEncoding#INVALID_INSTANT}) to start
+     * from the beginning and/or go to the end of the archive.
+     * <p>
+     * If the realtime parameter filler is enabled, the end will be set by default to the end of the previous interval
+     * compared to the interval of the current mission time.
+     */
+    public Future<?> reprocess(long start, long stop) {
+        if (backFiller == null) {
+            throw new ConfigurationException("backFilling is not enabled");
+        }
+        if (start == TimeEncoding.INVALID_INSTANT) {
+            start = TimeEncoding.NEGATIVE_INFINITY;
+        }
+
+        if (stop == TimeEncoding.INVALID_INSTANT) {
+            if (realtimeFiller == null) {
+                stop = TimeEncoding.POSITIVE_INFINITY;
+            } else {
+                stop = ParameterArchive.getIntervalStart(timeService.getMissionTime()) - 1;
+            }
+        }
+        log.debug("Scheduling a reprocess for interval [{} - {}]",
+                start == TimeEncoding.INVALID_INSTANT ? "not_specified" : TimeEncoding.toString(start),
+                stop == TimeEncoding.INVALID_INSTANT ? "not_specified" : TimeEncoding.toString(stop));
+        return backFiller.scheduleFillingTask(start, stop);
+    }
+
+    /**
+     * a copy of the partitions from start to stop inclusive
+     * 
+     * @param start
+     * @param stop
+     * @return a sorted list of partitions
+     */
+    public List<Partition> getPartitions(long start, long stop, boolean ascending) {
+        List<Partition> r = new ArrayList<>();
+        Iterator<Partition> it;
+        if (ascending) {
+            it = partitions.overlappingIterator(new TimeInterval(start, stop));
+        } else {
+            it = partitions.overlappingReverseIterator(new TimeInterval(start, stop));
+        }
+        while (it.hasNext()) {
+            r.add(it.next());
+        }
+        return r;
+    }
+
+    @Override
+    protected void doStart() {
+        backFiller.scheduleAutoFillers();
+
+        if (realtimeFillerEnabled) {
+            realtimeFiller = new RealtimeArchiveFiller(this, realtimeFillerConfig);
+            realtimeFiller.start();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        log.debug("Stopping ParameterArchive service for instance {}", yamcsInstance);
+        try {
+
+            backFiller.shutDown();
+
+            if (realtimeFiller != null) {
+                realtimeFiller.shutDown();
+            }
+        } catch (Exception e) {
+            log.error("Error stopping realtime filler", e);
+            notifyFailed(e);
+            return;
+        }
+        notifyStopped();
+    }
+
+    public void printKeys(PrintStream out) throws DecodingException, RocksDBException, IOException {
+        out.println("pid\t pgid\t type\tSegmentStart\tcount\tsize\tstype");
+        for (Partition p : partitions) {
+            try (RocksIterator it = getIterator(p)) {
+                it.seekToFirst();
+                while (it.isValid()) {
+                    SegmentKey key = p.version == 0 ? SegmentKey.decodeV0(it.key()) : SegmentKey.decode(it.key());
+                    byte[] v = it.value();
+                    BaseSegment s;
+                    s = SegmentEncoderDecoder.decode(it.value(), key.segmentStart);
+                    out.println(key.parameterId + "\t " + key.parameterGroupId + "\t " + key.type + "\t"
+                            + TimeEncoding.toString(key.segmentStart) + "\t" + s.size() + "\t" + v.length + "\t"
+                            + s.getClass().getSimpleName());
+                    it.next();
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete all partitions that overlap with [start, stop) segment.
+     * 
+     * @param start
+     * @param stop
+     * @throws RocksDBException
+     * @return all the partitions removed
+     */
+    public List<Partition> deletePartitions(long start, long stop) throws RocksDBException {
+        // List<Partition> parts = getPartitions(start, stop, true);
+        throw new UnsupportedOperationException("operation not supported");
+    }
+
+    /**
+     * Remove all the data and metadata related to the parameter archive and initialize a new database
+     * <p>
+     * Prior to Yamcs 5.9.0 the Parameter Archive was stored on the default RocksDB column family. After the purge
+     * operation, the parameter archive will be moved to its own column family
+     * <p>
+     * If the parameter archive is stored in the default column family this operation will remove all the records.
+     * <p>
+     * If the parameter archive is stored into its own column family this operation will simply drop that column family
+     * (for all time based partitions)
+     * 
+     * @throws RocksDBException
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    public void purge() throws RocksDBException, InterruptedException, IOException {
+        log.info("Purging the parameter archive");
+
+        log.debug("Shutting down the back filler");
+        backFiller.shutDown();
+
+        if (realtimeFiller != null) {
+            log.debug("Shutting down the realtime filler");
+            realtimeFiller.shutDown();
+        }
+
+        var allPids = parameterIdDb.getAllPids();
+        int pgTbsIndex = parameterIdDb.getParameterGroupIdDb().tbsIndex;
+
+        for (var p : partitions) {
+            log.debug("purging partition {}", p);
+            YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+            if (p.cfName == null || YRDB.DEFAULT_CF.equals(p.cfName)) {
+                WriteBatch wb = new WriteBatch();
+                for (int i = 0; i < allPids.size(); i++) {
+                    var tbsIndex = allPids.get(i);
+                    wb.deleteRange(dbKey(tbsIndex), dbKey(tbsIndex + 1));
+                }
+                try (WriteOptions wo = new WriteOptions()) {
+                    rdb.write(wo, wb);
+                }
+            } else {
+                rdb.dropColumnFamily(p.cfName);
+            }
+        }
+        partitions = new PartitionedTimeInterval<>();
+
+        log.debug("removing metadata records related to main parameter archive data");
+        // data has been removed in the partition loop above
+        tablespace.removeMetadataRecords(TablespaceRecord.Type.PARCHIVE_DATA);
+
+        log.debug("removing parameter groups and related metadata");
+        tablespace.removeTbsIndex(TablespaceRecord.Type.PARCHIVE_PGID2PG, pgTbsIndex);
+
+        log.debug("removing partitions and related metadata");
+        tablespace.removeTbsIndex(TablespaceRecord.Type.PARCHIVE_PINFO, pinfoTablespaceRecord.getTbsIndex());
+
+        log.debug("removing metadata storing aggregate/array composition");
+        // there is no data of this type stored
+        tablespace.removeMetadataRecords(TablespaceRecord.Type.PARCHIVE_AGGARR_INFO);
+
+        parameterIdDb = new ParameterIdDb(yamcsInstance, tablespace, sparseGroups, minimumGroupOverlap);
+        initializeDb();
+
+        log.debug("Starting the back filler");
+        backFiller = new BackFiller(this, backFillerConfig, !realtimeFillerEnabled);
+        backFiller.scheduleAutoFillers();
+
+        if (realtimeFillerEnabled) {
+            log.debug("Starting the realtime filler");
+            realtimeFiller = new RealtimeArchiveFiller(this, realtimeFillerConfig);
+            realtimeFiller.start();
+        }
+    }
+
+    public RocksIterator getIterator(Partition p) throws RocksDBException, IOException {
+        YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+
+        return rdb.newIterator(cfh(rdb, p));
+    }
+
+    public RdbIteratorWithOptions getIteratorWithOptions(Partition p) throws RocksDBException, IOException {
+        YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+        var snapshot = rdb.getSnapshot();
+        ReadOptions opts = new ReadOptions();
+        opts.setSnapshot(snapshot);
+
+        var it = rdb.newIterator(cfh(rdb, p), opts);
+        return new RdbIteratorWithOptions(it, opts);
+    }
+
+    public SortedTimeSegment getTimeSegment(Partition p, long segmentStart, int parameterGroupId, ReadOptions opts)
+            throws RocksDBException, IOException {
+
+        var sk = new SegmentKey(parameterIdDb.timeParameterId, parameterGroupId, segmentStart,
+                SegmentKey.TYPE_ENG_VALUE);
+        byte[] timeKey = p.version == 0 ? sk.encodeV0() : sk.encode();
+        YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+
+        var cfh = cfh(rdb, p);
+
+        byte[] tv = rdb.get(cfh, opts, timeKey);
+
+        if (tv == null) {
+            return null;
+        }
+        try {
+            return (SortedTimeSegment) SegmentEncoderDecoder.decode(tv, segmentStart);
+        } catch (DecodingException e) {
+            throw new DatabaseCorruptionException(e);
+        }
+    }
+
+    /**
+     * Used by the realtime filler to read a PGSegment for an interval in order to add data to it
+     * <p>
+     * returns null if no data for the given interval is found
+     * <p>
+     * This is only used starting with version 1 (when the merge operator has been introduced). The behaviour before
+     * could be incorrect.
+     */
+    PGSegment readPGsegment(ParameterGroup pg, long intervalStart) throws IOException, RocksDBException {
+        var partition = createAndGetPartition(intervalStart);
+        if (partition.version == 0) {
+            return null;
+        }
+        YRDB rdb = tablespace.getRdb(partition.partitionDir, false);
+        var cfh = cfh(rdb, partition);
+
+        try (var snapshot = rdb.getSnapshot();
+                ReadOptions opts = new ReadOptions()) {
+            opts.setSnapshot(snapshot);
+
+            byte[] timeKey = SegmentKey.encode(parameterIdDb.timeParameterId, pg.id, intervalStart,
+                    SegmentKey.TYPE_ENG_VALUE);
+            byte[] tv = rdb.get(cfh, opts, timeKey);
+
+            if (tv == null) {
+                return null;
+            }
+            var timeSegment = (SortedTimeSegment) SegmentEncoderDecoder.decode(tv, intervalStart);
+
+            List<ParameterValueSegment> pvsList = new ArrayList<>();
+            for (int pid : pg.pids) {
+                ValueSegment engValueSegment = null;
+                ValueSegment rawValueSegment = null;
+                ParameterStatusSegment parameterStatusSegment = null;
+                SortedIntArray gaps = null;
+
+                byte[] key = SegmentKey.encode(pid, pg.id, intervalStart, SegmentKey.TYPE_PARAMETER_STATUS);
+                byte[] value = rdb.get(cfh, opts, key);
+                if (value == null) {
+                    // parameter status is mandatory so if it does not exist it means this parameter is not part of
+                    // the interval
+                    continue;
+                }
+                parameterStatusSegment = (ParameterStatusSegment) SegmentEncoderDecoder.decode(value,
+                        intervalStart);
+
+                key = SegmentKey.encode(pid, pg.id, intervalStart, SegmentKey.TYPE_ENG_VALUE);
+                value = rdb.get(cfh, opts, key);
+
+                if (value != null) {
+                    engValueSegment = (ValueSegment) SegmentEncoderDecoder.decode(value, intervalStart);
+                }
+
+                key = SegmentKey.encode(pid, pg.id, intervalStart, SegmentKey.TYPE_RAW_VALUE);
+                value = rdb.get(cfh, opts, key);
+                if (value != null) {
+                    rawValueSegment = (ValueSegment) SegmentEncoderDecoder.decode(value, intervalStart);
+                }
+
+                key = SegmentKey.encode(pid, pg.id, intervalStart, SegmentKey.TYPE_GAPS);
+                value = rdb.get(cfh, opts, key);
+                if (value != null) {
+                    gaps = SegmentEncoderDecoder.decodeGaps(value);
+                }
+
+                ParameterValueSegment pvs = new ParameterValueSegment(pid, timeSegment, engValueSegment,
+                        rawValueSegment, parameterStatusSegment, gaps);
+                pvsList.add(pvs);
+
+            }
+            return new PGSegment(pg.id, timeSegment, pvsList);
+        } catch (DecodingException e) {
+            throw new DatabaseCorruptionException(e);
+        }
+
+    }
+
+    Partition getPartitions(long instant) {
+        synchronized (partitions) {
+            return partitions.getFit(instant);
+        }
+    }
+
+    public long coverageEnd() {
+        return coverageEnd.get();
+    }
+
+    /**
+     * returns the interval (instant) where this instant could fit.
+     * 
+     * @param instant
+     * @return
+     */
+    public static long getIntervalStart(long instant) {
+        return getInterval(instant);
+    }
+
+    public static long getInterval(long instant) {
+        return instant & INTERVAL_MASK;
+    }
+
+    /**
+     * returns the end of the interval where the instant fits
+     * 
+     * @param instant
+     * @return
+     */
+    public static long getIntervalEnd(long instant) {
+        return instant | TIMESTAMP_MASK;
+    }
+
+    /**
+     * duration in milliseconds of one segment
+     * 
+     * @return
+     */
+    public static long getIntervalDuration() {
+        return TIMESTAMP_MASK + 1l;
+    }
+
+    public Tablespace getTablespace() {
+        return tablespace;
+    }
+
+    int getMaxSegmentSize() {
+        return maxSegmentSize;
+    }
+
+    public RealtimeArchiveFiller getRealtimeFiller() {
+        return realtimeFiller;
+    }
+
+    public BackFiller getBackFiller() {
+        return backFiller;
+    }
+
+    // this method is never used
+    // we leave it in if we want to experiment again with manual compaction
+    public void disableAutoCompaction(long start, long stop) {
+        try {
+            var interval = new TimeInterval(start, stop);
+            log.debug("Disabling auto-compaction on partitions overlapping with {}", interval.toStringEncoded());
+            var it = partitions.overlappingIterator(interval);
+            while (it.hasNext()) {
+                Partition p = it.next();
+                YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+                rdb.disableAutoCompaction(cfh(rdb, p));
+            }
+        } catch (RocksDBException e) {
+            throw new ParameterArchiveException("error compacting", e);
+        }
+    }
+
+    // this method is never used
+    // we leave it in if we want to experiment again with manual compaction
+    public void enableAutoCompaction(long start, long stop) {
+        try {
+            var interval = new TimeInterval(start, stop);
+            log.debug("Enabling auto-compaction on partitions overlapping with {}", interval.toStringEncoded());
+            var it = partitions.overlappingIterator(interval);
+            while (it.hasNext()) {
+                Partition p = it.next();
+                YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+                rdb.enableAutoCompaction(cfh(rdb, p));
+            }
+        } catch (RocksDBException e) {
+            throw new ParameterArchiveException("error compacting", e);
+        }
+    }
+
+    public void compact() {
+        try {
+            log.debug("Compacting all partitions");
+            long t0 = System.currentTimeMillis();
+            for (Partition p : partitions) {
+                YRDB rdb = tablespace.getRdb(p.partitionDir, false);
+                rdb.compactRange(cfh(rdb, p));
+            }
+            log.debug("Compaction finished in {} millisec", System.currentTimeMillis() - t0);
+        } catch (RocksDBException e) {
+            throw new ParameterArchiveException("error compacting", e);
+        }
+
+    }
+
+    /**
+     * 
+     * Returns the ColumnFamilyHandle for the partition.
+     * <p>
+     * The databases created after 5.9.0 will use a different column family; before that version the data will be stored
+     * in the default column family
+     * 
+     */
+    ColumnFamilyHandle cfh(YRDB rdb, Partition p) throws RocksDBException {
+        if (p.cfName == null) {
+            return rdb.getDefaultColumnFamilyHandle();
+        } else {
+            return rdb.createAndGetColumnFamilyHandle(p.cfName);
+        }
+    }
+
+    public long maxCoverageEnd() {
+        return timeService.getMissionTime() + coverageEndDelta;
+    }
+
+    /**
+     * Computes the coverage end as the greatest timestamp of a parameter in the archive, smaller than now
+     * <p>
+     * In order to find that, it iterates over all time segments
+     * 
+     * @throws IOException
+     * @throws RocksDBException
+     * @throws DecodingException
+     */
+    public long getCoverageEnd(long now) throws RocksDBException, IOException, DecodingException {
+        long covEnd = TimeEncoding.NEGATIVE_INFINITY;
+        log.debug("Computing coverage end as greatest timestamp of a parameter smaller than {}",
+                TimeEncoding.toString(now));
+
+        if (getParameterGroupIdDb().numGroups() == 0) {
+            log.debug("No parameter group, coverageEnd is {}", TimeEncoding.toString(covEnd));
+            return covEnd;
+        }
+        var partitions = getPartitions(TimeEncoding.MIN_INSTANT, now, false);
+        if (partitions.isEmpty()) {
+            log.debug("No partition, coverageEnd is {}", TimeEncoding.toString(covEnd));
+            return covEnd;
+        }
+
+        // he first partition (in descending order) should be enough but maybe it will contain no data, that's why we
+        // iterate
+        var nowIntervalEnd = getIntervalEnd(now);
+        for (var p : partitions) {
+            try (RocksIterator it = getIterator(p)) {
+                var groupIterator = getParameterGroupIdDb().groupIterato();
+                pg_loop: while (groupIterator.hasNext()) {
+                    var pg = groupIterator.next();
+
+                    var sk = new SegmentKey(parameterIdDb.timeParameterId, pg.id, nowIntervalEnd, Byte.MAX_VALUE);
+                    byte[] timeKey = p.version == 0 ? sk.encodeV0() : sk.encode();
+                    it.seekForPrev(timeKey);
+                    while (it.isValid()) {
+                        sk = p.version == 0 ? SegmentKey.decodeV0(it.key()) : SegmentKey.decode(it.key());
+                        if (sk.parameterGroupId != pg.id) {
+                            // no time segment for this parameter group
+                            continue pg_loop;
+                        }
+                        if (getIntervalEnd(sk.segmentStart) <= covEnd) {
+                            // this time segment ends before the current covEnd, no point in decoding it
+                            continue pg_loop;
+                        }
+
+                        var sts = (SortedTimeSegment) SegmentEncoderDecoder.decode(it.value(), sk.segmentStart);
+
+                        long covEnd1;
+                        int pos = sts.search(now);
+                        if (pos >= 0) {
+                            covEnd1 = sts.getTime(pos);
+                        } else {
+                            pos = -pos - 1;
+                            if (pos == 0) {
+                                it.prev();
+                                continue;
+                            }
+                            covEnd1 = sts.getTime(pos - 1);
+                        }
+                        covEnd = Long.max(covEnd, covEnd1);
+                        break;
+                    }
+                }
+            }
+        }
+        log.debug("Found coverageEnd {}", TimeEncoding.toString(covEnd));
+        return covEnd;
+    }
+
+    public FillerLock getFillerLock() {
+        return fillerLock;
+    }
+
+    public static class Partition extends TimeInterval {
+        final String partitionDir;
+        final private String cfName;
+
+        final int version;
+
+        Partition(String cfName, int version) {
+            super(TimeEncoding.NEGATIVE_INFINITY, TimeEncoding.POSITIVE_INFINITY);
+
+            this.partitionDir = null;
+            this.cfName = cfName;
+            this.version = version;
+        }
+
+        Partition(long start, long end, String dir, String cfName, int version) {
+            super(start, end);
+
+            this.partitionDir = dir;
+            this.cfName = cfName;
+            this.version = version;
+        }
+
+        @Override
+        public String toString() {
+            return "partition: " + partitionDir + "[" + TimeEncoding.toString(getStart()) + " - "
+                    + TimeEncoding.toString(getEnd()) + "], version: " + version;
+        }
+
+        public String getPartitionDir() {
+            return partitionDir;
+        }
+    }
+
+}
+```
+
+### `ParameterArchiveException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterArchiveException.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+public class ParameterArchiveException extends RuntimeException {
+    public ParameterArchiveException(String message) {
+        super(message);
+    }
+    
+    public ParameterArchiveException(String message, Throwable t) {
+        super(message, t);
+    }
+}
+```
+
+### `ParameterGroupIdDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterGroupIdDb.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.VarIntUtil;
+import org.yamcs.yarch.rocksdb.AscendingRangeIterator;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.rocksdb.YRDB;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord;
+
+import com.google.common.collect.Iterators;
+
+import static org.yamcs.yarch.rocksdb.RdbStorageEngine.TBS_INDEX_SIZE;
+
+/**
+ * Stores a map between List&lt;parameter_id&gt; and ParameterGroup_id.
+ * <p>
+ * Stores data in the main tablespace:
+ * <p>
+ * database key = tbsIndex,ParameterGroup_id
+ * <p>
+ * datbase value = SortedIntArray of parameter_id, stored delta encoded
+ * <p>
+ * 
+ * Backed by RocksDB
+ *
+ */
+public class ParameterGroupIdDb {
+    final Tablespace tablespace;
+    final String yamcsInstance;
+
+    /**
+     * if true, allow parameter lists to be part of the groups even though not matching 100% all parameters
+     * <p>
+     * This results in gaps in the columnar data but reduces the number of groups
+     **/
+    final boolean sparseGroups;
+    /**
+     * if sparseGroups = true: minimum amount of overlap between a parameter list and an existing group, for the list to
+     * be considered part of the same group
+     * <p>
+     * value between 0.0 and 1.0
+     */
+    final double minOverlap;
+
+    // used to store the parameter groups in the RocksDB
+    int tbsIndex;
+
+    // The list of all parameter groups.
+    // The index in this list is the pgid
+    // May contain nulls if a group is ever removed, or if the archive comes from Yamcs prior to 5.9.5 - for some reason
+    // the group 0 was not used
+    private List<ParameterGroup> groups = new ArrayList<>();
+
+    Map<IntArray, ParameterGroup> pg2groupCache = new HashMap<>();
+
+    private ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    ParameterGroupIdDb(String yamcsInstance, Tablespace tablespace) throws RocksDBException {
+        this(yamcsInstance, tablespace, false, 1);
+    }
+
+    /**
+     * Create a new db storing the parameter group definition
+     * 
+     * @param yamcsInstance
+     * @param tablespace
+     *            - the tablespace is used to load and persist the group to the Rocksdb
+     * @param sparseGroups
+     *            - if true, allow parameter lists to be part of the groups even though not matching 100% all parameters
+     * @param minOverlap
+     *            - considered only if sparseGroups = true - minimum amount of overlap between a parameter list and an
+     *            existing group, for the list to be considered part of the same group - should be between 0 and 1.
+     * @throws RocksDBException
+     */
+    ParameterGroupIdDb(String yamcsInstance, Tablespace tablespace, boolean sparseGroups, double minOverlap)
+            throws RocksDBException {
+        this.tablespace = tablespace;
+        this.yamcsInstance = yamcsInstance;
+        this.minOverlap = minOverlap;
+        this.sparseGroups = sparseGroups;
+        if (minOverlap < 0 || minOverlap > 1) {
+            throw new IllegalArgumentException("The minOverlap parameter should be between 0 and 1");
+        }
+        readDb();
+    }
+
+    private void readDb() throws RocksDBException {
+        List<TablespaceRecord> trl = tablespace.filter(TablespaceRecord.Type.PARCHIVE_PGID2PG, yamcsInstance,
+                trb -> true);
+        if (trl.size() > 1) {
+            throw new DatabaseCorruptionException("Multiple records of type "
+                    + TablespaceRecord.Type.PARCHIVE_PGID2PG.name() + " found for instance " + yamcsInstance);
+        }
+        TablespaceRecord tr;
+        if (trl.isEmpty()) {
+            TablespaceRecord.Builder trb = TablespaceRecord.newBuilder()
+                    .setType(TablespaceRecord.Type.PARCHIVE_PGID2PG);
+            tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+        } else {
+            tr = trl.get(0);
+        }
+        this.tbsIndex = tr.getTbsIndex();
+        YRDB db = tablespace.getRdb();
+        byte[] range = new byte[TBS_INDEX_SIZE];
+        ByteArrayUtils.encodeInt(tr.getTbsIndex(), range, 0);
+
+        try (AscendingRangeIterator it = new AscendingRangeIterator(db.newIterator(), range, range)) {
+            while (it.isValid()) {
+                byte[] key = it.key();
+                int pgid = ByteArrayUtils.decodeInt(key, TBS_INDEX_SIZE);
+
+                IntArray pids = VarIntUtil.decodeDeltaIntArray(it.value());
+                var pg = new ParameterGroup(pgid, pids);
+                for (int i = groups.size(); i < pgid; i++) { // add nulls if we miss some pgid
+                    groups.add(null);
+                }
+                assert (groups.size() == pgid);
+                groups.add(pg);
+
+                pg2groupCache.put(pids, pg);
+                it.next();
+            }
+        }
+    }
+
+    /**
+     * Returns the ParameterGroup for the given parameter id array, creating it if it does not exist yet
+     * <p>
+     * If a group matching the array exists, it is returned.
+     * <p>
+     * If it does not exist and sparseGroup is disabled, then a new group is made.
+     * <p>
+     * If sparseGroup is enabled, then a group overlapping the input array is searched. If no existing group matches
+     * half of the input array, then a new group is created for the input array.
+     * <p>
+     * If an existing group overlapping the input array is found, then there are two cases:
+     * <ul>
+     * <li>The existing group contains all the entries from the input array. Then it is simply returned.</li>
+     * <li>The existing group misses some entries from the input array. In this case the group is extended with the
+     * missing entries, then it is returned.</li>
+     * </ul>
+     * 
+     */
+    public ParameterGroup getGroup(IntArray input) throws RocksDBException {
+        lock.writeLock().lock();
+        try {
+            ParameterGroup pg = pg2groupCache.get(input);
+            if (pg == null) {
+                if (sparseGroups) {
+                    pg = createOrModify(input);
+                } else {
+                    pg = new ParameterGroup(groups.size(), input);
+                    groups.add(pg);
+                    pg2groupCache.put(input, pg);
+                    writeToDb(pg);
+                }
+            }
+            return pg;
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    // this is called when sparseGroup = true
+    private ParameterGroup createOrModify(IntArray input) throws RocksDBException {
+        ParameterGroup max = null;
+        // go through all groups and find one which overlap most with the input (but at least the minimum required)
+        int maxOverlap = 0;
+        for (var g : groups) {
+            if (g == null) {
+                continue;
+            }
+            int overlap = input.intersectionSize(g.pids);
+            if (overlap < input.size() * minOverlap && overlap < g.pids.size() * minOverlap) {
+                continue;
+            }
+
+            if (overlap > maxOverlap) {
+                maxOverlap = overlap;
+                max = g;
+            } else if (overlap == maxOverlap && (max == null || g.pids.size() < max.pids.size())) {
+                // If two groups have the same overlap value, give preference to the one with fewer elements.
+                // This strategy aims to minimise the sparsity of the columns.
+                g = max;
+            }
+        }
+        if (max == null) {// no group overlapping enough has been found, make a new one
+            var pg = new ParameterGroup(groups.size(), input);
+            groups.add(pg);
+            pg2groupCache.put(input, pg);
+            writeToDb(pg);
+            return pg;
+        } else if (maxOverlap == input.size()) { // a group has been found and contains all the elements from the input
+            pg2groupCache.put(input, max);
+            return max;
+        } else {// a group has been found but it needs to be modified to add the missing elements from the input
+            max.pids = IntArray.union(max.pids, input, max.pids.size() + input.size() - maxOverlap);
+            writeToDb(max);
+            pg2groupCache.put(max.pids, max);
+            pg2groupCache.put(input, max);
+            return max;
+        }
+    }
+
+    private void writeToDb(ParameterGroup pg) throws RocksDBException {
+        byte[] key = new byte[TBS_INDEX_SIZE + 4];
+        ByteArrayUtils.encodeInt(tbsIndex, key, 0);
+        ByteArrayUtils.encodeInt(pg.id, key, TBS_INDEX_SIZE);
+        byte[] v = VarIntUtil.encodeDeltaIntArray(pg.pids);
+        tablespace.putData(key, v);
+    }
+
+    /**
+     * return the members of the pg group.
+     * <p>
+     * Throws {@link IllegalArgumentException} if the group does not exist
+     */
+    public IntArray getParameterGroup(int pg) {
+        lock.readLock().lock();
+        try {
+            if ((pg >= groups.size()) || (groups.get(pg) == null)) {
+                throw new IllegalArgumentException("No parameter group with the id " + pg);
+            }
+            return groups.get(pg).pids;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    public int numGroups() {
+        return (int) groups.stream().filter(Objects::nonNull).count();
+    }
+
+    public Iterator<ParameterGroup> groupIterato() {
+        return Iterators.filter(groups.iterator(), Objects::nonNull);
+    }
+
+    @Override
+    public String toString() {
+        return pg2groupCache.toString();
+    }
+
+    /**
+     * get all parameter group ids for the parameters from which this parameter id is part of
+     * 
+     * @param pid
+     * @return the parameter group ids for the parameters groups that contain the pid
+     */
+    public int[] getAllGroups(int pid) {
+        lock.readLock().lock();
+        try {
+            IntArray r = new IntArray();
+            for (var pg : groups) {
+                if (pg != null && pg.pids.binarySearch(pid) >= 0) {
+                    r.add(pg.id);
+                }
+            }
+            return r.toArray();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    static public class ParameterGroup {
+        /** parmeter group id */
+        final int id;
+        /** list of parameter ids */
+        IntArray pids;
+
+        public ParameterGroup(int pgId, IntArray pids) {
+            this.id = pgId;
+            this.pids = pids;
+        }
+    }
+}
+```
+
+### `ParameterId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterId.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+
+/**
+ * 
+ * The parameter archive gives each (fqn, rawType, engType) a numeric 32 bits pid.
+ * <p>
+ * fqn is the parameter fully qualified name
+ * <p>
+ * This interface is implemented by classes storing the association between fqn, pid, rawType and engType
+ * 
+ */
+public interface ParameterId {
+
+    public Type getRawType();
+
+    public Type getEngType();
+
+    public int getPid();
+
+    public String getParamFqn();
+
+    /**
+     * @return true if the parameter id is not an aggregate or array
+     */
+    public boolean isSimple();
+
+    /**
+     * 
+     * @return true if the parameter has a raw value. It is equivalent with getRawType()==null
+     */
+    public boolean hasRawValue();
+
+    /**
+     * Returns the ids of the components for aggregates or arrays. if isSimple() returns true, this method returns
+     * null.
+     */
+    public IntArray getComponents();
+}
+```
+
+### `ParameterIdDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterIdDb.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.BiFunction;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord;
+
+/**
+ * Stores a map (parameter_fqn, type) -> parameter_id
+ * <p>
+ * type is a 32 bit assigned corresponding (engType, rawType)
+ * <p>
+ * engType and rawType are one of the types from protobuf Value.Type - the numbers are used assuming that no more than
+ * 2^15 will ever exist.
+ * <p>
+ * The parameter_id is the tbsIndex from RocksdDb backed database.
+ * <p>
+ * The aggregates and arrays are also allocated parameter_ids (i.e. tbsIndex) but they do not contain any data, just a
+ * list of members parameter ids stored in the tablespace metadata.
+ * 
+ * 
+ * Backed by RocksDB
+ *
+ */
+public class ParameterIdDb {
+    final static float LOAD_FACTOR = 0.7f;
+    final static int INITIAL_SIZE = 512;
+
+    final Tablespace tablespace;
+    final String yamcsInstance;
+
+    private int size = 0;
+    private Entry[] entries;
+
+    // hash tables for pid and fqn; the values are indexes in the entries array
+    private int[] pidHtable;
+    private int[] fqnHtable;
+    private int threshold;
+
+    // used as parameterId (tbsIndex) for the time records
+    int timeParameterId;
+    public static final String TIME_PARAMETER_FQN = "__time_parameter_";
+    static final int UNSET = -1;
+
+    private ParameterGroupIdDb pgidMap;
+
+    ParameterIdDb(String yamcsInstance, Tablespace tablespace, boolean sparseGroups, double minGroupOverlap)
+            throws RocksDBException, IOException {
+        this.tablespace = tablespace;
+        this.yamcsInstance = yamcsInstance;
+
+        entries = new Entry[INITIAL_SIZE];
+        pidHtable = new int[INITIAL_SIZE];
+        fqnHtable = new int[INITIAL_SIZE];
+        Arrays.fill(pidHtable, UNSET);
+        Arrays.fill(fqnHtable, UNSET);
+        size = 0;
+        threshold = (int) (LOAD_FACTOR * INITIAL_SIZE);
+
+        readDb();
+        pgidMap = new ParameterGroupIdDb(yamcsInstance, tablespace, sparseGroups, minGroupOverlap);
+    }
+
+    /**
+     * Get the mapping from (parameterFqn, type) to pid
+     * <p>
+     * It creates it if it does not exist
+     * 
+     * @param paramFqn
+     * @param engType
+     * @param rawType
+     * 
+     * @return a parameter id for the given parameter name and type
+     * @throws ParameterArchiveException
+     *             if there was an error creating and storing a new parameter_id
+     */
+    public synchronized int createAndGet(String paramFqn, Value.Type engType, Value.Type rawType)
+            throws ParameterArchiveException {
+        int type = numericType(engType, rawType);
+
+        Entry e = getCachedEntry(paramFqn, type);
+        if (e == null) {
+            int pid = addParameterToRocksdb(paramFqn, type);
+            e = new Entry(pid, type, paramFqn);
+            addEntry(e);
+        }
+
+        return e.pid;
+    }
+
+    public ParameterGroupIdDb getParameterGroupIdDb() {
+        return pgidMap;
+    }
+
+    private Entry getCachedEntry(String paramFqn, int type) {
+        int fhash = paramFqn.hashCode() & (fqnHtable.length - 1);
+        int idx = fqnHtable[fhash];
+        if (idx == UNSET) {
+            return null;
+        } else {
+            Entry e = entries[idx];
+            while (e != null && !e.equals(paramFqn, type)) {
+                e = e.nextFqn;
+            }
+            return e;
+        }
+    }
+
+    private void addEntry(Entry e) {
+        if (e == null) {
+            throw new NullPointerException();
+        }
+        if (size > threshold) {
+            resizeHashTables();
+        }
+        if (size == entries.length) {
+            resizeEntries();
+        }
+        int idx = size++;
+        entries[idx] = e;
+        addHash(idx, e);
+    }
+
+    private void addHash(int idx, Entry e) {
+        int fhash = e.fqn.hashCode() & (fqnHtable.length - 1);
+        int phash = e.pid & (pidHtable.length - 1);
+
+        int fidx = fqnHtable[fhash];
+        int pidx = pidHtable[phash];
+        Entry e1, e2;
+
+        if (fidx == UNSET) {
+            fqnHtable[fhash] = idx;
+        } else {
+            e1 = entries[fidx];
+            while ((e2 = e1.nextFqn) != null) {
+                e1 = e2;
+            }
+            e1.nextFqn = e;
+        }
+
+        if (pidx == UNSET) {
+            pidHtable[phash] = idx;
+        } else {
+            e1 = entries[pidx];
+            while ((e2 = e1.nextPid) != null) {
+                e1 = e2;
+            }
+            e1.nextPid = e;
+        }
+    }
+
+    private void resizeHashTables() {
+        int n = fqnHtable.length;
+        if (n == Integer.MAX_VALUE) {
+            throw new ParameterArchiveException("too many parameters");
+        }
+        n *= 2;
+        fqnHtable = new int[n];
+        pidHtable = new int[n];
+        threshold = (int) (LOAD_FACTOR * n);
+
+        // rehash all entries
+        Arrays.fill(fqnHtable, UNSET);
+        Arrays.fill(pidHtable, UNSET);
+
+        for (int i = 0; i < size; i++) {
+            entries[i].nextFqn = entries[i].nextPid = null;
+        }
+        for (int i = 0; i < size; i++) {
+            addHash(i, entries[i]);
+        }
+    }
+
+    private void resizeEntries() {
+        entries = Arrays.copyOf(entries, 2 * entries.length);
+    }
+
+    /**
+     * get a parameter id for a parameter that only has engineering value
+     * 
+     * @param paramFqn
+     * @param engType
+     * @return a parameter id for the given parameter name and type
+     */
+    public int createAndGet(String paramFqn, Type engType) {
+        return createAndGet(paramFqn, engType, null);
+    }
+
+    private int addParameterToRocksdb(String paramFqn, int type) {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(TablespaceRecord.Type.PARCHIVE_DATA)
+                .setParameterFqn(paramFqn).setParameterType(type);
+        TablespaceRecord tr;
+        try {
+            tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+            return tr.getTbsIndex();
+        } catch (RocksDBException e) {
+            throw new ParameterArchiveException("Cannot store key for new parameter id", e);
+        }
+    }
+
+    // compose a numeric type from engType and rawType (we assume that no more than 2^15 types will ever exist)
+    private int numericType(Value.Type engType, Value.Type rawType) {
+        int et = (engType == null) ? 0xFFFF : engType.getNumber();
+        int rt = (rawType == null) ? 0xFFFF : rawType.getNumber();
+        return et << 16 | rt;
+    }
+
+    private void readDb() throws RocksDBException, IOException {
+        List<TablespaceRecord> trlist = tablespace.filter(TablespaceRecord.Type.PARCHIVE_DATA, yamcsInstance,
+                (trb) -> true);
+        if (trlist.isEmpty()) {
+            // new database- create a record for the time parameter
+            TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(TablespaceRecord.Type.PARCHIVE_DATA)
+                    .setParameterFqn(TIME_PARAMETER_FQN);
+            TablespaceRecord tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+            timeParameterId = tr.getTbsIndex();
+        } else {
+            for (TablespaceRecord tr : trlist) {
+                String paraName = tr.getParameterFqn();
+                if (TIME_PARAMETER_FQN.equals(paraName)) {
+                    timeParameterId = tr.getTbsIndex();
+                } else {
+                    int pid = tr.getTbsIndex();
+                    int type = tr.getParameterType();
+                    addEntry(new Entry(pid, type, paraName));
+                }
+            }
+        }
+
+        trlist = tablespace.filter(TablespaceRecord.Type.PARCHIVE_AGGARR_INFO, yamcsInstance,
+                (trb) -> true);
+        for (TablespaceRecord tr : trlist) {
+            String paraFqn = tr.getParameterFqn();
+            int pid = tr.getTbsIndex();
+
+            IntArray memberIds = new IntArray();
+            for (int i = 0; i < tr.getMemberIdCount(); i++) {
+                memberIds.add(tr.getMemberId(i));
+            }
+
+            int numericType;
+            if (tr.hasNumericType()) {
+                numericType = tr.getNumericType();
+            } else {// workaround if the parameter was created before this has been implemented
+                numericType = Value.ARRAYVALUE_FIELD_NUMBER;
+            }
+            addEntry(new AggArrayEntry(pid, paraFqn, numericType, memberIds));
+
+        }
+    }
+
+    static Value.Type getEngType(int x) {
+        int et = x >> 16;
+        if (et == 0xFFFF) {
+            return null;
+        } else
+            return Value.Type.forNumber(et);
+    }
+
+    static Value.Type getRawType(int x) {
+        int rt = x & 0xFFFF;
+        if (rt == 0xFFFF) {
+            return null;
+        } else
+            return Value.Type.forNumber(rt);
+    }
+
+    static boolean hasRawType(int x) {
+        return (x & 0xFFFF) != 0xFFFF;
+    }
+
+    public int getTimeParameterId() {
+        return timeParameterId;
+    }
+
+    public void print(PrintStream out) {
+        for (Entry me : entries) {
+            String pname = me.fqn;
+            out.print(pname + ": ");
+            out.println("\t(" + getEngType(me.type) + ", " + getRawType(me.type) + ") -> " + me.pid);
+        }
+    }
+
+    /*
+     * return the number of unique parameters
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Get all parameters ids for a given qualified name
+     * 
+     * return null if no parameter id exists for that fqn.
+     * 
+     * 
+     * @param fqn
+     *            - fully qualified name of the parameter for which the ids are returned
+     * @return all parameters ids for a given qualified name or null if no parameter id exists for that fqn
+     */
+    public synchronized ParameterId[] get(String fqn) {
+        int fhash = fqn.hashCode() & (fqnHtable.length - 1);
+        int idx = fqnHtable[fhash];
+        if (idx == UNSET) {
+            return null;
+        }
+        Entry e = entries[idx];
+        int n = 0;
+        Entry e1 = e;
+        while (e1 != null) {
+            if (fqn.equals(e1.fqn)) {
+                n++;
+            }
+            e1 = e1.nextFqn;
+        }
+
+        ParameterId[] r = new ParameterId[n];
+        e1 = e;
+        int i = 0;
+        while (e1 != null && i < n) {
+            if (fqn.equals(e1.fqn)) {
+                r[i++] = e1;
+            }
+            e1 = e1.nextFqn;
+        }
+        return r;
+    }
+
+    /**
+     * returns the parameter FQN for the given parameterId
+     * 
+     * @param parameterId
+     * 
+     * @return parameterFQN or null if there is no parameter with the given id
+     */
+    public String getParameterFqnById(int parameterId) {
+        Entry e = getCachedEntryById(parameterId);
+        return e == null ? null : e.fqn;
+    }
+
+    /**
+     * returns ParameterId based on numeric id or null if it does not exist
+     */
+    public ParameterId getParameterId(int pid) {
+        Entry e = getCachedEntryById(pid);
+        return e;
+    }
+
+    public Entry getCachedEntryById(int pid) {
+        int phash = pid & (pidHtable.length - 1);
+        int idx = pidHtable[phash];
+        if (idx == UNSET) {
+            return null;
+        } else {
+            Entry e = entries[idx];
+            while (e != null && e.pid != pid) {
+                e = e.nextPid;
+            }
+            return e;
+        }
+    }
+
+    /**
+     * Iterate over the parameter database, calling the function with the fqn and parameter id.
+     * <p>
+     * The iteration will continue as long as the function returns true
+     * 
+     * @param consumer
+     */
+    public void iterate(BiFunction<String, ParameterId, Boolean> consumer) {
+        for (int i = 0; i < size; i++) {
+            Entry e = entries[i];
+            if (!consumer.apply(e.fqn, e)) {
+                return;
+            }
+        }
+    }
+
+    /**
+     * Creates (if not already existing) an id for the aggregate or array parameter with the given qualified name and
+     * member ids.
+     * <p>
+     * If another parameter with the same name exists and the aggArray is either a subset or superset of the members of
+     * the existing parameter, it is considered the same and is returned.
+     * <p>
+     * For example an array will have an id for each index of its elements a[0], a[1],.. The aggArray for that parameter
+     * will consist of the list of ids corresponding to the value which had the maximum number of elements.
+     * 
+     * <p>
+     * If a new value is encountered having more elements than the previous maximum, we do not want to create a new id
+     * for that parameter. We do however want to create a new id if the elements have a different type (and thus a[i]
+     * will have a different id)
+     * 
+     * @param paramFqn
+     *            - qualified name of the parameter
+     * @param engType
+     *            - the type of engineering value (ARRAY or AGGREGATE)
+     * @param rawType
+     *            - the type of the raw value - null if the parameter has no raw value
+     * @param components
+     *            - the parameter ids of the components of the aggregate or array
+     * @return
+     */
+    public synchronized int createAndGetAggrray(String paramFqn, Value.Type engType, Value.Type rawType,
+            IntArray components) {
+        components.sort();
+        int pid = -1;
+        int numericType = numericType(engType, rawType);
+
+        int fhash = paramFqn.hashCode() & (fqnHtable.length - 1);
+        int idx = fqnHtable[fhash];
+        if (idx == UNSET) {
+            pid = addAggArray(paramFqn, numericType, components);
+            addEntry(new AggArrayEntry(pid, paramFqn, numericType, components));
+        } else {
+            Entry e = entries[idx];
+            while (e != null) {
+                if (paramFqn.equals(e.fqn) && (e instanceof AggArrayEntry agge)) {
+                    int c = IntArray.compare(agge.components, components);
+                    if (c != -1) {
+                        pid = e.pid;
+                        if (c == 1) {
+                            agge.components = components;
+                            modifyAggArray(pid, paramFqn, numericType, components);
+                        }
+                        break;
+                    }
+                }
+                e = e.nextFqn;
+            }
+        }
+        if (pid == -1) {
+            pid = addAggArray(paramFqn, numericType, components);
+            addEntry(new AggArrayEntry(pid, paramFqn, numericType, components));
+        }
+
+        return pid;
+    }
+
+    private int addAggArray(String paramFqn, int numericType, IntArray aggArray) {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder()
+                .setType(TablespaceRecord.Type.PARCHIVE_AGGARR_INFO)
+                .setParameterFqn(paramFqn)
+                .setNumericType(numericType);
+        aggArray.stream().forEach(x -> trb.addMemberId(x));
+
+        TablespaceRecord tr;
+        try {
+            tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+            return tr.getTbsIndex();
+
+        } catch (RocksDBException e) {
+            throw new ParameterArchiveException("Cannot store information for new aggregate/array parameter id", e);
+        }
+    }
+
+    private void modifyAggArray(int pid, String paramFqn, int numericType, IntArray aggArray) {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder()
+                .setTbsIndex(pid)
+                .setType(TablespaceRecord.Type.PARCHIVE_AGGARR_INFO)
+                .setParameterFqn(paramFqn)
+                .setNumericType(numericType);
+        aggArray.stream().forEach(x -> trb.addMemberId(x));
+
+        TablespaceRecord tr;
+        try {
+            tr = tablespace.updateRecord(yamcsInstance, trb);
+            tr.getTbsIndex();
+
+        } catch (RocksDBException e) {
+            throw new ParameterArchiveException("Cannot store information for new aggregate/array parameter id", e);
+        }
+    }
+
+    /**
+     * Get the array components of aggregate/array parameter pid which are members of the group gid
+     * 
+     * @param aggrayPid
+     * @param gid
+     * @return
+     */
+    public synchronized ParameterId[] getAggarrayComponents(int aggrayPid, int gid) {
+        Entry e = getCachedEntryById(aggrayPid);
+        if (e == null) {
+            throw new IllegalArgumentException("Invalid parameter id " + aggrayPid);
+        }
+
+        if (!(e instanceof AggArrayEntry)) {
+            throw new IllegalArgumentException("parameter id " + aggrayPid + " is not an id of an aggregate or array");
+        }
+        IntArray gidMembers = pgidMap.getParameterGroup(gid);
+
+        return ((AggArrayEntry) e).components.stream()
+                .filter(pid -> gidMembers.binarySearch(pid) >= 0)
+                .mapToObj(pid -> getParameterId(pid))
+                .toArray(ParameterId[]::new);
+    }
+
+    /**
+     * returns an array of all parameter ids (including the time pseudo-parameter id)
+     */
+    public IntArray getAllPids() {
+        IntArray r = new IntArray(size + 1);
+        r.add(timeParameterId);
+        for (var e : entries) {
+            if (e != null) {
+                r.add(e.pid);
+            }
+        }
+        return r;
+    }
+
+    static class Entry implements ParameterId {
+        final int pid;
+        final int type;
+        final String fqn;
+
+        Entry nextPid;
+        Entry nextFqn;
+
+        public Entry(int pid, int numericType, String fqn) {
+            this.pid = pid;
+            this.type = numericType;
+            this.fqn = fqn;
+        }
+
+        public boolean equals(String paramFqn, int type) {
+            return fqn.equals(paramFqn) && this.type == type;
+        }
+
+        @Override
+        public Type getRawType() {
+            return ParameterIdDb.getRawType(type);
+        }
+
+        @Override
+        public Type getEngType() {
+            return ParameterIdDb.getEngType(type);
+        }
+
+        @Override
+        public int getPid() {
+            return pid;
+        }
+
+        @Override
+        public String getParamFqn() {
+            return fqn;
+        }
+
+        @Override
+        public boolean isSimple() {
+            return true;
+        }
+
+        @Override
+        public boolean hasRawValue() {
+            return ParameterIdDb.hasRawType(type);
+        }
+
+        @Override
+        public IntArray getComponents() {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "Entry [pid=" + pid + ", fqn=" + fqn + ", engType: " + getEngType()
+                    + ", rawType: " + getRawType() + "]";
+        }
+    }
+
+    static class AggArrayEntry extends Entry {
+
+        IntArray components;
+
+        public AggArrayEntry(int pid, String fqn, int numericType, IntArray components) {
+            super(pid, numericType, fqn);
+            if (components.size() == 0) {
+                throw new IllegalArgumentException(
+                        "the aggregate or array parameter has to have at least one component");
+            }
+            this.components = components;
+        }
+
+        @Override
+        public boolean isSimple() {
+            return false;
+        }
+
+        @Override
+        public IntArray getComponents() {
+            return components;
+        }
+
+        @Override
+        public String toString() {
+            return "AggArrayEntry [pid=" + pid + ", fqn=" + fqn + "+components=" + components + "]";
+        }
+    }
+
+}
+```
+
+### `ParameterIdValueList.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterIdValueList.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * A list of parametersIds with values all having the same timestamp
+ * @author nm
+ *
+ */
+public class ParameterIdValueList {
+    final long instant;
+    
+    IntArray pids = new IntArray();
+    
+    List<ParameterValue> values = new ArrayList<>();
+    
+    public ParameterIdValueList(long instant) {
+        this.instant = instant;
+    }
+    
+    public void add(int parameterId, ParameterValue v) {
+        pids.add(parameterId);
+        values.add(v);
+    }
+   
+
+    public List<ParameterValue> getValues() {
+        return values;
+    }
+    
+    public long time() {
+        return instant;
+    }
+
+    public long size() {
+        return pids.size();
+    }
+
+    public IntArray getPids() {
+        return pids;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(TimeEncoding.toCombinedFormat(instant)+" [");
+        boolean first = true;
+        for(int i=0 ; i<pids.size();i++) {
+            Value ev = values.get(i).getEngValue();
+            if(first) first = false;
+            else sb.append(", ");
+            sb.append(pids.get(i)+": ("+ev.getType()+")"+ev);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+}
+```
+
+### `ParameterInfoRetrieval.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterInfoRetrieval.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.io.IOException;
+import java.util.function.Consumer;
+
+import org.rocksdb.RocksDBException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.protobuf.ArchiveParameterSegmentInfo;
+import org.yamcs.utils.TimeEncoding;
+
+public class ParameterInfoRetrieval {
+    final private ParameterArchive parchive;
+    private final Logger log = LoggerFactory.getLogger(ParameterInfoRetrieval.class);
+
+    ParameterId parameterId;
+    long start, stop;
+
+    public ParameterInfoRetrieval(ParameterArchive parchive, ParameterId parameterId, long start, long stop) {
+        this.parchive = parchive;
+        this.parameterId = parameterId;
+        this.start = start;
+        this.stop = stop;
+    }
+
+    public void retrieve(Consumer<ArchiveParameterSegmentInfo> consumer) throws RocksDBException, IOException {
+
+        int[] pgids = parchive.getParameterGroupIdDb().getAllGroups(parameterId.getPid());
+
+        if (pgids.length == 0) {
+            log.error("Found no parameter group for parameter Id {}", parameterId);
+            return;
+        }
+
+        for (int pgid : pgids) {
+            retrieveInfo(pgid, consumer);
+        }
+    }
+
+    private void retrieveInfo(int parameterGroupId, Consumer<ArchiveParameterSegmentInfo> consumer)
+            throws RocksDBException, IOException {
+
+        ParameterRetrievalOptions req = ParameterRetrievalOptions.newBuilder().withStartStop(start, stop)
+                .withAscending(true)
+                .withRetrieveEngineeringValues(false)
+                .withRetrieveRawValues(false)
+                .withRetrieveParameterStatus(false).build();
+
+        try (SegmentIterator it = new SegmentIterator(parchive, parameterId, parameterGroupId, req)) {
+            while (it.isValid()) {
+                ParameterValueSegment pvs = it.value();
+                SortedTimeSegment timeSegment = pvs.timeSegment;
+                ArchiveParameterSegmentInfo apsi = ArchiveParameterSegmentInfo.newBuilder()
+                        .setGroupId(parameterGroupId)
+                        .setCount(timeSegment.size())
+                        .setStart(TimeEncoding.toProtobufTimestamp(timeSegment.getSegmentStart()))
+                        .setEnd(TimeEncoding.toProtobufTimestamp(timeSegment.getSegmentEnd()))
+                        .build();
+                consumer.accept(apsi);
+                it.next();
+            }
+        }
+    }
+
+}
+```
+
+### `ParameterIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterIterator.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+/**
+ * Iterator over values of one (parameterId, group id)
+ */
+public interface ParameterIterator extends ParchiveIterator<TimedValue> {
+    public TimedValue value();
+
+    public ParameterId getParameterId();
+
+    public int getParameterGroupId();
+}
+```
+
+### `ParameterStatusSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterStatusSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+
+public class ParameterStatusSegment extends ObjectSegment<ParameterStatus> {
+    static ParameterStatusSerializer serializer = new ParameterStatusSerializer();
+    static AcquiredCache cache = new AcquiredCache();
+
+    public ParameterStatusSegment(boolean buildForSerialisation) {
+        super(serializer, buildForSerialisation);
+    }
+
+    static public final ParameterStatus getStatus(BasicParameterValue pv, ParameterStatus prevStatus) {
+        AcquisitionStatus acq = pv.getAcquisitionStatus(false);
+        MonitoringResult mr = pv.getMonitoringResult();
+
+        if (acq == AcquisitionStatus.ACQUIRED && mr == null) {
+            return cache.get(pv.getExpireMillis());
+        }
+
+        ParameterStatus newStatus = pv.getStatus().toProtoBuf(false);
+
+        if (newStatus.equals(prevStatus)) {
+            return prevStatus;
+        }
+        return newStatus;
+
+    }
+
+    public void insertParameterValue(int pos, BasicParameterValue pv) {
+        ParameterStatus prevStatus = null;
+        if (pos > 0) {
+            prevStatus = get(pos - 1);
+        }
+
+        add(pos, getStatus(pv, prevStatus));
+    }
+
+    public void addParameterValue(BasicParameterValue pv) {
+        ParameterStatus prevStatus = null;
+        if (size > 0) {
+            prevStatus = get(size - 1);
+        }
+        add(getStatus(pv, prevStatus));
+    }
+
+    public static ParameterStatusSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        ParameterStatusSegment r = new ParameterStatusSegment(false);
+        r.parse(bb);
+        return r;
+    }
+
+    static class ParameterStatusSerializer implements ObjectSerializer<ParameterStatus> {
+        @Override
+        public byte getFormatId() {
+            return BaseSegment.FORMAT_ID_ParameterStatusSegment;
+        }
+
+        @Override
+        public ParameterStatus deserialize(byte[] b) throws DecodingException {
+            try {
+                return ParameterStatus.parseFrom(b);
+            } catch (InvalidProtocolBufferException e) {
+                throw new DecodingException("Cannto deserialzie ParameterStatus", e);
+            }
+        }
+
+        @Override
+        public byte[] serialize(ParameterStatus e) {
+            return e.toByteArray();
+        }
+    }
+
+    /**
+     * cache to avoid creating unnecessary ParameterStatus objects for parameters that have no status other than
+     * acquired and expiration time (likely 95% of all parameter values).
+     *
+     */
+    static class AcquiredCache {
+        static long EVICTION_INTERVAL = 3600000L;
+        static long CACHE_TIME = 3600000L;
+
+        static final ParameterStatus ACQUIRED_NO_EXP = ParameterStatus.newBuilder()
+                .setAcquisitionStatus(AcquisitionStatus.ACQUIRED).build();
+        Map<Long, CacheEntry> m = new ConcurrentHashMap<>();
+        long lastEviction;
+
+        public ParameterStatus get(long expireMills) {
+            if (expireMills <= 0) {
+                return ACQUIRED_NO_EXP;
+            }
+            long now = System.currentTimeMillis();
+
+            if (now > lastEviction + EVICTION_INTERVAL) {
+                performEviction();
+            }
+            CacheEntry ce = m.get(expireMills);
+            if (ce == null) {
+                ParameterStatus status = ParameterStatus.newBuilder().setAcquisitionStatus(AcquisitionStatus.ACQUIRED)
+                        .setExpireMillis(expireMills).build();
+                ce = new CacheEntry(status);
+                m.put(expireMills, ce);
+            }
+            ce.lastAccessedTime = now;
+            return ce.status;
+        }
+
+        private synchronized void performEviction() {
+            long now = System.currentTimeMillis();
+            if (now < lastEviction + EVICTION_INTERVAL) {
+                return;
+            }
+            this.lastEviction = now;
+            Iterator<Map.Entry<Long, CacheEntry>> it = m.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Long, CacheEntry> e = it.next();
+                if (now > e.getValue().lastAccessedTime + CACHE_TIME) {
+                    it.remove();
+                }
+            }
+        }
+
+        static class CacheEntry {
+            final ParameterStatus status;
+            long lastAccessedTime;
+
+            CacheEntry(ParameterStatus status) {
+                this.status = status;
+            }
+        }
+    }
+
+    public void insertGap(int pos) {
+        // TODO Auto-generated method stub
+
+    }
+}
+```
+
+### `ParametersValueRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParametersValueRequest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+public class ParametersValueRequest {
+    long start, stop;
+    int[] parameterIds;
+    boolean ascending;
+    ValueConsumer consumer;
+    
+    public ParametersValueRequest(long start, long stop, int[] parameterIds, boolean ascending, ValueConsumer consumer) {
+        super();
+        this.start = start;
+        this.stop = stop;
+        this.parameterIds = parameterIds;
+        this.ascending = ascending;
+        this.consumer = consumer;
+    }
+}
+```
+
+### `ParameterValueArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterValueArray.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+/**
+ * an array of values for one {@link ParameterId}
+ *
+ */
+public class ParameterValueArray {
+    final long[] timestamps;
+    // engValues and rawValues are arrays of primitives
+    final ValueArray engValues;
+    final ValueArray rawValues;
+    final ParameterStatus[] paramStatus;
+
+    public ParameterValueArray(long timestamps[], ValueArray engValues, ValueArray rawValues,
+            ParameterStatus[] paramStatus) {
+        this.timestamps = timestamps;
+        this.engValues = engValues;
+        this.rawValues = rawValues;
+        this.paramStatus = paramStatus;
+    }
+
+    public long[] getTimestamps() {
+        return timestamps;
+    }
+
+    public ValueArray getEngValues() {
+        return engValues;
+    }
+
+    public ValueArray getRawValues() {
+        return rawValues;
+    }
+
+    /**
+     * @return the type of the engineering values or {@link Type#NONE} if the engineering values were not requested
+     */
+    public Type getEngType() {
+        return engValues == null ? Type.NONE : engValues.getType();
+    }
+
+    /**
+     * @return the type of the raw values or {@link Type#NONE} if there are no raw values in this segment (either
+     *         because the parameter does not have a raw value or because the raw values were not requested/extracted)
+     */
+    public Type getRawType() {
+        return rawValues == null ? Type.NONE : rawValues.getType();
+    }
+
+    public ParameterStatus[] getStatuses() {
+        return paramStatus;
+    }
+
+    /**
+     * Return engineering value of the parameter on position idx
+     *
+     * @param idx
+     * @return
+     */
+    Value getEngValue(int idx) {
+        return engValues.getValue(idx);
+    }
+
+    public int size() {
+        return timestamps.length;
+    }
+}
+```
+
+### `ParameterValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParameterValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.PeekingIterator;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+import static org.yamcs.parameterarchive.ParameterArchive.STORE_RAW_VALUES;
+
+import java.util.NoSuchElementException;
+
+/**
+ * Stores parameter values for one parameter over a time range.
+ * <p>
+ * It is composed of a time, engineering, raw and parameter status segments and possibly by a list of gaps;
+ * <p>
+ * The engineering, raw and parameter status contain only the data - gaps are not stored in the segment themselves (the
+ * timeSegment has by definition no gap).
+ * <p>
+ * To convert from a position as used in the time segment to a position in the other segments, the gaps have to be taken
+ * into account. Such conversion can naturally result in no value if the requested position is part of the gaps.
+ * <p>
+ * The time segment is shared with other objects of this class and is updated outside this class
+ */
+public class ParameterValueSegment {
+    final int pid;
+    final SortedTimeSegment timeSegment;
+
+    // engValueSegment should not be null during buildup but maybe null during retrieval (if the retrieving of
+    // engineering values is skipped)
+    ValueSegment engValueSegment;
+    private ValueSegment rawValueSegment;
+    private ParameterStatusSegment parameterStatusSegment;
+
+    // stores the indices (positions) of the gaps
+    SortedIntArray gaps;
+
+    public ParameterValueSegment(int pid, SortedTimeSegment timeSegment, ValueSegment engValueSegment,
+            ValueSegment rawValueSegment, ParameterStatusSegment parameterStatusSegment, SortedIntArray gaps) {
+        this.pid = pid;
+        this.timeSegment = timeSegment;
+        this.engValueSegment = engValueSegment;
+        this.rawValueSegment = rawValueSegment;
+        this.parameterStatusSegment = parameterStatusSegment;
+        this.gaps = gaps;
+    }
+
+    /**
+     * 
+     * Creates a new segment for a parameter with the given engValue and raw value types
+     */
+    public ParameterValueSegment(int pid, SortedTimeSegment timeSegment, Type engValueType, Type rawValueType) {
+        this.pid = pid;
+        this.timeSegment = timeSegment;
+
+        if (engValueType != null) {
+            engValueSegment = getNewSegment(engValueType);
+        } else {
+            engValueSegment = null;
+        }
+        parameterStatusSegment = new ParameterStatusSegment(true);
+
+        if (STORE_RAW_VALUES && rawValueType != null) {
+            rawValueSegment = getNewSegment(rawValueType);
+        } else {
+            rawValueSegment = null;
+        }
+    }
+
+    public void insertGap(int pos) {
+        if (gaps == null) {
+            gaps = new SortedIntArray();
+        } else {
+            // the position of all the indices following the pos have to increase by 1
+            gaps.addIfGreaterOrEqualThan(pos, 1);
+        }
+        gaps.insert(pos);
+    }
+
+    public void insert(int pos, BasicParameterValue pv) {
+        if (pos == timeSegment.size()) {
+            // fast path inserting data at the end, no need to care about gaps
+            if (engValueSegment != null) {
+                engValueSegment.add(pv.getEngValue());
+            }
+            parameterStatusSegment.addParameterValue(pv);
+            if (rawValueSegment != null) {
+                rawValueSegment.add(pv.getRawValue());
+            }
+        } else {
+            if (gaps == null) {
+                if (engValueSegment != null) {
+                    engValueSegment.insert(pos, pv.getEngValue());
+                }
+                parameterStatusSegment.insertParameterValue(pos, pv);
+                if (rawValueSegment != null) {
+                    rawValueSegment.insert(pos, pv.getRawValue());
+                }
+            } else {
+                int pos1;
+
+                var idx = gaps.search(pos);
+
+                if (idx < 0) {
+                    pos1 = pos + idx + 1;
+                } else {
+                    pos1 = pos - idx;
+                }
+                if (engValueSegment != null) {
+                    engValueSegment.insert(pos1, pv.getEngValue());
+                }
+                parameterStatusSegment.insertParameterValue(pos1, pv);
+                if (rawValueSegment != null) {
+                    rawValueSegment.insert(pos1, pv.getRawValue());
+                }
+                gaps.addIfGreaterOrEqualThan(pos, 1);
+            }
+        }
+    }
+
+    // returns the modified position after gaps are eliminated or -1 if the position corresponds to a gap
+    private int gaplessPosition(int pos) {
+        if (gaps == null) {
+            return pos;
+        } else {
+            var idx = gaps.search(pos);
+            if (idx < 0) {
+                return pos + idx + 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
+    /**
+     * returns the modified position after gaps are eliminated
+     * <p>
+     * if the position corresponds to a gap, return the next position or the segment size if the gap is at the end
+     * <p>
+     * it assumes gaps is non null
+     */
+    int nextAfterGap(int pos) {
+        var idx = gaps.search(pos);
+        if (idx < 0) {
+            return pos + idx + 1;
+        } else {
+            return pos - idx;
+        }
+    }
+
+    /**
+     * returns the modified position after gaps are eliminated
+     * <p>
+     * if the position corresponds to a gap, return the previous position or -1 if the gap is at the beginning
+     * <p>
+     * it assumes gaps is non null
+     */
+    int previousBeforeGap(int pos) {
+        var idx = gaps.search(pos);
+        if (idx < 0) {
+            return pos + idx + 1;
+        } else {
+            int x = pos - idx - 1;
+            return x < 0 ? -1 : x;
+        }
+    }
+
+    /**
+     * <p>
+     * Optimise for writing to archive
+     */
+    public void consolidate() {
+        parameterStatusSegment.consolidate();
+        if (engValueSegment != null) {
+            engValueSegment.consolidate();
+        }
+
+        if (STORE_RAW_VALUES) {
+            if (rawValueSegment != null) {
+                // the raw values will only be stored if they are different than the engineering values
+                if (rawValueSegment.equals(engValueSegment)) {
+                    rawValueSegment = null;
+                } else {
+                    rawValueSegment.consolidate();
+                }
+            }
+        }
+    }
+
+    public ParameterValueArray getRange(int posStart, int posStop, boolean ascending, boolean retrieveParameterStatus) {
+        long[] timestamps;
+        if (gaps == null) {
+            timestamps = timeSegment.getRange(posStart, posStop, ascending);
+        } else {
+            timestamps = timeSegment.getRangeWithGaps(posStart, posStop, ascending, gaps);
+            if (ascending) {
+                posStart = nextAfterGap(posStart);
+                posStop = nextAfterGap(posStop);
+            } else {
+                posStart = previousBeforeGap(posStart);
+                posStop = previousBeforeGap(posStop);
+            }
+        }
+
+        if (posStart >= posStop) {// only gaps
+            return null;
+        }
+        ValueArray engValues = null;
+        if (engValueSegment != null) {
+            engValues = engValueSegment.getRange(posStart, posStop, ascending);
+        }
+
+        ValueArray rawValues = null;
+        if (rawValueSegment == engValueSegment) {
+            rawValues = engValues;
+        } else if (rawValueSegment != null) {
+            rawValues = rawValueSegment.getRange(posStart, posStop, ascending);
+        }
+
+        ParameterStatus[] paramStatus = null;
+        if (retrieveParameterStatus) {
+            paramStatus = parameterStatusSegment.getRangeArray(posStart, posStop, ascending);
+        }
+        return new ParameterValueArray(timestamps, engValues, rawValues, paramStatus);
+    }
+
+    public long getSegmentStart() {
+        return timeSegment.getSegmentStart();
+    }
+
+    public long getSegmentEnd() {
+        return timeSegment.getSegmentEnd();
+    }
+
+    public int numGaps() {
+        return gaps == null ? 0 : gaps.size();
+    }
+
+    public int numValues() {
+        int numGaps = gaps == null ? 0 : gaps.size();
+        return timeSegment.size() - numGaps;
+    }
+
+    public BaseSegment getConsolidatedEngValueSegment() {
+        return (BaseSegment) engValueSegment;
+    }
+
+    public BaseSegment getConsolidatedRawValueSegment() {
+        return (BaseSegment) rawValueSegment;
+    }
+
+    public BaseSegment getConsolidatedParmeterStatusSegment() {
+        return (BaseSegment) parameterStatusSegment;
+    }
+
+    static private ValueSegment getNewSegment(Type type) {
+        switch (type) {
+        case BINARY:
+            return new BinaryValueSegment(true);
+        case STRING:
+        case ENUMERATED:
+            return new StringValueSegment(true);
+        case SINT32:
+            return new IntValueSegment(true);
+        case UINT32:
+            return new IntValueSegment(false);
+        case FLOAT:
+            return new FloatValueSegment();
+        case SINT64:
+        case UINT64:
+        case TIMESTAMP: // intentional fall through
+            return new LongValueSegment(type);
+        case DOUBLE:
+            return new DoubleValueSegment();
+        case BOOLEAN:
+            return new BooleanValueSegment();
+
+        default:
+            throw new IllegalStateException("Unknown type " + type);
+        }
+    }
+
+    public TimedValue getTimedValue(int pos) {
+        pos = gaplessPosition(pos);
+        if (pos < 0) {
+            return null;
+        }
+        long t = timeSegment.getTime(pos);
+
+        Value ev = (engValueSegment == null) ? null : engValueSegment.getValue(pos);
+        Value rv = (rawValueSegment == null) ? null : rawValueSegment.getValue(pos);
+        ParameterStatus ps = (parameterStatusSegment == null) ? null : parameterStatusSegment.get(pos);
+
+        return new TimedValue(t, ev, rv, ps);
+    }
+
+    public Value getEngValue(int pos) {
+        pos = gaplessPosition(pos);
+        if (pos < 0) {
+            return null;
+        }
+        return engValueSegment.getValue(pos);
+    }
+
+    public Value getRawValue(int pos) {
+        pos = gaplessPosition(pos);
+        if (pos < 0) {
+            return null;
+        }
+        return rawValueSegment.getValue(pos);
+    }
+
+    public SortedIntArray getGaps() {
+        return gaps;
+    }
+
+    public PeekingIterator<TimedValue> newAscendingIterator(long t0) {
+        return new AscendingIterator(t0);
+    }
+
+    public PeekingIterator<TimedValue> newDescendingIterator(long t0) {
+        return new DescendingIterator(t0);
+    }
+
+    /**
+     * In rare circumstances, a segment read from the archive has to be modified.
+     * <p>
+     * This method updates the object such that it can be modified
+     */
+    public void makeWritable() {
+        parameterStatusSegment.makeWritable();
+        engValueSegment.makeWritable();
+        if (rawValueSegment != null) {
+            rawValueSegment.makeWritable();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ParameterValueSegment[pid:" + pid + ", timeSegmentSize: " + timeSegment.size() +
+                ", parameterStatusSegment.size: " + parameterStatusSegment.size() +
+                ", start: " + TimeEncoding.toString(getSegmentStart())
+                + ", end: " + TimeEncoding.toString(getSegmentEnd())
+                + "\ngaps: " + gaps
+                + "\nengValue:" + engValueSegment
+                + "\nrawValue:" + rawValueSegment
+                + "]";
+
+    }
+
+    class AscendingIterator implements PeekingIterator<TimedValue> {
+        private int idxT;
+        private int idxV;
+        private int idxG;
+        private TimedValue currentValue = null;
+
+        public AscendingIterator(long t0) {
+            idxT = timeSegment.lowerBound(t0);
+
+            if (gaps == null) {
+                idxV = idxT;
+            } else {
+                idxG = gaps.search(idxT);
+                if (idxG < 0) {
+                    idxG = -(idxG + 1);
+                }
+                idxV = idxT - idxG;
+
+            }
+            next();
+        }
+
+        public boolean isValid() {
+            return currentValue != null;
+        }
+
+        public TimedValue value() {
+            if (!isValid()) {
+                throw new NoSuchElementException();
+            }
+            return currentValue;
+        }
+
+        public void next() {
+            while (gaps != null && idxG < gaps.size() && idxT == gaps.get(idxG)) {
+                idxT++;
+                idxG++;
+            }
+
+            if (idxV < numValues()) {
+                Value ev = (engValueSegment == null) ? null : engValueSegment.getValue(idxV);
+                Value rv = (rawValueSegment == null) ? null : rawValueSegment.getValue(idxV);
+                ParameterStatus ps = (parameterStatusSegment == null) ? null : parameterStatusSegment.get(idxV);
+
+                currentValue = new TimedValue(timeSegment.getTime(idxT), ev, rv, ps);
+                idxT++;
+                idxV++;
+            } else {
+                currentValue = null;
+            }
+        }
+    }
+
+    class DescendingIterator implements PeekingIterator<TimedValue> {
+        private int idxT;
+        private int idxV;
+        private int idxG;
+        private TimedValue currentValue = null;
+
+        public DescendingIterator(long t0) {
+            idxT = timeSegment.higherBound(t0);
+
+            if (gaps == null) {
+                idxV = idxT;
+            } else {
+                idxG = gaps.search(idxT);
+                if (idxG < 0) {
+                    idxG = -(idxG + 2);
+                }
+                idxV = idxT - idxG - 1;
+            }
+            next();
+        }
+
+        public boolean isValid() {
+            return currentValue != null;
+        }
+
+        public TimedValue value() {
+            if (!isValid()) {
+                throw new NoSuchElementException();
+            }
+            return currentValue;
+        }
+
+        public void next() {
+            while (gaps != null && idxG >= 0 && idxT == gaps.get(idxG)) {
+                idxT--;
+                idxG--;
+            }
+
+            if (idxT >= 0 && idxV >= 0) {
+                Value ev = (engValueSegment == null) ? null : engValueSegment.getValue(idxV);
+                Value rv = (rawValueSegment == null) ? null : rawValueSegment.getValue(idxV);
+                ParameterStatus ps = (parameterStatusSegment == null) ? null : parameterStatusSegment.get(idxV);
+
+                currentValue = new TimedValue(timeSegment.getTime(idxT), ev, rv, ps);
+                idxT--;
+                idxV--;
+            } else {
+                currentValue = null;
+            }
+        }
+    }
+}
+```
+
+### `ParchiveIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ParchiveIterator.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.utils.PeekingIterator;
+
+/**
+ * RocksDb style iterator. The advantage over the standard java iterator is that the value can be looked at and thus
+ * used in priority queues to run multiple of them in parallel.
+ */
+public interface ParchiveIterator<T> extends PeekingIterator<T>, AutoCloseable {
+    public void close();
+}
+```
+
+### `PGSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/PGSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameterarchive.ParameterGroupIdDb.ParameterGroup;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.IntHashSet;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Parameter Group segment - keeps references to Time and Value segments for a given parameter group and segment.
+ * <p>
+ * This class is used during the parameter archive buildup.
+ * <p>
+ * In Yamcs 5.10 the RocksDB merge operator has been introduced. The operator is responsible for merging multiple
+ * segments into an interval.
+ * <p>
+ * Merging the time, engineering/raw values, and status segments is straightforward - they are just appended one after
+ * the other.
+ * <p>
+ * Merging the gap segments is tricky: the gaps store the indices of the elements that are missing for one particular
+ * parameter. When we merge segments into intervals, the indices change so we have to renumber all of them. For this
+ * purpose the {@link #segmentIdxInsideInterval} is used - it represents where in the interval this segment starts.
+ * <p>
+ * In general we do not want to create records for parameters that do not appear at all in the interval (that's why this
+ * class does not cater for all parameters that might be in a {@link ParameterGroup}). However if a parameter appears in
+ * one of the segments of the interval, it has to be propagated throughout the interval - that is we have to create gaps
+ * for those segments in the interval where it does not appear.
+ * <p>
+ * There are two situations to handle:
+ * <ol>
+ * <li>A segment seg1 contains a parameter p but the subsequent segment seg2 does not contain it. In this case we have
+ * to add a full gap segment for seg2.</li>
+ * 
+ * <li>A segment seg1 does not contain a parameter p but the subsequent segment seg2 contains it. In this case we have
+ * to add a full gap segment for seg1. Since when seg1 was created we did not know that the parameter p will be part of
+ * the interval and seg1 may already be written in the archive when the subsequent segment is encountered, we need to
+ * write the gap segment later.</li>
+ * </ol>
+ * 
+ * 
+ */
+public class PGSegment {
+    final int parameterGroupId;
+    private final SortedTimeSegment timeSegment;
+    List<ParameterValueSegment> pvSegments;
+
+    /**
+     * This contains the parameters that have appeared in one of the previous segments of the interval and do not appear
+     * in this segment
+     */
+    IntHashSet currentFullGaps;
+
+    /**
+     * This contains the parameters that appear for the first time in this segment (they haven't been part of the
+     * previous segments in this interval); We need to create gaps to cover the previous segments; otherwise the merging
+     * will go awry.
+     */
+    IntHashSet previousFullGaps;
+
+    // for the first segment in the interval this is zero
+    // for the subsequent segments it is the number of rows from the previous segments
+    int segmentIdxInsideInterval;
+
+    /**
+     * as a safety measure we set this to true once no data is allowed in this segment. Then the next segment in the
+     * interval can be initialised with the proper gap counting
+     */
+    boolean frozen = false;
+
+    public PGSegment(int parameterGroupId, long interval) {
+        this(parameterGroupId, interval, 1000);
+    }
+
+    public PGSegment(int parameterGroupId, long interval, int capacity) {
+        this.parameterGroupId = parameterGroupId;
+        this.timeSegment = new SortedTimeSegment(interval);
+        this.pvSegments = new ArrayList<>(capacity);
+    }
+
+    public PGSegment(int parameterGroupId, SortedTimeSegment timeSegment, List<ParameterValueSegment> pvSegments) {
+        this.parameterGroupId = parameterGroupId;
+        this.timeSegment = timeSegment;
+        this.pvSegments = pvSegments;
+    }
+
+    public void addRecord(long instant, BasicParameterList sortedPvList) {
+        do {
+            addRecord(instant, sortedPvList.getPids(), sortedPvList.pvList);
+            sortedPvList = sortedPvList.next();
+        } while (sortedPvList != null);
+    }
+
+    /**
+     * Add a new record
+     * <p>
+     * instant goes into the timeSegment the values goes each into a value segment
+     */
+    public void addRecord(long instant, IntArray pids, List<BasicParameterValue> values) {
+        if (frozen) {
+            throw new UnsupportedOperationException("The segment is frozen, new data is not accepted");
+        }
+        int idx1 = 0; // tracks the existing data
+        int idx2 = 0; // tracks the new data
+        int pos = timeSegment.add(instant);
+        while (idx1 < pvSegments.size() && idx2 < pids.size()) {
+            var pid2 = pids.get(idx2);
+            BasicParameterValue pv = values.get(idx2);
+            ParameterValueSegment pvs = pvSegments.get(idx1);
+
+            if (pvs.pid < pid2) {
+                // parameter not part of the new data, we have to insert a gap in the existing data
+                pvs.insertGap(pos);
+                idx1++;
+            } else if (pvs.pid > pid2) {
+                // new parameter, we have to shift all existing segments to the right and insert a new segment with gaps
+                // in all positions except pos
+                pvSegments.add(idx1, newPvs(pid2, timeSegment, pos, pv));
+                if (currentFullGaps != null && !currentFullGaps.remove(pid2)) {
+                    // pid2 is part of this segment and was not part of the previous segments
+                    // it means we need to generate gaps for it in the previous segments when merging them
+                    previousFullGaps.add(pid2);
+                }
+                idx1++;
+                idx2++;
+            } else {
+                // happy case, parameter exists both in the segments and in the new data
+                pvs.insert(pos, pv);
+                idx1++;
+                idx2++;
+            }
+        }
+        while (idx1 < pvSegments.size()) {
+            ParameterValueSegment pvs = pvSegments.get(idx1);
+            // parameter not part of the new data, we have to insert a gap in the existing data
+            pvs.insertGap(pos);
+
+            idx1++;
+        }
+
+        while (idx2 < pids.size()) {
+            BasicParameterValue pv = values.get(idx2);
+            var pid2 = pids.get(idx2);
+            // new segment to add to the end of the segment list
+            pvSegments.add(newPvs(pid2, timeSegment, pos, pv));
+            if (currentFullGaps != null && !currentFullGaps.remove(pid2)) {
+                // pid2 is added to this segment but was not part of the previous segments
+                previousFullGaps.add(pid2);
+            }
+            idx2++;
+        }
+    }
+
+    private Type type(Value v) {
+        if (v == null) {
+            return null;
+        } else {
+            return v.getType();
+        }
+    }
+
+    public void consolidate() {
+        for (var pvs : pvSegments) {
+            pvs.consolidate();
+        }
+    }
+
+    public ParameterValueSegment getParameterValue(int pid) {
+        for (var pvs : pvSegments) {
+            if (pvs.pid == pid) {
+                return pvs;
+            }
+        }
+        return null;
+    }
+
+    public MultiParameterValueSegment getParametersValues(ParameterId[] pids) {
+        List<ParameterValueSegment> filteredPVSegments = new ArrayList<>(pids.length);
+        for (ParameterId pid : pids) {
+            boolean found = false;
+            for (var pvs : pvSegments) {
+                if (pvs.pid == pid.getPid()) {
+                    filteredPVSegments.add(pvs);
+                    found = true;
+                }
+            }
+            if (!found) {
+                filteredPVSegments.add(null);
+            }
+        }
+
+        return new MultiParameterValueSegment(pids, timeSegment, filteredPVSegments);
+    }
+
+    /**
+     * 
+     * populate the currentFullGaps and previousFullGaps based on the previous segment parameters and gaps
+     * <p>
+     * sets also the segmentIdxInsideInterval
+     */
+    public void continueSegment(PGSegment prevSegment) {
+        assert (prevSegment.isFrozen());
+        this.segmentIdxInsideInterval = prevSegment.getSegmentIdxInsideInterval() + prevSegment.size();
+        var pvl1 = prevSegment.pvSegments;
+        var pvl2 = pvSegments;
+        int idx1 = 0; // tracks the previous segment
+        int idx2 = 0; // tracks this segment
+
+        if (prevSegment.currentFullGaps == null) {
+            currentFullGaps = new IntHashSet();
+        } else {
+            currentFullGaps = prevSegment.currentFullGaps.clone();
+        }
+        previousFullGaps = new IntHashSet();
+        while (idx1 < pvl1.size() && idx2 < pvl2.size()) {
+            var pid1 = pvl1.get(idx1).pid;
+            var pid2 = pvl2.get(idx2).pid;
+
+            if (pid1 < pid2) {
+                // pid1 not part of this segment
+                currentFullGaps.add(pid1);
+                idx1++;
+            } else if (pid1 > pid2) {
+                // if pid2 was part of the prevSegment.currentFullGaps, we have to remove it from
+                // this segment currentFullGaps
+                if (!currentFullGaps.remove(pid2)) {
+                    previousFullGaps.add(pid2);
+                } // else pid2 was part of the prevSegment.currentFullGaps so it cannot be part of this segment
+                idx2++;
+            } else {
+                // happy case, parameter exists both in the segments and in the new data
+                idx1++;
+                idx2++;
+            }
+        }
+        while (idx1 < pvl1.size()) {
+            var pid1 = pvl1.get(idx1).pid;
+            // pid1 not part of this segment
+            currentFullGaps.add(pid1);
+
+            idx1++;
+        }
+        while (idx2 < pvl2.size()) {
+            var pid2 = pvl2.get(idx2).pid;
+            // if pid2 was part of the prevSegment.currentFullGaps, we have to remove it from
+            // this segment currentFullGaps
+            if (!currentFullGaps.remove(pid2)) {
+                previousFullGaps.add(pid2);
+            } // else pid2 was part of the prevSegment.currentFullGaps so it cannot be part of this segment
+            idx2++;
+        }
+    }
+
+    public long getInterval() {
+        return timeSegment.getInterval();
+    }
+
+    public long getSegmentStart() {
+        return timeSegment.getSegmentStart();
+    }
+
+    /**
+     * 
+     * @return timestamp of the last parameter in this segment
+     */
+    public long getSegmentEnd() {
+        return timeSegment.getSegmentEnd();
+    }
+
+    public SortedTimeSegment getTimeSegment() {
+        return timeSegment;
+    }
+
+    public int getParameterGroupId() {
+        return parameterGroupId;
+    }
+
+    /**
+     * returns the number of rows in the segment group
+     */
+    public int size() {
+        return timeSegment.size();
+    }
+
+    /**
+     * returns the number of parameter segments inside this segment group
+     */
+    public int numParameters() {
+        return pvSegments.size();
+    }
+
+    public int getParameterId(int idx) {
+        return pvSegments.get(idx).pid;
+    }
+
+    public boolean isFirstInInterval() {
+        return segmentIdxInsideInterval == 0;
+    }
+
+    /**
+     * In case the interval is composed of multiple segments, this returns the idx of the segment inside interval.
+     * <p>
+     * For the first segment this will be 0, for the following segments it is the sum of the number of elements of the
+     * previous segments.
+     * <p>
+     * The number is used when merging the segments together in the interval to know where the gaps are in the combined
+     * interval.
+     * 
+     */
+    public int getSegmentIdxInsideInterval() {
+        return segmentIdxInsideInterval;
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    /**
+     * after this is called, no more data can be inserted in the segment
+     * <p>
+     * It is used as a safety check when initialising the next segment in the interval
+     */
+    public void freeze() {
+        this.frozen = true;
+    }
+
+    /**
+     * returns true if this segment contains the first value of this parameter for this interval
+     */
+    public boolean wasPreviousGap(int pid) {
+        return previousFullGaps != null && previousFullGaps.contains(pid);
+    }
+
+    /**
+     * In rare circumstances, a segment read from the archive has to be modified.
+     * <p>
+     * This method updates the object such that it can be modified
+     */
+    public void makeWritable() {
+        for (var pvs : pvSegments) {
+            pvs.makeWritable();
+        }
+    }
+
+    // create a new ParameterValueSegment with the pv on position pos and everything else gap
+    private ParameterValueSegment newPvs(int pid, SortedTimeSegment timeSegment, int pos, BasicParameterValue pv) {
+        ParameterValueSegment pvs = new ParameterValueSegment(pid, timeSegment, type(pv.getEngValue()),
+                type(pv.getRawValue()));
+
+        for (int i = 0; i < pos; i++) {
+            pvs.insertGap(i);
+        }
+        pvs.insert(pos, pv);
+        for (int i = pos + 1; i < timeSegment.size(); i++) {
+            pvs.insertGap(i);
+        }
+        return pvs;
+    }
+
+    protected ParameterValueSegment newPvs(int pid, SortedTimeSegment timeSegment, Type engValueType,
+            Type rawValueType) {
+        return new ParameterValueSegment(pid, timeSegment, engValueType, rawValueType);
+    }
+
+    public String toString() {
+        return "PGsegment[groupId: " + parameterGroupId + ", [" + TimeEncoding.toString(getSegmentStart()) + ", "
+                + TimeEncoding.toString(getSegmentEnd()) + "], num of rows: " + size()
+                + ", num of params: " + pvSegments.size()
+                + ", segmentIdxInsideInterval: " + segmentIdxInsideInterval
+                + ", previousFullGaps: " + previousFullGaps
+                + ", currentFullGaps: " + currentFullGaps
+                + ", timeSegment: " + timeSegment
+                + "]";
+    }
+}
+```
+
+### `RdbIteratorWithOptions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/RdbIteratorWithOptions.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.rocksdb.ReadOptions;
+import org.rocksdb.RocksIterator;
+
+/**
+ * the options object has a snapshot which can be used to get consistent view of the database
+ */
+public record RdbIteratorWithOptions(RocksIterator it, ReadOptions opts) implements AutoCloseable {
+    public RdbIteratorWithOptions {
+        if (opts.snapshot() == null) {
+            throw new IllegalArgumentException("ReadOptions must have a snapshot set");
+        }
+    }
+
+    @Override
+    public void close() {
+        opts.close();
+        it.close();
+    }
+}
+```
+
+### `RealtimeArchiveFiller.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/RealtimeArchiveFiller.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.yamcs.parameterarchive.ParameterArchive.getInterval;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.parameterarchive.ParameterGroupIdDb.ParameterGroup;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+/**
+ * Realtime archive filler task - it works even if the data is not perfectly sorted
+ * <p>
+ * It can save data in max two intervals at a time. The first interval is kept open only as long as the most recent
+ * timestamp received is not older than orderingThreshold ms from the interval end
+ * <p>
+ * 
+ * When new parameters are received, they are sorted into groups with all parameter from the same group having the same
+ * timestamp.
+ * 
+ * <p>
+ * Max two segments are kept open for each group, one in each interval.
+ * 
+ * <p>
+ * If the group reaches its max size, it is archived and a new one opened.
+ * 
+ */
+public class RealtimeArchiveFiller extends AbstractArchiveFiller {
+    String processorName = "realtime";
+    final String yamcsInstance;
+    Processor realtimeProcessor;
+    int subscriptionId;
+    ExecutorService executor;
+    Map<Integer, DataQueue> queues = new HashMap<>();
+    private YamcsServer yamcsServer;
+
+    // Maximum time to wait for new data before flushing to archive
+    int flushInterval = 60; // seconds
+
+    // max allowed time for old data
+    long sortingThreshold;// milliseconds
+
+    // reset the processing if time jumps in the past by this much
+    long pastJumpThreshold;
+
+    int numThreads;
+
+    public RealtimeArchiveFiller(ParameterArchive parameterArchive, YConfiguration config) {
+        super(parameterArchive);
+        this.yamcsInstance = parameterArchive.getYamcsInstance();
+
+        flushInterval = config.getInt("flushInterval", 60);
+        processorName = config.getString("processorName", processorName);
+        sortingThreshold = config.getInt("sortingThreshold");
+        numThreads = config.getInt("numThreads", getDefaultNumThreads());
+        pastJumpThreshold = config.getLong("pastJumpThreshold") * 1000;
+        if (flushInterval * 1000 < sortingThreshold) {
+            throw new ConfigurationException("flushInterval (" + flushInterval
+                    + " seconds) cannot be smaller than the sorting threshold (" + sortingThreshold + " milliseconds)");
+        }
+    }
+
+    static Spec getSpec() {
+        Spec spec = new Spec();
+
+        spec.addOption("enabled", OptionType.BOOLEAN);
+        spec.addOption("processorName", OptionType.STRING).withDefault("realtime");
+        spec.addOption("sortingThreshold", OptionType.INTEGER).withDefault(1000);
+        spec.addOption("numThreads", OptionType.INTEGER);
+        spec.addOption("pastJumpThreshold", OptionType.INTEGER)
+                .withDescription("When receiving data with an old timestamp differing from the previous data "
+                        + "by more than this threshold in seconds, the old segments are flushed to archinve and a new one is started. "
+                        + "This is to avoid that the data is rejected because the time is reinitialized on-board for example.")
+                .withDefault(86400);
+        spec.addOption("flushInterval", OptionType.INTEGER).withDescription(
+                "If no data is received for a parameter group in this number of seconds, then flush the data to disk. "
+                        + "If data is received, the data will be flushed after maxSegmentSize data points are received")
+                .withDefault(60);
+        return spec;
+    }
+
+    /**
+     * Gets the Yamcs server reference. Code in this class should call this method rather than
+     * <code>YamcsServer.getServer()</code> so the server can be mocked for unit testing.
+     * 
+     * @return the Yamcs server reference
+     */
+    private synchronized YamcsServer getYamcsServer() {
+        if (yamcsServer == null) {
+            yamcsServer = YamcsServer.getServer();
+        }
+        return yamcsServer;
+    }
+
+    /**
+     * Sets the Yamcs server to use. Default scope for unit testing. Should only be called by unit tests.
+     * 
+     * @param yamcsServer
+     *            the Yamcs server to use, perhaps a mock object
+     */
+    synchronized void setYamcsServer(YamcsServer yamcsServer) {
+        this.yamcsServer = yamcsServer;
+    }
+
+    protected void start() {
+        // subscribe to the realtime processor
+        realtimeProcessor = getYamcsServer().getProcessor(yamcsInstance, processorName);
+        if (realtimeProcessor == null) {
+            throw new ConfigurationException("No processor named '" + processorName + "' in instance " + yamcsInstance);
+        }
+
+        subscriptionId = realtimeProcessor.getParameterRequestManager().subscribeAll(this);
+
+        log.debug("Starting executor for archive writing with {} threads", numThreads);
+        executor = Executors.newFixedThreadPool(numThreads,
+                new ThreadFactoryBuilder().setNameFormat("realtime-parameter-archive-writer-%d").build());
+
+        var timer = getYamcsServer().getThreadPoolExecutor();
+        if (timer != null) {
+            timer.scheduleAtFixedRate(this::flushPeriodically, flushInterval, flushInterval, TimeUnit.SECONDS);
+        }
+    }
+
+    private void flushPeriodically() {
+        long now = System.currentTimeMillis();
+        for (var queueEntry : queues.entrySet()) {
+            DataQueue queue = queueEntry.getValue();
+            synchronized (queue) {
+                if (queue.hasDataToWrite() && now > queue.getLatestUpdateTime() + flushInterval * 1000L) {
+                    log.debug("Flush interval reached without new data for parameter group {}, flushing queue",
+                            queueEntry.getKey());
+                    queue.flush();
+                }
+            }
+        }
+    }
+
+    public void shutDown() throws InterruptedException {
+        realtimeProcessor.getParameterRequestManager().unsubscribeAll(subscriptionId);
+        log.info("Shutting down, writing all pending segments");
+        for (DataQueue queue : queues.values()) {
+            queue.flush();
+        }
+        executor.shutdown();
+        if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {
+            log.warn("Timed out before flushing all pending segments");
+        }
+    }
+
+    @Override
+    protected void processParameters(long t, BasicParameterList pvList) {
+        ParameterGroup pg;
+        try {
+            pg = parameterGroupIdMap.getGroup(pvList.getPids());
+        } catch (RocksDBException e) {
+            log.error("Error creating parameter group id", e);
+            return;
+        }
+
+        DataQueue segQueue = queues.computeIfAbsent(pg.id,
+                id -> new DataQueue(pg.id, maxSegmentSize, pgs -> scheduleWriteToArchive(pgs),
+                        interval -> readPgSegment(pg, interval), parameterArchive.getFillerLock()));
+
+        synchronized (segQueue) {
+            if (segQueue.hasDataToWrite()) {
+                long segStart = segQueue.getStart();
+                if (t < segStart - pastJumpThreshold) {
+                    log.warn(
+                            "Time jumped in the past; current timestamp: {}, new timestamp: {}. Flushing old data.",
+                            TimeEncoding.toString(segStart), TimeEncoding.toString(t));
+                    segQueue.flush();
+                } else if (t < segStart - sortingThreshold) {
+                    log.warn("Dropping old data with timestamp {} (minimum allowed is {})."
+                            + "Unsorted data received in the realtime filler? Consider using a backfiller instead",
+                            TimeEncoding.toString(t),
+                            TimeEncoding.toString(segStart - sortingThreshold));
+                    return;
+                }
+            }
+
+            if (segQueue.addRecord(t, pvList)) {
+                segQueue.sendToArchive(t - sortingThreshold);
+            }
+        }
+
+    }
+
+    private PGSegment readPgSegment(ParameterGroup pg, long interval) {
+        try {
+            return parameterArchive.readPGsegment(pg, interval);
+        } catch (IOException | RocksDBException e) {
+            log.error("Error reading old data from archive", e);
+            return null;
+        }
+    }
+
+    private CompletableFuture<Void> scheduleWriteToArchive(PGSegment pgs) {
+        CompletableFuture<Void> cf = new CompletableFuture<>();
+        try {
+            executor.submit(() -> {
+                doWriteToArchive(pgs, cf);
+            });
+        } catch (RejectedExecutionException e) {
+            // the executor is shutdown and won't accept new tasks, keep writing in the same thread
+            doWriteToArchive(pgs, cf);
+        }
+        return cf;
+    }
+
+    private void doWriteToArchive(PGSegment pgs, CompletableFuture<Void> cf) {
+        try {
+            long t0 = System.nanoTime();
+            parameterArchive.writeToArchive(pgs);
+            long d = System.nanoTime() - t0;
+            log.debug("Wrote segment {} to archive in {} millisec", pgs, d / 1000_000);
+            cf.complete(null);
+        } catch (RocksDBException | IOException e) {
+            log.error("Error writing segment to the parameter archive", e);
+            cf.completeExceptionally(e);
+        }
+    }
+
+    /**
+     * Called when risking running out of memory, drop all data
+     */
+    @Override
+    protected void abort() {
+        queues.clear();
+    }
+
+    private int getDefaultNumThreads() {
+        int n = Runtime.getRuntime().availableProcessors() - 1;
+        return n > 0 ? n : 1;
+    }
+
+    /**
+     * Return the list of segments for the (parameterId, parameterGroupId) currently in memory. If there is no data, an
+     * empty list is returned.
+     * <p>
+     * If ascending is false, the list of segments is sorted by descending start time but the data inside the segments
+     * is still sorted in ascending order.
+     * <p>
+     * The segments are references to the data that is being added, that means they are modified by external threads.
+     * <p>
+     * Some segments may just being written to the archive, so care has to be taken by the caller to eliminate duplicate
+     * data when using the return of this method combined with reading data from archive. The {@link SegmentIterator}
+     * does that.
+     * 
+     * 
+     * @param parameterId
+     * @param parameterGroupId
+     * @param ascending
+     * @return
+     */
+    public List<ParameterValueSegment> getSegments(int parameterId, int parameterGroupId, boolean ascending) {
+        DataQueue queue = queues.get(parameterGroupId);
+        if (queue == null) {
+            return Collections.emptyList();
+        }
+
+        return queue.getPVSegments(parameterId, ascending);
+    }
+
+    public List<MultiParameterValueSegment> getSegments(ParameterId[] pids, int parameterGroupId, boolean ascending) {
+        DataQueue queue = queues.get(parameterGroupId);
+        if (queue == null) {
+            return Collections.emptyList();
+        }
+
+        return queue.getPVSegments(pids, ascending);
+    }
+
+    /**
+     * 
+     * This class is used to accumulate "slightly" unsorted data and also keeps the data while is being written to the
+     * archive.
+     * <p>
+     * Works like a queue, new segments are added to the tail, they are written to the archive from the head. The
+     * elements in the queue are only cleared (set to null) after they have been written to the archive, even if
+     * theoretically they are out of the queue.
+     * <p>
+     * This gives the chance to still use the data in the retrieval. See {@link SingleParameterRetrieval} and
+     * {@link MultiParameterRetrieval}
+     * 
+     * <p>
+     * theoretically if the data comes at the high frequency and the sortingThreshold is high, we can accumulate lots of
+     * segments in memory. There is however a limit of 16 hardcoded for now.
+     * <p>
+     * Sometimes the maxSegmentSize is exceeded because if a segment is full and new unsorted data fits inside, it is
+     * still added.
+     *
+     */
+    static class DataQueue {
+        private static Log log = new Log(DataQueue.class);
+        final int parameterGroupId;
+
+        // sorted list of intervals
+        List<IntervalData> intervals = new ArrayList<>();
+        final int maxSegmentSize;
+
+        // this function is used to write to the archive
+        // it returns a completable future which is completed when the data has been written.
+        final Function<PGSegment, CompletableFuture<Void>> writeToArchiveFunction;
+
+        // used to read an existing segment from the archive at startup or if after a period of inactivity the data has
+        // been flushed
+        final Function<Long, PGSegment> readFromArchiveFunction;
+        final FillerLock fillerLock;
+
+        private long latestUpdateTime;
+
+        public DataQueue(int parameterGroupId, int maxSegmentSize,
+                Function<PGSegment, CompletableFuture<Void>> writeToArchiveFunction,
+                Function<Long, PGSegment> readFromArchiveFunction, FillerLock fillerLocks) {
+            this.parameterGroupId = parameterGroupId;
+            this.maxSegmentSize = maxSegmentSize;
+            this.writeToArchiveFunction = writeToArchiveFunction;
+            this.readFromArchiveFunction = readFromArchiveFunction;
+            this.fillerLock = fillerLocks;
+        }
+
+        /**
+         * send to archive all segments which are either from an older interval than t1 or are full and their end is
+         * smaller than t1.
+         * <p>
+         * Writing to archive is an async operation, and the completable future returned by the function is called when
+         * the writing to archive has been completed and is used to null the entry in the queue. Before the entry is
+         * null, the data can still be used in the retrieval.
+         */
+        public synchronized void sendToArchive(long t1) {
+            int firstNonEmpty = -1;
+            long t1int = getInterval(t1);
+
+            for (int i = 0; i < intervals.size(); i++) {
+                var intv = intervals.get(i);
+                if (firstNonEmpty == -1 && intv.hasDataToRead()) {
+                    firstNonEmpty = i;
+                }
+                if (intv.hasDataToWrite()) {
+                    if (intv.interval < t1int) {
+                        intv.flush();
+                        fillerLock.unlock(intv.interval, parameterGroupId);
+                    } else if (intv.interval == t1int) {
+                        intv.sendToArchive(t1);
+                    } else {
+                        break;
+                    }
+                }
+
+            }
+            if (firstNonEmpty > 0) {
+                // we can discard all intervals before firstNonEmpty
+                for (int i = firstNonEmpty; i < intervals.size(); i++) {
+                    intervals.set(i - firstNonEmpty, intervals.get(i));
+                }
+                for (int i = 0; i < firstNonEmpty; i++) {
+                    intervals.remove(intervals.size() - 1);
+                }
+            }
+        }
+
+        public synchronized boolean addRecord(long t, BasicParameterList pvList) {
+            long interval = getInterval(t);
+            latestUpdateTime = System.currentTimeMillis();
+            int pos = 0;
+            boolean replace = false;
+
+            for (int i = intervals.size() - 1; i >= 0; i--) {
+                var intv = intervals.get(i);
+                if (intv.interval == interval) {
+                    if (!intv.hasDataToWrite()) {
+                        // all the segments of this interval have been flushed to the archive
+                        // replace it with a new interval
+                        pos = i;
+                        replace = true;
+                        break;
+                    } else {
+                        return intv.addRecord(t, pvList);
+                    }
+                } else if (intv.interval < interval) {
+                    // Since the list is sorted, no need to check earlier elements
+                    pos = i + 1;
+                    break;
+                }
+            }
+
+            if (!fillerLock.try_lock(interval, parameterGroupId, this)) {
+                log.warn("Cannot lock interval {} for parameter group {}", TimeEncoding.toString(interval),
+                        parameterGroupId);
+                return false;
+            }
+
+            var intv = new IntervalData(t, pvList);
+            if (replace) {
+                intervals.set(pos, intv);
+            } else {
+                intervals.add(pos, intv);
+            }
+
+            return true;
+        }
+
+        public synchronized long getStart() {
+            for (var intv : intervals) {
+                if (intv.hasDataToWrite()) {
+                    return intv.getStart();
+                }
+            }
+            throw new IllegalStateException("queue is empty");
+        }
+
+        /**
+         * Returns a list of segments for the pid.
+         * 
+         * <p>
+         * The ascending argument can be used to sort the segments in ascending or descending order. The values inside
+         * the segments will always be ascending (but one can iterate the segment in descending order).
+         * 
+         */
+        public synchronized List<MultiParameterValueSegment> getPVSegments(ParameterId[] pids, boolean ascending) {
+            List<MultiParameterValueSegment> r = new ArrayList<>();
+            if (ascending) {
+                for (var intv : intervals) {
+                    intv.getSegmentsAscending(pids, r);
+                }
+            } else {
+                for (int i = intervals.size() - 1; i >= 0; i--) {
+                    var intv = intervals.get(i);
+                    intv.getSegmentsDescending(pids, r);
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Returns a list of segments for the pid.
+         * 
+         * <p>
+         * The ascending argument can be used to sort the segments in ascending or descending order. The values inside
+         * the segments will always be ascending (but one can iterate the segment in descending order).
+         * 
+         */
+        public synchronized List<ParameterValueSegment> getPVSegments(int parameterId, boolean ascending) {
+            List<ParameterValueSegment> r = new ArrayList<>();
+            if (ascending) {
+                for (var intv : intervals) {
+                    intv.getSegmentsAscending(parameterId, r);
+                }
+            } else {
+                for (int i = intervals.size() - 1; i >= 0; i--) {
+                    var intv = intervals.get(i);
+                    intv.getSegmentsDescending(parameterId, r);
+                }
+
+            }
+            return r;
+        }
+
+        public void flush() {
+            for (var intv : intervals) {
+                intv.flush();
+                fillerLock.unlock(intv.interval, parameterGroupId);
+            }
+        }
+
+        public long getLatestUpdateTime() {
+            return latestUpdateTime;
+        }
+
+        public synchronized boolean hasDataToRead() {
+            for (int i = intervals.size() - 1; i >= 0; i--) {
+                var intv = intervals.get(i);
+                if (intv.hasDataToRead()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public synchronized boolean hasDataToWrite() {
+            for (int i = intervals.size() - 1; i >= 0; i--) {
+                var intv = intervals.get(i);
+                if (intv.hasDataToWrite()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /**
+         * return the number of segments which can be read
+         */
+        public synchronized int numReadSegments() {
+            int r = 0;
+            for (var intv : intervals) {
+                r += intv.numReadSegments();
+            }
+            return r;
+        }
+
+        /**
+         * Queue of segments belonging to one interval
+         */
+        class IntervalData {
+            final long interval;
+            static final int QSIZE = 16; // has to be a power of 2!
+            static final int MASK = QSIZE - 1;
+            final PGSegment[] segments = new PGSegment[QSIZE];
+            int head = 0;
+            int tail = 0;
+
+            // we use this to make sure that only one write is running for a given pg at a time
+            CompletableFuture<Void> lastWriteFuture = CompletableFuture.completedFuture(null);
+
+            public IntervalData(long t, BasicParameterList pvList) {
+                this.interval = getInterval(t);
+                // we need to read the existing interval from the archive, we may need to add to it
+                // or in any case to continue it
+                PGSegment prevSeg = readFromArchiveFunction.apply(interval);
+                log.trace("Read from archive prevSeg {}", prevSeg);
+                if (prevSeg != null && t <= prevSeg.getSegmentEnd()) {
+                    // data fits into the previous segment
+                    prevSeg.makeWritable();
+                    prevSeg.addRecord(t, pvList);
+                    segments[tail] = prevSeg;
+                    tail = inc(tail);
+                } else {
+                    // else we make a new segment continuing the previous one (if it exists)
+                    var pids = pvList.getPids();
+                    PGSegment seg = new SynchronizedPGSegment(parameterGroupId, ParameterArchive.getInterval(t),
+                            pids.size());
+                    seg.addRecord(t, pvList);
+                    if (prevSeg != null) {
+                        prevSeg.freeze();
+                        seg.continueSegment(prevSeg);
+                    }
+                    segments[tail] = seg;
+                    tail = inc(tail);
+                }
+            }
+
+            public long getStart() {
+                if (tail == head) {
+                    throw new IllegalStateException("interval is empty");
+                }
+                return segments[head].getSegmentStart();
+            }
+
+            /**
+             * Add the record to the queue.
+             * <p>
+             * Given the queue state s1, s2, s3... sn, it is inserted into the sk such that the t is in the same
+             * interval as sk and either sk is not full, or t < sk.end.
+             * <p>
+             * If not such a segment exists, a new segment is created and inserted in the queue (if the queue is not
+             * full).
+             * <p>
+             * Returns true if the record has been added or false if the queue was full or if the filler lock could not
+             * be obtained.
+             */
+            public boolean addRecord(long t, BasicParameterList pvList) {
+                int k = head;
+                for (; k != tail; k = inc(k)) {
+                    PGSegment seg = segments[k];
+
+                    if (t <= seg.getSegmentEnd() || seg.size() < maxSegmentSize) {
+                        // when the first condition is met only (i.e. new data coming in the middle of a full segment)
+                        // the segment will become bigger than the maxSegmentSize
+                        seg.addRecord(t, pvList);
+                        return true;
+                    }
+                }
+                // new segment to be added on position k
+                // If there is only one slot free, then the queue is already full.
+                // if segments[tail] is not null, it means it hasn't been written to the archive yet (async operation),
+                // we do not want to overwrite it because it won't be found in the retrieval
+                if (inc(tail) == head || segments[tail] != null) {
+                    log.warn("Realtime parameter archive queue for parameter group {} full."
+                            + "Consider increasing the writerThreads (if CPUs are available) or using a back filler",
+                            parameterGroupId);
+                    return false;
+                }
+
+                var pids = pvList.getPids();
+                PGSegment seg = new SynchronizedPGSegment(parameterGroupId, ParameterArchive.getInterval(t),
+                        pids.size());
+                seg.addRecord(t, pvList);
+                // shift everything between k and tail to the right
+                for (int i = k; i != tail; i = inc(i)) {
+                    segments[inc(i)] = segments[i];
+                }
+                tail = inc(tail);
+
+                // insert on position k
+                segments[k] = seg;
+                return true;
+
+            }
+
+            /**
+             * send to archive all segments which are full and their end is smaller than t1.
+             * <p>
+             * Writing to archive is an async operation, and the completable future returned by the function is called
+             * when the writing to archive has been completed and is used to null the entry in the queue. Before the
+             * entry is null, the data can still be used in the retrieval.
+             */
+            void sendToArchive(long t1) {
+                while (head != tail) {
+                    PGSegment seg = segments[head];
+
+                    if (seg.size() < maxSegmentSize || seg.getSegmentEnd() >= t1) {
+                        break;
+                    }
+                    sendHeadToArchive();
+                }
+            }
+
+            void flush() {
+                while (head != tail) {
+                    sendHeadToArchive();
+                }
+            }
+
+            // send the head to the archive and move the head towards the tail
+            private void sendHeadToArchive() {
+                PGSegment seg = segments[head];
+                seg.freeze();
+
+                int _head = head;
+                head = inc(head);
+                if (head != tail) {
+                    var nextSeg = segments[head];
+                    if (nextSeg.getInterval() == seg.getInterval()) {
+                        nextSeg.continueSegment(seg);
+                    }
+                }
+                toArchive(_head);
+            }
+
+            private void toArchive(int idx) {
+                PGSegment seg = segments[idx];
+                lastWriteFuture = lastWriteFuture
+                        .thenCompose(v -> writeToArchiveFunction.apply(seg))
+                        .thenAccept(v -> segments[idx] = null);
+            }
+
+            public int size() {
+                return (tail - head) & MASK;
+            }
+
+            private boolean hasDataToWrite() {
+                return head != tail;
+            }
+
+            private boolean hasDataToRead() {
+                for (var seg : segments) {
+                    if (seg != null) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public int numReadSegments() {
+                int r = 0;
+                for (var seg : segments) {
+                    if (seg != null) {
+                        r++;
+                    }
+                }
+                return r;
+            }
+
+            private void getSegmentsAscending(int pid, List<ParameterValueSegment> r) {
+                int k = head;
+                while (k != tail && segments[dec(k)] != null) {
+                    k = dec(k);
+                }
+
+                while (k != tail) {
+                    PGSegment seg = segments[k];
+                    k = inc(k);
+                    if (seg == null) {
+                        continue;
+                    }
+                    ParameterValueSegment pvs = seg.getParameterValue(pid);
+                    if (pvs != null) {
+                        r.add(pvs);
+                    }
+                }
+            }
+
+            private void getSegmentsDescending(int pid, List<ParameterValueSegment> r) {
+                int k = dec(tail);
+
+                while (true) {
+                    PGSegment seg = segments[k];
+                    if (seg == null) {
+                        break;
+                    }
+                    ParameterValueSegment pvs = seg.getParameterValue(pid);
+                    if (pvs != null) {
+                        r.add(pvs);
+                    }
+                    k = dec(k);
+                }
+
+            }
+
+            private void getSegmentsAscending(ParameterId[] pids, List<MultiParameterValueSegment> r) {
+
+                int k = head;
+                while (k != tail && segments[dec(k)] != null) {
+                    k = dec(k);
+                }
+
+                while (k != tail) {
+                    PGSegment seg = segments[k];
+                    if (seg == null) {
+                        continue;
+                    }
+
+                    MultiParameterValueSegment pvs = seg.getParametersValues(pids);
+                    if (pvs != null) {
+                        r.add(pvs);
+                    }
+                    k = inc(k);
+                }
+            }
+
+            private void getSegmentsDescending(ParameterId[] pids, List<MultiParameterValueSegment> r) {
+                int k = dec(tail);
+
+                while (true) {
+                    PGSegment seg = segments[k];
+                    if (seg == null) {
+                        break;
+                    }
+                    MultiParameterValueSegment pvs = seg.getParametersValues(pids);
+                    if (pvs != null) {
+                        r.add(pvs);
+                    }
+                    k = dec(k);
+                }
+            }
+
+            /**
+             * Circularly increment k
+             */
+            static final int inc(int k) {
+                return (k + 1) & MASK;
+            }
+
+            /**
+             * Circularly decrement k
+             */
+            static final int dec(int k) {
+                return (k - 1) & MASK;
+            }
+        }
+    }
+}
+```
+
+### `SegmentEncoderDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SegmentEncoderDecoder.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.VarIntUtil;
+
+import static org.yamcs.parameterarchive.BaseSegment.*;
+
+public class SegmentEncoderDecoder {
+
+    static public byte[] encode(BaseSegment valueSegment) {
+        ByteBuffer bb = ByteBuffer.allocate(2 + valueSegment.getMaxSerializedSize());
+        bb.put(valueSegment.getFormatId());
+        valueSegment.writeTo(bb);
+        if (bb.position() < bb.capacity()) {
+            int length = bb.position();
+            byte[] v = new byte[length];
+            bb.rewind();
+            bb.get(v, 0, length);
+            return v;
+        } else {
+            return bb.array();
+        }
+    }
+
+    static public BaseSegment decode(byte[] buf, long segmentStart) throws DecodingException {
+        buf = Arrays.copyOf(buf, buf.length + 16);
+        ByteBuffer bb = ByteBuffer.wrap(buf);
+        byte formatId = bb.get();
+        return BaseSegment.parseSegment(formatId, segmentStart, bb);
+    }
+
+    /**
+     * the gaps is a sorted int array so we encode it with the same encoding like the time segment
+     */
+    static public byte[] encodeGaps(int segStartIdxInsideInterval, SortedIntArray gaps) {
+        ByteBuffer bb = ByteBuffer.allocate(5 + 4 * gaps.size());
+        bb.put(FORMAT_ID_GapSegment);
+        VarIntUtil.writeVarInt32(bb, segStartIdxInsideInterval);
+        SortedTimeSegment.writeTo(gaps, bb);
+
+        if (bb.position() < bb.capacity()) {
+            int length = bb.position();
+            byte[] v = new byte[length];
+            bb.rewind();
+            bb.get(v, 0, length);
+            return v;
+        } else {
+            return bb.array();
+        }
+    }
+
+    static public SortedIntArray decodeGaps(byte[] buf) throws DecodingException {
+        ByteBuffer bb = ByteBuffer.wrap(buf);
+
+        byte formatId = bb.get();
+        if (formatId == FORMAT_ID_SortedTimeValueSegmentV1) {
+            return SortedTimeSegment.parse(bb);
+        } else if (formatId == FORMAT_ID_GapSegment) {
+            /* int segStartIdxInsideInterval =*/ VarIntUtil.readVarInt32(bb);
+            SortedIntArray a = SortedTimeSegment.parse(bb);
+            return a;
+        } else {
+            throw new DecodingException("Invalid format id " + formatId + " for gaps");
+        }
+    }
+
+    // makes a gap segment with all gaps between idx1 (inclusive) and idx2 (exclusive)
+    public static byte[] encodeGaps(int idx1, int idx2) {
+        int[] x = new int[idx2 - idx1];
+        for (int i = 0; i < x.length; i++) {
+            x[i] = i;
+        }
+        SortedIntArray gaps = new SortedIntArray(x);
+        return encodeGaps(idx1, gaps);
+    }
+
+}
+```
+
+### `SegmentIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SegmentIterator.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.yamcs.parameterarchive.ParameterArchive.getIntervalEnd;
+import static org.yamcs.parameterarchive.ParameterArchive.getIntervalStart;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameterarchive.ParameterArchive.Partition;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.rocksdb.AscendingRangeIterator;
+import org.yamcs.yarch.rocksdb.DbIterator;
+import org.yamcs.yarch.rocksdb.DescendingRangeIterator;
+
+/**
+ * For a given simple parameter id and group id, iterates over all segments in the parameter archive (across all
+ * partitions).
+ * <p>
+ * Provides objects of type {@link ParameterValueSegment} which contain multiple values of one parameter - suitable to
+ * be used for bulk processing (e.g. downsampling or averaging).
+ * <p>
+ * The {@link ParameterIterator} can be used to iterate over parameters value by value (at the expense of consuming more
+ * memory)
+ * <p>
+ * This iterator works like a Rocks iterator (with isValid(), next(), and value()) not like a java one. The advantage is
+ * that one can look at the current value multiple times. This property is used when merging the iterators using a
+ * priority queue.
+ * 
+ * <p>
+ * The iterator has to be closed if it is not used until the end, otherwise a rocks iterator may be left hanging
+ * 
+ * <p>
+ * Note about the raw values retrieval: the retrieval assumes that if raw values are requested, the parameter has raw
+ * values (this can be known from the type associated to the parameter id).
+ * <p>
+ * Thus, if the raw values are requested and not found in the archive, the engineering values are returned as raw
+ * values. This is an optimisation done in case the two are equal.
+ * 
+ * <p>
+ * The iterator also sends data from RealtimeFiller if that is enabled.
+ * 
+ *
+ */
+public class SegmentIterator implements ParchiveIterator<ParameterValueSegment> {
+    private final ParameterId parameterId;
+    private final int parameterGroupId;
+
+    ParameterArchive parchive;
+
+    List<Partition> partitions;
+
+    // iterates over partitions
+    Iterator<Partition> topIt;
+
+    // iterates over segments in one partition
+    SubIterator subIt;
+
+    final boolean ascending, retrieveEngValues, retrieveRawValues, retrieveParameterStatus;
+    final long start, stop;
+
+    ParameterValueSegment curValue;
+    Iterator<ParameterValueSegment> rtIterator;
+    final RealtimeArchiveFiller rtfiller;
+
+    public SegmentIterator(ParameterArchive parchive, ParameterId parameterId, int parameterGroupId,
+            ParameterRetrievalOptions req) {
+        this.parameterId = parameterId;
+        this.parameterGroupId = parameterGroupId;
+        this.parchive = parchive;
+        this.start = req.start();
+        this.stop = req.stop();
+        this.ascending = req.ascending();
+        this.retrieveEngValues = req.retrieveEngValues();
+        this.retrieveRawValues = (parameterId.getRawType() == null) ? false : req.retrieveRawValues();
+        this.retrieveParameterStatus = req.retrieveParameterStatus();
+
+        int pid = parameterId.getPid();
+
+        rtfiller = parchive.getRealtimeFiller();
+
+        if (retrieveEngValues || retrieveRawValues || retrieveParameterStatus) {
+            partitions = parchive.getPartitions(getIntervalStart(req.start()), getIntervalEnd(req.stop()),
+                    req.ascending());
+            topIt = partitions.iterator();
+
+            if (rtfiller != null && !ascending) {
+                rtIterator = rtfiller.getSegments(pid, parameterGroupId, ascending).iterator();
+            }
+            next();
+        } // else the iterator will return isValid = false since there is nothing to retrieve
+    }
+
+    public boolean isValid() {
+        return curValue != null;
+    }
+
+    public ParameterValueSegment value() {
+        return curValue;
+    }
+
+    public void next() {
+        // descending with a realtime filler: retrieve first the values from the realtime that are in range
+        if (!ascending && rtIterator != null) {
+            curValue = null;
+            while (rtIterator.hasNext()) {
+                curValue = rtIterator.next();
+                if (curValue.getSegmentStart() <= stop && curValue.getSegmentEnd() >= start) {
+                    break;
+                } else {
+                    curValue = null;
+                }
+            }
+            if (curValue == null) {
+                rtIterator = null;
+            } else {
+                return;
+            }
+        }
+
+        subIt = getPartitionIterator();
+        if (subIt != null) {
+            curValue = subIt.value();
+            subIt.next();
+            return;
+        } else {
+            curValue = null;
+        }
+
+        // ascending with a realtime filler: retrieve at the end the values from the realtime that are in range
+        if (ascending && rtfiller != null) {
+            if (rtIterator == null) {
+                rtIterator = rtfiller.getSegments(parameterId.getPid(), parameterGroupId, ascending).iterator();
+            }
+            long lastSegmentTime = curValue == null ? start : curValue.getSegmentEnd();
+            curValue = null;
+
+            while (rtIterator.hasNext()) {
+                curValue = rtIterator.next();
+                if (curValue.getSegmentStart() <= stop && curValue.getSegmentEnd() >= lastSegmentTime) {
+                    break;
+                } else {
+                    curValue = null;
+                }
+            }
+            if (curValue == null) {
+                rtIterator = null;
+            }
+        }
+    }
+
+    private SubIterator getPartitionIterator() {
+        while (subIt == null || !subIt.isValid()) {
+            if (topIt.hasNext()) {
+                Partition p = topIt.next();
+                close(subIt);
+                subIt = new SubIterator(p);
+            } else {
+                close(subIt);
+                return null;
+            }
+        }
+        return subIt;
+    }
+
+    /**
+     * Close the underlying rocks iterator if not already closed
+     */
+    public void close() {
+        close(subIt);
+    }
+
+    private void close(SubIterator pit) {
+        if (pit != null) {
+            pit.close();
+        }
+    }
+
+    public int getParameterGroupId() {
+        return parameterGroupId;
+    }
+
+    public ParameterId getParameterId() {
+        return parameterId;
+    }
+
+    class SubIterator {
+        final Partition partition;
+        private SegmentKey currentKey;
+        SegmentEncoderDecoder segmentEncoder = new SegmentEncoderDecoder();
+        private byte[] currentEngValueSegment;
+        private byte[] currentRawValueSegment;
+        private byte[] currentStatusSegment;
+        private byte[] currentGaps;
+        long currentGapsSegmentStart;
+        /**
+         * Iterator with options containing a snapshot to ensure that the time and value segments are consistent
+         */
+        RdbIteratorWithOptions iteratorWithOptions;
+        /**
+         * The dbIterator is a wrapper around the iteratorWithOptions to iterate in ascending or descending (raw value,
+         * eng value, parameter status). The time values are received using point loockups.
+         */
+        DbIterator dbIterator;
+        boolean valid;
+
+
+        public SubIterator(Partition partition) {
+            this.partition = partition;
+            try {
+                iteratorWithOptions = parchive.getIteratorWithOptions(partition);
+            } catch (RocksDBException | IOException e) {
+                throw new ParameterArchiveException("Failed to create iterator", e);
+            }
+
+            int pid = parameterId.getPid();
+
+            // we use the 0 and Byte.MAX_VALUE for the segment type to make sure we catch all types.
+            // ENG_VALUE=0 and PARAMETER_STATUS=2 could have been used as well
+            var startk = new SegmentKey(pid, parameterGroupId, ParameterArchive.getIntervalStart(start),
+                    (byte) 0);
+            byte[] rangeStart = partition.version == 0 ? startk.encodeV0() : startk.encode();
+            var stopk = new SegmentKey(pid, parameterGroupId, stop, Byte.MAX_VALUE);
+
+            byte[] rangeStop = partition.version == 0 ? stopk.encodeV0() : stopk.encode();
+
+            if (ascending) {
+                dbIterator = new AscendingRangeIterator(iteratorWithOptions.it(), rangeStart, rangeStop);
+            } else {
+                dbIterator = new DescendingRangeIterator(iteratorWithOptions.it(), rangeStart, rangeStop);
+            }
+            next();
+        }
+
+        public void next() {
+            if (!dbIterator.isValid()) {
+                valid = false;
+                return;
+            }
+            if (ascending) {
+                nextAscending();
+            } else {
+                nextDescending();
+            }
+        }
+
+        void nextAscending() {
+            currentKey = partition.version == 0 ? SegmentKey.decodeV0(dbIterator.key())
+                    : SegmentKey.decode(dbIterator.key());
+            valid = true;
+
+            SegmentKey key = currentKey;
+            while (key.segmentStart == currentKey.segmentStart) {
+                loadSegment(key.type);
+                dbIterator.next();
+                if (dbIterator.isValid()) {
+                    key = partition.version == 0 ? SegmentKey.decodeV0(dbIterator.key())
+                            : SegmentKey.decode(dbIterator.key());
+                } else {
+                    break;
+                }
+            }
+        }
+
+        void nextDescending() {
+            currentKey = partition.version == 0 ? SegmentKey.decodeV0(dbIterator.key())
+                    : SegmentKey.decode(dbIterator.key());
+            valid = true;
+            SegmentKey key = currentKey;
+
+            while (key.segmentStart == currentKey.segmentStart) {
+                loadSegment(key.type);
+                dbIterator.prev();
+                if (dbIterator.isValid()) {
+                    key = partition.version == 0 ? SegmentKey.decodeV0(dbIterator.key())
+                            : SegmentKey.decode(dbIterator.key());
+                } else {
+                    break;
+                }
+            }
+        }
+
+        private void loadSegment(byte type) {
+            switch (type) {
+            case SegmentKey.TYPE_ENG_VALUE:
+                if (retrieveEngValues || retrieveRawValues) {
+                    currentEngValueSegment = dbIterator.value();
+                }
+                break;
+            case SegmentKey.TYPE_RAW_VALUE:
+                if (retrieveRawValues) {
+                    currentRawValueSegment = dbIterator.value();
+                }
+                break;
+            case SegmentKey.TYPE_PARAMETER_STATUS:
+                if (retrieveParameterStatus) {
+                    currentStatusSegment = dbIterator.value();
+                }
+                break;
+            case SegmentKey.TYPE_GAPS:
+                // we remember from which segment this gaps is otherwise we may inherit the gaps from the previous
+                // segment
+                currentGapsSegmentStart = currentKey.segmentStart;
+                currentGaps = dbIterator.value();
+                break;
+            }
+        }
+
+        SegmentKey key() {
+            return currentKey;
+        }
+
+        ParameterValueSegment value() {
+            if (!valid) {
+                throw new NoSuchElementException();
+            }
+
+            long segStart = currentKey.segmentStart;
+            try {
+                var timeSegment = parchive.getTimeSegment(partition, segStart, parameterGroupId,
+                        iteratorWithOptions.opts());
+                if (timeSegment == null) {
+                    String msg = "Cannot find a time segment for parameterGroupId=" + parameterGroupId
+                            + " segmentStart = " + segStart + " despite having a value segment for parameterId: "
+                            + parameterId;
+                    throw new DatabaseCorruptionException(msg);
+                }
+
+                ValueSegment _engValueSegment = null;
+                if (currentEngValueSegment != null) {
+                    _engValueSegment = (ValueSegment) SegmentEncoderDecoder.decode(currentEngValueSegment, segStart);
+                }
+
+                ValueSegment engValueSegment = retrieveEngValues ? _engValueSegment : null;
+
+                ValueSegment rawValueSegment = null;
+                if (currentRawValueSegment != null) {
+                    rawValueSegment = (ValueSegment) SegmentEncoderDecoder.decode(currentRawValueSegment, segStart);
+                } else if (retrieveRawValues) {
+                    rawValueSegment = _engValueSegment;
+                }
+                ParameterStatusSegment parameterStatusSegment = currentStatusSegment == null ? null
+                        : (ParameterStatusSegment) SegmentEncoderDecoder.decode(currentStatusSegment,
+                                segStart);
+                SortedIntArray gaps = currentGaps == null || segStart != currentGapsSegmentStart ? null
+                        : SegmentEncoderDecoder.decodeGaps(currentGaps);
+
+                checkConsistency(timeSegment, engValueSegment, rawValueSegment, parameterStatusSegment, gaps);
+                ParameterValueSegment pvs = new ParameterValueSegment(parameterId.getPid(), timeSegment,
+                        engValueSegment, rawValueSegment, parameterStatusSegment, gaps);
+                return pvs;
+            } catch (DecodingException e) {
+                throw new DatabaseCorruptionException(e);
+            } catch (RocksDBException | IOException e) {
+                throw new ParameterArchiveException("Failded extracting data from the parameter archive", e);
+            }
+
+        }
+
+        /**
+         * Checks that the size of the engingeering raw and parameter status is the same and the size of the gaps with
+         * the size of the values is equal to the size of the timestamp segment.
+         */
+        private void checkConsistency(SortedTimeSegment timeSegment, ValueSegment engValueSegment,
+                ValueSegment rawValueSegment, ParameterStatusSegment parameterStatusSegment, SortedIntArray gaps) {
+
+            int timeSize = timeSegment.size();
+            int gapSize = gaps == null ? 0 : gaps.size();
+
+            if ((engValueSegment != null && engValueSegment.size() + gapSize != timeSize)
+                    || (rawValueSegment != null && rawValueSegment.size() + gapSize != timeSize)
+                    || (parameterStatusSegment != null && parameterStatusSegment.size() + gapSize != timeSize)) {
+                String err = String.format(
+                        """
+                                        Parameter %s id=%d pgid=%d: size of the values segment + gaps does not match the size of the time segment.
+                                        Values size: %s, Gap size: %d, Time size: %d
+                                        If this is a database made with Yamcs versions 5.10.0 - 5.10.7, please rebuild the corrupted segment using the command:
+                                        "yamcs parameter-archive rebuild %s %s".
+
+                                """,
+                        parameterId.getParamFqn(), parameterId.getPid(), parameterGroupId,
+                        getSizesString(engValueSegment, rawValueSegment, parameterStatusSegment),
+                        gapSize, timeSize,
+                        TimeEncoding.toString(timeSegment.getInterval()),
+                        TimeEncoding.toString(timeSegment.getSegmentEnd()));
+
+                throw new DatabaseCorruptionException(err);
+            }
+        }
+
+        private String getSizesString(ValueSegment engValueSegment, ValueSegment rawValueSegment,
+                ParameterStatusSegment parameterStatusSegment) {
+            List<String> parts = new ArrayList<>();
+
+            if (engValueSegment != null) {
+                parts.add("eng=" + engValueSegment.size());
+            }
+            if (rawValueSegment != null) {
+                parts.add("raw=" + rawValueSegment.size());
+            }
+            if (parameterStatusSegment != null) {
+                parts.add("status=" + parameterStatusSegment.size());
+            }
+
+            return String.join(", ", parts);
+        }
+
+        boolean isValid() {
+            return valid;
+        }
+
+        void close() {
+            if (dbIterator != null) {
+                dbIterator.close();
+            }
+        }
+    }
+
+}
+```
+
+### `SegmentKey.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SegmentKey.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.utils.StringConverter;
+
+/**
+ * Holder, encoder and decoder for the segment keys (in the sense of key,value storage used for RocksDb)
+ *
+ */
+public class SegmentKey {
+    final int parameterId;
+    final int parameterGroupId;
+    final long segmentStart;
+    byte type;
+    public static final byte TYPE_ENG_VALUE = 0;
+    public static final byte TYPE_RAW_VALUE = 1;
+    public static final byte TYPE_PARAMETER_STATUS = 2;
+    public static final byte TYPE_GAPS = 3;
+
+    public SegmentKey(int parameterId, int parameterGroupId, long segmentStart, byte type) {
+        this.parameterId = parameterId;
+        this.parameterGroupId = parameterGroupId;
+        this.segmentStart = segmentStart;
+        this.type = type;
+    }
+
+    /**
+     * Key encode in Yamcs starting with 5.10 - we use the invertSign for the timestamps in order for the negative times
+     * to sort before the positive ones in the archive
+     */
+    public byte[] encode() {
+        return encode(parameterId, parameterGroupId, segmentStart, type);
+    }
+
+    /**
+     * Key decode in Yamcs starting with 5.10 - we use the invertSign for the timestamps in order for the negative times
+     * to sort before the positive ones in the archive
+     */
+    public static SegmentKey decode(byte[] b) {
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        int parameterId = bb.getInt();
+        int parameterGroupId = bb.getInt();
+        long segmentStart = invertSign(bb.getLong());
+        byte type = bb.get();
+        return new SegmentKey(parameterId, parameterGroupId, segmentStart, type);
+    }
+
+    /**
+     * Key encode in Yamcs starting with 5.10 - we use the invertSign for the timestamps in order for the negative times
+     * to sort before the positive ones in the archive
+     */
+    public static byte[] encode(int parameterId, int parameterGroupId, long segmentStart, byte type) {
+        ByteBuffer bb = ByteBuffer.allocate(17);
+        bb.putInt(parameterId);
+        bb.putInt(parameterGroupId);
+        bb.putLong(invertSign(segmentStart));
+        bb.put(type);
+        return bb.array();
+    }
+
+    /**
+     * Version 0 is prior to Yamcs 5.10 when the negative times were not sorting properly
+     * 
+     */
+    public byte[] encodeV0() {
+        return encodeV0(parameterId, parameterGroupId, segmentStart, type);
+    }
+
+    /**
+     * Version 0 is prior to Yamcs 5.10 when the negative times were not sorting properly
+     * 
+     */
+    public static SegmentKey decodeV0(byte[] b) {
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        int parameterId = bb.getInt();
+        int parameterGroupId = bb.getInt();
+        long segmentStart = bb.getLong();
+        byte type = bb.get();
+        return new SegmentKey(parameterId, parameterGroupId, segmentStart, type);
+    }
+
+    /**
+     * Version 0 is prior to Yamcs 5.10 when the negative times were not sorting properly
+     * 
+     */
+    public static byte[] encodeV0(int parameterId, int parameterGroupId, long segmentStart, byte type) {
+        ByteBuffer bb = ByteBuffer.allocate(17);
+        bb.putInt(parameterId);
+        bb.putInt(parameterGroupId);
+        bb.putLong(segmentStart);
+        bb.put(type);
+        return bb.array();
+    }
+
+    /**
+     * inverting the sign causes negative numbers to be sorted before the positive ones when converted to binary
+     */
+    static long invertSign(long x) {
+        return x ^ Long.MIN_VALUE;
+    }
+
+    @Override
+    public String toString() {
+        return "SegmentKey [parameterId=" + parameterId + ", parameterGroupId="
+                + parameterGroupId + ", segmentStart=" + segmentStart
+                + ", type=" + type + " encoded: " + StringConverter.arrayToHexString(encode()) + "]";
+    }
+}
+```
+
+### `SimpleParameterIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SimpleParameterIterator.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.NoSuchElementException;
+
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.utils.PeekingIterator;
+
+/**
+ * For a given parameter id and group id, iterates over all parameters in the parameter archive (across all segments and
+ * partitions).
+ * <p>
+ * Provides objects of type {@link TimedValue}.
+ * <p>
+ * It embeds an {@link SegmentIterator} object.
+ */
+public class SimpleParameterIterator implements ParameterIterator {
+    final SegmentIterator segIt;
+    final ParameterRetrievalOptions req;
+    final ParameterId parameterId;
+
+    PeekingIterator<TimedValue> pvsIt;
+    TimedValue currentValue = null;
+
+    public SimpleParameterIterator(ParameterArchive parchive, ParameterId parameterId, int parameterGroupId,
+            ParameterRetrievalOptions req) {
+        this.req = req;
+        this.parameterId = parameterId;
+        this.segIt = new SegmentIterator(parchive, parameterId, parameterGroupId, req);
+        next();
+    }
+
+    @Override
+    public boolean isValid() {
+        return currentValue != null;
+    }
+
+    @Override
+    public TimedValue value() {
+        if (currentValue == null) {
+            throw new NoSuchElementException();
+        }
+        return currentValue;
+    }
+
+    @Override
+    public void next() {
+        currentValue = null;
+
+        if (pvsIt == null || !pvsIt.isValid()) {
+            nextPvsIt();
+
+            if (pvsIt == null || !pvsIt.isValid()) {
+                return;
+            }
+        }
+
+        currentValue = pvsIt.value();
+        pvsIt.next();
+        if ((req.ascending() && currentValue.instant >= req.stop()) ||
+                (!req.ascending() && currentValue.instant <= req.start())) {
+            currentValue = null;
+            pvsIt = null;
+            close();
+            return;
+        }
+    }
+
+    private void nextPvsIt() {
+        while (segIt.isValid()) {
+            var pvs = segIt.value();
+            segIt.next();
+
+            pvsIt = req.ascending() ? pvs.newAscendingIterator(req.start())
+                    : pvs.newDescendingIterator(req.stop());
+            if (pvsIt.isValid()) {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void close() {
+        segIt.close();
+    }
+
+    public ParameterId getParameterId() {
+        return parameterId;
+    }
+
+    public int getParameterGroupId() {
+        return segIt.getParameterGroupId();
+    }
+}
+```
+
+### `SingleParameterRetrieval.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SingleParameterRetrieval.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
+import java.util.function.Consumer;
+
+import org.rocksdb.RocksDBException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+/**
+ * Retrieves values for a single parameter from the parameter archive. The result is arrays of samples (see
+ * {@link ParameterValueArray}) corresponding to the segments of the archive.
+ * <p>
+ * Because all values are of the same type, the memory consumed by those arrays is much smaller than what is provided by
+ * an equivalent single parameter retrieval using {@link MultiParameterRetrieval}
+ * 
+ */
+public class SingleParameterRetrieval {
+    final private ParameterRetrievalOptions opts;
+    final private ParameterArchive parchive;
+    private final Logger log = LoggerFactory.getLogger(SingleParameterRetrieval.class);
+    final ParameterId[] pids;
+
+    final int[] parameterGroupIds;
+
+    public SingleParameterRetrieval(ParameterArchive parchive, String parameterFqn, ParameterRetrievalOptions opts) {
+        this.opts = opts;
+        this.parchive = parchive;
+
+        pids = parchive.getParameterIdDb().get(parameterFqn);
+        if (pids == null) {
+            log.warn("No parameter id found in the parameter archive for {}", parameterFqn);
+        }
+        this.parameterGroupIds = null;
+    }
+
+    SingleParameterRetrieval(ParameterArchive parchive, int parameterId, int[] parameterGroupIds,
+            ParameterRetrievalOptions spvr) {
+        this.opts = spvr;
+        this.parchive = parchive;
+        ParameterId pid1 = parchive.getParameterIdDb().getParameterId(parameterId);
+        this.pids = new ParameterId[] { pid1 };
+        this.parameterGroupIds = parameterGroupIds;
+
+    }
+
+    boolean hasData() {
+        return pids != null;
+    }
+
+    public void retrieve(Consumer<ParameterValueArray> consumer) throws RocksDBException, IOException {
+        if (pids == null) {
+            return;
+        }
+
+        for (ParameterId pid : pids) {
+            int[] pgids = parameterGroupIds;
+            if (pgids == null) {
+                pgids = parchive.getParameterGroupIdDb().getAllGroups(pid.getPid());
+            }
+
+            if (pgids.length == 0) {
+                log.error("Found no parameter group for parameter Id {}", pid);
+                continue;
+            }
+
+            if (pgids.length == 1) {
+                retrieveValueSingleGroup(pid, pgids[0], consumer);
+            } else {
+                retrieveValuesMultiGroup(pid, pgids, consumer);
+            }
+        }
+    }
+
+    // this is the easy case, one single parameter group -> no merging of segments necessary
+    private void retrieveValueSingleGroup(ParameterId pid, int parameterGroupId,
+            Consumer<ParameterValueArray> consumer) throws RocksDBException, IOException {
+
+        try (SegmentIterator it = new SegmentIterator(parchive, pid, parameterGroupId, opts)) {
+            while (it.isValid()) {
+                ParameterValueSegment pvs = it.value();
+                sendValuesFromSegment(pid, pvs, opts, consumer);
+                it.next();
+            }
+        }
+    }
+
+    // multiple parameter groups -> merging of segments necessary
+    private void retrieveValuesMultiGroup(ParameterId pid, int parameterGroupIds[],
+            Consumer<ParameterValueArray> consumer)
+            throws RocksDBException, IOException {
+
+        PriorityQueue<SegmentIterator> queue = new PriorityQueue<>(new SegmentIteratorComparator(opts.ascending()));
+        try {
+            for (int pgid : parameterGroupIds) {
+                SegmentIterator it = new SegmentIterator(parchive, pid, pgid, opts);
+                if (it.isValid()) {
+                    queue.add(it);
+                } else { // not really necessary
+                    it.close();
+                }
+            }
+            SegmentMerger merger = new SegmentMerger(pid, opts, consumer);
+
+            while (!queue.isEmpty()) {
+                SegmentIterator it = queue.poll();
+                sendValuesFromSegment(pid, it.value(), opts, merger);
+                it.next();
+                if (it.isValid()) {
+                    queue.add(it);
+                }
+            }
+            merger.flush();
+        } finally {
+            queue.forEach(it -> it.close());
+        }
+
+    }
+
+    private void sendValuesFromSegment(ParameterId pid, ParameterValueSegment pvs, ParameterRetrievalOptions pvr,
+            Consumer<ParameterValueArray> consumer) {
+        SortedTimeSegment timeSegment = pvs.timeSegment;
+        int posStart, posStop;
+        if (pvr.ascending()) {
+            posStart = timeSegment.search(pvr.start());
+            if (posStart < 0) {
+                posStart = -posStart - 1;
+            }
+
+            posStop = timeSegment.search(pvr.stop());
+            if (posStop < 0) {
+                posStop = -posStop - 1;
+            }
+        } else {
+            posStop = timeSegment.search(pvr.stop());
+            if (posStop < 0) {
+                posStop = -posStop - 2;
+            }
+
+            posStart = timeSegment.search(pvr.start());
+            if (posStart < 0) {
+                posStart = -posStart - 2;
+            }
+        }
+
+        if (posStart >= posStop) {
+            return;
+        }
+
+        ParameterValueArray pva = pvs.getRange(posStart, posStop, pvr.ascending(), pvr.retrieveParameterStatus());
+        if (pva != null) {
+            consumer.accept(pva);
+        }
+    }
+
+    /**
+     * Merges ParameterValueArray for same parameter and sends the result to the final consumer
+     */
+    static class SegmentMerger implements Consumer<ParameterValueArray> {
+        final Consumer<ParameterValueArray> finalConsumer;
+        final ParameterRetrievalOptions opts;
+        ParameterValueArray mergedPva;
+        ParameterId pid;
+
+        public SegmentMerger(ParameterId pid, ParameterRetrievalOptions opts, Consumer<ParameterValueArray> finalConsumer) {
+            this.finalConsumer = finalConsumer;
+            this.opts = opts;
+            this.pid = pid;
+        }
+
+        @Override
+        public void accept(ParameterValueArray pva) {
+            if (mergedPva == null) {
+                mergedPva = pva;
+            } else {
+                if (ParameterArchive.getIntervalStart(mergedPva.timestamps[0]) != ParameterArchive
+                        .getIntervalStart(pva.timestamps[0])) {
+                    finalConsumer.accept(mergedPva);
+                    mergedPva = pva;
+                } else {
+                    merge(pva);
+                }
+            }
+        }
+
+        // merge the pva with the mergedPva into a new pva
+        private void merge(ParameterValueArray pva) {
+            long[] timestamps0 = mergedPva.timestamps;
+            long[] timestamps1 = pva.timestamps;
+
+            long[] mergedTimestamps = new long[timestamps0.length + timestamps1.length];
+            int[] src = new int[mergedTimestamps.length];
+
+            int i0 = 0;
+            int i1 = 0;
+            int k = 0;
+
+            while (true) {
+                long t0, t1;
+                if (i0 < timestamps0.length) {
+                    t0 = timestamps0[i0];
+                } else {
+                    int n = timestamps1.length - i1;
+                    System.arraycopy(timestamps1, i1, mergedTimestamps, k, n);
+                    Arrays.fill(src, k, k + n, 1);
+                    break;
+                }
+
+                if (i1 < timestamps1.length) {
+                    t1 = timestamps1[i1];
+                } else {
+                    int n = timestamps0.length - i0;
+                    System.arraycopy(timestamps0, i0, mergedTimestamps, k, n);
+                    Arrays.fill(src, k, k + n, 0);
+                    break;
+                }
+                if ((opts.ascending() && t0 <= t1) || (!opts.ascending() && t0 >= t1)) {
+                    mergedTimestamps[k] = t0;
+                    src[k] = 0;
+                    k++;
+                    i0++;
+                } else {
+                    mergedTimestamps[k] = t1;
+                    src[k] = 1;
+                    k++;
+                    i1++;
+                }
+            }
+
+            ValueArray engValues = null;
+            if (opts.retrieveEngValues() && mergedPva.engValues != null) {
+                engValues = ValueArray.merge(src, mergedPva.engValues, pva.engValues);
+            }
+            ValueArray rawValues = null;
+            if (opts.retrieveRawValues() && mergedPva.rawValues != null) {
+                rawValues = ValueArray.merge(src, mergedPva.rawValues, pva.rawValues);
+            }
+            ParameterStatus[] paramStatus = null;
+            if (opts.retrieveParameterStatus() && opts.retrieveParameterStatus()) {
+                paramStatus = (ParameterStatus[]) merge(src, mergedPva.paramStatus, pva.paramStatus);
+            }
+
+            mergedPva = new ParameterValueArray(mergedTimestamps, engValues, rawValues, paramStatus);
+        }
+
+        private ParameterStatus[] merge(int[] src, ParameterStatus[]... inputValueArray) {
+            int[] idx = new int[inputValueArray.length];
+            ParameterStatus[] r = new ParameterStatus[src.length];
+            for (int i = 0; i < src.length; i++) {
+                int n = src[i];
+                r[i] = inputValueArray[n][idx[n]];
+                idx[n]++;
+            }
+            return r;
+        }
+
+        /**
+         * sends the last segment
+         */
+        public void flush() {
+            if (mergedPva != null) {
+                finalConsumer.accept(mergedPva);
+            }
+            mergedPva = null;
+        }
+    }
+
+    static class ParameterValueSegmentCompatator implements Comparator<ParameterValueSegment> {
+        final boolean ascending;
+
+        public ParameterValueSegmentCompatator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(ParameterValueSegment o1, ParameterValueSegment o2) {
+            int c;
+            if (ascending) {
+                c = Long.compare(o1.getSegmentStart(), o2.timeSegment.getSegmentStart());
+            } else {
+                c = Long.compare(o2.getSegmentStart(), o1.timeSegment.getSegmentStart());
+            }
+
+            return c;
+        }
+    }
+
+    static class SegmentIteratorComparator implements Comparator<SegmentIterator> {
+        final boolean ascending;
+
+        public SegmentIteratorComparator(boolean ascending) {
+            this.ascending = ascending;
+        }
+
+        @Override
+        public int compare(SegmentIterator it1, SegmentIterator it2) {
+            ParameterValueSegment pvs1 = it1.value();
+            ParameterValueSegment pvs2 = it2.value();
+
+            int c = ascending ? Long.compare(pvs1.getSegmentStart(), pvs2.getSegmentStart())
+                    : Long.compare(pvs2.getSegmentEnd(), pvs1.getSegmentEnd());
+
+            if (c != 0) {
+                return c;
+            }
+            //
+            // make sure the parameters are extracted in the order of their id
+            // (rather than some random order from PriorityQueue)
+            return Integer.compare(it1.getParameterId().getPid(), it2.getParameterId().getPid());
+        }
+    }
+
+}
+```
+
+### `SortedTimeSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SortedTimeSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.VarIntUtil;
+
+import me.lemire.integercompression.FastPFOR128;
+import me.lemire.integercompression.IntWrapper;
+
+/**
+ * TimeSegment stores timestamps relative to the interval start. The timestamps are stored in a sorted int array.
+ * <p>
+ * The timestamps have to be part of the same interval (see {@link ParameterArchive#INTERVAL_MASK}.
+ * 
+ */
+public class SortedTimeSegment extends BaseSegment {
+
+    static final byte SUBFORMAT_ID_DELTAZG_FPF128_VB = 1; // compressed with DeltaZigzag and then FastPFOR128 plus
+                                                          // VarInt32 for remaining
+    static final byte SUBFORMAT_ID_DELTAZG_VB = 2; // compressed with DeltaZigzag plus VarInt32
+
+    public static final int VERSION = 0;
+    private final long interval;
+    private SortedIntArray tsarray;
+
+    public SortedTimeSegment(long interval) {
+        super(FORMAT_ID_SortedTimeValueSegmentV2);
+        if (interval != ParameterArchive.getInterval(interval)) {
+            throw new IllegalArgumentException(interval + " is not the start of an interval");
+        }
+        tsarray = new SortedIntArray();
+        this.interval = interval;
+    }
+
+    /**
+     * Insert instant into the array and return the position at which it has been inserted.
+     * 
+     * @param instant
+     */
+    public int add(long instant) {
+        if (ParameterArchive.getInterval(instant) != interval) {
+            throw new IllegalArgumentException("This timestamp does not fit into this interval;"
+                    + " intervalStart: " + TimeEncoding.toString(interval)
+                    + ", timestamp: " + TimeEncoding.toString(instant));
+        }
+
+        return tsarray.insert((int) (instant - interval));
+    }
+
+    /**
+     * get timestamp at position idx
+     * 
+     * @param idx
+     * @return
+     */
+    public long getTime(int idx) {
+        return interval + tsarray.get(idx);
+    }
+
+    /**
+     * performs a binary search in the time segment and returns the position of t or where t would fit in.
+     * <p>
+     * Note that this works even if the value would not fit in the same interval, which would cause a subsequent add
+     * operation to fail.
+     * 
+     * @see java.util.Arrays#binarySearch(int[], int)
+     * @param instant
+     * @return
+     */
+    public int search(long instant) {
+        if (interval != ParameterArchive.getInterval(instant)) {
+            if (instant < interval) {
+                return -1;
+            } else {
+                return -tsarray.size() - 1;
+            }
+        }
+
+        return tsarray.search((int) (instant - interval));
+    }
+
+    /**
+     * returns idx such that
+     * 
+     * <pre>
+     * ts[i] >= instant iif i >= idx
+     * </pre>
+     * 
+     */
+    public int lowerBound(long instant) {
+        if (interval != ParameterArchive.getInterval(instant)) {
+            if (instant < interval) {
+                return 0;
+            } else {
+                return tsarray.size();
+            }
+        }
+
+        return tsarray.lowerBound((int) (instant - interval));
+    }
+
+    /**
+     * returns idx such that
+     * 
+     * <pre>
+     * ts[i] <= instant iif i <= idx
+     * </pre>
+     */
+    public int higherBound(long instant) {
+        if (interval != ParameterArchive.getInterval(instant)) {
+            if (instant < interval) {
+                return -1;
+            } else {
+                return tsarray.size() - 1;
+            }
+        }
+
+        return tsarray.higherBound((int) (instant - interval));
+    }
+
+    public int size() {
+        return tsarray.size();
+    }
+
+    public long getSegmentStart() {
+        if (tsarray.isEmpty()) {
+            return interval;
+        } else {
+            return interval + tsarray.get(0);
+        }
+    }
+
+    @Override
+    public void writeTo(ByteBuffer bb) {
+        writeTo(tsarray, bb);
+    }
+
+    /**
+     * Encode the time array
+     */
+    public static void writeTo(SortedIntArray tsarray, ByteBuffer bb) {
+        if (tsarray.size() == 0) {
+            throw new IllegalStateException(" the time segment has no data");
+        }
+        int[] ddz = VarIntUtil.encodeDeltaDeltaZigZag(tsarray);
+        int position = bb.position();
+        bb.put(SUBFORMAT_ID_DELTAZG_FPF128_VB);
+
+        int size = ddz.length;
+
+        VarIntUtil.writeVarInt32(bb, size);
+
+        FastPFOR128 fastpfor = FastPFORFactory.get();
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+        int[] out = new int[size];
+        fastpfor.compress(ddz, inputoffset, size, out, outputoffset);
+        if (outputoffset.get() == 0) {
+            // fastpfor didn't compress anything, probably there were too few datapoints
+            bb.put(position, SUBFORMAT_ID_DELTAZG_VB);
+        } else {
+            // write the fastpfor output
+            for (int i = 0; i < outputoffset.get(); i++) {
+                bb.putInt(out[i]);
+            }
+        }
+        // write the remaining bytes varint compressed
+        for (int i = inputoffset.get(); i < size; i++) {
+            VarIntUtil.writeVarInt32(bb, ddz[i]);
+        }
+    }
+
+    /**
+     * Creates a TimeSegment by decoding the buffer this is the reverse of the {@link #writeTo()} operation
+     * 
+     */
+    static SortedIntArray parse(ByteBuffer bb) throws DecodingException {
+        byte subFormatId = bb.get();
+        int n = VarIntUtil.readVarInt32(bb);
+        int position = bb.position();
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+        int[] ddz = new int[n];
+
+        if (subFormatId == SUBFORMAT_ID_DELTAZG_FPF128_VB) {
+            int[] x = new int[(bb.limit() - bb.position()) / 4];
+            for (int i = 0; i < x.length; i++) {
+                x[i] = bb.getInt();
+            }
+
+            FastPFOR128 fastpfor = FastPFORFactory.get();
+            fastpfor.uncompress(x, inputoffset, x.length, ddz, outputoffset);
+            bb.position(position + inputoffset.get() * 4);
+        }
+
+        for (int i = outputoffset.get(); i < n; i++) {
+            ddz[i] = VarIntUtil.readVarInt32(bb);
+        }
+
+        return new SortedIntArray(VarIntUtil.decodeDeltaDeltaZigZag(ddz));
+    }
+
+    public static SortedTimeSegment parseFromV1(ByteBuffer bb, long segmentStart) throws DecodingException {
+        long interval = ParameterArchive.getInterval(segmentStart);
+        SortedTimeSegment r = new SortedTimeSegment(interval);
+        int diff = (int) (segmentStart - interval);
+
+        r.tsarray = parse(bb);
+        r.tsarray.addToAll(diff);
+        return r;
+    }
+
+    public static SortedTimeSegment parseFromV2(ByteBuffer bb, long segmentStart) throws DecodingException {
+        SortedTimeSegment r = new SortedTimeSegment(ParameterArchive.getInterval(segmentStart));
+        r.tsarray = parse(bb);
+        return r;
+    }
+
+    @Override
+    public int getMaxSerializedSize() {
+        return 4 * (tsarray.size()) + 3;
+    }
+
+    public long getSegmentEnd() {
+        int size = tsarray.size();
+        if (size == 0) {
+            return interval;
+        } else {
+            return getTime(size - 1);
+        }
+    }
+
+    public long[] getRange(int posStart, int posStop, boolean ascending) {
+        long[] r = new long[posStop - posStart];
+        if (ascending) {
+            for (int i = posStart; i < posStop; i++) {
+                r[i - posStart] = tsarray.get(i) + interval;
+            }
+        } else {
+            for (int i = posStop; i > posStart; i--) {
+                r[posStop - i] = tsarray.get(i) + interval;
+            }
+        }
+        return r;
+    }
+
+    /**
+     * Get the range between posStart and posStop skipping the positions that are in the gaps array
+     */
+    public long[] getRangeWithGaps(int posStart, int posStop, boolean ascending, SortedIntArray gaps) {
+        long[] r = new long[posStop - posStart];
+        int j = 0;
+        if (ascending) {
+            int k = 0;
+            for (int i = posStart; i < posStop; i++) {
+                while (k < gaps.size() && gaps.get(k) < i) {
+                    k++;
+                }
+                if (k >= gaps.size() || gaps.get(k) != i) {
+                    r[j++] = tsarray.get(i) + interval;
+                }
+            }
+        } else {
+            int k = gaps.size() - 1;
+            for (int i = posStop; i > posStart; i--) {
+                while (k >= 0 && gaps.get(k) > i) {
+                    k--;
+                }
+                if (k < 0 || gaps.get(k) != i) {
+                    r[j++] = tsarray.get(i) + interval;
+                }
+            }
+        }
+        return Arrays.copyOf(r, j);
+    }
+
+    public long getInterval() {
+        return interval;
+    }
+
+    public String toString() {
+        return "[TimeSegment: interval:" + interval + ", relative times: " + tsarray.toString() + "]";
+    }
+
+}
+```
+
+### `StringValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/StringValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class StringValueSegment extends ObjectSegment<String> implements ValueSegment {
+    static StringSerializer serializer = new StringSerializer();
+
+    StringValueSegment(boolean buildForSerialisation) {
+        super(serializer, buildForSerialisation);
+    }
+
+    public static final int MAX_UTF8_CHAR_LENGTH = 3; // I've seen this in protobuf somwhere
+
+    @Override
+    public void insert(int pos, Value value) {
+        add(pos, value.getStringValue());
+    }
+
+    @Override
+    public void add(Value value) {
+        add(value.getStringValue());
+    }
+
+    @Override
+    public Value getValue(int index) {
+        return ValueUtility.getStringValue(get(index));
+    }
+
+    public void addValue(Value v) {
+        add(v.getStringValue());
+    }
+
+    public static StringValueSegment parseFrom(ByteBuffer bb) throws DecodingException {
+        StringValueSegment r = new StringValueSegment(false);
+        r.parse(bb);
+        return r;
+    }
+
+    static class StringSerializer implements ObjectSerializer<String> {
+        @Override
+        public byte getFormatId() {
+            return BaseSegment.FORMAT_ID_StringValueSegment;
+        }
+
+        @Override
+        public String deserialize(byte[] b) throws DecodingException {
+            return new String(b, StandardCharsets.UTF_8);
+        }
+
+        @Override
+        public byte[] serialize(String s) {
+            return s.getBytes(StandardCharsets.UTF_8);
+        }
+    }
+
+    @Override
+    public ValueArray getRange(int posStart, int posStop, boolean ascending) {
+        return new ValueArray(getRangeArray(posStart, posStop, ascending));
+    }
+
+}
+```
+
+### `SynchronizedParameterValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SynchronizedParameterValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.concurrent.locks.ReadWriteLock;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.PeekingIterator;
+
+/**
+ * Parameter value segment used by the realtime filler which is also used during retrieval.
+ * <p>
+ * We use a read-write lock in order to avoid retrieval reading inconsistent data
+ */
+public class SynchronizedParameterValueSegment extends ParameterValueSegment {
+    final ReadWriteLock lock;
+
+    public SynchronizedParameterValueSegment(int pid, SortedTimeSegment timeSegment, Type engValueType,
+            Type rawValueType, ReadWriteLock lock) {
+        super(pid, timeSegment, engValueType, rawValueType);
+        this.lock = lock;
+    }
+
+    @Override
+    public void insertGap(int pos) {
+        lock.writeLock().lock();
+        try {
+            super.insertGap(pos);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public void insert(int pos, BasicParameterValue pv) {
+        lock.writeLock().lock();
+        try {
+            super.insert(pos, pv);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    public ParameterValueArray getRange(int posStart, int posStop, boolean ascending, boolean retrieveParameterStatus) {
+        lock.readLock().lock();
+        try {
+            return super.getRange(posStart, posStop, ascending, retrieveParameterStatus);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public long getSegmentStart() {
+        lock.readLock().lock();
+        try {
+            return super.getSegmentStart();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public long getSegmentEnd() {
+        lock.readLock().lock();
+        try {
+            return super.getSegmentEnd();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public int numGaps() {
+        lock.readLock().lock();
+        try {
+            return super.numGaps();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public int numValues() {
+        lock.readLock().lock();
+        try {
+            return super.numValues();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public Value getEngValue(int pos) {
+        lock.readLock().lock();
+        try {
+            return super.getEngValue(pos);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public Value getRawValue(int pos) {
+        lock.readLock().lock();
+        try {
+            return super.getRawValue(pos);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public PeekingIterator<TimedValue> newAscendingIterator(long t0) {
+        lock.readLock().lock();
+        try {
+            return new SynchronizedAscendingIterator(t0);
+        } finally {
+            lock.readLock().unlock();
+        }
+
+    }
+
+    @Override
+    public PeekingIterator<TimedValue> newDescendingIterator(long t0) {
+        lock.readLock().lock();
+        try {
+            return new SynchronizedDescendingIterator(t0);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    class SynchronizedAscendingIterator extends AscendingIterator {
+        public SynchronizedAscendingIterator(long t0) {
+            super(t0);
+        }
+
+        @Override
+        public void next() {
+            lock.readLock().lock();
+            try {
+                super.next();
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+    }
+
+    class SynchronizedDescendingIterator extends DescendingIterator {
+
+        public SynchronizedDescendingIterator(long t0) {
+            super(t0);
+        }
+
+        @Override
+        public void next() {
+            lock.readLock().lock();
+            try {
+                super.next();
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+    }
+}
+```
+
+### `SynchronizedPGSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/SynchronizedPGSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+
+/**
+ * This is a superclass of {@link PGSegment} that provides synchronized access between get and add operations.
+ * <p>
+ * It is used by the Realtime Parameter filler in order to avoid concurrency issues when reading and writing to the same
+ * segment
+ */
+public class SynchronizedPGSegment extends PGSegment {
+    final ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    public SynchronizedPGSegment(int parameterGroupId, long interval, int size) {
+        super(parameterGroupId, interval, size);
+    }
+
+    @Override
+    public void addRecord(long instant, IntArray pids, List<BasicParameterValue> values) {
+        lock.writeLock().lock();
+        try {
+            super.addRecord(instant, pids, values);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    @Override
+    protected ParameterValueSegment newPvs(int pid, SortedTimeSegment timeSegment, Type engValueType,
+            Type rawValueType) {
+        return new SynchronizedParameterValueSegment(pid, timeSegment, engValueType, rawValueType, lock);
+    }
+}
+```
+
+### `test-result.txt`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/test-result.txt`
+
+
+```text
+------------ numParams: 1000 numBlocks: 720 numSamplesPerBloc: 3600
+stats: 
+** Compaction Stats [data] **
+Level    Files   Size(MB) Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) Comp(cnt) Avg(sec) Stall(cnt)  KeyIn KeyDrop
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L0      6/0       2000   3.0      0.0     0.0      0.0       9.4      9.4       0.0   0.0      0.0     34.8       276        27   10.238         29       0      0
+  L1    118/1       7562  14.6      9.2     7.4      1.7       9.2      7.4       0.0   1.2     13.2     13.2       711         3  237.013          0    679K      0
+  L2      1/0         64   0.0      0.1     0.1      0.0       0.1      0.1       0.0   1.0     14.1     14.1         9         2    4.547          0       0      0
+ Sum    125/1       9626   0.0      9.3     7.6      1.7      18.7     17.0       0.0   2.0      9.5     19.2       997        32   31.143         29    679K      0
+ Int      0/0          0   0.0      0.1     0.1      0.0       0.4      0.4       0.0   1.5      8.4     24.7        15         3    5.107          0       0      0
+Flush(GB): cumulative 9.400, interval 0.244
+Stalls(count): 6 level0_slowdown, 0 level0_numfiles, 23 memtable_compaction, 0 leveln_slowdown_soft, 0 leveln_slowdown_hard
+
+** DB Stats **
+Uptime(secs): 738.1 total, 738.1 interval
+Cumulative writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative compaction: 18.68 GB write, 25.92 MB/s write, 9.28 GB read, 12.88 MB/s read, 996.6 seconds
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 MB, 0.00 MB/s
+Interval compaction: 18.68 GB write, 25.92 MB/s write, 9.28 GB read, 12.88 MB/s read, 996.6 seconds
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+cur-size-all-mem-tables: 324443141
+time to populate: 740 sec
+stats: 
+** Compaction Stats [data] **
+Level    Files   Size(MB) Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) Comp(cnt) Avg(sec) Stall(cnt)  KeyIn KeyDrop
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L0      9/0       2310   4.5      0.0     0.0      0.0       0.3      0.3       0.0   0.0      0.0     63.1         5         3    1.637          0       0      0
+  L1    117/0       7497  14.6      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+  L2      2/0        128   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+ Sum    128/0       9936   0.0      0.0     0.0      0.0       0.3      0.3       0.0   1.0      0.0     63.1         5         3    1.637          0       0      0
+ Int      0/0          0   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+Flush(GB): cumulative 0.303, interval 0.000
+Stalls(count): 0 level0_slowdown, 0 level0_numfiles, 0 memtable_compaction, 0 leveln_slowdown_soft, 0 leveln_slowdown_hard
+
+** DB Stats **
+Uptime(secs): 6.4 total, 6.4 interval
+Cumulative writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative compaction: 0.30 GB write, 48.48 MB/s write, 0.00 GB read, 0.00 MB/s read, 4.9 seconds
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 MB, 0.00 MB/s
+Interval compaction: 0.30 GB write, 48.48 MB/s write, 0.00 GB read, 0.00 MB/s read, 4.9 seconds
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+time to compact: 747 sec
+stats: 
+** Compaction Stats [data] **
+Level    Files   Size(MB) Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) Comp(cnt) Avg(sec) Stall(cnt)  KeyIn KeyDrop
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L2    153/1       9794   1.9      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+  L3      2/0        128   0.0      0.0     0.0      0.0       0.0      0.0       0.1   0.0      0.0      0.0         0         0    0.000          0       0      0
+ Sum    155/1       9923   0.0      0.0     0.0      0.0       0.0      0.0       0.1   0.0      0.0      0.0         0         0    0.000          0       0      0
+ Int      0/0          0   0.0      0.0     0.0      0.0       0.0      0.0       0.1   0.0      0.0      0.0         0         0    0.000          0       0      0
+Flush(GB): cumulative 0.000, interval 0.000
+Stalls(count): 0 level0_slowdown, 0 level0_numfiles, 0 memtable_compaction, 0 leveln_slowdown_soft, 0 leveln_slowdown_hard
+
+** DB Stats **
+Uptime(secs): 0.1 total, 0.1 interval
+Cumulative writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative compaction: 0.00 GB write, 0.00 MB/s write, 0.00 GB read, 0.00 MB/s read, 0.0 seconds
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 MB, 0.00 MB/s
+Interval compaction: 0.00 GB write, 0.00 MB/s write, 0.00 GB read, 0.00 MB/s read, 0.0 seconds
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+time to scan all params 168 sec
+
+
+
+
+
+
+------------ numParams: 1000 numBlocks: 2880 numSamplesPerBloc: 900
+stats: 
+** Compaction Stats [data] **
+Level    Files   Size(MB) Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) Comp(cnt) Avg(sec) Stall(cnt)  KeyIn KeyDrop
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L0      7/0       1747   3.5      0.0     0.0      0.0       9.5      9.5       0.0   0.0      0.0     35.6       273        30    9.111         28       0      0
+  L1    123/1       7857  15.2      9.5     7.8      1.7       9.5      7.8       0.0   1.2     12.6     12.6       770         3  256.588          0   2802K      0
+  L2      2/0        128   0.0      0.1     0.1      0.0       0.1      0.1       0.0   1.0     12.7     12.6        10         2    5.081          0     18K      0
+ Sum    132/1       9732   0.0      9.6     7.9      1.7      19.1     17.4       0.0   2.0      9.4     18.6      1053        35   30.093         28   2821K      0
+ Int      0/0          0   0.0      0.1     0.1      0.0       0.6      0.6       0.0   1.3      4.9     23.8        26         4    6.592          0     18K      0
+Flush(GB): cumulative 9.505, interval 0.487
+Stalls(count): 11 level0_slowdown, 0 level0_numfiles, 17 memtable_compaction, 0 leveln_slowdown_soft, 0 leveln_slowdown_hard
+
+** DB Stats **
+Uptime(secs): 805.4 total, 805.4 interval
+Cumulative writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative compaction: 19.13 GB write, 24.33 MB/s write, 9.63 GB read, 12.24 MB/s read, 1053.3 seconds
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 MB, 0.00 MB/s
+Interval compaction: 19.13 GB write, 24.33 MB/s write, 9.63 GB read, 12.24 MB/s read, 1053.3 seconds
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+cur-size-all-mem-tables: 282132675
+time to populate: 810 sec
+stats: 
+** Compaction Stats [data] **
+Level    Files   Size(MB) Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) Comp(cnt) Avg(sec) Stall(cnt)  KeyIn KeyDrop
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L0     10/0       2016   5.0      0.0     0.0      0.0       0.3      0.3       0.0   0.0      0.0     58.6         5         3    1.531          0       0      0
+  L1    123/1       7857  15.2      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+  L2      2/0        128   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+ Sum    135/1      10001   0.0      0.0     0.0      0.0       0.3      0.3       0.0   1.0      0.0     58.6         5         3    1.531          0       0      0
+ Int      0/0          0   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+Flush(GB): cumulative 0.263, interval 0.000
+Stalls(count): 0 level0_slowdown, 0 level0_numfiles, 0 memtable_compaction, 0 leveln_slowdown_soft, 0 leveln_slowdown_hard
+
+** DB Stats **
+Uptime(secs): 6.4 total, 6.4 interval
+Cumulative writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative compaction: 0.26 GB write, 42.29 MB/s write, 0.00 GB read, 0.00 MB/s read, 4.6 seconds
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 MB, 0.00 MB/s
+Interval compaction: 0.26 GB write, 42.29 MB/s write, 0.00 GB read, 0.00 MB/s read, 4.6 seconds
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+time to compact: 895 sec
+stats: 
+** Compaction Stats [data] **
+Level    Files   Size(MB) Score Read(GB)  Rn(GB) Rnp1(GB) Write(GB) Wnew(GB) Moved(GB) W-Amp Rd(MB/s) Wr(MB/s) Comp(sec) Comp(cnt) Avg(sec) Stall(cnt)  KeyIn KeyDrop
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  L2    155/0       9910   1.9      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+  L3      1/0         64   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+ Sum    156/0       9975   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+ Int      0/0          0   0.0      0.0     0.0      0.0       0.0      0.0       0.0   0.0      0.0      0.0         0         0    0.000          0       0      0
+Flush(GB): cumulative 0.000, interval 0.000
+Stalls(count): 0 level0_slowdown, 0 level0_numfiles, 0 memtable_compaction, 0 leveln_slowdown_soft, 0 leveln_slowdown_hard
+
+** DB Stats **
+Uptime(secs): 0.3 total, 0.3 interval
+Cumulative writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 GB, 0.00 MB/s
+Cumulative WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 GB, 0.00 MB/s
+Cumulative compaction: 0.00 GB write, 0.00 MB/s write, 0.00 GB read, 0.00 MB/s read, 0.0 seconds
+Cumulative stall: 00:00:0.000 H:M:S, 0.0 percent
+Interval writes: 0 writes, 0 keys, 0 batches, 0.0 writes per batch, ingest: 0.00 MB, 0.00 MB/s
+Interval WAL: 0 writes, 0 syncs, 0.00 writes per sync, written: 0.00 MB, 0.00 MB/s
+Interval compaction: 0.00 GB write, 0.00 MB/s write, 0.00 GB read, 0.00 MB/s read, 0.0 seconds
+Interval stall: 00:00:0.000 H:M:S, 0.0 percent
+
+time to scan all params 177 sec
+
+
+```
+
+### `TimedValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/TimedValue.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+public class TimedValue {
+    final long instant;
+    final Value engValue;
+    final Value rawValue;
+    final ParameterStatus paramStatus;
+    
+    public TimedValue(long instant, Value engValue, Value rawValue, ParameterStatus paramStatus) {
+        this.instant = instant;
+        this.engValue = engValue;
+        this.rawValue = rawValue;
+        this.paramStatus = paramStatus;
+    }
+}
+```
+
+### `ValueConsumer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ValueConsumer.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.protobuf.Yamcs.Value;
+
+public interface ValueConsumer {
+    void accept(int parameterId, int parameterGroupId, long t, Value v);
+}
+```
+
+### `ValueSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/ValueSegment.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+
+/**
+ * Interface for segments of columnar data.
+ * <p>
+ * Given that all data from one segment is of the same type, the implementors can make use of arrays to store data more
+ * efficiently.
+ * <p>
+ * As of Yamcs 5.9.4 Yamcs supports sparse data in parameter archive. This interface and its implementors do not deal
+ * with gaps, they store only the data. The mapping from the original data with gaps to this is done in the
+ * {@link ParameterValueSegment}
+ */
+public interface ValueSegment {
+
+    /**
+     * returns Value at position index
+     * 
+     * @param index
+     * @return the value at the index
+     */
+    public abstract Value getValue(int index);
+
+    /**
+     * Insert data at position pos. The data at the subsequent positions is shifted to the right.
+     */
+    public abstract void insert(int pos, Value engValue);
+
+    /**
+     * Add data at the end of the segment.
+     */
+    public abstract void add(Value engValue);
+
+    /**
+     * Optimise the segment data for writing to the archive
+     * <p>
+     * After this method is called, no more data can be added to the segment
+     */
+    public abstract void consolidate();
+
+    public abstract int size();
+
+    /**
+     * In rare circumstances, a segment read from the archive has to be modified.
+     * <p>
+     * This method updates the object such that it can be modified
+     */
+    public default void makeWritable() {
+
+    }
+    /**
+     * returns an array containing the values in the range [posStart, posStop) if ascending or [posStop, posStart) if
+     * descending
+     *
+     * @param posStart
+     * @param posStop
+     * @param ascending
+     * @return an array containing the values in the specified range
+     */
+    public abstract ValueArray getRange(int posStart, int posStop, boolean ascending);
+}
+```

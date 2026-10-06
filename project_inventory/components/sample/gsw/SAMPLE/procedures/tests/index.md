@@ -3,18 +3,216 @@
 
 **경로:** `components/sample/gsw/SAMPLE/procedures/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sample_app_test.rb`
 
-file--sample_app_test.rb
-file--sample_ast_test.rb
-file--sample_device_test.rb
+**경로:** `components/sample/gsw/SAMPLE/procedures/tests/sample_app_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "sample_lib.rb"
+
+##
+## This script tests the standard cFS component application functionality.
+## Currently this includes: 
+##   Housekeeping, request telemetry to be published on the software bus
+##   NOOP, no operation but confirm correct counters increment
+##   Reset counters, increment as done in NOOP and confirm ability to clear repeatably
+##   Invalid ground command, confirm bad lengths and codes are rejected
+##
+
+# Get to known state
+safe_sample()
+
+##
+##   Housekeeping, request telemetry to be published on the software bus
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    get_sample_hk()
+end
+
+
+##
+## NOOP, no operation but confirm correct counters increment
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    sample_cmd("SAMPLE SAMPLE_NOOP_CC")
+end
+
+
+##
+## Reset counters, increment as done in NOOP and confirm ability to clear repeatably
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    sample_cmd("SAMPLE SAMPLE_NOOP_CC")
+    cmd("SAMPLE SAMPLE_RST_COUNTERS_CC") # Note standard `cmd` as we can't reset counters and then confirm increment
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM CMD_COUNT == 0")
+    check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == 0")
+end
+
+
+##
+##   Invalid ground command, confirm bad lengths and codes are rejected
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    # Bad length
+    cmd_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+    cmd("SAMPLE SAMPLE_NOOP_CC with CCSDS_LENGTH #{n+2}") # Note +2 due to CCSDS already being +1
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+end
+
+for n in 6..(5 + SAMPLE_TEST_LOOP_COUNT)
+    # Bad command codes
+    cmd_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+    cmd("SAMPLE SAMPLE_NOOP_CC with CCSDS_FC #{n+1}")
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+end
 ```
 
-## 항목
+### `sample_ast_test.rb`
 
-- [`components/sample/gsw/SAMPLE/procedures/tests/sample_app_test.rb`](file--sample_app_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/gsw/SAMPLE/procedures/tests/sample_ast_test.rb`](file--sample_ast_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/gsw/SAMPLE/procedures/tests/sample_device_test.rb`](file--sample_device_test.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/sample/gsw/SAMPLE/procedures/tests/sample_ast_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "sample_lib.rb"
+
+##
+## This script tests the cFS component in an automated scenario.
+## Currently this includes: 
+##   Hardware failure
+##   Hardware status reporting fault
+##
+
+
+##
+## Hardware failure
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    # Prepare
+    sample_prepare_ast()
+
+    # Disable sim and confirm device error counts increase
+    dev_cmd_cnt = tlm("SAMPLE SAMPLE_HK_TLM DEVICE_COUNT")
+    dev_cmd_err_cnt = tlm("SAMPLE SAMPLE_HK_TLM DEVICE_ERR_COUNT")
+    sample_sim_disable()
+    check("SAMPLE SAMPLE_HK_TLM DEVICE_COUNT == #{dev_cmd_cnt}")
+    check("SAMPLE SAMPLE_HK_TLM DEVICE_ERR_COUNT >= #{dev_cmd_err_cnt}")
+
+    # Enable sim and confirm return to nominal operation
+    sample_sim_enable()
+    confirm_sample_data_loop()
+end
+
+
+##
+## Hardware status reporting fault
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    # Prepare
+    sample_prepare_ast()
+
+    # Add a fault to status in the simulator
+    sample_sim_set_status(255)
+
+    # Confirm that status register and that app disabled itself
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM DEVICE_STATUS == 255")
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM DEVICE_ENABLED == 'DISABLED'")
+    
+    # Clear simulator status fault
+    sample_sim_set_status(0)
+end
+```
+
+### `sample_device_test.rb`
+
+**경로:** `components/sample/gsw/SAMPLE/procedures/tests/sample_device_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "sample_lib.rb"
+
+##
+## This script tests the cFS component device functionality.
+## Currently this includes: 
+##   Enable / disable, control hardware communications
+##   Configuration, reconfigure sample instrument register
+##
+
+
+##
+## Enable / disable, control hardware communications
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    # Get to known state
+    safe_sample()
+
+    # Manually command to disable when already disabled
+    cmd_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+    cmd("SAMPLE SAMPLE_DISABLE_CC")
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+
+    # Enable
+    enable_sample()
+
+    # Confirm device counters increment without errors
+    confirm_sample_data_loop()
+
+    # Manually command to enable when already enabled
+    cmd_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+    cmd("SAMPLE SAMPLE_ENABLE_CC")
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+
+    # Reconfirm data remains as expected
+    confirm_sample_data_loop()
+
+    # Disable
+    disable_sample()
+end
+
+
+##
+##   Configuration, reconfigure sample instrument register
+##
+SAMPLE_TEST_LOOP_COUNT.times do |n|
+    # Get to known state
+    safe_sample()
+
+    # Confirm configuration command denied if disabled
+    cmd_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+    cmd("SAMPLE SAMPLE_CONFIG_CC with DEVICE_CONFIG 10")
+    get_sample_hk()
+    check("SAMPLE SAMPLE_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+    
+    # Enable
+    enable_sample()
+
+    # Set configuration
+    sample_cmd("SAMPLE SAMPLE_CONFIG_CC with DEVICE_CONFIG #{n+1}")
+    check("SAMPLE SAMPLE_HK_TLM DEVICE_CONFIG == #{n+1}")
+end
+```

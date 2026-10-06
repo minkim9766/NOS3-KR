@@ -3,18 +3,51 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stacked-text-entry.component.css`
 
-file--stacked-text-entry.component.css
-file--stacked-text-entry.component.html
-file--stacked-text-entry.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/stacked-text-entry.component.css`
+
+
+```css
+:host {
+  display: block;
+  position: relative;
+}
 ```
 
-## 항목
+### `stacked-text-entry.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/stacked-text-entry.component.css`](file--stacked-text-entry.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/stacked-text-entry.component.html`](file--stacked-text-entry.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/stacked-text-entry.component.ts`](file--stacked-text-entry.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/stacked-text-entry.component.html`
+
+
+```html
+@if (entry(); as entry) {
+  <app-markdown [text]="entry.renderedText()" />
+}
+```
+
+### `stacked-text-entry.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/stacked-text-entry.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+import { EntryLabel } from '../entry-label/entry-label.component';
+import { StackedTextEntry } from '../stack-file/StackedEntry';
+
+@Component({
+  selector: 'app-stacked-text-entry',
+  templateUrl: './stacked-text-entry.component.html',
+  styleUrl: './stacked-text-entry.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [EntryLabel, MarkdownComponent, WebappSdkModule],
+})
+export class StackedTextEntryComponent {
+  entry = input.required<StackedTextEntry>();
+}
+```

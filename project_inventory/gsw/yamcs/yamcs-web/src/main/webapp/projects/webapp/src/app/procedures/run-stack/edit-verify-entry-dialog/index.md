@@ -3,18 +3,229 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-verify-entry-dialog.component.css`
 
-file--edit-verify-entry-dialog.component.css
-file--edit-verify-entry-dialog.component.html
-file--edit-verify-entry-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/edit-verify-entry-dialog.component.css`
+
+
+```css
+.condition-table {
+  width: 100%;
+}
+
+.condition-table td:first-child {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+:host ::ng-deep .condition-table input {
+  margin: 0 !important;
+  width: 100%;
+}
+
+:host ::ng-deep ya-select.operator ya-button {
+  margin-top: 0;
+  width: 100%;
+}
 ```
 
-## 항목
+### `edit-verify-entry-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/edit-verify-entry-dialog.component.css`](file--edit-verify-entry-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/edit-verify-entry-dialog.component.html`](file--edit-verify-entry-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/edit-verify-entry-dialog.component.ts`](file--edit-verify-entry-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/edit-verify-entry-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Step: Verify parameters</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-stepper>
+      <ya-stepper-step label="Parameters" [expanded]="true">
+        <table class="condition-table" formArrayName="condition">
+          @for (
+            comparison of comparisonGroups;
+            track comparison;
+            let i = $index;
+            let first = $first;
+            let last = $last
+          ) {
+            <tr [formGroupName]="i">
+              <td style="width: 70%">
+                <app-parameter-input formControlName="parameter" />
+              </td>
+              <td style="white-space: nowrap">
+                <ya-select class="operator" formControlName="operator">
+                  <ya-option id="eq" label="=" />
+                  <ya-option id="neq" label="!=" />
+                  <ya-option id="lt" label="&lt;" />
+                  <ya-option id="lte" label="&lt;=" />
+                  <ya-option id="gt" label="&gt;" />
+                  <ya-option id="gte" label="&gt;=" />
+                </ya-select>
+              </td>
+              <td style="width: 30%">
+                <input type="text" formControlName="value" />
+              </td>
+              <td style="white-space: nowrap">
+                <ya-icon-action
+                  icon="keyboard_arrow_down"
+                  [disabled]="last"
+                  (click)="moveComparisonGroupDown(i)" />
+                <ya-icon-action
+                  icon="keyboard_arrow_up"
+                  [disabled]="first"
+                  (click)="moveComparisonGroupUp(i)" />
+                <ya-text-action icon="delete" (click)="removeComparisonGroup(i)">
+                  DELETE
+                </ya-text-action>
+              </td>
+            </tr>
+          }
+          <tr>
+            <td colspan="1">
+              <ya-button icon="add_circle" (click)="addComparisonGroup()">Add</ya-button>
+            </td>
+          </tr>
+        </table>
+      </ya-stepper-step>
+
+      <ya-stepper-step label="Timing">
+        <ya-field label="Delay (milliseconds)">
+          <input type="number" formControlName="delay" />
+          <span class="hint">Initial delay before verifying the condition</span>
+        </ya-field>
+
+        <ya-field label="Timeout (milliseconds)">
+          <input type="number" formControlName="timeout" />
+          <span class="hint">Maximum wait time before aborting the verification</span>
+        </ya-field>
+      </ya-stepper-step>
+
+      <ya-stepper-step label="Comment">
+        <app-markdown-input formControlName="comment" />
+      </ya-stepper-step>
+    </ya-stepper>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div style="flex: 1 1 auto"></div>
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">
+    {{ data.edit ? "UPDATE" : "ADD TO STACK" }}
+  </ya-button>
+</mat-dialog-actions>
+```
+
+### `edit-verify-entry-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/edit-verify-entry-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule, YaStepper, YaStepperStep } from '@yamcs/webapp-sdk';
+import { AppMarkdownInput } from '../../../shared/markdown-input/markdown-input.component';
+import { AppParameterInput } from '../../../shared/parameter-input/parameter-input.component';
+import { StackedVerifyEntry } from '../stack-file/StackedEntry';
+
+@Component({
+  selector: 'app-edit-verify-entry-dialog',
+  templateUrl: './edit-verify-entry-dialog.component.html',
+  styleUrl: './edit-verify-entry-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AppMarkdownInput,
+    AppParameterInput,
+    YaStepper,
+    YaStepperStep,
+    WebappSdkModule,
+  ],
+})
+export class EditVerifyEntryDialogComponent {
+  form: FormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<EditVerifyEntryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA)
+    readonly data: { edit: boolean; entry?: StackedVerifyEntry },
+  ) {
+    this.form = new FormGroup({
+      condition: new FormArray([]),
+      delay: new FormControl(0, [Validators.required]),
+      timeout: new FormControl(''),
+      comment: new FormControl(''),
+    });
+
+    if (data.entry) {
+      const condition = data.entry.condition || [];
+      for (const comparison of condition) {
+        this.addComparisonGroup();
+      }
+
+      this.form.setValue({
+        condition: condition,
+        delay: data.entry.delay ?? 0,
+        timeout: data.entry.timeout || '',
+        comment: data.entry.comment || '',
+      });
+    }
+
+    // At least one blank line
+    if (!this.conditionFormArray.length) {
+      this.addComparisonGroup();
+    }
+  }
+
+  get conditionFormArray() {
+    return this.form.controls.condition as FormArray;
+  }
+
+  get comparisonGroups() {
+    return this.conditionFormArray.controls;
+  }
+
+  addComparisonGroup() {
+    this.conditionFormArray.push(
+      new FormGroup({
+        parameter: new FormControl('', [Validators.required]),
+        operator: new FormControl('eq', [Validators.required]),
+        value: new FormControl('', [Validators.required]),
+      }),
+    );
+  }
+
+  removeComparisonGroup(idx: number) {
+    this.conditionFormArray.removeAt(idx);
+  }
+
+  moveComparisonGroupDown(idx: number) {
+    const control = this.conditionFormArray.controls[idx];
+    this.conditionFormArray.removeAt(idx);
+    this.conditionFormArray.insert(idx + 1, control);
+  }
+
+  moveComparisonGroupUp(idx: number) {
+    const control = this.conditionFormArray.controls[idx];
+    this.conditionFormArray.removeAt(idx);
+    this.conditionFormArray.insert(idx - 1, control);
+  }
+
+  save() {
+    const { value } = this.form;
+    const result: { [key: string]: any } = {
+      condition: value.condition,
+      delay: Math.max(value.delay, 0),
+      comment: value.comment,
+    };
+    if (value.timeout !== '' && value.timeout !== null) {
+      result.timeout = Math.max(value.timeout, 0);
+    }
+    this.dialogRef.close(result);
+  }
+}
+```

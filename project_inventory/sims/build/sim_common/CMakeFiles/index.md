@@ -3,7 +3,7 @@
 
 **경로:** `sims/build/sim_common/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,18 @@ nos3-all-simulators.dir/index
 nos3-sim-cmdbus-bridge.dir/index
 nos3-single-simulator.dir/index
 sim_common.dir/index
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/sim_common/CMakeFiles/nos3-all-simulators.dir/`](nos3-all-simulators.dir/index) — 폴더
-- [`sims/build/sim_common/CMakeFiles/nos3-sim-cmdbus-bridge.dir/`](nos3-sim-cmdbus-bridge.dir/index) — 폴더
-- [`sims/build/sim_common/CMakeFiles/nos3-single-simulator.dir/`](nos3-single-simulator.dir/index) — 폴더
-- [`sims/build/sim_common/CMakeFiles/sim_common.dir/`](sim_common.dir/index) — 폴더
-- [`sims/build/sim_common/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `sims/build/sim_common/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `sims/build/sim_common/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

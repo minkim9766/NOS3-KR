@@ -3,30 +3,1111 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `file-transfer-icon.component.css`
 
-file--file-transfer-icon.component.css
-file--file-transfer-icon.component.html
-file--file-transfer-icon.component.ts
-file--file-transfer-list.component.css
-file--file-transfer-list.component.html
-file--file-transfer-list.component.ts
-file--file-transfer.datasource.ts
-file--FileTransferBuffer.ts
-file--TransferItem.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-icon.component.css`
+
+
+```css
+.completed {
+  color: #00c752;
+}
+
+.running {
+  animation: yspin 2s infinite linear;
+}
+
+.cancelling {
+  color: var(--y-warning-color);
+  animation: yspin 2s infinite linear;
+}
+
+.failed {
+  color: var(--y-error-color);
+}
+
+.paused {
+  animation: yblink 1s linear infinite;
+}
+
+@keyframes yblink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes yspin {
+  0% {
+    -webkit-transform: rotate(0deg) scaleX(-1);
+    transform: rotate(0deg) scaleX(-1);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg) scaleX(-1);
+    transform: rotate(359deg) scaleX(-1);
+  }
+}
 ```
 
-## 항목
+### `file-transfer-icon.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-icon.component.css`](file--file-transfer-icon.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-icon.component.html`](file--file-transfer-icon.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-icon.component.ts`](file--file-transfer-icon.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-list.component.css`](file--file-transfer-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-list.component.html`](file--file-transfer-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-list.component.ts`](file--file-transfer-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer.datasource.ts`](file--file-transfer.datasource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/FileTransferBuffer.ts`](file--FileTransferBuffer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/TransferItem.ts`](file--TransferItem.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-icon.component.html`
+
+
+```html
+@if (transfer(); as transfer) {
+  @if (transfer.state === "COMPLETED") {
+    <mat-icon class="completed" [matTooltip]="transfer.state">check_circle</mat-icon>
+  } @else if (transfer.state === "RUNNING") {
+    <mat-icon class="running" [matTooltip]="transfer.state">cached</mat-icon>
+  } @else if (transfer.state === "FAILED") {
+    <mat-icon class="failed" [matTooltip]="transfer.state">highlight_off</mat-icon>
+  } @else if (transfer.state === "CANCELLING") {
+    <mat-icon class="cancelling" [matTooltip]="transfer.state">cached</mat-icon>
+  } @else if (transfer.state === "PAUSED") {
+    <mat-icon class="paused" [matTooltip]="transfer.state">pause_circle</mat-icon>
+  } @else if (transfer.state === "QUEUED") {
+    <mat-icon [matTooltip]="transfer.state">pending</mat-icon>
+  }
+}
+```
+
+### `file-transfer-icon.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-icon.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Transfer, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-file-transfer-icon',
+  templateUrl: './file-transfer-icon.component.html',
+  styleUrl: './file-transfer-icon.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class FileTransferIconComponent {
+  transfer = input.required<Transfer>();
+}
+```
+
+### `file-transfer-list.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-list.component.css`
+
+
+```css
+tr.item-row:not(.nodetail) td {
+  border-bottom-width: 0;
+}
+
+tr.item-detail td {
+  padding-left: 40px !important;
+}
+
+.detail-layout {
+  display: flex;
+  align-items: center;
+}
+
+.detail-layout > * {
+  margin-left: 20px;
+}
+
+.error {
+  color: var(--y-error-color);
+}
+
+.file-column {
+  white-space: normal !important;
+  min-width: 250px !important;
+  max-width: 250px !important;
+  overflow-wrap: break-word;
+}
+
+tr.upload td {
+  background-color: #f7f7f7;
+}
+```
+
+### `file-transfer-list.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="File transfer">
+    @if (services().length) {
+      <ya-page-button
+        [matMenuTriggerFor]="serviceMenu"
+        primary="true"
+        dropdown="true"
+        icon="file_copy">
+        {{ service()?.name || "select service" }}
+      </ya-page-button>
+      <mat-menu #serviceMenu="matMenu" class="ya-menu">
+        @for (service of services(); track service) {
+          <button mat-menu-item (click)="switchService(service)">
+            {{ service.name }}
+          </button>
+        }
+      </mat-menu>
+    }
+
+    @if (service(); as service) {
+      @if (
+        mayControlFileTransfers() && (service.capabilities.download || service.capabilities.upload)
+      ) {
+        <ya-page-button
+          (clicked)="showCreateTransferDialog(service)"
+          [icon]="
+            service.capabilities.download && service.capabilities.upload
+              ? 'cloud'
+              : service.capabilities.upload
+                ? 'cloud_upload'
+                : 'cloud_download'
+          ">
+          New
+          {{
+            service.capabilities.download && service.capabilities.upload
+              ? "transfer"
+              : service.capabilities.upload
+                ? "upload"
+                : "download"
+          }}
+        </ya-page-button>
+      }
+    }
+  </ya-instance-toolbar>
+
+  <div class="table-wrapper">
+    <ya-panel>
+      <app-file-transfer-tabs />
+
+      <ya-filter-bar [formGroup]="filterForm" style="margin-top: 16px">
+        <ya-select [options]="directionOptions" formControlName="direction" />
+        <ya-multi-select
+          [options]="stateOptions"
+          formControlName="state"
+          emptyOption="Any status" />
+        <ya-select [options]="localEntityOptions()" formControlName="localEntityId" />
+        <ya-select [options]="remoteEntityOptions()" formControlName="remoteEntityId" />
+        <ya-select [options]="intervalOptions" icon="access_time" formControlName="interval" />
+        @if (filterForm.value["interval"] === "CUSTOM") {
+          <ya-date-time-input formControlName="customStart" />
+          <ya-date-time-input formControlName="customStop" />
+          <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+        } @else {
+          <ya-button (click)="jumpToNow()">Jump to now</ya-button>
+        }
+      </ya-filter-bar>
+
+      <table mat-table [dataSource]="dataSource" class="ya-data-table expand" multiTemplateDataRows>
+        <ng-container matColumnDef="startTime">
+          <th mat-header-cell *matHeaderCellDef>Started</th>
+          <td mat-cell *matCellDef="let item" style="white-space: nowrap">
+            {{ item.startTime | datetime }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="localEntity">
+          <th mat-header-cell *matHeaderCellDef>Local entity</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.localEntity?.name ?? item.localEntity?.id ?? "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="localFile">
+          <th mat-header-cell *matHeaderCellDef>Local file</th>
+          <td mat-cell *matCellDef="let item" class="file-column">
+            @if ((item.direction === "DOWNLOAD" && item.state !== "COMPLETED") || !item.objectUrl) {
+              <span>
+                {{ (item.objectName | storageUrl: item.bucket) || "-" }}
+              </span>
+            } @else {
+              <a [href]="item.objectUrl" download>
+                {{ (item.objectName | storageUrl: item.bucket) || "-" }}
+              </a>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="direction">
+          <th mat-header-cell *matHeaderCellDef>Direction</th>
+          <td mat-cell *matCellDef="let item" style="text-align: center">
+            @if (item.direction === "DOWNLOAD") {
+              <mat-icon>west</mat-icon>
+            }
+            @if (item.direction === "UPLOAD") {
+              <mat-icon class="upload">east</mat-icon>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="remoteEntity">
+          <th mat-header-cell *matHeaderCellDef>Remote entity</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.remoteEntity?.name ?? item.remoteEntity?.id ?? "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="remoteFile">
+          <th mat-header-cell *matHeaderCellDef>Remote file</th>
+          <td mat-cell *matCellDef="let item" class="file-column">
+            {{ item.remotePath || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef>Size</th>
+          <td mat-cell *matCellDef="let item">
+            {{ (item.totalSize | formatBytes) ?? "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef class="status"></th>
+          <td mat-cell *matCellDef="let item" class="status">
+            <app-file-transfer-icon [transfer]="item" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="transferred">
+          <th mat-header-cell *matHeaderCellDef>Transferred</th>
+          <td mat-cell *matCellDef="let item">
+            {{ (item.sizeTransferred | formatBytes) ?? "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="transferType">
+          <th mat-header-cell *matHeaderCellDef>Transfer type</th>
+          <td mat-cell *matCellDef="let item">{{ item.transferType || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let item">
+            @if (service()?.capabilities?.pauseResume) {
+              @if (item.state === "RUNNING") {
+                <ya-text-action icon="pause_circle_outline" (click)="pauseTransfer(item)">
+                  PAUSE
+                </ya-text-action>
+              }
+              @if (item.state === "PAUSED") {
+                <ya-text-action icon="play_circle_outline" (click)="resumeTransfer(item)">
+                  RESUME
+                </ya-text-action>
+              }
+            }
+            @if (item.state !== "COMPLETED" && item.state !== "FAILED") {
+              <ya-text-action icon="not_interested" (click)="cancelTransfer(item)">
+                CANCEL
+              </ya-text-action>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="detail">
+          <td
+            mat-cell
+            *matCellDef="let transfer"
+            [attr.colspan]="(displayedColumns$ | async)!.length">
+            <div class="detail-layout">
+              @if (
+                $any(transfer).state === "RUNNING" ||
+                $any(transfer).state === "PAUSED" ||
+                $any(transfer).state === "CANCELLING"
+              ) {
+                <ya-progress width="200px" [value]="transferPercent($any(transfer))" [total]="1" />
+              }
+              <span>{{ $any(transfer).sizeTransferred | formatBytes }}</span>
+              @if ($any(transfer).failureReason) {
+                <span class="error">
+                  {{ $any(transfer).failureReason }}
+                </span>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns$ | async"
+          class="item-row"
+          [class.upload]="row.direction === 'UPLOAD'"
+          [class.nodetail]="row.state === 'COMPLETED'"></tr>
+        <tr
+          mat-row
+          class="item-detail"
+          [class.upload]="row.direction === 'UPLOAD'"
+          *matRowDef="let row; columns: ['detail']; when: isIncomplete"></tr>
+      </table>
+
+      @if (!services().length) {
+        <ya-empty-message headerTitle="File Transfer">
+          <p>This instance has no file transfer services configured.</p>
+        </ya-empty-message>
+      }
+    </ya-panel>
+  </div>
+</ya-instance-page>
+```
+
+### `file-transfer-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer-list.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  Signal,
+  computed,
+  input,
+  signal,
+} from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuthService,
+  FileTransferService,
+  GetFileTransfersOptions,
+  MessageService,
+  Synchronizer,
+  Transfer,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { FileTransferTabsComponent } from '../file-transfer-tabs/file-transfer-tabs.component';
+import { TransferFileDialogComponent } from '../transfer-file-dialog/transfer-file-dialog.component';
+import { FileTransferIconComponent } from './file-transfer-icon.component';
+import { FileTransferDataSource } from './file-transfer.datasource';
+
+const defaultInterval = 'NO_LIMIT';
+
+@Component({
+  selector: 'app-file-transfer-list',
+  templateUrl: './file-transfer-list.component.html',
+  styleUrl: './file-transfer-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    FileTransferIconComponent,
+    FileTransferTabsComponent,
+    WebappSdkModule,
+  ],
+})
+export class FileTransferListComponent implements OnInit {
+  services = input.required<FileTransferService[]>();
+  requestedServiceName = input<string | null>(null, { alias: 'service' });
+  requestedService = computed(() => {
+    // Respect the requested service (from query param)
+    // But default to the first if unspecified.
+    let service = null;
+    const services = this.services();
+    for (const candidate of services) {
+      if (this.requestedServiceName() === candidate.name) {
+        service = candidate;
+        break;
+      }
+    }
+    if (!service && !this.requestedServiceName()) {
+      service = services.length ? services[0] : null;
+    }
+    return service;
+  });
+
+  service = signal<FileTransferService | null>(null);
+
+  localEntityOptions: Signal<YaSelectOption[]> = computed(() => {
+    const options = [{ id: 'ANY', label: 'Any local entity' }];
+    for (const entity of this.service()?.localEntities || []) {
+      options.push({ id: String(entity.id), label: entity.name });
+    }
+    return options;
+  });
+
+  remoteEntityOptions: Signal<YaSelectOption[]> = computed(() => {
+    const options = [{ id: 'ANY', label: 'Any remote entity' }];
+    for (const entity of this.service()?.remoteEntities || []) {
+      options.push({ id: String(entity.id), label: entity.name });
+    }
+    return options;
+  });
+
+  isIncomplete = (index: number, transfer: Transfer) => {
+    return transfer.state !== 'COMPLETED';
+  };
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new UntypedFormGroup({
+    interval: new UntypedFormControl(defaultInterval),
+    customStart: new UntypedFormControl(null),
+    customStop: new UntypedFormControl(null),
+    direction: new UntypedFormControl('ANY'),
+    state: new UntypedFormControl([]),
+    localEntityId: new UntypedFormControl('ANY'),
+    remoteEntityId: new UntypedFormControl('ANY'),
+  });
+
+  intervalOptions: YaSelectOption[] = [
+    { id: 'PT1H', label: 'Last hour' },
+    { id: 'PT6H', label: 'Last 6 hours' },
+    { id: 'P1D', label: 'Last 24 hours' },
+    { id: 'NO_LIMIT', label: 'No limit' },
+    { id: 'CUSTOM', label: 'Custom', group: true },
+  ];
+
+  directionOptions: YaSelectOption[] = [
+    { id: 'ANY', label: 'Any direction' },
+    { id: 'DOWNLOAD', label: 'Download' },
+    { id: 'UPLOAD', label: 'Upload' },
+  ];
+
+  stateOptions: YaSelectOption[] = [
+    { id: 'QUEUED', label: 'Queued' },
+    { id: 'RUNNING', label: 'Running' },
+    { id: 'PAUSED', label: 'Paused' },
+    { id: 'CANCELLING', label: 'Cancelling' },
+    { id: 'FAILED', label: 'Failed' },
+    { id: 'COMPLETED', label: 'Completed' },
+  ];
+
+  defaultColumns = [
+    'status',
+    'startTime',
+    'localEntity',
+    'localFile',
+    'direction',
+    'remoteEntity',
+    'remoteFile',
+    'size',
+    'actions',
+  ];
+
+  displayedColumns$ = new BehaviorSubject<string[]>([]);
+
+  dataSource: FileTransferDataSource;
+
+  private state: string[] = [];
+  private direction: string;
+  private localEntityId: string;
+  private remoteEntityId: string;
+
+  constructor(
+    title: Title,
+    readonly yamcs: YamcsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    synchronizer: Synchronizer,
+  ) {
+    title.setTitle('File transfer');
+    const storageClient = yamcs.createStorageClient();
+    this.dataSource = new FileTransferDataSource(
+      yamcs,
+      synchronizer,
+      storageClient,
+    );
+  }
+
+  ngOnInit() {
+    const initialService = this.requestedService();
+    this.switchService(initialService);
+  }
+
+  switchService(service: FileTransferService | null) {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        service: service?.name || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+
+    this.dataSource.stopStreaming();
+    this.service.set(service);
+    if (service) {
+      this.dataSource.startStreaming(service);
+    }
+
+    const displayedColumns = [...this.defaultColumns];
+    if (service?.capabilities?.hasTransferType) {
+      displayedColumns.splice(displayedColumns.length - 1, 0, 'transferType');
+    }
+    this.displayedColumns$.next(displayedColumns);
+
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm.get('direction')!.valueChanges.forEach((direction) => {
+      this.direction = direction !== 'ANY' ? direction : null;
+      this.loadData();
+    });
+
+    this.filterForm.get('state')!.valueChanges.forEach((state) => {
+      this.state = state;
+      this.loadData();
+    });
+
+    this.filterForm
+      .get('localEntityId')!
+      .valueChanges.forEach((localEntityId) => {
+        this.localEntityId = localEntityId !== 'ANY' ? localEntityId : null;
+        this.loadData();
+      });
+
+    this.filterForm
+      .get('remoteEntityId')!
+      .valueChanges.forEach((remoteEntityId) => {
+        this.remoteEntityId = remoteEntityId !== 'ANY' ? remoteEntityId : null;
+        this.loadData();
+      });
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('direction')) {
+      this.direction = queryParams.get('direction')!;
+      this.filterForm.get('direction')!.setValue(this.direction);
+    }
+    if (queryParams.has('state')) {
+      this.state = queryParams.getAll('state')!;
+      this.filterForm.get('state')!.setValue(this.state);
+    }
+    if (queryParams.has('localEntityId')) {
+      this.localEntityId = queryParams.get('localEntityId')!;
+      this.filterForm.get('localEntityId')!.setValue(this.localEntityId);
+    }
+    if (queryParams.has('remoteEntityId')) {
+      this.remoteEntityId = queryParams.get('remoteEntityId')!;
+      this.filterForm.get('remoteEntityId')!.setValue(this.remoteEntityId);
+    }
+    if (queryParams.has('interval')) {
+      this.appliedInterval = queryParams.get('interval')!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = queryParams.get('customStart')!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = utils.toDate(customStart);
+        const customStop = queryParams.get('customStop')!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = utils.toDate(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = null;
+      this.validStart = null;
+    }
+  }
+
+  mayControlFileTransfers() {
+    return this.authService
+      .getUser()!
+      .hasSystemPrivilege('ControlFileTransfers');
+  }
+
+  showCreateTransferDialog(service: FileTransferService) {
+    this.dialog.open(TransferFileDialogComponent, {
+      width: '70%',
+      height: '100%',
+      autoFocus: false,
+      position: {
+        right: '0',
+      },
+      panelClass: 'dialog-full-size',
+      data: { service },
+    });
+  }
+
+  jumpToNow() {
+    this.filterForm.get('interval')!.setValue('NO_LIMIT');
+  }
+
+  applyCustomDates() {
+    this.validStart = utils.toDate(this.filterForm.value['customStart']);
+    this.validStop = utils.toDate(this.filterForm.value['customStop']);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  loadData() {
+    this.updateURL();
+    const options: GetFileTransfersOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+    if (this.direction) {
+      options.direction = this.direction as any;
+    }
+    if (this.localEntityId) {
+      options.localEntityId = this.localEntityId as any;
+    }
+    if (this.remoteEntityId) {
+      options.remoteEntityId = this.remoteEntityId as any;
+    }
+    if (this.state.length) {
+      options.state = this.state;
+    }
+
+    const service = this.service();
+    if (service) {
+      this.dataSource
+        .loadTransfers(service, options)
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        direction: this.direction || null,
+        state: this.state.length ? this.state : null,
+        localEntityId: this.localEntityId || null,
+        remoteEntityId: this.remoteEntityId || null,
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStart']
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStop']
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  transferPercent(transfer: Transfer) {
+    return transfer.totalSize != 0
+      ? transfer.sizeTransferred / transfer.totalSize
+      : 0;
+  }
+
+  pauseTransfer(transfer: Transfer) {
+    const id = transfer.id;
+    const serviceName = this.service()!.name;
+    this.yamcs.yamcsClient
+      .pauseFileTransfer(this.yamcs.instance!, serviceName, id)
+      .catch((err) => {
+        this.messageService.showError(err);
+      });
+  }
+
+  resumeTransfer(transfer: Transfer) {
+    const id = transfer.id;
+    const serviceName = this.service()!.name;
+    this.yamcs.yamcsClient
+      .resumeFileTransfer(this.yamcs.instance!, serviceName, id)
+      .catch((err) => {
+        this.messageService.showError(err);
+      });
+  }
+
+  cancelTransfer(transfer: Transfer) {
+    const id = transfer.id;
+    const serviceName = this.service()!.name;
+    this.yamcs.yamcsClient
+      .cancelFileTransfer(this.yamcs.instance!, serviceName, id)
+      .catch((err) => {
+        this.messageService.showError(err);
+      });
+  }
+}
+```
+
+### `file-transfer.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/file-transfer.datasource.ts`
+
+
+```typescript
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import {
+  FileTransferService,
+  GetFileTransfersOptions,
+  StorageClient,
+  Synchronizer,
+  Transfer,
+  TransferSubscription,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { FileTransferBuffer } from './FileTransferBuffer';
+import { TransferItem } from './TransferItem';
+
+export class FileTransferDataSource extends DataSource<TransferItem> {
+  pageSize = 100;
+  options: GetFileTransfersOptions;
+
+  transfers$ = new BehaviorSubject<TransferItem[]>([]);
+  private buffer: FileTransferBuffer;
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+  public streaming$ = new BehaviorSubject<boolean>(false);
+
+  private realtimeSubscription: TransferSubscription;
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+    private storageClient: StorageClient,
+  ) {
+    super();
+    this.syncSubscription = synchronizer.sync(() => {
+      if (this.buffer.dirty && !this.loading$.getValue()) {
+        this.emitTransfers();
+        this.buffer.dirty = false;
+      }
+    });
+
+    this.buffer = new FileTransferBuffer(() => {
+      this.buffer.compact(500);
+    });
+  }
+
+  override connect(
+    collectionViewer: CollectionViewer,
+  ): Observable<readonly TransferItem[]> {
+    return this.transfers$;
+  }
+
+  private emitTransfers() {
+    const transfers = this.buffer.snapshot();
+    this.transfers$.next(transfers);
+  }
+
+  loadTransfers(
+    service: FileTransferService,
+    options: GetFileTransfersOptions,
+  ) {
+    this.loading$.next(true);
+    return Promise.all([
+      this.loadPage(service, {
+        ...options,
+        limit: this.pageSize,
+      }),
+    ]).then((results) => {
+      const transfers = results[0].map((transfer) => this.toItem(transfer));
+
+      this.loading$.next(false);
+      this.buffer.reset();
+      this.buffer.addArchiveData(transfers);
+
+      // Quick emit, don't wait on sync tick
+      this.emitTransfers();
+
+      return transfers;
+    });
+  }
+
+  private loadPage(
+    service: FileTransferService,
+    options: GetFileTransfersOptions,
+  ) {
+    this.options = options;
+    return this.yamcs.yamcsClient
+      .getFileTransfers(this.yamcs.instance!, service.name, options)
+      .then((page) => {
+        return page.transfers || [];
+      });
+  }
+
+  startStreaming(service: FileTransferService) {
+    this.streaming$.next(true);
+    this.realtimeSubscription =
+      this.yamcs.yamcsClient.createTransferSubscription(
+        {
+          instance: this.yamcs.instance!,
+          serviceName: service.name,
+          ongoingOnly: true,
+        },
+        (transfer) => {
+          if (!this.loading$.getValue() && this.matchesFilter(transfer)) {
+            this.buffer.addRealtimeTransfer(this.toItem(transfer));
+          }
+        },
+      );
+  }
+
+  private toItem(transfer: Transfer): TransferItem {
+    const objectUrl = transfer.objectName
+      ? this.storageClient.getObjectURL(transfer.bucket, transfer.objectName)
+      : '';
+    return new TransferItem(transfer, objectUrl);
+  }
+
+  private matchesFilter(item: Transfer) {
+    if (this.options) {
+      if (this.options.direction) {
+        if (item.direction !== this.options.direction) {
+          return false;
+        }
+      }
+      if (this.options.localEntityId) {
+        if (item.localEntity.id !== this.options.localEntityId) {
+          return false;
+        }
+      }
+      if (this.options.remoteEntityId) {
+        if (item.remoteEntity.id !== this.options.remoteEntityId) {
+          return false;
+        }
+      }
+      if (this.options.state?.length) {
+        if (this.options.state.indexOf(item.state) === -1) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  stopStreaming() {
+    this.realtimeSubscription?.cancel();
+    this.streaming$.next(false);
+  }
+
+  override disconnect(collectionViewer: CollectionViewer): void {
+    this.stopStreaming();
+    this.syncSubscription?.unsubscribe();
+    this.transfers$.complete();
+    this.loading$.complete();
+    this.streaming$.complete();
+  }
+}
+```
+
+### `FileTransferBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/FileTransferBuffer.ts`
+
+
+```typescript
+import { TransferItem } from './TransferItem';
+
+export type WatermarkObserver = () => void;
+
+/**
+ * Combines archive transfers obtained via REST
+ * with realtime transfers obtained via WebSocket.
+ *
+ * This class does not care about whether archive data and
+ * realtime data is connected. Both sets are joined and
+ * sorted under all conditions.
+ */
+export class FileTransferBuffer {
+  public dirty = false;
+
+  private archiveTransfers: TransferItem[] = [];
+
+  private realtimeBuffer: (TransferItem | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+
+  constructor(private watermarkObserver: WatermarkObserver) {
+    this.realtimeBuffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  addArchiveData(transfers: TransferItem[]) {
+    this.archiveTransfers = this.archiveTransfers.concat(transfers);
+    this.dirty = true;
+  }
+
+  addRealtimeTransfer(transfer: TransferItem) {
+    if (this.pointer < this.bufferSize) {
+      this.realtimeBuffer[this.pointer] = transfer;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.alreadyWarned = true;
+        this.watermarkObserver();
+      }
+      this.pointer = this.pointer + 1;
+    }
+    this.dirty = true;
+  }
+
+  reset() {
+    this.archiveTransfers = [];
+    this.realtimeBuffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+    this.dirty = true;
+  }
+
+  snapshot(): TransferItem[] {
+    const splicedTransfers = [...this.archiveTransfers];
+    this.realtimeBuffer.map((transfer) => {
+      if (!transfer) return;
+
+      const existingIndex = splicedTransfers.findIndex(
+        (a) => a.id === transfer.id,
+      );
+      if (existingIndex === -1) {
+        splicedTransfers.push(transfer);
+      } else {
+        splicedTransfers[existingIndex] = transfer;
+      }
+    });
+
+    splicedTransfers.sort((a, b) => {
+      const time1 = a.creationTime || a.startTime || '';
+      const time2 = b.creationTime || b.startTime || '';
+      return time2.localeCompare(time1);
+    });
+    return splicedTransfers;
+  }
+
+  /**
+   * Transfers the realtime buffer into the archive buffer, and
+   * reduces its size to a set limit. The oldest transfers (based
+   * on generation time) are removed first.
+   */
+  compact(limit: number) {
+    const snapshot = this.snapshot();
+    snapshot.length = Math.min(limit, snapshot.length);
+    this.reset();
+    this.archiveTransfers = snapshot;
+    this.dirty = true;
+  }
+}
+```
+
+### `TransferItem.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/TransferItem.ts`
+
+
+```typescript
+import { Transfer } from '@yamcs/webapp-sdk';
+
+export class TransferItem implements Transfer {
+  constructor(
+    public transfer: Transfer,
+    public objectUrl: string,
+  ) {}
+
+  get id() {
+    return this.transfer.id;
+  }
+
+  get creationTime() {
+    return this.transfer.creationTime;
+  }
+
+  get startTime() {
+    return this.transfer.startTime;
+  }
+
+  get direction() {
+    return this.transfer.direction;
+  }
+
+  get localEntity() {
+    return this.transfer.localEntity;
+  }
+
+  get remoteEntity() {
+    return this.transfer.remoteEntity;
+  }
+
+  get state() {
+    return this.transfer.state;
+  }
+
+  get bucket() {
+    return this.transfer.bucket;
+  }
+
+  get objectName() {
+    return this.transfer.objectName;
+  }
+
+  get remotePath() {
+    return this.transfer.remotePath;
+  }
+
+  get totalSize() {
+    return this.transfer.totalSize;
+  }
+
+  get sizeTransferred() {
+    return this.transfer.sizeTransferred;
+  }
+
+  get failureReason() {
+    return this.transfer.failureReason;
+  }
+
+  get transferType() {
+    return this.transfer.transferType;
+  }
+}
+```

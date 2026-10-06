@@ -3,18 +3,387 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `active-alarm-list.component.css`
 
-file--active-alarm-list.component.css
-file--active-alarm-list.component.html
-file--active-alarm-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/active-alarm-list.component.css`
+
+
+```css
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+mat-row {
+  cursor: pointer;
+}
+
+mat-row:hover {
+  background: #fafafa;
+}
 ```
 
-## 항목
+### `active-alarm-list.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/active-alarm-list.component.css`](file--active-alarm-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/active-alarm-list.component.html`](file--active-alarm-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/active-alarm-list.component.ts`](file--active-alarm-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/active-alarm-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      Alarms
+      <ya-help>
+        An alarm can be in these states:
+        <table class="ya-data-table">
+          <tr>
+            <td width="1">
+              <mat-icon class="icon16" style="vertical-align: middle">
+                notification_important
+              </mat-icon>
+            </td>
+            <td>The alarm is unacknowledged and the cause of the alarm still exists.</td>
+          </tr>
+          <tr>
+            <td>
+              <mat-icon class="icon16" style="vertical-align: middle">notifications_none</mat-icon>
+            </td>
+            <td>
+              The alarm is unacknowledged and the cause that generated the alarm no longer exists.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-icon class="icon16" style="vertical-align: middle">check_circle</mat-icon>
+            </td>
+            <td>The alarm is acknowledged and the cause of the alarm still exists.</td>
+          </tr>
+          <tr>
+            <td>
+              <mat-icon class="icon16" style="vertical-align: middle">
+                check_circle_outline
+              </mat-icon>
+            </td>
+            <td>
+              The alarm is acknowledged and the cause that generated the alarm no longer exists.
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <mat-icon class="icon16" style="vertical-align: middle">timer</mat-icon>
+            </td>
+            <td>The alarm was shelved.</td>
+          </tr>
+        </table>
+      </ya-help>
+    </ng-template>
+
+    @if (mayControlAlarms()) {
+      <ya-page-button
+        (clicked)="acknowledgeAlarms(selection.selected)"
+        [disabled]="!mayControlSelection()"
+        icon="notifications_off">
+        Acknowledge
+      </ya-page-button>
+    }
+    @if (mayControlAlarms()) {
+      <ya-page-button
+        (clicked)="shelveAlarms(selection.selected)"
+        [disabled]="!mayControlSelection()"
+        icon="timer">
+        Shelve
+      </ya-page-button>
+    }
+  </ya-instance-toolbar>
+
+  <ya-detail-pane>
+    @if (detailAlarm$ | async; as detailAlarm) {
+      <ya-detail-toolbar>Alarm detail</ya-detail-toolbar>
+      <div style="padding: 0 16px">
+        <app-alarm-detail
+          [alarm]="detailAlarm"
+          [mayControl]="mayControlAlarms()"
+          (acknowledgeAlarm)="acknowledgeAlarms([$event])"
+          (shelveAlarm)="shelveAlarms([$event])"
+          (unshelveAlarm)="unshelveAlarms([$event])"
+          (clearAlarm)="clearAlarms([$event])" />
+      </div>
+    } @else {
+      <ya-detail-toolbar>Select an alarm</ya-detail-toolbar>
+    }
+  </ya-detail-pane>
+
+  <div class="table-wrapper">
+    @if (dataSource) {
+      <ya-panel>
+        <app-alarms-page-tabs />
+
+        <dl class="dl-horizontal">
+          <dt>Unacknowledged alarms:</dt>
+          <dd>
+            <strong>{{ (dataSource.unacknowledgedAlarms$ | async)?.length }}</strong>
+          </dd>
+          <dt>Acknowledged alarms:</dt>
+          <dd>
+            <strong>{{ (dataSource.acknowledgedAlarms$ | async)?.length }}</strong>
+          </dd>
+          <dt>Shelved alarms:</dt>
+          <dd>
+            <strong>{{ (dataSource.shelvedAlarms$ | async)?.length }}</strong>
+          </dd>
+        </dl>
+
+        <ya-filter-bar [formGroup]="filterForm">
+          <ya-search-filter formControlName="filter" placeholder="Filter by text search" />
+          <ya-select [options]="viewOptions" formControlName="view" />
+        </ya-filter-bar>
+
+        <app-alarms-table
+          [dataSource]="dataSource"
+          [selection]="selection"
+          [view]="view$ | async"
+          [mayControl]="mayControlAlarms()"
+          (acknowledgeAlarm)="acknowledgeAlarms([$event])"
+          (shelveAlarm)="shelveAlarms([$event])"
+          (unshelveAlarm)="unshelveAlarms([$event])" />
+      </ya-panel>
+    }
+  </div>
+</ya-instance-page>
+```
+
+### `active-alarm-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/active-alarm-list.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import {
+  Alarm,
+  BaseComponent,
+  TrackBySelectionModel,
+  WebappSdkModule,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { AcknowledgeAlarmDialogComponent } from '../acknowledge-alarm-dialog/acknowledge-alarm-dialog.component';
+import { AlarmDetailComponent } from '../alarm-detail/alarm-detail.component';
+import { AlarmsPageTabsComponent } from '../alarms-page-tabs/alarms-page-tabs.component';
+import { AlarmsTableComponent } from '../alarms-table/alarm-table.component';
+import { AlarmsDataSource } from '../alarms.datasource';
+import { ShelveAlarmDialogComponent } from '../shelve-alarm-dialog/shelve-alarm-dialog.component';
+
+@Component({
+  templateUrl: './active-alarm-list.component.html',
+  styleUrl: './active-alarm-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AlarmDetailComponent,
+    AlarmsPageTabsComponent,
+    AlarmsTableComponent,
+    WebappSdkModule,
+  ],
+})
+export class ActiveAlarmListComponent
+  extends BaseComponent
+  implements OnDestroy
+{
+  filterForm = new UntypedFormGroup({
+    filter: new UntypedFormControl(),
+    view: new UntypedFormControl('standard'),
+  });
+
+  // Alarm to show in detail pane (only on single selection)
+  detailAlarm$ = new BehaviorSubject<Alarm | null>(null);
+
+  dataSource: AlarmsDataSource;
+  selection = new TrackBySelectionModel<Alarm>(
+    (index: number, alarm: Alarm) => {
+      return `${alarm.triggerTime}__${alarm.id.namespace}__${alarm.id.name}__${alarm.seqNum}`;
+    },
+    false,
+    [],
+  );
+
+  viewOptions: YaSelectOption[] = [
+    { id: 'standard', label: 'Standard view (ack & unack)' },
+    { id: 'unacknowledged', label: 'Unacknowledged alarms' },
+    { id: 'acknowledged', label: 'Acknowledged alarms' },
+    { id: 'shelved', label: 'Shelved alarms' },
+    { id: 'all', label: 'All alarms' },
+  ];
+
+  private selectionSubscription: Subscription;
+  private alarmsSubscription: Subscription;
+
+  // Would prefer to use formGroup, but when using valueChanges this
+  // only is updated after the callback...
+  view$ = new BehaviorSubject('standard');
+  private filter: string;
+
+  constructor(
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+  ) {
+    super();
+    this.setTitle('Alarms');
+    this.selectionSubscription = this.selection.changed.subscribe(() => {
+      const selected = this.selection.selected;
+      if (selected.length === 1) {
+        this.detailAlarm$.next(selected[0]);
+      } else {
+        this.detailAlarm$.next(null);
+      }
+    });
+
+    this.dataSource = new AlarmsDataSource(this.yamcs, false);
+    this.dataSource.loadAlarms();
+
+    this.alarmsSubscription = this.dataSource.alarms$.subscribe((alarms) => {
+      this.selection.matchNewValues(alarms);
+
+      // Update detail pane
+      const detailAlarm = this.detailAlarm$.value;
+      if (detailAlarm) {
+        for (const alarm of alarms) {
+          if (this.isSameAlarm(alarm, detailAlarm)) {
+            this.detailAlarm$.next(alarm);
+            break;
+          }
+        }
+      }
+    });
+
+    this.initializeOptions();
+
+    this.filterForm
+      .get('filter')!
+      .valueChanges.pipe(debounceTime(400))
+      .forEach((filter) => {
+        this.filter = filter;
+        this.updateURL();
+        this.dataSource.setFilter(filter);
+      });
+
+    this.filterForm.get('view')!.valueChanges.forEach((view) => {
+      this.view$.next(view);
+      this.updateURL();
+      this.selection.clear();
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filter = queryParams.get('filter') || '';
+      this.filterForm.get('filter')!.setValue(this.filter);
+    }
+    if (queryParams.has('view')) {
+      const view = queryParams.get('view')!;
+      this.view$.next(view);
+      this.filterForm.get('view')!.setValue(view);
+    }
+  }
+
+  private isSameAlarm(alarm1: Alarm, alarm2: Alarm) {
+    return (
+      alarm1.seqNum === alarm2.seqNum &&
+      alarm1.id.namespace === alarm2.id.namespace &&
+      alarm1.id.name === alarm2.id.name &&
+      alarm1.triggerTime === alarm2.triggerTime
+    );
+  }
+
+  acknowledgeAlarms(alarms: Alarm[]) {
+    this.dialog
+      .open(AcknowledgeAlarmDialogComponent, {
+        width: '400px',
+        data: { alarms },
+      })
+      .afterClosed()
+      .subscribe(() => this.selection.clear());
+  }
+
+  shelveAlarms(alarms: Alarm[]) {
+    this.dialog
+      .open(ShelveAlarmDialogComponent, {
+        width: '400px',
+        data: { alarms },
+      })
+      .afterClosed()
+      .subscribe(() => this.selection.clear());
+  }
+
+  unshelveAlarms(alarms: Alarm[]) {
+    for (const alarm of alarms) {
+      const alarmName =
+        alarm.id.namespace + (alarm.id.name ? '/' + alarm.id.name : '');
+      this.yamcs.yamcsClient
+        .unshelveAlarm(
+          this.yamcs.instance!,
+          this.yamcs.processor!,
+          alarmName,
+          alarm.seqNum,
+        )
+        .then(() => this.selection.clear())
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+
+  clearAlarms(alarms: Alarm[]) {
+    for (const alarm of alarms) {
+      const alarmName =
+        alarm.id.namespace + (alarm.id.name ? '/' + alarm.id.name : '');
+      this.yamcs.yamcsClient.clearAlarm(
+        this.yamcs.instance!,
+        this.yamcs.processor!,
+        alarmName,
+        alarm.seqNum,
+        {},
+      );
+    }
+  }
+
+  mayControlAlarms() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlAlarms');
+  }
+
+  mayControlSelection() {
+    const { selected } = this.selection;
+    if (!selected.length) {
+      return false;
+    }
+    for (const alarm of selected) {
+      if (alarm.readonly) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: this.filter || null,
+        view: this.view$.value || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  ngOnDestroy() {
+    this.selectionSubscription?.unsubscribe();
+    this.alarmsSubscription?.unsubscribe();
+  }
+}
+```

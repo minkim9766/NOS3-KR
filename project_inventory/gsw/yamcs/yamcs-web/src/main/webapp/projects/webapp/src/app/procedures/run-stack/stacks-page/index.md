@@ -3,14 +3,28 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacks-page/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stacks-page.component.ts`
 
-file--stacks-page.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacks-page/stacks-page.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+/**
+ * Placeholder just to work around being able to capture file paths via
+ * angular router '**' wildcard, rather than being forced to use
+ * query parameters.
+ */
+
+@Component({
+  selector: 'app-stacks-page',
+  template: '<router-outlet />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
+})
+export class StacksPageComponent {}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacks-page/stacks-page.component.ts`](file--stacks-page.component.ts) — UTF-8 텍스트 파일 본문 포함

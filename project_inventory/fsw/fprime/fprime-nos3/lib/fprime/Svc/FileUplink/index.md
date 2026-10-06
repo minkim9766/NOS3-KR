@@ -3,34 +3,831 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--Events.fppi
-file--File.cpp
-file--FileUplink.cpp
-file--FileUplink.fpp
-file--FileUplink.hpp
-file--Telemetry.fppi
-file--Warnings.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/FileUplink.cpp`](file--FileUplink.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/FileUplink.fpp`](file--FileUplink.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/FileUplink.hpp`](file--FileUplink.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/Warnings.cpp`](file--Warnings.cpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/.gitignore`
+
+
+```text
+#Ignore Test Outputs
+dest.bin
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FileUplink.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FileUplink.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/File.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Warnings.cpp"
+)
+set(MOD_DEPS
+  Os
+  Fw/Buffer
+  Fw/FilePacket
+  Utils/Hash
+  CFDP/Checksum
+)
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FileUplink.fpp"
+  ${CMAKE_CURRENT_LIST_DIR}/test/ut/FileUplinkTester.cpp
+  ${CMAKE_CURRENT_LIST_DIR}/test/ut/FileUplinkMain.cpp
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/Events.fppi`
+
+
+```text
+@ During receipt of a file, the computed checksum value did not match the stored value
+event BadChecksum(
+                   fileName: string size 40 @< The file name
+                   computed: U32 @< The computed value
+                   read: U32 @< The value read
+                 ) \
+  severity warning high \
+  id 0 \
+  format "Bad checksum value during receipt of file {}: computed 0x{x}, read 0x{x}"
+
+@ An error occurred opening a file
+event FileOpenError(
+                     fileName: string size 40 @< The name of the file
+                   ) \
+  severity warning high \
+  id 1 \
+  format "Could not open file {}"
+
+@ The File Uplink component successfully received a file
+event FileReceived(
+                    fileName: string size 40 @< The name of the file
+                  ) \
+  severity activity high \
+  id 2 \
+  format "Received file {}"
+
+@ An error occurred writing to a file
+event FileWriteError(
+                      fileName: string size 40 @< The name of the file
+                    ) \
+  severity warning high \
+  id 3 \
+  format "Could not write to file {}" \
+  throttle 5
+
+@ The File Uplink component received a packet with a type that was invalid for the current receive mode
+event InvalidReceiveMode(
+                          packetType: FwPacketDescriptorType @< The type of the packet received
+                          mode: U32 @< The receive mode
+                        ) \
+  severity warning high \
+  id 4 \
+  format "Packet type {} received in mode {}" \
+  throttle 5
+
+@ During receipt of a file, the File Uplink component encountered a packet with offset and size out of bounds for the current file
+event PacketOutOfBounds(
+                         packetIndex: U32 @< The sequence index of the packet
+                         fileName: string size 40 @< The name of the file
+                       ) \
+  severity warning high \
+  id 5 \
+  format "Packet {} out of bounds for file {}" \
+  throttle 5
+
+@ The File Uplink component encountered an out-of-order packet during file receipt
+event PacketOutOfOrder(
+                        packetIndex: U32 @< The sequence index of the out-of-order packet
+                        lastPacketIndex: U32 @< The sequence index of the last packet received before the out-of-order packet
+                      ) \
+  severity warning high \
+  id 6 \
+  format "Received packet {} after packet {}" \
+  throttle 20
+
+@ The File Uplink component encountered a duplicate packet during file receipt
+event PacketDuplicate(
+                        packetIndex: U32 @< The sequence index of the duplicate packet
+                      ) \
+  severity warning high \
+  id 7 \
+  format "Received a duplicate of packet {}" \
+  throttle 20
+
+@ The File Uplink component received a CANCEL packet
+event UplinkCanceled \
+  severity activity high \
+  id 8 \
+  format "Received CANCEL packet"
+
+@ Error decoding file packet
+event DecodeError(
+                   status: I32 @< The sequence index of the out-of-order packet
+                 ) \
+  severity warning high \
+  id 9 \
+  format "Unable to decode file packet. Status: {}"
+
+@ Invalid packet received
+event InvalidPacketReceived(
+                   packetType: FwPacketDescriptorType @< The packet type received
+                 ) \
+  severity warning high \
+  id 10 \
+  format "Invalid packet received. Wrong packet type: {}"
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/File.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  File.cpp
+// \author bocchino
+// \brief  cpp file for FileUplink::File
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Svc/FileUplink/FileUplink.hpp>
+
+namespace Svc {
+
+Os::File::Status FileUplink::File ::open(const Fw::FilePacket::StartPacket& startPacket) {
+    const U32 length = startPacket.getDestinationPath().getLength();
+    char path[Fw::FilePacket::PathName::MAX_LENGTH + 1];
+    memcpy(path, startPacket.getDestinationPath().getValue(), length);
+    path[length] = 0;
+    Fw::LogStringArg logStringArg(path);
+    this->name = logStringArg;
+    this->size = startPacket.getFileSize();
+    CFDP::Checksum checksum;
+    this->m_checksum = checksum;
+    return this->osFile.open(path, Os::File::OPEN_WRITE);
+}
+
+Os::File::Status FileUplink::File ::write(const U8* const data, const U32 byteOffset, const U32 length) {
+    Os::File::Status status;
+    status = this->osFile.seek(byteOffset, Os::File::SeekType::ABSOLUTE);
+    if (status != Os::File::OP_OK) {
+        return status;
+    }
+
+    FwSizeType intLength = length;
+    // Note: not waiting for the file write to finish
+    status = this->osFile.write(data, intLength, Os::File::WaitType::NO_WAIT);
+    if (status != Os::File::OP_OK) {
+        return status;
+    }
+
+    FW_ASSERT(static_cast<U32>(intLength) == length, static_cast<FwAssertArgType>(intLength));
+    this->m_checksum.update(data, byteOffset, length);
+    return Os::File::OP_OK;
+}
+
+}  // namespace Svc
+```
+
+### `FileUplink.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/FileUplink.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FileUplink.cpp
+// \author bocchino
+// \brief  cpp file for FileUplink component implementation class
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/Com/ComPacket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/FileUplink/FileUplink.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+FileUplink ::FileUplink(const char* const name)
+    : FileUplinkComponentBase(name),
+      m_receiveMode(START),
+      m_lastSequenceIndex(0),
+      m_lastPacketWriteStatus(Os::File::MAX_STATUS),
+      m_filesReceived(this),
+      m_packetsReceived(this),
+      m_warnings(this) {}
+
+FileUplink ::~FileUplink() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FileUplink ::bufferSendIn_handler(const FwIndexType portNum, Fw::Buffer& buffer) {
+    // If packet is too small to contain a packet type, log + deallocate and return
+    if (buffer.getSize() < sizeof(FwPacketDescriptorType)) {
+        this->log_WARNING_HI_InvalidPacketReceived(Fw::ComPacketType::FW_PACKET_UNKNOWN);
+        this->bufferSendOut_out(0, buffer);
+        return;
+    }
+
+    // Read the packet type from the packet buffer
+    FwPacketDescriptorType packetType;
+    Fw::SerializeStatus status = buffer.getDeserializer().deserialize(packetType);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // If packet type is not a file packet, log + deallocate and return
+    if (packetType != Fw::ComPacketType::FW_PACKET_FILE) {
+        this->log_WARNING_HI_InvalidPacketReceived(packetType);
+        this->bufferSendOut_out(0, buffer);
+        return;
+    }
+
+    // Deserialize the file packet contents into Fw::FilePacket (remove packet type token)
+    Fw::Buffer packetBuffer(buffer.getData() + sizeof(packetType),
+                            buffer.getSize() - static_cast<Fw::Buffer::SizeType>(sizeof(packetType)));
+    Fw::FilePacket filePacket;
+    status = filePacket.fromBuffer(packetBuffer);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        this->log_WARNING_HI_DecodeError(status);
+    } else {
+        Fw::FilePacket::Type header_type = filePacket.asHeader().getType();
+        switch (header_type) {
+            case Fw::FilePacket::T_START:
+                this->handleStartPacket(filePacket.asStartPacket());
+                break;
+            case Fw::FilePacket::T_DATA:
+                this->handleDataPacket(filePacket.asDataPacket());
+                break;
+            case Fw::FilePacket::T_END:
+                this->handleEndPacket(filePacket.asEndPacket());
+                break;
+            case Fw::FilePacket::T_CANCEL:
+                this->handleCancelPacket();
+                break;
+            default:
+                FW_ASSERT(0);
+                break;
+        }
+    }
+    this->bufferSendOut_out(0, buffer);
+}
+
+void FileUplink ::pingIn_handler(const FwIndexType portNum, U32 key) {
+    // return key
+    this->pingOut_out(0, key);
+}
+
+// ----------------------------------------------------------------------
+// Private helper functions
+// ----------------------------------------------------------------------
+
+void FileUplink ::handleStartPacket(const Fw::FilePacket::StartPacket& startPacket) {
+    // Clear all event throttles in preparation for new start packet
+    this->log_WARNING_HI_FileWriteError_ThrottleClear();
+    this->log_WARNING_HI_InvalidReceiveMode_ThrottleClear();
+    this->log_WARNING_HI_PacketOutOfBounds_ThrottleClear();
+    this->log_WARNING_HI_PacketOutOfOrder_ThrottleClear();
+    this->m_packetsReceived.packetReceived();
+    if (this->m_receiveMode != START) {
+        this->m_file.osFile.close();
+        this->m_warnings.invalidReceiveMode(Fw::FilePacket::T_START);
+    }
+    const Os::File::Status status = this->m_file.open(startPacket);
+    if (status == Os::File::OP_OK) {
+        this->goToDataMode();
+    } else {
+        this->m_warnings.fileOpen(this->m_file.name);
+        this->goToStartMode();
+    }
+}
+
+void FileUplink ::handleDataPacket(const Fw::FilePacket::DataPacket& dataPacket) {
+    this->m_packetsReceived.packetReceived();
+    if (this->m_receiveMode != DATA) {
+        this->m_warnings.invalidReceiveMode(Fw::FilePacket::T_DATA);
+        return;
+    }
+
+    const U32 sequenceIndex = dataPacket.asHeader().getSequenceIndex();
+
+    // skip this packet if it is a duplicate and it has already been written
+    if (this->m_lastPacketWriteStatus == Os::File::OP_OK && this->checkDuplicatedPacket(sequenceIndex)) {
+        return;
+    }
+
+    this->checkSequenceIndex(sequenceIndex);
+    const U32 byteOffset = dataPacket.getByteOffset();
+    const U32 dataSize = dataPacket.getDataSize();
+    if (byteOffset + dataSize > this->m_file.size) {
+        this->m_warnings.packetOutOfBounds(sequenceIndex, this->m_file.name);
+        return;
+    }
+    const Os::File::Status status = this->m_file.write(dataPacket.getData(), byteOffset, dataSize);
+    if (status != Os::File::OP_OK) {
+        this->m_warnings.fileWrite(this->m_file.name);
+    }
+
+    this->m_lastPacketWriteStatus = status;
+}
+
+void FileUplink ::handleEndPacket(const Fw::FilePacket::EndPacket& endPacket) {
+    this->m_packetsReceived.packetReceived();
+    if (this->m_receiveMode == DATA) {
+        this->m_filesReceived.fileReceived();
+        this->checkSequenceIndex(endPacket.asHeader().getSequenceIndex());
+        this->compareChecksums(endPacket);
+        this->log_ACTIVITY_HI_FileReceived(this->m_file.name);
+    } else {
+        this->m_warnings.invalidReceiveMode(Fw::FilePacket::T_END);
+    }
+    this->goToStartMode();
+}
+
+void FileUplink ::handleCancelPacket() {
+    this->m_packetsReceived.packetReceived();
+    this->log_ACTIVITY_HI_UplinkCanceled();
+    this->goToStartMode();
+}
+
+void FileUplink ::checkSequenceIndex(const U32 sequenceIndex) {
+    if (sequenceIndex != this->m_lastSequenceIndex + 1) {
+        this->m_warnings.packetOutOfOrder(sequenceIndex, this->m_lastSequenceIndex);
+    }
+    this->m_lastSequenceIndex = sequenceIndex;
+}
+
+bool FileUplink ::checkDuplicatedPacket(const U32 sequenceIndex) {
+    // check for duplicate packet
+    if (sequenceIndex == this->m_lastSequenceIndex) {
+        this->m_warnings.packetDuplicate(sequenceIndex);
+        return true;
+    }
+
+    return false;
+}
+
+void FileUplink ::compareChecksums(const Fw::FilePacket::EndPacket& endPacket) {
+    CFDP::Checksum computed, stored;
+    this->m_file.getChecksum(computed);
+    endPacket.getChecksum(stored);
+    if (computed != stored) {
+        this->m_warnings.badChecksum(computed.getValue(), stored.getValue());
+    }
+}
+
+void FileUplink ::goToStartMode() {
+    this->m_file.osFile.close();
+    this->m_receiveMode = START;
+    this->m_lastSequenceIndex = 0;
+    this->m_lastPacketWriteStatus = Os::File::MAX_STATUS;
+}
+
+void FileUplink ::goToDataMode() {
+    this->m_receiveMode = DATA;
+    this->m_lastSequenceIndex = 0;
+    this->m_lastPacketWriteStatus = Os::File::MAX_STATUS;
+}
+
+}  // namespace Svc
+```
+
+### `FileUplink.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/FileUplink.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for uplinking files
+  active component FileUplink {
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    @ Buffer send in
+    async input port bufferSendIn: Fw.BufferSend
+
+    @ Buffer send out
+    output port bufferSendOut: Fw.BufferSend
+
+    @ Ping in
+    async input port pingIn: Svc.Ping
+
+    @ Ping out
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special Ports
+    # ----------------------------------------------------------------------
+
+    @ Time get
+    time get port timeCaller
+
+    @ Telemetry
+    telemetry port tlmOut
+
+    @ Event
+    event port eventOut
+
+    @ Text event
+    text event port LogText
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+  }
+
+}
+```
+
+### `FileUplink.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/FileUplink.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FileUplink.hpp
+// \author bocchino
+// \brief  hpp file for FileUplink component implementation class
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_FileUplink_HPP
+#define Svc_FileUplink_HPP
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Os/File.hpp>
+#include <Svc/FileUplink/FileUplinkComponentAc.hpp>
+
+namespace Svc {
+
+class FileUplink final : public FileUplinkComponentBase {
+    friend class FileUplinkTester;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The ReceiveMode type
+    typedef enum { START, DATA } ReceiveMode;
+
+    //! An object representing an incoming file
+    class File {
+        friend class FileUplinkTester;
+
+      public:
+        //! The file size
+        U32 size;
+
+        //! The file name
+        Fw::LogStringArg name;
+
+        //! The underlying OS file
+        Os::File osFile;
+
+      private:
+        //! The checksum for the file
+        ::CFDP::Checksum m_checksum;
+
+      public:
+        //! Open the OS file for writing and initialize the checksum
+        Os::File::Status open(const Fw::FilePacket::StartPacket& startPacket);
+
+        //! Write bytes into the OS file and update the checksum
+        Os::File::Status write(const U8* const data, const U32 byteOffset, const U32 length);
+
+        //! Get the checksum
+        void getChecksum(::CFDP::Checksum& checksum) { checksum = this->m_checksum; }
+    };
+
+    //! Object to record files received
+    class FilesReceived {
+        friend class FileUplinkTester;
+
+      public:
+        //! Construct a FilesReceived object
+        FilesReceived(FileUplink* const fileUplink) : m_received_files_counter(0), m_fileUplink(fileUplink) {}
+
+      public:
+        //! Record a received file
+        void fileReceived() {
+            ++this->m_received_files_counter;
+            this->m_fileUplink->tlmWrite_FilesReceived(m_received_files_counter);
+        }
+
+      private:
+        //! The total number of files received
+        U32 m_received_files_counter;
+
+        //! The enclosing FileUplink object
+        FileUplink* const m_fileUplink;
+    };
+
+    //! Object to record packets received
+    class PacketsReceived {
+        friend class FileUplinkTester;
+
+      public:
+        //! Construct a PacketsReceived object
+        PacketsReceived(FileUplink* const fileUplink) : m_received_packet_count(0), m_fileUplink(fileUplink) {}
+
+      public:
+        //! Record a packet received
+        void packetReceived() {
+            ++this->m_received_packet_count;
+            this->m_fileUplink->tlmWrite_PacketsReceived(m_received_packet_count);
+        }
+
+      private:
+        //! The total number of received packets
+        U32 m_received_packet_count;
+
+        //! The enclosing FileUplink object
+        FileUplink* const m_fileUplink;
+    };
+
+    //! Object to record warnings
+    class Warnings {
+        friend class FileUplinkTester;
+
+      public:
+        //! Construct a Warnings object
+        Warnings(FileUplink* const fileUplink) : m_warning_count(0), m_fileUplink(fileUplink) {}
+
+      public:
+        //! Record an Invalid Receive Mode warning
+        void invalidReceiveMode(const Fw::FilePacket::Type packetType);
+
+        //! Record a File Open warning
+        void fileOpen(Fw::LogStringArg& fileName);
+
+        //! Record a Packet Out of Bounds warning
+        void packetOutOfBounds(const U32 sequenceIndex, Fw::LogStringArg& fileName);
+
+        //! Record a Packet Out of Order warning
+        void packetOutOfOrder(const U32 sequenceIndex, const U32 lastSequenceIndex);
+
+        //! Record a Duplicate Packet warning
+        void packetDuplicate(const U32 sequenceIndex);
+
+        //! Record a File Write warning
+        void fileWrite(Fw::LogStringArg& fileName);
+
+        //! Record a Bad Checksum warning
+        void badChecksum(const U32 computed, const U32 read);
+
+      private:
+        //! Record a warning
+        void warning() {
+            ++this->m_warning_count;
+            this->m_fileUplink->tlmWrite_Warnings(m_warning_count);
+        }
+
+      private:
+        //! The total number of warnings
+        U32 m_warning_count;
+
+        //! The enclosing FileUplink object
+        FileUplink* const m_fileUplink;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FileUplink
+    //!
+    FileUplink(const char* const name  //!< The component name
+    );
+
+    //! Destroy object FileUplink
+    //!
+    ~FileUplink();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for bufferSendIn
+    //!
+    void bufferSendIn_handler(const FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& buffer          //!< Buffer wrapping data
+    );
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum, /*!< The port number*/
+                        U32 key                    /*!< Value to return to pinger*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper functions
+    // ----------------------------------------------------------------------
+
+    //! Handle a start packet
+    void handleStartPacket(const Fw::FilePacket::StartPacket& startPacket);
+
+    //! Handle a data packet
+    void handleDataPacket(const Fw::FilePacket::DataPacket& dataPacket);
+
+    //! Handle an end packet
+    void handleEndPacket(const Fw::FilePacket::EndPacket& endPacket);
+
+    //! Handle a cancel packet
+    void handleCancelPacket();
+
+    //! Check sequence index
+    void checkSequenceIndex(const U32 sequenceIndex);
+
+    //! Check if a received packet is a duplicate
+    bool checkDuplicatedPacket(const U32 sequenceIndex);
+
+    //! Compare checksums
+    void compareChecksums(const Fw::FilePacket::EndPacket& endPacket);
+
+    //! Go to START mode
+    void goToStartMode();
+
+    //! Go to DATA mode
+    void goToDataMode();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The receive mode
+    ReceiveMode m_receiveMode;
+
+    //! The sequence index of the last packet received
+    U32 m_lastSequenceIndex;
+
+    //! The write status of the last packet received
+    Os::File::Status m_lastPacketWriteStatus;
+
+    //! The file being assembled
+    File m_file;
+
+    //! The total number of files received
+    FilesReceived m_filesReceived;
+
+    //! The total number of cancel packets
+    PacketsReceived m_packetsReceived;
+
+    //! The total number of warnings
+    Warnings m_warnings;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/Telemetry.fppi`
+
+
+```text
+@ The total number of complete files received
+telemetry FilesReceived: U32 id 0
+
+@ The total number of packets received
+telemetry PacketsReceived: U32 id 1
+
+@ The total number of warnings issued
+telemetry Warnings: U32 id 2
+```
+
+### `Warnings.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/Warnings.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Warnings.cpp
+// \author bocchino
+// \brief  cpp file for FileUplink::Warnings
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Svc/FileUplink/FileUplink.hpp>
+
+namespace Svc {
+
+void FileUplink::Warnings ::invalidReceiveMode(const Fw::FilePacket::Type packetType) {
+    this->m_fileUplink->log_WARNING_HI_InvalidReceiveMode(static_cast<FwPacketDescriptorType>(packetType),
+                                                          static_cast<U32>(m_fileUplink->m_receiveMode));
+    this->warning();
+}
+
+void FileUplink::Warnings ::fileOpen(Fw::LogStringArg& fileName) {
+    this->m_fileUplink->log_WARNING_HI_FileOpenError(fileName);
+    this->warning();
+}
+
+void FileUplink::Warnings ::packetOutOfBounds(const U32 sequenceIndex, Fw::LogStringArg& fileName) {
+    this->m_fileUplink->log_WARNING_HI_PacketOutOfBounds(sequenceIndex, fileName);
+    this->warning();
+}
+
+void FileUplink::Warnings ::packetOutOfOrder(const U32 sequenceIndex, const U32 lastSequenceIndex) {
+    this->m_fileUplink->log_WARNING_HI_PacketOutOfOrder(sequenceIndex, lastSequenceIndex);
+    this->warning();
+}
+
+void FileUplink::Warnings ::packetDuplicate(const U32 sequenceIndex) {
+    this->m_fileUplink->log_WARNING_HI_PacketDuplicate(sequenceIndex);
+    this->warning();
+}
+
+void FileUplink::Warnings ::fileWrite(Fw::LogStringArg& fileName) {
+    this->m_fileUplink->log_WARNING_HI_FileWriteError(fileName);
+    this->warning();
+}
+
+void FileUplink::Warnings ::badChecksum(const U32 computed, const U32 read) {
+    this->m_fileUplink->log_WARNING_HI_BadChecksum(this->m_fileUplink->m_file.name, computed, read);
+    this->warning();
+}
+
+}  // namespace Svc
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,18 +11,408 @@
 docs/index
 test/index
 Types/index
-file--CMakeLists.txt
-file--DefaultPriorityQueue.cpp
-file--PriorityQueue.cpp
-file--PriorityQueue.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/Types/`](Types/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/DefaultPriorityQueue.cpp`](file--DefaultPriorityQueue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/PriorityQueue.cpp`](file--PriorityQueue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/PriorityQueue.hpp`](file--PriorityQueue.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Types")
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+#### Os/Generic/Queue Section ####
+register_fprime_module(
+    Os_Generic_PriorityQueue_Implementation
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/PriorityQueue.cpp"
+  HEADERS
+    "${CMAKE_CURRENT_LIST_DIR}/PriorityQueue.hpp"
+  DEPENDS
+    Fw_Types
+    Os_Generic_Types
+)
+register_fprime_implementation(
+    Os_Generic_PriorityQueue
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/DefaultPriorityQueue.cpp"
+  IMPLEMENTS
+    Os_Queue
+  DEPENDS
+    Fw_Types
+    Os_Generic_PriorityQueue_Implementation
+)
+
+register_fprime_ut(
+    PriorityQueueTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PriorityQueueTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/queue/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/queue/QueueRules.cpp"
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    Os
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    Os_Generic_PriorityQueue
+)
+if (TARGET PriorityQueueTest)
+    target_compile_options(PriorityQueueTest PRIVATE -Wno-conversion)
+    target_include_directories(PriorityQueueTest PRIVATE "${CMAKE_CURRENT_LIST_DIR}/test/ut")
+endif()
+```
+
+### `DefaultPriorityQueue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/DefaultPriorityQueue.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/DefaultFile.cpp
+// \brief sets default Os::Queue to generic priority queue implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Generic/PriorityQueue.hpp"
+#include "Os/Queue.hpp"
+
+namespace Os {
+QueueInterface* QueueInterface::getDelegate(QueueHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<QueueInterface, Os::Generic::PriorityQueue, QueueHandleStorage>(
+        aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `PriorityQueue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/PriorityQueue.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Generic/PriorityQueue.cpp
+// \brief priority queue implementation for Os::Queue
+// ======================================================================
+
+#include "PriorityQueue.hpp"
+#include <Fw/Types/Assert.hpp>
+#include <cstring>
+#include <new>
+
+namespace Os {
+namespace Generic {
+
+FwSizeType PriorityQueueHandle ::find_index() {
+    FwSizeType index = this->m_indices[this->m_startIndex % this->m_depth];
+    this->m_startIndex = (this->m_startIndex + 1) % this->m_depth;
+    return index;
+}
+
+void PriorityQueueHandle ::return_index(FwSizeType index) {
+    this->m_indices[this->m_stopIndex % this->m_depth] = index;
+    this->m_stopIndex = (this->m_stopIndex + 1) % this->m_depth;
+}
+
+void PriorityQueueHandle ::store_data(FwSizeType index, const U8* data, FwSizeType size) {
+    FW_ASSERT(size <= this->m_maxSize);
+    FW_ASSERT(index < this->m_depth);
+
+    FwSizeType offset = this->m_maxSize * index;
+    (void)::memcpy(this->m_data + offset, data, static_cast<size_t>(size));
+    this->m_sizes[index] = size;
+}
+
+void PriorityQueueHandle ::load_data(FwSizeType index, U8* destination, FwSizeType size) {
+    FW_ASSERT(size <= this->m_maxSize);
+    FW_ASSERT(index < this->m_depth);
+    FwSizeType offset = this->m_maxSize * index;
+    (void)::memcpy(destination, this->m_data + offset, static_cast<size_t>(size));
+}
+
+PriorityQueue::~PriorityQueue() {
+    delete[] this->m_handle.m_data;
+    delete[] this->m_handle.m_indices;
+    delete[] this->m_handle.m_sizes;
+}
+
+QueueInterface::Status PriorityQueue::create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) {
+    // Ensure we are created exactly once
+    FW_ASSERT(this->m_handle.m_indices == nullptr);
+    FW_ASSERT(this->m_handle.m_sizes == nullptr);
+    FW_ASSERT(this->m_handle.m_data == nullptr);
+
+    // Allocate indices list
+    FwSizeType* indices = new (std::nothrow) FwSizeType[depth];
+    if (indices == nullptr) {
+        return QueueInterface::Status::ALLOCATION_FAILED;
+    }
+    // Allocate sizes list or clean-up
+    FwSizeType* sizes = new (std::nothrow) FwSizeType[depth];
+    if (sizes == nullptr) {
+        delete[] indices;
+        return QueueInterface::Status::ALLOCATION_FAILED;
+    }
+    // Allocate sizes list or clean-up
+    U8* data = new (std::nothrow) U8[depth * messageSize];
+    if (data == nullptr) {
+        delete[] indices;
+        delete[] sizes;
+        return QueueInterface::Status::ALLOCATION_FAILED;
+    }
+    // Allocate max heap or clean-up
+    bool created = this->m_handle.m_heap.create(depth);
+    if (not created) {
+        delete[] indices;
+        delete[] sizes;
+        delete[] data;
+        return QueueInterface::Status::ALLOCATION_FAILED;
+    }
+    // Assign initial indices and sizes
+    for (FwSizeType i = 0; i < depth; i++) {
+        indices[i] = i;
+        sizes[i] = 0;
+    }
+    // Set local tracking variables
+    this->m_handle.m_maxSize = messageSize;
+    this->m_handle.m_indices = indices;
+    this->m_handle.m_data = data;
+    this->m_handle.m_sizes = sizes;
+    this->m_handle.m_startIndex = 0;
+    this->m_handle.m_stopIndex = 0;
+    this->m_handle.m_depth = depth;
+    this->m_handle.m_highMark = 0;
+
+    return QueueInterface::Status::OP_OK;
+}
+
+QueueInterface::Status PriorityQueue::send(const U8* buffer,
+                                           FwSizeType size,
+                                           FwQueuePriorityType priority,
+                                           QueueInterface::BlockingType blockType) {
+    // Check for sizing problem before locking
+    if (size > this->m_handle.m_maxSize) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    }
+    // Artificial block scope for scope lock ensuring an unlock in all cases and ensuring an unlock before notify
+    {
+        Os::ScopeLock lock(this->m_handle.m_data_lock);
+        if (this->m_handle.m_heap.isFull() and blockType == BlockingType::NONBLOCKING) {
+            return QueueInterface::Status::FULL;
+        }
+        // Will loop and block until full is false
+        while (this->m_handle.m_heap.isFull()) {
+            this->m_handle.m_full.wait(this->m_handle.m_data_lock);
+        }
+        FwSizeType index = this->m_handle.find_index();
+
+        // Space must exist, push must work
+        FW_ASSERT(this->m_handle.m_heap.push(priority, index));
+        this->m_handle.store_data(index, buffer, size);
+        this->m_handle.m_sizes[index] = size;
+        this->m_handle.m_highMark = FW_MAX(this->m_handle.m_highMark, this->getMessagesAvailable());
+    }
+    this->m_handle.m_empty.notify();
+    return QueueInterface::Status::OP_OK;
+}
+
+QueueInterface::Status PriorityQueue::receive(U8* destination,
+                                              FwSizeType capacity,
+                                              QueueInterface::BlockingType blockType,
+                                              FwSizeType& actualSize,
+                                              FwQueuePriorityType& priority) {
+    {
+        Os::ScopeLock lock(this->m_handle.m_data_lock);
+        if (this->m_handle.m_heap.isEmpty() and blockType == BlockingType::NONBLOCKING) {
+            return QueueInterface::Status::EMPTY;
+        }
+        // Loop and lock while empty
+        while (this->m_handle.m_heap.isEmpty()) {
+            this->m_handle.m_empty.wait(this->m_handle.m_data_lock);
+        }
+
+        FwSizeType index;
+        // Message must exist, so pop must pass and size must be valid
+        FW_ASSERT(this->m_handle.m_heap.pop(priority, index));
+        actualSize = this->m_handle.m_sizes[index];
+        FW_ASSERT(actualSize <= capacity);
+        this->m_handle.load_data(index, destination, actualSize);
+        this->m_handle.return_index(index);
+    }
+    this->m_handle.m_full.notify();
+    return QueueInterface::Status::OP_OK;
+}
+
+FwSizeType PriorityQueue::getMessagesAvailable() const {
+    return this->m_handle.m_heap.getSize();
+}
+
+FwSizeType PriorityQueue::getMessageHighWaterMark() const {
+    // Safe to cast away const in this context because scope lock will restore unlocked state on return
+    Os::ScopeLock lock(const_cast<Mutex&>(this->m_handle.m_data_lock));
+    return this->m_handle.m_highMark;
+}
+
+QueueHandle* PriorityQueue::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Generic
+}  // namespace Os
+```
+
+### `PriorityQueue.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/PriorityQueue.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Generic/PriorityQueue.hpp
+// \brief priority queue implementation definitions for Os::Queue
+// ======================================================================
+#include "Os/Condition.hpp"
+#include "Os/Generic/Types/MaxHeap.hpp"
+#include "Os/Mutex.hpp"
+#include "Os/Queue.hpp"
+#ifndef OS_GENERIC_PRIORITYQUEUE_HPP
+#define OS_GENERIC_PRIORITYQUEUE_HPP
+
+namespace Os {
+namespace Generic {
+
+//! \brief critical data stored for priority queue
+//!
+//! The priority queue has two essential data structures: a block of unordered memory storing message data and size. The
+//! queue also stores a circular list of indices into that memory tracking which slots are free and which are taken.
+//! These indices are ordered by a max heap data structure projecting priority on to the otherwise unordered data. Both
+//! the data region and index list have queue depth number of entries.
+struct PriorityQueueHandle : public QueueHandle {
+    Types::MaxHeap m_heap;            //!< MaxHeap data store for tracking priority
+    U8* m_data = nullptr;             //!< Pointer to data allocation
+    FwSizeType* m_indices = nullptr;  //!< List of indices into data
+    FwSizeType* m_sizes = nullptr;    //!< Size store for each method
+    FwSizeType m_depth = 0;           //!< Depth of the queue
+    FwSizeType m_startIndex = 0;      //!< Start index of the circular data structure
+    FwSizeType m_stopIndex = 0;       //!< End index of the circular data structure
+    FwSizeType m_maxSize = 0;         //!< Maximum size allowed of a message
+    FwSizeType m_highMark = 0;        //!< Message count high water mark
+    Os::Mutex m_data_lock;            //!< Lock against data manipulation
+    Os::ConditionVariable m_full;     //!< Queue full condition variable to support blocking
+    Os::ConditionVariable m_empty;    //!< Queue empty condition variable to support blocking
+
+    //!\brief find an available index to store data from the list
+    FwSizeType find_index();
+
+    //!\brief return index to the circular data structure
+    //!\param index: index to return to the list
+    void return_index(FwSizeType index);
+
+    //!\brief store data into a set index in the data store
+    void store_data(FwSizeType index, const U8* source, FwSizeType size);
+
+    //!\brief load data from a set index in the data store
+    void load_data(FwSizeType index, U8* destination, FwSizeType capacity);
+};
+//! \brief generic priority queue implementation
+//!
+//! \warning This Priority Queue is not ISR safe
+//!
+//! A generic implementation of a priority queue to support the Os::QueueInterface. This queue uses OSAL mutexes,
+//! and condition variables to provide for a task-safe blocking queue implementation. Data is stored in heap memory.
+//!
+//! \warning allocates memory on the heap
+class PriorityQueue : public Os::QueueInterface {
+  public:
+    //! \brief default queue interface constructor
+    PriorityQueue() = default;
+
+    //! \brief default queue destructor
+    virtual ~PriorityQueue();
+
+    //! \brief copy constructor is forbidden
+    PriorityQueue(const QueueInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    PriorityQueue(const QueueInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    PriorityQueue& operator=(const QueueInterface& other) override = delete;
+
+    //! \brief create queue storage
+    //!
+    //! Creates a queue ensuring sufficient storage to hold `depth` messages of `messageSize` size each.
+    //!
+    //! \warning allocates memory on the heap
+    //!
+    //! \param name: name of queue
+    //! \param depth: depth of queue in number of messages
+    //! \param messageSize: size of an individual message
+    //! \return: status of the creation
+    Status create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) override;
+
+    //! \brief send a message into the queue
+    //!
+    //! Send a message into the queue, providing the message data, size, priority, and blocking type. When
+    //! `blockType` is set to BLOCKING, this call will block on queue full. Otherwise, this will return an error
+    //! status on queue full.
+    //!
+    //! \warning It is invalid to send a null buffer
+    //! \warning This method will block if the queue is full and blockType is set to BLOCKING
+    //! \warning This method is not ISR safe
+    //!
+    //! \param buffer: message data
+    //! \param size: size of message data
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return: status of the send
+    Status send(const U8* buffer, FwSizeType size, FwQueuePriorityType priority, BlockingType blockType) override;
+
+    //! \brief receive a message from the queue
+    //!
+    //! Receive a message from the queue, providing the message destination, capacity, priority, and blocking type.
+    //! When `blockType` is set to BLOCKING, this call will block on queue empty. Otherwise, this will return an
+    //! error status on queue empty. Actual size received and priority of message is set on success status.
+    //!
+    //! \warning It is invalid to send a null buffer
+    //! \warning This method will block if the queue is full and blockType is set to BLOCKING
+    //!
+    //! \param destination: destination for message data
+    //! \param capacity: maximum size of message data
+    //! \param blockType: BLOCKING to wait for message or NONBLOCKING to return error when queue is empty
+    //! \param actualSize: (output) actual size of message read
+    //! \param priority: (output) priority of message read
+    //! \return: status of the send
+    Status receive(U8* destination,
+                   FwSizeType capacity,
+                   BlockingType blockType,
+                   FwSizeType& actualSize,
+                   FwQueuePriorityType& priority) override;
+
+    //! \brief get number of messages available
+    //!
+    //! \return number of messages available
+    FwSizeType getMessagesAvailable() const override;
+
+    //! \brief get maximum messages stored at any given time
+    //!
+    //! \warning This method is not ISR safe
+    //!
+    //! Returns the maximum number of messages in this queue at any given time. This is the high-water mark for this
+    //! queue.
+    //! \return queue message high-water mark
+    FwSizeType getMessageHighWaterMark() const override;
+
+    QueueHandle* getHandle() override;
+
+    PriorityQueueHandle m_handle;
+};
+}  // namespace Generic
+}  // namespace Os
+
+#endif  // OS_GENERIC_PRIORITYQUEUE_HPP
+```

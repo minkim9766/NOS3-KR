@@ -3,20 +3,30 @@
 
 **경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mugshots/index
-file--2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dd.csv
-file--2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dqe.csv
-file--2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_sue.csv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/mugshots/`](mugshots/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dd.csv`](file--2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dd.csv) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dqe.csv`](file--2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dqe.csv) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_sue.csv`](file--2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_sue.csv) — 빌드 산출물 (경로만)
+### `2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dd.csv`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dd.csv`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dqe.csv`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_dqe.csv`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_sue.csv`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000002/asdp/2021_02_03_dhm_true_low_chlamy_grayscale_lab_06_sue.csv`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

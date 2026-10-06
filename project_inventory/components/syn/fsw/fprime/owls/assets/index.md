@@ -3,7 +3,7 @@
 
 **경로:** `components/syn/fsw/fprime/owls/assets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -18,13 +18,4 @@ asdp000000006/index
 asdp000000007/index
 ```
 
-## 항목
-
-- [`components/syn/fsw/fprime/owls/assets/asdp000000000/`](asdp000000000/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000001/`](asdp000000001/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000002/`](asdp000000002/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000003/`](asdp000000003/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000004/`](asdp000000004/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000005/`](asdp000000005/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000006/`](asdp000000006/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000007/`](asdp000000007/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,26 +3,401 @@
 
 **경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `logging.properties`
 
-file--logging.properties
-file--processor.yaml
-file--trustStore
-file--yamcs.node1.yaml
-file--yamcs.node2.yaml
-file--yamcs.node3.yaml
-file--yamcs.yaml
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/logging.properties`
+
+
+```text
+#rename this file to logging.properties in order to debug the SLE functionality
+
+
+handlers = java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = ALL
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.ConsoleFormatter
+
+org.yamcs.level = INFO
+
+
+org.yamcs.replication.level = INFO
+
+#this will cause the events to be also logged
+org.yamcs.events.EventProducer.level = ALL
+
 ```
 
-## 항목
+### `processor.yaml`
 
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/trustStore`](file--trustStore) — 바이너리 (경로만)
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.node1.yaml`](file--yamcs.node1.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.node2.yaml`](file--yamcs.node2.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.node3.yaml`](file--yamcs.node3.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/processor.yaml`
+
+
+```yaml
+# this file defines the different processors
+# A processor is where TM/TC processing happens inside Yamcs.
+#
+# Each processor uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+
+realtime:
+  services:
+    - class: org.yamcs.StreamTmPacketProvider
+    - class: org.yamcs.StreamTcCommandReleaser
+    - class: org.yamcs.tctm.StreamParameterProvider
+    - class: org.yamcs.algorithms.AlgorithmManager
+    # implements provider of parameters from sys_param stream (these are collected and sent on this stream by SystemParametersService service)
+    - class: org.yamcs.parameter.LocalParameterManager
+  config:
+    generateEvents: true #generate events for errors in TM decoding and running algorithms
+    subscribeAll: true
+    #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+    alarm:
+      parameterCheck: true
+      parameterServer: enabled
+      eventServer: enabled
+    tmProcessor:
+      #if container entries fit outside the binary packet, setting this to true will cause the error to be ignored, otherwise an exception will be printed in the yamcs logs
+      ignoreOutOfContainerEntries: false
+    #record all the parameters that have initial values at the start of the processor
+    recordInitialValues: true
+    #record the local values
+    recordLocalValues: true
+
+
+#used to perform step by step archive replays to displays,etc
+# initiated via web interface or Yamcs Studio.
+# should be renamed to ArchiveReplay
+Archive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+
+#used by the ParameterArchive when rebuilding the parameter archive
+# no need for parameter cache
+ParameterArchive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+#used for performing archive retrievals via replays (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+```
+
+### `trustStore`
+
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/trustStore`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `yamcs.node1.yaml`
+
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.node1.yaml`
+
+
+```yaml
+services:
+    - class: org.yamcs.archive.XtceTmRecorder
+    - class: org.yamcs.archive.ParameterRecorder
+    - class: org.yamcs.archive.AlarmRecorder
+    - class: org.yamcs.archive.EventRecorder
+    - class: org.yamcs.archive.ReplayServer
+    - class: org.yamcs.archive.CcsdsTmIndex
+      args:
+          streams:
+              - tm_realtime
+              - tm_dump
+    - class: org.yamcs.parameter.SystemParametersService
+      args:
+          producers: ['jvm', 'fs']
+    - class: org.yamcs.ProcessorCreatorService
+      args: 
+          name: "realtime"
+          type: "realtime" 
+    - class: org.yamcs.archive.CommandHistoryRecorder
+    - class: org.yamcs.simulator.SimulatorCommander
+      args:
+          telnet:
+              port: 10023
+          tctm:
+              tmPort: 10015
+              tcPort: 10025
+              losPort: 10115
+              tm2Port: 10016
+      # Simulator can send some packets to test the performance of Yamcs. 
+      # Make sure the yamcs.simulator.yaml, mdb section contains a database generator for these packets, such that they are processed by Yamcs
+      # if numPackets is greater than 0, the simulator will send <numPackets> packets of size <packetSize> at each <interval> (in ms)
+          perfTest: 
+              numPackets: 0
+              packetSize: 1476 #length of the performance testing packets
+              interval: 10 
+    - class: org.yamcs.replication.ReplicationMaster
+      args:
+          tcpRole: server
+          streams: ["tm_realtime"]
+
+
+dataLinks:
+    - name: tm_realtime
+      class: org.yamcs.tctm.TcpTmDataLink
+      stream: tm_realtime
+      host: localhost
+      port: 10015
+      # Give the embedded simulator some time to boot up
+      initialDelay: 2000
+    - name: tc_sim
+      class: org.yamcs.tctm.TcpTcDataLink
+      stream: tc_realtime
+      host: localhost
+      port: 10025
+      # Give the embedded simulator smoe time to boot up
+      initialDelay: 2000
+      commandPostprocessorClassName: org.yamcs.tctm.IssCommandPostprocessor
+      commandPostprocessorArgs:
+          errorDetection:
+              type: 16-SUM
+          enforceEvenNumberOfBytes: true
+
+mdb:
+    # Configuration of the active loaders
+    # Valid loaders are: sheet, xtce or fully qualified name of the class
+    - type: "sheet"
+      spec: "mdb/simulator-ccsds.xls"
+      subLoaders:
+          - type: "sheet"
+            spec: "mdb/landing.xls"
+    #Loads the performance testing mission database
+    - type: "org.yamcs.simulator.PerfMdbLoader"
+      args:
+         numPackets: 100
+         packetSize: 1476
+
+#Configuration for streams created at server startup
+streamConfig:
+    tm:
+        - name: "tm_realtime"
+          processor: "realtime"
+        - name: "tm2_realtime"
+          rootContainer: "/YSS/SIMULATOR/tm2_container"
+          processor: "realtime"
+        - name: "tm_dump"
+    invalidTm: "invalid_tm_stream"
+    cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+    event: ["events_realtime", "events_dump"]
+    param: ["pp_realtime", "pp_tse", "sys_param", "proc_param"]
+    parameterAlarm: ["alarms_realtime"]
+    eventAlarm: ["event_alarms_realtime"]
+    tc:
+     - name: "tc_realtime"
+       processor: "realtime"
+```
+
+### `yamcs.node2.yaml`
+
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.node2.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+    args:
+      streams:
+        - tm_realtime
+        - tm_dump
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers: ['jvm', 'fs']
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime"
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.replication.ReplicationMaster
+    enabledAtStartup: false
+    args:
+        tcpRole: server
+        streams: ["tm_realtime"]
+  - class: org.yamcs.replication.ReplicationSlave
+    args:
+        tcpRole: client
+        enableTls: false
+        masterHost: localhost
+        masterPort: 8099
+        masterInstance: node1
+        streams: ["tm_realtime", "sys_param", "tm2_realtime"]
+
+
+dataLinks:
+  - name: tm_realtime
+    enabledAtStartup: false
+    class: org.yamcs.tctm.TcpTmDataLink
+    stream: tm_realtime
+    host: localhost
+    port: 10015
+    # Give the embedded simulator some time to boot up
+    initialDelay: 2000
+  - name: tc_sim
+    class: org.yamcs.tctm.TcpTcDataLink
+    stream: tc_realtime
+    host: localhost
+    port: 10025
+    # Give the embedded simulator smoe time to boot up
+    initialDelay: 2000
+    commandPostprocessorClassName: org.yamcs.tctm.IssCommandPostprocessor
+    commandPostprocessorArgs:
+        errorDetection:
+          type: 16-SUM
+        enforceEvenNumberOfBytes: true
+
+mdb:
+  # Configuration of the active loaders
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: "sheet"
+    spec: "mdb/simulator-ccsds.xls"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/landing.xls"
+
+#Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+    - name: "tm2_realtime"
+      rootContainer: "/YSS/SIMULATOR/tm2_container"
+      processor: "realtime"
+    - name: "tm_dump"
+  invalidTm: "invalid_tm_stream"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_tse", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc:
+     - name: "tc_realtime"
+       processor: "realtime"
+```
+
+### `yamcs.node3.yaml`
+
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.node3.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+    args:
+      streams:
+        - tm_realtime
+        - tm_dump
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers: ['jvm', 'fs']
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime"
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+  - class: org.yamcs.replication.ReplicationSlave
+    name: slave-to-node1
+    args:
+        tcpRole: client
+        masterHost: localhost
+        masterPort: 8099
+        masterInstance: node1
+        streams: ["tm_realtime"]
+  - class: org.yamcs.replication.ReplicationSlave
+    name: slave-to-node2
+    enabledAtStartup: false
+    args:
+        tcpRole: client
+        masterHost: localhost
+        masterPort: 8099
+        masterInstance: node2
+        streams: ["tm_realtime"]
+
+
+
+mdb:
+  # Configuration of the active loaders
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: "sheet"
+    spec: "mdb/simulator-ccsds.xls"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/landing.xls"
+
+#Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+    - name: "tm2_realtime"
+      rootContainer: "/YSS/SIMULATOR/tm2_container"
+      processor: "realtime"
+    - name: "tm_dump"
+  invalidTm: "invalid_tm_stream"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_tse", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc:
+     - name: "tc_realtime"
+       processor: "realtime"
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/etc/yamcs.yaml`
+
+
+```yaml
+# System-wide services
+services:
+  - class: org.yamcs.http.HttpServer
+  - class: org.yamcs.replication.ReplicationServer
+    args:
+      port: 8099
+      #tlsCert: /path/to/server.crt
+      #tlsKey: /path/to/server.key
+
+#instances (or domains). One yarch database will be created for each of them
+# instance specific properties go into the file yamcs.{instance}.yaml
+instances:
+  - node1
+  - node2
+  - node3
+
+dataDir: /storage/yamcs-data
+
+#set the serverId if you want something else than hostname to be used in system parameters generated by yamcs
+#serverId: yamcs1
+
+# Secret key unique to a particular Yamcs installation.
+# This is used to provide cryptographic signing.
+secretKey: "changeme"
+
+yamcs-web:
+  tag: REPLICATION2
+```

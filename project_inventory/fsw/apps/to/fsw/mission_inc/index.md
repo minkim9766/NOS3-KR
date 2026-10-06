@@ -3,16 +3,135 @@
 
 **경로:** `fsw/apps/to/fsw/mission_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `to_mission_cfg.h`
 
-file--to_mission_cfg.h
-file--to_perf_ids.h
+**경로:** `fsw/apps/to/fsw/mission_inc/to_mission_cfg.h`
+
+
+```c
+/******************************************************************************/
+/** \file  to_mission_cfg.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Mission Configuration Header File for TO Application
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - All Mission configuration files should be defined in apps/inc folder.
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*     - 2016-05-11 | Allen Brown | Updated headers
+*******************************************************************************/ 
+#ifndef _TO_MISSION_CFG_H_
+#define _TO_MISSION_CFG_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Pragmas
+*/
+
+/*
+** Local Defines
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+
+#include "to_perf_ids.h"
+#include "to_msgids.h"
+#include "to_msgdefs.h"
+
+/* Note, this header uses a mission name prefix convention.
+   This include may need to be altered. */
+#include "MISSION_to_types.h"
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _TO_MISSION_CFG_H_ */
+
+/*==============================================================================
+** End of file to_mission_cfg.h
+**============================================================================*/
+    
 ```
 
-## 항목
+### `to_perf_ids.h`
 
-- [`fsw/apps/to/fsw/mission_inc/to_mission_cfg.h`](file--to_mission_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/mission_inc/to_perf_ids.h`](file--to_perf_ids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/to/fsw/mission_inc/to_perf_ids.h`
+
+
+```c
+ /*************************************************************************
+ ** File:
+ **  to_perfids.h
+ **
+ **  Copyright © 2016 United States Government as represented by the 
+ **  Administrator of the National Aeronautics and Space Administration. 
+ **  All Other Rights Reserved.  
+ **
+ **  This software was created at NASA's Johnson Space Center.
+ **  This software is governed by the NASA Open Source Agreement and may be 
+ **  used, distributed and modified only pursuant to the terms of that 
+ **  agreement.
+ **
+ ** Purpose: 
+ **   This file contains the cFE performance ID's used by Telemetry Output
+ **
+ ** References:
+ **   Flight Software Branch C Coding Standard Version 1.2
+ **   CFS Development Standards Document
+ **
+ ** Notes:
+ **   1) XXX_PERF_ID is used to measure an application's performance on 
+ **      various functions.
+ **
+ **  \par Modification History:
+ **     - 2016-05-11 | Allen Brown | Initial Version
+ *************************************************************************/
+#ifndef _TO_PERF_IDS_H_
+#define _TO_PERF_IDS_H_
+
+#define TO_MAIN_TASK_PERF_ID        0x0072
+
+#endif /* _TO_PERF_IDS_H_ */
+
+/*=======================================================================================
+** End of file ci_perf_ids.h
+**=====================================================================================*/
+    
+```

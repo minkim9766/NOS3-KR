@@ -3,272 +3,12992 @@
 
 **경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 util/index
 xml/index
-file--AbsoluteTimeArgumentType.java
-file--AbsoluteTimeDataType.java
-file--AbsoluteTimeParameterType.java
-file--AggregateArgumentType.java
-file--AggregateDataType.java
-file--AggregateParameterType.java
-file--AlarmLevels.java
-file--AlarmRanges.java
-file--AlarmReportType.java
-file--AlarmType.java
-file--Algorithm.java
-file--AlgorithmCalibrator.java
-file--AncillaryData.java
-file--ANDedConditions.java
-file--Argument.java
-file--ArgumentAssignment.java
-file--ArgumentEntry.java
-file--ArgumentInstanceRef.java
-file--ArgumentType.java
-file--ArrayArgumentType.java
-file--ArrayDataType.java
-file--ArrayParameterEntry.java
-file--ArrayParameterType.java
-file--BaseDataType.java
-file--BaseTimeDataType.java
-file--BinaryArgumentType.java
-file--BinaryDataEncoding.java
-file--BinaryDataType.java
-file--BinaryParameterType.java
-file--BooleanArgumentType.java
-file--BooleanDataEncoding.java
-file--BooleanDataType.java
-file--BooleanExpression.java
-file--BooleanParameterType.java
-file--Calibrator.java
-file--CheckWindow.java
-file--CommandContainer.java
-file--CommandVerifier.java
-file--Comparison.java
-file--ComparisonList.java
-file--ComparisonOperatorType.java
-file--Condition.java
-file--Container.java
-file--ContainerEntry.java
-file--ContextCalibrator.java
-file--CustomAlgorithm.java
-file--DataEncoding.java
-file--DataSource.java
-file--DataType.java
-file--DynamicIntegerValue.java
-file--EnumeratedArgumentType.java
-file--EnumeratedDataType.java
-file--EnumeratedParameterType.java
-file--EnumerationAlarm.java
-file--EnumerationContextAlarm.java
-file--ExpressionList.java
-file--FixedIntegerValue.java
-file--FixedValueEntry.java
-file--FloatArgumentType.java
-file--FloatDataEncoding.java
-file--FloatDataType.java
-file--FloatingPointNotationType.java
-file--FloatParameterType.java
-file--FloatValidRange.java
-file--Header.java
-file--History.java
-file--IndirectParameterRefEntry.java
-file--InputParameter.java
-file--IntegerArgumentType.java
-file--IntegerDataEncoding.java
-file--IntegerDataType.java
-file--IntegerParameterType.java
-file--IntegerRange.java
-file--IntegerValidRange.java
-file--IntegerValue.java
-file--JavaExpressionCalibrator.java
-file--LinearAdjusment.java
-file--MatchCriteria.java
-file--MathAlgorithm.java
-file--MathOperation.java
-file--MathOperationCalibrator.java
-file--MathOperator.java
-file--Member.java
-file--MetaCommand.java
-file--NamedDescriptionIndex.java
-file--NameDescription.java
-file--NonStandardData.java
-file--NumberFormatType.java
-file--NumericAlarm.java
-file--NumericContextAlarm.java
-file--NumericDataType.java
-file--NumericParameterType.java
-file--OnParameterUpdateTrigger.java
-file--OnPeriodicRateTrigger.java
-file--OperatorType.java
-file--ORedConditions.java
-file--OutputParameter.java
-file--Parameter.java
-file--ParameterEntry.java
-file--ParameterInstanceRef.java
-file--ParameterOrArgumentRef.java
-file--ParameterType.java
-file--ParameterValueChange.java
-file--PathElement.java
-file--PolynomialCalibrator.java
-file--RadixType.java
-file--RateInStream.java
-file--ReferenceTime.java
-file--Repeat.java
-file--SequenceContainer.java
-file--SequenceEntry.java
-file--Significance.java
-file--SpaceSystem.java
-file--SplineCalibrator.java
-file--SplinePoint.java
-file--StringArgumentType.java
-file--StringDataEncoding.java
-file--StringDataType.java
-file--StringParameterType.java
-file--SystemParameter.java
-file--TimeEpoch.java
-file--TransmissionConstraint.java
-file--TriggeredMathOperation.java
-file--TriggerSetType.java
-file--UnitType.java
-file--ValueEnumeration.java
-file--ValueEnumerationRange.java
-file--XtceDb.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/`](util/index) — 폴더
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/xml/`](xml/index) — 폴더
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AbsoluteTimeArgumentType.java`](file--AbsoluteTimeArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AbsoluteTimeDataType.java`](file--AbsoluteTimeDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AbsoluteTimeParameterType.java`](file--AbsoluteTimeParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AggregateArgumentType.java`](file--AggregateArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AggregateDataType.java`](file--AggregateDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AggregateParameterType.java`](file--AggregateParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmLevels.java`](file--AlarmLevels.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmRanges.java`](file--AlarmRanges.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmReportType.java`](file--AlarmReportType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmType.java`](file--AlarmType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Algorithm.java`](file--Algorithm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlgorithmCalibrator.java`](file--AlgorithmCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AncillaryData.java`](file--AncillaryData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ANDedConditions.java`](file--ANDedConditions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Argument.java`](file--Argument.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentAssignment.java`](file--ArgumentAssignment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentEntry.java`](file--ArgumentEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentInstanceRef.java`](file--ArgumentInstanceRef.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentType.java`](file--ArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayArgumentType.java`](file--ArrayArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayDataType.java`](file--ArrayDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayParameterEntry.java`](file--ArrayParameterEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayParameterType.java`](file--ArrayParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BaseDataType.java`](file--BaseDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BaseTimeDataType.java`](file--BaseTimeDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryArgumentType.java`](file--BinaryArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryDataEncoding.java`](file--BinaryDataEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryDataType.java`](file--BinaryDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryParameterType.java`](file--BinaryParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanArgumentType.java`](file--BooleanArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanDataEncoding.java`](file--BooleanDataEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanDataType.java`](file--BooleanDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanExpression.java`](file--BooleanExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanParameterType.java`](file--BooleanParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Calibrator.java`](file--Calibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CheckWindow.java`](file--CheckWindow.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CommandContainer.java`](file--CommandContainer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CommandVerifier.java`](file--CommandVerifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Comparison.java`](file--Comparison.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ComparisonList.java`](file--ComparisonList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ComparisonOperatorType.java`](file--ComparisonOperatorType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Condition.java`](file--Condition.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Container.java`](file--Container.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ContainerEntry.java`](file--ContainerEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ContextCalibrator.java`](file--ContextCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CustomAlgorithm.java`](file--CustomAlgorithm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DataEncoding.java`](file--DataEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DataSource.java`](file--DataSource.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DataType.java`](file--DataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DynamicIntegerValue.java`](file--DynamicIntegerValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumeratedArgumentType.java`](file--EnumeratedArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumeratedDataType.java`](file--EnumeratedDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumeratedParameterType.java`](file--EnumeratedParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumerationAlarm.java`](file--EnumerationAlarm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumerationContextAlarm.java`](file--EnumerationContextAlarm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ExpressionList.java`](file--ExpressionList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FixedIntegerValue.java`](file--FixedIntegerValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FixedValueEntry.java`](file--FixedValueEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatArgumentType.java`](file--FloatArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatDataEncoding.java`](file--FloatDataEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatDataType.java`](file--FloatDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatingPointNotationType.java`](file--FloatingPointNotationType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatParameterType.java`](file--FloatParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatValidRange.java`](file--FloatValidRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Header.java`](file--Header.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/History.java`](file--History.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IndirectParameterRefEntry.java`](file--IndirectParameterRefEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/InputParameter.java`](file--InputParameter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerArgumentType.java`](file--IntegerArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerDataEncoding.java`](file--IntegerDataEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerDataType.java`](file--IntegerDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerParameterType.java`](file--IntegerParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerRange.java`](file--IntegerRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerValidRange.java`](file--IntegerValidRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerValue.java`](file--IntegerValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/JavaExpressionCalibrator.java`](file--JavaExpressionCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/LinearAdjusment.java`](file--LinearAdjusment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MatchCriteria.java`](file--MatchCriteria.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathAlgorithm.java`](file--MathAlgorithm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathOperation.java`](file--MathOperation.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathOperationCalibrator.java`](file--MathOperationCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathOperator.java`](file--MathOperator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Member.java`](file--Member.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MetaCommand.java`](file--MetaCommand.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NamedDescriptionIndex.java`](file--NamedDescriptionIndex.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NameDescription.java`](file--NameDescription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NonStandardData.java`](file--NonStandardData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumberFormatType.java`](file--NumberFormatType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericAlarm.java`](file--NumericAlarm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericContextAlarm.java`](file--NumericContextAlarm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericDataType.java`](file--NumericDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericParameterType.java`](file--NumericParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OnParameterUpdateTrigger.java`](file--OnParameterUpdateTrigger.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OnPeriodicRateTrigger.java`](file--OnPeriodicRateTrigger.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OperatorType.java`](file--OperatorType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ORedConditions.java`](file--ORedConditions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OutputParameter.java`](file--OutputParameter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Parameter.java`](file--Parameter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterEntry.java`](file--ParameterEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterInstanceRef.java`](file--ParameterInstanceRef.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterOrArgumentRef.java`](file--ParameterOrArgumentRef.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterType.java`](file--ParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterValueChange.java`](file--ParameterValueChange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/PathElement.java`](file--PathElement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/PolynomialCalibrator.java`](file--PolynomialCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/RadixType.java`](file--RadixType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/RateInStream.java`](file--RateInStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ReferenceTime.java`](file--ReferenceTime.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Repeat.java`](file--Repeat.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SequenceContainer.java`](file--SequenceContainer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SequenceEntry.java`](file--SequenceEntry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Significance.java`](file--Significance.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SpaceSystem.java`](file--SpaceSystem.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SplineCalibrator.java`](file--SplineCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SplinePoint.java`](file--SplinePoint.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringArgumentType.java`](file--StringArgumentType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringDataEncoding.java`](file--StringDataEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringDataType.java`](file--StringDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringParameterType.java`](file--StringParameterType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SystemParameter.java`](file--SystemParameter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TimeEpoch.java`](file--TimeEpoch.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TransmissionConstraint.java`](file--TransmissionConstraint.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TriggeredMathOperation.java`](file--TriggeredMathOperation.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TriggerSetType.java`](file--TriggerSetType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/UnitType.java`](file--UnitType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ValueEnumeration.java`](file--ValueEnumeration.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ValueEnumerationRange.java`](file--ValueEnumerationRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/XtceDb.java`](file--XtceDb.java) — UTF-8 텍스트 파일 본문 포함
+### `AbsoluteTimeArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AbsoluteTimeArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.Collections;
+import java.util.List;
+
+public class AbsoluteTimeArgumentType extends AbsoluteTimeDataType implements ArgumentType {
+    private static final long serialVersionUID = 1L;
+
+    public AbsoluteTimeArgumentType(Builder builder) {
+        super(builder);
+    }
+    
+    public AbsoluteTimeArgumentType(String name) {
+        super(name);
+    }
+
+    /**
+     * Copy constructor
+     */
+    public AbsoluteTimeArgumentType(AbsoluteTimeArgumentType t) {
+        super(t);
+    }
+
+
+    @Override
+    public List<UnitType> getUnitSet() {
+        return Collections.emptyList();
+    }
+
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+    
+    @Override
+    public String toString() {
+        return "AbsoluteTimeArgumentType name:" + name
+                + ((getReferenceTime() != null) ? ", referenceTime:" + getReferenceTime() : "");
+    }
+   
+    
+    public static class Builder extends AbsoluteTimeDataType.Builder<Builder> implements ArgumentType.Builder<Builder>{
+
+        public Builder() {
+        }
+
+        public Builder(AbsoluteTimeArgumentType absoluteTimeArgumentType) {
+            super(absoluteTimeArgumentType);
+        }
+
+        @Override
+        public AbsoluteTimeArgumentType build() {
+            return new AbsoluteTimeArgumentType(this);
+        }
+    }
+}
+```
+
+### `AbsoluteTimeDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AbsoluteTimeDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.time.Instant;
+
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+/**
+ * Used to contain an absolute time. Contains an absolute (to a known epoch) time.
+ * 
+ * Use the [ISO 8601] extended format CCYY-MM-DDThh:mm:ss where "CC" represents the century, "YY" the year, "MM" the
+ * month and "DD" the day, preceded by an optional leading "-" sign to indicate a negative number. If the sign is
+ * omitted, "+" is assumed. The letter "T" is the date/time separator and "hh", "mm", "ss" represent hour, minute and
+ * second respectively. Additional digits can be used to increase the precision of fractional seconds if desired i.e.
+ * the format ss.ss... with any number of digits after the decimal point is supported.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public abstract class AbsoluteTimeDataType extends BaseTimeDataType {
+    private static final long serialVersionUID = 1;
+
+    ReferenceTime referenceTime;
+    String initialValue;
+
+    protected AbsoluteTimeDataType(Builder<?> builder) {
+        super(builder);
+        this.referenceTime = builder.referenceTime;
+    }
+
+    protected AbsoluteTimeDataType(String name) {
+        super(name);
+    }
+
+    protected AbsoluteTimeDataType(AbsoluteTimeDataType t) {
+        super(t);
+        this.initialValue = t.initialValue;
+        this.referenceTime = t.referenceTime;
+    }
+
+    public ReferenceTime getReferenceTime() {
+        return referenceTime;
+    }
+
+    /**
+     * sets the initial value in UTC ISO 8860 string
+     */
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    @Override
+    public String getInitialValue() {
+        return initialValue;
+    }
+
+    @Override
+    public String convertType(Object value) {
+        if (value instanceof String) {
+            Instant.parse((String) value);
+            return (String) value;
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public Type getValueType() {
+        return Value.Type.TIMESTAMP;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "time";
+    }
+
+    public static abstract class Builder<T extends Builder<T>> extends BaseTimeDataType.Builder<T> {
+        ReferenceTime referenceTime;
+
+        public Builder() {
+        }
+
+        public Builder(AbsoluteTimeDataType dataType) {
+            super(dataType);
+            this.referenceTime = dataType.referenceTime;
+        }
+
+        public void setReferenceTime(ReferenceTime referenceTime) {
+            this.referenceTime = referenceTime;
+        }
+
+        public ReferenceTime getReferenceTime() {
+            return referenceTime;
+        }
+    }
+}
+```
+
+### `AbsoluteTimeParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AbsoluteTimeParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+public class AbsoluteTimeParameterType extends AbsoluteTimeDataType implements ParameterType {
+    private static final long serialVersionUID = 1L;
+
+    public AbsoluteTimeParameterType(Builder builder) {
+        super(builder);
+    }
+    
+    public AbsoluteTimeParameterType(String name) {
+        super(name);
+    }
+
+    /**
+     * Creates a shallow copy of the parameter type, giving it a new name.
+     */
+    public AbsoluteTimeParameterType(AbsoluteTimeParameterType t) {
+        super(t);
+    }
+
+
+    @Override
+    public List<UnitType> getUnitSet() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        if (referenceTime == null || referenceTime.getOffsetFrom()==null) {
+            return Collections.emptySet();
+        }
+        ParameterInstanceRef pref = referenceTime.getOffsetFrom();
+        return Collections.singleton(pref.getParameter());
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return false;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+    
+    @Override
+    public String toString() {
+        return "AbsoluteTimeParameterType name:" + name
+                + ((getReferenceTime() != null) ? ", referenceTime:" + getReferenceTime() : "");
+    }
+   
+    
+    public static class Builder extends AbsoluteTimeDataType.Builder<Builder> implements ParameterType.Builder<Builder>{
+
+        public Builder() {
+        }
+
+        public Builder(AbsoluteTimeParameterType absoluteTimeParameterType) {
+            super(absoluteTimeParameterType);
+        }
+
+        @Override
+        public AbsoluteTimeParameterType build() {
+            return new AbsoluteTimeParameterType(this);
+        }
+
+        
+    }
+}
+```
+
+### `AggregateArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AggregateArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+public class AggregateArgumentType extends AggregateDataType implements ArgumentType {
+    private static final long serialVersionUID = 2L;
+    
+    public AggregateArgumentType(Builder builder) {
+        super(builder);
+    }
+
+    public AggregateArgumentType(AggregateArgumentType t) {
+        super(t);
+    }
+
+
+    @Override
+    public List<UnitType> getUnitSet() {
+        return null;
+    }
+
+    @Override
+    public AggregateArgumentType.Builder toBuilder() {
+        return new Builder(this);
+    }
+    
+    public static class Builder extends AggregateDataType.Builder<Builder> implements ArgumentType.Builder<Builder>{
+        public Builder() {
+        }
+        
+        public Builder(AggregateArgumentType aggregateArgumentType) {
+            super(aggregateArgumentType);
+        }
+        @Override
+        public AggregateArgumentType build() {
+            return new AggregateArgumentType(this);
+        }
+        @Override
+        public Builder setEncoding(DataEncoding.Builder<?> dataEncoding) {
+            throw new UnsupportedOperationException("aggregate arguments do not support encodings");
+        }
+
+        @Override
+        public org.yamcs.xtce.DataEncoding.Builder<?> getEncoding() {
+            throw new UnsupportedOperationException("aggregate arguments do not support encodings");
+        }
+    }
+}
+```
+
+### `AggregateDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AggregateDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+
+public class AggregateDataType extends NameDescription implements DataType {
+    private static final long serialVersionUID = 1L;
+
+    List<Member> memberList = new ArrayList<>();
+    transient AggregateMemberNames memberNames;
+
+    public AggregateDataType(Builder<?> builder) {
+        super(builder);
+        this.memberList = builder.memberList;
+    }
+
+    protected AggregateDataType(AggregateDataType t) {
+        super(t);
+        this.memberList = t.memberList;
+        this.memberNames = t.memberNames;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "aggregate";
+    }
+
+    /**
+     * Returns a member on the given name. If no such member is present return null
+     * 
+     * @param name
+     *            the name of the member to be returned
+     * @return the member with the given name
+     */
+    public Member getMember(String name) {
+        for (Member m : memberList) {
+            if (name.equals(m.getName())) {
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public List<Member> getMemberList() {
+        return memberList;
+    }
+
+    @Override
+    public Type getValueType() {
+        return Value.Type.AGGREGATE;
+    }
+
+    /**
+     * Returns a member in a hierarchical aggregate. It is equivalent with a chained call of {@link #getMember(String)}:
+     * 
+     * <pre>
+     * getMember(path[0]).getMember(path[1])...getMember(path[n])
+     * </pre>
+     * 
+     * assuming that all the elements on the path exist.
+     * 
+     * 
+     * @param path
+     *            - the path to be traversed. Its length has to be at least 1 - otherwise an
+     *            {@link IllegalArgumentException} will be thrown.
+     * @return the member obtained by traversing the path or null if not such member exist.
+     */
+    public Member getMember(String[] path) {
+        if (path.length == 0) {
+            throw new IllegalArgumentException("path cannot be empty");
+        }
+        DataType ptype = this;
+        Member m = null;
+        for (int i = 0; i < path.length; i++) {
+
+            if (ptype instanceof AggregateDataType) {
+                m = ((AggregateDataType) ptype).getMember(path[i]);
+                if (m == null) {
+                    return null;
+                } else {
+                    ptype = m.getType();
+                }
+            } else {
+                return null;
+            }
+        }
+        return m;
+    }
+
+    /**
+     * 
+     * @return the (unique) object encoding the member names
+     * 
+     */
+    public AggregateMemberNames getMemberNames() {
+        if (memberNames == null) {
+            String[] n = memberList.stream().map(m -> m.getName()).toArray(String[]::new);
+            memberNames = AggregateMemberNames.get(n);
+        }
+        return memberNames;
+    }
+
+    public int numMembers() {
+        return memberList.size();
+    }
+
+    public Member getMember(int idx) {
+        return memberList.get(idx);
+    }
+
+    /**
+     * Parse the initial value as a JSON string.
+     * <p>
+     * This allows to specify only partially the values, the rest are copied from the member initial value or the type
+     * definition.
+     * <p>
+     * Since Yamcs 5.11.9, it does not enforce that all members are present. This is because some values may be deduced
+     * from array lengths
+     * 
+     * @return a map containing the values for all members.
+     * @throws IllegalArgumentException
+     *             if the string cannot be parsed or if values cannot be determined for all members
+     */
+    @Override
+    public Map<String, Object> convertType(Object value) {
+        if (value instanceof String) {
+            // Parse as JSON
+            try {
+                JsonElement je = JsonParser.parseString((String) value);
+                if (je instanceof JsonObject) {
+                    return fromJson((JsonObject) je);
+                } else {
+                    throw new IllegalArgumentException("Expected JSON object but found " + je.getClass());
+                }
+            } catch (JsonParseException jpe) {
+                throw new IllegalArgumentException(jpe.toString());
+            }
+        } else if (value instanceof Map) {
+            return fromMap((Map<String, Object>) value);
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    private Map<String, Object> fromJson(JsonObject jobj) {
+        // Copy, so that we can remove
+        JsonObject input = jobj.deepCopy();
+        Map<String, Object> r = new HashMap<>();
+        for (Member memb : memberList) {
+            if (input.has(memb.getName())) {
+                JsonElement jsel = input.remove(memb.getName());
+                String v;
+                if (jsel.isJsonPrimitive() && jsel.getAsJsonPrimitive().isString()) {
+                    v = jsel.getAsString();
+                } else {
+                    v = jsel.toString();
+                }
+                r.put(memb.getName(), memb.getType().convertType(v));
+            } else {
+                Object v = memb.getInitialValue();
+                if (v == null) {
+                    v = memb.getType().getInitialValue();
+                }
+                if (v != null) {
+                    r.put(memb.getName(), v);
+                }
+            }
+        }
+        if (input.size() > 0) {
+            throw new IllegalArgumentException("Unknown members "
+                    + input.entrySet().stream().map(e -> e.getKey()).collect(Collectors.toList()));
+        }
+        return r;
+    }
+
+    private Map<String, Object> fromMap(Map<String, Object> map) {
+        // Provided map may be immutable. So make a copy where we can remove.
+        Map<String, Object> input = new HashMap<>(map);
+        Map<String, Object> r = new LinkedHashMap<>(input.size());
+        for (Member memb : memberList) {
+            if (input.containsKey(memb.getName())) {
+                Object el = input.remove(memb.getName());
+                r.put(memb.getName(), memb.getType().convertType(el));
+            } else {
+                Object v = memb.getInitialValue();
+                if (v == null) {
+                    v = memb.getType().getInitialValue();
+                }
+                if (v != null) {
+                    r.put(memb.getName(), v);
+                }
+
+            }
+        }
+        if (input.size() > 0) {
+            throw new IllegalArgumentException("Unknown members: " + input.keySet());
+        }
+        return r;
+    }
+
+    @Override
+    public Map<String, Object> parseStringForRawValue(String stringValue) {
+        // parse it as json
+        try {
+            JsonElement je = JsonParser.parseString(stringValue);
+            if (je instanceof JsonObject) {
+                return fromJsonRaw((JsonObject) je);
+            } else {
+                throw new IllegalArgumentException("Expected JSON object but found " + je.getClass());
+            }
+        } catch (JsonParseException jpe) {
+            throw new IllegalArgumentException(jpe.toString());
+        }
+    }
+
+    private Map<String, Object> fromJsonRaw(JsonObject jobj) {
+        // Copy, so that we can remove
+        JsonObject input = jobj.deepCopy();
+        Map<String, Object> r = new HashMap<>();
+        for (Member memb : memberList) {
+            if (input.has(memb.getName())) {
+                JsonElement jsel = input.remove(memb.getName());
+                String v;
+                if (jsel.isJsonPrimitive() && jsel.getAsJsonPrimitive().isString()) {
+                    v = jsel.getAsString();
+                } else {
+                    v = jsel.toString();
+                }
+                r.put(memb.getName(), memb.getType().parseStringForRawValue(v));
+            } else {
+                throw new IllegalArgumentException("No value for member '" + memb.getName() + "'");
+            }
+        }
+        if (input.size() > 0) {
+            throw new IllegalArgumentException("Unknown members "
+                    + input.entrySet().stream().map(e -> e.getKey()).collect(Collectors.joining(",", "[", "]")));
+        }
+        return r;
+    }
+
+    @Override
+    public Map<String, Object> getInitialValue() {
+        Map<String, Object> r = new HashMap<>();
+        for (Member memb : memberList) {
+            Object v = memb.getInitialValue();
+            if (v == null) {
+                DataType dt = memb.getType();
+                if (dt != null) {
+                    v = dt.getInitialValue();
+                }
+            }
+            if (v == null) {
+                return null;
+            }
+            r.put(memb.getName(), v);
+        }
+        return r;
+    }
+
+    @Override
+    public String toString(Object v) {
+        Gson gson = new Gson();
+        return gson.toJson(getMapStr(v));
+    }
+
+    // convert the map m to another one with the leafs converted to strings or primitive types
+    // also verifies that the m is valid for this type (all members present and no extra member)
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> getMapStr(Object v) {
+
+        if (!(v instanceof Map)) {
+            throw new IllegalArgumentException("Can only convert maps; got: " + v);
+        }
+        // Copy, so that we can remove
+        Map<String, Object> m = new HashMap<>((Map<String, Object>) v);
+
+        Map<String, Object> r = new HashMap<>();
+
+        for (Member memb : memberList) {
+            Object v1 = m.remove(memb.getName());
+            if (v1 == null) {
+                if (memb.getInitialValue() == null) {
+                    throw new IllegalArgumentException("no value provided for member '" + memb.getName() + "'");
+                }
+            } else {
+                DataType dt = memb.getType();
+                if (dt instanceof AggregateDataType) {
+                    r.put(memb.getName(), ((AggregateDataType) dt).getMapStr(v1));
+                } else {
+                    dt.toString(v1);
+                    r.put(memb.getName(), v1);
+                }
+            }
+        }
+        if (!m.isEmpty()) {
+            throw new IllegalArgumentException("Unknown members " + m.keySet());
+        }
+        return r;
+    }
+
+    public abstract static class Builder<T extends Builder<T>> extends NameDescription.Builder<T>
+            implements DataType.Builder<T> {
+        List<Member> memberList = new ArrayList<>();
+
+        public Builder() {
+        }
+
+        public Builder(AggregateDataType dataType) {
+            super(dataType);
+            this.memberList = dataType.memberList;
+        }
+
+        @Override
+        public T setInitialValue(String initialValue) {
+            throw new UnsupportedOperationException(
+                    "Cannot set initial value; please send individual initial values for the members");
+
+        }
+
+        public T addMember(Member member) {
+            memberList.add(member);
+            return self();
+        }
+
+        public T addMembers(List<Member> memberList) {
+            this.memberList.addAll(memberList);
+            return self();
+        }
+
+        public List<Member> getMemberList() {
+            return memberList;
+        }
+    }
+
+}
+```
+
+### `AggregateParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AggregateParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * AggegateParameters are analogous to a C struct, they are an aggregation of related data items. Each of these data
+ * items is defined here as a 'Member'
+ * 
+ * @author nm
+ *
+ */
+public class AggregateParameterType extends AggregateDataType implements ParameterType {
+
+    public AggregateParameterType(Builder builder) {
+        super(builder);
+    }
+
+    public AggregateParameterType(AggregateParameterType t) {
+        super(t);
+    }
+
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public boolean hasAlarm() {
+        return false;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    @Override
+    public DataEncoding getEncoding() {
+        throw new UnsupportedOperationException("aggregate parameters do not support encodings");
+    }
+
+    public static class Builder extends AggregateDataType.Builder<Builder> implements ParameterType.Builder<Builder> {
+
+        public Builder() {
+        }
+
+        public Builder(AggregateParameterType aggregateParameterType) {
+            super(aggregateParameterType);
+        }
+
+        @Override
+        public AggregateParameterType build() {
+            return new AggregateParameterType(this);
+        }
+
+        @Override
+        public Builder setEncoding(DataEncoding.Builder<?> dataEncoding) {
+            throw new UnsupportedOperationException("aggregate parameters do not support encodings");
+        }
+
+    }
+}
+```
+
+### `AlarmLevels.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmLevels.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * An enumerated list of the possible alarm levels
+ * @author nm
+ *
+ */
+public enum AlarmLevels {
+    NORMAL("normal"),
+    WATCH("watch"),
+    WARNING("warning"),
+    DISTRESS("distress"),
+    CRITICAL("critical"),
+    SEVERE("severe");
+
+    public final String xtceName;
+
+    private AlarmLevels(String xtceName) {
+        this.xtceName = xtceName;
+    }
+
+    public static AlarmLevels fromXtce(String name) {
+        for (AlarmLevels l : AlarmLevels.values()) {
+            if (l.xtceName.equals(name)) {
+                return l;
+            }
+        }
+        throw new IllegalArgumentException("Illegal xtce name " + name);
+    }
+}
+```
+
+### `AlarmRanges.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmRanges.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+import org.yamcs.xtce.util.DoubleRange;
+
+/**
+ * Contains five ranges: Watch, Warning, Distress, Critical, and Severe each in increasing severity. Normally, only the
+ * Warning and Critical ranges are used and the color yellow is associated with Warning and the color red is associated
+ * with Critical. The ranges given are valid for numbers lower than the min and higher than the max values. These ranges
+ * should not overlap, but if they do, assume the most severe range is to be applied. All ranges are optional and it is
+ * quite allowed for there to be only one end of the range. Range values are in calibrated engineering units.
+ * 
+ * Note that we actually keep here the ranges for the IN_LIMITS. This means that if range.inRange(v)!=0 (meaning v out
+ * of range), then the parameter is in alarm state.
+ * 
+ * @author nm
+ *
+ */
+public class AlarmRanges implements Serializable {
+    private static final long serialVersionUID = 200706052351L;
+    DoubleRange watchRange = null;
+    DoubleRange warningRange = null;
+    DoubleRange distressRange = null;
+    DoubleRange criticalRange = null;
+    DoubleRange severeRange = null;
+
+    public void addWatchRange(DoubleRange range) {
+        if (this.watchRange == null) {
+            this.watchRange = range;
+        } else {
+            this.watchRange = this.watchRange.intersectWith(range);
+        }
+    }
+
+    public void addWarningRange(DoubleRange range) {
+        if (this.warningRange == null) {
+            this.warningRange = range;
+        } else {
+            this.warningRange = this.warningRange.intersectWith(range);
+        }
+    }
+
+    public void addDistressRange(DoubleRange range) {
+        if (this.distressRange == null) {
+            this.distressRange = range;
+        } else {
+            this.distressRange = this.distressRange.intersectWith(range);
+        }
+    }
+
+    public void addCriticalRange(DoubleRange range) {
+        if (this.criticalRange == null) {
+            this.criticalRange = range;
+        } else {
+            this.criticalRange = this.criticalRange.intersectWith(range);
+        }
+    }
+
+    public void addSevereRange(DoubleRange range) {
+        if (this.severeRange == null) {
+            this.severeRange = range;
+        } else {
+            this.severeRange = this.severeRange.intersectWith(range);
+        }
+    }
+
+    public void addRange(DoubleRange range, AlarmLevels level) {
+        switch (level) {
+        case WATCH:
+            addWatchRange(range);
+            break;
+        case WARNING:
+            addWarningRange(range);
+            break;
+        case DISTRESS:
+            addDistressRange(range);
+            break;
+        case CRITICAL:
+            addCriticalRange(range);
+            break;
+        case SEVERE:
+            addSevereRange(range);
+            break;
+        default:
+            throw new IllegalArgumentException("Level '" + level + "' not allowed for alarm ranges");
+
+        }
+    }
+
+    public DoubleRange getWatchRange() {
+        return watchRange;
+    }
+
+    public DoubleRange getWarningRange() {
+        return warningRange;
+    }
+
+    public DoubleRange getDistressRange() {
+        return distressRange;
+    }
+
+    public DoubleRange getCriticalRange() {
+        return criticalRange;
+    }
+
+    public DoubleRange getSevereRange() {
+        return severeRange;
+    }
+
+    public void setWarningRange(DoubleRange warningRange) {
+        this.warningRange = warningRange;
+    }
+
+    @Override
+    public String toString() {
+        return ((watchRange != null) ? " watchRange" + watchRange : "") +
+                ((warningRange != null) ? " warningRange" + warningRange : "") +
+                ((distressRange != null) ? " distressRange" + distressRange : "") +
+                ((criticalRange != null) ? " criticalRange" + criticalRange : "") +
+                ((severeRange != null) ? " severeRange" + severeRange : "");
+    }
+}
+```
+
+### `AlarmReportType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmReportType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Allow control over when alarms are reported.
+ * NOT IN XTCE 
+ */
+public enum AlarmReportType {
+    ON_SEVERITY_CHANGE,
+    ON_VALUE_CHANGE; // When value changes (not when parameter updates)
+}
+```
+
+### `AlarmType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlarmType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Base type for alarms
+ */
+public abstract class AlarmType implements Serializable {
+
+    private static final long serialVersionUID = 7443202826018275789L;
+    public static final AlarmReportType DEFAULT_REPORT_TYPE = AlarmReportType.ON_SEVERITY_CHANGE;
+
+    private AlarmReportType reportType = DEFAULT_REPORT_TYPE; // When alarms should be reported (not in XTCE)
+    private int minViolations = 1;
+
+    // if true it means that when the parameter is back within limits (RTN = return to normal) the alarm is cleared and
+    // does not need an acknowledgement
+    // FIXME: not supported by the excel or by XTCE
+    private boolean autoAck;
+
+    // if true it means that the alarm will stay triggered even when the parameter is back within limits.
+    // FIXME: not supported by the excel or by XTCE.
+    // However XTCE defines a minConformance attribute which is the number of times the parameter
+    // is back within limits in order to clear the alarm.
+    // This can be seen as a generalisation of latching: latching = true <=> minConformance = Infinite
+    private boolean latching;
+
+    public int getMinViolations() {
+        return minViolations;
+    }
+
+    public void setMinViolations(int minViolations) {
+        this.minViolations = minViolations;
+    }
+
+    public AlarmReportType getAlarmReportType() {
+        return reportType;
+    }
+
+    public void setAlarmReportType(AlarmReportType reportType) {
+        this.reportType = reportType;
+    }
+
+    /**
+     * Latching means that the alarm will stay triggered even when the parameter is back within limits.
+     *
+     * @return
+     */
+    public boolean isLatching() {
+        return latching;
+    }
+
+    public boolean isAutoAck() {
+        return autoAck;
+    }
+
+    @Override
+    public String toString() {
+        return "AlarmType[reportType=" + reportType + ",minViolations=" + minViolations + "]";
+    }
+
+}
+```
+
+### `Algorithm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Algorithm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Abstract algorithm - defines the inputs, outputs and triggers
+ * 
+ * @author nm
+ *
+ */
+public abstract class Algorithm extends NameDescription {
+    private static final long serialVersionUID = 6L;
+    
+    private TriggerSetType triggerSet;
+    private List<InputParameter> inputList = new ArrayList<>();
+    private List<OutputParameter> outputList = new ArrayList<>();
+    
+    //commandVerification algorithms can only be run in the context of a command verifier
+    public enum Scope {GLOBAL, COMMAND_VERIFICATION, CONTAINER_PROCESSING};
+    
+    private Scope scope = Scope.GLOBAL;
+    
+    /**
+     * copy constructor
+     * @param a
+     */
+    Algorithm(Algorithm a) {
+        super(a);
+        this.triggerSet = a.triggerSet;
+        this.inputList = a.inputList;
+        this.outputList = a.outputList;
+        this.scope = a.scope;
+    }
+    
+    public Algorithm(String name) {
+        super(name);
+    }
+    
+    public TriggerSetType getTriggerSet() {
+        return triggerSet;
+    }
+    
+    public void setTriggerSet(TriggerSetType triggerSet) {
+        this.triggerSet = triggerSet;
+    }
+    
+    public void addInput(InputParameter inputParameter) {
+        inputList.add(inputParameter);
+    }
+    
+    public void addOutput(OutputParameter outputParameter) {
+        outputList.add(outputParameter);
+    }
+    
+    /**
+     * same as {@link getInputList}, although it's a list this method calls it Set due to XTCE terminology. 
+     * @return ordered list of input parameters
+     */
+    public List<InputParameter> getInputSet() {
+        return inputList;
+    }
+    /**
+     * Returns the list of input parameters
+     * @return
+     */
+    public List<InputParameter> getInputList() {
+        return inputList;
+    }
+    /**
+     * same as {@link getOutputList}, although it's a list this method calls it Set due to XTCE terminology. 
+     * @return
+     */
+    public List<OutputParameter> getOutputSet() {
+        return outputList;
+    }
+    /**
+     * 
+     * @return ordered list of output parameters
+     */
+    public List<OutputParameter> getOutputList() {
+        return outputList;
+    }
+    
+    public void setOutputSet(List<OutputParameter> outputSet) {
+        this.outputList = outputSet;
+    }
+    public void setOutputList(List<OutputParameter> outputList) {
+        this.outputList = outputList;
+    }
+    
+    public void setInputSet(List<InputParameter> inputSet) {
+        setInputList(inputSet);
+    }
+    
+    public void setInputList(List<InputParameter> inputList) {
+        this.inputList = inputList;
+    }
+    
+    public Scope getScope() {
+        return scope;
+    }
+
+    public void setScope(Scope scope) {
+        this.scope = scope;
+    }
+    public void print(PrintStream out) {
+        out.print("Algorithm name: "+name);
+        if(scope!=Scope.GLOBAL) {
+            out.print(", scope: "+scope);
+        }
+        if(getAliasSet()!=null) {
+            out.print(", aliases: "+getAliasSet());
+        }
+        out.println();
+        for(InputParameter p:inputList) {
+            out.println("\t\tInputParameter "+p);
+        }
+        for(OutputParameter p:outputList) {
+            out.println("\t\tOutputParameter "+p);
+        }
+        out.println("\t\tTriggers "+triggerSet);
+    }
+}
+```
+
+### `AlgorithmCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AlgorithmCalibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * A general calibrator - references a java class that can convert any raw value to any engineer value or the reverse.
+ * <p>
+ * Until Yamcs 5.12 only numerical calibrators were supported (as specified in XTCE). Starting with Yamcs 5.12 this
+ * restriction is eliminated and this class can be used to reference an algorithm that performs this transformation.
+ *
+ */
+public class AlgorithmCalibrator implements Calibrator {
+    private static final long serialVersionUID = 1L;
+    private final Algorithm algorithm;
+
+    public AlgorithmCalibrator(Algorithm algorithm) {
+        this.algorithm = algorithm;
+    }
+
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    @Override
+    public String toString() {
+        return "AlgortihmCalibrator [" + algorithm + "]";
+    }
+}
+```
+
+### `AncillaryData.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/AncillaryData.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.net.URI;
+import java.util.AbstractMap.SimpleEntry;
+
+/**
+ * Used for any other data associated with each named object. May be used to
+ * include administrative data (e.g., version, CM or tags) or potentially any
+ * MIME type. Data may be included or given as an href.
+ * 
+ * <p>
+ * The properties used in yamcs are grouped under the key Yamcs and documented below. Only name and value are used (href
+ * and mimeType are ignored).
+ * 
+ */
+public class AncillaryData implements Serializable {
+    public static final String KEY_YAMCS = "Yamcs";
+    /**
+     * Used to specifies that certain inputs for an algorithm are mandatory (the algorithm won't be started if they are
+     * not there)
+     */
+    public static final String KEY_ALGO_MANDATORY_INPUT = "Yamcs:AlgorithmMandatoryInput";
+
+    /**
+     * Used to configure the SequenceContainers to be used to partition the archive data.
+     * The containers will also be used for histogram building (this is the "pname" column in the tm table).
+     */
+    public static final String PROP_USE_AS_ARCHIVING_PARTITION = "UseAsArchivingPartition";
+
+    /**
+     * Used to override default CCSDS MAP ID for commands
+     */
+    public static final String KEY_CCSDS_MAP_ID = "Yamcs:CcsdsMapId";
+
+    private static final long serialVersionUID = 1L;
+    private static final String DEFAULT_MIME_TYPE = "text/plain";
+
+    private String name;
+    private String value;
+    private String mimeType;
+    private URI href;
+
+    public AncillaryData(String name, String value) {
+        this.name = name;
+        this.value = value;
+        this.mimeType = DEFAULT_MIME_TYPE;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public URI getHref() {
+        return href;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Tries to split the value in a "s1=s2" form and returns the (s1,s2) pair if the value can be split. Otherwise
+     * returns null.
+     * 
+     */
+    SimpleEntry<String, String> getValueAsPair() {
+        String[] s = value.split("\\s*=\\s*", 2);
+        if (s.length == 2) {
+            return new SimpleEntry<>(s[0], s[1]);
+        } else {
+            return null;
+        }
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public void setHref(URI href) {
+        this.href = href;
+    }
+
+    public boolean isYamcs() {
+        return KEY_YAMCS.equalsIgnoreCase(name);
+    }
+
+    @Override
+    public String toString() {
+        return name + ":" + value;
+    }
+}
+```
+
+### `ANDedConditions.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ANDedConditions.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class ANDedConditions extends ExpressionList {
+    private static final long serialVersionUID = 6301730763127090210L;
+
+}
+```
+
+### `Argument.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Argument.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Describe the name of an Argument its NameReference to an ArgumentType in ArgumentTypeSet
+ *
+ * @author nm
+ *
+ */
+public class Argument extends NameDescription {
+    private static final long serialVersionUID = 7L;
+
+    public Argument(String name) {
+        super(name);
+    }
+
+    ArgumentType argumentType;
+
+    /*
+     *    THIS is used as a default value when sending a command that does not have specified the value for this argument
+     */
+    Object initialValue;
+
+    public ArgumentType getArgumentType() {
+        return argumentType;
+    }
+
+    public void setArgumentType(ArgumentType argumentType) {
+        this.argumentType = argumentType;
+    }
+
+    /**
+     * returns the initial value of this argument which would be better called default value
+     * 
+     * returns null if no initial value has been set
+     *
+     * @return initial value or null if no initial value has been set
+     */
+    public Object getInitialValue() {
+        return initialValue;
+    }
+
+    public void setInitialValue(Object v) {
+        this.initialValue = v;
+    }
+
+    @Override
+    public String toString() {
+        return "ArgName: " + this.getName() + ((initialValue == null) ? "" : " initialValue: " + initialValue)
+                + " argType:" + argumentType;
+    }
+
+}
+```
+
+### `ArgumentAssignment.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentAssignment.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public class ArgumentAssignment implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    final String argumentName;
+    final String argumentValue;
+
+    public ArgumentAssignment(String argumentName, String argumentValue) {
+        if (argumentName == null) {
+            throw new NullPointerException("argumentName cannot be null");
+        }
+        if (argumentValue == null) {
+            throw new NullPointerException("argumentValue cannot be null");
+        }
+        this.argumentName = argumentName;
+        this.argumentValue = argumentValue;
+    }
+
+    public String getArgumentName() {
+        return argumentName;
+    }
+
+    public String getArgumentValue() {
+        return argumentValue;
+    }
+
+    @Override
+    public String toString() {
+        return argumentName + "=" + argumentValue;
+    }
+}
+```
+
+### `ArgumentEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * An entry that is a single Argument
+ * 
+ * @author nm
+ *
+ */
+public class ArgumentEntry extends SequenceEntry {
+    private static final long serialVersionUID = 1L;
+    private Argument argument;
+
+    public ArgumentEntry(int locationInContainerInBits, ReferenceLocationType location, Argument argument) {
+        super(locationInContainerInBits, location);
+        this.argument = argument;
+    }
+
+    /**
+     * Constructor for an unresolved ArgumentEntry. The Argument will come later via {@link #setArgument(Argument)}
+     * 
+     * @param locationInContainerInBits
+     * @param location
+     */
+    public ArgumentEntry(int locationInContainerInBits, ReferenceLocationType location) {
+        super(locationInContainerInBits, location);
+    }
+
+    public ArgumentEntry(Argument arg) {
+        this.argument = arg;
+    }
+
+    public void setArgument(Argument argument) {
+        this.argument = argument;
+    }
+
+    public Argument getArgument() {
+        return argument;
+    }
+
+    @Override
+    public String toString() {
+        return "ArgumentEntry position:" + getIndex() + ", container:" + container.getName() +
+                " locationInContainer:" + getLocationInContainerInBits() + " from:" + getReferenceLocation() +
+                ", argument: " + argument;
+
+    }
+}
+```
+
+### `ArgumentInstanceRef.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentInstanceRef.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * A reference to a command argument or to a member of an argument of type aggregate
+ *
+ */
+public class ArgumentInstanceRef extends ParameterOrArgumentRef {
+    private static final long serialVersionUID = 1;
+    private Argument argument;
+
+    /**
+     * Constructor to be used when the parameter is not yet known.
+     * The parameter will have to be set later with setParameter()
+     */
+    public ArgumentInstanceRef() {
+        super();
+    }
+
+    public ArgumentInstanceRef(Argument arg) {
+        this.argument = arg;
+    }
+
+    public ArgumentInstanceRef(Argument arg, PathElement[] path) {
+        this.argument = arg;
+        this.path = path;
+    }
+
+    public ArgumentInstanceRef(Argument arg, boolean useCalibratedValue) {
+        this.argument = arg;
+        this.useCalibratedValue = useCalibratedValue;
+    }
+
+    public void setArgument(Argument arg) {
+        this.argument = arg;
+    }
+
+    public Argument getArgument() {
+        return argument;
+    }
+
+
+    @Override
+    public String getName() {
+        return argument == null ? null : argument.getName();
+    }
+
+    @Override
+    public DataType getDataType() {
+        return argument == null ? null : argument.getArgumentType();
+
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (argument != null) {
+            sb.append(argument.getName());
+        }
+        if (path != null) {
+            sb.append("/");
+            sb.append(PathElement.pathToString(path));
+        }
+        return sb.toString();
+    }
+
+}
+```
+
+### `ArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+/**
+ * Interface to be implemented by all the argument types
+ * 
+ * @author nm
+ *
+ */
+public interface ArgumentType extends DataType {
+    /**
+     * String which represents the type.
+     * This string will be presented to the users of the system.
+     * 
+     * @return
+     */
+    String getTypeAsString();
+
+    /**
+     * 
+     * @return the list of units
+     */
+    public List<UnitType> getUnitSet();
+
+    /**
+     * 
+     * @return the name of the type
+     */
+    String getName();
+
+    /**
+     * Create a shallow copy of the data type
+     * - the object itself (and the primitive fields) are new
+     * but the other fields reference to the same object like the original
+     * 
+     * @return
+     */
+    <T extends ArgumentType> Builder<?> toBuilder();
+
+    interface Builder<T extends Builder<T>> extends DataType.Builder<T> {
+        T setEncoding(DataEncoding.Builder<?> dataEncoding);
+
+        public ArgumentType build();
+
+        DataEncoding.Builder<?> getEncoding();
+    }
+}
+```
+
+### `ArrayArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+/**
+ * Describe an array parameter type.
+ * <p>
+ * The size and number of dimensions are described here. See ArrayParameterRefEntryType, NameReferenceType and
+ * ArrayDataType.
+ *
+ */
+public class ArrayArgumentType extends ArrayDataType implements ArgumentType {
+    private static final long serialVersionUID = 2L;
+
+    ArrayArgumentType(Builder builder) {
+        super(builder);
+    }
+
+    public ArrayArgumentType(String name, int numberOfDimensions) {
+        super(name, numberOfDimensions);
+    }
+
+    public ArrayArgumentType(String name) {
+        super(name, -1);
+    }
+
+    public ArrayArgumentType(ArrayArgumentType t) {
+        super(t);
+    }
+
+    @Override
+    public List<UnitType> getUnitSet() {
+        return null;
+    }
+
+    @Override
+    public ArrayArgumentType.Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder extends ArrayDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+        public Builder() {
+        }
+
+        public Builder(ArrayArgumentType arrayArgumentType) {
+            super(arrayArgumentType);
+        }
+
+        @Override
+        public ArrayArgumentType build() {
+            return new ArrayArgumentType(this);
+        }
+
+        @Override
+        public Builder setEncoding(DataEncoding.Builder<?> dataEncoding) {
+            throw new UnsupportedOperationException("array arguments do not support encodings");
+        }
+
+        @Override
+        public org.yamcs.xtce.DataEncoding.Builder<?> getEncoding() {
+            throw new UnsupportedOperationException("array arguments do not support encodings");
+        }
+    }
+}
+```
+
+### `ArrayDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+
+/**
+ * An array of values of the type referenced in {@link #type} and have the number of array dimensions as specified in
+ * {@link #numberOfDimensions}
+ * 
+ */
+public class ArrayDataType extends NameDescription implements DataType {
+    private static final long serialVersionUID = 1L;
+
+    List<IntegerValue> dim;
+    private DataType type;
+    private int numberOfDimensions;
+    private Object[] initialValue;
+
+    public ArrayDataType(Builder<?> builder) {
+        super(builder);
+
+        if (builder.type == null) {
+            throw new IllegalArgumentException("Array element type cannot be null");
+        }
+        this.dim = builder.dim;
+        this.type = builder.type;
+        this.numberOfDimensions = builder.numberOfDimensions;
+
+        if (builder.initialValue != null) {
+            if (builder.initialValue instanceof Object[]) {
+                this.initialValue = (Object[]) builder.initialValue;
+            } else {
+                this.initialValue = convertType(builder.initialValue.toString());
+            }
+        }
+    }
+
+    public ArrayDataType(String name, int numberOfDimensions) {
+        super(name);
+        this.numberOfDimensions = numberOfDimensions;
+    }
+
+    public ArrayDataType(ArrayDataType t) {
+        super(t);
+        this.type = t.type;
+        this.numberOfDimensions = t.numberOfDimensions;
+        this.initialValue = t.initialValue;
+        this.dim = t.dim;
+    }
+
+    /**
+     * returns the type of the elements of the array
+     *
+     * @return - the type of the elements of the array
+     */
+    public DataType getElementType() {
+        return type;
+    }
+
+    public int getNumberOfDimensions() {
+        return numberOfDimensions;
+    }
+
+    @Override
+    public Type getValueType() {
+        return Type.ARRAY;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(type.getTypeAsString().replace("[]", ""));
+        for (int i = 0; i < numberOfDimensions; i++) {
+            sb.append("[]");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Return the dimension list (defined as from XTCE 1.2). The list here is not really used except for populating the
+     * {@link ArrayParameterEntry#dim} at the MDB load.
+     * 
+     * @return
+     */
+    public List<IntegerValue> getSize() {
+        return dim;
+    }
+
+    /**
+     * 
+     * @return true if all dimensions are of fixed size
+     */
+    public boolean isFixedSize() {
+        for (IntegerValue iv : dim) {
+            if (!(iv instanceof FixedIntegerValue)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Get the size of the nth dimension
+     */
+    public IntegerValue getDimension(int n) {
+        return dim.get(n);
+    }
+
+    /**
+     * If {@link #isFixedSize()} returns true, this method can be used to get the array flat size
+     * 
+     * @return
+     */
+    public int[] getFixedSize() {
+        int[] r = new int[dim.size()];
+        for (int i = 0; i < dim.size(); i++) {
+            FixedIntegerValue fiv = (FixedIntegerValue) dim.get(i);
+            if (fiv instanceof FixedIntegerValue) {
+                r[i] = (int) ((FixedIntegerValue) fiv).getValue();
+            }
+        }
+        return r;
+    }
+
+    /**
+     * Parse an initial value specified as an json array. Each element of the array has to be itself an array until
+     * reaching the {@link #getNumberOfDimensions()}
+     * <p>
+     * The return is an java array (Object[]). For multi dimensional arrays each Object it itself an Object[] and so on
+     * to reach the number of dimensions,
+     * <p>
+     * The final Object is of type as returned by the element type {@link DataType#convertType(Object)}
+     * 
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public Object[] convertType(Object value) {
+        if (value instanceof String) {
+            return parse((String) value, false);
+        } else if (value instanceof List) {
+            return toArray((List<Object>) value, numberOfDimensions - 1, false);
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public Object parseStringForRawValue(String stringValue) {
+        return parse(stringValue, true);
+    }
+
+    private Object[] parse(String stringValue, boolean raw) {
+        try {
+            JsonElement el = JsonParser.parseString(stringValue);
+            return toArray(el, numberOfDimensions - 1, raw);
+        } catch (JsonParseException e) {
+            throw new IllegalArgumentException("Cannot parse string as json: " + e.getMessage());
+        }
+    }
+
+    private Object[] toArray(JsonElement jel, int numDim, boolean raw) {
+        if (!(jel instanceof JsonArray)) {
+            throw new IllegalArgumentException(
+                    "Expected '" + jel + "' to be an array but instead it is: " + jel.getClass());
+        }
+        JsonArray jarr = (JsonArray) jel;
+        Object[] r = new Object[jarr.size()];
+        if (numDim > 0) {
+            for (int i = 0; i < jarr.size(); i++) {
+                r[i] = toArray(jarr.get(i), numDim - 1, raw);
+            }
+        } else if (raw) {
+            for (int i = 0; i < jarr.size(); i++) {
+                r[i] = type.parseStringForRawValue(jarr.get(i).getAsString());
+            }
+        } else {
+            for (int i = 0; i < jarr.size(); i++) {
+                r[i] = type.convertType(jarr.get(i).getAsString());
+            }
+        }
+
+        return r;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object[] toArray(List<Object> arr, int numDim, boolean raw) {
+        Object[] r = new Object[arr.size()];
+        if (numDim > 0) {
+            for (int i = 0; i < arr.size(); i++) {
+                Object el = arr.get(i);
+                if (!(el instanceof List)) {
+                    throw new IllegalArgumentException(
+                            "Expected '" + el + "' to be an array but instead it is: " + el.getClass());
+                }
+                r[i] = toArray((List<Object>) el, numDim - 1, raw);
+            }
+        } else if (raw) {
+            for (int i = 0; i < arr.size(); i++) {
+                r[i] = type.parseStringForRawValue((String) arr.get(i));
+            }
+        } else {
+            for (int i = 0; i < arr.size(); i++) {
+                r[i] = type.convertType(arr.get(i));
+            }
+        }
+        return r;
+    }
+
+    @Override
+    public String toString(Object v) {
+        if (v instanceof Object[]) {
+            Object[] v1 = (Object[]) v;
+            String[] v2 = new String[v1.length];
+            for (int i = 0; i < v1.length; i++) {
+                v2[i] = type.toString(v1[i]);
+            }
+            Gson gson = new Gson();
+            return gson.toJson(v2);
+        } else {
+            throw new IllegalArgumentException("Can only convert arrays not " + v.getClass());
+        }
+    }
+
+    @Override
+    public Object[] getInitialValue() {
+        return initialValue;
+    }
+
+    public static abstract class Builder<T extends Builder<T>> extends NameDescription.Builder<T>
+            implements DataType.Builder<T> {
+        List<IntegerValue> dim;
+        private DataType type;
+        private int numberOfDimensions;
+        private Object initialValue;
+
+        public Builder() {
+        }
+
+        public Builder(ArrayDataType dataType) {
+            super(dataType);
+            this.dim = dataType.dim;
+            this.type = dataType.type;
+            this.numberOfDimensions = dataType.numberOfDimensions;
+            this.initialValue = dataType.initialValue;
+        }
+
+        /**
+         * Sets the type of the elements of the array
+         * 
+         * @param type
+         */
+        public T setElementType(DataType type) {
+            this.type = type;
+            return self();
+        }
+
+        public T setSize(List<IntegerValue> list) {
+            if (list.isEmpty()) {
+                throw new IllegalArgumentException("Dimension sizes cannot be empty");
+            }
+            this.dim = list;
+            setNumberOfDimensions(dim.size());
+            return self();
+        }
+
+        public List<IntegerValue> getSize() {
+            return dim;
+        }
+
+        public T setNumberOfDimensions(int numberOfDimensions) {
+            this.numberOfDimensions = numberOfDimensions;
+            return self();
+        }
+
+        @Override
+        public T setInitialValue(String initialValue) {
+            this.initialValue = initialValue;
+            return self();
+        }
+
+        public boolean isResolved() {
+            return type != null;
+        }
+    }
+}
+```
+
+### `ArrayParameterEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayParameterEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+/**
+ * Describe an entry that is an array parameter.
+ * 
+ * The size of the extracted array has to be specified in the {@code size} property which is a list of
+ * {@link IntegerValue} that can be static or values of other parameters.
+ * 
+ * @author nm
+ *
+ */
+public class ArrayParameterEntry extends ParameterEntry {
+    private static final long serialVersionUID = 2L;
+    
+    public ArrayParameterEntry(int locationInContainerInBits, ReferenceLocationType location) {
+        super(locationInContainerInBits, location);
+    }
+    
+    public ArrayParameterEntry(int locationInContainerInBits, ReferenceLocationType location, Parameter parameter) {
+        super(locationInContainerInBits, location, parameter);
+    }
+  
+
+    private Parameter parameter;
+    List<IntegerValue> dim;
+
+
+    public void setParameter(Parameter parameter) {
+        if (!(parameter.getParameterType() instanceof ArrayParameterType)) {
+            throw new IllegalArgumentException("Array parameter type required for parameter " + parameter.getName());
+        }
+        this.parameter = parameter;
+        if(dim==null) {
+            ArrayParameterType pt = (ArrayParameterType)parameter.getParameterType();
+            dim = pt.getSize();
+        }
+        validateSize();
+    }
+
+    /**
+     * sets the sizes of the extracted array. The length of the list has to match the
+     * {@link ArrayParameterType#getNumberOfDimensions()}
+     * 
+     * @throws IllegalArgumentException
+     *             if the length of the list is not correct.
+     */
+    public void setSize(List<IntegerValue> list) {
+        if (list.isEmpty()) {
+            throw new IllegalArgumentException("Dimension sizes cannot be empty");
+        }
+        this.dim = list;
+        validateSize();
+    }
+
+    public List<IntegerValue> getSize() {
+        return dim;
+    }
+
+    private void validateSize() {
+        if (dim != null && parameter != null) {
+            ArrayParameterType ptype = (ArrayParameterType) parameter.getParameterType();
+            if (dim.size() != ptype.getNumberOfDimensions()) {
+                throw new IllegalArgumentException(
+                        "The numberOfDimensions of the parameter does not match the size length: "
+                                + ptype.getNumberOfDimensions() + " vs " + dim.size());
+            }
+        }
+    }
+
+    /**
+     * 
+     * @return the parameter referenced by this array entry
+     */
+    public Parameter getParameter() {
+        return parameter;
+    }
+
+    @Override
+    public String toString() {
+        return "ArrayParameterEntry position:" + getIndex() + ", container:" + container.getName() +
+                " locationInContainer:" + getLocationInContainerInBits() + " from:" + getReferenceLocation() +
+                ", " + parameter +
+                ((getRepeatEntry() != null) ? ", repeatEntry: (" + getRepeatEntry() + ")" : "");
+    }
+}
+```
+
+### `ArrayParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ArrayParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Describe an array parameter type. The size and number of dimensions are described here. See
+ * {@link ArrayParameterEntry}, NameReferenceType and ArrayDataType.
+ * <p>
+ * Note: XTCE 1.1 defines only the number of dimensions (integer) as part of the ArrayDataType and leaves the dimension
+ * list (containing the size of each dimension) to be defined as part of the {@link ArrayParameterEntry}
+ * <p>
+ * In XTCE 1.2 the dimension list is also defined in this class and can be optionally omitted from the
+ * {@link ArrayParameterEntry}.
+ * <p>
+ * We support both behaviours.
+ * 
+ * @author nm
+ *
+ */
+public class ArrayParameterType extends ArrayDataType implements ParameterType {
+    private static final long serialVersionUID = 1L;
+
+    public ArrayParameterType(Builder builder) {
+        super(builder);
+    }
+    
+    public ArrayParameterType(String name) {
+        super(name, -1);
+    }
+
+    public ArrayParameterType(String name, int numberOfDimensions) {
+        super(name, numberOfDimensions);
+        if (numberOfDimensions < 0) {
+            throw new IllegalArgumentException("numberOfDimensions should be positive");
+        }
+    }
+
+    public ArrayParameterType(ArrayParameterType t) {
+        super(t);
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return getElementType().getTypeAsString() + "[]";
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return false;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    @Override
+    public DataEncoding getEncoding() {
+        throw new UnsupportedOperationException("array parameters do not support encodings");
+    }
+
+   
+
+
+    @Override
+    public String toString() {
+        return "ArrayParameterType name:" + name + " numberOfDimensions:" + getNumberOfDimensions();
+    }
+    
+    public static class Builder extends ArrayDataType.Builder<Builder> implements ParameterType.Builder<Builder> {
+
+        public Builder() {
+            
+        }
+        
+        public Builder(ArrayParameterType arrayParameterType) {
+           super(arrayParameterType);
+        }
+
+        @Override
+        public ArrayParameterType build() {
+            return new ArrayParameterType(this);
+        }
+
+        @Override
+        public Builder setEncoding(DataEncoding.Builder<?> dataEncoding) {
+            throw new UnsupportedOperationException("array parameters do not support encodings");
+        }
+        
+    }
+}
+```
+
+### `BaseDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BaseDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Base class for all simple XTCE types - tha is all types except {@link AggregateDataType} and {@link ArrayDataType}
+ *
+ * @author nm
+ *
+ */
+public abstract class BaseDataType extends NameDescription implements DataType {
+    private static final long serialVersionUID = 3L;
+    List<UnitType> unitSet = new ArrayList<>();
+    protected DataEncoding encoding;
+
+    BaseDataType(String name) {
+        super(name);
+    }
+
+    BaseDataType(Builder<?> builder) {
+        super(builder);
+        this.unitSet = builder.unitSet;
+        if (builder.encoding != null) {
+            this.encoding = builder.encoding.build();
+        }
+
+        if (builder.baseType != null) {
+            BaseDataType baseType = builder.baseType;
+
+            if (this.encoding == null && baseType.encoding != null) {
+                this.encoding = baseType.encoding;
+            }
+            if (this.unitSet == null && baseType.unitSet != null) {
+                this.unitSet = baseType.unitSet;
+            }
+        }
+    }
+
+    /**
+     * creates a shallow copy of t
+     * 
+     * @param t
+     */
+    protected BaseDataType(BaseDataType t) {
+        super(t);
+        this.unitSet = t.unitSet;
+        this.encoding = t.encoding;
+    }
+
+    public DataEncoding getEncoding() {
+        return encoding;
+    }
+
+    public List<UnitType> getUnitSet() {
+        return unitSet;
+    }
+
+    public void setUnitSet(List<UnitType> unitSet) {
+        this.unitSet = unitSet;
+    }
+
+    protected void setInitialValue(Builder<?> builder) {
+        if (builder.initialValue != null) {
+            setInitialValue(builder.initialValue);
+        } else if (builder.baseType != null && builder.baseType.getInitialValue() != null) {
+            setInitialValue(builder.baseType.getInitialValue());
+        }
+    }
+
+    protected abstract void setInitialValue(Object initialValue);
+
+    @Override
+    public String toString(Object o) {
+        return o.toString();
+    }
+
+    @Override
+    public Object parseStringForRawValue(String stringValue) {
+        return encoding.parseString(stringValue);
+    }
+
+    public abstract static class Builder<T extends Builder<T>> extends NameDescription.Builder<T>
+            implements DataType.Builder<T> {
+        List<UnitType> unitSet = new ArrayList<>();
+        private DataEncoding.Builder<?> encoding;
+        protected Object initialValue;
+        protected BaseDataType baseType;
+
+        public Builder() {
+        }
+
+        public Builder(BaseDataType baseType) {
+            super(baseType);
+            this.unitSet = baseType.unitSet;
+            this.initialValue = baseType.getInitialValue();
+            if (baseType.encoding != null) {
+                this.encoding = baseType.encoding.toBuilder();
+            }
+        }
+
+        public T setInitialValue(byte[] initialValue) {
+            this.initialValue = initialValue;
+            return self();
+        }
+
+        @Override
+        public T setInitialValue(String initialValue) {
+            this.initialValue = initialValue;
+            return self();
+        }
+
+        public T setEncoding(DataEncoding.Builder<?> dataEncoding) {
+            this.encoding = dataEncoding;
+            if (baseType != null) {
+                encoding.baseEncoding = baseType.encoding;
+            }
+            return self();
+        }
+
+        public T addAllUnits(Collection<UnitType> units) {
+            unitSet.addAll(units);
+            return self();
+        }
+
+        public T addUnit(UnitType unit) {
+            unitSet.add(unit);
+            return self();
+        }
+
+        public DataEncoding.Builder<?> getEncoding() {
+            return encoding;
+        }
+
+        public void setBaseType(BaseDataType type) {
+            this.baseType = type;
+            if (encoding != null) {
+                encoding.baseEncoding = type.encoding;
+            }
+        }
+    }
+}
+```
+
+### `BaseTimeDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BaseTimeDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public abstract class BaseTimeDataType extends BaseDataType {
+    private static final long serialVersionUID = 2L;
+
+    boolean needsScaling;
+    double scale = 1.0;
+    double offset = 0.0;
+
+    BaseTimeDataType(Builder<?> builder) {
+        super(builder);
+        this.needsScaling = builder.needsScaling;
+        this.scale = builder.scale;
+        this.offset = builder.offset;
+        
+        if (builder.baseType instanceof BaseTimeDataType) {
+            BaseTimeDataType baseType = (BaseTimeDataType) builder.baseType;
+            if(!builder.needsScaling && baseType.needsScaling) {
+                this.needsScaling = baseType.needsScaling;
+                this.scale = baseType.scale;
+                this.offset = baseType.offset;
+            }
+        }
+        
+        setInitialValue(builder);
+    }
+
+    BaseTimeDataType(String name) {
+        super(name);
+    }
+
+    /**
+     * creates a shallow copy of t
+     * 
+     * @param t
+     */
+    protected BaseTimeDataType(BaseTimeDataType t) {
+        super(t);
+        this.encoding = t.encoding;
+        this.needsScaling = t.needsScaling;
+        this.scale = t.scale;
+        this.offset = t.offset;
+    }
+
+    public Object parseStringForRawValue(String stringValue) {
+        return encoding.parseString(stringValue);
+    }
+
+    /**
+     * Scale and offset are used in a y = m*x + b type relationship (m is the scale and b is the offset)
+     * to make adjustments to the encoded value so that it matches the time units.
+     * 
+     * @param offset
+     * @param scale
+     */
+    public void setScaling(double offset, double scale) {
+        this.needsScaling = true;
+        this.offset = offset;
+        this.scale = scale;
+    }
+
+    public boolean needsScaling() {
+        return needsScaling;
+    }
+
+    public double getOffset() {
+        return offset;
+    }
+
+    public double getScale() {
+        return scale;
+    }
+
+    public static abstract class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        boolean needsScaling;
+        double scale = 1.0;
+        double offset = 0.0;
+        
+        public Builder() {
+            
+        }
+        
+        public Builder(BaseTimeDataType dataType) {
+            super(dataType);
+            this.needsScaling = dataType.needsScaling;
+            this.scale = dataType.scale;
+            this.offset = dataType.offset;
+        }
+
+        public void setScaling(double offset, double scale) {
+            this.needsScaling = true;
+            this.offset = offset;
+            this.scale = scale;
+        }
+
+    }
+}
+```
+
+### `BinaryArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class BinaryArgumentType extends BinaryDataType implements ArgumentType {
+    private static final long serialVersionUID = 1L;
+
+    BinaryArgumentType(Builder builder) {
+        super(builder);
+    }
+
+    public BinaryArgumentType(BinaryArgumentType t1) {
+        super(t1);
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "binary";
+    }
+
+    @Override
+    public String toString() {
+        return "BinaryArgumentType name:" + name + " encoding:" + encoding;
+    }
+
+    public BinaryArgumentType.Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder extends BinaryDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+        public Builder() {
+        }
+
+        public Builder(BinaryArgumentType binaryArgumentType) {
+            super(binaryArgumentType);
+        }
+
+        @Override
+        public BinaryArgumentType build() {
+            return new BinaryArgumentType(this);
+        }
+    }
+
+}
+```
+
+### `BinaryDataEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryDataEncoding.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * 
+ * Although XTCE suggests that this class could be used to encode/decode integer/float/string data, In Yamcs this is
+ * used just for
+ * encoding binary data (i.e. binary to binary). See {@link DataEncoding} for how to use the other classes to
+ * encode/decode arbitrary binary to a
+ * float/integer/string.
+ * <p>
+ * DIFFERS_FROM_XTCE: XTCE doesn't support LEADING_SIZE parameter types (it does only for strings). However it allows
+ * the size to be specified dynamically
+ * by the value of another parameter.
+ *
+ */
+public class BinaryDataEncoding extends DataEncoding {
+    private static final long serialVersionUID = 3L;
+
+    public enum Type {
+        FIXED_SIZE, LEADING_SIZE, CUSTOM, DYNAMIC
+    }
+
+    int sizeInBitsOfSizeTag = 16; // this is used when type is LEADING_SIZE to encod the length of the value before the
+                                  // value
+    private Type type = Type.FIXED_SIZE;
+
+    /**
+     * For variable-sized parameters or arguments, a reference to the parameter
+     * or argument containing the size.
+     */
+    protected DynamicIntegerValue dynamicSize;
+
+    /**
+     * copy constructor
+     * 
+     * @param bde
+     */
+    public BinaryDataEncoding(BinaryDataEncoding bde) {
+        super(bde);
+        this.sizeInBitsOfSizeTag = bde.sizeInBitsOfSizeTag;
+        this.type = bde.type;
+    }
+
+    public BinaryDataEncoding(Builder builder) {
+        super(builder, -1);
+
+        if (builder.type != null) {
+            this.type = builder.type;
+        }
+        if (builder.sizeInBitsOfSizeTag != null) {
+            this.sizeInBitsOfSizeTag = builder.sizeInBitsOfSizeTag;
+        }
+
+        if (builder.dynamicSize != null) {
+            this.sizeInBits = -1;
+            this.dynamicSize = builder.dynamicSize;
+        }
+
+        if (builder.baseEncoding instanceof BinaryDataEncoding) {
+            BinaryDataEncoding baseEncoding = (BinaryDataEncoding) builder.baseEncoding;
+
+            if (builder.type == null) {
+                this.type = baseEncoding.type;
+            }
+
+            if (builder.sizeInBitsOfSizeTag == null) {
+                this.sizeInBitsOfSizeTag = baseEncoding.sizeInBitsOfSizeTag;
+            }
+            if (builder.dynamicSize == null) {
+                this.dynamicSize = baseEncoding.dynamicSize;
+            }
+        }
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public void setSizeType(Type sizeType) {
+        this.type = sizeType;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public int getSizeInBitsOfSizeTag() {
+        return sizeInBitsOfSizeTag;
+    }
+
+    public void setSizeInBitsOfSizeTag(int sizeInBits) {
+        this.sizeInBitsOfSizeTag = sizeInBits;
+    }
+
+    public boolean isVariableSize() {
+        return dynamicSize != null;
+    }
+
+    public DynamicIntegerValue getDynamicSize() {
+        return dynamicSize;
+    }
+
+    @Override
+    public Object parseString(String stringValue) {
+        return BinaryDataType.hexStringToArray(stringValue);
+    }
+
+    @Override
+    public BinaryDataEncoding copy() {
+        return new BinaryDataEncoding(this);
+    }
+
+    @Override
+    public String toString() {
+        return "BinaryDataEncoding(sizeInBits:" + sizeInBits + ", type:" + type + ")";
+    }
+
+    public static class Builder extends DataEncoding.Builder<Builder> {
+        Integer sizeInBitsOfSizeTag;
+        private Type type;
+        DynamicIntegerValue dynamicSize;
+
+        public Builder(BinaryDataEncoding encoding) {
+            super(encoding);
+            this.sizeInBitsOfSizeTag = encoding.sizeInBitsOfSizeTag;
+            this.type = encoding.type;
+        }
+
+        public Builder() {
+            super();
+        }
+
+        public DynamicIntegerValue getDynamicSize() {
+            return dynamicSize;
+        }
+
+        public Builder setDynamicSize(DynamicIntegerValue v) {
+            this.dynamicSize = v;
+            return self();
+        }
+
+        public Builder setType(Type type) {
+            this.type = type;
+            return self();
+        }
+
+        public Builder setSizeInBitsOfSizeTag(int sizeInBitsOfSizeTag) {
+            this.sizeInBitsOfSizeTag = sizeInBitsOfSizeTag;
+            return self();
+        }
+
+        @Override
+        public Builder setToBinaryTransformAlgorithm(Algorithm alg) {
+            super.setToBinaryTransformAlgorithm(alg);
+            this.type = Type.CUSTOM;
+            return self();
+        }
+
+        @Override
+        public Builder setFromBinaryTransformAlgorithm(Algorithm alg) {
+            super.setFromBinaryTransformAlgorithm(alg);
+            this.type = Type.CUSTOM;
+            return self();
+        }
+
+        @Override
+        public BinaryDataEncoding build() {
+            return new BinaryDataEncoding(this);
+        }
+    }
+}
+```
+
+### `BinaryDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.AbstractMap.SimpleEntry;
+import java.util.List;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class BinaryDataType extends BaseDataType {
+    private static final long serialVersionUID = 3L;
+    byte[] initialValue;
+
+    /**
+     * DIFFERS_FROM_XTCE XTCE does not define a size range
+     */
+    IntegerRange sizeRangeInBytes;
+
+    protected BinaryDataType(Builder<?> builder) {
+        super(builder);
+        this.sizeRangeInBytes = builder.sizeRangeInBytes;
+
+        if (builder.baseType instanceof BinaryDataType) {
+            BinaryDataType baseType = (BinaryDataType) builder.baseType;
+            if (builder.sizeRangeInBytes == null && baseType.sizeRangeInBytes != null) {
+                this.sizeRangeInBytes = baseType.sizeRangeInBytes;
+            }
+        }
+        setInitialValue(builder);
+    }
+
+    protected BinaryDataType(BinaryDataType t) {
+        super(t);
+        this.sizeRangeInBytes = t.sizeRangeInBytes;
+    }
+
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    @Override
+    public byte[] getInitialValue() {
+        return initialValue;
+    }
+
+    public IntegerRange getSizeRangeInBytes() {
+        return sizeRangeInBytes;
+    }
+
+    public void setSizeRangeInBytes(IntegerRange sizeRangeInBytes) {
+        this.sizeRangeInBytes = sizeRangeInBytes;
+    }
+
+    @Override
+    public String toString() {
+        return "BinaryData encoding: " + encoding;
+    }
+
+    /**
+     * parse the hexadecimal stringValue into byte[]
+     */
+    @Override
+    public byte[] convertType(Object value) {
+        if (value instanceof String) {
+            return hexStringToArray((String) value);
+        } else if (value instanceof byte[]) {
+            return (byte[]) value;
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public String toString(Object v) {
+        if (v instanceof byte[]) {
+            return arrayToHexString((byte[]) v);
+        } else {
+            throw new IllegalArgumentException("Can only convert byte arrays");
+        }
+    }
+
+    /**
+     * Converts a hex string into a byte array. If the string has an odd number of hex digits, a 0 is prepended in
+     * front.
+     * 
+     * if the string contains something else than 0-9, a-f, a NumberFormatException is thrown from Integer.parseInt with
+     * radix 16
+     * 
+     * @param s
+     * @return byte array resulted from parsing the string
+     */
+    public static byte[] hexStringToArray(String s) {
+        if ((s.length() & 1) == 1) {
+            s = "0" + s;
+        }
+        byte[] b = new byte[s.length() / 2];
+        for (int i = 0; i < s.length() / 2; i++) {
+            b[i] = (byte) (Integer.parseInt(s.substring(2 * i, 2 * i + 2), 16) & 0xFF);
+        }
+        return b;
+    }
+
+    public static String arrayToHexString(byte[] b) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < b.length; i++) {
+            sb.append(String.format("%02X", b[i] & 0xFF));
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public Type getValueType() {
+        return Type.BINARY;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "binary";
+    }
+
+    public static abstract class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        IntegerRange sizeRangeInBytes;
+
+        public Builder() {
+        }
+
+        public Builder(BinaryDataType binaryDataType) {
+            super(binaryDataType);
+            this.sizeRangeInBytes = binaryDataType.sizeRangeInBytes;
+        }
+
+        public void setSizeRangeInBytes(IntegerRange sizeRangeInBytes) {
+            this.sizeRangeInBytes = sizeRangeInBytes;
+        }
+
+        @Override
+        public void setAncillaryData(List<AncillaryData> ancillaryData) {
+            super.setAncillaryData(ancillaryData);
+
+            long minLength = Long.MIN_VALUE;
+            long maxLength = Long.MAX_VALUE;
+
+            for (AncillaryData ad : ancillaryData) {
+                if (ad.isYamcs()) {
+                    SimpleEntry<String, String> p = ad.getValueAsPair();
+                    if (p != null && "minLength".equals(p.getKey())) {
+                        minLength = Integer.valueOf(p.getValue());
+                    }
+                    if (p != null && "maxLength".equals(p.getKey())) {
+                        maxLength = Integer.valueOf(p.getValue());
+                    }
+                }
+            }
+            if (minLength != Long.MIN_VALUE || maxLength != Long.MAX_VALUE) {
+                this.sizeRangeInBytes = new IntegerRange(minLength, maxLength);
+            }
+        }
+    }
+}
+```
+
+### `BinaryParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BinaryParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class BinaryParameterType extends BinaryDataType implements ParameterType {
+    private static final long serialVersionUID = 200805131551L;
+
+    BinaryParameterType(Builder builder) {
+        super(builder);
+    }
+
+    public BinaryParameterType(BinaryParameterType t1) {
+        super(t1);
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return false;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "binary";
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new BinaryParameterType.Builder(this);
+    }
+
+    public static class Builder extends BinaryDataType.Builder<Builder> implements ParameterType.Builder<Builder> {
+        public Builder() {
+        }
+
+        public Builder(BinaryParameterType binaryParameterType) {
+            super(binaryParameterType);
+        }
+
+        @Override
+        public BinaryParameterType build() {
+            return new BinaryParameterType(this);
+        }
+    }
+}
+```
+
+### `BooleanArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class BooleanArgumentType extends BooleanDataType implements ArgumentType {
+    private static final long serialVersionUID = 3L;
+
+    public BooleanArgumentType(Builder builder) {
+        super(builder);
+    }
+    /**
+     * Creates a shallow copy of the parameter type
+     * 
+     */
+    public BooleanArgumentType(BooleanArgumentType t) {
+        super(t);
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "boolean";
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("BooleanArgumentType name:").append(name);
+
+        if (initialValue != null)
+            sb.append(", defaultValue: ").append(initialValue);
+        sb.append(", encoding: ").append(encoding);
+
+        return sb.toString();
+    }
+
+    @Override
+    public BooleanArgumentType.Builder toBuilder() {
+        return new Builder(this);
+    }
+    
+    
+    public static class Builder extends BooleanDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+        public Builder() {
+        }
+        
+        public Builder(BooleanArgumentType booleanArgumentType) {
+           super(booleanArgumentType);
+        }
+
+        @Override
+        public ArgumentType build() {
+            return new BooleanArgumentType(this);
+        }
+    }
+}
+```
+
+### `BooleanDataEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanDataEncoding.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * For boolean data.
+ * <p>
+ * DIFFERS_FROM_XTCE: XTCE does not have a BooleanDataEncoding, only a BooleanParameterType. This
+ * creates an inconsistency when algorithms output uncalibrated boolean values.
+ */
+public class BooleanDataEncoding extends DataEncoding {
+    private static final long serialVersionUID = 200805131551L;
+
+    BooleanDataEncoding(BooleanDataEncoding bde) {
+        super(bde);
+    }
+
+    public BooleanDataEncoding(Builder builder) {
+        super(builder, 1);
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    @Override
+    public Object parseString(String stringValue) {
+        return Boolean.parseBoolean(stringValue);
+    }
+
+    @Override
+    public BooleanDataEncoding copy() {
+        return new BooleanDataEncoding(this);
+    }
+
+    public static class Builder extends DataEncoding.Builder<Builder> {
+        public Builder(BooleanDataEncoding encoding) {
+            super(encoding);
+        }
+
+        public Builder() {
+            super();
+        }
+
+        public BooleanDataEncoding build() {
+            return new BooleanDataEncoding(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "BooleanDataEncoding(sizeInBits:" + sizeInBits + ")";
+    }
+}
+```
+
+### `BooleanDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class BooleanDataType extends BaseDataType {
+    private static final long serialVersionUID = 2L;
+    private static final Logger log = LoggerFactory.getLogger(BooleanDataType.class);
+    public static final String DEFAULT_ONE_STRING_VALUE = "True";
+    public static final String DEFAULT_ZERO_STRING_VALUE = "False";
+    Boolean initialValue;
+
+    String oneStringValue = DEFAULT_ONE_STRING_VALUE;
+    String zeroStringValue = DEFAULT_ZERO_STRING_VALUE;
+
+    protected BooleanDataType(Builder<?> builder) {
+        super(builder);
+
+        if (builder.oneStringValue != null) {
+            this.oneStringValue = builder.oneStringValue;
+        }
+        if (builder.zeroStringValue != null) {
+            this.zeroStringValue = builder.zeroStringValue;
+        }
+        if (builder.baseType instanceof BooleanDataType) {
+            BooleanDataType baseType = (BooleanDataType) builder.baseType;
+            if (builder.oneStringValue == null && baseType.oneStringValue != null) {
+                this.oneStringValue = baseType.oneStringValue;
+            }
+            if (builder.zeroStringValue == null && baseType.zeroStringValue != null) {
+                this.zeroStringValue = baseType.zeroStringValue;
+            }
+        }
+
+        setInitialValue(builder);
+    }
+
+    protected BooleanDataType(BooleanDataType t) {
+        super(t);
+    }
+
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    @Override
+    public Boolean getInitialValue() {
+        return initialValue;
+    }
+
+    @Override
+    public Boolean convertType(Object value) {
+        if (value instanceof String) {
+            String stringValue = (String) value;
+            if (oneStringValue.equals(stringValue)) {
+                return Boolean.TRUE;
+            } else if (zeroStringValue.equals(stringValue)) {
+                return Boolean.FALSE;
+            } else if (oneStringValue.equalsIgnoreCase(stringValue)) {
+                log.warn("DEPRECATION: Boolean conversion from string should use '{}' instead of '{}'. "
+                        + "This check will be enforced in a future release of Yamcs", oneStringValue, value);
+                return Boolean.TRUE;
+            } else if (zeroStringValue.equalsIgnoreCase(stringValue)) {
+                log.warn("DEPRECATION: Boolean conversion from string should use '{}' instead of '{}'. "
+                        + "This check will be enforced in a future release of Yamcs", zeroStringValue, value);
+                return Boolean.FALSE;
+            } else {
+                throw new IllegalArgumentException(
+                        "Invalid initialValue, should be '" + oneStringValue + "' or '" + zeroStringValue + "'");
+            }
+        } else if (value instanceof Boolean) {
+            return (Boolean) value;
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public String toString(Object o) {
+        if (o instanceof Boolean) {
+            return (Boolean) o ? oneStringValue : zeroStringValue;
+        } else {
+            throw new IllegalArgumentException("Can only convert a boolean value, not " + o.getClass());
+        }
+    }
+
+    public String getOneStringValue() {
+        return oneStringValue;
+    }
+
+    public String getZeroStringValue() {
+        return zeroStringValue;
+    }
+
+    @Override
+    public Type getValueType() {
+        return Type.BOOLEAN;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "boolean";
+    }
+
+    @Override
+    public String toString() {
+        return "BooleanData encoding: " + encoding;
+    }
+
+    public static abstract class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        String oneStringValue;
+        String zeroStringValue;
+
+        public Builder() {
+        }
+
+        public Builder(BooleanDataType dataType) {
+            super(dataType);
+            this.oneStringValue = dataType.oneStringValue;
+            this.zeroStringValue = dataType.zeroStringValue;
+        }
+
+        public void setOneStringValue(String oneStringValue) {
+            this.oneStringValue = oneStringValue;
+        }
+
+        public void setZeroStringValue(String zeroStringValue) {
+            this.zeroStringValue = zeroStringValue;
+        }
+    }
+}
+```
+
+### `BooleanExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanExpression.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public interface BooleanExpression extends MatchCriteria {
+}
+```
+
+### `BooleanParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/BooleanParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class BooleanParameterType extends BooleanDataType implements ParameterType {
+
+    private static final long serialVersionUID = 1L;
+
+    public BooleanParameterType(Builder builder) {
+        super(builder);
+    }
+
+    /**
+     * Creates a shallow copy of the parameter type
+     * 
+     */
+    public BooleanParameterType(BooleanParameterType t) {
+        super(t);
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return false;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder extends BooleanDataType.Builder<Builder> implements ParameterType.Builder<Builder> {
+        public Builder() {
+
+        }
+
+        public Builder(BooleanParameterType booleanParameterType) {
+            super(booleanParameterType);
+        }
+
+        @Override
+        public BooleanParameterType build() {
+            return new BooleanParameterType(this);
+        }
+    }
+}
+```
+
+### `Calibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Calibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public interface Calibrator extends Serializable {
+}
+```
+
+### `CheckWindow.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CheckWindow.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * From XTCE: Holds a time to stop checking and optional time to start checking and whether window is relative to
+ * command release or last verifier.
+ * 
+ */
+public class CheckWindow implements Serializable {
+    private static final long serialVersionUID = 2L;
+
+    public enum TimeWindowIsRelativeToType {
+        COMMAND_RELEASE, LAST_VERIFIER;
+
+        static public TimeWindowIsRelativeToType fromXtce(String xtceAttr) {
+            if ("timeLastVerifierPassed".equals(xtceAttr)) {
+                return TimeWindowIsRelativeToType.LAST_VERIFIER;
+            } else if ("commandRelease".equals(xtceAttr)) {
+                return TimeWindowIsRelativeToType.COMMAND_RELEASE;
+            } else {
+                throw new IllegalArgumentException("Invalid value '" + xtceAttr + "' for timeWindowIsRelativeTo");
+            }
+        }
+
+        static public TimeWindowIsRelativeToType fromXls(String xlsStr) {
+            if ("LastVerifier".equals(xlsStr)) {
+                return TimeWindowIsRelativeToType.LAST_VERIFIER;
+            } else if ("CommandRelease".equals(xlsStr)) {
+                return TimeWindowIsRelativeToType.COMMAND_RELEASE;
+            } else {
+                throw new IllegalArgumentException("Invalid value '" + xlsStr + "' for timeWindowIsRelativeTo");
+            }
+        }
+
+        public String toXtce() {
+            if (this == COMMAND_RELEASE) {
+                return "commandRelease";
+            } else {
+                return "timeLastVerifierPassed";
+            }
+        }
+    };
+
+    final private long timeToStartChecking; // time to start checking in milliseconds (if -1 - it means not defined)
+    final private long timeToStopChecking; // time to stop checking in milliseconds
+
+    final private TimeWindowIsRelativeToType timeWindowIsRelativeTo;
+
+    public CheckWindow(long timeToStartChecking, long timeToStopChecking,
+            TimeWindowIsRelativeToType timeWindowIsRelativeTo) {
+        if (timeToStopChecking < timeToStartChecking) {
+            throw new IllegalArgumentException(
+                    "timeToStopChecking has to be greater or equal than timeToStartChecking");
+        }
+
+        if (timeToStopChecking <= 0) {
+            throw new IllegalArgumentException(
+                    "timeToStopChecking has to be strictly greater than 0");
+        }
+
+        this.timeToStartChecking = timeToStartChecking;
+        this.timeToStopChecking = timeToStopChecking;
+        this.timeWindowIsRelativeTo = timeWindowIsRelativeTo;
+    }
+
+    public long getTimeToStartChecking() {
+        return timeToStartChecking;
+    }
+
+    public long getTimeToStopChecking() {
+        return timeToStopChecking;
+    }
+
+    public TimeWindowIsRelativeToType getTimeWindowIsRelativeTo() {
+        return timeWindowIsRelativeTo;
+    }
+
+    public boolean hasStart() {
+        return timeToStartChecking != -1;
+    }
+
+    public String toString() {
+        return timeWindowIsRelativeTo + "[" + timeToStartChecking + "," + timeToStopChecking + "]";
+    }
+}
+```
+
+### `CommandContainer.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CommandContainer.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CommandContainer extends Container {
+    private static final long serialVersionUID = 1L;
+
+    public CommandContainer(String name) {
+        super(name);
+    }
+
+    ArrayList<SequenceEntry> entryList = new ArrayList<SequenceEntry>();
+
+    /**
+     * looks up in the argumentEntry list the first one that is linked to the passed on argument
+     * 
+     * @param arg
+     * @return the ArgumentEntry whose argument is arg. Returns null if no ArgumentEntry satisfies the condition;
+     */
+    public ArgumentEntry getEntryForArgument(Argument arg) {
+        for (SequenceEntry se : entryList) {
+            if (se instanceof ArgumentEntry) {
+                ArgumentEntry ae = (ArgumentEntry) se;
+                if (ae.getArgument() == arg)
+                    return ae;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * returns the list of entries
+     * 
+     * @return
+     */
+    public List<SequenceEntry> getEntryList() {
+        return entryList;
+    }
+
+    public void addEntry(SequenceEntry se) {
+        entryList.add(se);
+        se.setIndex(entryList.size() - 1);
+        se.setContainer(this);
+    }
+
+    public void print(PrintStream out) {
+        out.print("  MetaCommandContainer name: " + name + ((sizeInBits > -1) ? ", sizeInBits: " + sizeInBits : ""));
+        if (getAliasSet() != null)
+            out.print(", aliases: " + getAliasSet());
+        out.println();
+        if (baseContainer != null) {
+            out.println("\tbaseContainer: '" + baseContainer.getName());
+        }
+        for (SequenceEntry se : entryList) {
+            out.println("\t\t" + se);
+        }
+    }
+
+}
+```
+
+### `CommandVerifier.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CommandVerifier.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * XTCE: A command verifier is used to check that the command has been successfully executed.
+ * <p>
+ * Command Verifiers may be either a Custom Algorithm or a Boolean Check or the presence of a Container for a relative
+ * change in the value of a Parameter.
+ * <p>
+ * The CheckWindow is a time period where the verification must test true to pass.
+ *
+ * @author nm
+ *
+ */
+public class CommandVerifier implements Serializable {
+    private static final long serialVersionUID = 2L;
+
+    public enum Type {
+        /** verifier succeeds if a container is received */
+        CONTAINER,
+        /** an algorithm runs to decide if the verifier succeeds or fails */
+        ALGORITHM,
+        /** succeeds when some conditions are met */
+        MATCH_CRITERIA,
+        /** succeeds when a parameter changes with a delta above a threshold */
+        PARAMETER_VALUE_CHANGE
+    };
+
+    private final Type type;
+
+    /**
+     * what can happen when the verification finishes XTCE does not specify very well, just that each verifier returns
+     * true or false.
+     * 
+     * We acknowledge the fact that the verifier can also timeout and define three TerminationAction for the three
+     * outcomes: true, false or timeout.
+     */
+    public enum TerminationAction {
+        SUCCESS, // the command is declared successful
+        FAIL // the command is declared failed
+    }
+
+    private TerminationAction onSuccess = null, onFail = null, onTimeout = null;
+
+    /**
+     * 
+     * Command verification stage. This corresponds to the verifier name from XTCE.
+     * 
+     */
+    final private String stage;
+
+    /**
+     * XTCE: A time based check window
+     */
+    private CheckWindow checkWindow;
+
+    SequenceContainer containerRef;
+    Algorithm algorithm;
+    MatchCriteria matchCriteria;
+    ParameterValueChange paraValueChange;
+
+    // valid for matchCriteria - if true the first time the condition can be checked (i.e. all input parameters
+    // available) and the condition does not match, the verifier will fail.
+    // if false, the verifier will keep checking until timeout (it will never fail)
+    boolean verifierFailOnFirstFailedMatch = false;
+
+    // if not null, the value will be used as the "result" of verification
+    private Parameter returnParameter;
+
+    public CommandVerifier(Type type, String stage) {
+        this.type = type;
+        this.stage = stage;
+    }
+
+    public CommandVerifier(Type type, String stage, CheckWindow checkWindow) {
+        this(type, stage);
+        this.checkWindow = checkWindow;
+    }
+
+    // copy constructor
+    public CommandVerifier(CommandVerifier cv) {
+        this.algorithm = cv.algorithm;
+        this.checkWindow = cv.checkWindow;
+        this.type = cv.type;
+        this.stage = cv.stage;
+        this.containerRef = cv.containerRef;
+        this.onSuccess = cv.onSuccess;
+        this.onFail = cv.onFail;
+        this.onTimeout = cv.onTimeout;
+        this.matchCriteria = cv.matchCriteria;
+    }
+
+    public String getStage() {
+        return stage;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setContainerRef(SequenceContainer containerRef) {
+        this.containerRef = containerRef;
+    }
+
+    public SequenceContainer getContainerRef() {
+        return containerRef;
+    }
+
+    public Algorithm getAlgorithm() {
+        return algorithm;
+    }
+
+    public void setAlgorithm(Algorithm algo) {
+        this.algorithm = algo;
+    }
+
+    public void setMatchCriteria(MatchCriteria matchCriteria) {
+        if (type != Type.MATCH_CRITERIA) {
+            throw new IllegalStateException("This verifier is of type " + type);
+        }
+        this.matchCriteria = matchCriteria;
+    }
+
+    public CheckWindow getCheckWindow() {
+        return checkWindow;
+    }
+
+    public TerminationAction getOnTimeout() {
+        return onTimeout;
+    }
+
+    public void setOnTimeout(TerminationAction onTimeout) {
+        this.onTimeout = onTimeout;
+    }
+
+    public TerminationAction getOnFail() {
+        return onFail;
+    }
+
+    public void setCheckWindow(CheckWindow checkWindow) {
+        this.checkWindow = checkWindow;
+    }
+
+    public void setOnFail(TerminationAction onFail) {
+        this.onFail = onFail;
+    }
+
+    public TerminationAction getOnSuccess() {
+        return onSuccess;
+    }
+
+    public void setOnSuccess(TerminationAction onSuccess) {
+        this.onSuccess = onSuccess;
+    }
+
+    public MatchCriteria getMatchCriteria() {
+        return matchCriteria;
+    }
+
+    public ParameterValueChange getParameterValueChange() {
+        return paraValueChange;
+    }
+
+    public void setParameterValueChange(ParameterValueChange paraValueChange) {
+        this.paraValueChange = paraValueChange;
+    }
+
+    public boolean failOnFirstFailedMatch() {
+        return verifierFailOnFirstFailedMatch;
+    }
+
+    public Parameter getReturnParameter() {
+        return returnParameter;
+    }
+
+    public void setReturnParameter(Parameter returnParameter) {
+        this.returnParameter = returnParameter;
+    }
+
+    public List<Parameter> getDependentParameters() {
+        List<Parameter> plist = new ArrayList<>();
+        if (matchCriteria != null) {
+            plist.addAll(matchCriteria.getDependentParameters());
+        }
+        if (paraValueChange != null) {
+            plist.add(paraValueChange.getParameterRef().getParameter());
+        }
+
+        if (returnParameter != null) {
+            plist.add(returnParameter);
+        }
+        // parameters on which the algorithms depend are handled by AlgorithmManager
+
+        return plist;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{stage: ").append(stage);
+        if (containerRef != null) {
+            sb.append(", containerRef: ").append(containerRef.getName());
+        }
+        if (algorithm != null) {
+            sb.append(", algorithm: ").append(algorithm.getName());
+        }
+        if (matchCriteria != null) {
+            sb.append(", matchCriteria: ").append(matchCriteria);
+        }
+        sb.append(", checkWindow: ").append(checkWindow.toString()).append("}");
+        return sb.toString();
+    }
+}
+```
+
+### `Comparison.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Comparison.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.yamcs.xtce.util.DataTypeUtil;
+
+/**
+ * This corresponds to XTCE Comparison or ArgumentComparison
+ */
+public class Comparison implements MatchCriteria {
+
+    private static final long serialVersionUID = 10L;
+
+    // only one of paraRef and argRef is set, the other is null
+    private ParameterOrArgumentRef ref;
+
+    private OperatorType comparisonOperator;
+
+    String stringValue;
+
+    /**
+     * Makes a new comparison with a generic stringValue at this step the paraRef could be pointing to an unknown
+     * parameter. resolveValueType can(should) be called later to create the correct value if it's not string
+     * 
+     * @param paraRef
+     * @param stringValue
+     * @param op
+     */
+    public Comparison(ParameterInstanceRef paraRef, String stringValue, OperatorType op) {
+        if (stringValue == null) {
+            throw new NullPointerException("stringValue");
+        }
+        this.ref = paraRef;
+        this.stringValue = stringValue;
+        this.comparisonOperator = op;
+
+        checkParaRef(paraRef);
+    }
+
+    public Comparison(ArgumentInstanceRef argRef, String stringValue, OperatorType op) {
+        if (stringValue == null) {
+            throw new NullPointerException("stringValue");
+        }
+        this.ref = argRef;
+        this.stringValue = stringValue;
+        this.comparisonOperator = op;
+    }
+
+    private void checkParaRef(ParameterInstanceRef paraRef) {
+        if (paraRef.getInstance() != 0) {
+            throw new UnsupportedOperationException("Condition on parameter values from history are not supported");
+        }
+    }
+
+    /**
+     * Called when the type of the parameter used for comparison is known, so we have to find the value from stringValue
+     * that we can compare to it
+     */
+    public void validateValueType() {
+
+        boolean useCalibratedValue = ref.useCalibratedValue;
+        DataType dtype = ref.getDataType();
+
+        if (dtype instanceof AggregateDataType) {
+            if (ref.getMemberPath() == null) {
+                throw new IllegalArgumentException(
+                        "Reference to an aggregate parameter type " + dtype.getName() + " without speciyfing the path");
+            }
+            DataType dtype1 = DataTypeUtil.getMemberType(dtype, ref.getMemberPath());
+            if (dtype1 == null) {
+                throw new IllegalArgumentException("reference " + PathElement.pathToString(ref.getMemberPath())
+                        + " points to a nonexistent member inside the parameter type " + dtype.getName());
+            }
+            dtype = dtype1;
+        }
+        try {
+            if (useCalibratedValue) {
+                dtype.convertType(stringValue);
+            } else {
+                dtype.parseStringForRawValue(stringValue);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Cannot parse value required for comparing with "
+                    + ref.getName() + ": " + e.getMessage(), e);
+        }
+    }
+
+    public ParameterOrArgumentRef getRef() {
+        return ref;
+    }
+
+    public OperatorType getComparisonOperator() {
+        return comparisonOperator;
+    }
+
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        if (ref instanceof ParameterInstanceRef) {
+            Set<Parameter> pset = new HashSet<>();
+            pset.add(((ParameterInstanceRef) ref).getParameter());
+            return pset;
+        } else {
+            return Collections.emptySet();
+        }
+
+    }
+
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    @Override
+    public String toString() {
+        return "Comparison: " + ref +
+                comparisonOperator + stringValue;
+    }
+}
+```
+
+### `ComparisonList.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ComparisonList.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * All comparisons must be true.
+ * 
+ * @author nm
+ *
+ */
+public class ComparisonList implements MatchCriteria {
+
+    private static final long serialVersionUID = 200805131551L;
+    ArrayList<Comparison> comparisons = new ArrayList<>();
+
+    public void addComparison(Comparison comparison) {
+        comparisons.add(comparison);
+    }
+
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        Set<Parameter> pset = new HashSet<>();
+        for (Comparison c : comparisons) {
+            pset.addAll(c.getDependentParameters());
+        }
+        return pset;
+    }
+
+    public List<Comparison> getComparisonList() {
+        return comparisons;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("ComparisonList: ");
+        for (Comparison c : comparisons) {
+            sb.append(c.toString()).append(" ");
+        }
+        return sb.toString();
+    }
+}
+```
+
+### `ComparisonOperatorType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ComparisonOperatorType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public class ComparisonOperatorType implements Serializable{
+	private static final long serialVersionUID = 200706141154L;
+	
+	enum Type { EQUALITY, INEQUALITY, LARGERTHAN, LARGEROREQUALTHAN, SMALLERTHAN, SMALLEROREQUALTHAN }
+	Type type;
+
+	ComparisonOperatorType(String type) throws IllegalArgumentException {
+		if (type.equals("==")) {
+			this.type = Type.EQUALITY;
+		} else {
+			if (type.equals("!=")) {
+				this.type = Type.INEQUALITY;
+			} else {
+				if (type.equals(">")) {
+					this.type = Type.LARGERTHAN;
+				} else {
+					if (type.equals(">=")) {
+						this.type = Type.LARGEROREQUALTHAN;
+					} else {
+						if (type.equals("<")) {
+							this.type = Type.SMALLERTHAN;
+						} else {
+							if (type.equals("<=")) {
+								this.type = Type.SMALLEROREQUALTHAN;
+							} else {
+								throw new IllegalArgumentException("the following type is not a valid ComparisonOperatorType: " + type);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public boolean apply(long value1, long value2) {
+		switch (this.type) {
+			case EQUALITY: {
+				return (value1 == value2);
+			}
+			case INEQUALITY: {
+				return (value1 != value2);
+			}
+			case LARGERTHAN: {
+				return (value1 > value2);
+			}
+			case LARGEROREQUALTHAN: {
+				return (value1 >= value2);
+			}
+			case SMALLERTHAN: {
+				return (value1 < value2);
+		    }	
+			case SMALLEROREQUALTHAN: {
+				return (value1 <= value2);
+			}
+		}
+		return true; // should never be reached
+	}
+
+	public String value() {
+		switch (this.type) {
+			case EQUALITY: {
+				return "==";
+			}
+			case INEQUALITY: {
+				return "!=";
+			}
+			case LARGERTHAN: {
+				return ">";
+			}
+			case LARGEROREQUALTHAN: {
+				return ">=";
+			}
+			case SMALLERTHAN: {
+				return "<";
+			}
+			case SMALLEROREQUALTHAN: {
+				return "<=";
+			}
+		}
+		return ""; // should never be reached
+	}
+}
+
+```
+
+### `Condition.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Condition.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * The Condition is XTCE overlaps with the Comparison. Condition allows two operands to be Parameters
+ * 
+ * @author dho
+ *
+ */
+public class Condition implements BooleanExpression {
+
+    private static final long serialVersionUID = 2L;
+
+    // ParameterInstanceRef or ArgumentInstanceRef
+    ParameterOrArgumentRef leftRef;
+
+    // Only one of these two can be set
+    ParameterOrArgumentRef rightRef;
+    String rightValue;
+
+    OperatorType comparisonOperator;
+
+    public Condition(OperatorType comparisonOperator, ParameterOrArgumentRef leftRef, ParameterOrArgumentRef rightRef) {
+        super();
+
+        this.leftRef = leftRef;
+        this.comparisonOperator = comparisonOperator;
+        this.rightRef = rightRef;
+    }
+
+    public Condition(OperatorType comparisonOperator, ParameterOrArgumentRef leftRef, String rightValue) {
+        super();
+
+        this.leftRef = leftRef;
+        this.comparisonOperator = comparisonOperator;
+        this.rightValue = rightValue;
+    }
+
+    /**
+     * If the type of the parameter used for comparison is known, can parse the stringValue to see if it can be compared
+     * with the type
+     */
+    public void validateValueType() {
+        if (rightValue != null) {
+            DataType ptype = leftRef.getDataType();
+            if (ptype != null) {
+                if (leftRef.useCalibratedValue()) {
+                    ptype.convertType(rightValue);
+                } else {
+                    ptype.parseStringForRawValue(rightValue);
+                }
+            }
+        }
+    }
+
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        Set<Parameter> pset = new HashSet<>();
+        if (leftRef instanceof ParameterInstanceRef) {
+            ParameterInstanceRef pref = ((ParameterInstanceRef) leftRef);
+            pset.add(pref.getParameter());
+        }
+        if (rightRef instanceof ParameterInstanceRef) {
+            ParameterInstanceRef pref = ((ParameterInstanceRef) rightRef);
+            pset.add(pref.getParameter());
+        }
+
+        return pset;
+    }
+
+    @Override
+    public String toString() {
+        return "Condition: " + leftRef + comparisonOperator + (rightValue == null ? rightRef : rightValue);
+
+    }
+
+    public ParameterOrArgumentRef getLeftRef() {
+        return leftRef;
+    }
+
+    public ParameterOrArgumentRef getRightRef() {
+        return rightRef;
+    }
+
+    public OperatorType getComparisonOperator() {
+        return comparisonOperator;
+    }
+
+    public String getRightValue() {
+        return rightValue;
+    }
+
+}
+```
+
+### `Container.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Container.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+/**
+ * An abstract block of data; used as the base type for more specific container types
+ * 
+ * @author nm
+ *
+ */
+public abstract class Container extends NameDescription {
+    private static final long serialVersionUID = 200706051148L;
+
+    /*
+     * DIFFERS_FROM_XTCE XTCE specifies the size of the container in the BinaryDataEncoding
+     * 
+     * Yamcs uses it only for telemetry when dealing with containers that are part of other containers, to speed up the processing of the
+     * parameter subsequent to this container.
+     * If specified, means that this container will ALWAYS have this size
+     */
+    protected int sizeInBits = -1;
+
+    protected Container baseContainer;
+
+    protected MatchCriteria restrictionCriteria;
+    // expected rate
+    RateInStream rate = null;
+
+    Container(String name) {
+        super(name);
+    }
+
+    public void setSizeInBits(int sizeInBits) {
+        this.sizeInBits = sizeInBits;
+    }
+
+    public int getSizeInBits() {
+        return sizeInBits;
+    }
+
+    public void setRateInStream(RateInStream r) {
+        this.rate = r;
+    }
+
+    public RateInStream getRateInStream() {
+        return rate;
+    }
+
+    public abstract void addEntry(SequenceEntry se);
+
+    public abstract List<SequenceEntry> getEntryList();
+
+    public void setBaseContainer(Container baseContainer) {
+        this.baseContainer = baseContainer;
+    }
+
+    public Container getBaseContainer() {
+        return baseContainer;
+    }
+
+    public void setRestrictionCriteria(MatchCriteria restrictionCriteria) {
+        this.restrictionCriteria = restrictionCriteria;
+    }
+
+    /**
+     * restriction criteria related to inheritance from the base container
+     * 
+     * @return
+     */
+    public MatchCriteria getRestrictionCriteria() {
+        return restrictionCriteria;
+    }
+
+}
+```
+
+### `ContainerEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ContainerEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Entry from a container that makes reference to another container.
+ * This is different than container inheritance: here the small container is included in the big one and does not extend
+ * it.
+ *
+ */
+public class ContainerEntry extends SequenceEntry {
+    private static final long serialVersionUID = 200706050737L;
+    private SequenceContainer refContainer;
+
+    public ContainerEntry(int locationInContainerInBits, ReferenceLocationType location,
+            SequenceContainer refContainer) {
+        this(locationInContainerInBits, location);
+        this.setRefContainer(refContainer);
+    }
+
+
+    public ContainerEntry(int locationInContainerInBits, ReferenceLocationType location) {
+        super(locationInContainerInBits, location);
+    }
+
+    @Override
+    public String toString() {
+        return "ContainerEntry position:" + getIndex() + ", locationInContainer: " + getLocationInContainerInBits()
+                + " from " + getReferenceLocation() +
+                ", refContainer: " + getRefContainer().getName()
+                + ((getRepeatEntry() != null) ? ", repeatEntry: (" + getRepeatEntry() + ")" : "");
+    }
+
+    public void setRefContainer(SequenceContainer refContainer) {
+        this.refContainer = refContainer;
+    }
+
+    public SequenceContainer getRefContainer() {
+        return refContainer;
+    }
+
+}
+```
+
+### `ContextCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ContextCalibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Context calibrations are applied when the ContextMatch is true. 
+ * Context calibrators override Default calibrators
+ * 
+ * @author nm
+ *
+ */
+public class ContextCalibrator implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    private Calibrator calibrator;
+    private MatchCriteria context;
+   
+    public ContextCalibrator( MatchCriteria context, Calibrator calibrator) {
+        this.calibrator = calibrator;
+        this.context = context;
+    }
+    
+    public Calibrator getCalibrator() {
+        return calibrator;
+    }
+    public void setCalibrator(Calibrator calibrator) {
+        this.calibrator = calibrator;
+    }
+    public MatchCriteria getContextMatch() {
+        return context;
+    }
+    public void setContext(MatchCriteria context) {
+        this.context = context;
+    }
+    @Override
+    public String toString() {
+        return "ContextCalibrator [ context:" + context +", calibrator:" + calibrator  + "]";
+    }
+}
+```
+
+### `CustomAlgorithm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/CustomAlgorithm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Algorithm implemented in a specific language.
+ * 
+ * This is XTCE InputOutputTriggerAlgorithmType
+ * 
+ * @author nm
+ *
+ */
+public class CustomAlgorithm extends Algorithm {
+    private static final long serialVersionUID = 1L;
+
+    private String language;
+   
+    private String algorithmText;
+    
+    public CustomAlgorithm(String name) {
+        super(name);
+    }
+    
+    public CustomAlgorithm(CustomAlgorithm a) {
+        super(a);
+        this.language = a.language;
+        this.algorithmText = a.algorithmText;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+    
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getAlgorithmText() {
+        return algorithmText;
+    }
+
+    public void setAlgorithmText(String algorithmText) {
+        this.algorithmText = algorithmText;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomAlgorithm [language=" + language + ", algorithmText='" + algorithmText + "', inputSet: "+getInputList()+", outputSet: "+getOutputList()+"]";
+    }
+    
+    /**
+     * return a shallow copy of the algorithm
+     * @return
+     */
+    public CustomAlgorithm copy() {
+        return new CustomAlgorithm(this);
+    }
+
+}
+```
+
+### `DataEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DataEncoding.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.ByteOrder;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Describes how a particular piece of data is sent or received from some non-native, off-platform device. (e.g. a
+ * spacecraft)
+ * <p>
+ * 
+ * DIFFERS_FROM_XTCE: XTCE defines known encodings for the usual types (e.g. twosComplement for signed integers) and
+ * allows a catch all using a BinaryDataEncoding with a custom algorithm. We consider this approach as flawed and
+ * inconsistent: whereas FloatDataEncoding converts from binary to float, IntegerDataEncoding converts from binary to
+ * integer, etc, the BinaryDataEncoding would convert from binary to anything and it cannot be known into what by just
+ * looking at it.
+ * 
+ * Therefore in Yamcs we allow the catch all custom algorithm for all encodings and the BinaryDataEncoding can only
+ * convert from binary to binary.
+ * 
+ */
+public abstract class DataEncoding implements Serializable {
+    private static final long serialVersionUID = 5L;
+
+    protected Calibrator defaultCalibrator = null;
+    protected List<ContextCalibrator> contextCalibratorList = null;
+
+    /**
+     * size in bits if known. If the size in bits is variable, it should be set to -1.
+     */
+    protected int sizeInBits;
+
+    transient ByteOrder byteOrder = ByteOrder.BIG_ENDIAN; // DIFFERS_FROM_XTCE in xtce is very complicated
+
+    // the algorithm will be used to convert from binary to raw value
+    protected Algorithm fromBinaryTransformAlgorithm;
+
+    // the algorithm will be used to convert from raw value to binary
+    protected Algorithm toBinaryTransformAlgorithm;
+
+    /**
+     * copy constructor
+     * 
+     * @param ide
+     */
+    DataEncoding(DataEncoding de) {
+        this.sizeInBits = de.sizeInBits;
+        this.byteOrder = de.byteOrder;
+        this.fromBinaryTransformAlgorithm = de.fromBinaryTransformAlgorithm;
+        this.toBinaryTransformAlgorithm = de.toBinaryTransformAlgorithm;
+    }
+
+    DataEncoding(Builder<?> builder, int defaultSizeInBits) {
+        this.sizeInBits = defaultSizeInBits;
+
+        if (builder.sizeInBits != null) {
+            this.sizeInBits = builder.sizeInBits;
+        }
+
+        if (builder.byteOrder != null) {
+            this.byteOrder = builder.byteOrder;
+        }
+
+        this.fromBinaryTransformAlgorithm = builder.fromBinaryTransformAlgorithm;
+        this.toBinaryTransformAlgorithm = builder.toBinaryTransformAlgorithm;
+        this.defaultCalibrator = builder.defaultCalibrator;
+        this.contextCalibratorList = builder.contextCalibratorList;
+
+        if (builder.baseEncoding != null) {
+            DataEncoding baseEncoding = builder.baseEncoding;
+
+            if (builder.sizeInBits == null) {
+                this.sizeInBits = baseEncoding.sizeInBits;
+            }
+            if (builder.byteOrder == null) {
+                this.byteOrder = baseEncoding.byteOrder;
+            }
+            if (builder.fromBinaryTransformAlgorithm == null) {
+                this.fromBinaryTransformAlgorithm = baseEncoding.fromBinaryTransformAlgorithm;
+            }
+            if (builder.toBinaryTransformAlgorithm == null) {
+                this.toBinaryTransformAlgorithm = baseEncoding.toBinaryTransformAlgorithm;
+            }
+            if (builder.defaultCalibrator == null) {
+                this.defaultCalibrator = baseEncoding.defaultCalibrator;
+            }
+            if (builder.contextCalibratorList == null) {
+                this.contextCalibratorList = baseEncoding.contextCalibratorList;
+            }
+        }
+    }
+
+    /**
+     * Returns the size in bits of data encoded according to this encoding. For some encodings like
+     * {@link StringDataEncoding} the size may be variable (depending on the data to be encoded). In this cases it
+     * returns -1.
+     * 
+     * @return size in bits or -1 if the size is unknown
+     */
+    public int getSizeInBits() {
+        return sizeInBits;
+    }
+
+    public void setSizeInBits(int sizeInBits) {
+        this.sizeInBits = sizeInBits;
+    }
+
+    public ByteOrder getByteOrder() {
+        return byteOrder;
+    }
+
+    // these two methods are used for serialisation because ByteOrder is not serializable
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        if (byteOrder == ByteOrder.BIG_ENDIAN) {
+            out.writeInt(0);
+        } else {
+            out.writeInt(1);
+        }
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        int o = in.readInt();
+        if (o == 0) {
+            byteOrder = ByteOrder.BIG_ENDIAN;
+        } else {
+            byteOrder = ByteOrder.LITTLE_ENDIAN;
+        }
+    }
+
+    /**
+     * parses the string into a java object of the correct type Has to match the DataEncodingDecoder (so probably it
+     * should be moved there somehow: TODO)
+     */
+    public abstract Object parseString(String stringValue);
+
+    public Algorithm getFromBinaryTransformAlgorithm() {
+        return fromBinaryTransformAlgorithm;
+    }
+
+    public void setFromBinaryTransformAlgorithm(Algorithm fromBinaryTransformAlgorithm) {
+        this.fromBinaryTransformAlgorithm = fromBinaryTransformAlgorithm;
+    }
+
+    public Algorithm getToBinaryTransformAlgorithm() {
+        return toBinaryTransformAlgorithm;
+    }
+
+    public void setToBinaryTransformAlgorithm(Algorithm toBinaryTransformAlgorithm) {
+        this.toBinaryTransformAlgorithm = toBinaryTransformAlgorithm;
+    }
+
+    public Set<Parameter> getDependentParameters() {
+        if (contextCalibratorList != null) {
+            Set<Parameter> r = new HashSet<>();
+            for (ContextCalibrator cc : contextCalibratorList) {
+                r.addAll(cc.getContextMatch().getDependentParameters());
+            }
+            return r;
+        } else {
+            return Collections.emptySet();
+        }
+    }
+
+    public List<ContextCalibrator> getContextCalibratorList() {
+        return contextCalibratorList;
+    }
+
+    public Calibrator getDefaultCalibrator() {
+        return defaultCalibrator;
+    }
+
+    public void setDefaultCalibrator(Calibrator calibrator) {
+        this.defaultCalibrator = calibrator;
+    }
+
+    public void setContextCalibratorList(List<ContextCalibrator> contextCalibratorList) {
+        this.contextCalibratorList = contextCalibratorList;
+    }
+
+    /**
+     * Create a shallow copy of the data encoding
+     * 
+     * @return
+     */
+    public abstract DataEncoding copy();
+
+    public abstract static class Builder<T extends Builder<T>> {
+        protected Integer sizeInBits;
+        transient ByteOrder byteOrder = null;
+        private Algorithm fromBinaryTransformAlgorithm;
+        private Algorithm toBinaryTransformAlgorithm;
+        DataEncoding baseEncoding;
+        Calibrator defaultCalibrator = null;
+        private List<ContextCalibrator> contextCalibratorList = null;
+
+        public Builder(DataEncoding encoding) {
+            this.sizeInBits = encoding.sizeInBits;
+            this.byteOrder = encoding.byteOrder;
+            this.fromBinaryTransformAlgorithm = encoding.fromBinaryTransformAlgorithm;
+            this.toBinaryTransformAlgorithm = encoding.toBinaryTransformAlgorithm;
+            this.defaultCalibrator = encoding.defaultCalibrator;
+            this.contextCalibratorList = encoding.contextCalibratorList;
+        }
+
+        public Builder() {
+        }
+
+        public T setSizeInBits(Integer sizeInBits) {
+            this.sizeInBits = sizeInBits;
+            return self();
+        }
+
+        public T setFromBinaryTransformAlgorithm(Algorithm alg) {
+            this.fromBinaryTransformAlgorithm = alg;
+            return self();
+        }
+
+        public T setToBinaryTransformAlgorithm(Algorithm alg) {
+            this.toBinaryTransformAlgorithm = alg;
+            return self();
+        }
+
+        public T setByteOrder(ByteOrder byteOrder) {
+            this.byteOrder = byteOrder;
+            return self();
+        }
+
+        public List<ContextCalibrator> getContextCalibratorList() {
+            return contextCalibratorList;
+        }
+
+        public Calibrator getDefaultCalibrator() {
+            return defaultCalibrator;
+        }
+
+        public T setDefaultCalibrator(Calibrator calibrator) {
+            this.defaultCalibrator = calibrator;
+            return self();
+        }
+
+        public T setContextCalibratorList(List<ContextCalibrator> contextCalibratorList) {
+            this.contextCalibratorList = contextCalibratorList;
+            return self();
+        }
+
+        public ByteOrder getByteOrder() {
+            return byteOrder;
+        }
+
+        public Algorithm getFromBinaryTransformAlgorithm() {
+            return fromBinaryTransformAlgorithm;
+        }
+
+        public Algorithm getToBinaryTransformAlgorithm() {
+            return toBinaryTransformAlgorithm;
+        }
+
+        @SuppressWarnings("unchecked")
+        protected T self() {
+            return (T) this;
+        }
+
+        protected abstract DataEncoding build();
+
+        public Integer getSizeInBits() {
+            return sizeInBits;
+        }
+
+    }
+
+    public abstract Builder<?> toBuilder();
+}
+```
+
+### `DataSource.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DataSource.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * The data source is associated to a {@link Parameter} and specifies the source of the values for that parameter.
+ * 
+ * @author nm
+ *
+ */
+public enum DataSource {
+    /**
+     * used for data acquired from outside, parameters of this type cannot be changed
+     */
+    TELEMETERED,
+    /**
+     * According to XTCE, a ground parameter is generated by an asset which is not the spacecraft. From Yamcs point of
+     * view is the same as TELEMETERED.
+     */
+    GROUND,
+    /**
+     * parameters set by the algorithm manager
+     */
+    DERIVED,
+    /**
+     * constants in the XtceDb - cannot be changed
+     */
+    CONSTANT,
+    /**
+     * software parameters maintained by Yamcs and that can be set by client
+     */
+    LOCAL,
+    /**
+     * parameters giving internal yamcs state -created on the fly
+     */
+    SYSTEM,
+    /**
+     * parameters used in the context of command verifiers
+     */
+    COMMAND,
+    /**
+     * special parameters created on the fly and instantiated in the context of command verifiers
+     */
+    COMMAND_HISTORY,
+    /**
+     * external parameters are like local parameters (can be set by the client) but maintained outside Yamcs.
+     * These are project specific and require a <code>SoftwareParameterManager</code> to be defined in the Yamcs
+     * processor configuration.
+     * 
+     */
+    EXTERNAL1, EXTERNAL2, EXTERNAL3;
+}
+```
+
+### `DataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import org.yamcs.protobuf.Yamcs.Value;
+
+/**
+ * Interface for all XTCE data types.
+ *
+ */
+public interface DataType {
+    /**
+     * String which represents the type. This string will be presented to the users of the system.
+     * 
+     * @return
+     */
+    String getTypeAsString();
+
+    /**
+     * 
+     * @return the name of the type
+     */
+    String getName();
+
+    /**
+     * Converts to the canonical (boxed) java representation of this type.
+     * <p>
+     * For example, if {@code value} is a {@code String}, an integer-like DataType should parse the String value, and
+     * return an Integer result.
+     * 
+     * 
+     * @param value
+     *            value to be converted, use boxed primitive values.
+     * @return The preferred java object representation
+     * @throws IllegalArgumentException
+     *             when the provided value cannot be represented by this type.
+     */
+    Object convertType(Object value);
+
+    /**
+     * parses the string into a java object according to the parameter encoding
+     * 
+     * @param stringValue
+     * @return a java object representation
+     * @throws IllegalArgumentException
+     *             if the string cannot be parsed
+     */
+    Object parseStringForRawValue(String stringValue);
+
+    /**
+     * Converts a value to a string.
+     * 
+     * @param v
+     * @return
+     */
+    String toString(Object v);
+
+    /**
+     * Get the initial value if any
+     * 
+     * @return
+     */
+    Object getInitialValue();
+
+    /**
+     * Return the expected Value type of an engineering value conforming to this XTCE data type
+     * 
+     * @return
+     */
+    Value.Type getValueType();
+
+    public String getShortDescription();
+
+    public String getLongDescription();
+
+    public String getQualifiedName();
+
+    public interface Builder<T extends Builder<T>> {
+        public T setName(String name);
+
+        public T setQualifiedName(String fqn);
+
+        public T setInitialValue(String initialValue);
+
+        public T setShortDescription(String shortDescription);
+
+        public T setLongDescription(String longDescription);
+
+        public DataType build();
+
+        public String getName();
+    }
+}
+```
+
+### `DynamicIntegerValue.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/DynamicIntegerValue.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Uses a parameter instance to obtain the value.
+ * <p>
+ * Note that this explicitly supports only integer values (whereas XTCE supports also doubles)
+ * 
+ */
+public class DynamicIntegerValue extends IntegerValue {
+    private static final long serialVersionUID = 14L;
+    private long intercept = 0;
+    private long slope = 1;
+    private ParameterOrArgumentRef instanceRef;
+
+    public DynamicIntegerValue(ParameterOrArgumentRef ir) {
+        this.instanceRef = ir;
+    }
+
+    public ParameterInstanceRef getParameterInstanceRef() {
+        if (!(instanceRef instanceof ParameterInstanceRef)) {
+            throw new IllegalStateException(
+                    "In DynamicIntegerValue: wanted ParameterInstanceRef but got "
+                            + instanceRef.getClass().getName());
+        }
+        return (ParameterInstanceRef) instanceRef;
+    }
+
+    public ParameterOrArgumentRef getDynamicInstanceRef() {
+        return instanceRef;
+    }
+
+    public long getIntercept() {
+        return intercept;
+    }
+
+    public void setIntercept(long intercept) {
+        this.intercept = intercept;
+    }
+
+    public long getSlope() {
+        return slope;
+    }
+
+    public void setSlope(long slope) {
+        this.slope = slope;
+    }
+
+    /**
+     * Transform the value with the intercept and slope.
+     * 
+     * @throws ArithmeticException
+     *             if the result overflows a long
+     */
+    public long transform(long v) {
+        return Math.addExact(Math.multiplyExact(v, slope), intercept);
+    }
+
+    /**
+     * Reverse operation for {@link #transform(long)}
+     * 
+     * @throws ArithmeticException
+     *             if the result overflows a long
+     */
+    public long reverse(long v) {
+        return Math.subtractExact(v / slope, intercept);
+    }
+
+    @Override
+    public String toString() {
+        return "DynamicIntegerValue(instanceRef=" + instanceRef.getName()
+                + ", slope=" + slope + ", intercept=" + intercept + ")";
+    }
+}
+```
+
+### `EnumeratedArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumeratedArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+
+public class EnumeratedArgumentType extends EnumeratedDataType implements ArgumentType {
+    private static final long serialVersionUID = 1;
+
+    public EnumeratedArgumentType(Builder builder) {
+        super(builder);
+    }
+
+    /**
+     * Copy constructor
+     * 
+     */
+    public EnumeratedArgumentType(EnumeratedArgumentType t) {
+        super(t);
+    }
+
+    public long decalibrate(String label) {
+        for (ValueEnumeration ve : enumerationList) {
+            if (ve.getLabel().equals(label)) {
+                return ve.getValue();
+            }
+        }
+        return 0;
+    }
+
+    public String getCalibrationDescription() {
+        return "EnumeratedArgumentType: " + enumeration;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "enumeration";
+    }
+
+    @Override
+    public String toString() {
+        return "EnumeratedArgumentType: " + enumeration + " encoding:" + encoding;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+    
+    
+    public static class Builder extends EnumeratedDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+        public Builder() {
+        }
+        
+        public Builder(EnumeratedArgumentType enumeratedArgumentType) {
+            super(enumeratedArgumentType);
+        }
+
+        @Override
+        public EnumeratedArgumentType build() {
+            return new EnumeratedArgumentType(this);
+        }
+        
+    }
+  
+}
+```
+
+### `EnumeratedDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumeratedDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class EnumeratedDataType extends BaseDataType {
+    private static final long serialVersionUID = 2L;
+    String initialValue;
+
+    protected HashMap<Long, ValueEnumeration> enumeration = new HashMap<>();
+
+    protected List<ValueEnumeration> enumerationList = new ArrayList<>();
+    protected List<ValueEnumerationRange> ranges = new ArrayList<>();
+
+    EnumeratedDataType(Builder<?> builder) {
+        super(builder);
+        this.enumerationList = builder.enumerationList;
+        this.ranges = builder.ranges;
+
+        if (builder.baseType instanceof EnumeratedDataType) {
+            EnumeratedDataType baseType = (EnumeratedDataType) builder.baseType;
+            if (builder.enumerationList.isEmpty()) {
+                enumerationList.addAll(baseType.enumerationList);
+            }
+            if (builder.ranges.isEmpty()) {
+                ranges.addAll(baseType.ranges);
+            }
+        }
+
+        for (ValueEnumeration ve : enumerationList) {
+            enumeration.put(ve.value, ve);
+        }
+        setInitialValue(builder);
+    }
+
+    /**
+     * performs a shallow copy of this object into t
+     * 
+     * @param t
+     */
+    protected EnumeratedDataType(EnumeratedDataType t) {
+        super(t);
+        this.enumeration = t.enumeration;
+        this.enumerationList = t.enumerationList;
+        this.ranges = t.ranges;
+        this.initialValue = t.initialValue;
+    }
+
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    @Override
+    public String getInitialValue() {
+        return initialValue;
+    }
+
+    public ValueEnumeration enumValue(Long key) {
+        if (enumeration.containsKey(key)) {
+            return enumeration.get(key);
+        } else if (ranges != null) {
+            for (ValueEnumerationRange range : ranges) {
+                if (range.isValueInRange(key)) {
+                    return new ValueEnumeration(key, range.getLabel());
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the enumeration value that maps to the given label or null if it does not exist.
+     * <p>
+     * It does not look through the ranges
+     */
+    public ValueEnumeration enumValue(String label) {
+        for (ValueEnumeration enumeration : enumerationList) {
+            if (enumeration.getLabel().equals(label)) {
+                return enumeration;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the enumeration value range that maps to the given label or null if it does not exist.
+     * <p>
+     * It does not look through the regular enumerations
+     */
+    public ValueEnumerationRange enumValueRange(String label) {
+        for (ValueEnumerationRange range : ranges) {
+            if (range.getLabel().equals(label)) {
+                return range;
+            }
+        }
+        return null;
+    }
+
+    public String calibrate(long raw) {
+        ValueEnumeration v = enumeration.get(raw);
+        if (v != null) {
+            return v.label;
+        }
+
+        if (ranges != null) {
+            for (ValueEnumerationRange range : ranges) {
+                if (range.isValueInRange(raw)) {
+                    return range.label;
+                }
+            }
+        }
+        return "UNDEF";
+    }
+
+    public boolean hasLabel(String label) {
+        for (ValueEnumeration enumeration : enumerationList) {
+            if (enumeration.getLabel().equals(label)) {
+                return true;
+            }
+        }
+        if (ranges != null) {
+            for (ValueEnumerationRange range : ranges) {
+                if (range.getLabel().equals(label)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public List<ValueEnumeration> getValueEnumerationList() {
+        return Collections.unmodifiableList(enumerationList);
+    }
+
+    public List<ValueEnumerationRange> getValueEnumerationRangeList() {
+        return Collections.unmodifiableList(ranges);
+    }
+
+    @Override
+    public String convertType(Object value) {
+        if (value instanceof String) {
+            return (String) value;
+        } else if (value instanceof Number) {
+            ValueEnumeration e = enumValue(((Number) value).longValue());
+            if (e != null) {
+                return e.label;
+            } else {
+                throw new IllegalArgumentException("Cannot find enumeration for number '" + value + "'");
+            }
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public Type getValueType() {
+        return Value.Type.ENUMERATED;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "enumeration";
+    }
+
+    public abstract static class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        protected List<ValueEnumeration> enumerationList = new ArrayList<>();
+        protected List<ValueEnumerationRange> ranges = new ArrayList<>();
+
+        public Builder() {
+        }
+
+        public Builder(EnumeratedDataType dataType) {
+            super(dataType);
+            this.enumerationList = dataType.enumerationList;
+            this.ranges = dataType.ranges;
+        }
+
+        public T addEnumerationValue(long value, String label) {
+            ValueEnumeration valEnum = new ValueEnumeration(value, label);
+            enumerationList.add(valEnum);
+            return self();
+        }
+
+        public T addEnumerationValue(ValueEnumeration ve) {
+            enumerationList.add(ve);
+            return self();
+        }
+
+        public T addEnumerationRange(ValueEnumerationRange range) {
+            ranges.add(range);
+            return self();
+        }
+
+        public boolean hasLabel(String label) {
+            for (ValueEnumeration enumeration : enumerationList) {
+                if (enumeration.getLabel().equals(label)) {
+                    return true;
+                }
+            }
+            for (ValueEnumerationRange range : ranges) {
+                if (range.getLabel().equals(label)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public ValueEnumeration enumValue(Long key) {
+            for (ValueEnumeration ve : enumerationList) {
+                if (ve.getValue() == key) {
+                    return ve;
+                }
+            }
+
+            for (ValueEnumerationRange range : ranges) {
+                if (range.isValueInRange(key)) {
+                    return new ValueEnumeration(key, range.getLabel());
+                }
+            }
+
+            return null;
+        }
+
+        public ValueEnumeration enumValue(String label) {
+            for (ValueEnumeration enumeration : enumerationList) {
+                if (enumeration.getLabel().equals(label)) {
+                    return enumeration;
+                }
+            }
+            return null;
+        }
+
+        public List<ValueEnumeration> getValueEnumerationList() {
+            return Collections.unmodifiableList(enumerationList);
+        }
+
+        public List<ValueEnumerationRange> getValueEnumerationRangeList() {
+            return Collections.unmodifiableList(ranges);
+        }
+    }
+}
+```
+
+### `EnumeratedParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumeratedParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class EnumeratedParameterType extends EnumeratedDataType implements ParameterType {
+    private static final long serialVersionUID = 5L;
+
+    private EnumerationAlarm defaultAlarm = null;
+    private List<EnumerationContextAlarm> contextAlarmList = null;
+
+    public EnumeratedParameterType(Builder builder) {
+        super(builder);
+        this.defaultAlarm = builder.defaultAlarm;
+        this.contextAlarmList  = builder.contextAlarmList;
+        
+        
+        if (builder.baseType instanceof EnumeratedParameterType) {
+            EnumeratedParameterType baseType = (EnumeratedParameterType) builder.baseType;
+            if(builder.defaultAlarm == null && baseType.defaultAlarm!=null) {
+                this.defaultAlarm = baseType.defaultAlarm;
+            }
+            if(builder.contextAlarmList == null && baseType.contextAlarmList!=null) {
+                this.contextAlarmList = baseType.contextAlarmList;
+            }
+        }
+    }
+    
+    /**
+     * Copy constructor
+     * 
+     */
+    public EnumeratedParameterType(EnumeratedParameterType t) {
+        super(t);
+        this.defaultAlarm = t.defaultAlarm;
+        this.contextAlarmList = t.contextAlarmList;
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return defaultAlarm != null || (contextAlarmList != null && !contextAlarmList.isEmpty());
+    }
+    
+    /**
+     * Override the default alarm from MDB
+     * @param enumerationAlarm
+     */
+    public void setDefaultAlarm(EnumerationAlarm enumerationAlarm) {
+        this.defaultAlarm = enumerationAlarm;
+    }
+    
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        if (contextAlarmList == null) {
+            return Collections.emptySet();
+        }
+        Set<Parameter> dependentParameters = new HashSet<>();
+        for (EnumerationContextAlarm eca : contextAlarmList)
+            dependentParameters.addAll(eca.getContextMatch().getDependentParameters());
+        return dependentParameters;
+    }
+
+    public EnumerationAlarm getDefaultAlarm() {
+        return defaultAlarm;
+    }
+
+  
+
+    public EnumerationContextAlarm getContextAlarm(MatchCriteria contextMatch) {
+        if (contextAlarmList == null) {
+            return null;
+        }
+        for (EnumerationContextAlarm eca : contextAlarmList) {
+            if (eca.getContextMatch().equals(contextMatch)) {
+                return eca;
+            }
+        }
+        return null;
+    }
+
+    
+  
+
+    public List<EnumerationContextAlarm> getContextAlarmList() {
+        return contextAlarmList;
+    }
+
+
+    public String getCalibrationDescription() {
+        return "EnumeratedParameterType: " + enumeration;
+    }
+
+
+    public void setContextAlarmList(List<EnumerationContextAlarm> contextAlarmList) {
+        this.contextAlarmList = contextAlarmList;
+    }
+
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+
+    @Override
+    public String toString() {
+        return "EnumeratedParameterType: " + enumerationList + " encoding:" + encoding
+                + ((defaultAlarm != null) ? defaultAlarm : "") + ((contextAlarmList != null) ? contextAlarmList : "");
+    }
+    
+    public static class Builder extends EnumeratedDataType.Builder<Builder> implements ParameterType.Builder<Builder> {
+        private EnumerationAlarm defaultAlarm = null;
+        private List<EnumerationContextAlarm> contextAlarmList = null;
+
+        public Builder() {
+            
+        }
+        
+        public Builder(EnumeratedParameterType enumeratedParameterType) {
+            super(enumeratedParameterType);
+            this.defaultAlarm = enumeratedParameterType.defaultAlarm;
+            this.contextAlarmList = enumeratedParameterType.contextAlarmList;
+        }
+
+        public void setDefaultAlarm(EnumerationAlarm enumerationAlarm) {
+            this.defaultAlarm = enumerationAlarm;
+        }
+        
+        public void addContextAlarm(EnumerationContextAlarm nca) {
+            if (contextAlarmList == null) {
+                contextAlarmList = new ArrayList<>();
+            }
+            contextAlarmList.add(nca);
+        }
+        
+        /**
+         * Adds a new contextual alarm for the specified value
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addAlarm(MatchCriteria contextMatch, String enumLabel, AlarmLevels level) {
+            createOrGetAlarm(contextMatch).addAlarm(enumLabel, level);
+        }
+
+        public EnumerationAlarm createOrGetAlarm(MatchCriteria contextMatch) {
+            if (contextMatch == null) {
+                if (defaultAlarm == null) {
+                    defaultAlarm = new EnumerationAlarm();
+                }
+                return defaultAlarm;
+            } else {
+                EnumerationContextAlarm eca = getContextAlarm(contextMatch);
+                if (eca == null) {
+                    eca = new EnumerationContextAlarm();
+                    eca.setContextMatch(contextMatch);
+                    addContextAlarm(eca);
+                }
+                return eca;
+            }
+        }
+        
+        public EnumerationAlarm getDefaultAlarm() {
+            return defaultAlarm;
+        }
+
+        public EnumerationContextAlarm getContextAlarm(MatchCriteria contextMatch) {
+            if (contextAlarmList == null) {
+                return null;
+            }
+            for (EnumerationContextAlarm eca : contextAlarmList) {
+                if (eca.getContextMatch().equals(contextMatch)) {
+                    return eca;
+                }
+            }
+            return null;
+        }
+        
+        public void setContextAlarmList(List<EnumerationContextAlarm> contextAlarmList) {
+            this.contextAlarmList = contextAlarmList;
+        }
+
+        @Override
+        public EnumeratedParameterType build() {
+            return new EnumeratedParameterType(this);
+        }
+    }
+
+}
+```
+
+### `EnumerationAlarm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumerationAlarm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Alarm conditions for Enumerations
+ * An additional check needs to be performed to ensure that the enumeration values in the alarms are legal
+ * enumeration values for the Parameter
+ *
+ */
+public class EnumerationAlarm extends AlarmType implements Serializable {
+    private static final long serialVersionUID = 200707121420L;
+
+    private List<EnumerationAlarmItem> alarmList = new ArrayList<EnumerationAlarmItem>();
+    /**
+     * If none from the list above applies, then this one is used
+     */
+    AlarmLevels defaultAlarmLevel = AlarmLevels.NORMAL;
+
+    public void addAlarm(String label, AlarmLevels level) {
+        alarmList.add(new EnumerationAlarmItem(label, level));
+    }
+
+    public AlarmLevels getDefaultAlarmLevel() {
+        return defaultAlarmLevel;
+    }
+
+    public List<EnumerationAlarmItem> getAlarmList() {
+        return alarmList;
+    }
+
+    public void setAlarmList(List<EnumerationAlarmItem> alarmList) {
+        this.alarmList = alarmList;
+    }
+
+    @Override
+    public String toString() {
+        return "EnumerationAlarm(defaultLevel:" + defaultAlarmLevel + ", alarmList: " + alarmList;
+    }
+
+    static public class EnumerationAlarmItem implements Serializable {
+        private static final long serialVersionUID = 200707121420L;
+
+        AlarmLevels alarmLevel;
+        String enumerationLabel;
+
+        public EnumerationAlarmItem(String label, AlarmLevels level) {
+            this.enumerationLabel = label;
+            this.alarmLevel = level;
+        }
+
+        public String getEnumerationLabel() {
+            return enumerationLabel;
+        }
+
+        public AlarmLevels getAlarmLevel() {
+            return alarmLevel;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + enumerationLabel + "->" + alarmLevel + ")";
+        }
+    }
+
+    public void setDefaultAlarmLevel(AlarmLevels level) {
+        this.defaultAlarmLevel = level;
+    }
+}
+```
+
+### `EnumerationContextAlarm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/EnumerationContextAlarm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Context alarms are applied when the ContextMatch is true. Context alarms override Default alarms meaning that if the
+ * condition matches, this alarm applies and if the condition does not match, then the defaultAlarm applies.
+ *
+ * @author nm
+ *
+ */
+public class EnumerationContextAlarm extends EnumerationAlarm {
+    private static final long serialVersionUID = 201103300451L;
+    private MatchCriteria contextMatch;
+
+    public MatchCriteria getContextMatch() {
+        return contextMatch;
+    }
+
+    @Override
+    public String toString() {
+        return "EnumerationContextAlarm(contextMatch:" + getContextMatch() + ", defaultLevel:" + defaultAlarmLevel
+                + ", alarmList: " + getAlarmList() + ")";
+    }
+
+    public void setContextMatch(MatchCriteria contextMatch) {
+        this.contextMatch = contextMatch;
+    }
+}
+```
+
+### `ExpressionList.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ExpressionList.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * This class does not have an equivalence in the XTCE standard
+ * Created as a base-class for ORedConditions and ANDedConditions 
+ * 
+ * @author dho
+ *
+ */
+public abstract class ExpressionList implements BooleanExpression {
+    private static final long serialVersionUID = 2333657095062539096L;
+    protected List<BooleanExpression> expressions = new ArrayList<>();	
+
+    public void addConditionExpression(BooleanExpression cond) {
+        expressions.add(cond);		
+    }
+
+    public Set<Parameter> getDependentParameters() {
+        Set<Parameter> pset=new HashSet<>();
+        for(BooleanExpression c: expressions) {
+            pset.addAll(c.getDependentParameters());
+        }
+        return pset;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder();
+        sb.append("ExpressionList: ");
+        for(BooleanExpression exp: expressions) {
+            sb.append(exp.toString()).append(" ");
+        }
+        return sb.toString();
+    }
+    
+    public List<BooleanExpression> getExpressionList() {
+        return expressions;
+    }
+}
+```
+
+### `FixedIntegerValue.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FixedIntegerValue.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * A simple long value
+ * 
+ * @author nm
+ *
+ */
+public class FixedIntegerValue extends IntegerValue {
+    private static final long serialVersionUID = 200706091239L;
+    long value;
+
+    public FixedIntegerValue(long value) {
+        this.value = value;
+    }
+
+    public long getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "FixedIntegerValue(" + value + ")";
+    }
+}
+```
+
+### `FixedValueEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FixedValueEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import org.yamcs.xtce.util.HexUtils;
+
+/**
+ * 
+ * Holds an optional attributes name, bitOrder, byteOrderList, required attributes binaryValue, sizeInBits and optional
+ * LocationInContainerInBits, RepeatEntry and IncludeCondition.
+ * 
+ */
+public class FixedValueEntry extends SequenceEntry {
+    private static final long serialVersionUID = 1L;
+
+    // An optional name, this name cannot be NameReferenced and is only a form of documentation.
+    final String name;
+
+    /**
+     * The fixed/constant value that should be encoded into the sequence. This value provided should have sufficient bit
+     * length to accommodate the size in bits. If the value is larger, the most significant unnecessary bits are
+     * dropped. The value provided should be in network byte order for encoding.
+     **/
+    final byte[] binaryValue;
+
+    // the size in bits of the value - this should not be more than the length in bits of the binaryValue
+    final int sizeInBits;
+
+    public FixedValueEntry(String name, byte[] binaryValue, int sizeInBits) {
+        if (sizeInBits > binaryValue.length * 8) {
+            throw new IllegalArgumentException("binaryValue has to have at least sizeInBits(" + sizeInBits
+                    + ") bits, instead of " + (binaryValue.length * 8));
+        }
+        this.name = name;
+        this.binaryValue = binaryValue;
+        this.sizeInBits = sizeInBits;
+    }
+
+    public FixedValueEntry(int locationInContainerInBits, ReferenceLocationType location, String name,
+            byte[] binaryValue, int sizeInBits) {
+        super(locationInContainerInBits, location);
+        if (sizeInBits > binaryValue.length * 8) {
+            throw new IllegalArgumentException("binaryValue has to have at least sizeInBits(" + sizeInBits
+                    + ") bits, instead of " + (binaryValue.length * 8));
+        }
+        this.name = name;
+        this.binaryValue = binaryValue;
+        this.sizeInBits = sizeInBits;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public byte[] getBinaryValue() {
+        return binaryValue;
+    }
+
+    public int getSizeInBits() {
+        return sizeInBits;
+    }
+
+    @Override
+    public String toString() {
+        return "FixedValueEntry position:" + getIndex() + ", container:" + container.getName() +
+                " locationInContainer:" + getLocationInContainerInBits() + " from:" + getReferenceLocation() +
+                ", sizeInBits: " + sizeInBits +
+                ", binaryValue: " + HexUtils.hex(binaryValue);
+    }
+}
+```
+
+### `FloatArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Represent aspects of an float, probably using IntegerDataEncoding with a calibrator or FloatDataEncoding.
+ * 
+ * @author nm
+ *
+ */
+public class FloatArgumentType extends FloatDataType implements ArgumentType {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Creates a shallow copy.
+     */
+    public FloatArgumentType(FloatArgumentType t) {
+        super(t);
+    }
+
+    public FloatArgumentType(Builder builder) {
+        super(builder);
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "float";
+    }
+
+    @Override
+    public FloatArgumentType.Builder toBuilder() {
+        return new FloatArgumentType.Builder(this);
+    }
+
+    @Override
+    public String toString() {
+        return "FloatArgumentType name:" + name + " sizeInBits:" + sizeInBits + " encoding:" + encoding;
+    }
+
+    public static class Builder extends FloatDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+
+        public Builder(FloatArgumentType floatArgumentType) {
+            super(floatArgumentType);
+        }
+
+        public Builder() {
+        }
+
+        @Override
+        public FloatArgumentType build() {
+            return new FloatArgumentType(this);
+        }
+    }
+}
+```
+
+### `FloatDataEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatDataEncoding.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * For common encodings of floating point data.
+ * <p>
+ * Unlike XTCE we support encoding floats as strings - this is done by providing a separate {@link StringDataEncoding}
+ * 
+ */
+public class FloatDataEncoding extends DataEncoding {
+    private static final long serialVersionUID = 3L;
+
+    public enum Encoding {
+        IEEE754_1985, MILSTD_1750A, STRING// DIFFERS_FROM_XTCE
+    };
+
+    private Encoding encoding = Encoding.IEEE754_1985;
+
+    StringDataEncoding stringEncoding = null;
+
+    public FloatDataEncoding(Builder builder) {
+        super(builder, 32);
+        if (builder.encoding != null) {
+            this.encoding = builder.encoding;
+        }
+
+        this.stringEncoding = builder.stringEncoding;
+
+        if (builder.baseEncoding instanceof FloatDataEncoding) {
+            FloatDataEncoding baseEncoding = (FloatDataEncoding) builder.baseEncoding;
+            if (builder.encoding == null) {
+                this.encoding = baseEncoding.encoding;
+            }
+
+            if (builder.stringEncoding == null) {
+                this.stringEncoding = baseEncoding.stringEncoding;
+            }
+        }
+
+        validateEncodingSizeInBits(encoding, sizeInBits);
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    private static void validateEncodingSizeInBits(Encoding encoding, int sizeInBits) {
+        if (encoding == Encoding.IEEE754_1985) {
+            if (sizeInBits != 32 && sizeInBits != 64) {
+                throw new IllegalArgumentException("For IEEE754_1985 encoding sizeInBits has to be 32 or 64");
+            }
+        } else if (encoding == Encoding.MILSTD_1750A) {
+            if (sizeInBits != 32 && sizeInBits != 48) {
+                throw new IllegalArgumentException("For MILSTD_1750A encoding sizeInBits has to be 32 or 48");
+            }
+        }
+    }
+
+    /**
+     * copy constructor
+     * 
+     * @param fde
+     */
+    public FloatDataEncoding(FloatDataEncoding fde) {
+        super(fde);
+        this.encoding = fde.encoding;
+        this.stringEncoding = fde.stringEncoding;
+    }
+
+    public Encoding getEncoding() {
+        return encoding;
+    }
+
+    public StringDataEncoding getStringDataEncoding() {
+        return stringEncoding;
+    }
+
+    @Override
+    public String toString() {
+        switch (getEncoding()) {
+        case IEEE754_1985:
+        case MILSTD_1750A:
+            return "FloatDataEncoding(sizeInBits=" + sizeInBits + ", byteOrder: " + byteOrder
+                    + (defaultCalibrator == null ? "" : (", defaultCalibrator:" + defaultCalibrator))
+                    + ")";
+        case STRING:
+            return "FloatDataEncoding(sizeInBits=" + sizeInBits + " StringEncoding: " + stringEncoding
+                    + (defaultCalibrator == null ? "" : (", defaultCalibrator:" + defaultCalibrator))
+                    + ")";
+        default:
+            return "UnknownFloatEncoding(" + getEncoding() + ")";
+        }
+
+    }
+
+    @Override
+    public Object parseString(String stringValue) {
+        switch (getEncoding()) {
+        case IEEE754_1985:
+        case MILSTD_1750A:
+            if (sizeInBits == 32) {
+                return Float.parseFloat(stringValue);
+            } else {
+                return Double.parseDouble(stringValue);
+            }
+        case STRING:
+            return stringValue;
+        default:
+            throw new IllegalStateException("Unknown encoding " + getEncoding());
+        }
+    }
+
+
+    @Override
+    public FloatDataEncoding copy() {
+        return new FloatDataEncoding(this);
+    }
+
+    public static class Builder extends DataEncoding.Builder<Builder> {
+        Encoding encoding = null;
+        StringDataEncoding stringEncoding = null;
+
+        public Builder(FloatDataEncoding encoding) {
+            super(encoding);
+            this.stringEncoding = encoding.stringEncoding;
+            this.encoding = encoding.encoding;
+        }
+
+        public Builder() {
+            super();
+        }
+
+        public FloatDataEncoding build() {
+            return new FloatDataEncoding(this);
+        }
+
+        public Builder setFloatEncoding(Encoding floatEncoding) {
+            this.encoding = floatEncoding;
+            return self();
+        }
+
+        public Builder setStringEncoding(StringDataEncoding stringEncoding) {
+            this.stringEncoding = stringEncoding;
+            this.encoding = Encoding.STRING;
+            this.sizeInBits = stringEncoding.sizeInBits;
+            return self();
+        }
+
+        public Encoding getFloatEncoding() {
+            return encoding;
+        }
+    }
+}
+```
+
+### `FloatDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public abstract class FloatDataType extends NumericDataType {
+    private static final long serialVersionUID = 1L;
+    Double initialValue;
+    /**
+     * XTCE: The Valid Range bounds the universe of possible values this Parameter may have. For Telemetry the valid
+     * range is always applied before calibration, regardless of the value of validRangeAppliesToCalibrated. For
+     * commanding, if validRangeAppliesToCalibrated is false -- it is applied before calibration to the link
+     * DataEncoding.
+     * 
+     */
+    FloatValidRange validRange;
+    int sizeInBits = 32;
+    /**
+     * XTCE: This element provides the implementation with assistance rendering the value as a string for users.
+     * <p>
+     * Note that XTCE wraps NumberFormatType in another type ToStringType, which we don't do.
+     */
+    NumberFormatType numberFormat;
+
+    protected FloatDataType(Builder<?> builder) {
+        super(builder);
+
+        this.validRange = builder.validRange;
+        this.numberFormat = builder.numberFormat;
+        if (builder.sizeInBits != null) {
+            this.sizeInBits = builder.sizeInBits;
+        }
+
+        if (builder.baseType instanceof FloatDataType) {
+            FloatDataType baseType = (FloatDataType) builder.baseType;
+            if (builder.sizeInBits == null) {
+                this.sizeInBits = baseType.sizeInBits;
+            }
+
+            if (builder.validRange == null && baseType.validRange != null) {
+                this.validRange = baseType.validRange;
+            }
+
+            if (builder.numberFormat == null && baseType.numberFormat != null) {
+                this.numberFormat = baseType.numberFormat;
+            }
+        }
+
+        setInitialValue(builder);
+    }
+
+    protected FloatDataType(FloatDataType t) {
+        super(t);
+        this.validRange = t.validRange;
+        this.sizeInBits = t.sizeInBits;
+        this.numberFormat = t.numberFormat;
+    }
+
+    @Override
+    public Double getInitialValue() {
+        return initialValue;
+    }
+
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    public int getSizeInBits() {
+        return sizeInBits;
+    }
+
+    public FloatValidRange getValidRange() {
+        return validRange;
+    }
+
+    public NumberFormatType getNumberFormat() {
+        return numberFormat;
+    }
+
+    @Override
+    public Double convertType(Object value) {
+        if (value instanceof String) {
+            String stringValue = (String) value;
+            try {
+                if (sizeInBits == 32) {
+                    return (double) Float.parseFloat(stringValue);
+                } else {
+                    return Double.parseDouble(stringValue);
+                }
+            } catch (NumberFormatException e) {
+                // Customize the message for better user experience
+                throw new NumberFormatException("Not a valid float");
+            }
+        } else if (value instanceof Number) {
+            return ((Number) value).doubleValue();
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public Type getValueType() {
+        return (sizeInBits <= 32) ? Type.FLOAT : Type.DOUBLE;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "float";
+    }
+
+    public abstract static class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        private FloatValidRange validRange;
+        Integer sizeInBits;
+        private NumberFormatType numberFormat;
+
+        public Builder() {
+        }
+
+        public Builder(FloatDataType dataType) {
+            super(dataType);
+            this.validRange = dataType.validRange;
+            this.sizeInBits = dataType.sizeInBits;
+        }
+
+        public T setSizeInBits(int sizeInBits) {
+            this.sizeInBits = sizeInBits;
+            return self();
+        }
+
+        public T setValidRange(FloatValidRange validRange) {
+            this.validRange = validRange;
+            return self();
+        }
+
+        public T setInitialValue(double initialValue) {
+            this.initialValue = Double.toString(initialValue);
+            return self();
+        }
+
+        public T setNumberFormat(NumberFormatType numberFormat) {
+            this.numberFormat = numberFormat;
+            return self();
+        }
+    }
+}
+```
+
+### `FloatingPointNotationType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatingPointNotationType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public enum FloatingPointNotationType {
+
+    NORMAL,
+    SCIENTIFIC,
+    ENGINEERING;
+}
+```
+
+### `FloatParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.xtce.util.DoubleRange;
+
+public class FloatParameterType extends FloatDataType implements NumericParameterType {
+    private static final long serialVersionUID = 2L;
+    private NumericAlarm defaultAlarm = null;
+    private List<NumericContextAlarm> contextAlarmList = null;
+
+    public FloatParameterType(Builder builder) {
+        super(builder);
+        this.defaultAlarm = builder.defaultAlarm;
+        this.contextAlarmList = builder.contextAlarmList;
+
+        if (builder.baseType instanceof FloatParameterType) {
+            FloatParameterType baseType = (FloatParameterType) builder.baseType;
+            if (builder.defaultAlarm == null && baseType.defaultAlarm != null) {
+                this.defaultAlarm = baseType.defaultAlarm;
+            }
+            if (builder.contextAlarmList == null && baseType.contextAlarmList != null) {
+                this.contextAlarmList = baseType.contextAlarmList;
+            }
+        }
+    }
+
+    /**
+     * Creates a shallow copy.
+     */
+    public FloatParameterType(FloatParameterType t) {
+        super(t);
+        this.defaultAlarm = t.defaultAlarm;
+        this.contextAlarmList = t.contextAlarmList;
+    }
+
+    @Override
+    public NumericAlarm getDefaultAlarm() {
+        return defaultAlarm;
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return defaultAlarm != null || (contextAlarmList != null && !contextAlarmList.isEmpty());
+    }
+
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        if (contextAlarmList == null) {
+            return (encoding != null) ? encoding.getDependentParameters() : Collections.emptySet();
+        }
+
+        Set<Parameter> dependentParameters = new HashSet<>();
+        dependentParameters.addAll(encoding.getDependentParameters());
+
+        for (NumericContextAlarm nca : contextAlarmList) {
+            dependentParameters.addAll(nca.getContextMatch().getDependentParameters());
+        }
+        return dependentParameters;
+    }
+
+    public List<NumericContextAlarm> getContextAlarmList() {
+        return contextAlarmList;
+    }
+
+    public void setDefaultAlarm(NumericAlarm defaultAlarm) {
+        this.defaultAlarm = defaultAlarm;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    @Override
+    public String toString() {
+        return "FloatParameterType name:" + name + " sizeInBits:" + sizeInBits + " encoding:" + encoding
+                + ((getDefaultAlarm() != null) ? ", defaultAlarm:" + getDefaultAlarm() : "")
+                + ((contextAlarmList != null) ? ", contextAlarmList:" + contextAlarmList : "");
+    }
+
+    public static class Builder extends FloatDataType.Builder<Builder>
+            implements NumericParameterType.Builder<Builder> {
+        private NumericAlarm defaultAlarm = null;
+        private List<NumericContextAlarm> contextAlarmList = null;
+
+        public Builder() {
+        }
+
+        public Builder(FloatParameterType floatParameterType) {
+            super(floatParameterType);
+            this.defaultAlarm = floatParameterType.defaultAlarm;
+            this.contextAlarmList = floatParameterType.contextAlarmList;
+        }
+
+        @Override
+        public void setContextAlarmList(List<NumericContextAlarm> contextAlarmList) {
+            this.contextAlarmList = contextAlarmList;
+        }
+
+        public void addContextAlarm(NumericContextAlarm nca) {
+            if (contextAlarmList == null) {
+                contextAlarmList = new ArrayList<>();
+            }
+            contextAlarmList.add(nca);
+        }
+
+        public void addContextAlarms(Collection<NumericContextAlarm> ncas) {
+            if (contextAlarmList == null) {
+                contextAlarmList = new ArrayList<>();
+            }
+            contextAlarmList.addAll(ncas);
+        }
+
+        @Override
+        public NumericAlarm createOrGetAlarm(MatchCriteria contextMatch) {
+            if (contextMatch == null) {
+                if (defaultAlarm == null) {
+                    defaultAlarm = new NumericAlarm();
+                }
+                return defaultAlarm;
+            } else {
+                NumericContextAlarm nca = getNumericContextAlarm(contextMatch);
+                if (nca == null) {
+                    nca = new NumericContextAlarm();
+                    nca.setContextMatch(contextMatch);
+                    addContextAlarm(nca);
+                }
+                return nca;
+            }
+        }
+
+        public NumericContextAlarm getNumericContextAlarm(MatchCriteria context) {
+            if (contextAlarmList == null) {
+                return null;
+            }
+            for (NumericContextAlarm nca : contextAlarmList) {
+                if (nca.getContextMatch().equals(context)) {
+                    return nca;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Adds a new, or unions with an existing range for the specified context and level
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addAlarmRange(MatchCriteria contextMatch, DoubleRange floatRange, AlarmLevels level) {
+            getAlarmRanges(contextMatch).addRange(floatRange, level);
+
+        }
+
+        /**
+         * Adds a new, or unions with an existing watch range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addWatchAlarmRange(MatchCriteria contextMatch, DoubleRange watchRange) {
+            getAlarmRanges(contextMatch).addWatchRange(watchRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing warning range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addWarningAlarmRange(MatchCriteria contextMatch, DoubleRange warningRange) {
+            getAlarmRanges(contextMatch).addWarningRange(warningRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing distress range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addDistressAlarmRange(MatchCriteria contextMatch, DoubleRange distressRange) {
+            getAlarmRanges(contextMatch).addDistressRange(distressRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing critical range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addCriticalAlarmRange(MatchCriteria contextMatch, DoubleRange criticalRange) {
+            getAlarmRanges(contextMatch).addCriticalRange(criticalRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing severe range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addSevereAlarmRange(MatchCriteria contextMatch, DoubleRange severeRange) {
+            getAlarmRanges(contextMatch).addSevereRange(severeRange);
+        }
+
+        private AlarmRanges getAlarmRanges(MatchCriteria contextMatch) {
+            NumericAlarm alarm = createOrGetAlarm(contextMatch);
+            return alarm.getStaticAlarmRanges();
+        }
+
+        public void setDefaultWatchAlarmRange(DoubleRange watchRange) {
+            getAlarmRanges(null).watchRange = watchRange;
+        }
+
+        public void setDefaultWarningAlarmRange(DoubleRange warningRange) {
+            getAlarmRanges(null).warningRange = warningRange;
+        }
+
+        public void setDefaultDistressAlarmRange(DoubleRange distressRange) {
+            getAlarmRanges(null).distressRange = distressRange;
+        }
+
+        public void setDefaultCriticalAlarmRange(DoubleRange criticalRange) {
+            getAlarmRanges(null).criticalRange = criticalRange;
+        }
+
+        public void setDefaultSevereAlarmRange(DoubleRange severeRange) {
+            getAlarmRanges(null).severeRange = severeRange;
+        }
+
+        public NumericAlarm getDefaultAlarm() {
+            return defaultAlarm;
+        }
+
+        @Override
+        public FloatParameterType build() {
+            return new FloatParameterType(this);
+        }
+
+        @Override
+        public void setDefaultAlarm(NumericAlarm defaultAlarm) {
+            this.defaultAlarm = defaultAlarm;
+        }
+    }
+
+}
+```
+
+### `FloatValidRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/FloatValidRange.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import org.yamcs.xtce.util.DoubleRange;
+
+/**
+ * Holds the min/max of a ValidRange for floating point.
+ * 
+ * @author nm
+ *
+ */
+public class FloatValidRange extends DoubleRange {
+    private static final long serialVersionUID = 2L;
+
+    /**
+     * The range specified applies to the destination data type if true, or the raw source data type if false. The
+     * default is false and reflects the more likely scenario of checking raw values before conversion or calibration in
+     * telemetry.
+     */
+    private boolean validRangeAppliesToCalibrated;
+
+    public FloatValidRange(double minInclusive, double maxInclusive) {
+        super(minInclusive, maxInclusive);
+    }
+
+    public FloatValidRange(DoubleRange range) {
+        super(range);
+    }
+
+    public boolean isValidRangeAppliesToCalibrated() {
+        return validRangeAppliesToCalibrated;
+    }
+
+    public void setValidRangeAppliesToCalibrated(boolean validRangeAppliesToCalibrated) {
+        this.validRangeAppliesToCalibrated = validRangeAppliesToCalibrated;
+    }
+
+}
+```
+
+### `Header.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Header.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * A header contains general information about the system or subsystem.
+ * 
+ * @author mu
+ * 
+ */
+public class Header implements Serializable {
+
+    private static final long serialVersionUID = 2L;
+    private String            version          = null;
+    private String            date             = null;
+    private List<History> historyList = new ArrayList<>();
+
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDate() {
+        return date;
+    }
+    
+    public List<History> getHistoryList() {
+        return historyList;
+    }
+    
+    public void addHistory(History history) {
+        this.historyList.add(history);
+    }
+    
+    @Override
+    public String toString() {
+        return "version: "+version+", date: "+date;
+    }
+}
+```
+
+### `History.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/History.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Capture creation or change history of document.
+ *
+ * DIFFERS_FROM_XTCE XTCE only has one string-field.
+ */
+public class History implements Serializable, Comparable<History> {
+
+    private static final long serialVersionUID = 1L;
+
+    private String version;
+    private String date;
+    private String message;
+    private String author;
+
+    public History(String version, String date, String message, String author) {
+        if(version == null)
+            throw new IllegalArgumentException("Version can not be null");
+        if(!version.matches("[0-9]+.*"))
+            throw new IllegalArgumentException("Invalid version format '" + version + "'");
+        this.version = version;
+        this.date = date;
+        this.message = message;
+        this.author = author;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    @Override
+    public String toString() {
+        return version + "; " + date + (message != null ? "; " + message : "");
+    }
+
+    @Override
+    public int compareTo(History o) {
+        if (o == null) return 1;
+        String[] parts = version.split("\\.");
+        String[] oparts = o.version.split("\\.");
+        int len = Math.max(parts.length, oparts.length);
+        for (int i = 0; i < len; i++) {
+            try {
+                int part = (i < parts.length) ? Integer.parseInt(parts[i]) : 0;
+                int opart = (i < oparts.length) ? Integer.parseInt(oparts[i]) : 0;
+                if (part < opart) return -1;
+                if (part > opart) return 1;
+            } catch (NumberFormatException e) {
+                int c = parts[i].compareTo(oparts[i]);
+                if (c != 0) return c;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+### `IndirectParameterRefEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IndirectParameterRefEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * An entry whose name is given by the value of a ParamameterInstance. This entry may be used to implement dwell
+ * telemetry streams.
+ * The value of the parameter in ParameterInstance must use either the name of the Parameter or its alias.
+ * If it's an alias name, the alias namespace is supplied as an attribute.
+ *
+ */
+public class IndirectParameterRefEntry extends SequenceEntry {
+    private static final long serialVersionUID = 2L;
+    private ParameterInstanceRef parameterRef;
+    private String aliasNameSpace;
+
+    public IndirectParameterRefEntry(int locationInContainerInBits, ReferenceLocationType location,
+            ParameterInstanceRef parameterRef, String aliasNameSpace) {
+        super(locationInContainerInBits, location);
+        this.parameterRef = parameterRef;
+        this.aliasNameSpace = aliasNameSpace;
+    }
+
+    public ParameterInstanceRef getParameterRef() {
+        return parameterRef;
+    }
+
+    public void setParameterRef(ParameterInstanceRef parameterRef) {
+        this.parameterRef = parameterRef;
+    }
+
+    public String getAliasNameSpace() {
+        return aliasNameSpace;
+    }
+
+    public void setAliasNameSpace(String aliasNameSpace) {
+        this.aliasNameSpace = aliasNameSpace;
+    }
+
+    @Override
+    public String toString() {
+        return "IndirectParameterRefEntry [parameterRef=" + parameterRef + ", aliasNameSpace=" + aliasNameSpace + "]";
+    }
+}
+```
+
+### `InputParameter.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/InputParameter.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Input parameters for algorithms.
+ * <p>
+ * Although they are called input parameters they can also reference command arguments
+ * for algorithms running part of command transmission constraints or command verifiers.
+ */
+public class InputParameter implements Serializable {
+    private static final long serialVersionUID = 4L;
+
+    // one of these two is null and other one not
+    private final ParameterInstanceRef parameterInstance;
+    private final ArgumentInstanceRef argumentRef;
+
+    private String inputName; // Optional friendly name
+    // if this input parameter is not set, the algorithm will not trigger
+    private boolean mandatory = false;
+
+    private InputParameter(ParameterInstanceRef parameterInstance, ArgumentInstanceRef argRef, String inputName) {
+        this.parameterInstance = parameterInstance;
+        this.argumentRef = argRef;
+        this.inputName = inputName;
+    }
+
+    public InputParameter(ParameterInstanceRef parameterInstance) {
+        this(parameterInstance, null, null);
+    }
+
+    public InputParameter(ParameterInstanceRef parameterInstance, String inputName) {
+        this(parameterInstance, null, inputName);
+    }
+
+    public InputParameter(ArgumentInstanceRef argumentRef, String inputName) {
+        this(null, argumentRef, inputName);
+    }
+
+    /**
+     * @return the reference to the parameter or null if this references an argument instead
+     */
+    public ParameterInstanceRef getParameterInstance() {
+        return parameterInstance;
+    }
+
+    /**
+     * @return the reference to the command argument or null if this references a parameter instead
+     */
+    public ArgumentInstanceRef getArgumentRef() {
+        return argumentRef;
+    }
+
+    public ParameterOrArgumentRef getRef() {
+        return parameterInstance == null ? argumentRef : parameterInstance;
+    }
+
+    public String getInputName() {
+        return inputName;
+    }
+
+    /**
+     * Returns the name of the input to be used in the algorithm. This is the defined name as returned by
+     * {@link #getInputName()} or the name of the parameter if no specific name has been defined.
+     */
+    public String getEffectiveInputName() {
+        if (inputName != null) {
+            return inputName;
+        }
+        if (parameterInstance != null) {
+            return parameterInstance.getParameter().getName();
+        }
+        return argumentRef.getArgument().getName();
+    }
+
+    public void setInputName(String inputName) {
+        this.inputName = inputName;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    @Override
+    public String toString() {
+        if (inputName == null)
+            return parameterInstance.toString() + (mandatory ? "[M]" : "");
+        else
+            return parameterInstance + " inputName:" + inputName + (mandatory ? "[M]" : "");
+    }
+}
+```
+
+### `IntegerArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class IntegerArgumentType extends IntegerDataType implements ArgumentType {
+    private static final long serialVersionUID = 3L;
+
+    public IntegerArgumentType(Builder builder) {
+        super(builder);
+    }
+
+    /**
+     * Creates a shallow copy of the parameter type, giving it a new name.
+     */
+    public IntegerArgumentType(IntegerArgumentType t) {
+        super(t);
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "integer";
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("IntegerArgumentType name:").append(name)
+                .append(" sizeInBits:").append(sizeInBits)
+                .append(" signed: ").append(signed);
+
+        if (initialValue != null)
+            sb.append(", defaultValue: ").append(initialValue);
+        if (validRange != null)
+            sb.append(", validRange: ").append(validRange.toString(isSigned()));
+
+        sb.append(", encoding: ").append(encoding);
+
+        return sb.toString();
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder extends IntegerDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+        public Builder(IntegerArgumentType integerArgumentType) {
+            super(integerArgumentType);
+        }
+        public Builder() {
+        }
+        
+        @Override
+        public IntegerArgumentType build() {
+            return new IntegerArgumentType(this);
+        }
+
+    }
+}
+```
+
+### `IntegerDataEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerDataEncoding.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.nio.ByteOrder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * For all major encodings of integer data
+ *
+ */
+public class IntegerDataEncoding extends DataEncoding {
+    private static final long serialVersionUID = 4L;
+    static Logger log = LoggerFactory.getLogger(IntegerDataEncoding.class.getName());
+
+    public enum Encoding {
+        UNSIGNED, TWOS_COMPLEMENT, SIGN_MAGNITUDE, ONES_COMPLEMENT, STRING
+    };
+
+    Encoding encoding = Encoding.UNSIGNED;
+    StringDataEncoding stringEncoding = null;
+
+    public IntegerDataEncoding(Builder builder) {
+        super(builder, 8);
+
+        if (builder.encoding != null) {
+            this.encoding = builder.encoding;
+        }
+
+        this.stringEncoding = builder.stringEncoding;
+
+        if (builder.baseEncoding instanceof IntegerDataEncoding) {
+            IntegerDataEncoding baseEncoding = (IntegerDataEncoding) builder.baseEncoding;
+
+            if (builder.encoding == null) {
+                this.encoding = baseEncoding.encoding;
+            }
+
+            if (builder.stringEncoding == null) {
+                this.stringEncoding = baseEncoding.stringEncoding;
+            }
+        }
+    }
+
+    public IntegerDataEncoding(IntegerDataEncoding ide) {
+        super(ide);
+    }
+
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public Encoding getEncoding() {
+        return encoding;
+    }
+
+    public StringDataEncoding getStringEncoding() {
+        return stringEncoding;
+    }
+
+    public void setEncoding(Encoding encoding) {
+        this.encoding = encoding;
+    }
+
+    @Override
+    public Object parseString(String stringValue) {
+        if (encoding == Encoding.STRING) {
+            return stringValue;
+        }
+
+        if (sizeInBits > 32) {
+            return Long.decode(stringValue);
+        } else {
+            return Long.decode(stringValue).intValue();
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("IntegerDataEncoding[sizeInBits: ").append(sizeInBits)
+                .append(", byteOrder: ").append(byteOrder);
+        if (stringEncoding == null) {
+            sb.append(", encoding:").append(encoding);
+        } else {
+            sb.append(", stringEncoding: ").append(stringEncoding);
+        }
+        if (defaultCalibrator != null) {
+            sb.append(", defaultCalibrator: ").append(defaultCalibrator);
+        }
+        if (contextCalibratorList != null) {
+            sb.append(", contextCalibrators: ").append(contextCalibratorList);
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    @Override
+    public IntegerDataEncoding copy() {
+        return new IntegerDataEncoding(this);
+    }
+
+    public static class Builder extends DataEncoding.Builder<Builder> {
+        Encoding encoding = null;
+        StringDataEncoding stringEncoding = null;
+
+        public Builder(IntegerDataEncoding encoding) {
+            super(encoding);
+            this.encoding = encoding.encoding;
+            this.stringEncoding = encoding.stringEncoding;
+        }
+
+        public Builder() {
+            super();
+        }
+
+        public IntegerDataEncoding build() {
+            return new IntegerDataEncoding(this);
+        }
+
+        public Builder setStringEncoding(StringDataEncoding stringEncoding) {
+            this.stringEncoding = stringEncoding;
+            this.sizeInBits = stringEncoding.sizeInBits;
+            this.encoding = Encoding.STRING;
+            return self();
+        }
+
+        public Builder setEncoding(Encoding enc) {
+            this.encoding = enc;
+            return self();
+        }
+
+        public Encoding getEncoding() {
+            return encoding;
+        }
+
+        public Builder setByteOrder(ByteOrder byteOrder) {
+            this.byteOrder = byteOrder;
+            return self();
+        }
+    }
+}
+```
+
+### `IntegerDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.math.BigInteger;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+/**
+ * Contains an integral value.
+ *
+ * @author nm
+ *
+ */
+public abstract class IntegerDataType extends NumericDataType {
+    private static final long serialVersionUID = 1L;
+    int sizeInBits = 32;
+    protected boolean signed = true;
+    Long initialValue;
+
+    /**
+     * XTCE: The Valid Range bounds the universe of possible values this Parameter may have. For Telemetry the valid
+     * range is always applied before calibration, regardless of the value of validRangeAppliesToCalibrated. For
+     * commanding, if validRangeAppliesToCalibrated is false -- it is applied before calibration to the link
+     * DataEncoding.
+     */
+    IntegerValidRange validRange;
+    /**
+     * XTCE: This element provides the implementation with assistance rendering the value as a string for users.
+     * <p>
+     * Note that XTCE wraps NumberFormatType in another type ToStringType, which we don't do.
+     */
+    NumberFormatType numberFormat;
+
+    protected IntegerDataType(Builder<?> builder) {
+        super(builder);
+
+        if (builder.sizeInBits != null) {
+            this.sizeInBits = builder.sizeInBits;
+        }
+        if (builder.signed != null) {
+            signed = builder.signed;
+        }
+        if (builder.validRange != null) {
+            validRange = builder.validRange;
+        }
+        if (builder.numberFormat != null) {
+            numberFormat = builder.numberFormat;
+        }
+
+        if (builder.baseType instanceof IntegerDataType) {
+            IntegerDataType baseType = (IntegerDataType) builder.baseType;
+            if (builder.sizeInBits == null) {
+                this.sizeInBits = baseType.sizeInBits;
+            }
+            if (builder.signed == null) {
+                this.signed = baseType.signed;
+            }
+
+            if (builder.validRange == null && baseType.validRange != null) {
+                this.validRange = baseType.validRange;
+            }
+            if (builder.numberFormat == null && baseType.numberFormat != null) {
+                this.numberFormat = baseType.numberFormat;
+            }
+        }
+        setInitialValue(builder);
+    }
+
+    protected IntegerDataType(IntegerDataType t) {
+        super(t);
+        this.sizeInBits = t.sizeInBits;
+        this.signed = t.signed;
+        this.validRange = t.validRange;
+        this.numberFormat = t.numberFormat;
+    }
+
+    public boolean isSigned() {
+        return signed;
+    }
+
+    public int getSizeInBits() {
+        return sizeInBits;
+    }
+
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    /**
+     * returns the range for the values of this type to be valid or null if there is no range set (meaning that all
+     * values are valid)
+     * 
+     * @return
+     */
+    public IntegerValidRange getValidRange() {
+        return validRange;
+    }
+
+    public void setInitialValue(Long initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    @Override
+    public Long getInitialValue() {
+        return (Long) initialValue;
+    }
+
+    public NumberFormatType getNumberFormat() {
+        return numberFormat;
+    }
+
+    /**
+     * In case the provided value is a String, it is parsed to a Long Base 10 (decimal) form unless:
+     * <ul>
+     * <li>if preceded by a 0b or 0B, value is in base two (binary form)</li>
+     * <li>if preceded by a 0o or 0O, values is in base 8 (octal) form</li>
+     * <li>if preceded by a 0x or 0X, value is in base 16 (hex) form.</li>
+     * </ul>
+     * 
+     * Underscores (_) are allowed in the string and ignored.
+     * 
+     * Throws a {@link NumberFormatException} if the value cannot be parsed or does not fit within the specified number
+     * of bits
+     */
+    @Override
+    public Long convertType(Object value) {
+        if (value instanceof Number) {
+            long longValue = ((Number) value).longValue();
+            boolean negative = longValue < 0;
+
+            BigInteger bn = BigInteger.valueOf(negative ? -longValue : longValue);
+            int bs = sizeInBits;
+            if (signed) {
+                bs--;
+            }
+            if (bn.bitLength() > bs) {
+                throw new NumberFormatException("Number " + longValue + " does not fit the bit size (" + sizeInBits
+                        + (signed ? "/signed" : "unsigned") + ")");
+            }
+            long x = bn.longValue();
+            if (negative) {
+                x = -x;
+            }
+            return x;
+        } else if (value instanceof String) {
+            String stringValue = (String) value;
+            String sv = stringValue.replace("_", "");
+            if (sv.length() == 0) {
+                throw new NumberFormatException("Zero length string");
+            }
+
+            int off = 0;
+
+            char sv0 = sv.charAt(0);
+            boolean negative = false;
+            int radix = 10;
+
+            if (sv0 == '-') {
+                if (!signed) {
+                    throw new NumberFormatException("negative number specified for unsigned integer");
+                }
+                negative = true;
+                off++;
+            } else if (sv0 == '+') {
+                off++;
+            }
+
+            if (sv.startsWith("0b", off) || sv.startsWith("0B", off)) {
+                off += 2;
+                radix = 2;
+            } else if (sv.startsWith("0o", off) || sv.startsWith("0O", off)) {
+                off += 2;
+                radix = 8;
+            } else if (sv.startsWith("0x", off) || sv.startsWith("0X", off)) {
+                off += 2;
+                radix = 16;
+            }
+
+            if (sv.startsWith("-", off) || sv.startsWith("+", off)) {
+                throw new NumberFormatException("Sign character in the middle of the number");
+            }
+            BigInteger bn;
+            try {
+                bn = new BigInteger(sv.substring(off), radix);
+            } catch (NumberFormatException e) {
+                // Customize the message for better user experience
+                throw new NumberFormatException("Not a valid integer");
+            }
+
+            int bs = sizeInBits;
+            if (signed) {
+                bs--;
+            }
+            if (bn.bitLength() > bs) {
+                throw new NumberFormatException("Number " + stringValue + " does not fit the bit size (" + sizeInBits
+                        + (signed ? "/signed" : "unsigned") + ")");
+            }
+            long x = bn.longValue();
+            if (negative) {
+                x = -x;
+            }
+            return x;
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public Type getValueType() {
+        return sizeInBits > 32 ? (signed ? Type.SINT64 : Type.UINT64)
+                : (signed ? Type.SINT32 : Type.UINT32);
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "integer";
+    }
+
+    public abstract static class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+
+        Integer sizeInBits;
+        Boolean signed;
+        IntegerValidRange validRange;
+        NumberFormatType numberFormat;
+
+        public Builder() {
+        }
+
+        public Builder(IntegerDataType dataType) {
+            super(dataType);
+            this.sizeInBits = dataType.sizeInBits;
+            this.signed = dataType.signed;
+            this.validRange = dataType.validRange;
+            this.numberFormat = dataType.numberFormat;
+        }
+
+        public T setSizeInBits(int sizeInBits) {
+            this.sizeInBits = sizeInBits;
+            return self();
+        }
+
+        public T setSigned(boolean signed) {
+            this.signed = signed;
+            return self();
+        }
+
+        public boolean isSigned() {
+            return signed == null ? true : signed;
+        }
+
+        public T setValidRange(IntegerValidRange range) {
+            this.validRange = range;
+            return self();
+        }
+
+        public T setNumberFormat(NumberFormatType numberFormat) {
+            this.numberFormat = numberFormat;
+            return self();
+        }
+    }
+}
+```
+
+### `IntegerParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.xtce.util.DoubleRange;
+
+public class IntegerParameterType extends IntegerDataType implements NumericParameterType {
+    private static final long serialVersionUID = 2L;
+    List<NumericContextAlarm> contextAlarmList = null;
+
+    NumericAlarm defaultAlarm = null;
+
+    public IntegerParameterType(Builder builder) {
+        super(builder);
+        this.contextAlarmList = builder.contextAlarmList;
+        this.defaultAlarm = builder.defaultAlarm;
+
+        if (builder.baseType instanceof IntegerParameterType) {
+            IntegerParameterType baseType = (IntegerParameterType) builder.baseType;
+            if (builder.defaultAlarm == null && baseType.defaultAlarm != null) {
+                this.defaultAlarm = baseType.defaultAlarm;
+            }
+            if (builder.contextAlarmList == null && baseType.contextAlarmList != null) {
+                this.contextAlarmList = baseType.contextAlarmList;
+            }
+        }
+    }
+
+    /**
+     * Creates a shallow copy of the parameter type, giving it a new name.
+     */
+    public IntegerParameterType(IntegerParameterType t) {
+        super(t);
+        this.defaultAlarm = t.defaultAlarm;
+        this.contextAlarmList = t.contextAlarmList;
+    }
+
+    @Override
+    public NumericAlarm getDefaultAlarm() {
+        return defaultAlarm;
+    }
+
+    public List<NumericContextAlarm> getContextAlarmList() {
+        return contextAlarmList;
+    }
+
+    @Override
+    public boolean hasAlarm() {
+        return defaultAlarm != null || (contextAlarmList != null && !contextAlarmList.isEmpty());
+    }
+
+    @Override
+    public Set<Parameter> getDependentParameters() {
+        if (getContextAlarmList() == null) {
+            return (encoding != null) ? encoding.getDependentParameters() : Collections.emptySet();
+        }
+
+        Set<Parameter> dependentParameters = new HashSet<>();
+        for (NumericContextAlarm nca : contextAlarmList) {
+            dependentParameters.addAll(nca.getContextMatch().getDependentParameters());
+        }
+        return dependentParameters;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    @Override
+    public String toString() {
+        return "IntegerDataType name:" + name + " sizeInBits:" + sizeInBits + " signed:" + signed + " encoding:"
+                + encoding
+                + ((defaultAlarm != null) ? ", defaultAlarm:" + defaultAlarm : "")
+                + ((contextAlarmList != null) ? ", contextAlarmList:" + contextAlarmList : "");
+    }
+
+    public static class Builder extends IntegerDataType.Builder<Builder>
+            implements NumericParameterType.Builder<Builder> {
+
+        List<NumericContextAlarm> contextAlarmList = null;
+
+        NumericAlarm defaultAlarm = null;
+
+        public Builder() {
+        }
+
+        public Builder(IntegerParameterType integerParameterType) {
+            super(integerParameterType);
+            this.contextAlarmList = integerParameterType.contextAlarmList;
+            this.defaultAlarm = integerParameterType.defaultAlarm;
+
+        }
+
+        @Override
+        public void setDefaultAlarm(NumericAlarm defaultAlarm) {
+            this.defaultAlarm = defaultAlarm;
+        }
+
+        public void setNumericContextAlarmList(List<NumericContextAlarm> numericContextAlarmList) {
+            this.contextAlarmList = numericContextAlarmList;
+        }
+
+        private AlarmRanges getAlarmRanges(MatchCriteria contextMatch) {
+            NumericAlarm alarm = createOrGetAlarm(contextMatch);
+            return alarm.getStaticAlarmRanges();
+        }
+
+        public void setDefaultWatchAlarmRange(DoubleRange watchRange) {
+            getAlarmRanges(null).watchRange = watchRange;
+        }
+
+        public void setDefaultWarningAlarmRange(DoubleRange warningRange) {
+            getAlarmRanges(null).warningRange = warningRange;
+        }
+
+        public void setDefaultDistressAlarmRange(DoubleRange distressRange) {
+            getAlarmRanges(null).distressRange = distressRange;
+        }
+
+        public void setDefaultCriticalAlarmRange(DoubleRange criticalRange) {
+            getAlarmRanges(null).criticalRange = criticalRange;
+        }
+
+        public void setDefaultSevereAlarmRange(DoubleRange severeRange) {
+            getAlarmRanges(null).severeRange = severeRange;
+        }
+
+        /**
+         * Adds a new, or unions with an existing range for the specified context and level
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addAlarmRange(MatchCriteria contextMatch, DoubleRange range, AlarmLevels level) {
+            getAlarmRanges(contextMatch).addRange(range, level);
+        }
+
+        /**
+         * Adds a new, or unions with an existing watch range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addWatchAlarmRange(MatchCriteria contextMatch, DoubleRange watchRange) {
+            getAlarmRanges(contextMatch).addWatchRange(watchRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing warning range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addWarningAlarmRange(MatchCriteria contextMatch, DoubleRange warningRange) {
+            getAlarmRanges(contextMatch).addWarningRange(warningRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing distress range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addDistressAlarmRange(MatchCriteria contextMatch, DoubleRange distressRange) {
+            getAlarmRanges(contextMatch).addDistressRange(distressRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing critical range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addCriticalAlarmRange(MatchCriteria contextMatch, DoubleRange criticalRange) {
+            getAlarmRanges(contextMatch).addCriticalRange(criticalRange);
+        }
+
+        /**
+         * Adds a new, or unions with an existing severe range for the specified context
+         * 
+         * @param contextMatch
+         *            use {@code null} for the default context
+         */
+        public void addSevereAlarmRange(MatchCriteria contextMatch, DoubleRange severeRange) {
+            getAlarmRanges(contextMatch).addSevereRange(severeRange);
+        }
+
+        public void addContextAlarm(NumericContextAlarm nca) {
+            if (contextAlarmList == null) {
+                contextAlarmList = new ArrayList<>();
+            }
+            contextAlarmList.add(nca);
+        }
+
+        public void addContextAlarms(Collection<NumericContextAlarm> ncas) {
+            if (contextAlarmList == null) {
+                contextAlarmList = new ArrayList<>();
+            }
+            contextAlarmList.addAll(ncas);
+        }
+
+        public NumericContextAlarm getNumericContextAlarm(MatchCriteria context) {
+            if (contextAlarmList == null) {
+                return null;
+            }
+            for (NumericContextAlarm nca : contextAlarmList) {
+                if (nca.getContextMatch().equals(context)) {
+                    return nca;
+                }
+            }
+            return null;
+        }
+
+        public NumericAlarm createOrGetAlarm(MatchCriteria contextMatch) {
+            if (contextMatch == null) {
+                if (defaultAlarm == null) {
+                    defaultAlarm = new NumericAlarm();
+                }
+                return defaultAlarm;
+            } else {
+                NumericContextAlarm nca = getNumericContextAlarm(contextMatch);
+                if (nca == null) {
+                    nca = new NumericContextAlarm();
+                    nca.setContextMatch(contextMatch);
+                    addContextAlarm(nca);
+                }
+                return nca;
+            }
+        }
+
+        public NumericAlarm getDefaultAlarm() {
+            return defaultAlarm;
+        }
+
+        @Override
+        public IntegerParameterType build() {
+            return new IntegerParameterType(this);
+        }
+
+        @Override
+        public void setContextAlarmList(List<NumericContextAlarm> contextAlarmList) {
+            this.contextAlarmList = contextAlarmList;
+        }
+
+    }
+
+}
+```
+
+### `IntegerRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerRange.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * An integral range of numbers. "min", and "max"
+ * 
+ * @author nm
+ *
+ */
+public class IntegerRange implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    long minInclusive;
+    long maxInclusive;
+
+    public IntegerRange(long minInclusive, long maxInclusive) {
+        this.minInclusive = minInclusive;
+        this.maxInclusive = maxInclusive;
+    }
+
+    /**
+     * copy constructor
+     */
+    public IntegerRange(IntegerRange range) {
+        this.minInclusive = range.minInclusive;
+        this.maxInclusive = range.maxInclusive;
+    }
+
+    public long getMaxInclusive() {
+        return maxInclusive;
+    }
+
+    public long getMinInclusive() {
+        return minInclusive;
+    }
+
+    /**
+     * E.g. a low limit of ]-Infinity, -22] and a high limit of [40, +Infinity[
+     * intersect to [-22, 40] (which for practical purposes is actually the range
+     * inside of which pvals are _not_ out of limits)
+     */
+    public IntegerRange intersectWith(IntegerRange other) {
+        return new IntegerRange(Math.max(minInclusive, other.minInclusive), Math.min(maxInclusive, other.maxInclusive));
+    }
+
+    @Override
+    public String toString() {
+        return "[" + minInclusive + "," + maxInclusive + "]";
+    }
+
+    public String toString(boolean signed) {
+        if (signed) {
+            return "[" + minInclusive + "," + maxInclusive + "]";
+        } else {
+            return "[" + Long.toUnsignedString(minInclusive) + "," + Long.toUnsignedString(maxInclusive) + "]";
+        }
+    }
+
+}
+```
+
+### `IntegerValidRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerValidRange.java`
+
+
+```java
+package org.yamcs.xtce;
+/**
+ * XTCE: Holds an integer range and flag denoting whether the range is calculated on the value using the source data type or the destination data type.
+ */
+public class IntegerValidRange extends IntegerRange {
+    private static final long serialVersionUID = 1L;
+    /**
+     * Ranges are applied to the raw source DataEncoding data type or against the calibrated or converted destination data type
+     */
+    boolean validRangeAppliesToCalibrated=false;
+
+
+    public IntegerValidRange(long minInclusive, long maxInclusive) {
+        super(minInclusive, maxInclusive);
+    }
+
+    public IntegerValidRange(IntegerRange range) {
+        super(range);
+    }
+
+    public boolean isValidRangeAppliesToCalibrated() {
+        return validRangeAppliesToCalibrated;
+    }
+
+    public void setValidRangeAppliesToCalibrated(boolean validRangeAppliesToCalibrated) {
+        this.validRangeAppliesToCalibrated = validRangeAppliesToCalibrated;
+    }
+
+
+}
+```
+
+### `IntegerValue.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/IntegerValue.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * @author nm
+ * 
+ * Contains an Integer value; value may be provided directly or via the value in a parameter.
+ */
+public abstract class IntegerValue implements Serializable {
+	private static final long serialVersionUID = 1L;
+}
+```
+
+### `JavaExpressionCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/JavaExpressionCalibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class JavaExpressionCalibrator implements Calibrator {
+   
+    private static final long serialVersionUID = 1L;
+    private final String javaFormula;
+
+    public JavaExpressionCalibrator(String javaFormula) {
+        this.javaFormula = javaFormula;
+    }
+    public String getFormula() {
+        return javaFormula;
+    }
+    
+    @Override
+    public String toString() {
+        return "JavaExpressionCalibrator [" + javaFormula + "]";
+    }
+}
+```
+
+### `LinearAdjusment.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/LinearAdjusment.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class LinearAdjusment {
+    double intercept = 0;
+    double slope = 1;
+
+    public LinearAdjusment(double intercept, double slope) {
+        this.intercept = intercept;
+        this.slope = slope;
+    }
+
+    public double getIntercept() {
+        return intercept;
+    }
+
+    public double getSlope() {
+        return slope;
+    }
+}
+```
+
+### `MatchCriteria.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MatchCriteria.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.Set;
+import java.util.logging.Logger;
+
+public interface MatchCriteria extends Serializable {
+    /**
+     * Return the set of parameters which are required in order to evaluate the match criteria. If no parameter is
+     * required, return an empty set.
+     * 
+     * @return
+     */
+    public Set<Parameter> getDependentParameters();
+
+    static String printExpressionReference(ParameterOrArgumentRef ref) {
+        String fullName = ref.getName();
+        PathElement[] path = ref.getMemberPath();
+        if (path != null) {
+            for (PathElement el : path) {
+                if (el.getName() != null) {
+                    fullName += ".";
+                }
+                fullName += el;
+            }
+        }
+
+        if (!ref.useCalibratedValue()) {
+            return "'raw://" + fullName + "'";
+        } else {
+            return "'" + fullName + "'";
+        }
+    }
+
+    static String printExpressionValue(Object value) {
+        if (value instanceof String) {
+            // Need to allow for quotes and slashes within the string itself
+            // Turn '\' into '\\' and next, '"' into '\"'
+            String escaped = ((String) value).replace("\\", "\\\\").replace("\"", "\\\"");
+            return "\"" + escaped + "\"";
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
+    /**
+     * For debugging purpose
+     * 
+     * @param criteria
+     */
+    static public void printParsedMatchCriteria(Logger log, MatchCriteria criteria, String indent) {
+        if (criteria instanceof Comparison) {
+            log.fine(indent + criteria.toString());
+        } else if (criteria instanceof ComparisonList) {
+            log.fine(indent + "ComparisonList (");
+            for (Comparison c : ((ComparisonList) criteria).comparisons) {
+                log.fine(indent + "  " + c.toString());
+            }
+            log.fine(indent + ")");
+        } else if (criteria instanceof Condition) {
+            log.fine(indent + criteria.toString());
+        } else if (criteria instanceof ANDedConditions) {
+            log.fine(indent + "AND (");
+            for (MatchCriteria c : ((ExpressionList) criteria).expressions) {
+                printParsedMatchCriteria(log, c, indent + "  ");
+            }
+            log.fine(indent + ")");
+        } else if (criteria instanceof ORedConditions) {
+            log.fine(indent + "OR (");
+            for (MatchCriteria c : ((ExpressionList) criteria).expressions) {
+                printParsedMatchCriteria(log, c, indent + "  ");
+            }
+            log.fine(indent + ")");
+        }
+    }
+}
+```
+
+### `MathAlgorithm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathAlgorithm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class MathAlgorithm extends Algorithm {
+    private static final long serialVersionUID = 1L;
+    TriggeredMathOperation operation;
+    
+    public MathAlgorithm(String name) {
+        super(name);
+    }
+
+    public void setMathOperation(TriggeredMathOperation mo) {
+        this.operation = mo;
+    }
+
+    public MathOperation getOperation() {
+        return operation;
+    }
+}
+```
+
+### `MathOperation.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathOperation.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Postfix (aka Reverse Polish Notation (RPN)) notation is used to describe mathematical equations. It uses a stack
+ * where operands (either fixed values or ParameterInstances) are pushed onto the stack from first to last in the XML.
+ * As the operators are specified, each pops off operands as it evaluates them, and pushes the result back onto the
+ * stack. In this case postfix is used to avoid having to specify parenthesis. To convert from infix to postfix, use
+ * Dijkstra's "shunting yard" algorithm.
+ * 
+ * @author nm
+ *
+ */
+public class MathOperation implements Serializable {
+    private static final long serialVersionUID = 1L;
+    final private List<Element> elementList;
+
+    public static enum ElementType {
+        /**
+         * Use a constant in the calculation.
+         */
+        VALUE_OPERAND("ValueOperand"),
+        /**
+         * Use the value of this parameter in the calculation. It is the calibrator's value only. If the raw value is
+         * needed, specify it explicitly using ParameterInstanceRefOperand. Note this element has no content.
+         */
+        THIS_PARAMETER_OPERAND("ThisParameterOperand"),
+        /**
+         * This element is used to reference the last received/assigned value of any Parameter in this math operation.
+         */
+        PARAMETER_INSTANCE_REF_OPERAND("ParameterInstanceRefOperand"),
+        /**
+         * All operators utilize operands on the top values in the stack and leaving the result on the top of the stack.
+         * Ternary operators utilize the top three operands on the stack, binary operators utilize the top two operands
+         * on the stack, and unary operators use the top operand on the stack.
+         */
+        OPERATOR("Operator");
+
+        final String xtceName;
+
+        ElementType(String xtceName) {
+            this.xtceName = xtceName;
+        }
+
+        public String xtceName() {
+            return xtceName;
+        }
+    }
+
+    public static class Element implements Serializable {
+        private static final long serialVersionUID = 1L;
+        final ElementType type;
+        double value;
+        ParameterInstanceRef pref;
+        MathOperator operator;
+
+        public Element(double value) {
+            this.type = ElementType.VALUE_OPERAND;
+            this.value = value;
+        }
+
+        public Element() {
+            this.type = ElementType.THIS_PARAMETER_OPERAND;
+        }
+
+        public Element(ParameterInstanceRef pref) {
+            this.type = ElementType.PARAMETER_INSTANCE_REF_OPERAND;
+            this.pref = pref;
+        }
+
+        public Element(MathOperator op) {
+            this.type = ElementType.OPERATOR;
+            this.operator = op;
+        }
+
+        public Element(ElementType type) {
+            this.type = type;
+        }
+
+        public ElementType getType() {
+            return type;
+        }
+
+        public double getValue() {
+            return value;
+        }
+
+        public MathOperator getOperator() {
+            return operator;
+        }
+
+        public ParameterInstanceRef getParameterInstanceRef() {
+            return pref;
+        }
+
+        @Override
+        public String toString() {
+            switch (type) {
+            case OPERATOR:
+                return operator.xtceName();
+            case PARAMETER_INSTANCE_REF_OPERAND:
+                return "pref";
+            case THIS_PARAMETER_OPERAND:
+                return "this";
+            case VALUE_OPERAND:
+                return Double.toString(value);
+            }
+            return "";
+        }
+
+        public void setParameterInstance(ParameterInstanceRef pref) {
+            this.pref = pref;
+        }
+    }
+
+    public MathOperation(List<Element> elementList) {
+        this.elementList = elementList;
+    }
+
+    public List<Element> getElementList() {
+        return elementList;
+    }
+
+}
+```
+
+### `MathOperationCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathOperationCalibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+public class MathOperationCalibrator extends MathOperation implements Calibrator {
+    
+    public MathOperationCalibrator(List<Element> list) {
+       super(list);
+    }
+
+    private static final long serialVersionUID = 1L;
+    
+    
+    
+}
+```
+
+### `MathOperator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MathOperator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Mathematical operators used in the math operation. Behaviour of each operator on the stack is described using
+ * notation (before -- after), where "before" represents the stack before execution of the operator and "after"
+ * represent the stack after execution.
+ * <p>
+ * The top of the stack is at the right, e.g. in (x1 x2 -- x1-x2), x2 is the element on the top, x1 is the second from
+ * the top and (x1-x2) is the top of the frame after the execution.
+ *
+ * @author nm
+ *
+ */
+public enum MathOperator {
+    /**
+     * addition (x1 x2 -- x1+x2)
+     */
+    PLUS("+", 2),
+    /**
+     * subtraction (x1 x2 -- x1-x2)
+     */
+    MINUS("-", 2),
+    /**
+     * multiplication (x1 x2 -- x1*x2)
+     */
+    STAR("*", 2),
+    /**
+     * division (x1 x2 -- x1/x2) An undefined condition exists if x2 is zero
+     */
+    DIV("/", 2),
+    /**
+     * unsigned mod (x1 x2 -- x3) Divide x1 by x2, giving the remainder x3; an undefined condition exists if x2 is zero
+     */
+    MODULO("%", 2),
+    /**
+     * power function (x1 x2 -- x1**x2)
+     */
+    POW("^", 2),
+    /**
+     * reverse power function (x1 x2 -- x2**x1)
+     */
+    REVPOW("y^x", 2),
+    /**
+     * natural (base e) logarithm (x -- ln(x)) An undefined condition exists if x is less than or equal to zero
+     */
+    LN("ln", 1),
+    /**
+     * base-10 logarithm (x-- log(x)) An undefined condition exists if x is less than or equal to zero
+     */
+    LOG("log", 1),
+    /**
+     * exponentiation (x -- exp(x))
+     */
+    EXP("e^x", 1),
+    /**
+     * inversion (x -- 1/x) An undefined condition exists if x is zero
+     */
+    INV("1/x", 1),
+    /**
+     * factorial (x -- x!) An undefined condition exists if x is less than zero
+     */
+    FACT("x!", 1),
+    /**
+     * tangent (x -- tan\(x)) radians
+     */
+    TAN("tan", 1),
+    /**
+     * cosine (x -- cos\(x)) radians
+     */
+    COS("cos", 1),
+    /**
+     * sine (x -- sin\(x)) radians
+     */
+    SIN("sin", 1),
+    /**
+     * arctangent (x -- atan\(x)) radians
+     */
+    ATAN("atan", 1),
+    /**
+     * arccosine (x -- acos\(x)) radians
+     */
+    ACOS("acos", 1),
+    /**
+     * arcsine (x -- asin\(x)) radians
+     */
+    ASIN("asin", 1),
+    /**
+     * hyperbolic tangent (x -- tanh(x))
+     */
+    TANH("tanh", 1),
+    /**
+     * hyperbolic cosine (x -- cosh\(x))
+     */
+    COSH("cosh", 1),
+    /**
+     * hyperbolic sine (x -- sinh\(x))
+     */
+    SINH("sinh", 1),
+    /**
+     * hyperbolic arctangent (x -- atanh\(x))
+     * <p>
+     * An undefined condition exists if x is outside the range [-1.0,+1.0]
+     */
+    ATANH("atanh", 1),
+    /**
+     * hyperbolic arccosine (x -- acosh\(x))
+     * <p>
+     * An undefined condition exists if n is less than one
+     */
+    ACOSH("acosh", 1),
+    /**
+     * hyperbolic arcsine (x -- asinh\(x))
+     */
+    ASINH("asinh", 1),
+    /**
+     * swap the top two stack items (x1 x2 -- x2 x1)
+     */
+    SWAP("swap", 2),
+    /**
+     * Remove top item from the stack (x -- )
+     */
+    DROP("drop", 1),
+    /**
+     * Duplicate top item on the stack (x -- x x)
+     */
+    DUP("dup", 1),
+    /**
+     * Duplicate second item to the top of the stack (x1 x2 -- x1 x2 x1)
+     */
+    OVER("over", 1),
+    /**
+     * absolute value (x1 -- abs(x1))
+     */
+    ABS("abs", 1),
+    /**
+     * bitwise right shift (x1 x2 -- x1 >> x2)
+     */
+    LEFT_SHIFT("<<", 2),
+    /**
+     * bitwise left shift (x1 x2 -- x1 << x2)
+     */
+    RIGHT_SHIFT(">>", 2),
+    /**
+     * bitwise or (x1 x2 -- x1 | x2)
+     */
+    BITWISE_OR("|", 2),
+    /**
+     * bitwise and (x1 x2 -- x1 & x2)
+     */
+    BITWISE_AND("&", 2);
+    
+    private final String xtceName;
+    private final int arity;
+    
+    MathOperator(String v, int arity) {
+        this.xtceName = v;
+        this.arity = arity;
+    }
+    public int getArity() {
+        return arity;
+    }
+    public static MathOperator fromXtceName(String s) {
+        for(MathOperator mo: values()) {
+            if(mo.xtceName.equals(s)) {
+                return mo;
+            }
+        }
+        throw new IllegalArgumentException("Invalid math operator '"+s+"'");
+    }
+    public String xtceName() {
+        return xtceName;
+    }
+   
+}
+```
+
+### `Member.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Member.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Describe a member field in an AggregateDataType.
+ * <p>
+ * Each member has a name and a type reference to a data type for the aggregate member name.
+ * <p>
+ * If this aggregate is a Parameter aggregate, then the typeRef is a parameter type reference.
+ * <p>
+ * If this aggregate is an Argument aggregate, then the typeRef is an argument type reference.
+ * <p>
+ * References to an array data type is currently not supported. Circular references are not allowed.
+ * 
+ * @author nm
+ *
+ */
+public class Member extends NameDescription {
+    private static final long serialVersionUID = 1L;
+
+    Object initialValue;
+    DataType type;
+
+    public Member(String name) {
+        super(name);
+    }
+
+    public Member(String name, DataType type) {
+        super(name);
+        this.type = type;
+    }
+
+    /**
+     * Used to set the initial calibrated values of Parameters. Will overwrite an initial value defined for the DataType
+     * 
+     * @param initialValue
+     *            - initial calibrated value
+     */
+    public void setInitialValue(Object initialValue) {
+        this.initialValue = type.convertType(initialValue);
+    }
+
+    public void setDataType(DataType dtype) {
+        this.type = dtype;
+    }
+
+    public DataType getType() {
+        return type;
+    }
+
+    /**
+     * Get the initial value of the member.
+     *
+     * @return
+     */
+    public Object getInitialValue() {
+        return initialValue;
+    }
+}
+```
+
+### `MetaCommand.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/MetaCommand.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * The MetaCommand is the base type for a tele-command.
+ * 
+ * 
+ * <p>
+ * The rules for MetaCommand inheritance as follows:
+ * <ul>
+ * <li>A MetaCommand may extend another using the BaseMetaCommand element</li>
+ * <li>BaseMetaCommands that form loops are illegal</li>
+ * <li>Its CommandContainer is only inherited if the BaseContainer is explicitly set between the child and parent.</li>
+ * <li>The same rules apply to MetaCommand/CommandContainer inheritance as described in
+ * SequenceContainer/BaseContainer.</li>
+ * </ul>
+ * 
+ * <p>
+ * Specific rules by element and attribute are:
+ * <ul>
+ * <li>BaseMetaCommand/ArgumentAssignment Child’s content will override parent’s content if present, otherwise child
+ * gets parent’s content if it is specified.</li>
+ * <li>If argument is the same name, it overrides the parent’s ArgumentAssignment.</li>
+ * <li>ArgumentList Child’s content is appended to parent’s content if present</li>
+ * <li>CommandContainer Special Case: inherited like other containers if CommandContainer/BaseContainer set. Otherwise
+ * it is not inherited.</li>
+ * <li>TransmissionConstraintList Child’s content prefixed to parent’s content if present</li>
+ * <li>DefaultSignificance Child’s content will override parent’s content if present, otherwise child gets parent’s
+ * content if specified</li>
+ * <li>VerifierSet Child’s content prefixed to parent’s content if present but: - Same verifiers are overridden by the
+ * child</li>
+ * </ul>
+ * 
+ * @author nm
+ */
+public class MetaCommand extends NameDescription {
+    private static final long serialVersionUID = 5L;
+
+    /**
+     * From XTCE:
+     * Many commands have one or more options. These are called command arguments. Command arguments may be of any of
+     * the standard data types.
+     * <p>
+     * MetaCommand arguments are local to the MetaCommand. Arguments are the visible to the user or processing software.
+     * <p>
+     * This can be somewhat subjective -- for example a checksum that is always part of the command format is probably
+     * not an argument.
+     */
+    List<Argument> argumentList = new ArrayList<Argument>();
+
+    /**
+     * From XTCE:
+     * Tells how to package this command.
+     * <p>
+     * May not be referred to in the EntryList of a SequenceContainer, CommandContainerSet/CommandContainer or another
+     * MetaCommandContainer.
+     * <p>
+     * May be extended by another MetaCommand/CommandContainer.
+     */
+    CommandContainer commandContainer;
+
+    MetaCommand baseMetaCommand;
+    // assignment for inheritance
+    List<ArgumentAssignment> argumentAssignmentList;
+
+    /**
+     * From XTCE:
+     * Some Command and Control Systems may require special user access or confirmations before transmitting commands
+     * with certain levels.
+     * The level is inherited from the Base MetaCommand, or it overrides any in the parent-chain if given here, however
+     * it should not go down in consequenceLevel.
+     */
+    private Significance defaultSignificance = null;
+
+    /**
+     * if command is abstract, it cannot be instantiated
+     */
+    boolean abstractCmd = false;
+
+    List<TransmissionConstraint> transmissionContstraintList = new ArrayList<TransmissionConstraint>();
+
+    /**
+     * From XTCE
+     * A Command Verifier is a conditional check on the telemetry from a SpaceSystem that that provides positive
+     * indication on the processing state of a command.
+     * There are eight different verifiers each associated with difference states in command processing:
+     * TransferredToRange, TransferredFromRange, Received, Accepted, Queued, Execution, Complete, and Failed.
+     * There may be multiple ‘complete’ verifiers. ‘Complete’ verifiers are added to the Base MetaCommand ‘Complete’
+     * verifier list.
+     * All others will override a verifier defined in a Base MetaCommand
+     * 
+     * 
+     * In Yamcs the verifier type is specified in the stage field.
+     */
+    private List<CommandVerifier> verifierList = new ArrayList<CommandVerifier>();
+
+    public MetaCommand(String name) {
+        super(name);
+    }
+
+    /**
+     * Set the command as abstract or non abstract.
+     * Abstract commands cannot be instantiated
+     * 
+     * @param a
+     */
+    public void setAbstract(boolean a) {
+        abstractCmd = a;
+    }
+
+    public boolean isAbstract() {
+        return abstractCmd;
+    }
+
+    public void setCommandContainer(CommandContainer mcc) {
+        this.commandContainer = mcc;
+    }
+
+    public CommandContainer getCommandContainer() {
+        return commandContainer;
+    }
+
+    public void setBaseMetaCommand(MetaCommand mc) {
+        this.baseMetaCommand = mc;
+    }
+
+    public MetaCommand getBaseMetaCommand() {
+        return baseMetaCommand;
+    }
+
+    /**
+     * returns the argument assignment list in relation to the inheritance
+     * - this is the list of arguments of the parent(s) which are assigned when the inheritance takes place
+     * 
+     * returns null if there is no such argument
+     * 
+     * @return
+     */
+    public List<ArgumentAssignment> getArgumentAssignmentList() {
+        if (argumentAssignmentList == null)
+            return null;
+        return Collections.unmodifiableList(argumentAssignmentList);
+    }
+
+    /**
+     * returns the list of arguments of this command
+     * can be empty if the command doesn't have arguments
+     * 
+     * @return
+     */
+    public List<Argument> getArgumentList() {
+        if (argumentList == null)
+            return null;
+        return Collections.unmodifiableList(argumentList);
+    }
+
+    /**
+     * returns the list of all arguments including those inherited from the parent
+     */
+    public List<Argument> getEffectiveArgumentList() {
+        // collect all the parents in a list so we can add the arguments starting from the top
+        List<MetaCommand> mclist = getHierarchy();
+
+        List<Argument> r = new ArrayList<>();
+        for (int i = mclist.size() - 1; i >= 0; i--) {
+            MetaCommand mc = mclist.get(i);
+            if (mc.argumentList != null) {
+                r.addAll(mc.argumentList);
+            }
+        }
+        return r;
+    }
+
+    public List<ArgumentAssignment> getEffectiveArgumentAssignmentList() {
+        List<MetaCommand> mclist = getHierarchy();
+
+        List<ArgumentAssignment> r = new ArrayList<>();
+        for (int i = mclist.size() - 1; i >= 0; i--) {
+            MetaCommand mc = mclist.get(i);
+            if (mc.argumentAssignmentList != null) {
+                r.addAll(mc.argumentAssignmentList);
+            }
+        }
+
+        return r;
+    }
+
+    private List<MetaCommand> getHierarchy() {
+        List<MetaCommand> mcList = new ArrayList<>();
+        MetaCommand mc = this;
+        while (mc != null) {
+            mcList.add(mc);
+            mc = mc.getBaseMetaCommand();
+        }
+        return mcList;
+    }
+
+    /**
+     * returns an argument based on name or null if it doesn't exist
+     * <p>
+     * The argument is only looked up in the current meta command, not in its parent.
+     * 
+     * @param argumentName
+     * @return
+     */
+    public Argument getArgument(String argumentName) {
+        for (Argument a : argumentList) {
+            if (a.getName().equals(argumentName)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Same as {@link #getArgument(String)} but looks up the argument also in the parent
+     */
+    public Argument getEffectiveArgument(String argumentName) {
+        Argument arg = getArgument(argumentName);
+        if (arg == null && baseMetaCommand != null) {
+            arg = baseMetaCommand.getEffectiveArgument(argumentName);
+        }
+        return arg;
+    }
+
+    /**
+     * Adds an argument to the command.
+     * 
+     * @param arg
+     *            - the argument to be added
+     */
+    public void addArgument(Argument arg) {
+        argumentList.stream().filter(a -> a.getName().equals(arg.getName())).findFirst().ifPresent(a -> {
+            throw new IllegalArgumentException("An argument named '" + arg.getName() + "' already exists");
+        });
+        argumentList.add(arg);
+    }
+
+    public void addTransmissionConstrain(TransmissionConstraint constraint) {
+        transmissionContstraintList.add(constraint);
+    }
+
+    /**
+     * 
+     * @return the list of transmission constraints (can be empty but not null)
+     */
+    public List<TransmissionConstraint> getTransmissionConstraintList() {
+        return transmissionContstraintList;
+    }
+
+    public void addArgumentAssignment(ArgumentAssignment aa) {
+        if (argumentAssignmentList == null) {
+            argumentAssignmentList = new ArrayList<ArgumentAssignment>();
+        }
+        argumentAssignmentList.add(aa);
+    }
+
+    public boolean hasTransmissionConstraints() {
+        return !transmissionContstraintList.isEmpty();
+    }
+
+    /**
+     * returns the command significance either directly defined or inherited from the parent
+     * <p>
+     * Returns null of no significance is attached to the command
+     */
+    public Significance getEffectiveDefaultSignificance() {
+        return defaultSignificance != null ? defaultSignificance
+                : baseMetaCommand != null ? baseMetaCommand.getEffectiveDefaultSignificance()
+                        : null;
+    }
+
+    public Significance getDefaultSignificance() {
+        return defaultSignificance;
+    }
+
+    public void setDefaultSignificance(Significance defaultSignificance) {
+        this.defaultSignificance = defaultSignificance;
+    }
+
+    public void addVerifier(CommandVerifier cmdVerifier) {
+        verifierList.add(cmdVerifier);
+    }
+
+    public boolean hasCommandVerifiers() {
+        return (!verifierList.isEmpty()) || ((baseMetaCommand != null) && baseMetaCommand.hasCommandVerifiers());
+    }
+
+    public List<CommandVerifier> getCommandVerifiers() {
+        return Collections.unmodifiableList(verifierList);
+    }
+
+    public void print(PrintStream out) {
+        out.print("MetaCommand name: " + name + " abstract:" + abstractCmd);
+        if (getAliasSet() != null)
+            out.print(", aliases: " + getAliasSet());
+
+        if (!transmissionContstraintList.isEmpty()) {
+            out.print(", TransmissionConstraints: ");
+            out.print(transmissionContstraintList.toString());
+        }
+        if (defaultSignificance != null) {
+            out.print(", defaultSignificance: ");
+            out.print(defaultSignificance.toString());
+        }
+
+        if (!verifierList.isEmpty()) {
+            out.print(", Verifiers: ");
+            out.print(verifierList.toString());
+        }
+        out.println();
+        if (baseMetaCommand != null) {
+            out.println("\t baseMetaCommand: " + baseMetaCommand.getName() + " with argument assignment:"
+                    + argumentAssignmentList);
+        }
+        if (commandContainer != null) {
+            commandContainer.print(out);
+        }
+    }
+
+    public void setArgumentAssignmentList(List<ArgumentAssignment> argumentAssignmentList) {
+        this.argumentAssignmentList = argumentAssignmentList;
+    }
+}
+```
+
+### `NamedDescriptionIndex.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NamedDescriptionIndex.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.yamcs.xtce.xml.XtceAliasSet;
+
+/**
+ * Keeps a list of {@link NameDescription} objects with corresponding indexes to be able to retrieve them in any namespace.
+ * 
+ * Note that the names are case sensitive while aliases are not. 
+ * 
+ * @author nm
+ *
+ */
+public class NamedDescriptionIndex<T extends NameDescription> implements Serializable, Iterable<T> {
+    private static final long serialVersionUID = 4L;
+
+    private LinkedHashMap<String, LinkedHashMap<String, T>> aliasIndex = new LinkedHashMap<String, LinkedHashMap<String, T>>();
+    private LinkedHashMap<String, T> index = new LinkedHashMap<String, T>();
+
+    public void add(T o) {
+        XtceAliasSet aliases = o.getAliasSet();
+        if (aliases != null) {
+            for (String ns : aliases.getNamespaces()) {
+                LinkedHashMap<String, T> m = aliasIndex.computeIfAbsent(ns, k -> new LinkedHashMap<String, T>());
+                m.put(aliases.getAlias(ns).toUpperCase(), o);
+            }
+        }
+        //add an "alias" for (fq_space_system_name, name) 
+        LinkedHashMap<String, T> m = aliasIndex.computeIfAbsent(o.getSubsystemName(), k -> new LinkedHashMap<String, T>());
+        m.put(o.getName().toUpperCase(), o);
+
+        if (o.getQualifiedName() != null) {
+            index.put(o.getQualifiedName(), o);
+        } else {
+            index.put(o.getName(), o); // Happens for Derived Values
+        }
+    }
+
+    /**
+     * returns the object based on its qualified name
+     */
+    public T get(String qualifiedName) {
+        return index.get(qualifiedName);
+    }
+
+    /**
+     * returns the object in namespace
+     * 
+     * @param name
+     * @param nameSpace
+     * @return
+     */
+    public T get(String nameSpace, String name) {
+        Map<String, T> m = aliasIndex.get(nameSpace);
+        if (m != null) {
+            return m.get(name.toUpperCase());
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * returns a collection of all the objects (parameters) in the index
+     * 
+     * @return
+     */
+    public Collection<T> getObjects() {
+        return index.values();
+    }
+
+    /**
+     * 
+     * @return number of objects in index
+     */
+    public int size() {
+        return index.size();
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return index.values().iterator();
+    }
+}
+```
+
+### `NameDescription.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NameDescription.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.xtce.xml.XtceAliasSet;
+
+/**
+ * The type definition used by most elements that require a name with optional descriptions.
+ */
+public class NameDescription implements Serializable {
+    private static final long serialVersionUID = 200706050619L;
+
+    /**
+     * path separator used in the fully qualified names
+     */
+    public static char PATH_SEPARATOR = '/';
+
+    /**
+     * Name of the object
+     */
+    protected String name = null;
+
+    /**
+     * fully qualified name (i.e. space system name+"/"+name
+     */
+    protected String qualifiedName = null;
+
+    /**
+     * Set of aliases
+     */
+    protected XtceAliasSet xtceAliasSet = XtceAliasSet.NO_ALIAS;
+
+    /**
+     * Escape hatch for storing any type of information
+     */
+    protected List<AncillaryData> ancillaryData = null;
+
+    String shortDescription;
+    String longDescription;
+
+    public NameDescription(Builder<?> builder) {
+        this.name = builder.name;
+        this.longDescription = builder.longDescription;
+        this.shortDescription = builder.shortDescription;
+        this.ancillaryData = builder.ancillaryData;
+        this.xtceAliasSet = builder.xtceAliasSet;
+        this.qualifiedName = builder.qualifiedName;
+    }
+
+    NameDescription(String name) {
+        this.name = name;
+    }
+
+    /*
+     * creates a shallow copy
+     */
+    protected NameDescription(NameDescription t) {
+        this.ancillaryData = t.ancillaryData;
+        this.longDescription = t.longDescription;
+        this.shortDescription = t.shortDescription;
+        this.name = t.name;
+        this.qualifiedName = t.qualifiedName;
+        this.xtceAliasSet = t.xtceAliasSet;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    /**
+     * Returns the non qualified name of the item
+     * 
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    public String getAlias(String namespace) {
+        if (xtceAliasSet == null) {
+            return null;
+        }
+        return xtceAliasSet.getAlias(namespace);
+    }
+
+    public void setQualifiedName(String qname) {
+        if (!qname.endsWith(name)) {
+            throw new IllegalArgumentException("qualified name '" + qname + "' must end with '" + name + "'");
+        }
+        this.qualifiedName = qname;
+        // String ssName = getSubsystemName(qname);
+        // addAlias(ssName, name);
+    }
+
+    /**
+     * Stores the given ancillary data. If an entry already existed for the applicable name, that entry will be
+     * overridden.
+     */
+    public void addAncillaryData(AncillaryData data) {
+        if (ancillaryData == null) {
+            ancillaryData = new ArrayList<>();
+        }
+        ancillaryData.add(data);
+    }
+
+    public void setAncillaryData(List<AncillaryData> ancillaryData) {
+        this.ancillaryData = ancillaryData;
+    }
+
+    public List<AncillaryData> getAncillaryData() {
+        return ancillaryData;
+    }
+
+    /**
+     * Returns the fully qualified name.
+     * 
+     * @return a name of shape /system/subsys1/subsys2/item
+     */
+    public String getQualifiedName() {
+        return qualifiedName;
+    }
+
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    /**
+     * Assign set of aliases with the object. The previous aliases if any are replaced by the new ones.
+     *
+     * @param aliasSet
+     *            Set of aliases
+     */
+    public void setAliasSet(XtceAliasSet aliasSet) {
+        this.xtceAliasSet = aliasSet;
+    }
+
+    public XtceAliasSet getAliasSet() {
+        return xtceAliasSet;
+    }
+
+    /**
+     * Adds all aliases to the existing aliases. The new aliases may overwrite already existing aliases - in this case
+     * the old ones will be replaced with the new ones.
+     *
+     * @param newAliases
+     */
+    public void addAliases(XtceAliasSet newAliases) {
+        if (xtceAliasSet == XtceAliasSet.NO_ALIAS) {
+            xtceAliasSet = new XtceAliasSet();
+        }
+        for (Map.Entry<String, String> e : newAliases.getAliases().entrySet()) {
+            xtceAliasSet.addAlias(e.getKey(), e.getValue());
+        }
+    }
+
+    public void addAlias(String namespace, String alias) {
+        if (xtceAliasSet == XtceAliasSet.NO_ALIAS) {
+            xtceAliasSet = new XtceAliasSet();
+        }
+        xtceAliasSet.addAlias(namespace, alias);
+    }
+
+    /**
+     * Concatenates the root with the subsystems and returns a qualified name
+     *
+     * @param root
+     */
+    public static String qualifiedName(String root, String... subsystems) {
+        if (root.charAt(0) != PATH_SEPARATOR) {
+            throw new IllegalArgumentException("root has to start with " + PATH_SEPARATOR);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append(root);
+        for (String s : subsystems) {
+            if (s.charAt(0) != PATH_SEPARATOR) {
+                sb.append(PATH_SEPARATOR);
+            }
+            sb.append(s);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * OPS name, in XTCE defined as alias for namespace "MDB:OPS Name"
+     *
+     * @return OPS Name alias if defined, otherwise null
+     */
+    public String getOpsName() {
+        return xtceAliasSet.getAlias("MDB:OPS Name");
+    }
+
+    /**
+     *
+     * @return fully qualified name of the subsystem of which this name is part of
+     */
+    public String getSubsystemName() {
+        return getSubsystemName(qualifiedName);
+    }
+
+    /**
+     * returns the last component of the fully qualified name
+     *
+     * @param fqname
+     * @return
+     */
+    public static String getName(String fqname) {
+        int index = fqname.lastIndexOf(PATH_SEPARATOR);
+        if (index < 0) {
+            return fqname;
+        }
+        return fqname.substring(index + 1);
+    }
+
+    /**
+     * returns the subsystem fully qualified name where this name is valid (i.e. the full path of the directory name if
+     * it were a filesystem)
+     *
+     * @param fqname
+     * @return the fully qualified name
+     */
+    public static String getSubsystemName(String fqname) {
+        int index = fqname.lastIndexOf(PATH_SEPARATOR);
+
+        if (index == 0) {
+            return String.valueOf(PATH_SEPARATOR);
+        }
+
+        if (index < 0) {
+            throw new RuntimeException("Illegal qualified name '" + fqname + "'");
+        }
+        return fqname.substring(0, index);
+    }
+
+    static public abstract class Builder<T extends Builder<T>> {
+        private String name;
+        private XtceAliasSet xtceAliasSet = XtceAliasSet.NO_ALIAS;
+        private List<AncillaryData> ancillaryData = null;
+        private String shortDescription;
+        private String longDescription;
+        private String qualifiedName;
+
+        public Builder() {
+        }
+
+        public Builder(NameDescription nd) {
+            this.name = nd.name;
+            this.xtceAliasSet = nd.xtceAliasSet;
+            this.ancillaryData = nd.ancillaryData;
+            this.shortDescription = nd.shortDescription;
+            this.longDescription = nd.longDescription;
+            this.qualifiedName = nd.qualifiedName;
+        }
+
+        public T setName(String name) {
+            this.name = name;
+            return self();
+        }
+
+        public T setQualifiedName(String fqn) {
+            this.qualifiedName = fqn;
+            return self();
+        }
+
+        public T setLongDescription(String longDescription) {
+            this.longDescription = longDescription;
+            return self();
+        }
+
+        public T setShortDescription(String shortDescription) {
+            this.shortDescription = shortDescription;
+            return self();
+        }
+
+        public T setAliasSet(XtceAliasSet aliasSet) {
+            this.xtceAliasSet = aliasSet;
+            return self();
+        }
+
+        public T addAlias(String namespace, String alias) {
+            if (xtceAliasSet == XtceAliasSet.NO_ALIAS) {
+                xtceAliasSet = new XtceAliasSet();
+            }
+            xtceAliasSet.addAlias(namespace, alias);
+            return self();
+        }
+
+        public void setAncillaryData(List<AncillaryData> ancillaryData) {
+            this.ancillaryData = ancillaryData;
+        }
+
+        @SuppressWarnings("unchecked")
+        protected T self() {
+            return (T) this;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+}
+```
+
+### `NonStandardData.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NonStandardData.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public interface NonStandardData<T extends NonStandardData<T>> extends Serializable {
+
+    /**
+     * Sets the qualified name of the space system this non-standard data belongs to. 
+     * This is where qualified names and aliases should be registered.
+     */
+    public void setSpaceSystemQualifiedName(String ssQualifiedName);
+
+    /**
+     * Merges non-standard data of one SpaceSystem with that of one of its direct sub-SpaceSystems
+     */
+    public T mergeWithChild(T childData);    
+}
+```
+
+### `NumberFormatType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumberFormatType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * XTCE: This type describes how a numeric value should be represented in engineering/calibrated form. The defaults
+ * reflect the most common form.
+ */
+public class NumberFormatType implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to the
+     * radix. Default is base 10.
+     */
+    private RadixType numberBase = RadixType.DECIMAL;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to the
+     * minimum number of fractional digits. The default is 0.
+     */
+    private int minimumFractionDigits = 0;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to the
+     * maximum or upper bound of the number of digits. There is no default. No value specified should be interpreted as
+     * no upper bound such that all requires digits are used to fully characterize the value.
+     */
+    private int maximumFractionDigits = -1;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to the
+     * minimum number of integer digits. The default is 1.
+     */
+    private int minimumIntegerDigits = 1;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to the
+     * maximum or upper bound of the integer digits. There is no default. No value specified should be interpreted as no
+     * upper bound such that all requires digits are used to fully characterize the value.
+     */
+    private int maximumIntegerDigits = -1;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to negative
+     * values. This attribute specifies the character or characters that should be appended to the numeric value to
+     * indicate negative values. The default is none.
+     */
+    private String negativeSuffix;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to positive
+     * values. This attribute specifies the character or characters that should be appended to the numeric value to
+     * indicate positive values. The default is none. Zero is considered to be specific to the implementation/platform
+     * and is not implied here.
+     */
+    private String positiveSuffix;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to negative
+     * values. This attribute specifies the character or characters that should be prepended to the numeric value to
+     * indicate negative values. The default is a minus character "-".
+     */
+    private String negativePrefix = "-";
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to positive
+     * values. This attribute specifies the character or characters that should be prepended to the numeric value to
+     * indicate positive values. The default is none. Zero is considered to be specific to the implementation/platform
+     * and is not implied here.
+     */
+    private String positivePrefix;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to larger
+     * values. Groupings by thousand are specific to locale, so the schema only specifies whether they will be present
+     * and not which character separators are used. The default is false.
+     */
+    private boolean showThousandsGrouping = false;
+
+    /**
+     * XTCE: Describes how the engineering/calibrated value of this number should be displayed with respect to notation.
+     * Engineering, scientific, or traditional decimal notation may be specified. The precise characters used is locale
+     * specific for the implementation/platform. The default is "normal" for the traditional notation.
+     */
+    private FloatingPointNotationType notation = FloatingPointNotationType.NORMAL;
+
+    public RadixType getNumberBase() {
+        return numberBase;
+    }
+
+    public void setNumberBase(RadixType numberBase) {
+        this.numberBase = numberBase;
+    }
+
+    public int getMinimumFractionDigits() {
+        return minimumFractionDigits;
+    }
+
+    public void setMinimumFractionDigits(int minimumFractionDigits) {
+        this.minimumFractionDigits = minimumFractionDigits;
+    }
+
+    public int getMaximumFractionDigits() {
+        return maximumFractionDigits;
+    }
+
+    public void setMaximumFractionDigits(int maximumFractionDigits) {
+        this.maximumFractionDigits = maximumFractionDigits;
+    }
+
+    public int getMinimumIntegerDigits() {
+        return minimumIntegerDigits;
+    }
+
+    public void setMinimumIntegerDigits(int minimumIntegerDigits) {
+        this.minimumIntegerDigits = minimumIntegerDigits;
+    }
+
+    public int getMaximumIntegerDigits() {
+        return maximumIntegerDigits;
+    }
+
+    public void setMaximumIntegerDigits(int maximumIntegerDigits) {
+        this.maximumIntegerDigits = maximumIntegerDigits;
+    }
+
+    public String getNegativeSuffix() {
+        return negativeSuffix;
+    }
+
+    public void setNegativeSuffix(String negativeSuffix) {
+        this.negativeSuffix = negativeSuffix;
+    }
+
+    public String getPositiveSuffix() {
+        return positiveSuffix;
+    }
+
+    public void setPositiveSuffix(String positiveSuffix) {
+        this.positiveSuffix = positiveSuffix;
+    }
+
+    public String getNegativePrefix() {
+        return negativePrefix;
+    }
+
+    public void setNegativePrefix(String negativePrefix) {
+        this.negativePrefix = negativePrefix;
+    }
+
+    public String getPositivePrefix() {
+        return positivePrefix;
+    }
+
+    public void setPositivePrefix(String positivePrefix) {
+        this.positivePrefix = positivePrefix;
+    }
+
+    public boolean isShowThousandsGrouping() {
+        return showThousandsGrouping;
+    }
+
+    public void setShowThousandsGrouping(boolean showThousandsGrouping) {
+        this.showThousandsGrouping = showThousandsGrouping;
+    }
+
+    public FloatingPointNotationType getNotation() {
+        return notation;
+    }
+
+    public void setNotation(FloatingPointNotationType notation) {
+        this.notation = notation;
+    }
+}
+```
+
+### `NumericAlarm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericAlarm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Alarms associated with numeric data types
+ * @author nm
+ *
+ */
+public class NumericAlarm extends AlarmType implements Serializable {
+    private static final long serialVersionUID = 200706052351L;
+
+    /**
+     * StaticAlarmRanges are used to trigger alarms when the parameter value
+     * passes some threshold value (as opposed to delta alarms or other fancy alarms not supported by yamcs). 
+     */
+    private AlarmRanges staticAlarmRanges=new AlarmRanges();
+
+   /**
+    *  ChangeAlarmRanges are used to trigger alarms when the parameter value's rate-of-change is either too fast or too slow.
+    *   The change may be with respect to time (the default) or with respect to samples (delta alarms) 
+    *   - the changeType attribute determines this.  
+    *   The change may also be either relative (as a percentage change) or absolute as set by the changeBasis attribute. 
+    *    The alarm also requires the spanOfInterest in both samples and seconds to have passed before it is to trigger.  
+    *    For time based rate of change alarms, the time specified in spanOfInterestInSeconds is used to calculate the change. 
+    *    For sample based rate of change alarms, the change is calculated over the number of samples specified in spanOfInterestInSeconds.
+    */
+    private AlarmRanges changeAlarmRanges = null;
+   
+    
+    public AlarmRanges getStaticAlarmRanges() {
+	return staticAlarmRanges;
+    }
+
+
+    public void setStaticAlarmRanges(AlarmRanges staticAlarmRanges) {
+	this.staticAlarmRanges = staticAlarmRanges;
+    }
+
+    @Override
+    public String toString() {
+	return getStaticAlarmRanges().toString();
+    }
+}
+```
+
+### `NumericContextAlarm.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericContextAlarm.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Context alarms are applied when the ContextMatch is true. Context alarms override Default alarms meaning that if the
+ * condition matches, this alarm applies and if the condition does not match, then the defaultAlarm applies.
+ *
+ * @author nm
+ *
+ */
+public class NumericContextAlarm extends NumericAlarm {
+    private static final long serialVersionUID = 201103300437L;
+
+    private MatchCriteria contextMatch;
+
+    public MatchCriteria getContextMatch() {
+        return contextMatch;
+    }
+
+    public void setContextMatch(MatchCriteria contextMatch) {
+        this.contextMatch = contextMatch;
+    }
+
+    @Override
+    public String toString() {
+        return "NumericContextAlarm(contextMatch:" + getContextMatch() + ", alarm:" + getStaticAlarmRanges()
+                + ", minViolations: " + getMinViolations() + ")";
+    }
+}
+```
+
+### `NumericDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public abstract class NumericDataType extends BaseDataType {
+    private static final long serialVersionUID = 5L;
+    
+    protected NumericDataType(BaseDataType.Builder<?> builder) {
+        super(builder);
+    }
+    
+    NumericDataType(String name) {
+        super(name);
+    }
+    protected NumericDataType(NumericDataType t) {
+        super(t);
+    }
+    
+    
+    public abstract static class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        
+    }
+    
+}
+```
+
+### `NumericParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/NumericParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+public interface NumericParameterType extends ParameterType {
+
+    public DataEncoding getEncoding();
+
+    public NumericAlarm getDefaultAlarm();
+    // public <T extends Builder<T>> Builder<T> toBuilder();
+
+    Builder<?> toBuilder();
+
+    interface Builder<T extends Builder<T>> extends ParameterType.Builder<T> {
+        public void setDefaultAlarm(NumericAlarm defaultAlarm);
+
+        /**
+         * Sets the contextual alarm list overriding any other contextual alarm if already set.
+         * 
+         * @param contextAlarmList
+         */
+        public void setContextAlarmList(List<NumericContextAlarm> contextAlarmList);
+
+        public DataEncoding.Builder<?> getEncoding();
+
+        public T setEncoding(DataEncoding.Builder<?> enc);
+
+        public NumericParameterType build();
+
+        public NumericAlarm createOrGetAlarm(MatchCriteria contextMatch);
+    }
+}
+```
+
+### `OnParameterUpdateTrigger.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OnParameterUpdateTrigger.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Names a parameter that upon change will start the execution of the algorithm.
+ * Holds a parameter reference name for a parameter that when it changes, will
+ * cause this algorithm to be executed.
+ */
+public class OnParameterUpdateTrigger implements Serializable {
+    private static final long serialVersionUID = 2L;
+
+    private Parameter parameter;
+    
+    public OnParameterUpdateTrigger(Parameter parameter) {
+        this.parameter = parameter;
+    }
+    
+    //constructor to be used when the parameter has to be resolved later
+    public OnParameterUpdateTrigger() {
+    }
+    
+    public void setParameter(Parameter parameter) {
+        this.parameter = parameter;
+    }
+
+    public Parameter getParameter() {
+        return parameter;
+    }
+    
+    @Override
+    public String toString() {
+        return parameter.getQualifiedName();
+    }
+}
+```
+
+### `OnPeriodicRateTrigger.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OnPeriodicRateTrigger.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public class OnPeriodicRateTrigger implements Serializable {
+    private static final long serialVersionUID = -7880893090845503905L;
+    private long fireRate; // in milliseconds
+    
+    public OnPeriodicRateTrigger(long fireRateInMilliseconds) {
+        fireRate=fireRateInMilliseconds;
+    }
+    
+    public long getFireRate() {
+        return fireRate;
+    }
+    
+    @Override
+    public String toString() {
+        return "fireRate:"+fireRate+"ms";
+    }
+}
+```
+
+### `OperatorType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OperatorType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public enum OperatorType {
+    EQUALITY("=="),
+    INEQUALITY("!="),
+    LARGERTHAN(">"),
+    LARGEROREQUALTHAN(">="),
+    SMALLERTHAN("<"),
+    SMALLEROREQUALTHAN("<=");
+
+    private String symbol;
+
+    private OperatorType(String symbol) {
+        this.symbol = symbol;
+    }
+
+    public static OperatorType fromSymbol(String symbol) {
+        for (OperatorType type : values()) {
+            if (type.symbol.equals(symbol)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unexpected symbol '" + symbol + "'");
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    @Override
+    public String toString() {
+        return getSymbol();
+    }
+}
+```
+
+### `ORedConditions.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ORedConditions.java`
+
+
+```java
+package org.yamcs.xtce;
+
+public class ORedConditions extends ExpressionList {
+    private static final long serialVersionUID = 10L;
+}
+```
+
+### `OutputParameter.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/OutputParameter.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public class OutputParameter implements Serializable {
+    private static final long serialVersionUID = 201308201307L;
+
+    private Parameter parameter;
+    private String outputName; // Optional friendly name
+
+    public OutputParameter(Parameter parameter) {
+        this.parameter = parameter;
+    }
+    
+    public OutputParameter(Parameter parameter, String outputName) {
+        this.parameter = parameter;
+        this.outputName = outputName;
+    }
+    
+    public OutputParameter() {
+       super();
+    }
+
+    public Parameter getParameter() {
+        return parameter;
+    }
+    
+    public void setParameter(Parameter parameter) {
+        this.parameter = parameter;
+    }
+    
+    public String getEffectiveOutputName() {
+        return outputName == null ? parameter.getName() : outputName;
+    }
+
+    /**
+     * Returns the name of the output to be used in the algorithm. This is the defined name as returned by
+     * {@link #getOutputName()} or the name of the parameter if no specific name has been defined.
+     */
+    public String getOutputName() {
+        return outputName;
+    }
+    
+    public void setOutputName(String outputName) {
+        this.outputName = outputName;
+    }
+    
+    @Override
+    public String toString() {
+        if(outputName==null) {
+            return parameter.getQualifiedName();
+        } else {
+            return parameter.getQualifiedName()+" outputName:"+outputName;
+        }
+    }
+}
+```
+
+### `Parameter.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Parameter.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * A Parameter is a description of something that can have a value; it is not the value itself.
+ */
+public class Parameter extends NameDescription {
+    private static final long serialVersionUID = 3L;
+    ParameterType parameterType;
+    DataSource dataSource = DataSource.TELEMETERED;
+    /**
+     * XTCE: A Parameter marked to persist should retain the latest value through resets/restarts to the extent that is
+     * possible or defined in the implementation. The net effect is that the initial/default value on a Parameter is
+     * only seen once or when the system has a reset to revert to initial/default values.
+     */
+    private boolean persistent;
+
+    private Object initialValue;
+
+    /**
+     * This is used for recording; if the recordingGroup is not set, the subsystem name is used. Currently it is only
+     * set for DaSS processed parameters for compatibility with the old recorder
+     */
+    String recordingGroup = null;
+
+    public Parameter(String name) {
+        super(name);
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public void setParameterType(ParameterType pm) {
+        parameterType = pm;
+    }
+
+    public ParameterType getParameterType() {
+        return parameterType;
+    }
+
+    public String getRecordingGroup() {
+        if (recordingGroup == null) {
+            return getSubsystemName();
+        } else {
+            return recordingGroup;
+        }
+    }
+
+    public void setRecordingGroup(String g) {
+        this.recordingGroup = g;
+    }
+
+    /**
+     * 
+     * @return the initial value of the parameter (if any)
+     */
+    public Object getInitialValue() {
+        return initialValue;
+    }
+
+    /**
+     * Sets the initial value for the parameter (if any). The value has to be compatible with its type.
+     * 
+     * @param initialValue
+     */
+    public void setInitialValue(Object initialValue) {
+        this.initialValue = initialValue;
+    }
+
+    /**
+     * Return true if this parameter is used/valid in a commanding context: that is if the data source is
+     * {@link DataSource#COMMAND} or {@link DataSource#COMMAND_HISTORY}
+     * 
+     */
+    public boolean isCommandParameter() {
+        return dataSource == DataSource.COMMAND || dataSource == DataSource.COMMAND_HISTORY;
+    }
+
+    @Override
+    public String toString() {
+        return "ParaName: " + this.getName() + " paraType:" + parameterType
+                + ((xtceAliasSet == null) ? "" : " aliases: " + xtceAliasSet.toString());
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    /**
+     * If set, the parameter's value will be preserved during Yamcs restarts
+     */
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
+    }
+
+}
+```
+
+### `ParameterEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * An entry that is a single Parameter
+ * 
+ * @author nm
+ *
+ */
+public class ParameterEntry extends SequenceEntry {
+    private static final long serialVersionUID = 200805131551L;
+    private Parameter parameter;
+
+    /**
+     * Constructor for parameter entry. The parameter to which it reffers will be set later with {@link #setParameter(Parameter)}
+     * 
+     * @param locationInContainerInBits
+     * @param location
+     * @param parameter
+     */
+    public ParameterEntry(int locationInContainerInBits, ReferenceLocationType location, Parameter parameter) {
+        this(locationInContainerInBits, location);
+        this.setParameter(parameter);
+    }
+
+    /**
+     * Constructor for an unresolved ParameterEntry. The Parameter will come later via {@link #setParameter(Parameter)}
+     * 
+     * @param locationInContainerInBits
+     * @param location
+     */
+    public ParameterEntry(int locationInContainerInBits, ReferenceLocationType location) {
+        super(locationInContainerInBits, location);
+    }
+
+    public void setParameter(Parameter parameter) {
+        this.parameter = parameter;
+    }
+
+    public Parameter getParameter() {
+        return parameter;
+    }
+
+    @Override
+    public String toString() {
+        return "ParameterEntry position:" + getIndex() + ", container:" + container.getName() +
+                " locationInContainer:" + getLocationInContainerInBits() + " from:" + getReferenceLocation() +
+                ", " + parameter +
+                ((getRepeatEntry() != null) ? ", repeatEntry: (" + getRepeatEntry() + ")" : "");
+    }
+
+}
+```
+
+### `ParameterInstanceRef.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterInstanceRef.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * A reference to an instance of a Parameter.
+ * <p>
+ * Used when the value of a parameter is required for a calculation or as an index value.
+ * <p>
+ * Starting with Yamcs 5.10.4 the {@link #relativeTo} field has been introduced to better qualify what the instance
+ * refers to exactly.
+ * <p>
+ * If the parameter is an aggregate or an array, the reference can be made to a member of the aggregate/array or more
+ * generally to a path inside the aggregate (if a hierarchy of aggregates/arrays)
+ * <p>
+ * Thus the reference can be something like: g1/g2/a[1]/g4[a3]/p7
+ *
+ */
+public class ParameterInstanceRef extends ParameterOrArgumentRef {
+    private static final long serialVersionUID = 4;
+    private Parameter parameter;
+    private int instance = 0;
+
+    public static enum InstanceRelativeTo {
+        /**
+         * The instance field counts positively from the beginning of the packet.
+         * <p>
+         * Negative values are not allowed.
+         */
+        PACKET_START_WITHIN_PACKET,
+        /**
+         * The instance field counts positively from the beginning of the packet.
+         * <p>
+         * Negative values means previously received data (with the possibility of missing packets, which may result in
+         * retrieving older values than intended)
+         *
+         */
+        PACKET_START_ACROSS_PACKETS,
+        /**
+         * The instance field counts negatively from the current entry. 0 means the last instance. Strictly positive
+         * values are not allowed.
+         * <p>
+         * The lookup stops in the current packet, values from previous packets are not considered.
+         */
+        CURRENT_ENTRY_WITHIN_PACKET,
+        /**
+         * This is the same as CURRENT_ENTRY_WITHIN_PACKET but not restricted to the current packet.
+         * <p>
+         * The lookup continues to the previous packets (with the possibility of missing packets, which may result in
+         * retrieving older values than intended).
+         */
+        CURRENT_ENTRY_ACROSS_PACKETS,
+    }
+
+    InstanceRelativeTo relativeTo = InstanceRelativeTo.CURRENT_ENTRY_WITHIN_PACKET;
+
+    /**
+     * Constructor to be used when the parameter is not yet known. The parameter will have to be set later with
+     * setParameter()
+     */
+    public ParameterInstanceRef() {
+        super();
+    }
+
+    public ParameterInstanceRef(Parameter para) {
+        this.parameter = para;
+    }
+
+    public ParameterInstanceRef(Parameter para, PathElement[] path) {
+        this.parameter = para;
+        this.path = path;
+    }
+
+    public ParameterInstanceRef(Parameter para, boolean useCalibratedValue) {
+        this.parameter = para;
+        this.useCalibratedValue = useCalibratedValue;
+    }
+
+    public ParameterInstanceRef(boolean useCalibratedValue) {
+        this.useCalibratedValue = useCalibratedValue;
+    }
+
+    public void setParameter(Parameter para) {
+        this.parameter = para;
+    }
+
+    public Parameter getParameter() {
+        return parameter;
+    }
+
+    public void setInstance(int instance) {
+        this.instance = instance;
+    }
+
+    /**
+     * The interpretation of instance depends on the {@link #relativeTo}
+     */
+    public int getInstance() {
+        return instance;
+    }
+
+    /**
+     * 
+     * @return true if the instance can reference values from older packets
+     */
+    public boolean requireOldValues() {
+        return instance <= 0 && (relativeTo == InstanceRelativeTo.CURRENT_ENTRY_ACROSS_PACKETS
+                || relativeTo == InstanceRelativeTo.PACKET_START_ACROSS_PACKETS);
+    }
+
+    public InstanceRelativeTo getRelativeTo() {
+        return relativeTo;
+    }
+
+    public void setRelativeTo(InstanceRelativeTo relativeTo) {
+        this.relativeTo = relativeTo;
+    }
+
+    public DataType getDataType() {
+        return parameter == null ? null : parameter.getParameterType();
+    }
+
+    @Override
+    public String getName() {
+        return parameter == null ? null : parameter.getQualifiedName();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (parameter != null) {
+            sb.append(parameter.getQualifiedName());
+        }
+        if (path != null) {
+            sb.append("/");
+            sb.append(PathElement.pathToString(path));
+        }
+        if (instance != 0) {
+            sb.append("[" + instance + "]");
+        }
+        sb.append("(relativeTo: "+relativeTo+")");
+
+        return sb.toString();
+    }
+}
+```
+
+### `ParameterOrArgumentRef.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterOrArgumentRef.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public abstract class ParameterOrArgumentRef implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    protected boolean useCalibratedValue = true;
+    protected PathElement[] path;
+
+    public boolean useCalibratedValue() {
+        return useCalibratedValue;
+    }
+
+    public void setUseCalibratedValue(boolean useCalibratedValue) {
+        this.useCalibratedValue = useCalibratedValue;
+    }
+
+    /**
+     * If the parameter or argument is an aggregate or an array (or a nested structure of these), return the path
+     * to the referenced member inside the structure.
+     * 
+     * @return the path to the referenced member of the aggregate or array or null if this reference refers to the
+     *         parameter itself
+     */
+    public PathElement[] getMemberPath() {
+        return path;
+    }
+
+    public void setMemberPath(PathElement[] path) {
+        this.path = path;
+    }
+
+    public abstract String getName();
+
+    public abstract DataType getDataType();
+
+}
+```
+
+### `ParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.Collections;
+import java.util.Set;
+
+/**
+ * Interface implemented by all the parameters types.
+ * 
+ */
+public interface ParameterType extends DataType {
+    /**
+     * 
+     * @return the set of parameters on which this one depends in order to be extracted or alarm checked
+     *         can be an empty set if this parameter does not depend on any other
+     */
+    default Set<Parameter> getDependentParameters() {
+        return Collections.emptySet();
+    }
+
+    /**
+     * Whether this ParameterType has any alarms associated
+     */
+    boolean hasAlarm();
+
+    /**
+     * Get the data encoding for the parameter type.
+     * <br>
+     * For arrays and aggregates types that do not have encoding;
+     * this operation will throw an {@link UnsupportedOperationException}
+     * 
+     * @return
+     */
+    DataEncoding getEncoding();
+
+    /**
+     * Create a builder that can be used to make shallow copy of the parameter type
+     * <p>
+     * all the fields reference to the same object like the original
+     * 
+     * @return
+     */
+    <T extends ParameterType> Builder<?> toBuilder();
+
+    interface Builder<T extends Builder<T>> extends DataType.Builder<T> {
+        T setEncoding(DataEncoding.Builder<?> dataEncoding);
+
+        public ParameterType build();
+    }
+}
+```
+
+### `ParameterValueChange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ParameterValueChange.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * XTCE: A parameter change in value or specified delta change in value
+ *
+ */
+public class ParameterValueChange implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    double delta;
+
+    // reference to a parameter (parameterRef.instance is always 0)
+    ParameterInstanceRef parameterRef;
+
+
+    public void setParameterRef(ParameterInstanceRef parameterRef) {
+        this.parameterRef = parameterRef;
+    }
+
+    public ParameterInstanceRef getParameterRef() {
+        return parameterRef;
+    }
+
+    public void setDelta(double delta) {
+        this.delta = delta;
+    }
+    public double getDelta() {
+        return delta;
+    }
+}
+```
+
+### `PathElement.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/PathElement.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Describes an element from an aggregate/array member access path For example, the third element from this path : <br>
+ * a/c[2]/d[0][5]/x <br>
+ * is: <br>
+ * name = "d"<br>
+ * index = [0, 5]
+ * <p>
+ * both name and index can be null
+ */
+public class PathElement implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    final String name;
+    final int[] index;
+
+    public PathElement(String name, int[] index) {
+        this.name = name;
+        this.index = index;
+    }
+
+    /**
+     * Encodes the path element into a string like
+     * 
+     * <pre>
+     * name[idx_1][idx_2]..[idx_n]
+     * </pre>
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (name != null) {
+            sb.append(name);
+        }
+        if (index != null) {
+            for (int i = 0; i < index.length; i++) {
+                sb.append("[").append(index[i]).append("]");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Creates a path element from a string like
+     * 
+     * <pre>
+     * name[idx_1][idx_2]..[idx_n]
+     * </pre>
+     */
+    public static PathElement fromString(String s) {
+        List<Integer> idx = new ArrayList<>();
+        int k = s.indexOf('[', 0);
+        if (k == -1) {
+            return new PathElement(s, null);
+        }
+
+        String name = k > 0 ? s.substring(0, k) : null;
+
+        while (true) {
+            k = s.indexOf('[', k);
+            if (k == -1) {
+                break;
+            }
+            int k2 = s.indexOf(']', k);
+            if (k2 == -1) {
+                throw new IllegalArgumentException("Invalid aggregate member path '" + s + "'");
+            }
+            int n = Integer.parseInt(s.substring(k + 1, k2));
+            if (n < 0) {
+                throw new IllegalArgumentException("Negative array index: " + n);
+            }
+            idx.add(n);
+            k = k2;
+        }
+        int[] idx1 = null;
+        if (!idx.isEmpty()) {
+            idx1 = new int[idx.size()];
+            for (int u = 0; u < idx.size(); u++) {
+                idx1[u] = idx.get(u);
+            }
+        }
+
+        return new PathElement(name, idx1);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int[] getIndex() {
+        return index;
+    }
+
+    /**
+     * Transforms the path into a string like<br>
+     * a/c[2]/d[0][5]/x <br>
+     * 
+     * @param path
+     * @return
+     */
+    public static String pathToString(PathElement[] path) {
+        if (path == null) {
+            return "null";
+        }
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (PathElement pe : path) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append("/");
+            }
+            sb.append(pe.toString());
+        }
+        return sb.toString();
+    }
+}
+```
+
+### `PolynomialCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/PolynomialCalibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.Arrays;
+
+/**
+ * A calibration type where a curve in a raw vs calibrated plane is described using a set of polynomial coefficients.
+ * Raw values are converted to calibrated values by finding a position on the curve corresponding to the raw value.
+ * The first coefficient belongs with the X^0 term, the next coefficient belongs to the X^1 term and so on.
+ * 
+ * @author nm
+ *
+ */
+public class PolynomialCalibrator implements Calibrator {
+    private static final long serialVersionUID = 3L;
+    double[] coefficients;
+
+    public PolynomialCalibrator(double[] coefficients) {
+        this.coefficients = coefficients;
+    }
+
+    public String toString() {
+        return "PolynomialCalibrator" + Arrays.toString(coefficients);
+    }
+
+    public double[] getCoefficients() {
+        return coefficients;
+    }
+}
+```
+
+### `RadixType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/RadixType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Specifies the number base
+ */
+public enum RadixType {
+
+    DECIMAL,
+    HEXADECIMAL,
+    OCTAL,
+    BINARY;
+}
+```
+
+### `RateInStream.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/RateInStream.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * XTCE doc:
+ *  Used in packaging to define the expected rate that any individual container will be in a Stream
+ *  
+ * DIFFERS_FROM_XTCE
+ *  XTCE defines two types: perSecond and perContainerUpdate. I don't know what perContainerUpdate means.
+ * 
+ * In this class, 
+ *  maxInterval means the maximum number of milliseconds in between two subsequent containers updates
+ *  minInterval means the minimum number of milliseconds in between two subsequent containers updates
+ *  
+ *  both can be -1 meaning not defined
+ *  
+ *  maxInterval is used to set parameter expiration times for parameters extracted from this container.
+ *  minInterval is currently not used 
+ *  
+ * @author nm
+ *
+ */
+public class RateInStream implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    private long maxInterval = -1;
+    private long minInterval = -1;
+    
+    public RateInStream(long minInterval, long maxInterval) {
+        this.maxInterval = maxInterval;
+        this.minInterval = minInterval;
+    }
+    
+    public long getMaxInterval() {
+        return maxInterval;
+    }
+    
+    public long getMinInterval() {
+        return minInterval;
+    }
+
+    @Override
+    public String toString() {
+        return "RateInStream [maxInterval=" + maxInterval + ", minInterval="+ minInterval + "]";
+    }
+
+}
+```
+
+### `ReferenceTime.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ReferenceTime.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Most time values are relative to another time e.g. seconds are relative to minutes, minutes are relative to hours.
+ * This type is used to describe this relationship starting with the least significant time Parameter to and progressing
+ * to the most significant time parameter.
+ * 
+ * @author nm
+ *
+ */
+public class ReferenceTime  implements Serializable {
+    private static final long serialVersionUID = 1L;
+    
+    private ParameterInstanceRef offsetFrom = null;
+    private TimeEpoch epoch = null;
+    
+    public ReferenceTime() {
+        
+    }
+
+    public ReferenceTime(TimeEpoch epoch) {
+        this.epoch = epoch;
+    }
+    
+    public ReferenceTime(ParameterInstanceRef offsetFrom) {
+        this.offsetFrom = offsetFrom;
+    }
+    
+    public void setOffsetFrom(ParameterInstanceRef paramInstRef) {
+        this.offsetFrom = paramInstRef;        
+    }
+    
+    public ParameterInstanceRef getOffsetFrom() {
+        return offsetFrom;
+    }
+   
+    public TimeEpoch getEpoch() {
+        return epoch;
+    }
+
+    public void setEpoch(TimeEpoch epoch) {
+        this.epoch = epoch;
+    }
+    
+    public String toString() {
+        return "ReferenceTime["+(offsetFrom!=null ? "offsetFrom: [" + offsetFrom.toString()+"]" : "")
+                + (epoch!=null ? epoch.toString() : "")+"]";
+    }
+}
+```
+
+### `Repeat.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Repeat.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Hold a structure that can be repeated X times, where X is the Count
+ * 
+ * @author nm
+ *
+ */
+public class Repeat implements Serializable {
+    private static final long serialVersionUID = 200706111239L;
+
+    /**
+     * Value (either fixed or dynamic) that contains the count of repeated structures.
+     */
+    private IntegerValue count;
+    /**
+     * Indicates the distance between repeating entries (the last bit of one entry to the start bit of the next entry)
+     */
+    private int offsetSizeInBits;
+
+
+    public Repeat(IntegerValue count) {
+        this(count, 0);
+    }
+
+    public Repeat(IntegerValue count, int offsetSizeInBits) {
+        this.count = count;
+        this.offsetSizeInBits = offsetSizeInBits;
+    }
+        
+
+    public void setOffsetSizeInBits(int offsetSizeInBits) {
+        this.offsetSizeInBits = offsetSizeInBits;
+    }
+
+    public int getOffsetSizeInBits() {
+        return offsetSizeInBits;
+    }
+
+    public void setCount(IntegerValue count) {
+        this.count = count;
+    }
+
+    public IntegerValue getCount() {
+        return count;
+    }
+
+    @Override
+    public String toString() {
+        return "offsetSizeInBits: " + getOffsetSizeInBits() + ", count: " + getCount();
+    }
+}
+```
+
+### `SequenceContainer.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SequenceContainer.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static org.yamcs.xtce.AncillaryData.*;
+
+/**
+ * A list of raw parameters, parameter segments, stream segments, containers, or container segments.
+ * Sequence containers may inherit from other sequence containers; when they do, the sequence in the parent
+ * SequenceContainer is 'inherited' and if the location of entries in the child sequence is not specified,
+ * it is assumed to start where the parent sequence ended. Parent sequence containers may be marked as "abstract".
+ * The idle pattern is part of any unallocated space in the Container.
+ */
+public class SequenceContainer extends Container {
+    private static final long serialVersionUID = 4L;
+
+    List<SequenceEntry> entryList = new ArrayList<>();
+
+    public SequenceContainer(String name) {
+        super(name);
+    }
+
+    /**
+     * Use this container as a partition when archiving (name of the container is used as partitioning key in the tm
+     * table).
+     * <p>
+     * If this property is set, this container name will be used for storing a certain packet if the packet doesn't
+     * match any inherited container with the property set
+     * 
+     */
+    private boolean useAsArchivePartition = false;
+
+    /**
+     * If this is true, the {@link #useAsArchivePartition} flag will be set automatically after all the MDB has been
+     * loaded.
+     */
+    private boolean autoPartition = false;
+
+    @Override
+    public void addAncillaryData(AncillaryData data) {
+        super.addAncillaryData(data);
+        if (isArchivePartition(data)) {
+            this.useAsArchivePartition = true;
+        }
+
+    }
+
+    @Override
+    public void setAncillaryData(List<AncillaryData> ancillaryData) {
+        super.setAncillaryData(ancillaryData);
+
+        Optional<?> o = ancillaryData.stream().filter(ad -> isArchivePartition(ad)).findAny();
+        if (o.isPresent()) {
+            this.useAsArchivePartition = true;
+        }
+    }
+
+    private boolean isArchivePartition(AncillaryData ad) {
+        return KEY_YAMCS.equalsIgnoreCase(ad.getName())
+                && PROP_USE_AS_ARCHIVING_PARTITION.equalsIgnoreCase(ad.getValue());
+    }
+
+    public SequenceContainer getBaseContainer() {
+        return (SequenceContainer) baseContainer;
+    }
+
+    public void setBaseContainer(Container baseContainer) {
+        if (baseContainer instanceof SequenceContainer) {
+            this.baseContainer = (SequenceContainer) baseContainer;
+        } else {
+            throw new IllegalArgumentException("The SequenceContainer expects a SequenceContainer as base container");
+        }
+    }
+
+    public MatchCriteria getRestrictionCriteria() {
+        return restrictionCriteria;
+    }
+
+    /**
+     * Add single entry to list of entries
+     * 
+     * @param entry
+     *            Entry to be added
+     */
+    public void addEntry(SequenceEntry entry) {
+        entryList.add(entry);
+        entry.setIndex(entryList.size() - 1);
+        entry.setContainer(this);
+    }
+
+    /**
+     * Insert the given entry in position idx. Shift all the subsequent entries to the right.
+     * 
+     * @param idx
+     * @param entry
+     */
+    public void insertEntry(int idx, SequenceEntry entry) {
+        entryList.add(idx, entry);
+        for (int i = idx; i < entryList.size(); i++) {
+            SequenceEntry se = entryList.get(i);
+            se.setIndex(i);
+            se.setContainer(this);
+        }
+    }
+
+    public void setEntryList(List<SequenceEntry> entryList) {
+        this.entryList = entryList;
+        for (int i = 0; i < entryList.size(); i++) {
+            SequenceEntry entry = entryList.get(i);
+            entry.setIndex(i);
+            entry.setContainer(this);
+        }
+    }
+
+    /**
+     * Returns the list of the entries in the sequence container. The list is unmodifiable.
+     */
+    public List<SequenceEntry> getEntryList() {
+        return Collections.unmodifiableList(entryList);
+    }
+
+    public boolean useAsArchivePartition() {
+        return useAsArchivePartition;
+    }
+
+    /**
+     * If set to true, the XtceTmRecorder will set the qualified name of this container as the "pname" (packet
+     * name) column in the tm table. The packet will be then visible in the front page of Yamcs web as well as in the
+     * Archive overview.
+     * <p>
+     * If the container has a child that matches the packet, and the child also has this flag set, then the name of the
+     * child will be used instead (e.g. the name of the most specific packet will be used).
+     * <p>
+     * If no container having this flag matches a packet, the name of the root container will be used (even if it does
+     * not have the flag set).
+     * 
+     * @param useAsArchivePartition
+     */
+    public void useAsArchivePartition(boolean useAsArchivePartition) {
+        this.useAsArchivePartition = useAsArchivePartition;
+        if (ancillaryData != null) {
+            ancillaryData.removeIf(ad -> isArchivePartition(ad));
+        }
+
+        if (useAsArchivePartition) {
+            addAncillaryData(new AncillaryData(KEY_YAMCS, PROP_USE_AS_ARCHIVING_PARTITION));
+        }
+    }
+
+    public void print(PrintStream out) {
+        out.print("SequenceContainer name: " + name + ((sizeInBits > -1) ? ", sizeInBits: " + sizeInBits : ""));
+        if (getAliasSet() != null) {
+            out.print(", aliases: " + getAliasSet());
+        }
+        out.print(", useAsArchivePartition:" + useAsArchivePartition);
+        if (rate != null) {
+            out.print(", rateInStream: " + rate);
+        }
+        out.println();
+        if (baseContainer != null) {
+            out.print("\tbaseContainer: '" + baseContainer.getQualifiedName());
+            out.println("', restrictionCriteria: " + restrictionCriteria);
+        }
+        for (SequenceEntry se : getEntryList()) {
+            out.println("\t\t" + se);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "SequenceContainer(name=" + name + ")";
+    }
+
+    public boolean isAutoPartition() {
+        return autoPartition;
+    }
+
+    public void setAutoPartition(boolean autoPartition) {
+        this.autoPartition = autoPartition;
+    }
+
+}
+```
+
+### `SequenceEntry.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SequenceEntry.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * 
+ * An abstract type used by sequence containers.
+ * <p>
+ * An entry contains a location in the container. The location may be either fixed or dynamic,
+ * absolute (to the start or end of the enclosing container, or relative (to either the previous or subsequent entry).
+ * <p>
+ * Entries may also repeat.
+ * <p>
+ * These entries have an index which is defining the order of the entry in the container.
+ * 
+ * @author nm
+ *
+ */
+public abstract class SequenceEntry implements Serializable, Comparable<SequenceEntry> {
+    private static final long serialVersionUID = 3L;
+
+    // this is either SequenceContainer or MetaCommandContainer
+    protected Container container;
+
+    /**
+     * if the referenceLocation is containerStart, then this is number of bits from the start
+     * for previousEntry, this is the number of bits from where the previous entry ends
+     * 
+     */
+    protected int locationInContainerInBits = 0;
+
+    /**
+     * this is the index in the ArrayList of the Container from which this sequence entry is part
+     * is used for sorting and for finding the parameter before or after this one.
+     */
+    int index;
+
+    /**
+     * The location may be relative to the start of the container (containerStart),
+     * or relative to the end of the previous entry (previousEntry)
+     */
+    public enum ReferenceLocationType {
+        CONTAINER_START("containerStart"), PREVIOUS_ENTRY("previousEntry");
+        final String xtceName;
+        ReferenceLocationType(String xtceName) {
+            this.xtceName = xtceName;
+        }
+
+        public String xtceName() {
+            return xtceName;
+        }
+    };
+
+    ReferenceLocationType referenceLocation = ReferenceLocationType.PREVIOUS_ENTRY;
+    /**
+     * May be used when this entry repeats itself in the sequence container.
+     * If null, the entry does not repeat.
+     */
+    Repeat repeatEntry = null;
+    
+    /**
+     * This entry will only be included in the sequence when this condition is true. 
+     * If no IncludeCondition is given, then it is will be included. A parameter that 
+     * is not included will be treated as if it did not exist in the sequence at all.
+     */
+    private MatchCriteria includeCondition = null;
+
+    public SequenceEntry() {
+        
+    }
+    public SequenceEntry(int locationInContainerInBits, ReferenceLocationType location) {
+        this.locationInContainerInBits = locationInContainerInBits;
+        this.referenceLocation = location;
+    }
+
+    void setContainer(Container container) {
+        this.container = container;
+    }
+
+    void setIndex(int index) {
+        this.index = index;
+    }
+
+    public Container getContainer() {
+        return container;
+    }
+
+    public SequenceContainer getSequenceContainer() {
+        if (container instanceof SequenceContainer) {
+            return (SequenceContainer) container;
+        } else {
+            return null;
+        }
+    }
+
+    public void setLocationInContainerInBits(int locationInBits) {
+        locationInContainerInBits = locationInBits;
+    }
+
+    public int getLocationInContainerInBits() {
+        return locationInContainerInBits;
+    }
+
+    public void setReferenceLocation(ReferenceLocationType type) {
+        this.referenceLocation = type;
+    }
+
+    
+    /**
+     * Set the location of this entry in the container. 
+     * 
+     * @param type - where to count the bits from
+     * @param locationInBits - number of bits to count
+     */
+    public void setLocation(ReferenceLocationType type, int locationInBits) {
+        this.referenceLocation = type;
+        this.locationInContainerInBits = locationInBits;
+    }
+    /**
+     * @param se
+     * @return the difference in indexes
+     */
+    @Override
+    public int compareTo(SequenceEntry se) {
+        return index - se.index;
+    }
+
+    public ReferenceLocationType getReferenceLocation() {
+        return referenceLocation;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public Repeat getRepeatEntry() {
+        return repeatEntry;
+    }
+
+    public void setRepeatEntry(Repeat repeat) {
+        repeatEntry = repeat;
+    }
+    
+    public MatchCriteria getIncludeCondition() {
+        return includeCondition;
+    }
+    public void setIncludeCondition(MatchCriteria includeCondition) {
+        this.includeCondition = includeCondition;
+    }
+}
+```
+
+### `Significance.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/Significance.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * XTCE: Significance provides some cautionary information about the potential consequence of each MetaCommand.
+ * 
+ * @author nm
+ *
+ */
+public class Significance implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * The XTCE aliases given to the Levels are from XTCE 1.2 and they correspond to ISO 14950 as well as the description found 
+     * <a href="https://www.iso.org/obp/ui#iso:std:iso:14950:ed-1:v1:en:sec:4">here</a>.
+     * <p>
+     * In the future we will maybe adopt the XTCE names as the main names but that requires changes in the web interface as well as Yamcs Studio.
+     * <p>
+     * Note that the command privilege checking assumes there is an order in between the levels whereas the XTCE 1.2 does not
+     * impose any ordering for user1 and user2.
+     *
+     */
+    public enum Levels {
+        /**
+         * All commands which are not in a category below
+         */
+        NONE("normal"),
+        /**
+         * Mission specific
+         */
+        WATCH("user1"),
+        /**
+         * Mission specific
+         */
+        WARNING("user2"),
+        /**
+         * ISO 14490: telecommand that is not a critical telecommand but is essential to the success of the mission and,
+         * if sent at the wrong time, could cause momentary loss of the mission
+         */
+        DISTRESS("vital"),
+        /**
+         * ISO 14490: telecommand that, if executed at the wrong time or in the wrong configuration, could cause
+         * irreversible loss or damage for the mission (i.e. endanger the achievement of the primary mission objectives)
+         */
+        CRITICAL("critical"),
+        /**
+         * ISO 14490: telecommand that is not expected to be used for nominal or foreseeable contingency operations,
+         * that is included for unforeseen contingency operations, and that could cause irreversible damage if executed
+         * at the wrong time or in the wrong configuration
+         */
+        SEVERE("forbidden");
+
+        private String xtceAlias;
+
+        private Levels(String xtceAlias) {
+            this.xtceAlias = xtceAlias;
+        }
+
+        public String xtceAlias() {
+            return xtceAlias;
+        }
+        public boolean isMoreSevere(Levels other) {
+            return ordinal() > other.ordinal();
+        }
+
+        public static Levels fromString(String value) {
+            try {
+                return Levels.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // The value does not match any enumeration constant. See if it
+                // matches an XTCE alias of one of the constants.
+                for (Levels level : values()) {
+                    if (level.xtceAlias.equalsIgnoreCase(value)) {
+                        return level;
+                    }
+                }
+                // No match. Propagate the original exception.
+                throw e;
+            }
+        }
+    }
+
+    private String reasonForWarning;
+    private Levels consequenceLevel;
+
+    public Significance(Levels consequenceLevel, String reasonForWarning) {
+        this.reasonForWarning = reasonForWarning;
+        this.consequenceLevel = consequenceLevel;
+    }
+
+    public String getReasonForWarning() {
+        return reasonForWarning;
+    }
+
+    public Levels getConsequenceLevel() {
+        return consequenceLevel;
+    }
+
+    @Override
+    public String toString() {
+        return consequenceLevel + "(" + reasonForWarning + ")";
+    }
+}
+```
+
+### `SpaceSystem.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SpaceSystem.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.xtce.util.NameReference;
+import org.yamcs.xtce.util.ReferenceFinder;
+import org.yamcs.xtce.util.ReferenceFinder.FoundReference;
+import org.yamcs.xtce.xml.XtceAliasSet;
+
+/**
+ * SpaceSystem is a collection of SpaceSystem(s) including space assets, ground assets, multi-satellite systems and
+ * sub-systems. A SpaceSystem is the root element for the set of data necessary to monitor and command an arbitrary
+ * space device - this includes the binary decomposition the data streams going into and out of a device.
+ *
+ *
+ * @author nm
+ *
+ */
+public class SpaceSystem extends NameDescription {
+
+    private static final long serialVersionUID = 6L;
+
+    Header header;
+    private Map<String, SequenceContainer> containers = new LinkedHashMap<>();
+    private Map<String, Parameter> parameters = new LinkedHashMap<>();
+    private HashMap<String, ParameterType> parameterTypes = new HashMap<>();
+    private HashMap<String, Algorithm> algorithms = new HashMap<>();
+    private HashMap<String, MetaCommand> commands = new HashMap<>();
+    private HashMap<Class<?>, NonStandardData> nonStandardDatas = new HashMap<>();
+    private Map<String, CommandContainer> cmdContainers = new LinkedHashMap<>();
+
+    private Map<String, SpaceSystem> subsystems = new LinkedHashMap<>();
+    static Logger log = LoggerFactory.getLogger(SpaceSystem.class.getName());
+    private HashMap<String, ArgumentType> argumentTypes = new HashMap<>();
+
+    transient List<NameReference> unresolvedReferences = new ArrayList<>();
+    SpaceSystem parent;
+
+    public SpaceSystem(String name) {
+        super(name);
+    }
+
+    public void setHeader(Header h) {
+        this.header = h;
+    }
+
+    /**
+     * Register the container
+     *
+     * @param container
+     *            Container to be registered
+     */
+    public void addSequenceContainer(SequenceContainer container) {
+        if (containers.containsKey(container.getName())) {
+            throw new IllegalArgumentException("duplicate container '" + container.getName() + "'");
+        }
+        containers.put(container.getName(), container);
+    }
+
+    public void addParameter(Parameter parameter) throws IllegalArgumentException {
+        if (parameters.containsKey(parameter.getName())) {
+            throw new IllegalArgumentException("duplicate parameter '" + parameter.getName() + "'");
+        }
+        parameters.put(parameter.getName(), parameter);
+    }
+
+    public void addParameterType(ParameterType parameterType) {
+        String ptn = ((NameDescription) parameterType).getName();
+        if (parameterTypes.containsKey(ptn)) {
+            throw new IllegalArgumentException("duplicate parameter type '" + ptn + "'");
+        }
+        parameterTypes.put(ptn, parameterType);
+
+    }
+
+    public boolean removeParameterType(ParameterType ptype) {
+        return parameterTypes.remove(ptype.getName(), ptype);
+    }
+
+    public void addArgumentType(ArgumentType argumentType) {
+        String atn = ((NameDescription) argumentType).getName();
+        if (argumentTypes.containsKey(atn)) {
+            throw new IllegalArgumentException("duplicate argument type '" + atn + "'");
+        }
+        argumentTypes.put(atn, argumentType);
+    }
+
+    public void addAlgorithm(Algorithm algorithm) {
+        if (algorithms.containsKey(algorithm.getName())) {
+            throw new IllegalArgumentException("duplcate algorithm '" + algorithm.getName() + "'");
+        }
+        algorithms.put(algorithm.getName(), algorithm);
+    }
+
+    public void addMetaCommand(MetaCommand command) {
+        if (commands.containsKey(command.getName())) {
+            throw new IllegalArgumentException("duplicate command '" + command.getName() + "'");
+        }
+        commands.put(command.getName(), command);
+    }
+
+    public MetaCommand getMetaCommand(String refName) {
+        return commands.get(refName);
+    }
+
+    public ParameterType getParameterType(String typeName) {
+        return parameterTypes.get(typeName);
+    }
+
+    public ArgumentType getArgumentType(String typeName) {
+        return argumentTypes.get(typeName);
+    }
+
+    public SequenceContainer getSequenceContainer(String refName) {
+        return containers.get(refName);
+    }
+
+    public void addCommandContainer(CommandContainer cmdContainer) {
+        if (cmdContainers.containsKey(cmdContainer.getName())) {
+            throw new IllegalArgumentException("duplicate container '" + cmdContainer.getName() + "'");
+        }
+        cmdContainers.put(cmdContainer.getName(), cmdContainer);
+    }
+
+    public CommandContainer getCommandContainer(String name) {
+        return cmdContainers.get(name);
+    }
+
+    public Algorithm getAlgorithm(String algoName) {
+        return algorithms.get(algoName);
+    }
+
+    public Parameter getParameter(String refName) {
+        return parameters.get(refName);
+    }
+
+    public void addSpaceSystem(SpaceSystem ss) throws IllegalArgumentException {
+        if (subsystems.containsKey(ss.getName())) {
+            throw new IllegalArgumentException("there is already a subsystem with name " + ss.getName());
+        }
+        subsystems.put(ss.getName(), ss);
+        ss.setParent(this);
+    }
+
+    /**
+     * tries to resolve the reference immediately in the current system; if it cannot, add it to the list of unresolved
+     * references - the reference will be resolved when all parts are available
+     */
+    public void addUnresolvedReference(NameReference nr) {
+        if (nr.isAbsolute()) {
+            // do not resolve absolute references, they will be resolved when assembling the MDB
+            unresolvedReferences.add(nr);
+        } else {
+            // try to resolve it immediately
+            FoundReference foundRef = ReferenceFinder.findReference(this, nr);
+            if (foundRef == null || !foundRef.isComplete()) {
+                unresolvedReferences.add(nr);
+            } else {
+                foundRef.resolved(nr);
+            }
+        }
+    }
+
+    public Collection<SequenceContainer> getSequenceContainers() {
+        return containers.values();
+    }
+
+    public Collection<CommandContainer> getCommandContainers() {
+        return cmdContainers.values();
+    }
+
+    public int getSequenceContainerCount(boolean recurse) {
+        if (!recurse) {
+            return containers.size();
+        }
+        int total = containers.size();
+        for (SpaceSystem sub : getSubSystems()) {
+            total += sub.getSequenceContainerCount(recurse);
+        }
+        return total;
+    }
+
+    /**
+     * Returns the direct sub parameters of this space system
+     */
+    public Collection<Parameter> getParameters() {
+        return parameters.values();
+    }
+
+    /**
+     * Returns the parameters defined in this space system, or under any of its sub space systems
+     */
+    public Collection<Parameter> getParameters(boolean recurse) {
+        if (!recurse) {
+            return getParameters();
+        }
+        List<Parameter> res = new ArrayList<>();
+        res.addAll(parameters.values());
+        for (SpaceSystem sub : getSubSystems()) {
+            res.addAll(sub.getParameters(recurse));
+        }
+        return res;
+    }
+
+    public int getParameterCount(boolean recurse) {
+        if (!recurse) {
+            return parameters.size();
+        }
+        int total = parameters.size();
+        for (SpaceSystem sub : getSubSystems()) {
+            total += sub.getParameterCount(recurse);
+        }
+        return total;
+    }
+
+    public Collection<ParameterType> getParameterTypes() {
+        return parameterTypes.values();
+    }
+
+    public int getParameterTypeCount(boolean recurse) {
+        if (!recurse) {
+            return parameterTypes.size();
+        }
+        int total = parameterTypes.size();
+        for (SpaceSystem sub : getSubSystems()) {
+            total += sub.getParameterTypeCount(recurse);
+        }
+        return total;
+    }
+
+    public Collection<ArgumentType> getArgumentTypes() {
+        return argumentTypes.values();
+    }
+
+    public Collection<SpaceSystem> getSubSystems() {
+        return subsystems.values();
+    }
+
+    public Collection<Algorithm> getAlgorithms() {
+        return algorithms.values();
+    }
+
+    public int getAlgorithmCount(boolean recurse) {
+        if (!recurse) {
+            return algorithms.size();
+        }
+        int total = algorithms.size();
+        for (SpaceSystem sub : getSubSystems()) {
+            total += sub.getAlgorithmCount(recurse);
+        }
+        return total;
+    }
+
+    public Collection<MetaCommand> getMetaCommands() {
+        return commands.values();
+    }
+
+    /**
+     * remove parameter from SpaceSystem - only used during loading or from XtceDb XtceDb has several maps pointing to
+     * these parameters.
+     * 
+     * @param p
+     *            parameter to remove
+     */
+    public void removeParameter(Parameter p) {
+        parameters.remove(p.getName());
+    }
+
+    public int getMetaCommandCount(boolean recurse) {
+        if (!recurse) {
+            return commands.size();
+        }
+        int total = commands.size();
+        for (SpaceSystem sub : getSubSystems()) {
+            total += sub.getMetaCommandCount(recurse);
+        }
+        return total;
+    }
+
+    public List<NameReference> getUnresolvedReferences() {
+        return unresolvedReferences;
+    }
+
+    public void setParent(SpaceSystem parent) {
+        this.parent = parent;
+    }
+
+    public SpaceSystem getParent() {
+        return parent;
+    }
+
+    public SpaceSystem getSubsystem(String sname) {
+        return subsystems.get(sname);
+    }
+
+    public SequenceContainer getRootSequenceContainer() {
+        return containers.values().stream().filter(sc -> sc.getBaseContainer() == null).findFirst().orElse(null);
+    }
+
+    public Header getHeader() {
+        return header;
+    }
+
+    /**
+     * Add non-standard data to this SpaceSystem. This enables loading any kind of data from within custom
+     * SpaceSystemLoaders and making it available through the XtceDb.
+     * <p>
+     * Non-standard data is distinguished from each other using the classname. Only one object is allowed for each
+     * classname.
+     */
+    public void addNonStandardData(NonStandardData data) {
+        if (nonStandardDatas.containsKey(data.getClass())) {
+            throw new IllegalArgumentException("there is already non-standard data of type " + data.getClass());
+        }
+        nonStandardDatas.put(data.getClass(), data);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends NonStandardData> T getNonStandardDataOfType(Class<T> clazz) {
+        if (nonStandardDatas.containsKey(clazz)) {
+            return (T) nonStandardDatas.get(clazz);
+        } else {
+            return null;
+        }
+    }
+
+    public Collection<NonStandardData> getNonStandardData() {
+        return nonStandardDatas.values();
+    }
+
+    @Override
+    public String toString() {
+        return "SpaceSystem[" + getName() + "]";
+    }
+
+    /**
+     * Searches through all namespaces for a parameter with the given alias.
+     * 
+     * Returns a list with all matches.
+     * 
+     * This is an expensive operation as it iterates over all parameters
+     * 
+     * @param alias
+     * @return a list of parameters matching the alias. If no alias matches the list will be empty.
+     */
+    public List<Parameter> getParameterByAlias(String alias) {
+        return getObjectByAlias(alias, parameters.values());
+    }
+
+    public List<SequenceContainer> getSequenceContainerByAlias(String alias) {
+        return getObjectByAlias(alias, containers.values());
+    }
+
+    public List<MetaCommand> getMetaCommandByAlias(String alias) {
+        return getObjectByAlias(alias, commands.values());
+    }
+
+    private static <T extends NameDescription> List<T> getObjectByAlias(String alias, Collection<T> ndObjects) {
+        List<T> l = new ArrayList<>(1);
+        for (T nd : ndObjects) {
+
+            XtceAliasSet aliasSet = nd.getAliasSet();
+            if (aliasSet == null) {
+                continue;
+            }
+            for (Map.Entry<String, String> m : nd.getAliasSet().getAliases().entrySet()) {
+                if (m.getValue().equals(alias)) {
+                    l.add(nd);
+                }
+            }
+        }
+        return l;
+    }
+
+}
+```
+
+### `SplineCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SplineCalibrator.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * A calibration type where a segmented line in a raw vs calibrated plane is described using a set of points.
+ * Raw values are converted to calibrated values by finding a position on the line corresponding to the raw value.
+ * The algorithm triggers on the input parameter.
+ *
+ */
+public class SplineCalibrator implements Calibrator {
+    private static final long serialVersionUID = 3L;
+    SplinePoint[] points;
+
+    public SplineCalibrator(List<SplinePoint> points) {
+        if(points.size()<2) {
+            throw new IllegalArgumentException("The spline calibrator needs at least two points");
+        }
+        this.points = points.toArray(new SplinePoint[0]);
+        Arrays.sort(this.points);
+    }
+
+    @Override
+    public String toString() {
+        return "SplineCalibrator" + Arrays.toString(points);
+    }
+
+    public SplinePoint[] getPoints() {
+        return points;
+    }
+}
+```
+
+### `SplinePoint.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SplinePoint.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * a spline is a set on points from which a curve may be drawn to interpolate raw to calibrated values
+ * 
+ * @author nm
+ *
+ */
+public class SplinePoint implements Serializable, Comparable<SplinePoint>{
+    private static final long serialVersionUID = 200706050619L;
+    public SplinePoint(double raw, double calibrated) {
+        this.raw=raw;
+        this.calibrated=calibrated;
+    }
+    final double raw;
+    final double calibrated;
+
+
+    @Override
+    public int compareTo(SplinePoint sp) {
+        return Double.compare(raw, sp.raw);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof SplinePoint)) {
+            return false;
+        }
+        SplinePoint sp=(SplinePoint)o;
+        return Double.compare(raw, sp.raw)==0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.valueOf(raw).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "("+raw+","+calibrated+")";
+    }
+
+    public double getRaw() {
+        return raw;
+    }
+
+    public double getCalibrated() {
+        return calibrated;
+    }
+}
+```
+
+### `StringArgumentType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringArgumentType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+
+public class StringArgumentType extends StringDataType implements ArgumentType {
+    private static final long serialVersionUID = 2L;
+
+    public StringArgumentType(Builder builder) {
+        super(builder);
+    }
+    
+    /**
+     * Creates a shallow copy of the parameter type, giving it a new name. 
+     */
+    public StringArgumentType(StringArgumentType t) {
+        super(t);
+    }
+    
+    
+    @Override
+    public String getTypeAsString() {
+        return "string";
+    }
+    
+
+    @Override
+    public String toString() {
+    	StringBuilder sb = new StringBuilder();
+    	sb.append("StringArgumentType name:").append(name);
+    	if(initialValue!=null) sb.append("defValue: ").append(initialValue);
+    	if(sizeRangeInCharacters!=null) sb.append(" sizeRange: ").append(sizeRangeInCharacters);
+    	
+    	sb.append(" encoding: ").append(encoding);
+    	return sb.toString();
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public static class Builder extends StringDataType.Builder<Builder> implements ArgumentType.Builder<Builder> {
+        public Builder() {
+        }
+
+        public Builder(StringArgumentType stringArgumentType) {
+           super(stringArgumentType);
+        }
+
+        @Override
+        public StringArgumentType build() {
+            return new StringArgumentType(this);
+        }
+    }
+}
+```
+
+### `StringDataEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringDataEncoding.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.nio.charset.Charset;
+
+/**
+ * For common encodings of string data.
+ * 
+ * <p>
+ * String data is encoded in a buffer. The size of the buffer may be fixed or variable. The size of the string may be
+ * variable inside the buffer or may take the whole buffer.
+ * <p>
+ * Upon decoding a packet, the resulting raw value will be the string extracted from the buffer but the parameter is
+ * considered to occupy the whole buffer (meaning that the next parameter will come in the packet after the end of the
+ * buffer not after the end of the string)
+ * 
+ * <p>
+ * The distinction between the string and the buffer containing the string has been made in Yamcs 5.5 in order to comply
+ * better with the XTCE 1.2.
+ * 
+ */
+public class StringDataEncoding extends DataEncoding {
+    private static final long serialVersionUID = 1L;
+
+    public enum SizeType {
+        /**
+         * fixed size has to be specified in the {@link #getSizeInBits}
+         */
+        FIXED,
+        /**
+         * Like C strings, they are terminated with a special string, usually a null character.
+         */
+        TERMINATION_CHAR,
+        /**
+         * Like PASCAL strings, the size of the string is given as an integer at the start of the string. SizeTag must
+         * be an unsigned Integer
+         */
+        LEADING_SIZE,
+        /**
+         * {@link #getFromBinaryTransformAlgorithm} will be used to decode the data
+         * <p>
+         * If this is used, the algorithm will also determine the size of the buffer.
+         */
+        CUSTOM
+    };
+
+    /**
+     * If the buffer size is dynamic
+     */
+    private DynamicIntegerValue dynamicBufferSize;
+
+    private SizeType sizeType;
+
+    private byte terminationChar = 0; // it's in fact the terminationByte but we call it like this for compatibility
+                                      // with XTCE
+    int sizeInBytesOfSizeTag = 2;
+    private String encoding = "UTF-8";
+
+    private int maxSizeInBytes = -1;
+
+    public StringDataEncoding(Builder builder) {
+        super(builder, -1);
+
+        this.sizeType = builder.sizeType;
+        if (builder.terminationChar != null) {
+            this.terminationChar = builder.terminationChar;
+        }
+        if (builder.sizeInBytesOfSizeTag != null) {
+            this.sizeInBytesOfSizeTag = builder.sizeInBytesOfSizeTag;
+        }
+        if (builder.encoding != null) {
+            this.encoding = builder.encoding;
+        }
+        this.maxSizeInBytes = builder.maxSizeInBytes;
+        this.dynamicBufferSize = builder.dynamicBufferSize;
+
+        if (builder.baseEncoding instanceof StringDataEncoding) {
+            StringDataEncoding baseEncoding = (StringDataEncoding) builder.baseEncoding;
+
+            if (builder.sizeType == null) {
+                this.sizeType = baseEncoding.sizeType;
+            }
+            if (builder.terminationChar == null) {
+                this.terminationChar = baseEncoding.terminationChar;
+            }
+
+            if (builder.sizeInBytesOfSizeTag == null) {
+                this.sizeInBytesOfSizeTag = baseEncoding.sizeInBytesOfSizeTag;
+            }
+
+            if (builder.encoding == null) {
+                this.encoding = baseEncoding.encoding;
+            }
+
+            if (builder.dynamicBufferSize == null) {
+                this.dynamicBufferSize = baseEncoding.dynamicBufferSize;
+            }
+            if (builder.maxSizeInBytes == -1) {
+                this.maxSizeInBytes = baseEncoding.maxSizeInBytes;
+            }
+        }
+    }
+
+    /**
+     * copy constructor
+     * 
+     * @param sde
+     */
+    StringDataEncoding(StringDataEncoding sde) {
+        super(sde);
+        this.sizeType = sde.sizeType;
+        this.terminationChar = sde.terminationChar;
+        this.sizeInBytesOfSizeTag = sde.sizeInBytesOfSizeTag;
+        this.encoding = sde.encoding;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
+    public void setSizeType(SizeType sizeType) {
+        this.sizeType = sizeType;
+    }
+
+    public SizeType getSizeType() {
+        return sizeType;
+    }
+
+    public int getSizeInBytesOfSizeTag() {
+        return sizeInBytesOfSizeTag;
+    }
+
+    public int getSizeInBitsOfSizeTag() {
+        return sizeInBytesOfSizeTag << 3;
+    }
+
+    public byte getTerminationChar() {
+        return terminationChar;
+    }
+
+    public void setTerminationChar(byte tc) {
+        this.terminationChar = tc;
+    }
+
+    public DynamicIntegerValue getDynamicBufferSize() {
+        return dynamicBufferSize;
+    }
+
+    public int getMaxSizeInBytes() {
+        return maxSizeInBytes;
+    }
+
+    public void setMaxSizeInBytes(int maxSizeInBytes) {
+        this.maxSizeInBytes = maxSizeInBytes;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("StringDataEncoding size: ");
+        sb.append(getSizeType()).append("(");
+        switch (getSizeType()) {
+        case FIXED:
+            sb.append("fixedSizeInBits=" + getSizeInBits());
+            break;
+        case LEADING_SIZE:
+            sb.append("sizeInBitsOfSizeTag=" + getSizeInBitsOfSizeTag());
+            if (getSizeInBits() != -1) {
+                sb.append(", sizeInBits=" + getSizeInBits());
+            } else if (dynamicBufferSize != null) {
+                sb.append(", dynamicBufferSize=").append(dynamicBufferSize);
+            }
+            break;
+        case TERMINATION_CHAR:
+            sb.append("terminationChar=" + getTerminationChar());
+            if (getSizeInBits() != -1) {
+                sb.append(", sizeInBits=" + getSizeInBits());
+            } else if (dynamicBufferSize != null) {
+                sb.append(", dynamicBufferSize=").append(dynamicBufferSize);
+            }
+            break;
+        case CUSTOM:
+            sb.append(getFromBinaryTransformAlgorithm());
+            break;
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    @Override
+    public Object parseString(String stringValue) {
+        return stringValue;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        // this will throw an exception if the charset is not supported by java
+        Charset.forName(encoding);
+
+        this.encoding = encoding;
+    }
+
+    @Override
+    public StringDataEncoding copy() {
+        return new StringDataEncoding(this);
+    }
+
+    public static class Builder extends DataEncoding.Builder<Builder> {
+        private SizeType sizeType;
+        private Byte terminationChar = null;
+        Integer sizeInBytesOfSizeTag = null;
+        private String encoding = "UTF-8";
+        private DynamicIntegerValue dynamicBufferSize;
+        private int maxSizeInBytes = -1;
+
+        public Builder(StringDataEncoding encoding) {
+            super(encoding);
+            this.sizeType = encoding.sizeType;
+            this.terminationChar = encoding.terminationChar;
+            this.sizeInBytesOfSizeTag = encoding.sizeInBytesOfSizeTag;
+        }
+
+        public Builder() {
+            super();
+        }
+
+        @Override
+        public StringDataEncoding build() {
+            return new StringDataEncoding(this);
+        }
+
+        @Override
+        public Builder setSizeInBits(Integer sizeInBits) {
+            if (sizeInBits > 0) {
+                if (sizeInBits % 8 != 0) {
+                    throw new IllegalArgumentException("Size in bits for string encoding has to be multiple of 8.");
+                }
+                this.maxSizeInBytes = sizeInBits / 8;
+            }
+            super.setSizeInBits(sizeInBits);
+            return self();
+        }
+
+        public Builder setSizeType(SizeType sizeType) {
+            this.sizeType = sizeType;
+            return self();
+        }
+
+        public Builder setTerminationChar(byte terminationChar) {
+            this.terminationChar = terminationChar;
+            return self();
+        }
+
+        public Builder setSizeInBitsOfSizeTag(int size) {
+            if ((size & 7) != 0) {
+                throw new IllegalArgumentException("Size in bits of size tag has to be a multiple of 8");
+            }
+            this.sizeInBytesOfSizeTag = size >> 3;
+            return self();
+        }
+
+        public Builder setEncoding(String stringEncoding) {
+            this.encoding = stringEncoding;
+            return self();
+        }
+
+        public Builder setMaxSizeInBits(int maxSizeInBits) {
+            if (maxSizeInBits % 8 != 0) {
+                throw new IllegalArgumentException("Maximum size in bits for string encoding has to be multiple of 8.");
+            }
+            this.maxSizeInBytes = maxSizeInBits / 8;
+            return self();
+        }
+
+        public Builder setDynamicBufferSize(DynamicIntegerValue div) {
+            this.dynamicBufferSize = div;
+            return self();
+        }
+
+        public SizeType getSizeType() {
+            return sizeType;
+        }
+    }
+
+}
+```
+
+### `StringDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringDataType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class StringDataType extends BaseDataType {
+    private static final long serialVersionUID = 2L;
+    String initialValue;
+
+    /**
+     * For telemetry, specify as UTF-8 or UTF-16 value to match the encoding. This range check will be applied before
+     * conversion to the host string data type. For commanding, the range check occurs on the string host data type
+     * encoding, whatever that is -- before injection on the command link.
+     */
+    IntegerRange sizeRangeInCharacters;
+
+    protected StringDataType(Builder<?> builder) {
+        super(builder);
+        this.sizeRangeInCharacters = builder.sizeRangeInCharacters;
+
+        if (builder.baseType instanceof StringDataType) {
+            StringDataType baseType = (StringDataType) builder.baseType;
+            if (builder.sizeRangeInCharacters == null && baseType.sizeRangeInCharacters != null) {
+                this.sizeRangeInCharacters = baseType.sizeRangeInCharacters;
+            }
+        }
+
+        setInitialValue(builder);
+    }
+
+    protected StringDataType(StringDataType t) {
+        super(t);
+        this.sizeRangeInCharacters = t.sizeRangeInCharacters;
+    }
+
+    @Override
+    protected void setInitialValue(Object initialValue) {
+        this.initialValue = convertType(initialValue);
+    }
+
+    @Override
+    public String getInitialValue() {
+        return (String) initialValue;
+    }
+
+    public IntegerRange getSizeRangeInCharacters() {
+        return sizeRangeInCharacters;
+    }
+
+    @Override
+    public String convertType(Object value) {
+        if (value instanceof String) {
+            return (String) value;
+        } else {
+            throw new IllegalArgumentException("Cannot convert value of type '" + value.getClass() + "'");
+        }
+    }
+
+    @Override
+    public Type getValueType() {
+        return Type.STRING;
+    }
+
+    @Override
+    public String getTypeAsString() {
+        return "string";
+    }
+
+    public static abstract class Builder<T extends Builder<T>> extends BaseDataType.Builder<T> {
+        IntegerRange sizeRangeInCharacters;
+
+        public Builder() {
+        }
+
+        public Builder(StringDataType stringType) {
+            super(stringType);
+            this.sizeRangeInCharacters = stringType.sizeRangeInCharacters;
+        }
+
+        public void setSizeRangeInCharacters(IntegerRange sizeRangeInCharacters) {
+            this.sizeRangeInCharacters = sizeRangeInCharacters;
+        }
+    }
+}
+```
+
+### `StringParameterType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/StringParameterType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+
+public class StringParameterType extends StringDataType implements ParameterType {
+    private static final long serialVersionUID = 1L;
+
+
+    public StringParameterType(Builder builder) {
+        super(builder);
+    }
+    
+    /**
+     * Creates a shallow copy of the parameter type, giving it a new name. 
+     */
+    public StringParameterType(StringParameterType t) {
+        super(t);
+    }
+
+    
+    @Override
+    public boolean hasAlarm() {
+        return false;
+    }
+
+    @Override
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+    
+    @Override
+    public String toString() {
+        return "StringParameterType name:"+name+" encoding:"+encoding;
+    }
+    
+    public static class Builder extends StringDataType.Builder<Builder> implements ParameterType.Builder<Builder> {
+
+        public Builder() {
+        }
+        
+        public Builder(StringParameterType stringParameterType) {
+            super(stringParameterType);
+        }
+
+        @Override
+        public StringParameterType build() {
+            return new StringParameterType(this);
+        }
+        
+    }
+
+}
+```
+
+### `SystemParameter.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/SystemParameter.java`
+
+
+```java
+package org.yamcs.xtce;
+
+/**
+ * Parameters made on the fly.
+ * 
+ * DataSource should be one of SYSTEM, COMMAND or COMMAND_HISTORY (so the class name is a misnomer);
+ * 
+ * @author nm
+ * 
+ */
+public class SystemParameter extends Parameter {
+    private static final long serialVersionUID = 2L;
+
+    private SystemParameter(String spaceSystemName, String name, DataSource ds) {
+        super(name);
+        setQualifiedName(spaceSystemName + "/" + name);
+        setDataSource(ds);
+    }
+
+    public static SystemParameter getForFullyQualifiedName(String fqname) {
+        DataSource ds = getSystemParameterDataSource(fqname);
+        SystemParameter sp = new SystemParameter(NameDescription.getSubsystemName(fqname),
+                NameDescription.getName(fqname), ds);
+        // set the recording name "/yamcs/a/b/c" -> "/yamcs/a"
+        int pos = fqname.indexOf(PATH_SEPARATOR, 0);
+        pos = fqname.indexOf(PATH_SEPARATOR, pos + 1);
+        pos = fqname.indexOf(PATH_SEPARATOR, pos + 1);
+        sp.setRecordingGroup(fqname.substring(0, pos));
+
+        return sp;
+    }
+
+    private static DataSource getSystemParameterDataSource(String fqname) {
+        if (fqname.startsWith(XtceDb.YAMCS_CMD_SPACESYSTEM_NAME)) {
+            return DataSource.COMMAND;
+        } else if (fqname.startsWith(XtceDb.YAMCS_CMDHIST_SPACESYSTEM_NAME)) {
+            return DataSource.COMMAND_HISTORY;
+        } else {
+            return DataSource.SYSTEM;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "SysParam(qname=" + getQualifiedName() + ")";
+    }
+}
+```
+
+### `TimeEpoch.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TimeEpoch.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public class TimeEpoch implements Serializable {
+    private static final long serialVersionUID = 2L;
+
+    public static enum CommonEpochs {
+        TAI, J2000, UNIX, GPS
+    };
+
+    private final CommonEpochs epoch;
+    private final String dateTime;
+
+    public TimeEpoch(CommonEpochs epoch) {
+        this.epoch = epoch;
+        this.dateTime = null;
+    }
+
+    public TimeEpoch(String dateTime) {
+        this.epoch = null;
+        if (!validate(dateTime)) {
+            throw new IllegalArgumentException("Invalid date time '" + dateTime + "'");
+        }
+        this.dateTime = dateTime;
+    }
+
+    public CommonEpochs getCommonEpoch() {
+        return epoch;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    private static boolean validate(String dateTime) {
+        try {
+            DateTimeFormatter.ISO_DATE_TIME.parse(dateTime);
+            return true;
+        } catch (DateTimeParseException e) {
+        }
+        try {
+            DateTimeFormatter.ISO_DATE.parse(dateTime);
+            return true;
+        } catch (DateTimeParseException e) {
+        }
+
+        return false;
+    }
+
+    public String toString() {
+        return epoch == null ? dateTime : epoch.toString();
+    }
+}
+```
+
+### `TransmissionConstraint.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TransmissionConstraint.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * A CommandTransmission constraint is used to check that the command can be run in the current operating mode and may
+ * block the transmission of the command if the constraint condition is true.
+ * 
+ * @author nm
+ *
+ */
+public class TransmissionConstraint implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * XTCE: A specialised form of MatchCriteria for transmission constraint
+     * that may be suspendable on timeout.
+     */
+    final private MatchCriteria matchCriteria;
+
+    /**
+     * timeout in milliseconds
+     */
+    final private long timeout;
+
+    public TransmissionConstraint(MatchCriteria criteria, long timeout) {
+        this.matchCriteria = criteria;
+        this.timeout = timeout;
+    }
+
+    public MatchCriteria getMatchCriteria() {
+        return matchCriteria;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + matchCriteria + ", timeout: " + timeout + ")";
+    }
+}
+```
+
+### `TriggeredMathOperation.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TriggeredMathOperation.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.util.List;
+
+public class TriggeredMathOperation extends MathOperation {
+    private static final long serialVersionUID = 1L;
+
+    public TriggeredMathOperation(List<Element> list) {
+        super(list);
+    }
+
+}
+```
+
+### `TriggerSetType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/TriggerSetType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+
+/**
+ * A trigger is used to initiate the processing of some algorithm. A trigger may be based on an update of a Parameter or
+ * on a time basis. Triggers may also have a rate that limits their firing to a 1/rate basis.
+ */
+public class TriggerSetType implements Serializable {
+    private static final long serialVersionUID = -9191842839880223058L;
+
+    // private String name;
+    // private int triggerRate;
+    private ArrayList<OnParameterUpdateTrigger> onParameterUpdateTriggers = new ArrayList<>();
+    // private ArrayList<OnContainerUpdateTrigger> onContainerUpdateTriggers=new ArrayList<OnContainerUpdateTrigger>();
+    private ArrayList<OnPeriodicRateTrigger> onPeriodicRateTriggers = new ArrayList<>();
+
+    public void addOnParameterUpdateTrigger(OnParameterUpdateTrigger trigger) {
+        onParameterUpdateTriggers.add(trigger);
+    }
+
+    public ArrayList<OnParameterUpdateTrigger> getOnParameterUpdateTriggers() {
+        return onParameterUpdateTriggers;
+    }
+
+    public void addOnPeriodicRateTrigger(OnPeriodicRateTrigger trigger) {
+        onPeriodicRateTriggers.add(trigger);
+    }
+
+    public ArrayList<OnPeriodicRateTrigger> getOnPeriodicRateTriggers() {
+        return onPeriodicRateTriggers;
+    }
+
+    public boolean isEmpty() {
+        return onParameterUpdateTriggers.isEmpty() && onPeriodicRateTriggers.isEmpty();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        buf.append("onParameterUpdate:").append(onParameterUpdateTriggers).append("\n");
+        buf.append("onPeriodicRate:").append(onPeriodicRateTriggers);
+        return buf.toString();
+    }
+}
+```
+
+### `UnitType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/UnitType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+/**
+ * Used to hold the unit(s) plus possibly the exponent and factor for the units
+ */
+public class UnitType implements Serializable {
+    private static final long serialVersionUID = -2505869748092316015L;
+
+    String description;
+    double power = 1;
+    String factor = "1";
+    private String unit;
+
+    public UnitType(String unit) {
+        this.unit = unit;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+    
+    public double getPower() {
+        return power;
+    }
+    
+    public void setPower(double power) {
+        this.power = power;
+    }
+    
+    public String getFactor() {
+        return factor;
+    }
+    
+    public void setFactor(String factor) {
+        this.factor = factor;
+    }
+    
+    public String getUnit() {
+        return unit;
+    }
+
+    
+    @Override
+    public String toString() {
+        return "unit:"+unit+" desc: "+description+", power: "+power+", factor: "+factor;
+    }
+}
+```
+
+### `ValueEnumeration.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ValueEnumeration.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public class ValueEnumeration implements Serializable {
+    private static final long serialVersionUID = 2011023231432L;
+    long value;
+
+    String label;
+    String description;
+
+    public ValueEnumeration(long value, String label) {
+        this.value = value;
+        this.label = label;
+    }
+
+    public long getValue() {
+        return value;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + value + "=" + label + ")";
+    }
+}
+```
+
+### `ValueEnumerationRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/ValueEnumerationRange.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.Serializable;
+
+public class ValueEnumerationRange implements Serializable {
+    private static final long serialVersionUID = 2011023231432L;
+
+    double min = 0;
+    double max = 0;
+    boolean isMinInclusive = true;
+    boolean isMaxInclusive = true;
+    String label;
+    private String description;
+
+    public ValueEnumerationRange(double min, double max, boolean isMinInclusive, boolean isMaxInclusive, String label) {
+        assert (min < max);
+        this.min = min;
+        this.max = max;
+        this.isMaxInclusive = isMaxInclusive;
+        this.isMinInclusive = isMinInclusive;
+        this.label = label;
+    }
+
+    public boolean isValueInRange(long value) {
+        return ((isMinInclusive) ? (value >= min) : (value > min))
+                && ((isMaxInclusive) ? (value <= max) : (value < max));
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public boolean getMinInclusive() {
+        return isMinInclusive;
+    }
+
+    public boolean getMaxInclusive() {
+        return isMaxInclusive;
+    }
+
+    public double getOneInRange() {
+        return min / 2 + max / 2;
+    }
+}
+```
+
+### `XtceDb.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/XtceDb.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import java.io.PrintStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.xml.XtceAliasSet;
+
+/**
+ * XtceDB database
+ * <p>
+ * It contains a SpaceSystem as defined in the Xtce schema and has lots of hashes to help find things quickly
+ * 
+ * 
+ */
+public class XtceDb implements Serializable {
+    private static final long serialVersionUID = 57L;
+
+    final SpaceSystem rootSystem;
+
+    // rwLock is used to guard the read/write of parameters, parameter types and spaceSystems which are the only ones
+    // that can change dynamically as of now
+    ReadWriteLock rwLock = new ReentrantReadWriteLock();
+
+    /**
+     * Namespaces system parameters
+     */
+    public static final String YAMCS_SPACESYSTEM_NAME = "/yamcs";
+    public static final String YAMCS_CMD_SPACESYSTEM_NAME = "/yamcs/cmd";
+    public static final String YAMCS_CMDARG_SPACESYSTEM_NAME = "/yamcs/cmd/arg";
+    public static final String YAMCS_CMDHIST_SPACESYSTEM_NAME = "/yamcs/cmdHist";
+
+    transient static Logger log = LoggerFactory.getLogger(XtceDb.class);
+
+    // map from the fully qualified names to the objects
+    protected HashMap<String, SpaceSystem> spaceSystems = new HashMap<>();
+    protected Map<String, SequenceContainer> sequenceContainers = new LinkedHashMap<>();
+    protected Map<String, Parameter> parameters = new LinkedHashMap<>();
+    protected Map<String, ParameterType> parameterTypes = new LinkedHashMap<>();
+    protected Map<String, ArgumentType> argumentTypes = new LinkedHashMap<>();
+    protected HashMap<String, Algorithm> algorithms = new HashMap<>();
+    protected HashMap<String, MetaCommand> commands = new HashMap<>();
+
+    @SuppressWarnings("rawtypes")
+    private HashMap<Class<?>, NonStandardData> nonStandardDatas = new HashMap<>();
+
+    // different namespaces
+    private NamedDescriptionIndex<SpaceSystem> spaceSystemAliases = new NamedDescriptionIndex<>();
+    private NamedDescriptionIndex<Parameter> parameterAliases = new NamedDescriptionIndex<>();
+    private NamedDescriptionIndex<NameDescription> parameterTypeAliases = new NamedDescriptionIndex<>();
+    private NamedDescriptionIndex<NameDescription> argumentTypeAliases = new NamedDescriptionIndex<>();
+    private NamedDescriptionIndex<SequenceContainer> sequenceContainerAliases = new NamedDescriptionIndex<>();
+    private NamedDescriptionIndex<Algorithm> algorithmAliases = new NamedDescriptionIndex<>();
+    private NamedDescriptionIndex<MetaCommand> commandAliases = new NamedDescriptionIndex<>();
+    private Map<String, List<IndirectParameterRefEntry>> indirectParameterRefEntries = new HashMap<>();
+
+    private Set<String> namespaces = new HashSet<>();
+
+    // this is the default sequence container where the xtce processors start processing
+    // specific ones can be defined per tm stream
+    SequenceContainer rootSequenceContainer;
+
+    /**
+     * Maps the Parameter to a list of ParameterEntry such that we know from which container we can extract this
+     * parameter
+     */
+    private HashMap<Parameter, ArrayList<ParameterEntry>> parameter2ParameterEntryMap;
+
+    /**
+     * maps the SequenceContainer to a list of other EntryContainers in case of aggregation
+     */
+    private HashMap<SequenceContainer, ArrayList<ContainerEntry>> sequenceContainer2ContainerEntryMap;
+
+    /**
+     * maps the SequenceContainer to a list of containers inheriting this one
+     */
+    private HashMap<SequenceContainer, ArrayList<SequenceContainer>> sequenceContainer2InheritingContainerMap;
+
+    public XtceDb(SpaceSystem spaceSystem) {
+        this.rootSystem = spaceSystem;
+    }
+
+    public SequenceContainer getSequenceContainer(String qualifiedName) {
+        return sequenceContainers.get(qualifiedName);
+    }
+
+    public SequenceContainer getSequenceContainer(String namespace, String name) {
+        return sequenceContainerAliases.get(namespace, name);
+    }
+
+    public SequenceContainer getSequenceContainer(NamedObjectId id) {
+        if (id.hasNamespace()) {
+            return sequenceContainerAliases.get(id.getNamespace(), id.getName());
+        } else {
+            return sequenceContainerAliases.get(id.getName());
+        }
+    }
+
+    /**
+     * returns the parameter with the given qualified name or null if it does not exist
+     */
+    public Parameter getParameter(String qualifiedName) {
+        rwLock.readLock().lock();
+        try {
+            int idx = qualifiedName.indexOf('/');
+            if (idx == 0) {
+                return parameters.get(qualifiedName);
+            } else if (idx > 0) {
+                String namespace = qualifiedName.substring(0, idx);
+                String name = qualifiedName.substring(idx + 1);
+                return getParameter(namespace, name);
+            }
+            return null;
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public static NamedObjectId toNamedObjectId(String qualifiedName) {
+        int idx = qualifiedName.indexOf('/');
+        if (idx == 0) {
+            return NamedObjectId.newBuilder().setName(qualifiedName).build();
+        } else if (idx > 0) {
+            return NamedObjectId.newBuilder()
+                    .setNamespace(qualifiedName.substring(0, idx))
+                    .setName(qualifiedName.substring(idx + 1))
+                    .build();
+        }
+        throw new IllegalArgumentException("Invalid parameter id " + qualifiedName);
+    }
+
+    public Parameter getParameter(String namespace, String name) {
+        rwLock.readLock().lock();
+        try {
+            return parameterAliases.get(namespace, name);
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public Parameter getParameter(NamedObjectId id) {
+        rwLock.readLock().lock();
+        try {
+            if (id.hasNamespace()) {
+                return parameterAliases.get(id.getNamespace(), id.getName());
+            } else {
+                return parameterAliases.get(id.getName());
+            }
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public ParameterType getParameterType(String qualifiedName) {
+        return parameterTypes.get(qualifiedName);
+    }
+
+    /**
+     * Returns an argument type with the given qualified name or null if it does not exist
+     * <p>
+     * Note that not all argument types have qualified names, some are used only locally in the command definitions and
+     * are never registered at the global level
+     */
+    public ArgumentType getArgumentType(String qualifiedName) {
+        return argumentTypes.get(qualifiedName);
+    }
+
+    public ParameterType getParameterType(String namespace, String name) {
+        return (ParameterType) parameterTypeAliases.get(namespace, name);
+    }
+
+    public ParameterType getParameterType(NamedObjectId id) {
+        if (id.hasNamespace()) {
+            return (ParameterType) parameterTypeAliases.get(id.getNamespace(), id.getName());
+        } else {
+            return (ParameterType) parameterTypeAliases.get(id.getName());
+        }
+    }
+
+    public SequenceContainer getRootSequenceContainer() {
+        return rootSequenceContainer;
+    }
+
+    public void setRootSequenceContainer(SequenceContainer sc) {
+        this.rootSequenceContainer = sc;
+    }
+
+    public Algorithm getAlgorithm(String qualifiedName) {
+        return algorithmAliases.get(qualifiedName);
+    }
+
+    public Algorithm getAlgorithm(String namespace, String name) {
+        return algorithmAliases.get(namespace, name);
+    }
+
+    public Algorithm getAlgorithm(NamedObjectId id) {
+        if (id.hasNamespace()) {
+            return algorithmAliases.get(id.getNamespace(), id.getName());
+        } else {
+            return algorithmAliases.get(id.getName());
+        }
+    }
+
+    public Collection<Algorithm> getAlgorithms() {
+        return algorithms.values();
+    }
+
+    public Collection<Parameter> getParameters() {
+        rwLock.readLock().lock();
+        try {
+            return new ArrayList<>(parameters.values());
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public Collection<ParameterType> getParameterTypes() {
+        return parameterTypes.values();
+    }
+
+    public boolean containsNamespace(String namespace) {
+        return namespaces.contains(namespace);
+    }
+
+    public Set<String> getNamespaces() {
+        return namespaces;
+    }
+
+    /**
+     * Returns a meta command by fully qualified name.
+     * 
+     * @param qualifiedName
+     *            - fully qualified name of the command to be returned.
+     * @return the meta command having the given qualified name. If no such command exists, <code>null</code> is
+     *         returned.
+     */
+    public MetaCommand getMetaCommand(String qualifiedName) {
+        rwLock.readLock().lock();
+        try {
+            return commandAliases.get(qualifiedName);
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Returns a command based on a name in a namespace
+     * 
+     * @param namespace
+     * @param name
+     * @return the meta command having the given name in the given namespace. If no such meta command exists,
+     *         <code>null</code> is returned.
+     */
+    public MetaCommand getMetaCommand(String namespace, String name) {
+        rwLock.readLock().lock();
+        try {
+            return commandAliases.get(namespace, name);
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public MetaCommand getMetaCommand(NamedObjectId id) {
+        rwLock.readLock().lock();
+        try {
+            if (id.hasNamespace()) {
+                return commandAliases.get(id.getNamespace(), id.getName());
+            } else {
+                return commandAliases.get(id.getName());
+            }
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Returns the list of MetaCommmands in the XTCE database
+     * 
+     * @return
+     */
+    public Collection<MetaCommand> getMetaCommands() {
+        rwLock.readLock().lock();
+        try {
+            return commands.values();
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public SpaceSystem getRootSpaceSystem() {
+        return rootSystem;
+    }
+
+    public SpaceSystem getSpaceSystem(String qualifiedName) {
+        rwLock.readLock().lock();
+        try {
+            return spaceSystemAliases.get(qualifiedName);
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public SpaceSystem getSpaceSystem(String namespace, String name) {
+        rwLock.readLock().lock();
+        try {
+            return spaceSystemAliases.get(namespace, name);
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public SpaceSystem getSpaceSystem(NamedObjectId id) {
+        rwLock.readLock().lock();
+        try {
+            if (id.hasNamespace()) {
+                return spaceSystemAliases.get(id.getNamespace(), id.getName());
+            } else {
+                return spaceSystemAliases.get(id.getName());
+            }
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
+
+    public Collection<SequenceContainer> getSequenceContainers() {
+        return sequenceContainers.values();
+    }
+
+    /**
+     *
+     * @return list of ParameterEntry corresponding to a given parameter or <code>null</code> if no such entry exists.
+     */
+    public List<ParameterEntry> getParameterEntries(Parameter p) {
+        return parameter2ParameterEntryMap.get(p);
+    }
+
+    /**
+     * @return list of ContainerEntry corresponding to a given sequence container or <code>null</code> if no such entry
+     *         exists.
+     */
+    public List<ContainerEntry> getContainerEntries(SequenceContainer sc) {
+        return sequenceContainer2ContainerEntryMap.get(sc);
+    }
+
+    public Collection<String> getParameterNames() {
+        return parameters.keySet();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends NonStandardData<T>> T getNonStandardDataOfType(Class<T> clazz) {
+        if (nonStandardDatas.containsKey(clazz)) {
+            return (T) nonStandardDatas.get(clazz);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    public Collection<NonStandardData> getNonStandardData() {
+        return nonStandardDatas.values();
+    }
+
+    /**
+     * Called after the database has been populated to build the maps for quickly finding things
+     *
+     */
+    public void buildIndexMaps() {
+        buildSpaceSystemsMap(rootSystem);
+        buildParameterMap(rootSystem);
+        buildParameterTypeMap(rootSystem);
+        buildArgumentTypeMap(rootSystem);
+        buildSequenceContainerMap(rootSystem);
+        buildAlgorithmMap(rootSystem);
+        buildMetaCommandMap(rootSystem);
+        buildNonStandardDataMap(rootSystem);
+
+        parameter2ParameterEntryMap = new HashMap<>();
+        sequenceContainer2ContainerEntryMap = new HashMap<>();
+        sequenceContainer2InheritingContainerMap = new HashMap<>();
+        for (SequenceContainer sc : sequenceContainers.values()) {
+            for (SequenceEntry se : sc.getEntryList()) {
+                if (se instanceof ParameterEntry) {
+                    ParameterEntry pe = (ParameterEntry) se;
+                    Parameter param = pe.getParameter();
+                    ArrayList<ParameterEntry> al = parameter2ParameterEntryMap.computeIfAbsent(param,
+                            k -> new ArrayList<>());
+                    al.add(pe);
+                } else if (se instanceof ContainerEntry) {
+                    ContainerEntry ce = (ContainerEntry) se;
+                    ArrayList<ContainerEntry> al = sequenceContainer2ContainerEntryMap
+                            .computeIfAbsent(ce.getRefContainer(), k -> new ArrayList<>());
+                    al.add(ce);
+                } else if (se instanceof IndirectParameterRefEntry) {
+                    IndirectParameterRefEntry ipe = (IndirectParameterRefEntry) se;
+                    List<IndirectParameterRefEntry> l = indirectParameterRefEntries
+                            .computeIfAbsent(ipe.getAliasNameSpace(), k -> new ArrayList<>());
+                    l.add(ipe);
+                }
+            }
+            if (sc.baseContainer != null) {
+                ArrayList<SequenceContainer> al_sc = sequenceContainer2InheritingContainerMap
+                        .get(sc.baseContainer);
+                if (al_sc == null) {
+                    al_sc = new ArrayList<>();
+                    sequenceContainer2InheritingContainerMap.put(sc.getBaseContainer(), al_sc);
+                }
+                al_sc.add(sc);
+            }
+        }
+
+        // build aliases maps
+        for (SpaceSystem ss : spaceSystems.values()) {
+            spaceSystemAliases.add(ss);
+            XtceAliasSet aliases = ss.getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+
+        for (SequenceContainer sc : sequenceContainers.values()) {
+            sequenceContainerAliases.add(sc);
+            XtceAliasSet aliases = sc.getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+
+        for (Parameter p : parameters.values()) {
+            parameterAliases.add(p);
+            XtceAliasSet aliases = p.getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+
+        for (ParameterType t : parameterTypes.values()) {
+            parameterTypeAliases.add((NameDescription) t);
+            XtceAliasSet aliases = ((NameDescription) t).getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+
+        for (ArgumentType t : argumentTypes.values()) {
+            argumentTypeAliases.add((NameDescription) t);
+            XtceAliasSet aliases = ((NameDescription) t).getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+
+        for (Algorithm a : algorithms.values()) {
+            algorithmAliases.add(a);
+            XtceAliasSet aliases = a.getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+
+        for (MetaCommand mc : commands.values()) {
+            commandAliases.add(mc);
+            XtceAliasSet aliases = mc.getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        }
+    }
+
+    private void buildSpaceSystemsMap(SpaceSystem ss) {
+        spaceSystems.put(ss.getQualifiedName(), ss);
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildSpaceSystemsMap(ss1);
+        }
+    }
+
+    private void buildParameterMap(SpaceSystem ss) {
+        for (Parameter p : ss.getParameters()) {
+            parameters.put(p.getQualifiedName(), p);
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildParameterMap(ss1);
+        }
+    }
+
+    private void buildParameterTypeMap(SpaceSystem ss) {
+        for (ParameterType t : ss.getParameterTypes()) {
+            String qualifiedName = ((NameDescription) t).getQualifiedName();
+            parameterTypes.put(qualifiedName, t);
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildParameterTypeMap(ss1);
+        }
+    }
+
+    private void buildArgumentTypeMap(SpaceSystem ss) {
+        for (ArgumentType t : ss.getArgumentTypes()) {
+            String qualifiedName = ((NameDescription) t).getQualifiedName();
+            argumentTypes.put(qualifiedName, t);
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildArgumentTypeMap(ss1);
+        }
+    }
+
+    private void buildSequenceContainerMap(SpaceSystem ss) {
+        for (SequenceContainer sc : ss.getSequenceContainers()) {
+            sequenceContainers.put(sc.getQualifiedName(), sc);
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildSequenceContainerMap(ss1);
+        }
+    }
+
+    private void buildAlgorithmMap(SpaceSystem ss) {
+        for (Algorithm a : ss.getAlgorithms()) {
+            algorithms.put(a.getQualifiedName(), a);
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildAlgorithmMap(ss1);
+        }
+    }
+
+    private void buildMetaCommandMap(SpaceSystem ss) {
+        for (MetaCommand mc : ss.getMetaCommands()) {
+            commands.put(mc.getQualifiedName(), mc);
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildMetaCommandMap(ss1);
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void buildNonStandardDataMap(SpaceSystem ss) {
+        for (NonStandardData data : ss.getNonStandardData()) {
+            if (nonStandardDatas.containsKey(data.getClass())) {
+                NonStandardData mergeResult = nonStandardDatas.get(data.getClass()).mergeWithChild(data);
+                nonStandardDatas.put(data.getClass(), mergeResult);
+            } else {
+                nonStandardDatas.put(data.getClass(), data);
+            }
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            buildNonStandardDataMap(ss1);
+        }
+    }
+
+    /**
+     * Get the list of containers inheriting from the given container
+     * 
+     * @param container
+     * @return
+     */
+    public List<SequenceContainer> getInheritingContainers(SequenceContainer container) {
+        return sequenceContainer2InheritingContainerMap.get(container);
+    }
+
+    protected void doAddParameter(Parameter p, boolean addSpaceSystem, boolean addParameterType) {
+        doAddParameters(List.of(p), addSpaceSystem, addParameterType);
+    }
+
+    /**
+     * Adds a list of new parameters to the XTCE db. If createSpaceSystem is true, also create the Space Systems where
+     * these parameters belong.
+     *
+     * <p>
+     * Throws a IllegalArgumentException if:
+     * <p>
+     * - createSpaceSystem is false and the Space Systems do not exist.
+     * <p>
+     * - the parameter with the given qualified name already exist
+     * 
+     * @param newparams
+     *            - the list of parameters to be added
+     * @param addParameterTypes
+     *            - if true, add also the parameter types (if not already in the database)
+     * @param addSpaceSystems
+     *            - if true, create all the necessary space systems
+     */
+    protected void doAddParameters(List<Parameter> newparams, boolean addSpaceSystems, boolean addParameterTypes) {
+        log.debug("Adding parameters {} , createSpaceSystem: {}", newparams, addSpaceSystems);
+        rwLock.writeLock().lock();
+        try {
+            for (var p : newparams) {
+                if (parameters.containsKey(p.getQualifiedName())) {
+                    throw new IllegalArgumentException(
+                            "There is already a parameter with qualified name '" + p.getQualifiedName() + "'");
+                }
+                if (!addSpaceSystems) {
+                    SpaceSystem ss = spaceSystems.get(p.getSubsystemName());
+                    if (ss == null) {
+                        throw new IllegalArgumentException("No SpaceSystem by name '" + p.getSubsystemName() + "'");
+                    }
+                    var pt = p.getParameterType();
+                    if (pt != null) {
+                        ss = spaceSystems.get(NameDescription.getSubsystemName(pt.getQualifiedName()));
+                        if (ss == null) {
+                            throw new IllegalArgumentException("No SpaceSystem by name '" + p.getSubsystemName()
+                                    + "' (required by the type of " + p.getQualifiedName() + ")");
+                        }
+                    }
+                }
+
+                if (!addParameterTypes) {
+                    var pt = p.getParameterType();
+                    if (pt != null) {
+                        var pt1 = parameterTypes.get(pt.getQualifiedName());
+                        if (pt1 == null) {
+                            throw new IllegalArgumentException("Parameter Type '" + pt.getQualifiedName()
+                                    + " required by " + p.getQualifiedName() + " not found");
+                        }
+                        if (pt1 != pt) {
+                            throw new IllegalArgumentException("Parameter Type '" + pt.getQualifiedName()
+                                    + " required by " + p.getQualifiedName()
+                                    + " found but it is different than the one referenced in the parameter");
+                        }
+                    }
+                }
+            }
+            for (var p : newparams) {
+                String ssname = p.getSubsystemName();
+                SpaceSystem ss = spaceSystems.get(ssname);
+                if (ss == null) {
+                    createAllSpaceSystems(ssname);
+                    ss = spaceSystems.get(ssname);
+                }
+                var pt = p.getParameterType();
+                if (pt != null) {
+                    var pt1 = parameterTypes.get(pt.getQualifiedName());
+                    if (pt1 == null) {
+                        SpaceSystem ssPt = spaceSystems.get(NameDescription.getSubsystemName(pt.getQualifiedName()));
+                        if (ssPt == null) {
+                            createAllSpaceSystems(ssname);
+                        }
+                        ssPt.addParameterType(pt);
+                    }
+                }
+
+                ss.addParameter(p);
+                parameters.put(p.getQualifiedName(), p);
+
+                parameterAliases.add(p);
+                XtceAliasSet aliases = p.getAliasSet();
+                if (aliases != null) {
+                    aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+                }
+            }
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Adds new parameter types to the XTCE db.
+     * <p>
+     *
+     * If the SpaceSystem where this parameter type does not exist, and createSpaceSystem is false, throws an
+     * IllegalArgumentException.
+     * <p>
+     * If the SpaceSystem where this parameter belongs exists and already contains an parameter type by this name,
+     * throws and IllegalArgumentException
+     * <p>
+     * If the SpaceSystem where this parameter belongs does not exist, and createSpaceSystem is true, the whole
+     * SpaceSystem hierarchy is created.
+     * 
+     *
+     * @param ptypeList
+     *            - the parameter types to be added
+     * @param createSpaceSystem
+     *            - if true, create all the necessary space systems
+     */
+    protected void doAddParameterType(List<ParameterType> ptypeList, boolean createSpaceSystem) {
+
+        log.debug("Adding parameter types {} , createSpaceSystem: {}", ptypeList, createSpaceSystem);
+        rwLock.writeLock().lock();
+
+        try {
+            for (var ptype : ptypeList) {
+                String fqn = ptype.getQualifiedName();
+                if (parameterTypes.containsKey(fqn)) {
+                    throw new IllegalArgumentException(
+                            "There is already a parameter with qualified name '" + fqn + "'");
+                }
+                String ssname = NameDescription.getSubsystemName(fqn);
+                SpaceSystem ss = spaceSystems.get(ssname);
+                if (ss == null && !createSpaceSystem) {
+                    throw new IllegalArgumentException("No SpaceSystem by name '" + ssname + "'");
+                }
+            }
+            for (var ptype : ptypeList) {
+                String fqn = ptype.getQualifiedName();
+                String ssname = NameDescription.getSubsystemName(fqn);
+                SpaceSystem ss = spaceSystems.get(ssname);
+                if (ss == null) {
+                    createAllSpaceSystems(ssname);
+                }
+
+                ss = spaceSystems.get(ssname);
+                ss.addParameterType(ptype);
+                parameterTypes.put(fqn, ptype);
+
+                parameterTypeAliases.add((NameDescription) ptype);
+                XtceAliasSet aliases = ((NameDescription) ptype).getAliasSet();
+                if (aliases != null) {
+                    aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+                }
+            }
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+
+    }
+
+    /**
+     * Adds new argument types to the XTCE db.
+     * <p>
+     *
+     * If the SpaceSystem where this argument type does not exist, and createSpaceSystem is false, throws an
+     * IllegalArgumentException.
+     * <p>
+     * If the SpaceSystem where this argument belongs exists and already contains an argument type by this name, throws
+     * and IllegalArgumentException
+     * <p>
+     * If the SpaceSystem where this argument belongs does not exist, and createSpaceSystem is true, the whole
+     * SpaceSystem hierarchy is created.
+     * 
+     *
+     * @param atypeList
+     *            - the argument types to be added
+     * @param createSpaceSystem
+     *            - if true, create all the necessary space systems
+     */
+    protected void doAddArgumentType(List<ArgumentType> atypeList, boolean createSpaceSystem) {
+
+        log.debug("Adding argument types {} , createSpaceSystem: {}", atypeList, createSpaceSystem);
+        rwLock.writeLock().lock();
+
+        try {
+            for (var ptype : atypeList) {
+                String fqn = ptype.getQualifiedName();
+                if (argumentTypes.containsKey(fqn)) {
+                    throw new IllegalArgumentException(
+                            "There is already an argument with qualified name '" + fqn + "'");
+                }
+                String ssname = NameDescription.getSubsystemName(fqn);
+                SpaceSystem ss = spaceSystems.get(ssname);
+                if (ss == null && !createSpaceSystem) {
+                    throw new IllegalArgumentException("No SpaceSystem by name '" + ssname + "'");
+                }
+            }
+            for (var ptype : atypeList) {
+                String fqn = ptype.getQualifiedName();
+                String ssname = NameDescription.getSubsystemName(fqn);
+                SpaceSystem ss = spaceSystems.get(ssname);
+                if (ss == null) {
+                    createAllSpaceSystems(ssname);
+                }
+
+                ss = spaceSystems.get(ssname);
+                ss.addArgumentType(ptype);
+                argumentTypes.put(fqn, ptype);
+
+                argumentTypeAliases.add((NameDescription) ptype);
+                XtceAliasSet aliases = ((NameDescription) ptype).getAliasSet();
+                if (aliases != null) {
+                    aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+                }
+            }
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+
+    }
+
+    private void createAllSpaceSystems(String ssname) {
+        String[] a = ssname.split("/");
+        String qn = "";
+        for (String name : a) {
+            if (name.isEmpty()) {
+                continue;
+            }
+            qn = qn + "/" + name;
+            if (getSpaceSystem(qn) == null) {
+                SpaceSystem ss = new SpaceSystem(name);
+                ss.setQualifiedName(qn);
+                addSpaceSystem(ss);
+            }
+        }
+    }
+
+    public void addMetaCommand(MetaCommand c) {
+        addMetaCommand(c, false);
+    }
+
+    /**
+     * Adds a new command definition to the XTCE db.
+
+     */
+    public void addMetaCommand(MetaCommand c, boolean addSpacesystem) {
+        rwLock.writeLock().lock();
+        try {
+            String ssname = c.getSubsystemName();
+            SpaceSystem ss = spaceSystems.get(ssname);
+            if (ss == null) {
+                if (!addSpacesystem) {
+                    throw new IllegalArgumentException("No SpaceSystem by name '" + ssname + "'");
+                }
+                createAllSpaceSystems(ssname);
+                ss = spaceSystems.get(ssname);
+            }
+            ss.addMetaCommand(c);
+            commands.put(c.getQualifiedName(), c);
+
+            commandAliases.add(c);
+            XtceAliasSet aliases = c.getAliasSet();
+            if (aliases != null) {
+                namespaces.addAll(aliases.getNamespaces());
+            }
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Adds a new {@link SpaceSystem} to the XTCE database.
+     *
+     * It throws an IllegalArgumentException in the following circumstances:
+     * <ul>
+     * <li>if a SpaceSystem with this name already exists
+     * <li>if {@link SpaceSystem#getParent() system.getParent()} does not return null
+     * <li>if the parent SpaceSystem (identified based on the {@link SpaceSystem#getSubsystemName()}) does not exist
+     * <li>if the space system is not empty
+     * </ul>
+     *
+     * This method also sets the parent of the passed spacesystem to its parent object.
+     *
+     * Note that this method is used to create SpaceSystems on the fly. The SpaceSystems are not saved anywhere and they
+     * will not be available when this object is created by the XtceDbFactory.
+     * 
+     * @param system
+     *            - the space system to be added.
+     *
+     */
+    public void addSpaceSystem(SpaceSystem system) {
+        rwLock.writeLock().lock();
+        try {
+            if (system.getParent() != null) {
+                throw new IllegalArgumentException(
+                        "The parent of the space system has to be null (it will be set by this method");
+            }
+            if (!system.getParameters().isEmpty() || !system.getSequenceContainers().isEmpty()
+                    || !system.getAlgorithms().isEmpty()
+                    || !system.getMetaCommands().isEmpty() || !system.getSubSystems().isEmpty()) {
+                throw new IllegalArgumentException(
+                        "The space system must be empty (no parameters, containers, commands, algorithms, subsystems)");
+            }
+
+            String parentName = system.getSubsystemName();
+            SpaceSystem parent = spaceSystems.get(parentName);
+            if (parent == null) {
+                throw new IllegalArgumentException("The parent subsystem '" + parentName + "' does not exist");
+            }
+
+            parent.addSpaceSystem(system);
+            system.setParent(parent);
+
+            spaceSystems.put(system.getQualifiedName(), system);
+            spaceSystemAliases.add(system);
+            XtceAliasSet aliases = system.getAliasSet();
+            if (aliases != null) {
+                aliases.getNamespaces().forEach(ns -> namespaces.add(ns));
+            }
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Checks if the named object refers to a system parameter:
+     * <ul>
+     * <li>either the namespace starts with {@link XtceDb#YAMCS_SPACESYSTEM_NAME}</li>
+     * <li>or there is no namespace and the fully qualified name starts with {@link XtceDb#YAMCS_SPACESYSTEM_NAME}</li>
+     * </ul>
+     * 
+     * @param id
+     * @return
+     */
+    public static boolean isSystemParameter(NamedObjectId id) {
+        boolean result;
+        if (!id.hasNamespace()) {
+            result = id.getName().startsWith(XtceDb.YAMCS_SPACESYSTEM_NAME);
+        } else {
+            result = id.getNamespace().startsWith(XtceDb.YAMCS_SPACESYSTEM_NAME);
+        }
+        return result;
+    }
+
+    /**
+     * Checks if a fully qualified name is the name of a system parameter. That is if <code>fqn</code> starts with
+     * {@link XtceDb#YAMCS_SPACESYSTEM_NAME}
+     * 
+     * @param fqn
+     * @return
+     */
+    public static boolean isSystemParameter(String fqn) {
+        return fqn.startsWith(XtceDb.YAMCS_SPACESYSTEM_NAME);
+    }
+
+    /**
+     * Returns a collection of all the {@link SpaceSystem} objects in the XTCE database.
+     * 
+     * @return the collection of space systems.
+     */
+    public Collection<SpaceSystem> getSpaceSystems() {
+        return spaceSystems.values();
+    }
+
+    /**
+     * Retrieve the list of {@link IndirectParameterRefEntry} for a given alias namespace.
+     * 
+     * @param namespace
+     *            - the namespace for which the indirect parameter reference entries should be retrieved. Can be null to
+     *            return the entries without a namespace.
+     * @return the list of indirect parameter reference entries whose alias namespace is equal to the given namespace.
+     *         If no such entry exists, <code>null</code> is returned.
+     */
+    public Collection<IndirectParameterRefEntry> getIndirectParameterRefEntries(String namespace) {
+        return indirectParameterRefEntries.get(namespace);
+    }
+
+    private void print(SpaceSystem ss, PrintStream out) {
+        if (ss.getHeader() != null) {
+            out.println("=========SpaceSystem " + ss.getQualifiedName() + " version: " + ss.getHeader().getVersion()
+                    + " date: " + ss.getHeader().getDate() + "=========");
+        } else {
+            out.println("=========SpaceSystem " + ss.getQualifiedName() + " (no header information)=========");
+        }
+
+        Comparator<NameDescription> comparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
+
+        SequenceContainer[] sca = ss.getSequenceContainers().toArray(new SequenceContainer[0]);
+        Arrays.sort(sca, comparator);
+        for (SequenceContainer sc : sca) {
+            sc.print(out);
+        }
+
+        Algorithm[] aa = ss.getAlgorithms().toArray(new Algorithm[0]);
+        Arrays.sort(aa, comparator);
+        for (Algorithm a : aa) {
+            a.print(out);
+        }
+
+        MetaCommand[] mca = ss.getMetaCommands().toArray(new MetaCommand[0]);
+        Arrays.sort(mca, comparator);
+        for (MetaCommand mc : mca) {
+            mc.print(out);
+        }
+
+        // print the list of system variables if any (because those will not be part of the sequence containers)
+        List<SystemParameter> systemVariables = new ArrayList<>();
+        for (Parameter p : ss.getParameters()) {
+            if (p instanceof SystemParameter) {
+                systemVariables.add((SystemParameter) p);
+            }
+        }
+        if (!systemVariables.isEmpty()) {
+            out.println("System Parameters: ");
+            SystemParameter[] sva = systemVariables.toArray(new SystemParameter[0]);
+            Arrays.sort(sva, comparator);
+            for (SystemParameter sv : sva) {
+                out.println("\t" + sv.getName());
+            }
+        }
+
+        SpaceSystem[] ssa = ss.getSubSystems().toArray(new SpaceSystem[0]);
+        Arrays.sort(ssa, comparator);
+        for (SpaceSystem ss1 : ssa) {
+            print(ss1, out);
+        }
+    }
+
+    public void print(PrintStream out) {
+        print(rootSystem, out);
+
+        Set<Parameter> orphanedParameters = new HashSet<>();
+        orphanedParameters.addAll(parameters.values());
+        removeNonOrphaned(rootSystem, orphanedParameters);
+        orphanedParameters.removeAll(parameter2ParameterEntryMap.keySet());
+
+        if (!orphanedParameters.isEmpty()) {
+            out.println("================ Orphaned parameters (not referenced in any container or algorithm):");
+            for (Parameter p : orphanedParameters) {
+                String namespaces = "";
+                if (p.getAliasSet() != null) {
+                    namespaces = ", aliases: " + p.getAliasSet();
+                }
+                out.println(p.getQualifiedName() + ", datasource: " + p.getDataSource() + namespaces + " type: "
+                        + p.getParameterType());
+            }
+        }
+    }
+
+    private static void removeNonOrphaned(SpaceSystem ss, Set<Parameter> orphanedParameters) {
+        for (Algorithm a : ss.getAlgorithms()) {
+            for (InputParameter p : a.getInputSet()) {
+                ParameterInstanceRef pref = p.getParameterInstance();
+                if (pref != null) {
+                    orphanedParameters.remove(pref.getParameter());
+                }
+            }
+            for (OutputParameter p : a.getOutputSet()) {
+                orphanedParameters.remove(p.getParameter());
+            }
+        }
+        for (SpaceSystem ss1 : ss.getSubSystems()) {
+            removeNonOrphaned(ss1, orphanedParameters);
+        }
+    }
+
+}
+```

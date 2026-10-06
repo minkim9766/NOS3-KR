@@ -3,16 +3,45 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/more/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `more.component.html`
 
-file--more.component.html
-file--more.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/more/more.component.html`
+
+
+```html
+<mat-menu #moreMenu="matMenu" overlapTrigger="false" class="ya-menu">
+  <ng-content />
+</mat-menu>
+<ya-icon-action
+  [matMenuTriggerFor]="moreMenu"
+  (click)="$event.stopPropagation()"
+  [icon]="icon"
+  [padding]="padding" />
 ```
 
-## 항목
+### `more.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/more/more.component.html`](file--more.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/more/more.component.ts`](file--more.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/more/more.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
+import { YaIconAction } from '../icon-action/icon-action.component';
+
+@Component({
+  selector: 'ya-more',
+  templateUrl: 'more.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [YaIconAction, MatMenu, MatMenuTrigger],
+})
+export class YaMore {
+  @Input()
+  icon = 'more_vert';
+
+  @Input()
+  padding = true;
+}
+```

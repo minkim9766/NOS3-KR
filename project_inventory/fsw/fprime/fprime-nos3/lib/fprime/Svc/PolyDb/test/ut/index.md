@@ -3,18 +3,215 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PolyDbTester.cpp`
 
-file--PolyDbTester.cpp
-file--PolyDbTester.hpp
-file--PolyDbTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/PolyDbTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PolyDbTester.cpp
+// \author tcanham
+// \brief  cpp file for PolyDb component test harness implementation class
+// ======================================================================
+
+#include "PolyDbTester.hpp"
+#include "Fw/Test/UnitTest.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+PolyDbTester ::PolyDbTester() : PolyDbGTestBase("PolyDbTester", PolyDbTester::MAX_HISTORY_SIZE), component("PolyDb") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+PolyDbTester ::~PolyDbTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void PolyDbTester::runNominalReadWrite() {
+    enum {
+        NUM_TEST_VALS = 12  // one for each type supported
+    };
+
+    Fw::PolyType vals[NUM_TEST_VALS];
+
+    // set test values
+    vals[0] = static_cast<U8>(1);
+    vals[1] = static_cast<I8>(2);
+    vals[2] = static_cast<U16>(3);
+    vals[3] = static_cast<I16>(4);
+    vals[4] = static_cast<U32>(5);
+    vals[5] = static_cast<I32>(6);
+    vals[6] = static_cast<U64>(7);
+    vals[7] = static_cast<I64>(8);
+    vals[8] = static_cast<F32>(9.0);
+    vals[9] = static_cast<F64>(10.0);
+    vals[10] = true;
+    vals[11] = reinterpret_cast<void*>(0x100);
+
+    Fw::Time ts(TimeBase::TB_NONE, 6, 7);
+
+    bool r001Emitted = false;
+    bool r002Emitted = false;
+    bool r003Emitted = false;
+    bool r004Emitted = false;
+
+    // read and write normal values for each entry in the database with each status type
+    for (MeasurementStatus::t mstatValue = MeasurementStatus::OK; mstatValue <= MeasurementStatus::STALE;) {
+        MeasurementStatus mstat(mstatValue);
+        for (U32 entry = 0; entry < Svc::PolyDbCfg::PolyDbEntry::NUM_CONSTANTS; entry++) {
+            Svc::PolyDbCfg::PolyDbEntry dbEntry = static_cast<Svc::PolyDbCfg::PolyDbEntry::T>(entry);
+
+            if (not r001Emitted) {
+                REQUIREMENT("PDB-001");
+                r001Emitted = true;
+            }
+            this->invoke_to_setValue(0, dbEntry, mstat, ts, vals[entry % NUM_TEST_VALS]);
+            Fw::PolyType check;
+            if (not r003Emitted) {
+                REQUIREMENT("PDB-003");
+                r003Emitted = true;
+            }
+            Fw::Time checkTs;
+            MeasurementStatus checkStat;
+            this->invoke_to_getValue(0, dbEntry, checkStat, checkTs, check);
+            if (not r002Emitted) {
+                REQUIREMENT("PDB-002");
+                r002Emitted = true;
+            }
+            if (vals[entry % NUM_TEST_VALS].isF32() or vals[entry % NUM_TEST_VALS].isF64()) {
+                ASSERT_NE(check, vals[entry % NUM_TEST_VALS]);
+            } else {
+                ASSERT_EQ(check, vals[entry % NUM_TEST_VALS]);
+            }
+            ASSERT_EQ(checkTs, ts);
+            if (not r004Emitted) {
+                REQUIREMENT("PDB-004");
+                r004Emitted = true;
+            }
+            ASSERT_EQ(mstatValue, checkStat.e);
+        }
+        mstatValue = static_cast<MeasurementStatus::t>(mstatValue + 1);
+    }
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `PolyDbTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/PolyDbTester.cpp`](file--PolyDbTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/PolyDbTester.hpp`](file--PolyDbTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/PolyDbTestMain.cpp`](file--PolyDbTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/PolyDbTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PolyDbTester.hpp
+// \author tcanham
+// \brief  hpp file for PolyDb component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_PolyDbTester_HPP
+#define Svc_PolyDbTester_HPP
+
+#include "Svc/PolyDb/PolyDb.hpp"
+#include "Svc/PolyDb/PolyDbGTestBase.hpp"
+
+namespace Svc {
+
+class PolyDbTester : public PolyDbGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object PolyDbTester
+    PolyDbTester();
+
+    //! Destroy object PolyDbTester
+    ~PolyDbTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Do nominal testing
+    void runNominalReadWrite();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    PolyDb component;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `PolyDbTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/test/ut/PolyDbTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PolyDbTestMain.cpp
+// \author tcanham
+// \brief  cpp file for PolyDb component test main function
+// ======================================================================
+
+#include "Fw/Test/UnitTest.hpp"
+#include "PolyDbTester.hpp"
+
+TEST(CmdDispTestNominal, NominalReadWrite) {
+    TEST_CASE(104.1.1, "PolyDb Nominal Read/Write Test");
+
+    COMMENT(
+        "Read and write values to the database while varying"
+        "the measurement statuses.");
+
+    Svc::PolyDbTester tester;
+
+    tester.runNominalReadWrite();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

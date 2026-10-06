@@ -3,18 +3,397 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-selector.component.css`
 
-file--command-selector.component.css
-file--command-selector.component.html
-file--command-selector.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/command-selector.component.css`
+
+
+```css
+.pullRight {
+  float: right;
+}
+
+.primary-td .mat-icon {
+  margin-right: 7px;
+}
 ```
 
-## 항목
+### `command-selector.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/command-selector.component.css`](file--command-selector.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/command-selector.component.html`](file--command-selector.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/command-selector.component.ts`](file--command-selector.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/command-selector.component.html`
+
+
+```html
+<span #top></span>
+@if (breadcrumb$ | async; as breadcrumb) {
+  @if (breadcrumb.length) {
+    <ya-filter-bar>
+      <ya-breadcrumb-trail>
+        <ya-breadcrumb icon="account_tree" [action]="true" (click)="changeSystem('')" />
+        @for (item of breadcrumb; track item) {
+          <ya-breadcrumb [action]="true" (click)="changeSystem(item.system)" [label]="item.name" />
+        }
+      </ya-breadcrumb-trail>
+    </ya-filter-bar>
+  }
+}
+<ya-filter-bar>
+  <ya-search-filter
+    #searchFilter
+    [formControl]="filterControl"
+    placeholder="Search by name"
+    icon="search"
+    (onArrowDown)="selectNext()"
+    (onArrowUp)="selectPrevious()"
+    (onEnter)="applySelection()" />
+  <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="sendCommand" />
+</ya-filter-bar>
+
+@if (dataSource) {
+  <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+    <ng-container cdkColumnDef="name">
+      <th mat-header-cell *cdkHeaderCellDef>Name</th>
+      <td mat-cell *cdkCellDef="let item" class="primary-td">
+        @if (item.system) {
+          <mat-icon class="icon12" style="vertical-align: middle">folder</mat-icon>
+          <a href="" (click)="selectRow(item)">{{ item.name | filename }}/</a>
+        }
+        @if (item.command) {
+          <mat-icon class="icon12" style="vertical-align: middle">rss_feed</mat-icon>
+          <a href="" (click)="selectRow(item)">
+            @if (system) {
+              <ya-highlight
+                [text]="item.command.qualifiedName | slice: system!.length + 1"
+                [term]="filterControl.value" />
+            } @else {
+              <ya-highlight [text]="item.command.qualifiedName" [term]="filterControl.value" />
+            }
+          </a>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="shortDescription">
+      <th mat-header-cell *cdkHeaderCellDef>Description</th>
+      <td mat-cell *cdkCellDef="let item" class="wrap200">
+        @if (item.system) {
+          {{ item.system.shortDescription || "-" }}
+        }
+        @if (item.command) {
+          @if (item.command.shortDescription; as desc) {
+            <ya-highlight [text]="desc" [term]="filterControl.value" />
+          } @else {
+            -
+          }
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="significance">
+      <th mat-header-cell *cdkHeaderCellDef>Significance</th>
+      <td mat-cell *cdkCellDef="let item">
+        @if (item.command?.effectiveSignificance; as significance) {
+          <app-significance-level [level]="significance.consequenceLevel" />
+        } @else {
+          -
+        }
+      </td>
+    </ng-container>
+
+    @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+      <ng-container [matColumnDef]="aliasColumn.id">
+        <th mat-header-cell *matHeaderCellDef>
+          {{ aliasColumn.label }}
+        </th>
+        <td mat-cell *matCellDef="let item">
+          @if (item.command | alias: aliasColumn.id; as name) {
+            <ya-highlight [text]="name" [term]="filterControl.value" />
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+    }
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+      [class.selected]="selection.isSelected(row)"></tr>
+  </table>
+}
+
+<mat-paginator
+  [pageSize]="pageSize"
+  [hidePageSize]="true"
+  [showFirstLastButtons]="true"
+  [length]="dataSource.totalSize$ | async" />
+```
+
+### `command-selector.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/command-selector.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+} from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import {
+  Command,
+  GetCommandsOptions,
+  SpaceSystem,
+  WebappSdkModule,
+  YaColumnChooser,
+  YaColumnInfo,
+  YamcsService,
+  YaSearchFilter,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { CommandsDataSource } from '../../commanding/command-sender/send-command/commands.datasource';
+import { SignificanceLevelComponent } from '../significance-level/significance-level.component';
+
+@Component({
+  selector: 'app-command-selector',
+  templateUrl: './command-selector.component.html',
+  styleUrl: './command-selector.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CommandSelectorComponent),
+      multi: true,
+    },
+  ],
+  imports: [SignificanceLevelComponent, WebappSdkModule],
+})
+export class CommandSelectorComponent
+  implements ControlValueAccessor, AfterViewInit
+{
+  @Input()
+  path: string;
+
+  pageSize = 100;
+
+  system: string | null = null;
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  @ViewChild('searchFilter')
+  searchFilter: YaSearchFilter;
+
+  filterControl = new UntypedFormControl();
+
+  dataSource: CommandsDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'significance', label: 'Significance', visible: true },
+    { id: 'shortDescription', label: 'Description' },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  // Added dynamically based on actual commands.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  selection = new SelectionModel<ListItem>(false);
+  selectedCommand$ = new BehaviorSubject<ListItem | null>(null);
+
+  private onChange = (_: Command | null) => {};
+  private onTouched = () => {};
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetection: ChangeDetectorRef,
+  ) {
+    this.dataSource = new CommandsDataSource(yamcs);
+    this.selectedCommand$.subscribe(async (item) => {
+      if (item && item.command) {
+        const commandDetail = await this.yamcs.yamcsClient.getCommand(
+          this.yamcs.instance!,
+          item.command.qualifiedName,
+        );
+        return this.onChange(commandDetail);
+      } else {
+        return this.onChange(null);
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.changeSystem('');
+    this.searchFilter.filter.nativeElement.focus();
+    this.filterControl.valueChanges.subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.updateDataSource();
+    });
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  changeSystem(system: string, page = 0) {
+    this.system = system;
+    this.updateBrowsePath();
+    this.paginator.pageIndex = page;
+    this.updateDataSource();
+  }
+
+  private updateDataSource() {
+    const options: GetCommandsOptions = {
+      system: this.system || '/',
+      noAbstract: true,
+      details: true,
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+      fields: [
+        'name',
+        'qualifiedName',
+        'alias',
+        'effectiveSignificance',
+        'shortDescription',
+      ],
+    };
+    const filterValue = this.filterControl.value;
+    if (filterValue) {
+      options.q = filterValue.toLowerCase();
+    }
+    this.dataSource.loadCommands(options).then(() => {
+      this.selection.clear();
+      this.updateBrowsePath();
+
+      // Reset alias columns
+      for (const aliasColumn of this.aliasColumns$.value) {
+        const idx = this.columns.indexOf(aliasColumn);
+        if (idx !== -1) {
+          this.columns.splice(idx, 1);
+        }
+      }
+      const aliasColumns = [];
+      for (const namespace of this.dataSource.getAliasNamespaces()) {
+        const aliasColumn = {
+          id: namespace,
+          label: namespace,
+          alwaysVisible: true,
+        };
+        aliasColumns.push(aliasColumn);
+      }
+      this.columns.splice(1, 0, ...aliasColumns); // Insert after name column
+      this.aliasColumns$.next(aliasColumns);
+      this.columnChooser.recalculate(this.columns);
+    });
+  }
+
+  selectRow(row: ListItem) {
+    if (row.system) {
+      this.selectedCommand$.next(null);
+      this.changeSystem(row.name);
+    } else {
+      this.selectedCommand$.next(row);
+    }
+    return false;
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    if (this.system) {
+      for (const part of this.system.slice(1).split('/')) {
+        path += '/' + part;
+        breadcrumb.push({
+          name: part,
+          system: path,
+        });
+      }
+    }
+    this.breadcrumb$.next(breadcrumb);
+  }
+
+  selectNext() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.items$.value;
+      if (item.command && items.indexOf(item) !== -1) {
+        this.selectRow(item);
+      }
+    }
+  }
+
+  writeValue(value: any) {
+    this.path = value;
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
+  }
+}
+
+export class ListItem {
+  name: string;
+  system?: SpaceSystem;
+  command?: Command;
+}
+
+export interface BreadCrumbItem {
+  name: string;
+  system: string;
+}
+```

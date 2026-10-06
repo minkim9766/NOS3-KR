@@ -3,7 +3,7 @@
 
 **경로:** `components/novatel_oem615/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,21 +12,237 @@
 fsw/index
 gsw/index
 sim/index
-file--%2Cgitignore
-file--.clang-format
-file--.git
-file--.gitignore
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/novatel_oem615/.github/`](.github/index) — 폴더
-- [`components/novatel_oem615/fsw/`](fsw/index) — 폴더
-- [`components/novatel_oem615/gsw/`](gsw/index) — 폴더
-- [`components/novatel_oem615/sim/`](sim/index) — 폴더
-- [`components/novatel_oem615/,gitignore`](file--%2Cgitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `,gitignore`
+
+**경로:** `components/novatel_oem615/,gitignore`
+
+
+```text
+fsw/standalone/build
+```
+
+### `.clang-format`
+
+**경로:** `components/novatel_oem615/.clang-format`
+
+
+```text
+---
+Language:        Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands:   true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit:     120
+CommentPragmas:  ''
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+ExperimentalAutoDetectBinPacking: false
+ForEachMacros: []
+IncludeBlocks:   Preserve
+IncludeCategories:  []
+IncludeIsMainRegex: '$'
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWidth:     4
+KeepEmptyLinesAtTheStartOfBlocks: true
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments:  true
+SortIncludes:    false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpaceBeforeCpp11BracedList: true
+SpacesBeforeTrailingComments: 1
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard:        c++11
+TabWidth:        8
+UseTab:          Never
+```
+
+### `.git`
+
+**경로:** `components/novatel_oem615/.git`
+
+
+```text
+gitdir: ../../.git/modules/components/novatel_oem615
+```
+
+### `.gitignore`
+
+**경로:** `components/novatel_oem615/.gitignore`
+
+
+```text
+#
+# Metadata
+#
+.vagrant
+.vscode
+
+#
+# Build Files
+#
+build
+fprime/build
+fsw/standalone/build
+tmp
+.cdskeyfile
+.reservedkeyfile
+.resetkeyfile
+```
+
+### `README.md`
+
+**경로:** `components/novatel_oem615/README.md`
+
+
+````markdown
+# NovAtel OEM 615 - cFS Application
+
+This repository contains the NovAtel OEM 615 cFS application.
+This includes flight software (FSW), ground software (GSW), simulation, and support directories.
+
+## Documentation
+Currently support exists for the following versions:
+* [OEM615 Dual-Frequency GNSS Receiver](https://www.novatel.com/products/gnss-receivers/oem-receiver-boards/oem6-receivers/oem615/)
+
+## Overview
+This novatel_oem615 component is a USART device that accepts multiple commands including requests for telemetry. 
+The available FSW is for use in the core Flight System (cFS) while the GSw supports COSMOS.
+A NOS3 simulation is available which includes a 42 data provider.
+
+# Device Communications
+The protocol, commands, and responses of the component are captured below.
+
+## Protocol
+The protocol in use is Universal Synchronous/Asynchronous Receiver/Transmitter (USART). The novatel_oem615 operates on the usart_1 bus on the spacecraft under handle/node-port 1.
+
+## Commands
+The commands for the novatel_oem615 include LOG, LOGALL, UNLOG, and SERIALCONFIG, as well as generic commands expected of all NOS3 components (NOOP, Request HK, Request Data, RESET_COUNTERS, ENABLE, DISABLE). Note that RESET_COUNTERS, ENABLE, and DISABLE do not communicate with the sim.
+
+## Response
+Response formats are as follows:
+* Generic Commands (Hex)
+  - uint16, 0xDEAD
+  - uint8, command code
+  - uint32, payload
+  - uint16, 0xBEEF
+* Novatel Commands (ASCII)
+  - LOG COM [log type] ONTIME [period options]
+    * [log types] = [BESTXYZA, GPGGA, RANGECMPA, BESTXYZB, RANGECMPB]
+    * [period options] = [ONCE, 0.05, 0.1, 0.2, 0.25, 0.5]
+  - UNLOG COM [log type]
+    * [log types] = [BESTXYZA, GPGGA, RANGECMPA, BESTXYZB, RANGECMPB]
+  - UNLOGALL
+  - SERIALCONFIG
+
+# Configuration
+The various configuration parameters available for each portion of the component are captured below.
+
+## FSW
+Refer to the file [fsw/platform_inc/novatel_oem615_platform_cfg.h](fsw/platform_inc/novatel_oem615_platform_cfg.h) for the default
+configuration settings, as well as a summary on overriding parameters in mission-specific repositories.
+
+## Simulation
+```
+<simulator>
+    <name>gps</name>
+    <active>true</active>
+    <library>libgps_sim.so</library>
+    <hardware-model>
+        <type>OEM615</type>
+        <connections>
+            <!-- <connection><type>command</type><bus-name>command</bus-name><node-name>gps-command</node-name></connection> -->
+            <connection><type>usart</type>
+                <bus-name>usart_1</bus-name>
+                <node-port>1</node-port>
+            </connection>
+        </connections>
+        <data-provider>               
+            <type>GPS42SOCKET</type>
+            <hostname>localhost</hostname>
+            <port>4245</port>
+            <max-connection-attempts>5</max-connection-attempts>
+            <retry-wait-seconds>5</retry-wait-seconds>
+            <spacecraft>0</spacecraft>
+            <GPS>0</GPS>
+            <leap-seconds>37</leap-seconds>
+        </data-provider>               
+        <!-- <data-provider>               
+            <type>GPSFILE</type>
+            <filename>gps_data.42</filename>
+        </data-provider> -->
+    </hardware-model>
+</simulator>
+```
+
+## 42
+Optionally the 42 data provider can be configured in the `nos3-simulator.xml`:
+```
+        <data-provider>               
+            <type>GPS42SOCKET</type>
+            <hostname>localhost</hostname>
+            <port>4245</port>
+            <max-connection-attempts>5</max-connection-attempts>
+            <retry-wait-seconds>5</retry-wait-seconds>
+            <spacecraft>0</spacecraft>
+            <GPS>0</GPS>
+            <leap-seconds>37</leap-seconds>
+        </data-provider>      
+```
+
+## Releases
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
+* v1.0.0 - X/Y/Z 
+  - Updated to be a component repository including FSW, GSW, Sim, and Standalone checkout
+* v0.1.0 - 10/9/2021 
+  - Initial release with version tagging
+
+## Legal 
+If this project interests you or if you have any questions, please feel free to contact any developer.
+
+### License
+This project is licensed under the NOSA (NASA Open Source Agreement) License. 
+
+### Acknowledgments
+* Special thanks to all the developers involved!
+````

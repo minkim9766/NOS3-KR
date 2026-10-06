@@ -3,18 +3,363 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-list.component.html`
 
-file--command-list.component.html
-file--command-list.component.ts
-file--commands.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/command-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Commands" />
+  <span #top></span>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter
+        [formControl]="filterControl"
+        placeholder="Filter commands"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="mdb-commands" />
+    </ya-filter-bar>
+
+    @if (dataSource) {
+      <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+        <ng-container matColumnDef="significance">
+          <th mat-header-cell *matHeaderCellDef>Significance</th>
+          <td mat-cell *matCellDef="let command">
+            @if (command.significance) {
+              <app-significance-level [level]="command.significance.consequenceLevel" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let command">
+            <a
+              [routerLink]="['/mdb/commands', command.qualifiedName]"
+              [queryParams]="{ c: yamcs.context }">
+              <ya-highlight
+                [text]="shortName ? command.name : command.qualifiedName"
+                [term]="filterControl.value" />
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="abstract">
+          <th mat-header-cell *matHeaderCellDef>Abstract</th>
+          <td mat-cell *matCellDef="let command">
+            {{ command.abstract ? "Yes" : "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let command" class="wrap400">
+            @if (command.shortDescription; as desc) {
+              <ya-highlight [text]="desc" [term]="filterControl.value" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+
+        @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+          <ng-container [matColumnDef]="aliasColumn.id">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ aliasColumn.label }}
+            </th>
+            <td mat-cell *matCellDef="let command">
+              @if (command | alias: aliasColumn.id; as name) {
+                <ya-highlight [text]="name" [term]="filterControl.value" />
+              } @else {
+                -
+              }
+            </td>
+          </ng-container>
+        }
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          [class.selected]="selection.isSelected(row)"></tr>
+      </table>
+    }
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [length]="dataSource.totalSize$ | async" />
+  </ya-panel>
+</ya-instance-page>
+
+<ng-template #empty>
+  <ya-panel>
+    The Mission Database for
+    <i>{{ yamcs.instance }}</i>
+    does not define any commands.
+  </ya-panel>
+</ng-template>
 ```
 
-## 항목
+### `command-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/command-list.component.html`](file--command-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/command-list.component.ts`](file--command-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/commands.datasource.ts`](file--commands.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/command-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Command,
+  GetCommandsOptions,
+  MessageService,
+  WebappSdkModule,
+  YaColumnChooser,
+  YaColumnInfo,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+import { CommandsDataSource } from './commands.datasource';
+
+@Component({
+  templateUrl: './command-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule, SignificanceLevelComponent],
+})
+export class CommandListComponent implements AfterViewInit {
+  shortName = false;
+  pageSize = 100;
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  filterControl = new UntypedFormControl();
+
+  dataSource: CommandsDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'significance', label: 'Significance', visible: true },
+    { id: 'abstract', label: 'Abstract', visible: true },
+    { id: 'shortDescription', label: 'Description' },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  // Added dynamically based on actual commands.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  selection = new SelectionModel<Command>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Commands');
+    this.dataSource = new CommandsDataSource(yamcs);
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    this.filterControl.setValue(queryParams.get('filter'));
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.updateDataSource();
+    });
+
+    if (queryParams.has('page')) {
+      this.paginator.pageIndex = Number(queryParams.get('page'));
+    }
+    this.updateDataSource();
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetCommandsOptions = {
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+      fields: [
+        'name',
+        'qualifiedName',
+        'alias',
+        'significance',
+        'abstract',
+        'shortDescription',
+      ],
+    };
+    const filterValue = this.filterControl.value;
+    if (filterValue) {
+      options.q = filterValue.toLowerCase();
+    }
+    this.dataSource
+      .loadCommands(options)
+      .then(() => {
+        this.selection.clear();
+
+        // Reset alias columns
+        for (const aliasColumn of this.aliasColumns$.value) {
+          const idx = this.columns.indexOf(aliasColumn);
+          if (idx !== -1) {
+            this.columns.splice(idx, 1);
+          }
+        }
+        const aliasColumns = [];
+        for (const namespace of this.dataSource.getAliasNamespaces()) {
+          const aliasColumn = {
+            id: namespace,
+            label: namespace,
+            alwaysVisible: true,
+          };
+          aliasColumns.push(aliasColumn);
+        }
+        this.columns.splice(1, 0, ...aliasColumns); // Insert after name column
+        this.aliasColumns$.next(aliasColumns);
+        this.columnChooser.recalculate(this.columns);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectNext() {
+    const items = this.dataSource.commands$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.commands$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.commands$.value;
+      if (items.indexOf(item) !== -1) {
+        this.router.navigate(['/mdb/commands', item.qualifiedName], {
+          queryParams: { c: this.yamcs.context },
+        });
+      }
+    }
+  }
+}
+```
+
+### `commands.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-list/commands.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import { Command, GetCommandsOptions, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class CommandsDataSource extends DataSource<Command> {
+  commands$ = new BehaviorSubject<Command[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private yamcs: YamcsService) {
+    super();
+  }
+
+  connect() {
+    return this.commands$;
+  }
+
+  loadCommands(options: GetCommandsOptions) {
+    this.loading$.next(true);
+    return this.yamcs.yamcsClient
+      .getCommands(this.yamcs.instance!, options)
+      .then((page) => {
+        this.loading$.next(false);
+        this.totalSize$.next(page.totalSize);
+        this.commands$.next(page.commands || []);
+      });
+  }
+
+  getAliasNamespaces() {
+    const namespaces: string[] = [];
+    for (const command of this.commands$.value) {
+      if (command.alias) {
+        for (const alias of command.alias) {
+          if (alias.namespace && namespaces.indexOf(alias.namespace) === -1) {
+            namespaces.push(alias.namespace);
+          }
+        }
+      }
+    }
+    return namespaces.sort();
+  }
+
+  disconnect() {
+    this.commands$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -43,164 +43,9197 @@ timeline/index
 utils/index
 xtce/index
 yarch/index
-file--AbstractPlugin.java
-file--AbstractProcessorService.java
-file--AbstractYamcsService.java
-file--CommandOption.java
-file--CommandOptionListener.java
-file--ConfigScope.java
-file--ConfigurationException.java
-file--ContainerExtractionResult.java
-file--CrashHandler.java
-file--ErrorInCommand.java
-file--EventCrashHandler.java
-file--Experimental.java
-file--FileBasedConfigurationResolver.java
-file--GuardedBy.java
-file--InitException.java
-file--InstanceMetadata.java
-file--InstanceStateListener.java
-file--InvalidIdentification.java
-file--InvalidRequestIdentification.java
-file--LimitExceededException.java
-file--LogCrashHandler.java
-file--NoPermissionException.java
-file--NotThreadSafe.java
-file--PacketTooSmallException.java
-file--Plugin.java
-file--PluginException.java
-file--PluginManager.java
-file--PluginMetadata.java
-file--Processor.java
-file--ProcessorConfig.java
-file--ProcessorCreatorService.java
-file--ProcessorException.java
-file--ProcessorFactory.java
-file--ProcessorListener.java
-file--ProcessorService.java
-file--ProcessorServiceWithConfig.java
-file--ProcessRunner.java
-file--ReadyListener.java
-file--ServiceWithConfig.java
-file--Spec.java
-file--StandardTupleDefinitions.java
-file--StreamConfig.java
-file--StreamInitializer.java
-file--StreamTcCommandReleaser.java
-file--StreamTmPacketProvider.java
-file--ThreadSafe.java
-file--TmPacket.java
-file--TmPacketProvider.java
-file--TmProcessor.java
-file--UncheckedYamcsException.java
-file--ValidationException.java
-file--YamcsException.java
-file--YamcsInstanceService.java
-file--YamcsServer.java
-file--YamcsServerInstance.java
-file--YamcsServerOptions.java
-file--YamcsService.java
-file--YamcsVersion.java
-file--YConfiguration.java
-file--YConfigurationPropertyProvider.java
-file--YConfigurationResolver.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/`](actions/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/`](activities/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/`](alarms/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/`](algo/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algorithms/`](algorithms/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/`](archive/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/`](buckets/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/`](cascading/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/`](cfdp/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/`](cli/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/`](cmdhistory/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/`](commanding/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/`](container/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/`](events/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/external/`](external/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/`](filetransfer/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/`](http/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/logging/`](logging/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/`](management/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/memento/`](memento/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/`](parameter/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameterarchive/`](parameterarchive/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/`](plists/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/`](pus/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/`](replication/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/rs/`](rs/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/`](security/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/`](tctm/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/`](templating/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/`](time/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/`](timeline/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/`](utils/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/xtce/`](xtce/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/`](yarch/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/AbstractPlugin.java`](file--AbstractPlugin.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/AbstractProcessorService.java`](file--AbstractProcessorService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/AbstractYamcsService.java`](file--AbstractYamcsService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/CommandOption.java`](file--CommandOption.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/CommandOptionListener.java`](file--CommandOptionListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ConfigScope.java`](file--ConfigScope.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ConfigurationException.java`](file--ConfigurationException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ContainerExtractionResult.java`](file--ContainerExtractionResult.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/CrashHandler.java`](file--CrashHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ErrorInCommand.java`](file--ErrorInCommand.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/EventCrashHandler.java`](file--EventCrashHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Experimental.java`](file--Experimental.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/FileBasedConfigurationResolver.java`](file--FileBasedConfigurationResolver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/GuardedBy.java`](file--GuardedBy.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InitException.java`](file--InitException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InstanceMetadata.java`](file--InstanceMetadata.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InstanceStateListener.java`](file--InstanceStateListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InvalidIdentification.java`](file--InvalidIdentification.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InvalidRequestIdentification.java`](file--InvalidRequestIdentification.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/LimitExceededException.java`](file--LimitExceededException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/LogCrashHandler.java`](file--LogCrashHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/NoPermissionException.java`](file--NoPermissionException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/NotThreadSafe.java`](file--NotThreadSafe.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PacketTooSmallException.java`](file--PacketTooSmallException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Plugin.java`](file--Plugin.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PluginException.java`](file--PluginException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PluginManager.java`](file--PluginManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PluginMetadata.java`](file--PluginMetadata.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Processor.java`](file--Processor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorConfig.java`](file--ProcessorConfig.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorCreatorService.java`](file--ProcessorCreatorService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorException.java`](file--ProcessorException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorFactory.java`](file--ProcessorFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorListener.java`](file--ProcessorListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorService.java`](file--ProcessorService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorServiceWithConfig.java`](file--ProcessorServiceWithConfig.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessRunner.java`](file--ProcessRunner.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ReadyListener.java`](file--ReadyListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ServiceWithConfig.java`](file--ServiceWithConfig.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Spec.java`](file--Spec.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StandardTupleDefinitions.java`](file--StandardTupleDefinitions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamConfig.java`](file--StreamConfig.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamInitializer.java`](file--StreamInitializer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamTcCommandReleaser.java`](file--StreamTcCommandReleaser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamTmPacketProvider.java`](file--StreamTmPacketProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ThreadSafe.java`](file--ThreadSafe.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/TmPacket.java`](file--TmPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/TmPacketProvider.java`](file--TmPacketProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/TmProcessor.java`](file--TmProcessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/UncheckedYamcsException.java`](file--UncheckedYamcsException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ValidationException.java`](file--ValidationException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsException.java`](file--YamcsException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsInstanceService.java`](file--YamcsInstanceService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsServer.java`](file--YamcsServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsServerInstance.java`](file--YamcsServerInstance.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsServerOptions.java`](file--YamcsServerOptions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsService.java`](file--YamcsService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsVersion.java`](file--YamcsVersion.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YConfiguration.java`](file--YConfiguration.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YConfigurationPropertyProvider.java`](file--YConfigurationPropertyProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YConfigurationResolver.java`](file--YConfigurationResolver.java) — UTF-8 텍스트 파일 본문 포함
+### `AbstractPlugin.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/AbstractPlugin.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.IOException;
+
+import org.yamcs.http.HttpServer;
+import org.yamcs.logging.Log;
+
+public abstract class AbstractPlugin implements Plugin {
+
+    protected final Log log = new Log(getClass());
+    protected final YamcsServer yamcs = YamcsServer.getServer();
+    protected String pluginName;
+    protected String pluginVersion;
+    protected YConfiguration config;
+
+    @Override
+    public final void onLoad(YConfiguration config) throws PluginException {
+        this.config = config;
+
+        var metadata = yamcs.getPluginManager().getMetadata(getClass());
+        pluginName = metadata.getName();
+        pluginVersion = metadata.getVersion();
+
+        importProtobufDefinitions();
+        init();
+    }
+
+    public abstract void init() throws PluginException;
+
+    /**
+     * Attempt to load a binary description of the protobuf definitions, if found at the expected location. Or fail
+     * quietly.
+     */
+    private void importProtobufDefinitions() throws PluginException {
+        var httpServer = yamcs.getGlobalService(HttpServer.class);
+        if (httpServer != null) {
+            try (var in = getClass().getResourceAsStream("/" + pluginName + ".protobin")) {
+                if (in != null) {
+                    log.trace("Loading {} protobuf definitions", pluginName);
+                    httpServer.getProtobufRegistry().importDefinitions(in);
+                }
+            } catch (IOException e) {
+                throw new PluginException(e);
+            }
+        }
+    }
+
+    public Log getLog() {
+        return log;
+    }
+
+    public YConfiguration getConfig() {
+        return config;
+    }
+}
+```
+
+### `AbstractProcessorService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/AbstractProcessorService.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.logging.Log;
+
+import com.google.common.util.concurrent.AbstractService;
+
+public abstract class AbstractProcessorService extends AbstractService implements ProcessorService {
+    protected Processor processor;
+    protected YConfiguration config;
+    protected Log log;
+
+    @Override
+    public void init(Processor proc, YConfiguration config, Object spec) {
+        this.processor = proc;
+        this.config = config;
+        log = new Log(getClass(), proc.getInstance());
+        log.setContext(proc.getName());
+    }
+
+    public String getYamcsInstance() {
+        return processor.getInstance();
+    }
+
+    public YConfiguration getConfig() {
+        return config;
+    }
+}
+```
+
+### `AbstractYamcsService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/AbstractYamcsService.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+
+import com.google.common.util.concurrent.AbstractService;
+
+public abstract class AbstractYamcsService extends AbstractService implements YamcsService {
+    protected String yamcsInstance;
+    protected String serviceName;
+    protected YConfiguration config;
+    protected Log log;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        this.yamcsInstance = yamcsInstance;
+        this.serviceName = serviceName;
+        this.config = config;
+        log = new Log(getClass(), yamcsInstance);
+    }
+
+    @Override
+    public String getYamcsInstance() {
+        return yamcsInstance;
+    }
+
+    public YConfiguration getConfig() {
+        return config;
+    }
+
+    /**
+     * looks for a stream with a given name and throws an exception if it cannot be found
+     */
+    protected Stream findStream(String streamName) throws ConfigurationException {
+        var ydb = YarchDatabase.getInstance(yamcsInstance);
+        var stream = ydb.getStream(streamName);
+
+        if (stream == null) {
+            throw new ConfigurationException("Cannot find stream '" + streamName + "'");
+        }
+
+        return stream;
+    }
+}
+```
+
+### `CommandOption.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/CommandOption.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.util.Timestamps;
+
+/**
+ * A command option. Instances of this class should be registered once, system-wide, against an instance of
+ * {@link YamcsServer}. While not enforced, it is preferred to use a {@link Plugin#onLoad(YConfiguration)} hook as this
+ * will guarantee that the registration is done only once.
+ */
+public class CommandOption {
+
+    public enum CommandOptionType {
+        BOOLEAN,
+        NUMBER,
+        STRING,
+        TIMESTAMP,
+    }
+
+    private final String id;
+    private final String verboseName;
+    private final CommandOptionType type;
+    private String help;
+
+    /**
+     * Create a new command option.
+     * 
+     * @param id
+     *            a system-wide unique identifier for this option. This identifier will be used by clients when
+     *            submitting commands, and will also be used for storage in Command History.
+     * @param verboseName
+     *            a human-readable name for this option. Used by UI clients.
+     * @param type
+     *            the expected type of option values. UI clients may use this to enforce specific controls.
+     */
+    public CommandOption(String id, String verboseName, CommandOptionType type) {
+        this.id = id;
+        this.verboseName = verboseName;
+        this.type = type;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getVerboseName() {
+        return verboseName;
+    }
+
+    public CommandOptionType getType() {
+        return type;
+    }
+
+    /**
+     * Specify detailed guidance on how to use this attribute. UI clients may use this to show to users.
+     */
+    public CommandOption withHelp(String help) {
+        this.help = help;
+        return this;
+    }
+
+    public String getHelp() {
+        return help;
+    }
+
+    /**
+     * Returns a new value whose type matches more closely the type of this command option.
+     * <p>
+     * The purpose here, is that we want to be forgiving on clients that run commands, while at the same time be more
+     * specific when it is recorded in Command History, or passed to a link.
+     */
+    public Value coerceValue(Value value) {
+        switch (type) {
+        case BOOLEAN:
+            switch (value.getType()) {
+            case STRING:
+                var booleanValue = "true".equals(value.getStringValue());
+                return Value.newBuilder()
+                        .setType(Value.Type.BOOLEAN)
+                        .setBooleanValue(booleanValue)
+                        .build();
+            case BOOLEAN:
+                return value;
+            default:
+                throw new IllegalArgumentException("Command option cannot be converted to boolean");
+            }
+        case NUMBER:
+            switch (value.getType()) {
+            case STRING:
+                var numberValue = Double.parseDouble(value.getStringValue());
+                return Value.newBuilder()
+                        .setType(Value.Type.DOUBLE)
+                        .setDoubleValue(numberValue)
+                        .build();
+            case DOUBLE:
+            case FLOAT:
+            case SINT32:
+            case SINT64:
+            case UINT32:
+            case UINT64:
+                return value;
+            default:
+                throw new IllegalArgumentException("Command option cannot be converted to number");
+            }
+        case STRING:
+            switch (value.getType()) {
+            case STRING:
+                return value;
+            default:
+                throw new IllegalArgumentException("Command option cannot be converted to string");
+            }
+        case TIMESTAMP:
+            switch (value.getType()) {
+            case TIMESTAMP:
+                return value;
+            case STRING:
+                var ts = Timestamps.parseUnchecked(value.getStringValue());
+                return Value.newBuilder()
+                        .setType(Value.Type.TIMESTAMP)
+                        .setTimestampValue(TimeEncoding.fromProtobufTimestamp(ts))
+                        .build();
+            default:
+                throw new IllegalArgumentException("Command option cannot be converted to timestamp");
+            }
+        default:
+            throw new IllegalStateException("Unexpected type " + type);
+        }
+    }
+
+    /**
+     * Returns a new value whose type matches more closely the type of this command option.
+     * <p>
+     * The purpose here, is that we want to be forgiving on clients that run commands, while at the same time be more
+     * specific when it is recorded in Command History, or passed to a link.
+     */
+    public Value coerceValue(Object value) {
+        switch (type) {
+        case BOOLEAN:
+            if (value instanceof String) {
+                var booleanValue = "true".equals((String) value);
+                return Value.newBuilder()
+                        .setType(Value.Type.BOOLEAN)
+                        .setBooleanValue(booleanValue)
+                        .build();
+            } else if (value instanceof Boolean) {
+                return Value.newBuilder()
+                        .setType(Value.Type.BOOLEAN)
+                        .setBooleanValue((Boolean) value)
+                        .build();
+            } else {
+                throw new IllegalArgumentException("Command option cannot be converted to boolean");
+            }
+        case NUMBER:
+            if (value instanceof String) {
+                var numberValue = Double.parseDouble((String) value);
+                return Value.newBuilder()
+                        .setType(Value.Type.DOUBLE)
+                        .setDoubleValue(numberValue)
+                        .build();
+            } else if (value instanceof Double) {
+                return Value.newBuilder()
+                        .setType(Value.Type.DOUBLE)
+                        .setDoubleValue((Double) value)
+                        .build();
+            } else if (value instanceof Float) {
+                return Value.newBuilder()
+                        .setType(Value.Type.FLOAT)
+                        .setFloatValue((Float) value)
+                        .build();
+            } else if (value instanceof Integer) {
+                return Value.newBuilder()
+                        .setType(Value.Type.SINT32)
+                        .setSint32Value((Integer) value)
+                        .build();
+            } else if (value instanceof Long) {
+                return Value.newBuilder()
+                        .setType(Value.Type.SINT64)
+                        .setSint64Value((Integer) value)
+                        .build();
+            } else {
+                throw new IllegalArgumentException("Command option cannot be converted to number");
+            }
+        case STRING:
+            if (value instanceof String) {
+                return Value.newBuilder()
+                        .setType(Value.Type.STRING)
+                        .setStringValue((String) value)
+                        .build();
+            } else {
+                throw new IllegalArgumentException("Command option cannot be converted to string");
+            }
+        case TIMESTAMP:
+            if (value instanceof Long) {
+                return Value.newBuilder()
+                        .setType(Value.Type.TIMESTAMP)
+                        .setTimestampValue((long) value)
+                        .build();
+            } else if (value instanceof String) {
+                var ts = Timestamps.parseUnchecked((String) value);
+                return Value.newBuilder()
+                        .setType(Value.Type.TIMESTAMP)
+                        .setTimestampValue(TimeEncoding.fromProtobufTimestamp(ts))
+                        .build();
+            } else {
+                throw new IllegalArgumentException("Command option cannot be converted to timestamp");
+            }
+        default:
+            throw new IllegalStateException("Unexpected type " + type);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return verboseName;
+    }
+}
+```
+
+### `CommandOptionListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/CommandOptionListener.java`
+
+
+```java
+package org.yamcs;
+
+public interface CommandOptionListener {
+
+    void commandOptionAdded(CommandOption option);
+}
+```
+
+### `ConfigScope.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ConfigScope.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Represents a type of configuration file
+ */
+public enum ConfigScope {
+
+    /**
+     * Represents yamcs.yaml configuration. This file contains global configuration options.
+     */
+    YAMCS,
+
+    /**
+     * Represents yamcs.[instance].yaml configuration. Such files contain instance-specific configuration options.
+     */
+    YAMCS_INSTANCE
+}
+```
+
+### `ConfigurationException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ConfigurationException.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Exception thrown if there is an error in configuration.
+ *
+ * If the config problem is related to a file, the confPath is the something like
+ *  filename.yaml: key1-&gt;subkey2-&gt;subkey3...
+ *
+ * @author nm
+ *
+ */
+public class ConfigurationException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+    String confpath;
+    
+    public ConfigurationException(String message) {
+        super(message);
+    }
+
+    public ConfigurationException(Exception e) {
+        super(e);
+    }
+
+    public ConfigurationException(String confpath, String message) {
+        super(message);
+        this.confpath=confpath;
+    }
+
+    public ConfigurationException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public ConfigurationException(String confpath, String message, Throwable t) {
+        super(message, t);
+        this.confpath=confpath;
+    }
+
+    public ConfigurationException(YConfiguration config, String message) {
+        super(message);
+    }
+
+    @Override
+    public String toString() {
+        String message = getLocalizedMessage();
+        if(confpath!=null) {
+            return "Configuration error in '"+confpath+"': "+message;
+        } else {
+            return message;
+        }
+    }
+}
+```
+
+### `ContainerExtractionResult.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ContainerExtractionResult.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.xtce.SequenceContainer;
+
+/**
+ * Holds the definition of a container, the content of its slice and some positioning information inside that slice
+ */
+public class ContainerExtractionResult {
+    private final SequenceContainer container;
+    private final byte[] containerContent;
+    private final int offset;
+    private final int bitPosition;
+
+    private final long acquisitionTime;
+    private final long generationTime;
+    private final int seqCount;
+
+    final boolean derivedFromRoot;
+
+    public ContainerExtractionResult(SequenceContainer container,
+            byte[] containerContent,
+            int offset,
+            int bitPosition,
+            long acquisitionTime,
+            long generationTime,
+            int seqCount,
+            boolean derivedFromRoot) {
+        this.container = container;
+        this.containerContent = containerContent;
+        this.offset = offset;
+        this.bitPosition = bitPosition;
+        this.acquisitionTime = acquisitionTime;
+        this.generationTime = generationTime;
+        this.seqCount = seqCount;
+        this.derivedFromRoot = derivedFromRoot;
+    }
+
+    public SequenceContainer getContainer() {
+        return container;
+    }
+
+    public byte[] getContainerContent() {
+        return containerContent;
+    }
+
+    /**
+     * @return the position in bits where the entries defined in this container start
+     */
+    public int getLocationInContainerInBits() {
+        return offset * 8 + bitPosition;
+    }
+
+    /**
+     * 
+     * @return the position in bytes where this container including parent hierarchy starts
+     */
+    public int getOffset() {
+        return offset;
+    }
+
+    public long getAcquisitionTime() {
+        return acquisitionTime;
+    }
+
+    public long getGenerationTime() {
+        return generationTime;
+    }
+
+    /**
+     * 
+     * Return true if this inherits (directly or indirectly) from the root container.
+     * <p>
+     * Return false if this does not inherit from the root container - that means is obtained through container
+     * composition rather than inheritance
+     */
+    public boolean isDerivedFromRoot() {
+        return derivedFromRoot;
+    }
+
+    public int getSeqCount() {
+        return seqCount;
+    }
+
+    @Override
+    public String toString() {
+        return container.toString();
+    }
+
+
+}
+```
+
+### `CrashHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/CrashHandler.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * 
+ * CrashHandler is used to handle extreme problems that need to reach operator (or sysadmin) attention.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public interface CrashHandler {
+    public void handleCrash(String type, String msg);
+}
+```
+
+### `ErrorInCommand.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ErrorInCommand.java`
+
+
+```java
+package org.yamcs;
+
+@SuppressWarnings("serial")
+public class ErrorInCommand extends YamcsException {
+
+    public ErrorInCommand(String message) {
+        super(message);
+    }
+}
+```
+
+### `EventCrashHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/EventCrashHandler.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+
+/**
+ * Crash handler that reports events via an event producer
+ * 
+ * Created by msc on 28/11/16.
+ */
+public class EventCrashHandler implements CrashHandler {
+
+    private EventProducer eventProducer;
+    private boolean sendingError;
+
+    public EventCrashHandler(String instanceName) {
+        eventProducer = EventProducerFactory.getEventProducer(instanceName);
+        eventProducer.setSource("CrashHandler");
+    }
+
+    @Override
+    public synchronized void handleCrash(String type, String msg) {
+        if (sendingError) {
+            return;
+        }
+        try {
+            sendingError = true;
+            eventProducer.sendSevere(type, msg);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sendingError = false;
+    }
+}
+```
+
+### `Experimental.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Experimental.java`
+
+
+```java
+package org.yamcs;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * Marks a class or method as experimental. This means that it may be changed or removed without needing a deprecation
+ * phase in the future.
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target({ ElementType.TYPE, ElementType.METHOD })
+@Documented
+public @interface Experimental {
+
+    /**
+     * Optional information on this feature.
+     */
+    String value() default "";
+}
+```
+
+### `FileBasedConfigurationResolver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/FileBasedConfigurationResolver.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.YConfiguration.ConfigurationNotFoundException;
+
+/**
+ * A file-based configuration resolver.
+ */
+public class FileBasedConfigurationResolver implements YConfigurationResolver {
+
+    private List<Path> configDirectories;
+
+    public FileBasedConfigurationResolver(Path... configDirectories) {
+        this.configDirectories = Arrays.asList(configDirectories);
+    }
+
+    @Override
+    public InputStream getConfigurationStream(String name) throws ConfigurationException {
+        if (name.startsWith("/")) { // YConfiguration gives us a something that looks like a classpath resource
+            name = name.substring(1);
+        }
+
+        for (Path configDirectory : configDirectories) {
+            Path file = configDirectory.resolve(name).normalize().toAbsolutePath();
+            if (Files.exists(file)) {
+                try {
+                    return new FileInputStream(file.toFile());
+                } catch (FileNotFoundException e) {
+                    throw new ConfigurationNotFoundException(String.format(
+                            "Cannot read file %s: %s", file, e.getMessage(), e));
+                }
+            }
+        }
+
+        throw new ConfigurationNotFoundException(String.format(
+                "Configuration file %s does not exist. Searched in: %s",
+                name, configDirectories));
+    }
+}
+```
+
+### `GuardedBy.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/GuardedBy.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * @author nm
+ * Annotation recommended by the book "Java Concurrency in Practice"
+ */
+public @interface GuardedBy {
+	String value();
+}
+```
+
+### `InitException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InitException.java`
+
+
+```java
+package org.yamcs;
+
+@SuppressWarnings("serial")
+public class InitException extends YamcsException {
+
+    public InitException(String message) {
+        super(message);
+    }
+
+    public InitException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public InitException(Throwable t) {
+        super(t);
+    }
+}
+```
+
+### `InstanceMetadata.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InstanceMetadata.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class InstanceMetadata {
+
+    private static final String LABELS = "labels";
+    private static final String TEMPLATE = "template";
+    private static final String TEMPLATE_SOURCE = "templateSource";
+    private static final String TEMPLATE_ARGS = "templateArgs";
+
+    private static final List<String> RESERVED = Arrays.asList(LABELS, TEMPLATE, TEMPLATE_SOURCE, TEMPLATE_ARGS);
+
+    private final Map<String, Object> map;
+
+    public InstanceMetadata() {
+        map = new HashMap<>();
+    }
+
+    public InstanceMetadata(Map<String, Object> map) {
+        this.map = new HashMap<>(map);
+    }
+
+    public String getLabel(String label) {
+        Map<String, String> labels = getLabels();
+        return labels.get(label);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getLabels() {
+        if (map.containsKey(LABELS)) {
+            return (Map<String, String>) map.get(LABELS);
+        }
+        return Collections.emptyMap();
+    }
+
+    public void setLabels(Map<String, String> labels) {
+        map.put(LABELS, labels);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void putLabel(String label, String value) {
+        Map<String, String> labels = (Map<String, String>) map.get(LABELS);
+        if (labels == null) {
+            labels = new HashMap<>();
+            map.put(LABELS, labels);
+        }
+        labels.put(label, value);
+    }
+
+    public String getTemplate() {
+        return (String) map.get(TEMPLATE);
+    }
+
+    public void setTemplate(String template) {
+        map.put(TEMPLATE, template);
+    }
+
+    public String getTemplateSource() {
+        return (String) map.get(TEMPLATE_SOURCE);
+    }
+
+    public void setTemplateSource(String templateSource) {
+        map.put(TEMPLATE_SOURCE, templateSource);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getTemplateArgs() {
+        if (map.containsKey(TEMPLATE_ARGS)) {
+            return (Map<String, Object>) map.get(TEMPLATE_ARGS);
+        }
+        return Collections.emptyMap();
+    }
+
+    public void setTemplateArgs(Map<String, Object> templateArgs) {
+        map.put(TEMPLATE_ARGS, templateArgs);
+    }
+
+    public Object get(Object key) {
+        return map.get(key);
+    }
+
+    public Object getOrDefault(Object key, Object defaultValue) {
+        return map.getOrDefault(key, defaultValue);
+    }
+
+    public Object put(String key, Object value) {
+        if (RESERVED.contains(key)) {
+            throw new IllegalArgumentException(String.format(
+                    "'%s' is a reserved key", key));
+        }
+        return map.put(key, value);
+    }
+
+    /**
+     * Returns an unmodifiable map view of this metadata.
+     */
+    public Map<String, Object> toMap() {
+        return Collections.unmodifiableMap(map);
+    }
+
+    @Override
+    public String toString() {
+        return map.toString();
+    }
+}
+```
+
+### `InstanceStateListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InstanceStateListener.java`
+
+
+```java
+package org.yamcs;
+
+public interface InstanceStateListener {
+
+    default void initializing() {
+    }
+
+    default void initialized() {
+    }
+
+    default void starting() {
+    }
+
+    default void running() {
+    }
+
+    default void stopping() {
+    }
+
+    default void offline() {
+    }
+
+    default void failed(Throwable failure) {
+    }
+}
+```
+
+### `InvalidIdentification.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InvalidIdentification.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+@SuppressWarnings("serial")
+public class InvalidIdentification extends Exception {
+
+    private List<NamedObjectId> invalidParameters;
+
+    public InvalidIdentification(List<NamedObjectId> paraList) {
+        this.invalidParameters = paraList;
+    }
+
+    public InvalidIdentification() {
+    }
+
+    public InvalidIdentification(NamedObjectId paraId) {
+        this.invalidParameters = new ArrayList<>(1);
+        getInvalidParameters().add(paraId);
+    }
+
+    public List<NamedObjectId> getInvalidParameters() {
+        return invalidParameters;
+    }
+
+    @Override
+    public String getMessage() {
+        if (invalidParameters != null) {
+            return invalidParameters.stream()
+                    .map(NamedObjectId::toString)
+                    .collect(Collectors.joining(", "));
+        }
+        return super.getMessage();
+    }
+}
+```
+
+### `InvalidRequestIdentification.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/InvalidRequestIdentification.java`
+
+
+```java
+package org.yamcs;
+
+@SuppressWarnings("serial")
+public class InvalidRequestIdentification extends RuntimeException {
+
+    public int subscriptionId;
+
+    public InvalidRequestIdentification(String string, int subscriptionId) {
+        super(string);
+        this.subscriptionId = subscriptionId;
+    }
+
+    public int getSubscriptionId() {
+        return subscriptionId;
+    }
+}
+```
+
+### `LimitExceededException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/LimitExceededException.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Thrown by a method that causes a user/system specified limit to be exceeded.
+ * 
+ * @author nm
+ *
+ */
+@SuppressWarnings("serial")
+public class LimitExceededException extends RuntimeException {
+
+    public LimitExceededException(String message) {
+        super(message);
+    }
+}
+```
+
+### `LogCrashHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/LogCrashHandler.java`
+
+
+```java
+package org.yamcs;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/** 
+ * default crash handler that just print a message in the log
+ * @author nm
+ *
+ */
+public class LogCrashHandler implements CrashHandler {
+    static Logger log = LoggerFactory.getLogger(CrashHandler.class);
+    @Override
+    public void handleCrash(String type, String msg) {
+        log.error("type: {}, msg: {}", type, msg);
+    }
+    
+}
+```
+
+### `NoPermissionException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/NoPermissionException.java`
+
+
+```java
+package org.yamcs;
+
+@SuppressWarnings("serial")
+public class NoPermissionException extends YamcsException {
+
+    public NoPermissionException(String message) {
+        super(message);
+    }
+}
+```
+
+### `NotThreadSafe.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/NotThreadSafe.java`
+
+
+```java
+package org.yamcs;
+
+public @interface NotThreadSafe {
+
+}
+```
+
+### `PacketTooSmallException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PacketTooSmallException.java`
+
+
+```java
+package org.yamcs;
+
+public class PacketTooSmallException extends Exception {
+	public PacketTooSmallException(String s) {
+		super(s);
+	}
+
+	private static final long serialVersionUID = -1229613858652488019L;
+}
+```
+
+### `Plugin.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Plugin.java`
+
+
+```java
+package org.yamcs;
+
+public interface Plugin {
+
+    /**
+     * Returns the valid configuration options for this plugin.
+     * <p>
+     * If {@code null} is returned, Yamcs will attempt to autodiscover plugin options in a resource file named after the
+     * reverse qualified name of this plugin with yaml extension. For example: for a plugin
+     * {@code com.example.MyPlugin}, Yamcs will search for a classpath resource {@code /com/example/MyPlugin.yaml}.
+     * 
+     * @return the argument specification. Or {@code null} if there are no options or Yamcs should autodiscover them.
+     */
+    public default Spec getSpec() {
+        return null;
+    }
+
+    /**
+     * Returns the valid instance-level configuration options for this plugin.
+     * <p>
+     * If {@code null} is returned, Yamcs will attempt to autodiscover plugin instance-level options in a resource file
+     * named after the reverse qualified name of this plugin with yaml extension. For example: for a plugin
+     * {@code com.example.MyPlugin}, Yamcs will search for a classpath resource {@code /com/example/MyPlugin.yaml}.
+     * 
+     * @return the argument specification. Or {@code null} if there are no options or Yamcs should autodiscover them.
+     */
+    public default Spec getInstanceSpec() {
+        return null;
+    }
+
+    /**
+     * Callback executed when the plugin is loaded.
+     * <p>
+     * This is executed after Yamcs has created all configured services, but before actually starting them.
+     */
+    public default void onLoad(YConfiguration config) throws PluginException {
+    }
+}
+```
+
+### `PluginException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PluginException.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Indicates a failure coming from a {@link Plugin}.
+ */
+@SuppressWarnings("serial")
+public class PluginException extends YamcsException {
+
+    public PluginException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public PluginException(Throwable t) {
+        super(t);
+    }
+
+    public PluginException(String message) {
+        super(message);
+    }
+}
+```
+
+### `PluginManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PluginManager.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ServiceLoader;
+
+import org.yamcs.Spec.OptionType;
+import org.yamcs.logging.Log;
+import org.yaml.snakeyaml.Yaml;
+
+/**
+ * Controls the loading of Yamcs plugins.
+ */
+public class PluginManager {
+
+    private static final Log log = new Log(PluginManager.class);
+
+    private Map<Class<? extends Plugin>, PluginMetadata> metadata = new HashMap<>();
+    private Map<Class<? extends Plugin>, Plugin> plugins = new HashMap<>();
+
+    public PluginManager() throws IOException {
+        var yamcs = YamcsServer.getServer();
+        for (var plugin : ServiceLoader.load(Plugin.class)) {
+            var propsResource = "/META-INF/yamcs/" + plugin.getClass().getName() + "/plugin.properties";
+            var props = new Properties();
+            try (var in = getClass().getResourceAsStream(propsResource)) {
+                props.load(in);
+            }
+
+            var pluginMetadata = new PluginMetadata(props);
+            metadata.put(plugin.getClass(), pluginMetadata);
+
+            var discoveredSpecs = discoverPluginOptions(plugin.getClass());
+
+            // Plugins may programmatically define a spec, but default to
+            // autodiscovery based on a resource descriptor.
+            var spec = plugin.getSpec();
+            if (spec == null) {
+                spec = discoveredSpecs.globalSpec;
+            }
+
+            // Allow to disable any plugin
+            spec.addOption("enabled", OptionType.BOOLEAN).withDefault(true);
+
+            yamcs.addConfigurationSection(ConfigScope.YAMCS, pluginMetadata.getName(), spec);
+
+            spec = plugin.getInstanceSpec();
+            if (spec == null) {
+                spec = discoveredSpecs.instanceSpec;
+            }
+            yamcs.addConfigurationSection(ConfigScope.YAMCS_INSTANCE, pluginMetadata.getName(), spec);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private PluginSpecs discoverPluginOptions(Class<?> pluginClass) throws IOException {
+        var specs = new PluginSpecs();
+        try (var in = pluginClass.getResourceAsStream(pluginClass.getSimpleName() + ".yaml")) {
+            if (in != null) {
+                var yaml = new Yaml();
+                Map<String, Object> pluginDescriptor = yaml.load(in);
+                if (pluginDescriptor.containsKey("options")) {
+                    var optionDescriptors = (Map<String, Map<String, Object>>) pluginDescriptor
+                            .get("options");
+                    try {
+                        specs.globalSpec = Spec.fromDescriptor(optionDescriptors);
+                    } catch (ValidationException e) {
+                        // Plugin error. Just throw it up because it must be fixed.
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (pluginDescriptor.containsKey("instanceOptions")) {
+                    var optionDescriptors = (Map<String, Map<String, Object>>) pluginDescriptor
+                            .get("instanceOptions");
+                    try {
+                        specs.instanceSpec = Spec.fromDescriptor(optionDescriptors);
+                    } catch (ValidationException e) {
+                        // Plugin error. Just throw it up because it must be fixed.
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        return specs;
+    }
+
+    public Collection<Plugin> getPlugins() {
+        return plugins.values();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Plugin> T getPlugin(Class<T> clazz) {
+        return (T) plugins.get(clazz);
+    }
+
+    public <T extends Plugin> PluginMetadata getMetadata(Class<T> clazz) {
+        return metadata.get(clazz);
+    }
+
+    public void discoverPlugins() {
+        List<String> disabledPlugins;
+        YConfiguration yconf = YConfiguration.getConfiguration("yamcs");
+        if (yconf.containsKey("disabledPlugins")) {
+            disabledPlugins = yconf.getList("disabledPlugins");
+        } else {
+            disabledPlugins = Collections.emptyList();
+        }
+
+        for (var plugin : ServiceLoader.load(Plugin.class)) {
+            var meta = metadata.get(plugin.getClass());
+            if (disabledPlugins.contains(meta.getName())) {
+                log.debug("Ignoring plugin {} (disabled by user config)", meta.getName());
+            } else {
+                var pluginConfig = yconf.getConfigOrEmpty(meta.getName());
+                if (pluginConfig.getBoolean("enabled", true)) {
+                    plugins.put(plugin.getClass(), plugin);
+                } else {
+                    log.debug("Ignoring plugin {} (disabled by user config)", meta.getName());
+                }
+            }
+        }
+    }
+
+    public void loadPlugins() throws PluginException {
+        var yamcsConfig = YamcsServer.getServer().getConfig();
+        for (var plugin : plugins.values()) {
+            var meta = metadata.get(plugin.getClass());
+            log.debug("Loading plugin {} {}", meta.getName(), meta.getVersion());
+            try {
+                var config = yamcsConfig.getConfigOrEmpty(meta.getName());
+                plugin.onLoad(config);
+            } catch (PluginException e) {
+                log.error("Could not load plugin {} {}", meta.getName(), meta.getVersion());
+                throw e;
+            }
+        }
+    }
+
+    private static class PluginSpecs {
+        Spec globalSpec = new Spec();
+        Spec instanceSpec = new Spec();
+    }
+}
+```
+
+### `PluginMetadata.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/PluginMetadata.java`
+
+
+```java
+package org.yamcs;
+
+import static java.util.Objects.requireNonNull;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.Properties;
+
+public class PluginMetadata {
+
+    private String name;
+    private String version;
+
+    private String description;
+    private String organization;
+    private String organizationUrl;
+    private Date lastUpdate;
+
+    public PluginMetadata(Properties props) {
+        name = requireNonNull(props.getProperty("name"));
+        version = requireNonNull(props.getProperty("version"));
+
+        description = props.getProperty("description");
+        organization = props.getProperty("organization");
+        organizationUrl = props.getProperty("organizationUrl");
+
+        String timestamp = props.getProperty("generated");
+        if (timestamp != null) {
+            lastUpdate = Date.from(Instant.parse(timestamp));
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public String getOrganizationUrl() {
+        return organizationUrl;
+    }
+
+    public Date getLastUpdate() {
+        return lastUpdate;
+    }
+}
+```
+
+### `Processor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Processor.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.stream.Collectors;
+
+import org.yamcs.alarms.EventAlarmServer;
+import org.yamcs.cmdhistory.CommandHistoryProvider;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryRequestManager;
+import org.yamcs.cmdhistory.StreamCommandHistoryProvider;
+import org.yamcs.cmdhistory.StreamCommandHistoryPublisher;
+import org.yamcs.commanding.Acknowledgment;
+import org.yamcs.commanding.CommandReleaser;
+import org.yamcs.commanding.CommandingManager;
+import org.yamcs.container.ContainerRequestManager;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.XtceTmProcessor;
+import org.yamcs.parameter.LastValueCache;
+import org.yamcs.parameter.ParameterPersistence;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.ServiceState;
+import org.yamcs.protobuf.Yamcs.EndAction;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
+import org.yamcs.protobuf.Yamcs.ReplayStatus.ReplayState;
+import org.yamcs.tctm.ArchiveTmPacketProvider;
+import org.yamcs.tctm.StreamParameterSender;
+import org.yamcs.time.TimeService;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+/**
+ * 
+ * This class helps keeping track of the different objects used in a Yamcs Processor - i.e. all the objects required to
+ * have a TM/TC processing chain (either realtime or playback).
+ *
+ */
+public class Processor extends AbstractService {
+    public static final String PROC_PARAMETERS_STREAM = "proc_param";
+
+    // runs algorithms and distributes parameters
+    private ParameterProcessorManager parameterProcessorManager;
+
+    // handles subscriptions to containers
+    private ContainerRequestManager containerRequestManager;
+    // handles subscriptions to command history
+    private CommandHistoryRequestManager commandHistoryRequestManager;
+
+    // handles command building and queues
+    private CommandingManager commandingManager;
+
+    // publishes events to command history
+    private CommandHistoryPublisher commandHistoryPublisher;
+
+    // these are services defined in the processor.yaml.
+    // They have to register themselves to the processor in their init method
+    private TmPacketProvider tmPacketProvider;
+    private CommandHistoryProvider commandHistoryProvider;
+    private CommandReleaser commandReleaser;
+
+    private Mdb mdb;
+
+    private final String name;
+    private final String type;
+    private final String yamcsInstance;
+
+    private ProcessorConfig config;
+
+    private String creator = "system";
+    private boolean persistent = false;
+    private boolean protected_ = false;
+
+    final Log log;
+    static Set<ProcessorListener> listeners = new CopyOnWriteArraySet<>(); // send notifications for added and removed
+    // processors to this
+
+    private boolean quitting;
+    // a synchronous processor waits for all the clients to deliver tm packets and parameters
+    private boolean synchronous = false;
+
+    XtceTmProcessor tmProcessor;
+
+    private final ScheduledThreadPoolExecutor timer;
+    TimeService timeService;
+
+    ProcessorData processorData;
+    List<ProcessorServiceWithConfig> serviceList;
+    StreamParameterSender streamParameterSender;
+    EventAlarmServer eventAlarmServer;
+    YamcsServerInstance ysi;
+
+    // Globally available acknowledgments (in addition to Q, R, S)
+    private Set<Acknowledgment> acknowledgments = new CopyOnWriteArraySet<>();
+
+    private ParameterPersistence paramPersistence;
+
+    public Processor(String yamcsInstance, String name, String type, String creator) throws ProcessorException {
+        if ((name == null) || "".equals(name)) {
+            throw new ProcessorException("The processor name must not be empty");
+        }
+        this.yamcsInstance = yamcsInstance;
+        this.name = name;
+        this.creator = creator;
+        this.type = type;
+        log = new Log(Processor.class, yamcsInstance);
+        log.info("Creating new processor '{}' of type '{}'", name, type);
+        log.setContext(name);
+        timer = new ScheduledThreadPoolExecutor(1,
+                new ThreadFactoryBuilder().setNameFormat("Processor-" + yamcsInstance + "." + name).build());
+    }
+
+    /**
+     * If recording to the archive initial values and local parameters is enabled, this class can be used to do it.
+     * 
+     * Otherwise it will return null.
+     * 
+     * @return the stream parameter sender that can be used to send data on the {@link #PROC_PARAMETERS_STREAM} stream
+     *         to be recorded in the archive
+     */
+    public StreamParameterSender getStreamParameterSender() {
+        return streamParameterSender;
+    }
+
+    /**
+     * 
+     * @param serviceList
+     * @param config
+     *            - configuration from processor.yaml
+     * @param spec
+     *            - configuration passed from the client when creating the processor
+     * @throws ProcessorException
+     * @throws ValidationException
+     * @throws ConfigurationException
+     */
+    void init(List<ProcessorServiceWithConfig> serviceList, ProcessorConfig config, Object spec)
+            throws ProcessorException, InitException, ValidationException {
+        log.debug("Initialzing the processor with the configuration {}", config);
+
+        mdb = MdbFactory.getInstance(yamcsInstance);
+
+        this.config = config;
+
+        this.serviceList = serviceList;
+
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+
+        Map<Parameter, ParameterValue> persistedParams = new HashMap<>();
+
+        if (config.persistParameters) {
+            paramPersistence = new ParameterPersistence(yamcsInstance, name);
+            var it = paramPersistence.load();
+
+            if (it != null) {
+                while (it.hasNext()) {
+                    var pv = it.next();
+                    var p = mdb.getParameter(pv.getParameterQualifiedName());
+                    if (p != null) {
+                        if (p.isPersistent()) {
+                            pv.setParameter(p);
+                            persistedParams.put(p, pv);
+                        } else {
+                            log.debug("Found persisted parameter without the persistance flag set {}",
+                                    pv.getParameterQualifiedName());
+                        }
+                    } else {
+                        log.debug("No parameter found in the MDB for persisted parameter value {}",
+                                pv.getParameterQualifiedName());
+                    }
+                }
+            }
+        }
+
+        processorData = new ProcessorData(this, config, persistedParams);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        Stream pps = ydb.getStream(PROC_PARAMETERS_STREAM);
+        if (pps != null) {
+            streamParameterSender = new StreamParameterSender(yamcsInstance, pps);
+        }
+        if (config.recordInitialValues || config.recordLocalValues) {
+            if (pps == null) {
+                throw new ConfigurationException("recordInitialValues is set to true but the stream '"
+                        + PROC_PARAMETERS_STREAM + "' does not exist");
+            }
+            streamParameterSender.sendParameters(processorData.getLastValueCache().getValues());
+        }
+        if (config.eventAlarmServerEnabled) {
+            eventAlarmServer = new EventAlarmServer(yamcsInstance, config, timer);
+        }
+        // Shared between prm and crm
+        tmProcessor = new XtceTmProcessor(this);
+        containerRequestManager = new ContainerRequestManager(this, tmProcessor);
+        parameterProcessorManager = new ParameterProcessorManager(this, tmProcessor);
+
+        for (ProcessorServiceWithConfig swc : serviceList) {
+            if (swc.service instanceof CommandHistoryPublisher) {
+                commandHistoryPublisher = (CommandHistoryPublisher) swc.service;
+            }
+
+            if (swc.service instanceof CommandHistoryProvider) {
+                setCommandHistoryProvider((CommandHistoryProvider) swc.service);
+            }
+            if (swc.service instanceof CommandReleaser) {
+                this.commandReleaser = (CommandReleaser) swc.service;
+            }
+        }
+        if (commandReleaser != null) {
+            if (commandHistoryPublisher == null) {
+                commandHistoryPublisher = new StreamCommandHistoryPublisher(yamcsInstance);
+            }
+            if (commandHistoryProvider == null) {
+                setCommandHistoryProvider(new StreamCommandHistoryProvider(yamcsInstance));
+            }
+
+            commandingManager = new CommandingManager(this);
+            commandReleaser.setCommandHistory(commandHistoryPublisher);
+        }
+        for (ProcessorServiceWithConfig swc : serviceList) {
+            ProcessorService service = (ProcessorService) swc.service;
+            service.init(this, swc.getConfig(), spec);
+        }
+
+        parameterProcessorManager.init();
+
+        listeners.forEach(l -> l.processorAdded(this));
+    }
+
+    public void setPacketProvider(TmPacketProvider tpp) {
+        if (tmPacketProvider != null) {
+            throw new IllegalStateException("There is already a packet provider");
+        }
+        tmPacketProvider = tpp;
+    }
+
+    public void setCommandHistoryProvider(CommandHistoryProvider chp) {
+        if (commandHistoryProvider != null) {
+            throw new IllegalStateException("There is already a command history provider");
+        }
+        commandHistoryProvider = chp;
+        commandHistoryRequestManager = new CommandHistoryRequestManager(this);
+        commandHistoryProvider.setCommandHistoryRequestManager(commandHistoryRequestManager);
+    }
+
+    public CommandHistoryPublisher getCommandHistoryPublisher() {
+        return commandHistoryPublisher;
+    }
+
+    public ParameterProcessorManager getParameterProcessorManager() {
+        return parameterProcessorManager;
+    }
+
+    public ContainerRequestManager getContainerRequestManager() {
+        return containerRequestManager;
+    }
+
+    public XtceTmProcessor getTmProcessor() {
+        return tmProcessor;
+    }
+
+    /**
+     * starts processing by invoking the start method for all the associated components
+     *
+     */
+    @Override
+    public void doStart() {
+        try {
+            tmProcessor.startAsync();
+            startIfNecessary(commandHistoryRequestManager);
+            startIfNecessary(commandHistoryProvider);
+            startIfNecessary(parameterProcessorManager);
+            startIfNecessary(tmPacketProvider);
+            startIfNecessary(commandingManager);
+            startIfNecessary(eventAlarmServer);
+
+            for (ProcessorServiceWithConfig swc : serviceList) {
+                startIfNecessary(swc.service);
+            }
+            tmProcessor.awaitRunning();
+            awaitIfNecessary(commandHistoryRequestManager);
+            awaitIfNecessary(commandHistoryProvider);
+            awaitIfNecessary(parameterProcessorManager);
+            awaitIfNecessary(tmPacketProvider);
+            awaitIfNecessary(commandingManager);
+            awaitIfNecessary(eventAlarmServer);
+
+            for (ProcessorServiceWithConfig swc : serviceList) {
+                swc.service.awaitRunning();
+            }
+
+            notifyStarted();
+        } catch (Exception e) {
+            notifyFailed(e);
+        }
+        propagateProcessorStateChange();
+    }
+
+    public List<ProcessorServiceWithConfig> getServices() {
+        return serviceList.stream().collect(Collectors.toList());
+    }
+
+    private void startIfNecessary(Service service) {
+        if (service != null) {
+            if (service.state() == State.NEW) {
+                service.startAsync();
+            }
+        }
+    }
+
+    void setYamcsServerInstance(YamcsServerInstance ysi) {
+        this.ysi = ysi;
+    }
+
+    private void awaitIfNecessary(Service service) {
+        if (service != null) {
+            service.awaitRunning();
+        }
+    }
+
+    public void pause() {
+        ((ArchiveTmPacketProvider) tmPacketProvider).pause();
+        propagateProcessorStateChange();
+    }
+
+    public void resume() {
+        ArchiveTmPacketProvider provider = (ArchiveTmPacketProvider) tmPacketProvider;
+        provider.resume();
+        if (provider.getSpeed() != null
+                && provider.getSpeed().getType() != ReplaySpeedType.STEP_BY_STEP) {
+            propagateProcessorStateChange();
+        }
+    }
+
+    private void propagateProcessorStateChange() {
+        listeners.forEach(l -> l.processorStateChanged(this));
+    }
+
+    public void seek(long instant) {
+        seek(instant, true);
+    }
+
+    public void seek(long instant, boolean autostart) {
+        getTmProcessor().resetStatistics();
+        ((ArchiveTmPacketProvider) tmPacketProvider).seek(instant, autostart);
+        propagateProcessorStateChange();
+    }
+
+    public void changeSpeed(ReplaySpeed speed) {
+        ((ArchiveTmPacketProvider) tmPacketProvider).changeSpeed(speed);
+        propagateProcessorStateChange();
+    }
+
+    public void changeRange(long start, long stop) {
+        ((ArchiveTmPacketProvider) tmPacketProvider).changeRange(start, stop);
+        ((ArchiveTmPacketProvider) tmPacketProvider).seek(start, false);
+        propagateProcessorStateChange();
+    }
+
+    public void changeEndAction(EndAction endAction) {
+        ((ArchiveTmPacketProvider) tmPacketProvider).changeEndAction(endAction);
+        propagateProcessorStateChange();
+    }
+
+    /**
+     * @return the tcUplinker
+     */
+    public CommandReleaser getCommandReleaser() {
+        return commandReleaser;
+    }
+
+    /**
+     * @return the tmPacketProvider
+     */
+    public TmPacketProvider getTmPacketProvider() {
+        return tmPacketProvider;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * Returns globally available acknowledgments (in addition to Acknowledge_Queued, Acknowledge_Released and
+     * Acknowledge_Sent).
+     */
+    public Collection<Acknowledgment> getAcknowledgments() {
+        return acknowledgments;
+    }
+
+    /**
+     * Add a globally available acknowledgment (in addition to Acknowledge_Queued, Acknowledge_Released and
+     * Acknowledge_Sent).
+     */
+    public void addAcknowledgment(Acknowledgment acknowledgment) {
+        acknowledgments.add(acknowledgment);
+    }
+
+    /**
+     * Closes the processor by stoping the tm/pp and tc It can be that there are still clients connected, but they will
+     * not get any data and new clients can not connect to these processors anymore. Once it is closed, you can create a
+     * processor with the same name which will make it maybe a bit confusing :(
+     *
+     */
+    @Override
+    public void doStop() {
+        if (quitting) {
+            return;
+        }
+
+        log.info("Processor {} quitting", name);
+        quitting = true;
+        timer.shutdown();
+        // first send a STOPPING event
+        listeners.forEach(l -> l.processorStateChanged(this));
+
+        for (ProcessorServiceWithConfig swc : serviceList) {
+            swc.service.stopAsync();
+        }
+
+        if (commandReleaser != null) {
+            commandReleaser.stopAsync();
+            commandingManager.stopAsync();
+        }
+        if (tmProcessor != null) {
+            tmProcessor.stopAsync();
+        }
+        if (eventAlarmServer != null) {
+            eventAlarmServer.stopAsync();
+        }
+        log.info("Processor {} is out of business", name);
+
+        if (ysi != null) {
+            ysi.removeProcessor(name);
+        }
+
+        if (paramPersistence != null) {
+            paramPersistence.save(processorData.getValuesToBePersisted().iterator());
+        }
+        if (parameterProcessorManager != null) {
+            parameterProcessorManager.stopAsync();
+        }
+
+        if (getState() == ServiceState.RUNNING || getState() == ServiceState.STOPPING) {
+            notifyStopped();
+        }
+        // and now a CLOSED event
+        listeners.forEach(l -> l.processorClosed(this));
+    }
+
+    public static void addProcessorListener(ProcessorListener processorListener) {
+        listeners.add(processorListener);
+    }
+
+    public static void removeProcessorListener(ProcessorListener processorListener) {
+        listeners.remove(processorListener);
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    public void setPersistent(boolean systemSession) {
+        this.persistent = systemSession;
+    }
+
+    /**
+     * Returns if this processor is protected. A protected processor may not be deleted.
+     */
+    public boolean isProtected() {
+        return protected_;
+    }
+
+    public void setProtected(boolean protected_) {
+        this.protected_ = protected_;
+    }
+
+    public boolean isSynchronous() {
+        return synchronous;
+    }
+
+    public boolean hasCommanding() {
+        return commandingManager != null;
+    }
+
+    public void setSynchronous(boolean synchronous) {
+        this.synchronous = synchronous;
+    }
+
+    public boolean isReplay() {
+        if (tmPacketProvider == null) {
+            return false;
+        }
+
+        return tmPacketProvider.isArchiveReplay();
+    }
+
+    /**
+     * valid only if isArchiveReplay returns true
+     * 
+     * @return
+     */
+    public ReplayRequest getReplayRequest() {
+        return ((ArchiveTmPacketProvider) tmPacketProvider).getReplayRequest();
+    }
+
+    /**
+     * valid only if isArchiveReplay returns true
+     * 
+     * @return
+     */
+    public ReplayState getReplayState() {
+        return ((ArchiveTmPacketProvider) tmPacketProvider).getReplayState();
+    }
+
+    public ReplayRequest getCurrentReplayRequest() {
+        return ((ArchiveTmPacketProvider) tmPacketProvider).getCurrentReplayRequest();
+    }
+
+    public ServiceState getState() {
+        return ServiceState.valueOf(state().name());
+    }
+
+    public CommandingManager getCommandingManager() {
+        return commandingManager;
+    }
+
+    /**
+     *
+     * @return the yamcs instance this processor is part of
+     */
+    public String getInstance() {
+        return yamcsInstance;
+    }
+
+    public Mdb getMdb() {
+        return mdb;
+    }
+
+    public CommandHistoryRequestManager getCommandHistoryManager() {
+        return commandHistoryRequestManager;
+    }
+
+    public boolean hasAlarmChecker() {
+        return config.checkParameterAlarms;
+    }
+
+    public boolean hasAlarmServer() {
+        return config.parameterAlarmServerEnabled;
+    }
+
+    public ScheduledThreadPoolExecutor getTimer() {
+        return timer;
+    }
+
+    /**
+     * Returns the processor time
+     * 
+     * for realtime processors it is the mission time (could be simulated) for replay processors it is the replay time
+     * 
+     * @return
+     */
+    public long getCurrentTime() {
+        if (isReplay()) {
+            return ((ArchiveTmPacketProvider) tmPacketProvider).getReplayTime();
+        } else {
+            return timeService.getMissionTime();
+        }
+    }
+
+    public void quit() {
+        stopAsync();
+        awaitTerminated();
+    }
+
+    public void start() {
+        startAsync();
+        awaitRunning();
+    }
+
+    public void notifyStateChange() {
+        propagateProcessorStateChange();
+    }
+
+    /**
+     * Returns the processor data used to store processor specific calibration, alarms
+     * 
+     * @return processor specific data
+     */
+    public ProcessorData getProcessorData() {
+        return processorData;
+    }
+
+    public LastValueCache getLastValueCache() {
+        return processorData.getLastValueCache();
+    }
+
+    public boolean isSubscribeAll() {
+        return config.subscribeAll;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends ProcessorService> List<T> getServices(Class<T> serviceClass) {
+        List<T> services = new ArrayList<>();
+        if (serviceList != null) {
+            for (ProcessorServiceWithConfig swc : serviceList) {
+                if (swc.getServiceClass().equals(serviceClass.getName())) {
+                    services.add((T) swc.service);
+                }
+            }
+        }
+        return services;
+    }
+
+    public boolean recordLocalValues() {
+        return config.recordLocalValues;
+    }
+
+    public EventAlarmServer getEventAlarmServer() {
+        return eventAlarmServer;
+    }
+
+    public ProcessorConfig getConfig() {
+        return config;
+    }
+
+    public ParameterRequestManager getParameterRequestManager() {
+        return parameterProcessorManager.getParameterRequestManager();
+    }
+
+    @Override
+    public String toString() {
+        return "name: " + name + " type: " + type;
+    }
+}
+```
+
+### `ProcessorConfig.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorConfig.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.Spec.OptionType;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ContainerProcessingOptions;
+import org.yamcs.mdb.MetaCommandProcessor;
+
+/**
+ * Configuration options for a processor
+ */
+public class ProcessorConfig {
+
+    private static final String CONFIG_KEY_PARAMETER_CACHE = "parameterCache";
+    private static final String CONFIG_KEY_ALARM = "alarm";
+    private static final String CONFIG_KEY_GENERATE_EVENTS = "generateEvents";
+    private static final String CONFIG_KEY_SUBSCRIBE_ALL = "subscribeAll";
+    private static final String CONFIG_KEY_RECORD_INITIAL_VALUES = "recordInitialValues";
+    private static final String CONFIG_KEY_RECORD_LOCAL_VALUES = "recordLocalValues";
+    private static final String CONFIG_KEY_TM_PROCESSOR = "tmProcessor";
+    private static final String CONFIG_KEY_MAX_TC_SIZE = "maxTcSize";
+    private static final String CONFIG_KEY_CONTAINERLESS_CMDS = "allowContainerlessCommands";
+    private static final String CONFIG_KEY_CHECK_COMMAND_CLEARANCE = "checkCommandClearance";
+    private static final String CONFIG_KEY_CHECK_PARAMETER_VALIDITY_RANGES = "checkParameterValidityRanges";
+    private static final String CONFIG_KEY_SUBSCRIBE_CONTAINER_ARCHPART = "subscribeContainerArchivePartitions";
+    private static final String CONFIG_KEY_PERSIST_PARAMETERS = "persistParameters";
+
+    boolean checkParameterAlarms = true;
+    boolean parameterAlarmServerEnabled = false;
+    boolean eventAlarmServerEnabled = false;
+    int maxTcSize = 4096;
+    boolean recordInitialValues = false;
+    boolean recordLocalValues = false;
+    int eventAlarmMinViolations = 1;
+    boolean subscribeAll = false;
+    boolean generateEvents = false;
+    boolean checkCommandClearance = false;
+    boolean checkParameterValidityRanges = true;
+
+    // if true, save at shutdown and load at startup the value of all parameters having the persistent flag set
+    boolean persistParameters = false;
+
+    // if set to true, subscribe by default to all containers that have the useAsArchivePartiton flag set
+    // used to have nice statistics showing the number of each packet received for the realtime and replay processors
+    boolean subscribeContainerArchivePartitions = true;
+
+    // if positive, the number of days to load the past alarms at startup
+    private double alarmLoadDays = 30;
+
+    /**
+     * If this is set to true, the {@link MetaCommandProcessor} will release commands without binary encoding if a
+     * MetaCommand has no container associated.
+     * <p>
+     * The link is then responsible to encode the command somehow starting from the command name and argument
+     * assignments.
+     *
+     */
+    boolean allowContainerlessCommands = false;
+
+    final ContainerProcessingOptions containerProcOptions;
+    static Log log = new Log(ProcessorConfig.class);
+
+    public ProcessorConfig(YConfiguration config) {
+
+        YConfiguration contProc = YConfiguration.emptyConfig();
+
+        if (config != null) {
+            for (String key : config.getRoot().keySet()) {
+                if (CONFIG_KEY_ALARM.equals(key)) {
+                    parseAlarmConfig(config.getConfig(key));
+                } else if (CONFIG_KEY_SUBSCRIBE_ALL.equals(key)) {
+                    subscribeAll = config.getBoolean(CONFIG_KEY_SUBSCRIBE_ALL);
+                } else if (CONFIG_KEY_PARAMETER_CACHE.equals(key)) {
+                    log.warn(
+                            "Since version 5.11 parameter cache has been moved from the processor to the ParameterRetrievalService");
+                } else if (CONFIG_KEY_TM_PROCESSOR.equals(key)) {
+                    contProc = config.getConfig(key);
+                } else if (CONFIG_KEY_RECORD_INITIAL_VALUES.equals(key)) {
+                    recordInitialValues = config.getBoolean(key);
+                } else if (CONFIG_KEY_RECORD_LOCAL_VALUES.equals(key)) {
+                    recordLocalValues = config.getBoolean(key);
+                } else if (CONFIG_KEY_GENERATE_EVENTS.equals(key)) {
+                    generateEvents = config.getBoolean(key);
+                } else if (CONFIG_KEY_MAX_TC_SIZE.equals(key)) {
+                    maxTcSize = config.getInt(key);
+                } else if (CONFIG_KEY_CONTAINERLESS_CMDS.equals(key)) {
+                    allowContainerlessCommands = config.getBoolean(key);
+                } else if (CONFIG_KEY_CHECK_COMMAND_CLEARANCE.equals(key)) {
+                    checkCommandClearance = config.getBoolean(key);
+                } else if (CONFIG_KEY_CHECK_PARAMETER_VALIDITY_RANGES.equals(key)) {
+                    checkParameterValidityRanges = config.getBoolean(key);
+                } else if (CONFIG_KEY_SUBSCRIBE_CONTAINER_ARCHPART.equals(key)) {
+                    subscribeContainerArchivePartitions = config.getBoolean(key);
+                } else if (CONFIG_KEY_PERSIST_PARAMETERS.equals(key)) {
+                    persistParameters = config.getBoolean(key);
+                } else {
+                    log.warn("Ignoring unknown config key '{}'", key);
+                }
+            }
+        }
+        containerProcOptions = new ContainerProcessingOptions(contProc);
+    }
+
+    public static Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption(CONFIG_KEY_ALARM, OptionType.MAP).withSpec(getAlarmSpec());
+        spec.addOption(CONFIG_KEY_SUBSCRIBE_ALL, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(CONFIG_KEY_PARAMETER_CACHE, OptionType.ANY);
+        spec.addOption(CONFIG_KEY_TM_PROCESSOR, OptionType.MAP).withSpec(ContainerProcessingOptions.getSpec());
+        spec.addOption(CONFIG_KEY_RECORD_INITIAL_VALUES, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(CONFIG_KEY_RECORD_LOCAL_VALUES, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(CONFIG_KEY_GENERATE_EVENTS, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(CONFIG_KEY_MAX_TC_SIZE, OptionType.INTEGER).withDefault(4096);
+        spec.addOption(CONFIG_KEY_CONTAINERLESS_CMDS, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(CONFIG_KEY_CHECK_COMMAND_CLEARANCE, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(CONFIG_KEY_CHECK_PARAMETER_VALIDITY_RANGES, OptionType.ANY);
+        spec.addOption(CONFIG_KEY_SUBSCRIBE_CONTAINER_ARCHPART, OptionType.BOOLEAN).withDefault(true);
+        spec.addOption(CONFIG_KEY_PERSIST_PARAMETERS, OptionType.BOOLEAN).withDefault(false);
+
+        return spec;
+    }
+
+    public static Spec getAlarmSpec() {
+        Spec spec = new Spec();
+        spec.addOption("loadDays", OptionType.FLOAT).withDefault(30);
+        spec.addOption("parameterCheck", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("parameterServer", OptionType.STRING).withDefault("enabled");
+        spec.addOption("eventServer", OptionType.STRING).withDefault("disabled");
+        spec.addOption("eventAlarmMinViolations", OptionType.INTEGER).withDefault(1);
+
+        return spec;
+    }
+
+    /**
+     * Default configuration
+     */
+    public ProcessorConfig() {
+        containerProcOptions = new ContainerProcessingOptions();
+    }
+
+    private void parseAlarmConfig(YConfiguration alarmConfig) {
+        checkParameterAlarms = alarmConfig.getBoolean("parameterCheck", checkParameterAlarms);
+        if (alarmConfig.containsKey("parameterServer")) {
+            parameterAlarmServerEnabled = "enabled".equalsIgnoreCase(alarmConfig.getString("parameterServer"));
+        }
+        if (parameterAlarmServerEnabled) {
+            checkParameterAlarms = true;
+        }
+
+        eventAlarmServerEnabled = "enabled".equalsIgnoreCase(alarmConfig.getString("eventServer", null));
+        eventAlarmMinViolations = alarmConfig.getInt("eventAlarmMinViolations", eventAlarmMinViolations);
+        alarmLoadDays = alarmConfig.getDouble("alarmLoadDays", alarmLoadDays);
+    }
+
+    /**
+     * Returns the maximum allowed size for a telecommand (TC) in bytes.
+     * 
+     * @return the maximum TC size
+     */
+    public int getMaxCommandSize() {
+        return maxTcSize;
+    }
+
+    /**
+     * Returns the minimum number of violations required to trigger an event alarm.
+     * 
+     * @return the minimum number of event alarm violations
+     */
+    public int getEventAlarmMinViolations() {
+        return eventAlarmMinViolations;
+    }
+
+    /**
+     * Returns whether event generation is enabled.
+     * <p>
+     * It refers to the events generated inside the processor (for example when encountering errors on processing
+     * packets) not events in general.
+     * 
+     * @return true if event generation is enabled, false otherwise
+     */
+    public boolean generateEvents() {
+        return generateEvents;
+    }
+
+    public ContainerProcessingOptions getContainerProcessingOptions() {
+        return containerProcOptions;
+    }
+
+    /**
+     * Returns whether commands without associated containers are allowed.
+     * 
+     * @return true if containerless commands are allowed, false otherwise
+     */
+    public boolean allowContainerlessCommands() {
+        return allowContainerlessCommands;
+    }
+
+    /**
+     * Returns whether command clearance checks are enabled.
+     * 
+     * @return true if command clearance checks are enabled, false otherwise
+     */
+    public boolean checkCommandClearance() {
+        return checkCommandClearance;
+    }
+
+    /**
+     * Returns whether parameter validity range checks are enabled.
+     * 
+     * @return true if parameter validity range checks are enabled, false otherwise
+     */
+    public boolean checkParameterValidityRanges() {
+        return checkParameterValidityRanges;
+    }
+
+    public boolean subscribeContainerArchivePartitions() {
+        return subscribeContainerArchivePartitions;
+    }
+
+    public void setSubscribeContainerArchivePartitions(boolean b) {
+        this.subscribeContainerArchivePartitions = b;
+    }
+
+    /**
+     * Returns whether parameter persistence is enabled, meaning parameter values will be saved at shutdown and loaded
+     * at startup.
+     * <p>
+     * If enabled, only parameters with the persistence flag set are saved
+     * 
+     * @return true if parameter persistence is enabled, false otherwise
+     */
+    public boolean persistParameters() {
+        return persistParameters;
+    }
+
+    /**
+     * Returns the number of past days of alarm data to load at startup.
+     * <p>
+     * If zero or negative, no alarms are loaded.
+     * 
+     * @return the number of days of alarm data to load
+     */
+    public double getAlarmLoadDays() {
+        return alarmLoadDays;
+    }
+
+    public void setAlarmLoadDays(double alarmLoadDays) {
+        this.alarmLoadDays = alarmLoadDays;
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessorConfig [checkParameterAlarms=" + checkParameterAlarms + ", parameterAlarmServerEnabled="
+                + parameterAlarmServerEnabled + ", eventAlarmServerEnabled=" + eventAlarmServerEnabled + ", maxTcSize="
+                + maxTcSize + ", recordInitialValues=" + recordInitialValues + ", recordLocalValues="
+                + recordLocalValues + ", eventAlarmMinViolations=" + eventAlarmMinViolations + ", subscribeAll="
+                + subscribeAll + ", generateEvents=" + generateEvents + ", containerProcOptions=" + containerProcOptions
+                + ", alarmLoadDays=" + alarmLoadDays + "]";
+    }
+}
+```
+
+### `ProcessorCreatorService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorCreatorService.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.Spec.OptionType;
+import org.yamcs.security.SecurityStore;
+
+/**
+ * Used in yamcs.instance.yaml to create processors at yamcs startup
+ * 
+ * @author nm
+ *
+ */
+public class ProcessorCreatorService extends AbstractYamcsService {
+    String processorName;
+    String processorType;
+    String processorConfig;
+
+    Processor processor;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("type", OptionType.STRING).withRequired(true);
+        spec.addOption("name", OptionType.STRING).withRequired(true);
+        spec.addOption("config", OptionType.STRING);
+        spec.addOption("spec", OptionType.STRING);
+
+        spec.mutuallyExclusive("config", "spec");
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        processorType = config.getString("type");
+        processorName = config.getString("name");
+
+        if (config.containsKey("config")) {
+            processorConfig = config.getString("config");
+        } else if (config.containsKey("spec")) {
+            processorConfig = config.getString("spec");
+        }
+        log.debug("Creating a new processor [instance={}, procName={}, procType={}]", yamcsInstance, processorName,
+                processorType);
+        try {
+            SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+            String systemUser = securityStore.getSystemUser().getName();
+            processor = ProcessorFactory.create(yamcsInstance, processorName, processorType, systemUser,
+                    processorConfig);
+        } catch (ProcessorException | ValidationException e) {
+            throw new InitException(e);
+        }
+        processor.setPersistent(true);
+        processor.setProtected(true);
+    }
+
+    @Override
+    protected void doStart() {
+        try {
+            log.debug("Starting processor {}", processorName);
+            processor.start();
+            notifyStarted();
+        } catch (Exception e) {
+            log.error("Starting a new processor {}.{} failed: {}", yamcsInstance, processorName,
+                    e.toString(), e);
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        processor.quit();
+        notifyStopped();
+    }
+}
+```
+
+### `ProcessorException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorException.java`
+
+
+```java
+package org.yamcs;
+
+@SuppressWarnings("serial")
+public class ProcessorException extends YamcsException {
+
+    public ProcessorException(String s) {
+        super(s);
+    }
+
+    public ProcessorException(String message, Throwable t) {
+        super(message, t);
+    }
+}
+```
+
+### `ProcessorFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorFactory.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.logging.Log;
+import org.yamcs.management.ManagementService;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Used to create processors as defined in processor.yaml
+ *
+ * @author nm
+ *
+ */
+public class ProcessorFactory {
+
+    /**
+     * Returns the processor types as defined in {@code processor.yaml}
+     */
+    public static Map<String, ProcessorConfig> getProcessorTypes() {
+        if (!YConfiguration.isDefined("processor")) {
+            return Collections.emptyMap();
+        }
+        YConfiguration conf = YConfiguration.getConfiguration("processor");
+        Map<String, ProcessorConfig> result = new HashMap<>();
+        for (String processorName : conf.getKeys()) {
+            YConfiguration processorConfig = conf.getConfig(processorName).getConfigOrEmpty("config");
+            result.put(processorName, new ProcessorConfig(processorConfig));
+        }
+        return result;
+    }
+
+    /**
+     * Create a processor with the give name, type, creator and spec
+     *
+     * type is used to load the tm, parameter and command classes as defined in processor.yaml spec if not null is
+     * passed as an extra argument to those classes - it is used for example when creating replay processors to pass on
+     * the data that has to be replayed. should probably be changed from string to some sort of object.
+     *
+     * @param yamcsInstance
+     * @param name
+     * @param type
+     * @param creator
+     * @param spec
+     * @return a new processor
+     * @throws ProcessorException
+     * @throws ConfigurationException
+     * @throws ValidationException
+     */
+    public static Processor create(String yamcsInstance, String name, String type, String creator, Object spec)
+            throws ProcessorException, ConfigurationException, ValidationException, InitException {
+        YConfiguration pc = null;
+        YConfiguration conf = YConfiguration.getConfiguration("processor");
+
+        List<ProcessorServiceWithConfig> serviceList;
+        try {
+            if (!conf.containsKey(type)) {
+                throw new ConfigurationException("No processor type '" + type + "' found in " + conf.getPath());
+            }
+            conf = conf.getConfig(type);
+            Log targetLog = new Log(ProcessorFactory.class, yamcsInstance);
+            targetLog.setContext(name);
+            serviceList = createServices(yamcsInstance, conf.getServiceConfigList("services"), targetLog);
+
+            pc = conf.getConfigOrEmpty("config");
+        } catch (IOException e) {
+            throw new ConfigurationException("Cannot load service", e);
+        }
+        pc = ProcessorConfig.getSpec().validate(pc);
+        ProcessorConfig processorConfig = new ProcessorConfig(pc);
+        return create(yamcsInstance, name, type, serviceList, creator, processorConfig, spec);
+    }
+
+    /**
+     * Create a Processor by specifying the service.
+     * 
+     * 
+     * @param instance
+     * @param name
+     * @param type
+     * @param creator
+     * @param config
+     * @return
+     * @throws ProcessorException
+     * @throws ConfigurationException
+     * @throws ValidationException
+     **/
+    public static Processor create(String instance, String name, String type,
+            List<ProcessorServiceWithConfig> serviceList,
+            String creator, ProcessorConfig config, Object spec)
+            throws ProcessorException, ConfigurationException, InitException, ValidationException {
+        if (config == null) {
+            throw new NullPointerException("config cannot be null");
+        }
+        Processor proc = new Processor(instance, name, type, creator);
+        YamcsServerInstance ysi = YamcsServer.getServer().getInstance(instance);
+        if (ysi != null) {// Unit Tests create processors outside of any instance
+            ysi.addProcessor(proc);
+        }
+        proc.init(serviceList, config, spec);
+        return proc;
+    }
+
+    /**
+     * creates a processor with the services already instantiated. used from unit tests
+     * 
+     * @throws ValidationException
+     */
+    public static Processor create(String yamcsInstance, String name, ProcessorService... services)
+            throws ProcessorException, ConfigurationException, InitException, ValidationException {
+        List<ProcessorServiceWithConfig> serviceList = new ArrayList<>();
+        for (ProcessorService service : services) {
+            serviceList.add(
+                    new ProcessorServiceWithConfig(service, service.getClass().getName(), service.getClass().getName(),
+                            YConfiguration.emptyConfig()));
+        }
+        return create(yamcsInstance, name, "test", serviceList, "test", new ProcessorConfig(), null);
+    }
+
+    /**
+     * creates a processor with the services already instantiated. used from unit tests
+     * 
+     * @throws ValidationException
+     */
+    public static Processor create(String yamcsInstance, String name, ProcessorServiceWithConfig... serviceList)
+            throws ProcessorException, ConfigurationException, InitException, ValidationException {
+        return create(yamcsInstance, name, "test", Arrays.asList(serviceList), "test", new ProcessorConfig(), null);
+    }
+
+    static List<ProcessorServiceWithConfig> createServices(String instance, List<YConfiguration> servicesConfig,
+            Log targetLog)
+            throws ValidationException, IOException {
+        ManagementService managementService = ManagementService.getInstance();
+        Set<String> names = new HashSet<>();
+        List<ProcessorServiceWithConfig> serviceList = new CopyOnWriteArrayList<>();
+        for (YConfiguration servconf : servicesConfig) {
+            String servclass;
+            YConfiguration config;
+            String name = null;
+            servclass = servconf.getString("class");
+            if (servconf.containsKey("config")) {
+                config = servconf.getConfig("config");
+            } else if (servconf.containsKey("args")) {
+                config = servconf.getConfig("args");
+            } else {
+                config = YConfiguration.emptyConfig();
+            }
+
+            name = servconf.getString("name", servclass.substring(servclass.lastIndexOf('.') + 1));
+            String candidateName = name;
+            int count = 1;
+            while (names.contains(candidateName)) {
+                candidateName = name + "-" + count;
+                count++;
+            }
+            name = candidateName;
+
+            targetLog.info("Loading processor service {}", name);
+            ProcessorServiceWithConfig swc;
+            try {
+                swc = createService(instance, servclass, name, config, targetLog);
+                serviceList.add(swc);
+            } catch (NoClassDefFoundError e) {
+                targetLog.error("Cannot create service {}, with arguments {}: class {} not found", name, config,
+                        servclass);
+                throw e;
+            } catch (ValidationException e) {
+                throw e;
+            } catch (Exception e) {
+                targetLog.error("Cannot create service {}, with arguments {}: {}", name, config, e.getMessage());
+                throw e;
+            }
+            if (managementService != null) {
+                managementService.registerService(instance, name, swc.service);
+            }
+            names.add(name);
+        }
+
+        return serviceList;
+    }
+
+    static ProcessorServiceWithConfig createService(String instance, String serviceClass, String serviceName,
+            YConfiguration config, Log targetLog)
+            throws ConfigurationException, ValidationException, IOException {
+        ProcessorService service = null;
+
+        service = YObjectLoader.loadObject(serviceClass);
+        Spec spec = service.getSpec();
+        if (spec != null) {
+            if (targetLog.isDebugEnabled()) {
+                Map<String, Object> unsafeArgs = config.getRoot();
+                Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                targetLog.debug("Raw args for {}: {}", serviceName, safeArgs);
+            }
+
+            config = spec.validate((YConfiguration) config);
+
+            if (targetLog.isDebugEnabled()) {
+                Map<String, Object> unsafeArgs = config.getRoot();
+                Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                targetLog.debug("Initializing {} with resolved args: {}", serviceName, safeArgs);
+            }
+        }
+        return new ProcessorServiceWithConfig(service, serviceClass, serviceName, config);
+    }
+}
+```
+
+### `ProcessorListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorListener.java`
+
+
+```java
+package org.yamcs;
+
+public interface ProcessorListener {
+
+    void processorAdded(Processor processor);
+
+    void processorClosed(Processor processor);
+
+    void processorStateChanged(Processor processor);
+}
+```
+
+### `ProcessorService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorService.java`
+
+
+```java
+package org.yamcs;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * This interface has to be implemented by all services that run as part of a processor.
+ * 
+ * 
+ */
+public interface ProcessorService extends Service {
+
+    /**
+     * Returns the valid configuration of the input args of this service.
+     * 
+     * @return the argument specification, or {@code null} if the args should not be validated.
+     */
+    default Spec getSpec() {
+        return null;
+    }
+
+    /**
+     * @param proc
+     * @param config
+     *            service configuration as specified in processor.yaml
+     * @param spec
+     *            passed by the user when creating the processor (for instance via the REST API)
+     * 
+     */
+    void init(Processor proc, YConfiguration config, Object spec) throws InitException;
+}
+```
+
+### `ProcessorServiceWithConfig.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessorServiceWithConfig.java`
+
+
+```java
+package org.yamcs;
+
+public class ProcessorServiceWithConfig {
+    final ProcessorService service;
+
+    final String serviceClass;
+    final String name;
+    final YConfiguration config;
+
+    public ProcessorServiceWithConfig(ProcessorService service, String serviceClass, String name, YConfiguration config) {
+        if (config == null) {
+            throw new NullPointerException("Config cannot be null (use Yconfiguration.emptyConfig() if necessary");
+        }
+        this.service = service;
+        this.serviceClass = serviceClass;
+        this.name = name;
+        this.config = config;
+
+    }
+
+    public ProcessorService getService() {
+        return service;
+    }
+
+    public String getServiceClass() {
+        return serviceClass;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public YConfiguration getConfig() {
+        return config;
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceWithConfig [service=" + service + ", serviceClass=" + serviceClass + ", name=" + name
+                + ", config=" + config + "]";
+    }
+}
+```
+
+### `ProcessRunner.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ProcessRunner.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.Spec.OptionType;
+
+import com.google.common.base.CharMatcher;
+
+/**
+ * Global service that launches and supervises a configured program or script. The primary purpose is to run non-java
+ * code, or to decouple java code that uses a fragile or untested JNI layer.
+ */
+public class ProcessRunner extends AbstractYamcsService {
+
+    private static enum RestartMode {
+        ALWAYS("always"),
+        ON_SUCCESS("on-success"),
+        ON_FAILURE("on-failure"),
+        NEVER("never");
+
+        String userOption;
+
+        RestartMode(String userOption) {
+            this.userOption = userOption;
+        }
+
+        static RestartMode fromUserOption(String userOption) {
+            for (RestartMode value : values()) {
+                if (value.userOption.equals(userOption)) {
+                    return value;
+                }
+            }
+            throw new IllegalArgumentException("Unexpected restart mode: '" + userOption + "'");
+        }
+    }
+
+    private ProcessBuilder pb;
+    private String logLevel;
+    private String logPrefix;
+
+    private Process process;
+    private ScheduledFuture<?> watchdog;
+
+    private RestartMode restartMode;
+    private List<Integer> successExitCodes;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("command", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withRequired(true);
+        spec.addOption("directory", OptionType.STRING);
+        spec.addOption("logLevel", OptionType.STRING).withDefault("INFO");
+        spec.addOption("logPrefix", OptionType.STRING);
+        spec.addOption("restart", OptionType.STRING)
+                .withChoices("always", "on-success", "on-failure", "never")
+                .withDefault("never");
+        spec.addOption("successExitCode", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.INTEGER)
+                .withDefault(0);
+        spec.addOption("environment", OptionType.MAP).withSpec(Spec.ANY);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        restartMode = RestartMode.fromUserOption(config.getString("restart"));
+        successExitCodes = config.getList("successExitCode");
+
+        List<String> command = config.getList("command");
+        pb = new ProcessBuilder(command);
+
+        pb.redirectErrorStream(true);
+        pb.environment().put("YAMCS", "1");
+
+        if (config.containsKey("environment")) {
+            Map<String, Object> map = config.getMap("environment");
+            for (var entry : map.entrySet()) {
+                pb.environment().put(entry.getKey(), "" + entry.getValue());
+            }
+        }
+
+        if (config.containsKey("directory")) {
+            pb.directory(new File(config.getString("directory")));
+        }
+
+        logLevel = config.getString("logLevel");
+        logPrefix = config.getString("logPrefix", "[" + pb.command().get(0) + "] ");
+    }
+
+    @Override
+    protected void doStart() {
+        try {
+            startProcess();
+            notifyStarted();
+        } catch (IOException e) {
+            log.error("Failed to start process", e);
+            notifyFailed(e);
+            return;
+        }
+
+        YamcsServer yamcs = YamcsServer.getServer();
+        ScheduledExecutorService exec = yamcs.getThreadPoolExecutor();
+        watchdog = exec.scheduleWithFixedDelay(() -> {
+            if (!process.isAlive() && isRunning() && !yamcs.isShuttingDown()) {
+                int code = process.exitValue();
+
+                boolean restart = false;
+                if (successExitCodes.contains(code)) {
+                    if (restartMode == RestartMode.ALWAYS || restartMode == RestartMode.ON_SUCCESS) {
+                        log.info("Process exited with code {}. Starting new process", code);
+                        restart = true;
+                    } else {
+                        log.info("Process exited with code {}. Stopping service", code);
+                        stopAsync();
+                    }
+                } else {
+                    if (restartMode == RestartMode.ALWAYS || restartMode == RestartMode.ON_FAILURE) {
+                        log.warn("Process exited with code {}. Starting new process", code);
+                        restart = true;
+                    } else {
+                        log.warn("Process exited with code {}. Stopping service", code);
+                        stopAsync();
+                    }
+                }
+
+                if (restart) {
+                    try {
+                        startProcess();
+                    } catch (IOException e) {
+                        log.error("Failed to start process", e);
+                    }
+                }
+            }
+        }, 5, 5, TimeUnit.SECONDS);
+    }
+
+    private void startProcess() throws IOException {
+        process = pb.start();
+
+        // Start a thread for reading process output. The thread lifecycle is linked to the process.
+        new Thread(() -> {
+            try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                reader.lines().forEach(line -> {
+                    line = CharMatcher.whitespace().trimTrailingFrom(line);
+                    switch (logLevel) {
+                    case "DEBUG":
+                        log.debug("{}{}", logPrefix, line);
+                        break;
+                    case "TRACE":
+                        log.trace("{}{}", logPrefix, line);
+                        break;
+                    case "WARN":
+                        log.warn("{}{}", logPrefix, line);
+                        break;
+                    case "ERROR":
+                        log.error("{}{}", logPrefix, line);
+                        break;
+                    default:
+                        log.info("{}{}", logPrefix, line);
+                    }
+                    onProcessOutput(line);
+                });
+            } catch (IOException e) {
+                log.error("Exception while gobbling process output", e);
+            }
+        }, getClass().getSimpleName() + " Gobbler").start();
+    }
+
+    protected void onProcessOutput(String line) {
+        // NOP by default
+    }
+
+    @Override
+    protected void doStop() {
+        watchdog.cancel(true);
+        process.destroy();
+
+        // Give the process some time to stop before reporting success. During
+        // shutdown, this reduces the chance of subprocess to be momentarily
+        // alive after the main Yamcs process has already stopped.
+        try {
+            boolean exited = process.waitFor(1000, TimeUnit.MILLISECONDS);
+            if (!exited) {
+                // This is also no "guarantee", but we did our best.
+                process.destroyForcibly();
+            }
+            notifyStopped();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+```
+
+### `ReadyListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ReadyListener.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Listener that is called when Yamcs has fully started. Register instances at
+ * {@link YamcsServer#addReadyListener(ReadyListener)}
+ */
+@FunctionalInterface
+public interface ReadyListener {
+
+    public void onReady();
+}
+```
+
+### `ServiceWithConfig.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ServiceWithConfig.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Holder for a service together with its name and config. Services are used at three levels:
+ * <ul>
+ * <li>Yamcs server global services
+ * <li>Yamcs instance specific services
+ * <li>Processor specific services
+ * </ul>
+ * 
+ * @author nm
+ */
+public class ServiceWithConfig {
+    final YamcsService service;
+ 
+    final String serviceClass;
+    final String name;
+    final YConfiguration args;
+    final boolean enableAtStartup;
+
+    public ServiceWithConfig(YamcsService service, String serviceClass, String name, YConfiguration args, boolean enabledAtStartup) {
+        this.service = service;
+        this.serviceClass = serviceClass;
+        this.name = name;
+        this.args = args;
+        this.enableAtStartup = enabledAtStartup;
+    }
+
+    public ServiceWithConfig(YamcsService service, String serviceClass, String name, YConfiguration args) {
+        this(service, serviceClass, name, args, true);
+    }
+
+    public YamcsService getService() {
+        return service;
+    }
+
+    public String getServiceClass() {
+        return serviceClass;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Object getArgs() {
+        return args;
+    }
+    
+    @Override
+    public String toString() {
+        return "ServiceWithConfig [service=" + service + ", serviceClass=" + serviceClass + ", name=" + name + ", args="
+                + args + "]";
+    }
+
+}
+```
+
+### `Spec.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/Spec.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Specifies the valid structure of a {@link YConfiguration} instance.
+ * <p>
+ * While not strictly 'validation', the spec also allows defining additional metadata like the 'default' keyword which
+ * is used in the merged result of a validation.
+ * <p>
+ * Furthermore, a spec validation applies a limited set of type transformations.
+ */
+public class Spec {
+
+    private static final Logger log = LoggerFactory.getLogger(Spec.class);
+
+    /**
+     * Spec implementation that allows any key.
+     */
+    public static final Spec ANY = new Spec();
+    static {
+        ANY.allowUnknownKeys = true;
+    }
+
+    private static final Spec OPTION_DESCRIPTOR = new Spec();
+    static {
+        OPTION_DESCRIPTOR.addOption("title", OptionType.STRING).withRequired(true);
+        OPTION_DESCRIPTOR.addOption("description", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING);
+        OPTION_DESCRIPTOR.addOption("type", OptionType.STRING)
+                .withRequired(true)
+                .withChoices(OptionType.class);
+        OPTION_DESCRIPTOR.addOption("required", OptionType.BOOLEAN).withDefault(false);
+        OPTION_DESCRIPTOR.addOption("secret", OptionType.BOOLEAN).withDefault(false);
+        OPTION_DESCRIPTOR.addOption("hidden", OptionType.BOOLEAN).withDefault(false);
+        OPTION_DESCRIPTOR.addOption("default", OptionType.ANY);
+        OPTION_DESCRIPTOR.addOption("versionAdded", OptionType.STRING);
+        OPTION_DESCRIPTOR.addOption("deprecationMessage", OptionType.STRING);
+        OPTION_DESCRIPTOR.addOption("elementType", OptionType.STRING)
+                .withChoices(OptionType.class);
+        OPTION_DESCRIPTOR.addOption("choices", OptionType.LIST)
+                .withElementType(OptionType.ANY);
+        OPTION_DESCRIPTOR.addOption("suboptions", OptionType.MAP)
+                .withSpec(ANY);
+        OPTION_DESCRIPTOR.addOption("applySpecDefaults", OptionType.BOOLEAN)
+                .withDefault(false);
+    }
+
+    private Map<String, Option> options = new LinkedHashMap<>();
+    private Map<String, String> aliases = new HashMap<>();
+
+    private boolean allowUnknownKeys = false;
+    private List<List<String>> requiredOneOfGroups = new ArrayList<>(0);
+    private List<List<String>> requireTogetherGroups = new ArrayList<>(0);
+    private List<List<String>> mutuallyExclusiveGroups = new ArrayList<>(0);
+    private List<WhenCondition> whenConditions = new ArrayList<>(0);
+
+    /**
+     * Returns true if this spec contains the specified option.
+     */
+    public boolean containsOption(String name) {
+        return options.containsKey(name);
+    }
+
+    /**
+     * Add an {@link Option} to this spec.
+     * 
+     * @throws IllegalArgumentException
+     *             if an option with this name is already defined.
+     */
+    public Option addOption(String name, OptionType type) {
+        if (options.containsKey(name) || aliases.containsKey(name)) {
+            throw new IllegalArgumentException("Option '" + name + "' is already defined");
+        }
+        var option = new Option(this, name, type);
+        options.put(name, option);
+        return option;
+    }
+
+    /**
+     * Remove an {@link Option} from this spec.
+     */
+    public void removeOption(String name) {
+        options.remove(name);
+    }
+
+    public void allowUnknownKeys(boolean allowUnknownKeys) {
+        this.allowUnknownKeys = allowUnknownKeys;
+    }
+
+    /**
+     * Specify a set of keys of which at least one must be specified. Note that this not enforce that only one is
+     * specified. You can combine this check with {@link #mutuallyExclusive(String...)} if that is required.
+     */
+    public void requireOneOf(String... keys) {
+        verifyKeys(keys);
+        requiredOneOfGroups.add(Arrays.asList(keys));
+    }
+
+    /**
+     * Specify a set of keys that must appear together. This check only applies as soon as at least one of these keys
+     * has been specified.
+     */
+    public void requireTogether(String... keys) {
+        verifyKeys(keys);
+        requireTogetherGroups.add(Arrays.asList(keys));
+    }
+
+    /**
+     * Specify a set of keys that are mutually exclusive. i.e. at most one of them may be specified.
+     */
+    public void mutuallyExclusive(String... keys) {
+        verifyKeys(keys);
+        mutuallyExclusiveGroups.add(Arrays.asList(keys));
+    }
+
+    /**
+     * Add a condition that is only verified when {@code key.equals(value)}
+     * 
+     * @param key
+     *            the name of an option
+     * @param value
+     *            the value that triggers the conditional check
+     * @return an instance of {@link WhenCondition} for further configuration options
+     */
+    public WhenCondition when(String key, Object value) {
+        verifyKeys(key);
+        var whenCondition = new WhenCondition(this, key, value);
+        whenConditions.add(whenCondition);
+        return whenCondition;
+    }
+
+    /**
+     * Validate the given arguments according to this spec.
+     * 
+     * @param args
+     *            the arguments to validate.
+     * @return the validation result where defaults have been added to the input arguments
+     * @throws ValidationException
+     *             when the specified arguments did not match this specification
+     */
+    public YConfiguration validate(YConfiguration args) throws ValidationException {
+        var ctx = new ValidationContext(args.getPath());
+        var result = doValidate(ctx, args.getRoot(), "", false);
+        var wrapped = YConfiguration.wrap(result);
+        wrapped.parent = args.parent;
+        wrapped.parentKey = args.parentKey;
+        wrapped.rootLocation = args.rootLocation;
+        return wrapped;
+    }
+
+    /**
+     * Validate the given arguments according to this spec.
+     * 
+     * @param args
+     *            the arguments to validate, keyed by argument name.
+     * @return the validation result where defaults have been added to the input arguments
+     * @throws ValidationException
+     *             when the specified arguments did not match this specification
+     */
+    public Map<String, Object> validate(Map<String, Object> args) throws ValidationException {
+        return doValidate(new ValidationContext(""), args, "", false);
+    }
+
+    private Map<String, Object> doValidate(ValidationContext ctx, Map<String, Object> args, String parent,
+            boolean suppressWarnings)
+            throws ValidationException {
+
+        for (var group : requiredOneOfGroups) {
+            if (count(args, group) == 0) {
+                var msg = "One of the following is required: " + group;
+                if (!"".equals(parent)) {
+                    msg += " at " + parent;
+                }
+                throw new ValidationException(ctx, msg);
+            }
+        }
+
+        for (var group : mutuallyExclusiveGroups) {
+            if (count(args, group) > 1) {
+                var msg = "The following arguments are mutually exclusive: " + group;
+                if (!"".equals(parent)) {
+                    msg += " at " + parent;
+                }
+                throw new ValidationException(ctx, msg);
+            }
+        }
+
+        for (var group : requireTogetherGroups) {
+            int n = count(args, group);
+            if (n > 0 && n != group.size()) {
+                var msg = "The following arguments are required together: " + group;
+                if (!"".equals(parent)) {
+                    msg += " at " + parent;
+                }
+                throw new ValidationException(ctx, msg);
+            }
+        }
+
+        var satisfiedWhenConditions = whenConditions.stream().filter(whenCondition -> {
+            var arg = args.get(whenCondition.key);
+            return arg != null && arg.equals(whenCondition.value);
+        }).toList();
+
+        for (var whenCondition : satisfiedWhenConditions) {
+            var missing = whenCondition.requiredKeys.stream()
+                    .filter(key -> !args.containsKey(key))
+                    .collect(Collectors.toList());
+            if (!missing.isEmpty()) {
+                var path = "".equals(parent) ? whenCondition.key : (parent + "->" + whenCondition.key);
+                throw new ValidationException(ctx, String.format(
+                        "%s is %s but the following arguments are missing: %s",
+                        path, whenCondition.value, missing));
+            }
+        }
+
+        // Build a new set of args where defaults have been entered
+        // Make this a linked hashmap to keep the defined order
+        var result = new LinkedHashMap<String, Object>();
+
+        // Check the provided arguments
+        for (var entry : args.entrySet()) {
+            var argName = entry.getKey();
+            var path = "".equals(parent) ? argName : (parent + "->" + argName);
+
+            var option = getOption(argName);
+            if (option == null) {
+                for (var whenCondition : satisfiedWhenConditions) {
+                    option = whenCondition.options.get(argName);
+                    if (option != null) {
+                        break;
+                    }
+                }
+            }
+
+            if (option == null) {
+                if (allowUnknownKeys) {
+                    result.put(argName, entry.getValue());
+                } else {
+                    throw new ValidationException(ctx, "Unknown argument " + path);
+                }
+            } else if (result.containsKey(option.name)) {
+                throw new ValidationException(ctx,
+                        String.format("Argument '%s' already specified. Check for aliases.", option.name));
+            } else {
+                var arg = entry.getValue();
+                var resultArg = option.validate(ctx, arg, path, suppressWarnings);
+                result.put(option.name, resultArg);
+            }
+        }
+
+        var effectiveOptions = new ArrayList<>(options.values());
+        for (var whenCondition : satisfiedWhenConditions) {
+            effectiveOptions.addAll(whenCondition.options.values());
+        }
+
+        for (var option : effectiveOptions) {
+            var specified = args.containsKey(option.name);
+            for (var alias : aliases.entrySet()) {
+                if (alias.getValue().equals(option.name) && args.containsKey(alias.getKey())) {
+                    specified = true;
+                }
+            }
+
+            if (!specified) {
+                var path = "".equals(parent) ? option.name : parent + "->" + option.name;
+                if (option.required) {
+                    throw new ValidationException(ctx, "Missing required argument " + path);
+                }
+
+                var defaultValue = option.validate(ctx, option.computeDefaultValue(), path,
+                        true /* suppressWarnings */);
+
+                if (defaultValue != null) {
+                    result.put(option.name, defaultValue);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public Collection<Option> getOptions() {
+        return options.values();
+    }
+
+    public boolean isAllowUnknownKeys() {
+        return allowUnknownKeys;
+    }
+
+    public List<List<String>> getRequiredOneOfGroups() {
+        return requiredOneOfGroups;
+    }
+
+    public List<List<String>> getRequireTogetherGroups() {
+        return requireTogetherGroups;
+    }
+
+    public List<WhenCondition> getWhenConditions() {
+        return whenConditions;
+    }
+
+    public Option getOption(String key) {
+        key = aliases.getOrDefault(key, key);
+        return options.get(key);
+    }
+
+    public List<String> getAliases(Option option) {
+        return aliases.entrySet().stream()
+                .filter(entry -> option.name.equals(entry.getValue()))
+                .map(entry -> entry.getKey())
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a copy of the given arguments but with all secret arguments recursively removed.
+     * <p>
+     * This method does not validate the arguments, however it will throw random exceptions if the input does not match
+     * the expected structure. It is therefore best to validate the arguments before passing them.
+     */
+    public Map<String, Object> removeSecrets(Map<String, Object> unsafeArgs) {
+        return makeSafe(unsafeArgs, false);
+    }
+
+    /**
+     * Returns a copy of the given arguments but with all secret arguments masked as {@code *****}.
+     * <p>
+     * This method does not validate the arguments, however it will throw random exceptions if the input does not match
+     * the expected structure. It is therefore best to validate the arguments before passing them.
+     */
+    public Map<String, Object> maskSecrets(Map<String, Object> unsafeArgs) {
+        return makeSafe(unsafeArgs, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> makeSafe(Map<String, Object> unsafeArgs, boolean mask) {
+        var safeArgs = new LinkedHashMap<String, Object>();
+        for (var arg : unsafeArgs.entrySet()) {
+            var option = getOption(arg.getKey());
+            if (option == null) {
+                // No exception. Often this method is called while we are already
+                // handling another exception.
+                safeArgs.put(arg.getKey(), arg.getValue());
+                continue;
+            }
+
+            var type = option.type;
+            var argValue = arg.getValue();
+            if (type == OptionType.LIST_OR_ELEMENT && !(argValue instanceof List)) {
+                type = OptionType.LIST;
+                argValue = Arrays.asList(argValue);
+            }
+
+            if (option.secret) {
+                if (mask) {
+                    safeArgs.put(arg.getKey(), "*****");
+                }
+            } else if (type == OptionType.MAP) {
+                var map = (Map<String, Object>) argValue;
+                var safeMap = option.spec.makeSafe(map, mask);
+                safeArgs.put(arg.getKey(), safeMap);
+            } else if (type == OptionType.LIST) {
+                var list = (List<Object>) argValue;
+                var safeList = new ArrayList<>();
+                for (var element : list) {
+                    if (option.elementType == OptionType.MAP) {
+                        var mapElement = (Map<String, Object>) element;
+                        var safeMapElement = option.spec.makeSafe(mapElement, mask);
+                        if (!safeMapElement.isEmpty()) {
+                            safeList.add(safeMapElement);
+                        }
+                    } else {
+                        safeList.add(element);
+                    }
+                }
+                safeArgs.put(arg.getKey(), safeList);
+            } else {
+                safeArgs.put(arg.getKey(), argValue);
+            }
+        }
+        return safeArgs;
+    }
+
+    private void verifyKeys(String... keys) {
+        for (var key : keys) {
+            if (!options.containsKey(key)) {
+                throw new IllegalArgumentException("Unknown option " + key);
+            }
+        }
+    }
+
+    private int count(Map<String, Object> args, List<String> check) {
+        return (int) check.stream()
+                .filter(args::containsKey)
+                .count();
+    }
+
+    public static enum OptionType {
+
+        /**
+         * Arguments for an ANY option are unvalidated.
+         */
+        ANY,
+
+        BOOLEAN,
+        INTEGER,
+        FLOAT,
+        LIST,
+
+        /**
+         * This option converts arguments automatically to a list if the argument is not a list.
+         */
+        LIST_OR_ELEMENT,
+
+        MAP,
+        STRING;
+
+        Object convertArgument(ValidationContext ctx, String path, Object arg, OptionType elementType)
+                throws ValidationException {
+            if (this == ANY) {
+                return arg;
+            }
+
+            if (arg == null) {
+                return null;
+            }
+
+            if (arg instanceof String) {
+                try {
+                    arg = YConfiguration.expandString(null, (String) arg);
+                } catch (ConfigurationException e) {
+                    throw new ValidationException(ctx, String.format("%s: %s", path, e));
+                }
+            }
+
+            var argType = forArgument(arg);
+            if (this == argType) {
+                return arg;
+            } else if (this == LIST_OR_ELEMENT) {
+                if (argType == LIST) {
+                    return arg;
+                } else {
+                    var elementArg = elementType.convertArgument(ctx, path, arg, null);
+                    return Arrays.asList(elementArg);
+                }
+            } else if (this == INTEGER) {
+                if (arg instanceof String) {
+                    var stringValue = (String) arg;
+                    try {
+                        return Integer.parseInt(stringValue);
+                    } catch (NumberFormatException e) {
+                        try {
+                            return Long.parseLong(stringValue);
+                        } catch (NumberFormatException e2) {
+                            throw new ValidationException(
+                                    ctx, String.format("%s: invalid integer '%s'", path, stringValue));
+                        }
+                    }
+                } else if ((arg instanceof Float) && (((Float) arg) % 1) == 0) {
+                    return ((Float) arg).intValue();
+                } else if ((arg instanceof Double) && ((Double) arg % 1) == 0) {
+                    return ((Double) arg).intValue();
+                }
+            } else if (this == FLOAT) {
+                if (arg instanceof Integer) {
+                    return Double.valueOf((Integer) arg);
+                } else if (arg instanceof Long) {
+                    return Double.valueOf((Long) arg);
+                } else if (arg instanceof String) {
+                    var stringValue = (String) arg;
+                    try {
+                        return Double.parseDouble(stringValue);
+                    } catch (NumberFormatException e) {
+                        throw new ValidationException(
+                                ctx, String.format("%s: invalid float '%s'", path, stringValue));
+                    }
+                }
+            } else if (this == BOOLEAN) {
+                if (arg instanceof String) {
+                    var stringValue = (String) arg;
+                    switch (stringValue) {
+                    case "yes":
+                    case "true":
+                    case "on":
+                        return true;
+                    case "no":
+                    case "false":
+                    case "off":
+                        return false;
+                    default:
+                        // Fall
+                    }
+                }
+            }
+            throw new ValidationException(ctx, String.format(
+                    "%s is of type %s, but should be %s instead",
+                    path, argType, this));
+        }
+
+        static OptionType forArgument(Object arg) {
+            if (arg instanceof String || arg instanceof Enum) {
+                return STRING;
+            } else if (arg instanceof Boolean) {
+                return BOOLEAN;
+            } else if (arg instanceof Integer || arg instanceof Long) {
+                return INTEGER;
+            } else if (arg instanceof Float || arg instanceof Double) {
+                return FLOAT;
+            } else if (arg instanceof List) {
+                return LIST;
+            } else if (arg instanceof Map) {
+                return MAP;
+            } else if (arg == null) {
+                throw new IllegalArgumentException("Cannot derive type for null argument");
+            } else {
+                throw new IllegalArgumentException(
+                        "Cannot derive type for argument of class " + arg.getClass().getName());
+            }
+        }
+    }
+
+    public static final class WhenCondition {
+
+        private Spec spec;
+        private String key;
+        private Object value;
+        private Map<String, Option> options = new LinkedHashMap<>(0);
+        private List<String> requiredKeys = new ArrayList<>(0);
+        private List<List<String>> requiredOneOfGroups = new ArrayList<>(0);
+        private List<List<String>> requireTogetherGroups = new ArrayList<>(0);
+        private List<List<String>> mutuallyExclusiveGroups = new ArrayList<>(0);
+
+        public WhenCondition(Spec spec, String key, Object value) {
+            this.spec = spec;
+            this.key = key;
+            this.value = value;
+        }
+
+        /**
+         * Add an {@link Option} when the condition is satisfied.
+         * 
+         * @throws IllegalArgumentException
+         *             if an option with this name is already defined.
+         */
+        public Option addOption(String name, OptionType type) {
+            var option = new Option(spec, name, type);
+            options.put(name, option);
+            return option;
+        }
+
+        /**
+         * Apply options from the given spec into the current spec when the condition is satisfied.
+         *
+         * @throws IllegalArgumentException
+         *             if an option with the same name is already defined.
+         */
+        public WhenCondition mergeSpec(Spec spec) {
+            var parentSpec = this.spec;
+            for (var option : spec.options.values()) {
+                var copy = new Option(parentSpec, option);
+                options.put(option.name, copy);
+            }
+            parentSpec.requiredOneOfGroups.addAll(spec.requiredOneOfGroups);
+            parentSpec.requireTogetherGroups.addAll(spec.requireTogetherGroups);
+            parentSpec.mutuallyExclusiveGroups.addAll(spec.mutuallyExclusiveGroups);
+            return this;
+        }
+
+        public Collection<Option> getOptions() {
+            return options.values();
+        }
+
+        public WhenCondition requireAll(String... keys) {
+            spec.verifyKeys(keys);
+            for (var key : keys) {
+                requiredKeys.add(key);
+            }
+            return this;
+        }
+
+        /**
+         * Specify a set of keys that must appear together. This check only applies as soon as at least one of these
+         * keys has been specified.
+         */
+        public void requireTogether(String... keys) {
+            requireTogetherGroups.add(Arrays.asList(keys));
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public List<String> getRequiredKeys() {
+            return requiredKeys;
+        }
+    }
+
+    public static final class Option {
+
+        private final Spec parentSpec;
+        private final String name;
+        private final OptionType type;
+        private String title;
+        private List<String> description;
+        private boolean required;
+        private boolean secret;
+        private boolean hidden;
+        private Object defaultValue;
+        private OptionType elementType;
+        private String versionAdded;
+        private String deprecationMessage;
+        private List<Object> choices;
+        private Spec spec;
+        private boolean applySpecDefaults;
+
+        public Option(Spec parentSpec, String name, OptionType type) {
+            this.parentSpec = parentSpec;
+            this.name = name;
+            this.type = type;
+        }
+
+        public Option(Spec parentSpec, Option original) {
+            this(parentSpec, original.name, original.type);
+            title = original.title;
+            if (original.description != null) {
+                description = new ArrayList<>(original.description);
+            }
+            required = original.required;
+            secret = original.secret;
+            hidden = original.hidden;
+            defaultValue = original.defaultValue;
+            elementType = original.elementType;
+            versionAdded = original.versionAdded;
+            deprecationMessage = original.deprecationMessage;
+            if (original.choices != null) {
+                choices = new ArrayList<>(original.choices);
+            }
+            spec = original.spec;
+            applySpecDefaults = original.applySpecDefaults;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public OptionType getType() {
+            return type;
+        }
+
+        public boolean isRequired() {
+            return required;
+        }
+
+        public boolean isHidden() {
+            return hidden;
+        }
+
+        public boolean isSecret() {
+            return secret;
+        }
+
+        public OptionType getElementType() {
+            return elementType;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public List<String> getDescription() {
+            return description;
+        }
+
+        public String getVersionAdded() {
+            return versionAdded;
+        }
+
+        public String getDeprecationMessage() {
+            return deprecationMessage;
+        }
+
+        public List<Object> getChoices() {
+            return choices;
+        }
+
+        public Spec getSpec() {
+            return spec;
+        }
+
+        public boolean isApplySpecDefaults() {
+            return applySpecDefaults;
+        }
+
+        public Object getDefaultValue() {
+            return defaultValue;
+        }
+
+        public Option withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Option withDescription(String... description) {
+            this.description = Arrays.asList(description);
+            return this;
+        }
+
+        /**
+         * Set whether this option is required.
+         */
+        public Option withRequired(boolean required) {
+            this.required = required;
+            return this;
+        }
+
+        /**
+         * Hint that this option should be hidden from UIs.
+         */
+        public Option withHidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
+        /**
+         * Set whether this option is secret.
+         * 
+         * Secret options are not printed in log files.
+         */
+        public Option withSecret(boolean secret) {
+            this.secret = secret;
+            return this;
+        }
+
+        /**
+         * Sets the default value. This is used only if the option is not required.
+         */
+        public Option withDefault(Object defaultValue) {
+            if (defaultValue instanceof Enum) {
+                this.defaultValue = ((Enum<?>) defaultValue).name();
+            } else {
+                this.defaultValue = defaultValue;
+            }
+            return this;
+        }
+
+        /**
+         * In case the {@link #type} is set to {@link OptionType#LIST} or {@link OptionType#LIST_OR_ELEMENT} the element
+         * type indicates the type of each element of that list.
+         */
+        public Option withElementType(OptionType elementType) {
+            if (type != OptionType.LIST && type != OptionType.LIST_OR_ELEMENT) {
+                throw new IllegalArgumentException("Element type can only be set on LIST or LIST_OR_ELEMENT");
+            }
+            this.elementType = elementType;
+            return this;
+        }
+
+        /**
+         * Which version of the software this specific option was added. For example: "1.2.3". In plugins, this must be
+         * the plugin version, not the Yamcs version.
+         */
+        public Option withVersionAdded(String versionAdded) {
+            this.versionAdded = versionAdded;
+            return this;
+        }
+
+        /**
+         * Attach a deprecation message to this option.
+         */
+        public Option withDeprecationMessage(String deprecationMessage) {
+            this.deprecationMessage = deprecationMessage;
+            return this;
+        }
+
+        /**
+         * Sets the allowed values of this option.
+         */
+        public Option withChoices(Object... choices) {
+            this.choices = Arrays.asList(choices);
+            return this;
+        }
+
+        /**
+         * Sets the allowed values of this option.
+         */
+        public Option withChoices(Collection<?> choices) {
+            this.choices = new ArrayList<>(choices);
+            return this;
+        }
+
+        /**
+         * Sets the allowed values of this option based on the states of an Enum.
+         */
+        public <T extends Enum<T>> Option withChoices(Class<T> enumClass) {
+            return withChoices(EnumSet.allOf(enumClass).stream()
+                    .map(Enum::name)
+                    .toArray());
+        }
+
+        /**
+         * Add aliases for this option. During validation the alias will be converted to the real option name.
+         */
+        public Option withAliases(String... aliases) {
+            for (var alias : aliases) {
+                if (parentSpec.options.containsKey(alias)) {
+                    throw new IllegalArgumentException("Option '" + alias + "' is already defined");
+                }
+                parentSpec.aliases.put(alias, name);
+            }
+            return this;
+        }
+
+        /**
+         * In case the {@link #type} or the {@link #elementType} is set to {@link OptionType#MAP} this specifies the
+         * options within that map.
+         */
+        public Option withSpec(Spec spec) {
+            this.spec = spec;
+            return this;
+        }
+
+        /**
+         * In case the {@link #type} is set to {@link OptionType#MAP}, setting this property to {@code true} will cause
+         * defaults within elements of that type to be applied even if the option itself is not defined.
+         * <p>
+         * Note that this is not a recursive property. You need to specify at every level if so required.
+         */
+        public Option withApplySpecDefaults(boolean applySpecDefaults) {
+            this.applySpecDefaults = applySpecDefaults;
+            return this;
+        }
+
+        @SuppressWarnings("unchecked")
+        private Object validate(ValidationContext ctx, Object arg, String path, boolean suppressWarnings)
+                throws ValidationException {
+            if (deprecationMessage != null && !suppressWarnings) {
+                log.warn("Argument {} has been deprecated: {}", path, deprecationMessage);
+            }
+            if (arg == null) {
+                return null;
+            }
+
+            arg = type.convertArgument(ctx, path, arg, elementType);
+
+            if (choices != null && !choices.contains(arg)) {
+                throw new ValidationException(ctx, String.format(
+                        "%s should be one of %s", name, choices));
+            }
+
+            if (type == OptionType.MAP || ((type == OptionType.LIST || type == OptionType.LIST_OR_ELEMENT)
+                    && elementType == OptionType.MAP)) {
+                if (spec == null) {
+                    throw new ValidationException(ctx, String.format(
+                            "%s cannot be validated since it does not have a specification.", path));
+                }
+            }
+
+            if (type == OptionType.LIST || type == OptionType.LIST_OR_ELEMENT) {
+                var resultList = new ArrayList<>();
+                var it = ((List<Object>) arg).listIterator();
+                while (it.hasNext()) {
+                    var elPath = path + "[" + it.nextIndex() + "]";
+                    var argElement = it.next();
+                    argElement = elementType.convertArgument(ctx, elPath, argElement, null);
+
+                    if (elementType == OptionType.LIST) {
+                        throw new UnsupportedOperationException("List of lists cannot be validated");
+                    } else if (elementType == OptionType.MAP) {
+                        var m = (Map<String, Object>) argElement;
+                        var resultArg = spec.doValidate(ctx, m, elPath, suppressWarnings);
+                        resultList.add(resultArg);
+                    } else {
+                        resultList.add(argElement);
+                    }
+                }
+                return resultList;
+            } else if (type == OptionType.MAP) {
+                return spec.doValidate(ctx, (Map<String, Object>) arg, path, suppressWarnings);
+            } else {
+                return arg;
+            }
+        }
+
+        private Object computeDefaultValue() {
+            if (defaultValue != null) {
+                if (type == OptionType.LIST_OR_ELEMENT && !(defaultValue instanceof List)) {
+                    return Arrays.asList(defaultValue);
+                }
+                return defaultValue;
+            }
+            if (applySpecDefaults) {
+                var result = new LinkedHashMap<String, Object>();
+                for (var option : spec.options.values()) {
+                    var subDefaultValue = option.computeDefaultValue();
+                    if (subDefaultValue != null) {
+                        result.put(option.name, subDefaultValue);
+                    }
+                }
+                return result;
+            }
+            return null;
+        }
+    }
+
+    /**
+     * A specialized {@link Spec} that also has a name.
+     * 
+     * The intended usage is when a {@link Spec} is defined for the value of a mapping key, and this mapping key is also
+     * to be specified.
+     */
+    public static final class NamedSpec extends Spec {
+
+        private String name;
+
+        public NamedSpec(String name) {
+            this.name = Objects.requireNonNull(name);
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
+     * Creates a spec object based on a option descriptors.
+     */
+    @SuppressWarnings("unchecked")
+    public static Spec fromDescriptor(Map<String, Map<String, Object>> optionDescriptors) throws ValidationException {
+        var spec = new Spec();
+        for (var entry : optionDescriptors.entrySet()) {
+            var optionName = entry.getKey();
+            var optionDescriptor = OPTION_DESCRIPTOR.validate(entry.getValue());
+
+            var option = spec.addOption(optionName, OptionType.valueOf((String) optionDescriptor.get("type")))
+                    .withTitle((String) optionDescriptor.get("title"))
+                    .withDefault(optionDescriptor.get("default"))
+                    .withRequired((boolean) optionDescriptor.get("required"))
+                    .withHidden((boolean) optionDescriptor.get("hidden"))
+                    .withSecret((boolean) optionDescriptor.get("secret"))
+                    .withVersionAdded((String) optionDescriptor.get("versionAdded"))
+                    .withDeprecationMessage((String) optionDescriptor.get("deprecationMessage"));
+            if (optionDescriptor.containsKey("description")) {
+                option.withDescription(((List<String>) optionDescriptor.get("description")).toArray(new String[0]));
+            }
+            if (optionDescriptor.containsKey("elementType")) {
+                option.withElementType(OptionType.valueOf((String) optionDescriptor.get("elementType")));
+            }
+            if (optionDescriptor.containsKey("suboptions")) {
+                var suboptionDescriptors = (Map<String, Map<String, Object>>) optionDescriptor.get("suboptions");
+                var subspec = fromDescriptor(suboptionDescriptors);
+                option.withSpec(subspec);
+                option.withApplySpecDefaults((boolean) optionDescriptor.get("applySpecDefaults"));
+            }
+            if (optionDescriptor.containsKey("choices")) {
+                var choices = (List<Object>) optionDescriptor.get("choices");
+                option.withChoices(choices.toArray());
+            }
+        }
+        return spec;
+    }
+
+    /**
+     * Extra information to be attached to any generated {@link ValidationException}
+     */
+    public static final class ValidationContext {
+
+        private final String path;
+
+        public ValidationContext(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+}
+```
+
+### `StandardTupleDefinitions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StandardTupleDefinitions.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.alarms.AlarmStreamer;
+import org.yamcs.alarms.EventAlarmStreamer;
+import org.yamcs.alarms.ParameterAlarmStreamer;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class StandardTupleDefinitions {
+
+    public static final String GENTIME_COLUMN = "gentime";
+    public static final String SEQNUM_COLUMN = "seqNum";
+    public static final String TM_RECTIME_COLUMN = "rectime";
+    public static final String TM_STATUS_COLUMN = "status";
+    public static final String TM_ERTIME_COLUMN = "ertime";
+    public static final String TM_OBT_COLUMN = "obt";
+    public static final String TM_PACKET_COLUMN = "packet";
+    public static final String TM_LINK_COLUMN = "link";
+    public static final String TM_ROOT_CONTAINER_COLUMN = "rootContainer";
+
+    public static final String CMDHIST_TUPLE_COL_CMDNAME = "cmdName";
+
+    public static final String PARAMETER_COL_RECTIME = "rectime";
+    public static final String PARAMETER_COL_SEQ_NUM = "seqNum";
+
+    public static final String PARAMETER_COL_GROUP = "group";
+    public static final String PARAMETER_COL_GENTIME = "gentime";
+
+    public static final String TC_ORIGIN_COLUMN = "origin";
+    public static final String PARAMETER_COLUMN = "parameter";
+
+    public static final String SOURCE_COLUMN = "source";
+    public static final String BODY_COLUMN = "body";
+
+    public static final String EVENT_SOURCE_COLUMN = "eventSource";
+    public static final String EVENT_TYPE_COLUMN = "eventType";
+
+    public static final String PENDING_COLUMN = "pending";
+
+    public static final TupleDefinition TM = new TupleDefinition();
+    public static final TupleDefinition INVALID_TM = new TupleDefinition();
+    static {
+        TM.addColumn(GENTIME_COLUMN, DataType.TIMESTAMP);
+        TM.addColumn(SEQNUM_COLUMN, DataType.INT);
+        // reception or recording time (useful in case we import data from other recordings which provide this)
+        TM.addColumn(TM_RECTIME_COLUMN, DataType.TIMESTAMP);
+        TM.addColumn(TM_STATUS_COLUMN, DataType.INT);
+
+        TM.addColumn(TM_PACKET_COLUMN, DataType.BINARY);
+
+        // earth reception time
+        TM.addColumn(TM_ERTIME_COLUMN, DataType.HRES_TIMESTAMP);
+        TM.addColumn(TM_OBT_COLUMN, DataType.LONG);
+        TM.addColumn(TM_LINK_COLUMN, DataType.ENUM);
+        TM.addColumn(TM_ROOT_CONTAINER_COLUMN, DataType.ENUM);
+
+    }
+    static {
+        INVALID_TM.addColumn(TM_RECTIME_COLUMN, DataType.TIMESTAMP);
+        INVALID_TM.addColumn(SEQNUM_COLUMN, DataType.LONG);
+        INVALID_TM.addColumn(TM_PACKET_COLUMN, DataType.BINARY);
+    }
+
+    public static final TupleDefinition TC = new TupleDefinition();
+    // this is the commandId (used as the primary key when recording), other columns are handled dynamically
+    static {
+        TC.addColumn(GENTIME_COLUMN, DataType.TIMESTAMP);
+        TC.addColumn(TC_ORIGIN_COLUMN, DataType.STRING);
+        TC.addColumn(SEQNUM_COLUMN, DataType.INT);
+        TC.addColumn(CMDHIST_TUPLE_COL_CMDNAME, DataType.ENUM);
+    }
+
+    public static final TupleDefinition PARAMETER = new TupleDefinition();
+    // first columns from the PP tuples
+    // the actual values are encoded as separated columns (umi_0x010203040506, value) value is ParameterValue
+    static {
+        PARAMETER.addColumn(PARAMETER_COL_GENTIME, DataType.TIMESTAMP); // generation time
+        PARAMETER.addColumn(PARAMETER_COL_GROUP, DataType.ENUM); // group - used for partitioning
+                                                                 // (i.e. splitting the archive
+                                                                 // in multiple files)
+        PARAMETER.addColumn(PARAMETER_COL_SEQ_NUM, DataType.INT); // sequence number
+        PARAMETER.addColumn(PARAMETER_COL_RECTIME, DataType.TIMESTAMP); // recording time
+
+    }
+
+    public static final TupleDefinition EVENT = new TupleDefinition();
+    // this is the commandId (used as the primary key when recording), the rest will be handled dynamically
+    static {
+        EVENT.addColumn(GENTIME_COLUMN, DataType.TIMESTAMP);
+        EVENT.addColumn(SOURCE_COLUMN, DataType.ENUM);
+        EVENT.addColumn(SEQNUM_COLUMN, DataType.INT);
+        EVENT.addColumn(BODY_COLUMN, DataType.protobuf(Event.class.getName()));
+    }
+
+    public static final TupleDefinition PARAMETER_ALARM = new TupleDefinition();
+    // user time, parameter name sequence number
+    static {
+        PARAMETER_ALARM.addColumn(AlarmStreamer.CNAME_TRIGGER_TIME, DataType.TIMESTAMP);
+        PARAMETER_ALARM.addColumn(PARAMETER_COLUMN, DataType.STRING);
+        PARAMETER_ALARM.addColumn(SEQNUM_COLUMN, DataType.INT);
+        PARAMETER_ALARM.addColumn(ParameterAlarmStreamer.CNAME_LAST_EVENT, DataType.ENUM);
+        PARAMETER_ALARM.addColumn(AlarmStreamer.CNAME_PENDING, DataType.BOOLEAN);
+    }
+
+    public static final TupleDefinition EVENT_ALARM = new TupleDefinition();
+    // user time, parameter name sequence number
+    static {
+        EVENT_ALARM.addColumn(AlarmStreamer.CNAME_TRIGGER_TIME, DataType.TIMESTAMP);
+        EVENT_ALARM.addColumn(EVENT_SOURCE_COLUMN, DataType.ENUM);
+        EVENT_ALARM.addColumn(SEQNUM_COLUMN, DataType.INT);
+        EVENT_ALARM.addColumn(EventAlarmStreamer.CNAME_LAST_EVENT, DataType.ENUM);
+        EVENT_ALARM.addColumn(EVENT_TYPE_COLUMN, DataType.STRING);
+        EVENT_ALARM.addColumn(AlarmStreamer.CNAME_PENDING, DataType.BOOLEAN);
+    }
+
+}
+```
+
+### `StreamConfig.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamConfig.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.xtce.SequenceContainer;
+
+/**
+ * Stores the value of the streamConfiguration parameter from yamcs.instance.yaml Used to create the streams at Yamcs
+ * startup and by various other services (recording, processor, ...)
+ * 
+ */
+public class StreamConfig {
+    public enum StandardStreamType {
+        CMD_HIST, TM, PARAM, TC, EVENT, PARAMETER_ALARM, EVENT_ALARM, SQL_FILE, INVALID_TM;
+
+        public static StandardStreamType fromString(String s) {
+            for (StandardStreamType v : values()) {
+                if (v.name().replace("_", "").equals(s.toUpperCase())) {
+                    return v;
+                }
+            }
+            throw new IllegalArgumentException("No stream type by this name");
+        }
+    }
+
+    List<StreamConfigEntry> entries = new ArrayList<>();
+    static Map<String, StreamConfig> instances = new HashMap<>();
+    Logger log = LoggerFactory.getLogger(this.getClass().getName());
+
+    public static synchronized StreamConfig getInstance(String yamcsInstance) throws ConfigurationException {
+        return instances.computeIfAbsent(yamcsInstance, StreamConfig::new);
+    }
+
+    public static synchronized void removeInstance(String instanceName) {
+        instances.remove(instanceName);
+    }
+
+    @SuppressWarnings("unchecked")
+    private StreamConfig(String yamcsInstance) {
+        Mdb mdb = MdbFactory.getInstance(yamcsInstance);
+        YamcsServerInstance instance = YamcsServer.getServer().getInstance(yamcsInstance);
+        YConfiguration instanceConfig = instance.getConfig();
+        if (!instanceConfig.containsKey("streamConfig")) {
+            log.warn("No streamConfig defined for instance {}", yamcsInstance);
+            return;
+        }
+        YConfiguration streamConfigAll = instanceConfig.getConfig("streamConfig");
+
+        for (String streamType : streamConfigAll.getRoot().keySet()) {
+            StandardStreamType type = null;
+            try {
+                type = StandardStreamType.fromString(streamType);
+            } catch (IllegalArgumentException e) {
+                throw new ConfigurationException("Unknown stream type '" + streamType + "'");
+            }
+            Object o = streamConfigAll.get(streamType);
+            if (o instanceof String) {
+                addEntry(type, (String) o);
+            } else if (o instanceof List) {
+                List<Object> streamList = (List<Object>) o;
+
+                for (int i = 0; i < streamList.size(); i++) {
+                    Object o1 = streamList.get(i);
+                    if (o1 instanceof String) {
+                        addEntry(type, (String) o1);
+                    } else if (o1 instanceof Map) {
+                        YConfiguration streamConf = streamConfigAll.getConfigListIdx(streamType, i);
+                        addEntry(mdb, type, streamConf);
+                    }
+                }
+            } else {
+                throw new ConfigurationException("invalid entry '" + o + "' in streamConfiguration");
+            }
+        }
+    }
+
+    private void addEntry(StandardStreamType type, String streamName) {
+        StreamConfigEntry entry;
+        if (type == StandardStreamType.TM) {
+            entry = new TmStreamConfigEntry(streamName);
+        } else if (type == StandardStreamType.TC) {
+            entry = new TcStreamConfigEntry(streamName, null, null);
+        } else {
+            entry = new StreamConfigEntry(type, streamName, null);
+        }
+
+        entries.add(entry);
+    }
+
+    private void addEntry(Mdb mdb, StandardStreamType type, YConfiguration streamConf) {
+        StreamConfigEntry entry;
+        String streamName = streamConf.getString("name");
+        boolean async = streamConf.getBoolean("async", false);
+
+        SequenceContainer rootContainer = null;
+
+        String processor = streamConf.getString("processor", null);
+
+        if (type == StandardStreamType.TM) {
+            if (streamConf.containsKey("rootContainer")) {
+                String containerName = streamConf.getString("rootContainer");
+                rootContainer = mdb.getSequenceContainer(containerName);
+                if (rootContainer == null) {
+                    throw new ConfigurationException("Unknown sequence container: " + containerName);
+                }
+            }
+            entry = new TmStreamConfigEntry(streamName, processor, rootContainer, async);
+        } else if (type == StandardStreamType.TC) {
+            if (streamConf.containsKey("tcPatterns")) {
+                List<String> patterns = streamConf.getList("tcPatterns");
+                List<Pattern> patterns1 = patterns.stream().map(Pattern::compile).collect(Collectors.toList());
+                entry = new TcStreamConfigEntry(streamName, processor, patterns1);
+            } else {
+                entry = new TcStreamConfigEntry(streamName, processor);
+            }
+        } else {
+            entry = new StreamConfigEntry(type, streamName, processor);
+        }
+        entries.add(entry);
+    }
+
+    /**
+     * get all stream configurations
+     * 
+     * @return a list of stream configuration
+     */
+    public List<StreamConfigEntry> getEntries() {
+        return entries;
+    }
+
+    public List<String> getStreamNames(StandardStreamType type) {
+        return entries.stream().filter(sce -> sce.type == type).map(StreamConfigEntry::getName)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * get stream configuration of a specific type. Returns an empty list if no stream of that type has been defined
+     * 
+     * @return a list of stream configuration of the given type
+     */
+    public List<StreamConfigEntry> getEntries(StandardStreamType type) {
+        List<StreamConfigEntry> r = new ArrayList<>();
+        for (StreamConfigEntry sce : entries) {
+            if (sce.type == type) {
+                r.add(sce);
+            }
+        }
+        return r;
+    }
+
+    /**
+     * returns the stream config with the given type and name or null if it has not been defined
+     * 
+     * @param type
+     * @param streamName
+     * @return
+     */
+    public StreamConfigEntry getEntry(StandardStreamType type, String streamName) {
+        for (StreamConfigEntry sce : entries) {
+            if (sce.type == type && sce.name.equals(streamName)) {
+                return sce;
+            }
+        }
+        return null;
+    }
+
+    public static class StreamConfigEntry {
+        StandardStreamType type;
+        // name of the stream or of the file to be loaded if the type is sqlFile
+        String name;
+
+        /**
+         * processor name see. If configured, it will be checked by {@link StreamTmPacketProvider} to select the stream
+         * to connect to the given processor
+         */
+        String processor;
+
+        public StreamConfigEntry(StandardStreamType type, String name, String processor) {
+            super();
+            this.type = type;
+            this.name = name;
+            this.processor = processor;
+        }
+
+        public StandardStreamType getType() {
+            return type;
+        }
+
+        /**
+         * 
+         * @return stream name
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * Return the name of the processor where this stream should be connected to or null if no such processor exists
+         * 
+         * @return
+         */
+        public String getProcessor() {
+            return processor;
+        }
+    }
+
+    public TmStreamConfigEntry getTmEntry(String streamName) {
+        StreamConfigEntry sce = getEntry(StandardStreamType.TM, streamName);
+        return (TmStreamConfigEntry) sce;
+    }
+
+    public List<TmStreamConfigEntry> getTmEntries() {
+        return entries.stream().filter(TmStreamConfigEntry.class::isInstance).map(TmStreamConfigEntry.class::cast)
+                .collect(Collectors.toList());
+    }
+
+    public TcStreamConfigEntry getTcEntry(String streamName) {
+        StreamConfigEntry sce = getEntry(StandardStreamType.TC, streamName);
+        return (TcStreamConfigEntry) sce;
+    }
+
+    public List<TcStreamConfigEntry> getTcEntries() {
+        return entries.stream().filter(TcStreamConfigEntry.class::isInstance).map(TcStreamConfigEntry.class::cast)
+                .collect(Collectors.toList());
+    }
+
+    public class TmStreamConfigEntry extends StreamConfigEntry {
+        // used by the XtceTmRecoder to block or not the thread that provides the TM packet wh
+        boolean async;
+        // root container used for telemetry processing
+        SequenceContainer rootContainer;
+
+        public TmStreamConfigEntry(String name, String processor,
+                SequenceContainer rootContainer, boolean async) {
+            super(StandardStreamType.TM, name, processor);
+            this.rootContainer = rootContainer;
+            this.async = async;
+        }
+
+        public TmStreamConfigEntry(String streamName) {
+            this(streamName, null, null, false);
+        }
+
+        public SequenceContainer getRootContainer() {
+            return rootContainer;
+        }
+
+        public boolean isAsync() {
+
+            return async;
+        }
+    }
+
+    public class TcStreamConfigEntry extends StreamConfigEntry {
+        // if not null, the commands will be placed in this stream only if their fully qualified name matches a
+        // pattern from the list
+        List<Pattern> tcPatterns;
+
+        public TcStreamConfigEntry(String name, String processor, List<Pattern> tcPatterns) {
+            super(StandardStreamType.TC, name, processor);
+            this.tcPatterns = tcPatterns;
+        }
+
+        public TcStreamConfigEntry(String streamName) {
+            this(streamName, null, null);
+        }
+
+        public TcStreamConfigEntry(String streamName, String processor) {
+            this(streamName, processor, null);
+        }
+
+        public List<Pattern> getTcPatterns() {
+            return tcPatterns;
+        }
+    }
+}
+```
+
+### `StreamInitializer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamInitializer.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+/**
+ * Run at the very beginning of Yamcs startup; creates different streams required for Yamcs operation
+ * 
+ * There are a number of "hardcoded" stream types that can be created without specifying the schema (because the schema
+ * has to match the definition expected by other services).
+ * 
+ * Additional streams can be created by specifying a file containing StreamSQL commands.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class StreamInitializer {
+    private static final Logger log = LoggerFactory.getLogger(StreamInitializer.class);
+    final String yamcsInstance;
+    YarchDatabaseInstance ydb;
+
+    public static void createStreams(String yamcsInstance) throws IOException {
+        StreamInitializer si = new StreamInitializer(yamcsInstance);
+        try {
+            si.createStreams();
+        } catch (StreamSqlException | ParseException e) {
+            throw new ConfigurationException("Cannot create streams", e);
+        }
+    }
+
+    public StreamInitializer(String yamcsInstance) throws ConfigurationException {
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        this.yamcsInstance = yamcsInstance;
+    }
+
+    public void createStreams() throws StreamSqlException, ParseException, IOException {
+        StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+        for (StreamConfigEntry sce : sc.getEntries()) {
+            if (sce.type == StreamConfig.StandardStreamType.CMD_HIST) {
+                createStream(sce.name, StandardTupleDefinitions.TC);
+            } else if (sce.type == StreamConfig.StandardStreamType.TM) {
+                createStream(sce.name, StandardTupleDefinitions.TM);
+            } else if (sce.type == StreamConfig.StandardStreamType.PARAM) {
+                createStream(sce.name, StandardTupleDefinitions.PARAMETER);
+            } else if (sce.type == StreamConfig.StandardStreamType.TC) {
+                createStream(sce.name, StandardTupleDefinitions.TC);
+            } else if (sce.type == StreamConfig.StandardStreamType.EVENT) {
+                createStream(sce.name, StandardTupleDefinitions.EVENT);
+            } else if (sce.type == StreamConfig.StandardStreamType.PARAMETER_ALARM) {
+                createStream(sce.name, StandardTupleDefinitions.PARAMETER_ALARM);
+            } else if (sce.type == StreamConfig.StandardStreamType.EVENT_ALARM) {
+                createStream(sce.name, StandardTupleDefinitions.EVENT_ALARM);
+            } else if (sce.type == StreamConfig.StandardStreamType.INVALID_TM) {
+                createStream(sce.name, StandardTupleDefinitions.INVALID_TM);
+            } else if (sce.type == StreamConfig.StandardStreamType.SQL_FILE) {
+                loadSqlFile(sce.name); // filename in fact
+            } else {
+                throw new IllegalArgumentException("Unknown stream type " + sce.type);
+            }
+        }
+    }
+
+    private void createStream(String streamName, TupleDefinition tdef) throws StreamSqlException, ParseException {
+        StreamSqlStatement stmt = ydb.createStatement("create stream " + streamName + tdef.getStringDefinition());
+        ydb.execute(stmt, new ResultListener() {
+            @Override
+            public void next(Tuple tuple) {
+                // normally create stream does not produce any tuple
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                log.error("Error while creating stream {}", streamName, t);
+            }
+
+            @Override
+            public void complete() {
+                log.debug("Created stream {}", streamName);
+            }
+        });
+    }
+
+    private void loadSqlFile(Object o) throws IOException, StreamSqlException, ParseException {
+        if (!(o instanceof String)) {
+            throw new ConfigurationException("Expected to have a filename to load as SQL File");
+        }
+        log.debug("Loading SQL File {}", o);
+        String filename = (String) o;
+        File f = new File(filename);
+        var ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        try (FileReader reader = new FileReader(f)) {
+            StreamSqlParser parser = new StreamSqlParser(reader);
+            StreamSqlStatement stmt;
+            while ((stmt = parser.StreamSqlStatement()) != null) {
+                StreamSqlStatement stmt1 = stmt;
+                stmt1.execute(ydb, new ResultListener() {
+                    @Override
+                    public void next(Tuple tuple) {
+                        // swallow result
+                    }
+
+                    @Override
+                    public void completeExceptionally(Throwable t) {
+                        log.error("Query {} eneded in error: ", stmt1, t);
+                    }
+
+                    @Override
+                    public void complete() {
+                        log.debug("Query {} finished", stmt1);
+                    }
+                });
+            }
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+}
+```
+
+### `StreamTcCommandReleaser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamTcCommandReleaser.java`
+
+
+```java
+package org.yamcs;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.regex.Pattern;
+
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.StreamConfig.TcStreamConfigEntry;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.CommandReleaser;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * Sends commands to yamcs streams
+ */
+public class StreamTcCommandReleaser extends AbstractProcessorService implements CommandReleaser {
+    List<StreamWriter> writers = new CopyOnWriteArrayList<>();
+    private CommandHistoryPublisher commandHistoryPublisher;
+
+    @Override
+    public void init(Processor proc, YConfiguration config, Object spec) {
+        super.init(proc, config, spec);
+        readStreamConfig();
+        this.processor = proc;
+        this.commandHistoryPublisher = proc.getCommandHistoryPublisher();
+    }
+
+    private void readStreamConfig() {
+        String yamcsInstance = getYamcsInstance();
+        String procName = processor.getName();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        StreamConfig streamConfig = StreamConfig.getInstance(yamcsInstance);
+
+        Set<String> streams = new LinkedHashSet<>();
+
+        for (StreamConfigEntry sce : streamConfig.getEntries(StandardStreamType.TC)) {
+            if (procName.equals(sce.getProcessor())) {
+                streams.add(sce.getName());
+            }
+        }
+        if (config.containsKey("stream")) {
+            String streamName = config.getString("stream");
+
+            if (!streams.isEmpty()) {
+                log.warn(
+                        "Configuration contains streams for processor {} both in instance config yamcs.{}.yaml (under streamConfig -> tc)"
+                                + " and processor.yaml. The stream {} from processor.yaml will only be used if no pattern matches "
+                                + " the streams ({}) specified in the instance config. To avoid confusion, please use just the instance config.",
+                        procName, yamcsInstance, streamName, streams);
+            }
+            streams.add(streamName);
+        }
+
+        for (String streamName : streams) {
+            TcStreamConfigEntry sce = streamConfig.getTcEntry(streamName);
+            if (sce.getTcPatterns() != null) {
+                log.debug("Sending TCs matching {} to stream {} ", sce.getTcPatterns(), streamName);
+            } else {
+                log.debug("Sending all TCs to stream {}", streamName);
+            }
+            Stream s = ydb.getStream(streamName);
+            if (s == null) {
+                throw new ConfigurationException("Cannot find stream '" + streamName + "'");
+            }
+            CommandMatcher matcher = sce.getTcPatterns() == null ? null
+                    : new PatternCommandMatcher(sce.getTcPatterns());
+            StreamWriter reader = new StreamWriter(s, matcher);
+            writers.add(reader);
+        }
+        if (writers.isEmpty()) {
+            throw new ConfigurationException(
+                    "Processor " + procName
+                            + " found no TC streams to send data to. Please configure the processor: under streamConfig->tc;"
+                            + " If tc processing has to be excluded from this processor, please configure the entry in processors.yaml appropiately");
+        }
+    }
+
+    /**
+     * 
+     * Add a new stream together with a matcher that will select the commands going to this stream
+     */
+    public void registerOutStream(int index, Stream stream, CommandMatcher matcher) {
+        writers.add(index, new StreamWriter(stream, matcher));
+    }
+
+    @Override
+    public void releaseCommand(PreparedCommand pc) {
+        for (StreamWriter w : writers) {
+            if (w.releaseCommand(pc)) {
+                return;
+            }
+        }
+        commandHistoryPublisher.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, processor.getCurrentTime(),
+                AckStatus.NOK, "No stream available");
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    public void setCommandHistory(CommandHistoryPublisher commandHistoryPublisher) {
+        // not interested in publishing anything to the command history
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    class StreamWriter {
+        final Stream stream;
+        final CommandMatcher matcher;
+
+        public StreamWriter(Stream stream, CommandMatcher matcher) {
+            this.stream = stream;
+            this.matcher = matcher;
+        }
+
+        public boolean releaseCommand(PreparedCommand pc) {
+            if (pc.getTcStream() == null || pc.getTcStream() == stream) { // Stream matches
+                if (matcher == null || matcher.matches(pc)) {
+                    log.trace("Releasing command {} on stream {}", pc.getLoggingId(), stream.getName());
+                    stream.emitTuple(pc.toTuple());
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    /**
+     * A matcher is associated to a stream and used to match commands that are sent to that stream
+     */
+    public static interface CommandMatcher {
+        boolean matches(PreparedCommand pc);
+    }
+
+    /**
+     * Matches commands using a list of regular expressions
+     */
+    public class PatternCommandMatcher implements CommandMatcher {
+        private final List<Pattern> patterns;
+
+        public PatternCommandMatcher(List<Pattern> patterns) {
+            this.patterns = patterns;
+        }
+
+        @Override
+        public boolean matches(PreparedCommand pc) {
+            var commandName = pc.getCommandName();
+            return patterns.stream().anyMatch(p -> p.matcher(commandName).matches());
+        }
+    }
+}
+```
+
+### `StreamTmPacketProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/StreamTmPacketProvider.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.StreamConfig.TmStreamConfigEntry;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * Receives packets from yamcs streams and sends them to the Processor/TmProcessor for extraction of parameters.
+ * 
+ * Can read from multiple streams, each with its own root container used as start of XTCE packet processing
+ * 
+ * @author nm
+ *
+ */
+public class StreamTmPacketProvider extends AbstractProcessorService implements TmPacketProvider {
+    Stream stream;
+    TmProcessor tmProcessor;
+    Mdb mdb;
+    volatile boolean disabled = false;
+    volatile long lastPacketTime;
+
+    List<StreamReader> readers = new ArrayList<>();
+
+    @Override
+    public void init(Processor proc, YConfiguration config, Object spec) {
+        super.init(proc, config, spec);
+        this.tmProcessor = proc.getTmProcessor();
+        this.mdb = MdbFactory.getInstance(proc.getInstance());
+        readStreamConfig(proc.getName());
+        proc.setPacketProvider(this);
+    }
+
+    /**
+     * add to readers all the streams specifically specified in the streams config (in processor.yaml) or those that
+     * have configured the processor to this processor in yamcs.instance.yaml
+     */
+    private void readStreamConfig(String procName) {
+        String yamcsInstance = getYamcsInstance();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        StreamConfig streamConfig = StreamConfig.getInstance(yamcsInstance);
+
+        Set<String> streams = new HashSet<>();
+        if (config.containsKey("streams")) {
+            streams.addAll(config.getList("streams"));
+        }
+
+        for (StreamConfigEntry sce : streamConfig.getEntries(StandardStreamType.TM)) {
+            if (procName.equals(sce.getProcessor())) {
+                streams.add(sce.getName());
+            }
+        }
+
+        for (String streamName : streams) {
+            TmStreamConfigEntry sce = streamConfig.getTmEntry(streamName);
+            if (sce == null)
+                throw new ConfigurationException("Cannot find TM stream configuration for '" + streamName + "'");
+
+            SequenceContainer rootContainer;
+            rootContainer = sce.getRootContainer();
+            if (rootContainer == null) {
+                rootContainer = mdb.getRootSequenceContainer();
+            }
+            if (rootContainer == null) {
+                throw new ConfigurationException(
+                        "MDB does not have a root sequence container and none was defined under streamConfig -> tm");
+            }
+
+            log.debug("Processing packets from stream {} starting with root container {}", streamName,
+                    rootContainer.getQualifiedName());
+            Stream s = ydb.getStream(streamName);
+            if (s == null) {
+                throw new ConfigurationException("Cannot find stream '" + streamName + "'");
+            }
+            StreamReader reader = new StreamReader(s, rootContainer);
+            readers.add(reader);
+        }
+        if (readers.isEmpty()) {
+            throw new ConfigurationException(
+                    "Processor " + procName
+                            + " found no tm_stream to process data from. Please configure the processor: under streamConfig->tm;"
+                            + " If tm processing has to be excluded from this processor, please configure the entry in processors.yaml appropiately");
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        for (StreamReader sr : readers) {
+            sr.stream.addSubscriber(sr);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        for (StreamReader sr : readers) {
+            sr.stream.removeSubscriber(sr);
+        }
+        notifyStopped();
+    }
+
+    @Override
+    public boolean isArchiveReplay() {
+        return false;
+    }
+
+    class StreamReader implements StreamSubscriber {
+        Stream stream;
+        SequenceContainer rootContainer;
+
+        public StreamReader(Stream stream, SequenceContainer sc) {
+            this.stream = stream;
+            this.rootContainer = sc;
+        }
+
+        @Override
+        public void onTuple(Stream s, Tuple tuple) {
+            long rectime = (Long) tuple.getColumn(StandardTupleDefinitions.TM_RECTIME_COLUMN);
+            long gentime = (Long) tuple.getColumn(StandardTupleDefinitions.GENTIME_COLUMN);
+            int seqCount = (Integer) tuple.getColumn(StandardTupleDefinitions.SEQNUM_COLUMN);
+            byte[] packet = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+            TmPacket tmPacket = new TmPacket(rectime, gentime, seqCount, packet);
+            String link = tuple.getColumn(StandardTupleDefinitions.TM_LINK_COLUMN);
+            tmPacket.setLink(link);
+
+            lastPacketTime = gentime;
+
+            String preferredRootContainerName = tuple.getColumn(StandardTupleDefinitions.TM_ROOT_CONTAINER_COLUMN);
+            if (preferredRootContainerName != null) {
+                var preferredRootContainer = mdb.getSequenceContainer(preferredRootContainerName);
+                tmPacket.setRootContainer(preferredRootContainer);
+            }
+
+            tmProcessor.processPacket(tmPacket, rootContainer);
+        }
+
+        @Override
+        public void streamClosed(Stream s) {
+            notifyStopped();
+        }
+    }
+}
+```
+
+### `ThreadSafe.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ThreadSafe.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * @author nm
+ * this is an annotation recommended by the book "Java Concurrency in Practice"
+ */
+public @interface ThreadSafe {
+
+}
+```
+
+### `TmPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/TmPacket.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.archive.XtceTmRecorder;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.SequenceContainer;
+
+/**
+ * Packet with acquisition time, generation time and sequence count.
+ * 
+ * <p>
+ * It is assumed that (generation time, sequence count) uniquely identifies the packet
+ * 
+ * <p>
+ * Starting with yamcs 4.11 there is a 32 bitfield status that can be set on the packets by the pre-processor. The bits
+ * currently defined:
+ * <ul>
+ * <li>bit 0 (msb) - always 0</li>
+ * <li>bits 1-15 - user defined (pre-processor specific)</li>
+ * <li>bits 16-28 - reserved for future Yamcs use</li>
+ * <li>bit 29 - DO_NOT_ARCHIVE - the {@link XtceTmRecorder} will not archive the packets that have this bit set.</li>
+ * <li>bit 30 - LOCAL_GEN_TIME - when the pre-processor cannot find the generation time, it can use the local time
+ * instead and set this bit</li>
+ * <li>bit 31(lsb) - INVALID - used for example when the packet fails crc or checksum verification</li>
+ * </ul>
+ * 
+ * <p>
+ * For the invalid packets there is an option at the link level to redirect them on a different stream. Using StreamSQL
+ * any other packet can be redirected as well.
+ * 
+ *
+ */
+public class TmPacket {
+    final public static int STATUS_MASK_INVALID = 1 << 0;
+    final public static int STATUS_MASK_LOCAL_GEN_TIME = 1 << 1;
+    final public static int STATUS_MASK_DO_NOT_ARCHIVE = 1 << 2;
+
+    private long rectime = TimeEncoding.INVALID_INSTANT; // Yamcs reception time
+    private long gentime = TimeEncoding.INVALID_INSTANT; // generation time
+    private Instant ertime = Instant.INVALID_INSTANT; // earth reception time
+    /**
+     * If this packet has been extracted from a CCSDS frame, this is the sequence count of the frame containing the last
+     * byte of the packet.
+     * <p>
+     * It is the same frame that contained the ertime
+     */
+    private long frameSeqCount = -1;
+
+    private long obt = Long.MIN_VALUE;// on-board time when the time is free running
+    private int seqCount;
+    private byte[] pkt;
+    private int status;
+
+    // link on which the TM packet has been received
+    private String link;
+
+
+    // Preferred root container
+    private SequenceContainer rootContainer;
+
+    public TmPacket(long rectime, byte[] pkt) {
+        this.rectime = rectime;
+        this.pkt = pkt;
+    }
+
+    public TmPacket(long rectime, long gentime, int seqCount, byte[] pkt) {
+        this.rectime = rectime;
+        this.gentime = gentime;
+        this.seqCount = seqCount;
+        this.pkt = pkt;
+    }
+
+    /**
+     * The time when the packet has been generated by the payload.
+     * 
+     * @return
+     */
+    public long getGenerationTime() {
+        return gentime;
+    }
+
+    public void setGenerationTime(long time) {
+        this.gentime = time;
+    }
+
+    /**
+     * Return the time when the packet has been received in Yamcs.
+     * 
+     * @return
+     */
+    public long getReceptionTime() {
+        return rectime;
+    }
+
+    /**
+     * The sequence count together with the generation time are supposed to uniquely identify the packet.
+     * <p>
+     * Note that for CCSDS space packets (as per CCSDS 133.0-B), this sequence count is a combination of the application
+     * identifier(APID) and packet sequence count.
+     * <p>
+     * This means that the sequence count cannot be directly used to asses packet loss or packet ordering without having
+     * more information about the nature of the count.
+     * 
+     * @return
+     */
+    public int getSeqCount() {
+        return seqCount;
+    }
+
+    public void setSequenceCount(int seqCount) {
+        this.seqCount = seqCount;
+    }
+
+    public byte[] getPacket() {
+        return pkt;
+    }
+
+    public int length() {
+        return pkt.length;
+    }
+
+    public void setInvalid() {
+        status |= STATUS_MASK_INVALID;
+    }
+
+    public void setInvalid(boolean invalid) {
+        status = invalid ? status | STATUS_MASK_INVALID : status & ~STATUS_MASK_INVALID;
+    }
+
+    public boolean isInvalid() {
+        return (status & STATUS_MASK_INVALID) > 0;
+    }
+
+    /**
+     * Returns the time when the packet has been received on earth or {@link TimeEncoding#INVALID_INSTANT} if it has not
+     * been set.
+     * <p>
+     * The exact time returned will depend on how the packet has been received. For SLE links it will be the time when
+     * the first bit of the last containing frame has been received at the ground station.
+     * <p>
+     * Some links will not set this parameter.
+     * <p>
+     * The reason this uses a high resolution instant whereas the others are using millisecond resolution times is that
+     * the ground stations usually have high resolution clocks able to provide this accuracy. This is also the time used
+     * to perform space to ground time synchronisation.
+     * 
+     * 
+     * @return the time of the reception of the packet on ground.
+     */
+    public Instant getEarthReceptionTime() {
+        return ertime;
+    }
+
+    public void setEarthReceptionTime(Instant ertime) {
+        this.ertime = ertime;
+    }
+
+    /**
+     * Use {@link #setEarthReceptionTime(Instant)} instead. (typo fix)
+     */
+    @Deprecated
+    public void setEarthRceptionTime(Instant ertime) {
+        setEarthReceptionTime(ertime);
+    }
+
+    public SequenceContainer getRootContainer() {
+        return rootContainer;
+    }
+
+    public void setRootContainer(SequenceContainer rootContainer) {
+        this.rootContainer = rootContainer;
+    }
+
+    /**
+     * Set the flag that this packet generation time is in fact local time.
+     */
+    public void setLocalGenTimeFlag() {
+        status |= STATUS_MASK_LOCAL_GEN_TIME;
+    }
+
+    /**
+     * Sets the flag that this packet will not be archived.
+     */
+    public void setDoNotArchive() {
+        status |= STATUS_MASK_DO_NOT_ARCHIVE;
+    }
+
+    /**
+     * The 32bit flag.
+     * <p>
+     * Be aware that this will change also the values set by the setInvalid
+     * 
+     * @return
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public long getObt() {
+        return obt;
+    }
+
+    public void setObt(long obt) {
+        this.obt = obt;
+    }
+
+    public long getFrameSeqCount() {
+        return frameSeqCount;
+    }
+
+    public void setFrameSeqCount(long frameSeqCount) {
+        this.frameSeqCount = frameSeqCount;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
+    }
+
+}
+```
+
+### `TmPacketProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/TmPacketProvider.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * @author nm
+ *
+ * Provides TM packets to a Yamcs Processor.
+ * 
+ */
+public interface TmPacketProvider extends ProcessorService {
+    /**
+     * true if this is a replay from archive
+     * @return
+     */
+    public boolean isArchiveReplay();
+
+}
+```
+
+### `TmProcessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/TmProcessor.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.xtce.SequenceContainer;
+
+/**
+ * 
+ * @author nm
+ *
+ *         Generic interface for components processing packets (usually to transform them into parameters).
+ *         The transformation according to the XTCE standard needs to know which root container to start from.
+ * 
+ *         The packets are provided by the TmPacketProvider
+ */
+public interface TmProcessor {
+    /**
+     * processes packets derived from the given root container
+     * 
+     * @param pwrt
+     * @param rootContainer
+     */
+    public void processPacket(TmPacket pwrt, SequenceContainer rootContainer);
+
+
+    /**
+     * Notification that there is no more packet to process
+     */
+    public void finished();
+
+}
+```
+
+### `UncheckedYamcsException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/UncheckedYamcsException.java`
+
+
+```java
+package org.yamcs;
+
+/**
+ * Allows wrapping any checked exception without overloading signatures.
+ */
+@SuppressWarnings("serial")
+public class UncheckedYamcsException extends RuntimeException {
+
+    public UncheckedYamcsException(Throwable t) {
+        super(t);
+    }
+}
+```
+
+### `ValidationException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/ValidationException.java`
+
+
+```java
+package org.yamcs;
+
+import org.yamcs.Spec.ValidationContext;
+
+/**
+ * This exception indicates that an error has occurred while performing a validate operation.
+ */
+@SuppressWarnings("serial")
+public class ValidationException extends YamcsException {
+
+    private ValidationContext ctx;
+
+    public ValidationException(ValidationContext ctx, String message) {
+        super(message);
+        this.ctx = ctx;
+    }
+
+    public ValidationContext getContext() {
+        return ctx;
+    }
+}
+```
+
+### `YamcsException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsException.java`
+
+
+```java
+package org.yamcs;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.MessageLite;
+
+/**
+ * Base class for all checked Yamcs exceptions (some day)
+ * 
+ * @author nm
+ */
+public class YamcsException extends Exception {
+    private static final long serialVersionUID = 1L;
+
+    private String type;
+    private byte[] extra; // a protobuf message which can be understood by the receiver based on the type
+
+    public YamcsException(String message) {
+        super(message);
+    }
+
+    public YamcsException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public YamcsException(Throwable t) {
+        super(t);
+    }
+
+    public YamcsException(String type, String message, Message extra) {
+        super(message);
+        this.type = type;
+        this.extra = extra.toByteArray();
+    }
+
+    public YamcsException(String type, String message) {
+        super(message);
+        this.type = type;
+    }
+
+    public YamcsException(String type, String message, byte[] extra) {
+        super(message);
+        this.type = type;
+        this.extra = extra;
+    }
+
+    public byte[] getExtra() {
+        return extra;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public MessageLite decodeExtra(MessageLite.Builder b) throws InvalidProtocolBufferException {
+        return b.mergeFrom(extra).build();
+    }
+
+    @Override
+    public String toString() {
+        Throwable t = getCause();
+        if (t != null) {
+            return getMessage() + ": " + t.toString();
+        } else {
+            return getMessage();
+        }
+    }
+}
+```
+
+### `YamcsInstanceService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsInstanceService.java`
+
+
+```java
+package org.yamcs;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
+
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+
+import com.google.common.util.concurrent.Monitor;
+import com.google.common.util.concurrent.Monitor.Guard;
+
+/**
+ * Inspired from Guava services, this class offers the following states:
+ * <ul>
+ * <li>OFFLINE</li>
+ * <li>INITIALIZING</li>
+ * <li>INITIALIZED</li>
+ * <li>STARTING</li>
+ * <li>RUNNING</li>
+ * <li>STOPPING</li>
+ * <li>FAILED</li>
+ * </ul>
+ * 
+ * transitions are allowed back to OFFLINE from all steady states
+ * 
+ * @author nm
+ *
+ */
+public abstract class YamcsInstanceService {
+    private final Monitor monitor = new Monitor();
+
+    private final Guard isInitializable = new IsInitializableGuard();
+    private final Guard isStartable = new IsStartableGuard();
+    private final Guard isStoppable = new IsStoppableGuard();
+    private final Guard hasReachedRunning = new HasReachedRunningGuard();
+    private final Guard hasReachedOffline = new HasReachedOfflineGuard();
+    private final Guard hasReachedInitialized = new HasReachedInitializedGuard();
+
+    private volatile StateSnapshot snapshot = new StateSnapshot(InstanceState.OFFLINE);
+
+    private Set<InstanceStateListener> stateListeners = new CopyOnWriteArraySet<>();
+
+    protected abstract void doInit();
+
+    protected abstract void doStart();
+
+    protected abstract void doStop();
+
+    public final InstanceState state() {
+        return snapshot.externalState();
+    }
+
+    public final YamcsInstanceService initAsync() {
+        if (monitor.enterIf(isInitializable)) {
+            try {
+                snapshot = new StateSnapshot(InstanceState.INITIALIZING);
+                initializing();
+                doInit();
+            } catch (Throwable startupFailure) {
+                notifyFailed(startupFailure);
+            } finally {
+                monitor.leave();
+                // executeListeners();
+            }
+        } else {
+            throw new IllegalStateException("Service " + this + " has already been started");
+        }
+        return this;
+    }
+
+    public final YamcsInstanceService startAsync() {
+        if (monitor.enterIf(isStartable)) {
+            try {
+                InstanceState previous = state();
+                if (previous == InstanceState.INITIALIZING) {
+                    snapshot = new StateSnapshot(InstanceState.STARTING, true, false, null);
+                } else {
+                    snapshot = new StateSnapshot(InstanceState.STARTING);
+                }
+                starting();
+                doStart();
+            } catch (Throwable startupFailure) {
+                notifyFailed(startupFailure);
+            } finally {
+                monitor.leave();
+                // executeListeners();
+            }
+        } else {
+            throw new IllegalStateException("Service " + this + " has already been started");
+        }
+        return this;
+    }
+
+    public final YamcsInstanceService stopAsync() {
+        if (monitor.enterIf(isStoppable)) {
+            try {
+                InstanceState previous = state();
+                switch (previous) {
+                case INITIALIZED:
+                    snapshot = new StateSnapshot(InstanceState.OFFLINE);
+                    offline(InstanceState.INITIALIZED);
+                    break;
+                case STARTING:
+                case INITIALIZING:
+                    snapshot = new StateSnapshot(previous, false, true, null);
+                    stopping(previous);
+                    break;
+                case RUNNING:
+                    snapshot = new StateSnapshot(InstanceState.STOPPING);
+                    stopping(InstanceState.RUNNING);
+                    doStop();
+                    break;
+                case OFFLINE:
+                    break;
+                case FAILED:
+                    snapshot = new StateSnapshot(InstanceState.OFFLINE);
+                    break;
+                case STOPPING:
+                    // These cases are impossible due to the if statement above.
+                    throw new AssertionError("isStoppable is incorrectly implemented, saw: " + previous);
+                default:
+                    throw new AssertionError("Unexpected state: " + previous);
+                }
+            } catch (Throwable shutdownFailure) {
+                notifyFailed(shutdownFailure);
+            } finally {
+                monitor.leave();
+                // executeListeners();
+            }
+        }
+        return this;
+    }
+
+    public final void awaitInitialized() {
+        monitor.enterWhenUninterruptibly(hasReachedInitialized);
+        try {
+            checkCurrentState(InstanceState.INITIALIZED);
+        } finally {
+            monitor.leave();
+        }
+    }
+
+    public final void awaitRunning() {
+        monitor.enterWhenUninterruptibly(hasReachedRunning);
+        try {
+            checkCurrentState(InstanceState.RUNNING);
+        } finally {
+            monitor.leave();
+        }
+    }
+
+    public final void awaitOffline() {
+        monitor.enterWhenUninterruptibly(hasReachedOffline);
+        try {
+            checkCurrentState(InstanceState.OFFLINE);
+        } finally {
+            monitor.leave();
+        }
+    }
+
+    public void addStateListener(InstanceStateListener listener) {
+        stateListeners.add(listener);
+    }
+
+    public void removeStateListener(InstanceStateListener listener) {
+        stateListeners.remove(listener);
+    }
+
+    /**
+     * Implementing classes should invoke this method once their service has been initialized.
+     *
+     * @throws IllegalStateException
+     *             if the service is not {@link InstanceState#STARTING}.
+     */
+    protected final void notifyInitialized() {
+        monitor.enter();
+        try {
+            // We have to examine the internal state of the snapshot here to properly handle the stop
+            // while starting case.
+            if (snapshot.state != InstanceState.INITIALIZING) {
+                IllegalStateException failure = new IllegalStateException(
+                        "Cannot notifyInitialized() when the service is " + snapshot.state);
+                notifyFailed(failure);
+                throw failure;
+            }
+
+            if (snapshot.shutdownWhenStartupOrInitFinishes) {
+                snapshot = new StateSnapshot(InstanceState.STOPPING);
+                // We don't call listeners here because we already did that when we set the
+                // shutdownWhenStartupFinishes flag.
+                doStop();
+            } else if (snapshot.runWhenInitFinishes) {
+                snapshot = new StateSnapshot(InstanceState.STARTING);
+                doStart();
+            } else {
+                snapshot = new StateSnapshot(InstanceState.INITIALIZED);
+                running();
+            }
+        } finally {
+            monitor.leave();
+            // executeListeners();
+        }
+    }
+
+    /**
+     * Implementing classes should invoke this method once their service has started. It will cause the service to
+     * transition from {@link InstanceState#STARTING} to {@link InstanceState#RUNNING}.
+     *
+     * @throws IllegalStateException
+     *             if the service is not {@link InstanceState#STARTING}.
+     */
+    protected final void notifyStarted() {
+        monitor.enter();
+        try {
+            // We have to examine the internal state of the snapshot here to properly handle the stop
+            // while starting case.
+            if (snapshot.state != InstanceState.STARTING) {
+                IllegalStateException failure = new IllegalStateException(
+                        "Cannot notifyStarted() when the service is " + snapshot.state);
+                notifyFailed(failure);
+                throw failure;
+            }
+
+            if (snapshot.shutdownWhenStartupOrInitFinishes) {
+                snapshot = new StateSnapshot(InstanceState.STOPPING);
+                // We don't call listeners here because we already did that when we set the
+                // shutdownWhenStartupFinishes flag.
+                doStop();
+            } else {
+                snapshot = new StateSnapshot(InstanceState.RUNNING);
+                running();
+            }
+        } finally {
+            monitor.leave();
+            // executeListeners();
+        }
+    }
+
+    private void running() {
+        stateListeners.forEach(InstanceStateListener::running);
+    }
+
+    /**
+     * Implementing classes should invoke this method once their service has stopped. It will cause the service to
+     * transition from {@link InstanceState#STOPPING} to {@link InstanceState#OFFLINE}.
+     *
+     * @throws IllegalStateException
+     *             if the service is neither {@link InstanceState#STOPPING} nor {@link InstanceState#RUNNING}.
+     */
+    protected final void notifyStopped() {
+        monitor.enter();
+        try {
+            // We check the internal state of the snapshot instead of state() directly so we don't allow
+            // notifyStopped() to be called while STARTING, even if stop() has already been called.
+            InstanceState previous = snapshot.state;
+            if (previous != InstanceState.STOPPING && previous != InstanceState.RUNNING) {
+                IllegalStateException failure = new IllegalStateException(
+                        "Cannot notifyStopped() when the service is " + previous);
+                notifyFailed(failure);
+                throw failure;
+            }
+            snapshot = new StateSnapshot(InstanceState.OFFLINE);
+            offline(previous);
+        } finally {
+            monitor.leave();
+            // executeListeners();
+        }
+    }
+
+    private void checkCurrentState(InstanceState expected) {
+        InstanceState actual = state();
+        if (actual != expected) {
+            if (actual == InstanceState.FAILED) {
+                // Handle this specially so that we can include the failureCause, if there is one.
+                throw new IllegalStateException("Expected the service to be " + expected
+                        + ", but the service has FAILED", failureCause());
+            }
+            throw new IllegalStateException("Expected the service to be " + expected + ", but was "
+                    + actual);
+        }
+    }
+
+    public final Throwable failureCause() {
+        return snapshot.failureCause();
+    }
+
+    /**
+     * Invoke this method to transition the service to the {@link InstanceState#FAILED}. The service will <b>not be
+     * stopped</b> if it is running. Invoke this method when a service has failed critically or otherwise cannot be
+     * started nor stopped.
+     */
+    protected final void notifyFailed(Throwable cause) {
+        checkNotNull(cause);
+
+        monitor.enter();
+        try {
+            InstanceState previous = state();
+            switch (previous) {
+            case INITIALIZED:
+            case OFFLINE:
+                throw new IllegalStateException("Failed while in state:" + previous, cause);
+            case RUNNING:
+            case STARTING:
+            case STOPPING:
+            case INITIALIZING:
+                snapshot = new StateSnapshot(InstanceState.FAILED, false, false, cause);
+                failed(previous, cause);
+                break;
+            case FAILED:
+                // Do nothing
+                break;
+            default:
+                throw new AssertionError("Unexpected state: " + previous);
+            }
+        } finally {
+            monitor.leave();
+            // executeListeners();
+        }
+    }
+
+    private void failed(InstanceState previous, Throwable cause) {
+        stateListeners.forEach(l -> l.failed(cause));
+    }
+
+    private void initializing() {
+        stateListeners.forEach(InstanceStateListener::initializing);
+    }
+
+    private void starting() {
+        stateListeners.forEach(InstanceStateListener::starting);
+    }
+
+    public void offline(InstanceState from) {
+        stateListeners.forEach(InstanceStateListener::offline);
+    }
+
+    public void stopping(InstanceState from) {
+        stateListeners.forEach(l -> l.stopping());
+    }
+
+    /**
+     * An immutable snapshot of the current state of the service. This class represents a consistent snapshot of the
+     * state and therefore it can be used to answer simple queries without needing to grab a lock.
+     */
+    private static final class StateSnapshot {
+        /**
+         * The internal state, which equals external state unless shutdownWhenStartupFinishes is true.
+         */
+        final InstanceState state;
+
+        /**
+         * If true, the user requested a start while the service was still initializing up.
+         */
+        final boolean runWhenInitFinishes;
+
+        /**
+         * If true, the user requested a shutdown while the service was still starting or initializing up.
+         */
+        final boolean shutdownWhenStartupOrInitFinishes;
+
+        /**
+         * The exception that caused this service to fail. This will be {@code null} unless the service has failed.
+         */
+        final Throwable failure;
+
+        StateSnapshot(InstanceState internalState) {
+            this(internalState, false, false, null);
+        }
+
+        StateSnapshot(
+                InstanceState internalState, boolean runWhenInitFinishes, boolean shutdownWhenStartupFinishes,
+                Throwable failure) {
+            checkArgument(!shutdownWhenStartupFinishes || internalState == InstanceState.STARTING,
+                    "shudownWhenStartupFinishes can only be set if state is STARTING. Got %s instead.",
+                    internalState);
+            checkArgument(!(failure != null ^ internalState == InstanceState.FAILED),
+                    "A failure cause should be set if and only if the state is failed.  Got %s and %s "
+                            + "instead.",
+                    internalState, failure);
+            this.state = internalState;
+            this.shutdownWhenStartupOrInitFinishes = shutdownWhenStartupFinishes;
+            this.runWhenInitFinishes = runWhenInitFinishes;
+            this.failure = failure;
+        }
+
+        /** @see Service#state() */
+        InstanceState externalState() {
+            if (shutdownWhenStartupOrInitFinishes && state == InstanceState.STARTING) {
+                return InstanceState.STOPPING;
+            } else {
+                return state;
+            }
+        }
+
+        /** @see Service#failureCause() */
+        Throwable failureCause() {
+            checkState(state == InstanceState.FAILED,
+                    "failureCause() is only valid if the service has failed, service is %s", state);
+            return failure;
+        }
+    }
+
+    private final class IsStartableGuard extends Guard {
+        IsStartableGuard() {
+            super(monitor);
+        }
+
+        @Override
+        public boolean isSatisfied() {
+            return state().compareTo(InstanceState.INITIALIZED) <= 0;
+        }
+    }
+
+    private final class IsStoppableGuard extends Guard {
+        IsStoppableGuard() {
+            super(monitor);
+        }
+
+        @Override
+        public boolean isSatisfied() {
+            InstanceState cs = state();
+            return cs.compareTo(InstanceState.RUNNING) <= 0 || cs == InstanceState.FAILED;
+        }
+    }
+
+    private final class IsInitializableGuard extends Guard {
+        IsInitializableGuard() {
+            super(monitor);
+        }
+
+        @Override
+        public boolean isSatisfied() {
+            return state() == InstanceState.OFFLINE;
+        }
+    }
+
+    private final class HasReachedRunningGuard extends Guard {
+        HasReachedRunningGuard() {
+            super(monitor);
+        }
+
+        @Override
+        public boolean isSatisfied() {
+            return state().compareTo(InstanceState.RUNNING) >= 0;
+        }
+    }
+
+    private final class HasReachedOfflineGuard extends Guard {
+        HasReachedOfflineGuard() {
+            super(monitor);
+        }
+
+        @Override
+        public boolean isSatisfied() {
+            return state() == InstanceState.OFFLINE;
+        }
+    }
+
+    private final class HasReachedInitializedGuard extends Guard {
+        HasReachedInitializedGuard() {
+            super(monitor);
+        }
+
+        @Override
+        public boolean isSatisfied() {
+            return state().compareTo(InstanceState.INITIALIZED) >= 0;
+        }
+    }
+}
+```
+
+### `YamcsServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsServer.java`
+
+
+```java
+package org.yamcs;
+
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.UncheckedIOException;
+import java.io.Writer;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.yamcs.Spec.OptionType;
+import org.yamcs.buckets.BucketManager;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.logging.ConsoleFormatter;
+import org.yamcs.logging.Log;
+import org.yamcs.logging.YamcsLogManager;
+import org.yamcs.management.ManagementService;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+import org.yamcs.security.CryptoUtils;
+import org.yamcs.security.SecurityStore;
+import org.yamcs.tctm.Link;
+import org.yamcs.templating.ParseException;
+import org.yamcs.templating.Template;
+import org.yamcs.templating.Variable;
+import org.yamcs.time.RealtimeTimeService;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.ExceptionUtil;
+import org.yamcs.utils.SDNotify;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.rocksdb.RDBFactory;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yaml.snakeyaml.Yaml;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
+import com.google.common.util.concurrent.Service.State;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+import io.netty.util.ResourceLeakDetector;
+
+/**
+ *
+ * Yamcs server together with the global instances
+ */
+public class YamcsServer {
+
+    private static final String CFG_SERVER_ID_KEY = "serverId";
+    private static final String CFG_SECRET_KEY = "secretKey";
+    public static final String CFG_CRASH_HANDLER_KEY = "crashHandler";
+
+    public static final String GLOBAL_INSTANCE = "_global";
+
+    private static final Log LOG = new Log(YamcsServer.class);
+
+    private static final Pattern INSTANCE_PATTERN = Pattern.compile("yamcs\\.(.*)\\.yaml(.offline)?");
+    private static final YamcsServer YAMCS = new YamcsServer();
+
+    // used to schedule various tasks throughout the yamcs server (to avoid each service creating its own)
+    ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1,
+            new ThreadFactoryBuilder().setNameFormat("YamcsServer-general-executor").build());
+
+    /**
+     * During shutdown, allow services this number of seconds for stopping
+     */
+    public static final int SERVICE_STOP_GRACE_TIME = 10;
+
+    static TimeService realtimeTimeService = new RealtimeTimeService();
+
+    // used for unit tests
+    static TimeService mockupTimeService;
+
+    private CrashHandler globalCrashHandler;
+
+    private YamcsServerOptions options = new YamcsServerOptions();
+    private Properties properties = new Properties();
+    private YConfiguration config;
+    private Spec spec;
+    private Map<ConfigScope, Map<String, Spec>> sectionSpecs = new HashMap<>();
+    private Map<ConfigScope, Map<String, Spec>> listSpecs = new HashMap<>();
+
+    private Map<String, CommandOption> commandOptions = new ConcurrentHashMap<>();
+    private Set<CommandOptionListener> commandOptionListeners = new CopyOnWriteArraySet<>();
+
+    List<ServiceWithConfig> globalServiceList;
+    Map<String, YamcsServerInstance> instances = new LinkedHashMap<>();
+    Map<String, Template> instanceTemplates = new HashMap<>();
+    List<ReadyListener> readyListeners = new ArrayList<>();
+
+    private SecurityStore securityStore;
+    private BucketManager bucketManager;
+    private PluginManager pluginManager;
+
+    private String serverId;
+    private byte[] secretKey;
+    int maxOnlineInstances = 1000;
+    int maxNumInstances = 20;
+    @Deprecated
+    Path incomingDir;
+    Path instanceDefDir;
+
+    // Set when the shutdown hook triggers
+    private boolean shuttingDown = false;
+
+    /**
+     * Creates services at global (if instance is null) or instance level. The services are not yet initialized. This
+     * must be done in a second step, so that components can ask YamcsServer for other service instantiations.
+     *
+     * @param instance
+     *            if null, then start a global service, otherwise an instance service
+     * @param services
+     *            list of service configuration; each of them is a string (=classname) or a map
+     * @param targetLog
+     *            the logger to use for any messages
+     * @throws IOException
+     * @throws ValidationException
+     */
+    static List<ServiceWithConfig> createServices(String instance, List<YConfiguration> servicesConfig, Log targetLog)
+            throws ValidationException, IOException {
+        ManagementService managementService = ManagementService.getInstance();
+        Set<String> names = new HashSet<>();
+        List<ServiceWithConfig> serviceList = new CopyOnWriteArrayList<>();
+        for (YConfiguration servconf : servicesConfig) {
+            String servclass;
+            String name = null;
+            servclass = servconf.getString("class");
+            YConfiguration args = servconf.getConfigOrEmpty("args");
+            name = servconf.getString("name", servclass.substring(servclass.lastIndexOf('.') + 1));
+            String candidateName = name;
+            int count = 1;
+            while (names.contains(candidateName)) {
+                candidateName = name + "-" + count;
+                count++;
+            }
+            name = candidateName;
+            boolean enabledAtStartup = servconf.getBoolean("enabledAtStartup", true);
+
+            targetLog.info("Loading service {}", name);
+            ServiceWithConfig swc;
+            try {
+                swc = createService(instance, servclass, name, args, enabledAtStartup);
+                serviceList.add(swc);
+            } catch (NoClassDefFoundError e) {
+                targetLog.error("Cannot create service {}, with arguments {}: class {} not found", name, args,
+                        e.getMessage());
+                throw e;
+            } catch (ValidationException e) {
+                throw e;
+            } catch (Exception e) {
+                targetLog.error("Cannot create service {}, with arguments {}: {}", name, args, e.getMessage());
+                throw e;
+            }
+            if (managementService != null) {
+                managementService.registerService(instance, name, swc.service);
+            }
+            names.add(name);
+        }
+
+        return serviceList;
+    }
+
+    public static void initServices(String instance, List<ServiceWithConfig> services) throws InitException {
+        for (ServiceWithConfig swc : services) {
+            swc.service.init(instance, swc.name, swc.args);
+        }
+    }
+
+    public <T extends YamcsService> void addGlobalService(
+            String name, Class<T> serviceClass, YConfiguration args) throws ValidationException, InitException {
+
+        for (ServiceWithConfig otherService : YAMCS.globalServiceList) {
+            if (otherService.getName().equals(name)) {
+                throw new ConfigurationException(String.format(
+                        "A service named '%s' already exists", name));
+            }
+        }
+
+        LOG.info("Loading service {}", name);
+        ServiceWithConfig swc = createService(null, serviceClass.getName(), name, args, true);
+        swc.service.init(null, name, swc.args);
+        YAMCS.globalServiceList.add(swc);
+
+        ManagementService managementService = ManagementService.getInstance();
+        managementService.registerService(null, name, swc.service);
+    }
+
+    /**
+     * Starts the specified list of services.
+     *
+     * @param serviceList
+     *            list of service configurations
+     * @throws ConfigurationException
+     */
+    public static void startServices(List<ServiceWithConfig> serviceList) throws ConfigurationException {
+        for (ServiceWithConfig swc : serviceList) {
+            if (!swc.enableAtStartup) {
+                LOG.debug("NOT starting service {} because enableAtStartup=false (can be manually started)",
+                        swc.getName());
+                continue;
+            }
+            LOG.debug("Starting service {}", swc.getName());
+            swc.service.startAsync();
+            try {
+                swc.service.awaitRunning();
+            } catch (IllegalStateException e) {
+                // this happens when it fails, the next check will throw an error in this case
+            }
+            State result = swc.service.state();
+            if (result == State.FAILED) {
+                throw new ConfigurationException("Failed to start service " + swc.service, swc.service.failureCause());
+            }
+        }
+    }
+
+    public void shutDown() {
+        long t0 = System.nanoTime();
+        LOG.info("Yamcs is shutting down");
+        if (SDNotify.isSupported()) {
+            SDNotify.sendStoppingNotification();
+        }
+        for (YamcsServerInstance ys : instances.values()) {
+            ys.stopAsync();
+        }
+        for (YamcsServerInstance ys : instances.values()) {
+            LOG.debug("Awaiting termination of instance {}", ys.getName());
+            ys.awaitOffline();
+            LOG.info("Stopped instance '{}'", ys.getName());
+        }
+        if (globalServiceList != null) {
+            for (ServiceWithConfig swc : globalServiceList) {
+                swc.getService().stopAsync();
+            }
+            for (ServiceWithConfig swc : globalServiceList) {
+                LOG.info("Awaiting termination of service {}", swc.getName());
+                swc.getService().awaitTerminated();
+            }
+        }
+        instances.clear();
+        YarchDatabase.removeInstance(GLOBAL_INSTANCE);
+
+        // Shutdown database when we're sure no services are using it.
+        RdbStorageEngine.getInstance().shutdown();
+
+        long stopTime = System.nanoTime() - t0;
+
+        LOG.info("Yamcs stopped in {}ms", NANOSECONDS.toMillis(stopTime));
+        YamcsLogManager.shutdown();
+        timer.shutdown();
+    }
+
+    public static boolean hasInstance(String instance) {
+        return YAMCS.instances.containsKey(instance);
+    }
+
+    public boolean hasInstanceTemplate(String template) {
+        return instanceTemplates.containsKey(template);
+    }
+
+    /**
+     * The serverId has to be unique among Yamcs servers connected to eachother.
+     * <p>
+     * It is used to distinguish the data generated by one particular server.
+     *
+     * @return
+     */
+    public String getServerId() {
+        return serverId;
+    }
+
+    public byte[] getSecretKey() {
+        return secretKey;
+    }
+
+    /**
+     * Registers the system-wide availability of a {@link CommandOption}. Command options represent additional arguments
+     * that commands may require, but that are not used by Yamcs in building telecommand binary.
+     * <p>
+     * An example use case would be a custom TC {@link Link} that may support additional arguments for controlling its
+     * behaviour.
+     * <p>
+     * While not enforced we recommend to call this method from a {@link Plugin#onLoad(YConfiguration)} hook as this
+     * will avoid registering an option multiple times (attempts to do so would generate an error).
+     * 
+     * @param option
+     *            the new command option.
+     */
+    @Experimental
+    public void addCommandOption(CommandOption option) {
+        CommandOption previous = commandOptions.putIfAbsent(option.getId(), option);
+        if (previous != null) {
+            throw new IllegalArgumentException(
+                    "A command option '" + option.getId() + "' was already registered with Yamcs");
+        }
+        if (PreparedCommand.isReservedColumn(option.getId())) {
+            throw new IllegalArgumentException(
+                    "Command options may not be named '" + option.getId() + "'. This name is reserved");
+        }
+        commandOptionListeners.forEach(l -> l.commandOptionAdded(option));
+    }
+
+    /**
+     * Returns the command options registered to this instance.
+     */
+    public Collection<CommandOption> getCommandOptions() {
+        return commandOptions.values();
+    }
+
+    public boolean hasCommandOption(String id) {
+        return commandOptions.containsKey(id);
+    }
+
+    public CommandOption getCommandOption(String id) {
+        return commandOptions.get(id);
+    }
+
+    public void addCommandOptionListener(CommandOptionListener listener) {
+        commandOptionListeners.add(listener);
+    }
+
+    public void removeCommandOptionListener(CommandOptionListener listener) {
+        commandOptionListeners.remove(listener);
+    }
+
+    /**
+     * Returns the main Yamcs configuration
+     */
+    public YConfiguration getConfig() {
+        return config;
+    }
+
+    /**
+     * Returns the configuration specification for the config returned by {@link #getConfig()}.
+     */
+    public Spec getSpec() {
+        return spec;
+    }
+
+    private int getOnlineInstanceCount() {
+        return (int) instances.values().stream().filter(ysi -> ysi.state() != InstanceState.OFFLINE).count();
+    }
+
+    /**
+     * Restarts a yamcs instance.
+     * 
+     * @param instanceName
+     *            the name of the instance
+     * 
+     * @return the newly created instance
+     * @throws IOException
+     */
+    public YamcsServerInstance restartInstance(String instanceName) throws IOException {
+        YamcsServerInstance ysi = instances.get(instanceName);
+
+        if (ysi.state() == InstanceState.RUNNING || ysi.state() == InstanceState.FAILED) {
+            try {
+                ysi.stop();
+            } catch (IllegalStateException e) {
+                LOG.warn("Instance did not terminate normally", e);
+            }
+        }
+        YarchDatabase.removeInstance(instanceName);
+        MdbFactory.remove(instanceName);
+        StreamConfig.removeInstance(instanceName);
+        LOG.info("Re-loading instance '{}'", instanceName);
+
+        YConfiguration instanceConfig = loadInstanceConfig(instanceName);
+        ysi.init(instanceConfig);
+        ysi.startAsync();
+        try {
+            ysi.awaitRunning();
+        } catch (IllegalStateException e) {
+            Throwable t = ExceptionUtil.unwind(e.getCause());
+            LOG.warn("Failed to start instance", t);
+            throw new UncheckedExecutionException(t);
+        }
+        return ysi;
+    }
+
+    private YConfiguration loadInstanceConfig(String instanceName) {
+        Path configFile = instanceDefDir.resolve(configFileName(instanceName));
+        if (Files.exists(configFile)) {
+            try (InputStream is = Files.newInputStream(configFile)) {
+                String confPath = configFile.toAbsolutePath().toString();
+                return new YConfiguration("yamcs." + instanceName, is, confPath);
+            } catch (IOException e) {
+                throw new ConfigurationException("Cannot load configuration from " + configFile.toAbsolutePath(), e);
+            }
+        } else {
+            return YConfiguration.getConfiguration("yamcs." + instanceName);
+        }
+    }
+
+    private InstanceMetadata loadInstanceMetadata(String instanceName) throws IOException {
+        Path metadataFile = instanceDefDir.resolve("yamcs." + instanceName + ".metadata");
+        if (Files.exists(metadataFile)) {
+            try (InputStream in = Files.newInputStream(metadataFile)) {
+                Map<String, Object> map = new Yaml().loadAs(in, Map.class);
+                return new InstanceMetadata(map);
+            }
+        }
+        return new InstanceMetadata();
+    }
+
+    /**
+     * Stop the instance (it will be offline after this)
+     * 
+     * @param instanceName
+     *            the name of the instance
+     * 
+     * @return the instance
+     * @throws IOException
+     */
+    public YamcsServerInstance stopInstance(String instanceName) throws IOException {
+        YamcsServerInstance ysi = instances.get(instanceName);
+
+        if (ysi.state() != InstanceState.OFFLINE) {
+            try {
+                ysi.stop();
+            } catch (IllegalStateException e) {
+                LOG.error("Instance did not terminate normally", e);
+            }
+        }
+        YarchDatabase.removeInstance(instanceName);
+        MdbFactory.remove(instanceName);
+        Path f = instanceDefDir.resolve(configFileName(instanceName));
+        if (Files.exists(f)) {
+            LOG.debug("Renaming {} to {}.offline", f.toAbsolutePath(), f.getFileName());
+            Files.move(f, f.resolveSibling(configFileName(instanceName) + ".offline"));
+        }
+
+        return ysi;
+    }
+
+    public void removeInstance(String instanceName) throws IOException {
+        stopInstance(instanceName);
+        Files.deleteIfExists(instanceDefDir.resolve(configFileName(instanceName)));
+        Files.deleteIfExists(instanceDefDir.resolve(configFileName(instanceName) + ".offline"));
+        instances.remove(instanceName);
+    }
+
+    /**
+     * Start the instance. If the instance is already started, do nothing.
+     * 
+     * If the instance is FAILED, restart the instance
+     * 
+     * If the instance is OFFLINE, rename the &lt;instance&gt;.yaml.offline to &lt;instance&gt;.yaml and start the
+     * instance
+     * 
+     * 
+     * @param instanceName
+     *            the name of the instance
+     * 
+     * @return the instance
+     * @throws IOException
+     */
+    public YamcsServerInstance startInstance(String instanceName) throws IOException {
+        YamcsServerInstance ysi = instances.get(instanceName);
+
+        if (ysi.state() == InstanceState.RUNNING) {
+            return ysi;
+        } else if (ysi.state() == InstanceState.FAILED) {
+            return restartInstance(instanceName);
+        }
+
+        if (getOnlineInstanceCount() >= maxOnlineInstances) {
+            throw new LimitExceededException("Number of online instances already at the limit " + maxOnlineInstances);
+        }
+
+        if (ysi.state() == InstanceState.OFFLINE) {
+            Path f = instanceDefDir.resolve(configFileName(instanceName) + ".offline");
+            if (Files.exists(f)) {
+                Files.move(f, instanceDefDir.resolve(configFileName(instanceName)));
+            }
+            YConfiguration instanceConfig = loadInstanceConfig(instanceName);
+            ysi.init(instanceConfig);
+        }
+        ysi.startAsync();
+        ysi.awaitRunning();
+        return ysi;
+    }
+
+    public BucketManager getBucketManager() {
+        return bucketManager;
+    }
+
+    /**
+     * Intended for unit tests only.
+     */
+    public void setBucketManager(BucketManager bucketManager) {
+        this.bucketManager = bucketManager;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
+    }
+
+    /**
+     * Add the definition of an additional configuration section to the root Yamcs spec (yamcs.yaml).
+     * 
+     * @param key
+     *            the name of this section. This represent a direct subkey of the main app config
+     * @param spec
+     *            the specification of this configuration section.
+     */
+    public void addConfigurationSection(String key, Spec spec) {
+        addConfigurationSection(ConfigScope.YAMCS, key, spec);
+    }
+
+    /**
+     * Add the definition of an additional configuration section to a particular configuration type
+     * 
+     * @param scope
+     *            the scope where this section belongs. When using file-based configuration this can be thought of as
+     *            the type of the configuration file.
+     * @param key
+     *            the name of this section. This represent a direct subkey of the main app config
+     * @param spec
+     *            the specification of this configuration section.
+     */
+    public void addConfigurationSection(ConfigScope scope, String key, Spec spec) {
+        Map<String, Spec> specs = sectionSpecs.computeIfAbsent(scope, x -> new HashMap<>());
+        specs.put(key, spec);
+    }
+
+    public void addConfigurationList(ConfigScope scope, String key, Spec spec) {
+        Map<String, Spec> specs = listSpecs.computeIfAbsent(scope, x -> new HashMap<>());
+        specs.put(key, spec);
+    }
+
+    public Map<String, Spec> getConfigurationSections(ConfigScope scope) {
+        Map<String, Spec> specs = sectionSpecs.get(scope);
+        return specs != null ? specs : Collections.emptyMap();
+    }
+
+    public Map<String, Spec> getConfigurationLists(ConfigScope scope) {
+        Map<String, Spec> specs = listSpecs.get(scope);
+        return specs != null ? specs : Collections.emptyMap();
+    }
+
+    /**
+     * Creates a new yamcs instance.
+     * 
+     * If the instance already exists an IllegalArgumentException is thrown
+     * 
+     * @param name
+     *            the name of the new instance
+     * 
+     * @param metadata
+     *            the metadata associated to this instance (labels or other attributes)
+     * @param offline
+     *            if true, the instance will be created offline and it does not need a config
+     * @param config
+     *            the configuration for this instance (equivalent of yamcs.instance.yaml)
+     * @return the newly created instance
+     */
+    public synchronized YamcsServerInstance addInstance(String name, InstanceMetadata metadata, boolean offline,
+            YConfiguration config) {
+        if (instances.containsKey(name)) {
+            throw new IllegalArgumentException(String.format("There already exists an instance named '%s'", name));
+        }
+        LOG.info("Loading {} instance '{}'", offline ? "offline" : "online", name);
+        YamcsServerInstance ysi = new YamcsServerInstance(name, metadata);
+
+        ysi.addStateListener(new InstanceStateListener() {
+            @Override
+            public void failed(Throwable failure) {
+                LOG.error("Instance {} failed", name, ExceptionUtil.unwind(failure));
+            }
+        });
+
+        instances.put(name, ysi);
+        if (!offline) {
+            ysi.init(config);
+        }
+
+        ManagementService.getInstance().registerYamcsInstance(ysi);
+        return ysi;
+    }
+
+    /**
+     * Create a new instance based on a template.
+     * 
+     * @param name
+     *            the name of the instance
+     * @param templateName
+     *            the name of an available template
+     * @param templateArgs
+     *            arguments to use while processing the template
+     * @param labels
+     *            labels associated to this instance
+     * @param customMetadata
+     *            custom metadata associated with this instance.
+     * @throws IOException
+     *             when a disk operation failed
+     * @return the newly create instance
+     */
+    public synchronized YamcsServerInstance createInstance(String name, String templateName,
+            Map<String, Object> templateArgs, Map<String, String> labels, Map<String, Object> customMetadata)
+            throws IOException {
+        if (instances.containsKey(name)) {
+            throw new IllegalArgumentException(String.format("There already exists an instance named '%s'", name));
+        }
+        if (!instanceTemplates.containsKey(templateName)) {
+            throw new IllegalArgumentException(String.format("Unknown template '%s'", templateName));
+        }
+
+        Template template = instanceTemplates.get(templateName);
+
+        // Build instance metadata as a combination of internal properties and custom metadata from the caller
+        InstanceMetadata metadata = new InstanceMetadata();
+        metadata.setTemplate(templateName);
+        metadata.setTemplateArgs(templateArgs);
+        metadata.setTemplateSource(template.getSource());
+        metadata.setLabels(labels);
+        customMetadata.forEach((k, v) -> metadata.put(k, v));
+
+        String processed = template.process(metadata.getTemplateArgs());
+
+        Path confFile = instanceDefDir.resolve(configFileName(name));
+        try (Writer writer = Files.newBufferedWriter(confFile)) {
+            writer.write(processed);
+        }
+
+        Path metadataFile = instanceDefDir.resolve("yamcs." + name + ".metadata");
+        try (Writer writer = Files.newBufferedWriter(metadataFile)) {
+            Map<String, Object> metadataMap = metadata.toMap();
+            new Yaml().dump(metadataMap, writer);
+        }
+
+        YConfiguration instanceConfig;
+        try (InputStream fis = Files.newInputStream(confFile)) {
+            String subSystem = "yamcs." + name;
+            String confPath = confFile.toString();
+            instanceConfig = new YConfiguration(subSystem, fis, confPath);
+        }
+
+        return addInstance(name, metadata, false, instanceConfig);
+    }
+
+    public synchronized YamcsServerInstance reconfigureInstance(String name, Map<String, Object> templateArgs,
+            Map<String, String> labels) throws IOException {
+        YamcsServerInstance ysi = instances.get(name);
+        if (ysi == null) {
+            throw new IllegalArgumentException(String.format("Unknown instance '%s'", name));
+        }
+
+        String templateName = ysi.getTemplate();
+        if (!instanceTemplates.containsKey(templateName)) {
+            throw new IllegalArgumentException(String.format("Unknown template '%s'", templateName));
+        }
+        Template template = instanceTemplates.get(templateName);
+
+        // Build instance metadata as a combination of internal properties and custom metadata from the caller
+        InstanceMetadata metadata = ysi.metadata;
+        metadata.setLabels(labels);
+        metadata.setTemplateArgs(templateArgs);
+        metadata.setTemplateSource(template.getSource());
+
+        String processed = template.process(metadata.getTemplateArgs());
+
+        Path confFile = instanceDefDir.resolve(configFileName(name));
+        try (Writer writer = Files.newBufferedWriter(confFile)) {
+            writer.write(processed);
+        }
+
+        Path metadataFile = instanceDefDir.resolve("yamcs." + name + ".metadata");
+        try (Writer writer = Files.newBufferedWriter(metadataFile)) {
+            Map<String, Object> metadataMap = metadata.toMap();
+            new Yaml().dump(metadataMap, writer);
+        }
+
+        return ysi;
+    }
+
+    private String deriveServerId() {
+        try {
+            String id;
+            if (config.containsKey(CFG_SERVER_ID_KEY)) {
+                id = config.getString(CFG_SERVER_ID_KEY);
+            } else {
+                id = InetAddress.getLocalHost().getHostName();
+            }
+            serverId = id;
+            LOG.debug("Using serverId {}", serverId);
+            return serverId;
+        } catch (ConfigurationException e) {
+            throw e;
+        } catch (UnknownHostException e) {
+            String msg = "Cannot resolve local host. Make sure it's defined properly or alternatively add 'serverId: <name>' to yamcs.yaml";
+            LOG.warn(msg);
+            throw new ConfigurationException(msg, e);
+        }
+    }
+
+    private void deriveSecretKey() {
+        if (config.containsKey(CFG_SECRET_KEY)) {
+            // Should maybe only allow base64 encoded secret keys
+            secretKey = config.getString(CFG_SECRET_KEY).getBytes(StandardCharsets.UTF_8);
+        } else {
+            LOG.warn("Generating random non-persisted secret key."
+                    + " Cryptographic verifications will not work across server restarts."
+                    + " Set 'secretKey: <secret>' in yamcs.yaml to avoid this message.");
+            secretKey = CryptoUtils.generateRandomSecretKey();
+        }
+    }
+
+    public static List<YamcsServerInstance> getInstances() {
+        return new ArrayList<>(YAMCS.instances.values());
+    }
+
+    public YamcsServerInstance getInstance(String yamcsInstance) {
+        return instances.get(yamcsInstance);
+    }
+
+    public Set<Template> getInstanceTemplates() {
+        return new HashSet<>(instanceTemplates.values());
+    }
+
+    public Template getInstanceTemplate(String name) {
+        return instanceTemplates.get(name);
+    }
+
+    /**
+     * Returns the time service for a given instance
+     */
+    public static TimeService getTimeService(String yamcsInstance) {
+        if (YAMCS.instances.containsKey(yamcsInstance)) {
+            return YAMCS.instances.get(yamcsInstance).getTimeService();
+        } else {
+            if (mockupTimeService != null) {
+                return mockupTimeService;
+            } else {
+                return realtimeTimeService; // happens from unit tests
+            }
+        }
+    }
+
+    public SecurityStore getSecurityStore() {
+        return securityStore;
+    }
+
+    public List<ServiceWithConfig> getGlobalServices() {
+        return new ArrayList<>(globalServiceList);
+    }
+
+    public ServiceWithConfig getGlobalServiceWithConfig(String serviceName) {
+        if (globalServiceList == null) {
+            return null;
+        }
+
+        synchronized (globalServiceList) {
+            for (ServiceWithConfig swc : globalServiceList) {
+                if (swc.getName().equals(serviceName)) {
+                    return swc;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the service matching the specified class.
+     * <p>
+     * This method requires that there be only one matching service, else it will throw an exception.
+     * 
+     * @return The matching singleton service, else {@code null}.
+     * @throws IllegalStateException
+     *             There is more than one matching service.
+     */
+    public <T extends YamcsService> T getService(String yamcsInstance, Class<T> serviceClass) {
+        List<T> services = getServices(yamcsInstance, serviceClass);
+        if (services.size() == 1) {
+            return services.get(0);
+        } else if (services.size() > 2) {
+            throw new IllegalStateException(serviceClass.getName() + " is not a singleton service");
+        } else {
+            return null;
+        }
+    }
+
+    public <T extends YamcsService> List<T> getServices(String yamcsInstance, Class<T> serviceClass) {
+        YamcsServerInstance ys = getInstance(yamcsInstance);
+        if (ys == null) {
+            return Collections.emptyList();
+        }
+        return ys.getServices(serviceClass);
+    }
+
+    public static void setMockupTimeService(TimeService timeService) {
+        mockupTimeService = timeService;
+    }
+
+    public YamcsService getGlobalService(String serviceName) {
+        ServiceWithConfig serviceWithConfig = getGlobalServiceWithConfig(serviceName);
+        return serviceWithConfig != null ? serviceWithConfig.getService() : null;
+    }
+
+    /**
+     * Returns the global service matching the specified class.
+     * <p>
+     * This method requires that there be only one matching service, else it will throw an exception.
+     * 
+     * @return The matching singleton service, else {@code null}.
+     * @throws IllegalStateException
+     *             There is more than one matching service.
+     */
+    public <T extends YamcsService> T getGlobalService(Class<T> serviceClass) {
+        List<T> services = getGlobalServices(serviceClass);
+        if (services.size() == 1) {
+            return services.get(0);
+        } else if (services.size() > 2) {
+            throw new IllegalStateException(serviceClass.getName() + " is not a singleton service");
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends YamcsService> List<T> getGlobalServices(Class<T> serviceClass) {
+        List<T> services = new ArrayList<>();
+        if (globalServiceList != null) {
+            for (ServiceWithConfig swc : globalServiceList) {
+                if (serviceClass.isInstance(swc.service)) {
+                    services.add((T) swc.service);
+                }
+            }
+        }
+        return services;
+    }
+
+    static ServiceWithConfig createService(String instance, String serviceClass, String serviceName,
+            YConfiguration args, boolean enabledAtStartup)
+            throws ConfigurationException, ValidationException {
+        YamcsService service = null;
+
+        service = YObjectLoader.loadObject(serviceClass);
+
+        if (args instanceof YConfiguration) {
+            // try {
+            Spec spec = service.getSpec();
+            if (spec != null) {
+                if (LOG.isDebugEnabled()) {
+                    Map<String, Object> unsafeArgs = ((YConfiguration) args).getRoot();
+                    Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                    LOG.debug("Raw args for {}: {}", serviceName, safeArgs);
+                }
+
+                args = spec.validate((YConfiguration) args);
+
+                if (LOG.isDebugEnabled()) {
+                    Map<String, Object> unsafeArgs = ((YConfiguration) args).getRoot();
+                    Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                    LOG.debug("Initializing {} with resolved args: {}", serviceName, safeArgs);
+                }
+            }
+            // service.init(instance, serviceName, (YConfiguration) args);
+            // } catch (InitException e) { // TODO should add this to throws instead
+            // throw new ConfigurationException(e);
+            // }
+        }
+        return new ServiceWithConfig(service, serviceClass, serviceName, args, enabledAtStartup);
+    }
+
+    // starts a service that has stopped or not yet started
+    static YamcsService startService(String instance, String serviceName, List<ServiceWithConfig> serviceList)
+            throws ConfigurationException, ValidationException, InitException {
+        for (int i = 0; i < serviceList.size(); i++) {
+            ServiceWithConfig swc = serviceList.get(i);
+            if (swc.name.equals(serviceName)) {
+                switch (swc.service.state()) {
+                case RUNNING:
+                case STARTING:
+                    // do nothing, service is already starting
+                    break;
+                case NEW: // not yet started, start it now
+                    swc.service.startAsync();
+                    break;
+                case FAILED:
+                case STOPPING:
+                case TERMINATED:
+                    // start a new one
+                    swc = createService(instance, swc.serviceClass, serviceName, swc.args, swc.enableAtStartup);
+                    swc.service.init(instance, swc.getName(), swc.args);
+                    serviceList.set(i, swc);
+                    swc.service.startAsync();
+                    break;
+                }
+                return swc.service;
+            }
+        }
+        return null;
+    }
+
+    public void startGlobalService(String serviceName)
+            throws ConfigurationException, ValidationException, InitException {
+        startService(null, serviceName, globalServiceList);
+    }
+
+    public CrashHandler getCrashHandler(String yamcsInstance) {
+        YamcsServerInstance ys = getInstance(yamcsInstance);
+        if (ys != null) {
+            return ys.getCrashHandler();
+        } else {
+            return globalCrashHandler; // may happen if the instance name is not valid (in unit tests)
+        }
+    }
+
+    public CrashHandler getGlobalCrashHandler() {
+        return globalCrashHandler;
+    }
+
+    public Path getConfigDirectory() {
+        return options.configDirectory;
+    }
+
+    public Path getDataDirectory() {
+        return options.dataDir;
+    }
+
+    /**
+     * Path of the Yamcs incoming directory. This global option is deprecated. Links that need an incoming directory,
+     * should read this information directly from that link's configuration.
+     */
+    @Deprecated
+    public Path getIncomingDirectory() {
+        return incomingDir;
+    }
+
+    public Path getCacheDirectory() {
+        return options.cacheDir;
+    }
+
+    /**
+     * Register a listener that will be called when Yamcs has fully started. If you register a listener after Yamcs has
+     * already started, your callback will not be executed.
+     */
+    public void addReadyListener(ReadyListener readyListener) {
+        readyListeners.add(readyListener);
+    }
+
+    /**
+     * @return the (singleton) server
+     */
+    public static YamcsServer getServer() {
+        return YAMCS;
+    }
+
+    public static void main(String[] args) {
+        long t0 = System.nanoTime();
+
+        // Run jcommander before setting up logging.
+        // We want this to use standard streams.
+        parseArgs(args);
+
+        System.setProperty("jxl.nowarnings", "true");
+        if (System.getProperty("javax.net.ssl.trustStore") == null) {
+            System.setProperty("javax.net.ssl.trustStore",
+                    YAMCS.options.configDirectory.resolve("trustStore").toString());
+        }
+
+        try {
+            setupLogging();
+
+            // Bootstrap YConfiguration such that it only considers physical files.
+            // Not classpath resources.
+            YConfiguration.setResolver(new FileBasedConfigurationResolver(YAMCS.options.configDirectory));
+
+            // Properties of the form ${foo} will be expanded based on the presence of application.properties,
+            // or just default to java system properties.
+            var propertiesFile = YAMCS.options.configDirectory.resolve("application.properties");
+            if (Files.exists(propertiesFile)) {
+                try (var fileIn = Files.newBufferedReader(propertiesFile, StandardCharsets.UTF_8)) {
+                    YAMCS.properties.load(fileIn);
+                }
+            }
+            YConfiguration.setPropertyProvider(propertyName -> {
+                var value = YAMCS.properties.getProperty(propertyName);
+                return value != null ? value : System.getProperty(propertyName);
+            });
+
+            YAMCS.prepareStart();
+        } catch (Exception e) {
+            Throwable t = ExceptionUtil.unwind(e);
+            if (t instanceof ValidationException) {
+                String path = ((ValidationException) t).getContext().getPath();
+                LOG.error("{}: {}", path, e.getMessage());
+                if (YAMCS.options.check) {
+                    System.out.println("Configuration Invalid");
+                }
+                RdbStorageEngine.getInstance().shutdown();
+                YamcsLogManager.shutdown();
+                System.exit(-1);
+            } else {
+                LOG.error("Failure while attempting to validate configuration", t);
+                RdbStorageEngine.getInstance().shutdown();
+                YamcsLogManager.shutdown();
+                System.exit(-1);
+            }
+        }
+
+        if (YAMCS.options.check) {
+            System.out.println("Configuration OK");
+            System.exit(0);
+        }
+
+        ResourceLeakDetector.setLevel(YAMCS.options.nettyLeakDetection);
+        if (ResourceLeakDetector.isEnabled()) {
+            LOG.info("Netty leak detection: " + ResourceLeakDetector.getLevel());
+        }
+
+        // Good to go!
+        try {
+            LOG.info("Yamcs {}, build {}", YamcsVersion.VERSION, YamcsVersion.REVISION);
+            YAMCS.start();
+            YAMCS.reportReady(System.nanoTime() - t0);
+        } catch (Exception e) {
+            LOG.error("Could not start Yamcs", ExceptionUtil.unwind(e));
+            System.exit(-1);
+        }
+    }
+
+    private static void parseArgs(String[] args) {
+        try {
+            JCommander jcommander = new JCommander(YAMCS.options);
+            jcommander.setProgramName("yamcsd");
+            jcommander.parse(args);
+            if (YAMCS.options.help) {
+                jcommander.usage();
+                System.exit(0);
+            } else if (YAMCS.options.version) {
+                System.out.println("Yamcs " + YamcsVersion.VERSION + ", build " + YamcsVersion.REVISION);
+                PluginManager pluginManager = new PluginManager();
+                for (Plugin plugin : ServiceLoader.load(Plugin.class)) {
+                    PluginMetadata meta = pluginManager.getMetadata(plugin.getClass());
+                    System.out.println(meta.getName() + " " + meta.getVersion());
+                }
+                System.exit(0);
+            }
+        } catch (ParameterException | IOException e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
+        }
+    }
+
+    private static void setupLogging() throws SecurityException, IOException {
+        if (YAMCS.options.check) {
+            Log.forceStandardStreams(Level.WARNING);
+            return;
+        }
+
+        if (System.getProperty("java.util.logging.config.file") != null) {
+            LOG.info("Logging configuration overriden via java property");
+        } else {
+            Path configFile = YAMCS.options.configDirectory.resolve("logging.properties").toAbsolutePath();
+            if (Files.exists(configFile)) {
+                try (InputStream in = Files.newInputStream(configFile)) {
+                    YamcsLogManager.setup(in);
+                    LOG.info("Logging enabled using {}", configFile);
+                }
+            } else {
+                setupDefaultLogging();
+            }
+        }
+
+        // Intercept stdout/stderr for sending to the log system. Only catches line-terminated
+        // string, but this should cover most uses cases.
+        // NOTE: stream redirect gets disabled on shutdown, so keep the check dynamic.
+        Logger stdoutLogger = Logger.getLogger("stdout");
+        System.setOut(new PrintStream(System.out) {
+            @Override
+            public void println(String x) {
+                if (YAMCS.options.noStreamRedirect) {
+                    super.println(x);
+                } else {
+                    stdoutLogger.info(x);
+                }
+            }
+
+            @Override
+            public void println(Object x) {
+                if (YAMCS.options.noStreamRedirect) {
+                    super.println(x);
+                } else {
+                    stdoutLogger.info(String.valueOf(x));
+                }
+            }
+        });
+        Logger stderrLogger = Logger.getLogger("stderr");
+        System.setErr(new PrintStream(System.err) {
+            @Override
+            public void println(String x) {
+                if (YAMCS.options.noStreamRedirect) {
+                    super.println(x);
+                } else {
+                    stderrLogger.severe(x);
+                }
+            }
+
+            @Override
+            public void println(Object x) {
+                if (YAMCS.options.noStreamRedirect) {
+                    super.println(x);
+                } else {
+                    stdoutLogger.info(String.valueOf(x));
+                }
+            }
+        });
+    }
+
+    private static void setupDefaultLogging() throws SecurityException, IOException {
+        Level logLevel = toLevel(YAMCS.options.verbose);
+
+        // Not sure. This seems to be the best programmatic way. Changing Logger
+        // instances directly only works on the weak instance.
+        String defaultHandler = ConsoleHandler.class.getName();
+        String defaultFormatter = ConsoleFormatter.class.getName();
+        StringBuilder buf = new StringBuilder();
+        buf.append("handlers=").append(defaultHandler).append("\n");
+        buf.append(defaultHandler).append(".level=").append(logLevel).append("\n");
+        buf.append(defaultHandler).append(".formatter=").append(defaultFormatter).append("\n");
+
+        if (YAMCS.options.logConfig != null) {
+            try (InputStream in = Files.newInputStream(YAMCS.options.logConfig)) {
+                Properties props = new Properties();
+                props.load(in);
+                props.forEach((logger, verbosity) -> {
+                    Level loggerLevel = toLevel(Integer.parseInt((String) verbosity));
+                    buf.append(logger).append(".level=").append(loggerLevel).append("\n");
+                });
+            }
+        } else {
+            // This sets up the level for *everything*.
+            buf.append(".level=").append(logLevel);
+        }
+
+        try (InputStream in = new ByteArrayInputStream(buf.toString().getBytes())) {
+            YamcsLogManager.setup(in);
+        }
+        for (Handler handler : Logger.getLogger("").getHandlers()) {
+            Formatter formatter = handler.getFormatter();
+            if (formatter instanceof ConsoleFormatter) {
+                ((ConsoleFormatter) formatter).setEnableAnsiColors(!YAMCS.options.noColor);
+            }
+        }
+    }
+
+    private static Level toLevel(int verbosity) {
+        switch (verbosity) {
+        case 0:
+            return Level.OFF;
+        case 1:
+            return Level.WARNING;
+        case 2:
+            return Level.INFO;
+        case 3:
+            return Level.FINE;
+        default:
+            return Level.ALL;
+        }
+    }
+
+    public void prepareStart() throws ValidationException, IOException, InitException {
+        if (timer.isShutdown()) {// happening in unit tests
+            timer = new ScheduledThreadPoolExecutor(1,
+                    new ThreadFactoryBuilder().setNameFormat("YamcsServer-general-executor").build());
+        }
+
+        ManagementService.getInstance().init();
+
+        bucketManager = new BucketManager();
+
+        pluginManager = new PluginManager();
+        pluginManager.discoverPlugins();
+
+        // Load the UTC-TAI.history file.
+        // Give priority to a file in etc folder.
+        Path utcTaiFile = options.configDirectory.resolve("UTC-TAI.history");
+        if (Files.exists(utcTaiFile)) {
+            try (InputStream in = Files.newInputStream(utcTaiFile)) {
+                TimeEncoding.setUp(in);
+            }
+        } else {
+            // Default to a bundled version from classpath
+            TimeEncoding.setUp();
+        }
+
+        validateMainConfiguration();
+        discoverTemplates();
+
+        // Prevent RDBFactory from installing shutdown hooks, shutdown is organised by YamcsServer.
+        RDBFactory.setRegisterShutdownHooks(false);
+
+        // Create also services and instances so that they can validate too.
+        addGlobalServicesAndInstances();
+    }
+
+    public void validateMainConfiguration() throws ValidationException {
+        Spec serviceSpec = new Spec();
+        serviceSpec.addOption("class", OptionType.STRING).withRequired(true);
+        serviceSpec.addOption("args", OptionType.ANY);
+        serviceSpec.addOption("name", OptionType.STRING);
+        serviceSpec.addOption("enabledAtStartup", OptionType.BOOLEAN);
+
+        spec = new Spec();
+        spec.addOption("services", OptionType.LIST).withElementType(OptionType.MAP)
+                .withSpec(serviceSpec);
+        spec.addOption("instances", OptionType.LIST).withElementType(OptionType.STRING);
+        spec.addOption("dataDir", OptionType.STRING).withDefault("yamcs-data");
+        spec.addOption("cacheDir", OptionType.STRING).withDefault("cache");
+        spec.addOption("incomingDir", OptionType.STRING).withDefault("yamcs-incoming")
+                .withDeprecationMessage("remove \"incomingDir\" property from yamcs.yaml. "
+                        + "Links that were using this option, should instead provide a link-specific option");
+        spec.addOption(CFG_SERVER_ID_KEY, OptionType.STRING);
+        spec.addOption(CFG_SECRET_KEY, OptionType.STRING).withSecret(true);
+        spec.addOption("disabledPlugins", OptionType.LIST).withElementType(OptionType.STRING)
+                .withDeprecationMessage("use: \"enabled\" property inside the plugin's configuration section instead");
+        spec.addOption("archive", OptionType.ANY);
+        spec.addOption("rdbConfig", OptionType.ANY);
+
+        Map<String, Spec> extraSections = getConfigurationSections(ConfigScope.YAMCS);
+        extraSections.forEach((key, sectionSpec) -> {
+            spec.addOption(key, OptionType.MAP).withSpec(sectionSpec)
+                    .withApplySpecDefaults(true);
+        });
+
+        Map<String, Spec> extraLists = getConfigurationLists(ConfigScope.YAMCS);
+        extraLists.forEach((key, listSpec) -> {
+            spec.addOption(key, OptionType.LIST)
+                    .withElementType(OptionType.MAP)
+                    .withSpec(listSpec);
+        });
+
+        config = YConfiguration.getConfiguration("yamcs");
+        config = spec.validate(config);
+    }
+
+    public void start() throws IOException, PluginException {
+        // Before starting anything, register a shutdown hook that will attempt graceful shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                shuttingDown = true;
+                shutDown();
+            }
+        });
+
+        pluginManager.loadPlugins();
+        startServices();
+
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            String msg = String.format("Uncaught exception '%s' in thread %s: %s", e, t,
+                    Arrays.toString(e.getStackTrace()));
+            LOG.error(msg);
+            globalCrashHandler.handleCrash("UncaughtException", msg);
+        });
+    }
+
+    /**
+     * Returns true when Yamcs is shutting down.
+     */
+    public boolean isShuttingDown() {
+        return shuttingDown;
+    }
+
+    private void discoverTemplates() throws IOException {
+        Path templatesDir = options.configDirectory.resolve("instance-templates");
+        if (!Files.exists(templatesDir)) {
+            return;
+        }
+
+        try (Stream<Path> dirStream = Files.list(templatesDir)) {
+            dirStream.filter(Files::isDirectory).forEach(p -> {
+                Path templateFile = p.resolve("template.yaml");
+                if (Files.exists(templateFile)) {
+                    try {
+                        String name = p.getFileName().toString();
+                        String source = new String(Files.readAllBytes(templateFile), StandardCharsets.UTF_8);
+                        Template template = new Template(name, source);
+
+                        Path metaFile = p.resolve("meta.yaml");
+                        Map<String, Object> metaDef = new HashMap<>();
+                        if (Files.exists(metaFile)) {
+                            try (InputStream in = Files.newInputStream(metaFile)) {
+                                metaDef = new Yaml().load(in);
+                            }
+                        }
+
+                        template.setDescription(YConfiguration.getString(metaDef, "description", null));
+                        if (metaDef.containsKey("variables")) {
+                            List<Map<String, Object>> varDefs = YConfiguration.getList(metaDef, "variables");
+                            for (Map<String, Object> varDef : varDefs) {
+                                String type = (String) varDef.getOrDefault("type", Variable.class.getName());
+                                Variable variable = YObjectLoader.loadObject(type);
+                                variable.setName(YConfiguration.getString(varDef, "name"));
+                                variable.setLabel(YConfiguration.getString(varDef, "label", null));
+                                variable.setRequired(YConfiguration.getBoolean(varDef, "required", true));
+                                variable.setHelp(YConfiguration.getString(varDef, "help", null));
+                                variable.setInitial(YConfiguration.getString(varDef, "initial", null));
+                                if (varDef.containsKey("choices")) {
+                                    variable.setChoices(YConfiguration.getList(varDef, "choices"));
+                                }
+                                template.addVariable(variable);
+                            }
+                        }
+
+                        addInstanceTemplate(template);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    } catch (ParseException e) {
+                        throw new ConfigurationException(e);
+                    }
+                }
+            });
+        }
+    }
+
+    public void addInstanceTemplate(Template template) {
+        instanceTemplates.put(template.getName(), template);
+    }
+
+    public void addGlobalServicesAndInstances() throws IOException, ValidationException, InitException {
+        serverId = deriveServerId();
+        deriveSecretKey();
+
+        if (config.containsKey("crashHandler")) {
+            globalCrashHandler = loadCrashHandler(config);
+        } else {
+            globalCrashHandler = new LogCrashHandler();
+        }
+        if (options.dataDir == null) {
+            options.dataDir = Path.of(config.getString("dataDir"));
+        }
+        YarchDatabase.setHome(options.dataDir.toString());
+        incomingDir = Path.of(config.getString("incomingDir"));
+        instanceDefDir = options.dataDir.resolve("instance-def");
+
+        if (YConfiguration.configDirectory != null) {
+            options.cacheDir = YConfiguration.configDirectory.toPath().toAbsolutePath();
+        } else if (options.cacheDir == null) {
+            options.cacheDir = Path.of(config.getString("cacheDir")).toAbsolutePath();
+        }
+        Files.createDirectories(options.cacheDir);
+
+        Path globalDir = options.dataDir.resolve(GLOBAL_INSTANCE);
+        Files.createDirectories(globalDir);
+        Files.createDirectories(instanceDefDir);
+
+        bucketManager.loadBuckets();
+
+        if (config.containsKey("services")) {
+            List<YConfiguration> services = config.getServiceConfigList("services");
+            globalServiceList = createServices(null, services, LOG);
+            initServices(null, globalServiceList);
+        }
+
+        try {
+            securityStore = new SecurityStore();
+            LOG.debug("Security: " + (securityStore.isEnabled() ? "enabled" : "disabled"));
+        } catch (InitException e) {
+            if (e.getCause() instanceof ValidationException) {
+                throw (ValidationException) e.getCause();
+            }
+            throw new ConfigurationException(e);
+        }
+
+        // Load user-configured instances. These are the ones that are explictly mentioned in yamcs.yaml
+        int instanceCount = 0;
+        if (config.containsKey("instances")) {
+            for (String name : config.<String> getList("instances")) {
+                if (instances.containsKey(name)) {
+                    throw new ConfigurationException("Duplicate instance specified: '" + name + "'");
+                }
+                YConfiguration instanceConfig = YConfiguration.getConfiguration("yamcs." + name);
+                addInstance(name, new InstanceMetadata(), false, instanceConfig);
+                instanceCount++;
+            }
+        }
+
+        // Load instances saved in storage
+        try (Stream<Path> paths = Files.list(instanceDefDir)) {
+            for (Path instanceDir : paths.collect(Collectors.toList())) {
+                String dirname = instanceDir.getFileName().toString();
+                Matcher m = INSTANCE_PATTERN.matcher(dirname);
+                if (!m.matches()) {
+                    continue;
+                }
+
+                String instanceName = m.group(1);
+                boolean online = m.group(2) == null;
+                if (online) {
+                    instanceCount++;
+                    if (instanceCount > maxOnlineInstances) {
+                        throw new ConfigurationException("Instance limit exceeded: " + instanceCount);
+                    }
+                    YConfiguration instanceConfig = loadInstanceConfig(instanceName);
+                    InstanceMetadata instanceMetadata = loadInstanceMetadata(instanceName);
+                    addInstance(instanceName, instanceMetadata, false, instanceConfig);
+                } else {
+                    if (instances.size() > maxNumInstances) {
+                        LOG.warn("Number of instances exceeds the maximum {}, offline instance {} not loaded",
+                                maxNumInstances, instanceName);
+                        continue;
+                    }
+                    InstanceMetadata instanceMetadata = loadInstanceMetadata(instanceName);
+                    addInstance(instanceName, instanceMetadata, true, null);
+                }
+            }
+        }
+    }
+
+    static CrashHandler loadCrashHandler(YConfiguration config) throws IOException {
+        if (config.containsKey("crashHandler", "args")) {
+            return YObjectLoader.loadObject(config.getSubString("crashHandler", "class"),
+                    config.getSubMap("crashHandler", "args"));
+        } else {
+            return YObjectLoader.loadObject(config.getSubString("crashHandler", "class"));
+        }
+    }
+
+    private void startServices() {
+        if (globalServiceList != null) {
+            startServices(globalServiceList);
+        }
+
+        for (YamcsServerInstance ysi : instances.values()) {
+            if (ysi.state() != InstanceState.OFFLINE) {
+                ysi.startAsync();
+            }
+        }
+    }
+
+    private void reportReady(long bootTime) throws IOException {
+        int instanceCount = getOnlineInstanceCount();
+        int serviceCount = globalServiceList.size() + getInstances().stream()
+                .map(instance -> instance.services != null ? instance.services.size() : 0)
+                .reduce(0, Integer::sum);
+
+        String msg = String.format("Yamcs started in %dms. Started %d of %d instances and %d services",
+                NANOSECONDS.toMillis(bootTime), instanceCount, instances.size(), serviceCount);
+
+        if (options.noStreamRedirect) {
+            System.out.println(msg);
+        } else {
+            // Associate the message with a specific logger
+            LOG.info(msg);
+        }
+
+        if (SDNotify.isSupported()) {
+            SDNotify.sendStartupNotification();
+        }
+
+        // Report start success to internal listeners
+        readyListeners.forEach(ReadyListener::onReady);
+    }
+
+    public Processor getProcessor(String yamcsInstance, String processorName) {
+        YamcsServerInstance ysi = getInstance(yamcsInstance);
+        if (ysi == null) {
+            return null;
+        }
+        return ysi.getProcessor(processorName);
+    }
+
+    public ScheduledThreadPoolExecutor getThreadPoolExecutor() {
+        return timer;
+    }
+
+    static String configFileName(String yamcsInstance) {
+        return "yamcs." + yamcsInstance + ".yaml";
+    }
+}
+```
+
+### `YamcsServerInstance.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsServerInstance.java`
+
+
+```java
+package org.yamcs;
+
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+import static org.yamcs.YamcsServer.CFG_CRASH_HANDLER_KEY;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+
+import org.yamcs.Spec.OptionType;
+import org.yamcs.logging.Log;
+import org.yamcs.management.LinkManager;
+import org.yamcs.mdb.DatabaseLoadException;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterRetrievalService;
+import org.yamcs.protobuf.Mdb.MissionDatabase;
+import org.yamcs.protobuf.YamcsInstance;
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+import org.yamcs.time.RealtimeTimeService;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.ExceptionUtil;
+import org.yamcs.utils.ServiceUtil;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.xtce.Header;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+/**
+ * Represents a Yamcs instance together with the instance specific services and the processors
+ * 
+ */
+public class YamcsServerInstance extends YamcsInstanceService {
+    private String name;
+    Log log;
+    TimeService timeService;
+    private CrashHandler crashHandler;
+    List<ServiceWithConfig> services;
+    private Mdb mdb;
+
+    InstanceMetadata metadata;
+    YConfiguration config;
+    final Map<String, Processor> processors = new LinkedHashMap<>();
+    LinkManager linkManager;
+    final int instanceId;
+
+    YamcsServerInstance(String name) {
+        this(name, new InstanceMetadata());
+    }
+
+    YamcsServerInstance(String name, InstanceMetadata metadata) {
+        this.name = name;
+        this.metadata = metadata;
+        log = new Log(getClass(), name);
+        this.instanceId = (YamcsServer.getServer().getServerId() + "." + name).hashCode();
+    }
+
+    public static Spec getSpec() {
+        Spec serviceSpec = new Spec();
+        serviceSpec.addOption("class", OptionType.STRING).withRequired(true);
+        serviceSpec.addOption("args", OptionType.ANY);
+        serviceSpec.addOption("name", OptionType.STRING);
+        serviceSpec.addOption("enabledAtStartup", OptionType.BOOLEAN);
+
+        Spec mdbSpec = new Spec();
+        mdbSpec.addOption("type", OptionType.STRING).withRequired(true);
+        mdbSpec.addOption("spec", OptionType.STRING);
+        mdbSpec.addOption("writable", OptionType.BOOLEAN).withDefault(false);
+        mdbSpec.addOption("args", OptionType.MAP).withSpec(Spec.ANY);
+        mdbSpec.addOption("subLoaders", OptionType.LIST).withElementType(OptionType.MAP).withSpec(mdbSpec);
+
+        Spec spec = new Spec();
+        spec.addOption("services", OptionType.LIST).withElementType(OptionType.MAP).withSpec(serviceSpec);
+
+        // Detailed validation on these is done
+        // in LinkManager, MdbFactory, and StreamInitializer
+        spec.addOption("dataLinks", OptionType.LIST).withElementType(OptionType.MAP).withSpec(Spec.ANY);
+        spec.addOption("streamConfig", OptionType.MAP).withSpec(Spec.ANY);
+
+        spec.addOption("mdb", OptionType.LIST).withElementType(OptionType.MAP).withSpec(mdbSpec);
+        spec.addOption("mdbSpec", OptionType.STRING);
+        spec.mutuallyExclusive("mdb", "mdbSpec");
+
+        spec.addOption("timeService", OptionType.ANY);
+        spec.addOption("tmIndexer", OptionType.ANY);
+        spec.addOption("eventDecoders", OptionType.ANY);
+
+        YarchDatabaseInstance.addSpec(spec);
+
+        // "anchors" is used to allow yaml anchors (reuse of blocks)
+        spec.addOption("anchors", OptionType.ANY);
+
+        YamcsServer yamcs = YamcsServer.getServer();
+        Map<String, Spec> extraSections = yamcs.getConfigurationSections(ConfigScope.YAMCS_INSTANCE);
+        extraSections.forEach((key, sectionSpec) -> {
+            spec.addOption(key, OptionType.MAP).withSpec(sectionSpec)
+                    .withApplySpecDefaults(true);
+        });
+        Map<String, Spec> extraLists = yamcs.getConfigurationLists(ConfigScope.YAMCS_INSTANCE);
+        extraLists.forEach((key, listSpec) -> {
+            spec.addOption(key, OptionType.LIST)
+                    .withElementType(OptionType.MAP)
+                    .withSpec(listSpec);
+        });
+
+        return spec;
+    }
+
+    void init(YConfiguration config) {
+        try {
+            this.config = getSpec().validate(config);
+        } catch (ValidationException e) {
+            // Don't care about stacktrace inside spec
+            throw new UncheckedExecutionException(new ValidationException(
+                    e.getContext(), e.getMessage()));
+        }
+        initAsync();
+        try {
+            awaitInitialized();
+        } catch (IllegalStateException e) {
+            throw new UncheckedExecutionException(e.getCause());
+        }
+    }
+
+    @Override
+    public void doInit() {
+        try {
+            loadTimeService();
+            loadCrashHandler();
+
+            // first load the MDB (if there is an error in it, we don't want to load any other service)
+            mdb = MdbFactory.getInstance(name);
+            StreamInitializer.createStreams(name);
+
+            // create services before the link manager so that the pre-processors can find them
+            // if required (even uninitialized)
+            List<YConfiguration> serviceConfigs = config.getServiceConfigList("services");
+            services = YamcsServer.createServices(name, serviceConfigs, log);
+            if (getServices(ParameterRetrievalService.class).isEmpty()) {
+                services.add(new ServiceWithConfig(new ParameterRetrievalService(),
+                        ParameterRetrievalService.class.getName(),
+                        "ParameterRetrievalService",
+                        YConfiguration.emptyConfig()));
+            }
+
+            linkManager = new LinkManager(name);
+
+            YamcsServer.initServices(name, services);
+
+            notifyInitialized();
+        } catch (Exception e) {
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        linkManager.startLinks();
+        for (ServiceWithConfig swc : services) {
+            if (swc.enableAtStartup) {
+                log.debug("Starting service {}", swc.getName());
+                swc.service.startAsync();
+            } else {
+                log.debug("Not starting service {} because enableAtStartup is false", swc.getName());
+            }
+        }
+        for (ServiceWithConfig swc : services) {
+            if (swc.enableAtStartup) {
+                log.info("Awaiting start of service {}", swc.getName());
+                ServiceUtil.awaitServiceRunning(swc.service);
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        linkManager.stopLinks();
+        ListeningExecutorService serviceStoppers = listeningDecorator(Executors.newCachedThreadPool());
+        List<ListenableFuture<?>> stopFutures = new ArrayList<>();
+        for (ServiceWithConfig swc : services) {
+            stopFutures.add(serviceStoppers.submit(() -> {
+                swc.service.stopAsync();
+                log.info("Awaiting termination of service {}", swc.getName());
+                ServiceUtil.awaitServiceTerminated(swc.service, YamcsServer.SERVICE_STOP_GRACE_TIME, log);
+            }));
+        }
+        linkManager = null;
+
+        serviceStoppers.shutdown();
+        Futures.addCallback(Futures.allAsList(stopFutures), new FutureCallback<Object>() {
+            @Override
+            public void onSuccess(Object result) {
+                log.info("Stopping Yamcs DB");
+                YarchDatabaseInstance ydb = YarchDatabase.getInstance(name);
+                ydb.close();
+                YarchDatabase.removeInstance(name);
+                notifyStopped();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                notifyFailed(ExceptionUtil.unwind(t));
+            }
+        }, MoreExecutors.directExecutor());
+    }
+
+    public Mdb getMdb() {
+        return mdb;
+    }
+
+    /**
+     * Stops this instance, and waits until it terminates
+     * 
+     * @throws IllegalStateException
+     *             if the instance fails to do a clean stop
+     */
+    public void stop() throws IllegalStateException {
+        stopAsync();
+        awaitOffline();
+
+        // set to null to free some memory
+        mdb = null;
+        services = null;
+    }
+
+    public void loadTimeService() {
+        if (config.containsKey("timeService")) {
+            YConfiguration m = config.getConfig("timeService");
+            String servclass = m.getString("class");
+            if (m.containsKey("args")) {
+                YConfiguration args = m.getConfig("args");
+                timeService = YObjectLoader.loadObject(servclass, name, args);
+            } else {
+                timeService = YObjectLoader.loadObject(servclass, name);
+            }
+        } else {
+            timeService = new RealtimeTimeService();
+        }
+    }
+
+    private void loadCrashHandler() throws IOException {
+        if (config.containsKey(CFG_CRASH_HANDLER_KEY)) {
+            crashHandler = YamcsServer.loadCrashHandler(config);
+        } else {
+            crashHandler = YamcsServer.getServer().getGlobalCrashHandler();
+        }
+    }
+
+    /**
+     * Returns the main configuration for this Yamcs instance
+     */
+    public YConfiguration getConfig() {
+        return config;
+    }
+
+    public ServiceWithConfig getServiceWithConfig(String serviceName) {
+        if (services == null) {
+            return null;
+        }
+
+        for (ServiceWithConfig swc : services) {
+            if (swc.getName().equals(serviceName)) {
+                return swc;
+            }
+        }
+        return null;
+    }
+
+    public Service getService(String serviceName) {
+        ServiceWithConfig serviceWithConfig = getServiceWithConfig(serviceName);
+        return serviceWithConfig != null ? serviceWithConfig.getService() : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends YamcsService> List<T> getServices(Class<T> serviceClass) {
+        List<T> result = new ArrayList<>();
+        if (services != null) {
+            for (ServiceWithConfig swc : services) {
+                if (serviceClass.isInstance(swc.service)) {
+                    result.add((T) swc.service);
+                }
+            }
+        }
+        return result;
+    }
+
+    public <T extends YamcsService> List<ServiceWithConfig> getServicesWithConfig(Class<T> serviceClass) {
+        List<ServiceWithConfig> result = new ArrayList<>();
+        if (services != null) {
+            for (ServiceWithConfig swc : services) {
+                if (serviceClass.isInstance(swc.service)) {
+                    result.add(swc);
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Return the service of the given class and name or null if not existing.
+     * <p>
+     * If a service of the given name but a different class exists (or the other way around), this function returns
+     * null.
+     * 
+     * @param serviceClass
+     * @param serviceName
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends YamcsService> T getService(Class<T> serviceClass, String serviceName) {
+        if (services != null) {
+            for (ServiceWithConfig swc : services) {
+                YamcsService ys = swc.service;
+                if (serviceClass.isInstance(ys) && swc.getName().equals(serviceName)) {
+                    return (T) ys;
+                }
+            }
+        }
+        return null;
+    }
+
+    public TimeService getTimeService() {
+        return timeService;
+    }
+
+    public List<ServiceWithConfig> getServices() {
+        if (services != null) {
+            return new ArrayList<>(services);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    public void startService(String serviceName) throws ConfigurationException, ValidationException, InitException {
+        YamcsServer.startService(name, serviceName, services);
+    }
+
+    CrashHandler getCrashHandler() {
+        return crashHandler;
+    }
+
+    /**
+     * Returns the name of this Yamcs instance
+     */
+    public String getName() {
+        return name;
+    }
+
+    public YamcsInstance getInstanceInfo() {
+        YamcsInstance.Builder aib = YamcsInstance.newBuilder().setName(name);
+        InstanceState state = state();
+        aib.setState(state);
+        if (state == InstanceState.FAILED) {
+            aib.setFailureCause(failureCause().toString());
+        }
+        if (config != null) { // Can be null for an offline instance
+            try {
+                MissionDatabase.Builder mdbproto = MissionDatabase.newBuilder();
+                if (config.containsKey("mdbSpec")) {
+                    String configName = config.getString("mdbSpec");
+                    mdbproto.setConfigName(configName);
+                } else if (!config.isList("mdb")) {
+                    String configName = config.getString("mdb");
+                    mdbproto.setConfigName(configName);
+                }
+                if (mdb != null) { // if the instance is in a failed state, it could be that it doesn't have a MDB
+                                   // (the failure might be due to the load of the MDB)
+                    mdbproto.setName(mdb.getRootSpaceSystem().getName());
+                    Header h = mdb.getRootSpaceSystem().getHeader();
+                    if (h != null && h.getVersion() != null) {
+                        mdbproto.setVersion(h.getVersion());
+                    }
+                }
+                aib.setMissionDatabase(mdbproto.build());
+            } catch (ConfigurationException | DatabaseLoadException e) {
+                log.warn("Got error when finding the mission database for instance {}", name, e);
+            }
+        }
+        aib.putAllLabels(getLabels());
+        return aib.build();
+    }
+
+    public String getTemplate() {
+        return metadata.getTemplate();
+    }
+
+    public String getTemplateSource() {
+        return metadata.getTemplateSource();
+    }
+
+    public Map<String, Object> getTemplateArgs() {
+        return metadata.getTemplateArgs();
+    }
+
+    public Object getMetadata(Object key) {
+        return metadata.get(key);
+    }
+
+    public Map<String, String> getLabels() {
+        return metadata.getLabels();
+    }
+
+    /**
+     * Adds the processor to the instance. If already existing a processor with the same name, an exception is thrown
+     * 
+     * @param proc
+     * @throws ProcessorException
+     */
+    public synchronized void addProcessor(Processor proc) throws ProcessorException {
+        if (processors.containsKey(proc.getName())) {
+            throw new ProcessorException(
+                    "A processor named '" + proc.getName() + "' already exists in instance " + name);
+        }
+        processors.put(proc.getName(), proc);
+        proc.setYamcsServerInstance(this);
+    }
+
+    /**
+     * Returns the first register processor or null if there is no processor registered.
+     * 
+     * @return the first registered processor
+     */
+    public synchronized Processor getFirstProcessor() {
+        if (processors.isEmpty()) {
+            return null;
+        } else {
+            return processors.values().iterator().next();
+        }
+    }
+
+    public synchronized List<Processor> getProcessors() {
+        return new ArrayList<>(processors.values());
+    }
+
+    public synchronized Processor getProcessor(String processorName) {
+        return processors.get(processorName);
+    }
+
+    public synchronized void removeProcessor(String processorName) {
+        processors.remove(processorName);
+    }
+
+    public LinkManager getLinkManager() {
+        return linkManager;
+    }
+
+    public int getInstanceId() {
+        return instanceId;
+    }
+}
+```
+
+### `YamcsServerOptions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsServerOptions.java`
+
+
+```java
+package org.yamcs;
+
+import java.nio.file.Path;
+import java.util.Arrays;
+
+import com.beust.jcommander.IStringConverter;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.converters.PathConverter;
+
+import io.netty.util.ResourceLeakDetector;
+import io.netty.util.ResourceLeakDetector.Level;
+
+public class YamcsServerOptions {
+
+    @Parameter(names = { "-v", "--version" }, description = "Print version information and quit")
+    boolean version;
+
+    @Parameter(names = "--check", description = "Run syntax tests on configuration files and quit")
+    boolean check;
+
+    @Parameter(names = "--log", description = "Level of verbosity")
+    int verbose = 2;
+
+    @Parameter(names = "--log-config", description = "File with log configuration", converter = PathConverter.class)
+    Path logConfig;
+
+    @Parameter(names = "--etc-dir", description = "Path to config directory", converter = PathConverter.class)
+    Path configDirectory;
+
+    @Parameter(names = "--data-dir", description = "Path to data directory", converter = PathConverter.class)
+    Path dataDir;
+
+    @Parameter(names = "--cache-dir", description = "Path to cache directory", converter = PathConverter.class)
+    Path cacheDir;
+
+    @Parameter(names = "--no-stream-redirect", description = "Do not redirect stdout/stderr to the log system")
+    boolean noStreamRedirect;
+
+    @Parameter(names = "--no-color", description = "Turn off console log colorization")
+    boolean noColor;
+
+    @Parameter(names = "--netty-leak-detection", description = "Enable leak detection (incurs overhead)", converter = LeakLevelConverter.class)
+    ResourceLeakDetector.Level nettyLeakDetection = ResourceLeakDetector.Level.DISABLED;
+
+    @Parameter(names = { "-h", "--help" }, help = true, hidden = true)
+    boolean help;
+
+    public YamcsServerOptions() {
+        String envNoColor = System.getenv("YAMCS_NO_COLOR");
+        if (envNoColor == null) { // envvar used by many other programs too
+            envNoColor = System.getenv("NO_COLOR");
+        }
+        noColor = (envNoColor != null) ? !envNoColor.isEmpty() : false;
+
+        String envEtcDir = System.getenv("YAMCS_ETC_DIR");
+        configDirectory = Path.of(envEtcDir != null ? envEtcDir : "etc").toAbsolutePath();
+
+        String envDataDir = System.getenv("YAMCS_DATA_DIR");
+        dataDir = (envDataDir != null) ? Path.of(envDataDir).toAbsolutePath() : null;
+
+        String envCacheDir = System.getenv("YAMCS_CACHE_DIR");
+        cacheDir = (envCacheDir != null) ? Path.of(envCacheDir).toAbsolutePath() : null;
+    }
+
+    // Keep public, required by JCommander
+    public static class LeakLevelConverter implements IStringConverter<ResourceLeakDetector.Level> {
+
+        @Override
+        public Level convert(String value) {
+            try {
+                return ResourceLeakDetector.Level.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new ParameterException(
+                        "Unknown value for --netty-leak-detection. Possible values: "
+                                + Arrays.asList(ResourceLeakDetector.Level.values()));
+            }
+        }
+    }
+
+    /**
+     * Convert a string into an absolute, normalized path.
+     */
+    public class AbsolutePathConverter implements IStringConverter<Path> {
+
+        @Override
+        public Path convert(String value) {
+            return Path.of(value).toAbsolutePath().normalize();
+        }
+    }
+}
+```
+
+### `YamcsService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsService.java`
+
+
+```java
+package org.yamcs;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * Required interface of a Yamcs Service. A Yamcs Service is a Guava service with hooks in the Yamcs configuration
+ * system.
+ */
+public interface YamcsService extends Service {
+
+    /**
+     * Returns the valid configuration options for this service.
+     * 
+     * @return the argument specification, or {@code null} if the args should not be validated.
+     */
+    public default Spec getSpec() {
+        return null;
+    }
+
+    /**
+     * returns the instance name
+     * 
+     * @return
+     */
+    public String getYamcsInstance();
+
+    /**
+     * Initialize this service. This is called before the service is started. All operations should finish fast.
+     * 
+     * @param yamcsInstance
+     *            The yamcs instance, or {@code null} if this is a global service.
+     * @param serviceName
+     *            The service name.
+     * @param config
+     *            The configured arguments for this service. If {@link #getSpec()} is implemented then this contains the
+     *            arguments after being validated (including any defaults).
+     * @throws InitException
+     *             When something goes wrong during the execution of this method.
+     */
+    public default void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+    }
+}
+```
+
+### `YamcsVersion.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YamcsVersion.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Properties;
+
+/**
+ * Provides access to build-time information of the Yamcs project.
+ */
+public class YamcsVersion {
+
+    /*
+     * This class reads a property file that is generated by Maven.
+     */
+
+    public static final String VERSION;
+    public static final String REVISION;
+
+    static {
+        String ver = null;
+        String rev = null;
+
+        try (var resourceIn = YamcsVersion.class.getResourceAsStream("/org.yamcs.core.properties")) {
+            if (resourceIn != null) {
+                var props = new Properties();
+                props.load(resourceIn);
+
+                ver = props.getProperty("version");
+                if (ver != null && ver.isBlank()) {
+                    ver = null;
+                }
+
+                rev = props.getProperty("revision");
+                if (rev != null && rev.isBlank()) {
+                    rev = null;
+                }
+            }
+        } catch (IOException e) { // ignore errors
+        }
+
+        VERSION = ver;
+        REVISION = rev;
+    }
+
+    /*
+     * Main called by Maven to generate org.yamcs.core.properties
+     */
+    public static void main(String[] args) throws IOException {
+        var versionArg = args[0].substring("VERSION=".length());
+        var revisionArg = args[1].substring("REVISION=".length());
+        var version = versionArg.isBlank() ? null : versionArg;
+        var revision = revisionArg.isBlank() ? null : revisionArg;
+
+        // Attempt to resolve revision using git. We allow this functionality to
+        // be overriden for when builds are done without an attached git repo.
+        if (revision == null) {
+            var processBuilder = new ProcessBuilder("git", "rev-parse", "HEAD");
+            try {
+                var process = processBuilder.start();
+                try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        if (!line.isBlank()) {
+                            revision = line;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                // Ignore
+            }
+        }
+
+        var targetFile = Path.of("target/generated-resources/version/org.yamcs.core.properties");
+        Files.createDirectories(targetFile.getParent());
+        var fileContent = "";
+        if (version != null) {
+            fileContent += "version=" + version + "\n";
+        }
+        if (revision != null) {
+            fileContent += "revision=" + revision + "\n";
+        }
+        Files.writeString(targetFile, fileContent);
+    }
+}
+```
+
+### `YConfiguration.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YConfiguration.java`
+
+
+```java
+package org.yamcs;
+
+import static java.util.regex.Matcher.quoteReplacement;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.LogManager;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
+
+/**
+ * A configuration object is a wrapper around a Map&ltString, Object&gt which keeps track to a parent and its original
+ * file (if any).
+ * 
+ * This class loads yamcs configurations. There are a number of "subsystems", each using a corresponding subsystem.yaml
+ * file
+ *
+ * Configuration files are looked up in this order:
+ * <ol>
+ * <li>in the prefix/file.yaml via the classpath if the prefix is set in the setup method (used in the unittests)
+ * <li>in the userConfigDirectory .yamcs/etc/file.yaml
+ * <li>in the file.yaml via the classpath..
+ * </ol>
+ *
+ * @author nm
+ */
+public class YConfiguration {
+
+    public static File configDirectory; // This is used in client tools to overwrite
+    static YConfigurationResolver resolver = new DefaultConfigurationResolver();
+    static YConfigurationPropertyProvider propertyProvider = new DefaultPropertyProvider();
+
+    private static Map<String, YConfiguration> configurations = new HashMap<>();
+    static Logger log = LoggerFactory.getLogger(YConfiguration.class.getName());
+    static String prefix = null;
+
+    // keeps track of the configuration path so meaningful error messages can be printed
+    // the path is something like filename.key1.subkey2[3]...
+    // this is used for the old style when the methods of YConfiguration were called in a static way
+    // Nowadays, please use Yconfiguration.getConfig() to make a child config, and then use the .path() to get the
+    // similar path.
+    private static IdentityHashMap<Object, String> staticConfPaths = new IdentityHashMap<>();
+
+    private static final YConfiguration EMPTY_CONFIG = YConfiguration.wrap(Collections.emptyMap());
+
+    public static final Pattern PROPERTY_PATTERN = Pattern
+            .compile("\\$\\{((?<name>[\\w\\.\\-]+)(:(?<fallback>.*)?)?)\\}");
+
+    /**
+     * The parent configuration
+     */
+    YConfiguration parent;
+    /**
+     * The key by which this object can be located within its parent
+     */
+    String parentKey;
+    /**
+     * The root map
+     */
+    Map<String, Object> root;
+
+    // this is set only for the root Yconfiguration (i.e. without a parent) and indicates where (which file) it has been
+    // loaded from
+    String rootLocation;
+
+    private YConfiguration(String subsystem) throws IOException, ConfigurationException {
+        this(subsystem, resolver.getConfigurationStream("/" + subsystem + ".yaml"), subsystem + ".yaml");
+    }
+
+    /**
+     * Constructs a new configuration object parsing the input stream
+     * 
+     * @param is
+     *            input stream where the configuration is loaded from
+     * @param confpath
+     *            configuration path - it is remembered together with the configuration in case of error to indicate
+     *            where it is coming from (i.e. which file)
+     */
+    @SuppressWarnings("unchecked")
+    public YConfiguration(String subsystem, InputStream is, String confpath) {
+        this.rootLocation = confpath;
+        Yaml yaml = getYamlParser();
+
+        try {
+            Object o = yaml.load(is);
+            if (o == null) {
+                o = new HashMap<String, Object>(); // config file is empty, not an error
+            } else if (!(o instanceof Map<?, ?>)) {
+                throw new ConfigurationException(confpath, "top level structure must be a map and not a " + o);
+            }
+            root = (Map<String, Object>) o;
+            staticConfPaths.put(root, confpath);
+        } catch (YAMLException e) {
+            throw new ConfigurationException(confpath, e.toString(), e);
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        configurations.put(subsystem, this);
+    }
+
+    /**
+     * Create a Yaml parser by taking into account some system properties.
+     */
+    private Yaml getYamlParser() {
+        LoaderOptions loaderOptions = new LoaderOptions();
+        int maxAliases = Integer.parseInt(System.getProperty("org.yamcs.yaml.maxAliases", "200"));
+        loaderOptions.setMaxAliasesForCollections(maxAliases);
+
+        return new Yaml(loaderOptions);
+    }
+
+    /**
+     * 
+     * @param parent
+     * @param parentKey
+     * @param root
+     */
+    public YConfiguration(YConfiguration parent, String parentKey, Map<String, Object> root) {
+        this.root = root;
+        this.parent = parent;
+        this.parentKey = parentKey;
+    }
+
+    /**
+     * Sets up the Yamcs configuration system and loads the UTC-TAI offsets.
+     * <p>
+     * This method is intended for client tools and may store or use files from {@code ~/.yamcs}.
+     */
+    public synchronized static void setupTool() {
+        File userConfigDirectory = new File(System.getProperty("user.home"), ".yamcs");
+        setupTool(userConfigDirectory);
+    }
+
+    /**
+     * Sets up the Yamcs configuration system and loads the UTC-TAI offsets.
+     * <p>
+     * This method is intended for client tools that wish to customize the default config directory.
+     * 
+     * @param configDirectory
+     */
+    public synchronized static void setupTool(File configDirectory) {
+        if (System.getProperty("java.util.logging.config.file") == null) {
+            try (InputStream in = resolver.getConfigurationStream("/logging.properties")) {
+                LogManager.getLogManager().readConfiguration(in);
+            } catch (Exception e) {
+                // do nothing, the default java builtin logging is used
+            }
+        }
+
+        TimeEncoding.setUp();
+
+        YConfiguration.configDirectory = configDirectory;
+        File logDir = new File(configDirectory, "log");
+        if (!logDir.exists()) {
+            if (logDir.mkdirs()) {
+                System.out.println("Created directory: " + logDir);
+            } else {
+                System.err.println("Cannot create directory: " + logDir);
+            }
+        }
+    }
+
+    /**
+     * Sets up the Yamcs configuration system and loads the UTC-TAI offsets.
+     * <p>
+     * This method is intended for use in unit and integration tests. It allows resolving configuration files from a
+     * specific subdirectory of the classpath.
+     *
+     * @param configPrefix
+     *            the name of the subdirectory where to resolve configuration files. This is resolved from the
+     *            classpath.
+     */
+    public static synchronized void setupTest(String configPrefix) {
+        prefix = configPrefix;
+        configurations.clear(); // forget any known config (useful in the maven unit tests called in the same VM)
+        resolver = new DefaultConfigurationResolver();
+
+        if (System.getProperty("java.util.logging.config.file") == null) {
+            try (InputStream in = resolver.getConfigurationStream("/logging.properties")) {
+                LogManager.getLogManager().readConfiguration(in);
+            } catch (Exception e) {
+                // do nothing, the default java builtin logging is used
+            }
+        }
+
+        TimeEncoding.setUp();
+    }
+
+    public static synchronized void clearConfigs() {
+        configurations.clear();
+    }
+
+    /**
+     * Loads (if not already loaded) and returns a configuration corresponding to a file &lt;subsystem&gt;.yaml
+     *
+     * This method does not reload the configuration file if it has changed.
+     *
+     * @param subsystem
+     * @return the loaded configuration
+     * @throws ConfigurationException
+     *             if the configuration file could not be found or not loaded (e.g. error in yaml formatting)
+     */
+    public synchronized static YConfiguration getConfiguration(String subsystem) throws ConfigurationException {
+        if (subsystem.contains("..") || subsystem.contains("/")) {
+            throw new ConfigurationException("Invalid subsystem '" + subsystem + "'");
+        }
+        YConfiguration c = configurations.get(subsystem);
+        if (c == null) {
+            try {
+                c = new YConfiguration(subsystem);
+            } catch (IOException e) {
+                throw new ConfigurationException("Cannot load configuration for subsystem " + subsystem + ": " + e);
+            }
+            configurations.put(subsystem, c);
+        }
+        return c;
+    }
+
+    /**
+     * Loads and returns a configuration corresponding to a file &lt;subsystem&gt;.yaml
+     *
+     * This method reloads the configuration file always.
+     *
+     * @param subsystem
+     * @param reload
+     * @return the loaded configuration
+     * @throws ConfigurationException
+     *             if the configuration file could not be found or not loaded (e.g. error in yaml formatting)
+     */
+    public synchronized static YConfiguration getConfiguration(String subsystem, boolean reload)
+            throws ConfigurationException {
+        if (reload) {
+            YConfiguration c = configurations.get(subsystem);
+            if (c != null) {
+                configurations.remove(subsystem);
+            }
+        }
+        return getConfiguration(subsystem);
+    }
+
+    public static boolean isDefined(String subsystem) throws ConfigurationException {
+        try {
+            getConfiguration(subsystem);
+            return true;
+        } catch (ConfigurationNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static boolean isNull(Map<?, ?> m, String key) {
+        if (!m.containsKey(key)) {
+            throw new ConfigurationException(staticConfPaths.get(m), "cannot find a mapping for key '" + key + "'");
+        }
+        Object o = m.get(key);
+        return o == null;
+    }
+
+    private void checkKey(String key, Class<?> cls) throws ConfigurationException {
+        if (!root.containsKey(key)) {
+            throw new ConfigurationException(getPath(), "cannot find a mapping for key '" + key + "'");
+        }
+        Object o = root.get(key);
+        if (o == null) {
+            throw new ConfigurationException(getPath(), key + " exists but is null");
+        }
+        if (!cls.isInstance(o)) {
+            throw new ConfigurationException(getPath(), key + " is not of the expected type " + cls.getName());
+        }
+    }
+
+    private static void checkKey(Map<String, Object> m, String key) throws ConfigurationException {
+        if (!m.containsKey(key)) {
+            throw new ConfigurationException(staticConfPaths.get(m), "cannot find a mapping for key '" + key + "'");
+        } else if (m.get(key) == null) {
+            throw new ConfigurationException(staticConfPaths.get(m), key + " exists but is null");
+        }
+    }
+
+    public boolean containsKey(String key) {
+        return root.containsKey(key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean containsKey(String key, String key1) throws ConfigurationException {
+        if (!root.containsKey(key)) {
+            return false;
+        }
+        checkKey(key, Map.class);
+        Map<String, Object> m = (Map<String, Object>) root.get(key);
+        return m.containsKey(key1);
+    }
+
+    /**
+     * returns the first entry in the config file if it's a map. Otherwise throws an error
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getFirstMap() throws ConfigurationException {
+        Object o = root.values().iterator().next();
+        if (o instanceof Map) {
+            return (Map<String, Object>) o;
+        } else {
+            throw new ConfigurationException(
+                    "the first entry in the config is of type " + o.getClass() + " and not Map");
+        }
+    }
+
+    /**
+     * returns the first entry(key) in the config file.
+     * 
+     * @return
+     */
+    public String getFirstEntry() throws ConfigurationException {
+        return root.keySet().iterator().next();
+    }
+
+    public Set<String> getKeys() {
+        return root.keySet();
+    }
+
+    private static String getUnqualifiedClassName(Object o) {
+        String name = o.getClass().getName();
+        if (name.lastIndexOf('.') > 0) {
+            name = name.substring(name.lastIndexOf('.') + 1); // Map$Entry
+        }
+        // The $ can be converted to a .
+        name = name.replace('$', '.'); // Map.Entry
+        return name;
+    }
+
+    public Map<String, Object> getRoot() {
+        return root;
+    }
+
+    /**
+     * If the key is pointing to a map, creates and returns a configuration object out of that map
+     * <p>
+     * The returned object will have its parent set to this object
+     * <p>
+     * If the key does not exist a ConfigurationException is thrown.
+     *
+     * @param key
+     * @return
+     */
+    public YConfiguration getConfig(String key) {
+        Map<String, Object> m = getMap(key);
+        return new YConfiguration(this, key, m);
+    }
+
+    /**
+     * Same as {@link #getConfig(String)} but return an empty config if the key does not exist.
+     *
+     * @param key
+     * @return
+     */
+    public YConfiguration getConfigOrEmpty(String key) {
+        if (root.containsKey(key) && root.get(key) != null) {
+            return getConfig(key);
+        } else {
+            return YConfiguration.emptyConfig();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> getMap(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof Map) {
+            Map<String, Object> m1 = (Map<String, Object>) o;
+            if (staticConfPaths.containsKey(m1)) {
+                staticConfPaths.put(m1, staticConfPaths.get(m) + "->" + key);
+            }
+            return m1;
+        } else {
+            throw new ConfigurationException(staticConfPaths.get(m),
+                    "mapping for key '" + key + "' is of type " + o.getClass().getCanonicalName() + " and not Map");
+        }
+    }
+
+    /**
+     * 
+     * Consider using {@link #getConfig} to get a child config instead of accessing the map directly
+     */
+    @SuppressWarnings("unchecked")
+    public <K, V> Map<K, V> getMap(String key) throws ConfigurationException {
+        checkKey(key, Map.class);
+        return (Map<K, V>) root.get(key);
+    }
+
+    public Map<String, Object> getSubMap(String key, String key1) throws ConfigurationException {
+        Map<String, Object> m = getMap(key);
+        return getMap(m, key1);
+    }
+
+    /**
+     * Returns m.get(key) if it exists and is of type string, otherwise throws an exception
+     * 
+     * @param m
+     * @param key
+     * @return
+     * @throws ConfigurationException
+     */
+    public static String getString(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+
+        Object o = m.get(key);
+        if (o instanceof String) {
+            return expandString(staticConfPaths.get(m), (String) o);
+        } else {
+            throw new ConfigurationException(staticConfPaths.get(m),
+                    "mapping for key '" + key + "' is of type " + getUnqualifiedClassName(o) + " and not String");
+        }
+    }
+
+    public static String getString(Map<String, Object> m, String key, String defaultValue)
+            throws ConfigurationException {
+        if (m.containsKey(key)) {
+            return getString(m, key);
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public String getString(String key) throws ConfigurationException {
+        return getString(root, key);
+    }
+
+    public String getString(String key, String defaultValue) throws ConfigurationException {
+        return getString(root, key, defaultValue);
+    }
+
+    /*
+     * The key has to point to a map that contains the subkey that points to a string
+     */
+    public String getSubString(String key, String subkey) throws ConfigurationException {
+        Map<String, Object> m = getMap(key);
+        return getString(m, subkey);
+    }
+
+    static String expandString(String confPath, String property) {
+        // Expand a system property like ${foo} or an environment property like ${env.foo}
+        String expanded = property;
+        while (expanded.contains("${")) {
+            StringBuilder buf = new StringBuilder();
+            Matcher matcher = PROPERTY_PATTERN.matcher(expanded);
+            while (matcher.find()) {
+                String name = matcher.group("name");
+
+                String replacement = null;
+                if (name.startsWith("env.")) {
+                    replacement = System.getenv(name.substring(4));
+                } else {
+                    replacement = propertyProvider.get(name);
+                }
+
+                if (replacement == null) {
+                    replacement = matcher.group("fallback");
+                }
+                if (replacement == null) {
+                    throw new ConfigurationException(confPath, "cannot resolve property '" + name + "'");
+                }
+                matcher.appendReplacement(buf, quoteReplacement(replacement));
+            }
+            matcher.appendTail(buf);
+            expanded = buf.toString();
+        }
+        return expanded;
+    }
+
+    /*
+     * The key has to point to a list
+     */
+    public <T> List<T> getList(String key) throws ConfigurationException {
+        return getList(root, key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<YConfiguration> getConfigList(String key) throws ConfigurationException {
+        checkKey(root, key);
+        List<YConfiguration> r = new ArrayList<>();
+        Object o = root.get(key);
+        if (o instanceof List) {
+            List<?> l = (List<?>) o;
+            for (int i = 0; i < l.size(); i++) {
+                Object o1 = l.get(i);
+                if (o1 instanceof Map) {
+                    r.add(new YConfiguration(this, key + "[" + i + "]", (Map<String, Object>) o1));
+                } else {
+                    throw new ConfigurationException(this, "One element of the list is not a map: " + o1);
+                }
+            }
+        } else {
+            throw new ConfigurationException(staticConfPaths.get(root),
+                    "mapping for key '" + key + "' is of type " + getUnqualifiedClassName(o) + " and not List");
+        }
+        return r;
+    }
+
+    public double getDouble(String key) throws ConfigurationException {
+        return getDouble(root, key);
+    }
+
+    public double getDouble(String key, double defaultValue) throws ConfigurationException {
+        if (!root.containsKey(key)) {
+            return defaultValue;
+        }
+        return getDouble(key);
+    }
+
+    /**
+     * This is the same like the method above but will create a {class: "string"} for strings rather than throwing an
+     * exception. It is to be used when loading service list which can be specified just by the class name.
+     * 
+     * @param key
+     * @return
+     * @throws ConfigurationException
+     */
+    @SuppressWarnings("unchecked")
+    public List<YConfiguration> getServiceConfigList(String key) throws ConfigurationException {
+        checkKey(root, key);
+        List<YConfiguration> r = new ArrayList<>();
+        Object o = root.get(key);
+        if (o instanceof List) {
+            List<?> l = (List<?>) o;
+            for (int i = 0; i < l.size(); i++) {
+                Object o1 = l.get(i);
+                if (o1 instanceof Map) {
+                    r.add(new YConfiguration(this, key + "[" + i + "]", (Map<String, Object>) o1));
+                } else if (o1 instanceof String) {
+                    Map<String, Object> m1 = new HashMap<>();
+                    m1.put("class", o1);
+                    r.add(new YConfiguration(this, key + "[" + i + "]", (Map<String, Object>) m1));
+                } else {
+                    throw new ConfigurationException(this, "One element of the list is not a map: " + o1);
+                }
+            }
+        } else {
+            throw new ConfigurationException(staticConfPaths.get(root),
+                    "mapping for key '" + key + "' is of type " + getUnqualifiedClassName(o) + " and not List");
+        }
+        return r;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getSubList(String key, String key1) throws ConfigurationException {
+        checkKey(key, Map.class);
+        Map<String, Object> m = (Map<String, Object>) root.get(key);
+        return getList(m, key1);
+    }
+
+    /**
+     * Returns m.get(key) if it exists and is of type boolean, if m.get(key) exists and is not boolean, throw an
+     * exception. if m.get(key) does not exist, return the default value.
+     * 
+     * @param m
+     * @param key
+     * @param defaultValue
+     *            - the default value to return if m.get(key) does not exist.
+     * @return the boolean config value
+     * @throws ConfigurationException
+     */
+    public static boolean getBoolean(Map<String, Object> m, String key, boolean defaultValue)
+            throws ConfigurationException {
+        if (m.containsKey(key)) {
+            return getBoolean(m, key);
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public static boolean getBoolean(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof Boolean) {
+            return (Boolean) o;
+        } else if (o instanceof String) {
+            String stringValue = getString(m, key);
+            switch (stringValue) {
+            case "yes":
+            case "true":
+            case "on":
+                return true;
+            case "no":
+            case "false":
+            case "off":
+                return false;
+            }
+        }
+        throw new ConfigurationException(staticConfPaths.get(m), "mapping for key '" + key + "' is of type "
+                + getUnqualifiedClassName(o) + " and not Boolean (use true or false without quotes)");
+    }
+
+    public boolean getBoolean(String key) throws ConfigurationException {
+        return getBoolean(root, key);
+    }
+
+    public boolean getBoolean(String key, String key1) throws ConfigurationException {
+        Map<String, Object> m = getMap(key);
+        return getBoolean(m, key1);
+    }
+
+    public boolean getBoolean(String key, boolean defaultValue) {
+        return getBoolean(root, key, defaultValue);
+    }
+
+    public int getInt(String key) throws ConfigurationException {
+        return getInt(root, key);
+    }
+
+    public int getInt(String key, int defaultValue) throws ConfigurationException {
+        return getInt(root, key, defaultValue);
+    }
+
+    public int getInt(String key, String key1) throws ConfigurationException {
+        Map<String, Object> m = getMap(key);
+        return getInt(m, key1);
+    }
+
+    public int getInt(String key, String key1, int defaultValue) throws ConfigurationException {
+        if (!root.containsKey(key)) {
+            return defaultValue;
+        }
+
+        Map<String, Object> m = getMap(key);
+
+        return getInt(m, key1, defaultValue);
+    }
+
+    public static int getInt(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof Integer) {
+            return (Integer) o;
+        } else if (o instanceof String) {
+            String stringValue = getString(m, key);
+            try {
+                return Integer.parseInt(stringValue);
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
+        }
+        throw new ConfigurationException(staticConfPaths.get(m),
+                "mapping for key '" + key + "' is of type " + getUnqualifiedClassName(o) + " and not Integer");
+    }
+
+    /**
+     * return the m.get(key) as an int if it's present or v if it is not.
+     *
+     * If the key is present but the value is not an integer, a ConfigurationException is thrown.
+     * 
+     * @param m
+     * @param key
+     * @param defaultValue
+     * @return the value from the map or the passed value if the map does not contain the key
+     * @throws ConfigurationException
+     *             if the key is present but it's not an int
+     */
+    public static int getInt(Map<String, Object> m, String key, int defaultValue) throws ConfigurationException {
+        if (!m.containsKey(key)) {
+            return defaultValue;
+        } else {
+            return getInt(m, key);
+        }
+    }
+
+    public long getLong(String key) {
+        return getLong(root, key);
+    }
+
+    public long getLong(String key, long defaultValue) {
+        return getLong(root, key, defaultValue);
+    }
+
+    public static long getLong(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof Integer) {
+            return (Integer) o;
+        } else if (o instanceof Long) {
+            return (Long) o;
+        } else if (o instanceof String) {
+            String stringValue = getString(m, key);
+            try {
+                return Long.parseLong(stringValue);
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
+        }
+        throw new ConfigurationException(staticConfPaths.get(m), "mapping for key '" + key + "' is of type "
+                + getUnqualifiedClassName(o) + " and not Integer or Long");
+    }
+
+    public byte[] getBinary(String key) {
+        return getBinary(root, key);
+    }
+
+    public byte[] getBinary(String key, byte[] defaultValue) {
+        if (root.containsKey(key)) {
+            return getBinary(root, key);
+        } else {
+            return defaultValue;
+
+        }
+    }
+
+    public static byte[] getBinary(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof byte[]) {
+            return (byte[]) o;
+        } else if (o instanceof String) {
+            String stringValue = getString(m, key);
+            try {
+                return StringConverter.hexStringToArray((String) o);
+            } catch (IllegalArgumentException e) {
+                throw new ConfigurationException("'" + stringValue + "' is not a hexadecimal string");
+            }
+        } else {
+            throw new ConfigurationException(staticConfPaths.get(m), "mapping for key '" + key + "' is of type "
+                    + getUnqualifiedClassName(o) + " and not binary or hexadecimal string");
+        }
+    }
+
+    /**
+     * return the m.get(key) as an long if it's present or v if it is not.
+     *
+     * @param m
+     * @param key
+     * @param v
+     * @return the value from the map or the passed value if the map does not contain the key
+     * @throws ConfigurationException
+     *             if the key is present but it's not an long
+     */
+    public static long getLong(Map<String, Object> m, String key, long v) throws ConfigurationException {
+        if (!m.containsKey(key)) {
+            return v;
+        } else {
+            return getLong(m, key);
+        }
+    }
+
+    public static double getDouble(Map<String, Object> m, String key, double v) throws ConfigurationException {
+        if (!m.containsKey(key)) {
+            return v;
+        } else {
+            return getDouble(m, key);
+        }
+    }
+
+    public static double getDouble(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof Number) {
+            return ((Number) o).doubleValue();
+        } else if (o instanceof String) {
+            String stringValue = getString(m, key);
+            try {
+                return Double.parseDouble(stringValue);
+            } catch (NumberFormatException e) {
+                // Ignore
+            }
+        }
+        throw new ConfigurationException(staticConfPaths.get(m), "mapping for key '" + key + "' is of type "
+                + getUnqualifiedClassName(o) + " and not Double");
+    }
+
+    public boolean isList(String key) {
+        return isList(root, key);
+    }
+
+    public static boolean isList(Map<String, Object> m, String key) {
+        checkKey(m, key);
+        Object o = m.get(key);
+        return (o instanceof List);
+    }
+
+    public static void setResolver(YConfigurationResolver resolver) {
+        YConfiguration.resolver = resolver;
+    }
+
+    public static YConfigurationResolver getResolver() {
+        return YConfiguration.resolver;
+    }
+
+    public static void setPropertyProvider(YConfigurationPropertyProvider propertyProvider) {
+        YConfiguration.propertyProvider = propertyProvider;
+    }
+
+    public static YConfigurationPropertyProvider getPropertyProvider() {
+        return YConfiguration.propertyProvider;
+    }
+
+    /**
+     * Default config file resolver. Looks for configuration files in the classpath and in the user config directory
+     * (~/.yamcs/).
+     */
+    public static class DefaultConfigurationResolver implements YConfigurationResolver {
+        @Override
+        public InputStream getConfigurationStream(String name) throws ConfigurationException {
+            InputStream is;
+            if (prefix != null) {
+                if ((is = YConfiguration.class.getResourceAsStream("/" + prefix + name)) != null) {
+                    log.debug("Reading {}", new File(YConfiguration.class.getResource("/" + prefix + name).getFile())
+                            .getAbsolutePath());
+                    return is;
+                }
+            }
+
+            // see if the users has an own version of the file
+            if (configDirectory != null) {
+                File f = new File(configDirectory, name);
+                if (f.exists()) {
+                    try {
+                        is = new FileInputStream(f);
+                        log.debug("Reading {}", f.getAbsolutePath());
+                        return is;
+                    } catch (FileNotFoundException e) {
+                        throw new ConfigurationException("Cannot read file " + f, e);
+                    }
+                }
+            }
+
+            is = YConfiguration.class.getResourceAsStream(name);
+            if (is == null) {
+                throw new ConfigurationNotFoundException("Cannot find resource " + name);
+            }
+            log.debug("Reading {}", new File(YConfiguration.class.getResource(name).getFile()).getAbsolutePath());
+            return is;
+        }
+    }
+
+    /**
+     * Default property provider. Looks up values with {@link System#getProperty(String)}.
+     */
+    public static class DefaultPropertyProvider implements YConfigurationPropertyProvider {
+        @Override
+        public String get(String name) {
+            return System.getProperty(name);
+        }
+    }
+
+    /**
+     * Introduced to be able to detect when a configuration file was not specified (as opposed to when there's a
+     * validation error inside). The current default behaviour of Yamcs is to throw an error when
+     * getConfiguration(String subystem) is called and the resource does not exist.
+     */
+    public static class ConfigurationNotFoundException extends ConfigurationException {
+        private static final long serialVersionUID = 1L;
+
+        public ConfigurationNotFoundException(String message) {
+            super(message);
+        }
+
+        public ConfigurationNotFoundException(String message, Throwable t) {
+            super(message, t);
+        }
+    }
+
+    public <T extends Enum<T>> T getEnum(String key, Class<T> enumClass) {
+        return getEnum(root, key, enumClass);
+    }
+
+    public <T extends Enum<T>> T getEnum(String key, Class<T> enumClass, T defaultValue) {
+        if (root.containsKey(key)) {
+            return getEnum(root, key, enumClass);
+        } else {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * Returns a value of an enumeration that matches ignoring case the string obtained from the config with the given
+     * key. Throws an Configurationexception if the key does not exist in config or if it does not map to a valid
+     * enumeration value
+     * 
+     * @param config
+     * @param key
+     * @param enumClass
+     * @return
+     */
+    public static <T extends Enum<T>> T getEnum(Map<String, Object> config, String key, Class<T> enumClass) {
+        String sk = getString(config, key);
+
+        T[] values = enumClass.getEnumConstants();
+        for (T v : values) {
+            if (v.toString().equalsIgnoreCase(sk)) {
+                return v;
+            }
+        }
+        throw new ConfigurationException("Invalid value '" + sk + "'. Valid values are: " + Arrays.toString(values));
+    }
+
+    /**
+     * 
+     * @param key
+     * @return root.get(key)
+     */
+    public Object get(String key) {
+        Object value = root.get(key);
+        if (value instanceof String) {
+            return getString(key); // Expand properties
+        } else {
+            return value;
+        }
+    }
+
+    /**
+     * Create a new configuration wrapping around a map The resulting config will have no parent
+     * 
+     * @param m
+     * @return
+     */
+    public static YConfiguration wrap(Map<String, Object> m) {
+        return new YConfiguration(null, null, m);
+    }
+
+    public static YConfiguration emptyConfig() {
+        return EMPTY_CONFIG;
+    }
+
+    public Map<String, Object> toMap() {
+        return getRoot();
+    }
+
+    public String getPath() {
+        if (parent == null) {
+            return rootLocation;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        buildPath(this, sb);
+        return sb.toString();
+    }
+
+    private static void buildPath(YConfiguration c, StringBuilder sb) {
+        if (c.parent != null) {
+            buildPath(c.parent, sb);
+            if (c.parent.parent != null) {
+                sb.append(".");
+            }
+            sb.append(c.parentKey);
+        } else {
+            sb.append(c.rootLocation).append(": ");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> getList(Map<String, Object> m, String key) throws ConfigurationException {
+        checkKey(m, key);
+        Object o = m.get(key);
+        if (o instanceof List) {
+            List<T> l = new ArrayList<>((List<T>) o);
+            String parentPath = staticConfPaths.get(m);
+            for (int i = 0; i < l.size(); i++) {
+                Object o1 = l.get(i);
+                if (!staticConfPaths.containsKey(o1)) {
+                    staticConfPaths.put(o1, parentPath + "->" + key + "[" + i + "]");
+                }
+                if (o1 instanceof String) {
+                    String confPath = staticConfPaths.get(o1);
+                    l.set(i, (T) expandString(confPath, (String) o1));
+                }
+            }
+            return l;
+        } else {
+            throw new ConfigurationException(staticConfPaths.get(m),
+                    "mapping for key '" + key + "' is of type " + getUnqualifiedClassName(o) + " and not List");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return root.toString();
+    }
+
+    /**
+     * If config.get(key) exists and is a list, and the list has the element idx and is a map, then return a
+     * configuration wrapper around that map.
+     * <p>
+     * Otherwise throw a ConfigurationException
+     * 
+     * @param key
+     * @param idx
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public YConfiguration getConfigListIdx(String key, int idx) {
+        checkKey(root, key);
+        Object o = root.get(key);
+        if (!(o instanceof List)) {
+            throw new ConfigurationException(staticConfPaths.get(root),
+                    "mapping for key '" + key + "' is of type " + getUnqualifiedClassName(o) + " and not List");
+        }
+
+        List<?> l = (List<?>) o;
+        if (idx >= l.size()) {
+            throw new ConfigurationException(staticConfPaths.get(root),
+                    "mapping for key '" + key + "' is a list but the requested index " + idx
+                            + " is outside of the list");
+        }
+
+        Object o1 = l.get(idx);
+        if (!(o1 instanceof Map)) {
+            throw new ConfigurationException(this,
+                    "The element " + idx + " in the list is not a map but " + getUnqualifiedClassName(o1));
+        }
+
+        return new YConfiguration(this, key + "[" + idx + "]", (Map<String, Object>) o1);
+    }
+}
+```
+
+### `YConfigurationPropertyProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YConfigurationPropertyProvider.java`
+
+
+```java
+package org.yamcs;
+
+@FunctionalInterface
+public interface YConfigurationPropertyProvider {
+
+    /**
+     * Get the value of a named property, or {@code null} if not found.
+     */
+    String get(String name);
+}
+```
+
+### `YConfigurationResolver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/YConfigurationResolver.java`
+
+
+```java
+package org.yamcs;
+
+import java.io.InputStream;
+
+public interface YConfigurationResolver {
+
+    /**
+     * Searches configuration by name
+     * 
+     * @param name
+     * @return
+     * @throws ConfigurationException
+     *             when configuration cannot be found
+     */
+    public InputStream getConfigurationStream(String name) throws ConfigurationException;
+}
+```

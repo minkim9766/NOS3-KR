@@ -3,14 +3,18 @@
 
 **경로:** `gsw/yamcs/examples/snippets/src/main/resources/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `mdb.yaml`
 
-file--mdb.yaml
+**경로:** `gsw/yamcs/examples/snippets/src/main/resources/mdb.yaml`
+
+
+```yaml
+example:
+  - type: org.yamcs.xtce.XtceLoader
+    args:
+      # This path reference is resolved from the file system.
+      # Relative paths start from your cwd
+      file: "mdb/xtce_v12_UT.xml"
 ```
-
-## 항목
-
-- [`gsw/yamcs/examples/snippets/src/main/resources/mdb.yaml`](file--mdb.yaml) — UTF-8 텍스트 파일 본문 포함

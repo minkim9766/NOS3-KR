@@ -3,40 +3,88 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ibd__Ref__C&DH_Commanding.jpg`
 
-file--ibd__Ref__C%26DH_Commanding.jpg
-file--ibd__Ref__C%26DH_Health.jpg
-file--ibd__Ref__C%26DH_Logging.jpg
-file--ibd__Ref__C%26DH_Telemetry.jpg
-file--ibd__Ref__C%26DH_Time.jpg
-file--ibd__Ref__Drivers.jpg
-file--ibd__Ref__Ground.jpg
-file--ibd__Ref__Parameters.jpg
-file--ibd__Ref__Rate_Groups.jpg
-file--ibd__Ref__REF_Commanding.jpg
-file--ibd__Ref__REF_Health.jpg
-file--ibd__Ref__REF_Logging.jpg
-file--ibd__Ref__REF_Telemetry.jpg
-file--ibd__Ref__REF_Time.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Commanding.jpg`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Commanding.jpg`](file--ibd__Ref__C%26DH_Commanding.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Health.jpg`](file--ibd__Ref__C%26DH_Health.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Logging.jpg`](file--ibd__Ref__C%26DH_Logging.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Telemetry.jpg`](file--ibd__Ref__C%26DH_Telemetry.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Time.jpg`](file--ibd__Ref__C%26DH_Time.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Drivers.jpg`](file--ibd__Ref__Drivers.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Ground.jpg`](file--ibd__Ref__Ground.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Parameters.jpg`](file--ibd__Ref__Parameters.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Rate_Groups.jpg`](file--ibd__Ref__Rate_Groups.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Commanding.jpg`](file--ibd__Ref__REF_Commanding.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Health.jpg`](file--ibd__Ref__REF_Health.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Logging.jpg`](file--ibd__Ref__REF_Logging.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Telemetry.jpg`](file--ibd__Ref__REF_Telemetry.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Time.jpg`](file--ibd__Ref__REF_Time.jpg) — 바이너리 (경로만)
+### `ibd__Ref__C&DH_Health.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Health.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__C&DH_Logging.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Logging.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__C&DH_Telemetry.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Telemetry.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__C&DH_Time.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__C&DH_Time.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__Drivers.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Drivers.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__Ground.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Ground.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__Parameters.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Parameters.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__Rate_Groups.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__Rate_Groups.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__REF_Commanding.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Commanding.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__REF_Health.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Health.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__REF_Logging.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Logging.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__REF_Telemetry.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Telemetry.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ibd__Ref__REF_Time.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/img/ibd__Ref__REF_Time.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

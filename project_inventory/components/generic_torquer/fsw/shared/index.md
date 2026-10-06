@@ -3,16 +3,89 @@
 
 **경로:** `components/generic_torquer/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_torquer_device.c`
 
-file--generic_torquer_device.c
-file--generic_torquer_device.h
+**경로:** `components/generic_torquer/fsw/shared/generic_torquer_device.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_torquer_device.c
+**
+** Purpose:
+**   This file contains the source code for the GENERIC_TORQUER device.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_torquer_device.h"
+
+/*
+** Configure torquer using hwlib
+*/
+int32_t GENERIC_TORQUER_Config(GENERIC_TORQUER_Device_tlm_t *trqHk, trq_info_t *trqDevice, uint8_t percent, uint8_t dir)
+{
+    int32_t status = OS_SUCCESS;
+
+    status = trq_command(trqDevice, percent, dir);
+    if (status == OS_SUCCESS)
+    {
+        trqHk->PercentOn = percent;
+        trqHk->Direction = dir;
+    }
+    return status;
+}
 ```
 
-## 항목
+### `generic_torquer_device.h`
 
-- [`components/generic_torquer/fsw/shared/generic_torquer_device.c`](file--generic_torquer_device.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/fsw/shared/generic_torquer_device.h`](file--generic_torquer_device.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_torquer/fsw/shared/generic_torquer_device.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_torquer_device.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_TORQUER device.
+**
+*******************************************************************************/
+#ifndef _GENERIC_TORQUER_DEVICE_H_
+#define _GENERIC_TORQUER_DEVICE_H_
+
+/*
+** Required header files.
+*/
+#include "device_cfg.h"
+#include "hwlib.h"
+#include "generic_torquer_platform_cfg.h"
+
+/*
+** Type definitions
+*/
+#define GENERIC_TORQUER_DEVICE_DISABLED 0
+#define GENERIC_TORQUER_DEVICE_ENABLED  1
+
+/*
+** GENERIC_TORQUER device telemetry definition
+*/
+typedef struct
+{
+    uint8_t Direction;
+    uint8_t PercentOn;
+
+} __attribute__((packed)) GENERIC_TORQUER_Device_tlm_t;
+#define GENERIC_TORQUER_DEVICE_TLM_LNGTH sizeof(GENERIC_TORQUER_Device_tlm_t)
+
+/*
+** Prototypes
+*/
+int32_t GENERIC_TORQUER_Config(GENERIC_TORQUER_Device_tlm_t *trqHk, trq_info_t *trqDevice, uint8_t percent,
+                               uint8_t dir);
+
+#endif /* _GENERIC_TORQUER_DEVICE_H_ */
+```

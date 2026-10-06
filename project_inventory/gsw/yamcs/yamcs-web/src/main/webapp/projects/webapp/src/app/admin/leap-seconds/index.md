@@ -3,16 +3,92 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/leap-seconds/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `leap-seconds.component.html`
 
-file--leap-seconds.component.html
-file--leap-seconds.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/leap-seconds/leap-seconds.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Leap seconds" />
+
+  <ya-panel>
+    <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+      <ng-container matColumnDef="period">
+        <th mat-header-cell *matHeaderCellDef>Valid period (at 0h UTC)</th>
+        <td mat-cell *matCellDef="let range">
+          {{ range.start | date: "y-MM-dd" }} &ndash;
+          {{ range.stop | date: "y-MM-dd" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="leap-seconds">
+        <th mat-header-cell *matHeaderCellDef>Leap seconds</th>
+        <td mat-cell *matCellDef="let range">{{ range.leapSeconds }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tai-utc">
+        <th mat-header-cell *matHeaderCellDef>TAI - UTC</th>
+        <td mat-cell *matCellDef="let range">{{ range.taiDifference }} s</td>
+      </ng-container>
+
+      <ng-container matColumnDef="utc-tai">
+        <th mat-header-cell *matHeaderCellDef>UTC - TAI</th>
+        <td mat-cell *matCellDef="let range">{{ -range.taiDifference }} s</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `leap-seconds.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/leap-seconds/leap-seconds.component.html`](file--leap-seconds.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/leap-seconds/leap-seconds.component.ts`](file--leap-seconds.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/leap-seconds/leap-seconds.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  ValidityRange,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './leap-seconds.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class LeapSecondsComponent {
+  displayedColumns = [
+    'period',
+    'leap-seconds',
+    'tai-utc',
+    //'utc-tai',
+    'actions',
+  ];
+
+  dataSource = new MatTableDataSource<ValidityRange>();
+
+  constructor(yamcs: YamcsService, title: Title) {
+    title.setTitle('Leap seconds');
+    yamcs.yamcsClient.getLeapSeconds().then((table) => {
+      this.dataSource.data = table.ranges;
+    });
+  }
+}
+```

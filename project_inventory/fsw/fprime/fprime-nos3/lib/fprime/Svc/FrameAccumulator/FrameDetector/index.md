@@ -3,20 +3,331 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CcsdsTcFrameDetector.cpp`
 
-file--CcsdsTcFrameDetector.cpp
-file--CcsdsTcFrameDetector.hpp
-file--FprimeFrameDetector.cpp
-file--FprimeFrameDetector.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/CcsdsTcFrameDetector.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CcsdsTcFrameDetector.hpp
+// \author thomas-bc
+// \brief  hpp file for fprime frame detector definitions
+// ======================================================================
+
+#include "Svc/FrameAccumulator/FrameDetector/CcsdsTcFrameDetector.hpp"
+#include <cstdio>
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+#include "Svc/Ccsds/Types/TCHeaderSerializableAc.hpp"
+#include "Svc/Ccsds/Types/TCTrailerSerializableAc.hpp"
+#include "Svc/Ccsds/Utils/CRC16.hpp"
+#include "Utils/Hash/Hash.hpp"
+#include "config/FppConstantsAc.hpp"
+
+namespace Svc {
+namespace FrameDetectors {
+
+FrameDetector::Status CcsdsTcFrameDetector::detect(const Types::CircularBuffer& data, FwSizeType& size_out) const {
+    if (data.get_allocated_size() < Ccsds::TCHeader::SERIALIZED_SIZE + Ccsds::TCTrailer::SERIALIZED_SIZE) {
+        size_out = Ccsds::TCHeader::SERIALIZED_SIZE + Ccsds::TCTrailer::SERIALIZED_SIZE;
+        return Status::MORE_DATA_NEEDED;
+    }
+
+    // ---------------- Frame Header ----------------
+    // Copy CircularBuffer data into linear buffer, for serialization into FrameHeader object
+    U8 header_data[Ccsds::TCHeader::SERIALIZED_SIZE];
+    Fw::SerializeStatus status = data.peek(header_data, Ccsds::TCHeader::SERIALIZED_SIZE, 0);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return Status::NO_FRAME_DETECTED;
+    }
+    Fw::ExternalSerializeBuffer header_ser_buffer(header_data, Ccsds::TCHeader::SERIALIZED_SIZE);
+    status = header_ser_buffer.setBuffLen(Ccsds::TCHeader::SERIALIZED_SIZE);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Attempt to deserialize data into the FrameHeader object
+    Ccsds::TCHeader header;
+    status = header.deserialize(header_ser_buffer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    if (header.get_flagsAndScId() != this->m_expectedFlagsAndScIdToken) {
+        // If the flags and SC ID do not match the expected token, we don't have a valid frame
+        return Status::NO_FRAME_DETECTED;
+    }
+    // TC protocol defines the Frame Length as number of bytes minus 1, so we add 1 back to get length in bytes
+    const FwSizeType expected_frame_length =
+        static_cast<FwSizeType>((header.get_vcIdAndLength() & Ccsds::TCSubfields::FrameLengthMask) + 1);
+    const U16 data_to_crc_length = static_cast<U16>(expected_frame_length - Ccsds::TCTrailer::SERIALIZED_SIZE);
+
+    if (data.get_allocated_size() < expected_frame_length) {
+        size_out = expected_frame_length;
+        return Status::MORE_DATA_NEEDED;
+    }
+
+    // ---------------- Frame Trailer ----------------
+    // Compute CRC on the received data
+    Ccsds::Utils::CRC16 crc;
+    for (FwSizeType i = 0; i < data_to_crc_length; ++i) {
+        U8 byte = 0;
+        status = data.peek(byte, i);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+        crc.update(byte);
+    }
+    U16 computed_fecf = crc.finalize();
+    // Retrieve CRC field from the trailer
+    U8 trailer_data[Ccsds::TCTrailer::SERIALIZED_SIZE];
+    status = data.peek(trailer_data, Ccsds::TCTrailer::SERIALIZED_SIZE, data_to_crc_length);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return Status::NO_FRAME_DETECTED;
+    }
+    Fw::ExternalSerializeBuffer trailer_ser_buffer(trailer_data, Ccsds::TCTrailer::SERIALIZED_SIZE);
+    status = trailer_ser_buffer.setBuffLen(Ccsds::TCTrailer::SERIALIZED_SIZE);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Attempt to deserialize data into the FrameTrailer object
+    Ccsds::TCTrailer trailer;
+    status = trailer.deserialize(trailer_ser_buffer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    U16 transmitted_fecf = trailer.get_fecf();
+    if (transmitted_fecf != computed_fecf) {
+        // If the computed CRC does not match the transmitted CRC, we don't have a valid frame
+        return Status::NO_FRAME_DETECTED;
+    }
+    // At this point, we have validated the header and CRC - we report a valid frame detected
+    size_out = expected_frame_length;
+    return Status::FRAME_DETECTED;
+}
+
+}  // namespace FrameDetectors
+}  // namespace Svc
 ```
 
-## 항목
+### `CcsdsTcFrameDetector.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/CcsdsTcFrameDetector.cpp`](file--CcsdsTcFrameDetector.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/CcsdsTcFrameDetector.hpp`](file--CcsdsTcFrameDetector.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/FprimeFrameDetector.cpp`](file--FprimeFrameDetector.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/FprimeFrameDetector.hpp`](file--FprimeFrameDetector.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/CcsdsTcFrameDetector.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CcsdsTcFrameDetector.hpp
+// \author thomas-bc
+// \brief  hpp file for fprime frame detector definitions
+// ======================================================================
+#ifndef SVC_FRAME_ACCUMULATOR_FRAME_DETECTOR_CCSDS_TC_FRAME_DETECTOR
+#define SVC_FRAME_ACCUMULATOR_FRAME_DETECTOR_CCSDS_TC_FRAME_DETECTOR
+
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+#include "Svc/FrameAccumulator/FrameDetector.hpp"
+
+namespace Svc {
+namespace FrameDetectors {
+
+//! \brief interface class used to codify what must be supported to allow frame detection
+class CcsdsTcFrameDetector : public FrameDetector {
+  public:
+    //! \brief detect if a frame is available within the circular buffer
+    //!
+    //! Function implemented by sub classes used to determine if a frame is available at the current position of the
+    //! circular buffer. Implementors should detect if a frame is available, set size_out, and return a status while
+    //! following these expectations:
+    //!
+    //!  1. FRAME_DETECTED status implies a frame is available at the current offset of the circular buffer.
+    //!     size_out must be set to the size of the frame from that location.
+    //!
+    //!  2. NO_FRAME_DETECTED status implies no frame is possible at the current offset of the circular buffer.
+    //!     e.g. no start word is found at the current offset. size_out is ignored.
+    //!
+    //!  3. MORE_DATA_NEEDED status implies that a frame might be possible but more data is needed before a
+    //!     determination is possible. size_out must be set to the total amount of data needed.
+    //!
+    //!     For example, if a frame start word is 4 bytes, and 3 bytes are available in the circular buffer then the
+    //!     return status would be NO_FRAME_DETECTED and size_out must be set to 4 to ensure that at least the start
+    //!     word is available.
+    //!
+    //! \param data: circular buffer with read-only access
+    //! \param size_out: set as output to caller indicating size when appropriate
+    //! \return status of the detection to be paired with size_out
+    Status detect(const Types::CircularBuffer& data, FwSizeType& size_out) const override;
+
+  protected:
+    //! \brief expected flags and spacecraft ID token for a valid CCSDS TC frame
+    const U16 m_expectedFlagsAndScIdToken =
+        0x1 << Ccsds::TCSubfields::BypassFlagOffset | (ComCfg::FppConstant_SpacecraftId::SpacecraftId);
+
+};  // class CcsdsTcFrameDetector
+}  // namespace FrameDetectors
+}  // namespace Svc
+
+#endif  // SVC_FRAME_ACCUMULATOR_FRAME_DETECTOR_CCSDS_TC_FRAME_DETECTOR
+```
+
+### `FprimeFrameDetector.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/FprimeFrameDetector.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFrameDetector.hpp
+// \author thomas-bc
+// \brief  hpp file for fprime frame detector definitions
+// ======================================================================
+
+#include "Svc/FrameAccumulator/FrameDetector/FprimeFrameDetector.hpp"
+
+namespace Svc {
+namespace FrameDetectors {
+
+FrameDetector::Status FprimeFrameDetector::detect(const Types::CircularBuffer& data, FwSizeType& size_out) const {
+    // If not enough data for header + trailer, report MORE_DATA_NEEDED
+    if (data.get_allocated_size() <
+        FprimeProtocol::FrameHeader::SERIALIZED_SIZE + FprimeProtocol::FrameTrailer::SERIALIZED_SIZE) {
+        size_out = FprimeProtocol::FrameHeader::SERIALIZED_SIZE + FprimeProtocol::FrameTrailer::SERIALIZED_SIZE;
+        return Status::MORE_DATA_NEEDED;
+    }
+
+    // NOTE: it is understood and accepted that the following code is not as efficient as it could technically be
+    // We are leveraging the FPP autocoded types to do the deserialization for us.
+    // In its current implementation, CircularBuffer is not a SerializeBufferBase, which prevents us from deserializing
+    // directly from the CircularBuffer into FrameHeader/FrameTrailer. Instead, we have to copy the data into
+    // a temporary SerializeBuffer, and then deserialize from that buffer into the FrameHeader/FrameTrailer objects.
+    // A better implementation would be to have CircularBuffer implement a shared interface with SerializeBufferBase,
+    // and then we could pass the CircularBuffer directly into the FrameHeader/FrameTrailer deserializers. This is left
+    // as a TODO for future improvement as it is a significant refactor
+
+    FprimeProtocol::FrameHeader header;
+    FprimeProtocol::FrameTrailer trailer;
+
+    // ---------------- Frame Header ----------------
+    // Copy CircularBuffer data into linear buffer, for serialization into FrameHeader object
+    U8 header_data[FprimeProtocol::FrameHeader::SERIALIZED_SIZE];
+    Fw::SerializeStatus status = data.peek(header_data, FprimeProtocol::FrameHeader::SERIALIZED_SIZE, 0);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return Status::NO_FRAME_DETECTED;
+    }
+    Fw::ExternalSerializeBuffer header_ser_buffer(header_data, FprimeProtocol::FrameHeader::SERIALIZED_SIZE);
+    status = header_ser_buffer.setBuffLen(FprimeProtocol::FrameHeader::SERIALIZED_SIZE);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Attempt to deserialize data into the FrameHeader object
+    status = header.deserialize(header_ser_buffer);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return Status::NO_FRAME_DETECTED;
+    }
+    // Check that deserialized start_word token matches expected value (default start_word value in the FPP object)
+    FprimeProtocol::FrameHeader default_value;
+    if (header.get_startWord() != default_value.get_startWord()) {
+        return Status::NO_FRAME_DETECTED;
+    }
+    // We expect the frame size to be size of header + body (of size specified in header) + trailer
+    const FwSizeType expected_frame_size = FprimeProtocol::FrameHeader::SERIALIZED_SIZE + header.get_lengthField() +
+                                           FprimeProtocol::FrameTrailer::SERIALIZED_SIZE;
+    // If the current allocated size can't hold the expected_frame_size -> MORE_DATA_NEEDED
+    if (data.get_allocated_size() < expected_frame_size) {
+        size_out = expected_frame_size;
+        return Status::MORE_DATA_NEEDED;
+    }
+
+    // ---------------- Frame Trailer ----------------
+    U8 trailer_data[FprimeProtocol::FrameTrailer::SERIALIZED_SIZE];
+    Fw::ExternalSerializeBuffer trailer_ser_buffer(trailer_data, FprimeProtocol::FrameTrailer::SERIALIZED_SIZE);
+    status = data.peek(trailer_data, FprimeProtocol::FrameTrailer::SERIALIZED_SIZE,
+                       FprimeProtocol::FrameHeader::SERIALIZED_SIZE + header.get_lengthField());
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return Status::NO_FRAME_DETECTED;
+    }
+    status = trailer_ser_buffer.setBuffLen(FprimeProtocol::FrameTrailer::SERIALIZED_SIZE);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+    // Deserialize trailer from circular buffer (peeked data) into trailer object
+    status = trailer.deserialize(trailer_ser_buffer);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return Status::NO_FRAME_DETECTED;
+    }
+
+    Utils::Hash hash;
+    Utils::HashBuffer hashBuffer;
+    // Compute CRC over the transmitted data (header + body)
+    FwSizeType hash_field_size = header.get_lengthField() + FprimeProtocol::FrameHeader::SERIALIZED_SIZE;
+    hash.init();
+    for (U32 i = 0; i < hash_field_size; i++) {
+        U8 byte = 0;
+        status = data.peek(byte, i);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+        hash.update(&byte, 1);
+    }
+    hash.final(hashBuffer);
+
+    // Compare the transmitted CRC with the computed one
+    if (trailer.get_crcField() != hashBuffer.asBigEndianU32()) {
+        // CRC mismatch - there likely was data corruption. The F Prime protocol
+        // being very simple, we don't have a way to recover from this.
+        // So we report NO_FRAME_DETECTED and drop the frame
+        return Status::NO_FRAME_DETECTED;
+    }
+    // All checks passed - we have detected a frame of size expected_frame_size
+    size_out = expected_frame_size;
+    return Status::FRAME_DETECTED;
+}
+
+}  // namespace FrameDetectors
+}  // namespace Svc
+```
+
+### `FprimeFrameDetector.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/FprimeFrameDetector.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFrameDetector.hpp
+// \author thomas-bc
+// \brief  hpp file for fprime frame detector definitions
+// ======================================================================
+#ifndef SVC_FRAME_ACCUMULATOR_FRAME_DETECTOR_FPRIME_FRAME_DETECTOR
+#define SVC_FRAME_ACCUMULATOR_FRAME_DETECTOR_FPRIME_FRAME_DETECTOR
+
+#include "Svc/FrameAccumulator/FrameDetector.hpp"
+
+#include "Fw/Buffer/Buffer.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+#include "Svc/FprimeProtocol/FrameHeaderSerializableAc.hpp"
+#include "Svc/FprimeProtocol/FrameTrailerSerializableAc.hpp"
+
+namespace Svc {
+namespace FrameDetectors {
+
+//! \brief interface class used to codify what must be supported to allow frame detection
+class FprimeFrameDetector : public FrameDetector {
+  public:
+    //! \brief detect if a frame is available within the circular buffer
+    //!
+    //! Function implemented by sub classes used to determine if a frame is available at the current position of the
+    //! circular buffer. Implementors should detect if a frame is available, set size_out, and return a status while
+    //! following these expectations:
+    //!
+    //!  1. FRAME_DETECTED status implies a frame is available at the current offset of the circular buffer.
+    //!     size_out must be set to the size of the frame from that location.
+    //!
+    //!  2. NO_FRAME_DETECTED status implies no frame is possible at the current offset of the circular buffer.
+    //!     e.g. no start word is found at the current offset. size_out is ignored.
+    //!
+    //!  3. MORE_DATA_NEEDED status implies that a frame might be possible but more data is needed before a
+    //!     determination is possible. size_out must be set to the total amount of data needed.
+    //!
+    //!     For example, if a frame start word is 4 bytes, and 3 bytes are available in the circular buffer then the
+    //!     return status would be NO_FRAME_DETECTED and size_out must be set to 4 to ensure that at least the start
+    //!     word is available.
+    //!
+    //! \param data: circular buffer with read-only access
+    //! \param size_out: set as output to caller indicating size when appropriate
+    //! \return status of the detection to be paired with size_out
+    Status detect(const Types::CircularBuffer& data, FwSizeType& size_out) const override;
+
+};  // class FprimeFrameDetector
+}  // namespace FrameDetectors
+}  // namespace Svc
+
+#endif  // SVC_FRAME_ACCUMULATOR_FRAME_DETECTOR_FPRIME_FRAME_DETECTOR
+```

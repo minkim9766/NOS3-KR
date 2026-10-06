@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,82 +11,4867 @@
 docs/index
 GTest/index
 test/index
-file--Assert.cpp
-file--Assert.hpp
-file--BasicTypes.h
-file--BasicTypes.hpp
-file--ByteArray.hpp
-file--CAssert.h
-file--CMakeLists.txt
-file--ConstByteArray.hpp
-file--ExternalString.hpp
-file--FileNameString.hpp
-file--format.hpp
-file--InternalInterfaceString.hpp
-file--MallocAllocator.cpp
-file--MallocAllocator.hpp
-file--MemAllocator.cpp
-file--MemAllocator.hpp
-file--MmapAllocator.cpp
-file--MmapAllocator.hpp
-file--ObjectName.hpp
-file--PolyType.cpp
-file--PolyType.hpp
-file--SerialBuffer.cpp
-file--SerialBuffer.hpp
-file--Serializable.cpp
-file--Serializable.hpp
-file--SerIds.hpp
-file--snprintf_format.cpp
-file--String.hpp
-file--StringBase.cpp
-file--StringBase.hpp
-file--StringTemplate.hpp
-file--StringToNumber.cpp
-file--StringType.hpp
-file--StringUtils.cpp
-file--StringUtils.hpp
-file--Types.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/GTest/`](GTest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Assert.cpp`](file--Assert.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Assert.hpp`](file--Assert.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/BasicTypes.h`](file--BasicTypes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/BasicTypes.hpp`](file--BasicTypes.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ByteArray.hpp`](file--ByteArray.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/CAssert.h`](file--CAssert.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ConstByteArray.hpp`](file--ConstByteArray.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ExternalString.hpp`](file--ExternalString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/FileNameString.hpp`](file--FileNameString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/format.hpp`](file--format.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/InternalInterfaceString.hpp`](file--InternalInterfaceString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MallocAllocator.cpp`](file--MallocAllocator.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MallocAllocator.hpp`](file--MallocAllocator.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MemAllocator.cpp`](file--MemAllocator.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MemAllocator.hpp`](file--MemAllocator.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MmapAllocator.cpp`](file--MmapAllocator.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MmapAllocator.hpp`](file--MmapAllocator.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ObjectName.hpp`](file--ObjectName.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/PolyType.cpp`](file--PolyType.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/PolyType.hpp`](file--PolyType.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/SerialBuffer.cpp`](file--SerialBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/SerialBuffer.hpp`](file--SerialBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Serializable.cpp`](file--Serializable.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Serializable.hpp`](file--Serializable.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/SerIds.hpp`](file--SerIds.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/snprintf_format.cpp`](file--snprintf_format.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/String.hpp`](file--String.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringBase.cpp`](file--StringBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringBase.hpp`](file--StringBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringTemplate.hpp`](file--StringTemplate.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringToNumber.cpp`](file--StringToNumber.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringType.hpp`](file--StringType.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringUtils.cpp`](file--StringUtils.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringUtils.hpp`](file--StringUtils.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Types.fpp`](file--Types.fpp) — UTF-8 텍스트 파일 본문 포함
+### `Assert.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Assert.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Fw/Types/format.hpp>
+#include <cassert>
+#include <cstdio>
+
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+#define fileIdFs "Assert: 0x%08" PRIx32 ":%" PRI_FwSizeType ""
+#else
+#define fileIdFs "Assert: \"%s:%" PRI_FwSizeType "\""
+#endif
+
+namespace Fw {
+
+void defaultPrintAssert(const CHAR* msg) {
+    // Write to stderr w/o formatting
+    (void)fputs(msg, stderr);
+    (void)fputs("\n", stderr);
+}
+
+void defaultReportAssert(FILE_NAME_ARG file,
+                         FwSizeType lineNo,
+                         FwSizeType numArgs,
+                         FwAssertArgType arg1,
+                         FwAssertArgType arg2,
+                         FwAssertArgType arg3,
+                         FwAssertArgType arg4,
+                         FwAssertArgType arg5,
+                         FwAssertArgType arg6,
+                         CHAR* destBuffer,
+                         FwSizeType buffSize) {
+    switch (numArgs) {
+        case 0:
+            (void)stringFormat(destBuffer, buffSize, fileIdFs, file, lineNo);
+            break;
+        case 1:
+            (void)stringFormat(destBuffer, buffSize, fileIdFs " %" PRI_FwAssertArgType, file, lineNo, arg1);
+            break;
+        case 2:
+            (void)stringFormat(destBuffer, buffSize, fileIdFs " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType, file,
+                               lineNo, arg1, arg2);
+            break;
+        case 3:
+            (void)stringFormat(destBuffer, buffSize,
+                               fileIdFs " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType,
+                               file, lineNo, arg1, arg2, arg3);
+            break;
+        case 4:
+            (void)stringFormat(destBuffer, buffSize,
+                               fileIdFs " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType
+                                        " %" PRI_FwAssertArgType,
+                               file, lineNo, arg1, arg2, arg3, arg4);
+            break;
+        case 5:
+            (void)stringFormat(destBuffer, buffSize,
+                               fileIdFs " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType
+                                        " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType,
+                               file, lineNo, arg1, arg2, arg3, arg4, arg5);
+            break;
+        case 6:
+            (void)stringFormat(destBuffer, buffSize,
+                               fileIdFs " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType
+                                        " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType " %" PRI_FwAssertArgType,
+                               file, lineNo, arg1, arg2, arg3, arg4, arg5, arg6);
+            break;
+        default:  // in an assert already, what can we do?
+            break;
+    }
+}
+
+void AssertHook::printAssert(const CHAR* msg) {
+    defaultPrintAssert(msg);
+}
+
+void AssertHook::reportAssert(FILE_NAME_ARG file,
+                              FwSizeType lineNo,
+                              FwSizeType numArgs,
+                              FwAssertArgType arg1,
+                              FwAssertArgType arg2,
+                              FwAssertArgType arg3,
+                              FwAssertArgType arg4,
+                              FwAssertArgType arg5,
+                              FwAssertArgType arg6) {
+    CHAR destBuffer[FW_ASSERT_TEXT_SIZE];
+    defaultReportAssert(file, lineNo, numArgs, arg1, arg2, arg3, arg4, arg5, arg6, destBuffer,
+                        static_cast<FwSizeType>(sizeof(destBuffer)));
+    // print message
+    this->printAssert(destBuffer);
+}
+
+void AssertHook::doAssert() {
+    assert(0);
+}
+
+static AssertHook* s_assertHook = nullptr;
+
+void AssertHook::registerHook() {
+    this->previousHook = s_assertHook;
+    s_assertHook = this;
+}
+
+void AssertHook::deregisterHook() {
+    s_assertHook = this->previousHook;
+}
+
+// Default handler of SwAssert functions
+I8 defaultSwAssert(FILE_NAME_ARG file,
+                   FwSizeType lineNo,
+                   FwSizeType numArgs,
+                   FwAssertArgType arg1,
+                   FwAssertArgType arg2,
+                   FwAssertArgType arg3,
+                   FwAssertArgType arg4,
+                   FwAssertArgType arg5,
+                   FwAssertArgType arg6) {
+    if (nullptr == s_assertHook) {
+        CHAR assertMsg[FW_ASSERT_TEXT_SIZE];
+        defaultReportAssert(file, lineNo, numArgs, arg1, arg2, arg3, arg4, arg5, arg6, assertMsg,
+                            static_cast<FwSizeType>(sizeof(assertMsg)));
+        defaultPrintAssert(assertMsg);
+        assert(0);
+    } else {
+        s_assertHook->reportAssert(file, lineNo, numArgs, arg1, arg2, arg3, arg4, arg5, arg6);
+        s_assertHook->doAssert();
+    }
+    return 0;
+}
+
+I8 SwAssert(FILE_NAME_ARG file, FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 0, 0, 0, 0, 0, 0, 0);
+}
+
+I8 SwAssert(FILE_NAME_ARG file, FwAssertArgType arg1, FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 1, arg1, 0, 0, 0, 0, 0);
+}
+
+I8 SwAssert(FILE_NAME_ARG file, FwAssertArgType arg1, FwAssertArgType arg2, FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 2, arg1, arg2, 0, 0, 0, 0);
+}
+
+I8 SwAssert(FILE_NAME_ARG file, FwAssertArgType arg1, FwAssertArgType arg2, FwAssertArgType arg3, FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 3, arg1, arg2, arg3, 0, 0, 0);
+}
+
+I8 SwAssert(FILE_NAME_ARG file,
+            FwAssertArgType arg1,
+            FwAssertArgType arg2,
+            FwAssertArgType arg3,
+            FwAssertArgType arg4,
+            FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 4, arg1, arg2, arg3, arg4, 0, 0);
+}
+
+I8 SwAssert(FILE_NAME_ARG file,
+            FwAssertArgType arg1,
+            FwAssertArgType arg2,
+            FwAssertArgType arg3,
+            FwAssertArgType arg4,
+            FwAssertArgType arg5,
+            FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 5, arg1, arg2, arg3, arg4, arg5, 0);
+}
+
+I8 SwAssert(FILE_NAME_ARG file,
+            FwAssertArgType arg1,
+            FwAssertArgType arg2,
+            FwAssertArgType arg3,
+            FwAssertArgType arg4,
+            FwAssertArgType arg5,
+            FwAssertArgType arg6,
+            FwSizeType lineNo) {
+    return defaultSwAssert(file, lineNo, 6, arg1, arg2, arg3, arg4, arg5, arg6);
+}
+}  // namespace Fw
+
+// define C asserts with C linkage
+extern "C" {
+I8 CAssert0(FILE_NAME_ARG file, FwSizeType lineNo);
+I8 CAssert1(FILE_NAME_ARG file, FwAssertArgType arg1, FwSizeType lineNo);
+}
+
+I8 CAssert0(FILE_NAME_ARG file, FwSizeType lineNo) {
+    if (nullptr == Fw::s_assertHook) {
+        CHAR assertMsg[FW_ASSERT_TEXT_SIZE];
+        Fw::defaultReportAssert(file, lineNo, 0, 0, 0, 0, 0, 0, 0, assertMsg,
+                                static_cast<FwSizeType>(sizeof(assertMsg)));
+    } else {
+        Fw::s_assertHook->reportAssert(file, lineNo, 0, 0, 0, 0, 0, 0, 0);
+        Fw::s_assertHook->doAssert();
+    }
+    return 0;
+}
+
+I8 CAssert1(FILE_NAME_ARG file, FwAssertArgType arg1, FwSizeType lineNo) {
+    if (nullptr == Fw::s_assertHook) {
+        CHAR assertMsg[FW_ASSERT_TEXT_SIZE];
+        Fw::defaultReportAssert(file, lineNo, 1, arg1, 0, 0, 0, 0, 0, assertMsg,
+                                static_cast<FwSizeType>(sizeof(assertMsg)));
+    } else {
+        Fw::s_assertHook->reportAssert(file, lineNo, 1, arg1, 0, 0, 0, 0, 0);
+        Fw::s_assertHook->doAssert();
+    }
+    return 0;
+}
+```
+
+### `Assert.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Assert.hpp`
+
+
+```cpp
+#ifndef FW_ASSERT_HPP
+#define FW_ASSERT_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+// Return only the first argument passed to the macro.
+#define FW_ASSERT_FIRST_ARG(ARG_0, ...) ARG_0
+// Return all the arguments of the macro, but the first one
+#define FW_ASSERT_NO_FIRST_ARG(ARG_0, ...) __VA_ARGS__
+
+#if FW_ASSERT_LEVEL == FW_NO_ASSERT
+// Users may override the NO_ASSERT case should they choose
+#ifndef FW_ASSERT
+#define FW_ASSERT(...) ((void)(FW_ASSERT_FIRST_ARG(__VA_ARGS__)))
+#endif
+#define FILE_NAME_ARG const CHAR*
+#else  // ASSERT is defined
+
+// Passing the __LINE__ argument at the end of the function ensures that
+// the FW_ASSERT_NO_FIRST_ARG macro will never have an empty variadic variable
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT && defined ASSERT_FILE_ID
+#define FILE_NAME_ARG U32
+#define FW_ASSERT(...)                            \
+    ((void)((FW_ASSERT_FIRST_ARG(__VA_ARGS__, 0)) \
+                ? (0)                             \
+                : (Fw::SwAssert(ASSERT_FILE_ID, FW_ASSERT_NO_FIRST_ARG(__VA_ARGS__, __LINE__)))))
+#elif FW_ASSERT_LEVEL == FW_FILEID_ASSERT && !defined ASSERT_FILE_ID
+#define FILE_NAME_ARG U32
+#define FW_ASSERT(...)                            \
+    ((void)((FW_ASSERT_FIRST_ARG(__VA_ARGS__, 0)) \
+                ? (0)                             \
+                : (Fw::SwAssert(static_cast<U32>(0), FW_ASSERT_NO_FIRST_ARG(__VA_ARGS__, __LINE__)))))
+#elif FW_ASSERT_LEVEL == FW_RELATIVE_PATH_ASSERT && defined ASSERT_RELATIVE_PATH
+#define FILE_NAME_ARG const CHAR*
+#define FW_ASSERT(...)                            \
+    ((void)((FW_ASSERT_FIRST_ARG(__VA_ARGS__, 0)) \
+                ? (0)                             \
+                : (Fw::SwAssert(ASSERT_RELATIVE_PATH, FW_ASSERT_NO_FIRST_ARG(__VA_ARGS__, __LINE__)))))
+#else
+#define FILE_NAME_ARG const CHAR*
+#define FW_ASSERT(...)                            \
+    ((void)((FW_ASSERT_FIRST_ARG(__VA_ARGS__, 0)) \
+                ? (0)                             \
+                : (Fw::SwAssert(__FILE__, FW_ASSERT_NO_FIRST_ARG(__VA_ARGS__, __LINE__)))))
+#endif
+#endif  // if ASSERT is defined
+
+// Helper macro asserting that a value fits into a type without overflow. Helpful for checking before static casts
+#define FW_ASSERT_NO_OVERFLOW(value, T) \
+    FW_ASSERT((value) <= std::numeric_limits<T>::max(), static_cast<FwAssertArgType>(value))
+
+// F' Assertion functions can technically return even though the intention is for the assertion to terminate the
+// program. This breaks static analysis depending on assertions, since the analyzer has to assume the assertion will
+// return. When supported, annotate assertion functions as noreturn when statically analyzing.
+#ifndef CLANG_ANALYZER_NORETURN
+#ifndef __has_feature
+#define __has_feature(x) 0  // Compatibility with non-clang compilers.
+#endif
+#if __has_feature(attribute_analyzer_noreturn)
+#define CLANG_ANALYZER_NORETURN __attribute__((analyzer_noreturn))
+#else
+#define CLANG_ANALYZER_NORETURN
+#endif
+#endif
+
+namespace Fw {
+//! Assert with no arguments
+I8 SwAssert(FILE_NAME_ARG file, FwSizeType lineNo) CLANG_ANALYZER_NORETURN;
+
+//! Assert with one argument
+I8 SwAssert(FILE_NAME_ARG file, FwAssertArgType arg1, FwSizeType lineNo) CLANG_ANALYZER_NORETURN;
+
+//! Assert with two arguments
+I8 SwAssert(FILE_NAME_ARG file, FwAssertArgType arg1, FwAssertArgType arg2, FwSizeType lineNo) CLANG_ANALYZER_NORETURN;
+
+//! Assert with three arguments
+I8 SwAssert(FILE_NAME_ARG file, FwAssertArgType arg1, FwAssertArgType arg2, FwAssertArgType arg3, FwSizeType lineNo)
+    CLANG_ANALYZER_NORETURN;
+
+//! Assert with four arguments
+I8 SwAssert(FILE_NAME_ARG file,
+            FwAssertArgType arg1,
+            FwAssertArgType arg2,
+            FwAssertArgType arg3,
+            FwAssertArgType arg4,
+            FwSizeType lineNo) CLANG_ANALYZER_NORETURN;
+
+//! Assert with five arguments
+I8 SwAssert(FILE_NAME_ARG file,
+            FwAssertArgType arg1,
+            FwAssertArgType arg2,
+            FwAssertArgType arg3,
+            FwAssertArgType arg4,
+            FwAssertArgType arg5,
+            FwSizeType lineNo) CLANG_ANALYZER_NORETURN;
+
+//! Assert with six arguments
+I8 SwAssert(FILE_NAME_ARG file,
+            FwAssertArgType arg1,
+            FwAssertArgType arg2,
+            FwAssertArgType arg3,
+            FwAssertArgType arg4,
+            FwAssertArgType arg5,
+            FwAssertArgType arg6,
+            FwSizeType lineNo) CLANG_ANALYZER_NORETURN;
+}  // namespace Fw
+
+// Base class for declaring an assert hook
+// Each of the base class functions can be overridden
+// or used by derived classes.
+
+namespace Fw {
+// Base class for declaring an assert hook
+class AssertHook {
+  public:
+    AssertHook() : previousHook(nullptr) {};  //!< constructor
+    virtual ~AssertHook() {};                 //!< destructor
+    // override this function to intercept asserts
+    virtual void reportAssert(FILE_NAME_ARG file,
+                              FwSizeType lineNo,
+                              FwSizeType numArgs,
+                              FwAssertArgType arg1,
+                              FwAssertArgType arg2,
+                              FwAssertArgType arg3,
+                              FwAssertArgType arg4,
+                              FwAssertArgType arg5,
+                              FwAssertArgType arg6);
+    // default reportAssert() will call this when the message is built
+    // override it to do another kind of print. printf by default
+    virtual void printAssert(const CHAR* msg);
+    // do assert action. By default, calls assert.
+    // Called after reportAssert()
+    virtual void doAssert();
+    // register the hook
+    void registerHook();
+    // deregister the hook
+    void deregisterHook();
+
+  protected:
+  private:
+    // the previous assert hook
+    AssertHook* previousHook;
+};
+}  // namespace Fw
+
+#endif  // FW_ASSERT_HPP
+```
+
+### `BasicTypes.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/BasicTypes.h`
+
+
+```c
+// ======================================================================
+// \title  Fw/Types/BasicTypes.h
+// \author mstarch
+// \brief  h file for FPrime basic numerical aliases (I8, U64, etc.)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// FPrime allows use of shorthand fixed-with types. This file provides
+// these definitions. I# is a signed integer of width #, U# is an unsigned
+// integer of width #, F# is a floating point number of width #.
+//
+// This file also contains macros for a number of useful operations:
+//
+// - FW_NUM_ARRAY_ELEMENTS(a): number of elements in an array
+// - FW_MAX(a, b): maximum of a and b
+// - FW_MIN(a, b): minimum of a and b
+//
+// - FW_NO_ASSERT: constant for assertions turned off
+// - FW_FILEID_ASSERT: constant for assertions reported as a file CRC and line number
+// - FW_FILENAME_ASSERT: constant for assertions reported as a file path and line number
+// - FW_RELATIVE_PATH_ASSERT: constant for assertions reported as a relative path within
+//       FPrime and line number
+//
+//
+// This header is intended to be C-compatible.
+//
+// ======================================================================
+#ifndef FW_BASIC_TYPES_H
+#define FW_BASIC_TYPES_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <config/FPrimeNumericalConfig.h>
+#include <inttypes.h>  // Standard integer types and printf macros
+
+// Compiler checks
+#if defined(__GNUC__) || defined(__llvm__) || defined(PLATFORM_OVERRIDE_GCC_CLANG_CHECK)
+#else
+#error \
+    "FPrime only supports GCC or Clang compilers. You may attempt to use other compilers by defining PLATFORM_OVERRIDE_GCC_CLANG_CHECK, but this is not recommended."
+#endif
+
+/*----------------------------------------------------------------------------*/
+/* Type definitions:     I8, U8, I16, U16, ..., I64, U64, F32, and F64        */
+/*----------------------------------------------------------------------------*/
+typedef int8_t I8;  //!< 8-bit signed integer
+#define PRI_I8 PRIi8
+
+typedef uint8_t U8;  //!< 8-bit unsigned integer
+#define PRI_U8 PRIu8
+
+typedef U8 BYTE;  //!< byte type
+#define PRI_BYTE PRIu8
+
+typedef char CHAR;
+#define PRI_CHAR "c"
+
+#if FW_HAS_16_BIT
+typedef int16_t I16;  //!< 16-bit signed integer
+#define PRI_I16 PRIi16
+typedef uint16_t U16;  //!< 16-bit unsigned integer
+#define PRI_U16 PRIu16
+#endif
+
+#if FW_HAS_32_BIT
+typedef int32_t I32;  //!< 32-bit signed integer
+#define PRI_I32 PRIi32
+typedef uint32_t U32;  //!< 32-bit unsigned integer
+#define PRI_U32 PRIu32
+#endif
+
+#if FW_HAS_64_BIT
+typedef int64_t I64;  //!< 64-bit signed integer
+#define PRI_I64 PRIi64
+typedef uint64_t U64;  //!< 64-bit unsigned integer
+#define PRI_U64 PRIu64
+#endif
+
+typedef float F32;  //!< 32-bit floating point
+#define PRI_F64 "lf"
+typedef double F64;  //!< 64-bit floating point (double). Required for compiler-supplied double promotion.
+
+/*----------------------------------------------------------------------------*/
+/* Useful macro definitions                                                   */
+/*----------------------------------------------------------------------------*/
+#define FW_NUM_ARRAY_ELEMENTS(a) (sizeof(a) / sizeof((a)[0]))  //!< number of elements in an array
+#define FW_MAX(a, b) (((a) > (b)) ? (a) : (b))                 //!< MAX macro
+#define FW_MIN(a, b) (((a) < (b)) ? (a) : (b))                 //!< MIN macro
+
+#define FW_NO_ASSERT 1  //!< Asserts turned off
+#define FW_FILEID_ASSERT \
+    2  //!< File ID used - requires -DASSERT_FILE_ID=somevalue to be set on the compile command line
+#define FW_FILENAME_ASSERT 3  //!< Uses the file path in the assert - image stores filenames
+#define FW_RELATIVE_PATH_ASSERT \
+    4  //!< Uses a relative file path (within fprime/fprime library) for assert. - requires -DASSERT_RELATIVE_PATH=path
+       //!< to be set on the compile command line
+
+#ifdef __cplusplus
+}
+#endif
+#endif  // FW_BASIC_TYPES_H
+```
+
+### `BasicTypes.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/BasicTypes.hpp`
+
+
+```cpp
+/**
+ * \file: BasicTypes.hpp
+ * \author mstarch
+ * \brief C++ header for working with basic fprime types
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ */
+
+#ifndef FW_BASIC_TYPES_HPP
+#define FW_BASIC_TYPES_HPP
+
+#include <limits>
+// Use C linkage for the basic items
+extern "C" {
+#include "Fw/Types/BasicTypes.h"
+}
+
+// IEEE compliance checks must occur in C++ code
+#if !defined(SKIP_FLOAT_IEEE_754_COMPLIANCE) || !SKIP_FLOAT_IEEE_754_COMPLIANCE
+static_assert((std::numeric_limits<float>::is_iec559 == true) && (std::numeric_limits<float>::radix == 2) &&
+                  (std::numeric_limits<float>::digits == 24) && (std::numeric_limits<float>::max_exponent == 128),
+              "The 32-bit floating point type does not conform to the IEEE-754 standard.");
+static_assert((std::numeric_limits<double>::is_iec559 == true) && (std::numeric_limits<double>::radix == 2) &&
+                  (std::numeric_limits<double>::digits == 53) && (std::numeric_limits<double>::max_exponent == 1024),
+              "The 64-bit floating point type does not conform to the IEEE-754 standard.");
+#endif
+#endif  // End FW_BASIC_TYPES_HPP
+```
+
+### `ByteArray.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ByteArray.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ByteArray.hpp
+// \author bocchino
+// \brief  hpp file for ByteArray type
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_ByteArray_HPP
+#define Fw_ByteArray_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Fw {
+
+//! \class ByteArray
+//! \brief A variable-length byte array
+//!
+struct ByteArray {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Construct a ByteArray
+    //!
+    ByteArray(U8* const a_bytes,       //!< Pointer to the bytes
+              const FwSizeType a_size  //!< The array size
+              )
+        : bytes(a_bytes), size(a_size) {}
+
+    // ----------------------------------------------------------------------
+    // Data
+    // ----------------------------------------------------------------------
+
+    //! The bytes
+    U8* const bytes;
+
+    //! The size
+    const FwSizeType size;
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `CAssert.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/CAssert.h`
+
+
+```c
+/*
+ * FwCAssert.hpp
+ *
+ *  Created on: Jun 8, 2014
+ *      Author: tcanham
+ */
+
+#ifndef FWCASSERT_HPP_
+#define FWCASSERT_HPP_
+
+#include <Fw/FPrimeBasicTypes.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#if FW_ASSERT_LEVEL == FW_NO_ASSERT
+
+#define FW_CASSERT(...)
+#define FW_CASSERT_1(cond, arg1)
+
+#else  // ASSERT is defined
+
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+#define FILE_NAME_ARG U32
+#define FW_CASSERT(cond) ((void)((cond) ? (0) : (CAssert0(ASSERT_FILE_ID, __LINE__))))
+#define FW_CASSERT_1(cond, arg1) ((void)((cond) ? (0) : (CAssert1(ASSERT_FILE_ID, (FwAssertArgType)(arg1), __LINE__))))
+#else
+#define FILE_NAME_ARG const CHAR*
+#define FW_CASSERT(cond) ((void)((cond) ? (0) : (CAssert0((FILE_NAME_ARG)(__FILE__), __LINE__))))
+#define FW_CASSERT_1(cond, arg1) \
+    ((void)((cond) ? (0) : (CAssert1((FILE_NAME_ARG)(__FILE__), (FwAssertArgType)(arg1), __LINE__))))
+#endif
+
+I8 CAssert0(FILE_NAME_ARG file, FwSizeType lineNo);                        //!< C assert function
+I8 CAssert1(FILE_NAME_ARG file, FwAssertArgType arg1, FwSizeType lineNo);  //!< C assert function with one argument
+
+#endif  // ASSERT is defined
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* FWCASSERT_HPP_ */
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+####
+register_fprime_module(
+    Fw_Types
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/Assert.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/MallocAllocator.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/MemAllocator.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/PolyType.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/SerialBuffer.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Serializable.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/StringBase.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/StringUtils.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/StringToNumber.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/Types.fpp"
+  DEPENDS
+    __fprime_config # Only module that should ever list __fprime_config in DEPENDS. Use Fw_Types instead.
+  REQUIRES_IMPLEMENTATIONS
+    Fw_StringFormat
+)
+
+register_fprime_implementation(
+    Fw_StringFormat_snprintf
+  IMPLEMENTS
+    Fw_StringFormat
+  DEPENDS
+    Fw_Types
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/snprintf_format.cpp"
+)
+
+### UTs ###
+register_fprime_ut(
+    Fw_Types_ut_exe
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ExternalSerializeBufferTest.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/AssertTypesTest.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TypesTest.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CAssertTest.cpp"
+  DEPENDS
+    Os
+)
+if (TARGET Fw_Types_ut_exe)
+    target_compile_options(Fw_Types_ut_exe PRIVATE -Wno-conversion)
+endif()
+
+register_fprime_ut(
+    Fw_StringFormat_snprintf_ut_exe
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SnPrintfFormatTest.cpp"
+  DEPENDS
+    Fw_Types
+  CHOOSES_IMPLEMENTATIONS
+    Fw_StringFormat_snprintf
+)
+
+
+# Non-test directory
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/GTest")
+```
+
+### `ConstByteArray.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ConstByteArray.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ConstByteArray.hpp
+// \author bocchino
+// \brief  hpp file for ConstByteArray type
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_ConstByteArray_HPP
+#define Fw_ConstByteArray_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Fw {
+
+//! \class ConstByteArray
+//! \brief A variable-length byte array with constant access
+//!
+struct ConstByteArray {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Construct a ConstByteArray
+    //!
+    ConstByteArray(const U8* const a_bytes,  //!< Pointer to the bytes
+                   const FwSizeType a_size   //!< The array size
+                   )
+        : bytes(a_bytes), size(a_size) {}
+
+    // ----------------------------------------------------------------------
+    // Data
+    // ----------------------------------------------------------------------
+
+    //! The bytes
+    const U8* const bytes;
+
+    //! The size
+    const FwSizeType size;
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `ExternalString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ExternalString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   ExternalString.hpp
+// @author Robert Bocchino
+// @brief  A string backed by an external buffer
+// ======================================================================
+
+#ifndef FW_EXTERNAL_STRING_HPP
+#define FW_EXTERNAL_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+//! A string backed by an external buffer
+class ExternalString final : public Fw::StringBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Deleted copy constructor
+    ExternalString(const ExternalString&) = delete;
+
+    //! Constructor (uninitialized buffer)
+    ExternalString() : StringBase(), m_bufferPtr(nullptr), m_bufferSize(0) {}
+
+    //! Constructor (bufferPtr and bufferSize)
+    ExternalString(char* bufferPtr,                 //!< The buffer pointer
+                   StringBase::SizeType bufferSize  //!< The buffer size
+                   )
+        : StringBase(), m_bufferPtr(bufferPtr), m_bufferSize(bufferSize) {
+        *this = "";
+    }
+
+    //! Constructor (bufferPtr, bufferSize, and StringBase)
+    ExternalString(char* bufferPtr,                  //!< The buffer pointer
+                   StringBase::SizeType bufferSize,  //!< The buffer size
+                   const StringBase& sb              //!< The source string
+                   )
+        : StringBase(), m_bufferPtr(bufferPtr), m_bufferSize(bufferSize) {
+        *this = sb;
+    }
+
+    //! Constructor (bufferPtr, bufferSize, and const char*)
+    ExternalString(char* bufferPtr,                  //!< The buffer pointer
+                   StringBase::SizeType bufferSize,  //!< The buffer size
+                   const char* str                   //!< The source string
+                   )
+        : StringBase(), m_bufferPtr(bufferPtr), m_bufferSize(bufferSize) {
+        *this = str;
+    }
+
+    //! Destructor
+    ~ExternalString() {}
+
+  public:
+    // ----------------------------------------------------------------------
+    // StringBase interface
+    // ----------------------------------------------------------------------
+
+    //! Gets the char buffer
+    //! @return The char buffer
+    const char* toChar() const { return this->m_bufferPtr; }
+
+    //! Returns the buffer size
+    //! @return The buffer size
+    StringBase::SizeType getCapacity() const { return this->m_bufferSize; }
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public interface
+    // ----------------------------------------------------------------------
+
+    //! Set the buffer and initialize it to the empty string
+    void setBuffer(char* bufferPtr,                 //!< The buffer pointer
+                   StringBase::SizeType bufferSize  //!< The buffer size
+    ) {
+        this->m_bufferPtr = bufferPtr;
+        this->m_bufferSize = bufferSize;
+        *this = "";
+    }
+
+  public:
+    // ----------------------------------------------------------------------
+    // Operators
+    // ----------------------------------------------------------------------
+
+    // Operator= (const ExternalString&)
+    ExternalString& operator=(const ExternalString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    // Operator= (const StringBase&)
+    ExternalString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    // const char* assignment operator
+    ExternalString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+  private:
+    // ----------------------------------------------------------------------
+    // Data members
+    // ----------------------------------------------------------------------
+
+    //! Pointer to string buffer
+    char* m_bufferPtr;
+
+    //! Size of string buffer
+    //! F Prime strings are null-terminated, so this is one more than
+    //! the length of the largest string that the buffer can hold
+    StringBase::SizeType m_bufferSize;
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `FileNameString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/FileNameString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   FileNameString.hpp
+// @author F Prime
+// @brief  A string sized to store a file name
+// ======================================================================
+
+#ifndef FW_FILE_NAME_STRING_HPP
+#define FW_FILE_NAME_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+#include "config/FppConstantsAc.hpp"
+
+namespace Fw {
+
+class FileNameString final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_FILE_NAME_STRING,
+        STRING_SIZE = FileNameStringSize,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    FileNameString() : StringBase() { *this = ""; }
+
+    FileNameString(const FileNameString& src) : StringBase() { *this = src; }
+
+    FileNameString(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit FileNameString(const char* src) : StringBase() { *this = src; }
+
+    ~FileNameString() {}
+
+    FileNameString& operator=(const FileNameString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    FileNameString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    FileNameString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `format.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/format.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  format.hpp
+// \author mstarch
+// \brief  hpp file for c-string format function
+//
+// \copyright
+// Copyright (C) 2025 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+#ifndef FW_TYPES_FORMAT_HPP_
+#define FW_TYPES_FORMAT_HPP_
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <cstdarg>
+namespace Fw {
+
+//! \brief status of string format calls
+enum class FormatStatus {
+    SUCCESS,                //!< Format worked
+    OVERFLOWED,             //!< Format overflowed
+    INVALID_FORMAT_STRING,  //!< Format provided invalid format string
+    SIZE_OVERFLOW,          //!< FwSizeType overflowed the range of size_t
+    OTHER_ERROR             //!< An error was returned from an underlying call
+};
+
+//! \brief format a c-string
+//!
+//! Format a string using printf family formatting semantics. Destination will be filled with the formatted string up to
+//! maximumSize - 1. This function will always terminate the string with a \0.
+//!
+//! This function can return several error codes:
+//!   OVERFLOWED: the complete string did not fit in the buffer with an appended null-terminator
+//!   INVALID_FORMAT_STRING: the format string was null
+//!   OTHER_ERROR: another error occurred in an underlying function call
+//! Otherwise SUCCESS is returned.  destination may be modified even in the case of an error.
+//!
+//! \param destination: destination to fill with the formatted string
+//! \param maximumSize: size of the buffer represented by destination
+//! \param formatString: format string to fill
+//! \param ...: variable arguments inputs
+//! \return: SUCCESS on successful formatting, OVERFLOWED on overflow, and something else on any error
+FormatStatus stringFormat(char* destination, const FwSizeType maximumSize, const char* formatString, ...);
+
+//! \brief format a c-string
+//!
+//! Format a string using printf family formatting semantics. Destination will be filled with the formatted string up to
+//! maximumSize - 1. This function will always terminate the string with a \0.
+//!
+//! This function can return several error codes:
+//!   OVERFLOWED: the complete string did not fit in the buffer with an appended null-terminator
+//!   INVALID_FORMAT_STRING: the format string was null
+//!   OTHER_ERROR: another error occurred in an underlying function call
+//! Otherwise SUCCESS is returned.  destination may be modified even in the case of an error.
+//!
+//! This version take a variable argument list
+//!
+//! \param destination: destination to fill with the formatted string
+//! \param maximumSize: size of the buffer represented by destination
+//! \param formatString: format string to fill
+//! \param args: variable arguments list
+//! \return: SUCCESS on successful formatting, OVERFLOWED on overflow, and something else on any error
+FormatStatus stringFormat(char* destination, const FwSizeType maximumSize, const char* formatString, va_list args);
+}  // namespace Fw
+#endif  // FW_TYPES_FORMAT_HPP_
+```
+
+### `InternalInterfaceString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/InternalInterfaceString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   InternalInterfaceString.hpp
+// @author F Prime
+// @brief  A string sized for an internal port argument
+// ======================================================================
+
+#ifndef FW_INTERNAL_INTERFACE_STRING_HPP
+#define FW_INTERNAL_INTERFACE_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+#include "config/FppConstantsAc.hpp"
+
+namespace Fw {
+
+class InternalInterfaceString final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_INTERNAL_INTERFACE_STRING,
+        STRING_SIZE = FW_INTERNAL_INTERFACE_STRING_MAX_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    InternalInterfaceString() : StringBase() { *this = ""; }
+
+    InternalInterfaceString(const InternalInterfaceString& src) : StringBase() { *this = src; }
+
+    InternalInterfaceString(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit InternalInterfaceString(const char* src) : StringBase() { *this = src; }
+
+    ~InternalInterfaceString() {}
+
+    InternalInterfaceString& operator=(const InternalInterfaceString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    InternalInterfaceString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    InternalInterfaceString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `MallocAllocator.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MallocAllocator.cpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief Implementation of malloc based allocator
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#include <Fw/Types/MallocAllocator.hpp>
+#include <cstdlib>
+
+namespace Fw {
+
+MallocAllocator::MallocAllocator() {}
+
+MallocAllocator::~MallocAllocator() {}
+
+void* MallocAllocator::allocate(const FwEnumStoreType identifier, FwSizeType& size, bool& recoverable) {
+    // don't use identifier
+    // heap memory is never recoverable
+    recoverable = false;
+    void* mem = ::malloc(static_cast<size_t>(size));
+    if (nullptr == mem) {
+        size = 0;  // set to zero if can't get memory
+    }
+    return mem;
+}
+
+void MallocAllocator::deallocate(const FwEnumStoreType identifier, void* ptr) {
+    ::free(ptr);
+}
+
+} /* namespace Fw */
+```
+
+### `MallocAllocator.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MallocAllocator.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief A MemAllocator implementation class that uses malloc.
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#ifndef TYPES_MALLOCALLOCATOR_HPP_
+#define TYPES_MALLOCALLOCATOR_HPP_
+
+#include <Fw/Types/MemAllocator.hpp>
+
+namespace Fw {
+
+/*!
+ *
+ * This class is an implementation of the MemAllocator base class.
+ * It uses the heap as the memory source.
+ *
+ * Since it is heap space, the identifier is unused, and memory is never recoverable.
+ *
+ */
+
+class MallocAllocator : public MemAllocator {
+  public:
+    MallocAllocator();
+    virtual ~MallocAllocator();
+    //! Allocate memory
+    /*!
+     * \param identifier the memory segment identifier (not used)
+     * \param size the requested size (not changed)
+     * \param recoverable - flag to indicate the memory could be recoverable (always set to false)
+     * \return the pointer to memory. Zero if unable to allocate.
+     */
+    void* allocate(const FwEnumStoreType identifier, FwSizeType& size, bool& recoverable);
+    //! Deallocate memory
+    /*!
+     * \param identifier the memory segment identifier (not used)
+     * \param ptr the pointer to memory returned by allocate()
+     */
+    void deallocate(const FwEnumStoreType identifier, void* ptr);
+};
+
+} /* namespace Fw */
+
+#endif /* TYPES_MALLOCALLOCATOR_HPP_ */
+```
+
+### `MemAllocator.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MemAllocator.cpp`
+
+
+```cpp
+/**
+ * \file
+ * \author
+ * \brief
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#include <Fw/Types/MemAllocator.hpp>
+
+namespace Fw {
+
+MemAllocator::MemAllocator() {}
+
+MemAllocator::~MemAllocator() {}
+
+} /* namespace Fw */
+```
+
+### `MemAllocator.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MemAllocator.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief Defines a base class for a memory allocator for classes.
+ *
+ * A memory allocator is a class that provides memory for a component.
+ * This allows a user of the class to allocate memory as they choose.
+ * The user writes derived classes for each of the allocator types.
+ *
+ * \copyright
+ * Copyright 2009-2020, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+#ifndef TYPES_MEMALLOCATOR_HPP_
+#define TYPES_MEMALLOCATOR_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+/*!
+ *
+ * This class is a pure virtual base class for memory allocators in Fprime.
+ * The intent is to provide derived classes the get memory from different sources.
+ * The base class can be passed to classes so the allocator can be selected at the
+ * system level, and different allocators can be used by different components as
+ * appropriate.
+ *
+ * The identifier can be used to look up a pre-allocated buffer by ID in an
+ * embedded system. Identifiers may be used only in a single call to an invocation.
+ * Some implementations of MemAllocator discard the identifier but components using
+ * the MemAllocator interface should not depend on the identifier to be discarded.
+ *
+ * The size is the requested size of the memory. If the allocator cannot return the
+ * requested amount, it should return the actual amount and users should check.
+ *
+ * The recoverable flag is intended to be used in embedded environments where
+ * memory can survive a processor reset and data can be recovered. The component
+ * using the allocator can then use the data. Any integrity checks are up to the
+ * user of the memory.
+ *
+ */
+
+namespace Fw {
+
+class MemAllocator {
+  public:
+    //! Allocate memory
+    /*!
+     * \param identifier the memory segment identifier, each identifier is to be used in once single allocation
+     * \param size the requested size - changed to actual if different
+     * \param recoverable - flag to indicate the memory could be recoverable
+     * \return the pointer to memory. Zero if unable to allocate
+     */
+    virtual void* allocate(const FwEnumStoreType identifier, FwSizeType& size, bool& recoverable) = 0;
+    //! Deallocate memory
+    /*!
+     * \param identifier the memory segment identifier, each identifier is to be used in once single allocation
+     * \param ptr the pointer to memory returned by allocate()
+     */
+    virtual void deallocate(const FwEnumStoreType identifier, void* ptr) = 0;
+
+  protected:
+    MemAllocator();
+    virtual ~MemAllocator();
+
+  private:
+    MemAllocator(MemAllocator&);  //!< disable
+    MemAllocator(MemAllocator*);  //!< disable
+};
+
+} /* namespace Fw */
+
+#endif /* TYPES_MEMALLOCATOR_HPP_ */
+```
+
+### `MmapAllocator.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MmapAllocator.cpp`
+
+
+```cpp
+/**
+ * \file
+ * \author Gene Merewether
+ * \brief Implementation of mmap based allocator
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#include <sys/mman.h>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/MmapAllocator.hpp>
+#include <cstdlib>
+
+namespace Fw {
+
+MmapAllocator::MmapAllocator() : m_length(0) {}
+
+MmapAllocator::~MmapAllocator() {}
+
+void* MmapAllocator::allocate(const FwEnumStoreType identifier, FwSizeType& size, bool& recoverable) {
+    void* addr = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    if (addr == MAP_FAILED) {
+        size = 0;
+        return nullptr;
+    }
+    this->m_length = size;
+
+    // mmap memory is never recoverable
+    recoverable = false;
+
+    return addr;
+}
+
+void MmapAllocator::deallocate(const FwEnumStoreType identifier, void* ptr) {
+    if (this->m_length) {
+        int stat = munmap(ptr, this->m_length);
+        FW_ASSERT(stat == 0, stat);
+    }
+}
+
+} /* namespace Fw */
+```
+
+### `MmapAllocator.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/MmapAllocator.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author Gene Merewether
+ * \brief A MemAllocator implementation class that uses mmap.
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#ifndef TYPES_MMAPALLOCATOR_HPP_
+#define TYPES_MMAPALLOCATOR_HPP_
+
+#include <Fw/Types/MemAllocator.hpp>
+
+namespace Fw {
+
+//! Fw::MmapAllocator is an implementation of the Fw::MemAllocator interface that back memory with a read and write
+//! capable anonymous memory mapped region. This class is currently not useful for mapping to a file.
+class MmapAllocator : public MemAllocator {
+  public:
+    //! Constructor with no arguments
+    //!
+    MmapAllocator();
+    //! Destructor with no arguments
+    virtual ~MmapAllocator();
+
+    //! Allocate memory using the mmap allocator
+    //! \param identifier: identifier to use with allocation
+    //! \param size: size of memory to be allocated
+    //! \param recoverable: (output) is this memory recoverable after a reset. Always false for mmap.
+    void* allocate(const FwEnumStoreType identifier, FwSizeType& size, bool& recoverable);
+
+    //! Deallocation of memory using the mmap allocator
+    //! \param identifier: identifier used at allocation
+    //! \param ptr: pointer to memory being deallocated
+    void deallocate(const FwEnumStoreType identifier, void* ptr);
+
+  private:
+    FwSizeType m_length;
+};
+
+} /* namespace Fw */
+
+#endif /* TYPES_MMAPALLOCATOR_HPP_ */
+```
+
+### `ObjectName.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/ObjectName.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   ObjectName.hpp
+// @author F Prime
+// @brief  A string sized to store an object name
+// ======================================================================
+
+#ifndef FW_OBJECT_NAME_HPP
+#define FW_OBJECT_NAME_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class ObjectName final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_OBJECT_NAME,
+        STRING_SIZE = FW_OBJ_NAME_BUFFER_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    ObjectName() : StringBase() { *this = ""; }
+
+    ObjectName(const ObjectName& src) : StringBase() { *this = src; }
+
+    ObjectName(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit ObjectName(const char* src) : StringBase() { *this = src; }
+
+    ~ObjectName() {}
+
+    ObjectName& operator=(const ObjectName& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    ObjectName& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    ObjectName& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `PolyType.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/PolyType.cpp`
+
+
+```cpp
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/ExternalString.hpp>
+#include <Fw/Types/PolyType.hpp>
+
+namespace Fw {
+
+// U8 methods
+
+PolyType::PolyType() {
+    this->m_dataType = TYPE_NOTYPE;
+}
+
+PolyType::PolyType(U8 val) {
+    this->m_dataType = TYPE_U8;
+    this->m_val.u8Val = val;
+}
+
+PolyType::operator U8() {
+    FW_ASSERT(TYPE_U8 == this->m_dataType);
+    return this->m_val.u8Val;
+}
+
+void PolyType::get(U8& val) {
+    FW_ASSERT(TYPE_U8 == this->m_dataType);
+    val = this->m_val.u8Val;
+}
+
+bool PolyType::isU8() {
+    return (TYPE_U8 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(U8 other) {
+    this->m_dataType = TYPE_U8;
+    this->m_val.u8Val = other;
+    return *this;
+}
+
+// I8 methods
+
+PolyType::PolyType(I8 val) {
+    this->m_dataType = TYPE_I8;
+    this->m_val.i8Val = val;
+}
+
+PolyType::operator I8() {
+    FW_ASSERT(TYPE_I8 == this->m_dataType);
+    return this->m_val.i8Val;
+}
+
+void PolyType::get(I8& val) {
+    FW_ASSERT(TYPE_I8 == this->m_dataType);
+    val = this->m_val.i8Val;
+}
+
+bool PolyType::isI8() {
+    return (TYPE_I8 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(I8 other) {
+    this->m_dataType = TYPE_I8;
+    this->m_val.i8Val = other;
+    return *this;
+}
+
+#if FW_HAS_16_BIT
+
+// U16 methods
+
+PolyType::PolyType(U16 val) {
+    this->m_dataType = TYPE_U16;
+    this->m_val.u16Val = val;
+}
+
+PolyType::operator U16() {
+    FW_ASSERT(TYPE_U16 == this->m_dataType);
+    return this->m_val.u16Val;
+}
+
+void PolyType::get(U16& val) {
+    FW_ASSERT(TYPE_U16 == this->m_dataType);
+    val = this->m_val.u16Val;
+}
+
+bool PolyType::isU16() {
+    return (TYPE_U16 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(U16 other) {
+    this->m_dataType = TYPE_U16;
+    this->m_val.u16Val = other;
+    return *this;
+}
+
+// I16 methods
+
+PolyType::PolyType(I16 val) {
+    this->m_dataType = TYPE_I16;
+    this->m_val.i16Val = val;
+}
+
+PolyType::operator I16() {
+    FW_ASSERT(TYPE_I16 == this->m_dataType);
+    return this->m_val.i16Val;
+}
+
+void PolyType::get(I16& val) {
+    FW_ASSERT(TYPE_I16 == this->m_dataType);
+    val = this->m_val.i16Val;
+}
+
+bool PolyType::isI16() {
+    return (TYPE_I16 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(I16 other) {
+    this->m_dataType = TYPE_I16;
+    this->m_val.i16Val = other;
+    return *this;
+}
+
+#endif
+
+#if FW_HAS_32_BIT
+
+// U32 methods
+
+PolyType::PolyType(U32 val) {
+    this->m_dataType = TYPE_U32;
+    this->m_val.u32Val = val;
+}
+
+PolyType::operator U32() {
+    FW_ASSERT(TYPE_U32 == this->m_dataType);
+    return this->m_val.u32Val;
+}
+
+void PolyType::get(U32& val) {
+    FW_ASSERT(TYPE_U32 == this->m_dataType);
+    val = this->m_val.u32Val;
+}
+
+bool PolyType::isU32() {
+    return (TYPE_U32 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(U32 other) {
+    this->m_dataType = TYPE_U32;
+    this->m_val.u32Val = other;
+    return *this;
+}
+
+// I32 methods
+
+PolyType::PolyType(I32 val) {
+    this->m_dataType = TYPE_I32;
+    this->m_val.i32Val = val;
+}
+
+PolyType::operator I32() {
+    FW_ASSERT(TYPE_I32 == this->m_dataType);
+    return this->m_val.i32Val;
+}
+
+void PolyType::get(I32& val) {
+    FW_ASSERT(TYPE_I32 == this->m_dataType);
+    val = this->m_val.i32Val;
+}
+
+bool PolyType::isI32() {
+    return (TYPE_I32 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(I32 other) {
+    this->m_dataType = TYPE_I32;
+    this->m_val.i32Val = other;
+    return *this;
+}
+
+#endif
+#if FW_HAS_64_BIT
+
+// U64 methods
+
+PolyType::PolyType(U64 val) {
+    this->m_dataType = TYPE_U64;
+    this->m_val.u64Val = val;
+}
+
+PolyType::operator U64() {
+    FW_ASSERT(TYPE_U64 == this->m_dataType);
+    return this->m_val.u64Val;
+}
+
+void PolyType::get(U64& val) {
+    FW_ASSERT(TYPE_U64 == this->m_dataType);
+    val = this->m_val.u64Val;
+}
+
+bool PolyType::isU64() {
+    return (TYPE_U64 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(U64 other) {
+    this->m_dataType = TYPE_U64;
+    this->m_val.u64Val = other;
+    return *this;
+}
+
+// I64 methods
+
+PolyType::PolyType(I64 val) {
+    this->m_dataType = TYPE_I64;
+    this->m_val.i64Val = val;
+}
+
+PolyType::operator I64() {
+    FW_ASSERT(TYPE_I64 == this->m_dataType);
+    return this->m_val.i64Val;
+}
+
+void PolyType::get(I64& val) {
+    FW_ASSERT(TYPE_I64 == this->m_dataType);
+    val = this->m_val.i64Val;
+}
+
+bool PolyType::isI64() {
+    return (TYPE_I64 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(I64 other) {
+    this->m_dataType = TYPE_I64;
+    this->m_val.i64Val = other;
+    return *this;
+}
+
+#endif
+
+PolyType::PolyType(F64 val) {
+    this->m_dataType = TYPE_F64;
+    this->m_val.f64Val = val;
+}
+
+PolyType::operator F64() {
+    FW_ASSERT(TYPE_F64 == this->m_dataType);
+    return this->m_val.f64Val;
+}
+
+void PolyType::get(F64& val) {
+    FW_ASSERT(TYPE_F64 == this->m_dataType);
+    val = this->m_val.f64Val;
+}
+
+bool PolyType::isF64() {
+    return (TYPE_F64 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(F64 other) {
+    this->m_dataType = TYPE_F64;
+    this->m_val.f64Val = other;
+    return *this;
+}
+
+PolyType::PolyType(F32 val) {
+    this->m_dataType = TYPE_F32;
+    this->m_val.f32Val = val;
+}
+
+PolyType::operator F32() {
+    FW_ASSERT(TYPE_F32 == this->m_dataType);
+    return this->m_val.f32Val;
+}
+
+void PolyType::get(F32& val) {
+    FW_ASSERT(TYPE_F32 == this->m_dataType);
+    val = this->m_val.f32Val;
+}
+
+bool PolyType::isF32() {
+    return (TYPE_F32 == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(F32 other) {
+    this->m_dataType = TYPE_F32;
+    this->m_val.f32Val = other;
+    return *this;
+}
+
+PolyType::PolyType(bool val) {
+    this->m_dataType = TYPE_BOOL;
+    this->m_val.boolVal = val;
+}
+
+PolyType::operator bool() {
+    FW_ASSERT(TYPE_BOOL == this->m_dataType);
+    return this->m_val.boolVal;
+}
+
+void PolyType::get(bool& val) {
+    FW_ASSERT(TYPE_BOOL == this->m_dataType);
+    val = this->m_val.boolVal;
+}
+
+bool PolyType::isBool() {
+    return (TYPE_BOOL == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(bool other) {
+    this->m_dataType = TYPE_BOOL;
+    this->m_val.boolVal = other;
+    return *this;
+}
+
+PolyType::PolyType(void* val) {
+    this->m_dataType = TYPE_PTR;
+    this->m_val.ptrVal = val;
+}
+
+PolyType::operator void*() {
+    FW_ASSERT(TYPE_PTR == this->m_dataType);
+    return this->m_val.ptrVal;
+}
+
+void PolyType::get(void*& val) {
+    FW_ASSERT(TYPE_PTR == this->m_dataType);
+    val = this->m_val.ptrVal;
+}
+
+bool PolyType::isPtr() {
+    return (TYPE_PTR == this->m_dataType);
+}
+
+PolyType& PolyType::operator=(void* other) {
+    this->m_dataType = TYPE_PTR;
+    this->m_val.ptrVal = other;
+    return *this;
+}
+
+PolyType::PolyType(const PolyType& original) : Fw::Serializable() {
+    this->m_dataType = original.m_dataType;
+    this->m_val = original.m_val;
+}
+
+PolyType::~PolyType() {}
+
+PolyType& PolyType::operator=(const PolyType& src) {
+    this->m_dataType = src.m_dataType;
+    this->m_val = src.m_val;
+    return *this;
+}
+
+bool PolyType::operator!=(const PolyType& other) const {
+    return !operator==(other);
+}
+
+bool PolyType::operator==(const PolyType& other) const {
+    // if type doesn't match, not equal
+    if (this->m_dataType != other.m_dataType) {
+        return false;
+    } else {
+        // check based on type
+        bool valIsEqual = false;
+        switch (this->m_dataType) {
+            case TYPE_U8:
+                valIsEqual = (this->m_val.u8Val == other.m_val.u8Val);
+                break;
+            case TYPE_I8:
+                valIsEqual = (this->m_val.i8Val == other.m_val.i8Val);
+                break;
+#if FW_HAS_16_BIT
+            case TYPE_U16:
+                valIsEqual = (this->m_val.u16Val == other.m_val.u16Val);
+                break;
+            case TYPE_I16:
+                valIsEqual = (this->m_val.i16Val == other.m_val.i16Val);
+                break;
+#endif
+#if FW_HAS_32_BIT
+            case TYPE_U32:
+                valIsEqual = (this->m_val.u32Val == other.m_val.u32Val);
+                break;
+            case TYPE_I32:
+                valIsEqual = (this->m_val.i32Val == other.m_val.i32Val);
+                break;
+#endif
+#if FW_HAS_64_BIT
+            case TYPE_U64:
+                valIsEqual = (this->m_val.u64Val == other.m_val.u64Val);
+                break;
+            case TYPE_I64:
+                valIsEqual = (this->m_val.i64Val == other.m_val.i64Val);
+                break;
+#endif
+            case TYPE_BOOL:
+                valIsEqual = (this->m_val.boolVal == other.m_val.boolVal);
+                break;
+            case TYPE_PTR:
+                valIsEqual = (this->m_val.ptrVal == other.m_val.ptrVal);
+                break;
+            case TYPE_F64:  // fall through, shouldn't test floating point
+            case TYPE_F32:  // fall through, shouldn't test floating point
+            case TYPE_NOTYPE:
+                valIsEqual = false;
+                break;
+            default:
+                FW_ASSERT(0, static_cast<FwAssertArgType>(this->m_dataType));
+                return false;  // for compiler
+        }
+        return valIsEqual;
+    }
+}
+
+bool PolyType::operator<(const PolyType& other) const {
+    // if type doesn't match, not equal
+    if (this->m_dataType != other.m_dataType) {
+        return false;
+    } else {
+        // check based on type
+        bool result = false;
+        switch (this->m_dataType) {
+            case TYPE_U8:
+                result = (this->m_val.u8Val < other.m_val.u8Val);
+                break;
+            case TYPE_I8:
+                result = (this->m_val.i8Val < other.m_val.i8Val);
+                break;
+#if FW_HAS_16_BIT
+            case TYPE_U16:
+                result = (this->m_val.u16Val < other.m_val.u16Val);
+                break;
+            case TYPE_I16:
+                result = (this->m_val.i16Val < other.m_val.i16Val);
+                break;
+#endif
+#if FW_HAS_32_BIT
+            case TYPE_U32:
+                result = (this->m_val.u32Val < other.m_val.u32Val);
+                break;
+            case TYPE_I32:
+                result = (this->m_val.i32Val < other.m_val.i32Val);
+                break;
+#endif
+#if FW_HAS_64_BIT
+            case TYPE_U64:
+                result = (this->m_val.u64Val < other.m_val.u64Val);
+                break;
+            case TYPE_I64:
+                result = (this->m_val.i64Val < other.m_val.i64Val);
+                break;
+#endif
+            case TYPE_F64:
+                result = (this->m_val.f64Val < other.m_val.f64Val);
+                break;
+            case TYPE_F32:
+                result = (this->m_val.f32Val < other.m_val.f32Val);
+                break;
+            case TYPE_PTR:
+                result = (this->m_val.ptrVal < other.m_val.ptrVal);
+                break;
+            case TYPE_BOOL:  // fall through, shouldn't test bool
+            case TYPE_NOTYPE:
+                result = false;
+                break;
+            default:
+                FW_ASSERT(0, static_cast<FwAssertArgType>(this->m_dataType));
+                return false;  // for compiler
+        }
+        return result;
+    }
+}
+
+bool PolyType::operator>(const PolyType& other) const {
+    return other.operator<(*this);
+}
+
+bool PolyType::operator>=(const PolyType& other) const {
+    return (this->operator>(other)) || (this->operator==(other));
+}
+
+bool PolyType::operator<=(const PolyType& other) const {
+    return (this->operator<(other)) || (this->operator==(other));
+}
+
+SerializeStatus PolyType::serializeTo(SerializeBufferBase& buffer) const {
+    // store type
+    SerializeStatus stat = buffer.serializeFrom(static_cast<FwEnumStoreType>(this->m_dataType));
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // switch on type
+    switch (this->m_dataType) {
+        case TYPE_U8:
+            stat = buffer.serializeFrom(this->m_val.u8Val);
+            break;
+        case TYPE_I8:
+            stat = buffer.serializeFrom(this->m_val.i8Val);
+            break;
+#if FW_HAS_16_BIT
+        case TYPE_U16:
+            stat = buffer.serializeFrom(this->m_val.u16Val);
+            break;
+        case TYPE_I16:
+            stat = buffer.serializeFrom(this->m_val.i16Val);
+            break;
+#endif
+#if FW_HAS_32_BIT
+        case TYPE_U32:
+            stat = buffer.serializeFrom(this->m_val.u32Val);
+            break;
+        case TYPE_I32:
+            stat = buffer.serializeFrom(this->m_val.i32Val);
+            break;
+#endif
+#if FW_HAS_64_BIT
+        case TYPE_U64:
+            stat = buffer.serializeFrom(this->m_val.u64Val);
+            break;
+        case TYPE_I64:
+            stat = buffer.serializeFrom(this->m_val.i64Val);
+            break;
+#endif
+        case TYPE_F64:
+            stat = buffer.serializeFrom(this->m_val.f64Val);
+            break;
+        case TYPE_F32:
+            stat = buffer.serializeFrom(this->m_val.f32Val);
+            break;
+        case TYPE_BOOL:
+            stat = buffer.serializeFrom(this->m_val.boolVal);
+            break;
+        case TYPE_PTR:
+            stat = buffer.serializeFrom(this->m_val.ptrVal);
+            break;
+        default:
+            stat = FW_SERIALIZE_FORMAT_ERROR;
+            break;
+    }
+
+    return stat;
+}
+
+SerializeStatus PolyType::deserializeFrom(SerializeBufferBase& buffer) {
+    // get type
+    FwEnumStoreType des;
+    SerializeStatus stat = buffer.deserializeTo(des);
+
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    } else {
+        this->m_dataType = static_cast<Type>(des);
+        // switch on type
+        switch (this->m_dataType) {
+            case TYPE_U8:
+                return buffer.deserializeTo(this->m_val.u8Val);
+            case TYPE_I8:
+                return buffer.deserializeTo(this->m_val.i8Val);
+#if FW_HAS_16_BIT
+            case TYPE_U16:
+                return buffer.deserializeTo(this->m_val.u16Val);
+            case TYPE_I16:
+                return buffer.deserializeTo(this->m_val.i16Val);
+#endif
+#if FW_HAS_32_BIT
+            case TYPE_U32:
+                return buffer.deserializeTo(this->m_val.u32Val);
+            case TYPE_I32:
+                return buffer.deserializeTo(this->m_val.i32Val);
+#endif
+#if FW_HAS_64_BIT
+            case TYPE_U64:
+                return buffer.deserializeTo(this->m_val.u64Val);
+            case TYPE_I64:
+                return buffer.deserializeTo(this->m_val.i64Val);
+#endif
+            case TYPE_F64:
+                return buffer.deserializeTo(this->m_val.f64Val);
+            case TYPE_F32:
+                return buffer.deserializeTo(this->m_val.f32Val);
+            case TYPE_BOOL:
+                return buffer.deserializeTo(this->m_val.boolVal);
+            case TYPE_PTR:
+                return buffer.deserializeTo(this->m_val.ptrVal);
+            default:
+                return FW_DESERIALIZE_FORMAT_ERROR;
+        }
+    }
+}
+
+#if FW_SERIALIZABLE_TO_STRING || BUILD_UT
+
+void PolyType::toString(StringBase& dest) const {
+    this->toString(dest, false);
+}
+
+void PolyType::toString(StringBase& dest, bool append) const {
+    char format[21];  // U64 max fits into 20 decimal digits + 1 null terminator
+    Fw::ExternalString external(format, sizeof format);
+    switch (this->m_dataType) {
+        case TYPE_U8:
+            (void)external.format("%" PRIu8 " ", this->m_val.u8Val);
+            break;
+        case TYPE_I8:
+            (void)external.format("%" PRId8 " ", this->m_val.i8Val);
+            break;
+#if FW_HAS_16_BIT
+        case TYPE_U16:
+            (void)external.format("%" PRIu16 " ", this->m_val.u16Val);
+            break;
+        case TYPE_I16:
+            (void)external.format("%" PRId16 " ", this->m_val.i16Val);
+            break;
+#endif
+#if FW_HAS_32_BIT
+        case TYPE_U32:
+            (void)external.format("%" PRIu32 " ", this->m_val.u32Val);
+            break;
+        case TYPE_I32:
+            (void)external.format("%" PRId32 " ", this->m_val.i32Val);
+            break;
+#endif
+#if FW_HAS_64_BIT
+        case TYPE_U64:
+            (void)external.format("%" PRIu64 " ", this->m_val.u64Val);
+            break;
+        case TYPE_I64:
+            (void)external.format("%" PRId64 " ", this->m_val.i64Val);
+            break;
+#endif
+        case TYPE_F64:
+            (void)external.format("%g ", this->m_val.f64Val);
+            break;
+        case TYPE_F32:
+            (void)external.format("%g ", static_cast<F64>(this->m_val.f32Val));
+            break;
+        case TYPE_BOOL:
+            (void)external.format("%s ", this->m_val.boolVal ? "T" : "F");
+            break;
+        case TYPE_PTR:
+            (void)external.format("%p ", this->m_val.ptrVal);
+            break;
+        default:
+            (void)external.format("%s ", "NT");
+            break;
+    }
+
+    if (append) {
+        dest += external;
+    } else {
+        dest = external;
+    }
+}
+
+#endif
+}  // namespace Fw
+```
+
+### `PolyType.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/PolyType.hpp`
+
+
+```cpp
+#ifndef FW_POLY_TYPE_HPP
+#define FW_POLY_TYPE_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerIds.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Fw/Types/StringType.hpp>
+
+namespace Fw {
+
+class PolyType : public Serializable {
+  public:
+    PolyType(U8 val);             //!< U8 constructor
+    operator U8();                //!< U8 cast operator
+    void get(U8& val);            //!< U8 accessor
+    bool isU8();                  //!< U8 checker
+    PolyType& operator=(U8 val);  //!< U8 operator=
+
+    PolyType(I8 val);             //!< I8 constructor
+    operator I8();                //!< I8 cast operator
+    void get(I8& val);            //!< I8 accessor
+    bool isI8();                  //!< I8 checker
+    PolyType& operator=(I8 val);  //!< I8 operator=
+
+#if FW_HAS_16_BIT
+    PolyType(U16 val);             //!< U16 constructor
+    operator U16();                //!< U16 cast operator
+    void get(U16& val);            //!< U16 accessor
+    bool isU16();                  //!< U16 checker
+    PolyType& operator=(U16 val);  //!< I8 operator=
+
+    PolyType(I16 val);             //!< I16 constructor
+    operator I16();                //!< I16 cast operator
+    void get(I16& val);            //!< I16 accessor
+    bool isI16();                  //!< I16 checker
+    PolyType& operator=(I16 val);  //!< I16 operator=
+#endif
+#if FW_HAS_32_BIT
+    PolyType(U32 val);             //!< U32 constructor
+    operator U32();                //!< U32 cast operator
+    void get(U32& val);            //!< U32 accessor
+    bool isU32();                  //!< U32 checker
+    PolyType& operator=(U32 val);  //!< U32 operator=
+
+    PolyType(I32 val);             //!< I32 constructor
+    operator I32();                //!< I32 cast operator
+    void get(I32& val);            //!< I32 accessor
+    bool isI32();                  //!< I32 checker
+    PolyType& operator=(I32 val);  //!< I32 operator=
+#endif
+#if FW_HAS_64_BIT
+    PolyType(U64 val);             //!< U64 constructor
+    operator U64();                //!< U64 cast operator
+    void get(U64& val);            //!< U64 accessor
+    bool isU64();                  //!< U64 checker
+    PolyType& operator=(U64 val);  //!< U64 operator=
+
+    PolyType(I64 val);             //!< I64 constructor
+    operator I64();                //!< I64 cast operator
+    void get(I64& val);            //!< I64 accessor
+    bool isI64();                  //!< I64 checker
+    PolyType& operator=(I64 val);  //!< I64 operator=
+#endif
+
+    PolyType(F64 val);             //!< F64 constructor
+    operator F64();                //!< F64 cast operator
+    void get(F64& val);            //!< F64 accessor
+    bool isF64();                  //!< F64 checker
+    PolyType& operator=(F64 val);  //!< F64 operator=
+
+    PolyType(F32 val);             //!< F32 constructor
+    operator F32();                //!< F32 cast operator
+    void get(F32& val);            //!< F32 accessor
+    bool isF32();                  //!< F32 checker
+    PolyType& operator=(F32 val);  //!< F32 operator=
+
+    PolyType(bool val);             //!< bool constructor
+    operator bool();                //!< bool cast operator
+    void get(bool& val);            //!< bool accessor
+    bool isBool();                  //!< bool checker
+    PolyType& operator=(bool val);  //!< bool operator=
+
+    PolyType(void* val);             //!< void* constructor.
+    operator void*();                //!< void* cast operator
+    void get(void*& val);            //!< void* accessor
+    bool isPtr();                    //!< void* checker
+    PolyType& operator=(void* val);  //!< void* operator=
+
+    PolyType();                          //!< default constructor
+    PolyType(const PolyType& original);  //!< copy constructor
+    virtual ~PolyType();                 //!< destructor
+
+#if FW_SERIALIZABLE_TO_STRING || BUILD_UT
+    void toString(StringBase& dest, bool append) const;  //!< get string representation
+    void toString(StringBase& dest) const override;      //!< get string representation
+#endif
+
+    PolyType& operator=(const PolyType& src);      //!< PolyType operator=
+    bool operator<(const PolyType& other) const;   //!< PolyType operator<
+    bool operator>(const PolyType& other) const;   //!< PolyType operator>
+    bool operator>=(const PolyType& other) const;  //!< PolyType operator>=
+    bool operator<=(const PolyType& other) const;  //!< PolyType operator<=
+    bool operator==(const PolyType& other) const;  //!< PolyType operator==
+    bool operator!=(const PolyType& other) const;  //!< PolyType operator!=
+
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const override;  //!< Serialize function
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer) override;    //!< Deserialize function
+
+  private:
+    typedef enum {
+        TYPE_NOTYPE,  // !< No type stored yet
+        TYPE_U8,      // !< U8 type stored
+        TYPE_I8,      // !< I8 type stored
+#if FW_HAS_16_BIT
+        TYPE_U16,  // !< U16 type stored
+        TYPE_I16,  // !< I16 type stored
+#endif
+#if FW_HAS_32_BIT
+        TYPE_U32,  // !< U32 type stored
+        TYPE_I32,  // !< I32 type stored
+#endif
+#if FW_HAS_64_BIT
+        TYPE_U64,  // !< U64 type stored
+        TYPE_I64,  // !< I64 type stored
+#endif
+        TYPE_F32,   // !< F32 type stored
+        TYPE_F64,   // !< F64 type stored
+        TYPE_BOOL,  // !< bool type stored
+        TYPE_PTR    // !< pointer type stored
+    } Type;
+
+    Type m_dataType;  //!< member that indicates type being stored
+
+    union PolyVal {
+        U8 u8Val;  //!< U8 data storage
+        I8 i8Val;  //!< I8 data storage
+#if FW_HAS_16_BIT
+        U16 u16Val;  //!< U16 data storage
+        I16 i16Val;  //!< I16 data storage
+#endif
+#if FW_HAS_32_BIT
+        U32 u32Val;  //!< U32 data storage
+        I32 i32Val;  //!< I32 data storage
+#endif
+#if FW_HAS_64_BIT
+        U64 u64Val;  //!< U64 data storage
+        I64 i64Val;  //!< I64 data storage
+#endif
+        F64 f64Val;    //!< F64 data storage
+        F32 f32Val;    // !< F32 data storage
+        void* ptrVal;  // !< pointer data storage
+        bool boolVal;  // !< bool data storage
+    } m_val;           // !< stores data value
+
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_POLY,                         //!< typeid for PolyType
+        SERIALIZED_SIZE = sizeof(FwEnumStoreType) + sizeof(PolyVal)  //!< stored serialized size
+    };
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `SerialBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/SerialBuffer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SerialBuffer.cpp
+// \author bocchino
+// \brief  cpp file for SerialBuffer type
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Fw {
+
+SerialBuffer ::SerialBuffer(U8* const data, const FwSizeType capacity) : m_data(data), m_capacity(capacity) {}
+
+FwSizeType SerialBuffer ::getBuffCapacity() const {
+    return m_capacity;
+}
+
+U8* SerialBuffer ::getBuffAddr() {
+    return m_data;
+}
+
+const U8* SerialBuffer ::getBuffAddr() const {
+    return m_data;
+}
+
+void SerialBuffer ::fill() {
+    const SerializeStatus status = this->setBuffLen(this->m_capacity);
+    FW_ASSERT(status == FW_SERIALIZE_OK);
+}
+
+SerializeStatus SerialBuffer ::pushBytes(const U8* const addr, const FwSizeType n) {
+    return this->serialize(const_cast<U8*>(addr), n, Fw::Serialization::OMIT_LENGTH);
+}
+
+SerializeStatus SerialBuffer ::popBytes(U8* const addr, FwSizeType n) {
+    return this->deserialize(addr, n, Fw::Serialization::OMIT_LENGTH);
+}
+
+}  // namespace Fw
+```
+
+### `SerialBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/SerialBuffer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SerialBuffer.hpp
+// \author bocchino
+// \brief  hpp file for SerialBuffer type
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_SerialBuffer_HPP
+#define Fw_SerialBuffer_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "Fw/Types/Serializable.hpp"
+
+namespace Fw {
+
+//! \class SerialBuffer
+//! \brief A variable-length serializable buffer
+//!
+class SerialBuffer final : public SerializeBufferBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Construct a SerialBuffer
+    //!
+    SerialBuffer(U8* const data,            //!< Pointer to the data
+                 const FwSizeType capacity  //!< The buffer capacity
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Pure virtual methods from SerializeBufferBase
+    // ----------------------------------------------------------------------
+
+    FwSizeType getBuffCapacity() const;
+
+    U8* getBuffAddr();
+
+    const U8* getBuffAddr() const;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public instance methods
+    // ----------------------------------------------------------------------
+
+    //! Fill the buffer to capacity with preexisting data
+    void fill();
+
+    //! Push n bytes onto the buffer
+    SerializeStatus pushBytes(const U8* const addr,  //!< Address of bytes to push
+                              const FwSizeType n     //!< Number of bytes
+    );
+
+    //! Pop n bytes off the buffer
+    SerializeStatus popBytes(U8* const addr,  //!< Address of bytes to pop
+                             FwSizeType n     //!< Number of bytes to pop
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Data
+    // ----------------------------------------------------------------------
+
+    //! The data
+    U8* const m_data;
+
+    //! The capacity
+    const FwSizeType m_capacity;
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `Serializable.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Serializable.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Fw/Types/StringType.hpp>
+#include <cstdio>
+#include <cstring>  // memcpy
+#ifdef BUILD_UT
+#include <Fw/Types/String.hpp>
+#include <iomanip>
+#endif
+
+// Some macros/functions to optimize for architectures
+
+namespace Fw {
+
+Serializable::Serializable() {}
+
+Serializable::~Serializable() {}
+
+// ----------------------------------------------------------------------
+#if FW_SERIALIZABLE_TO_STRING || FW_ENABLE_TEXT_LOGGING || BUILD_UT
+
+void Serializable::toString(StringBase& text) const {
+    text = "NOSPEC";  // set to not specified.
+}
+
+#endif
+
+#ifdef BUILD_UT
+std::ostream& operator<<(std::ostream& os, const Serializable& val) {
+    Fw::String out;
+    val.toString(out);
+
+    os << out;
+
+    return os;
+}
+#endif
+
+SerializeBufferBase::SerializeBufferBase() : m_serLoc(0), m_deserLoc(0) {}
+
+SerializeBufferBase::~SerializeBufferBase() {}
+
+void SerializeBufferBase::copyFrom(const SerializeBufferBase& src) {
+    this->m_serLoc = src.m_serLoc;
+    this->m_deserLoc = src.m_deserLoc;
+    FW_ASSERT(src.getBuffAddr());
+    FW_ASSERT(this->getBuffAddr());
+    // destination has to be same or bigger
+    FW_ASSERT(src.getBuffLength() <= this->getBuffCapacity(), static_cast<FwAssertArgType>(src.getBuffLength()),
+              static_cast<FwAssertArgType>(this->getBuffLength()));
+    (void)memcpy(this->getBuffAddr(), src.getBuffAddr(), static_cast<size_t>(this->m_serLoc));
+}
+
+// Copy constructor doesn't make sense in this virtual class as there is nothing to copy. Derived classes should
+// call the empty constructor and then call their own copy function
+SerializeBufferBase& SerializeBufferBase::operator=(const SerializeBufferBase& src) {  // lgtm[cpp/rule-of-two]
+    this->copyFrom(src);
+    return *this;
+}
+
+// serialization routines
+
+SerializeStatus SerializeBufferBase::serializeFrom(U8 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    this->getBuffAddr()[this->m_serLoc] = val;
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(I8 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+
+#if FW_HAS_16_BIT == 1
+SerializeStatus SerializeBufferBase::serializeFrom(U16 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val >> 8);
+    this->getBuffAddr()[this->m_serLoc + 1] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(I16 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val >> 8);
+    this->getBuffAddr()[this->m_serLoc + 1] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+#endif
+#if FW_HAS_32_BIT == 1
+SerializeStatus SerializeBufferBase::serializeFrom(U32 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val >> 24);
+    this->getBuffAddr()[this->m_serLoc + 1] = static_cast<U8>(val >> 16);
+    this->getBuffAddr()[this->m_serLoc + 2] = static_cast<U8>(val >> 8);
+    this->getBuffAddr()[this->m_serLoc + 3] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(I32 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val >> 24);
+    this->getBuffAddr()[this->m_serLoc + 1] = static_cast<U8>(val >> 16);
+    this->getBuffAddr()[this->m_serLoc + 2] = static_cast<U8>(val >> 8);
+    this->getBuffAddr()[this->m_serLoc + 3] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+#endif
+
+#if FW_HAS_64_BIT == 1
+SerializeStatus SerializeBufferBase::serializeFrom(U64 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val >> 56);
+    this->getBuffAddr()[this->m_serLoc + 1] = static_cast<U8>(val >> 48);
+    this->getBuffAddr()[this->m_serLoc + 2] = static_cast<U8>(val >> 40);
+    this->getBuffAddr()[this->m_serLoc + 3] = static_cast<U8>(val >> 32);
+    this->getBuffAddr()[this->m_serLoc + 4] = static_cast<U8>(val >> 24);
+    this->getBuffAddr()[this->m_serLoc + 5] = static_cast<U8>(val >> 16);
+    this->getBuffAddr()[this->m_serLoc + 6] = static_cast<U8>(val >> 8);
+    this->getBuffAddr()[this->m_serLoc + 7] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(I64 val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(val)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    this->getBuffAddr()[this->m_serLoc + 0] = static_cast<U8>(val >> 56);
+    this->getBuffAddr()[this->m_serLoc + 1] = static_cast<U8>(val >> 48);
+    this->getBuffAddr()[this->m_serLoc + 2] = static_cast<U8>(val >> 40);
+    this->getBuffAddr()[this->m_serLoc + 3] = static_cast<U8>(val >> 32);
+    this->getBuffAddr()[this->m_serLoc + 4] = static_cast<U8>(val >> 24);
+    this->getBuffAddr()[this->m_serLoc + 5] = static_cast<U8>(val >> 16);
+    this->getBuffAddr()[this->m_serLoc + 6] = static_cast<U8>(val >> 8);
+    this->getBuffAddr()[this->m_serLoc + 7] = static_cast<U8>(val);
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+#endif
+
+SerializeStatus SerializeBufferBase::serializeFrom(F64 val) {
+    // floating point values need to be byte-swapped as well, so copy to U64 and use that routine
+    U64 u64Val;
+    (void)memcpy(&u64Val, &val, sizeof(val));
+    return this->serializeFrom(u64Val);
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(F32 val) {
+    // floating point values need to be byte-swapped as well, so copy to U32 and use that routine
+    U32 u32Val;
+    (void)memcpy(&u32Val, &val, sizeof(val));
+    return this->serializeFrom(u32Val);
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(bool val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(U8)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+
+    FW_ASSERT(this->getBuffAddr());
+    if (val) {
+        this->getBuffAddr()[this->m_serLoc + 0] = FW_SERIALIZE_TRUE_VALUE;
+    } else {
+        this->getBuffAddr()[this->m_serLoc + 0] = FW_SERIALIZE_FALSE_VALUE;
+    }
+
+    this->m_serLoc += static_cast<Serializable::SizeType>(sizeof(U8));
+    this->m_deserLoc = 0;
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(const void* val) {
+    if (this->m_serLoc + static_cast<Serializable::SizeType>(sizeof(void*)) - 1 >= this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+
+    return this->serializeFrom(reinterpret_cast<PlatformPointerCastType>(val));
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(const U8* buff, Serializable::SizeType length) {
+    return this->serializeFrom(buff, static_cast<FwSizeType>(length), Serialization::INCLUDE_LENGTH);
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(const U8* buff, FwSizeType length, Fw::Serialization::t mode) {
+    // First serialize length
+    SerializeStatus stat;
+    if (mode == Serialization::INCLUDE_LENGTH) {
+        stat = this->serializeFrom(static_cast<FwSizeStoreType>(length));
+        if (stat != FW_SERIALIZE_OK) {
+            return stat;
+        }
+    }
+
+    // make sure we have enough space
+    if (this->m_serLoc + length > this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+
+    // copy buffer to our buffer
+    (void)memcpy(&this->getBuffAddr()[this->m_serLoc], buff, static_cast<size_t>(length));
+    this->m_serLoc += static_cast<Serializable::SizeType>(length);
+    this->m_deserLoc = 0;
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(const Serializable& val) {
+    return val.serializeTo(*this);
+}
+
+SerializeStatus SerializeBufferBase::serializeFrom(const SerializeBufferBase& val) {
+    Serializable::SizeType size = val.getBuffLength();
+    if (this->m_serLoc + size + static_cast<Serializable::SizeType>(sizeof(FwSizeStoreType)) >
+        this->getBuffCapacity()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+
+    // First, serialize size
+    SerializeStatus stat = this->serializeFrom(static_cast<FwSizeStoreType>(size));
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    FW_ASSERT(this->getBuffAddr());
+    FW_ASSERT(val.getBuffAddr());
+    // serialize buffer
+    (void)memcpy(&this->getBuffAddr()[this->m_serLoc], val.getBuffAddr(), static_cast<size_t>(size));
+    this->m_serLoc += size;
+    this->m_deserLoc = 0;
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::serializeSize(const FwSizeType size) {
+    SerializeStatus status = FW_SERIALIZE_OK;
+    if ((size < std::numeric_limits<FwSizeStoreType>::min()) || (size > std::numeric_limits<FwSizeStoreType>::max())) {
+        status = FW_SERIALIZE_FORMAT_ERROR;
+    }
+    if (status == FW_SERIALIZE_OK) {
+        status = this->serializeFrom(static_cast<FwSizeStoreType>(size));
+    }
+    return status;
+}
+
+// deserialization routines
+
+SerializeStatus SerializeBufferBase::deserializeTo(U8& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    val = this->getBuffAddr()[this->m_deserLoc + 0];
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(I8& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    val = static_cast<I8>(this->getBuffAddr()[this->m_deserLoc + 0]);
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+
+#if FW_HAS_16_BIT == 1
+SerializeStatus SerializeBufferBase::deserializeTo(U16& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    val = static_cast<U16>(((this->getBuffAddr()[this->m_deserLoc + 1]) << 0) |
+                           ((this->getBuffAddr()[this->m_deserLoc + 0]) << 8));
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(I16& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    val = static_cast<I16>(((this->getBuffAddr()[this->m_deserLoc + 1]) << 0) |
+                           ((this->getBuffAddr()[this->m_deserLoc + 0]) << 8));
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+#endif
+#if FW_HAS_32_BIT == 1
+SerializeStatus SerializeBufferBase::deserializeTo(U32& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    val = (static_cast<U32>(this->getBuffAddr()[this->m_deserLoc + 3]) << 0) |
+          (static_cast<U32>(this->getBuffAddr()[this->m_deserLoc + 2]) << 8) |
+          (static_cast<U32>(this->getBuffAddr()[this->m_deserLoc + 1]) << 16) |
+          (static_cast<U32>(this->getBuffAddr()[this->m_deserLoc + 0]) << 24);
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(I32& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    val = (static_cast<I32>(this->getBuffAddr()[this->m_deserLoc + 3]) << 0) |
+          (static_cast<I32>(this->getBuffAddr()[this->m_deserLoc + 2]) << 8) |
+          (static_cast<I32>(this->getBuffAddr()[this->m_deserLoc + 1]) << 16) |
+          (static_cast<I32>(this->getBuffAddr()[this->m_deserLoc + 0]) << 24);
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+#endif
+
+#if FW_HAS_64_BIT == 1
+
+SerializeStatus SerializeBufferBase::deserializeTo(U64& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    val = (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 7]) << 0) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 6]) << 8) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 5]) << 16) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 4]) << 24) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 3]) << 32) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 2]) << 40) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 1]) << 48) |
+          (static_cast<U64>(this->getBuffAddr()[this->m_deserLoc + 0]) << 56);
+
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(I64& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(val))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    // MSB first
+    val = (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 7]) << 0) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 6]) << 8) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 5]) << 16) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 4]) << 24) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 3]) << 32) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 2]) << 40) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 1]) << 48) |
+          (static_cast<I64>(this->getBuffAddr()[this->m_deserLoc + 0]) << 56);
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(val));
+    return FW_SERIALIZE_OK;
+}
+#endif
+
+SerializeStatus SerializeBufferBase::deserializeTo(F64& val) {
+    // deserialize as 64-bit int to handle endianness
+    U64 tempVal;
+    SerializeStatus stat = this->deserializeTo(tempVal);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+    // copy to argument
+    (void)memcpy(&val, &tempVal, sizeof(val));
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(bool& val) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < static_cast<Serializable::SizeType>(sizeof(U8))) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // read from current location
+    FW_ASSERT(this->getBuffAddr());
+    if (FW_SERIALIZE_TRUE_VALUE == this->getBuffAddr()[this->m_deserLoc + 0]) {
+        val = true;
+    } else if (FW_SERIALIZE_FALSE_VALUE == this->getBuffAddr()[this->m_deserLoc + 0]) {
+        val = false;
+    } else {
+        return FW_DESERIALIZE_FORMAT_ERROR;
+    }
+
+    this->m_deserLoc += static_cast<Serializable::SizeType>(sizeof(U8));
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(void*& val) {
+    // Deserialize as pointer cast, then convert to void*
+    PlatformPointerCastType pointerCastVal = 0;
+    const SerializeStatus stat = this->deserializeTo(pointerCastVal);
+    if (stat == FW_SERIALIZE_OK) {
+        val = reinterpret_cast<void*>(pointerCastVal);
+    }
+    return stat;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(F32& val) {
+    // deserialize as 64-bit int to handle endianness
+    U32 tempVal;
+    SerializeStatus stat = this->deserializeTo(tempVal);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+    (void)memcpy(&val, &tempVal, sizeof(val));
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(U8* buff, Serializable::SizeType& length) {
+    FwSizeType length_in_out = static_cast<FwSizeType>(length);
+    SerializeStatus status = this->deserializeTo(buff, length_in_out, Serialization::INCLUDE_LENGTH);
+    length = static_cast<Serializable::SizeType>(length_in_out);
+    return status;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(U8* buff, Serializable::SizeType& length, Serialization::t mode) {
+    FW_ASSERT(this->getBuffAddr());
+
+    if (mode == Serialization::INCLUDE_LENGTH) {
+        FwSizeStoreType storedLength;
+
+        SerializeStatus stat = this->deserializeTo(storedLength);
+
+        if (stat != FW_SERIALIZE_OK) {
+            return stat;
+        }
+
+        // make sure it fits
+        if ((storedLength > this->getBuffLeft()) or (storedLength > length)) {
+            return FW_DESERIALIZE_SIZE_MISMATCH;
+        }
+
+        (void)memcpy(buff, &this->getBuffAddr()[this->m_deserLoc], static_cast<size_t>(storedLength));
+
+        length = static_cast<FwSizeType>(storedLength);
+
+    } else {
+        // make sure enough is left
+        if (length > this->getBuffLeft()) {
+            return FW_DESERIALIZE_SIZE_MISMATCH;
+        }
+
+        (void)memcpy(buff, &this->getBuffAddr()[this->m_deserLoc], static_cast<size_t>(length));
+    }
+
+    this->m_deserLoc += static_cast<Serializable::SizeType>(length);
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(Serializable& val) {
+    return val.deserializeFrom(*this);
+}
+
+SerializeStatus SerializeBufferBase::deserializeTo(SerializeBufferBase& val) {
+    FW_ASSERT(val.getBuffAddr());
+    SerializeStatus stat = FW_SERIALIZE_OK;
+
+    FwSizeStoreType storedLength;
+
+    stat = this->deserializeTo(storedLength);
+
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // make sure destination has enough room
+
+    if ((storedLength > val.getBuffCapacity()) or (storedLength > this->getBuffLeft())) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+
+    FW_ASSERT(this->getBuffAddr());
+    (void)memcpy(val.getBuffAddr(), &this->getBuffAddr()[this->m_deserLoc], static_cast<size_t>(storedLength));
+
+    stat = val.setBuffLen(storedLength);
+
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    this->m_deserLoc += storedLength;
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::deserializeSize(FwSizeType& size) {
+    FwSizeStoreType storedSize = 0;
+    Fw::SerializeStatus status = this->deserializeTo(storedSize);
+    if (status == FW_SERIALIZE_OK) {
+        size = static_cast<FwSizeType>(storedSize);
+    }
+    return status;
+}
+
+void SerializeBufferBase::resetSer() {
+    this->m_deserLoc = 0;
+    this->m_serLoc = 0;
+}
+
+void SerializeBufferBase::resetDeser() {
+    this->m_deserLoc = 0;
+}
+
+SerializeStatus SerializeBufferBase::serializeSkip(FwSizeType numBytesToSkip) {
+    Fw::SerializeStatus status = FW_SERIALIZE_OK;
+    // compute new deser loc
+    const FwSizeType newSerLoc = this->m_serLoc + numBytesToSkip;
+    // check for room
+    if (newSerLoc <= this->getBuffCapacity()) {
+        // update deser loc
+        this->m_serLoc = static_cast<Serializable::SizeType>(newSerLoc);
+    } else {
+        status = FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    return status;
+}
+
+SerializeStatus SerializeBufferBase::deserializeSkip(FwSizeType numBytesToSkip) {
+    // check for room
+    if (this->getBuffLength() == this->m_deserLoc) {
+        return FW_DESERIALIZE_BUFFER_EMPTY;
+    } else if (this->getBuffLength() - this->m_deserLoc < numBytesToSkip) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    // update location in buffer to skip the value
+    this->m_deserLoc += static_cast<Serializable::SizeType>(numBytesToSkip);
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus SerializeBufferBase::moveSerToOffset(FwSizeType offset) {
+    // Reset serialization
+    this->resetSer();
+    // Advance to offset
+    return this->serializeSkip(offset);
+}
+SerializeStatus SerializeBufferBase::moveDeserToOffset(FwSizeType offset) {
+    // Reset deserialization
+    this->resetDeser();
+    // Advance to offset
+    return this->deserializeSkip(offset);
+}
+
+Serializable::SizeType SerializeBufferBase::getBuffLength() const {
+    return this->m_serLoc;
+}
+
+SerializeStatus SerializeBufferBase::setBuff(const U8* src, Serializable::SizeType length) {
+    if (this->getBuffCapacity() < length) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    } else {
+        FW_ASSERT(src);
+        FW_ASSERT(this->getBuffAddr());
+        (void)memcpy(this->getBuffAddr(), src, static_cast<size_t>(length));
+        this->m_serLoc = length;
+        this->m_deserLoc = 0;
+        return FW_SERIALIZE_OK;
+    }
+}
+
+SerializeStatus SerializeBufferBase::setBuffLen(Serializable::SizeType length) {
+    if (this->getBuffCapacity() < length) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    } else {
+        this->m_serLoc = length;
+        this->m_deserLoc = 0;
+        return FW_SERIALIZE_OK;
+    }
+}
+
+Serializable::SizeType SerializeBufferBase::getBuffLeft() const {
+    FW_ASSERT(this->m_serLoc >= this->m_deserLoc, static_cast<FwAssertArgType>(this->m_serLoc),
+              static_cast<FwAssertArgType>(this->m_deserLoc));
+    return this->m_serLoc - this->m_deserLoc;
+}
+
+SerializeStatus SerializeBufferBase::copyRaw(SerializeBufferBase& dest, Serializable::SizeType size) {
+    // make sure there is sufficient size in destination
+    if (dest.getBuffCapacity() < size) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    // otherwise, set destination buffer to data from deserialization pointer plus size
+    SerializeStatus stat = dest.setBuff(&this->getBuffAddr()[this->m_deserLoc], size);
+    if (stat == FW_SERIALIZE_OK) {
+        this->m_deserLoc += size;
+    }
+    return stat;
+}
+
+SerializeStatus SerializeBufferBase::copyRawOffset(SerializeBufferBase& dest, Serializable::SizeType size) {
+    // make sure there is sufficient size in destination
+    if (dest.getBuffCapacity() < size + dest.getBuffLength()) {
+        return FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    // make sure there is sufficient buffer in source
+    if (this->getBuffLeft() < size) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+
+    // otherwise, serialize bytes to destination without writing length
+    SerializeStatus stat =
+        dest.serializeFrom(&this->getBuffAddr()[this->m_deserLoc], size, Fw::Serialization::OMIT_LENGTH);
+    if (stat == FW_SERIALIZE_OK) {
+        this->m_deserLoc += size;
+    }
+    return stat;
+}
+
+// return address of buffer not yet deserialized. This is used
+// to copy the remainder of a buffer.
+const U8* SerializeBufferBase::getBuffAddrLeft() const {
+    return &this->getBuffAddr()[this->m_deserLoc];
+}
+
+//!< gets address of end of serialization. Used to manually place data at the end
+U8* SerializeBufferBase::getBuffAddrSer() {
+    return &this->getBuffAddr()[this->m_serLoc];
+}
+
+#ifdef BUILD_UT
+bool SerializeBufferBase::operator==(const SerializeBufferBase& other) const {
+    if (this->getBuffLength() != other.getBuffLength()) {
+        return false;
+    }
+
+    const U8* us = this->getBuffAddr();
+    const U8* them = other.getBuffAddr();
+
+    FW_ASSERT(us);
+    FW_ASSERT(them);
+
+    for (Serializable::SizeType byte = 0; byte < this->getBuffLength(); byte++) {
+        if (us[byte] != them[byte]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+std::ostream& operator<<(std::ostream& os, const SerializeBufferBase& buff) {
+    const U8* us = buff.getBuffAddr();
+
+    FW_ASSERT(us);
+
+    for (Serializable::SizeType byte = 0; byte < buff.getBuffLength(); byte++) {
+        os << "[" << std::setw(2) << std::hex << std::setfill('0') << us[byte] << "]" << std::dec;
+    }
+
+    return os;
+}
+#endif
+
+ExternalSerializeBuffer::ExternalSerializeBuffer(U8* buffPtr, Serializable::SizeType size) {
+    this->setExtBuffer(buffPtr, size);
+}
+
+ExternalSerializeBuffer::ExternalSerializeBuffer() {
+    this->clear();
+}
+
+void ExternalSerializeBuffer::setExtBuffer(U8* buffPtr, Serializable::SizeType size) {
+    FW_ASSERT(buffPtr != nullptr);
+    this->clear();
+    this->m_buff = buffPtr;
+    this->m_buffSize = size;
+}
+
+void ExternalSerializeBuffer::clear() {
+    this->resetSer();
+    this->resetDeser();
+    this->m_buff = nullptr;
+    this->m_buffSize = 0;
+}
+
+Serializable::SizeType ExternalSerializeBuffer::getBuffCapacity() const {
+    return this->m_buffSize;
+}
+
+U8* ExternalSerializeBuffer::getBuffAddr() {
+    return this->m_buff;
+}
+
+const U8* ExternalSerializeBuffer::getBuffAddr() const {
+    return this->m_buff;
+}
+
+// ----------------------------------------------------------------------
+// Deprecated method implementations for backward compatibility
+// ----------------------------------------------------------------------
+
+SerializeStatus SerializeBufferBase::serialize(U8 val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(I8 val) {
+    return this->serializeFrom(val);
+}
+#if FW_HAS_16_BIT == 1
+SerializeStatus SerializeBufferBase::serialize(U16 val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(I16 val) {
+    return this->serializeFrom(val);
+}
+#endif
+#if FW_HAS_32_BIT == 1
+SerializeStatus SerializeBufferBase::serialize(U32 val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(I32 val) {
+    return this->serializeFrom(val);
+}
+#endif
+#if FW_HAS_64_BIT == 1
+SerializeStatus SerializeBufferBase::serialize(U64 val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(I64 val) {
+    return this->serializeFrom(val);
+}
+#endif
+SerializeStatus SerializeBufferBase::serialize(F32 val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(F64 val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(bool val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(const void* val) {
+    return this->serializeFrom(val);
+}
+
+// Deprecated method for backward compatibility
+SerializeStatus SerializeBufferBase::serialize(const U8* buff, FwSizeType length, bool noLength) {
+    const Serialization::t mode = noLength ? Serialization::OMIT_LENGTH : Serialization::INCLUDE_LENGTH;
+    return this->serializeFrom(buff, length, mode);
+}
+
+SerializeStatus SerializeBufferBase::serialize(const U8* buff, FwSizeType length) {
+    return this->serializeFrom(buff, length);
+}
+SerializeStatus SerializeBufferBase::serialize(const U8* buff, FwSizeType length, Serialization::t mode) {
+    return this->serializeFrom(buff, length, mode);
+}
+SerializeStatus SerializeBufferBase::serialize(const Serializable& val) {
+    return this->serializeFrom(val);
+}
+SerializeStatus SerializeBufferBase::serialize(const SerializeBufferBase& val) {
+    return this->serializeFrom(val);
+}
+
+SerializeStatus SerializeBufferBase::deserialize(U8& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(I8& val) {
+    return this->deserializeTo(val);
+}
+#if FW_HAS_16_BIT == 1
+SerializeStatus SerializeBufferBase::deserialize(U16& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(I16& val) {
+    return this->deserializeTo(val);
+}
+#endif
+#if FW_HAS_32_BIT == 1
+SerializeStatus SerializeBufferBase::deserialize(U32& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(I32& val) {
+    return this->deserializeTo(val);
+}
+#endif
+#if FW_HAS_64_BIT == 1
+SerializeStatus SerializeBufferBase::deserialize(U64& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(I64& val) {
+    return this->deserializeTo(val);
+}
+#endif
+SerializeStatus SerializeBufferBase::deserialize(F32& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(F64& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(bool& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(void*& val) {
+    return this->deserializeTo(val);
+}
+
+// Deprecated method for backward compatibility
+SerializeStatus SerializeBufferBase::deserialize(U8* buff, FwSizeType& length, bool noLength) {
+    const Serialization::t mode = noLength ? Serialization::OMIT_LENGTH : Serialization::INCLUDE_LENGTH;
+    return this->deserializeTo(buff, length, mode);
+}
+
+SerializeStatus SerializeBufferBase::deserialize(U8* buff, FwSizeType& length) {
+    return this->deserializeTo(buff, length, Serialization::INCLUDE_LENGTH);
+}
+
+SerializeStatus SerializeBufferBase::deserialize(U8* buff, FwSizeType& length, Serialization::t mode) {
+    return this->deserializeTo(buff, length, mode);
+}
+
+SerializeStatus SerializeBufferBase::deserialize(Serializable& val) {
+    return this->deserializeTo(val);
+}
+SerializeStatus SerializeBufferBase::deserialize(SerializeBufferBase& val) {
+    return this->deserializeTo(val);
+}
+
+}  // namespace Fw
+```
+
+### `Serializable.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Serializable.hpp`
+
+
+```cpp
+#ifndef SERIALIZABLE_HPP
+#define SERIALIZABLE_HPP
+
+#ifdef BUILD_UT
+#include <iostream>
+#endif
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "Fw/Deprecate.hpp"
+
+namespace Fw {
+
+class StringBase;  //!< forward declaration for string
+typedef enum {
+    FW_SERIALIZE_OK,               //!< Serialization/Deserialization operation was successful
+    FW_SERIALIZE_FORMAT_ERROR,     //!< Data was the wrong format (e.g. wrong packet type)
+    FW_SERIALIZE_NO_ROOM_LEFT,     //!< No room left in the buffer to serialize data
+    FW_DESERIALIZE_BUFFER_EMPTY,   //!< Deserialization buffer was empty when trying to read more data
+    FW_DESERIALIZE_FORMAT_ERROR,   //!< Deserialization data had incorrect values (unexpected data types)
+    FW_DESERIALIZE_SIZE_MISMATCH,  //!< Data was left in the buffer, but not enough to deserialize
+    FW_DESERIALIZE_TYPE_MISMATCH   //!< Deserialized type ID didn't match
+} SerializeStatus;
+class SerializeBufferBase;  //!< forward declaration
+
+class Serializable {
+  public:
+    // Size type for backwards compatibility
+    using SizeType = FwSizeType;
+
+  public:
+    virtual SerializeStatus serializeTo(SerializeBufferBase& buffer) const = 0;  //!< serialize contents to buffer
+
+    virtual SerializeStatus deserializeFrom(SerializeBufferBase& buffer) = 0;  //!< deserialize contents from buffer
+
+    // ----------------------------------------------------------------------
+    // Legacy methods for backward compatibility
+    // ----------------------------------------------------------------------
+
+    SerializeStatus serialize(SerializeBufferBase& buffer) const { return this->serializeTo(buffer); }
+
+    SerializeStatus deserialize(SerializeBufferBase& buffer) { return this->deserializeFrom(buffer); }
+
+#if FW_SERIALIZABLE_TO_STRING || FW_ENABLE_TEXT_LOGGING || BUILD_UT
+    virtual void toString(StringBase& text) const;  //!< generate text from serializable
+#endif
+
+#ifdef BUILD_UT
+    friend std::ostream& operator<<(std::ostream& os, const Serializable& val);
+#endif
+
+  protected:
+    Serializable();           //!< Default constructor
+    virtual ~Serializable();  //!< destructor
+};
+
+class Serialization {
+  public:
+    enum t {
+        INCLUDE_LENGTH,  //!< Include length as first token in serialization
+        OMIT_LENGTH      //!< Omit length from serialization
+    };
+};
+
+class SerializeBufferBase {
+    friend class SerializeBufferBaseTester;
+
+  protected:
+    SerializeBufferBase& operator=(const SerializeBufferBase& src);  //!< copy assignment operator
+
+  public:
+    virtual ~SerializeBufferBase();  //!< destructor
+
+    // Serialization for built-in types
+
+    SerializeStatus serializeFrom(U8 val);  //!< serialize 8-bit unsigned int
+    SerializeStatus serializeFrom(I8 val);  //!< serialize 8-bit signed int
+
+#if FW_HAS_16_BIT == 1
+    SerializeStatus serializeFrom(U16 val);  //!< serialize 16-bit unsigned int
+    SerializeStatus serializeFrom(I16 val);  //!< serialize 16-bit signed int
+#endif
+#if FW_HAS_32_BIT == 1
+    SerializeStatus serializeFrom(U32 val);  //!< serialize 32-bit unsigned int
+    SerializeStatus serializeFrom(I32 val);  //!< serialize 32-bit signed int
+#endif
+#if FW_HAS_64_BIT == 1
+    SerializeStatus serializeFrom(U64 val);  //!< serialize 64-bit unsigned int
+    SerializeStatus serializeFrom(I64 val);  //!< serialize 64-bit signed int
+#endif
+    SerializeStatus serializeFrom(F32 val);   //!< serialize 32-bit floating point
+    SerializeStatus serializeFrom(F64 val);   //!< serialize 64-bit floating point
+    SerializeStatus serializeFrom(bool val);  //!< serialize boolean
+
+    SerializeStatus serializeFrom(
+        const void* val);  //!< serialize pointer (careful, only pointer value, not contents are serialized)
+
+    //! serialize data buffer
+    SerializeStatus serializeFrom(const U8* buff, FwSizeType length);
+
+    //! \brief serialize a byte buffer of a given length
+    //!
+    //! Serialize bytes from `buff` up to `length`.  If `serializationMode` is set to `INCLUDE_LENGTH` then the
+    //! length is included as the first token. Length may be omitted with `OMIT_LENGTH`.
+    //!
+    //! \param buff: buffer to serialize
+    //! \param length: length of data to serialize
+    //! \param mode: serialization type
+    //! \return status of serialization
+    SerializeStatus serializeFrom(const U8* buff, FwSizeType length, Serialization::t mode);
+
+    SerializeStatus serializeFrom(const SerializeBufferBase& val);  //!< serialize a serialized buffer
+
+    SerializeStatus serializeFrom(
+        const Serializable& val);  //!< serialize an object derived from serializable base class
+
+    SerializeStatus serializeSize(const FwSizeType size);  //!< serialize a size value
+
+    // Deserialization for built-in types
+
+    SerializeStatus deserializeTo(U8& val);  //!< deserialize 8-bit unsigned int
+    SerializeStatus deserializeTo(I8& val);  //!< deserialize 8-bit signed int
+
+#if FW_HAS_16_BIT == 1
+    SerializeStatus deserializeTo(U16& val);  //!< deserialize 16-bit unsigned int
+    SerializeStatus deserializeTo(I16& val);  //!< deserialize 16-bit signed int
+#endif
+
+#if FW_HAS_32_BIT == 1
+    SerializeStatus deserializeTo(U32& val);  //!< deserialize 32-bit unsigned int
+    SerializeStatus deserializeTo(I32& val);  //!< deserialize 32-bit signed int
+#endif
+#if FW_HAS_64_BIT == 1
+    SerializeStatus deserializeTo(U64& val);  //!< deserialize 64-bit unsigned int
+    SerializeStatus deserializeTo(I64& val);  //!< deserialize 64-bit signed int
+#endif
+    SerializeStatus deserializeTo(F32& val);   //!< deserialize 32-bit floating point
+    SerializeStatus deserializeTo(F64& val);   //!< deserialize 64-bit floating point
+    SerializeStatus deserializeTo(bool& val);  //!< deserialize boolean
+
+    SerializeStatus deserializeTo(void*& val);  //!< deserialize point value (careful, pointer value only, not contents)
+
+    SerializeStatus deserializeTo(U8* buff, FwSizeType& length);  //!< deserialize data buffer
+
+    //! \brief deserialize a byte buffer of a given length
+    //!
+    //! The `mode` parameter specifies whether the serialized length should be read from the buffer.
+    //! \param buff: buffer to deserialize into
+    //! \param length: length of the buffer, updated with the actual deserialized length
+    //! \param mode: deserialization type
+    //! \return status of serialization
+    SerializeStatus deserializeTo(U8* buff, FwSizeType& length, Serialization::t mode);
+
+    SerializeStatus deserializeTo(Serializable& val);  //!< deserialize an object derived from serializable base class
+
+    SerializeStatus deserializeTo(SerializeBufferBase& val);  //!< serialize a serialized buffer
+
+    SerializeStatus deserializeSize(FwSizeType& size);  //!< deserialize a size value
+
+    // ----------------------------------------------------------------------
+    // Serialization methods
+    // ----------------------------------------------------------------------
+
+    SerializeStatus serialize(U8 val);
+    SerializeStatus serialize(I8 val);
+#if FW_HAS_16_BIT == 1
+    SerializeStatus serialize(U16 val);
+    SerializeStatus serialize(I16 val);
+#endif
+#if FW_HAS_32_BIT == 1
+    SerializeStatus serialize(U32 val);
+    SerializeStatus serialize(I32 val);
+#endif
+#if FW_HAS_64_BIT == 1
+    SerializeStatus serialize(U64 val);
+    SerializeStatus serialize(I64 val);
+#endif
+    SerializeStatus serialize(F32 val);
+    SerializeStatus serialize(F64 val);
+    SerializeStatus serialize(bool val);
+    SerializeStatus serialize(const void* val);
+    DEPRECATED(SerializeStatus serialize(const U8* buff, FwSizeType length, bool noLength),
+               "Use serialize(const U8* buff, FwSizeType length, Serialization::t mode) instead");
+    SerializeStatus serialize(const U8* buff, FwSizeType length);
+    SerializeStatus serialize(const U8* buff, FwSizeType length, Serialization::t mode);
+    SerializeStatus serialize(const Serializable& val);
+    SerializeStatus serialize(const SerializeBufferBase& val);
+
+    SerializeStatus deserialize(U8& val);
+    SerializeStatus deserialize(I8& val);
+#if FW_HAS_16_BIT == 1
+    SerializeStatus deserialize(U16& val);
+    SerializeStatus deserialize(I16& val);
+#endif
+#if FW_HAS_32_BIT == 1
+    SerializeStatus deserialize(U32& val);
+    SerializeStatus deserialize(I32& val);
+#endif
+#if FW_HAS_64_BIT == 1
+    SerializeStatus deserialize(U64& val);
+    SerializeStatus deserialize(I64& val);
+#endif
+    SerializeStatus deserialize(F32& val);
+    SerializeStatus deserialize(F64& val);
+    SerializeStatus deserialize(bool& val);
+    SerializeStatus deserialize(void*& val);
+    DEPRECATED(SerializeStatus deserialize(U8* buff, FwSizeType& length, bool noLength),
+               "Use deserialize(U8* buff, FwSizeType& length, Serialization::t mode) instead");
+    SerializeStatus deserialize(U8* buff, FwSizeType& length);
+    SerializeStatus deserialize(U8* buff, FwSizeType& length, Serialization::t mode);
+    SerializeStatus deserialize(Serializable& val);
+    SerializeStatus deserialize(SerializeBufferBase& val);
+
+    void resetSer();    //!< reset to beginning of buffer to reuse for serialization
+    void resetDeser();  //!< reset deserialization to beginning
+
+    SerializeStatus moveSerToOffset(FwSizeType offset);    //!< Moves serialization to the specified offset
+    SerializeStatus moveDeserToOffset(FwSizeType offset);  //!< Moves deserialization to the specified offset
+
+    SerializeStatus serializeSkip(
+        FwSizeType numBytesToSkip);  //!< Skips the number of specified bytes for serialization
+    SerializeStatus deserializeSkip(
+        FwSizeType numBytesToSkip);  //!< Skips the number of specified bytes for deserialization
+    virtual Serializable::SizeType getBuffCapacity() const = 0;  //!< returns capacity, not current size, of buffer
+    Serializable::SizeType getBuffLength() const;                //!< returns current buffer size
+    Serializable::SizeType getBuffLeft() const;                  //!< returns how much deserialization buffer is left
+    virtual U8* getBuffAddr() = 0;                               //!< gets buffer address for data filling
+    virtual const U8* getBuffAddr() const = 0;  //!< gets buffer address for data reading, const version
+    const U8* getBuffAddrLeft() const;          //!< gets address of remaining non-deserialized data.
+    U8* getBuffAddrSer();  //!< gets address of end of serialization. DANGEROUS! Need to know max buffer size and adjust
+                           //!< when done
+    SerializeStatus setBuff(const U8* src, Serializable::SizeType length);  //!< sets buffer contents and size
+    SerializeStatus setBuffLen(Serializable::SizeType length);  //!< sets buffer length manually after filling with data
+    SerializeStatus copyRaw(
+        SerializeBufferBase& dest,
+        Serializable::SizeType size);  //!< directly copies buffer without looking for a size in the stream.
+                                       // Will increment deserialization pointer
+    SerializeStatus copyRawOffset(
+        SerializeBufferBase& dest,
+        Serializable::SizeType size);  //!< directly copies buffer without looking for a size in the stream.
+                                       // Will increment deserialization pointer
+
+#ifdef BUILD_UT
+    bool operator==(const SerializeBufferBase& other) const;
+    friend std::ostream& operator<<(std::ostream& os, const SerializeBufferBase& buff);
+#endif
+
+  protected:
+    SerializeBufferBase();              //!< default constructor
+    Serializable::SizeType m_serLoc;    //!< current offset in buffer of serialized data
+    Serializable::SizeType m_deserLoc;  //!< current offset for deserialization
+
+  private:
+    // Copy constructor can be used only by the implementation
+    SerializeBufferBase(const SerializeBufferBase& src);  //!< constructor with buffer as source
+
+    void copyFrom(const SerializeBufferBase& src);  //!< copy data from source buffer
+};
+
+// Helper classes for building buffers with external storage
+
+//! External serialize buffer with no copy semantics
+class ExternalSerializeBuffer : public SerializeBufferBase {
+  public:
+    ExternalSerializeBuffer(U8* buffPtr, Serializable::SizeType size);  //!< construct with external buffer
+    ExternalSerializeBuffer();                                          //!< default constructor
+    ~ExternalSerializeBuffer() {}                                       //!< destructor
+    //! Set the external buffer
+    //! This action also resets the serialization and deserialization pointers
+    void setExtBuffer(U8* buffPtr, Serializable::SizeType size);
+    void clear();                                                          //!< clear external buffer
+    ExternalSerializeBuffer(const ExternalSerializeBuffer& src) = delete;  //!< deleted copy constructor
+
+    // pure virtual functions
+    Serializable::SizeType getBuffCapacity() const;
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+    //! deleted copy assignment operator
+    ExternalSerializeBuffer& operator=(const SerializeBufferBase& src) = delete;
+
+  protected:
+    // data members
+    U8* m_buff;                         //!< pointer to external buffer
+    Serializable::SizeType m_buffSize;  //!< size of external buffer
+};
+
+//! External serialize buffer with data copy semantics
+//!
+//! Use this when the object esb on the left-hand side of an assignment esb = sbb
+//! is guaranteed to have a valid buffer
+class ExternalSerializeBufferWithDataCopy final : public ExternalSerializeBuffer {
+  public:
+    ExternalSerializeBufferWithDataCopy(U8* buffPtr, Serializable::SizeType size)
+        : ExternalSerializeBuffer(buffPtr, size) {}
+    ExternalSerializeBufferWithDataCopy() : ExternalSerializeBuffer() {}
+    ~ExternalSerializeBufferWithDataCopy() {}
+    ExternalSerializeBufferWithDataCopy(const SerializeBufferBase& src) = delete;
+    ExternalSerializeBufferWithDataCopy& operator=(SerializeBufferBase& src) {
+        (void)SerializeBufferBase::operator=(src);
+        return *this;
+    }
+};
+
+//! External serialize buffer with member copy semantics
+//!
+//! Use this when the object esb1 on the left-hand side of an assignment esb1 = esb2
+//! has an invalid buffer, and you want to move the buffer of esb2 into it.
+//! In this case there should usually be no more uses of esb2 after the assignment.
+class ExternalSerializeBufferWithMemberCopy final : public ExternalSerializeBuffer {
+  public:
+    ExternalSerializeBufferWithMemberCopy(U8* buffPtr, Serializable::SizeType size)
+        : ExternalSerializeBuffer(buffPtr, size) {}
+    ExternalSerializeBufferWithMemberCopy() : ExternalSerializeBuffer() {}
+    ~ExternalSerializeBufferWithMemberCopy() {}
+    ExternalSerializeBufferWithMemberCopy(const ExternalSerializeBufferWithMemberCopy& src)
+        : ExternalSerializeBuffer(src.m_buff, src.m_buffSize) {
+        this->m_serLoc = src.m_serLoc;
+        this->m_deserLoc = src.m_deserLoc;
+    }
+    ExternalSerializeBufferWithMemberCopy& operator=(const ExternalSerializeBufferWithMemberCopy& src) {
+        // Ward against self-assignment
+        if (this != &src) {
+            this->setExtBuffer(src.m_buff, src.m_buffSize);
+            this->m_serLoc = src.m_serLoc;
+            this->m_deserLoc = src.m_deserLoc;
+        }
+        return *this;
+    }
+};
+
+}  // namespace Fw
+#endif
+```
+
+### `SerIds.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/SerIds.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief Definitions for ISF type serial IDs
+ *
+ * NOTE: Not currently being used
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+#ifndef _FW_SER_IDS_HPP_
+#define _FW_SER_IDS_HPP_
+
+// Definitions of provided types serialized IDs
+// Should fit in 16 bits
+
+namespace Fw {
+enum {
+
+    // Built-in types
+
+    FW_TYPEID_U8 = 10,    //!< U8 serialized type id
+    FW_TYPEID_18 = 11,    //!< I8 serialized type id
+    FW_TYPEID_U16 = 12,   //!< U16 serialized type id
+    FW_TYPEID_I16 = 13,   //!< I16 serialized type id
+    FW_TYPEID_U32 = 14,   //!< U32 serialized type id
+    FW_TYPEID_I32 = 15,   //!< I32 serialized type id
+    FW_TYPEID_U64 = 16,   //!< U64 serialized type id
+    FW_TYPEID_I64 = 17,   //!< I64 serialized type id
+    FW_TYPEID_F32 = 18,   //!< F32 serialized type id
+    FW_TYPEID_F64 = 19,   //!< F64 serialized type id
+    FW_TYPEID_BOOL = 20,  //!< boolean serialized type id
+    FW_TYPEID_PTR = 21,   //!< pointer serialized type id
+    FW_TYPEID_BUFF = 22,  //!< buffer serialized type id
+
+    // PolyType
+
+    FW_TYPEID_POLY = 30,  //!< PolyType serialized type id
+
+    // Command/Telemetry types
+
+    FW_TYPEID_CMD_BUFF = 40,   //!< Command Buffer type id
+    FW_TYPEID_CMD_STR = 41,    //!< Command string type id
+    FW_TYPEID_TLM_BUFF = 42,   //!< Telemetry Buffer type id
+    FW_TYPEID_TLM_STR = 43,    //!< Telemetry string type id
+    FW_TYPEID_LOG_BUFF = 44,   //!< Log Buffer type id
+    FW_TYPEID_LOG_STR = 45,    //!< Log string type id
+    FW_TYPEID_PRM_BUFF = 46,   //!< Parameter Buffer type id
+    FW_TYPEID_PRM_STR = 47,    //!< Parameter string type id
+    FW_TYPEID_FILE_BUFF = 48,  //!< File piece Buffer type id
+
+    // Other types
+
+    FW_TYPEID_EIGHTY_CHAR_STRING = 50,         //!< 80 char string Buffer type id
+    FW_TYPEID_INTERNAL_INTERFACE_STRING = 51,  //!< interface string Buffer type id
+    FW_TYPEID_FIXED_LENGTH_STRING = 52,        //!< 256 char string Buffer type id
+    FW_TYPEID_OBJECT_NAME = 53,                //!< ObjectName string Buffer type id
+    FW_TYPEID_FILE_NAME_STRING = 54,           //!< FileName string Buffer type id
+};
+}
+
+#endif
+```
+
+### `snprintf_format.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/snprintf_format.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  format.cpp
+// \author mstarch
+// \brief  cpp file for c-string format function as a implementation using snprintf
+// ======================================================================
+#include <Fw/Types/format.hpp>
+#include <cstdio>
+#include <limits>
+
+Fw::FormatStatus Fw::stringFormat(char* destination, const FwSizeType maximumSize, const char* formatString, ...) {
+    va_list args;
+    va_start(args, formatString);
+    FormatStatus status = Fw::stringFormat(destination, maximumSize, formatString, args);
+    va_end(args);
+    return status;
+}
+
+Fw::FormatStatus Fw::stringFormat(char* destination,
+                                  const FwSizeType maximumSize,
+                                  const char* formatString,
+                                  va_list args) {
+    Fw::FormatStatus formatStatus = Fw::FormatStatus::SUCCESS;
+    // Force null termination in error cases
+    destination[0] = 0;
+    // Check format string
+    if (formatString == nullptr) {
+        formatStatus = Fw::FormatStatus::INVALID_FORMAT_STRING;
+    }
+    // Must allow the compiler to choose the correct type for comparison
+    else if (maximumSize > std::numeric_limits<size_t>::max()) {
+        formatStatus = Fw::FormatStatus::SIZE_OVERFLOW;
+    } else {
+        int needed_size = vsnprintf(destination, static_cast<size_t>(maximumSize), formatString, args);
+        destination[maximumSize - 1] = 0;  // Force null-termination
+        if (needed_size < 0) {
+            formatStatus = Fw::FormatStatus::OTHER_ERROR;
+        } else if (static_cast<FwSizeType>(needed_size) >= maximumSize) {
+            formatStatus = Fw::FormatStatus::OVERFLOWED;
+        }
+    }
+    return formatStatus;
+}
+```
+
+### `String.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/String.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   String.hpp
+// @author F Prime
+// @brief  A general purpose string backed by a fixed-size buffer
+// ======================================================================
+
+#ifndef FW_STRING_HPP
+#define FW_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class String final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_FIXED_LENGTH_STRING,
+        STRING_SIZE = FW_FIXED_LENGTH_STRING_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE),
+    };
+
+    String() : StringBase() { *this = ""; }
+
+    String(const String& src) : StringBase() { *this = src; }
+
+    String(const StringBase& src) : StringBase() { *this = src; }
+
+    String(const char* src) : StringBase() { *this = src; }
+
+    ~String() {}
+
+    String& operator=(const String& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    String& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    String& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `StringBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringBase.cpp`
+
+
+```cpp
+/**
+ * \file StringBase.cpp
+ * \author T. Canham
+ * \brief Implements F Prime string base class
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringType.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <cstdarg>
+#include <cstring>
+
+namespace Fw {
+
+StringBase::StringBase() {}
+
+StringBase::~StringBase() {}
+
+const CHAR* StringBase::operator+=(const CHAR* src) {
+    this->appendBuff(src, static_cast<SizeType>(StringUtils::string_length(src, this->getCapacity())));
+    return this->toChar();
+}
+
+const StringBase& StringBase::operator+=(const StringBase& src) {
+    this->appendBuff(src.toChar(), src.length());
+    return *this;
+}
+
+bool StringBase::operator==(const StringBase& other) const {
+    SizeType len = this->length();
+    if (len != other.length()) {
+        return false;
+    } else {
+        return this->operator==(other.toChar());
+    }
+}
+
+bool StringBase::operator==(const CHAR* other) const {
+    const CHAR* const us = this->toChar();
+    if ((us == nullptr) or (other == nullptr)) {
+        return false;
+    }
+
+    const SizeType capacity = this->getCapacity();
+    const size_t result = static_cast<size_t>(strncmp(us, other, static_cast<size_t>(capacity)));
+    return (result == 0);
+}
+
+FormatStatus StringBase::format(const CHAR* formatString, ...) {
+    va_list args;
+    va_start(args, formatString);
+    FormatStatus status = this->vformat(formatString, args);
+    va_end(args);
+    return status;
+}
+
+FormatStatus StringBase::vformat(const CHAR* formatString, va_list args) {
+    CHAR* us = const_cast<CHAR*>(this->toChar());
+    SizeType cap = this->getCapacity();
+    FW_ASSERT(us != nullptr);
+    // Needed until SizeType an FwSizeType are the same
+    static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<SizeType>::max(),
+                  "String size type must fit into FwSizeType");
+    return Fw::stringFormat(us, static_cast<FwSizeType>(cap), formatString, args);
+}
+
+bool StringBase::operator!=(const StringBase& other) const {
+    return !operator==(other);
+}
+
+bool StringBase::operator!=(const CHAR* other) const {
+    return !operator==(other);
+}
+
+#if FW_SERIALIZABLE_TO_STRING || BUILD_UT
+void StringBase::toString(StringBase& text) const {
+    text = *this;
+}
+#endif
+
+#ifdef BUILD_UT
+std::ostream& operator<<(std::ostream& os, const StringBase& str) {
+    os << str.toChar();
+    return os;
+}
+#endif
+
+StringBase& StringBase::operator=(const StringBase& other) {
+    if (this != &other) {
+        (void)Fw::StringUtils::string_copy(const_cast<char*>(this->toChar()), other.toChar(), this->getCapacity());
+    }
+    return *this;
+}
+
+// Copy constructor doesn't make sense in this virtual class as there is nothing to copy. Derived classes should
+// call the empty constructor and then call their own copy function
+StringBase& StringBase::operator=(const CHAR* other) {  // lgtm[cpp/rule-of-two]
+    (void)Fw::StringUtils::string_copy(const_cast<char*>(this->toChar()), other, this->getCapacity());
+    return *this;
+}
+
+void StringBase::appendBuff(const CHAR* buff, SizeType size) {
+    const SizeType capacity = this->getCapacity();
+    const SizeType length = this->length();
+    FW_ASSERT(capacity > length, static_cast<FwAssertArgType>(capacity), static_cast<FwAssertArgType>(length));
+    // Subtract 1 to leave space for null terminator
+    SizeType remaining = capacity - length - 1;
+    if (size < remaining) {
+        remaining = size;
+    }
+    FW_ASSERT(remaining < capacity, static_cast<FwAssertArgType>(remaining), static_cast<FwAssertArgType>(capacity));
+    (void)strncat(const_cast<CHAR*>(this->toChar()), buff, static_cast<size_t>(remaining));
+}
+
+StringBase::SizeType StringBase::length() const {
+    const SizeType length = static_cast<SizeType>(StringUtils::string_length(this->toChar(), this->getCapacity()));
+    FW_ASSERT(length <= this->maxLength(), static_cast<FwAssertArgType>(length),
+              static_cast<FwAssertArgType>(this->maxLength()));
+    return length;
+}
+
+StringBase::SizeType StringBase::maxLength() const {
+    const SizeType capacity = this->getCapacity();
+    FW_ASSERT(capacity > 0, static_cast<FwAssertArgType>(capacity));
+    return capacity - 1;
+}
+
+StringBase::SizeType StringBase::serializedSize() const {
+    return static_cast<SizeType>(sizeof(FwSizeStoreType)) + this->length();
+}
+
+StringBase::SizeType StringBase::serializedTruncatedSize(FwSizeType maxLength) const {
+    return static_cast<SizeType>(sizeof(FwSizeStoreType)) + static_cast<SizeType>(FW_MIN(this->length(), maxLength));
+}
+
+SerializeStatus StringBase::serializeTo(SerializeBufferBase& buffer) const {
+    return buffer.serializeFrom(reinterpret_cast<const U8*>(this->toChar()), this->length());
+}
+
+SerializeStatus StringBase::serializeTo(SerializeBufferBase& buffer, SizeType maxLength) const {
+    const FwSizeType len = FW_MIN(maxLength, this->length());
+    // Serialize length and then bytes
+    return buffer.serializeFrom(reinterpret_cast<const U8*>(this->toChar()), len, Serialization::INCLUDE_LENGTH);
+}
+
+// Deprecated method for backward compatibility
+SerializeStatus StringBase::serialize(SerializeBufferBase& buffer) const {
+    return this->serializeTo(buffer);
+}
+
+// Deprecated method for backward compatibility
+SerializeStatus StringBase::serialize(SerializeBufferBase& buffer, SizeType maxLength) const {
+    return this->serializeTo(buffer, maxLength);
+}
+
+SerializeStatus StringBase::deserializeFrom(SerializeBufferBase& buffer) {
+    // Get the max size of the deserialized string
+    const SizeType maxSize = this->maxLength();
+    // Initial estimate of actual size is max size
+    // This estimate is refined when calling the deserialize function below
+    SizeType actualSize = maxSize;
+    // Public interface returns const char*, but implementation needs char*
+    // So use const_cast
+    CHAR* raw = const_cast<CHAR*>(this->toChar());
+    // Deserialize length
+    // Fail if length exceeds max size (the initial value of actualSize)
+    // Otherwise deserialize length bytes and set actualSize to length
+    SerializeStatus stat = buffer.deserializeTo(reinterpret_cast<U8*>(raw), actualSize, Serialization::INCLUDE_LENGTH);
+    if (stat == FW_SERIALIZE_OK) {
+        // Deserialization succeeded: null-terminate string at actual size
+        FW_ASSERT(actualSize <= maxSize, static_cast<FwAssertArgType>(actualSize),
+                  static_cast<FwAssertArgType>(maxSize));
+        raw[actualSize] = 0;
+    } else {
+        // Deserialization failed: leave string unmodified, but ensure that it
+        // is null-terminated
+        raw[maxSize] = 0;
+    }
+    return stat;
+}
+
+}  // namespace Fw
+```
+
+### `StringBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringBase.hpp`
+
+
+```cpp
+/**
+ * \file StringBase.hpp
+ * \author T. Canham
+ * \brief Declares F Prime string base class
+ *
+ * \copyright
+ * Copyright 2009-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#ifndef FW_STRING_BASE_HPP
+#define FW_STRING_BASE_HPP
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Fw/Types/format.hpp>
+#include <cstdarg>
+#ifdef BUILD_UT
+#include <iostream>
+#endif
+
+namespace Fw {
+
+class StringBase : public Serializable {
+  public:
+    using SizeType = FwSizeType;
+    virtual const CHAR* toChar() const = 0;    //<! Convert to a C-style char*
+    virtual SizeType getCapacity() const = 0;  //!< return size of buffer
+    SizeType length() const;                   //!< Get length of string
+
+    //! Get the maximum length of a string that the buffer can hold (which is capacity - 1)
+    SizeType maxLength() const;
+    //! Get the static serialized size of a string
+    //! This is the max length of the string plus the size of the stored size
+    static constexpr SizeType STATIC_SERIALIZED_SIZE(SizeType maxLength  //!< The maximum string length
+    ) {
+        return static_cast<SizeType>(sizeof(FwSizeStoreType)) + maxLength;
+    }
+
+    //! Get the size of a null-terminated string buffer
+    static constexpr SizeType BUFFER_SIZE(SizeType maxLength  //!< The maximum string length
+    ) {
+        // Reserve one byte for each character plus one for the null terminator
+        return maxLength + 1;
+    }
+
+    //! Get the dynamic serialized size of a string
+    //! This is the length of the string plus the size of the stored size
+    SizeType serializedSize() const;
+
+    //! Get the serialized truncated size of a string
+    //! This is the minimum of the dynamic serialized size and the max length
+    SizeType serializedTruncatedSize(FwSizeType maxLength  //!< The max string length
+    ) const;
+
+    const CHAR* operator+=(const CHAR* src);              //!< Concatenate a CHAR*
+    const StringBase& operator+=(const StringBase& src);  //!< Concatenate a StringBase
+    bool operator==(const StringBase& other) const;       //!< Check for equality with StringBase
+    bool operator==(const CHAR* other) const;             //!< Check for equality with CHAR*
+    bool operator!=(const StringBase& other) const;       //!< Inequality with StringBase
+    bool operator!=(const CHAR* other) const;             //!< Inequality with CHAR*
+    StringBase& operator=(const CHAR* src);               //!< Assign CHAR*
+    StringBase& operator=(const StringBase& src);         //!< Assign another StringBase
+
+    FormatStatus format(const CHAR* formatString, ...);            //!< write formatted string to buffer
+    FormatStatus vformat(const CHAR* formatString, va_list args);  //!< write formatted string to buffer using va_list
+
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const override;
+    virtual SerializeStatus serializeTo(SerializeBufferBase& buffer, SizeType maxLen) const;
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer) override;
+
+    SerializeStatus serialize(SerializeBufferBase& buffer) const;
+    virtual SerializeStatus serialize(SerializeBufferBase& buffer, SizeType maxLen) const;
+
+#ifdef BUILD_UT
+    // to support GoogleTest framework in unit tests
+    friend std::ostream& operator<<(std::ostream& os, const StringBase& str);
+#endif
+#if FW_SERIALIZABLE_TO_STRING || BUILD_UT
+    void toString(StringBase& text) const override;  //!< write string with contents
+#endif
+
+  protected:
+    StringBase();
+    virtual ~StringBase();
+
+    void appendBuff(const CHAR* buff, SizeType size);
+
+  private:
+    StringBase(const StringBase& src) = delete;  //!< constructor with buffer as source
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `StringTemplate.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringTemplate.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   StringTemplate.hpp
+// @author Rob Bocchino
+// @brief  A string template parameterized by size
+// ======================================================================
+
+#ifndef FW_STRING_TEMPLATE_HPP
+#define FW_STRING_TEMPLATE_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+template <Fw::StringBase::SizeType size>
+class StringTemplate final : public StringBase {
+  public:
+    enum {
+        STRING_SIZE = size,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE),
+    };
+
+    StringTemplate() : StringBase() { *this = ""; }
+
+    StringTemplate(const StringTemplate& src) : StringBase() { *this = src; }
+
+    StringTemplate(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit StringTemplate(const char* src) : StringBase() { *this = src; }
+
+    ~StringTemplate() {}
+
+    StringTemplate& operator=(const StringTemplate& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    StringTemplate& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    StringTemplate& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(size)];
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `StringToNumber.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringToNumber.cpp`
+
+
+```cpp
+#include <Fw/Types/StringUtils.hpp>
+#include <cerrno>
+#include <cstdlib>
+
+Fw::StringUtils::StringToNumberStatus string_to_helper_input_check(const CHAR* input, FwSizeType buffer_size, U8 base) {
+    Fw::StringUtils::StringToNumberStatus status = Fw::StringUtils::StringToNumberStatus::SUCCESSFUL_CONVERSION;
+    // Check for null input string
+    if (input == nullptr) {
+        status = Fw::StringUtils::NULL_INPUT;
+    }
+    // Invalid base e.g. not 0, 2-36
+    else if (base == 1 || base > 36) {
+        status = Fw::StringUtils::INVALID_BASE;
+    } else {
+        // Check the string is bounded within the specified length
+        FwSizeType length = Fw::StringUtils::string_length(input, buffer_size);
+        if (length == buffer_size) {
+            status = Fw::StringUtils::INVALID_STRING;
+        }
+    }
+    errno = 0;
+    return status;
+}
+
+Fw::StringUtils::StringToNumberStatus string_to_helper_output_check(Fw::StringUtils::StringToNumberStatus status,
+                                                                    const char* original_input,
+                                                                    char*& internal_next,
+                                                                    char** external_next) {
+    // Check range, if error then
+    if (errno == ERANGE) {
+        status = Fw::StringUtils::INVALID_RANGE;
+    }
+    // Invalid number conversion
+    else if ((internal_next == original_input) || (internal_next == nullptr)) {
+        internal_next = nullptr;
+        status = Fw::StringUtils::INVALID_NUMBER;
+    }
+    // Set output pointer in all cases
+    if (external_next != nullptr) {
+        *external_next = internal_next;
+    }
+    errno = 0;
+    return status;
+}
+
+// Template for internal implementation only
+// \tparam T: input type (U8, I8, U64, I64)
+// \tparam Tinternal: function api type
+// \tparam F: conversion function to use
+template <typename T, typename Tinternal, Tinternal (*F)(const char*, char**, int)>
+Fw::StringUtils::StringToNumberStatus string_to_number_as_template(const CHAR* input,
+                                                                   FwSizeType buffer_size,
+                                                                   T& output,
+                                                                   char** next,
+                                                                   U8 base) {
+    static_assert(std::numeric_limits<T>::is_integer, "Type must be integer");
+    static_assert(std::numeric_limits<Tinternal>::is_integer, "Type must be integer");
+    static_assert(std::numeric_limits<T>::is_signed == std::numeric_limits<Tinternal>::is_signed,
+                  "Signedness must match");
+    static_assert(std::numeric_limits<T>::max() <= std::numeric_limits<Tinternal>::max(),
+                  "Invalid internal type chosen");
+    static_assert(std::numeric_limits<T>::min() >= std::numeric_limits<Tinternal>::min(),
+                  "Invalid internal type chosen");
+
+    char* output_next = nullptr;
+    Fw::StringUtils::StringToNumberStatus status = string_to_helper_input_check(input, buffer_size, base);
+    if (status == Fw::StringUtils::SUCCESSFUL_CONVERSION) {
+        Tinternal output_api = F(input, &output_next, base);
+        if (output_api > std::numeric_limits<T>::max()) {
+            status = Fw::StringUtils::StringToNumberStatus::INVALID_RANGE;
+            output_api = std::numeric_limits<T>::max();
+        }
+        if (output_api < std::numeric_limits<T>::min()) {
+            status = Fw::StringUtils::StringToNumberStatus::INVALID_RANGE;
+            output_api = std::numeric_limits<T>::min();
+        }
+        output = static_cast<T>(output_api);
+    }
+    status = string_to_helper_output_check(status, input, output_next, next);
+    return status;
+}
+
+#if FW_HAS_64_BIT
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        U64& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<U64, unsigned long long, strtoull>(input, buffer_size, output, next, base);
+}
+
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        I64& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<I64, long long, strtoll>(input, buffer_size, output, next, base);
+}
+#endif
+#if FW_HAS_32_BIT
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        U32& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<U32, unsigned long long, strtoull>(input, buffer_size, output, next, base);
+}
+
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        I32& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<I32, long long, strtoll>(input, buffer_size, output, next, base);
+}
+#endif
+#if FW_HAS_16_BIT
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        U16& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<U16, unsigned long long, strtoull>(input, buffer_size, output, next, base);
+}
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        I16& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<I16, long long, strtoll>(input, buffer_size, output, next, base);
+}
+#endif
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        U8& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<U8, unsigned long long, strtoull>(input, buffer_size, output, next, base);
+}
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        I8& output,
+                                                                        char** next,
+                                                                        U8 base) {
+    return string_to_number_as_template<I8, long long, strtoll>(input, buffer_size, output, next, base);
+}
+#if FW_HAS_F64
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        F64& output,
+                                                                        char** next) {
+    char* output_next = nullptr;
+    Fw::StringUtils::StringToNumberStatus status = string_to_helper_input_check(input, buffer_size, 0);
+    if (status == SUCCESSFUL_CONVERSION) {
+        output = strtod(input, &output_next);
+    }
+    status = string_to_helper_output_check(status, input, output_next, next);
+    return status;
+}
+#endif
+
+Fw::StringUtils::StringToNumberStatus Fw::StringUtils::string_to_number(const CHAR* input,
+                                                                        FwSizeType buffer_size,
+                                                                        F32& output,
+                                                                        char** next) {
+    char* output_next = nullptr;
+    Fw::StringUtils::StringToNumberStatus status = string_to_helper_input_check(input, buffer_size, 0);
+    if (status == SUCCESSFUL_CONVERSION) {
+        output = strtof(input, &output_next);
+    }
+    status = string_to_helper_output_check(status, input, output_next, next);
+    return status;
+}
+```
+
+### `StringType.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringType.hpp`
+
+
+```cpp
+// Compatibility header
+#include "Fw/Types/StringBase.hpp"
+```
+
+### `StringUtils.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringUtils.cpp`
+
+
+```cpp
+#include "StringUtils.hpp"
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/ExternalString.hpp>
+#include <cstring>
+#include <limits>
+
+char* Fw::StringUtils::string_copy(char* destination, const char* source, FwSizeType num) {
+    // Handle self-copy and 0 bytes copy
+    if (destination == source || num == 0) {
+        return destination;
+    }
+    FW_ASSERT(source != nullptr);
+    FW_ASSERT(destination != nullptr);
+
+    // Copying an overlapping range is undefined
+    FwSizeType source_len = string_length(source, num) + 1;
+    FW_ASSERT(source + source_len <= destination || destination + num <= source);
+
+    char* returned = strncpy(destination, source, static_cast<size_t>(num));
+    destination[num - 1] = '\0';
+    return returned;
+}
+
+FwSizeType Fw::StringUtils::string_length(const CHAR* source, FwSizeType buffer_size) {
+    FwSizeType length = 0;
+    FW_ASSERT(source != nullptr);
+    for (length = 0; length < buffer_size; length++) {
+        if (source[length] == '\0') {
+            break;
+        }
+    }
+    return length;
+}
+
+FwSignedSizeType Fw::StringUtils::substring_find(const CHAR* source_string,
+                                                 FwSizeType source_size,
+                                                 const CHAR* sub_string,
+                                                 FwSizeType sub_size) {
+    FW_ASSERT(source_string != nullptr);
+    FW_ASSERT(sub_string != nullptr);
+
+    // zero size sub-strings should always match
+    if ((source_size > 0) && (0 == sub_size)) {
+        return 0;
+    }
+
+    // Cannot find a substring larger than the source
+    if (source_size < sub_size) {
+        return -1;
+    }
+    // Confirm that the output type can hold the range of valid results
+    FW_ASSERT(static_cast<FwSignedSizeType>(source_size - sub_size) <= std::numeric_limits<FwSignedSizeType>::max());
+
+    // Loop from zero to source_size - sub_size (inclusive)
+    for (FwSizeType source_index = 0;
+         source_index < (source_size - sub_size + 1) &&
+         source_index < static_cast<FwSizeType>(std::numeric_limits<FwSignedSizeType>::max());
+         source_index++) {
+        // if the current character matches
+        for (FwSizeType sub_index = 0; sub_index < sub_size; sub_index++) {
+            // Prevent read overrun
+            FW_ASSERT((source_index + sub_index) < source_size);
+            // if there is a mismatch, go to next character
+            if (source_string[source_index + sub_index] != sub_string[sub_index]) {
+                break;
+            } else if (sub_index == (sub_size - 1)) {
+                // if we matched all the way to the end of the substring
+                return static_cast<FwSignedSizeType>(source_index);
+            }
+        }
+    }
+
+    // if we make it here, no matches were found
+    return -1;
+}
+```
+
+### `StringUtils.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/StringUtils.hpp`
+
+
+```cpp
+/**
+ * Fw/Types/StringUtils.hpp:
+ *
+ * C-string helper utilities. Note: wherever possible, use Fw::StringBase and derived classes instead of raw C-strings.
+ */
+#ifndef FW_STRINGUTILS_HPP
+#define FW_STRINGUTILS_HPP
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Fw {
+namespace StringUtils {
+/**
+ * \brief copy string with null-termination guaranteed
+ *
+ * Standard implementations of strncpy fail to guarantee the termination of a
+ * string with the null terminator. This implementation guarantees the string is
+ * properly null-terminated at the possible expense of the last character of the
+ * copied string being lost. The user is responsible for providing a destination
+ * large enough for the content and a null-character. Other behavior retains the
+ * behavior of strncpy.
+ *
+ * \param destination: destination buffer to hold copied contents
+ * \param source: source buffer to read content to copy
+ * \param num: length of destination buffer
+ * \return destination buffer
+ */
+char* string_copy(char* destination, const char* source, FwSizeType num);
+
+/**
+ * \brief get the length of the source string
+ *
+ * If no string termination character is detected within buffer_size number of characters then buffer_size is returned.
+ * When buffer_size is returned, it can be assumed that the source string is invalid within a bound of buffer_size.
+ *
+ * \param source: string to calculate the length
+ * \param buffer_size: the size of the buffer containing source string.
+ * \return length of the source string or buffer_size if no \0 is found within buffer_size characters.
+ */
+FwSizeType string_length(const CHAR* source, FwSizeType buffer_size);
+
+/**
+ * \brief find the first occurrence of a substring
+ *
+ * \param source_string: string to search for the substring
+ * \param source_size: the size of the source string
+ * \param substring: string to search for
+ * \param sub_size: the size of the string to search for
+ * \return index of substring, -1 if not found
+ */
+FwSignedSizeType substring_find(const CHAR* source_string,
+                                FwSizeType source_size,
+                                const CHAR* sub_string,
+                                FwSizeType sub_size);
+
+enum StringToNumberStatus {
+    SUCCESSFUL_CONVERSION,  //!< Output should be valid
+    NULL_INPUT,             //!< A null string was supplied
+    INVALID_STRING,         //!< No \0 detected within the supplied length
+    INVALID_BASE,           //!< Base was not supplied as 0, or 2-36
+    INVALID_NUMBER,         //!< String did not contain a valid number matching supplied base
+    INVALID_RANGE,          //!<
+};
+
+#if FW_HAS_64_BIT
+/**
+ * \brief converts a string to a U64
+ *
+ * Function to convert a string to a U64. String is provided via the input parameter and output is set in the output
+ * reference parameter. If no \0 is found within buffer_size, then this function will return an error, while setting
+ * output to 0.  If next is non-null, then a pointer to the character after the end of the number will be returned upon
+ * successful conversion.  Otherwise next will be set to null pointer.
+ *
+ * If base is 0, then the numerical base of the number is inferred from the string itself via the prefix (e.g 0x) and
+ * lacking a prefix is assumed to be decimal (base 10). Otherwise, base may be 2-36.
+ *
+ * If the converted number does not fit within the range of the type of output, output is set to min or max
+ * appropriately and INVALID_RANGE is returned.
+ *
+ * It is an error to supply a null input string.
+ * It is an error to supply a string that does not terminate with a \0 within buffer_size characters
+ * The numerical conversion may also return errors.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, U64& output, char** next, U8 base = 0);
+
+/**
+ * \brief converts a string to a I64
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, I64& output, char** next, U8 base = 0);
+#endif
+#if FW_HAS_32_BIT
+/**
+ * \brief converts a string to a U32
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, U32& output, char** next, U8 base = 0);
+
+/**
+ * \brief converts a string to a I32
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, I32& output, char** next, U8 base = 0);
+#endif
+#if FW_HAS_16_BIT
+/**
+ * \brief converts a string to a U16
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, U16& output, char** next, U8 base = 0);
+
+/**
+ * \brief converts a string to a I16
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, I16& output, char** next, U8 base = 0);
+#endif
+
+/**
+ * \brief converts a string to a U8
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, U8& output, char** next, U8 base = 0);
+
+/**
+ * \brief converts a string to a I8
+ *
+ * See string_to_number (above) for full explanation.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, I8& output, char** next, U8 base = 0);
+
+/**
+ * \brief converts a string to a F32
+ *
+ * See string_to_number (above) for full explanation. `base` is not supported on floating point conversions.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, F32& output, char** next);
+#if FW_HAS_F64
+/**
+ * \brief converts a string to a F64
+ *
+ * See string_to_number (above) for full explanation. `base` is not supported on floating point conversions.
+ *
+ * \param input: input string
+ * \param buffer_size: maximum length of string bounding the conversion
+ * \param base: base of the number. 0 to detect decimal, octal, hexadecimal. 2-36 to use specified base.
+ * \param output: (output) will contain the converted number or 0 on error
+ * \param next: (output) will contain a pointer to the next character after the number and null pointer on error
+ * \return SUCCESSFUL_CONVERSION when output is valid, something else on error.
+ */
+StringToNumberStatus string_to_number(const CHAR* input, FwSizeType buffer_size, F64& output, char** next);
+#endif
+
+}  // namespace StringUtils
+}  // namespace Fw
+#endif  // FW_STRINGUTILS_HPP
+```
+
+### `Types.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/Types.fpp`
+
+
+```fpp
+module Fw {
+
+  @ A string stored in a fixed-size buffer
+  type String
+
+  @ A value of polymorphic type
+  type PolyType
+
+  @ Serialization status
+  enum SerialStatus : U8 {
+    OK, @< Serialization operation succeeded
+    FORMAT_ERROR @< Data was the wrong format (e.g. wrong packet type)
+    NO_ROOM_LEFT  @< No room left in the buffer to serialize data
+  }
+
+  @ Deserialization status
+  enum DeserialStatus : U8 {
+    OK = 0
+    BUFFER_EMPTY = 3 @< Deserialization buffer was empty when trying to read data
+    FORMAT_ERROR = 4  @< Deserialization data had incorrect values (unexpected data types)
+    SIZE_MISMATCH = 5 @< Data was left in in the buffer, but not enough to deserialize
+    TYPE_MISMATCH = 6 @< Deserialized type ID didn't match
+  }
+
+  @ Enabled and disabled states
+  enum Enabled : U8 {
+    DISABLED @< Disabled state
+    ENABLED @< Enabled state
+  }
+
+  @ On and off states
+  enum On : U8 {
+    OFF @< Off state
+    ON @< On state
+  }
+
+  @ Logic states
+  enum Logic : U8 {
+    LOW @< Logic low state
+    HIGH @< Logic high state
+  }
+
+  @ Open and closed states
+  enum Open : U8 {
+    CLOSED @< Closed state
+    OPEN @< Open state
+  }
+
+  @ Direction states
+  enum Direction : U8 {
+    IN @< In direction
+    OUT @< Out direction
+    INOUT @< In/Out direction
+  }
+
+  @ Active and inactive states
+  enum Active : U8 {
+    INACTIVE @< Inactive state
+    ACTIVE @< Active state
+  }
+
+  @ Health states
+  enum Health : U8 {
+    HEALTHY @< Healthy state
+    SICK @< Sick state
+    FAILED @< Failed state
+  }
+
+  @ Success/Failure
+  enum Success : U8 {
+      FAILURE @< Representing failure
+      SUCCESS @< Representing success
+  }
+
+  @ Wait or don't wait for something
+  enum Wait : U8 {
+    WAIT @< Wait for something
+    NO_WAIT @< Don't wait for something
+  }
+
+  enum Completed : U8 {
+    COMPLETED @< Completed successfully
+    CANCELED @< Canceled before completion
+    FAILED @< Failed to complete
+  }
+}
+```

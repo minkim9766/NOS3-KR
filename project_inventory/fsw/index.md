@@ -3,7 +3,7 @@
 
 **경로:** `fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ psp/index
 tools/index
 ```
 
-## 항목
-
-- [`fsw/apps/`](apps/index) — 폴더
-- [`fsw/build/`](build/index) — 폴더
-- [`fsw/cfe/`](cfe/index) — 폴더
-- [`fsw/fprime/`](fprime/index) — 폴더
-- [`fsw/osal/`](osal/index) — 폴더
-- [`fsw/psp/`](psp/index) — 폴더
-- [`fsw/tools/`](tools/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

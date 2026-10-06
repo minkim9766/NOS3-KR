@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -20,15 +20,4 @@ rename-display-dialog/index
 viewers/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/create-display-dialog/`](create-display-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/create-display-folder-dialog/`](create-display-folder-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file/`](display-file/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/`](display-file-dirty-guard/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/`](display-folder/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-page/`](display-page/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/displays-page/`](displays-page/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/export-archive-data-dialog/`](export-archive-data-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/rename-display-dialog/`](rename-display-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/`](viewers/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

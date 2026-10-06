@@ -3,24 +3,1761 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `gds-cli.md`
 
-file--gds-cli.md
-file--gds-custom-dashboards.md
-file--gds-dashboard-reference.md
-file--gds-dev-guide.md
-file--gds-test-api-guide.md
-file--seqgen.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-cli.md`
+
+
+````markdown
+# The F´ GDS CLI
+
+This guide will give you a quick introduction to the F´ Ground Data System  Command Line Interface (`fprime-cli`),
+how it can be used, and a detailed reference for interested users. `fprime-cli` allows for use of the most common F´ GDS
+features without the need for a graphical environment. This enables projects easier access to F´ testing and operations
+in more environments.
+
+> [!NOTE]
+> Developer documentation is available in the [developer's CLI guide](gds-dev-guide.md).
+
+- [What is `fprime-cli`?](#what-is-fprime-cli)
+- [Getting Started](#getting-started)
+    - [The Basics](#the-basics)
+    - [Supplying F´ Dictionary](#supplying-f-dictionary)
+    - [Using the Tools](#using-the-tools)
+        - [Receiving Events and Channels](#receiving-events-and-channels)
+        - [Sending Commands](#sending-commands)
+- [Command Details](#command-details)
+    - [channels](#channels)
+    - [command-send](#command-send)
+    - [events](#events)
+- [Conclusion](#conclusion)
+
+![Landing Image](../../img/gds_cli_user_guide_cover.png)
+
+## What is `fprime-cli`?
+
+The `fprime-cli` tool provides a command-line interface for working with F´s Ground Data System, as an alternative to
+using the browser-based GUI. While graphical interfaces are often convenient, a command-line interface is still handy to
+have for situations like the following:
+
+-  Working remotely on a headless server
+-  Analyzing data with existing command-line tools
+-  Automating certain tasks through scripts
+-  Pacifying hardcore command-line users in your office
+
+In particular, the CLI tools for the GDS let you do 3 essential operations from the comfort of your shell:
+
+- Send commands to the embedded system through the GDS layer
+- View events emitted by the embedded into the F´ GDS
+- Receive system telemetry through the GDS
+
+Let's see how you can use these for yourself!
+
+## Getting Started
+
+`fprime-cli` is automatically installed when installing F´. In order to use it, make sure that your virtual environment
+has been activated. To ensure the tool is ready, run `fprime-cli -h` and you should see the help usage. If an error is
+received, ensure F´ is properly installed via [the installation guide](../../getting-started/installing-fprime.md) and that your virtual
+environment has been activated.
+
+`fprime-cli` connects to the `fprime-gds` ground system layer. Should the user wish to run `fprime-cli` make sure to
+start an instance of the `fprime-gds` in headless mode `fprime-gds -g none`. More information can be found in the
+[F´ GDS guide](../overview/gds-introduction.md).  If the GDS is running on a non-standard port, supply the `-p` and `-id` flags
+on any command below to connect to it. Without these flags, the default address of `127.0.0.1:50050` will be used.
+
+### The Basics
+
+All of the GDS CLI commands are run through the `fprime-cli` tool; if you run that all by itself, you should see a
+help message like this:
+
+```
+$ fprime-cli
+usage: fprime-cli [-h] [-V] {channels,command-send,events} ...
+
+provides utilities for interacting with the F´ Ground Data System (GDS)
+
+positional arguments:
+  {channels,command-send,events}
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -V, --version         show the program's version number and exit
 ```
 
-## 항목
+We can see there are 3 "positional arguments" we can provide here, corresponding to the 3 commands we can run:
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-cli.md`](file--gds-cli.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-custom-dashboards.md`](file--gds-custom-dashboards.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-dashboard-reference.md`](file--gds-dashboard-reference.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-dev-guide.md`](file--gds-dev-guide.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-test-api-guide.md`](file--gds-test-api-guide.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/seqgen.md`](file--seqgen.md) — UTF-8 텍스트 파일 본문 포함
+- `channels` lets us receive the values of open telemetry channels on the embedded system
+- `command-send` lets us send commands to the embedded system
+- `events` lets us receive events the embedded system is recording
+
+You can use each command by running `fprime-cli [COMMAND NAME]`, e.g. `fprime-cli events` or `fprime-cli channels`. To
+learn more about each one, you can include the `-h` or `--help` flag after the command to print out the individualized
+ command help messages (e.g. `fprime-cli events --help`) described below.
+
+```bash
+$ fprime-cli events --help
+usage: fprime-cli events [-h] [--zmq] [--zmq-server] 
+            [--zmq-transport serverInUrl serverOutUrl] [--tts-port TTS_PORT]
+            [--tts-addr TTS_ADDR] [-r ROOT_INPUT] [--dictionary DICTIONARY]
+            [--packet-spec PACKET_SPEC] [-l LOGS] [--log-directly]
+            [--log-to-stdout] [--file-storage-directory FILES_DIRECTORY]
+            [--list] [-i ID] [-c COMP [COMP ...]] [-s SEARCH] [-t SECONDS] [-j]
+
+print out new events that have occurred on the F Prime instance, sorted by
+timestamp
+
+options:
+  -h, --help            show this help message and exit
+
+GDS Options:
+  --zmq                 Switch to using the ZMQ transportation layer
+  --zmq-server          Sets the ZMQ connection to be a server. 
+                        Default: false (client)
+  --zmq-transport serverInUrl serverOutUrl
+                        Pair of URls used with --zmq to setup ZeroMQ transportation 
+                        [default: ['ipc:///tmp/fprime-server-in', 
+                        'ipc:///tmp/fprime-server-out']]
+  --tts-port TTS_PORT   Set the threaded TCP socket server port [default: 50050]
+  --tts-addr TTS_ADDR   Set the threaded TCP socket server address 
+                        [default: 0.0.0.0]
+  -r ROOT_INPUT, --root ROOT_INPUT
+                        Root directory of build artifacts, used to automatically 
+                        find app and dictionary. 
+                        [default: install_dest field in settings.ini]
+  --dictionary DICTIONARY
+                        Path to dictionary. Overrides automatic dictionary 
+                        detection.
+  --packet-spec PACKET_SPEC
+                        Path to packet specification.
+  -l LOGS, --logs LOGS  Logging directory. Created if nonexistent. 
+                        [default: /workspaces/macos/DefaultMission/logs]
+  --log-directly        Logging directory is used directly, no extra dated
+                        directories created.
+  --log-to-stdout       Log to standard out along with log output files
+  --file-storage-directory FILES_DIRECTORY
+                        File to store uplink and downlink files. 
+                        Default: /tmp/fprime-downlink/
+
+Search/Filtering Options:
+  --list                list all possible event types the current F Prime
+                        instance could produce, based on the events
+                        dictionary, sorted by event type ID
+  -i ID, --ids ID       only show events matching the given type ID(s) 'ID'; 
+                        can provide multiple IDs to show all given types
+  -c COMP [COMP ...], --components COMP [COMP ...]
+                        only show events from the given component name 'COMP';
+                        can provide multiple components to show events from all 
+                        components given
+  -s SEARCH, --search SEARCH
+                        only show events whose name or output string exactly
+                        matches or contains the entire given string "STRING"
+
+Retrieval Options:
+  -t SECONDS, --timeout SECONDS
+                        wait at most SECONDS seconds for a single new event,
+                        then exit (defaults to listening until the user exits
+                        via CTRL+C, and logging all events)
+  -j, --json            returns response in JSON format
+```
+
+### Supplying F´ Dictionary
+
+As mentioned, these CLI commands let you interact with the GDS through events and commands, and telemetry channels.
+Through a *project F´ dictionary* the CLI can understand what commands, events and telemetry channels are available.
+Every F´ project deployment will have a `*Dictionary.json` file that's created when the project's deployment is built
+By reading this file, the CLI tool knows what to look for when it's reading or sending data to the GDS. If it doesn't
+know where the dictionary is, then the CLI tool can't do much beyond printing out help messages.
+
+When you run one of the CLI commands, the tool will automatically look for files ending in `Dictionary.json` in your
+current working directory and use the first one it can find. This behavior is similar to how `fprime-gds` searches for
+dictionaries it uses to construct the browser GUI. If it can't find any dictionaries, it will print out an error message
+like this:
+
+```
+fprime-cli: error: No valid project dictionary found
+```
+
+Running commands from your project folder (e.g. inside `fprime/Ref`) should work to find a dictionary, but if you want
+to run commands for a different deployment or project, you can specify the dictionary file exactly using the
+`--dictionary` option with the file's path.
+`fprime-cli command-send --dictionary build-artifacts/Linux/Ref/Top/RefTopologyDictionary.json`.
+
+### Using the Tools
+
+The `fprime-cli` commands can roughly be grouped into 2 categories:
+
+- Ones that receive data through the GDS (`channels`, `events`)
+- Ones that send data through the GDS (`command-send`)
+
+#### Receiving Events and Channels
+
+The first category contains `channels` and `events`. There are two very similar commands to respectively listen for any
+telemetry channels or logged events coming from the embedded system through the GDS. These commands print out all the
+data they receive to the console until the user stops them with `CTRL+C`. Since this can be quite a lot of data,
+the user will often want to limit the data to items the user specifically cares about. There are several options to
+filter which items are displayed:
+
+- `-i`/`--ids` only prints data matching specified numeric IDs. e.g. `fprime-cli events --ids 1 2 3` will display events
+    with IDs: 1, 2, or 3
+- `-c`/`--components` only prints items generated by the specified component instance.
+    e.g `fprime-cli channels --components pingRcvr` will only display data sent from the component named `pingRcvr`
+- `s`/`--search` only prints strings containing the (case-sensitive) search term you provide. e.g. `fprime-cli events
+    --search WARNING_LO` will only display `WARNING_LO` events
+    -   Note that unlike the other two options, `--search` will only take a *single* search string
+
+These filters can be combined together to further narrow your search (e.g. `fprime-cli channels -c pingRcvr
+-s WARNING_LO` will only show `WARNING_LO` events from `pingRcvr`).
+
+If you want to view a full list of all the events or channels available, you can use the `-l`/`--list` flag on a command
+to list everything in the dictionary (e.g. `fprime-cli events -l` will list all known events for the project) and if
+that's too much information, the same filtering options we just talked about work on `--list`'s output, too!
+
+If you ever need the full programmatic guts of a response, you can also pass in the `-j/--json` flag to print out the
+full data objects being received in JSON format. While this will include some redundant information, it's guaranteed to
+show you all the information available and allow interaction with other tools.
+
+#### Sending Commands
+
+In the second category is the `command-send` command, which can be used to send commands through the GDS to the embedded
+system. You can send commands by giving the *full name* of the command. These are typically formed by joining the
+component instance name and command name with a '.' (e.g. `health.HLTH_CHNG_PING`). When the command needs arguments,
+these can be passed in as a space-separated list using the `-args`/`--arguments` option. To send a command that does not
+need arguments like `cmdDisp.CMD_NO_OP`, you would just run the following:
+
+```
+$ fprime-cli command-send cmdDisp.CMD_NO_OP
+```
+
+To send one that *does* need arguments like `health.HLTH_CHNG_PING`, the following would be run passing in all three
+needed arguments.
+
+```
+$ fprime-cli command-send health.HLTH_CHNG_PING --arguments eventLogger 50 20
+```
+
+
+> [!NOTE]
+> If you need to pass in a string with spaces as an argument, just enclose it in quotes `"like this"`.
+
+Similar to the other CLI tools, you can run `fprime-cli command-send -l` to get a list of the available commands and
+the arguments they take. The same filter options are available to search for particular commands. If you have tab
+completion enabled, you can also double-tap tab to view a list of potential commands based on what you've typed so far.
+
+## Command Details
+
+Each command's available interface is shown below for reference.  When in doubt use the `--help`  flag with the command
+directly.
+
+### `channels`
+
+Help Message:
+
+```
+usage: fprime-cli channels [-h] [--zmq] [--zmq-server] 
+            [--zmq-transport serverInUrl serverOutUrl] [--tts-port TTS_PORT]
+            [--tts-addr TTS_ADDR] [-r ROOT_INPUT] [--dictionary DICTIONARY]
+            [--packet-spec PACKET_SPEC] [-l LOGS] [--log-directly]
+            [--log-to-stdout] [--file-storage-directory FILES_DIRECTORY]
+            [--list] [-i ID] [-c COMP [COMP ...]] [-s SEARCH] [-t SECONDS] [-j]
+
+print out new telemetry data that has been received from the F Prime instance, 
+sorted by timestamp
+
+options:
+  -h, --help            show this help message and exit
+
+GDS Options:
+  --zmq                 Switch to using the ZMQ transportation layer
+  --zmq-server          Sets the ZMQ connection to be a server. 
+                        Default: false (client)
+  --zmq-transport serverInUrl serverOutUrl
+                        Pair of URls used with --zmq to setup ZeroMQ transportation 
+                        [default: ['ipc:///tmp/fprime-server-in', 
+                        'ipc:///tmp/fprime-server-out']]
+  --tts-port TTS_PORT   Set the threaded TCP socket server port [default: 50050]
+  --tts-addr TTS_ADDR   Set the threaded TCP socket server address 
+                        [default: 0.0.0.0]
+  -r ROOT_INPUT, --root ROOT_INPUT
+                        Root directory of build artifacts, used to automatically 
+                        find app and dictionary. 
+                        [default: install_dest field in settings.ini]
+  --dictionary DICTIONARY
+                        Path to dictionary. Overrides automatic dictionary 
+                        detection.
+  --packet-spec PACKET_SPEC
+                        Path to packet specification.
+  -l LOGS, --logs LOGS  Logging directory. Created if nonexistent. 
+                        [default: /workspaces/macos/DefaultMission/logs]
+  --log-directly        Logging directory is used directly, no extra dated
+                        directories created.
+  --log-to-stdout       Log to standard out along with log output files
+  --file-storage-directory FILES_DIRECTORY
+                        File to store uplink and downlink files. 
+                        Default: /tmp/fprime-downlink/
+
+Search/Filtering Options:
+  --list                list all possible channel types the current F Prime
+                        instance could produce, based on the channels
+                        dictionary, sorted by channel type ID
+  -i ID, --ids ID       only show channels matching the given type ID(s) 'ID'; 
+                        can provide multiple IDs to show all given types
+  -c COMP [COMP ...], --components COMP [COMP ...]
+                        only show channels from the given component name 'COMP';
+                        can provide multiple components to show channels from all 
+                        components given
+  -s SEARCH, --search SEARCH
+                        only show channels whose name or output string exactly
+                        matches or contains the entire given string "STRING"
+
+Retrieval Options:
+  -t SECONDS, --timeout SECONDS
+                        wait at most SECONDS seconds for a single new channel,
+                        then exit (defaults to listening until the user exits
+                        via CTRL+C, and logging all channels)
+  -j, --json            returns response in JSON format
+```
+
+### `command-send`
+
+Help Message:
+
+```
+usage: fprime-cli command-send [-h] [-r ROOT_INPUT] [--dictionary DICTIONARY]
+            [--packet-spec PACKET_SPEC] [-l LOGS] [--log-directly] 
+            [--log-to-stdout] [--file-storage-directory FILES_DIRECTORY]
+            [--zmq] [--zmq-server] [--zmq-transport serverInUrl serverOutUrl]
+            [--tts-port TTS_PORT] [--tts-addr TTS_ADDR]
+            [--arguments [ARGUMENTS ...]] [--list] [-i ID] [-c COMP [COMP ...]]
+            [-s SEARCH] [-j] [command-name]
+
+sends the given command to the spacecraft via the GDS
+
+positional arguments:
+  command-name          the full name of the command you want to execute 
+                        in "<component>.<name>" form
+
+options:
+  -h, --help            show this help message and exit
+  --arguments [ARGUMENTS ...]
+                        provide a space-separated set of arguments to 
+                        the command being sent
+
+GDS Options:
+  -r ROOT_INPUT, --root ROOT_INPUT
+                        Root directory of build artifacts, used to automatically 
+                        find app and dictionary. 
+                        [default: install_dest field in settings.ini]
+  --dictionary DICTIONARY
+                        Path to dictionary. Overrides automatic dictionary 
+                        detection.
+  --packet-spec PACKET_SPEC
+                        Path to packet specification.
+  -l LOGS, --logs LOGS  Logging directory. Created if nonexistent. 
+                        [default: /workspaces/macos/DefaultMission/logs]
+  --log-directly        Logging directory is used directly, no extra dated
+                        directories created.
+  --log-to-stdout       Log to standard out along with log output files
+  --file-storage-directory FILES_DIRECTORY
+                        File to store uplink and downlink files. 
+                        Default: /tmp/fprime-downlink/
+  --zmq                 Switch to using the ZMQ transportation layer
+  --zmq-server          Sets the ZMQ connection to be a server. 
+                        Default: false (client)
+  --zmq-transport serverInUrl serverOutUrl
+                        Pair of URls used with --zmq to setup ZeroMQ transportation 
+                        [default: ['ipc:///tmp/fprime-server-in', 
+                        'ipc:///tmp/fprime-server-out']]
+  --tts-port TTS_PORT   Set the threaded TCP socket server port [default: 50050]
+  --tts-addr TTS_ADDR   Set the threaded TCP socket server address 
+                        [default: 0.0.0.0]
+
+Search/Filtering Options:
+  --list                list all possible command types the current F Prime
+                        instance could produce, based on the commands
+                        dictionary, sorted by command type ID
+  -i ID, --ids ID       only show commands matching the given type ID(s) 'ID'; 
+                        can provide multiple IDs to show all given types
+  -c COMP [COMP ...], --components COMP [COMP ...]
+                        only show commands from the given component name 'COMP';
+                        can provide multiple components to show commands from all 
+                        components given
+  -s SEARCH, --search SEARCH
+                        only show commands whose name or output string exactly
+                        matches or contains the entire given string "STRING"
+
+Retrieval Options:
+  -j, --json            returns response in JSON format
+```
+
+### `events`
+
+Help message:
+
+```
+usage: fprime-cli events [-h] [--zmq] [--zmq-server] 
+            [--zmq-transport serverInUrl serverOutUrl] [--tts-port TTS_PORT]
+            [--tts-addr TTS_ADDR] [-r ROOT_INPUT] [--dictionary DICTIONARY]
+            [--packet-spec PACKET_SPEC] [-l LOGS] [--log-directly]
+            [--log-to-stdout] [--file-storage-directory FILES_DIRECTORY]
+            [--list] [-i ID] [-c COMP [COMP ...]] [-s SEARCH] [-t SECONDS] [-j]
+
+print out new events that have occurred on the F Prime instance, sorted by
+timestamp
+
+options:
+  -h, --help            show this help message and exit
+
+GDS Options:
+  --zmq                 Switch to using the ZMQ transportation layer
+  --zmq-server          Sets the ZMQ connection to be a server. 
+                        Default: false (client)
+  --zmq-transport serverInUrl serverOutUrl
+                        Pair of URls used with --zmq to setup ZeroMQ transportation 
+                        [default: ['ipc:///tmp/fprime-server-in', 
+                        'ipc:///tmp/fprime-server-out']]
+  --tts-port TTS_PORT   Set the threaded TCP socket server port [default: 50050]
+  --tts-addr TTS_ADDR   Set the threaded TCP socket server address 
+                        [default: 0.0.0.0]
+  -r ROOT_INPUT, --root ROOT_INPUT
+                        Root directory of build artifacts, used to automatically 
+                        find app and dictionary. 
+                        [default: install_dest field in settings.ini]
+  --dictionary DICTIONARY
+                        Path to dictionary. Overrides automatic dictionary 
+                        detection.
+  --packet-spec PACKET_SPEC
+                        Path to packet specification.
+  -l LOGS, --logs LOGS  Logging directory. Created if nonexistent. 
+                        [default: /workspaces/macos/DefaultMission/logs]
+  --log-directly        Logging directory is used directly, no extra dated
+                        directories created.
+  --log-to-stdout       Log to standard out along with log output files
+  --file-storage-directory FILES_DIRECTORY
+                        File to store uplink and downlink files. 
+                        Default: /tmp/fprime-downlink/
+
+Search/Filtering Options:
+  --list                list all possible event types the current F Prime
+                        instance could produce, based on the events
+                        dictionary, sorted by event type ID
+  -i ID, --ids ID       only show events matching the given type ID(s) 'ID'; 
+                        can provide multiple IDs to show all given types
+  -c COMP [COMP ...], --components COMP [COMP ...]
+                        only show events from the given component name 'COMP';
+                        can provide multiple components to show events from all 
+                        components given
+  -s SEARCH, --search SEARCH
+                        only show events whose name or output string exactly
+                        matches or contains the entire given string "STRING"
+
+Retrieval Options:
+  -t SECONDS, --timeout SECONDS
+                        wait at most SECONDS seconds for a single new event,
+                        then exit (defaults to listening until the user exits
+                        via CTRL+C, and logging all events)
+  -j, --json            returns response in JSON format
+```
+
+## Conclusion
+
+The user should now be able to successfully use the GDS cli to connect to a running GDS, send commands, receive events
+and telemetry, and filter the results to be manageable. All this is done through the command line using this tool.
+````
+
+### `gds-custom-dashboards.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-custom-dashboards.md`
+
+
+````markdown
+# The GDS Dashboard
+
+The GDS Dashboard lets users create a customizable view for displaying data available to the GDS. Each of these views is
+customizable for the project to display exactly what they need to see and nothing else. Users are able to choose view
+components and modify them to suit project needs. Currently, there are 7 components to choose from:
+
+-   `dashboard-box` groups components together visually
+-   `dashboard-row` helps organize components horizontally
+-   `command-input` sends commands to the embedded system
+-   `command-history` displays previously-sent commands
+-   `event-list` displays events the GDS receives
+-   `channel-table` displays telemetry data from the spacecraft
+-   `logging` displays logged messages stored as the GDS runs
+
+Through an XML specification, users can set up their dashboard and upload it to the F´ GDS to enable it in the system.
+Once uploaded, the Dashboard should load the file and assemble the specified GUI as long as the XML is error-free.
+
+A more complete reference is available here: [GDS Dashboard Reference](gds-dashboard-reference.md).
+
+- [How to Use the Dashboard](#how-to-use-the-dashboard)
+- [Setting Up XML Configuration Files](#setting-up-xml-configuration-files)
+- [Customizing Components](#customizing-components)
+- [An Example Dashboard Configuration](#an-example-dashboard-configuration)
+- [Conclusion](#conclusion)
+
+![Dashboard Intro](../../img/dashboard_header.png)
+
+## How to Use the Dashboard
+
+1.  Start running the GDS GUI for your application by running `fprime-gds` in your deployment folder. Further
+    instructions can be found here: [GDS Introduction](../overview/gds-introduction.md)
+2.  Navigate to the "Dashboard" tab using the navigation buttons at the top
+3.  Click "Browse" and select an XML configuration file containing your dashboard setup
+4.  The new Dashboard should render in the Dashboard tab.
+
+The browser will save your most recently-used Dashboard configuration and use it automatically when you restart the GUI.
+At any point, you can upload a new configuration file to change your Dashboard.
+
+## Setting Up XML Configuration Files
+
+The dashboard is driven by loading an XML file that specifies the layout of this tab.  In this, and the next few
+sections the XML format will be discussed.  At its most basic, the XML format is HTML with a few extra custom F´ tags
+used to display our components.  HTML may be used to help the user achieve the display they'd like, however; the entire
+display can be configured from our custom components and thus no HTML knowledge is required.
+
+Here are some basic rules on how the layout will be displayed:
+- Components will stack top to bottom using 100% width, unless components are inside a `dashboard-row`
+- Components inside a `dashboard-row` will instead layout horizontally left to right.
+    - If multiple components are inside a `dashboard-row` the elements will split the width. e.g. Four components each
+      get 25% of the page width.
+- `dashboard-box` and `dashboard-row` grow to contain all the components included and are limited to the maximum width
+- Other components have a fixed height and variable width with scrollbars that appear when the component overflows
+- Components will stay in the same row regardless of the page size and always maintain relative ordering
+
+The dashboard supports the following components shown below.
+
+| Component | Function | Available F´ Fields |
+|----|----|----|
+| <dashboard-row>...</dashboard-row> | Horizontal container for other components | |
+| <dashboard-box>...</dashboard-box> | Box container for other components        | title  |
+| <command-input/>   | Command builder and transmission component     | fields, filter-text, items-shown, compact |
+| <command-history/> | List of commands sent as tracked by the GDS    | fields, filter-text, items-shown, compact |
+| <event-list/>      | Ordered list of events received by the GDS     | fields, filter-text, items-shown, compact |
+| <channel-table/>   | Latest channel readings as received by the GDS | fields, filter-text, items-shown, compact |
+
+## Customizing Components
+
+Individual components may be customized by passing in properties to them in the form of XML attributes. There are
+several general properties available to many components. Some components allow for other properties that are shown in
+the above table.
+
+| Property | Description | Type | Valid values |
+|---|---|---|---|
+| title        | Title added as a label for box      | string  | any |
+| color        | Background color applied to box     | string  | [Any CSS color](https://www.w3.org/wiki/CSS/Properties/color/keywords) |
+| border-color | Color of border around the box      | string  | [Any CSS color](https://www.w3.org/wiki/CSS/Properties/color/keywords) |
+| fields       | List of fields (columns) shown      | list    | any column field names |
+| filter-text  | Text to filter displayed items      | string  | any |
+| items-shown  | Names of items to restrict display  | list    | any |
+| compact      | Use minimalist display of component | keyword | |
+
+Two of the most basic properties are described below. These were chosen because they show an example of using a string
+property and a space-separated list property.  Keyword properties are specified without the `=...` portion and thus are
+not described.
+
+### Title Property
+
+The title property is used to add a title to other components. This helps label the display such that it is easier to
+understand. The title property can be set by specifying the XML attribute as a string just as it is shown below.
+
+```xml
+    <dashboard-box title="A Giant Blob of Data">
+    ...
+```
+
+### Fields Property
+
+The fields property is used to restrict any of the table-driven components to minimize the number of columns that are
+shown. Thus, users can show just the columns of interest and ignore the others associated with the table owned by the
+component. This property is a list of space-separated values, and uses single quotes (') to contain values that
+included spaces. An example of both is shown below:
+
+```xml
+    <channel-table fields="Description 'Channel Value' 'Channel Name'">
+```
+
+Each component type has different properties that can be used to customize it. All properties for components are
+completely optional and omitted properties will use a default value. These properties are described in full below.
+
+
+## An Example Dashboard Configuration
+
+This section will provide an example dashboard configuration file. It shows how to compose various structures using the
+structural components as well as examples of using the existing F´ display components.  The dashboard we will explore
+will be rendered into the following display.
+
+![Example ](../../img/example_dashboard.png)
+
+This view was rendered from the following XML.  It is designed to be somewhat self-descriptive and should act as a good
+starting point for building your own dashboards.
+
+```xml
+<dashboard-box title="The Big Green Example Box" color="green">
+    <dashboard-box title="This item is on top"/>
+    <dashboard-box title="But this item is below, by default"/>
+    <dashboard-row>
+        <dashboard-box title="Let's start a row instead"/>
+        <dashboard-box color="lightgreen">
+            <dashboard-box title="You can have boxes inside boxes..."/>
+            <dashboard-box title="...and they'll start..."/>
+            <dashboard-box title="...grouping by column again!"/>
+        </dashboard-box>
+        <dashboard-box>
+            <dashboard-box title="Since that's the default"/>
+            <dashboard-box title="And boxes don't need colors"/>
+            <dashboard-box color="coral" border-color="orangered">
+                <dashboard-box title="Or titles."/>
+            </dashboard-box>
+        </dashboard-box>
+    </dashboard-row>
+</dashboard-box>
+
+<dashboard-row>
+    <dashboard-box title="A Clear Box"/>
+    <dashboard-box title="A Not-So-Clear Box" color="aqua"/>
+    <dashboard-box title="A Box with a Border" border-color="black"/>
+</dashboard-row>
+
+<dashboard-box title="A More Practical Example" border-color="black">
+    <dashboard-box title="Control Panel" border-color="gainsboro">
+        <command-input/>
+    </dashboard-box>
+
+    <dashboard-row>
+        <dashboard-box title="Warnings" color="lightyellow" border-color="yellow">
+            <event-list filter-text="WARNING"/>
+        </dashboard-box>
+        <dashboard-box title="Errors" color="salmon" border-color="red">
+            <event-list filter-text="FATAL"/>
+        </dashboard-box>
+    </dashboard-row>
+</dashboard-box>
+
+<dashboard-box title="You can pass in space-separated lists to do things" border-color="black">
+    <dashboard-row>
+        <dashboard-box title="...like only showing certain columns">
+            <event-list fields="'Event Name' 'Event Description'"/>
+        </dashboard-box>
+        <dashboard-box title="...or picking out specific channels">
+            <channel-table items-shown="pingRcvr.PR_NumPings sendBuffComp.PacketsSent"/>
+        </dashboard-box>
+    </dashboard-row>
+</dashboard-box>
+```
+
+## Conclusion
+
+This guide has introduced and walked through an example of the XML dashboards available to help customize the F´ GDS
+GUI. Users may use the technology to build their own views into the system. A more complete reference for the components
+used to build the GUI is available here: [GDS Dashboard Reference](gds-dashboard-reference.md).
+````
+
+### `gds-dashboard-reference.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-dashboard-reference.md`
+
+
+````markdown
+# GDS Dashboard Component Reference
+
+The GDS dashboard is an XML specification for designing custom views into the GDS. This guide will walk through each
+custom component that can be used in this specification. Properties are specified as XML attributes.  This specification
+in reality is HTML and thus HTML tags may be used. However, for best results, the user should stick to these components
+where possible.
+
+In this guide:
+
+- [Available Components and Properties](#available-components-and-properties)
+- [Dashboard Layout Components](#dashboard-layout-components)
+    - [dashboard-box](#dashboard-box)
+    - [dashboard-row](#dashboard-row)
+- [Functional Components](#functional-components)
+    - [command-input](#command-input)
+    - [command-history](#command-history)
+    - [event-list](#event-list)
+    - [channel-table](#channel-table)
+- [Misc Components](#misc-components)
+    - [logging](#logging)
+
+
+## Available Components and Properties
+
+The dashboard is composed of components and properties set on those components. This section will give a quick overview
+of the properties and the components that use them.  Further explanation of the components is available below.
+
+The following is the list of all properties defined by the XML dashboard specification. These properties have types that
+help the user enter them and these types are implicit to the property:
+
+| Property Type | Description | Example |
+|---|---|---
+| string  | text string                                        | title="My fancy title" |
+| list    | Space separated list. Items may be quoted with (') | fields="Field1 'Field 2' 'Field 3'|
+| keyword | Just a keyword, no value required                  | compact |
+
+The following are the properties available, the type of the property from the above table, and a description of valid
+values.
+
+| Property | Description | Type | Valid values |
+|---|---|---|---|
+| title        | Title added as a label for box      | string  | any |
+| color        | Background color applied to box     | string  | [Any CSS color](https://www.w3.org/wiki/CSS/Properties/color/keywords) |
+| border-color | Color of border around the box      | string  | [Any CSS color](https://www.w3.org/wiki/CSS/Properties/color/keywords) |
+| fields       | List of fields (columns) shown      | list    | any column field names |
+| filter-text  | Text to filter displayed items      | string  | any |
+| items-shown  | Names of items to restrict display  | list    | any |
+| compact      | Use minimalist display of component | keyword | |
+
+Finally, here is a list of available components and which properties they allow.
+
+| Component | Function | Available F´ Fields |
+|----|----|----|
+| [`<dashboard-row>...</dashboard-row>`](#dashboard-row) | Horizontal container for other components | |
+| [`<dashboard-box>...</dashboard-box>`](#dashboard-box) | Box container for other components        | title  |
+| [`<command-input/>`](#command-input)     | Command builder and transmission component  | fields, filter-text, items-shown, compact |
+| [`<command-history/>`](#command-history) | List of commands sent as tracked by the GDS | fields, filter-text, items-shown, compact |
+| [`<event-list/>`](#event-list)       | Ordered list of events received by the GDS      | fields, filter-text, items-shown, compact |
+| [`<channel-table/>`](#channel-table) | Latest channel readings as received by the GDS  | fields, filter-text, items-shown, compact |
+
+## Dashboard Layout Components
+
+There are dashboard layout components, which help users organize their dashboard. Apart from constraining the layout,
+these components provide no additional functionality. To understand these components and their properties, there are
+two notes to help clarify:
+
+- Colors are specified as a [named CSS color](https://www.w3.org/wiki/CSS/Properties/color/keywords)
+- All properties have defaults and are not required
+
+### dashboard-box
+
+The `dashboard-box` acts like a container where other elements are put inside, helping to visually group items together.
+This allows the user to specify arbitrary blocks of components that may optionally define a title, background color, and
+border color. An example is shown below.
+
+```xml
+<dashboard-box title="A Box!" color="gray" border-color="black">
+    <!-- ...other content goes inside... -->
+    <command-input/>
+    ...
+</dashboard-box>
+```
+
+`dashboard-box` supports the following properties:
+- `title`: A text label to give the box, appearing at the top-left corner (defaults to nothing)
+- `color`: The background color to give the box (defaults to transparent)
+- `border-color`: The color to give the border of the box (defaults to transparent)
+
+### dashboard-row
+
+The `dashboard-row` is a component for horizontal grouping. This can be used to force components or boxes to align
+horizontally across the screen. Without the component, groupings would be arrayed vertically. The container itself is
+invisible.
+
+```xml
+<dashboard-row>
+    <!-- ...other content goes inside... -->
+    <dashboard-box>...</dashboard-box>
+</dashboard-row>
+```
+
+The `dashboard-row` allows no properties.
+
+## Functional Components
+
+The F´ dashboard allows for several functional components as well. These components allow some access to the GDS data,
+and through the GDS, access to the embedded system.  These components manipulate channels, events, and commands. File
+handling components are currently not supported as they are better suited for a full view.
+
+### command-input
+
+`command-input` is used to build and send commands to the embedded system through the GDS. It consists of a command
+drop-down list, argument input boxes, a clear, and a send button.  It is seen on the top of the `Commands` tab. The
+input box is searchable. An example is shown below:
+
+```xml
+<command-input/>
+```
+
+`command-input` allows no properties.
+
+### command-history
+
+`command-history` is a list of commands and arguments sent to the embedded system. It is important to note that this is
+tracked through the GDS, and these commands may have not been successfully received by the embedded system. This list
+can be filtered for command types, and reduced to a set of fields to be displayed.  Use the [`event-list`](#event-list)
+component with a filter for command severity to display commands as received by the embedded system.  An example of the
+`command-history` component is below:
+
+```xml
+<command-history
+    fields="'Command Time' 'Command Id' 'Command Mnemonic' 'Command Args'"
+    filter-text="cmdDisp"
+    items-shown="cmdDisp.CMD_NO_OP health.HLTH_CHNG_PING"
+    compact/>
+```
+
+`command-history` supports the following properties:
+
+-   `fields`: A list of columns to *show*. The supplied columns must exactly match column headers (default: show all)
+-   `filter-text`: Initial filter text to filter items. Any items without string are hidden. (default: no filter)
+-   `items-shown`: A list of command mnemonics to display. Command mnemonics must exactly match. (default: show all)
+-   `compact`: Display using the compact version of this component.
+
+### event-list
+
+`event-list` displays a set of events as received by the GDS. This allows the user to monitor for either all commands, or for specific events. In addition, a filter may be used to look for certain severities. An example of the
+`event-list` component is shown below:
+
+```xml
+<event-list
+    fields="'Event Time' 'Event Id' 'Event Name' 'Event Severity' 'Event Description'"
+    filter-text="WARNING_LO"
+    items-shown=""
+    compact/>
+```
+
+`event-list` supports the following properties:
+
+-   `fields`: A list of columns to *show*. The supplied columns must exactly match column headers (default: show all)
+-   `filter-text`: Initial filter text to filter items. Any items without string are hidden. Use this for filtering by
+     severity or any arbitrary message text. (default: no filter)
+-   `items-shown`: A list of event names to display. Event names must exactly match. (default: show all)
+-   `compact`: Display using the compact version of this component.
+
+### channel-table
+
+`channel-table` displays the most recent reading of a channel's value. It provides a near real-time look at the channels
+in the embedded system as received by the GDS. Often users use the `items-shown` property to view specific channels of
+interest and the `fields` property can be used to remove undesired information like channel id.  An example is shown
+below:
+
+```xml
+<channel-table
+    fields="'Last Sample Time' 'Channel Id' 'Channel Name' 'Channel Value'"
+    filter-text=""
+    items-shown="cmdDisp.CommandsDispatched"
+    compact/>
+```
+
+`channel-table` supports the following properties:
+
+-   `fields`: A list of columns to *show*. The supplied columns must exactly match column headers (default: show all)
+-   `filter-text`: Initial filter text to filter items. Any items without string are hidden. (default: no filter)
+-   `items-shown`: A list of channel names to display. Channel names must exactly match. This is typically used to set
+     a specific subset of channels to monitor. (default: show all)
+-   `compact`: Display using the compact version of this component.
+
+## Misc Components
+
+This is a set of other components that are not typically used but are nonetheless available.
+
+### logging
+
+The logging component typically lives in the logging tab of the GDS.  It may be used to show logs in a dashboard, but
+this feature is rarely used.
+
+```xml
+<logging/>
+```
+
+`logging` supports no properties.
+````
+
+### `gds-dev-guide.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-dev-guide.md`
+
+
+```markdown
+# GDS Developer's Guide
+
+This guide is for programmers who intend to maintain and develop code for the Ground Data System's command-line interface suite. For regular users who just want to use these CLI tools, please see the [user guide](gds-cli.md).
+
+- [CLI Requirements](#cli-requirements)
+    - [Primary Requirements](#primary-requirements)
+    - [Secondary Requirements](#secondary-requirements)
+- [Architecture](#architecture)
+    - [Intended](#intended)
+    - [As Implemented](#as-implemented)
+    - [Dataflow](#dataflow)
+    - [Dependencies](#dependencies)
+    - [Source Files](#source-files)
+- [Tests](#tests)
+- [Code Quirks](#code-quirks)
+- [Future Work](#future-work)
+    - [Fixing Issues](#fixing-issues)
+    - [New Features](#new-features)
+
+## CLI Requirements
+
+### Primary Requirements
+
+-   Overall goal is to provide a command-line interface for interacting with the F´ Ground Data System (GDS), which can be used entirely in place of the GDS GUI
+    -   At a minimum, the CLI tools should allow for receiving all events/telemetry data from the GDS and sending commands to the spacecraft
+-   The CLI tools' output must be usable with existing UNIX utilities through piping/file output/BASH scripting/etc.
+-   The CLI tools should be multi-platform, supporting (at a minimum) Linux, Mac, and Windows systems
+-   If implemented in Python, must support Python 3.6+
+
+### Secondary Requirements
+
+-   Feature parity should be maintained between the GDS GUI and the GDS CLI tools as far as possible
+-   Tools should be performant (finish executing in <100ms unless explicitly waiting for new data)
+-   CLI tools should work "out of the box" with minimal or no setup/configuration
+-   GDS CLI options/names/operations should be consistent with the GDS GUI first, then with other F´ CLI tools, then with other UNIX conventions
+-   Should be installable through a single pip command
+-   Should support tab completion
+-   Number of 3rd-party dependencies should be kept to a minimum
+-   Should adhere to an MVC architecture, with parsing/printing separated from business logic
+
+## Architecture
+
+### Intended
+
+![](../../img/proposed_architecture.png)
+
+The intended architecture for the CLI is:
+
+-   A single `Parsing` module (if possible, a single file) which handles all argument parsing for the CLI tool; it determines what command was called and what arguments were provided to it
+-   The actual command code is executed in a `Command` module; each CLI command has its own, independent module to handle execution
+-   Any shared code between these modules is refactored into the `Common` module (notably, no direct calls should be made to the API from a `Command` module without going through a `Common` interface first)
+
+The CLI will interact with the GDS through an appropriate API, which the CLI modules access through an interface in `Common`. While the REST API was initially targeted, we later decided to transition to the Integration Test API for now due to its filtering capabilities.
+
+### As Implemented
+
+Not including imports used only for type hints, or dependencies for modules not part of the GDS CLI source code (generated using [pydeps](https://pydeps.readthedocs.io/en/latest/):
+
+![](../../img/overall_dependencies_edited.png)
+
+> [!NOTE]
+> The above graph has arrows pointing **to** the module that does the importing and away from the dependency, and does not include Python standard library imports.
+
+-   All parsing is handled in `fprime_cli`, which imports the command modules and several external libraries to help with parsing.
+-   Each command is implemented separately, but shares a large portion of its code with other modules via the `Common` module files, as well as importing the appropriate GDS data type for the type of data it's working with (and, in the case of `command_send`, an appropriate exception).
+-   The `Common` module is actually made up of several distinct, independent submodules containing related groups of common code. These import a variety of other GDS modules to help provide all necessary functionality; in particular, the `testing_fw.api` Integration Test module is used to access the GDS.
+
+### Dataflow
+
+![](../../img/cli_data_flow.svg)
+
+### Dependencies
+
+External Dependencies (installed via `setup.py`):
+
+-   [argcomplete](https://github.com/kislyuk/argcomplete) - Used to implement tab completion
+
+Internal Dependencies (i.e. Other F´ modules)
+
+-   Integration Test API - Used to get data from and send commands to the GDS and filter incoming data via the included predicates
+-   `common/pipeline` and `common/utils` - Used to initialize the Test API; `pipeline.dictionaries` also used to get a list of available commands/events/channels
+-   GDS Data Types in `common/data_types` - Used to handle incoming GDS data and for printing output
+-   `fprime_gds/flask/json.py` - Used for the `--json` printing flag implementation
+-   `executables/cli.py` - Used to automatically search for a dictionary file while parsing
+
+Important Python `stdlib` Dependencies:
+
+-   `argparse` - Used to handle parsing user input
+
+### Source Files
+
+Parsing files (in `executables`)
+
+-   **fprime_cli.py** - Handles user input to the CLI tools via Python's `argparse` library; defines a base class for parsing and a subclass for each command. Uses `argcomplete` to handle tab completion if it's enabled, `cli.py` to search for a dictionary file, and then executes the appropriate command's function.
+
+Command files (in `common/gds_cli`):
+
+-   **channels.py** - Displays and filters received telemetry channel data. Handles printing and listing data; most functionality comes from `base_commands.py`.
+-   **command_send.py** - Sends a given command to the GDS and prints an appropriate error message if this fails, and prints available commands. Filtering functionality comes from `base_commands.py`.
+-   **events.py** - Displays and filters received telemetry channel data. Handles printing and listing data; most functionality comes from `base_commands.py`.
+
+Common files (in `common/gds_cli`):
+
+-   **base_commands.py** - Defines a base class for implementing commands with logging, and a child class for receiving and filtering GDS data
+-   **test_api_utils.py** - Defines functions for initializing the Integration Test API and receiving data from the API
+-   **filtering_utils.py** - Defines classes and functions used to filter GDS data using the Integration Test API's predicates
+-   **misc_utils.py** - Any other functions used by multiple CLI commands that haven't been categorized (currently includes string formatting functions and shared datatypes for CLI arguments)
+
+## Tests
+
+The GDS CLI tests can be found at `Gds/test/fprime/common/gds_cli`, and currently includes 2 unit test files:
+
+-   `filtering_utils_test.py` tests that filtering lists and GDS data work as expected
+-   `utils_test.py` tests `misc_utils` and `test_api_utils` functions, verifying that commands listening for data exit when interrupted, and that getting lists of items works successfully
+
+Test coverage is fairly low; there are currently no integration tests for the CLI.
+
+## Code Quirks
+
+-   `fprime_cli.py` and `misc_utils.py` use delayed/lazy importing to avoid slow performance from several particularly long imports
+    -   In particular, `fprime_gds/flask/json.py` and `common/logger/test_logger.py` each take 100ms+ to import
+    -   The script takes noticeably longer to run if the optional `openpyxl` is installed since it's a slow import for the Test API
+-   While technically true for all GDS python code, the [fast_entry_points](https://github.com/ninjaaron/fast-entry_points) script was used to improve startup speed
+    -   Low startup times are especially important because tab completion re-runs the script each time tab is hit
+-   Code uses type hints, introduced in Python 3.5
+-   Commands don't bother initializing the Test API when passed the `--list` option for performance reasons
+-   The parsing/command classes currently have all their functionality implemented on class methods and are never instantiated
+-   Printing uses `SysData` printing methods, which means console output will change if those `SysData` methods change
+-   When used for filtering, the `filtering_util` predicates are called on entire `SysData` objects
+-   New event/channel retrieval methods defined in `test_api_utils` instead of using the Test API's existing `await_telemetry`/etc. methods, since those only accept predicates filtering by time or one of the predefined `telemetry_predicate` or `event_predicate` fields; defining our own methods lets us use any predicate that will accept a `SysData` object
+    -   This lets us also filter by component, printed strings, etc. at the cost of having slightly more complicated predicates
+-   The `search` filter option doesn't take multiple arguments like the other filtering options (done to allow for multi-word string queries more easily, but might not be worth breaking the multiple-filter pattern of the other ones)
+-   CLI filters are inclusive OR with themselves but exclusive to one another (e.g. passing multiple `ids` will show all data with any of those ID types, but passing `--ids` and `--search` will only show data with those IDs AND having that search term)
+-   MVC isn't strictly followed, since the base command class has a logging method for convenience (and since we have to print on data receipt), but parsing is separated from execution code
+
+## Future Work
+
+### Fixing Issues
+
+-   Getting tab completion to automatically install, rather than be user-activated (headache since the user has to source a script from `argcomplete`)
+-   Improve performance
+    -   Fix the problem of just having `openpyxl` installed slowing the script down because of import time
+    -   Test API is slow to shut down for some reason, due to a slow thread join
+-   Create basic integration tests for each CLI tool to make sure they work successfully end-to-end
+
+### New Features
+
+-   Adding CLI tools for file uplink/downlink
+-   Extending tab completion to component names/opcodes/etc.
+-   Immediate value querying (i.e. ask what the value of a channel/etc. is now, instead of just recording updates)
+    -   Nice-to-have, may not be possible with Integration Test API
+-   Having colored output to improve readability
+-   Talk to testers using the GDS to figure out useful quality-of-life features
+```
+
+### `gds-test-api-guide.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/gds-test-api-guide.md`
+
+
+````markdown
+# GDS Integration Test API
+
+The GDS integration test API is a tool that provides useful functions and asserts for creating integration or system tests for an F´ deployment. These tests run through the ground system attached to a running F´ deployment. This document hopes to give an overview of the main features associated with the Test API and demonstrates common use patterns and highlight some anti-patterns. 
+
+This integration test API was developed by Kevin Oran in the summer of 2019.
+
+## Quick Start
+
+Integration tests are implemented using [pytest](https://docs.pytest.org/) a custom fixture called `fprime_test_api` is
+provided that configures `pytest` to attach to the GDS framework, and provides access to the API functions.
+
+To create a simple test, place the following function in a python file in `test/int/test_my_deployment.py` typically in your deployment folder.
+
+```python
+def test_send_command(fprime_test_api):
+    """ Ensure commanding works as expected
+
+    Tests that commands may be sent and the expected command severity events are returned.
+    """
+    fprime_test_api.send_and_assert_command("cmdDisp.CMD_NO_OP", max_delay=0.1)
+    assert fprime_test_api.get_command_test_history().size() == 1
+```
+
+To run this test, ensure the GDS is running (by invoking `fprime-gds`) and then run `pytest test/int/test_my_deployment.py`.
+
+> [!NOTE]
+> You must ensure that your deployment has been built as this is required by `fprime-gds` and the integration test API.
+
+
+## Usage Patterns
+
+All usage patterns are written such that they would be compatible with the test framework example described above: each test case assumes that the histories were recently emptied and that the `fprime_test_api` is provided as a pytest fixture.  You may also browse sample [Ref app integration tests](https://github.com/nasa/fprime/blob/devel/Ref/test/int/ref_integration_test.py).
+
+### Sending Commands
+
+The Integration Test API provides several methods for sending commands. The most simple is the `send_command` method.
+
+> [!NOTE]
+> The command arguments must be Python strings (str) instead of a literal.
+
+```python
+fprime_test_api.send_command("TEST_CMD_1") # sending a command via mnemonic
+fprime_test_api.send_command(0x01)         # sending the same command via opcode
+
+fprime_test_api.send_command("TEST_CMD_2", ["235", "43"]) # sending a command with arguments
+```
+
+These calls do not ensure that command severity events were seen they just ensure that the command was sent.  To do both users should use `send_and_assert_command` with a `max_delay` of the time to wait for those events
+
+```python
+fprime_test_api.send_and_assert_command("TEST_CMD_2", ["235", "43"], max_delay=0.1)
+```
+
+### Searching for Telemetry
+
+The integration Test API provides several different [types of searches](#types-of-searches). Using a telemetry_predicate will enable the user to better specify the fields of the ChData object to be searched for.
+
+> [!NOTE]
+> all searches in the API will return the results of the search. This is so the user may perform additional checks on the results. Whether the search was successful is left to the user to check.
+
+```python
+# awaits a telemetry update on the Counter Channel
+result = fprime_test_api.await_telemetry("Counter")
+
+# same search, but using an id
+result = fprime_test_api.await_telemetry(3)
+
+# awaits a Counter update with a value of 8
+result = fprime_test_api.await_telemetry("Counter", 8)
+
+# searches for an existing telemetry update on the Counter Channel
+result = fprime_test_api.await_telemetry("Counter", start=0, timeout=0)
+
+# awaits for 7 telemetry updates that are not guaranteed to be in order
+results = fprime_test_api.await_telemetry_count(7, "Counter")
+
+ch_seq = []
+for i in range(0,10):
+    ch_seq.append(fprime_test_api.get_telemetry_pred("Counter", i))
+
+# awaits for 10 Counter updates with the values 0 through 9 (inclusive).
+# the resulting sequence must follow the history's enforced order
+results = fprime_test_api.await_telemetry_sequence(ch_seq)
+```
+
+
+### Asserting on Telemetry
+
+The integration Test API provides several different [types of searches](#types-of-searches) that can be followed by an assert on whether the search succeeded. Using a telemetry_predicate will enable the user to better specify the fields of the ChData object to be searched for.
+
+> [!NOTE]
+> all successful search-then-assert calls in the API will return the results of the search. This is so the user may perform additional checks on the results. Because an assertion is raised on search failure, the user can be sure the results reflect a successful test.
+
+```python
+# asserts a telemetry update exists in the current history
+result = fprime_test_api.assert_telemetry("Counter")
+
+# same search, but using an id
+result = fprime_test_api.assert_telemetry(3)
+
+# asserts a "Counter" update with a value of 8 exists in the current history
+result = fprime_test_api.assert_telemetry("Counter", 8)
+
+# awaits and asserts a "Counter" update was received
+result = fprime_test_api.assert_telemetry("Counter", start="END", timeout=5)
+
+# asserts a count of exactly 7 "Counter" updates exist in the current history
+results = fprime_test_api.assert_telemetry_count(7, "Counter")
+
+ch_seq = []
+for i in range(0,10):
+    ch_seq.append(fprime_test_api.get_telemetry_pred("Counter", i))
+
+# asserts the history contains a sequence of "Counter" updates with vals 0 through 9
+# the resulting sequence must follow the history's enforced order
+results = fprime_test_api.assert_telemetry_sequence(ch_seq)
+```
+
+### Searching for Events
+
+The integration Test API provides several different [types of searches](#types-of-searches). Using an event_predicate will enable the user to better specify the fields of the EventData object to be searched for.
+
+> [!NOTE]
+> all searches in the API will return the results of the search. This is so the user may perform additional checks on the results. Whether the search was successful is left to the user to check.
+
+```python
+# awaits a "CommandReceived" event
+result = fprime_test_api.await_event("CommandReceived")
+
+# same search, but using an id
+result = fprime_test_api.await_event(0x01)
+
+# awaits a "CommandReceived" event with arguments that match
+result = fprime_test_api.await_event("CommandReceived", [0x01])
+
+# searches for an existing "CommandReceived" event
+result = fprime_test_api.await_event("CommandReceived", start=0, timeout=0)
+
+# awaits for any 7 events updates that are not guaranteed to be in order
+results = fprime_test_api.await_event_count(7)
+
+evr_seq = []
+for i in range(0,10):
+    evr_seq.append(fprime_test_api.get_event_pred("CommandReceived", [i]))
+
+# awaits for 10 "CommandReceived" events with the argument values 0 through 9 (inclusive).
+# the resulting sequence must follow the history's enforced order
+results = fprime_test_api.await_event_sequence(evr_seq)
+```
+
+### Asserting on Events
+
+The integration Test API provides several different [types of searches](#types-of-searches) that can be followed by an assert on whether the search succeeded. Using an event_predicate will enable the user to better specify the fields of the EventData object to be searched for.
+
+> [!NOTE]
+> all successful search-then-assert calls in the API will return the results of the search. This is so the user may perform additional checks on the results. Because an assertion is raised on search failure, the user can be sure the results reflect a successful test.
+
+```python
+# asserts a "CommandReceived" event is in the history
+result = fprime_test_api.assert_event("CommandReceived")
+
+# same search, but using an id
+result = fprime_test_api.assert_event(0x01)
+
+# asserts a "CommandReceived" event with arguments is in the history
+result = fprime_test_api.assert_event("CommandReceived", [0x01])
+
+# awaits and asserts on a single "CommandReceived" event
+result = fprime_test_api.assert_event("CommandReceived", start="END", timeout=5)
+
+# asserts that exactly 7 of any event are in the history
+results = fprime_test_api.assert_event_count(7)
+
+evr_seq = []
+for i in range(0,10):
+    evr_seq.append(fprime_test_api.get_event_pred("CommandReceived", [i]))
+
+# asserts tha history has a sequence of 10 "CommandReceived" events with the argument vals 0 through 9 (inclusive).
+# the resulting sequence must follow the history's enforced order
+results = fprime_test_api.assert_event_sequence(evr_seq)
+```
+
+### Sending and Searching/Asserting
+
+The Test API provides 4 versions of send and search to enable searching for telemetry and events following a command. Internally, these calls record the current position of the history, then send a command then begin a search from the recorded position. All 4 versions support both item and sequence searches depending on whether the channels/events arguments are a list.
+
+```
+# sends "TEST_CMD_1" then awaits a "CommandCounter" channel update
+result = fprime_test_api.send_and_await_telemetry("TEST_CMD_1", channels="CommandCounter")
+
+# sends "TEST_CMD_1" then awaits a sequence of "CommandCounter" then five "Counter" updates
+seq = ["CommandCounter"] + ["Counter"] * 5
+results = fprime_test_api.send_and_await_telemetry("TEST_CMD_1", channels=seq)
+
+# sends "TEST_CMD_1" then awaits and asserts a "CommandCounter" channel update
+result = fprime_test_api.send_and_assert_telemetry("TEST_CMD_1", channels="CommandCounter")
+
+# sends "TEST_CMD_1" then awaits a "CommandReceived" event
+result = fprime_test_api.send_and_await_event("TEST_CMD_1", events="CommandReceived")
+
+# sends "TEST_CMD_1" then awaits a sequence of "CommandReceived" then five "SeverityDIAGNOSTIC" events
+seq = ["CommandReceived"] + ["SeverityDIAGNOSTIC"] * 5
+results = fprime_test_api.send_and_await_event("TEST_CMD_1", events=seq)
+
+# sends "TEST_CMD_1" then awaits and asserts "CommandReceived" event
+result = fprime_test_api.send_and_assert_event("TEST_CMD_1", events="CommandReceived")
+```
+
+> Unlike `send_and_assert_command` command severity events are not automatically checked with these commands.
+
+### Using predicates
+
+The API uses predicates to identify valid values in searches and filter data objects into histories.
+The provided [predicates](#predicates) can be combined to make specifying an event message or channel update incredibly flexible. When using predicates, it is important to understand that a predicate is used to determine if a value belongs to a set of values that satisfies a rule. Not satisfying a rule [**DOES NOT** imply](#interpreting-predicates-correctly) that a value satisfies a second complementary rule.
+
+#### Combining Predicates
+
+One pattern is to have multiple predicate specifications and want to combine these.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+
+gt_pred = predicates.greater_than(8)
+eq_pred = predicates.equal_to("some_string")
+
+# satisfies any will evaluate true if any of it's predicates are valid
+or_pred = predicates.satisfies_any([gt_pred, eq_pred])
+
+or_pred(121)           # evaluates True
+or_pred("some_string") # evaluates True
+
+rng_pred = predicates.within_range(0, 100)
+ne_pred = predicates.not_equal_to(50)
+
+# a valid value must be within the range 0 to 100 and must not be 50.
+and_pred = predicates.satisfies_all([rng_pred, ne_pred])
+
+or_pred(15) # evaluates True
+or_pred(50) # evaluates False
+```
+
+
+#### Set Predicates
+
+Another pattern is to specify a collection and check if the value is a member of that collection.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+
+is_in_pred = predicates.is_a_member_of(["A", 2, False])
+isnt_in_pred = predicates.is_not_a_member_of(["A", 3])
+
+is_in_pred(2)     # evaluates True
+is_in_pred(False) # evaluates True
+
+is_in_pred("A")   # evaluates True
+isnt_in_pred("A") # evaluates False
+```
+
+This pattern is useful for creating filters. For example, if we want to search or filter for certain event severities.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+from fprime_gds.common.utils.event_severity import EventSeverity
+
+severities = []
+severities.append(EventSeverity.FATAL)
+severities.append(EventSeverity.WARNING_HI)
+sev_pred = predicates.is_a_member_of(severities)
+
+# event pred will now identify any event with either Fatal or HI Warning severity
+event_pred = fprime_test_api.get_event_pred(severity=sev_pred)
+```
+
+#### Specifying data objects
+
+The test API has two methods to help create event and telemetry predicates: `api.get_telemetry_pred` and `api.get_event_pred`. These methods overload argument types such that fields can be specified as a value (becomes an equal_to predicate) or they can be specified by user-created predicates. To specify the type of event/telemetry, the helpers can accept both mnemonics (str) or ids (int).
+
+```python
+from fprime_gds.common.testing_fw import predicates
+from fprime_gds.common.utils.event_severity import EventSeverity
+
+# both predicates will now identify any event with a command severity
+sev_pred = predicates.equal_to(EventSeverity.COMMAND)
+event_pred1 = fprime_test_api.get_event_pred(severity=sev_pred)
+event_pred2 = fprime_test_api.get_event_pred(severity=EventSeverity.COMMAND)
+
+# both predicates will now identify any "CommandCounter" Update
+ch_pred1 = fprime_test_api.get_telemetry_pred("CommandCounter")
+ch_pred2 = fprime_test_api.get_telemetry_pred(1)
+```
+
+### Using sub-histories
+
+One pattern that the API supports is creating a sub-history of telemetry or event objects. There are several [behaviors](#substituting-a-history-with-history-argument) to understand with sub-histories that are outlined in the API features section. Below is an example of how to create sub-histories, search on sub-histories, and remove sub-histories. Sub-histories can be created for both telemetry and event data objects.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+from fprime_gds.common.utils.event_severity import EventSeverity
+
+# Creates an event sub-history with the default object ordering (fsw_order).
+fsw_subhist = fprime_test_api.get_event_subhistory()
+
+# Creates a filtered sub-history with all events of COMMAND severity
+event_filter = fprime_test_api.get_event_pred(severity=EventSeverity.COMMAND)
+filt_subhist = fprime_test_api.get_event_subhistory(event_filter)
+
+# Creates an event sub-history with ERT ordering
+ert_subhist = fprime_test_api.get_event_subhistory(fsw_order=False)
+
+# Substitutes a sub-history into an API assert
+result = fprime_test_api.assert_event("SeverityCOMMAND", history=filt_subhist)
+
+# If a sub-history hasn't been removed. It can also be awaited on.
+results = fprime_test_api.await_event_count(5, history=fsw_subhist)
+
+# De-register a sub-history from the GDS
+fprime_test_api.remove_event_subhistory(ert_subhist)
+```
+
+### Search returns
+
+API calls that perform a search and do not end by raising an Assertion Error will return the results of the search. This is so that the user can find some event or channel updates then perform additional checks on the results or use the results to specify a future search.
+
+Here is an example of awaiting a counter sequence and verifying that the sequence always ascends.
+
+```python
+search_seq = ["Counter"] * 5
+results = fprime_test_api.await_telemetry_sequence(search_seq)
+
+last = None
+for update in results:
+    if last is not None:
+        assert update.get_val() > last.get_val()
+    last = update
+```
+
+### Assert Helpers
+
+Another feature provided to the user is the ability to raise asserts with formatted assert messages reflected in the test logs.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+
+# assert on values that can be evaluated as True or False
+fprime_test_api.test_assert(2 < 3, "The number two should be less than three")
+
+# assert a predicate on a value the log message will be more descriptive.
+lt_pred = predicates.less_than(3)
+fprime_test_api.predicate_assert(lt_pred, 2, "The number two should be less than three")
+```
+
+Assert helpers can be configured not to raise an assertion error. They will also return True if the assertion passed or False if it failed. This can be used to perform multiple checks. This behavior is referred to as expecting instead of asserting.
+
+```python
+# a variable to accumulate whether all checks were successful
+all_passed = True
+all_passed &= fprime_test_api.test_assert(1 < 3, "1 should be less than 3", expect=True)
+all_passed &= fprime_test_api.test_assert(2 < 3, "2 should be less than 3", expect=True)
+# this call will not raise an assert, but will return False
+all_passed &= fprime_test_api.test_assert(3 < 3, "3 should not be less than 3", expect=True)
+
+# checks that previous expectations passed.
+fprime_test_api.test_assert(all_passed, "All checks should have passed, see log")
+```
+
+### Using TimeTypes
+
+The TimeType serializable stores timestamp information for both events and telemetry. As part of the development for the integration test API, the TimeType object was updated to support rich comparison and math operations. These are implemented with python special methods and are compatible with floating point numbers.
+
+> [!NOTE]
+> Math operations will return a new TimeType object with the resulting value and the TimeType serializable does not allow negative values.
+
+> [!NOTE]
+> Math operations between TimeType objects of different time_bases or time_context will return a TimeType with the same base and context as the left operand.
+
+```python
+from fprime.common.models.serialize.time_type import TimeType
+
+t0 = TimeType() # 0.0 seconds
+
+t1 = t0 + 1   # Assigns a TimeType with a time of 1.0 seconds
+t3 = t0 + 3   # Assigns a TimeType with a time of 3.0 seconds
+t2 = t3 - t1  # Assigns a TimeType with a time of 2.0 seconds
+t0 = t1 - t3  # Assigns a TimeType with a time of 0.0 seconds (negatives are set to 0)
+t15 = t3 / 2  # Assigns a TimeType with a time of 1.5 seconds
+t6 =  t2 * t3 # Assigns a TimeType with a time of 6.0 seconds
+
+
+t1 > 0   # evaluates True
+t1 > t0  # evaluates True
+t6 == 6  # evaluates True
+t3 >= t2 # evaluates True
+```
+
+Accessing TimeStamps from event and channel data types can be done with the `get_time()` getter. These comparisons can be very useful in testing whether FSW meets timing requirements.
+
+```python
+seq = ["Counter"] * 5
+results = fprime_test_api.await_telemetry_sequence(seq)
+
+# checks that all adjacent elements in the sequence happened within 2 seconds of each other
+last = None
+for result in results:
+    if last is not None:
+        assert result.get_time() - last.get_time() < 2
+    last = result
+```
+
+### Recording a point in the histories
+
+> [!BUG]
+> There is an issue with how get_latest_time() is implemented. Getting history markers should be updated to be more robust.
+
+If a user wants to record a marker, send some commands and then come back and evaluate items after that marker, then they can do the following: This all will return the latest FSW TimeStamp when the histories are ordered by FSW time.
+
+```python
+# if using time-ordered histories
+fsw_start = fprime_test_api.get_latest_time()
+
+# do some stuff
+fprime_test_api.send_command("TEST_CMD_1")
+
+# search
+results = fprime_test_api.assert_telemetry("Counter", start=fsw_start)
+```
+
+If using receive-ordered histories, this point should be marked as an index.
+
+```python
+# if using re-ordered histories
+ro_start = fprime_test_api.get_telemetry_test_history().size()
+
+# do some stuff
+fprime_test_api.send_command("TEST_CMD_1")
+
+# search
+results = fprime_test_api.assert_telemetry("Counter", start=ro_start)
+```
+
+## Anti-patterns
+
+These patterns do not operate as expected within the integration test API. You should ensure that you understand the issues using these patterns and perform them correctly.
+
+### Asserting none of a data object were received
+
+One thing a user might want to do is assert that no instances of a certain update or message were received. This can be done using a count search for zero items on **existing history items only**.  This constraint is because the count search behaves as follows:
+
+1. Count all items in the search scope of the current history
+2. Await future updates until a correct count is received.
+
+So, if count search is awaiting zero items, it will exit immediately and claim success where the user may believe it searched future objects.
+
+```python
+# incorrect, this will exit as the search found 0 items and was looking for 0 items
+fprime_test_api.assert_telemetry_count(0, start="END", timeout=5)
+```
+
+If the user wants to assert that none of a certain type of object were received in the future scope, they should wait for items to accumulate then assert on existing scope.
+
+```python
+import time
+
+# correct, way to say no telemetry was received in now or in the next 5 seconds.
+time.sleep(5)
+fprime_test_api.assert_telemetry_count(0)
+```
+
+### Specifying sequence searches with timestamps
+
+The doc-strings in the API recommend not specifying FSW timestamps when searching for sequences. This is simply because the timestamps can change depending on when tests are run. The easiest way to verify timing is to process timestamps after a search is completed.
+
+### No-scope search
+
+Because searches allow the user to define the [existing and future scope to search](#specifying-search-scope-start-and-timeout-arguments), it is possible to completely de-scope a search.
+
+```python
+# setting timeout to zero on await functions w/o a start, results in no scope
+fprime_test_api.await_telemetry_count(5, timeout=0)
+
+# setting start to END on assert functions w/o a timeout, results in no scope
+fprime_test_api.assert_telemetry_count(5, start="END")
+
+# setting start to END and timeout to zero on any search, results in no scope
+fprime_test_api.assert_telemetry_count(5, start="END", timeout=0)
+fprime_test_api.await_telemetry_count(5, start="END", timeout=0)
+```
+
+### Interpreting predicates correctly
+
+Predicates may compare a value to another, but their purpose isn't to compare two objects, rather to identify objects that satisfy a certain property or rule. If a user uses a greater_than predicate to see if a string is greater than a numeric value, 8, the predicate will return False. The correct interpretation is that the string is not in the set of values that are greater than 8. It is incorrect to say the string is less than 8.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+
+gt_pred = predicates.greater_than(8)
+gt_pred(9)        # evaluates True
+gt_pred(7)        # evaluates False
+gt_pred("string") # evaluates False: String is not a value that is greater than 8
+
+lte_pred = predicates.less_than_or_equal_to(8)
+lte_pred(8)        # evaluates True
+lte_pred(7)        # evaluates True
+lte_pred("string") # evaluates False: String is not a value that is less than 8
+```
+
+**Takeaway**: using invert to try to convert a greater_then predicate to a less_than_or_equal_to predicate will introduce false positives if the user isn't aware of what a predicate is describing.
+
+```python
+from fprime_gds.common.testing_fw import predicates
+
+gt_pred = predicates.greater_than(8)
+lte_pred = predicates.less_than_or_equal_to(8)
+not_lte_pred = predicates.invert(lte_pred) # inverts how a predicate evaluates.
+
+not_lte_pred("string") # evaluates True: because "string" is not a value that is less than 8
+gt_pred("string") # evaluates False: String is not a value that is greater than 8
+```
+
+## Important API Features
+
+This section discusses important API features.
+
+### Specifying Search Scope (start and timeout arguments)
+
+All searches in the integration test API can be configured to search part of the existing history (Current Search Scope) and/or part of the future history (Future Search Scope). The API relies on two common variables to define the scope of what is searched: `start` and `timeout`.
+
+The `start` argument specifies the Current Search Scope in an existing history. `start` is used to choose the earliest item that the search will evaluate in a given history's ordering. `start` can be either an index in the history's ordering, a predicate, or a TimeType timestamp. Because the Test API's histories support re-ordering, the TimeType timestamp is the most reliable marker for `start`. A predicate can also be used to specify a `start`. For example, if the assert is only to begin after a certain EVR was received then an event_predicate instance could be used to find the first element to search. If `start` is not specified, see the particular API function to learn the default behavior. For convenience, the API includes a member variable, `NOW`, that will begin the search after all existing history when `NOW` is passed as the `start` argument.
+
+The `timeout` argument specifies the Future Search Scope (FSS) in seconds. FSS is how long a search should await until the search criteria is met. Searches that await a yet-to-be-received item can only specify how long in seconds. A `timeout` of zero seconds will skip awaiting at all.
+
+![Search Scope diagram](../../img/APISearchScope.png)
+
+All search methods can either be configured with CSS, FSS, or both.
+
+```python
+# An example of FSS await 10 seconds
+fprime_test_api.await_telemetry_count(5, timeout=10)
+
+# An example of CSS searching from the beginning of history
+fprime_test_api.assert_telemetry_count(5, start=0)
+```
+
+### Types of searches
+
+The integration test API defines three types of searches: item, count, and sequence. Each of these searches has an [assert version and an await version](#default-search-scope-for-await-and-assert-calls) as well as a version for both telemetry and event versions. This means the API has a total of 12 search calls.
+
+| Search Type| Description|
+| :---| :---|
+| item search| an item search is searching for a specific item in the history. The result will return a single data object|
+| count search| a count search is searching for a number of items in history. The result is a group of items that isn't necessarily ordered according to the history. |
+| sequence search| a sequence search is searching for an ordered sequence of items in the history. The result is an ordered list of items that is ordered with respect to the given history's order.|
+
+#### Default Search Scope for await and assert calls
+
+The integration test API provides to versions of each type of search: the await version will always return results and the assert version will search and then assert on whether the search completed successfully. For any given combination of search type (item, count, sequence) and search behavior (await or assert), the API allows the user to reconfigure the search scope with CSS, FSS, or both. Because all search calls in the API can manipulate this scope, the API doesn't provide different combinations of search scopes as different API calls. However, the API does provide default arguments for its searches and name its searches accordingly. This was done to satisfy the common request to support await functionality explicitly even though this behavior is already being provided by all search types.
+
+| Prefix| Default Behavior|
+| :---| :---|
+| `await_`| By default, all search-only calls begin with `await_` and will only search for future data objects for at most 5 seconds|
+| `assert_`| By default, all search and assert calls begin with `assert_` and will search all current data objects from the beginning of the history|
+
+### Substituting a History With History Argument
+
+Another useful feature in the integration test API is the ability to create filtered sub-histories and substitute them into any regular API call. This feature provides the user with the ability to manage their own histories. The API methods that support this are` get_telemetry_subhistory`, `remove_telemetry_subhistory`, `get_event_subhistory`, `remove_event_subhistory`. There are several behaviors to know when creating sub-histories.
+
+- When creating a sub-history, the get_ calls allow the user to specify whether the history will be ordered by receive order or by flight software time (FSW) order. This is done with the `fsw_order` argument (ordered by FSW time is default).
+- When creating a sub-history, the get_ calls allow the user to optionally specify a predicate filter to determine which items to allow into the sub-history (allows all by default). These filters should be a predicate composed of either telemetry_predicate's or event_predicate's depending on the type of sub-history.
+- A new subhistory WILL be registered with the GDS to automatically receive data objects from its respective decoder (event/telemetry).
+- A new subhistory will NOT be managed by the Test API. It will not be cleared nor de-registered when a test case ends.
+
+Removing a sub-history is currently permanent as the API doesn't provide for sub-histories to be re-registered. Removing a sub-history will unsubscribe it from the GDS and it will no longer receive new data objects.
+
+### Data object specifiers (event and channel arguments)
+
+Throughout the API specifying an event message or channel update to search for is very flexible. This is because all search types use predicates to specify a single or multiple objects when searching. The word used to describe this overloading behavior in the API is `specifier`. The phrases to look for in doc-strings are channel specifiers and event specifiers.
+
+Providing this flexibility in the `event` and `channel` arguments is done via the get_event_predicate and get_telemetry_predicate calls. These calls provide argument-overloading when specifying different fields of ChData or EventData objects. The way this works for most fields is that if the user specifies the field as a value, the returned predicate will check that data object's corresponding field against that value; however, if the user specifies the field as a predicate, then the user's predicate will be called on that field instead. This enables using the predicates library to do more complex checks on certain fields.
+
+In addition to specifying values by value or predicate, the get_event_predicate and get_telemetry_predicate calls also access the deployment dictionary to allow the user to specify a data object type by mnemonic or ID.
+
+### API Test Log
+
+When an output location is specified, the integration test API will generate a formatted test log as a .xlsx file.
+There are four columns in this file. They are summarized in the table below:
+
+| Log Column| Description|
+| :---| :---|
+| Log Time| A time stamp of when the message was logged. Format "HH:mm:ss.us"|
+| Case ID| An identifier for a test case. This field will help navigate when looking through long logs.|
+| Sender| Describes where the message originated (GDS, Test API, API user). Note: all log messages are still made through API calls.|
+| Message| A string message recording test behavior.
+
+The following image is an excerpt from an API log generated by the Ref App integration tests.
+![Test Log Example](../../img/TestLogExample.png)
+
+The following table summarizes the color meanings from API-generated messages.
+
+| Color| Meaning|
+| :---| :---|
+| Red| red indicates failed asserts. If a red log message is from the Test API, then an assertion error was raised by an API call.|
+| Orange| orange indicates failed expectations and warnings.|
+| Yellow| yellow indicates the beginning and end of any search.|
+| Green| green indicates successful asserts and expectations within API calls.|
+| Blue| blue indicates interlaced EVR's.|
+| Purple| purple indicates commands that were sent to flight software.|
+| Gray| gray indicates the beginning of a new test case.|
+| White| white or blank fill is used for diagnostic messages.|
+
+### Predicates
+
+The integration test API uses predicates for filtering, searching and asserting. A predicate is a callable class that evaluates if an object/value satisfies a certain property. Predicates used by the API are defined in [testing_fw/predicates.py](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/common/testing_fw/predicates.py). The API uses Duck Typing to determine what can and cannot be used as a predicate; therefore, a user of the API can very easily create their own. Below is a table of how predicates are organized with a brief summary of each section:
+
+| Predicate Section| Section Description| Functions/predicates|
+| :----| :----| :----|
+| Base class/helpers| This section contains the parent class for predicates and helpers to carry out duck-typing and string formatting.| class predicate, is_predicate(), get_descriptive_string()|
+| Comparison Predicates| These predicates evaluate basic comparison rules (<, =, >, !=).| less_than, greater_than, equal_to, not_equal_to, less_than_or_equal_to, greater_than_or_equal_to, within_range|
+| Set Predicates| These predicates evaluate whether predicates belong to a set of objects.| is_a_member_of, is_not_a_member_of|
+| Logic Predicates| These predicates can be used to combine/manipulate other predicates with basic boolean logic.| always_true, invert (not), satisfies_all (and), satisfies_any (or)|
+| Test API Predicates| These predicates operate specifically on the fields on the ChData and EventData objects. They are used by the API to specify event and telemetry messages.| args_predicate, event_predicate, telemetry_predicate|
+
+
+## Known Bugs and Idiosyncrasies
+
+
+Known bugs and idiosyncrasies are tracked here: [Test API Issues](https://github.com/nasa/fprime/labels/Test%20API)
+````
+
+### `seqgen.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/seqgen.md`
+
+
+````markdown
+# Sequencing In F´
+
+F´ supports a very basic sequence format that allows for executing F´ commands at absolute times and at times relative
+to previous commands. The sequence uses the F´ dictionary to translate the human-readable sequence file into a minimized
+binary format for upload and running using the command sequencer.
+
+Compiling this sequence is done with the `fprime-seqgen` utility and can be run once uploaded by issuing the `*.CS_RUN`
+command of any command sequencer instance defined in the flight system.
+
+## Writing an F´ Sequence File
+
+F´ sequence files consist of lists of commands. These commands start with a time argument, followed by the command
+mnemonic, and lastly any arguments to command.  See the example below, which are all pulled from the example sequence
+file found here: [simple_sequence.seq](https://github.com/fprime-community/fprime-gds/blob/devel/examples/simple_sequence.seq).
+
+```
+A2015-075T22:32:40.123 cmdDisp.CMD_NO_OP
+```
+> [!NOTE]
+> See [Time Details](#time-details) for more on time formats and time bases.
+
+Here an absolute command was chosen.  Times can be specified in an absolute or relative time format.  An absolute time
+starts with an `A` and specifies a calendar time. A relative command is specified starting with an `R`, which runs
+relative to the previous command or start of the sequence. A relative command with an argument is shown below.
+
+```
+R01:00:01.050 CMD_NO_OP_STRING "Awesome string!" ; And a nice comment too
+```
+
+A list of these commands can be specified in a text file typically ending with the `.seq` extension.  Comments start
+with a ;. The example file above goes into a greater explanation of the sample commands.
+
+## Compiling A Sample Sequence
+
+The `fprime-seqgen` command can compile the sequence into a binary format that F´ flight software can execute. To do
+this the user should provide a path to the flight software dictionary and a path to the text file discussed above.
+Below is an example of how to run the sample example sequence with the Ref dictionary. Remember to build first or the
+dictionary will not be generated.
+
+```
+fprime-seqgen fprime/Gds/examples/simple_sequence.seq -d fprime/build-artifacts/*/Ref/dict/RefTopologyDictionary.json
+```
+
+Here the output file is not specified, so it will be a new file in the same directory as the sequence but ending with
+the `.bin` extension.
+
+This binary file should be uploaded to the flight software. Given limitations on file path length, it should be copied
+to `/tmp` when running locally.
+
+## Running The Binary Sequence
+
+Once uploaded, the sequence can be run by executing the .CS_RUN command of any command sequencer. Here we will run the
+`cmdSeq` instance's .CS_RUN command using an upload location of /tmp/sample_sequence.bin. This should work in the `Ref`
+application.
+
+```
+cmdSeq.CS_RUN	"/tmp/sample_sequence.bin"
+```
+
+> [!NOTE]
+> The sample sequence will run for multiple hours due to the specification of the relative commands.
+
+## Time Details
+
+Time is represented in the sequence file using several formats. Relative times are represented with ISO_8601 time with
+only subseconds being optional, see table below. Absolute times are represented in ISO_8601 using ordinal dates
+(day of year) and time with optional subseconds.
+
+| | Format | Description | Example |
+|---|---|---|---|
+| Relative Times | RHH:MM:SS[.sss] | 'R' followed by ISO_8601 hour minute section and optional subseconds | R23:02:01.010 |
+| Absolute Times | AYYYY-DDDTHH:MM:SS[.sss] | 'A' followed by ISO_8601 ordinal datetime format with optional subseconds | A2020-192T23:02:01.010 |
+
+> [!NOTE]
+> Relative times cannot exceed 24 hours.
+
+Since sequences can specify the absolute time it may be dangerous to run a sequence should the flight software time not be
+synchronized with a known source. For example, it may be dangerous to run a sequence near system boot before time has
+been polled from a hardware clock or system time source.
+
+A sequence can be built with an expected time base and said sequence will not run should the flight software report time
+system in a different time base. For example, a sequence using TB_SC_TIME (spacecraft time) could be prevented from
+running if the flight software is currently using raw processor time and has not synchronized time with a known time
+source. The available time sources are listed below:
+
+| Timebase | Value | Explanation |
+|---|---|---|
+| TB_PROC_TIME | 1 | Sequence will run when only raw processor time is reported |
+| TB_WORKSTATION_TIME | 2 | Sequence will run when time is synchronized with test workstation (for testing) |
+| TB_SC_TIME | 3 | Sequence will run when time is synchronized with spacecraft time |
+| TB_FPGA_TIME | 4 | Sequence will run when time is synchronized with FPGA/hardware clock |
+| TB_DONT_CARE | 0xFFFF | Sequence will run regardless of flight software timebase |
+
+> [!NOTE]
+> The above descriptions represent typically usages of these time bases but are project specific i.e. TB_SC_TIME might derive time from an internet time source.
+````

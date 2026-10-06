@@ -3,16 +3,28 @@
 
 **경로:** `fsw/apps/sbn/test/cFS/apps/fib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 fsw/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/test/cFS/apps/fib/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sbn/test/cFS/apps/fib/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn/test/cFS/apps/fib/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFE_FIB C)
+
+include_directories(fsw/platform_inc)
+
+aux_source_directory(fsw/src APP_SRC_FILES)
+
+add_cfe_app(fib_app ${APP_SRC_FILES})
+```

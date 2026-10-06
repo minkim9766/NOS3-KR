@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/config/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,14 +11,113 @@
 cmake/index
 fsw/index
 ut-coverage/index
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/config/cmake/`](cmake/index) — 폴더
-- [`fsw/cfe/modules/config/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/config/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/config/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/config/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Configuration Service (CONFIG) module CMake build recipe
+#
+##################################################################
+
+project(CFE_CONFIG C)
+
+# Executive services source files
+set(config_SOURCES
+    fsw/src/cfe_config_init.c
+    fsw/src/cfe_config_lookup.c
+    fsw/src/cfe_config_get.c
+    fsw/src/cfe_config_set.c
+)
+add_library(config STATIC
+  ${config_SOURCES}
+  ${MISSION_BINARY_DIR}/src/cfe_config_map.c
+)
+
+# need to include the "src" dir explicitly here, in order to compile
+# the generated tables under ${MISSION_BINARY_DIR}
+target_include_directories(config PRIVATE fsw/src)
+target_link_libraries(config PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if (ENABLE_UNIT_TESTS)
+  add_subdirectory(ut-coverage)
+endif (ENABLE_UNIT_TESTS)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/config/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# CFE configuration mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# Generate the complete list of configuration ids
+set(CFE_CONFIG_IDS)
+set(GENERATED_ENUM_OFFSET_LIST)
+set(GENERATED_CONSTANT_DEFINE_LIST)
+set(GENERATED_IDNAME_MAP_LIST)
+
+# Append the set of version description config keys
+list(APPEND CFE_CONFIG_IDS
+  MISSION_NAME
+  MISSION_SRCVER
+
+  CORE_VERSION_MAJOR
+  CORE_VERSION_MINOR
+  CORE_VERSION_REVISION
+  CORE_VERSION_MISSION_REV
+  CORE_VERSION_BUILDNUM
+  CORE_VERSION_BASELINE
+  CORE_VERSION_DESCRIPTION
+
+  CORE_BUILDINFO_DATE
+  CORE_BUILDINFO_USER
+  CORE_BUILDINFO_HOST
+)
+
+# Generate config ID for source version of modules that are included in the build
+# NOTE: the presence in this list does not necesarily mean it will have a value at runtime,
+# which may be the case for dynamic apps which are not loaded, for instance.
+foreach(DEP ${MISSION_CORE_INTERFACES} ${MISSION_APPS} ${MISSION_CORE_MODULES} ${MISSION_PSPMODULES})
+  string(TOUPPER "${DEP}" DEPNAME)
+  string(REPLACE "/" "_" DEPNAME_SANITIZED "${DEPNAME}")
+  list(APPEND CFE_CONFIG_IDS MOD_SRCVER_${DEPNAME_SANITIZED})
+endforeach()
+
+# Append any mission-defined config keys
+# this may further extend the list of IDs
+include(${MISSIONCONFIG}/config_ids_custom.cmake OPTIONAL)
+
+foreach(CFGID ${CFE_CONFIG_IDS})
+  list(APPEND GENERATED_ENUM_OFFSET_LIST "  CFE_ConfigIdOffset_${CFGID},\n")
+  list(APPEND GENERATED_IDNAME_MAP_LIST "  [CFE_ConfigIdOffset_${CFGID}] = { \"${CFGID}\" },\n")
+  list(APPEND GENERATED_CONSTANT_DEFINE_LIST "#define CFE_CONFIGID_${CFGID} CFE_CONFIGID_C(CFE_ResourceId_FromInteger(CFE_CONFIGID_BASE + CFE_ConfigIdOffset_${CFGID}))\n")
+endforeach()
+
+string(CONCAT GENERATED_ENUM_OFFSET_LIST ${GENERATED_ENUM_OFFSET_LIST})
+string(CONCAT GENERATED_CONSTANT_DEFINE_LIST ${GENERATED_CONSTANT_DEFINE_LIST})
+string(CONCAT GENERATED_IDNAME_MAP_LIST ${GENERATED_IDNAME_MAP_LIST})
+
+# Write header file for config IDs
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/cfe_config_ids.h.in ${CMAKE_BINARY_DIR}/inc/cfe_config_ids.h)
+
+# Write constant map list for config IDs
+configure_file(${CMAKE_CURRENT_LIST_DIR}/cmake/cfe_config_map.c.in ${CMAKE_BINARY_DIR}/src/cfe_config_map.c)
+```

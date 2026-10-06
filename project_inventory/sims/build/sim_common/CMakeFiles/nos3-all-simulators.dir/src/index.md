@@ -3,16 +3,16 @@
 
 **경로:** `sims/build/sim_common/CMakeFiles/nos3-all-simulators.dir/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `all_simulators.cpp.o`
 
-file--all_simulators.cpp.o
-file--all_simulators.cpp.o.d
-```
+**경로:** `sims/build/sim_common/CMakeFiles/nos3-all-simulators.dir/src/all_simulators.cpp.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`sims/build/sim_common/CMakeFiles/nos3-all-simulators.dir/src/all_simulators.cpp.o`](file--all_simulators.cpp.o) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/CMakeFiles/nos3-all-simulators.dir/src/all_simulators.cpp.o.d`](file--all_simulators.cpp.o.d) — 빌드 산출물 (경로만)
+### `all_simulators.cpp.o.d`
+
+**경로:** `sims/build/sim_common/CMakeFiles/nos3-all-simulators.dir/src/all_simulators.cpp.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

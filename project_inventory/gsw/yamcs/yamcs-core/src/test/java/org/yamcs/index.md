@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -29,36 +29,820 @@ time/index
 utils/index
 xtce/index
 yarch/index
-file--EventCrashHandlerTest.java
-file--LoggingUtils.java
-file--SpecTest.java
-file--YConfigurationTest.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/alarms/`](alarms/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/algorithms/`](algorithms/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/archive/`](archive/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cascading/`](cascading/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/`](cfdp/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/`](cli/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/events/`](events/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/filetransfer/`](filetransfer/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/`](http/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/`](parameter/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/`](parameterarchive/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/replication/`](replication/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/rs/`](rs/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/security/`](security/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/`](tctm/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/templating/`](templating/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/`](time/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/`](utils/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/xtce/`](xtce/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/`](yarch/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/EventCrashHandlerTest.java`](file--EventCrashHandlerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/LoggingUtils.java`](file--LoggingUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/SpecTest.java`](file--SpecTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/YConfigurationTest.java`](file--YConfigurationTest.java) — UTF-8 텍스트 파일 본문 포함
+### `EventCrashHandlerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/EventCrashHandlerTest.java`
+
+
+```java
+package org.yamcs;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Queue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class EventCrashHandlerTest {
+
+    @Test
+    public void sendErrorEventOk() {
+        TimeEncoding.setUp();
+        EventProducerFactory.setMockup(true);
+        Queue<Event> eventQueue = EventProducerFactory.getMockupQueue();
+        EventCrashHandler crashHandler = new EventCrashHandler("unitTestInstance");
+        crashHandler.handleCrash("m1", "err1");
+        crashHandler.handleCrash("m1", "err2");
+
+        assertEquals(2, eventQueue.size());
+    }
+}
+```
+
+### `LoggingUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/LoggingUtils.java`
+
+
+```java
+package org.yamcs;
+
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class LoggingUtils {
+
+    public static void configureLogging(Level level) {
+        Logger logger = Logger.getLogger("org.yamcs");
+        logger.setLevel(level);
+        ConsoleHandler ch = null;
+        
+        for (Handler h: Logger.getLogger("").getHandlers()) {
+            if(h instanceof ConsoleHandler) {
+                ch = (ConsoleHandler) h;
+                break;
+            }
+        }
+        if(ch==null) {
+            ch = new ConsoleHandler();
+            Logger.getLogger("").addHandler(ch);
+        }
+        ch.setLevel(level);
+    }
+
+    /**
+     * use to enable logging during junit tests debugging.
+     */
+    public static void enableTracing() {
+        configureLogging(Level.ALL);
+    }
+}
+```
+
+### `SpecTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/SpecTest.java`
+
+
+```java
+package org.yamcs;
+
+import static com.google.common.collect.ImmutableMap.of;
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.tctm.ccsds.TcManagedParameters.PriorityScheme;
+
+public class SpecTest {
+
+    @Test
+    public void testOptional() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.STRING).withRequired(false);
+        spec.validate(of(/* no value */));
+    }
+
+    @Test
+    public void testRequired() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.STRING).withRequired(true);
+        spec.validate(of("bla", "a value"));
+    }
+
+    @Test
+    public void testRequiredButMissing() {
+        assertThrows(ValidationException.class, () -> {
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.STRING).withRequired(true);
+            spec.validate(of());
+        });
+    }
+
+    @Test
+    public void testUnknownOption() {
+        assertThrows(ValidationException.class, () -> {
+            Spec spec = new Spec();
+            spec.validate(of("bla", "a value"));
+        });
+    }
+
+    @Test
+    public void testAny() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("whatever", OptionType.ANY);
+
+        Map<String, Object> result = spec.validate(of("whatever", "a string"));
+        assertEquals("a string", result.get("whatever"));
+
+        result = spec.validate(of("whatever", 123));
+        assertEquals(123, result.get("whatever"));
+    }
+
+    @Test
+    public void testWrongType() {
+        assertThrows(ValidationException.class, () -> {
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.STRING);
+            spec.validate(of("bla", 123));
+        });
+    }
+
+    @Test
+    public void testChoices() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.STRING)
+                .withChoices("valid", "other");
+        spec.validate(of("bla", "valid"));
+    }
+
+    @Test
+    public void testInvalidChoice() {
+        assertThrows(ValidationException.class, () -> {
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.STRING)
+                    .withChoices("valid", "other");
+            spec.validate(of("bla", "this is wrong"));
+        });
+    }
+
+    @Test
+    public void testElementType() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.LIST).withElementType(OptionType.INTEGER);
+        spec.validate(of("bla", asList(123, 456)));
+    }
+
+    @Test
+    public void testWrongElementType() {
+        assertThrows(ValidationException.class, () -> {
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.LIST).withElementType(OptionType.INTEGER);
+            spec.validate(of("bla", asList("str1", "str2")));
+        });
+    }
+
+    @Test
+    public void testMap() throws ValidationException {
+        Spec blaSpec = new Spec();
+        blaSpec.addOption("subkey", OptionType.INTEGER);
+
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.MAP).withSpec(blaSpec);
+        spec.validate(of("bla", of("subkey", 123)));
+    }
+
+    @Test
+    public void testSubMapValidation() {
+        assertThrows(ValidationException.class, () -> {
+            Spec blaSpec = new Spec();
+            blaSpec.addOption("subkey", OptionType.INTEGER);
+
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.MAP).withSpec(blaSpec);
+            spec.validate(of("bla", of("wrongKey", 123)));
+        });
+    }
+
+    @Test
+    public void testListOfMap() throws ValidationException {
+        Spec blaSpec = new Spec();
+        blaSpec.addOption("subkey", OptionType.INTEGER);
+
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(blaSpec);
+
+        spec.validate(of("bla", asList(of("subkey", 123))));
+    }
+
+    @Test
+    public void testListOfMapValidation() {
+        assertThrows(ValidationException.class, () -> {
+            Spec blaSpec = new Spec();
+            blaSpec.addOption("subkey", OptionType.INTEGER);
+
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.LIST)
+                    .withElementType(OptionType.MAP)
+                    .withSpec(blaSpec);
+
+            spec.validate(of("bla", asList(of("wrong", 123))));
+        });
+    }
+
+    @Test
+    public void testLong() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("large1", OptionType.INTEGER);
+        spec.addOption("large2", OptionType.INTEGER).withDefault(123L);
+        spec.addOption("large3", OptionType.INTEGER).withDefault(123);
+
+        var result = spec.validate(of());
+        assertEquals(null, result.get("large1"));
+        assertEquals(123L, result.get("large2"));
+        assertEquals(123, result.get("large3"));
+
+        result = spec.validate(of("large1", 5368709120L));
+        assertEquals(5368709120L, result.get("large1"));
+        result = spec.validate(of("large2", 5368709120L));
+        assertEquals(5368709120L, result.get("large2"));
+        result = spec.validate(of("large3", 5368709120L));
+        assertEquals(5368709120L, result.get("large3"));
+    }
+
+    @Test
+    public void testDefaultValue() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla1", OptionType.INTEGER);
+        spec.addOption("bla2", OptionType.INTEGER).withDefault(123);
+
+        Map<String, Object> result = spec.validate(of());
+        assertEquals(null, result.get("bla1"));
+        assertEquals(123, result.get("bla2"));
+
+        result = spec.validate(of("bla1", 456, "bla2", 456));
+        assertEquals(456, result.get("bla1"));
+        assertEquals(456, result.get("bla2"));
+    }
+
+    @Test
+    public void testDefaultValidation() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("bla1", OptionType.INTEGER);
+        assertThrows(ValidationException.class, () -> {
+            spec.validate(of("bla1", "text"));
+        });
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testApplyDefaults() throws ValidationException {
+        Spec subSpec = new Spec();
+        subSpec.addOption("subkey", OptionType.INTEGER).withDefault(123);
+
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.MAP)
+                .withSpec(subSpec)
+                .withApplySpecDefaults(true);
+
+        Map<String, Object> result = spec.validate(of());
+        assertTrue(result.containsKey("bla"));
+        Map<String, Object> blaArg = (Map<String, Object>) result.get("bla");
+        assertEquals(123, blaArg.get("subkey"));
+    }
+
+    @Test
+    public void testEnum() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("bla1", OptionType.STRING)
+                .withChoices(PriorityScheme.class)
+                .withDefault("FIFO");
+        spec.addOption("bla2", OptionType.STRING)
+                .withChoices(PriorityScheme.class)
+                .withDefault(PriorityScheme.FIFO);
+        Map<String, Object> result = spec.validate(of());
+        assertEquals("FIFO", result.get("bla1"));
+        assertEquals("FIFO", result.get("bla2"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testSecret() throws ValidationException {
+        Spec subSpec = new Spec();
+        subSpec.addOption("subkey1", OptionType.INTEGER);
+        subSpec.addOption("subkey2", OptionType.INTEGER).withSecret(true);
+
+        Spec spec = new Spec();
+        spec.addOption("bla1", OptionType.STRING);
+        spec.addOption("bla2", OptionType.STRING).withSecret(true);
+        spec.addOption("bloe", OptionType.MAP)
+                .withSpec(subSpec);
+
+        Map<String, Object> args = of("bla1", "abc", "bla2", "def",
+                "bloe", of("subkey1", 123, "subkey2", 456));
+
+        Map<String, Object> unsafeResult = spec.validate(args);
+        Map<String, Object> safeResult = spec.removeSecrets(unsafeResult);
+
+        assertTrue(unsafeResult.containsKey("bla1"));
+        assertTrue(safeResult.containsKey("bla1"));
+
+        assertTrue(unsafeResult.containsKey("bla2"));
+        assertFalse(safeResult.containsKey("bla2"));
+
+        Map<String, Object> unsafeSubResult = (Map<String, Object>) unsafeResult.get("bloe");
+        Map<String, Object> safeSubResult = (Map<String, Object>) safeResult.get("bloe");
+
+        assertTrue(unsafeSubResult.containsKey("subkey1"));
+        assertTrue(safeSubResult.containsKey("subkey1"));
+
+        assertTrue(unsafeSubResult.containsKey("subkey2"));
+        assertFalse(safeSubResult.containsKey("subkey2"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testListOfMapSecrets() throws ValidationException {
+        Spec subSpec = new Spec();
+        subSpec.addOption("subkey1", OptionType.INTEGER);
+        subSpec.addOption("subkey2", OptionType.INTEGER).withSecret(true);
+
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(subSpec);
+
+        Map<String, Object> args = of("bla", asList(of("subkey1", 123, "subkey2", 456)));
+
+        Map<String, Object> unsafeResult = spec.validate(args);
+        Map<String, Object> safeResult = spec.removeSecrets(unsafeResult);
+
+        List<Object> unsafeSubResult = (List<Object>) unsafeResult.get("bla");
+        List<Object> safeSubResult = (List<Object>) safeResult.get("bla");
+
+        Map<String, Object> unsafeEl = (Map<String, Object>) unsafeSubResult.get(0);
+        Map<String, Object> safeEl = (Map<String, Object>) safeSubResult.get(0);
+
+        assertTrue(unsafeEl.containsKey("subkey1"));
+        assertTrue(safeEl.containsKey("subkey1"));
+
+        assertTrue(unsafeEl.containsKey("subkey2"));
+        assertFalse(safeEl.containsKey("subkey2"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testMaskListOfMapSecrets() throws ValidationException {
+        Spec subSpec = new Spec();
+        subSpec.addOption("subkey1", OptionType.INTEGER);
+        subSpec.addOption("subkey2", OptionType.INTEGER).withSecret(true);
+
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(subSpec);
+
+        Map<String, Object> args = of("bla", asList(of("subkey1", 123, "subkey2", 456)));
+
+        Map<String, Object> unsafeResult = spec.validate(args);
+        Map<String, Object> safeResult = spec.maskSecrets(unsafeResult);
+
+        List<Object> unsafeSubResult = (List<Object>) unsafeResult.get("bla");
+        List<Object> safeSubResult = (List<Object>) safeResult.get("bla");
+
+        Map<String, Object> unsafeEl = (Map<String, Object>) unsafeSubResult.get(0);
+        Map<String, Object> safeEl = (Map<String, Object>) safeSubResult.get(0);
+
+        assertEquals(123, unsafeEl.get("subkey1"));
+        assertEquals(123, safeEl.get("subkey1"));
+
+        assertEquals(456, unsafeEl.get("subkey2"));
+        assertEquals("*****", safeEl.get("subkey2"));
+    }
+
+    @Test
+    public void testListOrElement() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("command", OptionType.LIST_OR_ELEMENT).withElementType(OptionType.INTEGER);
+
+        Map<String, Object> result1 = spec.validate(of("command", asList(123)));
+        Map<String, Object> result2 = spec.validate(of("command", 123));
+        assertEquals(result1, result2);
+        assertEquals(1, result1.size());
+        assertEquals(123, ((List<?>) result1.get("command")).get(0));
+    }
+
+    @Test
+    public void testListOrElementWithDefault() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("command", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.INTEGER)
+                .withDefault(123);
+
+        Map<String, Object> result1 = spec.validate(of());
+        assertEquals(1, result1.size());
+        assertEquals(123, ((List<?>) result1.get("command")).get(0));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testAnySpec() throws ValidationException {
+        // This is similar to OptionType.ANY, but allows to enforce that
+        // something the upper element is a LIST or MAP, rather than ANY.
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.MAP).withSpec(Spec.ANY);
+
+        Map<String, Object> result1 = spec.validate(of("bla", of("anything", 123)));
+        Map<String, Object> blaEl = (Map<String, Object>) result1.get("bla");
+        assertEquals(123, blaEl.get("anything"));
+    }
+
+    @Test
+    public void testAlias() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.ANY).withAliases("bloe");
+
+        Map<String, Object> result1 = spec.validate(of("bla", 123));
+        assertEquals(123, result1.get("bla"));
+        Map<String, Object> result2 = spec.validate(of("bloe", 123));
+        assertEquals(123, result2.get("bla"));
+    }
+
+    @Test
+    public void testAliasExists() {
+        assertThrows(ValidationException.class, () -> {
+            Spec spec = new Spec();
+            spec.addOption("bla", OptionType.ANY).withAliases("bloe");
+
+            spec.validate(of("bla", 123, "bloe", 456));
+        });
+    }
+
+    @Test
+    public void testAliasWithDefault() throws ValidationException {
+        Spec spec = new Spec();
+        spec.addOption("bla", OptionType.ANY).withDefault(555).withAliases("bloe");
+
+        Map<String, Object> result2 = spec.validate(of("bloe", 123));
+        assertEquals(123, result2.get("bla"));
+    }
+
+    @Test
+    public void testListOfMapsWithNoValue() throws ValidationException {
+        Map<String, Object> modulesConfig = new HashMap<>();
+        modulesConfig.put("modules1", null);
+        modulesConfig.put("modules2", null);
+
+        Spec spec = new Spec();
+        spec.addOption("modules1", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(new Spec());
+
+        spec.addOption("modules2", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(new Spec())
+                .withDefault(new ArrayList<>());
+
+        Map<String, Object> result = spec.validate(modulesConfig);
+        assertNull(result.get("modules1"));
+        assertNull(result.get("modules2")); // The "key" is specified, so default does not apply
+    }
+
+    @Test
+    public void testRemoveOption() {
+        var spec = new Spec();
+        assertFalse(spec.containsOption("bla"));
+        spec.addOption("bla", OptionType.STRING);
+        assertTrue(spec.containsOption("bla"));
+        spec.removeOption("bla");
+        assertFalse(spec.containsOption("bla"));
+    }
+
+    /**
+     * Conversions from string are allowed, because they are useful when using property expansions of the form on
+     * BOOLEAN options.
+     * <p>
+     * The values tested here, match the definition in both {@link YConfiguration} and {@link Spec}
+     */
+    @Test
+    public void testBooleanStrings() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("foo", OptionType.BOOLEAN);
+
+        var result = spec.validate(of("foo", "true"));
+        assertEquals(true, result.get("foo"));
+
+        result = spec.validate(of("foo", "yes"));
+        assertEquals(true, result.get("foo"));
+
+        result = spec.validate(of("foo", "on"));
+        assertEquals(true, result.get("foo"));
+
+        result = spec.validate(of("foo", "false"));
+        assertEquals(false, result.get("foo"));
+
+        result = spec.validate(of("foo", "no"));
+        assertEquals(false, result.get("foo"));
+
+        result = spec.validate(of("foo", "off"));
+        assertEquals(false, result.get("foo"));
+    }
+
+    @Test
+    public void testIntegerStrings() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("foo", OptionType.INTEGER);
+
+        var result = spec.validate(of("foo", "123"));
+        assertEquals(123, result.get("foo"));
+
+        result = spec.validate(of("foo", "12345678901"));
+        assertEquals(12345678901L, result.get("foo"));
+    }
+
+    /**
+     * Tolerate doubles representing whole numbers. It happens when dealing with GPB Structs.
+     */
+    @Test
+    public void testIntegerFloats() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("foo", OptionType.INTEGER);
+
+        var result = spec.validate(of("foo", 123.0f));
+        assertEquals(123, result.get("foo"));
+
+        result = spec.validate(of("foo", 123.0d));
+        assertEquals(123, result.get("foo"));
+
+        assertThrows(ValidationException.class, () -> {
+            spec.validate(of("foo", 123.1));
+        });
+    }
+
+    @Test
+    public void testFloatStrings() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("foo", OptionType.FLOAT);
+
+        var result = spec.validate(of("foo", "123.45"));
+        assertEquals(123.45, result.get("foo"));
+    }
+
+    @Test
+    public void testConditionalMergeSpec() throws ValidationException {
+        var spec = new Spec();
+        spec.addOption("foo", OptionType.INTEGER);
+
+        var condition = spec.when("foo", 123);
+        var conditionSpec = new Spec();
+        conditionSpec.addOption("bar", OptionType.STRING);
+        condition.mergeSpec(conditionSpec);
+
+        condition = spec.when("foo", 456);
+        conditionSpec = new Spec();
+        conditionSpec.addOption("baz", OptionType.STRING);
+        condition.mergeSpec(conditionSpec);
+
+        var result = spec.validate(of("foo", 123, "bar", "test"));
+        assertEquals("test", result.get("bar"));
+        assertThrows(ValidationException.class, () -> {
+            spec.validate(of("foo", 123, "baz", "test"));
+        });
+
+        result = spec.validate(of("foo", 456, "baz", "test"));
+        assertEquals("test", result.get("baz"));
+        assertThrows(ValidationException.class, () -> {
+            spec.validate(of("foo", 456, "bar", "test"));
+        });
+    }
+}
+```
+
+### `YConfigurationTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/YConfigurationTest.java`
+
+
+```java
+package org.yamcs;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class YConfigurationTest {
+    @Test
+    public void testBinaryDefault() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+        assertArrayEquals(new byte[] { 0x01, 0x0A }, config.getBinary("binary-nonexistent", new byte[] { 0x01, 0x0A }));
+    }
+
+    @Test
+    public void testEmptyBinary() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+        assertArrayEquals(new byte[] {}, config.getBinary("emptyBinary"));
+    }
+
+    @Test
+    public void testBinary1() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+        assertArrayEquals(new byte[] { 0x01, (byte) 0xAB }, config.getBinary("binary1"));
+    }
+
+    @Test
+    public void testBinary2() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+        assertArrayEquals(new byte[] { 0x02, (byte) 0xCD, 0x03 }, config.getBinary("binary2"));
+    }
+
+    @Test
+    public void testInvalidBinary() {
+        assertThrows(ConfigurationException.class, () -> {
+            YConfiguration config = YConfiguration.getConfiguration("test-config");
+            assertArrayEquals(new byte[] { 0x01, (byte) 0xAB }, config.getBinary("invalid-binary1"));
+        });
+    }
+
+    @Test
+    public void testStringPropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property1: ${foo}
+        System.setProperty("foo", "stringValue");
+        assertEquals("stringValue", config.getString("property1"));
+
+        System.clearProperty("foo");
+        assertThrows(ConfigurationException.class, () -> {
+            config.getString("property1");
+        });
+
+        // property2: "${foo}"
+        System.setProperty("foo", "stringValue");
+        assertEquals("stringValue", config.getString("property2"));
+
+        // property3: ${foo:defaultValue}
+        assertEquals("stringValue", config.getString("property3"));
+        System.clearProperty("foo");
+        assertEquals("defaultValue", config.getString("property3"));
+
+        // property7: "${foo}/${bar}"
+        System.setProperty("foo", "abc");
+        System.setProperty("bar", "def");
+        assertEquals("abc/def", config.getString("property7"));
+
+        // property9: ${foo: a value with spaces }
+        System.clearProperty("foo");
+        assertEquals(" a value with spaces ", config.getString("property9"));
+
+        // property10: ${foo:}
+        System.clearProperty("foo");
+        assertEquals("", config.getString("property10"));
+    }
+
+    @Test
+    public void testNestedPropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property11: ${foo:${bar}}
+        System.setProperty("bar", "stringValue");
+        assertEquals("stringValue", config.getString("property11"));
+        System.setProperty("foo", "abc");
+        assertEquals("abc", config.getString("property11"));
+
+        // property12: ${foo:${bar:defaultValue}}
+        System.clearProperty("foo");
+        System.clearProperty("bar");
+        assertEquals("defaultValue", config.getString("property12"));
+
+        // property13: ${foo:${bar:${baz}}}
+        System.setProperty("bar", "abc");
+        System.setProperty("baz", "def");
+        assertEquals("abc", config.getString("property13"));
+        System.clearProperty("bar");
+        assertEquals("def", config.getString("property13"));
+    }
+
+    @Test
+    public void testBooleanPropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property1: ${foo}
+        System.setProperty("foo", "true");
+        assertTrue(config.getBoolean("property1"));
+        System.setProperty("foo", "false");
+        assertFalse(config.getBoolean("property1"));
+
+        System.clearProperty("foo");
+        assertThrows(ConfigurationException.class, () -> {
+            config.getBoolean("property1");
+        });
+
+        // property4: ${foo:true}
+        // property5: ${foo:false}
+        assertTrue(config.getBoolean("property4"));
+        assertFalse(config.getBoolean("property5"));
+    }
+
+    @Test
+    public void testIntPropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property1: ${foo}
+        System.setProperty("foo", "10");
+        assertEquals(10, config.getInt("property1"));
+
+        System.clearProperty("foo");
+        assertThrows(ConfigurationException.class, () -> {
+            config.getInt("property1");
+        });
+
+        // property6: ${foo:20}
+        System.setProperty("foo", "10");
+        assertEquals(10, config.getInt("property6"));
+        System.clearProperty("foo");
+        assertEquals(20, config.getInt("property6"));
+        assertEquals("20", config.getString("property6"));
+    }
+
+    @Test
+    public void testLongPropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property1: ${foo}
+        System.setProperty("foo", "10");
+        assertEquals(10L, config.getLong("property1"));
+
+        System.clearProperty("foo");
+        assertThrows(ConfigurationException.class, () -> {
+            config.getLong("property1");
+        });
+
+        // property6: ${foo:20}
+        System.setProperty("foo", "10");
+        assertEquals(10L, config.getLong("property6"));
+        System.clearProperty("foo");
+        assertEquals(20L, config.getLong("property6"));
+        assertEquals("20", config.getString("property6"));
+    }
+
+    @Test
+    public void testDoublePropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property1: ${foo}
+        System.setProperty("foo", "10");
+        assertEquals(10.0, config.getDouble("property1"));
+
+        System.clearProperty("foo");
+        assertThrows(ConfigurationException.class, () -> {
+            config.getDouble("property1");
+        });
+
+        // property6: ${foo:20}
+        System.setProperty("foo", "10");
+        assertEquals(10.0, config.getDouble("property6"));
+        System.clearProperty("foo");
+        assertEquals(20.0, config.getDouble("property6"));
+        assertEquals("20", config.getString("property6"));
+    }
+
+    @Test
+    public void testListPropertyExpansion() {
+        YConfiguration config = YConfiguration.getConfiguration("test-config");
+
+        // property8: ["${foo}", ${bar}]
+        System.setProperty("foo", "abc");
+        System.setProperty("bar", "def");
+        List<String> list = config.getList("property8");
+        assertEquals("abc", list.get(0));
+        assertEquals("def", list.get(1));
+    }
+}
+```

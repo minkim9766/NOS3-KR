@@ -3,20 +3,219 @@
 
 **경로:** `components/generic_fss/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_fss_42_data_provider.hpp`
 
-file--generic_fss_42_data_provider.hpp
-file--generic_fss_data_point.hpp
-file--generic_fss_hardware_model.hpp
-file--generic_fss_shmem_data_provider.hpp
+**경로:** `components/generic_fss/sim/inc/generic_fss_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_FSS42DATAPROVIDER_HPP
+#define NOS3_GENERIC_FSS42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_fss_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_fss42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_fss42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_fss42DataProvider(void) {};
+        Generic_fss42DataProvider& operator=(const Generic_fss42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_fss_data_point.hpp`
 
-- [`components/generic_fss/sim/inc/generic_fss_42_data_provider.hpp`](file--generic_fss_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/sim/inc/generic_fss_data_point.hpp`](file--generic_fss_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/sim/inc/generic_fss_hardware_model.hpp`](file--generic_fss_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/sim/inc/generic_fss_shmem_data_provider.hpp`](file--generic_fss_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_fss/sim/inc/generic_fss_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_FSSDATAPOINT_HPP
+#define NOS3_GENERIC_FSSDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_fssDataPoint : public Sim42DataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_fssDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+        Generic_fssDataPoint(int valid, double alpha, double beta);
+        ~Generic_fssDataPoint(void) {};
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        bool        get_generic_fss_valid(void) const {parse_data_point(); return _generic_fss_valid;}
+        double      get_generic_fss_alpha(void) const {parse_data_point(); return _generic_fss_alpha;}
+        double      get_generic_fss_beta(void) const {parse_data_point(); return _generic_fss_beta;}
+    
+    private:
+        /* Disallow these */
+        Generic_fssDataPoint(void) {};
+        Generic_fssDataPoint(const Generic_fssDataPoint& sdp) : Sim42DataPoint(sdp) {};
+
+        /// @name Private mutators
+        //@{
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+        //@}
+
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        mutable bool _not_parsed;
+        mutable bool   _generic_fss_valid;
+        mutable double _generic_fss_alpha;
+        mutable double _generic_fss_beta;
+    };
+}
+
+#endif
+```
+
+### `generic_fss_hardware_model.hpp`
+
+**경로:** `components/generic_fss/sim/inc/generic_fss_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_FSSHARDWAREMODEL_HPP
+#define NOS3_GENERIC_FSSHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <vector>
+
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Spi/Client/SpiSlave.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Defines
+*/
+#define GENERIC_FSS_SIM_SUCCESS 0
+#define GENERIC_FSS_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    class SpiSlaveConnection;
+
+    /* Standard for a hardware model */
+    class Generic_fssHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_fssHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_fssHardwareModel(void);
+        std::vector<uint8_t> determine_spi_response_for_request(const std::vector<uint8_t>& in_data); /* Handle data the hardware receives from its protocol bus */
+
+    private:
+        /* Private helper methods */
+        void create_generic_fss_data(); 
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+        void double_to_4bytes_little_endian(double in, uint8_t out[4]);
+        uint8_t compute_checksum(std::vector<uint8_t>& in, int starting_byte, int number_of_bytes);
+        /* Private data members */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+        SpiSlaveConnection*                                 _spi;
+
+        SimIDataProvider*                                   _generic_fss_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::vector<uint8_t>                                _queued_data;
+    };
+
+    class SpiSlaveConnection : public NosEngine::Spi::SpiSlave
+    {
+    public:
+        SpiSlaveConnection(Generic_fssHardwareModel* fss, int chip_select, std::string connection_string, std::string bus_name);
+        size_t spi_read(uint8_t *rbuf, size_t rlen);
+        size_t spi_write(const uint8_t *wbuf, size_t wlen);
+    private:
+        Generic_fssHardwareModel*  _fss;
+        std::vector<uint8_t>       _spi_out_data;
+    };
+}
+
+#endif
+```
+
+### `generic_fss_shmem_data_provider.hpp`
+
+**경로:** `components/generic_fss/sim/inc/generic_fss_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_FSS_SHMEM_DATA_PROVIDER_HPP
+#define NOS3_GENERIC_FSS_SHMEM_DATA_PROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+#include <generic_fss_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    class GenericFssShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        GenericFssShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~GenericFssShmemDataProvider(void) {};
+        GenericFssShmemDataProvider& operator=(const GenericFssShmemDataProvider&) {return *this;};
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

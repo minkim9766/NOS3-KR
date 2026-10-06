@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,11 +16,4 @@ parameter-list-list/index
 parameter-list-summary-tab/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/create-parameter-list/`](create-parameter-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/edit-parameter-list/`](edit-parameter-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list/`](parameter-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/`](parameter-list-historical-data-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-list/`](parameter-list-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/`](parameter-list-summary-tab/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

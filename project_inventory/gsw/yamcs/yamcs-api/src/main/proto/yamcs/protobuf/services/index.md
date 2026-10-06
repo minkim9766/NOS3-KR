@@ -3,16 +3,155 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/services/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `services.proto`
 
-file--services.proto
-file--services_service.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/services/services.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.services;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "ServicesProto";
+option java_multiple_files = true;
+
+
+message ServiceInfo {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Service name
+  optional string name = 2;
+
+  // Service state
+  optional ServiceState state = 3;
+
+  // Java class name
+  optional string className = 4;
+
+  // Processor name (in case this is a processor service)
+  optional string processor = 5;
+
+  // Short failure message when `state` is FAILED.
+  optional string failureMessage = 6;
+
+  // Stacktrace when `state` is FAILED.
+  optional string failureCause = 7;
+}
+
+/*service states coming from guava (numbers have to correspond)*/
+enum ServiceState {
+  // A service in this state is inactive. It does minimal work and
+  // consumes minimal resources.
+  NEW = 0;
+
+  // A service in this state is transitioning to ``RUNNING``.
+  STARTING = 1;
+
+  // A service in this state is operational.
+  RUNNING = 2;
+
+  // A service in this state is transitioning to ``TERMINATED``.
+  STOPPING = 3;
+
+  // A service in this state has completed execution normally.
+  // It does minimal work and consumes minimal resources.
+  TERMINATED = 4;
+
+  // A service in this state has encountered a problem and may
+  // not be operational. It cannot be started nor stopped.
+  FAILED = 5;
+}
 ```
 
-## 항목
+### `services_service.proto`
 
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/services/services.proto`](file--services.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/services/services_service.proto`](file--services_service.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/services/services_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.services;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "ServicesServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/services/services.proto";
+
+
+service ServicesApi {
+
+  // List services
+  rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/services/{instance}"
+    };
+  }
+  
+  // Get a service
+  rpc GetService(GetServiceRequest) returns (ServiceInfo) {
+    option (yamcs.api.route) = {
+      get: "/api/services/{instance}/{name}"
+    };
+  }
+  
+  // Start a service
+  rpc StartService(StartServiceRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/services/{instance}/{name}:start"
+    };
+  }
+  
+  // Stop a service
+  //
+  // Once stopped, a service cannot be resumed. Instead a new service
+  // instance will be created and started.
+  rpc StopService(StopServiceRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/services/{instance}/{name}:stop"
+    };
+  }
+}
+
+message ListServicesRequest {
+  // Yamcs instance name. Or _global for system-wide services. 
+  optional string instance = 1;
+}
+
+message GetServiceRequest {
+  // Yamcs instance name. Or _global for system-wide services.
+  optional string instance = 1;
+
+  // Service name
+  optional string name = 2;
+}
+
+message StartServiceRequest {
+  // Yamcs instance name. Or _global for system-wide services.
+  optional string instance = 1;
+
+  // Service name
+  optional string name = 2;
+}
+
+message StopServiceRequest {
+  // Yamcs instance name. Or _global for system-wide services.
+  optional string instance = 1;
+
+  // Service name
+  optional string name = 2;
+}
+
+message ListServicesResponse {
+  repeated ServiceInfo services = 1;
+}
+```

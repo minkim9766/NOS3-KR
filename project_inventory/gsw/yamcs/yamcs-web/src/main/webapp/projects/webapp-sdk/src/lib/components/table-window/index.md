@@ -3,18 +3,132 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-window.component.css`
 
-file--table-window.component.css
-file--table-window.component.html
-file--table-window.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/table-window.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  background-color: var(--y-background-color);
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  padding: 0 1px;
+  font-family: Roboto, sans-serif;
+}
+
+.ya-table-window-actions {
+  display: flex;
+  column-gap: 12px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+}
 ```
 
-## 항목
+### `table-window.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/table-window.component.css`](file--table-window.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/table-window.component.html`](file--table-window.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/table-window.component.ts`](file--table-window.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/table-window.component.html`
+
+
+```html
+@switch (duration()) {
+  @case ("PT1H") {
+    <span>
+      Showing data from
+      <strong>the last hour</strong>
+      ending at
+      <strong>{{ stop() | datetime }}</strong>
+      (Mission Time)
+    </span>
+  }
+  @case ("PT6H") {
+    <span>
+      Showing data from
+      <strong>the last 6 hours</strong>
+      ending at
+      <strong>{{ stop() | datetime }}</strong>
+      (Mission Time)
+    </span>
+  }
+  @case ("P1D") {
+    <span>
+      Showing data from
+      <strong>the last 24 hours</strong>
+      ending at
+      <strong>{{ stop() | datetime }}</strong>
+      (Mission Time)
+    </span>
+  }
+  @case ("P1M") {
+    <span>
+      Showing data from
+      <strong>the last month</strong>
+      ending at
+      <strong>{{ stop() | datetime }}</strong>
+      (Mission Time)
+    </span>
+  }
+  @case ("P1Y") {
+    <span>
+      Showing data from
+      <strong>the last year</strong>
+      ending at
+      <strong>{{ stop() | datetime }}</strong>
+      (Mission Time)
+    </span>
+  }
+  @case ("NO_LIMIT") {
+    <span>
+      Showing data from
+      <strong>all time</strong>
+    </span>
+  }
+  @case ("CUSTOM") {
+    <span>
+      Showing data from
+      <strong>{{ start() | datetime }}</strong>
+      to
+      <strong>{{ stop() | datetime }}</strong>
+      (Mission Time)
+    </span>
+  }
+}
+
+<div style="flex: 1 1 auto"></div>
+
+<div class="ya-table-window-actions">
+  <ng-content />
+</div>
+```
+
+### `table-window.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-window/table-window.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { DateTimePipe } from '../../pipes/datetime.pipe';
+
+@Component({
+  selector: 'ya-table-window',
+  templateUrl: './table-window.component.html',
+  styleUrl: './table-window.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-table-window',
+  },
+  imports: [DateTimePipe],
+})
+export class YaTableWindow {
+  duration = input.required<string>();
+  start = input<string>();
+  stop = input<string>();
+}
+```

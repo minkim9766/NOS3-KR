@@ -3,14 +3,24 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/test/int/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_cmd_dispatcher.py`
 
-file--test_cmd_dispatcher.py
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/test/int/test_cmd_dispatcher.py`
+
+
+```python
+""" test_cmd_dispatcher.py:
+
+Test the command dispatcher with basic integration tests.
+"""
+
+
+def test_send_command(fprime_test_api):
+    """Test that commands may be sent
+
+    Tests command send, dispatch, and receipt using send_and_assert command with a pair of NO-OP commands.
+    """
+    fprime_test_api.send_and_assert_command("cmdDisp.CMD_NO_OP", max_delay=0.1)
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/test/int/test_cmd_dispatcher.py`](file--test_cmd_dispatcher.py) — UTF-8 텍스트 파일 본문 포함

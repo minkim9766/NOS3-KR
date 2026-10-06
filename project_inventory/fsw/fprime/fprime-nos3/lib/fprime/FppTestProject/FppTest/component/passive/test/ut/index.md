@@ -3,18 +3,478 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PassiveTestTester.cpp`
 
-file--PassiveTestTester.cpp
-file--PassiveTestTester.hpp
-file--Tester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/PassiveTestTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PassiveTest/test/ut/PassiveTestTester.cpp
+// \author tiffany
+// \brief  cpp file for PassiveTest test harness implementation class
+// ======================================================================
+
+#include "PassiveTestTester.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+PassiveTestTester ::PassiveTestTester()
+    : PassiveTestGTestBase("PassiveTestTester", PassiveTestTester::MAX_HISTORY_SIZE),
+      component("PassiveTest"),
+      primitiveBuf(primitiveData, sizeof(primitiveData)),
+      stringBuf(stringData, sizeof(stringData)),
+      enumBuf(enumData, sizeof(enumData)),
+      arrayBuf(arrayData, sizeof(arrayData)),
+      structBuf(structData, sizeof(structData)),
+      serialBuf(serialData, sizeof(serialData)),
+      time(STest::Pick::any(), STest::Pick::any()) {
+    this->initComponents();
+    this->connectPorts();
+    this->component.registerExternalParameters(&this->paramTesterDelegate);
+}
+
+PassiveTestTester ::~PassiveTestTester() {}
+
+void PassiveTestTester ::initComponents() {
+    this->init();
+    this->component.init(PassiveTestTester::TEST_INSTANCE_ID);
+}
+
+Fw::ParamValid PassiveTestTester ::from_prmGetIn_handler(const FwIndexType portNum,
+                                                         FwPrmIdType id,
+                                                         Fw::ParamBuffer& val) {
+    val.resetSer();
+
+    Fw::SerializeStatus status;
+    U32 id_base = component.getIdBase();
+
+    FW_ASSERT(id >= id_base);
+
+    switch (id - id_base) {
+        case PassiveTestComponentBase::PARAMID_PARAMBOOL:
+            status = val.serialize(boolPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMU32:
+            status = val.serialize(u32Prm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMSTRING:
+            status = val.serialize(stringPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMENUM:
+            status = val.serialize(enumPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMARRAY:
+            status = val.serialize(arrayPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMSTRUCT:
+            status = val.serialize(structPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+    }
+
+    this->pushFromPortEntry_prmGetIn(id, val);
+
+    return prmValid;
+}
+
+void PassiveTestTester ::from_prmSetIn_handler(const FwIndexType portNum, FwPrmIdType id, Fw::ParamBuffer& val) {
+    Fw::SerializeStatus status;
+    U32 id_base = component.getIdBase();
+
+    FW_ASSERT(id >= id_base);
+
+    switch (id - id_base) {
+        case PassiveTestComponentBase::PARAMID_PARAMBOOL:
+            status = val.deserialize(boolPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMU32:
+            status = val.deserialize(u32Prm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMSTRING:
+            status = val.deserialize(stringPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMENUM:
+            status = val.deserialize(enumPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMARRAY:
+            status = val.deserialize(arrayPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case PassiveTestComponentBase::PARAMID_PARAMSTRUCT:
+            status = val.deserialize(structPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+    }
+
+    this->pushFromPortEntry_prmSetIn(id, val);
+}
+
+// ----------------------------------------------------------------------
+// Unit test implementation of external parameter delegate serialization/deserialization
+// ----------------------------------------------------------------------
+
+Fw::SerializeStatus PassiveTestTester::PassiveTestComponentBaseParamExternalDelegate ::deserializeParam(
+    const FwPrmIdType base_id,
+    const FwPrmIdType local_id,
+    const Fw::ParamValid prmStat,
+    Fw::SerializeBufferBase& buff) {
+    Fw::SerializeStatus stat;
+    (void)base_id;
+
+    // Serialize the parameter based on ID
+    switch (local_id) {
+        // ParamBoolExternal
+        case PassiveTestComponentBase::PARAMID_PARAMBOOLEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamBoolExternal);
+            break;
+        // ParamI32External
+        case PassiveTestComponentBase::PARAMID_PARAMI32EXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamI32External);
+            break;
+        // ParamStringExternal
+        case PassiveTestComponentBase::PARAMID_PARAMSTRINGEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamStringExternal);
+            break;
+        // ParamEnumExternal
+        case PassiveTestComponentBase::PARAMID_PARAMENUMEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamEnumExternal);
+            break;
+        // ParamArrayExternal
+        case PassiveTestComponentBase::PARAMID_PARAMARRAYEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamArrayExternal);
+            break;
+        // ParamStructExternal
+        case PassiveTestComponentBase::PARAMID_PARAMSTRUCTEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamStructExternal);
+            break;
+        default:
+            // Unknown ID should not have gotten here
+            FW_ASSERT(false, static_cast<FwAssertArgType>(local_id));
+    }
+
+    return stat;
+}
+
+Fw::SerializeStatus PassiveTestTester::PassiveTestComponentBaseParamExternalDelegate ::serializeParam(
+    const FwPrmIdType base_id,
+    const FwPrmIdType local_id,
+    Fw::SerializeBufferBase& buff) const {
+    Fw::SerializeStatus stat;
+    (void)base_id;
+
+    // Serialize the parameter based on ID
+    switch (local_id) {
+        // ParamBoolExternal
+        case PassiveTestComponentBase::PARAMID_PARAMBOOLEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamBoolExternal);
+            break;
+        // ParamI32External
+        case PassiveTestComponentBase::PARAMID_PARAMI32EXTERNAL:
+            stat = buff.serialize(this->m_param_ParamI32External);
+            break;
+        // ParamStringExternal
+        case PassiveTestComponentBase::PARAMID_PARAMSTRINGEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamStringExternal);
+            break;
+        // ParamEnumExternal
+        case PassiveTestComponentBase::PARAMID_PARAMENUMEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamEnumExternal);
+            break;
+        // ParamArrayExternal
+        case PassiveTestComponentBase::PARAMID_PARAMARRAYEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamArrayExternal);
+            break;
+        // ParamStructExternal
+        case PassiveTestComponentBase::PARAMID_PARAMSTRUCTEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamStructExternal);
+            break;
+        default:
+            // Unknown ID should not have gotten here
+            FW_ASSERT(false, static_cast<FwAssertArgType>(local_id));
+    }
+
+    return stat;
+}
 ```
 
-## 항목
+### `PassiveTestTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/PassiveTestTester.cpp`](file--PassiveTestTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/PassiveTestTester.hpp`](file--PassiveTestTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/Tester.hpp`](file--Tester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/PassiveTestTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PassiveTest/test/ut/PassiveTestTester.hpp
+// \author tiffany
+// \brief  hpp file for PassiveTest test harness implementation class
+// ======================================================================
+
+#ifndef PASSIVE_TEST_TESTER_HPP
+#define PASSIVE_TEST_TESTER_HPP
+
+#include "FppTest/component/active/SerialPortIndexEnumAc.hpp"
+#include "FppTest/component/active/TypedPortIndexEnumAc.hpp"
+#include "FppTest/component/passive/PassiveTest.hpp"
+#include "FppTest/component/tests/CmdTests.hpp"
+#include "FppTest/component/tests/EventTests.hpp"
+#include "FppTest/component/tests/ExternalParamTests.hpp"
+#include "FppTest/component/tests/ParamTests.hpp"
+#include "FppTest/component/tests/PortTests.hpp"
+#include "FppTest/component/tests/TlmTests.hpp"
+#include "FppTest/component/types/FormalParamTypes.hpp"
+#include "PassiveTestGTestBase.hpp"
+
+class PassiveTestTester : public PassiveTestGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 100;
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+    //! Construct object PassiveTestTester
+    //!
+    PassiveTestTester();
+
+    //! Destroy object PassiveTestTester
+    //!
+    ~PassiveTestTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    PORT_TEST_DECLS
+
+    CMD_TEST_DECLS
+
+    EVENT_TEST_DECLS
+
+    TLM_TEST_DECLS
+
+    void testParam();
+    PARAM_CMD_TEST_DECLS
+
+    void testExternalParam();
+    EXTERNAL_PARAM_CMD_TEST_DECLS
+
+    void testTime();
+
+  private:
+#include "FppTest/component/common/tester.hpp"
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for serial from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_serialOut
+    //!
+    void from_serialOut_handler(FwIndexType portNum,             //!< The port number
+                                Fw::SerializeBufferBase& Buffer  //!< The serialization buffer
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Connect prmSetIn port
+    void connectPrmSetIn();
+
+    //! Connect timeGetOut port
+    void connectTimeGetOut();
+
+    //! Connect serial ports to special ports
+    void connectSpecialPortsSerial();
+
+    //! Set prmValid
+    void setPrmValid(Fw::ParamValid valid);
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+    //! Check successful status of a serial port invocation
+    void checkSerializeStatusSuccess();
+
+    //! Check unsuccessful status of a serial port invocation
+    void checkSerializeStatusBufferEmpty();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    PassiveTest component;
+
+    // Values returned by typed output ports
+    FppTest::Types::BoolType noParamReturnVal;
+    FppTest::Types::U32Type primitiveReturnVal;
+    FppTest::Types::EnumType enumReturnVal;
+    FppTest::Types::ArrayType arrayReturnVal;
+    FppTest::Types::StructType structReturnVal;
+    FppTest::Types::StringType stringReturnVal;
+    FppTest::Types::StringType stringAliasReturnVal;
+    FppTest::Types::AliasStringArrayType arrayStringAliasReturnVal;
+
+    // Buffers from serial output ports;
+    U8 primitiveData[InputPrimitiveArgsPort::SERIALIZED_SIZE];
+    U8 stringData[InputStringArgsPort::SERIALIZED_SIZE];
+    U8 enumData[InputEnumArgsPort::SERIALIZED_SIZE];
+    U8 arrayData[InputArrayArgsPort::SERIALIZED_SIZE];
+    U8 structData[InputStructArgsPort::SERIALIZED_SIZE];
+    U8 serialData[SERIAL_ARGS_BUFFER_CAPACITY];
+
+    Fw::SerialBuffer primitiveBuf;
+    Fw::SerialBuffer stringBuf;
+    Fw::SerialBuffer enumBuf;
+    Fw::SerialBuffer arrayBuf;
+    Fw::SerialBuffer structBuf;
+    Fw::SerialBuffer serialBuf;
+
+    // Parameter test values
+    FppTest::Types::BoolParam boolPrm;
+    FppTest::Types::U32Param u32Prm;
+    FppTest::Types::PrmStringParam stringPrm;
+    FppTest::Types::EnumParam enumPrm;
+    FppTest::Types::ArrayParam arrayPrm;
+    FppTest::Types::StructParam structPrm;
+    Fw::ParamValid prmValid;
+
+    // Time test values
+    Fw::Time time;
+
+    //! External Parameter Delegate
+    class PassiveTestComponentBaseParamExternalDelegate : public Fw::ParamExternalDelegate {
+      public:
+        // ----------------------------------------------------------------------
+        // Parameter validity flags
+        // ----------------------------------------------------------------------
+
+        //! True if ParamBoolExternal was successfully received
+        Fw::ParamValid m_param_ParamBoolExternal_valid;
+
+        //! True if ParamI32External was successfully received
+        Fw::ParamValid m_param_ParamI32External_valid;
+
+        //! True if ParamStringExternal was successfully received
+        Fw::ParamValid m_param_ParamStringExternal_valid;
+
+        //! True if ParamEnumExternal was successfully received
+        Fw::ParamValid m_param_ParamEnumExternal_valid;
+
+        //! True if ParamArrayExternal was successfully received
+        Fw::ParamValid m_param_ParamArrayExternal_valid;
+
+        //! True if ParamStructExternal was successfully received
+        Fw::ParamValid m_param_ParamStructExternal_valid;
+
+      public:
+        // ----------------------------------------------------------------------
+        // Parameter variables
+        // ----------------------------------------------------------------------
+
+        //! Parameter ParamBoolExternal
+        bool m_param_ParamBoolExternal;
+
+        //! Parameter ParamI32External
+        I32 m_param_ParamI32External;
+
+        //! Parameter ParamStringExternal
+        Fw::ParamString m_param_ParamStringExternal;
+
+        //! Parameter ParamEnumExternal
+        FormalParamEnum m_param_ParamEnumExternal;
+
+        //! Parameter ParamArrayExternal
+        FormalParamArray m_param_ParamArrayExternal;
+
+        //! Parameter ParamStructExternal
+        FormalParamStruct m_param_ParamStructExternal;
+
+      public:
+        // ----------------------------------------------------------------------
+        // Unit test implementation of external parameter delegate serialization/deserialization
+        // ----------------------------------------------------------------------
+
+        //! Parameter deserialization function for external parameter unit testing
+        Fw::SerializeStatus deserializeParam(
+            const FwPrmIdType base_id,     //!< The component base parameter ID to deserialize
+            const FwPrmIdType local_id,    //!< The parameter local ID to deserialize
+            const Fw::ParamValid prmStat,  //!< The parameter validity status
+            Fw::SerializeBufferBase& buff  //!< The buffer containing the parameter to deserialize
+            ) override;
+
+        //! Parameter serialization function for external parameter unit testing
+        Fw::SerializeStatus serializeParam(
+            const FwPrmIdType base_id,     //!< The component base parameter ID to serialize
+            const FwPrmIdType local_id,    //!< The parameter local ID to serialize
+            Fw::SerializeBufferBase& buff  //!< The buffer to serialize the parameter into
+        ) const override;
+    };
+
+    // ----------------------------------------------------------------------
+    // Parameter delegates
+    // ----------------------------------------------------------------------
+
+    //! Delegate to serialize/deserialize an externally stored parameter
+    PassiveTestComponentBaseParamExternalDelegate paramPassiveTestTesterDelegate;
+};
+
+#endif
+```
+
+### `Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/ut/Tester.hpp`
+
+
+```cpp
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+// PassiveTestTester is the full implementation - using it as the Tester class
+#include "PassiveTestTester.hpp"
+class PassiveTestTester;
+typedef PassiveTestTester Tester;
+
+#endif
+```

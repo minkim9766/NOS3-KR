@@ -3,14 +3,43 @@
 
 **경로:** `gsw/yamcs/yamcs-tse/src/main/proto/yamcs/protobuf/tse/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `tse.proto`
 
-file--tse.proto
+**경로:** `gsw/yamcs/yamcs-tse/src/main/proto/yamcs/protobuf/tse/tse.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.tse;
+
+option java_package = "org.yamcs.tse.api";
+option java_outer_classname = "TseProto";
+option java_multiple_files = true;
+
+import "yamcs/protobuf/yamcs.proto";
+import "yamcs/protobuf/commanding/commanding.proto";
+import "yamcs/protobuf/pvalue/pvalue.proto";
+
+message TseCommand {
+  optional commanding.CommandId id = 6;
+  optional string instrument = 1;
+  optional string command = 2;
+  optional string response = 3;
+  map<string, Value> argumentMapping = 4;
+  map<string, string> parameterMapping = 5;
+}
+
+message TseCommandResponse {
+  optional commanding.CommandId id = 1;
+  optional bool success = 2;
+  optional string errorMessage = 3;
+}
+
+message TseCommanderMessage {
+  optional TseCommandResponse commandResponse = 1;
+  optional pvalue.ParameterData parameterData = 2;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-tse/src/main/proto/yamcs/protobuf/tse/tse.proto`](file--tse.proto) — UTF-8 텍스트 파일 본문 포함

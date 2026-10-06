@@ -3,20 +3,510 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-data-tab.component.css`
 
-file--parameter-data-tab.component.css
-file--parameter-data-tab.component.html
-file--parameter-data-tab.component.ts
-file--parameter-data.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data-tab.component.css`
+
+
+```css
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
 ```
 
-## 항목
+### `parameter-data-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data-tab.component.css`](file--parameter-data-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data-tab.component.html`](file--parameter-data-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data-tab.component.ts`](file--parameter-data-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data.datasource.ts`](file--parameter-data.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data-tab.component.html`
+
+
+```html
+<ya-detail-pane>
+  @if (table.selectedValue | async; as pval) {
+    <ya-detail-toolbar>Value detail</ya-detail-toolbar>
+
+    <ya-attr-list style="padding: 0 16px">
+      <ya-attr label="Severity">
+        @if (pval.monitoringResult) {
+          <app-alarm-level [level]="pval.monitoringResult" />
+        } @else {
+          <span>-</span>
+        }
+      </ya-attr>
+
+      <ya-attr label="Generation time">
+        {{ pval.generationTime | datetime }}
+      </ya-attr>
+
+      <ya-attr label="Valid for">
+        {{ (pval.expireMillis | millisDuration) || "-" }}
+      </ya-attr>
+
+      <ya-attr>
+        <ng-template ya-attr-label>
+          Raw value
+          <ng-container
+            *ngTemplateOutlet="valueActionsTemplate; context: { value: pval.rawValue }" />
+        </ng-template>
+        @if (pval.rawValue) {
+          <ya-meta>
+            {{ pval.rawValue.type | lowercase }}
+          </ya-meta>
+        }
+        <ng-container *ngTemplateOutlet="valueTemplate; context: { value: pval.rawValue }" />
+      </ya-attr>
+
+      <ya-attr>
+        <ng-template ya-attr-label>
+          Engineering value
+          <ng-container
+            *ngTemplateOutlet="valueActionsTemplate; context: { value: pval.engValue }" />
+        </ng-template>
+        @if (pval.engValue) {
+          <ya-meta>
+            {{ pval.engValue.type | lowercase }}
+          </ya-meta>
+        }
+        <ng-container *ngTemplateOutlet="valueTemplate; context: { value: pval.engValue }" />
+      </ya-attr>
+
+      <ya-attr label="Range condition">
+        {{ pval.rangeCondition || "-" }}
+      </ya-attr>
+
+      <ya-attr label="Acquisition status">
+        {{ pval.acquisitionStatus || "-" }}
+      </ya-attr>
+    </ya-attr-list>
+  } @else {
+    <ya-detail-toolbar>Select a value</ya-detail-toolbar>
+  }
+</ya-detail-pane>
+
+<div class="table-wrapper">
+  <ya-panel>
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-select icon="access_time" formControlName="interval" [options]="intervalOptions" />
+
+      @if (filterForm.value["interval"] === "CUSTOM") {
+        <ya-date-time-input formControlName="customStart" />
+        <ya-date-time-input formControlName="customStop" />
+        <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+      } @else {
+        <ya-button (click)="jumpToNow()">Jump to now</ya-button>
+      }
+
+      @if (dataSource.loading$ | async) {
+        <ya-dots />
+      }
+    </ya-filter-bar>
+
+    <ya-table-window [duration]="appliedInterval" [start]="validStart" [stop]="validStop">
+      <ya-button appearance="text" (click)="exportParameterData()" icon="download">
+        Export CSV
+      </ya-button>
+    </ya-table-window>
+
+    <app-parameter-values-table #table [dataSource]="dataSource" />
+
+    @if (dataSource.isEmpty()) {
+      <ya-empty-message>
+        No records found matching current filter in the selected time range.
+      </ya-empty-message>
+    }
+
+    @if (!(dataSource.loading$ | async) && !dataSource.isEmpty()) {
+      <ya-toolbar appearance="bottom" align="center">
+        <ya-button [disabled]="!dataSource.hasMore()" (click)="loadMoreData()">Load more</ya-button>
+      </ya-toolbar>
+    }
+  </ya-panel>
+</div>
+
+<ng-template #valueActionsTemplate let-value="value">
+  @switch (value?.type) {
+    @case ("BINARY") {
+      <ya-more icon="more_horiz">
+        <button mat-menu-item (click)="copyHex(value.binaryValue)">Copy hex</button>
+        <button mat-menu-item (click)="copyBinary(value.binaryValue)">Copy binary</button>
+      </ya-more>
+    }
+  }
+</ng-template>
+
+<ng-template #valueTemplate let-value="value">
+  @switch (value?.type) {
+    @case ("BINARY") {
+      <app-hex [base64String]="value.binaryValue" />
+    }
+    @default {
+      <ya-value [value]="value" />
+    }
+  }
+</ng-template>
+```
+
+### `parameter-data-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data-tab.component.ts`
+
+
+```typescript
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  input,
+} from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ConfigService,
+  GetParameterValuesOptions,
+  MessageService,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AlarmLevelComponent } from '../../../shared/alarm-level/alarm-level.component';
+import { HexComponent } from '../../../shared/hex/hex.component';
+import { ExportParameterDataDialogComponent } from '../export-parameter-data-dialog/export-parameter-data-dialog.component';
+import { ParameterValuesTableComponent } from '../parameter-values-table/parameter-values-table.component';
+import { ParameterDataDataSource } from './parameter-data.datasource';
+
+const defaultInterval = 'PT1H';
+
+@Component({
+  templateUrl: './parameter-data-tab.component.html',
+  styleUrl: './parameter-data-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AlarmLevelComponent,
+    HexComponent,
+    ParameterValuesTableComponent,
+    WebappSdkModule,
+  ],
+})
+export class ParameterDataTabComponent implements OnInit, OnDestroy {
+  qualifiedName = input.required<string>({ alias: 'parameter' });
+
+  intervalOptions: YaSelectOption[] = [
+    { id: 'PT1H', label: 'Last hour' },
+    { id: 'PT6H', label: 'Last 6 hours' },
+    { id: 'P1D', label: 'Last 24 hours' },
+    { id: 'NO_LIMIT', label: 'No limit' },
+    { id: 'CUSTOM', label: 'Custom' },
+  ];
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new UntypedFormGroup({
+    interval: new UntypedFormControl(defaultInterval),
+    customStart: new UntypedFormControl(null),
+    customStop: new UntypedFormControl(null),
+  });
+
+  dataSource: ParameterDataDataSource;
+  downloadURL$ = new BehaviorSubject<string | null>(null);
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    readonly yamcs: YamcsService,
+    private dialog: MatDialog,
+    private clipboard: Clipboard,
+    private messageService: MessageService,
+    private configService: ConfigService,
+  ) {}
+
+  ngOnInit() {
+    const qualifiedName = this.qualifiedName();
+    this.dataSource = new ParameterDataDataSource(this.yamcs, qualifiedName);
+
+    this.validStop = this.yamcs.getMissionTime();
+    this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    this.appliedInterval = defaultInterval;
+
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('interval')) {
+      this.appliedInterval = queryParams.get('interval')!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = queryParams.get('customStart')!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = new Date(customStart);
+        const customStop = queryParams.get('customStop')!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = new Date(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.value['interval'];
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else {
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  applyCustomDates() {
+    this.validStart = utils.toDate(this.filterForm.value['customStart']);
+    this.validStop = utils.toDate(this.filterForm.value['customStop']);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  /**
+   * Loads the first page of data within validStart and validStop
+   */
+  loadData() {
+    this.updateURL();
+    const options: GetParameterValuesOptions = {
+      source: this.configService.isParameterArchiveEnabled()
+        ? 'ParameterArchive'
+        : 'replay',
+    };
+    if (this.validStart) {
+      // When descending, Yamcs does not include start bound, so make sure
+      // the user's indicated start is included.
+      const start = new Date(this.validStart.getTime());
+      start.setUTCMilliseconds(this.validStart.getUTCMilliseconds() - 1);
+      options.start = start.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+
+    this.dataSource
+      .loadParameterValues(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  /**
+   * Loads the next page of data starting at where the previous page was cut off.
+   * This not 100% waterproof as data may have arrived with generation time between
+   * the last visible data and the offscreen record. This is unlikely to cause
+   * practical problems.
+   */
+  loadMoreData() {
+    const options: GetParameterValuesOptions = {
+      source: this.configService.isParameterArchiveEnabled()
+        ? 'ParameterArchive'
+        : 'replay',
+    };
+    if (this.validStart) {
+      // When descending, Yamcs does not include start bound, so make sure
+      // the user's indicated start is included.
+      const start = new Date(this.validStart.getTime());
+      start.setUTCMilliseconds(this.validStart.getUTCMilliseconds() - 1);
+      options.start = start.toISOString();
+    }
+    this.dataSource
+      .loadMoreData(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  copyHex(base64: string) {
+    const hex = utils.convertBase64ToHex(base64);
+    this.clipboard.copy(hex);
+  }
+
+  copyBinary(base64: string) {
+    const raw = window.atob(base64);
+    this.clipboard.copy(raw);
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStart']
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStop']
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  exportParameterData() {
+    this.dialog.open(ExportParameterDataDialogComponent, {
+      width: '400px',
+      data: {
+        parameter: this.qualifiedName(),
+        start: this.validStart,
+        stop: this.validStop,
+      },
+    });
+  }
+
+  ngOnDestroy() {
+    this.dataSource?.disconnect();
+  }
+}
+```
+
+### `parameter-data.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-data-tab/parameter-data.datasource.ts`
+
+
+```typescript
+import { CollectionViewer } from '@angular/cdk/collections';
+import { DataSource } from '@angular/cdk/table';
+import {
+  GetParameterValuesOptions,
+  ParameterValue,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class ParameterDataDataSource extends DataSource<ParameterValue> {
+  pageSize = 100;
+  offscreenRecord: ParameterValue | null;
+
+  pvals$ = new BehaviorSubject<ParameterValue[]>([]);
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    private yamcs: YamcsService,
+    private qualifiedName: string,
+  ) {
+    super();
+  }
+
+  connect(collectionViewer: CollectionViewer) {
+    return this.pvals$;
+  }
+
+  isEmpty() {
+    return this.pvals$.value.length === 0;
+  }
+
+  loadParameterValues(options: GetParameterValuesOptions) {
+    this.loading$.next(true);
+    return this.loadPage({
+      ...options,
+      limit: this.pageSize + 1, // One extra to detect hasMore
+    })
+      .then((pvals) => {
+        this.pvals$.next(pvals);
+      })
+      .finally(() => this.loading$.next(false));
+  }
+
+  hasMore() {
+    return this.offscreenRecord != null;
+  }
+
+  /**
+   * Fetches a page of data and keeps track of one invisible record that will
+   * allow to deterimine if there are further page(s) and which stop date should
+   * be used for the next page (start/stop are inclusive).
+   */
+  private loadPage(options: GetParameterValuesOptions) {
+    return this.yamcs.yamcsClient
+      .getParameterValues(this.yamcs.instance!, this.qualifiedName, options)
+      .then((pvals) => {
+        if (pvals.length > this.pageSize) {
+          this.offscreenRecord = pvals.splice(pvals.length - 1, 1)[0];
+        } else {
+          this.offscreenRecord = null;
+        }
+        return pvals;
+      });
+  }
+
+  /**
+   * Loads the next page of data starting at where the previous page was cut off.
+   * This not 100% waterproof as data may have arrived with generation time between
+   * the last visible data and the offscreen record. This is unlikely to cause
+   * practical problems.
+   */
+  async loadMoreData(options: GetParameterValuesOptions) {
+    if (!this.offscreenRecord) {
+      return;
+    }
+    return this.loadPage({
+      ...options,
+      stop: this.offscreenRecord.generationTime,
+      limit: this.pageSize + 1, // One extra to detect hasMore
+    }).then((pvals) => {
+      const combinedPvals = this.pvals$.getValue().concat(pvals);
+      this.pvals$.next(combinedPvals);
+    });
+  }
+
+  disconnect() {
+    this.pvals$.complete();
+    this.loading$.complete();
+  }
+}
+```

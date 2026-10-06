@@ -3,22 +3,725 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `DeframingTester.cpp`
 
-file--DeframingTester.cpp
-file--DeframingTester.hpp
-file--FramingTester.cpp
-file--FramingTester.hpp
-file--main.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/DeframingTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DeframingTester.cpp
+// \author bocchino
+// \brief  cpp file for DeframingTester class
+// ======================================================================
+
+#include <cstring>
+
+#include "Fw/Types/SerialBuffer.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "Svc/FramingProtocol/test/ut/DeframingTester.hpp"
+#include "Utils/Hash/Hash.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction
+// ----------------------------------------------------------------------
+
+DeframingTester ::DeframingTester(U32 cbStoreSize)
+    : frameSize(0), cbStorage(new U8[cbStoreSize]), circularBuffer(this->cbStorage, cbStoreSize), interface(*this) {
+    this->fprimeDeframing.setup(this->interface);
+    memset(this->bufferStorage, 0, sizeof this->bufferStorage);
+    memset(this->frameData, 0, sizeof this->frameData);
+    memset(this->cbStorage, 0, cbStoreSize);
+}
+
+DeframingTester ::~DeframingTester() {
+    delete[] (this->cbStorage);
+}
+
+// ----------------------------------------------------------------------
+// Public member functions
+// ----------------------------------------------------------------------
+
+DeframingProtocol::DeframingStatus DeframingTester ::deframe(U32& needed) {
+    return this->fprimeDeframing.deframe(this->circularBuffer, needed);
+}
+
+void DeframingTester ::serializeTokenType(FpFrameHeader::TokenType v) {
+    U8 buffer[sizeof v];
+    Fw::SerialBuffer sb(buffer, sizeof buffer);
+    {
+        const Fw::SerializeStatus status = sb.serialize(v);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    }
+    {
+        const Fw::SerializeStatus status = this->circularBuffer.serialize(buffer, sizeof buffer);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    }
+}
+
+Fw::ByteArray DeframingTester ::constructRandomFrame(U32 packetSize) {
+    FW_ASSERT(packetSize <= MAX_PACKET_SIZE, static_cast<FwAssertArgType>(packetSize),
+              static_cast<FwAssertArgType>(MAX_PACKET_SIZE));
+    Fw::SerialBuffer sb(this->frameData, sizeof this->frameData);
+    Fw::SerializeStatus status = Fw::FW_SERIALIZE_OK;
+    // Serialize the start word
+    status = sb.serialize(Svc::FpFrameHeader::START_WORD);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    // Serialize the packet size
+    status = sb.serialize(static_cast<FpFrameHeader::TokenType>(packetSize));
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    // Construct the packet data
+    for (U32 i = 0; i < packetSize; ++i) {
+        const U8 byte = static_cast<U8>(STest::Pick::lowerUpper(0, 0xFF));
+        status = sb.serialize(byte);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    }
+    const FwSizeType buffLength = sb.getBuffLength();
+    const FwSizeType dataSize = FpFrameHeader::SIZE + packetSize;
+    FW_ASSERT(buffLength == dataSize, static_cast<FwAssertArgType>(buffLength), static_cast<FwAssertArgType>(dataSize));
+    // Compute the hash value
+    Utils::Hash hash;
+    Utils::HashBuffer hashBuffer;
+    hash.init();
+    hash.update(&this->frameData, dataSize);
+    hash.final(hashBuffer);
+    // Copy the hash value into place
+    const U8* const buffAddr = hashBuffer.getBuffAddr();
+    this->frameSize = dataSize + HASH_DIGEST_LENGTH;
+    FW_ASSERT(this->frameSize <= MAX_FRAME_SIZE);
+    memcpy(&this->frameData[dataSize], buffAddr, HASH_DIGEST_LENGTH);
+    // Return the byte array
+    return Fw::ByteArray(this->frameData, this->frameSize);
+}
+
+void DeframingTester ::pushFrameOntoCB(Fw::ByteArray frame) {
+    const Fw::SerializeStatus status = this->circularBuffer.serialize(frame.bytes, frame.size);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+}
+
+Fw::ByteArray DeframingTester ::getFrame() {
+    return Fw::ByteArray(this->frameData, this->frameSize);
+}
+
+void DeframingTester ::checkPacketData() {
+    FW_ASSERT(this->frameSize <= MAX_FRAME_SIZE, static_cast<FwAssertArgType>(this->frameSize),
+              static_cast<FwAssertArgType>(MAX_FRAME_SIZE));
+    FW_ASSERT(this->frameSize >= NON_PACKET_DATA_SIZE, static_cast<FwAssertArgType>(this->frameSize),
+              static_cast<FwAssertArgType>(NON_PACKET_DATA_SIZE));
+    const FwSizeType packetSize = this->frameSize - NON_PACKET_DATA_SIZE;
+    Fw::Buffer buffer = this->interface.getRoutedBuffer();
+    ASSERT_EQ(buffer.getSize(), packetSize);
+    const int result = memcmp(&this->frameData[FpFrameHeader::SIZE], buffer.getData(), packetSize);
+    ASSERT_EQ(result, 0);
+}
+
+void DeframingTester ::testNominalDeframing(U32 packetSize) {
+    const Fw::ByteArray frame = this->constructRandomFrame(packetSize);
+    this->pushFrameOntoCB(frame);
+    U32 needed;
+    const Svc::DeframingProtocol::DeframingStatus status = this->deframe(needed);
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_STATUS_SUCCESS);
+    ASSERT_EQ(needed, frame.size);
+    this->checkPacketData();
+}
+
+void DeframingTester ::testBadChecksum(U32 packetSize) {
+    const Fw::ByteArray frame = this->constructRandomFrame(packetSize);
+    const U32 hashOffset = FpFrameHeader::SIZE + packetSize;
+    ++frame.bytes[hashOffset];
+    this->pushFrameOntoCB(frame);
+    U32 needed;
+    const Svc::DeframingProtocol::DeframingStatus status = this->deframe(needed);
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_INVALID_CHECKSUM);
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `DeframingTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/DeframingTester.cpp`](file--DeframingTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/DeframingTester.hpp`](file--DeframingTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/FramingTester.cpp`](file--FramingTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/FramingTester.hpp`](file--FramingTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/DeframingTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DeframingTester.hpp
+// \author bocchino
+// \brief  hpp file for DeframingTester class
+// ======================================================================
+
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/ByteArray.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Svc/FramingProtocol/DeframingProtocol.hpp"
+#include "Svc/FramingProtocol/FprimeProtocol.hpp"
+#include "Utils/Hash/Hash.hpp"
+#include "Utils/Types/CircularBuffer.hpp"
+
+namespace Svc {
+
+//! A harness for checking deframing
+class DeframingTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants and types
+    // ----------------------------------------------------------------------
+
+    //! Constants
+    enum Constants {
+        //! The maximum frame size
+        MAX_FRAME_SIZE = 1024,
+        //! The size of non-packet data in a frame
+        NON_PACKET_DATA_SIZE = FpFrameHeader::SIZE + HASH_DIGEST_LENGTH,
+        //! The maximum allowed packet size
+        MAX_PACKET_SIZE = MAX_FRAME_SIZE - NON_PACKET_DATA_SIZE,
+        //! The offset of the start word in an F Prime protocol frame
+        START_WORD_OFFSET = 0,
+        //! The offset of the packet size in an F Prime protocol frame
+        PACKET_SIZE_OFFSET = START_WORD_OFFSET + sizeof FpFrameHeader::START_WORD,
+    };
+
+    //! The deframing protocol interface
+    class Interface : public DeframingProtocolInterface {
+      public:
+        //! Construct an Interface
+        Interface(DeframingTester& a_deframingTester  //!< The enclosing DeframingTester
+                  )
+            : deframingTester(a_deframingTester) {}
+
+      public:
+        //! Allocate the buffer
+        Fw::Buffer allocate(const U32 size) {
+            FW_ASSERT(size <= MAX_FRAME_SIZE);
+            Fw::Buffer buffer(this->deframingTester.bufferStorage, size);
+            return buffer;
+        }
+
+        //! Route the buffer
+        void route(Fw::Buffer& data) { this->routedBuffer = data; }
+
+        //! Get the routed buffer
+        Fw::Buffer getRoutedBuffer() { return this->routedBuffer; }
+
+      private:
+        //! The enclosing DeframingTester
+        DeframingTester& deframingTester;
+
+        //! The routed buffer
+        Fw::Buffer routedBuffer;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct a DeframingTester
+    DeframingTester(U32 cbStoreSize = MAX_FRAME_SIZE  //!< The circular buffer store size
+    );
+
+    //! Destroy a DeframingTester
+    ~DeframingTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Call the deframe function of the deframer
+    DeframingProtocol::DeframingStatus deframe(U32& needed  //!< The number of bytes needed (output)
+    );
+
+    //! Serialize a value of token type into the circular buffer
+    void serializeTokenType(FpFrameHeader::TokenType v  //!< The value
+    );
+
+    //! Construct a random frame
+    //! \return An array pointing to frame data owned by DeframingTester.
+    Fw::ByteArray constructRandomFrame(U32 packetSize  //!< The packet size
+    );
+
+    //! Push a frame onto the circular buffer
+    void pushFrameOntoCB(Fw::ByteArray frame  //!< The frame
+    );
+
+    //! Get the stored frame
+    //! \return The frame
+    Fw::ByteArray getFrame();
+
+    //! Check the packet data
+    void checkPacketData();
+
+    //! Test nominal deframing with a valid frame containing random
+    //! packet data
+    void testNominalDeframing(U32 packetSize  //!< The packet size
+    );
+
+    //! Test deframing with a frame containing a bad checksum
+    void testBadChecksum(U32 packetSize  //!< The packet size
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! Storage for the buffer
+    U8 bufferStorage[MAX_FRAME_SIZE];
+
+    //! The frame data
+    U8 frameData[MAX_FRAME_SIZE];
+
+    //! The frame size
+    FwSizeType frameSize;
+
+    //! Storage for the circular buffer
+    U8* cbStorage;
+
+    //! The circular buffer
+    Types::CircularBuffer circularBuffer;
+
+    //! The framing protocol interface
+    Interface interface;
+
+    //! The F Prime framing protocol
+    FprimeDeframing fprimeDeframing;
+};
+
+}  // namespace Svc
+```
+
+### `FramingTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/FramingTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FramingTester.cpp
+// \author bocchino
+// \brief  cpp file for FramingTester class
+// ======================================================================
+
+#include "Svc/FramingProtocol/test/ut/FramingTester.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction
+// ----------------------------------------------------------------------
+
+FramingTester ::FramingTester(Fw::ComPacketType a_packetType)
+    :  // Pick a random data size
+      dataSize(STest::Pick::lowerUpper(1, MAX_DATA_SIZE)),
+      packetType(a_packetType),
+      interface(*this) {
+    FW_ASSERT(this->dataSize <= MAX_DATA_SIZE);
+    this->fprimeFraming.setup(this->interface);
+    // Fill in random data
+    for (U32 i = 0; i < sizeof(this->data); ++i) {
+        this->data[i] = static_cast<U8>(STest::Pick::lowerUpper(0, 0xFF));
+    }
+    memset(this->bufferStorage, 0, sizeof this->bufferStorage);
+}
+
+// ----------------------------------------------------------------------
+// Public member functions
+// ----------------------------------------------------------------------
+
+void FramingTester ::check() {
+    this->fprimeFraming.frame(this->data, this->dataSize, this->packetType);
+    // Check that we received a buffer
+    Fw::Buffer* const sentBuffer = this->interface.getSentBuffer();
+    ASSERT_NE(sentBuffer, nullptr);
+    if (sentBuffer != nullptr) {
+        // Check the start word
+        this->checkStartWord();
+        // Check the packet size
+        const U32 packetSize = this->getPacketSize();
+        this->checkPacketSize(packetSize);
+        // Check the data
+        this->checkData();
+        // Check the hash value
+        this->checkHash(packetSize);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private member functions
+// ----------------------------------------------------------------------
+
+FpFrameHeader::TokenType FramingTester ::getPacketSize() {
+    FpFrameHeader::TokenType packetSize = 0;
+    Fw::SerialBuffer sb(&this->bufferStorage[PACKET_SIZE_OFFSET], sizeof packetSize);
+    sb.fill();
+    const Fw::SerializeStatus status = sb.deserialize(packetSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    return packetSize;
+}
+
+void FramingTester ::checkPacketSize(FpFrameHeader::TokenType packetSize) {
+    FwSizeType expectedPacketSize = this->dataSize;
+    ASSERT_EQ(packetSize, expectedPacketSize);
+}
+
+void FramingTester ::checkPacketType() {
+    SerialPacketType serialPacketType = 0;
+    Fw::SerialBuffer sb(&this->bufferStorage[PACKET_TYPE_OFFSET], sizeof serialPacketType);
+    sb.fill();
+    const Fw::SerializeStatus status = sb.deserialize(serialPacketType);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    typedef Fw::ComPacketType PacketType;
+    const PacketType pt = static_cast<PacketType>(serialPacketType);
+    ASSERT_EQ(pt, this->packetType);
+}
+
+void FramingTester ::checkStartWord() {
+    FpFrameHeader::TokenType startWord = 0;
+    Fw::SerialBuffer sb(&this->bufferStorage[START_WORD_OFFSET], sizeof startWord);
+    sb.fill();
+    const Fw::SerializeStatus status = sb.deserialize(startWord);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    ASSERT_EQ(startWord, FpFrameHeader::START_WORD);
+}
+
+void FramingTester ::checkData() {
+    FwSizeType dataOffset = PACKET_TYPE_OFFSET;
+    const I32 result = memcmp(this->data, &this->bufferStorage[dataOffset], this->dataSize);
+    ASSERT_EQ(result, 0);
+}
+
+void FramingTester ::checkHash(FpFrameHeader::TokenType packetSize) {
+    Utils::Hash hash;
+    Utils::HashBuffer hashBuffer;
+    const U32 localDataSize = FpFrameHeader::SIZE + packetSize;
+    hash.update(this->bufferStorage, localDataSize);
+    hash.final(hashBuffer);
+    const U8* const hashAddr = hashBuffer.getBuffAddr();
+    const I32 result = memcmp(&this->bufferStorage[localDataSize], hashAddr, HASH_DIGEST_LENGTH);
+    ASSERT_EQ(result, 0);
+}
+
+}  // namespace Svc
+```
+
+### `FramingTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/FramingTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FramingTester.hpp
+// \author bocchino
+// \brief  hpp file for FramingTester class
+// ======================================================================
+
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Svc/FramingProtocol/FprimeProtocol.hpp"
+#include "Svc/FramingProtocol/FramingProtocol.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+namespace Svc {
+
+//! A harness for checking framing
+class FramingTester {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants and types
+    // ----------------------------------------------------------------------
+
+    //! The serialized packet type
+    typedef I32 SerialPacketType;
+
+    //! Constants
+    enum Constants {
+        //! The maximum buffer size
+        MAX_BUFFER_SIZE = 1024,
+        //! The maximum allowed data size
+        MAX_DATA_SIZE = MAX_BUFFER_SIZE - FpFrameHeader::SIZE - sizeof(SerialPacketType) - HASH_DIGEST_LENGTH,
+        //! The offset of the start word in an F Prime protocol frame
+        START_WORD_OFFSET = 0,
+        //! The offset of the packet size in an F Prime protocol frame
+        PACKET_SIZE_OFFSET = START_WORD_OFFSET + sizeof FpFrameHeader::START_WORD,
+        //! The offset of the packet type in an F Prime protocol frame
+        PACKET_TYPE_OFFSET = FpFrameHeader::SIZE,
+    };
+
+    //! The framing protocol interface
+    class Interface : public FramingProtocolInterface {
+      public:
+        //! Construct an Interface
+        Interface(FramingTester& a_framingTester  //!< The enclosing FramingTester
+                  )
+            : framingTester(a_framingTester), sentBuffer(nullptr) {}
+
+      public:
+        //! Allocate the buffer
+        Fw::Buffer allocate(const U32 size) {
+            FW_ASSERT(size <= MAX_BUFFER_SIZE, static_cast<FwAssertArgType>(size),
+                      static_cast<FwAssertArgType>(MAX_BUFFER_SIZE));
+            Fw::Buffer buffer(this->framingTester.bufferStorage, size);
+            return buffer;
+        }
+
+        //! Send the buffer
+        void send(Fw::Buffer& outgoing) { this->sentBuffer = &outgoing; }
+
+        //! Get the sent buffer
+        Fw::Buffer* getSentBuffer() { return this->sentBuffer; }
+
+      private:
+        //! The enclosing FramingTester
+        FramingTester& framingTester;
+
+        //! The sent buffer
+        Fw::Buffer* sentBuffer;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Construct a FramingTester
+    FramingTester(Fw::ComPacketType a_packetType  //!< The packet type
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Check framing
+    void check();
+
+    // ----------------------------------------------------------------------
+    // Private member functions
+    // ----------------------------------------------------------------------
+
+  private:
+    //! Get the packet size from the buffer
+    FpFrameHeader::TokenType getPacketSize();
+
+    //! Check the packet size in the buffer
+    void checkPacketSize(FpFrameHeader::TokenType packetSize  //!< The packet size
+    );
+
+    //! Check the packet type in the buffer
+    void checkPacketType();
+
+    //! Check the start word in the buffer
+    void checkStartWord();
+
+    //! Check the data in the buffer
+    void checkData();
+
+    //! Check the hash value in the buffer
+    void checkHash(FpFrameHeader::TokenType packetSize  //!< The packet size
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The data to frame
+    U8 data[MAX_DATA_SIZE];
+
+    //! The data size in bytes
+    const U32 dataSize;
+
+    //! The packet type
+    Fw::ComPacketType packetType;
+
+    //! Storage for the buffer
+    U8 bufferStorage[MAX_BUFFER_SIZE];
+
+    //! The framing protocol interface
+    Interface interface;
+
+    //! The F Prime framing protocol
+    FprimeFraming fprimeFraming;
+};
+
+}  // namespace Svc
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/ut/main.cpp`
+
+
+```cpp
+#include <limits>
+
+#include "Fw/Test/UnitTest.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Random/Random.hpp"
+#include "Svc/FramingProtocol/test/ut/DeframingTester.hpp"
+#include "Svc/FramingProtocol/test/ut/FramingTester.hpp"
+#include "gtest/gtest.h"
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+TEST(Deframing, IncompleteHeader) {
+    COMMENT("Apply deframing to a frame with an incomplete header");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    // Start word
+    tester.serializeTokenType(Svc::FpFrameHeader::START_WORD);
+    U32 needed = 0;
+    const Svc::DeframingProtocol::DeframingStatus status = tester.deframe(needed);
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_MORE_NEEDED);
+}
+
+TEST(Deframing, InvalidStartWord) {
+    COMMENT("Apply deframing to a frame with an invalid start word");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    // Start word
+    tester.serializeTokenType(Svc::FpFrameHeader::START_WORD + 1);
+    // Packet size
+    tester.serializeTokenType(0);
+    U32 needed = 0;
+    const Svc::DeframingProtocol::DeframingStatus status = tester.deframe(needed);
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_INVALID_FORMAT);
+}
+
+TEST(Deframing, InvalidSizeIntegerOverflow) {
+    COMMENT("Apply deframing to a frame with an invalid packet size due to integer overflow");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    // Start word
+    tester.serializeTokenType(Svc::FpFrameHeader::START_WORD);
+    // Packet size
+    const U32 maxU32 = std::numeric_limits<U32>::max();
+    const U32 maxSize = maxU32 - (Svc::FpFrameHeader::SIZE + HASH_DIGEST_LENGTH);
+    // Make size too big
+    tester.serializeTokenType(maxSize + 1);
+    U32 needed = 0;
+    const Svc::DeframingProtocol::DeframingStatus status = tester.deframe(needed);
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_INVALID_SIZE);
+}
+
+TEST(Deframing, InvalidSizeBufferOverflow) {
+    COMMENT("Apply deframing to a frame with an invalid packet size due to buffer overflow");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    const Svc::FpFrameHeader::TokenType packetSize = 10;
+    const U32 frameSize = Svc::FpFrameHeader::SIZE + packetSize + HASH_DIGEST_LENGTH;
+    // Make the circular buffer too small to hold the frame
+    Svc::DeframingTester tester(frameSize - 1);
+    // Start word
+    tester.serializeTokenType(Svc::FpFrameHeader::START_WORD);
+    // Packet size
+    tester.serializeTokenType(packetSize);
+    U32 needed = 0;
+    const Svc::DeframingProtocol::DeframingStatus status = tester.deframe(needed);
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_INVALID_SIZE);
+    ASSERT_EQ(needed, frameSize);
+}
+
+TEST(Deframing, IncompleteFrame) {
+    COMMENT("Apply deframing to an incomplete frame");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    const Svc::FpFrameHeader::TokenType packetSize = 1;
+    Svc::DeframingTester tester;
+    // Start word
+    tester.serializeTokenType(Svc::FpFrameHeader::START_WORD);
+    // Packet size
+    tester.serializeTokenType(packetSize);
+    U32 needed = 0;
+    // Deframe
+    const Svc::DeframingProtocol::DeframingStatus status = tester.deframe(needed);
+    // Check results
+    ASSERT_EQ(status, Svc::DeframingProtocol::DEFRAMING_MORE_NEEDED);
+    const U32 expectedFrameSize = Svc::FpFrameHeader::SIZE + packetSize + HASH_DIGEST_LENGTH;
+    ASSERT_EQ(needed, expectedFrameSize);
+}
+
+TEST(Deframing, ZeroPacketSize) {
+    COMMENT("Apply deframing to a valid frame with packet size zero");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    const U32 packetSize = 0;
+    tester.testNominalDeframing(packetSize);
+}
+
+TEST(Deframing, RandomPacketSize) {
+    COMMENT("Apply deframing to a valid frame with a random packet size");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    const U32 packetSize = STest::Pick::lowerUpper(0, Svc::DeframingTester::MAX_PACKET_SIZE);
+    tester.testNominalDeframing(packetSize);
+}
+
+TEST(Deframing, MaxPacketSize) {
+    COMMENT("Apply deframing to a valid frame with maximum packet size for the test buffer");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    const U32 packetSize = Svc::DeframingTester::MAX_PACKET_SIZE;
+    tester.testNominalDeframing(packetSize);
+}
+
+TEST(Deframing, BadChecksum) {
+    COMMENT("Apply deframing to a frame with a bad checksum");
+    REQUIREMENT("Svc-FramingProtocol-002");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::DeframingTester tester;
+    const U32 packetSize = STest::Pick::lowerUpper(0, Svc::DeframingTester::MAX_PACKET_SIZE);
+    tester.testBadChecksum(packetSize);
+}
+
+TEST(Framing, CommandPacket) {
+    COMMENT("Apply framing to a command packet");
+    REQUIREMENT("Svc-FramingProtocol-001");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::FramingTester tester(Fw::ComPacketType::FW_PACKET_COMMAND);
+    tester.check();
+}
+
+TEST(Framing, FilePacket) {
+    COMMENT("Apply framing to a file packet");
+    REQUIREMENT("Svc-FramingProtocol-001");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::FramingTester tester(Fw::ComPacketType::FW_PACKET_FILE);
+    tester.check();
+}
+
+TEST(Framing, UnknownPacket) {
+    COMMENT("Apply framing to a packet of unknown type");
+    REQUIREMENT("Svc-FramingProtocol-001");
+    REQUIREMENT("Svc-FramingProtocol-003");
+    Svc::FramingTester tester(Fw::ComPacketType::FW_PACKET_UNKNOWN);
+    tester.check();
+}
+
+// ----------------------------------------------------------------------
+// Main function
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```

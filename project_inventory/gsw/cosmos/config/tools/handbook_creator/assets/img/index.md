@@ -3,18 +3,22 @@
 
 **경로:** `gsw/cosmos/config/tools/handbook_creator/assets/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ball_logo.bmp`
 
-file--ball_logo.bmp
-file--ball_logo.gif
-file--ball_logo.jpg
-```
+**경로:** `gsw/cosmos/config/tools/handbook_creator/assets/img/ball_logo.bmp`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`gsw/cosmos/config/tools/handbook_creator/assets/img/ball_logo.bmp`](file--ball_logo.bmp) — 바이너리 (경로만)
-- [`gsw/cosmos/config/tools/handbook_creator/assets/img/ball_logo.gif`](file--ball_logo.gif) — 바이너리 (경로만)
-- [`gsw/cosmos/config/tools/handbook_creator/assets/img/ball_logo.jpg`](file--ball_logo.jpg) — 바이너리 (경로만)
+### `ball_logo.gif`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/assets/img/ball_logo.gif`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ball_logo.jpg`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/assets/img/ball_logo.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

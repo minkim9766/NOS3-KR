@@ -3,24 +3,1396 @@
 
 **경로:** `fsw/apps/ci/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ci_app.c`
 
-file--ci_app.c
-file--ci_app.h
-file--ci_events.h
-file--ci_hktlm.h
-file--ci_msgdefs.h
-file--ci_utils.c
+**경로:** `fsw/apps/ci/fsw/src/ci_app.c`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_app.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions for CI Application
+*
+*   \par
+*     This source code file contains the application layer functions for CI.
+*
+*   \par
+*     This file defines the functions associtated with the application layer of
+*     Command Ingest (CI) application. The application layer is responsible to
+*     interact with the CFE Software bus, send the HK packet, and the OutData
+*     packet. The custom functions are defined in the ci_custom.c file.
+*
+*   \par API Functions Defined:
+*     - CI_AppMain() - Main entry point. Initializes, then calls CI_RcvMsg. 
+*     - CI_AppInit() - Initializes the CI Application
+*     - CI_InitEvent() - Initializes the events
+*     - CI_InitPipe() - Initializes the pipes (Scheduler, command)
+*     - CI_InitData() - Initializes HK and OutData packets.
+*     - CI_RcvMsg() - Pends on SB to perform main funtions.
+*     - CI_ProcessNewCmds() - Call appropriate fnct based on CMD MID.
+*     - CI_ProcessNewAppCmds() - Call appropriate fnct based on CMD Code.
+*     - CI_ReportHousekeeping() - Send to SB the HK packet.
+*     - CI_SendOutData() - Send the OutData packet to the SB.
+*
+*   \par Private Functions Defined:
+*     - None
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - All Custom functions are to be defined in ci_custom.c
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include <string.h>
+#include "cfe.h"
+#include "ci_app.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+CI_AppData_t  g_CI_AppData;
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Definitions
+*/
+
+
+/*****************************************************************************/
+/** \brief Main Entry Point for CI Application  
+******************************************************************************/
+void CI_AppMain(void)
+{
+    /* Performance Log Entry stamp - #1 */
+    CFE_ES_PerfLogEntry(CI_MAIN_TASK_PERF_ID);
+    
+    /* Perform Application initializations */
+    if (CI_AppInit() != CFE_SUCCESS)
+    {
+        g_CI_AppData.uiRunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /* Application Main Loop. Call CFE_ES_RunLoop() to check for changes in the
+    ** Application's status. If there is a request to kill this Application, 
+    ** it will be passed in through the RunLoop call.  */
+    while (CFE_ES_RunLoop(&g_CI_AppData.uiRunStatus) == true)
+    {
+        /* Performance Log Exit stamp - #1 */
+        CFE_ES_PerfLogExit(CI_MAIN_TASK_PERF_ID);
+        
+        CI_RcvMsg(g_CI_AppData.uiWakeupTimeout); 
+    }
+
+    /* Performance Log Exit stamp - #2 */
+    CFE_ES_PerfLogExit(CI_MAIN_TASK_PERF_ID);
+    
+    /* Exit the application. Will call CI_CleanupCallback */
+    CFE_ES_ExitApp(g_CI_AppData.uiRunStatus);
+} 
+    
+
+/*****************************************************************************/
+/** \brief Initialize The Application
+******************************************************************************/
+int32 CI_AppInit(void)
+{
+    int32  iStatus=CFE_SUCCESS;
+
+    g_CI_AppData.uiRunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /* Initialize Events */
+    iStatus = CI_InitEvent();
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("CI - Event Init failed. \n");
+        goto CI_AppInit_Exit_Tag;
+    }
+
+    /* Initialize Pipes */
+    iStatus = CI_InitPipe();
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Pipe Init failed.");
+        goto CI_AppInit_Exit_Tag;
+    }
+
+    /* Initialize Data (never fails) */
+    iStatus = CI_InitData();
+
+    /* Custom Init */
+    iStatus = CI_CustomInit();
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Custom Init failed.");
+        goto CI_AppInit_Exit_Tag;
+    }
+
+    /* Install the cleanup callback */
+    OS_TaskInstallDeleteHandler((osal_task_entry) &CI_CleanupCallback);
+
+CI_AppInit_Exit_Tag:
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CI_INIT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "Application initialized");
+    }
+    else
+    {
+        iStatus = CI_ERROR;
+        CFE_ES_WriteToSysLog("CI - Application failed to initialize\n");
+    }
+
+    return (iStatus);
+}
+    
+/*****************************************************************************/
+/** \brief Initialize the Event Filter Table.
+******************************************************************************/
+int32 CI_InitEvent(void)
+{
+    int32  iStatus=CFE_SUCCESS;
+    int32  ii = 0;
+
+    /* Create the event table */
+    CFE_PSP_MemSet((void*)g_CI_AppData.EventTbl, 0x00, 
+                   sizeof(g_CI_AppData.EventTbl));
+    
+    for (ii = 0; ii < CI_EVT_CNT; ++ii)
+    {
+        g_CI_AppData.EventTbl[ii].EventID = ii;
+    }
+
+    /* Register the table with CFE */
+    iStatus = CFE_EVS_Register(g_CI_AppData.EventTbl,
+                               CI_EVT_CNT, CFE_EVS_EventFilter_BINARY);
+    if (iStatus != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("CI - Failed to register with EVS (0x%08X)\n", 
+                             iStatus);
+    }
+
+    return (iStatus);
+}
+    
+/*****************************************************************************/
+/** \brief Initialize the Pipes
+******************************************************************************/
+int32 CI_InitPipe(void)
+{
+    int32  iStatus=CFE_SUCCESS;
+
+    /* Init schedule pipe */
+    g_CI_AppData.usSchPipeDepth = CI_SCH_PIPE_DEPTH;
+    CFE_PSP_MemSet((void*)g_CI_AppData.cSchPipeName, '\0', 
+                   sizeof(g_CI_AppData.cSchPipeName));
+    strncpy(g_CI_AppData.cSchPipeName, "CI_SCH_PIPE", OS_MAX_API_NAME-1);
+
+    /* Subscribe to Wakeup messages */
+    iStatus = CFE_SB_CreatePipe(&g_CI_AppData.SchPipeId,
+                                 g_CI_AppData.usSchPipeDepth,
+                                 g_CI_AppData.cSchPipeName);
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CI_WAKEUP_MID), g_CI_AppData.SchPipeId);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Failed to create SCH pipe (0x%08X)", 
+                         iStatus);
+        goto CI_InitPipe_Exit_Tag;
+    }
+
+    /* Init command pipe */
+    g_CI_AppData.usCmdPipeDepth = CI_CMD_PIPE_DEPTH ;
+    CFE_PSP_MemSet((void*)g_CI_AppData.cCmdPipeName, '\0', 
+                   sizeof(g_CI_AppData.cCmdPipeName));
+    strncpy(g_CI_AppData.cCmdPipeName, "CI_CMD_PIPE", OS_MAX_API_NAME-1);
+
+    /* Subscribe to command messages */
+    iStatus = CFE_SB_CreatePipe(&g_CI_AppData.CmdPipeId,
+                                 g_CI_AppData.usCmdPipeDepth,
+                                 g_CI_AppData.cCmdPipeName);
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CI_APP_CMD_MID), g_CI_AppData.CmdPipeId);
+        CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CI_SEND_HK_MID), g_CI_AppData.CmdPipeId);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CI_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI - Failed to create CMD pipe (0x%08X)", 
+                         iStatus);
+        goto CI_InitPipe_Exit_Tag;
+    }
+
+CI_InitPipe_Exit_Tag:
+    return (iStatus);
+}
+    
+/*****************************************************************************/
+/** \brief Initialize Data
+******************************************************************************/
+int32 CI_InitData(void)
+{
+    int32  iStatus= CI_SUCCESS;
+
+    /* Init CI mutex */
+    OS_MutSemCreate(&g_CI_AppData.ciMutex, "CI Mutex", 0);
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+
+    /* Init output data */
+    CFE_PSP_MemSet((void*)&g_CI_AppData.OutData, 0x00, 
+                   sizeof(g_CI_AppData.OutData));
+    CFE_MSG_Init(CFE_MSG_PTR(g_CI_AppData.OutData.ucTlmHeader),
+                 CFE_SB_ValueToMsgId(CI_OUT_DATA_MID), 
+                 sizeof(g_CI_AppData.OutData));
+
+    /* Init housekeeping packet */
+    CFE_PSP_MemSet((void*)&g_CI_AppData.HkTlm, 0x00, 
+                   sizeof(g_CI_AppData.HkTlm));
+    CFE_MSG_Init(CFE_MSG_PTR(g_CI_AppData.HkTlm.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(CI_HK_TLM_MID), 
+                 sizeof(g_CI_AppData.HkTlm));
+    
+    /* Init wakeup timeout */
+    /* NOTE: Saving timeout locally allows for potential customization.
+     * No default command is provided to change it at run-time as a safety
+     * measure. Custom implementation may choose to add such command in 
+     * CI_CustomAppCmds or CI_CustomGateCmds. */
+    g_CI_AppData.uiWakeupTimeout = CI_WAKEUP_TIMEOUT;
+    
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+
+    return (iStatus);
+}
+    
+
+/*****************************************************************************/
+/** \brief Receive Messages from Software Bus
+******************************************************************************/
+int32 CI_RcvMsg(int32 iBlocking)
+{
+    int32           iStatus=CFE_SUCCESS;
+    CFE_MSG_Message_t * MsgPtr = NULL;
+    CFE_SB_MsgId_t  MsgId;
+             
+    /* Wait for WAKEUP messages from scheduler or use timeout rate */
+    iStatus = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&MsgPtr,  g_CI_AppData.SchPipeId,  iBlocking);
+        
+    /* Performance Log Entry stamp */
+    CFE_ES_PerfLogEntry(CI_MAIN_TASK_PERF_ID); 
+        
+    if (iStatus == CFE_SUCCESS)
+    {
+        CFE_MSG_GetMsgId(MsgPtr, &MsgId);
+        switch (CFE_SB_MsgIdToValue(MsgId))
+        {
+            case CI_WAKEUP_MID:
+                CI_ProcessNewCmds();
+                CI_SendOutData();
+                break;
+            
+            default:
+                CFE_EVS_SendEvent(CI_MSGID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "CI - Recvd invalid SCH msgId (0x%04x)", 
+                                  CFE_SB_MsgIdToValue(MsgId));
+        }
+    }
+    /* Implementation may set usWakeupTimeout instead of relying on
+     * Scheduler for wakeup message. */
+    else if (iStatus == CFE_SB_TIME_OUT)
+    {
+        CI_ProcessNewCmds();
+        CI_SendOutData();
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CI_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                         "CI: SB pipe read error (0x%08x), app will exit", 
+                         iStatus);
+        g_CI_AppData.uiRunStatus= CFE_ES_RunStatus_APP_ERROR;
+    }
+    
+    return (iStatus);
+}
+
+
+/*****************************************************************************/
+/** \brief Process New Commands
+******************************************************************************/
+void CI_ProcessNewCmds(void)
+{
+    CFE_MSG_Message_t * CmdMsgPtr=NULL;
+    CFE_SB_MsgId_t  CmdMsgId;
+    bool         bGotNewMsg=true;
+
+    while (bGotNewMsg)
+    {
+        if (CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&CmdMsgPtr,  g_CI_AppData.CmdPipeId,  CFE_SB_POLL) == 
+            CFE_SUCCESS)
+        {
+            CFE_MSG_GetMsgId(CmdMsgPtr, &CmdMsgId);
+            switch (CFE_SB_MsgIdToValue(CmdMsgId))
+            {
+                case CI_APP_CMD_MID:
+                    CI_ProcessNewAppCmds(CmdMsgPtr);
+                    break;
+            
+                case CI_SEND_HK_MID:
+                    CI_ReportHousekeeping();
+                    break;
+
+                default:
+                    CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdErrCnt);
+                    CFE_EVS_SendEvent(CI_MSGID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "CI - Recvd invalid CMD msgId (0x%04x)", 
+                                      CFE_SB_MsgIdToValue(CmdMsgId));
+                    break;
+            }
+        }
+        else
+        {
+            bGotNewMsg = false;
+        }
+    }
+}
+    
+
+/*****************************************************************************/
+/** \brief Process New Application Commands
+******************************************************************************/
+void CI_ProcessNewAppCmds(CFE_MSG_Message_t * pCmdMsg)
+{
+    int32 iStatus = CI_SUCCESS;
+    CFE_MSG_FcnCode_t uiCmdCode=0;
+
+    if (pCmdMsg != NULL)
+    {
+        CFE_MSG_GetFcnCode(pCmdMsg, &uiCmdCode);
+        switch (uiCmdCode)
+        {
+            case CI_NOOP_CC:
+                if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_NoArgCmd_t)))
+                {
+                    CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdCnt);
+                    CFE_EVS_SendEvent(CI_CMD_INF_EID,
+                                      CFE_EVS_EventType_INFORMATION,
+                                      "No-op command. Version %d.%d.%d.%d",
+                                      CI_MAJOR_VERSION,
+                                      CI_MINOR_VERSION,
+                                      CI_REVISION,
+                                      CI_MISSION_REV);
+                }
+                break;
+
+            case CI_RESET_CC:
+                if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_NoArgCmd_t)))
+                {
+                    OS_MutSemTake(g_CI_AppData.ciMutex);
+                    g_CI_AppData.HkTlm.usCmdCnt = 0;
+                    g_CI_AppData.HkTlm.usCmdErrCnt = 0;
+                    OS_MutSemGive(g_CI_AppData.ciMutex);
+                    CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "Recvd RESET cmd (%d)", uiCmdCode);
+                }
+                break;
+                
+            case CI_ENABLE_TO_CC:
+                if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_EnableTOCmd_t)))
+                {
+                    CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdCnt);
+                    CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "Sending Enable TO Cmd (%d)",
+                                      CI_ENABLE_TO_CC);
+
+                    CI_CustomEnableTO(pCmdMsg);
+                }
+                break;
+
+            /* Any other commands are assumed to be custom commands. */
+            default:
+                iStatus = CI_CustomAppCmds(pCmdMsg);
+               
+                if (iStatus != CI_SUCCESS) 
+                {
+                    CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdErrCnt);
+                    CFE_EVS_SendEvent(CI_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Recvd invalid app cmd code (%d)", 
+                                      uiCmdCode);
+                }
+                break;
+        }
+    }
+}
+
+
+/*****************************************************************************/
+/** \brief Report Housekeeping Packet
+******************************************************************************/
+void CI_ReportHousekeeping(void)
+{
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&g_CI_AppData.HkTlm);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&g_CI_AppData.HkTlm, true);
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+}
+    
+/*****************************************************************************/
+/** \brief Send the OutData Packet
+******************************************************************************/
+void CI_SendOutData(void)
+{
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&g_CI_AppData.OutData);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&g_CI_AppData.OutData, true);
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+}
+
+
+/*****************************************************************************/
+/** \brief Perform cleanup on shutdown
+******************************************************************************/
+void CI_CleanupCallback(void)
+{
+    CI_CustomCleanup();
+}
+    
+/*==============================================================================
+** End of file ci_app.c
+**============================================================================*/
 ```
 
-## 항목
+### `ci_app.h`
 
-- [`fsw/apps/ci/fsw/src/ci_app.c`](file--ci_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/src/ci_app.h`](file--ci_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/src/ci_events.h`](file--ci_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/src/ci_hktlm.h`](file--ci_hktlm.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/src/ci_msgdefs.h`](file--ci_msgdefs.h) — 바이너리 (경로만)
-- [`fsw/apps/ci/fsw/src/ci_utils.c`](file--ci_utils.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/ci/fsw/src/ci_app.h`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_app.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Header file for CI Application
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - Application functions are defined in ci_app.c
+*       - Utilities are defined in ci_utils.c
+*       - Custom functions are defined in ci_custom.c
+*       - SEND_HK is subscribed to the command pipe. The wakeup rate should
+*         generally be set faster than the SEND_HK rate, otherwise HK packets
+*         will be dropped. SEND_HK is required to get housekeeping data.
+*       - The CI_WAKEUP_TIMEOUT value may be used instead of Scheduler 
+*         table for app processing rate.
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+    
+#ifndef _CI_APP_H_
+#define _CI_APP_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*******************************************************************************
+** Includes
+*******************************************************************************/
+#include <errno.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "osconfig.h"
+
+#include "ci_platform_cfg.h"
+#include "ci_mission_cfg.h"
+#include "ci_events.h"
+
+/*******************************************************************************
+** Macro Definitions
+*******************************************************************************/
+/** \name Version numbers */
+/** \{ */
+#define CI_MAJOR_VERSION     1  /**< Major Version Release */
+#define CI_MINOR_VERSION     0  /**< Minor Version Release */
+#define CI_REVISION          0  /**< Revision for bug fixes */
+#define CI_MISSION_REV       0  /**< Revision for mission */
+/** \} */
+
+/** \name Return codes */
+/** \{ */
+#define CI_SUCCESS  0   /**< Success */
+#define CI_ERROR   -1   /**< Error */
+/** \} */
+
+
+/** \name Default Macro definitions if not defined in ci_platform_cfg.h */
+/** \{ */
+#ifndef CI_WAKEUP_TIMEOUT
+#define CI_WAKEUP_TIMEOUT  1000  /**< Timeout for App rate (ms) */
+#endif
+
+#ifndef CI_SCH_PIPE_DEPTH
+#define CI_SCH_PIPE_DEPTH  10   /**< Scheduler Pipe Depth */
+#endif
+#ifndef CI_CMD_PIPE_DEPTH  
+#define CI_CMD_PIPE_DEPTH  10   /**< Command Pipe Depth */
+#endif
+
+#ifndef CI_CUSTOM_TASK_STACK_PTR 
+#define CI_CUSTOM_TASK_STACK_PTR NULL      /**< Custom task stack pointer */ 
+#endif
+#ifndef CI_CUSTOM_TASK_STACK_SIZE 
+#define CI_CUSTOM_TASK_STACK_SIZE 0x4000   /**< Custom task stack size    */
+#endif
+#ifndef CI_CUSTOM_TASK_PRIO 
+#define CI_CUSTOM_TASK_PRIO 118            /**< Custom task priority      */
+#endif
+/** \} */
+
+
+/*******************************************************************************
+** Structure definitions
+*******************************************************************************/
+/** /brief AppData Structure Defenition */
+typedef struct
+{
+    /* CFE Event table */
+    CFE_EVS_BinFilter_t  EventTbl[CI_EVT_CNT];      /**< Event Filter Table. */
+
+    /* CFE scheduling pipe */
+    CFE_SB_PipeId_t  SchPipeId;                     /**< Schedule Pipe ID */
+    uint16           usSchPipeDepth;                /**< Schedule Pipe depth */
+    char             cSchPipeName[OS_MAX_API_NAME]; /**< Schedule Pipe name */
+
+    /* CFE command pipe */
+    CFE_SB_PipeId_t  CmdPipeId;                     /**< Command Pipe ID */   
+    uint16           usCmdPipeDepth;                /**< Command Pipe depth */
+    char             cCmdPipeName[OS_MAX_API_NAME]; /**< Command Pipe name */ 
+    
+    /* Task-related */
+    uint32  uiRunStatus;        /**< Application Run Status */
+   
+    /* Wakeup timeout - may be used to set CI rate without SCH app. */
+    uint32  uiWakeupTimeout;    /**< CI Wakeup Timeout (ms) */
+
+    /* Output data 
+       Data structure defined in $MISSION/apps/inc/{MISSION}_ci_types.h */
+    CI_OutData_t  OutData;  /**< Output Data Packet */
+
+    /* Housekeeping telemetry (Sent on CI_SEND_HK command)
+       Data structure defined in $MISSION/apps/inc/{MISSION}_ci_types.h */
+    CI_HkTlm_t  HkTlm;      /**< Housekeeping Packet */
+
+    /* Mutex to protect telemetry packets (outData, hkTlm). */
+    uint32 ciMutex;         /**< CI AppData Mutex */
+
+} CI_AppData_t;
+
+
+/*******************************************************************************
+** Application Function Declarations
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Main Entry Point for CI Application
+*
+*   \par Description/Algorithm
+*       This function is the main entry point of the CI Application. It 
+*       performs the following:
+*       1. Registers the Application with cFE
+*       2. Initializes the application through CI_AppInit
+*       3. Loops over the CI_RcvMsg function to perform main function.
+*       4. Exit application on kill signal or error
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_MAIN_TASK_PERF_ID Entered in CI_RcvMsg
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_AppInit
+*       #CI_RcvMsg
+*       #CI_CleanupCallback
+*******************************************************************************/
+void  CI_AppMain(void);
+
+/******************************************************************************/
+/** \brief Initialize The Application
+*
+*   \par Description/Algorithm
+*        High level initialization function.  Calls in order:
+*        1. CI_InitEvent
+*        2. CI_InitPipe
+*        3. CI_InitData
+*        4. CI_CustomInit
+*        5. Installs the Cleanup Callback function.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_CustomInit is defined in ci_custom.c
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc  \copydoc CFE_SUCCESS \endcode
+*   \retcode #CI_ERROR \retdesc Initialization Error \endcode
+*
+*   \see 
+*       #CI_InitEvent
+*       #CI_InitPipe
+*       #CI_InitData
+*       #CI_CustomInit
+*******************************************************************************/
+int32  CI_AppInit(void);
+
+/******************************************************************************/
+/** \brief Initialize the Event Filter Table.
+*
+*   \par Description/Algorithm
+*        1. Set the EventTbl EventIds based on ids defined in ci_events.h
+*        2. Register the events with cFE Table services.
+*
+*   \par Assumptions, External Events, and Notes:
+*        - All Events are intialized as unfiltered.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retstmt Any of the error codes from #CFE_EVS_Register    \endstmt
+*   \endreturns
+*
+*   \see 
+*       #CI_AppInit
+*******************************************************************************/
+int32  CI_InitEvent(void);
+
+/******************************************************************************/
+/** \brief Initialize the Pipes
+*
+*   \par Description/Algorithm
+*        Initialize the Scheduler and Cmd Pipes. The Scheduler pipe is
+*        subscribed to the WAKEUP, while the Command
+*        pipe is subscribed to the CI_APP_CMD_MID and CI_SEND_HK_MID. 
+*
+*   \par Assumptions, External Events, and Notes:
+*        - No Telemetry pipe is included in the CI application.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retstmt Any of the error codes from #CFE_SB_CreatePipe    \endstmt
+*   \endreturns
+*
+*   \see 
+*       #CI_AppInit
+*******************************************************************************/
+int32  CI_InitPipe(void);
+
+/******************************************************************************/
+/** \brief Initialize Data
+*
+*   \par Description/Algorithm
+*        Initialize the Housekeeping Packet, the OutData Packet and the CI
+*        Mutex, for memory protection of these packets.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_WAKEUP_TIMEOUT is copied to AppData here so that it may be
+*         manipulated if desired in custom layer.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*
+*   \see 
+*       #CI_AppInit
+*******************************************************************************/
+int32  CI_InitData(void);
+
+/******************************************************************************/
+/** \brief Receive Messages from Software Bus
+*
+*   \par Description/Algorithm
+*       Pend on the SchPipe for CI_WAKEUP_MID. On wakeup, call
+*       CI_ProcessNewCmds() and CI_SendOutData(). May also be scheduled at 
+*       fixed rate through wakeup timeout.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - On timeout, process as if a wakeup message is received.
+*       - Quit app on error status.
+*       - SEND_HK is processed in CI_ProcessNewCmds.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] iBlocking blocking timeout (set through CI_WAKEUP_TIMEOUT)
+*
+*   \returns
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retstmt Any of the error codes from #CFE_SB_ReceiveBuffer \endstmt
+*
+*   \see 
+*       #CI_AppMain
+*       #CI_ProcessNewCmds
+*       #CI_SendOutData
+*******************************************************************************/
+int32  CI_RcvMsg(int32 iBlocking);
+
+/******************************************************************************/
+/** \brief Process New Commands
+*
+*   \par Description/Algorithm
+*       Loop over Cmd Pipe for any new messages. Call CI_ProcessNewAppCmds on
+*       the receipt of the CI_APP_CMD_MID and CI_ReportHousekeeping on receipt
+*       of CI_SEND_HK_MID. Error otherwise. 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_WAKEUP_MID.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_RcvMsg
+*       #CI_ProcessNewAppCmds
+*       #CI_ReportHousekeeping
+*******************************************************************************/
+void  CI_ProcessNewCmds(void);
+
+/******************************************************************************/
+/** \brief Process New Application Commands
+*
+*   \par Description/Algorithm
+*       Process the appropriate response based on the received command code.
+*       Possible command codes include:
+*       1. CI_NOOP_CC - No-operations. Increment cmd counter and return event.
+*       2. CI_RESET_CC - Reset the housekeeping packet.
+*       3. CI_ENABLE_TO_CC - Call the CI_CustomEnableTO function.
+*       4. Other custom commands - Call CI_CustomAppCmds
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The CI_CustomEnableTO function is defined in ci_custom.c
+*       - The command length of each command is verified
+*       - All command message structures are defined in {MISSION}_ci_types.h.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_ProcessNewCmds
+*       #CI_CustomEnableTO
+*       #CI_CustomAppCmds
+*******************************************************************************/
+void  CI_ProcessNewAppCmds(CFE_MSG_Message_t*);
+
+/******************************************************************************/
+/** \brief Report Housekeeping Packet
+*
+*   \par Description/Algorithm
+*       Send the housekeeping packet to the software bus.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_SEND_HK_MID.
+*       - The HK Packet is protected by ciMutex.
+*       - The default Housekeeping packet is defined in ci_hktlm.h.
+*       - Housekeeping packet may be extended in {MISSION}_ci_types.h.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_RcvMsg
+*******************************************************************************/
+void  CI_ReportHousekeeping(void);
+
+/******************************************************************************/
+/** \brief Send the OutData Packet
+*
+*   \par Description/Algorithm
+*       Send the OutData packet to the software bus.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_WAKEUP_MID.
+*       - The OutData Packet is protected by ciMutex.
+*       - The OutData packet is defined in {MISSION}_ci_types.h.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*
+*   \returns None
+*
+*   \see 
+*       #CI_RcvMsg
+*******************************************************************************/
+void  CI_SendOutData(void);
+
+/******************************************************************************/
+/** \brief Perform cleanup on shutdown
+*
+*   \par Call the custom cleanup function to close I/O channels, etc. 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - CI_CustomCleanup is defined in ci_custom.c
+*       - This function gets called on CFE_ES_ExitApp from CI_AppMain.
+*
+*   \param None
+*
+*   \returns None
+*
+*   \see 
+*       #CI_AppMain
+*       #CI_AppInit
+*       #CI_CustomCleanup
+*******************************************************************************/
+void  CI_CleanupCallback(void);
+
+
+/*******************************************************************************
+** Utility Function Declarations
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Increment a housekeeping packet counter
+*
+*   \par Description/Algorithm
+*       Increments the specified counter. The Incrementation is protected by
+*       the application mutex.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function should be used within the custom layer to increment any
+*       counters, as it has memory access protection.
+*       - This assumes that all counters are of type uint16.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] counter The pointer to the counter to increment.
+*
+*   \returns None
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CI_CustomAppCmds
+*******************************************************************************/
+void CI_IncrHkCounter(uint16 * counter);
+
+/******************************************************************************/
+/** \brief Verify the command length against expected length
+*
+*   \par Description/Algorithm
+*       Get the message length through the SB API and compare it with the passed
+*       in expected length.  If not equal, issue an error event, increment the
+*       uiCmdErrCnt and return false.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Call this function for all received commands to verify the length.
+*       - Should also be used in the custom layer.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] pMsg Pointer to the CCSDS message.
+*   \param[in] expectedLen Expected Command message length.
+*
+*   \returns True or False
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CI_CustomAppCmds
+*       #CI_CustomGateCmds
+*******************************************************************************/
+bool  CI_VerifyCmdLength(CFE_MSG_Message_t*, uint16);
+
+
+/*******************************************************************************
+** Required Custom Functions
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Custom Initialization
+*
+*   \par Description/Algorithm
+*       This function is mainly responsible to initialize the transport
+*       protocol(s) to use and to create the custom child task.  The entry 
+*       function for the child task should be CI_CustomMain.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Configuration macros defined in ci_platform_cfg.h should be used when
+*       configuring the transport protocol(s).
+*       - A local file descriptor should be defined for each transport protocols
+*       - A local buffer should be allocated to store incomming messages.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the application main task through
+*       CI_AppInit 
+*
+*   \param None
+*
+*   \returns 
+*   \retcode #CFE_SUCCESS \retdesc \copydoc CFE_SUCCESS \endcode
+*   \retcode #CI_ERROR \retdesc Initialization Error \endcode
+*
+*   \see 
+*       #CI_AppInit
+*       #CI_CustomMain
+*       #CFE_ES_CreateChildTask
+*******************************************************************************/
+int32 CI_CustomInit(void);
+
+/******************************************************************************/
+/** \brief Custom Child Task Entry Point
+*
+*   \par Description/Algorithm
+*       This function is responsible for receiving all commands over the choosen
+*       transport protocol.  The general pattern to follow is as followed:
+*       1. Check that the local file descriptor has been set correctly
+*       2. Loop as long as no errors are present
+*       3. Pend forever on uplink commands
+*       4. Call any data link I/O services (if applicable) to form full packet
+*       from frames.
+*       5. Call any format conversion protocols (if applicable) to form SPP
+*       (CCSDS) command packets.
+*       6. Get the CCSDS Msg ID of the command message. 
+*       7. Validate the Checksum of the message.
+*       8. If the command is the CI_GATE_CMG_MID, call CI_CustomGateCmds 
+*       9. Pass on any other commands to the Software bus
+*       10. Continue loop (2)
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Configuration macros defined in ci_platform_cfg.h should be used when
+*       configuring the transport protocol(s).
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the Custom Child Task.
+*
+*   \param None
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_CustomInit
+*       #CI_CustomGateCmds
+*       #CFE_SB_ValidateChecksum
+*       #CFE_SB_GetMsgId
+*       #CFE_SB_TransmitMsg
+*******************************************************************************/
+void  CI_CustomMain(void);
+
+/******************************************************************************/
+/** \brief Process of Gate commands by child task
+*
+*   \par Description/Algorithm
+*       This function is responsible to process any custom gate commands. Make
+*       use of same pattern as in CI_ProcessNewAppCmds, with a switch case on
+*       the received command code of the message.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_GATE_CMD_MID, called 
+*       from the CI_CustomMain function.
+*       - Any Gate commands should be executed immidiately.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the Custom Child Task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] cmdMsgPtr The pointer to the (CCSDS) Gate command message.
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_CustomMain
+*       #CI_IncrHkCounter
+*       #CI_VerifyCmdLength
+*       #CFE_SB_GetCmdCode
+*******************************************************************************/
+void  CI_CustomGateCmds(CFE_MSG_Message_t *);
+
+/******************************************************************************/
+/** \brief Process of custom app commands by main task
+*
+*   \par Description/Algorithm
+*       This function is responsible to process any custom app commands. Make
+*       use of same pattern as in CI_ProcessNewAppCmds, with a switch case on
+*       the received command code of the message. This function is called on 
+*       any user defined non-generic commands from CI_ProcessNewAppCmds. Return
+*       CI_ERROR if the command code is not recognized.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_APP_CMD_MID, called 
+*       from the CI_ProcessNewAppCmds function, on a custom command code.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the application main task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] pCmdMsg The pointer to the (CCSDS) app command message.
+*
+*   \returns
+*   \retcode #CI_SUCCESS \retdesc Success \endcode
+*   \retcode #CI_ERROR \retdesc Bad Command code \endcode
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CI_IncrHkCounter
+*       #CI_VerifyCmdLength
+*       #CFE_SB_GetCmdCode
+*******************************************************************************/
+int32 CI_CustomAppCmds(CFE_MSG_Message_t *pCmdMsg);
+
+/******************************************************************************/
+/** \brief Custom response to the Enable TO command
+*
+*   \par Description/Algorithm
+*       This function performs the response to the CI_ENABLE_TO_CC command code
+*       and is called from the CI_ProcessNewAppCmds function. It must construct
+*       the appropriate enabling message for the TO application, according to
+*       the transport protocol used by TO. Examples:
+*       - For UDP: The input command can be piped through to TO with the
+*       TO_APP_CMD_MID, provided that the message contains the destination IP.
+*       - For RS422: A TO message should be generated with the file descriptor
+*       used by CI if the serial port is to be used as a duplex serial port. 
+*       In all cases, the new message should be generated as followed:
+*       1. Set the Message ID to TO_APP_CMD_MID
+*       2. Set the Command code to TO_ENABLE_OUTPUT_CC
+*       3. Generate a new checksum 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function is called in response to the CI_APP_CMD_MID with 
+*       command code CI_ENABLE_TO_CC, called from the CI_ProcessNewAppCmds 
+*       function, on the CI_ENABLE_TO_CC command code.
+*       - Any access to AppData (HK or OutData) should make use of the ciMutex
+*       for memory protection.
+*       - This function is executed by the application main task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] pCmdMsg The pointer to the (CCSDS) Gate command message.
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_ProcessNewAppCmds
+*       #CFE_MSG_SetMsgId
+*       #CFE_SB_SetCmdCode
+*       #CFE_SB_GenerateChecksum
+*       #CFE_SB_TransmitMsg
+*******************************************************************************/
+void  CI_CustomEnableTO(CFE_MSG_Message_t *pCmdMsg);
+
+/******************************************************************************/
+/** \brief Custom Cleanup 
+*
+*   \par Description/Algorithm
+*       This function will close any transport protocols in response to 
+*       the exiting the application.  
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The custom child task will be exited automatically on termination
+*       of the application.  
+*       - This function is called during the termination process of the 
+*       main task, by the main task.
+*
+*   \param[in,out] g_CI_AppData CI Global Application Data
+*   \param[in] cmdMsgPtr The pointer to the (CCSDS) Gate command message.
+*
+*   \returns None 
+*
+*   \see 
+*       #CI_AppMain
+*       #CI_CleanupCallback
+*******************************************************************************/
+void  CI_CustomCleanup(void);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_APP_H_ */
+
+/*==============================================================================
+** End of file ci_app.h
+**============================================================================*/
+```
+
+### `ci_events.h`
+
+**경로:** `fsw/apps/ci/fsw/src/ci_events.h`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_events.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief ID Header File for CI Application
+*
+*   \par
+*       This header file contains definitions of the CI Event IDs
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+    
+#ifndef _CI_EVENTS_H_
+#define _CI_EVENTS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/** Event IDs */
+typedef enum
+{
+    CI_RESERVED_EID       =   0,
+    CI_INF_EID            =   1,
+    CI_INIT_INF_EID       =   2,
+    CI_CMD_INF_EID        =   3,
+    CI_CUSTOM_INF_EID     =   4,
+    CI_ERR_EID            =   5,
+    CI_INIT_ERR_EID       =   6,
+    CI_CMD_ERR_EID        =   7,
+    CI_PIPE_ERR_EID       =   8,
+    CI_MSGID_ERR_EID      =   9,
+    CI_MSGLEN_ERR_EID     =  10,
+    CI_CUSTOM_ERR_EID     =  11,
+    CI_EVT_CNT
+} CI_Events_t;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_EVENTS_H_ */
+
+/*==============================================================================
+** End of file ci_events.h
+**============================================================================*/
+    
+```
+
+### `ci_hktlm.h`
+
+**경로:** `fsw/apps/ci/fsw/src/ci_hktlm.h`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_hktlm.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Default HK Telemetry
+*
+*   \par
+*       This header contains the definition of the default HK Telemetry.
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Include this file in your MISSION_ci_types.h or define your own.
+*     - If a custom HK tlm is required, make sure to include all parameters
+*       in this default HK packet in your custom implementation.
+*
+*   \par Modification History:
+*     - 2015-10-16 | Guy de Carufel | Code Started
+*******************************************************************************/
+#ifndef _CI_HKTLM_H_
+#define _CI_HKTLM_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "cfe.h"
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t  TelemetryHeader; /**< \brief Telemetry header */
+    uint16  usCmdCnt;           /**< Count of all commands received           */
+    uint16  usCmdErrCnt;        /**< Count of command errors                  */
+} CI_HkTlm_t;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_HKTLM_H_ */
+
+/*==============================================================================
+** End of file ci_hktlm.h
+**============================================================================*/
+```
+
+### `ci_msgdefs.h`
+
+**경로:** `fsw/apps/ci/fsw/src/ci_msgdefs.h`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ci_utils.c`
+
+**경로:** `fsw/apps/ci/fsw/src/ci_utils.c`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_utils.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions of utility functions
+*
+*   \par
+*       This file defines utility functions used by other CI functions.
+*
+*   \par API Functions Defined:
+*     - CI_IncrHkCounter() - Increment a HK Counter with memory protection
+*     - CI_VerifyCmdLength() - Verify length of command message
+*
+*   \par Private Functions Defined:
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "ci_app.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+
+/*
+** External Global Variables
+*/
+extern CI_AppData_t g_CI_AppData;
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Definitions
+*/
+
+
+/******************************************************************************/
+/** \brief Increment a housekeeping packet counter
+*******************************************************************************/
+void CI_IncrHkCounter(uint16 * counter)
+{
+    OS_MutSemTake(g_CI_AppData.ciMutex);
+    *counter = *counter + 1;
+    OS_MutSemGive(g_CI_AppData.ciMutex);
+}
+
+
+/******************************************************************************/
+/** \brief Verify the command length against expected length
+*******************************************************************************/
+bool CI_VerifyCmdLength(CFE_MSG_Message_t * pMsg,
+                           uint16 usExpectedLen)
+{
+    bool bResult=false;
+    size_t usMsgLen=0;
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t usCmdCode = 0;
+
+    if (pMsg != NULL)
+    {
+        CFE_MSG_GetSize(pMsg, &usMsgLen);
+
+        if (usExpectedLen == usMsgLen)
+        {
+            bResult = true;
+        }
+        else
+        {
+            CFE_MSG_GetMsgId(pMsg, &MsgId);
+            CFE_MSG_GetFcnCode(pMsg, &usCmdCode);
+
+            CFE_EVS_SendEvent(CI_MSGLEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CI: Rcvd invalid msgLen: msgId=0x%04X, "
+                              "cmdCode=%d, msgLen=%ld, expectedLen=%d",
+                              CFE_SB_MsgIdToValue(MsgId), usCmdCode, usMsgLen, usExpectedLen);
+                              
+            CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdErrCnt);
+        }
+    }
+
+    return (bResult);
+}
+
+/*==============================================================================
+** End of file ci_utils.c
+**============================================================================*/
+```

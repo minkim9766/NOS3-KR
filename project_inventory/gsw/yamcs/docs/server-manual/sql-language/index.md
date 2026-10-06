@@ -3,28 +3,613 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/sql-language/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `expressions.rst`
 
-file--expressions.rst
-file--functions.rst
-file--identifiers.rst
-file--index.rst
-file--literals.rst
-file--object-names.rst
-file--operators.rst
-file--statements.rst
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/expressions.rst`
+
+
+```rst
+Expressions
+===========
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      simpleExpression: `additiveExpression` ( `bitwiseOp` `additiveExpression` )*
+      additiveExpression: `multiplicativeExpression` ( `addOp` `multiplicativeExpression` )*
+      multiplicativeExpression: `exponentExpression` ( `multOp` `multiplicativeExpression` )*
+      exponentExpression: `unaryExpression` [ "**" `unaryExpression` ]
+      unaryExpression: [ "+" | "-" ] `primaryExpression`
+      primaryExpression: `integer`
+                       : | `float`
+                       : | `string`
+                       : | "?"
+                       : | "(" `simpleExpression` ")"
+                       : | "ARRAY" "[" `expressionList` "]"
+                       : | `functionCall`
+                       : | `objectName`
+      expression: `andExpression` ( "OR" `andExpression` )*
+      andExpression: `unaryLogicalExpression`
+                   : | "(" `expression` ")" ( "AND" (
+                   :     `unaryLogicalExpression`
+                   :     | "(" `expression` ")"
+                   :   ) )*
+      unaryLogicalExpression: [ "NOT" ] `relationalExpression`
+      relationalExpression: `simpleExpression`
+                          : [
+                          :     `relOp` `simpleExpression`
+                          :     | `inClause`
+                          :     | `betweenClause`
+                          :     | `likeClause`
+                          :     | `isNullClause`
+                          : ]
+      expressionList: `expression` ( "," `expression` )*
+      inClause: [ "NOT" ] "IN" "(" `expressionList` ")"
+      betweenClause: [ "NOT" ] "BETWEEN" `simpleExpression` "AND" `simpleExpression`
+      likeClause: [ "NOT" ] "LIKE" ( STRING | "?" )
+      isNullClause: "IS" [ "NOT" ] "NULL"
+      functionCall: `objectName` "(" [ `expressionList` | "*" ] ")"
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      selectExpression: "SELECT" `selectList`
+                      : "FROM" `tupleSourceExpression`
+                      : [ "[" `windowSpecification` "]" ]
+                      : [ "WHERE" `expression` ]
+                      : [ "ORDER" [ "ASC" | "DESC" ] ]
+                      : [ "LIMIT" [ `offset` "," ] `rowCount` ]
+      mergeExpression: "MERGE" `tupleSourceExpression` ( "," `tupleSourceExpression` )*
+                     : "USING" `columnName`
+                     : [ "ORDER" [ "ASC" | "DESC" ] ]
+                     : [ "LIMIT" [ `offset` "," ] `rowCount` ]
+      selectList: `selectItem` ( "," `selectItem` )*
+      selectItem: "*"
+                : | `simpleExpression` [ [ "AS" ] `columnName` ]
+      tupleSourceExpression: `objectName` [ "HISTOGRAM" "(" `columnName` [ "," `mergeTime` ] ")" ]
+                           : | "(" `streamExpression` ")"
+      windowSpecification: "SIZE" `integer` "ADVANCE" `integer` `windowMode`
+      windowMode: "TIME" | "TUPLES" | "ON" `columnName`
+      offset: `integer`
+      rowCount: `integer`
+      mergeTime: `integer`
 ```
 
-## 항목
+### `functions.rst`
 
-- [`gsw/yamcs/docs/server-manual/sql-language/expressions.rst`](file--expressions.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/functions.rst`](file--functions.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/identifiers.rst`](file--identifiers.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/literals.rst`](file--literals.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/object-names.rst`](file--object-names.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/operators.rst`](file--operators.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/sql-language/statements.rst`](file--statements.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/functions.rst`
+
+
+```rst
+Functions
+=========
+
+.. index:: COALESCE
+   single: Function; COALESCE
+
+COALESCE()
+----------
+
+.. code-block::
+
+   COALESCE(value1, value2, value3, ...)
+
+The ``COALESCE()`` function returns the first value from the list of arguments that is not ``NULL``, or ``NULL`` if there is none.
+
+
+.. index:: UNHEX
+   single: Function; UNHEX
+
+UNHEX()
+-------
+
+.. code-block::
+
+   UNHEX(str)
+
+The ``UNHEX()`` function interpretes the given argument as a hexadecimal string, and returns a binary value.
+
+
+.. index:: EXTRACT_SHORT
+   single: Function; EXTRACT_SHORT
+
+EXTRACT_SHORT()
+---------------
+
+.. code-block::
+
+   EXTRACT_SHORT(binary, offset)
+
+Decodes 16 bits signed at the specified offset, returning a short value.
+
+
+.. index:: EXTRACT_USHORT
+   single: Function; EXTRACT_USHORT
+
+EXTRACT_USHORT()
+----------------
+
+.. code-block::
+
+   EXTRACT_USHORT(binary, offset)
+
+Decodes 16 bits unsigned at the specified offset, returning an integer value.
+
+
+.. index:: EXTRACT_INT
+   single: Function; EXTRACT_INT
+
+EXTRACT_INT()
+-------------
+
+.. code-block::
+
+   EXTRACT_INT(binary, offset)
+
+Decodes 32 bits signed at the specified offset, returning an integer value.
+
+
+.. index:: EXTRACT_U3BYTES
+   single: Function; EXTRACT_U3BYTES
+
+EXTRACT_U3BYTES()
+-----------------
+
+.. code-block::
+
+   EXTRACT_U3BYTES(binary, offset)
+
+Decodes 24 bits unsigned at the specified offset, returning an integer value.
+
+
+.. index:: COUNT
+   single: Function; COUNT
+
+COUNT()
+-------
+
+.. code-block::
+
+   COUNT(*)
+   COUNT(column)
+
+Aggregate function that counts the number of rows in a table that match the specified WHERE clause.
+
+
+.. index:: SUBSTRING
+   single: Function; SUBSTRING
+
+SUBSTRING()
+-----------
+
+.. code-block::
+
+   SUBSTRING(str, offset)
+   SUBSTRING(str, offset, length)
+
+Returns a substring of the given string, starting at the specified character offset.
+
+
+.. index:: SUM
+   single: Function; SUM
+
+SUM()
+-----
+
+.. code-block::
+
+   SUM(column)
+
+Aggregate function that returns the sum of the values of a given column for all rows in a table that match the specified WHERE clause.
+```
+
+### `identifiers.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/identifiers.rst`
+
+
+```rst
+Identifiers
+===========
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      identifier: `letter`+ ( `digit` | `letter` | `specialchars` )*
+      letter: "A"..."Z"
+      specialchars: "$" | "_" | "# | "."
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/index.rst`
+
+
+```rst
+SQL Language
+============
+
+This appendix specifies the SQL language used by Yamcs for its internal database.
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    identifiers
+    literals
+    operators
+    object-names
+    expressions
+    functions
+    statements
+```
+
+### `literals.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/literals.rst`
+
+
+```rst
+Literals
+========
+
+Integer Literals
+----------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      integer: `decinteger` | `hexinteger`
+      decinteger: digit+
+      hexinteger: "0" "X" `hexdigit`+
+      hexdigit: `digit` | "A"..."F"
+      digit: "0"..."9"
+
+
+Float Literals
+--------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      float: `digit`* "." `digit`+ [ `exponent` ]
+           : | `digit`+ `exponent`
+      exponent: [ "+" | "-" ] [ "E" ] `digit`+
+
+
+String Literals
+---------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      string: "'" stringchar*  "'" ( "'" stringchar* "'" )*
+      stringchar: <any character except newline or quote>
+
+.. rubric:: Concatenation
+
+Adjacent string literals (delimited by whitespace) are allowed, and concatenated at compile time.
+```
+
+### `object-names.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/object-names.rst`
+
+
+```rst
+Object Names
+============
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      objectName: `identifier` | `doubleQuotedIdentifier`
+      doubleQuotedIdentifier: '"' `stringchar`* '"'
+```
+
+### `operators.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/operators.rst`
+
+
+```rst
+Operators
+=========
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      addOp: "+" | "-" | "||"
+      multOp: "*" | "/" | "MOD"
+      relOp: "=" | "!=" | ">=" | ">" | "<>" | "<=" | "&&" | "<"
+      bitWiseOp: "&" | "|" | "^" | "<<" | ">>"
+```
+
+### `statements.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/sql-language/statements.rst`
+
+
+```rst
+Statements
+==========
+
+.. index:: ALTER SEQUENCE
+   single: Statement; ALTER SEQUENCE
+
+ALTER SEQUENCE Statement
+------------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      alterSequenceStatement: "ALTER" "SEQUENCE" `objectName` "RESTART" [ "WITH" `restart` ]
+      restart: `integer`
+
+Changes the properties of an existing sequence generator.
+
+
+.. index:: ALTER TABLE
+   single: Statement; ALTER TABLE
+
+ALTER TABLE Statement
+---------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      alterTableStatement: "ALTER" "TABLE" `objectName` "RENAME" "TO" `objectName`
+
+Changes table properties. Currently this is limited to renaming.
+
+
+.. index:: CLOSE STREAM
+   single: Statement; CLOSE STREAM
+
+CLOSE STREAM Statement
+----------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      closeStreamStatement: "CLOSE" "STREAM" `objectName`
+
+
+.. index:: CREATE TABLE
+   single: Statement; CREATE TABLE
+
+CREATE TABLE Statement
+----------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      createTableStatement: "CREATE" "TABLE" [ "IF" "NOT" "EXISTS" ] `tableName` "("
+                          :     `tableColumnDefinition` ( "," `tableColumnDefinition` )*
+                          :     "," "PRIMARY" "KEY" "(" `columnName` ( "," `columnName` )* ")"
+                          :     [ "," "INDEX" "(" `columnName` ( "," `columnName` )* ")" ]
+                          : ")"
+                          : [ "HISTOGRAM" "(" `columnName` ( "," `columnName` )* ")" ]
+                          : [ "ENGINE" `engineName` ]
+                          : [ "PARTITION" "BY" `partitioningSpec` ]
+                          : [ "TABLESPACE" `tablespaceName` ]
+                          : [ "TABLE_FORMAT" "=" "COMPRESSED" ]
+       tableColumnDefinition: `columnName` `dataType` [ "AUTO_INCREMENT" ]
+       dataType: `simpleDataType` | `arrayDataType`
+       arrayDataType: `simpleDataType` "[]"
+       simpleDataType: : "BINARY"
+                       : | "BOOLEAN"
+                       : | "BYTE"
+                       : | "DOUBLE"
+                       : | "ENUM"
+                       : | "HRES_TIMESTAMP"
+                       : | "INT"
+                       : | "LONG"
+                       : | "PARAMETER_VALUE"
+                       : | "SHORT"
+                       : | "STRING"
+                       : | "PROTOBUF" "(" `className` ")"
+                       : | "TIMESTAMP"
+                       : | "UUID"
+       partitioningSpec: "TIME" "(" `columnName` [ "(" `timePartitioning` ")" ] ")"
+                       : | "VALUE" "(" `columnName` ")"
+                       : | "TIME_AND_VALUE" "("
+                       :       `columnName` [ "(" `timePartitioning` ")" ],
+                       :       `columnName`
+                       :   ")"
+       className: `string`
+       columnName: `objectName`
+       timePartitioning: "'YYYY'" | "'YYYY/DOY'" | "'YYYY/MM'"
+
+.. rubric:: Partitioning
+
+Partitioning allows to separate the data in different RocksDB databases (by time) and column families (by value).
+
+Time partitioning allows the following schemes:
+
+* ``YYYY``: one RocksDB database per year.
+* ``YYYY/DOY``: one RocksDB database per combination year, and day of the year.
+* ``YYYY/MM``: one RocksDB database per combination year, and month of the year.
+
+Partitioning by time ensures that old data is frozen and not disturbed by new data coming in.
+
+
+.. index:: CREATE STREAM
+   single: Statement; CREATE STREAM
+
+CREATE STREAM Statement
+-----------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      createStreamStatement: "CREATE" "STREAM" `streamName` (
+                           :     "AS" `streamExpression` [ "NOFOLLOW" ]
+                           :     | "(" `streamColumnDefinition` ( "," `streamColumnDefinition` )* ")"
+                           :  )
+      streamExpression: `selectExpression` | `mergeExpression`
+      streamColumnDefinition: `columnName` `dataType`
+
+
+.. index:: DELETE
+   single: Statement; DESCRIBE
+
+DELETE Statement
+----------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      deleteStatement: "DELETE" "FROM" `objectName`
+                     : [ "WHERE" `expression` ]
+                     : [ "LIMIT" `integer` ]
+
+Delete records from a table.
+
+
+.. index:: DESCRIBE
+   single: Statement; DESCRIBE
+
+DESCRIBE Statement
+------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      describeStatement: "DESCRIBE" `objectName`
+
+Obtain information about table or stream structure.
+
+
+.. index:: DROP TABLE
+   single: Statement; DROP TABLE
+
+DROP TABLE Statement
+--------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      dropTableStatement: "DROP" "TABLE" [ "IF" "EXISTS" ] `objectName`
+
+Remove a table.
+
+
+.. index:: INSERT
+   single: Statement; INSERT
+
+INSERT Statement
+----------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar   
+      insertStatement: ( "INSERT" | "UPSERT" | "INSERT_APPEND" | "UPSERT_APPEND" | "LOAD" )
+                     : "INTO" `objectName`
+                     : (`streamExpression` | `insertValues`)
+      insertValues: "(" `columnName` ( "," `columnName` )* "VALUES" "(" `selectList` ")"
+
+
+.. index:: SELECT TABLE
+   single: Statement; SELECT TABLE
+
+SELECT TABLE Statement
+----------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      selectTableStatement: "SELECT" `selectList`
+                          : "FROM" `tupleSourceExpression`
+                          : [ "[" `windowSpecification` "]" ]
+                          : [ "WHERE" `expression` ]
+                          : [ "ORDER" [ "ASC" | "DESC" ] ]
+                          : [ "LIMIT" [ `offset` "," ] `rowCount` ]
+
+
+.. index:: SHOW DATABASES
+   single: Statement; SHOW DATABASES
+
+SHOW DATABASES Statement
+------------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      showDatabasesStatement: "SHOW" "DATABASES"
+
+Lists the databases.
+
+
+.. index:: SHOW ENGINES
+   single: Statement; SHOW ENGINES
+
+SHOW ENGINES Statement
+----------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      showEnginesStatement: "SHOW" "ENGINES"
+
+Lists the server's storage engines.
+
+
+.. index:: SHOW SEQUENCES
+   single: Statement; SHOW SEQUENCES
+
+SHOW SEQUENCES Statement
+------------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      showSequencesStatement: "SHOW" "SEQUENCES"
+
+Lists the sequences in the current database.
+
+
+.. index:: SHOW STREAMS
+   single: Statement; SHOW STREAMS
+
+SHOW STREAMS Statement
+----------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      showStreamsStatement: "SHOW" "STREAMS"
+
+Lists the streams in the current database.
+
+
+.. index:: SHOW TABLES
+   single: Statement; SHOW TABLES
+
+SHOW TABLES Statement
+---------------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      showTablesStatement: "SHOW" "TABLES"
+
+Lists the tables in the current database.
+
+
+.. index:: UPDATE
+   single: Statement; UPDATE
+
+UPDATE Statement
+----------------
+
+.. container:: productionlist
+
+   .. productionlist:: sql-grammar
+      updateStatement: "UPDATE" "SET" `columnName` "=" `expression`
+                     : ( "," `columnName` "=" `expression` )*
+                     : [ "WHERE" `expression` ]
+                     : [ "LIMIT" `integer` ]
+```

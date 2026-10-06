@@ -3,20 +3,56 @@
 
 **경로:** `gsw/yamcs/examples/snippets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mdb/index
 src/index
-file--.gitignore
-file--pom.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/snippets/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/examples/snippets/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/snippets/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/snippets/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `gsw/yamcs/examples/snippets/.gitignore`
+
+
+```text
+/cache/
+```
+
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/snippets/pom.xml`
+
+
+```xml
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>snippets</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: Examples :: Snippets</name>
+  <description>
+    A number of snippets demonstrating how to use parts of Yamcs
+    outside of a server context.
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>
+```

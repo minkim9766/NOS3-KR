@@ -3,26 +3,376 @@
 
 **경로:** `fsw/osal/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build-osal-documentation.yml`
 
-file--build-osal-documentation.yml
-file--codeql-cfe-build.yml
-file--codeql-osal-default.yml
-file--format-check.yml
-file--icbundle.yml
-file--standalone-build.yml
-file--static-analysis.yml
+**경로:** `fsw/osal/.github/workflows/build-osal-documentation.yml`
+
+
+```yaml
+name: "Build OSAL Documentation (API Guide)"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+
+  #Check for duplicate actions. Skips push actions if there is a matching or duplicate pull-request action.
+  check-for-duplicates:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'same_content'
+          skip_after_successful_duplicate: 'true'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+
+  build-osal-apiguide:
+    #Continue if check-for-duplicates found no duplicates. Always runs for pull-requests.
+    needs: check-for-duplicates
+    if: ${{ needs.check-for-duplicates.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Install Dependencies
+        run: sudo apt-get install doxygen graphviz -y
+
+      - name: Checkout submodule
+        uses: actions/checkout@v3
+
+      - name: Set up for build
+        run: |
+          cp Makefile.sample Makefile
+          make prep
+
+      - name: Build OSAL API Guide
+        run: |
+          make osal-apiguide 2>&1 > make_osal-apiguide_stdout.txt | tee make_osal-apiguide_stderr.txt
+          mv build/docs/osal-apiguide-warnings.log osal-apiguide-warnings.log
+
+      - name: Archive Osal Guide Build Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: OSAL Guide Artifacts
+          path: |
+            make_osal-apiguide_stdout.txt
+            make_osal-apiguide_stderr.txt
+            osal-apiguide-warnings.log
+
+      - name: Error Check
+        run: |
+          if [[ -s make_osal-apiguide_stderr.txt ]]; then
+            cat make_osal-apiguide_stderr.txt
+            exit -1
+          fi
+
+      - name: Warning Check
+        run: |
+          if [[ -s osal-apiguide-warnings.log ]]; then
+            cat osal-apiguide-warnings.log
+            exit -1
+          fi
 ```
 
-## 항목
+### `codeql-cfe-build.yml`
 
-- [`fsw/osal/.github/workflows/build-osal-documentation.yml`](file--build-osal-documentation.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/.github/workflows/codeql-cfe-build.yml`](file--codeql-cfe-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/.github/workflows/codeql-osal-default.yml`](file--codeql-osal-default.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/.github/workflows/icbundle.yml`](file--icbundle.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/.github/workflows/standalone-build.yml`](file--standalone-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/.github/workflows/static-analysis.yml`](file--static-analysis.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/.github/workflows/codeql-cfe-build.yml`
+
+
+```yaml
+name: "CodeQL cFE Build Analysis"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  codeql:
+    name: CodeQl Analysis
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with: 
+      component-path: osal
+      make: 'make -C build/native/default_cpu1/osal'
+```
+
+### `codeql-osal-default.yml`
+
+**경로:** `fsw/osal/.github/workflows/codeql-osal-default.yml`
+
+
+```yaml
+name: "CodeQL Analysis OSAL Default Build"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  codeql:
+    name: CodeQl Analysis
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with: 
+      component-path: cFS  # Causes reusable workflow to not checkout bundle
+      setup: 'cp Makefile.sample Makefile'
+      prep: 'make prep'
+      make: 'make'
+```
+
+### `format-check.yml`
+
+**경로:** `fsw/osal/.github/workflows/format-check.yml`
+
+
+```yaml
+name: Format Check
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  format-check:
+    name: Run format check
+    uses: nasa/cFS/.github/workflows/format-check.yml@main
+```
+
+### `icbundle.yml`
+
+**경로:** `fsw/osal/.github/workflows/icbundle.yml`
+
+
+```yaml
+name: Integration Candidate Bundle Generation
+
+# Generate Integration Candidate branch for this repository.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_nums:
+        description: 'The pull request numbers to include (Comma separated)'
+        required: true
+        type: string
+
+jobs:
+  generate-ic-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y w3m
+      - name: Checkout IC Branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          ref: main
+      - name: Rebase IC Branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "cfs-program@list.nasa.gov"
+          git pull
+          git checkout integration-candidate
+          git rebase main
+      - name: Merge each PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          prs=$(echo ${{ inputs.pr_nums }} | tr "," "\n")
+          for pr in $prs
+          do
+            src_branch=$(hub pr show -f %H $pr)
+            pr_title=$(hub pr show -f %t $pr)
+            commit_msg=$'Merge pull request #'"${pr}"$' from '"${src_branch}"$'\n\n'"${pr_title}"
+            git fetch origin pull/$pr/head:origin/pull/$pr/head
+            git merge origin/pull/$pr/head --no-ff -m "$commit_msg"
+          done
+      - name: Update Changelog and Version.h files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rev_num=$(git rev-list v6.0.0-rc4.. --count)
+          changelog_entry=$'# Changelog\\n\\n## Development Build: v6.0.0-rc4+dev'${rev_num}
+          prs=$(echo ${{ inputs.pr_nums }} | tr "," "\n")
+          see_entry=$'\-\ See:'
+          for pr in $prs
+          do
+            pr_title=$(hub pr show -f %t $pr)
+            changelog_entry="${changelog_entry}"$'\\n- '"${pr_title@Q}"
+            see_entry="${see_entry}"$' <https://github.com/nasa/cFE/pull/'${pr}$'>'
+          done
+          changelog_entry="${changelog_entry}\n${see_entry}\n"
+          echo "s|# Changelog|$changelog_entry|"
+          sed -ir "s|Changelog|$changelog_entry|" CHANGELOG.md
+          
+          buildnumber_entry=$'#define OS_BUILD_NUMBER   '${rev_num}
+          sed -ir "s|define OS_BUILD_NUMBER.*|$buildnumber_entry|" src/os/inc/osapi-version.h
+      - name: Commit and Push Updates to IC Branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rev_num=$(git rev-list v6.0.0-rc4.. --count)
+          git add CHANGELOG.md
+          git add src/os/inc/osapi-version.h
+          git commit -m "Updating documentation and version numbers for v6.0.0-rc4+dev${rev_num}"
+          git push -v origin integration-candidate
+```
+
+### `standalone-build.yml`
+
+**경로:** `fsw/osal/.github/workflows/standalone-build.yml`
+
+
+```yaml
+name: Build and Test Standalone OSAL package
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  allowed_ncov_lines: 0
+  allowed_ncov_branches: 4
+  allowed_ncov_functions: 0
+
+jobs:
+
+  build-and-test:
+    name: Build and Execute Tests
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build-type: [Debug, Release]
+        base-os: [ubuntu-22.04, ubuntu-20.04]
+
+    runs-on: ${{ matrix.base-os }}
+
+    steps:
+
+      - name: Checkout OSAL
+        uses: actions/checkout@v3
+        with:
+          path: source
+
+      - name: Install Coverage Analysis Tools
+        if: ${{ matrix.build-type == 'Debug' && matrix.base-os == 'ubuntu-20.04' }}
+        run: sudo apt-get install -y lcov xsltproc && echo "run_lcov=TRUE" >> $GITHUB_ENV
+
+      - name: Set up debug environment
+        if: ${{ matrix.build-type == 'Debug' }}
+        run: |
+          echo "is_debug=TRUE" >> $GITHUB_ENV
+          echo "is_release=FALSE" >> $GITHUB_ENV
+          echo "build_tgt=all" >> $GITHUB_ENV
+          echo "DESTDIR=${{ github.workspace }}/staging-debug" >> $GITHUB_ENV
+
+      - name: Set up release environment
+        if: ${{ matrix.build-type == 'Release' }}
+        run: |
+          echo "is_debug=FALSE" >> $GITHUB_ENV
+          echo "is_release=TRUE" >> $GITHUB_ENV
+          echo "build_tgt=install" >> $GITHUB_ENV
+          echo "DESTDIR=${{ github.workspace }}/staging-release" >> $GITHUB_ENV
+
+      - name: Set up build
+        run: cmake
+          -DCMAKE_BUILD_TYPE=${{ matrix.build-type }}
+          -DENABLE_UNIT_TESTS=${{ env.is_debug }}
+          -DOSAL_OMIT_DEPRECATED=${{ env.is_debug }}
+          -DOSAL_VALIDATE_API=${{ env.is_release }}
+          -DOSAL_INSTALL_LIBRARIES=${{ env.is_release }}
+          -DOSAL_CONFIG_DEBUG_PERMISSIVE_MODE=${{ env.is_debug }}
+          -DOSAL_SYSTEM_BSPTYPE=generic-linux
+          -DCMAKE_PREFIX_PATH=/usr/lib/cmake
+          -DCMAKE_INSTALL_PREFIX=/usr
+          -S source
+          -B build
+
+      - name: Build OSAL
+        working-directory: build
+        run: make ${{ env.build_tgt }} -j2
+
+      - name: Validate API
+        if: ${{ matrix.build-type == 'Release' }}
+        working-directory: build
+        run: make osal_apicheck
+
+      - name: Execute Tests
+        if: ${{ matrix.build-type == 'Debug' }}
+        working-directory: build
+        run: ctest --output-on-failure -j4 2>&1 | tee ../ctest.log
+
+      - name: Check Coverage
+        id: stats
+        if: ${{ env.run_lcov == 'TRUE' }}
+        uses: ./source/.github/actions/check-coverage
+        with:
+          binary-dir: build
+
+      - name: Enforce coverage function minimum
+        if: ${{ always() && steps.stats.outputs.ncov_functions > env.allowed_ncov_functions }}
+        run: |
+          echo "::error::Too many uncovered functions (${{ steps.stats.outputs.ncov_functions }})"
+          /bin/false
+
+      - name: Enforce coverage line minimum
+        if: ${{ always() && steps.stats.outputs.ncov_lines > env.allowed_ncov_lines }}
+        run: |
+          echo "::error::Too many uncovered lines (${{ steps.stats.outputs.ncov_lines }})"
+          /bin/false
+
+      - name: Enforce coverage branch minimum
+        if: ${{ always() && steps.stats.outputs.ncov_branches > env.allowed_ncov_branches }}
+        run: |
+          echo "::error::Too many uncovered branches (${{ steps.stats.outputs.ncov_branches }})"
+          /bin/false
+
+      - name: Assemble Results
+        if: ${{ always() }}
+        run: |
+          if [ -s ctest.log ]; then
+            echo '<h2>CTest Execution</h2>' >> $GITHUB_STEP_SUMMARY
+            echo '<pre>' >> $GITHUB_STEP_SUMMARY
+            cat ctest.log >> $GITHUB_STEP_SUMMARY
+            echo '</pre>' >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -s 'build/lcov-summary.xml' ]; then
+            cat 'build/lcov-summary.xml' >> $GITHUB_STEP_SUMMARY
+          fi
+```
+
+### `static-analysis.yml`
+
+**경로:** `fsw/osal/.github/workflows/static-analysis.yml`
+
+
+```yaml
+name: Static Analysis
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  static-analysis:
+    name: Run Static Analysis
+    uses: nasa/cFS/.github/workflows/static-analysis.yml@main
+    with: 
+      strict-dir-list: './src/bsp ./src/os'
+      cmake-project-options: -DENABLE_UNIT_TESTS=TRUE -DOSAL_OMIT_DEPRECATED=TRUE -DOSAL_SYSTEM_BSPTYPE=generic-linux
+```

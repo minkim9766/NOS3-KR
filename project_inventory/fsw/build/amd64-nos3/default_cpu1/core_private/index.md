@@ -3,22 +3,31 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
 src/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/`](src/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

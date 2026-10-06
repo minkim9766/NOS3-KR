@@ -3,14 +3,39 @@
 
 **경로:** `components/syn/synopsis/json/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `update.yml`
 
-file--update.yml
+**경로:** `components/syn/synopsis/json/.github/workflows/update.yml`
+
+
+```yaml
+on:
+  # For the initial commit:
+  push:
+    branches:
+      - master
+
+  # For the future releases:
+  schedule:
+    - cron:  '0 0 * * 0' # every week
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Actions"
+        ./update.py
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-## 항목
-
-- [`components/syn/synopsis/json/.github/workflows/update.yml`](file--update.yml) — UTF-8 텍스트 파일 본문 포함

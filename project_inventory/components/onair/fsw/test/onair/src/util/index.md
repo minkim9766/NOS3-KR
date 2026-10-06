@@ -3,24 +3,1506 @@
 
 **경로:** `components/onair/fsw/test/onair/src/util/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_cleanup.py`
 
-file--test_cleanup.py
-file--test_data_conversion.py
-file--test_file_io.py
-file--test_plugin_import.py
-file--test_print_io.py
-file--test_sim_io.py
+**경로:** `components/onair/fsw/test/onair/src/util/test_cleanup.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+import pytest
+from unittest.mock import MagicMock
+
+import onair.src.util.cleanup as cleanup
+
+# test_setup_folders
+def test_cleanup_setup_folders_creates_dir_when_given_results_path_does_not_exist(mocker):
+  # Arrange
+  arg_results_path = str(MagicMock())
+
+  mocker.patch(cleanup.__name__ + '.os.path.isdir', return_value=False)
+  mocker.patch(cleanup.__name__ + '.os.mkdir')
+
+  # Act
+  cleanup.setup_folders(arg_results_path)
+
+  # Assert
+  assert cleanup.os.path.isdir.call_count == 1
+  assert cleanup.os.mkdir.call_count == 1
+  assert cleanup.os.mkdir.call_args_list[0].args == (arg_results_path, )
+
+def test_cleanup_setup_folders_does_not_create_dir_when_it_already_exists(mocker):
+  # Arrange
+  arg_results_path = str(MagicMock())
+
+  mocker.patch(cleanup.__name__ + '.os.path.isdir', return_value=True)
+  mocker.patch(cleanup.__name__ + '.os.mkdir')
+
+  # Act
+  cleanup.setup_folders(arg_results_path)
+
+  # Assert
+  assert cleanup.os.path.isdir.call_count == 1
+  assert cleanup.os.mkdir.call_count == 0
 ```
 
-## 항목
+### `test_data_conversion.py`
 
-- [`components/onair/fsw/test/onair/src/util/test_cleanup.py`](file--test_cleanup.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/src/util/test_data_conversion.py`](file--test_data_conversion.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/src/util/test_file_io.py`](file--test_file_io.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/src/util/test_plugin_import.py`](file--test_plugin_import.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/src/util/test_print_io.py`](file--test_print_io.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/src/util/test_sim_io.py`](file--test_sim_io.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/test/onair/src/util/test_data_conversion.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+""" Test Data Conversion Functionality """
+import pytest
+from unittest.mock import MagicMock
+
+import onair.src.util.data_conversion as data_conversion
+
+from numpy import ndarray
+
+# status_to_oneHot tests
+def test_data_conversion_status_to_oneHot_returns_given_status_when_status_isinstance_of_np_ndarray(mocker):
+    # Arrange
+    arg_status = MagicMock()
+
+    mocker.patch(data_conversion.__name__ + '.isinstance', return_value=True)
+
+    # Act
+    result = data_conversion.status_to_oneHot(arg_status)
+
+    # Assert
+    assert data_conversion.isinstance.call_count == 1
+    assert data_conversion.isinstance.call_args_list[0].args == (arg_status, ndarray)
+    assert result == arg_status
+
+def test_data_conversion_status_to_oneHot_returns_one_hot_set_to_list_of_four_zeros_and_the_value_of_the_classes_status_to_1_point_0(mocker):
+    # Arrange
+    arg_status = MagicMock()
+
+    fake_status = pytest.gen.randint(0,3) # size of array choice, from 0 to 3
+
+    expected_result = [0.0, 0.0, 0.0, 0.0]
+    expected_result[fake_status] = 1.0
+
+    data_conversion.classes = {arg_status: fake_status}
+
+    mocker.patch(data_conversion.__name__ + '.isinstance', return_value=False)
+
+    # Act
+    result = data_conversion.status_to_oneHot(arg_status)
+
+    # Assert
+    assert result == expected_result
+
+```
+
+### `test_file_io.py`
+
+**경로:** `components/onair/fsw/test/onair/src/util/test_file_io.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+import pytest
+from unittest.mock import MagicMock
+
+import onair.src.util.file_io as file_io
+
+# parse_associations_from_json tests
+
+def test_file_io_parse_associations_raises_KeyError_when_loaded_data_does_not_have_keyword_children(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+
+  fake_data = {}
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert str(e_info.value) == "'children'"
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_does_not_print_when_loaded_data_children_is_empty(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = []
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_raises_KeyError_when_loaded_data_child_missing_name(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = [{}]
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert str(e_info.value) == "'name'"
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_raises_KeyError_when_loaded_data_child_missing_connections(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = [{'name':'I have a name!'}]
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert str(e_info.value) == "'connections'"
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_does_not_print_when_loaded_data_child_conections_are_empty(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = [{'name':'I have a name!', 'connections':[]}]
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_raises_KeyError_when_loaded_data_child_connections_missing_target(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = [{'name':'I have a name!', 'connections':[{}]}]
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert str(e_info.value) == "'target'"
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_raises_KeyError_when_loaded_data_child_connections_missing_weight(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = [{'name':'I have a name!', 'connections':[{'target':'I have a target!'}]}]
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert str(e_info.value) == "'weight'"
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == 0
+
+def test_file_io_parse_associations_prints_associations_in_reverse_sort_by_weight_when_data_is_properly_formed(mocker):
+  # Arrange
+  arg_filepath = MagicMock()
+
+  fake_file_iterator = MagicMock()
+  fake_f = MagicMock()
+  fake_f.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_data = {}
+  fake_data['children'] = []
+  example_connection = {'target':'', 'weight':0}
+  total_num_children = pytest.gen.randint(1, 5) # from 1 to 5
+  total_num_connections = pytest.gen.randint(1, 20) # from 1 to 20
+  expected_prints = []
+
+  # fake children
+  for i in range(total_num_children):
+    fake_data['children'].append({'name':f"name{i}", 'connections':[]})
+
+  # fake connections
+  for i in range(total_num_connections):
+    fake_target = f"target{i}"
+    fake_weight = 20 - i # highest weights first
+    # add to random child
+    child_index = pytest.gen.randrange(0, total_num_children) # from 0 to total_num_children - 1
+    fake_child = fake_data['children'][child_index]
+    fake_connections = fake_child['connections']
+    fake_connection = {'target':fake_target, 'weight':fake_weight}
+    fake_connections.insert(pytest.gen.randint(0, len(fake_connections)), fake_connection)
+    expected_prints.append(f"{fake_child['name']} --> {fake_target}, {str(fake_weight)}")
+
+  mocker.patch(file_io.__name__ + '.open', return_value=fake_f)
+  mocker.patch(file_io.__name__ + '.json.load', return_value=fake_data)
+  mocker.patch(file_io.__name__ + '.print')
+
+  # Act
+  file_io.parse_associations_from_json(arg_filepath)
+
+  # Assert
+  assert file_io.open.call_count == 1
+  assert file_io.json.load.call_count == 1
+  assert file_io.json.load.call_args_list[0].args == (fake_file_iterator,)
+  assert file_io.print.call_count == total_num_connections
+  for i in range(total_num_connections):
+    assert file_io.print.call_args_list[i].args == (expected_prints[i],)
+
+# aggregate_results tests
+
+def test_file_io_aggregate_results_does_nothing_then_returns_None():
+  # Arrange
+  expected_result = None
+
+  # Act
+  result = file_io.aggregate_results()
+
+  # Assert
+  assert result == expected_result
+```
+
+### `test_plugin_import.py`
+
+**경로:** `components/onair/fsw/test/onair/src/util/test_plugin_import.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+import pytest
+import os
+from unittest.mock import MagicMock
+
+import onair.src.util.plugin_import as plugin_import
+
+def test_plugin_import_returns_empty_list_when_given_module_dict_is_empty():
+    # Arrange
+    arg_headers = MagicMock()
+    arg_module_dict = {}
+
+    # Act
+    result = plugin_import.import_plugins(arg_headers, arg_module_dict)
+
+    # Assert
+    assert result == []
+
+def test_plugin_import_returns_single_item_list_when_given_module_dict_contains_one_key_value_pair_no_init_and_not_already_in_sys(mocker):
+    # Arrange
+    arg_headers = MagicMock()
+    fake_construct_name = MagicMock()
+    fake_mod_name = MagicMock()
+    fake_module_path = MagicMock()
+    fake_full_path = MagicMock()
+    arg_module_dict = {fake_construct_name:fake_module_path}
+
+    fake_spec = MagicMock()
+    fake_module = MagicMock()
+    fake_plugin = MagicMock()
+    fake_Plugin_instance = MagicMock()
+
+    mocker.patch.object(fake_module_path, 'endswith',
+                        return_value=False)
+    mocker.patch(plugin_import.__name__ + '.os.path.basename',
+                 return_value=fake_mod_name)
+    mocker.patch(plugin_import.__name__ + '.os.path.join',
+                 return_value=fake_full_path)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.spec_from_file_location', return_value=fake_spec)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.module_from_spec', return_value=fake_module)
+    mocker.patch.object(fake_spec, 'loader.exec_module')
+    mocker.patch.dict(plugin_import.sys.modules)
+    import_mock = mocker.patch('builtins.__import__', return_value=fake_plugin)
+    mocker.patch.object(fake_plugin, 'Plugin', return_value=fake_Plugin_instance)
+
+    # Act
+    result = plugin_import.import_plugins(arg_headers, arg_module_dict)
+
+    # Assert
+    # If import checks fail, test fails with INTERNALERROR due to test output using patched code
+    # Therefore import_mock is checked first then stopped, so other items failures output correctly
+    # When this test fails because of INTERNALERROR the problem is with import_mock
+    assert import_mock.call_count == 1
+    assert import_mock.call_args_list[0].args == (f'{fake_mod_name}.{fake_mod_name}_plugin', )
+    assert import_mock.call_args_list[0].kwargs == ({'fromlist': [f"{fake_mod_name}_plugin"]})
+    # # Without the stop of import_mock any other fails will also cause INTERNALERROR
+    mocker.stop(import_mock)
+
+    assert plugin_import.os.path.basename.call_count == 1
+    assert plugin_import.os.path.basename.call_args_list[0].args == (fake_module_path, )
+    assert plugin_import.importlib.util.spec_from_file_location.call_count == 1
+    assert plugin_import.importlib.util.spec_from_file_location.call_args_list[0].args == (fake_mod_name, fake_full_path)
+    assert plugin_import.importlib.util.module_from_spec.call_count == 1
+    assert plugin_import.importlib.util.module_from_spec.call_args_list[0].args == (fake_spec,)
+    assert fake_spec.loader.exec_module.call_count == 1
+    assert fake_spec.loader.exec_module.call_args_list[0].args == (fake_module, )
+    assert fake_mod_name in plugin_import.sys.modules
+    assert plugin_import.sys.modules[fake_mod_name] == fake_module
+    assert result == [fake_Plugin_instance]
+
+def test_plugin_import_returns_single_item_list_when_given_module_dict_contains_one_key_value_pair_has_init_and_not_already_in_sys(mocker):
+    # Arrange
+    arg_headers = MagicMock()
+    fake_construct_name = MagicMock()
+    fake_mod_name = MagicMock()
+    fake_pathing = []
+    for _ in range(pytest.gen.randint(1, 5)): # 1-5 arbitrary length
+        fake_pathing.append(str(MagicMock()))
+    expected_true_path = os.path.join(*fake_pathing)
+    fake_pathing.append("__init__.py")
+    fake_module_path = os.path.join(*fake_pathing)
+    fake_full_path = MagicMock()
+    arg_module_dict = {fake_construct_name:fake_module_path}
+
+    fake_spec = MagicMock()
+    fake_module = MagicMock()
+    fake_plugin = MagicMock()
+    fake_Plugin_instance = MagicMock()
+
+    mocker.patch(plugin_import.__name__ + '.os.path.basename',
+                 return_value=fake_mod_name)
+    mocker.patch(plugin_import.__name__ + '.os.path.join',
+                 return_value=fake_full_path)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.spec_from_file_location', return_value=fake_spec)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.module_from_spec', return_value=fake_module)
+    mocker.patch.object(fake_spec, 'loader.exec_module')
+    mocker.patch.dict(plugin_import.sys.modules)
+    import_mock = mocker.patch('builtins.__import__', return_value=fake_plugin)
+    mocker.patch.object(fake_plugin, 'Plugin', return_value=fake_Plugin_instance)
+
+    # Act
+    result = plugin_import.import_plugins(arg_headers, arg_module_dict)
+
+    # Assert
+    # If import checks fail, test fails with INTERNALERROR due to test output using patched code
+    # Therefore import_mock is checked first then stopped, so other items failures output correctly
+    # When this test fails because of INTERNALERROR the problem is with import_mock
+    assert import_mock.call_count == 1
+    assert import_mock.call_args_list[0].args == (f'{fake_mod_name}.{fake_mod_name}_plugin', )
+    assert import_mock.call_args_list[0].kwargs == ({'fromlist': [f"{fake_mod_name}_plugin"]})
+    # # Without the stop of import_mock any other fails will also cause INTERNALERROR
+    mocker.stop(import_mock)
+
+    assert plugin_import.os.path.basename.call_count == 1
+    assert plugin_import.os.path.basename.call_args_list[0].args == (expected_true_path, )
+    assert plugin_import.importlib.util.spec_from_file_location.call_count == 1
+    assert plugin_import.importlib.util.spec_from_file_location.call_args_list[0].args == (fake_mod_name, fake_full_path)
+    assert plugin_import.importlib.util.module_from_spec.call_count == 1
+    assert plugin_import.importlib.util.module_from_spec.call_args_list[0].args == (fake_spec,)
+    assert fake_spec.loader.exec_module.call_count == 1
+    assert fake_spec.loader.exec_module.call_args_list[0].args == (fake_module, )
+    assert fake_mod_name in plugin_import.sys.modules
+    assert plugin_import.sys.modules[fake_mod_name] == fake_module
+    assert result == [fake_Plugin_instance]
+
+def test_plugin_import_returns_single_item_list_when_given_module_dict_contains_one_key_value_pair_no_init_and_exists_in_sys(mocker):
+    # Arrange
+    arg_headers = MagicMock()
+    fake_construct_name = MagicMock()
+    fake_mod_name = MagicMock()
+    fake_module_path = MagicMock()
+    fake_full_path = MagicMock()
+    arg_module_dict = {fake_construct_name:fake_module_path}
+
+    fake_plugin = MagicMock()
+    fake_Plugin_instance = MagicMock()
+
+    mocker.patch.object(fake_module_path, 'endswith',
+                        return_value=False)
+    mocker.patch(plugin_import.__name__ + '.os.path.basename',
+                 return_value=fake_mod_name)
+    mocker.patch(plugin_import.__name__ + '.os.path.join',
+                 return_value=fake_full_path)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.spec_from_file_location')
+    mocker.patch.dict(plugin_import.sys.modules, {fake_mod_name:None})
+    import_mock = mocker.patch('builtins.__import__', return_value=fake_plugin)
+    mocker.patch.object(fake_plugin, 'Plugin', return_value=fake_Plugin_instance)
+
+    # Act
+    result = plugin_import.import_plugins(arg_headers, arg_module_dict)
+
+    # Assert
+    # If import checks fail, test fails with INTERNALERROR due to test output using patched code
+    # Therefore import_mock is checked first then stopped, so other items failures output correctly
+    # When this test fails because of INTERNALERROR the problem is with import_mock
+    assert import_mock.call_count == 1
+    assert import_mock.call_args_list[0].args == (f'{fake_mod_name}.{fake_mod_name}_plugin', )
+    assert import_mock.call_args_list[0].kwargs == ({'fromlist': [f"{fake_mod_name}_plugin"]})
+    # # Without the stop of import_mock any other fails will also cause INTERNALERROR
+    mocker.stop(import_mock)
+
+    assert plugin_import.os.path.basename.call_count == 1
+    assert plugin_import.os.path.basename.call_args_list[0].args == (fake_module_path, )
+    assert plugin_import.importlib.util.spec_from_file_location.call_count == 0
+    assert fake_mod_name in plugin_import.sys.modules
+    assert plugin_import.sys.modules[fake_mod_name] == None
+    assert result == [fake_Plugin_instance]
+
+def test_plugin_import_returns_single_item_list_when_given_module_dict_contains_one_key_value_pair_has_init_and_exists_in_sys(mocker):
+    # Arrange
+    arg_headers = MagicMock()
+    fake_construct_name = MagicMock()
+    fake_mod_name = MagicMock()
+    fake_pathing = []
+    for _ in range(pytest.gen.randint(1, 5)): # 1-5 arbitrary length
+        fake_pathing.append(str(MagicMock()))
+    expected_true_path = os.path.join(*fake_pathing)
+    fake_pathing.append("__init__.py")
+    fake_module_path = os.path.join(*fake_pathing)
+    fake_full_path = MagicMock()
+    arg_module_dict = {fake_construct_name:fake_module_path}
+
+    fake_plugin = MagicMock()
+    fake_Plugin_instance = MagicMock()
+
+    mocker.patch(plugin_import.__name__ + '.os.path.basename',
+                 return_value=fake_mod_name)
+    mocker.patch(plugin_import.__name__ + '.os.path.join',
+                 return_value=fake_full_path)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.spec_from_file_location')
+    mocker.patch.dict(plugin_import.sys.modules, {fake_mod_name:None})
+    import_mock = mocker.patch('builtins.__import__', return_value=fake_plugin)
+    mocker.patch.object(fake_plugin, 'Plugin', return_value=fake_Plugin_instance)
+
+    # Act
+    result = plugin_import.import_plugins(arg_headers, arg_module_dict)
+
+    # Assert
+    # If import checks fail, test fails with INTERNALERROR due to test output using patched code
+    # Therefore import_mock is checked first then stopped, so other items failures output correctly
+    # When this test fails because of INTERNALERROR the problem is with import_mock
+    assert import_mock.call_count == 1
+    assert import_mock.call_args_list[0].args == (f'{fake_mod_name}.{fake_mod_name}_plugin', )
+    assert import_mock.call_args_list[0].kwargs == ({'fromlist': [f"{fake_mod_name}_plugin"]})
+    # # Without the stop of import_mock any other fails will also cause INTERNALERROR
+    mocker.stop(import_mock)
+
+    assert plugin_import.os.path.basename.call_count == 1
+    assert plugin_import.os.path.basename.call_args_list[0].args == (expected_true_path, )
+    assert plugin_import.importlib.util.spec_from_file_location.call_count == 0
+    assert fake_mod_name in plugin_import.sys.modules
+    assert plugin_import.sys.modules[fake_mod_name] == None
+    assert result == [fake_Plugin_instance]
+
+def test_plugin_import_returns_two_item_list_when_given_module_dict_contains_two_key_value_pairs_that_use_same_module(mocker):
+    # Arrange
+    arg_headers = MagicMock()
+    fake_construct_name_1 = MagicMock()
+    fake_construct_name_2 = MagicMock()
+    fake_mod_name = MagicMock()
+    fake_module_path = MagicMock()
+    fake_full_path = MagicMock()
+    arg_module_dict = {fake_construct_name_1:fake_module_path,
+                       fake_construct_name_2:fake_module_path}
+
+    fake_spec = MagicMock()
+    fake_module = MagicMock()
+    fake_plugin = MagicMock()
+    fake_Plugin_instance_1 = MagicMock()
+    fake_Plugin_instance_2 = MagicMock()
+
+    mocker.patch.object(fake_module_path, 'endswith',
+                        return_value=False)
+    mocker.patch(plugin_import.__name__ + '.os.path.basename',
+                 return_value=fake_mod_name)
+    mocker.patch(plugin_import.__name__ + '.os.path.join',
+                 return_value=fake_full_path)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.spec_from_file_location', return_value=fake_spec)
+    mocker.patch(plugin_import.__name__ + '.importlib.util.module_from_spec', return_value=fake_module)
+    mocker.patch.object(fake_spec, 'loader.exec_module')
+    mocker.patch.dict(plugin_import.sys.modules)
+    import_mock = mocker.patch('builtins.__import__', return_value=fake_plugin)
+    mocker.patch.object(fake_plugin,
+                        'Plugin',
+                        side_effect=[fake_Plugin_instance_1,
+                                     fake_Plugin_instance_2])
+
+    # Act
+    result = plugin_import.import_plugins(arg_headers, arg_module_dict)
+
+    # Assert
+    # If import checks fail, test fails with INTERNALERROR due to test output using patched code
+    # Therefore import_mock is checked first then stopped, so other items failures output correctly
+    # When this test fails because of INTERNALERROR the problem is with import_mock
+    assert import_mock.call_count == 2
+    assert import_mock.call_args_list[0].args == (f'{fake_mod_name}.{fake_mod_name}_plugin', )
+    assert import_mock.call_args_list[0].kwargs == ({'fromlist': [f"{fake_mod_name}_plugin"]})
+    assert import_mock.call_args_list[1].args == (f'{fake_mod_name}.{fake_mod_name}_plugin', )
+    assert import_mock.call_args_list[1].kwargs == ({'fromlist': [f"{fake_mod_name}_plugin"]})
+    # # Without the stop of import_mock any other fails will also cause INTERNALERROR
+    mocker.stop(import_mock)
+
+    assert plugin_import.os.path.basename.call_count == 2
+    assert plugin_import.os.path.basename.call_args_list[0].args == (fake_module_path, )
+    assert plugin_import.importlib.util.spec_from_file_location.call_count == 1
+    assert plugin_import.importlib.util.spec_from_file_location.call_args_list[0].args == (fake_mod_name, fake_full_path)
+    assert plugin_import.importlib.util.module_from_spec.call_count == 1
+    assert plugin_import.importlib.util.module_from_spec.call_args_list[0].args == (fake_spec,)
+    assert fake_spec.loader.exec_module.call_count == 1
+    assert fake_spec.loader.exec_module.call_args_list[0].args == (fake_module, )
+    assert fake_mod_name in plugin_import.sys.modules
+    assert plugin_import.sys.modules[fake_mod_name] == fake_module
+    assert result == [fake_Plugin_instance_1, fake_Plugin_instance_2]
+```
+
+### `test_print_io.py`
+
+**경로:** `components/onair/fsw/test/onair/src/util/test_print_io.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+import pytest
+from unittest.mock import MagicMock
+
+import onair.src.util.print_io as print_io
+
+# bcolors tests
+def test_print_io_bcolors_HEADER_is_expected_value():
+  assert print_io.bcolors.HEADER == '\033[95m'
+
+def test_print_io_bcolors_OKBLUE_is_expected_value():
+  assert print_io.bcolors.OKBLUE == '\033[94m'
+
+def test_print_io_bcolors_OKGREEN_is_expected_value():
+  assert print_io.bcolors.OKGREEN == '\033[92m'
+
+def test_print_io_bcolors_WARNING_is_expected_value():
+  assert print_io.bcolors.WARNING == '\033[93m'
+
+def test_print_io_bcolors_FAIL_is_expected_value():
+  assert print_io.bcolors.FAIL == '\033[91m'
+
+def test_print_io_bcolors_ENDC_is_expected_value():
+  assert print_io.bcolors.ENDC == '\033[0m'
+
+def test_print_io_bcolors_BOLD_is_expected_value():
+  assert print_io.bcolors.BOLD == '\033[1m'
+
+def test_print_io_bcolors_UNDERLINE_is_expected_value():
+  assert print_io.bcolors.UNDERLINE == '\033[4m'
+
+
+# Globals tests
+def test_print_io_scolors_HEADER_is_set_to_bcolors_HEADER():
+  assert print_io.scolors['HEADER'] == print_io.bcolors.HEADER
+
+def test_print_io_scolors_OKBLUE_is_set_to_bcolors_OKBLUE():
+  assert print_io.scolors['OKBLUE'] == print_io.bcolors.OKBLUE
+
+def test_print_io_scolors_OKGREEN_is_set_to_bcolors_OKGREEN():
+  assert print_io.scolors['OKGREEN'] == print_io.bcolors.OKGREEN
+
+def test_print_io_scolors_WARNING_is_set_to_bcolors_WARNING():
+  assert print_io.scolors['WARNING'] == print_io.bcolors.WARNING
+
+def test_print_io_scolors_FAIL_is_set_to_bcolors_FAIL():
+  assert print_io.scolors['FAIL'] == print_io.bcolors.FAIL
+
+def test_print_io_scolors_ENDC_is_set_to_bcolors_ENDC():
+  assert print_io.scolors['ENDC'] == print_io.bcolors.ENDC
+
+def test_print_io_scolors_BOLD_is_set_to_bcolors_BOLD():
+  assert print_io.scolors['BOLD'] == print_io.bcolors.BOLD
+
+def test_print_io_scolors_UNDERLINE_is_set_to_bcolors_UNDERLINE():
+  assert print_io.scolors['UNDERLINE'] == print_io.bcolors.UNDERLINE
+
+def test_print_io_status_colors_GREEN_is_set_to_bcolors_OKGREEN():
+  assert print_io.status_colors['GREEN'] == print_io.bcolors.OKGREEN
+
+def test_print_io_status_colors_YELLOW_is_set_to_bcolors_WARNING():
+  assert print_io.status_colors['YELLOW'] == print_io.bcolors.WARNING
+
+def test_print_io_status_colors_RED_is_set_to_bcolors_FAIL():
+  assert print_io.status_colors['RED'] == print_io.bcolors.FAIL
+
+def test_print_io_status_colors_3_dashes_is_set_to_bcolors_OKBLUE():
+  assert print_io.status_colors['---'] == print_io.bcolors.OKBLUE
+
+
+# print_sim_header tests
+def test_print_io_print_sim_header_prints_expected_strings(mocker):
+  # Arrange
+  expected_print = []
+  expected_print.append(print_io.bcolors.HEADER + \
+                        print_io.bcolors.BOLD +\
+                        "\n***************************************************")
+  expected_print.append("************    SIMULATION STARTED     ************")
+  expected_print.append("***************************************************" + \
+                        print_io.bcolors.ENDC)
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_sim_header()
+
+  # Assert
+  for i in range(3):
+    print_io.print.call_args_list[i].args == (expected_print[i], )
+
+
+# print_sim_step tests
+def test_print_io_print_sim_step_inserts_given_step_num_into_text(mocker):
+  # Arrange
+  arg_step_num = pytest.gen.randint(1, 100) # arbitrary from 1 to 100
+  expected_print = print_io.bcolors.HEADER + \
+                   print_io.bcolors.BOLD + \
+                   f"\n--------------------- STEP {arg_step_num}" + \
+                   " ---------------------\n" + \
+                   print_io.bcolors.ENDC
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_sim_step(arg_step_num)
+
+  # Assert
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+
+# print_separator tests
+def test_print_io_print_separator_uses_bcolors_HEADER_as_default_color_value(mocker):
+  # Arrange
+  expected_color = print_io.bcolors.HEADER
+  expected_print = expected_color + \
+                   print_io.bcolors.BOLD + \
+                   "\n------------------------------------------------\n" + \
+                   print_io.bcolors.ENDC
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_separator()
+
+  # Assert
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+def test_print_io_print_separator_prints_whatever_is_passed_in_as_color_at_start_of_line(mocker):
+  # Arrange
+  arg_color = MagicMock()
+
+  expected_print = arg_color + \
+                   print_io.bcolors.BOLD + \
+                   "\n------------------------------------------------\n" + \
+                   print_io.bcolors.ENDC
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_separator(arg_color)
+
+  # Assert
+  assert print_io.print.call_count == 1
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+
+# update_header tests
+def test_print_io_update_header_prints_message_with_bcolors_BOLD_at_start_when_no_clr_arg_given(mocker):
+  # Arrange
+  arg_msg = MagicMock()
+
+  expected_clr = print_io.bcolors.BOLD
+  expected_print = expected_clr + \
+                   "--------- " + arg_msg + " update" + \
+                   print_io.bcolors.ENDC
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.update_header(arg_msg)
+
+  # Assert
+  assert print_io.print.call_count == 1
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+def test_print_io_update_header_prints_message_starting_with_whatever_is_given_as_clr(mocker):
+  # Arrange
+  arg_msg = MagicMock()
+  arg_clr = MagicMock()
+
+  expected_print = arg_clr + \
+                   "--------- " + arg_msg + " update" + \
+                   print_io.bcolors.ENDC
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.update_header(arg_msg, arg_clr)
+
+  # Assert
+  assert print_io.print.call_count == 1
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+
+# print_msg tests
+def test_print_io_print_msg_prints_message_starting_only_with_scolor_HEADER_when_no_clrs_arg_given(mocker):
+    # Arrange
+  arg_msg = MagicMock()
+
+  expected_scolor = print_io.scolors['HEADER']
+  expected_print = []
+  expected_print.append(expected_scolor)
+  expected_print.append("---- " + arg_msg + print_io.bcolors.ENDC)
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_msg(arg_msg)
+
+  # Assert
+  assert print_io.print.call_count == 2
+  for i in range(2):
+   assert print_io.print.call_args_list[i].args == (expected_print[i], )
+
+def test_print_io_print_msg_raises_KeyError_when_given_clrs_item_not_in_scolors(mocker):
+    # Arrange
+  arg_msg = MagicMock()
+  arg_clrs = ['THIS-WILL-THROW-KEYERROR']
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    print_io.print_msg(arg_msg, arg_clrs)
+
+  # Assert
+  assert str(e_info.value) == "'THIS-WILL-THROW-KEYERROR'"
+  assert print_io.print.call_count == 0
+
+def test_print_io_print_msg_prints_only_given_msg_when_given_clrs_is_empty(mocker):
+    # Arrange
+  arg_msg = MagicMock()
+  arg_clrs = []
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_msg(arg_msg, arg_clrs)
+
+  # Assert
+  assert print_io.print.call_count == 1
+  assert print_io.print.call_args_list[0].args == ("---- " + arg_msg + print_io.bcolors.ENDC, )
+
+def test_print_io_print_msg_prints_all_scolors_given_in_clrs(mocker):
+    # Arrange
+  arg_msg = MagicMock()
+  arg_clrs = list(print_io.scolors.keys())
+  pytest.gen.shuffle(arg_clrs) # change up the order to show it does not matter
+
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_msg(arg_msg, arg_clrs)
+
+  # Assert
+  assert print_io.print.call_count == len(print_io.scolors.keys()) + 1
+  for i in range(len(arg_clrs)):
+    assert print_io.print.call_args_list[i].args == (print_io.scolors[arg_clrs[i]], )
+  assert print_io.print.call_args_list[i + 1].args == ("---- " + arg_msg + print_io.bcolors.ENDC, )
+
+
+#print_mission_status
+def test_print_io_print_mission_status_only_prints_agent_formatted_status_when_data_not_given(mocker):
+  # Arrange
+  arg_agent = MagicMock()
+
+  fake_mission_status = MagicMock()
+  fake_status = MagicMock()
+
+  expected_print = "INTERPRETED SYSTEM STATUS: " + str(fake_status)
+
+  arg_agent.mission_status = fake_mission_status
+  mocker.patch(print_io.__name__ + '.format_status', return_value=fake_status)
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_system_status(arg_agent)
+
+  # Assert
+  assert print_io.format_status.call_count == 1
+  assert print_io.format_status.call_args_list[0].args == (fake_mission_status,)
+  assert print_io.print.call_count == 1
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+def test_print_io_print_mission_status_only_prints_agent_formatted_status_when_data_given_is_None(mocker):
+  # Arrange
+  arg_agent = MagicMock()
+  arg_data = None
+
+  fake_mission_status = MagicMock()
+  fake_status = MagicMock()
+
+  expected_print = "INTERPRETED SYSTEM STATUS: " + str(fake_status)
+
+  arg_agent.mission_status = fake_mission_status
+  mocker.patch(print_io.__name__ + '.format_status', return_value=fake_status)
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_system_status(arg_agent, arg_data)
+
+  # Assert
+  assert print_io.format_status.call_count == 1
+  assert print_io.format_status.call_args_list[0].args == (fake_mission_status,)
+  assert print_io.print.call_count == 1
+  assert print_io.print.call_args_list[0].args == (expected_print, )
+
+def test_print_io_print_mission_status_only_prints_agent_formatted_status_when_data_given_is_None(mocker):
+  # Arrange
+  arg_agent = MagicMock()
+  arg_data = MagicMock()
+
+  fake_mission_status = MagicMock()
+  fake_status = MagicMock()
+
+  expected_print = []
+  expected_print.append("CURRENT DATA: " + str(arg_data))
+  expected_print.append("INTERPRETED SYSTEM STATUS: " + str(fake_status))
+
+  arg_agent.mission_status = fake_mission_status
+  mocker.patch(print_io.__name__ + '.format_status', return_value=fake_status)
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_system_status(arg_agent, arg_data)
+
+  # Assert
+  assert print_io.format_status.call_count == 1
+  assert print_io.format_status.call_args_list[0].args == (fake_mission_status,)
+  assert print_io.print.call_count == 2
+  for i in range(print_io.print.call_count):
+    assert print_io.print.call_args_list[i].args == (expected_print[i], )
+
+
+# print_diagnosis tests
+def test_print_io_print_diagnosis_only_prints_separators_and_headers_when_status_list_and_activations_are_empty_tree_traversal_unused(mocker):
+  # Arrange
+  arg_diagnosis = MagicMock()
+
+  arg_diagnosis.configure_mock(**{'get_status_list.return_value': []})
+  arg_diagnosis.configure_mock(**{'current_activations.return_value': []})
+
+  mocker.patch(print_io.__name__ + '.print_separator')
+  mocker.patch(print_io.__name__ + '.print')
+
+  # Act
+  print_io.print_diagnosis(arg_diagnosis)
+
+  # Assert
+  assert print_io.print_separator.call_count == 2
+  assert print_io.print.call_count == 2
+  assert print_io.print.call_args_list[0].args == (print_io.bcolors.HEADER + print_io.bcolors.BOLD + "DIAGNOSIS INFO: \n" + print_io.bcolors.ENDC, )
+  assert print_io.print.call_args_list[1].args == (print_io.bcolors.HEADER + print_io.bcolors.BOLD + "\nCURRENT ACTIVATIONS: \n" + print_io.bcolors.ENDC, )
+
+def test_print_io_print_diagnosis_prints_separators_headers_status_and_activations_when_status_list_and_activations_have_items_tree_traversal_unused(mocker):
+  # Arrange
+  arg_diagnosis = MagicMock()
+
+  num_status = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  fake_status = []
+  fake_format = MagicMock()
+  num_activations = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  fake_activations = []
+  fake_str = MagicMock()
+
+  for i in range(num_status):
+    fake_status.append([MagicMock(), MagicMock()])
+
+  for i in range(num_activations):
+    fake_activations.append(MagicMock())
+
+  arg_diagnosis.configure_mock(**{'get_status_list.return_value': fake_status})
+  arg_diagnosis.current_activations = fake_activations
+
+  mocker.patch(print_io.__name__ + '.print_separator')
+  mocker.patch(print_io.__name__ + '.print')
+  mocker.patch(print_io.__name__ + '.format_status', return_value=fake_format)
+  mocker.patch(print_io.__name__ + '.str', return_value=fake_str)
+
+  # Act
+  print_io.print_diagnosis(arg_diagnosis)
+
+  # Assert
+  assert print_io.print_separator.call_count == 2
+  assert print_io.print.call_count == 2 + num_status + num_activations
+  assert print_io.print.call_args_list[0].args == (print_io.bcolors.HEADER + print_io.bcolors.BOLD + "DIAGNOSIS INFO: \n" + print_io.bcolors.ENDC, )
+  for i in range(num_status):
+    assert print_io.print.call_args_list[1 + i].args == (fake_status[i][0] + ': ' + fake_format, )
+    assert print_io.format_status.call_args_list[i].args == (fake_status[i][1], )
+  assert print_io.print.call_args_list[1 + num_status].args == (print_io.bcolors.HEADER + print_io.bcolors.BOLD + "\nCURRENT ACTIVATIONS: \n" + print_io.bcolors.ENDC, )
+  for i in range(num_activations):
+    assert print_io.print.call_args_list[2 + num_status + i].args == ('---' + fake_str, )
+    assert print_io.str.call_args_list[i].args == (fake_activations[i], )
+
+
+# subsystem_status_str tests
+def test_print_io_subsystem_status_str_returns_expected_string_when_stat_exists_as_key_in_status_colors(mocker):
+  # Arrange
+  arg_ss = MagicMock()
+
+  fake_type = MagicMock()
+  fake_stat = pytest.gen.choice(list(print_io.status_colors.keys()))
+  fake_uncertainty = MagicMock()
+  fake_str = MagicMock()
+
+  expected_s = print_io.bcolors.BOLD + '[' + fake_str + '] : ' + print_io.bcolors.ENDC
+  expected_s = expected_s + '\n' + print_io.status_colors[fake_stat] + ' ---- ' + fake_str + print_io.bcolors.ENDC + ' (' + fake_str + ')'
+  expected_s = expected_s + '\n'
+
+  arg_ss.type = fake_type
+  arg_ss.configure_mock(**{'get_status.return_value':fake_stat})
+  arg_ss.uncertainty = fake_uncertainty
+
+  mocker.patch(print_io.__name__ + '.str', return_value=fake_str)
+
+  # Act
+  result = print_io.subsystem_status_str(arg_ss)
+
+  # Assert
+  assert print_io.str.call_count == 3
+  assert print_io.str.call_args_list[0].args == (fake_type, )
+  assert print_io.str.call_args_list[1].args == (fake_stat, )
+  assert print_io.str.call_args_list[2].args == (fake_uncertainty, )
+  assert result == expected_s
+
+
+# subsystem_str tests
+def test_print_io_subsystem_str_returns_string_without_any_data_when_headers_tests_and_test_data_empty(mocker):
+  # Arrange
+  arg_ss = MagicMock()
+
+  arg_ss.type = str(MagicMock())
+  arg_ss.headers = []
+  arg_ss.tests = []
+  arg_ss.test_data = []
+
+  expected_result = print_io.bcolors.BOLD + arg_ss.type + '\n' + print_io.bcolors.ENDC
+  expected_result = expected_result + '--[headers] \n--[tests] \n--[test data] '
+
+  # Act
+  result = print_io.subsystem_str(arg_ss)
+
+  # Assert
+  assert result == expected_result
+
+def test_print_io_subsystem_str_returns_string_all_data_when_headers_tests_and_test_data_occupied(mocker):
+  # Arrange
+  arg_ss = MagicMock()
+
+  arg_ss.type = str(MagicMock())
+  num_headers = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  arg_ss.headers = []
+  num_tests = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  arg_ss.tests = []
+  num_test_data = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  arg_ss.test_data = []
+
+  expected_result = print_io.bcolors.BOLD + arg_ss.type + '\n' + print_io.bcolors.ENDC
+  expected_result = expected_result + '--[headers] '
+  for i in range(num_headers):
+    arg_ss.headers.append(MagicMock())
+    expected_result = expected_result + '\n---' + str(arg_ss.headers[i])
+  expected_result = expected_result + '\n--[tests] '
+  for i in range(num_tests):
+    arg_ss.tests.append(MagicMock())
+    expected_result = expected_result + '\n---' + str(arg_ss.tests[i])
+  expected_result = expected_result + '\n--[test data] '
+  for i in range(num_test_data):
+    arg_ss.test_data.append(MagicMock())
+    expected_result = expected_result + '\n---' + str(arg_ss.test_data[i])
+
+  # Act
+  result = print_io.subsystem_str(arg_ss)
+
+  # Assert
+  assert result == expected_result
+
+
+# headers_string tests
+def test_print_io_format_status_returns_empty_string_when_headers_is_vacant():
+  # Arrange
+  arg_headers = []
+
+  # Act
+  result = print_io.headers_string(arg_headers)
+
+  # Assert
+  assert result == str()
+
+def test_print_io_format_status_returns_all_headers_in_formatted_string_when_occupied():
+  # Arrange
+  num_headers = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  arg_headers = []
+
+  expected_result = ''
+
+  for i in range(num_headers):
+    arg_headers.append(str(MagicMock()))
+    expected_result = expected_result + '\n  -- ' + arg_headers[i]
+
+  # Act
+  result = print_io.headers_string(arg_headers)
+
+  # Assert
+  assert result == expected_result
+
+
+# format_status tests
+
+def test_print_io_format_status_raises_KeyError_when_stat_is_string_and_not_in_status_color_keys():
+  # Arrange
+  arg_stat = str(MagicMock())
+
+  # Act
+  with pytest.raises(KeyError) as e_info:
+    result = print_io.format_status(arg_stat)
+
+  # Assert
+  assert str(e_info.value) == '"' + arg_stat + '"'
+
+def test_print_io_format_status_returns_stat_in_its_status_color_when_stat_is_string_and_a_key():
+  # Arrange
+  arg_stat = pytest.gen.choice(list(print_io.status_colors.keys()))
+
+  expected_result = print_io.status_colors[arg_stat] + arg_stat + print_io.scolors['ENDC']
+
+  # Act
+  result = print_io.format_status(arg_stat)
+
+  # Assert
+  assert result == expected_result
+
+def test_print_io_format_status_returns_only_a_right_parenthesis_in_string_when_stat_is_an_empty_list():
+  # Arrange
+  arg_stat = []
+
+  expected_result = ')'
+
+  # Act
+  result = print_io.format_status(arg_stat)
+
+  # Assert
+  assert result == expected_result
+
+def test_print_io_format_status_returns_all_status_in_stat_formatted_into_string_when_stat_is_a_list_of_status(mocker):
+  # Arrange
+  num_stat = pytest.gen.randint(1, 10) # arbitrary from 1 to 10
+  arg_stat = []
+
+  expected_result = '('
+  for i in range(num_stat):
+    arg_stat.append(pytest.gen.choice(list(print_io.status_colors.keys())))
+    expected_result += print_io.status_colors[arg_stat[i]] + arg_stat[i] + print_io.scolors['ENDC']
+    if i != (num_stat - 1):
+      expected_result += ', '
+  expected_result += ')'
+
+  # Act
+  result = print_io.format_status(arg_stat)
+
+  # Assert
+  assert result == expected_result
+```
+
+### `test_sim_io.py`
+
+**경로:** `components/onair/fsw/test/onair/src/util/test_sim_io.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+import pytest
+from unittest.mock import MagicMock
+
+import onair.src.util.sim_io as sim_io
+
+def test_sim_io_render_reasoning_writes_txt_and_csv_files_even_when_list_is_empty(mocker):
+  # Arrange
+  SAVE_PATH = 'ONAIR_DIAGNOSIS_SAVE_PATH'
+  diag1 = MagicMock()
+  arg_diagnosis_list = []
+  fake_system_filename = MagicMock()
+  fake_full_path = MagicMock()
+  fake_file_iterator = MagicMock()
+  fake_file = MagicMock()
+  fake_file.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+
+  mocker.patch(sim_io.__name__ + '.os.environ.get', return_value=fake_system_filename)
+  mocker.patch(sim_io.__name__ + '.os.path.join', return_value=fake_full_path)
+  mocker.patch('builtins.open', return_value=fake_file)
+
+  # Act
+  sim_io.render_reasoning(arg_diagnosis_list)
+
+  # Assert
+  assert open.call_count == 2
+  assert fake_file_iterator.write.call_count == 4
+  assert sim_io.os.environ.get.call_args_list[0].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[0].args == (fake_system_filename, 'diagnosis.txt')
+  assert open.call_args_list[0].args == (fake_full_path,)
+  assert open.call_args_list[0].kwargs == {'mode':'a'}
+  assert fake_file_iterator.write.call_args_list[0].args == ('==========================================================\n',)
+  assert fake_file_iterator.write.call_args_list[1].args == ('                        DIAGNOSIS                         \n',)
+  assert fake_file_iterator.write.call_args_list[2].args == ('==========================================================\n',)
+  assert sim_io.os.environ.get.call_args_list[1].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[1].args == (fake_system_filename, 'diagnosis.csv')
+  assert open.call_args_list[1].args == (fake_full_path,)
+  assert open.call_args_list[1].kwargs == {'mode':'a'}
+  assert fake_file_iterator.write.call_args_list[3].args == ('time_step, cohens_kappa, faults, subgraph\n',)
+
+def test_sim_io_render_reasoning_writes_txt_and_csv_files_with_entry_for_each_given_diagnosis_in_list(mocker):
+  # Arrange
+  SAVE_PATH = 'ONAIR_DIAGNOSIS_SAVE_PATH'
+  diag1 = MagicMock()
+  arg_diagnosis_list = []
+  fake_system_filename = MagicMock()
+  fake_full_path = MagicMock()
+  fake_file_iterator = MagicMock()
+  fake_file = MagicMock()
+  fake_file.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+  fake_timestep = "my fake time step"
+  fake_str = MagicMock()
+  fake_results_csv = MagicMock
+
+  mocker.patch(sim_io.__name__ + '.os.environ.get', return_value=fake_system_filename)
+  mocker.patch(sim_io.__name__ + '.os.path.join', return_value=fake_full_path)
+  mocker.patch('builtins.open', return_value=fake_file)
+
+  for i in range(5):
+    fake_diag = MagicMock()
+    fake_diag.configure_mock(**{'get_time_step.return_value':fake_timestep,
+                                '__str__.return_value':fake_str,
+                                'results_csv.return_value':fake_results_csv})
+    arg_diagnosis_list.append(fake_diag)
+
+  # Act
+  sim_io.render_reasoning(arg_diagnosis_list)
+
+  # Assert
+  assert open.call_count == 2
+  assert fake_file_iterator.write.call_count == 4 + 5*5
+  assert sim_io.os.environ.get.call_args_list[0].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[0].args == (fake_system_filename, 'diagnosis.txt')
+  assert open.call_args_list[0].args == (fake_full_path,)
+  assert open.call_args_list[0].kwargs == {'mode':'a'}
+  assert fake_file_iterator.write.call_args_list[0].args == ('==========================================================\n',)
+  assert fake_file_iterator.write.call_args_list[1].args == ('                        DIAGNOSIS                         \n',)
+  assert fake_file_iterator.write.call_args_list[2].args == ('==========================================================\n',)
+
+  for i in range(5):
+    assert fake_file_iterator.write.call_args_list[i*4 + 3].args == ('\n----------------------------------------------------------\n',)
+    assert fake_file_iterator.write.call_args_list[i*4 + 4].args == ('***                DIAGNOSIS AT FRAME ' + fake_timestep + '               ***\n',)
+    assert fake_file_iterator.write.call_args_list[i*4 + 5].args == (fake_str,)
+    assert fake_file_iterator.write.call_args_list[i*4 + 6].args == ('----------------------------------------------------------\n',)
+
+  assert sim_io.os.environ.get.call_args_list[1].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[1].args == (fake_system_filename, 'diagnosis.csv')
+  assert open.call_args_list[1].args == (fake_full_path,)
+  assert open.call_args_list[1].kwargs == {'mode':'a'}
+  assert fake_file_iterator.write.call_args_list[i*4 + 7].args == ('time_step, cohens_kappa, faults, subgraph\n',)
+
+  for j in range(5):
+    assert fake_file_iterator.write.call_args_list[j + i*4 + 8].args == (fake_results_csv,)
+
+def test_sim_io_render_viz_does_only_stattest_render_viz_does_status_sensor_and_diagnosis_reports_when_diagnosis_is_givenus_and_sensor_reports_when_diagnosis_is_not_given(mocker):
+  # Arrange
+  SAVE_PATH = 'ONAIR_VIZ_SAVE_PATH'
+  arg_status_data = MagicMock()
+  arg_sensor_data = MagicMock()
+  arg_sim_name = MagicMock()
+
+  fake_system_filename = MagicMock()
+  fake_full_path = MagicMock()
+  fake_iterator = MagicMock()
+  fake_file = MagicMock()
+  fake_file.configure_mock(**{'__enter__.return_value': fake_iterator})
+
+  expected_status_report = {}
+  expected_status_report['filename'] = arg_sim_name
+  expected_status_report['data'] = arg_status_data
+  expected_sensor_status_report = {}
+  expected_sensor_status_report['name'] = 'MISSION'
+  expected_sensor_status_report['children'] = arg_sensor_data
+
+  mocker.patch(sim_io.__name__ + '.os.environ.get', return_value=fake_system_filename)
+  mocker.patch(sim_io.__name__ + '.os.path.join', return_value=fake_full_path)
+  mocker.patch('builtins.open', return_value=fake_file)
+  mocker.patch(sim_io.__name__ + '.json.dump')
+
+  # Act
+  sim_io.render_viz(arg_status_data, arg_sensor_data, arg_sim_name)
+
+  # Assert
+  assert open.call_count == 2
+  assert sim_io.os.environ.get.call_args_list[0].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[0].args == (fake_system_filename, 'system.json')
+  assert open.call_args_list[0].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[0].args == (expected_status_report, fake_iterator)
+  assert sim_io.os.environ.get.call_args_list[1].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[1].args == (fake_system_filename, 'faults.json')
+  assert open.call_args_list[1].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[1].args == (expected_sensor_status_report, fake_iterator)
+
+def test_sim_io_render_viz_does_only_status_and_sensor_reports_when_diagnosis_is_given_as_None(mocker):
+  # Arrange
+  SAVE_PATH = 'ONAIR_VIZ_SAVE_PATH'
+  arg_status_data = MagicMock()
+  arg_sensor_data = MagicMock()
+  arg_sim_name = MagicMock()
+  arg_diagnosis = None
+
+  fake_system_filename = MagicMock()
+  fake_full_path = MagicMock()
+  fake_iterator = MagicMock()
+  fake_file = MagicMock()
+  fake_file.configure_mock(**{'__enter__.return_value': fake_iterator})
+
+  expected_status_report = {}
+  expected_status_report['filename'] = arg_sim_name
+  expected_status_report['data'] = arg_status_data
+  expected_sensor_status_report = {}
+  expected_sensor_status_report['name'] = 'MISSION'
+  expected_sensor_status_report['children'] = arg_sensor_data
+
+  mocker.patch(sim_io.__name__ + '.os.environ.get', return_value=fake_system_filename)
+  mocker.patch(sim_io.__name__ + '.os.path.join', return_value=fake_full_path)
+  mocker.patch('builtins.open', return_value=fake_file)
+  mocker.patch(sim_io.__name__ + '.json.dump')
+
+  # Act
+  sim_io.render_viz(arg_status_data, arg_sensor_data, arg_sim_name, arg_diagnosis)
+
+  # Assert
+  assert open.call_count == 2
+  assert sim_io.os.environ.get.call_args_list[0].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[0].args == (fake_system_filename, 'system.json')
+  assert open.call_args_list[0].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[0].args == (expected_status_report, fake_iterator)
+  assert sim_io.os.environ.get.call_args_list[1].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[1].args == (fake_system_filename, 'faults.json')
+  assert open.call_args_list[1].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[1].args == (expected_sensor_status_report, fake_iterator)
+
+def test_sim_io_render_viz_does_status_sensor_and_diagnosis_reports_when_diagnosis_is_given(mocker):
+  # Arrange
+  SAVE_PATH = 'ONAIR_VIZ_SAVE_PATH'
+  arg_status_data = MagicMock()
+  arg_sensor_data = MagicMock()
+  arg_sim_name = MagicMock()
+  arg_diagnosis = MagicMock()
+
+  fake_system_filename = MagicMock()
+  fake_full_path = MagicMock()
+  fake_iterator = MagicMock()
+  fake_file = MagicMock()
+  fake_file.configure_mock(**{'__enter__.return_value': fake_iterator})
+  fake_results = MagicMock()
+
+  expected_status_report = {}
+  expected_status_report['filename'] = arg_sim_name
+  expected_status_report['data'] = arg_status_data
+  expected_sensor_status_report = {}
+  expected_sensor_status_report['name'] = 'MISSION'
+  expected_sensor_status_report['children'] = arg_sensor_data
+
+  mocker.patch(sim_io.__name__ + '.os.environ.get', return_value=fake_system_filename)
+  mocker.patch(sim_io.__name__ + '.os.path.join', return_value=fake_full_path)
+  mocker.patch('builtins.open', return_value=fake_file)
+  mocker.patch(sim_io.__name__ + '.json.dump')
+  arg_diagnosis.configure_mock(**{'get_diagnosis_viz_json.return_value': fake_results})
+
+  # Act
+  sim_io.render_viz(arg_status_data, arg_sensor_data, arg_sim_name, arg_diagnosis)
+
+  # Assert
+  assert open.call_count == 3
+  assert sim_io.os.environ.get.call_args_list[0].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[0].args == (fake_system_filename, 'system.json')
+  assert open.call_args_list[0].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[0].args == (expected_status_report, fake_iterator)
+  assert sim_io.os.environ.get.call_args_list[1].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[1].args == (fake_system_filename, 'faults.json')
+  assert open.call_args_list[1].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[1].args == (expected_sensor_status_report, fake_iterator)
+  arg_diagnosis.get_diagnosis_viz_json.assert_called_once()
+  assert sim_io.os.environ.get.call_args_list[2].args == (SAVE_PATH,)
+  assert sim_io.os.path.join.call_args_list[2].args == (fake_system_filename, 'results.json')
+  assert open.call_args_list[2].args == (fake_full_path, 'w')
+  assert sim_io.json.dump.call_args_list[2].args == (fake_results, fake_iterator)
+
+def test_sim_io_print_dots_uses_mod_10_plus_one_dots_when_ts_mod_20_is_less_than_10(mocker):
+  # Arrange
+  arg_ts = 20 # really want 0-9 + 20 * (arbitrary random 0 to some number)
+  expected_num_dots = (arg_ts % 10) + 1
+  dots_string = ""
+
+  for i in range(expected_num_dots):
+    dots_string = dots_string + '.'
+
+  mocker.patch("builtins.print")
+
+  # Act
+  sim_io.print_dots(arg_ts)
+
+  # Assert
+  print.assert_called_with('\033[95m' + dots_string + '\033[0m')
+
+def test_sim_io_print_dots_uses_10_minus_mod_10_plus_one_dots_when_ts_mod_20_is_10(mocker):
+  # Arrange
+  arg_ts = 10 # 10 is a static value by design but should still add 20 * 0 to some number
+  expected_num_dots = 10 - (arg_ts % 10) + 1
+  dots_string = ""
+
+  for i in range(expected_num_dots):
+    dots_string = dots_string + '.'
+
+  mocker.patch("builtins.print")
+
+  # Act
+  sim_io.print_dots(arg_ts)
+
+  # Assert
+  print.assert_called_with('\033[95m' + dots_string + '\033[0m')
+
+def test_sim_io_print_dots_uses_10_minus_mod_10_plus_one_dots_when_ts_mod_20_is_greater_than_10(mocker):
+  # Arrange
+  arg_ts = 19 # really should be 11 to 19 + 20 * 0 to some random number
+  expected_num_dots = 10 - (arg_ts % 10) + 1
+  dots_string = ""
+
+  for i in range(expected_num_dots):
+    dots_string = dots_string + '.'
+
+  mocker.patch("builtins.print")
+
+  # Act
+  sim_io.print_dots(arg_ts)
+
+  # Assert
+  print.assert_called_with('\033[95m' + dots_string + '\033[0m')
+```

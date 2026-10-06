@@ -3,16 +3,16 @@
 
 **경로:** `cfg/gui/resources/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `JSTAR-transparent_original.png`
 
-file--JSTAR-transparent_original.png
-file--nos3_original.png
-```
+**경로:** `cfg/gui/resources/JSTAR-transparent_original.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`cfg/gui/resources/JSTAR-transparent_original.png`](file--JSTAR-transparent_original.png) — 바이너리 (경로만)
-- [`cfg/gui/resources/nos3_original.png`](file--nos3_original.png) — 바이너리 (경로만)
+### `nos3_original.png`
+
+**경로:** `cfg/gui/resources/nos3_original.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

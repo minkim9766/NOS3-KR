@@ -3,24 +3,238 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/data-management/archive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarms.rst`
 
-file--alarms.rst
-file--command-history.rst
-file--events.rst
-file--index.rst
-file--parameters.rst
-file--telemetry-packets.rst
+**경로:** `gsw/yamcs/docs/server-manual/data-management/archive/alarms.rst`
+
+
+```rst
+Alarms
+======
+
+This table is created by the :doc:`../../services/instance/alarm-recorder` and uses the trigger time, parameter name and sequence number as primary key:
+
+.. code-block:: text
+
+    CREATE TABLE alarms(
+        triggerTime TIMESTAMP,
+        parameter STRING,
+        seqNum INT,
+        PRIMARY KEY(
+            triggerTime,
+            parameter,
+            seqNum
+        )
+    ) table_format=compressed;
+
+Where the columns are:
+
+* | **triggerTime**
+  | the time when the alarm has been triggered. Until an alarm is acknowledged, there will not be a new alarm generated for that parameter (even if it were to go back in limits)
+* | **parameter**
+  | the fully qualified name of the parameter for which the alarm has been triggered.
+* | **seqNum**
+  | a sequence number increasing with each new triggered alarm. The sequence number will reset to 0 at Yamcs restart.
 ```
 
-## 항목
+### `command-history.rst`
 
-- [`gsw/yamcs/docs/server-manual/data-management/archive/alarms.rst`](file--alarms.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/archive/command-history.rst`](file--command-history.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/archive/events.rst`](file--events.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/archive/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/archive/parameters.rst`](file--parameters.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/archive/telemetry-packets.rst`](file--telemetry-packets.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/data-management/archive/command-history.rst`
+
+
+```rst
+Command History
+===============
+
+This table is created by the :doc:`../../services/instance/command-history-recorder` and uses the generation time, origin and sequence number as primary key:
+
+.. code-block:: text
+
+    CREATE TABLE cmdhist(
+        gentime TIMESTAMP,
+        origin STRING,
+        seqNum INT,
+        cmdName STRING,
+        binary BINARY,
+        PRIMARY KEY(
+            gentime,
+            origin,
+            seqNum
+        )
+    ) HISTOGRAM(cmdName) PARTITION BY TIME(gentime) table_format=compressed;
+
+Where the columns are:
+
+* | **gentime**
+  | the generation time of the command set by the originator.
+* | **origin**
+  | a string representing the originator of the command.
+* | **seqNum**
+  | a sequence number provided by the originator. Each command originator is supposed to keep an independent sequence count for the commands it sends.
+* | **cmdName**
+  | the fully qualified name of the command.
+* | **binary**
+  | the binary packet contents.
+
+In addition to these columns, there will be numerous dynamic columns set by the command verifiers, command releasers, etc.
+
+Recording data into this table is setup with the following statements:
+
+.. code-block:: text
+
+    INSERT_APPEND INTO cmdhist SELECT * FROM cmdhist_realtime;
+    INSERT_APPEND INTO cmdhist SELECT * FROM cmdhist_dump;
+
+The ``INSERT_APPEND`` clause says that if a tuple with the new key is received on one of the cmdhist_realtime or cmdhist_dump streams, it will be just inserted into the ``cmdhist`` table. If however, a tuple with a key that already exists in the table is received, the columns that are new in the newly received tuple are appended to the already existing columns in the table.
+```
+
+### `events.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/data-management/archive/events.rst`
+
+
+```rst
+Events
+======
+
+This table is created by the :doc:`../../services/instance/event-recorder` and uses the generation time, source and sequence number as primary key:
+
+.. code-block:: text
+
+    CREATE TABLE events(
+        gentime TIMESTAMP,
+        source ENUM,
+        seqNum INT,
+        body PROTOBUF('org.yamcs.protobuf.Yamcs$Event'),
+        PRIMARY KEY(
+            gentime,
+            source,
+            seqNum
+        )
+    ) HISTOGRAM(source) partition by time(gentime) table_format=compressed;
+
+Where the columns are:
+
+* | **gentime**
+  | the generation time of the command set by the originator.
+* | **source**
+  | a string representing the source of the events.
+* | **seqNum**
+  | a sequence number provided by the event source. Each source is expected to keep an independent sequence count for the events it generates.
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/data-management/archive/index.rst`
+
+
+```rst
+Generic Archive
+===============
+
+.. toctree::
+    :maxdepth: 1
+
+    telemetry-packets
+    events
+    command-history
+    alarms
+    parameters
+
+Yamcs Generic Archive is composed of tables that store data emitted by streams.
+
+Like streams, the tables have a variable number of columns of predefined types. Tables have a primary key composed of one or more columns. The primary key columns are mandatory, a tuple that does not have them will not be stored in the table.
+
+The primary key is used to sort the data. Yamcs uses a (key, value) storage engine (currently RocksDB) for storing the data. Both key and value are byte arrays. Yamcs uses the serialized primary key of the table as the key in RocksDb and the remaining columns serialized as the value.
+
+Although not enforced by Yamcs, it is usual to have the time as part of the primary key.
+
+Yamcs stores time ordered tuples (t, v\ :sub:`1`, v\ :sub:`2`...v\ :sub:`n`) where t is the time and v\ :sub:`1`, v\ :sub:`2`, v\ :sub:`n` are values of various types. The tables are row-oriented and optimized for accessing entire records (e.g. a packet or a group of processed parameters).
+
+Yamcs defines a standard set of tables for storing raw telemetry packets, commands, events, alarms and processed parameters.
+```
+
+### `parameters.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/data-management/archive/parameters.rst`
+
+
+```rst
+Parameters
+----------
+
+This table is created by the :doc:`../../services/instance/parameter-recorder` and uses the generation time and sequence number as primary key:
+
+.. code-block:: text
+
+    CREATE TABLE pp(
+        gentime TIMESTAMP,
+        ppgroup ENUM,
+        seqNum INT,
+        rectime TIMESTAMP,
+        primary key(
+            gentime,
+            seqNum
+        )
+    ) histogram(ppgroup) PARTITION BY TIME_AND_VALUE(gentime,ppgroup) table_format=compressed;
+
+Where the columns are:
+
+* | **gentime**
+  | the generation time of the command set by the originator.
+* | **ppgroup**
+  | a string used to group parameters. The parameters sharing the same group and the same timestamp are stored together.
+* | **seqNum**
+  | a sequence number supposed to be increasing independently for each group.
+* | **rectime**
+  | the time when the parameters have been received by Yamcs.
+
+In addition to these columns that are statically created, the pp table will store columns with the name of the parameter and the type ``PROTOBUF(org.yamcs.protobuf.Pvalue$ParameterValue)``.
+
+.. note::
+    Because partitioning by ``ppgroup`` is specified, this is also implicitly part of the primary key, but not stored as such in the RocksDB key.
+```
+
+### `telemetry-packets.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/data-management/archive/telemetry-packets.rst`
+
+
+```rst
+Telemetry Packets
+=================
+
+This table is created by the :doc:`../../services/instance/xtce-tm-recorder` and uses the generation time and sequence number as primary key:
+
+.. code-block:: text
+
+    CREATE TABLE tm(
+        gentime TIMESTAMP,
+        seqNum INT,
+        packet BINARY,
+        pname ENUM,
+        PRIMARY KEY(
+            gentime,
+            seqNum
+        )
+     ) HISTOGRAM(pname) PARTITION BY VALUE(pname) TABLE_FORMAT=compressed;
+
+Where the columns are:
+
+* | **gentime**
+  | generation time of the packet.
+* | **seqNum**
+  | an increasing sequence number.
+* | **packet**
+  | the binary packet.
+* | **pname**
+  | the fully-qualified name name of the container. In a container hierarchy, one has to configure which containers are used as partitions. This can be done by setting a flag in the spreadsheet.
+
+If a packet arrives with the same time and sequence number as another packet already in the archive, it is considered duplicate and shall not be stored.
+
+The ``HISTOGRAM(pname)`` clause means that Yamcs will build an overview that can be used to quickly see when data for the given packet name is available in the archive.
+
+The ``PARTITION BY VALUE`` clause means that data is partitioned in different RocksDB column families based on the container name. This has benefits when retrieving data for one specific container for a time interval. If this is not desired, one can set the partitioning flag only on the root container (in fact it is automatically set) so that all packets are stored in the same partition.
+```

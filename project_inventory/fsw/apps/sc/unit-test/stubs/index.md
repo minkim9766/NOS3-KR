@@ -3,26 +3,632 @@
 
 **경로:** `fsw/apps/sc/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sc_app_stubs.c`
 
-file--sc_app_stubs.c
-file--sc_atsrq_stubs.c
-file--sc_cmds_stubs.c
-file--sc_loads_stubs.c
-file--sc_rtsrq_stubs.c
-file--sc_state_stubs.c
-file--sc_utils_stubs.c
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_app_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_app.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+SC_AppData_t  SC_AppData;
+SC_OperData_t SC_OperData;
+
+void SC_AppMain(void)
+{
+    UT_DEFAULT_IMPL(SC_AppMain);
+}
+
+CFE_Status_t SC_AppInit(void)
+{
+    return UT_DEFAULT_IMPL(SC_AppMain);
+}
+
+CFE_Status_t SC_InitTables(void)
+{
+    return UT_DEFAULT_IMPL(SC_InitTables);
+}
+
+CFE_Status_t SC_RegisterAllTables(void)
+{
+    return UT_DEFAULT_IMPL(SC_RegisterAllTables);
+}
+
+CFE_Status_t SC_GetDumpTablePointers(void)
+{
+    return UT_DEFAULT_IMPL(SC_GetDumpTablePointers);
+}
+
+CFE_Status_t SC_GetLoadTablePointers(void)
+{
+    return UT_DEFAULT_IMPL(SC_GetLoadTablePointers);
+}
+
+void SC_LoadDefaultTables(void)
+{
+    UT_DEFAULT_IMPL(SC_LoadDefaultTables);
+}
+
+void SC_RegisterManageCmds(void)
+{
+    UT_DEFAULT_IMPL(SC_RegisterManageCmds);
+}
 ```
 
-## 항목
+### `sc_atsrq_stubs.c`
 
-- [`fsw/apps/sc/unit-test/stubs/sc_app_stubs.c`](file--sc_app_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/stubs/sc_atsrq_stubs.c`](file--sc_atsrq_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/stubs/sc_cmds_stubs.c`](file--sc_cmds_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/stubs/sc_loads_stubs.c`](file--sc_loads_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/stubs/sc_rtsrq_stubs.c`](file--sc_rtsrq_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/stubs/sc_state_stubs.c`](file--sc_state_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/stubs/sc_utils_stubs.c`](file--sc_utils_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_atsrq_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_atsrq.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+bool SC_BeginAts(uint16 AtsId, uint16 TimeOffset)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_BeginAts), AtsId);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_BeginAts), TimeOffset);
+    return UT_DEFAULT_IMPL(SC_BeginAts);
+}
+
+void SC_StartAtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_StartAtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_StartAtsCmd);
+}
+
+void SC_StopAtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_StopAtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_StopAtsCmd);
+}
+
+void SC_KillAts(void)
+{
+    UT_DEFAULT_IMPL(SC_KillAts);
+}
+
+void SC_GroundSwitchCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_GroundSwitchCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_GroundSwitchCmd);
+}
+
+bool SC_InlineSwitch(void)
+{
+    return UT_DEFAULT_IMPL(SC_InlineSwitch);
+}
+
+void SC_ServiceSwitchPend(void)
+{
+    UT_DEFAULT_IMPL(SC_ServiceSwitchPend);
+}
+
+void SC_JumpAtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_JumpAtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_JumpAtsCmd);
+}
+
+void SC_ContinueAtsOnFailureCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ContinueAtsOnFailureCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_ContinueAtsOnFailureCmd);
+}
+
+void SC_AppendAtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_AppendAtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_AppendAtsCmd);
+}
+```
+
+### `sc_cmds_stubs.c`
+
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_cmds_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_cmds.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+void SC_TableManageCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_TableManageCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_TableManageCmd);
+}
+
+void SC_ManageRtsTable(int32 ArrayIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_ManageRtsTable), ArrayIndex);
+    UT_DEFAULT_IMPL(SC_ManageRtsTable);
+}
+
+void SC_ManageAtsTable(int32 ArrayIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_ManageAtsTable), ArrayIndex);
+    UT_DEFAULT_IMPL(SC_ManageAtsTable);
+}
+
+void SC_ManageAppendTable(void)
+{
+    UT_DEFAULT_IMPL(SC_ManageAppendTable);
+}
+
+void SC_ProcessRequest(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ProcessRequest), CmdPacket);
+    UT_DEFAULT_IMPL(SC_ProcessRequest);
+}
+
+void SC_ProcessCommand(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ProcessCommand), CmdPacket);
+    UT_DEFAULT_IMPL(SC_ProcessCommand);
+}
+
+void SC_NoOpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_NoOpCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_NoOpCmd);
+}
+
+void SC_ResetCountersCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ResetCountersCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_ResetCountersCmd);
+}
+
+void SC_SendHkPacket(void)
+{
+    UT_DEFAULT_IMPL(SC_SendHkPacket);
+}
+
+void SC_ProcessAtpCmd(void)
+{
+    UT_DEFAULT_IMPL(SC_ProcessAtpCmd);
+}
+
+void SC_ProcessRtpCommand(void)
+{
+    UT_DEFAULT_IMPL(SC_ProcessRtpCommand);
+}
+```
+
+### `sc_loads_stubs.c`
+
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_loads_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_loads.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+bool SC_ParseRts(uint32 Buffer[])
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ParseRts), Buffer);
+    return UT_DEFAULT_IMPL(SC_ParseRts);
+}
+
+void SC_BuildTimeIndexTable(uint16 AtsIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_BuildTimeIndexTable), AtsIndex);
+    UT_DEFAULT_IMPL(SC_BuildTimeIndexTable);
+}
+
+void SC_Insert(uint16 AtsIndex, uint32 NewCmdIndex, uint32 ListLength)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_Insert), AtsIndex);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_Insert), NewCmdIndex);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_Insert), ListLength);
+    UT_DEFAULT_IMPL(SC_Insert);
+}
+
+void SC_InitAtsTables(uint16 AtsIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_InitAtsTables), AtsIndex);
+    UT_DEFAULT_IMPL(SC_InitAtsTables);
+}
+
+int32 SC_VerifyAtsTable(uint32 *Buffer, int32 BufferWords)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_VerifyAtsTable), Buffer);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_VerifyAtsTable), BufferWords);
+    return UT_DEFAULT_IMPL(SC_VerifyAtsTable);
+}
+
+int32 SC_VerifyAtsEntry(uint32 *Buffer, int32 EntryIndex, int32 BufferWords)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_VerifyAtsEntry), Buffer);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_VerifyAtsEntry), EntryIndex);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_VerifyAtsEntry), BufferWords);
+    return UT_DEFAULT_IMPL(SC_VerifyAtsEntry);
+}
+
+void SC_LoadAts(uint16 AtsIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_LoadAts), AtsIndex);
+    UT_DEFAULT_IMPL(SC_LoadAts);
+}
+
+int32 SC_ValidateAts(void *TableData)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ValidateAts), TableData);
+    return UT_DEFAULT_IMPL(SC_ValidateAts);
+}
+
+int32 SC_ValidateAppend(void *TableData)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ValidateAppend), TableData);
+    return UT_DEFAULT_IMPL(SC_ValidateAppend);
+}
+
+void SC_UpdateAppend(void)
+{
+    UT_DEFAULT_IMPL(SC_UpdateAppend);
+}
+
+void SC_ProcessAppend(uint16 AtsIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_ProcessAppend), AtsIndex);
+    UT_DEFAULT_IMPL(SC_ProcessAppend);
+}
+
+void SC_LoadRts(uint16 RtsIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_LoadRts), RtsIndex);
+    UT_DEFAULT_IMPL(SC_LoadRts);
+}
+
+int32 SC_ValidateRts(void *TableData)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_ValidateRts), TableData);
+    return UT_DEFAULT_IMPL(SC_ValidateRts);
+}
+```
+
+### `sc_rtsrq_stubs.c`
+
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_rtsrq_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_rtsrq.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+void SC_StartRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_StartRtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_StartRtsCmd);
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == TRUE)
+void SC_StartRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_StartRtsGrpCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_StartRtsGrpCmd);
+}
+
+#endif
+void SC_StopRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_StopRtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_StopRtsCmd);
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == TRUE)
+void SC_StopRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_StopRtsGrpCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_StopRtsGrpCmd);
+}
+
+#endif
+void SC_DisableRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_DisableRtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_DisableRtsCmd);
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == TRUE)
+void SC_DisableRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_DisableRtsGrpCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_DisableRtsGrpCmd);
+}
+#endif
+
+void SC_EnableRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_EnableRtsCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_EnableRtsCmd);
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == TRUE)
+void SC_EnableRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_EnableRtsGrpCmd), CmdPacket);
+    UT_DEFAULT_IMPL(SC_EnableRtsGrpCmd);
+}
+#endif
+
+void SC_KillRts(uint16 RtsIndex)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_KillRts), RtsIndex);
+    UT_DEFAULT_IMPL(SC_KillRts);
+}
+
+void SC_AutoStartRts(uint16 RtsNumber)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_AutoStartRts), RtsNumber);
+    UT_DEFAULT_IMPL(SC_AutoStartRts);
+}
+```
+
+### `sc_state_stubs.c`
+
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_state_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_state.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+void SC_GetNextRtsTime(void)
+{
+    UT_DEFAULT_IMPL(SC_GetNextRtsTime);
+}
+
+void SC_UpdateNextTime(void)
+{
+    UT_DEFAULT_IMPL(SC_UpdateNextTime);
+}
+
+void SC_GetNextRtsCommand(void)
+{
+    UT_DEFAULT_IMPL(SC_GetNextRtsCommand);
+}
+
+void SC_GetNextAtsCommand(void)
+{
+    UT_DEFAULT_IMPL(SC_GetNextAtsCommand);
+}
+```
+
+### `sc_utils_stubs.c`
+
+**경로:** `fsw/apps/sc/unit-test/stubs/sc_utils_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+void SC_GetCurrentTime(void)
+{
+    UT_DEFAULT_IMPL(SC_GetCurrentTime);
+}
+
+SC_AbsTimeTag_t SC_GetAtsEntryTime(SC_AtsEntryHeader_t *Entry)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_GetAtsEntryTime), Entry);
+    return UT_DEFAULT_IMPL(SC_GetAtsEntryTime);
+}
+
+SC_AbsTimeTag_t SC_ComputeAbsTime(SC_RelTimeTag_t RelTime)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_ComputeAbsTime), RelTime);
+    return UT_DEFAULT_IMPL(SC_ComputeAbsTime);
+}
+
+bool SC_CompareAbsTime(SC_AbsTimeTag_t AbsTime1, SC_AbsTimeTag_t AbsTime2)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_CompareAbsTime), AbsTime1);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_CompareAbsTime), AbsTime2);
+    return UT_DEFAULT_IMPL(SC_CompareAbsTime);
+}
+
+bool SC_VerifyCmdLength(const CFE_MSG_Message_t *Msg, size_t ExpectedLength)
+{
+    UT_Stub_RegisterContext(UT_KEY(SC_VerifyCmdLength), Msg);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(SC_VerifyCmdLength), ExpectedLength);
+    return UT_DEFAULT_IMPL(SC_VerifyCmdLength);
+}
+
+uint16 SC_ToggleAtsIndex(void)
+{
+    return UT_DEFAULT_IMPL(SC_ToggleAtsIndex);
+}
+```

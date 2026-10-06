@@ -3,18 +3,64 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--FprimeProtocol.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/FprimeProtocol.fpp`](file--FprimeProtocol.fpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/reference
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeProtocol.fpp"
+)
+
+register_fprime_module()
+```
+
+### `FprimeProtocol.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/FprimeProtocol.fpp`
+
+
+```fpp
+module Svc {
+module FprimeProtocol {
+
+    type TokenType = U32
+
+    @ Describes the frame header format for the F Prime communications protocol
+    struct FrameHeader {
+        startWord: TokenType,
+        lengthField: TokenType,
+    } default {
+        startWord = 0xdeadbeef
+    }
+
+    @ Describes the frame trailer format for the F Prime communications protocol
+    struct FrameTrailer {
+        crcField: U32
+    }
+
+}
+}
+```

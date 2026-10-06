@@ -3,34 +3,1426 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `appearance.service.ts`
 
-file--appearance.service.ts
-file--auth.service.ts
-file--config.service.ts
-file--extension.service.ts
-file--favicon.service.ts
-file--formatter.service.ts
-file--message.service.ts
-file--preference-store.service.ts
-file--sdk-bridge.service.ts
-file--synchronizer.service.ts
-file--yamcs.service.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/appearance.service.ts`
+
+
+```typescript
+import {
+  DOCUMENT,
+  Inject,
+  Injectable,
+  OnDestroy,
+  effect,
+  signal,
+} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class AppearanceService implements OnDestroy {
+  public fullScreenRequested = signal(false);
+
+  public fullScreenMode$ = new BehaviorSubject<boolean>(false);
+  public focusMode$ = new BehaviorSubject<boolean>(false);
+  public detailPane$ = new BehaviorSubject<boolean>(false);
+
+  private fullScreenChangeListener = () => {
+    if (this.document.fullscreenElement) {
+      this.fullScreenMode$.next(true);
+    } else {
+      this.fullScreenRequested.set(false);
+      this.fullScreenMode$.next(false);
+      this.focusMode$.next(false);
+    }
+  };
+
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    document.addEventListener(
+      'fullscreenchange',
+      this.fullScreenChangeListener,
+    );
+
+    effect(() => {
+      if (!this.fullScreenRequested() && document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.document.removeEventListener(
+      'fullscreenchange',
+      this.fullScreenChangeListener,
+    );
+  }
+}
 ```
 
-## 항목
+### `auth.service.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/appearance.service.ts`](file--appearance.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/auth.service.ts`](file--auth.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/config.service.ts`](file--config.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/extension.service.ts`](file--extension.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/favicon.service.ts`](file--favicon.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/formatter.service.ts`](file--formatter.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/message.service.ts`](file--message.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/preference-store.service.ts`](file--preference-store.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/sdk-bridge.service.ts`](file--sdk-bridge.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/synchronizer.service.ts`](file--synchronizer.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/yamcs.service.ts`](file--yamcs.service.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/auth.service.ts`
+
+
+```typescript
+import { APP_BASE_HREF } from '@angular/common';
+import { Inject, Injectable, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import {
+  AuthInfo,
+  HttpHandler,
+  OpenIDConnectInfo,
+  TokenResponse,
+  UserInfo,
+} from '../client';
+import { User } from '../User';
+import { ConfigService } from './config.service';
+import { Synchronizer } from './synchronizer.service';
+import { YamcsService } from './yamcs.service';
+
+export interface Claims {
+  iss: string;
+  sub: string;
+  iat: number;
+  exp: number;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService implements OnDestroy {
+  private authInfo: AuthInfo;
+  public user$ = new BehaviorSubject<User | null>(null);
+
+  private syncSubscription: Subscription;
+  private nextRefresh: Date | null;
+
+  // Optional logout page where to redirect the browser after logging out of Yamcs
+  // If unset, defaults to a local login page.
+  private logoutRedirectUrl?: string;
+
+  constructor(
+    private yamcsService: YamcsService,
+    private configService: ConfigService,
+    private router: Router,
+    @Inject(APP_BASE_HREF) private baseHref: string,
+    synchronizer: Synchronizer,
+  ) {
+    this.authInfo = configService.getAuthInfo();
+    this.logoutRedirectUrl = configService.getConfig().logoutRedirectUrl;
+
+    yamcsService.sessionEnded$.subscribe((ended) => {
+      if (ended && !this.authInfo.spnego) {
+        this.logout(true);
+      }
+    });
+
+    /*
+     * Attempts to prevent 401 exceptions by checking if locally available
+     * tokens should (still) work. If not, then the user is navigated
+     * to the login page.
+     */
+    yamcsService.yamcsClient.setHttpInterceptor(
+      async (next: HttpHandler, url: string, init?: RequestInit) => {
+        let response;
+        try {
+          // Verify or fetch a token when necessary
+          await this.loginAutomatically();
+
+          init = this.modifyRequest(init);
+          response = await next.handle(url, init);
+          if (response.status === 401) {
+            // Server must have refused our access token. Attempt to refresh.
+            this.clearCookie('access_token');
+            await this.loginAutomatically();
+          }
+        } catch (err: any) {
+          if (err.name === 'TypeError') {
+            // TypeError is how Fetch API reports network or CORS failure
+            this.router.navigate(['/down'], { skipLocationChange: true });
+          } else {
+            this.logout(true);
+          }
+          throw err;
+        }
+
+        if (response.status === 401) {
+          init = this.modifyRequest(init);
+          response = await next.handle(url, init);
+        }
+
+        return response;
+      },
+    );
+
+    const accessToken = this.getCookie('access_token');
+    if (accessToken) {
+      // User visited the page with a prior established access token. We don't
+      // know its exact expiration, but start the refresh cycle shortly after
+      // page load.
+      this.nextRefresh = new Date();
+      this.nextRefresh.setTime(this.nextRefresh.getTime() + 10000);
+    }
+
+    // Proactively extends a login session when it's close to being expired.
+    this.syncSubscription = synchronizer.syncSlow(() => {
+      if (this.nextRefresh) {
+        const now = new Date().getTime();
+        if (now >= this.nextRefresh.getTime()) {
+          this.nextRefresh = null;
+          this.loginAutomatically(true /* refresh */);
+        }
+      }
+    });
+  }
+
+  /**
+   * Adds an authorization header to an HTTP request.
+   */
+  private modifyRequest(init?: RequestInit): RequestInit | undefined {
+    const accessToken = this.getCookie('access_token');
+    if (accessToken) {
+      if (!init) {
+        init = { headers: new Headers() };
+      } else if (!init.headers) {
+        init.headers = new Headers();
+      }
+      const headers = init.headers as Headers;
+      headers.append('Authorization', `Bearer ${accessToken}`);
+    }
+
+    return init;
+  }
+
+  getUser() {
+    return this.user$.value;
+  }
+
+  /**
+   * Aims to establish a login session without needing to ask
+   * the user for credentials. This will re-use locally available
+   * tokens in order to limit server calls.
+   *
+   * The promise will be rejected when the automatic login failed.
+   */
+  public async loginAutomatically(refresh = false): Promise<any> {
+    if (
+      !this.authInfo.requireAuthentication ||
+      this.configService.getDisableLoginForm()
+    ) {
+      if (!this.user$.value) {
+        // Written such that it bypasses our interceptor
+        const response = await fetch(`${this.baseHref}api/user`);
+        this.user$.next(new User((await response.json()) as UserInfo));
+      }
+      return;
+    }
+
+    // Use already available tokens when we can
+    const accessToken = this.getCookie('access_token');
+    const refreshToken = this.getCookie('refresh_token');
+    if (accessToken && !refresh) {
+      if (!this.user$.value) {
+        // Written such that it bypasses our interceptor
+        const headers = new Headers();
+        headers.append('Authorization', `Bearer ${accessToken}`);
+        const response = await fetch(`${this.baseHref}api/user`, { headers });
+        if (response.status === 200) {
+          const user = new User((await response.json()) as UserInfo);
+          this.user$.next(user);
+        } else if (response.status === 401) {
+          if (refreshToken) {
+            this.clearCookie('access_token');
+            try {
+              return await this.loginWithRefreshToken(refreshToken);
+            } catch {
+              console.log('Server refused our refresh token');
+            }
+          }
+          this.logout(false);
+          return await this.loginAutomatically();
+        } else {
+          return Promise.reject(
+            'Unexpected response when retrieving user info',
+          );
+        }
+      }
+
+      return this.extractClaims(this.getCookie('access_token')!);
+    } else if (refreshToken) {
+      try {
+        return await this.loginWithRefreshToken(refreshToken);
+      } catch {
+        console.log('Server refused our refresh token');
+        this.logout(false);
+      }
+    }
+
+    // If server supports spnego, attempt browser negotiation.
+    // This is done before any other auth attempts, because it does not
+    // require user intervention when successful.
+    if (this.authInfo.spnego) {
+      try {
+        return await this.loginWithSpnego();
+      } catch {
+        // Ignore
+      }
+    }
+
+    this.logout(true);
+    throw new Error('Could not login automatically');
+  }
+
+  /**
+   * Logs in via user-provided username/password credentials. This would have
+   * to come from our login page.
+   */
+  public login(username: string, password: string) {
+    return this.yamcsService.yamcsClient
+      .fetchAccessTokenWithPassword(username, password)
+      .then((loginInfo) => {
+        this.updateLoginState(loginInfo);
+        this.user$.next(new User(loginInfo.user));
+        return this.extractClaims(loginInfo.access_token);
+      });
+  }
+
+  public loginWithAuthorizationCode(authorizationCode: string) {
+    return this.yamcsService.yamcsClient
+      .fetchAccessTokenWithAuthorizationCode(authorizationCode)
+      .then((loginInfo) => {
+        this.updateLoginState(loginInfo);
+
+        this.user$.next(new User(loginInfo.user));
+        return this.extractClaims(loginInfo.access_token);
+      });
+  }
+
+  private async loginWithSpnego() {
+    const response = await fetch('/auth/spnego', {
+      credentials: 'include',
+    });
+    if (response.status === 200) {
+      const authorizationCode = (await response.text()).trim();
+      return await this.loginWithAuthorizationCode(authorizationCode);
+    } else {
+      throw new Error('SPNEGO authentication failed');
+    }
+  }
+
+  private loginWithRefreshToken(refreshToken: string) {
+    // Store in cookie so that the token survives browser refreshes
+    // and so it is added to the header of a websocket request.
+    return this.yamcsService.yamcsClient
+      .fetchAccessTokenWithRefreshToken(refreshToken)
+      .then((loginInfo) => {
+        this.updateLoginState(loginInfo);
+        this.user$.next(new User(loginInfo.user));
+        return this.extractClaims(loginInfo.access_token);
+      });
+  }
+
+  /*
+   * Store in cookie so that the token survives browser refreshes and so it
+   * is added to the header of a websocket request.
+   */
+  private updateLoginState(tokenResponse: TokenResponse) {
+    const expireMillis = tokenResponse.expires_in * 1000;
+    const cookieExpiration = new Date();
+    cookieExpiration.setTime(cookieExpiration.getTime() + expireMillis);
+    let cookie = `access_token=${encodeURIComponent(tokenResponse.access_token)}`;
+    cookie += `; expires=${cookieExpiration.toUTCString()}`;
+    cookie += `; path=${this.getCookiePath()}`;
+    const cookieConfig = this.configService.getConfig().cookie;
+    cookie += `; SameSite=${cookieConfig.sameSite}`;
+    if (cookieConfig.secure) {
+      cookie += '; Secure';
+    }
+    document.cookie = cookie;
+
+    // Store refresh token in a Session Cookie (bound to browser, not tab)
+    if (tokenResponse.refresh_token) {
+      cookie = `refresh_token=${encodeURIComponent(tokenResponse.refresh_token)}`;
+      cookie += `; path=${this.getCookiePath()}`;
+      cookie += `; SameSite=${cookieConfig.sameSite}`;
+      if (cookieConfig.secure) {
+        cookie += '; Secure';
+      }
+      document.cookie = cookie;
+    }
+
+    // Schedule a refresh before the new access token expires.
+    // Do this even when there is no refresh token
+    // (SPNEGO is an alternative way of refreshing)
+    this.nextRefresh = new Date(cookieExpiration.getTime() - 20000);
+  }
+
+  /**
+   * Clear all data from a previous login session
+   */
+  logout(navigateToLoginPage: boolean) {
+    this.nextRefresh = null;
+    this.clearCookie('access_token');
+    this.clearCookie('refresh_token');
+
+    this.yamcsService.clearContext(); // TODO needed here?
+    this.user$.next(null);
+
+    // TODO should be closed from server side
+    // (once it better supports OIDC-like sessions)
+    this.yamcsService.yamcsClient.closeWebSocketClient();
+
+    if (navigateToLoginPage) {
+      if (this.logoutRedirectUrl) {
+        window.location.href = this.logoutRedirectUrl;
+      } else if (!this.configService.getConfig().disableLoginForm) {
+        const redirectURI = this.buildOpenIDRedirectURI();
+        window.location.href = this.buildRedirector(
+          {
+            clientId: 'yamcs-web',
+            authorizationEndpoint: `${location.protocol}//${location.host}${this.baseHref}auth/authorize`,
+            scope: 'openid',
+          },
+          redirectURI,
+        );
+      }
+    }
+  }
+
+  public buildOpenIDRedirectURI() {
+    return `${location.protocol}//${location.host}${this.baseHref}cb`;
+  }
+
+  public buildServerSideOpenIDRedirectURI() {
+    return `${location.protocol}//${location.host}${this.baseHref}oidc-browser-callback`;
+  }
+
+  private buildRedirector(openid: OpenIDConnectInfo, redirectURI: string) {
+    let url = openid.authorizationEndpoint;
+    url += `?client_id=${encodeURIComponent(openid.clientId)}`;
+    url += '&response_mode=query';
+    url += '&response_type=code';
+    url += `&scope=${encodeURIComponent(openid.scope)}`;
+    url += `&redirect_uri=${encodeURIComponent(redirectURI)}`;
+
+    return url;
+  }
+
+  private extractClaims(jwt: string): Claims {
+    const base64Url = jwt.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(window.atob(base64));
+  }
+
+  private getCookie(name: string) {
+    const value = '; ' + document.cookie;
+    const parts = value.split('; ' + name + '=');
+    if (parts.length === 2) {
+      return parts.pop()!.split(';').shift() || undefined;
+    }
+    return undefined;
+  }
+
+  private clearCookie(name: string) {
+    const path = this.getCookiePath();
+    if (path) {
+      this.clearCookieForPath(name, path);
+
+      // Remove also from root path, to avoid refresh loop when removing a previously
+      // used context root.
+      if (path !== '/') {
+        this.clearCookieForPath(name, '/');
+      }
+    }
+  }
+
+  private clearCookieForPath(name: string, path: string) {
+    let cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    cookie += `; path=${path}`;
+    const cookieConfig = this.configService.getConfig().cookie;
+    cookie += `; SameSite=${cookieConfig.sameSite}`;
+    if (cookieConfig.secure) {
+      cookie += '; Secure';
+    }
+    document.cookie = cookie;
+  }
+
+  private getCookiePath() {
+    if (this.baseHref === '/') {
+      return '/';
+    } else if (this.baseHref.endsWith('/')) {
+      return this.baseHref.substring(0, this.baseHref.length - 1);
+    }
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+  }
+}
+```
+
+### `config.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/config.service.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+import { AuthInfo, CommandOption, InstanceConfig } from '../client';
+import { YaColumnInfo } from '../components/column-chooser/column-chooser.component';
+
+export interface WebsiteConfig {
+  serverId: string;
+  auth: AuthInfo;
+  tag: string;
+  logo: string;
+  plugins: string[];
+  events?: EventsConfig;
+  commandClearanceEnabled: boolean;
+  commandExports: boolean;
+  twoStageCommanding: boolean;
+  preferredNamespace: string;
+  collapseInitializedArguments: boolean;
+  commandOptions: CommandOption[];
+  queueNames: string[];
+  hasTemplates: boolean;
+  disableLoginForm: boolean;
+  logoutRedirectUrl: string;
+  cookie: CookieConfig;
+  opi: OpiConfig;
+  dass: boolean;
+  tc: boolean;
+  tmArchive: boolean;
+  utc: boolean;
+  siteLinks: SiteLink[];
+  extra: { [key: string]: { [key: string]: any } };
+}
+
+export interface EventsConfig {
+  extraColumns?: ExtraColumnInfo[];
+}
+
+export interface CookieConfig {
+  secure: boolean;
+  sameSite: string;
+}
+
+export interface OpiConfig {
+  disconnectedColor: string;
+  invalidColor: string;
+  majorColor: string;
+  minorColor: string;
+}
+
+export interface SiteLink {
+  label: string;
+  url: string;
+  external: boolean;
+}
+
+export interface ExtraColumnInfo extends YaColumnInfo {
+  /**
+   * id of another column after which to insert this column.
+   * This only impacts the ordering in the column chooser dropdown.
+   *
+   * Typically you want to set this so that the ordering matches
+   * the configured ordering of 'displayedColumns'.
+   */
+  after: string;
+}
+
+@Injectable({ providedIn: 'root' })
+export class ConfigService {
+  private websiteConfig: WebsiteConfig;
+  private instanceConfig: InstanceConfig;
+
+  async loadWebsiteConfig() {
+    const el = document.getElementById('appConfig')!;
+    this.websiteConfig = JSON.parse(el.innerText);
+    return this.websiteConfig;
+  }
+
+  getServerId() {
+    return this.websiteConfig.serverId;
+  }
+
+  getAuthInfo() {
+    return this.websiteConfig.auth;
+  }
+
+  getPluginIds() {
+    return this.websiteConfig.plugins;
+  }
+
+  getDisplayBucket() {
+    return this.instanceConfig.displayBucket;
+  }
+
+  getStackBucket() {
+    return this.instanceConfig.stackBucket;
+  }
+
+  isParameterArchiveEnabled() {
+    return this.instanceConfig.parameterArchive;
+  }
+
+  getTcStreams() {
+    return this.instanceConfig.tcStreams ?? [];
+  }
+
+  getTag() {
+    return this.websiteConfig.tag;
+  }
+
+  getCommandOptions() {
+    return this.websiteConfig.commandOptions;
+  }
+
+  hasTemplates() {
+    return this.websiteConfig.hasTemplates;
+  }
+
+  getDisableLoginForm() {
+    return this.websiteConfig.disableLoginForm;
+  }
+
+  getExtraConfig(key: string) {
+    if (this.websiteConfig.extra.hasOwnProperty(key)) {
+      return this.websiteConfig.extra[key];
+    }
+  }
+
+  getConfig() {
+    return this.websiteConfig;
+  }
+
+  setInstanceConfig(instanceConfig: InstanceConfig) {
+    this.instanceConfig = instanceConfig;
+  }
+
+  getSiteLinks() {
+    return this.websiteConfig.siteLinks || [];
+  }
+}
+```
+
+### `extension.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/extension.service.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NavGroup, NavItem } from '../navigation';
+import { AppearanceService } from './appearance.service';
+import { AuthService } from './auth.service';
+import { ConfigService } from './config.service';
+import { MessageService } from './message.service';
+import { YamcsService } from './yamcs.service';
+
+@Injectable({ providedIn: 'root' })
+export class ExtensionService {
+  readonly authService = inject(AuthService);
+  readonly configService = inject(ConfigService);
+  readonly messageService = inject(MessageService);
+  readonly appearanceService = inject(AppearanceService);
+  readonly router = inject(Router);
+  readonly route = inject(ActivatedRoute);
+  readonly yamcs = inject(YamcsService);
+
+  private navItems = new Map<NavGroup, NavItem[]>();
+
+  getNavItems(group: NavGroup) {
+    const navItems = [...(this.navItems.get(group) || [])];
+    navItems.sort((a, b) => {
+      const rc = (a.order || 0) - (b.order || 0);
+      return rc !== 0 ? rc : a.label.localeCompare(b.label);
+    });
+    return navItems;
+  }
+
+  addNavItem(group: NavGroup, item: NavItem) {
+    let items = this.navItems.get(group);
+    if (!items) {
+      items = [];
+      this.navItems.set(group, items);
+    }
+    items.push(item);
+  }
+}
+```
+
+### `favicon.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/favicon.service.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+
+const FAVICON_SUFFIX = 'favicon.ico';
+const FAVICON_NOTIFICATION_SUFFIX = 'favicon-notification.ico';
+
+@Injectable({ providedIn: 'root' })
+export class FaviconService {
+  showNotification(showNotification: boolean) {
+    const linkEl = document.querySelector(
+      'link[rel="shortcut icon"]',
+    ) as HTMLLinkElement;
+
+    if (showNotification && linkEl.href.indexOf(FAVICON_SUFFIX) !== -1) {
+      linkEl.href = linkEl.href.replace(
+        FAVICON_SUFFIX,
+        FAVICON_NOTIFICATION_SUFFIX,
+      );
+    } else if (
+      !showNotification &&
+      linkEl.href.indexOf(FAVICON_NOTIFICATION_SUFFIX) !== -1
+    ) {
+      linkEl.href = linkEl.href.replace(
+        FAVICON_NOTIFICATION_SUFFIX,
+        FAVICON_SUFFIX,
+      );
+    }
+  }
+}
+```
+
+### `formatter.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/formatter.service.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+import { FormatOptionsWithTZ, formatInTimeZone } from 'date-fns-tz';
+import { Value } from '../client';
+import * as utils from '../utils';
+import { ConfigService } from './config.service';
+
+const FNS_OPTS: FormatOptionsWithTZ = { weekStartsOn: 1 };
+const PREVIEW_LENGTH = 3;
+
+export interface FormatValueOptions {
+  maxBytes?: number;
+}
+
+@Injectable({ providedIn: 'root' })
+export class Formatter {
+  private timezone: string;
+  private DT_FMT_LONG = 'yyyy-MM-dd HH:mm:ss.SSS';
+  private DT_FMT_LONG_TZ = 'yyyy-MM-dd HH:mm:ss.SSS zzz';
+
+  constructor(configService: ConfigService) {
+    this.timezone = configService.getConfig().utc
+      ? 'UTC'
+      : Intl.DateTimeFormat().resolvedOptions().timeZone;
+  }
+
+  isUTC() {
+    return this.timezone === 'UTC';
+  }
+
+  getTimezone() {
+    return this.timezone;
+  }
+
+  formatDateTime(date: Date | string | number, addTimezone = true): string {
+    if (typeof date === 'string' && !date.endsWith('Z')) {
+      date += 'Z';
+    }
+
+    if (addTimezone) {
+      // Note: we do not specify a locale, so that the system locale
+      // is used.
+      //
+      // For example: en-US would not display CEST but GMT+2.
+      return formatInTimeZone(
+        date,
+        this.timezone,
+        this.DT_FMT_LONG_TZ,
+        FNS_OPTS,
+      );
+    } else {
+      return formatInTimeZone(date, this.timezone, this.DT_FMT_LONG, FNS_OPTS);
+    }
+  }
+
+  formatValue(value: Value, options?: FormatValueOptions) {
+    if (value.type === 'AGGREGATE') {
+      let preview = '{';
+      if (value.aggregateValue) {
+        const n = Math.min(value.aggregateValue.name.length, PREVIEW_LENGTH);
+        for (let i = 0; i < n; i++) {
+          if (i !== 0) {
+            preview += ', ';
+          }
+          preview +=
+            value.aggregateValue.name[i] +
+            ': ' +
+            this.formatValueWithoutPreview(
+              value.aggregateValue.value[i],
+              options,
+            );
+        }
+        if (n < value.aggregateValue.value.length) {
+          preview += `, …`;
+        }
+      }
+      return preview + '}';
+    } else if (value.type === 'ARRAY') {
+      let preview = '';
+      if (value.arrayValue) {
+        preview += `(${value.arrayValue.length}) [`;
+        const n = Math.min(value.arrayValue.length, PREVIEW_LENGTH);
+        for (let i = 0; i < n; i++) {
+          if (i !== 0) {
+            preview += ', ';
+          }
+          preview += this.formatValueWithoutPreview(
+            value.arrayValue[i],
+            options,
+          );
+        }
+        if (n < value.arrayValue.length) {
+          preview += ', …';
+        }
+        preview += ']';
+      } else {
+        preview += '(0) []';
+      }
+      return preview;
+    } else {
+      return this.formatValueWithoutPreview(value, options);
+    }
+  }
+
+  private formatValueWithoutPreview(
+    value: Value,
+    options?: FormatValueOptions,
+  ): string {
+    switch (value.type) {
+      case 'AGGREGATE':
+        return '{…}';
+      case 'ARRAY':
+        return 'array';
+      case 'BOOLEAN':
+        return '' + value.booleanValue;
+      case 'FLOAT':
+        return '' + value.floatValue;
+      case 'DOUBLE':
+        return '' + value.doubleValue;
+      case 'UINT32':
+        return '' + value.uint32Value;
+      case 'SINT32':
+        return '' + value.sint32Value;
+      case 'BINARY':
+        if (options?.maxBytes !== undefined) {
+          return this.formatHexPreview(
+            '' + value.binaryValue,
+            options.maxBytes,
+          );
+        } else {
+          return this.formatHexPreview('' + value.binaryValue);
+        }
+      case 'ENUMERATED':
+      case 'STRING':
+        return value.stringValue!;
+      case 'TIMESTAMP':
+        return this.formatDateTime(value.stringValue!);
+      case 'UINT64':
+        return '' + value.uint64Value;
+      case 'SINT64':
+        return '' + value.sint64Value;
+      case 'NONE':
+        return '';
+      default:
+        return 'Unsupported data type';
+    }
+  }
+
+  formatHexPreview(binaryValue: string, maxBytes = 16) {
+    const hex = utils.convertBase64ToHex(binaryValue);
+    if (hex.length > maxBytes * 2) {
+      return '0x' + hex.slice(0, maxBytes * 2) + '…';
+    } else if (hex.length > 0) {
+      return '0x' + hex;
+    } else {
+      return '';
+    }
+  }
+
+  formatHexDump(base64: string) {
+    function lpad(hex: string, width: number) {
+      if (hex.length >= width) {
+        return hex;
+      } else {
+        return new Array(width - hex.length + 1).join('0') + hex;
+      }
+    }
+
+    const raw = window.atob(base64);
+    let result = '';
+    let charCount = 0;
+    let lineAscii = '';
+    for (let i = 0; i < raw.length; i++) {
+      if (i % 16 === 0) {
+        const charCountHex = charCount.toString(16);
+        result += lpad(charCountHex, 8);
+        result += ': ';
+      }
+      const code = raw.charCodeAt(i);
+      const hex = code.toString(16);
+      if (32 <= code && code <= 126) {
+        lineAscii += raw[i];
+      } else {
+        lineAscii += '.';
+      }
+
+      result += hex.length === 2 ? hex : '0' + hex;
+      if ((i + 1) % 2 === 0) {
+        result += ' ';
+      }
+
+      if ((i + 1) % 16 === 0) {
+        result += ' ' + lineAscii + '\n';
+        lineAscii = '';
+        charCount += 16;
+      }
+    }
+    return result;
+  }
+}
+```
+
+### `message.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/message.service.ts`
+
+
+```typescript
+import { Injectable, OnDestroy } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { NavigationEnd, Router } from '@angular/router';
+import { BehaviorSubject, Subscription, filter, map } from 'rxjs';
+
+export interface SiteMessage {
+  level: 'WARNING' | 'ERROR';
+  message: string;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class MessageService implements OnDestroy {
+  /**
+   * Active error message. Each message replaces
+   * the previous one.
+   */
+  siteMessage$ = new BehaviorSubject<SiteMessage | null>(null);
+
+  private routerSubscription: Subscription;
+
+  constructor(
+    private snackBar: MatSnackBar,
+    router: Router,
+  ) {
+    this.routerSubscription = router.events
+      .pipe(
+        filter((evt) => evt instanceof NavigationEnd),
+        map((evt) => this.dismiss()),
+      )
+      .subscribe();
+  }
+
+  showInfo(message: string) {
+    this.snackBar.open(message, 'X', {
+      horizontalPosition: 'end',
+      duration: 3000,
+    });
+  }
+
+  showWarning(message: string) {
+    this.siteMessage$.next({ level: 'WARNING', message });
+  }
+
+  showError(error: string | Error) {
+    this.siteMessage$.next({
+      level: 'ERROR',
+      message: error instanceof Error ? error.message : error,
+    });
+  }
+
+  dismiss() {
+    this.siteMessage$.next(null);
+  }
+
+  dismissSnackBar() {
+    this.snackBar.dismiss();
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+  }
+}
+```
+
+### `preference-store.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/preference-store.service.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+export interface StoredColumnInfo {
+  id: string;
+  visible: boolean;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PreferenceStore {
+  // Keys without prefix
+  private preferences: { [key: string]: BehaviorSubject<any> } = {};
+
+  private prefix = 'yamcs.';
+
+  constructor() {
+    this.addPreference$('sidebar', true);
+  }
+
+  addPreference$<Type>(key: string, defaultValue: Type): BehaviorSubject<Type> {
+    this.preferences[key] = new BehaviorSubject<Type>(defaultValue);
+    let item = localStorage.getItem(this.prefix + key);
+
+    if (typeof defaultValue === 'boolean') {
+      this.preferences[key].next(
+        item === (!defaultValue).toString() ? !defaultValue : defaultValue,
+      );
+    } else {
+      this.preferences[key].next(item != null ? item : defaultValue);
+    }
+    return this.preferences[key];
+  }
+
+  getPreference$(key: string): BehaviorSubject<any> {
+    return this.preferences[key];
+  }
+
+  getValue(key: string) {
+    return this.preferences[key]?.getValue();
+  }
+
+  setValue<Type>(key: string, value: Type) {
+    this.preferences[key].next(value);
+    localStorage.setItem(this.prefix + key, String(value));
+  }
+
+  /**
+   * Returns a column preference from local storage.
+   */
+  getStoredColumnInfo(source: string): StoredColumnInfo[] | undefined {
+    const item = localStorage.getItem(`${this.prefix}${source}.cols`);
+    if (item) {
+      const cols: any[] = JSON.parse(item);
+      for (let i = 0; i < cols.length; i++) {
+        const col = cols[i];
+
+        // In previous versions the type was a string[] of visible
+        // columns. This has since been revised
+        if (typeof col === 'string') {
+          cols[i] = { id: col, visible: true };
+        }
+      }
+      return cols;
+    }
+  }
+
+  setVisibleColumns(source: string, columns: StoredColumnInfo[]) {
+    localStorage.setItem(
+      `${this.prefix}${source}.cols`,
+      JSON.stringify(columns),
+    );
+  }
+}
+```
+
+### `sdk-bridge.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/sdk-bridge.service.ts`
+
+
+```typescript
+import { Injectable, OnDestroy, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { AppearanceService } from './appearance.service';
+import { AuthService } from './auth.service';
+import { YamcsService } from './yamcs.service';
+
+const YA_ACTIVATED_ROUTE = 'YA_ACTIVATED_ROUTE';
+
+/**
+ * Provides access to services from the main webapp.
+ *
+ * This service is available in webcomponents, so it
+ * can be safely used in shared components.
+ */
+@Injectable({ providedIn: 'root' })
+export class SdkBridge implements EventListenerObject, OnDestroy {
+  /**
+   * The main webapp router
+   */
+  router: Router;
+
+  /**
+   * The main webapp appearance service
+   */
+  appearanceService: AppearanceService;
+
+  /**
+   * The main webapp Yamcs service
+   */
+  yamcs: YamcsService;
+
+  /**
+   * The main webapp auth service
+   */
+  authService: AuthService;
+
+  /**
+   * Route data for the activated route
+   */
+  routeData = signal<Map<string, any>>(new Map());
+
+  constructor() {
+    window.addEventListener(YA_ACTIVATED_ROUTE, this);
+  }
+
+  handleEvent(event: Event): void {
+    if (event.type === YA_ACTIVATED_ROUTE) {
+      const customEvent = event as CustomEvent;
+      if (customEvent.detail.route) {
+        let child = customEvent.detail.route;
+        while (child.firstChild) {
+          child = child.firstChild;
+        }
+
+        const data = child.snapshot.data;
+        const m = new Map<string, any>(Object.entries(data));
+        this.routeData.set(m);
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener(YA_ACTIVATED_ROUTE, this);
+  }
+}
+```
+
+### `synchronizer.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/synchronizer.service.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Observable, Subscription, timer } from 'rxjs';
+import { share } from 'rxjs/operators';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class Synchronizer {
+  /**
+   * Shared observable that emits every second.
+   */
+  private everyFiveSeconds$: Observable<number>;
+  private everySecond$: Observable<number>;
+  private everyHalfSecond$: Observable<number>;
+
+  constructor() {
+    this.everyFiveSeconds$ = timer(5000, 5000).pipe(share());
+    this.everySecond$ = timer(1000, 1000).pipe(share());
+    this.everyHalfSecond$ = timer(500, 500).pipe(share());
+  }
+
+  /**
+   * Execute a function every second.
+   */
+  sync(fn: () => void): Subscription {
+    return this.everySecond$.subscribe(fn);
+  }
+
+  /**
+   * Execute a function every 5000ms.
+   */
+  syncSlow(fn: () => void): Subscription {
+    return this.everyFiveSeconds$.subscribe(fn);
+  }
+
+  /**
+   * Execute a function every 500ms.
+   * Avoid doing expensive work at this rate.
+   */
+  syncFast(fn: () => void): Subscription {
+    return this.everyHalfSecond$.subscribe(fn);
+  }
+}
+```
+
+### `yamcs.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/yamcs.service.ts`
+
+
+```typescript
+import { APP_BASE_HREF } from '@angular/common';
+import { Inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
+import {
+  Clearance,
+  ClearanceSubscription,
+  ConnectionInfo,
+  Processor,
+  SessionListener,
+  StorageClient,
+  TimeSubscription,
+  YamcsClient,
+} from '../client';
+import { FrameLossListener } from '../client/FrameLossListener';
+import { getDefaultProcessor } from '../utils';
+import { ConfigService } from './config.service';
+import { MessageService } from './message.service';
+
+/**
+ * Singleton service for facilitating working with a websocket connection
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class YamcsService implements FrameLossListener, SessionListener {
+  readonly yamcsClient: YamcsClient;
+
+  readonly connectionInfo$ = new BehaviorSubject<ConnectionInfo | null>(null);
+
+  readonly clearance$ = new BehaviorSubject<Clearance | null>(null);
+  private clearanceSubscription: ClearanceSubscription;
+
+  readonly time$ = new BehaviorSubject<string | null>(null);
+  private timeSubscription: TimeSubscription;
+
+  readonly range$ = new BehaviorSubject<string>('PT15M');
+
+  readonly sessionEnded$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    @Inject(APP_BASE_HREF) baseHref: string,
+    private router: Router,
+    private messageService: MessageService,
+    private configService: ConfigService,
+  ) {
+    this.yamcsClient = new YamcsClient(baseHref, this, this);
+  }
+
+  onFrameLoss() {
+    this.messageService.showWarning(
+      'A gap was detected in one of the data feeds. Typically this occurs when data is fastly updating.',
+    );
+  }
+
+  onSessionEnd(message: string): void {
+    this.sessionEnded$.next(true);
+  }
+
+  setContext(instanceId: string, processorId?: string) {
+    if (processorId) {
+      return this.setProcessorContext(instanceId, processorId);
+    } else {
+      return this.setInstanceContext(instanceId);
+    }
+  }
+
+  async switchContext(instance: string, processor?: string) {
+    let newContext = instance;
+    if (processor) {
+      newContext += '__' + processor;
+    } else {
+      const instanceDetail = await this.yamcsClient.getInstance(instance);
+      const defaultProcessor = getDefaultProcessor(instanceDetail);
+      if (defaultProcessor) {
+        newContext += '__' + defaultProcessor;
+      }
+    }
+
+    this.router.navigate(['/context-switch', newContext, this.router.url], {
+      skipLocationChange: true,
+    });
+  }
+
+  private setInstanceContext(instanceId: string) {
+    return new Promise<void>((resolve, reject) => {
+      const currentConnectionInfo = this.connectionInfo$.value;
+      if (currentConnectionInfo) {
+        if (currentConnectionInfo.instance?.name === instanceId) {
+          resolve();
+          return;
+        }
+      }
+      this.clearContext();
+      Promise.all([
+        this.yamcsClient.getInstance(instanceId),
+        this.yamcsClient.getInstanceConfig(instanceId),
+      ])
+        .then((result) => {
+          this.connectionInfo$.next({ instance: result[0] });
+
+          // Don't wait on WebSocket. Lots of pages require mission time
+          this.time$.next(result[0].missionTime);
+
+          this.configService.setInstanceConfig(result[1]);
+
+          // Listen to time updates, so that we can easily provide actual mission time to components
+          this.timeSubscription = this.yamcsClient.createTimeSubscription(
+            {
+              instance: instanceId,
+            },
+            (time) => {
+              this.time$.next(time.value);
+              resolve();
+            },
+          );
+          this.clearanceSubscription =
+            this.yamcsClient.createClearanceSubscription((clearance) => {
+              this.clearance$.next(clearance);
+              resolve();
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  private setProcessorContext(instanceId: string, processorId: string) {
+    return new Promise<void>((resolve, reject) => {
+      const currentConnectionInfo = this.connectionInfo$.value;
+      if (currentConnectionInfo) {
+        if (
+          currentConnectionInfo.instance?.name === instanceId &&
+          currentConnectionInfo.processor?.name === processorId
+        ) {
+          resolve();
+          return;
+        }
+      }
+      this.clearContext();
+      Promise.all([
+        this.yamcsClient.getInstance(instanceId),
+        this.yamcsClient.getProcessor(instanceId, processorId),
+        this.yamcsClient.getInstanceConfig(instanceId),
+      ])
+        .then((result) => {
+          this.connectionInfo$.next({
+            instance: result[0],
+            processor: result[1],
+          });
+
+          // Don't wait on WebSocket. Lots of pages require mission time
+          this.time$.next(result[1].time);
+
+          this.configService.setInstanceConfig(result[2]);
+
+          // Listen to time updates, so that we can easily provide actual mission time to components
+          this.timeSubscription = this.yamcsClient.createTimeSubscription(
+            {
+              instance: instanceId,
+              processor: processorId,
+            },
+            (time) => {
+              this.time$.next(time.value);
+              resolve();
+            },
+          );
+          this.clearanceSubscription =
+            this.yamcsClient.createClearanceSubscription((clearance) => {
+              this.clearance$.next(clearance);
+              resolve();
+            });
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+
+  /**
+   * Returns the currently active context (if any).
+   * This is the combination of an instance with a processor.
+   */
+  get context() {
+    const value = this.connectionInfo$.getValue();
+    if (value) {
+      const processor = value.processor?.name;
+      return processor
+        ? `${value.instance.name}__${processor}`
+        : value.instance.name;
+    }
+  }
+
+  /**
+   * Returns the currently active instance (if any).
+   */
+  get instance() {
+    return this.connectionInfo$.getValue()?.instance?.name;
+  }
+
+  /**
+   * Returns the currently active processor (if any).
+   */
+  get processor() {
+    return this.connectionInfo$.getValue()?.processor?.name;
+  }
+
+  clearContext() {
+    this.connectionInfo$.next(null);
+    this.time$.next(null);
+    this.clearance$.next(null);
+    this.timeSubscription?.cancel();
+    this.clearanceSubscription?.cancel();
+  }
+
+  /**
+   * Returns the currently active processor (if any).
+   */
+  getProcessor(): Processor {
+    return this.connectionInfo$.getValue()!.processor!;
+  }
+
+  createStorageClient() {
+    return new StorageClient(this.yamcsClient);
+  }
+
+  /**
+   * Returns latest mission time for the currently active instance (if any).
+   */
+  getMissionTime() {
+    return new Date(Date.parse(this.time$.getValue()!));
+  }
+
+  /**
+   * Returns lookback period
+   */
+  getTimeRange() {
+    return this.range$.value;
+  }
+}
+```

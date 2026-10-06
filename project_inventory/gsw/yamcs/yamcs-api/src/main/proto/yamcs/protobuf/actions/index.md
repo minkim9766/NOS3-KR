@@ -3,14 +3,41 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/actions/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `actions.proto`
 
-file--actions.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/actions/actions.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.actions;
+
+option java_package = "org.yamcs.protobuf.actions";
+option java_outer_classname = "ActionsProto";
+option java_multiple_files = true;
+
+import "yamcs/protobuf/config/config.proto";
+
+message ActionInfo {
+  // Action identifier
+  optional string id = 1;
+
+  // Label describing an action
+  optional string label = 2;
+
+  // Action style, one of ``PUSH_BUTTON`` or ``CHECK_BOX``
+  optional string style = 3;
+
+  // Whether this action is currently enabled
+  optional bool enabled = 4;
+
+  // Whether this action is currently checked
+  optional bool checked = 5;
+
+  // Specification of action options (if any)
+  optional yamcs.protobuf.config.SpecInfo spec = 6;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/actions/actions.proto`](file--actions.proto) — UTF-8 텍스트 파일 본문 포함

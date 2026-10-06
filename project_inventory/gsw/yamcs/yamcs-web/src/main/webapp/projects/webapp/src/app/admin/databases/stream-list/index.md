@@ -3,16 +3,147 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stream-list.component.html`
 
-file--stream-list.component.html
-file--stream-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-list/stream-list.component.html`
+
+
+```html
+<ya-panel>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    matSortDisableClear>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let stream">
+        <a [routerLink]="stream.name">
+          {{ stream.name }}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dataCount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Data count</th>
+      <td mat-cell *matCellDef="let stream" style="text-align: right">
+        {{ stream.dataCount | number }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</ya-panel>
 ```
 
-## 항목
+### `stream-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-list/stream-list.component.html`](file--stream-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-list/stream-list.component.ts`](file--stream-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-list/stream-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import {
+  StreamEvent,
+  StreamStatisticsSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+export interface StreamItem {
+  name: string;
+  dataCount: number;
+}
+
+@Component({
+  templateUrl: './stream-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StreamListComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = ['name', 'dataCount', 'actions'];
+
+  dataSource = new MatTableDataSource<StreamItem>();
+
+  private database: string;
+  private streamStatisticsSubscription: StreamStatisticsSubscription;
+
+  private itemsByName: { [key: string]: StreamItem } = {};
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+  ) {
+    const parent = route.snapshot.parent!;
+    this.database = parent.paramMap.get('database')!;
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.streamStatisticsSubscription =
+      this.yamcs.yamcsClient.createStreamStatisticsSubscription(
+        {
+          instance: this.database,
+        },
+        (evt) => {
+          this.processStreamEvent(evt);
+        },
+      );
+  }
+
+  private processStreamEvent(evt: StreamEvent) {
+    switch (evt.type) {
+      case 'CREATED':
+      case 'UPDATED':
+        this.itemsByName[evt.name] = {
+          name: evt.name,
+          dataCount: evt.dataCount,
+        };
+        this.updateDataSource();
+        break;
+      case 'DELETED':
+        delete this.itemsByName[evt.name];
+        this.updateDataSource();
+        break;
+      default:
+        console.error('Unexpected stream update of type ' + evt.type);
+        break;
+    }
+  }
+
+  private updateDataSource() {
+    const data = Object.values(this.itemsByName);
+    data.sort((x, y) => {
+      return x.name.localeCompare(y.name);
+    });
+    this.dataSource.data = data;
+  }
+
+  ngOnDestroy() {
+    this.streamStatisticsSubscription?.cancel();
+  }
+}
+```

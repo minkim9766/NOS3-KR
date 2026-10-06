@@ -3,18 +3,80 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `thickness.component.css`
 
-file--thickness.component.css
-file--thickness.component.html
-file--thickness.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/thickness.component.css`
+
+
+```css
+.box {
+  float: left;
+  width: 30px;
+  height: 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin-right: 5px;
+}
 ```
 
-## 항목
+### `thickness.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/thickness.component.css`](file--thickness.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/thickness.component.html`](file--thickness.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/thickness.component.ts`](file--thickness.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/thickness.component.html`
+
+
+```html
+@for (option of options; track option; let i = $index) {
+  <div
+    class="box"
+    [class.selected]="option === selectedThickness"
+    (click)="select(option)"
+    [style.borderBottom]="option + 'px solid'"
+    [style.borderColor]="option === selectedThickness ? color : 'black'"></div>
+}
+<div style="clear: both"></div>
+```
+
+### `thickness.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/thickness/thickness.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-thickness',
+  templateUrl: './thickness.component.html',
+  styleUrl: './thickness.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ThicknessComponent {
+  options = [1, 2, 3, 4];
+
+  @Input()
+  selectedThickness = 2;
+
+  @Input()
+  color: string;
+
+  constructor(private changeDetection: ChangeDetectorRef) {}
+
+  select(thickness: number) {
+    this.selectedThickness = thickness;
+  }
+
+  changeColor(color: string) {
+    this.color = color;
+    this.changeDetection.detectChanges();
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_imu/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,10 +15,4 @@ standalone/index
 unit-test/index
 ```
 
-## 항목
-
-- [`components/generic_imu/fsw/cfs/`](cfs/index) — 폴더
-- [`components/generic_imu/fsw/fprime/`](fprime/index) — 폴더
-- [`components/generic_imu/fsw/shared/`](shared/index) — 폴더
-- [`components/generic_imu/fsw/standalone/`](standalone/index) — 폴더
-- [`components/generic_imu/fsw/unit-test/`](unit-test/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

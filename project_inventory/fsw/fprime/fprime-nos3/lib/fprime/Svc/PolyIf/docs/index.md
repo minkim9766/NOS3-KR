@@ -3,18 +3,64 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--.gitignore
-file--sdd.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/.gitignore`
+
+
+```text
+*.html
+```
+
+### `sdd.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/sdd.md`
+
+
+```markdown
+# Svc::Poly Port
+
+## 1. Introduction
+
+The `Svc::Poly` is used to pass the polymorphic `Fw::PolyType` between components. 
+See the [`Svc::PolyType`](../../../Fw/Types/docs/sdd.md) description for details on the class.
+
+The arguments are as follows:
+
+Argument|Description|Values
+--------|-----------|------
+entry   | The index of the entry in the table
+status  | The status of the measurement  | `MEASUREMENT_OK` = normal measurement, `MEASUREMENT_FAILURE` = error reading measurement, `MEASUREMENT_STALE` = measurement out of date
+time    | The time tag of the measurement
+val     | The value of the measurement
+
+## 2. Design
+
+### 2.1 Context
+
+#### 2.1.1 Port Diagram
+
+The `Svc::Poly` port has the following port diagram:
+
+![`Svc::Poly` Diagram](img/PolyIfBDD.jpg "Svc::Poly Port")
+
+## 3. Change Log
+
+Date | Description
+---- | -----------
+6/24/2015 |  Initial Version
+1/7/2016 | Added BDD diagram
+
+
+
+```

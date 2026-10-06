@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/sb/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,17 +12,132 @@ config/index
 eds/index
 fsw/index
 ut-coverage/index
-file--arch_build.cmake
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/sb/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/sb/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/sb/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/sb/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/sb/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/sb/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/sb/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/sb/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# SB Core Module platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the SB configuration
+set(SB_PLATFORM_CONFIG_FILE_LIST
+  cfe_sb_internal_cfg.h
+  cfe_sb_msgids.h
+  cfe_sb_platform_cfg.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(SB_CFGFILE ${SB_PLATFORM_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${SB_CFGFILE}" NAME_WE)
+  if (DEFINED SB_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE "${SB_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE "${CMAKE_CURRENT_LIST_DIR}/config/default_${SB_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${SB_CFGFILE}"
+    FALLBACK_FILE       ${DEFAULT_SOURCE}
+  )
+endforeach()
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/sb/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Software Bus (SB) module CMake build recipe
+#
+##################################################################
+
+project(CFE_SB C)
+
+# Software Bus source files
+set(sb_SOURCES
+    fsw/src/cfe_sb_api.c
+    fsw/src/cfe_sb_buf.c
+    fsw/src/cfe_sb_init.c
+    fsw/src/cfe_sb_msg_id_util.c
+    fsw/src/cfe_sb_priv.c
+    fsw/src/cfe_sb_dispatch.c
+    fsw/src/cfe_sb_task.c
+    fsw/src/cfe_sb_util.c
+)
+add_library(sb STATIC ${sb_SOURCES})
+
+target_include_directories(sb PUBLIC fsw/inc)
+target_link_libraries(sb PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(${DEP}
+    cfe_sb_msg.h
+    cfe_sb_eventids.h
+)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/sb/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# SB Core Module mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the SB configuration
+set(SB_MISSION_CONFIG_FILE_LIST
+  cfe_sb_mission_cfg.h
+  cfe_sb_interface_cfg.h
+  cfe_sb_extern_typedefs.h
+  cfe_sb_fcncodes.h
+  cfe_sb_msgdefs.h
+  cfe_sb_msg.h
+  cfe_sb_msgstruct.h
+  cfe_sb_topicids.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(SB_CFGFILE ${SB_MISSION_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${SB_CFGFILE}" NAME_WE)
+  if (DEFINED SB_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE GENERATED_FILE "${SB_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE FALLBACK_FILE "${CMAKE_CURRENT_LIST_DIR}/config/default_${SB_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${SB_CFGFILE}"
+    ${DEFAULT_SOURCE}
+  )
+endforeach()
+```

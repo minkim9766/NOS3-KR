@@ -3,30 +3,2091 @@
 
 **경로:** `fsw/apps/hwlib/fsw/linux/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `libcan.c`
 
-file--libcan.c
-file--libgpio.c
-file--libi2c.c
-file--libmem.c
-file--libsocket.c
-file--libspi.c
-file--libtrq.c
-file--libtrq_ioctl.h
-file--libuart.c
+**경로:** `fsw/apps/hwlib/fsw/linux/libcan.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libcan.h"
+
+/* The `libsocketcan` library wraps many of the netlink operations to control a SocketCAN interface
+ * Documentation here: https://lalten.github.io/libsocketcan/Documentation/html/group__extern.html */
+
+// Bring CAN network interface
+int32_t can_init_dev(can_info_t* device) 
+{
+  int retVal;
+  struct timeval tv;
+  char devname[10];
+
+  // Get device name from handle
+  snprintf(devname, 10, "can%d", device->handle);
+
+  retVal = can_set_bitrate(devname, device->bitrate);
+  if (retVal < 0) 
+  {
+    OS_printf("Errno: %d \n", errno);
+    OS_printf("\n");
+    OS_printf("Try the following before running again: \n");
+    OS_printf("  modprobe -r xilinx_can \n");
+    OS_printf("  modprobe xilinx_can \n");
+    OS_printf("\n");
+    return CAN_SET_BITRATE_ERR;
+  }
+
+  /* Running this function on the zybo spits out "RTNETLINK answers: Operation not supported" */
+  retVal = can_set_modes(device);
+  if (retVal < 0) 
+  {
+    return CAN_SET_MODES_ERR;
+  }
+
+  /* TODO: Add option for filters */
+
+  retVal = can_do_start(devname);
+  if (retVal < 0) 
+  {
+    return CAN_UP_ERR;
+  }
+
+  device->sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+  if (device->sock < 0) 
+  { 
+    return CAN_SOCK_OPEN_ERR; 
+  }
+
+  strcpy(device->ifr.ifr_name, devname);
+
+  retVal = ioctl(device->sock, SIOCGIFINDEX, &device->ifr);
+  if (retVal < 0) 
+  { 
+    return CAN_SOCK_FLAGSET_ERR; 
+  }
+  
+  device->addr.can_family  = AF_CAN;
+  device->addr.can_ifindex = device->ifr.ifr_ifindex;
+
+  if (bind(device->sock, (struct sockaddr*)&device->addr, sizeof(device->addr)) < 0) 
+  {
+    return CAN_SOCK_BIND_ERR;
+  }
+  
+  // Set timeouts
+  tv.tv_sec = device->second_timeout;
+  tv.tv_usec = device->microsecond_timeout;
+  retVal = setsockopt(device->sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
+  if(retVal < 0) 
+  {
+    return CAN_SOCK_SETOPT_ERR;
+  }
+
+  // Set to non-blocking
+	fcntl(device->sock, F_SETFL, O_NONBLOCK);
+
+  device->isUp = CAN_INTERFACE_UP;
+
+  return CAN_SUCCESS;
+}
+
+// Call the `libsocketcan` function to set each CAN mode on/off
+int32_t can_set_modes(can_info_t* device) 
+{
+  struct can_ctrlmode cm;
+  memset(&cm, 0, sizeof(cm));
+  char devname[10];
+
+  // Get device name from handle
+  snprintf(devname, 10, "can%d", device->handle);
+
+  cm.mask = CAN_CTRLMODE_LOOPBACK     | // Remaining flags not supported
+            //CAN_CTRLMODE_LISTENONLY     | 
+            //CAN_CTRLMODE_3_SAMPLES      | 
+            //CAN_CTRLMODE_ONE_SHOT       | 
+            CAN_CTRLMODE_BERR_REPORTING;
+            //CAN_CTRLMODE_FD             | 
+            //CAN_CTRLMODE_PRESUME_ACK;
+
+  cm.flags = (device->presumeAck << 6)     | 
+             (device->fd << 5)             | 
+             (device->berrReporting << 4)  | 
+             (device->oneShot << 3)        | 
+             (device->tripleSampling << 2) | 
+             (device->listenOnly << 1)     | 
+              device->loopback;
+
+  int retVal = can_set_ctrlmode(devname, &cm);
+
+  if (retVal < 0) 
+  {
+    return CAN_SET_MODES_ERR;
+  }
+
+  return CAN_SUCCESS;
+}
+
+// Write a can_frame  from `device->tx_Frame` to CAN bus from SocketCAN socket specified by `device`
+int32_t can_write(can_info_t* device) 
+{  
+  int ret;
+
+  // If can_id is > 11 bits, means it is extended frame format (EFF) and need to set bit 31 of the can_id field to signal EFF
+  if (device->tx_frame.can_id > 0x7FF) 
+  {
+    device->tx_frame.can_id |= 1 << 31;
+  }
+
+  ret = write(device->sock, &device->tx_frame, sizeof(struct can_frame));
+  if (ret < 0) 
+  { 
+    ret = CAN_WRITE_ERR; 
+  }
+  else
+  {
+    ret = CAN_SUCCESS;
+  }
+
+  #ifdef LIBCAN_VERBOSE
+    printf("can_write ret = %d \n", ret);
+  #endif
+
+  return ret;
+}
+
+// Read a can_frame from SocketCAN interface specified by `device` into `device->rx_frame`
+// Does a nonblocking read call
+int32_t can_read(can_info_t* device) 
+{		
+  int ret;
+
+  ret = read(device->sock, &device->rx_frame, sizeof(struct can_frame));
+  if(ret < 0) 
+  {
+    if(errno == 11) 
+    {
+      ret = CAN_READ_TIMEOUT_ERR;
+    }
+    else 
+    {
+      ret = CAN_READ_ERR;
+    }
+  }
+
+  if (ret == 16)
+  {
+    ret = CAN_SUCCESS;
+  }
+
+  #ifdef LIBCAN_VERBOSE
+    OS_printf("can_read ret = %d \n", ret);
+  #endif
+
+  return ret;
+}
+
+// Bring CAN network interface down
+int32_t can_close_device(can_info_t* device) 
+{
+  int retVal;
+  char devname[10];
+
+  // Get device name from handle
+  snprintf(devname, 10, "can%d", device->handle);
+  
+  close(device->sock);
+
+  retVal = can_do_stop(devname);
+  if (retVal < 0) 
+  {
+    return CAN_DOWN_ERR;
+  }
+  device->isUp = CAN_INTERFACE_DOWN;
+
+  return CAN_SUCCESS;
+}
+
+// Perform non-blocking can transaction
+int32_t can_master_transaction(can_info_t* device) 
+{
+  int32_t status;
+
+  status = can_write(device);
+  if (status != CAN_SUCCESS)
+  {
+      return status;
+  }
+
+  usleep(device->xfer_us_delay);
+
+  status = can_read(device);
+  if (status != CAN_SUCCESS)
+  {
+      return status;
+  }
+
+  #ifdef LIBCAN_VERBOSE
+    uint8_t i;
+    OS_printf("can_master_transaction: \n");
+    OS_printf("  can_id = 0x%08x \t tx: 0x", device->tx_frame.can_id);
+    for (i = 0; i < device->tx_frame.can_dlc; i++)
+    {
+      OS_printf("%02x ", device->tx_frame.data[i]);
+    }
+    OS_printf("\n");
+    OS_printf("  can_id = 0x%08x \t rx: 0x", device->rx_frame.can_id);
+    for (i = 0; i < device->rx_frame.can_dlc; i++)
+    {
+      OS_printf("%02x ", device->rx_frame.data[i]);
+    }
+    OS_printf("\n");
+  #endif
+
+  return status;
+}
 ```
 
-## 항목
+### `libgpio.c`
 
-- [`fsw/apps/hwlib/fsw/linux/libcan.c`](file--libcan.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libgpio.c`](file--libgpio.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libi2c.c`](file--libi2c.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libmem.c`](file--libmem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libsocket.c`](file--libsocket.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libspi.c`](file--libspi.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libtrq.c`](file--libtrq.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libtrq_ioctl.h`](file--libtrq_ioctl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/linux/libuart.c`](file--libuart.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/hwlib/fsw/linux/libgpio.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libgpio.h"
+
+int32_t gpio_init(gpio_info_t* device) 
+{    
+    char buffer[128];
+    int  bytes_written;
+    int  write_size;
+    int  fd;
+
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/direction", device->pin);
+
+    // Check if pin already exported
+    if (access(buffer, W_OK) < 0)
+    {   // File does not exist
+        fd = open("/sys/class/gpio/export", O_WRONLY);
+        if (fd < 0) 
+        {
+            return GPIO_FD_OPEN_ERR;
+        }
+        write_size = snprintf(buffer, 128, "%d", device->pin);
+        bytes_written = write(fd, buffer, write_size);
+        if (bytes_written < write_size) 
+        {
+            return GPIO_WRITE_ERR;
+        }
+        close(fd);
+    }
+
+    // Set direction
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/direction", device->pin);
+    fd = open(buffer, O_WRONLY);
+    if (fd < 0) 
+    {
+        return GPIO_FD_OPEN_ERR;
+    }
+
+    if (device->direction == GPIO_INPUT)
+    {
+        snprintf(buffer, 128, "IN");
+        bytes_written = write(fd, buffer, 4);
+    }
+    else
+    {
+        snprintf(buffer, 128, "OUT");
+        bytes_written = write(fd, buffer, 4);
+    }
+    close(fd);
+
+    // Set open
+    device->isOpen = GPIO_OPEN;
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_read(gpio_info_t* device, uint8_t* value)
+{
+    int32_t status = GPIO_SUCCESS;
+    char buffer[128];
+    char readValue[3];
+    int fd;
+
+    if(device->isOpen != GPIO_OPEN) 
+    {
+        status = GPIO_READ_ERR;
+        return status;
+    }
+
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/value", device->pin);
+    fd = open(buffer, O_RDONLY);
+    if (fd < 0) 
+    {
+        status = GPIO_FD_OPEN_ERR;
+        return status;
+    }
+    if (read(fd, &readValue, 3) < 0) 
+    {
+        status = GPIO_READ_ERR;
+        return status;
+    }
+
+    //convert from ASCII to decimal
+    if(readValue[0] == '0') *value = 0;
+    else if(readValue[0] == '1') *value = 1;
+    else {
+        *value = 0;
+    }
+
+    close(fd);
+    return status;
+}
+
+int32_t gpio_write(gpio_info_t* device, uint8_t value)
+{
+    char buffer[128];
+    char charVal;
+    int fd;
+
+    if (value == 1) 
+    {
+        charVal = '1';
+    }
+    else 
+    {
+        charVal = '0';
+    }
+
+    snprintf(buffer, 128, "/sys/class/gpio/gpio%d/value", device->pin);
+    fd = open(buffer, O_WRONLY);
+    if (fd < 0) 
+    {
+         return GPIO_FD_OPEN_ERR;
+    }
+
+    if (write(fd, &charVal, 1) != 1) 
+    {
+        return GPIO_WRITE_ERR;
+    }
+
+    close(fd);
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_close(gpio_info_t* device)
+{
+    char buffer[128];
+    int  bytes_written;
+    int  write_size;
+    int  fd;
+    
+    if (device->isOpen == GPIO_OPEN)
+    {   // Unexport pin
+        fd = open("/sys/class/gpio/unexport", O_WRONLY);
+        if (fd < 0) 
+        {
+            return GPIO_FD_OPEN_ERR;
+        }
+        write_size = snprintf(buffer, 128, "%d", device->pin);
+        bytes_written = write(fd, buffer, write_size);
+        if (bytes_written < write_size) 
+        {
+            return GPIO_WRITE_ERR;
+        }
+        close(fd);
+        device->isOpen = GPIO_CLOSED;
+    }
+    return GPIO_SUCCESS;
+}
+```
+
+### `libi2c.c`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libi2c.c`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include <errno.h>
+#include <string.h>
+
+#include "libi2c.h"
+
+/* Call to configure a specific i2c device from /dev
+** i2c_bus- struct with bus configuration
+** speed  - currently unused
+*/
+int32_t i2c_master_init(i2c_bus_info_t* device)
+{
+    char devname[20];
+    int32_t status = I2C_SUCCESS;
+
+    snprintf(devname, 19, "/dev/i2c-%d", device->handle);
+    device->handle = open(devname, O_RDWR);
+    if (device->handle < 0)
+    {
+        printf("i2c bus open failed for handle = %d, %s\n", device->handle, strerror(errno));
+        status = I2C_ERROR;
+        device->isOpen = I2C_CLOSED;
+    }
+    else
+    {
+        device->isOpen = I2C_OPEN;
+        printf("i2c bus open passed for handle = %d\n", device->handle);
+    }
+    return status;
+}
+
+int32_t i2c_master_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, void * rxbuf, uint8_t rxlen, uint16_t timeout)
+{
+    int32_t status = I2C_SUCCESS;
+    int32_t resp;
+
+    /* Set I2C slave address */
+    if (ioctl(device->handle, I2C_SLAVE, addr) < 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    /* Perform write if needed */
+    if (txlen > 0 )
+    {
+        resp = write(device->handle, txbuf, txlen);
+        if (resp != txlen)
+        {
+            printf("i2c-%d write to address 0x%X FAILED, [%u] %s\n", device->handle, addr, errno, strerror(errno));
+            status = I2C_ERROR;
+        }
+    }
+    /* Perform read if needed */
+    if (rxlen > 0 )
+    {
+        resp = read(device->handle, rxbuf, rxlen);
+        if (resp != rxlen)
+        {
+            printf("i2c-%d read from address 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+            status = I2C_ERROR;
+        }
+    }
+
+    return status;
+}
+
+int32_t i2c_read_transaction(i2c_bus_info_t* device, uint8_t addr, void * rxbuf, uint8_t rxlen, uint8_t timeout)
+{
+    int32_t resp;
+    int32_t status = I2C_SUCCESS;
+
+    /* Set I2C slave address */
+    if (ioctl(device->handle, I2C_SLAVE, addr) < 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    resp = read(device->handle, rxbuf, rxlen); //<-- ACK would need to go in here
+    if (resp != rxlen)
+    {
+        printf("i2c-%d read from address 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+    }
+
+    return status;
+}
+
+int32_t i2c_write_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, uint8_t timeout)
+{
+    int32_t resp;
+    int32_t status = I2C_SUCCESS;
+
+    /* Set I2C slave address */
+    if (ioctl(device->handle, I2C_SLAVE, addr) < 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    resp = write(device->handle, txbuf, txlen);
+    if (resp != txlen)
+    {
+        printf("i2c-%d write from address 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+    }
+
+    return status;
+}
+
+int32_t i2c_multiple_transaction(i2c_bus_info_t* device, uint8_t addr, struct i2c_rdwr_ioctl_data* rdwr_data, uint16_t timeout)
+{
+    /* Do combined read/write transaction without stop (simply restarts) in between. */
+    int32_t status = I2C_SUCCESS;
+
+    /* Set I2C slave address */
+    if (ioctl(device->handle, I2C_SLAVE, addr) < 0)
+    {
+        printf("i2c-%d setting slave address = 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    /* Make the ICOTL call */
+    if (ioctl(device->handle, I2C_RDWR, rdwr_data) < 0)
+    {
+        printf("i2c-%d multple transaction error = 0x%X FAILED, %s\n", device->handle, addr, strerror(errno));
+        status = I2C_ERROR;
+        return status;
+    }
+
+    return status;
+}
+```
+
+### `libmem.c`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libmem.c`
+
+
+```c
+#include <sys/mman.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include "libmem.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * Xil_MMAP() - Map physical address to userspace using mmap intermediary with /dev/mem. 
+ *              MMAP creates userspace intermediary buffers to other memory locations. MMAP users can write/read 
+ *              to/from the intermediaries and MMAP can sync changes to the buffers with the memory they are mapped
+ *              to. Anything mapped by MMAP must be page aligned. This function calculates the page offset of the
+ *              requested address and then creates mapped page buffers using mmap that users may interface to. 
+ *
+ * Inputs:      _off_t address: Requested address
+ *              size_t length:  Length of memory request
+ *
+ * Outputs:     returns void *: Address offset into mapped page. Corresponds to requested physical address. 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void *Xil_MMAP(__off_t address, size_t length){
+	size_t 	pagesize    = sysconf(_SC_PAGE_SIZE); 
+	__off_t	page_base   = (address / pagesize) * pagesize; 
+	__off_t	page_offset = address - page_base; 
+	unsigned char *sysaddr; 
+	int fd, error;  
+
+	if((fd = open("/dev/mem", O_RDWR | O_SYNC)) < 0)
+		return NULL; 
+
+	if((sysaddr = mmap(NULL, page_offset + length, PROT_READ | PROT_WRITE, MAP_SHARED, fd, page_base)) == MAP_FAILED){
+        error = errno; 
+        OS_printf("MMAP ERROR = %d\n", error); 
+		sysaddr = NULL; 
+    }
+	close(fd); 
+
+	return sysaddr + page_offset; 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * Xil_MMAP_close() -   Sync page buffers and unmap previously mapped memory address with MMAP.
+ *                      Mapped intermediary buffers must be freed since they are dynamically allocated with MMAP. 
+ *                      The kernel periodically syncs mapped buffer changes. This should be done explicitly prior
+ *                      to close however just to make sure. The msync() function does this. 
+ *                      TODO: Normally the flag MS_SYNC given to msync tells it to wait for completion of the sync
+ *                      before moving forward. This is currently broken and results in msync returning EINVAL. As
+ *                      an alternative, we're just waiting explicitly for it to finish. 
+ *  
+ * Inputs:              __off_t shared_addr:    Mapped buffer address previously returned by MMAP
+ *                      __off_t address:        Physical address previously mapped by MMAP 
+ *                      size_t length:          Data length previously mapped by MMAP
+ *                      int read:               Whether this buffer was used for writing
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void Xil_MMAP_close(__off_t shared_addr, __off_t address, size_t length, int read){
+	size_t 	pagesize    = sysconf(_SC_PAGE_SIZE); 
+	__off_t	page_base   = (address / pagesize) * pagesize; 
+	__off_t	page_offset = address - page_base; 
+    int     error; 
+
+    if(!read){
+        if(msync((void *)(shared_addr - page_offset),  page_offset + length, MS_ASYNC) != 0){
+            error = errno; 
+            OS_printf("MSYNC ERROR = %d\n", error); 
+        }
+        usleep(10000); 
+    }
+
+    if(munmap((void *)(shared_addr - page_offset), page_offset + length)){
+        error = errno; 
+        OS_printf("MUNMAP ERROR = %d\n", error); 
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * Xil_MMAP_Out32() -   Write 32-bit register from userspace. 
+ *
+ * Inputs:              unsigned int Addr:      Register address to write to
+ *                      unsigned int Value:     32-bit value to write 
+ * 
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void Xil_MMAP_Out32(unsigned int Addr, unsigned int Value){
+	volatile unsigned int   *LocalAddr;
+
+	if((LocalAddr = Xil_MMAP(Addr, 4)) == NULL)
+		return; 
+	
+    *LocalAddr = Value; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, Addr, 4, 0); 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * Xil_MMAP_In32() -    Read 32-bit register from userspace.
+ *
+ * Inputs:              unsigned int Addr:      Register address to read from
+ * Outputs:             returns unsigned int:   Data from register 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+unsigned int Xil_MMAP_In32(unsigned int Addr){
+	volatile unsigned int  *LocalAddr;
+    unsigned int           res; 
+
+	if((LocalAddr = Xil_MMAP(Addr, 4)) == NULL)
+		return -1; 
+
+    res = *LocalAddr; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, Addr, 4, 1); 
+    return res; 
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * devmem_write() - Higher-level function to write physical memory from user-space. 
+ *
+ * Inputs:          unsigned int addr:  Address to write to
+ *                  unsigned char *in:  Input data to write
+ *                  int length:         Length of input data
+ *
+ * Outputs:         returns int:        Length of data written on success, -1 on failure
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t devmem_write(uint32_t addr, uint8_t *in, int32_t length){
+	volatile unsigned char *LocalAddr;
+    int                     byte;  
+
+	if((LocalAddr = Xil_MMAP(addr, length)) == NULL)
+		return -1;  
+
+    for(byte = 0; byte < length; byte++)
+        LocalAddr[byte] = in[byte]; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, addr, length, 0); 
+
+    return length; 
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * devmem_read() -  Higher-level function to read physical memory from user-space. 
+ *
+ * Inputs:          unsigned int addr:  Address to read from
+ *                  unsigned char *out: Output buffer to read into
+ *                  int length:         Length of data to read
+ *
+ * Outputs:         returns int:        Length of data read on success, -1 on failure  
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t devmem_read(uint32_t addr, uint8_t *out, int32_t length){
+	volatile unsigned char *LocalAddr;
+    int                     byte;
+
+	if((LocalAddr = Xil_MMAP(addr, length)) == NULL)
+		return -1;  
+
+    for(byte = 0; byte < length; byte++)
+        out[byte] = LocalAddr[byte]; 
+
+    Xil_MMAP_close((unsigned long int)LocalAddr, addr, length, 1); 
+
+    return length; 
+}
+```
+
+### `libsocket.c`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libsocket.c`
+
+
+```c
+#include "libsocket.h"
+
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <errno.h>
+
+// Creates an endpoint for communication
+// Binds stream, server sockets to localhost and port number
+//
+// Inputs:
+//      socket_info->address_family
+//      socket_info->type
+//      socket_info->port_num (used for stream sockets)
+//      socket_info->block
+//
+// Outputs:
+//      socket_info->sockfd
+//      socket_info->created
+//      socket_info->bound  
+int32_t socket_create(socket_info_t* socket_info)
+{
+    int ret;
+    int type;
+    int address_family;
+    int protocol;
+    struct sockaddr_in sockaddr;
+    int flags;
+    int optval;
+    socklen_t optlen;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    // Set the socket address family
+    if(socket_info->address_family==ip_ver_4)
+    {
+        address_family=AF_INET; // IP version 4
+    }
+    else if(socket_info->address_family==ip_ver_6)
+    {
+        address_family=AF_INET6; // IP version 6
+    }
+    else
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;        
+    }
+
+    // Set the socket type 
+    if(socket_info->type==stream)
+    {
+        type=SOCK_STREAM; // Connection based
+    }
+    else if(socket_info->type==dgram)
+    {
+        type=SOCK_DGRAM; // Connectionless
+    }
+    else
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;        
+    }
+
+    // Set the socket protocol
+    protocol = IPPROTO_IP; // IP protocol
+
+    // Create the socket
+    ret = socket(address_family, type, protocol);
+    if(ret == -1)
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;
+    }
+
+    // Assign values to the socket_info structure 
+    socket_info->sockfd = ret;
+    socket_info->created = true;
+    OS_printf("socket_info->sockfd = %d\n",socket_info->sockfd);
+    OS_printf("socket_info->created = %d\n",socket_info->created);
+
+    // Bind server sockets to localhost and port number
+    if(socket_info->category==server || socket_info->type==dgram)
+    {
+        // Prepare the sockaddr_in structure
+        sockaddr.sin_family = address_family;
+        sockaddr.sin_addr.s_addr = inet_addr(socket_info->ip_address);
+        sockaddr.sin_port = htons(socket_info->port_num);       
+
+        // Bind the socket 
+        ret = bind(socket_info->sockfd,(struct sockaddr *)&sockaddr , sizeof(sockaddr));
+        if(ret != 0)
+        {
+            status = SOCKET_BIND_ERR;
+            return status;
+        }  
+
+        // Assign values to the socket_info structure
+        socket_info->bound = true;
+        OS_printf("socket_info->bound = %d\n",socket_info->bound);
+    }
+
+    // Make socket non-blocking?
+    if(socket_info->block==false)
+    {
+        flags = fcntl(socket_info->sockfd, F_GETFL, 0);
+        fcntl(socket_info->sockfd, F_SETFL, flags | O_NONBLOCK);
+    }
+
+    // Turn keep alive on?
+    if(socket_info->keep_alive==true)
+    {
+        optval = 1;
+        optlen = sizeof(optval);
+        setsockopt(socket_info->sockfd, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen);      
+    }
+
+    return status;
+}
+
+// Listens on a connection on a socket
+//
+// Inputs:
+//      socket_info->bound
+//      socket_info->sockfd
+//
+// Outputs:
+//      socket_info->listening
+int32_t socket_listen(socket_info_t* socket_info)
+{
+    int ret;
+    int pending_connections_queue_size;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+    pending_connections_queue_size = 5;
+    
+    // Only listen on a stream socket that has been bound
+    if( (!socket_info->type==stream)||(!socket_info->bound) )
+    {
+        status = SOCKET_LISTEN_ERR;
+        return status;
+    }
+
+    // Listen on the socket
+    ret = listen(socket_info->sockfd, pending_connections_queue_size);
+    if(ret != 0)
+    {
+        status = SOCKET_LISTEN_ERR;
+        return status;
+    }  
+
+    // Assign values to the socket_info structure
+    socket_info->listening = true;
+    OS_printf("socket_info->listening = %d\n",socket_info->listening);
+
+    return status;
+}
+
+// Accepts a connection on a socket
+//
+// Inputs:
+//      socket_info->listening
+//      socket_info->sockfd
+//
+// Outputs:
+//      socket_info->connected
+//      socket_info->sockfd
+int32_t socket_accept(socket_info_t* socket_info)
+{
+    int c;
+    int ret;
+    struct sockaddr_in client;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    // Only accept connections on a socket that is in a listening state
+    if(socket_info->listening==false)
+    {
+		status = SOCKET_ACCEPT_ERR;
+        return status;        
+    }
+
+    // Accept incoming connection 
+    c = sizeof(struct sockaddr_in);
+    ret = accept(socket_info->sockfd, (struct sockaddr *)&client, (socklen_t*)&c);
+	if (ret == -1)
+	{
+        // Handle non-blocking sockets
+        if( (socket_info->block==false) && (errno==EAGAIN) )
+        {
+		    status = SOCKET_TRY_AGAIN;
+            return status;
+        }   
+        if( (socket_info->block==false) && (errno==EWOULDBLOCK) )
+        {
+		    status = SOCKET_TRY_AGAIN;
+            return status;
+        }          
+		status = SOCKET_ACCEPT_ERR;
+        return status;
+	}
+
+    // Assign values to the socket_info structure
+    socket_info->sockfd = ret;
+    socket_info->connected = true;
+    OS_printf("socket_info->sockfd = %d\n",socket_info->sockfd);
+    OS_printf("socket_info->connected = %d\n",socket_info->connected);
+
+    return status;
+} 
+
+// Initiates a connection to a remote ip address and port number
+//
+// Inputs:
+//      socket_info->created
+//      socket_info->category
+//      socket_info->address_family
+//      socket_info->sockfd
+//      remote_ip_address (the remote ip address)
+//      remote_port_num (the remote port number)
+//
+// Outputs:
+//      socket_info->connected
+int32_t socket_connect(socket_info_t* socket_info, char* remote_ip_address, int remote_port_num)
+{
+    int ret;
+    int address_family;
+    struct sockaddr_in server;
+    int32_t status;
+    int error_num;
+
+    status = SOCKET_SUCCESS;
+
+    // Only make outbound connections on client sockets that have been created
+    if(  (socket_info->category!=client)||(!socket_info->created) )
+    {
+        status = SOCKET_CONNECT_ERR;
+        return status; 
+    }
+
+    // Set the socket address family
+    if(socket_info->address_family==ip_ver_4)
+    {
+        address_family=AF_INET; // IP version 4
+    }
+    else if(socket_info->address_family==ip_ver_6)
+    {
+        address_family=AF_INET6; // IP version 6
+    }
+    else
+    {
+        status = SOCKET_CONNECT_ERR;
+        return status;        
+    }
+
+    // Prepare the server structure 
+	server.sin_family = address_family;
+	server.sin_addr.s_addr = inet_addr(remote_ip_address);
+	server.sin_port = htons(remote_port_num);  
+
+    // Connect to remote address/port 
+	ret = connect(socket_info->sockfd , (struct sockaddr *)&server , sizeof(server));
+	if (ret == -1)
+	{
+        error_num = errno;
+        // Ignore "Operation in progress" error on a non-blocking socket
+        if( (socket_info->block==0) && (error_num==115) )
+        {
+            // Do nothing 
+        }
+        else
+        {
+            printf("errno = %d\n",error_num);
+            status = SOCKET_CONNECT_ERR;
+            return status;
+        }
+        
+	}    
+
+    // Assign values to the socket_info structure
+    socket_info->connected = true;    
+
+    return status;
+}
+
+int32_t socket_send(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_sent, char* remote_ip_address, int remote_port_num)
+{
+    int ret;
+    int32_t status;
+    struct sockaddr_in remote_sockaddr;
+    status = SOCKET_SUCCESS;
+
+   switch(socket_info->type)
+    {
+        case stream:
+        {
+            // Only send on stream sockets in a connected state
+            if(socket_info->connected == false)
+            {
+                status = SOCKET_SEND_ERR;
+                return status;
+            }
+            else
+            {           
+                ret = send(socket_info->sockfd, buffer, buflen, 0);
+                if(ret == -1)
+                {
+                    status = SOCKET_SEND_ERR;     
+                    return status;           
+                }
+            }
+            *bytes_sent = ret;
+            break;
+        }
+        case dgram:
+        {
+            // Prepare the remote_sockaddr structure 
+            remote_sockaddr.sin_family = socket_info->address_family;
+            remote_sockaddr.sin_addr.s_addr = inet_addr(remote_ip_address);
+            remote_sockaddr.sin_port = htons(remote_port_num);
+
+            ret = sendto(socket_info->sockfd, (void*)buffer, buflen, 0, (struct sockaddr *)&remote_sockaddr , sizeof(remote_sockaddr));
+            if(ret == -1)
+            {
+                OS_printf("socket_send: sendto returned error %d \n", ret);
+                status = SOCKET_SEND_ERR;     
+                return status;           
+            }
+
+            if(ret != (int) buflen)
+            {
+                OS_printf("socket_send: sendto sent only %d out of %lu bytes! \n", ret, buflen);
+            }
+
+            *bytes_sent = ret;
+            break;
+        }
+        default: 
+        {
+            status = SOCKET_SEND_ERR; 
+            break;
+        }
+    }
+
+    return status;
+}
+
+int32_t socket_recv(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_recvd)
+{
+    int c;
+    int ret;
+    int32_t status;
+    struct sockaddr_in remote_sockaddr;
+
+    status = SOCKET_SUCCESS;
+
+    switch(socket_info->type)
+    {
+        case stream:
+        {
+            // Only recv on stream sockets in a connected state
+            if(socket_info->connected == false)
+            {
+                status = SOCKET_RECV_ERR;
+                return status;
+            }
+            else
+            {           
+                ret = recv(socket_info->sockfd, (void*)buffer, buflen, 0);
+                if(ret == 0)
+                {
+                    // Client disconnected
+                    socket_info->connected = false;
+                    status = SOCKET_RECV_ERR;
+                    return status;
+                }
+                else if(ret == -1)
+                {
+                    // Handle non-blocking sockets
+                    if( (socket_info->block==false) && (errno==EAGAIN) )
+                    {
+                        status = SOCKET_TRY_AGAIN;
+                        return status;
+                    }   
+                    if( (socket_info->block==false) && (errno==EWOULDBLOCK) )
+                    {
+                        status = SOCKET_TRY_AGAIN;
+                        return status;
+                    }
+                    status = SOCKET_RECV_ERR;     
+                    return status;           
+                }
+                *bytes_recvd = ret;
+            }
+            break;
+        }
+        case dgram:
+        {
+            c = sizeof(struct sockaddr_in);
+            ret = recvfrom(socket_info->sockfd, (void*)buffer, buflen, 0, (struct sockaddr *)&remote_sockaddr, (socklen_t*)&c);
+            if(ret == -1)
+            {
+                // Handle non-blocking sockets
+                if( (socket_info->block==false) && (errno==EAGAIN) )
+                {
+                    status = SOCKET_TRY_AGAIN;
+                    return status;
+                }   
+                if( (socket_info->block==false) && (errno==EWOULDBLOCK) )
+                {
+                    status = SOCKET_TRY_AGAIN;
+                    return status;
+                }
+                status = SOCKET_RECV_ERR;     
+                return status;           
+            }   
+            *bytes_recvd = ret;   
+            break;
+        }
+        default: 
+        {
+            status = SOCKET_RECV_ERR; 
+            break;
+        }
+    }
+
+    return status;
+}
+
+int32_t socket_close(socket_info_t* socket_info)
+{
+    int ret;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    ret = close(socket_info->sockfd);
+    if(ret == -1)
+    {
+        status = SOCKET_CLOSE_ERR;
+        return status;
+    }
+
+    // Assign values to the socket_info structure
+    // TBD
+
+    return status;
+}
+```
+
+### `libspi.c`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libspi.c`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libspi.h"
+
+spi_mutex_t spi_bus_mutex[MAX_SPI_BUSES];
+
+int32_t spi_init_dev(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+  char    buffer[16];
+
+  // Initialize the bus mutex
+  if (device->bus < MAX_SPI_BUSES)
+  {
+    if (spi_bus_mutex[device->bus].users == 0)
+    {
+      snprintf(buffer, 16, "spi_%d_mutex", device->bus);
+      status = OS_MutSemCreate(&spi_bus_mutex[device->bus].spi_mutex, buffer, 0);
+      if (status != OS_SUCCESS)
+      {
+        OS_printf("HWLIB: Create spi mutex error %d", status);
+        return status;
+      }
+    }
+    spi_bus_mutex[device->bus].users++;
+  }
+  else
+  {
+    OS_printf("HWLIB: Create spi mutex error %d, bus invalid!", status);
+    return status;
+  }
+
+  if (OS_MutSemTake(spi_bus_mutex[device->bus].spi_mutex) == OS_SUCCESS)
+  {
+    // Open the device
+    device->handle = open(device->deviceString, O_RDWR, 0); 
+    if (device->handle < 0)
+    {
+      device->isOpen = SPI_DEVICE_CLOSED;
+      status = SPI_ERR_FILE_OPEN;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      OS_printf("HWLIB: Open SPI device \"%s\" error %d", device->deviceString, status);
+      return status;
+    }
+  }
+  OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+
+  // Set the mode 
+  status = spi_set_mode(device);
+  if(status != SPI_SUCCESS)
+  {
+    return status;
+  }
+
+  // Set open flag
+  device->isOpen = SPI_DEVICE_OPEN;
+
+  return status;
+}
+
+int32_t spi_set_mode(spi_info_t* device)
+{
+  uint8_t mode; 
+  int32_t ret;
+  int32_t status = SPI_SUCCESS; 
+
+  switch(device->spi_mode)
+  {
+    case 0:
+      mode = SPI_MODE_0;
+      break;
+    case 1:
+      mode = SPI_MODE_1;
+      break;
+    case 2:
+      mode = SPI_MODE_2;
+      break;
+    case 3:
+      mode = SPI_MODE_3;
+      break;
+    default: 
+      status = SPI_ERR_INVAL_MD;
+      OS_printf("HWLIB: Invalid spi mode error %d", status);
+      return status;
+  }
+
+  if (OS_MutSemTake(spi_bus_mutex[device->bus].spi_mutex) == OS_SUCCESS)
+  {
+    // Set mode
+    ret = ioctl(device->handle, SPI_IOC_WR_MODE, &mode);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_WR_MODE;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      return status;
+    }  
+    // Set bits per word
+    ret = ioctl(device->handle, SPI_IOC_WR_BITS_PER_WORD, &(device->bits_per_word));
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_WR_BPW;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      return status;
+    }
+    // Set max speed
+    ret = ioctl(device->handle, SPI_IOC_WR_MAX_SPEED_HZ, &(device->baudrate));
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_WR_SD_HZ;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      return status;
+    }
+  }
+  OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+  
+  return status;
+}
+
+int32_t spi_get_mode(spi_info_t* device)
+{
+  int32_t  ret;
+  int32_t  status = SPI_SUCCESS; 
+  uint8_t  spi_mode = 0;
+  uint8_t  bits_per_word = 0;
+  uint32_t baudrate = 0;
+  
+  if (OS_MutSemTake(spi_bus_mutex[device->bus].spi_mutex) == OS_SUCCESS)
+  {
+    // Get mode
+    ret = ioctl(device->handle, SPI_IOC_RD_MODE, &spi_mode);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_RD_MODE;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      return status;
+    }  
+    // Get bits per word
+    ret = ioctl(device->handle, SPI_IOC_RD_BITS_PER_WORD, &bits_per_word);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_RD_BPW;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      return status;
+    }  
+    // Get max speed
+    ret = ioctl(device->handle, SPI_IOC_RD_MAX_SPEED_HZ, &baudrate);
+    if (ret != SPI_SUCCESS)
+    {
+      status = SPI_ERR_RD_SD_HZ;
+      OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+      return status;
+    }
+  }
+  OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+
+  device->spi_mode = spi_mode;
+  device->bits_per_word = bits_per_word;
+  device->baudrate = baudrate;
+
+  return status;
+}
+
+int32_t spi_write(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = SPI_SUCCESS;
+
+  status = spi_transaction(device, NULL, data, numBytes, 0, 8, 0);
+
+  return status;     
+}
+
+int32_t spi_read(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = SPI_SUCCESS;
+
+  status = spi_transaction(device, NULL, data, numBytes, 0, 8, 0);
+
+  return status;  
+}
+
+int32_t spi_transaction(spi_info_t* device, uint8_t *txBuff, uint8_t * rxBuffer, uint32_t length, uint16_t delay, uint8_t bits, uint8_t deselect)
+{
+  int32_t status = SPI_SUCCESS;
+  int ret;
+  struct spi_ioc_transfer xfer;
+
+  // Clear the xfer struct
+  memset((void *)&xfer, 0, sizeof(struct spi_ioc_transfer));
+
+  // Setup the transfer structure for the transaction 
+  xfer.tx_buf = (unsigned long) txBuff;
+  xfer.rx_buf = (unsigned long) rxBuffer; 
+
+  xfer.len = length;
+  xfer.speed_hz = device->baudrate;
+  
+  xfer.delay_usecs = delay;
+  xfer.bits_per_word = bits;
+  xfer.cs_change = deselect;
+  xfer.tx_nbits = (bits * length);
+  xfer.rx_nbits = (bits * length);
+
+  // Perform a full duplex transaction
+  ret = ioctl(device->handle, SPI_IOC_MESSAGE(1), &xfer);
+  if (ret < 1)
+  {
+      status = SPI_ERR_IOC_MSG;
+      return status;
+  }
+  
+  return status;
+}
+
+int32_t spi_select_chip(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+
+  /* 
+  * See "/usr/share/doc/linux-doc/spi/spidev":
+  * "From userspace, you can't currently change the chip select polarity;
+  *  that could corrupt transfers to other devices sharing the SPI bus.
+  *  Each SPI device is deselected when it's not in active use, allowing
+  *  other drivers to talk to other devices."
+  */
+  status = OS_MutSemTake(spi_bus_mutex[device->bus].spi_mutex);
+  
+  return status;
+}
+
+int32_t spi_unselect_chip(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+
+  /* 
+  * See "/usr/share/doc/linux-doc/spi/spidev":
+  * "From userspace, you can't currently change the chip select polarity;
+  *  that could corrupt transfers to other devices sharing the SPI bus.
+  *  Each SPI device is deselected when it's not in active use, allowing
+  *  other drivers to talk to other devices."
+  */
+  status = OS_MutSemGive(spi_bus_mutex[device->bus].spi_mutex);
+  
+  return status;
+}
+
+int32_t spi_close_device(spi_info_t* device)
+{
+  int32_t status = SPI_SUCCESS;
+
+  // Check for valid handle
+  if (device->handle >= 0)
+  {
+    spi_bus_mutex[device->bus].users--;
+    if (spi_bus_mutex[device->bus].users == 0)
+    {
+      OS_MutSemDelete(spi_bus_mutex[device->bus].spi_mutex);
+    }
+
+    status = close(device->handle);
+    if (status != SPI_SUCCESS) 
+    {
+      status = SPI_ERR_FILE_CLOSE;
+      return status;
+    }
+    // Set open flag
+    device->isOpen = SPI_DEVICE_CLOSED;
+  }
+  else
+  {
+    status = SPI_ERR_FILE_HANDLE;
+    return status;
+  }
+
+  return status;
+}
+```
+
+### `libtrq.c`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libtrq.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include <fcntl.h>
+#include "libtrq.h"
+#include "libtrq_ioctl.h"
+
+#define TRQ_FNAME_SIZE 50
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_time_high(): Configure the time high per period in nanoseconds for a TRQ device. Time high lengths
+ *                      may not exceed a device's period length. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *                      uint32_t    new_time    -   New time high length for the device period in nanoseconds
+ *
+ * Outputs:             trq_info_t *device      -   High time set to new_time if successful
+ *                      returns int32_t         -   TRQ_ERROR_* type on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_time_high(trq_info_t* device, uint32_t new_time) 
+{
+    if(!device->enabled)
+    {
+        printf("trq_set_time_high: Error setting trq %d timer period because it's disabled! \n", device->trq_num); 
+        return TRQ_ERROR; 
+    }
+
+	// Make sure the time high isn't greater than the period
+	if(new_time > device->timer_period_ns) 
+    {
+		printf("trq_set_time_high: Error setting trq %d time high, must not exceed the period! \n", device->trq_num);
+		return TRQ_TIME_HIGH_VAL_ERR;
+	}
+
+    ioctl(device->timerfd, TMRCTR_PWM_DISABLE); 
+    if(ioctl(device->timerfd, TMRCTR_PWM_SET_HIGH_TIME, new_time) < 0)
+    {
+        printf("trq_set_time_high: Error setting trq %d high time! \n", device->trq_num); 
+        return TRQ_ERROR; 
+    }
+	device->timer_high_ns = new_time;
+
+    if(device->timer_period_ns && device->timer_high_ns)
+    {
+        ioctl(device->timerfd, TMRCTR_PWM_ENABLE);
+    }
+
+    //printf("trq_set_time_high: timer_period_ns = %d, timer_high_ns = %d\n", device->timer_period_ns, device->timer_high_ns); 
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_period():    Configure the period length for a TRQ device in nanoseconds. Note that timer time high 
+ *                      is set to zero before this function is called. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *
+ * Outputs:             returns int32_t         -   TRQ_ERROR on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_period(trq_info_t* device) 
+{
+    if(!device->enabled)
+    {
+        printf("trq_set_period: Error setting trq %d timer period because it's disabled! \n", device->trq_num); 
+        return TRQ_ERROR; 
+    }
+
+    // Make sure timer is disabled first
+    ioctl(device->timerfd, TMRCTR_PWM_DISABLE); 
+
+    if(ioctl(device->timerfd, TMRCTR_PWM_SET_PERIOD, device->timer_period_ns) < 0)
+    {
+        printf("trq_set_period: Error setting trq %d timer period! \n", device->trq_num); 
+        return TRQ_ERROR; 
+    }
+
+    // Enable timer
+    ioctl(device->timerfd, TMRCTR_PWM_ENABLE); 
+
+    return TRQ_SUCCESS;
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_direction():    Configure the direction of the TRQ device. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *                      bool        direction   -   New direction desired for device
+ *
+ * Outputs:             trq_info_t *device      -   positive_direction set to direction if successful
+ *                      returns int32_t         -   TRQ_ERROR on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_direction(trq_info_t* device, bool direction) 
+{
+    char charVal;
+    
+    if (direction == TRQ_DIR_NEGATIVE) 
+    {
+        charVal = '1'; // Inverted due to hardware
+    }
+    else 
+    {
+        charVal = '0';
+    }
+
+    if (write(device->direction_pin_fd, &charVal, 1) != 1) 
+    {
+        printf("trq_set_direction: Error setting trq %d direction! \n", device->trq_num);
+        return TRQ_ERROR;
+    }
+    device->positive_direction = direction;
+
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_init():          Opens a TRQ device and initializes it. This function can also be
+ *                      used on an already opened TRQ number to reset it. 
+ *
+ * Inputs:              trq_info_t *device  -   TRQ Device info structure to initialize   
+ * 
+ * Outputs:             trq_info_t *device  -   Info structure contains AXI timer device file descriptor. 
+ *                      returns int32_t     -   <0 on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_init(trq_info_t* device) 
+{
+    int32_t status = TRQ_SUCCESS;
+    char devname[TRQ_FNAME_SIZE];
+
+    if(!device->enabled)
+    {
+        // Open axi timer
+        snprintf(devname, TRQ_FNAME_SIZE, "/dev/tmrctr%d", device->trq_num); 
+        if((device->timerfd = open(devname, O_RDWR, 0)) < 0)
+        {
+            printf("trq_init: Error opening axi timer device %s \n", devname); 
+            return TRQ_INIT_ERR; 
+        } 
+        //printf("trq_init: Initialized AXI Timer Device: %s for device->trq_num %d \n", devname, device->trq_num);
+
+        // Open direction pin
+        snprintf(devname, TRQ_FNAME_SIZE, "/dev/hb%d", device->trq_num); 
+        if((device->direction_pin_fd = open(devname, O_RDWR, 0)) < 0)
+        {
+            printf("trq_init: Error opening axi timer device %s \n", devname); 
+            return TRQ_INIT_ERR; 
+        }
+
+        // Set direction
+        status = trq_set_direction(device, TRQ_DIR_POSITIVE);
+        if(status != TRQ_SUCCESS)
+        {
+            return TRQ_INIT_ERR;
+        }
+
+        device->enabled = true;
+    }
+
+    // Set timer time high to zero
+    status = trq_set_time_high(device, 0);
+    if(status != TRQ_SUCCESS)
+    {
+        return TRQ_INIT_ERR;
+    }
+    device->timer_high_ns = 0;  // no pulse
+
+    // Set timer period. Expects timer_period_ns to be set by app. 
+    status = trq_set_period(device);
+    if(status != TRQ_SUCCESS)
+    {
+        return TRQ_INIT_ERR;
+    }
+
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_command():   Change TQR period, time high, or direction.
+ *
+ * Inputs:              trq_info_t* device      -   TQR device info structure to modify
+ *                      uint8_t percent_high    -   Percent of the period to be high (0-100)
+ *                      bool pos_dir            -   Direction - True for positive, False for negative
+ *
+ * Outputs:             trq_info_t *device      -   Parameters set to new values if successful
+ *                      returns int32_t         -   TRQ_ERROR_* type on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_command(trq_info_t *device, uint8_t percent_high, bool pos_dir)
+{
+    int32_t status = TRQ_SUCCESS;
+    uint32_t time_high_ns;
+
+    if(!device->enabled)
+    {
+        status = TRQ_ERROR; 
+        return status;
+    }
+    
+    // Calculate time high
+    if (percent_high > 100)
+    {
+        printf("trq_command: Error setting percent high greater than 100! \n");
+        return TRQ_ERROR;
+    }
+    time_high_ns = device->timer_period_ns * (percent_high / 100.00);
+    
+    // Change time high? 
+    if(device->timer_high_ns != time_high_ns)
+    {
+        status=trq_set_time_high(device, time_high_ns);
+        if(status != TRQ_SUCCESS)
+        {
+            status = TRQ_ERROR; 
+            return status;
+        }
+        device->timer_high_ns = time_high_ns;
+    }
+
+    // Change direction?
+    if(device->positive_direction != pos_dir)
+    {
+        // Set direction
+        status = trq_set_direction(device, pos_dir);
+        if(status != TRQ_SUCCESS)
+        {
+            printf("trq_command: Error setting trq %d direction! \n", device->trq_num);
+            status = TRQ_INIT_ERR;
+            return status;
+        }
+    }
+
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ *
+ * trq_close():         Disables and closes an active TRQ device. 
+ * 
+ * Inputs:              trq_info_t *device - TRQ device info structure for TRQ device to disable
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void trq_close(trq_info_t* device)
+{
+    if(!device->enabled)
+    {
+        printf("trq_close: Error closing trq %d, already disabled! \n", device->trq_num); 
+        return; 
+    }
+
+    close(device->timerfd); 
+    close(device->direction_pin_fd);
+    device->enabled = false; 
+}
+```
+
+### `libtrq_ioctl.h`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libtrq_ioctl.h`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+
+/* IOCTL commands */
+#include <sys/ioctl.h>
+
+#define TMRCTR_MAGIC                            15
+
+#define TMRCTR_START                _IO(    TMRCTR_MAGIC, 0         )
+#define TMRCTR_STOP                 _IO(    TMRCTR_MAGIC, 1         )
+#define TMRCTR_PWM_ENABLE           _IO(    TMRCTR_MAGIC, 2         )
+#define TMRCTR_PWM_SET_PERIOD       _IOW(   TMRCTR_MAGIC, 3,    long)
+#define TMRCTR_PWM_SET_HIGH_TIME    _IOW(   TMRCTR_MAGIC, 4,    long)
+#define TMRCTR_PWM_DISABLE          _IO(    TMRCTR_MAGIC, 5         )
+#define TMRCTR_SELFTEST             _IO(    TMRCTR_MAGIC, 6         )
+#define TMRCTR_SETOPTION            _IOW(   TMRCTR_MAGIC, 7,    long)
+#define TMRCTR_GETOPTION            _IOR(   TMRCTR_MAGIC, 8,    long)
+#define TMRCTR_RESET                _IO(    TMRCTR_MAGIC, 9         )
+#define TMRCTR_SET_RESET_VALUE      _IOW(   TMRCTR_MAGIC, 10,   long)
+#define TMRCTR_GET_VALUE            _IOR(   TMRCTR_MAGIC, 11,   long)
+#define TMRCTR_GET_CAPTURE_VALUE    _IOR(   TMRCTR_MAGIC, 12,   long)
+#define TMRCTR_CHECK_UPDATE         _IOR(   TMRCTR_MAGIC, 13,   long)
+#define TMRCTR_TMR_SELECT           _IOW(   TMRCTR_MAGIC, 14,   long)
+
+/* IOCTL Errors */
+#define TMRCTR_BAD_CMD            (-1)
+
+```
+
+### `libuart.c`
+
+**경로:** `fsw/apps/hwlib/fsw/linux/libuart.c`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libuart.h"
+
+int32_t uart_init_port(uart_info_t* device)
+{
+  int32_t status = UART_SUCCESS;
+  speed_t speed;
+
+  // Set the access flag.  We default to O_RDWR if the specified access flag is
+  // out of range
+  int oflag = O_RDWR;
+
+  if (device->access_option == uart_access_flag_RDONLY)
+    oflag = O_RDONLY;
+  else if (device->access_option == uart_access_flag_WRONLY)
+    oflag = O_WRONLY;
+
+  device->handle = open(device->deviceString, oflag);
+
+  if (device->handle >= 0)
+  {
+    // Set open flag
+    device->isOpen = PORT_OPEN;
+
+    // Get current port options
+    if(tcgetattr(device->handle, &device->options)<0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+
+    // Set baud rate
+    switch(device->baud)
+    {
+      case 4800:
+        speed=B4800;
+        break;
+      case 9600:
+        speed=B9600;
+        break;
+      case 19200:
+        speed=B19200;
+        break;
+      case 38400:
+        speed=B38400;
+        break;
+      case 57600:
+        speed=B57600;
+        break;
+      case 115200:
+        speed=B115200;
+        break;
+      case 230400:
+        speed=B230400;
+        break;
+      case 460800:
+        speed=B460800;
+        break;
+      case 500000:
+        speed=B500000;
+        break;
+      case 576000:
+        speed=B576000;
+        break;
+      case 921600:
+        speed=B921600;
+        break;
+      case 1000000:
+        speed=B1000000;
+        break;
+      case 1152000:
+        speed=B1152000;
+        break;
+      case 2000000:
+        speed=B2000000;
+        break;
+      case 2500000:
+        speed=B2500000;
+        break;
+      case 3000000:
+        speed=B3000000;
+        break;
+      case 3500000:
+        speed=B3500000;
+        break;
+      case 4000000:
+        speed=B4000000;
+        break;
+      default:
+        status = OS_ERR_FILE;
+        return status;
+    }
+    if(cfsetispeed(&device->options,speed)<0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+    if(cfsetospeed(&device->options,speed)<0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+
+    // Raw byte mode - no strings and no CRLF
+    device->options.c_iflag      = IGNBRK | INPCK;
+    device->options.c_oflag      = 0;
+    device->options.c_cflag      = CREAD | CS8 | CLOCAL;
+    device->options.c_lflag      = NOFLSH;
+    if(device->canonicalModeOn == 1)
+    {
+        device->options.c_lflag |= ICANON;
+    }
+
+    // Set the port to blocking read with timeout of 0.1 sec
+    device->options.c_cc[VMIN] = 0;       // min of bytes to read
+    device->options.c_cc[VTIME] = 1;      // intra-byte time to wait - tenths of sec
+    fcntl(device->handle, F_SETFL, O_NONBLOCK);    // Don't have serial port block
+
+    // TODO - any other options needed like hw control?
+    tcflush(device->handle, TCIOFLUSH);
+
+    // Set the options
+    if(tcsetattr(device->handle, TCSANOW, &device->options)<0)
+    {
+        status = OS_ERR_FILE;
+        return status;
+    }
+  }
+  else
+  {
+      printf("Oh no!  Open \"%s\" failed and reported: %s \n", device->deviceString, strerror(device->handle));
+      device->isOpen = PORT_CLOSED;
+      status = OS_ERR_FILE;
+  }
+
+  return status;
+}
+
+int32_t uart_bytes_available(uart_info_t* device)
+{
+  int32_t bytes_available = 0;
+
+  ioctl(device->handle, FIONREAD, &bytes_available);
+
+  return bytes_available;
+}
+
+int32_t uart_flush(uart_info_t* device)
+{
+  tcflush(device->handle,TCIOFLUSH);
+
+  return UART_SUCCESS;
+}
+
+int32_t uart_read_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = UART_SUCCESS;
+
+  if (data != NULL)
+  {
+    // TODO - this read blocks forever if no serial data on the port.
+    //        it should be timing out - need to look into this ASAP
+    status = read(device->handle, data, numBytes);
+  }
+  else
+  {
+    status = OS_ERR_FILE;
+  }
+
+  return status;
+}
+
+int32_t uart_write_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  int32_t status = UART_SUCCESS;
+
+  status = write(device->handle, data, numBytes);
+
+  return status;
+}
+
+int32_t uart_close_port(uart_info_t* device)
+{
+  int32_t status = UART_SUCCESS;
+
+  if (device->handle >= 0)
+  {
+    status = close(device->handle);
+    if (0 == status) /* todo remove magic number */
+    {
+      status = UART_SUCCESS;
+    }
+    else
+    {
+      status = OS_ERR_FILE;
+    }
+  }
+  else
+  {
+    status = OS_ERR_FILE;
+  }
+  return status;
+}
+```

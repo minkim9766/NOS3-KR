@@ -3,30 +3,1932 @@
 
 **경로:** `fsw/apps/hwlib/sim/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `libcan.c`
 
-file--libcan.c
-file--libgpio.c
-file--libi2c.c
-file--libmem.c
-file--libsocket.c
-file--libspi.c
-file--libtrq.c
-file--libuart.c
-file--nos_link.c
+**경로:** `fsw/apps/hwlib/sim/src/libcan.c`
+
+
+```c
+/* Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "nos_link.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+/* nos */
+#include <Can/Client/CInterface.h>
+
+#include "libcan.h"
+
+#define CAN_BASE_CMD_LEN  8
+
+/* can device handles */
+static NE_CanHandle *can_device[NUM_CAN_DEVICES] = {0};
+
+/* get spi device */
+static NE_CanHandle* nos_get_can_device(can_info_t* device)
+{
+    NE_CanHandle *dev = NULL;
+    
+    dev = can_device[device->handle];
+    if(dev == NULL)
+    {
+        can_init_dev(device);
+        dev = can_device[device->handle];
+    }
+    
+    return dev;
+}
+
+/* destroy nos engine can link */
+void nos_destroy_can_link(void)
+{
+    /* clean up can buses */
+    int i;
+    for (i = 0; i < NUM_CAN_DEVICES; i++)
+    {
+        NE_CanHandle *dev = can_device[i];
+        if (dev) 
+            NE_can_close(&dev);
+    }
+}
+
+// Bring CAN network interface
+int32_t can_init_dev(can_info_t* device)
+{
+    int32_t result = OS_SUCCESS;
+    NE_CanHandle **dev;
+    const nos_connection_t *con;
+
+    dev = &can_device[device->handle];
+    if (*dev == NULL)
+    {
+        /* get nos can connection params */
+        con = &nos_can_connection[device->handle];
+    }
+
+    /* try to initialize master */
+    *dev = NE_can_init_master3(hub, 10, con->uri, con->bus);
+    device->isUp = CAN_INTERFACE_UP;
+    if (*dev == NULL)
+    {
+        result = OS_ERROR;
+        OS_printf("LIBCAN: %s:  FAILED TO INITIALIZE NOS CAN MASTER\n", __func__);
+        device->isUp = CAN_INTERFACE_DOWN;
+    }
+    return result;        
+}
+
+// TODO: NOT IMPLEMENTED!
+int32_t can_set_modes(can_info_t* device) 
+{
+	return CAN_SUCCESS;
+}
+
+// Write a can_frame  from `device->tx_Frame` to CAN bus from SocketCAN socket specified by `device`
+int32_t can_write(can_info_t* device)
+{
+    return can_master_transaction(device);
+}
+
+// Read a can_frame from SocketCAN interface specified by `device` into `device->rx_frame`
+int32_t can_read(can_info_t* device)
+{
+    return can_master_transaction(device);
+}
+
+int32_t can_master_transaction(can_info_t* device)
+{
+    int result = CAN_ERROR;
+    
+    /* get can device handle */
+    NE_CanHandle *dev = nos_get_can_device(device);
+
+    /* can transaction */
+    if(dev)
+    {
+        result = NE_can_transaction(dev, device->tx_frame.can_id,
+                                    (uint8_t*) &device->tx_frame, device->tx_frame.can_dlc + CAN_BASE_CMD_LEN, 
+                                    (uint8_t*) &device->rx_frame, CAN_BASE_CMD_LEN + CAN_MAX_DLEN);
+    }
+
+    #ifdef LIBCAN_VERBOSE
+        int i;
+        OS_printf("can_master_transaction: \n");
+        OS_printf("  can_id = 0x%08x \t tx: 0x", device->tx_frame.can_id);
+        for (i = 0; i < device->tx_frame.can_dlc; i++)
+        {
+        OS_printf("%02x ", device->tx_frame.data[i]);
+        }
+        OS_printf("\n");
+        OS_printf("  can_id = 0x%08x \t rx: 0x", device->rx_frame.can_id);
+        for (i = 0; i < device->rx_frame.can_dlc; i++)
+        {
+        OS_printf("%02x ", device->rx_frame.data[i]);
+        }
+        OS_printf("\n");
+    #endif
+
+    return result;
+}
+
+// Bring CAN network interface down
+int32_t can_close_device(can_info_t* device)
+{
+    /* clean up can device */
+    NE_CanHandle *dev = can_device[device->handle];
+    if(dev) 
+    {
+        NE_can_close(&dev);
+        can_device[device->handle] = 0;
+        device->isUp = CAN_INTERFACE_DOWN;
+    }
+    return NE_CAN_SUCCESS;
+}
 ```
 
-## 항목
+### `libgpio.c`
 
-- [`fsw/apps/hwlib/sim/src/libcan.c`](file--libcan.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libgpio.c`](file--libgpio.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libi2c.c`](file--libi2c.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libmem.c`](file--libmem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libsocket.c`](file--libsocket.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libspi.c`](file--libspi.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libtrq.c`](file--libtrq.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/libuart.c`](file--libuart.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/sim/src/nos_link.c`](file--nos_link.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/hwlib/sim/src/libgpio.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+//#include <cfe_psp.h>
+#include "libgpio.h"
+#include <sys/stat.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int32_t gpio_init(gpio_info_t* device) 
+{    
+    char buffer[128];
+    int  write_size;
+    int  fd;
+
+    if (device->pin > 30-1) {
+        printf("Please provide a pin # from 0 to %d\n", 30-1);
+    }
+    // Using a /tmp/ directory to avoid permission issues
+    mkdir("/tmp/gpio-fake/", 0777);
+    snprintf(buffer, 128, "/tmp/gpio-fake/gpio%d/", device->pin);
+    mkdir(buffer, 0777);
+    snprintf(buffer, 128, "/tmp/gpio-fake/gpio%d/direction", device->pin);
+
+    // Set direction
+    fd = open(buffer, O_WRONLY | O_CREAT, 0777);
+    if (fd < 0) 
+    {
+        return GPIO_FD_OPEN_ERR;
+    }
+
+    if (device->direction == GPIO_INPUT)
+    {
+        snprintf(buffer, 128, "IN");
+        write_size = 2;
+    } else {
+        snprintf(buffer, 128, "OUT");
+        write_size = 3;
+    }
+    write(fd, buffer, write_size);
+    close(fd);
+
+    //snprintf(buffer, 128, "/tmp/gpio-fake/gpio%d/value", device->pin);
+    //fd = open(buffer, O_WRONLY | O_CREAT);
+    // Set open
+    device->isOpen = GPIO_OPEN;
+    gpio_write(device, 0x00);
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_read(gpio_info_t* device, uint8_t* value)
+{
+    char buffer[128];
+    int fd;
+
+    snprintf(buffer, 128, "/tmp/gpio-fake/gpio%d/value", device->pin);
+    fd = open(buffer, O_RDONLY | O_CREAT, 0777);
+    if (fd < 0) 
+    {
+         return GPIO_FD_OPEN_ERR;
+    }
+    if (read(fd, value, 3) < 0) 
+    {
+        return GPIO_READ_ERR;
+    }
+    close(fd);
+    if (*value == '1') {
+        *value = 0x01;
+    } else {
+        *value = 0x00;
+    }
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_write(gpio_info_t* device, uint8_t value)
+{
+    char buffer[128];
+    char charVal;
+    int fd;
+
+    if (value == 1) 
+    {
+        charVal = '1';
+    }
+    else 
+    {
+        charVal = '0';
+    }
+
+    snprintf(buffer, 128, "/tmp/gpio-fake/gpio%d/value", device->pin);
+    fd = open(buffer, O_WRONLY | O_CREAT, 0777);
+    if (fd < 0) 
+    {
+         return GPIO_FD_OPEN_ERR;
+    }
+
+    if (write(fd, &charVal, 1) != 1) 
+    {
+        return GPIO_WRITE_ERR;
+    }
+
+    close(fd);
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_close(gpio_info_t* device)
+{
+
+    
+    if (device->isOpen == GPIO_OPEN)
+    {
+        device->isOpen = GPIO_CLOSED;
+    }
+    return GPIO_SUCCESS;
+}
+
+#ifdef __cplusplus
+}
+#endif
+```
+
+### `libi2c.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/libi2c.c`
+
+
+```c
+/* Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "nos_link.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+/* nos */
+#include <I2C/Client/CInterface.h>
+
+/* hwlib API */
+#include "libi2c.h"
+
+/* i2c device handles */
+static NE_I2CHandle *i2c_device[NUM_I2C_DEVICES] = {0};
+
+/* destroy nos engine i2c link */
+void nos_destroy_i2c_link(void)
+{
+    /* clean up i2c buses */
+    int32_t i;
+    for(i = 0; i < NUM_I2C_DEVICES; i++)
+    {
+        NE_I2CHandle *dev = i2c_device[i];
+        if(dev) NE_i2c_close(&dev);
+    }
+
+}
+
+static NE_I2CHandle* nos_get_i2c_device(int handle)
+{
+    NE_I2CHandle *dev = NULL;
+    if(handle < NUM_I2C_DEVICES)
+    {
+        dev = i2c_device[handle];
+    }
+    return dev;
+}
+
+int32_t i2c_master_init(i2c_bus_info_t* device)
+{
+    int32_t status = I2C_SUCCESS;
+    if(device->handle >= 0 && device->handle < NUM_I2C_DEVICES)
+    {
+        /* get i2c device handle */
+        NE_I2CHandle **dev = &i2c_device[device->handle];
+        if(*dev == NULL)
+        {
+            /* get nos i2c connection params */
+            const nos_connection_t *con = &nos_i2c_connection[device->handle];
+
+            /* try to initialize master */
+            *dev = NE_i2c_init_master3(hub, 10, con->uri, con->bus); // the value 10 is used in the NOS3 case to indicate the master
+            if(*dev == NULL)
+            {
+                OS_printf("nos i2c_init_master failed\n");
+                device->isOpen = I2C_CLOSED;
+                status = I2C_ERROR;
+            }
+            else
+            {
+                device->isOpen = I2C_OPEN;
+            }
+        }
+    }
+    else
+    {
+        OS_printf("i2c_init_master: Handle not found\n");
+        device->isOpen = I2C_CLOSED;
+        status = I2C_ERROR;
+    }
+    return status;
+}
+
+/* nos i2c transaction */
+int32_t i2c_master_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen,
+                               void * rxbuf, uint8_t rxlen, uint16_t timeout)
+{
+    int32_t result = I2C_ERROR;
+
+    NE_I2CHandle *dev = nos_get_i2c_device((int)device->handle);
+
+    /* i2c transaction */
+    if(dev)
+    {
+        if ((txlen == 0) && (rxlen == 0)) { // force success if both buffer lengths are 0
+            result = I2C_SUCCESS;
+        } else if(NE_i2c_transaction(dev, addr, txbuf, txlen, rxbuf, rxlen) == NE_I2C_SUCCESS)
+        {
+            result = I2C_SUCCESS;
+        }
+    }
+
+    return result;
+}
+
+int32_t i2c_multiple_transaction(i2c_bus_info_t* device, uint8_t addr, struct i2c_rdwr_ioctl_data* rdwr_data, uint16_t timeout)
+{
+    int32_t result = I2C_ERROR;
+    uint32_t i;
+
+    for (i = 0; i < rdwr_data->nmsgs; i++)
+    {
+        if (rdwr_data->msgs[i].flags == 0)
+        {   // Write
+            result = i2c_master_transaction(device, addr, (void*) rdwr_data->msgs[i].buf, (uint8_t) rdwr_data->msgs[i].len, (void*) NULL, 0, timeout);
+        }
+        else
+        {   // Read
+            result = i2c_master_transaction(device, addr, (void*) NULL, 0, (void*) rdwr_data->msgs[i].buf, (uint8_t) rdwr_data->msgs[i].len, timeout);
+        }
+        
+        if (result != I2C_SUCCESS)
+        {
+            break;
+        }
+    }
+
+    return result;
+}
+
+int32_t i2c_master_close(i2c_bus_info_t* device) 
+{
+    if (device->handle >= 0)
+    {
+        NE_I2CHandle *dev = nos_get_i2c_device((int)device->handle);
+        if(dev)
+        {
+            NE_i2c_close(&dev);
+            i2c_device[device->handle] = 0;
+            device->isOpen = I2C_CLOSED;
+        }
+    }
+    return I2C_SUCCESS;
+}
+```
+
+### `libmem.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/libmem.c`
+
+
+```c
+#include <sys/mman.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdint.h>
+#include <pthread.h>
+#include "libmem.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+pthread_mutex_t mutex;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * get_shared_mem() -   Creates a shared memory segment and attaches that segment to an unused address.
+ * 
+ * Inputs:              uint32_t address:   Requested address
+ *                      uint32_t length:    Length of memory request
+ *
+ * Outputs:             returns void *:     Address containing the shared memory segment. 
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void *get_shared_mem(uint32_t address, uint32_t length){
+
+    pthread_mutex_lock(&mutex);
+
+    // Creates shared memory segment or returns the identifier of the previously created segment.
+    int32_t shmid = shmget(address, length, IPC_CREAT | S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+    if (shmid == -1) {
+        printf("LIBMEM SHMGET ERROR %d\n", errno);
+        return NULL;
+    }
+
+    // Attaches shared memory segment to an unused page-aligned address chosen by the system
+    uint32_t *sh_mem_addr = (uint32_t*)shmat(shmid, NULL, 0);
+    if (sh_mem_addr == (uint32_t*)(-1)) {
+        printf("LIBMEM SHMAT ERROR %d\n", errno);
+        return NULL;
+    }
+
+    return sh_mem_addr;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * detach_shared_mem() -   Detaches the shared memory segment.
+ *  
+ * Inputs:                 uint32_t:    Address of the shared memory segment.
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void detach_shared_mem(uint32_t *shared_addr){
+    while (shmdt((void*)shared_addr) == -1) {
+        printf("LIBMEM SHMDT ERROR %d\n", errno);
+    }
+    pthread_mutex_unlock(&mutex);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * devmem_write() - Higher-level function to write to shared memory. 
+ *
+ * Inputs:          uint32_t addr:      Address to write to
+ *                  uint8_t *in:        Input data to write
+ *                  int32_t length:     Length of input data
+ *
+ * Outputs:         returns int32_t:    Length of data written on success, -1 on failure
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t devmem_write(uint32_t addr, uint8_t *in, int32_t length){
+	uint32_t *local_addr;
+    uint8_t byte;  
+
+	if((local_addr = (uint32_t*)get_shared_mem(addr, length)) == NULL) {
+		return -1;  
+    }
+
+    for(byte = 0; byte < length; byte++) {
+        local_addr[byte] = in[byte]; 
+    }
+
+    detach_shared_mem(local_addr); 
+
+    return length; 
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *  
+ * devmem_read() -  Higher-level function to read from shared memory. 
+ *
+ * Inputs:          uint32_t addr:      Address to read from
+ *                  uint8_t *out:       Output buffer to read into
+ *                  int32_t length:     Length of data to read
+ *
+ * Outputs:         returns int32_t:    Length of data read on success, -1 on failure  
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t devmem_read(uint32_t addr, uint8_t *out, int32_t length){
+	uint32_t *local_addr;
+    uint8_t byte;
+
+	if((local_addr = (uint32_t*)get_shared_mem(addr, length)) == NULL) {
+		return -1;  
+    }
+
+    for(byte = 0; byte < length; byte++) {
+        out[byte] = local_addr[byte]; 
+    }
+
+    detach_shared_mem(local_addr); 
+
+    return length; 
+}
+
+#ifdef __cplusplus
+}
+#endif
+```
+
+### `libsocket.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/libsocket.c`
+
+
+```c
+#define _POSIX_C_SOURCE 200112L
+#include "libsocket.h"
+
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+
+// Creates an endpoint for communication
+// Binds stream, server sockets to localhost and port number
+//
+// Inputs:
+//      socket_info->address_family
+//      socket_info->type
+//      socket_info->port_num (used for stream sockets)
+//      socket_info->block
+//
+// Outputs:
+//      socket_info->sockfd
+//      socket_info->created
+//      socket_info->bound  
+int32_t socket_create(socket_info_t* socket_info)
+{
+    int ret;
+    int type;
+    int address_family;
+    int protocol;
+    struct sockaddr_in sockaddr;
+    int flags;
+    int optval;
+    socklen_t optlen;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    // Set the socket address family
+    if(socket_info->address_family==ip_ver_4)
+    {
+        address_family=AF_INET; // IP version 4
+    }
+    else if(socket_info->address_family==ip_ver_6)
+    {
+        address_family=AF_INET6; // IP version 6
+    }
+    else
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;        
+    }
+
+    // Set the socket type 
+    if(socket_info->type==stream)
+    {
+        type=SOCK_STREAM; // Connection based
+    }
+    else if(socket_info->type==dgram)
+    {
+        type=SOCK_DGRAM; // Connectionless
+    }
+    else
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;        
+    }
+
+    // Set the socket protocol
+    protocol = IPPROTO_IP; // IP protocol
+
+    // Create the socket
+    ret = socket(address_family, type, protocol);
+    if(ret == -1)
+    {
+        status = SOCKET_CREATE_ERR;
+        return status;
+    }
+
+    // Assign values to the socket_info structure 
+    socket_info->sockfd = ret;
+    socket_info->created = true;
+    //OS_printf("socket_info->sockfd = %d\n",socket_info->sockfd);
+    //OS_printf("socket_info->created = %d\n",socket_info->created);
+
+    // Bind server sockets to localhost and port number
+    if(socket_info->category==server || socket_info->type==dgram)
+    {
+        // Prepare the sockaddr_in structure
+        sockaddr.sin_family = address_family;
+        if(inet_addr(socket_info->ip_address) != INADDR_NONE)
+        {
+            sockaddr.sin_addr.s_addr = inet_addr(socket_info->ip_address);
+        }
+        else
+        {
+            char ip[16];
+            int check = HostToIp(socket_info->ip_address, ip);
+            if(check == 0)
+            {
+                sockaddr.sin_addr.s_addr = inet_addr(ip);
+            }
+        }
+        sockaddr.sin_port = htons(socket_info->port_num);
+
+        // Bind the socket 
+        ret = bind(socket_info->sockfd,(struct sockaddr *)&sockaddr , sizeof(sockaddr));
+        if(ret != 0)
+        {
+            status = SOCKET_BIND_ERR;
+            return status;
+        }  
+
+        // Assign values to the socket_info structure
+        socket_info->bound = true;
+        //OS_printf("socket_info->bound = %d\n",socket_info->bound);
+    }
+
+    // Make socket non-blocking?
+    if(socket_info->block==false)
+    {
+        flags = fcntl(socket_info->sockfd, F_GETFL, 0);
+        fcntl(socket_info->sockfd, F_SETFL, flags | O_NONBLOCK);
+    }
+
+    // Turn keep alive on?
+    if(socket_info->keep_alive==true)
+    {
+        optval = 1;
+        optlen = sizeof(optval);
+        setsockopt(socket_info->sockfd, SOL_SOCKET, SO_KEEPALIVE, &optval, optlen);      
+    }
+
+    return status;
+}
+
+// Listens on a connection on a socket
+//
+// Inputs:
+//      socket_info->bound
+//      socket_info->sockfd
+//
+// Outputs:
+//      socket_info->listening
+int32_t socket_listen(socket_info_t* socket_info)
+{
+    int ret;
+    int pending_connections_queue_size;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+    pending_connections_queue_size = 5;
+    
+    // Only listen on a stream socket that has been bound
+    if( (!socket_info->type==stream)||(!socket_info->bound) )
+    {
+        status = SOCKET_LISTEN_ERR;
+        return status;
+    }
+
+    // Listen on the socket
+    ret = listen(socket_info->sockfd, pending_connections_queue_size);
+    if(ret != 0)
+    {
+        status = SOCKET_LISTEN_ERR;
+        return status;
+    }  
+
+    // Assign values to the socket_info structure
+    socket_info->listening = true;
+    //OS_printf("socket_info->listening = %d\n",socket_info->listening);
+
+    return status;
+}
+
+// Accepts a connection on a socket
+//
+// Inputs:
+//      socket_info->listening
+//      socket_info->sockfd
+//
+// Outputs:
+//      socket_info->connected
+//      socket_info->sockfd
+int32_t socket_accept(socket_info_t* socket_info)
+{
+    int c;
+    int ret;
+    struct sockaddr_in client;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    // Only accept connections on a socket that is in a listening state
+    if(socket_info->listening==false)
+    {
+		status = SOCKET_ACCEPT_ERR;
+        return status;        
+    }
+
+    // Accept incoming connection 
+    c = sizeof(struct sockaddr_in);
+    ret = accept(socket_info->sockfd, (struct sockaddr *)&client, (socklen_t*)&c);
+	if (ret == -1)
+	{
+        // Handle non-blocking sockets
+        if( (socket_info->block==false) && (errno==EAGAIN) )
+        {
+		    status = SOCKET_TRY_AGAIN;
+            return status;
+        }   
+        if( (socket_info->block==false) && (errno==EWOULDBLOCK) )
+        {
+		    status = SOCKET_TRY_AGAIN;
+            return status;
+        }          
+		status = SOCKET_ACCEPT_ERR;
+        return status;
+	}
+
+    // Assign values to the socket_info structure
+    socket_info->sockfd = ret;
+    socket_info->connected = true;
+    //OS_printf("socket_info->sockfd = %d\n",socket_info->sockfd);
+    //OS_printf("socket_info->connected = %d\n",socket_info->connected);
+
+    return status;
+} 
+
+// Initiates a connection to a remote ip address and port number
+//
+// Inputs:
+//      socket_info->created
+//      socket_info->category
+//      socket_info->address_family
+//      socket_info->sockfd
+//      remote_ip_address (the remote ip address)
+//      remote_port_num (the remote port number)
+//
+// Outputs:
+//      socket_info->connected
+int32_t socket_connect(socket_info_t* socket_info, char* remote_ip_address, int remote_port_num)
+{
+    int ret;
+    int address_family;
+    struct sockaddr_in server;
+    int32_t status;
+    int error_num;
+
+    status = SOCKET_SUCCESS;
+
+    // Only make outbound connections on client sockets that have been created
+    if(  (socket_info->category!=client)||(!socket_info->created) )
+    {
+        status = SOCKET_CONNECT_ERR;
+        return status; 
+    }
+
+    // Set the socket address family
+    if(socket_info->address_family==ip_ver_4)
+    {
+        address_family=AF_INET; // IP version 4
+    }
+    else if(socket_info->address_family==ip_ver_6)
+    {
+        address_family=AF_INET6; // IP version 6
+    }
+    else
+    {
+        status = SOCKET_CONNECT_ERR;
+        return status;        
+    }
+
+    // Prepare the server structure 
+	server.sin_family = address_family;
+	server.sin_addr.s_addr = inet_addr(remote_ip_address);
+	server.sin_port = htons(remote_port_num);  
+
+    // Connect to remote address/port 
+	ret = connect(socket_info->sockfd , (struct sockaddr *)&server , sizeof(server));
+	if (ret == -1)
+	{
+        error_num = errno;
+        // Ignore "Operation in progress" error on a non-blocking socket
+        if( (socket_info->block==0) && (error_num==115) )
+        {
+            // Do nothing 
+        }
+        else
+        {
+            OS_printf("errno = %d\n",error_num);
+            status = SOCKET_CONNECT_ERR;
+            return status;
+        }
+        
+	}    
+
+    // Assign values to the socket_info structure
+    socket_info->connected = true;    
+
+    return status;
+}
+
+int32_t socket_send(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_sent, char* remote_ip_address, int remote_port_num)
+{
+    int ret;
+    int32_t status;
+    struct sockaddr_in remote_sockaddr;
+    status = SOCKET_SUCCESS;
+
+   switch(socket_info->type)
+    {
+        case stream:
+        {
+            // Only send on stream sockets in a connected state
+            if(socket_info->connected == false)
+            {
+                status = SOCKET_SEND_ERR;
+                return status;
+            }
+            else
+            {           
+                ret = send(socket_info->sockfd, buffer, buflen, 0);
+                if(ret == -1)
+                {
+                    status = SOCKET_SEND_ERR;     
+                    return status;           
+                }
+            }
+            *bytes_sent = ret;
+            break;
+        }
+        case dgram:
+        {
+            // Prepare the remote_sockaddr structure 
+            remote_sockaddr.sin_family = socket_info->address_family;
+            if(inet_addr(remote_ip_address) != INADDR_NONE)
+            {
+                remote_sockaddr.sin_addr.s_addr = inet_addr(remote_ip_address);
+            }
+            else
+            {
+                char ip[16];
+                int check = HostToIp(remote_ip_address, ip);
+                if(check == 0)
+                {
+                    remote_sockaddr.sin_addr.s_addr = inet_addr(ip);
+                }
+            }
+            remote_sockaddr.sin_port = htons(remote_port_num);
+
+            ret = sendto(socket_info->sockfd, (void*)buffer, buflen, 0, (struct sockaddr *)&remote_sockaddr , sizeof(remote_sockaddr));
+            if(ret == -1)
+            {
+                OS_printf("socket_send: sendto returned error %d \n", ret);
+                status = SOCKET_SEND_ERR;     
+                return status;           
+            }
+
+            if(ret != (int) buflen)
+            {
+                OS_printf("socket_send: sendto sent only %d out of %ld bytes! \n", ret, buflen);
+            }
+
+            *bytes_sent = ret;
+            break;
+        }
+        default: 
+        {
+            status = SOCKET_SEND_ERR; 
+            break;
+        }
+    }
+
+    return status;
+}
+
+int32_t socket_recv(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_recvd)
+{
+    int c;
+    int ret;
+    int32_t status;
+    struct sockaddr_in remote_sockaddr;
+
+    status = SOCKET_SUCCESS;
+
+    switch(socket_info->type)
+    {
+        case stream:
+        {
+            // Only recv on stream sockets in a connected state
+            if(socket_info->connected == false)
+            {
+                status = SOCKET_RECV_ERR;
+                return status;
+            }
+            else
+            {           
+                ret = recv(socket_info->sockfd, (void*)buffer, buflen, 0);
+                if(ret == 0)
+                {
+                    // Client disconnected
+                    socket_info->connected = false;
+                    status = SOCKET_RECV_ERR;
+                    return status;
+                }
+                else if(ret == -1)
+                {
+                    // Handle non-blocking sockets
+                    if( (socket_info->block==false) && (errno==EAGAIN) )
+                    {
+                        status = SOCKET_TRY_AGAIN;
+                        return status;
+                    }   
+                    if( (socket_info->block==false) && (errno==EWOULDBLOCK) )
+                    {
+                        status = SOCKET_TRY_AGAIN;
+                        return status;
+                    }
+                    status = SOCKET_RECV_ERR;     
+                    return status;           
+                }
+                *bytes_recvd = ret;
+            }
+            break;
+        }
+        case dgram:
+        {
+            c = sizeof(struct sockaddr_in);
+            ret = recvfrom(socket_info->sockfd, (void*)buffer, buflen, 0, (struct sockaddr *)&remote_sockaddr, (socklen_t*)&c);
+            if(ret == -1)
+            {
+                // Handle non-blocking sockets
+                if( (socket_info->block==false) && (errno==EAGAIN) )
+                {
+                    status = SOCKET_TRY_AGAIN;
+                    return status;
+                }   
+                if( (socket_info->block==false) && (errno==EWOULDBLOCK) )
+                {
+                    status = SOCKET_TRY_AGAIN;
+                    return status;
+                }
+                status = SOCKET_RECV_ERR;     
+                return status;           
+            }   
+            *bytes_recvd = ret;   
+            break;
+        }
+        default: 
+        {
+            status = SOCKET_RECV_ERR; 
+            break;
+        }
+    }
+
+    return status;
+}
+
+int32_t socket_close(socket_info_t* socket_info)
+{
+    int ret;
+    int32_t status;
+
+    status = SOCKET_SUCCESS;
+
+    ret = close(socket_info->sockfd);
+    if(ret == -1)
+    {
+        status = SOCKET_CLOSE_ERR;
+        return status;
+    }
+
+    // Assign values to the socket_info structure
+    // TBD
+
+    return status;
+}
+
+int HostToIp(const char * hostname, char* ip)
+{
+    struct addrinfo hints, *res, *p;
+    int status;
+    void *addr;
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET; // Uses IPV4 only.  AF_UNSPEC for IPV6 Support
+    hints.ai_socktype = SOCK_STREAM;
+
+    if ((status = getaddrinfo(hostname, NULL, &hints, &res)) != 0)
+    {
+        return 1;
+    }
+
+    for (p = res; p != NULL; p = p->ai_next)
+    {
+        struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+        addr = &(ipv4->sin_addr);
+
+        // Convert IP to String
+        if (inet_ntop(p->ai_family, addr, ip, INET_ADDRSTRLEN) == NULL)
+        {
+            freeaddrinfo(res);
+            return 1;
+        }
+
+        freeaddrinfo(res);
+        return 0; // IP Found
+    }
+    freeaddrinfo(res);
+    return 1; // IP NOT Found
+}
+```
+
+### `libspi.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/libspi.c`
+
+
+```c
+/* Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "nos_link.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+/* nos */
+#include <Spi/Client/CInterface.h>
+
+/* hwlib API */
+#include "libspi.h"
+
+/* spi bus mutex */
+pthread_mutex_t spi_bus_mutex[MAX_SPI_BUSES];
+uint32_t handle_count = 0;
+
+/* spi device handles */
+static NE_SpiHandle *spi_device[NUM_SPI_DEVICES] = {0};
+
+/* public prototypes */
+void nos_init_spi_link(void);
+void nos_destroy_spi_link(void);
+
+/* private prototypes */
+static NE_SpiHandle* nos_get_spi_device(spi_info_t* device);
+
+/* initialize nos engine spi link */
+void nos_init_spi_link(void)
+{
+    // Init the mutexes for chip select
+    int i;
+    for(i = 0; i < MAX_SPI_BUSES; i++)
+    {
+        if (pthread_mutex_init(&spi_bus_mutex[i], NULL) != 0)
+        {
+            OS_printf("HWLIB: Create spi mutex error for spi bus %d", i);
+        }
+    }
+}
+
+/* destroy nos engine spi link */
+void nos_destroy_spi_link(void)
+{
+    /* clean up spi buses */
+    int i;
+    for(i = 0; i < MAX_SPI_BUSES; i++)
+    {
+        NE_SpiHandle *dev = spi_device[i];
+        if(dev) NE_spi_close(&dev);
+
+        if (pthread_mutex_destroy(&spi_bus_mutex[i]) != 0)
+        {
+            OS_printf("HWLIB: Destroy spi mutex error for spi bus %d", i);
+        }
+    }
+}
+
+/* nos spi init */
+int32_t spi_init_dev(spi_info_t* device)
+{
+    int     status = SPI_SUCCESS;
+
+
+    pthread_mutex_lock(&spi_bus_mutex[device->bus]);
+    
+    /* get spi device handle */
+    NE_SpiHandle **dev = &spi_device[device->handle];
+    if(*dev == NULL)
+    {
+        /* get nos spi connection params */
+        const nos_connection_t *con = &nos_spi_connection[(device->bus * 10) + device->cs];
+
+        /* try to initialize master */
+        *dev = NE_spi_init_master3(hub, con->uri, con->bus);
+        if(*dev)
+        {
+            status = SPI_SUCCESS;
+        }
+        else
+        {
+            pthread_mutex_unlock(&spi_bus_mutex[device->bus]);
+            OS_printf("HWLIB: Open SPI device \"%s\" error %d", device->deviceString, status);
+            return status;
+        }
+    }
+
+    pthread_mutex_unlock(&spi_bus_mutex[device->bus]);
+
+    // Set open flag
+    device->isOpen = SPI_DEVICE_OPEN;
+
+    return status;
+}
+
+/* get spi device */
+static NE_SpiHandle* nos_get_spi_device(spi_info_t* device)
+{
+    NE_SpiHandle *dev = NULL;
+    if(device->handle < NUM_SPI_DEVICES)
+    {
+        dev = spi_device[device->handle];
+        if(dev == NULL)
+        {
+            spi_init_dev(device);
+            dev = spi_device[device->handle];
+        }
+    }
+    return dev;
+}
+
+/* nos spi chip select */
+int32_t spi_select_chip(spi_info_t* device)
+{
+    int32_t status = SPI_SUCCESS;
+
+    pthread_mutex_lock(&spi_bus_mutex[device->bus]);
+
+    NE_SpiHandle *dev = nos_get_spi_device(device);
+    if(dev)
+    {
+        NE_spi_select_chip(dev, device->cs);
+    }
+
+    return status;
+}
+
+/* nos spi chip unselect */
+int32_t spi_unselect_chip(spi_info_t* device)
+{
+    int32_t status = SPI_SUCCESS;
+
+    pthread_mutex_unlock(&spi_bus_mutex[device->bus]);
+
+    NE_SpiHandle *dev = nos_get_spi_device(device);
+    if(dev)
+    {
+        NE_spi_unselect_chip(dev);
+    }
+
+    return status;
+}
+
+/* nos spi write */
+int32_t spi_write(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+    int status = SPI_SUCCESS;
+
+    NE_SpiHandle *dev = nos_get_spi_device(device);
+    if(dev)
+    {
+        if(NE_spi_write(dev, data, numBytes) != NE_SPI_SUCCESS)
+        {
+            status = SPI_ERROR;
+        }
+    }
+
+    return status;
+}
+
+/* nos spi read */
+int32_t spi_read(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+    int status = SPI_SUCCESS;
+
+    NE_SpiHandle *dev = nos_get_spi_device(device);
+    if(dev)
+    {
+        if(NE_spi_read(dev, data, numBytes) != NE_SPI_SUCCESS)
+        {
+            status = SPI_ERROR;
+        }
+    }
+
+    return status;
+}
+
+int32_t spi_transaction(spi_info_t* device, uint8_t *txBuff, uint8_t * rxBuffer, uint32_t length, uint16_t delay, uint8_t bits, uint8_t deselect)
+{
+    int status = SPI_SUCCESS;
+
+    NE_SpiHandle *dev = nos_get_spi_device(device);
+    if(dev)
+    {
+        if(NE_spi_transaction(dev, txBuff, length, rxBuffer, length) != NE_SPI_SUCCESS)
+        {
+            status = SPI_ERROR;
+        }
+    }
+
+    return status;
+}
+
+int32_t spi_close_device(spi_info_t* device)
+{
+	if (device->handle >= 0)
+    {
+        NE_SpiHandle *dev = nos_get_spi_device(device);
+        if(dev)
+        {
+            NE_spi_close(&dev);
+            spi_device[device->handle] = 0;
+            device-> isOpen = SPI_DEVICE_CLOSED;
+        }
+    }
+    return OS_SUCCESS;
+}
+```
+
+### `libtrq.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/libtrq.c`
+
+
+```c
+/* Copyright (C) 2009 - 2020 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "nos_link.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <sys/socket.h> 
+#include <arpa/inet.h> 
+#include <netinet/in.h>
+
+/* nos */
+#include <Spi/Client/CInterface.h>
+
+/* hwlib API */
+#include "libtrq.h"
+#include "libsocket.h"
+
+static int num_conn_errors = 0;
+static int num_send_errors = 0;
+static const int PORT = 14242;
+static int sockfd = 0;
+static struct sockaddr_in servaddr;
+
+int32_t trq_update(trq_info_t* device)
+{
+    int32_t status = TRQ_SUCCESS;
+    ssize_t bytes_sent;
+    char message[512];
+    float percent_high_dir = 100.0 * device->timer_high_ns / device->timer_period_ns;
+
+    // Take into account the direction
+    if (device->positive_direction == false)
+    {
+        percent_high_dir = percent_high_dir * -1;
+    }
+
+    // Send to MTB sim, MTB sim must then calculate A-m^2
+    sprintf(message, "%d %f\n", device->trq_num, percent_high_dir);
+
+    if (sockfd >= 0) 
+    {
+        bytes_sent = sendto(sockfd, message, strlen(message), MSG_CONFIRM | MSG_DONTWAIT, (const struct sockaddr *)&servaddr, sizeof(servaddr));
+        if ((bytes_sent < 0) || ((size_t)bytes_sent != strlen(message))) 
+        {
+            if (num_send_errors++ < 10) 
+            { // don't spam
+                printf("NOS command_torquer:  Only sent %ld bytes of %ld bytes.  Message was:  %s\n", bytes_sent, strlen(message), message);
+            }
+            status = TRQ_ERROR;
+        }
+    } else 
+    {
+        if (num_conn_errors++ < 10) 
+        { // don't spam
+            printf("NOS command_torquer:  Socket not connected (%d).\n", sockfd);
+        }
+        status = TRQ_ERROR;
+    }
+
+    return status;
+}
+
+int32_t trq_set_time_high(trq_info_t* device, uint32_t new_time)
+{
+    int32_t status = TRQ_SUCCESS;
+
+    device->timer_high_ns = new_time;
+    status = trq_update(device);
+
+    return status;
+}
+
+int32_t trq_set_period(trq_info_t* device)
+{
+    int32_t status = TRQ_SUCCESS;
+    
+    status = trq_update(device);
+
+    return status;
+}
+
+int32_t trq_set_direction(trq_info_t* device, bool direction)
+{
+    int32_t status = TRQ_SUCCESS;
+    
+    device->positive_direction = direction;
+    status = trq_update(device);
+
+    return status;
+}
+
+int32_t trq_init(trq_info_t* device)
+{
+    int32_t status = TRQ_SUCCESS;
+    device->enabled = true;
+    device->timer_high_ns = 0;  // no pulse
+
+    // int socket(int domain, int type, int protocol);
+    // int close(int fd)
+
+    if (sockfd == 0) {
+        if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+            OS_printf("NOS trq_init:  Failed to create UDP socket\n");
+        }
+    
+        memset(&servaddr, 0, sizeof(servaddr));
+        
+        // Filling server information 
+        servaddr.sin_family = AF_INET;
+        servaddr.sin_port = htons(PORT);
+        
+        // Look up `trq_sim` from hostname
+        char ip[16];
+        int check = HostToIp("trq-sim", ip);
+        if(check == 0)
+        {
+            servaddr.sin_addr.s_addr = inet_addr(ip);
+        }
+    }
+
+    return status;
+}
+
+int32_t trq_command(trq_info_t* device, uint8_t percent_high, bool pos_dir)
+{
+    int32_t status = TRQ_SUCCESS;
+
+    // Calculate time high
+    if (percent_high > 100)
+    {
+        printf("trq_command: Error setting percent high greater than 100! \n");
+        return TRQ_ERROR;
+    }
+
+    device->timer_high_ns = device->timer_period_ns * (percent_high / 100.00);
+    device->positive_direction = pos_dir;
+    status = trq_update(device);
+
+    return status;
+}
+
+void trq_close(trq_info_t* device)
+{
+    device->enabled = false;
+    close(sockfd);
+}
+```
+
+### `libuart.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/libuart.c`
+
+
+```c
+/* Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "nos_link.h"
+#include <stdint.h>
+#include <stdlib.h>
+
+/* nos */
+#include <Uart/Client/CInterface.h>
+
+/* hwlib API */
+#include "libuart.h"
+
+/* size of uart buffer */
+#define USART_RX_BUF_SIZE    4096
+
+/* usart device handles */
+static NE_Uart *usart_device[NUM_USARTS] = {0};
+
+/* public prototypes */
+void nos_destroy_usart_link(void);
+
+/* private prototypes */
+static NE_Uart* nos_get_usart_device(int handle);
+
+/* destroy nos engine usart link */
+void nos_destroy_usart_link(void)
+{
+    int i;
+
+    /* clean up usart buses */
+    for(i = 0; i <= NUM_USARTS; i++)
+    {
+        NE_Uart *dev = usart_device[i];
+        if(dev) NE_uart_close(&dev);
+    }
+}
+
+/* init usart */
+int32_t uart_init_port(uart_info_t* device)
+{
+    int32_t status = OS_SUCCESS;
+    if(device->handle >= 0 && device->handle < NUM_USARTS)
+    {
+
+        /* get usart device handle */
+        NE_Uart **dev = &usart_device[device->handle];
+        if(*dev == NULL)
+        {
+            /* get nos usart connection params */
+            const nos_connection_t *con = &nos_usart_connection[device->handle];
+
+            /* try to initialize usart */
+            *dev = NE_uart_open3(hub, "fsw", con->uri, con->bus, device->handle);
+
+            if(*dev)
+            {
+                /* set default queue size */
+                NE_uart_set_queue_size(*dev, USART_RX_BUF_SIZE);
+
+                device->isOpen = PORT_OPEN;           
+	        }
+            else
+            {
+                OS_printf("nos uart_open failed\n");
+		        device->isOpen = PORT_CLOSED;
+		        status = OS_ERR_FILE;
+            }
+        }
+    }
+    else
+    {
+        OS_printf("Handle not found\n");
+        device->isOpen = PORT_CLOSED;
+        status = OS_ERR_FILE;
+    }
+    return status;
+}
+
+/* get usart device */
+static NE_Uart* nos_get_usart_device(int handle)
+{
+    NE_Uart *dev = NULL;
+    if(handle < NUM_USARTS)
+    {
+        dev = usart_device[handle];
+    }
+    return dev;
+}
+
+/* usart flush */
+int32_t uart_flush(uart_info_t* device)
+{
+    NE_Uart *dev = nos_get_usart_device((int)device->handle);
+    if(dev)
+    {
+        NE_uart_flush(dev);
+    }
+    return UART_SUCCESS;
+}
+
+/* usart write */
+int32_t uart_write_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+    int32_t status = OS_ERR_FILE;
+    NE_Uart *dev = nos_get_usart_device((int)device->handle);
+    if(dev)
+    {
+        status = NE_uart_write(dev, (const uint8_t*)data, numBytes); //Can this function return -1?
+    }
+    return status;
+}
+
+/* usart read */
+int32_t uart_read_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+    uint32_t status = OS_ERR_FILE;
+
+    if (data != NULL) //Check that there is actually data to read
+    { 
+        uint8_t c = 0xFF;
+        int  i;
+        int stat;
+        NE_Uart *dev = nos_get_usart_device((int)device->handle);
+        if(dev)
+        {
+            for (i = 0; i < (int)numBytes; i++) //TODO: Add ability to switch between blocking and non-blocking?
+            {
+                /*
+                //NON BLOCKING MODE
+                stat = NE_uart_getc(dev, (uint8_t*)&c); //Returns 0 if byte read, 1 if no byte actually read
+                if(stat == 1)
+                {
+                    return i; //Causes app to immediately enter service mode
+                }
+                else {
+                    data[i] = c;
+                }
+                */
+                //BLOCKING MODE
+                do {
+                    stat = NE_uart_getc(dev, (uint8_t*)&c);
+                    if (stat == 1)
+                    {
+                        OS_TaskDelay(1);
+                    }
+                } while(stat); 
+                data[i] = c;
+            }
+            status = numBytes;
+            
+            return status;
+        }
+        return status; //There is data, but can't read from device
+    }
+    return status; //Following arm_inux model
+}
+
+/* usart number bytes available */
+int32_t uart_bytes_available(uart_info_t* device)
+{
+    int bytes = 0;
+    NE_Uart *dev = nos_get_usart_device((int)device->handle);
+    if(dev)
+    {
+        bytes = (int)NE_uart_available(dev);
+    }
+    return bytes;
+}
+
+int32_t uart_close_port(uart_info_t* device) 
+{
+    NE_UartStatus status;
+    NE_Uart *dev = nos_get_usart_device((int)device->handle);
+    if (device->handle >= 0)
+    {
+        if(dev)
+        {
+            status = NE_uart_close(&dev);
+            usart_device[device->handle] = 0;
+            device->isOpen = PORT_CLOSED;
+        }
+    }
+    if (status == NE_UART_SUCCESS) {
+        return OS_SUCCESS;
+    }
+    else
+    {
+        return OS_ERROR;
+    }
+    
+}
+```
+
+### `nos_link.c`
+
+**경로:** `fsw/apps/hwlib/sim/src/nos_link.c`
+
+
+```c
+/* Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "nos_link.h"
+#include "hwlib.h"
+#include <stdlib.h>
+
+/* nos usart connection table */
+nos_connection_t nos_usart_connection[NUM_USARTS] = {
+    {"tcp://nos-engine-server:12000", "usart_0"},
+    {"tcp://nos-engine-server:12000", "usart_1"},
+    {"tcp://nos-engine-server:12000", "usart_2"},
+    {"tcp://nos-engine-server:12000", "usart_3"},
+    {"tcp://nos-engine-server:12000", "usart_4"},
+    {"tcp://nos-engine-server:12000", "usart_5"},
+    {"tcp://nos-engine-server:12000", "usart_6"},
+    {"tcp://nos-engine-server:12000", "usart_7"},
+    {"tcp://nos-engine-server:12000", "usart_8"},
+    {"tcp://nos-engine-server:12000", "usart_9"},
+    {"tcp://nos-engine-server:12000", "usart_10"},
+    {"tcp://nos-engine-server:12000", "usart_11"},
+    {"tcp://nos-engine-server:12000", "usart_12"},
+    {"tcp://nos-engine-server:12000", "usart_13"},
+    {"tcp://nos-engine-server:12000", "usart_14"},
+    {"tcp://nos-engine-server:12000", "usart_15"},
+    {"tcp://nos-engine-server:12000", "usart_16"},
+    {"tcp://nos-engine-server:12000", "usart_17"},
+    {"tcp://nos-engine-server:12000", "usart_18"},
+    {"tcp://nos-engine-server:12000", "usart_19"},
+    {"tcp://nos-engine-server:12000", "usart_20"},
+    {"tcp://nos-engine-server:12000", "usart_21"},
+    {"tcp://nos-engine-server:12000", "usart_22"},
+    {"tcp://nos-engine-server:12000", "usart_23"},
+    {"tcp://nos-engine-server:12000", "usart_24"},
+    {"tcp://nos-engine-server:12000", "usart_25"},
+    {"tcp://nos-engine-server:12000", "usart_26"},
+    {"tcp://nos-engine-server:12000", "usart_27"},
+    {"tcp://nos-engine-server:12000", "usart_28"},
+    {"tcp://nos-engine-server:12000", "usart_29"}
+};
+
+/* nos i2c connection table */
+nos_connection_t nos_i2c_connection[NUM_I2C_DEVICES] = {
+    {"tcp://nos-engine-server:12000", "i2c_0"},
+    {"tcp://nos-engine-server:12000", "i2c_1"},
+    {"tcp://nos-engine-server:12000", "i2c_2"},
+    {"tcp://nos-engine-server:12000", "i2c_3"},
+    {"tcp://nos-engine-server:12000", "i2c_4"},
+    {"tcp://nos-engine-server:12000", "i2c_5"},
+    {"tcp://nos-engine-server:12000", "i2c_6"},
+    {"tcp://nos-engine-server:12000", "i2c_7"},
+    {"tcp://nos-engine-server:12000", "i2c_8"},
+    {"tcp://nos-engine-server:12000", "i2c_9"},
+    {"tcp://nos-engine-server:12000", "i2c_10"},
+    {"tcp://nos-engine-server:12000", "i2c_11"},
+    {"tcp://nos-engine-server:12000", "i2c_12"},
+    {"tcp://nos-engine-server:12000", "i2c_13"},
+    {"tcp://nos-engine-server:12000", "i2c_14"},
+    {"tcp://nos-engine-server:12000", "i2c_15"},
+    {"tcp://nos-engine-server:12000", "i2c_16"},
+    {"tcp://nos-engine-server:12000", "i2c_17"},
+    {"tcp://nos-engine-server:12000", "i2c_18"},
+    {"tcp://nos-engine-server:12000", "i2c_19"},
+    {"tcp://nos-engine-server:12000", "i2c_20"},
+    {"tcp://nos-engine-server:12000", "i2c_21"},
+    {"tcp://nos-engine-server:12000", "i2c_22"},
+    {"tcp://nos-engine-server:12000", "i2c_23"},
+    {"tcp://nos-engine-server:12000", "i2c_24"},
+    {"tcp://nos-engine-server:12000", "i2c_25"},
+    {"tcp://nos-engine-server:12000", "i2c_26"},
+    {"tcp://nos-engine-server:12000", "i2c_27"},
+    {"tcp://nos-engine-server:12000", "i2c_28"},
+    {"tcp://nos-engine-server:12000", "i2c_29"}
+};
+
+/* nos can connection table */
+nos_connection_t nos_can_connection[NUM_CAN_DEVICES] = {
+    {"tcp://nos-engine-server:12000", "can_0"},
+    {"tcp://nos-engine-server:12000", "can_1"},
+    {"tcp://nos-engine-server:12000", "can_2"},
+    {"tcp://nos-engine-server:12000", "can_3"},
+    {"tcp://nos-engine-server:12000", "can_4"},
+    {"tcp://nos-engine-server:12000", "can_5"},
+    {"tcp://nos-engine-server:12000", "can_6"},
+    {"tcp://nos-engine-server:12000", "can_7"},
+    {"tcp://nos-engine-server:12000", "can_8"},
+    {"tcp://nos-engine-server:12000", "can_9"},
+    {"tcp://nos-engine-server:12000", "can_10"},
+    {"tcp://nos-engine-server:12000", "can_11"},
+    {"tcp://nos-engine-server:12000", "can_12"},
+    {"tcp://nos-engine-server:12000", "can_13"},
+    {"tcp://nos-engine-server:12000", "can_14"},
+    {"tcp://nos-engine-server:12000", "can_15"},
+    {"tcp://nos-engine-server:12000", "can_16"},
+    {"tcp://nos-engine-server:12000", "can_17"},
+    {"tcp://nos-engine-server:12000", "can_18"},
+    {"tcp://nos-engine-server:12000", "can_19"},
+    {"tcp://nos-engine-server:12000", "can_20"},
+    {"tcp://nos-engine-server:12000", "can_21"},
+    {"tcp://nos-engine-server:12000", "can_22"},
+    {"tcp://nos-engine-server:12000", "can_23"},
+    {"tcp://nos-engine-server:12000", "can_24"},
+    {"tcp://nos-engine-server:12000", "can_25"},
+    {"tcp://nos-engine-server:12000", "can_26"},
+    {"tcp://nos-engine-server:12000", "can_27"},
+    {"tcp://nos-engine-server:12000", "can_28"},
+    {"tcp://nos-engine-server:12000", "can_29"}
+};
+
+/* nos spi connection table */
+nos_connection_t nos_spi_connection[NUM_SPI_DEVICES] = {
+    {"tcp://nos-engine-server:12000", "spi_0"},
+    {"tcp://nos-engine-server:12000", "spi_1"},
+    {"tcp://nos-engine-server:12000", "spi_2"},
+    {"tcp://nos-engine-server:12000", "spi_3"},
+    {"tcp://nos-engine-server:12000", "spi_4"},
+    {"tcp://nos-engine-server:12000", "spi_5"},
+    {"tcp://nos-engine-server:12000", "spi_6"},
+    {"tcp://nos-engine-server:12000", "spi_7"},
+    {"tcp://nos-engine-server:12000", "spi_8"},
+    {"tcp://nos-engine-server:12000", "spi_9"},
+    {"tcp://nos-engine-server:12000", "spi_10"},
+    {"tcp://nos-engine-server:12000", "spi_11"},
+    {"tcp://nos-engine-server:12000", "spi_12"},
+    {"tcp://nos-engine-server:12000", "spi_13"},
+    {"tcp://nos-engine-server:12000", "spi_14"},
+    {"tcp://nos-engine-server:12000", "spi_15"},
+    {"tcp://nos-engine-server:12000", "spi_16"},
+    {"tcp://nos-engine-server:12000", "spi_17"},
+    {"tcp://nos-engine-server:12000", "spi_18"},
+    {"tcp://nos-engine-server:12000", "spi_19"},
+    {"tcp://nos-engine-server:12000", "spi_20"},
+    {"tcp://nos-engine-server:12000", "spi_21"},
+    {"tcp://nos-engine-server:12000", "spi_22"},
+    {"tcp://nos-engine-server:12000", "spi_23"},
+    {"tcp://nos-engine-server:12000", "spi_24"},
+    {"tcp://nos-engine-server:12000", "spi_25"},
+    {"tcp://nos-engine-server:12000", "spi_26"},
+    {"tcp://nos-engine-server:12000", "spi_27"},
+    {"tcp://nos-engine-server:12000", "spi_28"},
+    {"tcp://nos-engine-server:12000", "spi_29"}
+};
+
+/* common transport hub */
+NE_TransportHub *hub = NULL;
+
+/* internal hardware bus init/destroy */
+extern void nos_destroy_usart_link(void);
+extern void nos_init_i2c_link(void);
+extern void nos_destroy_i2c_link(void);
+extern void nos_init_can_link(void);
+extern void nos_destroy_can_link(void);
+extern void nos_init_spi_link(void);
+extern void nos_destroy_spi_link(void);
+
+/* initialize nos engine link */
+void nos_init_link(void)
+{
+    OS_printf("initializing nos engine link...\n");
+
+    /* create transport hub */
+    hub = NE_create_transport_hub(0);
+
+    /* initialize buses */
+    /* can, i2c, and uart do not need init for mutex*/
+    nos_init_spi_link();
+}
+
+/* destroy nos engine link */
+void nos_destroy_link(void)
+{
+    OS_printf("destroying nos engine link...\n");
+
+    /* destroy buses */
+    nos_destroy_usart_link();
+    nos_destroy_i2c_link();
+    nos_destroy_can_link();
+    nos_destroy_spi_link();
+
+    /* destroy transport hub */
+    NE_destroy_transport_hub(&hub);
+}
+
+```

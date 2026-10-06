@@ -3,170 +3,12300 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 funct/index
-file--AdditiveExpression.java
-file--AddOp.java
-file--AggregateExpression.java
-file--AggregateListExpression.java
-file--AlterSequenceStatement.java
-file--AlterTableStatement.java
-file--AndExpression.java
-file--ArgumentExpression.java
-file--ArrayExpression.java
-file--BitwiseExpression.java
-file--BitwiseOp.java
-file--CloseStreamStatement.java
-file--ColumnExpression.java
-file--ColumnNotFoundException.java
-file--CompilableAggregateExpression.java
-file--CreateInputStreamStatement.java
-file--CreateOutputStreamStatement.java
-file--CreateStreamStatement.java
-file--CreateTableStatement.java
-file--DeleteStatement.java
-file--DescribeStatement.java
-file--DropTableStatement.java
-file--ExponentExpression.java
-file--Expression.java
-file--FirstValExpression.java
-file--GenericStreamSqlException.java
-file--HistogramStreamBuilder.java
-file--InClause.java
-file--InExpression.java
-file--InsertStatement.java
-file--InsertValuesExpression.java
-file--IsNullClause.java
-file--IsNullExpression.java
-file--javacc-invocation.sh
-file--LikeClause.java
-file--LikeExpression.java
-file--LimitedStream.java
-file--MergeExpression.java
-file--MergeStatement.java
-file--MultiplicativeExpression.java
-file--MultOp.java
-file--NegativeExpression.java
-file--NotExpression.java
-file--NotSupportedException.java
-file--NullExpression.java
-file--OrExpression.java
-file--QueryTableExpression.java
-file--README.txt
-file--RelationalExpression.java
-file--RelOp.java
-file--ResourceNotFoundException.java
-file--ResultListener.java
-file--SelectExpression.java
-file--SelectItem.java
-file--SelectTableStatement.java
-file--ShowDatabasesStatement.java
-file--ShowEnginesStatement.java
-file--ShowSequencesStatement.java
-file--ShowStreamsStatement.java
-file--ShowStreamStatement.java
-file--ShowTablesStatement.java
-file--SimpleStreamSqlStatement.java
-file--StreamExpression.java
-file--StreamSql.jj
-file--StreamSqlException.java
-file--StreamSqlParser.java
-file--StreamSqlParserConstants.java
-file--StreamSqlParserTokenManager.java
-file--StreamSqlResult.java
-file--StreamSqlResultList.java
-file--StreamSqlStatement.java
-file--TableWalkerBuilder.java
-file--TokenMgrError.java
-file--TupleSourceExpression.java
-file--UpdateTableStatement.java
-file--Utils.java
-file--ValueExpression.java
-file--WindowSpecification.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/funct/`](funct/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AdditiveExpression.java`](file--AdditiveExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AddOp.java`](file--AddOp.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AggregateExpression.java`](file--AggregateExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AggregateListExpression.java`](file--AggregateListExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AlterSequenceStatement.java`](file--AlterSequenceStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AlterTableStatement.java`](file--AlterTableStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AndExpression.java`](file--AndExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ArgumentExpression.java`](file--ArgumentExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ArrayExpression.java`](file--ArrayExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/BitwiseExpression.java`](file--BitwiseExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/BitwiseOp.java`](file--BitwiseOp.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CloseStreamStatement.java`](file--CloseStreamStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ColumnExpression.java`](file--ColumnExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ColumnNotFoundException.java`](file--ColumnNotFoundException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CompilableAggregateExpression.java`](file--CompilableAggregateExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateInputStreamStatement.java`](file--CreateInputStreamStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateOutputStreamStatement.java`](file--CreateOutputStreamStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateStreamStatement.java`](file--CreateStreamStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateTableStatement.java`](file--CreateTableStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/DeleteStatement.java`](file--DeleteStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/DescribeStatement.java`](file--DescribeStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/DropTableStatement.java`](file--DropTableStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ExponentExpression.java`](file--ExponentExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/Expression.java`](file--Expression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/FirstValExpression.java`](file--FirstValExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/GenericStreamSqlException.java`](file--GenericStreamSqlException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/HistogramStreamBuilder.java`](file--HistogramStreamBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InClause.java`](file--InClause.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InExpression.java`](file--InExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InsertStatement.java`](file--InsertStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InsertValuesExpression.java`](file--InsertValuesExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/IsNullClause.java`](file--IsNullClause.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/IsNullExpression.java`](file--IsNullExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/javacc-invocation.sh`](file--javacc-invocation.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/LikeClause.java`](file--LikeClause.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/LikeExpression.java`](file--LikeExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/LimitedStream.java`](file--LimitedStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MergeExpression.java`](file--MergeExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MergeStatement.java`](file--MergeStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MultiplicativeExpression.java`](file--MultiplicativeExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MultOp.java`](file--MultOp.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NegativeExpression.java`](file--NegativeExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NotExpression.java`](file--NotExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NotSupportedException.java`](file--NotSupportedException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NullExpression.java`](file--NullExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/OrExpression.java`](file--OrExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/QueryTableExpression.java`](file--QueryTableExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/RelationalExpression.java`](file--RelationalExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/RelOp.java`](file--RelOp.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ResourceNotFoundException.java`](file--ResourceNotFoundException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ResultListener.java`](file--ResultListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SelectExpression.java`](file--SelectExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SelectItem.java`](file--SelectItem.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SelectTableStatement.java`](file--SelectTableStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowDatabasesStatement.java`](file--ShowDatabasesStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowEnginesStatement.java`](file--ShowEnginesStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowSequencesStatement.java`](file--ShowSequencesStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowStreamsStatement.java`](file--ShowStreamsStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowStreamStatement.java`](file--ShowStreamStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowTablesStatement.java`](file--ShowTablesStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SimpleStreamSqlStatement.java`](file--SimpleStreamSqlStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamExpression.java`](file--StreamExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSql.jj`](file--StreamSql.jj) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlException.java`](file--StreamSqlException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlParser.java`](file--StreamSqlParser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlParserConstants.java`](file--StreamSqlParserConstants.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlParserTokenManager.java`](file--StreamSqlParserTokenManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlResult.java`](file--StreamSqlResult.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlResultList.java`](file--StreamSqlResultList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlStatement.java`](file--StreamSqlStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/TableWalkerBuilder.java`](file--TableWalkerBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/TokenMgrError.java`](file--TokenMgrError.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/TupleSourceExpression.java`](file--TupleSourceExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/UpdateTableStatement.java`](file--UpdateTableStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/Utils.java`](file--Utils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ValueExpression.java`](file--ValueExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/WindowSpecification.java`](file--WindowSpecification.java) — UTF-8 텍스트 파일 본문 포함
+### `AdditiveExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AdditiveExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public class AdditiveExpression extends Expression {
+    List<AddOp> ops;
+
+    public AdditiveExpression(List<Expression> exprs, List<AddOp> ops) throws ParseException {
+        super(exprs.toArray(new Expression[0]));
+        this.ops = ops;
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        boolean constant = Arrays.stream(children).allMatch(e -> e.isConstant());
+        if (constant) {
+            computeConstantValue();
+        } else {
+            type = children[0].getType();
+            if(DataType.isNumber(type)) {
+                Optional<Expression> o = Arrays.stream(children).filter(c->!DataType.isNumber(c.getType())).findAny();
+                if(o.isPresent()) {
+                    throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot add numeric with data type " + o.get().getType());
+                }
+            } else {
+                if (ops.contains(AddOp.MINUS)) {
+                    throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot use minus on data type " + type);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if (DataType.isNumber(type) || type==DataType.STRING) {
+            code.append("(");
+            children[0].fillCode_getValueReturn(code);
+            for (int i = 0; i < ops.size(); i++) {
+                code.append(ops.get(i).getSign());
+                children[i + 1].fillCode_getValueReturn(code);
+            }
+            code.append(")");
+        } else {
+            code.append("org.yamcs.yarch.streamsql.AdditiveExpression._binaryConcat(");
+            children[0].fillCode_getValueReturn(code);
+            for (int i = 0; i < ops.size(); i++) {
+                code.append(",");
+                children[i + 1].fillCode_getValueReturn(code);
+            }
+            code.append(")");
+        }
+    }
+    
+
+    private void computeConstantValue() throws StreamSqlException {
+        DataType ch0t = children[0].getType();
+        if (ch0t == DataType.STRING) {
+            constantValue = concatStringChildren();
+        } else if (ch0t == DataType.BINARY) {
+            constantValue = concatBinaryChildren();
+        } else if (DataType.isNumber(ch0t)) {
+            BigDecimal x = addNumbChildren();
+            if (x.stripTrailingZeros().scale() <= 0) {
+                long lx = x.longValue();
+                if (lx == (int) lx) {
+                    constantValue = (int) lx;
+                    type = DataType.LONG;
+                } else {
+                    constantValue = lx;
+                    type = DataType.INT;
+                }
+            }
+        } else {
+            throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot use additive expression for " + ch0t);
+        }
+
+    }
+
+    private String concatStringChildren() throws StreamSqlException {
+        StringBuilder sb = new StringBuilder();
+        for (Expression c : children) {
+            if (c.getType() != DataType.STRING) {
+                throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot add String to " + c.getType());
+            }
+            sb.append((String) c.getConstantValue());
+        }
+        return sb.toString();
+    }
+
+    private BigDecimal addNumbChildren() throws StreamSqlException {
+        BigDecimal s = new BigDecimal(0);
+        for (Expression c : children) {
+            if (!DataType.isNumber(c.getType())) {
+                throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot add number to " + c.getType());
+            }
+            Number x = (Number) c.getConstantValue();
+            s = s.add(new BigDecimal(x.toString()));
+        }
+        return s;
+    }
+
+    private byte[] concatBinaryChildren() throws StreamSqlException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        for (Expression c : children) {
+            if (c.getType() != DataType.BINARY) {
+                throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot add Binary to " + c.getType());
+            }
+            try {
+                baos.write((byte[]) c.getConstantValue());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return baos.toByteArray();
+   }
+    
+    
+   public static byte[] binaryConcat(byte[] arg1, byte[] arg2) {
+       return _binaryConcat(arg1, arg2);
+   }
+   public static byte[] binaryConcat(byte[] arg1, byte[] arg2, byte[] arg3) {
+       return _binaryConcat(arg1, arg2, arg3);
+   }
+   
+   public static byte[] _binaryConcat(byte[]...args) {
+       int length = 0;
+       for(byte[] arg: args) {
+           length+=arg.length;
+       }
+       byte[] r = new byte[length];
+       int offset = 0;
+           
+       for(byte[] arg: args) {
+           System.arraycopy(arg, 0, r, offset, arg.length);
+           offset+=arg.length;
+       }
+       return r;
+   }
+}
+```
+
+### `AddOp.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AddOp.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public enum AddOp {
+  PLUS, MINUS, STRING_PLUS;
+  public String getSign() {
+    switch(this) { 
+    case MINUS: return "-";
+    case PLUS: return "+";
+    case STRING_PLUS: return "+";
+    default: return null;
+    }
+  }
+}
+```
+
+### `AggregateExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AggregateExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledAggregateExpression;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.FieldReturnCompiledExpression;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.utils.parser.ParseException;
+
+/**
+ * Expressions containing aggregates are computed in two phases:
+ * phase 1: the input tuples are passed to a list of expressions composed by the group by columns and the list of
+ * aggregates
+ * phase 2: the output tuples of phase 1 are passed to the list of original select list. In this phase, aggregates act
+ * as a ColumnExpression
+ * 
+ * @author nm
+ *
+ */
+public abstract class AggregateExpression extends Expression {
+    boolean star;
+    ColumnDefinition cdef;
+
+    public AggregateExpression(Expression[] args, boolean star) throws ParseException {
+        super(args);
+        this.star = star;
+        if (!star) {
+            for (Expression c : children)
+                if (c.hasAggregates)
+                    throw new ParseException("Aggregate not allowed as argument to another aggregate");
+        }
+    }
+
+    @Override
+    protected boolean isAggregate() {
+        return true;
+    }
+
+    /**
+     * When this is called, all the children are already bound.
+     * 
+     */
+    public void bindAggregate(TupleDefinition def) throws StreamSqlException {
+        this.inputDef = def;
+        doBind();
+    }
+
+    /*
+     * this is called recursively from the select top expression. We behave like if we were a column expression.
+     * the bindAggregate method takes care of the type and binding children and it is called before this
+     */
+    @Override
+    public void bind(TupleDefinition def) throws StreamSqlException {
+        cdef = def.getColumn(colName);
+        if (cdef == null) {
+            throw new GenericStreamSqlException("'" + colName + "' is not an input column");
+        }
+        type = cdef.getType();
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        code.append("col" + colName);
+    }
+
+    @Override
+    public CompiledExpression compile() throws StreamSqlException {
+        return new FieldReturnCompiledExpression(colName, cdef);
+    }
+
+    abstract public CompiledAggregateExpression getCompiledAggregate() throws StreamSqlException;
+
+}
+```
+
+### `AggregateListExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AggregateListExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.CompiledAggregateExpression;
+import org.yamcs.yarch.CompiledAggregateList;
+import org.yamcs.yarch.DataType;
+
+import org.yamcs.utils.parser.ParseException;
+
+public class AggregateListExpression extends AggregateExpression {
+    public AggregateListExpression(Expression[] args, boolean star) throws ParseException {
+        super(args, star);
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        if (star) {
+            type = DataType.array(DataType.tuple(inputDef));
+        } else {
+            // TODO
+        }
+    }
+
+    @Override
+    public CompiledAggregateExpression getCompiledAggregate() throws StreamSqlException {
+        return new CompiledAggregateList();
+    }
+}
+```
+
+### `AlterSequenceStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AlterSequenceStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Sequence;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class AlterSequenceStatement  extends SimpleStreamSqlStatement {
+    final String seqName;
+    final long value;
+    
+    public AlterSequenceStatement(String seqName, long withValue) {
+        this.seqName = seqName;
+        this.value = withValue;
+    }
+    
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("name", DataType.STRING);
+        TDEF.addColumn("value", DataType.LONG);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        Sequence seq = ydb.getSequence(seqName, false);
+        if(seq==null) {
+            throw new GenericStreamSqlException("Unknown sequence "+seqName);
+        }
+        seq.reset(value);
+        Tuple tuple = new Tuple(TDEF, new Object[] { seqName, value});
+        consumer.accept(tuple);
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `AlterTableStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AlterTableStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * Alter table supports only
+ * <code>
+ * ALTER TABLE &lt;name&gt; RENAME TO &lt;new_name&gt;
+ * </code>
+ */
+public class AlterTableStatement extends SimpleStreamSqlStatement {
+    final String oldName;
+    final String newName;
+
+    public AlterTableStatement(String name, String newName) {
+        this.oldName = name;
+        this.newName = newName;
+    }
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("oldName", DataType.STRING);
+        TDEF.addColumn("newName", DataType.STRING);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        ydb.renameTable(oldName, newName);
+        Tuple tuple = new Tuple(TDEF, new Object[] { oldName, newName });
+        consumer.accept(tuple);
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `AndExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/AndExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.List;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.FilterableTarget;
+import org.yamcs.utils.parser.ParseException;
+
+public class AndExpression extends Expression {
+    public AndExpression(List<Expression> list) throws ParseException {
+        super(list.toArray(new Expression[0]));
+    }
+
+    @Override
+    public void addFilter(FilterableTarget tableStream) throws StreamSqlException {
+        for (Expression expr : children) {
+            expr.addFilter(tableStream);
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        boolean first = true;
+        code.append("SqlExpressions.AND(");
+        for (Expression expr : children) {
+            if (!first) {
+                code.append(", ");
+            } else {
+                first = false;
+            }
+            expr.fillCode_getValueReturn(code);
+        }
+        code.append(")");
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        for (Expression c : children) {
+            if (c.getType() != DataType.BOOLEAN) {
+                throw new GenericStreamSqlException("'" + c + "' is not of type boolean");
+            }
+        }
+        type = DataType.BOOLEAN;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        boolean first = true;
+        for (Expression expr : children) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(" AND ");
+            }
+            sb.append("(");
+            sb.append(expr.toString());
+            sb.append(")");
+        }
+        return sb.toString();
+    }
+}
+```
+
+### `ArgumentExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ArgumentExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * This corresponds to an ? argument passed to a query
+ *
+ */
+public class ArgumentExpression extends Expression implements CompiledExpression {
+    final int n;
+
+    public ArgumentExpression(int n, Object value) {
+        super(null);
+        this.n = n;
+        this.constantValue = value;
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        if (constantValue != null) {
+            type = DataType.typeOf(constantValue);
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if (constantValue != null) {
+            code.append("(" + type.javaType() + ")__sql_args[" + n + "]");
+        } else {
+            code.append("__sql_args[" + n + "]");
+        }
+    }
+
+    @Override
+    public ColumnDefinition getDefinition() {
+        return null;
+    }
+
+    @Override
+    public Object getValue(Tuple tuple) {
+        return constantValue;
+    }
+}
+```
+
+### `ArrayExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ArrayExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.yarch.DataType;
+
+public class ArrayExpression extends Expression {
+
+    public ArrayExpression(List<Expression> children) throws GenericStreamSqlException {
+        super(children.toArray(new Expression[0]));
+
+        // we don't support empty arrays because we don't know what type they are
+        if (children.size() == 0) {
+            throw new GenericStreamSqlException("Empty arrays not supported");
+        }
+    }
+    
+
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        DataType chidlType = children[0].getType();
+
+        for (Expression c : children) {
+            if (c.getType().val != chidlType.val) {
+                throw new GenericStreamSqlException("Array must have all components of the same type");
+            }
+        }
+        type = DataType.array(chidlType);
+
+        if (Arrays.stream(children).allMatch(c -> c.isConstant())) {
+            constantValue = Arrays.stream(children).map(c -> c.getConstantValue()).collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    protected void fillCode_Declarations(StringBuilder code) throws StreamSqlException {
+        if (constantValue != null) {
+            code.append("\tprivate final java.util.List const_array = java.util.Arrays.asList(");
+            boolean first = true;
+            for (Expression c : children) {
+                if (first) {
+                    first = false;
+                } else {
+                    code.append(", ");
+                }
+                c.fillCode_getValueReturn(code);
+            }
+            code.append(");\n");
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if (constantValue != null) {
+            code.append("const_array");
+        } else {
+            code.append("java.util.Arrays.asList(");
+            boolean first = true;
+            for (Expression c : children) {
+                if (first) {
+                    first = false;
+                } else {
+                    code.append(", ");
+                }
+                c.fillCode_getValueReturn(code);
+            }
+            code.append(")");
+        }
+
+    }
+
+}
+```
+
+### `BitwiseExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/BitwiseExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public class BitwiseExpression extends Expression {
+    List<BitwiseOp> ops;
+
+    public BitwiseExpression(List<Expression> exprs, List<BitwiseOp> ops) throws ParseException {
+        super(exprs.toArray(new Expression[0]));
+        this.ops = ops;
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        boolean constant = Arrays.stream(children).allMatch(e -> e.isConstant());
+        if (constant) {
+            computeConstantValue();
+        } else {
+            type = children[0].getType();
+            Optional<Expression> o = Arrays.stream(children).filter(c -> !DataType.isNumber(c.getType())).findAny();
+            if (o.isPresent()) {
+                throw new StreamSqlException(ErrCode.BAD_ARG_TYPE,
+                        "Cannot use bitwise operators with data type " + o.get().getType());
+            }
+        }
+    }
+
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        code.append("(");
+        code.append("(" + type.primitiveJavaType() + ")");
+        children[0].fillCode_getValueReturn(code);
+        for (int i = 0; i < ops.size(); i++) {
+            code.append(ops.get(i).getSign());
+            code.append("(" + type.primitiveJavaType() + ")");
+            children[i + 1].fillCode_getValueReturn(code);
+        }
+        code.append(")");
+    }
+
+    private void computeConstantValue() throws StreamSqlException {
+        DataType ch0t = children[0].getType();
+        if (DataType.isNumber(ch0t)) {
+            BigDecimal x = addNumbChildren();
+            if (x.stripTrailingZeros().scale() <= 0) {
+                long lx = x.longValue();
+                if (lx == (int) lx) {
+                    constantValue = (int) lx;
+                    type = DataType.LONG;
+                } else {
+                    constantValue = lx;
+                    type = DataType.INT;
+                }
+            }
+        } else {
+            throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot use bitwise expression for " + ch0t);
+        }
+
+    }
+
+    private BigDecimal addNumbChildren() throws StreamSqlException {
+        BigDecimal s = new BigDecimal(0);
+        for (Expression c : children) {
+            if (!DataType.isNumber(c.getType())) {
+                throw new StreamSqlException(ErrCode.BAD_ARG_TYPE, "Cannot add number to " + c.getType());
+            }
+            Number x = (Number) c.getConstantValue();
+            s = s.add(new BigDecimal(x.toString()));
+        }
+        return s;
+    }
+}
+```
+
+### `BitwiseOp.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/BitwiseOp.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public enum BitwiseOp {
+    AND, OR, XOR, NOT, LSHIFT, RSHIFT;
+  public String getSign() {
+    switch(this) { 
+        case AND:
+            return "&";
+        case OR:
+            return "|";
+        case XOR:
+            return "^";
+        case NOT:
+            return "~";
+        case LSHIFT:
+            return "<<";
+        case RSHIFT:
+            return ">>";
+    default: return null;
+    }
+  }
+}
+```
+
+### `CloseStreamStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CloseStreamStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class CloseStreamStatement extends SimpleStreamSqlStatement  {
+
+    String name;
+
+    public CloseStreamStatement(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void execute(ExecutionContext c, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance db = c.getDb();
+        // locking of the dictionary is performed inside the close
+        Stream s = db.getStream(name);
+        if (s == null) {
+            throw new ResourceNotFoundException(name);
+        }
+        s.close();
+    }
+
+}
+```
+
+### `ColumnExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ColumnExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Set;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.FieldReturnCompiledExpression;
+import org.yamcs.yarch.ProtobufDataType;
+
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor.Type;
+
+/**
+ * Represents a column in a query, for example x and y below: select x from table where y &gt; 0
+ * 
+ * @author nm
+ *
+ */
+public class ColumnExpression extends Expression {
+    String name;
+
+    // after binding
+    ColumnDefinition cdef;
+
+    // for protobuf columns
+    String className;
+    String fieldName;
+    FieldDescriptor fieldDescriptor;
+
+    ColumnExpression(String name) throws ParseException {
+        super(null);
+        this.name = name;
+        this.colName = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        ColumnDefinition inputCdef = inputDef.getColumn(name);
+        if (inputCdef == null) {
+            int idx = name.indexOf(".");
+            if (idx != -1) { // protobuf column
+                className = name.substring(0, idx);
+                fieldName = name.substring(idx + 1);
+                bindProtobuf(className, fieldName);
+            } else {
+                throw new GenericStreamSqlException("'" + name + "' is not an input column");
+            }
+            cdef = new ColumnDefinition(colName, type);
+        } else {
+            type = inputCdef.getType();
+            if (name.equals(colName)) {
+                cdef = inputCdef;
+            } else {
+                cdef = new ColumnDefinition(colName, type);
+            }
+        }
+    }
+
+    private void bindProtobuf(String className, String fieldName) throws GenericStreamSqlException {
+        cdef = inputDef.getColumn(className);
+        if (cdef == null) {
+            throw new GenericStreamSqlException("'" + name + "' is not an input column");
+        }
+
+        DataType dt = cdef.getType();
+        if (dt instanceof ProtobufDataType) {
+            ProtobufDataType pdt = (ProtobufDataType) dt;
+            Descriptor d = pdt.getDescriptor();
+            fieldDescriptor = d.findFieldByName(fieldName);
+            if (fieldDescriptor == null) {
+                throw new GenericStreamSqlException("'" + name + "' is not an input column");
+            }
+            ;
+            type = getType(fieldDescriptor.getType());
+        } else {
+            throw new GenericStreamSqlException("'" + name + "' is not an input column");
+        }
+    }
+
+    private DataType getType(Type type) throws GenericStreamSqlException {
+        switch (type) {
+        case BOOL:
+            return DataType.BOOLEAN;
+        case BYTES:
+            return DataType.BINARY;
+        case DOUBLE:
+            return DataType.DOUBLE;
+        case FLOAT:
+            return DataType.DOUBLE;
+
+        case FIXED32:
+        case INT32:
+        case SINT32:
+        case SFIXED32:
+        case UINT32:
+            return DataType.INT;
+        case FIXED64:
+        case SFIXED64:
+        case INT64:
+        case UINT64:
+        case SINT64:
+            return DataType.LONG;
+        case STRING:
+        case ENUM:
+            return DataType.STRING;
+        default:
+            throw new GenericStreamSqlException("Cannot use protobuf fields of type '" + type + "' in sql expressions");
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        String sname = sanitizeName(name);
+        if (fieldName == null) {
+            code.append("col" + sname);
+        } else {
+            String varName = "col" + className;
+            String hasFunction = varName + ".has" + capitalizeFirstLetter(fieldName) + "()";
+            String getFunction = varName + ".get" + capitalizeFirstLetter(fieldName) + "()";
+            if (fieldDescriptor.getType() == Type.ENUM) {
+                getFunction += ".name()";
+            }
+            code.append("((" + varName + " != null && " + hasFunction + ")\n");
+            code.append("\t\t\t? " + getFunction + "\n");
+            code.append("\t\t\t: null)");
+        }
+    }
+
+    @Override
+    public void collectRequiredInputs(Set<ColumnDefinition> inputs) {
+        if (className == null) {
+            inputs.add(inputDef.getColumn(colName));
+        } else {
+            inputs.add(inputDef.getColumn(className));
+        }
+    }
+
+    @Override
+    public CompiledExpression compile() throws StreamSqlException {
+        if (className == null) {
+            return new FieldReturnCompiledExpression(name, cdef);
+        } else {
+            return super.compile();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public static String capitalizeFirstLetter(String original) {
+        if (original == null || original.length() == 0) {
+            return original;
+        }
+        return original.substring(0, 1).toUpperCase() + original.substring(1);
+    }
+}
+```
+
+### `ColumnNotFoundException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ColumnNotFoundException.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+@SuppressWarnings("serial")
+public class ColumnNotFoundException extends StreamSqlException {
+
+    public ColumnNotFoundException(String name) {
+        super(ErrCode.COLUMN_NOT_FOUND, "'" + name + "' is not part of the columns");
+    }
+}
+```
+
+### `CompilableAggregateExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CompilableAggregateExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.codehaus.janino.SimpleCompiler;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledAggregateExpression;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+import org.yamcs.utils.parser.ParseException;
+
+public abstract class CompilableAggregateExpression extends AggregateExpression {
+
+    public CompilableAggregateExpression(Expression[] args, boolean star) throws ParseException {
+        super(args, star);
+    }
+
+    private static AtomicInteger counter = new AtomicInteger();
+
+    
+    public void collectRequiredInputs(Set<ColumnDefinition> inputs) {
+        inputs.add(cdef);
+    }
+    
+    @Override
+    public CompiledAggregateExpression getCompiledAggregate() throws StreamSqlException {
+        String className = "AggregateExpression" + counter.incrementAndGet();
+        StringBuilder code = new StringBuilder();
+        code.append("package org.yamcs.yarch;\n")
+                .append("public class " + className + " implements CompiledAggregateExpression {\n");
+        aggregateFillCode_Declarations(code);
+
+        code.append("\tpublic void newData(Tuple tuple) {\n");
+        aggregateFillCode_newData(code);
+        code.append("\t}\n");
+
+        code.append("\tpublic Object getValue() {\n");
+        aggregateFillCode_getValue(code);
+        code.append("\t}\n");
+
+        code.append("\tpublic void clear() {\n");
+        aggregateFillCode_clear(code);
+        code.append("\t}\n")
+                .append("}");
+
+        try {
+            SimpleCompiler compiler = new SimpleCompiler();
+            compiler.cook(code.toString());
+            Class<?> cexprClass = compiler.getClassLoader().loadClass("org.yamcs.yarch." + className);
+            return (CompiledAggregateExpression) cexprClass.newInstance();
+        } catch (Exception e) {
+            throw new StreamSqlException(ErrCode.COMPILE_ERROR, e.toString());
+        }
+    }
+
+    protected abstract void aggregateFillCode_clear(StringBuilder code);
+
+    protected abstract void aggregateFillCode_getValue(StringBuilder code);
+
+    protected abstract void aggregateFillCode_newData(StringBuilder code) throws StreamSqlException;
+
+    protected abstract void aggregateFillCode_Declarations(StringBuilder code);
+}
+```
+
+### `CreateInputStreamStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateInputStreamStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public class CreateInputStreamStatement extends SimpleStreamSqlStatement {
+
+    TupleDefinition definition;
+    String streamName;
+
+    public CreateInputStreamStatement(String name, TupleDefinition definition) {
+        this.definition = definition;
+        this.streamName = name;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        throw new StreamSqlException(ErrCode.NOT_IMPLEMENTED, "InputStream not implemented");
+    }
+}
+```
+
+### `CreateOutputStreamStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateOutputStreamStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.OutputStream;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+public class CreateOutputStreamStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("port", DataType.INT);
+    }
+
+    String streamName;
+    StreamExpression expression;
+
+    public CreateOutputStreamStatement(String streamName, StreamExpression expression) {
+        this.streamName = streamName;
+        this.expression = expression;
+    }
+
+    @Override
+    public void execute(ExecutionContext c, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = c.getDb();
+        expression.bind(c);
+
+        Stream s = expression.execute(c);
+
+        OutputStream os = null;
+        synchronized (ydb) {
+            if (ydb.streamOrTableExists(streamName)) {
+                throw new ResourceAlreadyExistsException(streamName);
+            }
+            try {
+                os = new OutputStream(ydb, streamName, s.getDefinition());
+                ydb.addStream(os);
+                s.addSubscriber(os);
+                os.setSubscribedStream(s);
+
+                if (s.getState() == Stream.SETUP) {
+                    s.start();
+                }
+            } catch (YarchException e) {
+                if (os != null) {
+                    os.close();
+                }
+                throw new GenericStreamSqlException(e.getMessage());
+            }
+
+            Tuple tuple = new Tuple(TDEF, new Object[] { os.getPort() });
+            consumer.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `CreateStreamStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateStreamStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.InternalStream;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+public class CreateStreamStatement extends SimpleStreamSqlStatement {
+    String streamName;
+    StreamExpression expression;
+    TupleDefinition tupleDefinition;
+
+    public CreateStreamStatement(String streamName, StreamExpression expression) {
+        this.streamName = streamName;
+        this.expression = expression;
+    }
+
+    public CreateStreamStatement(String name, TupleDefinition tupleDefinition) {
+        this.streamName = name;
+        this.tupleDefinition = tupleDefinition;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        ExecutionContext context1 = new ExecutionContext(context.getDb());
+
+        YarchDatabaseInstance db = context1.getDb();
+        synchronized (db) {
+            if (db.streamOrTableExists(streamName)) {
+                throw new ResourceAlreadyExistsException(streamName);
+            }
+            InternalStream stream = new InternalStream(context1, streamName, tupleDefinition);
+
+            if (expression != null) {
+                expression.bind(context1);
+                Stream stream1 = expression.execute(context1);
+                stream.setInner(stream1);
+            }
+
+
+            try {
+                db.addStream(stream);
+            } catch (YarchException e) {
+                throw new GenericStreamSqlException(e.getMessage());
+            }
+        }
+    }
+}
+```
+
+### `CreateTableStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/CreateTableStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+public class CreateTableStatement extends SimpleStreamSqlStatement {
+
+    boolean ifNotExists;
+    String tableName;
+    TupleDefinition tupleDefinition;
+    List<String> primaryKey;
+    ArrayList<String> histoColumns;
+    List<String> index;
+    PartitioningSpec partitioningSpec;
+    String tablespace;
+    String engine;
+    List<TableFormatOption> formatOptions = new ArrayList<>();
+
+    public CreateTableStatement(boolean ifNotExists, String tableName, TupleDefinition tupleDefinition,
+            List<String> primaryKey, List<String> index) {
+        this.ifNotExists = ifNotExists;
+        this.tableName = tableName;
+        this.tupleDefinition = tupleDefinition;
+        this.primaryKey = primaryKey;
+        this.index = index;
+    }
+
+    public void setTablespace(String tablespace) {
+        this.tablespace = tablespace;
+
+    }
+
+    public void setPartitioning(PartitioningSpec pspec) {
+        this.partitioningSpec = pspec;
+    }
+
+    public void addHistogramColumn(String columnName) {
+        if (histoColumns == null) {
+            histoColumns = new ArrayList<>();
+        }
+        histoColumns.add(columnName);
+    }
+
+    public void addTableFormatOption(TableFormatOption tfo) {
+        formatOptions.add(tfo);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        synchronized (ydb) {
+            if (ydb.getStream(tableName) != null) {
+                throw new ResourceAlreadyExistsException(tableName);
+            }
+            if (ydb.getTable(tableName) != null) {
+                if (ifNotExists) {
+                    return;
+                } else {
+                    throw new ResourceAlreadyExistsException(tableName);
+                }
+            }
+            TableDefinition tableDefinition = new TableDefinition(tableName, tupleDefinition, primaryKey);
+            tableDefinition.validate();
+
+            if (engine != null) {
+                tableDefinition.setStorageEngineName(engine);
+            } else {
+                tableDefinition.setStorageEngineName(YarchDatabase.getDefaultStorageEngineName());
+            }
+
+            for (var tfo : formatOptions) {
+                if ("COMPRESSED".equals(tfo.key)) {
+                    tableDefinition.setCompressed(true);
+                } else if ("COLUMN_FAMILY".equals(tfo.key)) {
+                    tableDefinition.setCfName(tfo.value);
+                } else {
+                    throw new GenericStreamSqlException(
+                            "Invalid table format option '" + tfo.key
+                                    + "'. Supported are COMPRESSED and COLUMN_FAMILY");
+                }
+            }
+            if (partitioningSpec != null) {
+                tableDefinition.setPartitioningSpec(partitioningSpec);
+            } else {
+                tableDefinition.setPartitioningSpec(PartitioningSpec.noneSpec());
+            }
+            if (histoColumns != null) {
+                tableDefinition.setHistogramColumns(histoColumns);
+            }
+
+            if (index != null) {
+                tableDefinition.setSecondaryIndex(index);
+            }
+            try {
+                ydb.createTable(tableDefinition);
+            } catch (YarchException e) {
+                throw new GenericStreamSqlException("Cannot create table: " + e.getMessage());
+            }
+        }
+    }
+
+    public void setEngine(String engine) {
+        this.engine = engine;
+    }
+
+    public static class TableFormatOption {
+        final String key;
+        final String value;
+
+        public TableFormatOption(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public TableFormatOption(String key) {
+            this(key, null);
+        }
+    }
+}
+```
+
+### `DeleteStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/DeleteStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWalker;
+import org.yamcs.yarch.TableVisitor;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+/**
+ * Execute a statement:
+ * 
+ * <pre>
+ * delete from &lt;table&gt; where &lt;cond&gt; limit n
+ * </pre>
+ * 
+ * The query returns a tuple containing the number of inspected and deleted rows.
+ *
+ * <p>
+ * Note that rocksdb does not remove the data from the disk immediately. The freeing of the space will only happen when
+ * a compact operation will be executed on the files which have removed data inside. See
+ * <a href="https://github.com/facebook/rocksdb/wiki/Compaction"> Rocksdb Compaction </a> for details.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class DeleteStatement extends SimpleStreamSqlStatement {
+    final String tblName;
+    Expression whereClause;
+    final long limit;
+    CompiledExpression cwhere = null;
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("inspected", DataType.LONG);
+        TDEF.addColumn("deleted", DataType.LONG);
+    }
+
+    public DeleteStatement(String tableName, Expression whereClause, long limit) {
+        this.tblName = tableName;
+        this.whereClause = whereClause;
+        this.limit = limit;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        TableDefinition tblDef = ydb.getTable(tblName);
+        if (tblDef == null) {
+            throw new GenericStreamSqlException(String.format("Object %s does not exist or is not a table", tblName));
+        }
+
+        if (whereClause != null) {
+            whereClause.bind(tblDef.getTupleDefinition());
+        }
+        boolean bulkDelete = false;
+        AtomicLong deleted = new AtomicLong();
+        AtomicLong inspected = new AtomicLong();
+        try {
+            TableWalkerBuilder twb = new TableWalkerBuilder(context, tblDef);
+            if (whereClause != null) {
+                whereClause.addFilter(twb);
+            }
+            TableWalker tblIt = twb.build();
+           /* TODO: add  back bulk delete
+            if (whereClause == null && limit < 0) {
+                bulkDelete = true;
+                tblIt.bulkDelete();
+            } else {*/
+            
+                if (whereClause != null) {
+                    cwhere = whereClause.compile();
+                }
+                tblIt.walk(new TableVisitor() {
+                    @Override
+                    public Action visit(byte[] key, byte[] value) {
+                        if (cwhere == null) {
+                            return ACTION_DELETE;
+                        } else {
+                            Tuple tuple = tblDef.deserialize(key, value);
+                            inspected.incrementAndGet();
+                            if ((Boolean) cwhere.getValue(tuple)) {
+                                long c = deleted.incrementAndGet();
+
+                                if (limit > 0 && c >= limit) {
+                                    return ACTION_DELETE_STOP;
+                                } else {
+                                    return ACTION_DELETE;
+                                }
+                            } else {
+                                return ACTION_CONTINUE;
+                            }
+                        }
+                    }
+                });
+
+        } catch (YarchException e) {
+            throw new GenericStreamSqlException(e.getMessage());
+        }
+        Tuple tuple;
+        if (bulkDelete) {
+            tuple = new Tuple(TDEF, new Object[] { 0l, -1l });
+            consumer.accept(tuple);
+        } else {
+            tuple = new Tuple(TDEF, new Object[] { inspected.get(), deleted.get() });
+            consumer.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+
+/*
+ * 
+ *     public void bulkDelete() {
+        running = true;
+        Iterator<PartitionManager.Interval> partitionIterator = getIntervalIterator();
+        try {
+            while (isRunning() && partitionIterator.hasNext()) {
+                PartitionManager.Interval interval = partitionIterator.next();
+                boolean endReached = bulkDeleteFromInterval(interval, range);
+                if (endReached) {
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            log.error("got exception ", e);
+        } finally {
+            close();
+        }
+    }
+    
+     @Override
+    protected boolean bulkDeleteFromInterval(PartitionManager.Interval partitions,  DbRange tableRange ) {
+
+        // all partitions will have the same database, just use the same one
+        RdbPartition p1 = (RdbPartition) partitions.iterator().next();
+
+        YRDB rdb;
+        rdb = tablespace.getRdb(p1.dir, false);
+
+        try (FlushOptions flushOptions = new FlushOptions()) {
+            for (Partition p : partitions) {
+                RdbPartition rp = (RdbPartition) p;
+                DbRange dbRange = getDeleteDbRange(rp.tbsIndex, tableRange);
+                rdb.getDb().deleteRange(dbRange.rangeStart, dbRange.rangeEnd);
+            }
+
+            rdb.getDb().flush(flushOptions);
+
+        } catch (RocksDBException e) {
+            throw new YarchException(e);
+        } finally {
+            tablespace.dispose(rdb);
+        }
+        return false;
+    }
+*/
+```
+
+### `DescribeStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/DescribeStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class DescribeStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF_TABLE = new TupleDefinition();
+    static {
+        TDEF_TABLE.addColumn("column", DataType.STRING);
+        TDEF_TABLE.addColumn("type", DataType.STRING);
+        TDEF_TABLE.addColumn("partition", DataType.STRING);
+        TDEF_TABLE.addColumn("key", DataType.STRING);
+        TDEF_TABLE.addColumn("extra", DataType.STRING);
+    }
+
+    private static final TupleDefinition TDEF_STREAM = new TupleDefinition();
+    static {
+        TDEF_STREAM.addColumn("column", DataType.STRING);
+        TDEF_STREAM.addColumn("type", DataType.STRING);
+    }
+
+    private String objectName;
+
+    public DescribeStatement(String objectName) {
+        this.objectName = objectName;
+    }
+
+    @Override
+    public void execute(ExecutionContext c, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = c.getDb();
+
+        TableDefinition tdef = null;
+        Stream stream = null;
+        synchronized (ydb) {
+            tdef = ydb.getTable(objectName);
+            stream = ydb.getStream(objectName);
+        }
+        if (tdef != null) {
+            describeTable(tdef, consumer);
+        } else if (stream != null) {
+            describeStream(stream, consumer);
+        } else {
+            throw new ResourceNotFoundException(objectName);
+        }
+    }
+
+    private void describeTable(TableDefinition tdef, Consumer<Tuple> consumer) {
+        var partitioning = tdef.getPartitioningSpec();
+        var partitionBy = new ArrayList<TableColumnDefinition>();
+
+        switch (partitioning.type) {
+        case TIME:
+            partitionBy.add(tdef.getColumnDefinition(partitioning.timeColumn));
+            break;
+        case VALUE:
+            partitionBy.add(tdef.getColumnDefinition(partitioning.valueColumn));
+            break;
+        case TIME_AND_VALUE:
+            partitionBy.add(tdef.getColumnDefinition(partitioning.timeColumn));
+            partitionBy.add(tdef.getColumnDefinition(partitioning.valueColumn));
+            break;
+        default:
+            // NOP
+            break;
+        }
+
+        for (var cdef : partitionBy) {
+            var tuple = new Tuple(TDEF_TABLE, new Object[] {
+                    cdef.getName(),
+                    cdef.getType().toString(),
+                    "*",
+                    "",
+                    cdef.isAutoIncrement() ? "auto_increment" : "",
+            });
+            consumer.accept(tuple);
+        }
+        for (var cdef : tdef.getKeyDefinition()) {
+            if (partitionBy.contains(cdef)) {
+                continue;
+            }
+            var tuple = new Tuple(TDEF_TABLE, new Object[] {
+                    cdef.getName(),
+                    cdef.getType().toString(),
+                    "",
+                    "*",
+                    cdef.isAutoIncrement() ? "auto_increment" : "",
+            });
+            consumer.accept(tuple);
+        }
+        for (var cdef : tdef.getValueDefinition()) {
+            if (partitionBy.contains(cdef)) {
+                continue;
+            }
+            var tuple = new Tuple(TDEF_TABLE, new Object[] {
+                    cdef.getName(),
+                    cdef.getType().toString(),
+                    "",
+                    "",
+                    cdef.isAutoIncrement() ? "auto_increment" : "",
+            });
+            consumer.accept(tuple);
+        }
+    }
+
+    private void describeStream(Stream stream, Consumer<Tuple> consumer) {
+        for (ColumnDefinition cdef : stream.getDefinition().getColumnDefinitions()) {
+            Tuple tuple = new Tuple(TDEF_STREAM, new Object[] {
+                    cdef.getName(),
+                    cdef.getType().toString(),
+            });
+            consumer.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF_TABLE;
+    }
+}
+```
+
+### `DropTableStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/DropTableStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+public class DropTableStatement extends SimpleStreamSqlStatement {
+
+    boolean ifExists;
+    String tblName;
+
+    public DropTableStatement(boolean ifExists, String name) {
+        this.ifExists = ifExists;
+        this.tblName = name;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        try {
+            synchronized (ydb) {
+                if (!ifExists || ydb.getTable(tblName) != null) {
+                    ydb.dropTable(tblName);
+                }
+            }
+        } catch (YarchException e) {
+            throw new GenericStreamSqlException(e.getMessage());
+        }
+    }
+
+}
+```
+
+### `ExponentExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ExponentExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.streamsql.Expression;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+
+public class ExponentExpression extends Expression {
+
+	public ExponentExpression(Expression retExpr, Expression expr) throws ParseException {
+		super(new Expression[] {retExpr, expr});
+	}
+
+	public void setBase(Expression expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setExponent(Expression expr) {
+		// TODO Auto-generated method stub
+		
+	}
+
+  @Override
+  public void doBind() throws StreamSqlException {
+ // TODO Auto-generated method stub
+  }
+
+  @Override
+  public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+    // TODO Auto-generated method stub
+    
+  }
+
+}
+```
+
+### `Expression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/Expression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.io.StringReader;
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.codehaus.janino.SimpleCompiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.FilterableTarget;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public abstract class Expression {
+    protected DataType type = null;
+    protected Expression[] children;
+    protected TupleDefinition inputDef;
+
+    protected boolean hasAggregates;
+    protected Object constantValue;
+    Object[] args;
+
+    String colName;
+    static Logger log = LoggerFactory.getLogger(Expression.class);
+
+    public Expression(Expression[] children) {
+        this.children = children;
+        hasAggregates = false;
+        if (children != null) {
+            for (Expression c : children) {
+                if (c.isAggregate() || c.hasAggregates) {
+                    hasAggregates = true;
+                }
+            }
+        }
+        colName = String.format("%s0x%xd", this.getClass().getSimpleName(), this.hashCode());
+    }
+
+    // TODO: this is now called from within the parser at query preparation time.
+    // when we add PreparedStatements, we should allow passing the args at execution time
+    public void setArgs(Object[] args) {
+        this.args = args;
+        if (children != null) {
+            for (Expression c : children) {
+                c.setArgs(args);
+            }
+        }
+    }
+
+    protected boolean isAggregate() {
+        return false;
+    }
+
+    final public boolean isConstant() {
+        return constantValue != null;
+    }
+
+    /**
+     * add a filter to the table if applicable.
+     * 
+     * @param tableStream
+     * @throws StreamSqlException
+     */
+    public void addFilter(FilterableTarget tableStream) throws StreamSqlException {
+        // by default do nothing
+    }
+
+    public void collectAggregates(List<AggregateExpression> list) {
+        if (isAggregate()) {
+            list.add((AggregateExpression) this);
+        } else if (children != null) {
+            for (Expression c : children) {
+                if (c.hasAggregates || c.isAggregate()) {
+                    c.collectAggregates(list);
+                }
+            }
+        }
+    }
+
+    protected abstract void doBind() throws StreamSqlException;
+
+    public void bind(TupleDefinition inputDef2) throws StreamSqlException {
+        this.inputDef = inputDef2;
+        if (children != null) {
+            for (Expression c : children) {
+                c.bind(inputDef);
+            }
+        }
+        doBind();
+    }
+
+    public DataType getType() {
+        return type;
+    }
+
+    protected void fillCode_Declarations(StringBuilder code) throws StreamSqlException {
+        if (children != null) {
+            for (Expression c : children) {
+                c.fillCode_Declarations(code);
+            }
+        }
+        if (constantValue instanceof byte[]) {
+            byte[] v = (byte[]) constantValue;
+            code.append("\tbyte[] const_").append(getColumnName()).append(" = ")
+                    .append("org.yamcs.utils.StringConverter.hexStringToArray(\"")
+                    .append(StringConverter.arrayToHexString(v))
+                    .append("\");\n");
+        }
+    }
+
+    protected void fillCode_Constructor(StringBuilder code) throws StreamSqlException {
+        if (children != null) {
+            for (Expression c : children) {
+                c.fillCode_Constructor(code);
+            }
+        }
+    }
+
+    public void collectRequiredInputs(Set<ColumnDefinition> inputs) {
+        if (children != null) {
+            for (Expression c : children) {
+                c.collectRequiredInputs(inputs);
+            }
+        }
+    }
+
+    protected void fillCode_InputDefVars(Collection<ColumnDefinition> inputs, StringBuilder code) {
+        for (ColumnDefinition cd : inputs) {
+            String javaColIdentifier = "col" + sanitizeName(cd.getName());
+            DataType dtype = cd.getType();
+            if (dtype.isPrimitiveJavaType()) {
+                code.append("\t\t" + dtype.javaType() + " " + javaColIdentifier +
+                        " =  (" + dtype.javaType() + ")tuple.getColumn(\""
+                        + cd.getName() + "\");\n");
+            } else {
+                code.append("\t\t" + dtype.javaType() + " " + javaColIdentifier +
+                        " =  (" + dtype.javaType() + ")tuple.getColumn(\""
+                        + cd.getName() + "\");\n");
+            }
+        }
+    }
+
+    protected void fillCode_getValueBody(StringBuilder code) throws StreamSqlException {
+        if (children != null) {
+            for (Expression c : children) {
+                c.fillCode_getValueBody(code);
+            }
+        }
+    }
+
+    public abstract void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException;
+
+    // TODO: when adding support for PreparedStatements we should remember the result of the compilation
+    // and create new instances of that class with different arguments
+    // (currently the arguments are passed from the parser.)
+    // additional code should be added to verify that the arguments match the expected type
+    public CompiledExpression compile() throws StreamSqlException {
+        String className = "Expression_generated";
+        StringBuilder source = new StringBuilder();
+        source.append("package org.yamcs.yarch;\n")
+                .append("import org.yamcs.parameter.ParameterValue;\n")
+                .append("import org.yamcs.yarch.utils.*;\n")
+                .append("import java.util.Objects;\n")
+                .append("public class " + className + " implements CompiledExpression {\n")
+                .append("\tColumnDefinition cdef;\n")
+                .append("\tObject[] __sql_args;\n")
+                .append("\n");
+        fillCode_Declarations(source);
+
+        source.append("\tpublic " + className + "(ColumnDefinition cdef, Object[] args) {\n")
+                .append("\t\tthis.cdef = cdef;\n")
+                .append("\t\tthis.__sql_args = args;\n");
+        fillCode_Constructor(source);
+        source.append("\t}\n");
+
+        source.append("\tpublic Object getValue(Tuple tuple) {\n");
+        if (!isConstant()) {
+            Set<ColumnDefinition> inputs = new HashSet<>();
+            collectRequiredInputs(inputs);
+
+            fillCode_InputDefVars(inputs, source);
+        }
+        fillCode_getValueBody(source);
+
+        // source.append("Value colid=t.getColumn(\"id\");\n");
+        source.append("\n\t\treturn ");
+        fillCode_getValueReturn(source);
+        source.append(";\n");
+        source.append("\t}\n")
+                .append("\tpublic ColumnDefinition getDefinition() {\n")
+                .append("\t\treturn cdef;\n")
+                .append("\t}\n")
+                .append("}\n");
+
+        // System.out.println("source: " + source);
+        try {
+            SimpleCompiler compiler = new SimpleCompiler();
+            compiler.cook(new StringReader(source.toString()));
+
+            @SuppressWarnings("unchecked")
+            Class<CompiledExpression> cexprClass = (Class<CompiledExpression>) compiler.getClassLoader()
+                    .loadClass("org.yamcs.yarch." + className);
+            Constructor<CompiledExpression> cexprConstructor = cexprClass.getConstructor(ColumnDefinition.class,
+                    Object[].class);
+            ColumnDefinition cdef = new ColumnDefinition(colName, type);
+            return cexprConstructor.newInstance(cdef, args);
+        } catch (Exception e) {
+            log.warn("Got exception when compiling {} ", source.toString(), e);
+            throw new StreamSqlException(ErrCode.COMPILE_ERROR, e.toString());
+        }
+    }
+
+    /**
+     * when the expression behaves like a column expression, this is the column name
+     * 
+     * @return
+     */
+    public String getColumnName() {
+        return colName;
+    }
+
+    public void setColumnName(String name) {
+        this.colName = name;
+    }
+
+    public Object getConstantValue() {
+        return constantValue;
+    }
+
+    static String sanitizeName(String s) {
+        return s.replace("/", "_").replace("-", "_");
+    }
+}
+```
+
+### `FirstValExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/FirstValExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.CompiledAggregateExpression;
+import org.yamcs.yarch.CompiledFirstVal;
+import org.yamcs.yarch.DataType;
+import org.yamcs.utils.parser.ParseException;
+
+public class FirstValExpression extends AggregateExpression {
+    public FirstValExpression(Expression[] args, boolean star) throws ParseException {
+        super(args, star);
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        if(star) {
+            type=DataType.tuple(inputDef);
+        } else if (children.length>1) {
+            //TODO
+        } else if (children.length==1) {
+            type=inputDef.getColumn(children[0].getColumnName()).getType();
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    @Override
+    public CompiledAggregateExpression getCompiledAggregate() throws StreamSqlException {
+        if(star)  return new CompiledFirstVal(null, star);
+        String[] args=new String[children.length];
+        for(int i=0; i<children.length; i++) {
+            args[i]=children[i].getColumnName();
+        }
+        return new CompiledFirstVal(args,star);
+    }
+}
+```
+
+### `GenericStreamSqlException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/GenericStreamSqlException.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+@SuppressWarnings("serial")
+public class GenericStreamSqlException extends StreamSqlException {
+
+    public GenericStreamSqlException(String msg) {
+        super(ErrCode.ERROR, msg);
+    }
+}
+```
+
+### `HistogramStreamBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/HistogramStreamBuilder.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Set;
+
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.HistogramReaderStream;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public class HistogramStreamBuilder {
+    private final YarchDatabaseInstance ydb;
+    private final TableDefinition tableDefinition;
+    private final String columnName;
+    private final TupleDefinition tupleDefinition;
+
+    private long mergeTime = -1;
+    private TimeInterval interval = new TimeInterval();
+
+    HistogramStreamBuilder(YarchDatabaseInstance ydb, TableDefinition tableDefinition, String columnName) {
+        this.ydb = ydb;
+        this.tableDefinition = tableDefinition;
+        this.columnName = columnName;
+
+        tupleDefinition = new TupleDefinition();
+        tupleDefinition.addColumn(tableDefinition.getColumnDefinition(columnName));
+        tupleDefinition.addColumn(new ColumnDefinition("first", DataType.TIMESTAMP));
+        tupleDefinition.addColumn(new ColumnDefinition("last", DataType.TIMESTAMP));
+        tupleDefinition.addColumn(new ColumnDefinition("num", DataType.INT));
+    }
+
+    /* puts conditions on the first or last. doesn't work properly yet TODO */
+    public boolean addRelOpFilterHistogram(ColumnExpression cexpr, RelOp relOp, Object value)
+            throws StreamSqlException {
+        String cname = cexpr.getName();
+        if ("first".equals(cname) || "last".equals(cname)) {
+            long time;
+            try {
+                time = (Long) DataType.castAs(DataType.TIMESTAMP, value);
+            } catch (IllegalArgumentException e) {
+                throw new StreamSqlException(ErrCode.ERROR, e.getMessage());
+            }
+            switch (relOp) {
+            case GREATER:
+            case GREATER_OR_EQUAL:
+                interval.setStart(time);
+                return true;
+            case LESS:
+            case LESS_OR_EQUAL:
+                interval.setEnd(time);
+                return true;
+            case EQUAL:
+                interval.setStart(time);
+                interval.setEnd(time);
+                return true;
+            default:
+                // TODO
+                throw new UnsupportedOperationException(relOp + " not implemented for histogram streams");
+            }
+        }
+        return false;
+    }
+
+    public boolean addInFilter(ColumnExpression cexpr, boolean negation, Set<Object> values) {
+        return false;
+    }
+
+    public HistogramReaderStream build() {
+        HistogramReaderStream histoStream = new HistogramReaderStream(ydb, tableDefinition, columnName,
+                tupleDefinition);
+        if (mergeTime > 0) {
+            histoStream.setMergeTime(mergeTime);
+        }
+        histoStream.setTimeInterval(interval);
+
+        return histoStream;
+    }
+
+    public TupleDefinition getTupleDefinition() {
+        return tupleDefinition;
+    }
+
+    public void setMergeTime(long mergeTime) {
+        this.mergeTime = mergeTime;
+    }
+}
+```
+
+### `InClause.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InClause.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.List;
+
+public class InClause {
+    boolean negation = false;
+    List<Expression> list;
+    
+    public void setNegation(boolean b) {
+        this.negation = b;        
+    }
+    
+    public void setList(List<Expression> list) {
+        this.list = list;
+        
+    }
+}
+```
+
+### `InExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.FilterableTarget;
+
+import org.yamcs.utils.parser.ParseException;
+
+public class InExpression extends Expression {
+    static AtomicInteger at = new AtomicInteger();
+    private int count = at.incrementAndGet();
+    boolean negation;
+    
+    public InExpression(Expression expr, InClause inClause) throws ParseException {
+        super(getChildren(expr, inClause.list));
+        this.negation = inClause.negation;
+    }
+
+    private static Expression[] getChildren(Expression expr, List<Expression> list) {
+        Expression[] c = new Expression[list.size() + 1];
+        c[0] = expr;
+        int i = 1;
+        for (Expression e : list)
+            c[i++] = e;
+        return c;
+    }
+
+    @Override
+    public void addFilter(FilterableTarget tableStream) throws StreamSqlException {
+        if (!(children[0] instanceof ColumnExpression)) {
+            return;
+        }
+
+        for (int i = 1; i < children.length; i++) {
+            if (!children[1].isConstant())
+                return;
+        }
+
+        ColumnExpression cexpr = (ColumnExpression) children[0];
+        Set<Object> values = new HashSet<Object>();
+        for (int i = 1; i < children.length; i++) {
+            Object cvalue;
+            if (children[i].isConstant()) {
+                cvalue = children[i].getConstantValue();
+            } else {
+                CompiledExpression compexpr = children[i].compile();
+                cvalue = compexpr.getValue(null);
+            }
+            values.add(cvalue);
+        }
+        tableStream.addInFilter(cexpr,  negation, values);
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        for (int i = 1; i < children.length; i++) {
+            if (!DataType.compatible(children[i].getType(), children[0].getType())) {
+                throw new IncompatibilityException(children[i] + " is of different type than " + children[0] + "("
+                        + children[i].getType() + " versus " + children[0].getType() + ")");
+            }
+        }
+        type = DataType.BOOLEAN;
+    }
+
+    @Override
+    protected void fillCode_Declarations(StringBuilder code) {
+        code.append("\tjava.util.Set inSet" + count + "=new java.util.HashSet();\n");
+    }
+
+    @Override
+    protected void fillCode_Constructor(StringBuilder code) throws StreamSqlException {
+        for (int i = 1; i < children.length; i++) {
+            if (children[i].isConstant()) {
+                code.append("\t\tinSet" + count + ".add(");
+                children[i].fillCode_getValueReturn(code);
+                code.append(");\n");
+            }
+        }
+    }
+
+    @Override
+    protected void fillCode_getValueBody(StringBuilder code) throws StreamSqlException {
+        for (int i = 1; i < children.length; i++) {
+            if (!children[i].isConstant()) {
+                code.append("\t\tinSet" + count + ".add(");
+                children[i].fillCode_getValueReturn(code);
+                code.append(");\n");
+            }
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if(negation) {
+            code.append("!");
+        }
+        code.append("inSet" + count + ".contains(");
+        children[0].fillCode_getValueReturn(code);
+        code.append(")");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(children[0]);
+        if(negation) {
+            sb.append(" NOT");
+        }
+        sb.append(" IN (");
+        boolean first = true;
+        for (int i = 1; i < children.length; i++) {
+            if (!first)
+                sb.append(", ");
+            else
+                first = false;
+            sb.append(children[i].toString());
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+}
+```
+
+### `InsertStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InsertStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.utils.MutableLong;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+public class InsertStatement extends SimpleStreamSqlStatement {
+    String name;
+    StreamExpression expression;
+    static Logger log = LoggerFactory.getLogger(InsertStatement.class.getName());
+    InsertMode insertMode;
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("inserted", DataType.LONG);
+    }
+
+
+    public InsertStatement(String name, StreamExpression expression, InsertMode mode) {
+        this.name = name;
+        this.expression = expression;
+        this.insertMode = mode;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+
+        TableDefinition outputTableDef = ydb.getTable(name);
+        Stream outputStream = outputTableDef == null ? ydb.getStream(name) : null;
+
+        if (outputTableDef == null && outputStream == null) {
+            throw new ResourceNotFoundException(name);
+        }
+
+        expression.bind(context);
+        Stream inputStream = expression.execute(context);
+
+        if (outputTableDef != null) {
+            try {
+                // writing into a table
+                TableWriter tableWriter = ydb.getStorageEngine(outputTableDef)
+                        .newTableWriter(ydb, outputTableDef, insertMode);
+                inputStream.addSubscriber(tableWriter);
+                tableWriter.closeFuture().thenAccept(v -> inputStream.removeSubscriber(tableWriter));
+            } catch (YarchException e) {
+                log.warn("Exception while inserting into table", e);
+                throw new GenericStreamSqlException(e.getMessage());
+            }
+        } else {
+            inputStream.addSubscriber(new StreamSubscriber() {
+                @Override
+                public void streamClosed(Stream stream) {
+                    log.debug("InputStream {} closed", stream.getName());
+                }
+
+                @Override
+                public void onTuple(Stream stream, Tuple tuple) {
+                    outputStream.emitTuple(tuple);
+                }
+            });
+        }
+
+        Long inserted = null;
+        if (expression.isFinite()) {
+            Semaphore semaphore = new Semaphore(0);
+            MutableLong count = new MutableLong(0);
+            inputStream.addSubscriber(new StreamSubscriber() {
+                @Override
+                public void onTuple(Stream stream, Tuple tuple) {
+                    count.increment();
+                }
+
+                @Override
+                public void streamClosed(Stream stream) {
+                    semaphore.release();
+                }
+            });
+
+            inputStream.start();
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                throw new GenericStreamSqlException("Interrupted");
+            }
+            inserted = count.getLong();
+        } else {
+            inputStream.start();
+        }
+
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn("inserted", DataType.LONG);
+        consumer.accept(new Tuple(tdef, Arrays.asList(inserted)));
+    }
+
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `InsertValuesExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/InsertValuesExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchException;
+
+/**
+ * Produces tuples as result of:
+ * <p>
+ * <code>
+ * INSERT INTO table(...) VALUES(...)
+ *</code>
+ */
+public class InsertValuesExpression implements StreamExpression {
+    TupleDefinition tdef;
+    List<String> columns;
+    List<SelectItem> selectList;
+    static final TupleDefinition EMPTY_DEF = new TupleDefinition();
+    static final Tuple EMPTY_TPL = new Tuple(EMPTY_DEF);
+
+    public InsertValuesExpression(List<String> columns, List<SelectItem> selectList) throws StreamSqlException {
+        if (columns.size() != selectList.size()) {
+            throw new GenericStreamSqlException("Values list size does not match the declared columns");
+        }
+        boolean hasStars = selectList.stream().filter(item -> item.isStar()).findAny().isPresent();
+        if (hasStars) {
+            throw new GenericStreamSqlException("Cannot use star (*) in INSERT list");
+        }
+
+        this.columns = columns;
+        this.selectList = selectList;
+    }
+
+    @Override
+    public void bind(ExecutionContext c) throws StreamSqlException {
+
+        tdef = new TupleDefinition();
+
+        for (int i = 0; i < selectList.size(); i++) {
+            SelectItem item = selectList.get(i);
+            item.expr.bind(EMPTY_DEF);
+            tdef.addColumn(columns.get(i), item.expr.getType());
+        }
+    }
+
+    @Override
+    public Stream execute(ExecutionContext c) throws StreamSqlException, YarchException {
+        
+        List<Object> values = new ArrayList<>();
+        for(SelectItem item: selectList) {
+            Object o =  item.expr.compile().getValue(EMPTY_TPL);
+            values.add(o);
+        }
+
+        return new Stream(c.getDb(), "InsertValuesExpression" + this.hashCode(), tdef) {
+            @Override
+            public void doStart() {
+                Tuple t = new Tuple(tdef, values);
+                emitTuple(t);
+                close();
+            }
+            @Override
+            protected void doClose() {
+            }
+        };
+    }
+
+    @Override
+    public TupleDefinition getOutputDefinition() {
+        return tdef;
+    }
+
+    @Override
+    public boolean isFinite() {
+        return true;
+    }
+
+}
+```
+
+### `IsNullClause.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/IsNullClause.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public class IsNullClause {
+    // if negation = true, the clause is "IS NOT NULL"
+    boolean negation;
+
+    public void setNegation(boolean b) {
+        this.negation = b;        
+    }
+}
+```
+
+### `IsNullExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/IsNullExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.DataType;
+
+public class IsNullExpression extends Expression {
+    IsNullClause isNullClause;
+
+    public IsNullExpression(Expression expr, IsNullClause isNullClause) {
+        super(new Expression[] { expr });
+        this.isNullClause = isNullClause;
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = DataType.BOOLEAN;
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+
+        children[0].fillCode_getValueReturn(code);
+        if (isNullClause.negation) {
+            code.append("!=");
+        } else {
+            code.append("==");
+        }
+        code.append("null");
+    }
+
+}
+```
+
+### `javacc-invocation.sh`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/javacc-invocation.sh`
+
+
+```bash
+#!/bin/sh
+
+javacc -nostatic -JDK_VERSION=1.6 StreamSql.jj
+rm ParseException.java SimpleCharStream.java Token.java 
+```
+
+### `LikeClause.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/LikeClause.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public class LikeClause {
+    boolean negation;
+    String pattern; 
+    public void setNegation(boolean b) {
+        this.negation = b;        
+    }
+    
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
+        
+    }
+}
+```
+
+### `LikeExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/LikeExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.DataType;
+
+
+public class LikeExpression extends Expression {
+    LikeClause likeClause;
+    public LikeExpression(Expression expr, LikeClause likeClause) {
+        super(new Expression[]{expr});
+        this.likeClause=likeClause;
+    }
+
+    @Override
+    protected void doBind() throws StreamSqlException {
+        type = DataType.BOOLEAN;
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if(likeClause.negation) {
+            code.append("!");
+        }
+        code.append("org.yamcs.yarch.streamsql.Utils.like(");
+        children[0].fillCode_getValueReturn(code);
+        code.append(", \"");
+        code.append(likeClause.pattern);
+        code.append("\")");
+    }
+
+}
+```
+
+### `LimitedStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/LimitedStream.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.math.BigDecimal;
+
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class LimitedStream extends Stream implements StreamSubscriber {
+
+    private Stream input;
+
+    private long offset = 0;
+    private long limit = Long.MAX_VALUE;
+
+    protected LimitedStream(YarchDatabaseInstance ydb, Stream input, BigDecimal offset, BigDecimal limit,
+            TupleDefinition definition) {
+        super(ydb, input.getName() + "_limit", definition);
+        this.input = input;
+        if (offset != null) {
+            this.offset = Math.abs(offset.longValue());
+        }
+        if (limit != null) {
+            this.limit = Math.abs(limit.longValue());
+        }
+        input.addSubscriber(this);
+    }
+
+    @Override
+    public void doStart() {
+        if (input.getState() == SETUP) {
+            input.start();
+        }
+    }
+
+    // Called when the input stream received a tuple
+    @Override
+    public void onTuple(Stream stream, Tuple tuple) {
+        long inputDataCount = stream.getDataCount();
+        if (inputDataCount < offset + 1) {
+            return;
+        }
+        if (getDataCount() < limit) {
+            emitTuple(tuple);
+        } else {
+            input.close();
+        }
+    }
+
+    // Called when the input stream is closed
+    @Override
+    public void streamClosed(Stream stream) {
+        close();
+    }
+
+    @Override
+    protected void doClose() {
+        input.close();
+    }
+}
+```
+
+### `MergeExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MergeExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.MergeStream;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+class MergeExpression implements StreamExpression {
+    ArrayList<TupleSourceExpression> sources = new ArrayList<>();
+    String mergeColumn;
+    boolean ascending = true;
+    BigDecimal offset;
+    BigDecimal limit;
+    static Logger log = LoggerFactory.getLogger(MergeExpression.class.getName());
+
+    public void setMergeColumn(String name) {
+        mergeColumn = name;
+    }
+
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+    }
+
+    public void setLimit(BigDecimal offset, BigDecimal limit) {
+        this.offset = offset;
+        this.limit = limit;
+    }
+
+    @Override
+    public void bind(ExecutionContext c) throws StreamSqlException {
+        for (TupleSourceExpression tps : sources) {
+            tps.bind(c);
+        }
+    }
+
+    @Override
+    public Stream execute(ExecutionContext c) throws StreamSqlException {
+        YarchDatabaseInstance ydb = c.getDb();
+        Stream[] streams = new Stream[sources.size()];
+        for (int i = 0; i < streams.length; i++) {
+            streams[i] = sources.get(i).execute(c);
+        }
+
+        Stream stream;
+        if (streams.length == 1) {
+            stream = streams[0];
+        } else {
+            stream = new MergeStream(ydb, streams, mergeColumn, ascending);
+        }
+
+        if (limit != null || offset != null) {
+            return new LimitedStream(ydb, stream, offset, limit, stream.getDefinition());
+        } else {
+            return stream;
+        }
+    }
+
+    public void addTupleSourceExpression(TupleSourceExpression tsrc) {
+        sources.add(tsrc);
+    }
+
+    @Override
+    public TupleDefinition getOutputDefinition() {
+        return null;
+    }
+
+    @Override
+    public boolean isFinite() {
+        for (TupleSourceExpression tsrc : sources) {
+            if (!tsrc.isFinite()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+### `MergeStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MergeStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class MergeStatement extends SimpleStreamSqlStatement {
+
+    static Logger log = LoggerFactory.getLogger(MergeStatement.class.getName());
+
+    public MergeStatement(StreamExpression expr1, StreamExpression expr2, String name) {
+        // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        synchronized (ydb) {
+            log.warn("Merge statement not yet implemented");
+            throw new NotImplementedException("Merge statement");
+        }        
+    }
+}
+```
+
+### `MultiplicativeExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MultiplicativeExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.List;
+
+import org.yamcs.utils.parser.ParseException;
+
+public class MultiplicativeExpression extends Expression {
+    List<MultOp> ops;
+    public MultiplicativeExpression(List<Expression> exprs, List<MultOp> ops) throws ParseException {
+        super(exprs.toArray(new Expression[0]));
+        this.ops=ops;
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        // TODO Auto-generated method stub
+
+    }
+}
+```
+
+### `MultOp.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/MultOp.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public enum MultOp {
+	MULT, DIV, MOD
+
+}
+```
+
+### `NegativeExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NegativeExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.utils.parser.ParseException;
+
+public class NegativeExpression extends Expression {
+
+    public NegativeExpression(Expression expr) throws ParseException {
+        super(new Expression[] { expr });
+    //    constant = expr.isConstant();
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        type = children[0].getType();
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        code.append("-");
+        children[0].fillCode_getValueReturn(code);
+    }
+}
+```
+
+### `NotExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NotExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.utils.parser.ParseException;
+
+public class NotExpression extends Expression {
+
+    public NotExpression(Expression expr) throws ParseException {
+        super(new Expression[] { expr });
+        // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        // TODO Auto-generated method stub
+
+    }
+
+}
+```
+
+### `NotSupportedException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NotSupportedException.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+@SuppressWarnings("serial")
+public class NotSupportedException extends StreamSqlException {
+
+    public NotSupportedException(String item) {
+        super(ErrCode.NOT_SUPPORTED, "'" + item + "' not supported");
+    }
+}
+```
+
+### `NullExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/NullExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+/**
+ * This represents a NULL value coming from some sql expression for example: select null from x
+ */
+public class NullExpression extends Expression {
+
+    NullExpression() {
+        super(null);
+        this.constantValue = null;
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        // No type
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        code.append("null");
+    }
+}
+```
+
+### `OrExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/OrExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.FilterableTarget;
+
+import java.util.ArrayList;
+
+public class OrExpression extends Expression {
+
+    public OrExpression(ArrayList<Expression> list) {
+        super(list.toArray(new Expression[0]));
+    }
+
+    @Override
+    public void addFilter(FilterableTarget tableStream) throws StreamSqlException {
+        // cannot apply or condition to filter
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        for (Expression c : children) {
+            if (c.getType() != DataType.BOOLEAN) {
+                throw new GenericStreamSqlException("'" + c + "' is not of type boolean");
+            }
+        }
+        type = DataType.BOOLEAN;
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        boolean first = true;
+        code.append("SqlExpressions.OR(");
+        for (Expression expr : children) {
+            if (!first) {
+                code.append(", ");
+            } else {
+                first = false;
+            }
+            expr.fillCode_getValueReturn(code);
+        }
+        code.append(")");
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        boolean first = true;
+        for (Expression expr : children) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(" OR ");
+            }
+            sb.append("(");
+            sb.append(expr.toString());
+            sb.append(")");
+        }
+        return sb.toString();
+    }
+}
+```
+
+### `QueryTableExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/QueryTableExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public class QueryTableExpression {
+
+	public void setTable1Alias(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setOuterJoin() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTable2(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTable2Alias(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void setTable1(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+```
+
+### `README.txt`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/README.txt`
+
+
+```text
+the parser in this directory is generated automatically using javacc from StreamSql.jj
+The script javacc-invocation.sh lists the exact parameters
+
+```
+
+### `RelationalExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/RelationalExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ArrayDataType;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.FilterableTarget;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+/**
+ * Expressions of type <code>x &gt; y</code> or <code>x=y</code>
+ * 
+ * @author nm
+ *
+ */
+public class RelationalExpression extends Expression {
+    RelOp relOp;
+
+    public RelationalExpression(Expression left, Expression right, RelOp relOp) throws ParseException {
+        super(new Expression[] { left, right });
+        this.relOp = relOp;
+        // if (left.isConstant() && right.isConstant())
+        // constant = true;
+    }
+
+    public RelOp getRelation() {
+        return relOp;
+    }
+
+    @Override
+    public void addFilter(FilterableTarget tableStream) throws StreamSqlException {
+        if ((children[1] instanceof ColumnExpression) && (children[0].isConstant())) {
+            // swap left with right
+            Expression tmp = children[1];
+            children[1] = children[0];
+            children[0] = tmp;
+            relOp = relOp.getOppsite();
+        }
+
+        if ((children[0] instanceof ColumnExpression) && children[1].isConstant()) {
+            ColumnExpression cexpr = (ColumnExpression) children[0];
+            Object cvalue;
+            if (children[1] instanceof ValueExpression) {
+                cvalue = children[1].getConstantValue();
+            } else {
+                CompiledExpression compexpr = children[1].compile();
+                cvalue = compexpr.getValue(null);
+            }
+
+            tableStream.addRelOpFilter(cexpr, relOp, cvalue);
+        }
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        type = DataType.BOOLEAN;
+
+        DataType ltype = children[0].getType();
+        DataType rtype = children[1].getType();
+
+        if (relOp == RelOp.OVERLAP) {
+            if (!(ltype instanceof ArrayDataType) || !(rtype instanceof ArrayDataType)) {
+                throw new StreamSqlException(ErrCode.INCOMPATIBLE,
+                        "Overlap operator " + relOp.getSign() + " can only be used between two arrays");
+            }
+        }
+        if (DataType.compatible(ltype, rtype)) {
+            return;
+        }
+
+        // if any of the two children is constant, we attempt a conversion, otherwise we throw an exception (an explicit
+        // conversion should be used)
+        if (children[0].isConstant()) {
+            try {
+                Object v = DataType.castAs(ltype, rtype, children[0].getConstantValue());
+                children[0] = new ValueExpression(v, rtype);
+                return;
+            } catch (IllegalArgumentException e) {
+                throw new StreamSqlException(ErrCode.INCOMPATIBLE,
+                        "Cannot convert " + children[0].getConstantValue() + " to " + rtype);
+            }
+        } else if (children[1].isConstant()) {
+            try {
+                Object v = DataType.castAs(rtype, ltype, children[1].getConstantValue());
+                children[1] = new ValueExpression(v, ltype);
+                return;
+            } catch (IllegalArgumentException e) {
+                throw new StreamSqlException(ErrCode.INCOMPATIBLE,
+                        "Cannot convert " + children[1].getConstantValue() + " to " + ltype);
+            }
+        }
+
+        throw new StreamSqlException(ErrCode.INCOMPATIBLE, "Cannot compare " + ltype + " and " + rtype);
+
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        DataType ch0dt = children[0].getType();
+        if (ch0dt.isComparable()) {
+            code.append("SqlExpressions." + relOp.name() + "(");
+            children[0].fillCode_getValueReturn(code);
+            code.append(", ");
+            children[1].fillCode_getValueReturn(code);
+            code.append(") ");
+        } else {
+            switch (relOp) {
+            case NOT_EQUAL:
+                code.append("!");
+            case EQUAL: // intentional fall through
+                code.append("Objects.equals(");
+                children[0].fillCode_getValueReturn(code);
+                code.append(",");
+                children[1].fillCode_getValueReturn(code);
+                code.append(")");
+                break;
+            case OVERLAP:
+                code.append("SqlArrays.overlap(");
+                children[0].fillCode_getValueReturn(code);
+                code.append(", ");
+                children[1].fillCode_getValueReturn(code);
+                code.append(")");
+                break;
+            default:
+                throw new StreamSqlException(ErrCode.COMPILE_ERROR,
+                        "Cannot use " + relOp + " not supported for data type " + ch0dt);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return children[0] + " " + relOp.getSign() + " " + children[1];
+    }
+}
+```
+
+### `RelOp.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/RelOp.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.streamsql.RelOp;
+
+public enum RelOp {
+    EQUAL, NOT_EQUAL, GREATER_OR_EQUAL, GREATER, LESS_OR_EQUAL, LESS, OVERLAP;
+
+    public RelOp getOppsite() {
+        switch (this) {
+        case EQUAL:
+            return EQUAL;
+        case NOT_EQUAL:
+            return NOT_EQUAL;
+        case GREATER_OR_EQUAL:
+            return LESS_OR_EQUAL;
+        case GREATER:
+            return LESS;
+        case LESS_OR_EQUAL:
+            return GREATER_OR_EQUAL;
+        case LESS:
+            return GREATER_OR_EQUAL;
+        default:
+            throw new IllegalStateException("No opposite for " + this);
+        }
+    }
+
+    public String getSign() {
+        switch (this) {
+        case EQUAL:
+            return "==";
+        case GREATER:
+            return ">";
+        case GREATER_OR_EQUAL:
+            return ">=";
+        case LESS:
+            return "<";
+        case LESS_OR_EQUAL:
+            return "<=";
+        case NOT_EQUAL:
+            return "!=";
+        case OVERLAP:
+            return "&&";
+        default:
+            return null;
+        }
+    }
+}
+```
+
+### `ResourceNotFoundException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ResourceNotFoundException.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+@SuppressWarnings("serial")
+public class ResourceNotFoundException extends StreamSqlException {
+
+    public ResourceNotFoundException(String name) {
+        super(ErrCode.RESOURCE_NOT_FOUND, "Stream or table '" + name + "' not found");
+    }
+}
+```
+
+### `ResultListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ResultListener.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+public interface ResultListener {
+    /**
+     * Called at the beginning to provide the schema of the result.
+     * Not all tuples will have all columns.
+     * 
+     * @param tdef
+     */
+    default void start(TupleDefinition tdef) {
+    }
+
+    void next(Tuple tuple);
+
+    void completeExceptionally(Throwable t);
+
+    void complete();
+}
+```
+
+### `SelectExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SelectExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledAggregateExpression;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.ConstantValueCompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.SelectStream;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.WindowProcessor;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+import org.yamcs.utils.parser.ParseException;
+
+/**
+ * Corresponds to a queries like "select 2*x, x+sum(y+3) from t[...] where x&gt;5 group by x" chain of data/processing
+ * (D=Data, P=Processing, agg=aggregate):
+ * 
+ * <pre>
+ * (D1)   inputDef             (x,y)
+ * 
+ * (P1.1) where filter         (x&gt;5)
+ * (P1.2) aggInputList
+ * 
+ * (D2)   aggInputDef          (x,y+3)
+ * 
+ * (P2)   aggSelectList
+ *
+ * (D3)   aggOutputDef         (x,sum(y+3))
+ * 
+ * (P3)   selectList
+ * 
+ * (D4)   outputDef            (2*x,x+sum(y+3))
+ * </pre>
+ * 
+ * 
+ * P1.2 is performed by the WindowProcessor If there is no aggregate, then P3 follows directly after P1.1
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class SelectExpression implements StreamExpression {
+    List<SelectItem> selectList; // a,b+4,c
+    TupleSourceExpression tupleSourceExpression; // t,u,v (but only one table/stream supported for the moment)
+    Expression whereClause; // x and y
+    WindowSpecification windowSpec;// [SIZE 1000 ADVANCE 1000 ON a]
+    TupleDefinition inputDef, outputDef, minOutputDef, aggInputDef = null, aggOutputDef = null;
+    List<AggregateExpression> aggList = null;
+    List<Expression> aggInputList = null;
+    boolean ascending = true; // only for table-selects
+    boolean follow = false; // only for table-selects
+    private boolean selectStar; // in case of select *
+    BigDecimal offset;
+    BigDecimal limit;
+
+    public void setSelectList(List<SelectItem> selectList) {
+        this.selectList = selectList;
+    }
+
+    public void setFirstSource(TupleSourceExpression tsrc) {
+        this.tupleSourceExpression = tsrc;
+    }
+
+    public void setWhereClause(Expression whereClause) {
+        this.whereClause = whereClause;
+    }
+
+    public void setWindow(WindowSpecification windowSpec) {
+        this.windowSpec = windowSpec;
+    }
+
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+        tupleSourceExpression.setAscending(ascending);
+    }
+
+    public void setFollow(boolean follow) {
+        this.follow = follow;
+        tupleSourceExpression.setFollow(follow);
+    }
+
+    public void setLimit(BigDecimal offset, BigDecimal limit) {
+        this.offset = offset;
+        this.limit = limit;
+    }
+
+    @Override
+    public void bind(ExecutionContext c) throws StreamSqlException {
+        tupleSourceExpression.bind(c);
+
+        inputDef = tupleSourceExpression.getDefinition();
+        if (whereClause != null) {
+            whereClause.bind(inputDef);
+            if (whereClause.getType() != DataType.BOOLEAN) {
+                throw new GenericStreamSqlException("Invalid where clause, should return a boolean");
+            }
+        }
+        if (windowSpec != null) {
+            windowSpec.bind(inputDef);
+        }
+
+        if (selectList.size() == 1 && selectList.get(0) == SelectItem.STAR) {
+            selectStar = true;
+        }
+
+        /*
+         * expand the * if together with something else
+         * if(!selectStar) {
+         * for(int i=0;i<selectList.size();i++) {
+         * if(selectList.get(i)==SelectItem.STAR) {
+         * selectList.remove(i);
+         * for(ColumnDefinition cd:inputDef.getColumnDefinitions()) {
+         * try {
+         * selectList.add(i, new SelectItem(new ColumnExpression(cd.getName())));
+         * } catch (ParseException e) {
+         * e.printStackTrace();
+         * }
+         * i++;
+         * }
+         * }
+         * }
+         * }
+         */
+        // bind the other expressions
+        if (selectStar) {
+            outputDef = inputDef;
+            minOutputDef = inputDef;
+        } else {
+            bindAggregates(c);
+            outputDef = new TupleDefinition();
+            minOutputDef = new TupleDefinition();
+            for (SelectItem item : selectList) {
+                if (item != SelectItem.STAR) {
+                    item.expr.bind((aggOutputDef == null) ? inputDef : aggOutputDef);
+                    outputDef.addColumn(item.getName(), item.expr.getType());
+                }
+            }
+        }
+    }
+
+    private void bindAggregates(ExecutionContext c) throws StreamSqlException {
+        // collect aggregates
+        aggList = new ArrayList<>();
+
+        for (SelectItem item : selectList) {
+            if (item != SelectItem.STAR) {
+                item.expr.collectAggregates(aggList);
+            }
+        }
+
+        // bind aggregates
+        if (!aggList.isEmpty()) {
+            if (windowSpec == null) {
+                windowSpec = WindowSpecification.INFINITE_WINDOW;
+            }
+
+            // build aggInput
+            aggInputDef = new TupleDefinition();
+            aggInputList = new ArrayList<>();
+
+            boolean hasStars = false;
+            for (AggregateExpression aggExpr : aggList) {
+                if (aggExpr.star) {
+                    hasStars = true;
+                    break;
+                }
+            }
+
+            if (hasStars) {// add all the columns from inputDef
+                for (ColumnDefinition cd : inputDef.getColumnDefinitions()) {
+                    aggInputDef.addColumn(cd);
+                    try {
+                        aggInputList.add(new ColumnExpression(cd.getName()));
+                    } catch (ParseException e) {
+                        throw new StreamSqlException(ErrCode.ERROR, e.toString());
+                    }
+                }
+            } else if (windowSpec.type == WindowSpecification.Type.FIELD) {// add all the fields from the windowSpec
+                aggInputDef.addColumn(inputDef.getColumn(windowSpec.field));
+                try {
+                    aggInputList.add(new ColumnExpression(windowSpec.field));
+                } catch (ParseException e) {
+                    throw new StreamSqlException(ErrCode.ERROR, e.toString());
+                }
+            }
+            // add all the fields from the groupBy TODO
+
+            boolean hasComputations = false;
+            // add all children of the aggregate expressions
+            for (AggregateExpression aggExpr : aggList) {
+                if (aggExpr.children == null) {
+                    continue;
+                }
+                for (Expression expr : aggExpr.children) {
+                    expr.bind(inputDef);
+                    if (aggInputDef.getColumn(expr.getColumnName()) == null) {
+                        aggInputDef.addColumn(expr.getColumnName(), expr.getType());
+                        aggInputList.add(expr);
+                    }
+                    if (!(expr instanceof ColumnExpression)) {
+                        hasComputations = true;
+                    }
+                }
+            }
+            if (!hasComputations) {
+                aggInputDef = null;
+                aggInputList = null;
+            }
+            aggOutputDef = new TupleDefinition();
+            for (AggregateExpression aggExpr : aggList) {
+                aggExpr.bindAggregate((aggInputDef == null) ? inputDef : aggInputDef);
+                aggOutputDef.addColumn(aggExpr.getColumnName(), aggExpr.getType());
+            }
+        }
+
+    }
+
+    @Override
+    public TupleDefinition getOutputDefinition() {
+        return outputDef;
+    }
+
+    @Override
+    public Stream execute(ExecutionContext c) throws StreamSqlException {
+        if (whereClause != null) {
+            whereClause.addFilter(tupleSourceExpression);
+        }
+
+        Stream stream = tupleSourceExpression.execute(c);
+        CompiledExpression cWhereClause = (whereClause == null) ? null : whereClause.compile();
+
+        List<CompiledExpression> caggInputList = null;
+        if (aggInputList != null) {
+            caggInputList = new ArrayList<>();
+            for (Expression expr : aggInputList) {
+                caggInputList.add(expr.compile());
+            }
+        }
+
+        List<CompiledAggregateExpression> caggList = null;
+        if (aggOutputDef != null) {
+            caggList = new ArrayList<>();
+            for (AggregateExpression aexpr : aggList) {
+                caggList.add(aexpr.getCompiledAggregate());
+            }
+        }
+
+        List<CompiledExpression> cselectList = null;
+        if (!selectStar) {
+            cselectList = new ArrayList<>();
+            for (SelectItem item : selectList) {
+                if (item != SelectItem.STAR) {
+                    Expression expr = item.expr;
+                    if (expr.isConstant()) {
+                        cselectList.add(new ConstantValueCompiledExpression(expr.getConstantValue(),
+                                new ColumnDefinition(expr.getColumnName(), expr.getType())));
+                    } else {
+                        cselectList.add(item.expr.compile());
+                    }
+                } else {
+                    cselectList.add(SelectStream.STAR);
+                }
+            }
+        }
+        WindowProcessor windowProc = null;
+        if (windowSpec != null) {
+            windowProc = WindowProcessor.getInstance(windowSpec, aggInputDef, caggList, aggOutputDef);
+        }
+
+        YarchDatabaseInstance ydb = c.getDb();
+        if (cWhereClause != null || caggInputList != null || windowProc != null || cselectList != null) {
+            stream = new SelectStream(ydb, stream, cWhereClause,
+                    caggInputList, windowProc,
+                    cselectList, outputDef, minOutputDef);
+        }
+
+        if (limit != null || offset != null) {
+            return new LimitedStream(ydb, stream, offset, limit, stream.getDefinition());
+        } else {
+            return stream;
+        }
+    }
+
+    @Override
+    public boolean isFinite() {
+        return tupleSourceExpression.isFinite();
+    }
+}
+```
+
+### `SelectItem.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SelectItem.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+public class SelectItem {
+    public static final SelectItem STAR = new SelectItem(null);
+    Expression expr;
+    String alias;
+
+    public SelectItem(Expression expr) {
+        this.expr = expr;
+    }
+
+    public void setAlias(String name) {
+        this.alias = name;
+        expr.setColumnName(name);
+    }
+
+    public String getName() {
+        if (alias != null)
+            return alias;
+        else
+            return expr.getColumnName();
+    }
+
+    public boolean isStar() {
+        return this == STAR;
+    }
+
+    @Override
+    public String toString() {
+        if (alias == null)
+            return expr.toString();
+        else
+            return expr.toString() + "(aliased: " + alias + ")";
+    }
+}
+```
+
+### `SelectTableStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SelectTableStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class SelectTableStatement implements StreamSqlStatement {
+
+    private SelectExpression expression;
+    static final Tuple END_SIGNAL = new Tuple(new TupleDefinition(), Arrays.asList());
+
+    public SelectTableStatement(SelectExpression expression) {
+        this.expression = expression;
+    }
+
+    @Override
+    public void execute(YarchDatabaseInstance ydb, ResultListener resultListener, long limit)
+            throws StreamSqlException {
+        if (resultListener == null) {
+            throw new GenericStreamSqlException("Cannot select without a result listener");
+        }
+        ExecutionContext context = new ExecutionContext(ydb);
+
+        Stream stream = createStream(context);
+        resultListener.start(stream.getDefinition());
+
+        stream.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                resultListener.next(tuple);
+                if (stream.getDataCount() >= limit) {
+                    stream.close();
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                resultListener.complete();
+                context.close();
+            }
+        });
+        stream.start();
+    }
+
+    @Override
+    public StreamSqlResult execute(YarchDatabaseInstance ydb) throws StreamSqlException {
+        ExecutionContext context = new ExecutionContext(ydb);
+        Stream stream = createStream(context);
+
+        QueueStreamSqlResult result = new QueueStreamSqlResult(context, stream);
+        stream.addSubscriber(result);
+        stream.start();
+        stream.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                context.close();
+            }
+        });
+        return result;
+    }
+
+    Stream createStream(ExecutionContext context) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        String tblName = expression.tupleSourceExpression.objectName;
+        if (ydb.getTable(tblName) == null) {
+            throw new GenericStreamSqlException(String.format("Object %s does not exist or is not a table", tblName));
+        }
+
+        expression.bind(context);
+        return expression.execute(context);
+    }
+
+    static class QueueStreamSqlResult implements StreamSqlResult, StreamSubscriber {
+        final Stream stream;
+        final ExecutionContext context;
+
+        BlockingQueue<Tuple> queue = new ArrayBlockingQueue<Tuple>(1024);
+        Tuple next;
+        static Log log = new Log(QueueStreamSqlResult.class);
+
+        QueueStreamSqlResult(ExecutionContext context, Stream stream) {
+            this.stream = stream;
+            this.context = context;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (next == null) {
+                next = queueTake();
+            }
+
+            if (next == END_SIGNAL) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        @Override
+        public Tuple next() {
+            if (next == null) {
+                next = queueTake();
+            }
+            if (next == END_SIGNAL) {
+                throw new NoSuchElementException();
+            }
+
+            Tuple r = next;
+            next = null;
+
+            return r;
+        }
+
+        private Tuple queueTake() {
+            try {
+                return queue.take();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            return END_SIGNAL;
+        }
+
+        @Override
+        public void close() {
+            stream.close();
+            context.close();
+            queue.add(END_SIGNAL);
+        }
+
+        @Override
+        public void onTuple(Stream stream, Tuple tuple) {
+            queue.add(tuple);
+        }
+
+        @Override
+        public void streamClosed(Stream stream) {
+            queue.add(END_SIGNAL);
+        }
+
+        @Override
+        protected void finalize() {
+            if (!stream.isClosed()) {
+                log.error("Stream {} left dangling (StreamSqlResult has been discarded before closing)",
+                        stream.getName());
+                close();
+            }
+        }
+    }
+
+}
+```
+
+### `ShowDatabasesStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowDatabasesStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+
+public class ShowDatabasesStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("database", DataType.STRING);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+         List<String> databases = new ArrayList<>(YarchDatabase.getDatabases());
+        Collections.sort(databases);
+
+        for (String database : databases) {
+            Tuple tuple = new Tuple(TDEF, new Object[] { database });
+            consumer.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `ShowEnginesStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowEnginesStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+
+public class ShowEnginesStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("engine", DataType.STRING);
+        TDEF.addColumn("default", DataType.STRING);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> c) {
+        List<String> engines = new ArrayList<>(YarchDatabase.getStorageEngineNames());
+        Collections.sort(engines);
+        for (String engine : engines) {
+            String def = engine.equals(YarchDatabase.getDefaultStorageEngineName()) ? "*" : null;
+            Tuple tuple = new Tuple(TDEF, new Object[] { engine, def });
+            c.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `ShowSequencesStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowSequencesStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.SequenceInfo;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class ShowSequencesStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("name", DataType.STRING);
+        TDEF.addColumn("value", DataType.LONG);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        for (SequenceInfo seq : ydb.getSequencesInfo()) {
+            Tuple tuple = new Tuple(TDEF, new Object[] { seq.getName(), seq.getValue() });
+            consumer.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `ShowStreamsStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowStreamsStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class ShowStreamsStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("name", DataType.STRING);
+        TDEF.addColumn("emitted", DataType.LONG);
+        TDEF.addColumn("subscribers", DataType.INT);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        synchronized (ydb) {
+            List<Stream> streams = new ArrayList<>(ydb.getStreams());
+            Collections.sort(streams, (s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
+            for (Stream stream : streams) {
+                Tuple tuple = new Tuple(TDEF, new Object[] {
+                        stream.getName(),
+                        stream.getDataCount(),
+                        stream.getSubscriberCount(),
+                });
+                consumer.accept(tuple);
+            }
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `ShowStreamStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowStreamStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class ShowStreamStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("column", DataType.STRING);
+        TDEF.addColumn("type", DataType.STRING);
+    }
+
+    String name;
+
+    public ShowStreamStatement(String name) {
+        this.name = name;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        Stream s = null;
+        synchronized (ydb) {
+            s = ydb.getStream(name);
+        }
+        if (s == null) {
+            throw new ResourceNotFoundException(name);
+        }
+
+        for (ColumnDefinition cdef : s.getDefinition().getColumnDefinitions()) {
+            Tuple tuple = new Tuple(TDEF, new Object[] {
+                    cdef.getName(),
+                    cdef.getType().toString(),
+            });
+            consumer.accept(tuple);
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `ShowTablesStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ShowTablesStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class ShowTablesStatement extends SimpleStreamSqlStatement {
+
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("name", DataType.STRING);
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        synchronized (ydb) {
+            List<TableDefinition> tdefs = new ArrayList<>(ydb.getTableDefinitions());
+            Collections.sort(tdefs, (t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+            for (TableDefinition td : tdefs) {
+                Tuple tuple = new Tuple(TDEF, new Object[] { td.getName() });
+                consumer.accept(tuple);
+            }
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+}
+```
+
+### `SimpleStreamSqlStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/SimpleStreamSqlStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * common implementation for statements which do not return a stream of results but just a limited set
+ *
+ */
+public abstract class SimpleStreamSqlStatement implements StreamSqlStatement {
+    final static TupleDefinition EMPTY_TDEF = new TupleDefinition();
+
+    @Override
+    public void execute(YarchDatabaseInstance ydb, ResultListener resultListener, long limit)
+            throws StreamSqlException {
+        try (ExecutionContext contex = new ExecutionContext(ydb)) {
+            resultListener.start(getResultDefinition());
+
+            AtomicLong count = new AtomicLong();
+            execute(contex, t -> {
+                if (count.getAndIncrement() < limit) {
+                    resultListener.next(t);
+                }
+            });
+            resultListener.complete();
+        }
+    }
+
+    @Override
+    public StreamSqlResult execute(YarchDatabaseInstance ydb) throws StreamSqlException {
+        try (ExecutionContext contex = new ExecutionContext(ydb)) {
+            StreamSqlResultList r = new StreamSqlResultList();
+            execute(contex, t -> r.addTuple(t));
+
+            return r.init();
+        }
+    }
+
+    protected abstract void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException;
+
+    protected TupleDefinition getResultDefinition() {
+        return EMPTY_TDEF;
+    }
+}
+```
+
+### `StreamExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchException;
+
+/**
+ * Expression that upon execution produces a stream. Only to be used from the *Statement classes.
+ * 
+ * @author nm
+ *
+ */
+interface StreamExpression {
+
+    public Stream execute(ExecutionContext c) throws StreamSqlException, YarchException;
+
+    public void bind(ExecutionContext c) throws StreamSqlException;
+
+    public TupleDefinition getOutputDefinition();
+
+    /**
+     * If the stream produced by the execute has a finite number of elements, return true;
+     * <p>
+     * For example a select from a table will produce a finite number of elements whereas a select from a stream not.
+     * <p>
+     * This is used in the statements to wait for the execution of the statement or run it in background.
+     *
+     * @return true if the stream created will contain a finite number of elements.
+     *
+     */
+    boolean isFinite();
+}
+```
+
+### `StreamSql.jj`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSql.jj`
+
+
+```text
+/** A grammar for MRDP subset of StreamSql.
+    Initial start from the PL-SQL grammar found on javacc site
+*/
+
+options{
+    STATIC=false ;
+    IGNORE_CASE=true ;
+    //USER_CHAR_STREAM = false; //use the SimpleCharStream from the org.yamcs.utils.parser
+    
+    
+//  DEBUG_LOOKAHEAD= true ;
+//DEBUG_PARSER=true;
+}
+
+PARSER_BEGIN(StreamSqlParser)
+package org.yamcs.yarch.streamsql;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import org.yamcs.utils.parser.Token;
+import org.yamcs.utils.parser.SimpleCharStream;
+import org.yamcs.utils.parser.ParseException;
+
+import org.yamcs.yarch.*;
+import org.yamcs.yarch.streamsql.funct.*;
+import org.yamcs.yarch.TableWriter.InsertMode;
+
+
+public class StreamSqlParser {
+    private Object[] args = new Object[0];
+    int argCount = 0;
+
+    private String getNonEscapedString(String s) {
+	    return s.substring(1,s.length()-1).replace("''","'"); //remove the quote (') from beginning and from end and then replace double quote with single quote
+    }
+    
+    protected boolean seeTYPE() {
+        return "TYPE".equalsIgnoreCase(getToken(1).image);
+    }
+    
+   public void setArgs(Object[] args) {
+        this.args = args;
+    }
+    
+    ArgumentExpression nextArg() throws StreamSqlException {
+        if(argCount>=args.length) {
+            throw new StreamSqlException(StreamSqlException.ErrCode.WRONG_ARG_COUNT); 
+        }
+       ArgumentExpression expr = new ArgumentExpression(argCount, args[argCount++]);
+       expr.setArgs(args);
+       return expr;
+    }
+    
+    String nextArgAsString() throws StreamSqlException {
+  	    if(argCount>=args.length) {
+            throw new StreamSqlException(StreamSqlException.ErrCode.WRONG_ARG_COUNT); 
+        }
+        Object o = args[argCount++];
+        if(o instanceof String) {
+            return (String) o;
+        } else {
+            throw new StreamSqlException(StreamSqlException.ErrCode.BAD_ARG_TYPE, "Expected String, got "+o.getClass()); 
+        }
+    }
+    DataType getBasicDataType(String type) throws ParseException {
+        if("TIMESTAMP".equalsIgnoreCase(type)) {return DataType.TIMESTAMP;}
+        if("PARAMETER_VALUE".equalsIgnoreCase(type)) {return DataType.PARAMETER_VALUE;}
+        if("BINARY".equalsIgnoreCase(type))  {return DataType.BINARY;}
+        if("HRES_TIMESTAMP".equalsIgnoreCase(type)) {return DataType.HRES_TIMESTAMP;}
+    	if("UUID".equalsIgnoreCase(type)) {return DataType.UUID;}
+    
+        throw new ParseException("Unknown data type '"+type+"'");
+    }
+}
+PARSER_END(StreamSqlParser)
+
+
+SKIP:
+{
+    " "
+|   "\t"
+|   "\r"
+|   "\n"
+}
+
+/* Prefix      Meaning
+    -------------------
+    K_          Keyword
+    S_          Substitutes
+*/
+
+TOKEN: /* (Stream) SQL keywords. prefixed with K_ to avoid name clashes */
+{
+    <K_ADVANCE: "ADVANCE">
+|   <K_AFAP: "AFAP">
+|   <K_ALL: "ALL">
+|   <K_ALTER: "ALTER">
+|   <K_AND: "AND">
+|   <K_ANY: "ANY">
+|   <K_ARRAY:"ARRAY">
+|   <K_AS: "AS">
+|   <K_ASC:"ASC">
+|   <K_AUTO_INCREMENT: "AUTO_INCREMENT">
+|   <K_BETWEEN:"BETWEEN">
+|   <K_BOOLEAN:"BOOLEAN">
+|   <K_BY:"BY">
+|   <K_BYTE:"BYTE">
+|   <K_CHAR:"CHAR">
+|   <K_CLOSE:"CLOSE">
+|   <K_COLUMN_FAMILY: "COLUMN_FAMILY">
+|   <K_COMPRESSED:"COMPRESSED">
+|   <K_CREATE:"CREATE">
+|   <K_CURRENT:"CURRENT">
+|   <K_DATABASES:"DATABASES">
+|   <K_DATE:"DATE">
+|   <K_DECIMAL:"DECIMAL">
+|   <K_DELETE:"DELETE">
+|   <K_DESC:"DESC">
+|   <K_DESCRIBE:"DESCRIBE">
+|   <K_DISTINCT:"DISTINCT">
+|   <K_DOUBLE:"DOUBLE">
+|   <K_DROP:"DROP">
+|   <K_ENGINE:"ENGINE">
+|   <K_ENGINES:"ENGINES">
+|   <K_ENUM:"ENUM">
+|   <K_ESCAPE:"ESCAPE">
+|   <K_EXISTS:"EXISTS">
+|   <K_FIXED_DELAY:"FIXED_DELAY">
+|   <K_FLOAT:"FLOAT">
+|   <K_FROM:"FROM">
+|   <K_HAVING:"HAVING">
+|   <K_HISTOGRAM:"HISTOGRAM">
+|   <K_IF:"IF">
+|   <K_IN:"IN">
+|   <K_IN_KEY: "IN_KEY">
+|   <K_INPUT:"INPUT">
+|   <K_INDEX:"INDEX">
+|   <K_INSERT:"INSERT">
+|   <K_INSERT_APPEND:"INSERT_APPEND">
+|   <K_INT:"INT">
+|   <K_INTO:"INTO">
+|   <K_IS:"IS">
+|   <K_KEY:"KEY">
+|   <K_LIKE:"LIKE">
+|   <K_LIMIT:"LIMIT">
+|   <K_LOAD:"LOAD">
+|   <K_LONG:"LONG">
+|   <K_MERGE:"MERGE">
+|   <K_MOD:"MOD">
+|   <K_NOT:"NOT">
+|   <K_NOFOLLOW:"NOFOLLOW">
+|   <K_NULL:"NULL">
+|   <K_NULLS:"NULLS">
+|   <K_ON:"ON">
+|   <K_ONLY:"ONLY">
+|   <K_OR:"OR">
+|   <K_ORDER:"ORDER">
+|   <K_ORIGINAL:"ORIGINAL">
+|   <K_OUT:"OUT">
+|   <K_OUTPUT:"OUTPUT">
+|   <K_PARTITION:"PARTITION">
+|   <K_PORT:"PORT">
+|   <K_PRIMARY:"PRIMARY">
+|   <K_PROTOBUF:"PROTOBUF">
+|   <K_RANGE:"RANGE">
+|   <K_READ:"READ">
+|   <K_REAL:"REAL">
+|   <K_RENAME:"RENAME">
+|   <K_RESTART:"RESTART">
+|   <K_REVERSE:"REVERSE">
+|   <K_ROW:"ROW">
+|   <K_ROWS:"ROWS">
+|   <K_SAMPLE:"SAMPLE">
+|   <K_SELECT:"SELECT">
+|   <K_SEQUENCE:"SEQUENCE">
+|   <K_SET:"SET">
+|   <K_SIZE:"SIZE">
+|   <K_SHOW:"SHOW">
+|   <K_SHRT:"SHORT">
+|   <K_SMALLINT:"SMALLINT">
+|   <K_SEQUENCES:"SEQUENCES">
+|   <K_STREAM:"STREAM">
+|   <K_STREAMS:"STREAMS">
+|   <K_STRING:"STRING">
+|   <K_TABLE:"TABLE">
+|   <K_TABLE_FORMAT:"TABLE_FORMAT">
+|   <K_TABLES:"TABLES">
+|   <K_TABLESPACE:"TABLESPACE">
+|   <K_TIME:"TIME">
+|   <K_TIME_AND_VALUE:"TIME_AND_VALUE">
+|   <K_TO:"TO">
+|   <K_TUPLES:"TUPLES">
+|   <K_UNIQUE:"UNIQUE">
+|   <K_UPDATE:"UPDATE">
+|   <K_UPSERT:"UPSERT">
+|   <K_UPSERT_APPEND:"UPSERT_APPEND">
+|   <K_USE:"USE">
+|   <K_USING:"USING">
+|   <K_VALUE:"VALUE">
+|   <K_VALUES:"VALUES">
+|   <K_WHEN:"WHEN">
+|   <K_WHERE:"WHERE">
+|   <K_WITH:"WITH">
+}
+
+TOKEN : /* Numeric Constants */
+{
+    < S_INTEGER: <DECIMAL_LITERAL> | <HEX_LITERAL> >
+  |  <#DECIMAL_LITERAL: (<DIGIT>)+>
+  |  <#HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+>
+  | < S_FLOAT:
+        (<DIGIT>)* "." (<DIGIT>)+ (<EXPONENT>)?
+      | (<DIGIT>)+ <EXPONENT>
+    >
+  | < #EXPONENT: ( <SIGN> )? ["e","E"] ( <DIGIT> )+ >
+  | < #DIGIT: ["0" - "9"] >
+  | < #HEX_DIGIT: ["0" - "9", "a" - "h", "A" - "H"] >
+  | < #SIGN: ["-","+"]>
+  | < S_STRING: "'" (~["'"])* "'" ("'" (~["'"])* "'")*>
+}
+
+SPECIAL_TOKEN:
+{
+   <LINE_COMMENT: "--"(~["\r","\n"])*>
+|  <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+
+TOKEN:
+{
+    < S_IDENTIFIER: (<LETTER>)+ (<DIGIT> | <LETTER> |<SPECIAL_CHARS>)* >
+  | < #LETTER: ["a"-"z", "A"-"Z"] >
+  | < #SPECIAL_CHARS: "$" | "_" | "#" | ".">
+  | < S_DOUBLE_QUOTED_IDENTIFIER: "\"" (~["\n","\r","\""])* "\"" >
+  | < S_QMARK: "?" >
+}
+
+
+DataType DataTypeDefinition():
+{
+    Token className;
+    DataType dataType;
+}
+{
+   (    "INT" {dataType = DataType.INT;}
+      |  "LONG" {dataType = DataType.LONG;}
+      |  "BOOLEAN" {dataType = DataType.BOOLEAN;}
+      |  "BYTE" {dataType = DataType.BYTE;}
+      |  "SHORT" {dataType = DataType.SHORT;}
+      |  "DOUBLE" {dataType = DataType.DOUBLE;}
+      |  "STRING"  {dataType = DataType.STRING;}
+      |  "ENUM"  {dataType = DataType.ENUM;}
+      |  "PROTOBUF" "(" className= <S_STRING> ")"   {dataType =  DataType.protobuf(getNonEscapedString(className.image));}
+      | <S_IDENTIFIER> {dataType = getBasicDataType(token.image);}
+    )
+    [
+      "[]" {dataType = DataType.array(dataType);}
+    ]
+    {
+     return dataType;
+    }
+    
+}
+
+
+StreamSqlStatement OneStatement() throws StreamSqlException: {
+    StreamSqlStatement statement;
+} {
+    statement=StreamSqlStatement() 
+    <EOF>
+    {
+        return statement;
+    }
+}
+
+StreamSqlStatement StreamSqlStatement() throws StreamSqlException: {StreamSqlStatement statement;}
+{
+    <EOF> {return null;}
+    |
+    (LOOKAHEAD(2) statement=CreateTableStatement()
+    |
+    LOOKAHEAD(2) statement=CreateStreamStatement()
+    |
+    statement=DeleteStatement()
+    |
+    statement=InsertStatement()
+    |
+    statement=SelectTableStatement()
+    |
+    statement=UpdateTableStatement()
+    |
+    statement=CloseStreamStatement()
+    |
+    statement=DropTableStatement()
+    |
+    statement=DescribeStatement()
+    |
+    LOOKAHEAD(2) statement=ShowStreamsStatement()
+    |    
+    LOOKAHEAD(2) statement=ShowStreamStatement()
+    |
+    LOOKAHEAD(2) statement=ShowTablesStatement()
+    |
+    LOOKAHEAD(2) statement=ShowEnginesStatement()
+    |
+    LOOKAHEAD(2) statement=ShowDatabasesStatement()
+    |
+    LOOKAHEAD(2) statement=ShowSequencesStatement()
+    |
+    LOOKAHEAD(2) statement=AlterSequenceStatement()
+    |
+    LOOKAHEAD(2) statement=AlterTableStatement()
+    )
+    {
+	return statement;
+    }
+}
+
+CreateInputStreamStatement CreateInputStreamStatement() throws StreamSqlException: {
+    TupleDefinition tupleDefinition;
+    String streamName;
+} {
+    <K_CREATE> "INPUT" "STREAM" streamName=ObjectName() tupleDefinition=TupleDefinition()
+    {
+	return new CreateInputStreamStatement(streamName,tupleDefinition);
+    }
+}
+
+CreateTableStatement CreateTableStatement() throws StreamSqlException: {
+    TupleDefinition tupleDefinition=new TupleDefinition();
+    ArrayList<String> primaryKey=new ArrayList<String>();
+    ArrayList<String> partitions=new ArrayList<String>();
+ 	ArrayList<String> index=new ArrayList<String>();
+    String tableName, pk, partitionColumn, indexColumn ;
+    boolean ifNotExists=false;
+    boolean autoincrement = false;
+    
+    TableColumnDefinition tcd;
+    
+    CreateTableStatement cts;
+    
+} {
+    <K_CREATE> <K_TABLE> [<K_IF> <K_NOT> <K_EXISTS> {ifNotExists=true;}] tableName=ObjectName()
+    "(" (tcd = TableColumnDefinition() "," {tupleDefinition.addColumn(tcd);} )+
+     <K_PRIMARY> <K_KEY> "(" pk=ObjectName() {primaryKey.add(pk);} ("," pk=ObjectName(){primaryKey.add(pk);})* ")" 
+     [","<K_INDEX> "(" indexColumn=ObjectName() {index.add(indexColumn);} ("," indexColumn=ObjectName(){index.add(indexColumn);})* ")"]
+     ")"
+     {cts=new CreateTableStatement(ifNotExists, tableName, tupleDefinition, primaryKey, index);}
+     (TableOption(cts))*	
+	
+    {
+	return cts;
+    }
+}
+
+TableColumnDefinition TableColumnDefinition() throws StreamSqlException: {
+   TableColumnDefinition tcd;
+   String columnName;
+   DataType columnType;
+} {
+   columnName=ObjectName() columnType=DataTypeDefinition() {tcd = new TableColumnDefinition(columnName,columnType);}
+   [<K_AUTO_INCREMENT> {tcd.setAutoIncrement(true);}]
+   {
+   return tcd;
+   }
+}
+
+void TableOption(CreateTableStatement cts) throws StreamSqlException: {
+   String columnName, tablespace, engine;
+   PartitioningSpec pspec;
+   CreateTableStatement.TableFormatOption tfo;
+} {
+   <K_HISTOGRAM> "(" columnName=ObjectName() {cts.addHistogramColumn(columnName);} ("," columnName=ObjectName(){cts.addHistogramColumn(columnName);})* ")"
+   |
+   <K_ENGINE>  engine=ObjectName() {cts.setEngine(engine);}
+   |
+   <K_PARTITION> <K_BY>  pspec=PartitioningSpec() {cts.setPartitioning(pspec);} 
+   |
+   <K_TABLESPACE> tablespace=ObjectName() {cts.setTablespace(tablespace);}
+   |
+   <K_TABLE_FORMAT> "="  tfo=TableFormatOption() {cts.addTableFormatOption(tfo);} 
+                         ("," tfo=TableFormatOption(){cts.addTableFormatOption(tfo);})*
+
+}
+
+
+PartitioningSpec PartitioningSpec() throws StreamSqlException: {
+    PartitioningSpec pspec;
+    String cname1, cname2;
+    Token t;
+    String timePartSchema = null;
+} {
+  ( <K_TIME> "(" 
+                 cname1=ObjectName() 
+                 [ "(" t = <S_STRING> ")" {timePartSchema = getNonEscapedString(t.image);} ] 
+             ")" {
+  		         pspec = PartitioningSpec.timeSpec(cname1, timePartSchema);
+  	         } 
+    |
+	<K_VALUE> "(" cname1=ObjectName() ")" {
+	   pspec = PartitioningSpec.valueSpec(cname1);
+	 } 
+    |
+	<K_TIME_AND_VALUE> "(" 
+	            cname1=ObjectName() 
+	            [ "(" t = <S_STRING> ")" {timePartSchema =  getNonEscapedString(t.image);} ]
+	            "," cname2=ObjectName() 
+	   ")" {
+	        pspec = PartitioningSpec.timeAndValueSpec(cname1, cname2, timePartSchema);
+	    } 
+  ) { 
+       return pspec;
+    }
+}
+
+CreateTableStatement.TableFormatOption TableFormatOption() throws StreamSqlException: {
+     CreateTableStatement.TableFormatOption tfo;
+     String cfName;
+} {
+	("COMPRESSED" {tfo = new CreateTableStatement.TableFormatOption("COMPRESSED");}
+       |
+    "COLUMN_FAMILY" ":" cfName=ObjectName() {tfo = new CreateTableStatement.TableFormatOption("COLUMN_FAMILY", cfName);}
+    ) {
+    	return tfo;
+    }
+}
+
+
+CreateStreamStatement CreateStreamStatement() throws StreamSqlException: {
+    String name;
+    StreamExpression expression;
+    TupleDefinition tupleDefinition;
+    boolean follow = true;
+} {
+    <K_CREATE> <K_STREAM> name=ObjectName() (
+      <K_AS>  expression=StreamExpression() [<K_NOFOLLOW> {follow=false;}]
+       { 
+        	if(expression instanceof SelectExpression) {
+        		((SelectExpression) expression).setFollow(follow);
+    		}
+            return new CreateStreamStatement(name, expression); 
+        }
+     |
+         tupleDefinition=TupleDefinition()
+        {
+            return new CreateStreamStatement(name,tupleDefinition);
+        }
+   )
+}
+
+SelectTableStatement SelectTableStatement() throws StreamSqlException: {
+    String name;
+    SelectExpression expression;
+} {
+    expression = SelectExpression() 
+    {
+        return new SelectTableStatement(expression); 
+    }
+}
+
+CloseStreamStatement CloseStreamStatement() throws StreamSqlException: {
+    String name;
+} {
+    <K_CLOSE> <K_STREAM> name=ObjectName()
+    {
+	return new CloseStreamStatement(name);
+    }
+}
+
+DropTableStatement DropTableStatement() throws StreamSqlException: {
+    boolean ifExists=false;
+    String name;
+} {
+    <K_DROP> <K_TABLE> [<K_IF> <K_EXISTS> {ifExists=true;}] name=ObjectName()
+    {
+	return new DropTableStatement(ifExists, name);
+    }
+}
+
+
+ShowStreamsStatement ShowStreamsStatement() throws StreamSqlException: {
+} {
+    <K_SHOW> <K_STREAMS> 
+    {
+	return new ShowStreamsStatement();
+    }
+}
+
+ShowTablesStatement ShowTablesStatement() throws StreamSqlException: {
+} {
+    <K_SHOW> <K_TABLES> 
+    {
+	return new ShowTablesStatement();
+    }
+}
+
+ShowStreamStatement ShowStreamStatement() throws StreamSqlException: {
+    String name;
+} {
+    <K_SHOW> <K_STREAM> name=ObjectName()
+    {
+	return new ShowStreamStatement(name);
+    }
+}
+
+ShowEnginesStatement ShowEnginesStatement() throws StreamSqlException: {
+} {
+    <K_SHOW> <K_ENGINES> 
+    {
+	return new ShowEnginesStatement();
+    }
+}
+
+ShowDatabasesStatement ShowDatabasesStatement() throws StreamSqlException: {
+} {
+    <K_SHOW> <K_DATABASES> 
+    {
+	return new ShowDatabasesStatement();
+    }
+}
+
+ShowSequencesStatement ShowSequencesStatement() throws StreamSqlException: {
+} {
+    <K_SHOW> <K_SEQUENCES> 
+    {
+	return new ShowSequencesStatement();
+    }
+}
+
+DescribeStatement DescribeStatement() throws StreamSqlException: {
+    String name;
+} {
+    <K_DESCRIBE> name=ObjectName()
+    {
+	return new DescribeStatement(name);
+    }
+}
+
+AlterSequenceStatement AlterSequenceStatement() throws StreamSqlException: {
+    String name;
+    BigDecimal n = new BigDecimal(0);
+} {
+    <K_ALTER>  <K_SEQUENCE> name=ObjectName() <K_RESTART> [ <K_WITH> n = NumericConstant()]
+    {
+	return new AlterSequenceStatement(name, n.longValue());
+    }
+}
+
+AlterTableStatement AlterTableStatement() throws StreamSqlException: {
+    String name, newName;
+} {
+    <K_ALTER>  <K_TABLE> name=ObjectName() <K_RENAME> <K_TO> newName=ObjectName()
+    {
+	return new AlterTableStatement(name, newName);
+    }
+}
+
+StreamExpression StreamExpression() throws StreamSqlException:  {
+    StreamExpression expression;
+} {
+   (expression=SelectExpression()
+   |
+   expression=MergeExpression()
+   )
+    {
+	return expression;
+    }
+}
+
+void IntoClause() throws StreamSqlException:{
+} {
+    "INTO" ObjectName()
+}
+
+InsertStatement InsertStatement() throws StreamSqlException: {
+    String name;
+    StreamExpression expression;
+    List<String> columns = new ArrayList();
+    List<SelectItem> selectList;
+    String cn;
+    InsertMode insertMode;
+} {
+    (
+       <K_INSERT> {insertMode = InsertMode.INSERT;}
+       |
+       <K_UPSERT> {insertMode = InsertMode.UPSERT;}
+       |
+       <K_INSERT_APPEND> {insertMode = InsertMode.INSERT_APPEND;}
+       |
+       <K_UPSERT_APPEND> {insertMode = InsertMode.UPSERT_APPEND;}
+       |
+       <K_LOAD> {insertMode = InsertMode.LOAD;}
+    )
+    <K_INTO> name=ObjectName()
+    (
+         expression=StreamExpression()
+         {
+             return new InsertStatement(name, expression, insertMode);
+         }
+      |
+         "(" cn=ObjectName() {columns.add(cn);} ("," cn=ObjectName(){columns.add(cn);})* ")"
+         <K_VALUES>
+         "(" selectList = SelectList() ")"
+         {
+            return new InsertStatement(name, new InsertValuesExpression(columns, selectList), InsertMode.INSERT);
+         }
+    )
+}
+
+MergeExpression MergeExpression() throws StreamSqlException: {
+    MergeExpression mergeExpr=new MergeExpression();
+    TupleSourceExpression tsrc;
+    String name;
+    boolean ascending = true;
+    BigDecimal offset = null;
+    BigDecimal limit = null;
+} {
+    "MERGE" 
+       tsrc=TupleSourceExpression() {mergeExpr.addTupleSourceExpression(tsrc);}
+       ("," 
+        tsrc=TupleSourceExpression() {mergeExpr.addTupleSourceExpression(tsrc);}
+       )*
+    "USING" name=ObjectName() {mergeExpr.setMergeColumn(name);}
+    [ ascending=OrderClause() {mergeExpr.setAscending(ascending);} ]
+    [ 
+        <K_LIMIT>
+        [LOOKAHEAD(2) offset=NumericConstant() "," ]
+        limit=NumericConstant() { mergeExpr.setLimit(offset, limit); }
+    ]
+    {
+	return mergeExpr;
+    }
+}
+
+DeleteStatement DeleteStatement() throws StreamSqlException: {
+    String tableName;
+    Expression expression=null;
+    BigDecimal limit = new BigDecimal(-1);
+} {
+    "DELETE" "FROM" tableName=ObjectName()
+    ["WHERE" expression=Expression() ]
+    ["LIMIT" limit=NumericConstant() ]
+    {
+	return new DeleteStatement(tableName, expression, limit.longValue());
+    }
+}
+
+
+UpdateTableStatement UpdateTableStatement() throws StreamSqlException: {
+    String tableName;
+    String colName;
+    Expression whereExpr = null;
+    Expression colValue;
+    List<UpdateTableStatement.UpdateItem> updateList = new ArrayList<UpdateTableStatement.UpdateItem>();
+    BigDecimal limit = new BigDecimal(-1);
+} {
+    "UPDATE" tableName=ObjectName()
+    "SET" 
+     colName = ObjectName() "=" colValue = Expression()
+       { 
+          updateList.add(new UpdateTableStatement.UpdateItem(colName, colValue));
+       }
+     ("," colName = ObjectName() "=" colValue = Expression()
+       {
+     	  updateList.add(new UpdateTableStatement.UpdateItem(colName, colValue));
+       } 
+     )*
+    ["WHERE" whereExpr=Expression() ]
+    ["LIMIT" limit=NumericConstant() ]
+    {
+	return new UpdateTableStatement(tableName, updateList, whereExpr, limit.longValue());
+    }
+}
+
+// Expression and its children
+Expression Expression() throws StreamSqlException: {
+    Expression expr;
+    ArrayList<Expression> list = new ArrayList<Expression>();
+} {
+      expr = AndExpression() { list.add(expr); }
+      ( "OR" expr=AndExpression() { list.add(expr); } )*
+    {
+        if(list.size() == 1) expr= list.get(0);
+        else expr = new OrExpression(list);
+
+        expr.setArgs(args);
+        return expr;
+    }
+}
+
+Expression AndExpression() throws StreamSqlException: {
+    Expression expr;
+    ArrayList<Expression> list=new ArrayList<Expression>();
+} {
+    (
+        (
+            LOOKAHEAD(3) expr=UnaryLogicalExpression()
+            |
+            "(" expr=Expression() ")"
+        ) { list.add(expr); }
+        (
+            "AND"
+            (
+            LOOKAHEAD(3)  expr=UnaryLogicalExpression()
+                |
+                "(" expr=Expression() ")"
+            ) { list.add(expr); }
+        )*
+    )
+    {
+        if(list.size()==1) return list.get(0);
+        else return new AndExpression(list);
+    }
+}
+
+Expression UnaryLogicalExpression() throws StreamSqlException: {
+    boolean notset=false;
+    Expression expr;
+} {
+    ["NOT" {notset = true;}] expr = RelationalExpression() 
+    {
+	if(notset) return new NotExpression(expr);
+	else return expr;
+    }
+}
+
+Expression RelationalExpression() throws StreamSqlException: {
+    Expression retExpr, expr;
+    RelOp relOp;
+    List<Expression> list;
+    LikeClause likeClause;
+    InClause inClause;
+    IsNullClause isNullClause;
+} {
+    expr = SimpleExpression() {retExpr=expr;}
+    ( relOp=RelOp() expr = SimpleExpression() {retExpr=new RelationalExpression(retExpr,expr,relOp);}
+      |
+      LOOKAHEAD(2) inClause=InClause() {retExpr=new InExpression(expr, inClause);}
+      |
+      LOOKAHEAD(2) BetweenClause()
+      |
+      LOOKAHEAD(2) likeClause = LikeClause() { retExpr = new LikeExpression(expr, likeClause);}
+      |
+      isNullClause = IsNullClause() { retExpr = new IsNullExpression(expr, isNullClause);}
+   )?
+    {
+	return retExpr;
+    }
+}
+
+List<Expression> ExpressionList() throws StreamSqlException: {
+    List<Expression> list=new ArrayList<Expression>();
+    Expression expr;
+} {
+    expr=Expression(){list.add(expr);} ("," expr=Expression() {list.add(expr);})*
+    {
+    return list;
+    }
+}
+
+InClause InClause() throws StreamSqlException: {
+    List<Expression> list;
+    InClause inClause = new InClause();
+} {
+    ["NOT" {inClause.setNegation(true);}] 
+    "IN" "(" list=ExpressionList()")" {inClause.setList(list);}
+    {
+    return inClause;
+    }
+}
+
+void BetweenClause() throws StreamSqlException: {
+} {
+    ["NOT"] "BETWEEN" SimpleExpression() "AND" SimpleExpression()
+}
+
+
+LikeClause LikeClause() throws StreamSqlException:{
+  LikeClause likeClause = new LikeClause();
+  String pattern;
+} {
+    ["NOT" {likeClause.setNegation(true);}]
+    "LIKE" (<S_STRING> {likeClause.setPattern(getNonEscapedString(token.image));}
+    | <S_QMARK> {likeClause.setPattern(nextArgAsString());}
+    )    
+    {
+       return likeClause;
+    }
+
+}
+
+IsNullClause IsNullClause() throws StreamSqlException:{
+	IsNullClause isNullClause = new IsNullClause();
+} {
+    "IS" ["NOT" {isNullClause.setNegation(true);}] "NULL"
+    {
+    return isNullClause;
+    }
+}
+
+
+Expression SimpleExpression() throws StreamSqlException: {
+    Expression expr;
+    BitwiseOp bitwiseOp;
+    List<Expression> exprs = new ArrayList<Expression>();
+    List<BitwiseOp> ops = new ArrayList<BitwiseOp>();
+} {
+    expr = AdditiveExpression() {exprs.add(expr);} 
+    ( LOOKAHEAD(2) bitwiseOp = BitwiseOp() expr = AdditiveExpression() {exprs.add(expr); ops.add(bitwiseOp);} )* 
+    {
+        if(ops.isEmpty()) {
+	     return exprs.get(0);
+        } else {
+	     return new BitwiseExpression(exprs, ops);
+        }
+    }
+}
+
+
+
+Expression AdditiveExpression() throws StreamSqlException: {
+    Expression expr;
+    AddOp addOp;
+    List<Expression>exprs = new ArrayList<Expression>();
+    List<AddOp> ops = new ArrayList<AddOp>();
+} {
+    expr = MultiplicativeExpression() {exprs.add(expr);} 
+    ( addOp=AddOp() expr = MultiplicativeExpression() {exprs.add(expr); ops.add(addOp);} )* 
+    {
+        if(ops.isEmpty()) {
+	     return exprs.get(0);
+        } else {
+	     return new AdditiveExpression(exprs,ops);
+        }
+    }
+}
+
+
+
+Expression MultiplicativeExpression() throws StreamSqlException: {
+    Expression expr;
+    MultOp multOp;
+    List<Expression>exprs=new ArrayList<Expression>();
+    List<MultOp> ops=new ArrayList<MultOp>();
+} {
+    expr=ExponentExpression() {exprs.add(expr);}
+    ( LOOKAHEAD(1) multOp=MultOp() expr=MultiplicativeExpression() {exprs.add(expr); ops.add(multOp);} )*
+    {
+        if(ops.isEmpty()) {
+	     return exprs.get(0);
+        } else {
+	     return new MultiplicativeExpression(exprs,ops);
+        }
+    }
+}
+
+Expression ExponentExpression() throws StreamSqlException: {
+    Expression retExpr,expr;
+} {
+    expr=UnaryExpression() {retExpr=expr;} 
+    [ "**" expr=UnaryExpression() {retExpr=new ExponentExpression(retExpr,expr);}]
+    {
+	return retExpr;
+    }
+}
+
+Expression UnaryExpression() throws StreamSqlException: {
+    Expression expr;
+    boolean negative=false;
+} {
+    ("+" | "-" {negative=true;})? expr=PrimaryExpression()
+    {
+	    if(negative) {
+            if(expr instanceof ValueExpression) {
+                return ((ValueExpression)expr).getNegative();
+            } else {
+                return new NegativeExpression(expr);
+            }
+        } else {
+            return expr;
+        }
+    }
+}
+
+
+Expression PrimaryExpression() throws StreamSqlException: {
+    String name;
+    Expression expr;
+    List<Expression> exprList;
+} {
+    <S_INTEGER> 
+      {
+         String s = token.image;
+         BigInteger bi ;
+         if(s.startsWith("0x") || s.startsWith("0X")) {
+             bi = new BigInteger(s.substring(2), 16);
+         } else {
+             bi = new BigInteger(s);
+         }
+         if (bi.bitLength() < 32) return new ValueExpression((Integer)bi.intValue());
+	     if (bi.bitLength() < 64) return new ValueExpression((Long)bi.longValue());
+         throw new ParseException("number too big for an int or a long: "+bi);
+      }
+  | <S_FLOAT> {return new ValueExpression(Double.valueOf(token.image));}
+  | <S_STRING> {return new ValueExpression(getNonEscapedString(token.image));}
+  | <K_NULL> {return new NullExpression();}
+  | <S_QMARK> {return nextArg();}
+  | LOOKAHEAD(3) "(" expr = SimpleExpression() ")" {return expr;}
+  | "ARRAY" "[" exprList = ExpressionList() "]" {return new ArrayExpression(exprList); }
+  | LOOKAHEAD(ObjectName() "(") expr=FunctionCall() {return expr;}
+  | name=ObjectName() {return new ColumnExpression(name);}
+}
+
+
+/* ---------------- General Productions --------------------- */
+
+
+String ObjectName() throws StreamSqlException:
+{}
+{
+    <S_IDENTIFIER>        {return token.image;}
+  | <S_DOUBLE_QUOTED_IDENTIFIER> {String s1 = token.image; return s1.substring(1, s1.length() - 1);}  
+}
+
+
+BitwiseOp BitwiseOp()  throws StreamSqlException: {
+} {
+    "&" {return BitwiseOp.AND;}
+  | "|" {return BitwiseOp.OR;}
+  | "^" {return BitwiseOp.XOR;}
+  | "<<" {return BitwiseOp.LSHIFT;}
+  | ">>" {return BitwiseOp.RSHIFT;}
+}
+
+AddOp AddOp()  throws StreamSqlException: {
+} {
+    "+" {return AddOp.PLUS;}
+  | "-" {return AddOp.MINUS;}
+  | "||" {return AddOp.STRING_PLUS;}
+}
+
+
+
+MultOp MultOp() throws StreamSqlException: {
+} {
+    "*" {return MultOp.MULT;}
+  | "/" {return MultOp.DIV;}
+  | "MOD" {return MultOp.MOD;}
+}
+
+
+RelOp RelOp() throws StreamSqlException: {
+} {
+    "=" {return RelOp.EQUAL;}
+  | "!" "=" {return RelOp.NOT_EQUAL;}
+  | LOOKAHEAD(2) ">" "=" {return RelOp.GREATER_OR_EQUAL;}
+  | ">" {return RelOp.GREATER;}
+  | LOOKAHEAD(2) "<" ">" {return RelOp.NOT_EQUAL;}
+  | LOOKAHEAD(2) "<" "=" {return RelOp.LESS_OR_EQUAL;}
+  | LOOKAHEAD(2) "&" "&" {return RelOp.OVERLAP;}
+  | "<" {return RelOp.LESS;}
+}
+
+void Arguments() throws StreamSqlException: {
+} {
+    Argument() ("," Argument())*
+}
+
+void Argument() throws StreamSqlException: {
+} {
+    [LOOKAHEAD(2) <S_IDENTIFIER> "=>"] Expression()
+}
+
+/* --------------- General Productions ends here --------------- */
+
+/* ----------- SQL productions start here ----------------- */
+
+SelectExpression SelectExpression() throws StreamSqlException: {
+    SelectExpression expression;
+    boolean ascending;
+    BigDecimal offset = null;
+    BigDecimal limit = null;
+} {
+    expression=Select()
+    [ ascending=OrderClause() { expression.setAscending(ascending); } ]
+    [ 
+        <K_LIMIT>
+        [LOOKAHEAD(2) offset=NumericConstant() "," ]
+        limit=NumericConstant() { expression.setLimit(offset, limit); }
+    ] { return expression; }
+}
+
+SelectExpression Select() throws StreamSqlException:
+{
+    List<SelectItem> selectList;
+    TupleSourceExpression tsrc;
+    Expression whereClause=null;
+    SelectExpression selectExpr=new SelectExpression();
+    WindowSpecification windowSpec;
+}
+{
+    <K_SELECT> selectList=SelectList() {selectExpr.setSelectList(selectList);}
+    <K_FROM> tsrc=TupleSourceExpression() {selectExpr.setFirstSource(tsrc);}
+    [ "[" windowSpec=WindowSpecification() {selectExpr.setWindow(windowSpec);} "]" ]
+    [<K_WHERE> whereClause=Expression() {selectExpr.setWhereClause(whereClause);}]
+    {
+	return selectExpr;
+    }
+}
+
+
+/* Checks for whatever follows  SELECT */
+List<SelectItem> SelectList() throws StreamSqlException: {
+    List<SelectItem> selectList = new ArrayList<SelectItem>();
+    SelectItem selectItem;
+} {
+   selectItem=SelectItem() {selectList.add(selectItem);} 
+     ("," selectItem=SelectItem()  {selectList.add(selectItem);} )*
+   {return selectList;} 
+}
+
+SelectItem SelectItem() throws StreamSqlException: {
+    String name;
+    Expression expr;
+    SelectItem selectItem;
+} {
+       "*" {return SelectItem.STAR;}
+   |
+       expr=SimpleExpression() {selectItem=new SelectItem(expr);}
+       [ [ "AS" ] name=ObjectName() {
+	    selectItem.setAlias(name);
+        }
+      ]
+    { return selectItem;}
+}
+
+
+WindowSpecification WindowSpecification() throws StreamSqlException: {
+    String name,field;
+    WindowSpecification wspec;
+    BigDecimal size, advance;
+} {
+    name=ObjectName() {wspec=new WindowSpecification(name);}
+    |
+    "SIZE" size = NumericConstant() "ADVANCE" advance = NumericConstant()
+    ( "TIME" {wspec = new WindowSpecification(size,advance,WindowSpecification.Type.TIME);}
+    | "TUPLES" {wspec = new WindowSpecification(size,advance,WindowSpecification.Type.TUPLES);}
+    | "ON" 
+    field=ObjectName() {wspec = new WindowSpecification(size,advance,WindowSpecification.Type.FIELD,field);}
+    )
+  {return wspec;}
+}
+
+TupleSourceExpression TupleSourceExpression() throws StreamSqlException: {
+    TupleSourceExpression tsrc;
+    StreamExpression expr;
+    String name, histoColumn;
+    BigDecimal mergeTime;
+} {
+    (name=ObjectName() {tsrc = new TupleSourceExpression(name);} 
+         [ <K_HISTOGRAM> "(" histoColumn = ObjectName() {tsrc.setHistogramColumn(histoColumn);} 
+          [ "," mergeTime = NumericConstant()  { tsrc.setHistogramMergeTime(mergeTime);}] 
+         ")" ]
+     | LOOKAHEAD(3) "(" expr = StreamExpression() ")" {tsrc=new TupleSourceExpression(expr);}
+    )
+    {
+	return tsrc;
+    }
+}
+
+TupleDefinition TupleDefinition() throws StreamSqlException: {
+    String columnName;
+    TupleDefinition tupleDefinition=new TupleDefinition();
+    DataType columnType;
+} {
+    "(" 
+    	columnName=ObjectName() columnType=DataTypeDefinition() {tupleDefinition.addColumn(columnName,columnType);}
+    ("," columnName=ObjectName() columnType=DataTypeDefinition() {tupleDefinition.addColumn(columnName,columnType);})*
+    ")"
+    {
+        return tupleDefinition;
+    }
+}
+
+
+boolean OrderClause() throws StreamSqlException: {
+   boolean ascending=true;
+} {
+    <K_ORDER>
+    ["ASC" | "DESC" {ascending=false;} ]
+    {
+    return ascending;
+    }
+}
+
+
+Expression FunctionCall() throws StreamSqlException: {
+   String name;
+   List<Expression> args=null;
+   boolean star=false;
+} {
+    name=ObjectName()
+        "(" [(args=ExpressionList()
+            | "*" {star=true;}
+             )] ")"
+    {
+      return FunctionExpressionFactory.get(name, args, star);
+    }
+}
+
+BigDecimal NumericConstant()  throws StreamSqlException: {
+} {
+ (<S_INTEGER> | <S_FLOAT>) {return new BigDecimal(token.image);}
+}
+
+void ID(String id):{
+} {
+    <S_IDENTIFIER>
+    {
+        if (!token.image.matches("(?i)" + id)) {
+            throw new ParseException("Encountered " + token.image
+                + " at line " + token.beginLine + ", column " + token.beginColumn + "."
+                + "\nWas expecting: " + id);
+        }
+    }
+}
+```
+
+### `StreamSqlException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlException.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.YarchException;
+
+/**
+ * Exception thrown for errors in sql queries.
+ * <p>
+ * For errors related to the storage engine, the {@link YarchException} shall be used. 
+ * 
+ * @author nm
+ *
+ */
+public class StreamSqlException extends Exception {
+
+    public enum ErrCode {
+        ERROR,
+        RESOURCE_EXISTS,
+        NOT_A_STREAM,
+        NONE_SPECIFIED,
+        INCOMPATIBLE,
+        NOT_IMPLEMENTED,
+        COLUMN_NOT_FOUND,
+        AGGREGATE_IN_AGGREGATE,
+        COMPILE_ERROR,
+        NOT_SUPPORTED,
+        RESOURCE_NOT_FOUND,
+        AGGREGATE_WITHOUT_WINDOW,
+        INVALID_HISTOGRAM_COLUMN,
+        INVALID_INDEX_COLUMN,
+        WRONG_ARG_COUNT,
+        BAD_ARG_TYPE, DUPLICATE_KEY;
+    };
+
+    ErrCode errCode;
+
+    public StreamSqlException(ErrCode code, String msg) {
+        super(code + " " + msg);
+        this.errCode = code;
+    }
+
+    public StreamSqlException(ErrCode code) {
+        this.errCode = code;
+    }
+
+    @Override
+    public String toString() {
+        return errCode + ":  " + getMessage();
+    }
+}
+
+@SuppressWarnings("serial")
+class ResourceAlreadyExistsException extends StreamSqlException {
+    public ResourceAlreadyExistsException(String name) {
+        super(ErrCode.RESOURCE_EXISTS, "There is already a table or stream with the name '" + name + "'");
+    }
+}
+
+@SuppressWarnings("serial")
+class NotAStreamException extends StreamSqlException {
+    public NotAStreamException(String name) {
+        super(ErrCode.NOT_A_STREAM, "'" + name + "' is not an input or output stream");
+    }
+}
+
+@SuppressWarnings("serial")
+class NoneSpecifiedException extends StreamSqlException {
+    public NoneSpecifiedException() {
+        super(ErrCode.NONE_SPECIFIED, "None of the objectname or stream expression specified");
+    }
+}
+
+@SuppressWarnings("serial")
+class IncompatibilityException extends StreamSqlException {
+    public IncompatibilityException(String reason) {
+        super(ErrCode.INCOMPATIBLE, "Incompatibility detected because: " + reason);
+    }
+}
+
+@SuppressWarnings("serial")
+class NotImplementedException extends StreamSqlException {
+    public NotImplementedException(String item) {
+        super(ErrCode.NOT_IMPLEMENTED, item);
+    }
+}
+
+```
+
+### `StreamSqlParser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlParser.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. StreamSqlParser.java */
+package org.yamcs.yarch.streamsql;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import org.yamcs.utils.parser.Token;
+import org.yamcs.utils.parser.SimpleCharStream;
+import org.yamcs.utils.parser.ParseException;
+
+import org.yamcs.yarch.*;
+import org.yamcs.yarch.streamsql.funct.*;
+import org.yamcs.yarch.TableWriter.InsertMode;
+
+
+public class StreamSqlParser implements StreamSqlParserConstants {
+    private Object[] args = new Object[0];
+    int argCount = 0;
+
+    private String getNonEscapedString(String s) {
+            return s.substring(1,s.length()-1).replace("''","'"); //remove the quote (') from beginning and from end and then replace double quote with single quote
+    }
+
+    protected boolean seeTYPE() {
+        return "TYPE".equalsIgnoreCase(getToken(1).image);
+    }
+
+   public void setArgs(Object[] args) {
+        this.args = args;
+    }
+
+    ArgumentExpression nextArg() throws StreamSqlException {
+        if(argCount>=args.length) {
+            throw new StreamSqlException(StreamSqlException.ErrCode.WRONG_ARG_COUNT);
+        }
+       ArgumentExpression expr = new ArgumentExpression(argCount, args[argCount++]);
+       expr.setArgs(args);
+       return expr;
+    }
+
+    String nextArgAsString() throws StreamSqlException {
+            if(argCount>=args.length) {
+            throw new StreamSqlException(StreamSqlException.ErrCode.WRONG_ARG_COUNT);
+        }
+        Object o = args[argCount++];
+        if(o instanceof String) {
+            return (String) o;
+        } else {
+            throw new StreamSqlException(StreamSqlException.ErrCode.BAD_ARG_TYPE, "Expected String, got "+o.getClass());
+        }
+    }
+    DataType getBasicDataType(String type) throws ParseException {
+        if("TIMESTAMP".equalsIgnoreCase(type)) {return DataType.TIMESTAMP;}
+        if("PARAMETER_VALUE".equalsIgnoreCase(type)) {return DataType.PARAMETER_VALUE;}
+        if("BINARY".equalsIgnoreCase(type))  {return DataType.BINARY;}
+        if("HRES_TIMESTAMP".equalsIgnoreCase(type)) {return DataType.HRES_TIMESTAMP;}
+        if("UUID".equalsIgnoreCase(type)) {return DataType.UUID;}
+
+        throw new ParseException("Unknown data type '"+type+"'");
+    }
+
+  final public DataType DataTypeDefinition() throws ParseException {
+    Token className;
+    DataType dataType;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_INT:
+      jj_consume_token(K_INT);
+               dataType = DataType.INT;
+      break;
+    case K_LONG:
+      jj_consume_token(K_LONG);
+                 dataType = DataType.LONG;
+      break;
+    case K_BOOLEAN:
+      jj_consume_token(K_BOOLEAN);
+                    dataType = DataType.BOOLEAN;
+      break;
+    case K_BYTE:
+      jj_consume_token(K_BYTE);
+                 dataType = DataType.BYTE;
+      break;
+    case K_SHRT:
+      jj_consume_token(K_SHRT);
+                  dataType = DataType.SHORT;
+      break;
+    case K_DOUBLE:
+      jj_consume_token(K_DOUBLE);
+                   dataType = DataType.DOUBLE;
+      break;
+    case K_STRING:
+      jj_consume_token(K_STRING);
+                    dataType = DataType.STRING;
+      break;
+    case K_ENUM:
+      jj_consume_token(K_ENUM);
+                  dataType = DataType.ENUM;
+      break;
+    case K_PROTOBUF:
+      jj_consume_token(K_PROTOBUF);
+      jj_consume_token(131);
+      className = jj_consume_token(S_STRING);
+      jj_consume_token(132);
+                                                     dataType =  DataType.protobuf(getNonEscapedString(className.image));
+      break;
+    case S_IDENTIFIER:
+      jj_consume_token(S_IDENTIFIER);
+                        dataType = getBasicDataType(token.image);
+      break;
+    default:
+      jj_la1[0] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 133:
+      jj_consume_token(133);
+            dataType = DataType.array(dataType);
+      break;
+    default:
+      jj_la1[1] = jj_gen;
+      ;
+    }
+     {if (true) return dataType;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public StreamSqlStatement OneStatement() throws ParseException, StreamSqlException {
+    StreamSqlStatement statement;
+    statement = StreamSqlStatement();
+    jj_consume_token(0);
+        {if (true) return statement;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public StreamSqlStatement StreamSqlStatement() throws ParseException, StreamSqlException {
+                                                                    StreamSqlStatement statement;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 0:
+      jj_consume_token(0);
+           {if (true) return null;}
+      break;
+    case K_ALTER:
+    case K_CLOSE:
+    case K_CREATE:
+    case K_DELETE:
+    case K_DESCRIBE:
+    case K_DROP:
+    case K_INSERT:
+    case K_INSERT_APPEND:
+    case K_LOAD:
+    case K_SELECT:
+    case K_SHOW:
+    case K_UPDATE:
+    case K_UPSERT:
+    case K_UPSERT_APPEND:
+      if (jj_2_1(2)) {
+        statement = CreateTableStatement();
+      } else if (jj_2_2(2)) {
+        statement = CreateStreamStatement();
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case K_DELETE:
+          statement = DeleteStatement();
+          break;
+        case K_INSERT:
+        case K_INSERT_APPEND:
+        case K_LOAD:
+        case K_UPSERT:
+        case K_UPSERT_APPEND:
+          statement = InsertStatement();
+          break;
+        case K_SELECT:
+          statement = SelectTableStatement();
+          break;
+        case K_UPDATE:
+          statement = UpdateTableStatement();
+          break;
+        case K_CLOSE:
+          statement = CloseStreamStatement();
+          break;
+        case K_DROP:
+          statement = DropTableStatement();
+          break;
+        case K_DESCRIBE:
+          statement = DescribeStatement();
+          break;
+        default:
+          jj_la1[2] = jj_gen;
+          if (jj_2_3(2)) {
+            statement = ShowStreamsStatement();
+          } else if (jj_2_4(2)) {
+            statement = ShowStreamStatement();
+          } else if (jj_2_5(2)) {
+            statement = ShowTablesStatement();
+          } else if (jj_2_6(2)) {
+            statement = ShowEnginesStatement();
+          } else if (jj_2_7(2)) {
+            statement = ShowDatabasesStatement();
+          } else if (jj_2_8(2)) {
+            statement = ShowSequencesStatement();
+          } else if (jj_2_9(2)) {
+            statement = AlterSequenceStatement();
+          } else if (jj_2_10(2)) {
+            statement = AlterTableStatement();
+          } else {
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+        }
+      }
+        {if (true) return statement;}
+      break;
+    default:
+      jj_la1[3] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public CreateInputStreamStatement CreateInputStreamStatement() throws ParseException, StreamSqlException {
+    TupleDefinition tupleDefinition;
+    String streamName;
+    jj_consume_token(K_CREATE);
+    jj_consume_token(K_INPUT);
+    jj_consume_token(K_STREAM);
+    streamName = ObjectName();
+    tupleDefinition = TupleDefinition();
+        {if (true) return new CreateInputStreamStatement(streamName,tupleDefinition);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public CreateTableStatement CreateTableStatement() throws ParseException, StreamSqlException {
+    TupleDefinition tupleDefinition=new TupleDefinition();
+    ArrayList<String> primaryKey=new ArrayList<String>();
+    ArrayList<String> partitions=new ArrayList<String>();
+        ArrayList<String> index=new ArrayList<String>();
+    String tableName, pk, partitionColumn, indexColumn ;
+    boolean ifNotExists=false;
+    boolean autoincrement = false;
+
+    TableColumnDefinition tcd;
+
+    CreateTableStatement cts;
+    jj_consume_token(K_CREATE);
+    jj_consume_token(K_TABLE);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_IF:
+      jj_consume_token(K_IF);
+      jj_consume_token(K_NOT);
+      jj_consume_token(K_EXISTS);
+                                                     ifNotExists=true;
+      break;
+    default:
+      jj_la1[4] = jj_gen;
+      ;
+    }
+    tableName = ObjectName();
+    jj_consume_token(131);
+    label_1:
+    while (true) {
+      tcd = TableColumnDefinition();
+      jj_consume_token(134);
+                                            tupleDefinition.addColumn(tcd);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case S_IDENTIFIER:
+      case S_DOUBLE_QUOTED_IDENTIFIER:
+        ;
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        break label_1;
+      }
+    }
+    jj_consume_token(K_PRIMARY);
+    jj_consume_token(K_KEY);
+    jj_consume_token(131);
+    pk = ObjectName();
+                                              primaryKey.add(pk);
+    label_2:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[6] = jj_gen;
+        break label_2;
+      }
+      jj_consume_token(134);
+      pk = ObjectName();
+                                                                                        primaryKey.add(pk);
+    }
+    jj_consume_token(132);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 134:
+      jj_consume_token(134);
+      jj_consume_token(K_INDEX);
+      jj_consume_token(131);
+      indexColumn = ObjectName();
+                                                 index.add(indexColumn);
+      label_3:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 134:
+          ;
+          break;
+        default:
+          jj_la1[7] = jj_gen;
+          break label_3;
+        }
+        jj_consume_token(134);
+        indexColumn = ObjectName();
+                                                                                                        index.add(indexColumn);
+      }
+      jj_consume_token(132);
+      break;
+    default:
+      jj_la1[8] = jj_gen;
+      ;
+    }
+    jj_consume_token(132);
+      cts=new CreateTableStatement(ifNotExists, tableName, tupleDefinition, primaryKey, index);
+    label_4:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_ENGINE:
+      case K_HISTOGRAM:
+      case K_PARTITION:
+      case K_TABLE_FORMAT:
+      case K_TABLESPACE:
+        ;
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        break label_4;
+      }
+      TableOption(cts);
+    }
+        {if (true) return cts;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public TableColumnDefinition TableColumnDefinition() throws ParseException, StreamSqlException {
+   TableColumnDefinition tcd;
+   String columnName;
+   DataType columnType;
+    columnName = ObjectName();
+    columnType = DataTypeDefinition();
+                                                            tcd = new TableColumnDefinition(columnName,columnType);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_AUTO_INCREMENT:
+      jj_consume_token(K_AUTO_INCREMENT);
+                        tcd.setAutoIncrement(true);
+      break;
+    default:
+      jj_la1[10] = jj_gen;
+      ;
+    }
+   {if (true) return tcd;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void TableOption(CreateTableStatement cts) throws ParseException, StreamSqlException {
+   String columnName, tablespace, engine;
+   PartitioningSpec pspec;
+   CreateTableStatement.TableFormatOption tfo;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_HISTOGRAM:
+      jj_consume_token(K_HISTOGRAM);
+      jj_consume_token(131);
+      columnName = ObjectName();
+                                              cts.addHistogramColumn(columnName);
+      label_5:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 134:
+          ;
+          break;
+        default:
+          jj_la1[11] = jj_gen;
+          break label_5;
+        }
+        jj_consume_token(134);
+        columnName = ObjectName();
+                                                                                                                cts.addHistogramColumn(columnName);
+      }
+      jj_consume_token(132);
+      break;
+    case K_ENGINE:
+      jj_consume_token(K_ENGINE);
+      engine = ObjectName();
+                                    cts.setEngine(engine);
+      break;
+    case K_PARTITION:
+      jj_consume_token(K_PARTITION);
+      jj_consume_token(K_BY);
+      pspec = PartitioningSpec();
+                                                   cts.setPartitioning(pspec);
+      break;
+    case K_TABLESPACE:
+      jj_consume_token(K_TABLESPACE);
+      tablespace = ObjectName();
+                                           cts.setTablespace(tablespace);
+      break;
+    case K_TABLE_FORMAT:
+      jj_consume_token(K_TABLE_FORMAT);
+      jj_consume_token(135);
+      tfo = TableFormatOption();
+                                                  cts.addTableFormatOption(tfo);
+      label_6:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 134:
+          ;
+          break;
+        default:
+          jj_la1[12] = jj_gen;
+          break label_6;
+        }
+        jj_consume_token(134);
+        tfo = TableFormatOption();
+                                                      cts.addTableFormatOption(tfo);
+      }
+      break;
+    default:
+      jj_la1[13] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+  }
+
+  final public PartitioningSpec PartitioningSpec() throws ParseException, StreamSqlException {
+    PartitioningSpec pspec;
+    String cname1, cname2;
+    Token t;
+    String timePartSchema = null;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_TIME:
+      jj_consume_token(K_TIME);
+      jj_consume_token(131);
+      cname1 = ObjectName();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 131:
+        jj_consume_token(131);
+        t = jj_consume_token(S_STRING);
+        jj_consume_token(132);
+                                           timePartSchema = getNonEscapedString(t.image);
+        break;
+      default:
+        jj_la1[14] = jj_gen;
+        ;
+      }
+      jj_consume_token(132);
+                         pspec = PartitioningSpec.timeSpec(cname1, timePartSchema);
+      break;
+    case K_VALUE:
+      jj_consume_token(K_VALUE);
+      jj_consume_token(131);
+      cname1 = ObjectName();
+      jj_consume_token(132);
+           pspec = PartitioningSpec.valueSpec(cname1);
+      break;
+    case K_TIME_AND_VALUE:
+      jj_consume_token(K_TIME_AND_VALUE);
+      jj_consume_token(131);
+      cname1 = ObjectName();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 131:
+        jj_consume_token(131);
+        t = jj_consume_token(S_STRING);
+        jj_consume_token(132);
+                                              timePartSchema =  getNonEscapedString(t.image);
+        break;
+      default:
+        jj_la1[15] = jj_gen;
+        ;
+      }
+      jj_consume_token(134);
+      cname2 = ObjectName();
+      jj_consume_token(132);
+                pspec = PartitioningSpec.timeAndValueSpec(cname1, cname2, timePartSchema);
+      break;
+    default:
+      jj_la1[16] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+       {if (true) return pspec;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public CreateTableStatement.TableFormatOption TableFormatOption() throws ParseException, StreamSqlException {
+     CreateTableStatement.TableFormatOption tfo;
+     String cfName;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_COMPRESSED:
+      jj_consume_token(K_COMPRESSED);
+                       tfo = new CreateTableStatement.TableFormatOption("COMPRESSED");
+      break;
+    case K_COLUMN_FAMILY:
+      jj_consume_token(K_COLUMN_FAMILY);
+      jj_consume_token(136);
+      cfName = ObjectName();
+                                             tfo = new CreateTableStatement.TableFormatOption("COLUMN_FAMILY", cfName);
+      break;
+    default:
+      jj_la1[17] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+        {if (true) return tfo;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public CreateStreamStatement CreateStreamStatement() throws ParseException, StreamSqlException {
+    String name;
+    StreamExpression expression;
+    TupleDefinition tupleDefinition;
+    boolean follow = true;
+    jj_consume_token(K_CREATE);
+    jj_consume_token(K_STREAM);
+    name = ObjectName();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_AS:
+      jj_consume_token(K_AS);
+      expression = StreamExpression();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_NOFOLLOW:
+        jj_consume_token(K_NOFOLLOW);
+                                                           follow=false;
+        break;
+      default:
+        jj_la1[18] = jj_gen;
+        ;
+      }
+                if(expression instanceof SelectExpression) {
+                        ((SelectExpression) expression).setFollow(follow);
+                }
+            {if (true) return new CreateStreamStatement(name, expression);}
+      break;
+    case 131:
+      tupleDefinition = TupleDefinition();
+            {if (true) return new CreateStreamStatement(name,tupleDefinition);}
+      break;
+    default:
+      jj_la1[19] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public SelectTableStatement SelectTableStatement() throws ParseException, StreamSqlException {
+    String name;
+    SelectExpression expression;
+    expression = SelectExpression();
+        {if (true) return new SelectTableStatement(expression);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public CloseStreamStatement CloseStreamStatement() throws ParseException, StreamSqlException {
+    String name;
+    jj_consume_token(K_CLOSE);
+    jj_consume_token(K_STREAM);
+    name = ObjectName();
+        {if (true) return new CloseStreamStatement(name);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public DropTableStatement DropTableStatement() throws ParseException, StreamSqlException {
+    boolean ifExists=false;
+    String name;
+    jj_consume_token(K_DROP);
+    jj_consume_token(K_TABLE);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_IF:
+      jj_consume_token(K_IF);
+      jj_consume_token(K_EXISTS);
+                                           ifExists=true;
+      break;
+    default:
+      jj_la1[20] = jj_gen;
+      ;
+    }
+    name = ObjectName();
+        {if (true) return new DropTableStatement(ifExists, name);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ShowStreamsStatement ShowStreamsStatement() throws ParseException, StreamSqlException {
+    jj_consume_token(K_SHOW);
+    jj_consume_token(K_STREAMS);
+        {if (true) return new ShowStreamsStatement();}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ShowTablesStatement ShowTablesStatement() throws ParseException, StreamSqlException {
+    jj_consume_token(K_SHOW);
+    jj_consume_token(K_TABLES);
+        {if (true) return new ShowTablesStatement();}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ShowStreamStatement ShowStreamStatement() throws ParseException, StreamSqlException {
+    String name;
+    jj_consume_token(K_SHOW);
+    jj_consume_token(K_STREAM);
+    name = ObjectName();
+        {if (true) return new ShowStreamStatement(name);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ShowEnginesStatement ShowEnginesStatement() throws ParseException, StreamSqlException {
+    jj_consume_token(K_SHOW);
+    jj_consume_token(K_ENGINES);
+        {if (true) return new ShowEnginesStatement();}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ShowDatabasesStatement ShowDatabasesStatement() throws ParseException, StreamSqlException {
+    jj_consume_token(K_SHOW);
+    jj_consume_token(K_DATABASES);
+        {if (true) return new ShowDatabasesStatement();}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public ShowSequencesStatement ShowSequencesStatement() throws ParseException, StreamSqlException {
+    jj_consume_token(K_SHOW);
+    jj_consume_token(K_SEQUENCES);
+        {if (true) return new ShowSequencesStatement();}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public DescribeStatement DescribeStatement() throws ParseException, StreamSqlException {
+    String name;
+    jj_consume_token(K_DESCRIBE);
+    name = ObjectName();
+        {if (true) return new DescribeStatement(name);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public AlterSequenceStatement AlterSequenceStatement() throws ParseException, StreamSqlException {
+    String name;
+    BigDecimal n = new BigDecimal(0);
+    jj_consume_token(K_ALTER);
+    jj_consume_token(K_SEQUENCE);
+    name = ObjectName();
+    jj_consume_token(K_RESTART);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_WITH:
+      jj_consume_token(K_WITH);
+      n = NumericConstant();
+      break;
+    default:
+      jj_la1[21] = jj_gen;
+      ;
+    }
+        {if (true) return new AlterSequenceStatement(name, n.longValue());}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public AlterTableStatement AlterTableStatement() throws ParseException, StreamSqlException {
+    String name, newName;
+    jj_consume_token(K_ALTER);
+    jj_consume_token(K_TABLE);
+    name = ObjectName();
+    jj_consume_token(K_RENAME);
+    jj_consume_token(K_TO);
+    newName = ObjectName();
+        {if (true) return new AlterTableStatement(name, newName);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public StreamExpression StreamExpression() throws ParseException, StreamSqlException {
+    StreamExpression expression;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_SELECT:
+      expression = SelectExpression();
+      break;
+    case K_MERGE:
+      expression = MergeExpression();
+      break;
+    default:
+      jj_la1[22] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+        {if (true) return expression;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void IntoClause() throws ParseException, StreamSqlException {
+    jj_consume_token(K_INTO);
+    ObjectName();
+  }
+
+  final public InsertStatement InsertStatement() throws ParseException, StreamSqlException {
+    String name;
+    StreamExpression expression;
+    List<String> columns = new ArrayList();
+    List<SelectItem> selectList;
+    String cn;
+    InsertMode insertMode;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_INSERT:
+      jj_consume_token(K_INSERT);
+                   insertMode = InsertMode.INSERT;
+      break;
+    case K_UPSERT:
+      jj_consume_token(K_UPSERT);
+                   insertMode = InsertMode.UPSERT;
+      break;
+    case K_INSERT_APPEND:
+      jj_consume_token(K_INSERT_APPEND);
+                          insertMode = InsertMode.INSERT_APPEND;
+      break;
+    case K_UPSERT_APPEND:
+      jj_consume_token(K_UPSERT_APPEND);
+                          insertMode = InsertMode.UPSERT_APPEND;
+      break;
+    case K_LOAD:
+      jj_consume_token(K_LOAD);
+                 insertMode = InsertMode.LOAD;
+      break;
+    default:
+      jj_la1[23] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    jj_consume_token(K_INTO);
+    name = ObjectName();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_MERGE:
+    case K_SELECT:
+      expression = StreamExpression();
+             {if (true) return new InsertStatement(name, expression, insertMode);}
+      break;
+    case 131:
+      jj_consume_token(131);
+      cn = ObjectName();
+                              columns.add(cn);
+      label_7:
+      while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 134:
+          ;
+          break;
+        default:
+          jj_la1[24] = jj_gen;
+          break label_7;
+        }
+        jj_consume_token(134);
+        cn = ObjectName();
+                                                                     columns.add(cn);
+      }
+      jj_consume_token(132);
+      jj_consume_token(K_VALUES);
+      jj_consume_token(131);
+      selectList = SelectList();
+      jj_consume_token(132);
+            {if (true) return new InsertStatement(name, new InsertValuesExpression(columns, selectList), InsertMode.INSERT);}
+      break;
+    default:
+      jj_la1[25] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public MergeExpression MergeExpression() throws ParseException, StreamSqlException {
+    MergeExpression mergeExpr=new MergeExpression();
+    TupleSourceExpression tsrc;
+    String name;
+    boolean ascending = true;
+    BigDecimal offset = null;
+    BigDecimal limit = null;
+    jj_consume_token(K_MERGE);
+    tsrc = TupleSourceExpression();
+                                     mergeExpr.addTupleSourceExpression(tsrc);
+    label_8:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[26] = jj_gen;
+        break label_8;
+      }
+      jj_consume_token(134);
+      tsrc = TupleSourceExpression();
+                                      mergeExpr.addTupleSourceExpression(tsrc);
+    }
+    jj_consume_token(K_USING);
+    name = ObjectName();
+                               mergeExpr.setMergeColumn(name);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_ORDER:
+      ascending = OrderClause();
+                               mergeExpr.setAscending(ascending);
+      break;
+    default:
+      jj_la1[27] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_LIMIT:
+      jj_consume_token(K_LIMIT);
+      if (jj_2_11(2)) {
+        offset = NumericConstant();
+        jj_consume_token(134);
+      } else {
+        ;
+      }
+      limit = NumericConstant();
+                                  mergeExpr.setLimit(offset, limit);
+      break;
+    default:
+      jj_la1[28] = jj_gen;
+      ;
+    }
+        {if (true) return mergeExpr;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public DeleteStatement DeleteStatement() throws ParseException, StreamSqlException {
+    String tableName;
+    Expression expression=null;
+    BigDecimal limit = new BigDecimal(-1);
+    jj_consume_token(K_DELETE);
+    jj_consume_token(K_FROM);
+    tableName = ObjectName();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_WHERE:
+      jj_consume_token(K_WHERE);
+      expression = Expression();
+      break;
+    default:
+      jj_la1[29] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_LIMIT:
+      jj_consume_token(K_LIMIT);
+      limit = NumericConstant();
+      break;
+    default:
+      jj_la1[30] = jj_gen;
+      ;
+    }
+        {if (true) return new DeleteStatement(tableName, expression, limit.longValue());}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public UpdateTableStatement UpdateTableStatement() throws ParseException, StreamSqlException {
+    String tableName;
+    String colName;
+    Expression whereExpr = null;
+    Expression colValue;
+    List<UpdateTableStatement.UpdateItem> updateList = new ArrayList<UpdateTableStatement.UpdateItem>();
+    BigDecimal limit = new BigDecimal(-1);
+    jj_consume_token(K_UPDATE);
+    tableName = ObjectName();
+    jj_consume_token(K_SET);
+    colName = ObjectName();
+    jj_consume_token(135);
+    colValue = Expression();
+          updateList.add(new UpdateTableStatement.UpdateItem(colName, colValue));
+    label_9:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[31] = jj_gen;
+        break label_9;
+      }
+      jj_consume_token(134);
+      colName = ObjectName();
+      jj_consume_token(135);
+      colValue = Expression();
+          updateList.add(new UpdateTableStatement.UpdateItem(colName, colValue));
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_WHERE:
+      jj_consume_token(K_WHERE);
+      whereExpr = Expression();
+      break;
+    default:
+      jj_la1[32] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_LIMIT:
+      jj_consume_token(K_LIMIT);
+      limit = NumericConstant();
+      break;
+    default:
+      jj_la1[33] = jj_gen;
+      ;
+    }
+        {if (true) return new UpdateTableStatement(tableName, updateList, whereExpr, limit.longValue());}
+    throw new Error("Missing return statement in function");
+  }
+
+// Expression and its children
+  final public Expression Expression() throws ParseException, StreamSqlException {
+    Expression expr;
+    ArrayList<Expression> list = new ArrayList<Expression>();
+    expr = AndExpression();
+                               list.add(expr);
+    label_10:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_OR:
+        ;
+        break;
+      default:
+        jj_la1[34] = jj_gen;
+        break label_10;
+      }
+      jj_consume_token(K_OR);
+      expr = AndExpression();
+                                    list.add(expr);
+    }
+        if(list.size() == 1) expr= list.get(0);
+        else expr = new OrExpression(list);
+
+        expr.setArgs(args);
+        {if (true) return expr;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression AndExpression() throws ParseException, StreamSqlException {
+    Expression expr;
+    ArrayList<Expression> list=new ArrayList<Expression>();
+    if (jj_2_12(3)) {
+      expr = UnaryLogicalExpression();
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 131:
+        jj_consume_token(131);
+        expr = Expression();
+        jj_consume_token(132);
+        break;
+      default:
+        jj_la1[35] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+            list.add(expr);
+    label_11:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_AND:
+        ;
+        break;
+      default:
+        jj_la1[36] = jj_gen;
+        break label_11;
+      }
+      jj_consume_token(K_AND);
+      if (jj_2_13(3)) {
+        expr = UnaryLogicalExpression();
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 131:
+          jj_consume_token(131);
+          expr = Expression();
+          jj_consume_token(132);
+          break;
+        default:
+          jj_la1[37] = jj_gen;
+          jj_consume_token(-1);
+          throw new ParseException();
+        }
+      }
+                list.add(expr);
+    }
+        if(list.size()==1) {if (true) return list.get(0);}
+        else {if (true) return new AndExpression(list);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression UnaryLogicalExpression() throws ParseException, StreamSqlException {
+    boolean notset=false;
+    Expression expr;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_NOT:
+      jj_consume_token(K_NOT);
+            notset = true;
+      break;
+    default:
+      jj_la1[38] = jj_gen;
+      ;
+    }
+    expr = RelationalExpression();
+        if(notset) {if (true) return new NotExpression(expr);}
+        else {if (true) return expr;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression RelationalExpression() throws ParseException, StreamSqlException {
+    Expression retExpr, expr;
+    RelOp relOp;
+    List<Expression> list;
+    LikeClause likeClause;
+    InClause inClause;
+    IsNullClause isNullClause;
+    expr = SimpleExpression();
+                               retExpr=expr;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_BETWEEN:
+    case K_IN:
+    case K_IS:
+    case K_LIKE:
+    case K_NOT:
+    case 135:
+    case 142:
+    case 150:
+    case 151:
+    case 152:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 135:
+      case 142:
+      case 150:
+      case 151:
+      case 152:
+        relOp = RelOp();
+        expr = SimpleExpression();
+                                               retExpr=new RelationalExpression(retExpr,expr,relOp);
+        break;
+      default:
+        jj_la1[39] = jj_gen;
+        if (jj_2_14(2)) {
+          inClause = InClause();
+                                        retExpr=new InExpression(expr, inClause);
+        } else if (jj_2_15(2)) {
+          BetweenClause();
+        } else if (jj_2_16(2)) {
+          likeClause = LikeClause();
+                                               retExpr = new LikeExpression(expr, likeClause);
+        } else {
+          switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case K_IS:
+            isNullClause = IsNullClause();
+                                      retExpr = new IsNullExpression(expr, isNullClause);
+            break;
+          default:
+            jj_la1[40] = jj_gen;
+            jj_consume_token(-1);
+            throw new ParseException();
+          }
+        }
+      }
+      break;
+    default:
+      jj_la1[41] = jj_gen;
+      ;
+    }
+        {if (true) return retExpr;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public List<Expression> ExpressionList() throws ParseException, StreamSqlException {
+    List<Expression> list=new ArrayList<Expression>();
+    Expression expr;
+    expr = Expression();
+                      list.add(expr);
+    label_12:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[42] = jj_gen;
+        break label_12;
+      }
+      jj_consume_token(134);
+      expr = Expression();
+                                                               list.add(expr);
+    }
+    {if (true) return list;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public InClause InClause() throws ParseException, StreamSqlException {
+    List<Expression> list;
+    InClause inClause = new InClause();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_NOT:
+      jj_consume_token(K_NOT);
+            inClause.setNegation(true);
+      break;
+    default:
+      jj_la1[43] = jj_gen;
+      ;
+    }
+    jj_consume_token(K_IN);
+    jj_consume_token(131);
+    list = ExpressionList();
+    jj_consume_token(132);
+                                       inClause.setList(list);
+    {if (true) return inClause;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void BetweenClause() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_NOT:
+      jj_consume_token(K_NOT);
+      break;
+    default:
+      jj_la1[44] = jj_gen;
+      ;
+    }
+    jj_consume_token(K_BETWEEN);
+    SimpleExpression();
+    jj_consume_token(K_AND);
+    SimpleExpression();
+  }
+
+  final public LikeClause LikeClause() throws ParseException, StreamSqlException {
+  LikeClause likeClause = new LikeClause();
+  String pattern;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_NOT:
+      jj_consume_token(K_NOT);
+            likeClause.setNegation(true);
+      break;
+    default:
+      jj_la1[45] = jj_gen;
+      ;
+    }
+    jj_consume_token(K_LIKE);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case S_STRING:
+      jj_consume_token(S_STRING);
+                        likeClause.setPattern(getNonEscapedString(token.image));
+      break;
+    case S_QMARK:
+      jj_consume_token(S_QMARK);
+                 likeClause.setPattern(nextArgAsString());
+      break;
+    default:
+      jj_la1[46] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+       {if (true) return likeClause;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public IsNullClause IsNullClause() throws ParseException, StreamSqlException {
+        IsNullClause isNullClause = new IsNullClause();
+    jj_consume_token(K_IS);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_NOT:
+      jj_consume_token(K_NOT);
+                 isNullClause.setNegation(true);
+      break;
+    default:
+      jj_la1[47] = jj_gen;
+      ;
+    }
+    jj_consume_token(K_NULL);
+    {if (true) return isNullClause;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression SimpleExpression() throws ParseException, StreamSqlException {
+    Expression expr;
+    BitwiseOp bitwiseOp;
+    List<Expression> exprs = new ArrayList<Expression>();
+    List<BitwiseOp> ops = new ArrayList<BitwiseOp>();
+    expr = AdditiveExpression();
+                                 exprs.add(expr);
+    label_13:
+    while (true) {
+      if (jj_2_17(2)) {
+        ;
+      } else {
+        break label_13;
+      }
+      bitwiseOp = BitwiseOp();
+      expr = AdditiveExpression();
+                                                                        exprs.add(expr); ops.add(bitwiseOp);
+    }
+        if(ops.isEmpty()) {
+             {if (true) return exprs.get(0);}
+        } else {
+             {if (true) return new BitwiseExpression(exprs, ops);}
+        }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression AdditiveExpression() throws ParseException, StreamSqlException {
+    Expression expr;
+    AddOp addOp;
+    List<Expression>exprs = new ArrayList<Expression>();
+    List<AddOp> ops = new ArrayList<AddOp>();
+    expr = MultiplicativeExpression();
+                                       exprs.add(expr);
+    label_14:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 138:
+      case 139:
+      case 147:
+        ;
+        break;
+      default:
+        jj_la1[48] = jj_gen;
+        break label_14;
+      }
+      addOp = AddOp();
+      expr = MultiplicativeExpression();
+                                                       exprs.add(expr); ops.add(addOp);
+    }
+        if(ops.isEmpty()) {
+             {if (true) return exprs.get(0);}
+        } else {
+             {if (true) return new AdditiveExpression(exprs,ops);}
+        }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression MultiplicativeExpression() throws ParseException, StreamSqlException {
+    Expression expr;
+    MultOp multOp;
+    List<Expression>exprs=new ArrayList<Expression>();
+    List<MultOp> ops=new ArrayList<MultOp>();
+    expr = ExponentExpression();
+                               exprs.add(expr);
+    label_15:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_MOD:
+      case 148:
+      case 149:
+        ;
+        break;
+      default:
+        jj_la1[49] = jj_gen;
+        break label_15;
+      }
+      multOp = MultOp();
+      expr = MultiplicativeExpression();
+                                                                    exprs.add(expr); ops.add(multOp);
+    }
+        if(ops.isEmpty()) {
+             {if (true) return exprs.get(0);}
+        } else {
+             {if (true) return new MultiplicativeExpression(exprs,ops);}
+        }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression ExponentExpression() throws ParseException, StreamSqlException {
+    Expression retExpr,expr;
+    expr = UnaryExpression();
+                            retExpr=expr;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 137:
+      jj_consume_token(137);
+      expr = UnaryExpression();
+                                   retExpr=new ExponentExpression(retExpr,expr);
+      break;
+    default:
+      jj_la1[50] = jj_gen;
+      ;
+    }
+        {if (true) return retExpr;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression UnaryExpression() throws ParseException, StreamSqlException {
+    Expression expr;
+    boolean negative=false;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 138:
+    case 139:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 138:
+        jj_consume_token(138);
+        break;
+      case 139:
+        jj_consume_token(139);
+                negative=true;
+        break;
+      default:
+        jj_la1[51] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    default:
+      jj_la1[52] = jj_gen;
+      ;
+    }
+    expr = PrimaryExpression();
+            if(negative) {
+            if(expr instanceof ValueExpression) {
+                {if (true) return ((ValueExpression)expr).getNegative();}
+            } else {
+                {if (true) return new NegativeExpression(expr);}
+            }
+        } else {
+            {if (true) return expr;}
+        }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression PrimaryExpression() throws ParseException, StreamSqlException {
+    String name;
+    Expression expr;
+    List<Expression> exprList;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case S_INTEGER:
+      jj_consume_token(S_INTEGER);
+         String s = token.image;
+         BigInteger bi ;
+         if(s.startsWith("0x") || s.startsWith("0X")) {
+             bi = new BigInteger(s.substring(2), 16);
+         } else {
+             bi = new BigInteger(s);
+         }
+         if (bi.bitLength() < 32) {if (true) return new ValueExpression((Integer)bi.intValue());}
+             if (bi.bitLength() < 64) {if (true) return new ValueExpression((Long)bi.longValue());}
+         {if (true) throw new ParseException("number too big for an int or a long: "+bi);}
+      break;
+    case S_FLOAT:
+      jj_consume_token(S_FLOAT);
+               {if (true) return new ValueExpression(Double.valueOf(token.image));}
+      break;
+    case S_STRING:
+      jj_consume_token(S_STRING);
+                {if (true) return new ValueExpression(getNonEscapedString(token.image));}
+      break;
+    case K_NULL:
+      jj_consume_token(K_NULL);
+              {if (true) return new NullExpression();}
+      break;
+    case S_QMARK:
+      jj_consume_token(S_QMARK);
+               {if (true) return nextArg();}
+      break;
+    default:
+      jj_la1[53] = jj_gen;
+      if (jj_2_18(3)) {
+        jj_consume_token(131);
+        expr = SimpleExpression();
+        jj_consume_token(132);
+                                                    {if (true) return expr;}
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case K_ARRAY:
+          jj_consume_token(K_ARRAY);
+          jj_consume_token(140);
+          exprList = ExpressionList();
+          jj_consume_token(141);
+                                                 {if (true) return new ArrayExpression(exprList);}
+          break;
+        default:
+          jj_la1[54] = jj_gen;
+          if (jj_2_19(2147483647)) {
+            expr = FunctionCall();
+                                                     {if (true) return expr;}
+          } else {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case S_IDENTIFIER:
+            case S_DOUBLE_QUOTED_IDENTIFIER:
+              name = ObjectName();
+                       {if (true) return new ColumnExpression(name);}
+              break;
+            default:
+              jj_la1[55] = jj_gen;
+              jj_consume_token(-1);
+              throw new ParseException();
+            }
+          }
+        }
+      }
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+/* ---------------- General Productions --------------------- */
+  final public String ObjectName() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case S_IDENTIFIER:
+      jj_consume_token(S_IDENTIFIER);
+                           {if (true) return token.image;}
+      break;
+    case S_DOUBLE_QUOTED_IDENTIFIER:
+      jj_consume_token(S_DOUBLE_QUOTED_IDENTIFIER);
+                                  String s1 = token.image; {if (true) return s1.substring(1, s1.length() - 1);}
+      break;
+    default:
+      jj_la1[56] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public BitwiseOp BitwiseOp() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 142:
+      jj_consume_token(142);
+         {if (true) return BitwiseOp.AND;}
+      break;
+    case 143:
+      jj_consume_token(143);
+         {if (true) return BitwiseOp.OR;}
+      break;
+    case 144:
+      jj_consume_token(144);
+         {if (true) return BitwiseOp.XOR;}
+      break;
+    case 145:
+      jj_consume_token(145);
+          {if (true) return BitwiseOp.LSHIFT;}
+      break;
+    case 146:
+      jj_consume_token(146);
+          {if (true) return BitwiseOp.RSHIFT;}
+      break;
+    default:
+      jj_la1[57] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public AddOp AddOp() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 138:
+      jj_consume_token(138);
+         {if (true) return AddOp.PLUS;}
+      break;
+    case 139:
+      jj_consume_token(139);
+         {if (true) return AddOp.MINUS;}
+      break;
+    case 147:
+      jj_consume_token(147);
+          {if (true) return AddOp.STRING_PLUS;}
+      break;
+    default:
+      jj_la1[58] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public MultOp MultOp() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 148:
+      jj_consume_token(148);
+         {if (true) return MultOp.MULT;}
+      break;
+    case 149:
+      jj_consume_token(149);
+         {if (true) return MultOp.DIV;}
+      break;
+    case K_MOD:
+      jj_consume_token(K_MOD);
+           {if (true) return MultOp.MOD;}
+      break;
+    default:
+      jj_la1[59] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public RelOp RelOp() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 135:
+      jj_consume_token(135);
+         {if (true) return RelOp.EQUAL;}
+      break;
+    case 150:
+      jj_consume_token(150);
+      jj_consume_token(135);
+             {if (true) return RelOp.NOT_EQUAL;}
+      break;
+    default:
+      jj_la1[60] = jj_gen;
+      if (jj_2_20(2)) {
+        jj_consume_token(151);
+        jj_consume_token(135);
+                          {if (true) return RelOp.GREATER_OR_EQUAL;}
+      } else {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 151:
+          jj_consume_token(151);
+         {if (true) return RelOp.GREATER;}
+          break;
+        default:
+          jj_la1[61] = jj_gen;
+          if (jj_2_21(2)) {
+            jj_consume_token(152);
+            jj_consume_token(151);
+                          {if (true) return RelOp.NOT_EQUAL;}
+          } else if (jj_2_22(2)) {
+            jj_consume_token(152);
+            jj_consume_token(135);
+                          {if (true) return RelOp.LESS_OR_EQUAL;}
+          } else if (jj_2_23(2)) {
+            jj_consume_token(142);
+            jj_consume_token(142);
+                          {if (true) return RelOp.OVERLAP;}
+          } else {
+            switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+            case 152:
+              jj_consume_token(152);
+         {if (true) return RelOp.LESS;}
+              break;
+            default:
+              jj_la1[62] = jj_gen;
+              jj_consume_token(-1);
+              throw new ParseException();
+            }
+          }
+        }
+      }
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void Arguments() throws ParseException, StreamSqlException {
+    Argument();
+    label_16:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[63] = jj_gen;
+        break label_16;
+      }
+      jj_consume_token(134);
+      Argument();
+    }
+  }
+
+  final public void Argument() throws ParseException, StreamSqlException {
+    if (jj_2_24(2)) {
+      jj_consume_token(S_IDENTIFIER);
+      jj_consume_token(153);
+    } else {
+      ;
+    }
+    Expression();
+  }
+
+/* --------------- General Productions ends here --------------- */
+
+/* ----------- SQL productions start here ----------------- */
+  final public SelectExpression SelectExpression() throws ParseException, StreamSqlException {
+    SelectExpression expression;
+    boolean ascending;
+    BigDecimal offset = null;
+    BigDecimal limit = null;
+    expression = Select();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_ORDER:
+      ascending = OrderClause();
+                                expression.setAscending(ascending);
+      break;
+    default:
+      jj_la1[64] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_LIMIT:
+      jj_consume_token(K_LIMIT);
+      if (jj_2_25(2)) {
+        offset = NumericConstant();
+        jj_consume_token(134);
+      } else {
+        ;
+      }
+      limit = NumericConstant();
+                                  expression.setLimit(offset, limit);
+      break;
+    default:
+      jj_la1[65] = jj_gen;
+      ;
+    }
+        {if (true) return expression;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public SelectExpression Select() throws ParseException, StreamSqlException {
+    List<SelectItem> selectList;
+    TupleSourceExpression tsrc;
+    Expression whereClause=null;
+    SelectExpression selectExpr=new SelectExpression();
+    WindowSpecification windowSpec;
+    jj_consume_token(K_SELECT);
+    selectList = SelectList();
+                                        selectExpr.setSelectList(selectList);
+    jj_consume_token(K_FROM);
+    tsrc = TupleSourceExpression();
+                                           selectExpr.setFirstSource(tsrc);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 140:
+      jj_consume_token(140);
+      windowSpec = WindowSpecification();
+                                            selectExpr.setWindow(windowSpec);
+      jj_consume_token(141);
+      break;
+    default:
+      jj_la1[66] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_WHERE:
+      jj_consume_token(K_WHERE);
+      whereClause = Expression();
+                                         selectExpr.setWhereClause(whereClause);
+      break;
+    default:
+      jj_la1[67] = jj_gen;
+      ;
+    }
+        {if (true) return selectExpr;}
+    throw new Error("Missing return statement in function");
+  }
+
+/* Checks for whatever follows  SELECT */
+  final public List<SelectItem> SelectList() throws ParseException, StreamSqlException {
+    List<SelectItem> selectList = new ArrayList<SelectItem>();
+    SelectItem selectItem;
+    selectItem = SelectItem();
+                            selectList.add(selectItem);
+    label_17:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[68] = jj_gen;
+        break label_17;
+      }
+      jj_consume_token(134);
+      selectItem = SelectItem();
+                                    selectList.add(selectItem);
+    }
+    {if (true) return selectList;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public SelectItem SelectItem() throws ParseException, StreamSqlException {
+    String name;
+    Expression expr;
+    SelectItem selectItem;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case 148:
+      jj_consume_token(148);
+            {if (true) return SelectItem.STAR;}
+      break;
+    case K_ARRAY:
+    case K_NULL:
+    case S_INTEGER:
+    case S_FLOAT:
+    case S_STRING:
+    case S_IDENTIFIER:
+    case S_DOUBLE_QUOTED_IDENTIFIER:
+    case S_QMARK:
+    case 131:
+    case 138:
+    case 139:
+      expr = SimpleExpression();
+                                selectItem=new SelectItem(expr);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_AS:
+      case S_IDENTIFIER:
+      case S_DOUBLE_QUOTED_IDENTIFIER:
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case K_AS:
+          jj_consume_token(K_AS);
+          break;
+        default:
+          jj_la1[69] = jj_gen;
+          ;
+        }
+        name = ObjectName();
+            selectItem.setAlias(name);
+        break;
+      default:
+        jj_la1[70] = jj_gen;
+        ;
+      }
+      {if (true) return selectItem;}
+      break;
+    default:
+      jj_la1[71] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public WindowSpecification WindowSpecification() throws ParseException, StreamSqlException {
+    String name,field;
+    WindowSpecification wspec;
+    BigDecimal size, advance;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case S_IDENTIFIER:
+    case S_DOUBLE_QUOTED_IDENTIFIER:
+      name = ObjectName();
+                       wspec=new WindowSpecification(name);
+      break;
+    case K_SIZE:
+      jj_consume_token(K_SIZE);
+      size = NumericConstant();
+      jj_consume_token(K_ADVANCE);
+      advance = NumericConstant();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_TIME:
+        jj_consume_token(K_TIME);
+              wspec = new WindowSpecification(size,advance,WindowSpecification.Type.TIME);
+        break;
+      case K_TUPLES:
+        jj_consume_token(K_TUPLES);
+                wspec = new WindowSpecification(size,advance,WindowSpecification.Type.TUPLES);
+        break;
+      case K_ON:
+        jj_consume_token(K_ON);
+        field = ObjectName();
+                        wspec = new WindowSpecification(size,advance,WindowSpecification.Type.FIELD,field);
+        break;
+      default:
+        jj_la1[72] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+   {if (true) return wspec;}
+      break;
+    default:
+      jj_la1[73] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public TupleSourceExpression TupleSourceExpression() throws ParseException, StreamSqlException {
+    TupleSourceExpression tsrc;
+    StreamExpression expr;
+    String name, histoColumn;
+    BigDecimal mergeTime;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case S_IDENTIFIER:
+    case S_DOUBLE_QUOTED_IDENTIFIER:
+      name = ObjectName();
+                        tsrc = new TupleSourceExpression(name);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_HISTOGRAM:
+        jj_consume_token(K_HISTOGRAM);
+        jj_consume_token(131);
+        histoColumn = ObjectName();
+                                                         tsrc.setHistogramColumn(histoColumn);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case 134:
+          jj_consume_token(134);
+          mergeTime = NumericConstant();
+                                                 tsrc.setHistogramMergeTime(mergeTime);
+          break;
+        default:
+          jj_la1[74] = jj_gen;
+          ;
+        }
+        jj_consume_token(132);
+        break;
+      default:
+        jj_la1[75] = jj_gen;
+        ;
+      }
+      break;
+    default:
+      jj_la1[76] = jj_gen;
+      if (jj_2_26(3)) {
+        jj_consume_token(131);
+        expr = StreamExpression();
+        jj_consume_token(132);
+                                                       tsrc=new TupleSourceExpression(expr);
+      } else {
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+        {if (true) return tsrc;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public TupleDefinition TupleDefinition() throws ParseException, StreamSqlException {
+    String columnName;
+    TupleDefinition tupleDefinition=new TupleDefinition();
+    DataType columnType;
+    jj_consume_token(131);
+    columnName = ObjectName();
+    columnType = DataTypeDefinition();
+                                                                 tupleDefinition.addColumn(columnName,columnType);
+    label_18:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case 134:
+        ;
+        break;
+      default:
+        jj_la1[77] = jj_gen;
+        break label_18;
+      }
+      jj_consume_token(134);
+      columnName = ObjectName();
+      columnType = DataTypeDefinition();
+                                                                  tupleDefinition.addColumn(columnName,columnType);
+    }
+    jj_consume_token(132);
+        {if (true) return tupleDefinition;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public boolean OrderClause() throws ParseException, StreamSqlException {
+   boolean ascending=true;
+    jj_consume_token(K_ORDER);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_ASC:
+    case K_DESC:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_ASC:
+        jj_consume_token(K_ASC);
+        break;
+      case K_DESC:
+        jj_consume_token(K_DESC);
+                     ascending=false;
+        break;
+      default:
+        jj_la1[78] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    default:
+      jj_la1[79] = jj_gen;
+      ;
+    }
+    {if (true) return ascending;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Expression FunctionCall() throws ParseException, StreamSqlException {
+   String name;
+   List<Expression> args=null;
+   boolean star=false;
+    name = ObjectName();
+    jj_consume_token(131);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case K_ARRAY:
+    case K_NOT:
+    case K_NULL:
+    case S_INTEGER:
+    case S_FLOAT:
+    case S_STRING:
+    case S_IDENTIFIER:
+    case S_DOUBLE_QUOTED_IDENTIFIER:
+    case S_QMARK:
+    case 131:
+    case 138:
+    case 139:
+    case 148:
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case K_ARRAY:
+      case K_NOT:
+      case K_NULL:
+      case S_INTEGER:
+      case S_FLOAT:
+      case S_STRING:
+      case S_IDENTIFIER:
+      case S_DOUBLE_QUOTED_IDENTIFIER:
+      case S_QMARK:
+      case 131:
+      case 138:
+      case 139:
+        args = ExpressionList();
+        break;
+      case 148:
+        jj_consume_token(148);
+                   star=true;
+        break;
+      default:
+        jj_la1[80] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+      break;
+    default:
+      jj_la1[81] = jj_gen;
+      ;
+    }
+    jj_consume_token(132);
+      {if (true) return FunctionExpressionFactory.get(name, args, star);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public BigDecimal NumericConstant() throws ParseException, StreamSqlException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case S_INTEGER:
+      jj_consume_token(S_INTEGER);
+      break;
+    case S_FLOAT:
+      jj_consume_token(S_FLOAT);
+      break;
+    default:
+      jj_la1[82] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+                            {if (true) return new BigDecimal(token.image);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public void ID(String id) throws ParseException {
+    jj_consume_token(S_IDENTIFIER);
+        if (!token.image.matches("(?i)" + id)) {
+            {if (true) throw new ParseException("Encountered " + token.image
+                + " at line " + token.beginLine + ", column " + token.beginColumn + "."
+                + "\u005cnWas expecting: " + id);}
+        }
+  }
+
+  private boolean jj_2_1(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_1(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(0, xla); }
+  }
+
+  private boolean jj_2_2(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_2(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(1, xla); }
+  }
+
+  private boolean jj_2_3(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_3(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(2, xla); }
+  }
+
+  private boolean jj_2_4(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_4(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(3, xla); }
+  }
+
+  private boolean jj_2_5(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_5(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(4, xla); }
+  }
+
+  private boolean jj_2_6(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_6(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(5, xla); }
+  }
+
+  private boolean jj_2_7(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_7(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(6, xla); }
+  }
+
+  private boolean jj_2_8(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_8(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(7, xla); }
+  }
+
+  private boolean jj_2_9(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_9(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(8, xla); }
+  }
+
+  private boolean jj_2_10(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_10(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(9, xla); }
+  }
+
+  private boolean jj_2_11(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_11(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(10, xla); }
+  }
+
+  private boolean jj_2_12(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_12(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(11, xla); }
+  }
+
+  private boolean jj_2_13(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_13(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(12, xla); }
+  }
+
+  private boolean jj_2_14(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_14(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(13, xla); }
+  }
+
+  private boolean jj_2_15(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_15(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(14, xla); }
+  }
+
+  private boolean jj_2_16(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_16(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(15, xla); }
+  }
+
+  private boolean jj_2_17(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_17(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(16, xla); }
+  }
+
+  private boolean jj_2_18(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_18(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(17, xla); }
+  }
+
+  private boolean jj_2_19(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_19(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(18, xla); }
+  }
+
+  private boolean jj_2_20(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_20(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(19, xla); }
+  }
+
+  private boolean jj_2_21(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_21(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(20, xla); }
+  }
+
+  private boolean jj_2_22(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_22(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(21, xla); }
+  }
+
+  private boolean jj_2_23(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_23(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(22, xla); }
+  }
+
+  private boolean jj_2_24(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_24(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(23, xla); }
+  }
+
+  private boolean jj_2_25(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_25(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(24, xla); }
+  }
+
+  private boolean jj_2_26(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_26(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(25, xla); }
+  }
+
+  private boolean jj_3R_99() {
+    if (jj_3R_100()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_92() {
+    if (jj_scan_token(148)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_72() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_92()) {
+    jj_scanpos = xsp;
+    if (jj_3R_93()) {
+    jj_scanpos = xsp;
+    if (jj_3R_94()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_54() {
+    if (jj_3R_59()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_53() {
+    if (jj_3R_58()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_38() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_53()) {
+    jj_scanpos = xsp;
+    if (jj_3R_54()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_75() {
+    if (jj_scan_token(147)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_74() {
+    if (jj_scan_token(139)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_73() {
+    if (jj_scan_token(138)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_64() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_73()) {
+    jj_scanpos = xsp;
+    if (jj_3R_74()) {
+    jj_scanpos = xsp;
+    if (jj_3R_75()) return true;
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_61() {
+    if (jj_3R_68()) return true;
+    return false;
+  }
+
+  private boolean jj_3_16() {
+    if (jj_3R_33()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_28() {
+    if (jj_scan_token(K_ALTER)) return true;
+    if (jj_scan_token(K_TABLE)) return true;
+    return false;
+  }
+
+  private boolean jj_3_15() {
+    if (jj_3R_32()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_49() {
+    if (jj_scan_token(146)) return true;
+    return false;
+  }
+
+  private boolean jj_3_14() {
+    if (jj_3R_31()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_48() {
+    if (jj_scan_token(145)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_47() {
+    if (jj_scan_token(144)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_55() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_60()) {
+    jj_scanpos = xsp;
+    if (jj_3_14()) {
+    jj_scanpos = xsp;
+    if (jj_3_15()) {
+    jj_scanpos = xsp;
+    if (jj_3_16()) {
+    jj_scanpos = xsp;
+    if (jj_3R_61()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_60() {
+    if (jj_3R_67()) return true;
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_46() {
+    if (jj_scan_token(143)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_34() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_45()) {
+    jj_scanpos = xsp;
+    if (jj_3R_46()) {
+    jj_scanpos = xsp;
+    if (jj_3R_47()) {
+    jj_scanpos = xsp;
+    if (jj_3R_48()) {
+    jj_scanpos = xsp;
+    if (jj_3R_49()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_45() {
+    if (jj_scan_token(142)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_40() {
+    if (jj_3R_36()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_55()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3R_27() {
+    if (jj_scan_token(K_ALTER)) return true;
+    if (jj_scan_token(K_SEQUENCE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_104() {
+    if (jj_scan_token(148)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_103() {
+    if (jj_3R_99()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_52() {
+    if (jj_scan_token(S_DOUBLE_QUOTED_IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_101() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_103()) {
+    jj_scanpos = xsp;
+    if (jj_3R_104()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_37() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_51()) {
+    jj_scanpos = xsp;
+    if (jj_3R_52()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_51() {
+    if (jj_scan_token(S_IDENTIFIER)) return true;
+    return false;
+  }
+
+  private boolean jj_3_19() {
+    if (jj_3R_37()) return true;
+    if (jj_scan_token(131)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_29() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(115)) {
+    jj_scanpos = xsp;
+    if (jj_scan_token(118)) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_19() {
+    if (jj_scan_token(K_CREATE)) return true;
+    if (jj_scan_token(K_TABLE)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_39() {
+    if (jj_scan_token(K_NOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_96() {
+    if (jj_3R_37()) return true;
+    if (jj_scan_token(131)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_101()) jj_scanpos = xsp;
+    if (jj_scan_token(132)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_91() {
+    if (jj_3R_37()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_30() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_39()) jj_scanpos = xsp;
+    if (jj_3R_40()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_90() {
+    if (jj_3R_96()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_89() {
+    if (jj_scan_token(K_ARRAY)) return true;
+    if (jj_scan_token(140)) return true;
+    if (jj_3R_99()) return true;
+    return false;
+  }
+
+  private boolean jj_3_18() {
+    if (jj_scan_token(131)) return true;
+    if (jj_3R_36()) return true;
+    if (jj_scan_token(132)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_88() {
+    if (jj_scan_token(S_QMARK)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_87() {
+    if (jj_scan_token(K_NULL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_26() {
+    if (jj_scan_token(K_SHOW)) return true;
+    if (jj_scan_token(K_SEQUENCES)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_86() {
+    if (jj_scan_token(S_STRING)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_85() {
+    if (jj_scan_token(S_FLOAT)) return true;
+    return false;
+  }
+
+  private boolean jj_3_13() {
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_105() {
+    if (jj_scan_token(131)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_25() {
+    if (jj_scan_token(K_SHOW)) return true;
+    if (jj_scan_token(K_DATABASES)) return true;
+    return false;
+  }
+
+  private boolean jj_3_12() {
+    if (jj_3R_30()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_84() {
+    if (jj_scan_token(S_INTEGER)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_70() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_84()) {
+    jj_scanpos = xsp;
+    if (jj_3R_85()) {
+    jj_scanpos = xsp;
+    if (jj_3R_86()) {
+    jj_scanpos = xsp;
+    if (jj_3R_87()) {
+    jj_scanpos = xsp;
+    if (jj_3R_88()) {
+    jj_scanpos = xsp;
+    if (jj_3_18()) {
+    jj_scanpos = xsp;
+    if (jj_3R_89()) {
+    jj_scanpos = xsp;
+    if (jj_3R_90()) {
+    jj_scanpos = xsp;
+    if (jj_3R_91()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_24() {
+    if (jj_scan_token(K_SHOW)) return true;
+    if (jj_scan_token(K_ENGINES)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_102() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_12()) {
+    jj_scanpos = xsp;
+    if (jj_3R_105()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_10() {
+    if (jj_3R_28()) return true;
+    return false;
+  }
+
+  private boolean jj_3_9() {
+    if (jj_3R_27()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_22() {
+    if (jj_scan_token(K_SHOW)) return true;
+    if (jj_scan_token(K_STREAM)) return true;
+    return false;
+  }
+
+  private boolean jj_3_8() {
+    if (jj_3R_26()) return true;
+    return false;
+  }
+
+  private boolean jj_3_7() {
+    if (jj_3R_25()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_83() {
+    if (jj_scan_token(139)) return true;
+    return false;
+  }
+
+  private boolean jj_3_6() {
+    if (jj_3R_24()) return true;
+    return false;
+  }
+
+  private boolean jj_3_26() {
+    if (jj_scan_token(131)) return true;
+    if (jj_3R_38()) return true;
+    return false;
+  }
+
+  private boolean jj_3_5() {
+    if (jj_3R_23()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_100() {
+    if (jj_3R_102()) return true;
+    return false;
+  }
+
+  private boolean jj_3_4() {
+    if (jj_3R_22()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    if (jj_scan_token(K_SHOW)) return true;
+    if (jj_scan_token(K_TABLES)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_69() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(138)) {
+    jj_scanpos = xsp;
+    if (jj_3R_83()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_3() {
+    if (jj_3R_21()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_62() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_69()) jj_scanpos = xsp;
+    if (jj_3R_70()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_77() {
+    if (jj_3R_37()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_66() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_77()) {
+    jj_scanpos = xsp;
+    if (jj_3_26()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_21() {
+    if (jj_scan_token(K_SHOW)) return true;
+    if (jj_scan_token(K_STREAMS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_71() {
+    if (jj_scan_token(137)) return true;
+    if (jj_3R_62()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_56() {
+    if (jj_3R_62()) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_71()) jj_scanpos = xsp;
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_3R_20()) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_3R_19()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_63() {
+    if (jj_3R_72()) return true;
+    if (jj_3R_50()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_50() {
+    if (jj_3R_56()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_63()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_98() {
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_97() {
+    if (jj_scan_token(148)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_95() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_97()) {
+    jj_scanpos = xsp;
+    if (jj_3R_98()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3R_57() {
+    if (jj_3R_64()) return true;
+    if (jj_3R_50()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_35() {
+    if (jj_3R_50()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3R_57()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_76() {
+    if (jj_3R_95()) return true;
+    return false;
+  }
+
+  private boolean jj_3_11() {
+    if (jj_3R_29()) return true;
+    if (jj_scan_token(134)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_20() {
+    if (jj_scan_token(K_CREATE)) return true;
+    if (jj_scan_token(K_STREAM)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_65() {
+    if (jj_scan_token(K_SELECT)) return true;
+    if (jj_3R_76()) return true;
+    return false;
+  }
+
+  private boolean jj_3_17() {
+    if (jj_3R_34()) return true;
+    if (jj_3R_35()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_59() {
+    if (jj_scan_token(K_MERGE)) return true;
+    if (jj_3R_66()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_36() {
+    if (jj_3R_35()) return true;
+    Token xsp;
+    while (true) {
+      xsp = jj_scanpos;
+      if (jj_3_17()) { jj_scanpos = xsp; break; }
+    }
+    return false;
+  }
+
+  private boolean jj_3_25() {
+    if (jj_3R_29()) return true;
+    if (jj_scan_token(134)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_82() {
+    if (jj_scan_token(K_NOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_68() {
+    if (jj_scan_token(K_IS)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_82()) jj_scanpos = xsp;
+    if (jj_scan_token(K_NULL)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_58() {
+    if (jj_3R_65()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_43() {
+    if (jj_scan_token(S_STRING)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_44() {
+    if (jj_scan_token(S_QMARK)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_42() {
+    if (jj_scan_token(K_NOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_33() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_42()) jj_scanpos = xsp;
+    if (jj_scan_token(K_LIKE)) return true;
+    xsp = jj_scanpos;
+    if (jj_3R_43()) {
+    jj_scanpos = xsp;
+    if (jj_3R_44()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_24() {
+    if (jj_scan_token(S_IDENTIFIER)) return true;
+    if (jj_scan_token(153)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_32() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(61)) jj_scanpos = xsp;
+    if (jj_scan_token(K_BETWEEN)) return true;
+    if (jj_3R_36()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_81() {
+    if (jj_scan_token(152)) return true;
+    return false;
+  }
+
+  private boolean jj_3_23() {
+    if (jj_scan_token(142)) return true;
+    if (jj_scan_token(142)) return true;
+    return false;
+  }
+
+  private boolean jj_3_22() {
+    if (jj_scan_token(152)) return true;
+    if (jj_scan_token(135)) return true;
+    return false;
+  }
+
+  private boolean jj_3_21() {
+    if (jj_scan_token(152)) return true;
+    if (jj_scan_token(151)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_80() {
+    if (jj_scan_token(151)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_41() {
+    if (jj_scan_token(K_NOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_31() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_41()) jj_scanpos = xsp;
+    if (jj_scan_token(K_IN)) return true;
+    if (jj_scan_token(131)) return true;
+    return false;
+  }
+
+  private boolean jj_3_20() {
+    if (jj_scan_token(151)) return true;
+    if (jj_scan_token(135)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_79() {
+    if (jj_scan_token(150)) return true;
+    if (jj_scan_token(135)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_78() {
+    if (jj_scan_token(135)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_67() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_78()) {
+    jj_scanpos = xsp;
+    if (jj_3R_79()) {
+    jj_scanpos = xsp;
+    if (jj_3_20()) {
+    jj_scanpos = xsp;
+    if (jj_3R_80()) {
+    jj_scanpos = xsp;
+    if (jj_3_21()) {
+    jj_scanpos = xsp;
+    if (jj_3_22()) {
+    jj_scanpos = xsp;
+    if (jj_3_23()) {
+    jj_scanpos = xsp;
+    if (jj_3R_81()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_94() {
+    if (jj_scan_token(K_MOD)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_93() {
+    if (jj_scan_token(149)) return true;
+    return false;
+  }
+
+  /** Generated Token Manager. */
+  public StreamSqlParserTokenManager token_source;
+  SimpleCharStream jj_input_stream;
+  /** Current token. */
+  public Token token;
+  /** Next token. */
+  public Token jj_nt;
+  private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[83];
+  static private int[] jj_la1_0;
+  static private int[] jj_la1_1;
+  static private int[] jj_la1_2;
+  static private int[] jj_la1_3;
+  static private int[] jj_la1_4;
+  static {
+      jj_la1_init_0();
+      jj_la1_init_1();
+      jj_la1_init_2();
+      jj_la1_init_3();
+      jj_la1_init_4();
+   }
+   private static void jj_la1_init_0() {
+      jj_la1_0 = new int[] {0x50000,0x0,0x50100000,0x50900101,0x0,0x0,0x0,0x0,0x0,0x0,0x4000,0x0,0x0,0x0,0x0,0x0,0x0,0x600000,0x0,0x1000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x200,0x0,0x0,0x0,0x0,0x8000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x800,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x1000,0x1000,0x800,0x0,0x0,0x0,0x0,0x0,0x0,0x20002000,0x20002000,0x800,0x800,0x0,};
+   }
+   private static void jj_la1_init_1() {
+      jj_la1_1 = new int[] {0x4080011,0x0,0x2060002,0x2060002,0x1000,0x0,0x0,0x0,0x0,0x804,0x0,0x0,0x0,0x804,0x0,0x0,0x0,0x0,0x40000000,0x0,0x1000,0x0,0x8000000,0x2060000,0x0,0x8000000,0x0,0x0,0x1000000,0x0,0x1000000,0x0,0x0,0x1000000,0x0,0x0,0x0,0x0,0x20000000,0x0,0x200000,0x20a02000,0x0,0x20000000,0x20000000,0x20000000,0x0,0x20000000,0x0,0x10000000,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x0,0x0,0x10000000,0x0,0x0,0x0,0x0,0x0,0x1000000,0x0,0x0,0x0,0x0,0x0,0x80000000,0x0,0x0,0x0,0x800,0x0,0x0,0x0,0x0,0xa0000000,0xa0000000,0x0,};
+   }
+   private static void jj_la1_init_2() {
+      jj_la1_2 = new int[] {0x84000800,0x0,0x200000,0x2200000,0x0,0x0,0x0,0x0,0x0,0x100,0x0,0x0,0x0,0x100,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x200000,0x0,0x0,0x200000,0x0,0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x10,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x2,0x1000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+   }
+   private static void jj_la1_init_3() {
+      jj_la1_3 = new int[] {0x40000000,0x0,0xe00,0xe00,0x0,0x40000000,0x0,0x0,0x0,0xa,0x0,0x0,0x0,0xa,0x0,0x0,0x4030,0x0,0x0,0x0,0x0,0x40000,0x0,0xc00,0x0,0x0,0x0,0x0,0x0,0x20000,0x0,0x0,0x20000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x8000000,0x0,0x0,0x0,0x0,0x0,0x0,0x8480000,0x0,0x40000000,0x40000000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x20000,0x0,0x0,0x40000000,0x48480000,0x90,0x40000000,0x0,0x0,0x40000000,0x0,0x0,0x0,0x48480000,0x48480000,0x480000,};
+   }
+   private static void jj_la1_init_4() {
+      jj_la1_4 = new int[] {0x0,0x20,0x0,0x0,0x0,0x2,0x40,0x40,0x40,0x0,0x0,0x40,0x40,0x0,0x8,0x8,0x0,0x0,0x0,0x8,0x0,0x0,0x0,0x0,0x40,0x8,0x40,0x0,0x0,0x0,0x0,0x40,0x0,0x0,0x0,0x8,0x0,0x8,0x0,0x1c04080,0x0,0x1c04080,0x40,0x0,0x0,0x0,0x4,0x0,0x80c00,0x300000,0x200,0xc00,0xc00,0x4,0x0,0x2,0x2,0x7c000,0x80c00,0x300000,0x400080,0x800000,0x1000000,0x40,0x0,0x0,0x1000,0x0,0x40,0x0,0x2,0x100c0e,0x0,0x2,0x40,0x0,0x2,0x40,0x0,0x0,0x100c0e,0x100c0e,0x0,};
+   }
+  final private JJCalls[] jj_2_rtns = new JJCalls[26];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
+
+  /** Constructor with InputStream. */
+  public StreamSqlParser(java.io.InputStream stream) {
+     this(stream, null);
+  }
+  /** Constructor with InputStream and supplied encoding */
+  public StreamSqlParser(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    token_source = new StreamSqlParserTokenManager(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 83; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream) {
+     ReInit(stream, null);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    token_source.ReInit(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 83; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Constructor. */
+  public StreamSqlParser(java.io.Reader stream) {
+    jj_input_stream = new SimpleCharStream(stream, 1, 1);
+    token_source = new StreamSqlParserTokenManager(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 83; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader stream) {
+    jj_input_stream.ReInit(stream, 1, 1);
+    token_source.ReInit(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 83; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Constructor with generated Token Manager. */
+  public StreamSqlParser(StreamSqlParserTokenManager tm) {
+    token_source = tm;
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 83; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(StreamSqlParserTokenManager tm) {
+    token_source = tm;
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 83; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  private Token jj_consume_token(int kind) throws ParseException {
+    Token oldToken;
+    if ((oldToken = token).next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    if (token.kind == kind) {
+      jj_gen++;
+      if (++jj_gc > 100) {
+        jj_gc = 0;
+        for (int i = 0; i < jj_2_rtns.length; i++) {
+          JJCalls c = jj_2_rtns[i];
+          while (c != null) {
+            if (c.gen < jj_gen) c.first = null;
+            c = c.next;
+          }
+        }
+      }
+      return token;
+    }
+    token = oldToken;
+    jj_kind = kind;
+    throw generateParseException();
+  }
+
+  static private final class LookaheadSuccess extends java.lang.Error { }
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
+    if (jj_scanpos == jj_lastpos) {
+      jj_la--;
+      if (jj_scanpos.next == null) {
+        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+      } else {
+        jj_lastpos = jj_scanpos = jj_scanpos.next;
+      }
+    } else {
+      jj_scanpos = jj_scanpos.next;
+    }
+    if (jj_rescan) {
+      int i = 0; Token tok = token;
+      while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }
+      if (tok != null) jj_add_error_token(kind, i);
+    }
+    if (jj_scanpos.kind != kind) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
+    return false;
+  }
+
+
+/** Get the next Token. */
+  final public Token getNextToken() {
+    if (token.next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    jj_gen++;
+    return token;
+  }
+
+/** Get the specific Token. */
+  final public Token getToken(int index) {
+    Token t = token;
+    for (int i = 0; i < index; i++) {
+      if (t.next != null) t = t.next;
+      else t = t.next = token_source.getNextToken();
+    }
+    return t;
+  }
+
+  private int jj_ntk() {
+    if ((jj_nt=token.next) == null)
+      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+    else
+      return (jj_ntk = jj_nt.kind);
+  }
+
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
+
+  private void jj_add_error_token(int kind, int pos) {
+    if (pos >= 100) return;
+    if (pos == jj_endpos + 1) {
+      jj_lasttokens[jj_endpos++] = kind;
+    } else if (jj_endpos != 0) {
+      jj_expentry = new int[jj_endpos];
+      for (int i = 0; i < jj_endpos; i++) {
+        jj_expentry[i] = jj_lasttokens[i];
+      }
+      boolean exists = false;
+      for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+        exists = true;
+        int[] oldentry = (int[])(it.next());
+        if (oldentry.length == jj_expentry.length) {
+          for (int i = 0; i < jj_expentry.length; i++) {
+            if (oldentry[i] != jj_expentry[i]) {
+              exists = false;
+              break;
+            }
+          }
+          if (exists) break;
+        }
+      }
+      if (!exists) jj_expentries.add(jj_expentry);
+      if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+    }
+  }
+
+  /** Generate ParseException. */
+  public ParseException generateParseException() {
+    jj_expentries.clear();
+    boolean[] la1tokens = new boolean[154];
+    if (jj_kind >= 0) {
+      la1tokens[jj_kind] = true;
+      jj_kind = -1;
+    }
+    for (int i = 0; i < 83; i++) {
+      if (jj_la1[i] == jj_gen) {
+        for (int j = 0; j < 32; j++) {
+          if ((jj_la1_0[i] & (1<<j)) != 0) {
+            la1tokens[j] = true;
+          }
+          if ((jj_la1_1[i] & (1<<j)) != 0) {
+            la1tokens[32+j] = true;
+          }
+          if ((jj_la1_2[i] & (1<<j)) != 0) {
+            la1tokens[64+j] = true;
+          }
+          if ((jj_la1_3[i] & (1<<j)) != 0) {
+            la1tokens[96+j] = true;
+          }
+          if ((jj_la1_4[i] & (1<<j)) != 0) {
+            la1tokens[128+j] = true;
+          }
+        }
+      }
+    }
+    for (int i = 0; i < 154; i++) {
+      if (la1tokens[i]) {
+        jj_expentry = new int[1];
+        jj_expentry[0] = i;
+        jj_expentries.add(jj_expentry);
+      }
+    }
+    jj_endpos = 0;
+    jj_rescan_token();
+    jj_add_error_token(0, 0);
+    int[][] exptokseq = new int[jj_expentries.size()][];
+    for (int i = 0; i < jj_expentries.size(); i++) {
+      exptokseq[i] = jj_expentries.get(i);
+    }
+    return new ParseException(token, exptokseq, tokenImage);
+  }
+
+  /** Enable tracing. */
+  final public void enable_tracing() {
+  }
+
+  /** Disable tracing. */
+  final public void disable_tracing() {
+  }
+
+  private void jj_rescan_token() {
+    jj_rescan = true;
+    for (int i = 0; i < 26; i++) {
+    try {
+      JJCalls p = jj_2_rtns[i];
+      do {
+        if (p.gen > jj_gen) {
+          jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+          switch (i) {
+            case 0: jj_3_1(); break;
+            case 1: jj_3_2(); break;
+            case 2: jj_3_3(); break;
+            case 3: jj_3_4(); break;
+            case 4: jj_3_5(); break;
+            case 5: jj_3_6(); break;
+            case 6: jj_3_7(); break;
+            case 7: jj_3_8(); break;
+            case 8: jj_3_9(); break;
+            case 9: jj_3_10(); break;
+            case 10: jj_3_11(); break;
+            case 11: jj_3_12(); break;
+            case 12: jj_3_13(); break;
+            case 13: jj_3_14(); break;
+            case 14: jj_3_15(); break;
+            case 15: jj_3_16(); break;
+            case 16: jj_3_17(); break;
+            case 17: jj_3_18(); break;
+            case 18: jj_3_19(); break;
+            case 19: jj_3_20(); break;
+            case 20: jj_3_21(); break;
+            case 21: jj_3_22(); break;
+            case 22: jj_3_23(); break;
+            case 23: jj_3_24(); break;
+            case 24: jj_3_25(); break;
+            case 25: jj_3_26(); break;
+          }
+        }
+        p = p.next;
+      } while (p != null);
+      } catch(LookaheadSuccess ls) { }
+    }
+    jj_rescan = false;
+  }
+
+  private void jj_save(int index, int xla) {
+    JJCalls p = jj_2_rtns[index];
+    while (p.gen > jj_gen) {
+      if (p.next == null) { p = p.next = new JJCalls(); break; }
+      p = p.next;
+    }
+    p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
+  }
+
+  static final class JJCalls {
+    int gen;
+    Token first;
+    int arg;
+    JJCalls next;
+  }
+
+}
+```
+
+### `StreamSqlParserConstants.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlParserConstants.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. StreamSqlParserConstants.java */
+package org.yamcs.yarch.streamsql;
+
+
+/**
+ * Token literal values and constants.
+ * Generated by org.javacc.parser.OtherFilesGen#start()
+ */
+public interface StreamSqlParserConstants {
+
+  /** End of File. */
+  int EOF = 0;
+  /** RegularExpression Id. */
+  int K_ADVANCE = 5;
+  /** RegularExpression Id. */
+  int K_AFAP = 6;
+  /** RegularExpression Id. */
+  int K_ALL = 7;
+  /** RegularExpression Id. */
+  int K_ALTER = 8;
+  /** RegularExpression Id. */
+  int K_AND = 9;
+  /** RegularExpression Id. */
+  int K_ANY = 10;
+  /** RegularExpression Id. */
+  int K_ARRAY = 11;
+  /** RegularExpression Id. */
+  int K_AS = 12;
+  /** RegularExpression Id. */
+  int K_ASC = 13;
+  /** RegularExpression Id. */
+  int K_AUTO_INCREMENT = 14;
+  /** RegularExpression Id. */
+  int K_BETWEEN = 15;
+  /** RegularExpression Id. */
+  int K_BOOLEAN = 16;
+  /** RegularExpression Id. */
+  int K_BY = 17;
+  /** RegularExpression Id. */
+  int K_BYTE = 18;
+  /** RegularExpression Id. */
+  int K_CHAR = 19;
+  /** RegularExpression Id. */
+  int K_CLOSE = 20;
+  /** RegularExpression Id. */
+  int K_COLUMN_FAMILY = 21;
+  /** RegularExpression Id. */
+  int K_COMPRESSED = 22;
+  /** RegularExpression Id. */
+  int K_CREATE = 23;
+  /** RegularExpression Id. */
+  int K_CURRENT = 24;
+  /** RegularExpression Id. */
+  int K_DATABASES = 25;
+  /** RegularExpression Id. */
+  int K_DATE = 26;
+  /** RegularExpression Id. */
+  int K_DECIMAL = 27;
+  /** RegularExpression Id. */
+  int K_DELETE = 28;
+  /** RegularExpression Id. */
+  int K_DESC = 29;
+  /** RegularExpression Id. */
+  int K_DESCRIBE = 30;
+  /** RegularExpression Id. */
+  int K_DISTINCT = 31;
+  /** RegularExpression Id. */
+  int K_DOUBLE = 32;
+  /** RegularExpression Id. */
+  int K_DROP = 33;
+  /** RegularExpression Id. */
+  int K_ENGINE = 34;
+  /** RegularExpression Id. */
+  int K_ENGINES = 35;
+  /** RegularExpression Id. */
+  int K_ENUM = 36;
+  /** RegularExpression Id. */
+  int K_ESCAPE = 37;
+  /** RegularExpression Id. */
+  int K_EXISTS = 38;
+  /** RegularExpression Id. */
+  int K_FIXED_DELAY = 39;
+  /** RegularExpression Id. */
+  int K_FLOAT = 40;
+  /** RegularExpression Id. */
+  int K_FROM = 41;
+  /** RegularExpression Id. */
+  int K_HAVING = 42;
+  /** RegularExpression Id. */
+  int K_HISTOGRAM = 43;
+  /** RegularExpression Id. */
+  int K_IF = 44;
+  /** RegularExpression Id. */
+  int K_IN = 45;
+  /** RegularExpression Id. */
+  int K_IN_KEY = 46;
+  /** RegularExpression Id. */
+  int K_INPUT = 47;
+  /** RegularExpression Id. */
+  int K_INDEX = 48;
+  /** RegularExpression Id. */
+  int K_INSERT = 49;
+  /** RegularExpression Id. */
+  int K_INSERT_APPEND = 50;
+  /** RegularExpression Id. */
+  int K_INT = 51;
+  /** RegularExpression Id. */
+  int K_INTO = 52;
+  /** RegularExpression Id. */
+  int K_IS = 53;
+  /** RegularExpression Id. */
+  int K_KEY = 54;
+  /** RegularExpression Id. */
+  int K_LIKE = 55;
+  /** RegularExpression Id. */
+  int K_LIMIT = 56;
+  /** RegularExpression Id. */
+  int K_LOAD = 57;
+  /** RegularExpression Id. */
+  int K_LONG = 58;
+  /** RegularExpression Id. */
+  int K_MERGE = 59;
+  /** RegularExpression Id. */
+  int K_MOD = 60;
+  /** RegularExpression Id. */
+  int K_NOT = 61;
+  /** RegularExpression Id. */
+  int K_NOFOLLOW = 62;
+  /** RegularExpression Id. */
+  int K_NULL = 63;
+  /** RegularExpression Id. */
+  int K_NULLS = 64;
+  /** RegularExpression Id. */
+  int K_ON = 65;
+  /** RegularExpression Id. */
+  int K_ONLY = 66;
+  /** RegularExpression Id. */
+  int K_OR = 67;
+  /** RegularExpression Id. */
+  int K_ORDER = 68;
+  /** RegularExpression Id. */
+  int K_ORIGINAL = 69;
+  /** RegularExpression Id. */
+  int K_OUT = 70;
+  /** RegularExpression Id. */
+  int K_OUTPUT = 71;
+  /** RegularExpression Id. */
+  int K_PARTITION = 72;
+  /** RegularExpression Id. */
+  int K_PORT = 73;
+  /** RegularExpression Id. */
+  int K_PRIMARY = 74;
+  /** RegularExpression Id. */
+  int K_PROTOBUF = 75;
+  /** RegularExpression Id. */
+  int K_RANGE = 76;
+  /** RegularExpression Id. */
+  int K_READ = 77;
+  /** RegularExpression Id. */
+  int K_REAL = 78;
+  /** RegularExpression Id. */
+  int K_RENAME = 79;
+  /** RegularExpression Id. */
+  int K_RESTART = 80;
+  /** RegularExpression Id. */
+  int K_REVERSE = 81;
+  /** RegularExpression Id. */
+  int K_ROW = 82;
+  /** RegularExpression Id. */
+  int K_ROWS = 83;
+  /** RegularExpression Id. */
+  int K_SAMPLE = 84;
+  /** RegularExpression Id. */
+  int K_SELECT = 85;
+  /** RegularExpression Id. */
+  int K_SEQUENCE = 86;
+  /** RegularExpression Id. */
+  int K_SET = 87;
+  /** RegularExpression Id. */
+  int K_SIZE = 88;
+  /** RegularExpression Id. */
+  int K_SHOW = 89;
+  /** RegularExpression Id. */
+  int K_SHRT = 90;
+  /** RegularExpression Id. */
+  int K_SMALLINT = 91;
+  /** RegularExpression Id. */
+  int K_SEQUENCES = 92;
+  /** RegularExpression Id. */
+  int K_STREAM = 93;
+  /** RegularExpression Id. */
+  int K_STREAMS = 94;
+  /** RegularExpression Id. */
+  int K_STRING = 95;
+  /** RegularExpression Id. */
+  int K_TABLE = 96;
+  /** RegularExpression Id. */
+  int K_TABLE_FORMAT = 97;
+  /** RegularExpression Id. */
+  int K_TABLES = 98;
+  /** RegularExpression Id. */
+  int K_TABLESPACE = 99;
+  /** RegularExpression Id. */
+  int K_TIME = 100;
+  /** RegularExpression Id. */
+  int K_TIME_AND_VALUE = 101;
+  /** RegularExpression Id. */
+  int K_TO = 102;
+  /** RegularExpression Id. */
+  int K_TUPLES = 103;
+  /** RegularExpression Id. */
+  int K_UNIQUE = 104;
+  /** RegularExpression Id. */
+  int K_UPDATE = 105;
+  /** RegularExpression Id. */
+  int K_UPSERT = 106;
+  /** RegularExpression Id. */
+  int K_UPSERT_APPEND = 107;
+  /** RegularExpression Id. */
+  int K_USE = 108;
+  /** RegularExpression Id. */
+  int K_USING = 109;
+  /** RegularExpression Id. */
+  int K_VALUE = 110;
+  /** RegularExpression Id. */
+  int K_VALUES = 111;
+  /** RegularExpression Id. */
+  int K_WHEN = 112;
+  /** RegularExpression Id. */
+  int K_WHERE = 113;
+  /** RegularExpression Id. */
+  int K_WITH = 114;
+  /** RegularExpression Id. */
+  int S_INTEGER = 115;
+  /** RegularExpression Id. */
+  int DECIMAL_LITERAL = 116;
+  /** RegularExpression Id. */
+  int HEX_LITERAL = 117;
+  /** RegularExpression Id. */
+  int S_FLOAT = 118;
+  /** RegularExpression Id. */
+  int EXPONENT = 119;
+  /** RegularExpression Id. */
+  int DIGIT = 120;
+  /** RegularExpression Id. */
+  int HEX_DIGIT = 121;
+  /** RegularExpression Id. */
+  int SIGN = 122;
+  /** RegularExpression Id. */
+  int S_STRING = 123;
+  /** RegularExpression Id. */
+  int LINE_COMMENT = 124;
+  /** RegularExpression Id. */
+  int MULTI_LINE_COMMENT = 125;
+  /** RegularExpression Id. */
+  int S_IDENTIFIER = 126;
+  /** RegularExpression Id. */
+  int LETTER = 127;
+  /** RegularExpression Id. */
+  int SPECIAL_CHARS = 128;
+  /** RegularExpression Id. */
+  int S_DOUBLE_QUOTED_IDENTIFIER = 129;
+  /** RegularExpression Id. */
+  int S_QMARK = 130;
+
+  /** Lexical state. */
+  int DEFAULT = 0;
+
+  /** Literal token values. */
+  String[] tokenImage = {
+    "<EOF>",
+    "\" \"",
+    "\"\\t\"",
+    "\"\\r\"",
+    "\"\\n\"",
+    "\"ADVANCE\"",
+    "\"AFAP\"",
+    "\"ALL\"",
+    "\"ALTER\"",
+    "\"AND\"",
+    "\"ANY\"",
+    "\"ARRAY\"",
+    "\"AS\"",
+    "\"ASC\"",
+    "\"AUTO_INCREMENT\"",
+    "\"BETWEEN\"",
+    "\"BOOLEAN\"",
+    "\"BY\"",
+    "\"BYTE\"",
+    "\"CHAR\"",
+    "\"CLOSE\"",
+    "\"COLUMN_FAMILY\"",
+    "\"COMPRESSED\"",
+    "\"CREATE\"",
+    "\"CURRENT\"",
+    "\"DATABASES\"",
+    "\"DATE\"",
+    "\"DECIMAL\"",
+    "\"DELETE\"",
+    "\"DESC\"",
+    "\"DESCRIBE\"",
+    "\"DISTINCT\"",
+    "\"DOUBLE\"",
+    "\"DROP\"",
+    "\"ENGINE\"",
+    "\"ENGINES\"",
+    "\"ENUM\"",
+    "\"ESCAPE\"",
+    "\"EXISTS\"",
+    "\"FIXED_DELAY\"",
+    "\"FLOAT\"",
+    "\"FROM\"",
+    "\"HAVING\"",
+    "\"HISTOGRAM\"",
+    "\"IF\"",
+    "\"IN\"",
+    "\"IN_KEY\"",
+    "\"INPUT\"",
+    "\"INDEX\"",
+    "\"INSERT\"",
+    "\"INSERT_APPEND\"",
+    "\"INT\"",
+    "\"INTO\"",
+    "\"IS\"",
+    "\"KEY\"",
+    "\"LIKE\"",
+    "\"LIMIT\"",
+    "\"LOAD\"",
+    "\"LONG\"",
+    "\"MERGE\"",
+    "\"MOD\"",
+    "\"NOT\"",
+    "\"NOFOLLOW\"",
+    "\"NULL\"",
+    "\"NULLS\"",
+    "\"ON\"",
+    "\"ONLY\"",
+    "\"OR\"",
+    "\"ORDER\"",
+    "\"ORIGINAL\"",
+    "\"OUT\"",
+    "\"OUTPUT\"",
+    "\"PARTITION\"",
+    "\"PORT\"",
+    "\"PRIMARY\"",
+    "\"PROTOBUF\"",
+    "\"RANGE\"",
+    "\"READ\"",
+    "\"REAL\"",
+    "\"RENAME\"",
+    "\"RESTART\"",
+    "\"REVERSE\"",
+    "\"ROW\"",
+    "\"ROWS\"",
+    "\"SAMPLE\"",
+    "\"SELECT\"",
+    "\"SEQUENCE\"",
+    "\"SET\"",
+    "\"SIZE\"",
+    "\"SHOW\"",
+    "\"SHORT\"",
+    "\"SMALLINT\"",
+    "\"SEQUENCES\"",
+    "\"STREAM\"",
+    "\"STREAMS\"",
+    "\"STRING\"",
+    "\"TABLE\"",
+    "\"TABLE_FORMAT\"",
+    "\"TABLES\"",
+    "\"TABLESPACE\"",
+    "\"TIME\"",
+    "\"TIME_AND_VALUE\"",
+    "\"TO\"",
+    "\"TUPLES\"",
+    "\"UNIQUE\"",
+    "\"UPDATE\"",
+    "\"UPSERT\"",
+    "\"UPSERT_APPEND\"",
+    "\"USE\"",
+    "\"USING\"",
+    "\"VALUE\"",
+    "\"VALUES\"",
+    "\"WHEN\"",
+    "\"WHERE\"",
+    "\"WITH\"",
+    "<S_INTEGER>",
+    "<DECIMAL_LITERAL>",
+    "<HEX_LITERAL>",
+    "<S_FLOAT>",
+    "<EXPONENT>",
+    "<DIGIT>",
+    "<HEX_DIGIT>",
+    "<SIGN>",
+    "<S_STRING>",
+    "<LINE_COMMENT>",
+    "<MULTI_LINE_COMMENT>",
+    "<S_IDENTIFIER>",
+    "<LETTER>",
+    "<SPECIAL_CHARS>",
+    "<S_DOUBLE_QUOTED_IDENTIFIER>",
+    "\"?\"",
+    "\"(\"",
+    "\")\"",
+    "\"[]\"",
+    "\",\"",
+    "\"=\"",
+    "\":\"",
+    "\"**\"",
+    "\"+\"",
+    "\"-\"",
+    "\"[\"",
+    "\"]\"",
+    "\"&\"",
+    "\"|\"",
+    "\"^\"",
+    "\"<<\"",
+    "\">>\"",
+    "\"||\"",
+    "\"*\"",
+    "\"/\"",
+    "\"!\"",
+    "\">\"",
+    "\"<\"",
+    "\"=>\"",
+  };
+
+}
+```
+
+### `StreamSqlParserTokenManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlParserTokenManager.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. StreamSqlParserTokenManager.java */
+package org.yamcs.yarch.streamsql;
+import java.util.List;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import org.yamcs.utils.parser.Token;
+import org.yamcs.utils.parser.SimpleCharStream;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.*;
+import org.yamcs.yarch.streamsql.funct.*;
+import org.yamcs.yarch.TableWriter.InsertMode;
+
+/** Token Manager. */
+public class StreamSqlParserTokenManager implements StreamSqlParserConstants
+{
+
+  /** Debug output. */
+  public  java.io.PrintStream debugStream = System.out;
+  /** Set debug output. */
+  public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
+private final int jjStopStringLiteralDfa_0(int pos, long active0, long active1, long active2)
+{
+   switch (pos)
+   {
+      case 0:
+         if ((active2 & 0x200000L) != 0L)
+            return 16;
+         if ((active2 & 0x800L) != 0L)
+            return 13;
+         if ((active0 & 0xffffffffffffffe0L) != 0L || (active1 & 0x7ffffffffffffL) != 0L)
+         {
+            jjmatchedKind = 126;
+            return 35;
+         }
+         return -1;
+      case 1:
+         if ((active0 & 0xffc00ffffff9cfe0L) != 0L || (active1 & 0x7ffbfffffffc1L) != 0L)
+         {
+            if (jjmatchedPos != 1)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 1;
+            }
+            return 35;
+         }
+         if ((active0 & 0x3ff00000063000L) != 0L || (active1 & 0x400000003eL) != 0L)
+            return 35;
+         return -1;
+      case 2:
+         if ((active0 & 0xcf878ffffffdc960L) != 0L || (active1 & 0x7efbfff73ff35L) != 0L)
+         {
+            if (jjmatchedPos != 2)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 2;
+            }
+            return 35;
+         }
+         if ((active0 & 0x400000000000L) != 0L)
+         {
+            if (jjmatchedPos != 2)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 2;
+            }
+            return 24;
+         }
+         if ((active0 & 0x3058000000002680L) != 0L || (active1 & 0x1000008c00c0L) != 0L)
+            return 35;
+         return -1;
+      case 3:
+         if ((active0 & 0x86900212640c0040L) != 0L || (active1 & 0x5003003086205L) != 0L)
+            return 35;
+         if ((active0 & 0x400000000000L) != 0L)
+         {
+            if (jjmatchedPos != 3)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 3;
+            }
+            return 24;
+         }
+         if ((active0 & 0x49078ded9bf1c920L) != 0L || (active1 & 0x2ef8ffc739db0L) != 0L)
+         {
+            if (jjmatchedPos != 3)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 3;
+            }
+            return 35;
+         }
+         return -1;
+      case 4:
+         if ((active0 & 0x400000004000L) != 0L || (active1 & 0x2000000000L) != 0L)
+         {
+            if (jjmatchedPos != 4)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 4;
+            }
+            return 24;
+         }
+         if ((active0 & 0x40060ceddbe18020L) != 0L || (active1 & 0xf80f8738da0L) != 0L)
+         {
+            if (jjmatchedPos != 4)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 4;
+            }
+            return 35;
+         }
+         if ((active0 & 0x901810000100900L) != 0L || (active1 & 0x2e00f04001011L) != 0L)
+            return 35;
+         return -1;
+      case 5:
+         if ((active0 & 0x400000000000L) != 0L)
+            return 24;
+         if ((active0 & 0x40000800cb618020L) != 0L || (active1 & 0x18430d20L) != 0L)
+         {
+            if (jjmatchedPos != 5)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 5;
+            }
+            return 35;
+         }
+         if ((active0 & 0x8000004000L) != 0L || (active1 & 0x2200000000L) != 0L)
+         {
+            if (jjmatchedPos != 5)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 5;
+            }
+            return 24;
+         }
+         if ((active0 & 0x6046d10800000L) != 0L || (active1 & 0x8f8ce0308080L) != 0L)
+            return 35;
+         return -1;
+      case 6:
+         if ((active0 & 0x809018020L) != 0L || (active1 & 0x40030400L) != 0L)
+            return 35;
+         if ((active0 & 0x4008000204000L) != 0L || (active1 & 0x82200000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 6;
+            return 24;
+         }
+         if ((active0 & 0x40000800c2400000L) != 0L || (active1 & 0x818400920L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 6;
+            return 35;
+         }
+         return -1;
+      case 7:
+         if ((active0 & 0x4008000204000L) != 0L || (active1 & 0x82200000000L) != 0L)
+         {
+            if (jjmatchedPos != 7)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 7;
+            }
+            return 24;
+         }
+         if ((active0 & 0x80002400000L) != 0L || (active1 & 0x800000100L) != 0L)
+         {
+            if (jjmatchedPos != 7)
+            {
+               jjmatchedKind = 126;
+               jjmatchedPos = 7;
+            }
+            return 35;
+         }
+         if ((active0 & 0x40000000c0000000L) != 0L || (active1 & 0x18400820L) != 0L)
+            return 35;
+         return -1;
+      case 8:
+         if ((active0 & 0x400000L) != 0L || (active1 & 0x800000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 8;
+            return 35;
+         }
+         if ((active0 & 0x4008000204000L) != 0L || (active1 & 0x82200000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 8;
+            return 24;
+         }
+         if ((active0 & 0x80002000000L) != 0L || (active1 & 0x10000100L) != 0L)
+            return 35;
+         return -1;
+      case 9:
+         if ((active0 & 0x4008000204000L) != 0L || (active1 & 0x82200000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 9;
+            return 24;
+         }
+         if ((active0 & 0x400000L) != 0L || (active1 & 0x800000000L) != 0L)
+            return 35;
+         return -1;
+      case 10:
+         if ((active0 & 0x8000000000L) != 0L)
+            return 24;
+         if ((active0 & 0x4000000204000L) != 0L || (active1 & 0x82200000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 10;
+            return 24;
+         }
+         return -1;
+      case 11:
+         if ((active1 & 0x200000000L) != 0L)
+            return 24;
+         if ((active0 & 0x4000000204000L) != 0L || (active1 & 0x82000000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 11;
+            return 24;
+         }
+         return -1;
+      case 12:
+         if ((active0 & 0x4000000200000L) != 0L || (active1 & 0x80000000000L) != 0L)
+            return 24;
+         if ((active0 & 0x4000L) != 0L || (active1 & 0x2000000000L) != 0L)
+         {
+            jjmatchedKind = 126;
+            jjmatchedPos = 12;
+            return 24;
+         }
+         return -1;
+      default :
+         return -1;
+   }
+}
+private final int jjStartNfa_0(int pos, long active0, long active1, long active2)
+{
+   return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0, active1, active2), pos + 1);
+}
+private int jjStopAtPos(int pos, int kind)
+{
+   jjmatchedKind = kind;
+   jjmatchedPos = pos;
+   return pos + 1;
+}
+private int jjMoveStringLiteralDfa0_0()
+{
+   switch(curChar)
+   {
+      case 33:
+         return jjStopAtPos(0, 150);
+      case 38:
+         return jjStopAtPos(0, 142);
+      case 40:
+         return jjStopAtPos(0, 131);
+      case 41:
+         return jjStopAtPos(0, 132);
+      case 42:
+         jjmatchedKind = 148;
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x0L, 0x200L);
+      case 43:
+         return jjStopAtPos(0, 138);
+      case 44:
+         return jjStopAtPos(0, 134);
+      case 45:
+         return jjStartNfaWithStates_0(0, 139, 13);
+      case 47:
+         return jjStartNfaWithStates_0(0, 149, 16);
+      case 58:
+         return jjStopAtPos(0, 136);
+      case 60:
+         jjmatchedKind = 152;
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x0L, 0x20000L);
+      case 61:
+         jjmatchedKind = 135;
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x0L, 0x2000000L);
+      case 62:
+         jjmatchedKind = 151;
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x0L, 0x40000L);
+      case 63:
+         return jjStopAtPos(0, 130);
+      case 91:
+         jjmatchedKind = 140;
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x0L, 0x20L);
+      case 93:
+         return jjStopAtPos(0, 141);
+      case 94:
+         return jjStopAtPos(0, 144);
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa1_0(0x7fe0L, 0x0L, 0x0L);
+      case 66:
+      case 98:
+         return jjMoveStringLiteralDfa1_0(0x78000L, 0x0L, 0x0L);
+      case 67:
+      case 99:
+         return jjMoveStringLiteralDfa1_0(0x1f80000L, 0x0L, 0x0L);
+      case 68:
+      case 100:
+         return jjMoveStringLiteralDfa1_0(0x3fe000000L, 0x0L, 0x0L);
+      case 69:
+      case 101:
+         return jjMoveStringLiteralDfa1_0(0x7c00000000L, 0x0L, 0x0L);
+      case 70:
+      case 102:
+         return jjMoveStringLiteralDfa1_0(0x38000000000L, 0x0L, 0x0L);
+      case 72:
+      case 104:
+         return jjMoveStringLiteralDfa1_0(0xc0000000000L, 0x0L, 0x0L);
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa1_0(0x3ff00000000000L, 0x0L, 0x0L);
+      case 75:
+      case 107:
+         return jjMoveStringLiteralDfa1_0(0x40000000000000L, 0x0L, 0x0L);
+      case 76:
+      case 108:
+         return jjMoveStringLiteralDfa1_0(0x780000000000000L, 0x0L, 0x0L);
+      case 77:
+      case 109:
+         return jjMoveStringLiteralDfa1_0(0x1800000000000000L, 0x0L, 0x0L);
+      case 78:
+      case 110:
+         return jjMoveStringLiteralDfa1_0(0xe000000000000000L, 0x1L, 0x0L);
+      case 79:
+      case 111:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0xfeL, 0x0L);
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0xf00L, 0x0L);
+      case 82:
+      case 114:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0xff000L, 0x0L);
+      case 83:
+      case 115:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0xfff00000L, 0x0L);
+      case 84:
+      case 116:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0xff00000000L, 0x0L);
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x3f0000000000L, 0x0L);
+      case 86:
+      case 118:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0xc00000000000L, 0x0L);
+      case 87:
+      case 119:
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x7000000000000L, 0x0L);
+      case 124:
+         jjmatchedKind = 143;
+         return jjMoveStringLiteralDfa1_0(0x0L, 0x0L, 0x80000L);
+      default :
+         return jjMoveNfa_0(0, 0);
+   }
+}
+private int jjMoveStringLiteralDfa1_0(long active0, long active1, long active2)
+{
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(0, active0, active1, active2);
+      return 1;
+   }
+   switch(curChar)
+   {
+      case 42:
+         if ((active2 & 0x200L) != 0L)
+            return jjStopAtPos(1, 137);
+         break;
+      case 60:
+         if ((active2 & 0x20000L) != 0L)
+            return jjStopAtPos(1, 145);
+         break;
+      case 62:
+         if ((active2 & 0x40000L) != 0L)
+            return jjStopAtPos(1, 146);
+         else if ((active2 & 0x2000000L) != 0L)
+            return jjStopAtPos(1, 153);
+         break;
+      case 93:
+         if ((active2 & 0x20L) != 0L)
+            return jjStopAtPos(1, 133);
+         break;
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa2_0(active0, 0x40006000000L, active1, 0xc00f00101100L, active2, 0L);
+      case 68:
+      case 100:
+         return jjMoveStringLiteralDfa2_0(active0, 0x20L, active1, 0L, active2, 0L);
+      case 69:
+      case 101:
+         return jjMoveStringLiteralDfa2_0(active0, 0x840000078008000L, active1, 0x10e3e000L, active2, 0L);
+      case 70:
+      case 102:
+         if ((active0 & 0x100000000000L) != 0L)
+            return jjStartNfaWithStates_0(1, 44, 35);
+         return jjMoveStringLiteralDfa2_0(active0, 0x40L, active1, 0L, active2, 0L);
+      case 72:
+      case 104:
+         return jjMoveStringLiteralDfa2_0(active0, 0x80000L, active1, 0x3000006000000L, active2, 0L);
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa2_0(active0, 0x180088080000000L, active1, 0x4003001000000L, active2, 0L);
+      case 76:
+      case 108:
+         return jjMoveStringLiteralDfa2_0(active0, 0x10000100180L, active1, 0L, active2, 0L);
+      case 77:
+      case 109:
+         return jjMoveStringLiteralDfa2_0(active0, 0L, active1, 0x8000000L, active2, 0L);
+      case 78:
+      case 110:
+         if ((active0 & 0x200000000000L) != 0L)
+         {
+            jjmatchedKind = 45;
+            jjmatchedPos = 1;
+         }
+         else if ((active1 & 0x2L) != 0L)
+         {
+            jjmatchedKind = 65;
+            jjmatchedPos = 1;
+         }
+         return jjMoveStringLiteralDfa2_0(active0, 0x1fc01c00000600L, active1, 0x10000000004L, active2, 0L);
+      case 79:
+      case 111:
+         if ((active1 & 0x4000000000L) != 0L)
+            return jjStartNfaWithStates_0(1, 102, 35);
+         return jjMoveStringLiteralDfa2_0(active0, 0x7600000100610000L, active1, 0xc0200L, active2, 0L);
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa2_0(active0, 0L, active1, 0xe0000000000L, active2, 0L);
+      case 82:
+      case 114:
+         if ((active1 & 0x8L) != 0L)
+         {
+            jjmatchedKind = 67;
+            jjmatchedPos = 1;
+         }
+         return jjMoveStringLiteralDfa2_0(active0, 0x20200800800L, active1, 0xc30L, active2, 0L);
+      case 83:
+      case 115:
+         if ((active0 & 0x1000L) != 0L)
+         {
+            jjmatchedKind = 12;
+            jjmatchedPos = 1;
+         }
+         else if ((active0 & 0x20000000000000L) != 0L)
+            return jjStartNfaWithStates_0(1, 53, 35);
+         return jjMoveStringLiteralDfa2_0(active0, 0x2000002000L, active1, 0x300000000000L, active2, 0L);
+      case 84:
+      case 116:
+         return jjMoveStringLiteralDfa2_0(active0, 0L, active1, 0xe0000000L, active2, 0L);
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa2_0(active0, 0x8000000001004000L, active1, 0x80000000c1L, active2, 0L);
+      case 88:
+      case 120:
+         return jjMoveStringLiteralDfa2_0(active0, 0x4000000000L, active1, 0L, active2, 0L);
+      case 89:
+      case 121:
+         if ((active0 & 0x20000L) != 0L)
+         {
+            jjmatchedKind = 17;
+            jjmatchedPos = 1;
+         }
+         return jjMoveStringLiteralDfa2_0(active0, 0x40000L, active1, 0L, active2, 0L);
+      case 124:
+         if ((active2 & 0x80000L) != 0L)
+            return jjStopAtPos(1, 147);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(0, active0, active1, active2);
+}
+private int jjMoveStringLiteralDfa2_0(long old0, long active0, long old1, long active1, long old2, long active2)
+{
+   if (((active0 &= old0) | (active1 &= old1) | (active2 &= old2)) == 0L)
+      return jjStartNfa_0(0, old0, old1, old2);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(1, active0, active1, 0L);
+      return 2;
+   }
+   switch(curChar)
+   {
+      case 95:
+         return jjMoveStringLiteralDfa3_0(active0, 0x400000000000L, active1, 0L);
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa3_0(active0, 0x200000000080040L, active1, 0x8006000L);
+      case 66:
+      case 98:
+         return jjMoveStringLiteralDfa3_0(active0, 0L, active1, 0xf00000000L);
+      case 67:
+      case 99:
+         if ((active0 & 0x2000L) != 0L)
+            return jjStartNfaWithStates_0(2, 13, 35);
+         return jjMoveStringLiteralDfa3_0(active0, 0x2008000000L, active1, 0L);
+      case 68:
+      case 100:
+         if ((active0 & 0x200L) != 0L)
+            return jjStartNfaWithStates_0(2, 9, 35);
+         else if ((active0 & 0x1000000000000000L) != 0L)
+            return jjStartNfaWithStates_0(2, 60, 35);
+         return jjMoveStringLiteralDfa3_0(active0, 0x1000000000000L, active1, 0x20000000010L);
+      case 69:
+      case 101:
+         if ((active1 & 0x100000000000L) != 0L)
+            return jjStartNfaWithStates_0(2, 108, 35);
+         return jjMoveStringLiteralDfa3_0(active0, 0x800000L, active1, 0x3000000000000L);
+      case 70:
+      case 102:
+         return jjMoveStringLiteralDfa3_0(active0, 0x4000000000000000L, active1, 0L);
+      case 71:
+      case 103:
+         return jjMoveStringLiteralDfa3_0(active0, 0xc00000000L, active1, 0L);
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa3_0(active0, 0x4000000000L, active1, 0x210000000420L);
+      case 75:
+      case 107:
+         return jjMoveStringLiteralDfa3_0(active0, 0x80000000000000L, active1, 0L);
+      case 76:
+      case 108:
+         if ((active0 & 0x80L) != 0L)
+            return jjStartNfaWithStates_0(2, 7, 35);
+         return jjMoveStringLiteralDfa3_0(active0, 0x8000000010200000L, active1, 0xc00000200005L);
+      case 77:
+      case 109:
+         return jjMoveStringLiteralDfa3_0(active0, 0x100000000400000L, active1, 0x3000100000L);
+      case 78:
+      case 110:
+         return jjMoveStringLiteralDfa3_0(active0, 0x400000000000000L, active1, 0x9000L);
+      case 79:
+      case 111:
+         return jjMoveStringLiteralDfa3_0(active0, 0x30200110000L, active1, 0x6000800L);
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa3_0(active0, 0x800000000000L, active1, 0x8000000000L);
+      case 81:
+      case 113:
+         return jjMoveStringLiteralDfa3_0(active0, 0L, active1, 0x10400000L);
+      case 82:
+      case 114:
+         return jjMoveStringLiteralDfa3_0(active0, 0x800000001000800L, active1, 0xe0000300L);
+      case 83:
+      case 115:
+         return jjMoveStringLiteralDfa3_0(active0, 0x60800e0000000L, active1, 0xc0000010000L);
+      case 84:
+      case 116:
+         if ((active0 & 0x8000000000000L) != 0L)
+         {
+            jjmatchedKind = 51;
+            jjmatchedPos = 2;
+         }
+         else if ((active0 & 0x2000000000000000L) != 0L)
+            return jjStartNfaWithStates_0(2, 61, 35);
+         else if ((active1 & 0x40L) != 0L)
+         {
+            jjmatchedKind = 70;
+            jjmatchedPos = 2;
+         }
+         else if ((active1 & 0x800000L) != 0L)
+            return jjStartNfaWithStates_0(2, 87, 35);
+         return jjMoveStringLiteralDfa3_0(active0, 0x1000000604c100L, active1, 0x4000000000080L);
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa3_0(active0, 0x1100000000L, active1, 0L);
+      case 86:
+      case 118:
+         return jjMoveStringLiteralDfa3_0(active0, 0x40000000020L, active1, 0x20000L);
+      case 87:
+      case 119:
+         if ((active1 & 0x40000L) != 0L)
+         {
+            jjmatchedKind = 82;
+            jjmatchedPos = 2;
+         }
+         return jjMoveStringLiteralDfa3_0(active0, 0L, active1, 0x80000L);
+      case 88:
+      case 120:
+         return jjMoveStringLiteralDfa3_0(active0, 0x8000000000L, active1, 0L);
+      case 89:
+      case 121:
+         if ((active0 & 0x400L) != 0L)
+            return jjStartNfaWithStates_0(2, 10, 35);
+         else if ((active0 & 0x40000000000000L) != 0L)
+            return jjStartNfaWithStates_0(2, 54, 35);
+         break;
+      case 90:
+      case 122:
+         return jjMoveStringLiteralDfa3_0(active0, 0L, active1, 0x1000000L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(1, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa3_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(1, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(2, active0, active1, 0L);
+      return 3;
+   }
+   switch(curChar)
+   {
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa4_0(active0, 0x12002800820L, active1, 0x20000008000L);
+      case 66:
+      case 98:
+         return jjMoveStringLiteralDfa4_0(active0, 0x100000000L, active1, 0L);
+      case 67:
+      case 99:
+         if ((active0 & 0x20000000L) != 0L)
+         {
+            jjmatchedKind = 29;
+            jjmatchedPos = 3;
+         }
+         return jjMoveStringLiteralDfa4_0(active0, 0x40000000L, active1, 0L);
+      case 68:
+      case 100:
+         if ((active0 & 0x200000000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 57, 35);
+         else if ((active1 & 0x2000L) != 0L)
+            return jjStartNfaWithStates_0(3, 77, 35);
+         break;
+      case 69:
+      case 101:
+         if ((active0 & 0x40000L) != 0L)
+            return jjStartNfaWithStates_0(3, 18, 35);
+         else if ((active0 & 0x4000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 26, 35);
+         else if ((active0 & 0x80000000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 55, 35);
+         else if ((active1 & 0x1000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 88, 35);
+         else if ((active1 & 0x1000000000L) != 0L)
+         {
+            jjmatchedKind = 100;
+            jjmatchedPos = 3;
+         }
+         return jjMoveStringLiteralDfa4_0(active0, 0x7008010000100L, active1, 0xc2060220010L);
+      case 71:
+      case 103:
+         if ((active0 & 0x400000000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 58, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x800000000000000L, active1, 0x1020L);
+      case 72:
+      case 104:
+         if ((active1 & 0x4000000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 114, 35);
+         break;
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa4_0(active0, 0x100040c08000000L, active1, 0x80000000L);
+      case 75:
+      case 107:
+         return jjMoveStringLiteralDfa4_0(active0, 0x400000000000L, active1, 0L);
+      case 76:
+      case 108:
+         if ((active0 & 0x8000000000000000L) != 0L)
+         {
+            jjmatchedKind = 63;
+            jjmatchedPos = 3;
+         }
+         else if ((active1 & 0x4000L) != 0L)
+            return jjStartNfaWithStates_0(3, 78, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x10000L, active1, 0x8f08000001L);
+      case 77:
+      case 109:
+         if ((active0 & 0x1000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 36, 35);
+         else if ((active0 & 0x20000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 41, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0L, active1, 0x400L);
+      case 78:
+      case 110:
+         if ((active1 & 0x1000000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 112, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0L, active1, 0x200000000000L);
+      case 79:
+      case 111:
+         if ((active0 & 0x10000000000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 52, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x4000000000004000L, active1, 0L);
+      case 80:
+      case 112:
+         if ((active0 & 0x40L) != 0L)
+            return jjStartNfaWithStates_0(3, 6, 35);
+         else if ((active0 & 0x200000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 33, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x400000L, active1, 0x100080L);
+      case 81:
+      case 113:
+         return jjMoveStringLiteralDfa4_0(active0, 0L, active1, 0x10000000000L);
+      case 82:
+      case 114:
+         if ((active0 & 0x80000L) != 0L)
+            return jjStartNfaWithStates_0(3, 19, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x1000000L, active1, 0x2000004000000L);
+      case 83:
+      case 115:
+         if ((active1 & 0x80000L) != 0L)
+            return jjStartNfaWithStates_0(3, 83, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x4000100000L, active1, 0L);
+      case 84:
+      case 116:
+         if ((active1 & 0x200L) != 0L)
+            return jjStartNfaWithStates_0(3, 73, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x80080000000L, active1, 0x10900L);
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa4_0(active0, 0x800000200000L, active1, 0xc00010400000L);
+      case 87:
+      case 119:
+         if ((active1 & 0x2000000L) != 0L)
+            return jjStartNfaWithStates_0(3, 89, 35);
+         return jjMoveStringLiteralDfa4_0(active0, 0x8000L, active1, 0L);
+      case 89:
+      case 121:
+         if ((active1 & 0x4L) != 0L)
+            return jjStartNfaWithStates_0(3, 66, 35);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(2, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa4_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(2, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(3, active0, active1, 0L);
+      return 4;
+   }
+   switch(curChar)
+   {
+      case 95:
+         return jjMoveStringLiteralDfa5_0(active0, 0x4000L, active1, 0x2000000000L);
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa5_0(active0, 0L, active1, 0x60010400L);
+      case 66:
+      case 98:
+         return jjMoveStringLiteralDfa5_0(active0, 0x2000000L, active1, 0L);
+      case 67:
+      case 99:
+         return jjMoveStringLiteralDfa5_0(active0, 0L, active1, 0x200000L);
+      case 68:
+      case 100:
+         return jjMoveStringLiteralDfa5_0(active0, 0x8000000000L, active1, 0L);
+      case 69:
+      case 101:
+         if ((active0 & 0x100000L) != 0L)
+            return jjStartNfaWithStates_0(4, 20, 35);
+         else if ((active0 & 0x800000000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 59, 35);
+         else if ((active1 & 0x1000L) != 0L)
+            return jjStartNfaWithStates_0(4, 76, 35);
+         else if ((active1 & 0x100000000L) != 0L)
+         {
+            jjmatchedKind = 96;
+            jjmatchedPos = 4;
+         }
+         else if ((active1 & 0x400000000000L) != 0L)
+         {
+            jjmatchedKind = 110;
+            jjmatchedPos = 4;
+         }
+         else if ((active1 & 0x2000000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 113, 35);
+         return jjMoveStringLiteralDfa5_0(active0, 0x400001018000L, active1, 0x808e10400000L);
+      case 71:
+      case 103:
+         if ((active1 & 0x200000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 109, 35);
+         break;
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa5_0(active0, 0x80000000L, active1, 0x120L);
+      case 76:
+      case 108:
+         return jjMoveStringLiteralDfa5_0(active0, 0x4000000100000000L, active1, 0x8100000L);
+      case 77:
+      case 109:
+         return jjMoveStringLiteralDfa5_0(active0, 0x8200000L, active1, 0x8000L);
+      case 78:
+      case 110:
+         return jjMoveStringLiteralDfa5_0(active0, 0x40c00000020L, active1, 0x80000000L);
+      case 79:
+      case 111:
+         return jjMoveStringLiteralDfa5_0(active0, 0x80000000000L, active1, 0x800L);
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa5_0(active0, 0x2000000000L, active1, 0L);
+      case 82:
+      case 114:
+         if ((active0 & 0x100L) != 0L)
+            return jjStartNfaWithStates_0(4, 8, 35);
+         else if ((active1 & 0x10L) != 0L)
+            return jjStartNfaWithStates_0(4, 68, 35);
+         return jjMoveStringLiteralDfa5_0(active0, 0x6000040400000L, active1, 0xc0000020000L);
+      case 83:
+      case 115:
+         if ((active1 & 0x1L) != 0L)
+            return jjStartNfaWithStates_0(4, 64, 35);
+         break;
+      case 84:
+      case 116:
+         if ((active0 & 0x10000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 40, 35);
+         else if ((active0 & 0x800000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 47, 35);
+         else if ((active0 & 0x100000000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 56, 35);
+         else if ((active1 & 0x4000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 90, 35);
+         return jjMoveStringLiteralDfa5_0(active0, 0x4010800000L, active1, 0x20000000000L);
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa5_0(active0, 0L, active1, 0x10000000080L);
+      case 88:
+      case 120:
+         if ((active0 & 0x1000000000000L) != 0L)
+            return jjStartNfaWithStates_0(4, 48, 35);
+         break;
+      case 89:
+      case 121:
+         if ((active0 & 0x800L) != 0L)
+            return jjStartNfaWithStates_0(4, 11, 35);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(3, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa5_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(3, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(4, active0, active1, 0L);
+      return 5;
+   }
+   switch(curChar)
+   {
+      case 95:
+         return jjMoveStringLiteralDfa6_0(active0, 0x8000000000L, active1, 0x200000000L);
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa6_0(active0, 0xa010000L, active1, 0x2000000000L);
+      case 66:
+      case 98:
+         return jjMoveStringLiteralDfa6_0(active0, 0L, active1, 0x800L);
+      case 67:
+      case 99:
+         return jjMoveStringLiteralDfa6_0(active0, 0x20L, active1, 0L);
+      case 69:
+      case 101:
+         if ((active0 & 0x800000L) != 0L)
+            return jjStartNfaWithStates_0(5, 23, 35);
+         else if ((active0 & 0x10000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 28, 35);
+         else if ((active0 & 0x100000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 32, 35);
+         else if ((active0 & 0x400000000L) != 0L)
+         {
+            jjmatchedKind = 34;
+            jjmatchedPos = 5;
+         }
+         else if ((active0 & 0x2000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 37, 35);
+         else if ((active1 & 0x8000L) != 0L)
+            return jjStartNfaWithStates_0(5, 79, 35);
+         else if ((active1 & 0x100000L) != 0L)
+            return jjStartNfaWithStates_0(5, 84, 35);
+         else if ((active1 & 0x10000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 104, 35);
+         else if ((active1 & 0x20000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 105, 35);
+         return jjMoveStringLiteralDfa6_0(active0, 0x800408000L, active1, 0L);
+      case 71:
+      case 103:
+         if ((active0 & 0x40000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 42, 35);
+         else if ((active1 & 0x80000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 95, 35);
+         return jjMoveStringLiteralDfa6_0(active0, 0x80000000000L, active1, 0L);
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa6_0(active0, 0x40004000L, active1, 0x8000000L);
+      case 76:
+      case 108:
+         return jjMoveStringLiteralDfa6_0(active0, 0x4000000000000000L, active1, 0L);
+      case 77:
+      case 109:
+         if ((active1 & 0x20000000L) != 0L)
+         {
+            jjmatchedKind = 93;
+            jjmatchedPos = 5;
+         }
+         return jjMoveStringLiteralDfa6_0(active0, 0L, active1, 0x40000000L);
+      case 78:
+      case 110:
+         return jjMoveStringLiteralDfa6_0(active0, 0x81200000L, active1, 0x10400020L);
+      case 82:
+      case 114:
+         return jjMoveStringLiteralDfa6_0(active0, 0L, active1, 0x10400L);
+      case 83:
+      case 115:
+         if ((active0 & 0x4000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 38, 35);
+         else if ((active1 & 0x400000000L) != 0L)
+         {
+            jjmatchedKind = 98;
+            jjmatchedPos = 5;
+         }
+         else if ((active1 & 0x8000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 103, 35);
+         else if ((active1 & 0x800000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 111, 35);
+         return jjMoveStringLiteralDfa6_0(active0, 0L, active1, 0x800020000L);
+      case 84:
+      case 116:
+         if ((active0 & 0x2000000000000L) != 0L)
+         {
+            jjmatchedKind = 49;
+            jjmatchedPos = 5;
+         }
+         else if ((active1 & 0x80L) != 0L)
+            return jjStartNfaWithStates_0(5, 71, 35);
+         else if ((active1 & 0x200000L) != 0L)
+            return jjStartNfaWithStates_0(5, 85, 35);
+         else if ((active1 & 0x40000000000L) != 0L)
+         {
+            jjmatchedKind = 106;
+            jjmatchedPos = 5;
+         }
+         return jjMoveStringLiteralDfa6_0(active0, 0x4000000000000L, active1, 0x80000000100L);
+      case 89:
+      case 121:
+         if ((active0 & 0x400000000000L) != 0L)
+            return jjStartNfaWithStates_0(5, 46, 24);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(4, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa6_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(4, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(5, active0, active1, 0L);
+      return 6;
+   }
+   switch(curChar)
+   {
+      case 95:
+         return jjMoveStringLiteralDfa7_0(active0, 0x4000000200000L, active1, 0x80000000000L);
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa7_0(active0, 0L, active1, 0x20L);
+      case 66:
+      case 98:
+         return jjMoveStringLiteralDfa7_0(active0, 0x40000000L, active1, 0L);
+      case 67:
+      case 99:
+         return jjMoveStringLiteralDfa7_0(active0, 0x80000000L, active1, 0x10400000L);
+      case 68:
+      case 100:
+         return jjMoveStringLiteralDfa7_0(active0, 0x8000000000L, active1, 0L);
+      case 69:
+      case 101:
+         if ((active0 & 0x20L) != 0L)
+            return jjStartNfaWithStates_0(6, 5, 35);
+         else if ((active1 & 0x20000L) != 0L)
+            return jjStartNfaWithStates_0(6, 81, 35);
+         break;
+      case 70:
+      case 102:
+         return jjMoveStringLiteralDfa7_0(active0, 0L, active1, 0x200000000L);
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa7_0(active0, 0L, active1, 0x100L);
+      case 76:
+      case 108:
+         if ((active0 & 0x8000000L) != 0L)
+            return jjStartNfaWithStates_0(6, 27, 35);
+         break;
+      case 78:
+      case 110:
+         if ((active0 & 0x8000L) != 0L)
+            return jjStartNfaWithStates_0(6, 15, 35);
+         else if ((active0 & 0x10000L) != 0L)
+            return jjStartNfaWithStates_0(6, 16, 35);
+         return jjMoveStringLiteralDfa7_0(active0, 0x4000L, active1, 0x2008000000L);
+      case 79:
+      case 111:
+         return jjMoveStringLiteralDfa7_0(active0, 0x4000000000000000L, active1, 0L);
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa7_0(active0, 0L, active1, 0x800000000L);
+      case 82:
+      case 114:
+         return jjMoveStringLiteralDfa7_0(active0, 0x80000000000L, active1, 0L);
+      case 83:
+      case 115:
+         if ((active0 & 0x800000000L) != 0L)
+            return jjStartNfaWithStates_0(6, 35, 35);
+         else if ((active1 & 0x40000000L) != 0L)
+            return jjStartNfaWithStates_0(6, 94, 35);
+         return jjMoveStringLiteralDfa7_0(active0, 0x2400000L, active1, 0L);
+      case 84:
+      case 116:
+         if ((active0 & 0x1000000L) != 0L)
+            return jjStartNfaWithStates_0(6, 24, 35);
+         else if ((active1 & 0x10000L) != 0L)
+            return jjStartNfaWithStates_0(6, 80, 35);
+         break;
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa7_0(active0, 0L, active1, 0x800L);
+      case 89:
+      case 121:
+         if ((active1 & 0x400L) != 0L)
+            return jjStartNfaWithStates_0(6, 74, 35);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(5, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa7_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(5, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(6, active0, active1, 0L);
+      return 7;
+   }
+   switch(curChar)
+   {
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa8_0(active0, 0x4080000000000L, active1, 0x80800000000L);
+      case 67:
+      case 99:
+         return jjMoveStringLiteralDfa8_0(active0, 0x4000L, active1, 0L);
+      case 68:
+      case 100:
+         return jjMoveStringLiteralDfa8_0(active0, 0L, active1, 0x2000000000L);
+      case 69:
+      case 101:
+         if ((active0 & 0x40000000L) != 0L)
+            return jjStartNfaWithStates_0(7, 30, 35);
+         else if ((active1 & 0x400000L) != 0L)
+         {
+            jjmatchedKind = 86;
+            jjmatchedPos = 7;
+         }
+         return jjMoveStringLiteralDfa8_0(active0, 0x8002000000L, active1, 0x10000000L);
+      case 70:
+      case 102:
+         if ((active1 & 0x800L) != 0L)
+            return jjStartNfaWithStates_0(7, 75, 35);
+         return jjMoveStringLiteralDfa8_0(active0, 0x200000L, active1, 0L);
+      case 76:
+      case 108:
+         if ((active1 & 0x20L) != 0L)
+            return jjStartNfaWithStates_0(7, 69, 35);
+         break;
+      case 79:
+      case 111:
+         return jjMoveStringLiteralDfa8_0(active0, 0L, active1, 0x200000100L);
+      case 83:
+      case 115:
+         return jjMoveStringLiteralDfa8_0(active0, 0x400000L, active1, 0L);
+      case 84:
+      case 116:
+         if ((active0 & 0x80000000L) != 0L)
+            return jjStartNfaWithStates_0(7, 31, 35);
+         else if ((active1 & 0x8000000L) != 0L)
+            return jjStartNfaWithStates_0(7, 91, 35);
+         break;
+      case 87:
+      case 119:
+         if ((active0 & 0x4000000000000000L) != 0L)
+            return jjStartNfaWithStates_0(7, 62, 35);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(6, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa8_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(6, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(7, active0, active1, 0L);
+      return 8;
+   }
+   switch(curChar)
+   {
+      case 95:
+         return jjMoveStringLiteralDfa9_0(active0, 0L, active1, 0x2000000000L);
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa9_0(active0, 0x200000L, active1, 0L);
+      case 67:
+      case 99:
+         return jjMoveStringLiteralDfa9_0(active0, 0L, active1, 0x800000000L);
+      case 69:
+      case 101:
+         return jjMoveStringLiteralDfa9_0(active0, 0x400000L, active1, 0L);
+      case 76:
+      case 108:
+         return jjMoveStringLiteralDfa9_0(active0, 0x8000000000L, active1, 0L);
+      case 77:
+      case 109:
+         if ((active0 & 0x80000000000L) != 0L)
+            return jjStartNfaWithStates_0(8, 43, 35);
+         break;
+      case 78:
+      case 110:
+         if ((active1 & 0x100L) != 0L)
+            return jjStartNfaWithStates_0(8, 72, 35);
+         break;
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa9_0(active0, 0x4000000000000L, active1, 0x80000000000L);
+      case 82:
+      case 114:
+         return jjMoveStringLiteralDfa9_0(active0, 0x4000L, active1, 0x200000000L);
+      case 83:
+      case 115:
+         if ((active0 & 0x2000000L) != 0L)
+            return jjStartNfaWithStates_0(8, 25, 35);
+         else if ((active1 & 0x10000000L) != 0L)
+            return jjStartNfaWithStates_0(8, 92, 35);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(7, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa9_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(7, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(8, active0, active1, 0L);
+      return 9;
+   }
+   switch(curChar)
+   {
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa10_0(active0, 0x8000000000L, active1, 0L);
+      case 68:
+      case 100:
+         if ((active0 & 0x400000L) != 0L)
+            return jjStartNfaWithStates_0(9, 22, 35);
+         break;
+      case 69:
+      case 101:
+         if ((active1 & 0x800000000L) != 0L)
+            return jjStartNfaWithStates_0(9, 99, 35);
+         return jjMoveStringLiteralDfa10_0(active0, 0x4000L, active1, 0L);
+      case 77:
+      case 109:
+         return jjMoveStringLiteralDfa10_0(active0, 0x200000L, active1, 0x200000000L);
+      case 80:
+      case 112:
+         return jjMoveStringLiteralDfa10_0(active0, 0x4000000000000L, active1, 0x80000000000L);
+      case 86:
+      case 118:
+         return jjMoveStringLiteralDfa10_0(active0, 0L, active1, 0x2000000000L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(8, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa10_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(8, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(9, active0, active1, 0L);
+      return 10;
+   }
+   switch(curChar)
+   {
+      case 65:
+      case 97:
+         return jjMoveStringLiteralDfa11_0(active0, 0L, active1, 0x2200000000L);
+      case 69:
+      case 101:
+         return jjMoveStringLiteralDfa11_0(active0, 0x4000000000000L, active1, 0x80000000000L);
+      case 73:
+      case 105:
+         return jjMoveStringLiteralDfa11_0(active0, 0x200000L, active1, 0L);
+      case 77:
+      case 109:
+         return jjMoveStringLiteralDfa11_0(active0, 0x4000L, active1, 0L);
+      case 89:
+      case 121:
+         if ((active0 & 0x8000000000L) != 0L)
+            return jjStartNfaWithStates_0(10, 39, 24);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(9, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa11_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(9, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(10, active0, active1, 0L);
+      return 11;
+   }
+   switch(curChar)
+   {
+      case 69:
+      case 101:
+         return jjMoveStringLiteralDfa12_0(active0, 0x4000L, active1, 0L);
+      case 76:
+      case 108:
+         return jjMoveStringLiteralDfa12_0(active0, 0x200000L, active1, 0x2000000000L);
+      case 78:
+      case 110:
+         return jjMoveStringLiteralDfa12_0(active0, 0x4000000000000L, active1, 0x80000000000L);
+      case 84:
+      case 116:
+         if ((active1 & 0x200000000L) != 0L)
+            return jjStartNfaWithStates_0(11, 97, 24);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(10, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa12_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(10, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(11, active0, active1, 0L);
+      return 12;
+   }
+   switch(curChar)
+   {
+      case 68:
+      case 100:
+         if ((active0 & 0x4000000000000L) != 0L)
+            return jjStartNfaWithStates_0(12, 50, 24);
+         else if ((active1 & 0x80000000000L) != 0L)
+            return jjStartNfaWithStates_0(12, 107, 24);
+         break;
+      case 78:
+      case 110:
+         return jjMoveStringLiteralDfa13_0(active0, 0x4000L, active1, 0L);
+      case 85:
+      case 117:
+         return jjMoveStringLiteralDfa13_0(active0, 0L, active1, 0x2000000000L);
+      case 89:
+      case 121:
+         if ((active0 & 0x200000L) != 0L)
+            return jjStartNfaWithStates_0(12, 21, 24);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(11, active0, active1, 0L);
+}
+private int jjMoveStringLiteralDfa13_0(long old0, long active0, long old1, long active1)
+{
+   if (((active0 &= old0) | (active1 &= old1)) == 0L)
+      return jjStartNfa_0(11, old0, old1, 0L);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(12, active0, active1, 0L);
+      return 13;
+   }
+   switch(curChar)
+   {
+      case 69:
+      case 101:
+         if ((active1 & 0x2000000000L) != 0L)
+            return jjStartNfaWithStates_0(13, 101, 24);
+         break;
+      case 84:
+      case 116:
+         if ((active0 & 0x4000L) != 0L)
+            return jjStartNfaWithStates_0(13, 14, 24);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(12, active0, active1, 0L);
+}
+private int jjStartNfaWithStates_0(int pos, int kind, int state)
+{
+   jjmatchedKind = kind;
+   jjmatchedPos = pos;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) { return pos + 1; }
+   return jjMoveNfa_0(state, pos + 1);
+}
+static final long[] jjbitVec0 = {
+   0x0L, 0x0L, 0xffffffffffffffffL, 0xffffffffffffffffL
+};
+private int jjMoveNfa_0(int startState, int curPos)
+{
+   int startsAt = 0;
+   jjnewStateCnt = 35;
+   int i = 1;
+   jjstateSet[0] = startState;
+   int kind = 0x7fffffff;
+   for (;;)
+   {
+      if (++jjround == 0x7fffffff)
+         ReInitRounds();
+      if (curChar < 64)
+      {
+         long l = 1L << curChar;
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 35:
+               case 24:
+                  if ((0x3ff401800000000L & l) == 0L)
+                     break;
+                  if (kind > 126)
+                     kind = 126;
+                  jjCheckNAdd(24);
+                  break;
+               case 0:
+                  if ((0x3ff000000000000L & l) != 0L)
+                  {
+                     if (kind > 115)
+                        kind = 115;
+                     jjCheckNAddStates(0, 5);
+                  }
+                  else if (curChar == 34)
+                     jjCheckNAddTwoStates(26, 27);
+                  else if (curChar == 47)
+                     jjstateSet[jjnewStateCnt++] = 16;
+                  else if (curChar == 45)
+                     jjstateSet[jjnewStateCnt++] = 13;
+                  else if (curChar == 39)
+                     jjCheckNAddTwoStates(9, 10);
+                  else if (curChar == 46)
+                     jjCheckNAdd(4);
+                  if (curChar == 48)
+                     jjstateSet[jjnewStateCnt++] = 1;
+                  break;
+               case 2:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 115)
+                     kind = 115;
+                  jjstateSet[jjnewStateCnt++] = 2;
+                  break;
+               case 3:
+                  if (curChar == 46)
+                     jjCheckNAdd(4);
+                  break;
+               case 4:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 118)
+                     kind = 118;
+                  jjCheckNAddStates(6, 8);
+                  break;
+               case 5:
+                  if ((0x280000000000L & l) != 0L)
+                     jjCheckNAdd(6);
+                  break;
+               case 7:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 118)
+                     kind = 118;
+                  jjstateSet[jjnewStateCnt++] = 7;
+                  break;
+               case 8:
+                  if (curChar == 39)
+                     jjCheckNAddTwoStates(9, 10);
+                  break;
+               case 9:
+                  if ((0xffffff7fffffffffL & l) != 0L)
+                     jjCheckNAddTwoStates(9, 10);
+                  break;
+               case 10:
+                  if (curChar != 39)
+                     break;
+                  if (kind > 123)
+                     kind = 123;
+                  jjstateSet[jjnewStateCnt++] = 11;
+                  break;
+               case 11:
+                  if (curChar == 39)
+                     jjCheckNAddTwoStates(12, 10);
+                  break;
+               case 12:
+                  if ((0xffffff7fffffffffL & l) != 0L)
+                     jjCheckNAddTwoStates(12, 10);
+                  break;
+               case 13:
+                  if (curChar != 45)
+                     break;
+                  if (kind > 124)
+                     kind = 124;
+                  jjCheckNAdd(14);
+                  break;
+               case 14:
+                  if ((0xffffffffffffdbffL & l) == 0L)
+                     break;
+                  if (kind > 124)
+                     kind = 124;
+                  jjCheckNAdd(14);
+                  break;
+               case 15:
+                  if (curChar == 45)
+                     jjstateSet[jjnewStateCnt++] = 13;
+                  break;
+               case 16:
+                  if (curChar == 42)
+                     jjCheckNAddTwoStates(17, 18);
+                  break;
+               case 17:
+                  if ((0xfffffbffffffffffL & l) != 0L)
+                     jjCheckNAddTwoStates(17, 18);
+                  break;
+               case 18:
+                  if (curChar == 42)
+                     jjCheckNAddStates(9, 11);
+                  break;
+               case 19:
+                  if ((0xffff7bffffffffffL & l) != 0L)
+                     jjCheckNAddTwoStates(20, 18);
+                  break;
+               case 20:
+                  if ((0xfffffbffffffffffL & l) != 0L)
+                     jjCheckNAddTwoStates(20, 18);
+                  break;
+               case 21:
+                  if (curChar == 47 && kind > 125)
+                     kind = 125;
+                  break;
+               case 22:
+                  if (curChar == 47)
+                     jjstateSet[jjnewStateCnt++] = 16;
+                  break;
+               case 25:
+                  if (curChar == 34)
+                     jjCheckNAddTwoStates(26, 27);
+                  break;
+               case 26:
+                  if ((0xfffffffbffffdbffL & l) != 0L)
+                     jjCheckNAddTwoStates(26, 27);
+                  break;
+               case 27:
+                  if (curChar == 34 && kind > 129)
+                     kind = 129;
+                  break;
+               case 28:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 115)
+                     kind = 115;
+                  jjCheckNAddStates(0, 5);
+                  break;
+               case 29:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 115)
+                     kind = 115;
+                  jjCheckNAdd(29);
+                  break;
+               case 30:
+                  if ((0x3ff000000000000L & l) != 0L)
+                     jjCheckNAddTwoStates(30, 3);
+                  break;
+               case 31:
+                  if ((0x3ff000000000000L & l) != 0L)
+                     jjCheckNAddStates(12, 14);
+                  break;
+               case 32:
+                  if ((0x280000000000L & l) != 0L)
+                     jjCheckNAdd(33);
+                  break;
+               case 34:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 118)
+                     kind = 118;
+                  jjstateSet[jjnewStateCnt++] = 34;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else if (curChar < 128)
+      {
+         long l = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 35:
+                  if ((0x7fffffe87fffffeL & l) != 0L)
+                  {
+                     if (kind > 126)
+                        kind = 126;
+                     jjCheckNAdd(24);
+                  }
+                  if ((0x7fffffe07fffffeL & l) != 0L)
+                  {
+                     if (kind > 126)
+                        kind = 126;
+                     jjCheckNAddTwoStates(23, 24);
+                  }
+                  break;
+               case 0:
+               case 23:
+                  if ((0x7fffffe07fffffeL & l) == 0L)
+                     break;
+                  if (kind > 126)
+                     kind = 126;
+                  jjCheckNAddTwoStates(23, 24);
+                  break;
+               case 1:
+                  if ((0x100000001000000L & l) != 0L)
+                     jjCheckNAdd(2);
+                  break;
+               case 2:
+                  if ((0x7e0000007eL & l) == 0L)
+                     break;
+                  if (kind > 115)
+                     kind = 115;
+                  jjCheckNAdd(2);
+                  break;
+               case 6:
+                  if ((0x2000000020L & l) != 0L)
+                     jjstateSet[jjnewStateCnt++] = 7;
+                  break;
+               case 9:
+                  jjCheckNAddTwoStates(9, 10);
+                  break;
+               case 12:
+                  jjCheckNAddTwoStates(12, 10);
+                  break;
+               case 14:
+                  if (kind > 124)
+                     kind = 124;
+                  jjstateSet[jjnewStateCnt++] = 14;
+                  break;
+               case 17:
+                  jjCheckNAddTwoStates(17, 18);
+                  break;
+               case 19:
+               case 20:
+                  jjCheckNAddTwoStates(20, 18);
+                  break;
+               case 24:
+                  if ((0x7fffffe87fffffeL & l) == 0L)
+                     break;
+                  if (kind > 126)
+                     kind = 126;
+                  jjCheckNAdd(24);
+                  break;
+               case 26:
+                  jjAddStates(15, 16);
+                  break;
+               case 33:
+                  if ((0x2000000020L & l) != 0L)
+                     jjstateSet[jjnewStateCnt++] = 34;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else
+      {
+         int i2 = (curChar & 0xff) >> 6;
+         long l2 = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 9:
+                  if ((jjbitVec0[i2] & l2) != 0L)
+                     jjCheckNAddTwoStates(9, 10);
+                  break;
+               case 12:
+                  if ((jjbitVec0[i2] & l2) != 0L)
+                     jjCheckNAddTwoStates(12, 10);
+                  break;
+               case 14:
+                  if ((jjbitVec0[i2] & l2) == 0L)
+                     break;
+                  if (kind > 124)
+                     kind = 124;
+                  jjstateSet[jjnewStateCnt++] = 14;
+                  break;
+               case 17:
+                  if ((jjbitVec0[i2] & l2) != 0L)
+                     jjCheckNAddTwoStates(17, 18);
+                  break;
+               case 19:
+               case 20:
+                  if ((jjbitVec0[i2] & l2) != 0L)
+                     jjCheckNAddTwoStates(20, 18);
+                  break;
+               case 26:
+                  if ((jjbitVec0[i2] & l2) != 0L)
+                     jjAddStates(15, 16);
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      if (kind != 0x7fffffff)
+      {
+         jjmatchedKind = kind;
+         jjmatchedPos = curPos;
+         kind = 0x7fffffff;
+      }
+      ++curPos;
+      if ((i = jjnewStateCnt) == (startsAt = 35 - (jjnewStateCnt = startsAt)))
+         return curPos;
+      try { curChar = input_stream.readChar(); }
+      catch(java.io.IOException e) { return curPos; }
+   }
+}
+static final int[] jjnextStates = {
+   29, 30, 3, 31, 32, 33, 4, 5, 6, 18, 19, 21, 31, 32, 33, 26, 
+   27, 
+};
+
+/** Token literal values. */
+public static final String[] jjstrLiteralImages = {
+"", null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+null, null, null, null, null, "\77", "\50", "\51", "\133\135", "\54", "\75", "\72", 
+"\52\52", "\53", "\55", "\133", "\135", "\46", "\174", "\136", "\74\74", "\76\76", 
+"\174\174", "\52", "\57", "\41", "\76", "\74", "\75\76", };
+
+/** Lexer state names. */
+public static final String[] lexStateNames = {
+   "DEFAULT",
+};
+static final long[] jjtoToken = {
+   0xffffffffffffffe1L, 0x484fffffffffffffL, 0x3fffffeL, 
+};
+static final long[] jjtoSkip = {
+   0x1eL, 0x3000000000000000L, 0x0L, 
+};
+static final long[] jjtoSpecial = {
+   0x0L, 0x3000000000000000L, 0x0L, 
+};
+protected SimpleCharStream input_stream;
+private final int[] jjrounds = new int[35];
+private final int[] jjstateSet = new int[70];
+protected char curChar;
+/** Constructor. */
+public StreamSqlParserTokenManager(SimpleCharStream stream){
+   if (SimpleCharStream.staticFlag)
+      throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
+   input_stream = stream;
+}
+
+/** Constructor. */
+public StreamSqlParserTokenManager(SimpleCharStream stream, int lexState){
+   this(stream);
+   SwitchTo(lexState);
+}
+
+/** Reinitialise parser. */
+public void ReInit(SimpleCharStream stream)
+{
+   jjmatchedPos = jjnewStateCnt = 0;
+   curLexState = defaultLexState;
+   input_stream = stream;
+   ReInitRounds();
+}
+private void ReInitRounds()
+{
+   int i;
+   jjround = 0x80000001;
+   for (i = 35; i-- > 0;)
+      jjrounds[i] = 0x80000000;
+}
+
+/** Reinitialise parser. */
+public void ReInit(SimpleCharStream stream, int lexState)
+{
+   ReInit(stream);
+   SwitchTo(lexState);
+}
+
+/** Switch to specified lex state. */
+public void SwitchTo(int lexState)
+{
+   if (lexState >= 1 || lexState < 0)
+      throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
+   else
+      curLexState = lexState;
+}
+
+protected Token jjFillToken()
+{
+   final Token t;
+   final String curTokenImage;
+   final int beginLine;
+   final int endLine;
+   final int beginColumn;
+   final int endColumn;
+   String im = jjstrLiteralImages[jjmatchedKind];
+   curTokenImage = (im == null) ? input_stream.GetImage() : im;
+   beginLine = input_stream.getBeginLine();
+   beginColumn = input_stream.getBeginColumn();
+   endLine = input_stream.getEndLine();
+   endColumn = input_stream.getEndColumn();
+   t = Token.newToken(jjmatchedKind, curTokenImage);
+
+   t.beginLine = beginLine;
+   t.endLine = endLine;
+   t.beginColumn = beginColumn;
+   t.endColumn = endColumn;
+
+   return t;
+}
+
+int curLexState = 0;
+int defaultLexState = 0;
+int jjnewStateCnt;
+int jjround;
+int jjmatchedPos;
+int jjmatchedKind;
+
+/** Get the next Token. */
+public Token getNextToken() 
+{
+  Token specialToken = null;
+  Token matchedToken;
+  int curPos = 0;
+
+  EOFLoop :
+  for (;;)
+  {
+   try
+   {
+      curChar = input_stream.BeginToken();
+   }
+   catch(java.io.IOException e)
+   {
+      jjmatchedKind = 0;
+      matchedToken = jjFillToken();
+      matchedToken.specialToken = specialToken;
+      return matchedToken;
+   }
+
+   try { input_stream.backup(0);
+      while (curChar <= 32 && (0x100002600L & (1L << curChar)) != 0L)
+         curChar = input_stream.BeginToken();
+   }
+   catch (java.io.IOException e1) { continue EOFLoop; }
+   jjmatchedKind = 0x7fffffff;
+   jjmatchedPos = 0;
+   curPos = jjMoveStringLiteralDfa0_0();
+   if (jjmatchedKind != 0x7fffffff)
+   {
+      if (jjmatchedPos + 1 < curPos)
+         input_stream.backup(curPos - jjmatchedPos - 1);
+      if ((jjtoToken[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
+      {
+         matchedToken = jjFillToken();
+         matchedToken.specialToken = specialToken;
+         return matchedToken;
+      }
+      else
+      {
+         if ((jjtoSpecial[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
+         {
+            matchedToken = jjFillToken();
+            if (specialToken == null)
+               specialToken = matchedToken;
+            else
+            {
+               matchedToken.specialToken = specialToken;
+               specialToken = (specialToken.next = matchedToken);
+            }
+         }
+         continue EOFLoop;
+      }
+   }
+   int error_line = input_stream.getEndLine();
+   int error_column = input_stream.getEndColumn();
+   String error_after = null;
+   boolean EOFSeen = false;
+   try { input_stream.readChar(); input_stream.backup(1); }
+   catch (java.io.IOException e1) {
+      EOFSeen = true;
+      error_after = curPos <= 1 ? "" : input_stream.GetImage();
+      if (curChar == '\n' || curChar == '\r') {
+         error_line++;
+         error_column = 0;
+      }
+      else
+         error_column++;
+   }
+   if (!EOFSeen) {
+      input_stream.backup(1);
+      error_after = curPos <= 1 ? "" : input_stream.GetImage();
+   }
+   throw new TokenMgrError(EOFSeen, curLexState, error_line, error_column, error_after, curChar, TokenMgrError.LEXICAL_ERROR);
+  }
+}
+
+private void jjCheckNAdd(int state)
+{
+   if (jjrounds[state] != jjround)
+   {
+      jjstateSet[jjnewStateCnt++] = state;
+      jjrounds[state] = jjround;
+   }
+}
+private void jjAddStates(int start, int end)
+{
+   do {
+      jjstateSet[jjnewStateCnt++] = jjnextStates[start];
+   } while (start++ != end);
+}
+private void jjCheckNAddTwoStates(int state1, int state2)
+{
+   jjCheckNAdd(state1);
+   jjCheckNAdd(state2);
+}
+
+private void jjCheckNAddStates(int start, int end)
+{
+   do {
+      jjCheckNAdd(jjnextStates[start]);
+   } while (start++ != end);
+}
+
+}
+```
+
+### `StreamSqlResult.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlResult.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.Iterator;
+
+import org.yamcs.yarch.Tuple;
+
+public interface StreamSqlResult extends Iterator<Tuple> {
+
+   /**
+    * Close the associated resources
+    */
+   void close();
+}
+```
+
+### `StreamSqlResultList.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlResultList.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.yamcs.yarch.Tuple;
+
+/**
+ * StreamSqlResult which stores a list of results
+ * @author nm
+ *
+ */
+public class StreamSqlResultList implements StreamSqlResult {
+
+    List<Tuple> list = new ArrayList<>();
+    Iterator<Tuple> iterator;
+    
+    StreamSqlResultList init() {
+        iterator = list.iterator();
+        return this;
+    }
+    
+    public void addTuple(Tuple t) {
+        list.add(t);
+    }
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public Tuple next() {
+        return iterator.next();
+    }
+
+    @Override
+    public void close() {
+        //no resource to release (the list will be garbage collected)
+    }
+    
+}
+```
+
+### `StreamSqlStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/StreamSqlStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * Tag interface for all StreamSQL statements.
+ */
+public interface StreamSqlStatement {
+    /**
+     * Execute query and limit the number of results returned.
+     * <p>
+     * Note that the update/delete/drop table queries that return one row are executed even if the limit is 0. The
+     * output however is suppressed when the limit is set to 0.
+     *
+
+     * @param ydb
+     * @param resultListener
+     * @param limit
+     * @throws StreamSqlException
+     */
+    void execute(YarchDatabaseInstance ydb, ResultListener resultListener, long limit) throws StreamSqlException;
+
+    /**
+     * Execute query and send the results to the result listener.
+     *
+     * @param ydb
+     * @param resultListener
+     * @throws StreamSqlException
+     */
+    default void execute(YarchDatabaseInstance ydb, ResultListener resultListener) throws StreamSqlException {
+        execute(ydb, resultListener, Long.MAX_VALUE);
+    }
+
+    /**
+     * Execute query and return a result. The result can be closed at any time.
+
+     * @param ydb
+     * @return
+     * @throws StreamSqlException
+     */
+    StreamSqlResult execute(YarchDatabaseInstance ydb) throws StreamSqlException;
+}
+```
+
+### `TableWalkerBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/TableWalkerBuilder.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.logging.Log;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.DbRange;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.FilterableTarget;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWalker;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+import com.google.common.collect.BiMap;
+
+public class TableWalkerBuilder implements FilterableTarget {
+    static Log log = new Log(TableWalkerBuilder.class);
+
+    final private ExecutionContext ctx;
+    final private YarchDatabaseInstance ydb;
+    final private TableDefinition tableDefinition;
+
+    private Set<Object> partitionValueFilter;
+    TimeInterval partitionTimeFilter = new TimeInterval();
+
+    // filter on primary key
+    private DbRange pkRange;
+
+    // filter on secondary key
+    private DbRange skRange;
+
+    private boolean ascending = true;
+    private boolean follow = false;
+
+    public TableWalkerBuilder(ExecutionContext ctx, TableDefinition tableDefinition) {
+        this.ctx = ctx;
+        this.ydb = ctx.getDb();
+        this.tableDefinition = tableDefinition;
+    }
+
+    @Override
+    public void addRelOpFilter(ColumnExpression cexpr, RelOp relOp, Object value) throws StreamSqlException {
+        String columnName = cexpr.getName();
+
+        TableColumnDefinition col0 = tableDefinition.getKeyDefinition().get(0);
+        if (col0.getName().equals(columnName)) {
+            byte[] val = null;
+            Object columnValue = null;
+            try {
+                columnValue = DataType.castAs(col0.getType(), value);
+                val = col0.getSerializer().toByteArray(columnValue);
+            } catch (IllegalArgumentException e) {
+                throw new StreamSqlException(ErrCode.ERROR, e.getMessage());
+            }
+            if (pkRange == null) {
+                pkRange = new DbRange();
+            }
+            addToRange(pkRange, relOp, val);
+
+            if (tableDefinition.isPartitionedByTime()) {
+                addPartitionTimeFilter(relOp, (Long) columnValue);
+            }
+        } else {
+            List<String> sidx = tableDefinition.getSecondaryIndex();
+            if (sidx != null && sidx.get(0).equals(columnName)) {
+                TableColumnDefinition tcd = tableDefinition.getColumnDefinition(columnName);
+                byte[] val = null;
+                try {
+                    Object columnValue = DataType.castAs(tcd.getType(), value);
+                    val = tcd.getSerializer().toByteArray(columnValue);
+                } catch (IllegalArgumentException e) {
+                    throw new StreamSqlException(ErrCode.ERROR, e.getMessage());
+                }
+                if (skRange == null) {
+                    skRange = new DbRange();
+                }
+                byte[] b = new byte[val.length+1];
+                b[0] = (byte)(0x70|tcd.getType().getTypeId());
+                System.arraycopy(val, 0, b, 1, val.length);
+                addToRange(skRange, relOp, b);
+            }
+        }
+
+        if ((relOp == RelOp.EQUAL) && tableDefinition.hasPartitioning()) {
+            PartitioningSpec pspec = tableDefinition.getPartitioningSpec();
+            if (cexpr.getName().equals(pspec.valueColumn)) {
+                Set<Object> values = new HashSet<>();
+                values.add(value);
+                values = transformEnums(values);
+                if (partitionValueFilter == null) {
+                    partitionValueFilter = values;
+                } else {
+                    partitionValueFilter.retainAll(values);
+                }
+            }
+        }
+    }
+
+    private void addPartitionTimeFilter(RelOp relOp, long time) {
+        switch (relOp) {
+        case GREATER:
+        case GREATER_OR_EQUAL:
+            partitionTimeFilter.setStart(time);
+            break;
+        case LESS:
+        case LESS_OR_EQUAL:
+            partitionTimeFilter.setEnd(time);
+            break;
+        case EQUAL:
+            partitionTimeFilter.setStart(time);
+            partitionTimeFilter.setEnd(time);
+            break;
+        case NOT_EQUAL:
+            // TODO support multiple ranges
+            break;
+        case OVERLAP:
+            throw new IllegalStateException();
+        }
+    }
+
+    private void addToRange(DbRange range, RelOp relOp, byte[] val) {
+
+        // TODO FIX to allow multiple ranges
+        switch (relOp) {
+        case GREATER:
+        case GREATER_OR_EQUAL:
+            range.rangeStart = val;
+            break;
+        case LESS:
+        case LESS_OR_EQUAL:
+            range.rangeEnd = val;
+            break;
+        case EQUAL:
+            range.rangeStart = val;
+            range.rangeEnd = val;
+            break;
+        case NOT_EQUAL:
+            // TODO - two ranges have to be created
+            break;
+        case OVERLAP:
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * currently adds only filters on value based partitions
+     */
+    @Override
+    public void addInFilter(ColumnExpression cexpr, boolean negation, Set<Object> values) throws StreamSqlException {
+        if (!tableDefinition.hasPartitioning()) {
+            return;
+        }
+        PartitioningSpec pspec = tableDefinition.getPartitioningSpec();
+
+        if ((pspec.valueColumn == null) || (!pspec.valueColumn.equals(cexpr.getName()))) {
+            return;
+        }
+        values = transformEnums(values);
+        if (partitionValueFilter == null) {
+            if (negation) {
+                ColumnDefinition cd = tableDefinition.getColumnDefinition(pspec.valueColumn);
+                if (cd.getType() != DataType.ENUM) { // we don't know all the possible values so we cannot exclude
+                    return;
+                }
+                BiMap<String, Short> enumValues = tableDefinition.getEnumValues(pspec.valueColumn);
+                partitionValueFilter = new HashSet<>(enumValues.values());
+                partitionValueFilter.removeAll(values);
+            } else {
+                partitionValueFilter = values;
+            }
+        } else {
+            if (negation) {
+                partitionValueFilter.removeAll(values);
+            } else {
+                partitionValueFilter.retainAll(values);
+            }
+        }
+        return;
+    }
+
+    // if the value partitioning column is of type Enum, we have to convert all
+    // the values (used in the query for filtering) from String to Short
+    // the values that do not have an enum are eliminated (because they cannot be possibly matching the query)
+
+    // if partitioning value is not an enum, return it unchanged
+    private Set<Object> transformEnums(Set<Object> values) {
+        PartitioningSpec pspec = tableDefinition.getPartitioningSpec();
+        ColumnDefinition cd = tableDefinition.getColumnDefinition(pspec.valueColumn);
+
+        if (cd.getType() == DataType.ENUM) {
+            BiMap<String, Short> enumValues = tableDefinition.getEnumValues(pspec.valueColumn);
+
+            Set<Object> v1 = new HashSet<>();
+            if (enumValues != null) { // else there is no value in the table yet
+                for (Object o : values) {
+                    Object o1 = enumValues.get(o);
+                    if (o1 == null) {
+                        log.debug("no enum value for column: {} value: {}", pspec.valueColumn, o);
+                    } else {
+                        v1.add(o1);
+                    }
+                }
+            }
+            values = v1;
+        }
+        return values;
+    }
+
+    public TableWalker build() {
+        if (!ascending) {
+            follow = false;
+        }
+        TableWalker tw;
+        if (skRange == null) {
+            tw = ydb.getStorageEngine(tableDefinition).newTableWalker(ctx, tableDefinition, ascending, follow);
+            tw.setPartitionFilter(partitionTimeFilter, partitionValueFilter);
+        } else {
+            tw = ydb.getStorageEngine(tableDefinition).newSecondaryIndexTableWalker(ydb, tableDefinition, ascending,
+                    follow);
+            tw.setSecondaryIndexRange(skRange);
+        }
+      
+        if (pkRange != null) {
+            tw.setPrimaryIndexRange(pkRange);
+        }
+        return tw;
+    }
+
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+    }
+
+    public void setFollow(boolean follow) {
+        this.follow = follow;
+    }
+
+    public TableDefinition getTableDefinition() {
+        return tableDefinition;
+    }
+
+}
+```
+
+### `TokenMgrError.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/TokenMgrError.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. TokenMgrError.java Version 5.0 */
+/* JavaCCOptions: */
+package org.yamcs.yarch.streamsql;
+
+/** Token Manager Error. */
+public class TokenMgrError extends Error
+{
+
+  /**
+   * The version identifier for this Serializable class.
+   * Increment only if the <i>serialized</i> form of the
+   * class changes.
+   */
+  private static final long serialVersionUID = 1L;
+
+  /*
+   * Ordinals for various reasons why an Error of this type can be thrown.
+   */
+
+  /**
+   * Lexical error occurred.
+   */
+  static final int LEXICAL_ERROR = 0;
+
+  /**
+   * An attempt was made to create a second instance of a static token manager.
+   */
+  static final int STATIC_LEXER_ERROR = 1;
+
+  /**
+   * Tried to change to an invalid lexical state.
+   */
+  static final int INVALID_LEXICAL_STATE = 2;
+
+  /**
+   * Detected (and bailed out of) an infinite loop in the token manager.
+   */
+  static final int LOOP_DETECTED = 3;
+
+  /**
+   * Indicates the reason why the exception is thrown. It will have
+   * one of the above 4 values.
+   */
+  int errorCode;
+
+  /**
+   * Replaces unprintable characters by their escaped (or unicode escaped)
+   * equivalents in the given string
+   */
+  protected static final String addEscapes(String str) {
+    StringBuffer retval = new StringBuffer();
+    char ch;
+    for (int i = 0; i < str.length(); i++) {
+      switch (str.charAt(i))
+      {
+        case 0 :
+          continue;
+        case '\b':
+          retval.append("\\b");
+          continue;
+        case '\t':
+          retval.append("\\t");
+          continue;
+        case '\n':
+          retval.append("\\n");
+          continue;
+        case '\f':
+          retval.append("\\f");
+          continue;
+        case '\r':
+          retval.append("\\r");
+          continue;
+        case '\"':
+          retval.append("\\\"");
+          continue;
+        case '\'':
+          retval.append("\\\'");
+          continue;
+        case '\\':
+          retval.append("\\\\");
+          continue;
+        default:
+          if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+            String s = "0000" + Integer.toString(ch, 16);
+            retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+          } else {
+            retval.append(ch);
+          }
+          continue;
+      }
+    }
+    return retval.toString();
+  }
+
+  /**
+   * Returns a detailed message for the Error when it is thrown by the
+   * token manager to indicate a lexical error.
+   * Parameters :
+   *    EOFSeen     : indicates if EOF caused the lexical error
+   *    curLexState : lexical state in which this error occurred
+   *    errorLine   : line number when the error occurred
+   *    errorColumn : column number when the error occurred
+   *    errorAfter  : prefix that was seen before this error occurred
+   *    curchar     : the offending character
+   * Note: You can customize the lexical error message by modifying this method.
+   */
+  protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
+    return("Lexical error at line " +
+          errorLine + ", column " +
+          errorColumn + ".  Encountered: " +
+          (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
+          "after : \"" + addEscapes(errorAfter) + "\"");
+  }
+
+  /**
+   * You can also modify the body of this method to customize your error messages.
+   * For example, cases like LOOP_DETECTED and INVALID_LEXICAL_STATE are not
+   * of end-users concern, so you can return something like :
+   *
+   *     "Internal Error : Please file a bug report .... "
+   *
+   * from this method for such cases in the release version of your parser.
+   */
+  public String getMessage() {
+    return super.getMessage();
+  }
+
+  /*
+   * Constructors of various flavors follow.
+   */
+
+  /** No arg constructor. */
+  public TokenMgrError() {
+  }
+
+  /** Constructor with message and reason. */
+  public TokenMgrError(String message, int reason) {
+    super(message);
+    errorCode = reason;
+  }
+
+  /** Full Constructor. */
+  public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar, int reason) {
+    this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
+  }
+}
+/* JavaCC - OriginalChecksum=e6f077d2b5cd43bc81da4a849ea48c01 (do not edit this line) */
+```
+
+### `TupleSourceExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/TupleSourceExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.math.BigDecimal;
+import java.util.Set;
+
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.FilterableTarget;
+import org.yamcs.yarch.HistogramReaderStream;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWalker;
+import org.yamcs.yarch.TableReaderStream;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+/**
+ * A source of tuples. Can be:
+ * 
+ * <ul>
+ * <li>a reference to an existing stream objectName
+ * <li>a reference to a table objectName
+ * <li>a stream expression
+ * </ul>
+ * 
+ * @author nm
+ *
+ */
+public class TupleSourceExpression implements FilterableTarget {
+    static Log log = new Log(TupleSourceExpression.class);
+
+    String objectName = null;
+    StreamExpression streamExpression = null;
+    BigDecimal histogramMergeTime = null;
+
+    enum Type {
+        STREAM_EXPRESSION, STREAM, TABLE, TABLE_HISTOGRAM;
+    }
+
+    // when histoColumn is set, the objectName must be a table having histograms on that column
+    String histoColumn;
+
+    boolean ascending = true;
+    boolean follow = false;
+
+    // after binding
+    TupleDefinition definition;
+    TableWalkerBuilder tableWalkerBuilder;
+    HistogramStreamBuilder histogramStreamBuilder;
+
+    Type type;
+
+    public TupleSourceExpression(String name) {
+        this.objectName = name;
+    }
+
+    public TupleSourceExpression(StreamExpression expr) {
+        this.streamExpression = expr;
+    }
+
+    public void setHistogramColumn(String histoColumn) {
+        this.histoColumn = histoColumn;
+    }
+
+    void bind(ExecutionContext c) throws StreamSqlException {
+        if (streamExpression != null) {
+            streamExpression.bind(c);
+            definition = streamExpression.getOutputDefinition();
+            type = Type.STREAM_EXPRESSION;
+        } else {
+            YarchDatabaseInstance ydb = c.getDb();
+            TableDefinition tableDefinition = ydb.getTable(objectName);
+            if (tableDefinition != null) {
+                if (histoColumn == null) {
+                    definition = tableDefinition.getTupleDefinition();
+                    type = Type.TABLE;
+                    tableWalkerBuilder = new TableWalkerBuilder(c, tableDefinition);
+                    tableWalkerBuilder.setAscending(ascending);
+                    tableWalkerBuilder.setFollow(follow);
+                } else {
+                    if (!tableDefinition.hasHistogram()) {
+                        throw new StreamSqlException(ErrCode.INVALID_HISTOGRAM_COLUMN,
+                                "No histogram configured for table " + tableDefinition.getName());
+                    }
+                    if (!tableDefinition.getHistogramColumns().contains(histoColumn)) {
+                        throw new StreamSqlException(ErrCode.INVALID_HISTOGRAM_COLUMN,
+                                "Histogram is not configured for column " + histoColumn);
+                    }
+
+                    histogramStreamBuilder = new HistogramStreamBuilder(ydb, tableDefinition, histoColumn);
+                    definition = histogramStreamBuilder.getTupleDefinition();
+                    if (histogramMergeTime != null) {
+                        histogramStreamBuilder.setMergeTime(histogramMergeTime.longValue());
+                    }
+                    type = Type.TABLE_HISTOGRAM;
+                }
+            } else {
+                Stream stream = ydb.getStream(objectName);
+                if (stream == null) {
+                    throw new ResourceNotFoundException(objectName);
+                }
+                if (histoColumn != null) {
+                    throw new StreamSqlException(ErrCode.INVALID_HISTOGRAM_COLUMN,
+                            "Cannot specify histogram option when selecting from a stream");
+                }
+                definition = stream.getDefinition();
+                type = Type.STREAM;
+            }
+        }
+    }
+
+    public void addRelOpFilter(ColumnExpression cexpr, RelOp relOp, Object value) throws StreamSqlException {
+        switch (type) {
+        case STREAM:
+        case STREAM_EXPRESSION:
+            break;
+        case TABLE:
+            tableWalkerBuilder.addRelOpFilter(cexpr, relOp, value);
+            break;
+        case TABLE_HISTOGRAM:
+            histogramStreamBuilder.addRelOpFilterHistogram(cexpr, relOp, value);
+            break;
+        default:
+            throw new IllegalStateException();
+        }
+    }
+
+    public void addInFilter(ColumnExpression cexpr, boolean negation, Set<Object> values) throws StreamSqlException {
+        switch (type) {
+        case STREAM:
+        case STREAM_EXPRESSION:
+            break;
+        case TABLE:
+            tableWalkerBuilder.addInFilter(cexpr, negation, values);
+            break;
+        case TABLE_HISTOGRAM:
+            histogramStreamBuilder.addInFilter(cexpr, negation, values);
+            break;
+        default:
+            throw new IllegalStateException();
+        }
+    }
+
+    Stream execute(ExecutionContext c) throws StreamSqlException, YarchException {
+        Stream stream;
+        YarchDatabaseInstance ydb = c.getDb();
+
+        switch (type) {
+        case STREAM_EXPRESSION:
+            stream = streamExpression.execute(c);
+            break;
+        case STREAM:
+            stream = ydb.getStream(objectName);
+            if (stream == null) {
+                throw new ResourceNotFoundException(objectName);
+            }
+            break;
+        case TABLE:
+            TableWalker tblit = tableWalkerBuilder.build();
+            stream = new TableReaderStream(ydb, tableWalkerBuilder.getTableDefinition(), tblit);
+            break;
+        case TABLE_HISTOGRAM:
+            HistogramReaderStream histoStream = histogramStreamBuilder.build();
+
+            stream = histoStream;
+            break;
+        default:
+            throw new IllegalStateException();
+        }
+
+        return stream;
+    }
+
+    public void setHistogramMergeTime(BigDecimal mergeTime) {
+        histogramMergeTime = mergeTime;
+    }
+
+    public void setAscending(boolean ascending) {
+        this.ascending = ascending;
+    }
+
+    public void setFollow(boolean follow) {
+        this.follow = follow;
+    }
+
+    TupleDefinition getDefinition() {
+        return definition;
+    }
+
+    public boolean isFinite() {
+        switch(type) {
+        case TABLE:
+        case TABLE_HISTOGRAM:
+            return true;
+        default:
+            return false;
+        }
+    }
+}
+```
+
+### `UpdateTableStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/UpdateTableStatement.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.Row;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableVisitor;
+import org.yamcs.yarch.TableWalker;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+public class UpdateTableStatement extends SimpleStreamSqlStatement {
+    final Log log = new Log(UpdateTableStatement.class);
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("inspected", DataType.LONG);
+        TDEF.addColumn("updated", DataType.LONG);
+    }
+
+    final String tableName;
+    final List<UpdateItem> updateList;
+    Expression whereClause;
+    long limit;
+
+    CompiledExpression cwhere = null;
+    TableDefinition tableDefinition;
+    boolean updateKey = false;
+
+    public UpdateTableStatement(String tableName, List<UpdateItem> updateList, Expression whereClause, long limit) {
+        this.tableName = tableName;
+        this.updateList = updateList;
+        this.whereClause = whereClause;
+        this.limit = limit;
+    }
+
+    @Override
+    protected void execute(ExecutionContext context, Consumer<Tuple> consumer) throws StreamSqlException {
+        checkAndCompile(context);
+
+        AtomicLong updated = new AtomicLong();
+        AtomicLong inspected = new AtomicLong();
+        try {
+            TableWalkerBuilder twb = new TableWalkerBuilder(context, tableDefinition);
+            if (whereClause != null) {
+                whereClause.addFilter(twb);
+            }
+            TableWalker tblWalker = twb.build();
+            tblWalker.setBatchUpdates(true);
+
+            if (whereClause != null) {
+                cwhere = whereClause.compile();
+            }
+
+            tblWalker.walk((key, value) -> {
+                inspected.getAndIncrement();
+                Tuple tuple = tableDefinition.deserialize(key, value);
+                if (cwhere != null && !((Boolean) cwhere.getValue(tuple))) {
+                    return TableVisitor.ACTION_CONTINUE;
+                }
+
+                for (UpdateItem item : updateList) {
+                    Object colv;
+                    if (item.compiledExpr != null) {
+                        colv = DataType.castAs(item.type, item.compiledExpr.getValue(tuple));
+                    } else {
+                        colv = item.constantValue;
+                    }
+                    if (tuple.hasColumn(item.colName)) {
+                        tuple.setColumn(item.colName, colv);
+                    } else {
+                        tuple.addColumn(item.colName, item.type, colv);
+                    }
+                }
+                long c = updated.incrementAndGet();
+                boolean stop = (limit > 0 && c >= limit);
+                byte[] updatedValue;
+                Row row = null;
+                try {
+                    if (updateKey) {
+                        row = tableDefinition.generateRow(tuple);
+                        updatedValue = tableDefinition.serializeValue(tuple, row);
+                    } else {
+                        updatedValue = tableDefinition.serializeValue(tuple, null);
+                    }
+                } catch (YarchException e) {
+                    log.error("Error serializing value", e);
+                    return TableVisitor.ACTION_STOP;
+                }
+                if (row != null) {
+                    return TableVisitor.Action.updateAction(row.getKey(), updatedValue, stop);
+                } else {
+                    return TableVisitor.Action.updateAction(updatedValue, stop);
+                }
+            });
+
+        } catch (YarchException e) {
+            throw new GenericStreamSqlException(e.getMessage());
+        }
+        Tuple tuple = new Tuple(TDEF, new Object[] { inspected.get(), updated.get() });
+        consumer.accept(tuple);
+
+    }
+
+    void checkAndCompile(ExecutionContext context) throws StreamSqlException {
+        YarchDatabaseInstance ydb = context.getDb();
+        tableDefinition = ydb.getTable(tableName);
+        if (tableDefinition == null) {
+            throw new ResourceNotFoundException("Table '" + tableName + "' does not exist");
+        }
+
+        for (UpdateItem ui : updateList) {
+            ui.value.bind(tableDefinition.getTupleDefinition());
+
+            ColumnDefinition cd = tableDefinition.getColumnDefinition(ui.colName);
+            if (cd == null) {
+                ui.type = ui.value.getType();
+                if (ui.value.isConstant()) {
+                    ui.constantValue = ui.value.getConstantValue();
+                } else {
+                    ui.compiledExpr = ui.value.compile();
+                }
+            } else {
+                if (tableDefinition.isPartitionedBy(ui.colName)) {
+                    throw new NotImplementedException("Cannot update partition column");
+                }
+                if (tableDefinition.hasKey(ui.colName)) {
+                    updateKey = true;
+                }
+
+
+                boolean isNull = ui.value instanceof NullExpression
+                        || (ui.value instanceof ArgumentExpression
+                                && ((ArgumentExpression) ui.value).getConstantValue() == null);
+
+                if (!isNull && !DataType.compatible(ui.value.getType(), cd.getType())) {
+                    throw new IncompatibilityException(
+                            "Cannot assign values of type " + ui.value.getType() + " to column '"
+                                    + cd.getName() + "' of type " + cd.getType());
+                }
+
+                ui.type = cd.getType();
+                if (isNull) {
+                    ui.constantValue = null;
+                } else if (ui.value.isConstant()) {
+                    ui.constantValue = DataType.castAs(cd.getType(), ui.value.getConstantValue());
+                } else {
+                    ui.compiledExpr = ui.value.compile();
+                }
+            }
+        }
+
+        if (whereClause != null) {
+            whereClause.bind(tableDefinition.getTupleDefinition());
+            if (whereClause.getType() != DataType.BOOLEAN) {
+                throw new GenericStreamSqlException("Invalid where clause, should return a boolean");
+            }
+        }
+    }
+
+    @Override
+    protected TupleDefinition getResultDefinition() {
+        return TDEF;
+    }
+
+    static public class UpdateItem {
+        final String colName;
+        final Expression value;
+        Object constantValue = null;
+        CompiledExpression compiledExpr = null;
+        DataType type;
+
+        public UpdateItem(String colName, Expression value) {
+            this.colName = colName;
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "UpdateItem [colName=" + colName + ", value=" + value + "]";
+        }
+    }
+}
+```
+
+### `Utils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/Utils.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Utils {
+    public static boolean like(String str, String pattern) {
+        pattern = pattern.toLowerCase();
+        pattern = pattern.replace(".", "\\.");
+        pattern = pattern.replace("?", ".");
+        pattern = pattern.replace("%", ".*");
+        if (str != null) { // Avoid NPE on null values
+            str = str.toLowerCase();
+            Matcher m = Pattern.compile(pattern, Pattern.DOTALL).matcher(str);
+            return m.matches();
+        } else {
+            return false;
+        }
+    }
+}
+```
+
+### `ValueExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/ValueExpression.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.CompiledExpression;
+import org.yamcs.yarch.ConstantValueCompiledExpression;
+import org.yamcs.yarch.DataType;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.time.Instant;
+import org.yamcs.utils.parser.ParseException;
+
+/**
+ * This represents a constant value coming from some sql expression
+ * for example: select 3 from x
+ * 
+ * @author nm
+ *
+ */
+public class ValueExpression extends Expression {
+    ValueExpression(Object value) {
+        super(null);
+        this.constantValue = value;
+    }
+
+    public ValueExpression(Object value, DataType type) {
+        super(null);
+        this.constantValue = value;
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return constantValue.toString();
+    }
+
+    @Override
+    public void doBind() throws StreamSqlException {
+        type = DataType.typeOf(constantValue);
+    }
+
+    ValueExpression getNegative() throws ParseException {
+        Object newv;
+        if (constantValue instanceof Byte) {
+            newv = (byte) -1 * (Byte) constantValue;
+        } else if (constantValue instanceof Short) {
+            newv = (short) -1 * (Short) constantValue;
+        } else if (constantValue instanceof Integer) {
+            newv = (int) -1 * (Integer) constantValue;
+        } else if (constantValue instanceof Double) {
+            newv = (double) -1 * (Double) constantValue;
+        } else if (constantValue instanceof Long) {
+            newv = (long) -1 * (Long) constantValue;
+        } else {
+            throw new ParseException("Cannot have a negative value of a " + constantValue.getClass());
+        }
+        return new ValueExpression(newv);
+    }
+
+    @Override
+    protected void fillCode_Declarations(StringBuilder code) {
+        if (constantValue instanceof UUID) {
+            UUID uuid = (UUID) constantValue;
+            code.append("\tprivate final ")
+                    .append(UUID.class.getName()).append(" const_uuid = ")
+                    .append(UUID.class.getName()).append(".fromString(\"")
+                    .append(uuid.toString()).append("\");\n");
+        } else if (constantValue instanceof Instant) {
+            Instant t = (Instant) constantValue;
+            code.append("\tprivate final ")
+                    .append(Instant.class.getName()).append(" const_instant = ")
+                    .append(Instant.class.getName()).append(".get(").append(t.getMillis())
+                    .append("l, ").append(t.getPicos()).append(");\n");
+        }
+    }
+
+    @Override
+    public void fillCode_getValueReturn(StringBuilder code) throws StreamSqlException {
+        if ((constantValue instanceof Byte) || (constantValue instanceof Short) || (constantValue instanceof Integer)) {
+            code.append(constantValue.toString());
+        } else if (constantValue instanceof Long) {
+            code.append(constantValue.toString()).append("l");
+        } else if (constantValue instanceof String) {
+            code.append('"');
+            escapeJavaString((String) constantValue, code);
+            code.append('"');
+        } else if (constantValue instanceof UUID) {
+            code.append("const_uuid");
+        } else if (constantValue instanceof Instant) {
+            code.append("const_instant");
+        } else if (constantValue instanceof List<?>) {
+            code.append("const_list");
+        } else {
+            throw new NotImplementedException(constantValue.getClass() + " not usable in constants");
+        }
+    }
+
+    @Override
+    public CompiledExpression compile() {
+        ColumnDefinition def = new ColumnDefinition(constantValue.toString(), type);
+        return new ConstantValueCompiledExpression(constantValue, def);
+    }
+
+    /**
+     * Copied (and modified a little) from org.apache.commons.lang
+     * 
+     * @param s
+     * @return
+     */
+    private void escapeJavaString(String str, StringBuilder sb) {
+        int sz;
+        sz = str.length();
+        for (int i = 0; i < sz; i++) {
+            char ch = str.charAt(i);
+
+            // handle unicode
+            if (ch > 0xfff) {
+                sb.append("\\u" + Integer.toHexString(ch).toUpperCase());
+            } else if (ch > 0xff) {
+                sb.append("\\u0" + Integer.toHexString(ch).toUpperCase());
+            } else if (ch > 0x7f) {
+                sb.append("\\u00" + Integer.toHexString(ch).toUpperCase());
+            } else if (ch < 32) {
+                switch (ch) {
+                case '\b':
+                    sb.append('\\');
+                    sb.append('b');
+                    break;
+                case '\n':
+                    sb.append('\\');
+                    sb.append('n');
+                    break;
+                case '\t':
+                    sb.append('\\');
+                    sb.append('t');
+                    break;
+                case '\f':
+                    sb.append('\\');
+                    sb.append('f');
+                    break;
+                case '\r':
+                    sb.append('\\');
+                    sb.append('r');
+                    break;
+                default:
+                    if (ch > 0xf) {
+                        sb.append("\\u00" + Integer.toHexString(ch).toUpperCase());
+                    } else {
+                        sb.append("\\u000" + Integer.toHexString(ch).toUpperCase());
+                    }
+                    break;
+                }
+            } else {
+                switch (ch) {
+                case '"':
+                    sb.append('\\');
+                    sb.append('"');
+                    break;
+                case '\\':
+                    sb.append('\\');
+                    sb.append('\\');
+                    break;
+                default:
+                    sb.append(ch);
+                    break;
+                }
+            }
+        }
+    }
+}
+```
+
+### `WindowSpecification.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/WindowSpecification.java`
+
+
+```java
+package org.yamcs.yarch.streamsql;
+
+import java.math.BigDecimal;
+
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+public class WindowSpecification {
+    final String name; // in case it refers to an existing window
+
+    public enum Type {
+        TIME, TUPLES, FIELD,
+        /**
+         * this is a pseudo window which collects all the tuples until the stream is closed
+         */
+        INFINITE
+    };
+
+    public static final WindowSpecification INFINITE_WINDOW = new WindowSpecification();
+
+    public final Type type;
+    public final BigDecimal size, advance;
+    public final String field;
+    DataType fieldType;
+
+    private WindowSpecification() {
+        type = Type.INFINITE;
+        advance = size = null;
+        field = null;
+        name = null;
+    }
+
+    public WindowSpecification(String name) {
+        this.name = name;
+        advance = size = null;
+        type = null;
+        field = null;
+    }
+
+    public WindowSpecification(BigDecimal size, BigDecimal advance, Type type) {
+        this.name = null;
+        this.type = type;
+        this.size = size;
+        this.advance = advance;
+        this.field = null;
+    }
+
+    public WindowSpecification(BigDecimal size, BigDecimal advance, Type type, String field) {
+        this.name = null;
+        this.type = type;
+        this.size = size;
+        this.advance = advance;
+        this.field = field;
+    }
+
+    public void bind(TupleDefinition inputDef) throws StreamSqlException {
+        switch (type) {
+        case FIELD:
+            ColumnDefinition cd = inputDef.getColumn(field);
+            if (cd == null)
+                throw new StreamSqlException(ErrCode.COLUMN_NOT_FOUND, "Field '" + field + "' not part of the input");
+            fieldType = cd.getType();
+            if ((fieldType != DataType.INT) && (fieldType != DataType.TIMESTAMP)) {
+                throw new StreamSqlException(ErrCode.INCOMPATIBLE,
+                        "Cannot create windows on fields of type " + cd.getType());
+            }
+            break;
+        case TIME: // TODO
+        case TUPLES: // TODO
+            break;
+        case INFINITE://nothing to do
+            break;
+        }
+    }
+
+    public DataType getFieldType() {
+        return fieldType;
+    }
+}
+```

@@ -3,14 +3,17 @@
 
 **경로:** `gsw/cosmos/config/tools/tlm_viewer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `tlm_viewer.txt`
 
-file--tlm_viewer.txt
+**경로:** `gsw/cosmos/config/tools/tlm_viewer/tlm_viewer.txt`
+
+
+```text
+AUTO_TARGETS
+
+# TARGET "INST"
+#  SCREEN "adcs.txt"
+
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/tools/tlm_viewer/tlm_viewer.txt`](file--tlm_viewer.txt) — UTF-8 텍스트 파일 본문 포함

@@ -3,24 +3,1246 @@
 
 **경로:** `fsw/apps/fm/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fm_app_stubs.c`
 
-file--fm_app_stubs.c
-file--fm_child_stubs.c
-file--fm_cmd_utils_handlers.c
-file--fm_cmd_utils_stubs.c
-file--fm_cmds_stubs.c
-file--fm_tbl_stubs.c
+**경로:** `fsw/apps/fm/unit-test/stubs/fm_app_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The File Manager (FM) Application provides onboard file system
+ *  management services by processing commands for copying and moving
+ *  files, decompressing files, concatenating files, creating directories,
+ *  deleting files and directories, and providing file and directory status.
+ *  When the File Manager application receives a housekeeping request
+ *  (scheduled within the scheduler application), FM  reports it's housekeeping
+ *  status values via telemetry messaging.
+ */
+
+#include "cfe.h"
+#include "fm_msg.h"
+#include "fm_msgdefs.h"
+#include "fm_msgids.h"
+#include "fm_app.h"
+#include "fm_tbl.h"
+#include "fm_child.h"
+#include "fm_cmds.h"
+#include "fm_cmd_utils.h"
+#include "fm_events.h"
+#include "fm_perfids.h"
+#include "fm_platform_cfg.h"
+#include "fm_version.h"
+#include "fm_verify.h"
+#include "fm_test_utils.h"
+
+#include <string.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM application global data                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+FM_GlobalData_t FM_GlobalData;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM application -- entry point and main loop processor           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_AppMain(void)
+{
+    UT_DEFAULT_IMPL(FM_AppMain);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM application -- startup initialization processor              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_AppInit(void)
+{
+    return UT_DEFAULT_IMPL(FM_AppInit);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM application -- input packet processor                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ProcessPkt(const CFE_SB_Buffer_t *MessagePtr)
+{
+    UT_DEFAULT_IMPL(FM_ProcessPkt);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM application -- command packet processor                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ProcessCmd(const CFE_SB_Buffer_t *MessagePtr)
+{
+    UT_DEFAULT_IMPL(FM_ProcessCmd);
+    UT_Stub_CopyFromLocal(UT_KEY(FM_ProcessCmd), &MessagePtr, sizeof(MessagePtr));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM application -- housekeeping request packet processor         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ReportHK(const CFE_MSG_CommandHeader_t *Msg)
+{
+    UT_DEFAULT_IMPL(FM_ReportHK);
+}
 ```
 
-## 항목
+### `fm_child_stubs.c`
 
-- [`fsw/apps/fm/unit-test/stubs/fm_app_stubs.c`](file--fm_app_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/unit-test/stubs/fm_child_stubs.c`](file--fm_child_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/unit-test/stubs/fm_cmd_utils_handlers.c`](file--fm_cmd_utils_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/unit-test/stubs/fm_cmd_utils_stubs.c`](file--fm_cmd_utils_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/unit-test/stubs/fm_cmds_stubs.c`](file--fm_cmds_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/unit-test/stubs/fm_tbl_stubs.c`](file--fm_tbl_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/fm/unit-test/stubs/fm_child_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  File Manager (FM) Child task (low priority command handler)
+ */
+
+#include "cfe.h"
+#include "fm_msg.h"
+#include "fm_msgdefs.h"
+#include "fm_msgids.h"
+#include "fm_events.h"
+#include "fm_app.h"
+#include "fm_child.h"
+#include "fm_cmds.h"
+#include "fm_cmd_utils.h"
+#include "fm_perfids.h"
+#include "fm_platform_cfg.h"
+#include "fm_verify.h"
+#include "fm_test_utils.h"
+
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <string.h>
+
+#ifdef FM_INCLUDE_DECOMPRESS
+#include "cfs_fs_lib.h"
+#endif
+
+/************************************************************************
+** OSAL Compatibility for directory name access
+** New OSAL version have an access macro to get the string.  If that
+** macro is defined, use it, otherwise assume "d_name" structure member.
+*************************************************************************/
+#ifndef OS_DIRENTRY_NAME
+#define OS_DIRENTRY_NAME(x) ((x).d_name)
+#endif
+
+#define FM_QUEUE_SEM_NAME "FM_QUEUE_SEM"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task -- startup initialization                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_ChildInit(void)
+{
+    return UT_DEFAULT_IMPL(FM_ChildInit);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task -- task entry point                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildTask(void)
+{
+    UT_DEFAULT_IMPL(FM_ChildTask);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task -- main process loop                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildLoop(void)
+{
+    UT_DEFAULT_IMPL(FM_ChildLoop);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task -- interface handshake processor                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildProcess(void)
+{
+    UT_DEFAULT_IMPL(FM_ChildProcess);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Copy File                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildCopyCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_Stub_RegisterContext(UT_KEY(FM_ChildCopyCmd), CmdArgs);
+    UT_DEFAULT_IMPL(FM_ChildCopyCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Move File                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildMoveCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildMoveCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Rename File                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildRenameCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildRenameCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Delete File                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildDeleteCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildDeleteCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Delete All Files               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildDeleteAllCmd(FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildDeleteAllCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Decompress File                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#ifdef FM_INCLUDE_DECOMPRESS
+
+void FM_ChildDecompressCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildDecompressCmd);
+}
+
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Concatenate Files              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildConcatCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildConcatCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Get File Info                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildFileInfoCmd(FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildFileInfoCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Create Directory               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildCreateDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildCreateDirCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Delete Directory               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildDeleteDirCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildDeleteDirCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Get Directory List (to file)   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildDirListFileCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildDeleteDirCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Get Directory List (to pkt)    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildDirListPktCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildDirListPktCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task command handler -- Set File Permissions           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void FM_ChildSetPermissionsCmd(const FM_ChildQueueEntry_t *CmdArgs)
+{
+    UT_DEFAULT_IMPL(FM_ChildSetPermissionsCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task utility function -- create dir list output file   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_ChildDirListFileInit(osal_id_t *FileHandlePtr, const char *Directory, const char *Filename)
+{
+    return UT_DEFAULT_IMPL(FM_ChildDirListFileInit);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task utility function -- write to dir list output file */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildDirListFileLoop(osal_id_t DirId, osal_id_t FileHandle, const char *Directory, const char *DirWithSep,
+                             const char *Filename, uint8 getSizeTimeMode)
+{
+    UT_DEFAULT_IMPL(FM_ChildDirListFileLoop);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task utility function -- get dir entry size and time   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_ChildSizeTimeMode(const char *Filename, uint32 *FileSize, uint32 *FileTime, uint32 *FileMode)
+{
+    return UT_DEFAULT_IMPL(FM_ChildSizeTimeMode);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM child task utility function -- sleep between OS_stat on files*/
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ChildSleepStat(const char *Filename, FM_DirListEntry_t *DirListData, int32 *FilesTillSleep,
+                       bool getSizeTimeMode)
+{
+    UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), Filename);
+    UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), DirListData);
+    UT_Stub_RegisterContext(UT_KEY(FM_ChildSleepStat), FilesTillSleep);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(FM_ChildSleepStat), getSizeTimeMode);
+    UT_DEFAULT_IMPL(FM_ChildSleepStat);
+}
+```
+
+### `fm_cmd_utils_handlers.c`
+
+**경로:** `fsw/apps/fm/unit-test/stubs/fm_cmd_utils_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+#include "osapi.h"
+#include "cfe.h"
+#include "utstubs.h"
+#include "cfe_resourceid.h"
+#include "cfe_resourceid_basevalue.h"
+
+static void UT_fm_cmd_utils_bool_conversion(UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    bool  retval;
+    int32 status_code;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status_code))
+    {
+        retval = status_code;
+    }
+    else
+    {
+        retval = false;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_IsValidCmdPktLength(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyChildTask(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyDirExists(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyDirNoExist(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyFileClosed(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyFileExists(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyFileNoExist(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyFileNotOpen(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyFileState(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+
+/*------------------------------------------------------------*/
+void UT_DefaultHandler_FM_VerifyOverwrite(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_fm_cmd_utils_bool_conversion(FuncKey, Context);
+}
+```
+
+### `fm_cmd_utils_stubs.c`
+
+**경로:** `fsw/apps/fm/unit-test/stubs/fm_cmd_utils_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in fm_cmd_utils header
+ */
+
+#include "fm_cmd_utils.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_FM_IsValidCmdPktLength(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyChildTask(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyDirExists(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyDirNoExist(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyFileClosed(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyFileExists(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyFileNoExist(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyFileNotOpen(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyFileState(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_FM_VerifyOverwrite(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_AppendPathSep()
+ * ----------------------------------------------------
+ */
+void FM_AppendPathSep(char *Directory, uint32 BufferSize)
+{
+    UT_GenStub_AddParam(FM_AppendPathSep, char *, Directory);
+    UT_GenStub_AddParam(FM_AppendPathSep, uint32, BufferSize);
+
+    UT_GenStub_Execute(FM_AppendPathSep, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetDirectorySpaceEstimate()
+ * ----------------------------------------------------
+ */
+int32 FM_GetDirectorySpaceEstimate(const char *Directory, uint64 *BlockCount, uint64 *ByteCount)
+{
+    UT_GenStub_SetupReturnBuffer(FM_GetDirectorySpaceEstimate, int32);
+
+    UT_GenStub_AddParam(FM_GetDirectorySpaceEstimate, const char *, Directory);
+    UT_GenStub_AddParam(FM_GetDirectorySpaceEstimate, uint64 *, BlockCount);
+    UT_GenStub_AddParam(FM_GetDirectorySpaceEstimate, uint64 *, ByteCount);
+
+    UT_GenStub_Execute(FM_GetDirectorySpaceEstimate, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetDirectorySpaceEstimate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetFilenameState()
+ * ----------------------------------------------------
+ */
+uint32 FM_GetFilenameState(char *Filename, uint32 BufferSize, bool FileInfoCmd)
+{
+    UT_GenStub_SetupReturnBuffer(FM_GetFilenameState, uint32);
+
+    UT_GenStub_AddParam(FM_GetFilenameState, char *, Filename);
+    UT_GenStub_AddParam(FM_GetFilenameState, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_GetFilenameState, bool, FileInfoCmd);
+
+    UT_GenStub_Execute(FM_GetFilenameState, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetFilenameState, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetOpenFilesData()
+ * ----------------------------------------------------
+ */
+uint32 FM_GetOpenFilesData(const FM_OpenFilesEntry_t *OpenFilesData)
+{
+    UT_GenStub_SetupReturnBuffer(FM_GetOpenFilesData, uint32);
+
+    UT_GenStub_AddParam(FM_GetOpenFilesData, const FM_OpenFilesEntry_t *, OpenFilesData);
+
+    UT_GenStub_Execute(FM_GetOpenFilesData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetOpenFilesData, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_GetVolumeFreeSpace()
+ * ----------------------------------------------------
+ */
+int32 FM_GetVolumeFreeSpace(const char *FileSys, uint64 *BlockCount, uint64 *ByteCount)
+{
+    UT_GenStub_SetupReturnBuffer(FM_GetVolumeFreeSpace, int32);
+
+    UT_GenStub_AddParam(FM_GetVolumeFreeSpace, const char *, FileSys);
+    UT_GenStub_AddParam(FM_GetVolumeFreeSpace, uint64 *, BlockCount);
+    UT_GenStub_AddParam(FM_GetVolumeFreeSpace, uint64 *, ByteCount);
+
+    UT_GenStub_Execute(FM_GetVolumeFreeSpace, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_GetVolumeFreeSpace, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_InvokeChildTask()
+ * ----------------------------------------------------
+ */
+void FM_InvokeChildTask(void)
+{
+
+    UT_GenStub_Execute(FM_InvokeChildTask, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_IsValidCmdPktLength()
+ * ----------------------------------------------------
+ */
+bool FM_IsValidCmdPktLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_IsValidCmdPktLength, bool);
+
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, size_t, ExpectedLength);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, uint32, EventID);
+    UT_GenStub_AddParam(FM_IsValidCmdPktLength, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_IsValidCmdPktLength, Basic, UT_DefaultHandler_FM_IsValidCmdPktLength);
+
+    return UT_GenStub_GetReturnValue(FM_IsValidCmdPktLength, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyChildTask()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyChildTask(uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyChildTask, bool);
+
+    UT_GenStub_AddParam(FM_VerifyChildTask, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyChildTask, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyChildTask, Basic, UT_DefaultHandler_FM_VerifyChildTask);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyChildTask, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyDirExists()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyDirExists(char *Directory, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyDirExists, bool);
+
+    UT_GenStub_AddParam(FM_VerifyDirExists, char *, Directory);
+    UT_GenStub_AddParam(FM_VerifyDirExists, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyDirExists, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyDirExists, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyDirExists, Basic, UT_DefaultHandler_FM_VerifyDirExists);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyDirExists, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyDirNoExist()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyDirNoExist(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyDirNoExist, bool);
+
+    UT_GenStub_AddParam(FM_VerifyDirNoExist, char *, Name);
+    UT_GenStub_AddParam(FM_VerifyDirNoExist, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyDirNoExist, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyDirNoExist, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyDirNoExist, Basic, UT_DefaultHandler_FM_VerifyDirNoExist);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyDirNoExist, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyFileClosed()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyFileClosed(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyFileClosed, bool);
+
+    UT_GenStub_AddParam(FM_VerifyFileClosed, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileClosed, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyFileClosed, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyFileClosed, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyFileClosed, Basic, UT_DefaultHandler_FM_VerifyFileClosed);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyFileClosed, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyFileExists()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyFileExists(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyFileExists, bool);
+
+    UT_GenStub_AddParam(FM_VerifyFileExists, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileExists, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyFileExists, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyFileExists, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyFileExists, Basic, UT_DefaultHandler_FM_VerifyFileExists);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyFileExists, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyFileNoExist()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyFileNoExist(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyFileNoExist, bool);
+
+    UT_GenStub_AddParam(FM_VerifyFileNoExist, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileNoExist, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyFileNoExist, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyFileNoExist, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyFileNoExist, Basic, UT_DefaultHandler_FM_VerifyFileNoExist);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyFileNoExist, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyFileNotOpen()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyFileNotOpen(char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyFileNotOpen, bool);
+
+    UT_GenStub_AddParam(FM_VerifyFileNotOpen, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileNotOpen, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyFileNotOpen, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyFileNotOpen, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyFileNotOpen, Basic, UT_DefaultHandler_FM_VerifyFileNotOpen);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyFileNotOpen, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyFileState()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyFileState(FM_File_States State, char *Filename, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyFileState, bool);
+
+    UT_GenStub_AddParam(FM_VerifyFileState, FM_File_States, State);
+    UT_GenStub_AddParam(FM_VerifyFileState, char *, Filename);
+    UT_GenStub_AddParam(FM_VerifyFileState, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyFileState, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyFileState, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyFileState, Basic, UT_DefaultHandler_FM_VerifyFileState);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyFileState, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyNameValid()
+ * ----------------------------------------------------
+ */
+uint32 FM_VerifyNameValid(char *Name, uint32 BufferSize, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyNameValid, uint32);
+
+    UT_GenStub_AddParam(FM_VerifyNameValid, char *, Name);
+    UT_GenStub_AddParam(FM_VerifyNameValid, uint32, BufferSize);
+    UT_GenStub_AddParam(FM_VerifyNameValid, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyNameValid, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyNameValid, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyNameValid, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for FM_VerifyOverwrite()
+ * ----------------------------------------------------
+ */
+bool FM_VerifyOverwrite(uint16 Overwrite, uint32 EventID, const char *CmdText)
+{
+    UT_GenStub_SetupReturnBuffer(FM_VerifyOverwrite, bool);
+
+    UT_GenStub_AddParam(FM_VerifyOverwrite, uint16, Overwrite);
+    UT_GenStub_AddParam(FM_VerifyOverwrite, uint32, EventID);
+    UT_GenStub_AddParam(FM_VerifyOverwrite, const char *, CmdText);
+
+    UT_GenStub_Execute(FM_VerifyOverwrite, Basic, UT_DefaultHandler_FM_VerifyOverwrite);
+
+    return UT_GenStub_GetReturnValue(FM_VerifyOverwrite, bool);
+}
+```
+
+### `fm_cmds_stubs.c`
+
+**경로:** `fsw/apps/fm/unit-test/stubs/fm_cmds_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Provides functions for the execution of the FM ground commands
+ */
+
+#include "cfe.h"
+#include "fm_msg.h"
+#include "fm_msgdefs.h"
+#include "fm_msgids.h"
+#include "fm_events.h"
+#include "fm_app.h"
+#include "fm_cmds.h"
+#include "fm_cmd_utils.h"
+#include "fm_perfids.h"
+#include "fm_platform_cfg.h"
+#include "fm_version.h"
+#include "fm_verify.h"
+#include "fm_test_utils.h"
+
+/************************************************************************
+** UT Includes
+*************************************************************************/
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <string.h>
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- NOOP                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_NoopCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Reset Counters                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_ResetCountersCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Copy File                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_CopyFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_CopyFileCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Move File                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_MoveFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_MoveFileCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Rename File                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_RenameFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_RenameFileCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Delete File                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_DeleteFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_DeleteFileCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Delete All Files                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_DeleteAllFilesCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_DeleteAllFilesCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Decompress File                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+#ifdef FM_INCLUDE_DECOMPRESS
+
+bool FM_DecompressFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_DecompressFileCmd) != 0;
+}
+
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Concatenate Files                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_ConcatFilesCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_ConcatFilesCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Get File Info                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_GetFileInfoCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Get List of Open Files                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_GetOpenFilesCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_GetOpenFilesCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Create Directory                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_CreateDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_CreateDirectoryCmd);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Delete Directory                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_DeleteDirectoryCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_DeleteDirectoryCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Get List of Directory Entries (to file)   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_GetDirListFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_GetDirListFileCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Get List of Directory Entries (to pkt)    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_GetDirListPktCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_GetDirListPktCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Get File System Free Space                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_MonitorFilesystemSpaceCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_MonitorFilesystemSpaceCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Set Table Entry Enable/Disable State      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_SetTableStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_SetTableStateCmd) != 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM command handler -- Set Permissions for a file                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+bool FM_SetPermissionsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    return UT_DEFAULT_IMPL(FM_SetPermissionsCmd) != 0;
+}
+```
+
+### `fm_tbl_stubs.c`
+
+**경로:** `fsw/apps/fm/unit-test/stubs/fm_tbl_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Provides functions for the initialization, validation, and
+ *  management of the FM File System Free Space Table
+ */
+
+#include "cfe.h"
+#include "fm_platform_cfg.h"
+#include "fm_msg.h"
+#include "fm_tbl.h"
+#include "fm_events.h"
+#include "fm_perfids.h"
+#include "fm_child.h"
+#include "fm_test_utils.h"
+
+/************************************************************************
+** UT Includes
+*************************************************************************/
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <string.h>
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM table function -- startup initialization                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_TableInit(void)
+{
+    int32 status;
+    status = UT_DEFAULT_IMPL(FM_TableInit);
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM table function -- table data verification                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 FM_ValidateTable(FM_MonitorTable_t *TablePtr)
+{
+    int32 status;
+    status = UT_DEFAULT_IMPL(FM_ValidateTable);
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM table function -- acquire table data pointer                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_AcquireTablePointers(void)
+{
+    UT_DEFAULT_IMPL(FM_AcquireTablePointers);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM table function -- release table data pointer                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void FM_ReleaseTablePointers(void)
+{
+    UT_DEFAULT_IMPL(FM_ReleaseTablePointers);
+}
+```

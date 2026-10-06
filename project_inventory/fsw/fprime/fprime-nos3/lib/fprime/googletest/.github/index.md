@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ ISSUE_TEMPLATE/index
 workflows/index
 ```
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/workflows/`](workflows/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

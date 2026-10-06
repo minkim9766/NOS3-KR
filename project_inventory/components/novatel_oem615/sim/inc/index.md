@@ -3,24 +3,543 @@
 
 **경로:** `components/novatel_oem615/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `gps_sim_data_42socket_provider.hpp`
 
-file--gps_sim_data_42socket_provider.hpp
-file--gps_sim_data_file_provider.hpp
-file--gps_sim_data_point.hpp
-file--gps_sim_data_shmem_provider.hpp
-file--gps_sim_hardware_model_common.hpp
-file--gps_sim_hardware_model_OEM615.hpp
+**경로:** `components/novatel_oem615/sim/inc/gps_sim_data_42socket_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_GPSSIMDATA42SOCKETPROVIDER_HPP
+#define NOS3_GPSSIMDATA42SOCKETPROVIDER_HPP
+
+//#include <vector>
+
+//#include <Client/Bus.hpp>
+
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /** \brief Class for a provider of GPS simulation data that provides data from a socket connection to 42.
+     *
+     */
+    class GPSSimData42SocketProvider : public SimData42SocketProvider
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  sc  The configuration for the simulation
+        GPSSimData42SocketProvider(const boost::property_tree::ptree& config);
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to retrieve GPS data.
+         *
+         * @returns                     A data point of GPS data.
+         */
+      virtual boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+        //@}
+    private:
+        // Private helper methods
+        // Private data
+        int16_t _sc;  // Which spacecraft number to parse out of 42 data
+        int16_t _gps; // Which GPS number to parse out of 42 data
+        int16_t _leap_seconds; // Current number of leap seconds
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `gps_sim_data_file_provider.hpp`
 
-- [`components/novatel_oem615/sim/inc/gps_sim_data_42socket_provider.hpp`](file--gps_sim_data_42socket_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/sim/inc/gps_sim_data_file_provider.hpp`](file--gps_sim_data_file_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/sim/inc/gps_sim_data_point.hpp`](file--gps_sim_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/sim/inc/gps_sim_data_shmem_provider.hpp`](file--gps_sim_data_shmem_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/sim/inc/gps_sim_hardware_model_common.hpp`](file--gps_sim_hardware_model_common.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/sim/inc/gps_sim_hardware_model_OEM615.hpp`](file--gps_sim_hardware_model_OEM615.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/novatel_oem615/sim/inc/gps_sim_data_file_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_GPSSIMDATAFILEPROVIDER_HPP
+#define NOS3_GPSSIMDATAFILEPROVIDER_HPP
+
+#include <vector>
+
+#include <Client/Bus.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <gps_sim_data_point.hpp>
+
+namespace Nos3
+{
+    /** \brief Class for a provider of GPS simulation data that provides data from a file that is generated by 42.
+     *
+     */
+    class GPSSimDataFileProvider : public SimIDataProvider
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  sc  The configuration for the simulation
+        GPSSimDataFileProvider(const boost::property_tree::ptree& config);
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to retrieve GPS data.
+         *
+         * @returns                     A data point of GPS data.
+         */
+      virtual boost::shared_ptr<SimIDataPoint> get_data_point() const;
+        //@}
+    private:
+        // Private helper methods
+        boost::shared_ptr<GPSSimDataPoint> get_gps_data() const;
+    	void get_gps_time(double absTime, int32_t& gps_week, int32_t& gps_seconds_in_week, double& gps_fractions_of_a_second) const;
+
+        // Private data
+        NosEngine::Transport::TransportHub      _hub;
+        std::unique_ptr<NosEngine::Client::Bus> _time_bus;
+        const double                            _absolute_start_time;
+        const int64_t                           _sim_microseconds_per_tick;
+        std::string _data_file;
+        mutable int _file_loc;
+        const int16_t _leap_seconds; // Current number of leap seconds
+
+    };
+}
+
+#endif
+```
+
+### `gps_sim_data_point.hpp`
+
+**경로:** `components/novatel_oem615/sim/inc/gps_sim_data_point.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_GPSSIMDATAPOINT_HPP
+#define NOS3_GPSSIMDATAPOINT_HPP
+
+#include <cstdint>
+#include <string>
+
+#include <boost/shared_ptr.hpp>
+
+#include <sim_42data_point.hpp>
+#include <sim_i_data_point.hpp>
+
+namespace Nos3
+{
+
+    /** \brief Class to contain a file entry of GPS simulation data for a specific time.
+     *
+     *  The GPS data is actually for a specific orbit location and attitude for the spacecraft also.
+     *
+     *  Notes on symbols/abbreviations:
+     *  - v is for vector
+     *  - n is the standard symbol used for inertial reference frame (independent of spacecraft attitude),
+     *    b is the standard symbol used for body reference frame (depends on spacecraft attitude)
+     *  - x, y, z... are for the x, y, z components
+     *
+     *  !!! UNITS !!!:
+     *    absolute time is in seconds, with an epoch of ??
+     *    inertial reference frame has center at ??, x pointing in ?? direction, y pointing in ?? direction, z pointing in ?? direction
+     *    body reference frame has center at ?? (mag center?  spacecraft center?), x pointing in ?? direction, y pointing in ?? direction, z pointing in ?? direction
+     *
+     *  TBD:  Specify units of GPS data.  Specify exactly what
+     *    inertial reference frame we are talking about.  Specify exactly how the body reference frame is set up, e.g. do
+     *    we need to worry about a rotation matrix to reference the magnetometer body reference frame to the cubesat body
+     *    reference frame.
+     */
+    class GPSSimDataPoint : public Sim42DataPoint
+    {
+    public:
+        /// @name Constructors
+        //@{
+        /** \brief Default constructor
+         *  Just has no data
+         */
+        GPSSimDataPoint() : _not_parsed(false) /* nothing to parse */ {_ECEF.resize(3); _ECEF_vel.resize(3); _ECI.resize(3); _ECI_vel.resize(3); };
+        /** \brief Constructor explicit data values.
+         *  Sets all the data values.
+         */
+        GPSSimDataPoint(double abs_time, int16_t leap_seconds, int16_t gps_week, int32_t gps_sec_week, double gps_frac_sec, 
+            double ECEF[3], double ECEF_vel[3], double ECI[3], double ECI_vel[3]);
+        /** \brief Constructor explicit data values.
+         *  Sets all the data values.
+         */
+        GPSSimDataPoint(double abs_time, int16_t leap_seconds, int16_t gps_week, int32_t gps_sec_week, double gps_frac_sec, 
+            const std::vector<double>& ECEF, const std::vector<double>& ECEF_vel, const std::vector<double>& ECI, const std::vector<double>& ECI_vel);
+        /** \brief Constructor from a 42 data point
+         *  Just sets the data point... parsing done on demand later.  This is for efficiency so if no accessors are called, no parsing is done.
+         */
+        GPSSimDataPoint(int16_t spacecraft, int16_t gps, int16_t leap_seconds, const boost::shared_ptr<Sim42DataPoint> dp);
+        //@}
+
+        /// @name Accessors
+        //@{
+        /// \brief Returns a block formatted string representation of the GPS simulation data point
+        /// @return     A block formatted string representation of the GPS simulation data point
+        std::string to_formatted_string(void) const;
+        /// \brief Returns one long single string representation of the GPS simulation data point
+        /// @return     A long single string representation of the GPS simulation data point
+        std::string to_string(void) const;
+
+        int16_t get_gps_rollover(void) const {parse_data_point(); return _gps_rollover;}
+        int16_t get_gps_week(void) const {parse_data_point(); return _gps_week;}
+        int32_t get_gps_sec_week(void) const {parse_data_point(); return _gps_sec_week;}
+        double get_gps_frac_sec(void) const {parse_data_point(); return _gps_frac_sec;}
+        double get_ECEF_x(void) const {parse_data_point(); return _ECEF[0];}
+        double get_ECEF_y(void) const {parse_data_point(); return _ECEF[1];}
+        double get_ECEF_z(void) const {parse_data_point(); return _ECEF[2];}
+        double get_ECEF_vx(void) const {parse_data_point(); return _ECEF_vel[0];}
+        double get_ECEF_vy(void) const {parse_data_point(); return _ECEF_vel[1];}
+        double get_ECEF_vz(void) const {parse_data_point(); return _ECEF_vel[2];}
+        double get_abs_time(void) const {parse_data_point(); return _abs_time;}
+        //@}
+    private:
+        /// @name Private mutators
+        //@{
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+        //@}
+
+        // Private data
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        int16_t _gps;
+        int16_t _leap_seconds;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+        mutable double _abs_time;
+        mutable bool _gps_valid;
+        mutable int16_t _gps_rollover;
+        mutable int16_t _gps_week; // Unambiguous GPS Week
+        mutable int32_t _gps_sec_week; // Integer seconds elapsed since the start of the GPS week
+        mutable double _gps_frac_sec; // Fractions of a second beyond the integer seconds_of_week
+        mutable std::vector<double> _ECEF, _ECEF_vel, _ECI, _ECI_vel; // m, m/s, m, m/s
+        mutable double _gps_lat, _gps_lng, _gps_alt; // degrees, degrees, m above WGS-84 ellipsoid
+
+    };
+
+}
+
+#endif
+
+```
+
+### `gps_sim_data_shmem_provider.hpp`
+
+**경로:** `components/novatel_oem615/sim/inc/gps_sim_data_shmem_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2025 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_GPS_SIM_DATA_SHMEM_PROVIDER_HPP
+#define NOS3_GPS_SIM_DATA_SHMEM_PROVIDER_HPP
+
+//#include <vector>
+
+//#include <Client/Bus.hpp>
+
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <sim_i_data_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    /** \brief Class for a provider of GPS simulation data that provides data from a shared memory connection to 42.
+     *
+     */
+    class GPSSimDataShmemProvider : public SimIDataProvider
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  config  The configuration for the simulation
+        GPSSimDataShmemProvider(const boost::property_tree::ptree& config);
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to retrieve GPS data.
+         *
+         * @returns                     A data point of GPS data.
+         */
+      virtual boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+        //@}
+    private:
+        // Private helper methods
+        // Private data
+        int16_t _sc;  // Which spacecraft number to parse out of 42 data
+        int16_t _gps; // Which GPS number to parse out of 42 data
+        int16_t _leap_seconds; // Current number of leap seconds
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```
+
+### `gps_sim_hardware_model_common.hpp`
+
+**경로:** `components/novatel_oem615/sim/inc/gps_sim_hardware_model_common.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_GPSSIMHARDWAREMODELCOMMON_HPP
+#define NOS3_GPSSIMHARDWAREMODELCOMMON_HPP
+
+#include <cstdint>
+#include <vector>
+
+#include <sim_data_provider_factory.hpp>
+#include <sim_i_hardware_model.hpp>
+
+namespace Nos3
+{
+    /** \brief Class for things common to multiple GPS simulation hardware models, like the data provider
+     *
+     */
+    class GPSSimHardwareModelCommon : public SimIHardwareModel
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  config  The configuration for the simulation
+        GPSSimHardwareModelCommon(const boost::property_tree::ptree& config) : SimIHardwareModel(config)
+        {
+            std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "GPS42SOCKET");
+            _sim_data_provider = SimDataProviderFactory::Instance().Create(dp_name, config);
+        }
+
+        /// \brief Destructor.
+        virtual ~GPSSimHardwareModelCommon()
+        {
+            delete _sim_data_provider;
+            _sim_data_provider = nullptr;
+        }
+        //@}
+
+        void run(void)
+        {
+            // Spin so the callbacks remain valid
+            // TODO - Is this the best thing to do?
+            while(1)
+            {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
+        }
+
+    protected:
+        // protected data
+        SimIDataProvider* _sim_data_provider;
+    };
+}
+
+#endif
+```
+
+### `gps_sim_hardware_model_OEM615.hpp`
+
+**경로:** `components/novatel_oem615/sim/inc/gps_sim_hardware_model_OEM615.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_GPSSIMHARDWAREMODELOEM615_HPP
+#define NOS3_GPSSIMHARDWAREMODELOEM615_HPP
+
+#include <cstdint>
+#include <vector>
+#include <map>
+#include <boost/tuple/tuple.hpp>
+
+#include <Uart/Client/Uart.hpp>
+
+#include <gps_sim_hardware_model_common.hpp>
+
+/*
+** Defines
+*/
+#define NOVATEL_OEM615_SIM_SUCCESS 0
+#define NOVATEL_OEM615_SIM_ERROR   1
+
+namespace Nos3
+{
+    /** \brief Class for a NovAtel OEM615 GPS simulation hardware model.
+     *
+     *  http://www.novatel.com/products/gnss-receivers/oem-receiver-boards/oem6-receivers/oem615/
+     *  http://www.novatel.com/assets/Documents/Manuals/om-20000128.pdf
+     *  http://www.novatel.com/assets/Documents/Manuals/om-20000129.pdf
+     */
+    class GPSSimHardwareModelOEM615 : public GPSSimHardwareModelCommon
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  sim_data_provider The data provider to use to retrieve data
+        /// @param  sc  The configuration for the simulation
+        GPSSimHardwareModelOEM615(const boost::property_tree::ptree& config);
+        /// \brief Destructor
+        ~GPSSimHardwareModelOEM615(void);
+        //@}
+
+    private:
+        // Private helper methods
+        void create_novatel_oem615_data(std::vector<uint8_t>& out_data); 
+        void uart_read_callback(const uint8_t *buf, size_t len);
+        std::uint8_t determine_response_for_request(const std::vector<uint8_t>& in_data, std::vector<uint8_t>& out_data);
+        void send_periodic_data(NosEngine::Common::SimTime time);
+
+        void string_to_uint8vector(const std::string& in, std::vector<uint8_t>& outvector);
+        uint8_t char_to_hex(char in);
+        void hexstring_to_uint8vector(const std::string& in_data, std::vector<uint8_t>& outvector);
+        void double_to_uint8vector(double in_data, std::vector<uint8_t>& outvector);
+        bool is_valid_period(std::string in_string, double& period);
+
+        void create_binary_error(const GPSSimDataPoint& data_point, std::vector<uint8_t>& error);
+        void create_ascii_error(const std::vector<std::string>& words, const GPSSimDataPoint& data_point,  std::vector<uint8_t>& error);
+
+        void get_ascii_header_string(const std::string& message, const GPSSimDataPoint& data_point, std::string& header);
+        void get_binary_header_bytes(uint16_t message, uint16_t length, const GPSSimDataPoint& data_point, std::vector<uint8_t>& header);
+        void get_gpgga_response(const GPSSimDataPoint& data_point, std::vector<uint8_t>& response);
+        void get_bestxyza_response(const GPSSimDataPoint& data_point, std::vector<uint8_t>& response);
+        void get_bestxyzb_response(const GPSSimDataPoint& data_point, std::vector<uint8_t>& response);
+        void get_rangecmpa_response(const GPSSimDataPoint& data_point, std::vector<uint8_t>& response);
+        void get_rangecmpb_response(const GPSSimDataPoint& data_point, std::vector<uint8_t>& response);
+
+        typedef uint32_t    Hex4;
+        Hex4 CRC32Value(int i);
+        Hex4 CalculateBlockCRC32(unsigned long ulCount /* Number of bytes in the data block */, const char *ucBuffer ) /* Data block */;
+        void compute_checksum(const std::string& message, std::string& checksum);
+
+        // Private data
+        typedef void (GPSSimHardwareModelOEM615::*get_log_data_func)(const GPSSimDataPoint&, std::vector<uint8_t>&);
+        std::unique_ptr<NosEngine::Client::Bus> _time_bus;
+        std::unique_ptr<NosEngine::Uart::Uart> _uart_connection;
+        std::map<std::string, get_log_data_func> _get_log_data_map; // message, function to call to generate data for that message
+        std::map<std::string, boost::tuple<double, double>> _periodic_logs; // message, (last absolute time function was called, period (seconds) to call function)
+
+        SimIDataProvider*                                   _novatel_oem615_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::uint32_t                                       _count;
+        std::uint32_t                                       _config;
+        std::uint32_t                                       _status;
+    };
+}
+
+#endif
+```

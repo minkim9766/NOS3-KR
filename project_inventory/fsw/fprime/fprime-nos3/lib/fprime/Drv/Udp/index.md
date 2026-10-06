@@ -3,26 +3,391 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--Udp.fpp
-file--Udp.hpp
-file--UdpComponentImpl.cpp
-file--UdpComponentImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/Udp.fpp`](file--Udp.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/Udp.hpp`](file--Udp.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/UdpComponentImpl.cpp`](file--UdpComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/UdpComponentImpl.hpp`](file--UdpComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Posix SOCKETS)
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/Udp.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/UdpComponentImpl.cpp"
+)
+
+# Necessary shared helpers
+set(MOD_DEPS
+    "Fw/Logger"
+    "Drv/ByteStreamDriverModel"
+    "Drv/Ip"
+)
+
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/Udp.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/UdpTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/UdpTester.cpp"
+)
+set(UT_MOD_DEPS
+    STest
+    SocketTestHelper
+)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Udp.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/Udp.fpp`
+
+
+```fpp
+module Drv {
+    passive component Udp {
+
+        import ByteStreamDriver
+        
+        output port allocate: Fw.BufferGet
+
+        output port deallocate: Fw.BufferSend
+
+    }
+}
+```
+
+### `Udp.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/Udp.hpp`
+
+
+```cpp
+// ======================================================================
+// Udp.hpp
+// Standardization header for Udp
+// ======================================================================
+
+#ifndef Drv_Udp_HPP
+#define Drv_Udp_HPP
+
+#include "Drv/Udp/UdpComponentImpl.hpp"
+
+namespace Drv {
+
+typedef UdpComponentImpl Udp;
+
+}
+
+#endif
+```
+
+### `UdpComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/UdpComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  UdpComponentImpl.cpp
+// \author mstarch
+// \brief  cpp file for UdpComponentImpl component implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/Udp/UdpComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <config/IpCfg.hpp>
+#include <limits>
+#include "Fw/Types/Assert.hpp"
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+UdpComponentImpl::UdpComponentImpl(const char* const compName) : UdpComponentBase(compName) {}
+
+SocketIpStatus UdpComponentImpl::configureSend(const char* hostname,
+                                               const U16 port,
+                                               const U32 send_timeout_seconds,
+                                               const U32 send_timeout_microseconds) {
+    return m_socket.configureSend(hostname, port, send_timeout_seconds, send_timeout_microseconds);
+}
+
+SocketIpStatus UdpComponentImpl::configureRecv(const char* hostname, const U16 port, FwSizeType buffer_size) {
+    FW_ASSERT(buffer_size <= std::numeric_limits<U32>::max(), static_cast<FwAssertArgType>(buffer_size));
+    m_allocation_size = buffer_size;  // Store the buffer size
+
+    return m_socket.configureRecv(hostname, port);
+}
+
+UdpComponentImpl::~UdpComponentImpl() {}
+
+U16 UdpComponentImpl::getRecvPort() {
+    return this->m_socket.getRecvPort();
+}
+
+// ----------------------------------------------------------------------
+// Implementations for socket read task virtual methods
+// ----------------------------------------------------------------------
+
+IpSocket& UdpComponentImpl::getSocketHandler() {
+    return m_socket;
+}
+
+Fw::Buffer UdpComponentImpl::getBuffer() {
+    return allocate_out(0, static_cast<U32>(m_allocation_size));
+}
+
+void UdpComponentImpl::sendBuffer(Fw::Buffer buffer, SocketIpStatus status) {
+    Drv::ByteStreamStatus recvStatus = ByteStreamStatus::OTHER_ERROR;
+    if (status == SOCK_SUCCESS) {
+        recvStatus = ByteStreamStatus::OP_OK;
+    } else if (status == SOCK_NO_DATA_AVAILABLE) {
+        recvStatus = ByteStreamStatus::RECV_NO_DATA;
+    } else {
+        recvStatus = ByteStreamStatus::OTHER_ERROR;
+    }
+    this->recv_out(0, buffer, recvStatus);
+}
+
+void UdpComponentImpl::connected() {
+    if (isConnected_ready_OutputPort(0)) {
+        this->ready_out(0);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+Drv::ByteStreamStatus UdpComponentImpl::send_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    FW_ASSERT_NO_OVERFLOW(fwBuffer.getSize(), U32);
+    Drv::SocketIpStatus status = send(fwBuffer.getData(), static_cast<U32>(fwBuffer.getSize()));
+    Drv::ByteStreamStatus returnStatus;
+    switch (status) {
+        case SOCK_INTERRUPTED_TRY_AGAIN:
+            returnStatus = ByteStreamStatus::SEND_RETRY;
+            break;
+        case SOCK_DISCONNECTED:
+            returnStatus = ByteStreamStatus::SEND_RETRY;
+            break;
+        case SOCK_SUCCESS:
+            returnStatus = ByteStreamStatus::OP_OK;
+            break;
+        default:
+            returnStatus = ByteStreamStatus::OTHER_ERROR;
+            break;
+    }
+    return returnStatus;
+}
+
+void UdpComponentImpl::recvReturnIn_handler(FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->deallocate_out(0, fwBuffer);
+}
+
+}  // end namespace Drv
+```
+
+### `UdpComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/UdpComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  UdpComponentImpl.hpp
+// \author mstarch
+// \brief  hpp file for UdpComponentImpl component implementation
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef UdpComponentImpl_HPP
+#define UdpComponentImpl_HPP
+
+#include <Drv/Ip/IpSocket.hpp>
+#include <Drv/Ip/SocketComponentHelper.hpp>
+#include <Drv/Ip/UdpSocket.hpp>
+#include "Drv/Udp/UdpComponentAc.hpp"
+
+namespace Drv {
+
+class UdpComponentImpl : public UdpComponentBase, public SocketComponentHelper {
+    friend class UdpTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief construct the TcpClient component.
+     * \param compName: name of this component
+     */
+    UdpComponentImpl(const char* const compName);
+
+    /**
+     * \brief Destroy the component
+     */
+    ~UdpComponentImpl();
+
+    // ----------------------------------------------------------------------
+    // Helper methods to start and stop socket
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief Configures the Udp send settings but does not open the connection
+     *
+     * The UdpComponent may need to send to a remote UDP port. This call configures the hostname, port and send
+     * timeouts for that socket connection. This call should be performed on system startup before send is called.
+     * Note: hostname must be a dot-notation IP address of the form "x.x.x.x". DNS translation is left up
+     * to the user.
+     *
+     * \param hostname: ip address of remote tcp server in the form x.x.x.x
+     * \param port: port of remote tcp server
+     * \param send_timeout_seconds: send timeout seconds component. Defaults to: SOCKET_TIMEOUT_SECONDS
+     * \param send_timeout_microseconds: send timeout microseconds component. Must be less than 1000000. Defaults to:
+     * SOCKET_TIMEOUT_MICROSECONDS
+     * \return status of the configure
+     */
+    SocketIpStatus configureSend(const char* hostname,
+                                 const U16 port,
+                                 const U32 send_timeout_seconds = SOCKET_SEND_TIMEOUT_SECONDS,
+                                 const U32 send_timeout_microseconds = SOCKET_SEND_TIMEOUT_MICROSECONDS);
+
+    /**
+     * \brief Configures the Udp receive settings but does not open the connection
+     *
+     * The UdpComponent may need to receive from a remote udp port. This call configures the hostname and port of that
+     * source. This call should be performed on system startup before recv or send are called. Note: hostname must be a
+     * dot-notation IP address of the form "x.x.x.x". DNS translation is left up to the user.
+     *
+     * \param hostname: ip address of remote tcp server in the form x.x.x.x
+     * \param port: port of remote tcp server
+     * \param buffer_size: size of the buffer to be allocated. Defaults to 1024.
+     *  \return status of the configure
+     */
+    SocketIpStatus configureRecv(const char* hostname, const U16 port, FwSizeType buffer_size = 1024);
+
+    /**
+     * \brief get the port being received on
+     *
+     * Most useful when receive was configured to use port "0", this will return the port used for receiving data after
+     * a port has been determined. Will return 0 if the connection has not been setup.
+     *
+     * \return receive port
+     */
+    U16 getRecvPort();
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Implementations for socket read task virtual methods
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief returns a reference to the socket handler
+     *
+     * Gets a reference to the current socket handler in order to operate generically on the IpSocket instance. Used for
+     * receive, and open calls. This socket handler will be a TcpClient.
+     *
+     * \return IpSocket reference
+     */
+    IpSocket& getSocketHandler() override;
+
+    /**
+     * \brief returns a buffer to fill with data
+     *
+     * Gets a reference to a buffer to fill with data. This allows the component to determine how to provide a
+     * buffer and the socket read task just fills said buffer.
+     *
+     * \return Fw::Buffer to fill with data
+     */
+    Fw::Buffer getBuffer() override;
+
+    /**
+     * \brief sends a buffer to be filled with data
+     *
+     * Sends the buffer gotten by getBuffer that has now been filled with data. This is used to delegate to the
+     * component how to send back the buffer. Ignores buffers with error status error.
+     *
+     * \return Fw::Buffer filled with data to send out
+     */
+    void sendBuffer(Fw::Buffer buffer, SocketIpStatus status) override;
+
+    /**
+     * \brief called when the IPv4 system has been connected
+     */
+    void connected() override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief Send data out of the TcpClient
+     *
+     * Passing data to this port will send data from the TcpClient to whatever TCP server this component has connected
+     * to. Should the socket not be opened or was disconnected, then this port call will return SEND_RETRY and critical
+     * transmissions should be retried. OTHER_ERROR indicates an unresolvable error. OP_OK is returned when the data
+     * has been sent.
+     *
+     * Note: this component delegates the reopening of the socket to the read thread and thus the caller should retry
+     * after the read thread has attempted to reopen the port but does not need to reopen the port manually.
+     *
+     * \param portNum: fprime port number of the incoming port call
+     * \param fwBuffer: buffer containing data to be sent
+     */
+    Drv::ByteStreamStatus send_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) override;
+
+    //! Handler implementation for recvReturnIn
+    //!
+    //! Port receiving back ownership of data sent out on $recv port
+    void recvReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& fwBuffer  //!< The buffer
+                              ) override;
+
+    Drv::UdpSocket m_socket;  //!< Socket implementation
+
+    FwSizeType m_allocation_size;  //!< Member variable to store the buffer size
+};
+
+}  // end namespace Drv
+
+#endif  // end UdpComponentImpl
+```

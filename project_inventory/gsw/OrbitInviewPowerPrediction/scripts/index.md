@@ -3,68 +3,4334 @@
 
 **경로:** `gsw/OrbitInviewPowerPrediction/scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `angular_separation_report.py`
 
-file--angular_separation_report.py
-file--argvalidator.py
-file--az_el_range_report.py
-file--configuration.py
-file--fix_tle_checksum.py
-file--generate_az_el_report.py
-file--generate_html_report.py
-file--get_iss_ephemeris_now.py
-file--get_iss_ephemeris_today.py
-file--get_iss_lonlatalt_today.py
-file--get_iss_suntimes_today.py
-file--get_satellite_contacts_from_tracking_schedules.py
-file--get_satellite_ephemerides.py
-file--get_sgp4_verify_ephemeris.py
-file--ground_station.py
-file--ground_station_html_report_generator.py
-file--ground_station_schedule_directory.py
-file--ground_station_tracking_schedule.py
-file--inview_calculator.py
-file--inview_list_report_generator.py
-file--iss_inviews.py
-file--received_telemetry_azelplot.py
-file--retrieve_spacetrack_tles.sh
-file--satellite_html_report_generator.py
-file--satellite_overflight_report_generator.py
-file--satellite_tle.py
-file--sgp4_to_iirv.py
-file--visible_satellite.py
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/angular_separation_report.py`
+
+
+```python
+import sys
+import os
+import math
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+from pytz import UTC
+
+###############################################################################
+# Python module to put together SatelliteTle and InviewCalculator functionality
+# to produce a report of the angular separation with respect to a ground
+# station over time between satellites during inviews for a specified period
+# of time.
+###############################################################################
+
+class AngularSeparationReportGenerator:
+    """Class to create an angular separtion report for a given ground station, a given satellite, and one or more other satellites for a specific time period """
+    # Constructor
+    def __init__(self, base_output_dir, ground_station, satellite_of_interest_tle, other_satellite_tle_list, tz, \
+                 start_day = 0, end_day = 0):
+        # days:  0=today, -1=yesterday, 1 = tomorrow, etc.
+        """Constructor"""
+        self.__base_output_dir = base_output_dir
+        self.__ground_station = ground_station
+        self.__satellite_of_interest = satellite_of_interest_tle
+        self.__other_satellite_tle_list = other_satellite_tle_list
+        self.__tz = tz
+        self.__report_timezone = tz.tzname(datetime.now())
+        self.__start_day = start_day
+        self.__end_day = end_day
+        self.__debug = False
+        self.__trace = False
+        self.__out = sys.stdout
+
+    # Member functions
+    def generate_report(self):
+        """Method to generate the CSV report"""
+        
+        today = datetime.now()
+        directory = "%s/%4.4d-%2.2d-%2.2d" % (self.__base_output_dir, today.year, today.month, today.day)
+        #sys.stderr.write("Generating report in directory: %s\n" % directory)
+        try:
+            os.makedirs(directory)
+        except OSError as e:
+            if (e.errno != os.errno.EEXIST):
+                sys.stderr.write("Error making directory %s: %s" % (directory, e))
+                raise e
+
+        filename = "%s/%4.4d-%2.2d-%2.2d-angular-separation.txt" % (directory, today.year, today.month, today.day)
+        #sys.stderr.write("Generating report: %s\n" % filename)
+
+        with open(filename, "w") as self.__out:
+
+            for i in range(self.__start_day, self.__end_day+1):
+                self.__generate_separations_for_day(i)
+
+    def __generate_separations_for_day(self, day):
+        """Method to generate separations for one day"""
+
+        D2R = math.pi / 180.0
+        # ALL TIMES ARE IN THE TIMEZONE self.__tz !!
+        # Determine the time range for the requested day
+        day_date = datetime.now() + timedelta(days=day)
+        day_year = day_date.year
+        day_month = day_date.month
+        day_day = day_date.day
+        start_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 0, 0, 0))
+        end_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 23, 59, 59))
+        
+        # Get the InviewCalculator and compute the inviews
+        base_ic = InviewCalculator(self.__ground_station, self.__satellite_of_interest)
+        base_inviews = []
+        base_inviews = base_ic.compute_inviews(start_time, end_time)
+        if (self.__debug):
+            self.__out.write("Inviews for satellite of interest %s\n" % self.__satellite_of_interest.get_satellite_number()) # debug
+            base_ic.print_inviews(base_inviews)
+        for sat in self.__other_satellite_tle_list:
+            other_ic = InviewCalculator(self.__ground_station, sat)
+            other_inviews = []
+            other_inviews = other_ic.compute_inviews(start_time, end_time)
+            if (self.__debug):
+                self.__out.write("Inviews for other satellite %s\n" % sat.get_satellite_number()) # debug
+                other_ic.print_inviews(other_inviews)
+
+            combined_inviews = self.combine_inviews(base_inviews, other_inviews)
+            if (self.__debug):
+                self.__out.write("Combined inviews for %s and %s\n" % (self.__satellite_of_interest.get_satellite_number(), sat.get_satellite_number()))
+            for civ in combined_inviews:
+                if (self.__debug):
+                    self.__out.write("Start:  %s, end:  %s\n" % (civ[0], civ[1]))
+                base_azel = base_ic.compute_azels(civ[0], civ[1], 15)
+                other_azel = other_ic.compute_azels(civ[0], civ[1], 15)
+                for i in range(len(base_azel)):
+                    base_unit = [math.cos(D2R*base_azel[i][1])*math.cos(D2R*base_azel[i][2]), 
+                            math.sin(D2R*base_azel[i][1])*math.cos(D2R*base_azel[i][2]), 
+                            math.sin(D2R*base_azel[i][2])]
+                    other_unit = [math.cos(D2R*other_azel[i][1])*math.cos(D2R*other_azel[i][2]), 
+                            math.sin(D2R*other_azel[i][1])*math.cos(D2R*other_azel[i][2]), 
+                            math.sin(D2R*other_azel[i][2])]
+                    separation_angle = math.acos(base_unit[0]*other_unit[0] + base_unit[1]*other_unit[1] + base_unit[2]*other_unit[2]) / D2R
+                    self.__out.write("%s, %s, %s, %s, %f, %f, %f, %f, %f\n" % 
+                            (base_azel[i][0], other_azel[i][0], self.__satellite_of_interest.get_satellite_number(), sat.get_satellite_number(), separation_angle, 
+                                base_azel[i][1], base_azel[i][2],
+                                other_azel[i][1], other_azel[i][2]))
+
+    def combine_inviews(self, inviews1, inviews2):
+        """Method to combine two set of inviews into the overlapping parts + single ends"""
+        index1 = 0
+        index2 = 0
+        combined_inviews = []
+        if (self.__trace):
+            self.__out.write(inviews1)
+            self.__out.write("\n")
+            self.__out.write(inviews2)
+            self.__out.write("\n")
+
+        while ((index1 < len(inviews1)) and (index2 < len(inviews2))): 
+            if (inviews1[index1][0] < inviews2[index2][0]):
+                combined_start = inviews1[index1][0]
+                starting_number = 1
+            else:
+                combined_start = inviews2[index2][0]
+                starting_number = 2
+            if (self.__trace):
+                self.__out.write("Combined start beginning at indices %d, %d is number %d at %s\n" % (index1, index2, starting_number, combined_start)) # debug
+            if (starting_number == 1):
+                if (inviews2[index2][0] <= inviews1[index1][1]):
+                    if (self.__trace):
+                        self.__out.write("Overlap found for indices %d, %d\n" % (index1, index2)) # debug
+                    if (inviews2[index2][1] > inviews1[index1][1]):
+                        ending_number = 2
+                        combined_end = inviews2[index2][1]
+                        if (self.__trace):
+                            self.__out.write("Combined inview for indices %d, %d is %s-%s\n" % (index1, index2, combined_start, combined_end)) # debug
+                    else:
+                        ending_number = 1
+                        combined_end = inviews1[index1][1]
+                        if (self.__trace):
+                            self.__out.write("Combined inview for indices %d, %d is %s-%s\n" % (index1, index2, combined_start, combined_end)) # debug
+                    combined_inviews.append((combined_start, combined_end))
+                else:
+                    if (self.__trace):
+                        self.__out.write("No overlap found for indices %d, %d\n" % (index1, index2)) # debug
+                    if (inviews1[index1][0] > inviews2[index2][1]):
+                            index2 = index2 + 1
+                index1 = index1 + 1
+            else:
+                if (inviews1[index1][0] <= inviews2[index2][1]):
+                    if (self.__trace):
+                        self.__out.write("Overlap found for indices %d, %d\n" % (index1, index2)) # debug
+                    if (inviews2[index2][1] > inviews1[index1][1]):
+                        ending_number = 2
+                        combined_end = inviews2[index2][1]
+                        if (self.__trace):
+                            self.__out.write("Combined inview for indices %d, %d is %s-%s\n" % (index1, index2, combined_start, combined_end)) # debug
+                    else:
+                        ending_number = 1
+                        combined_end = inviews1[index1][1]
+                        if (self.__trace):
+                            self.__out.write("Combined inview for indices %d, %d is %s-%s\n" % (index1, index2, combined_start, combined_end)) # debug
+                    combined_inviews.append((combined_start, combined_end))
+                else:
+                    if (self.__trace):
+                        self.__out.write("No overlap found for indices %d, %d\n" % (index1, index2)) # debug
+                    if (inviews2[index2][0] > inviews1[index1][1]):
+                            index1 = index1 + 1
+                index2 = index2 + 1
+        return combined_inviews
 ```
 
-## 항목
+### `argvalidator.py`
 
-- [`gsw/OrbitInviewPowerPrediction/scripts/angular_separation_report.py`](file--angular_separation_report.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/argvalidator.py`](file--argvalidator.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/az_el_range_report.py`](file--az_el_range_report.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/configuration.py`](file--configuration.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/fix_tle_checksum.py`](file--fix_tle_checksum.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/generate_az_el_report.py`](file--generate_az_el_report.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/generate_html_report.py`](file--generate_html_report.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_iss_ephemeris_now.py`](file--get_iss_ephemeris_now.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_iss_ephemeris_today.py`](file--get_iss_ephemeris_today.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_iss_lonlatalt_today.py`](file--get_iss_lonlatalt_today.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_iss_suntimes_today.py`](file--get_iss_suntimes_today.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_satellite_contacts_from_tracking_schedules.py`](file--get_satellite_contacts_from_tracking_schedules.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_satellite_ephemerides.py`](file--get_satellite_ephemerides.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/get_sgp4_verify_ephemeris.py`](file--get_sgp4_verify_ephemeris.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/ground_station.py`](file--ground_station.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/ground_station_html_report_generator.py`](file--ground_station_html_report_generator.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/ground_station_schedule_directory.py`](file--ground_station_schedule_directory.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/ground_station_tracking_schedule.py`](file--ground_station_tracking_schedule.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/inview_calculator.py`](file--inview_calculator.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/inview_list_report_generator.py`](file--inview_list_report_generator.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/iss_inviews.py`](file--iss_inviews.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/received_telemetry_azelplot.py`](file--received_telemetry_azelplot.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/retrieve_spacetrack_tles.sh`](file--retrieve_spacetrack_tles.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/satellite_html_report_generator.py`](file--satellite_html_report_generator.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/satellite_overflight_report_generator.py`](file--satellite_overflight_report_generator.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/satellite_tle.py`](file--satellite_tle.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/sgp4_to_iirv.py`](file--sgp4_to_iirv.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/scripts/visible_satellite.py`](file--visible_satellite.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/argvalidator.py`
+
+
+```python
+#!/usr/bin/env python
+from os import path
+from datetime import datetime
+import argparse
+
+class ArgValidator:
+
+    def __init__(self):
+        pass
+    
+    @staticmethod
+    def validate_datetime(s):
+        try:
+            return datetime.strptime(s, "%Y-%m-%dT%H:%M:%S") 
+        except ValueError:
+            msg = "Not a valid date/time: '{0}'.".format(s)
+            raise argparse.ArgumentTypeError(msg)
+
+    @staticmethod
+    def validate_file(s):
+        try:
+            with open(s) as f:
+                pass
+            return s
+        except:
+            msg = "Not a valid file: '{0}'.".format(s)
+            raise argparse.ArgumentTypeError(msg)
+
+    @staticmethod
+    def validate_directory(s):
+        if (path.exists(s)):
+            return s
+        else:
+            msg = "Not a valid directory: '{0}'.".format(s)
+            raise argparse.ArgumentTypeError(msg)
+```
+
+### `az_el_range_report.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/az_el_range_report.py`
+
+
+```python
+import sys
+import os
+import math
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+from pytz import UTC
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+###############################################################################
+# Python module to put together SatelliteTle and InviewCalculator functionality
+# to produce a report of azimuth, elevation(, and range) with respect to a
+# ground station during inviews between the ground station and the satellite
+# for a specified period of time.
+###############################################################################
+
+class AzElRangeReportGenerator:
+    """Class to create an azimuth, elevation(, and range) report for a given ground station and a given satellite for a specific time period """
+    # Constructor
+    def __init__(self, base_output_dir, ground_station, gs_number, satellite_of_interest_tle, tz, \
+                 aer_days = 0, time_step_seconds = 15):
+        # days:  0=today, -1=yesterday, 1 = tomorrow, etc.
+        """Constructor"""
+        self.__base_output_dir = base_output_dir
+        self.__ground_station = ground_station
+        self.__gs_number = gs_number
+        self.__satellite_of_interest = satellite_of_interest_tle
+        self.__tz = tz
+        self.__report_timezone = tz.tzname(datetime.now())
+        self.__aer_days = aer_days
+        self.__time_step_seconds = time_step_seconds # depends on the caller to guard from stupidity
+        self.__debug = False
+        self.__trace = False
+        self.__out = sys.stdout
+        today = datetime.now()
+        self.__datestr = "%4.4d-%2.2d-%2.2d" % (today.year, today.month, today.day)
+        self.__directory = "%s/%s" % (self.__base_output_dir, self.__datestr)
+        #sys.stderr.write("Generating report in directory: %s\n" % directory)
+
+    # Member functions
+    def generate_report(self):
+        """Method to generate the report"""
+        
+        if (self.__aer_days > 0):
+            try:
+                os.makedirs(self.__directory)
+            except OSError as e:
+                if (e.errno != os.errno.EEXIST):
+                    sys.stderr.write("Error making directory %s: %s" % (directory, e))
+                    raise e
+
+            for i in range(0, self.__aer_days):
+                filename = "%s/aer-day%d-gs%d-sat%s.html" % (self.__directory, i, self.__gs_number, self.__satellite_of_interest.get_satellite_number())
+                #sys.stderr.write("Generating report: %s\n" % filename)
+                with open(filename, "w") as self.__out:
+                    self.__generate_azelrange_for_day(i)
+
+    def __generate_azelrange_for_day(self, day):
+        """Method to generate azimuth, elevation, range report for one day"""
+
+        speed_of_light = 300000 # km/s
+        # ALL TIMES ARE IN THE TIMEZONE self.__tz !!
+        # Determine the time range for the requested day
+        day_date = datetime.now() + timedelta(days=day)
+        day_year = day_date.year
+        day_month = day_date.month
+        day_day = day_date.day
+        start_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 0, 0, 0))
+        end_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 23, 59, 59))
+        
+        # Get the InviewCalculator and compute the inviews
+        base_ic = InviewCalculator(self.__ground_station, self.__satellite_of_interest)
+        base_inviews = []
+        base_inviews = base_ic.compute_inviews(start_time, end_time)
+
+        if (self.__ground_station.get_name() != ""):
+            station_name = self.__ground_station.get_name()
+        else:
+            station_name = ("Lat:%s Lon:%s" % self.__ground_station.get_latitude(), self.__ground_station.get_longitude())
+
+        self.__out.write("<html>\n")
+        self.__out.write("  <head>\n")
+        self.__out.write("    <title>AER %s to %s, Day %d</title>\n" % ( \
+                station_name, self.__satellite_of_interest.get_satellite_name(), day))
+        self.__out.write("  </head>\n")
+        self.__out.write("  <body>\n")
+
+        report_date = datetime.now() + timedelta(days=day)
+        title = "Azimuth, Elevation, Range Report from Ground Station %s to Satellite %s for Day %s (%04d-%02d-%02d)" % \
+                (station_name, self.__satellite_of_interest.get_satellite_name(), day, \
+                 report_date.year, report_date.month, report_date.day)
+        self.__out.write("    <h1>%s</h1>\n" % title)
+        self.__out.write(("    <h2>NOTE:  Times displayed on the timeline are " + \
+              "for the timezone:  %s</h2>\n") % \
+              self.__report_timezone)
+
+        i = 0
+        self.__out.write("    <ul>\n")
+        for iv in base_inviews:
+            #self.__out.write(iv) # debug
+            start_time = iv[0].astimezone(self.__tz)
+            end_time = iv[1].astimezone(self.__tz)
+            i = i + 1
+            self.__out.write("    <li>Goto: <a href=\"#inview%d\">Inview #%d (%s to %s)</a></li>\n" % (i, i, start_time, end_time))
+        self.__out.write("    </ul>\n")
+
+        i = 0
+        for iv in base_inviews:
+            #self.__out.write(iv) # debug
+            start_time = iv[0].astimezone(self.__tz)
+            end_time = iv[1].astimezone(self.__tz)
+            i = i + 1
+            sat_string = "%s" % (self.__satellite_of_interest.get_satellite_name())
+            rx_freq = self.__satellite_of_interest.get_receive_frequency()
+            if (rx_freq is not None):
+                sat_string = sat_string + " (Receive Frequency %8.3f)" % (rx_freq)
+            tx_freq = self.__satellite_of_interest.get_transmit_frequency()
+            if (tx_freq is not None):
+                sat_string = sat_string + " (Transmit Frequency %8.3f)" % (tx_freq)
+            self.__out.write("    <h3><a name=\"inview%d\">%s to %s inview #%d (%s to %s)</a></h3>\n" % \
+                    (i, station_name, sat_string, i, start_time, end_time))
+            azels = base_ic.compute_azels(iv[0], iv[1], self.__time_step_seconds)
+            self.__out.write("    <table border='1'><tr><td>\n")
+            self.__out.write("    <pre><code>\n")
+            out_string = "      Time (%-19s, Azimuth, Elevation, Range(km), Rng Rt(km/s)" % (str(self.__tz) + ")")
+            if (rx_freq is not None):
+                out_string = out_string + ",  Xmit Freq"
+            if (tx_freq is not None):
+                out_string = out_string + ",  Recv Freq"
+            self.__out.write("%s\n" % out_string)
+            prev_rng = None
+            for azel in azels:
+                if (prev_rng is None):
+                    rr_string = "--------"
+                    if (rx_freq is not None):
+                        tx_string = ",   --------"
+                    else:
+                        tx_string = ""
+                    if (tx_freq is not None):
+                        rx_string = ",   --------"
+                    else:
+                        rx_string = ""
+                else:
+                    range_rate = (azel[3] - prev_rng) / self.__time_step_seconds
+                    rr_string = "%8.5f" % range_rate
+                    if (rx_freq is not None):
+                        freq = rx_freq * (1 + range_rate / speed_of_light)
+                        tx_string = ",   %8.3f" % freq
+                    else:
+                        tx_string = ""
+                    if (tx_freq is not None):
+                        freq = tx_freq * (1 - range_rate / speed_of_light)
+                        rx_string = ",   %8.3f" % freq
+                    else:
+                        rx_string = ""
+                self.__out.write("      %s, %7.2f,    %6.2f,   %7.1f,     %8.8s%s%s\n" % (azel[0].astimezone(self.__tz), azel[1], azel[2], azel[3], rr_string, tx_string, rx_string)) # convert to specified time zone
+                prev_rng = azel[3]
+            self.__out.write("    </pre></code>\n")
+            self.__out.write("    </td><td>")
+            self.__out.write("    <b><p id=\"time%d\" align=\"center\"></p></b>\n" % i)
+            self.__out.write("    <script>\n")
+            self.__out.write("      var temp%d = setInterval(myTimer%d, 1000);\n" % (i, i))
+            self.__out.write("      function myTimer%d() {\n" % i)
+            self.__out.write("        var d = new Date();\n")
+            self.__out.write("        var t = d.toLocaleTimeString();\n")
+            self.__out.write("        document.getElementById(\"time%d\").innerHTML = d;\n" % i)
+            self.__out.write("      }\n")
+            self.__out.write("    </script>\n")
+            filename = "aer-day%d-gs%d-sat%s-iv%d.png" % (day, self.__gs_number, self.__satellite_of_interest.get_satellite_number(), i)
+            path = "%s/%s" % (self.__directory, filename)
+            self.__generate_azelrange_plot(path, azels)
+            self.__out.write("    <img src='../%s/%s'>\n" % (self.__datestr, filename))
+            self.__out.write("    </td></tr></table>\n")
+
+        self.__out.write("  </body>\n")
+        self.__out.write("</html>\n")
+
+
+    def __generate_azelrange_plot(self, filename, azels):
+        """Method to generate azimuth, elevation(, range) plot for a day, ground station, inview"""
+        (fig, ax) = self.create_polar_fig_and_ax()
+        self.generate_azelrange_plot_groundconstraints(ax)
+        self.generate_azelrange_plot_track(ax, self.__satellite_of_interest.get_satellite_name(), azels, 4) # Hardwire every 4
+        plt.savefig(filename)
+        plt.close(fig)
+
+    def create_polar_fig_and_ax(self):
+        plt.rc('grid', color='#000000', linewidth=1, linestyle='-')
+        plt.rc('xtick', labelsize=10)
+        plt.rc('ytick', labelsize=10)
+
+        # force square figure and square axes looks better for polar, IMO
+        fig = plt.figure(figsize=(8, 8))
+        ax = fig.add_axes([0.1, 0.1, 0.8, 0.8],
+                          projection='polar')
+        ax.legend()
+        return (fig, ax)
+
+    def generate_azelrange_plot_track(self, ax, name, azels, time_label_step):
+        """Method to plot a track on a set of azimuth/elevation axes.  name is used for the label; azels is a list of time, azimuth, elevation lists; time_label_step indicates how often the track should be labeled with the time from the azels"""
+        # CAVEAT EMPTOR:  It was easier to work with the azimuth in radians (0 to 2pi) and the elevation in degrees (0 to 90)
+        xarr = []
+        yarr = []
+        xlbl = []
+        ylbl = []
+        i = 0
+        for azel in azels:
+            theta = azel[1]*np.pi/180.0
+            xarr.append(theta)
+            r = 90.0 - azel[2]
+            yarr.append(r)
+            if ((i % time_label_step) == 0):
+                dt = azel[0].astimezone(self.__tz)
+                time = "%2.2d:%2.2d:%2.2d" % (dt.hour, dt.minute, dt.second)
+                ax.annotate(time, (theta, r))
+                xlbl.append(theta)
+                ylbl.append(r)
+            i = i + 1
+        ax.plot(xarr, yarr, color='#000000', lw=3, label=name)
+        ax.plot(xlbl, ylbl, color='#000000', lw=3, linestyle='None', marker='o')
+
+    def generate_azelrange_plot_points(self, ax, name, color, azels):
+        """Method to plot points on a set of azimuth/elevation axes.  name and color are used for the label; azels is a list of time, azimuth, elevation lists"""
+        # CAVEAT EMPTOR:  It was easier to work with the azimuth in radians (0 to 2pi) and the elevation in degrees (0 to 90)
+        xarr = []
+        yarr = []
+        i = 0
+        for azel in azels:
+            theta = azel[1]*np.pi/180.0
+            xarr.append(theta)
+            r = 90.0 - azel[2]
+            yarr.append(r)
+        ax.scatter(xarr, yarr, color=color, lw=3, label=name)
+
+    def generate_azelrange_plot_groundconstraints(self, ax):
+        """Method to plot the ground station constraints on azimuth/elevation axes.  Constraints include min elevation, keyhole elevation, good sectors, and bad sectors"""
+        # CAVEAT EMPTOR:  It was easier to work with the azimuth in radians (0 to 2pi) and the elevation in degrees (0 to 90)
+        ax.set_theta_zero_location("N")
+        ax.text(0, 103, "N", fontsize=10)
+        ax.text(np.pi/2, 107, "E", fontsize=10)
+        ax.text(np.pi, 105, "S", fontsize=10)
+        ax.text(3*np.pi/2, 105, "W", fontsize=10)
+
+        min_el =self.__ground_station.get_aer_min_el()
+        keyhole_el =self.__ground_station.get_aer_keyhole_el()
+        x = np.arange(0, 2*np.pi + 0.1, 0.1)
+        ax.fill_between(x, 90 - min_el, 90, color='#ffff00', alpha=0.5) # Min el: 90 - angle, plt has 0 at bullseye
+        ax.fill_between(x, 0, 90 - keyhole_el, color='#ffff00', alpha=0.5)  # Keyhole: 90 - angle, plt has 0 at bullseye
+
+        for sector in self.__ground_station.get_good_sectors():
+            [minaz, maxaz, minel, maxel] = sector
+            if ((minaz < maxaz) and (minel < maxel)):
+                #print("Min/Max Az/El: %f %f %f %f" % (minaz, maxaz, minel, maxel)) # debug
+                x = np.arange(minaz*np.pi/180.0, maxaz*np.pi/180.0 + 0.01, 0.01)
+                ax.fill_between(x, 90 - maxel, 90 - minel, color='#00ff00', alpha=0.2) # 90 - angle, plt 0 at bull
+
+        for sector in self.__ground_station.get_bad_sectors():
+            [minaz, maxaz, minel, maxel] = sector
+            if ((minaz < maxaz) and (minel < maxel)):
+                #print("Min/Max Az/El: %f %f %f %f" % (minaz, maxaz, minel, maxel)) # debug
+                x = np.arange(minaz*np.pi/180.0, maxaz*np.pi/180.0 + 0.01, 0.01)
+                ax.fill_between(x, 90 - maxel, 90 - minel, color='#ff0000', alpha=0.5) # 90 - angle, plt 0 at bull
+
+        theta = np.arange(0, 2*np.pi + 0.1, 0.1)
+        r = theta*0 + 90
+        ax.plot(theta, r, color='#ff0000')
+
+        labels = []
+        for angle in range(0, 105, 15):
+            if (min_el == angle):
+                pass
+            elif (min_el < angle):
+                labels.append(min_el)
+            if (keyhole_el == angle):
+                pass
+            elif ((min_el != keyhole_el) and (keyhole_el < angle)):
+                labels.append(keyhole_el)
+            labels.append(angle)
+        labels.reverse()
+        ticks = []
+        for label in labels:
+            ticks.append(90-label)
+
+        ax.set_yticks(ticks)
+        ax.set_yticklabels(map(str, labels))
+
+```
+
+### `configuration.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/configuration.py`
+
+
+```python
+#!/usr/bin/env python
+import sys
+import tempfile
+from pytz import timezone
+
+class Configuration:
+
+    def __init__(self):
+        pass
+    
+    @staticmethod
+    def get_config_sectors(sector_list):
+        sectors = []
+        for sector in sector_list:
+            sectors.append(Configuration.get_config_sector(sector))
+        return sectors
+    
+    @staticmethod
+    def get_config_sector(sector_data):
+        sector = []
+        sector.append(Configuration.get_config_float(sector_data.get('min_az','0'),0,360,0))
+        sector.append(Configuration.get_config_float(sector_data.get('max_az','0'),0,360,0))
+        sector.append(Configuration.get_config_float(sector_data.get('min_el','0'),0,90,0))
+        sector.append(Configuration.get_config_float(sector_data.get('max_el','0'),0,90,0))
+        return sector
+        
+    @staticmethod
+    def get_config_int(input, min, max, default):
+        try:
+            t = int(input)
+            if ((t >= min) and (t <= max)):
+                output = t
+            else:
+                output = default
+        except:
+            output = default
+            
+        return output
+    
+    @staticmethod
+    def get_config_float(input, min, max, default):
+        try:
+            t = float(input)
+            if ((t >= min) and (t <= max)):
+                output = t
+            else:
+                output = default
+        except:
+            output = default
+            
+        return output
+    
+    @staticmethod
+    def get_config_timezone(input):
+        try:
+            tz = timezone(data['timezone'])
+        except:
+            tz = timezone('US/Eastern')
+        return tz
+    
+    @staticmethod
+    def get_config_boolean(input):
+        if (input.lower() == "true"):
+            return True
+        else:
+            return False
+    
+    @staticmethod
+    def get_config_directory(input):
+        directory = input
+        try:
+            #sys.stderr.write("Trying to see if directory %s is writable\n" % directory)
+            with tempfile.TemporaryFile(dir = directory) as testfile:
+              testfile.close
+        except:
+            sys.stderr.write("Error getting writable base_output_directory %s\n" % (directory))
+            directory = tempfile.gettempdir()
+        return directory
+    
+```
+
+### `fix_tle_checksum.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/fix_tle_checksum.py`
+
+
+```python
+#!/usr/bin/python
+
+"""Update the checksum of a TLE."""
+
+import sys
+
+def checksum(line):
+    s = 0
+    for c in line:
+        if c == '-':
+            s += 1
+        elif c.isdigit():
+            s += int(c)
+    return s % 10
+
+def fix(line):
+    return line[:68] + str(checksum(line[:68]))
+
+# Assumes at least 3 lines - line 1 is sat #/sat name/anything, line 2 is TLE line 1, line 3 is TLE line 2, and the rest of the lines are anything you want
+lines = sys.stdin.readlines()[:]
+sys.stdout.write(lines[0])
+sys.stdout.write(fix(lines[1]))
+sys.stdout.write("\n")
+sys.stdout.write(fix(lines[2]))
+sys.stdout.write("\n")
+for i in range(3, len(lines)):
+  sys.stdout.write(lines[i])
+
+```
+
+### `generate_az_el_report.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/generate_az_el_report.py`
+
+
+```python
+#!/usr/bin/env python
+import sys
+import json
+import tempfile
+from pytz import timezone
+from configuration import Configuration
+from satellite_tle import SatelliteTle
+from ground_station import GroundStation
+from satellite_html_report_generator import SatelliteHtmlReportGenerator
+from ground_station_html_report_generator import GroundStationHtmlReportGenerator
+from angular_separation_report import AngularSeparationReportGenerator
+from az_el_range_report import  AzElRangeReportGenerator
+from satellite_overflight_report_generator import SatelliteOverflightReportGenerator
+from inview_list_report_generator import InviewListReportGenerator
+from inview_calculator import InviewCalculator
+from datetime import datetime, timedelta
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    conf_file = "config/sat_html_report.config"
+    if (len(sys.argv) > 1):
+        conf_file = sys.argv[1]
+    #sys.stderr.write("conf_file: %s\n" % conf_file)
+    
+    with open(conf_file) as json_data_file:
+        data = json.load(json_data_file)
+        
+    #base_output_dir = Configuration.get_config_directory(data.get('base_output_directory',tempfile.gettempdir()))
+    tz = Configuration.get_config_timezone(data.get('timezone','US/Eastern'))
+    inviews = Configuration.get_config_boolean(data.get('inviews','false'))
+    contacts = Configuration.get_config_boolean(data.get('contacts','false'))
+    insun = Configuration.get_config_boolean(data.get('insun','false'))
+    start_day = Configuration.get_config_int(data.get('start_day','0'), -180, 180, 0)
+    end_day = Configuration.get_config_int(data.get('end_day','0'), -180, 180, 0)
+    time_step_seconds = Configuration.get_config_float(data.get('time_step_seconds','15'), 1, 600, 15)
+    sat_tle = SatelliteTle.from_config(data.get('satellite',[]))
+    ground_station = GroundStation.from_config(data.get('ground_station',[]))    
+    
+    # Determine the time range for the requested day
+    day_date = datetime.now() + timedelta(days=start_day)
+    day_year = day_date.year
+    day_month = day_date.month
+    day_day = day_date.day
+    start_time = tz.localize(
+        datetime(day_year, day_month, day_day, 0, 0, 0))
+    end_time = tz.localize(
+        datetime(day_year, day_month, day_day, 23, 59, 59))
+
+    # Get the InviewCalculator and compute the inviews
+    base_ic = InviewCalculator(ground_station, sat_tle)
+    base_inviews = []
+    base_inviews = base_ic.compute_inviews(start_time, end_time)
+    for iv in base_inviews:
+        print(iv) # debug
+        start_time = iv[0].astimezone(tz)
+        end_time = iv[1].astimezone(tz)
+        azels = base_ic.compute_azels(iv[0], iv[1], time_step_seconds)
+        for azel in azels:
+            #print("      %s, %7.2f,    %6.2f,   %7.1f\n" % (azel[0].astimezone(tz), azel[1], azel[2], azel[3])) # convert to specified time zone
+            print("      %s, %7.2f,    %6.2f,   %7.1f" % (azel[0].astimezone(tz), azel[1], azel[2], azel[3])) # convert to specified time zone
+            
+    #print(sat_tle)
+    
+   
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `generate_html_report.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/generate_html_report.py`
+
+
+```python
+#!/usr/bin/env python
+import sys
+import json
+import tempfile
+from pytz import timezone
+from configuration import Configuration
+from satellite_tle import SatelliteTle
+from ground_station import GroundStation
+from satellite_html_report_generator import SatelliteHtmlReportGenerator
+from ground_station_html_report_generator import GroundStationHtmlReportGenerator
+from angular_separation_report import AngularSeparationReportGenerator
+from az_el_range_report import  AzElRangeReportGenerator
+from satellite_overflight_report_generator import SatelliteOverflightReportGenerator
+from inview_list_report_generator import InviewListReportGenerator
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    conf_file = "config/sat_html_report.config"
+    if (len(sys.argv) > 1):
+        conf_file = sys.argv[1]
+    #sys.stderr.write("conf_file: %s\n" % conf_file)
+    
+    with open(conf_file) as json_data_file:
+        data = json.load(json_data_file)
+
+    base_output_dir = Configuration.get_config_directory(data.get('base_output_directory',tempfile.gettempdir()))
+    tz = Configuration.get_config_timezone(data.get('timezone','US/Eastern'))
+    inviews = Configuration.get_config_boolean(data.get('inviews','false'))
+    contacts = Configuration.get_config_boolean(data.get('contacts','false'))
+    insun = Configuration.get_config_boolean(data.get('insun','false'))
+    start_day = Configuration.get_config_int(data.get('start_day','0'), -180, 180, 0)
+    end_day = Configuration.get_config_int(data.get('end_day','0'), -180, 180, 0)
+    time_step_seconds = Configuration.get_config_float(data.get('time_step_seconds','15'), 1, 600, 15)
+
+    if (data['report_type'] == "Satellite HTML"):
+        create_satellite_html_report(base_output_dir, tz, inviews, contacts, insun, start_day, end_day, time_step_seconds, data)
+    elif (data['report_type'] == "Ground Station HTML"):
+        create_ground_station_html_report(base_output_dir, tz, inviews, start_day, end_day, data)
+    elif (data['report_type'] == "Angular Separation CSV"):
+        create_angular_separation_report(base_output_dir, tz, start_day, end_day, data)
+    elif (data['report_type'] == "AzEl Tabular Text"):
+        create_az_el_range_report(base_output_dir, tz, start_day, end_day, data)
+    elif (data['report_type'] == "Satellite Overflight"):
+        create_satellite_overflight_report(base_output_dir, tz, data)
+    elif (data['report_type'] == "Inview List"):
+        create_inview_list_report(base_output_dir, tz, start_day, end_day, data)
+    else:
+        sys.stderr.write("Unsupported report type:  %s.\n" % data['report_type'])
+ 
+def create_satellite_html_report(base_output_dir, tz, inviews, contacts, insun, start_day, end_day, time_step_seconds, data):
+    
+    sat_tle = SatelliteTle.from_config(data.get('satellite',[]))
+        
+    ground_station_list = []
+    gs_list = data.get('ground_stations',[])
+    for gs in gs_list:
+        ground_station_list.append(GroundStation.from_config(gs))
+        
+    aer_days = Configuration.get_config_int(data.get('num_aer_days','0'),0,10,0)
+
+    shrg = SatelliteHtmlReportGenerator(base_output_dir, sat_tle, ground_station_list, tz, inviews, contacts, insun, aer_days, \
+            start_day, end_day, time_step_seconds)
+    shrg.generate_report()
+    
+def create_inview_list_report(base_output_dir, tz, start_day, end_day, data):
+    sat_tle = SatelliteTle.from_config(data.get('satellite',[]))
+    ground_station = GroundStation.from_config(data.get('ground_station',[]))
+    ilrg = InviewListReportGenerator(base_output_dir, sat_tle, ground_station, tz, start_day, end_day)
+    ilrg.generate_report()
+
+def create_satellite_overflight_report(base_output_dir, tz, data):
+    sat_tle = SatelliteTle.from_config(data.get('satellite',[]))
+    ground_station = GroundStation.from_config(data.get('ground_station',[]))
+    common_sat_name = data.get('common_satellite_name', sat_tle.get_satellite_name())
+    common_gs_name = data.get('common_ground_station_name', ground_station.get_name())
+    sorg = SatelliteOverflightReportGenerator(base_output_dir, sat_tle, ground_station, tz, common_sat_name, common_gs_name)
+    sorg.generate_report()
+
+def create_ground_station_html_report(base_output_dir, tz, inviews, start_day, end_day, data):
+    ground_station = GroundStation.from_config(data.get('ground_station',[]))
+    
+    sat_list = []
+    sat_data_list = data.get('satellites',[])
+    for sat in sat_data_list:
+        sat_list.append(SatelliteTle.from_config(sat))
+
+    aer_days = Configuration.get_config_int(data.get('num_aer_days','0'),0,10,0)
+
+    gshrg = GroundStationHtmlReportGenerator(base_output_dir, ground_station, sat_list, tz, inviews, aer_days, start_day, end_day)
+    gshrg.generate_report()
+
+def create_az_el_range_report(base_output_dir, tz, start_day, end_day, data):
+    ground_station = GroundStation.from_config(data.get('ground_station',[]))
+    sat_of_interest = SatelliteTle.from_config(data.get('satellite',[]))
+    # sys.stderr.write(sat_of_interest.__repr__() + "\n") # debug
+    time_step_seconds = Configuration.get_config_float(data.get('time_step_seconds','15'), 1, 600, 15)
+    aerg = AzElRangeReportGenerator(base_output_dir, ground_station, 0, sat_of_interest, tz, start_day, end_day, time_step_seconds)
+    aerg.generate_report()
+
+def create_angular_separation_report(base_output_dir, tz, start_day, end_day, data):
+    ground_station = GroundStation.from_config(data.get('ground_station',[]))
+    sat_of_interest = SatelliteTle.from_config(data.get('satellite_of_interest',[]))
+    
+    other_sats = []
+    other_sats_data = data.get('other_satellites',[])
+    for sat in other_sats_data:
+        other_sats.append(SatelliteTle.from_config(sat))
+
+    asrg = AngularSeparationReportGenerator(base_output_dir, ground_station, sat_of_interest, other_sats, tz, start_day, end_day)
+    asrg.generate_report()
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `get_iss_ephemeris_now.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_iss_ephemeris_now.py`
+
+
+```python
+#!/usr/bin/env python
+
+from satellite_tle import SatelliteTle
+from datetime import datetime
+from pytz import timezone
+
+###############################################################################
+# Script to use the satellite_tle module to compute
+# the current ephemeris point for ISS
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    # Constants
+    satnum = 25544 # ISS = 25544
+    saturl="http://www.celestrak.com/NORAD/elements/stations.txt"
+    our_tzname = 'US/Eastern'
+
+    # Times we need
+    now = datetime.now()
+    our_tz = timezone(our_tzname)
+    our_now = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                       now.hour, now.minute, now.second))
+
+    st = SatelliteTle(satnum, tle_url=saturl)
+    print_tle_data(st)
+
+    point = st.compute_ephemeris_point(our_now)
+    print_ephemeris_point_now(st, point)
+
+    llap = st.compute_lonlatalt_point(our_now)
+    print_lonlatalt_now(st, llap)
+
+    sun_state = st.get_satellite_sun_state(our_now)
+    if (sun_state == st.InSun):
+        in_sun = "in sun"
+    elif (sun_state == st.InPenumbra):
+        in_sun = "in penumbra"
+    else:
+        in_sun = "in umbra"
+        
+    print "Satellite is %s" % in_sun
+
+def print_tle_data(st):
+    print "Current ISS TLE:"
+    print "Column Headers:"
+    print st
+    print "Raw:"
+    print st.raw_string()
+    print "Pretty:"
+    print st.pretty_string()
+    print ""
+
+def print_ephemeris_point_now(st, point):
+    #print point
+    print "Date/Time: %s  Satellite Number: %s" % \
+          (point[0], st.get_satellite_number())
+    print "Position (km,   x/y/z ECI): %s/%s/%s" % \
+          (point[1][0], point[1][1], point[1][2])
+    print "Velocity (km/s, x/y/z ECI): %s/%s/%s" % \
+          (point[2][0], point[2][1], point[2][2])
+    print ""
+
+def print_lonlatalt_now(st, llap):
+    print "Date/Time: %s  Satellite Number: %s" % \
+          (llap[0], st.get_satellite_number())
+    print "Position (lat/lon/alt km): %s/%s/%s" % \
+          (llap[2], llap[1], llap[3])
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `get_iss_ephemeris_today.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_iss_ephemeris_today.py`
+
+
+```python
+#!/usr/bin/env python
+
+from satellite_tle import SatelliteTle
+from datetime import datetime
+from pytz import timezone
+
+###############################################################################
+# Script to use the satellite_tle module to compute
+# a table of ephemeris points for (local) today for ISS
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    # Constants
+    satnum = 25544 # ISS = 25544
+    saturl="http://www.celestrak.com/NORAD/elements/stations.txt"
+    our_tzname = 'US/Eastern'
+
+    # Times we need
+    now = datetime.now()
+    our_tz = timezone(our_tzname)
+    our_today_start = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                               0, 0, 0))
+    our_today_end = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                             23, 59, 59))
+
+    st = SatelliteTle(satnum, tle_url=saturl)
+    table = st.compute_ephemeris_table(our_today_start, our_today_end, 60)
+    print_ephemeris_table(st, table)
+
+def print_ephemeris_table(st, table):
+    print "Satellite Number: %s" % st.get_satellite_number()
+    print "Current ISS TLE:"
+    print st
+    print "Time: X/Y/Z in km, VX/VY/VZ in km/s, ECI Coordinates"
+    print ""
+    for i in range(0, len(table)):
+        print "%s: %16.8f/%16.8f/%16.8f %13.9f/%13.9f/%13.9f" % \
+              (table[i][0], table[i][1][0], table[i][1][1], table[i][1][2], \
+               table[i][2][0], table[i][2][1], table[i][2][2]) 
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `get_iss_lonlatalt_today.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_iss_lonlatalt_today.py`
+
+
+```python
+#!/usr/bin/env python
+
+from satellite_tle import SatelliteTle
+from datetime import datetime
+from pytz import timezone
+
+###############################################################################
+# Script to use the satellite_tle module to compute
+# a table of ephemeris points for (local) today for ISS
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    # Constants
+    satnum = 25544 # ISS = 25544
+    saturl="http://www.celestrak.com/NORAD/elements/stations.txt"
+    our_tzname = 'US/Eastern'
+
+    # Times we need
+    now = datetime.now()
+    our_tz = timezone(our_tzname)
+    our_today_start = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                               0, 0, 0))
+    our_today_end = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                             23, 59, 59))
+
+    st = SatelliteTle(satnum, tle_url=saturl)
+    table = st.compute_lonlatalt_table(our_today_start, our_today_end, 60)
+    print_lonlatalt_table(st, table)
+
+def print_lonlatalt_table(st, table):
+    print "Satellite Number: %s" % st.get_satellite_number()
+    print "Current ISS TLE:"
+    print st
+    print "Time: lat/lon/alt in km, Geodetic Coordinates"
+    print ""
+    for i in range(0, len(table)):
+        print "%s: %6.2f/%8.2f/%9.2f" % \
+              (table[i][0], table[i][2], table[i][1], table[i][3]) 
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `get_iss_suntimes_today.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_iss_suntimes_today.py`
+
+
+```python
+#!/usr/bin/env python
+
+from satellite_tle import SatelliteTle
+from datetime import datetime
+from pytz import timezone
+
+###############################################################################
+# Script to use the satellite_tle module to compute
+# a table of sun entrance/exit times for (local) today for ISS
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    # Constants
+    satnum = 25544 # ISS = 25544
+    saturl="http://www.celestrak.com/NORAD/elements/stations.txt"
+    our_tzname = 'US/Eastern'
+
+    # Times we need
+    now = datetime.now()
+    our_tz = timezone(our_tzname)
+    our_today_start = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                               0, 0, 0))
+    our_today_end = our_tz.localize(datetime(now.year, now.month, now.day, \
+                                             23, 59, 59))
+
+    st = SatelliteTle(satnum, tle_url=saturl)
+    tables = st.compute_sun_times(our_today_start, our_today_end)
+    print_sun_times_table(st, our_today_start, our_today_end, tables)
+
+def print_sun_times_table(st, our_today_start, our_today_end, tables):
+    print "Satellite Number: %s" % st.get_satellite_number()
+    print "Current ISS TLE:"
+    print st
+    print ""
+    table = tables[0]
+    print "In sun times from %s to %s" % (our_today_start, our_today_end)
+    print "        Enter Sun                Exit Sun           (Len )"
+    for i in range(0, len(table)):
+        delta = table[i][1] - table[i][0]
+        print "%s %s (%s)" % (table[i][0].isoformat(), table[i][1].isoformat(), \
+                              delta.seconds)
+    table = tables[1]
+    print ""
+    print "In penumbra times from %s to %s" % (our_today_start, our_today_end)
+    print "        Enter Penumbra           Exit Penumbra       (Len )"
+    for i in range(0, len(table)):
+        delta = table[i][1] - table[i][0]
+        print "%s %s (%s)" % (table[i][0].isoformat(), table[i][1].isoformat(), \
+                              delta.seconds)
+    table = tables[2]
+    print ""
+    print "In umbra times from %s to %s" % (our_today_start, our_today_end)
+    print "        Enter Umbra              Exit Umbra         (Len )"
+    for i in range(0, len(table)):
+        delta = table[i][1] - table[i][0]
+        print "%s %s (%s)" % (table[i][0].isoformat(), table[i][1].isoformat(), \
+                              delta.seconds)
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `get_satellite_contacts_from_tracking_schedules.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_satellite_contacts_from_tracking_schedules.py`
+
+
+```python
+#!/usr/bin/env python
+import argparse
+from os.path import join
+from argvalidator import ArgValidator
+from datetime import datetime
+from pytz import timezone
+import ground_station_tracking_schedule
+import ground_station_schedule_directory
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", "--dir", help="Location of directory with ground station tracking schedule xlsm files", type=ArgValidator.validate_directory, default=None)
+    parser.add_argument("-f", "--file", help="ground station tracking schedule xlsm file to parse", type=ArgValidator.validate_file, default=None)
+    parser.add_argument("-d", "--date", help="Date to find schedule for", type=ArgValidator.validate_datetime, default=datetime.now())
+    parser.add_argument("-s", "--satellite", help="Satellite to find schedule for", default="stf1")
+    args = parser.parse_args()
+
+    tz = timezone('US/Eastern')
+    gssd = None
+    if (args.dir is None):
+        gssd = ground_station_schedule_directory.GroundStationScheduleDirectory()
+    else:
+        gssd = ground_station_schedule_directory.GroundStationScheduleDirectory(args.dir)
+
+    thedate = None
+    if (args.file is None):
+        thedate = args.date.date()
+        fname = gssd.get_latest_schedule_full_filename_for_date(thedate)
+    else:
+        fname = args.file
+
+    print("Arguments:  ")
+    print("  Dir:        %s" % args.dir)
+    print("  File:       %s" % args.file)
+    print("  Date:       %s" % args.date)
+    print("  Satellite:  %s" % args.satellite)
+
+    gsts = ground_station_tracking_schedule.GroundStationTrackingSchedule(join(gssd.get_dir_name(),fname))
+    if (thedate is None):
+        thedate = gsts.get_week()
+
+    print("Computed:  ")
+    print("  Dir:        %s" % gssd.get_dir_name())
+    print("  File:       %s" % fname)
+    print("  Date:       %s" % thedate)
+
+    contacts = gsts.get_satellite_contacts(args.satellite)
+
+    print("Schedule for satellite %s containing date %s found." % (args.satellite, thedate))
+    print("Week beginning is %s; revision is %s." %(gsts.get_week(), gsts.get_revision()))
+
+    for c in contacts:
+        print("%s contact: %s to %s, max el %f" % (args.satellite, c[0].astimezone(tz), c[1].astimezone(tz), c[2])) 
+
+
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+
+```
+
+### `get_satellite_ephemerides.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_satellite_ephemerides.py`
+
+
+```python
+#!/usr/bin/env python
+
+import argparse
+from argvalidator import ArgValidator
+import math
+from satellite_tle import SatelliteTle
+from ground_station import GroundStation
+from inview_calculator import InviewCalculator
+from datetime import datetime
+from pytz import timezone
+from pyorbital.orbital import astronomy
+import geomag
+import aacgmv2
+
+###############################################################################
+# Script to use the satellite_tle module to compute
+# an ephemeris point at a time (default is now) for a satellite number
+# (default is 43852, which is STF-1)
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--satnum", help="Specify satellite number (e.g. 25544=ISS, 43852=STF-1)", \
+            type=int, metavar="[1-99999]", choices=range(1,99999), default=43852)
+    parser.add_argument("-t", "--time", help="Specify date/time (UTC)", type=ArgValidator.validate_datetime, metavar="YYYY-MM-DDTHH:MM:SS", default=datetime.now())
+    parser.add_argument("-r", "--endtime", help="Specify date time range with this end date/time (UTC)", \
+            type=ArgValidator.validate_datetime, metavar="YYYY-MM-DDTHH:MM:SS", default=None)
+    parser.add_argument("-d", "--timestep", help="Specify time step (delta) in seconds for tabular data", \
+            type=int, metavar="[1-86400]", choices=range(1,86400), default=60)
+    parser.add_argument("-p", "--tle", help="Print TLE information", action="store_true")
+    parser.add_argument("-u", "--sun", help="Print sun/umbra/penumbra information", action="store_true")
+    parser.add_argument("-e", "--ecef", help="Print ECEF ephemeris", action="store_true")
+    parser.add_argument("-i", "--eci", help="Print ECI ephemeris", action="store_true")
+    parser.add_argument("-l", "--lla", help="Print latitude, longitude, altitude (geodetic degrees, altitude in km above WGS-84 ellipsoid) ephemeris", action="store_true")
+    parser.add_argument("-f", "--file", help="TLE file to use (instead of looking up the TLE on CelesTrak)", type=ArgValidator.validate_file, default=None)
+    parser.add_argument("-m", "--mag", help="Print geomagnetic data", action="store_true")
+    parser.add_argument("-a", "--aer", help="Print az/el/range from ground station", action="store_true")
+    parser.add_argument("-x", "--longitude", help="Specify longitude (degrees) of ground station", \
+            type=float, default=-79.825518056)
+    parser.add_argument("-y", "--latitude", help="Specify latitude (degrees) of ground station", \
+            type=float, default=38.43685028)
+    parser.add_argument("-z", "--elevation", help="Specify elevation (meters) of ground station", \
+            type=float, default=842.0)
+    parser.add_argument("-v", "--iirv", help="Print improved interrange vector (IIRV) format", action="store_true")
+    args = parser.parse_args()
+
+    if (args.file is not None):
+        st = SatelliteTle(args.satnum, tle_file=args.file)
+    else:
+        saturl = "http://www.celestrak.com/cgi-bin/TLE.pl?CATNR=%s" % args.satnum
+        st = SatelliteTle(args.satnum, tle_url=saturl)
+
+    if (args.tle):
+        print_tle_data(st)
+
+    if (args.eci):
+        if (args.endtime is None):
+            point = st.compute_ephemeris_point(args.time)
+            print_ephemeris_point(st, point)
+        else:
+            table = st.compute_ephemeris_table(args.time, args.endtime, args.timestep)
+            print_ephemeris_table(st, table)
+
+    if (args.ecef):
+        #print "ECEF is not implemented"
+        if (args.endtime is None):
+            point = st.compute_ephemeris_point(args.time)
+            print_ephemeris_point(st, point, False)
+        else:
+            table = st.compute_ephemeris_table(args.time, args.endtime, args.timestep)
+            print_ephemeris_table(st, table, False)
+
+
+    if (args.lla):
+        if (args.endtime is None):
+            llap = st.compute_lonlatalt_point(args.time)
+            print_lonlatalt(st, llap)
+        else:
+            table = st.compute_lonlatalt_table(args.time, args.endtime, args.timestep)
+            print_lonlatalt_table(st, table)
+
+    if (args.mag):
+        if (args.endtime is None):
+            llap = st.compute_lonlatalt_point(args.time)
+            print_mag(st, llap)
+        else:
+            table = st.compute_lonlatalt_table(args.time, args.endtime, args.timestep)
+            print_mag_table(st, table)
+
+    if (args.aer):
+        gs = GroundStation(lat=args.latitude, lon=args.longitude, el_meters=args.elevation)
+        ic = InviewCalculator(gs, st)
+        if (args.endtime is None):
+            args.endtime = args.time
+        azels = ic.compute_azels(args.time, args.endtime, args.timestep)
+        print_azelrange_table(azels)
+
+    if (args.sun):
+        if (args.endtime is None):
+            sun_state = st.get_satellite_sun_state(args.time)
+            if (sun_state == st.InSun):
+                in_sun = "in sun"
+            elif (sun_state == st.InPenumbra):
+                in_sun = "in penumbra"
+            else:
+                in_sun = "in umbra"
+            print("===== SUN =====")
+            print("Satellite is %s" % in_sun)
+        else:
+            tables = st.compute_sun_times(args.time, args.endtime)
+            print_sun_times_table(st, args.time, args.endtime, tables)
+            
+    if (args.iirv):
+        if (args.endtime is None):
+            point = st.compute_ephemeris_point(args.time)
+            print_iirv_point(st, point)
+        else:
+            table = st.compute_ephemeris_table(args.time, args.endtime, args.timestep)
+            print_iirv_points(st, table)
+
+def print_tle_data(st):
+    print("===== TLE =====")
+    print("Column Headers:")
+    print(st)
+    print("Raw:")
+    print(st.raw_string())
+    print("Pretty:")
+    print(st.pretty_string())
+
+def print_ephemeris_point(st, point, inertial=True):
+    #print point
+    if (inertial):
+        coords = "ECI"
+    else:
+        coords = "ECEF"
+    print("===== %s =====" % coords)
+
+    if (not inertial):
+        gmst_radians = astronomy.gmst(point[0])
+    print("Date/Time: %s  Satellite Number: %s" % \
+          (point[0], st.get_satellite_number()))
+    (x, y, z) = (point[1][0], point[1][1], point[1][2])
+    if (not inertial):
+        r = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        x = r*math.cos(-1.0*gmst_radians+theta)
+        y = r*math.sin(-1.0*gmst_radians+theta)
+    print("Position (km,   x/y/z %s): %s/%s/%s" % (coords, x, y, z))
+    (x, y, z) = (point[2][0], point[2][1], point[2][2])
+    if (not inertial):
+        r = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        x = r*math.cos(-1.0*gmst_radians+theta)
+        y = r*math.sin(-1.0*gmst_radians+theta)
+    print("Velocity (km/s, x/y/z %s): %s/%s/%s" % (coords, x, y, z))
+
+def print_lonlatalt(st, llap):
+    print("===== LLA =====")
+    print("Date/Time: %s  Satellite Number: %s" % \
+          (llap[0], st.get_satellite_number()))
+    print("Position (lat/lon/alt in geodetic degrees and km above WGS-84 ellipsoid): %s/%s/%s" % \
+          (llap[2], llap[1], llap[3]))
+
+KM_TO_FEET=3280.84
+def print_mag(st, llap):
+    print("===== MAG =====")
+    print("Date/Time: %s  Satellite Number: %s" % \
+          (llap[0], st.get_satellite_number()))
+    d = datetime.date(llap[0])
+    gm = geomag.geomag.GeoMag()
+    mag = gm.GeoMag(llap[2], llap[1], llap[3]*KM_TO_FEET, d)
+    aacgm = aacgmv2.get_aacgm_coord(llap[2], llap[1], llap[3], llap[0])
+    print("Geodetic Latitude (degrees)/Geodetic Longitude (degrees)/Altitude (km above WGS-84 ellipsoid)/Declination (degrees)/Inclination (degrees)/Total Intensity (nT)/Horizontal (nT)/North (nT)/East (nT)/Vertical (nT)/Magnetic Latitude (degrees)/Magnetic Longitude(degrees)/Magnetic Local Time (hours):  %s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s/%s" % \
+    	(llap[2], llap[1], llap[3], mag.dec, mag.dip, mag.ti, mag.bh, mag.bx, mag.by, mag.bz, aacgm[0], aacgm[1], aacgm[2]))
+
+def print_iirv_point(st, point):
+    print("GIIRV MANY\r\r\n")
+    tt = point[0].timetuple()
+    string = "1211800001000%3.3d%2.2d%2.2d%2.2d%3.3d" % (tt.tm_yday, tt.tm_hour, tt.tm_min, tt.tm_sec, int(point[0].microsecond/1000.0))
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    gmst_radians = astronomy.gmst(point[0])
+    #print("gmst_radians=%s, degrees=%s" % (gmst_radians, gmst_radians * 180.0/3.1415927))
+    (x, y, z) = (point[1][0], point[1][1], point[1][2])
+    r = math.sqrt(x*x + y*y)
+    theta = math.atan2(y, x)
+    x = r*math.cos(-1.0*gmst_radians+theta)
+    y = r*math.sin(-1.0*gmst_radians+theta)
+    string = "% 013.0f% 013.0f% 013.0f" % (x*1000.0, y*1000.0, z*1000.0)
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    (x, y, z) = (point[2][0], point[2][1], point[2][2])
+    r = math.sqrt(x*x + y*y)
+    theta = math.atan2(y, x)
+    x = r*math.cos(-1.0*gmst_radians+theta)
+    y = r*math.sin(-1.0*gmst_radians+theta)
+    string = "% 013.0f% 013.0f% 013.0f" % (x*1000000.0, y*1000000.0, z*1000000.0)
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    mass = 4475570
+    cross = 99999
+    drag = 207
+    solar = 0
+    string = "%08.0f%05.0f%04.0f% 08.0f" % (mass, cross, drag, solar)
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    print("ITERM GAQD\r\r\n")
+    
+def checksum(s):
+    csum = 0
+    for c in s:
+        if (c == ' '):
+            pass
+        elif (c == '-'):
+            csum = csum + 1
+        else:
+            csum = csum + int(c)
+    return csum
+
+def print_ephemeris_table(st, table, inertial=True):
+    if (inertial):
+        coords = "ECI"
+    else:
+        coords = "ECEF"
+    print("===== %s =====" % coords)
+
+    print("Time, X,Y,Z in km, VX,VY,VZ in km/s (%s Coordinates)" % coords)
+    for i in range(0, len(table)):
+        ( x,  y,  z) = (table[i][1][0], table[i][1][1], table[i][1][2])
+        (vx, vy, vz) = (table[i][2][0], table[i][2][1], table[i][2][2])
+        if (not inertial):
+            gmst_radians = astronomy.gmst(table[i][0])
+            r = math.sqrt(x*x + y*y)
+            theta = math.atan2(y, x)
+            x = r*math.cos(-1.0*gmst_radians+theta)
+            y = r*math.sin(-1.0*gmst_radians+theta)
+            vr = math.sqrt(vx*vx + vy*vy)
+            vtheta = math.atan2(vy, vx)
+            vx = vr*math.cos(-1.0*gmst_radians+vtheta)
+            vy = vr*math.sin(-1.0*gmst_radians+vtheta)
+        print("%s, %16.8f,%16.8f,%16.8f, %13.9f,%13.9f,%13.9f" % \
+              (table[i][0], x, y, z, vx, vy, vz))
+
+def print_azelrange_table(table):
+    print("===== AER =====")
+    print("Time, azimuth (degrees), elevation (degrees), range (km)")
+    for i in range(0, len(table)):
+        print("%s, %6.2f,%8.2f,%9.2f" % \
+              (table[i][0], table[i][1], table[i][2], table[i][3]))
+
+def print_lonlatalt_table(st, table):
+    print("===== LLA =====")
+    print("Time, lat,lon,alt (geodetic degrees, km above WGS-84 ellipsoid)")
+    for i in range(0, len(table)):
+        print("%s, %6.2f,%8.2f,%9.2f" % \
+              (table[i][0], table[i][2], table[i][1], table[i][3])) 
+
+def print_mag_table(st, table):
+    gm = geomag.geomag.GeoMag()
+    print("===== MAG =====")
+    print("Time (UTC), geodetic latitude (degrees), geodetic longitude (degrees), alt (km above WGS-84 ellipsoid), magnetic declination (degrees), inclination (degrees), total intensity (nT), horizontal (nT), north (nT), east (nT), vertical (nT), magnetic latitude (degrees), magnetic longitude (degrees), magnetic local time (hours)")
+    for i in range(0, len(table)):
+        mag = gm.GeoMag(table[i][2], table[i][1], table[i][3]*KM_TO_FEET, datetime.date(table[i][0]))
+        aacgm = aacgmv2.get_aacgm_coord(table[i][2], table[i][1], table[i][3], table[i][0])
+        print("%s, %6.2f, %8.2f, %9.2f, %6.2f, %8.2f, %7.1f, %7.1f, %7.1f, %7.1f, %7.1f, %6.2f, %8.2f, %5.2f" % \
+            (table[i][0], table[i][2], table[i][1], table[i][3], mag.dec, mag.dip, mag.ti, mag.bh, mag.bx, mag.by, mag.bz, aacgm[0], aacgm[1], aacgm[2]))
+
+def print_sun_times_table(st, start, end, tables):
+    print("===== SUN =====")
+    table = tables[0]
+    print("In sun times from %s to %s" % (start, end))
+    print("        Enter Sun                Exit Sun           (Len )")
+    for i in range(0, len(table)):
+        delta = table[i][1] - table[i][0]
+        print("%s %s (%s)" % (table[i][0].isoformat(), table[i][1].isoformat(), \
+                              delta.seconds))
+    table = tables[1]
+    print("")
+    print("In penumbra times from %s to %s" % (start, end))
+    print("        Enter Penumbra           Exit Penumbra       (Len )")
+    for i in range(0, len(table)):
+        delta = table[i][1] - table[i][0]
+        print("%s %s (%s)" % (table[i][0].isoformat(), table[i][1].isoformat(), \
+                              delta.seconds))
+    table = tables[2]
+    print("")
+    print("In umbra times from %s to %s" % (start, end))
+    print("        Enter Umbra              Exit Umbra         (Len )")
+    for i in range(0, len(table)):
+        delta = table[i][1] - table[i][0]
+        print("%s %s (%s)" % (table[i][0].isoformat(), table[i][1].isoformat(), \
+                              delta.seconds))
+
+def print_iirv_points(st, table):
+    for i in range(0, len(table)):
+        print("GIIRV MANY\r\r\n")
+        tt = table[i][0].timetuple()
+        string = "1111800001%3.3d%3.3d%2.2d%2.2d%2.2d%3.3d" % (i+1, tt.tm_yday, tt.tm_hour, tt.tm_min, tt.tm_sec, int(table[i][0].microsecond/1000.0))
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        gmst_radians = astronomy.gmst(table[i][0])
+        #print("gmst_radians=%s, degrees=%s" % (gmst_radians, gmst_radians * 180.0/3.1415927))
+        (x, y, z) = (table[i][1][0], table[i][1][1], table[i][1][2])
+        r = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        x = r*math.cos(-1.0*gmst_radians+theta)
+        y = r*math.sin(-1.0*gmst_radians+theta)
+        string = "% 013.0f% 013.0f% 013.0f" % (x*1000.0, y*1000.0, z*1000.0)
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        (x, y, z) = (table[i][2][0], table[i][2][1], table[i][2][2])
+        r = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        x = r*math.cos(-1.0*gmst_radians+theta)
+        y = r*math.sin(-1.0*gmst_radians+theta)
+        string = "% 013.0f% 013.0f% 013.0f" % (x*1000000.0, y*1000000.0, z*1000000.0)
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        mass = 4544100
+        cross = 99999
+        drag = 200
+        solar = 1500000
+        string = "%08.0f%05.0f%04.0f% 08.0f" % (mass, cross, drag, solar)
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        print("ITERM GAQD\r\r\n")
+        
+
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `get_sgp4_verify_ephemeris.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/get_sgp4_verify_ephemeris.py`
+
+
+```python
+#!/usr/bin/env python
+
+from satellite_tle import SatelliteTle
+from datetime import datetime
+from pytz import timezone
+
+###############################################################################
+# Script to use the satellite_tle module to compute
+# a table of ephemeris points for verification against
+# "Revisiting Spacetrack Report #3: Rev 2", AIAA 2006-6753-Rev2,
+# Vallado, Crawford, Hujsak, Kelso.
+# Get sgp4-ver.tle from https://celestrak.com/software/vallado-sw.asp
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    # Constants
+    satnum = "06251" # Delta 1 Deb
+
+    # Times we need
+    start = datetime(2006, 06, 25, 19, 46, 43, 980096)
+    end = datetime(2006, 06, 26, 19, 46, 43, 980096)
+    
+    st = SatelliteTle(satnum, tle_file = "../config/sgp4-ver.tle")
+    table = st.compute_ephemeris_table(start, end, 7200)
+    print_ephemeris_table(st, table)
+
+def print_ephemeris_table(st, table):
+    print "Satellite Number: %s" % st.get_satellite_number()
+    print "Current Firefly TLE:"
+    print st
+    print "Time: X/Y/Z in km, VX/VY/VZ in km/s, ECI Coordinates"
+    print ""
+    for i in range(0, len(table)):
+        print "%s: %16.8f/%16.8f/%16.8f %13.9f/%13.9f/%13.9f" % \
+              (table[i][0], table[i][1][0], table[i][1][1], table[i][1][2], \
+               table[i][2][0], table[i][2][1], table[i][2][2]) 
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `ground_station.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/ground_station.py`
+
+
+```python
+import geocoder
+from datetime import datetime, timedelta
+from pytz import timezone
+from configuration import Configuration
+from ground_station_schedule_directory import GroundStationScheduleDirectory
+
+###############################################################################
+# Python module to make it easy to work with a ground station, its location,
+# and its time zone, determined either by specific lat, lon, elev, tz, etc.
+# or determined using the Google geocoder
+###############################################################################
+
+class GroundStation:
+    """Class to represent the location and timezone of a particular ground station """
+    # Constructor
+    def __init__(self, name="", address="", lat="", lon="", el_meters="", \
+                 tz=None, wx_url=None, other_info=None, minimum_elevation_angle=0.0, \
+                 show_operations_hours=True, \
+                 operations_start_hour=8, operations_start_minute=0, operations_end_hour=16, operations_end_minute=30, \
+                 aer_min_el=0, aer_keyhole_el=90, good_sectors=[], bad_sectors=[], contact_schedule_directory=None):
+        self.__name = name
+        self.__address = address
+        self.__latitude = lat
+        self.__longitude = lon
+        self.__elevation_in_meters = el_meters
+        self.__tz = tz
+        self.__wx_url = wx_url
+        self.__other_info = other_info
+        self.__show_operations_hours = show_operations_hours
+        self.__minimum_elevation_angle = minimum_elevation_angle
+        self.__operations_start_hour = operations_start_hour
+        self.__operations_start_minute = operations_start_minute
+        self.__operations_end_hour = operations_end_hour
+        self.__operations_end_minute = operations_end_minute
+        self.__aer_min_el = aer_min_el
+        self.__aer_keyhole_el = aer_keyhole_el
+        self.__good_sectors = good_sectors
+        self.__bad_sectors = bad_sectors
+        if (contact_schedule_directory is None):
+            self.__schedule_directory = GroundStationScheduleDirectory()
+        else:
+            self.__schedule_directory = GroundStationScheduleDirectory(contact_schedule_directory)
+        
+    # Class Methods to construct in alternative ways
+    @classmethod
+    def from_config(cls, gs_data):
+        if (gs_data.get('predefined','').lower() == 'wallops'):
+                gs = GroundStation.create_wallops()
+        elif (gs_data.get('predefined','').lower() == 'morehead'):
+                gs = GroundStation.create_morehead()
+        elif (gs_data.get('predefined','').lower() == 'sri_paloalto'):
+                gs = GroundStation.create_sri_paloalto()
+        else:
+            name = gs_data.get('name','')
+            lat = Configuration.get_config_float(gs_data.get('lat','0'), -90, 90, 0)
+            lon = Configuration.get_config_float(gs_data.get('lon','0'), -180, 180, 0)
+            el_meters = Configuration.get_config_float(gs_data.get('el_meters','0'), -1000, 10000, 0)
+            tz = Configuration.get_config_timezone('tz')
+            wx_url = gs_data.get('weather_url', None)
+            other_info = gs_data.get('other_info', None)
+            minimum_elevation_angle = Configuration.get_config_float(gs_data.get('minimum_elevation_angle','0'), 0, 90, 0)
+            show_operations_hours = Configuration.get_config_boolean(gs_data.get('show_operations_hours', 'true'))
+            operations_start_hour = Configuration.get_config_int(gs_data.get('operations_start_hour','8'), 0, 23, 8)
+            operations_start_minute = Configuration.get_config_int(gs_data.get('operations_start_minute','0'), 0, 59, 0)
+            operations_end_hour = Configuration.get_config_int(gs_data.get('operations_end_hour','16'), 0, 23, 16)
+            operations_end_minute = Configuration.get_config_int(gs_data.get('operations_end_minute','30'), 0, 59, 30)
+            aer_min_el = Configuration.get_config_float(gs_data.get('aer_min_el','0'),0,90,0)
+            aer_keyhole_el = Configuration.get_config_float(gs_data.get('aer_keyhole_el','90'),0,90,90)
+            good_sectors = Configuration.get_config_sectors(gs_data.get('good_sectors',[]))
+            bad_sectors = Configuration.get_config_sectors(gs_data.get('bad_sectors',[]))
+            contact_schedule_directory = gs_data.get('contact_schedule_directory', None)
+            gs = cls(name, '', lat, lon, el_meters, tz, wx_url, other_info, \
+                    minimum_elevation_angle, show_operations_hours, operations_start_hour, \
+                    operations_start_minute, operations_end_hour, operations_end_minute, \
+                    aer_min_el, aer_keyhole_el, good_sectors, bad_sectors, contact_schedule_directory)
+    
+        return gs
+     
+    @classmethod
+    def from_address(cls, address, name="", \
+        minimum_elevation_angle=0.0, show_operations_hours=True, operations_start_hour=8, operations_start_minute=0, operations_end_hour=16, operations_end_minute=30):
+        gc = geocoder.google(address)
+        [lon, lat] = gc.geometry['coordinates']
+        el = geocoder.google([lat, lon], method='elevation')
+        el_meters = el.meters
+        gtz = geocoder.google([lat, lon], method='timezone')
+        tz_offset_seconds = gtz.dstOffset + gtz.rawOffset
+        tz = timezone(gtz.timeZoneId)
+        obj = cls(name, address, lat, lon, el_meters, tz, minimum_elevation_angle, \
+                  show_operations_hours, operations_start_hour, operations_start_minute, operations_end_hour, operations_end_minute)
+        return obj
+    
+    @classmethod
+    def from_location(cls, lat, lon, el_meters, tzname, name="", minimum_elevation_angle=0.0, \
+                      show_operations_hours=True, operations_start_hour=8, operations_start_minute=0, operations_end_hour=16, operations_end_minute=30):
+        tz = timezone(tzname)
+        obj = cls(name, "", lat, lon, el_meters, tz, minimum_elevation_angle, \
+                  show_operations_hours, operations_start_hour, operations_start_minute, operations_end_hour, operations_end_minute)
+        return obj
+
+    # And a few static factory methods for specific locations
+    @staticmethod
+    def create_wallops():
+        groundstation_name = 'Wallops Antenna'
+        groundstation_address = 'Radar Road, Temperanceville, VA  23442'
+        gs_minimum_elevation_angle = 0.0
+        gs_show_operations_hours = True
+        gs_operations_start_hour = 8
+        gs_operations_start_minute = 30
+        gs_operations_end_hour = 23
+        gs_operations_end_minute = 30
+
+        # Alternate constants
+        gs_alt_lat = 37.854886 # Only needed if address not found
+        gs_alt_lon = -75.512936 # Ditto
+        gs_alt_el_meters = 3.8 # Ditto
+        gs_alt_tzname = 'US/Eastern' # Ditto
+
+        # Otherwise, use explicit location data...
+        gs = GroundStation.from_location(gs_alt_lat, gs_alt_lon, \
+                                         gs_alt_el_meters, \
+                                         gs_alt_tzname, \
+                                         groundstation_name, \
+                                         gs_minimum_elevation_angle, \
+                                         gs_show_operations_hours, gs_operations_start_hour, gs_operations_start_minute, gs_operations_end_hour, gs_operations_end_minute)
+        return gs
+    
+    @staticmethod
+    def create_morehead():
+        groundstation_name = 'Morehead Antenna'
+        gs_minimum_elevation_angle = 10.0
+        gs_alt_lat = 38.191834
+        gs_alt_lon = -83.438841
+        gs_alt_el_meters = 353
+        gs_alt_tzname = 'US/Eastern'
+
+        # Use explicit location data...
+        gs = GroundStation.from_location(gs_alt_lat, gs_alt_lon, \
+                                         gs_alt_el_meters, \
+                                         gs_alt_tzname, \
+                                         groundstation_name, \
+                                         gs_minimum_elevation_angle)
+        return gs    
+
+    @staticmethod
+    def create_sri_paloalto():
+        groundstation_name = 'SRI Palo Alto Antenna'
+        gs_minimum_elevation_angle = 10.0
+        gs_alt_lat = 37.40303
+        gs_alt_lon = -122.17423
+        gs_alt_el_meters = 156.47
+        gs_alt_tzname = 'US/Pacific'
+
+        # Use explicit location data...
+        gs = GroundStation.from_location(gs_alt_lat, gs_alt_lon, \
+                                         gs_alt_el_meters, \
+                                         gs_alt_tzname, \
+                                         groundstation_name, \
+                                         gs_minimum_elevation_angle)
+        return gs
+    
+    def get_name(self):
+        return self.__name
+
+    def get_address(self):
+        return self.__address
+
+    def get_latitude(self):
+        return self.__latitude
+
+    def get_longitude(self):
+        return self.__longitude
+
+    def get_elevation_in_meters(self):
+        return self.__elevation_in_meters
+
+    def get_tz(self):
+        return self.__tz
+    
+    def get_wx_url(self):
+        return self.__wx_url
+    
+    def get_other_info(self):
+        return self.__other_info
+    
+    def get_utcoffset_ondate(self, year, month, day):
+        date = datetime(year, month, day)
+        return self.__tz.utcoffset(date)
+
+    def get_utcoffset_hours_ondate(self, year, month, day):
+        td = self.get_utcoffset_ondate(year, month, day)
+        return (td.days * 86400 + td.seconds) / 3600
+
+    def get_minimum_elevation_angle(self):
+        return self.__minimum_elevation_angle
+
+    def get_show_operations_hours(self):
+        return self.__show_operations_hours
+
+    def get_operations_start_hour(self):
+        return self.__operations_start_hour
+
+    def get_operations_start_minute(self):
+        return self.__operations_start_minute
+
+    def get_operations_end_hour(self):
+        return self.__operations_end_hour
+
+    def get_operations_end_minute(self):
+        return self.__operations_end_minute
+
+    def get_aer_min_el(self):
+        return self.__aer_min_el
+
+    def get_aer_keyhole_el(self):
+        return self.__aer_keyhole_el
+
+    def get_good_sectors(self):
+        return self.__good_sectors
+
+    def get_bad_sectors(self):
+        return self.__bad_sectors
+
+    def get_schedule_directory(self):
+        return self.__schedule_directory
+
+    # Other methods
+    def __repr__(self):
+        """Returns a string representing an instance of this class."""
+        out1 = ('Name: %s Address: %s Timezone: %s\n') % (self.__name, self.__address, self.__tz)
+        out2 = ('Lat: %s Lon: %s El(m): %s\n') % (self.__latitude, self.__longitude, self.__elevation_in_meters)
+        out3 = ('Min El: %s Operating times: %2.2d:%2.2d to %2.2d:%2.2d, Show times: %s\n') % \
+            (self.__minimum_elevation_angle, \
+             self.__operations_start_hour, self.__operations_start_minute, self.__operations_end_hour, self.__operations_end_minute, self.__show_operations_hours)
+        return out1 + out2 + out3
+```
+
+### `ground_station_html_report_generator.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/ground_station_html_report_generator.py`
+
+
+```python
+import sys
+import os
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+from az_el_range_report import AzElRangeReportGenerator
+from pytz import UTC
+
+###############################################################################
+# Python module to put together SatelliteTle and InviewCalculator functionality
+# to produce a nice HTML report that describes events of interest
+# for a ground station and one or more satellites for a specified period of time.
+###############################################################################
+
+class GroundStationHtmlReportGenerator:
+    """Class to create an HTML report for a given ground station and one or more satellites for a specific time period """
+    # Constructor
+    def __init__(self, base_output_dir, ground_station, satellite_tle_list, tz, \
+                 create_inviews = True, aer_days = 0,\
+                 start_day = 0, end_day = 0):
+        # days:  0=today, -1=yesterday, 1 = tomorrow, etc.
+        """Constructor"""
+        self.__base_output_dir = base_output_dir
+        self.__ground_station = ground_station
+        self.__satellite_tle_list = satellite_tle_list
+        self.__tz = tz
+        self.__create_inviews = create_inviews
+        self.__aer_days = aer_days
+        self.__start_day = start_day
+        self.__end_day = end_day
+        self.__html_out = sys.stdout
+
+    # Member functions
+    def generate_report(self):
+        """Method to generate the HTML report"""
+        # Use Google timeline JavaScript API from:  https://developers.google.com/chart/interactive/docs/gallery/timeline
+        
+        
+        today = datetime.now()
+        directory = "%s/%4.4d-%2.2d-%2.2d" % (self.__base_output_dir, today.year, today.month, today.day)
+        #sys.stderr.write("Generating report in directory: %s\n" % directory)
+        try:
+            os.makedirs(directory)
+        except OSError as e:
+            if (e.errno != os.errno.EEXIST):
+                sys.stderr.write("Error making directory %s: %s" % (directory, e))
+                raise e
+
+        filename = "%s/%4.4d-%2.2d-%2.2d.html" % (directory, today.year, today.month, today.day)
+        #sys.stderr.write("Generating report: %s\n" % filename)
+
+        with open(filename, "w") as self.__html_out:
+
+            self.__html_out.write("<html>\n")
+            self.__generate_html_head()
+            self.__html_out.write("  <body>\n")
+            self.__generate_html_body_header()
+
+            # Timelines
+            unit_height = 55
+            standard_row_height = unit_height + unit_height * len(self.__satellite_tle_list)
+            if (self.__ground_station.get_show_operations_hours()):
+                standard_row_height += unit_height
+            for i in range(self.__start_day, self.__end_day+1):
+                row_height = standard_row_height
+                if (i == 0):
+                    row_height += unit_height # space for report generation time bar
+                self.__html_out.write("    <hr>\n")
+                self.__html_out.write(("    <div id=\"timeline%s\" " + \
+                       "style=\"height: %dpx;\"></div>\n") % \
+                       (i, row_height))
+
+            self.__html_out.write("  </body>\n")
+            self.__html_out.write("</html>\n")
+
+        if (self.__aer_days > 0):
+            #print self.__aer_days # debug
+            for sat in self.__satellite_tle_list:
+                aerg = AzElRangeReportGenerator(self.__base_output_dir, self.__ground_station, 0, sat, \
+                        self.__tz, self.__aer_days)
+                aerg.generate_report()
+        
+    def __generate_html_head(self):
+        if (self.__ground_station.get_name() != ""):
+            ident = self.__ground_station.get_name()
+        else:
+            ident = ("Lat:%s Lon:%s" % self.__ground_station.get_latitude(), self.__ground_station.get_longitude())
+        title = "Ground Station %s Report" % ident
+        self.__html_out.write("  <head>\n")
+        self.__html_out.write("    <title>%s</title>\n" % title)
+        self.__html_out.write("    <script type=\"text/javascript\" " + \
+              "src=\"https://www.google.com/jsapi\"></script>\n")
+        self.__html_out.write("    <script type=\"text/javascript\">\n")
+        self.__html_out.write("      google.load(\"visualization\", \"1\", " + \
+              "{packages:[\"timeline\"]});\n")
+        self.__html_out.write("      google.setOnLoadCallback(drawCharts);\n")
+        self.__html_out.write("      function drawCharts() {\n")
+        for i in range(self.__start_day, self.__end_day+1):
+            self.__generate_chart_for_day(i)
+            pass
+        self.__html_out.write("      }\n")
+        self.__html_out.write("    </script>\n")
+        self.__html_out.write("  </head>\n")
+
+    def __generate_html_body_header(self):
+        today = datetime.now()
+        yday = datetime.now() + timedelta(days=-1)
+        tom = datetime.now() + timedelta(days=+1)
+        if (self.__ground_station.get_name() != ""):
+            ident = self.__ground_station.get_name()
+        else:
+            ident = ("Lat:%s Lon:%s" % self.__ground_station.get_latitude(), self.__ground_station.get_longitude())
+        title = "Ground Station %s Report for %04d-%02d-%02d" % \
+                (ident, today.year, today.month, today.day)
+        self.__html_out.write("    <h1>%s</h1>\n" % title)
+        self.__html_out.write(("    <h2>NOTE:  Times displayed on the timeline are " + \
+              "for the timezone:  %s</h2>\n") % \
+              self.__tz)
+        self.__html_out.write("Please click on the inview bars to get azimuth/elevation report information.<br>\n")
+        self.__html_out.write("Please hover over any colored bar for detailed time information.\n")
+        self.__html_out.write("    <hr>\n")
+        self.__html_out.write("    Report from day %s to day %s<br>\n" % \
+              (self.__start_day, self.__end_day))
+        self.__html_out.write(("    (If they exist: " + \
+              "<a href=\"../%04d-%02d-%02d/%04d-%02d-%02d.html\">Previous Report</a> " + \
+              "<a href=\"../%04d-%02d-%02d/%04d-%02d-%02d.html\">Next Report</a>)\n") % \
+              (yday.year, yday.month, yday.day, \
+               yday.year, yday.month, yday.day, \
+               tom.year, tom.month, tom.day, \
+               tom.year, tom.month, tom.day))
+        self.__html_out.write("    <hr>\n")
+        self.__html_out.write("    Ground Station:  %s (%s)<br>\n" % \
+              (self.__ground_station.get_name(), \
+               self.__ground_station.get_address()))
+        self.__html_out.write(("    (Latitude %s degrees, Longitude %s degrees, Elevation %s meters, " + \
+               "Timezone %s)<br>\n") % \
+               (self.__ground_station.get_latitude(), \
+                self.__ground_station.get_longitude(), \
+                self.__ground_station.get_elevation_in_meters(), \
+                self.__ground_station.get_tz().tzname(datetime.now())))
+        self.__html_out.write("    Minimum elevation above the horizon for inview:  %s degrees (inview start and end times are at this elevation)\n" % \
+              self.__ground_station.get_minimum_elevation_angle())
+        self.__html_out.write("    <hr>\n")
+        
+        if (self.__create_inviews):
+            for sat in self.__satellite_tle_list:
+                self.__html_out.write("    <hr>\n")
+                self.__html_out.write("    With inviews for satellite:  %s (%s)<br>\n" % \
+                      (sat.get_satellite_name(), sat.get_satellite_number()))
+                epoch = datetime(2000 + \
+                                 int(sat.get_epoch_year()), 1, 1) + \
+                        timedelta(days=float(sat.get_epoch_day())-1)
+                self.__html_out.write("    Two Line Element Set for Epoch %s (UTC) :<br>\n" % epoch)
+                self.__html_out.write("%s\n" % sat.pretty_string())
+                self.__html_out.write("    <hr>\n")
+
+    def __generate_chart_for_day(self, day):
+        # ALL TIMES ARE IN THE TIMEZONE self.__tz !!
+        # Determine the time range for the requested day
+        day_date = datetime.now() + timedelta(days=day)
+        day_year = day_date.year
+        day_month = day_date.month
+        day_day = day_date.day
+        start_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 0, 0, 0))
+        end_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 23, 59, 59))
+        
+        self.__html_out.write(("        var container = " + \
+              "document.getElementById('timeline%s');\n") % \
+               day)
+        self.__html_out.write("        var chart%d = new google.visualization.Timeline(container);\n" % (day+200)) # 200 is a hack to not have - in names
+        self.__html_out.write("        var dataTable = new google.visualization.DataTable();\n")
+
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', id: 'Title' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', id: 'Barname' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', role: 'style' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', role: 'tooltip' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'date', id: 'Start' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'date', id: 'End' });\n")
+        self.__html_out.write("        google.visualization.events.addListener(chart%d, 'select', selectChart%d);\n" % (day+200, day+200)) # 200 is a hack to not have - in names
+        self.__generate_wholeday_bar_for_day(day, start_time, end_time)
+        satnums = []
+        iv = []
+        row = 1
+        if (day == 0):
+            self.__generate_report_generation_time_bar()
+            row = row + 1
+        if (self.__ground_station.get_show_operations_hours()):
+            self.__generate_operations_bar_for_day(self.__ground_station, day, \
+                                                   day_date, day_year, \
+                                                   day_month, day_day)
+            row = row + 1
+        i = 0
+        if (self.__create_inviews):
+            for sat in self.__satellite_tle_list:
+                satnums.append(sat.get_satellite_number())
+                iv.append(row)
+                row = row + self.__generate_inview_bars_for_day(sat, day, start_time, end_time)
+                i = i + 1
+            iv.append(row)
+        self.__html_out.write("        function selectChart%d(e) {\n" % (day+200)) # 200 is a hack to not have - in names
+        self.__html_out.write("          var satnums = [")
+        for j in range(0,i):
+            self.__html_out.write("%s, " % satnums[j])
+        self.__html_out.write("];\n")
+        self.__html_out.write("          var ivrows = [")
+        for j in range(0,i+1):
+            self.__html_out.write("%d, " % iv[j])
+        self.__html_out.write("];\n")
+        self.__html_out.write("          var msg = 'Table %d selection: ';\n" % (day))
+        self.__html_out.write("          var selection = chart%d.getSelection();\n" % (day+200)) # 200 is a hack to not have - in names
+        self.__html_out.write("          for (var i = 0; i < selection.length; i++) {\n")
+        self.__html_out.write("            var item = selection[i];\n")
+        self.__html_out.write("            if (item.row != null) {;\n")
+        self.__html_out.write("              msg += 'Row ' + item.row + ' ';\n")
+        self.__html_out.write("              for (var j = 0; j < ivrows.length-1; j++) {\n")
+        self.__html_out.write("                if ((ivrows[j] <= item.row) && (ivrows[j+1] > item.row)) {\n")
+        #self.__html_out.write("                  alert('Day %d Inview Sat ' + j + ' number: ' + satnums[j] + ' Inview # ' + (item.row-ivrows[j]));\n" % (day))
+        self.__html_out.write("                  if ((%d >= 0) && (%d < %d)) {\n" % (day, day, self.__aer_days))
+        today = datetime.now()
+        self.__html_out.write("                    var win = window.open('../%4.4d-%2.2d-%2.2d/aer-day%d-gs0-sat' + satnums[j] + '.html#inview' + (1+item.row-ivrows[j]));\n" % 
+                (today.year, today.month, today.day, day))
+        self.__html_out.write("                    win.focus();\n")
+        self.__html_out.write("                  }\n")
+        self.__html_out.write("                }\n")
+        self.__html_out.write("              }\n")
+        self.__html_out.write("            }\n")
+        self.__html_out.write("          }\n")
+        #self.__html_out.write("          alert(msg);\n") # debug
+        self.__html_out.write("        }\n")
+        self.__html_out.write("        chart%d.draw(dataTable);\n" % (day+200)) # 200 is a hack to not have - in names
+
+    def __generate_report_generation_time_bar(self):
+        # Time bar for the minute at which the report was generated
+        generation_time = self.__tz.localize(datetime.now())
+        self.__html_out.write("        dataTable.addRows([\n")
+        self.__html_out.write(("          ['Report Generation Time:', " + \
+              "'Report was generated at:  %s', \n") % \
+               (generation_time))
+        self.__html_out.write(("          'red', \n"))
+        self.__html_out.write(("          'Report was generated at:  %s', \n") % \
+               (generation_time))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s), \n" % \
+              (generation_time.year, generation_time.month-1, \
+               generation_time.day, generation_time.hour, \
+               generation_time.minute, generation_time.second))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s)],\n" % \
+              (generation_time.year, generation_time.month-1, \
+               generation_time.day, generation_time.hour, \
+               generation_time.minute, generation_time.second))
+        self.__html_out.write("        ]);\n")
+
+    def __generate_wholeday_bar_for_day(self, day, start_time, end_time):
+        # Time bar for the whole day
+        if (day < -1):
+            dayname = "PAST"
+            daycolor = "#888"
+        elif (day == -1):
+            dayname = "YESTERDAY"
+            daycolor = "#888"
+        elif (day == 0):
+            dayname = "TODAY"
+            daycolor = "#0a0"
+        elif (0 < day):
+            dayname = "FUTURE"
+            daycolor = "#dd8"
+        self.__html_out.write("        dataTable.addRows([\n")
+        self.__html_out.write(("          ['Times Displayed are %s', " + \
+              "'%s, Day %s:  %s to %s', \n") % \
+               (self.__tz, dayname, day, start_time, end_time))
+        self.__html_out.write("           '%s', \n" % (daycolor))
+        self.__html_out.write("           '%s', \n" % dayname)
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s), \n" % \
+              (start_time.year, start_time.month-1, \
+               start_time.day, start_time.hour, \
+               start_time.minute, start_time.second))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s)],\n" % \
+              (end_time.year, end_time.month-1, \
+               end_time.day, end_time.hour, \
+               end_time.minute, end_time.second))
+        self.__html_out.write("        ]);\n")
+        
+    def __generate_operations_bar_for_day(self, ground_station, day, day_date, \
+                                        day_year, day_month, day_day):
+        # Time bar for local operations
+        if (day < 0):
+            daycolor = "#888"
+        elif (day == 0):
+            daycolor = "#0a0"
+        elif (0 < day):
+            daycolor = "#dd8"
+        local_day_start = ground_station.get_tz(). \
+                          localize( \
+                              datetime(day_year, day_month, day_day,
+                                       ground_station.get_operations_start_hour(), ground_station.get_operations_start_minute(), 0)).astimezone(self.__tz)
+        local_day_end   = ground_station.get_tz(). \
+                          localize( \
+                              datetime(day_year, day_month, day_day,
+                                       ground_station.get_operations_end_hour(), ground_station.get_operations_end_minute(), 0)).astimezone(self.__tz)
+        self.__html_out.write("        dataTable.addRows([\n")
+        self.__html_out.write("          ['%s Operating hours', '%s Operating hours %2.2d:%2.2d-%2.2d:%2.2d ground station local time, which is %s', \n" % \
+              (ground_station.get_name(), \
+               ground_station.get_name(), \
+               ground_station.get_operations_start_hour(), ground_station.get_operations_start_minute(), \
+               ground_station.get_operations_end_hour(), ground_station.get_operations_end_minute(), \
+               ground_station.get_tz()))
+        self.__html_out.write("           '%s', \n" % (daycolor))
+        self.__html_out.write("           '%s Operating hours',\n" % ground_station.get_name())
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s),\n" % \
+              (local_day_start.year, local_day_start.month-1, \
+               local_day_start.day, local_day_start.hour, \
+               local_day_start.minute, local_day_start.second))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s)],\n" % \
+              (local_day_end.year, local_day_end.month-1, \
+               local_day_end.day, local_day_end.hour, \
+               local_day_end.minute, local_day_end.second))
+        self.__html_out.write("        ]);\n")
+
+    def __generate_inview_bars_for_day(self, sat, day, \
+                                       start_time, end_time):
+        # Time bars for inviews
+        gsname = self.__ground_station.get_name()        
+        helptext = ""
+        if ((day >= 0) and (day < self.__aer_days)): 
+            helptext = " (CLICK BAR FOR AZ/EL REPORT AND GRAPH)"
+
+        # Get the InviewCalculator and compute the inviews
+        ic = InviewCalculator(self.__ground_station, \
+                              sat)
+        inviews = []
+        inviews = ic.compute_inviews(start_time, end_time)
+
+        self.__html_out.write("        dataTable.addRows([\n")
+        for i in range(0, len(inviews)):
+            riselocal = inviews[i][0].astimezone(self.__tz)
+            setlocal = inviews[i][1].astimezone(self.__tz)
+            self.__html_out.write(("          ['%s - S/C %s Inviews', ' ', 'blue', " + \
+                   "'%02d:%02d:%02d - %02d:%02d:%02d, Max Elev %02.1f degrees%s', " + \
+                   "new Date(%s, %s, %s, %s, %s, %s), " + \
+                   "new Date(%s, %s, %s, %s, %s, %s)],\n") % \
+                   (gsname, sat.get_satellite_name(), \
+                    riselocal.hour, riselocal.minute, riselocal.second, \
+                    setlocal.hour, setlocal.minute, setlocal.second, \
+                    inviews[i][2], helptext, \
+                    riselocal.year, riselocal.month-1, riselocal.day, \
+                    riselocal.hour, riselocal.minute, riselocal.second, \
+                    setlocal.year, setlocal.month-1, setlocal.day, \
+                    setlocal.hour, setlocal.minute, setlocal.second))
+        self.__html_out.write("        ]);\n")
+        return len(inviews)
+
+```
+
+### `ground_station_schedule_directory.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/ground_station_schedule_directory.py`
+
+
+```python
+from os import listdir
+from os.path import isfile, join
+import ground_station_tracking_schedule
+from datetime import timedelta
+
+###############################################################################
+# Python module to make it easy to work with a directory of 
+# ground station tracking files
+###############################################################################
+
+class GroundStationScheduleDirectory:
+    # Caches as much as possible to speed it up... but then does not reread directories, files, etc.
+    def __init__(self, dir_name="C:/Users/msuder/Google Drive/STF1/WFF-Schedule"):
+        self.__dir_name = dir_name
+        self.__files = None
+        self.__latest_files = None
+    
+    def get_dir_name(self):
+        return self.__dir_name
+    
+    def get_schedule_file_list(self):
+        if (self.__files is None):
+            self.__files = []
+            try:
+                for f in listdir(self.__dir_name):
+                    fname = join(self.__dir_name, f)
+                    suffix = f[-5:]
+                    prefix = f[:1]
+                    if (isfile(fname) and (suffix == ".xlsm") and (prefix != "~")): # only care about files that end in .xlsm and are not backup (~) files
+                        self.__files.append(f)
+            except:
+                pass # Just return an empty list of files
+        return self.__files
+
+    def get_latest_schedule_full_filename_for_date(self, dt):
+        fname = self.get_latest_schedule_filename_for_date(dt)
+        if (fname is None):
+            return None
+        else:
+            return join(self.__dir_name, self.get_latest_schedule_filename_for_date(dt))
+
+    def get_latest_schedule_filename_for_date(self, dt):
+        zerodays = timedelta(days = 0)
+        sevendays = timedelta(days = 7)
+
+        for l in self.get_latest_files():
+            span = dt - l[0]
+            if ((zerodays <= span) and (span < sevendays)):
+                return l[2]
+
+        return None
+
+    def get_latest_files(self):
+        if (self.__latest_files is None):
+            self.__process_all_files()
+        return self.__latest_files
+
+    def __process_all_files(self):
+        self.__latest_files = [] 
+        for f in self.get_schedule_file_list():
+            gsts = ground_station_tracking_schedule.GroundStationTrackingSchedule(join(self.__dir_name, f))
+            week = gsts.get_week()
+            #print("Week:  %s, 0 processing file: %s" % (week, f))
+            l = self.find_entry_for_date(week)
+            if (l is None):
+                self.__latest_files.append([week, gsts.get_revision(), f])
+                #print("Week:  %s, 1 adding file    : %s, rev: %s" % (week, f, gsts.get_revision()))
+            else:
+                frev = gsts.get_revision()
+                if (gsts.compare_revisions(l[1], frev) < 0):
+                    #print("Week:  %s, 2 replacing file : %s, rev: %s, with file: %s, rev: %s" % (week, l[2], l[1], f, frev))
+                    l[1] = frev
+                    l[2] = f
+
+    def find_entry_for_date(self, dt):
+        for l in self.get_latest_files():
+            if (l[0] == dt):
+                return l
+
+        return None
+
+    def print_all_latest(self):
+        for l in self.get_latest_files():
+            print("Week: %s, Latest Rev: %s, Filename: %s" % (l[0], l[1], l[2]))
+
+```
+
+### `ground_station_tracking_schedule.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/ground_station_tracking_schedule.py`
+
+
+```python
+import pytz
+import re
+import os
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, append=True)
+from openpyxl import load_workbook
+from datetime import date
+from dateutil import parser
+
+###############################################################################
+# Python module to make it easy to work with a ground station tracking
+# schedule excel spreadsheet 
+###############################################################################
+
+class GroundStationTrackingSchedule:
+    def __init__(self, file_name="schedule.xlsm"):
+        self.__file_name = file_name
+        self.__worksheet = load_workbook(file_name).worksheets[0]
+    
+    # Alternative based on data in the spreadsheet
+    #def get_week(self):
+    #    try:
+    #        d = parser.parse(self.__worksheet.cell(row=6, column=8).value).date() # H6
+    #    except:
+    #        d = date(1, 1, 1)
+    #    return d
+
+    # Alternative based on filename
+    def get_week(self):
+        #print(self.__file_name)
+        result = re.search("(\d+)_(\d+)_(\d+)", self.__file_name)
+        if (result is not None):
+            #print("%s %s %s" % (result.group(3), result.group(1), result.group(2)))
+            return date(int(result.group(3)), int(result.group(1)), int(result.group(2)))
+        else:
+            return date(1, 1, 1)
+    
+    # Alternative based on data in the spreadsheet
+    #def get_revision(self):
+    #    return self.__worksheet.cell(row=6, column=2).value # B6
+    
+    # Alternative based on filename
+    #def get_revision(self):
+    #    if (re.search("DRAFT", self.__file_name)):
+    #        return "Draft"
+    #    else:
+    #        result = re.search("Rev_(\d+)", self.__file_name)
+    #        if (result is not None):
+    #            return "Final Rev %s" % result.group(1)
+    #        else:
+    #            return ""
+
+    # Alternative based on last modified time 
+    def get_revision(self):
+        rev = os.path.getmtime(self.__file_name)
+        #print(rev)
+        return rev
+
+    __revs = ["", "Draft", "Final Rev 0", "Final Rev 1", "Final Rev 2", "Final Rev 3", "Final Rev 4", \
+        "Final Rev 5", "Final Rev 6", "Final Rev 7", "Final Rev 8", "Final Rev 9"]
+    @classmethod
+    # Alternative based on either the filename or data in the spreadsheet
+    #def compare_revisions(self, rev1, rev2):
+    #    r1 = self.__revs.index(rev1)
+    #    #print("%s %s" % (rev1, r1))
+    #    r2 = self.__revs.index(rev2)
+    #    #print("%s %s" % (rev2, r2))
+    #    if (r1 < r2):
+    #        return -1
+    #    elif (r1 == r2):
+    #        return 0
+    #    else:
+    #        return 1
+
+    # Alternative based on last modified time
+    def compare_revisions(self, rev1, rev2):
+        #print("%s %s" % (rev1, rev2))
+        if (rev1 < rev2):
+            return -1
+        elif (rev1 == rev2):
+            return 0
+        else:
+            return 1
+
+    def get_satellite_contacts(self, sat_name):
+        contacts = []
+        for i in range(self.__worksheet.max_row):
+            sat = self.__worksheet.cell(row=i+1, column=2)         # Satellite names found in column B
+            support = self.__worksheet.cell(row=i+1, column=9)     # Y in column I means this satellite inview row is supported
+            s = self.__worksheet.cell(row=i+1, column=3).value     # Column C - GMT start time of inview
+            e = self.__worksheet.cell(row=i+1, column=4).value     # Column D - GMT end time of inview
+            maxel = self.__worksheet.cell(row=i+1, column=5).value # Column E - maximum elevation of inview
+            if ((sat.value == sat_name) and (support.value == 'Y')):
+                start = pytz.UTC.localize(s)
+                end   = pytz.UTC.localize(e)
+                contacts.append((start, end, maxel))
+        
+        return contacts
+
+```
+
+### `inview_calculator.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/inview_calculator.py`
+
+
+```python
+import sys
+import math
+from satellite_tle import SatelliteTle
+from datetime import datetime, timedelta
+from pytz import UTC
+from pyorbital.orbital import Orbital, astronomy
+import numpy as np
+
+###############################################################################
+# Python module to make it easy to compute the inview times (above a
+# certain elevation angle) from a location on earth (latitude,
+# longitude, elevation) to a spacecraft.  This module downloads
+# the spacecraft TLE from Celestrak
+#
+# Obviously uses lots of other libraries to do the heavy lifting.
+#
+# Here are some reference URLs:
+# http://www.celestrak.com/columns/v04n03/
+# http://www.celestrak.com/columns/v04n05/
+# https://docs.python.org/2/install/
+# https://docs.python.org/2/library/datetime.html
+# http://pytroll.org/
+###############################################################################
+
+class InviewCalculator:
+    """Class to compute inviews above a specified elevation angle from a latitude, longitude, elevation to a satellite (number) """
+    # Constructor
+    def __init__(self, ground_station, satellite_tle):
+        """Constructor:  ground station as GroundStation, satellite TLE as TleManipulator"""
+        self.__ground_station = ground_station
+        self.__satellite_tle = satellite_tle
+        self.__orb = Orbital(str(self.__satellite_tle.get_satellite_number()), \
+                             line1=self.__satellite_tle.get_line1(), \
+                             line2=self.__satellite_tle.get_line2())
+
+    # Member functions
+        
+    def __repr__(self):
+        """Returns a string representing an instance of this class."""
+        out = 'Inview Calculator:\n' \
+              'latitude=%f, longitude=%f, elevation=%f, ' \
+              'minimum elevation angle=%s, satellite TLE=\n%s' % \
+              (self.__ground_station.get_latitude(), self.__ground_station.get_longitude(), self.__ground_station.get_minimum_elevation_angle(), \
+               self.__ground_station.get_minimum_elevation_angle(), self.__satellite_tle)
+        return out
+
+    def compute_inviews(self, in_start_time, in_end_time):
+        """Method to compute inviews (in UTC) for the initialized location, elevation angle, and satellite over a specified time period.  Returns a list of inview start/stop times, accurate to the nearest second and using the latest available TLE when the method is called."""
+        # NOTE:  pyorbital EXPECTS naive date/times and interprets them
+        # as UTC... so we need to satisfy it; however, we are making this
+        # module DATETIME AWARE, so RETURN VALUES are DATETIME AWARE!!
+        # Also, all naive inputs are assumed to be UTC and all aware inputs
+        # are converted to UTC (and then made naive)
+        if (in_start_time.tzinfo is not None):
+            temp = in_start_time.astimezone(UTC)
+            start_time = datetime(temp.year, temp.month, temp.day, \
+                                  temp.hour, temp.minute, temp.second)
+        else:
+            start_time = in_start_time
+        if (in_end_time.tzinfo is not None):
+            temp = in_end_time.astimezone(UTC)
+            end_time = datetime(temp.year, temp.month, temp.day, \
+                                temp.hour, temp.minute, temp.second)
+        else:
+            end_time = in_end_time
+        # start_time, end_time are now naive
+        inviews = []
+        time = start_time
+        up = 0
+        el_increasing = 0
+        maxel = 0
+        try:
+            (az, el) = self.__orb.get_observer_look(time, self.__ground_station.get_longitude(), \
+                                                    self.__ground_station.get_latitude(), \
+                                                    self.__ground_station.get_minimum_elevation_angle())
+            if (el > self.__ground_station.get_minimum_elevation_angle()):
+                # start the first inview at the input start_time
+                up = 1
+                el_increasing = 1
+                rising = time
+            # Step through time, looking for inview starts and ends
+            while (time < end_time):
+                (az, el) = self.__orb.get_observer_look(time, self.__ground_station.get_longitude(), \
+                                                        self.__ground_station.get_latitude(), \
+                                                        self.__ground_station.get_minimum_elevation_angle())
+                if (el > self.__ground_station.get_minimum_elevation_angle()) and (up == 0):
+                    rising = self.__find_exact_crossing(time, up)
+                    el_increasing = 1
+                    up = 1
+                if (el < self.__ground_station.get_minimum_elevation_angle()) and (up == 1):
+                    # make sure to append AWARE datetimes
+                    crossing = self.__find_exact_crossing(time, up)
+                    inviews.append((rising.replace(tzinfo=UTC), \
+                                    crossing.replace(tzinfo=UTC), \
+                                    maxel))
+                    el_increasing = 0
+                    up = 0
+                    maxel = 0
+                if (el > self.__ground_station.get_minimum_elevation_angle()):
+                    if (el > maxel):
+                        maxel = el
+                    elif (el_increasing): # First point after el starts decreasing... find the exact max el
+                        el_increasing = 0
+                        maxel = self.__find_exact_maxel(time, maxel)
+                time += self.__oneminute
+            if (up == 1):
+                # end the last inview at the input end_time
+                # make sure to append AWARE datetimes
+                inviews.append((rising.replace(tzinfo=UTC), \
+                                end_time.replace(tzinfo=UTC), \
+                                maxel))
+
+            return inviews
+        except NotImplementedError: # Does not seem to work?
+            print("NotImplementedError computing inviews.  Date/time = %s-%s-%sT%s:%s:%s, satellite number = %s" % \
+                (time.year, time.month, time.day, time.hour, time.minute, time.second, self.__satellite_tle.get_satellite_number()))
+            sys.stdout.flush()
+            raise
+        except: # Does not seem to work?
+            print("Unknown exception computing inviews.  Date/time = %s-%s-%sT%s:%s:%s, satellite number = %s" % \
+                (time.year, time.month, time.day, time.hour, time.minute, time.second, self.__satellite_tle.get_satellite_number()))
+            sys.stdout.flush()
+            raise
+    
+    def print_inviews(self, inviews):
+        """Method to print a table of inviews... assumes that inviews contains the data for such a table"""
+        for iv in inviews:
+            print("Rise: %s, Set: %s, Maximum Elevation: %f" % (iv[0], iv[1], iv[2]))
+
+    def compute_azels(self, in_start_time, in_end_time, time_step_seconds):
+        """Method to compute az/el angles at time_step intervals during the input time period, INDEPENDENT of whether the satellite is actually in view """
+        # NOTE:  pyorbital EXPECTS naive date/times and interprets them
+        # as UTC... so we need to satisfy it; however, we are making this
+        # module DATETIME AWARE, so RETURN VALUES are DATETIME AWARE!!
+        # Also, all naive inputs are assumed to be UTC and all aware inputs
+        # are converted to UTC (and then made naive)
+        if (in_start_time.tzinfo is not None):
+            temp = in_start_time.astimezone(UTC)
+            start_time = datetime(temp.year, temp.month, temp.day, \
+                                  temp.hour, temp.minute, temp.second)
+        else:
+            start_time = in_start_time
+        if (in_end_time.tzinfo is not None):
+            temp = in_end_time.astimezone(UTC)
+            end_time = datetime(temp.year, temp.month, temp.day, \
+                                temp.hour, temp.minute, temp.second)
+        else:
+            end_time = in_end_time
+        # start_time, end_time are now naive
+        try:
+            delta = timedelta(seconds=time_step_seconds)
+        except:
+            delta = timedelta(seconds=60)
+        azels = []
+        time = start_time
+        # Naively compute the table... i.e. compute time, az, el for the
+        # input duration at each time step... no matter whether the satellite
+        # is really inview or not!
+        while (time < end_time + delta):
+            (az, el) = self.__orb.get_observer_look(time, self.__ground_station.get_longitude(), \
+                                                    self.__ground_station.get_latitude(), \
+                                                    self.__ground_station.get_minimum_elevation_angle())
+            range_km = self.__compute_range(time)
+            outtime = time.replace(tzinfo=UTC) # time is unmodified!
+            azels.append((outtime, az, el, range_km))
+            time += delta
+            
+        return azels
+
+    def __compute_range(self, utc_time):
+        """Method to compute range in kilometers from observer to satellite at *naive* UTC time utc_time"""
+        # N.B. pyorbital works in kilometers
+        (pos_x, pos_y, pos_z), (vel_x, vel_y, vel_z) = self.__orb.get_position(utc_time, normalize=False)
+        (opos_x, opos_y, opos_z), (ovel_x, ovel_y, ovel_z) = astronomy.observer_position(utc_time, \
+                self.__ground_station.get_longitude(), self.__ground_station.get_latitude(), self.__ground_station.get_elevation_in_meters()/1000.0)
+        dx = pos_x - opos_x
+        dy = pos_y - opos_y
+        dz = pos_z - opos_z
+        return math.sqrt(dx*dx + dy*dy + dz*dz) # km
+
+    # up is what it is **before** the crossing
+    def __find_exact_crossing(self, time, up): 
+        """Private method to refine an in view/out of view crossing time from the nearest minute to the nearest second."""
+        exacttime = time
+        # The crossing occurred in the minute before now... search backwards
+        # for the exact second of crossing
+        for j in range(0, 60):
+            exacttime -= self.__onesecond
+            (az, el) = self.__orb.get_observer_look(exacttime, \
+                                                    self.__ground_station.get_longitude(), \
+                                                    self.__ground_station.get_latitude(), \
+                                                    self.__ground_station.get_minimum_elevation_angle())
+            if ((el > self.__ground_station.get_minimum_elevation_angle()) and (up == 1)) or \
+               ((el < self.__ground_station.get_minimum_elevation_angle()) and (up == 0)):
+                break
+        return exacttime
+
+    def __find_exact_maxel(self, time, maxel):
+        """Private method to refine the maximum elevation from occuring at the nearest minute to the nearest second."""
+        exacttime = time
+        # The maximum elevation occurred in the **two** minutes before now... search backwards
+        # for the exact second of maximum elevation
+        for j in range(0, 120):
+            exacttime -= self.__onesecond
+            (az, el) = self.__orb.get_observer_look(exacttime, \
+                                                    self.__ground_station.get_longitude(), \
+                                                    self.__ground_station.get_latitude(), \
+                                                    self.__ground_station.get_minimum_elevation_angle())
+            if (el > maxel):
+                maxel = el
+        return maxel        
+    
+    # Class member constants
+    __onesecond = timedelta(seconds=1)
+    __oneminute = timedelta(minutes=1)
+```
+
+### `inview_list_report_generator.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/inview_list_report_generator.py`
+
+
+```python
+import sys
+#import os
+from datetime import datetime, timedelta
+#from datetime import datetime, timedelta
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+#from az_el_range_report import AzElRangeReportGenerator
+#from pytz import UTC
+
+###############################################################################
+# Python module to put together SatelliteTle and InviewCalculator functionality
+# to produce a text list of inviews from the ground station to the satellite 
+# for a specified period of time.
+###############################################################################
+
+class InviewListReportGenerator:
+    """Class to create a list of inviews report for a given satellite and ground station for a specific time period """
+    # Constructor
+    def __init__(self, base_output_dir, satellite_tle, ground_station, tz, \
+                 start_day = 0, end_day = 0):
+        # days:  0=today, -1=yesterday, 1 = tomorrow, etc.
+        """Constructor"""
+        self.__base_output_dir = base_output_dir
+        self.__satellite_tle = satellite_tle
+        self.__ground_station = ground_station
+        self.__tz = tz
+        self.__report_timezone = tz.tzname(datetime.now())
+        self.__start_day = start_day
+        self.__end_day = end_day
+        self.__out = sys.stdout
+
+    # Member functions
+    def generate_report(self):
+        """Method to generate the inview report"""
+        
+        end = start = datetime.now()
+        start = start + timedelta(days=self.__start_day)
+        end = end + timedelta(days=self.__end_day)
+        start_time = self.__tz.localize(
+            datetime(start.year, start.month, start.day, 0, 0, 0))
+        end_time = self.__tz.localize(
+            datetime(end.year, end.month, end.day, 23, 59, 59))
+
+        filename = "%s/inviews.txt" % (self.__base_output_dir)
+        #sys.stderr.write("Generating report: %s\n" % filename)
+
+        with open(filename, "w") as self.__out:
+            ic = InviewCalculator(self.__ground_station, \
+                                  self.__satellite_tle)
+            inviews = []
+            inviews = ic.compute_inviews(start_time, end_time)
+            for iv in inviews:
+                riselocal = iv[0].astimezone(self.__tz)
+                setlocal  = iv[1].astimezone(self.__tz)
+                self.__out.write("%s to %s\n" % (riselocal, setlocal))
+
+        
+```
+
+### `iss_inviews.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/iss_inviews.py`
+
+
+```python
+#!/usr/bin/env python
+
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+from datetime import datetime, timedelta
+from pytz import timezone
+from satellite_tle import SatelliteTle
+from ground_station import GroundStation
+
+###############################################################################
+# Script to use the inview_calculator module to compute
+# inviews for ISS
+###############################################################################
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    # Constants
+    groundstation_name = 'Wallops Antenna'
+    groundstation_address = 'Radar Road, Temperanceville, VA  23442'
+    satnum = 25544 # ISS = 25544
+    saturl="http://www.celestrak.com/NORAD/elements/stations.txt"
+    gs_minimum_elevation_angle = 10.0
+
+    # Alternate constants
+    gs_alt_lat = 37.854886 # Only needed if address not found
+    gs_alt_lon = -75.512936 # Ditto
+    gs_alt_el_meters = 3.8 # Ditto
+    gs_alt_tz_offset_seconds = -18000.0 # Ditto
+    gs_tzname = 'US/Eastern'
+
+    # Construct the ground station info
+    try:
+        # Try to use the address...
+        gs = GroundStation.from_address(groundstation_address, \
+                                        groundstation_name, \
+                                        gs_minimum_elevation_angle)
+    except:
+        # Otherwise, use explicit location data...
+        gs = GroundStation.from_location(gs_alt_lat, gs_alt_lon, \
+                                         gs_alt_el_meters, \
+                                         gs_tzname, \
+                                         groundstation_name, \
+                                         gs_minimum_elevation_angle)
+
+    # Times we need
+    now = datetime.now()
+    gs_today = gs.get_tz().localize(datetime(now.year, now.month, now.day))
+    gs_today_start = gs.get_tz().localize(datetime(now.year, now.month, now.day, \
+                                              0, 0, 0))    
+    gs_today_end = gs.get_tz().localize(datetime(now.year, now.month, now.day, \
+                                            23, 59, 59))
+
+    # Get the InviewCalculator and compute the inviews
+    st = SatelliteTle(satnum, tle_url=saturl)
+    ic = InviewCalculator(gs, st)
+    inviews = ic.compute_inviews(gs_today_start, gs_today_end)
+
+    # Print the results
+    print_satellite_header(st)
+    print_inview_header(gs.get_minimum_elevation_angle(), gs_today, gs)
+    print_inviews(gs, inviews)
+    print_azeltables(inviews, ic)
+
+# Convenience print functions
+def print_satellite_header(st):
+    """Function to print a header with satellite info for the satellite number"""
+    # Retrieve TLE data
+    print "Satellite Number/Launch Year/Launch Number of Year: %s/20%s/%s" % \
+          (st.get_satellite_number(), st.get_launch_year(), \
+           st.get_launch_year_number())
+    year = 2000 + int(st.get_epoch_year())
+    fracyear = timedelta(float(st.get_epoch_day()))
+    time = datetime(year, 1, 1) + fracyear - timedelta(1)
+    print "Epoch Date Time/Rev At Epoch: %s/%s" % \
+          (time, st.get_rev_at_epoch())
+    print "Inclination/Eccentricity/Average Revs Per Day: %s/0.%s/%s" % \
+          (st.get_inclination(), st.get_eccentricity(), st.get_mean_motion())
+    print ""
+
+def print_inview_header(minimum_elevation_angle, now, gs):
+    """Function to print a header for the inview info"""
+    print "Inviews (above %s degrees) on %s-%s-%s" % \
+          (minimum_elevation_angle, now.year, now.month, now.day)
+    print "At %s:  Lat/Lon/El: %s/%s/%s" % \
+          (gs.get_name(), gs.get_latitude(), gs.get_longitude(),
+           gs.get_elevation_in_meters())
+    print "where local time is UTC%+s hours" % \
+          (gs.get_utcoffset_hours_ondate(now.year, now.month, now.day))
+    print "  Rise   (UTC)  Set     ( Duration  )    Rise  (UTC%+s) Set" % \
+          (gs.get_utcoffset_hours_ondate(now.year, now.month, now.day))
+
+def print_inviews(gs, inviews):
+    """Function to print the inviews"""
+    #print "Number of inviews from %s to %s:  %d" % \
+    #      (today_start.isoformat(), today_end.isoformat(),len(inviews))
+
+    for i in range(0, len(inviews)):
+        #print "%s to %s" % (inviews[i][0].isoformat(), inviews[i][1].isoformat())
+        print_inview(inviews[i][0], inviews[i][1], gs)
+
+def print_azeltables(inviews, ic):
+    """Function to print a table of time, azimuth, elevation for each inview"""
+    for i in range(0, len(inviews)):
+        print " "
+        print "Az/El for inview %s to %s" % (inviews[i][0], inviews[i][1])
+        azels = ic.compute_azels(inviews[i][0], inviews[i][1], 15)
+        for j in range(0, len(azels)):
+            print "At %s, azimuth=%8.2f, elevation=%8.2f" % \
+                  (azels[j][0], azels[j][1], azels[j][2])
+
+def print_inview(rise, set, gs):
+    """Function to print a single inview"""
+    riselocal = rise + gs.get_utcoffset_ondate(rise.year, rise.month, rise.day)
+    setlocal = set + gs.get_utcoffset_ondate(set.year, set.month, set.day)
+    delta = set - rise
+    print "%2d:%02d:%02d  to  %2d:%02d:%02d  (%3d seconds)  %2d:%02d:%02d  to  %2d:%02d:%02d" % \
+        (rise.hour, rise.minute, rise.second, set.hour, set.minute, set.second, delta.seconds,
+         riselocal.hour, riselocal.minute, riselocal.second, setlocal.hour, setlocal.minute, setlocal.second)
+    return
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `received_telemetry_azelplot.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/received_telemetry_azelplot.py`
+
+
+```python
+#!/usr/bin/env python
+#
+# Quick script to graph where STF-1 would be in azimuth and elevation relative to Wallops at times
+# specified in an input file... if these files represent when telemetry was received, then the 
+# plot indicates where STF-1 was when the telemetry was received.  The location computations are
+# based on TLEs.
+#
+# Syntax:  received_telemetry_azelplot.py <file of times, format YYYY-MM-DD HH:MM:SS>
+#
+
+import json
+import tempfile
+from argvalidator import ArgValidator
+import os
+import sys
+import glob
+from configuration import Configuration
+from pyorbital.orbital import Orbital
+from satellite_tle import SatelliteTle
+from ground_station import GroundStation
+from az_el_range_report import AzElRangeReportGenerator
+from datetime import datetime
+from pytz import timezone, UTC
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+
+def main():
+  conf_file = "config/sat_html_report.config"
+  if (len(sys.argv) > 1):
+      conf_file = sys.argv[1]
+  #sys.stderr.write("conf_file: %s\n" % conf_file)
+    
+  with open(conf_file) as json_data_file:
+      data = json.load(json_data_file)
+
+  base_output_dir = Configuration.get_config_directory(data.get('base_output_directory',tempfile.gettempdir()))
+  tz = Configuration.get_config_timezone(data.get('timezone','US/Eastern'))
+  start_day = Configuration.get_config_int(data.get('start_day','0'), -180, 180, 0)
+  end_day = Configuration.get_config_int(data.get('end_day','0'), -180, 180, 0)
+  time_step_seconds = Configuration.get_config_float(data.get('time_step_seconds','15'), 1, 600, 15)
+
+  #parser.add_argument("-f", "--file", help="File of times, format YYYY-MM-DD HH:MM:SS", type=ArgValidator.validate_file, default=None)
+  #parser.add_argument("-d", "--directory", \
+  #    help="Directory of dated directories containing TLE files (*.tle), assumed format of dated directory is YYYY-MM-DD", \
+  #    type=ArgValidator.validate_directory, default="/home/itc/Desktop/oipp-data/stf1/")
+  #parser.add_argument("-g", "--debug", help="Print debug information", action="store_true")
+  #parser.add_argument("-t", "--table", help="Print table of time, azimuth, elevation information", action="store_true")
+  #parser.add_argument("-m", "--summary", help="Print summary of days found and points per day", action="store_true")
+
+  if (data['report_type'] == "AzElCmdTelem"):
+      create_azel_cmd_telemetry_report(base_output_dir, tz, start_day, end_day, time_step_seconds, data)
+
+def create_azel_cmd_telemetry_report(base_output_dir, tz, start_day, end_day, time_step_seconds, data):
+  satnum = data.get('satellite',[])['number']
+  ground_station = GroundStation.from_config(data.get('ground_station',[]))
+  tlm_file = data.get('tlm_file',"")
+
+  if (tlm_file is not None):
+    cwd = os.getcwd() + "/"
+    filename = cwd + tlm_file
+    pngname = filename + ".png"
+    process_file(filename, base_output_dir, pngname, tz, satnum, ground_station, data)
+
+def process_file(filename, eltdir, pngname, tzone, satnum, gs, data):
+
+  tle_dir = data.get('tle_dir', "")
+  lyear = lmonth = lday = 0
+  ax = generate_azelrange_plot()
+  tle = SatelliteTle.from_config(data.get('satellite',[]))
+  aer = AzElRangeReportGenerator(eltdir, gs, 1, tle, tzone, 0, time_step_seconds = 15)
+  aer.generate_azelrange_plot_groundconstraints(ax)
+  debug = Configuration.get_config_boolean(data.get('debug','false'))
+  summary = Configuration.get_config_boolean(data.get('summary','false'))
+
+  points = 0
+  azels = []
+  with open(filename, "r") as f:
+    i = 0
+    for line in f:
+      year = line[0:4]
+      month = line[5:7]
+      day = line[8:10]
+      hour = line[11:13]
+      minute = line[14:16]
+      second = line[17:19]
+      if (debug):
+        print("Line: %s contains year month day hour minute second: %s %s %s %s %s %s" % (line, year, month, day, hour, minute, second))
+      if ((lyear != year) or (lmonth != month) or (lday != day)):
+        date = "%s-%s-%s" % (lyear, lmonth, lday)
+        if (len(azels) > 0):
+          points = points + len(azels)
+          generate_azelrange_subplot(date, ax, azels, i, data)# as the number of days progresses... i grows... and the color becomes closer to white
+        azels = []
+        i = i + 1
+
+        elglob = tle_dir + "%s-%s-%s/*.tle" % (year, month, day)
+        elfile = glob.glob(elglob)
+
+        if (debug):
+          print("New date found:  %s-%s-%s.  From glob %s found TLE file:  %s." % (year, month, day, elglob, elfile[0]))
+
+        tle = SatelliteTle(satnum, tle_file=elfile[0])
+        if (debug):
+          print("TLE:")
+          print(tle)
+        orb = Orbital(str(tle.get_satellite_number()), \
+                          line1=tle.get_line1(), \
+                          line2=tle.get_line2())
+
+
+      instant = datetime(int(year), int(month), int(day), int(hour), int(minute), int(second))
+      temp = tzone.localize(instant).astimezone(UTC)
+      time = datetime(temp.year, temp.month, temp.day, temp.hour, temp.minute, temp.second)
+      (az, el) = orb.get_observer_look(time, gs.get_longitude(), gs.get_latitude(), gs.get_elevation_in_meters())
+      azels.append((time, az, el))
+      #print("%s%s, %s, %s-%s-%s %s:%s:%s, %d, %d" % (tle.get_epoch_year(), tle.get_epoch_day(), \
+      #    time, year, month, day, hour, minute, second, el, az))
+
+      lyear = year
+      lmonth = month
+      lday = day
+    date = "%s-%s-%s" % (lyear, lmonth, lday)
+    if (len(azels) > 0):
+      points = points + len(azels)
+      generate_azelrange_subplot(date, ax, azels, i, data)
+
+    if (summary):
+      print("There were %d points and %d days of telemetry represented." % (points, i))
+
+  plt.figure(1)
+  plt.savefig(pngname)
+  #plt.close(fig)
+
+def generate_azelrange_plot():
+  # CAVEAT EMPTOR:  It was easier to work with the azimuth in radians (0 to 2pi) and the elevation in degrees (0 to 90)
+
+  plt.rc('grid', color='#000000', linewidth=1, linestyle='-')
+  plt.rc('xtick', labelsize=10)
+  plt.rc('ytick', labelsize=10)
+
+  # force square figure and square axes looks better for polar, IMO
+  fig = plt.figure(figsize=(8, 8))
+  ax = fig.add_axes([0.1, 0.1, 0.8, 0.8],
+                    projection='polar')
+
+  ax.set_theta_zero_location("N")
+  ax.text(0, 103, "N", fontsize=10)
+  ax.text(np.pi/2, 107, "E", fontsize=10)
+  ax.text(np.pi, 105, "S", fontsize=10)
+  ax.text(3*np.pi/2, 105, "W", fontsize=10)
+
+  x = np.arange(0, 2*np.pi + 0.1, 0.1)
+  ax.fill_between(x, 90, 90, color='#ffff00', alpha=0.5) # Min el: 90 - angle, plt has 0 at bullseye
+  ax.fill_between(x, 0, 0, color='#ffff00', alpha=0.5)  # Keyhole: 90 - angle, plt has 0 at bullseye
+
+  theta = np.arange(0, 2*np.pi + 0.1, 0.1)
+  r = theta*0 + 90
+  ax.plot(theta, r, color='#ff0000')
+
+  labels = []
+  for angle in range(0, 105, 15):
+      labels.append(angle)
+  labels.reverse()
+  ticks = []
+  for label in labels:
+      ticks.append(90-label)
+
+  ax.set_yticks(ticks)
+  ax.set_yticklabels(map(str, labels))
+  ax.legend()
+  return ax
+
+def generate_azelrange_subplot(day, ax, azels, number, data):
+  space = 64
+  offset = 100
+  xarr = []
+  yarr = []
+  i = 0
+  summary = Configuration.get_config_boolean(data.get('summary','false'))
+  table = Configuration.get_config_boolean(data.get('table','false'))
+
+  if (summary):
+    print("There are %d points on %s" % (len(azels), day))
+
+  for azel in azels:
+      if (table):
+        print("%s, %s, %s" % (azel[0], azel[1], azel[2]))
+      theta = azel[1]*np.pi/180.0
+      xarr.append(theta)
+      r = 90.0 - azel[2]
+      yarr.append(r)
+      i = i + 1
+  n = int(256*number/space) + offset
+  clr = '#%2.2x%2.2x%2.2x' % (0, n, 0)
+  #print(clr)
+  ax.scatter(xarr, yarr, color=clr, lw=1, label='STF-1')
+
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+
+```
+
+### `retrieve_spacetrack_tles.sh`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/retrieve_spacetrack_tles.sh`
+
+
+```bash
+#!/bin/bash
+# Quick script to automatically pull TLEs for a specific list of TLE numbers.
+# Credit:  Jim Lux, JPL; and the Space-Track website
+# Usage:  retrieve_spacetrack_tles.sh <file to write> <Space-Track username> <Space-Track password> <beginning sat number> <ending sat number>
+# e.g.: retrieve_spacetrack_tles.sh electrontles.tle username password 43849 43862
+
+export spacetrackuser=$2
+export spacetrackpass=$3
+
+# originally: curl -c cookies.txt -b cookies.txt https://www.space-track.org/ajaxauth/login -d "identity=$spacetrackuser&password=$spacetrackpass"
+curl -s -S -c /tmp/cookies.txt -b /tmp/cookies.txt https://www.space-track.org/ajaxauth/login -d "identity=$spacetrackuser&password=$spacetrackpass" > /dev/null
+# originally: curl --limit-rate 100K --cookie cookies.txt https://www.space-track.org/basicspacedata/query/class/tle_latest/ORDINAL/1/NORAD_CAT_ID/43849--43862/orderby/TLE_LINE1%20ASC/format/tle > electrontle$1.txt
+curl -s -S --limit-rate 100K --cookie /tmp/cookies.txt https://www.space-track.org/basicspacedata/query/class/tle_latest/ORDINAL/1/NORAD_CAT_ID/$4--$5/orderby/TLE_LINE1%20ASC/format/tle > $1
+
+```
+
+### `satellite_html_report_generator.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/satellite_html_report_generator.py`
+
+
+```python
+import sys
+import os
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+from az_el_range_report import AzElRangeReportGenerator
+from pytz import UTC
+from ground_station_tracking_schedule import GroundStationTrackingSchedule
+
+###############################################################################
+# Python module to put together SatelliteTle and InviewCalculator functionality
+# to produce a nice HTML report that describes events of interest
+# for a satellite and ground station for a specified period of time.
+###############################################################################
+
+class SatelliteHtmlReportGenerator:
+    """Class to create an HTML report for a given satellite and ground station for a specific time period """
+    # Constructor
+    def __init__(self, base_output_dir, satellite_tle, ground_station_list, tz, \
+                 create_inviews = True, create_contacts = False, create_insun = True, aer_days = 0, \
+                 start_day = 0, end_day = 0, time_step_seconds = 15):
+        # days:  0=today, -1=yesterday, 1 = tomorrow, etc.
+        """Constructor"""
+        self.__base_output_dir = base_output_dir
+        self.__satellite_tle = satellite_tle
+        self.__ground_station_list = ground_station_list
+        self.__tz = tz
+        self.__create_inviews = create_inviews
+        self.__create_contacts = create_contacts
+        self.__create_insun = create_insun
+        self.__aer_days = aer_days
+        self.__start_day = start_day
+        self.__end_day = end_day
+        self.__time_step_seconds = time_step_seconds
+        self.__html_out = sys.stdout
+
+
+    # Member functions
+    def generate_report(self):
+        """Method to generate the HTML report"""
+        # Use Google timeline JavaScript API from:  https://developers.google.com/chart/interactive/docs/gallery/timeline
+        
+        today = datetime.now()
+        directory = "%s/%4.4d-%2.2d-%2.2d" % (self.__base_output_dir, today.year, today.month, today.day)
+        #sys.stderr.write("Generating report in directory: %s\n" % directory)
+        try:
+            os.makedirs(directory)
+        except OSError as e:
+            if (e.errno != os.errno.EEXIST):
+                sys.stderr.write("Error making directory %s: %s" % (directory, e))
+                raise e
+
+        filename = "%s/%4.4d-%2.2d-%2.2d.html" % (directory, today.year, today.month, today.day)
+        #sys.stderr.write("Generating report: %s\n" % filename)
+
+        with open(filename, "w") as self.__html_out:
+
+            self.__html_out.write("<html>\n")
+            self.__generate_html_head()
+            self.__html_out.write("  <body>\n")
+            self.__generate_html_body_header()
+
+            # Timelines
+            unit_height = 60
+            standard_row_height = 0
+            if (self.__create_insun):
+                standard_row_height += unit_height
+            if (self.__create_inviews):
+                for gs in self.__ground_station_list:
+                    standard_row_height += unit_height
+                    if (gs.get_show_operations_hours()):
+                        standard_row_height += unit_height
+
+            for i in range(self.__start_day, self.__end_day+1):
+                row_height = unit_height + standard_row_height
+                if (i == 0):
+                    row_height += unit_height # space for report generation time bar
+                self.__html_out.write("     <hr>\n")
+                self.__html_out.write(("    <div id=\"timeline%s\" " + \
+                       "style=\"height: %dpx;\"></div>\n") % \
+                       (i, row_height))
+
+            self.__html_out.write("  </body>\n")
+            self.__html_out.write("</html>\n")
+
+        if (self.__aer_days > 0):
+            #print self.__aer_days # debug
+            i = 0
+            for gs in self.__ground_station_list:
+                aerg = AzElRangeReportGenerator(self.__base_output_dir, gs, i, self.__satellite_tle, \
+                        self.__tz, self.__aer_days, self.__time_step_seconds)
+                aerg.generate_report()
+                i = i + 1
+        
+    def __generate_html_head(self):
+        ident = self.__satellite_tle.get_satellite_name()
+        title = "Satellite %s Report" % ident
+        self.__html_out.write("  <head>\n")
+        self.__html_out.write("    <title>%s</title>\n" % title)
+        self.__html_out.write("    <script type=\"text/javascript\" " + \
+              "src=\"https://www.google.com/jsapi\"></script>\n")
+        self.__html_out.write("    <script type=\"text/javascript\">\n")
+        self.__html_out.write("      google.load(\"visualization\", \"1\", " + \
+              "{packages:[\"timeline\"]});\n")
+        self.__html_out.write("      google.setOnLoadCallback(drawCharts);\n")
+        self.__html_out.write("      function drawCharts() {\n")
+        for i in range(self.__start_day, self.__end_day+1):
+            self.__generate_chart_for_day(i)
+            pass
+        self.__html_out.write("      }\n")
+        self.__html_out.write("    </script>\n")
+        self.__html_out.write("  </head>\n")
+
+    def __generate_html_body_header(self):
+        today = datetime.now()
+        yday = datetime.now() + timedelta(days=-1)
+        tom = datetime.now() + timedelta(days=+1)
+        ident = self.__satellite_tle.get_satellite_name()
+        title = "Satellite %s Report for %04d-%02d-%02d\n" % \
+                (ident, today.year, today.month, today.day)
+        self.__html_out.write("    <h1>%s</h1>\n" % title)
+        self.__html_out.write("    <h2>NOTE:  Times displayed on the timeline are " + \
+              "for the timezone:  %s</h2>\n" % \
+              self.__tz)
+        self.__html_out.write("Please click on the inview bars to get azimuth/elevation report information.<br>\n")
+        self.__html_out.write("Inview bar color codes:  grey=no schedule information, blue=scheduled contact, purple=no scheduled contact.<br>\n")
+        self.__html_out.write("Please hover over any colored bar for detailed time information.\n")
+        self.__html_out.write("    <hr>\n")
+        self.__html_out.write("    Report from day %s to day %s<br>\n" % \
+              (self.__start_day, self.__end_day))
+        self.__html_out.write(("    (If they exist: " + \
+              "<a href=\"../%04d-%02d-%02d/%04d-%02d-%02d.html\">Previous Report</a> " + \
+              "<a href=\"../%04d-%02d-%02d/%04d-%02d-%02d.html\">Next Report</a>)\n") % \
+              (yday.year, yday.month, yday.day, \
+               yday.year, yday.month, yday.day, \
+               tom.year, tom.month, tom.day, \
+               tom.year, tom.month, tom.day))
+        self.__html_out.write("    <hr>\n")
+        epoch = datetime(2000 + \
+                         int(self.__satellite_tle.get_epoch_year()), 1, 1) + \
+                timedelta(days=float(self.__satellite_tle.get_epoch_day())-1)
+        self.__html_out.write("Two Line Element Set for Epoch %s (UTC) :" % epoch)
+        if (self.__satellite_tle.get_tle_url() is None):
+            self.__html_out.write("<br>\n")
+        else:
+            self.__html_out.write("  (<a href=\"%s\" target=\"_blank\">TLE Link - CAVEAT:  The data at this URL may have changed since it was retrieved for this report.</a>)<br>\n" % self.__satellite_tle.get_tle_url())
+        self.__html_out.write("%s\n" % self.__satellite_tle.pretty_string())
+        if (self.__create_inviews):
+            for gs in self.__ground_station_list:
+                self.__html_out.write("    <hr>\n")
+                self.__html_out.write("    With inviews for ground station:  %s (%s)<br>\n" % \
+                      (gs.get_name(), \
+                       gs.get_address()))
+                self.__html_out.write(("    <a href=\"https://www.google.com/maps?q=%f,%f\" target=\"_blank\">(Latitude %s degrees, Longitude %s degrees, Elevation %s meters, " + \
+                       "Timezone %s)</a><br>\n") % \
+                       (gs.get_latitude(), \
+                        gs.get_longitude(), \
+                        gs.get_latitude(), \
+                        gs.get_longitude(), \
+                        gs.get_elevation_in_meters(), \
+                        gs.get_tz().tzname(datetime.now())))
+                self.__html_out.write("    Minimum elevation above the horizon for inview:  %s degrees (inview start and end times are at this elevation)<br>\n" % \
+                      gs.get_minimum_elevation_angle())
+                if (gs.get_wx_url() is not None):
+                    self.__html_out.write("    <a href=\"%s\" target=\"_blank\">Click for weather information</a><br>\n" % gs.get_wx_url())
+                if (gs.get_other_info() is not None):
+                    self.__html_out.write("    %s<br>\n" % gs.get_other_info())
+                self.__html_out.write("    <hr>\n")
+
+    def __generate_chart_for_day(self, day):
+        # ALL TIMES ARE IN THE TIMEZONE self.__tz !!
+        # Determine the time range for the requested day
+        day_date = datetime.now() + timedelta(days=day)
+        day_year = day_date.year
+        day_month = day_date.month
+        day_day = day_date.day
+        start_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 0, 0, 0))
+        end_time = self.__tz.localize(
+            datetime(day_year, day_month, day_day, 23, 59, 59))
+        
+        self.__html_out.write("        var container = " + \
+              "document.getElementById('timeline%s');\n" % \
+               day)
+        self.__html_out.write("        var chart%d = new google.visualization.Timeline(container);\n" % (day+200)) # 200 is a hack to not have - in names
+        self.__html_out.write("        var dataTable = new google.visualization.DataTable();\n")
+
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', id: 'Title' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', id: 'Barname' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', role: 'style' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'string', role: 'tooltip' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'date', id: 'Start' });\n")
+        self.__html_out.write("        dataTable.addColumn({ type: 'date', id: 'End' });\n")
+        self.__html_out.write("        google.visualization.events.addListener(chart%d, 'select', selectChart%d);\n" % (day+200, day+200)) # 200 is a hack to not have - in names
+        self.__generate_wholeday_bar_for_day(day, start_time, end_time)
+        iv = []
+        row = 1
+        if (day == 0):
+            self.__generate_report_generation_time_bar()
+            row = row + 1
+        i = 0
+        if (self.__create_inviews):
+            for gs in self.__ground_station_list:
+                if (gs.get_show_operations_hours()):
+                    self.__generate_dayshift_bar_for_day(gs, day, \
+                                                         day_date, day_year, \
+                                                         day_month, day_day)
+                    row = row + 1
+                iv.append(row)
+                row = row + self.__generate_inview_bars_for_day(gs, day, \
+                                                    start_time, end_time)
+                i = i + 1
+            iv.append(row)
+        if (self.__create_insun):
+            self.__generate_insun_bars_for_day(start_time, end_time)
+        
+        self.__html_out.write("        function selectChart%d(e) {\n" % (day+200)) # 200 is a hack to not have - in names
+        self.__html_out.write("          var ivrows = [")
+        for j in range(0,i+1):
+            self.__html_out.write("%d, " % iv[j])
+        self.__html_out.write("];\n")
+        self.__html_out.write("          var msg = 'Table %d selection: ';\n" % (day))
+        self.__html_out.write("          var selection = chart%d.getSelection();\n" % (day+200)) # 200 is a hack to not have - in names
+        self.__html_out.write("          for (var i = 0; i < selection.length; i++) {\n")
+        self.__html_out.write("            var item = selection[i];\n")
+        self.__html_out.write("            if (item.row != null) {;\n")
+        self.__html_out.write("              msg += 'Row ' + item.row + ' ';\n")
+        self.__html_out.write("              for (var j = 0; j < ivrows.length-1; j++) {\n")
+        self.__html_out.write("                if ((ivrows[j] <= item.row) && (ivrows[j+1] > item.row)) {\n")
+        #self.__html_out.write("                  alert('Day %d Inview GS ' + j + ' Inview # ' + (item.row-ivrows[j]));\n" % (day))
+        self.__html_out.write("                   if ((%d >= 0) && (%d < %d)) {\n" % (day, day, self.__aer_days))
+        today = datetime.now()
+        self.__html_out.write("                       var win = window.open('../%4.4d-%2.2d-%2.2d/aer-day%d-gs' + j + '-sat%s.html#inview' + (1+item.row-ivrows[j]));\n" % 
+                (today.year, today.month, today.day, day, self.__satellite_tle.get_satellite_number()))
+        self.__html_out.write("                       win.focus();\n")
+        self.__html_out.write("                   }\n")
+        self.__html_out.write("                }\n")
+        self.__html_out.write("              }\n")
+        self.__html_out.write("            }\n")
+        self.__html_out.write("          }\n")
+        #self.__html_out.write("          alert(msg);\n") # debug
+        self.__html_out.write("        }\n")
+        self.__html_out.write("        chart%d.draw(dataTable);\n" % (day+200)) # 200 is a hack to not have - in names
+
+    def __generate_report_generation_time_bar(self):
+        # Time bar for the minute at which the report was generated
+        generation_time = self.__tz.localize(datetime.now())
+        self.__html_out.write("        dataTable.addRows([\n")
+        self.__html_out.write(("          ['Report Generation Time:', " + \
+              "'Report was generated at:  %s', \n") % \
+               (generation_time))
+        self.__html_out.write("          'red', \n")
+        self.__html_out.write("          'Report was generated at:  %s', \n" % \
+               (generation_time))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s), \n" % \
+              (generation_time.year, generation_time.month-1, \
+               generation_time.day, generation_time.hour, \
+               generation_time.minute, generation_time.second))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s)],\n" % \
+              (generation_time.year, generation_time.month-1, \
+               generation_time.day, generation_time.hour, \
+               generation_time.minute, generation_time.second))
+        self.__html_out.write("        ]);\n")
+
+    def __generate_wholeday_bar_for_day(self, day, start_time, end_time):
+        # Time bar for the whole day
+        if (day < -1):
+            dayname = "PAST"
+            daycolor = "#888"
+        elif (day == -1):
+            dayname = "YESTERDAY"
+            daycolor = "#888"
+        elif (day == 0):
+            dayname = "TODAY"
+            daycolor = "#0a0"
+        elif (0 < day):
+            dayname = "FUTURE"
+            daycolor = "#dd8"
+        self.__html_out.write("        dataTable.addRows([\n")
+        self.__html_out.write(("          ['Times Displayed are %s', " + \
+              "'%s, Day %s:  %s to %s', \n") % \
+               (self.__tz, dayname, day, start_time, end_time))
+        self.__html_out.write("           '%s', \n" % (daycolor))
+        self.__html_out.write("           '%s', \n" % dayname)
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s), \n" % \
+              (start_time.year, start_time.month-1, \
+               start_time.day, start_time.hour, \
+               start_time.minute, start_time.second))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s)],\n" % \
+              (end_time.year, end_time.month-1, \
+               end_time.day, end_time.hour, \
+               end_time.minute, end_time.second))
+        self.__html_out.write("        ]);\n")
+        
+    def __generate_dayshift_bar_for_day(self, ground_station, day, day_date, \
+                                        day_year, day_month, day_day):
+        # Time bar for local day shift
+        if (day < 0):
+            daycolor = "#888"
+        elif (day == 0):
+            daycolor = "#0a0"
+        elif (0 < day):
+            daycolor = "#dd8"
+        local_day_start = ground_station.get_tz(). \
+                          localize( \
+                              datetime(day_year, day_month, day_day,
+                                       ground_station.get_operations_start_hour(), ground_station.get_operations_start_minute(), 0)).astimezone(self.__tz)
+        local_day_end   = ground_station.get_tz(). \
+                          localize( \
+                              datetime(day_year, day_month, day_day,
+                                       ground_station.get_operations_end_hour(), ground_station.get_operations_end_minute(), 0)).astimezone(self.__tz)
+        self.__html_out.write("        dataTable.addRows([\n")
+        self.__html_out.write("          ['%s Operating hours', '%s Operating hours %2.2d:%2.2d-%2.2d:%2.2d ground station local time, which is %s', \n" % \
+              (ground_station.get_name(), \
+               ground_station.get_name(), \
+               ground_station.get_operations_start_hour(), ground_station.get_operations_start_minute(), \
+               ground_station.get_operations_end_hour(), ground_station.get_operations_end_minute(), \
+               ground_station.get_tz().tzname(day_date)))
+        self.__html_out.write("           '%s', \n" % (daycolor))
+        self.__html_out.write("           '%s Operating hours',\n" % ground_station.get_name())
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s),\n" % \
+              (local_day_start.year, local_day_start.month-1, \
+               local_day_start.day, local_day_start.hour, \
+               local_day_start.minute, local_day_start.second))
+        self.__html_out.write("           new Date(%s, %s, %s, %s, %s, %s)],\n" % \
+              (local_day_end.year, local_day_end.month-1, \
+               local_day_end.day, local_day_end.hour, \
+               local_day_end.minute, local_day_end.second))
+        self.__html_out.write("        ]);\n")
+
+    def __generate_inview_bars_for_day(self, ground_station, day, \
+                                       start_time, end_time):
+        # Time bars for inviews
+        gsname = ground_station.get_name()        
+        helptext = ""
+        if ((day >= 0) and (day < self.__aer_days)): 
+            helptext = " (CLICK BAR FOR AZ/EL REPORT AND GRAPH)"
+
+        # Get the InviewCalculator and compute the inviews
+        ic = InviewCalculator(ground_station, \
+                              self.__satellite_tle)
+        inviews = []
+        inviews = ic.compute_inviews(start_time, end_time)
+        contacts = []
+        schedname = ""
+        if (self.__create_contacts):
+            fname = ground_station.get_schedule_directory().get_latest_schedule_full_filename_for_date(start_time.date())
+            #print("Schedule filename: %s" % fname)
+            if (fname is not None):
+                gsts = GroundStationTrackingSchedule(fname)
+                contacts = gsts.get_satellite_contacts(self.__satellite_tle.get_satellite_contact_name())
+                #print(contacts)
+                schedname = " -- (Schedule File: %s)" % ground_station.get_schedule_directory().get_latest_schedule_filename_for_date(start_time.date())
+
+        self.__html_out.write("        dataTable.addRows([\n")
+        for i in range(0, len(inviews)):
+            (typetext, color) = self.inview_contact_info(contacts, inviews[i])
+            riselocal = inviews[i][0].astimezone(self.__tz)
+            setlocal = inviews[i][1].astimezone(self.__tz)
+            self.__html_out.write(("          ['%s - %s Inviews', ' ', '%s', " + \
+                   "'%s %02d:%02d:%02d - %02d:%02d:%02d, Max Elev %02.2f degrees%s %s', " + \
+                   "new Date(%s, %s, %s, %s, %s, %s), " + \
+                   "new Date(%s, %s, %s, %s, %s, %s)],\n") % \
+                   (gsname, self.__satellite_tle.get_satellite_name(), color, typetext, \
+                    riselocal.hour, riselocal.minute, riselocal.second, \
+                    setlocal.hour, setlocal.minute, setlocal.second, \
+                    inviews[i][2], helptext, schedname, \
+                    riselocal.year, riselocal.month-1, riselocal.day, \
+                    riselocal.hour, riselocal.minute, riselocal.second, \
+                    setlocal.year, setlocal.month-1, setlocal.day, \
+                    setlocal.hour, setlocal.minute, setlocal.second))
+        self.__html_out.write("        ]);\n")
+        return len(inviews)
+
+    def inview_contact_info(self, contacts, inview):
+        if (len(contacts) == 0):
+            # No schedule information
+            return ('Inview', 'grey')
+        else:
+            for c in contacts:
+                if ((c[0] <= inview[1]) and (c[1] >= inview[0])):
+                    return ('Scheduled Contact', 'blue')
+            # No overlap found... not on schedule
+            return ('NO Contact', 'purple')
+
+    def __generate_insun_bars_for_day(self, start_time, end_time):
+        # Time bars for in sun times
+
+        # Get the SatelliteTle and compute the in sun times
+        suntimes = []
+        tables = self.__satellite_tle.compute_sun_times(start_time, end_time)
+
+        suntimes = tables[0]
+        self.__html_out.write("        dataTable.addRows([\n")
+        for i in range(0, len(suntimes)):
+            enterlocal = suntimes[i][0].astimezone(self.__tz)
+            exitlocal = suntimes[i][1].astimezone(self.__tz)
+            self.__html_out.write(("          ['%s In Sunlight Times', ' ', 'yellow', " + \
+                   "'Sunlight: %02d:%02d:%02d - %02d:%02d:%02d', " + \
+                   "new Date(%s, %s, %s, %s, %s, %s), " + \
+                   "new Date(%s, %s, %s, %s, %s, %s)],\n") % \
+                   (self.__satellite_tle.get_satellite_name(), \
+                    enterlocal.hour, enterlocal.minute, enterlocal.second, \
+                    exitlocal.hour, exitlocal.minute, exitlocal.second, \
+                    enterlocal.year, enterlocal.month-1, enterlocal.day, \
+                    enterlocal.hour, enterlocal.minute, enterlocal.second, \
+                    exitlocal.year, exitlocal.month-1, exitlocal.day, \
+                    exitlocal.hour, exitlocal.minute, exitlocal.second))
+        self.__html_out.write("        ]);\n")
+        
+        pentimes = tables[1]
+        self.__html_out.write("        dataTable.addRows([\n")
+        for i in range(0, len(pentimes)):
+            enterlocal = pentimes[i][0].astimezone(self.__tz)
+            exitlocal = pentimes[i][1].astimezone(self.__tz)
+            self.__html_out.write(("          ['%s In Sunlight Times', ' ', 'grey', " + \
+                   "'Penumbra: %02d:%02d:%02d - %02d:%02d:%02d', " + \
+                   "new Date(%s, %s, %s, %s, %s, %s), " + \
+                   "new Date(%s, %s, %s, %s, %s, %s)],\n") % \
+                   (self.__satellite_tle.get_satellite_name(), \
+                    enterlocal.hour, enterlocal.minute, enterlocal.second, \
+                    exitlocal.hour, exitlocal.minute, exitlocal.second, \
+                    enterlocal.year, enterlocal.month-1, enterlocal.day, \
+                    enterlocal.hour, enterlocal.minute, enterlocal.second, \
+                    exitlocal.year, exitlocal.month-1, exitlocal.day, \
+                    exitlocal.hour, exitlocal.minute, exitlocal.second))
+        self.__html_out.write("        ]);\n")
+        
+        umbratimes = tables[2]
+        self.__html_out.write("        dataTable.addRows([\n")
+        for i in range(0, len(umbratimes)):
+            enterlocal = umbratimes[i][0].astimezone(self.__tz)
+            exitlocal = umbratimes[i][1].astimezone(self.__tz)
+            self.__html_out.write(("          ['%s In Sunlight Times', ' ', 'black', " + \
+                   "'Umbra: %02d:%02d:%02d - %02d:%02d:%02d', " + \
+                   "new Date(%s, %s, %s, %s, %s, %s), " + \
+                   "new Date(%s, %s, %s, %s, %s, %s)],\n") % \
+                   (self.__satellite_tle.get_satellite_name(), \
+                    enterlocal.hour, enterlocal.minute, enterlocal.second, \
+                    exitlocal.hour, exitlocal.minute, exitlocal.second, \
+                    enterlocal.year, enterlocal.month-1, enterlocal.day, \
+                    enterlocal.hour, enterlocal.minute, enterlocal.second, \
+                    exitlocal.year, exitlocal.month-1, exitlocal.day, \
+                    exitlocal.hour, exitlocal.minute, exitlocal.second))
+        self.__html_out.write("        ]);\n")
+        
+```
+
+### `satellite_overflight_report_generator.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/satellite_overflight_report_generator.py`
+
+
+```python
+import sys
+import os
+from datetime import datetime, timedelta
+from datetime import datetime, timedelta
+from satellite_tle import SatelliteTle
+from inview_calculator import InviewCalculator
+from az_el_range_report import AzElRangeReportGenerator
+from pytz import UTC
+
+###############################################################################
+# Python module to put together SatelliteTle and InviewCalculator functionality
+# to produce a nice HTML report that describes events of interest
+# for a satellite and ground station for a specified period of time.
+###############################################################################
+
+class SatelliteOverflightReportGenerator:
+    """Class to create an HTML report for a given satellite and ground station for a specific time period """
+    # Constructor
+    def __init__(self, base_output_dir, satellite_tle, ground_station, tz, common_satellite_name, common_ground_station_name):
+        # days:  0=today, -1=yesterday, 1 = tomorrow, etc.
+        """Constructor"""
+        self.__base_output_dir = base_output_dir
+        self.__satellite_tle = satellite_tle
+        self.__ground_station = ground_station
+        self.__tz = tz
+        self.__common_satellite_name = common_satellite_name
+        self.__common_ground_station_name = common_ground_station_name
+        self.__report_timezone = tz.tzname(datetime.now())
+        self.__html_out = sys.stdout
+
+    # Member functions
+    def generate_report(self):
+        """Method to generate the HTML report"""
+        # Use Google timeline JavaScript API from:  https://developers.google.com/chart/interactive/docs/gallery/timeline
+        
+        months = ['zero', 'January', 'February', 'March', 'April', 'May', 'June', \
+                'July', 'August', 'September', 'October', 'November', 'Decemter']
+        weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        today = datetime.now()
+        start_time = self.__tz.localize(
+            datetime(today.year, today.month, today.day, 0, 0, 0))
+        end_time = self.__tz.localize(
+            datetime(today.year, today.month, today.day, 23, 59, 59))
+
+        filename = "%s/satellite-overflight.html" % (self.__base_output_dir)
+        #sys.stderr.write("Generating report: %s\n" % filename)
+
+        with open(filename, "w") as self.__html_out:
+            self.__html_out.write("<html>\n")
+            self.__html_out.write("  <head>\n")
+            self.__html_out.write("  </head>\n")
+            self.__html_out.write("    <title>Satellite %s Over %s</title>\n" % (self.__common_satellite_name, self.__common_ground_station_name))
+            self.__html_out.write("  <body>\n")
+            self.__html_out.write("    <p>On %s, %s %d, %4.4d, %s is over %s during:</p>\n" % \
+                    (weekdays[today.weekday()], months[today.month], today.day, today.year, self.__common_satellite_name, self.__common_ground_station_name))
+
+            ic = InviewCalculator(self.__ground_station, \
+                                  self.__satellite_tle)
+            inviews = []
+            inviews = ic.compute_inviews(start_time, end_time)
+            self.__html_out.write("    <ul>\n")
+            for iv in inviews:
+                riselocal = iv[0].astimezone(self.__tz)
+                setlocal  = iv[1].astimezone(self.__tz)
+                self.__html_out.write("      <li>%2.2d:%2.2d to %2.2d:%2.2d %s time</li>\n" % 
+                        (riselocal.hour, riselocal.minute, setlocal.hour, setlocal.minute, self.__tz))
+            self.__html_out.write("    </ul>\n")
+
+            self.__html_out.write("  </body>\n")
+            self.__html_out.write("</html>\n")
+
+        
+```
+
+### `satellite_tle.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/satellite_tle.py`
+
+
+```python
+import sys
+if sys.version_info[0] > 2:
+    from urllib.request import urlopen
+else:
+    from urllib import urlopen
+from fileinput import input
+from pyorbital.orbital import Orbital
+from pytz import UTC
+from datetime import datetime, timedelta
+from math import sqrt, sin, cos, asin, acos, pi
+from configuration import Configuration
+
+###############################################################################
+# Python module to make it easy to retrieve and use a satellite two
+# line element set for a given satellite.  This module downloads
+# the spacecraft TLE from Celestrak.
+#
+# Obviously uses lots of other libraries to do the heavy lifting.
+#
+# Here are some reference URLs:
+# http://www.celestrak.com/columns/v04n03/
+# http://www.celestrak.com/columns/v04n05/
+# https://docs.python.org/2/install/
+# http://stackoverflow.com/questions/15138614/how-can-i-read-the-contents-of-an-url-with-python
+# https://docs.python.org/2/library/datetime.html
+###############################################################################
+
+class SatelliteTleException:
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+class SatelliteTle:
+    """Class to retrieve and use a two line element set for a given satellite """
+    # Constructor
+    def __init__(self, satellite_number, satellite_name = None, satellite_contact_name = None, tle_url = "http://www.celestrak.com/NORAD/elements/cubesat.txt", tle_file = None, 
+            rx_freq = None, tx_freq = None):
+        """Constructor:  satellite number according to NORAD"""
+        self.__satellite_number = satellite_number
+        self.__tle_url = tle_url
+        #sys.stderr.write("__tle_url: %s\n" % self.__tle_url)
+        self.__tle_file = tle_file # Like "C:\Users\msuder\Desktop\STF1-TLE.txt"
+        #sys.stderr.write("__tle_file: %s\n" % self.__tle_file)
+        self.__satellite_name = satellite_name
+        self.__satellite_contact_name = satellite_contact_name
+        self.__receive_frequency = rx_freq
+        self.__transmit_frequency = tx_freq
+        self.__line1 = None
+        self.__line2 = None
+        self.__get_tle()
+
+    # Class Methods to construct in alternative ways
+    @classmethod
+    def from_config(cls, sat_data):
+        # sys.stderr.write(sat_data.__repr__() + "\n") # debug
+        sat_num = Configuration.get_config_int(sat_data.get('number','1'), 0, 1000000, 0)
+        sat_name = sat_data.get('name', None)
+        sat_contact_name = sat_data.get('contact_name', None)
+        sat_url = sat_data.get('url', 'http://www.celestrak.com/NORAD/elements/cubesat.txt')
+        sat_rx_freq = Configuration.get_config_float(sat_data.get('receive_frequency', None), 0, 9999, None)
+        sat_tx_freq = Configuration.get_config_float(sat_data.get('transmit_frequency', None), 0, 9999, None)
+        #sys.stderr.write("sat_url: %s\n" % sat_url)
+        return cls(sat_num, satellite_name=sat_name, satellite_contact_name=sat_contact_name, tle_url=sat_url, rx_freq=sat_rx_freq, tx_freq=sat_tx_freq)
+    
+    # Member functions
+    def refetch_tle(self):
+        """Method the class user can call to fetch the TLE info again, to make sure it is up to date"""
+        self.__get_tle()
+
+    def compute_ephemeris_point(self, in_time):
+        """Method to compute an ephemeris point for a given time"""
+        time = self.__time_to_naiveUTC(in_time)
+        (pos, vel) = self.__orbit.get_position(time, normalize=False)
+        return (in_time, pos, vel)
+
+    def compute_ephemeris_table(self, in_start_time, in_end_time, time_step_seconds):
+        """Method to compute a table of ephemerides for a given time span at a given time step"""
+        time = in_start_time
+        try:
+            delta = timedelta(seconds=time_step_seconds)
+        except:
+            delta = timedelta(seconds=60)
+        ephem_tbl = []
+        while (time < in_end_time + delta):
+            ephem_tbl.append(self.compute_ephemeris_point(time))
+            time += delta
+
+        return ephem_tbl
+
+    def compute_lonlatalt_point(self, in_time):
+        """Method to compute an ephemeris point for a given time"""
+        time = self.__time_to_naiveUTC(in_time)
+        (lon, lat, alt) = self.__orbit.get_lonlatalt(time)
+        return (in_time, lon, lat, alt)
+
+    def compute_lonlatalt_table(self, in_start_time, in_end_time, time_step_seconds):
+        """Method to compute a table of lon/lat/alt for a given time span at a given time step"""
+        time = in_start_time
+        try:
+            delta = timedelta(seconds=time_step_seconds)
+        except:
+            delta = timedelta(seconds=60)
+        lla_tbl = []
+        while (time < in_end_time + delta):
+            lla_tbl.append(self.compute_lonlatalt_point(time))
+            time += delta
+
+        return lla_tbl
+
+    def compute_sun_times(self, in_start_time, in_end_time):
+        """Method to compute in sun times (in UTC) for the satellite over a specified time period.  Returns a list of sun entrance/exit times, accurate to the nearest second and using the latest available TLE when the method is called."""
+        start_time = self.__time_to_naiveUTC(in_start_time)
+        end_time = self.__time_to_naiveUTC(in_end_time)
+        # start_time, end_time are now naive
+        suntimes = []
+        pentimes = []
+        umtimes = []
+        time = start_time
+        state = self.get_satellite_sun_state(time)
+        if (state == self.InSun):
+            sunenter = time
+        elif (state == self.InPenumbra):
+            penenter = time
+        else:
+            umenter = time
+        # Step through time, looking for transitions from one state to another
+        while (time < end_time):
+            now_state = self.get_satellite_sun_state(time)
+            if (now_state != state):
+                if (state == self.InSun):
+                    suntimes.append((sunenter.replace(tzinfo=UTC), time.replace(tzinfo=UTC)))
+                elif (state == self.InPenumbra):
+                    pentimes.append((penenter.replace(tzinfo=UTC), time.replace(tzinfo=UTC)))
+                else:
+                    umtimes.append((umenter.replace(tzinfo=UTC), time.replace(tzinfo=UTC)))
+                if (now_state == self.InSun):
+                    sunenter = time
+                elif (now_state == self.InPenumbra):
+                    penenter = time
+                else:
+                    umenter = time
+                state = now_state
+            time += self.__onesecond
+            
+        if (state == self.InSun):
+            suntimes.append((sunenter.replace(tzinfo=UTC), time.replace(tzinfo=UTC)))
+        elif (state == self.InPenumbra):
+            pentimes.append((penenter.replace(tzinfo=UTC), time.replace(tzinfo=UTC)))
+        else:
+            umtimes.append((umenter.replace(tzinfo=UTC), time.replace(tzinfo=UTC)))
+
+        return [suntimes, pentimes, umtimes]            
+
+    def get_satellite_sun_state(self, in_time):
+        """Method to determine if the satellite is in sun, penumbra, or umbra at the given time"""
+        # https://celestrak.com/columns/v03n01/
+        earth_sun = self.get_sun_vector(in_time)
+        ephemeris = self.compute_ephemeris_point(in_time)
+        earth_sat = ephemeris[1]
+        sat_sun = [earth_sun[0]-earth_sat[0], earth_sun[1]-earth_sat[1], earth_sun[2]-earth_sat[2]]
+
+        rho_e = sqrt(earth_sat[0]*earth_sat[0] + earth_sat[1]*earth_sat[1] + earth_sat[2]*earth_sat[2])        
+        rho_s = sqrt(sat_sun[0]*sat_sun[0] + sat_sun[1]*sat_sun[1] + sat_sun[2]*sat_sun[2])
+        
+        theta_e = asin(self.__earthradius / rho_e)
+        theta_s = asin(self.__sunradius / rho_s)
+        theta = acos(-1 * (earth_sat[0] * sat_sun[0] + earth_sat[1] * sat_sun[1] + earth_sat[2] * sat_sun[2]) / (rho_e * rho_s))
+
+        if (theta > theta_e + theta_s):
+            return self.InSun
+        elif ((theta_e > theta_s) and (theta < theta_e - theta_s)):
+            return self.InUmbra
+        else:
+            return self.InPenumbra
+        
+    def get_sun_vector(self, in_time):
+        """Method to determine the sun vector at a specific time."""
+        # Astronomical Algorithms, 2nd ed., Jean Meeus, Willman-Bell, 1998
+        dt = self.__time_to_naiveUTC(in_time) - datetime(2000, 1, 1, 12, 0)
+        T = (dt.days + (dt.seconds + dt.microseconds / (1000000.0)) / (24 * 3600.0)) / 36525.0 # (25.1)
+        epsilon_0 = (23.0 + 26.0/60.0 + 21.448/3600.0 - (46.8150*T + 0.00059*T*T - 0.001813*T*T*T) / 3600) * pi / 180.0 # (22.2)
+        L_0 = 280.46646 + 36000.76983*T + 0.0003032*T*T # (25.2)
+        M = (357.52911 + 35999.05029*T - 0.0001537*T*T) * pi / 180.0 # (25.3)
+        e = 0.016708634 - 0.000042037*T - 0.0000001267*T*T # (25.4)
+        C = ((1.914602 - 0.004817*T - 0.000014*T*T)*sin(M) + (0.019993 - 0.000101*T)*sin(2*M) + 0.000289*sin(3*M)) # p. 164
+        true_longitude = (L_0 + C) * pi / 180.0 # p. 164
+        nu = M + C # p. 164
+        R = (1.000001018 * (1 - e*e))/(1 + e * cos(nu)) # (25.5)
+        x = cos(true_longitude) # Set x = cos(true longitude), see (25.6)
+        y = cos(epsilon_0) * sin(true_longitude) # Then y comes from this by (25.6)
+        z = sin(epsilon_0) * sin(true_longitude) # And z comes from this by (25.7)
+        x = x * R * self.__astronomical_unit # Scale unit vector to earth/sun distance in km
+        y = y * R * self.__astronomical_unit # Scale unit vector to earth/sun distance in km
+        z = z * R * self.__astronomical_unit # Scale unit vector to earth/sun distance in km
+
+        return [x, y, z]
+    
+    # Getters
+    def get_tle_url(self):
+        return self.__tle_url
+    
+    def get_line1(self):
+        return self.__line1
+    
+    def get_line2(self):
+        return self.__line2
+
+    def get_satellite_name(self):
+        if (self.__satellite_name is None):
+            return self.get_satellite_number()
+        else:
+            return self.__satellite_name
+
+    def get_satellite_contact_name(self):
+        if (self.__satellite_contact_name is None):
+            return self.get_satellite_name()
+        else:
+            return self.__satellite_contact_name
+    
+    def get_receive_frequency(self):
+        return self.__receive_frequency
+
+    def get_transmit_frequency(self):
+        return self.__transmit_frequency
+
+    def get_satellite_number(self):
+        return self.__line1[2:7]
+    
+    def get_launch_year(self): # last two digits of launch year
+        return self.__line1[9:11]
+    
+    def get_launch_year_number(self): # launch number of the year
+        return self.__line1[11:14]
+    
+    def get_launch_piece(self): # piece of the launch
+        return self.__line1[14:17]
+    
+    def get_epoch_year(self): # last two digits of year
+        return self.__line1[18:20]
+    
+    def get_epoch_day(self): # day of the year and fractional part of the day
+        return self.__line1[20:32]
+    
+    def get_mean_motion_dot(self): # first time derivative of the mean motion
+        return self.__line1[33:43]
+    
+    def get_mean_motion_doubledot(self): # second time derivative of the mean motion, decimal point assumed
+        return self.__line1[44:52]
+    
+    def get_bstar(self): # decimal point assumed
+        return self.__line1[53:61]
+    
+    def get_element_number(self):
+        return self.__line1[64:68]
+    
+    def get_inclination(self): # degrees
+        return self.__line2[8:16]
+    
+    def get_raan(self): # degrees
+        return self.__line2[17:25]
+    
+    def get_eccentricity(self): # decimal point assumed
+        return self.__line2[26:33]
+    
+    def get_arg_perigee(self): # degrees
+        return self.__line2[34:42]
+    
+    def get_mean_anomaly(self): # degrees
+        return self.__line2[43:51]
+    
+    def get_mean_motion(self): # revs per day
+        return self.__line2[52:63]
+    
+    def get_rev_at_epoch(self): # revs
+        return self.__line2[63:68]
+
+    # Other methods
+    def __repr__(self):
+        """Returns a string representing an instance of this class."""
+        hdr0 = "Sat_Name________________\n"
+        out0 = ('%s\n') % (self.get_satellite_name())
+        hdr1 = "L_SatnmU_LyLnmLp__EyEdd.dddddddd__MeanMoDot__MMDbDot__-BSTAR-_0_ElNmX\n"
+        out1 = ('%s\n') % (self.__line1)
+        hdr2 = "L_Satnm__Inclina_RtAscANd_Eccentr_ArgPerig_MeanAnom_MeanMotion-RevNmX\n"
+        out2 = ('%s') % (self.__line2)
+        return hdr1 + out1 + hdr2 + out2
+
+    def raw_string(self):
+        out = ""
+        if (self.__satellite_name is not None):
+            out += ("%s\n") % self.__satellite_name
+        out += ('%s\n%s') % (self.__line1, self.__line2)
+        return out
+        
+    def pretty_string(self):
+        rx_freq = ""
+        if (self.__receive_frequency is not None):
+            rx_freq = ", Receive Frequency %s" % self.__receive_frequency
+        tx_freq = ""
+        if (self.__transmit_frequency is not None):
+            tx_freq = ", Transmit Frequency %s" % self.__transmit_frequency
+        out0 = ('Satellite Name=%s%s%s\n') % \
+               (self.get_satellite_name(), rx_freq, tx_freq)
+        out1 = ('Satellite Number=%s, Launch Year=%s, Launch Day=%s, Launch Piece=%s\n') % \
+               (self.get_satellite_number(), self.get_launch_year(), \
+                self.get_launch_year_number(), self.get_launch_piece())
+        out2 = ('Epoch Year=%s, Epoch Day=%s, Mean Motion Dot=%s\n') % \
+               (self.get_epoch_year(), self.get_epoch_day(), self.get_mean_motion_dot())
+        out3 = ('Mean Motion Double Dot=0.%s, BSTAR=0.%s, Element Number=%s\n') % \
+               (self.get_mean_motion_doubledot(), self.get_bstar(), self.get_element_number())
+        out4 = ('Inclination=%s, RAAN=%s, Eccentricity=0.%s\n') % \
+               (self.get_inclination(), self.get_raan(), self.get_eccentricity())
+        out5 = ('Argument of Perigee=%s, Mean Anomaly=%s\n') % \
+               (self.get_arg_perigee(), self.get_mean_anomaly())
+        out6 = ('Mean Motion=%s, Rev at Epoch=%s') % \
+               (self.get_mean_motion(), self.get_rev_at_epoch())
+        return out0 + out1 + out2 + out3 + out4 + out5 + out6
+
+    # Private method to fetch the TLE
+    def __get_tle(self):
+        """Method to retrieve the TLE for the initialized satellite number, usually from Celestrak (could be from a hardwired file).  No return value."""
+        if (self.__tle_file is not None):
+            lines = input(self.__tle_file)
+        else:
+            try:
+                lines = urlopen(self.__tle_url)
+            except:
+                default_file = "C:\\Users\\msuder\\Desktop\\cubesat.txt"
+                lines = input(default_file)
+
+        last_name = ""
+        for line in lines:
+            if "1 %s" % self.__satellite_number in line:
+                self.__line1 = line[0:69]
+                if (self.__satellite_name is None):
+                    self.__satellite_name = last_name
+            if "2 %s" % self.__satellite_number in line:
+                self.__line2 = line[0:69]
+            if ("1 " != line[0:2]) and ("2 " != line[0:2]):
+                last_name = line.rstrip()
+            else:
+                last_name = None
+                
+        if ((self.__line1 is None) or (self.__line2 is None)):
+            if (self.__tle_file is not None):
+                raise SatelliteTleException('Could not find TLE for satellite %s in file %s' % \
+                    (self.__satellite_number, self.__tle_file))
+            else:
+                raise SatelliteTleException('Could not find TLE for satellite %s at URL %s' % \
+                    (self.__satellite_number, self.__tle_url))
+        else:
+            self.__orbit = Orbital(str(self.__satellite_number), line1=self.__line1, \
+                line2=self.__line2)
+
+    def __time_to_naiveUTC(self, in_time):
+        """Private method to convert (if necessary) a time (potentially with timezone) to a naive time that is UTC."""
+        # NOTE:  pyorbital EXPECTS naive date/times and interprets them
+        # as UTC... so we need to satisfy it; however, we are making this
+        # module DATETIME AWARE, so RETURN VALUES are DATETIME AWARE!!
+        # Also, all naive inputs are assumed to be UTC and all aware inputs
+        # are converted to UTC (and then made naive)
+        if (in_time.tzinfo is not None):
+            temp = in_time.astimezone(UTC)
+            time = datetime(temp.year, temp.month, temp.day, \
+                                  temp.hour, temp.minute, temp.second)
+        else:
+            time = in_time
+        return time
+
+        
+    # Class member constants
+    __onesecond = timedelta(seconds=1)
+    __oneminute = timedelta(minutes=1)
+    __sunradius = 695700 # km, https://www.iau.org/static/resolutions/IAU2015_English.pdf
+    __earthradius = 6378.137 # km, http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf
+    __astronomical_unit = 149597870.700 # km, https://www.iau.org/static/resolutions/IAU2012_English.pdf
+    __dp_over_dsplusdp = 2 * __earthradius / (2 * __sunradius + 2 * __earthradius)
+    InSun = 0
+    InPenumbra = 1
+    InUmbra = 2
+```
+
+### `sgp4_to_iirv.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/sgp4_to_iirv.py`
+
+
+```python
+#!/usr/bin/env python
+
+import argparse
+from argvalidator import ArgValidator
+from datetime import datetime, timedelta
+import requests
+from fileinput import input
+import pandas as pd
+import math
+from sgp4.api import Satrec
+from pyorbital.orbital import astronomy
+
+###############################################################################
+# Script to use the sgp4 module to compute IIRVs for a satellite number
+# (default is 43852, which is STF-1)
+###############################################################################
+
+class SatelliteTleException(BaseException):
+    def __init__(self, value):
+        self.value = value
+    def __str__(self):
+        return repr(self.value)
+
+class SatelliteTle:
+    """Class to retrieve and use a two line element set for a given satellite """
+    # Constructor
+    def __init__(self, satellite_number, satellite_name = None, satellite_contact_name = None, tle_url = "http://www.celestrak.com/NORAD/elements/cubesat.txt", tle_file = None):
+        """Constructor:  satellite number according to NORAD"""
+        self.__satellite_number = satellite_number
+        self.__tle_url = tle_url
+        self.__tle_file = tle_file # Like "C:\Users\msuder\Desktop\STF1-TLE.txt"
+        self.__satellite_name = satellite_name
+        self.__satellite_contact_name = satellite_contact_name
+        self.__line1 = None
+        self.__line2 = None
+        self.__get_tle()
+
+    # Private method to fetch the TLE
+    def __get_tle(self):
+        """Method to retrieve the TLE for the initialized satellite number, usually from Celestrak (could be from a hardwired file).  No return value."""
+        if (self.__tle_file is not None):
+            lines = input(self.__tle_file)
+        else:
+            try:
+                lines = requests.get(self.__tle_url).text.splitlines() 
+            except:
+                default_file = "C:/Users/msuder/Desktop/cubesat.txt"
+                lines = input(default_file)
+
+        last_name = ""
+        for line in lines:
+            if "1 %s" % self.__satellite_number in line:
+                self.__line1 = line[0:69]
+                if (self.__satellite_name is None):
+                    self.__satellite_name = last_name
+            if "2 %s" % self.__satellite_number in line:
+                self.__line2 = line[0:69]
+            if ("1 " != line[0:2]) and ("2 " != line[0:2]):
+                last_name = line.rstrip()
+            else:
+                last_name = None
+                
+        if ((self.__line1 is None) or (self.__line2 is None)):
+            if (self.__tle_file is not None):
+                raise SatelliteTleException('Could not find TLE for satellite %s in file %s' % \
+                    (self.__satellite_number, self.__tle_file))
+            else:
+                raise SatelliteTleException('Could not find TLE for satellite %s at URL %s' % \
+                    (self.__satellite_number, self.__tle_url))
+        else:
+            self.__satellite = Satrec.twoline2rv(self.__line1, self.__line2)
+    
+    def compute_ephemeris_point(self, in_time):
+        """Method to compute an ephemeris point for a given time"""
+        time = pd.Timestamp(in_time).to_julian_date()
+        (e, pos, vel) = self.__satellite.sgp4(time, 0.0)
+        return (in_time, pos, vel)
+
+    def compute_ephemeris_table(self, in_start_time, in_end_time, time_step_seconds):
+        """Method to compute a table of ephemerides for a given time span at a given time step"""
+        time = in_start_time
+        try:
+            delta = timedelta(seconds=time_step_seconds)
+        except:
+            delta = timedelta(seconds=60)
+        ephem_tbl = []
+        while (time < in_end_time + delta):
+            ephem_tbl.append(self.compute_ephemeris_point(time))
+            time += delta
+
+        return ephem_tbl
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--satnum", help="Specify satellite number (e.g. 25544=ISS, 43852=STF-1)", \
+            type=int, metavar="[1-99999]", choices=range(1,99999), default=43852)
+    parser.add_argument("-t", "--time", help="Specify date/time (UTC)", type=ArgValidator.validate_datetime, metavar="YYYY-MM-DDTHH:MM:SS", default=datetime.now())
+    parser.add_argument("-r", "--endtime", help="Specify date time range with this end date/time (UTC)", \
+            type=ArgValidator.validate_datetime, metavar="YYYY-MM-DDTHH:MM:SS", default=None)
+    parser.add_argument("-d", "--timestep", help="Specify time step (delta) in seconds for tabular data", \
+            type=int, metavar="[1-86400]", choices=range(1,86400), default=60)
+    parser.add_argument("-f", "--file", help="TLE file to use (instead of looking up the TLE on CelesTrak)", type=ArgValidator.validate_file, default=None)
+    parser.add_argument("-v", "--iirv", help="Print improved interrange vector (IIRV) format", action="store_true")
+    args = parser.parse_args()
+
+    if (args.file is not None):
+        st = SatelliteTle(args.satnum, tle_file=args.file)
+    else:
+        saturl = "http://www.celestrak.com/cgi-bin/TLE.pl?CATNR=%s" % args.satnum
+        st = SatelliteTle(args.satnum, tle_url=saturl)
+
+    if (args.iirv):
+        if (args.endtime is None):
+            point = st.compute_ephemeris_point(args.time)
+            print_iirv_point(st, point)
+        else:
+            table = st.compute_ephemeris_table(args.time, args.endtime, args.timestep)
+            print_iirv_points(st, table)
+
+def print_iirv_point(st, point):
+    print("GIIRV MANY\r\r\n")
+    tt = point[0].timetuple()
+    string = "1211800001000%3.3d%2.2d%2.2d%2.2d%3.3d" % (tt.tm_yday, tt.tm_hour, tt.tm_min, tt.tm_sec, int(point[0].microsecond/1000.0))
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    gmst_radians = astronomy.gmst(point[0])
+    #print("gmst_radians=%s, degrees=%s" % (gmst_radians, gmst_radians * 180.0/3.1415927))
+    (x, y, z) = (point[1][0], point[1][1], point[1][2])
+    r = math.sqrt(x*x + y*y)
+    theta = math.atan2(y, x)
+    x = r*math.cos(-1.0*gmst_radians+theta)
+    y = r*math.sin(-1.0*gmst_radians+theta)
+    string = "% 013.0f% 013.0f% 013.0f" % (x*1000.0, y*1000.0, z*1000.0)
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    (x, y, z) = (point[2][0], point[2][1], point[2][2])
+    r = math.sqrt(x*x + y*y)
+    theta = math.atan2(y, x)
+    x = r*math.cos(-1.0*gmst_radians+theta)
+    y = r*math.sin(-1.0*gmst_radians+theta)
+    string = "% 013.0f% 013.0f% 013.0f" % (x*1000000.0, y*1000000.0, z*1000000.0)
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    mass = 4475570
+    cross = 99999
+    drag = 207
+    solar = 0
+    string = "%08.0f%05.0f%04.0f% 08.0f" % (mass, cross, drag, solar)
+    csum = checksum(string)
+    print("%s%3.3d\r\r\n" % (string, csum))
+    print("ITERM GAQD\r\r\n")
+
+def checksum(s):
+    csum = 0
+    for c in s:
+        if (c == ' '):
+            pass
+        elif (c == '-'):
+            csum = csum + 1
+        else:
+            csum = csum + int(c)
+    return csum
+
+def print_iirv_points(st, table):
+    for i in range(0, len(table)):
+        print("GIIRV MANY\r\r\n")
+        tt = table[i][0].timetuple()
+        string = "1111800001%3.3d%3.3d%2.2d%2.2d%2.2d%3.3d" % (i+1, tt.tm_yday, tt.tm_hour, tt.tm_min, tt.tm_sec, int(table[i][0].microsecond/1000.0))
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        gmst_radians = astronomy.gmst(table[i][0])
+        #print("gmst_radians=%s, degrees=%s" % (gmst_radians, gmst_radians * 180.0/3.1415927))
+        (x, y, z) = (table[i][1][0], table[i][1][1], table[i][1][2])
+        r = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        x = r*math.cos(-1.0*gmst_radians+theta)
+        y = r*math.sin(-1.0*gmst_radians+theta)
+        string = "% 013.0f% 013.0f% 013.0f" % (x*1000.0, y*1000.0, z*1000.0)
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        (x, y, z) = (table[i][2][0], table[i][2][1], table[i][2][2])
+        r = math.sqrt(x*x + y*y)
+        theta = math.atan2(y, x)
+        x = r*math.cos(-1.0*gmst_radians+theta)
+        y = r*math.sin(-1.0*gmst_radians+theta)
+        string = "% 013.0f% 013.0f% 013.0f" % (x*1000000.0, y*1000000.0, z*1000000.0)
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        mass = 4544100
+        cross = 99999
+        drag = 200
+        solar = 1500000
+        string = "%08.0f%05.0f%04.0f% 08.0f" % (mass, cross, drag, solar)
+        csum = checksum(string)
+        print("%s%3.3d\r\r\n" % (string, csum))
+        print("ITERM GAQD\r\r\n")
+        
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+```
+
+### `visible_satellite.py`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/scripts/visible_satellite.py`
+
+
+```python
+#!/usr/bin/env python
+
+import math
+from datetime import datetime, timedelta
+from pytz import timezone, utc
+from ephem import Observer, Sun
+from satellite_tle import SatelliteTle
+from ground_station import GroundStation
+from inview_calculator import InviewCalculator
+from astropy.time import Time
+
+###############################################################################
+
+# Brightness from www.n2yo.com
+SATS =[
+[25544,-0.5],
+[20580,3.0],
+[19120,3.5],
+[19650,3.5],
+[20625,3.5],
+[22220,3.5],
+[22285,3.5],
+[22566,3.5],
+[22803,3.5],
+[23088,3.5],
+[23343,3.5],
+[23405,3.5],
+[23705,3.5],
+[24298,3.5],
+[25400,3.5],
+[25407,3.5],
+[25861,3.5],
+[10967,3.5],
+[16182,3.5],
+[17590,3.5],
+[10967,4.0],
+[16182,4.0],
+[17590,4.0],
+[19210,4.5],
+[21610,4.5],
+[23560,4.5],
+[23561,4.5],
+[25860,4.5],
+[27386,4.5],
+[27422,4.5],
+]
+a = [
+]
+
+def main():
+    """Main function... makes 'forward declarations' of helper functions unnecessary"""
+    [gs, gs_observer, gs_tz, gs_start, gs_end] = init_groundstation()
+    [civil_night, nautical_night] = determine_nighttime(gs_observer)
+
+    print("<html><head><title>Visible Satellites Today</title></head>")
+    print("<body>")
+    print("<a href=http://www.cleardarksky.com/c/FairmontWVkey.html?date=%s>" % gs_start.isoformat())
+    print("<img src=\"http://www.cleardarksky.com/c/FairmontWVcsk.gif?c=554409&date=%s\"></a>" % gs_start.isoformat())
+    print("<hr>\nTimes when it is night at the ground station and a satellite is inview and in the sun:")
+    print("<hr>Civil night: ")
+    print_span(gs_tz, civil_night)
+    print(", nautical night: ")
+    print_span(gs_tz, nautical_night)
+    visibilities = []
+    for sat in SATS:
+        visibilities.extend(determine_satellite_visibility(sat, gs, gs_tz, gs_start, gs_end, civil_night))
+
+    visibilities.sort(key=lambda entry : entry[1][0])
+    print_timespans(gs_tz, visibilities)
+   
+    print("</body></html>")
+
+def determine_satellite_visibility(sat, gs, gs_tz, gs_start, gs_end, night):
+    satnum = sat[0]
+    saturl = "http://www.celestrak.com/cgi-bin/TLE.pl?CATNR=%s" % satnum
+    st = SatelliteTle(satnum, tle_url=saturl)
+
+    [suntimes, pentimes, umtimes] = st.compute_sun_times(gs_start, gs_end)
+
+    ic = InviewCalculator(gs, st)
+    inviews = ic.compute_inviews(gs_start, gs_end)
+
+    intersections = []
+    for inview in inviews:
+        i1 = intersect_times(night, inview)
+        if (i1 is not None):
+            #print_span(gs_tz, i1)
+            for suntime in suntimes:
+                i2 = intersect_times(i1, suntime)
+                if (i2 is not None):
+                    #print_span(gs_tz, i2)
+                    i2startmjd = Time(i2[0]).mjd
+                    href = "http://www.heavens-above.com/passdetails.aspx?lat=%f&lng=%f&loc=%s&alt=%f&tz=%s&satid=%d&mjd=%f" % \
+                        (gs.get_latitude(), gs.get_longitude(), gs.get_name(), gs.get_elevation_in_meters(), gs.get_tz().localize(datetime(i2[0].year, i2[0].month, i2[0].day)).tzname(), satnum, i2startmjd)
+                    intersections.append(["<a href=%s>%s (mag:%s) %s %s-%s%s</a>" % 
+                        (href, satnum, sat[1], 
+                         st.get_satellite_name(), st.get_launch_year(), st.get_launch_year_number(), st.get_launch_piece()),i2])
+
+    #print_debug_times(gs_tz, satnum, night, suntimes, inviews)
+    return intersections
+
+def print_debug_times(gs_tz, satnum, night, suntimes, inviews):
+    print("<hr>\nNight time:")
+    print_span(gs_tz, night)
+    print("Times when %s is in the sun" % satnum)
+    print_timespans(gs_tz, suntimes)
+    print("<hr>\nTimes when %s is inview of the ground station" % satnum)
+    print_timespans(gs_tz, inviews)
+
+def print_timespans(gs_tz, spans):
+    for span in spans:
+        print("<hr>Satellite %s is visible:<br>" % span[0])
+        print_span(gs_tz, span[1])
+
+def print_span(gs_tz, span):
+    print("%s --to-- %s" % (time_to_string(span[0].astimezone(gs_tz)), time_to_string(span[1].astimezone(gs_tz))))
+
+def time_to_string(time):
+    return "%4.4d-%2.2d-%2.2d %2.2d:%2.2d:%2.2d" %(time.year, time.month, time.day, time.hour, time.minute, time.second)
+
+def init_groundstation():
+    # Ground station stuff
+    gs_lat = 39.50417 
+    gs_lon = -80.218615 
+    gs_el_meters = 359.664 
+    gs_tzname = 'US/Eastern'
+    groundstation_name = 'Fairmont'
+    gs_minimum_elevation_angle = 10.0
+    gs_observer = Observer()
+    gs_observer.lat = gs_lat * math.pi / 180.0
+    gs_observer.lon = gs_lon * math.pi / 180.0
+    gs_observer.elevation = gs_el_meters
+
+    # Times we need
+    now = datetime.now()
+    tomorrow = now + timedelta(1)
+    gs_observer.date = now
+    #now += timedelta(hours=14) # testing
+    #tomorrow = now + timedelta(hours=4) # testing
+    gs_tz = timezone(gs_tzname)
+    gs_start = gs_tz.localize(now)
+    gs_end = gs_tz.localize(tomorrow)
+    #print(gs_start)
+    #print(gs_end)
+
+    gs = GroundStation.from_location(gs_lat, gs_lon, \
+                                     gs_el_meters, \
+                                     gs_tzname, \
+                                     groundstation_name, \
+                                     gs_minimum_elevation_angle)
+
+    return [gs, gs_observer,gs_tz, gs_start, gs_end]
+
+def determine_nighttime(gs_observer):
+    sun = Sun()
+    gs_observer.horizon = '-6' # Civil twilight, stars should start appearing rapidly
+    next_set = utc.localize(gs_observer.next_setting(sun, use_center=True).datetime())
+    following_rise = utc.localize(gs_observer.next_rising(sun, use_center=True, start=next_set).datetime())
+    civil_night = [next_set, following_rise]
+    #print(civil_night)
+    gs_observer.horizon = '-12' # Nautical twilight, it's dark
+    next_set = utc.localize(gs_observer.next_setting(sun, use_center=True).datetime())
+    following_rise = utc.localize(gs_observer.next_rising(sun, use_center=True, start=next_set).datetime())
+    nautical_night = [next_set, following_rise]
+    #print(nautical_night)
+    return [civil_night, nautical_night]
+
+def intersect_times(first, second):
+    intersection = [max(first[0], second[0]), min(first[1], second[1])]
+    if (intersection[0] < intersection[1]):
+        return intersection
+    else:
+        return None
+
+# Python idiom to eliminate the need for forward declarations
+if __name__=="__main__":
+   main()
+
+```

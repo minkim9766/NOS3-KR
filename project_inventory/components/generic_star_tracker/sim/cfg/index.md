@@ -3,18 +3,75 @@
 
 **경로:** `components/generic_star_tracker/sim/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Inp_StarTracker_IPC.txt`
 
-file--Inp_StarTracker_IPC.txt
-file--nos3-StarTracker-simulator.xml
-file--SC_StarTracker_NOS3.txt
+**경로:** `components/generic_star_tracker/sim/cfg/Inp_StarTracker_IPC.txt`
+
+
+```text
+**********************************  Star Tracker   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+0                                       ! AC.ID for ACS mode
+"ST.42"                                 ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4282                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+TRUE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].AC.ST"                           ! Prefix 0
 ```
 
-## 항목
+### `nos3-StarTracker-simulator.xml`
 
-- [`components/generic_star_tracker/sim/cfg/Inp_StarTracker_IPC.txt`](file--Inp_StarTracker_IPC.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/cfg/nos3-StarTracker-simulator.xml`](file--nos3-StarTracker-simulator.xml) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/cfg/SC_StarTracker_NOS3.txt`](file--SC_StarTracker_NOS3.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_star_tracker/sim/cfg/nos3-StarTracker-simulator.xml`
+
+
+```xml
+        <simulator>
+            <name>generic_star_tracker_sim</name>
+            <active>true</active>
+            <library>libgeneric_star_tracker_sim.so</library>
+            <hardware-model>
+                <type>GENERIC_STAR_TRACKER</type>
+                <connections>
+                    <connection><type>command</type>
+                        <bus-name>command</bus-name>
+                        <node-name>star-tracker-command</node-name>
+                    </connection>
+                    <connection><type>usart</type>
+                        <bus-name>usart_10</bus-name>
+                        <node-port>10</node-port>
+                    </connection>
+                </connections>
+                <data-provider>
+                    <type>GENERIC_STAR_TRACKER_42_PROVIDER</type>
+                    <hostname>fortytwo</hostname>
+                    <port>4282</port>
+                    <max-connection-attempts>20</max-connection-attempts>
+                    <retry-wait-seconds>5</retry-wait-seconds>
+                    <spacecraft>0</spacecraft>
+                    <star-tracker>0</star-tracker>
+                </data-provider>
+            </hardware-model>
+        </simulator>
+```
+
+### `SC_StarTracker_NOS3.txt`
+
+**경로:** `components/generic_star_tracker/sim/cfg/SC_StarTracker_NOS3.txt`
+
+
+```text
+************************** Star Tracker *********************************
+1                             ! Number of Star Trackers
+=============================== ST 0 ====================================
+0.25                          ! Sample Time,sec
+30.0  20.0  10.0  213         ! Mounting Angles (deg), Seq in Body
+Z_AXIS                        ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+8.0   8.0                     ! H, V FOV Size, deg
+30.0  10.0  10.0              ! Sun, Earth, Moon Exclusion Angles, deg
+2.0  2.0  20.0                ! Noise Equivalent Angle, arcsec RMS
+0                             ! Flex Node Index
+```

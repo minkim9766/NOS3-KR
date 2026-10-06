@@ -3,18 +3,83 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-arguments.component.css`
 
-file--command-arguments.component.css
-file--command-arguments.component.html
-file--command-arguments.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/command-arguments.component.css`
+
+
+```css
+.args {
+  margin: 0;
+  margin-left: 10px;
+}
+
+.args .key {
+  min-width: 80px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.args .value {
+  color: grey;
+  padding-left: 10px;
+}
+
+:host.nomargin .args,
+:host.nomargin .args td.key:first-child {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+:host.nomargin .args {
+  border-spacing: 0;
+}
 ```
 
-## 항목
+### `command-arguments.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/command-arguments.component.css`](file--command-arguments.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/command-arguments.component.html`](file--command-arguments.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/command-arguments.component.ts`](file--command-arguments.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/command-arguments.component.html`
+
+
+```html
+<table class="args">
+  @for (arg of command.userAssignments; track arg.name) {
+    <tr>
+      <td class="key" width="1">{{ arg.name }}</td>
+      <td class="value">
+        <ya-value [value]="arg.value" />
+      </td>
+    </tr>
+  }
+</table>
+```
+
+### `command-arguments.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-arguments/command-arguments.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommandHistoryRecord, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-command-arguments',
+  templateUrl: './command-arguments.component.html',
+  styleUrl: './command-arguments.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.nomargin]': 'nomargin',
+  },
+  imports: [WebappSdkModule],
+})
+export class CommandArgumentsComponent {
+  @Input({ required: true })
+  command: CommandHistoryRecord;
+
+  @Input()
+  nomargin = false;
+}
+```

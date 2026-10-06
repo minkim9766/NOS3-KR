@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/osal/nos_impl/CMakeFiles/osal_nos_impl.dir/home/minseo/nos3/fsw/osal/src/os/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ portable/index
 posix/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/osal/nos_impl/CMakeFiles/osal_nos_impl.dir/home/minseo/nos3/fsw/osal/src/os/portable/`](portable/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/nos_impl/CMakeFiles/osal_nos_impl.dir/home/minseo/nos3/fsw/osal/src/os/posix/`](posix/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

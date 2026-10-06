@@ -3,18 +3,88 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `page-button.component.css`
 
-file--page-button.component.css
-file--page-button.component.html
-file--page-button.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/page-button.component.css`
+
+
+```css
+:host ::ng-deep .mdc-button.primary {
+  border: 1px solid var(--y-accent);
+}
+
+:host.disabled {
+  pointer-events: none;
+}
 ```
 
-## 항목
+### `page-button.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/page-button.component.css`](file--page-button.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/page-button.component.html`](file--page-button.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/page-button.component.ts`](file--page-button.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/page-button.component.html`
+
+
+```html
+<button
+  mat-button
+  [color]="color()"
+  [disabled]="disabled()"
+  [class.primary]="primary()"
+  (click)="onClick($event)">
+  @if (icon(); as icon) {
+    <mat-icon [style.transform]="iconRotate90() ? 'rotate(90deg)' : 'none'">
+      {{ icon }}
+    </mat-icon>
+  }
+  <ng-content />
+  @if (dropdown()) {
+    ▾
+  }
+</button>
+```
+
+### `page-button.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-button/page-button.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
+import { MatButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-page-button',
+  templateUrl: './page-button.component.html',
+  styleUrl: './page-button.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatButton, MatIcon],
+  host: {
+    class: 'ya-page-button',
+    '[class.disabled]': 'disabled()',
+  },
+})
+export class YaPageButton {
+  icon = input<string>();
+  iconRotate90 = input(false, { transform: booleanAttribute });
+  disabled = input(false, { transform: booleanAttribute });
+  dropdown = input(false, { transform: booleanAttribute });
+  color = input<string>('primary');
+  primary = input(false, { transform: booleanAttribute });
+
+  clicked = output<MouseEvent>();
+
+  onClick(event: MouseEvent) {
+    if (!this.disabled()) {
+      this.clicked.emit(event);
+    }
+  }
+}
+```

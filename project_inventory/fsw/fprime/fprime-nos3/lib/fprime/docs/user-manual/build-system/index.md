@@ -3,32 +3,425 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--01-cmake-intro.md
-file--cmake-api.md
-file--cmake-customization.md
-file--cmake-implementations.md
-file--cmake-platforms.md
-file--cmake-targets.md
-file--cmake-toolchains.md
-file--cmake-uts.md
-file--settings.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/01-cmake-intro.md`](file--01-cmake-intro.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-api.md`](file--cmake-api.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-customization.md`](file--cmake-customization.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-implementations.md`](file--cmake-implementations.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-platforms.md`](file--cmake-platforms.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-targets.md`](file--cmake-targets.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-toolchains.md`](file--cmake-toolchains.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-uts.md`](file--cmake-uts.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/settings.md`](file--settings.md) — UTF-8 텍스트 파일 본문 포함
+### `01-cmake-intro.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/01-cmake-intro.md`
+
+
+```markdown
+# F´ CMake Build System
+
+F´ leverages CMake as its underlying build system, adding an [API layer](../../reference/api/cmake/API.md) for ease of use.
+
+Installation guides for CMake can be found here: [https://cmake.org/install/](https://cmake.org/install/).
+
+A Basic CMake tutorial can be found here: [https://cmake.org/cmake/help/latest/guide/tutorial/index.html](https://cmake.org/cmake/help/latest/guide/tutorial/index.html).
+Although fprime tries to simplify CMake usage for fprime-specific tasks, an understanding of basic CMake is useful.
+
+## Getting Started with CMake and F´
+
+CMake as a system auto-generates OS-specific build files for building F´. Once these files are generated, standard build tools can be run to perform the compiling, assembling, linking, etc. In other words, CMake is a high-level build system that defers low-level build systems to build. It generates the inputs to these low-level systems in a straightforward way.
+
+F´ sets up CMake in such a way that adding a module (component, port, deployment) is easy and automatically takes
+advantage of the autocoding capabilities of fprime. To add new modules to the CMake system, users need to perform the following steps:
+
+1. Define a `CMakeLists.txt` file to define the module's source files and dependencies
+2. Ensure that `register_fprime_module` or `register_fprime_deployment` is called in that `CMakeLists.txt`
+3. Make sure this new directory defining the `CMakeLists.txt` is added to the deployment `CMakeLists.txt` using
+   `add_fprime_subdirectory`.
+
+Each of these steps are described in detail below. Further usage documentation on the functions used to perform these
+steps can be found in [API](./cmake-api.md). This document will explain the usage of core F´ CMake functions.
+
+## Step 1, Step 2, and Step 3: Define A CMakeList.txt File
+
+The CMakeList.txt file defines the steps needed to build **something** in CMake.  In fprime, we use this file to define the source, autocoder, and module dependencies for modules in fprime. A `register_` function is called to tie into the fprime autocoder environment. This keeps fprime modules simple, although all of CMake's power can be used when needed.
+
+Users need only set the `AUTOCODER_INPUTS` and `SOURCES` directives to a list of autocoder and code sources as part of the
+`register_fprime_module` call to setup a module for fprime (Port/Component). Deployments are done similarly but use the
+`register_fprime_deployment` call instead.
+
+`add_fprime_subdirectory`, `register_fprime_module`, `register_fprime_executable` docs are here: [API](./cmake-api.md).
+
+
+When defining a module, ensure it at least calls `register_fprime_module`, or `register_fprime_deployment`.
+
+When building a module, remember to add it to the deployment by adding a line `add_fprime_subdirectory(path/module/dir)`
+to the deployment `CMakeLists.txt`.
+
+## API Information
+
+The CMake automatically documented API describes the above steps with all details.  The index for this documentation can
+be found here: [CMake API](./cmake-api.md).
+
+## Build Options
+
+Options describe the runtime options that the CMake system takes. Users wanting to alter the build should look here.
+The list of all available options can be found here: [CMake Options](../../reference/api/cmake/options.md)
+
+## Toolchains and Platforms
+
+To integrate with new hardware platforms users need to build or acquire a CMake toolchain file, and add a platform
+support file to the F´ CMake system. These steps can be reviewed here:
+
+[CMake Toolchains](./cmake-toolchains.md): F´ CMake toolchain file usage
+[F´ Platforms](./cmake-platforms.md): F´ CMake platform files
+
+```
+
+### `cmake-api.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-api.md`
+
+
+```markdown
+## User API Documentation
+
+These links point to documentation needed by most users of the CMake system. The API link
+describes the module-level API for working with CMake. This is where users should look for the full
+descriptions of module-level functions. Options describe the runtime options that the CMake system
+takes. Users wanting to alter the build should look here.
+
+- [API](../../reference/api/cmake/API.md): Module API function documentation
+- [Options](../../reference/api/cmake/options.md): Runtime build options
+
+This documentation is generated from [the source code](https://github.com/nasa/fprime/tree/devel/cmake). Below is a description of some of the main API functionalities.
+
+## Toolchain and Platform Documentation
+
+Toolchain files are used to cross-compile F´. In general, standard CMake toolchain files can be used
+to cross-compile, however; F´ includes several built-in toolchains and a template for writing your
+own toolchains for F´.
+
+[CMake Toolchain Documentation](https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html): CMake's toolchain documentation  
+[Toolchain Template](../../reference/api/cmake/toolchain/toolchain-template.md): Toolchain file template documentation  
+[raspberrypi](../../reference/api/cmake/toolchain/raspberrypi.md): Raspberry PI cross-compile toolchain file
+
+Platform files are used to set up F´ for use on specific hardware platforms. This allows users to
+define types and headers needed for F´ for any embedded system they desire.
+
+[Platform Template](../../reference/api/cmake/platform/platform-template.md): Platform file template documentation  
+[Linux](../../reference/api/cmake/platform/Linux.md): Linux platform support  
+[Darwin](../../reference/api/cmake/platform/Darwin.md): Darwin (macOS) platform support  
+
+## Target Documentation
+
+These links document the custom targets integrated into the F´ build system. Targets can be
+generically integrated to support both module-level and global targets building toward the same
+F´ "target".  For example, the "dict" target may build local dictionary fragments and then roll
+them into a global dictionary.
+
+[CMake Customization](./cmake-customization.md): Custom Build-System Commands (Make Targets)
+
+## CMake Support Code Documentation
+
+These links describe the internal CMake function references. These should be consulted when
+improvements to the CMake are needed. Build system architects should consult this section.
+
+[FPrime-Code](../../reference/api/cmake/FPrime-Code.md): F´ framework code inclusions  
+[FPrime](../../reference/api/cmake/FPrime.md): F´ project support
+```
+
+### `cmake-customization.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-customization.md`
+
+
+```markdown
+# CMake Customization
+
+Some projects may wish to customize the CMake system in order to perform some things that the
+standard CMake and F prime systems do not allow. This guide is designed to provide some basic
+advice on how to configure standard customization items as part of this CMake system.
+
+**Important** this system is CMake and that gives the user much power. Just about anything desired
+can be done using standard CMake patterns. Thus, the user is encouraged to study CMake if advice
+cannot be found herein.
+
+## Build F Prime Utilities
+
+Adding a utility executable that depends on F prime code is easy. Just perform a standard call to
+`register_fprime_executable`. Care should be taken to set the executable name as the first argument to that
+call. This executable will then be output as part of the deployment's build and may be built directly by name.
+A separate tools deployment may be used to build only utilities.
+
+See: [API](cmake-api.md)
+
+## Custom Build-System Commands (Make Targets)
+
+Custom build targets that need to be built against modules and global targets can be generated
+using the hook pattern. This pattern involves creating a file with three functions - `<target>_add_global_target`, `<target>_add_module_target`, and `<target>_add_deployment_target`. These functions are called to add targets to the top level and each module respectively.
+Then this file is registered with `register_fprime_target`.
+
+These functions can have any code the target needs, but typically uses `add_custom_target` to register the actual target.
+
+See:
+  - [add_custom_target](https://cmake.org/cmake/help/latest/command/add_custom_target.html) to view
+information on CMake targets.
+  - [API](cmake-api.md) for the syntax of the register call
+  - [Targets](cmake-targets.md) for information on the built-in targets
+
+## Custom External Libraries With Other Build Systems
+
+There are two ways to handle external libraries and build them within CMake. One is to simply
+use the `add_directory` cmake command to add the directory. Then use a `CMakeLists.txt` to call
+`add_custom_target` or `add_custom_command` trigger the actual building. The `add_custom_target`
+is used when the system does not depend on the files produced (directly) but may need a link
+dependency, and `add_custom_command` is used when the system needs access to the output files.
+
+Alternatively, `ExternalProject_Add` can be used if the external library requires download,
+version control, and building steps.
+
+For a guide on integrating with another build system see:
+[How To: Integrate External Libraries](../../how-to/integrate-external-libraries.md).
+```
+
+### `cmake-implementations.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-implementations.md`
+
+
+````markdown
+# CMake Implementations
+
+Certain parts of F´ have different implementations that a project may choose from.  The canonical example of this is a file system implementation. Projects may wish to use the stubbed implementation of the file system, the platform supplied standard implementation, or something project-specific like a flash chip or SD card.
+
+These packages must be fully specified. Thus, every platform must specify a specific implementation for every package. These specific implementations may be overridden for a specific executable deployment or unit test.
+
+## Requiring an Implementation
+
+Modules that require an implementation should use the directive `REQUIRES_IMPLEMENTATIONS` in the `register_fprime_module` call.
+
+> [!NOTE]
+> `REQUIRES_IMPLEMENTATIONS` is only needed for modules that have a direct dependency on the implementation, not on their dependents.
+
+## Choosing an Implementation
+
+Platform developers *must* specify an implementation of every package used in the system. Failing to do so means that a given functionality is undefined and impossible to link.  Stub implementations are provided in the case that a platform does not support a given package's functionality.
+
+Choosing an implementation is done with the `CHOOSES_IMPLEMENTATIONS` directive available to `register_fprime_config`. Platform developers should choose implementations as part of the platform definition.
+
+https://github.com/nasa/fprime/blob/dfaf496263bdfff04461179eb99fb3f906a10009/cmake/platform/Linux.cmake#L15-L17
+
+## Overriding an Implementation Choice
+
+Executables, unit tests, and deployments may wish to use a different implementation than that specified by the platform. This can be done by using `CHOOSES_IMPLEMENTATIONS` directive call in the deployment, executable, or unit test's registration. For example, a unit test may wish to choose `Os_File_Stub` as an implementation of `Os_File` to disable platform file system support for the given unit test:
+
+```
+register_fprime_ut(
+    ...
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_Stub
+)
+```
+
+> [!NOTE]
+> A CMake target with the name of the chosen implementor *must* be defined somewhere in F´, an F´ library used by the project, or by the project itself.
+
+## Defining an Implementation
+
+To define an implementation, developers should declare an F´ module (using `register_fprime_module`) that implements the needed interface of the package and supply the `IMPLEMENTS` directive to that call.
+
+## Conclusion
+
+F´ provides for various implementations for certain packages needed by the framework.
+````
+
+### `cmake-platforms.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-platforms.md`
+
+
+```markdown
+# F´ and CMake Platforms
+
+Users can create platform-specific build files for the purposes of tailoring fprime
+for given platform targets. Any CMake toolchain file should work, but it will require a platform file created here to add target-specific configuration using the name "${FPRIME_PLATFORM}.cmake".
+
+Platforms should register a configuration module using `register_fprime_config` that sets the `AUTOCODER_INPUTS`, `HEADERS` and
+`CHOOSES_IMPLEMENTATIONS` directives.
+
+`AUTOCODER_INPUTS`: must include one .fpp file defining the platform's [platform types](../../reference/numerical-types.md#platform-configured-types)
+`HEADERS`: lists the `PlatformTypes.h` header defining `PlatformPointerCastType`
+`CHOOSES_IMPLEMENTATIONS`: lists all implementations chosen for the current platform. See: [CMake Implementations](./cmake-implementations.md).
+```
+
+### `cmake-targets.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-targets.md`
+
+
+```markdown
+
+# Targets
+
+The build system supplies the ability to register extra targets that allow the user to register new
+functionality to the build system. For example, the user may wish to create a build target that
+counts the total number of files in the system.  This would be the place to register such a target
+and have it available to the build system.
+
+Targets are applied both at the global scope and per-module scope. Thus each target can provide a set of build targets (one per registered module) and a global build target. For example, a counting target might provide a `count` global target to count all files, and a `<MODULE>_count` to count the files of a given module.
+
+## Built-In Targets
+
+The CMake system supplies several targets that are useful for all projects and thus are included
+as part of the CMake system. These targets are defined in [cmake/target](https://github.com/nasa/fprime/tree/devel/cmake/target).
+
+
+## Adding Custom Targets
+
+See the [Customization Guide](cmake-customization.md) for a description of adding custom targets.
+```
+
+### `cmake-toolchains.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-toolchains.md`
+
+
+```markdown
+# CMake Toolchain Files
+
+CMake defines the location, arguments, and properties of build tools using toolchain files. In short, these files
+specify what configuration of tools to use to build the CMake project. Since CMake toolchain files can be shared between
+projects, F´ mostly uses them as-is. To set platform-specific fprime settings a parallel Platform file may be created in order to keep those settings out of this more generic file.
+
+
+See: [https://cmake.org/cmake/help/v3.12/manual/cmake-toolchains.7.html](https://cmake.org/cmake/help/v3.12/manual/cmake-toolchains.7.html)
+
+CMake toolchains are often adapted from vendor-supplied toolchains, or from one F´ provides. Users should set the variable
+`FPRIME_PLATFORM` in their toolchain to specify the F Prime platform file. See: [fprime Platform Files](./cmake-platforms.md)
+```
+
+### `cmake-uts.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/cmake-uts.md`
+
+
+````markdown
+# CMake Build System Unit Tests
+
+These tests seek to ensure that the CMake system functions as expected. These will test that the
+CMake system meets all the requirements specified in the CMake SDD. The goal is to ensure
+that the CMake system can be maintainable by ensuring core functions of the CMake process work as
+expected in an automated system.
+
+## Implementation Via PyTest
+
+The CMake system runs its tests via PyTest. This allows the implementation to be streamlined using
+standard a testing framework. Python `subprocess` is used to run CMake for its simplicity. To prepare to run these tests, ensure that you are running fprime out of a virtual environment following the fprime installation. Then run `pytest` in this directory: `cd cmake/test; pytest`
+
+**Running:**
+```
+fprime> cd cmake/test
+pytest
+```
+````
+
+### `settings.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/settings.md`
+
+
+````markdown
+# `settings.ini`: Build Settings Configuration
+
+In many circumstances, it is useful to set default values for the build as well as configure external
+locations for F´ to use external code. The `settings.ini` file allows users to set various settings
+to control the build.
+
+In this document:
+
+- [`settings.ini` Settings](#settingsini-settings)
+    - [`fprime` Section](#fprime-section)
+    - [Platform Sections](#platform-sections)
+    - [Example `settings.ini`](#example-settingsini)
+    - [Example Environment Ini File](#example-environment-ini-file)
+
+> [!WARNING]
+> The changes to the `settings.ini` file only take effect during the `fprime-util generate` step, and thus builds **must** be regenerated after a change.
+
+## `settings.ini` Settings
+
+The `settings.ini` file is written in the INI format as interpreted by the default settings of the
+Python `configparser` module. Should a user wish to reference another key, the `%(other key)s` syntax should be used. The full format description is available here:
+
+https://docs.python.org/3/library/configparser.html#supported-ini-file-structure
+
+This file is expected in the directory of an F´ deployment and affects only the deployment it is
+defined in. This directory is the same directory that contains the project's base `CMakeLists.txt`
+(has a `project()` call).
+
+> [!WARNING]
+> The changes to the `settings.ini` file only take effect during the `fprime-util generate` step, and thus builds **must** be regenerated after a change.
+
+### `fprime` Section
+
+The `[fprime]` section defines settings for the F´ build.
+
+These settings include:
+
+- `project_root`: path to the root of the fprime project
+- `framework_path`: Path to the F´ framework root
+- `library_locations`: Paths to additional F´ libraries and components. Multiple paths can be
+  specified with the `:` separator. Ex: `../library1:../library2`
+- `default_toolchain`: Default platform to build against. Defaults to `native`, or the host
+  computer platform.
+- `default_ut_toolchain`: Default platform to build unit tests against. Defaults to `native`, or the host
+  computer platform.
+- `environment_file`: An ini file that can be used to set environmental variables during the build
+  process.
+- `config_directory`: Path to configuration header directory.
+
+### Platform Sections
+
+Some settings may be overridden for specific platforms using specific platform sections. These sections
+have the same name as the platform and may set the following settings:
+
+1. `config_directory`
+2. `install_destination`
+3. `environment_file`
+
+These settings only apply when building for the specified platform.
+
+### Example `settings.ini`
+
+This `settings.ini` file comes from the [fprime-sphinx](https://github.com/fprime-community/fprime-sphinx)
+deployment, which is a standard standalone deployment where the F´ framework and libraries are included
+as git submodules at the top level.
+
+```ini
+[fprime]
+project_root: ..
+framework_path: ../fprime
+library_locations: ../fprime-vxworks:../fprime-sphinx-drivers:../fprime-jplffs
+default_toolchain: gr712-vxworks6
+environment_file: ../fprime-vxworks/cmake/env/VxWorks-GR712.ini
+config_directory: ./config
+
+[gr712-vxworks6]
+config_directory: Cfg_gr712
+```
+
+### Example Environment Ini File
+
+The format for the environment file option is similar to `settings.ini`
+Each key in the file will be set as an environmental variable for the project build.
+
+```ini
+[environment]
+WIND_BASE=/opt/WindRiver/vxworks-6.7
+LINK_BIN_PRE=/opt/sparc-wrs-vxworks/bin/ccsparc
+LINK_BIN_PRE_FLAGS=-r -nostdlib -Wl,-X
+LINK_BIN_PRE_TO=-o
+```
+````

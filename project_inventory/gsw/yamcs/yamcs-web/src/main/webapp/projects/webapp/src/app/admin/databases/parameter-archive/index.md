@@ -3,20 +3,382 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `completions.ts`
 
-file--completions.ts
-file--parameter-archive.component.css
-file--parameter-archive.component.html
-file--parameter-archive.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/completions.ts`
+
+
+```typescript
+import { Completion, insertCompletionText } from '@codemirror/autocomplete';
+import { EditorView } from 'codemirror';
+
+function applyString(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  const replacement = completion.label + ' = \"\"';
+  const tr = insertCompletionText(view.state, replacement, from, to);
+  // Place cursor between quotes
+  tr.selection = { anchor: from + replacement.length - 1 };
+  view.dispatch(tr);
+}
+
+function applyEnum(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' = ', from, to),
+  );
+}
+
+function applyNumber(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' = ', from, to),
+  );
+}
+
+function applyLogicalOperator(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' ', from, to),
+  );
+}
+
+export const PID_COMPLETIONS: Completion[] = [
+  {
+    label: 'pid',
+    type: 'method',
+    info: 'Filter by PID',
+    apply: applyNumber,
+  },
+  {
+    label: 'parameter',
+    type: 'method',
+    info: 'Filter by parameter name',
+    apply: applyString,
+  },
+  {
+    label: 'rawType',
+    type: 'method',
+    info: 'Filter by raw type',
+    apply: applyEnum,
+  },
+  {
+    label: 'engType',
+    type: 'method',
+    info: 'Filter by engineering type',
+    apply: applyEnum,
+  },
+  {
+    label: 'gid',
+    type: 'method',
+    info: 'Filter by GID',
+    apply: applyNumber,
+  },
+  {
+    section: 'Exclude PIDs',
+    label: '-pid',
+    type: 'method',
+    info: 'Exclude based on PID',
+    apply: applyNumber,
+  },
+  {
+    section: 'Exclude PIDs',
+    label: '-parameter',
+    type: 'method',
+    info: 'Exclude based on parameter name',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude PIDs',
+    label: '-rawType',
+    type: 'method',
+    info: 'Exclude based on raw type',
+    apply: applyEnum,
+  },
+  {
+    section: 'Exclude PIDs',
+    label: '-engType',
+    type: 'method',
+    info: 'Exclude based on engineering type',
+    apply: applyEnum,
+  },
+  {
+    section: 'Exclude PIDs',
+    label: '-gid',
+    type: 'method',
+    info: 'Exclude based on GID',
+    apply: applyNumber,
+  },
+  {
+    section: 'Logical operators',
+    label: 'AND',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+  {
+    section: 'Logical operators',
+    label: 'OR',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+  {
+    section: 'Logical operators',
+    label: 'NOT',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+];
 ```
 
-## 항목
+### `parameter-archive.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/completions.ts`](file--completions.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/parameter-archive.component.css`](file--parameter-archive.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/parameter-archive.component.html`](file--parameter-archive.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/parameter-archive.component.ts`](file--parameter-archive.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/parameter-archive.component.css`
+
+
+```css
+.ya-filter-bar.query {
+  height: unset;
+}
+```
+
+### `parameter-archive.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/parameter-archive.component.html`
+
+
+```html
+<ya-panel>
+  <ya-filter-bar [formGroup]="filterForm" class="query">
+    <ya-search-filter2
+      #searchFilter
+      formControlName="filter"
+      placeholder="Search PIDs"
+      style="flex: 1 1 auto"
+      [completions]="completions"
+      [expanded]="false"
+      (typedValue)="parseQuery($event)" />
+  </ya-filter-bar>
+
+  @if (searchFilter.dirty()) {
+    <ya-table-top>
+      The search filter has changed.
+      @if (!(searchFilter.errorState$ | async)) {
+        &nbsp;
+        <a href class="ya-link" (click)="searchFilter.doSearch(); $event.preventDefault()">
+          Apply filter
+        </a>
+        .
+      }
+    </ya-table-top>
+  }
+  <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+    <ng-container matColumnDef="pid">
+      <th mat-header-cell *matHeaderCellDef>PID</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.pid }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="parameter">
+      <th mat-header-cell *matHeaderCellDef>Parameter name</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.parameter || "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rawType">
+      <th mat-header-cell *matHeaderCellDef>Raw type</th>
+      <td mat-cell *matCellDef="let item">
+        @if (item.rawType) {
+          <span class="mono">{{ item.rawType | lowercase }}</span>
+        } @else {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="engType">
+      <th mat-header-cell *matHeaderCellDef>Engineering type</th>
+      <td mat-cell *matCellDef="let item">
+        @if (item.engType) {
+          <span class="mono">{{ item.engType | lowercase }}</span>
+        } @else {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="gids">
+      <th mat-header-cell *matHeaderCellDef>GIDs</th>
+      <td mat-cell *matCellDef="let item">
+        @for (gid of item.gids || []; track gid; let last = $last) {
+          {{ gid }}
+          @if (!last) {
+            ,
+          }
+        } @empty {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <ya-toolbar appearance="bottom" align="center">
+    <ya-button [disabled]="!continuationToken()" (click)="loadData(continuationToken())">
+      Load more
+    </ya-button>
+  </ya-toolbar>
+</ya-panel>
+```
+
+### `parameter-archive.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/parameter-archive.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  GetParameterArchivePidsOptions,
+  MessageService,
+  ParameterId,
+  ParseFilterSubscription,
+  WebappSdkModule,
+  YamcsService,
+  YaSearchFilter2,
+} from '@yamcs/webapp-sdk';
+import { PID_COMPLETIONS } from './completions';
+
+@Component({
+  templateUrl: './parameter-archive.component.html',
+  styleUrl: './parameter-archive.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterArchiveComponent implements OnInit, OnDestroy {
+  @Input()
+  database: string;
+
+  // From resolver
+  parseFilterSubscription = input.required<ParseFilterSubscription>();
+
+  searchFilter = viewChild.required<YaSearchFilter2>('searchFilter');
+  completions = PID_COMPLETIONS;
+
+  displayedColumns = [
+    'pid',
+    'parameter',
+    'rawType',
+    'engType',
+    'gids',
+    'actions',
+  ];
+
+  filterForm = new FormGroup({
+    filter: new FormControl<string | null>(null),
+  });
+
+  dataSource = new MatTableDataSource<ParameterId>();
+  continuationToken = signal<string | undefined>(undefined);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+  ) {}
+
+  ngOnInit(): void {
+    this.parseFilterSubscription().addMessageListener((data) => {
+      if (data.errorMessage) {
+        this.searchFilter().addErrorMark(data.errorMessage, {
+          beginLine: data.beginLine!,
+          beginColumn: data.beginColumn!,
+          endLine: data.endLine!,
+          endColumn: data.endColumn!,
+        });
+      } else {
+        this.searchFilter().clearErrorMark();
+      }
+    });
+
+    this.loadData();
+
+    this.filterForm.get('filter')!.valueChanges.forEach(() => {
+      this.loadData();
+    });
+  }
+
+  loadData(next?: string) {
+    const { controls } = this.filterForm;
+    const options: GetParameterArchivePidsOptions = {
+      limit: 200,
+      next,
+    };
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.filter = filter;
+    }
+
+    this.yamcs.yamcsClient
+      .getParameterArchivePids(this.database, options)
+      .then((page) => {
+        if (next) {
+          this.dataSource.data = [
+            ...this.dataSource.data,
+            ...(page.pids || []),
+          ];
+        } else {
+          this.dataSource.data = page.pids || [];
+        }
+        this.continuationToken.set(page.continuationToken);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  parseQuery(typedQuery: string) {
+    this.parseFilterSubscription().sendMessage({
+      resource: 'pids',
+      filter: typedQuery,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.parseFilterSubscription().cancel();
+  }
+}
+```

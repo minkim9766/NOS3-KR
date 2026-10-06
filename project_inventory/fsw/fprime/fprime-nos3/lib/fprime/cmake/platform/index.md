@@ -3,24 +3,234 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 unix/index
-file--Darwin.cmake
-file--Linux.cmake
-file--platform.cmake
-file--platform.cmake.template
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/`](unix/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/Darwin.cmake`](file--Darwin.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/Linux.cmake`](file--Linux.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/platform.cmake`](file--platform.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/platform.cmake.template`](file--platform.cmake.template) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `Darwin.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/Darwin.cmake`
+
+
+```cmake
+####
+# Darwin.cmake:
+#
+# Darwin based platform file used for Darwin (Mac OS X) targets. Note: this sets some OS X flags before calling into the common
+# Linux implementations to use the posix types defined there.
+####
+
+FIND_PACKAGE ( Threads REQUIRED )
+set(FPRIME_USE_POSIX ON)
+set(FPRIME_HAS_SOCKETS ON)
+# Set platform default for stubbed drivers
+if (NOT DEFINED FPRIME_USE_STUBBED_DRIVERS)
+   set(FPRIME_USE_STUBBED_DRIVERS ON)
+endif()
+# Add unix include path which is compatible with Darwin for PlatformTypes.hpp
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/unix/Platform/")
+# Override unix implementations with DARWIN specific ones
+register_fprime_config(
+      PlatformDarwin
+   INTERFACE # No buildable files generated
+   CHOOSES_IMPLEMENTATIONS
+      Os_Cpu_Darwin
+      Os_Memory_Darwin
+   BASE_CONFIG
+)
+target_compile_definitions(PlatformDarwin INTERFACE -DTGT_OS_TYPE_DARWIN)
+```
+
+### `Linux.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/Linux.cmake`
+
+
+```cmake
+####
+# Linux.cmake:
+#
+# Linux platform file for standard linux targets.
+####
+FIND_PACKAGE ( Threads REQUIRED )
+set(FPRIME_USE_POSIX ON)
+set(FPRIME_HAS_SOCKETS ON)
+# Add unix include path which is compatible with Linux for PlatformTypes.hpp
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/unix/Platform/")
+# Override unix implementations with LINUX specific ones
+register_fprime_config(
+        PlatformLinux
+    INTERFACE # No buildable files generated
+    CHOOSES_IMPLEMENTATIONS
+        Os_Cpu_Linux
+        Os_Memory_Linux
+    BASE_CONFIG
+)
+target_compile_definitions(PlatformLinux INTERFACE -DTGT_OS_TYPE_LINUX)
+```
+
+### `platform.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/platform.cmake`
+
+
+```cmake
+####
+# platforms:
+#
+# Platforms in F prime's CMake system setup f prime specific items w.r.t the OS. This file loads those platforms
+# file and uses it to setup F prime's build. See: [Platform Template](./platform-template.md) for how to
+# generate these files.
+#
+####
+include_guard()
+include(API)
+# Basic definitions
+get_filename_component(TOOLCHAIN_NAME "${CMAKE_TOOLCHAIN_FILE}" NAME_WE)
+# Native toolchains use the system name for the toolchain and FPRIME_PLATFORM
+if (NOT TOOLCHAIN_NAME)
+    set(TOOLCHAIN_NAME "${CMAKE_SYSTEM_NAME}")
+    set(FPRIME_PLATFORM "${CMAKE_SYSTEM_NAME}")
+# It is an error to use a "Generic" toolchain without setting FPRIME_PLATFORM correctly
+elseif (CMAKE_SYSTEM_NAME STREQUAL "Generic" AND NOT FPRIME_PLATFORM)
+    message(FATAL_ERROR "Toolchain '${TOOLCHAIN_NAME}' set CMAKE_SYSTEM_NAME to 'Generic' without setting FPRIME_PLATFORM")
+# It is an error to set neither of CMAKE_SYSTEM_NAME and FPRIME_PLATFORM
+elseif (NOT CMAKE_SYSTEM_NAME AND NOT FPRIME_PLATFORM)
+    message(FATAL_ERROR "Toolchain '${TOOLCHAIN_NAME}' should set CMAKE_SYSTEM_NAME to 'Generic' and set FPRIME_PLATFORM")
+# Fallback to CMAKE_SYSTEM_NAME when only CMAKE_SYSTEM_NAME is set
+elseif (NOT FPRIME_PLATFORM)
+    message(WARNING "Toolchain '${TOOLCHAIN_NAME}' should set CMAKE_SYSTEM_NAME to 'Generic' and set FPRIME_PLATFORM")
+    set(FPRIME_PLATFORM "${CMAKE_SYSTEM_NAME}")
+endif()
+
+# Include platform file based on system name
+message(STATUS "Target build toolchain/platform: ${TOOLCHAIN_NAME}/${FPRIME_PLATFORM}")
+
+# Output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${TOOLCHAIN_NAME}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin/${TOOLCHAIN_NAME}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib/${TOOLCHAIN_NAME}")
+set(EXPECTED_PLATFORM_FILE "")
+
+# Loop over locations of platform files in order: project, libraries, then framework
+foreach(ROOT ${FPRIME_PROJECT_ROOT};${FPRIME_LIBRARY_LOCATIONS};${FPRIME_FRAMEWORK_PATH} )
+    set(EXPECTED_PLATFORM_FILE "${ROOT}/cmake/platform/${FPRIME_PLATFORM}.cmake")
+    # Include host machine settings
+    if (EXISTS "${EXPECTED_PLATFORM_FILE}")
+        set_property(GLOBAL PROPERTY FPRIME_PLATFORM_FILE "${EXPECTED_PLATFORM_FILE}")
+        break()
+    endif()
+endforeach()
+# Ensure the last attempt for the platform file was successful, otherwise error.
+if (NOT EXISTS "${EXPECTED_PLATFORM_FILE}")
+  message(FATAL_ERROR "\n[F-PRIME] No platform config for '${FPRIME_PLATFORM}'. Please create: '${FPRIME_PLATFORM}.cmake'\n")
+endif()
+####
+# Macro `fprime__include_platform_file`:
+#
+# Callback function to include the platform file and set up the platform specific module. Defined as a macro so the set variables
+# exist in calling scope.
+#
+####
+macro(fprime__include_platform_file)
+    get_property(EXPECTED_PLATFORM_FILE GLOBAL PROPERTY FPRIME_PLATFORM_FILE)
+    message(STATUS "Including ${EXPECTED_PLATFORM_FILE}")
+    include("${EXPECTED_PLATFORM_FILE}")
+endmacro()
+```
+
+### `platform.cmake.template`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/platform.cmake.template`
+
+
+````text
+####
+# platform.cmake.template:
+#
+# This file acts as a template for the fprime platform files used by the CMake system.
+# These files specify build flags, compiler directives, and must specify an include
+# directory for system includes like "PlatformTypes.hpp".
+#
+# Follow all the steps in this template to create a platform file. Ensure
+# to remove the platform-failsafe (step 1) and fill in all <SOMETHING> tags.
+#
+# **Note:** If the user desires to set compiler paths, and other CMake toolchain settings, a
+#           toolchain file should be constructed. See: toolchain.md
+#
+# ### Platform File Loading ###
+#
+# The user rarely needs to specify a platform file directly. It will be specified based on the data
+# in the chosen Toolchain file, or by the CMake system itself. However, if the user wants to control
+# which platform file is used, the load is specified by the following rules:
+#
+# If the user specifies a CMake Toolchain file, then the platform file `${CMAKE_SYSTEM_NAME}.cmake`
+# will be used. `${CMAKE_SYSTEM_NAME}` is set in the toolchain file and is typically set to a name like Linux, or Darwin
+# but may be more specific if required.
+#
+# Otherwise, CMake sets the `${CMAKE_SYSTEM_NAME}` automatically to be that of the Host system, and that platform
+# will be used. e.g. when building on Linux, the platform file "Linux.cmake" will be used.
+#
+# ### Filling In CMake Platform by Example ###
+#
+# F prime platform files are used to set F prime specific settings. This allows the user to control
+# some aspects of the F prime build at the top-level. This means setting global include directories
+# compiler definitions for the platform, threading libraries, etc. The bare-minimum platform file
+# should specify an include directory for "PlatformTypes.hpp" and a threading library if using
+# active components with OS supported threads. This can be done with the following lines:
+#
+# ```
+# FIND_PACKAGE ( Threads REQUIRED )
+# include_directories(SYSTEM "${FPRIME_FRAMEWORK_PATH}/Fw/Types/Linux")
+# ```
+#
+# **Note:** much of this is done already in *-common.cmake for Linux. If using a linux-like system,
+#           this can be included to save time.
+#
+# **Note:** if copying the template, delete the message with FATAL_ERROR line. This is a fail-safe
+#           to prevent a raw-copy from being treated as a valid toolchain file.
+####
+
+## STEP 1: DELETE the following fail-safe line
+message(FATAL_ERROR "\n[F-PRIME] Platform must be filled before use.\n")
+
+## STEP 2: Specify the OS type include directive i.e. LINUX or DARWIN
+add_definitions(-DTGT_OS_TYPE_<PLATFORM-NAME>)
+
+# STEP 3: Specify CMAKE C and CXX compile flags. DO NOT clear existing flags
+set(CMAKE_C_FLAGS
+  "${CMAKE_C_FLAGS} <ADD-C-FLAGS-HERE>"
+)
+set(CMAKE_CXX_FLAGS
+  "${CMAKE_CXX_FLAGS} <ADD-CXX-FLAGS-HERE>"
+)
+
+# STEP 4: Specify that a thread package should be searched in the toolchain
+#         directory. NOTE: when running without threads, remove this line.
+#         Here there is a check for the using baremetal scheduler
+if (NOT DEFINED FPRIME_USE_BAREMETAL_SCHEDULER)
+   set(FPRIME_USE_BAREMETAL_SCHEDULER OFF)
+   message(STATUS "Requiring thread library")
+   FIND_PACKAGE ( Threads REQUIRED )
+endif()
+
+# STEP 5: Specify a directory containing the "PlatformTypes.hpp" headers, as well
+#         as other system headers. Other global headers can be placed here.
+#         Note: Typically, the Linux directory is a good default, as it grabs
+#         standard types from <cstdint>.
+include_directories(SYSTEM "${FPRIME_FRAMEWORK_PATH}/Fw/Types/Linux")
+````
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/README.md`
+
+
+```markdown
+```

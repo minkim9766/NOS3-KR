@@ -3,14 +3,33 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `proxy-server.js`
 
-file--proxy-server.js
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/scripts/proxy-server.js`
+
+
+```javascript
+#!/usr/bin/env node
+
+// Simple reverse proxy for test purposes.
+
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+const app = express();
+
+const wsProxy = createProxyMiddleware({
+  target: 'ws://127.0.0.1:8090',
+  changeOrigin: true,
+  headers: {
+    'X-Remote-User': 'admin',
+  },
+});
+
+app.use('/', wsProxy);
+
+const server = app.listen(5050);
+server.on('upgrade', wsProxy.upgrade);
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/scripts/proxy-server.js`](file--proxy-server.js) — UTF-8 텍스트 파일 본문 포함

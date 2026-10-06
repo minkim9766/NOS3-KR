@@ -3,18 +3,237 @@
 
 **경로:** `components/blackboard/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `blackboard_42_data_provider.hpp`
 
-file--blackboard_42_data_provider.hpp
-file--blackboard_data_point.hpp
-file--blackboard_hardware_model.hpp
+**경로:** `components/blackboard/sim/inc/blackboard_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_BLACKBOARD42DATAPROVIDER_HPP
+#define NOS3_BLACKBOARD42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <blackboard_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Blackboard42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Blackboard42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Blackboard42DataProvider(void) {};
+        Blackboard42DataProvider& operator=(const Blackboard42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `blackboard_data_point.hpp`
 
-- [`components/blackboard/sim/inc/blackboard_42_data_provider.hpp`](file--blackboard_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/blackboard/sim/inc/blackboard_data_point.hpp`](file--blackboard_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/blackboard/sim/inc/blackboard_hardware_model.hpp`](file--blackboard_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/blackboard/sim/inc/blackboard_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_BLACKBOARDDATAPOINT_HPP
+#define NOS3_BLACKBOARDDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class BlackboardDataPoint : public Sim42DataPoint
+    {
+    public:
+        /* Constructors */
+        BlackboardDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        double get_svb_x(void) {parse_data_point(); return _svb[0];}
+        double get_svb_y(void) {parse_data_point(); return _svb[1];}
+        double get_svb_z(void) {parse_data_point(); return _svb[2];}
+        double get_bvb_x(void) {parse_data_point(); return _bvb[0];}
+        double get_bvb_y(void) {parse_data_point(); return _bvb[1];}
+        double get_bvb_z(void) {parse_data_point(); return _bvb[2];}
+        double get_Hvb_x(void) {parse_data_point(); return _Hvb[0];}
+        double get_Hvb_y(void) {parse_data_point(); return _Hvb[1];}
+        double get_Hvb_z(void) {parse_data_point(); return _Hvb[2];}
+        double get_GyroRate_x(void) {parse_data_point(); return _GyroRate[0];}
+        double get_GyroRate_y(void) {parse_data_point(); return _GyroRate[1];}
+        double get_GyroRate_z(void) {parse_data_point(); return _GyroRate[2];}
+        int    get_CSSValid_0(void) {parse_data_point(); return _CSSValid[0];}
+        int    get_CSSValid_1(void) {parse_data_point(); return _CSSValid[1];}
+        int    get_CSSValid_2(void) {parse_data_point(); return _CSSValid[2];}
+        int    get_CSSValid_3(void) {parse_data_point(); return _CSSValid[3];}
+        int    get_CSSValid_4(void) {parse_data_point(); return _CSSValid[4];}
+        int    get_CSSValid_5(void) {parse_data_point(); return _CSSValid[5];}
+        double get_CSSIllum_0(void) {parse_data_point(); return _CSSIllum[0];}
+        double get_CSSIllum_1(void) {parse_data_point(); return _CSSIllum[1];}
+        double get_CSSIllum_2(void) {parse_data_point(); return _CSSIllum[2];}
+        double get_CSSIllum_3(void) {parse_data_point(); return _CSSIllum[3];}
+        double get_CSSIllum_4(void) {parse_data_point(); return _CSSIllum[4];}
+        double get_CSSIllum_5(void) {parse_data_point(); return _CSSIllum[5];}
+        int    get_FSSValid(void) {parse_data_point(); return _FSSValid;}
+        double get_FSSSunAng_alpha(void) {parse_data_point(); return _FSSSunAng[0];}
+        double get_FSSSunAng_beta(void) {parse_data_point(); return _FSSSunAng[1];}
+        int    get_STValid(void) {parse_data_point(); return _STValid;}
+        double get_STqn_0(void) {parse_data_point(); return _STqn[0];}
+        double get_STqn_1(void) {parse_data_point(); return _STqn[1];}
+        double get_STqn_2(void) {parse_data_point(); return _STqn[2];}
+        double get_STqn_3(void) {parse_data_point(); return _STqn[3];}
+        double get_AbsTime(void) {parse_data_point(); return _AbsTime;}
+        int    get_GPSWeek(void) {parse_data_point(); return _GPSWeek;}
+        int    get_GPSSec(void) {parse_data_point(); return _GPSSec;}
+        double get_GPSFracSec(void) {parse_data_point(); return _GPSFracSec;}
+        double get_GPSPosN_x(void) {parse_data_point(); return _GPSPosN[0];}
+        double get_GPSPosN_y(void) {parse_data_point(); return _GPSPosN[1];}
+        double get_GPSPosN_z(void) {parse_data_point(); return _GPSPosN[2];}
+        double get_GPSVelN_x(void) {parse_data_point(); return _GPSVelN[0];}
+        double get_GPSVelN_y(void) {parse_data_point(); return _GPSVelN[1];}
+        double get_GPSVelN_z(void) {parse_data_point(); return _GPSVelN[2];}
+        double get_GPSPosW_x(void) {parse_data_point(); return _GPSPosW[0];}
+        double get_GPSPosW_y(void) {parse_data_point(); return _GPSPosW[1];}
+        double get_GPSPosW_z(void) {parse_data_point(); return _GPSPosW[2];}
+        double get_GPSVelW_x(void) {parse_data_point(); return _GPSVelW[0];}
+        double get_GPSVelW_y(void) {parse_data_point(); return _GPSVelW[1];}
+        double get_GPSVelW_z(void) {parse_data_point(); return _GPSVelW[2];}
+        double get_AccelAcc_x(void) {parse_data_point(); return _AccelAcc[0];}
+        double get_AccelAcc_y(void) {parse_data_point(); return _AccelAcc[1];}
+        double get_AccelAcc_z(void) {parse_data_point(); return _AccelAcc[2];}
+        double get_WhlH_x(void) {parse_data_point(); return _WhlH[0];}
+        double get_WhlH_y(void) {parse_data_point(); return _WhlH[1];}
+        double get_WhlH_z(void) {parse_data_point(); return _WhlH[2];}
+
+        std::string to_string(void) const;
+    
+    private:
+        /* Disallow these */
+        BlackboardDataPoint(void) {};
+        BlackboardDataPoint(const BlackboardDataPoint& sdp) : Sim42DataPoint(sdp) {};
+        ~BlackboardDataPoint(void) {};
+
+        // Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable double _svb[3];
+        mutable double _bvb[3];
+        mutable double _Hvb[3];
+        mutable double _GyroRate[3];
+        mutable int    _CSSValid[6];
+        mutable double _CSSIllum[6];
+        mutable int    _FSSValid;
+        mutable double _FSSSunAng[2];
+        mutable int    _STValid;
+        mutable double _STqn[4];
+        mutable double _AbsTime;
+        mutable int    _GPSWeek;
+        mutable int    _GPSSec;
+        mutable double _GPSFracSec;
+        mutable double _GPSPosN[3];
+        mutable double _GPSVelN[3];
+        mutable double _GPSPosW[3];
+        mutable double _GPSVelW[3];
+        mutable double _AccelAcc[3];
+        mutable double _WhlH[3];
+    };
+}
+
+#endif
+```
+
+### `blackboard_hardware_model.hpp`
+
+**경로:** `components/blackboard/sim/inc/blackboard_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_BLACKBOARDHARDWAREMODEL_HPP
+#define NOS3_BLACKBOARDHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+
+#include <Client/Bus.hpp>
+#include <Uart/Client/Uart.hpp> /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+
+#include <sim_i_data_provider.hpp>
+#include <blackboard_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+#include <blackboard_data.hpp>
+
+
+/*
+** Defines
+*/
+#define BLACKBOARD_SIM_SUCCESS 0
+#define BLACKBOARD_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    /* Standard for a hardware model */
+    class BlackboardHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        BlackboardHardwareModel(const boost::property_tree::ptree& config);
+        ~BlackboardHardwareModel(void);
+
+        void send_periodic_data_to_shmem(NosEngine::Common::SimTime time);
+    private:
+        /* Private helper methods */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        /* Private data members */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _blackboard_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::string                                         _shm_name;
+        bip::mapped_region                                  _shm_region;
+        BlackboardData*                                     _blackboard_data;
+        std::uint16_t                                       _ticks_between_shmem_saves;
+        std::uint16_t                                       _ticks_to_wait_at_startup;
+        std::uint8_t                                        _enabled;
+    };
+
+}
+
+#endif
+```

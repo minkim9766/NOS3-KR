@@ -3,16 +3,192 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/tm-stats-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `tm-stats-table.component.html`
 
-file--tm-stats-table.component.html
-file--tm-stats-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/tm-stats-table/tm-stats-table.component.html`
+
+
+```html
+@if (dataSource) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="packetName"
+    matSortDirection="asc"
+    matSortDisableClear>
+    <ng-container matColumnDef="packetName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Packet</th>
+      <td mat-cell *matCellDef="let tmstats">
+        @if (config.tmArchive) {
+          <a
+            routerLink="/telemetry/packets"
+            [queryParams]="{ c: yamcs.context, name: tmstats.packetName }">
+            {{ tmstats.packetName }}
+          </a>
+        } @else {
+          {{ tmstats.packetName }}
+        }
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    <ng-container matColumnDef="lastReceived">
+      <th mat-header-cell *matHeaderCellDef>Received</th>
+      <td mat-cell *matCellDef="let tmstats" style="text-align: right">
+        {{ (tmstats.lastReceived | deltaWith: tmstats.lastPacketTime) || "-" }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    <ng-container matColumnDef="lastPacketTime">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Packet time</th>
+      <td mat-cell *matCellDef="let tmstats">
+        {{ (tmstats.lastPacketTime | datetime) || "-" }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    <ng-container matColumnDef="packetRate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Packet rate</th>
+      <td mat-cell *matCellDef="let tmstats" style="text-align: right">
+        {{ tmstats.packetRate }} p/s
+      </td>
+      <td mat-footer-cell *matFooterCellDef style="text-align: right">
+        {{ totalPacketRate$ | async }} p/s
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="dataRate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Data rate</th>
+      <td mat-cell *matCellDef="let tmstats" style="text-align: right">
+        {{ tmstats.dataRate | dataRate }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef style="text-align: right">
+        {{ totalDataRate$ | async | dataRate }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef></td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+  </table>
+}
 ```
 
-## 항목
+### `tm-stats-table.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/tm-stats-table/tm-stats-table.component.html`](file--tm-stats-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/tm-stats-table/tm-stats-table.component.ts`](file--tm-stats-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/tm-stats-table/tm-stats-table.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  ConfigService,
+  TmStatistics,
+  WebappSdkModule,
+  WebsiteConfig,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+
+export interface PacketStats {
+  packetName: string;
+  packetRate: number;
+  dataRate: number;
+  lastReceived?: string;
+  lastPacketTime?: string;
+}
+
+@Component({
+  selector: 'app-tmstats-table',
+  templateUrl: './tm-stats-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TmStatsTableComponent implements AfterViewInit, OnDestroy {
+  @Input()
+  tmstats$: Observable<TmStatistics[]>;
+  tmstatsSubscription: Subscription;
+
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  private statsByName: { [key: string]: PacketStats } = {};
+  dataSource = new MatTableDataSource<PacketStats>();
+  totalPacketRate$ = new BehaviorSubject<number>(0);
+  totalDataRate$ = new BehaviorSubject<number>(0);
+
+  config: WebsiteConfig;
+
+  displayedColumns = [
+    'packetName',
+    'lastPacketTime',
+    'lastReceived',
+    'packetRate',
+    'dataRate',
+    'actions',
+  ];
+
+  constructor(
+    readonly yamcs: YamcsService,
+    configService: ConfigService,
+  ) {
+    this.config = configService.getConfig();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    if (this.tmstats$ && !this.tmstatsSubscription) {
+      this.yamcs.yamcsClient
+        .getPacketNames(this.yamcs.instance!)
+        .then((response) => {
+          for (const packetName of response.packets || []) {
+            this.statsByName[packetName] = {
+              packetName,
+              packetRate: 0,
+              dataRate: 0,
+            };
+          }
+          this.updateData();
+
+          this.tmstatsSubscription = this.tmstats$.subscribe((tmstats) => {
+            for (const entry of tmstats || []) {
+              this.statsByName[entry.packetName] = entry;
+            }
+            this.updateData();
+          });
+        });
+    }
+  }
+
+  private updateData() {
+    const lines = Object.values(this.statsByName);
+    let totalPacketRate = 0;
+    let totalDataRate = 0;
+    for (const line of lines) {
+      totalPacketRate += Number(line.packetRate);
+      totalDataRate += Number(line.dataRate);
+    }
+    this.totalPacketRate$.next(totalPacketRate);
+    this.totalDataRate$.next(totalDataRate);
+    this.dataSource.data = lines;
+  }
+
+  ngOnDestroy() {
+    this.tmstatsSubscription?.unsubscribe();
+  }
+}
+```

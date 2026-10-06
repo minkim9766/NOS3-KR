@@ -3,18 +3,66 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `server-unavailable.component.css`
 
-file--server-unavailable.component.css
-file--server-unavailable.component.html
-file--server-unavailable.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/server-unavailable.component.css`
+
+
+```css
+:host {
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `server-unavailable.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/server-unavailable.component.css`](file--server-unavailable.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/server-unavailable.component.html`](file--server-unavailable.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/server-unavailable.component.ts`](file--server-unavailable.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/server-unavailable.component.html`
+
+
+```html
+<ya-panel>
+  <p>&nbsp;</p>
+  <table style="padding-left: 60px; margin: 0 auto; padding-top: 100px">
+    <tr>
+      <td style="vertical-align: top">
+        <h2>Server unavailable</h2>
+        <p>Yamcs appears to be down.</p>
+        <p>&nbsp;</p>
+        <p>
+          <ya-button appearance="primary" (click)="reload()">RELOAD</ya-button>
+        </p>
+      </td>
+      <td style="padding-left: 15em; padding-right: 5em">
+        <app-oops />
+      </td>
+    </tr>
+  </table>
+</ya-panel>
+```
+
+### `server-unavailable.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/server-unavailable/server-unavailable.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { OopsComponent } from '../oops/oops.component';
+
+@Component({
+  templateUrl: './server-unavailable.component.html',
+  styleUrl: './server-unavailable.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [OopsComponent, WebappSdkModule],
+})
+export class ServerUnavailableComponent {
+  reload() {
+    window.location.reload();
+  }
+}
+```

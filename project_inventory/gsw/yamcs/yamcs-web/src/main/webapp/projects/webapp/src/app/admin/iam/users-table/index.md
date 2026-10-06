@@ -3,16 +3,137 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/users-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `users-table.component.html`
 
-file--users-table.component.html
-file--users-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/users-table/users-table.component.html`
+
+
+```html
+@if (dataSource) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    matSortDisableClear>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+      <td mat-cell *matCellDef="let user">
+        <a [routerLink]="user.name">
+          {{ user.name }}
+        </a>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="displayName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Display name</th>
+      <td mat-cell *matCellDef="let user">
+        {{ user.displayName || "-" }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="groups">
+      <th mat-header-cell *matHeaderCellDef>Groups</th>
+      <td mat-cell *matCellDef="let user">
+        @for (group of user.groups; track group; let isFirst = $first) {
+          @if (!isFirst) {
+            ,
+          }
+          {{ group.name }}
+        }
+        @if (!user.groups) {
+          -
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="registered">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Registered</th>
+      <td mat-cell *matCellDef="let user">{{ (user.creationTime | datetime) || "never" }}</td>
+    </ng-container>
+    <ng-container matColumnDef="lastLogin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Login</th>
+      <td mat-cell *matCellDef="let user">{{ (user.lastLoginTime | datetime) || "never" }}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let user">
+        <ya-more>
+          <a mat-menu-item [routerLink]="[user.name, 'edit']">Edit user</a>
+          <button mat-menu-item (click)="deleteUser.next(user.name)">Delete user</button>
+        </ya-more>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
+@if (!dataSource.data.length) {
+  <ya-empty-message>No rows to display</ya-empty-message>
+}
 ```
 
-## 항목
+### `users-table.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/users-table/users-table.component.html`](file--users-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/users-table/users-table.component.ts`](file--users-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/users-table/users-table.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { UserInfo, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-users-table',
+  templateUrl: './users-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class UsersTableComponent implements AfterViewInit, OnChanges {
+  displayedColumns = [
+    'name',
+    'displayName',
+    'groups',
+    // 'registered',
+    // 'lastLogin',
+    'actions',
+  ];
+
+  @Input()
+  users: UserInfo[];
+
+  @Input()
+  filter: string;
+
+  @Output()
+  deleteUser = new EventEmitter<string>();
+
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  dataSource = new MatTableDataSource<UserInfo>();
+
+  ngAfterViewInit() {
+    this.dataSource.filterPredicate = (user, filter) => {
+      return user.name.toLowerCase().indexOf(filter) >= 0;
+    };
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnChanges() {
+    this.dataSource.data = this.users || [];
+    this.dataSource.filter = this.filter;
+  }
+}
+```

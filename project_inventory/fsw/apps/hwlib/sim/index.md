@@ -3,18 +3,36 @@
 
 **경로:** `fsw/apps/hwlib/sim/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/hwlib/sim/inc/`](inc/index) — 폴더
-- [`fsw/apps/hwlib/sim/src/`](src/index) — 폴더
-- [`fsw/apps/hwlib/sim/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/hwlib/sim/CMakeLists.txt`
+
+
+```cmake
+project(noslink C)
+cmake_minimum_required(VERSION 2.6.4)
+
+include_directories(inc
+                    ${NOSENGINE_INCLUDE_DIRS}
+                    ${MISSION_SOURCE_DIR}/components/hwlib/fsw/public_inc
+                    ${MISSION_SOURCE_DIR}/osal/src/os/inc
+                    ${MISSION_SOURCE_DIR}/psp/fsw/inc
+                    )
+
+aux_source_directory(src NOSLINK_SRC)
+
+add_library(noslink STATIC ${NOSLINK_SRC})
+target_link_libraries(noslink ${NOSENGINE_LIBRARIES} gcov)
+
+```

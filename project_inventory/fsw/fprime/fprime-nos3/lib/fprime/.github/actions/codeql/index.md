@@ -3,20 +3,100 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `jpl-standard-pack-1.yml`
 
-file--jpl-standard-pack-1.yml
-file--jpl-standard-pack-2.yml
-file--jpl-standard-pack-3.yml
-file--security-pack.yml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/jpl-standard-pack-1.yml`
+
+
+```yaml
+name: "CodeQL JPL Coding Standard - Errors and Warnings"
+
+disable-default-queries: true
+
+packs:
+  # Source of the query pack is https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+  - codeql/cpp-queries:JPL_C
+
+query-filters:
+  - exclude:
+      problem.severity:
+        - recommendation
 ```
 
-## 항목
+### `jpl-standard-pack-2.yml`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/jpl-standard-pack-1.yml`](file--jpl-standard-pack-1.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/jpl-standard-pack-2.yml`](file--jpl-standard-pack-2.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/jpl-standard-pack-3.yml`](file--jpl-standard-pack-3.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/security-pack.yml`](file--security-pack.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/jpl-standard-pack-2.yml`
+
+
+```yaml
+name: "CodeQL JPL Coding Standard - Recommendations 1 of 2"
+
+disable-default-queries: true
+
+packs:
+  # Source of the query pack is https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+  - codeql/cpp-queries:JPL_C
+
+query-filters:
+  - exclude:
+      problem.severity:
+        - error
+        - warning
+  # We are excluding the following query because it overflows the limit of
+  # 5000 results that the SARIF upload can handle
+  # This sole query is ran in jpl-standard-pack-3.yml
+  # https://docs.github.com/en/code-security/code-scanning/integrating-with-code-scanning/uploading-a-sarif-file-to-github#uploading-a-code-scanning-analysis-with-github-actions
+  - exclude:
+      id:
+        - cpp/jpl-c/basic-int-types
+```
+
+### `jpl-standard-pack-3.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/jpl-standard-pack-3.yml`
+
+
+```yaml
+name: "CodeQL JPL Coding Standard - Recommendations 2 of 2"
+
+disable-default-queries: true
+
+packs:
+  # Source of the query pack is https://github.com/github/codeql/tree/main/cpp/ql/src/JPL_C
+  - codeql/cpp-queries:JPL_C
+
+query-filters:
+  # This will ONLY include the following query
+  - include:
+      id:
+        - cpp/jpl-c/basic-int-types
+```
+
+### `security-pack.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/security-pack.yml`
+
+
+```yaml
+name: "CodeQL security and quality"
+
+queries: 
+  - uses: security-and-quality
+
+query-filters:
+  - include: 
+      id: cpp/incorrect-not-operator-usage
+  - include: 
+      tags contain: correctness
+  - include: 
+      tags contain: reliability
+
+paths-ignore:
+  - docs/
+  - cmake/docs/
+  - cmake/test/
+  - Autocoders/Python/src/fprime_ac/utils/DiffAndRename.py
+  - Autocoders/Python/src/fprime_ac/utils/pyparsing.py
+```

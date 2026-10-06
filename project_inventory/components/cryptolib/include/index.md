@@ -3,34 +3,2217 @@
 
 **경로:** `components/cryptolib/include/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `crypto.h`
 
-file--crypto.h
-file--crypto_config.h
-file--crypto_config_structs.h
-file--crypto_error.h
-file--crypto_events.h
-file--crypto_print.h
-file--crypto_structs.h
-file--cryptography_interface.h
-file--key_interface.h
-file--mc_interface.h
-file--sa_interface.h
+**경로:** `components/cryptolib/include/crypto.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+#ifndef CRYPTO_H
+#define CRYPTO_H
+
+/*
+** Crypto Includes
+*/
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "cfe.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#endif
+
+#include <math.h>
+#include <string.h>
+#include <ctype.h>
+#include "crypto_config.h"
+#include "crypto_config_structs.h"
+#include "crypto_error.h"
+#include "crypto_events.h"
+#include "crypto_print.h"
+#include "crypto_structs.h"
+#include "sa_interface.h"
+#include "cryptography_interface.h"
+#include "key_interface.h"
+#include "mc_interface.h"
+#include "sa_interface.h"
+#include "crypto.h"
+
+/*
+** Crypto Version
+*/
+#define CRYPTO_LIB_MAJOR_VERSION 1
+#define CRYPTO_LIB_MINOR_VERSION 4
+#define CRYPTO_LIB_REVISION      1
+#define CRYPTO_LIB_MISSION_REV   0
+
+#define GVCID_MAX_PARAM_SIZE 250
+#define CRC32TBL_SIZE        256
+#define CRC16TBL_SIZE        256
+
+/*
+** User Prototypes
+*/
+uint8_t Crypto_gf_mul(uint8_t a, uint8_t b);
+
+// Crypto Library Configuration functions
+extern int32_t Crypto_Config_CryptoLib(uint8_t key_type, uint8_t mc_type, uint8_t sa_type, uint8_t cryptography_type,
+                                       uint8_t iv_type, uint8_t crypto_create_fecf, uint8_t process_sdls_pdus,
+                                       uint8_t has_pus_hdr, uint8_t ignore_sa_state, uint8_t ignore_anti_replay,
+                                       uint8_t unique_sa_per_mapid, uint8_t crypto_check_fecf, uint8_t vcid_bitmask,
+                                       uint8_t crypto_increment_nontransmitted_iv);
+extern int32_t Crypto_Config_MariaDB(char *mysql_hostname, char *mysql_database, uint16_t mysql_port,
+                                     uint8_t mysql_require_secure_transport, uint8_t mysql_tls_verify_server,
+                                     char *mysql_tls_ca, char *mysql_tls_capath, char *mysql_mtls_cert,
+                                     char *mysql_mtls_key, char *mysql_mtls_client_key_password, char *mysql_username,
+                                     char *mysql_password);
+extern int32_t Crypto_Config_Kmc_Crypto_Service(char *protocol, char *kmc_crypto_hostname, uint16_t kmc_crypto_port,
+                                                char *kmc_crypto_app, char *kmc_tls_ca_bundle, char *kmc_tls_ca_path,
+                                                uint8_t kmc_ignore_ssl_hostname_validation, char *mtls_client_cert_path,
+                                                char *mtls_client_cert_type, char *mtls_client_key_path,
+                                                char *mtls_client_key_pass, char *mtls_issuer_cert);
+extern int32_t Crypto_Config_Cam(uint8_t cam_enabled, char *cookie_file_path, char *keytab_file_path,
+                                 uint8_t login_method, char *access_manager_uri, char *username, char *cam_home);
+extern int32_t Crypto_Config_Add_Gvcid_Managed_Parameters(GvcidManagedParameters_t mp_struct);
+// Initialization
+extern int32_t Crypto_Init(void); // Initialize CryptoLib After Configuration Calls
+extern int32_t Crypto_Init_With_Configs(
+    CryptoConfig_t *crypto_config_p, GvcidManagedParameters_t *gvcid_managed_parameters_p,
+    SadbMariaDBConfig_t *sa_mariadb_config_p,
+    CryptographyKmcCryptoServiceConfig_t
+        *cryptography_kmc_crypto_config_p);     // Initialize CryptoLib With Application Defined Configuration
+extern int32_t Crypto_SC_Init(void);            // Initialize CryptoLib with Spacecraft default Configurations
+extern int32_t Crypto_Init_TC_Unit_Test(void);  // Initialize CryptoLib with unit test default Configurations
+extern int32_t Crypto_Init_TM_Unit_Test(void);  // Initialize CryptoLib with unit test default Configurations
+extern int32_t Crypto_Init_AOS_Unit_Test(void); // Initialize CryptoLib with unit test default Configurations
+
+// Cleanup
+extern int32_t Crypto_Shutdown(void); // Free all allocated memory
+
+// Telecommand (TC)
+extern int32_t Crypto_TC_ApplySecurity(const uint8_t *p_in_frame, const uint16_t in_frame_length,
+                                       uint8_t **pp_enc_frame, uint16_t *p_enc_frame_len);
+extern int32_t Crypto_TC_ProcessSecurity(uint8_t *ingest, int *len_ingest, TC_t *tc_sdls_processed_frame);
+extern int32_t Crypto_TC_ApplySecurity_Cam(const uint8_t *p_in_frame, const uint16_t in_frame_length,
+                                           uint8_t **pp_enc_frame, uint16_t *p_enc_frame_len, char *cam_cookies);
+extern int32_t Crypto_TC_ProcessSecurity_Cam(uint8_t *ingest, int *len_ingest, TC_t *tc_sdls_processed_frame,
+                                             char *cam_cookies);
+
+int32_t  Crypto_TC_Get_SA_Service_Type(uint8_t *sa_service_type, SecurityAssociation_t *sa_ptr);
+int32_t  Crypto_TC_Parse_Check_FECF(uint8_t *ingest, int *len_ingest, TC_t *tc_sdls_processed_frame);
+int32_t  Crypto_TC_Nontransmitted_IV_Increment(SecurityAssociation_t *sa_ptr, TC_t *tc_sdls_processed_frame);
+int32_t  Crypto_TC_Nontransmitted_SN_Increment(SecurityAssociation_t *sa_ptr, TC_t *tc_sdls_processed_frame);
+int32_t  Crypto_TC_Check_ACS_Keylen(crypto_key_t *akp, SecurityAssociation_t *sa_ptr);
+int32_t  Crypto_TC_Check_ECS_Keylen(crypto_key_t *ekp, SecurityAssociation_t *sa_ptr);
+void     Crypto_TC_Safe_Free_Ptr(uint8_t *ptr);
+int32_t  Crypto_TC_Do_Decrypt(uint8_t sa_service_type, uint8_t ecs_is_aead_algorithm, crypto_key_t *ekp,
+                              SecurityAssociation_t *sa_ptr, uint8_t *aad, TC_t *tc_sdls_processed_frame,
+                              uint8_t *ingest, uint16_t tc_enc_payload_start_index, uint16_t aad_len, char *cam_cookies,
+                              crypto_key_t *akp, uint8_t segment_hdr_len);
+int32_t  Crypto_TC_Process_Sanity_Check(int *len_ingest);
+int32_t  Crypto_TC_Prep_AAD(TC_t *tc_sdls_processed_frame, uint8_t fecf_len, uint8_t sa_service_type,
+                            uint8_t ecs_is_aead_algorithm, uint16_t *aad_len, SecurityAssociation_t *sa_ptr,
+                            uint8_t segment_hdr_len, uint8_t *ingest, uint8_t **aad);
+int32_t  Crypto_TC_Get_Keys(crypto_key_t **ekp, crypto_key_t **akp, SecurityAssociation_t *sa_ptr);
+int32_t  Crypto_TC_Check_IV_ARSN(SecurityAssociation_t *sa_ptr, TC_t *tc_sdls_processed_frame);
+uint32_t Crypto_TC_Sanity_Validations(TC_t *tc_sdls_processed_frame, SecurityAssociation_t **sa_ptr);
+void Crypto_TC_Get_Ciper_Mode_TCP(uint8_t sa_service_type, uint32_t *encryption_cipher, uint8_t *ecs_is_aead_algorithm,
+                                  SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Get_Ciper_Mode_TCA(uint8_t sa_service_type, uint32_t *encryption_cipher,
+                                     uint8_t *ecs_is_aead_algorithm, SecurityAssociation_t *sa_ptr);
+void    Crypto_TC_Calc_Lengths(uint8_t *fecf_len, uint8_t *segment_hdr_len, uint8_t *ocf_len);
+void    Crypto_TC_Set_Segment_Header(TC_t *tc_sdls_processed_frame, uint8_t *ingest, int *byte_idx);
+int32_t Crypto_TC_Check_CMD_Frame_Flag(uint8_t header_cc);
+int32_t Crypto_TC_Validate_SA_Service_Type(uint8_t sa_service_type);
+int32_t Crypto_TC_Handle_Enc_Padding(uint8_t sa_service_type, uint32_t *pkcs_padding, uint16_t *p_enc_frame_len,
+                                     uint16_t *new_enc_frame_header_field_length, uint16_t tf_payload_len,
+                                     SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Frame_Validation(uint16_t *p_enc_frame_len);
+int32_t Crypto_TC_Accio_Buffer(uint8_t **p_new_enc_frame, uint16_t *p_enc_frame_len);
+int32_t Crypto_TC_ACS_Algo_Check(SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Check_IV_Setup(SecurityAssociation_t *sa_ptr, uint8_t *p_new_enc_frame, uint16_t *index);
+int32_t Crypto_TC_Encrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint16_t *mac_loc,
+                          uint16_t tf_payload_len, uint8_t segment_hdr_len, uint8_t *p_new_enc_frame, crypto_key_t *ekp,
+                          uint8_t **aad, uint8_t ecs_is_aead_algorithm, uint16_t *index_p, const uint8_t *p_in_frame,
+                          char *cam_cookies, uint32_t pkcs_padding);
+void    Crypto_TC_Increment_IV_ARSN(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TC_Do_Encrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint16_t *mac_loc,
+                             uint16_t tf_payload_len, uint8_t segment_hdr_len, uint8_t *p_new_enc_frame,
+                             crypto_key_t *ekp, uint8_t **aad, uint8_t ecs_is_aead_algorithm, uint16_t *index_p,
+                             const uint8_t *p_in_frame, char *cam_cookies, uint32_t pkcs_padding,
+                             uint16_t new_enc_frame_header_field_length, uint16_t *new_fecf);
+int32_t Crypto_TC_Check_Init_Setup(uint16_t in_frame_length);
+int32_t Crypto_TC_Sanity_Setup(const uint8_t *p_in_frame, const uint16_t in_frame_length);
+int32_t Crytpo_TC_Validate_TC_Temp_Header(const uint16_t in_frame_length, TC_FramePrimaryHeader_t temp_tc_header,
+                                          const uint8_t *p_in_frame, uint8_t *map_id, uint8_t *segmentation_hdr,
+                                          SecurityAssociation_t **sa_ptr);
+int32_t Crypto_TC_Finalize_Frame_Setup(uint8_t sa_service_type, uint32_t *pkcs_padding, uint16_t *p_enc_frame_len,
+                                       uint16_t *new_enc_frame_header_field_length, uint16_t tf_payload_len,
+                                       SecurityAssociation_t **sa_ptr, uint8_t **p_new_enc_frame);
+void    Crypto_TC_Handle_Padding(uint32_t pkcs_padding, SecurityAssociation_t *sa_ptr, uint8_t *p_new_enc_frame,
+                                 uint16_t *index);
+int32_t Crypto_TC_Set_IV(SecurityAssociation_t *sa_ptr, uint8_t *p_new_enc_frame, uint16_t *index);
+
+// OCF
+uint32_t Crypto_Get_FSR(void);
+void     Crypto_Set_FSR(uint8_t *p_ingest, uint16_t byte_idx, uint16_t pdu_len, SecurityAssociation_t *sa_ptr);
+
+// Telemetry (TM)
+extern int32_t Crypto_TM_ApplySecurity(uint8_t *pTfBuffer, uint16_t len_ingest);
+extern int32_t Crypto_TM_ProcessSecurity(uint8_t *p_ingest, uint16_t len_ingest, uint8_t **pp_processed_frame,
+                                         uint16_t *p_decrypted_length);
+
+// Advanced Orbiting Systems (AOS)
+extern int32_t Crypto_AOS_ApplySecurity(uint8_t *pTfBuffer, uint16_t len_ingest);
+extern int32_t Crypto_AOS_ProcessSecurity(uint8_t *p_ingest, uint16_t len_ingest, uint8_t **pp_processed_frame,
+                                          uint16_t *p_decrypted_length);
+
+// Crypo Error Support Functions
+extern char *Crypto_Get_Error_Code_Enum_String(int32_t crypto_error_code);
+
+/*
+** Internal Prototypes
+*/
+
+int32_t Crypto_Get_Security_Header_Length(SecurityAssociation_t *sa_ptr);
+int32_t Crypto_Get_Security_Trailer_Length(SecurityAssociation_t *sa_ptr);
+
+/*
+** Internal Prototypes
+*/
+// Telemetry (TM)
+int32_t Crypto_TM_Sanity_Check(uint8_t *pTfBuffer);
+int32_t Crypto_TM_Determine_SA_Service_Type(uint8_t *sa_service_type, SecurityAssociation_t *sa_ptr);
+void    Crypto_TM_Check_For_Secondary_Header(uint8_t *pTfBuffer, uint16_t *idx);
+int32_t Crypto_TM_IV_Sanity_Check(uint8_t *sa_service_type, SecurityAssociation_t *sa_ptr);
+void Crypto_TM_PKCS_Padding(uint32_t *pkcs_padding, SecurityAssociation_t *sa_ptr, uint8_t *pTfBuffer, uint16_t *idx_p);
+void Crypto_TM_Handle_Managed_Parameter_Flags(uint16_t *pdu_len);
+int32_t Crypto_TM_Get_Keys(crypto_key_t **ekp, crypto_key_t **akp, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt_NONPLAINTEXT(uint8_t sa_service_type, uint16_t *aad_len, int *mac_loc, uint16_t *idx_p,
+                                          uint16_t pdu_len, uint8_t *pTfBuffer, uint8_t *aad,
+                                          SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt_NONPLAINTEXT_AEAD_Logic(uint8_t sa_service_type, uint8_t ecs_is_aead_algorithm,
+                                                     uint8_t *pTfBuffer, uint16_t pdu_len, uint16_t data_loc,
+                                                     crypto_key_t *ekp, crypto_key_t *akp, uint32_t pkcs_padding,
+                                                     int *mac_loc, uint16_t *aad_len, uint8_t *aad,
+                                                     SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt_Handle_Increment(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Do_Encrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint16_t *aad_len, int *mac_loc,
+                             uint16_t *idx_p, uint16_t pdu_len, uint8_t *pTfBuffer, uint8_t *aad,
+                             uint8_t ecs_is_aead_algorithm, uint16_t data_loc, crypto_key_t *ekp, crypto_key_t *akp,
+                             uint32_t pkcs_padding, uint16_t *new_fecf);
+void    Crypto_TM_ApplySecurity_Debug_Print(uint16_t idx, uint16_t pdu_len, SecurityAssociation_t *sa_ptr);
+int32_t Crypto_TM_Process_Setup(uint16_t len_ingest, uint16_t *byte_idx, uint8_t *p_ingest, uint8_t *secondary_hdr_len);
+int32_t Crypto_TM_Determine_Cipher_Mode(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr,
+                                        uint32_t *encryption_cipher, uint8_t *ecs_is_aead_algorithm);
+int32_t Crypto_TM_FECF_Setup(uint8_t *p_ingest, uint16_t len_ingest);
+int32_t Crypto_TM_Parse_Mac_Prep_AAD(uint8_t sa_service_type, uint8_t *p_ingest, int mac_loc,
+                                     SecurityAssociation_t *sa_ptr, uint16_t *aad_len, uint16_t byte_idx, uint8_t *aad);
+int32_t Crypto_TM_Do_Decrypt_AEAD(uint8_t sa_service_type, uint8_t *p_ingest, uint8_t *p_new_dec_frame,
+                                  uint16_t byte_idx, uint16_t pdu_len, crypto_key_t *ekp, SecurityAssociation_t *sa_ptr,
+                                  uint8_t iv_loc, int mac_loc, uint16_t aad_len, uint8_t *aad);
+int32_t Crypto_TM_Do_Decrypt_NONAEAD(uint8_t sa_service_type, uint16_t pdu_len, uint8_t *p_new_dec_frame,
+                                     uint16_t byte_idx, uint8_t *p_ingest, crypto_key_t *akp, crypto_key_t *ekp,
+                                     SecurityAssociation_t *sa_ptr, uint8_t iv_loc, int mac_loc, uint16_t aad_len,
+                                     uint8_t *aad);
+void    Crypto_TM_Calc_PDU_MAC(uint16_t *pdu_len, uint16_t byte_idx, SecurityAssociation_t *sa_ptr, int *mac_loc);
+int32_t Crypto_TM_Do_Decrypt(uint8_t sa_service_type, SecurityAssociation_t *sa_ptr, uint8_t ecs_is_aead_algorithm,
+                             uint16_t byte_idx, uint8_t *p_new_dec_frame, uint16_t pdu_len, uint8_t *p_ingest,
+                             crypto_key_t *ekp, crypto_key_t *akp, uint8_t iv_loc, int mac_loc, uint16_t aad_len,
+                             uint8_t *aad, uint8_t **pp_processed_frame, uint16_t *p_decrypted_length);
+void    Crypto_TM_Process_Debug_Print(uint16_t byte_idx, uint16_t pdu_len, SecurityAssociation_t *sa_ptr);
+
+extern int32_t Crypto_increment(uint8_t *num, int length);
+int32_t        Crypto_Get_tmLength(int len);
+uint8_t        Crypto_Is_AEAD_Algorithm(uint32_t cipher_suite_id);
+void           Crypto_TM_updatePDU(uint8_t *ingest, int len_ingest);
+void           Crypto_TM_updateOCF(Telemetry_Frame_Ocf_Fsr_t *report, TM_t *tm_frame);
+uint8_t       *Crypto_Prepare_TC_AAD(const uint8_t *buffer, uint16_t len_aad, const uint8_t *abm_buffer);
+uint32_t       Crypto_Prepare_TM_AAD(const uint8_t *buffer, uint16_t len_aad, const uint8_t *abm_buffer, uint8_t *aad);
+uint32_t       Crypto_Prepare_AOS_AAD(const uint8_t *buffer, uint16_t len_aad, const uint8_t *abm_buffer, uint8_t *aad);
+int32_t        Crypto_Local_Config(void);
+int32_t        Crypto_Local_Init(void);
+int32_t        Crypto_window(uint8_t *actual, uint8_t *expected, int length, int window);
+uint16_t       Crypto_Calc_FECF(const uint8_t *ingest, int len_ingest);
+uint16_t       Crypto_Calc_FHECF(uint8_t *data);
+int32_t        Crypto_Calc_CRC_Init_Table(void);
+uint16_t       Crypto_Calc_CRC16(uint8_t *data, int size);
+int32_t        Crypto_Check_Anti_Replay(SecurityAssociation_t *sa_ptr, uint8_t *arsn, uint8_t *iv);
+int32_t        Crypto_Get_ECS_Algo_Keylen(uint8_t algo);
+int32_t        Crypto_Get_ACS_Algo_Keylen(uint8_t algo);
+uint8_t        Crypto_Is_ACS_Only_Algo(uint8_t algo);
+
+int32_t Crypto_Check_Anti_Replay_Verify_Pointers(SecurityAssociation_t *sa_ptr, uint8_t *arsn, uint8_t *iv);
+int32_t Crypto_Check_Anti_Replay_ARSNW(SecurityAssociation_t *sa_ptr, uint8_t *arsn, int8_t *arsn_valid);
+int32_t Crypto_Check_Anti_Replay_GCM(SecurityAssociation_t *sa_ptr, uint8_t *iv, int8_t *iv_valid);
+
+// SDLS Related Functions
+extern uint8_t Crypto_Prep_Reply(uint8_t *ingest, uint8_t appID);
+extern void    Crypto_Print_Sdls_Ep_Reply(void);
+extern int32_t Crypto_Get_Sdls_Ep_Reply(uint8_t *buffer, uint16_t *length);
+
+// Key Management Functions
+int32_t Crypto_Key_OTAR(void);
+int32_t Crypto_Key_update(uint8_t state);
+int32_t Crypto_Key_inventory(uint8_t *);
+int32_t Crypto_Key_verify(TC_t *tc_frame);
+
+// Security Monitoring & Control Procedure
+int32_t Crypto_MC_ping(uint8_t *ingest);
+int32_t Crypto_MC_status(uint8_t *ingest);
+int32_t Crypto_MC_dump(uint8_t *ingest);
+int32_t Crypto_MC_erase(uint8_t *ingest);
+int32_t Crypto_MC_selftest(uint8_t *ingest);
+int32_t Crypto_SA_readARSN(uint8_t *ingest);
+int32_t Crypto_MC_resetalarm(void);
+
+// User Functions
+int32_t Crypto_User_IdleTrigger(uint8_t *ingest);
+int32_t Crypto_User_BadSPI(void);
+int32_t Crypto_User_BadIV(void);
+int32_t Crypto_User_BadMAC(void);
+int32_t Crypto_User_BadFECF(void);
+int32_t Crypto_User_ModifyKey(void);
+int32_t Crypto_User_ModifyActiveTM(void);
+int32_t Crypto_User_ModifyVCID(void);
+
+// SA Save Functions
+int32_t sa_perform_save(SecurityAssociation_t *sa);
+
+// Clean REF
+void clean_ekref(SecurityAssociation_t *sa);
+void clean_akref(SecurityAssociation_t *sa);
+
+// Determine Payload Data Unit
+int32_t Crypto_Process_Extended_Procedure_Pdu(TC_t *tc_sdls_processed_frame, uint8_t *ingest, uint16_t len_ingest);
+int32_t Crypto_PDU(uint8_t *ingest, TC_t *tc_frame);
+int32_t Crypto_SG_KEY_MGMT(uint8_t *ingest, TC_t *tc_frame);
+int32_t Crypto_SG_SA_MGMT(uint8_t *ingest, TC_t *tc_frame);
+int32_t Crypto_SEC_MON_CTRL(uint8_t *ingest);
+int32_t Crypto_USER_DEFINED_CMD(uint8_t *ingest);
+
+// Managed Parameter Functions
+int32_t Crypto_Get_Managed_Parameters_For_Gvcid(uint8_t tfvn, uint16_t scid, uint8_t vcid,
+                                                GvcidManagedParameters_t *managed_parameters_in,
+                                                GvcidManagedParameters_t *managed_parameters_out);
+// Project-wide support functions
+extern int32_t crypto_deep_copy_string(char *src_string, char **dst_string);
+
+// Path validation functions
+int32_t Crypto_is_safe_username(const char *s);
+int32_t Crypto_is_safe_path(const char *s);
+
+/*
+** Extern Global Variables
+*/
+// Data stores used in multiple components
+extern CCSDS_t          sdls_frame;
+extern SDLS_KEYV_RPLY_t sdls_ep_keyv_reply;
+extern uint8_t          sdls_ep_reply[TC_MAX_FRAME_SIZE];
+// extern TM_t tm_frame;
+extern uint8_t                  tm_frame[1786];
+extern TM_FramePrimaryHeader_t  tm_frame_pri_hdr;
+extern TM_FrameSecurityHeader_t tm_frame_sec_hdr; // Used to reduce bit math duplication
+// exterm AOS_t aos_frame
+extern AOS_FramePrimaryHeader_t  aos_frame_pri_hdr;
+extern AOS_FrameSecurityHeader_t aos_frame_sec_hdr; // Used to reduce bit math duplication
+extern uint8_t                   parity[4];         // Used in FHECF calc
+
+// Global configuration structs
+extern CryptoConfig_t                        crypto_config;
+extern SadbMariaDBConfig_t                  *sa_mariadb_config;
+extern CryptographyKmcCryptoServiceConfig_t *cryptography_kmc_crypto_config;
+extern CamConfig_t                          *cam_config;
+extern GvcidManagedParameters_t             *gvcid_managed_parameters;
+extern GvcidManagedParameters_t             *current_managed_parameters;
+extern GvcidManagedParameters_t              gvcid_managed_parameters_array[GVCID_MAX_PARAM_SIZE];
+extern GvcidManagedParameters_t              tc_current_managed_parameters_struct;
+extern GvcidManagedParameters_t              tm_current_managed_parameters_struct;
+extern GvcidManagedParameters_t              aos_current_managed_parameters_struct;
+extern int                                   gvcid_counter;
+extern KeyInterface                          key_if;
+extern McInterface                           mc_if;
+extern SaInterface                           sa_if;
+extern CryptographyInterface                 cryptography_if;
+
+// extern crypto_key_t ak_ring[NUM_KEYS];
+extern SadbMariaDBConfig_t      *sa_mariadb_config;
+extern GvcidManagedParameters_t *gvcid_managed_parameters;
+extern GvcidManagedParameters_t *current_managed_parameters;
+
+// OCF
+extern uint8_t                    ocf;
+extern Telemetry_Frame_Ocf_Fsr_t  report;
+extern Telemetry_Frame_Ocf_Clcw_t clcw;
+
+// Flags
+extern SDLS_MC_LOG_RPLY_t      log_summary;
+extern SDLS_MC_DUMP_BLK_RPLY_t mc_log;
+extern uint8_t                 log_count;
+extern uint16_t                tm_offset;
+// ESA Testing - 0 = disabled, 1 = enabled
+extern uint8_t badSPI;
+extern uint8_t badIV;
+extern uint8_t badMAC;
+extern uint8_t badFECF;
+//  CRC
+extern uint32_t crc32Table[CRC32TBL_SIZE];
+extern uint16_t crc16Table[CRC16TBL_SIZE];
+
+// GF(2^4) field and logarithm tables
+static const uint8_t crypto_gf_exp[15] = {1, 2, 4, 8, 3, 6, 12, 11, 5, 10, 7, 14, 15, 13, 9};
+
+static const uint8_t crypto_gf_log[GF_SIZE] = {0, 0, 1, 4, 2, 8, 5, 10, 3, 14, 9, 7, 6, 13, 11, 12};
+
+// Generator polynomial coefficients for g(x) = x^4 + a^3x^3 + ax^2 + a^3x + 1
+static const uint8_t crypto_gen_poly[RS_PARITY + 1] = {1, 8, 2, 8, 1};
+
+#endif // CRYPTO_H
 ```
 
-## 항목
+### `crypto_config.h`
 
-- [`components/cryptolib/include/crypto.h`](file--crypto.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/crypto_config.h`](file--crypto_config.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/crypto_config_structs.h`](file--crypto_config_structs.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/crypto_error.h`](file--crypto_error.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/crypto_events.h`](file--crypto_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/crypto_print.h`](file--crypto_print.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/crypto_structs.h`](file--crypto_structs.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/cryptography_interface.h`](file--cryptography_interface.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/key_interface.h`](file--key_interface.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/mc_interface.h`](file--mc_interface.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/include/sa_interface.h`](file--sa_interface.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/cryptolib/include/crypto_config.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef CRYPTO_CONFIG_H
+#define CRYPTO_CONFIG_H
+
+// Debug Colors
+#ifdef DEBUG
+#define CRYPTO_DEBUG printf("%s:%s: %d", __FILE__, __FUNCTION__, __LINE__);
+#define KRED         "\x1B[31m"
+#define KGRN         "\x1B[32m"
+#define KYEL         "\x1B[33m"
+#define KBLU         "\x1B[34m"
+#define KMAG         "\x1B[35m"
+#define KCYN         "\x1B[36m"
+#define RESET        "\033[0m"
+#else
+#define CRYPTO_DEBUG
+#define KRED
+#define RED
+#define KGRN
+#define GREEN
+#define KYEL
+#define KBLU
+#define KMAG
+#define KCYN
+#define RESET
+#endif
+
+// Managed Parameters Size
+#define GVCID_MAN_PARAM_SIZE 250
+
+// Max Frame Size
+#define TC_MAX_FRAME_SIZE  1024
+#define TC_MIN_FRAME_SIZE  5
+#define TM_MAX_FRAME_SIZE  1786
+#define AOS_MAX_FRAME_SIZE 1786
+
+// Spacecraft Defines
+#define SCID 0x0003
+
+// Functionality Defines
+#define INCREMENT
+#define FILL
+// TM Fill Types - select 1
+//#define TM_ZERO_FILL
+#define TM_IDLE_FILL
+
+// GVCID Defines
+#define NUM_GVCID 64
+#define TYPE_TC   0
+#define TYPE_MAP  1
+#define TYPE_TM   2
+#define TYPE_AOS  3
+
+// Specific to Authentication
+#define SA_NONE        0
+#define SA_UNKEYED     1
+#define SA_KEYED       2
+#define SA_OPERATIONAL 3
+// SA State Transitions
+#define SA_CREATE 5
+#define SA_REKEY  6
+#define SA_START  7
+#define SA_STOP   2
+#define SA_EXPIRE 1
+#define SA_DELETE 0
+// SA Additional Directives
+#define SA_STATUS   8
+#define SA_SETARSN  9
+#define SA_SETARSNW 10
+
+// Key State Defines
+#define KEY_PREACTIVE   0
+#define KEY_ACTIVE      1
+#define KEY_DEACTIVATED 2
+#define KEY_DESTROYED   3
+#define KEY_CORRUPTED   4
+
+// Key Length Defines
+// ECS
+#define AES256_GCM_KEYLEN     32
+#define AES256_GCM_SIV_KEYLEN 32
+#define AES256_CBC_KEYLEN     32
+#define AES256_CCM_KEYLEN     32
+// ACS
+#define CMAC_AES256_KEYLEN 32
+#define HMAC_SHA256_KEYLEN 32
+#define HMAC_SHA512_KEYLEN 64
+
+// SA Service Types
+#define SA_PLAINTEXT                0
+#define SA_AUTHENTICATION           1
+#define SA_ENCRYPTION               2
+#define SA_AUTHENTICATED_ENCRYPTION 3
+
+// Generic Defines
+#define SPI_LEN             2 /* bytes */
+#define SPI_MIN             0
+#define SPI_MAX             NUM_SA - 1
+#define KEY_SIZE            512 /* bytes */
+#define KEY_ID_SIZE         8
+#define MKID_MAX            128
+#define DISABLED            0
+#define ENABLED             1
+#define IV_SIZE_TC          4 /* TC IV size bytes */
+#define REF_SIZE            250
+#define OCF_SIZE            4
+#define FHECF_SIZE          2
+#define FECF_SIZE           2
+#define TC_SEGMENT_HDR_SIZE 1
+#define ECS_SIZE            4    /* bytes */
+#define ABM_SIZE            1786 /* bytes */
+#define ARSN_SIZE           20   /* total messages */
+#define ARSNW_SIZE          1    /* bytes */
+#define SN_SIZE             16   /* bytes */
+#define PAD_SIZE            32   /* bytes */
+#define CHALLENGE_SIZE      16   /* bytes */
+#define CHALLENGE_MAC_SIZE  16   /* bytes */
+#define BYTE_LEN            8    /* bits */
+#define CRYPTOLIB_APPID     128
+#define MAX_IV_LEN          32 /* bytes */
+
+// Configurable via build flags
+#ifndef NUM_SA
+#define NUM_SA 64
+#endif
+#ifndef MAC_SIZE
+#define MAC_SIZE 16 /* bytes */
+#endif
+#ifndef IV_SIZE
+#define IV_SIZE 16 /* TM IV size bytes */
+#endif
+#ifndef NUM_KEYS
+#define NUM_KEYS 256
+#endif
+
+// Monitoring and Control Defines
+#define EMV_SIZE 4  /* bytes */
+#define LOG_SIZE 50 /* packets */
+#define ST_OK    0x00
+#define ST_NOK   0xFF
+
+// Protocol Data Unit (PDU)
+// PDU Type
+#define PDU_TYPE_COMMAND 0
+#define PDU_TYPE_REPLY   1
+// PDU User Flag
+#define PDU_USER_FLAG_TRUE  1
+#define PDU_USER_FLAG_FALSE 0
+
+// Procedure Identification (PID) - CCSDS Defined Commands
+// Service Group - Key Management
+#define SG_KEY_MGMT          0x00 // 0b00
+#define PID_OTAR             0x01 // 0b0001
+#define PID_KEY_ACTIVATION   0x02 // 0b0010
+#define PID_KEY_DEACTIVATION 0x03 // 0b0011
+#define PID_KEY_VERIFICATION 0x04 // 0b0100
+#define PID_KEY_DESTRUCTION  0x06 // 0b0110
+#define PID_KEY_INVENTORY    0x07 // 0b0111
+// Service Group - Security Association Management
+#define SG_SA_MGMT    0x01 // 0b01
+#define PID_CREATE_SA 0x01 // 0b0001
+#define PID_REKEY_SA  0x06 // 0b0110
+#define PID_START_SA  0x0B // 0b1011
+#define PID_STOP_SA   0x0E // 0b1110
+#define PID_EXPIRE_SA 0x09 // 0b1001
+#define PID_DELETE_SA 0x04 // 0b0100
+#define PID_SET_ARSN  0x0A // 0b1010
+#define PID_SET_ARSNW 0x05 // 0b0101
+#define PID_READ_ARSN 0x00 // 0b0000
+#define PID_SA_STATUS 0x0F // 0b1111
+// Service Group - Security Monitoring & Control
+#define SG_SEC_MON_CTRL 0x03 // 0b11
+#define PID_PING        0x01 // 0b0001
+#define PID_LOG_STATUS  0x02 // 0b0010
+#define PID_DUMP_LOG    0x03 // 0b0011
+#define PID_ERASE_LOG   0x04 // 0b0100
+#define PID_SELF_TEST   0x05 // 0b0101
+#define PID_ALARM_FLAG  0x07 // 0b0111
+
+// Procedure Identification (PID) - User Defined Commands
+#define PID_IDLE_FRAME_TRIGGER 0
+#define PID_TOGGLE_BAD_SPI     1
+#define PID_TOGGLE_BAD_IV      2
+#define PID_TOGGLE_BAD_MAC     3
+#define PID_TOGGLE_BAD_FECF    4
+#define PID_MODIFY_KEY         5
+#define PID_MODIFY_ACTIVE_TM   6
+#define PID_MODIFY_VCID        7
+
+// TC Defines
+#define TC_SH_SIZE         8 /* bits */
+#define TC_SN_SIZE         2
+#define TC_SN_WINDOW       10               /* +/- value */
+#define TC_FRAME_DATA_SIZE 1019 /* bytes */ // 1024 - 5byte header
+#define TC_CADU_ASM_SIZE   4
+
+// CCSDS PUS Defines
+#define TLV_DATA_SIZE 494 /* bytes */
+
+// TM Defines
+#define TM_FRAME_DATA_SIZE         1786 /* bytes */
+#define TM_FILL_SIZE               1145 /* bytes */
+#define TM_PAD_SIZE                2    /* bytes */
+#define TM_SECONDARY_HDR_MAX_VALUE 63
+
+// AOS Defines
+#define AOS_FRAME_DATA_SIZE 1786 /* bytes */
+#define AOS_FILL_SIZE       1145 /* bytes */
+
+// SDLS Behavior Defines
+#define SDLS_OTAR_IV_OFFSET     2
+#define SDLS_MAX_KEY_UPDATES    16 /* keys */
+#define SDLS_KEYV_MAX_KEYS      21 /* keys */
+#define SDLS_MAX_KEY_UPDATE_LEN 35 /* bytes */
+#define SDLS_IV_LEN             12 /* bytes */
+#define SDLS_KEYV_KEY_ID_LEN    2  /* bytes */
+#define SDLS_KEY_LEN            32 /* bytes */
+#define SDLS_KEYID_LEN          2  /* bytes */
+
+// TC Behavior Defines
+#define TC_SDLS_EP_VCID \
+    4 // VCID which has SDLS PDUs (JPL uses VCIDs to determine TC type, there is no space packet layer with APIDs). Set
+      // to -1 if uses SP APIDs.
+
+// TM Behavior Defines
+#define TM_CADU_HAS_ASM 1 // Skip 0x1acffc1d at beginning of each frame
+// TM CADU based on ASM, currently only holds non-turbo ASM
+#ifdef TM_CADU_HAS_ASM
+#define TM_CADU_SIZE (TM_FRAME_DATA_SIZE + TC_CADU_ASM_SIZE)
+#else
+#define TM_CADU_SIZE TM_FRAME_DATA_SIZE
+#endif
+
+// AOS Behavior Defines
+// FHECF Calculation
+#define RS_SYMS   10 // Total symbols in codeword
+#define RS_DATA   6  // Data symbols
+#define RS_PARITY 4  // Parity symbols
+#define GF_SIZE   16 // 2^4
+
+// Logic Behavior Defines
+#define CRYPTO_FALSE 0
+#define CRYPTO_TRUE  1
+
+/*
+** SAVE FILE NAME/LOCATION
+*/
+#define CRYPTO_SA_SAVE "sa_save_file.bin"
+
+/*
+** TC_BLOCK_SIZE
+*/
+#define TC_BLOCK_SIZE 16
+
+#endif // CRYPTO_CONFIG_H
+```
+
+### `crypto_config_structs.h`
+
+**경로:** `components/cryptolib/include/crypto_config_structs.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+#ifndef CRYPTO_CONFIG_STRUCTS_H
+#define CRYPTO_CONFIG_STRUCTS_H
+
+#include "crypto_config.h"
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include <stdint.h>
+#endif
+
+// main config enums
+typedef enum
+{
+    UNITIALIZED = 0,
+    INITIALIZED
+} InitStatus;
+typedef enum
+{
+    KEY_TYPE_UNITIALIZED = 0,
+    KEY_TYPE_CUSTOM,
+    KEY_TYPE_INTERNAL,
+    KEY_TYPE_KMC
+} KeyType;
+typedef enum
+{
+    MC_TYPE_UNITIALIZED = 0,
+    MC_TYPE_CUSTOM,
+    MC_TYPE_DISABLED,
+    MC_TYPE_INTERNAL
+} McType;
+typedef enum
+{
+    SA_TYPE_UNITIALIZED = 0,
+    SA_TYPE_CUSTOM,
+    SA_TYPE_INMEMORY,
+    SA_TYPE_MARIADB
+} SadbType;
+typedef enum
+{
+    CRYPTOGRAPHY_TYPE_UNITIALIZED = 0,
+    CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+    CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+    CRYPTOGRAPHY_TYPE_WOLFSSL,
+    CRYPTOGRAPHY_TYPE_CUSTOM
+} CryptographyType;
+/***************************************
+** GVCID Managed Parameter enums
+****************************************/
+typedef enum
+{
+    IV_INTERNAL,
+    IV_CRYPTO_MODULE
+} IvType;
+typedef enum
+{
+    TC_NO_FECF,
+    TC_HAS_FECF,
+    TM_NO_FECF,
+    TM_HAS_FECF,
+    AOS_NO_FECF,
+    AOS_HAS_FECF
+} FecfPresent;
+typedef enum
+{
+    CRYPTO_TC_CREATE_FECF_FALSE,
+    CRYPTO_TC_CREATE_FECF_TRUE,
+    CRYPTO_TM_CREATE_FECF_FALSE,
+    CRYPTO_TM_CREATE_FECF_TRUE,
+    CRYPTO_AOS_CREATE_FECF_FALSE,
+    CRYPTO_AOS_CREATE_FECF_TRUE
+} CreateFecfBool;
+typedef enum
+{
+    AOS_FHEC_NA = 0,
+    AOS_NO_FHEC,
+    AOS_HAS_FHEC
+} AosFhecPresent;
+typedef enum
+{
+    AOS_IZ_NA,
+    AOS_NO_IZ,
+    AOS_HAS_IZ
+} AosInsertZonePresent;
+typedef enum
+{
+    TC_CHECK_FECF_FALSE,
+    TC_CHECK_FECF_TRUE,
+    TM_CHECK_FECF_FALSE,
+    TM_CHECK_FECF_TRUE,
+    AOS_CHECK_FECF_FALSE,
+    AOS_CHECK_FECF_TRUE
+} CheckFecfBool;
+typedef enum
+{
+    AOS_NO_OCF,
+    AOS_HAS_OCF,
+    TC_OCF_NA,
+    TM_NO_OCF,
+    TM_HAS_OCF
+} OcfPresent;
+/***************************************
+** TC specific enums
+****************************************/
+typedef enum
+{
+    TC_NO_SEGMENT_HDRS,
+    TC_HAS_SEGMENT_HDRS,
+    TM_SEGMENT_HDRS_NA, // Invalid for TM
+    AOS_SEGMENT_HDRS_NA // Invalid for AOS
+} TcSegmentHdrsPresent;
+typedef enum
+{
+    TC_PROCESS_SDLS_PDUS_FALSE,
+    TC_PROCESS_SDLS_PDUS_TRUE
+} TcProcessSdlsPdus;
+typedef enum
+{
+    TC_NO_PUS_HDR,
+    TC_HAS_PUS_HDR
+} TcPusHdrPresent;
+typedef enum
+{
+    TC_IGNORE_SA_STATE_FALSE,
+    TC_IGNORE_SA_STATE_TRUE
+} TcIgnoreSaState;
+typedef enum
+{
+    TC_IGNORE_ANTI_REPLAY_FALSE,
+    TC_IGNORE_ANTI_REPLAY_TRUE
+} TcIgnoreAntiReplay;
+typedef enum
+{
+    TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+    TC_UNIQUE_SA_PER_MAP_ID_TRUE
+} TcUniqueSaPerMapId;
+typedef enum
+{
+    SA_INCREMENT_NONTRANSMITTED_IV_FALSE,
+    SA_INCREMENT_NONTRANSMITTED_IV_TRUE
+} SaIncrementNonTransmittedIvPortion;
+/***************************************
+** Telemetry specific enums
+****************************************/
+typedef enum
+{
+    TM_NO_SECONDARY_HDR,
+    TM_HAS_SECONDARY_HDR
+} TmSecondaryHdrPresent;
+typedef enum
+{
+    CAM_ENABLED_FALSE,
+    CAM_ENABLED_TRUE
+} CamEnabledBool;
+
+typedef enum
+{
+    CAM_LOGIN_NONE,       // Using already populated cam_cookie_file
+    CAM_LOGIN_KERBEROS,   // Using already logged-in Kerberos to generate CAM cookies
+    CAM_LOGIN_KEYTAB_FILE // using keytab file to login and generate CAM cookies
+} CamLoginMethod;
+/*
+**  Used for selecting supported algorithms
+*/
+typedef enum
+{
+    CRYPTO_MAC_NONE,
+    CRYPTO_MAC_CMAC_AES256,
+    CRYPTO_MAC_HMAC_SHA256,
+    CRYPTO_MAC_HMAC_SHA512,
+    CRYPTO_ACS_MAX = 3
+} AuthCipherSuite;
+typedef enum
+{
+    CRYPTO_CIPHER_NONE,
+    CRYPTO_CIPHER_AES256_GCM,
+    CRYPTO_CIPHER_AES256_CBC,
+    CRYPTO_CIPHER_AES256_CBC_MAC,
+    CRYPTO_CIPHER_AES256_CCM,
+    CRYPTO_CIPHER_AES256_GCM_SIV
+} EncCipherSuite;
+
+/*
+** Main Crypto Configuration Block
+*/
+typedef struct
+{
+    InitStatus       init_status;
+    KeyType          key_type;
+    McType           mc_type;
+    SadbType         sa_type;
+    CryptographyType cryptography_type;
+    IvType           iv_type;             // Whether or not CryptoLib should generate the IV
+    CreateFecfBool   crypto_create_fecf;  // Whether or not CryptoLib is expected to calculate TC FECFs and return
+                                          // payloads with the FECF
+    TcProcessSdlsPdus  process_sdls_pdus; // Config to process SDLS extended procedure PDUs in CryptoLib
+    TcPusHdrPresent    has_pus_hdr;
+    TcIgnoreSaState    ignore_sa_state; // TODO - add logic that uses this configuration
+    TcIgnoreAntiReplay ignore_anti_replay;
+    TcUniqueSaPerMapId unique_sa_per_mapid;
+    CheckFecfBool      crypto_check_fecf;
+    uint8_t            vcid_bitmask;
+    uint8_t crypto_increment_nontransmitted_iv; // Whether or not CryptoLib increments the non-transmitted portion of
+                                                // the IV field
+} CryptoConfig_t;
+#define CRYPTO_CONFIG_SIZE (sizeof(CryptoConfig_t))
+
+typedef struct _GvcidManagedParameters_t GvcidManagedParameters_t;
+struct _GvcidManagedParameters_t
+{
+    uint8_t              tfvn : 4;  // Transfer Frame Version Number
+    uint16_t             scid : 10; // SpacecraftID
+    uint8_t              vcid : 6;  // Virtual Channel ID
+    FecfPresent          has_fecf;
+    AosFhecPresent       aos_has_fhec;
+    AosInsertZonePresent aos_has_iz;
+    uint16_t             aos_iz_len;
+    TcSegmentHdrsPresent has_segmentation_hdr;
+    uint16_t             max_frame_size; // Maximum TC/TM Frame Length with headers
+    OcfPresent           has_ocf;
+    int                  set_flag;
+};
+#define GVCID_MANAGED_PARAMETERS_SIZE (sizeof(GvcidManagedParameters_t))
+
+/*
+** SaDB MariaDB Configuration Block
+*/
+typedef struct
+{
+    char    *mysql_username;
+    char    *mysql_password;
+    char    *mysql_hostname;
+    char    *mysql_database;
+    uint16_t mysql_port;
+    char    *mysql_mtls_cert;
+    char    *mysql_mtls_key;
+    char    *mysql_mtls_ca;
+    char    *mysql_mtls_capath;
+    uint8_t  mysql_tls_verify_server;
+    char    *mysql_mtls_client_key_password;
+    uint8_t  mysql_require_secure_transport;
+
+} SadbMariaDBConfig_t;
+#define SADB_MARIADB_CONFIG_SIZE (sizeof(SadbMariaDBConfig_t))
+
+/*
+** KMC Cryptography Service Configuration Block
+*/
+typedef struct
+{
+    char    *kmc_crypto_hostname;
+    char    *protocol;
+    uint16_t kmc_crypto_port;
+    char    *kmc_crypto_app_uri;
+    char    *mtls_client_cert_path;
+    char    *mtls_client_cert_type; // default "PEM", supports "P12" and "DER"
+    char    *mtls_client_key_path;
+    char    *mtls_client_key_pass;
+    char    *mtls_ca_bundle;
+    char    *mtls_ca_path;
+    char    *mtls_issuer_cert;
+    uint8_t  ignore_ssl_hostname_validation;
+
+} CryptographyKmcCryptoServiceConfig_t;
+#define CRYPTOGRAPHY_KMC_CRYPTO_SERVICE_CONFIG_SIZE (sizeof(CryptographyKmcCryptoServiceConfig_t))
+
+/*
+** Common Access Manager (CAM) Configuration Block
+*/
+typedef struct
+{
+    uint8_t cam_enabled;
+    char   *cookie_file_path;
+    char   *keytab_file_path;
+    char   *access_manager_uri;
+    char   *username;
+    char   *cam_home;
+    uint8_t login_method;
+
+} CamConfig_t;
+#define CAM_CONFIG_SIZE (sizeof(CamConfig_t))
+
+#endif // CRYPTO_CONFIG_STRUCTS_H
+```
+
+### `crypto_error.h`
+
+**경로:** `components/cryptolib/include/crypto_error.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef CRYPTO_ERROR_H
+#define CRYPTO_ERROR_H
+
+/*
+ *  *** IMPORTANT READ ***
+ *  If error codes are added to this header file, their enum string must be added to the error lists (in crypto_error.c)
+ *  AND the appropriate _ERROR_CODE_MAX must be updated below!
+ */
+
+#define CRYPTO_CONFIGURATION_NOT_COMPLETE               100
+#define CRYPTO_MANAGED_PARAM_CONFIGURATION_NOT_COMPLETE 101
+#define CRYPTO_MARIADB_CONFIGURATION_NOT_COMPLETE       102
+#define MANAGED_PARAMETERS_FOR_GVCID_NOT_FOUND          103
+
+#define SADB_INVALID_SADB_TYPE 200
+#define SADB_NULL_SA_USED      201
+
+#define SADB_MARIADB_CONNECTION_FAILED 300
+#define SADB_QUERY_FAILED              301
+#define SADB_QUERY_EMPTY_RESULTS       302
+#define SADB_INSERT_FAILED             303
+#define SADB_INVALID_SA_FIELD_VALUE    304
+
+#define CRYPTOGRAPHY_INVALID_CRYPTO_INTERFACE_TYPE      400
+#define CRYPTOGRAPHY_UNSUPPORTED_OPERATION_FOR_KEY_RING 401
+#define CRYPTOGRAPHY_LIBRARY_INITIALIZIATION_ERROR      402
+
+#define CRYPTOGRAPHY_KMC_CRYPTO_SERVICE_CONFIGURATION_NOT_COMPLETE 500
+#define CRYPTOGRAPHY_KMC_CURL_INITIALIZATION_FAILURE               501
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_CONNECTION_ERROR           502
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_AEAD_ENCRYPT_ERROR         503
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_AEAD_DECRYPT_ERROR         504
+#define CRYPTOGRAHPY_KMC_CRYPTO_JSON_PARSE_ERROR                   505
+#define CRYPTOGRAHPY_KMC_CIPHER_TEXT_NOT_FOUND_IN_JSON_RESPONSE    506
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE            507
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_AUTHENTICATION_ERROR       508
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_MAC_VALIDATION_ERROR       509
+#define CRYPTOGRAHPY_KMC_ICV_NOT_FOUND_IN_JSON_RESPONSE            510
+#define CRYPTOGRAHPY_KMC_NULL_ENCRYPTION_KEY_REFERENCE_IN_SA       511
+#define CRYPTOGRAHPY_KMC_NULL_AUTHENTICATION_KEY_REFERENCE_IN_SA   512
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_EMPTY_RESPONSE             513
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_DECRYPT_ERROR              514
+#define CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_ENCRYPT_ERROR              515
+
+#define CAM_CONFIG_NOT_SUPPORTED_ERROR                      600
+#define CAM_INVALID_COOKIE_FILE_CONFIGURATION_NULL          601
+#define CAM_AUTHENTICATION_FAILURE_REDIRECT                 602
+#define CAM_AUTHENTICATION_REQUIRED                         603
+#define CAM_GET_SSO_TOKEN_FAILURE                           604
+#define CAM_INVALID_CONFIGURATION_ACCESS_MANAGER_URI_NULL   605
+#define CAM_INVALID_CONFIGURATION_KEYTAB_FILE_PATH_NULL     606
+#define CAM_INVALID_CONFIGURATION_KEYTAB_FILE_USERNAME_NULL 607
+#define CAM_KEYTAB_FILE_KINIT_FAILURE                       608
+#define CAM_KERBEROS_REQUEST_TIME_OUT                       609
+#define CAM_MAX_AUTH_RETRIES_REACHED                        610
+
+#define CRYPTO_LIB_SUCCESS                                                  (0)
+#define CRYPTO_LIB_ERROR                                                    (-1)
+#define CRYPTO_LIB_ERR_NO_INIT                                              (-2)
+#define CRYPTO_LIB_ERR_INVALID_TFVN                                         (-3)
+#define CRYPTO_LIB_ERR_INVALID_SCID                                         (-4)
+#define CRYPTO_LIB_ERR_INVALID_VCID                                         (-5)
+#define CRYPTO_LIB_ERR_INVALID_MAPID                                        (-6)
+#define CRYPTO_LIB_ERR_INVALID_CC_FLAG                                      (-7)
+#define CRYPTO_LIB_ERR_NO_OPERATIONAL_SA                                    (-8)
+#define CRYPTO_LIB_ERR_NULL_BUFFER                                          (-9)
+#define CRYPTO_LIB_ERR_UT_BYTE_MISMATCH                                     (-10)
+#define CRYPTO_LIB_ERR_NO_CONFIG                                            (-11)
+#define CRYPTO_LIB_ERR_INVALID_FECF                                         (-12)
+#define CRYPTO_LIB_ERR_ARSN_OUTSIDE_WINDOW                                  (-13)
+#define CRYPTO_LIB_ERR_LIBGCRYPT_ERROR                                      (-14)
+#define CRYPTO_LIB_ERR_AUTHENTICATION_ERROR                                 (-15)
+#define CRYPTO_LIB_ERR_NULL_IV                                              (-16)
+#define CRYPTO_LIB_ERR_NULL_ABM                                             (-17)
+#define CRYPTO_LIB_ERR_DECRYPT_ERROR                                        (-18)
+#define CRYPTO_LIB_ERR_ABM_TOO_SHORT_FOR_AAD                                (-19)
+#define CRYPTO_LIB_ERR_MAC_RETRIEVAL_ERROR                                  (-20)
+#define CRYPTO_LIB_ERR_MAC_VALIDATION_ERROR                                 (-21)
+#define CRYPTO_LIB_ERR_INVALID_HEADER                                       (-22)
+#define CRYPTO_LIB_ERR_IV_OUTSIDE_WINDOW                                    (-23)
+#define CRYPTO_LIB_ERR_NULL_ARSN                                            (-24)
+#define CRYPTO_LIB_ERR_NULL_SA                                              (-25)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_ACS                                      (-26)
+#define CRYPTO_LIB_ERR_ENCRYPTION_ERROR                                     (-27)
+#define CRYPTO_LIB_ERR_INVALID_SA_CONFIGURATION                             (-28)
+#define CRYPTO_LIB_ERR_TC_FRAME_SIZE_EXCEEDS_MANAGED_PARAM_MAX_LIMIT        (-29)
+#define CRYPTO_LIB_ERR_TC_FRAME_SIZE_EXCEEDS_SPEC_LIMIT                     (-30)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_ECS                                      (-31)
+#define CRYPTO_LIB_ERR_KEY_LENGTH_ERROR                                     (-32)
+#define CRYPTO_LIB_ERR_NULL_ECS_PTR                                         (-33)
+#define CRYPTO_LIB_ERR_IV_NOT_SUPPORTED_FOR_ACS_ALGO                        (-34)
+#define CRYPTO_LIB_ERR_NULL_CIPHERS                                         (-35)
+#define CRYPTO_LIB_ERR_NO_ECS_SET_FOR_ENCRYPTION_MODE                       (-36)
+#define CRYPTO_LIB_ERR_IV_LEN_SHORTER_THAN_SEC_HEADER_LENGTH                (-37)
+#define CRYPTO_LIB_ERR_ARSN_LEN_SHORTER_THAN_SEC_HEADER_LENGTH              (-38)
+#define CRYPTO_LIB_ERR_FRAME_COUNTER_DOESNT_MATCH_SA                        (-39)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_TOO_SHORT_FOR_TC_STANDARD                (-40)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_LENGTH_SHORTER_THAN_FRAME_HEADERS_LENGTH (-41)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_ECS_MODE                                 (-42)
+#define CRYPTO_LIB_ERR_NULL_MODE_PTR                                        (-43)
+#define CRYPTO_LIB_ERR_UNSUPPORTED_MODE                                     (-44)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_TOO_SHORT_FOR_TM_STANDARD                (-45)
+#define CRYPTO_LIB_ERR_TC_ENUM_USED_FOR_TM_CONFIG                           (-46)
+#define CRYPTO_LIB_ERR_KEY_ID_ERROR                                         (-47)
+#define CRYPTO_LIB_ERR_MC_INIT                                              (-48)
+#define CRYPTO_LIB_ERR_INPUT_FRAME_TOO_SHORT_FOR_AOS_STANDARD               (-49)
+#define CRYPTO_LIB_ERR_TC_ENUM_USED_FOR_AOS_CONFIG                          (-50)
+#define CRYPTO_LIB_ERR_INVALID_SA_SERVICE_TYPE                              (-51)
+#define CRYPTO_LIB_ERR_FAIL_SA_SAVE                                         (-52)
+#define CRYPTO_LIB_ERR_FAIL_SA_LOAD                                         (-53)
+#define CRYPTO_LIB_ERR_EXCEEDS_MANAGED_PARAMETER_MAX_LIMIT                  (-54)
+#define CRYPTO_LIB_ERR_KEY_VALIDATION                                       (-55)
+#define CRYPTO_LIB_ERR_SPI_INDEX_OOB                                        (-56)
+#define CRYPTO_LIB_ERR_SA_NOT_OPERATIONAL                                   (-57)
+#define CRYPTO_LIB_ERR_IV_GREATER_THAN_MAX_LENGTH                           (-58)
+#define CRYPTO_LIB_ERR_KEY_STATE_TRANSITION_ERROR                           (-59)
+#define CRYPTO_LIB_ERR_SPI_INDEX_MISMATCH                                   (-60)
+#define CRYPTO_LIB_ERR_KEY_STATE_INVALID                                    (-61)
+#define CRYPTO_LIB_ERR_SDLS_EP_WRONG_SPI                                    (-62)
+#define CRYPTO_LIB_ERR_SDLS_EP_NOT_BUILT                                    (-63)
+#define CRYPTO_LIB_ERR_BAD_TLV_LENGTH                                       (-64)
+#define CRYPTO_LIB_ERR_OTAR_BAD_TLV_LENGTH                                  (-65)
+#define CRYPTO_LIB_ERR_SHIVF_LEN_GREATER_THAN_MAX_IV_SIZE                   (-66)
+#define CRYPTO_LIB_ERR_SHSNF_LEN_GREATER_THAN_MAX_ARSN_SIZE                 (-67)
+#define CRYPTO_LIB_ERR_ABM_LEN_GREATER_THAN_MAX_ABM_SIZE                    (-68)
+#define CRYPTO_LIB_ERR_STMACF_LEN_GREATER_THAN_MAX_MAC_SIZE                 (-69)
+#define CRYPTO_LIB_ERR_SHPLF_LEN_GREATER_THAN_MAX_PAD_SIZE                  (-70)
+#define CRYPTO_LIB_ERR_INVALID_SVC_TYPE_WITH_ARSN                           (-71)
+#define CRYPTO_LIB_ERR_ARSN_LT_SHSNF                                        (-72)
+#define CRYPTO_LIB_ERR_TC_FRAME_LENGTH_UNDERFLOW                            (-73)
+#define CRYPTO_LIB_ERR_IV_EXCEEDS_INCREMENT_SIZE                            (-74)
+#define CRYPTO_LIB_ERR_AOS_FRAME_LENGTH_UNDERFLOW                           (-75)
+#define CRYPTO_LIB_ERR_TM_FRAME_LENGTH_UNDERFLOW                            (-76)
+#define CRYPTO_LIB_ERR_AOS_FL_LT_MAX_FRAME_SIZE                             (-77)
+#define CRYPTO_LIB_ERR_TM_FL_LT_MAX_FRAME_SIZE                              (-78)
+#define CRYPTO_LIB_ERR_INVALID_FHECF                                        (-79)
+#define CRYPTO_LIB_ERR_TM_SECONDARY_HDR_SIZE                                (-80)
+#define CRYPTO_LIB_ERR_TM_SECONDARY_HDR_VN                                  (-81)
+#define CRYPTO_LIB_ERR_TC_FRAME_LENGTH_MISMATCH                             (-82)
+#define CRYPTO_LIB_ERR_SHPLF_LEN_LESS_THAN_MIN_PAD_SIZE                     (-83)
+#define CRYPTO_LIB_ERR_INVALID_AOS_IZ_LENGTH                                (-84)
+
+#define CRYPTO_CORE_ERROR_CODES_MAX -84
+
+// Define codes for returning MDB Strings, and determining error based on strings
+#define CAM_ERROR_CODES     600
+#define CAM_ERROR_CODES_MAX 610
+
+#define KMC_ERROR_CODES     500
+#define KMC_ERROR_CODES_MAX 515
+
+#define CRYPTO_INTERFACE_ERROR_CODES     400
+#define CRYPTO_INTERFACE_ERROR_CODES_MAX 402
+
+#define SADB_ERROR_CODES     300
+#define SADB_ERROR_CODES_MAX 304
+
+#define SADB_INTERFACE_ERROR_CODES     200
+#define SADB_INTERFACE_ERROR_CODES_MAX 201
+
+#define CONFIGURATION_ERROR_CODES     100
+#define CONFIGURATION_ERROR_CODES_MAX 103
+
+extern char *crypto_enum_errlist_core[];
+extern char *crypto_enum_errlist_config[];
+extern char *crypto_enum_errlist_sa_if[];
+extern char *crypto_enum_errlist_sa_mariadb[];
+extern char *crypto_enum_errlist_crypto_if[];
+extern char *crypto_enum_errlist_crypto_kmc[];
+extern char *crypto_enum_errlist_crypto_cam[];
+
+#endif // CRYPTO_ERROR_H
+```
+
+### `crypto_events.h`
+
+**경로:** `components/cryptolib/include/crypto_events.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef CRYPTO_EVENTS_H
+#define CRYPTO_EVENTS_H
+
+#define FECF_ERR_EID           0
+#define MKID_INVALID_EID       1
+#define MKID_STATE_ERR_EID     2
+#define KEY_TRANSITION_ERR_EID 3
+#define SPI_INVALID_EID        4
+#define IV_WINDOW_ERR_EID      5
+#define IV_REPLAY_ERR_EID      6
+#define OTAR_MK_ERR_EID        7
+
+#define STARTUP_EID 10
+
+#endif // CRYPTO_EVENTS_H
+```
+
+### `crypto_print.h`
+
+**경로:** `components/cryptolib/include/crypto_print.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+#ifndef CRYPTO_PRINT_H
+#define CRYPTO_PRINT_H
+
+/*
+** Includes
+*/
+#include "crypto.h"
+#include "crypto_structs.h"
+
+/*
+** Prototypes
+*/
+
+/**
+ * @brief Function: Crypto_tcPrint
+ * @param tc_frame: TC_T*
+ * Prints the contents of the tc_frame
+ **/
+void Crypto_tcPrint(TC_t *tc_frame);
+
+/**
+ * @brief Function: Crypto_tmPrint
+ * @param tm_frame: TM_T*
+ * Prints the contents of the tm_frame
+ **/
+void Crypto_tmPrint(TM_t *tm_frame);
+
+/**
+ * @brief Function: Crypto_clcwPrint
+ * @param clcw: Telemetry_Frame_Clcw_t*
+ * Prints the contents of the clcw
+ **/
+void Crypto_clcwPrint(Telemetry_Frame_Ocf_Clcw_t *clcw);
+
+/**
+ * @brief Function: Crypto_fsrPrint
+ * @param report: SDLS_FSR_t*
+ * Prints the contents of current FSR in memory
+ **/
+void Crypto_fsrPrint(Telemetry_Frame_Ocf_Fsr_t *report);
+
+/**
+ * @brief Function: Crypto_ccsdsPrint
+ * @param sdls_frame: CCSDS_t*
+ * Prints the contents of current CCSDS in memory
+ **/
+void Crypto_ccsdsPrint(CCSDS_t *sdls_frame);
+
+/**
+ * @brief Function: Crypto_saPrint
+ * @param sa: SecurityAssociation_t*
+ * Prints the contents of SA
+ **/
+void Crypto_saPrint(SecurityAssociation_t *sa);
+
+/**
+ * @brief Function: Crypto_hexPrint
+ * Prints the array of hex characters.
+ * @param c: void*, The hex to be printed.
+ * @param n: size_t, The size of the array to be printed.
+ **/
+void Crypto_hexprint(const void *c, size_t n);
+
+/**
+ * @brief Function: Crypto_binprint
+ * Prints the array of binary data.
+ * @param c: void*, The binary array to be printed.
+ * @param n: size_t, The size of the array to be printed.
+ **/
+void Crypto_binprint(void *c, size_t n);
+
+/**
+ * @brief Function: Crypto_mpPrint
+ * Prints the array of Managed Parameters.
+ * @param managed_parameters: GvcidManagedParameters_t*, The binary array to be printed.
+ * @param print_children: uint8_t, The size of the array to be printed.
+ **/
+void Crypto_mpPrint(GvcidManagedParameters_t *managed_parameters, uint8_t print_children);
+
+#endif // CRYPTO_PRINT_H
+```
+
+### `crypto_structs.h`
+
+**경로:** `components/cryptolib/include/crypto_structs.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+#ifndef CRYPTO_STRUCTS_H
+#define CRYPTO_STRUCTS_H
+
+#define SDLS_CHALLENGED_SIZE     10
+#define SDLS_CMAC_SIZE           10
+#define SDLS_KEY_VERIFY_BLK_SIZE 29
+#define SDLS_KEY_ID_SIZE         98
+#define SDLS_EKB_LEN             30
+
+#include "crypto_config.h"
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#endif // Assume build outside of NOS3/cFS infrastructure
+
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdio.h>
+
+/**
+ * CCSDS Compliance Reference:
+ * This file implements security features compliant with:
+ * - CCSDS 232.0-B-3 (TC Space Data Link Protocol)
+ * - CCSDS 132.0-B-3 (TM Space Data Link Protocol)
+ * - CCSDS 732.0-B-4 (AOS Space Data Link Protocol)
+ * - CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+ */
+
+/*
+** Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3, CCSDS 132.0-B-3, CCSDS 732.0-B-4
+** Global Virtual Channel ID / Global MAP ID structure
+*/
+typedef struct
+{                       // Global Virtual Channel ID / Global MAP ID
+    uint8_t  tfvn : 4;  // Transfer Frame Version Number
+    uint16_t scid : 16; // Spacecraft ID
+    uint16_t vcid : 6;  // Virtual Channel ID
+    uint8_t  mapid : 6; // Multiplexer Access Point ID
+} __attribute__((packed)) crypto_gvcid_t;
+#define CRYPTO_GVCID_SIZE (sizeof(crypto_gvcid_t))
+
+/*
+** Security Association
+** CCSDS Compliance: CCSDS 355.0-B-2 Table A6 (Security Association)
+*/
+typedef struct
+{
+    // Status
+    uint16_t spi;          // Security Parameter Index
+    uint16_t ekid;         // Encryption Key ID  (Used with numerically indexed keystores, EG inmemory keyring)
+    uint16_t akid;         // Authentication Key ID
+    char ek_ref[REF_SIZE]; // Encryption Key Reference (Used with string-referenced keystores,EG-PKCS12 keystores, KMC
+                           // crypto)
+    char ak_ref[REF_SIZE]; // Authentication Key Reference (Used with string-referenced keystores,EG-PKCS12 keystores,
+                           // KMC crypto)
+    uint8_t        sa_state : 2;
+    crypto_gvcid_t gvcid_blk;
+    uint8_t        lpid;
+
+    // Configuration
+    uint8_t  est : 1;         // Encryption Service Type
+    uint8_t  ast : 1;         // Authentication Service Type
+    uint8_t  shivf_len : 6;   // Sec. Header Transmitted IV Field Length
+    uint8_t  shsnf_len : 6;   // Sec. Header SN Field Length
+    uint8_t  shplf_len : 2;   // Sec. Header PL Field Length
+    uint8_t  stmacf_len : 8;  // Sec. Trailer MAC Field Length
+    uint8_t  ecs;             // Encryption Cipher Suite (algorithm / mode ID)
+    uint8_t  ecs_len : 8;     // Encryption Cipher Suite Length
+    uint8_t  iv[IV_SIZE];     // Initialization Vector
+    uint8_t  iv_len;          // Length of entire IV
+    uint8_t  acs_len : 8;     // Authentication Cipher Suite Length
+    uint8_t  acs;             // Authentication Cipher Suite (algorithm / mode ID)
+    uint16_t abm_len : 16;    // Authentication Bit Mask Length
+    uint8_t  abm[ABM_SIZE];   // Authentication Bit Mask (Primary Hdr. through Security Hdr.)
+    uint8_t  arsn_len : 8;    // Anti-Replay Seq Num Length
+    uint8_t  arsn[ARSN_SIZE]; // Anti-Replay Seq Num
+    uint8_t  arsnw_len : 8;   // Anti-Replay Seq Num Window Length
+    uint16_t arsnw;           // Anti-Replay Seq Num Window
+
+} __attribute__((packed)) SecurityAssociation_t;
+#define SA_SIZE (sizeof(SecurityAssociation_t))
+
+/*
+** SDLS Definitions
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 2.4 (Frame Security Report)
+*/
+typedef struct
+{
+    uint8_t  cwt : 1;    // Control Word Type
+    uint8_t  vnum : 3;   // FSR Version Number
+    uint8_t  af : 1;     // Alarm Field
+    uint8_t  bsnf : 1;   // Bad SN Flag
+    uint8_t  bmacf : 1;  // Bad MAC Flag
+    uint8_t  ispif : 1;  // Invalid SPI Flag
+    uint16_t lspiu : 16; // Last SPI Used
+    uint8_t  snval : 8;  // SN Value (LSB)
+} __attribute__((packed)) SDLS_FSR_t;
+#define SDLS_FSR_SIZE (sizeof(SDLS_FSR_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.5 (Security Protocol Procedures)
+*/
+typedef struct
+{
+    uint8_t  type : 1; // Procedure Type Flag
+    uint8_t  uf : 1;   // User Flag
+    uint8_t  sg : 2;   // Service Group Field
+    uint8_t  pid : 4;  // Procedure Identification Field
+    uint16_t pdu_len;  // EP Data Field Length - BITS
+} __attribute__((packed)) SDLS_TLV_Hdr_t;
+#define SDLS_TLV_HDR_SIZE (sizeof(SDLS_TLV_Hdr_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.5 (Security Protocol Procedures)
+*/
+typedef struct
+{
+    SDLS_TLV_Hdr_t hdr;
+    uint8_t        data[TLV_DATA_SIZE];
+} SDLS_TLV_t;
+#define SDLS_TLV_SIZE (sizeof(SDLS_TLV_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t ekid;         // Encrypted Key ID
+    uint8_t  ek[KEY_SIZE]; // Encrypted Key
+} SDLS_EKB_t;
+#define SDLS_EKB_SIZE (sizeof(SDLS_EKB_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t   mkid;              // Master Key ID
+    uint8_t    iv[IV_SIZE];       // Initialization Vector
+    SDLS_EKB_t EKB[SDLS_EKB_LEN]; // Encrypted Key Block
+    uint8_t    mac[MAC_SIZE];     // Message Authentication Code
+} SDLS_OTAR_t;
+#define SDLS_OTAR_SIZE (sizeof(SDLS_OTAR_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16; // Key ID
+} SDLS_KEY_t;
+#define SDLS_KEY_SIZE (sizeof(SDLS_KEY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    SDLS_KEY_t kblk[SDLS_KEY_ID_SIZE]; // Key ID Block
+} SDLS_KEY_BLK_t;
+#define SDLS_KEY_BLK_SIZE (sizeof(SDLS_KEY_BLK_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid_first : 16; // First Key ID
+    uint16_t kid_last : 16;  // Last Key ID
+} SDLS_KEY_INVENTORY_CMD_t;
+#define SDLS_KEY_INVENTORY_CMD_SIZE (sizeof(SDLS_KEY_INVENTORY_CMD_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;      // Key ID
+    uint16_t key_state : 8; // Key state
+} __attribute__((packed)) SDLS_KEY_INVENTORY_RPLY_t;
+#define SDLS_KEY_INVENTORY_RPLY_SIZE (sizeof(SDLS_KEY_INVENTORY_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;                  // Key ID
+    uint8_t  challenge[CHALLENGE_SIZE]; // Key Challenge
+} SDLS_KEYV_CMD_BLK_t;
+#define SDLS_KEYV_CMD_BLK_SIZE (sizeof(SDLS_KEYV_CMD_BLK_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    SDLS_KEYV_CMD_BLK_t blk[SDLS_KEY_VERIFY_BLK_SIZE]; // Key Verification Command Block
+} SDLS_KEYV_CMD_t;
+#define SDLS_KEYV_CMD_SIZE (sizeof(SDLS_KEYV_CMD_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;                   // Key ID
+    uint8_t  iv[SDLS_IV_LEN];            // Key Initialization Vector
+    uint8_t  challenged[CHALLENGE_SIZE]; // Encrypted Challenge
+    uint8_t  mac[MAC_SIZE];              // Challenge Message Authentication Code
+} SDLS_KEYV_RPLY_BLK_t;
+#define SDLS_KEYV_RPLY_BLK_SIZE (sizeof(SDLS_KEYV_RPLY_BLK_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    SDLS_KEYV_RPLY_BLK_t blk[SDLS_KEY_VERIFY_BLK_SIZE]; // Key Verification Reply Block
+} SDLS_KEYV_RPLY_t;
+#define SDLS_KEYV_RPLY_SIZE (sizeof(SDLS_KEYV_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16; // Key ID
+    uint8_t  challenged[SDLS_CHALLENGED_SIZE];
+} SDLS_KEYDB_CMD_t;
+#define SDLS_KEYDB_CMD_SIZE (sizeof(SDLS_KEYDB_CMD_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.4 (Key Management)
+*/
+typedef struct
+{
+    uint16_t kid : 16;                         // Key ID
+    uint8_t  iv[IV_SIZE];                      // Initialization Vector
+    uint8_t  challenged[SDLS_CHALLENGED_SIZE]; // Encrypted Challenge
+    uint8_t  cmac[SDLS_CMAC_SIZE];             // Challenge Message Authentication Code
+} SDLS_KEYDB_RPLY_t;
+#define SDLS_KEYDB_RPLY_SIZE (sizeof(SDLS_KEYDB_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.5 (SA Management)
+*/
+typedef struct
+{
+    uint16_t spi : 16; // Security Parameter Index
+    uint8_t  lpid : 8; // Procedure ID from Last State Transition or Current State
+} __attribute__((packed)) SDLS_SA_STATUS_RPLY_t;
+#define SDLS_SA_STATUS_RPLY_SIZE (sizeof(SDLS_SA_STATUS_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.5 (SA Management)
+*/
+typedef struct
+{
+    uint16_t spi : 16;        // Security Parameter Index
+    uint8_t  arsn[ARSN_SIZE]; // Anti-Replay Sequence Number
+} SDLS_SA_READ_ARSN_RPLY_t;
+#define SDLS_SA_READ_ARSN_RPLY_SIZE (sizeof(SDLS_SA_READ_ARSN_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint16_t num_se; // Number of Security Events
+    uint16_t rs;     // Remaining Space
+} SDLS_MC_LOG_RPLY_t;
+#define SDLS_MC_LOG_RPLY_SIZE (sizeof(SDLS_MC_LOG_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint8_t  emt : 8;       // Event Message Tag
+    uint16_t em_len : 16;   // Event Message Length
+    uint8_t  emv[EMV_SIZE]; // Event Message Value
+} __attribute__((packed)) SDLS_MC_DUMP_RPLY_t;
+#define SDLS_MC_DUMP_RPLY_SIZE (sizeof(SDLS_MC_DUMP_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    SDLS_MC_DUMP_RPLY_t blk[LOG_SIZE]; // Dump Log PDU
+} SDLS_MC_DUMP_BLK_RPLY_t;
+#define SDLS_MC_DUMP_BLK_RPLY_SIZE (sizeof(SDLS_MC_DUMP_BLK_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint8_t str : 8; // Self-Test Result
+} SDLS_MC_ST_RPLY_t;
+#define SDLS_MC_ST_RPLY_SIZE (sizeof(SDLS_MC_ST_RPLY_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.1-B-1 Section 5.6 (Monitoring and Control)
+*/
+typedef struct
+{
+    uint8_t snv[SN_SIZE]; // Sequence Number Value
+} SDLS_MC_SN_RPLY_t;
+#define SDLS_MC_SN_RPLY_SIZE (sizeof(SDLS_MC_SN_RPLY_t))
+
+/*
+** Telecommand (TC) Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3 Section 4.1.2 (TC Primary Header)
+*/
+typedef struct
+{
+    uint8_t tfvn : 2;   // Transfer Frame Version Number
+    uint8_t bypass : 1; // Bypass
+                        // 0 = Type A: Sequence Check, Acknowledgement
+                        // 1 = Type B: Checks are bypassed
+    uint8_t cc : 1;     // Control Command
+                        // 0 = Type D: Transfer Frame is Data Unit
+                        // 1 = Type C: Contron Command (for COP)
+    uint8_t  spare : 2; // Reserved Spare - Shall be 00
+    uint16_t scid : 10; // Spacecraft ID
+                        // Master Channel ID (MCID) = TFVN + SCID
+    uint8_t  vcid : 6;  // Virtual Channel ID
+    uint16_t fl : 10;   // The whole transfer frame length (max 1024)
+    uint8_t  fsn : 8;   // Frame sequence number, also N(S), zeroed on Type-B frames
+} __attribute__((packed)) TC_FramePrimaryHeader_t;
+#define TC_FRAME_PRIMARYHEADER_STRUCT_SIZE (sizeof(TC_FramePrimaryHeader_t))
+#define TC_FRAME_HEADER_SIZE               5
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.2.1 (TC Security Header)
+*/
+typedef struct
+{
+    uint8_t  sh : TC_SH_SIZE; // Segment Header
+    uint16_t spi;             // Security Parameter Index
+    uint8_t  iv[IV_SIZE];     // Initialization Vector for encryption
+    uint8_t  iv_field_len;
+    uint8_t  sn[SN_SIZE]; // Sequence Number for anti-replay
+    uint8_t  sn_field_len;
+    uint8_t  pad[PAD_SIZE]; // Count of the used fill Bytes
+    uint8_t  pad_field_len;
+} __attribute__((packed)) TC_FrameSecurityHeader_t;
+#define TC_FRAME_SECHEADER_SIZE (sizeof(TC_FrameSecurityHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.2.2 (TC Security Trailer)
+*/
+typedef struct
+{
+    uint8_t  mac[MAC_SIZE]; // Message Authentication Code
+    uint8_t  mac_field_len;
+    uint16_t fecf; // Frame Error Control Field
+} __attribute__((packed)) TC_FrameSecurityTrailer_t;
+#define TC_FRAME_SECTRAILER_SIZE (sizeof(TC_FrameSecurityTrailer_t))
+
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3 (TC Space Data Link Protocol) and
+** CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+*/
+typedef struct
+{
+    TC_FramePrimaryHeader_t   tc_header;
+    TC_FrameSecurityHeader_t  tc_sec_header;
+    uint8_t                   tc_pdu[TC_FRAME_DATA_SIZE];
+    uint16_t                  tc_pdu_len;
+    TC_FrameSecurityTrailer_t tc_sec_trailer;
+} __attribute__((packed)) TC_t;
+#define TC_SIZE (sizeof(TC_t))
+
+/*
+** ECSS Definitions
+** European Cooperation for Space Standardization
+** Note: Early CryptoLib Testing Utilized ECSS PUS Headers
+*/
+
+typedef struct
+{
+    uint8_t shf : 1;  // Secondary Header Flag
+    uint8_t pusv : 3; // TC Packet PUS Version Number
+    uint8_t ack : 4;  // Acknowledgement
+    uint8_t st : 8;   // Service Type
+    uint8_t sst : 8;  // Service Subtype
+    uint8_t sid : 4;  // Source ID
+    uint8_t spare : 4;
+} ECSS_PUS_t;
+#define ECSS_PUS_SIZE (sizeof(ECSS_PUS_t))
+
+/*
+** CCSDS Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 133.0-B-2 Section 4.1 (Packet Primary Header)
+*/
+typedef struct
+{
+    uint8_t  pvn : 3;         // Packet Version Number
+    uint8_t  type : 1;        // Type = 1
+    uint8_t  shdr : 1;        // Data Field Header Flag
+    uint16_t appID : 11;      // Application ID
+    uint8_t  seq : 2;         // Sequence Flags
+    uint16_t pktid : 14;      // Sequence Count
+    uint16_t pkt_length : 16; // Packet Length
+} CCSDS_SPP_HDR_t;
+#define CCSDS_HDR_SIZE (sizeof(CCSDS_SPP_HDR_t))
+
+/*
+** CCSDS Compliance: CCSDS 133.0-B-2 (Space Packet Protocol)
+*/
+typedef struct
+{
+    CCSDS_SPP_HDR_t hdr;
+    ECSS_PUS_t      pus;
+    SDLS_TLV_t      tlv_pdu;
+} __attribute__((packed)) CCSDS_t;
+#define CCSDS_SIZE (sizeof(CCSDS_t))
+
+/*
+** Operational Control Field definitions
+** Telemetry frames can reply with either of these in their OCF field:
+** 1) A Communications Control Link Word -or-
+** 2) A Frame Security Report
+*/
+
+/*
+** CCSDS Compliance: CCSDS 232.0-B-3 Section 4.1.4 (Communications Link Control Word)
+*/
+typedef struct
+{
+    uint8_t cwt : 1;    // Control Word Type "0"
+    uint8_t cvn : 2;    // CLCW Version Number "00"
+    uint8_t sf : 3;     // Status Field
+    uint8_t cie : 2;    // COP In Effect
+    uint8_t vci : 6;    // Virtual Channel Identification
+    uint8_t spare0 : 2; // Reserved Spare "00"
+    uint8_t nrfaf : 1;  // No RF Avaliable Flag
+    uint8_t nblf : 1;   // No Bit Lock Flag
+    uint8_t lof : 1;    // Lock-Out Flag
+    uint8_t waitf : 1;  // Wait Flag
+    uint8_t rtf : 1;    // Retransmit Flag
+    uint8_t fbc : 2;    // FARM-B Counter
+    uint8_t spare1 : 1; // Reserved Spare "0"
+    uint8_t rv : 8;     // Report Value
+} __attribute__((packed)) Telemetry_Frame_Ocf_Clcw_t;
+
+#define TELEMETRY_FRAME_OCF_CLCW_SIZE (sizeof(Telemetry_Frame_Ocf_Clcw_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.4 (Frame Security Report)
+*/
+typedef struct
+{
+    uint8_t  cwt : 1;   // Control Word Type "1"
+    uint8_t  fvn : 3;   // FSR Version Number "100"
+    uint8_t  af : 1;    // Alarm Flag
+    uint8_t  bsnf : 1;  // Bad Sequence Number Flag
+    uint8_t  bmacf : 1; // Bad Mac Flag
+    uint8_t  bsaf : 1;  // Bad Security Association Flag
+    uint16_t lspi : 16; // Last SPI Used
+    uint8_t  snval : 8; // Sequence Number Value (LSB)
+} __attribute__((packed)) Telemetry_Frame_Ocf_Fsr_t;
+
+#define TELEMETRY_FRAME_OCF_FSR_SIZE (sizeof(Telemetry_Frame_Ocf_Fsr_t))
+
+/*
+** Telemetry (TM) Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 132.0-B-3 Section 4.1.2 (TM Primary Header)
+*/
+typedef struct
+{
+    uint8_t  tfvn : 2;  // Transfer Frame Version Number
+    uint16_t scid : 10; // Spacecraft ID
+    uint8_t  vcid : 3;  // Virtual Channel ID
+    uint8_t  ocff : 1;  // Describes whether OCF is present or not
+    uint8_t  mcfc : 8;  // Master Channel Frame Count (modulo-256)
+    uint8_t  vcfc : 8;  // Virtual Channel Frame Count (modulo-256)
+    uint8_t  tfsh : 1;  // Transfer Frame Secondary Header
+    uint8_t  sf : 1;    // Sync Flag
+                        // 0 = Payload is either idle data or octet synchronized forward-ordered packets
+                        // 1 = Data is a virtual channel access data unit
+    uint8_t pof : 1;    // Packet Order Flag
+                        // 0 = Shall be set to 0
+                        // Sync Flag 1 = Undefined
+    uint8_t slid : 2;   // Segment Length ID
+                        // Sync Flag 0 = Shall be 11
+                        // Sync Flag 1 = Undefined
+    uint16_t fhp : 11;  // First Header Pointer
+                        // Sync Flag 0 = Contains position of the first byte of the first packet in the data field
+                        // Sync Flag 1 = undefined
+} TM_FramePrimaryHeader_t;
+#define TM_FRAME_PRIMARYHEADER_SIZE (sizeof(TM_FramePrimaryHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.1 (TM Security Header)
+*/
+typedef struct
+{
+    uint16_t spi;         // Security Parameter Index
+    uint8_t  iv[IV_SIZE]; // Initialization Vector for encryption
+} TM_FrameSecurityHeader_t;
+#define TM_FRAME_SECHEADER_SIZE (sizeof(TM_FrameSecurityHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.2 (TM Security Trailer)
+*/
+typedef struct
+{
+    uint8_t  mac[MAC_SIZE]; // Message Authentication Code
+    uint8_t  ocf[OCF_SIZE]; // Operational Control Field
+    uint16_t fecf;          // Frame Error Control Field
+} TM_FrameSecurityTrailer_t;
+#define TM_FRAME_SECTRAILER_SIZE (sizeof(TM_FrameSecurityTrailer_t))
+
+/*
+** CCSDS Compliance: CCSDS 132.0-B-3 (TM Space Data Link Protocol) and
+** CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+*/
+typedef struct
+{
+    TM_FramePrimaryHeader_t   tm_header;
+    TM_FrameSecurityHeader_t  tm_sec_header;
+    uint8_t                   tm_pdu[TM_FRAME_DATA_SIZE];
+    TM_FrameSecurityTrailer_t tm_sec_trailer;
+} TM_t;
+#define TM_SIZE (sizeof(TM_t))
+
+#define TM_MIN_SIZE \
+    (TM_FRAME_PRIMARYHEADER_SIZE + TM_FRAME_SECHEADER_SIZE + TM_FRAME_SECTRAILER_SIZE + TM_FRAME_CLCW_SIZE)
+
+/*
+** Advanced Orbiting Systems (AOS) Definitions
+*/
+/*
+** CCSDS Compliance: CCSDS 732.0-B-4 Section 4.1.2 (AOS Primary Header)
+*/
+typedef struct
+{
+    uint8_t tfvn : 2;  // Transfer Frame Version Number
+                       // Shall be set to '01' (732.0b4 Section 4.1.2.2.2)
+    uint16_t scid : 8; // Spacecraft ID
+    uint8_t  vcid : 6; // Virtual Channel ID
+                       // To be all zeros if only one VC used (732.0b4 Section 4.1.2.3)
+    long vcfc : 24;    // Virtual Channel Frame Count (modulo-16,777,216)
+    /* Begin TF Signalling Field */
+    uint8_t rf : 1;    // Replay Flag
+    uint8_t sf : 1;    // VC Frame Count Usgae Flag
+                       // 0 = Payload is either idle data or octet synchronized forward-ordered packets
+                       // 1 = Data is a virtual channel access data unit
+    uint8_t spare : 2; // Reserved Spare
+                       // 0 = Shall be set to 0
+                       // Sync Flag 1 = Undefined
+    uint8_t vfcc : 4;  // VC Frame Count cycle
+                       // Sync Flag 0 = Shall be 11
+                       // Sync Flag 1 = Undefined
+    uint16_t fhp : 16; // First Header Pointer
+                       // Sync Flag 0 = Contains position of the first byte of the first packet in the data field
+                       // Sync Flag 1 = undefined
+} AOS_FramePrimaryHeader_t;
+#define AOS_FRAME_PRIMARYHEADER_SIZE (sizeof(AOS_FramePrimaryHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.1 (Security Header)
+*/
+typedef struct
+{
+    uint16_t spi;         // Security Parameter Index
+    uint8_t  iv[IV_SIZE]; // Initialization Vector for encryption
+} AOS_FrameSecurityHeader_t;
+#define AOS_FRAME_SECHEADER_SIZE (sizeof(AOS_FrameSecurityHeader_t))
+
+/*
+** CCSDS Compliance: CCSDS 355.0-B-2 Section 4.3.2 (Security Trailer)
+*/
+typedef struct
+{
+    uint8_t  mac[MAC_SIZE]; // Message Authentication Code
+    uint8_t  ocf[OCF_SIZE]; // Operational Control Field
+    uint16_t fecf;          // Frame Error Control Field
+} AOS_FrameSecurityTrailer_t;
+#define AOS_FRAME_SECTRAILER_SIZE (sizeof(AOS_FrameSecurityTrailer_t))
+
+/*
+** CCSDS Compliance: CCSDS 732.0-B-4 (AOS Space Data Link Protocol) and
+** CCSDS 355.0-B-2 (Space Data Link Security Protocol)
+*/
+typedef struct
+{
+    AOS_FramePrimaryHeader_t   tm_header;
+    AOS_FrameSecurityHeader_t  tm_sec_header;
+    uint8_t                    aos_pdu[AOS_FRAME_DATA_SIZE];
+    AOS_FrameSecurityTrailer_t aos_sec_trailer;
+} __attribute__((packed)) AOS_t;
+#define AOS_SIZE (sizeof(AOS_t))
+
+#define AOS_MIN_SIZE \
+    (AOS_FRAME_PRIMARYHEADER_SIZE + AOS_FRAME_SECHEADER_SIZE + AOS_FRAME_SECTRAILER_SIZE + AOS_FRAME_OCF_SIZE)
+
+#endif // CRYPTO_STRUCTS_H
+```
+
+### `cryptography_interface.h`
+
+**경로:** `components/cryptolib/include/cryptography_interface.h`
+
+
+```c
+/*
+ * Copyright 2021, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * Transfer at the California Institute of Technology.
+ *
+ * This software may be subject to U.S. export control laws. By accepting
+ * this software, the user agrees to comply with all applicable U.S.
+ * export laws and regulations. User has the responsibility to obtain
+ * export licenses, or other export authority as may be required before
+ * exporting such information to foreign countries or providing access to
+ * foreign persons.
+ */
+
+#ifndef CRYPTOLIB_CRYPTOGRAPHY_INTERFACE_H
+#define CRYPTOLIB_CRYPTOGRAPHY_INTERFACE_H
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#include "osapi.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#endif
+
+#include "crypto_structs.h"
+
+typedef struct
+{
+    // Cryptography Interface Initialization & Management Functions
+    int32_t (*cryptography_config)(void);
+    int32_t (*cryptography_init)(void);
+    int32_t (*cryptography_shutdown)(void);
+    // Cryptography Interface Functions
+    int32_t (*cryptography_encrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                    uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                    uint32_t iv_len, uint8_t *ecs, uint8_t padding, char *cam_cookies);
+    int32_t (*cryptography_decrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                    uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                    uint32_t iv_len, uint8_t *ecs, uint8_t *acs, char *cam_cookies);
+    int32_t (*cryptography_authenticate)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                         uint8_t *key, uint32_t len_key,
+                                         SecurityAssociation_t *sa_ptr, // For key index or key references (when key not
+                                                                        // passed in explicitly via key param)
+                                         uint8_t *iv, uint32_t iv_len, uint8_t *mac, uint32_t mac_size, uint8_t *aad,
+                                         uint32_t aad_len, uint8_t ecs, uint8_t acs, char *cam_cookies);
+    int32_t (*cryptography_validate_authentication)(uint8_t *data_out, size_t len_data_out, const uint8_t *data_in,
+                                                    const size_t len_data_in, uint8_t *key, uint32_t len_key,
+                                                    SecurityAssociation_t *sa_ptr, const uint8_t *iv, uint32_t iv_len,
+                                                    const uint8_t *mac, uint32_t mac_size, const uint8_t *aad,
+                                                    uint32_t aad_len, uint8_t ecs, uint8_t acs, char *cam_cookies);
+    int32_t (*cryptography_aead_encrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                         uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                         uint32_t iv_len, uint8_t *mac, uint32_t mac_size, uint8_t *aad,
+                                         uint32_t aad_len, uint8_t encrypt_bool, uint8_t authenticate_bool,
+                                         uint8_t aad_bool, uint8_t *ecs, uint8_t *acs, char *cam_cookies);
+    int32_t (*cryptography_aead_decrypt)(uint8_t *data_out, size_t len_data_out, uint8_t *data_in, size_t len_data_in,
+                                         uint8_t *key, uint32_t len_key, SecurityAssociation_t *sa_ptr, uint8_t *iv,
+                                         uint32_t iv_len, uint8_t *aad, uint32_t aad_len, uint8_t *mac,
+                                         uint32_t mac_size, uint8_t decrypt_bool, uint8_t authenticate_bool,
+                                         uint8_t aad_bool, uint8_t *ecs, uint8_t *acs, char *cam_cookies);
+    int32_t (*cryptography_get_acs_algo)(int8_t algo_enum);
+    int32_t (*cryptography_get_ecs_algo)(int8_t algo_enum);
+
+} CryptographyInterfaceStruct, *CryptographyInterface;
+
+CryptographyInterface get_cryptography_interface_libgcrypt(void);
+CryptographyInterface get_cryptography_interface_kmc_crypto_service(void);
+CryptographyInterface get_cryptography_interface_wolfssl(void);
+CryptographyInterface get_cryptography_interface_custom(void);
+
+#endif // CRYPTOLIB_CRYPTOGRAPHY_INTERFACE_H
+```
+
+### `key_interface.h`
+
+**경로:** `components/cryptolib/include/key_interface.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef KEY_INTERFACE_H
+#define KEY_INTERFACE_H
+
+#include "crypto_error.h"
+#include "crypto_structs.h"
+
+/* Structures */
+typedef struct
+{
+    uint8_t  value[KEY_SIZE];
+    uint32_t key_len;
+    uint8_t  key_state : 4;
+} crypto_key_t;
+#define CRYPTO_KEY_SIZE (sizeof(crypto_key_t))
+
+typedef struct
+{
+    /* Key Interface, SDLS */
+    crypto_key_t *(*get_key)(uint32_t key_id);
+    int32_t (*key_init)(void);
+    int32_t (*key_shutdown)(void);
+
+    /* Key Interface, SDLS-EP */
+
+} KeyInterfaceStruct, *KeyInterface;
+
+/* Prototypes */
+KeyInterface get_key_interface_custom(void);
+KeyInterface get_key_interface_internal(void);
+KeyInterface get_key_interface_kmc(void);
+
+#endif // KEY_INTERFACE_H
+```
+
+### `mc_interface.h`
+
+**경로:** `components/cryptolib/include/mc_interface.h`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+#ifndef MONITORING_AND_CONTROL_INTERFACE_H
+#define MONITORING_AND_CONTROL_INTERFACE_H
+
+#include "crypto_error.h"
+#include "crypto_structs.h"
+
+/* Structures */
+typedef struct
+{
+    /* MC Interface, SDLS */
+    int32_t (*mc_initialize)(void);
+    void (*mc_log)(int32_t error_code);
+    int32_t (*mc_shutdown)(void);
+
+    /* MC Interface, SDLS-EP */
+    /*
+    int32_t (*mc_ping)();
+    int32_t (*mc_log_status)(void);
+    int32_t (*mc_dump_log)(void);
+    int32_t (*mc_erase_log)(void);
+    int32_t (*mc_self_test)(void);
+    int32_t (*mc_alarm_reset_flag)(void);
+    */
+
+} McInterfaceStruct, *McInterface;
+
+/* Prototypes */
+McInterface get_mc_interface_custom(void);
+McInterface get_mc_interface_disabled(void);
+McInterface get_mc_interface_internal(void);
+
+#endif // MONITORING_AND_CONTROL_INTERFACE_H
+```
+
+### `sa_interface.h`
+
+**경로:** `components/cryptolib/include/sa_interface.h`
+
+
+```c
+/*
+ * Copyright 2021, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * Transfer at the California Institute of Technology.
+ *
+ * This software may be subject to U.S. export control laws. By accepting
+ * this software, the user agrees to comply with all applicable U.S.
+ * export laws and regulations. User has the responsibility to obtain
+ * export licenses, or other export authority as may be required before
+ * exporting such information to foreign countries or providing access to
+ * foreign persons.
+ */
+
+#ifndef CRYPTOLIB_SA_INTERFACE_H
+#define CRYPTOLIB_SA_INTERFACE_H
+
+#ifdef NOS3 // NOS3/cFS build is ready
+#include "common_types.h"
+#include "osapi.h"
+#else // Assume build outside of NOS3/cFS infrastructure
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#endif
+
+#include "crypto_structs.h"
+
+typedef struct
+{
+    // Security Association Initialization & Management Functions
+    int32_t (*sa_config)(void);
+    int32_t (*sa_init)(void);
+    int32_t (*sa_close)(void);
+    // Security Association Interaction Functions
+    int32_t (*sa_get_from_spi)(uint16_t, SecurityAssociation_t **);
+    int32_t (*sa_get_operational_sa_from_gvcid)(uint8_t, uint16_t, uint16_t, uint8_t, SecurityAssociation_t **);
+    int32_t (*sa_save_sa)(SecurityAssociation_t *);
+    int32_t (*sa_setIV)(uint16_t, char *);
+    // Security Association Utility Functions
+    int32_t (*sa_stop)(TC_t *tc_frame);
+    int32_t (*sa_start)(TC_t *tc_frame);
+    int32_t (*sa_expire)(TC_t *tc_frame);
+    int32_t (*sa_rekey)(TC_t *tc_frame);
+    int32_t (*sa_status)(uint8_t *);
+    int32_t (*sa_create)(TC_t *tc_frame);
+    int32_t (*sa_setARSN)(TC_t *tc_frame);
+    int32_t (*sa_setARSNW)(TC_t *tc_frame);
+    int32_t (*sa_delete)(TC_t *tc_frame);
+
+} SaInterfaceStruct, *SaInterface;
+
+SaInterface get_sa_interface_custom(void);
+SaInterface get_sa_interface_inmemory(void);
+SaInterface get_sa_interface_mariadb(void);
+
+#endif // CRYPTOLIB_SA_INTERFACE_H
+```

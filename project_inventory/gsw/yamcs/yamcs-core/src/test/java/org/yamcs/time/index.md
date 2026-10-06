@@ -3,20 +3,331 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FixedSizeTimeDecoderTest.java`
 
-file--FixedSizeTimeDecoderTest.java
-file--InstantTest.java
-file--TimeCorrelationServiceTest.java
-file--TimeOfFlightEstimatorTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/FixedSizeTimeDecoderTest.java`
+
+
+```java
+package org.yamcs.time;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.yamcs.utils.StringConverter.hexStringToArray;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteOrder;
+
+import org.junit.jupiter.api.Test;
+
+public class FixedSizeTimeDecoderTest {
+
+    @Test
+    public void testDecode4bytes() {
+        FixedSizeTimeDecoder decoder = new FixedSizeTimeDecoder(ByteOrder.BIG_ENDIAN, 4, 1000);
+        long t = decoder.decode(hexStringToArray("01020304"), 0);
+        assertEquals(1000l * 0x01020304, t);
+    }
+
+    @Test
+    public void testDecodeRaw4bytes() {
+        FixedSizeTimeDecoder decoder = new FixedSizeTimeDecoder(ByteOrder.BIG_ENDIAN, 4, 1000);
+        long t = decoder.decodeRaw(hexStringToArray("01020304"), 0);
+        assertEquals(0x01020304, t);
+    }
+
+    @Test
+    public void testDecode8bytes() {
+        FixedSizeTimeDecoder decoder = new FixedSizeTimeDecoder(ByteOrder.BIG_ENDIAN, 8, 0.1);
+        long t = decoder.decode(hexStringToArray("0102030405060708"), 0);
+        assertEquals((long) (0.1 * 0x0102030405060708l), t);
+    }
+
+    @Test
+    public void testDecodeRaw8bytes() {
+        FixedSizeTimeDecoder decoder = new FixedSizeTimeDecoder(ByteOrder.BIG_ENDIAN, 8, 0.1);
+        long t = decoder.decodeRaw(hexStringToArray("0102030405060708"), 0);
+        assertEquals(0x0102030405060708l, t);
+    }
+
+    @Test
+    public void testInvalidSize() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new FixedSizeTimeDecoder(ByteOrder.BIG_ENDIAN, 7, 1000);
+        });
+    }
+
+    @Test
+    public void testBufferUnderflow() {
+        assertThrows(BufferUnderflowException.class, () -> {
+            FixedSizeTimeDecoder decoder = new FixedSizeTimeDecoder(ByteOrder.BIG_ENDIAN, 4, 1000);
+            decoder.decodeRaw(hexStringToArray("0102030405060708"), 5);
+        });
+    }
+}
 ```
 
-## 항목
+### `InstantTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/FixedSizeTimeDecoderTest.java`](file--FixedSizeTimeDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/InstantTest.java`](file--InstantTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/TimeCorrelationServiceTest.java`](file--TimeCorrelationServiceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/TimeOfFlightEstimatorTest.java`](file--TimeOfFlightEstimatorTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/InstantTest.java`
+
+
+```java
+package org.yamcs.time;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
+public class InstantTest {
+    @Test
+    public void test1() {
+        Instant t = Instant.get(100, Integer.MAX_VALUE);
+        assertInstantEquals(t, 102, 147483647);
+    }
+
+    @Test
+    public void test2() {
+        Instant t1 = Instant.get(100, 20);
+        Instant t2 = Instant.get(100, 20);
+        Instant t3 = t1.plus(t2);
+        assertInstantEquals(t3, 200, 40);
+    }
+
+    @Test
+    public void test3() {
+        Instant t1 = Instant.get(100, 20);
+        Instant t2 = Instant.get(100, 1000_000_000 - 20);
+        Instant t3 = t1.plus(t2);
+        assertInstantEquals(t3, 201, 0);
+    }
+
+    @Test
+    public void testPlusSec1() {
+        Instant t1 = Instant.get(100, 20);
+        Instant t2 = t1.plus(1e-3 + 5e-12);
+        assertInstantEquals(t2, 101, 25);
+    }
+
+    @Test
+    public void testMinusSec() {
+        Instant t1 = Instant.get(100, 20);
+        Instant t2 = t1.plus(-5e-12);
+        assertInstantEquals(t2, 100, 15);
+
+        Instant t3 = t1.plus(-25e-12);
+        assertInstantEquals(t3, 99, 999_999_995);
+
+    }
+
+    @Test
+    public void test5() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            Instant t1 = Instant.get(100, 20);
+            t1.plus(1e50);
+        });
+    }
+
+    @Test
+    public void testDeltaFrom() {
+        Instant t1 = Instant.get(100, 20);
+        Instant t2 = Instant.get(100, 30);
+
+        double d = t2.deltaFrom(t1);
+        assertEquals(1e-11, d, 1e-20);
+
+        Instant t3 = Instant.get(101, 30);
+        d = t3.deltaFrom(t1);
+        assertEquals(1e-3 + 1e-11, d, 1e-20);
+
+    }
+
+    private void assertInstantEquals(Instant t, long expectedMillis, int expectedPicos) {
+        assertEquals(expectedMillis, t.getMillis());
+        assertEquals(expectedPicos, t.getPicos());
+    }
+}
+```
+
+### `TimeCorrelationServiceTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/TimeCorrelationServiceTest.java`
+
+
+```java
+package org.yamcs.time;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class TimeCorrelationServiceTest {
+    static String yamcsInstance = "ots-test";
+    static String serviceName = "test";
+    static String tableName = TimeCorrelationService.TABLE_NAME + serviceName;
+
+    @BeforeAll
+    public static void beforeClass() {
+        TimeEncoding.setUp();
+        EventProducerFactory.setMockup(false);
+    }
+
+    private TimeCorrelationService createAndStart(boolean dropTable) throws Exception {
+        if (dropTable) {
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            if (ydb.getTable(tableName) != null) {
+                ydb.dropTable(tableName);
+            }
+        }
+        TimeCorrelationService ots = new TimeCorrelationService();
+        Map<String, Object> conf = new HashMap<>();
+        conf.put("numSamples", 2);
+        ots.init(yamcsInstance, serviceName, YConfiguration.wrap(conf));
+        ots.startAsync().awaitRunning();
+
+        return ots;
+    }
+
+    @Test
+    public void test1() throws Exception {
+        TimeCorrelationService ots = createAndStart(true);
+        assertEquals(Instant.INVALID_INSTANT, ots.getTime(0));
+        ots.addSample(0, Instant.get(1000, 0));
+        assertEquals(Instant.INVALID_INSTANT, ots.getTime(0));
+        ots.addSample(1, Instant.get(2000, 0));
+
+        assertEquals(Instant.get(1000, 0), ots.getTime(0));
+        assertEquals(Instant.get(2000, 0), ots.getTime(1));
+        assertEquals(Instant.get(3000, 0), ots.getTime(2));
+
+        ots.stopAsync().awaitTerminated();
+    }
+
+    @Test
+    public void testRetrievalFromArchive() throws Exception {
+        TimeCorrelationService ots1 = createAndStart(true);
+        ots1.addSample(0, Instant.get(10000, 0));
+        ots1.addSample(1, Instant.get(11000, 5000));
+        assertEquals(Instant.get(13000, 15000), ots1.getTime(3));
+        ots1.stopAsync().awaitTerminated();
+
+        TimeCorrelationService ots2 = createAndStart(false);
+        assertEquals(Instant.get(13000, 15000), ots2.getTime(3));
+    }
+
+    @Test
+    public void testReset() throws Exception {
+        TimeCorrelationService ots = createAndStart(true);
+        ots.addSample(0, Instant.get(1000, 0));
+        ots.addSample(1, Instant.get(2000, 0));
+        assertEquals(Instant.get(4000, 0), ots.getTime(3));
+
+        ots.reset();
+        assertEquals(Instant.INVALID_INSTANT, ots.getTime(0));
+
+        ots.addSample(0, Instant.get(10000, 0));
+        ots.addSample(1, Instant.get(11000, 5000));
+        assertEquals(Instant.get(13000, 15000), ots.getTime(3));
+
+        ots.stopAsync().awaitTerminated();
+    }
+
+    @Test
+    public void testExceededAccuracy() throws Exception {
+        TimeCorrelationService ots = createAndStart(true);
+        ots.addSample(0, Instant.get(1000, 0));
+        ots.addSample(1, Instant.get(2000, 0));
+        assertEquals(Instant.get(5000, 0), ots.getTime(4));
+
+        ots.addSample(3, Instant.get(4200, 0));// this will cause the coefficients to be recomputed based on the last
+                                               // two samples
+        assertEquals(Instant.get(5300, 0), ots.getTime(4));
+
+        assertEquals(Instant.get(5000, 0), ots.getHistoricalTime(Instant.get(1000, 0), 4));
+    }
+
+    @Test
+    public void testExceededValidity() throws Exception {
+        TimeCorrelationService ots = createAndStart(true);
+        ots.addSample(0, Instant.get(1000, 0));
+        ots.addSample(1, Instant.get(2000, 0));
+        assertEquals(Instant.get(4000, 0), ots.getTime(3));
+
+        ots.addSample(3, Instant.get(5000, 0));// this will cause the coefficients to be recomputed based on the last
+                                               // two samples
+        assertEquals(Instant.INVALID_INSTANT, ots.getTime(0));
+    }
+
+    @Test
+    public void testUnsortedSample() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            TimeCorrelationService ots = createAndStart(true);
+            ots.addSample(10, Instant.get(1000, 0));
+            ots.addSample(9, Instant.get(0, 0));
+        });
+    }
+}
+```
+
+### `TimeOfFlightEstimatorTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/time/TimeOfFlightEstimatorTest.java`
+
+
+```java
+package org.yamcs.time;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InitException;
+import org.yamcs.utils.TimeEncoding;
+
+public class TimeOfFlightEstimatorTest {
+
+    @BeforeAll
+    static public void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testInterval() throws InitException {
+        TimeOfFlightEstimator tofe = new TimeOfFlightEstimator("test", "test", false);
+        tofe.addInterval(Instant.get(1000, 0), Instant.get(100000, 0), new double[] { 1, 0.5 });
+        assertEquals(1.0, tofe.getTof(Instant.get(1000)), 1e-10);
+        assertEquals(1.5, tofe.getTof(Instant.get(2000)), 1e-10);
+
+        assertTrue(Double.isNaN(tofe.getTof(Instant.get(100001))));
+
+        tofe.addInterval(Instant.get(100000, 0), Instant.get(200000, 0), new double[] { 1, 0.2 });
+        assertEquals(1.0002, tofe.getTof(Instant.get(100001)), 1e-10);
+    }
+
+    @Test
+    public void testRetrievalFromArchive() throws Exception {
+        Instant t0 = TimeEncoding.getWallclockHresTime().plus(100);
+        Instant t1 = t0.plus(1000);
+
+        TimeOfFlightEstimator tofe1 = new TimeOfFlightEstimator("test", "test", true);
+        tofe1.addInterval(t0, t1, new double[] { 1, 0.2 });
+
+        TimeOfFlightEstimator tofe2 = new TimeOfFlightEstimator("test", "test", true);
+        assertEquals(1.0002, tofe2.getTof(t0.plus(0.001)), 1e-10);
+    }
+}
+```

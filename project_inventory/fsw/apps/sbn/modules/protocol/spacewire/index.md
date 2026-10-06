@@ -3,20 +3,60 @@
 
 **경로:** `fsw/apps/sbn/modules/protocol/spacewire/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 fsw/index
-file--app.cfg
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/modules/protocol/spacewire/docs/`](docs/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/spacewire/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/spacewire/app.cfg`](file--app.cfg) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/modules/protocol/spacewire/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `app.cfg`
+
+**경로:** `fsw/apps/sbn/modules/protocol/spacewire/app.cfg`
+
+
+```text
+APP_NAME=spacewire        
+APP_ABBREV=SPW    
+OBJ_TYPE=CFE_APP           
+APP_PATH=/cf/apps/spacewire.so   
+ENTRY_PT=SPW_AppMain 
+CFE_NAME=SPW_APP     
+PRIORITY=15                   
+STACK_SIZE=4096               
+LOAD_ADDR=0x0                 
+EXCEPT_ACT=0                  
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn/modules/protocol/spacewire/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(SBN_SPACEWIRE_MODULE C)
+
+if(NOT(IS_DIRECTORY ${SBN_APP_SOURCE_DIR}))
+    message(FATAL_ERROR "SBN_APP_SOURCE_DIR not defined, is sbn in the target list before this module?")
+endif()
+
+include_directories(${SBN_APP_SOURCE_DIR}/fsw/platform_inc)
+
+if(NOT(IS_DIRECTORY ${SBN_LIB_SOURCE_DIR}))
+    message(FATAL_ERROR "SBN_LIB_SOURCE_DIR not defined, is sbn_lib in the target list before this module?")
+endif()
+
+include_directories(${SBN_LIB_SOURCE_DIR}/fsw/public_inc)
+
+
+aux_source_directory(fsw/src LIB_SRC_FILES)
+
+# Create the app module
+add_cfe_app(sbn_module_spacewire ${LIB_SRC_FILES})
+```

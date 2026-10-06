@@ -3,16 +3,41 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field-divider/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `field-divider.component.css`
 
-file--field-divider.component.css
-file--field-divider.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field-divider/field-divider.component.css`
+
+
+```css
+:host {
+  display: block;
+  margin: 0;
+  margin-bottom: 16px;
+  border-top-style: solid;
+  border-top-color: var(--y-border-color);
+  border-top-width: 1px;
+}
 ```
 
-## 항목
+### `field-divider.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field-divider/field-divider.component.css`](file--field-divider.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field-divider/field-divider.component.ts`](file--field-divider.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field-divider/field-divider.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-field-divider',
+  template: '',
+  styleUrl: './field-divider.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-field-divider',
+    role: 'separator',
+  },
+})
+export class YaFieldDivider {}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/fm/CMakeFiles/tblobj_cpu1_fm.tblfa8c4e31ab2df4a1325871bb8f0f6563fa8bb1bc.dir/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 tables/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/apps/fm/CMakeFiles/tblobj_cpu1_fm.tblfa8c4e31ab2df4a1325871bb8f0f6563fa8bb1bc.dir/fsw/tables/`](tables/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

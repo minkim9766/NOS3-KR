@@ -3,30 +3,291 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--FatalHandler.fpp
-file--FatalHandler.hpp
-file--FatalHandlerComponentBaremetalImpl.cpp
-file--FatalHandlerComponentCommonImpl.cpp
-file--FatalHandlerComponentImpl.hpp
-file--FatalHandlerComponentLinuxImpl.cpp
-file--FatalHandlerComponentVxWorksImpl.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandler.fpp`](file--FatalHandler.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandler.hpp`](file--FatalHandler.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentBaremetalImpl.cpp`](file--FatalHandlerComponentBaremetalImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentCommonImpl.cpp`](file--FatalHandlerComponentCommonImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentImpl.hpp`](file--FatalHandlerComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentLinuxImpl.cpp`](file--FatalHandlerComponentLinuxImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentVxWorksImpl.cpp`](file--FatalHandlerComponentVxWorksImpl.cpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FatalHandler.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FatalHandlerComponentCommonImpl.cpp"
+)
+
+if(FPRIME_USE_BAREMETAL_SCHEDULER)
+  list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/FatalHandlerComponentBaremetalImpl.cpp")
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "VxWorks") 
+  list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/FatalHandlerComponentVxWorksImpl.cpp")
+else()
+  list(APPEND SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/FatalHandlerComponentLinuxImpl.cpp")
+endif()
+
+set(MOD_DEPS
+  Os
+  Fw/Logger
+)
+register_fprime_module()
+```
+
+### `FatalHandler.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandler.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Handles FATAL calls
+  passive component FatalHandler {
+
+    @ FATAL event receive port
+    sync input port FatalReceive: Svc.FatalEvent
+
+  }
+
+}
+```
+
+### `FatalHandler.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandler.hpp`
+
+
+```cpp
+// ======================================================================
+// FatalHandler.hpp
+// Standardization header for FatalHandler
+// ======================================================================
+
+#ifndef Svc_FatalHandler_HPP
+#define Svc_FatalHandler_HPP
+
+#include "Svc/FatalHandler/FatalHandlerComponentImpl.hpp"
+
+namespace Svc {
+
+typedef FatalHandlerComponentImpl FatalHandler;
+
+}
+
+#endif
+```
+
+### `FatalHandlerComponentBaremetalImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentBaremetalImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FatalHandlerImpl.cpp
+// \author lestarch
+// \brief  cpp file for FatalHandler component implementation class
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Svc/FatalHandler/FatalHandlerComponentImpl.hpp>
+#include <cstdlib>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FatalHandlerComponentImpl::FatalReceive_handler(const FwIndexType portNum, FwEventIdType Id) {
+    Fw::Logger::log("FATAL %" PRI_FwEventIdType "handled.\n", Id);
+    while (true) {
+    }  // Returning might be bad
+}
+
+}  // end namespace Svc
+```
+
+### `FatalHandlerComponentCommonImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentCommonImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FatalHandlerImpl.cpp
+// \author tcanham
+// \brief  cpp file for FatalHandler component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Svc/FatalHandler/FatalHandlerComponentImpl.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+FatalHandlerComponentImpl ::FatalHandlerComponentImpl(const char* const compName)
+    : FatalHandlerComponentBase(compName) {}
+
+FatalHandlerComponentImpl ::~FatalHandlerComponentImpl() {}
+
+}  // end namespace Svc
+```
+
+### `FatalHandlerComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FatalHandlerImpl.hpp
+// \author tcanham
+// \brief  hpp file for FatalHandler component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FatalHandler_HPP
+#define FatalHandler_HPP
+
+#include "Svc/FatalHandler/FatalHandlerComponentAc.hpp"
+
+namespace Svc {
+
+class FatalHandlerComponentImpl final : public FatalHandlerComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FatalHandler
+    //!
+    FatalHandlerComponentImpl(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object FatalHandler
+    //!
+    ~FatalHandlerComponentImpl();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for FatalReceive
+    //!
+    void FatalReceive_handler(const FwIndexType portNum, /*!< The port number*/
+                              FwEventIdType Id           /*!< The ID of the FATAL event*/
+    );
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `FatalHandlerComponentLinuxImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentLinuxImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FatalHandlerImpl.cpp
+// \author tcanham
+// \brief  cpp file for FatalHandler component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Os/Task.hpp>
+#include <Svc/FatalHandler/FatalHandlerComponentImpl.hpp>
+#include <csignal>
+#include <cstdlib>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FatalHandlerComponentImpl::FatalReceive_handler(const FwIndexType portNum, FwEventIdType Id) {
+    // for **nix, delay then exit with error code
+    Fw::Logger::log("FATAL %d handled.\n", Id);
+    (void)Os::Task::delay(Fw::TimeInterval(1, 0));
+    Fw::Logger::log("Exiting with abort signal and core dump file.\n");
+    (void)raise(SIGABRT);
+    exit(1);
+}
+
+}  // end namespace Svc
+```
+
+### `FatalHandlerComponentVxWorksImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/FatalHandlerComponentVxWorksImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FatalHandlerImpl.cpp
+// \author tcanham
+// \brief  cpp file for FatalHandler component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <taskLib.h>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Svc/FatalHandler/FatalHandlerComponentImpl.hpp>
+
+namespace Svc {
+
+void FatalHandlerComponentImpl::FatalReceive_handler(const FwIndexType portNum, FwEventIdType Id) {
+    Fw::Logger::log("FATAL %d handled.\n", Id, 0, 0, 0, 0, 0);
+    taskSuspend(0);
+}
+
+}  // end namespace Svc
+```

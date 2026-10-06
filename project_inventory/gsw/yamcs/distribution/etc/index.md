@@ -3,24 +3,307 @@
 
 **경로:** `gsw/yamcs/distribution/etc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-queue.yaml.sample`
 
-file--command-queue.yaml.sample
-file--logging.properties.sample
-file--mdb.yaml.sample
-file--processor.yaml.sample
-file--UTC-TAI.history.sample
-file--yamcs.yaml.sample
+**경로:** `gsw/yamcs/distribution/etc/command-queue.yaml.sample`
+
+
+```text
+# Definition of command queues. Each queue has a name,
+# and optionally a preferred startup state.
+#
+# There are three possible states: 
+#   - enabled means the commands are sent immediately
+#   - blocked means the commands are accepted into the queue but need to be 
+#     manually sent 
+#   - disabled means the commands are rejected
+
+supervised:
+  state: blocked
+  minLevel: critical
+
+# If no state is configured, the queue will start with the same state that
+# it had on a previous run, defaulting to enabled.
+default:
+  #state: enabled
 ```
 
-## 항목
+### `logging.properties.sample`
 
-- [`gsw/yamcs/distribution/etc/command-queue.yaml.sample`](file--command-queue.yaml.sample) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/etc/logging.properties.sample`](file--logging.properties.sample) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/etc/mdb.yaml.sample`](file--mdb.yaml.sample) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/etc/processor.yaml.sample`](file--processor.yaml.sample) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/etc/UTC-TAI.history.sample`](file--UTC-TAI.history.sample) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/etc/yamcs.yaml.sample`](file--yamcs.yaml.sample) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/distribution/etc/logging.properties.sample`
+
+
+```text
+handlers = java.util.logging.ConsoleHandler, java.util.logging.FileHandler
+
+java.util.logging.ConsoleHandler.level = INFO
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.JournalFormatter
+java.util.logging.ConsoleHandler.filter = org.yamcs.logging.GlobalFilter
+
+java.util.logging.FileHandler.level = ALL
+java.util.logging.FileHandler.pattern = /opt/yamcs/log/yamcs-server.log
+java.util.logging.FileHandler.limit = 20000000
+java.util.logging.FileHandler.count = 50
+java.util.logging.FileHandler.formatter = org.yamcs.logging.CompactFormatter
+
+org.yamcs.level = FINE
+```
+
+### `mdb.yaml.sample`
+
+**경로:** `gsw/yamcs/distribution/etc/mdb.yaml.sample`
+
+
+```text
+refmdb:
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: "sheet"
+    spec: "mdb/refmdb-ccsds.xls"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/refmdb-subsys1.xls"
+
+simulator:
+  - type: "sheet"
+    spec: "mdb/simulator-ccsds.xls"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/simulator-tmtc.xls"
+```
+
+### `processor.yaml.sample`
+
+**경로:** `gsw/yamcs/distribution/etc/processor.yaml.sample`
+
+
+```text
+# this file defines the different processors
+# A processor is where TM/TC processing happens inside Yamcs.
+#
+# Each processor uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+
+realtime:
+  services: 
+    - class: org.yamcs.StreamTmPacketProvider
+      args: 
+        streams: ["tm_realtime"]    
+    - class: org.yamcs.StreamTcCommandReleaser
+      args:
+        stream: "tc_realtime"
+    - class: org.yamcs.tctm.StreamParameterProvider
+      args:
+        stream: "pp_realtime"
+    # implements XTCE algorithms
+    - class: org.yamcs.algorithms.AlgorithmManager
+    - class: org.yamcs.parameter.LocalParameterManager
+  config:
+    #subcribe by default to parameters from all providers (this means also process all incoming TM packets)
+    # if this is not enabled(default) then only parameters that are subscribed by client are processed
+    # if the alarm checking is enabled below, all parameters that have limits defined are subscribed even if this is set to false
+    subscribeAll: true
+    #Generate events in case of errors when processing telemetry
+    generateEvents: true
+    #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+    alarm:
+      parameterCheck: true
+      parameterServer: enabled
+    parameterCache:
+      enabled: true
+      cacheAll: true
+      #duration in seconds on how long parameters are kept into cache
+      duration: 600
+      #maximum number of entries in the cache for one parameter
+      maxNumEntries: 4096
+    tmProcessor:
+      #if container entries fit outside the binary packet, setting this to true will cause the error to be ignored, otherwise an exception will be printed in the yamcs logs
+      ignoreOutOfContainerEntries: false
+
+
+#used to perform step by step archive replays to displays,etc
+# initiated from Yamcs Monitor, Yamcs Studio.
+# should be renamed to ArchiveReplay
+Archive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+  config:        
+    #keep a small cache in case new displays are open while the replay is paused, to have the parameters readily available
+    parameterCache:
+      enabled: true
+      cacheAll: true
+      maxNumEntries: 8
+
+
+#used by the ParameterArchive when rebuilding the parameter archive
+# no need for parameter cache
+ParameterArchive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+  config:
+    #Do not generate events in case of errors when processing telemetry (otherwise it will flood the event log with plenty of repeats)
+    generateEvents: false
+    parameterCache:
+      enabled: false
+
+#used for performing archive retrievals via replays (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+  services:
+    - class: org.yamcs.tctm.ReplayService
+  config:
+    #Do not generate events in case of errors when processing telemetry (otherwise it will flood the event log with plenty of repeats)
+    generateEvents: false
+    parameterCache:
+      enabled: false
+```
+
+### `UTC-TAI.history.sample`
+
+**경로:** `gsw/yamcs/distribution/etc/UTC-TAI.history.sample`
+
+
+```text
+
+ ---------------
+ UTC-TAI.history
+ ---------------
+ RELATIONSHIP BETWEEN TAI AND UTC
+ ------------------------------------------------------------------------------- 
+ Limits of validity(at 0h UTC)       TAI - UTC  
+ 
+ 1961  Jan.  1 - 1961  Aug.  1     1.422 818 0s + (MJD - 37 300) x 0.001 296s
+       Aug.  1 - 1962  Jan.  1     1.372 818 0s +        ""
+ 1962  Jan.  1 - 1963  Nov.  1     1.845 858 0s + (MJD - 37 665) x 0.001 123 2s
+ 1963  Nov.  1 - 1964  Jan.  1     1.945 858 0s +        ""
+ 1964  Jan.  1 -       April 1     3.240 130 0s + (MJD - 38 761) x 0.001 296s
+       April 1 -       Sept. 1     3.340 130 0s +        ""
+       Sept. 1 - 1965  Jan.  1     3.440 130 0s +        ""
+ 1965  Jan.  1 -       March 1     3.540 130 0s +        ""
+       March 1 -       Jul.  1     3.640 130 0s +        ""
+       Jul.  1 -       Sept. 1     3.740 130 0s +        ""
+       Sept. 1 - 1966  Jan.  1     3.840 130 0s +        ""
+ 1966  Jan.  1 - 1968  Feb.  1     4.313 170 0s + (MJD - 39 126) x 0.002 592s
+ 1968  Feb.  1 - 1972  Jan.  1     4.213 170 0s +        ""
+ 1972  Jan.  1 -       Jul.  1    10s            
+       Jul.  1 - 1973  Jan.  1    11s
+ 1973  Jan.  1 - 1974  Jan.  1    12s	
+ 1974  Jan.  1 - 1975  Jan.  1    13s	
+ 1975  Jan.  1 - 1976  Jan.  1    14s	  
+ 1976  Jan.  1 - 1977  Jan.  1    15s	    
+ 1977  Jan.  1 - 1978  Jan.  1    16s
+ 1978  Jan.  1 - 1979  Jan.  1    17s	
+ 1979  Jan.  1 - 1980  Jan.  1    18s	
+ 1980  Jan.  1 - 1981  Jul.  1    19s	
+ 1981  Jul.  1 - 1982  Jul.  1    20s	
+ 1982  Jul.  1 - 1983  Jul.  1    21s
+ 1983  Jul.  1 - 1985  Jul.  1    22s
+ 1985  Jul.  1 - 1988  Jan.  1    23s
+ 1988  Jan.  1 - 1990  Jan.  1    24s
+ 1990  Jan.  1 - 1991  Jan.  1    25s
+ 1991  Jan.  1 - 1992  Jul.  1    26s
+ 1992  Jul.  1.- 1993  Jul   1    27s
+ 1993  Jul.  1 - 1994  Jul.  1    28s
+ 1994  Jul.  1 - 1996  Jan.  1    29s
+ 1996  Jan.  1 - 1997  Jul.  1    30s
+ 1997  Jul.  1.- 1999  Jan.  1    31s
+ 1999  Jan.  1.- 2006  Jan.  1    32s
+ 2006  Jan.  1.- 2009  Jan.  1    33s
+ 2009  Jan.  1.- 2012  Jul   1    34s
+ 2012  Jul   1 - 2015  Jul   1    35s
+ 2015  Jul   1 - 2017  Jan   1    36s
+ 2017  Jan   1 -                  37s
+ ----------------------------------------------------------------------
+```
+
+### `yamcs.yaml.sample`
+
+**경로:** `gsw/yamcs/distribution/etc/yamcs.yaml.sample`
+
+
+```text
+# System-wide services
+services:
+  - class: org.yamcs.http.HttpServer
+    args:
+      port: 8090
+      #enable the following three options to have a TLS (https) connection
+      #the crt file can contain also the CA crt
+      #tlsCert: /opt/yamcs/etc/yamcs-server.crt
+      #tlsKey: /opt/yamcs/etc/yamcs-server.key
+
+      # Indicates whether zero-copy can be used to optimize non-ssl static file serving
+      # Leave this true unless you encounter a specific deployment issue (e.g. some docker hosts)
+      zeroCopyEnabled: true
+
+      # Configure Cross—origin Resource Sharing for the REST API.
+      # This facilitates use of the API in browser applications.
+      # Note that as per W3C spec the exact allowed origin MUST be defined if credentials are to be passed.
+      #cors:
+      #  allowOrigin: "*"
+      #  allowCredentials: false
+
+      #WebSocket configurations
+      webSocket:
+
+        # Configure netty write buffers for the websockets. 
+        # If the buffer is full, then websocket messages will be dropped and you see log messages:
+        #    Dropping {} message for client [id={}, username={}] because channel is not or no longer writable
+        # After a few consecutive dropped messages (the number can be configured below), the connection will be closed.
+        # The clients can see that they lost a message from the sequence count in each received websocket data frame.
+        #
+        # The higher the values, the more memory may be consumed but the connections will be more resilient 
+        # against unstable networks (i.e. high jitter).
+        # Increasing the values also helps if a large number of messages(events, alarms, parameters, etc)
+        # are generated in bursts.
+        writeBufferWaterMark:
+          low: 32768
+          high: 65536
+
+#instances (or domains). One yarch database will be created for each of them 
+# instance specific properties go into the file yamcs.{instance}.yaml
+instances:
+  - simulator
+
+dataDir: /storage/yamcs-data
+
+archive:
+  #max length of the data of type binary(e.g. tm packets)
+  maxBinaryLength: 1048576
+
+#set the serverId if you want something else than hostname to be used in system parameters generated by yamcs
+#serverId: yamcs1
+
+#rocksdb table configuration
+rdbConfig:
+  tablespaceConfig:
+    # config for the "simulation" tablespace. Any regular expression can be used to match the table name
+    # see https://github.com/facebook/rocksdb/blob/master/include/rocksdb/options.h for an explanation on the various options
+    - tablespaceNamePattern: ".*"
+      numLevels: 7
+      maxOpenFiles: 1000
+      targetFileSizeBase: 10240     #KB
+      targetFileSizeMultiplier: 2
+      maxBytesForLevelBase: 102400  #KB
+      maxBytesForLevelMultiplier: 10
+      writeBufferSize: 50240        #KB
+      maxWriteBufferNumber: 2
+      maxBackgroundFlushes: 2
+      allowConcurrentMemtableWrite: false
+      minWriteBufferNumberToMerge: 1
+      level0FileNumCompactionTrigger: 4
+      level0SlowdownWritesTrigger: 20
+      level0StopWritesTrigger: 36
+      compressionType: snappy
+      bottommostCompressionType: zstd
+      tableFormatConfig:
+           blockSize: 64 #KB
+           noBlockCache: true
+              
+# Secret key unique to a particular Yamcs installation.
+# This is used to provide cryptographic signing.
+secretKey: "changeme"
+```

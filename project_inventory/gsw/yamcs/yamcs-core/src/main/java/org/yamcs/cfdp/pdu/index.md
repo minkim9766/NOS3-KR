@@ -3,62 +3,2211 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AckPacket.java`
 
-file--AckPacket.java
-file--CfdpHeader.java
-file--CfdpPacket.java
-file--ConditionCode.java
-file--DirectoryListingRequest.java
-file--DirectoryListingResponse.java
-file--EofPacket.java
-file--FileDataPacket.java
-file--FileDirectiveCode.java
-file--FileStoreRequest.java
-file--FinishedPacket.java
-file--KeepAlivePacket.java
-file--LV.java
-file--MessageToUser.java
-file--MetadataPacket.java
-file--NakPacket.java
-file--OriginatingTransactionId.java
-file--PduDecodingException.java
-file--ProxyClosureRequest.java
-file--ProxyPutRequest.java
-file--ProxyPutResponse.java
-file--ProxyTransmissionMode.java
-file--ReservedMessageToUser.java
-file--SegmentRequest.java
-file--TLV.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/AckPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Map;
+
+import org.yamcs.cfdp.FileDirective;
+
+import com.google.common.collect.Maps;
+
+public class AckPacket extends CfdpPacket implements FileDirective {
+    private FileDirectiveCode directiveCode;
+    private FileDirectiveSubtypeCode directiveSubtypeCode;
+    private ConditionCode conditionCode;
+    private TransactionStatus transactionStatus;
+
+    public enum TransactionStatus {
+        UNDEFINED((byte) 0x00), ACTIVE((byte) 0x01), TERMINATED((byte) 0x02), URECOGNIZED((byte) 0x03);
+
+        private byte status;
+
+        public static final Map<Byte, TransactionStatus> Lookup = Maps.uniqueIndex(
+                Arrays.asList(TransactionStatus.values()),
+                TransactionStatus::getStatus);
+
+        private TransactionStatus(byte status) {
+            this.status = status;
+        }
+
+        public byte getStatus() {
+            return status;
+        }
+
+        private static TransactionStatus fromStatus(byte status) {
+            return Lookup.get(status);
+        }
+
+        public static TransactionStatus readTransactionStatus(byte b) {
+            return TransactionStatus.fromStatus((byte) (b & 0x03));
+        }
+
+    }
+
+    public enum FileDirectiveSubtypeCode {
+        FINISHED_BY_WAYPOINT_OR_OTHER((byte) 0x00), FINISHED_BY_END_SYSTEM((byte) 0x01);
+
+        private byte code;
+
+        public static final Map<Byte, FileDirectiveSubtypeCode> Lookup = Maps.uniqueIndex(
+                Arrays.asList(FileDirectiveSubtypeCode.values()),
+                FileDirectiveSubtypeCode::getCode);
+
+        private FileDirectiveSubtypeCode(byte code) {
+            this.code = code;
+        }
+
+        public byte getCode() {
+            return code;
+        }
+
+        private static FileDirectiveSubtypeCode fromCode(byte code) {
+            return Lookup.get(code);
+        }
+
+        public static FileDirectiveSubtypeCode readSubtypeCode(byte b) {
+            return FileDirectiveSubtypeCode.fromCode((byte) (b & 0x0f));
+        }
+    }
+
+    public AckPacket(FileDirectiveCode code, FileDirectiveSubtypeCode subcode, ConditionCode conditionCode,
+            TransactionStatus status, CfdpHeader header) {
+        super(header);
+        this.directiveCode = code;
+        this.directiveSubtypeCode = subcode;
+        this.conditionCode = conditionCode;
+        this.transactionStatus = status;
+    }
+
+    AckPacket(ByteBuffer buffer, CfdpHeader header) {
+        super(header);
+        byte temp = buffer.get();
+        this.directiveCode = FileDirectiveCode.readFileDirectiveCodeFromHalfAByte(temp);
+        this.directiveSubtypeCode = FileDirectiveSubtypeCode.readSubtypeCode(temp);
+        temp = buffer.get();
+        this.conditionCode = ConditionCode.readConditionCode(temp);
+        this.transactionStatus = TransactionStatus.readTransactionStatus(temp);
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        buffer.put(getFileDirectiveCode().getCode());
+        buffer.put((byte) (this.directiveCode.getCode() << 4 | this.directiveSubtypeCode.getCode() & 0xff));
+        buffer.put((byte) (this.conditionCode.getCode() << 4 | this.transactionStatus.getStatus() & 0xff));
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        return 3;
+    }
+
+    @Override
+    public FileDirectiveCode getFileDirectiveCode() {
+        return FileDirectiveCode.ACK;
+    }
+
+    public FileDirectiveCode getDirectiveCode() {
+        return this.directiveCode;
+    }
+
+    public FileDirectiveSubtypeCode getFileDirectiveSubtypeCode() {
+        return directiveSubtypeCode;
+    }
+
+    public ConditionCode getConditionCode() {
+        return conditionCode;
+    }
+
+    @Override
+    public String toString() {
+        return "AckPacket [directiveCode=" + directiveCode + ", directiveSubtypeCode=" + directiveSubtypeCode
+                + ", conditionCode=" + conditionCode + ", transactionStatus=" + transactionStatus + "]";
+    }
+}
 ```
 
-## 항목
+### `CfdpHeader.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/AckPacket.java`](file--AckPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/CfdpHeader.java`](file--CfdpHeader.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/CfdpPacket.java`](file--CfdpPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ConditionCode.java`](file--ConditionCode.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/DirectoryListingRequest.java`](file--DirectoryListingRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/DirectoryListingResponse.java`](file--DirectoryListingResponse.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/EofPacket.java`](file--EofPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FileDataPacket.java`](file--FileDataPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FileDirectiveCode.java`](file--FileDirectiveCode.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FileStoreRequest.java`](file--FileStoreRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FinishedPacket.java`](file--FinishedPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/KeepAlivePacket.java`](file--KeepAlivePacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/LV.java`](file--LV.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/MessageToUser.java`](file--MessageToUser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/MetadataPacket.java`](file--MetadataPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/NakPacket.java`](file--NakPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/OriginatingTransactionId.java`](file--OriginatingTransactionId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/PduDecodingException.java`](file--PduDecodingException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyClosureRequest.java`](file--ProxyClosureRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyPutRequest.java`](file--ProxyPutRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyPutResponse.java`](file--ProxyPutResponse.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyTransmissionMode.java`](file--ProxyTransmissionMode.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ReservedMessageToUser.java`](file--ReservedMessageToUser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/SegmentRequest.java`](file--SegmentRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/TLV.java`](file--TLV.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/CfdpHeader.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.cfdp.CfdpUtils;
+
+public class CfdpHeader {
+    /*
+     * Header (Variable size):
+     * 3 bits = Version ('000')
+     * 1 bit = PDU type (0 = File Directive, 1 = File Data)
+     * 1 bit = Direction (0 = towards receiver, 1 = towards sender)
+     * 1 bit = Transmission mode (0 = acknowledged, 1 = unacknowledged)
+     * 1 bit = CRC flag (0 = CRC not present, 1 = CRC present)
+     * 1 bit = Large File (0=small file, 1 = Large file)
+     * 16 bits = PDU data field length (in octets)
+     * 1 bit = reserved ('0')
+     * 3 bits = length of entity IDs (number of octets in entity ID minus 1)
+     * 1 bit = reserved ('0')
+     * 3 bits = length of transaction sequence number (number of octets in sequence number minus 1)
+     * variable = source entity id (UINT)
+     * variable = transaction sequence number (UINT)
+     * variable = destination entity id (UINT)
+     */
+
+    // header types
+    private boolean fileDirective, towardsSender, acknowledged, withCrc, largeFile;
+    private int entityIdLength, sequenceNumberLength;
+    private long sourceId, destinationId, sequenceNr;
+
+    public CfdpHeader(boolean fileDirective, boolean towardsSender, boolean acknowledged, boolean withCrc,
+            int entityIdLength, int sequenceNumberLength, long sourceId, long destinationId, long sequenceNumber) {
+        this.fileDirective = fileDirective;
+        this.towardsSender = towardsSender;
+        this.acknowledged = acknowledged;
+        this.withCrc = withCrc;
+        this.entityIdLength = entityIdLength;
+        this.sequenceNumberLength = sequenceNumberLength;
+        this.sourceId = sourceId;
+        this.destinationId = destinationId;
+        this.sequenceNr = sequenceNumber;
+    }
+
+    /**
+     * decodes the header from the ByteBuffer at the current position and sets the position just after the header
+     */
+    CfdpHeader(ByteBuffer buffer) {
+        readPduHeader(buffer);
+    }
+
+    public CfdpHeader copy() {
+        return copy(fileDirective, towardsSender);
+    }
+
+    public CfdpHeader copy(boolean fileDirective) {
+        return copy(fileDirective, towardsSender);
+    }
+
+    public CfdpHeader copy(boolean fileDirective, boolean towardsSender) {
+        return new CfdpHeader(fileDirective, towardsSender, acknowledged, withCrc, entityIdLength, sequenceNumberLength, sourceId, destinationId, sequenceNr);
+    }
+
+    public CfdpHeader copyDirectionInverted() {
+        return copy(fileDirective, !towardsSender);
+    }
+
+    public CfdpTransactionId getTransactionId() {
+        return new CfdpTransactionId(this.sourceId, this.sequenceNr);
+    }
+
+    public boolean isFileDirective() {
+        return fileDirective;
+    }
+
+    public boolean withCrc() {
+        return withCrc;
+    }
+
+    public int getEntityIdLength() {
+        return this.entityIdLength;
+    }
+
+    public int getSequenceNumberLength() {
+        return this.sequenceNumberLength;
+    }
+
+    public long getSequenceNumber() {
+        return sequenceNr;
+    }
+
+    public long getDestinationId() {
+        return this.destinationId;
+    }
+
+    public long getSourceId() {
+        return this.sourceId;
+    }
+
+    public boolean isAcknowledged() {
+        return this.acknowledged;
+    }
+
+    public boolean isLargeFile() {
+        return largeFile;
+    }
+
+    public void setLargeFile(boolean largeFile) {
+        this.largeFile = largeFile;
+    }
+
+    /*
+     * Reads the header of the incoming buffer, which is assumed to be a complete PDU
+     * Afterwards puts the buffer position right after the header
+     */
+    private void readPduHeader(ByteBuffer buffer) {
+        byte tempByte = buffer.get();
+        fileDirective = !CfdpUtils.isBitOfByteSet(tempByte, 3);
+        towardsSender = CfdpUtils.isBitOfByteSet(tempByte, 4);
+        acknowledged = !CfdpUtils.isBitOfByteSet(tempByte, 5);
+        withCrc = CfdpUtils.isBitOfByteSet(tempByte, 6);
+        largeFile = CfdpUtils.isBitOfByteSet(tempByte, 7);
+        CfdpUtils.getUnsignedShort(buffer); // datalength
+        tempByte = buffer.get();
+        entityIdLength = ((tempByte >> 4) & 0x07) + 1;
+        sequenceNumberLength = (tempByte & 0x07) + 1;
+        sourceId = CfdpUtils.getUnsignedLongFromBuffer(buffer, entityIdLength);
+        sequenceNr = CfdpUtils.getUnsignedLongFromBuffer(buffer, sequenceNumberLength);
+        destinationId = CfdpUtils.getUnsignedLongFromBuffer(buffer, entityIdLength);
+    }
+
+    public static int getDataLength(ByteBuffer buffer) {
+        return buffer.getShort(1) & 0xFFFF;
+    }
+
+    protected void writeToBuffer(ByteBuffer buffer, int dataLength) {
+        byte b = (byte) (0x20 | // version 2 (001)
+                CfdpUtils.boolToByte(largeFile, 7) |
+                CfdpUtils.boolToByte(!fileDirective, 3) |
+                CfdpUtils.boolToByte(towardsSender, 4) |
+                CfdpUtils.boolToByte(!acknowledged, 5) |
+                CfdpUtils.boolToByte(withCrc, 6));
+
+        buffer.put(b);
+        buffer.putShort((short) dataLength);
+        b = (byte) ((entityIdLength - 1 << 4) | (sequenceNumberLength - 1));
+        buffer.put(b);
+        buffer.put(CfdpUtils.longToBytesFixed(sourceId, entityIdLength));
+        buffer.put(CfdpUtils.longToBytesFixed(sequenceNr, sequenceNumberLength));
+        buffer.put(CfdpUtils.longToBytesFixed(destinationId, entityIdLength));
+    }
+
+    /**
+     * 
+     * @return the header length
+     */
+    public int getLength() {
+        return 4 + entityIdLength + sequenceNumberLength + entityIdLength;
+    }
+
+    @Override
+    public String toString() {
+        return "CfdpHeader [fileDirective=" + fileDirective + ", towardsSender=" + towardsSender + ", acknowledged="
+                + acknowledged + ", withCrc=" + withCrc + ", entityIdLength="
+                + entityIdLength + ", sequenceNumberLength=" + sequenceNumberLength + ", sourceId=" + sourceId
+                + ", destinationId=" + destinationId + ", sequenceNr=" + sequenceNr + ", largeFile=" + largeFile + "]";
+    }
+
+    public String toJson() {
+        return " {\n"
+                + "        fileDirective=" + fileDirective + ",\n"
+                + "        towardsSender=" + towardsSender + ",\n"
+                + "        acknowledged=" + acknowledged + ",\n"
+                + "        withCrc=" + withCrc + ",\n"
+                + "        entityIdLength=" + entityIdLength + ",\n"
+                + "        sequenceNumberLength=" + sequenceNumberLength + ",\n"
+                + "        sourceId=" + sourceId + ",\n"
+                + "        destinationId=" + destinationId + ",\n"
+                + "        sequenceNr=" + sequenceNr + ",\n"
+                + "    }";
+    }
+}
+```
+
+### `CfdpPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/CfdpPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.cfdp.OngoingCfdpTransfer;
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+public abstract class CfdpPacket {
+    protected final CfdpHeader header;
+
+    private static Logger log = LoggerFactory.getLogger("Packet");
+    private static CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+    public static final TupleDefinition CFDP = new TupleDefinition();
+    // outgoing CFDP packets
+    static {
+        CFDP.addColumn(StandardTupleDefinitions.GENTIME_COLUMN, DataType.TIMESTAMP);
+        CFDP.addColumn("entityId", DataType.LONG);
+        CFDP.addColumn(StandardTupleDefinitions.SEQNUM_COLUMN, DataType.INT);
+        CFDP.addColumn("pdu", DataType.BINARY);
+    }
+
+    protected CfdpPacket() {
+        this.header = null;
+    }
+
+    protected CfdpPacket(CfdpHeader header) {
+        this.header = header;
+    }
+
+
+    public CfdpHeader getHeader() {
+        return this.header;
+    }
+
+    public abstract int getDataFieldLength();
+
+    /**
+     * Reads a CFDP PDU from the ByteBuffer at the current position.
+     * <p>
+     * The buffer can contain more data than one PDU, at the end of the call the position will be set to the end of the
+     * PDU.
+     * <p>
+     * In case of error (e.g. cannot decode header) a PduDecodingException is thrown and the position is undetermined.
+     * <p>
+     * The return may be null if the PDU is not supported
+     *
+     */
+    public static CfdpPacket getCFDPPacket(ByteBuffer bb) throws PduDecodingException {
+        int position = bb.position();
+        int limit = bb.limit();
+        CfdpHeader header;
+
+        try {
+            header = new CfdpHeader(bb);
+        } catch (BufferUnderflowException e) {
+            throw new PduDecodingException("short PDU, size: " + bb.limit(), getData(bb, position, bb.limit()), e);
+        }
+
+        int fcsLength = header.withCrc() ? 2 : 0;
+        int dataLength = CfdpHeader.getDataLength(bb) - fcsLength;
+
+        if (dataLength < 2) {
+            throw new PduDecodingException("data length is " + dataLength + " (expected at least 2)",
+                    getData(bb, position, bb.limit()));
+        }
+
+        int pduSize = header.getLength() + dataLength + fcsLength;
+        if (pduSize > bb.limit()) {
+            throw new PduDecodingException(
+                    "buffer too short, from header expected PDU of size" + pduSize + " bytes, but only "
+                            + bb.limit() + " bytes available",
+                    getData(bb, position, bb.limit()));
+        }
+
+        if (header.withCrc() &&
+            crcCalculator.compute(bb, position, pduSize) != 0) {
+            throw new PduDecodingException("invalid CRC checksum",
+                    getData(bb, position, pduSize));
+        }
+
+        bb.limit(position + pduSize - fcsLength);
+
+        CfdpPacket toReturn = null;
+        if (header.isFileDirective()) {
+            byte fdcCode = bb.get();
+            FileDirectiveCode fdc = FileDirectiveCode.fromCode(fdcCode);
+            if (fdc == null) {
+                throw new PduDecodingException("Unknown file directive code: " + fdcCode,
+                        getData(bb, position, pduSize));
+            }
+            try {
+                switch (fdc) {
+                case EOF:
+                    toReturn = new EofPacket(bb, header);
+                    break;
+                case FINISHED:
+                    toReturn = new FinishedPacket(bb, header);
+                    break;
+                case ACK:
+                    toReturn = new AckPacket(bb, header);
+                    break;
+                case METADATA:
+                    toReturn = new MetadataPacket(bb, header);
+                    break;
+                case NAK:
+                    toReturn = new NakPacket(bb, header);
+                    break;
+                case KEEP_ALIVE:
+                    toReturn = new KeepAlivePacket(bb, header);
+                    break;
+                default:
+                    log.warn("Ignoring unknown/not supported " + fdc + " file directive PDU ");
+                }
+            } catch (BufferUnderflowException e) {
+                throw new PduDecodingException("Short " + fdc + " PDU; size: " + pduSize,
+                        getData(bb, position, pduSize), e);
+            }
+        } else {
+            try {
+                toReturn = new FileDataPacket(bb, header);
+            } catch (BufferUnderflowException e) {
+                throw new PduDecodingException("Short file data PDU; size: " + pduSize, getData(bb, position, pduSize),
+                        e);
+            }
+        }
+        bb.limit(limit);
+        bb.position(position + pduSize);
+        return toReturn;
+    }
+
+    private static byte[] getData(ByteBuffer bb, int position, int length) {
+        byte[] data = new byte[length];
+        bb.position(position);
+        bb.get(data);
+        return data;
+    }
+
+    public byte[] toByteArray() {
+        int dataLength = getDataFieldLength();
+        int fcsLength = header.withCrc() ? 2 : 0;
+        ByteBuffer buffer = ByteBuffer.allocate(header.getLength() + dataLength + fcsLength);
+        header.writeToBuffer(buffer, dataLength + fcsLength);
+        writeCFDPPacket(buffer);
+        if (fcsLength > 0)
+            buffer.putShort((short)crcCalculator.compute(buffer, 0, dataLength));
+        return buffer.array();
+    }
+
+    public void writeToBuffer(ByteBuffer buffer) {
+        int offset = buffer.position();
+        int dataLength = getDataFieldLength();
+        int fcsLength = header.withCrc() ? 2 : 0;
+        header.writeToBuffer(buffer, dataLength + fcsLength);
+        writeCFDPPacket(buffer);
+        if (fcsLength > 0)
+            buffer.putShort((short)crcCalculator.compute(buffer, offset, dataLength));
+    }
+
+    public Tuple toTuple(OngoingCfdpTransfer trans) {
+        return toTuple(trans.getTransactionId(), trans.getStartTime());
+    }
+
+    public Tuple toTuple(long startTime) {
+        return toTuple(header.getTransactionId(), startTime);
+    }
+
+    public Tuple toTuple(CfdpTransactionId id, long startTime) {
+        TupleDefinition td = CFDP;
+        ArrayList<Object> al = new ArrayList<>();
+        al.add(startTime);
+        al.add(id.getInitiatorEntity());
+        al.add(id.getSequenceNumber());
+        al.add(this.toByteArray());
+        return new Tuple(td, al);
+    }
+
+    public static CfdpPacket fromTuple(Tuple tuple) {
+        byte[] pduData = tuple.getColumn("pdu");
+        if (pduData == null) {
+            throw new ConfigurationException("no column named 'pdu' in the tuple");
+        } else {
+            return CfdpPacket.getCFDPPacket(ByteBuffer.wrap(pduData));
+        }
+    }
+
+    public CfdpTransactionId getTransactionId() {
+        return getHeader().getTransactionId();
+    }
+
+    // the buffer is assumed to be at the correct position
+    protected abstract void writeCFDPPacket(ByteBuffer buffer);
+
+    public enum TransmissionMode {
+        ACKNOWLEDGED(0),
+        UNACKNOWLEDGED(1);
+
+        private final int value;
+
+        TransmissionMode(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static TransmissionMode fromValue(int value) {
+            switch (value) {
+                case 0: return ACKNOWLEDGED;
+                case 1: return UNACKNOWLEDGED;
+                default: throw new IllegalArgumentException("Value can only be 0 or 1");
+            }
+        }
+    }
+}
+```
+
+### `ConditionCode.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ConditionCode.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+public enum ConditionCode {
+
+    NO_ERROR((byte) 0x00),
+    ACK_LIMIT_REACHED((byte) 0x01),
+    KEEP_ALIVE_LIMIT_REACHED((byte) 0x02),
+    INVALID_TRANSMISSION_MODE((byte) 0x03),
+    FILESTORE_REJECTION((byte) 0x04),
+    FILE_CHECKSUM_FAILURE((byte) 0x05),
+    FILE_SIZE_ERROR((byte) 0x06),
+    NAK_LIMIT_REACHED((byte) 0x07),
+    INACTIVITY_DETECTED((byte) 0x08),
+    INVALID_FILE_STRUCTURE((byte) 0x09),
+    CHECK_LIMIT_REACHED((byte) 0x0A),
+    UNSUPPORTED_CHECKSUM_TYPE((byte)0x0B),
+    SUSPEND_REQUEST_RECEIVED((byte) 0x0E),
+    CANCEL_REQUEST_RECEIVED((byte) 0x0F),
+    RESERVED((byte) 0x0C);
+
+    private byte code;
+
+    public static final Map<Byte, ConditionCode> Lookup = Maps.uniqueIndex(
+            Arrays.asList(ConditionCode.values()),
+            ConditionCode::getCode);
+
+    private ConditionCode(byte code) {
+        this.code = code;
+    }
+
+    public byte getCode() {
+        return code;
+    }
+
+    private static ConditionCode fromCode(byte code) {
+        if (Lookup.containsKey(code)) {
+            return Lookup.get(code);
+        } else {
+            return RESERVED;
+        }
+    }
+
+    public static ConditionCode readConditionCode(byte b) {
+        return ConditionCode.fromCode((byte) ((b >> 4)&0x0F));
+    }
+
+    public void writeAsByteToBuffer(ByteBuffer buffer) {
+        buffer.put((byte) (getCode() << 4));
+    }
+
+}
+```
+
+### `DirectoryListingRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/DirectoryListingRequest.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.cfdp.CfdpUtils;
+
+import java.nio.ByteBuffer;
+
+public class DirectoryListingRequest extends ReservedMessageToUser {
+
+    private final String directoryName;
+    private final String directoryFileName; // Where the directory listing will be saved locally
+
+    public DirectoryListingRequest(String directoryName, String directoryFileName) {
+        super(MessageType.DIRECTORY_LISTING_REQUEST, encode(directoryName, directoryFileName));
+        this.directoryName = directoryName;
+        this.directoryFileName = directoryFileName;
+    }
+
+    public DirectoryListingRequest(byte[] content) {
+        super(MessageType.DIRECTORY_LISTING_REQUEST, content);
+
+        ByteBuffer buffer = ByteBuffer.wrap(content);
+        this.directoryName = new String(LV.readLV(buffer).getValue());
+        this.directoryFileName = new String(LV.readLV(buffer).getValue());
+    }
+
+    private static byte[] encode(String directoryName, String directoryFileName) {
+        return Bytes.concat(
+                new LV(directoryName).getBytes(),
+                new LV(directoryFileName).getBytes()
+            );
+    }
+
+
+    public String getDirectoryName() {
+        return directoryName;
+    }
+
+    public String getDirectoryFileName() {
+        return directoryFileName;
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.DIRECTORY_LISTING_REQUEST
+                + ", directoryName=" + directoryName + ", directoryFileName=" + directoryFileName + "}";
+    }
+
+
+    @Override
+    public String toString() {
+        return "DirectoryListingRequest(directoryName: " + directoryName + ", directoryFileName:" + directoryFileName + ")";
+    }
+
+}
+```
+
+### `DirectoryListingResponse.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/DirectoryListingResponse.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.cfdp.CfdpUtils;
+
+import java.nio.ByteBuffer;
+
+public class DirectoryListingResponse extends ReservedMessageToUser {
+
+    private final ListingResponseCode listingResponseCode;
+    private final String directoryName;
+    private final String directoryFileName; // Where the directory listing will be saved locally
+
+    public enum ListingResponseCode {
+        SUCCESSFUL(0),
+        UNSUCCESSFUL(1);
+
+        private final int value;
+        ListingResponseCode(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public static ListingResponseCode fromValue(int value) {
+            switch (value) {
+                case 0: return SUCCESSFUL;
+                case 1: return UNSUCCESSFUL;
+                default: return null;
+            }
+        }
+    }
+
+    public DirectoryListingResponse(ListingResponseCode listingResponseCode, String directoryName, String directoryFileName) {
+        super(MessageType.DIRECTORY_LISTING_RESPONSE, encode(listingResponseCode, directoryName, directoryFileName));
+        this.listingResponseCode = listingResponseCode;
+        this.directoryName = directoryName;
+        this.directoryFileName = directoryFileName;
+    }
+
+    public DirectoryListingResponse(byte[] content) {
+        super(MessageType.DIRECTORY_LISTING_RESPONSE, content);
+
+        ByteBuffer buffer = ByteBuffer.wrap(content);
+        this.listingResponseCode = ListingResponseCode.fromValue(buffer.get() >> 7);
+        this.directoryName = new String(LV.readLV(buffer).getValue());
+        this.directoryFileName = new String(LV.readLV(buffer).getValue());
+    }
+
+    private static byte[] encode(ListingResponseCode listingResponseCode, String directoryName, String directoryFileName) {
+        return Bytes.concat(
+                new byte[] { CfdpUtils.boolToByte(listingResponseCode.getValue() == 1, 0) },
+                new LV(directoryName).getBytes(),
+                new LV(directoryFileName).getBytes()
+        );
+    }
+
+    public ListingResponseCode getListingResponseCode() {
+        return listingResponseCode;
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.DIRECTORY_LISTING_RESPONSE
+                + ", listingResponseCode=" + listingResponseCode + ", directoryName=" + directoryName + ", directoryFileName=" + directoryFileName + "}";
+    }
+
+
+    @Override
+    public String toString() {
+        return "DirectoryListingResponse(listingResponseCode: " + listingResponseCode + ", directoryName: " + directoryName + ", directoryFileName:" + directoryFileName + ")";
+    }
+
+}
+```
+
+### `EofPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/EofPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.cfdp.FileDirective;
+import org.yamcs.cfdp.CfdpUtils;
+
+public class EofPacket extends CfdpPacket implements FileDirective {
+
+    private ConditionCode conditionCode;
+    private long fileChecksum;
+    private long fileSize;
+    private TLV faultLocation = null;
+
+    public EofPacket(ConditionCode code, long checksum, long filesize, TLV faultLocation, CfdpHeader header) {
+        super(header);
+        this.conditionCode = code;
+        this.fileChecksum = checksum;
+        this.fileSize = filesize;
+        if (this.conditionCode != ConditionCode.NO_ERROR) {
+            this.faultLocation = faultLocation;
+        }
+    }
+
+    EofPacket(ByteBuffer buffer, CfdpHeader header) {
+        super(header);
+
+        byte temp = buffer.get();
+        this.conditionCode = ConditionCode.readConditionCode(temp);
+        this.fileChecksum = CfdpUtils.getUnsignedInt(buffer);
+        this.fileSize = CfdpUtils.getUnsignedInt(buffer);
+        if (buffer.hasRemaining()) {
+            if (conditionCode != ConditionCode.NO_ERROR
+                    && conditionCode != ConditionCode.RESERVED) {
+                this.faultLocation = TLV.readTLV(buffer);
+            }
+        }
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        buffer.put(getFileDirectiveCode().getCode());
+        this.conditionCode.writeAsByteToBuffer(buffer);
+        CfdpUtils.writeUnsignedInt(buffer, this.fileChecksum);
+        CfdpUtils.writeUnsignedInt(buffer, this.fileSize);
+        if (this.faultLocation != null) {
+            faultLocation.writeToBuffer(buffer);
+        }
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        return 10 // condition code (1) + checksum (4) + file size (4)
+                + ((faultLocation != null) ? 2 + faultLocation.getValue().length : 0);
+    }
+
+    public ConditionCode getConditionCode() {
+        return conditionCode;
+    }
+
+    public long getFileChecksum() {
+        return this.fileChecksum;
+    }
+
+    @Override
+    public FileDirectiveCode getFileDirectiveCode() {
+        return FileDirectiveCode.EOF;
+    }
+
+    public TLV getFaultLocation() {
+        return faultLocation;
+    }
+
+    @Override
+    public String toString() {
+        return "EofPacket [conditionCode=" + conditionCode + ", fileChecksum=" + fileChecksum + ", fileSize=" + fileSize
+                + ", faultLocation=" + faultLocation + "]";
+    }
+}
+```
+
+### `FileDataPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FileDataPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.cfdp.CfdpUtils;
+
+/**
+ * Structure is
+ * 
+ * <pre>
+ * offset - 4 bytes
+ * file data - variable
+ * </pre>
+ *
+ * The version 5 of the CFDP standard introduces some metadata. This is not supported.
+ */
+public class FileDataPacket extends CfdpPacket {
+    public static final int OFFSET_SIZE = 4;
+
+    private long offset;
+    private byte[] filedata;
+
+    public FileDataPacket(byte[] fileData, long offset, CfdpHeader header) {
+        super(header);
+        this.offset = offset;
+        this.filedata = fileData;
+    }
+
+    public FileDataPacket(ByteBuffer buffer, CfdpHeader header) {
+        super(header);
+
+        this.offset = CfdpUtils.getUnsignedInt(buffer);
+        int fileDataSize = CfdpHeader.getDataLength(buffer) - OFFSET_SIZE;
+
+        if (header.withCrc()) {
+            fileDataSize -= 2;
+        }
+        this.filedata = new byte[fileDataSize];
+        buffer.get(this.filedata);
+    }
+
+    public long getOffset() {
+        return this.offset;
+    }
+
+    public byte[] getData() {
+        return this.filedata;
+    }
+
+    public long getEndOffset() {
+        return offset + filedata.length;
+    }
+
+    public int getLength() {
+        return this.filedata.length;
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        CfdpUtils.writeUnsignedInt(buffer, offset);
+        buffer.put(filedata);
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        return OFFSET_SIZE + this.filedata.length;
+    }
+
+    @Override
+    public String toString() {
+        return "FileDataPacket [offset=" + offset + ", length=" + filedata.length + "]";
+    }
+
+}
+```
+
+### `FileDirectiveCode.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FileDirectiveCode.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import com.google.common.collect.Maps;
+
+public enum FileDirectiveCode {
+    RESERVED((byte) 0x00),
+    EOF((byte) 0x04),
+    FINISHED((byte) 0x05),
+    ACK((byte) 0x06),
+    METADATA((byte) 0x07),
+    NAK((byte) 0x08),
+    PROMPT((byte) 0x09),
+    KEEP_ALIVE((byte) 0x0C);
+
+    private byte code;
+
+    public static final Map<Byte, FileDirectiveCode> Lookup = Maps.uniqueIndex(
+            Arrays.asList(FileDirectiveCode.values()),
+            FileDirectiveCode::getCode);
+
+    private FileDirectiveCode(byte code) {
+        this.code = code;
+    }
+
+    public byte getCode() {
+        return code;
+    }
+
+    /**
+     * returns the FileDirectiveCode for the given code or null if it is not defined
+     */
+    public static FileDirectiveCode fromCode(byte code) {
+        return Lookup.get(code);
+    }
+
+    // In the ACK packets, the ACKed packet File Directive is present as the first half of a byte
+    public static FileDirectiveCode readFileDirectiveCodeFromHalfAByte(byte b) {
+        return FileDirectiveCode.fromCode((byte) ((b & 0xf0) >> 4));
+    }
+
+}
+```
+
+### `FileStoreRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FileStoreRequest.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+/**
+ * NOT IMPLEMENTED
+ */
+public class FileStoreRequest extends TLV {
+    //Action Code (4bits)
+    //Spare (4bits)
+    //First File Name (LV)
+    //Second File Name (LV) (Only present for some action codes.)
+
+    //Action Code Action Second File Name Present
+    //‘0000’ Create File N
+    //‘0001’ Delete File N
+    //‘0010’ Rename File Y
+    //‘0011’ Append File Y
+    //‘0100’ Replace File Y
+    //‘0101’ Create Directory N
+    //‘0110’ Remove Directory N
+    //‘0111’ Deny File (delete if present) N
+    //‘1000’ Deny Directory (remove if present) N
+    public FileStoreRequest() {
+        super(TLV.TYPE_FILE_STORE_REQUEST, encode());
+    }
+
+    private static byte[] encode() {
+        return new byte[0];
+    }
+}
+```
+
+### `FinishedPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/FinishedPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Map;
+
+import org.yamcs.cfdp.FileDirective;
+import org.yamcs.logging.Log;
+import org.yamcs.cfdp.CfdpUtils;
+
+import com.google.common.collect.Maps;
+
+public class FinishedPacket extends CfdpPacket implements FileDirective {
+    static final Log log = new Log(MetadataPacket.class);
+
+    private ConditionCode conditionCode;
+    private boolean generatedByEndSystem;
+
+    // false = delivery incomplete; true = delivery complete
+    private boolean dataComplete; // Delivery Code
+    private FileStatus fileStatus;
+    private TLV faultLocation = null;
+
+    public enum FileStatus {
+        DELIBERATELY_DISCARDED((byte) 0x00),
+        FILESTORE_REJECTION((byte) 0x01),
+        SUCCESSFUL_RETENTION((byte) 0x02),
+        FILE_STATUS_UNREPORTED((byte) 0x03);
+
+        private byte code;
+
+        public static final Map<Byte, FileStatus> Lookup = Maps.uniqueIndex(
+                Arrays.asList(FileStatus.values()),
+                FileStatus::getCode);
+
+        private FileStatus(byte code) {
+            this.code = code;
+        }
+
+        public byte getCode() {
+            return code;
+        }
+
+        static FileStatus fromCode(byte code) {
+            return Lookup.get(code);
+        }
+    }
+
+    public FinishedPacket(ConditionCode code, boolean dataComplete, FileStatus status, TLV faultLocation,
+            CfdpHeader header) {
+        super(header);
+        this.conditionCode = code;
+        this.generatedByEndSystem = true;
+        this.dataComplete = dataComplete;
+        this.fileStatus = status;
+        this.faultLocation = faultLocation;
+    }
+
+    FinishedPacket(ByteBuffer buffer, CfdpHeader header) {
+        super(header);
+
+        byte temp = buffer.get();
+        this.conditionCode = ConditionCode.readConditionCode(temp);
+        this.generatedByEndSystem = CfdpUtils.isBitOfByteSet(temp, 4);
+        this.dataComplete = !CfdpUtils.isBitOfByteSet(temp, 5);
+        this.fileStatus = FileStatus.fromCode((byte) (temp & 0x03));
+        
+        while (buffer.hasRemaining()) {
+            TLV tempTLV = TLV.readTLV(buffer);
+            switch (tempTLV.getType()) {
+            case 6:
+                this.faultLocation = tempTLV;
+                break;
+            default:
+                log.debug("Ignoring unknown TLV: {} ", tempTLV);
+            }
+        }
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        buffer.put(getFileDirectiveCode().getCode());
+        byte temp = (byte) ((this.conditionCode.getCode() << 4));
+        temp |= ((this.generatedByEndSystem ? 1 : 0) << 3);
+        temp |= ((this.dataComplete ? 0 : 1) << 2);
+        temp |= ((this.fileStatus.getCode() & 0x03));
+        buffer.put(temp);
+        if (faultLocation != null) {
+            faultLocation.writeToBuffer(buffer);
+        }
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        int toReturn = 2; // condition code + some status bits
+        if (faultLocation != null) {
+            toReturn += 2 + faultLocation.getValue().length;
+        }
+        return toReturn;
+    }
+
+    @Override
+    public FileDirectiveCode getFileDirectiveCode() {
+        return FileDirectiveCode.FINISHED;
+    }
+
+    public ConditionCode getConditionCode() {
+        return this.conditionCode;
+    }
+
+    public boolean isDataComplete() {
+        return dataComplete;
+    }
+
+    public FileStatus getFileStatus() {
+        return fileStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "FinishedPacket [conditionCode=" + conditionCode + ", generatedByEndSystem=" + generatedByEndSystem
+                + ", dataComplete=" + dataComplete + ", fileStatus=" + fileStatus + ", faultLocation="
+                + faultLocation + "]";
+    }
+}
+```
+
+### `KeepAlivePacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/KeepAlivePacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import org.yamcs.cfdp.CfdpUtils;
+import org.yamcs.cfdp.FileDirective;
+
+import java.nio.ByteBuffer;
+
+public class KeepAlivePacket extends CfdpPacket implements FileDirective {
+
+    private final long progress; // in octets
+
+    public KeepAlivePacket(long progress, CfdpHeader header) {
+        super(header);
+        this.progress = progress;
+    }
+
+    public KeepAlivePacket(ByteBuffer buffer, CfdpHeader header) {
+        super(header);
+        this.progress = CfdpUtils.getUnsignedNumber(buffer, header.isLargeFile());
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        buffer.put(getFileDirectiveCode().getCode());
+        CfdpUtils.writeUnsignedNumber(buffer, progress, header.isLargeFile());
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        return 1 + (!header.isLargeFile() ? 4 : 8);
+    }
+
+    @Override
+    public FileDirectiveCode getFileDirectiveCode() {
+        return FileDirectiveCode.KEEP_ALIVE;
+    }
+
+    @Override
+    public String toString() {
+        return "KeepAlivePacket [progress=" + progress + "]";
+    }
+}
+```
+
+### `LV.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/LV.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.cfdp.CfdpUtils;
+import org.yamcs.utils.ByteArrayUtils;
+
+public class LV {
+    private byte[] value;
+
+    public LV(byte[] value) {
+        this.value = value;
+        // TODO: check length > 255
+    }
+
+    public LV(String value) {
+        this(value.getBytes());
+    }
+
+    public byte[] getValue() {
+        return value;
+    }
+
+    public static LV readLV(ByteBuffer buffer) {
+        byte[] value = new byte[CfdpUtils.getUnsignedByte(buffer)];
+        buffer.get(value);
+        return new LV(value);
+    }
+
+    public void writeToBuffer(ByteBuffer buffer) {
+        CfdpUtils.writeUnsignedByte(buffer, (short) this.getValue().length);
+        buffer.put(this.getValue());
+    }
+
+    public byte[] getBytes() {
+        return Bytes.concat(new byte[] {(byte) value.length}, value);
+    }
+
+    @Override
+    public String toString() {
+        return new String(value);
+    }
+}
+```
+
+### `MessageToUser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/MessageToUser.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+public class MessageToUser extends TLV {
+    public MessageToUser(byte[] value) {
+        super(TLV.TYPE_MESSAGE_TO_USER, value);
+    }
+
+    /**
+     * Decodes TLV into a MessageToUser. Returns original TLV if unable
+     * @param tlv TLV to decode
+     * @return Corresponding MessageToUser, or original TLV if unable
+     */
+    public static TLV fromTLV(TLV tlv) {
+        if(tlv.getType() != TLV.TYPE_MESSAGE_TO_USER) {
+            // Not a message to user
+            return tlv;
+        }
+
+        return ReservedMessageToUser.fromValue(tlv.getValue());
+    }
+}
+```
+
+### `MetadataPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/MetadataPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import io.netty.util.internal.StringUtil;
+import org.yamcs.cfdp.CfdpUtils;
+import org.yamcs.cfdp.ChecksumType;
+import org.yamcs.cfdp.FileDirective;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.StringConverter;
+
+public class MetadataPacket extends CfdpPacket implements FileDirective {
+    static final Log log = new Log(MetadataPacket.class);
+
+    private boolean closureRequested;
+    private ChecksumType checksumType;
+    private long fileSize;
+    private LV sourceFileName;
+    private LV destinationFileName;
+    private List<TLV> options;
+
+    public MetadataPacket(boolean closureRequested, ChecksumType checksumType, int fileSize,
+            String source, String destination, List<TLV> options, CfdpHeader header) {
+        super(header);
+        if (fileSize == 0 && header.isLargeFile()) {
+            throw new java.lang.UnsupportedOperationException("Unbound data size not yet implemented");
+        }
+        this.closureRequested = closureRequested;
+        this.checksumType = checksumType;
+        this.fileSize = fileSize;
+        this.sourceFileName = new LV(source);
+        this.destinationFileName = new LV(destination);
+        this.options = options;
+    }
+
+    /**
+     * decodes a metadata PDU from the buffer at the current position. The limit has to be set at the end of the PDU.
+     */
+    MetadataPacket(ByteBuffer buffer, CfdpHeader header) throws PduDecodingException {
+        super(header);
+
+        byte temp = buffer.get();
+        closureRequested = (temp & 0x40) == 0x40;
+        checksumType = ChecksumType.fromId(temp & 0x0F);
+        if (checksumType == null) {
+            throw new PduDecodingException("Invalid checksum type " + (temp & 0x0f), null);
+        }
+
+        this.fileSize = CfdpUtils.getUnsignedInt(buffer);
+
+        if (this.fileSize == 0 && header.isLargeFile()) {
+            throw new java.lang.UnsupportedOperationException("Unbound data size not yet implemented");
+        }
+
+        this.sourceFileName = LV.readLV(buffer);
+        this.destinationFileName = LV.readLV(buffer);
+
+        if (buffer.hasRemaining()) {
+            options = new ArrayList<>();
+            while (buffer.hasRemaining()) {
+                try {
+                    options.add(MessageToUser.fromTLV(TLV.readTLV(buffer)));
+                } catch (IndexOutOfBoundsException e) {
+                    throw new PduDecodingException("TLV options in Metadata packet wrongly formatted", buffer.array(), e);
+                }
+            }
+        }
+
+        buffer.position(buffer.limit());
+    }
+
+    public long getFileLength() {
+        return this.fileSize;
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        int toReturn = 5 // first byte + File size
+                + this.sourceFileName.getValue().length
+                + this.destinationFileName.getValue().length;
+
+        toReturn += 3;
+
+        if(options != null) {
+            for (TLV option : options) {
+                toReturn += option.getBytes().length;
+            }
+        }
+
+        return toReturn;
+    }
+
+    public boolean closureRequested() {
+        return closureRequested;
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        buffer.put(getFileDirectiveCode().getCode());
+        int tmp = ((closureRequested ? 1 : 0) << 6) + checksumType.id();
+        buffer.put((byte) tmp);
+
+        CfdpUtils.writeUnsignedInt(buffer, fileSize);
+        sourceFileName.writeToBuffer(buffer);
+        destinationFileName.writeToBuffer(buffer);
+        if(options != null) {
+            options.forEach(option -> buffer.put(option.getBytes()));
+        }
+    }
+
+    @Override
+    public FileDirectiveCode getFileDirectiveCode() {
+        return FileDirectiveCode.METADATA;
+    }
+
+    public String getSourceFilename() {
+        return sourceFileName.toString();
+    }
+
+    public String getDestinationFilename() {
+        return new String(destinationFileName.getValue());
+    }
+
+    public ChecksumType getChecksumType() {
+        return checksumType;
+    }
+
+    public List<TLV> getOptions() {
+        return options;
+    }
+
+    @Override
+    public String toString() {
+        return "MetadataPacket [closureRequested=" + closureRequested + ", fileSize=" + fileSize
+                + ", checksumType=" + checksumType
+                + ", sourceFileName=" + sourceFileName + ", destinationFileName=" + destinationFileName + "]";
+    }
+
+    public String toJson() {
+        return " {\n"
+                + "    header: " + header.toJson() + ", \n"
+                + "    closureRequested:" + closureRequested + ",\n"
+                + "    fileSize=" + fileSize + ",\n"
+                + "    checksumType=" + checksumType + ",\n"
+                + "    sourceFileName=" + sourceFileName + ",\n"
+                + "    destinationFileName=" + destinationFileName + ",\n"
+                + "    options=[" + (options == null ? "" : "\n"
+                + "        " + options.stream().map((option) -> option.toJson()).collect(Collectors.joining(",\n        ")))
+                + "],\n"
+                + "}";
+    }
+}
+```
+
+### `NakPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/NakPacket.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.cfdp.FileDirective;
+import org.yamcs.cfdp.CfdpUtils;
+
+public class NakPacket extends CfdpPacket implements FileDirective {
+
+    private long scopeStart;
+    private long scopeEnd;
+    private List<SegmentRequest> segmentRequests = new ArrayList<SegmentRequest>();
+
+    public NakPacket(long scopeStart, long scopeEnd, List<SegmentRequest> requests, CfdpHeader header) {
+        super(header);
+        this.scopeStart = scopeStart;
+        this.scopeEnd = scopeEnd;
+        this.segmentRequests = requests;
+    }
+
+    NakPacket(ByteBuffer buffer, CfdpHeader header) {
+        super(header);
+
+        this.scopeStart = CfdpUtils.getUnsignedInt(buffer);
+        this.scopeEnd = CfdpUtils.getUnsignedInt(buffer);
+        while (buffer.hasRemaining()) {
+            segmentRequests.add(new SegmentRequest(CfdpUtils.getUnsignedInt(buffer),
+                    CfdpUtils.getUnsignedInt(buffer)));
+        }
+    }
+
+    @Override
+    protected void writeCFDPPacket(ByteBuffer buffer) {
+        buffer.put(getFileDirectiveCode().getCode());
+        CfdpUtils.writeUnsignedInt(buffer, scopeStart);
+        CfdpUtils.writeUnsignedInt(buffer, scopeEnd);
+        segmentRequests.forEach(x -> x.writeToBuffer(buffer));
+    }
+
+    @Override
+    public int getDataFieldLength() {
+        return 9 + 8 * segmentRequests.size();
+    }
+
+    /**
+     * returns the maximum number of segments which can be transmitted given the maximum data size of a PDU
+     */
+    public static int maxNumSegments(int maxDataSize) {
+        return (maxDataSize - 9) / 8;
+    }
+
+    @Override
+    public FileDirectiveCode getFileDirectiveCode() {
+        return FileDirectiveCode.NAK;
+    }
+
+    public List<SegmentRequest> getSegmentRequests() {
+        return this.segmentRequests;
+    }
+
+    public long getScopeStart() {
+        return scopeStart;
+    }
+
+    public long getScopeEnd() {
+        return scopeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return "NakPacket [scopeStart=" + scopeStart + ", scopeEnd=" + scopeEnd + ", segmentRequests=" + segmentRequests
+                + "]";
+    }
+
+}
+```
+
+### `OriginatingTransactionId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/OriginatingTransactionId.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.cfdp.CfdpUtils;
+
+import java.nio.ByteBuffer;
+
+public class OriginatingTransactionId extends ReservedMessageToUser {
+    // Maybe good to associate with CfdpTransactionId?
+
+    private final long sourceEntityId;
+    private final long transactionSequenceNumber;
+
+    public OriginatingTransactionId(long sourceEntityId, long transactionSequenceNumber) {
+        super(MessageType.ORIGINATING_TRANSACTION_ID, encode(sourceEntityId, transactionSequenceNumber));
+
+        this.sourceEntityId = sourceEntityId;
+        this.transactionSequenceNumber = transactionSequenceNumber;
+    }
+
+    public OriginatingTransactionId(byte[] content) {
+        super(MessageType.ORIGINATING_TRANSACTION_ID, content);
+
+        ByteBuffer buffer = ByteBuffer.wrap(content);
+        byte lengths = buffer.get();
+
+        this.sourceEntityId = CfdpUtils.getUnsignedLongFromBuffer(buffer, ((lengths >> 4) & 0x07) + 1);
+        this.transactionSequenceNumber = CfdpUtils.getUnsignedLongFromBuffer(buffer, (lengths & 0x07) + 1);
+    }
+
+    private static byte[] encode(long sourceEntityId, long transactionSequenceNumber) {
+        byte[] entityId = CfdpUtils.longToTrimmedBytes(sourceEntityId);
+        byte[] sequenceNumber = CfdpUtils.longToTrimmedBytes(transactionSequenceNumber);
+
+        byte[] lengths = new byte[]{ (byte) ((entityId.length - 1 << 4) | (sequenceNumber.length - 1)) };
+        return Bytes.concat(lengths, entityId, sequenceNumber);
+    }
+
+    public long getSourceEntityId() {
+        return sourceEntityId;
+    }
+
+    public long getTransactionSequenceNumber() {
+        return transactionSequenceNumber;
+    }
+
+    public CfdpTransactionId toCfdpTransactionId() {
+        return new CfdpTransactionId(sourceEntityId, transactionSequenceNumber);
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.ORIGINATING_TRANSACTION_ID
+                + ", sourceEntityId=" + sourceEntityId + ", transactionSequenceNumber=" + transactionSequenceNumber + "}";
+    }
+
+    @Override
+    public String toString() {
+        return "OriginatingTransactionId(sourceEntityID: " + sourceEntityId +", seqNum: " + transactionSequenceNumber +")";
+    }
+}
+```
+
+### `PduDecodingException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/PduDecodingException.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+public class PduDecodingException extends RuntimeException {
+    final byte[] pdu;
+
+    public PduDecodingException(String msg, byte[] pdu) {
+        super(msg);
+        this.pdu = pdu;
+    }
+
+    public PduDecodingException(String msg, byte[] pdu, Throwable t) {
+        super(msg, t);
+        this.pdu = pdu;
+    }
+
+    public byte[] getData() {
+        return pdu;
+    }
+}
+```
+
+### `ProxyClosureRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyClosureRequest.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import org.yamcs.cfdp.CfdpUtils;
+
+public class ProxyClosureRequest extends ReservedMessageToUser {
+    private final boolean closureRequested;
+
+    public ProxyClosureRequest(boolean closureRequested) {
+        super(MessageType.PROXY_CLOSURE_REQUEST, encode(closureRequested));
+
+        this.closureRequested = closureRequested;
+    }
+
+    public ProxyClosureRequest(byte[] content) {
+        super(MessageType.PROXY_CLOSURE_REQUEST, content);
+
+        this.closureRequested = (content[0] == 1);
+    }
+
+    private static byte[] encode(boolean closureRequested) {
+        return new byte[]{ CfdpUtils.boolToByte(closureRequested, 7) };
+    }
+
+    public boolean isClosureRequested() {
+        return closureRequested;
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.PROXY_TRANSMISSION_MODE
+                + ", closureRequested=" + closureRequested + "}";
+    }
+
+    @Override
+    public String toString() {
+        return "ProxyClosureRequest(" + closureRequested + ")";
+    }
+}
+```
+
+### `ProxyPutRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyPutRequest.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.cfdp.CfdpUtils;
+import org.yamcs.utils.StringConverter;
+
+import java.nio.ByteBuffer;
+
+import static org.yamcs.cfdp.CfdpUtils.longToBytesFixed;
+
+public class ProxyPutRequest extends ReservedMessageToUser {
+    private final long destinationEntityId;
+    private final String sourceFileName;
+    private final String destinationFileName;
+
+    public ProxyPutRequest(long destinationEntityId, String sourceFileName, String destinationFileName, int entityIdLength) {
+        super(MessageType.PROXY_PUT_REQUEST, encode(destinationEntityId, sourceFileName, destinationFileName, entityIdLength));
+        this.destinationEntityId = destinationEntityId;
+        this.sourceFileName = sourceFileName;
+        this.destinationFileName = destinationFileName;
+    }
+
+    public ProxyPutRequest(byte[] content) {
+        super(MessageType.PROXY_PUT_REQUEST, content);
+
+        ByteBuffer buffer = ByteBuffer.wrap(content);
+        this.destinationEntityId = CfdpUtils.getUnsignedLongFromByteArray(LV.readLV(buffer).getValue());
+        this.sourceFileName = new String(LV.readLV(buffer).getValue());
+        this.destinationFileName = new String(LV.readLV(buffer).getValue());
+    }
+
+    private static byte[] encode(long destinationEntityId, String sourceFileName, String destinationFileName, int entityIdLength) {
+        return Bytes.concat(
+            new LV(longToBytesFixed(destinationEntityId, entityIdLength)).getBytes(),
+            new LV(sourceFileName).getBytes(),
+            new LV(destinationFileName).getBytes()
+        );
+    }
+
+    public long getDestinationEntityId() {
+        return destinationEntityId;
+    }
+
+    public String getSourceFileName() {
+        return sourceFileName;
+    }
+
+    public String getDestinationFileName() {
+        return destinationFileName;
+    }
+
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.PROXY_PUT_REQUEST
+                + ", destinationEntityId=" + destinationEntityId + ", sourceFileName=" + sourceFileName + ", destinationFileName=" + destinationFileName + "}";
+    }
+
+
+    @Override
+    public String toString() {
+        return "ProxyPutRequest(destinationEntityId: " + destinationEntityId + ", sourceFileName: " + sourceFileName + ", destinationFileName: " + destinationFileName + ")";
+    }
+}
+```
+
+### `ProxyPutResponse.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyPutResponse.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import org.yamcs.cfdp.CfdpUtils;
+import org.yamcs.cfdp.pdu.FinishedPacket.FileStatus;
+
+public class ProxyPutResponse extends ReservedMessageToUser {
+    private final ConditionCode conditionCode;
+    private final boolean dataComplete; // delivery code (0 - true, 1 - false) TODO: maybe use correct name
+    private final FileStatus fileStatus;
+
+    public ProxyPutResponse(ConditionCode conditionCode, boolean dataComplete, FinishedPacket.FileStatus fileStatus) {
+        super(MessageType.PROXY_PUT_RESPONSE, encode(conditionCode, dataComplete, fileStatus));
+        this.conditionCode = conditionCode;
+        this.dataComplete = dataComplete;
+        this.fileStatus = fileStatus;
+    }
+
+    public ProxyPutResponse(byte[] content) {
+        super(MessageType.PROXY_PUT_REQUEST, content);
+
+        byte b = content[0];
+        this.conditionCode = ConditionCode.readConditionCode(b);
+        this.dataComplete = !CfdpUtils.isBitOfByteSet(b, 5);
+        this.fileStatus = FinishedPacket.FileStatus.fromCode((byte) (b & 0x03));
+    }
+
+    private static byte[] encode(ConditionCode conditionCode, boolean dataComplete, FinishedPacket.FileStatus fileStatus) {
+        byte b = (byte) ((conditionCode.getCode() << 4));
+        b |= ((dataComplete ? 0 : 1) << 2);
+        b |= (fileStatus.getCode() & 0x03);
+        return new byte[]{ b };
+    }
+
+    public ConditionCode getConditionCode() {
+        return conditionCode;
+    }
+
+    public boolean isDataComplete() {
+        return dataComplete;
+    }
+
+    public int getDeliveryCode() {
+        return dataComplete ? 0 : 1;
+    }
+
+    public FileStatus getFileStatus() {
+        return fileStatus;
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.PROXY_PUT_RESPONSE
+                + ", conditionCode=" + conditionCode + ", dataComplete=" + dataComplete + ", fileStatus=" + fileStatus + "}";
+    }
+
+
+    @Override
+    public String toString() {
+        return "ProxyPutResponse(conditionCode: " + conditionCode + ", dataComplete: " + dataComplete + ", fileStatus: " + fileStatus + ")";
+    }
+}
+```
+
+### `ProxyTransmissionMode.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ProxyTransmissionMode.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+public class ProxyTransmissionMode extends ReservedMessageToUser {
+    private CfdpPacket.TransmissionMode transmissionMode;
+
+    public ProxyTransmissionMode(CfdpPacket.TransmissionMode transmissionMode) {
+        super(MessageType.PROXY_TRANSMISSION_MODE, encode(transmissionMode));
+
+        this.transmissionMode = transmissionMode;
+    }
+
+    public ProxyTransmissionMode(byte[] content) {
+        super(MessageType.PROXY_TRANSMISSION_MODE, content);
+
+        this.transmissionMode = CfdpPacket.TransmissionMode.fromValue(content[0]);
+    }
+
+    private static byte[] encode(CfdpPacket.TransmissionMode transmissionMode) {
+        return new byte[]{(byte) transmissionMode.getValue()};
+    }
+
+    public CfdpPacket.TransmissionMode getTransmissionMode() {
+        return transmissionMode;
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + MessageType.PROXY_TRANSMISSION_MODE
+                + ", transmissionMode=" + transmissionMode + "}";
+    }
+
+    @Override
+    public String toString() {
+        return "ProxyTransmissionMode(" + transmissionMode + ")";
+    }
+}
+```
+
+### `ReservedMessageToUser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/ReservedMessageToUser.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.utils.StringConverter;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+public class ReservedMessageToUser extends MessageToUser {
+
+    public static final String MESSAGE_IDENTIFIER = "cfdp";
+    private final MessageType messageType;
+    private final byte[] content;
+
+    public enum MessageType {
+        //00 Proxy Put Request
+        //01 Proxy Message to User
+        //02 Proxy Filestore Request
+        //03 Proxy Fault Handler Override
+        //04 Proxy Transmission Mode
+        //05 Proxy Flow Label
+        //06 Proxy Segmentation Control
+        //07 Proxy Put Response
+        //08 Proxy Filestore Response
+        //09 Proxy Put Cancel
+        //0B Proxy Closure Request
+        //10 Directory Listing Request
+        //11 Directory Listing Response
+        //20 Remote Status Report Request
+        //21 Remote Status Report Response
+        //30 Remote Suspend Request
+        //31 Remote Suspend Response
+        //38 Remote Resume Request
+        //39 Remote Resume Response
+        //40 SFO Request
+        //41 SFO Message to User
+        //42 SFO Flow Label
+        //43 SFO Fault Handler Override
+        //44 SFO Filestore Request
+        //45 SFO Report
+        //46 SFO Filestore Response
+        PROXY_PUT_REQUEST((byte) 0x00),
+        PROXY_MESSAGE_TO_USER((byte) 0x01),
+        PROXY_FILESTORE_REQUEST((byte) 0x02),
+        PROXY_FAULT_HANDLER_OVERRIDE((byte) 0x03),
+        PROXY_TRANSMISSION_MODE((byte) 0x04),
+        PROXY_FLOW_LABEL((byte) 0x05),
+        PROXY_SEGMENTATION_CONTROL((byte) 0x06),
+        PROXY_PUT_RESPONSE((byte) 0x07),
+        PROXY_FILESTORE_RESPONSE((byte) 0x08),
+        PROXY_PUT_CANCEL((byte) 0x09),
+        ORIGINATING_TRANSACTION_ID((byte) 0x0A),
+        PROXY_CLOSURE_REQUEST((byte) 0x0B),
+        DIRECTORY_LISTING_REQUEST((byte) 0x10),
+        DIRECTORY_LISTING_RESPONSE((byte) 0x11),
+        REMOTE_STATUS_REPORT_REQUEST((byte) 0x20),
+        REMOTE_STATUS_REPORT_RESPONSE((byte) 0x21),
+        REMOTE_SUSPEND_REQUEST((byte) 0x30),
+        REMOTE_SUSPEND_RESPONSE((byte) 0x31),
+        REMOTE_RESUME_REQUEST((byte) 0x38),
+        REMOTE_RESUME_RESPONSE((byte) 0x39),
+        SFO_REQUEST((byte) 0x40),
+        SFO_MESSAGE_TO_USER((byte) 0x41),
+        SFO_FLOW_LABEL((byte) 0x42),
+        SFO_FAULT_HANDLER_OVERRIDE((byte) 0x43),
+        SFO_FILESTORE_REQUEST((byte) 0x44),
+        SFO_REPORT((byte) 0x45),
+        SFO_FILESTORE_RESPONSE((byte) 0x46),
+        UNKNOWN_MESSAGE_TYPE((byte) 0xFF); // 0xFF is arbitrary (not in CFDP spec)
+
+        private final byte[] bytes;
+
+        MessageType(byte bytes) {
+            this.bytes = new byte[] {bytes};
+        }
+
+        public byte[] getBytes() {
+            return bytes;
+        }
+
+        public static MessageType fromByte(byte b) {
+            switch (b) {
+                case 0x00: return PROXY_PUT_REQUEST;
+                case 0x01: return PROXY_MESSAGE_TO_USER;
+                case 0x02: return PROXY_FILESTORE_REQUEST;
+                case 0x03: return PROXY_FAULT_HANDLER_OVERRIDE;
+                case 0x04: return PROXY_TRANSMISSION_MODE;
+                case 0x05: return PROXY_FLOW_LABEL;
+                case 0x06: return PROXY_SEGMENTATION_CONTROL;
+                case 0x07: return PROXY_PUT_RESPONSE;
+                case 0x08: return PROXY_FILESTORE_RESPONSE;
+                case 0x09: return PROXY_PUT_CANCEL;
+                case 0x0A: return ORIGINATING_TRANSACTION_ID;
+                case 0x0B: return PROXY_CLOSURE_REQUEST;
+                case 0x10: return DIRECTORY_LISTING_REQUEST;
+                case 0x11: return DIRECTORY_LISTING_RESPONSE;
+                case 0x20: return REMOTE_STATUS_REPORT_REQUEST;
+                case 0x21: return REMOTE_STATUS_REPORT_RESPONSE;
+                case 0x30: return REMOTE_SUSPEND_REQUEST;
+                case 0x31: return REMOTE_SUSPEND_RESPONSE;
+                case 0x38: return REMOTE_RESUME_REQUEST;
+                case 0x39: return REMOTE_RESUME_RESPONSE;
+                case 0x40: return SFO_REQUEST;
+                case 0x41: return SFO_MESSAGE_TO_USER;
+                case 0x42: return SFO_FLOW_LABEL;
+                case 0x43: return SFO_FAULT_HANDLER_OVERRIDE;
+                case 0x44: return SFO_FILESTORE_REQUEST;
+                case 0x45: return SFO_REPORT;
+                case 0x46: return SFO_FILESTORE_RESPONSE;
+                default: return UNKNOWN_MESSAGE_TYPE;
+            }
+        }
+
+    }
+
+    public ReservedMessageToUser(MessageType messageType, byte[] content) {
+        super(Bytes.concat(MESSAGE_IDENTIFIER.getBytes(), messageType.getBytes(), content));
+
+        this.messageType = messageType;
+        this.content = content;
+    }
+
+    /**
+     * Decodes ReservedMessageToUser from MessageToUser TLV value. Returns regular MessageToUser if unable.
+     * Will return the child associated with the MessageType instead if the class exists.
+     * @param value TLV value to decode
+     * @return ReservedMessageToUser (or child if possible), or regular MessageToUser if unable
+     */
+    public static MessageToUser fromValue(byte[] value) {
+        if(value.length < MESSAGE_IDENTIFIER.getBytes().length + 1 || !Arrays.equals(Arrays.copyOfRange(value, 0, MESSAGE_IDENTIFIER.getBytes().length), MESSAGE_IDENTIFIER.getBytes())) {
+            // Not a CFDP reserved message to user
+            return new MessageToUser(value);
+        }
+
+        ByteBuffer buffer = ByteBuffer.wrap(value);
+        MessageType messageType = MessageType.fromByte(buffer.get(MESSAGE_IDENTIFIER.getBytes().length));
+        buffer.position(MESSAGE_IDENTIFIER.getBytes().length + 1);
+        byte[] content = new byte[buffer.remaining()];
+        buffer.get(content);
+
+
+        switch (messageType) {
+        case PROXY_PUT_REQUEST:
+            return new ProxyPutRequest(content);
+        case PROXY_TRANSMISSION_MODE:
+            return new ProxyTransmissionMode(content);
+        case PROXY_PUT_RESPONSE:
+            return new ProxyPutResponse(content);
+        case ORIGINATING_TRANSACTION_ID:
+            return new OriginatingTransactionId(content);
+        case PROXY_CLOSURE_REQUEST:
+            return new ProxyClosureRequest(content);
+        case DIRECTORY_LISTING_REQUEST:
+            return new DirectoryListingRequest(content);
+        case DIRECTORY_LISTING_RESPONSE:
+            return new DirectoryListingResponse(content);
+        default:
+            return new ReservedMessageToUser(messageType, content);
+        }
+    }
+
+    public MessageType getMessageType() {
+        return messageType;
+    }
+
+    public byte[] getContent() {
+        return content;
+    }
+
+    @Override
+    public String toJson() {
+        return "{type=" + getType() + ", length=" + getValue().length + ", messageType=" + messageType + ", content="
+                + StringConverter.arrayToHexString(content) + "}";
+    }
+
+}
+```
+
+### `SegmentRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/SegmentRequest.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.cfdp.CfdpUtils;
+
+/**
+ * The SegmentRequest is part of a NAK PDU to indicate a missing part of a file.
+ * <p>
+ * segmentStart=segmentEnd=0 means that the metadata PDU was missing.
+ *
+ */
+public class SegmentRequest {
+    private long segmentStart;
+    private long segmentEnd;
+
+    public SegmentRequest(long start, long end) {
+        this.segmentStart = start;
+        this.segmentEnd = end;
+    }
+
+    public long getSegmentStart() {
+        return this.segmentStart;
+    }
+
+    public long getSegmentEnd() {
+        return this.segmentEnd;
+    }
+
+    public boolean isMetadata() {
+        return segmentStart == 0 && segmentEnd == 0;
+    }
+
+    // returns true if a given value false within the range of this SegmentRequest, including the start but excluding
+    // the end
+    public boolean isInRange(long value) {
+        return value >= this.segmentStart && value < this.segmentEnd;
+    }
+
+    public void writeToBuffer(ByteBuffer buffer) {
+        CfdpUtils.writeUnsignedInt(buffer, segmentStart);
+        CfdpUtils.writeUnsignedInt(buffer, segmentEnd);
+    }
+
+    @Override
+    public String toString() {
+        return segmentStart + "-" + segmentEnd;
+    }
+}
+```
+
+### `TLV.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/TLV.java`
+
+
+```java
+package org.yamcs.cfdp.pdu;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import com.google.common.primitives.Bytes;
+import org.yamcs.cfdp.CfdpUtils;
+import org.yamcs.utils.StringConverter;
+/**
+ * Type, Length, Value 
+ *
+ */
+public class TLV {
+    static final byte TYPE_FILE_STORE_REQUEST= 0x00;
+    static final byte TYPE_FILE_STORE_RESPONSE = 0x01;
+    public static final byte TYPE_MESSAGE_TO_USER = 0x02;
+    static final byte TYPE_FAULT_HANDLER_OVERRIDE = 0x04;
+    static final byte TYPE_FLOW_LABEL = 0x05;
+    static final byte TYPE_ENTITY_ID= 0x06;
+    
+    
+    private byte type;
+    private byte[] value;
+
+    public TLV(byte type, byte[] value) {
+        this.type = type;
+        this.value = value;
+        // TODO: check length > 255
+    }
+
+    public byte getType() {
+        return type;
+    }
+
+    public byte[] getValue() {
+        return value;
+    }
+
+    public static TLV readTLV(ByteBuffer buffer) {
+        byte type = buffer.get();
+        byte[] value = new byte[CfdpUtils.getUnsignedByte(buffer)]; // get length from buffer
+        buffer.get(value);
+        return new TLV(type, value);
+    }
+
+    public void writeToBuffer(ByteBuffer buffer) {
+        buffer.put(type);
+        CfdpUtils.writeUnsignedByte(buffer, value.length);
+        buffer.put(value);
+    }
+
+    public byte[] getBytes() {
+        return Bytes.concat(new byte[] {type, (byte) value.length }, value);
+    }
+
+    public static TLV getEntityIdTLV(long entityId, int entityIdLength) {
+        return new TLV(TYPE_ENTITY_ID, CfdpUtils.longToBytesFixed(entityId, entityIdLength));
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + type;
+        result = prime * result + Arrays.hashCode(value);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TLV other = (TLV) obj;
+        if (type != other.type)
+            return false;
+        if (!Arrays.equals(value, other.value))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "TLV [type=" + type + ", value=" + StringConverter.arrayToHexString(value) + "]";
+    }
+
+    public String toJson() {
+        return "{type=" + type + ", length=" + value.length + ", value=" + StringConverter.arrayToHexString(value) + "}";
+    }
+}
+```

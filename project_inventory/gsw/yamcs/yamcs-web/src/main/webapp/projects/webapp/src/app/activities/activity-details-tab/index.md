@@ -3,16 +3,92 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-details-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activity-details-tab.component.html`
 
-file--activity-details-tab.component.html
-file--activity-details-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-details-tab/activity-details-tab.component.html`
+
+
+```html
+@if (activity$ | async; as activity) {
+  <ya-panel>
+    <dl class="dl-horizontal no-lead">
+      <dt>Activity ID</dt>
+      <dd>{{ activity.id }}</dd>
+      <dt>Status</dt>
+      <dd>{{ activity.status }}</dd>
+      <dt>Started</dt>
+      <dd>{{ activity.start | datetime }}</dd>
+      <dt>Finished</dt>
+      <dd>
+        {{ (activity.stop | datetime) ?? "-" }}
+        @if (activity.stop) {
+          ({{ activity.stop | deltaWith: activity.start }})
+        }
+      </dd>
+      <dt>User</dt>
+      <dd>{{ activity.startedBy }}</dd>
+    </dl>
+    <div class="section-divider">
+      <mat-divider />
+    </div>
+    <dl class="dl-horizontal">
+      <dt>Activity type</dt>
+      <dd>{{ activity.type }}</dd>
+      <dt>Arguments</dt>
+      <dd></dd>
+      @for (kv of activity.args | keyvalue; track kv) {
+        <dt>&nbsp;&nbsp;{{ kv.key }}</dt>
+        <dd>{{ kv.value | printObj }}</dd>
+      }
+    </dl>
+  </ya-panel>
+}
 ```
 
-## 항목
+### `activity-details-tab.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-details-tab/activity-details-tab.component.html`](file--activity-details-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-details-tab/activity-details-tab.component.ts`](file--activity-details-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-details-tab/activity-details-tab.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  input,
+} from '@angular/core';
+import {
+  Activity,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  templateUrl: './activity-details-tab.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ActivityDetailsTabComponent implements OnInit {
+  activityId = input.required<string>();
+  activity$ = new BehaviorSubject<Activity | null>(null);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+  ) {}
+
+  ngOnInit() {
+    const { yamcs } = this;
+    yamcs.yamcsClient
+      .getActivity(yamcs.instance!, this.activityId())
+      .then((activity) => {
+        this.activity$.next(activity);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

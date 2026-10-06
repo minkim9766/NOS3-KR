@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/tbl/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,17 +12,129 @@ config/index
 eds/index
 fsw/index
 ut-coverage/index
-file--arch_build.cmake
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/tbl/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/tbl/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/tbl/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/tbl/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/tbl/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/tbl/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# TBL Core Module platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the TBL configuration
+set(TBL_PLATFORM_CONFIG_FILE_LIST
+  cfe_tbl_internal_cfg.h
+  cfe_tbl_msgids.h
+  cfe_tbl_platform_cfg.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(TBL_CFGFILE ${TBL_PLATFORM_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${TBL_CFGFILE}" NAME_WE)
+  if (DEFINED TBL_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE "${TBL_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE "${CMAKE_CURRENT_LIST_DIR}/config/default_${TBL_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${TBL_CFGFILE}"
+    FALLBACK_FILE       ${DEFAULT_SOURCE}
+  )
+endforeach()
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/tbl/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Table Services (TBL) module CMake build recipe
+#
+##################################################################
+
+project(CFE_TBL C)
+
+# Table Services source files
+set(tbl_SOURCES
+    fsw/src/cfe_tbl_api.c
+    fsw/src/cfe_tbl_internal.c
+    fsw/src/cfe_tbl_task.c
+    fsw/src/cfe_tbl_task_cmds.c
+    fsw/src/cfe_tbl_dispatch.c
+)
+add_library(tbl STATIC ${tbl_SOURCES})
+
+target_include_directories(tbl PUBLIC fsw/inc)
+target_link_libraries(tbl PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(${DEP}
+    cfe_tbl_msg.h
+    cfe_tbl_eventids.h
+)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/tbl/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# TBL Core Module mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the TBL configuration
+set(TBL_MISSION_CONFIG_FILE_LIST
+  cfe_tbl_mission_cfg.h
+  cfe_tbl_interface_cfg.h
+  cfe_tbl_extern_typedefs.h
+  cfe_tbl_fcncodes.h
+  cfe_tbl_msgdefs.h
+  cfe_tbl_msg.h
+  cfe_tbl_msgstruct.h
+  cfe_tbl_topicids.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(TBL_CFGFILE ${TBL_MISSION_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${TBL_CFGFILE}" NAME_WE)
+  if (DEFINED TBL_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE GENERATED_FILE "${TBL_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE FALLBACK_FILE "${CMAKE_CURRENT_LIST_DIR}/config/default_${TBL_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${TBL_CFGFILE}"
+    ${DEFAULT_SOURCE}
+  )
+endforeach()
+```

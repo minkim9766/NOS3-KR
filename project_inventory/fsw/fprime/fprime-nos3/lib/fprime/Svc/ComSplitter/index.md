@@ -3,22 +3,159 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--ComSplitter.cpp
-file--ComSplitter.fpp
-file--ComSplitter.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/ComSplitter.cpp`](file--ComSplitter.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/ComSplitter.fpp`](file--ComSplitter.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/ComSplitter.hpp`](file--ComSplitter.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ComSplitter.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ComSplitter.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ComSplitter.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ComSplitterTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ComSplitterMain.cpp"
+)
+register_fprime_ut()
+```
+
+### `ComSplitter.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/ComSplitter.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+//
+// ComSplitter.cpp
+//
+// ----------------------------------------------------------------------
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Svc/ComSplitter/ComSplitter.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+ComSplitter ::ComSplitter(const char* compName) : ComSplitterComponentBase(compName) {}
+
+ComSplitter ::~ComSplitter() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations
+// ----------------------------------------------------------------------
+
+void ComSplitter ::comIn_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    FW_ASSERT(portNum == 0);
+
+    FwIndexType numPorts = getNum_comOut_OutputPorts();
+    FW_ASSERT(numPorts > 0);
+
+    for (FwIndexType i = 0; i < numPorts; i++) {
+        if (isConnected_comOut_OutputPort(i)) {
+            // Need to make a copy because we are passing by reference!:
+            Fw::ComBuffer dataToSend = data;
+            comOut_out(i, dataToSend, 0);
+        }
+    }
+}
+
+}  // namespace Svc
+```
+
+### `ComSplitter.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/ComSplitter.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for splitting a Com buffer stream
+  passive component ComSplitter {
+
+    @ Com input port
+    sync input port comIn: Fw.Com
+
+    @ Com output port
+    output port comOut: [5] Fw.Com
+
+  }
+
+}
+```
+
+### `ComSplitter.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/ComSplitter.hpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+//
+// ComSplitter.hpp
+//
+// ----------------------------------------------------------------------
+
+#ifndef COMSPLITTER_HPP
+#define COMSPLITTER_HPP
+
+#include <Fw/Types/Assert.hpp>
+#include <Svc/ComSplitter/ComSplitterComponentAc.hpp>
+
+namespace Svc {
+
+class ComSplitter final : public ComSplitterComponentBase {
+    // ----------------------------------------------------------------------
+    // Friend class for whitebox testing
+    // ----------------------------------------------------------------------
+
+    friend class ComSplitterComponentBaseFriend;
+
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    ComSplitter(const char* compName);
+
+    ~ComSplitter();
+
+    // ----------------------------------------------------------------------
+    // Handler implementations
+    // ----------------------------------------------------------------------
+
+  private:
+    void comIn_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context);
+};
+
+}  // namespace Svc
+
+#endif
+```

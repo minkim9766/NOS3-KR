@@ -3,18 +3,172 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `profile.component.css`
 
-file--profile.component.css
-file--profile.component.html
-file--profile.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/profile.component.css`
+
+
+```css
+mat-toolbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--y-background-color);
+  box-sizing: content-box;
+}
+
+mat-toolbar-row {
+  padding-left: 24px;
+}
 ```
 
-## 항목
+### `profile.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/profile.component.css`](file--profile.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/profile.component.html`](file--profile.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/profile.component.ts`](file--profile.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/profile.component.html`
+
+
+```html
+<app-appbase-toolbar label="Profile" />
+
+@if (user$ | async; as user) {
+  <div class="form-content">
+    <dl class="dl-horizontal no-lead">
+      <dt>Username</dt>
+      <dd>{{ user.getName() }}</dd>
+      <dt>Display name</dt>
+      <dd>{{ user.getDisplayName() || "-" }}</dd>
+      <dt>Email</dt>
+      <dd>{{ user.getEmail() || "-" }}</dd>
+      @if (user.isSuperuser()) {
+        <dt>Attributes</dt>
+        <dd>⚡️ superuser</dd>
+      }
+      @if (config.commandClearanceEnabled) {
+        <dt>Command clearance</dt>
+        <dd>
+          <app-significance-level [level]="user.getClearance()" [grayscale]="true" />
+        </dd>
+      }
+    </dl>
+    <mat-divider />
+    <dl class="dl-horizontal">
+      <dt>Roles</dt>
+      <dd>
+        @if (user.getRoles().length) {
+          @for (role of user.getRoles(); track role; let last = $last) {
+            {{ role.name }}
+            @if (!last) {
+              <span>,</span>
+            }
+          }
+        }
+        @if (!user.getRoles().length) {
+          -
+        }
+      </dd>
+    </dl>
+    @if (user.isSuperuser()) {
+      <mat-divider />
+      <dl class="dl-horizontal">
+        <dt>System privileges</dt>
+        <dd>All privileges implied</dd>
+      </dl>
+      <mat-divider />
+      <dl class="dl-horizontal">
+        <dt>Object privileges</dt>
+        <dd>All privileges implied</dd>
+      </dl>
+    }
+    @if (!user.isSuperuser()) {
+      <mat-divider />
+      <dl class="dl-horizontal">
+        <dt>System privileges</dt>
+        <dd>
+          @if (user.getSystemPrivileges().length) {
+            <table yaDataTable>
+              @for (privilege of user.getSystemPrivileges(); track privilege) {
+                <tr>
+                  <td>{{ privilege }}</td>
+                </tr>
+              }
+            </table>
+          }
+          @if (!user.getSystemPrivileges().length) {
+            -
+          }
+        </dd>
+      </dl>
+      <mat-divider />
+      <dl class="dl-horizontal">
+        <dt>Object privileges</dt>
+        <dd>
+          @if (user.getObjectPrivileges().length) {
+            <table yaDataTable>
+              @for (p of user.getObjectPrivileges(); track p) {
+                <tr>
+                  <th class="lcolumn">{{ p.type }}</th>
+                  <td>
+                    @if (p.objects) {
+                      @for (object of p.objects; track object) {
+                        {{ object }}
+                        <br />
+                      }
+                    } @else {
+                      -
+                    }
+                  </td>
+                </tr>
+              }
+            </table>
+          }
+          @if (!user.getObjectPrivileges().length) {
+            -
+          }
+        </dd>
+      </dl>
+    }
+  </div>
+}
+```
+
+### `profile.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/profile/profile.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import {
+  ConfigService,
+  User,
+  WebappSdkModule,
+  WebsiteConfig,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { SignificanceLevelComponent } from '../../shared/significance-level/significance-level.component';
+import { AppAppBaseToolbar } from '../appbase-toolbar/appbase-toolbar.component';
+
+@Component({
+  templateUrl: './profile.component.html',
+  styleUrl: './profile.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppAppBaseToolbar, WebappSdkModule, SignificanceLevelComponent],
+})
+export class ProfileComponent {
+  user$ = new BehaviorSubject<User | null>(null);
+  config: WebsiteConfig;
+
+  constructor(title: Title, configService: ConfigService, yamcs: YamcsService) {
+    title.setTitle('Profile');
+    this.config = configService.getConfig();
+
+    // Fetch a fresh copy instead of using the one from AuthService,
+    // there may have been updates (clearance in particular)
+    yamcs.yamcsClient.getUserInfo().then((userinfo) => {
+      this.user$.next(new User(userinfo));
+    });
+  }
+}
+```

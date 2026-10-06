@@ -3,20 +3,464 @@
 
 **경로:** `fsw/psp/unit-test-coverage/mcp750-vxworks/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `coveragetest-cfe-psp-start.c`
 
-file--coveragetest-cfe-psp-start.c
-file--coveragetest-cfe-psp-support.c
-file--coveragetest-psp-mcp750-vxworks.c
-file--coveragetest-psp-mcp750-vxworks.h
+**경로:** `fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-cfe-psp-start.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ *
+ *    Copyright (c) 2020, United States government as represented by the
+ *    administrator of the National Aeronautics Space Administration.
+ *    All rights reserved. This software was created at NASA Goddard
+ *    Space Flight Center pursuant to government contracts.
+ *
+ *    This is governed by the NASA Open Source Agreement and may be used,
+ *    distributed and modified only according to the terms of that agreement.
+ *
+ */
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "coveragetest-psp-mcp750-vxworks.h"
+#include "ut-adaptor-bootrec.h"
+
+#include "cfe_psp.h"
+
+#include "PCS_sysLib.h"
+#include "PCS_mcpx750.h"
+#include "PCS_stdlib.h"
+#include "PCS_cfe_configdata.h"
+
+extern void UT_OS_Application_Startup(void);
+extern void UT_OS_Application_Run(void);
+
+uint32 UT_ReservedMemBuffer[256];
+
+typedef struct
+{
+    uint32 StartType;
+    uint32 StartSubtype;
+} PSP_UT_StartType_t;
+
+/*
+ * A hook function that can check/verify the  reset sub type
+ */
+static int32 Test_Hook_ResetSubType(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    PSP_UT_StartType_t *UserBuffer = UserObj;
+    UserBuffer->StartType          = UT_Hook_GetArgValueByName(Context, "StartType", uint32);
+    UserBuffer->StartSubtype       = UT_Hook_GetArgValueByName(Context, "StartSubtype", uint32);
+    return StubRetcode;
+}
+
+void Test_OS_Application_Startup(void)
+{
+    /*
+     * Test Case For:
+     * void OS_Application_Startup(void)
+     *
+     * NOTE: The UT assert library itself defines OS_Application_Startup
+     * To avoid conflict with the UT assert, the unit under test is renamed
+     * to "UT_OS_Application_Startup" using a preprocessor definition
+     */
+    PSP_UT_StartType_t StartType;
+
+    /* Install a hook function to grab the start type parameters from the system main call */
+    UT_SetHookFunction(UT_KEY(PCS_SystemMain), Test_Hook_ResetSubType, &StartType);
+    UT_Setup_ReservedMem_BootRec();
+
+    /* nominal */
+    UT_SetDataBuffer(UT_KEY(PCS_sysMemTop), UT_ReservedMemBuffer, sizeof(UT_ReservedMemBuffer), false);
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(OS_printf)), 4);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 1);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_POWERON);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_UNDEFINED_RESET);
+
+    /* failure of OS_API_Init */
+    UT_SetDefaultReturnValue(UT_KEY(OS_API_Init), OS_ERROR);
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_exit)), 1);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_API_Init));
+
+    /* failure of OS_FileSysAddFixedMap - an extra OS_printf */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileSysAddFixedMap), OS_ERROR);
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(OS_printf)), 9);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 2);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_FileSysAddFixedMap));
+
+    /* coverage for each of the reset types */
+    *PCS_SYS_REG_BLRR = PCS_SYS_REG_BLRR_PWRON;
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 3);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_POWERON);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_POWER_CYCLE);
+
+    *PCS_SYS_REG_BLRR = PCS_SYS_REG_BLRR_PBRST;
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 4);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_POWERON);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_PUSH_BUTTON);
+
+    *PCS_SYS_REG_BLRR = PCS_SYS_REG_BLRR_FBTN;
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 5);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_SUBTYPE_PUSH_BUTTON);
+    UtAssert_INT32_EQ(StartType.StartSubtype, 3);
+
+    *PCS_SYS_REG_BLRR = PCS_SYS_REG_BLRR_WDT2;
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 6);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_PROCESSOR);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_HW_WATCHDOG);
+
+    *PCS_SYS_REG_BLRR = PCS_SYS_REG_BLRR_SWSRST;
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 7);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_PROCESSOR);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_RESET_COMMAND);
+
+    *PCS_SYS_REG_BLRR = PCS_SYS_REG_BLRR_SWHRST;
+    UT_Set_ReservedMem_BootType(CFE_PSP_RST_TYPE_POWERON);
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 8);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_POWERON);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_RESET_COMMAND);
+
+    UT_Set_ReservedMem_BootType(CFE_PSP_RST_TYPE_PROCESSOR);
+    UT_OS_Application_Startup();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_SystemMain)), 9);
+    UtAssert_INT32_EQ(StartType.StartType, CFE_PSP_RST_TYPE_PROCESSOR);
+    UtAssert_INT32_EQ(StartType.StartSubtype, CFE_PSP_RST_SUBTYPE_RESET_COMMAND);
+}
+
+void Test_OS_Application_Run(void)
+{
+    /*
+     * Test Case For:
+     * void OS_Application_Run(void)
+     *
+     * NOTE: The UT assert library itself defines OS_Application_Run
+     * To avoid conflict with the UT assert, the unit under test is renamed
+     * to "UT_OS_Application_Run" using a preprocessor definition
+     */
+
+    /* The function currently contains an infinite loop so cannot be tested now */
+}
 ```
 
-## 항목
+### `coveragetest-cfe-psp-support.c`
 
-- [`fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-cfe-psp-start.c`](file--coveragetest-cfe-psp-start.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-cfe-psp-support.c`](file--coveragetest-cfe-psp-support.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-psp-mcp750-vxworks.c`](file--coveragetest-psp-mcp750-vxworks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-psp-mcp750-vxworks.h`](file--coveragetest-psp-mcp750-vxworks.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-cfe-psp-support.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ *
+ *    Copyright (c) 2020, United States government as represented by the
+ *    administrator of the National Aeronautics Space Administration.
+ *    All rights reserved. This software was created at NASA Goddard
+ *    Space Flight Center pursuant to government contracts.
+ *
+ *    This is governed by the NASA Open Source Agreement and may be used,
+ *    distributed and modified only according to the terms of that agreement.
+ *
+ */
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "coveragetest-psp-mcp750-vxworks.h"
+#include "ut-adaptor-bootrec.h"
+
+#include "cfe_psp.h"
+
+#include "PCS_stdlib.h"
+#include "PCS_rebootLib.h"
+#include "PCS_cacheLib.h"
+#include "PCS_cfe_configdata.h"
+
+void Test_CFE_PSP_Restart(void)
+{
+    /*
+     * Test Case For:
+     * void CFE_PSP_Restart(uint32 reset_type)
+     */
+
+    UT_Setup_ReservedMem_BootRec();
+    CFE_PSP_Restart(CFE_PSP_RST_TYPE_PROCESSOR);
+    UtAssert_INT32_EQ(UT_Get_ReservedMem_BootType(), CFE_PSP_RST_TYPE_PROCESSOR);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_cacheTextUpdate)), 1);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_reboot)), 1);
+
+    UT_Setup_ReservedMem_BootRec();
+    CFE_PSP_Restart(CFE_PSP_RST_TYPE_POWERON);
+    UtAssert_INT32_EQ(UT_Get_ReservedMem_BootType(), CFE_PSP_RST_TYPE_POWERON);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_cacheTextUpdate)), 2);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_reboot)), 2);
+}
+
+void Test_CFE_PSP_Panic(void)
+{
+    /*
+     * Test Case For:
+     * void CFE_PSP_Panic(int32 ErrorCode)
+     */
+    CFE_PSP_Panic(0);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_exit)), 1);
+}
+
+void Test_CFE_PSP_FlushCaches(void)
+{
+    /*
+     * Test Case For:
+     * void CFE_PSP_FlushCaches(uint32 type, void* address, uint32 size)
+     */
+
+    CFE_PSP_FlushCaches(0, NULL, 0);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_cacheTextUpdate)), 0);
+    CFE_PSP_FlushCaches(1, NULL, 0);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(PCS_cacheTextUpdate)), 1);
+}
+
+void Test_CFE_PSP_GetProcessorId(void)
+{
+    /*
+     * Test Case For:
+     * uint32 CFE_PSP_GetProcessorId    (void)
+     */
+
+    /*
+     * Note - the data structure used here is declared as "const" internally so
+     * there is no way to modify the value at runtime, even in unit test.
+     */
+    UtAssert_INT32_EQ(CFE_PSP_GetProcessorId(), PCS_CONFIG_CPUNUMBER);
+}
+
+void Test_CFE_PSP_GetSpacecraftId(void)
+{
+    /*
+     * Test Case For:
+     * uint32 CFE_PSP_GetSpacecraftId   (void)
+     */
+
+    /*
+     * Note - the data structure used here is declared as "const" internally so
+     * there is no way to modify the value at runtime, even in unit test.
+     */
+    UtAssert_INT32_EQ(CFE_PSP_GetSpacecraftId(), PCS_CONFIG_SPACECRAFT);
+}
+```
+
+### `coveragetest-psp-mcp750-vxworks.c`
+
+**경로:** `fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-psp-mcp750-vxworks.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ *
+ *    Copyright (c) 2020, United States government as represented by the
+ *    administrator of the National Aeronautics Space Administration.
+ *    All rights reserved. This software was created at NASA Goddard
+ *    Space Flight Center pursuant to government contracts.
+ *
+ *    This is governed by the NASA Open Source Agreement and may be used,
+ *    distributed and modified only according to the terms of that agreement.
+ *
+ */
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "coveragetest-psp-mcp750-vxworks.h"
+
+/* Psp_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Psp_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Psp_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_Application_Run);
+    ADD_TEST(OS_Application_Startup);
+
+    ADD_TEST(CFE_PSP_Restart);
+    ADD_TEST(CFE_PSP_Panic);
+    ADD_TEST(CFE_PSP_FlushCaches);
+    ADD_TEST(CFE_PSP_GetProcessorId);
+    ADD_TEST(CFE_PSP_GetSpacecraftId);
+
+    ADD_TEST(CFE_PSP_Exception_GetBuffer);
+    ADD_TEST(CFE_PSP_Exception_GetNextContextBuffer);
+    ADD_TEST(CFE_PSP_Exception_GetSummary);
+    ADD_TEST(CFE_PSP_Exception_CopyContext);
+}
+```
+
+### `coveragetest-psp-mcp750-vxworks.h`
+
+**경로:** `fsw/psp/unit-test-coverage/mcp750-vxworks/src/coveragetest-psp-mcp750-vxworks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ *
+ *    Copyright (c) 2020, United States government as represented by the
+ *    administrator of the National Aeronautics Space Administration.
+ *    All rights reserved. This software was created at NASA Goddard
+ *    Space Flight Center pursuant to government contracts.
+ *
+ *    This is governed by the NASA Open Source Agreement and may be used,
+ *    distributed and modified only according to the terms of that agreement.
+ *
+ */
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#ifndef COVERAGETEST_PSP_MCP750_VXWORKS_H
+#define COVERAGETEST_PSP_MCP750_VXWORKS_H
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utstubs.h"
+
+#include "coveragetest-psp-shared.h"
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Psp_Test_Setup, Psp_Test_Teardown, #test)
+
+/* Psp_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Psp_Test_Setup(void);
+void Psp_Test_Teardown(void);
+
+/*
+ * Test routine dedicated to coverage of each of the PSP implementation functions
+ */
+void Test_CFE_PSP_Restart(void);
+void Test_CFE_PSP_Panic(void);
+void Test_CFE_PSP_FlushCaches(void);
+void Test_CFE_PSP_GetProcessorId(void);
+void Test_CFE_PSP_GetSpacecraftId(void);
+
+void Test_OS_Application_Startup(void);
+void Test_OS_Application_Run(void);
+
+#endif
+```

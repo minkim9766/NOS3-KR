@@ -3,48 +3,112 @@
 
 **경로:** `sims/build/lib/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `libblackboard_sim.so`
 
-file--libblackboard_sim.so
-file--libcam_sim.so
-file--libgeneric_css_sim.so
-file--libgeneric_eps_sim.so
-file--libgeneric_fss_sim.so
-file--libgeneric_imu_sim.so
-file--libgeneric_mag_sim.so
-file--libgeneric_radio_sim.so
-file--libgeneric_rw_sim.so
-file--libgeneric_star_tracker_sim.so
-file--libgeneric_thruster_sim.so
-file--libgeneric_torquer_sim.so
-file--libgps_sim.so
-file--libnos_time_driver.so
-file--libsample_sim.so
-file--libsim_common.so
-file--libsim_terminal.so
-file--libtruth_42_sim.so
-```
+**경로:** `sims/build/lib/libblackboard_sim.so`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`sims/build/lib/libblackboard_sim.so`](file--libblackboard_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libcam_sim.so`](file--libcam_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_css_sim.so`](file--libgeneric_css_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_eps_sim.so`](file--libgeneric_eps_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_fss_sim.so`](file--libgeneric_fss_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_imu_sim.so`](file--libgeneric_imu_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_mag_sim.so`](file--libgeneric_mag_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_radio_sim.so`](file--libgeneric_radio_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_rw_sim.so`](file--libgeneric_rw_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_star_tracker_sim.so`](file--libgeneric_star_tracker_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_thruster_sim.so`](file--libgeneric_thruster_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgeneric_torquer_sim.so`](file--libgeneric_torquer_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libgps_sim.so`](file--libgps_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libnos_time_driver.so`](file--libnos_time_driver.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libsample_sim.so`](file--libsample_sim.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libsim_common.so`](file--libsim_common.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libsim_terminal.so`](file--libsim_terminal.so) — 빌드 산출물 (경로만)
-- [`sims/build/lib/libtruth_42_sim.so`](file--libtruth_42_sim.so) — 빌드 산출물 (경로만)
+### `libcam_sim.so`
+
+**경로:** `sims/build/lib/libcam_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_css_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_css_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_eps_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_eps_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_fss_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_fss_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_imu_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_imu_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_mag_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_mag_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_radio_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_radio_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_rw_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_rw_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_star_tracker_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_star_tracker_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_thruster_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_thruster_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgeneric_torquer_sim.so`
+
+**경로:** `sims/build/lib/libgeneric_torquer_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libgps_sim.so`
+
+**경로:** `sims/build/lib/libgps_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libnos_time_driver.so`
+
+**경로:** `sims/build/lib/libnos_time_driver.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libsample_sim.so`
+
+**경로:** `sims/build/lib/libsample_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libsim_common.so`
+
+**경로:** `sims/build/lib/libsim_common.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libsim_terminal.so`
+
+**경로:** `sims/build/lib/libsim_terminal.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libtruth_42_sim.so`
+
+**경로:** `sims/build/lib/libtruth_42_sim.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

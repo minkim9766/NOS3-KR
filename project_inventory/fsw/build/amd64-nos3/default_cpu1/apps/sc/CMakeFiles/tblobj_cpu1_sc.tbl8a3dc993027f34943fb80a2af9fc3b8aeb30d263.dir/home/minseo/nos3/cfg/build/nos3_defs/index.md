@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/sc/CMakeFiles/tblobj_cpu1_sc.tbl8a3dc993027f34943fb80a2af9fc3b8aeb30d263.dir/home/minseo/nos3/cfg/build/nos3_defs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 tables/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sc/CMakeFiles/tblobj_cpu1_sc.tbl8a3dc993027f34943fb80a2af9fc3b8aeb30d263.dir/home/minseo/nos3/cfg/build/nos3_defs/tables/`](tables/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

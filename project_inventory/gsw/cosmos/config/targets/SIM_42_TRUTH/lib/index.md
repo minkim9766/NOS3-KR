@@ -3,36 +3,462 @@
 
 **경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `beta_angle.rb`
 
-file--beta_angle.rb
-file--geocentric_latitude.rb
-file--in_sun.rb
-file--nadir_in_body.rb
-file--orbit_normal.rb
-file--ram_in_body.rb
-file--svn.rb
-file--utilities.rb
-file--vector_magnitude.rb
-file--x_ram_angle.rb
-file--xz_ram_angle.rb
-file--z_nadir_angle.rb
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/beta_angle.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class BetaAngle < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+      @converted_array_size = 2
+    end
+
+    def call(value, packet, buffer)
+      p   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      v   = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5])]
+      svb = [packet.read(@items[6]), packet.read(@items[7]), packet.read(@items[8])]
+      qbn = [packet.read(@items[9]), packet.read(@items[10]), packet.read(@items[11]), packet.read(@items[12])]
+
+      pxv = Utilities::cross(p,v)
+      orbnorm = Utilities::sxv(1/Utilities::norm(pxv), pxv)
+      cbn = Utilities::Q2C(qbn)
+      svn = Utilities::MTxV(cbn,svb)
+
+      b = []
+      b[0] = 90.0 - 180.0*Math.acos(Utilities::dot(orbnorm,svn))/Math::PI # beta angle
+      b[1] = 90.0 + 180.0*Math.acos(Utilities::dot(orbnorm,svn))/Math::PI # beta angle supplement
+
+      return b
+    end
+
+  end
+end
 ```
 
-## 항목
+### `geocentric_latitude.rb`
 
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/beta_angle.rb`](file--beta_angle.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/geocentric_latitude.rb`](file--geocentric_latitude.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/in_sun.rb`](file--in_sun.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/nadir_in_body.rb`](file--nadir_in_body.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/orbit_normal.rb`](file--orbit_normal.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/ram_in_body.rb`](file--ram_in_body.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/svn.rb`](file--svn.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/utilities.rb`](file--utilities.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/vector_magnitude.rb`](file--vector_magnitude.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/x_ram_angle.rb`](file--x_ram_angle.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/xz_ram_angle.rb`](file--xz_ram_angle.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/z_nadir_angle.rb`](file--z_nadir_angle.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/geocentric_latitude.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+require 'utilities'
+
+module Cosmos
+  class GeocentricLatitude < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+    end
+
+    def call(value, packet, buffer)
+      p = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+
+      return Math.atan2(p[2], Math.sqrt(p[0]*p[0]+p[1]*p[1]))*180.0/Math::PI
+    end
+
+  end
+end
+```
+
+### `in_sun.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/in_sun.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class InSun < Conversion
+    ER = 6378137.0
+
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :INT
+      @converted_bit_size = 8
+    end
+
+    def call(value, packet, buffer)
+      p   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      svb = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5])]
+      qbn = [packet.read(@items[6]), packet.read(@items[7]), packet.read(@items[8]), packet.read(@items[9])]
+
+      cbn = Utilities::Q2C(qbn)
+      svn = Utilities::MTxV(cbn,svb)
+      rmag = Utilities::norm(p)
+      r = Utilities::sxv(-1.0/rmag, p)
+
+      theta = Math.acos(Utilities::dot(r, svn))
+
+      in_sun = 50 # non-zero value for in sun... scale as you wish for use on graphs
+
+      if ((theta < Math::PI/2) and (rmag * Math.sin(theta) < ER)) # simple calculation using sun vector and nominal earth radius... does not account for penumbra, etc.
+        in_sun = 0 # zero value means not in sun
+      end
+
+      return in_sun
+    end
+
+  end
+end
+```
+
+### `nadir_in_body.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/nadir_in_body.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class NadirInBody < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+      @converted_array_size = 3
+    end
+
+    def call(value, packet, buffer)
+      p   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      qbn = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5]), packet.read(@items[6])]
+
+      cbn = Utilities::Q2C(qbn)
+
+      nb = Utilities::MxV(cbn, Utilities::sxv(-1.0/Utilities::norm(p),p)) # Nadir (-position) unit vector in body frame
+
+      return nb
+    end
+
+  end
+end
+```
+
+### `orbit_normal.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/orbit_normal.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+require 'utilities'
+
+module Cosmos
+  class OrbitNormal < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+      @converted_array_size = 3
+    end
+
+    def call(value, packet, buffer)
+      p = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      v = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5])]
+
+      pxv = Utilities::cross(p,v)
+      orbnorm = Utilities::sxv(1/Utilities::norm(pxv), pxv)
+
+      return orbnorm
+    end
+
+  end
+end
+```
+
+### `ram_in_body.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/ram_in_body.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class RamInBody < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+      @converted_array_size = 3
+    end
+
+    def call(value, packet, buffer)
+      v   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      qbn = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5]), packet.read(@items[6])]
+
+      cbn = Utilities::Q2C(qbn)
+
+      vb = Utilities::MxV(cbn, Utilities::sxv(1.0/Utilities::norm(v),v)) # Velocity unit vector in body frame
+
+      return vb
+    end
+
+  end
+end
+```
+
+### `svn.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/svn.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+require 'utilities'
+
+module Cosmos
+  class Svn < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+      @converted_array_size = 3
+    end
+
+    def call(value, packet, buffer)
+      svb = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      qbn = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5]), packet.read(@items[6])]
+      cbn = Utilities::Q2C(qbn)
+      svn = Utilities::MTxV(cbn,svb)
+      return svn
+    end
+
+  end
+end
+```
+
+### `utilities.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/utilities.rb`
+
+
+```ruby
+
+module Cosmos
+    class Utilities
+        def self.dot(u, v)
+            return u[0]*v[0] + u[1]*v[1] + u[2]*v[2]
+        end
+
+        def self.norm(u)
+            return Math.sqrt(dot(u,u))
+        end
+
+        def self.cross(u, v)
+            w = []
+            w[0] = u[1]*v[2]-u[2]*v[1]
+            w[1] = u[2]*v[0]-u[0]*v[2]
+            w[2] = u[0]*v[1]-u[1]*v[0]
+            return w
+        end
+
+        def self.sxv(s, v)
+            r = []
+            r[0] = s*v[0]
+            r[1] = s*v[1]
+            r[2] = s*v[2]
+            return r
+        end
+
+        def self.uaddv(u, v)
+            r = []
+            r[0] = u[0] + v[0]
+            r[1] = u[1] + v[1]
+            r[2] = u[2] + v[2]
+            return r
+        end
+
+        def self.Q2C(q)
+            twoQ00 = 2.0*q[0]*q[0];
+            twoQ11 = 2.0*q[1]*q[1];
+            twoQ22 = 2.0*q[2]*q[2];
+            twoQ01 = 2.0*q[0]*q[1];
+            twoQ02 = 2.0*q[0]*q[2];
+            twoQ03 = 2.0*q[0]*q[3];
+            twoQ12 = 2.0*q[1]*q[2];
+            twoQ13 = 2.0*q[1]*q[3];
+            twoQ23 = 2.0*q[2]*q[3];
+
+            c = [[1,0,0],[0,1,0],[0,0,1]]
+            c[0][0] = 1.0-(twoQ11+twoQ22);
+            c[0][1] = twoQ01+twoQ23;
+            c[0][2] = twoQ02-twoQ13;
+            c[1][0] = twoQ01-twoQ23;
+            c[1][1] = 1.0-(twoQ22+twoQ00);
+            c[1][2] = twoQ12+twoQ03;
+            c[2][0] = twoQ02+twoQ13;
+            c[2][1] = twoQ12-twoQ03;
+            c[2][2] = 1.0-(twoQ00+twoQ11);
+            return c
+        end
+
+        def self.MxV (m, v)
+            w = []
+            w[0] = m[0][0]*v[0] + m[0][1]*v[1] + m[0][2]*v[2];
+            w[1] = m[1][0]*v[0] + m[1][1]*v[1] + m[1][2]*v[2];
+            w[2] = m[2][0]*v[0] + m[2][1]*v[1] + m[2][2]*v[2];
+            return w
+        end
+
+        def self.MTxV (m, v)
+            w = []
+            w[0] = m[0][0]*v[0] + m[1][0]*v[1] + m[2][0]*v[2];
+            w[1] = m[0][1]*v[0] + m[1][1]*v[1] + m[2][1]*v[2];
+            w[2] = m[0][2]*v[0] + m[1][2]*v[1] + m[2][2]*v[2];
+            return w
+        end
+        
+    end
+end
+```
+
+### `vector_magnitude.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/vector_magnitude.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+require 'utilities'
+
+module Cosmos
+  class VectorMagnitude < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+    end
+
+    def call(value, packet, buffer)
+      u = []
+      u[0] = packet.read(@items[0])
+      u[1] = packet.read(@items[1])
+      u[2] = packet.read(@items[2])
+      return Utilities::norm(u)
+    end
+
+  end
+end
+```
+
+### `x_ram_angle.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/x_ram_angle.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class XRamAngle < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+    end
+
+    def call(value, packet, buffer)
+      v   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      qbn = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5]), packet.read(@items[6])]
+
+      cbn = Utilities::Q2C(qbn)
+
+      vb = Utilities::MxV(cbn, Utilities::sxv(1.0/Utilities::norm(v),v)) # Velocity unit vector in body frame
+
+      return 180.0*Math.acos(vb[0])/Math::PI # Dot product with +x, then acos
+    end
+
+  end
+end
+```
+
+### `xz_ram_angle.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/xz_ram_angle.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class XzRamAngle < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+    end
+
+    def call(value, packet, buffer)
+      v   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      qbn = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5]), packet.read(@items[6])]
+
+      cbn = Utilities::Q2C(qbn)
+
+      vb = Utilities::MxV(cbn, Utilities::sxv(1.0/Utilities::norm(v),v)) # Velocity unit vector in body frame
+
+      ang = 180.0*Math.atan2(vb[1], vb[0])/Math::PI # atan of y/x
+      if ang < 0.0
+        ang = -ang # keep in 0 to 180 degree range to better compare with x-ram angle
+      end
+
+      return ang
+    end
+
+  end
+end
+```
+
+### `z_nadir_angle.rb`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/lib/z_nadir_angle.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+module Cosmos
+  class ZNadirAngle < Conversion
+    def initialize(*args)
+      super()
+      @items = args
+      @converted_type = :FLOAT
+      @converted_bit_size = 64
+    end
+
+    def call(value, packet, buffer)
+      p   = [packet.read(@items[0]), packet.read(@items[1]), packet.read(@items[2])]
+      qbn = [packet.read(@items[3]), packet.read(@items[4]), packet.read(@items[5]), packet.read(@items[6])]
+
+      cbn = Utilities::Q2C(qbn)
+
+      nb = Utilities::MxV(cbn, Utilities::sxv(-1.0/Utilities::norm(p),p)) # Nadir (-position) unit vector in body frame
+
+      return 180.0*Math.acos(nb[2])/Math::PI # Dot product with +z, then acos
+    end
+
+  end
+end
+```

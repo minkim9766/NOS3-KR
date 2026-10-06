@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_adcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,16 +11,97 @@
 .github/index
 fsw/index
 gsw/index
-file--.clang-format
-file--.git
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_adcs/.github/`](.github/index) — 폴더
-- [`components/generic_adcs/fsw/`](fsw/index) — 폴더
-- [`components/generic_adcs/gsw/`](gsw/index) — 폴더
-- [`components/generic_adcs/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `components/generic_adcs/.clang-format`
+
+
+```text
+---
+Language:        Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands:   true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit:     120
+CommentPragmas:  ''
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+ExperimentalAutoDetectBinPacking: false
+ForEachMacros: []
+IncludeBlocks:   Preserve
+IncludeCategories:  []
+IncludeIsMainRegex: '$'
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWidth:     4
+KeepEmptyLinesAtTheStartOfBlocks: true
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments:  true
+SortIncludes:    false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpaceBeforeCpp11BracedList: true
+SpacesBeforeTrailingComments: 1
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard:        c++11
+TabWidth:        8
+UseTab:          Never
+```
+
+### `.git`
+
+**경로:** `components/generic_adcs/.git`
+
+
+```text
+gitdir: ../../.git/modules/components/generic_adcs
+```
+
+### `README.md`
+
+**경로:** `components/generic_adcs/README.md`
+
+
+```markdown
+# generic_adcs
+Generic NOS3 Attitude Determination and Control System
+```

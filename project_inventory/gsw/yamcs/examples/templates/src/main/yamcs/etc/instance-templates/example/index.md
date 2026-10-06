@@ -3,16 +3,59 @@
 
 **경로:** `gsw/yamcs/examples/templates/src/main/yamcs/etc/instance-templates/example/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `meta.yaml`
 
-file--meta.yaml
-file--template.yaml
+**경로:** `gsw/yamcs/examples/templates/src/main/yamcs/etc/instance-templates/example/meta.yaml`
+
+
+```yaml
+description: Creates an empty instance, for demo purposes
+
+variables:
+  - name: spaceSystem
+    label: Example parameter
+    help: Used as name of the root space system
+  
+  - name: bar
+    label: Example combo parameter
+    choices:
+      - Option 1
+      - Option 2
+      - Option 3
+    initial: Option 2
+  
+  - name: optional_foo
+    label: An optional parameter
+    required: false
 ```
 
-## 항목
+### `template.yaml`
 
-- [`gsw/yamcs/examples/templates/src/main/yamcs/etc/instance-templates/example/meta.yaml`](file--meta.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/templates/src/main/yamcs/etc/instance-templates/example/template.yaml`](file--template.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/examples/templates/src/main/yamcs/etc/instance-templates/example/template.yaml`
+
+
+```yaml
+# Variables are used like this: {{ spaceSystem }} anywhere in this file.
+# Yaml parsing only happens after variable substitution.
+
+{% if optional_foo %}
+# If a parameter is conditional (required: false), you can check if it was set using an if condition
+{% endif %}
+
+services: []
+
+mdb:
+  - type: "emptyNode"
+    args:
+      name: "{{ spaceSystem }}"
+
+streamConfig:
+  tm: ["tm_realtime", "tm_dump"]
+  cmdHist: ["cmdhist_realtime",  "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["sys_param", "pp_realtime"]
+  parameterAlarm: ["alarms_realtime"]
+  tc: ["tc_realtime"]
+```

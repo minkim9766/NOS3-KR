@@ -3,18 +3,121 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm.component.css`
 
-file--algorithm.component.css
-file--algorithm.component.html
-file--algorithm.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/algorithm.component.css`
+
+
+```css
+.tab-content-wrapper {
+  position: absolute;
+  /* tab height + border */
+  top: 37px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.tab-content-wrapper.noscroll {
+  overflow: hidden;
+}
 ```
 
-## 항목
+### `algorithm.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/algorithm.component.css`](file--algorithm.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/algorithm.component.html`](file--algorithm.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/algorithm.component.ts`](file--algorithm.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/algorithm.component.html`
+
+
+```html
+@if (algorithm$ | async; as algorithm) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        @for (parent of algorithm.qualifiedName | parents; track parent; let isFirst = $first) {
+          @if (!isFirst) {
+            <a
+              routerLink="/algorithms"
+              class="ya-link ya-header-link"
+              [queryParams]="{ c: yamcs.context, system: parent.path }">
+              {{ parent.name }}
+            </a>
+          }
+          /
+        }
+        <span>{{ algorithm.qualifiedName | shortName }}</span>
+        <ya-title-copy [text]="algorithm.qualifiedName" />
+      </ng-template>
+    </ya-instance-toolbar>
+
+    <ya-page-tabs>
+      <a
+        routerLink="-/summary"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [class.active]="rla.isActive"
+        [queryParams]="{ c: yamcs.context }">
+        Summary
+      </a>
+      <a
+        routerLink="-/trace"
+        routerLinkActive
+        #rlb="routerLinkActive"
+        [class.active]="rlb.isActive"
+        [queryParams]="{ c: yamcs.context }"
+        [class.disabled]="algorithm.scope !== 'GLOBAL'">
+        Trace
+      </a>
+    </ya-page-tabs>
+
+    <div class="tab-content-wrapper">
+      <router-outlet />
+    </div>
+  </ya-instance-page>
+}
+```
+
+### `algorithm.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/algorithm.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  input,
+} from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { Algorithm, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './algorithm.component.html',
+  styleUrl: './algorithm.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AlgorithmComponent implements OnInit {
+  qualifiedName = input.required<string>({ alias: 'algorithm' });
+
+  algorithm$: Promise<Algorithm>;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private title: Title,
+  ) {}
+
+  ngOnInit(): void {
+    this.algorithm$ = this.yamcs.yamcsClient.getAlgorithm(
+      this.yamcs.instance!,
+      this.qualifiedName(),
+    );
+    this.algorithm$.then((algorithm) => {
+      this.title.setTitle(algorithm.name);
+    });
+  }
+}
+```

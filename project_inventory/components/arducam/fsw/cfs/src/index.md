@@ -3,26 +3,1419 @@
 
 **경로:** `components/arducam/fsw/cfs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cam_app.c`
 
-file--cam_app.c
-file--cam_app.h
-file--cam_child.c
-file--cam_child.h
-file--cam_events.h
-file--cam_msg.h
-file--cam_version.h
+**경로:** `components/arducam/fsw/cfs/src/cam_app.c`
+
+
+```c
+/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+/*******************************************************************************
+** File: cam_app.c
+**
+** Purpose:
+**   This file contains the source code for the Sample STF1 App.
+**
+*******************************************************************************/
+
+#include "cam_app.h"
+
+/*
+** global app data
+*/
+CAM_AppData_t CAM_AppData;
+
+/*
+** arducam_AppMain() -- Application entry point and main process loop
+*/
+void arducam_AppMain(void)
+{
+    int32 status          = 0;
+    CAM_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+    CFE_ES_PerfLogEntry(CAM_PERF_ID);
+
+    /*
+    ** initialize the application, register the app, etc
+    */
+    status = CAM_AppInit();
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CAM_INIT_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: init error %d", status);
+        CAM_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** CAM Runloop
+    */
+    while (CFE_ES_RunLoop(&CAM_AppData.RunStatus) == true)
+    {
+        /*
+        ** Exit performance profiling.  It will be restarted later in this while loop.
+        */
+        CFE_ES_PerfLogExit(CAM_PERF_ID);
+
+        /*
+        ** Pend on receipt of command packet -- set timeout to 500ms as cFE default
+        ** could also set no timeout - this means that this app
+        ** will block until a message is received.  Refer to the header file docs
+        ** for more information on using this function
+        */
+        status =
+            CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&CAM_AppData.MsgPtr, CAM_AppData.CmdPipe, CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Begin performance metrics on anything after this line. This will help to determine
+        ** where we are spending most of the time during this app execution
+        */
+        CFE_ES_PerfLogEntry(CAM_PERF_ID);
+
+        /*
+        ** If the RcvMsg() was successful, then continue to process the CommandPacket()
+        ** if not successful, then
+        */
+        if (status == CFE_SUCCESS)
+        {
+            CAM_ProcessCommandPacket();
+        }
+        else if (status == CFE_SB_PIPE_RD_ERR)
+        {
+            /* This is an example of exiting on an error.
+            ** Note that a SB read error is not always going to
+            ** result in an app quitting.
+            */
+            CFE_EVS_SendEvent(CAM_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM APP: SB Pipe Read Error, CAM APP will continue with error = %d", status);
+            // CAM_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    CFE_ES_ExitApp(CAM_AppData.RunStatus);
+}
+
+/*
+** CAM_AppInit() --  initialization
+*/
+int32 CAM_AppInit(void)
+{
+    int32 status = OS_SUCCESS;
+
+    while (true)
+    {
+        /*
+        ** Register the events
+        */
+        status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+        if (status != CFE_SUCCESS)
+        {
+            OS_printf("CAM APP: EVS register error %d", status);
+            break;
+        }
+
+        /*
+        ** Create the Software Bus command pipe
+        */
+        status = CFE_SB_CreatePipe(&CAM_AppData.CmdPipe, CAM_PIPE_DEPTH, "CAM_CMD_PIPE");
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "CAM APP: Cmd pipe error %d", status);
+            break;
+        }
+
+        /*
+        ** Subscribe to "ground commands". Ground commands are those commands with command codes
+        */
+        status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CAM_CMD_MID), CAM_AppData.CmdPipe);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM APP: Ground command subscription error %d", status);
+            break;
+        }
+
+        /*
+        ** Subscribe to housekeeping (hk) messages.  HK messages are those messages that request
+        ** an app to send its HK telemetry
+        */
+        status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CAM_SEND_HK_MID), CAM_AppData.CmdPipe);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_SUB_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM APP: HK command subscription error %d", status);
+            break;
+        }
+
+        /*
+        ** Create data mutex
+        */
+        status = OS_MutSemCreate(&CAM_AppData.data_mutex, CAM_MUTEX_NAME, 0);
+        if (status != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_MUTEX_ERR_EID, CFE_EVS_EventType_ERROR, "CAM APP: Create mutex error %d", status);
+            break;
+        }
+
+        /*
+        ** Create child task wakeup semaphore
+        */
+        status = OS_BinSemCreate(&CAM_AppData.sem_id, CAM_SEM_NAME, 0, 0);
+        if (status != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_SEMAPHORE_ERR_EID, CFE_EVS_EventType_ERROR, "CAM APP: Semaphore create error %d",
+                              status);
+            break;
+        }
+
+        /*
+        ** Initialize Application Data
+        */
+        CAM_AppData.State                            = CAM_STOP;
+        CAM_AppData.Exp                              = 0;
+        CAM_AppData.Size                             = size_160x120;
+        CAM_AppData.HkTelemetryPkt.CommandCount      = 0;
+        CAM_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+
+        /*
+        ** Create child task
+        */
+        status = CAM_ChildInit();
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CAM_INIT_CHILD_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: Child task init error %d",
+                              status);
+            break;
+        }
+
+        /* Initialize the published HK message - this HK message will contain the telemetry
+        ** that has been defined in the CAM_HkTelemetryPkt for this app
+        */
+        CFE_MSG_Init(CFE_MSG_PTR(CAM_AppData.HkTelemetryPkt.TlmHeader), CFE_SB_ValueToMsgId(CAM_HK_TLM_MID),
+                     CAM_HK_TLM_LNGTH);
+
+        CFE_MSG_Init(CFE_MSG_PTR(CAM_AppData.Exp_Pkt.TlmHeader), CFE_SB_ValueToMsgId(CAM_EXP_TLM_MID),
+                     CAM_EXP_TLM_LNGTH);
+
+        /*
+        ** Important to send an information event that the app has initialized. this is
+        ** useful for debugging the loading of individual apps
+        */
+        CFE_EVS_SendEvent(CAM_STARTUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "CAM App Initialized. Version %d.%d.%d.%d", CAM_MAJOR_VERSION, CAM_MINOR_VERSION,
+                          CAM_REVISION, CAM_MISSION_REV);
+        break;
+    }
+
+    return status;
+}
+
+/*
+**  Name:  CAM_ProcessCommandPacket
+**
+**  Purpose:
+**  This routine will process any packet that is received on the CAM command pipe.
+*/
+void CAM_ProcessCommandPacket(void)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_MSG_GetMsgId(CAM_AppData.MsgPtr, &MsgId);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    switch (CFE_SB_MsgIdToValue(MsgId))
+    {
+        /*
+        ** Ground Commands with command codes fall under the CAM_APP_CMD_MID
+        ** message ID
+        */
+        case CAM_CMD_MID:
+            CAM_ProcessGroundCommand();
+            break;
+
+        /*
+        ** All other messages, other than ground commands, add to this case statement.
+        ** The HK MID comes first, as it is currently the only other messages defined
+        ** besides the CAM_APP_CMD_MID message above
+        */
+        case CAM_SEND_HK_MID:
+            CAM_ReportHousekeeping();
+            break;
+
+            /*
+            ** All other invalid messages that this app doesn't recognize, increment
+            ** the command error counter and log as an error event.
+            */
+        default:
+            CAM_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(CAM_COMMAND_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM App: invalid command packet, MID = 0x%x", CFE_SB_MsgIdToValue(MsgId));
+            break;
+    }
+
+    return;
+}
+
+/*
+** CAM_ProcessGroundCommand() -- CAM ground commands
+*/
+void CAM_ProcessGroundCommand(void)
+{
+    // Local variables
+    uint8             state       = 1;
+    uint16            x           = 0;
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /*
+    ** MsgId is only needed if the command code is not recognized. See default case below
+    */
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_MSG_GetMsgId(CAM_AppData.MsgPtr, &MsgId);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+
+    /*
+    ** Ground Commands, by definition, has a command code associated with them.  Pull
+    ** this command code from the message and then process the action associated with
+    ** the command code.
+    */
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_MSG_GetFcnCode(CAM_AppData.MsgPtr, &CommandCode);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    switch (CommandCode)
+    {
+        /*
+        ** NOOP Command
+        */
+        case CAM_NOOP_CC:
+            /*
+            ** notice the usage of the VerifyCmdLength() function call to verify that
+            ** the command length is as expected.
+            */
+            if (CAM_VerifyCmdLength(CAM_AppData.MsgPtr, sizeof(CAM_NoArgsCmd_t)))
+            {
+                OS_MutSemTake(CAM_AppData.data_mutex);
+                CAM_AppData.HkTelemetryPkt.CommandCount++;
+                OS_MutSemGive(CAM_AppData.data_mutex);
+                CFE_EVS_SendEvent(CAM_COMMANDNOP_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: NOOP command");
+            }
+            break;
+
+        /*
+        ** Reset Counters Command
+        */
+        case CAM_RESET_COUNTERS_CC:
+            CAM_ResetCounters();
+            break;
+
+        /*
+        ** Stop Science Command
+        */
+        case CAM_STOP_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_STOP_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: STOP command");
+            break;
+
+        /*
+        ** Pause Science Command
+        */
+        case CAM_PAUSE_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_PAUSE;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_PAUSE_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: PAUSE command");
+            break;
+
+        /*
+        ** Resume Science Command
+        */
+        case CAM_RESUME_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_RUN;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_RUN_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: RESUME command");
+            break;
+
+        /*
+        ** Timeout Command
+        */
+        case CAM_TIMEOUT_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_TIME;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_TIMEOUT_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: TIMEOUT command");
+            break;
+
+        /*
+        ** Low Voltage Command
+        */
+        case CAM_LOW_VOLTAGE_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.State = CAM_LOW_VOLTAGE;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_LOW_VOLTAGE_INT_EID, CFE_EVS_EventType_INFORMATION, "CAM App: LOW_VOLTAGE command");
+            break;
+
+        /*
+        ** EXP 1 - Small
+        */
+        case CAM_EXP1_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.Exp = 1;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_EXP1_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 1 Command - Small Picture");
+            OS_BinSemGive(CAM_AppData.sem_id);
+            break;
+
+        /*
+        ** EXP 2  - Medium
+        */
+        case CAM_EXP2_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.Exp = 2;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_EXP2_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 2 Command - Medium Picture");
+            OS_BinSemGive(CAM_AppData.sem_id);
+            break;
+        /*
+        ** EXP 3 - Large
+        */
+        case CAM_EXP3_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            CAM_AppData.Exp = 3;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 3 Command - Large Picture");
+            OS_BinSemGive(CAM_AppData.sem_id);
+            break;
+
+        /*
+        **  Hardware Check
+        */
+        case CAM_HW_CHECK_CC:
+            CAM_AppData.HkTelemetryPkt.CommandCount++;
+            state = OS_SUCCESS;
+            state = CAM_init_i2c();
+            if (state != OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(CAM_INIT_I2C_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: I2C Failure");
+            }
+            else
+            {
+                state = CAM_init_spi();
+                if (state != OS_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(CAM_INIT_SPI_ERR_EID, CFE_EVS_EventType_ERROR, "CAM App: SPI Failure");
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CAM_HW_CHECK_EID, CFE_EVS_EventType_INFORMATION, "CAM App: Hardware Checked Out");
+                }
+            }
+            break;
+
+        /*
+        **  Debug and Testing CC
+        */
+        case CAM_HWLIB_INIT_I2C_CC:
+            CAM_init_i2c();
+            break;
+        case CAM_HWLIB_INIT_SPI_CC:
+            CAM_init_spi();
+            break;
+        case CAM_HWLIB_CONFIG_CC:
+            CAM_config();
+            break;
+        case CAM_HWLIB_JPEG_INIT_CC:
+            CAM_jpeg_init();
+            break;
+        case CAM_HWLIB_YUV422_CC:
+            CAM_yuv422();
+            break;
+        case CAM_HWLIB_JPEG_CC:
+            CAM_jpeg();
+            break;
+        case CAM_HWLIB_SETUP_CC:
+            CAM_setup();
+            break;
+        case CAM_HWLIB_SETSIZE_CC:
+            CAM_setSize(CAM_AppData.Size);
+            break;
+        case CAM_HWLIB_CAPTURE_PREP_CC:
+            CAM_capture_prep();
+            break;
+        case CAM_HWLIB_CAPTURE_CC:
+            CAM_capture();
+            break;
+        case CAM_HWLIB_READ_PREP_CC:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.Exp_Pkt.msg_count = 0x0000;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CAM_read_prep((char *)&CAM_AppData.Exp_Pkt.data, (uint16 *)&x);
+            break;
+        case CAM_HWLIB_READ_CC:
+            x     = 1;
+            state = 1;
+            CAM_fifo(&x, &state);
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.HkTelemetryPkt.CommandErrorCount++;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+            CFE_EVS_SendEvent(CAM_COMMAND_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CAM App: invalid command code for packet MID = 0x%x CC = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+**  Name:  CAM_ReportHousekeeping
+**
+**  Purpose:
+**         This function is triggered in response to a task telemetry request
+**         from the housekeeping task. This function will gather the Apps
+**         telemetry, packetize it and send it to the housekeeping task via
+**         the software bus
+*/
+void CAM_ReportHousekeeping(void)
+{
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&CAM_AppData.HkTelemetryPkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&CAM_AppData.HkTelemetryPkt, true);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    return;
+}
+
+/*
+**  Name:  CAM_ResetCounters
+**
+**  Purpose:
+**         This function resets all the global counter variables that are
+**         part of the task telemetry.
+*/
+void CAM_ResetCounters(void)
+{
+    /* Status of commands processed by the CAM App */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 0;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+    CFE_EVS_SendEvent(CAM_COMMANDRST_INF_EID, CFE_EVS_EventType_INFORMATION, "CAM App: RESET Counters Command");
+    return;
+}
+
+/*
+** CAM_VerifyCmdLength() -- Verify command packet length
+*/
+bool CAM_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 ExpectedLength)
+{
+    bool              result       = true;
+    size_t            ActualLength = 0;
+    CFE_SB_MsgId_t    MessageID    = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode  = 0;
+
+    /*
+    ** Verify the command packet length.
+    */
+    CFE_MSG_GetSize(msg, &ActualLength);
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(msg, &MessageID);
+        CFE_MSG_GetFcnCode(msg, &CommandCode);
+
+        CFE_EVS_SendEvent(CAM_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X CC = %d Len = %ld Expected = %d",
+                          CFE_SB_MsgIdToValue(MessageID), CommandCode, ActualLength, ExpectedLength);
+
+        result = false;
+        CAM_AppData.HkTelemetryPkt.CommandErrorCount++;
+    }
+
+    return (result);
+}
 ```
 
-## 항목
+### `cam_app.h`
 
-- [`components/arducam/fsw/cfs/src/cam_app.c`](file--cam_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/src/cam_app.h`](file--cam_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/src/cam_child.c`](file--cam_child.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/src/cam_child.h`](file--cam_child.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/src/cam_events.h`](file--cam_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/src/cam_msg.h`](file--cam_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/src/cam_version.h`](file--cam_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/arducam/fsw/cfs/src/cam_app.h`
+
+
+```c
+/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _CAM_H_
+#define _CAM_H_
+
+/*
+** Required header files.
+*/
+#include "cfe.h"
+#include "cam_perfids.h"
+#include "cam_msgids.h"
+#include "cam_msg.h"
+#include "cam_events.h"
+#include "cam_version.h"
+#include "cam_device.h"
+#include "cam_child.h"
+#include "hwlib.h"
+
+/*
+** This is the specified pipe depth for the app, meaning how many messages will be
+**   queued in the pipe.  32 is the cFE default
+*/
+#define CAM_PIPE_DEPTH 32
+
+/*
+** The cFE convention is to put all global app data in a single struct.
+** This struct would be defined in the cam_app.h file. You would then have one global instance
+** in the.c file. You would also extern the global struct in the header file. This is important for
+** the Unit Test Framework(UTF). When using the UTF, you need access to the app global data so
+** it's a good idea to play along.
+*/
+typedef struct
+{
+    /*
+    ** Housekeeping telemetry packet...each app defines its own packet which contains
+    ** its OWN telemetry that you want to be sent
+    */
+    CAM_Hk_tlm_t HkTelemetryPkt; /* CAM Housekeeping Telemetry Packet */
+
+    /*
+    ** Operational data (not reported in housekeeping)...
+    */
+    CFE_MSG_Message_t *MsgPtr;    /* Pointer to msg received on software bus */
+    CFE_SB_PipeId_t    CmdPipe;   /* Pipe Id for HK command pipe */
+    uint32             RunStatus; /* App run status for controlling the application state */
+    CAM_Exp_tlm_t      Exp_Pkt;   /* Experiment Packet */
+
+    /*
+    ** Child data
+    */
+    uint32 ChildTaskID; /* Task ID provided by CFS on initialization */
+    uint32 data_mutex;
+    uint32 sem_id; /* Semaphore ID */
+    uint32 Exp;
+    uint32 State;
+    uint32 Size; /* Resolution of picture */
+} CAM_AppData_t;
+
+/*
+** Exported Data
+*/
+extern CAM_AppData_t CAM_AppData; /* CAM App Data */
+
+/*
+**
+** Local function prototypes.
+**
+** Note: Except for the entry point (CAM_AppMain), these
+**       functions are not called from any other source module.
+*/
+// void CAM_AppMain(void);
+int32 CAM_AppInit(void);
+void  CAM_ProcessCommandPacket(void);
+void  CAM_ProcessGroundCommand(void);
+void  CAM_ReportHousekeeping(void);
+void  CAM_ProcessPR(void);
+void  CAM_ResetCounters(void);
+
+/*
+** This function is provided as an example of verifying the size of the command
+*/
+bool CAM_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 ExpectedLength);
+
+#endif
+```
+
+### `cam_child.c`
+
+**경로:** `components/arducam/fsw/cfs/src/cam_child.c`
+
+
+```c
+/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "cam_child.h"
+
+/*
+**  Name:  CAM_publish
+**
+**  Purpose:
+** 		   Break apart functionality, publish received data.
+*/
+int32_t CAM_publish(void)
+{
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    CAM_AppData.Exp_Pkt.msg_count++;
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&CAM_AppData.Exp_Pkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&CAM_AppData.Exp_Pkt, true);
+    OS_MutSemGive(CAM_AppData.data_mutex);
+    return OS_SUCCESS;
+} /* End of CAM_publish() */
+
+/*
+**  Name:  CAM_state
+**
+**  Purpose:
+** 		   	Checks the state of the experiment
+**			Holds on pause and quits on stop
+*/
+int32_t CAM_state(void)
+{
+    int32_t  result = OS_ERROR;
+    uint32_t state;
+
+    OS_MutSemTake(CAM_AppData.data_mutex);
+    state = CAM_AppData.State;
+    OS_MutSemGive(CAM_AppData.data_mutex);
+
+    switch (state)
+    {
+        case CAM_LOW_VOLTAGE:
+            OS_printf("CAM child task low voltage received");
+            break;
+
+        case CAM_TIME:
+            OS_printf("CAM child task timeout received");
+            break;
+
+        case CAM_STOP:
+            // Do nothing
+            break;
+
+        case CAM_PAUSE:
+            while (state == CAM_PAUSE)
+            {
+                OS_MutSemTake(CAM_AppData.data_mutex);
+                state = CAM_AppData.State;
+                OS_MutSemGive(CAM_AppData.data_mutex);
+                OS_TaskDelay(1000);
+            }
+            if (state == CAM_STOP)
+            {
+                result = OS_ERROR;
+            }
+            result = OS_SUCCESS;
+            break;
+
+        default: // CAM_RUN
+            result = OS_SUCCESS;
+    }
+    return result;
+}
+
+/*
+**  Name:  CAM_fifo
+**
+**  Purpose:
+** 		   Read the camera FIFO until commanded to stop, complete, or error occurs.
+*/
+int32_t CAM_fifo(uint16 *x, uint8 *status)
+{
+    int32_t result = OS_SUCCESS;
+
+    while ((*status > 0) && (*status <= 8) &&
+           (CAM_AppData.Exp_Pkt.msg_count < ((CAM_AppData.Exp_Pkt.length / CAM_DATA_SIZE) + 1)))
+    // Status is used to track key points such as start and end of the image
+    // Limiting this number ensures that cycling through the FIFO repeatedly is avoided
+    {
+        // Read a packet
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        result = CAM_read((char *)&CAM_AppData.Exp_Pkt.data, x, status);
+        OS_MutSemGive(CAM_AppData.data_mutex);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM read error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+        (*x) = 0;
+
+        // Publish the packet
+        result = CAM_publish();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM publish error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Delay between messages to allow for processing
+        OS_TaskDelay(250);
+
+#ifdef STF1_DEBUG
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        OS_printf("\n status   = %d \n", *status);
+        OS_printf("\n msg_count = %d \n", CAM_AppData.Exp_Pkt.msg_count);
+        OS_MutSemGive(CAM_AppData.data_mutex);
+#endif
+    }
+    return result;
+}
+
+/*
+**  Name:  CAM_exp
+**
+**  Purpose:
+** 		   The experiment runs until the parent dies or is commanded to stop by the parent
+** 		   but has the ability to be paused and resumed depending on the current state.
+*/
+int32_t CAM_exp(void)
+{
+    int32_t result = OS_ERROR;
+    uint8   status = 1;
+    uint16  x      = 0;
+
+    while (status == 1)
+    { // Check state
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Initialize Serial Peripheral Interface
+        result = CAM_init_spi();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM init spi error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Initialize Inter-Integrated Circuit
+        result = CAM_init_i2c();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM init i2c error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Camera for Upload
+        result = CAM_config();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM configure camera for upload error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Registers
+        result = CAM_jpeg_init();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM jpeg init error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Registers
+        result = CAM_yuv422();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM yuv422 error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Registers
+        result = CAM_jpeg();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM jpeg error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Configure Camera for Size
+        result = CAM_setup();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM setup error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Upload Size
+        result = CAM_setSize(CAM_AppData.Size);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM upload size error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Prepare for Capture
+        result = CAM_capture_prep();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM capture prep error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Capture Image
+        result = CAM_capture();
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM capture error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Read FIFO Size
+        result = CAM_read_fifo_length(&CAM_AppData.Exp_Pkt.length);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM read fifo length error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Prepare for FIFO Read
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        CAM_AppData.Exp_Pkt.msg_count = 0x0000;
+        result                        = CAM_read_prep((char *)&CAM_AppData.Exp_Pkt.data, (uint16 *)&x);
+        OS_MutSemGive(CAM_AppData.data_mutex);
+        if (result != OS_SUCCESS)
+        {
+            OS_printf("CAM read prep error");
+            OS_MutSemTake(CAM_AppData.data_mutex);
+            CAM_AppData.State = CAM_STOP;
+            OS_MutSemGive(CAM_AppData.data_mutex);
+        }
+        if (CAM_state() != OS_SUCCESS)
+            break;
+
+        // Read FIFO
+        result = CAM_fifo((uint16 *)&x, (uint8 *)&status);
+        break;
+    }
+
+    return result;
+}
+
+/*
+** CAM Child Task Startup Initialization
+*/
+int32_t CAM_ChildInit(void)
+{
+    int32_t result;
+
+    /* Create child task (low priority command handler) */
+    result = CFE_ES_CreateChildTask(&CAM_AppData.ChildTaskID, CAM_CHILD_TASK_NAME, CAM_ChildTask, 0,
+                                    CAM_CHILD_TASK_STACK_SIZE, CAM_CHILD_TASK_PRIORITY, 0);
+
+    if (result != CFE_SUCCESS)
+    {
+        OS_printf("CAM child task initialization error: create task failed: result = %d", result);
+    }
+
+    return result;
+} /* End of CAM_ChildInit() */
+
+/*
+**  Name:  CAM_ChildTask
+**
+**  Purpose:
+** 		   The child task remains active until provided the binary semaphore by the parent
+**         when and experiment is kicked off.
+*/
+void CAM_ChildTask(void)
+{
+    int32_t result;
+    int32_t state;
+
+    OS_printf("CAM child task initialization complete");
+
+    while (true)
+    {
+        // Block on Semaphore
+        OS_BinSemTake(CAM_AppData.sem_id);
+
+        // Check State
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        state = CAM_AppData.State;
+        OS_MutSemGive(CAM_AppData.data_mutex);
+        if (state == CAM_PAUSE)
+        {
+            while (CAM_state() != OS_SUCCESS)
+                ;
+        }
+
+        // Initialize Child Process Flags
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        CAM_AppData.State = CAM_RUN;
+        switch (CAM_AppData.Exp)
+        {
+            case 1:
+#ifdef OV2640
+                CAM_AppData.Size = size_160x120;
+#endif
+#ifdef OV5640
+                CAM_AppData.Size = size_320x240;
+#endif
+#ifdef OV5642
+                CAM_AppData.Size = size_320x240;
+#endif
+                break;
+            case 2:
+#ifdef OV2640
+                CAM_AppData.Size = size_800x600;
+#endif
+#ifdef OV5640
+                CAM_AppData.Size = size_1600x1200;
+#endif
+#ifdef OV5642
+                CAM_AppData.Size = size_1600x1200;
+#endif
+                break;
+            case 3:
+#ifdef OV2640
+                CAM_AppData.Size = size_1600x1200;
+#endif
+#ifdef OV5640
+                CAM_AppData.Size = size_2592x1944;
+#endif
+#ifdef OV5642
+                CAM_AppData.Size = size_2592x1944;
+#endif
+                break;
+            default:
+                OS_printf("CAM experiment ID error");
+                CAM_AppData.State = CAM_STOP;
+                break;
+        }
+        OS_MutSemGive(CAM_AppData.data_mutex);
+
+        // Run Experiment
+        result = CAM_exp();
+        // Check Result
+        OS_MutSemTake(CAM_AppData.data_mutex);
+        if ((result == OS_SUCCESS) && (CAM_AppData.State == CAM_RUN))
+        {
+            switch (CAM_AppData.Exp)
+            {
+                case 1:
+                    // OS_printf("CAM EXP1 Complete\n");
+                    CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 1 Completed");
+                    break;
+                case 2:
+                    // OS_printf("CAM EXP2 Complete\n");
+                    CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 2 Completed");
+                    break;
+                case 3:
+                    // OS_printf("CAM EXP3 Complete\n");
+                    CFE_EVS_SendEvent(CAM_EXP3_EID, CFE_EVS_EventType_INFORMATION, "CAM App: EXP 3 Completed");
+                    break;
+                default:
+                    break;
+            }
+            // Delay to allow for all CAM Tlm messages to be cleared from pipe
+            OS_TaskDelay(10000);
+        }
+        // Cleanup
+        CAM_AppData.State = CAM_STOP;
+        OS_MutSemGive(CAM_AppData.data_mutex);
+    }
+
+    /* This call allows cFE to clean-up system resources */
+    OS_printf("CAM child task exit complete");
+    CFE_ES_ExitChildTask();
+} /* End of CAM_ChildTask() */
+```
+
+### `cam_child.h`
+
+**경로:** `components/arducam/fsw/cfs/src/cam_child.h`
+
+
+```c
+/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _cam_child_h_
+#define _cam_child_h_
+
+#include "device_cfg.h"
+#include "cam_app.h"
+#include "cam_platform_cfg.h"
+
+int32_t CAM_publish(void);
+int32_t CAM_state(void);
+int32_t CAM_fifo(uint16_t *, uint8_t *);
+int32_t CAM_exp(void);
+int32_t CAM_ChildInit(void);
+void    CAM_ChildTask(void);
+
+#endif /* _cam_child_h_ */
+```
+
+### `cam_events.h`
+
+**경로:** `components/arducam/fsw/cfs/src/cam_events.h`
+
+
+```c
+/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _CAM_EVENTS_H_
+#define _CAM_EVENTS_H_
+
+/* define any custom app event IDs */
+#define CAM_RESERVED_EID          0
+#define CAM_STARTUP_INF_EID       1
+#define CAM_COMMAND_ERR_EID       2
+#define CAM_COMMANDNOP_INF_EID    3
+#define CAM_COMMANDRST_INF_EID    4
+#define CAM_INVALID_MSGID_ERR_EID 5
+#define CAM_LEN_ERR_EID           6
+#define CAM_PIPE_ERR_EID          7
+#define CAM_MUTEX_ERR_EID         8
+#define CAM_SEMAPHORE_ERR_EID     9
+#define CAM_CHILD_REG_ERR_EID     10
+#define CAM_INIT_CHILD_ERR_EID    11
+#define CAM_INIT_ERR_EID          12
+#define CAM_INIT_REG_ERR_EID      13
+#define CAM_INIT_PIPE_ERR_EID     14
+#define CAM_INIT_SUB_CMD_ERR_EID  15
+#define CAM_INIT_SUB_HK_ERR_EID   16
+
+/* Child Task IDs */
+#define CAM_STOP_INF_EID        20
+#define CAM_PAUSE_INF_EID       21
+#define CAM_RUN_INF_EID         22
+#define CAM_TIMEOUT_INF_EID     23
+#define CAM_LOW_VOLTAGE_INT_EID 24
+#define CAM_CHILD_STOP_INF_EID  25
+#define CAM_CHILD_PAUSE_INF_EID 26
+#define CAM_CHILD_RUN_INF_EID   27
+#define CAM_CHILD_INIT_EID      28
+#define CAM_CHILD_INIT_ERR_EID  29
+#define CAM_CHILD_EXP_EID       30
+#define CAM_CHILD_EXP_ERR_EID   31
+
+/* Full Experiments Completed */
+#define CAM_EXP1_EID     40
+#define CAM_EXP2_EID     41
+#define CAM_EXP3_EID     42
+#define CAM_HW_CHECK_EID 43
+
+/* Errors */
+#define CAM_INIT_SPI_ERR_EID      61
+#define CAM_INIT_I2C_ERR_EID      62
+#define CAM_CONFIG_ERR_EID        63
+#define CAM_JPEG_INIT_ERR_EID     64
+#define CAM_YUV422_ERR_EID        65
+#define CAM_JPEG_ERR_EID          66
+#define CAM_SETUP_ERR_EID         67
+#define CAM_SET_SIZE_ERR_EID      68
+#define CAM_CAPTURE_PREP_ERR_EID  69
+#define CAM_CAPTURE_ERR_EID       70
+#define CAM_READ_FIFO_LEN_ERR_EID 71
+#define CAM_READ_PREP_ERR_EID     72
+#define CAM_READ_ERR_EID          73
+#define CAM_PUBLISH_ERR_EID       74
+#define CAM_LOW_VOLTAGE_EID       75
+#define CAM_TIME_EID              76
+
+#endif
+```
+
+### `cam_msg.h`
+
+**경로:** `components/arducam/fsw/cfs/src/cam_msg.h`
+
+
+```c
+/* Copyright (C) 2009 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _CAM_MSG_H_
+#define _CAM_MSG_H_
+
+#include "cam_device.h"
+#include "cfe_sb.h"
+
+/*
+** CAM App command codes
+*/
+// \camcmd CAM NOOP Command
+#define CAM_NOOP_CC 0
+// \camcmd CAM Reset Counter Command
+#define CAM_RESET_COUNTERS_CC 1
+
+/* Generic Science CC */
+// \camcmd CAM Stop Science
+#define CAM_STOP_CC 2 // Stop all science in preperation for immediate shutdown
+// \camcmd CAM Pause Science
+#define CAM_PAUSE_CC 3 // Pause data transfer
+// \camcmd CAM Resume Science
+#define CAM_RESUME_CC 4 // Resume data transfer
+// \camcmd CAM Timeout Science
+#define CAM_TIMEOUT_CC 5 // Stop all science due to experiment timeout
+// \camcmd CAM Low Voltage
+#define CAM_LOW_VOLTAGE_CC 6 // Stop all science due to low voltage
+
+/* Complete Experiment CC */
+// \camcmd CAM Experiment 1 - Small
+#define CAM_EXP1_CC 10
+// \camcmd CAM Experiment 2 - Medium
+#define CAM_EXP2_CC 11
+// \camcmd CAM Experiment 3 - Large
+#define CAM_EXP3_CC 12
+// \camcmd CAM Hardware Check
+#define CAM_HW_CHECK_CC 13
+
+/* Debug and Testing CC */
+#define CAM_HWLIB_INIT_I2C_CC     20
+#define CAM_HWLIB_INIT_SPI_CC     21
+#define CAM_HWLIB_CONFIG_CC       22
+#define CAM_HWLIB_JPEG_INIT_CC    23
+#define CAM_HWLIB_YUV422_CC       24
+#define CAM_HWLIB_JPEG_CC         25
+#define CAM_HWLIB_SETUP_CC        26
+#define CAM_HWLIB_SETSIZE_CC      27
+#define CAM_HWLIB_CAPTURE_PREP_CC 28
+#define CAM_HWLIB_CAPTURE_CC      29
+#define CAM_HWLIB_READ_PREP_CC    30
+#define CAM_HWLIB_READ_CC         31
+#define CAM_PUBLISH_CC            32
+
+#define CAM_DATA_SIZE 1010 // Necessary to avoid compiler errors
+
+/*
+** CAM no argument command
+** See also: #CAM_NOOP_CC, #CAM_RESET_COUNTER_CC, #CAM_STOP_CC,
+** #CAM_PAUSE_CC, #CAM_RESUME_CC, #CAM_EXP1_CC, #CAM_EXP2_CC,
+** #CAM_EXP3_CC
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+
+} CAM_NoArgsCmd_t;
+#define CAM_NOARGSCMD_LNGTH sizeof(CAM_NoArgsCmd_t)
+
+/*
+** Type definition (CAM housekeeping)
+** \camtlm CAM Housekeeping telemetry packet
+** #CAM_HK_TLM_MID
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     CommandErrorCount;
+    uint8                     CommandCount;
+
+} CAM_Hk_tlm_t;
+#define CAM_HK_TLM_LNGTH sizeof(CAM_Hk_tlm_t)
+
+/*
+** Type definition (CAM EXP)
+** \camtlm CAM Experiment telemetry packet
+** #CAM_EXP_TLM_MID
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     data[CAM_DATA_SIZE];
+    uint16                    spare;
+    uint32                    msg_count;
+    uint32                    length;
+
+} CAM_Exp_tlm_t;
+#define CAM_EXP_TLM_LNGTH sizeof(CAM_Exp_tlm_t)
+
+#endif
+```
+
+### `cam_version.h`
+
+**경로:** `components/arducam/fsw/cfs/src/cam_version.h`
+
+
+```c
+/* Copyright (C) 2009 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+documentation will conform to the program, or any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+out of the results of, or use of, the software, documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+/************************************************************************
+** File:
+**   $Id: cam_version.h  $
+**
+** Purpose:
+**  The CAM Application header file containing version number
+**
+** Notes:
+**
+*************************************************************************/
+
+/* The Sample Application header file containing version number */
+#ifndef _CAM_VERSION_H_
+#define _CAM_VERSION_H_
+
+#define CAM_MAJOR_VERSION 1
+#define CAM_MINOR_VERSION 0
+#define CAM_REVISION      0
+#define CAM_MISSION_REV   1
+
+#endif
+```

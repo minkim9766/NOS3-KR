@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -25,70 +25,1481 @@ STest/index
 Svc/index
 TestUtils/index
 Utils/index
-file--.clang-format
-file--.clang-tidy
-file--.git
-file--.gitignore
-file--.gitmodules
-file--.nav.yml
-file--.pre-commit-config.yaml
-file--AI_POLICY.md
-file--CITATION.cff
-file--CMakeLists.txt
-file--CMakePresets.json
-file--CODE_OF_CONDUCT.md
-file--CONTRIBUTING.md
-file--CONTRIBUTORS.md
-file--CPPLINT.cfg
-file--GOVERNANCE.md
-file--LICENSE.txt
-file--NOTICE.txt
-file--README.md
-file--release.clang-tidy
-file--requirements.txt
-file--SECURITY.md
-file--settings.ini
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/`](.github/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/`](CFDP/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/`](ci/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/`](cmake/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/`](default/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/`](Drv/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fpp/`](Fpp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/`](FppTestProject/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/`](Fw/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/`](googletest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/`](Os/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/`](Ref/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/`](STest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/`](Svc/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/TestUtils/`](TestUtils/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/`](Utils/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.clang-tidy`](file--.clang-tidy) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.gitmodules`](file--.gitmodules) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.nav.yml`](file--.nav.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.pre-commit-config.yaml`](file--.pre-commit-config.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/AI_POLICY.md`](file--AI_POLICY.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CITATION.cff`](file--CITATION.cff) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CMakePresets.json`](file--CMakePresets.json) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CODE_OF_CONDUCT.md`](file--CODE_OF_CONDUCT.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CONTRIBUTING.md`](file--CONTRIBUTING.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CONTRIBUTORS.md`](file--CONTRIBUTORS.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CPPLINT.cfg`](file--CPPLINT.cfg) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/GOVERNANCE.md`](file--GOVERNANCE.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/LICENSE.txt`](file--LICENSE.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/NOTICE.txt`](file--NOTICE.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/release.clang-tidy`](file--release.clang-tidy) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/requirements.txt`](file--requirements.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/SECURITY.md`](file--SECURITY.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.clang-format`
+
+
+```text
+---
+BasedOnStyle: Chromium
+IndentWidth: 4
+ColumnLimit: 120
+AccessModifierOffset: -2
+```
+
+### `.clang-tidy`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.clang-tidy`
+
+
+```text
+# Clang-tidy configuration used on the whole code base, including tests and flight code
+
+Checks: >
+    bugprone-unhandled-self-assignment,
+    modernize-deprecated-headers,
+    modernize-redundant-void-arg,
+    modernize-use-bool-literals,
+    modernize-use-nullptr,
+    readability-braces-around-statements
+    -clang-analyzer-security.insecureAPI.rand,
+WarningsAsErrors: '*'
+```
+
+### `.git`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.git`
+
+
+```text
+gitdir: ../../../../../.git/modules/fsw/fprime/fprime-nos3/modules/lib/fprime
+```
+
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.gitignore`
+
+
+```text
+build/
+build-fprime-*/
+build-artifacts/
+gtest/
+docs-cache/
+CMakePresets.json
+
+AutoXML/
+test_harness/src/test_harness-C/application.out
+/.project
+/.cproject
+*.pyc
+*.o
+*Ac.*
+*ComponentReport.txt
+lib*.a
+*-bin
+ac_dep
+*~
+.metadata
+RemoteSystemsTempFiles
+*.py.bak
+~*
+*.hash
+.DS_Store
+*.stackdump
+Dict
+*.core
+
+**/coverage/
+*.gcov
+!**/test/ut/output/*.gcov
+GTestBase.*
+TesterBase.*
+Tester.*
+!**/test/ut/GTestBase.*
+!**/test/ut/TesterBase.*
+!**/test/ut/Tester.*
+seed-history
+
+*.sconsign.dblite
+*.class
+.classpath
+doxygen
+.scrub*
+.coverity*
+coverity.out
+#*#
+.#*
+
+**/docs/*.html
+/docs/UsersGuide/api/*
+*.template.*
+
+logs
+
+test_harness/.autotools
+core
+
+*.swp4
+
+*AppDictionary.xml
+*TopologyAppID.csv
+*TopologyAppAi_IDTableLog.txt
+
+.vscode
+py_dict
+.settings
+build-fprime-automatic*
+
+/Ref/bin
+/ci-venv/
+/ci-logs*
+/ci-Framework-logs*
+/ci-Ref-logs*
+TesterBase.*
+GTestBase.*
+**/DefaultDict/serializable/*
+
+fprime-venv
+xml
+depend
+
+/.idea/
+/venv/
+
+Packet-Views
+docs/reference/api/cpp
+docs/reference/api/cmake
+temp_dir/
+```
+
+### `.gitmodules`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.gitmodules`
+
+
+```text
+[submodule "googletest"]
+	path = googletest
+	url = https://github.com/google/googletest.git
+```
+
+### `.nav.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.nav.yml`
+
+
+```yaml
+# This file is used to generate the navigation structure for the documentation website
+# The website uses MkDocs Material and this file is used by the mkdocs-awesome-nav plugin
+# https://github.com/lukasgeiter/mkdocs-awesome-nav
+#
+# Paths prefixed with ../ are not publicly available
+
+nav:
+  - Home: '../'
+  - Overview: '../overview'
+  - Getting Started: 
+    - 'Getting Started': docs/getting-started/index.md
+    - 'Installation and Troubleshooting': docs/getting-started/installing-fprime.md
+  - Documentation:
+    - docs/index.md
+    - Tutorials:
+      - Tutorials Index: docs/tutorials/index.md
+      - 'Hello World': tutorials-hello-world/docs/hello-world.md
+      - 'LED Blinker': tutorials-led-blinker/docs/led-blinker.md
+      - 'MathComponent': tutorials-math-component/docs/math-component.md
+      - 'Cross-Compilation Setup': docs/tutorials/cross-compilation.md
+      - 'Arduino LED Blinker': tutorials-arduino-led-blinker/docs/arduino-led-blinker.md
+    - User Manual: 
+      - User Manual Index: docs/user-manual/index.md
+      - Overview: docs/user-manual/overview/
+      - Framework: docs/user-manual/framework/
+      - FPP: 'https://nasa.github.io/fpp/fpp-users-guide.html'
+      - GDS: docs/user-manual/gds
+      - Design Pattens: docs/user-manual/design-patterns/
+      - Build System: docs/user-manual/build-system/
+      - Security: docs/user-manual/security/
+    - How To: docs/how-to
+    - Reference: 
+      - docs/reference/index.md
+      - APIs:
+        - C++: docs/reference/api/cpp/html/
+        - CMake: docs/reference/api/cmake/
+      - Component SDDs:
+        - Svc:
+          - "Svc/**/docs/sdd.md"
+        - Fw:
+          - "Fw/**/docs/sdd.md"
+        - Drv:
+          - "Drv/**/docs/sdd.md"
+      - Specifications: 
+        - FPP Language Spec: 'https://nasa.github.io/fpp/fpp-spec.html'
+        - GDS Plugins: docs/reference/gds-plugins/
+        - "docs/reference/*.md"
+  - Support: '../support'
+  - Events: '../events'
+```
+
+### `.pre-commit-config.yaml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.pre-commit-config.yaml`
+
+
+```yaml
+repos:
+    -   repo: https://github.com/psf/black
+        rev: 19.3b0
+        hooks:
+        -   id: black
+            name: Format Python Code (black) in Fw/Python/
+            files: '^Fw/Python/'
+        -   id: black
+            name: Format Python Code (black) in Gds/
+            files: '^Gds/'
+            exclude: '^Gds/src/fprime_gds/wxgui/'
+```
+
+### `AI_POLICY.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/AI_POLICY.md`
+
+
+```markdown
+# F´ Generative AI Usage Guidelines
+
+We're excited about the potential of generative AI to help make [F´](https://github.com/nasa/fprime) development more productive, enjoyable, and accessible! Whether you're using AI to write code, improve documentation, or learn about complex systems, we welcome the thoughtful use of these powerful tools in your F´ contributions.
+
+This guide shares our community's approach to using generative AI effectively and responsibly. You'll find practical tips, best practices, and simple guidelines to help you get the most out of AI tools while maintaining the quality standards that make F´ great.
+
+## Our Position on Generative AI
+
+F´ embraces technological advancement and innovation. Generative AI tools can assist with:
+
+- Code generation and refactoring
+- Documentation creation and improvement  
+- Test case development
+- Debugging assistance
+- Design pattern suggestions
+- Learning and understanding our codebases
+
+However, the use of generative AI must align with our commitment to high technical standards, quality, and the collaborative nature of open source development.
+
+## Disclosure
+
+To maintain transparency and enable effective code review, contributors **must disclose all generative AI usage**.   
+This includes contributions in the forms of **Pull Requests**, **Issues** or **Discussions**. 
+
+### Pull Request Submissions for Contributors
+
+1. **Fill-In the "AI Used (y/n)" table entry** in the pull request template disclosing whether Gen AI was used in the pull request
+2. **Provide details in the "AI Usage" section** describing how generative AI was utilized
+
+### What to Disclose
+
+Include information about:
+
+- **Type of assistance**: Code generation, documentation, debugging, testing, refactoring, etc.
+- **Scope of usage**: Which files, functions, or sections were AI-assisted
+- **Tool(s) used**: Name of the AI system(s) employed (e.g., GitHub Copilot, ChatGPT, etc.)
+- **Level of modification**: Whether AI-generated content was used as-is, modified, or used as inspiration
+
+
+### What AI Cannot Replace
+
+- **Domain expertise** in flight software and embedded systems
+- **Understanding of F Prime architecture** and design patterns
+- **Critical thinking** about system requirements and constraints
+- **Human judgment** on safety-critical decisions
+- **Community collaboration** and peer review processes
+
+## Best Practices
+
+### Providing Guidelines to AI Tools
+
+When working with generative AI, provide clear rules and context to improve code quality and consistency. For Example:
+
+- **Reference F´ Style Guidelines**: Include the [F´ Style Guidelines](https://github.com/nasa/fprime/wiki/F%C2%B4-Style-Guidelines) in your prompts
+- **Enforce coding standards**: Instruct AI to avoid "magic numbers" and use descriptive variable names or comments
+- **Provide project context**: Share relevant F´ architectural patterns and component structures
+
+### Quality and Responsibility
+
+- **Review all AI-generated code** thoroughly before submission
+- **Verify necessity and relevance** - Remove verbose or unnecessary AI-generated content
+- **Be concise** - Edit AI output to be clear and to-the-point
+- **Ensure compliance** with F Prime coding standards and style guidelines
+- **Verify correctness** and test all AI-assisted implementations
+- **Maintain authorship responsibility** - you are accountable for all submitted code regardless of its origin
+
+### Security
+
+- **Be cautious with external dependencies** suggested by AI tools
+- **Validate security implications** of AI-generated code, especially for flight software
+
+### Code Review Considerations
+
+- **Provide context** to reviewers about AI usage to enable informed evaluation
+- **Be prepared to explain** AI-generated logic and design decisions
+- **Accept feedback gracefully** - AI-generated code is not exempt from revision requests
+- **Document complex AI-assisted algorithms** clearly for future maintainers
+
+## Getting Help
+
+If you have questions about appropriate AI usage or need guidance on disclosure:
+
+- Open a [Discussion](https://github.com/nasa/fprime/discussions) for community input
+- Contact the Community Managers for specific guidance
+```
+
+### `CITATION.cff`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CITATION.cff`
+
+
+```text
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - name: "The F´ Framework Team"
+title: "F´: A Flight-Proven, Multi-Platform, Open-Source Flight Software Framework"
+url: "https://github.com/nasa/fprime"
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CMakeLists.txt`
+
+
+```cmake
+####
+# CMakeLists.txt:
+#
+# Build core F prime.
+####
+cmake_minimum_required(VERSION 3.16)
+project(FPrime C CXX)
+set(FPRIME_FRAMEWORK_PATH "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location of F prime framework" FORCE)
+set(FPRIME_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Root path of F prime project" FORCE)
+
+# Include the build for F prime.
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/FPrime.cmake")
+
+# Set default warning flags for all builds
+# Specific build modules that do not comply with these flags can disable one or more of them
+#
+# -Wno-unused-parameter: Disable the unused parameter warning for now. F' has a lot of interfaces,
+# so unused method parameters are common in the F prime code base. Eventually all intentionally
+# unused parameters should be annotated to avoid this error.
+#
+# -Wno-vla: Variable length arrays are required to support sending to async serializable
+# ports. https://github.com/nasa/fprime/issues/945
+#
+add_compile_options(
+    $<$<COMPILE_LANGUAGE:CXX>:-Wold-style-cast>
+    -pedantic
+    -Wall
+    -Wextra
+    -Wconversion
+    -Wdouble-promotion
+    -Wshadow
+    -Werror
+    -Wno-unused-parameter
+    -Wno-vla
+)
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/FPrime-Code.cmake")
+```
+
+### `CMakePresets.json`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CMakePresets.json`
+
+
+```json
+{
+    "version": 4,
+    "configurePresets": [
+      {
+        "name": "fprime",
+        "displayName": "F´ Release Preset",
+        "description": "F´ release build using local fprime-venv",
+        "binaryDir": "${sourceDir}/build-fprime-automatic-native",
+        "generator": "Ninja",
+        "environment": {
+          "VIRTUAL_ENV": "${fileDir}/fprime-venv",
+          "PATH": "$env{VIRTUAL_ENV}/bin:$penv{PATH}"
+        },
+        "cacheVariables": {
+            "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+            "CMAKE_BUILD_TYPE": "Release"
+        }
+      },
+      {
+        "name": "fprime-debug",
+        "inherits": "fprime",
+        "displayName": "F´ Debug Preset",
+        "description": "F´ debug build using local fprime-venv",
+        "cacheVariables": {
+            "CMAKE_BUILD_TYPE": "Debug"
+        }
+      },
+      {
+        "name": "fprime-ut",
+        "inherits": "fprime-debug",
+        "displayName": "F´ Unit Test Preset",
+        "description": "F´ debug build including unit tests using local fprime-venv",
+        "binaryDir": "${sourceDir}/build-fprime-automatic-native-ut",
+        "cacheVariables": {
+            "BUILD_TESTING": "ON"
+        }
+      }
+  ]
+}
+```
+
+### `CODE_OF_CONDUCT.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CODE_OF_CONDUCT.md`
+
+
+```markdown
+
+# Contributor Covenant Code of Conduct
+
+## Our Pledge
+
+We as members, contributors, and leaders pledge to make participation in our
+community a harassment-free experience for everyone, regardless of age, body
+size, visible or invisible disability, ethnicity, sex characteristics, gender
+identity and expression, level of experience, education, socio-economic status,
+nationality, personal appearance, race, caste, color, religion, or sexual
+identity and orientation.
+
+We pledge to act and interact in ways that contribute to an open, welcoming,
+diverse, inclusive, and healthy community.
+
+## Our Standards
+
+Examples of behavior that contributes to a positive environment for our
+community include:
+
+* Demonstrating empathy and kindness toward other people
+* Being respectful of differing opinions, viewpoints, and experiences
+* Giving and gracefully accepting constructive feedback
+* Accepting responsibility and apologizing to those affected by our mistakes,
+  and learning from the experience
+* Focusing on what is best not just for us as individuals, but for the overall
+  community
+
+Examples of unacceptable behavior include:
+
+* The use of sexualized language or imagery, and sexual attention or advances of
+  any kind
+* Trolling, insulting or derogatory comments, and personal or political attacks
+* Public or private harassment
+* Publishing others' private information, such as a physical or email address,
+  without their explicit permission
+* Other conduct which could reasonably be considered inappropriate in a
+  professional setting
+
+## Enforcement Responsibilities
+
+Community leaders are responsible for clarifying and enforcing our standards of
+acceptable behavior and will take appropriate and fair corrective action in
+response to any behavior that they deem inappropriate, threatening, offensive,
+or harmful.
+
+Community leaders have the right and responsibility to remove, edit, or reject
+comments, commits, code, wiki edits, issues, and other contributions that are
+not aligned to this Code of Conduct, and will communicate reasons for moderation
+decisions when appropriate.
+
+## Scope
+
+This Code of Conduct applies within all community spaces, and also applies when
+an individual is officially representing the community in public spaces.
+Examples of representing our community include using an official email address,
+posting via an official social media account, or acting as an appointed
+representative at an online or offline event.
+
+## Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be
+reported to the community leaders responsible for enforcement at
+[fprime@jpl.nasa.gov](mailto:fprime@jpl.nasa.gov).
+All complaints will be reviewed and investigated promptly and fairly.
+
+All community leaders are obligated to respect the privacy and security of the
+reporter of any incident.
+
+## Enforcement Guidelines
+
+Community leaders will follow these Community Impact Guidelines in determining
+the consequences for any action they deem in violation of this Code of Conduct:
+
+### 1. Correction
+
+**Community Impact**: Use of inappropriate language or other behavior deemed
+unprofessional or unwelcome in the community.
+
+**Consequence**: A private, written warning from community leaders, providing
+clarity around the nature of the violation and an explanation of why the
+behavior was inappropriate. A public apology may be requested.
+
+### 2. Warning
+
+**Community Impact**: A violation through a single incident or series of
+actions.
+
+**Consequence**: A warning with consequences for continued behavior. No
+interaction with the people involved, including unsolicited interaction with
+those enforcing the Code of Conduct, for a specified period of time. This
+includes avoiding interactions in community spaces as well as external channels
+like social media. Violating these terms may lead to a temporary or permanent
+ban.
+
+### 3. Temporary Ban
+
+**Community Impact**: A serious violation of community standards, including
+sustained inappropriate behavior.
+
+**Consequence**: A temporary ban from any sort of interaction or public
+communication with the community for a specified period of time. No public or
+private interaction with the people involved, including unsolicited interaction
+with those enforcing the Code of Conduct, is allowed during this period.
+Violating these terms may lead to a permanent ban.
+
+### 4. Permanent Ban
+
+**Community Impact**: Demonstrating a pattern of violation of community
+standards, including sustained inappropriate behavior, harassment of an
+individual, or aggression toward or disparagement of classes of individuals.
+
+**Consequence**: A permanent ban from any sort of public interaction within the
+community.
+
+## Attribution
+
+This Code of Conduct is adapted from the [Contributor Covenant][homepage],
+version 2.1, available at
+[https://www.contributor-covenant.org/version/2/1/code_of_conduct.html][v2.1].
+
+Community Impact Guidelines were inspired by
+[Mozilla's code of conduct enforcement ladder][Mozilla CoC].
+
+For answers to common questions about this code of conduct, see the FAQ at
+[https://www.contributor-covenant.org/faq][FAQ]. Translations are available at
+[https://www.contributor-covenant.org/translations][translations].
+
+[homepage]: https://www.contributor-covenant.org
+[v2.1]: https://www.contributor-covenant.org/version/2/1/code_of_conduct.html
+[Mozilla CoC]: https://github.com/mozilla/diversity
+[FAQ]: https://www.contributor-covenant.org/faq
+[translations]: https://www.contributor-covenant.org/translations
+
+```
+
+### `CONTRIBUTING.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CONTRIBUTING.md`
+
+
+````markdown
+# Contributing Guidelines
+
+F´ is a free and open source project used to build embedded software!  Are you ready to contribute?
+
+In this file you can find basic information on contributing to [F´](https://github.com/nasa/fprime). We will walk
+through how to contribute and the process contributions follow. Remember, we may ask for changes or adjustments to make
+your submission the best it can be. Fear not! Your submission is still valued! You may even comment on other submissions
+to help them improve.
+
+## Ways of Contributing
+
+The best way to contribute to F´ is to remain positive and engaged. Just about every contribution needs some improvement
+before it is ready to be folded in. Stand behind your work, push it forward, and work with us!
+
+Specific Ways to Contribute:
+- [Ask a Question or Suggest Improvements](https://github.com/nasa/fprime/discussions/new)
+- [Report a Bug or Mistake](https://github.com/nasa/fprime/issues/new/choose)
+- [Review Contributions](https://github.com/nasa/fprime/pulls)
+- Submit a Pull Request
+- Contribute to Ongoing Discussions and Reviews
+
+Feel free to contribute any way that suits your skills and enjoy.
+
+
+> **Note:** [F´ Autocoder Python](https://github.com/nasa/fprime/tree/master/Autocoders) is being actively replaced
+> by [FPP](https://github.com/fprime-community/fpp). Thus we will no longer accept changes to this code except for
+> security and critical bug fixes done in the most minimal fashion.
+>
+> We do love Python fixes, please consider contributing to
+> [fprime-tools](https://github.com/fprime-community/fprime-tools) or
+> [fprime-gds](https://github.com/fprime-community/fprime-gds)
+
+## Where to Start
+
+First, contributors should build some understanding of F´. Read through the documentation, try a tutorial, or run a
+reference application. Contributors can find information in our [documentation](https://fprime.jpl.nasa.gov/latest/docs). Keep
+track of inconsistencies or bugs as these should be reported!
+
+When you are ready to join discussions and submit bug reports use one of the above links!
+
+To contribute to the F´ framework directly, consider writing
+[needed documentation](https://github.com/nasa/fprime/issues?q=is%3Aissue+is%3Aopen+label%3ADocumentation) or starting
+with an [easy first issue](https://github.com/nasa/fprime/issues?q=is%3Aissue+is%3Aopen+label%3A%22Easy+First+Issue%22).
+When starting to modify F´ directly, ask questions, seek help, and be patient. Remember to review the project structure,
+development process, and helpful tips sections below.
+
+## Project Structure
+
+The F´ project is designed as a base software [framework](https://github.com/nasa/fprime) with additional
+[packages](https://github.com/fprime-community) designed to extend the framework. This means that occasionally we may
+move contributions in or out of these packages.
+
+Key packages include:
+
+- [fpp](https://github.com/fprime-community/fpp): fpp development repository
+- [fprime-tools](https://github.com/fprime-community/fprime-tools): `fprime-util` development repository
+- [fprime-gds](https://github.com/fprime-community/fprime-gds): `fprime-gds` development repository
+
+
+### F´ Repository Structure
+
+Contributors to the [fprime](https://github.com/nasa/fprime) repository should understand the following key folders:
+
+- [docs/UsersGuide](https://github.com/nasa/fprime/tree/devel/docs/UsersGuide): add new documentation in this or a subfolder
+- [Fw](https://github.com/nasa/fprime/tree/devel/Fw): changes here will be reviewed carefully because this code is critical across F
+- [Ref](https://github.com/nasa/fprime/tree/devel/Ref): update and maintain the Reference application here
+
+## Development Process
+
+F´ follows a standard git flow development model. Developers should start with a
+[fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) of one of the F´ repositories and then develop
+according to [git flow](https://docs.github.com/en/get-started/quickstart/github-flow). Remember to add an
+[upstream remote](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/configuring-a-remote-repository-for-a-fork) to your fork such that you may fetch the latest changes.
+
+For each contribution, developers should first fetch the latest changes from upstream. Then create a new branch off
+`devel` and submit back to F´ using a pull request as described above.
+
+**Preparing A New Branch**
+```
+git fetch upstream
+git checkout upstream/devel
+git checkout -b <desired branch name>
+```
+
+Once a pull request has been submitted the following process will begin.
+
+### Submission Review
+
+The pull request changes will be reviewed by the team and community supporting F´. Often this means that a discussion on
+how to improve the submission will arise. Engage in the conversation and work with reviewers to improve the code.
+Remember, F´ is flight software running in remote environments. This means we hold submissions to very high standards.
+Do not fear, we are happy to work with contributors to help meet these standards!
+
+Submission reviews can take some time for the team to complete. These reviews may take additional time for pull requests
+that are very large, touch sensitive code, or have not been [discussed](https://github.com/nasa/fprime/discussions)
+beforehand. Sometimes changes are determined to best fit in another repository or package. Please be patient with us and
+remember we are all one team.
+
+Anyone can review code on F´ but an approved review from a maintainer will be required to complete the submission.
+
+### Automated Checking
+
+Once the submission has been reviewed by a maintainer, automated checking will begin. There are many checks that must
+pass on submitted code to ensure that it is not going to introduce a bug or regression to F´. These checks ensure unit
+tests pass, development environments remain supported, code runs without crashing, software and documentation quality is
+upheld, and more!
+
+These checks can be a bit pedantic and this often is the point. Do your best to correct errors or ask for help. Don't be
+surprised if an F´ maintainer pushes some commits to your branch to help correct minor issues (e.g. spelling errors). In
+the end, these checks must pass for the submission to continue.
+
+If something seems amiss with one of these checks ask for help on your PR and a maintainer will do their best to help
+get the submission moving forward.
+
+### Automated Checks on Reference Repositories
+
+Some of the above-mentioned automated checks run on reference applications that are not part of the core F´ repository, such as our [tutorial repositories](https://github.com/fprime-community#tutorials). This serves two main purposes: running more tests, and making sure our suite of reference applications and tutorials do not go out-of-date.
+Because of this pattern, users who submit a pull request which introduces breaking changes on _how_ F´ is used in those external repositories will need to submit associated pull requests to introduce a fix on said external repositories.
+
+The checks are configured to run on the `devel` branch of each external repository, but will prioritize the branch `pr-<PR_NUMBER>` if it exists, with `PR_NUMBER` being the number of the pull request that has been opened in nasa/fprime.
+
+Maintainers will gladly help you in this process.
+
+## Final Approval and Submission
+
+Once all corrections have been made, automated checks are passing, and a maintainer has given final approval, it is time
+to contribute the submission. A maintainer will handle this final step and once complete changes should appear in the
+`devel` branch. You can help this process by submitting any deferred or future work items as issues using the links
+above.
+
+## Helpful Tips
+
+This section will describe some helpful tips for contributing to F´.
+
+### Keep Submissions Small
+
+Large submissions are difficult to review. Incredibly large pull requests can be very difficult to review and often need
+to be broken up. Try to keep submissions small, focus on one issue or change in a pull request, and avoid lots of minor
+changes across many files.
+
+Keep in mind that editors that fix whitespace automatically can cause many small changes. Even with advanced GitHub
+tools this can increase the effort required to review a submission. Be careful with the changes you are submitting.
+
+## Run Tests
+
+The automatic checking system will run all our unit tests and integration tests across several systems. However, this
+process will take time. Try to run the unit tests locally during development before submitting a PR and use the
+automatic checks as a safety net.
+
+The tests can be run using the following commands:
+
+```bash
+# Go into the fprime directory
+cp MY_FPRIME_DIRECTORY
+
+# Run CI tests on fprime
+./ci/tests/Framework.bash
+
+# Run CI tests on the reference application
+./ci/tests/Ref.bash
+
+# Run the static analyzer with the basic configuration
+# Purge unit test directory
+fprime-util purge
+# Generate the build files for clang-tidy. Make sure clang-tidy is installed.
+fprime-util generate --ut -DCMAKE_CXX_CLANG_TIDY=clang-tidy-12
+# Build fprime with the static analyzer
+fprime-util build --all --ut -j16
+
+# Run the static analyzer with additional flight code checks
+# Purge release directory
+fprime-util purge
+# Generate the build files for clang-tidy. Make sure clang-tidy is installed.
+fprime-util generate -DCMAKE_CXX_CLANG_TIDY="clang-tidy-12;--config-file=$PWD/release.clang-tidy"
+# Build fprime with the static analyzer
+fprime-util build --all -j16
+```
+
+## Development with modified FPP version
+
+In case FPP needs to be locally changed, first uninstall all `fprime-fpp-*` `pip` packages, and install FPP
+using the procedure mentioned in the [FPP readme](https://github.com/nasa/fpp/blob/main/compiler/README.adoc).
+
+Then, `fprime-util generate` needs to be run using `-DFPRIME_SKIP_TOOLS_VERSION_CHECK=1`
+
+For example, to generate and build F´:
+```bash
+# Go into the fprime directory
+cp MY_FPRIME_DIRECTORY
+# Generate the build files without checking the FPP version
+fprime-util generate -DFPRIME_SKIP_TOOLS_VERSION_CHECK=1
+# Build the project
+fprime-util build -j4
+```
+````
+
+### `CONTRIBUTORS.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CONTRIBUTORS.md`
+
+
+```markdown
+**NOTE:** a full list of contributors is here <https://github.com/nasa/fprime/graphs/contributors>.
+
+This file contains a list of contributors and authors prior to proper tracking using the publicly available GitHub. The above link is a better representation
+of F´ contributors since the transition to open source.  This file will be removed in future releases.
+
+JPL Contributors to the F' Software Framework:
+
+* Adams, Derek
+* Anderson, Joshua
+* Bocchino, Robert
+* Campuzano, Brian
+* Canham, Timothy
+* Catchen, Michael
+* Chase, Matthew
+* Chen, Victor
+* Daruwala, Rohan
+* Daugherty, Daniel
+* Day, Leonard
+* Deerin, Jake
+* Dinkel, Jack
+* Dinkel, Kevin
+* Duerschmid, Tobias
+* Gandhi, Gorang
+* Gangianpour, Mehran
+* Harriman, Blake
+* Hofman, James
+* Huynh, Thomas
+* Ishii, Jordan
+* Kaye, Warren
+* Kooi, David
+* Klemm, Roger
+* Kubiak, Gerik
+* Levison, Jeffrey
+* Manglapus, Lloyd
+* Merewether, Eugene
+* Mueller, David
+* Nicolich, Eric
+* Nowicki, Robert
+* Oran, Kevin
+* Ortega, Kevin
+* Pandian, Prashanth
+* Paulson, Hunter
+* Ramanan, Saikiran
+* Reder, Leonard
+* Rizvi, Aadil
+* Roche, Michael
+* Sinha, Sanchit
+* Starch, Michael
+* Perez, Joseph
+* Shenker, Boris
+* Smith, Celeste
+* Tuszynski, Marek
+* Uchenik, Igor
+* Watney, Garth
+* Wang, Eric
+* Whitaker, William
+* Wong, Vincent
+
+Non-JPL Contributors to the F' Software Framework:
+
+* AaronMcDaniel
+* acxz
+* jasonduley
+* keck-in-space
+* sommercharles
+* SterlingPeet
+* arijitdas123student
+```
+
+### `CPPLINT.cfg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CPPLINT.cfg`
+
+
+```text
+#
+# Cpplint is a command-line tool to check C/C++ files for style issues following Google's C++ style guide.
+# https://github.com/cpplint/cpplint
+#
+# Type the command below for details about supported options in CPPLINT.cfg.
+# > cpplint --help
+#
+
+# Do not look for additional CPPLINT.cfg in the parent directories.
+set noparent
+root=.
+extensions=cpp,hpp,c,h
+
+# Limit line length.
+linelength=120
+
+# Adjust the following error categories as specified by the filter:
+# (filter parameters are concatenated together)
+
+# `build` rules
+# Enable a warning about C++ features that were not in the original
+# C++11 specification (and so might not be well-supported).  In the
+# case of F´, the minimum supported platforms are potentially not
+# new enough to afford to do without this warning.
+filter=+build/c++11
+
+# F´ uses `#ifndef FOO_H` guard not the `#pragma once`.
+filter=-build/pragma_once
+
+# Do not enforce including header files in both .h and .cpp.
+filter=-build/header_guard
+filter=-build/include
+filter=-build/include_alpha
+filter=-build/include_order
+filter=-build/include_subdir
+filter=-build/include_what_you_use
+filter=-build/namespaces
+
+filter=-legal/copyright
+
+filter=-readability/braces
+filter=-readability/casting
+filter=-readability/namespace
+filter=-readability/todo
+
+filter=-runtime/indentation_namespace
+filter=-runtime/int
+filter=-runtime/references
+
+filter=-whitespace/blank_line
+filter=-whitespace/braces
+filter=-whitespace/comma
+filter=-whitespace/comments
+filter=-whitespace/end_of_line
+filter=-whitespace/indent
+filter=-whitespace/line_length
+filter=-whitespace/newline
+filter=-whitespace/operators
+filter=-whitespace/parens
+filter=-whitespace/tab
+
+# There is no need for lint-gardening in the documentation.
+exclude_files=Autocoders
+exclude_files=ci
+exclude_files=cmake
+exclude_files=docs
+exclude_files=Fpp
+exclude_files=FppTest
+exclude_files=gtest
+exclude_files=build-fprime-automatic-*
+```
+
+### `GOVERNANCE.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/GOVERNANCE.md`
+
+
+```markdown
+# F Prime Project Governance
+
+This governance model aims to create an open source community that encourages transparency, contributions, and collaboration, while maintaining our technical and quality standards. Our goal is to build a community comprised of members from private organizations, universities, government organizations, and international organizations that will collaborate towards the success of F Prime.
+
+F Prime aims to create a product that accepts contributions from across the community and is overseen by a Change Control Board (CCB). The role of the CCB is to ensure that the development of the product is done in a way that meets the needs of the entire community by guiding its developments. The CCB is charged with the responsibility of determining where in the F Prime ecosystem work should be done, namely within the core F Prime products (fprime, fprime-tools, fprime-gds, fpp, and our tutorials), in a [fprime-community](https://github.com/fprime-community) add-on repository, or in project maintained code.
+
+This structure is composed of various roles with various responsibilities. The F Prime Project will be hence referred to as "the Project".
+
+> While F Prime intends to maintain high technical and quality standards, it is ultimately up to the user to ensure the software meet any specific guidelines or standards.
+
+## Applicability
+
+This Governance document applies to all F´ repositories hosted on NASA's GitHub Organization (fprime, fprime-tools, fprime-gds, and fpp). It also applies to  repositories in `fprime-community` directly managed by the Project (e.g. tutorial repositories). Other F´ add-on repositories are governed by their creators.
+
+## Roles
+
+The F Prime community breaks down into a set of roles that take actions and have certain privileges with respect to the development of F Prime.  These roles are:
+
+| Role              | Available To        | Description                                                                                   |
+|-------------------|---------------------|-----------------------------------------------------------------------------------------------|
+| User              | Anyone              | Anyone downloading, deploying, or operating the software to meet a specific objective.        |
+| Contributor       | Anyone              | Anyone providing input to the Project, including: code, issues, documentation, graphics, etc. |
+| CCB Member        | Active, Sustained Contributor | Member of the change control board (CCB) guiding F Prime development.               |
+| Community Manager | Active CCB Members  | Overall manager(s) of the product charged with execution of CCB guidance.                     |
+
+
+Each role has a set of privileges afforded to it. These privileges are: 
+
+| Role              | Read/Clone | Propose Pull Request | Comment in Tickets / Discussions | Review | Binding Review | Merge | Project Decisions |
+|-------------------|------------|----------------------|----------------------------------|--------|----------------|-------|-------------------|
+| User              | ✅          | ❌                    | ❌                                | ❌      | ❌              | ❌     | ❌                 |
+| Contributor       | ✅          | ✅                    | ✅                                | ✅      | ❌              | ❌     | ❌                 |
+| CCB Member        | ✅          | ✅                    | ✅                                | ✅      | ✅              | ❌     | ✅                 |
+| Community Manager | ✅          | ✅                    | ✅                                | ✅      | ✅              | ✅     | ✅                  |
+
+### User
+
+Anyone who has downloaded, deployed, or used F Prime is a user. Users are free to read/clone the software. If a user comments or posts to the community the user becomes a Contributor. Users have complete authority over their projects.
+
+### Contributor
+
+Contributors include anyone that provides input to the Project. This includes code, issues, documentation, graphics, designs, or anything else that tangibly improves the Project. We encourage you to start contributing right away by joining our [Discussions](https://github.com/nasa/fprime/discussions) or submitting an [Issue](https://github.com/nasa/fprime/issues).
+
+Contributors must follow the [code of conduct](https://github.com/nasa/fprime/blob/devel/CODE_OF_CONDUCT.md) and the [contributing guide](https://github.com/nasa/fprime/blob/devel/CONTRIBUTING.md).
+
+### CCB Member
+
+CCB members are individuals working as part of the governance of the F Prime team. These members are charged, as a team, to make decisions to guide the development of F Prime. These decisions influence how an [idea becomes a contribution](#the-decision-making-process).  CCB members also have the responsibility of performing binding reviews on Pull Requests before they can be merged into the product.
+
+CCB members do not operate in a vacuum. These members solicit feedback from the community through conversations in our Discussions and Issues. Specifically, CCB members will open [Calls for Comments](https://github.com/nasa/fprime/discussions/categories/call-for-comments) to solicit feedback on specific decisions they will make.
+
+The CCB is also charged with selecting the contributors to join the CCB.  These members must be active sustained members of the F Prime community.
+
+### Community Manager 
+
+A community manager is charged with carrying out the decisions of the CCB. This often means communicating back decisions, merging pull requests, and guiding Calls for Comments. The CCB is charged with selecting community managers. Pull requests are merged by Community Managers after receiving a Binding Review from at least one CCB Member.
+
+Community managers are also members of the CCB and are thus involved in decisions of the Project as described above.
+
+## The Decision-Making Process
+
+F Prime has to support a number of community members both inside and outside of NASA. This means the Project must maintain high technical and quality standards, cybersecurity standard, and must be developed ensuring that the needs of the community are met.  The Change Control Board (CCB) is charged with making these decisions.
+
+First, a Contributor comes up with an idea for F Prime. Ideas must be submitted as [Issues](https://github.com/nasa/fprime/issues). These issues are automatically placed in the "CCB" state waiting CCB approval. Contributors should take caution when developing changes that have not been approved by the CCB as they may be reworked or rejected.
+
+Next, the CCB answers the question "How does this idea fit within the F Prime ecosystem?". For simple ideas (e.g. a bug report) this is often a quick decision to place this work within the core F Prime products.  For larger, or more breaking changes this decision can have a number of different outcomes:
+
+1. A Call for Comments
+2. A recommendation for modifications
+3. Acceptance into F Prime
+4. Acceptance as a community add-on
+5. Recommendation for development within a users' projects
+
+Each of these outcomes is elaborated on below. Contributors can check the status of an item on the [CCB Resolution Board](https://github.com/orgs/nasa/projects/21/views/17).
+
+#### Call for Comments
+
+When the CCB is asked to decide on an idea for F Prime for which the CCB lacks context, the idea only partially spelled-out, or the idea may result in wide-reaching changes impacting the community, a call for comments will be placed on the F Prime Discussions form.  The CCB will gather input on this idea from the community before reevaluating the idea.
+
+#### A Recommendation for Modifications
+
+The CCB may respond with modifications to an idea to help it fit better within the scope of the F Prime core products. Contributors receiving these recommendations should take them to heart as it often means this idea is wanted within F Prime and the CCB is helping the idea meet the standards of the Project.
+
+#### Acceptance into F Prime
+
+The CCB has accepted that this contribution belongs in F Prime's core products and development may begin. At this point issues move out of the CCB Resolution Board, however; individual issue records carry their resolution in the issue project metadata.
+
+#### Acceptance as a Community Add-On
+
+When the CCB has determined that an idea has merit but the applicability of the idea is limited to a subset of the community the CCB will recommend this be contributed as a community add-on. These add-ons are available to the community, and may be used by any number of projects.  They are shipped independently of the core products.  Most Operating System and Platform adaptations become community add-ons.
+
+Community add-ons are not (with a few exceptions) maintained by the F Prime project.  However, should a community add-on have proven merit and code quality it can be accepted into the fprime-community organization. Add-ons may have designated maintainers who act as reviewers and stewards for that add-on.
+
+#### Recommendation for Development Within a Users' Projects
+
+Some ideas fit better within the context of a Users' projects. These contributions would have limited impact across the community, make broad and breaking changes, or need looser standards than the F Prime Project allows. Such ideas are often routed back to the User for implementation within their own code base.
+
+### Bypassing the Process
+
+As F Prime is open source, there is nothing stopping a Contributor from attempting to bypass the process by submitting a Pull Request without CCB approval. The Community Managers of F Prime do their best to accept these contributions, obtain CCB approval, and continue with development. However, this effort is not guaranteed and these contributions may be closed without feedback.  It is always best to follow the process outlined above.
+
+## Communication Channels
+
+The F Prime Project uses GitHub as a communication medium. Issues and Discussions will be communicated to using the conversation features provided by those mediums. The "Reviews" feature is used to communicate feedback to a specific contribution. The CCB will comment on Issues, and on Pull Requests to communicate feedback. The Community Manager will use the "Reviews" feature to provide the required pre-merge reviews.
+
+[Announcements](https://github.com/nasa/fprime/discussions/categories/announcements) are used when F Prime needs to communicate to the entire community.
+Calls for Comments are used as outlined above to solicit feedback from the community.
+
+To communicate issues of cybersecurity, follow the [Security Policy](https://github.com/nasa/fprime/security/policy)
+
+## Acknowledgements
+
+The form of this document was modeled after the [SLIM Project](https://nasa-ammos.github.io/slim/) governance document.
+
+
+```
+
+### `LICENSE.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/LICENSE.txt`
+
+
+```text
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
+
+### `NOTICE.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/NOTICE.txt`
+
+
+```text
+Copyright (c) 2023 California Institute of Technology (“Caltech”). U.S. Government sponsorship acknowledged.
+
+All rights reserved.
+
+Neither the name of Caltech nor its operating division, the Jet Propulsion Laboratory, nor the names of its
+contributors may be used to endorse or promote products derived from this software without specific prior written
+permission.
+
+This product includes cryptographic software written by  Eric Young (eay@cryptsoft.com)
+This product includes pyparsing written by Paul T. McGuire
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/README.md`
+
+
+````markdown
+<h2 align="center">A Flight-Proven, Multi-Platform, Open-Source Flight Software Framework</h2>
+<p align="center"><br/>
+<img width="200em" src="docs/img/fprime-logo.svg"><br/>
+</p>
+
+#
+F´ (F Prime) is a component-driven framework that enables rapid development and deployment of spaceflight and other embedded software applications. Originally developed at the [Jet Propulsion Laboratory](https://www.jpl.nasa.gov/), F´ has been successfully deployed on [several space applications](https://fprime.jpl.nasa.gov/overview/projects/). It is tailored but not limited to small-scale spaceflight systems such as CubeSats, SmallSats, and instruments.
+
+**Please Visit the F´ Website:** [https://fprime.jpl.nasa.gov](https://fprime.jpl.nasa.gov/) for more information.
+
+
+## What does F´ provide
+
+- An architecture that decomposes flight software into discrete components with well-defined interfaces
+- A C++ framework that provides core capabilities such as message queues and threads
+- Modeling tools for specifying components and connections and automatically generating code
+- A growing collection of ready-to-use components
+- Testing tools for testing flight software at the unit and integration levels.
+
+Learn more about [F´ key features](https://fprime.jpl.nasa.gov/overview).
+
+
+## System Requirements
+
+1. Linux, Windows with WSL, or macOS operating system
+2. [git](https://git-scm.com/)
+3. [Clang](https://clang.llvm.org/) or [GNU C and C++ compilers](https://gcc.gnu.org/) (e.g. gcc and g++)
+4. [Python 3.9+](https://www.python.org/downloads/), [virtual environments](https://docs.python.org/3/library/venv.html), and [PIP](https://pypi.org/project/pip/)
+
+
+## Getting Started
+
+To get started with F´, install the F´ bootstrapping tool with:
+```
+pip install fprime-bootstrap
+```
+
+Then, create a new project with:
+```
+fprime-bootstrap project
+```
+
+See the [HelloWorld Tutorial](https://fprime.jpl.nasa.gov/latest/tutorials-hello-world/docs/hello-world/) to guide you through all the steps of developing an F´ project.
+
+New users are encouraged to read through the [User Manual](https://fprime.jpl.nasa.gov/latest/docs/user-manual/) and explore the [other tutorials](https://fprime.jpl.nasa.gov/latest/docs/tutorials/).
+
+
+## Getting Help
+
+### Discussions
+To ask questions, discuss improvements, and ask for help please use the project's [GitHub Discussions](https://github.com/nasa/fprime/discussions).
+### Bug reports
+To report bugs and issues, [open an issue here](https://github.com/nasa/fprime/issues).
+### Community
+The [F´ Community](https://github.com/fprime-community) GitHub Organization contains third party contributions, more documentation of flight software development, and additional resources.
+
+
+## Resources
+- [User Manual](https://fprime.jpl.nasa.gov/latest/docs/user-manual/)
+- [Tutorials](https://fprime.jpl.nasa.gov/latest/docs/tutorials/)
+- [Discussions](https://github.com/nasa/fprime/discussions)
+- [Submit an Issue](https://github.com/nasa/fprime/issues)
+- [F´ Community](https://github.com/fprime-community)
+
+
+## Release Notes
+
+The version history and artifacts associated with the project can be found at [Releases](https://github.com/nasa/fprime/releases).
+````
+
+### `release.clang-tidy`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/release.clang-tidy`
+
+
+```text
+# Clang-tidy configuration used only for flight code
+
+Checks: >
+    -*,
+    misc-no-recursion
+WarningsAsErrors: '*'
+```
+
+### `requirements.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/requirements.txt`
+
+
+```text
+aniso8601==9.0.1
+annotated-types==0.7.0
+argcomplete==3.5.1
+arrow==1.3.0
+binaryornot==0.4.4
+blinker==1.8.2
+Brotli==1.1.0
+certifi==2024.8.30
+chardet==5.2.0
+charset-normalizer==3.4.0
+clang-format==20.1.8
+click==8.1.7
+cmake==3.26.0
+colorlog==6.8.2
+cookiecutter==2.6.0
+CT3==3.3.3.post1
+et-xmlfile==1.1.0
+Flask==3.0.3
+Flask-Compress==1.15
+Flask-RESTful==0.3.10
+fprime-fpl-layout==1.0.3
+fprime-fpl-write-pic==1.0.3
+fprime-fpp==3.0.0
+fprime-gds==4.0.1
+fprime-tools==4.0.1
+fprime-visual==1.0.2
+gcovr==8.2
+idna==3.10
+importlib-metadata==6.7.0
+iniconfig==2.0.0
+itsdangerous==2.2.0
+Jinja2==3.1.6
+legacy-cgi==2.6.1; python_version >= "3.13"
+lxml==5.3.0
+Markdown==3.7
+markdown-it-py==3.0.0
+MarkupSafe==2.1.5
+mdurl==0.1.2
+ninja==1.11.1.4
+openpyxl==3.1.5
+packaging==24.1
+pexpect==4.9.0
+pluggy==1.5.0
+ptyprocess==0.7.0
+pydantic==2.9.2
+pydantic_core==2.23.4
+Pygments==2.18.0
+pyserial==3.5
+pytest==8.3.3
+python-dateutil==2.9.0.post0
+python-slugify==8.0.4
+pytz==2024.2
+PyYAML==6.0.2
+pyzmq==26.2.0
+requests==2.32.4
+rich==13.9.2
+setuptools==78.1.1
+six==1.16.0
+text-unidecode==1.3
+tomli==2.0.1
+types-python-dateutil==2.9.0.20241003
+typing-extensions==4.12.2
+urllib3==2.5.0
+Werkzeug==3.0.6
+zipp==3.19.1
+zstandard==0.23.0
+```
+
+### `SECURITY.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/SECURITY.md`
+
+
+```markdown
+# Security Policy
+
+The F´ team secures our code base using a combination of code review, dependency review, and static analysis performed during automated pull request
+verification. We welcome general bug reports and vulnerability reports from the larger community.
+
+### Reporting a Vulnerability
+
+For general defects, please submit a [Bug Report](https://github.com/nasa/fprime/issues/new/choose)
+
+To report a vulnerability for F´ please use the [vulnerability report form](https://github.com/nasa/fprime/security/advisories/new) or send a detailed
+report to [fprime@jpl.nasa.gov](mailto:fprime@jpl.nasa.gov). 
+
+### Static Analysis Checks
+
+The [GitHub Actions workflows](https://github.com/nasa/fprime/blob/devel/.github/workflows/) are available to the public. To review the results, fork the
+repository and run the workflows. 
+
+These checks are run on each pull request submitted to F´.
+
+### General Support
+
+For additional support, please open a [Discussion](https://github.com/nasa/fprime/discussions). 
+```
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/settings.ini`
+
+
+```text
+[fprime]
+framework_path: .
+```

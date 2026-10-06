@@ -3,16 +3,207 @@
 
 **경로:** `fsw/apps/sc/unit-test/utilities/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sc_test_utils.c`
 
-file--sc_test_utils.c
-file--sc_test_utils.h
+**경로:** `fsw/apps/sc/unit-test/utilities/sc_test_utils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Unit test utility implementations
+ */
+
+/*
+ * Includes
+ */
+
+#include "sc_app.h"
+#include "sc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#define UT_MAX_SENDEVENT_DEPTH 4
+CFE_EVS_SendEvent_context_t    context_CFE_EVS_SendEvent[UT_MAX_SENDEVENT_DEPTH];
+CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
+SC_RtsInfoEntry_t              RtsInfoTbl[SC_NUMBER_OF_RTS];
+
+UT_CmdBuf_t UT_CmdBuf;
+
+/*
+ * Function Definitions
+ */
+void UT_Handler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va)
+{
+    uint16 CallCount;
+    uint16 idx;
+
+    CallCount = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    if (CallCount > (sizeof(context_CFE_EVS_SendEvent) / sizeof(context_CFE_EVS_SendEvent[0])))
+    {
+        UtAssert_Failed("CFE_EVS_SendEvent UT depth %u exceeded: %u, increase UT_MAX_SENDEVENT_DEPTH",
+                        UT_MAX_SENDEVENT_DEPTH, CallCount);
+    }
+    else
+    {
+        idx                                      = CallCount - 1;
+        context_CFE_EVS_SendEvent[idx].EventID   = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
+        context_CFE_EVS_SendEvent[idx].EventType = UT_Hook_GetArgValueByName(Context, "EventType", uint16);
+
+        strncpy(context_CFE_EVS_SendEvent[idx].Spec, UT_Hook_GetArgValueByName(Context, "Spec", const char *),
+                CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+        context_CFE_EVS_SendEvent[idx].Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1] = '\0';
+    }
+}
+
+void UT_Handler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va)
+{
+    strncpy(context_CFE_ES_WriteToSysLog.Spec, UT_Hook_GetArgValueByName(Context, "SpecStringPtr", const char *),
+            CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1);
+    context_CFE_ES_WriteToSysLog.Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1] = '\0';
+}
+
+void SC_Test_Setup(void)
+{
+    /* initialize test environment to default state for every test */
+    UT_ResetState(0);
+
+    memset(&SC_OperData, 0, sizeof(SC_OperData));
+    memset(&SC_AppData, 0, sizeof(SC_AppData));
+    memset(RtsInfoTbl, 0, sizeof(RtsInfoTbl));
+
+    memset(context_CFE_EVS_SendEvent, 0, sizeof(context_CFE_EVS_SendEvent));
+    memset(&context_CFE_ES_WriteToSysLog, 0, sizeof(context_CFE_ES_WriteToSysLog));
+    memset(&UT_CmdBuf, 0, sizeof(UT_CmdBuf));
+
+    SC_OperData.RtsInfoTblAddr = &RtsInfoTbl[0];
+
+    /* Register custom handlers */
+    UT_SetVaHandlerFunction(UT_KEY(CFE_EVS_SendEvent), UT_Handler_CFE_EVS_SendEvent, NULL);
+    UT_SetVaHandlerFunction(UT_KEY(CFE_ES_WriteToSysLog), UT_Handler_CFE_ES_WriteToSysLog, NULL);
+}
+
+void SC_Test_TearDown(void)
+{
+    /* cleanup test environment */
+}
 ```
 
-## 항목
+### `sc_test_utils.h`
 
-- [`fsw/apps/sc/unit-test/utilities/sc_test_utils.c`](file--sc_test_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/utilities/sc_test_utils.h`](file--sc_test_utils.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sc/unit-test/utilities/sc_test_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Unit test utilities header
+ */
+#ifndef SC_TEST_UTILS_H
+#define SC_TEST_UTILS_H
+
+/*
+ * Includes
+ */
+
+#include "sc_app.h"
+#include "utstubs.h"
+#include "cfe_msgids.h"
+#include "cfe_tbl_msg.h"
+
+extern SC_AppData_t      SC_AppData;
+extern SC_OperData_t     SC_OperData;
+extern SC_RtsInfoEntry_t RtsInfoTbl[SC_NUMBER_OF_RTS];
+
+/*
+ * Global context structures
+ */
+typedef struct
+{
+    uint16 EventID;
+    uint16 EventType;
+    char   Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+} CFE_EVS_SendEvent_context_t;
+
+typedef struct
+{
+    char Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+} CFE_ES_WriteToSysLog_context_t;
+
+extern CFE_EVS_SendEvent_context_t    context_CFE_EVS_SendEvent[];
+extern CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
+
+/* Command buffer typedef for any handler */
+typedef union
+{
+    CFE_SB_Buffer_t                 Buf;
+    SC_NoArgsCmd_t                  NoArgsCmd;
+    SC_StartAtsCmd_t                StartAtsCmd;
+    SC_RtsCmd_t                     RtsCmd;
+    SC_JumpAtsCmd_t                 JumpAtsCmd;
+    SC_SetContinueAtsOnFailureCmd_t SetContinueAtsOnFailureCmd;
+    SC_AppendAtsCmd_t               AppendAtsCmd;
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+    SC_RtsGrpCmd_t RtsGrpCmd;
+#endif
+    CFE_TBL_NotifyCmd_t NotifyCmd; /* SC subscribes to the table notify command */
+} UT_CmdBuf_t;
+
+extern UT_CmdBuf_t UT_CmdBuf;
+
+/* Unit test ids */
+#define SC_UT_MID_1 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 1)
+
+/*
+ * Function Definitions
+ */
+
+void SC_Test_Setup(void);
+void SC_Test_TearDown(void);
+
+#endif
+```

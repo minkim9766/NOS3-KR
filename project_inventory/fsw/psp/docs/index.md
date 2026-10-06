@@ -3,16 +3,16 @@
 
 **경로:** `fsw/psp/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PSP 1.3.0.0 Version Description Document.docx`
 
-file--PSP%201.3.0.0%20Version%20Description%20Document.docx
-file--PSP%201.3.0.0%20Version%20Description%20Document.pdf
-```
+**경로:** `fsw/psp/docs/PSP 1.3.0.0 Version Description Document.docx`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/psp/docs/PSP 1.3.0.0 Version Description Document.docx`](file--PSP%201.3.0.0%20Version%20Description%20Document.docx) — 바이너리 (경로만)
-- [`fsw/psp/docs/PSP 1.3.0.0 Version Description Document.pdf`](file--PSP%201.3.0.0%20Version%20Description%20Document.pdf) — 바이너리 (경로만)
+### `PSP 1.3.0.0 Version Description Document.pdf`
+
+**경로:** `fsw/psp/docs/PSP 1.3.0.0 Version Description Document.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

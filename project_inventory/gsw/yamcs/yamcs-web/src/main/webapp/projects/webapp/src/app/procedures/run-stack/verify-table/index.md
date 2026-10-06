@@ -3,18 +3,80 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `verify-table.component.css`
 
-file--verify-table.component.css
-file--verify-table.component.html
-file--verify-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/verify-table.component.css`
+
+
+```css
+table {
+  width: auto;
+}
+
+table td {
+  border: none;
+  padding: 0;
+}
+
+table td:not(:first-child) {
+  padding-left: 10px;
+}
+
+table td {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+table td {
+  color: rgba(0, 0, 0, 0.654);
+}
 ```
 
-## 항목
+### `verify-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/verify-table.component.css`](file--verify-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/verify-table.component.html`](file--verify-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/verify-table.component.ts`](file--verify-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/verify-table.component.html`
+
+
+```html
+<table>
+  @for (namedPval of entry.pvals; track namedPval) {
+    <tr>
+      <td style="width: 16px">
+        <div style="display: flex; align-items: center">
+          <app-verify-icon [comparison]="namedPval" />
+        </div>
+      </td>
+      <td style="padding-right: 20px">
+        {{ namedPval.parameter }}
+      </td>
+      <td>{{ (namedPval.pval?.engValue | value) ?? "-" }}</td>
+    </tr>
+  }
+</table>
+```
+
+### `verify-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/verify-table.component.ts`
+
+
+```typescript
+import { Component, Input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { StackedVerifyEntry } from '../stack-file/StackedEntry';
+import { VerifyIconComponent } from '../verify-icon/verify-icon.component';
+
+@Component({
+  selector: 'app-verify-table',
+  templateUrl: './verify-table.component.html',
+  styleUrl: './verify-table.component.css',
+  //changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [VerifyIconComponent, WebappSdkModule],
+})
+export class VerifyTableComponent {
+  @Input()
+  entry: StackedVerifyEntry;
+}
+```

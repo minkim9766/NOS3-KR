@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,41 @@
 create-spacer/index
 edit-spacer/index
 spacer-styles/index
-file--Spacer.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/create-spacer/`](create-spacer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/edit-spacer/`](edit-spacer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/spacer-styles/`](spacer-styles/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/Spacer.ts`](file--Spacer.ts) — UTF-8 텍스트 파일 본문 포함
+### `Spacer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/Spacer.ts`
+
+
+```typescript
+import { Banner } from '@fqqb/timeline';
+import { TimelineBand } from '@yamcs/webapp-sdk';
+import {
+  NumberProperty,
+  PropertyInfoSet,
+  resolveProperties,
+} from '../shared/properties';
+import { TimelineChartComponent } from '../timeline-chart/timeline-chart.component';
+
+export const propertyInfo: PropertyInfoSet = {
+  height: new NumberProperty(34),
+};
+
+export class Spacer extends Banner {
+  constructor(chart: TimelineChartComponent, bandInfo: TimelineBand) {
+    super(chart.timeline);
+
+    this.label = bandInfo.name;
+    this.data = { band: bandInfo };
+
+    const properties = resolveProperties(
+      propertyInfo,
+      bandInfo.properties || {},
+    );
+    this.contentHeight = properties.height;
+  }
+}
+```

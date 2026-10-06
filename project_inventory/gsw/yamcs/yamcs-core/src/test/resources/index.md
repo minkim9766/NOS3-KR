@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/resources/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,35 +14,358 @@ ProcessorsTest/index
 refmdb/index
 xtce/index
 YamcsServer/index
-file--logging.properties
-file--mdb.yaml
-file--processor.yaml
-file--test-config.yaml
-file--yamcs.BogusSAT.yaml
-file--yamcs.errmdb.yaml
-file--yamcs.refxtce.yaml
-file--yamcs.yaml
-file--yamcs.yarchtest_CmdHistoryRecordingTest.yaml
-file--yamcs.yarchtest_EventRecordingTest.yaml
-file--yamcs.yarchtest_PpTupleTranslatorTest.yaml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/test/resources/cfdp/`](cfdp/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/resources/parameterarchive/`](parameterarchive/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/`](ProcessorsTest/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/resources/refmdb/`](refmdb/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/`](xtce/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/`](YamcsServer/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/resources/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/mdb.yaml`](file--mdb.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/test-config.yaml`](file--test-config.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.BogusSAT.yaml`](file--yamcs.BogusSAT.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.errmdb.yaml`](file--yamcs.errmdb.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.refxtce.yaml`](file--yamcs.refxtce.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.yarchtest_CmdHistoryRecordingTest.yaml`](file--yamcs.yarchtest_CmdHistoryRecordingTest.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.yarchtest_EventRecordingTest.yaml`](file--yamcs.yarchtest_EventRecordingTest.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/yamcs.yarchtest_PpTupleTranslatorTest.yaml`](file--yamcs.yarchtest_PpTupleTranslatorTest.yaml) — UTF-8 텍스트 파일 본문 포함
+### `logging.properties`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/logging.properties`
+
+
+```text
+#used for unit tests, log everything on standard output
+handlers= java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = SEVERE
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.CompactFormatter
+
+org.yamcs.level = WARNING
+io.netty.level = WARNING
+```
+
+### `mdb.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/mdb.yaml`
+
+
+```yaml
+refmdb:
+    # Configuration of the active loaders
+    # Valid loaders are: sheet, xtce or fully qualified name of the class
+    - type: "sheet"
+      args: 
+           file: "mdb/refmdb.xls"
+           enableAliasReferences: false
+      
+
+refmdb-v6:
+    # Configuration of the active loaders
+    # Valid loaders are: sheet, xtce or fully qualified name of the class
+    - type: "sheet"
+      args: 
+           file: "mdb/refmdb-v6.xls"
+           enableAliasReferences: false
+      
+refxtce:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/ref-xtce.xml"
+      
+ccsds-green-book:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/ccsds-green-book.xml"
+
+      
+BogusSAT:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/BogusSAT-1.xml"          
+
+BogusSAT2:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/BogusSAT-2.xml"
+          
+BogusSAT2-noautopart:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/BogusSAT-2.xml"
+          autoTmPartitions: false
+
+ranges-test:
+    - type: xtce
+      args:
+          file: "../yamcs-xtce/src/test/resources/ranges-test.xml"
+          
+empty-match-criteria:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/empty-match-criteria.xml"
+          
+          
+xtce-fileset:
+    - type: xtce
+      args:
+          fileset: ["src/test/resources/xtce/a*.xml", "src/test/resources/xtce/b.xml"]
+
+VariableBinaryTest:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/VariableBinary.xml"
+
+ArrayArgCommandTest:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/array-arg.xml"
+
+ArrayTmTest:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/array-tm.xml"
+
+EnumArgCommandTest:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/enum-arg.xml"
+
+xtce-strings-tm:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/strings-tm.xml"
+
+xtce-strings-cmd:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/strings-cmd.xml"
+          
+xtce-booleans:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/booleans.xml"   
+          
+xtce-refsolver:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/refsolver1.xml"
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/refsolver2.xml"
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/refsolver3.xml"
+          
+container-entry:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/container-entry.xml"   
+                 
+indirect-param-ref:
+    - type: xtce
+      args:
+          file: "../yamcs-xtce/src/test/resources/indirect-param.xml"
+
+ArrayInArrayArgCommandTest:
+    - type: xtce
+      args:
+          file: "src/test/resources/xtce/array-in-array-arg.xml"
+```
+
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/processor.yaml`
+
+
+```yaml
+# this file defines the diferrent channels
+# channel is where TM/TC processing happends inside Yamcs.
+#
+# each channel uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+#
+
+
+
+realtime:
+    services: 
+       - class: org.yamcs.StreamTmPacketProvider
+         args: 
+           streams: ["tm_realtime"]    
+       - class: org.yamcs.StreamTcCommandReleaser
+       # implements XTCE algorithms
+       - class: org.yamcs.algorithms.AlgorithmManager
+       # manages software parameters
+       - class: org.yamcs.parameter.LocalParameterManager
+    config:
+        subscribeAll: true
+        # save the value of the parameters when the processor is closed and restore them when a processor with the same name starts
+        # only the parameters with the persistence flag set will be saved
+        persistParameters: true
+        #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+        alarm:
+            parameterCheck: true
+            parameterServer: enabled
+
+
+Archive:
+    services: 
+        - class: org.yamcs.tctm.ReplayService
+
+#used for performing archive retrievals (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+    services:
+        - class: org.yamcs.tctm.ReplayService
+```
+
+### `test-config.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/test-config.yaml`
+
+
+```yaml
+emptyBinary: ""
+binary1: 01AB
+binary2: !!binary "As0D"
+
+invalid-binary1: 01AB0X
+
+property1: ${foo}
+property2: "${foo}"
+property3: ${foo:defaultValue}
+property4: ${foo:true}
+property5: ${foo:false}
+property6: ${foo:20}
+property7: "${foo}/${bar}"
+property8: ["${foo}", "${bar}"]
+property9: "${foo: a value with spaces }"
+property10: ${foo:}
+property11: ${foo:${bar}}
+property12: ${foo:${bar:defaultValue}}
+property13: ${foo:${bar:${baz}}}
+```
+
+### `yamcs.BogusSAT.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.BogusSAT.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.YarchChannel
+
+mdb:
+  - type: xtce
+    args:
+      file: "src/test/resources/xtce/BogusSAT-1.xml"
+
+streamConfig:
+  tm: ["tm_realtime"]
+```
+
+### `yamcs.errmdb.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.errmdb.yaml`
+
+
+```yaml
+mdb:
+  - type: "sheet"
+    spec: "mdb/errmdb.xls"    
+```
+
+### `yamcs.refxtce.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.refxtce.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+
+mdb:
+  - type: xtce
+    args:
+      file: "src/test/resources/xtce/ref-xtce.xml"
+
+streamConfig:
+  tm: ["tm_realtime"]
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.yaml`
+
+
+```yaml
+#the instance list is empty here but YarchTestCase creates anyway an instance based on the UnitTest class name
+instances:
+  - testinst
+
+dataDir: ${java.io.tmpdir}/yamcs-data
+
+archive:
+  #max length of the data of type binary(e.g. tm packets)
+  maxBinaryLength: 1048576
+
+storageEngines: [rocksdb2]
+
+rdbConfig:
+  tablespaceConfig:
+    - tablespaceNamePattern: .*
+      maxOpenFiles: 100
+      columnFamilyConfig:
+        - columnFamilyPattern: rt_data
+          targetFileSizeBase: 10240 #in KB
+          targetFileSizeMultiplier: 10
+          maxBytesForLevelBase: 102400 #in KB
+          maxBytesForLevelMultiplier: 10
+          writeBufferSize: 50240 #in KB
+          maxWriteBufferNumber: 2
+          tableFormatConfig:
+            blockSize: 256 #KB
+            blockCacheSize: 50000 #KB
+
+secretKey: testtest
+```
+
+### `yamcs.yarchtest_CmdHistoryRecordingTest.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.yarchtest_CmdHistoryRecordingTest.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.ReplayServer
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+```
+
+### `yamcs.yarchtest_EventRecordingTest.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.yarchtest_EventRecordingTest.yaml`
+
+
+```yaml
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+
+streamConfig:
+  event: ["events_realtime"]
+```
+
+### `yamcs.yarchtest_PpTupleTranslatorTest.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/yamcs.yarchtest_PpTupleTranslatorTest.yaml`
+
+
+```yaml
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+
+streamConfig:
+  param: [pp_realtime]
+```

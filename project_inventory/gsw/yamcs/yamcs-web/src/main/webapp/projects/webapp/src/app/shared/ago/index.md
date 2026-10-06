@@ -3,14 +3,57 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/ago/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ago.component.ts`
 
-file--ago.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/ago/ago.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+} from '@angular/core';
+import { Synchronizer } from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AgoPipe } from '../pipes/ago.pipe';
+
+@Component({
+  selector: 'app-ago',
+  template: '{{ value$ | async }}',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe],
+})
+export class AgoComponent implements OnChanges, OnDestroy {
+  @Input()
+  time: string;
+
+  @Input()
+  useMissionTime = true;
+
+  value$ = new BehaviorSubject<string | null>(null);
+  timerSubscription: Subscription;
+
+  constructor(
+    synchronizer: Synchronizer,
+    private agoPipe: AgoPipe,
+  ) {
+    this.timerSubscription = synchronizer.sync(() => {
+      this.value$.next(agoPipe.transform(this.time, this.useMissionTime));
+    });
+  }
+
+  ngOnChanges() {
+    this.value$.next(this.agoPipe.transform(this.time, this.useMissionTime));
+  }
+
+  ngOnDestroy() {
+    this.timerSubscription?.unsubscribe();
+  }
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/ago/ago.component.ts`](file--ago.component.ts) — UTF-8 텍스트 파일 본문 포함

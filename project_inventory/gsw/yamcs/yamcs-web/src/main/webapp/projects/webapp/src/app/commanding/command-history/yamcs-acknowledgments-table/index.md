@@ -3,18 +3,134 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `yamcs-acknowledgments-table.component.css`
 
-file--yamcs-acknowledgments-table.component.css
-file--yamcs-acknowledgments-table.component.html
-file--yamcs-acknowledgments-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component.css`
+
+
+```css
+table {
+  width: auto;
+}
+
+table td {
+  border: none;
+  padding: 0;
+}
+
+table td:not(:first-child) {
+  padding-left: 10px;
+}
+
+table td {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+table td {
+  color: rgba(0, 0, 0, 0.654);
+}
 ```
 
-## 항목
+### `yamcs-acknowledgments-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component.css`](file--yamcs-acknowledgments-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component.html`](file--yamcs-acknowledgments-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component.ts`](file--yamcs-acknowledgments-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component.html`
+
+
+```html
+@if (command) {
+  <table>
+    <tr>
+      @if (showIcons) {
+        <td style="width: 16px">
+          <div style="display: flex; align-items: center">
+            <app-acknowledgment-icon [ack]="command.queued" />
+          </div>
+        </td>
+      }
+      <td style="width: 150px">Queued</td>
+      <td style="width: 70px">{{ command.queued?.status || "-" }}</td>
+      <td>
+        <span [matTooltip]="command.queued?.time | datetime">
+          {{ (command.queued?.time | deltaWith: command.generationTime) || "-" }}
+        </span>
+      </td>
+    </tr>
+    <tr>
+      @if (showIcons) {
+        <td>
+          <div style="display: flex; align-items: center">
+            @if (!command.released) {
+              <app-transmission-constraints-icon [command]="command" />
+            }
+            @if (command.released) {
+              <app-acknowledgment-icon [ack]="command.released" />
+            }
+          </div>
+        </td>
+      }
+      <td>Released</td>
+      <td>
+        {{ command.released?.status || command.transmissionConstraints?.status || "-" }}
+      </td>
+      <td>
+        <span [matTooltip]="command.released?.time | datetime">
+          {{ (command.released?.time | deltaWith: command.generationTime) || "-" }}
+        </span>
+      </td>
+    </tr>
+    <tr>
+      @if (showIcons) {
+        <td>
+          <div style="display: flex; align-items: center">
+            <app-acknowledgment-icon [ack]="command.sent" />
+          </div>
+        </td>
+      }
+      <td>Sent</td>
+      <td>{{ command.sent?.status || "-" }}</td>
+      <td>
+        <span [matTooltip]="command.sent?.time | datetime">
+          {{ (command.sent?.time | deltaWith: command.generationTime) || "-" }}
+        </span>
+      </td>
+    </tr>
+  </table>
+}
+```
+
+### `yamcs-acknowledgments-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommandHistoryRecord, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AcknowledgmentIconComponent } from '../acknowledgment-icon/acknowledgment-icon.component';
+import { TransmissionConstraintsIconComponent } from '../transmission-constraints-icon/transmission-constraints-icon.component';
+
+@Component({
+  selector: 'app-yamcs-acknowledgments-table',
+  templateUrl: './yamcs-acknowledgments-table.component.html',
+  styleUrl: './yamcs-acknowledgments-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AcknowledgmentIconComponent,
+    WebappSdkModule,
+    TransmissionConstraintsIconComponent,
+  ],
+})
+export class YamcsAcknowledgmentsTableComponent {
+  @Input()
+  command: CommandHistoryRecord;
+
+  @Input()
+  inline = false;
+
+  @Input()
+  showIcons = true;
+}
+```

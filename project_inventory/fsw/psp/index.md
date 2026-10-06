@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,27 +14,703 @@ docs/index
 fsw/index
 unit-test-coverage/index
 ut-stubs/index
-file--.git
-file--CHANGELOG.md
-file--CMakeLists.txt
-file--CONTRIBUTING.md
-file--LICENSE
-file--README.md
-file--SECURITY.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/.github/`](.github/index) — 폴더
-- [`fsw/psp/cmake/`](cmake/index) — 폴더
-- [`fsw/psp/docs/`](docs/index) — 폴더
-- [`fsw/psp/fsw/`](fsw/index) — 폴더
-- [`fsw/psp/unit-test-coverage/`](unit-test-coverage/index) — 폴더
-- [`fsw/psp/ut-stubs/`](ut-stubs/index) — 폴더
-- [`fsw/psp/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/CHANGELOG.md`](file--CHANGELOG.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/CONTRIBUTING.md`](file--CONTRIBUTING.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/LICENSE`](file--LICENSE) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/SECURITY.md`](file--SECURITY.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `fsw/psp/.git`
+
+
+```text
+gitdir: ../../.git/modules/fsw/psp
+```
+
+### `CHANGELOG.md`
+
+**경로:** `fsw/psp/CHANGELOG.md`
+
+
+```markdown
+# Changelog
+
+## Development Build: v1.6.0-rc4+dev82
+- Implement RTEMS Sysmons
+- find psp standard module
+- See <https://github.com/nasa/PSP/pull/397> and <https://github.com/nasa/PSP/pull/402>
+
+## Development Build: v1.6.0-rc4+dev76
+- Create Workflow for IC Bundle Generation
+- See <https://github.com/nasa/PSP/pull/391>
+
+## Development Build: v1.6.0-rc4+dev72
+- adds generic driver interface and Linux sysmon module
+- See <https://github.com/nasa/PSP/pull/386>
+
+## Development Build: v1.6.0-rc4+dev67
+- Squash constParameter warning in linux cfe_psp_memory.c
+- Remove obsolete _USING_RTEMS_INCLUDES_
+- See <https://github.com/nasa/PSP/pull/374> and <https://github.com/nasa/PSP/pull/372>
+
+## Development Build: v1.6.0-rc4+dev61
+- Stop empty function catching CI workflow format checks
+- Remove redundant/inconsistent comments (/* end of function */, /* end if */ etc.) and clean up empty lines.
+- See <https://github.com/nasa/PSP/pull/365> and <https://github.com/nasa/PSP/pull/368>
+
+## Development Build: v1.6.0-rc4+dev55
+- Create Changelog File
+- Remove unnecessary parentheses around return values.
+- Remove 'return;' from last line of void function.
+- See <https://github.com/nasa/PSP/pull/361>, <https://github.com/nasa/PSP/pull/358>, and <https://github.com/nasa/PSP/pull/360>
+
+## Development Build: v1.6.0-rc4+dev47
+- correct PSP module IDs and lookups
+- See <https://github.com/nasa/PSP/pull/354>
+
+## Development Build: v1.6.0-rc4+dev43
+
+- remove commented out code
+- See <https://github.com/nasa/PSP/pull/351>
+
+## Development Build: v1.6.0-rc4+dev41
+
+- Add CFE_PSP_StatusToString and CFE_PSP_STATUS_C
+- See <https://github.com/nasa/cFS/pull/505>
+
+## Development Build: v1.6.0-rc4+dev38
+
+- Resolve uninit var static analysis warning
+- See <https://github.com/nasa/PSP/pull/346> and <https://github.com/nasa/cFS/pull/492>
+
+## Development Build: v1.6.0-rc4+dev34
+
+- Update codeql workflow for reusable updates
+- Add cpu affinity example
+- Update RTEMS CMake Platform File
+- See <https://github.com/nasa/PSP/pull/343> and <https://github.com/nasa/cFS/pull/471>
+
+## Development Build: v1.6.0-rc4+dev21
+
+- Standardize version.h
+- Update Copyright Header
+- See <https://github.com/nasa/PSP/pull/330> and <https://github.com/nasa/cFS/445>
+
+
+## Development Build: v1.6.0-rc4+dev14
+
+- Remove explicit filename doxygen comments
+- Apply header guard standard
+- See <https://github.com/nasa/PSP/pull/326> and <https://github.com/nasa/cFS/pull/432>
+
+
+## Development Build: v1.6.0-rc4+dev6
+
+- Sleep before exit when printing
+- Check the address in PSP get segment stubs
+- Set Build Baseline for cFS-Caelum-rc4: v1.6.0-rc4
+- See <https://github.com/nasa/PSP/pull/318> and <https://github.com/nasa/cFS/pull/390>
+
+## Development Build: v1.5.0-rc1+dev124
+
+- Relax strict of check before calling "Init" function of module, only check that module type is not invalid
+- Remove override of `add_psp_module` for coverage test
+- See <https://github.com/nasa/PSP/pull/307> and <https://github.com/nasa/cFS/pull/351>
+
+## Development Build: v1.5.0-rc1+dev118
+
+- Implement Coding Standards in CodeQL
+- rename doc to docs
+- See <https://github.com/nasa/PSP/pull/296> and <https://github.com/nasa/cFS/pull/265/>
+
+## Development Build: v1.5.0-rc1+dev112
+
+- Cleans up stale code from the previous methods of generating 1Hz. Adds a new PSP module that instantiates an OSAL abstract timebase for use with cFE services. This single module is used across all psp implementations (mcp750, pc-linux, pc-rtems). Results in 1Hz timing tick on MCP750 will be more accurate. No changes to Linux or RTEMS
+- Fixes segfaults when `CFE_PSP_Port` routines are invoked on Linux.
+- Converts `cfe_psp_ram.c` and `cfe_psp_port.c` into modular components and removes from the "shared" directory. The existing implementations become the corresponding "direct" module, and are enabled based on the psp module selection. Adds a "notimpl" variant where all the functions return `CFE_PSP_ERR_NOT_IMPLEMENTED`. This is used on Linux
+or any other system where direct access is not possible.  Renames the existing `eeprom_stub` module to be `eeprom_notimpl` for consistency and to avoid confusion with the unit test stubs.
+- Implements two PSP modules to provide `CFE_PSP_GetTime` and `CFE_PSP_GetTimeBase`, one for POSIX-compliant RTOS using `clock_gettime()` and the other specifically for PowerPC processors on VxWorks that have the `vxTimeBaseGet()` routine. Clarifies and documents the difference and use cases for `CFE_PSP_GetTime` and `CFE_PSP_GetTimeBase`. No impact to behavior.
+- Adds a coverage test for the VxWorks PSP timebase module and provides an example of how this can be implemented for other modules.
+- See <https://github.com/nasa/PSP/pull/289> and <https://github.com/nasa/cFS/pull/238>
+
+## Development Build: v1.5.0-rc1+dev101
+
+- Removes unnecessary global config structure `Target_PspConfigData` and associated elements in favor of the new version API.
+- The mem pool stats TLM command now works on 64-bit Linux and sends out the expected telemetry packet.
+Converts `CFE_PSP_MemoryTable` to internal object (instead of external) that should only be accessed via the PSP API. Replace `uint32`s with `size_t`. Use full range (SIZE_MAX) in the Linux/RTEMS implementation.
+- See <https://github.com/nasa/PSP/pull/288> and <https://github.com/nasa/cFS/pull/233>
+
+## Development Build: v1.5.0-rc1+dev95
+
+- Includes `cfe_psp_version.c` in the cmake source list, which was mistakenly omitted previously.
+- Applied the patch and confirmed that CS Cmake unit tests build. Unit tests relying on `CFE_PSP_GetKernelTextSegmentInfo` will build.
+- See <https://github.com/nasa/PSP/pull/279>
+
+## Development Build: v1.5.0-rc1+dev90
+
+- Addresses the issue of incompatible/non-portable code blobs in the "shared" directory. It uses the same modular init pattern as is used elsewhere in cFE: CMake generates a list of "base" modules correlating with the selected PSP (i.e. pc-linux, mcp750-vxworks, etc) and these modules are then initialized (in order) before the rest of PSP runs. The "direct write" EEPROM is not used unconditionally. Instead the proper eeprom implementation module is selected based on which PSP is selected. MCP750 uses direct write, pc-linux uses an mmap file, and pc-rtems uses a stub (not implemented).
+- Replaces " used on non-system header #includes with <>
+- Adds a contributing guide that links to the main cFS contributing guide.
+- See <https://github.com/nasa/PSP/pull/273>
+
+
+## Development Build: v1.5.0-rc1+dev82
+
+- HOTFIX 20210312, updates to work with older CMake
+- See <https://github.com/nasa/PSP/pull/268>
+
+## Development Build: v1.5.0-rc1+dev76
+
+- Fix #246, remove unused code.
+- Fix #254, use CMake to publish interface details
+- Fix #256, add PSP version API
+- Fix #258, Add Testing Tools to the Security Policy
+- See <https://github.com/nasa/PSP/pull/260>
+
+## Development Build: 1.5.0-rc1+dev68
+
+- Updates continuous integration workflow by adding static analysis with timeout and code format check. Adds status badges to ReadMe and removes old TravisCI artifacts.
+- Adds CodeQL analysis to continuous integration
+- Apply standard formatting to psp codebase. Only changes whitespace.
+- Adds missing "+dev" to development version output
+- See <https://github.com/nasa/PSP/pull/250>
+
+## Development Build: 1.5.0-rc1+dev58
+
+- Add `Security.md` with instructions on reporting vulnerabilities.
+- Rename `UT_ClearForceFail` as `UT_ClearDefaultValue` to reflect <https://github.com/nasa/osal/issues/724>
+- Remove unused elements in `CFE_PSP_ModuleType_t` enum to avoids irregular enum warning
+- See <https://github.com/nasa/PSP/pull/243>
+
+## Development Build: 1.5.0-rc1+dev50
+
+-  Instead of accessing `OS_time_t` member values directly, use the OSAL-provided conversion and access methods. This provides independence and abstraction from the specific `OS_time_t` definition and allows OSAL to transition to a 64 bit value.
+- See <https://github.com/nasa/psp/pull/240>
+
+## Development Build: 1.5.0-rc1+dev46
+
+- Add cppcheck GitHub Actions workflow file
+- See <https://github.com/nasa/PSP/pull/234>
+
+
+## Development Build: 1.5.0-rc1+dev42
+
+- Updates the Readme for RTEMS and adds `README_RTEMS_5.txt`. The changes include removing references to the CEXP module loader, and describing the development environment setup for RTEMS 5.  
+- Remove obsolete OS_TaskRegister comment.  
+- See <https://github.com/nasa/PSP/pull/226>
+
+
+## Development Build: 1.5.0-rc1+dev36
+
+- Rename `UT_SetForceFail` to `UT_SetDefaultReturnValue` since some functions that retain more than 1 value are not necessarily failing.
+- Use of the size_t type instead of uint32 in unit-tests to avoid a compiler type mismatch error on some platforms.
+- See <https://github.com/nasa/PSP/pull/221>
+
+## Development Build: 1.5.0-rc1+dev30
+
+- - Use event callback mechanism to invoke pthread_setname_np() such that the OS kernel is informed of the OSAL task name. `/proc` filesystem on Linux now has actual task name, instead of all being core-cpu1. The `pthread_setname_np` API requires `_GNU_SOURCE` to be defined when compiling - this can be local to PSP.
+- Set REVISION to "99" to indicate development version
+- See <https://github.com/nasa/PSP/pull/213>
+
+## Development Build: 1.5.0-rc1+dev24
+
+- Improves the module ID lookup when getting the CFE core text segment info. VxWorks PSP should use the real module name, not assume cfe-core.o when getting text segment info
+- See <https://github.com/nasa/PSP/pull/209>
+
+## Development Build: 1.5.0-rc1+dev19
+
+- Use the osal_id_t typedef whenever dealing with an OSAL ID value.
+- Resolves build error regarding redefinition of PPC macros in the coverage test, when building on the actual ppc/vxworks target.
+- See <https://github.com/nasa/PSP/pull/206>
+
+## Development Build: 1.5.0-rc1+dev14
+
+- Sets the stub config data spacecraft id to historical value 0x42, was 42.
+- Installs unit test to target directories.
+- See <https://github.com/nasa/PSP/pull/196>
+
+## Development Build: 1.5.0-rc1+dev6
+
+- Adds CFE_PSP_GetProcessorName
+- Removes classic make artifacts
+- See <https://github.com/nasa/PSP/pull/190>
+
+## Development Build: 1.4.0+dev76
+
+- Provide a new framework and perform PSP coverage tests. New coverage test executable is built and several files within PSP are targeted.
+- See <https://github.com/nasa/PSP/pull/184>
+
+## Development Build: 1.4.0+dev71
+
+- Restructure code to make more amicable for rebuilding in a unit test environment. No major changes, primarily just shifting code between locations/headers to support unit testing.
+-  Adds a char element `Version` to `CFE_PSP_VersionInfo_t` containing the version number expressed as a string. Defines new macros for the Build Number and the Build Baseline.
+- See <https://github.com/nasa/PSP/pull/176>
+
+## Development Build: 1.4.14
+
+- Changes the PSP reference to be compatible with the change in nasa/osal#449 making the BSP modules more generic and changes the name.
+- See <https://github.com/nasa/PSP/pull/175>
+
+## Development Build: 1.4.13
+
+- Changes the PSP reference to be compatible with the change in nasa/osal#449 making the BSP modules more generic and changes the name.
+- See <https://github.com/nasa/PSP/pull/167>
+
+## Development Build: 1.4.12
+
+- Replace 'OS_VolumeTable' with OS_FileSysAddFixedMap() in all PSPs.
+- See <https://github.com/nasa/PSP/pull/166>
+
+## Development Build: 1.4.11
+
+- Removes non-termination string warnings when building with GCC9.
+- Exception handling is now implemented on POSIX. There is no longer a separate handler for SIGINT - it is now treated as an exception and goes through the normal process which ends up "restarting" CFE. On pc-linux causes the process to exit normally. There is now a mechanism to capture the CTRL+C exception code and use it during normal test cycles.
+- See <https://github.com/nasa/PSP/pull/160>
+
+## Development Build: 1.4.10
+
+- Implements full-precision microsecond conversion
+- See <https://github.com/nasa/PSP/pull/155>
+
+## Development Build: 1.4.9
+
+- RTEMS builds successfully without errors
+- Build script uses a proper CMakeLists.txt instead of the aux_source directory
+- Minor updates (see <https://github.com/nasa/PSP/pull/153>)
+
+## Development Build: 1.4.8
+
+- Minor updates (see <https://github.com/nasa/PSP/pull/151>)
+
+## Development Build: 1.4.7
+
+- Fixed some build warnings for MCP750
+- Minor updates (see <https://github.com/nasa/PSP/pull/142>)
+
+## Development Build: 1.4.6
+
+- Minor updates (see <https://github.com/nasa/PSP/pull/141>)
+
+## Development Build: 1.4.5
+
+- Simplifies array handling in VxWorks
+- Minor updates (see <https://github.com/nasa/PSP/pull/138>)
+
+## Development Build: 1.4.4
+
+- Minor updates (see <https://github.com/nasa/PSP/pull/132>)
+
+## Development Build: 1.4.3
+
+- Minor updates (see <https://github.com/nasa/PSP/pull/130>)
+
+## Development Build: 1.4.2
+
+- Minor updates (see <https://github.com/nasa/PSP/pull/127>)
+
+## Development Build: 1.4.1
+
+- Minor updates (see <https://github.com/nasa/PSP/pull/115>)
+
+## **_1.4.0 OFFICIAL RELEASE - Aquila_**
+
+- This is a point release from an internal repository
+- Changes are detailed in [cFS repo](https://github.com/nasa/cFS) release documentation
+- Released as part of cFE 6.7.0, Apache 2.0
+
+## **_1.3.0a OFFICIAL RELEASE_**
+
+- This is a point release from an internal repository
+- See [version description document](https://github.com/nasa/PSP/blob/v1.3.0a/doc/PSP%201.3.0.0%20Version%20Description%20Document.pdf)
+- Released as part of cFE 6.6.0a, Apache 2.0
+
+The open source release does not include all PSPs that have been developed. Only the three PSPs included are managed by the community CCB. PSPs developed by other organizations can be requested through the mechanisms listed below. Note the framework PSPs delivered may change in the future as platforms become obsolete.
+
+## Known issues
+
+See all open issues and closed to milestones later than this version.
+
+## Getting Help
+
+For best results, submit issues:questions or issues:help wanted requests at <https://github.com/nasa/cFS>.
+
+Official cFS page: <http://cfs.gsfc.nasa.gov>
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/psp/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for CFE Platform Support Package (PSP)
+#
+######################################################################
+
+project(CFEPSP C)
+
+if (NOT CFE_SYSTEM_PSPNAME)
+  message(FATAL_ERROR "CFE_SYSTEM_PSPNAME is not defined - do not know which to build")
+endif()
+
+set(CFE_PSP_TARGETNAME "${CFE_SYSTEM_PSPNAME}")
+add_definitions(-D_CFE_PSP_)       # macro to indicate PSP scope
+
+# The "psp_module_api" defines the interface between internal PSP components
+add_library(psp_module_api INTERFACE)
+target_compile_definitions(psp_module_api INTERFACE
+    $<TARGET_PROPERTY:osal,INTERFACE_COMPILE_DEFINITIONS> # use defs from OSAL
+)
+target_include_directories(psp_module_api INTERFACE
+    fsw/inc         # public API
+    fsw/shared/inc  # all PSP shared headers
+    fsw/${CFE_PSP_TARGETNAME}/inc # all impl headers
+    ${CFE_SOURCE_DIR}/cmake/target/inc    # for sysconfig
+    $<TARGET_PROPERTY:osal,INTERFACE_INCLUDE_DIRECTORIES>  # use headers from OSAL
+)
+
+# Translate the CFE_PSP_TARGETNAME to a set of additional modules to build
+file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/fsw/${CFE_PSP_TARGETNAME}/psp_module_list.cmake" PSP_TARGET_MODULE_LIST REGEX "^[a-zA-Z]")
+
+# The PSP is currently built in modular parts, consisting of a platform-specific
+# module(s) combined with a shared component which is built for multiple targets.
+# The "shared" component is compiled using headers from the platform-specific module
+# so it is still ultimately a platform-specific binary, and it all gets wrapped into
+# a single PSP static library target.
+add_subdirectory(fsw/${CFE_PSP_TARGETNAME} ${CFE_PSP_TARGETNAME}-impl)
+add_subdirectory(fsw/shared ${CFE_PSP_TARGETNAME}-shared)
+
+# Generate a list of PSP modules along with a pointer to its API structure/entry point
+set(GENERATED_EXTERNS)
+set(GENERATED_KEYVALS)
+foreach(PSPMOD ${PSP_TARGET_MODULE_LIST})
+    add_subdirectory(fsw/modules/${PSPMOD} ${PSPMOD}-${CFE_PSP_TARGETNAME}-impl)
+    list(APPEND GENERATED_EXTERNS "extern CFE_PSP_ModuleApi_t CFE_PSP_${PSPMOD}_API\;\n")
+    list(APPEND GENERATED_KEYVALS "{ .Name = \"${PSPMOD}\", .Api = &CFE_PSP_${PSPMOD}_API },\n")
+endforeach()
+
+string(CONCAT GENERATED_EXTERNS ${GENERATED_EXTERNS})
+string(CONCAT GENERATED_KEYVALS ${GENERATED_KEYVALS})
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/module_list.c.in ${CMAKE_CURRENT_BINARY_DIR}/${CFE_PSP_TARGETNAME}_module_list.c @ONLY)
+
+add_library(psp-${CFE_PSP_TARGETNAME} STATIC
+    ${CMAKE_CURRENT_BINARY_DIR}/${CFE_PSP_TARGETNAME}_module_list.c
+    $<TARGET_OBJECTS:psp-${CFE_PSP_TARGETNAME}-shared>
+    $<TARGET_OBJECTS:psp-${CFE_PSP_TARGETNAME}-impl>
+)
+target_link_libraries(psp-${CFE_PSP_TARGETNAME} PUBLIC
+    ${PSP_TARGET_MODULE_LIST}
+)
+target_link_libraries(psp-${CFE_PSP_TARGETNAME} PRIVATE
+    psp_module_api
+)
+
+target_include_directories(psp-${CFE_PSP_TARGETNAME} INTERFACE
+    fsw/inc
+)
+
+
+if (ENABLE_UNIT_TESTS)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ut-stubs)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/unit-test-coverage)
+endif (ENABLE_UNIT_TESTS)
+
+```
+
+### `CONTRIBUTING.md`
+
+**경로:** `fsw/psp/CONTRIBUTING.md`
+
+
+```markdown
+# Contributing Guide
+
+Please see our [top-level contributing guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md) for more information on how to contribute. 
+```
+
+### `LICENSE`
+
+**경로:** `fsw/psp/LICENSE`
+
+
+```text
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
+
+### `README.md`
+
+**경로:** `fsw/psp/README.md`
+
+
+```markdown
+![Static Analysis](https://github.com/nasa/psp/workflows/Static%20Analysis/badge.svg)
+![Format Check](https://github.com/nasa/psp/workflows/Format%20Check/badge.svg)
+
+# Core Flight System : Framework : Platform Support Package
+
+This repository contains NASA's Platform Support Package (PSP), which is a framework component of the Core Flight System.
+
+This is a collection of APIs abstracting platform specific functionality to be located in the `psp` subdirectory of a cFS Mission Tree. The Core Flight System is bundled at <https://github.com/nasa/cFS>, which includes build and execution instructions.
+
+## Known issues
+
+See all open issues and closed to milestones later than this version.
+
+## Getting Help
+
+For best results, submit issues:questions or issues:help wanted requests at <https://github.com/nasa/cFS>.
+
+Official cFS page: <http://cfs.gsfc.nasa.gov>
+```
+
+### `SECURITY.md`
+
+**경로:** `fsw/psp/SECURITY.md`
+
+
+```markdown
+# Security Policy
+
+## Reporting a Vulnerability
+
+To report a vulnerability for the PSP subsystem please [submit an issue](https://github.com/nasa/psp/issues/new/choose).
+
+For general cFS vulnerabilities please [open a cFS framework issue](https://github.com/nasa/cfs/issues/new/choose) and see our [top-level security policy](https://github.com/nasa/cFS/security/policy).
+
+In either case please use the "Bug Report" template and provide as much information as possible. Apply appropriate labels for each report. For security related reports, tag the issue with the "security" label.
+
+## Testing
+
+**Disclaimer: nasa/PSP is not responsible for any liability incurred under the [Apache License 2.0](https://github.com/nasa/PSP/blob/main/LICENSE).**
+
+Testing is an important aspect our team values to improve PSP. 
+
+To view tools used for the cFS bundle, see our [top-level security policy](https://github.com/nasa/cFS/security/policy). 
+
+### CodeQL
+
+The [PSP CodeQL GitHub Actions workflow](https://github.com/nasa/PSP/actions/workflows/codeql-build.yml) is available to the public. To review the results, fork the PSP repository and run the CodeQL workflow. 
+
+CodeQL is ran for every push and pull-request on all branches of PSP in GitHub Actions. 
+
+For the CodeQL GitHub Actions setup, visit https://github.com/github/codeql-action. 
+
+### Cppcheck
+
+The [PSP Cppcheck GitHub Actions workflow and results](https://github.com/nasa/PSP/actions/workflows/static-analysis.yml) are available to the public. To view the results, select a workflow and download the artifacts. 
+
+Cppcheck is ran for every push on the main branch and every pull request on all branches of PSP in Github Actions. 
+
+For more information about Cppcheck, visit http://cppcheck.sourceforge.net/.
+
+## Additional Support
+
+For additional support, submit a GitHub issue. You can also email the cfs community at cfs-community@lists.nasa.gov. 
+
+You can subscribe to the mailing list [here](https://lists.nasa.gov/mailman/listinfo/cfs-community) that includes all the community members/users of the NASA core Flight Software (cFS) product line. The mailing list is used to communicate any information related to the cFS product such as current releases, bug findings and fixes, enhancement requests, community meeting notifications, sending out meeting minutes, etc.
+
+If you wish to report a cybersecurity incident or concern, please contact the NASA Security Operations Center either by phone at 1-877-627-2732 or via email address soc@nasa.gov.
+```

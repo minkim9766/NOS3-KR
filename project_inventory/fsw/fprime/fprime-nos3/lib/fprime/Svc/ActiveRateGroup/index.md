@@ -3,24 +3,369 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--ActiveRateGroup.cpp
-file--ActiveRateGroup.fpp
-file--ActiveRateGroup.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/ActiveRateGroup.cpp`](file--ActiveRateGroup.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/ActiveRateGroup.fpp`](file--ActiveRateGroup.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/ActiveRateGroup.hpp`](file--ActiveRateGroup.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `ActiveRateGroup.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/ActiveRateGroup.cpp`
+
+
+```cpp
+/*
+ * \author: Tim Canham
+ * \file:
+ * \brief
+ *
+ * This file implements the ActiveRateGroup component,
+ * which invokes a set of components the comprise the rate group.
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ *
+ */
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Console.hpp>
+#include <Svc/ActiveRateGroup/ActiveRateGroup.hpp>
+#include <config/ActiveRateGroupCfg.hpp>
+
+namespace Svc {
+
+ActiveRateGroup::ActiveRateGroup(const char* compName)
+    : ActiveRateGroupComponentBase(compName),
+      m_cycles(0),
+      m_maxTime(0),
+      m_cycleStarted(false),
+      m_numContexts(0),
+      m_overrunThrottle(0),
+      m_cycleSlips(0) {}
+
+void ActiveRateGroup::configure(U32 contexts[], FwIndexType numContexts) {
+    FW_ASSERT(contexts);
+    FW_ASSERT(numContexts == this->getNum_RateGroupMemberOut_OutputPorts(), static_cast<FwAssertArgType>(numContexts),
+              static_cast<FwAssertArgType>(this->getNum_RateGroupMemberOut_OutputPorts()));
+    FW_ASSERT(FW_NUM_ARRAY_ELEMENTS(this->m_contexts) == this->getNum_RateGroupMemberOut_OutputPorts(),
+              static_cast<FwAssertArgType>(FW_NUM_ARRAY_ELEMENTS(this->m_contexts)),
+              static_cast<FwAssertArgType>(this->getNum_RateGroupMemberOut_OutputPorts()));
+
+    this->m_numContexts = numContexts;
+    // copy context values
+    for (FwIndexType entry = 0; entry < this->m_numContexts; entry++) {
+        this->m_contexts[entry] = contexts[entry];
+    }
+}
+
+ActiveRateGroup::~ActiveRateGroup() {}
+
+void ActiveRateGroup::preamble() {
+    this->log_DIAGNOSTIC_RateGroupStarted();
+}
+
+void ActiveRateGroup::CycleIn_handler(FwIndexType portNum, Os::RawTime& cycleStart) {
+    // Make sure it's been configured
+    FW_ASSERT(this->m_numContexts);
+
+    Os::RawTime endTime;
+
+    this->m_cycleStarted = false;
+
+    // invoke any members of the rate group
+    for (FwIndexType port = 0; port < this->m_numContexts; port++) {
+        if (this->isConnected_RateGroupMemberOut_OutputPort(port)) {
+            this->RateGroupMemberOut_out(port, static_cast<U32>(this->m_contexts[port]));
+        }
+    }
+
+    // grab timer for endTime of cycle
+    endTime.now();
+
+    // get rate group execution time
+    U32 cycleTime;
+    // Cast to void as the only possible error is overflow, which we can't handle other
+    // than capping cycleTime to max value of U32 (which is done in getDiffUsec anyways)
+    (void)endTime.getDiffUsec(cycleStart, cycleTime);
+
+    // check to see if the time has exceeded the previous maximum
+    if (cycleTime > this->m_maxTime) {
+        this->m_maxTime = cycleTime;
+    }
+
+    // update cycle telemetry
+    this->tlmWrite_RgMaxTime(this->m_maxTime);
+
+    // check for cycle slip. That will happen if new cycle message has been received
+    // which will cause flag will be set again.
+    if (this->m_cycleStarted) {
+        this->m_cycleSlips++;
+        if (this->m_overrunThrottle < ACTIVE_RATE_GROUP_OVERRUN_THROTTLE) {
+            this->log_WARNING_HI_RateGroupCycleSlip(this->m_cycles);
+            this->m_overrunThrottle++;
+        }
+        // update cycle slips
+        this->tlmWrite_RgCycleSlips(this->m_cycleSlips);
+    } else {  // if cycle is okay start decrementing throttle value
+        if (this->m_overrunThrottle > 0) {
+            this->m_overrunThrottle--;
+        }
+    }
+
+    // increment cycle
+    this->m_cycles++;
+}
+
+void ActiveRateGroup::CycleIn_preMsgHook(FwIndexType portNum, Os::RawTime& cycleStart) {
+    // set flag to indicate cycle has started. Check in thread for overflow.
+    this->m_cycleStarted = true;
+}
+
+void ActiveRateGroup::PingIn_handler(FwIndexType portNum, U32 key) {
+    // return the key to health
+    this->PingOut_out(0, key);
+}
+
+}  // namespace Svc
+```
+
+### `ActiveRateGroup.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/ActiveRateGroup.fpp`
+
+
+```fpp
+module Svc {
+
+
+  @ A rate group active component with input and output scheduler ports
+  active component ActiveRateGroup {
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    @ The rate group cycle input
+    async input port CycleIn: Svc.Cycle drop
+
+    @ Scheduler output port to rate group members
+    output port RateGroupMemberOut: [ActiveRateGroupOutputPorts] Sched
+
+    @ Ping input port for health
+    async input port PingIn: Ping
+
+    @ Ping output port for health
+    output port PingOut: Ping
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Informational event that rate group has started
+    event RateGroupStarted \
+      severity diagnostic \
+      id 0 \
+      format "Rate group started."
+
+    @ Warning event that rate group has had a cycle slip
+    event RateGroupCycleSlip(
+                              cycle: U32 @< The cycle where the cycle occurred
+                            ) \
+      severity warning high \
+      id 1 \
+      format "Rate group cycle slipped on cycle {}"
+
+    # ----------------------------------------------------------------------
+    # Telemetry channels
+    # ----------------------------------------------------------------------
+
+    @ Max execution time rate group
+    telemetry RgMaxTime: U32 id 0 update on change \
+      format "{} us"
+
+    @ Cycle slips for rate group
+    telemetry RgCycleSlips: U32 id 1 update on change
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Event port for emitting events
+    event port Log
+
+    @ Event port for emitting text events
+    text event port LogText
+
+    @ A port for getting the time
+    time get port Time
+
+    @ A port for emitting telemetry
+    telemetry port Tlm
+
+  }
+
+}
+```
+
+### `ActiveRateGroup.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/ActiveRateGroup.hpp`
+
+
+```cpp
+/*
+ * \author: Tim Canham
+ * \file:
+ * \brief
+ *
+ * This file implements the ActiveRateGroup component,
+ * which invokes a set of components the comprise the rate group.
+ *
+ *   Copyright 2014-2022, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ *
+ */
+
+#ifndef SVC_ACTIVERATEGROUP_HPP
+#define SVC_ACTIVERATEGROUP_HPP
+
+#include <Svc/ActiveRateGroup/ActiveRateGroupComponentAc.hpp>
+
+namespace Svc {
+
+//! \class ActiveRateGroup
+//! \brief Executes a set of components as part of a rate group
+//!
+//! ActiveRateGroup takes an input cycle call to begin the rate group cycle.
+//! It calls each output port in succession and passes the value in the context
+//! array at the index corresponding to the output port number. It keeps track of the execution
+//! time of the rate group and detects overruns.
+//!
+
+class ActiveRateGroup final : public ActiveRateGroupComponentBase {
+    friend class ActiveRateGroupTester;
+
+  public:
+    static constexpr FwIndexType CONNECTION_COUNT_MAX = NUM_RATEGROUPMEMBEROUT_OUTPUT_PORTS;
+
+    //!  \brief ActiveRateGroup constructor
+    //!
+    //!  The constructor of the class clears all the flags and copies the
+    //!  contents of the context array to private storage.
+    //!
+    //!  \param compName Name of the component
+    ActiveRateGroup(const char* compName);
+
+    //!  \brief ActiveRateGroup configuration function
+    //!
+    //!  The configuration function takes an array of context values to pass to
+    //!  members of the rate group.
+    //!
+    //!  \param contexts Array of integers that contain the context values that will be sent
+    //!         to each member component. The index of the array corresponds to the
+    //!         output port number.
+    //!  \param numContexts The number of elements in the context array.
+
+    void configure(U32 contexts[], FwIndexType numContexts);
+
+    //!  \brief ActiveRateGroup destructor
+    //!
+    //!  The destructor of the class is empty
+
+    ~ActiveRateGroup();
+
+  private:
+    //!  \brief Input cycle port handler
+    //!
+    //!  The cycle port handler calls each component in the rate group in turn,
+    //!  passing the context value. It computes the execution time each cycle,
+    //!  and writes it to a telemetry value if it reaches a maximum time
+    //!
+    //!  \param portNum incoming port call. For this class, should always be zero
+    //!  \param cycleStart value stored by the cycle driver, used to compute execution time.
+
+    void CycleIn_handler(FwIndexType portNum, Os::RawTime& cycleStart);
+
+    //!  \brief Input cycle port pre message hook
+    //!
+    //!  The input cycle port pre message hook is called on the thread of the calling
+    //!  cycle port. It sets flag to indicate that the cycle has started.
+    //!
+    //!  \param portNum incoming port call. For this class, should always be zero
+    //!  \param cycleStart value stored by the cycle driver, used to compute execution time.
+
+    void CycleIn_preMsgHook(FwIndexType portNum, Os::RawTime& cycleStart);  //!< CycleIn pre-message hook
+
+    //!  \brief Input ping port handler
+    //!
+    //!  This port is called by the health task to verify task aliveness
+    //!
+    //!  \param portNum incoming port call. For this class, should always be zero
+    //!  \param key value returned to health task to verify round trip
+
+    void PingIn_handler(FwIndexType portNum, U32 key);
+
+    //!  \brief Task preamble
+    //!
+    //!  This method is called prior to entering the message loop.
+    //!  It issues an event indicating that the task has started.
+    //!
+
+    void preamble();
+
+    U32 m_cycles;                          //!< cycles executed
+    U32 m_maxTime;                         //!< maximum execution time in microseconds
+    volatile bool m_cycleStarted;          //!< indicate that cycle has started. Used to detect overruns.
+    U32 m_contexts[CONNECTION_COUNT_MAX];  //!< Must match number of output ports
+    FwIndexType m_numContexts;             //!< Number of contexts passed in by user
+    FwIndexType m_overrunThrottle;         //!< throttle value for overrun events
+    U32 m_cycleSlips;                      //!< tracks number of cycle slips
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ActiveRateGroup.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ActiveRateGroup.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/ActiveRateGroup/ActiveRateGroup.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ActiveRateGroupTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ActiveRateGroupTester.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```

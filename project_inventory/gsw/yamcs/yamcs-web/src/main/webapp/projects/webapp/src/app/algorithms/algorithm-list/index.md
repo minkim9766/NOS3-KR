@@ -3,20 +3,435 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm-list.component.css`
 
-file--algorithm-list.component.css
-file--algorithm-list.component.html
-file--algorithm-list.component.ts
-file--algorithms.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithm-list.component.css`
+
+
+```css
+.primary-td .mat-icon {
+  margin-right: 7px;
+}
 ```
 
-## 항목
+### `algorithm-list.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithm-list.component.css`](file--algorithm-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithm-list.component.html`](file--algorithm-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithm-list.component.ts`](file--algorithm-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithms.datasource.ts`](file--algorithms.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithm-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Algorithms" />
+  <span #top></span>
+
+  <ya-panel>
+    @if (breadcrumb$ | async; as breadcrumb) {
+      @if (breadcrumb.length) {
+        <ya-filter-bar>
+          <ya-breadcrumb-trail>
+            <ya-breadcrumb
+              link="/algorithms"
+              [queryParams]="{ c: yamcs.context }"
+              icon="account_tree" />
+            @for (item of breadcrumb; track item) {
+              <ya-breadcrumb
+                [link]="item.route"
+                [queryParams]="item.queryParams"
+                [label]="item.name" />
+            }
+          </ya-breadcrumb-trail>
+        </ya-filter-bar>
+      }
+    }
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-search-filter
+        formControlName="filter"
+        placeholder="Search by name"
+        icon="search"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+      <ya-select formControlName="scope" [options]="scopeOptions" />
+    </ya-filter-bar>
+
+    @if (dataSource) {
+      <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let item" class="primary-td">
+            @if (item.system) {
+              <mat-icon class="icon12" style="vertical-align: middle">folder</mat-icon>
+              <a
+                [routerLink]="['/algorithms']"
+                [queryParams]="{ c: yamcs.context, system: item.name }">
+                {{ item.name | filename }}/
+              </a>
+            }
+            @if (item.algorithm) {
+              <mat-icon class="icon12" style="vertical-align: middle">transform</mat-icon>
+              <a
+                [routerLink]="'/algorithms' + item.algorithm.qualifiedName"
+                [queryParams]="{ c: yamcs.context }">
+                @if (!system) {
+                  <ya-highlight
+                    [text]="item.algorithm.qualifiedName"
+                    [term]="filterForm.value.filter" />
+                }
+                @if (system) {
+                  <ya-highlight
+                    [text]="item.algorithm.qualifiedName | slice: system!.length + 1"
+                    [term]="filterForm.value.filter" />
+                }
+              </a>
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let item">{{ item.algorithm?.type || "-" }}</td>
+        </ng-container>
+        <ng-container matColumnDef="language">
+          <th mat-header-cell *matHeaderCellDef>Language</th>
+          <td mat-cell *matCellDef="let item">{{ item.algorithm?.language || "-" }}</td>
+        </ng-container>
+        <ng-container matColumnDef="scope">
+          <th mat-header-cell *matHeaderCellDef>Scope</th>
+          <td mat-cell *matCellDef="let item">{{ item.algorithm?.scope || "-" }}</td>
+        </ng-container>
+        <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let item" class="wrap200">
+            @if (item.system) {
+              {{ item.system.shortDescription || "-" }}
+            }
+            @if (item.algorithm) {
+              {{ item.algorithm.shortDescription || "-" }}
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.selected]="selection.isSelected(row)"></tr>
+      </table>
+    }
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [length]="dataSource.totalSize$ | async" />
+  </ya-panel>
+  <ng-template #empty>
+    <ya-panel>
+      The Mission Database for
+      <i>{{ yamcs.instance }}</i>
+      does not define any algorithms.
+    </ya-panel>
+  </ng-template>
+</ya-instance-page>
+```
+
+### `algorithm-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithm-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {
+  GetAlgorithmsOptions,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AlgorithmsDataSource, ListItem } from './algorithms.datasource';
+
+@Component({
+  templateUrl: './algorithm-list.component.html',
+  styleUrl: './algorithm-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AlgorithmListComponent implements AfterViewInit, OnDestroy {
+  filterForm = new UntypedFormGroup({
+    filter: new UntypedFormControl(),
+    scope: new UntypedFormControl('ANY'),
+  });
+
+  shortName = false;
+  pageSize = 100;
+
+  system: string | null = null;
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  dataSource: AlgorithmsDataSource;
+
+  displayedColumns = [
+    'name',
+    'type',
+    'language',
+    'scope',
+    'shortDescription',
+    'actions',
+  ];
+
+  scopeOptions: YaSelectOption[] = [
+    { id: 'ANY', label: 'Any scope' },
+    { id: 'GLOBAL', label: 'Global' },
+    { id: 'COMMAND_VERIFICATION', label: 'Command Verification' },
+    { id: 'CONTAINER_PROCESSING', label: 'Container Processing' },
+  ];
+
+  private queryParamMapSubscription: Subscription;
+
+  selection = new SelectionModel<ListItem>(false);
+
+  // Would prefer to use formGroup, but when using valueChanges this
+  // only is updated after the callback...
+  private scope: string;
+  private filter: string;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
+    title.setTitle('Algorithms');
+    this.dataSource = new AlgorithmsDataSource(yamcs);
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filter = queryParams.get('filter') || '';
+      this.filterForm.get('filter')!.setValue(this.filter);
+    }
+    if (queryParams.has('scope')) {
+      this.scope = queryParams.get('scope')!;
+      this.filterForm.get('scope')!.setValue(this.scope);
+    }
+
+    this.filterForm.get('filter')!.valueChanges.subscribe((filter) => {
+      this.paginator.pageIndex = 0;
+      this.filter = filter;
+      this.updateDataSource();
+    });
+
+    this.filterForm.get('scope')!.valueChanges.forEach((scope) => {
+      this.scope = scope !== 'ANY' ? scope : null;
+      this.updateDataSource();
+    });
+
+    this.changeSystem(this.route.snapshot.queryParamMap);
+    this.queryParamMapSubscription = this.route.queryParamMap.subscribe(
+      (map) => {
+        if (map.get('system') !== this.system) {
+          this.changeSystem(map);
+        }
+      },
+    );
+
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  changeSystem(map: ParamMap) {
+    this.system = map.get('system');
+    this.updateBrowsePath();
+
+    if (map.has('page')) {
+      this.paginator.pageIndex = Number(map.get('page'));
+    } else {
+      this.paginator.pageIndex = 0;
+    }
+
+    this.updateDataSource();
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetAlgorithmsOptions = {
+      system: this.system || '/',
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+    };
+    if (this.filter) {
+      options.q = this.filter;
+    }
+    if (this.scope) {
+      options.scope = this.scope;
+    }
+    this.dataSource.loadAlgorithms(options).then(() => {
+      this.selection.clear();
+      this.updateBrowsePath();
+    });
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: this.filter || null,
+        scope: this.scope || null,
+        system: this.system || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    if (this.system) {
+      for (const part of this.system.slice(1).split('/')) {
+        path += '/' + part;
+        breadcrumb.push({
+          name: part,
+          route: '/algorithms',
+          queryParams: { system: path, c: this.yamcs.context },
+        });
+      }
+    }
+    this.breadcrumb$.next(breadcrumb);
+  }
+
+  selectNext() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.items$.value;
+      if (items.indexOf(item) !== -1) {
+        this.router.navigate(['/algorithms' + item.algorithm?.qualifiedName], {
+          queryParams: { c: this.yamcs.context },
+        });
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.queryParamMapSubscription?.unsubscribe();
+    this.dataSource.disconnect();
+  }
+}
+
+export interface BreadCrumbItem {
+  name?: string;
+  route: string;
+  queryParams: any;
+}
+```
+
+### `algorithms.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/algorithms.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  Algorithm,
+  GetAlgorithmsOptions,
+  SpaceSystem,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class ListItem {
+  name: string;
+  system?: SpaceSystem;
+  algorithm?: Algorithm;
+}
+
+export class AlgorithmsDataSource extends DataSource<ListItem> {
+  items$ = new BehaviorSubject<ListItem[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private yamcs: YamcsService) {
+    super();
+  }
+
+  connect() {
+    return this.items$;
+  }
+
+  loadAlgorithms(options: GetAlgorithmsOptions) {
+    this.loading$.next(true);
+    return this.yamcs.yamcsClient
+      .getAlgorithms(this.yamcs.instance!, options)
+      .then((page) => {
+        this.loading$.next(false);
+        this.totalSize$.next(page.totalSize);
+        const items: ListItem[] = [];
+        for (const system of page.systems || []) {
+          items.push({ name: system.qualifiedName, system });
+        }
+        for (const algorithm of page.algorithms || []) {
+          items.push({ name: algorithm.qualifiedName, algorithm });
+        }
+        this.items$.next(items);
+      });
+  }
+
+  disconnect() {
+    this.items$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

@@ -3,18 +3,143 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack-file-dirty-guard-dialog.component.html`
 
-file--stack-file-dirty-guard-dialog.component.html
-file--stack-file-dirty-guard-dialog.component.ts
-file--stack-file-dirty.guard.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/stack-file-dirty-guard-dialog.component.html`
+
+
+```html
+<mat-dialog-content>
+  <h3>Close without saving?</h3>
+  <p>You have unsaved changes, close without saving?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="confirmDiscard()">OK</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `stack-file-dirty-guard-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/stack-file-dirty-guard-dialog.component.html`](file--stack-file-dirty-guard-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/stack-file-dirty-guard-dialog.component.ts`](file--stack-file-dirty-guard-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/stack-file-dirty.guard.ts`](file--stack-file-dirty.guard.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/stack-file-dirty-guard-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-stack-file-page-dirty-dialog',
+  templateUrl: './stack-file-dirty-guard-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class StackFilePageDirtyDialog {
+  constructor(
+    private dialogRef: MatDialogRef<StackFilePageDirtyDialog>,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+  ) {}
+
+  confirmDiscard() {
+    const { stackFileService } = this.data;
+    stackFileService.dirty$.next(false);
+    this.dialogRef.close(true);
+  }
+}
+```
+
+### `stack-file-dirty.guard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/stack-file-dirty.guard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import { CanDeactivateFn } from '@angular/router';
+import { AuthService, ConfigService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Observer, of } from 'rxjs';
+import { StackFileService } from '../stack-file/StackFileService';
+import { StackFilePageDirtyDialog } from './stack-file-dirty-guard-dialog.component';
+
+export const stackFilePageDirtyGuardFn: CanDeactivateFn<unknown> = (
+  component: unknown,
+) => {
+  return inject(StackFilePageDirtyGuard).canDeactivate(component);
+};
+
+@Injectable()
+export class StackFilePageDirtyGuard {
+  private bucket: string;
+
+  // TODO this is just a workaround around the fact that our current version
+  // of Angular seems to trigger our deactivate guard twice...
+  private dialogOpen$ = new BehaviorSubject<boolean>(false);
+  private dialogRef: MatDialogRef<StackFilePageDirtyDialog, any>;
+
+  constructor(
+    private dialog: MatDialog,
+    private authService: AuthService,
+    configService: ConfigService,
+    private stackFileService: StackFileService,
+  ) {
+    this.bucket = configService.getStackBucket();
+  }
+
+  canDeactivate(component: unknown) {
+    // Copy the result of the first triggered dialog
+    if (this.dialogOpen$.value) {
+      return new Observable((observer: Observer<boolean>) => {
+        this.dialogRef.afterClosed().subscribe({
+          next: (result) => {
+            observer.next(result === true);
+            observer.complete();
+          },
+          error: () => {
+            observer.next(false);
+            observer.complete();
+          },
+        });
+      });
+    }
+
+    if (this.stackFileService.dirty$.value && this.mayManageStacks()) {
+      return new Observable((observer: Observer<boolean>) => {
+        this.dialogOpen$.next(true);
+        this.dialogRef = this.dialog.open(StackFilePageDirtyDialog, {
+          width: '400px',
+          data: {
+            stackFileService: this.stackFileService,
+          },
+        });
+        this.dialogRef.afterClosed().subscribe({
+          next: (result) => {
+            this.dialogOpen$.next(false);
+            observer.next(result === true);
+            observer.complete();
+          },
+          error: () => {
+            this.dialogOpen$.next(false);
+            observer.next(false);
+            observer.complete();
+          },
+        });
+      });
+    } else {
+      return of(true);
+    }
+  }
+
+  private mayManageStacks() {
+    const user = this.authService.getUser()!;
+    return (
+      user.hasObjectPrivilege('ManageBucket', this.bucket) ||
+      user.hasSystemPrivilege('ManageAnyBucket')
+    );
+  }
+}
+```

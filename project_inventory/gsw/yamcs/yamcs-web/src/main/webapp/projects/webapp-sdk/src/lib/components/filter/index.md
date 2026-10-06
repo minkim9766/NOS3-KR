@@ -3,36 +3,799 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cmSetup.ts`
 
-file--cmSetup.ts
-file--filter-input.component.css
-file--filter-input.component.html
-file--filter-input.component.ts
-file--filter-textarea.component.css
-file--filter-textarea.component.html
-file--filter-textarea.component.ts
-file--FilterErrorMark.ts
-file--highlight.js
-file--lang-filter.ts
-file--parser.js
-file--parser.terms.js
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/cmSetup.ts`
+
+
+```typescript
+import {
+  autocompletion,
+  closeBrackets,
+  closeBracketsKeymap,
+  Completion,
+  CompletionContext,
+  completionKeymap,
+} from '@codemirror/autocomplete';
+import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
+import {
+  bracketMatching,
+  HighlightStyle,
+  indentOnInput,
+  syntaxHighlighting,
+} from '@codemirror/language';
+import { lintKeymap } from '@codemirror/lint';
+import { highlightSelectionMatches } from '@codemirror/search';
+import { EditorState, Extension } from '@codemirror/state';
+import {
+  crosshairCursor,
+  drawSelection,
+  dropCursor,
+  highlightActiveLine,
+  highlightActiveLineGutter,
+  highlightSpecialChars,
+  keymap,
+  lineNumbers,
+  placeholder,
+  rectangularSelection,
+} from '@codemirror/view';
+import { tags } from '@lezer/highlight';
+import { EditorView } from 'codemirror';
+import { StyleSpec } from 'style-mod';
+
+const highlightStyle = HighlightStyle.define([
+  { tag: tags.compareOperator, color: 'rgb(95, 99, 104)' },
+  { tag: tags.lineComment, color: 'rgb(176, 96, 0)' },
+  { tag: tags.literal, color: 'rgb(0, 0, 0)' },
+  { tag: tags.logicOperator, color: 'rgb(19, 115, 51)' },
+  { tag: tags.operator, color: 'rgb(217, 48, 37)' },
+  { tag: tags.propertyName, color: 'rgb(118, 39, 187)' },
+  { tag: tags.string, color: 'rgb(201, 39, 134)' },
+]);
+
+const multilineTheme = EditorView.theme(
+  {
+    '&': {
+      width: '100%',
+      height: '100%',
+      fontSize: '12px',
+      fontWeight: 'normal',
+      letterSpacing: 'normal',
+    },
+    '.cm-content, .cm-gutter': {
+      minHeight: '100px',
+    },
+    '.cm-scroller': {
+      overflow: 'auto',
+      fontFamily: "'Roboto Mono', monospace",
+    },
+    '&.cm-focused': {
+      outline: 'none',
+    },
+    '.cm-underline': {
+      textDecoration: 'underline 1px red',
+      textDecorationStyle: 'wavy',
+    },
+  },
+  { dark: false },
+);
+
+function createOnelineTheme(paddingLeft: string | undefined) {
+  const styles: { [key: string]: StyleSpec } = {
+    '&': {
+      width: '100%',
+      height: '100%',
+      fontSize: '12px',
+      fontWeight: 'normal',
+      letterSpacing: 'normal',
+    },
+    '.cm-content': {
+      padding: 0,
+    },
+    '.cm-scroller': {
+      overflow: 'auto',
+      fontFamily: 'Roboto, sans-serif',
+      backgroundColor: '#fff',
+      lineHeight: '22px', // 24px - 2px top + bottom border
+    },
+    '&.cm-focused': {
+      outline: 'none',
+    },
+    '.cm-underline': {
+      textDecoration: 'underline 1px red',
+      textDecorationStyle: 'wavy',
+    },
+  };
+  if (paddingLeft) {
+    styles['.cm-line'] = {
+      paddingLeft,
+    };
+  }
+  return EditorView.theme(styles, { dark: false });
+}
+
+export interface CodeMirrorConfiguration {
+  oneline?: boolean;
+  placeholder?: string;
+  paddingLeft?: string;
+  onEnter?: (view: EditorView) => void;
+  completions?: Completion[];
+}
+
+export function provideCodeMirrorSetup(
+  options?: CodeMirrorConfiguration,
+): Extension {
+  function provideCompletions(context: CompletionContext) {
+    const before = context.matchBefore(/\w+/);
+    // If completion wasn't explicitly started and there
+    // is no word before the cursor, don't open completions.
+    if (!context.explicit && !before) {
+      return null;
+    }
+    return {
+      from: before ? before.from : context.pos,
+      options: options?.completions || [],
+      validFor: /^\w*$/,
+    };
+  }
+
+  const extensions: Extension[] = [
+    highlightSpecialChars(),
+    history(),
+    drawSelection(),
+    dropCursor(),
+    indentOnInput(),
+    syntaxHighlighting(highlightStyle),
+    bracketMatching(),
+    closeBrackets(),
+    autocompletion({
+      override: [provideCompletions],
+    }),
+    highlightSelectionMatches(),
+  ];
+
+  if (options?.oneline) {
+    if (options.onEnter) {
+      // Important to have this in the extension array
+      // before any other key mappings (higher priority)
+      extensions.push(
+        keymap.of([
+          {
+            key: 'Enter',
+            run: (view) => {
+              options.onEnter!(view);
+              return true;
+            },
+            preventDefault: true,
+          },
+        ]),
+      );
+    }
+
+    const theme = createOnelineTheme(options?.paddingLeft);
+    extensions.push(theme);
+  } else {
+    extensions.push(
+      ...[
+        multilineTheme,
+        lineNumbers(),
+        highlightActiveLineGutter(),
+        EditorState.allowMultipleSelections.of(true),
+        rectangularSelection(),
+        crosshairCursor(),
+        highlightActiveLine(),
+        EditorView.lineWrapping,
+      ],
+    );
+  }
+
+  extensions.push(
+    keymap.of([
+      ...closeBracketsKeymap,
+      ...defaultKeymap,
+      ...historyKeymap,
+      ...completionKeymap,
+      ...lintKeymap,
+    ]),
+  );
+
+  if (options?.placeholder) {
+    extensions.push(placeholder(options.placeholder));
+  }
+
+  return extensions;
+}
 ```
 
-## 항목
+### `filter-input.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/cmSetup.ts`](file--cmSetup.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-input.component.css`](file--filter-input.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-input.component.html`](file--filter-input.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-input.component.ts`](file--filter-input.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-textarea.component.css`](file--filter-textarea.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-textarea.component.html`](file--filter-textarea.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-textarea.component.ts`](file--filter-textarea.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/FilterErrorMark.ts`](file--FilterErrorMark.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/highlight.js`](file--highlight.js) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/lang-filter.ts`](file--lang-filter.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/parser.js`](file--parser.js) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/parser.terms.js`](file--parser.terms.js) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-input.component.css`
+
+
+```css
+:host {
+  display: block;
+  position: relative;
+}
+
+.editor-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.icon .material-symbols {
+  color: darkgrey;
+  padding: 4px;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.clear {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.clear .material-symbols {
+  cursor: pointer;
+  color: darkgrey;
+  padding: 4px;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.clear:hover .material-symbols {
+  color: black;
+}
+```
+
+### `filter-input.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-input.component.html`
+
+
+```html
+<div #editorContainer class="editor-container"></div>
+
+@if (icon(); as icon) {
+  <div class="icon">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+}
+
+@if (showClear()) {
+  <div class="clear" (click)="clearInput()">
+    <mat-icon>close</mat-icon>
+  </div>
+}
+```
+
+### `filter-input.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-input.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  forwardRef,
+  input,
+  OnDestroy,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { Completion } from '@codemirror/autocomplete';
+import {
+  EditorState,
+  StateEffect,
+  StateEffectType,
+  StateField,
+} from '@codemirror/state';
+import { Decoration, DecorationSet } from '@codemirror/view';
+import { EditorView } from 'codemirror';
+import { provideCodeMirrorSetup } from './cmSetup';
+import { FilterErrorMark } from './FilterErrorMark';
+import { filter } from './lang-filter';
+
+@Component({
+  selector: 'ya-filter-input',
+  templateUrl: './filter-input.component.html',
+  styleUrl: './filter-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaFilterInput),
+      multi: true,
+    },
+  ],
+  imports: [MatIcon],
+})
+export class YaFilterInput
+  implements ControlValueAccessor, AfterViewInit, OnDestroy
+{
+  completions = input<Completion[]>();
+  errorMark = input<FilterErrorMark>();
+  placeholder = input<string>();
+  icon = input<string>();
+
+  onEnter = output<string>();
+
+  private editorContainerRef =
+    viewChild.required<ElementRef<HTMLDivElement>>('editorContainer');
+  private editorView: EditorView | null = null;
+  private underlineDecoration: Decoration;
+  private addUnderlineEffect: StateEffectType<{ from: number; to: number }>;
+  private removeUnderlineEffect: StateEffectType<null>;
+
+  showClear = signal<boolean>(false);
+
+  private onChange = (_: string | null) => {};
+
+  // Internal value, for when a value is received before CM init
+  private initialDocString: string | undefined;
+
+  constructor() {
+    effect(() => {
+      const errorMark = this.errorMark();
+
+      // Remove any old effect, before adding a new one
+      this.editorView?.dispatch({
+        effects: this.removeUnderlineEffect.of(null),
+      });
+
+      if (errorMark) {
+        const { doc } = this.editorView!.state;
+        const { beginLine, beginColumn, endLine, endColumn } = errorMark;
+
+        const beginOffset = doc.line(beginLine).from + (beginColumn - 1);
+        const endOffset = doc.line(endLine).from + endColumn;
+        this.editorView!.dispatch({
+          effects: this.addUnderlineEffect.of(
+            this.underlineDecoration.range(beginOffset, endOffset),
+          ),
+        });
+      }
+    });
+  }
+
+  writeValue(value: any): void {
+    this.initialDocString = value || undefined;
+    this.editorView?.dispatch({
+      changes: {
+        from: 0,
+        to: this.editorView.state.doc.length,
+        insert: this.initialDocString,
+      },
+    });
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
+
+  ngAfterViewInit(): void {
+    const targetEl = this.editorContainerRef().nativeElement;
+    this.initializeEditor(targetEl);
+  }
+
+  focus() {
+    this.editorView?.focus();
+  }
+
+  clearInput() {
+    this.writeValue(null);
+    this.focus();
+    this.onEnter.emit('');
+  }
+
+  private initializeEditor(targetEl: HTMLDivElement) {
+    this.addUnderlineEffect = StateEffect.define({
+      map: ({ from, to }, change) => ({
+        from: change.mapPos(from),
+        to: change.mapPos(to),
+      }),
+    });
+    this.removeUnderlineEffect = StateEffect.define();
+
+    this.underlineDecoration = Decoration.mark({ class: 'cm-underline' });
+
+    const that = this;
+    const underlineExtension = StateField.define<DecorationSet>({
+      create() {
+        return Decoration.none;
+      },
+      update(value, transaction) {
+        // Move the decorations to account for document changes
+        value = value.map(transaction.changes);
+
+        for (const effect of transaction.effects) {
+          if (effect.is(that.addUnderlineEffect)) {
+            value = value.update({
+              add: [
+                that.underlineDecoration.range(
+                  effect.value.from,
+                  effect.value.to,
+                ),
+              ],
+            });
+          } else if (effect.is(that.removeUnderlineEffect)) {
+            value = value.update({
+              filter: (f, t, value) => false,
+            });
+          }
+        }
+        return value;
+      },
+      provide: (f) => EditorView.decorations.from(f),
+    });
+
+    const state = EditorState.create({
+      doc: this.initialDocString,
+      extensions: [
+        provideCodeMirrorSetup({
+          oneline: true,
+          placeholder: this.placeholder(),
+          paddingLeft: this.icon() ? '24px' : undefined,
+          onEnter: (view) => {
+            this.onEnter.emit(view.state.doc.toString());
+          },
+          completions: this.completions(),
+        }),
+        filter(),
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            const newValue = update.state.doc.toString();
+            this.onChange(newValue);
+            this.showClear.set(!!newValue);
+          }
+        }),
+        underlineExtension,
+      ],
+    });
+
+    this.editorView = new EditorView({
+      state,
+      parent: targetEl,
+    });
+    this.showClear.set(!!this.initialDocString);
+  }
+
+  ngOnDestroy(): void {
+    this.editorView?.destroy();
+    this.editorView = null;
+  }
+}
+```
+
+### `filter-textarea.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-textarea.component.css`
+
+
+```css
+.editor-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+```
+
+### `filter-textarea.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-textarea.component.html`
+
+
+```html
+<div #editorContainer class="editor-container"></div>
+```
+
+### `filter-textarea.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/filter-textarea.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  forwardRef,
+  input,
+  OnDestroy,
+  output,
+  viewChild,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Completion } from '@codemirror/autocomplete';
+import {
+  EditorState,
+  StateEffect,
+  StateEffectType,
+  StateField,
+} from '@codemirror/state';
+import { Decoration, DecorationSet } from '@codemirror/view';
+import { EditorView } from 'codemirror';
+import { provideCodeMirrorSetup } from './cmSetup';
+import { FilterErrorMark } from './FilterErrorMark';
+import { filter } from './lang-filter';
+
+@Component({
+  selector: 'ya-filter-textarea',
+  templateUrl: './filter-textarea.component.html',
+  styleUrl: './filter-textarea.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaFilterTextarea),
+      multi: true,
+    },
+  ],
+})
+export class YaFilterTextarea
+  implements ControlValueAccessor, AfterViewInit, OnDestroy
+{
+  errorMark = input<FilterErrorMark>();
+  placeholder = input<string>();
+  completions = input<Completion[]>();
+
+  onEnter = output<string>();
+
+  private editorContainerRef =
+    viewChild.required<ElementRef<HTMLDivElement>>('editorContainer');
+
+  private editorView: EditorView | null = null;
+  private underlineDecoration: Decoration;
+  private addUnderlineEffect: StateEffectType<{ from: number; to: number }>;
+  private removeUnderlineEffect: StateEffectType<null>;
+
+  private onChange = (_: string | null) => {};
+
+  // Internal value, for when a value is received before CM init
+  private initialDocString: string | undefined;
+
+  constructor() {
+    effect(() => {
+      const errorMark = this.errorMark();
+
+      // Remove any old effect, before adding a new one
+      this.editorView?.dispatch({
+        effects: this.removeUnderlineEffect.of(null),
+      });
+
+      if (errorMark) {
+        const { doc } = this.editorView!.state;
+        const { beginLine, beginColumn, endLine, endColumn } = errorMark;
+
+        const beginOffset = doc.line(beginLine).from + (beginColumn - 1);
+        const endOffset = doc.line(endLine).from + endColumn;
+        this.editorView!.dispatch({
+          effects: this.addUnderlineEffect.of(
+            this.underlineDecoration.range(beginOffset, endOffset),
+          ),
+        });
+      }
+    });
+  }
+
+  writeValue(value: any): void {
+    this.initialDocString = value || undefined;
+    this.editorView?.dispatch({
+      changes: {
+        from: 0,
+        to: this.editorView.state.doc.length,
+        insert: this.initialDocString,
+      },
+    });
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
+
+  ngAfterViewInit(): void {
+    const targetEl = this.editorContainerRef().nativeElement;
+    this.initializeEditor(targetEl);
+  }
+
+  private initializeEditor(targetEl: HTMLDivElement) {
+    this.addUnderlineEffect = StateEffect.define({
+      map: ({ from, to }, change) => ({
+        from: change.mapPos(from),
+        to: change.mapPos(to),
+      }),
+    });
+    this.removeUnderlineEffect = StateEffect.define();
+
+    this.underlineDecoration = Decoration.mark({ class: 'cm-underline' });
+
+    const that = this;
+    const underlineExtension = StateField.define<DecorationSet>({
+      create() {
+        return Decoration.none;
+      },
+      update(value, transaction) {
+        // Move the decorations to account for document changes
+        value = value.map(transaction.changes);
+
+        for (const effect of transaction.effects) {
+          if (effect.is(that.addUnderlineEffect)) {
+            value = value.update({
+              add: [
+                that.underlineDecoration.range(
+                  effect.value.from,
+                  effect.value.to,
+                ),
+              ],
+            });
+          } else if (effect.is(that.removeUnderlineEffect)) {
+            value = value.update({
+              filter: (f, t, value) => false,
+            });
+          }
+        }
+        return value;
+      },
+      provide: (f) => EditorView.decorations.from(f),
+    });
+
+    const state = EditorState.create({
+      doc: this.initialDocString,
+      extensions: [
+        provideCodeMirrorSetup({
+          completions: this.completions(),
+        }),
+        filter(),
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            this.onChange(update.state.doc.toString());
+          }
+        }),
+        underlineExtension,
+      ],
+    });
+
+    this.editorView = new EditorView({
+      state,
+      parent: targetEl,
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.editorView?.destroy();
+    this.editorView = null;
+  }
+}
+```
+
+### `FilterErrorMark.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/FilterErrorMark.ts`
+
+
+```typescript
+export interface FilterErrorMark {
+  beginLine: number;
+  beginColumn: number;
+  endLine: number;
+  endColumn: number;
+}
+```
+
+### `highlight.js`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/highlight.js`
+
+
+```javascript
+import { styleTags, tags as t } from '@lezer/highlight';
+
+export const filterHighlighting = styleTags({
+  String: t.string,
+  Text: t.literal,
+  LineComment: t.lineComment,
+  CompareOp: t.compareOperator,
+  Comparable: t.propertyName,
+  LogicOp: t.logicOperator,
+  Number: t.number,
+  'True False': t.bool,
+  Minus: t.operator,
+  Null: t.null,
+  '( )': t.paren,
+});
+```
+
+### `lang-filter.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/lang-filter.ts`
+
+
+```typescript
+import { LanguageSupport, LRLanguage } from '@codemirror/language';
+import { parser } from './parser';
+
+export const filterLanguage = LRLanguage.define({
+  name: 'filter',
+  parser: parser.configure({}),
+  languageData: {
+    closeBrackets: { brackets: ['(', '"'] },
+  },
+});
+
+export function filter() {
+  return new LanguageSupport(filterLanguage);
+}
+```
+
+### `parser.js`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/parser.js`
+
+
+```javascript
+// This file was generated by lezer-generator. You probably shouldn't edit it.
+import {LRParser} from "@lezer/lr"
+import {filterHighlighting} from "./highlight"
+export const parser = LRParser.deserialize({
+  version: 14,
+  states: "#lQ`QPOOO!oQPO'#CfO#fQPO'#CgOOQO'#Cp'#CpO$]QPO'#CpO$eQPO'#ChOOQO'#Ck'#CkOOQO'#Cl'#ClQ`QPOOOOQO,59[,59[O$eQPO,59SOOQO'#Cj'#CjO%SQPO,59SOOQO-E6j-E6jO%SQPO1G.nOOQO'#Cf'#CfOOQO'#Cg'#CgO%cQPO'#CpOOQO1G.n1G.nOOQO7+$Y7+$Y",
+  stateData: "%v~OcOSPOSQOSROS~OTROUROVROWROXSOePOfQOpUOqUOrUO~Og]Xh]Xi]Xj]Xk]Xl]Xm]Xn]Xo]X~OTYXUYXVYXWYXXYXaYXeYXfYXpYXqYXrYX~P!QOTZXUZXVZXWZXXZXaZXeZXfZXpZXqZXrZX~P!QOePOfQO~OgZOhZOiZOjZOkZOlZOmZOnZOoZO~OTROUROVROWROXaOe_Of`O~OTrqpWUPXVf~",
+  goto: "!cePPPPPPPPPPffpt{p!RPPP!XWROW[^TXSaTVOWSTOWRYSQ[TR^YQWOR]WSVOWQb[Rc^",
+  nodeNames: "⚠ LineComment ( ) Filter True False Null Number Minus String Text Comparison Comparable CompareOp LogicOp",
+  maxTerm: 34,
+  nodeProps: [
+    ["isolate", -3,10,11,13,""]
+  ],
+  propSources: [filterHighlighting],
+  skippedNodes: [0,1,2,3],
+  repeatNodeCount: 1,
+  tokenData: "5p~RmXY!|YZ!|]^!|pq!|qr#Rrs#ftu$yxy%byz%g}!O%l!Q!R&c!R!['q![!](S!^!_(X!_!`(f!`!a(s!c!d)Q!d!p$y!p!q*w!q!r,n!r!}$y#R#S$y#T#Y$y#Y#Z-v#Z#b$y#b#c0v#c#h$y#h#i3[#i#o$y~#ROc~~#UQ!_!`#[#r#s#a~#aOh~~#fOn~~#iWpq#fqr#frs$Rs#O#f#O#P$W#P;'S#f;'S;=`$s<%lO#f~$WOe~~$ZWrs#f!P!Q#f#O#P#f#U#V#f#Y#Z#f#b#c#f#f#g#f#h#i#f~$vP;=`<%l#f~%OUf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y~%gOQ~~%lOR~~%qRX~}!O%z!Q!R&c!R!['q~&PSP~OY%zZ;'S%z;'S;=`&]<%lO%z~&`P;=`<%l%z~&hRW~!O!P&q!g!h'V#X#Y'V~&tP!Q![&w~&|RW~!Q![&w!g!h'V#X#Y'V~'YR{|'c}!O'c!Q!['i~'fP!Q!['i~'nPW~!Q!['i~'vSW~!O!P&q!Q!['q!g!h'V#X#Y'V~(XOo~~(^Pi~!_!`(a~(fOk~~(kPg~#r#s(n~(sOm~~(xPj~!_!`({~)QOl~~)VWf~tu$y!O!P$y!Q![$y!c!p$y!p!q)o!q!}$y#R#S$y#T#o$y~)tWf~tu$y!O!P$y!Q![$y!c!f$y!f!g*^!g!}$y#R#S$y#T#o$y~*eUp~f~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y~*|Wf~tu$y!O!P$y!Q![$y!c!q$y!q!r+f!r!}$y#R#S$y#T#o$y~+kWf~tu$y!O!P$y!Q![$y!c!v$y!v!w,T!w!}$y#R#S$y#T#o$y~,[Ur~f~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y~,sWf~tu$y!O!P$y!Q![$y!c!t$y!t!u-]!u!}$y#R#S$y#T#o$y~-dUq~f~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y~-{Vf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#U.b#U#o$y~.gWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#`$y#`#a/P#a#o$y~/UWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#g$y#g#h/n#h#o$y~/sWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#X$y#X#Y0]#Y#o$y~0dUU~f~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y~0{Wf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#i$y#i#j1e#j#o$y~1jWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#`$y#`#a2S#a#o$y~2XWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#`$y#`#a2q#a#o$y~2xUV~f~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y~3aWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#f$y#f#g3y#g#o$y~4OWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#i$y#i#j4h#j#o$y~4mWf~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#X$y#X#Y5V#Y#o$y~5^UT~f~tu$y!O!P$y!Q![$y!c!}$y#R#S$y#T#o$y",
+  tokenizers: [0],
+  topRules: {"Filter":[0,4]},
+  tokenPrec: 211
+})
+```
+
+### `parser.terms.js`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter/parser.terms.js`
+
+
+```javascript
+// This file was generated by lezer-generator. You probably shouldn't edit it.
+export const
+  LineComment = 1,
+  Filter = 4,
+  True = 5,
+  False = 6,
+  Null = 7,
+  Number = 8,
+  Minus = 9,
+  String = 10,
+  Text = 11,
+  Comparison = 12,
+  Comparable = 13,
+  CompareOp = 14,
+  LogicOp = 15
+```

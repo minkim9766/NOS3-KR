@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,17 @@
 choice/index
 initial/index
 state/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/`](choice/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/`](initial/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/`](state/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/choice/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/initial/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/state/")
+```

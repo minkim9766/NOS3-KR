@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -29,36 +29,259 @@ Time/index
 Tlm/index
 Trap/index
 Types/index
-file--CMakeLists.txt
-file--Deprecate.hpp
-file--FPrimeBasicTypes.h
-file--FPrimeBasicTypes.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/`](Buffer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/`](Cmd/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/`](Com/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Comp/`](Comp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Dp/`](Dp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/`](FilePacket/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/`](Fpy/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/`](Interfaces/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/`](Log/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/`](Logger/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/`](Obj/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/`](Port/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/`](Ports/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/`](Prm/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/`](SerializableFile/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/`](Sm/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/`](Test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/`](Time/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/`](Tlm/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Trap/`](Trap/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Types/`](Types/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Deprecate.hpp`](file--Deprecate.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FPrimeBasicTypes.h`](file--FPrimeBasicTypes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FPrimeBasicTypes.hpp`](file--FPrimeBasicTypes.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/CMakeLists.txt`
+
+
+```cmake
+# Module subdirectories
+set(FPRIME_FRAMEWORK_MODULES Fw_Prm Fw_Cmd Fw_Log Fw_Tlm Fw_Fpy Fw_Com Fw_Time Fw_Port Fw_Types CACHE INTERNAL "Fw mods")
+# Port subdirectories
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Buffer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Cmd/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Com/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Dp/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Fpy/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Interfaces/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Log/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Logger/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Prm/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Time/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Tlm/")
+
+# Framework subdirectories
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Comp/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Sm/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FilePacket/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Obj/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Port/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports/CompletionStatus")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports/Ready")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports/Signal")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports/SuccessCondition")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SerializableFile/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Test/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Types/")
+
+# Setup an interface target for Fw for efficiency
+add_library(Fw INTERFACE)
+target_link_libraries(Fw INTERFACE ${FPRIME_FRAMEWORK_MODULES})
+```
+
+### `Deprecate.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Deprecate.hpp`
+
+
+```cpp
+// deprecate.hpp:
+//
+// A minor implementation of compile-time deprecation for the fprime framework.
+
+#ifndef FW_DEPRECATE_HPP
+#define FW_DEPRECATE_HPP
+
+#ifndef DEPRECATED
+
+#ifdef __GNUC__
+#define DEPRECATED(func, message) func __attribute__((deprecated(message)))
+#else
+#warning "No implementation of DEPRECATED for given compiler. Please check for use of DEPRECATED() functions"
+#define DEPRECATED(func) func
+#endif
+
+#endif
+
+#endif  // FW_DEPRECATE_HPP
+```
+
+### `FPrimeBasicTypes.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FPrimeBasicTypes.h`
+
+
+```c
+// ======================================================================
+// \title  Fw/FPrimeBasicTypes.h
+// \author mstarch
+// \brief  header file for basic types used in F Prime
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// FPrime defines a number of basic types, platform configurable types,
+// and project configurable types. This file provides a single header
+// users can import for using these types.
+//
+// This header is intended to be C-compatible.
+//
+// ======================================================================
+#ifndef FPRIME_BASIC_TYPES_H
+#define FPRIME_BASIC_TYPES_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include <Fw/Types/BasicTypes.h>
+#include <Platform/PlatformTypes.h>
+#include <config/FpConfig.h>
+
+// ----------------------------------------------------------------------
+// Type aliases defined by FPP
+// ----------------------------------------------------------------------
+
+#include <config/FwAssertArgTypeAliasAc.h>
+#include <config/FwIndexTypeAliasAc.h>
+#include <config/FwQueuePriorityTypeAliasAc.h>
+#include <config/FwSignedSizeTypeAliasAc.h>
+#include <config/FwSizeTypeAliasAc.h>
+#include <config/FwTaskIdTypeAliasAc.h>
+#include <config/FwTaskPriorityTypeAliasAc.h>
+
+#include <config/FwChanIdTypeAliasAc.h>
+#include <config/FwDpIdTypeAliasAc.h>
+#include <config/FwDpPriorityTypeAliasAc.h>
+#include <config/FwEnumStoreTypeAliasAc.h>
+#include <config/FwEventIdTypeAliasAc.h>
+#include <config/FwIdTypeAliasAc.h>
+#include <config/FwOpcodeTypeAliasAc.h>
+#include <config/FwPacketDescriptorTypeAliasAc.h>
+#include <config/FwPrmIdTypeAliasAc.h>
+#include <config/FwSizeStoreTypeAliasAc.h>
+#include <config/FwSizeTypeAliasAc.h>
+#include <config/FwTimeBaseStoreTypeAliasAc.h>
+#include <config/FwTimeContextStoreTypeAliasAc.h>
+#include <config/FwTlmPacketizeIdTypeAliasAc.h>
+#include <config/FwTraceIdTypeAliasAc.h>
+
+// Backwards naming compatibility.
+typedef FwSizeStoreType FwBuffSizeType;
+#define PRI_FwBuffSizeType PRI_FwSizeStoreType
+
+#ifdef __cplusplus
+}
+#endif
+#endif  // FPRIME_BASIC_TYPES_H
+```
+
+### `FPrimeBasicTypes.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FPrimeBasicTypes.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FPrimeBasicTypes.hpp
+// \author mstarch
+// \brief  hpp file for basic types used in F Prime
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// FPrime defines a number of basic types, platform configurable types,
+// and project configurable types. This file provides a single header
+// users can import for using these types. It wraps the underlying C
+// header in C-linkage to allow C++ users to include this header.
+//
+// ======================================================================
+#ifndef FPRIME_BASIC_TYPES_HPP
+#define FPRIME_BASIC_TYPES_HPP
+#include <limits>
+extern "C" {
+#include <Fw/FPrimeBasicTypes.h>
+}
+#include <Fw/Types/BasicTypes.hpp>
+// Needed for FwAssertTextSize
+#include <config/FppConstantsAc.hpp>
+
+// Define max length of assert string
+// Note: This constant truncates file names in assertion failure event reports
+#ifndef FW_ASSERT_TEXT_SIZE
+#define FW_ASSERT_TEXT_SIZE FwAssertTextSize  //!< Size of string used to store assert description
+#endif
+
+//// Configuration validation checks ////
+
+// Check that Fw::String is big enough to hold any string that can be given a
+// default value in FPP.
+
+static_assert(FW_FIXED_LENGTH_STRING_SIZE >= FW_CMD_STRING_MAX_SIZE,
+              "A generic string should be able to hold a command string");
+static_assert(FW_FIXED_LENGTH_STRING_SIZE >= FW_LOG_STRING_MAX_SIZE,
+              "A generic string should be able to hold an event string");
+static_assert(FW_FIXED_LENGTH_STRING_SIZE >= FW_TLM_STRING_MAX_SIZE,
+              "A generic string should be able to hold a telemetry string");
+static_assert(FW_FIXED_LENGTH_STRING_SIZE >= FW_PARAM_STRING_MAX_SIZE,
+              "A generic string should be able to hold a parameter string");
+
+// Check that command/telemetry strings are not larger than an argument buffer
+
+static_assert(FW_CMD_STRING_MAX_SIZE + sizeof(FwSizeStoreType) <= FW_CMD_ARG_BUFFER_MAX_SIZE,
+              "FW_CMD_STRING_MAX_SIZE cannot be larger than FW_CMD_ARG_BUFFER_MAX_SIZE");
+static_assert(FW_LOG_STRING_MAX_SIZE + sizeof(FwSizeStoreType) <= FW_LOG_BUFFER_MAX_SIZE,
+              "FW_LOG_STRING_MAX_SIZE cannot be larger than FW_LOG_BUFFER_MAX_SIZE");
+static_assert(FW_TLM_STRING_MAX_SIZE + sizeof(FwSizeStoreType) <= FW_TLM_BUFFER_MAX_SIZE,
+              "FW_TLM_STRING_MAX_SIZE cannot be larger than FW_TLM_BUFFER_MAX_SIZE");
+static_assert(FW_PARAM_STRING_MAX_SIZE + sizeof(FwSizeStoreType) <= FW_PARAM_BUFFER_MAX_SIZE,
+              "FW_PARAM_STRING_MAX_SIZE cannot be larger than FW_PARAM_BUFFER_MAX_SIZE");
+
+// Text logging needs the code generator for serializables to generate a stringified version of the
+// value.
+static_assert((FW_ENABLE_TEXT_LOGGING == 0) || (FW_SERIALIZABLE_TO_STRING != 0),
+              "FW_SERIALIZABLE_TO_STRING must be enabled to enable FW_ENABLE_TEXT_LOGGING");
+
+// Unit testing needs serializable strings
+#ifdef BUILD_UT
+static_assert(FW_SERIALIZABLE_TO_STRING != 0, "FW_SERIALIZABLE_TO_STRING must be enabled for unit testing");
+#endif
+
+static_assert(std::numeric_limits<FwBuffSizeType>::max() == std::numeric_limits<FwSizeStoreType>::max() &&
+                  std::numeric_limits<FwBuffSizeType>::min() == std::numeric_limits<FwSizeStoreType>::min(),
+              "FwBuffSizeType must be equivalent to FwExternalSizeType");
+
+static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<FwSizeStoreType>::max() &&
+                  std::numeric_limits<FwSizeType>::min() <= std::numeric_limits<FwSizeStoreType>::min(),
+              "FwSizeType cannot entirely store values of type FwExternalSizeType");
+
+// Check platform defined types for required invariants
+static_assert(sizeof(PlatformPointerCastType) == sizeof(void*),
+              "PlatformPointerCastType must be the same size as pointers");
+static_assert(std::numeric_limits<PlatformSizeType>::max() >= std::numeric_limits<unsigned int>::max(),
+              "PlatformSizeType must be at least as large as unsigned int");
+static_assert(std::numeric_limits<PlatformSignedSizeType>::max() >= std::numeric_limits<int>::max(),
+              "PlatformSignedSizeType must be at least as large as int");
+static_assert(std::numeric_limits<PlatformSignedSizeType>::min() <= std::numeric_limits<int>::min(),
+              "PlatformSignedSizeType must be at least as small as int");
+static_assert(std::numeric_limits<PlatformIndexType>::is_signed, "PlatformIndexType must be signed");
+static_assert(not std::numeric_limits<PlatformSizeType>::is_signed, "PlatformSizeType must be unsigned");
+static_assert(std::numeric_limits<PlatformSignedSizeType>::is_signed, "PlatformSignedSizeType must be signed");
+static_assert(std::numeric_limits<PlatformSizeType>::max() >= std::numeric_limits<U32>::max(),
+              "PlatformSizeType must be at least as large as U32");
+static_assert(sizeof(PlatformSizeType) == sizeof(PlatformSignedSizeType),
+              "PlatformSizeType must be the same size as PlatformSignedSizeType");
+
+// Check framework configured types for required invariants
+static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<unsigned int>::max(),
+              "FwSizeType must be at least as large as unsigned int");
+static_assert(std::numeric_limits<FwSignedSizeType>::max() >= std::numeric_limits<int>::max(),
+              "FwSignedSizeType must be at least as large as int");
+static_assert(std::numeric_limits<FwSignedSizeType>::min() <= std::numeric_limits<int>::min(),
+              "FwSignedSizeType must be at least as large as int");
+static_assert(std::numeric_limits<FwIndexType>::is_signed, "FwIndexType must be signed");
+static_assert(not std::numeric_limits<FwSizeType>::is_signed, "FwSizeType must be unsigned");
+static_assert(std::numeric_limits<FwSignedSizeType>::is_signed, "FwSignedSizeType must be signed");
+static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<U32>::max(),
+              "FwSizeType must be at least as large as U32");
+static_assert(sizeof(FwSizeType) == sizeof(FwSignedSizeType), "FwSizeType must be the same size as FwSignedSizeType");
+
+#endif  // FW_TYPES_HPP
+```

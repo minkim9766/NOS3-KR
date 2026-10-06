@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/hwlib/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,11 +16,4 @@ src/index
 stubs/index
 ```
 
-## 항목
-
-- [`fsw/apps/hwlib/fsw/linux/`](linux/index) — 폴더
-- [`fsw/apps/hwlib/fsw/mission_inc/`](mission_inc/index) — 폴더
-- [`fsw/apps/hwlib/fsw/platform_inc/`](platform_inc/index) — 폴더
-- [`fsw/apps/hwlib/fsw/public_inc/`](public_inc/index) — 폴더
-- [`fsw/apps/hwlib/fsw/src/`](src/index) — 폴더
-- [`fsw/apps/hwlib/fsw/stubs/`](stubs/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,22 +3,1738 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `makefile`
 
-file--makefile
-file--tmtf_stubs.c
-file--tmtf_stubs.h
-file--tmtf_testcase.c
-file--tmtf_testrunner.c
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=tmtf
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../../src/formats
+VPATH += ../ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../../src
+INCLUDES += -I../../public_inc
+INCLUDES += -I../ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := $(APP).o
+
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_osapi_stubs.o
+UT_OBJS += $(APP)_testcase.o
+UT_OBJS += $(APP)_stubs.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -D_LINUX_OS_
+#COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ -DUT_VERBOSE 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(UT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov -b $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
 ```
 
-## 항목
+### `tmtf_stubs.c`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_stubs.c`](file--tmtf_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_stubs.h`](file--tmtf_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_testcase.c`](file--tmtf_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_testrunner.c`](file--tmtf_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_stubs.c`
+
+
+```c
+/*
+ * File: TMTF_stubs.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *  Stub out various functions not stubbed out by the UT-Assert code
+ *
+ */
+
+#include "cfe.h"
+
+#include "tmtf_stubs.h"
+
+TMTF_ReturnCodeTable_t     TMTF_ReturnCodeTable[TMTF_MAX_INDEX];
+
+void TMTF_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < TMTF_MAX_INDEX) {
+        TMTF_ReturnCodeTable[Index].Value = RtnVal;
+        TMTF_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+
+bool TMTF_UseReturnCode(uint32 Index)
+{
+    if (TMTF_ReturnCodeTable[Index].Count > 0) {
+        TMTF_ReturnCodeTable[Index].Count--;
+        if (TMTF_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+```
+
+### `tmtf_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_stubs.h`
+
+
+```c
+/*
+ * File: tmtf_stubs.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide stubs for unit testing transfer frames
+ *
+ * History:
+ *   04/26/2015  A. Asp, Odyssey Space Research, LLC
+ *    * Created
+ */
+
+#ifndef _TMTF_STUBS_H_
+#define _TMTF_STUBS_H_
+
+#include "uttools.h"
+
+typedef enum
+{
+    TMTF_MAX_INDEX
+} TMTF_INDEX_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} TMTF_ReturnCodeTable_t;
+
+
+void    TMTF_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+bool TMTF_UseReturnCode(uint32 Index);
+
+
+#endif
+```
+
+### `tmtf_testcase.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_testcase.c`
+
+
+```c
+/*
+ * Filename: tmtf_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains unit test cases for TM transfer frames
+ *
+ * TODO:
+ *   Add additional asserts for TMTF_InitFrame tests
+ *   Add additional TMTF_InitFrame tests
+ *
+ * Modification History:
+ *   04/26/2015, A. Asp, Odyssey Space Research, LLC
+ *    * Created
+ *
+ */
+
+
+/*
+ * Includes
+ */
+#include "tmtf_stubs.h"
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+
+#include "tmtf.h"
+
+
+#define TEST_FRAME_LENGTH     500  
+
+static const uint16 TMTF_PRIHDR_SIZE = 6;
+
+
+/* Prototypes for non-exported functions */
+
+
+/* -------------------- Special Test Case Variables ------------------------- */
+static const TMTF_PriHdr_t initHdr =
+{
+    {0x00, 0x12},  /* tfvn=0, scid=1, vcid=1, ocf flag=0 */
+    0x00,          /* mc frame count=0 */
+    0x00,          /* vc frame count=0 */
+    {0x00, 0x00}   /* status=0 */
+};
+
+uint8 tfBuffer[TEST_FRAME_LENGTH];
+
+static TMTF_PriHdr_t   *testFramePtr = (TMTF_PriHdr_t *)tfBuffer;
+static uint8            testFrame[TEST_FRAME_LENGTH];
+static uint8            testData[TEST_FRAME_LENGTH];
+
+
+/*******************************************************************************
+**
+**  TMTF_SetVersion Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVersion_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetVersion(NULL, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVersion_Zero(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetVersion(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[0] == 0x3F, "tfvn == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVersion_One(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetVersion(testFramePtr, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[0] == 0x40, "tfvn == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVersion_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetVersion(testFramePtr, 0xFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[0] == 0xC0, "tfvn == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetScId Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetScId_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetScId(NULL, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetScId_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0xFF;
+    testFramePtr->Id[1] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetScId(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True((testFramePtr->Id[0] == 0xC0) && (testFramePtr->Id[1] == 0x0F), "sc id == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetScId_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0x00;
+    testFramePtr->Id[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetScId(testFramePtr, 0xFFFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True((testFramePtr->Id[0] == 0x3F) && (testFramePtr->Id[1] == 0xF0), "sc id == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetScId_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0xC0;
+    testFramePtr->Id[1] = 0x0F;
+
+    /* Execute test */
+    actual = TMTF_SetScId(testFramePtr, 0x2AA);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True((testFramePtr->Id[0] == 0xEA) && (testFramePtr->Id[1] == 0xAF), "sc id == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_GetMcId Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_GetMcId(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0x00;
+    TMTF_SetScId(testFramePtr, 0x01);
+
+    /* Execute test */
+    actual = TMTF_GetMcId(NULL);
+    UtAssert_True(actual == expected, "Null Pointer Error");
+    
+    expected = 0x01;
+    actual = TMTF_GetMcId(testFramePtr);
+    UtAssert_True(actual == expected, "McId == expected");
+}
+
+
+
+/*******************************************************************************
+**
+**  TMTF_SetVcId Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcId_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetVcId(NULL, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcId_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[1] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetVcId(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[1] == 0xF1, "vc id == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcId_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetVcId(testFramePtr, 0xFFFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[1] == 0x0E, "vc id == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcId_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetVcId(testFramePtr, 0x05);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[1] == 0x0A, "vc id == expected");
+}
+
+/*******************************************************************************
+**
+**  TMTF_GetGlobalVcId Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_GetGlobalVcId(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[0] = 0x00;
+    testFramePtr->Id[1] = 0x00;
+    TMTF_SetScId(testFramePtr, 1);
+    TMTF_SetVcId(testFramePtr, 7);
+
+    /* Execute test */
+    actual = TMTF_GetGlobalVcId(NULL);
+    UtAssert_True(actual == expected, "return value == expected");
+    
+    expected = 0x1e;
+    actual = TMTF_GetGlobalVcId(testFramePtr);
+    UtAssert_True(actual == expected, "GlobalVcId == expected");
+}
+
+/*******************************************************************************
+**
+**  TMTF_SetMcFrameCount Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetMcFrameCount_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetMcFrameCount(NULL, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetMcFrameCount_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+    testFramePtr->McFrameCount = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetMcFrameCount(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->McFrameCount == 0, "mc frame count == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetMcFrameCount_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->McFrameCount = 0;
+
+    /* Execute test */
+    actual = TMTF_SetMcFrameCount(testFramePtr, 0xFFFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->McFrameCount == 0xFF, "mc frame count == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetMcFrameCount_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->McFrameCount = 0;
+
+    /* Execute test */
+    actual = TMTF_SetMcFrameCount(testFramePtr, 0xAA);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->McFrameCount == 0xAA, "mc frame count == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetVcFrameCount Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcFrameCount_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetVcFrameCount(NULL, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcFrameCount_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->VcFrameCount = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetVcFrameCount(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->VcFrameCount == 0, "vc frame count == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcFrameCount_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->VcFrameCount = 0;
+
+    /* Execute test */
+    actual = TMTF_SetVcFrameCount(testFramePtr, 0xFFFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->VcFrameCount == 0xFF, "vc frame count == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetVcFrameCount_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->VcFrameCount = 0;
+
+    /* Execute test */
+    actual = TMTF_SetVcFrameCount(testFramePtr, 0xAA);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->VcFrameCount == 0xAA, "vc frame count == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_IncrVcFrameCount Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_IncrVcFrameCount_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_IncrVcFrameCount(NULL);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_IncrVcFrameCount(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->VcFrameCount = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_IncrVcFrameCount(testFramePtr);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->VcFrameCount == 0, "vc frame count == expected");
+
+    /* Setup inputs */
+    testFramePtr->VcFrameCount = 0x00;
+
+    /* Execute test */
+    actual = TMTF_IncrVcFrameCount(testFramePtr);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->VcFrameCount == 1, "vc frame count == expected");
+}
+
+/*******************************************************************************
+**
+**  TMTF_SetOcfFlag Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcfFlag_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetOcfFlag(NULL, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcfFlag_True(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetOcfFlag(testFramePtr, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[1] == 0x01, "ocf flag == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcfFlag_False(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->Id[1] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetOcfFlag(testFramePtr, false);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->Id[1] == 0xFE, "ocf flag == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetSecHdrFlag Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrFlag_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrFlag(NULL, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrFlag_True(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrFlag(testFramePtr, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x80, "secondary hdr flag == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrFlag_False(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrFlag(testFramePtr, false);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x7F, "secondary hdr flag == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetSyncFlag Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSyncFlag_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSyncFlag(NULL, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSyncFlag_True_PoFlgOn(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x20;  /* packet order flag = 1, seg length id = '00' */
+
+    /* Execute test */
+    actual = TMTF_SetSyncFlag(testFramePtr, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x60, "sync flag == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSyncFlag_True_PoFlgOff(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;  /* packet order flag = 0, seg length id = '00' */
+
+    /* Execute test */
+    actual = TMTF_SetSyncFlag(testFramePtr, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x40, "sync flag == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSyncFlag_False_PoFlgOn(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0xE7;  /* packet order flag = 1, seg length id = '00' */
+
+    /* Execute test */
+    actual = TMTF_SetSyncFlag(testFramePtr, false);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x9F, "sync flag == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSyncFlag_False_PoFlgOff(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0xDF;  /* packet order flag = 0, seg length id = '11' */
+
+    /* Execute test */
+    actual = TMTF_SetSyncFlag(testFramePtr, false);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x9F, "sync flag == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetPacketOrderFlag Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetPacketOrderFlag_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetPacketOrderFlag(NULL, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetPacketOrderFlag_True(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetPacketOrderFlag(testFramePtr, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x20, "packet order flag == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetPacketOrderFlag_False(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetPacketOrderFlag(testFramePtr, false);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0xDF, "packet order flag == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetSegLengthId Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSegLengthId_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSegLengthId(NULL, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSegLengthId_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetSegLengthId(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0xE7, "seg length id == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSegLengthId_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetSegLengthId(testFramePtr, 0xFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x18, "seg length id == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSegLengthId_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetSegLengthId(testFramePtr, 2);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(testFramePtr->DataFieldStatus[0] == 0x10, "seg length id == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetFirstHdrPtr Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetFirstHdrPtr_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetFirstHdrPtr(NULL, true);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetFirstHdrPtr_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0xFF;
+    testFramePtr->DataFieldStatus[1] = 0xFF;
+
+    /* Execute test */
+    actual = TMTF_SetFirstHdrPtr(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True((testFramePtr->DataFieldStatus[0] == 0xF8) && (testFramePtr->DataFieldStatus[1] == 0x00),
+                  "first hdr ptr == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetFirstHdrPtr_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;
+    testFramePtr->DataFieldStatus[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetFirstHdrPtr(testFramePtr, 0xFFFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True((testFramePtr->DataFieldStatus[0] == 0x07) && (testFramePtr->DataFieldStatus[1] == 0xFF),
+                  "first hdr ptr == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetFirstHdrPtr_NoFirstHdrPtr(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    uint16 noFirstHdrPtrVal = 0x07FF;
+    testFramePtr->DataFieldStatus[0] = 0x00;
+    testFramePtr->DataFieldStatus[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetFirstHdrPtr(testFramePtr, noFirstHdrPtrVal);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(((testFramePtr->DataFieldStatus[0] * 256 +
+                    testFramePtr->DataFieldStatus[1]) == noFirstHdrPtrVal),
+                  "first hdr ptr == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetFirstHdrPtr_OidOnly(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    uint16 oidFirstHdrPtrVal = 0x07FE;
+    testFramePtr->DataFieldStatus[0] = 0x00;
+    testFramePtr->DataFieldStatus[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetFirstHdrPtr(testFramePtr, oidFirstHdrPtrVal);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(((testFramePtr->DataFieldStatus[0] * 256 +
+                    testFramePtr->DataFieldStatus[1]) == oidFirstHdrPtrVal),
+                  "first hdr ptr == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetFirstHdrPtr_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;
+    testFramePtr->DataFieldStatus[1] = 0x00;
+
+    /* Execute test */
+    actual = TMTF_SetFirstHdrPtr(testFramePtr, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(((testFramePtr->DataFieldStatus[0] * 256 +
+                    testFramePtr->DataFieldStatus[1]) == 1),
+                  "first hdr ptr == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetSecHdrLength Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_NullPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(NULL, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_SecHdrFlagFalse(void)
+{
+    int32 expected = TMTF_INVALID_SECHDR;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x00;  /* sec hdr flag = 0 */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(testFramePtr, 0xFF);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(*((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) == 0x00,
+                  "sec hdr length == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_Zero(void)
+{
+    int32 expected = TMTF_INVALID_LENGTH;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x80;  /* sec hdr flag = 1 */
+    *((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) = 0x3F;
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(testFramePtr, 0);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(*((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) == 0x3F,
+                  "sec hdr length == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_Min(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x80;  /* sec hdr flag = 1 */
+    *((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) = 0x3F;
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(testFramePtr, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(*((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) == 0x01,
+                  "sec hdr length == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_Max(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x80;  /* sec hdr flag = 1 */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(testFramePtr, 63);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(*((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) == 0x3F,
+                  "sec hdr length == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_TooBig(void)
+{
+    int32 expected = TMTF_INVALID_LENGTH;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x80;  /* sec hdr flag = 1 */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(testFramePtr, 64);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(*((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) == 0x00,
+                  "sec hdr length == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrLength_Misc(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    testFramePtr->DataFieldStatus[0] = 0x80;  /* sec hdr flag = 1 */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrLength(testFramePtr, 42);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True(*((uint8 *)testFramePtr + TMTF_PRIHDR_SIZE) == 42,
+                  "sec hdr length == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetSecHdrData Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrData_NullTfPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrData(NULL, testData, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrData_NullDataPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrData((TMTF_PriHdr_t *)(&testFrame), NULL, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrData_NoSecHdr(void)
+{
+    int32 expected = TMTF_INVALID_SECHDR;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrData((TMTF_PriHdr_t *)(&testFrame), testData, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrData_InvalidLen(void)
+{
+    int32 expected = TMTF_INVALID_LENGTH;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+    TMTF_SetSecHdrFlag((TMTF_PriHdr_t *)(&testFrame), 1);
+    TMTF_SetSecHdrLength((TMTF_PriHdr_t *)(&testFrame), 1);
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrData((TMTF_PriHdr_t *)(&testFrame), testData, 2);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetSecHdrData(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+    TMTF_SetSecHdrFlag((TMTF_PriHdr_t *)(&testFrame), 1);
+    TMTF_SetSecHdrLength((TMTF_PriHdr_t *)(&testFrame), 2);
+
+    /* Execute test */
+    actual = TMTF_SetSecHdrData((TMTF_PriHdr_t *)(&testFrame), testData, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+
+/*******************************************************************************
+**
+**  TMTF_SetOcf Test
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcf_NullTfPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetOcf(NULL, testData, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcf_NullDataPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetOcf((TMTF_PriHdr_t *)(&testFrame), NULL, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcf_NoOcf(void)
+{
+    int32 expected = TMTF_ERROR;
+    int32 actual   = 99;
+
+   /* Setup inputs */
+
+    /* Execute test */
+    actual = TMTF_SetOcf((TMTF_PriHdr_t *)(&testFrame), testData, 1);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_SetOcf(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+
+    /* Setup inputs */
+    TMTF_SetOcfFlag(testFramePtr, 1);
+
+    /* Execute test */
+    actual = TMTF_SetOcf(testFramePtr, testData, 496);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*******************************************************************************
+**
+**  TMTF UpdateErrCtrlField Test
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_UpdateErrCtrlField_NullTfPtr(void)
+{
+    int32 expected = TMTF_INVALID_POINTER;
+    int32 actual   = 99;
+    
+    TMTF_LibInit();
+    actual = TMTF_UpdateErrCtrlField(NULL, 9);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_UpdateErrCtrlField_InvlLen(void)
+{
+    int32 expected = TMTF_INVALID_LENGTH;
+    int32 actual   = 99;
+    
+    TMTF_LibInit();
+    actual = TMTF_UpdateErrCtrlField(&testFrame, 5);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+}
+
+/*----------------------------------------------------------------------------*/
+void Test_TMTF_UpdateErrCtrlField(void)
+{
+    int32 expected = TMTF_SUCCESS;
+    int32 actual   = 99;
+    
+    /* Standard "123456789" test for CRC16-CCITT as in following reference:
+     * http::/srecord.sourceforge.net/crc16-ccitt.html 
+     * Expected: 0xE5CC. */
+    
+    uint8 crcFrame[11] = "123456789";
+
+    TMTF_LibInit();
+    actual = TMTF_UpdateErrCtrlField((TMTF_PriHdr_t *) crcFrame, 9);
+
+    /* Verify results */
+    UtAssert_True(actual == expected, "return value == expected");
+    UtAssert_True((crcFrame[9] == 0xE5) && (crcFrame[10] == 0xCC),
+                  "CRC == expected");
+}
+
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+
+
+
+/*
+ * TMTF_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void TMTF_Setup(void)
+{
+    memset(testFramePtr, 0, TEST_FRAME_LENGTH);
+    memcpy(testFramePtr, &initHdr, sizeof(initHdr));
+    memset(&testFrame, 0, sizeof(testFrame));
+    memset(&testData, 0, sizeof(testData));
+}
+
+/*
+ * TMTF_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void TMTF_TearDown(void)
+{
+
+}
+
+
+#define ADD_TEST(test) UtTest_Add((test), TMTF_Setup, TMTF_TearDown, #test)
+
+/* TMTF_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void TMTF_AddTestCase(void)
+{
+    /* TMTF_SetVersion Tests */
+    ADD_TEST(Test_TMTF_SetVersion_NullPtr);
+    ADD_TEST(Test_TMTF_SetVersion_Zero);
+    ADD_TEST(Test_TMTF_SetVersion_One);
+    ADD_TEST(Test_TMTF_SetVersion_Max);
+
+    /* TMTF_SetScId Tests */
+    ADD_TEST(Test_TMTF_SetScId_NullPtr);
+    ADD_TEST(Test_TMTF_SetScId_Min);
+    ADD_TEST(Test_TMTF_SetScId_Max);
+    ADD_TEST(Test_TMTF_SetScId_Misc);
+
+    ADD_TEST(Test_TMTF_GetMcId);
+
+    /* TMTF_SetVcId Tests */
+    ADD_TEST(Test_TMTF_SetVcId_NullPtr);
+    ADD_TEST(Test_TMTF_SetVcId_Min);
+    ADD_TEST(Test_TMTF_SetVcId_Max);
+    ADD_TEST(Test_TMTF_SetVcId_Misc);
+    
+    ADD_TEST(Test_TMTF_GetGlobalVcId);
+
+    /* TMTF_SetMcFrameCount Tests */
+    ADD_TEST(Test_TMTF_SetMcFrameCount_NullPtr);
+    ADD_TEST(Test_TMTF_SetMcFrameCount_Min);
+    ADD_TEST(Test_TMTF_SetMcFrameCount_Max);
+    ADD_TEST(Test_TMTF_SetMcFrameCount_Misc);
+
+    /* TMTF_SetVcFrameCount Tests */
+    ADD_TEST(Test_TMTF_SetVcFrameCount_NullPtr);
+    ADD_TEST(Test_TMTF_SetVcFrameCount_Min);
+    ADD_TEST(Test_TMTF_SetVcFrameCount_Max);
+    ADD_TEST(Test_TMTF_SetVcFrameCount_Misc);
+    
+    /* TMTF_IncrVcFrameCount Tests */
+    ADD_TEST(Test_TMTF_IncrVcFrameCount_NullPtr);
+    ADD_TEST(Test_TMTF_IncrVcFrameCount);
+
+    /* TMTF_SetOcfFlag Tests */
+    ADD_TEST(Test_TMTF_SetOcfFlag_NullPtr);
+    ADD_TEST(Test_TMTF_SetOcfFlag_True);
+    ADD_TEST(Test_TMTF_SetOcfFlag_False);
+    
+    /* TMTF_SetSecHdrFlag Tests */
+    ADD_TEST(Test_TMTF_SetSecHdrFlag_NullPtr);
+    ADD_TEST(Test_TMTF_SetSecHdrFlag_True);
+    ADD_TEST(Test_TMTF_SetSecHdrFlag_False);
+
+    /* TMTF_SetSyncFlag Tests */
+    ADD_TEST(Test_TMTF_SetSyncFlag_NullPtr);
+    ADD_TEST(Test_TMTF_SetSyncFlag_True_PoFlgOn);
+    ADD_TEST(Test_TMTF_SetSyncFlag_True_PoFlgOff);
+    ADD_TEST(Test_TMTF_SetSyncFlag_False_PoFlgOn);
+    ADD_TEST(Test_TMTF_SetSyncFlag_False_PoFlgOff);
+
+    /* TMTF_SetPacketOrderFlag Tests */
+    ADD_TEST(Test_TMTF_SetPacketOrderFlag_NullPtr);
+    ADD_TEST(Test_TMTF_SetPacketOrderFlag_True);
+    ADD_TEST(Test_TMTF_SetPacketOrderFlag_False);
+
+    /* TMTF_SetSegLengthId Tests */
+    ADD_TEST(Test_TMTF_SetSegLengthId_NullPtr);
+    ADD_TEST(Test_TMTF_SetSegLengthId_Min);
+    ADD_TEST(Test_TMTF_SetSegLengthId_Max);
+    ADD_TEST(Test_TMTF_SetSegLengthId_Misc);
+
+    /* TMTF_SetFirstHdrPtr Tests */
+    ADD_TEST(Test_TMTF_SetFirstHdrPtr_NullPtr);
+    ADD_TEST(Test_TMTF_SetFirstHdrPtr_Min);
+    ADD_TEST(Test_TMTF_SetFirstHdrPtr_Max);
+    ADD_TEST(Test_TMTF_SetFirstHdrPtr_NoFirstHdrPtr);
+    ADD_TEST(Test_TMTF_SetFirstHdrPtr_OidOnly);
+    ADD_TEST(Test_TMTF_SetFirstHdrPtr_Misc);
+
+    /* TMTF_SetSecHdrLength Tests */
+    ADD_TEST(Test_TMTF_SetSecHdrLength_NullPtr);
+    ADD_TEST(Test_TMTF_SetSecHdrLength_SecHdrFlagFalse);
+    ADD_TEST(Test_TMTF_SetSecHdrLength_Zero);
+    ADD_TEST(Test_TMTF_SetSecHdrLength_Min);
+    ADD_TEST(Test_TMTF_SetSecHdrLength_Max);
+    ADD_TEST(Test_TMTF_SetSecHdrLength_TooBig);
+    ADD_TEST(Test_TMTF_SetSecHdrLength_Misc);
+
+    /* TMTF_SetSecHdrData Tests */
+    ADD_TEST(Test_TMTF_SetSecHdrData_NullTfPtr);
+    ADD_TEST(Test_TMTF_SetSecHdrData_NullDataPtr);
+    ADD_TEST(Test_TMTF_SetSecHdrData_NoSecHdr);
+    ADD_TEST(Test_TMTF_SetSecHdrData_InvalidLen);
+    ADD_TEST(Test_TMTF_SetSecHdrData);
+
+    /* TMTF_SetOcf Tests */
+    ADD_TEST(Test_TMTF_SetOcf_NullTfPtr);
+    ADD_TEST(Test_TMTF_SetOcf_NullDataPtr);
+    ADD_TEST(Test_TMTF_SetOcf_NoOcf);
+    ADD_TEST(Test_TMTF_SetOcf);
+
+    /* TMTF_UpdateErrCtrlField Tests */
+    ADD_TEST(Test_TMTF_UpdateErrCtrlField_NullTfPtr);
+    ADD_TEST(Test_TMTF_UpdateErrCtrlField_InvlLen);
+    ADD_TEST(Test_TMTF_UpdateErrCtrlField);
+
+
+}
+```
+
+### `tmtf_testrunner.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/tmtf_testrunner.c`
+
+
+```c
+
+void TMTF_AddTestCase(void);
+
+/*
+ * Filename: tmtf_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for TM transfer frames.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    TMTF_AddTestCase();
+    return(UtTest_Run());
+}
+
+```

@@ -3,14 +3,24 @@
 
 **경로:** `gsw/cosmos/config/targets/PDU/lib/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `pdu_defines.rb`
 
-file--pdu_defines.rb
+**경로:** `gsw/cosmos/config/targets/PDU/lib/pdu_defines.rb`
+
+
+```ruby
+# Use "target_name"_VCID to set a custom vcid for this target
+PDU_VCID = 1
+
+############################################
+#               Command Defines            #
+############################################
+CF_INCOMING_PDU_MID = 0x1FFD
+
+############################################
+#              Telemetry Defines           #
+############################################
+CF_SPACE_TO_GND_PDU_MID = 0x0FFD
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/targets/PDU/lib/pdu_defines.rb`](file--pdu_defines.rb) — UTF-8 텍스트 파일 본문 포함

@@ -3,16 +3,47 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-printable/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-history-printable.component.html`
 
-file--command-history-printable.component.html
-file--command-history-printable.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-printable/command-history-printable.component.html`
+
+
+```html
+@for (record of data; track record) {
+  <app-command-detail2
+    [command]="record"
+    [showIcons]="false"
+    style="page-break-after: always; page-break-inside: avoid" />
+}
 ```
 
-## 항목
+### `command-history-printable.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-printable/command-history-printable.component.html`](file--command-history-printable.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-printable/command-history-printable.component.ts`](file--command-history-printable.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-printable/command-history-printable.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  CommandHistoryRecord,
+  Printable,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+import { CommandDetailComponent } from '../command-detail/command-detail.component';
+
+@Component({
+  selector: 'app-command-history-printable',
+  templateUrl: './command-history-printable.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommandDetailComponent, WebappSdkModule],
+})
+export class CommandHistoryPrintableComponent implements Printable {
+  @Input()
+  pageTitle: string;
+
+  @Input()
+  data: CommandHistoryRecord[];
+}
+```

@@ -3,28 +3,232 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `print-zone-hide.directive.ts`
 
-file--print-zone-hide.directive.ts
-file--print-zone-show.directive.ts
-file--print-zone.component.css
-file--print-zone.component.html
-file--print-zone.component.ts
-file--print.service.ts
-file--printable.directive.ts
-file--Printable.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone-hide.directive.ts`
+
+
+```typescript
+import { Directive } from '@angular/core';
+
+/**
+ * Shows the host element, except when used in PrintZone
+ */
+@Directive({
+  selector: '[yaPrintZoneHide]',
+  host: {
+    class: 'ya-print-zone-hide',
+  },
+})
+export class YaPrintZoneHide {}
 ```
 
-## 항목
+### `print-zone-show.directive.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone-hide.directive.ts`](file--print-zone-hide.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone-show.directive.ts`](file--print-zone-show.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone.component.css`](file--print-zone.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone.component.html`](file--print-zone.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone.component.ts`](file--print-zone.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print.service.ts`](file--print.service.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/printable.directive.ts`](file--printable.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/Printable.ts`](file--Printable.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone-show.directive.ts`
+
+
+```typescript
+import { Directive } from '@angular/core';
+
+/**
+ * Hides the host element, except when used in PrintZone
+ */
+@Directive({
+  selector: '[yaPrintZoneShow]',
+  host: {
+    class: 'ya-print-zone-show',
+    '[style.display]': '"none"',
+  },
+})
+export class YaPrintZoneShow {}
+```
+
+### `print-zone.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone.component.css`
+
+
+```css
+:host {
+  display: none;
+}
+```
+
+### `print-zone.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone.component.html`
+
+
+```html
+<div #wrapper>
+  <ng-template printable-host />
+</div>
+```
+
+### `print-zone.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print-zone.component.ts`
+
+
+```typescript
+import { NgTemplateOutlet } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Type,
+  ViewChild,
+} from '@angular/core';
+import { Printable } from './Printable';
+import { PrintService } from './print.service';
+import { PrintableDirective } from './printable.directive';
+
+@Component({
+  selector: 'ya-print-zone',
+  templateUrl: './print-zone.component.html',
+  styleUrl: './print-zone.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [NgTemplateOutlet, PrintableDirective],
+})
+export class YaPrintZone {
+  /*
+   * Implementation note:
+   *
+   * Test in Chrome, FF and Safari before committing
+   * changes. Very tricky.
+   *
+   * Probably printing from a new tab instead of an iframe
+   * would be easier.
+   *
+   * Currently still one bug in Safari when doing:
+   * print -> cancel print -> print.
+   */
+
+  @ViewChild('wrapper', { static: true })
+  private printableContent: ElementRef;
+
+  @ViewChild(PrintableDirective, { static: true })
+  private printableHost: PrintableDirective;
+
+  constructor(private printService: PrintService) {
+    this.printService.printOrders$.subscribe((order) => {
+      this.createAndPrint(order.componentType, order.title, order.data);
+    });
+  }
+
+  private createAndPrint(
+    componentType: Type<Printable>,
+    pageTitle: string,
+    data: any,
+  ) {
+    const viewContainerRef = this.printableHost.viewContainerRef;
+    viewContainerRef.clear();
+    const componentRef = viewContainerRef.createComponent(componentType);
+    (<Printable>componentRef.instance).pageTitle = pageTitle;
+    (<Printable>componentRef.instance).data = data;
+
+    // Realise content
+    componentRef.changeDetectorRef.detectChanges();
+
+    const prevFrames = document.getElementsByClassName('printable');
+    for (let i = 0; i < prevFrames.length; i++) {
+      document.body.removeChild(prevFrames[i]);
+    }
+
+    const iframeEl = document.createElement('iframe') as HTMLIFrameElement;
+    iframeEl.className = 'printable';
+    iframeEl.style.display = 'none';
+    document.body.appendChild(iframeEl);
+    const iframeDoc = iframeEl.contentDocument!;
+    iframeDoc.title = pageTitle;
+
+    iframeDoc.open();
+    iframeDoc.writeln('<!doctype html>');
+    iframeDoc.writeln('<head>');
+    iframeDoc.writeln(`
+      <style>
+      body {
+        font: 400 12px / 14px Roboto, sans-serif;
+      }
+      .ya-attr-label {
+        margin-top: 1em;
+        font-weight: bold;
+      }
+      .ya-print-zone-show {
+        display: unset !important;
+      }
+      .ya-print-zone-hide, .ya-print-zone-hide * {
+        display: none !important;
+      }
+      </style>
+    `);
+    iframeDoc.writeln('</head>');
+
+    iframeDoc.writeln('<body onload="window.print()">');
+    const printableEl = this.printableContent.nativeElement as HTMLDivElement;
+    iframeDoc.writeln(printableEl.innerHTML);
+    iframeDoc.writeln('</body>');
+    iframeDoc.writeln('</html>');
+    iframeDoc.close();
+  }
+}
+```
+
+### `print.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/print.service.ts`
+
+
+```typescript
+import { Injectable, Type } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Printable } from './Printable';
+
+export class PrintOrder {
+  componentType: Type<Printable>;
+  title: string;
+  data: any;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class PrintService {
+  printOrders$ = new Subject<PrintOrder>();
+
+  printComponent(componentType: Type<Printable>, title: string, data: any) {
+    this.printOrders$.next({ componentType, title, data });
+  }
+}
+```
+
+### `printable.directive.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/printable.directive.ts`
+
+
+```typescript
+import { Directive, ViewContainerRef } from '@angular/core';
+
+@Directive({
+  selector: '[printable-host]',
+})
+export class PrintableDirective {
+  constructor(public viewContainerRef: ViewContainerRef) {}
+}
+```
+
+### `Printable.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/Printable.ts`
+
+
+```typescript
+export interface Printable {
+  pageTitle: string;
+  data: any;
+}
+```

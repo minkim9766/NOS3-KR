@@ -3,16 +3,102 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-view/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-view.component.html`
 
-file--create-view.component.html
-file--create-view.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-view/create-view.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button routerLink=".." [queryParams]="{ c: yamcs.context }" icon="arrow_back" />
+      Create view
+    </ng-template>
+  </ya-instance-toolbar>
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-field label="Name" hint="(required)">
+        <input type="text" formControlName="name" />
+      </ya-field>
+
+      <ya-field-divider />
+
+      <h4>Bands</h4>
+      <app-band-multi-select formControlName="bands" />
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink=".." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `create-view.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-view/create-view.component.html`](file--create-view.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-view/create-view.component.ts`](file--create-view.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-view/create-view.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import {
+  MessageService,
+  TimelineBand,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BandMultiSelectComponent } from '../shared/band-multi-select/band-multi-select.component';
+
+@Component({
+  templateUrl: './create-view.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [BandMultiSelectComponent, WebappSdkModule],
+})
+export class CreateViewComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    title: Title,
+    readonly yamcs: YamcsService,
+    private formBuilder: UntypedFormBuilder,
+    private messageService: MessageService,
+    private router: Router,
+  ) {
+    title.setTitle('Create a view');
+    this.form = this.formBuilder.group({
+      name: ['', [Validators.required]],
+      bands: [[], []],
+    });
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+    this.yamcs.yamcsClient
+      .createTimelineView(this.yamcs.instance!, {
+        name: formValue.name,
+        bands: formValue.bands.map((v: TimelineBand) => v.id),
+      })
+      .then((view) =>
+        this.router.navigateByUrl(
+          `/timeline/chart?c=${this.yamcs.context}&view=${view.id}`,
+        ),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

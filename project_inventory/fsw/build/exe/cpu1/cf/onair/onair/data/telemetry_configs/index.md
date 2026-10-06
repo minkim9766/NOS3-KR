@@ -3,18 +3,22 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `adapter_TLM_CONFIG.json`
 
-file--adapter_TLM_CONFIG.json
-file--data_physics_generation_CONFIG.json
-file--redis_example_CONFIG.json
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/adapter_TLM_CONFIG.json`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/adapter_TLM_CONFIG.json`](file--adapter_TLM_CONFIG.json) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/data_physics_generation_CONFIG.json`](file--data_physics_generation_CONFIG.json) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/redis_example_CONFIG.json`](file--redis_example_CONFIG.json) — 빌드 산출물 (경로만)
+### `data_physics_generation_CONFIG.json`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/data_physics_generation_CONFIG.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `redis_example_CONFIG.json`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/redis_example_CONFIG.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,22 +3,152 @@
 
 **경로:** `components/onair/fsw/onair/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_config.ini`
 
-file--default_config.ini
-file--kalman_csv_output_example.ini
-file--redis_example.ini
-file--reporter_config.ini
-file--sbn_cfs_config.ini
+**경로:** `components/onair/fsw/onair/config/default_config.ini`
+
+
+```text
+# Required Section: FILES section contains the paths of required files for running OnAIR
+[FILES]
+# Required Key: TelemetryFilePath is the directory of TelemetryFile
+TelemetryFilePath = onair/data/raw_telemetry_data/data_physics_generation/Errors
+# Required Key: TelemetryFile is the file read by the selected parser
+# NOTE: TelemetryFile is required even when selected parser does not use it
+TelemetryFile = 700_crash_to_earth_1.csv
+# Required Key: MetaFilePath is the directory of MetaFile
+MetaFilePath = onair/data/telemetry_configs/
+# Required Key: MetaFile describes frame composition of data
+MetaFile = data_physics_generation_CONFIG.json
+
+# Required Section: DATA_HANDLING section specifies which data source parser to use
+[DATA_HANDLING]
+# Required Key: DataSourceFile is the name of the parser DataSource object to use
+DataSourceFile = onair/data_handling/csv_parser.py
+
+# Required Section: PLUGINS section contains the plugins wanted for OnAIR to run
+[PLUGINS]
+# NOTE: even though keys are required, they may be set to empty dicts
+# Required Key: KnowledgeRepPluginDict(s) are used by the VehicleRep
+KnowledgeRepPluginDict = {'generic':'plugins/generic/__init__.py'}
+# Required Key: LearnersPluginDict(s) are used by Agent for learning
+LearnersPluginDict = {'generic':'plugins/generic/__init__.py'}
+# Required Key: LearnersPluginDict(s) are used by Agent for planning
+PlannersPluginDict = {'generic':'plugins/generic/__init__.py'}
+# Required Key: ComplexPluginDict(s) are used by Agent for complex reasoning
+ComplexPluginDict = {'generic':'plugins/generic/__init__.py'}
+
+# Optional Section: OPTIONS are settable values to change running experience
+[OPTIONS]
+# Optional Key: IO_Flag denotes whether or not to provide console output
+# default = false
+IO_Enabled = true
 ```
 
-## 항목
+### `kalman_csv_output_example.ini`
 
-- [`components/onair/fsw/onair/config/default_config.ini`](file--default_config.ini) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/config/kalman_csv_output_example.ini`](file--kalman_csv_output_example.ini) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/config/redis_example.ini`](file--redis_example.ini) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/config/reporter_config.ini`](file--reporter_config.ini) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/config/sbn_cfs_config.ini`](file--sbn_cfs_config.ini) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/onair/config/kalman_csv_output_example.ini`
+
+
+```text
+[FILES]
+TelemetryFilePath = onair/data/raw_telemetry_data/data_physics_generation/Errors
+TelemetryFile = 700_crash_to_earth_1.csv
+MetaFilePath = onair/data/telemetry_configs/
+MetaFile = data_physics_generation_CONFIG.json
+
+[DATA_HANDLING]
+DataSourceFile = onair/data_handling/csv_parser.py
+
+[PLUGINS]
+KnowledgeRepPluginDict = {'Kalman Filter': 'plugins/kalman'}
+LearnersPluginDict = {'csv output':'plugins/csv_output'}
+PlannersPluginDict = {}
+ComplexPluginDict = {}
+
+[OPTIONS]
+IO_Enabled = true
+```
+
+### `redis_example.ini`
+
+**경로:** `components/onair/fsw/onair/config/redis_example.ini`
+
+
+```text
+[FILES]
+TelemetryFilePath = onair/data/raw_telemetry_data/data_physics_generation/Errors
+TelemetryFile = 700_crash_to_earth_1.csv
+MetaFilePath = onair/data/telemetry_configs/
+MetaFile = redis_example_CONFIG.json
+
+[DATA_HANDLING]
+DataSourceFile = onair/data_handling/redis_adapter.py
+
+[PLUGINS]
+KnowledgeRepPluginDict = {'knowledge':'plugins/generic/__init__.py'}
+LearnersPluginDict = {'learner':'plugins/generic/__init__.py'}
+PlannersPluginDict = {'planner':'plugins/generic/__init__.py'}
+ComplexPluginDict = {'complex':'plugins/generic/__init__.py'}
+
+[OPTIONS]
+IO_Enabled = true
+```
+
+### `reporter_config.ini`
+
+**경로:** `components/onair/fsw/onair/config/reporter_config.ini`
+
+
+```text
+[FILES]
+TelemetryFilePath = onair/data/raw_telemetry_data/data_physics_generation/Errors
+TelemetryFile = 700_crash_to_earth_1.csv
+MetaFilePath = onair/data/telemetry_configs/
+MetaFile = data_physics_generation_CONFIG.json
+
+[DATA_HANDLING]
+DataSourceFile = onair/data_handling/csv_parser.py
+
+[PLUGINS]
+KnowledgeRepPluginDict = {'Knowledge Reporter 1':'plugins/reporter',
+                          'Knowledge Reporter 2':'plugins/reporter'}
+LearnersPluginDict = {'Learners Reporter 1':'plugins/reporter',
+                      'Learners Reporter 2':'plugins/reporter'}
+PlannersPluginDict = {'Planner Reporter 1':'plugins/reporter',
+                      'Planner Reporter 2':'plugins/reporter'}
+ComplexPluginDict = {'Complex Reporter 1':'plugins/reporter',
+                     'Complex Reporter 2':'plugins/reporter'}
+
+[OPTIONS]
+IO_Enabled = true
+```
+
+### `sbn_cfs_config.ini`
+
+**경로:** `components/onair/fsw/onair/config/sbn_cfs_config.ini`
+
+
+```text
+# Example configuration for connecting to cFS via SBN
+# For an example cFS Distro, see https://github.com/nasa/OnAIR/blob/main/doc/cfs-onair-guide.md
+[FILES]
+TelemetryFilePath =
+TelemetryFile =
+MetaFilePath = cf/onair/onair/data/telemetry_configs/
+MetaFile = adapter_TLM_CONFIG.json
+
+[DATA_HANDLING]
+DataSourceFile = cf/onair/onair/data_handling/sbn_adapter.py
+
+[PLUGINS]
+KnowledgeRepPluginDict = {'generic':'cf/onair/plugins/generic/__init__.py'}
+LearnersPluginDict = {'generic':'cf/onair/plugins/generic/__init__.py'}
+PlannersPluginDict = {'generic':'cf/onair/plugins/generic/__init__.py'}
+ComplexPluginDict = {'generic':'cf/onair/plugins/generic/__init__.py'}
+
+[OPTIONS]
+IO_Enabled = true
+```

@@ -3,16 +3,49 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stream.component.html`
 
-file--stream.component.html
-file--stream.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream/stream.component.html`
+
+
+```html
+@if (stream$ | async; as stream) {
+  <router-outlet />
+}
 ```
 
-## 항목
+### `stream.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream/stream.component.html`](file--stream.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream/stream.component.ts`](file--stream.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream/stream.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Stream, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-stream-page',
+  templateUrl: './stream.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StreamComponent {
+  stream$: Promise<Stream>;
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    title: Title,
+  ) {
+    const snapshot = route.snapshot;
+    const database = snapshot.parent!.paramMap.get('database')!;
+    const name = snapshot.paramMap.get('stream')!;
+    title.setTitle(name);
+    this.stream$ = yamcs.yamcsClient.getStream(database, name);
+  }
+}
+```

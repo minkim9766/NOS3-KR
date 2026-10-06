@@ -3,36 +3,1478 @@
 
 **경로:** `scripts/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `config.sh`
 
-file--config.sh
-file--configure.py
-file--configure_cosmos_target.py
-file--configure_test_runner.py
-file--declare_cosmos_target.py
-file--igniter_launch.sh
-file--prep_gsw.sh
-file--prep_sat.sh
-file--prepare.sh
-file--uninstall.sh
-file--yamcs_default.nos3.yaml
-file--yamcs_multiGDS.nos3.yaml
+**경로:** `scripts/cfg/config.sh`
+
+
+```bash
+#!/bin/bash -i
+
+# Convenience script for NOS3 development
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source "$SCRIPT_DIR/../env.sh"
+
+ORIGINAL_CONFIG="$BASE_DIR/cfg/nos3-mission.xml"
+CONFIG_FILE="$ORIGINAL_CONFIG"
+
+# Make flight software configuration directory
+mkdir -p "$BASE_DIR/cfg/build/temp_mission/"
+cp -r "$BASE_DIR/cfg/nos3-mission.xml" "$BASE_DIR/cfg/build/temp_mission/"
+
+# Copy baseline configurations into build directory
+cp -r "$BASE_DIR/cfg/InOut" "$BASE_DIR/cfg/build/"
+cp -r "$BASE_DIR/cfg/nos3_defs" "$BASE_DIR/cfg/build/"
+cp -r "$BASE_DIR/cfg/sims" "$BASE_DIR/cfg/build/"
+
+# If SC1_CFG is passed in, validate and patch
+if [ -n "${SC1_CFG// }" ]; then
+    REL_SC1_CFG="${SC1_CFG#cfg/}"   # Strip leading cfg/ if present
+    FULL_SC1_CFG="$BASE_DIR/cfg/$REL_SC1_CFG"
+
+    if [ ! -f "$FULL_SC1_CFG" ]; then
+        echo "ERROR: Config file '$FULL_SC1_CFG' does not exist."
+        exit 1
+    fi
+
+    echo "Overriding <sc-1-cfg> with: $REL_SC1_CFG"
+    TEMP_CONFIG=$(mktemp "$BASE_DIR/cfg/build/temp_mission/XXXXXX.xml")
+    sed "s|<sc-1-cfg>.*</sc-1-cfg>|<sc-1-cfg>$REL_SC1_CFG</sc-1-cfg>|" "$ORIGINAL_CONFIG" > "$TEMP_CONFIG"
+    CONFIG_FILE="$TEMP_CONFIG"
+
+    echo "$CONFIG_FILE" > "$BASE_DIR/cfg/build/current_config_path.txt"
+else
+    echo "$ORIGINAL_CONFIG" > "$BASE_DIR/cfg/build/current_config_path.txt"
+fi
+
+# Run the configuration Python script
+python3 "$SCRIPT_DIR/cfg/configure.py" "$CONFIG_FILE"
+
+# Configure Cosmos Targets
+python3 $BASE_DIR/scripts/cfg/declare_cosmos_target.py
+python3 $BASE_DIR/scripts/cfg/configure_cosmos_target.py
+python3 $BASE_DIR/scripts/cfg/configure_test_runner.py
 ```
 
-## 항목
+### `configure.py`
 
-- [`scripts/cfg/config.sh`](file--config.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/configure.py`](file--configure.py) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/configure_cosmos_target.py`](file--configure_cosmos_target.py) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/configure_test_runner.py`](file--configure_test_runner.py) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/declare_cosmos_target.py`](file--declare_cosmos_target.py) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/igniter_launch.sh`](file--igniter_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/prep_gsw.sh`](file--prep_gsw.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/prep_sat.sh`](file--prep_sat.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/prepare.sh`](file--prepare.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/uninstall.sh`](file--uninstall.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/yamcs_default.nos3.yaml`](file--yamcs_default.nos3.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/cfg/yamcs_multiGDS.nos3.yaml`](file--yamcs_multiGDS.nos3.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `scripts/cfg/configure.py`
+
+
+```python
+#
+# Convenience script for NOS3 development
+# Configures NOS3 based on mission and spacecraft XML files
+#   Script assumes run from top level directory of NOS3 repo
+#
+
+import datetime
+import os
+import xml.etree.ElementTree as ET
+import sys
+
+# Use passed-in mission file if provided, otherwise default to ./cfg/nos3-mission.xml
+mission_file = sys.argv[1] if len(sys.argv) > 1 else 'nos3-mission.xml'
+
+# Ensure it exists
+if not os.path.isfile(mission_file):
+    print(f"ERROR: Mission configuration file '{mission_file}' not found!")
+    sys.exit(1)
+
+# Parse mission configuration
+mission_tree = ET.parse("./cfg/build/temp_mission/" + os.path.basename(mission_file))
+mission_root = mission_tree.getroot()
+mission_start_time = mission_root.find('start-time').text
+print('  start-time:', mission_start_time)
+mission_start_time_utc = datetime.datetime(2000, 1, 1, 12, 0) + datetime.timedelta(seconds=float(mission_start_time))
+print('  start-time-utc:', mission_start_time_utc)
+print('  mission-file: ', mission_file)
+# FSW
+fsw_str = 'fsw'
+fsw_cfg = mission_root.find(fsw_str).text
+print(' ', fsw_str, ':', fsw_cfg)
+fsw_identified = 0
+if (fsw_cfg == 'fprime'):
+    fsw_identified = 1
+    os.system('cp ./scripts/fsw/fsw_fprime_build.sh ./cfg/build/fsw_build.sh')
+    os.system('cp ./scripts/fsw/fsw_fprime_launch.sh ./cfg/build/launch.sh')
+if (fsw_cfg == 'cfs'):
+    fsw_identified = 1
+    os.system('cp ./scripts/fsw/fsw_cfs_build.sh ./cfg/build/fsw_build.sh')
+    os.system('cp ./scripts/fsw/fsw_cfs_launch.sh ./cfg/build/launch.sh')
+    # os.system('cp ./scripts/fsw/fsw_cfs_multipleGSW_launch.sh ./cfg/build/launch.sh')
+if (fsw_identified == 0):
+    print('Invalid FSW in configuration file!')
+    print('Exiting due to error...')
+
+# GSW
+gsw_str = 'gsw'
+gsw_cfg = mission_root.find(gsw_str).text
+print(' ', gsw_str, ':', gsw_cfg)
+gsw_identified = 0
+if (gsw_cfg == 'openc3'):
+    # Copy openc3 scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_openc3_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_openc3_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'cosmos'):
+    # Copy cosmos scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_cosmos_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_cosmos_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'fprime'):
+    # Copy fprime scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_fprime_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_fprime_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'ait'):
+    # Copy ait scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_ait_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_ait_launch.sh ./cfg/build/gsw_launch.sh')
+if (gsw_cfg == 'yamcs'):
+    # Copy yamcs scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_yamcs_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_yamcs_launch.sh ./cfg/build/gsw_launch.sh')
+    os.system('cp ./scripts/cfg/yamcs_default.nos3.yaml ./gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.nos3.yaml')
+if (gsw_cfg == 'multiple'):
+    # Copy mulitple scripts into ./cfg/build
+    gsw_identified = 1
+    os.system('cp ./scripts/gsw/gsw_cosmos_multi_build.sh ./cfg/build/gsw_build.sh')
+    os.system('cp ./scripts/gsw/gsw_cosmos_launch.sh ./cfg/build/gsw_launch.sh')
+    os.system('cp ./scripts/gsw/gsw_yamcs_build.sh ./cfg/build/gsw_build2.sh')
+    os.system('cp ./scripts/gsw/gsw_yamcs_multi_launch.sh ./cfg/build/gsw_launch2.sh')  
+    os.system('cp ./cfg/build/sims/nos3-simulator-multipleGDS.xml ./cfg/build/sims/nos3-simulator.xml')
+    os.system('cp ./scripts/fsw/fsw_cfs_multipleGSW_launch.sh ./cfg/build/launch.sh')
+    os.system('cp ./scripts/cfg/yamcs_multiGDS.nos3.yaml ./gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.nos3.yaml')
+if (gsw_identified == 0):
+    print('Invalid GSW in configuration file!')
+    print('Exiting due to error...')
+
+# Scenario
+scenario = mission_root.find('scenario').text
+print('  scenario:', scenario)
+if (scenario == 'DeepSpace'):
+    os.system('cp ./cfg/InOut/Inp_Sim_DeepSpace.txt ./cfg/InOut/Inp_Sim.txt')
+    os.system('cp ./cfg/InOut/Inp_Graphics_DeepSpace.txt ./cfg/InOut/Inp_Graphics.txt')
+elif (scenario == 'Gateway'):
+    os.system('cp ./cfg/InOut/Inp_Sim_Gateway.txt ./cfg/InOut/Inp_Sim.txt')
+    os.system('cp ./cfg/InOut/Inp_Graphics_Gateway.txt ./cfg/InOut/Inp_Graphics.txt')
+else:
+    os.system('cp ./cfg/InOut/Inp_Sim_STF1.txt ./cfg/InOut/Inp_Sim.txt')
+    os.system('cp ./cfg/InOut/Inp_Graphics_STF1.txt ./cfg/InOut/Inp_Graphics.txt')
+
+# Read number of spacecraft
+mission_number_spacecraft = mission_root.find('number-spacecraft').text
+print('  number-spacecraft:', mission_number_spacecraft)
+num_sc = int(mission_number_spacecraft)
+
+# Check number of spacecraft valid
+spacecraft_cfg = []
+if (num_sc < 1):
+    print('Invalid number of spacecraft in configuration file!')
+    print('Exiting due to error...')
+else:
+    # Iterate through spacecraft configurations
+    for x in range(1, int(mission_number_spacecraft) + 1):
+        sc_str = 'sc-' + str(x) + '-cfg'
+        sc_cfg = mission_root.find(sc_str).text
+        #print(' ', sc_str, ':', sc_cfg)
+        spacecraft_cfg.append(sc_cfg)
+
+        # Open spacecraft configuration
+        sc_cfg_str = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_str)
+        sc_root = sc_tree.getroot()
+
+        # Parse spacecraft configuration
+        sc_cf_en = sc_root.find('applications/cf/enable').text
+        sc_ds_en = sc_root.find('applications/ds/enable').text
+        sc_fm_en = sc_root.find('applications/fm/enable').text
+        sc_lc_en = sc_root.find('applications/lc/enable').text
+        sc_sbn_en = sc_root.find('applications/sbn/enable').text 
+        sc_sc_en = sc_root.find('applications/sc/enable').text
+
+        sc_adcs_en = sc_root.find('components/adcs/enable').text
+        sc_cam_en = sc_root.find('components/cam/enable').text
+        sc_css_en = sc_root.find('components/css/enable').text
+        sc_eps_en = sc_root.find('components/eps/enable').text
+        sc_fss_en = sc_root.find('components/fss/enable').text
+        sc_gps_en = sc_root.find('components/gps/enable').text
+        sc_imu_en = sc_root.find('components/imu/enable').text
+        sc_mag_en = sc_root.find('components/mag/enable').text
+        sc_mgr_en = sc_root.find('components/mgr/enable').text
+        sc_radio_en = sc_root.find('components/radio/enable').text
+        sc_rw_en = sc_root.find('components/rw/enable').text
+        sc_sample_en = sc_root.find('components/sample/enable').text
+        sc_st_en = sc_root.find('components/st/enable').text
+        sc_syn_en = sc_root.find('components/syn/enable').text
+        sc_torquer_en = sc_root.find('components/torquer/enable').text
+        sc_thruster_en = sc_root.find('components/thruster/enable').text
+
+        sc_gui_en = sc_root.find('gui/enable').text
+        sc_orbit_tipoff_x = sc_root.find('orbit/tipoff_x').text
+        sc_orbit_tipoff_y = sc_root.find('orbit/tipoff_y').text
+        sc_orbit_tipoff_z = sc_root.find('orbit/tipoff_z').text
+        sc_sim_truth_en = sc_root.find('sim/sim_truth_interface').text
+
+        ###
+        ### Flight Software - Startup Script
+        ###
+        
+        # Capture lines to be used if enabled in startup script
+        with open('./cfg/nos3_defs/cpu1_cfe_es_startup.scr', 'r') as fp:
+            lines = fp.readlines()
+            
+            # Initialize variables
+            sc_startup_eof = 999
+            cf_line = ""
+            ds_line = ""
+            fm_line = ""
+            lc_line = ""
+            sbn_line = ""
+            sc_line = ""
+            adcs_line = ""
+            cam_line = ""
+            css_line = ""
+            eps_line = ""
+            fss_line = ""
+            gps_line = ""
+            imu_line = ""
+            mag_line = ""
+            mgr_line = ""
+            radio_line = ""
+            rw_line = ""
+            sample_line = ""
+            st_line = ""
+            syn_line = ""
+            torquer_line = ""
+            thruster_line = ""
+            
+            # Parse lines
+            for line in lines:
+                if line.find('!') != -1:
+                    if (lines.index(line)) < sc_startup_eof:
+                        sc_startup_eof = lines.index(line)
+                if line.find('CF,') != -1:
+                    if (sc_cf_en == 'true'):
+                        cf_line = line
+                if line.find('DS,') != -1:
+                    if (sc_ds_en == 'true'):
+                        ds_line = line
+                if line.find('FM,') != -1:
+                    if (sc_fm_en == 'true'):
+                        fm_line = line
+                if line.find('LC,') != -1:
+                    if (sc_lc_en == 'true'):
+                        lc_line = line
+                if line.find('SBN,') != -1:
+                    if (sc_sbn_en == 'true'):
+                        sbn_line = line
+                if line.find('SC,') != -1:
+                    if (sc_sc_en == 'true'):
+                        sc_line = line
+                if line.find('ADCS,') != -1:
+                    if (sc_adcs_en == 'true'):
+                        adcs_line = line
+                if line.find('CAM,') != -1:
+                    if (sc_cam_en == 'true'):
+                        cam_line = line
+                if line.find('CSS,') != -1:
+                    if (sc_css_en == 'true'):
+                        css_line = line
+                if line.find('EPS,') != -1:
+                    if (sc_eps_en == 'true'):
+                        eps_line = line
+                if line.find('FSS,') != -1:
+                    if (sc_fss_en == 'true'):
+                        fss_line = line
+                if line.find('IMU,') != -1:
+                    if (sc_imu_en == 'true'):
+                        imu_line = line
+                if line.find('MAG,') != -1:
+                    if (sc_mag_en == 'true'):
+                        mag_line = line
+                if line.find('MGR,') != -1:
+                    if (sc_mgr_en == 'true'):
+                        mgr_line = line
+                if line.find('RADIO,') != -1:
+                    if (sc_radio_en == 'true'):
+                        radio_line = line
+                if line.find('RW,') != -1:
+                    if (sc_rw_en == 'true'):
+                        rw_line = line
+                if line.find('NAV,') != -1:
+                    if (sc_gps_en == 'true'):
+                        gps_line = line
+                if line.find('SAMPLE,') != -1:
+                    if (sc_sample_en == 'true'):
+                        sample_line = line
+                if line.find('ST,') != -1:
+                    if (sc_st_en == 'true'):
+                        st_line = line
+                if line.find('SYN,') != -1:
+                    if (sc_syn_en == 'true'):
+                        syn_line = line
+                if line.find('TORQUER,') != -1:
+                    if (sc_torquer_en == 'true'):
+                        torquer_line = line
+                if line.find('THRUSTER,') != -1:
+                    if (sc_thruster_en == 'true'):
+                        thruster_line = line
+
+        # Modify startup script per spacecraft configuration
+        lines.insert(sc_startup_eof, "\n")
+        lines.insert(sc_startup_eof, torquer_line)
+        lines.insert(sc_startup_eof, thruster_line)
+        lines.insert(sc_startup_eof, syn_line)
+        lines.insert(sc_startup_eof, st_line)
+        lines.insert(sc_startup_eof, sample_line)
+        lines.insert(sc_startup_eof, rw_line)
+        lines.insert(sc_startup_eof, radio_line)
+        lines.insert(sc_startup_eof, mag_line)
+        lines.insert(sc_startup_eof, mgr_line)
+        lines.insert(sc_startup_eof, imu_line)
+        lines.insert(sc_startup_eof, gps_line)
+        lines.insert(sc_startup_eof, fss_line)
+        lines.insert(sc_startup_eof, eps_line)
+        lines.insert(sc_startup_eof, css_line)
+        lines.insert(sc_startup_eof, cam_line)
+        lines.insert(sc_startup_eof, adcs_line)
+        lines.insert(sc_startup_eof, sc_line)
+        lines.insert(sc_startup_eof, sbn_line)
+        lines.insert(sc_startup_eof, lc_line)
+        lines.insert(sc_startup_eof, fm_line)
+        lines.insert(sc_startup_eof, ds_line)
+        lines.insert(sc_startup_eof, cf_line)
+                        
+        # Write startup script file
+        with open('./cfg/build/nos3_defs/cpu1_cfe_es_startup.scr', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        ###
+        ### 42 - InOut Files
+        ###
+
+        # Inp_Sim.txt
+        gui_index = 999
+        date_index = 999
+        time_index = 999
+        with open('./cfg/InOut/Inp_Sim.txt', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('Graphics Front End') != -1:
+                    if (lines.index(line)) < gui_index:
+                        gui_index = lines.index(line)
+                if line.find('Date (UTC)') != -1:
+                    if (lines.index(line)) < date_index:
+                        date_index = lines.index(line)
+                if line.find('Time (UTC)') != -1:
+                    if (lines.index(line)) < time_index:
+                        time_index = lines.index(line)
+
+        if (sc_gui_en == 'false'):
+            lines[gui_index] = 'FALSE                           !  Graphics Front End?\n'
+
+        lines[date_index] = mission_start_time_utc.strftime('%m %d %Y') + '  !  Date (UTC) (Month, Day, Year)\n'
+        lines[time_index] = mission_start_time_utc.strftime('%H %M %S') + '  !  Time (UTC) (Hr,Min,Sec)\n'
+
+        with open('./cfg/build/InOut/Inp_Sim.txt', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        # SC_NOS3.txt
+        tipoff_index = 999
+        with open('./cfg/InOut/SC_NOS3.txt', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('Ang Vel (deg/sec)') != -1:
+                    if (lines.index(line)) < tipoff_index:
+                        tipoff_index = lines.index(line)
+        
+        lines[tipoff_index] = sc_orbit_tipoff_x + ' ' + sc_orbit_tipoff_y + ' ' + sc_orbit_tipoff_z + '  ! Ang Vel (deg/sec)\n'
+
+        with open('./cfg/build/InOut/SC_NOS3.txt', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        # Inp_IPC.txt
+        css_index = 999
+        eps_index = 999
+        fss_index = 999
+        gps_index = 999
+        imu_index = 999
+        mag_index = 999
+        rw0_to_index = 999
+        rw0_from_index = 999
+        rw1_to_index = 999
+        rw1_from_index = 999
+        rw2_to_index = 999
+        rw2_from_index = 999
+        #sample_index = 999
+        st_index = 999
+        torquer_index = 999
+        thruster_index = 999
+        truth_index = 999
+
+        with open('./cfg/InOut/Inp_IPC.txt', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('CSS IPC') != -1:
+                    if (lines.index(line)) < css_index:
+                        css_index = lines.index(line) + 1
+                if line.find('EPS IPC') != -1:
+                    if (lines.index(line)) < eps_index:
+                        eps_index = lines.index(line) + 1
+                if line.find('FSS IPC') != -1:
+                    if (lines.index(line)) < fss_index:
+                        fss_index = lines.index(line) + 1
+                if line.find('GPS IPC') != -1:
+                    if (lines.index(line)) < gps_index:
+                        gps_index = lines.index(line) + 1
+                if line.find('IMU IPC') != -1:
+                    if (lines.index(line)) < imu_index:
+                        imu_index = lines.index(line) + 1
+                if line.find('MAG IPC') != -1:
+                    if (lines.index(line)) < mag_index:
+                        mag_index = lines.index(line) + 1
+                if line.find('RW 0 to 42') != -1:
+                    if (lines.index(line)) < rw0_to_index:
+                        rw0_to_index = lines.index(line) + 1
+                if line.find('RW 0 from 42') != -1:
+                    if (lines.index(line)) < rw0_from_index:
+                        rw0_from_index = lines.index(line) + 1
+                if line.find('RW 1 to 42') != -1:
+                    if (lines.index(line)) < rw1_to_index:
+                        rw1_to_index = lines.index(line) + 1
+                if line.find('RW 1 from 42') != -1:
+                    if (lines.index(line)) < rw1_from_index:
+                        rw1_from_index = lines.index(line) + 1
+                if line.find('RW 2 to 42') != -1:
+                    if (lines.index(line)) < rw2_to_index:
+                        rw2_to_index = lines.index(line) + 1
+                if line.find('RW 2 from 42') != -1:
+                    if (lines.index(line)) < rw2_from_index:
+                        rw2_from_index = lines.index(line) + 1
+                #if line.find('Sample IPC') != -1:
+                #    if (lines.index(line)) < sample_index:
+                #        sample_index = lines.index(line) + 1
+                if line.find('Star Tracker IPC') != -1:
+                    if (lines.index(line)) < st_index:
+                        st_index = lines.index(line) + 1
+                if line.find('Torquer IPC') != -1:
+                    if (lines.index(line)) < torquer_index:
+                        torquer_index = lines.index(line) + 1
+                if line.find('Thruster IPC') != -1:
+                    if (lines.index(line)) < thruster_index:
+                        thruster_index = lines.index(line) + 1
+                if line.find('Truth data') != -1:
+                    if (lines.index(line)) < truth_index:
+                        truth_index = lines.index(line) + 1
+        
+        ipc_off = 'OFF                                     ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)\n'
+        if (sc_css_en != 'true'):
+            lines[css_index] = ipc_off
+        if (sc_eps_en != 'true'):
+            lines[eps_index] = ipc_off
+        if (sc_fss_en != 'true'):
+            lines[fss_index] = ipc_off
+        if (sc_gps_en != 'true'):
+            lines[gps_index] = ipc_off
+        if (sc_imu_en != 'true'):
+            lines[imu_index] = ipc_off
+        if (sc_mag_en != 'true'):
+            lines[mag_index] = ipc_off
+        if (sc_rw_en != 'true'):
+            lines[rw0_to_index] = ipc_off
+            lines[rw0_from_index] = ipc_off
+            lines[rw1_to_index] = ipc_off
+            lines[rw1_from_index] = ipc_off
+            lines[rw2_to_index] = ipc_off
+            lines[rw2_from_index] = ipc_off
+        #if (sc_sample_en != 'true'):
+        #    lines[sample_index] = ipc_off
+        if (sc_st_en != 'true'):
+            lines[st_index] = ipc_off
+        if (sc_torquer_en != 'true'):
+            lines[torquer_index] = ipc_off
+        if (sc_thruster_en != 'true'):
+            lines[thruster_index] = ipc_off
+        if (sc_sim_truth_en != 'true'):
+            lines[truth_index] = ipc_off
+
+        with open('./cfg/build/InOut/Inp_IPC.txt', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+
+        # Inp_Graphics.txt
+        os.system('cp ./cfg/InOut/Inp_Graphics.txt ./cfg/build/InOut/Inp_Graphics.txt')
+
+
+        ###
+        ### Simulators - nos3-simulator.xml
+        ###
+        cam_index = 999
+        css_index = 999
+        eps_index = 999
+        fss_index = 999
+        gps_index = 999
+        imu_index = 999
+        mag_index = 999
+        radio_index = 999
+        rw0_index = 999
+        rw1_index = 999
+        rw2_index = 999
+        sample_index = 999
+        st_index = 999
+        torquer_index = 999
+        thruster_index = 999
+
+        with open('./cfg/build/sims/nos3-simulator.xml', 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                if line.find('<absolute-start-time>') != -1:
+                    lines[lines.index(line)] = "        <absolute-start-time>{}</absolute-start-time>\n".format(mission_start_time)
+                if line.find('camsim</name>') != -1:
+                    if (lines.index(line)) < cam_index:
+                        cam_index = lines.index(line) + 1
+                if line.find('css-sim</name>') != -1:
+                    if (lines.index(line)) < css_index:
+                        css_index = lines.index(line) + 1
+                if line.find('eps-sim</name>') != -1:
+                    if (lines.index(line)) < eps_index:
+                        eps_index = lines.index(line) + 1
+                if line.find('fss-sim</name>') != -1:
+                    if (lines.index(line)) < fss_index:
+                        fss_index = lines.index(line) + 1
+                if line.find('gps</name>') != -1:
+                    if (lines.index(line)) < gps_index:
+                        gps_index = lines.index(line) + 1
+                if line.find('imu-sim</name>') != -1:
+                    if (lines.index(line)) < imu_index:
+                        imu_index = lines.index(line) + 1
+                if line.find('mag-sim</name>') != -1:
+                    if (lines.index(line)) < mag_index:
+                        mag_index = lines.index(line) + 1
+                if line.find('radio-sim</name>') != -1:
+                    if (lines.index(line)) < radio_index:
+                        radio_index = lines.index(line) + 1
+                if line.find('reactionwheel-sim0</name>') != -1:
+                    if (lines.index(line)) < rw0_index:
+                        rw0_index = lines.index(line) + 1
+                if line.find('reactionwheel-sim1</name>') != -1:
+                    if (lines.index(line)) < rw1_index:
+                        rw1_index = lines.index(line) + 1
+                if line.find('reactionwheel-sim2</name>') != -1:
+                    if (lines.index(line)) < rw2_index:
+                        rw2_index = lines.index(line) + 1
+                if line.find('sample-sim</name>') != -1:
+                    if (lines.index(line)) < sample_index:
+                        sample_index = lines.index(line) + 1
+                if line.find('star-tracker-sim</name>') != -1:
+                    if (lines.index(line)) < st_index:
+                        st_index = lines.index(line) + 1
+                if line.find('generic-torquer-sim</name>') != -1:
+                    if (lines.index(line)) < torquer_index:
+                        torquer_index = lines.index(line) + 1
+                if line.find('generic-thruster-sim</name>') != -1:
+                    if (lines.index(line)) < thruster_index:
+                        thruster_index = lines.index(line) + 1
+
+        sim_disabled = '            <active>false</active>\n'
+        if (sc_cam_en != 'true'):
+            lines[cam_index] = sim_disabled
+        if (sc_css_en != 'true'):
+            lines[css_index] = sim_disabled
+        if (sc_eps_en != 'true'):
+            lines[eps_index] = sim_disabled
+        if (sc_fss_en != 'true'):
+            lines[fss_index] = sim_disabled
+        if (sc_gps_en != 'true'):
+            lines[gps_index] = sim_disabled
+        if (sc_imu_en != 'true'):
+            lines[imu_index] = sim_disabled
+        if (sc_mag_en != 'true'):
+            lines[mag_index] = sim_disabled
+        if (sc_radio_en != 'true'):
+            lines[radio_index] = sim_disabled
+        if (sc_rw_en != 'true'):
+            lines[rw0_index] = sim_disabled
+            lines[rw1_index] = sim_disabled
+            lines[rw2_index] = sim_disabled
+        if (sc_sample_en != 'true'):
+            lines[sample_index] = sim_disabled
+        if (sc_st_en != 'true'):
+            lines[st_index] = sim_disabled
+        if (sc_torquer_en != 'true'):
+            lines[torquer_index] = sim_disabled
+        if (sc_thruster_en != 'true'):
+            lines[thruster_index] = sim_disabled
+
+        with open('./cfg/build/sims/nos3-simulator.xml', 'w') as fp:
+            lines = "".join(lines)
+            fp.write(lines)
+```
+
+### `configure_cosmos_target.py`
+
+**경로:** `scripts/cfg/configure_cosmos_target.py`
+
+
+```python
+import os
+import shutil
+import xml.etree.ElementTree as ET
+
+# Component to XML mapping
+components = {
+    "arducam": "cam",
+    "cryptolib": "radio",
+    "generic_adcs": "adcs",
+    "generic_css": "css",
+    "generic_eps": "eps",
+    "generic_fss": "fss",
+    "generic_imu": "imu",
+    "generic_mag": "mag",
+    "generic_radio": "radio",
+    "generic_reaction_wheel": "rw",
+    "generic_star_tracker": "st",
+    "generic_thruster": "thruster",
+    "generic_torquer": "torquer",
+    "mgr": "mgr",
+    "novatel_oem615": "gps",
+    "onair": "onair",
+    "sample": "sample",
+    "syn": "syn"
+}
+
+def clean_target_lines(input_file, output_file, sc_root):
+    """Remove TARGET lines for disabled components (and their _RADIO versions)."""
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+
+    lines_to_remove = set()
+
+    for comp_key, xml_name in components.items():
+        component_upper = comp_key.upper()
+        node = sc_root.find(f"components/{xml_name}/enable")
+        enabled = node is not None and node.text.strip().lower() == 'true'
+
+        if enabled:
+            continue
+
+        print(f"[REMOVE] {comp_key} disabled — removing TARGET lines.")
+        lines_to_remove.update({
+            f"TARGET {component_upper}",
+            f"TARGET {component_upper}_RADIO"
+        })
+
+        # Special case for 'syn' → SYNOPSIS
+        if comp_key == "syn":
+            lines_to_remove.update({
+                "TARGET SYNOPSIS",
+                "TARGET SYNOPSIS_RADIO"
+            })
+
+    # Filter out unwanted lines
+    filtered_lines = [line for line in lines if line.strip() not in lines_to_remove]
+
+    with open(output_file, 'w') as f:
+        f.writelines(filtered_lines)
+
+def main():
+    # === Parse XML to get SC config ===
+    mission_file = 'nos3-mission.xml'
+    mission_path = "./cfg/build/temp_mission/" + os.path.basename(mission_file)
+    
+    try:
+        mission_tree = ET.parse(mission_path)
+        mission_root = mission_tree.getroot()
+        sc_cfg = mission_root.find("sc-1-cfg").text
+        sc_cfg_path = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_path)
+        sc_root = sc_tree.getroot()
+    except Exception as e:
+        print(f"Error parsing XML: {e}")
+        return
+
+    # === File paths ===
+    input_path = './gsw/cosmos/config/tools/cmd_tlm_server/stash/cmd_tlm_server.txt'
+    output_path = './gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt'
+
+    shutil.copyfile(input_path, output_path)
+
+    clean_target_lines(output_path, output_path, sc_root)
+
+if __name__ == '__main__':
+    main()
+```
+
+### `configure_test_runner.py`
+
+**경로:** `scripts/cfg/configure_test_runner.py`
+
+
+```python
+import os
+import shutil
+import xml.etree.ElementTree as ET
+
+# Component to XML mapping
+components = {
+    "arducam_test": "cam",
+    "generic_adcs_test": "adcs",
+    "generic_css_test": "css",
+    "generic_eps_test": "eps",
+    "generic_fss_test": "fss",
+    "generic_imu_test": "imu",
+    "generic_mag_test": "mag",
+    "generic_radio_test": "radio",
+    "generic_rw_test": "rw",
+    "generic_st_test": "st",
+    "generic_thruster_test": "thruster",
+    "generic_torquer_test": "torquer",
+    "novatel_oem615_test": "gps",
+}
+
+def clean_test_runner_targets(input_file, output_file, sc_root):
+    """Remove REQUIRE_UTILITY lines for disabled components"""
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+
+    lines_to_remove = set()
+
+    for comp_key, xml_name in components.items():
+        component_upper = comp_key.upper()
+        node = sc_root.find(f"components/{xml_name}/enable")
+        enabled = node is not None and node.text.strip().lower() == 'true'
+
+        if enabled:
+            continue
+
+        print(f"[REMOVE] {comp_key} disabled — removing REQUIRE_UTILITY lines.")
+        lines_to_remove.update({
+            f"REQUIRE_UTILITY '{comp_key}'"
+        })
+
+    # Filter out unwanted lines
+    filtered_lines = [line for line in lines if line.strip() not in lines_to_remove]
+
+    with open(output_file, 'w') as f:
+        f.writelines(filtered_lines)
+
+def main():
+    # === Parse XML to get SC config ===
+    mission_file = 'nos3-mission.xml'
+    mission_path = "./cfg/build/temp_mission/" + os.path.basename(mission_file)
+    
+    try:
+        mission_tree = ET.parse(mission_path)
+        mission_root = mission_tree.getroot()
+        sc_cfg = mission_root.find("sc-1-cfg").text
+        sc_cfg_path = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_path)
+        sc_root = sc_tree.getroot()
+    except Exception as e:
+        print(f"Error parsing XML: {e}")
+        return
+
+    # === File paths ===
+    input_path = './gsw/cosmos/config/tools/test_runner/stash/test_runner.txt'
+    output_path = './gsw/cosmos/config/tools/test_runner/test_runner.txt'
+
+    shutil.copyfile(input_path, output_path)
+
+    clean_test_runner_targets(output_path, output_path, sc_root)
+
+if __name__ == '__main__':
+    main()
+```
+
+### `declare_cosmos_target.py`
+
+**경로:** `scripts/cfg/declare_cosmos_target.py`
+
+
+```python
+import os
+import shutil
+import xml.etree.ElementTree as ET
+
+# Map component names to their XML identifiers
+components = {
+    "arducam": "cam",
+    "cryptolib": "radio",
+    "generic_adcs": "adcs",
+    "generic_css": "css",
+    "generic_eps": "eps",
+    "generic_fss": "fss",
+    "generic_imu": "imu",
+    "generic_mag": "mag",
+    "generic_radio": "radio",
+    "generic_reaction_wheel": "rw",
+    "generic_star_tracker": "st",
+    "generic_thruster": "thruster",
+    "generic_torquer": "torquer",
+    "mgr": "mgr",
+    "novatel_oem615": "gps",
+    "onair": "onair",
+    "sample": "sample",
+    "syn": "syn"
+}
+
+def clean_declare_targets(input_file, output_file, sc_root, component_key, xml_name):
+    """Remove DECLARE_TARGET lines related to a disabled component."""
+    component_upper = component_key.upper()
+    node = sc_root.find(f"components/{xml_name}/enable")
+    enabled = node is not None and node.text.strip().lower() == 'true'
+
+    if enabled:
+        return
+
+    # Lines to remove if the component is disabled
+    patterns_to_remove = {
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} {component_upper}',
+        f'DECLARE_TARGET ../../COMPONENTS/GENERIC_{component_upper} GENERIC_{component_upper}',
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} {component_upper}_RADIO',
+        f'DECLARE_TARGET ../../COMPONENTS/GENERIC_{component_upper} GENERIC_{component_upper}_RADIO',
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} SYNOPSIS',
+        f'DECLARE_TARGET ../../COMPONENTS/{component_upper} SYNOPSIS_RADIO'
+    }
+
+    with open(input_file, 'r') as f:
+        lines = f.readlines()
+
+    # Remove any line that matches exactly one of the patterns
+    filtered_lines = [line for line in lines if line.strip() not in patterns_to_remove]
+
+    with open(output_file, 'w') as f:
+        f.writelines(filtered_lines)
+
+def main():
+    # === Parse XML to get SC config ===
+    mission_file = 'nos3-mission.xml'
+    mission_path = "./cfg/build/temp_mission/" + os.path.basename(mission_file)
+    
+    try:
+        mission_tree = ET.parse(mission_path)
+        mission_root = mission_tree.getroot()
+        sc_cfg = mission_root.find("sc-1-cfg").text
+        sc_cfg_path = './cfg/' + sc_cfg
+        sc_tree = ET.parse(sc_cfg_path)
+        sc_root = sc_tree.getroot()
+    except Exception as e:
+        print(f"Error parsing XML: {e}")
+        return
+
+    # === File paths ===
+    input_path = './gsw/cosmos/config/system/stash/system.txt'
+    output_path = './gsw/cosmos/config/system/system.txt'
+
+    # Start fresh from stash copy
+    shutil.copyfile(input_path, output_path)
+
+    # Process each component
+    for comp_key, xml_name in components.items():
+        clean_declare_targets(output_path, output_path, sc_root, comp_key, xml_name)
+
+if __name__ == '__main__':
+    main()
+```
+
+### `igniter_launch.sh`
+
+**경로:** `scripts/cfg/igniter_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS# development
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+echo ""
+echo ""
+
+cd $BASE_DIR
+python3 $BASE_DIR/cfg/gui/cfg_gui_main.py &
+echo ""
+echo ""
+```
+
+### `prep_gsw.sh`
+
+**경로:** `scripts/cfg/prep_gsw.sh`
+
+
+```bash
+#!/bin/bash
+
+sudo ip addr add 10.10.10.100 dev eth1
+sudo ip route add default via 10.10.10.100 dev eth1
+
+# The next thing to do is to 'create' a docker swarm. Swarm containers are not
+# necessary here, but to connect the two computers it is necessary to run
+# docker swarm init on the main computer (which I have been using as the gsw
+# machine); then "docker swarm join" must be run on the satellite machine. 
+# 
+# The successful output of "docker swarm init" will give the command which must
+# be run on the satellite VM.
+
+docker swarm init --advertise-addr 10.10.10.100
+
+```
+
+### `prep_sat.sh`
+
+**경로:** `scripts/cfg/prep_sat.sh`
+
+
+```bash
+#!/bin/bash
+
+sudo ip addr add 10.10.10.101 dev eth1
+sudo ip route add default via 10.10.10.101 dev eth1
+
+# Open the relevant ports for a Docker overlay network?
+# 2377, 4789, and 7946 might be all; the first and last
+# on tcp, and the last two on udp.
+
+```
+
+### `prepare.sh`
+
+**경로:** `scripts/cfg/prepare.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+echo ""
+echo ""
+
+echo "Create local user directory..."
+mkdir $USER_NOS3_DIR 2> /dev/null
+echo "  "$USER_NOS3_DIR
+mkdir $USER_NOS3_DIR/42 2> /dev/null
+echo ""
+echo ""
+
+echo "Prepare nos3 docker container..."
+$DCALL image pull $DBOX
+echo ""
+echo ""
+
+echo "Prepare 42..."
+cd $USER_NOS3_DIR
+git clone https://github.com/nasa-itc/42.git --depth 1 -b dev_20260403
+cd $USER_NOS3_DIR/42
+$DFLAGS_CPUS -v $BASE_DIR:$BASE_DIR -v $USER_NOS3_DIR:$USER_NOS3_DIR -w $USER_NOS3_DIR/42 --name "nos3_42_build" $DBOX make
+echo ""
+echo ""
+
+echo "NOS3 required preparations complete!"
+echo "Proceeding to optional additions."
+echo ""
+echo ""
+
+echo "Preparing Shared Folders for YAMCS..."
+mkdir $USER_YAMCS_PATH 2> /dev/null
+echo ""
+echo ""
+
+echo "Preparing Shared Folders for Fprime..."
+mkdir $USER_FPRIME_PATH 2> /dev/null
+echo ""
+echo ""
+
+echo "Prepare Igniter (optional)..."
+pip3 install pyside6 xmltodict
+cd $BASE_DIR
+python3 $BASE_DIR/cfg/gui/cfg_gui_main.py &
+echo ""
+echo ""
+
+sleep 3
+echo ""
+echo ""
+
+echo "NOS3 prep script complete:"
+echo "  Some above optional installations may have failed, that's ok. You just may not have those extra features."
+echo "  You can choose to use the Igniter GUI or close it in favor of the command line."
+echo "  To launch igniter again simply run the following in the terminal:"
+echo "    make igniter"
+echo ""
+echo ""
+```
+
+### `uninstall.sh`
+
+**경로:** `scripts/cfg/uninstall.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+echo "Cleaning up any COSMOS files..."
+yes | rm $BASE_DIR/gsw/cosmos/Gemfile 2> /dev/null
+yes | rm $BASE_DIR/gsw/cosmos/Gemfile.lock 2> /dev/null
+yes | rm -r $BASE_DIR/gsw/cosmos/COMPONENTS 2> /dev/null
+yes | rm -r $BASE_DIR/gsw/cosmos/outputs 2> /dev/null
+
+echo "Cleaning up Minicom log..."
+yes | rm $BASE_DIR/minicom.cap 2> /dev/null
+
+echo "Cleaning up local user directory..."
+if docker ps -a --format "{{.Names}}" | grep -q "^${DBOX}$"; then
+    rm -f "${USER_NOS3_DIR}"
+fi
+rm -rf $USER_NOS3_DIR/*
+rm -rf $USER_FPRIME_PATH
+
+echo "Removing NOS Based containers..."
+yes 2> /dev/null | $DCALL images --format "{{.Repository}}:{{.Tag}}" | grep '^ivvitc' | xargs -r docker rmi  
+
+echo "Removing NOS Based container networks..."
+yes | $DNETWORK ls --format "{{.Name}}" | grep '^nos3_' | xargs -r docker network rm 2> /dev/null
+
+echo "Removing BallAerospace Based containers..."
+yes 2> /dev/null | $DCALL images --format "{{.Repository}}:{{.Tag}}" | grep '^ballaerospace' | xargs -r docker rmi  
+
+echo "Removing OpenC3 Based containers..."
+yes 2> /dev/null | $DCALL images --format "{{.Repository}}:{{.Tag}}" | grep '^openc3' | xargs -r docker rmi  
+
+echo "Removing OpenC3 Based container networks..."
+yes | $DNETWORK ls --format "{{.Name}}" | grep '^openc3' | xargs -r docker network rm 2> /dev/null
+
+yes | $DCALL swarm leave --force 2> /dev/null
+
+exit 0
+```
+
+### `yamcs_default.nos3.yaml`
+
+**경로:** `scripts/cfg/yamcs_default.nos3.yaml`
+
+
+```yaml
+timeService:
+   class: org.yamcs.time.SimulationTimeService
+ 
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers:
+        - fs
+        - jvm
+  - class: org.yamcs.ProcessorCreatorService
+    args:
+      name: realtime
+      type: realtime
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+      realtimeFiller:
+        enabled: true
+      backFiller:
+        enabled: false
+        warmupTime: 60
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.cfdp.CfdpService
+    name: cfdp
+    args:
+     inactivityTimeout: 30000
+     sequenceNrLength: 4
+     maxPduSize: 484
+     inStream: cfdp_in
+     outStream: cfdp_out
+     incomingBucket: "ground"
+     allowRemoteProvidedBucket: false
+     allowRemoteProvidedSubdirectory: true
+     allowDownloadOverwrites: false
+     maxExistingFileRenames: 1000
+     eofAckTimeout: 5000
+     eofAckLimit: 5
+     sleepBetweenPdus: 250
+     maxNumPendingUploads: 1
+     pendingAfterCompletion: 10000
+     localEntities:
+       - name: ground
+         id: 21
+         bucket: ground
+     remoteEntities:
+       - name: spacecraft
+         id: 24
+         bucket: spacecraft
+     entityIdLength: 4
+     hasFileListingCapability: false
+     senderFaultHandlers:
+       AckLimitReached: suspend
+     fileListingParserClassName: org.yamcs.filetransfer.CsvListingParser
+     fileListingParserArgs:
+       timestampMultiplier: 1
+
+dataLinks:
+  - name: radio-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 6011
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+
+  - name: radio-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: cryptolib
+    port: 6010
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: debug-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 5013
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+      
+  - name: debug-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: nos-fsw
+    port: 5012
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: truth42-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: truth42_data
+    port: 5111
+    updateSimulationTime: true
+    packetPreprocessorClassName: org.yamcs.nos3.Truth42PacketPreprocessor    
+
+mdb:
+  - type: xtce
+    args:
+      file: mdb/ccsds.xtce
+  - type: xtce
+    args:
+      file: mdb/cfs.xtce
+  - type: xtce
+    args:
+      file: mdb/ci_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/cmd_util.xtce
+  - type: xtce
+    args:
+      file: mdb/sim_42_truth.xtce
+  - type: xtce
+    args:
+      file: mdb/system.xtce
+  - type: xtce
+    args:
+      file: mdb/to_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/pdu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/arducam/gsw/arducam.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_adcs/gsw/generic_adcs.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_css/gsw/generic_css.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_eps/gsw/generic_eps.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_fss/gsw/generic_fss.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_imu/gsw/generic_imu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_mag/gsw/generic_mag.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_radio/gsw/generic_radio.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_reaction_wheel/gsw/generic_reaction_wheel.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_star_tracker/gsw/generic_star_tracker.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_thruster/gsw/generic_thruster.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_torquer/gsw/generic_torquer.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/novatel_oem615/gsw/novatel_oem615.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/sample/gsw/sample.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/mgr/gsw/mgr.xtce
+#  - type: xtce
+#    args:
+#      file: mdb/syn.xtce
+
+# Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+      rootContainer: "/CCSDS/CCSDS_TM"
+    - name: "truth42_data"
+      processor: "realtime"
+      rootContainer: "/SIM_42_TRUTH/SIM_42_TRUTH_DATA/SIM_42_TRUTH_DATA"
+    - name: "tm_dump"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_dump", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  tc:
+    # - name: "tc_debug"
+    #  processor: "realtime"
+    #  tcPatterns: ["/TO_DEBUG/CMD/.*"]
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+```
+
+### `yamcs_multiGDS.nos3.yaml`
+
+**경로:** `scripts/cfg/yamcs_multiGDS.nos3.yaml`
+
+
+```yaml
+timeService:
+   class: org.yamcs.time.SimulationTimeService
+ 
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers:
+        - fs
+        - jvm
+  - class: org.yamcs.ProcessorCreatorService
+    args:
+      name: realtime
+      type: realtime
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+      realtimeFiller:
+        enabled: true
+      backFiller:
+        enabled: false
+        warmupTime: 60
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.cfdp.CfdpService
+    name: cfdp
+    args:
+     inactivityTimeout: 30000
+     sequenceNrLength: 4
+     maxPduSize: 484
+     inStream: cfdp_in
+     outStream: cfdp_out
+     incomingBucket: "ground"
+     allowRemoteProvidedBucket: false
+     allowRemoteProvidedSubdirectory: true
+     allowDownloadOverwrites: false
+     maxExistingFileRenames: 1000
+     eofAckTimeout: 5000
+     eofAckLimit: 5
+     sleepBetweenPdus: 250
+     maxNumPendingUploads: 1
+     pendingAfterCompletion: 10000
+     localEntities:
+       - name: ground
+         id: 21
+         bucket: ground
+     remoteEntities:
+       - name: spacecraft
+         id: 24
+         bucket: spacecraft
+     entityIdLength: 4
+     hasFileListingCapability: false
+     senderFaultHandlers:
+       AckLimitReached: suspend
+     fileListingParserClassName: org.yamcs.filetransfer.CsvListingParser
+     fileListingParserArgs:
+       timestampMultiplier: 1
+
+dataLinks:
+  - name: radio-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 6011
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+
+  - name: radio-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: cryptolib2
+    port: 6010
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: debug-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 5013
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+      
+  - name: debug-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: nos-fsw
+    port: 5012
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: truth42-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: truth42_data
+    port: 5111
+    updateSimulationTime: true
+    packetPreprocessorClassName: org.yamcs.nos3.Truth42PacketPreprocessor    
+
+mdb:
+  - type: xtce
+    args:
+      file: mdb/ccsds.xtce
+  - type: xtce
+    args:
+      file: mdb/cfs.xtce
+  - type: xtce
+    args:
+      file: mdb/ci_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/cmd_util.xtce
+  - type: xtce
+    args:
+      file: mdb/sim_42_truth.xtce
+  - type: xtce
+    args:
+      file: mdb/system.xtce
+  - type: xtce
+    args:
+      file: mdb/to_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/pdu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/arducam/gsw/arducam.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_adcs/gsw/generic_adcs.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_css/gsw/generic_css.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_eps/gsw/generic_eps.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_fss/gsw/generic_fss.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_imu/gsw/generic_imu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_mag/gsw/generic_mag.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_radio/gsw/generic_radio.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_reaction_wheel/gsw/generic_reaction_wheel.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_star_tracker/gsw/generic_star_tracker.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_thruster/gsw/generic_thruster.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_torquer/gsw/generic_torquer.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/novatel_oem615/gsw/novatel_oem615.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/sample/gsw/sample.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/mgr/gsw/mgr.xtce
+#  - type: xtce
+#    args:
+#      file: mdb/syn.xtce
+
+# Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+      rootContainer: "/CCSDS/CCSDS_TM"
+    - name: "truth42_data"
+      processor: "realtime"
+      rootContainer: "/SIM_42_TRUTH/SIM_42_TRUTH_DATA/SIM_42_TRUTH_DATA"
+    - name: "tm_dump"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_dump", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  tc:
+    # - name: "tc_debug"
+    #  processor: "realtime"
+    #  tcPatterns: ["/TO_DEBUG/CMD/.*"]
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+
+```

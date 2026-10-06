@@ -3,32 +3,460 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--default.fpp
-file--EnumToStringTest.cpp
-file--explicit.fpp
-file--implicit.fpp
-file--interval.fpp
-file--IsValidTest.cpp
-file--main.cpp
-file--README.md
-file--serialize_type.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/CMakeLists.txt`
+
+
+```cmake
+# ====================================================================== 
+# CMakeLists.txt
+# ====================================================================== 
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/implicit.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/explicit.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/default.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/interval.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/serialize_type.fpp"
+)
+register_fprime_module()
+
+# Declare dependencies on test modules
+set(UT_MOD_DEPS
+  Fw/Test
+  STest
+)
+
+# List all .cpp files as UT_SOURCE_FILES. Only the UT build is allowed.
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/EnumToStringTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+register_fprime_ut()
 ```
 
-## 항목
+### `default.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/default.fpp`](file--default.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/EnumToStringTest.cpp`](file--EnumToStringTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/explicit.fpp`](file--explicit.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/implicit.fpp`](file--implicit.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/interval.fpp`](file--interval.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/IsValidTest.cpp`](file--IsValidTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/serialize_type.fpp`](file--serialize_type.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/default.fpp`
+
+
+```fpp
+@ An enum with specified default values
+enum Default {
+  A,
+  B,
+  C,
+  D,
+  E,
+} default C
+```
+
+### `EnumToStringTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/EnumToStringTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  EnumToStringTest.cpp
+// \author T. Chieu
+// \brief  cpp file for EnumToStringTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/enum/ImplicitEnumAc.hpp"
+#include "FppTest/enum/ExplicitEnumAc.hpp"
+#include "FppTest/enum/DefaultEnumAc.hpp"
+#include "FppTest/enum/IntervalEnumAc.hpp"
+#include "FppTest/enum/SerializeTypeU8EnumAc.hpp"
+#include "FppTest/enum/SerializeTypeU64EnumAc.hpp"
+
+#include "gtest/gtest.h"
+
+#include <cstring>
+#include <sstream>
+
+namespace FppTest {
+    
+    // Populate an array with enum values
+    template <typename EnumType>
+    void setEnumValArray(typename EnumType::T (&a)[EnumType::NUM_CONSTANTS+1]) {
+        for (U32 i = 0; i < EnumType::NUM_CONSTANTS + 1; i++) {
+            a[i] = static_cast<typename EnumType::T>(i);
+        }
+    }
+
+    template<>
+    void setEnumValArray<Explicit>(Explicit::T (&a)[Explicit::NUM_CONSTANTS+1]) {
+        a[0] = Explicit::A;
+        a[1] = Explicit::B;
+        a[2] = Explicit::C;
+        a[3] = static_cast<Explicit::T>(11);
+    }
+
+    template<>
+    void setEnumValArray<Interval>(Interval::T (&a)[Interval::NUM_CONSTANTS+1]) {
+        a[0] = Interval::A;
+        a[1] = Interval::B;
+        a[2] = Interval::C;
+        a[3] = Interval::D;
+        a[4] = Interval::E;
+        a[5] = Interval::F;
+        a[6] = Interval::G;
+        a[7] = static_cast<Interval::T>(11);
+    }
+
+    // Populate an array with strings representing enum values
+    template <typename EnumType>
+    void setEnumStrArray(std::string (&a)[EnumType::NUM_CONSTANTS+1]) {
+        a[0] = "A (0)";
+        a[1] = "B (1)";
+        a[2] = "C (2)";
+        a[3] = "D (3)";
+        a[4] = "E (4)";
+        a[5] = "[invalid] (5)";
+    }
+
+    template<>
+    void setEnumStrArray<Explicit>(std::string (&a)[Explicit::NUM_CONSTANTS+1]) {
+        a[0] = "A (-1952875139)";
+        a[1] = "B (2)";
+        a[2] = "C (2000999333)";
+        a[3] = "[invalid] (11)";
+    }
+
+    template <>
+    void setEnumStrArray<Interval>(std::string (&a)[Interval::NUM_CONSTANTS+1]) {
+        a[0] = "A (0)";
+        a[1] = "B (3)";
+        a[2] = "C (4)";
+        a[3] = "D (5)";
+        a[4] = "E (10)";
+        a[5] = "F (100)";
+        a[6] = "G (101)";
+        a[7] = "[invalid] (11)";
+    }
+
+} // namespace FppTest
+
+// Test enum string functions
+template <typename EnumType>
+class EnumToStringTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        FppTest::setEnumValArray<EnumType>(vals);
+        FppTest::setEnumStrArray<EnumType>(strs);
+    };
+
+    EnumType e;
+    std::stringstream buf;
+
+    typename EnumType::T vals[EnumType::NUM_CONSTANTS+1];
+    std::string strs[EnumType::NUM_CONSTANTS+1];
+};
+
+// Specify type parameters for this test suite
+using EnumTypes = ::testing::Types<
+    Implicit, 
+    Explicit, 
+    Default,
+    Interval, 
+    SerializeTypeU8,
+    SerializeTypeU64
+>;
+TYPED_TEST_SUITE(EnumToStringTest, EnumTypes);
+
+// Test enum toString() and ostream operator functions
+TYPED_TEST(EnumToStringTest, ToString) {
+    for (U32 i = 0; i < TypeParam::NUM_CONSTANTS + 1; i++) {
+        this->e = this->vals[i];
+        this->buf << this->e;
+
+        ASSERT_STREQ(this->buf.str().c_str(), this->strs[i].c_str());
+
+        this->buf.str("");
+    }
+}
+```
+
+### `explicit.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/explicit.fpp`
+
+
+```fpp
+@ An enum with explicit constant values
+enum Explicit {
+  A = -1952875139,
+  B = 2,
+  C = 2000999333,
+}
+```
+
+### `implicit.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/implicit.fpp`
+
+
+```fpp
+@ An enum with implicit constant values
+enum Implicit {
+  A, @< Member A
+  B,
+  C,
+  D,
+  E,
+}
+```
+
+### `interval.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/interval.fpp`
+
+
+```fpp
+@ An enum with many intervals of values
+enum Interval {
+  A = 0,
+  B = 3,
+  C = 4,
+  D = 5,
+  E = 10,
+  F = 100,
+  G = 101,
+}
+```
+
+### `IsValidTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/IsValidTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  IsValidTest.cpp
+// \author T. Chieu
+// \brief  cpp file for IsValidTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/enum/IntervalEnumAc.hpp"
+
+#include "gtest/gtest.h"
+
+// Test boundary values for enum isValid() function
+TEST(IsValidTest, IntervalEnum) {
+    Interval e = static_cast<Interval::T>(-1);
+    ASSERT_FALSE(e.isValid());
+
+    e = static_cast<Interval::T>(0);
+    ASSERT_TRUE(e.isValid());
+
+    e = static_cast<Interval::T>(1);
+    ASSERT_FALSE(e.isValid());
+
+    e = static_cast<Interval::T>(2);
+    ASSERT_FALSE(e.isValid());
+
+    e = static_cast<Interval::T>(3);
+    ASSERT_TRUE(e.isValid());
+
+    e = static_cast<Interval::T>(5);
+    ASSERT_TRUE(e.isValid());
+
+    e = static_cast<Interval::T>(6);
+    ASSERT_FALSE(e.isValid());
+
+    e = static_cast<Interval::T>(10);
+    ASSERT_TRUE(e.isValid());
+
+    e = static_cast<Interval::T>(99);
+    ASSERT_FALSE(e.isValid());
+
+    e = static_cast<Interval::T>(100);
+    ASSERT_TRUE(e.isValid());
+
+    e = static_cast<Interval::T>(101);
+    ASSERT_TRUE(e.isValid());
+
+    e = static_cast<Interval::T>(102);
+    ASSERT_FALSE(e.isValid());
+}
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/main.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  main.cpp
+// \author T. Chieu
+// \brief  main cpp file for FPP enum tests
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/enum/ImplicitEnumAc.hpp"
+#include "FppTest/enum/ExplicitEnumAc.hpp"
+#include "FppTest/enum/DefaultEnumAc.hpp"
+#include "FppTest/enum/IntervalEnumAc.hpp"
+#include "FppTest/enum/SerializeTypeU8EnumAc.hpp"
+#include "FppTest/enum/SerializeTypeU64EnumAc.hpp"
+
+#include "FppTest/typed_tests/EnumTest.hpp"
+
+#include "STest/Random/Random.hpp"
+#include "gtest/gtest.h"
+
+// Instantiate enum tests
+using EnumTestImplementations = ::testing::Types<
+    Implicit, 
+    Explicit, 
+    Default,
+    Interval, 
+    SerializeTypeU8,
+    SerializeTypeU64
+>;
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, 
+                               EnumTest, 
+                               EnumTestImplementations);
+
+// Specializations for default value
+template<>
+Explicit::T FppTest::Enum::getDefaultValue<Explicit>() {
+    return Explicit::A;
+}
+
+template<>
+Default::T FppTest::Enum::getDefaultValue<Default>() {
+    return Default::C;
+}
+
+// Specializations for valid value
+template<>
+Explicit::T FppTest::Enum::getValidValue<Explicit>() {
+    U32 val = STest::Pick::startLength(0, Explicit::NUM_CONSTANTS);
+
+    switch (val) {
+        case 0: return Explicit::A;
+        case 1: return Explicit::B;
+        default: return Explicit::C;
+    }
+}
+
+template<>
+Interval::T FppTest::Enum::getValidValue<Interval>() {
+    U32 val = STest::Pick::startLength(0, Interval::NUM_CONSTANTS);
+
+    switch (val) {
+        case 0: return Interval::A;
+        case 1: return Interval::B;
+        case 2: return Interval::C;
+        case 3: return Interval::D;
+        case 4: return Interval::E;
+        case 5: return Interval::F;
+        default: return Interval::G;
+    }
+}
+
+// Specializations for invalid value
+template <>
+Explicit::T FppTest::Enum::getInvalidValue<Explicit>() {
+    U32 sign = STest::Pick::lowerUpper(0, 1);
+
+    switch (sign) {
+        case 0:
+            return static_cast<Explicit::T>(STest::Pick::lowerUpper(
+                Explicit::C + 1,
+                std::numeric_limits<Explicit::SerialType>::max()
+            ));
+        default:
+            return static_cast<Explicit::T>(
+                static_cast<I32>(
+                    STest::Pick::lowerUpper(
+                        (Explicit::A - 1) * (-1),
+                        std::numeric_limits<Explicit::SerialType>::max()
+                    )
+                ) * (-1)
+            );
+    }
+}
+
+template<>
+Interval::T FppTest::Enum::getInvalidValue<Interval>() {
+    return static_cast<Interval::T>(STest::Pick::lowerUpper(
+        Interval::G + 1,
+        std::numeric_limits<Interval::SerialType>::max()
+    ));
+}
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+
+    return RUN_ALL_TESTS();
+}
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/README.md`
+
+
+```markdown
+# FppTest/enum
+
+This directory contains unit tests for the FPP enum code generator.
+
+* `EnumToStringTest`: Tests enum `toString()` and `ostream` operator functions
+* `IsValidTest`: Additional tests for `isValid()` function with boundary values
+
+To use this directory, you must have installed F Prime, and you must be inside 
+the F Prime Python virtual environment.
+
+* To build the tests, run `fprime-util build --ut`.
+* To run the tests, run `fprime-util check`.
+```
+
+### `serialize_type.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/serialize_type.fpp`
+
+
+```fpp
+@ An enum with a specified serialize type
+enum SerializeTypeU8 : U8 {
+  A,
+  B,
+  C,
+  D,
+  E,
+}
+
+enum SerializeTypeU64 : U64 {
+  A,
+  B,
+  C,
+  D,
+  E,
+}
+```

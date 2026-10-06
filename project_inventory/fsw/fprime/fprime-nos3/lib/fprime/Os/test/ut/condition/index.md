@@ -3,22 +3,292 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--ConditionRules.cpp
-file--ConditionRules.hpp
-file--RulesHeaders.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/condition/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/condition/CommonTests.hpp"
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/test/ConcurrentRule.hpp"
+#include "Os/test/ut/condition/RulesHeaders.hpp"
+
+TEST(Blocking, WaitSingle) {
+    Os::Test::Condition::Tester tester;
+    AggregatedConcurrentRule<Os::Test::Condition::Tester> aggregator;
+    Os::Test::Condition::Tester::Wait wait_rule(aggregator);
+    Os::Test::Condition::Tester::Notify notify_rule(aggregator);
+
+    aggregator.apply(tester);
+    aggregator.join();
+}
+
+TEST(Blocking, WaitAll) {
+    Os::Test::Condition::Tester tester;
+    AggregatedConcurrentRule<Os::Test::Condition::Tester> aggregator;
+    PseudoRule<Os::Test::Condition::Tester> pseudoRule("Notify", aggregator);
+    Os::Test::Condition::Tester::Wait wait_rule1(aggregator);
+    Os::Test::Condition::Tester::Wait wait_rule2(aggregator);
+    Os::Test::Condition::Tester::NotifyAll notify_rule(aggregator);
+    aggregator.apply(tester);
+    {
+        Os::ScopeLock lock(aggregator.getLock());
+        while (tester.m_waiters != 2) {
+            pseudoRule.wait_for_next_step();
+        }
+    }
+    std::string to_notify("NotifyAll");
+    aggregator.notify(to_notify);
+    {
+        Os::ScopeLock lock(aggregator.getLock());
+        while (tester.m_waiters > 0) {
+            pseudoRule.wait_for_next_step();
+        }
+    }
+    aggregator.notify(to_notify);
+    aggregator.join();
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/ConditionRules.cpp`](file--ConditionRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/ConditionRules.hpp`](file--ConditionRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/CommonTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/condition/CommonTests.hpp
+// \brief required header
+// ======================================================================
+#include "RulesHeaders.hpp"
+#ifndef OS_TEST_UT_QUEUE_COMMON_TESTS_HPP
+#define OS_TEST_UT_QUEUE_COMMON_TESTS_HPP
+#endif  // OS_TEST_UT_QUEUE_COMMON_TESTS_HPP
+```
+
+### `ConditionRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/ConditionRules.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/condition/ConditionRules.cpp
+// \brief condition variables rule implementations
+// ======================================================================
+
+#include "CommonTests.hpp"
+#include "Fw/Types/String.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Wait
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Condition::Tester::Wait::Wait(AggregatedConcurrentRule<Os::Test::Condition::Tester>& runner)
+    : ConcurrentRule<Os::Test::Condition::Tester>("Wait", runner) {}
+
+bool Os::Test::Condition::Tester::Wait::precondition(const Os::Test::Condition::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Condition::Tester::Wait::action(Os::Test::Condition::Tester& state  //!< The test state
+) {
+    state.m_notify = false;
+    state.m_waiters += 1;
+    this->notify_other("Notify");
+    state.m_condition.wait(this->getLock());
+    ASSERT_TRUE(state.m_notify) << "Notify was not set";
+    state.m_waiters -= 1;
+    this->notify_other("Notify");
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Notify
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Condition::Tester::Notify::Notify(AggregatedConcurrentRule<Os::Test::Condition::Tester>& runner)
+    : ConcurrentRule<Os::Test::Condition::Tester>("Notify", runner) {}
+
+bool Os::Test::Condition::Tester::Notify::precondition(const Os::Test::Condition::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Condition::Tester::Notify::action(Os::Test::Condition::Tester& state  //!< The test state
+) {
+    FwSizeType waiters = 0;
+    this->wait_for_next_step();
+    waiters = state.m_waiters;
+    state.m_notify = true;
+    state.m_condition.notify();
+    // Wait for notification and ensure exactly one waiter woke up
+    this->wait_for_next_step();
+    ASSERT_EQ(waiters - 1, state.m_waiters);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  NotifyAll
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Condition::Tester::NotifyAll::NotifyAll(AggregatedConcurrentRule<Os::Test::Condition::Tester>& runner)
+    : ConcurrentRule<Os::Test::Condition::Tester>("NotifyAll", runner) {}
+
+bool Os::Test::Condition::Tester::NotifyAll::precondition(const Os::Test::Condition::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Condition::Tester::NotifyAll::action(Os::Test::Condition::Tester& state  //!< The test state
+) {
+    this->wait_for_next_step();
+    state.m_notify = true;
+    state.m_condition.notifyAll();
+    this->wait_for_next_step();
+    ASSERT_EQ(0, state.m_waiters);
+}
+```
+
+### `ConditionRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/ConditionRules.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/condition/ConditionRules.hpp
+// \brief condition variables rule definitions
+// ======================================================================
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Wait
+//
+// ------------------------------------------------------------------------------------------------------
+struct Wait : public ConcurrentRule<Os::Test::Condition::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit Wait(AggregatedConcurrentRule<Os::Test::Condition::Tester>& runner);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Condition::Tester& state  //!< The test state
+                      ) override;
+
+    //! Action
+    void action(Os::Test::Condition::Tester& state  //!< The test state
+                ) override;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Notify
+//
+// ------------------------------------------------------------------------------------------------------
+struct Notify : public ConcurrentRule<Os::Test::Condition::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit Notify(AggregatedConcurrentRule<Os::Test::Condition::Tester>& runner);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Condition::Tester& state  //!< The test state
+                      ) override;
+
+    //! Action
+    void action(Os::Test::Condition::Tester& state  //!< The test state
+                ) override;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  NotifyAll
+//
+// ------------------------------------------------------------------------------------------------------
+struct NotifyAll : public ConcurrentRule<Os::Test::Condition::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit NotifyAll(AggregatedConcurrentRule<Os::Test::Condition::Tester>& runner);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Condition::Tester& state  //!< The test state
+                      ) override;
+
+    //! Action
+    void action(Os::Test::Condition::Tester& state  //!< The test state
+                ) override;
+};
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/RulesHeaders.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/condition/RulesHeaders.cpp
+// \brief condition test rules headers
+// ======================================================================
+
+#ifndef OS_TEST_CONDITION_RULES_HEADERS__
+#define OS_TEST_CONDITION_RULES_HEADERS__
+
+#include "Os/Condition.hpp"
+#include "Os/test/ConcurrentRule.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace Condition {
+
+struct Tester {
+  public:
+    //! Constructor
+    Tester() = default;
+    virtual ~Tester() = default;
+
+    Os::ConditionVariable m_condition;
+    bool m_notify = false;
+    FwSizeType m_waiters = 0;
+
+  public:
+#include "ConditionRules.hpp"
+};
+
+}  // namespace Condition
+}  // namespace Test
+}  // namespace Os
+
+#endif
+```

@@ -3,22 +3,255 @@
 
 **경로:** `components/generic_css/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_css_42_data_provider.hpp`
 
-file--generic_css_42_data_provider.hpp
-file--generic_css_data_point.hpp
-file--generic_css_data_provider.hpp
-file--generic_css_hardware_model.hpp
-file--generic_css_shmem_data_provider.hpp
+**경로:** `components/generic_css/sim/inc/generic_css_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_CSS42DATAPROVIDER_HPP
+#define NOS3_GENERIC_CSS42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_css_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_css42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_css42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_css42DataProvider(void) {};
+        Generic_css42DataProvider& operator=(const Generic_css42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+        double _scale_factor; /* Corresponds to the CSS Scale Factor from 42 */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_css_data_point.hpp`
 
-- [`components/generic_css/sim/inc/generic_css_42_data_provider.hpp`](file--generic_css_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/inc/generic_css_data_point.hpp`](file--generic_css_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/inc/generic_css_data_provider.hpp`](file--generic_css_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/inc/generic_css_hardware_model.hpp`](file--generic_css_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/sim/inc/generic_css_shmem_data_provider.hpp`](file--generic_css_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_css/sim/inc/generic_css_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_CSSDATAPOINT_HPP
+#define NOS3_GENERIC_CSSDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_cssDataPoint : public SimIDataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_cssDataPoint(double count);
+        Generic_cssDataPoint(double scale_factor, int valid0, int valid1, int valid2, int valid3, int valid4, int valid5,
+            double illum0, double illum1, double illum2, double illum3, double illum4, double illum5);
+        ~Generic_cssDataPoint(void) {};
+
+        Generic_cssDataPoint(double scaleFactor, int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        std::vector<float> getValues(void) const {parse_data_point(); return _generic_css_data;}
+    
+    private:
+        /* Disallow these */
+        Generic_cssDataPoint(void) {};
+        Generic_cssDataPoint(const Generic_cssDataPoint&) {};
+        /// @name Private mutators
+        //@{
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+        //@}
+
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        double _scale_factor;
+        mutable bool _not_parsed;
+        mutable std::vector<float> _generic_css_data;
+        static const int numChannels = 6;
+    };
+}
+
+#endif
+```
+
+### `generic_css_data_provider.hpp`
+
+**경로:** `components/generic_css/sim/inc/generic_css_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_CSSDATAPROVIDER_HPP
+#define NOS3_GENERIC_CSSDATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_css_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class Generic_cssDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_cssDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_cssDataProvider(void) {};
+        Generic_cssDataProvider& operator=(const Generic_cssDataProvider&) {return *this;};
+
+        mutable double _request_count;
+    };
+}
+
+#endif
+```
+
+### `generic_css_hardware_model.hpp`
+
+**경로:** `components/generic_css/sim/inc/generic_css_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_CSSHARDWAREMODEL_HPP
+#define NOS3_GENERIC_CSSHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <I2C/Client/I2CSlave.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <generic_css_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Defines
+*/
+#define GENERIC_CSS_SIM_SUCCESS 0
+#define GENERIC_CSS_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_cssHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_cssHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_cssHardwareModel(void);
+        void create_generic_css_data(std::vector<uint8_t>& out_data); 
+
+    private:
+        /* Private helper methods */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+        /* Private data members */
+        class I2CSlaveConnection*                           _i2c_slave_connection;
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_css_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+    };
+
+    class I2CSlaveConnection : public NosEngine::I2C::I2CSlave
+    {
+    public:
+        I2CSlaveConnection(Generic_cssHardwareModel* hm, int bus_address, std::string connection_string, std::string bus_name);
+        size_t i2c_read(uint8_t *rbuf, size_t rlen);
+        size_t i2c_write(const uint8_t *wbuf, size_t wlen);
+    private:
+        std::vector<uint8_t>  _i2c_out_data;
+        Generic_cssHardwareModel* _hardware_model;
+    };
+}
+
+#endif
+```
+
+### `generic_css_shmem_data_provider.hpp`
+
+**경로:** `components/generic_css/sim/inc/generic_css_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_CSS42DATAPROVIDER_HPP
+#define NOS3_GENERIC_CSS42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <generic_css_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    /* Standard for a 42 data provider */
+    class Generic_cssShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_cssShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_cssShmemDataProvider(void) {};
+        Generic_cssShmemDataProvider& operator=(const Generic_cssShmemDataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+        double _scale_factor; /* Corresponds to the CSS Scale Factor from 42 */
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

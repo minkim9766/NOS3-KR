@@ -3,18 +3,137 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stacked-check-entry.component.css`
 
-file--stacked-check-entry.component.css
-file--stacked-check-entry.component.html
-file--stacked-check-entry.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/stacked-check-entry.component.css`
+
+
+```css
+:host {
+  display: block;
+  position: relative;
+}
+
+table {
+  padding-left: 18px;
+  padding-right: 18px;
+  background-color: #fafafa;
+}
+
+:host ::ng-deep tr.mat-mdc-row {
+  background: #fafafa;
+}
+
+:host ::ng-deep td:first-child {
+  padding-left: 0 !important;
+}
 ```
 
-## 항목
+### `stacked-check-entry.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/stacked-check-entry.component.css`](file--stacked-check-entry.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/stacked-check-entry.component.html`](file--stacked-check-entry.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/stacked-check-entry.component.ts`](file--stacked-check-entry.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/stacked-check-entry.component.html`
+
+
+```html
+<app-entry-label icon="toll" text="Parameters:" />
+@if (entry(); as entry) {
+  <table mat-table [dataSource]="dataSource" class="ya-data-table no-frame">
+    <ng-container matColumnDef="parameter">
+      <td mat-cell *matCellDef="let item" style="width: 400px">
+        {{ item.parameter }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level">
+      <td mat-cell *matCellDef="let item" style="width: 80px">
+        @if (item.pval?.engValue; as value) {
+          <app-alarm-level [level]="item.pval.monitoringResult" />
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="value">
+      <td mat-cell *matCellDef="let item">
+        @if (item.pval?.engValue; as value) {
+          <ya-expirable [pval]="item.pval">
+            <ya-value [value]="item.pval.engValue" [alwaysExpand]="true" />
+            @if (item.pval.rangeCondition === "LOW") {
+              <span>&#8595;</span>
+            }
+            @if (item.pval.rangeCondition === "HIGH") {
+              <span>&#8593;</span>
+            }
+          </ya-expirable>
+        } @else {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
+```
+
+### `stacked-check-entry.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/stacked-check-entry.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  input,
+} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { ParameterValue, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AlarmLevelComponent } from '../../../shared/alarm-level/alarm-level.component';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+import { EntryLabel } from '../entry-label/entry-label.component';
+import { StackedCheckEntry } from '../stack-file/StackedEntry';
+
+interface Record {
+  parameter: string;
+  pval?: ParameterValue;
+}
+
+@Component({
+  selector: 'app-stacked-check-entry',
+  templateUrl: './stacked-check-entry.component.html',
+  styleUrl: './stacked-check-entry.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AlarmLevelComponent,
+    EntryLabel,
+    MarkdownComponent,
+    WebappSdkModule,
+  ],
+})
+export class StackedCheckEntryComponent {
+  entry = input.required<StackedCheckEntry>();
+  pvals = input.required<{ [key: string]: ParameterValue }>();
+
+  dataSource = new MatTableDataSource<Record>();
+  displayedColumns = ['parameter', 'level', 'value'];
+
+  constructor() {
+    effect(() => {
+      const pvals = this.pvals();
+      const records: Record[] = [];
+      for (const check of this.entry().parameters) {
+        const record: Record = {
+          parameter: check.parameter,
+          pval: pvals[check.parameter],
+        };
+        records.push(record);
+      }
+
+      this.dataSource.data = records;
+    });
+  }
+}
+```

@@ -3,20 +3,293 @@
 
 **경로:** `components/generic_radio/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_radio_42_data_provider.hpp`
 
-file--generic_radio_42_data_provider.hpp
-file--generic_radio_data_point.hpp
-file--generic_radio_data_provider.hpp
-file--generic_radio_hardware_model.hpp
+**경로:** `components/generic_radio/sim/inc/generic_radio_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_RADIO42DATAPROVIDER_HPP
+#define NOS3_GENERIC_RADIO42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_radio_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_radio42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_radio42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_radio42DataProvider(void) {};
+        Generic_radio42DataProvider& operator=(const Generic_radio42DataProvider&) {return *this;};
+
+        mutable int16_t _comm_uplink;
+        mutable std::string _uplink_close_criteria;
+        mutable double _uplink_cnr_limit;
+        mutable bool _uplink_delay_on;
+        mutable int16_t _comm_downlink;
+        mutable std::string _downlink_close_criteria;
+        mutable double _downlink_cnr_limit;
+        mutable bool _downlink_delay_on;
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_radio_data_point.hpp`
 
-- [`components/generic_radio/sim/inc/generic_radio_42_data_provider.hpp`](file--generic_radio_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/sim/inc/generic_radio_data_point.hpp`](file--generic_radio_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/sim/inc/generic_radio_data_provider.hpp`](file--generic_radio_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/sim/inc/generic_radio_hardware_model.hpp`](file--generic_radio_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_radio/sim/inc/generic_radio_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_RADIODATAPOINT_HPP
+#define NOS3_GENERIC_RADIODATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_radioDataPoint : public SimIDataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_radioDataPoint(int16_t uplink, std::string uplink_close_criteria, double uplink_cnr_limit, bool uplink_delay_on,
+            int16_t downlink, std::string downlink_close_criteria, double downlink_cnr_limit, bool downlink_delay_on, const boost::shared_ptr<Sim42DataPoint> dp);
+        Generic_radioDataPoint(void);
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        bool        get_uplink_occulted(void) const {parse_data_point(); return _uplink_occulted;}
+        double      get_uplink_delay(void) const {parse_data_point(); return _uplink_delay;}
+        double      get_uplink_cnr(void) const {parse_data_point(); return _uplink_cnr;}
+        bool        get_downlink_occulted(void) const {parse_data_point(); return _downlink_occulted;}
+        double      get_downlink_delay(void) const {parse_data_point(); return _downlink_delay;}
+        double      get_downlink_cnr(void) const {parse_data_point(); return _downlink_cnr;}
+    
+        std::string get_uplink_close_criteria(void) {return _uplink_close_criteria;}
+        double      get_uplink_cnr_limit(void) {return _uplink_cnr_limit;}
+        bool        get_uplink_delay_on(void) { return _uplink_delay_on;}
+        std::string get_downlink_close_criteria(void) {return _downlink_close_criteria;}
+        double      get_downlink_cnr_limit(void) {return _downlink_cnr_limit;}
+        bool        get_downlink_delay_on(void) { return _downlink_delay_on;}
+    private:
+        /* Disallow these */
+        Generic_radioDataPoint(const Generic_radioDataPoint&) {};
+        ~Generic_radioDataPoint(void) {};
+
+        /// @name Private mutators
+        //@{
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+        //@}
+
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable Sim42DataPoint _dp;
+        int16_t        _uplink;
+        std::string    _uplink_close_criteria;
+        double         _uplink_cnr_limit;
+        bool           _uplink_delay_on;
+        int16_t        _downlink;
+        std::string    _downlink_close_criteria;
+        double         _downlink_cnr_limit;
+        bool           _downlink_delay_on;
+        mutable bool   _not_parsed;
+        mutable bool   _uplink_occulted;
+        mutable double _uplink_delay;
+        mutable double _uplink_cnr;
+        mutable bool   _downlink_occulted;
+        mutable double _downlink_delay;
+        mutable double _downlink_cnr;
+    };
+}
+
+#endif
+```
+
+### `generic_radio_data_provider.hpp`
+
+**경로:** `components/generic_radio/sim/inc/generic_radio_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_RADIODATAPROVIDER_HPP
+#define NOS3_GENERIC_RADIODATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_radio_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class Generic_radioDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_radioDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_radioDataProvider(void) {};
+        Generic_radioDataProvider& operator=(const Generic_radioDataProvider&) {return *this;};
+
+    };
+}
+
+#endif
+```
+
+### `generic_radio_hardware_model.hpp`
+
+**경로:** `components/generic_radio/sim/inc/generic_radio_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_RADIOHARDWAREMODEL_HPP
+#define NOS3_GENERIC_RADIOHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+#include <queue>
+#include <mutex>
+
+#include <arpa/inet.h>	
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <thread>
+#include <string.h>
+#include <sys/socket.h>
+
+#include <Client/Bus.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <generic_radio_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_radioHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_radioHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_radioHardwareModel(void);
+        void run(void);
+
+    private:
+        void create_generic_radio_hk(std::uint8_t out_data[16]); 
+        void process_radio_command(const uint8_t *buf, size_t len); /* Handle data the hardware receives */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        const int GENERIC_RADIO_SIM_SUCCESS = 0;
+        const int GENERIC_RADIO_SIM_ERROR = 1;
+
+        typedef struct 
+        {
+            int sockfd;
+            std::string ip;
+            int port;
+            int clientfd;
+        } udp_info_t;
+
+        // typedef struct 
+        // {
+        //     int sockfd;
+        //     std::string ip;
+        //     int port;
+        // } tcp_info_t;
+
+        int32_t host_to_ip(const char * hostname, char* ip);
+        int32_t udp_init(udp_info_t* sock);
+        int32_t tcp_init(udp_info_t* sock);
+        void forward_loop(udp_info_t* rcv_sock, udp_info_t* fwd_sock, int direction);
+        void process_forward_loop_message_queue(NosEngine::Common::SimTime time);
+        void tcp_forward_loop(udp_info_t* rcv_sock, udp_info_t* fwd_sock, int direction);
+        void process_tcp_forward_loop_message_queue(NosEngine::Common::SimTime time);
+        void setup_fwd_addr(udp_info_t* sock, struct sockaddr_in& addr);
+        void forward_loop_multi(udp_info_t* rcv_sock, udp_info_t* fwd_sock1, udp_info_t* fwd_sock2);
+        void process_forward_loop_multi_message_queue(NosEngine::Common::SimTime time);
+
+        udp_info_t                                          _fsw_ci;
+        udp_info_t                                          _fsw_to;
+        udp_info_t                                          _fsw_radio;
+        udp_info_t                                          _radio_cmd;
+        udp_info_t                                          _gsw_cmd;
+        udp_info_t                                          _gsw_tlm;
+        udp_info_t                                          _prox_rcv;
+        udp_info_t                                          _prox_fsw;
+        udp_info_t                                          _prox_fwd;
+        udp_info_t                                          _prox_dest;
+
+        udp_info_t _gsw2_cmd;
+        udp_info_t _gsw2_tlm;
+
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+        SimIDataProvider*                                   _generic_radio_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::uint32_t                                       _count;
+        std::uint32_t                                       _config;
+        std::uint32_t                                       _prox_signal;
+        struct message_to_send_t {
+            uint8_t buffer[8192];
+            size_t buffer_size;
+            double time_to_send;
+        };
+        std::queue<message_to_send_t>                       _message_queue_udp_uplink; 
+        std::queue<message_to_send_t>                       _message_queue_udp_downlink;
+        std::mutex                                          _message_queue_udp_mutex;
+        std::queue<message_to_send_t>                       _message_queue_tcp_uplink; 
+        std::mutex                                          _message_queue_tcp_uplink_mutex;
+        std::queue<message_to_send_t>                       _message_queue_tcp_downlink;
+        std::mutex                                          _message_queue_tcp_downlink_mutex;
+        std::queue<message_to_send_t>                       _message_queue_multi_downlink;
+        std::mutex                                          _message_queue_multi_downlink_mutex;
+        udp_info_t*                                         _rcv_sock_udp_uplink;
+        struct sockaddr_in                                  _fwd_addr_udp_uplink;
+        udp_info_t*                                         _rcv_sock_udp_downlink;
+        struct sockaddr_in                                  _fwd_addr_udp_downlink;
+        udp_info_t*                                         _rcv_sock_tcp_downlink;
+        udp_info_t*                                         _fwd_sock_tcp_downlink;
+        udp_info_t*                                         _rcv_sock_tcp_uplink;
+        udp_info_t*                                         _fwd_sock_tcp_uplink;
+        struct sockaddr_in                                  _fwd_addr_tcp_uplink;
+        udp_info_t*                                         _rcv_sock_multi_downlink;
+        struct sockaddr_in                                  _fwd_addr1_multi_downlink;
+        struct sockaddr_in                                  _fwd_addr2_multi_downlink;
+    };
+}
+
+#endif
+```

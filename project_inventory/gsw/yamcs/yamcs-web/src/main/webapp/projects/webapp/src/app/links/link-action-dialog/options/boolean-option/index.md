@@ -3,18 +3,169 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `boolean-option.component.css`
 
-file--boolean-option.component.css
-file--boolean-option.component.html
-file--boolean-option.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/boolean-option.component.css`
+
+
+```css
+:host.ng-invalid:not(.ng-pristine) ::ng-deep input {
+  border-color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `boolean-option.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/boolean-option.component.css`](file--boolean-option.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/boolean-option.component.html`](file--boolean-option.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/boolean-option.component.ts`](file--boolean-option.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/boolean-option.component.html`
+
+
+```html
+@if (option(); as option) {
+  <ya-field
+    [label]="option.name"
+    [hint]="option.required ? undefined : '(optional)'"
+    [class.error]="err.invalid$ | async">
+    <ya-meta>boolean</ya-meta>
+
+    @if (option.description?.length) {
+      <ya-help>
+        @for (description of option.description; track description) {
+          <p>{{ description }}</p>
+        }
+      </ya-help>
+    }
+
+    <ya-errors #err [controlName]="option.name" />
+
+    <div class="radio-group" [formGroup]="formGroup">
+      <label class="radio" [class.checked]="formGroup.value.enabled === 'true'">
+        <input type="radio" formControlName="enabled" value="true" />
+        True
+      </label>
+
+      <label class="radio" [class.checked]="formGroup.value.enabled === 'false'">
+        <input type="radio" formControlName="enabled" value="false" />
+        False
+      </label>
+    </div>
+  </ya-field>
+}
+```
+
+### `boolean-option.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/boolean-option/boolean-option.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  forwardRef,
+  input,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { Option, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-boolean-option',
+  templateUrl: './boolean-option.component.html',
+  styleUrl: './boolean-option.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BooleanOptionComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BooleanOptionComponent),
+      multi: true,
+    },
+  ],
+})
+export class BooleanOptionComponent
+  implements ControlValueAccessor, Validator, OnInit, OnDestroy
+{
+  option = input.required<Option>();
+
+  // Wrap in a group to avoid interference between multiple
+  // component instances. See #729
+  formGroup: FormGroup;
+
+  private validators: ValidatorFn[] = [];
+  private onChange = (_: boolean | null) => {};
+  private subscriptions: Subscription[] = [];
+
+  constructor() {
+    this.formGroup = new FormGroup({
+      enabled: new FormControl(null),
+    });
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.formGroup.valueChanges.subscribe(() => {
+        const value = this.formGroup.get('enabled')!.value;
+        if (value === 'true') {
+          this.onChange(true);
+        } else if (value === 'false') {
+          this.onChange(false);
+        } else {
+          this.onChange(null);
+        }
+      }),
+    );
+
+    if (this.option().required) {
+      this.validators.push(Validators.required);
+    }
+  }
+
+  writeValue(obj: any) {
+    if (obj === true) {
+      this.formGroup.setValue({ enabled: 'true' });
+    } else if (obj === false) {
+      this.formGroup.setValue({ enabled: 'false' });
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  validate(control: UntypedFormControl): ValidationErrors | null {
+    for (const validator of this.validators) {
+      const errors = validator(control);
+      if (errors) {
+        return errors;
+      }
+    }
+    return null;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+}
+```

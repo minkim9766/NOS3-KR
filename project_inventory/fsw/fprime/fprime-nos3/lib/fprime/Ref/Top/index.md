@@ -3,28 +3,931 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
-file--CMakeLists.txt
-file--instances.fpp
-file--RefPackets.fppi
-file--RefTopology.cpp
-file--RefTopology.hpp
-file--RefTopologyDefs.hpp
-file--topology.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/.gitignore`
+
+
+```text
+unconnected
+visual
 ```
 
-## 항목
+### `CMakeLists.txt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/instances.fpp`](file--instances.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefPackets.fppi`](file--RefPackets.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefTopology.cpp`](file--RefTopology.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefTopology.hpp`](file--RefTopology.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefTopologyDefs.hpp`](file--RefTopologyDefs.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/topology.fpp`](file--topology.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+####
+add_compile_options(
+  -Wno-shadow
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/instances.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/topology.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/RefTopology.cpp"
+)
+set(MOD_DEPS
+  Fw/Logger
+  Svc/PosixTime
+)
+
+register_fprime_module()
+```
+
+### `instances.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/instances.fpp`
+
+
+```fpp
+module Ref {
+
+  # ----------------------------------------------------------------------
+  # Base ID Convention
+  # ----------------------------------------------------------------------
+  # 
+  # All Base IDs follow the 8-digit hex format: 0xDSSCCxxx
+  #
+  # Where:
+  #   D   = Deployment digit (1-F)
+  #   SS  = Subtopology digits (00 for main topology, 01-FF)
+  #   CC  = Component digits (00-FF)
+  #   xxx = Reserved for internal component items (events, commands, telemetry)
+  #
+
+  # ----------------------------------------------------------------------
+  # Defaults
+  # ----------------------------------------------------------------------
+
+  module Default {
+    constant QUEUE_SIZE = 10
+    constant STACK_SIZE = 64 * 1024
+  }
+
+  # ----------------------------------------------------------------------
+  # Active component instances
+  # ----------------------------------------------------------------------
+
+  instance blockDrv: Ref.BlockDriver base id 0x10000000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 140
+
+  instance rateGroup1Comp: Svc.ActiveRateGroup base id 0x10001000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 120
+
+  instance rateGroup2Comp: Svc.ActiveRateGroup base id 0x10002000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 119
+
+  instance rateGroup3Comp: Svc.ActiveRateGroup base id 0x10003000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 118
+
+  instance pingRcvr: Ref.PingReceiver base id 0x10004000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 100
+
+  instance typeDemo: Ref.TypeDemo base id 0x10005000
+
+  instance cmdSeq: Svc.CmdSequencer base id 0x10006000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 97
+
+  instance dpDemo: Ref.DpDemo base id 0x0A10 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 96
+
+  # ----------------------------------------------------------------------
+  # Queued component instances
+  # ----------------------------------------------------------------------
+
+  instance sendBuffComp: Ref.SendBuff base id 0x10010000 \
+    queue size Default.QUEUE_SIZE
+
+  instance SG1: Ref.SignalGen base id 0x10011000 \
+    queue size Default.QUEUE_SIZE
+
+  instance SG2: Ref.SignalGen base id 0x10012000 \
+    queue size Default.QUEUE_SIZE
+
+  instance SG3: Ref.SignalGen base id 0x10013000 \
+    queue size Default.QUEUE_SIZE
+
+  instance SG4: Ref.SignalGen base id 0x10014000 \
+    queue size Default.QUEUE_SIZE
+
+  instance SG5: Ref.SignalGen base id 0x10015000 \
+    queue size Default.QUEUE_SIZE
+
+  # ----------------------------------------------------------------------
+  # Passive component instances
+  # ----------------------------------------------------------------------
+
+  instance posixTime: Svc.PosixTime base id 0x10020000
+
+  instance rateGroupDriverComp: Svc.RateGroupDriver base id 0x10021000
+
+  instance recvBuffComp: Ref.RecvBuff base id 0x10022000
+
+  instance systemResources: Svc.SystemResources base id 0x10023000
+
+  instance linuxTimer: Svc.LinuxTimer base id 0x10024000
+
+  instance comDriver: Drv.TcpClient base id 0x10025000 
+
+}
+```
+
+### `RefPackets.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefPackets.fppi`
+
+
+```text
+telemetry packets RefPackets {
+
+  packet CDH id 1 group 1 {
+    CdhCore.cmdDisp.CommandsDispatched
+
+    FileHandling.fileUplink.FilesReceived
+    FileHandling.fileUplink.PacketsReceived
+    FileHandling.fileDownlink.FilesSent
+    FileHandling.fileDownlink.PacketsSent
+    FileHandling.fileManager.CommandsExecuted
+
+    Ref.cmdSeq.CS_LoadCommands
+    Ref.cmdSeq.CS_CancelCommands
+    Ref.cmdSeq.CS_CommandsExecuted
+    Ref.cmdSeq.CS_SequencesCompleted
+    ComCcsds.comQueue.comQueueDepth
+    ComCcsds.comQueue.buffQueueDepth
+    ComCcsds.commsBufferManager.TotalBuffs
+    ComCcsds.commsBufferManager.CurrBuffs
+    ComCcsds.commsBufferManager.HiBuffs
+    #ComCcsds.tlmSend.SendLevel
+
+    Ref.rateGroup1Comp.RgMaxTime
+    Ref.rateGroup2Comp.RgMaxTime
+    Ref.rateGroup3Comp.RgMaxTime
+  }
+
+  packet CDHErrors id 2 group 1 {
+    CdhCore.$health.PingLateWarnings
+
+    FileHandling.fileUplink.Warnings
+    FileHandling.fileDownlink.Warnings
+    FileHandling.fileManager.Errors
+
+    Ref.cmdSeq.CS_Errors
+    ComCcsds.commsBufferManager.NoBuffs
+    ComCcsds.commsBufferManager.EmptyBuffs
+
+    Ref.rateGroup1Comp.RgCycleSlips
+    Ref.rateGroup2Comp.RgCycleSlips
+    Ref.rateGroup3Comp.RgCycleSlips
+  }
+
+  packet DriveTlm id 3 group 1 {
+    Ref.pingRcvr.PR_NumPings
+    Ref.sendBuffComp.PacketsSent
+    Ref.sendBuffComp.NumErrorsInjected
+    Ref.sendBuffComp.Parameter3
+    Ref.sendBuffComp.Parameter4
+    Ref.sendBuffComp.SendState
+    Ref.recvBuffComp.PktState
+    Ref.recvBuffComp.Sensor1
+    Ref.recvBuffComp.Sensor2
+    Ref.recvBuffComp.Parameter1
+    Ref.recvBuffComp.Parameter2
+    Ref.blockDrv.BD_Cycles
+  }
+
+  packet SigGenSum id 4 group 1 {
+    Ref.SG1.Output
+    Ref.SG1.Type
+    Ref.SG2.Output
+    Ref.SG2.Type
+    Ref.SG3.Output
+    Ref.SG3.Type
+    Ref.SG4.Output
+    Ref.SG4.Type
+    Ref.SG5.Output
+    Ref.SG5.Type
+  }
+
+  packet SystemRes1 id 5 group 2 {
+    Ref.systemResources.MEMORY_TOTAL
+    Ref.systemResources.MEMORY_USED
+    Ref.systemResources.NON_VOLATILE_TOTAL
+    Ref.systemResources.NON_VOLATILE_FREE
+  }
+
+  packet SystemRes3 id 6 group 2 {
+    Ref.systemResources.CPU
+    Ref.systemResources.CPU_00
+    Ref.systemResources.CPU_01
+    Ref.systemResources.CPU_02
+    Ref.systemResources.CPU_03
+    Ref.systemResources.CPU_04
+    Ref.systemResources.CPU_05
+    Ref.systemResources.CPU_06
+    Ref.systemResources.CPU_07
+    Ref.systemResources.CPU_08
+    Ref.systemResources.CPU_09
+    Ref.systemResources.CPU_10
+    Ref.systemResources.CPU_11
+    Ref.systemResources.CPU_12
+    Ref.systemResources.CPU_13
+    Ref.systemResources.CPU_14
+    Ref.systemResources.CPU_15
+  }
+
+  packet SigGen1Info id 10 group 2 {
+    Ref.SG1.Info
+  }
+
+  packet SigGen2Info id 11 group 2 {
+    Ref.SG2.Info
+  }
+
+  packet SigGen3Info id 12 group 2 {
+    Ref.SG3.Info
+  }
+
+  packet SigGen4Info id 13 group 2 {
+    Ref.SG4.Info
+  }
+
+  packet SigGen5Info id 14 group 2 {
+    Ref.SG5.Info
+  }
+
+  packet SigGen1 id 15 group 3 {
+    Ref.SG1.PairOutput
+    Ref.SG1.History
+    Ref.SG1.PairHistory
+    Ref.SG1.DpBytes
+    Ref.SG1.DpRecords
+  }
+
+  packet SigGen2 id 16 group 3 {
+    Ref.SG2.PairOutput
+    Ref.SG2.History
+    Ref.SG2.PairHistory
+    Ref.SG2.DpBytes
+    Ref.SG2.DpRecords
+  }
+
+  packet SigGen3 id 17 group 3 {
+    Ref.SG3.PairOutput
+    Ref.SG3.History
+    Ref.SG3.PairHistory
+    Ref.SG3.DpBytes
+    Ref.SG3.DpRecords
+  }
+
+  packet SigGen4 id 18 group 3 {
+    Ref.SG4.PairOutput
+    Ref.SG4.History
+    Ref.SG4.PairHistory
+    Ref.SG4.DpBytes
+    Ref.SG4.DpRecords
+  }
+
+  packet SigGen5 id 19 group 3 {
+    Ref.SG5.PairOutput
+    Ref.SG5.History
+    Ref.SG5.PairHistory
+    Ref.SG5.DpBytes
+    Ref.SG5.DpRecords
+  }
+
+  packet TypeDemo id 20 group 3 {
+    Ref.typeDemo.ChoiceCh
+    Ref.typeDemo.ChoicesCh
+    Ref.typeDemo.ExtraChoicesCh
+    Ref.typeDemo.ChoicePairCh
+    Ref.typeDemo.ChoiceSlurryCh
+    Ref.typeDemo.Float1Ch
+    Ref.typeDemo.Float2Ch
+    Ref.typeDemo.Float3Ch
+    Ref.typeDemo.FloatSet
+    Ref.typeDemo.ScalarStructCh
+    Ref.typeDemo.ScalarU8Ch
+    Ref.typeDemo.ScalarU16Ch
+    Ref.typeDemo.ScalarU32Ch
+    Ref.typeDemo.ScalarU64Ch
+    Ref.typeDemo.ScalarI8Ch
+    Ref.typeDemo.ScalarI16Ch
+    Ref.typeDemo.ScalarI32Ch
+    Ref.typeDemo.ScalarI64Ch
+    Ref.typeDemo.ScalarF32Ch
+    Ref.typeDemo.ScalarF64Ch
+  }
+
+  packet DataProducts id 21 group 3 {
+    DataProducts.dpCat.CatalogDps
+    DataProducts.dpCat.DpsSent
+
+    DataProducts.dpMgr.NumSuccessfulAllocations
+    DataProducts.dpMgr.NumFailedAllocations
+    DataProducts.dpMgr.NumDataProducts
+    DataProducts.dpMgr.NumBytes
+
+    DataProducts.dpWriter.NumBuffersReceived
+    DataProducts.dpWriter.NumBytesWritten
+    DataProducts.dpWriter.NumSuccessfulWrites
+    DataProducts.dpWriter.NumFailedWrites
+    DataProducts.dpWriter.NumErrors
+
+    DataProducts.dpBufferManager.TotalBuffs
+    DataProducts.dpBufferManager.CurrBuffs
+    DataProducts.dpBufferManager.HiBuffs
+    DataProducts.dpBufferManager.NoBuffs
+    DataProducts.dpBufferManager.EmptyBuffs
+  }
+
+  packet Version1 id 22 group 2 {
+    CdhCore.version.FrameworkVersion
+    CdhCore.version.ProjectVersion
+  }
+
+  packet Version_Library1 id 23 group 2 {
+    CdhCore.version.LibraryVersion01
+    CdhCore.version.LibraryVersion02
+  }
+
+  packet Version_Library2 id 24 group 2 {
+    CdhCore.version.LibraryVersion03
+    CdhCore.version.LibraryVersion04
+  }
+
+  packet Version_Library3 id 25 group 2 {
+    CdhCore.version.LibraryVersion05
+    CdhCore.version.LibraryVersion06
+  }
+
+  packet Version_Library4 id 26 group 2 {
+    CdhCore.version.LibraryVersion07
+    CdhCore.version.LibraryVersion08
+  }
+
+  packet Version_Library5 id 27 group 2 {
+    CdhCore.version.LibraryVersion09
+    CdhCore.version.LibraryVersion10
+  }
+
+  packet Version_Custom1 id 28 group 2 {
+    CdhCore.version.CustomVersion01
+  }
+
+  packet Version_Custom2 id 29 group 2 {
+    CdhCore.version.CustomVersion02
+  }
+
+  packet Version_Custom3 id 30 group 2 {
+    CdhCore.version.CustomVersion03
+  }
+
+  packet Version_Custom4 id 31 group 2 {
+    CdhCore.version.CustomVersion04
+  }
+
+  packet Version_Custom5 id 32 group 2 {
+    CdhCore.version.CustomVersion05
+  }
+
+  packet Version_Custom6 id 33 group 2 {
+    CdhCore.version.CustomVersion06
+  }
+
+  packet Version_Custom7 id 34 group 2 {
+    CdhCore.version.CustomVersion07
+  }
+
+  packet Version_Custom8 id 35 group 2 {
+    CdhCore.version.CustomVersion08
+  }
+
+  packet Version_Custom9 id 36 group 2 {
+    CdhCore.version.CustomVersion09
+  }
+
+  packet Version_Custom10 id 37 group 2 {
+    CdhCore.version.CustomVersion10
+  }
+
+} omit {
+  CdhCore.cmdDisp.CommandErrors
+}
+```
+
+### `RefTopology.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefTopology.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Topology.cpp
+// \author mstarch
+// \brief cpp file containing the topology instantiation code
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+// Provides access to autocoded functions
+#include <Ref/Top/RefTopologyAc.hpp>
+
+// Necessary project-specified types
+#include <Fw/Types/MallocAllocator.hpp>
+
+
+// Allows easy reference to objects in FPP/autocoder required namespaces
+using namespace Ref;
+
+// Instantiate a malloc allocator for cmdSeq buffer allocation
+Fw::MallocAllocator mallocator;
+
+// The reference topology divides the incoming clock signal (1Hz) into sub-signals: 1Hz, 1/2Hz, and 1/4Hz and
+// zero offset for all the dividers
+Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{1, 0}, {2, 0}, {4, 0}}};
+
+// Rate groups may supply a context token to each of the attached children whose purpose is set by the project. The
+// reference topology sets each token to zero as these contexts are unused in this project.
+U32 rateGroup1Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup2Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup3Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+
+enum TopologyConstants {
+    COMM_PRIORITY = 100,
+};
+
+/**
+ * \brief configure/setup components in project-specific way
+ *
+ * This is a *helper* function which configures/sets up each component requiring project specific input. This includes
+ * allocating resources, passing-in arguments, etc. This function may be inlined into the topology setup function if
+ * desired, but is extracted here for clarity.
+ */
+void configureTopology() {
+    // Rate group driver needs a divisor list
+    rateGroupDriverComp.configure(rateGroupDivisorsSet);
+
+    // Rate groups require context arrays. Empty for Reference example.
+    rateGroup1Comp.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
+    rateGroup2Comp.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
+    rateGroup3Comp.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
+
+    // Command sequencer needs to allocate memory to hold contents of command sequences
+    cmdSeq.allocateBuffer(0, mallocator, 5 * 1024);
+}
+
+// Public functions for use in main program are namespaced with deployment name Ref
+namespace Ref {
+void setupTopology(const TopologyState& state) {
+    // Autocoded initialization. Function provided by autocoder.
+    initComponents(state);
+    // Autocoded id setup. Function provided by autocoder.
+    setBaseIds();
+    // Autocoded connection wiring. Function provided by autocoder.
+    connectComponents();
+    // Autocoded command registration. Function provided by autocoder.
+    regCommands();
+    // Autocoded configuration. Function provided by autocoder.
+    configComponents(state);
+    if (state.hostname != nullptr && state.port != 0) {
+        comDriver.configure(state.hostname, state.port);
+    }
+    // Project-specific component configuration. Function provided above. May be inlined, if desired.
+    configureTopology();
+    // Autocoded parameter loading. Function provided by autocoder.
+    loadParameters();
+    // Autocoded task kick-off (active components). Function provided by autocoder.
+    startTasks(state);
+    //Initialize socket client communication if and only if there is a valid specification
+    if (state.hostname != nullptr && state.port != 0) {
+        Os::TaskString name("ReceiveTask");
+        comDriver.start(name, COMM_PRIORITY, Default::STACK_SIZE);
+    }
+}
+
+void startRateGroups(Fw::TimeInterval interval) {
+    // This timer drives the fundamental tick rate of the system.
+    // Svc::RateGroupDriver will divide this down to the slower rate groups.
+    // This call will block until the stopRateGroups() call is made.
+    // For this Linux demo, that call is made from a signal handler.
+    linuxTimer.startTimer(interval.getSeconds()*1000+interval.getUSeconds()/1000);
+}
+
+void stopRateGroups() {
+    linuxTimer.quit();
+}
+
+void teardownTopology(const TopologyState& state) {
+    // Autocoded (active component) task clean-up. Functions provided by topology autocoder.
+    stopTasks(state);
+    freeThreads(state);
+
+    //Stop the comDriver component, free thread
+    comDriver.stop();
+    (void)comDriver.join();
+
+    // Resource deallocation
+    cmdSeq.deallocateBuffer(mallocator);
+    tearDownComponents(state);
+}
+}  // namespace Ref
+```
+
+### `RefTopology.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefTopology.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Topology.hpp
+// \author mstarch
+// \brief header file containing the topology instantiation definitions
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+#ifndef REF_REFTOPOLOGY_HPP
+#define REF_REFTOPOLOGY_HPP
+// Included for access to Ref::TopologyState and Ref::ConfigObjects::pingEntries. These definitions are required by the
+// autocoder, but are also used in this hand-coded topology.
+#include <Ref/Top/RefTopologyDefs.hpp>
+
+// Remove unnecessary Ref:: qualifications
+using namespace Ref;
+namespace Ref {
+/**
+ * \brief initialize and run the F´ topology
+ *
+ * Initializes, configures, and runs the F´ topology. This is performed through a series of steps, some provided via
+ * autocoded functions, and others provided via the functions implementation. These steps are:
+ *
+ *   1. Call the autocoded `initComponents()` function initializing each component via the `component.init` method
+ *   2. Call the autocoded `setBaseIds()` function to set the base IDs (offset) for each component instance
+ *   3. Call the autocoded `connectComponents()` function to wire-together the topology of components
+ *   4. Configure components requiring custom configuration
+ *   5. Call the autocoded `loadParameters()` function to cause each component to load initial parameter values
+ *   6. Call the autocoded `startTasks()` function to start the active component tasks
+ *   7. Start tasks not owned by active components
+ *
+ * Step 4 and step 7 are custom and supplied by the project. The ordering of steps 1, 2, 3, 5, and 6 are critical for
+ * F´ topologies to function. Configuration (step 4) typically assumes a connect but not started topology and is thus
+ * inserted between step 3 and 5. Step 7 may come before or after the active component initializations. Since these
+ * custom tasks often start radio communication it is convenient to start them last.
+ *
+ * The state argument carries command line inputs used to setup the topology. For an explanation of the required type
+ * Ref::TopologyState see: RefTopologyDefs.hpp.
+ *
+ * \param state: object shuttling CLI arguments (hostname, port) needed to construct the topology
+ */
+void setupTopology(const TopologyState& state);
+
+/**
+ * \brief teardown the F´ topology
+ *
+ * Tears down the F´ topology in preparation for shutdown. This is done via a series of steps, some provided by
+ * autocoded functions, and others provided via the function implementation. These steps are:
+ *
+ *   1. Call the autocoded `stopTasks()` function to stop the tasks started by `startTasks()` (active components)
+ *   2. Call the autocoded `freeThreads()` function to join to the tasks started by `startTasks()`
+ *   3. Stop the tasks not owned by active components
+ *   4. Join to the tasks not owned by active components
+ *   5. Deallocate other resources
+ *
+ * Step 1, 2, 3, and 4 must occur in-order as the tasks must be stopped before being joined. These tasks must be stopped
+ * and joined before any active resources may be deallocated.
+ *
+ * For an explanation of the required type Ref::TopologyState see: RefTopologyDefs.hpp.
+ *
+ * \param state: state object provided to setupTopology
+ */
+void teardownTopology(const TopologyState& state);
+
+/**
+ * \brief cycle the rate group driver based in a system timer
+ *
+ * In order to be a portable demonstration, the reference topology does not have a direct hardware timer that is typically used
+ * in embedded applications. Instead, a linux system timer is used to drive the rate groups at 1Hz. The slower rate groups are 
+ * derived from this fundamental rate using the RateGroupDriver component to divide the rate down to slower rates.
+ * 
+ * For embedded Linux, this could be used to drive the system rate groups. For other embedded systems, projects should write components
+ * that implement whatever timers are available for that platform in place of Svc/LinuxTimer.
+ *
+ * This loop is stopped via a stopRateGroups call.
+ *
+ */
+void startRateGroups(Fw::TimeInterval interval);
+
+/**
+ * \brief stop the rate groups 
+ *
+ * This stops the cycle started by startRateGroups.
+ */
+void stopRateGroups();
+
+} // namespace Ref
+#endif
+```
+
+### `RefTopologyDefs.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/RefTopologyDefs.hpp`
+
+
+````cpp
+// ======================================================================
+// \title  RefTopologyDefs.hpp
+// \author mstarch
+// \brief required header file containing the required definitions for the topology autocoder
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+#ifndef REF_REFTOPOLOGYDEFS_HPP
+#define REF_REFTOPOLOGYDEFS_HPP
+
+#include "Ref/BlockDriver/BlockDriver.hpp"
+#include "Ref/Top/FppConstantsAc.hpp"
+
+// Subtopology PingEntries includes
+#include "Svc/Subtopologies/CdhCore/PingEntries.hpp"
+#include "Svc/Subtopologies/ComCcsds/PingEntries.hpp"
+#include "Svc/Subtopologies/DataProducts/PingEntries.hpp"
+#include "Svc/Subtopologies/FileHandling/PingEntries.hpp"
+
+// SubtopologyTopologyDefs includes
+#include "Svc/Subtopologies/CdhCore/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/ComCcsds/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/DataProducts/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/FileHandling/SubtopologyTopologyDefs.hpp"
+
+//ComCcsds Enum Includes
+#include "Svc/Subtopologies/ComCcsds/Ports_ComPacketQueueEnumAc.hpp"
+#include "Svc/Subtopologies/ComCcsds/Ports_ComBufferQueueEnumAc.hpp"
+
+/**
+ * \brief required ping constants
+ *
+ * The topology autocoder requires a WARN and FATAL constant definition for each component that supports the health-ping
+ * interface. These are expressed as enum constants placed in a namespace named for the component instance. These
+ * are all placed in the PingEntries namespace.
+ *
+ * Each constant specifies how many missed pings are allowed before a WARNING_HI/FATAL event is triggered. In the
+ * following example, the health component will emit a WARNING_HI event if the component instance cmdDisp does not
+ * respond for 3 pings and will FATAL if responses are not received after a total of 5 pings.
+ *
+ * ```c++
+ * namespace PingEntries {
+ * namespace cmdDisp {
+ *     enum { WARN = 3, FATAL = 5 };
+ * }
+ * }
+ * ```
+ */
+namespace PingEntries {
+    namespace Ref_blockDrv       {enum { WARN = 3, FATAL = 5 };}
+    namespace Ref_pingRcvr       {enum { WARN = 3, FATAL = 5 };}
+    namespace Ref_rateGroup1Comp {enum { WARN = 3, FATAL = 5 };}
+    namespace Ref_rateGroup2Comp {enum { WARN = 3, FATAL = 5 };}
+    namespace Ref_rateGroup3Comp {enum { WARN = 3, FATAL = 5 };}
+    namespace Ref_cmdSeq         {enum { WARN = 3, FATAL = 5 };}
+}  // namespace PingEntries
+
+// Definitions are placed within a namespace named after the deployment
+namespace Ref {
+
+    /**
+     * \brief required type definition to carry state
+     *
+     * The topology autocoder requires an object that carries state with the name `Ref::TopologyState`. Only the type
+     * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The
+     * contents are entirely up to the definition of the project. This reference application specifies hostname and port
+     * fields, which are derived by command line inputs.
+     */
+    struct TopologyState {
+        const char* hostname;   //!< Hostname for TCP communication
+        U16 port;              //!< Port for TCP communication
+        CdhCore::SubtopologyState cdhCore;           //!< Subtopology state for CdhCore
+        ComCcsds::SubtopologyState comCcsds;         //!< Subtopology state for ComCcsds 
+        DataProducts::SubtopologyState dataProducts; //!< Subtopology state for DataProducts
+        FileHandling::SubtopologyState fileHandling; //!< Subtopology state for FileHandling
+    };
+
+    namespace PingEntries = ::PingEntries;
+}  // namespace Ref
+#endif
+````
+
+### `topology.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/topology.fpp`
+
+
+```fpp
+module Ref {
+
+  # ----------------------------------------------------------------------
+  # Symbolic constants for port numbers
+  # ----------------------------------------------------------------------
+
+  enum Ports_RateGroups {
+    rateGroup1
+    rateGroup2
+    rateGroup3
+  }
+
+
+
+  topology Ref {
+    # ----------------------------------------------------------------------
+    # Subtopology imports
+    # ----------------------------------------------------------------------
+    import CdhCore.Subtopology
+    import ComCcsds.Subtopology
+    import FileHandling.Subtopology
+    import DataProducts.Subtopology
+    
+    # ----------------------------------------------------------------------
+    # Instances used in the topology
+    # ----------------------------------------------------------------------
+
+    instance SG1
+    instance SG2
+    instance SG3
+    instance SG4
+    instance SG5
+    instance blockDrv
+    instance posixTime
+    instance pingRcvr
+    instance rateGroup1Comp
+    instance rateGroup2Comp
+    instance rateGroup3Comp
+    instance rateGroupDriverComp
+    instance recvBuffComp
+    instance sendBuffComp
+    instance typeDemo
+    instance systemResources
+    instance dpDemo
+    instance linuxTimer
+    instance comDriver
+    instance cmdSeq
+
+    # ----------------------------------------------------------------------
+    # Pattern graph specifiers
+    # ----------------------------------------------------------------------
+
+    command connections instance CdhCore.cmdDisp
+
+    event connections instance CdhCore.events
+
+    telemetry connections instance CdhCore.tlmSend
+
+    text event connections instance CdhCore.textLogger
+
+    health connections instance CdhCore.$health
+
+    param connections instance FileHandling.prmDb
+
+    time connections instance posixTime
+
+    # ----------------------------------------------------------------------
+    # Telemetry packets
+    # ----------------------------------------------------------------------
+
+    include "RefPackets.fppi"
+
+    # ----------------------------------------------------------------------
+    # Direct graph specifiers
+    # ----------------------------------------------------------------------
+
+    connections RateGroups {
+
+      # Linux timer to drive cycle
+      linuxTimer.CycleOut -> rateGroupDriverComp.CycleIn
+
+      # Rate group 1
+      rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1Comp.CycleIn
+      rateGroup1Comp.RateGroupMemberOut[0] -> SG1.schedIn
+      rateGroup1Comp.RateGroupMemberOut[1] -> SG2.schedIn
+      rateGroup1Comp.RateGroupMemberOut[2] -> CdhCore.tlmSend.Run
+      rateGroup1Comp.RateGroupMemberOut[3] -> FileHandling.fileDownlink.Run
+      rateGroup1Comp.RateGroupMemberOut[4] -> systemResources.run
+      rateGroup1Comp.RateGroupMemberOut[5] -> ComCcsds.comQueue.run
+
+      # Rate group 2
+      rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2Comp.CycleIn
+      rateGroup2Comp.RateGroupMemberOut[0] -> cmdSeq.schedIn
+      rateGroup2Comp.RateGroupMemberOut[1] -> sendBuffComp.SchedIn
+      rateGroup2Comp.RateGroupMemberOut[2] -> SG3.schedIn
+      rateGroup2Comp.RateGroupMemberOut[3] -> SG4.schedIn
+      rateGroup2Comp.RateGroupMemberOut[4] -> dpDemo.run
+
+      # Rate group 3
+      rateGroupDriverComp.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3Comp.CycleIn
+      rateGroup3Comp.RateGroupMemberOut[0] -> CdhCore.$health.Run
+      rateGroup3Comp.RateGroupMemberOut[1] -> SG5.schedIn
+      rateGroup3Comp.RateGroupMemberOut[2] -> blockDrv.Sched
+      rateGroup3Comp.RateGroupMemberOut[3] -> ComCcsds.commsBufferManager.schedIn
+      rateGroup3Comp.RateGroupMemberOut[4] -> DataProducts.dpBufferManager.schedIn
+      rateGroup3Comp.RateGroupMemberOut[5] -> DataProducts.dpWriter.schedIn
+      rateGroup3Comp.RateGroupMemberOut[6] -> DataProducts.dpMgr.schedIn
+    }
+
+    connections Communications {
+      # ComDriver buffer allocations
+      comDriver.allocate      -> ComCcsds.commsBufferManager.bufferGetCallee
+      comDriver.deallocate    -> ComCcsds.commsBufferManager.bufferSendIn
+      
+      # ComDriver <-> ComStub (Uplink)
+      comDriver.$recv                     -> ComCcsds.comStub.drvReceiveIn
+      ComCcsds.comStub.drvReceiveReturnOut -> comDriver.recvReturnIn
+      
+      # ComStub <-> ComDriver (Downlink)
+      ComCcsds.comStub.drvSendOut      -> comDriver.$send
+      comDriver.ready         -> ComCcsds.comStub.drvConnected
+    }
+
+    connections Ref {
+      sendBuffComp.Data -> blockDrv.BufferIn
+      blockDrv.BufferOut -> recvBuffComp.Data
+
+      ### Moved this out of DataProducts Subtopology --> anything specific to deployment should live in Ref connections
+      # Synchronous request. Will have both request kinds for demo purposes, not typical
+      SG1.productGetOut -> DataProducts.dpMgr.productGetIn
+      # Asynchronous request
+      SG1.productRequestOut -> DataProducts.dpMgr.productRequestIn
+      DataProducts.dpMgr.productResponseOut -> SG1.productRecvIn
+      # Send filled DP
+      SG1.productSendOut -> DataProducts.dpMgr.productSendIn
+      # Synchronous request
+      dpDemo.productGetOut -> DataProducts.dpMgr.productGetIn
+      # Send filled DP
+      dpDemo.productSendOut -> DataProducts.dpMgr.productSendIn
+      # Asynchronous request
+      dpDemo.productRequestOut -> DataProducts.dpMgr.productRequestIn
+      DataProducts.dpMgr.productResponseOut -> dpDemo.productRecvIn
+    }
+
+    connections ComCcsds_CdhCore{
+      # events and telemetry to comQueue
+      CdhCore.events.PktSend        -> ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.EVENTS]
+      CdhCore.tlmSend.PktSend            -> ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.TELEMETRY]
+
+      # Router <-> CmdDispatcher
+      ComCcsds.fprimeRouter.commandOut  -> CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus     -> ComCcsds.fprimeRouter.cmdResponseIn
+      cmdSeq.comCmdOut -> CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus -> cmdSeq.cmdResponseIn
+    }
+
+    connections ComCcsds_FileHandling {
+      # File Downlink <-> ComQueue
+      FileHandling.fileDownlink.bufferSendOut -> ComCcsds.comQueue.bufferQueueIn[ComCcsds.Ports_ComBufferQueue.FILE]
+      ComCcsds.comQueue.bufferReturnOut[ComCcsds.Ports_ComBufferQueue.FILE] -> FileHandling.fileDownlink.bufferReturn
+      
+      # Router <-> FileUplink
+      ComCcsds.fprimeRouter.fileOut     -> FileHandling.fileUplink.bufferSendIn
+      FileHandling.fileUplink.bufferSendOut -> ComCcsds.fprimeRouter.fileBufferReturnIn
+    }
+
+    connections FileHandling_DataProducts{
+      # Data Products
+      DataProducts.dpCat.fileOut             -> FileHandling.fileDownlink.SendFile
+      FileHandling.fileDownlink.FileComplete -> DataProducts.dpCat.fileDone
+    }
+
+  }
+
+}
+```

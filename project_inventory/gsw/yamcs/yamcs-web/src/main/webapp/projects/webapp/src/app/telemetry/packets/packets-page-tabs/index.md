@@ -3,16 +3,53 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets-page-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `packets-page-tabs.component.html`
 
-file--packets-page-tabs.component.html
-file--packets-page-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets-page-tabs/packets-page-tabs.component.html`
+
+
+```html
+<ya-page-tabs>
+  <a
+    routerLink="/telemetry/packets"
+    routerLinkActive
+    [routerLinkActiveOptions]="{ matrixParams: 'exact', paths: 'exact', queryParams: 'ignored' }"
+    #rla="routerLinkActive"
+    [class.active]="rla.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Query
+  </a>
+  <a
+    routerLink="/telemetry/packets/queries"
+    routerLinkActive
+    #rlb="routerLinkActive"
+    [class.active]="rlb.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Saved queries
+  </a>
+
+  <ng-container actions><ng-content /></ng-container>
+</ya-page-tabs>
 ```
 
-## 항목
+### `packets-page-tabs.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets-page-tabs/packets-page-tabs.component.html`](file--packets-page-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets-page-tabs/packets-page-tabs.component.ts`](file--packets-page-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets-page-tabs/packets-page-tabs.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-packets-page-tabs',
+  templateUrl: './packets-page-tabs.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class PacketsPageTabsComponent {
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

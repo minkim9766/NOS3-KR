@@ -3,30 +3,464 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--SeqDispatcher.cpp
-file--SeqDispatcher.fpp
-file--SeqDispatcher.hpp
-file--SeqDispatcherCommands.fppi
-file--SeqDispatcherEvents.fppi
-file--SeqDispatcherTelemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcher.cpp`](file--SeqDispatcher.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcher.fpp`](file--SeqDispatcher.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcher.hpp`](file--SeqDispatcher.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcherCommands.fppi`](file--SeqDispatcherCommands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcherEvents.fppi`](file--SeqDispatcherEvents.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcherTelemetry.fppi`](file--SeqDispatcherTelemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SeqDispatcher.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SeqDispatcher.cpp"
+)
+
+register_fprime_module()
+
+### UTS ###
+set(UT_AUTO_HELPERS ON)
+
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/SeqDispatcher/SeqDispatcher.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SeqDispatcherTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SeqDispatcherTestMain.cpp"
+)
+register_fprime_ut()
+```
+
+### `SeqDispatcher.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcher.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SeqDispatcher.cpp
+// \author zimri.leisher
+// \brief  cpp file for SeqDispatcher component implementation class
+// ======================================================================
+
+#include <Svc/SeqDispatcher/SeqDispatcher.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+SeqDispatcher ::SeqDispatcher(const char* const compName) : SeqDispatcherComponentBase(compName) {}
+
+SeqDispatcher ::~SeqDispatcher() {}
+
+FwIndexType SeqDispatcher::getNextAvailableSequencerIdx() {
+    for (FwIndexType i = 0; i < SeqDispatcherSequencerPorts; i++) {
+        if (this->isConnected_seqRunOut_OutputPort(i) &&
+            this->m_entryTable[i].state == SeqDispatcher_CmdSequencerState::AVAILABLE) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void SeqDispatcher::runSequence(FwIndexType sequencerIdx, const Fw::StringBase& fileName, Fw::Wait block) {
+    // this function is only designed for internal usage
+    // we can guarantee it cannot be called with input that would fail
+    FW_ASSERT(sequencerIdx >= 0 && sequencerIdx < SeqDispatcherSequencerPorts,
+              static_cast<FwAssertArgType>(sequencerIdx));
+    FW_ASSERT(this->isConnected_seqRunOut_OutputPort(sequencerIdx));
+    FW_ASSERT(this->m_entryTable[sequencerIdx].state == SeqDispatcher_CmdSequencerState::AVAILABLE,
+              static_cast<FwAssertArgType>(this->m_entryTable[sequencerIdx].state));
+
+    if (block == Fw::Wait::NO_WAIT) {
+        this->m_entryTable[sequencerIdx].state = SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_NO_BLOCK;
+    } else {
+        this->m_entryTable[sequencerIdx].state = SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_BLOCK;
+    }
+
+    this->m_sequencersAvailable--;
+    this->tlmWrite_sequencersAvailable(this->m_sequencersAvailable);
+    this->m_entryTable[sequencerIdx].sequenceRunning = fileName;
+
+    this->m_dispatchedCount++;
+    this->tlmWrite_dispatchedCount(this->m_dispatchedCount);
+    this->seqRunOut_out(sequencerIdx, this->m_entryTable[sequencerIdx].sequenceRunning);
+}
+
+void SeqDispatcher::seqStartIn_handler(FwIndexType portNum,            //!< The port number
+                                       const Fw::StringBase& fileName  //!< The sequence file name
+) {
+    FW_ASSERT(portNum >= 0 && portNum < SeqDispatcherSequencerPorts, static_cast<FwAssertArgType>(portNum));
+    if (this->m_entryTable[portNum].state == SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_BLOCK ||
+        this->m_entryTable[portNum].state == SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_NO_BLOCK) {
+        // we were aware of this sequencer running a sequence
+        if (this->m_entryTable[portNum].sequenceRunning != fileName) {
+            // uh oh. entry table is wrong
+            // let's just update it to be correct. nothing we can do about
+            // it except raise a warning and update our state
+            this->log_WARNING_HI_ConflictingSequenceStarted(static_cast<U16>(portNum), fileName,
+                                                            this->m_entryTable[portNum].sequenceRunning);
+            this->m_entryTable[portNum].sequenceRunning = fileName;
+        }
+    } else {
+        // we were not aware that this sequencer was running. ground must have
+        // directly commanded that specific sequencer
+
+        // warn because this may be unintentional
+        this->log_WARNING_LO_UnexpectedSequenceStarted(static_cast<U16>(portNum), fileName);
+
+        // update the state
+        this->m_entryTable[portNum].state = SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_NO_BLOCK;
+        this->m_entryTable[portNum].sequenceRunning = fileName;
+        this->m_sequencersAvailable--;
+        this->tlmWrite_sequencersAvailable(this->m_sequencersAvailable);
+    }
+}
+
+void SeqDispatcher::seqDoneIn_handler(FwIndexType portNum,             //!< The port number
+                                      FwOpcodeType opCode,             //!< Command Op Code
+                                      U32 cmdSeq,                      //!< Command Sequence
+                                      const Fw::CmdResponse& response  //!< The command response argument
+) {
+    FW_ASSERT(portNum >= 0 && portNum < SeqDispatcherSequencerPorts, static_cast<FwAssertArgType>(portNum));
+    if (this->m_entryTable[portNum].state != SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_BLOCK &&
+        this->m_entryTable[portNum].state != SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_NO_BLOCK) {
+        // this sequencer was not running a sequence that we were aware of.
+
+        // we should have caught this in seqStartIn and updated the state
+        // accordingly, but somehow we didn't? very sad and shouldn't happen
+
+        // anyways, don't have to do anything cuz now that this seq we didn't know
+        // about is done, the sequencer is available again (which is its current
+        // state in our internal entry table already)
+        this->log_WARNING_LO_UnknownSequenceFinished(static_cast<U16>(portNum));
+    } else {
+        // ok, a sequence has finished that we knew about
+        if (this->m_entryTable[portNum].state == SeqDispatcher_CmdSequencerState::RUNNING_SEQUENCE_BLOCK) {
+            // we need to give a cmd response cuz some other sequence is being blocked
+            // by this
+            this->cmdResponse_out(this->m_entryTable[portNum].opCode, this->m_entryTable[portNum].cmdSeq, response);
+
+            if (response == Fw::CmdResponse::EXECUTION_ERROR) {
+                // dispatched sequence errored
+                this->m_errorCount++;
+                this->tlmWrite_errorCount(this->m_errorCount);
+            }
+        }
+    }
+
+    // all command responses mean the sequence is no longer running
+    // so component should be available
+    this->m_entryTable[portNum].state = SeqDispatcher_CmdSequencerState::AVAILABLE;
+    this->m_entryTable[portNum].sequenceRunning = "<no seq>";
+    this->m_sequencersAvailable++;
+    this->tlmWrite_sequencersAvailable(this->m_sequencersAvailable);
+}
+
+//! Handler for input port seqRunIn
+void SeqDispatcher::seqRunIn_handler(FwIndexType portNum, const Fw::StringBase& fileName) {
+    FwIndexType idx = this->getNextAvailableSequencerIdx();
+    // no available sequencers
+    if (idx == -1) {
+        this->log_WARNING_HI_NoAvailableSequencers();
+        return;
+    }
+
+    this->runSequence(idx, fileName, Fw::Wait::NO_WAIT);
+}
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void SeqDispatcher ::RUN_cmdHandler(const FwOpcodeType opCode,
+                                    const U32 cmdSeq,
+                                    const Fw::CmdStringArg& fileName,
+                                    Fw::Wait block) {
+    FwIndexType idx = this->getNextAvailableSequencerIdx();
+    // no available sequencers
+    if (idx == -1) {
+        this->log_WARNING_HI_NoAvailableSequencers();
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->runSequence(idx, fileName, block);
+
+    if (block == Fw::Wait::NO_WAIT) {
+        // return instantly
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        // otherwise don't return a response yet. just save the opCode and cmdSeq
+        // so we can return a response later
+        this->m_entryTable[idx].opCode = opCode;
+        this->m_entryTable[idx].cmdSeq = cmdSeq;
+    }
+}
+
+void SeqDispatcher::LOG_STATUS_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                          const U32 cmdSeq) {        /*!< The command sequence number*/
+    for (FwIndexType idx = 0; idx < SeqDispatcherSequencerPorts; idx++) {
+        this->log_ACTIVITY_LO_LogSequencerStatus(static_cast<U16>(idx), this->m_entryTable[idx].state,
+                                                 Fw::LogStringArg(this->m_entryTable[idx].sequenceRunning));
+    }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+}  // namespace Svc
+```
+
+### `SeqDispatcher.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcher.fpp`
+
+
+```fpp
+module Svc {
+    @ Dispatches command sequences to available command sequencers
+    active component SeqDispatcher {
+
+        enum CmdSequencerState {
+            AVAILABLE = 0
+            RUNNING_SEQUENCE_BLOCK = 1
+            RUNNING_SEQUENCE_NO_BLOCK = 2
+        }
+
+        include "SeqDispatcherCommands.fppi"
+        include "SeqDispatcherTelemetry.fppi"
+        include "SeqDispatcherEvents.fppi"
+
+        @ Dispatches a sequence to the first available command sequencer
+        async input port seqRunIn: Svc.CmdSeqIn
+
+        output port seqRunOut: [SeqDispatcherSequencerPorts] Svc.CmdSeqIn
+
+        @ Called by a command sequencer whenever it has finished any sequence
+        async input port seqDoneIn: [SeqDispatcherSequencerPorts] Fw.CmdResponse
+
+        @ Called by cmdsequencer whenever it starts any sequence
+        async input port seqStartIn: [SeqDispatcherSequencerPorts] Svc.CmdSeqIn
+
+        match seqRunOut with seqDoneIn
+
+        match seqRunOut with seqStartIn
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+    }
+}
+```
+
+### `SeqDispatcher.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcher.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SeqDispatcher.hpp
+// \author zimri.leisher
+// \brief  hpp file for SeqDispatcher component implementation class
+// ======================================================================
+
+#ifndef SeqDispatcher_HPP
+#define SeqDispatcher_HPP
+
+#include "Fw/Types/StringBase.hpp"
+#include "Fw/Types/WaitEnumAc.hpp"
+#include "Svc/SeqDispatcher/SeqDispatcherComponentAc.hpp"
+#include "Svc/SeqDispatcher/SeqDispatcher_CmdSequencerStateEnumAc.hpp"
+#include "config/FppConstantsAc.hpp"
+
+namespace Svc {
+
+class SeqDispatcher final : public SeqDispatcherComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object SeqDispatcher
+    //!
+    SeqDispatcher(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object SeqDispatcher
+    //!
+    ~SeqDispatcher();
+
+  protected:
+    //! Handler for input port seqDoneIn
+    void seqDoneIn_handler(FwIndexType portNum,             //!< The port number
+                           FwOpcodeType opCode,             //!< Command Op Code
+                           U32 cmdSeq,                      //!< Command Sequence
+                           const Fw::CmdResponse& response  //!< The command response argument
+    );
+
+    //! Handler for input port seqStartIn
+    void seqStartIn_handler(FwIndexType portNum,            //!< The port number
+                            const Fw::StringBase& fileName  //!< The sequence file
+    );
+
+    //! Handler for input port seqRunIn
+    void seqRunIn_handler(FwIndexType portNum,            //!< The port number
+                          const Fw::StringBase& fileName  //!< The sequence file
+    );
+
+  private:
+    // number of sequences dispatched (successful or otherwise)
+    U32 m_dispatchedCount = 0;
+    // number of errors from dispatched sequences (CmdResponse::EXECUTION_ERROR)
+    U32 m_errorCount = 0;
+    // number of sequencers in state AVAILABLE
+    U32 m_sequencersAvailable = SeqDispatcherSequencerPorts;
+
+    struct DispatchEntry {
+        FwOpcodeType opCode;  //!< opcode of entry
+        U32 cmdSeq;
+        // store the state of each sequencer
+        SeqDispatcher_CmdSequencerState state;
+        // store the sequence currently running for each sequencer
+        Fw::String sequenceRunning = "<no seq>";
+    } m_entryTable[SeqDispatcherSequencerPorts];  //!< table of dispatch
+                                                  //!< entries
+
+    FwIndexType getNextAvailableSequencerIdx();
+
+    void runSequence(FwIndexType sequencerIdx, const Fw::StringBase& fileName, Fw::Wait block);
+
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for RUN command handler
+    //!
+    void RUN_cmdHandler(const FwOpcodeType opCode,        /*!< The opcode*/
+                        const U32 cmdSeq,                 /*!< The command sequence number*/
+                        const Fw::CmdStringArg& fileName, /*!< The name of the sequence file*/
+                        Fw::Wait block);
+
+    void LOG_STATUS_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                               const U32 cmdSeq);         /*!< The command sequence number*/
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `SeqDispatcherCommands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcherCommands.fppi`
+
+
+```text
+@ Dispatches a sequence to the first available sequencer
+async command RUN(
+                      fileName: string size 240 @< The name of the sequence file
+                      $block: Fw.Wait @< Return command status when complete or not
+                    ) \
+    opcode 0
+
+@ Logs via Events the state of each connected command sequencer
+async command LOG_STATUS() opcode 1
+```
+
+### `SeqDispatcherEvents.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcherEvents.fppi`
+
+
+```text
+event InvalidSequencer(
+    idx: U16
+) \
+    severity warning high \
+    format "Invalid sequence index {}"
+
+event NoAvailableSequencers() \
+    severity warning high \
+    format "No available cmd sequencers to dispatch a sequence to"
+
+event UnknownSequenceFinished(
+    idx: U16
+) \
+    severity warning low \
+    format "Sequencer {} completed a sequence with no matching start notification"
+
+event ConflictingSequenceStarted(
+    idx: U16,
+    newSequence: string size 240,
+    sequenceInInternalState: string size 240
+) \
+    severity warning high \
+    format "Sequencer {} started a sequence {} while still running {}"
+
+event UnexpectedSequenceStarted(
+    idx: U16,
+    newSequence: string size 240
+) \
+    severity warning low \
+    format "Sequencer {} was externally commanded to start a sequence {}"
+
+event LogSequencerStatus(
+    idx: U16
+    $state: CmdSequencerState
+    filename: string size 240
+) \
+    severity activity low \
+    format "Sequencer {} with state {} is running file {}"
+```
+
+### `SeqDispatcherTelemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/SeqDispatcherTelemetry.fppi`
+
+
+```text
+@ Number of sequences dispatched
+telemetry dispatchedCount: U32
+@ Number of sequences dispatched that returned an error. Note: if a sequence
+@ was run in non-blocking mode, even if the sequence errors out, this error
+@ count will never increase
+telemetry errorCount: U32
+@ Number of sequencers in an available state
+telemetry sequencersAvailable: U32
+```

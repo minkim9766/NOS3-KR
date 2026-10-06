@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sbn/modules/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ filter/index
 protocol/index
 ```
 
-## 항목
-
-- [`fsw/apps/sbn/modules/filter/`](filter/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/`](protocol/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

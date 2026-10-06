@@ -3,22 +3,36 @@
 
 **경로:** `fsw/build/docs/ds-usersguide/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--ds-usersguide.doxyfile
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/docs/ds-usersguide/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/docs/ds-usersguide/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/ds-usersguide/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/ds-usersguide/ds-usersguide.doxyfile`](file--ds-usersguide.doxyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/ds-usersguide/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/docs/ds-usersguide/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/docs/ds-usersguide/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `ds-usersguide.doxyfile`
+
+**경로:** `fsw/build/docs/ds-usersguide/ds-usersguide.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/docs/ds-usersguide/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,140 +13,3209 @@ drv/index
 net/index
 netinet/index
 sys/index
-file--assert.h
-file--blkIo.h
-file--bsp-impl.h
-file--cbioLib.h
-file--complex.h
-file--ctype.h
-file--dirent.h
-file--dlfcn.h
-file--dosFsLib.h
-file--errno.h
-file--errnoLib.h
-file--fcntl.h
-file--fenv.h
-file--float.h
-file--hostLib.h
-file--intLib.h
-file--inttypes.h
-file--ioLib.h
-file--iv.h
-file--loadLib.h
-file--locale.h
-file--logLib.h
-file--math.h
-file--memPartLib.h
-file--moduleLib.h
-file--mqueue.h
-file--msgQLib.h
-file--netdb.h
-file--objLib.h
-file--poll.h
-file--pthread.h
-file--ramDiskCbio.h
-file--ramDrv.h
-file--sched.h
-file--selectLib.h
-file--semaphore.h
-file--semLib.h
-file--setjmp.h
-file--shellLib.h
-file--signal.h
-file--stat.h
-file--stdarg.h
-file--stdio.h
-file--stdlib.h
-file--string.h
-file--strings.h
-file--symLib.h
-file--sysLib.h
-file--taskLib.h
-file--taskVarLib.h
-file--termios.h
-file--tgmath.h
-file--time.h
-file--timers.h
-file--ulimit.h
-file--unistd.h
-file--unldLib.h
-file--usrLib.h
-file--version.h
-file--vxWorks.h
-file--wchar.h
-file--wctype.h
-file--xbdBlkDev.h
-file--xbdRamDisk.h
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/arpa/`](arpa/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/drv/`](drv/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/net/`](net/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/netinet/`](netinet/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/`](sys/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/assert.h`](file--assert.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/blkIo.h`](file--blkIo.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/bsp-impl.h`](file--bsp-impl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/cbioLib.h`](file--cbioLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/complex.h`](file--complex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ctype.h`](file--ctype.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dirent.h`](file--dirent.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dlfcn.h`](file--dlfcn.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dosFsLib.h`](file--dosFsLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/errno.h`](file--errno.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/errnoLib.h`](file--errnoLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/fcntl.h`](file--fcntl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/fenv.h`](file--fenv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/float.h`](file--float.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/hostLib.h`](file--hostLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/intLib.h`](file--intLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/inttypes.h`](file--inttypes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ioLib.h`](file--ioLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/iv.h`](file--iv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/loadLib.h`](file--loadLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/locale.h`](file--locale.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/logLib.h`](file--logLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/math.h`](file--math.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/memPartLib.h`](file--memPartLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/moduleLib.h`](file--moduleLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/mqueue.h`](file--mqueue.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/msgQLib.h`](file--msgQLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/netdb.h`](file--netdb.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/objLib.h`](file--objLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/poll.h`](file--poll.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/pthread.h`](file--pthread.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ramDiskCbio.h`](file--ramDiskCbio.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ramDrv.h`](file--ramDrv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sched.h`](file--sched.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/selectLib.h`](file--selectLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/semaphore.h`](file--semaphore.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/semLib.h`](file--semLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/setjmp.h`](file--setjmp.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/shellLib.h`](file--shellLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/signal.h`](file--signal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stat.h`](file--stat.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdarg.h`](file--stdarg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdio.h`](file--stdio.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdlib.h`](file--stdlib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/string.h`](file--string.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/strings.h`](file--strings.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/symLib.h`](file--symLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sysLib.h`](file--sysLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/taskLib.h`](file--taskLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/taskVarLib.h`](file--taskVarLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/termios.h`](file--termios.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/tgmath.h`](file--tgmath.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/time.h`](file--time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/timers.h`](file--timers.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ulimit.h`](file--ulimit.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/unistd.h`](file--unistd.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/unldLib.h`](file--unldLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/usrLib.h`](file--usrLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/version.h`](file--version.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/vxWorks.h`](file--vxWorks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/wchar.h`](file--wchar.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/wctype.h`](file--wctype.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/xbdBlkDev.h`](file--xbdBlkDev.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/xbdRamDisk.h`](file--xbdRamDisk.h) — UTF-8 텍스트 파일 본문 포함
+### `assert.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/assert.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for assert.h
+ */
+
+#ifndef OVERRIDE_ASSERT_H
+#define OVERRIDE_ASSERT_H
+
+#include "OCS_assert.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in assert.h */
+/* ----------------------------------------- */
+
+#define assert OCS_assert
+
+#endif /* OVERRIDE_ASSERT_H */
+```
+
+### `blkIo.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/blkIo.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for blkIo.h
+ */
+
+#ifndef OVERRIDE_BLKIO_H
+#define OVERRIDE_BLKIO_H
+
+#include "OCS_blkIo.h"
+#include <vxWorks.h>
+
+/* ---------------------------------------*/
+/* mappings for declarations in blkIo.h */
+/* ---------------------------------------*/
+#define NULLDEV    OCS_NULLDEV
+#define BLK_DEV    OCS_BLK_DEV
+#define BLK_DEV_ID OCS_BLK_DEV_ID
+
+#endif /* OVERRIDE_BLKIO_H */
+```
+
+### `bsp-impl.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/bsp-impl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for bsp-impl
+ */
+
+#ifndef OVERRIDE_BSP_IMPL_H
+#define OVERRIDE_BSP_IMPL_H
+
+#include "OCS_bsp-impl.h"
+
+#define OS_BSP_CONSOLEMODE_NORMAL    OCS_OS_BSP_CONSOLEMODE_NORMAL
+#define OS_BSP_CONSOLEMODE_RED       OCS_OS_BSP_CONSOLEMODE_RED
+#define OS_BSP_CONSOLEMODE_GREEN     OCS_OS_BSP_CONSOLEMODE_GREEN
+#define OS_BSP_CONSOLEMODE_BLUE      OCS_OS_BSP_CONSOLEMODE_BLUE
+#define OS_BSP_CONSOLEMODE_HIGHLIGHT OCS_OS_BSP_CONSOLEMODE_HIGHLIGHT
+
+#define OS_BSP_Lock_Impl           OCS_OS_BSP_Lock_Impl
+#define OS_BSP_ConsoleOutput_Impl  OCS_OS_BSP_ConsoleOutput_Impl
+#define OS_BSP_ConsoleSetMode_Impl OCS_OS_BSP_ConsoleSetMode_Impl
+#define OS_BSP_Unlock_Impl         OCS_OS_BSP_Unlock_Impl
+
+/*********************
+   END bsp-impl.h
+ *********************/
+
+#endif /* OVERRIDE_BSP_IMPL_H */
+```
+
+### `cbioLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/cbioLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for cbioLib.h
+ */
+
+#ifndef OVERRIDE_CBIOLIB_H
+#define OVERRIDE_CBIOLIB_H
+
+#include "OCS_cbioLib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in cbioLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_CBIOLIB_H */
+```
+
+### `complex.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/complex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for complex.h
+ */
+
+#ifndef OVERRIDE_COMPLEX_H
+#define OVERRIDE_COMPLEX_H
+
+#include "OCS_complex.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in complex.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_COMPLEX_H */
+```
+
+### `ctype.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ctype.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ctype.h
+ */
+
+#ifndef OVERRIDE_CTYPE_H
+#define OVERRIDE_CTYPE_H
+
+#include "OCS_ctype.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in ctype.h */
+/* ----------------------------------------- */
+
+#define isgraph OCS_isgraph
+
+#endif /* OVERRIDE_CTYPE_H */
+```
+
+### `dirent.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dirent.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dirent.h
+ */
+
+#ifndef OVERRIDE_DIRENT_H
+#define OVERRIDE_DIRENT_H
+
+#include "OCS_dirent.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in dirent.h */
+/* ----------------------------------------- */
+
+#define DIR       OCS_DIR
+#define dirent    OCS_dirent
+#define closedir  OCS_closedir
+#define opendir   OCS_opendir
+#define readdir   OCS_readdir
+#define rewinddir OCS_rewinddir
+
+#endif /* OVERRIDE_DIRENT_H */
+```
+
+### `dlfcn.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dlfcn.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dlfcn.h
+ */
+
+#ifndef OVERRIDE_DLFCN_H
+#define OVERRIDE_DLFCN_H
+
+#include "OCS_dlfcn.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in dlfcn.h */
+/* ----------------------------------------- */
+
+#define dlclose OCS_dlclose
+#define dlerror OCS_dlerror
+#define dlopen  OCS_dlopen
+#define dlsym   OCS_dlsym
+
+#endif /* OVERRIDE_DLFCN_H */
+```
+
+### `dosFsLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/dosFsLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for dosFsLib.h
+ */
+
+#ifndef OVERRIDE_DOSFSLIB_H
+#define OVERRIDE_DOSFSLIB_H
+
+#include "OCS_dosFsLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in dosFsLib.h */
+/* ----------------------------------------- */
+#define DOS_CHK_ONLY        OCS_DOS_CHK_ONLY
+#define DOS_CHK_REPAIR      OCS_DOS_CHK_REPAIR
+#define DOS_CHK_VERB_0      OCS_DOS_CHK_VERB_0
+#define DOS_CHK_VERB_SILENT OCS_DOS_CHK_VERB_SILENT
+#define DOS_OPT_BLANK       OCS_DOS_OPT_BLANK
+
+#define dosFsVolFormat OCS_dosFsVolFormat
+
+#endif /* OVERRIDE_DOSFSLIB_H */
+```
+
+### `errno.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/errno.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for errno.h
+ */
+
+#ifndef OVERRIDE_ERRNO_H
+#define OVERRIDE_ERRNO_H
+
+#include "OCS_errno.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in errno.h */
+/* ----------------------------------------- */
+#define EINTR     OCS_EINTR
+#define EAGAIN    OCS_EAGAIN
+#define EINVAL    OCS_EINVAL
+#define EEXIST    OCS_EEXIST
+#define EMSGSIZE  OCS_EMSGSIZE
+#define ETIMEDOUT OCS_ETIMEDOUT
+#define ESPIPE    OCS_ESPIPE
+#define ENOTSUP   OCS_ENOTSUP
+#define ENOSYS    OCS_ENOSYS
+#define EROFS     OCS_EROFS
+
+#define errno OCS_errno
+
+#endif /* OVERRIDE_ERRNO_H */
+```
+
+### `errnoLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/errnoLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for errnoLib.h
+ */
+
+#ifndef OVERRIDE_ERRNOLIB_H
+#define OVERRIDE_ERRNOLIB_H
+
+#include "OCS_errnoLib.h"
+#include <vxWorks.h>
+
+/* -----------------------------------------  */
+/* mappings for declarations in errnoLib.h */
+/* -----------------------------------------  */
+#define errnoGet OCS_errnoGet
+
+#endif /* OVERRIDE_ERRNOLIB_H */
+```
+
+### `fcntl.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/fcntl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for fcntl.h
+ */
+
+#ifndef OVERRIDE_FCNTL_H
+#define OVERRIDE_FCNTL_H
+
+#include "OCS_fcntl.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in fcntl.h */
+/* ----------------------------------------- */
+#define S_IRWXU    OCS_S_IRWXU
+#define S_IRWXG    OCS_S_IRWXG
+#define S_IRWXO    OCS_S_IRWXO
+#define S_IXOTH    OCS_S_IXOTH
+#define S_IXGRP    OCS_S_IXGRP
+#define S_IXUSR    OCS_S_IXUSR
+#define S_IROTH    OCS_S_IROTH
+#define S_IRGRP    OCS_S_IRGRP
+#define S_IRUSR    OCS_S_IRUSR
+#define S_IWOTH    OCS_S_IWOTH
+#define S_IWGRP    OCS_S_IWGRP
+#define S_IWUSR    OCS_S_IWUSR
+#define S_IFDIR    OCS_S_IFDIR
+#define S_ISDIR(x) OCS_S_ISDIR(x)
+#define O_RDONLY   OCS_O_RDONLY
+#define O_WRONLY   OCS_O_WRONLY
+#define O_RDWR     OCS_O_RDWR
+#define O_CREAT    OCS_O_CREAT
+#define O_TRUNC    OCS_O_TRUNC
+#define O_NONBLOCK OCS_O_NONBLOCK
+#define F_GETFL    OCS_F_GETFL
+#define F_SETFL    OCS_F_SETFL
+#define F_GETFD    OCS_F_GETFD
+#define F_SETFD    OCS_F_SETFD
+#define F_DUPFD    OCS_F_DUPFD
+
+#define fcntl OCS_fcntl
+#define open  OCS_open
+
+#endif /* OVERRIDE_FCNTL_H */
+```
+
+### `fenv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/fenv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for fenv.h
+ */
+
+#ifndef OVERRIDE_FENV_H
+#define OVERRIDE_FENV_H
+
+#include "OCS_fenv.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in fenv.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_FENV_H */
+```
+
+### `float.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/float.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for float.h
+ */
+
+#ifndef OVERRIDE_FLOAT_H
+#define OVERRIDE_FLOAT_H
+
+#include "OCS_float.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in float.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_FLOAT_H */
+```
+
+### `hostLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/hostLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for hostLib.h
+ */
+
+#ifndef OVERRIDE_HOSTLIB_H
+#define OVERRIDE_HOSTLIB_H
+
+#include "OCS_hostLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in hostLib.h */
+/* ----------------------------------------- */
+#define hostGetByName OCS_hostGetByName
+
+#endif /* OVERRIDE_HOSTLIB_H */
+```
+
+### `intLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/intLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for intLib.h
+ */
+
+#ifndef OVERRIDE_INTLIB_H
+#define OVERRIDE_INTLIB_H
+
+#include "OCS_intLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in intLib.h */
+/* ----------------------------------------- */
+
+#define intConnect   OCS_intConnect
+#define intDisable   OCS_intDisable
+#define intEnable    OCS_intEnable
+#define intLock      OCS_intLock
+#define intUnlock    OCS_intUnlock
+#define INUM_TO_IVEC OCS_INUM_TO_IVEC
+
+#endif /* OVERRIDE_INTLIB_H */
+```
+
+### `inttypes.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/inttypes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for inttypes.h
+ */
+
+#ifndef OVERRIDE_INTTYPES_H
+#define OVERRIDE_INTTYPES_H
+
+#include "OCS_inttypes.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in inttypes.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_INTTYPES_H */
+```
+
+### `ioLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ioLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ioLib.h
+ */
+
+#ifndef OVERRIDE_IOLIB_H
+#define OVERRIDE_IOLIB_H
+
+#include "OCS_ioLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in ioLib.h */
+/* ----------------------------------------- */
+
+#define FIOCHKDSK  OCS_FIOCHKDSK
+#define FIOUNMOUNT OCS_FIOUNMOUNT
+#define FIONBIO    OCS_FIONBIO
+#define ioctl      OCS_ioctl
+
+#endif /* OVERRIDE_IOLIB_H */
+```
+
+### `iv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/iv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for iv.h
+ */
+
+#ifndef OVERRIDE_IV_H
+#define OVERRIDE_IV_H
+
+#include "OCS_iv.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in iv.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_IV_H */
+```
+
+### `loadLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/loadLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for loadLib.h
+ */
+
+#ifndef OVERRIDE_LOADLIB_H
+#define OVERRIDE_LOADLIB_H
+
+#include "OCS_loadLib.h"
+#include <vxWorks.h>
+#include <moduleLib.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in loadLib.h */
+/* ----------------------------------------- */
+
+#define loadModule OCS_loadModule
+
+#endif /* OVERRIDE_LOADLIB_H */
+```
+
+### `locale.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/locale.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for locale.h
+ */
+
+#ifndef OVERRIDE_LOCALE_H
+#define OVERRIDE_LOCALE_H
+
+#include "OCS_locale.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in locale.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_LOCALE_H */
+```
+
+### `logLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/logLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for logLib.h
+ */
+
+#ifndef OVERRIDE_LOGLIB_H
+#define OVERRIDE_LOGLIB_H
+
+#include "OCS_logLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in logLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_LOGLIB_H */
+```
+
+### `math.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/math.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for math.h
+ */
+
+#ifndef OVERRIDE_MATH_H
+#define OVERRIDE_MATH_H
+
+#include "OCS_math.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in math.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_MATH_H */
+```
+
+### `memPartLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/memPartLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for memPartLib.h
+ */
+
+#ifndef OVERRIDE_MEMPARTLIB_H
+#define OVERRIDE_MEMPARTLIB_H
+
+#include "OCS_memPartLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in memPartLib.h */
+/* ----------------------------------------- */
+#define PART_ID        OCS_PART_ID
+#define MEM_PART_STATS OCS_MEM_PART_STATS
+
+#define memPartShow    OCS_memPartShow
+#define memPartInfoGet OCS_memPartInfoGet
+#define memSysPartId   OCS_memSysPartId
+
+#endif /* OVERRIDE_MEMPARTLIB_H */
+```
+
+### `moduleLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/moduleLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for moduleLib.h
+ */
+
+#ifndef OVERRIDE_MODULELIB_H
+#define OVERRIDE_MODULELIB_H
+
+#include "OCS_moduleLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in moduleLib.h */
+/* ----------------------------------------- */
+
+#define MODULE_ID   OCS_MODULE_ID
+#define MODULE_INFO OCS_MODULE_INFO
+
+#define moduleInfoGet OCS_moduleInfoGet
+
+#endif /* OVERRIDE_MODULELIB_H */
+```
+
+### `mqueue.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/mqueue.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for mqueue.h
+ */
+
+#ifndef OVERRIDE_MQUEUE_H
+#define OVERRIDE_MQUEUE_H
+
+#include "OCS_mqueue.h"
+#include <time.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in mqueue.h */
+/* ----------------------------------------- */
+
+#define mqd_t   OCS_mqd_t
+#define mq_attr OCS_mq_attr
+
+#define mq_close        OCS_mq_close
+#define mq_open         OCS_mq_open
+#define mq_receive      OCS_mq_receive
+#define mq_timedreceive OCS_mq_timedreceive
+#define mq_timedsend    OCS_mq_timedsend
+#define mq_unlink       OCS_mq_unlink
+
+#endif /* OVERRIDE_MQUEUE_H */
+```
+
+### `msgQLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/msgQLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for msgQLib.h
+ */
+
+#ifndef OVERRIDE_MSGQLIB_H
+#define OVERRIDE_MSGQLIB_H
+
+#include "OCS_msgQLib.h"
+#include <vxWorks.h>
+#include <objLib.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in msgQLib.h */
+/* ----------------------------------------- */
+#define MSG_Q_FIFO             OCS_MSG_Q_FIFO
+#define MSG_Q_PRIORITY         OCS_MSG_Q_PRIORITY
+#define WIND_MSG_Q_OPTION_MASK OCS_WIND_MSG_Q_OPTION_MASK
+#define MSG_PRI_NORMAL         OCS_MSG_PRI_NORMAL
+#define MSG_PRI_URGENT         OCS_MSG_PRI_URGENT
+
+#define MSG_Q_ID OCS_MSG_Q_ID
+
+#define msgQCreate  OCS_msgQCreate
+#define msgQDelete  OCS_msgQDelete
+#define msgQReceive OCS_msgQReceive
+#define msgQSend    OCS_msgQSend
+
+#endif /* OVERRIDE_MSGQLIB_H */
+```
+
+### `netdb.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/netdb.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for netdb.h
+ */
+
+#ifndef OVERRIDE_NETDB_H
+#define OVERRIDE_NETDB_H
+
+#include "OCS_netdb.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in netdb.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_NETDB_H */
+```
+
+### `objLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/objLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for objLib.h
+ */
+
+#ifndef OVERRIDE_OBJLIB_H
+#define OVERRIDE_OBJLIB_H
+
+#include "OCS_objLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in objLib.h */
+/* ----------------------------------------- */
+
+#define M_objLib                 OCS_M_objLib
+#define S_objLib_OBJ_ID_ERROR    OCS_S_objLib_OBJ_ID_ERROR
+#define S_objLib_OBJ_UNAVAILABLE OCS_S_objLib_OBJ_UNAVAILABLE
+#define S_objLib_OBJ_DELETED     OCS_S_objLib_OBJ_DELETED
+#define S_objLib_OBJ_TIMEOUT     OCS_S_objLib_OBJ_TIMEOUT
+#define S_objLib_OBJ_NO_METHOD   OCS_S_objLib_OBJ_NO_METHOD
+
+#endif /* OVERRIDE_OBJLIB_H */
+```
+
+### `poll.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/poll.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for poll.h
+ */
+
+#ifndef OVERRIDE_POLL_H
+#define OVERRIDE_POLL_H
+
+#include "OCS_poll.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in poll.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_POLL_H */
+```
+
+### `pthread.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/pthread.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for pthread.h
+ */
+
+#ifndef OVERRIDE_PTHREAD_H
+#define OVERRIDE_PTHREAD_H
+
+#include "OCS_pthread.h"
+#include <sched.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in pthread.h */
+/* ----------------------------------------- */
+
+#define PTHREAD_PRIO_INHERIT    OCS_PTHREAD_PRIO_INHERIT
+#define PTHREAD_MUTEX_RECURSIVE OCS_PTHREAD_MUTEX_RECURSIVE
+#define PTHREAD_EXPLICIT_SCHED  OCS_PTHREAD_EXPLICIT_SCHED
+
+#define pthread_t           OCS_pthread_t
+#define pthread_attr_t      OCS_pthread_attr_t
+#define pthread_mutex_t     OCS_pthread_mutex_t
+#define pthread_mutexattr_t OCS_pthread_mutexattr_t
+#define pthread_cond_t      OCS_pthread_cond_t
+#define pthread_condattr_t  OCS_pthread_condattr_t
+#define pthread_key_t       OCS_pthread_key_t
+
+#define pthread_attr_destroy          OCS_pthread_attr_destroy
+#define pthread_attr_getschedparam    OCS_pthread_attr_getschedparam
+#define pthread_attr_init             OCS_pthread_attr_init
+#define pthread_attr_setinheritsched  OCS_pthread_attr_setinheritsched
+#define pthread_attr_setschedparam    OCS_pthread_attr_setschedparam
+#define pthread_attr_setschedpolicy   OCS_pthread_attr_setschedpolicy
+#define pthread_attr_setstacksize     OCS_pthread_attr_setstacksize
+#define pthread_cancel                OCS_pthread_cancel
+#define pthread_cond_broadcast        OCS_pthread_cond_broadcast
+#define pthread_cond_destroy          OCS_pthread_cond_destroy
+#define pthread_cond_init             OCS_pthread_cond_init
+#define pthread_cond_signal           OCS_pthread_cond_signal
+#define pthread_cond_timedwait        OCS_pthread_cond_timedwait
+#define pthread_cond_wait             OCS_pthread_cond_wait
+#define pthread_create                OCS_pthread_create
+#define pthread_detach                OCS_pthread_detach
+#define pthread_equal                 OCS_pthread_equal
+#define pthread_exit                  OCS_pthread_exit
+#define pthread_getschedparam         OCS_pthread_getschedparam
+#define pthread_getspecific           OCS_pthread_getspecific
+#define pthread_key_create            OCS_pthread_key_create
+#define pthread_mutexattr_destroy     OCS_pthread_mutexattr_destroy
+#define pthread_mutexattr_init        OCS_pthread_mutexattr_init
+#define pthread_mutexattr_setprotocol OCS_pthread_mutexattr_setprotocol
+#define pthread_mutexattr_settype     OCS_pthread_mutexattr_settype
+#define pthread_mutex_destroy         OCS_pthread_mutex_destroy
+#define pthread_mutex_init            OCS_pthread_mutex_init
+#define pthread_mutex_lock            OCS_pthread_mutex_lock
+#define pthread_mutex_unlock          OCS_pthread_mutex_unlock
+#define pthread_self                  OCS_pthread_self
+#define pthread_setschedparam         OCS_pthread_setschedparam
+#define pthread_setschedprio          OCS_pthread_setschedprio
+#define pthread_setspecific           OCS_pthread_setspecific
+#define pthread_sigmask               OCS_pthread_sigmask
+
+#endif /* OVERRIDE_PTHREAD_H */
+```
+
+### `ramDiskCbio.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ramDiskCbio.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ramDiskCbio.h
+ */
+
+#ifndef OVERRIDE_RAMDISKCBIO_H
+#define OVERRIDE_RAMDISKCBIO_H
+
+#include "OCS_ramDiskCbio.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in ramDiskCbio.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_RAMDISKCBIO_H */
+```
+
+### `ramDrv.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ramDrv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ramDrv.h
+ */
+
+#ifndef OVERRIDE_RAMDRV_H
+#define OVERRIDE_RAMDRV_H
+
+#include "OCS_ramDrv.h"
+#include <vxWorks.h>
+#include <blkIo.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in ramDrv.h */
+/* ----------------------------------------- */
+
+#define ramDevCreate OCS_ramDevCreate
+
+#endif /* OVERRIDE_RAMDRV_H */
+```
+
+### `sched.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sched.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sched.h
+ */
+
+#ifndef OVERRIDE_SCHED_H
+#define OVERRIDE_SCHED_H
+
+#include "OCS_sched.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sched.h */
+/* ----------------------------------------- */
+
+#define SCHED_FIFO OCS_SCHED_FIFO
+#define SCHED_RR   OCS_SCHED_RR
+
+#define sched_param OCS_sched_param
+
+#define sched_get_priority_max OCS_sched_get_priority_max
+#define sched_get_priority_min OCS_sched_get_priority_min
+
+#endif /* OVERRIDE_SCHED_H */
+```
+
+### `selectLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/selectLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for selectLib
+ */
+
+#ifndef OVERRIDE_SELECTLIB_H
+#define OVERRIDE_SELECTLIB_H
+
+#include <vxWorks.h>
+#include <sys/select.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in selectLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SELECTLIB_H */
+```
+
+### `semaphore.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/semaphore.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for semaphore.h
+ */
+
+#ifndef OVERRIDE_SEMAPHORE_H
+#define OVERRIDE_SEMAPHORE_H
+
+#include "OCS_semaphore.h"
+#include <time.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in semaphore.h */
+/* ----------------------------------------- */
+#define sem_t         OCS_sem_t
+#define sem_destroy   OCS_sem_destroy
+#define sem_getvalue  OCS_sem_getvalue
+#define sem_init      OCS_sem_init
+#define sem_post      OCS_sem_post
+#define sem_timedwait OCS_sem_timedwait
+#define sem_wait      OCS_sem_wait
+
+#endif /* OVERRIDE_SEMAPHORE_H */
+```
+
+### `semLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/semLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for semLib.h
+ */
+
+#ifndef OVERRIDE_SEMLIB_H
+#define OVERRIDE_SEMLIB_H
+
+#include "OCS_semLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in semLib.h */
+/* ----------------------------------------- */
+
+#define VX_BINARY_SEMAPHORE(x)   OCS_VX_BINARY_SEMAPHORE(x)
+#define VX_COUNTING_SEMAPHORE(x) OCS_VX_COUNTING_SEMAPHORE(x)
+#define VX_MUTEX_SEMAPHORE(x)    OCS_VX_MUTEX_SEMAPHORE(x)
+
+#define SEM_ID                   OCS_SEM_ID
+#define SEM_B_STATE              OCS_SEM_B_STATE
+#define SEM_EMPTY                OCS_SEM_EMPTY
+#define SEM_FULL                 OCS_SEM_FULL
+#define SEM_Q_FIFO               OCS_SEM_Q_FIFO
+#define SEM_Q_PRIORITY           OCS_SEM_Q_PRIORITY
+#define SEM_DELETE_SAFE          OCS_SEM_DELETE_SAFE
+#define SEM_INVERSION_SAFE       OCS_SEM_INVERSION_SAFE
+#define SEM_EVENTSEND_ERR_NOTIFY OCS_SEM_EVENTSEND_ERR_NOTIFY
+
+#define semBInitialize OCS_semBInitialize
+#define semBCreate     OCS_semBCreate
+#define semMInitialize OCS_semMInitialize
+#define semMCreate     OCS_semMCreate
+#define semCInitialize OCS_semCInitialize
+#define semCCreate     OCS_semCCreate
+#define semDelete      OCS_semDelete
+#define semFlush       OCS_semFlush
+#define semTake        OCS_semTake
+#define semGive        OCS_semGive
+
+#endif /* OVERRIDE_SEMLIB_H */
+```
+
+### `setjmp.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/setjmp.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for setjmp.h
+ */
+
+#ifndef OVERRIDE_SETJMP_H
+#define OVERRIDE_SETJMP_H
+
+#include "OCS_setjmp.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in setjmp.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SETJMP_H */
+```
+
+### `shellLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/shellLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for shellLib.h
+ */
+
+#ifndef OVERRIDE_SHELLLIB_H
+#define OVERRIDE_SHELLLIB_H
+
+#include "OCS_shellLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in shellLib.h */
+/* ----------------------------------------- */
+#define shellGenericInit OCS_shellGenericInit
+
+#endif /* OVERRIDE_SHELLLIB_H */
+```
+
+### `signal.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/signal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for signal.h
+ */
+
+#ifndef OVERRIDE_SIGNAL_H
+#define OVERRIDE_SIGNAL_H
+
+#include "OCS_signal.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in signal.h */
+/* ----------------------------------------- */
+
+#define SIG_SETMASK  OCS_SIG_SETMASK
+#define SIGHUP       OCS_SIGHUP
+#define SIGINT       OCS_SIGINT
+#define SIGABRT      OCS_SIGABRT
+#define SIGSEGV      OCS_SIGSEGV
+#define SIGBUS       OCS_SIGBUS
+#define SIGFPE       OCS_SIGFPE
+#define SIGILL       OCS_SIGILL
+#define SIGRTMIN     OCS_SIGRTMIN
+#define SIGRTMAX     OCS_SIGRTMAX
+#define SIGEV_SIGNAL OCS_SIGEV_SIGNAL
+
+#define sighandler_t OCS_sighandler_t
+#define sigset_t     OCS_sigset_t
+#define sig_atomic_t OCS_sig_atomic_t
+#define sigevent     OCS_sigevent
+
+#define kill        OCS_kill
+#define sigaddset   OCS_sigaddset
+#define sigdelset   OCS_sigdelset
+#define sigemptyset OCS_sigemptyset
+#define sigfillset  OCS_sigfillset
+#define sigismember OCS_sigismember
+#define signal      OCS_signal
+#define sigprocmask OCS_sigprocmask
+#define sigsuspend  OCS_sigsuspend
+#define sigwait     OCS_sigwait
+
+#endif /* OVERRIDE_SIGNAL_H */
+```
+
+### `stat.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stat.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stat.h
+ */
+
+#ifndef OVERRIDE_STAT_H
+#define OVERRIDE_STAT_H
+
+#include "OCS_stat.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/stat.h */
+/* ----------------------------------------- */
+
+#define stat   OCS_stat
+#define fstat  OCS_fstat
+#define fchmod OCS_fchmod
+#define chmod  OCS_chmod
+#define mkdir  OCS_mkdir
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/statvfs.h */
+/* ----------------------------------------- */
+#define statvfs OCS_statvfs
+#define statfs  OCS_statvfs
+
+#endif /* OVERRIDE_STAT_H */
+```
+
+### `stdarg.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdarg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdarg.h
+ */
+
+#ifndef OVERRIDE_STDARG_H
+#define OVERRIDE_STDARG_H
+
+#include "OCS_stdarg.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdarg.h */
+/* ----------------------------------------- */
+
+#define va_list            OCS_va_list
+#define va_start(ap, last) OCS_va_start(ap, last)
+#define va_end(ap)         OCS_va_end(ap)
+
+#endif /* OVERRIDE_STDARG_H */
+```
+
+### `stdio.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdio.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdio.h
+ */
+
+#ifndef OVERRIDE_STDIO_H
+#define OVERRIDE_STDIO_H
+
+#include "OCS_stdio.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdio.h */
+/* ----------------------------------------- */
+
+#define FILE         OCS_FILE
+#define fclose       OCS_fclose
+#define fgets        OCS_fgets
+#define fopen        OCS_fopen
+#define fputs        OCS_fputs
+#define remove       OCS_remove
+#define rename       OCS_rename
+#define snprintf     OCS_snprintf
+#define vsnprintf    OCS_vsnprintf
+#define printf(...)  OCS_printf(__VA_ARGS__)
+#define fprintf(...) OCS_fprintf(__VA_ARGS__)
+#define putchar      OCS_putchar
+
+#define stdin  OCS_stdin
+#define stdout OCS_stdout
+#define stderr OCS_stderr
+
+#endif /* OVERRIDE_STDIO_H */
+```
+
+### `stdlib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/stdlib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for stdlib.h
+ */
+
+#ifndef OVERRIDE_STDLIB_H
+#define OVERRIDE_STDLIB_H
+
+#include "OCS_stdlib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdlib.h */
+/* ----------------------------------------- */
+
+#define EXIT_SUCCESS OCS_EXIT_SUCCESS
+#define EXIT_FAILURE OCS_EXIT_FAILURE
+#define abort        OCS_abort
+#define exit         OCS_exit
+#define strtoul      OCS_strtoul
+#define system       OCS_system
+#define malloc       OCS_malloc
+#define free         OCS_free
+
+#endif /* OVERRIDE_STDLIB_H */
+```
+
+### `string.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/string.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for string.h
+ */
+
+#ifndef OVERRIDE_STRING_H
+#define OVERRIDE_STRING_H
+
+#include "OCS_string.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in string.h */
+/* ----------------------------------------- */
+#define memchr   OCS_memchr
+#define memcpy   OCS_memcpy
+#define memset   OCS_memset
+#define strcmp   OCS_strcmp
+#define strcpy   OCS_strcpy
+#define strlen   OCS_strlen
+#define strncmp  OCS_strncmp
+#define strncpy  OCS_strncpy
+#define strchr   OCS_strchr
+#define strrchr  OCS_strrchr
+#define strcat   OCS_strcat
+#define strncat  OCS_strncat
+#define strerror OCS_strerror
+
+#endif /* OVERRIDE_STRING_H */
+```
+
+### `strings.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/strings.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for strings.h
+ */
+
+#ifndef OVERRIDE_STRINGS_H
+#define OVERRIDE_STRINGS_H
+
+#include "OCS_strings.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in strings.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_STRINGS_H */
+```
+
+### `symLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/symLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for symLib
+ */
+
+#ifndef OVERRIDE_SYMLIB_H
+#define OVERRIDE_SYMLIB_H
+
+#include "OCS_symLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in symLib.h */
+/* ----------------------------------------- */
+#define LOAD_ALL_SYMBOLS OCS_LOAD_ALL_SYMBOLS
+#define SYM_FIND_BY_NAME OCS_SYM_FIND_BY_NAME
+
+#define SYM_TYPE    OCS_SYM_TYPE
+#define SYMTAB      OCS_SYMTAB
+#define SYMBOL      OCS_SYMBOL
+#define SYMTAB_ID   OCS_SYMTAB_ID
+#define SYMBOL_ID   OCS_SYMBOL_ID
+#define SYMBOL_DESC OCS_SYMBOL_DESC
+#define SYM_GROUP   OCS_SYM_GROUP
+#define SYM_VALUE   OCS_SYM_VALUE
+
+#define sysSymTbl     OCS_sysSymTbl
+#define symFindByName OCS_symFindByName
+#define symEach       OCS_symEach
+#define symFind       OCS_symFind
+
+#endif /* OVERRIDE_SYMLIB_H */
+```
+
+### `sysLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sysLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sysLib.h
+ */
+
+#ifndef OVERRIDE_SYSLIB_H
+#define OVERRIDE_SYSLIB_H
+
+#include "OCS_sysLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in sysLib.h */
+/* ----------------------------------------- */
+#define sysClkRateGet OCS_sysClkRateGet
+
+#endif /* OVERRIDE_SYSLIB_H */
+```
+
+### `taskLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/taskLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for taskLib.h
+ */
+
+#ifndef OVERRIDE_TASKLIB_H
+#define OVERRIDE_TASKLIB_H
+
+#include "OCS_taskLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in taskLib.h */
+/* ----------------------------------------- */
+#define VX_FP_TASK OCS_VX_FP_TASK
+#define TASK_ID    OCS_TASK_ID
+#define WIND_TCB   OCS_WIND_TCB
+#define TASK_DESC  OCS_TASK_DESC
+
+#define taskName        OCS_taskName
+#define taskNameToId    OCS_taskNameToId
+#define taskIdDefault   OCS_taskIdDefault
+#define taskIsReady     OCS_taskIsReady
+#define taskIsSuspended OCS_taskIsSuspended
+#define taskGetInfo     OCS_taskGetInfo
+
+#define taskActivate    OCS_taskActivate
+#define taskExit        OCS_taskExit
+#define taskIdSelf      OCS_taskIdSelf
+#define taskDelay       OCS_taskDelay
+#define taskDelete      OCS_taskDelete
+#define taskDeleteForce OCS_taskDeleteForce
+#define taskSuspend     OCS_taskSuspend
+#define taskResume      OCS_taskResume
+#define taskPrioritySet OCS_taskPrioritySet
+#define taskSpawn       OCS_taskSpawn
+#define taskInit        OCS_taskInit
+#define taskTcb         OCS_taskTcb
+
+#endif /* OVERRIDE_TASKLIB_H */
+```
+
+### `taskVarLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/taskVarLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for taskVarLib.h
+ */
+
+#ifndef OVERRIDE_TASKVARLIB_H
+#define OVERRIDE_TASKVARLIB_H
+
+#include "OCS_taskVarLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in taskVarLib.h */
+/* ----------------------------------------- */
+
+#define taskVarAdd OCS_taskVarAdd
+
+#endif /* OVERRIDE_TASKVARLIB_H */
+```
+
+### `termios.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/termios.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for termios.h
+ */
+
+#ifndef OVERRIDE_TERMIOS_H
+#define OVERRIDE_TERMIOS_H
+
+#include "OCS_termios.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in termios.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_TERMIOS_H */
+```
+
+### `tgmath.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/tgmath.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for tgmath.h
+ */
+
+#ifndef OVERRIDE_TGMATH_H
+#define OVERRIDE_TGMATH_H
+
+#include "OCS_tgmath.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in tgmath.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_TGMATH_H */
+```
+
+### `time.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for time.h
+ */
+
+#ifndef OVERRIDE_TIME_H
+#define OVERRIDE_TIME_H
+
+#include "OCS_time.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in time.h */
+/* ----------------------------------------- */
+
+#define CLOCK_REALTIME  OCS_CLOCK_REALTIME
+#define CLOCK_MONOTONIC OCS_CLOCK_MONOTONIC
+#define TIMER_ABSTIME   OCS_TIMER_ABSTIME
+
+#define clockid_t          OCS_clockid_t
+#define timer_t            OCS_timer_t
+#define time_t             OCS_time_t
+#define suseconds_t        OCS_suseconds_t
+#define timespec           OCS_timespec
+#define timeval            OCS_timeval
+#define itimerspec         OCS_itimerspec
+#define TIMER_CONNECT_FUNC OCS_TIMER_CONNECT_FUNC
+
+#define clock_getres    OCS_clock_getres
+#define clock_gettime   OCS_clock_gettime
+#define clock_nanosleep OCS_clock_nanosleep
+#define clock_settime   OCS_clock_settime
+#define timer_create    OCS_timer_create
+#define timer_delete    OCS_timer_delete
+#define timer_gettime   OCS_timer_gettime
+#define timer_settime   OCS_timer_settime
+#define timer_connect   OCS_timer_connect
+
+#endif /* OVERRIDE_TIME_H */
+```
+
+### `timers.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/timers.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for timers.h
+ */
+
+#ifndef OVERRIDE_TIMERS_H
+#define OVERRIDE_TIMERS_H
+
+#include "OCS_timers.h"
+#include <time.h>
+
+/*
+ * Note: this is just an alias for time.h
+ */
+
+#endif /* OVERRIDE_TIMERS_H */
+```
+
+### `ulimit.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/ulimit.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for ulimit.h
+ */
+
+#ifndef OVERRIDE_ULIMIT_H
+#define OVERRIDE_ULIMIT_H
+
+#include "OCS_ulimit.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in ulimit.h */
+/* ----------------------------------------- */
+#define ulimit OCS_ulimit
+
+#endif /* OVERRIDE_ULIMIT_H */
+```
+
+### `unistd.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/unistd.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for unistd.h
+ */
+
+#ifndef OVERRIDE_UNISTD_H
+#define OVERRIDE_UNISTD_H
+
+#include "OCS_unistd.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in unistd.h */
+/* ----------------------------------------- */
+
+#define SEEK_SET      OCS_SEEK_SET
+#define SEEK_CUR      OCS_SEEK_CUR
+#define SEEK_END      OCS_SEEK_END
+#define STDIN_FILENO  OCS_STDIN_FILENO
+#define STDOUT_FILENO OCS_STDOUT_FILENO
+#define STDERR_FILENO OCS_STDERR_FILENO
+
+#define close       OCS_close
+#define getegid     OCS_getegid
+#define geteuid     OCS_geteuid
+#define gethostid   OCS_gethostid
+#define gethostname OCS_gethostname
+#define getpid      OCS_getpid
+#define lseek       OCS_lseek
+#define read        OCS_read
+#define rmdir       OCS_rmdir
+#define sysconf     OCS_sysconf
+#define write       OCS_write
+
+#endif /* OVERRIDE_UNISTD_H */
+```
+
+### `unldLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/unldLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for unldLib.h
+ */
+
+#ifndef OVERRIDE_UNLDLIB_H
+#define OVERRIDE_UNLDLIB_H
+
+#include "OCS_unldLib.h"
+#include <vxWorks.h>
+#include <moduleLib.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in unldLib.h */
+/* ----------------------------------------- */
+#define unldByModuleId OCS_unldByModuleId
+
+#endif /* OVERRIDE_UNLDLIB_H */
+```
+
+### `usrLib.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/usrLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for usrLib.h
+ */
+
+#ifndef OVERRIDE_USRLIB_H
+#define OVERRIDE_USRLIB_H
+
+#include "OCS_usrLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in usrLib.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_USRLIB_H */
+```
+
+### `version.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for version.h
+ */
+
+#ifndef OVERRIDE_VERSION_H
+#define OVERRIDE_VERSION_H
+
+#include "OCS_version.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in version.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_VERSION_H */
+```
+
+### `vxWorks.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/vxWorks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for vxWorks
+ */
+
+#ifndef OVERRIDE_VXWORKS_H
+#define OVERRIDE_VXWORKS_H
+
+#include "OCS_vxWorks.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in vxWorks.h */
+/* ----------------------------------------- */
+#define ERROR        OCS_ERROR
+#define OK           OCS_OK
+#define WAIT_FOREVER OCS_WAIT_FOREVER
+#define NO_WAIT      OCS_NO_WAIT
+
+#define STATUS      OCS_STATUS
+#define BOOL        OCS_BOOL
+#define FUNCPTR     OCS_FUNCPTR
+#define VOIDFUNCPTR OCS_VOIDFUNCPTR
+
+#define UINT   OCS_UINT
+#define INT8   OCS_INT8
+#define UINT8  OCS_UINT8
+#define INT16  OCS_INT16
+#define UINT16 OCS_UINT16
+#define INT32  OCS_INT32
+#define UINT32 OCS_UINT32
+
+#define _Vx_usr_arg_t OCS_Vx_usr_arg_t
+
+#endif /* OVERRIDE_VXWORKS_H */
+```
+
+### `wchar.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/wchar.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for wchar.h
+ */
+
+#ifndef OVERRIDE_WCHAR_H
+#define OVERRIDE_WCHAR_H
+
+#include "OCS_wchar.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in wchar.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_WCHAR_H */
+```
+
+### `wctype.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/wctype.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for wctype.h
+ */
+
+#ifndef OVERRIDE_WCTYPE_H
+#define OVERRIDE_WCTYPE_H
+
+#include "OCS_wctype.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in wctype.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_WCTYPE_H */
+```
+
+### `xbdBlkDev.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/xbdBlkDev.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for xbdBlkDev.h
+ */
+
+#ifndef OVERRIDE_XBDBLKDEV_H
+#define OVERRIDE_XBDBLKDEV_H
+
+#include "OCS_xbdBlkDev.h"
+#include <vxWorks.h>
+#include <blkIo.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in xbdBlkDev.h */
+/* ----------------------------------------- */
+
+#define NULLDEV             OCS_NULLDEV
+#define device_t            OCS_device_t
+#define xbdBlkDevCreateSync OCS_xbdBlkDevCreateSync
+#define xbdBlkDevDelete     OCS_xbdBlkDevDelete
+
+#endif /* OVERRIDE_XBDBLKDEV_H */
+```
+
+### `xbdRamDisk.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/xbdRamDisk.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for xbdRamDisk.h
+ */
+
+#ifndef OVERRIDE_XBDRAMDISK_H
+#define OVERRIDE_XBDRAMDISK_H
+
+#include "OCS_xbdRamDisk.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in xbdRamDisk.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_XBDRAMDISK_H */
+```

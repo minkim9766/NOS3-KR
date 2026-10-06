@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,35 +16,1597 @@ directives/index
 pipes/index
 print/index
 services/index
-file--BitRange.ts
-file--extension.directive.ts
-file--navigation.ts
-file--providers.ts
-file--TrackBySelectionModel.ts
-file--transforms.ts
-file--User.ts
-file--utils.ts
-file--validators.ts
-file--webapp-sdk.module.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/abc/`](abc/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/`](client/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/`](commanding/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/`](components/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/directives/`](directives/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/`](pipes/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/print/`](print/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/services/`](services/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/BitRange.ts`](file--BitRange.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/extension.directive.ts`](file--extension.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/navigation.ts`](file--navigation.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/providers.ts`](file--providers.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/TrackBySelectionModel.ts`](file--TrackBySelectionModel.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/transforms.ts`](file--transforms.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/User.ts`](file--User.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/utils.ts`](file--utils.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/validators.ts`](file--validators.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/webapp-sdk.module.ts`](file--webapp-sdk.module.ts) — UTF-8 텍스트 파일 본문 포함
+### `BitRange.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/BitRange.ts`
+
+
+```typescript
+export class BitRange {
+  constructor(
+    readonly start: number,
+    readonly bitlength: number,
+  ) {}
+
+  get stop() {
+    return this.start + this.bitlength;
+  }
+
+  join(other: BitRange) {
+    const start = Math.min(this.start, other.start);
+    const stop = Math.max(this.stop, other.stop);
+    return new BitRange(start, stop - start);
+  }
+
+  joinBit(bitpos: number) {
+    const start = Math.min(this.start, bitpos);
+    const stop = Math.max(this.stop, bitpos);
+    return new BitRange(start, stop - start);
+  }
+
+  containsBit(bitpos: number) {
+    return this.start <= bitpos && bitpos <= this.stop;
+  }
+
+  containsBitExclusive(bitpos: number) {
+    return this.start < bitpos && bitpos < this.stop;
+  }
+
+  overlaps(other: BitRange) {
+    return other.start < this.stop && this.start < other.stop;
+  }
+
+  intersect(other: BitRange): BitRange | null {
+    if (other.start > this.stop || this.start > other.stop) {
+      return null;
+    }
+    const start = Math.max(this.start, other.start);
+    const stop = Math.min(this.stop, other.stop);
+    return new BitRange(start, stop - start);
+  }
+
+  equals(other: BitRange): boolean {
+    return this.start === other.start && this.bitlength === other.bitlength;
+  }
+
+  toString() {
+    return `${this.start}-${this.stop} (${this.bitlength} bits)`;
+  }
+}
+```
+
+### `extension.directive.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/extension.directive.ts`
+
+
+```typescript
+import { Directive, inject, Input } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigService } from './services/config.service';
+import { ExtensionService } from './services/extension.service';
+import { MessageService } from './services/message.service';
+import { SdkBridge } from './services/sdk-bridge.service';
+import { YamcsService } from './services/yamcs.service';
+
+@Directive()
+export abstract class YamcsWebExtension {
+  private _extensionService: ExtensionService;
+  sdkBridge = inject(SdkBridge);
+
+  @Input()
+  public subroute: string;
+
+  @Input()
+  get extensionService() {
+    return this._extensionService;
+  }
+  set extensionService(extensionService: ExtensionService) {
+    this._extensionService = extensionService;
+
+    // Configure bridge to use services of main webapp
+    this.sdkBridge.authService = extensionService.authService;
+    this.sdkBridge.appearanceService = extensionService.appearanceService;
+    this.sdkBridge.router = extensionService.router;
+    this.sdkBridge.yamcs = extensionService.yamcs;
+
+    this.onExtensionInit();
+  }
+
+  get configService(): ConfigService {
+    return this.extensionService?.configService;
+  }
+
+  get messageService(): MessageService {
+    return this.extensionService?.messageService;
+  }
+
+  get router(): Router {
+    return this.extensionService?.router;
+  }
+
+  get route(): ActivatedRoute {
+    return this.extensionService?.route;
+  }
+
+  get yamcs(): YamcsService {
+    return this.extensionService?.yamcs;
+  }
+
+  /**
+   * Called when the extension is initialized in the main application.
+   * At this time, main services are available.
+   */
+  abstract onExtensionInit(): void;
+}
+```
+
+### `navigation.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/navigation.ts`
+
+
+```typescript
+import { User } from './User';
+
+export type NavGroup =
+  | 'telemetry'
+  | 'commanding'
+  | 'procedures'
+  | 'archive'
+  | 'mdb';
+
+export interface NavItem {
+  path: string;
+  label: string;
+  activeWhen?: string;
+  icon?: string;
+  condition?: (user: User) => boolean;
+
+  /**
+   * Optional hint to order items in sidebar. Defaults to 0.
+   *
+   * Only used for extension paths.
+   */
+  order?: number;
+}
+```
+
+### `providers.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/providers.ts`
+
+
+```typescript
+import {
+  FullscreenOverlayContainer,
+  OverlayContainer,
+} from '@angular/cdk/overlay';
+import { APP_BASE_HREF } from '@angular/common';
+import {
+  EnvironmentProviders,
+  inject,
+  provideAppInitializer,
+  Provider,
+  provideZonelessChangeDetection,
+} from '@angular/core';
+import { DateAdapter } from '@angular/material/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import {
+  MAT_TOOLTIP_DEFAULT_OPTIONS,
+  MatTooltipDefaultOptions,
+} from '@angular/material/tooltip';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
+import { UtcDateAdapter } from './components/date-time-input/UtcDateAdapter';
+import { AppearanceService } from './services/appearance.service';
+import { AuthService } from './services/auth.service';
+import { ConfigService } from './services/config.service';
+import { SdkBridge } from './services/sdk-bridge.service';
+import { YamcsService } from './services/yamcs.service';
+
+const matTooltipOptions: MatTooltipDefaultOptions = {
+  showDelay: 0,
+  hideDelay: 0,
+  touchendHideDelay: 1500,
+  disableTooltipInteractivity: true,
+};
+
+export function provideUtcNativeDateAdapter(): Provider[] {
+  return [{ provide: DateAdapter, useClass: UtcDateAdapter }];
+}
+
+/**
+ * base href can be a context path, and is set in index.html
+ * so that it can be applied for loading static resources.
+ * Here we derive APP_BASE_HREF from it.
+ */
+export function provideBaseHrefFromIndexHtml(): Provider[] {
+  return [
+    {
+      provide: APP_BASE_HREF,
+      useFactory: () => {
+        const baseEl = document.getElementsByTagName('base')[0];
+        return baseEl.getAttribute('href');
+      },
+    },
+  ];
+}
+
+export function provideYamcsMaterialConfiguration(): Provider[] {
+  return [
+    provideUtcNativeDateAdapter(),
+    { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: matTooltipOptions },
+    // The default OverlayContainer does not show overlays if
+    // requestFullscreen is used.
+    { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
+    provideNoopAnimations(),
+  ];
+}
+
+export function provideConfigInitializer(): EnvironmentProviders[] {
+  return [
+    provideAppInitializer(() => {
+      inject(ConfigService).loadWebsiteConfig();
+    }),
+  ];
+}
+
+/**
+ * Configures Angular Material to use Material Symbols font,
+ * mapped to material-symbols class.
+ */
+export function provideMaterialSymbols(): EnvironmentProviders[] {
+  return [
+    provideAppInitializer(() => {
+      inject(MatIconRegistry).setDefaultFontSetClass('material-symbols');
+    }),
+  ];
+}
+
+// Not intended for use in webcomponents
+export function provideSdkBridge(): EnvironmentProviders[] {
+  return [
+    provideAppInitializer(() => {
+      const sdkBridge = inject(SdkBridge);
+      sdkBridge.authService = inject(AuthService);
+      sdkBridge.appearanceService = inject(AppearanceService);
+      sdkBridge.router = inject(Router);
+      sdkBridge.yamcs = inject(YamcsService);
+    }),
+  ];
+}
+
+export function provideYamcsWebExtension(): (
+  | Provider
+  | EnvironmentProviders
+)[] {
+  return [
+    provideBaseHrefFromIndexHtml(),
+    provideYamcsMaterialConfiguration(),
+    provideConfigInitializer(),
+    provideZonelessChangeDetection(),
+    provideMaterialSymbols(),
+  ];
+}
+```
+
+### `TrackBySelectionModel.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/TrackBySelectionModel.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import { TrackByFunction } from '@angular/core';
+
+/**
+ * A SelectionModel that compares items via an arbitrary tracker function instead of
+ * via the default reference equality.
+ */
+export class TrackBySelectionModel<T> extends SelectionModel<T> {
+  constructor(
+    private tracker: TrackByFunction<T>,
+    multiple?: boolean,
+    initiallySelectedValues?: T[],
+  ) {
+    super(multiple, initiallySelectedValues);
+  }
+
+  /**
+   * Inform this model of all new values. Previously selected values that are no longer
+   * in the new collection get automatically deselected.
+   */
+  matchNewValues(newValues: T[]) {
+    const newIds: any[] = [];
+    for (const value of newValues) {
+      newIds.push(this.tracker(-1, value));
+    }
+
+    const oldIds = this.selected.map((v) => this.tracker(-1, v));
+
+    const newSelected: T[] = [];
+    for (const value of newValues) {
+      const valueId = this.tracker(-1, value);
+      if (oldIds.indexOf(valueId) !== -1) {
+        newSelected.push(value);
+      }
+    }
+
+    this.clear();
+    if (newSelected.length) {
+      this.select(...newSelected);
+    }
+  }
+
+  override isSelected(value: T) {
+    const valueId = this.tracker(-1, value);
+    for (const candidate of this.selected) {
+      if (valueId === this.tracker(-1, candidate)) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+```
+
+### `transforms.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/transforms.ts`
+
+
+```typescript
+export function stringArrayAttribute(value: unknown): string[] {
+  if (!value) {
+    return [];
+  } else if (Array.isArray(value)) {
+    return value;
+  } else {
+    return [value as any];
+  }
+}
+```
+
+### `User.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/User.ts`
+
+
+```typescript
+import { ObjectPrivilege, UserInfo } from './client';
+
+export class User {
+  constructor(private userInfo: UserInfo) {}
+
+  getName() {
+    return this.userInfo.name;
+  }
+
+  getEmail() {
+    return this.userInfo.email;
+  }
+
+  getDisplayName() {
+    return this.userInfo.displayName;
+  }
+
+  isSuperuser() {
+    return this.userInfo.superuser || false;
+  }
+
+  getGroups() {
+    return this.userInfo.groups || [];
+  }
+
+  getRoles() {
+    return this.userInfo.roles || [];
+  }
+
+  getSystemPrivileges() {
+    return this.userInfo.systemPrivileges || [];
+  }
+
+  getObjectPrivileges(): ObjectPrivilege[] {
+    return this.userInfo.objectPrivileges || [];
+  }
+
+  hasSystemPrivilege(privilege: string) {
+    if (this.userInfo.superuser) {
+      return true;
+    }
+    return this.getSystemPrivileges().indexOf(privilege) !== -1;
+  }
+
+  hasObjectPrivilege(type: string, object: string) {
+    if (this.userInfo.superuser) {
+      return true;
+    }
+    for (const p of this.getObjectPrivileges()) {
+      if (p.type === type) {
+        for (const expression of p.objects) {
+          if (object.match(expression)) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  hasAnyObjectPrivilegeOfType(type: string) {
+    if (this.userInfo.superuser) {
+      return true;
+    }
+    for (const p of this.getObjectPrivileges()) {
+      if (p.type === type) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getClearance() {
+    return this.userInfo.clearance;
+  }
+}
+```
+
+### `utils.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/utils.ts`
+
+
+```typescript
+import {
+  Instance,
+  Parameter,
+  ParameterMember,
+  ParameterType,
+  UnitInfo,
+  Value,
+} from './client';
+
+/**
+ * Minimum valid date for a proto Timestamp
+ */
+export const MIN_DATE = new Date('0001-01-01T00:00:00Z');
+
+/**
+ * Maximum valid date for a proto Timestamp
+ */
+export const MAX_DATE = new Date('9999-12-31T23:59:59.999999999Z');
+
+/**
+ * Return a new date, clamped to the range {@link MIN_DATE} - {@link MAX_DATE}
+ */
+export function clampDate(date: Date | number | string): Date {
+  const copy = new Date(date);
+  if (copy.getTime() < MIN_DATE.getTime()) {
+    copy.setTime(MIN_DATE.getTime());
+  } else if (copy.getTime() > MAX_DATE.getTime()) {
+    copy.setTime(MAX_DATE.getTime());
+  }
+  return copy;
+}
+
+/**
+ * Deep clones an object.
+ * https://github.com/whatwg/html/issues/793
+ */
+export function structuredClone(obj: {}) {
+  return new Promise((resolve) => {
+    const { port1, port2 } = new MessageChannel();
+    port2.onmessage = (ev) => resolve(ev.data);
+    port1.postMessage(obj);
+  });
+}
+
+/**
+ * Substracts an ISO 8601 duration string from the given date.
+ * Fractions are not currently supported.
+ */
+export function subtractDuration(date: Date, isoDuration: string) {
+  const regex =
+    /P((([0-9]*\.?[0-9]*)Y)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)W)?(([0-9]*\.?[0-9]*)D)?)?(T(([0-9]*\.?[0-9]*)H)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)S)?)?/;
+
+  const matchResult = isoDuration.match(regex);
+  if (!matchResult) {
+    throw new Error(`Invalid ISO 8601 duration: ${isoDuration}`);
+  }
+
+  const dt = new Date(date.getTime());
+  if (matchResult[3]) {
+    // e.g. P1Y
+    dt.setUTCFullYear(date.getUTCFullYear() - parseFloat(matchResult[3]));
+  }
+  if (matchResult[5]) {
+    // e.g. P1M
+    dt.setUTCMonth(date.getUTCMonth() - parseFloat(matchResult[5]));
+  }
+  if (matchResult[7]) {
+    // e.g. P1W
+    dt.setUTCDate(date.getUTCDate() - 7 * parseFloat(matchResult[7]));
+  }
+  if (matchResult[9]) {
+    // e.g. P1D
+    dt.setUTCDate(date.getUTCDate() - parseFloat(matchResult[9]));
+  }
+  if (matchResult[12]) {
+    // e.g. PT1H
+    dt.setUTCHours(date.getUTCHours() - parseFloat(matchResult[12]));
+  }
+  if (matchResult[14]) {
+    // e.g. PT1M
+    dt.setUTCMinutes(date.getUTCMinutes() - parseFloat(matchResult[14]));
+  }
+  if (matchResult[16]) {
+    // e.g. PT1S
+    dt.setUTCSeconds(date.getUTCSeconds() - parseFloat(matchResult[16]));
+  }
+  return dt;
+}
+
+export function convertProtoDurationToMillis(protoDuration: string) {
+  if (!protoDuration.endsWith('s')) {
+    throw new Error(`Invalid proto duration: ${protoDuration}`);
+  }
+  const parts = protoDuration
+    .substring(0, protoDuration.length - 1)
+    .split('.', 2);
+  if (parts.length === 1) {
+    return Number(parts[0]) * 1000;
+  } else {
+    const seconds = Number(parts[0]);
+    let millisString = parts[1].substr(0, 3);
+    let millis = Number(millisString);
+    if (millisString.length === 1) {
+      millis *= 100;
+    } else if (millisString.length === 2) {
+      millis *= 10;
+    }
+    return seconds * 1000 + millis;
+  }
+}
+
+/**
+ * Converts an ISO duration string to the equivalent number of milliseconds.
+ * This only works with seconds, minutes, hours and days.
+ */
+export function convertDurationToMillis(isoDuration: string) {
+  const regex =
+    /P((([0-9]*\.?[0-9]*)Y)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)W)?(([0-9]*\.?[0-9]*)D)?)?(T(([0-9]*\.?[0-9]*)H)?(([0-9]*\.?[0-9]*)M)?(([0-9]*\.?[0-9]*)S)?)?/;
+
+  const matchResult = isoDuration.match(regex);
+  if (!matchResult) {
+    throw new Error(`Invalid ISO 8601 duration: ${isoDuration}`);
+  }
+
+  let millis = 0;
+  if (matchResult[9]) {
+    // e.g. P1D
+    millis += parseFloat(matchResult[9]) * 86400000;
+  }
+  if (matchResult[12]) {
+    // e.g. PT1H
+    millis += parseFloat(matchResult[12]) * 3600000;
+  }
+  if (matchResult[14]) {
+    // e.g. PT1M
+    millis += parseFloat(matchResult[14]) * 60000;
+  }
+  if (matchResult[16]) {
+    // e.g. PT1S
+    millis += parseFloat(matchResult[16]) * 1000;
+  }
+  return millis;
+}
+
+export function convertValueToNumber(value: Value) {
+  switch (value.type) {
+    case 'FLOAT':
+      return value.floatValue!;
+    case 'DOUBLE':
+      return value.doubleValue!;
+    case 'UINT32':
+      return value.uint32Value!;
+    case 'SINT32':
+      return value.sint32Value!;
+    case 'UINT64':
+      return value.uint64Value!;
+    case 'SINT64':
+      return value.sint64Value!;
+    default:
+      return null; // Assuming not a number
+  }
+}
+
+export function convertBase64ToHex(base64: string) {
+  const raw = window.atob(base64);
+  let result = '';
+  for (let i = 0; i < raw.length; i++) {
+    const hex = raw.charCodeAt(i).toString(16);
+    result += hex.length === 2 ? hex : '0' + hex;
+  }
+  return result;
+}
+
+export function convertHexToBase64(hex: string) {
+  if (hex.length % 2) {
+    hex = '0' + hex;
+  }
+  const barr = [];
+  for (let i = 0; i < hex.length - 1; i += 2) {
+    barr.push(parseInt(hex.substr(i, 2), 16));
+  }
+  const str = String.fromCharCode.apply(String, barr);
+  return window.btoa(str);
+}
+
+export function toValue(value: any): Value {
+  if (Array.isArray(value)) {
+    const arrayValue: Value[] = [];
+    for (const item of value) {
+      arrayValue.push(toValue(item));
+    }
+    return { type: 'ARRAY', arrayValue };
+  } else if (typeof value === 'object') {
+    const names = [];
+    const values = [];
+    for (const name in value) {
+      names.push(name);
+      values.push(toValue(value[name]));
+    }
+    return {
+      type: 'AGGREGATE',
+      aggregateValue: { name: names, value: values },
+    };
+  } else if (value === true || value === false) {
+    return { type: 'BOOLEAN', booleanValue: value };
+  } else {
+    return { type: 'STRING', stringValue: String(value) };
+  }
+}
+
+export function convertValue(value: Value) {
+  switch (value.type) {
+    case 'FLOAT':
+      return value.floatValue;
+    case 'DOUBLE':
+      return value.doubleValue;
+    case 'UINT32':
+      return value.uint32Value;
+    case 'SINT32':
+      return value.sint32Value;
+    case 'UINT64':
+      return value.uint64Value;
+    case 'SINT64':
+      return value.sint64Value;
+    case 'BOOLEAN':
+      return value.booleanValue;
+    case 'TIMESTAMP':
+      return toDate(value.stringValue!);
+    case 'BINARY':
+      return window.atob(value.binaryValue!);
+    case 'ENUMERATED':
+    case 'STRING':
+      return value.stringValue;
+    case 'ARRAY':
+      const arrayValue: any[] = [];
+      for (const item of value.arrayValue || []) {
+        arrayValue.push(convertValue(item));
+      }
+      return arrayValue;
+    case 'AGGREGATE':
+      const aggregate: Map<string, any> = new Map<string, any>();
+      let membersLength = value.aggregateValue?.value.length || 0;
+      for (let i = 0; i < membersLength; i++) {
+        let memberName = value.aggregateValue?.name[i] || '';
+        let memberValue = convertValue(value.aggregateValue?.value[i] as Value);
+        aggregate.set(memberName, memberValue);
+      }
+      return aggregate;
+    default:
+      throw new Error(`Unexpected value type ${value.type}`);
+  }
+}
+
+const adjectives = [
+  'amused',
+  'acid',
+  'adaptable',
+  'alleged',
+  'agreeable',
+  'aspiring',
+  'awestruck',
+  'berserk',
+  'bright',
+  'busy',
+  'calm',
+  'caring',
+  'chilly',
+  'cool',
+  'curious',
+  'dapper',
+  'dazzling',
+  'dizzy',
+  'eager',
+  'elite',
+  'energetic',
+  'familiar',
+  'famous',
+  'fancy',
+  'fast',
+  'festive',
+  'flawless',
+  'fresh',
+  'friendly',
+  'funny',
+  'furry',
+  'gifted',
+  'groovy',
+  'helpful',
+  'hungry',
+  'jolly',
+  'jumpy',
+  'lucky',
+  'polite',
+  'quick',
+  'quiet',
+  'rapid',
+  'rare',
+  'scary',
+  'surprised',
+  'swift',
+  'tall',
+  'tame',
+  'thin',
+  'tidy',
+  'tiny',
+  'thirsty',
+  'tough',
+  'wacky',
+  'wild',
+];
+
+const animals = [
+  'alligator',
+  'ant',
+  'anteater',
+  'antelope',
+  'armadillo',
+  'badger',
+  'bat',
+  'bear',
+  'bee',
+  'beetle',
+  'buffalo',
+  'butterfly',
+  'camel',
+  'cat',
+  'chameleon',
+  'cheetah',
+  'chicken',
+  'cicada',
+  'chimp',
+  'clam',
+  'cow',
+  'coyote',
+  'crab',
+  'cricket',
+  'crow',
+  'deer',
+  'dog',
+  'dolphin',
+  'donkey',
+  'dove',
+  'dragonfly',
+  'duck',
+  'eagle',
+  'eel',
+  'elephant',
+  'ferret',
+  'fish',
+  'fly',
+  'fox',
+  'frog',
+  'gazelle',
+  'goat',
+  'groundhog',
+  'hedgehog',
+  'hen',
+  'hippo',
+  'horse',
+  'hyena',
+  'koala',
+  'leopard',
+  'lion',
+  'llama',
+  'lobster',
+  'lynx',
+  'meerkat',
+  'mole',
+  'moose',
+  'moth',
+  'mouse',
+  'octopus',
+  'orangutan',
+  'orca',
+  'ostrich',
+  'otter',
+  'owl',
+  'panda',
+  'panther',
+  'parrot',
+  'penguin',
+  'pig',
+  'pigeon',
+  'rabbit',
+  'raccoon',
+  'reindeer',
+  'seagull',
+  'seahorse',
+  'seal',
+  'shark',
+  'sheep',
+  'shrimp',
+  'slug',
+  'snail',
+  'snake',
+  'sparrow',
+  'spider',
+  'squid',
+  'squirrel',
+  'starfish',
+  'swan',
+  'tiger',
+  'turtle',
+  'wallaby',
+  'walrus',
+  'wasp',
+  'weasel',
+  'weaver',
+  'whale',
+  'wolf',
+  'wolverine',
+  'wombat',
+];
+
+/**
+ * Generates 'random' animal names.
+ */
+export function generateRandomName() {
+  const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+  const animal = animals[Math.floor(Math.random() * animals.length)];
+  return `${adjective}_${animal}`;
+}
+
+/**
+ * Prints a date in ISO format (with Z suffix).
+ * Dates or datetimes without Z suffix are considered UTC.
+ */
+export function toISOString(date: Date | string): string {
+  let dateString;
+  if (typeof date === 'string') {
+    // Convert to date first, this standardizes output (millis precision)
+    dateString = toDate(date).toISOString();
+  } else {
+    dateString = date.toISOString();
+  }
+  return dateString;
+}
+
+export function toDate(obj: any): Date {
+  if (!obj) {
+    return obj;
+  }
+
+  if (obj instanceof Date) {
+    return obj;
+  } else if (typeof obj === 'number') {
+    return new Date(obj);
+  } else if (typeof obj === 'string') {
+    if (!obj.endsWith('Z')) {
+      obj = obj + 'Z';
+    }
+    return new Date(Date.parse(obj));
+  } else {
+    throw new Error(`Cannot convert '${obj}' to Date`);
+  }
+}
+
+export function toBase64URL(data: string) {
+  return window
+    .btoa(data)
+    .replace(/\//g, '_')
+    .replace(/\+/g, '-')
+    .replace(/=/g, '');
+}
+
+export function fromBase64URL(base64Url: string) {
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  return window.atob(base64);
+}
+
+export function generateUnsignedJWT(claims: { [key: string]: any }) {
+  const joseHeader = toBase64URL('{"alg":"none"}');
+  const payload = toBase64URL(JSON.stringify(claims));
+  return `${joseHeader}.${payload}.`;
+}
+
+export function lpad(nr: number, n: number) {
+  return Array(n - String(nr).length + 1).join('0') + nr;
+}
+
+export function getDefaultProcessor(instance: Instance): string | null {
+  if (!instance) {
+    return null;
+  }
+
+  // Try to find a 'default' processor for this instance.
+  // The alphabetic-first non-replay persistent processor
+  for (const processor of instance.processors || []) {
+    if (processor.persistent && !processor.replay) {
+      return processor.name;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Prints a qualified name of a specific parameter member entry
+ */
+export function getMemberPath(parameter: Parameter): string | null {
+  if (!parameter) {
+    return null;
+  }
+  let result = parameter.qualifiedName;
+  if (parameter.path) {
+    for (let i = 0; i < parameter.path.length; i++) {
+      const el = parameter.path[i];
+      if (el.startsWith('[')) {
+        result += el;
+      } else {
+        result += '.' + el;
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * Outputs the basename of a path string (no extension).
+ */
+export function getBasename(path: string | null): string | null {
+  if (!path) {
+    return null;
+  }
+
+  const idx = path.lastIndexOf('.');
+  if (idx === -1) {
+    return path;
+  } else {
+    return path.substring(0, idx);
+  }
+}
+
+/**
+ * Relativizes a path to another.
+ *
+ * This is a simplified implementation that assumes that
+ * both paths are provided as fully qualified names.
+ */
+export function relativizePath(path: string, relto: string) {
+  if (relto.endsWith('/')) {
+    relto = relto.slice(0, -1);
+  }
+
+  const aSegments = relto.split('/');
+  const bSegments = path.split('/');
+  let commonSegments: string[] = [];
+  for (let i = 0; i < Math.min(aSegments.length, bSegments.length); i++) {
+    if (aSegments[i] === bSegments[i]) {
+      commonSegments.push(aSegments[i]);
+    }
+  }
+
+  const commonPrefix = commonSegments.join('/') || '/';
+  if (commonPrefix === '/') {
+    return path;
+  } else {
+    let result = '';
+    for (let i = commonSegments.length; i < aSegments.length; i++) {
+      result += '../';
+    }
+    for (let i = commonSegments.length; i < bSegments.length; i++) {
+      if (i > commonSegments.length) {
+        result += '/';
+      }
+      result += bSegments[i];
+    }
+    return result;
+  }
+}
+
+/**
+ * Outputs the filename of a path string. The path may end with a trailing slash which is preserved.
+ */
+export function getFilename(path: string): string | null {
+  if (!path) {
+    return null;
+  }
+  let idx = path.lastIndexOf('/');
+  if (path.endsWith('/')) {
+    idx = path.substring(0, path.length - 1).lastIndexOf('/');
+  }
+
+  if (idx === -1) {
+    return path;
+  } else {
+    return path.substring(idx + 1);
+  }
+}
+
+/**
+ * Outputs the extension of a filename.
+ */
+export function getExtension(filename: string | null): string | null {
+  if (!filename) {
+    return null;
+  }
+
+  let idx = filename.lastIndexOf('.');
+  if (idx === -1) {
+    return null;
+  } else {
+    return filename.substring(idx + 1);
+  }
+}
+
+export function getEntryForOffset(
+  parameter: Parameter,
+  offset: string,
+): Parameter | ParameterMember | null {
+  const entry = parameter.name + offset;
+  const parts = entry.split('.');
+
+  let node: Parameter | ParameterMember = parameter;
+  for (let i = 1; i < parts.length; i++) {
+    let memberNode;
+    const members: ParameterMember[] =
+      getParameterTypeForEntry(node)?.member || [];
+    for (const member of members) {
+      if (member.name === parts[i]) {
+        memberNode = member;
+        break;
+      }
+    }
+
+    if (!memberNode) {
+      return null;
+    } else {
+      node = memberNode;
+    }
+  }
+
+  return node || null;
+}
+
+function getParameterTypeForEntry(entry: Parameter | ParameterMember) {
+  const entryType = entry.type as ParameterType;
+  if (entryType.arrayInfo) {
+    return entryType.arrayInfo.type;
+  } else {
+    return entry.type;
+  }
+}
+
+export function getParameterTypeForPath(
+  parameter: Parameter,
+  pathString?: string,
+): ParameterType | null | undefined {
+  if (!parameter) {
+    return null;
+  }
+  let path = parameter.path;
+
+  // Allow overriding the path (for when it is not contained
+  // in the parameter definition)
+  if (pathString !== undefined) {
+    path = pathString.split('.');
+  }
+
+  if (!path) {
+    return parameter.type;
+  }
+  let ptype = parameter.type!;
+  for (const segment of path) {
+    if (segment.startsWith('[')) {
+      ptype = ptype.arrayInfo!.type;
+    } else {
+      for (const member of ptype.member || []) {
+        if (member.name === segment) {
+          ptype = member.type as ParameterType;
+          break;
+        }
+      }
+    }
+  }
+  return ptype;
+}
+
+export function getUnits(unitSet?: UnitInfo[]): string | null {
+  if (!unitSet || unitSet.length === 0) {
+    return null;
+  }
+  let res = '';
+  for (const unitInfo of unitSet) {
+    res += unitInfo.unit + ' ';
+  }
+  return res;
+}
+
+export function unflattenIndex(flatIndex: number, dimensions: number[]) {
+  let n = flatIndex;
+
+  let d = 1;
+  for (let i = 1; i < dimensions.length; i++) {
+    d *= dimensions[i];
+  }
+
+  let result = [];
+
+  let k;
+  for (k = 0; k < dimensions.length - 1; k++) {
+    result[k] = Math.floor(n / d);
+    n = n - d * result[k];
+    d = Math.floor(d / dimensions[k + 1]);
+  }
+  result[k] = n;
+  return result;
+}
+
+export function objectCompareFn(...fields: string[]) {
+  fields = [...fields];
+  const reverse: boolean[] = [];
+  for (let i = 0; i < fields.length; i++) {
+    if (fields[i].startsWith('-')) {
+      reverse.push(true);
+      fields[i] = fields[i].substring(1);
+    } else {
+      reverse.push(false);
+    }
+  }
+  return (a: any, b: any) => {
+    let rc = 0;
+    for (let i = 0; i < fields.length; i++) {
+      const field = fields[i];
+      let aField = (a.hasOwnProperty(field) ? (a as any)[field] : null) ?? null;
+      let bField = (b.hasOwnProperty(field) ? (b as any)[field] : null) ?? null;
+      if (typeof aField === 'string') {
+        aField = aField.toLowerCase();
+      }
+      if (typeof bField === 'string') {
+        bField = bField.toLowerCase();
+      }
+      if (aField === bField) {
+        rc = 0;
+      } else if (aField === null) {
+        rc = -1;
+      } else if (bField == null) {
+        rc = 1;
+      } else {
+        rc = aField > bField ? 1 : -1;
+      }
+      if (reverse[i]) {
+        rc = -rc;
+      }
+      if (rc !== 0) {
+        break;
+      }
+    }
+    return rc;
+  };
+}
+```
+
+### `validators.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/validators.ts`
+
+
+```typescript
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+
+export const requireInteger: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  if (control.value === null || control.value === '') {
+    return null; // don't validate empty values to allow optional controls
+  }
+  const allowed =
+    !isNaN(control.value) && Number.isInteger(parseFloat(control.value));
+  return allowed ? null : { notInteger: { value: control.value } };
+};
+
+export const requireUnsigned: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  const allowed = !isNaN(control.value) && parseFloat(control.value) >= 0;
+  return allowed ? null : { notUnsigned: { value: control.value } };
+};
+
+export const requireFloat: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  if (control.value === null || control.value === '') {
+    return null; // don't validate empty values to allow optional controls
+  }
+  const allowed =
+    !isNaN(control.value) &&
+    (Number.isInteger(parseFloat(control.value)) || control.value % 1 !== 0);
+  return allowed ? null : { notFloat: { value: control.value } };
+};
+
+export const requireHex: ValidatorFn = (
+  control: AbstractControl,
+): ValidationErrors | null => {
+  if (!control.value) {
+    return null; // don't validate empty values to allow optional controls
+  }
+  const value: string = control.value;
+  return /^[a-fA-F0-9]+$/.test(value) ? null : { notHex: true };
+};
+
+export function minHexLengthValidator(minBytes: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (isEmptyInputValue(control.value) || !hasValidLength(control.value)) {
+      return null;
+    }
+    const minLength = minBytes * 2;
+    return control.value.length < minLength
+      ? {
+          minhexlength: {
+            requiredLength: minLength,
+            actualLength: control.value.length,
+          },
+        }
+      : null;
+  };
+}
+
+export function maxHexLengthValidator(maxBytes: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const maxLength = maxBytes * 2;
+    return hasValidLength(control.value) && control.value.length > maxLength
+      ? {
+          maxhexlength: {
+            requiredLength: maxLength,
+            actualLength: control.value.length,
+          },
+        }
+      : null;
+  };
+}
+
+function isEmptyInputValue(value: any): boolean {
+  return (
+    value === null ||
+    value === undefined ||
+    ((typeof value === 'string' || Array.isArray(value)) && value.length === 0)
+  );
+}
+
+function hasValidLength(value: any): boolean {
+  return (
+    value !== null && value !== undefined && typeof value.length === 'number'
+  );
+}
+```
+
+### `webapp-sdk.module.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/webapp-sdk.module.ts`
+
+
+```typescript
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkTableModule } from '@angular/cdk/table';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { YaPrintZoneHide } from '../lib/print/print-zone-hide.directive';
+import { YaPrintZoneShow } from '../lib/print/print-zone-show.directive';
+import { YaActionLogSummary } from './components/action-log-summary/action-log-summary.component';
+import { YaAttrDivider } from './components/attr-list/attr-divider.component';
+import { YaAttrLabel } from './components/attr-list/attr-label.directive';
+import { YaAttrList } from './components/attr-list/attr-list.component';
+import { YaAttr } from './components/attr-list/attr.component';
+import { YaBinaryInput } from './components/binary-input/binary-input.component';
+import { YaBreadcrumbTrail } from './components/breadcrumb/breadcrumb-trail.component';
+import { YaBreadcrumb } from './components/breadcrumb/breadcrumb.component';
+import { YaButtonGroup } from './components/button-group/button-group.component';
+import { YaButton } from './components/button/button.component';
+import { YaColorInput } from './components/color-input/color-input.component';
+import { YaColumnChooser } from './components/column-chooser/column-chooser.component';
+import { YaDateTimeInput } from './components/date-time-input/date-time-input.component';
+import { YaDetailPane } from './components/detail-pane/detail-pane.component';
+import { YaDetailToolbar } from './components/detail-toolbar/detail-toolbar.component';
+import { YaDots } from './components/dots/dots.component';
+import { YaDownloadButton } from './components/download-button/download-button.component';
+import { YaDownloadMenuItem } from './components/download-menu-item/download-menu-item.component';
+import { YaDurationInput } from './components/duration-input/duration-input.component';
+import { YaEmptyMessage } from './components/empty-message/empty-message.component';
+import { YaErrors } from './components/errors/errors.component';
+import { YaExpirable } from './components/expirable/expirable.component';
+import { YaFieldDivider } from './components/field-divider/field-divider.component';
+import { YaFieldLabel } from './components/field/field-label.directive';
+import { YaField } from './components/field/field.component';
+import { YaFilterBar } from './components/filter-bar/filter-bar.component';
+import { YaFilterInput } from './components/filter/filter-input.component';
+import { YaFilterTextarea } from './components/filter/filter-textarea.component';
+import { YaHelp } from './components/help/help.component';
+import { YaHelpDialog } from './components/help/help.dialog';
+import { YaHexIntegerInput } from './components/hex-integer-input/hex-integer-input.component';
+import { YaHighlight } from './components/highlight/highlight.component';
+import { YaHref } from './components/href/href.directive';
+import { YaIconAction } from './components/icon-action/icon-action.component';
+import { YaIconButton } from './components/icon-button/icon-button.component';
+import { YaInstancePage } from './components/instance-page/instance-page.component';
+import { YaInstanceToolbarLabel } from './components/instance-toolbar/instance-toolbar-label.directive';
+import { YaInstanceToolbar } from './components/instance-toolbar/instance-toolbar.component';
+import { YaInterval } from './components/interval/interval.component';
+import { YaLabel } from './components/label/label.component';
+import { YaLabels } from './components/labels/labels.component';
+import { YaLed } from './components/led/led.component';
+import { YaMessageBar } from './components/message-bar/message-bar.component';
+import { YaMeta } from './components/meta/meta.component';
+import { YaMore } from './components/more/more.component';
+import { YaMultiSelect } from './components/multi-select/multi-select.component';
+import { YaOption } from './components/option/option.component';
+import { YaPageButton } from './components/page-button/page-button.component';
+import { YaPageIconButton } from './components/page-icon-button/page-icon-button.component';
+import { YaPageTabs } from './components/page-tabs/page-tabs.component';
+import { YaPanel } from './components/panel/panel.component';
+import { YaProgress } from './components/progress/progress.component';
+import { YaSearchFilter } from './components/search-filter/search-filter.component';
+import { YaSearchFilter2 } from './components/search-filter2/search-filter2.component';
+import { YaSelect } from './components/select/select.component';
+import { YaSidebarNavGroup } from './components/sidebar/sidebar-nav-group.component';
+import { YaSidebarNavItem } from './components/sidebar/sidebar-nav-item.component';
+import { YaStepperStepActions } from './components/stepper/stepper-step-actions.component';
+import { YaStepperStep } from './components/stepper/stepper-step.component';
+import { YaStepper } from './components/stepper/stepper.component';
+import { YaTableCheckbox } from './components/table-checkbox/table-checkbox.component';
+import { YaTableToggle } from './components/table-toggle/table-toggle.component';
+import { YaTableTop } from './components/table-top/table-top.component';
+import { YaTableWindow } from './components/table-window/table-window.component';
+import { YaTagSelect } from './components/tag-select/tag-select.component';
+import { YaTextAction } from './components/text-action/text-action.component';
+import { YaTimezoneSelect } from './components/timezone-select/timezone-select.component';
+import { YaTitleCopy } from './components/title-copy/title-copy.component';
+import { YaToolbar } from './components/toolbar/toolbar.component';
+import { YaValue } from './components/value/value.component';
+import { YaVerticalDivider } from './components/vertical-divider/vertical-divider.component';
+import { YaWarningMessage } from './components/warning-message/warning-message.component';
+import { DataTableDirective } from './directives/data-table.directive';
+import { AliasPipe } from './pipes/alias.pipe';
+import { ArrayContainsPipe } from './pipes/array-contains.pipe';
+import { BasenamePipe } from './pipes/basename.pipe';
+import { DataRatePipe } from './pipes/data-rate.pipe';
+import { DateTimePipe } from './pipes/datetime.pipe';
+import { DefaultProcessorPipe } from './pipes/default-processor.pipe';
+import { DeltaWithPipe } from './pipes/delta-with.pipe';
+import { DurationPipe } from './pipes/duration.pipe';
+import { EntryForOffsetPipe } from './pipes/entry-for-offset.pipe';
+import { ExtensionPipe } from './pipes/extension.pipe';
+import { FilenamePipe } from './pipes/filename.pipe';
+import { FormatBytesPipe } from './pipes/format-bytes.pipe';
+import { HexDumpPipe } from './pipes/hex-dump.pipe';
+import { HexPipe } from './pipes/hex.pipe';
+import { MayAccessAdminAreaPipe } from './pipes/may-access-admin-area.pipe';
+import { MemberPathPipe } from './pipes/member-path.pipe';
+import { MillisDurationPipe } from './pipes/millis-duration.pipe';
+import { NanosDurationPipe } from './pipes/nanos-duration.pipe';
+import { NvlPipe } from './pipes/nvl.pipe';
+import { ParameterTypeForPathPipe } from './pipes/parameter-type-for-path.pipe';
+import { ParentsPipe } from './pipes/parents.pipe';
+import { PrintJsonPipe } from './pipes/print-json.pipe';
+import { PrintObjPipe } from './pipes/print-obj.pipe';
+import { RelativizePipe } from './pipes/relativize.pipe';
+import { ReversePipe } from './pipes/reverse.pipe';
+import { ShortNamePipe } from './pipes/short-name.pipe';
+import { SpaceSystemPipe } from './pipes/space-system.pipe';
+import { StorageUrlPipe } from './pipes/storage-url.pipe';
+import { ToValuePipe } from './pipes/to-value.pipe';
+import { UnitsPipe } from './pipes/units.pipe';
+import { ValuePipe } from './pipes/value.pipe';
+import { YaPrintZone } from './print/print-zone.component';
+import { PrintableDirective } from './print/printable.directive';
+
+const pipes = [
+  AliasPipe,
+  ArrayContainsPipe,
+  BasenamePipe,
+  DataRatePipe,
+  DateTimePipe,
+  DefaultProcessorPipe,
+  DeltaWithPipe,
+  DurationPipe,
+  EntryForOffsetPipe,
+  ExtensionPipe,
+  FilenamePipe,
+  FormatBytesPipe,
+  HexDumpPipe,
+  HexPipe,
+  MayAccessAdminAreaPipe,
+  MemberPathPipe,
+  MillisDurationPipe,
+  NanosDurationPipe,
+  NvlPipe,
+  ParameterTypeForPathPipe,
+  ParentsPipe,
+  PrintJsonPipe,
+  PrintObjPipe,
+  RelativizePipe,
+  ReversePipe,
+  ShortNamePipe,
+  SpaceSystemPipe,
+  StorageUrlPipe,
+  ToValuePipe,
+  UnitsPipe,
+  ValuePipe,
+];
+
+const directives = [
+  DataTableDirective,
+  PrintableDirective,
+  YaAttrLabel,
+  YaFieldLabel,
+  YaHref,
+  YaPrintZoneHide,
+  YaPrintZoneShow,
+];
+
+const sharedComponents = [
+  YaActionLogSummary,
+  YaAttr,
+  YaAttrDivider,
+  YaAttrList,
+  YaBinaryInput,
+  YaBreadcrumb,
+  YaBreadcrumbTrail,
+  YaButton,
+  YaButtonGroup,
+  YaColorInput,
+  YaColumnChooser,
+  YaDateTimeInput,
+  YaDetailPane,
+  YaDetailToolbar,
+  YaDots,
+  YaDownloadButton,
+  YaDownloadMenuItem,
+  YaDurationInput,
+  YaEmptyMessage,
+  YaErrors,
+  YaExpirable,
+  YaField,
+  YaFieldDivider,
+  YaFilterBar,
+  YaFilterInput,
+  YaFilterTextarea,
+  YaHelp,
+  YaHelpDialog,
+  YaHexIntegerInput,
+  YaHighlight,
+  YaIconAction,
+  YaIconButton,
+  YaInterval,
+  YaInstancePage,
+  YaInstanceToolbar,
+  YaInstanceToolbarLabel,
+  YaLabel,
+  YaLabels,
+  YaLed,
+  YaMessageBar,
+  YaMeta,
+  YaMore,
+  YaMultiSelect,
+  YaOption,
+  YaPageButton,
+  YaPageIconButton,
+  YaPageTabs,
+  YaPanel,
+  YaProgress,
+  YaPrintZone,
+  YaSearchFilter,
+  YaSearchFilter2,
+  YaSelect,
+  YaSidebarNavGroup,
+  YaSidebarNavItem,
+  YaStepper,
+  YaStepperStep,
+  YaStepperStepActions,
+  YaTableCheckbox,
+  YaTableToggle,
+  YaTableTop,
+  YaTableWindow,
+  YaTagSelect,
+  YaTextAction,
+  YaTimezoneSelect,
+  YaTitleCopy,
+  YaToolbar,
+  YaValue,
+  YaVerticalDivider,
+  YaWarningMessage,
+];
+
+const materialModules = [
+  OverlayModule,
+  CdkTableModule,
+  DragDropModule,
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatIconModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatPaginatorModule,
+  MatSidenavModule,
+  MatSlideToggleModule,
+  MatSortModule,
+  MatSnackBarModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    materialModules,
+    directives,
+    pipes,
+    sharedComponents,
+  ],
+  exports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    directives,
+    materialModules,
+    sharedComponents,
+    pipes,
+  ],
+})
+export class WebappSdkModule {}
+```

@@ -3,20 +3,321 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Action.java`
 
-file--Action.java
-file--ActionChangeListener.java
-file--ActionHelper.java
-file--ActionResult.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/Action.java`
+
+
+```java
+package org.yamcs.actions;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.yamcs.Spec;
+
+import com.google.gson.JsonObject;
+
+/**
+ * @param <T>
+ *            the type of the action target
+ */
+public abstract class Action<T> {
+
+    public static enum ActionStyle {
+        PUSH_BUTTON,
+        CHECK_BOX,
+    }
+
+    private final String id;
+    private final String label;
+    private final ActionStyle style;
+    private boolean enabled = true;
+    private boolean checked = false;
+
+    private Set<ActionChangeListener> changeListeners = new HashSet<>(1);
+
+    public Action(String id, String label) {
+        this(id, label, ActionStyle.PUSH_BUTTON);
+    }
+
+    public Action(String id, String label, ActionStyle style) {
+        this.id = id;
+        this.label = label;
+        this.style = style;
+    }
+
+    /**
+     * Returns a unique identifier for this action.
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Human-readable label for this action.
+     */
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * Specification of action arguments (if the actions supports or requires this)
+     */
+    public Spec getSpec() {
+        return new Spec();
+    }
+
+    /**
+     * Returns whether this action is enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Set the enabled state of this action.
+     * <p>
+     * An action that is not enabled, is visible, but can't be executed.
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        changeListeners.forEach(ActionChangeListener::onChange);
+    }
+
+    /**
+     * Return the style of this action.
+     */
+    public ActionStyle getStyle() {
+        return style;
+    }
+
+    /**
+     * Returns the checked state of this action.
+     * <p>
+     * Only relevant if the style of this action is set to {@link ActionStyle#CHECK_BOX}.
+     */
+    public boolean isChecked() {
+        return checked;
+    }
+
+    /**
+     * Sets the checked state of this action.
+     * <p>
+     * Only relevant if the style of this action is set to {@link ActionStyle#CHECK_BOX}.
+     */
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+        changeListeners.forEach(ActionChangeListener::onChange);
+    }
+
+    /**
+     * Add a listener that will get notified whenever one of the action properties has changed.
+     */
+    public void addChangeListener(ActionChangeListener listener) {
+        changeListeners.add(listener);
+    }
+
+    /**
+     * Remove a previously registered change listeners.
+     */
+    public void removeChangeListener(ActionChangeListener listener) {
+        changeListeners.remove(listener);
+    }
+
+    /**
+     * Execute an action.
+     * <p>
+     * When successful, use the {@code result} parameter to provide the action result (which may be null).
+     * <p>
+     * When an error occurs, use the {@code result} parameter to provide the exception.
+     * 
+     * @param target
+     *            The target of this action
+     * @param request
+     *            Optional request options
+     * @param result
+     *            Object where to mark the successful end of an action.
+     */
+    public abstract void execute(T target, JsonObject request, ActionResult result);
+}
 ```
 
-## 항목
+### `ActionChangeListener.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/Action.java`](file--Action.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/ActionChangeListener.java`](file--ActionChangeListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/ActionHelper.java`](file--ActionHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/ActionResult.java`](file--ActionResult.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/ActionChangeListener.java`
+
+
+```java
+package org.yamcs.actions;
+
+@FunctionalInterface
+public interface ActionChangeListener {
+
+    void onChange();
+}
+```
+
+### `ActionHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/ActionHelper.java`
+
+
+```java
+package org.yamcs.actions;
+
+import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.yamcs.ValidationException;
+import org.yamcs.actions.Action.ActionStyle;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.api.ConfigApi;
+import org.yamcs.protobuf.actions.ActionInfo;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Struct;
+import com.google.protobuf.util.JsonFormat;
+
+public class ActionHelper {
+
+    private static final Type HASHMAP_TYPE = new TypeToken<HashMap<String, Object>>() {
+    }.getType();
+
+    public static ActionInfo toActionInfo(Action<?> action) {
+        return toActionInfo(action, true);
+    }
+
+    public static ActionInfo toActionInfo(Action<?> action, boolean addSpec) {
+        var b = ActionInfo.newBuilder()
+                .setId(action.getId())
+                .setLabel(action.getLabel())
+                .setStyle(action.getStyle().name())
+                .setEnabled(action.isEnabled());
+        if (action.getStyle() == ActionStyle.CHECK_BOX) {
+            b.setChecked(action.isChecked());
+        }
+        var spec = action.getSpec();
+        if (spec != null && !spec.getOptions().isEmpty()) {
+            b.setSpec(ConfigApi.toSpecInfo(spec));
+        }
+        return b.build();
+    }
+
+    /**
+     * Run an action on a target.
+     */
+    public static <T> void runAction(T target, Action<T> action, Struct options,
+            Observer<Struct> responseObserver) throws HttpException {
+        var gson = new Gson();
+        JsonObject actionMessage = null;
+        Map<String, Object> actionOptions = null;
+        try {
+            String json = JsonFormat.printer().print(options);
+            actionMessage = gson.fromJson(json, JsonElement.class).getAsJsonObject();
+
+            actionOptions = gson.fromJson(actionMessage, HASHMAP_TYPE);
+        } catch (InvalidProtocolBufferException e) {
+            // Should not happen, it's already been converted from JSON through transcoding
+            throw new InternalServerErrorException(e);
+        }
+
+        if (!action.isEnabled()) {
+            throw new BadRequestException("Action '" + action.getId() + "' is not enabled");
+        }
+
+        var spec = action.getSpec();
+        if (spec != null) {
+            try {
+                // Validate, and apply defaults
+                actionOptions = spec.validate(actionOptions);
+                actionMessage = gson.toJsonTree(actionOptions, HASHMAP_TYPE).getAsJsonObject();
+            } catch (ValidationException e) {
+                throw new BadRequestException(e.getMessage());
+            }
+        }
+
+        var actionResult = new ActionResult();
+        action.execute(target, actionMessage, actionResult);
+        actionResult.future().whenComplete((response, t) -> {
+            if (t != null) {
+                responseObserver.completeExceptionally(t);
+            } else {
+                if (response == null) {
+                    responseObserver.next(Struct.getDefaultInstance());
+                } else {
+                    var json = response.toString();
+                    var responseb = Struct.newBuilder();
+                    try {
+                        JsonFormat.parser().merge(json, responseb);
+                    } catch (InvalidProtocolBufferException e) {
+                        throw new InternalServerErrorException(e);
+                    }
+                    responseObserver.next(responseb.build());
+                }
+            }
+        });
+    }
+}
+```
+
+### `ActionResult.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/actions/ActionResult.java`
+
+
+```java
+package org.yamcs.actions;
+
+import java.util.concurrent.CompletableFuture;
+
+import com.google.gson.JsonObject;
+
+public class ActionResult {
+
+    private CompletableFuture<JsonObject> future = new CompletableFuture<>();
+
+    /**
+     * Complete successfully, without response message.
+     * <p>
+     * Shortcut for {@code complete(null)}
+     */
+    public void complete() {
+        complete(null);
+    }
+
+    /**
+     * Complete successfully
+     *
+     * @param result
+     *            the result value (may be null)
+     */
+    public void complete(JsonObject result) {
+        future.complete(result);
+    }
+
+    /**
+     * Complete with an exception
+     */
+    public void completeExceptionally(Throwable t) {
+        future.completeExceptionally(t);
+    }
+
+    /**
+     * Return the underlying future.
+     */
+    public CompletableFuture<JsonObject> future() {
+        return future;
+    }
+}
+```

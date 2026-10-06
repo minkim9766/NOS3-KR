@@ -3,20 +3,145 @@
 
 **경로:** `gsw/cosmos/procedures/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `deployment_test.rb`
 
-file--deployment_test.rb
-file--PassSetupEPSCheck_LowPowerScen.rb
-file--Processor_Endian.rb
-file--README.txt
+**경로:** `gsw/cosmos/procedures/deployment_test.rb`
+
+
+```ruby
+#
+# Deployment Test Script
+#
+
+# Enable ADCS components
+cmd("GENERIC_CSS_DEBUG GENERIC_CSS_ENABLE_CC")
+cmd("GENERIC_FSS_DEBUG GENERIC_FSS_ENABLE_CC")
+cmd("GENERIC_IMU_DEBUG GENERIC_IMU_ENABLE_CC")
+cmd("GENERIC_MAG_DEBUG GENERIC_MAG_ENABLE_CC")
+cmd("GENERIC_TORQUER_DEBUG GENERIC_TORQUER_ENABLE_CC")
+cmd("NOVATEL_OEM615_DEBUG NOVATEL_OEM615_ENABLE_CC")
+wait(3)
+
+# Prepare scenario, i.e. spin up spacecraft
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 0, TORQUE 2")
+wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_X", -0.10, 0.01, 120)
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 0, TORQUE 0")
+
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 1, TORQUE 4")
+wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Y", -0.10, 0.01, 120)
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 1, TORQUE 0")
+
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 2, TORQUE -6")
+wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Z", 0.10, 0.01, 120)
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 2, TORQUE 0")
+wait(10)
+
+## Enable BDOT mode to detumble
+#cmd("GENERIC_ADCS_DEBUG GENERIC_ADCS_SET_MODE_CC with GNC_MODE 'BDOT_MODE'")
+#wait(3)
+#
+## Wait on transition until all axis reported under 3 degrees angular rate
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_X", 0.0, 0.015, 120)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Y", 0.0, 0.015, 120)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Z", 0.0, 0.015, 120)
+#
+## Check again to be sure
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_X", 0.0, 0.015, 10)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Y", 0.0, 0.015, 10)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Z", 0.0, 0.015, 10)
+
+# Set sun safe mode
+cmd("GENERIC_ADCS_DEBUG GENERIC_ADCS_SET_MODE_CC with GNC_MODE 'SUNSAFE_MODE'")
 ```
 
-## 항목
+### `PassSetupEPSCheck_LowPowerScen.rb`
 
-- [`gsw/cosmos/procedures/deployment_test.rb`](file--deployment_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/procedures/PassSetupEPSCheck_LowPowerScen.rb`](file--PassSetupEPSCheck_LowPowerScen.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/procedures/Processor_Endian.rb`](file--Processor_Endian.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/procedures/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/procedures/PassSetupEPSCheck_LowPowerScen.rb`
+
+
+```ruby
+# Library for GENERIC_EPS Target
+require 'cosmos'
+require 'cosmos/script'
+
+#
+# Definitions
+#
+GENERIC_EPS_CMD_SLEEP = 0.25
+GENERIC_EPS_RESPONSE_TIMEOUT = 5
+GENERIC_EPS_TEST_LOOP_COUNT = 1
+GENERIC_EPS_DEVICE_LOOP_COUNT = 5
+
+#
+# Functions
+#
+def get_eps_hk()
+    cmd("GENERIC_EPS GENERIC_EPS_REQ_HK")
+    wait_check_packet("GENERIC_EPS", "GENERIC_EPS_HK_TLM", 1, GENERIC_EPS_RESPONSE_TIMEOUT)
+    sleep(GENERIC_EPS_CMD_SLEEP)
+end
+
+dev_cmd_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_COUNT")
+dev_cmd_err_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_ERR_COUNT")
+
+# Test with Sample Switch Disabled
+in_sun = tlm("SIM_42_TRUTH SIM_42_TRUTH_DATA IN_SUN")
+get_eps_hk()
+initial_batt_voltage = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM BATT_VOLTAGE")
+
+cmd("GENERIC_EPS GENERIC_EPS_SWITCH_CC with SWITCH_NUMBER SWITCH_0, STATE OFF")
+# Should charge during daytime and discharge at night with ambient power draw
+if(in_sun != 0)
+    wait_check("GENERIC_EPS GENERIC_EPS_HK_TLM BATT_VOLTAGE >= #{initial_batt_voltage}", GENERIC_EPS_RESPONSE_TIMEOUT)
+else
+    wait_check("GENERIC_EPS GENERIC_EPS_HK_TLM BATT_VOLTAGE <= #{initial_batt_voltage}", GENERIC_EPS_RESPONSE_TIMEOUT)
+end
+
+# Test with Sample Switch Enabled
+cmd("GENERIC_EPS GENERIC_EPS_SWITCH_CC with SWITCH_NUMBER SWITCH_0, STATE ON")
+in_sun = tlm("SIM_42_TRUTH SIM_42_TRUTH_DATA IN_SUN")
+get_eps_hk()
+initial_batt_voltage = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM BATT_VOLTAGE")
+
+#Always draws more power than is being put in if Sample is enabled
+if(in_sun != 0)
+    wait_check("GENERIC_EPS GENERIC_EPS_HK_TLM BATT_VOLTAGE <= #{initial_batt_voltage}", GENERIC_EPS_RESPONSE_TIMEOUT)
+else
+    wait_check("GENERIC_EPS GENERIC_EPS_HK_TLM BATT_VOLTAGE <= #{initial_batt_voltage}", GENERIC_EPS_RESPONSE_TIMEOUT)
+end
+cmd("GENERIC_EPS GENERIC_EPS_SWITCH_CC with SWITCH_NUMBER SWITCH_0, STATE OFF")
+
+get_eps_hk()
+check("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_COUNT >= #{dev_cmd_cnt}")
+check("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_ERR_COUNT == #{dev_cmd_err_cnt}")
+cmd("GENERIC_EPS GENERIC_EPS_SWITCH_CC with SWITCH_NUMBER SWITCH_7, STATE ON")
+
+
+cmd("MGR MGR_SET_AK_CC with AK_STATUS ENABLE")
+cmd("MGR MGR_SET_CONUS_CC with CONUS_STATUS ENABLE")
+cmd("MGR MGR_SET_HI_CC with HI_STATUS ENABLE")
+sleep(GENERIC_EPS_CMD_SLEEP)
+cmd("MGR MGR_SET_MODE_CC with SPACECRAFT_MODE SCIENCE")
+```
+
+### `Processor_Endian.rb`
+
+**경로:** `gsw/cosmos/procedures/Processor_Endian.rb`
+
+
+```ruby
+require 'cosmos_cfs_config'
+
+puts "PROCESSOR_ENDIAN = #{CosmosCfsConfig::PROCESSOR_ENDIAN}"
+```
+
+### `README.txt`
+
+**경로:** `gsw/cosmos/procedures/README.txt`
+
+
+```text
+This file is here to make sure this folder is included in the release.
+```

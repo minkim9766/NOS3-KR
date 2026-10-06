@@ -3,44 +3,1299 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ut_cfe_es_hooks.h`
 
-file--ut_cfe_es_hooks.h
-file--ut_cfe_es_stubs.h
-file--ut_cfe_evs_hooks.h
-file--ut_cfe_evs_stubs.h
-file--ut_cfe_fs_stubs.h
-file--ut_cfe_sb_hooks.h
-file--ut_cfe_sb_stubs.h
-file--ut_cfe_tbl_hooks.h
-file--ut_cfe_tbl_stubs.h
-file--ut_cfe_time_stubs.h
-file--ut_osapi_stubs.h
-file--ut_osfileapi_stubs.h
-file--utassert.h
-file--utlist.h
-file--uttest.h
-file--uttools.h
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_es_hooks.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_es_hooks.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_es_hooks.h 1.1 2011/05/04 11:20:17EDT rmcgraw Exp  $
+**
+** Purpose: Unit test header file for cFE Executive Services hooks.
+**
+** $Log: ut_cfe_es_hooks.h  $
+** Revision 1.1 2011/05/04 11:20:17EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:51EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/03/07 17:54:46EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_ES_HOOKS_H_
+#define UT_CFE_ES_HOOKS_H_
+
+#include "cfe.h"
+
+int32 Ut_CFE_ES_RunLoopHook(uint32 *ExitStatus);
+
+#endif
 ```
 
-## 항목
+### `ut_cfe_es_stubs.h`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_es_hooks.h`](file--ut_cfe_es_hooks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_es_stubs.h`](file--ut_cfe_es_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_evs_hooks.h`](file--ut_cfe_evs_hooks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_evs_stubs.h`](file--ut_cfe_evs_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_fs_stubs.h`](file--ut_cfe_fs_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_sb_hooks.h`](file--ut_cfe_sb_hooks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_sb_stubs.h`](file--ut_cfe_sb_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_tbl_hooks.h`](file--ut_cfe_tbl_hooks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_tbl_stubs.h`](file--ut_cfe_tbl_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_time_stubs.h`](file--ut_cfe_time_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_osapi_stubs.h`](file--ut_osapi_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_osfileapi_stubs.h`](file--ut_osfileapi_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/utassert.h`](file--utassert.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/utlist.h`](file--utlist.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/uttest.h`](file--uttest.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/uttools.h`](file--uttools.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_es_stubs.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_es_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_es_stubs.h 1.2 2011/05/04 11:28:00EDT rmcgraw Exp  $
+**
+** Purpose: cFE Executive Services Header file for unit test stubs
+**
+** $Log: ut_cfe_es_stubs.h  $
+** Revision 1.2 2011/05/04 11:28:00EDT rmcgraw 
+** Changed PoolCreateEx to have new parameter USE_MUTEX
+** Revision 1.1 2011/05/04 11:20:18EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:51EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/02/15 11:12:32EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_ES_STUBS_H_
+#define UT_CFE_ES_STUBS_H_
+
+typedef enum 
+{
+    UT_CFE_ES_RESETCFE_INDEX,
+    UT_CFE_ES_RESTARTAPP_INDEX,
+    UT_CFE_ES_RELOADAPP_INDEX,
+    UT_CFE_ES_DELETEAPP_INDEX,
+    UT_CFE_ES_EXITAPP_INDEX,
+    UT_CFE_ES_RUNLOOP_INDEX,
+    UT_CFE_ES_WAITFORSTARTUPSYNC_INDEX,
+    UT_CFE_ES_REGISTERAPP_INDEX,
+    UT_CFE_ES_GETAPPID_INDEX,
+    UT_CFE_ES_GETAPPIDBYNAME_INDEX,
+    UT_CFE_ES_GETAPPNAME_INDEX,
+    UT_CFE_ES_GETAPPINFO_INDEX,
+    UT_CFE_ES_GETTASKINFO_INDEX,
+    UT_CFE_ES_REGISTERCHILDTASK_INDEX,
+    UT_CFE_ES_CREATECHILDTASK_INDEX,
+    UT_CFE_ES_DELETECHILDTASK_INDEX,
+    UT_CFE_ES_EXITCHILDTASK_INDEX,
+    UT_CFE_ES_INCREMENTTASKCOUNTER_INDEX,
+    UT_CFE_ES_WRITETOSYSLOG_INDEX,
+    UT_CFE_ES_REGISTERDRIVER_INDEX,
+    UT_CFE_ES_UNLOADDRIVER_INDEX,
+    UT_CFE_ES_CALCULATECRC_INDEX,
+    UT_CFE_ES_REGISTERCDS_INDEX,
+    UT_CFE_ES_COPYTOCDS_INDEX,
+    UT_CFE_ES_RESTOREFROMCDS_INDEX,
+    UT_CFE_ES_POOLCREATE_INDEX,
+    UT_CFE_ES_POOLCREATEEX_INDEX,
+    UT_CFE_ES_GETPOOLBUF_INDEX,
+    UT_CFE_ES_GETPOOLBUFINFO_INDEX,
+    UT_CFE_ES_PUTPOOLBUF_INDEX,
+    UT_CFE_ES_GETMEMPOOLSTATS_INDEX,
+    UT_CFE_ES_PERFLOGADD_INDEX,
+    UT_CFE_ES_MAX_INDEX
+} Ut_CFE_ES_INDEX_t;
+
+typedef struct
+{
+    int32 (*CFE_ES_ResetCFE)(uint32 ResetType);
+    int32 (*CFE_ES_RestartApp)(uint32 AppID);
+    int32 (*CFE_ES_ReloadApp)(uint32 AppID_API, const char *AppFileName);
+    int32 (*CFE_ES_DeleteApp)(uint32 AppID);
+    int32 (*CFE_ES_ExitApp)(uint32 ExitStatus);
+    int32 (*CFE_ES_RunLoop)(uint32 *ExitStatus);
+    int32 (*CFE_ES_WaitForStartupSync)(uint32 TimeOutMilliseconds);
+    int32 (*CFE_ES_RegisterApp)(void);
+    int32 (*CFE_ES_GetAppID)(uint32 *AppIdPtr);
+    int32 (*CFE_ES_GetAppIDByName)(uint32 *AppIdPtr, char *AppName);
+    int32 (*CFE_ES_GetAppName)(char *AppName, uint32 AppId, uint32 BufferLength);
+    int32 (*CFE_ES_GetAppInfo)(CFE_ES_AppInfo_t *AppInfo, uint32 AppId);
+    int32 (*CFE_ES_GetTaskInfo)(CFE_ES_TaskInfo_t *TaskInfo, uint32 TaskId);
+    int32 (*CFE_ES_RegisterChildTask)(void);
+    int32 (*CFE_ES_CreateChildTask)(uint32 *TaskIdPtr, const char *TaskName, CFE_ES_ChildTaskMainFuncPtr_t  FunctionPtr,const uint32 *StackPtr, uint32 StackSize, uint32 Priority, uint32 Flags);
+    int32 (*CFE_ES_DeleteChildTask)(uint32 TaskId);
+    int32 (*CFE_ES_ExitChildTask)(void);
+    int32 (*CFE_ES_IncrementTaskCounter)(void);
+    int32 (*CFE_ES_WriteToSysLog)(const char *SpecStringPtr, ...);
+    int32 (*CFE_ES_RegisterDriver)(uint32 *DriverIdPtr, uint32 *DriverDescPtr);
+    int32 (*CFE_ES_UnloadDriver)(uint32 DriverId);
+    int32 (*CFE_ES_CalculateCRC)(void *DataPtr, uint32 DataLength, uint32 InputCRC, uint32 TypeCRC);
+    int32 (*CFE_ES_RegisterCDS)(CFE_ES_CDSHandle_t *HandlePtr, int32 BlockSize, const char *Name);
+    int32 (*CFE_ES_CopyToCDS)(CFE_ES_CDSHandle_t Handle, void *DataToCopy);
+    int32 (*CFE_ES_RestoreFromCDS)(void *RestoreToMemory, CFE_ES_CDSHandle_t Handle);
+    int32 (*CFE_ES_PoolCreate)(uint32 *HandlePtr, uint8 *MemPtr, uint32 Size);
+    int32 (*CFE_ES_PoolCreateEx)(uint32 *HandlePtr, uint8 *MemPtr, uint32 Size, uint32 NumBlockSizes, uint32 *BlockSizes, uint16 UseMutex);
+    int32 (*CFE_ES_GetPoolBuf)(uint32 **BufPtr, CFE_ES_MemHandle_t HandlePtr, uint32 Size);
+    int32 (*CFE_ES_GetPoolBufInfo)(CFE_ES_MemHandle_t HandlePtr, uint32 *BufPtr);
+    int32 (*CFE_ES_PutPoolBuf)(CFE_ES_MemHandle_t HandlePtr, uint32 *BufPtr);
+    int32 (*CFE_ES_GetMemPoolStats)(CFE_ES_MemPoolStats_t *BufPtr, CFE_ES_MemHandle_t  Handle);
+    int32 (*CFE_ES_PerfLogAdd)(uint32 Marker, uint32 EntryExit);    
+} Ut_CFE_ES_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_CFE_ES_ReturnCodeTable_t;
+
+void Ut_CFE_ES_Reset(void);
+void Ut_CFE_ES_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_CFE_ES_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif
+```
+
+### `ut_cfe_evs_hooks.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_evs_hooks.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_evs_hooks.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_evs_hooks.h 1.1 2011/05/04 11:20:18EDT rmcgraw Exp  $
+**
+** Purpose: Unit test header file for cFE Event Services hooks.
+**
+** $Log: ut_cfe_evs_hooks.h  $
+** Revision 1.1 2011/05/04 11:20:18EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:52EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.3 2011/03/10 11:16:45EST sslegel 
+** Added EventNotSent and PacketNotSent asserts
+** Revision 1.2 2011/02/16 17:06:44EST rmcgraw 
+** Added "extern UtListHead_t EventQueue;" to ut_cfe_evs_hooks.h
+** Revision 1.1 2011/02/15 11:12:32EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_EVS_HOOKS_H_
+#define UT_CFE_EVS_HOOKS_H_
+
+#include "cfe.h"
+#include "utassert.h"
+#include "utlist.h"
+
+extern UtListHead_t        EventQueue;
+
+#define     UtAssert_EventSent(EventID, EventType, EventText, Description) \
+                UtAssert(Ut_CFE_EVS_EventSent(EventID, EventType, EventText), Description, __FILE__, __LINE__)
+
+#define     UtAssert_EventNotSent(EventID, EventType, EventText, Description) \
+                UtAssert(Ut_CFE_EVS_EventSent(EventID, EventType, EventText) == false, Description, __FILE__, __LINE__)
+
+#define     UtAssert_NoEventSent(Description) \
+                UtAssert(UtList_IsEmpty(&EventQueue), Description, __FILE__, __LINE__)
+
+void        Ut_CFE_EVS_ClearEventQueue(void);
+uint32      Ut_CFE_EVS_GetEventQueueDepth(void);
+uint32      Ut_CFE_EVS_GetEventCount(uint16 EventID, uint16 EventType, char *EventText);
+int32       Ut_CFE_EVS_SendEventHook(uint16 EventID, uint16 EventType, char *EventText);
+bool     Ut_CFE_EVS_EventSent(uint16 EventID, uint16 EventType, char *EventText);
+
+#endif
+```
+
+### `ut_cfe_evs_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_evs_stubs.h`
+
+
+```c
+/*
+**
+** File:  ut_cfe_evs_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_evs_stubs.h 1.1 2011/05/04 11:20:19EDT rmcgraw Exp  $
+**
+** Purpose: cFE Event Services Header file for unit test stubs
+**
+** $Log: ut_cfe_evs_stubs.h  $
+** Revision 1.1 2011/05/04 11:20:19EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:53EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/02/15 11:12:33EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_EVS_STUBS_H_
+#define UT_CFE_EVS_STUBS_H_
+
+typedef enum 
+{
+    UT_CFE_EVS_REGISTER_INDEX,
+    UT_CFE_EVS_SENDEVENT_INDEX,
+    UT_CFE_EVS_SENDTIMEDEVENT_INDEX,
+    UT_CFE_EVS_SENDEVENTWITHAPPID_INDEX,
+    UT_CFE_EVS_MAX_INDEX
+} Ut_CFE_EVS_INDEX_t;
+
+typedef struct
+{
+    int32 (*CFE_EVS_Register)(void *Filters, uint16 NumEventFilters, uint16 FilterScheme);
+    int32 (*CFE_EVS_SendEvent)(uint16 EventID, uint16 EventType, char *EventText);
+} Ut_CFE_EVS_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_CFE_EVS_ReturnCodeTable_t;
+
+void Ut_CFE_EVS_Reset(void);
+void Ut_CFE_EVS_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_CFE_EVS_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif 
+```
+
+### `ut_cfe_fs_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_fs_stubs.h`
+
+
+```c
+/*
+**
+** File:  ut_cfe_fs_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_fs_stubs.h 1.1 2011/05/04 11:20:20EDT rmcgraw Exp  $
+**
+** Purpose: cFE File System Header file for unit test stubs
+**
+** $Log: ut_cfe_fs_stubs.h  $
+** Revision 1.1 2011/05/04 11:20:20EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:54EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/02/15 11:12:33EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_FS_STUBS_H_
+#define UT_CFE_FS_STUBS_H_
+
+typedef enum 
+{
+    UT_CFE_FS_READHDR_INDEX,
+    UT_CFE_FS_WRITEHDR_INDEX,
+    UT_CFE_FS_SETTIMESTAMP_INDEX,
+    UT_CFE_FS_ISGZFILE_INDEX,
+    UT_CFE_FS_EXTRACTFILENAMEFROMPATH_INDEX,
+    UT_CFE_FS_DECOMPRESS_INDEX,
+    UT_CFE_FS_MAX_INDEX
+} Ut_CFE_FS_INDEX_t;
+
+typedef struct
+{
+    int32 (*CFE_FS_ReadHeader)(CFE_FS_Header_t *Hdr, int32 FileDes);
+    int32 (*CFE_FS_WriteHeader)(int32 FileDes, CFE_FS_Header_t *Hdr);
+    int32 (*CFE_FS_SetTimestamp)(int32 FileDes, CFE_TIME_SysTime_t NewTimestamp);
+    int32 (*CFE_FS_IsGzFile)(char *FileName);
+    int32 (*CFE_FS_ExtractFilenameFromPath)(char *OriginalPath, char *FileNameOnly);
+    int32 (*CFE_FS_Decompress)( char * SourceFile, char * DestinationFile );
+} Ut_CFE_FS_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_CFE_FS_ReturnCodeTable_t;
+
+void Ut_CFE_FS_Reset(void);
+void Ut_CFE_FS_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_CFE_FS_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif 
+```
+
+### `ut_cfe_sb_hooks.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_sb_hooks.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_sb_hooks.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_sb_hooks.h 1.1 2011/05/04 11:20:20EDT rmcgraw Exp  $
+**
+** Purpose: Unit test header file for cFE Software Bus hooks.
+**
+** $Log: ut_cfe_sb_hooks.h  $
+** Revision 1.1 2011/05/04 11:20:20EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:54EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.2 2011/03/10 11:16:45EST sslegel 
+** Added EventNotSent and PacketNotSent asserts
+** Revision 1.1 2011/02/15 11:12:33EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_SB_HOOKS_H_
+#define UT_CFE_SB_HOOKS_H_
+
+#include "cfe.h"
+#include "utassert.h"
+#include "utlist.h"
+
+extern UtListHead_t        MsgQueue;
+
+#define     UtAssert_PacketSent(MessageID, Description) \
+                UtAssert(Ut_CFE_SB_PacketSent(MessageID), Description, __FILE__, __LINE__)
+
+#define     UtAssert_PacketNotSent(MessageID, Description) \
+                UtAssert(Ut_CFE_SB_PacketSent(MessageID) == false, Description, __FILE__, __LINE__)
+
+#define     UtAssert_NoPacketSent(Description) \
+                UtAssert(UtList_IsEmpty(&MsgQueue), Description, __FILE__, __LINE__)
+
+void                Ut_CFE_SB_ClearMsgQueue(void);
+uint32              Ut_CFE_SB_GetMsgQueueDepth(void);
+uint32              Ut_CFE_SB_GetMsgCount(uint16 MessageID);
+int32               Ut_CFE_SB_TransmitMsgHook(CFE_MSG_Message_t *MsgPtr);
+bool             Ut_CFE_SB_PacketSent(uint16 MessageID);
+void               *Ut_CFE_SB_FindPacket(uint16 MessageID, uint32 MessageNumber);
+
+void                Ut_CFE_SB_ClearPipes(void);
+int32               Ut_CFE_SB_CreatePipe(char *PipeName);
+int32               Ut_CFE_SB_GetPipeDepth(CFE_SB_PipeId_t PipeId);
+int32               Ut_CFE_SB_FindPipe(char *PipeName);
+void                Ut_CFE_SB_AddMsgToPipe(void *MsgPtr, CFE_SB_PipeId_t PipeId);
+int32               Ut_CFE_SB_CreatePipeHook(CFE_SB_PipeId_t *PipeIdPtr, uint16  Depth, char *PipeName);
+int32               Ut_CFE_SB_ReceiveBufferHook(CFE_MSG_Message_t * *BufPtr, CFE_SB_PipeId_t PipeId, int32 TimeOut);
+
+void                Ut_CFE_MSG_InitHook(void *MsgPtr,CFE_SB_MsgId_t MsgId, uint16 Length, bool Clear);
+uint16              Ut_CFE_SB_MsgHdrSizeHook(CFE_SB_MsgId_t MsgId);
+void               *Ut_CFE_SB_GetUserDataHook(CFE_MSG_Message_t * MsgPtr);
+CFE_SB_MsgId_t      Ut_CFE_SB_GetMsgIdHook(CFE_MSG_Message_t * MsgPtr);
+void                Ut_CFE_MSG_SetMsgIdHook(CFE_MSG_Message_t * MsgPtr,CFE_SB_MsgId_t MsgId);
+uint16              Ut_CFE_SB_GetUserDataLengthHook(CFE_MSG_Message_t * MsgPtr);
+void                Ut_CFE_SB_SetUserDataLengthHook(CFE_MSG_Message_t * MsgPtr,uint16 DataLength);
+uint16              Ut_CFE_SB_GetTotalMsgLengthHook(CFE_MSG_Message_t * MsgPtr);
+void                Ut_CFE_SB_SetTotalMsgLengthHook(CFE_MSG_Message_t * MsgPtr,uint16 TotalLength);
+CFE_TIME_SysTime_t  Ut_CFE_SB_GetMsgTimeHook(CFE_MSG_Message_t * MsgPtr);
+int32               Ut_CFE_MSG_SetMsgTimeHook(CFE_MSG_Message_t * MsgPtr,CFE_TIME_SysTime_t Time);
+void                Ut_CFE_SB_TimeStampMsgHook(CFE_MSG_Message_t * MsgPtr);
+uint16              Ut_CFE_SB_GetCmdCodeHook(CFE_MSG_Message_t * MsgPtr);
+int32               Ut_CFE_SB_SetCmdCodeHook(CFE_MSG_Message_t * MsgPtr,uint16 CmdCode);
+uint16              Ut_CFE_SB_GetChecksumHook(CFE_MSG_Message_t * MsgPtr);
+void                Ut_CFE_SB_GenerateChecksumHook(CFE_MSG_Message_t * MsgPtr);
+bool             Ut_CFE_SB_ValidateChecksumHook(CFE_MSG_Message_t * MsgPtr);
+
+void                CCSDS_LoadCheckSum (CCSDS_CmdPkt_t *PktPtr);
+void                CCSDS_InitPkt (CCSDS_PriHdr_t *PktPtr, uint16 StreamId, uint16 Length, bool Clear);
+bool             CCSDS_ValidCheckSum (CCSDS_CmdPkt_t *PktPtr);
+uint8               CCSDS_ComputeCheckSum (CCSDS_CmdPkt_t *PktPtr);
+
+#endif
+```
+
+### `ut_cfe_sb_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_sb_stubs.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_sb_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_sb_stubs.h 1.1 2011/05/04 11:20:21EDT rmcgraw Exp  $
+**
+** Purpose: cFE Software Bus Header file for unit test stubs
+**
+** $Log: ut_cfe_sb_stubs.h  $
+** Revision 1.1 2011/05/04 11:20:21EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:55EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/02/15 11:12:34EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_SB_STUBS_H_
+#define UT_CFE_SB_STUBS_H_
+
+typedef enum 
+{
+    UT_CFE_SB_CREATEPIPE_INDEX,
+    UT_CFE_SB_DELETEPIPE_INDEX,
+    UT_CFE_SB_SUBSCRIBEEX_INDEX,
+    UT_CFE_SB_SUBSCRIBE_INDEX,
+    UT_CFE_SB_SUBSCRIBELOCAL_INDEX,
+    UT_CFE_SB_UNSUBSCRIBE_INDEX,
+    UT_CFE_SB_UNSUBSCRIBELOCAL_INDEX,
+    UT_CFE_SB_SENDMSG_INDEX,
+    UT_CFE_SB_PASSMSG_INDEX,
+    UT_CFE_SB_RCVMSG_INDEX,
+    UT_CFE_SB_GETLASTSENDERID_INDEX,
+    UT_CFE_SB_ZEROCOPYGETPTR_INDEX,
+    UT_CFE_SB_ZEROCOPYRELEASEPTR_INDEX,
+    UT_CFE_SB_ZEROCOPYSEND_INDEX,
+    UT_CFE_SB_ZEROCOPYPASS_INDEX,
+    UT_CFE_SB_INITMSG_INDEX,
+    UT_CFE_SB_MSGHDRSIZE_INDEX,
+    UT_CFE_SB_GETUSERDATA_INDEX,
+    UT_CFE_SB_GETMSGID_INDEX,
+    UT_CFE_SB_SETMSGID_INDEX,
+    UT_CFE_SB_GETUSERDATALENGTH_INDEX,
+    UT_CFE_SB_SETUSERDATALENGTH_INDEX,
+    UT_CFE_SB_GETTOTALMSGLENGTH_INDEX,
+    UT_CFE_SB_SETTOTALMSGLENGTH_INDEX,
+    UT_CFE_SB_GETMSGTIME_INDEX,
+    UT_CFE_SB_SETMSGTIME_INDEX,
+    UT_CFE_SB_TIMESTAMPMSG_INDEX,
+    UT_CFE_SB_GETCMDCODE_INDEX,
+    UT_CFE_SB_SETCMDCODE_INDEX,
+    UT_CFE_SB_GETCHECKSUM_INDEX,
+    UT_CFE_SB_GENERATECHECKSUM_INDEX,
+    UT_CFE_SB_VALIDATECHECKSUM_INDEX,
+    UT_CFE_SB_CLEANUPAPP_INDEX,
+    UT_CFE_SB_MAX_INDEX
+} Ut_CFE_SB_INDEX_t;
+
+typedef struct
+{
+    int32 (*CFE_SB_CreatePipe)(CFE_SB_PipeId_t *PipeIdPtr,uint16  Depth, char *PipeName);
+    int32 (*CFE_SB_DeletePipe)(CFE_SB_PipeId_t PipeId);
+    int32 (*CFE_SB_SubscribeEx)(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId,CFE_SB_Qos_t Quality, uint16 MsgLim);
+    int32 (*CFE_SB_Subscribe)(CFE_SB_MsgId_t  MsgId, CFE_SB_PipeId_t PipeId);
+    int32 (*CFE_SB_SubscribeLocal)(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId, uint16 MsgLim);
+    int32 (*CFE_SB_Unsubscribe)(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId);
+    int32 (*CFE_SB_UnsubscribeLocal)(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId);   
+    int32 (*CFE_SB_TransmitMsg)(CFE_MSG_Message_t   *MsgPtr);
+    int32 (*CFE_SB_PassMsg)(CFE_MSG_Message_t   *MsgPtr);
+    int32 (*CFE_SB_ReceiveBuffer)(CFE_MSG_Message_t *  *BufPtr, CFE_SB_PipeId_t  PipeId, int32 TimeOut);    
+    int32 (*CFE_SB_GetLastSenderId)(CFE_SB_SenderId_t **Ptr,CFE_SB_PipeId_t  PipeId); 
+    int32 (*CFE_SB_ZeroCopyGetPtr)(uint16  MsgSize,CFE_SB_ZeroCopyHandle_t *BufferHandle); 
+    int32 (*CFE_SB_ZeroCopyReleasePtr)(CFE_MSG_Message_t  *Ptr2Release,CFE_SB_ZeroCopyHandle_t BufferHandle); 
+    int32 (*CFE_SB_ZeroCopySend)(CFE_MSG_Message_t   *MsgPtr,CFE_SB_ZeroCopyHandle_t BufferHandle);
+    int32 (*CFE_SB_ZeroCopyPass)(CFE_MSG_Message_t   *MsgPtr,CFE_SB_ZeroCopyHandle_t BufferHandle); 
+    int32 (*CFE_MSG_Init)(void *MsgPtr,CFE_SB_MsgId_t MsgId, uint16 Length, bool Clear); 
+    int32 (*CFE_SB_MsgHdrSize)(CFE_SB_MsgId_t MsgId);
+    void *(*CFE_SB_GetUserData)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_GetMsgId)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_MSG_SetMsgId)(CFE_MSG_Message_t * MsgPtr,CFE_SB_MsgId_t MsgId);
+    int32 (*CFE_SB_GetUserDataLength)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_SetUserDataLength)(CFE_MSG_Message_t * MsgPtr,uint16 DataLength);
+    int32 (*CFE_SB_GetTotalMsgLength)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_SetTotalMsgLength)(CFE_MSG_Message_t * MsgPtr,uint16 TotalLength);
+    CFE_TIME_SysTime_t (*CFE_SB_GetMsgTime)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_MSG_SetMsgTime)(CFE_MSG_Message_t * MsgPtr,CFE_TIME_SysTime_t Time);
+    int32 (*CFE_SB_TimeStampMsg)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_GetCmdCode)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_SetCmdCode)(CFE_MSG_Message_t * MsgPtr,uint16 CmdCode);
+    int32 (*CFE_SB_GetChecksum)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_GenerateChecksum)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_ValidateChecksum)(CFE_MSG_Message_t * MsgPtr);
+    int32 (*CFE_SB_CleanUpApp)(uint32 AppId);
+} Ut_CFE_SB_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count; 
+} Ut_CFE_SB_ReturnCodeTable_t;
+
+void Ut_CFE_SB_Reset(void);
+void Ut_CFE_SB_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_CFE_SB_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif
+```
+
+### `ut_cfe_tbl_hooks.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_tbl_hooks.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_tbl_hooks.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_tbl_hooks.h 1.1 2011/05/04 11:20:22EDT rmcgraw Exp  $
+**
+** Purpose: Unit test header file for cFE Table Services hooks.
+**
+** $Log: ut_cfe_tbl_hooks.h  $
+** Revision 1.1 2011/05/04 11:20:22EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:56EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.2 2011/02/18 15:57:43EST sslegel 
+** Added new hooks and return codes
+** Changed Ut_CFE_TBL_LoadHook to automatically call the table validate function
+** Revision 1.1 2011/02/15 11:12:34EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_TBL_HOOKS_H_
+#define UT_CFE_TBL_HOOKS_H_
+
+#include "cfe.h"
+
+void        Ut_CFE_TBL_ClearTables(void);
+int32       Ut_CFE_TBL_RegisterTable(const char *Name, uint32 Size, uint16 TblOptionFlags, CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr);
+int32       Ut_CFE_TBL_AddTable(char *Filename, void *TablePtr);
+int32       Ut_CFE_TBL_LoadTable(CFE_TBL_Handle_t TblHandle, void *SrcDataPtr);
+int32       Ut_CFE_TBL_FindTable(char *Filename);
+void       *Ut_CFE_TBL_GetAddress(CFE_TBL_Handle_t TblHandle);
+int32       Ut_CFE_TBL_RegisterHook(CFE_TBL_Handle_t *TblHandlePtr, const char *Name, uint32 Size, uint16 TblOptionFlags, CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr);
+int32       Ut_CFE_TBL_LoadHook(CFE_TBL_Handle_t TblHandle, CFE_TBL_SrcEnum_t SrcType, const void *SrcDataPtr);
+int32       Ut_CFE_TBL_GetAddressHook(void **TblPtr, CFE_TBL_Handle_t TblHandle);
+
+#endif
+```
+
+### `ut_cfe_tbl_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_tbl_stubs.h`
+
+
+```c
+/*
+**
+** File:  ut_cfe_tbl_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_tbl_stubs.h 1.1 2011/05/04 11:20:23EDT rmcgraw Exp  $
+**
+** Purpose: cFE Table Services Header file for unit test stubs
+**
+** $Log: ut_cfe_tbl_stubs.h  $
+** Revision 1.1 2011/05/04 11:20:23EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:56EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.2 2011/02/18 15:57:43EST sslegel 
+** Added new hooks and return codes
+** Changed Ut_CFE_TBL_LoadHook to automatically call the table validate function
+** Revision 1.1 2011/02/15 11:12:35EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_TBL_STUBS_H_
+#define UT_CFE_TBL_STUBS_H_
+
+typedef enum 
+{
+    UT_CFE_TBL_REGISTER_INDEX,
+    UT_CFE_TBL_LOAD_INDEX,
+    UT_CFE_TBL_MANAGE_INDEX,
+    UT_CFE_TBL_GETADDRESS_INDEX,
+    UT_CFE_TBL_GETADDRESSES_INDEX,
+    UT_CFE_TBL_GETSTATUS_INDEX,
+    UT_CFE_TBL_GETINFO_INDEX,
+    UT_CFE_TBL_MAX_INDEX
+} Ut_CFE_TBL_INDEX_t;
+
+typedef struct
+{
+    int32 (*CFE_TBL_Register)(CFE_TBL_Handle_t*, const char *,uint32, uint16, CFE_TBL_CallbackFuncPtr_t);
+    int32 (*CFE_TBL_Load)(CFE_TBL_Handle_t, CFE_TBL_SrcEnum_t, const void *);
+    int32 (*CFE_TBL_Manage)(CFE_TBL_Handle_t);
+    int32 (*CFE_TBL_GetAddress)(void **, CFE_TBL_Handle_t);
+    int32 (*CFE_TBL_GetAddresses)(void **[], uint16, const CFE_TBL_Handle_t []);
+    int32 (*CFE_TBL_GetInfo)(CFE_TBL_Info_t *TblInfoPtr, const char *TblName);
+} Ut_CFE_TBL_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_CFE_TBL_ReturnCodeTable_t;
+
+void Ut_CFE_TBL_Reset(void);
+void Ut_CFE_TBL_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_CFE_TBL_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif 
+```
+
+### `ut_cfe_time_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_cfe_time_stubs.h`
+
+
+```c
+/*
+**
+** File: ut_cfe_time_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_cfe_time_stubs.h 1.1 2011/05/04 11:20:23EDT rmcgraw Exp  $
+**
+** Purpose: cFE Time Services Header file for unit test stubs
+**
+** $Log: ut_cfe_time_stubs.h  $
+** Revision 1.1 2011/05/04 11:20:23EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:57EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/02/15 11:12:35EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_CFE_TIME_STUBS_H_
+#define UT_CFE_TIME_STUBS_H_
+
+typedef enum 
+{
+    UT_CFE_TIME_GETTIME_INDEX,
+    UT_CFE_TIME_MAX_INDEX
+} Ut_CFE_TIME_INDEX_t;
+
+typedef struct
+{
+    CFE_TIME_SysTime_t (*CFE_TIME_GetTime)(void);
+} Ut_CFE_TIME_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_CFE_TIME_ReturnCodeTable_t;
+
+void Ut_CFE_TIME_Reset(void);
+void Ut_CFE_TIME_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_CFE_TIME_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif
+```
+
+### `ut_osapi_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_osapi_stubs.h`
+
+
+```c
+/*
+**
+** File: ut_osapi_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_osapi_stubs.h 1.2 2011/05/16 16:25:33EDT rmcgraw Exp  $
+**
+** Purpose: OSAPI Header file for unit test stubs
+**
+** $Log: ut_osapi_stubs.h  $
+** Revision 1.2 2011/05/16 16:25:33EDT rmcgraw 
+** Added hook functionality to Count Semaphore APIs
+** Revision 1.3 2011/05/16 14:42:41EDT rmcgraw 
+** Added SetRtnCode processing to Counting Semaphore APIs
+** Revision 1.2 2011/03/08 15:42:03EST rmcgraw 
+** Added OS_CountSemGetIdByName
+** Revision 1.1 2011/02/15 11:12:35EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_OSAPI_STUBS_H_
+#define UT_OSAPI_STUBS_H_
+
+typedef enum 
+{
+    UT_OSAPI_TASKDELAY_INDEX,
+    UT_OSAPI_BINSEMTAKE_INDEX,
+    UT_OSAPI_BINSEMTIMEDWAIT_INDEX,
+    UT_OSAPI_MUTSEMTAKE_INDEX,
+    UT_OSAPI_GETLOCALTIME_INDEX,
+    UT_OSAPI_QUEUEGET_INDEX,
+    UT_OSAPI_QUEUEPUT_INDEX,
+    UT_OSAPI_TASKDELETE_INDEX,
+    UT_OSAPI_BINSEMGIVE_INDEX,
+    UT_OSAPI_COUNTSEMCREATE_INDEX,
+    UT_OSAPI_COUNTSEMDELETE_INDEX,    
+    UT_OSAPI_COUNTSEMGIVE_INDEX,
+    UT_OSAPI_COUNTSEMTAKE_INDEX,
+    UT_OSAPI_COUNTSEMTIMEDWAIT_INDEX,
+    UT_OSAPI_COUNTSEMGETIDBYNAME_INDEX,
+    UT_OSAPI_COUNTSEMGETINFO_INDEX,
+    UT_OSAPI_MAX_INDEX
+} Ut_OSAPI_Index_t;
+
+typedef struct
+{
+    int32 (*OS_TaskDelay)(uint32);
+    int32 (*OS_BinSemTake)(uint32);
+    int32 (*OS_BinSemTimedWait)(uint32, uint32);
+    int32 (*OS_MutSemTake)(uint32);
+    int32 (*OS_GetLocalTime)(OS_time_t *);
+    int32 (*OS_QueueGet)(uint32, void *, uint32, uint32 *, int32);
+    int32 (*OS_QueuePut)(uint32, void *, uint32, uint32);
+    int32 (*OS_TaskDelete)(uint32);
+    int32 (*OS_BinSemGive)(uint32);
+    int32 (*OS_CountSemCreate)(uint32 *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options);
+    int32 (*OS_CountSemDelete)(uint32 sem_id);
+    int32 (*OS_CountSemGive)(uint32 sem_id);
+    int32 (*OS_CountSemTake)(uint32 sem_id);
+    int32 (*OS_CountSemTimedWait)(uint32 sem_id, uint32 msecs);
+    int32 (*OS_CountSemGetIdByName)(uint32 *sem_id, const char *sem_name);
+    int32 (*OS_CountSemGetInfo)(uint32 sem_id, OS_count_sem_prop_t *count_prop);
+} Ut_OSAPI_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_OSAPI_ReturnCodeTable_t;
+
+void Ut_OSAPI_Reset(void);
+void Ut_OSAPI_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_OSAPI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif
+```
+
+### `ut_osfileapi_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/ut_osfileapi_stubs.h`
+
+
+```c
+/*
+**
+** File:  ut_osfileapi_stubs.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** $Id: ut_osfileapi_stubs.h 1.1 2011/05/04 11:20:25EDT rmcgraw Exp  $
+**
+** Purpose: OSAPI File Services Header file for unit test stubs.
+**
+** $Log: ut_osfileapi_stubs.h  $
+** Revision 1.1 2011/05/04 11:20:25EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.1 2011/04/08 16:25:59EDT rmcgraw 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/cf/fsw/unit_test/ut-assert/inc/project.pj
+** Revision 1.3 2011/03/30 09:58:56EDT rmcgraw 
+** Added Hook and Return enhancements to Directory APIs
+** Revision 1.2 2011/03/24 13:14:54EDT rmcgraw 
+** Added Hook and RtnCode functionality to OS_stat
+** Revision 1.1 2011/02/15 11:12:36EST sslegel 
+** Initial revision
+** Member added to project c:/MKSDATA/MKS-REPOSITORY/FSW-TOOLS-REPOSITORY/ut-assert/inc/project.pj
+**
+*/
+
+#ifndef UT_OSFILEAPI_STUBS_H_
+#define UT_OSFILEAPI_STUBS_H_
+
+typedef enum 
+{
+    UT_OSFILEAPI_CREAT_INDEX,
+    UT_OSFILEAPI_WRITE_INDEX,
+    UT_OSFILEAPI_READ_INDEX,
+    UT_OSFILEAPI_OPENDIR_INDEX,
+    UT_OSFILEAPI_READDIR_INDEX,
+    UT_OSFILEAPI_CLOSE_INDEX,
+    UT_OSFILEAPI_OPEN_INDEX,
+    UT_OSFILEAPI_CLOSEDIR_INDEX,
+    UT_OSFILEAPI_STAT_INDEX,
+    UT_OSFILEAPI_FDGETINFO_INDEX,
+    UT_OSFILEAPI_MAX_INDEX
+} Ut_OSFILEAPI_INDEX_t;
+
+typedef struct
+{
+    int32 (*OS_creat)(const char *,int32);
+    int32 (*OS_write)(int32, void *, uint32);
+    int32 (*OS_read)(int32, void *, uint32);
+    os_dirp_t (*OS_opendir)(const char *path);
+    os_dirent_t* (*OS_readdir)(os_dirp_t directory);
+    int32 (*OS_close)(int32  filedes);
+    int32 (*OS_open)(const char *path,  int32 access,  uint32  mode);
+    int32 (*OS_closedir)(os_dirp_t directory);
+    int32 (*OS_stat)(const char *path, os_fstat_t *filestats);    
+    int32 (*OS_FDGetInfo) (int32 filedes, OS_FDTableEntry *fd_prop);
+
+} Ut_OSFILEAPI_HookTable_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count; 
+} Ut_OSFILEAPI_ReturnCodeTable_t;
+
+void Ut_OSFILEAPI_Reset(void);
+void Ut_OSFILEAPI_SetFunctionHook(uint32 Index, void *FunPtr);
+void Ut_OSFILEAPI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+
+#endif 
+```
+
+### `utassert.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/utassert.h`
+
+
+```c
+
+/*
+ * Filename: utassert.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a standard set of asserts for use in unit tests.
+ *
+ * Design Notes: 
+ *    - All asserts evaluate a expression as true or false to determine if a unit test has 
+ *      passed or failed.  true means the test passed, false means the test failed.
+ *    - All asserts return a boolen result to indicate the pass fail status.
+ *    - All asserts are implemented as macros to hide the __LINE__ and __FILE__ macros.
+ *    - All asserts must call the function UtAssert.
+ *
+ * References:
+ *
+ */
+
+#ifndef _utassert_
+#define	_utassert_
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+#include "uttools.h"
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
+
+/*
+ * Macro Definitions
+ */
+
+/* Evaluates a expression as either true or false.  true means the test passed, false means the test failed. */
+#define     UtAssert_True(Expression, Description) \
+                UtAssert(Expression, Description, __FILE__, __LINE__)
+
+/* Evaluates a expression as either true or false.  true means the test passed, false means the test failed. */
+#define     UtAssert_Bool(Expression, Description) \
+                UtAssert(Expression, Description, __FILE__, __LINE__)
+
+/* Asserts a test failure */
+#define     UtAssert_Failed(Description) \
+                UtAssert(false, Description, __FILE__, __LINE__)
+
+/* Compares two floating point numbers and determines if they are equal within a specified absolute tolerance. */
+#define     UtAssert_DoubleCmpAbs(x, y, Tolerance, Description) \
+                UtAssert((fabs((x) - (y)) <= (Tolerance)), Description, __FILE__, __LINE__)
+
+/* Compares two floating point numbers and determines if they are equal within a specified relative tolerance. */
+#define     UtAssert_DoubleCmpRel(x, y, Ratio, Description) \
+                UtAssert((fabs((x) - (y))/(x) <= (Ratio)), Description, __FILE__, __LINE__)
+
+/* Compares two strings and determines if they are equal. */
+#define     UtAssert_StrCmp(String1, String2, Description) \
+                UtAssert((strcmp(String1, String2) == 0), Description, __FILE__, __LINE__)
+
+/* Compares at most Length characters of two strings and determines if they are equal. */
+#define     UtAssert_StrnCmp(String1, String2, Length, Description) \
+                UtAssert((strncmp(String1, String2, Length) == 0), Description, __FILE__, __LINE__)
+
+/* Compares two regions of memory and determines if they are equal. */
+#define     UtAssert_MemCmp(Memory1, Memory2, Length, Description) \
+                UtAssert((memcmp(Memory1, Memory2, Length) == 0), Description, __FILE__, __LINE__)
+
+/* Compares a region of memory to a static pattern and determines if they are equal.  Note: Use UtMemSet to
+ * fill a region of memory with a static pattern. */
+#define     UtAssert_MemCmpValue(Memory, Value, Length, Description) \
+                UtAssert((UtMemCmpValue(Memory, Value, Length)), Description, __FILE__, __LINE__)
+
+/* Compares a region of memory to a byte count pattern and determines if they are equal.  Note: Use UtMemFill to
+ * fill a region of memory with a byte count pattern. */
+#define     UtAssert_MemCmpCount(Memory, Length, Description) \
+                UtAssert((UtMemCmpCount(Memory, Length)), Description, __FILE__, __LINE__)
+
+/* Compares a region of memory with the contents of a binary file and determines if they are equal.  Note: Use
+ * UtMem2BinFile to copy a region of memory to a binary file. */
+#define     UtAssert_Mem2BinFileCmp(Memory, Filename, Description) \
+                UtAssert((UtMem2BinFileCmp(Memory, Filename)), Description, __FILE__, __LINE__)
+
+/*
+ * Exported Functions
+ */
+
+/* Returns the number of asserts that have passed. */
+uint32      UtAssert_GetPassCount(void);
+
+/* Returns the number of asserts that have failed. */
+uint32      UtAssert_GetFailCount(void);
+
+/* Base assert function.  All asserts must call this function. */
+bool     UtAssert(bool Expression, char *Description, char *File, uint32 Line);
+
+#endif
+```
+
+### `utlist.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/utlist.h`
+
+
+```c
+
+/*
+ * Filename: utlist.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a generic linked list data structure.
+ *
+ * Design Notes:
+ *
+ * References:
+ *
+ */
+
+#ifndef _utlist_
+#define	_utlist_
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+
+/*
+ * Macro Definitions
+ */
+
+/* Macros to redefine list functions to look like stack and queue functions */
+#define UtStack_Push        UtList_Add
+#define UtStack_Pop         UtList_RemoveLast
+#define UtStack_IsEmpty     UtList_IsEmpty
+#define UtStack_Depth       UtList_Depth
+
+#define UtQueue_Add         UtList_Add
+#define UtQueue_Get         UtList_RemoveFirst
+#define UtQueue_Look        UtList_First
+#define UtQueue_Delete      UtList_DeleteFirst
+#define UtQueue_IsEmpty     UtList_IsEmpty
+#define UtQueue_Depth       UtList_Depth
+
+/*
+ * Type Definitions
+ */
+
+typedef struct UtListNodeTag {
+    struct UtListNodeTag   *Next;
+    struct UtListNodeTag   *Prev;
+    void                   *Data;
+    uint32                  DataSize;
+    uint32                  Tag;
+} UtListNode_t;
+
+ typedef struct {
+    UtListNode_t           *First;
+    UtListNode_t           *Last;
+    uint32                  NumberOfEntries;
+} UtListHead_t;
+
+/*
+ * Exported Functions
+ */
+
+/* Dynamically allocates a new list head.  A list head could also just be declared, this function is useful
+ * if you need to dynamically allocate memory for a new list head.  Note always free list heads allocated by
+ * this function by calling UtList_Destroy. */
+UtListHead_t               *UtList_Create(void);
+
+/* Frees a list head created by UtList_Create. */
+void                        UtList_Destroy(UtListHead_t *ListHead);
+
+/* Deletes all nodes on the list. */
+void                        UtList_Reset(UtListHead_t *ListHead);
+
+/* Dynamically adds a new node to the list.  Nodes are always added to the end of the list.  Memory is dynamically
+ * allocated for the new node and to hold the data pointed to by Data.  A Tag field is also provided to be used to
+ * store user defined information with the node. */
+void                        UtList_Add(UtListHead_t *ListHead, void *Data, uint32 DataSize, uint32 Tag);
+
+/* Deletes the first node from the list. */
+void                        UtList_DeleteFirst(UtListHead_t *ListHead);
+
+/* Deletes the last node from the list. */
+void                        UtList_DeleteLast(UtListHead_t *ListHead);
+
+/* Deletes the specified node from the list, this will screw up if you do not pass in a valid DeleteNode.  I do not
+ * verify that DeleteNode is a member of the list. */
+void                        UtList_DeleteNode(UtListHead_t *ListHead, UtListNode_t *DeleteNode);
+
+/* Removes the first node from the list by first copying the data from the node to the memory buffer pointed to by the
+ * specified Data pointer and then the node is deleted from the list.  Make sure the destination pointer points to a
+ * memory buffer large enough to hold the data.  The size of the data on the node is available by referencing UtListNode->DataSize. */
+void                        UtList_RemoveFirst(UtListHead_t *ListHead, void *Data);
+
+/* Removes the last node from the list by first copying the data from the node to the memory buffer pointed to by the
+ * specified Data pointer and then the node is deleted from the list.  Make sure the destination pointer points to a
+ * memory buffer large enough to hold the data.  The size of the data on the node is available by referencing UtListNode->DataSize. */
+void                        UtList_RemoveLast(UtListHead_t *ListHead, void *Data);
+
+/* Removes the speciified RemoveNode from the list by first copying the data from the node to the memory buffer pointed to by the
+ * specified Data pointer and then the node is deleted from the list.  Make sure the destination pointer points to a
+ * memory buffer large enough to hold the data.  The size of the data on the node is available by referencing UtListNode->DataSize. */
+void                        UtList_RemoveNode(UtListHead_t *ListHead, void *Data, UtListNode_t *RemoveNode);
+
+/* Returns a pointer to the first node on the list.  This is the same as (UtListHead->First). */
+UtListNode_t               *UtList_First(UtListHead_t *ListHead);
+
+/* Returns a pointer to the last node on the list.  This is the same as (UtListHead->Last). */
+UtListNode_t               *UtList_Last(UtListHead_t *ListHead);
+
+/* Returns true if the list is empty.  This is the same as (UtListHead->NumberOfEntries == 0). */
+bool                     UtList_IsEmpty(UtListHead_t *ListHead);
+
+/* Returns the number of nodes on the list.  This is the same as (UtListHead->NumberOfEntries). */
+uint32                      UtList_Depth(UtListHead_t *ListHead);
+
+#endif
+```
+
+### `uttest.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/uttest.h`
+
+
+```c
+
+/*
+ * Filename: uttest.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a standard way to execute unit tests.
+ *
+ * Design Notes: 
+ *    By default the only output that is printed to the console is assert failures
+ *    and a summary of the test results after all tests have executed.  To enable additional 
+ *    test output define the macro UT_VERBOSE.
+ *
+ * References:
+ *
+ */
+
+#ifndef _uttest_
+#define	_uttest_
+
+/*
+ * Exported Functions
+ */
+
+/* Adds a new unit test to the test database. */
+void    UtTest_Add(void (*Test)(void), void (*Setup)(void), void (*Teardown)(void), char *TestName);
+
+/* Executes all unit tests contained in the test database.  Once all tests have finished executing 
+ * a results summary is printed to the console and the test database is deleted.  This function also 
+ * returns a bool status indicating if any of the tests failed. (true = at least one test failure 
+ * has occurred, false = all tests passed) */
+int     UtTest_Run(void);
+
+#endif
+
+```
+
+### `uttools.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut-assert/inc/uttools.h`
+
+
+```c
+
+/*
+ * Filename: uttools.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains functions to implement a set of tools for use in unit testing.
+ *
+ * Design Notes:
+ *
+ * References:
+ *
+ */
+
+#ifndef _uttools_
+#define	_uttools_
+
+/*
+ * Includes
+ */
+
+#include "common_types.h"
+
+/*
+ * Macro Definitions
+ */
+
+#define             UtMemSet memset
+
+/*
+ * Exported Functions
+ */
+
+/* Copies a region of memory to a binary file.  This file can be reloaded by calling UtBinFile2Mem or it can be
+ * used to verify test results by calling UtMem2BinFileCmp. */
+bool             UtMem2BinFile(void *Memory, char *Filename, uint32 Length);
+
+/* Copies a binary file to a region of memory. */
+bool             UtBinFile2Mem(void *Memory, char *Filename, uint32 Length);
+
+/* Copies a region of memory to a hex file */
+bool             UtMem2HexFile(void *Memory, char *Filename, uint32 Length);
+
+/* Fills a region of memory with a byte count pattern. */
+void                UtMemFill(void *Memory, uint32 Length);
+
+/* Just like the standard printf except it will supress its output unless the macro UT_VERBOSE
+ * is defined. */
+void                UtPrintf(char *Spec, ...);
+
+/* Just like the standard sprintf except it returns a pointer to the result string.  The result string
+ * cannot be larger than 256 bytes.  */
+char               *UtSprintf(char *Spec, ...);
+
+/* Calls UtPrintf to print a range of memory as hex bytes. */
+void                UtPrintx(void *Memory, uint32 Length);
+
+/* Compares a region of memory to a static pattern and determines if they are equal.  Note: Use UtMemSet to
+ * fill a region of memory with a static pattern. */
+bool             UtMemCmpValue(void *Memory, uint8 Value, uint32 Length);
+
+/* Compares a region of memory to a byte count pattern and determines if they are equal.  Note: Use UtMemFill to
+ * fill a region of memory with a byte count pattern. */
+bool             UtMemCmpCount(void *Memory, uint32 Length);
+
+/* Compares a region of memory with the contents of a binary file and determines if they are equal.  Note: Use
+ * UtMem2BinFile to copy a region of memory to a binary file. */
+bool             UtMem2BinFileCmp(void *Memory, char *Filename);
+
+#endif
+
+```

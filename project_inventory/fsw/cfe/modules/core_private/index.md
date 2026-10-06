@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/core_private/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,81 @@ config/index
 eds/index
 fsw/index
 ut-stubs/index
-file--arch_build.cmake
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/core_private/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/core_private/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/core_private/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/core_private/ut-stubs/`](ut-stubs/index) — 폴더
-- [`fsw/cfe/modules/core_private/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/core_private/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# CFE arch/platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# Generate the "cfe_platform_cfg.h" and "cfe_msgids.h" header files
+# these must come from mission config
+
+generate_config_includefile(
+    FILE_NAME           "cfe_platform_cfg.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_platform_cfg.h"
+    MATCH_SUFFIX        "platform_cfg.h"
+    PREFIXES            ${BUILD_CONFIG} cfe
+)
+
+generate_config_includefile(
+    FILE_NAME           "cfe_core_private_internal_cfg.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_core_private_internal_cfg.h"
+    PREFIXES            ${BUILD_CONFIG}
+)
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/core_private/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Inter-module interface
+#
+##################################################################
+
+
+add_library(core_private INTERFACE)
+
+# code compiled as CFE core internal will have _CFE_CORE_ macro set
+target_compile_definitions(core_private INTERFACE _CFE_CORE_)
+
+target_include_directories(core_private INTERFACE
+    fsw/inc     # includes shared typedefs among CFE core apps, not called/used by apps
+    ${CFE_SOURCE_DIR}/cmake/target/inc # allow CFE core apps to get "target_config.h" file
+)
+
+# also use all headers/definitions from public intf
+target_link_libraries(core_private INTERFACE core_api)
+
+# Add unit test coverage subdirectory
+if (ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-stubs)
+endif (ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(core_private
+    cfe_es_erlog_typedef.h
+    cfe_evs_log_typedef.h
+    cfe_es_resetdata_typedef.h
+    cfe_sbr.h
+    cfe_sb_destination_typedef.h
+    cfe_es_perfdata_typedef.h
+    cfe_core_resourceid_basevalues.h
+)
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/resourceid/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,65 @@ eds/index
 fsw/index
 option_inc/index
 ut-coverage/index
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/resourceid/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/resourceid/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/resourceid/option_inc/`](option_inc/index) — 폴더
-- [`fsw/cfe/modules/resourceid/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/resourceid/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/resourceid/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/resourceid/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE resource ID module CMake build recipe
+#
+##################################################################
+
+project(CFE_RESOURCEID C)
+
+# Module library
+set(resourceid_SOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/fsw/src/cfe_resourceid_api.c
+)
+add_library(resourceid STATIC ${resourceid_SOURCES})
+
+target_link_libraries(resourceid PRIVATE core_private)
+target_include_directories(resourceid PUBLIC fsw/inc)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/resourceid/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# Resource ID mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# Check if strict/enforcing typedef should be used
+if (MISSION_RESOURCEID_MODE STREQUAL "STRICT")
+  set(RESOURCEID_HDR_FILE "cfe_resourceid_strict.h")
+else ()
+  set(RESOURCEID_HDR_FILE "cfe_resourceid_simple.h")
+endif ()
+
+# Generate the header definition files, use local default for this module)
+generate_config_includefile(
+    FILE_NAME           "cfe_resourceid_typedef.h"
+    FALLBACK_FILE       "${CMAKE_CURRENT_LIST_DIR}/option_inc/${RESOURCEID_HDR_FILE}"
+)
+```

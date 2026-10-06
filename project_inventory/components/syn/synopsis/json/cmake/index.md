@@ -3,24 +3,421 @@
 
 **경로:** `components/syn/synopsis/json/cmake/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ci.cmake`
 
-file--ci.cmake
-file--config.cmake.in
-file--download_test_data.cmake
-file--nlohmann_jsonConfigVersion.cmake.in
-file--pkg-config.pc.in
-file--test.cmake
+**경로:** `components/syn/synopsis/json/cmake/ci.cmake`
+
+
+```cmake
+message(FATAL_ERROR "The JSON_CI option is not availablewhen using the nlohmann_json_cmake_fetchcontent repository.")
 ```
 
-## 항목
+### `config.cmake.in`
 
-- [`components/syn/synopsis/json/cmake/ci.cmake`](file--ci.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/cmake/config.cmake.in`](file--config.cmake.in) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/cmake/download_test_data.cmake`](file--download_test_data.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/cmake/nlohmann_jsonConfigVersion.cmake.in`](file--nlohmann_jsonConfigVersion.cmake.in) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/cmake/pkg-config.pc.in`](file--pkg-config.pc.in) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/cmake/test.cmake`](file--test.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/syn/synopsis/json/cmake/config.cmake.in`
+
+
+```text
+include(FindPackageHandleStandardArgs)
+set(${CMAKE_FIND_PACKAGE_NAME}_CONFIG ${CMAKE_CURRENT_LIST_FILE})
+find_package_handle_standard_args(@PROJECT_NAME@ CONFIG_MODE)
+
+if(NOT TARGET @PROJECT_NAME@::@NLOHMANN_JSON_TARGET_NAME@)
+    include("${CMAKE_CURRENT_LIST_DIR}/@NLOHMANN_JSON_TARGETS_EXPORT_NAME@.cmake")
+    if((NOT TARGET @NLOHMANN_JSON_TARGET_NAME@) AND
+       (NOT @PROJECT_NAME@_FIND_VERSION OR
+        @PROJECT_NAME@_FIND_VERSION VERSION_LESS 3.2.0))
+        add_library(@NLOHMANN_JSON_TARGET_NAME@ INTERFACE IMPORTED)
+        set_target_properties(@NLOHMANN_JSON_TARGET_NAME@ PROPERTIES
+            INTERFACE_LINK_LIBRARIES @PROJECT_NAME@::@NLOHMANN_JSON_TARGET_NAME@
+        )
+    endif()
+endif()
+```
+
+### `download_test_data.cmake`
+
+**경로:** `components/syn/synopsis/json/cmake/download_test_data.cmake`
+
+
+```cmake
+set(JSON_TEST_DATA_URL     https://github.com/nlohmann/json_test_data)
+set(JSON_TEST_DATA_VERSION 3.1.0)
+
+# if variable is set, use test data from given directory rather than downloading them
+if(JSON_TestDataDirectory)
+    message(STATUS "Using test data in ${JSON_TestDataDirectory}.")
+    add_custom_target(download_test_data)
+    file(WRITE ${CMAKE_BINARY_DIR}/include/test_data.hpp "#define TEST_DATA_DIRECTORY \"${JSON_TestDataDirectory}\"\n")
+else()
+    find_package(Git)
+    # target to download test data
+    add_custom_target(download_test_data
+        COMMAND test -d json_test_data || ${GIT_EXECUTABLE} clone -c advice.detachedHead=false --branch v${JSON_TEST_DATA_VERSION} ${JSON_TEST_DATA_URL}.git --quiet --depth 1
+        COMMENT "Downloading test data from ${JSON_TEST_DATA_URL} (v${JSON_TEST_DATA_VERSION})"
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+    # create a header with the path to the downloaded test data
+    file(WRITE ${CMAKE_BINARY_DIR}/include/test_data.hpp "#define TEST_DATA_DIRECTORY \"${CMAKE_BINARY_DIR}/json_test_data\"\n")
+endif()
+
+# determine the operating system (for debug and support purposes)
+find_program(UNAME_COMMAND uname)
+find_program(VER_COMMAND ver)
+find_program(LSB_RELEASE_COMMAND lsb_release)
+find_program(SW_VERS_COMMAND sw_vers)
+set(OS_VERSION_STRINGS "${CMAKE_SYSTEM}")
+if (VER_COMMAND)
+    execute_process(COMMAND ${VER_COMMAND} OUTPUT_VARIABLE VER_COMMAND_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(OS_VERSION_STRINGS "${OS_VERSION_STRINGS}; ${VER_COMMAND_RESULT}")
+endif()
+if (SW_VERS_COMMAND)
+    execute_process(COMMAND ${SW_VERS_COMMAND} OUTPUT_VARIABLE SW_VERS_COMMAND_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+    string(REGEX REPLACE "[ ]*\n" "; " SW_VERS_COMMAND_RESULT "${SW_VERS_COMMAND_RESULT}")
+    set(OS_VERSION_STRINGS "${OS_VERSION_STRINGS}; ${SW_VERS_COMMAND_RESULT}")
+endif()
+if (LSB_RELEASE_COMMAND)
+    execute_process(COMMAND ${LSB_RELEASE_COMMAND} -a OUTPUT_VARIABLE LSB_RELEASE_COMMAND_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+    string(REGEX REPLACE "[ ]*\n" "; " LSB_RELEASE_COMMAND_RESULT "${LSB_RELEASE_COMMAND_RESULT}")
+    set(OS_VERSION_STRINGS "${OS_VERSION_STRINGS}; ${LSB_RELEASE_COMMAND_RESULT}")
+endif()
+if (UNAME_COMMAND)
+    execute_process(COMMAND ${UNAME_COMMAND} -a OUTPUT_VARIABLE UNAME_COMMAND_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_QUIET)
+    set(OS_VERSION_STRINGS "${OS_VERSION_STRINGS}; ${UNAME_COMMAND_RESULT}")
+endif()
+
+message(STATUS "Operating system: ${OS_VERSION_STRINGS}")
+
+# determine the compiler (for debug and support purposes)
+if (MSVC)
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} OUTPUT_VARIABLE CXX_VERSION_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_VARIABLE CXX_VERSION_RESULT ERROR_STRIP_TRAILING_WHITESPACE)
+    set(CXX_VERSION_RESULT "${CXX_VERSION_RESULT}; MSVC_VERSION=${MSVC_VERSION}; MSVC_TOOLSET_VERSION=${MSVC_TOOLSET_VERSION}")
+else()
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} --version OUTPUT_VARIABLE CXX_VERSION_RESULT OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+string(REGEX REPLACE "[ ]*\n" "; " CXX_VERSION_RESULT "${CXX_VERSION_RESULT}")
+message(STATUS "Compiler: ${CXX_VERSION_RESULT}")
+```
+
+### `nlohmann_jsonConfigVersion.cmake.in`
+
+**경로:** `components/syn/synopsis/json/cmake/nlohmann_jsonConfigVersion.cmake.in`
+
+
+```text
+# This is essentially cmake's BasicConfigVersion-SameMajorVersion.cmake.in but
+# without the 32/64-bit check.  Since json is a header-only library, it doesn't
+# matter if it was built on a different platform than what it is used on (see
+# https://github.com/nlohmann/json/issues/1697).
+set(PACKAGE_VERSION "@PROJECT_VERSION@")
+
+if(PACKAGE_VERSION VERSION_LESS PACKAGE_FIND_VERSION)
+  set(PACKAGE_VERSION_COMPATIBLE FALSE)
+else()
+
+  if(PACKAGE_FIND_VERSION_MAJOR STREQUAL "@PROJECT_VERSION_MAJOR@")
+    set(PACKAGE_VERSION_COMPATIBLE TRUE)
+  else()
+    set(PACKAGE_VERSION_COMPATIBLE FALSE)
+  endif()
+
+  if(PACKAGE_FIND_VERSION STREQUAL PACKAGE_VERSION)
+      set(PACKAGE_VERSION_EXACT TRUE)
+  endif()
+endif()
+```
+
+### `pkg-config.pc.in`
+
+**경로:** `components/syn/synopsis/json/cmake/pkg-config.pc.in`
+
+
+```text
+Name: ${PROJECT_NAME}
+Description: JSON for Modern C++
+Version: ${PROJECT_VERSION}
+Cflags: -I${CMAKE_INSTALL_FULL_INCLUDEDIR}
+```
+
+### `test.cmake`
+
+**경로:** `components/syn/synopsis/json/cmake/test.cmake`
+
+
+```cmake
+set(_json_test_cmake_list_file ${CMAKE_CURRENT_LIST_FILE})
+
+#############################################################################
+# download test data
+#############################################################################
+
+include(download_test_data)
+
+# test fixture to download test data
+add_test(NAME "download_test_data" COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR}
+    --target download_test_data
+)
+set_tests_properties(download_test_data PROPERTIES FIXTURES_SETUP TEST_DATA)
+
+if(JSON_Valgrind)
+    find_program(CMAKE_MEMORYCHECK_COMMAND valgrind)
+    message(STATUS "Executing test suite with Valgrind (${CMAKE_MEMORYCHECK_COMMAND})")
+    set(memcheck_command "${CMAKE_MEMORYCHECK_COMMAND} ${CMAKE_MEMORYCHECK_COMMAND_OPTIONS} --error-exitcode=1 --leak-check=full")
+    separate_arguments(memcheck_command)
+endif()
+
+#############################################################################
+# detect standard support
+#############################################################################
+
+# C++11 is the minimum required
+set(compiler_supports_cpp_11 TRUE)
+
+foreach(feature ${CMAKE_CXX_COMPILE_FEATURES})
+    if (${feature} STREQUAL cxx_std_14)
+        set(compiler_supports_cpp_14 TRUE)
+    elseif (${feature} STREQUAL cxx_std_17)
+        set(compiler_supports_cpp_17 TRUE)
+    elseif (${feature} STREQUAL cxx_std_20)
+        set(compiler_supports_cpp_20 TRUE)
+    elseif (${feature} STREQUAL cxx_std_23)
+        set(compiler_supports_cpp_23 TRUE)
+    endif()
+endforeach()
+
+#############################################################################
+# test functions
+#############################################################################
+
+#############################################################################
+# json_test_set_test_options(
+#     all|<tests>
+#     [CXX_STANDARDS all|<args>...]
+#     [COMPILE_DEFINITIONS <args>...]
+#     [COMPILE_FEATURES <args>...]
+#     [COMPILE_OPTIONS <args>...]
+#     [LINK_LIBRARIES <args>...]
+#     [LINK_OPTIONS <args>...]
+#     [TEST_PROPERTIES <args>...])
+#
+# Supply test- and standard-specific build settings and/or test properties.
+# Specify multiple tests using a list e.g., "test-foo;test-bar".
+#
+# Must be called BEFORE the test is created.
+#############################################################################
+
+function(json_test_set_test_options tests)
+    cmake_parse_arguments(args "" ""
+        "CXX_STANDARDS;COMPILE_DEFINITIONS;COMPILE_FEATURES;COMPILE_OPTIONS;LINK_LIBRARIES;LINK_OPTIONS;TEST_PROPERTIES"
+        ${ARGN})
+
+    if(NOT args_CXX_STANDARDS)
+        set(args_CXX_STANDARDS "all")
+    endif()
+
+    foreach(test ${tests})
+        if("${test}" STREQUAL "all")
+            set(test "")
+        endif()
+
+        foreach(cxx_standard ${args_CXX_STANDARDS})
+            if("${cxx_standard}" STREQUAL "all")
+                if("${test}" STREQUAL "")
+                    message(FATAL_ERROR "Not supported. Change defaults in: ${_json_test_cmake_list_file}")
+                endif()
+                set(test_interface _json_test_interface_${test})
+            else()
+                set(test_interface _json_test_interface_${test}_cpp_${cxx_standard})
+            endif()
+
+            if(NOT TARGET ${test_interface})
+                add_library(${test_interface} INTERFACE)
+            endif()
+
+            target_compile_definitions(${test_interface} INTERFACE ${args_COMPILE_DEFINITIONS})
+            target_compile_features(${test_interface} INTERFACE ${args_COMPILE_FEATURES})
+            target_compile_options(${test_interface} INTERFACE ${args_COMPILE_OPTIONS})
+            target_link_libraries (${test_interface} INTERFACE ${args_LINK_LIBRARIES})
+            target_link_options(${test_interface} INTERFACE ${args_LINK_OPTIONS})
+            #set_target_properties(${test_interface} PROPERTIES JSON_TEST_PROPERTIES "${args_TEST_PROPERTIES}")
+            set_property(DIRECTORY PROPERTY
+                ${test_interface}_TEST_PROPERTIES "${args_TEST_PROPERTIES}"
+            )
+        endforeach()
+    endforeach()
+endfunction()
+
+# for internal use by _json_test_add_test()
+function(_json_test_apply_test_properties test_target properties_target)
+    #get_target_property(test_properties ${properties_target} JSON_TEST_PROPERTIES)
+    get_property(test_properties DIRECTORY PROPERTY ${properties_target}_TEST_PROPERTIES)
+    if(test_properties)
+        set_tests_properties(${test_target} PROPERTIES ${test_properties})
+    endif()
+endfunction()
+
+# for internal use by json_test_add_test_for()
+function(_json_test_add_test test_name file main cxx_standard)
+    set(test_target ${test_name}_cpp${cxx_standard})
+
+    if(TARGET ${test_target})
+        message(FATAL_ERROR "Target ${test_target} has already been added.")
+    endif()
+
+    add_executable(${test_target} ${file})
+    target_link_libraries(${test_target} PRIVATE ${main})
+
+    # set and require C++ standard
+    set_target_properties(${test_target} PROPERTIES
+        CXX_STANDARD ${cxx_standard}
+        CXX_STANDARD_REQUIRED ON
+    )
+
+    # apply standard-specific build settings
+    if(TARGET _json_test_interface__cpp_${cxx_standard})
+        target_link_libraries(${test_target} PRIVATE _json_test_interface__cpp_${cxx_standard})
+    endif()
+
+    # apply test-specific build settings
+    if(TARGET _json_test_interface_${test_name})
+        target_link_libraries(${test_target} PRIVATE _json_test_interface_${test_name})
+    endif()
+
+    # apply test- and standard-specific build settings
+    if(TARGET _json_test_interface_${test_name}_cpp_${cxx_standard})
+        target_link_libraries(${test_target} PRIVATE
+            _json_test_interface_${test_name}_cpp_${cxx_standard}
+        )
+    endif()
+
+    if (JSON_FastTests)
+        add_test(NAME ${test_target}
+            COMMAND ${test_target} ${DOCTEST_TEST_FILTER}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    else()
+        add_test(NAME ${test_target}
+            COMMAND ${test_target} ${DOCTEST_TEST_FILTER} --no-skip
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    endif()
+    set_tests_properties(${test_target} PROPERTIES LABELS "all" FIXTURES_REQUIRED TEST_DATA)
+
+    # apply standard-specific test properties
+    if(TARGET _json_test_interface__cpp_${cxx_standard})
+        _json_test_apply_test_properties(${test_target} _json_test_interface__cpp_${cxx_standard})
+    endif()
+
+    # apply test-specific test properties
+    if(TARGET _json_test_interface_${test_name})
+        _json_test_apply_test_properties(${test_target} _json_test_interface_${test_name})
+    endif()
+
+    # apply test- and standard-specific test properties
+    if(TARGET _json_test_interface_${test_name}_cpp_${cxx_standard})
+        _json_test_apply_test_properties(${test_target}
+            _json_test_interface_${test_name}_cpp_${cxx_standard}
+        )
+    endif()
+
+    if(JSON_Valgrind)
+        add_test(NAME ${test_target}_valgrind
+            COMMAND ${memcheck_command} $<TARGET_FILE:${test_target}> ${DOCTEST_TEST_FILTER}
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+        set_tests_properties(${test_target}_valgrind PROPERTIES
+            LABELS "valgrind" FIXTURES_REQUIRED TEST_DATA
+        )
+    endif()
+endfunction()
+
+#############################################################################
+# json_test_add_test_for(
+#     <file>
+#     [NAME <name>]
+#     MAIN <main>
+#     [CXX_STANDARDS <version_number>...] [FORCE])
+#
+# Given a <file> unit-foo.cpp, produces
+#
+#     test-foo_cpp<version_number>
+#
+# if C++ standard <version_number> is supported by the compiler and the
+# source file contains JSON_HAS_CPP_<version_number>.
+# Use NAME <name> to override the filename-derived test name.
+# Use FORCE to create the test regardless of the file containing
+# JSON_HAS_CPP_<version_number>.
+# Test targets are linked against <main>.
+# CXX_STANDARDS defaults to "11".
+#############################################################################
+
+function(json_test_add_test_for file)
+    cmake_parse_arguments(args "FORCE" "MAIN;NAME" "CXX_STANDARDS" ${ARGN})
+
+    if("${args_MAIN}" STREQUAL "")
+        message(FATAL_ERROR "Required argument MAIN <main> missing.")
+    endif()
+
+    if("${args_NAME}" STREQUAL "")
+        get_filename_component(file_basename ${file} NAME_WE)
+        string(REGEX REPLACE "unit-([^$]+)" "test-\\1" test_name ${file_basename})
+    else()
+        set(test_name ${args_NAME})
+        if(NOT test_name MATCHES "test-[^$]+")
+            message(FATAL_ERROR "Test name must start with 'test-'.")
+        endif()
+    endif()
+
+    if("${args_CXX_STANDARDS}" STREQUAL "")
+        set(args_CXX_STANDARDS 11)
+    endif()
+
+    file(READ ${file} file_content)
+    foreach(cxx_standard ${args_CXX_STANDARDS})
+        if(NOT compiler_supports_cpp_${cxx_standard})
+            continue()
+        endif()
+
+        # add unconditionally if C++11 (default) or forced
+        if(NOT ("${cxx_standard}" STREQUAL 11 OR args_FORCE))
+            string(FIND "${file_content}" JSON_HAS_CPP_${cxx_standard} has_cpp_found)
+            if(${has_cpp_found} EQUAL -1)
+                continue()
+            endif()
+        endif()
+
+        _json_test_add_test(${test_name} ${file} ${args_MAIN} ${cxx_standard})
+    endforeach()
+endfunction()
+
+#############################################################################
+# json_test_should_build_32bit_test(
+#     <build_32bit_var> <build_32bit_only_var> <input>)
+#
+# Check if the 32bit unit test should be built based on the value of <input>
+# and store the result in the variables <build_32bit_var> and
+# <build_32bit_only_var>.
+#############################################################################
+
+function(json_test_should_build_32bit_test build_32bit_var build_32bit_only_var input)
+    set(${build_32bit_only_var} OFF PARENT_SCOPE)
+    string(TOUPPER "${input}" ${build_32bit_var})
+    if("${${build_32bit_var}}" STREQUAL AUTO)
+        # check if compiler is targeting 32bit by default
+        include(CheckTypeSize)
+        check_type_size("size_t" sizeof_size_t LANGUAGE CXX)
+        if(sizeof_size_t AND ${sizeof_size_t} EQUAL 4)
+            message(STATUS "Auto-enabling 32bit unit test.")
+            set(${build_32bit_var} ON)
+        else()
+            set(${build_32bit_var} OFF)
+        endif()
+    elseif("${${build_32bit_var}}" STREQUAL ONLY)
+        set(${build_32bit_only_var} ON PARENT_SCOPE)
+    endif()
+
+    set(${build_32bit_var} "${${build_32bit_var}}" PARENT_SCOPE)
+endfunction()
+```

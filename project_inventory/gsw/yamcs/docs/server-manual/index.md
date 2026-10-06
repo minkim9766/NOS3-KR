@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -20,31 +20,440 @@ services/index
 sql-language/index
 tc/index
 web-interface/index
-file--command-options.rst
-file--conf.py
-file--configuration-sections.rst
-file--index.rst
-file--Makefile
-file--yamcs-plugin-format.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/administration/`](administration/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/data-management/`](data-management/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/general/`](general/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/links/`](links/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/processors/`](processors/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/programs/`](programs/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/security/`](security/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/services/`](services/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/sql-language/`](sql-language/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/tc/`](tc/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/web-interface/`](web-interface/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/command-options.rst`](file--command-options.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/conf.py`](file--conf.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/configuration-sections.rst`](file--configuration-sections.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/yamcs-plugin-format.rst`](file--yamcs-plugin-format.rst) — UTF-8 텍스트 파일 본문 포함
+### `command-options.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/command-options.rst`
+
+
+```rst
+Command Options
+===============
+
+Yamcs supports a programmatic API for activating custom command options. When commands are issued with custom options, these can be interpreted by you own code, typically a TC data link.
+
+Custom command options do not impact the encoding of telecommand packets, rather they are used for passing other instructions, such as at-runtime overriding of link properties.
+
+Custom command options are added system-wide. Registered command options are available in all official clients wherever a command can be configured for sending.
+
+Command options are automatically saved as attributes in Command History, and will also be received by all command/acknowledgment listeners.
+
+
+Registration
+------------
+
+Command options must be registered against :javadoc:`org.yamcs.YamcsServer`. It is not possible to send custom options without the option being registered.
+
+.. code-block:: java
+
+    // Statically retrieve the current Yamcs server object.
+    YamcsServer yamcs = YamcsServer.getServer();
+
+    CommandOption option = new CommandOption(
+        "cop1Bypass",  // System-wide unique identifier. Also stored in cmdhist.
+        "COP-1 Bypass", // Verbose name for display in UI clients.
+        CommandOptionType.BOOLEAN, // The expected type for hinting UI clients.
+    );
+
+    yamcs.addCommandOption(option);
+
+
+A registration can only be done once, or else ``addCommandOption()`` will throw an exception. One way of doing so is to put this registration in the static initializer of the components that uses this option (e.g. a command link). Then the command option will only be loaded (and once only) when at least one such link is running.
+
+An alternative method that avoids the use of static initializers, is to implement :javadoc:`org.yamcs.Plugin`, and then put the registration in the ``onLoad`` lifecycle hook. This hook is called once-only when the server is starting up.
+
+.. code-block:: java
+
+    public class MyPlugin implements Plugin {
+
+        public static final CommandOption MY_OPTION = ...;
+    
+        public void onLoad(YConfiguration config) { // Called on start-up
+            YamcsServer yamcs = YamcsServer.getServer();
+            yamcs.addCommandOption(MY_OPTION);
+        }
+    }
+
+.. note::
+    Plugins must be packaged in a specific manner, before Yamcs can actually find and load them. This is documented separately.
+
+
+Types
+-----
+
+There is support for these types: ``BOOLEAN``, ``NUMBER``, ``STRING`` and ``TIMESTAMP``. These types are only a hint for use by UI clients. For example, the Yamcs web interface will use these types to determine which UI controls to render in a dynamic form, and how to encode the values for persisting in Command History. The HTTP API will not check which :javadoc:`~org.yamcs.protobuf.Value` types are used. Submitted values are pushed end-to-end in a type-preserving manner.
+
+The effective :javadoc:`~org.yamcs.protobuf.Value` type is intentionally loose, and depends on the client. The Yamcs web interface for example, will use double for submitting the value of any ``NUMBER`` options.
+
+
+Permissions
+-----------
+
+The use of any command option requires the system privilege ``CommandOptions``.
+```
+
+### `conf.py`
+
+**경로:** `gsw/yamcs/docs/server-manual/conf.py`
+
+
+```python
+from xml.etree import ElementTree as ET
+
+# Read the latest Yamcs versions from the Maven pom.xml
+tree = ET.ElementTree()
+tree.parse("../../pom.xml")
+yamcs_version_el = tree.getroot().find("{http://maven.apache.org/POM/4.0.0}version")
+
+project = "Yamcs"
+copyright = "2006-present, Space Applications Services"
+author = "Yamcs Team"
+
+# The short X.Y version
+version = yamcs_version_el.text
+
+# The full version, including alpha/beta/rc tags
+release = version
+
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.extlinks",
+    "sphinxcontrib.yamcs",
+]
+
+# Force-disable conversion of -- to en-dash
+smartquotes = False
+
+# Add any paths that contain templates here, relative to this directory.
+# templates_path = ['_templates']
+
+# The suffix(es) of source filenames.
+# You can specify multiple suffix as a list of string:
+#
+# source_suffix = ['.rst', '.md']
+source_suffix = ".rst"
+
+# The language for content autogenerated by Sphinx. Refer to documentation
+# for a list of supported languages.
+#
+# This is also used if you do content translation via gettext catalogs.
+# Usually you set "language" from the command line for these cases.
+language = "en"
+
+# List of patterns, relative to source directory, that match files and
+# directories to ignore when looking for source files.
+# This pattern also affects html_static_path and html_extra_path .
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+# The name of the Pygments (syntax highlighting) style to use.
+pygments_style = "sphinx"
+
+extlinks = {
+    "source": ("https://github.com/yamcs/yamcs/blob/master/%s", "GitHub: %s"),
+    "apidoc": ("https://docs.yamcs.org/yamcs-http-api/%s", "API: %s"),
+}
+
+# The theme to use for HTML and HTML Help pages.  See the documentation for
+# a list of builtin themes.
+#
+html_theme = "nature"
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+#
+html_theme_options = {
+    "sidebarwidth": "300px",
+}
+
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+# html_static_path = ['_static']
+
+html_show_sourcelink = False
+
+latex_elements = {
+    "papersize": "a4paper",
+    "figure_align": "htbp",
+}
+
+# Grouping the document tree into LaTeX files. List of tuples
+# (source start file, target name, title,
+#  author, documentclass [howto, manual, or own class]).
+latex_documents = [
+    (
+        "index",
+        f"yamcs-server-manual-{release}.tex",
+        "Yamcs Server Manual",
+        "Space Applications Services",
+        "manual",
+    ),
+]
+
+latex_show_pagerefs = True
+
+latex_show_urls = "footnote"
+
+man_pages = [
+    (
+        "programs/yamcsadmin",
+        "yamcsadmin",
+        "Tool for local Yamcs administration",
+        author,
+        1,
+    ),
+    (
+        "programs/yamcsadmin_backup",
+        "yamcsadmin-backup",
+        "Perform and restore backups",
+        author,
+        1,
+    ),
+    (
+        "programs/yamcsadmin_confcheck",
+        "yamcsadmin-confcheck",
+        "Check Yamcs configuration",
+        author,
+        1,
+    ),
+    (
+        "programs/yamcsadmin_mdb",
+        "yamcsadmin-mdb",
+        "Provides MDB information",
+        author,
+        1,
+    ),
+    (
+        "programs/yamcsadmin_password-hash",
+        "yamcsadmin-password-hash",
+        "Generate password hash for use in users.yaml",
+        author,
+        1,
+    ),
+    (
+        "programs/yamcsadmin_rocksdb",
+        "yamcsadmin-rocksdb",
+        "Provides low-level RocksDB data operations",
+        author,
+        1,
+    ),
+    (
+        "programs/yamcsadmin_users",
+        "yamcsadmin-users",
+        "User operations",
+        author,
+        1,
+    ),
+    ("programs/yamcsd", "yamcsd", "Yamcs Server", author, 8),
+    ("programs/packet-viewer", "packet-viewer", "Packet Viewer", author, 1),
+]
+```
+
+### `configuration-sections.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/configuration-sections.rst`
+
+
+```rst
+Configuration Sections
+======================
+
+Some of the standard configuration files can be extended with custom configuration options. This is called a configuration section. Sections are represented by a top-level identifier and are scoped to a type of configuration file.
+
+A Yamcs plugin is automatically associated with a configuration section named after the plugin identifier.
+
+For example, the ``yamcs-web`` module is packaged as a Yamcs plugin, and accepts configuration options read from the ``yamcs-web`` section of the main :file:`etc/yamcs.yaml`:
+
+.. code-block:: java
+
+    public class WebPlugin implements Plugin {
+
+        public Spec getSpec() {
+            Spec spec = new Spec();
+            // ...
+            return spec;
+        }
+
+        @Override
+        public void onLoad(YConfiguration config) throws PluginException {
+            // Use the actual configuration
+        }
+    }
+
+Here the :javadoc:`org.yamcs.Spec` object is a helper class that allows defining how to validate your plugin configuration. Yamcs will take care of the actual validation step, and if all went well the ``onLoad`` hook should trigger. This is a good place to access the runtime configuration model, and retrieve your custom options.
+
+If you have custom components that want to access this configuration, one possible way is to provide accessors on your plugin class, and then to retrieve the singleton instance of your plugin class:
+
+.. code-block:: java
+
+    PluginManager pluginManager = YamcsServer.getServer().getPluginManager();
+    MyPlugin plugin = pluginManager.getPlugin(MyPlugin.class);
+    // ...
+
+
+.. rubric:: Instance-specific configuration
+
+Besides global plugin configuration options in :file:`etc/yamcs.yaml`, you may also want to add instance-specific configuration options. These would be considered when validating any :file:`etc/yamcs.{instance}.yaml` file:
+
+.. code-block:: java
+
+    YamcsServer yamcs = YamcsServer.getServer();
+    yamcs.addConfigurationSection(ConfigScope.YAMCS_INSTANCE, "my-section", spec);
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/index.rst`
+
+
+```rst
+===================
+Yamcs Server Manual
+===================
+
+.. toctree::
+    :maxdepth: 1
+    :titlesonly:
+
+    general/index
+    administration/index
+    mdb/index
+    data-management/index
+    links/index
+    processors/index
+    tc/index
+    services/index
+    security/index
+    web-interface/index
+    programs/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Extending Yamcs
+
+    configuration-sections
+    command-options
+    yamcs-plugin-format
+
+.. raw:: latex
+
+   \appendix
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Appendices
+
+    sql-language/index
+```
+
+### `Makefile`
+
+**경로:** `gsw/yamcs/docs/server-manual/Makefile`
+
+
+```make
+# Minimal makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line.
+SPHINXOPTS    =
+SPHINXBUILD   = sphinx-build
+SOURCEDIR     = .
+BUILDDIR      = _build
+
+# Put it first so that "make" without argument is like "make help".
+help:
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+.PHONY: help Makefile
+
+# Catch-all target: route all unknown targets to Sphinx using the new
+# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+```
+
+### `yamcs-plugin-format.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/yamcs-plugin-format.rst`
+
+
+```rst
+Yamcs Plugin Format
+===================
+
+Yamcs has a simple plugin system that facilitates hooking into internals. The main advantages is that it allows to trigger custom code on server-start, which makes it an ideal place for programmatic customizations.
+
+For example, you could use a plugin to dynamically add services without even needing to write them in YAML. Or you could use a plugin to read and validate some custom configuration file that is shared by multiple of your components. Or maybe you want to add your own custom HTTP and WebSocket calls to the API.
+
+The following is a detailed specification of how Yamcs plugins should be packaged. If you want the short instructions, just implement :javadoc:`org.yamcs.Plugin` and add this execution to the ``pom.xml`` of your Yamcs Maven project. Then everything will be derived automatically:
+
+.. code-block:: xml
+
+    <plugin>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-maven-plugin</artifactId>
+      <!--version>...</version-->
+      <executions>
+        <execution>
+          <goals>
+            <goal>detect</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+
+
+Main configuration file
+-----------------------
+
+Yamcs plugins should be packaged inside regular jar files. You can have as many plugins inside a jar as you want. Your jar file must contain the following file in its classpath:
+
+    /META-INF/services/org.yamcs.Plugin
+
+The content of this file must list the class names of all the plugins in your jar (one on each line). So for instance if you want to register your plugin ``com.example.MyPlugin``, then the contents of the file ``org.yamcs.Plugin`` must be simply:
+
+.. code-block:: text
+
+    com.example.MyPlugin        
+
+With this setup, Yamcs will find your plugin and hook it into its lifecycle.
+
+
+Plugin metadata
+---------------
+
+In addition to the file ``/META-INF/services/org.yamcs.Plugin``, you must also add the following file to your classpath:
+
+    /META-INF/yamcs/com.example.MyPlugin/plugin.properties
+
+Replace ``com.example.MyPlugin`` with the class name of your own plugin. The file ``plugin.properties`` supports the following key value pairs:
+
+.. code-block:: properties
+    
+    # REQUIRED. A short identifier for your plugin
+    name=my-plugin
+
+    # REQUIRED. A version number for your plugin
+    version=1.0.0
+
+    # Optional: freeform description (no markup)
+    description=Example
+
+    # Optional: your organization name
+    organization=Example
+
+    # Optional: your organization's URL
+    organizationUrl=https://example.com
+
+    # Optional: when your plugin package was generated (ISO 8601)
+    generated=
+
+
+All these properties are used by Yamcs as metadata for potential integration in APIs and UIs.
+```

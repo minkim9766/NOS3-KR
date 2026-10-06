@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sch/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,18 +11,30 @@
 detailed_design/index
 dox_src/index
 users_guide/index
-file--cFS%20SCH%202210%20Version%20Description%20Document.docx
-file--cFS%20SCH%202210%20Version%20Description%20Document.pdf
-file--CFS%20SCH%20Requirements%20Document%20V1_1%20080111.pdf
-file--SCH_v2.2.2_VersionDescriptionDocument.pdf
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sch/docs/detailed_design/`](detailed_design/index) — 폴더
-- [`fsw/apps/sch/docs/dox_src/`](dox_src/index) — 폴더
-- [`fsw/apps/sch/docs/users_guide/`](users_guide/index) — 폴더
-- [`fsw/apps/sch/docs/cFS SCH 2210 Version Description Document.docx`](file--cFS%20SCH%202210%20Version%20Description%20Document.docx) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/cFS SCH 2210 Version Description Document.pdf`](file--cFS%20SCH%202210%20Version%20Description%20Document.pdf) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/CFS SCH Requirements Document V1_1 080111.pdf`](file--CFS%20SCH%20Requirements%20Document%20V1_1%20080111.pdf) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/SCH_v2.2.2_VersionDescriptionDocument.pdf`](file--SCH_v2.2.2_VersionDescriptionDocument.pdf) — 바이너리 (경로만)
+### `cFS SCH 2210 Version Description Document.docx`
+
+**경로:** `fsw/apps/sch/docs/cFS SCH 2210 Version Description Document.docx`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `cFS SCH 2210 Version Description Document.pdf`
+
+**경로:** `fsw/apps/sch/docs/cFS SCH 2210 Version Description Document.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CFS SCH Requirements Document V1_1 080111.pdf`
+
+**경로:** `fsw/apps/sch/docs/CFS SCH Requirements Document V1_1 080111.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `SCH_v2.2.2_VersionDescriptionDocument.pdf`
+
+**경로:** `fsw/apps/sch/docs/SCH_v2.2.2_VersionDescriptionDocument.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

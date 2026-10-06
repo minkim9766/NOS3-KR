@@ -3,16 +3,48 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpPorts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--DpPorts.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpPorts/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpPorts.fpp"
+)
+
+set(MOD_DEPS
+    Fw/Types
+    Fw/Port
+)
+
+register_fprime_module()
 ```
 
-## 항목
+### `DpPorts.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpPorts/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpPorts/DpPorts.fpp`](file--DpPorts.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpPorts/DpPorts.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Send a notification that a data product was written
+  port DpWritten(
+      fileName: string size FileNameStringSize @< The file name
+      $priority: FwDpPriorityType @< The priority
+      $size: FwSizeType @< The file size
+  )
+
+}
+```

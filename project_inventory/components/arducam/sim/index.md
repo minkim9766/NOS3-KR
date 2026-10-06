@@ -3,20 +3,84 @@
 
 **경로:** `components/arducam/sim/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/arducam/sim/inc/`](inc/index) — 폴더
-- [`components/arducam/sim/src/`](src/index) — 폴더
-- [`components/arducam/sim/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/sim/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/arducam/sim/CMakeLists.txt`
+
+
+```cmake
+project(cam_sim)
+
+find_package(ITC_Common REQUIRED QUIET COMPONENTS itc_logger)
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client i2c spi)
+
+include_directories(inc
+                    ${sim_common_SOURCE_DIR}/inc
+                    ${ITC_Common_INCLUDE_DIRS}
+                    ${NOSENGINE_INCLUDE_DIRS})
+
+set(cam_sim_src
+    src/cam_hardware_model.cpp
+    src/cam_data_provider.cpp
+    src/cam_data_point.cpp
+)
+
+# For Code::Blocks and other IDEs
+file(GLOB cam_sim_inc inc/*.hpp)
+
+set(cam_sim_libs
+    sim_common
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:$ORIGIN/../lib") # Pick up .so in install directory
+
+add_library(cam_sim SHARED ${cam_sim_src} ${cam_sim_inc})
+target_link_libraries(cam_sim ${cam_sim_libs})
+install(TARGETS cam_sim LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+
+install(TARGETS cam_sim LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(FILES src/cam.bin DESTINATION bin)
+```
+
+### `README.md`
+
+**경로:** `components/arducam/sim/README.md`
+
+
+```markdown
+# ArduCam Mini - NOS3 Simulator
+
+This repository contains the ArduCAM NOS3 Simulator.
+
+## Documentation
+Currently support exists for the following versions:
+* [ArduCAM-M-2MP OV2640](http://www.arducam.com/downloads/shields/ArduCAM_Mini_2MP_Camera_Shield_DS.pdf)
+
+Vendor repositories: 
+* https://github.com/ArduCAM
+
+### Versioning
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
+
+## Legal 
+If this project interests you or if you have any questions, please feel free to contact any developer.
+
+### License
+This project is licensed under the NOSA (NASA Open Source Agreement) License. 
+
+### Acknowledgments
+* Special thanks to all the developers involved!
+```

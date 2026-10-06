@@ -3,16 +3,177 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/sessions/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `session-list.component.html`
 
-file--session-list.component.html
-file--session-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/sessions/session-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Sessions" />
+
+  <ya-panel>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      [trackBy]="tableTrackerFn"
+      class="ya-data-table expand"
+      matSort
+      matSortActive="started"
+      matSortDirection="desc"
+      matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let session">{{ session.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="user">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>User</th>
+        <td mat-cell *matCellDef="let session">{{ session.username || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="ipAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>IP address</th>
+        <td mat-cell *matCellDef="let session">{{ session.ipAddress || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="hostname">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hostname</th>
+        <td mat-cell *matCellDef="let session">{{ session.hostname || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="started">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Started</th>
+        <td mat-cell *matCellDef="let session">{{ (session.startTime | datetime) || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="lastAccessTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Last renewed</th>
+        <td mat-cell *matCellDef="let session">
+          <app-ago [time]="session.lastAccessTime" [useMissionTime]="false" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="expirationTime">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Expires in</th>
+        <td mat-cell *matCellDef="let session">
+          <app-ago [time]="session.expirationTime" [useMissionTime]="false" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="clients">
+        <th mat-header-cell *matHeaderCellDef class="expand">Client</th>
+        <td mat-cell *matCellDef="let session">
+          @for (client of session.clients || []; track client; let first = $first) {
+            @if (!first) {
+              ,
+            }
+            {{ client | userAgent }}
+          }
+          @if (!session.clients) {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator [pageSize]="100" [hidePageSize]="true" [showFirstLastButtons]="true" />
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `session-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/sessions/session-list.component.html`](file--session-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/sessions/session-list.component.ts`](file--session-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/sessions/session-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  SessionInfo,
+  Synchronizer,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+import { AgoComponent } from '../../shared/ago/ago.component';
+import { UserAgentPipe } from '../http-traffic/user-agent.pipe';
+import { AdminPageTemplateComponent } from '../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './session-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AgoComponent,
+    WebappSdkModule,
+    UserAgentPipe,
+  ],
+})
+export class SessionListComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
+
+  displayedColumns = [
+    'id',
+    'user',
+    'ipAddress',
+    'hostname',
+    'started',
+    'lastAccessTime',
+    'expirationTime',
+    'clients',
+  ];
+
+  tableTrackerFn = (index: number, session: SessionInfo) => session.id;
+
+  dataSource = new MatTableDataSource<SessionInfo>();
+
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+    synchronizer: Synchronizer,
+  ) {
+    title.setTitle('Sessions');
+
+    this.refresh();
+    this.syncSubscription = synchronizer.syncSlow(() => this.refresh());
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  private refresh() {
+    this.yamcs.yamcsClient.getSessions().then((sessions) => {
+      this.dataSource.data = sessions || [];
+    });
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+  }
+}
+```

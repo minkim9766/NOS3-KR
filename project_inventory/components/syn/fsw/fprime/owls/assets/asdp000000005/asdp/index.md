@@ -3,20 +3,42 @@
 
 **경로:** `components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mugshots/index
-file--2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dd.csv
-file--2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dqe.csv
-file--2021_02_19_dhm_true_low_bsub_grayscale_lab_14_sue.csv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/mugshots/`](mugshots/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dd.csv`](file--2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dd.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dqe.csv`](file--2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dqe.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/2021_02_19_dhm_true_low_bsub_grayscale_lab_14_sue.csv`](file--2021_02_19_dhm_true_low_bsub_grayscale_lab_14_sue.csv) — UTF-8 텍스트 파일 본문 포함
+### `2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dd.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dd.csv`
+
+
+```text
+bbox_area_min_pc10.0,bbox_area_min_pc50.0,bbox_area_min_pc90.0,disp_e2e_norm_pc10.0,disp_e2e_norm_pc50.0,disp_e2e_norm_pc90.0,speed_mean_pc10.0,speed_mean_pc50.0,speed_mean_pc90.0
+0.0008888888888888888,0.011111111111111112,0.07333333333333333,0.0007790465841314711,0.004575835618216441,0.04940591257664273,0.011610750552912196,0.01935174523721325,0.06463665369936003
+```
+
+### `2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dqe.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/2021_02_19_dhm_true_low_bsub_grayscale_lab_14_dqe.csv`
+
+
+```text
+DQE
+0.9199999999999999
+```
+
+### `2021_02_19_dhm_true_low_bsub_grayscale_lab_14_sue.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000005/asdp/2021_02_19_dhm_true_low_bsub_grayscale_lab_14_sue.csv`
+
+
+```text
+SUE
+0.39075343872374446
+```

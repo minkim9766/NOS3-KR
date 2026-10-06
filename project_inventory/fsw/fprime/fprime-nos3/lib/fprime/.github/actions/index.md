@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,10 +15,4 @@ setup/index
 spelling/index
 ```
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/codeql/`](codeql/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/cookiecutter-check/`](cookiecutter-check/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/markdown-check/`](markdown-check/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/setup/`](setup/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/`](spelling/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

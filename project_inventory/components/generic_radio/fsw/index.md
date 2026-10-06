@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_radio/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ shared/index
 standalone/index
 ```
 
-## 항목
-
-- [`components/generic_radio/fsw/cfs/`](cfs/index) — 폴더
-- [`components/generic_radio/fsw/fprime/`](fprime/index) — 폴더
-- [`components/generic_radio/fsw/shared/`](shared/index) — 폴더
-- [`components/generic_radio/fsw/standalone/`](standalone/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

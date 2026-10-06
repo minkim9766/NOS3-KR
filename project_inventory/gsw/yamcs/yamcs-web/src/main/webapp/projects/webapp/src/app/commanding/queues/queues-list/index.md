@@ -3,16 +3,486 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `queues-list.component.html`
 
-file--queues-list.component.html
-file--queues-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-list/queues-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      Queues
+      <ya-help>
+        <p>
+          A queue is a temporary holding location for issued commands that are waiting to enter the
+          next stage of processing.
+        </p>
+        <p>Queues are an ordered list. Issued commands are offered to the first matching queue.</p>
+        <p>A queue can perform these actions:</p>
+        <table yaDataTable>
+          <tr>
+            <th width="1">ACCEPT</th>
+            <td>The queue accepts and releases commands.</td>
+          </tr>
+          <tr>
+            <th>HOLD</th>
+            <td>
+              The queue accepts commands but does not release them. These commands may be released
+              manually, or automatically as soon as the queue action changes to ACCEPT.
+            </td>
+          </tr>
+          <tr>
+            <th>REJECT</th>
+            <td>The queue does not accept commands. Matching commands fail immediately.</td>
+          </tr>
+        </table>
+      </ya-help>
+    </ng-template>
+
+    <ya-page-button
+      [matMenuTriggerFor]="actionMenu"
+      [disabled]="selection.isEmpty()"
+      dropdown="true">
+      Change action
+    </ya-page-button>
+    <mat-menu #actionMenu="matMenu" class="ya-menu">
+      <button mat-menu-item (click)="enableSelectedQueues()">
+        <mat-icon>check</mat-icon>
+        ACCEPT
+      </button>
+      <button mat-menu-item (click)="blockSelectedQueues()">
+        <mat-icon>pause</mat-icon>
+        HOLD
+      </button>
+      <button mat-menu-item (click)="disableSelectedQueues()">
+        <mat-icon>close</mat-icon>
+        REJECT
+      </button>
+    </mat-menu>
+  </ya-instance-toolbar>
+
+  <ya-panel>
+    @if ((connectionInfo$ | async)?.processor?.hasCommanding) {
+      @if (dataSource) {
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          [trackBy]="tableTrackerFn"
+          class="ya-data-table expand">
+          <ng-container cdkColumnDef="select">
+            <th
+              mat-header-cell
+              *cdkHeaderCellDef
+              class="checkbox"
+              (click)="cb.toggle(); $event.stopPropagation()">
+              <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+            </th>
+            <td
+              mat-cell
+              *cdkCellDef="let item"
+              class="checkbox"
+              (click)="cb.toggle(); $event.stopPropagation()">
+              <ya-table-checkbox
+                #cb
+                [dataSource]="dataSource"
+                [selection]="selection"
+                [item]="item" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="order">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td mat-cell *matCellDef="let queue">
+              {{ queue.order }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Queue</th>
+            <td mat-cell *matCellDef="let queue">
+              {{ queue.name }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="issuer">
+            <th mat-header-cell *matHeaderCellDef>Issuer</th>
+            <td mat-cell *matCellDef="let queue">
+              @for (group of queue.groups; track group) {
+                <ya-label icon="people">{{ group }}</ya-label>
+              }
+              @for (user of queue.users; track user) {
+                <ya-label icon="person">{{ user }}</ya-label>
+              }
+              @if (!queue.groups && !queue.users) {
+                any
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="level">
+            <th mat-header-cell *matHeaderCellDef>Min.&nbsp;level</th>
+            <td mat-cell *matCellDef="let queue">
+              <app-significance-level [level]="queue.minLevel" [grayscale]="true" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="patterns">
+            <th mat-header-cell *matHeaderCellDef>Name&nbsp;patterns</th>
+            <td mat-cell *matCellDef="let queue">
+              @if (!queue.tcPatterns) {
+                any
+              }
+              @for (tcPattern of queue.tcPatterns; track tcPattern) {
+                {{ tcPattern }}
+                <br />
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef>Action</th>
+            <td mat-cell *matCellDef="let queue">
+              @if (queue.state === "ENABLED") {
+                <span>ACCEPT</span>
+              }
+              @if (queue.state === "BLOCKED") {
+                <span [style.visibility]="(visibility$ | async) ? 'visible' : 'hidden'">HOLD</span>
+              }
+              @if (queue.state === "DISABLED") {
+                <span>REJECT</span>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pending">
+            <th mat-header-cell *matHeaderCellDef>Pending</th>
+            <td mat-cell *matCellDef="let queue" style="text-align: center">
+              {{ queue.entries?.length || 0 | number }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="expand"></th>
+            <td mat-cell *matCellDef="let queue">
+              <ya-more>
+                <button mat-menu-item (click)="enableQueue(queue)">
+                  <mat-icon>check</mat-icon>
+                  Accept mode
+                </button>
+                <button mat-menu-item (click)="blockQueue(queue)">
+                  <mat-icon>pause</mat-icon>
+                  Hold mode
+                </button>
+                <button mat-menu-item (click)="disableQueue(queue)">
+                  <mat-icon>close</mat-icon>
+                  Reject mode
+                </button>
+                <mat-divider />
+                <a
+                  mat-menu-item
+                  routerLink="/commanding/history"
+                  [queryParams]="{ c: yamcs.context, queue: queue.name }">
+                  View command history
+                </a>
+              </ya-more>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="toggleOne(row)"
+            [class.selected]="selection.isSelected(row)"></tr>
+        </table>
+      }
+      <p>&nbsp;</p>
+      <ya-page-tabs>
+        <a
+          routerLink="/commanding/queues/pending"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [class.active]="rla.isActive"
+          [queryParams]="{ c: yamcs.context }">
+          Pending
+        </a>
+        <a
+          routerLink="/commanding/queues/log"
+          routerLinkActive
+          #rlb="routerLinkActive"
+          [class.active]="rlb.isActive"
+          [queryParams]="{ c: yamcs.context }">
+          Action log
+        </a>
+      </ya-page-tabs>
+      <div style="margin-top: 16px">
+        <router-outlet />
+      </div>
+    } @else {
+      @if (connectionInfo$ | async; as connectionInfo) {
+        <ya-empty-message headerTitle="Queues">
+          <p>
+            You are connected to the
+            @if (connectionInfo.processor?.replay) {
+              replay
+            }
+            processor
+            <strong>{{ connectionInfo.processor?.name }}</strong>
+            .
+          </p>
+          <p>This processor does not support commanding.</p>
+        </ya-empty-message>
+      }
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `queues-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-list/queues-list.component.html`](file--queues-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-list/queues-list.component.ts`](file--queues-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-list/queues-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  CommandQueue,
+  ConnectionInfo,
+  MessageService,
+  QueueEventsSubscription,
+  QueueStatisticsSubscription,
+  Synchronizer,
+  TrackBySelectionModel,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+
+@Component({
+  templateUrl: './queues-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule, SignificanceLevelComponent],
+})
+export class QueuesListComponent implements AfterViewInit, OnDestroy {
+  connectionInfo$: Observable<ConnectionInfo | null>;
+
+  cqueues$ = new BehaviorSubject<CommandQueue[]>([]);
+
+  dataSource = new MatTableDataSource<CommandQueue>();
+  selection = new TrackBySelectionModel<CommandQueue>(
+    (index: number, queue: CommandQueue) => {
+      return queue.name;
+    },
+    true,
+    [],
+  );
+
+  // trackBy is needed to prevent menu from closing when the queue object is updated
+  tableTrackerFn = (index: number, queue: CommandQueue) => queue.name;
+
+  displayedColumns = [
+    'select',
+    'order',
+    'name',
+    'issuer',
+    'level',
+    'patterns',
+    'action',
+    'pending',
+    'actions',
+  ];
+
+  visibility$ = new BehaviorSubject<boolean>(true);
+  syncSubscription: Subscription;
+
+  private queueSubscription: QueueStatisticsSubscription;
+  private queueEventSubscription: QueueEventsSubscription;
+
+  // Regroup WebSocket updates (which are for 1 queue at a time)
+  private cqueueByName: { [key: string]: CommandQueue } = {};
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    messageService: MessageService,
+    private changeDetection: ChangeDetectorRef,
+    synchronizer: Synchronizer,
+  ) {
+    title.setTitle('Queues');
+    this.connectionInfo$ = yamcs.connectionInfo$;
+
+    yamcs.yamcsClient
+      .getCommandQueues(yamcs.instance!, yamcs.processor!)
+      .then((cqueues) => {
+        for (const cqueue of cqueues) {
+          this.cqueueByName[cqueue.name] = cqueue;
+        }
+        this.emitChange();
+      })
+      .catch((err) => messageService.showError(err));
+
+    this.syncSubscription = synchronizer.syncFast(() => {
+      this.visibility$.next(!this.visibility$.value);
+    });
+
+    this.queueSubscription =
+      yamcs.yamcsClient.createQueueStatisticsSubscription(
+        {
+          instance: yamcs.instance!,
+          processor: yamcs.processor!,
+        },
+        (queue) => {
+          const existingQueue = this.cqueueByName[queue.name];
+          if (existingQueue) {
+            // Update queue (but keep already known entries)
+            queue.entries = existingQueue.entries;
+            this.cqueueByName[queue.name] = queue;
+            this.emitChange();
+          }
+        },
+      );
+
+    this.queueEventSubscription =
+      yamcs.yamcsClient.createQueueEventsSubscription(
+        {
+          instance: yamcs.instance!,
+          processor: yamcs.processor!,
+        },
+        (queueEvent) => {
+          const queue = this.cqueueByName[queueEvent.data.queueName];
+          if (queue) {
+            if (queueEvent.type === 'COMMAND_ADDED') {
+              queue.entries = queue.entries || [];
+              queue.entries.push(queueEvent.data);
+            } else if (queueEvent.type === 'COMMAND_UPDATED') {
+              const idx = (queue.entries || []).findIndex((entries) => {
+                return entries.id === queueEvent.data.id;
+              });
+              if (idx !== -1) {
+                queue.entries[idx] = queueEvent.data;
+              }
+            } else if (queueEvent.type === 'COMMAND_REJECTED') {
+              queue.entries = queue.entries || [];
+              queue.entries = queue.entries.filter((entry) => {
+                return entry.id !== queueEvent.data.id;
+              });
+            } else if (queueEvent.type === 'COMMAND_SENT') {
+              queue.entries = queue.entries || [];
+              queue.entries = queue.entries.filter((entry) => {
+                return entry.id !== queueEvent.data.id;
+              });
+            } else {
+              throw new Error(`Unexpected queue event ${queueEvent.type}`);
+            }
+            this.emitChange();
+          } else {
+            console.warn('Received an event for an unknown queue', queueEvent);
+          }
+        },
+      );
+  }
+
+  ngAfterViewInit() {
+    this.cqueues$.subscribe((cqueues) => {
+      this.dataSource.data = cqueues;
+      this.selection.matchNewValues(cqueues);
+
+      // Needed to show table updates in combination with trackBy
+      this.changeDetection.detectChanges();
+    });
+  }
+
+  toggleOne(row: CommandQueue) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  enableSelectedQueues() {
+    for (const item of this.selection.selected) {
+      this.enableQueue(item);
+    }
+  }
+
+  enableQueue(queue: CommandQueue) {
+    const count = queue.entries?.length || 0;
+    let msg = `Are you sure you want to change the '${queue.name}' queue's action to ACCEPT?\n\n`;
+    if (count === 1) {
+      msg += `There is ${count} queued command that will be accepted immediately.`;
+    } else {
+      msg += `There are ${count} queued commands that will be accepted immediately.`;
+    }
+    if (count && !confirm(msg)) {
+      return;
+    }
+
+    this.yamcs.yamcsClient.enableCommandQueue(
+      queue.instance,
+      queue.processorName,
+      queue.name,
+    );
+  }
+
+  disableSelectedQueues() {
+    for (const item of this.selection.selected) {
+      this.disableQueue(item);
+    }
+  }
+
+  disableQueue(queue: CommandQueue) {
+    const count = queue.entries?.length || 0;
+    let msg = `Are you sure you want to change the '${queue.name}' queue\'s action to REJECT?\n\n`;
+    if (count === 1) {
+      msg += `There is ${count} queued command that will be rejected immediately.`;
+    } else {
+      msg += `There are ${count} queued commands that will be rejected immediately.`;
+    }
+    if (count && !confirm(msg)) {
+      return;
+    }
+
+    this.yamcs.yamcsClient.disableCommandQueue(
+      queue.instance,
+      queue.processorName,
+      queue.name,
+    );
+  }
+
+  blockSelectedQueues() {
+    for (const item of this.selection.selected) {
+      this.blockQueue(item);
+    }
+  }
+
+  blockQueue(queue: CommandQueue) {
+    this.yamcs.yamcsClient.blockCommandQueue(
+      queue.instance,
+      queue.processorName,
+      queue.name,
+    );
+  }
+
+  private emitChange() {
+    this.cqueues$.next(Object.values(this.cqueueByName));
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+    this.queueSubscription?.cancel();
+    this.queueEventSubscription?.cancel();
+  }
+}
+```

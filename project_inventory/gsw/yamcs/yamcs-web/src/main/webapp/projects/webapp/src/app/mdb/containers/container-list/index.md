@@ -3,18 +3,384 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `container-list.component.html`
 
-file--container-list.component.html
-file--container-list.component.ts
-file--containers.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/container-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Containers" />
+  <span #top></span>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter
+        [formControl]="filterControl"
+        placeholder="Filter containers"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="containers" />
+    </ya-filter-bar>
+
+    @if (dataSource) {
+      <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let container">
+            <a
+              [routerLink]="['/mdb/containers', container.qualifiedName]"
+              [queryParams]="{ c: yamcs.context }">
+              <ya-highlight
+                [text]="shortName ? container.name : container.qualifiedName"
+                [term]="filterControl.value" />
+            </a>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="maxInterval">
+          <th mat-header-cell *matHeaderCellDef>Max interval</th>
+          <td mat-cell *matCellDef="let container">
+            {{ (container.maxInterval | millisDuration) || "-" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="sizeInBits">
+          <th mat-header-cell *matHeaderCellDef>Size in bits</th>
+          <td mat-cell *matCellDef="let container">{{ container.sizeInBits || "-" }}</td>
+        </ng-container>
+        <ng-container matColumnDef="baseContainer">
+          <th mat-header-cell *matHeaderCellDef>Base container</th>
+          <td mat-cell *matCellDef="let container">
+            @if (container.baseContainer) {
+              <a
+                [routerLink]="['/mdb/containers/', container.baseContainer.qualifiedName]"
+                [queryParams]="{ c: yamcs.context }"
+                class="secundary">
+                {{
+                  container.baseContainer.qualifiedName
+                    | relativize: (container.qualifiedName | spaceSystemName)
+                }}
+              </a>
+            } @else {
+              <span>-</span>
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="restrictionCriteria">
+          <th mat-header-cell *matHeaderCellDef>Restriction criteria</th>
+          <td
+            mat-cell
+            *matCellDef="let container"
+            [class.mono]="!!container.restrictionCriteriaExpression">
+            @if (container.restrictionCriteriaExpression) {
+              <app-expression
+                [expression]="container.restrictionCriteriaExpression"
+                [relto]="container.qualifiedName | spaceSystemName" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="archivePartition">
+          <th mat-header-cell *matHeaderCellDef>Partition</th>
+          <td mat-cell *matCellDef="let container">
+            {{ container.archivePartition ? "Yes" : "-" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let container" class="wrap200">
+            {{ container.shortDescription || "-" }}
+          </td>
+        </ng-container>
+        @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+          <ng-container [matColumnDef]="aliasColumn.id">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ aliasColumn.label }}
+            </th>
+            <td mat-cell *matCellDef="let parameter">
+              @if (parameter | alias: aliasColumn.id; as name) {
+                {{ name }}
+              } @else {
+                -
+              }
+            </td>
+          </ng-container>
+        }
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          [class.selected]="selection.isSelected(row)"></tr>
+      </table>
+    }
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [length]="dataSource.totalSize$ | async" />
+  </ya-panel>
+  <ng-template #empty>
+    <ya-panel>
+      The Mission Database for
+      <i>{{ yamcs.instance }}</i>
+      does not define any containers.
+    </ya-panel>
+  </ng-template>
+</ya-instance-page>
 ```
 
-## 항목
+### `container-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/container-list.component.html`](file--container-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/container-list.component.ts`](file--container-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/containers.datasource.ts`](file--containers.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/container-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Container,
+  GetContainersOptions,
+  MessageService,
+  WebappSdkModule,
+  YaColumnChooser,
+  YaColumnInfo,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ExpressionComponent } from '../../../shared/expression/expression.component';
+import { ContainersDataSource } from './containers.datasource';
+
+@Component({
+  templateUrl: './container-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ExpressionComponent, WebappSdkModule],
+})
+export class ContainerListComponent implements AfterViewInit {
+  shortName = false;
+  pageSize = 100;
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  filterControl = new UntypedFormControl();
+
+  dataSource: ContainersDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'maxInterval', label: 'Max Interval', visible: true },
+    { id: 'sizeInBits', label: 'Size in bits', visible: true },
+    { id: 'baseContainer', label: 'Base Container', visible: true },
+    { id: 'restrictionCriteria', label: 'Restriction Criteria', visible: true },
+    { id: 'archivePartition', label: 'Partition' },
+    { id: 'shortDescription', label: 'Description' },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  // Added dynamically based on actual containers.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  selection = new SelectionModel<Container>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Containers');
+    this.dataSource = new ContainersDataSource(yamcs);
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    this.filterControl.setValue(queryParams.get('filter'));
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.updateDataSource();
+    });
+
+    if (queryParams.has('page')) {
+      this.paginator.pageIndex = Number(queryParams.get('page'));
+    }
+    this.updateDataSource();
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetContainersOptions = {
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+    };
+    const filterValue = this.filterControl.value;
+    if (filterValue) {
+      options.q = filterValue.toLowerCase();
+    }
+    this.dataSource
+      .loadContainers(options)
+      .then(() => {
+        this.selection.clear();
+
+        // Reset alias columns
+        for (const aliasColumn of this.aliasColumns$.value) {
+          const idx = this.columns.indexOf(aliasColumn);
+          if (idx !== -1) {
+            this.columns.splice(idx, 1);
+          }
+        }
+        const aliasColumns = [];
+        for (const namespace of this.dataSource.getAliasNamespaces()) {
+          const aliasColumn = {
+            id: namespace,
+            label: namespace,
+            alwaysVisible: true,
+          };
+          aliasColumns.push(aliasColumn);
+        }
+        this.columns.splice(1, 0, ...aliasColumns); // Insert after name column
+        this.aliasColumns$.next(aliasColumns);
+        this.columnChooser.recalculate(this.columns);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectNext() {
+    const items = this.dataSource.containers$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.containers$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.containers$.value;
+      if (items.indexOf(item) !== -1) {
+        this.router.navigate(['/mdb/containers', item.qualifiedName], {
+          queryParams: { c: this.yamcs.context },
+        });
+      }
+    }
+  }
+}
+```
+
+### `containers.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/containers/container-list/containers.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  Container,
+  GetContainersOptions,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class ContainersDataSource extends DataSource<Container> {
+  containers$ = new BehaviorSubject<Container[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private yamcs: YamcsService) {
+    super();
+  }
+
+  connect() {
+    return this.containers$;
+  }
+
+  loadContainers(options: GetContainersOptions) {
+    this.loading$.next(true);
+    return this.yamcs.yamcsClient
+      .getContainers(this.yamcs.instance!, options)
+      .then((page) => {
+        this.loading$.next(false);
+        this.totalSize$.next(page.totalSize);
+        this.containers$.next(page.containers || []);
+      });
+  }
+
+  getAliasNamespaces() {
+    const namespaces: string[] = [];
+    for (const container of this.containers$.value) {
+      if (container.alias) {
+        for (const alias of container.alias) {
+          if (alias.namespace && namespaces.indexOf(alias.namespace) === -1) {
+            namespaces.push(alias.namespace);
+          }
+        }
+      }
+    }
+    return namespaces.sort();
+  }
+
+  disconnect() {
+    this.containers$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

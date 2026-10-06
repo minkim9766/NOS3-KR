@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -25,28 +25,104 @@ table-data-tab/index
 table-info-tab/index
 table-list/index
 table-script-tab/index
-file--streamsql.css
-file--utils.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/`](database/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database-list/`](database-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/parameter-archive/`](parameter-archive/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/record/`](record/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/shared/`](shared/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/show-enum-dialog/`](show-enum-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream/`](stream/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-column-list/`](stream-column-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data/`](stream-data/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/`](stream-data-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-list/`](stream-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/`](stream-script-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table/`](table/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/`](table-data-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-info-tab/`](table-info-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-list/`](table-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/`](table-script-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/streamsql.css`](file--streamsql.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/utils.ts`](file--utils.ts) — UTF-8 텍스트 파일 본문 포함
+### `streamsql.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/streamsql.css`
+
+
+```css
+::ng-deep .dtype {
+  color: red;
+}
+
+::ng-deep .paren {
+  color: #1b61b9;
+}
+
+::ng-deep .kw {
+  color: #1b61b9;
+}
+```
+
+### `utils.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/utils.ts`
+
+
+```typescript
+const indent = '&nbsp;&nbsp;&nbsp;&nbsp;';
+const tokenExpression = /[()]|(, ")/;
+
+/**
+ * A very simplicistic syntax colorer for StreamSQL definitions.
+ * Only patterns impacting indent are used for tokenizing the input.
+ * Other style annotations are added with replace-all regexps.
+ */
+export function formatSQL(sql: string) {
+  if (!sql) {
+    return sql;
+  }
+
+  const parts: string[] = [];
+  let totalIndent = '';
+
+  let tokenIndex = sql.search(tokenExpression);
+  while (tokenIndex !== -1) {
+    if (sql[tokenIndex] === '(') {
+      parts.push(sql.substring(0, tokenIndex + 1));
+      totalIndent += indent;
+      parts.push('<br>', totalIndent);
+
+      sql = sql.substring(tokenIndex + 1);
+      tokenIndex = sql.search(tokenExpression);
+    } else if (sql[tokenIndex] === ')') {
+      parts.push(sql.substring(0, tokenIndex));
+      totalIndent = totalIndent.replace(indent, '');
+      parts.push('<br>', totalIndent);
+      parts.push(')');
+
+      sql = sql.substring(tokenIndex + 1);
+      tokenIndex = sql.search(tokenExpression);
+    } else {
+      // Should be a column separation
+      parts.push(sql.substring(0, tokenIndex + 1));
+      parts.push('<br>', totalIndent);
+      parts.push('"');
+
+      sql = sql.substring(tokenIndex + 3);
+      tokenIndex = sql.search(tokenExpression);
+    }
+  }
+
+  let res = parts.join('') + sql;
+
+  // Start options on a new line
+  res = res.replace(
+    /(engine|histogram|partition|primary|table_format)/g,
+    '<br>$1',
+  );
+
+  return stylize(res);
+}
+
+function stylize(text: string) {
+  return text
+    .replace(
+      /(BINARY|ENUM|HRES_TIMESTAMP|INT|LONG|PARAMETER_VALUE|PROTOBUF|STRING|TIMESTAMP)/g,
+      '<span class="dtype">$1</span>',
+    )
+    .replace(/([(),]+)/g, '<span class="paren">$1</span>')
+    .replace(
+      /(auto_increment|create|compressed|histogram|engine|primary key|table(_format)?|stream)/g,
+      '<span class="kw">$1</span>',
+    )
+    .replace(
+      /(partition by time(_and_value)?|partition by value)/g,
+      '<span class="kw">$1</span>',
+    );
+}
+```

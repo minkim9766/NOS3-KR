@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,14 +11,18 @@
 cf.dir/index
 generate_table_cpu1_cf_cf_def_config.dir/index
 tblobj_cpu1_cf.tbl2f767cdba7b7be56fc91e822009877fd9ebc03a5.dir/index
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/cf.dir/`](cf.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/generate_table_cpu1_cf_cf_def_config.dir/`](generate_table_cpu1_cf_cf_def_config.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/tblobj_cpu1_cf.tbl2f767cdba7b7be56fc91e822009877fd9ebc03a5.dir/`](tblobj_cpu1_cf.tbl2f767cdba7b7be56fc91e822009877fd9ebc03a5.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cf/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

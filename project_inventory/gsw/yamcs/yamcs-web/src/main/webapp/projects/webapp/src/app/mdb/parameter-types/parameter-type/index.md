@@ -3,16 +3,83 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-type.component.html`
 
-file--parameter-type.component.html
-file--parameter-type.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type/parameter-type.component.html`
+
+
+```html
+@if (ptype$ | async; as ptype) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        @if (ptype.qualifiedName | spaceSystemName; as spaceSystemName) {
+          <a
+            routerLink="/mdb/parameter-types"
+            [queryParams]="{ c: yamcs.context, filter: spaceSystemName }"
+            class="ya-link ya-header-link">
+            {{ spaceSystemName }}
+          </a>
+          /{{ ptype.qualifiedName | shortName }}
+          <ya-title-copy [text]="ptype.qualifiedName" />
+        }
+      </ng-template>
+    </ya-instance-toolbar>
+
+    <ya-panel>
+      <app-parameter-type-detail [parameterType]="ptype" />
+    </ya-panel>
+  </ya-instance-page>
+}
 ```
 
-## 항목
+### `parameter-type.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type/parameter-type.component.html`](file--parameter-type.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type/parameter-type.component.ts`](file--parameter-type.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type/parameter-type.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ParameterType,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ParameterTypeDetailComponent } from '../parameter-type-detail/parameter-type-detail.component';
+
+@Component({
+  templateUrl: './parameter-type.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ParameterTypeDetailComponent, WebappSdkModule],
+})
+export class ParameterTypeComponent {
+  ptype$ = new BehaviorSubject<ParameterType | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private title: Title,
+  ) {
+    // When clicking links pointing to this same component, Angular will not reinstantiate
+    // the component. Therefore subscribe to routeParams
+    route.paramMap.subscribe((params) => {
+      const qualifiedName = params.get('qualifiedName')!;
+      this.changeParameterType(qualifiedName);
+    });
+  }
+
+  changeParameterType(qualifiedName: string) {
+    this.yamcs.yamcsClient
+      .getParameterType(this.yamcs.instance!, qualifiedName)
+      .then((ptype) => {
+        this.ptype$.next(ptype);
+        this.title.setTitle(ptype.name);
+      });
+  }
+}
+```

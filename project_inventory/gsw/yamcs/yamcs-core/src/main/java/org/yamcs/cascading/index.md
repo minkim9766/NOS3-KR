@@ -3,32 +3,2178 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommandMapData.java`
 
-file--CommandMapData.java
-file--ContainerFetcher.java
-file--README
-file--TmGapFinder.java
-file--YamcsEventLink.java
-file--YamcsLink.java
-file--YamcsParameterLink.java
-file--YamcsTcLink.java
-file--YamcsTmArchiveLink.java
-file--YamcsTmLink.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/CommandMapData.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+
+public class CommandMapData {
+    enum CommandType {
+        DEFAULT, DIRECT, EMBEDDED_BINARY
+    }
+
+    private CommandType type;
+    private String localPath;
+    private String upstreamPath;
+    private String upstreamArgumentName;
+
+    public CommandMapData(String localPath, String upstreamPath) {
+        this.type = CommandType.DIRECT;
+        this.localPath = localPath;
+        this.upstreamPath = upstreamPath;
+    }
+
+    public CommandMapData(String localPath, String upstreamPath, String argumentName) {
+        this.type = CommandType.EMBEDDED_BINARY;
+        this.localPath = localPath;
+        this.upstreamPath = upstreamPath;
+        this.upstreamArgumentName = argumentName;
+    }
+
+    public CommandMapData() {
+        setDefaultConfig();
+    }
+
+    public CommandMapData(YConfiguration config) {
+        parseConfig(config);
+    }
+
+    private void setDefaultConfig() {
+        this.type = CommandType.DEFAULT;
+    }
+
+    private void parseConfig(YConfiguration config) {
+        String t = config.getString("type").toUpperCase();
+        if (t.equals("DIRECT")) {
+            this.type = CommandType.DIRECT;
+        } else if (t.equals("EMBEDDED_BINARY")) {
+            this.type = CommandType.EMBEDDED_BINARY;
+        } else if (t.equals("DEFAULT")) {
+            this.type = CommandType.DEFAULT;
+            return;
+        } else {
+            throw new ConfigurationException("Unknown command mapping type " + config.getString("type"));
+        }
+
+        this.localPath = config.getString("local");
+
+        this.upstreamPath = config.getString("upstream");
+
+        if (this.type == CommandType.EMBEDDED_BINARY)
+            if (this.upstreamPath.endsWith("/")) {
+                throw new ConfigurationException(
+                        "upstream '" + this.upstreamPath
+                                + "' cannot be a path (has to be a command qualified name) in case of EMBEDDED_BINARY");
+            } else if (this.type == CommandType.DIRECT) {
+                if (this.localPath.endsWith("/") && !this.upstreamPath.endsWith("/")) {
+                    throw new ConfigurationException(
+                            "upstream '" + this.upstreamPath + "' has to be a path if local is a path");
+                }
+            }
+
+        if (config.containsKey("argument")) {
+            if (this.type == CommandType.EMBEDDED_BINARY) {
+                this.upstreamArgumentName = config.getString("argument");
+            } else {
+                throw new ConfigurationException(
+                        "Command mapping configuration specified an argument while not being of the embedded binary type.");
+            }
+        }
+    }
+
+    public static Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("type", Spec.OptionType.STRING).withRequired(true);
+        spec.addOption("local", Spec.OptionType.STRING).withRequired(true);
+        spec.addOption("upstream", Spec.OptionType.STRING).withRequired(true);
+        spec.addOption("argument", Spec.OptionType.STRING);
+        return spec;
+    }
+
+    public CommandType getCommandType() {
+        return this.type;
+    }
+
+    public String getLocalPath() {
+        return this.localPath;
+    }
+
+    public String getUpstreamPath() {
+        return this.upstreamPath;
+    }
+
+    public String getUpstreamArgumentName() {
+        return this.upstreamArgumentName;
+    }
+}
 ```
 
-## 항목
+### `ContainerFetcher.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/CommandMapData.java`](file--CommandMapData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/ContainerFetcher.java`](file--ContainerFetcher.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/README`](file--README) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/TmGapFinder.java`](file--TmGapFinder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsEventLink.java`](file--YamcsEventLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsLink.java`](file--YamcsLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsParameterLink.java`](file--YamcsParameterLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTcLink.java`](file--YamcsTcLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTmArchiveLink.java`](file--YamcsTmArchiveLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTmLink.java`](file--YamcsTmLink.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/ContainerFetcher.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import org.yamcs.client.Page;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Mdb.ContainerInfo;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
+
+/**
+ * Responsible for retrieving the list of containers from the upstream server
+ */
+public class ContainerFetcher {
+
+    public static CompletableFuture<List<String>> fetch(MissionDatabaseClient mdbClient, Log log) {
+        return getPages(mdbClient.listContainers(), null, log);
+    }
+
+    private static CompletableFuture<List<String>> getPages(CompletableFuture<Page<ContainerInfo>> future, List<String> list, Log log) {
+        List<String> containers = Objects.requireNonNullElse(list, new ArrayList<>());
+        return future.thenCompose(page -> {
+            page.forEach(container -> containers.add(container.getQualifiedName()));
+
+            if(page.hasNextPage()) {
+                return getPages(page.getNextPage(), containers, log);
+            } else {
+                return CompletableFuture.completedFuture(containers);
+            }
+        });
+    }
+
+    public static CompletableFuture<List<String>> fetchAndMatch(MissionDatabaseClient mdbClient, List<String> patterns, Log log) {
+        return fetch(mdbClient, log).thenApply(containers -> {
+            HashSet<String> filtered = new HashSet<>();
+
+            for (String p : patterns) {
+                String pattern = p;
+                if(p.endsWith("/")) {
+                    pattern += "**";
+                }
+
+                PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + pattern);
+                boolean added = false;
+
+                for (String container : containers) {
+                    if (matcher.matches(Path.of(container))) {
+                        filtered.add(container);
+                        added = true;
+                    }
+                }
+
+                if (!added) {
+                    log.warn("Cannot match containers with {} in remote MDB; ignoring", p);
+                }
+            }
+
+            return new ArrayList<>(filtered);
+        });
+    }
+
+}
+```
+
+### `README`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/README`
+
+
+```text
+This package contains functionality for one Yamcs server to connect to another Yamcs server as client.
+```
+
+### `TmGapFinder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/TmGapFinder.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Predicate;
+
+import org.yamcs.archive.IndexRequest;
+import org.yamcs.archive.IndexRequestListener;
+import org.yamcs.archive.IndexRequestProcessor;
+import org.yamcs.cascading.YamcsTmArchiveLink.Gap;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.StreamOptions;
+import org.yamcs.events.EventProducer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Timestamps;
+
+public class TmGapFinder {
+    final Log log;
+    final int retrievalDays;
+    final YamcsLink parentLink;
+    final String yamcsInstance;
+    final EventProducer eventProducer;
+    final Predicate<String> requiredPkt;
+
+    TmGapFinder(String yamcsInstance, YamcsLink parentLink, EventProducer eventProducer, int retrievalDays,
+            Predicate<String> requiredPkt) {
+        this.yamcsInstance = yamcsInstance;
+        this.parentLink = parentLink;
+        this.log = new Log(TmGapFinder.class, yamcsInstance);
+        this.retrievalDays = retrievalDays;
+        this.eventProducer = eventProducer;
+        this.requiredPkt = requiredPkt;
+    }
+
+    /**
+     * retrieves the TM index from upstream and compares it with the local
+     *
+     * @return
+     *
+     * @return
+     */
+    List<Gap> identifyGaps(long start, long stop) {
+        int mergeTime = 1000;
+
+        java.time.Instant startj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(start));
+        java.time.Instant stopj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(stop));
+
+        ArchiveClient arcClient = parentLink.getClient().createArchiveClient(parentLink.getUpstreamInstance());
+        List<ArchiveRecord> upstreamRecords = new ArrayList<>();
+        try {
+            arcClient.streamPacketIndex(upstreamRecords::add, startj, stopj, StreamOptions.mergeTime(mergeTime))
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            eventProducer.sendWarning("Exception when receiving archive index: " + e.getMessage());
+        }
+
+        IndexRequest request = new IndexRequest(yamcsInstance);
+        request.setSendAllTm(true);
+        request.setStart(start);
+        request.setStop(stop);
+        request.setMergeTime(mergeTime);
+        List<ArchiveRecord> downstreamRecords = new ArrayList<>();
+        IndexRequestProcessor p = new IndexRequestProcessor(null, request, -1, null,
+                new IndexRequestListener() {
+                    @Override
+                    public void processData(ArchiveRecord record) {
+                        downstreamRecords.add(record);
+                    }
+
+                    @Override
+                    public void finished(String token, boolean success) {
+                    }
+                });
+        p.run();
+
+        return diff(group(upstreamRecords, true), group(downstreamRecords, false));
+
+    }
+
+    List<Gap> diff(Map<String, List<ArchiveRecord>> upstreamRecords,
+            Map<String, List<ArchiveRecord>> downstreamRecords) {
+        GapCollector gapCollector = new GapCollector();
+        for (Map.Entry<String, List<ArchiveRecord>> me : upstreamRecords.entrySet()) {
+            String pname = me.getKey();
+            if (downstreamRecords.containsKey(pname)) {
+                addMissing(log, gapCollector, me.getValue(), downstreamRecords.get(pname));
+            } else {
+                for (ArchiveRecord ar : me.getValue()) {
+                    gapCollector.addGap(ar.getFirst(), ar.getLast());
+                }
+            }
+        }
+
+        return gapCollector.gaps;
+    }
+
+    // For one specific packet, check records that are in upstream and not in downstream and add them to the missing
+    // list. Those partially overlapping are also added in full because we don't know if the overlap part is complete
+    static void addMissing(Log log, GapCollector gapCollector,
+            List<ArchiveRecord> upstream, List<ArchiveRecord> downstream) {
+
+        Iterator<ArchiveRecord> iterator = downstream.iterator();
+
+        ArchiveRecord down = null;
+        boolean keep = false;
+        ArchiveRecord prevUp = null;
+        boolean logLastDown = false;
+
+        upstreamLoop: for (ArchiveRecord up : upstream) {
+
+            while (keep || iterator.hasNext()) {
+                if (!keep) {
+                    down = iterator.next();
+                }
+                if (Timestamps.compare(up.getFirst(), down.getFirst()) <= 0 &&
+                        Timestamps.compare(up.getLast(), down.getLast()) >= 0) {
+                    // Nominal case: downstream times fully included into upstream (1)
+                    if (down.getNum() < up.getNum()) {
+                        gapCollector.addGap(up.getFirst(), up.getLast());
+                    } else if (down.getNum() > up.getNum()) {
+                        log.warn("Downstream record has more data than the related upstream record. DOWN: "
+                                + toString(down) + ", UP: " + toString(up));
+                    }
+                    prevUp = up;
+                    keep = false; // Get next record
+                    continue upstreamLoop;
+                } else if (Timestamps.compare(up.getLast(), down.getFirst()) < 0) {
+                    // Upstream times completely before downstream (2)
+                    // Adding entire upstream and keeping downstream record for the next iteration
+                    gapCollector.addGap(up.getFirst(), up.getLast());
+                    keep = true;
+                    logLastDown = true;
+                    continue upstreamLoop;
+                } else if (Timestamps.compare(up.getFirst(), down.getLast()) > 0) {
+                    // Upstream times completely after downstream (3)
+                    // Warning only if downstream has parts after the previous upstream and does not include it
+                    if (prevUp == null || (Timestamps.compare(prevUp.getFirst(), down.getFirst()) < 0
+                            && Timestamps.compare(prevUp.getLast(), down.getLast()) < 0)) {
+                        log.warn("Downstream record does not appear in the upstream archive: " + toString(down));
+                    }
+                    // Ignoring current downstream record and continue checking the rest
+                    keep = false;
+                } else if (Timestamps.compare(up.getFirst(), down.getFirst()) >= 0 &&
+                        Timestamps.compare(up.getLast(), down.getLast()) <= 0) {
+                    // upstream included completely in downstream (4)
+                    log.warn("Downstream contains more data than upstream: " + toString(down));
+                    // continue iterating over upstream records
+                    prevUp = up;
+                    keep = true;
+                    logLastDown = false;
+                    continue upstreamLoop;
+                } else { // Unusual overlaps, where part of downstream record lays outside the upstream one (5.1 and
+                         // 5.2)
+                    // Skipping downstream record and adding upstream
+                    log.warn("Downstream contains more data than upstream: " + toString(down));
+                    gapCollector.addGap(up.getFirst(), up.getLast());
+                    prevUp = up;
+                    keep = false;
+                    continue upstreamLoop;
+                }
+            }
+            // Adding records that do not match any existing (exhausted iterator)
+            gapCollector.addGap(up.getFirst(), up.getLast());
+        }
+
+        if (keep && logLastDown && down != null) {
+            log.warn("Downstream contains more data than upstream: " + toString(down));
+        }
+
+        while (iterator.hasNext()) {
+            down = iterator.next();
+            if (prevUp == null || Timestamps.compare(down.getLast(), prevUp.getLast()) > 0) {
+                log.warn("Downstream archive has more data than upstream: " + toString(down));
+            }
+        }
+    }
+
+    // group by packet name
+    private Map<String, List<ArchiveRecord>> group(List<ArchiveRecord> records, boolean skipNotRequired) {
+        Set<String> notRequired = new HashSet<>();
+        Set<String> required = new HashSet<>();
+        Map<String, List<ArchiveRecord>> r = new HashMap<>();
+        for (ArchiveRecord ar : records) {
+            String name = ar.getId().getName();
+            if (skipNotRequired) {
+                if (notRequired.contains(name)) {
+                    continue;
+                } else if (!required.contains(name)) {
+                    if (requiredPkt.test(name)) {
+                        required.add(name);
+                    } else {
+                        notRequired.add(name);
+                        continue;
+                    }
+                }
+            }
+
+            List<ArchiveRecord> l = r.computeIfAbsent(name, x -> new ArrayList<>());
+            l.add(ar);
+        }
+        return r;
+    }
+
+    private static String toString(ArchiveRecord ar) {
+        return ar.getId().getName() + "[" + toString(ar.getFirst()) + " - " + toString(ar.getLast()) + "]";
+    }
+
+    private static String toString(Timestamp t) {
+        return TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(t));
+    }
+
+    static class GapCollector {
+        List<Gap> gaps = new ArrayList<>();
+
+        void addGap(Timestamp start, Timestamp stop) {
+            addGap(TimeEncoding.fromProtobufTimestamp(start), TimeEncoding.fromProtobufTimestamp(stop));
+        }
+
+        void addGap(long start, long stop) {
+            Gap g = new Gap(start, stop);
+            int idx = Collections.binarySearch(gaps, g);
+
+            if (idx < 0) {
+                idx = -idx - 1;
+            }
+
+            if (idx > 0) {
+                Gap g1 = gaps.get(idx - 1);
+                if (g1.stop >= start) {
+                    g1.stop = g.stop;
+                    g = g1;
+                    idx -= 1;
+                } else {
+                    gaps.add(idx, g);
+                }
+            } else {
+                gaps.add(0, g);
+            }
+
+            if (idx < gaps.size() - 1) {
+                Gap g2 = gaps.get(idx + 1);
+                if (g2.start <= g.stop) {
+                    g.stop = Math.max(g2.stop, g.stop);
+                    gaps.remove(idx + 1);
+                }
+            }
+        }
+    }
+}
+```
+
+### `YamcsEventLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsEventLink.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.ConfigurationException;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.EventSubscription;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db;
+
+/**
+ * 
+ * Yamcs TM link - subscribes to realtime telemetry
+ *
+ */
+public class YamcsEventLink extends AbstractLink {
+    YamcsLink parentLink;
+    protected AtomicLong dataCount = new AtomicLong(0);
+
+    EventSubscription subscription;
+    Stream eventStream;
+
+    public YamcsEventLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        String eventStreamName = config.getString("eventRealtimeStream", EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+        this.eventStream = ydb.getStream(eventStreamName);
+        if (this.eventStream == null) {
+            throw new ConfigurationException("Cannto find stream " + eventStreamName);
+        }
+    }
+
+    // a little bit of a hack: because we use only one config for the parent,
+    // we generate a new one for the sublink with the name tmRealtimeStream/tmArchiveStream changed to tmStream
+    // depending on which link it is
+    static YConfiguration swapConfig(YConfiguration config, String oldKey, String newKey, String defaultValue) {
+        Map<String, Object> root = new HashMap<>(config.getRoot());
+        String value = (String) root.remove(oldKey);
+        if (value == null) {
+            value = defaultValue;
+        }
+
+        root.put(newKey, value);
+        return YConfiguration.wrap(root);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (subscription != null && !subscription.isDone()) {
+            return;
+        }
+        WebSocketClient wsclient = parentLink.getClient().getWebSocketClient();
+        if (wsclient.isConnected()) {
+            subscribeEvents();
+        }
+    }
+
+    private void subscribeEvents() {
+        YamcsClient yclient = parentLink.getClient();
+
+        subscription = yclient.createEventSubscription();
+        subscription.addMessageListener(new MessageListener<Event>() {
+            @Override
+            public void onMessage(Event ev) {
+                processEvent(ev);
+            }
+
+            public void onError(Throwable t) {
+                if (t instanceof ClientException) {
+                    eventProducer.sendWarning("Got error when subscribing to containers: " + t.getMessage());
+                } else {
+                    log.warn("Got error when subscribing to containers: " + t.getMessage());
+                }
+            }
+        });
+
+        subscription.sendMessage(SubscribeEventsRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .build());
+    }
+
+    private void processEvent(Event ev) {
+        long rectime = timeService.getMissionTime();
+        long gentime = ev.hasGenerationTime() ? TimeEncoding.fromProtobufTimestamp(ev.getGenerationTime()) : rectime;
+        String source = ev.hasSource() ? ev.getSource() : parentLink.getName();
+        int seqCount = ev.hasSeqNumber() ? ev.getSeqNumber() : 0;
+
+        TupleDefinition tdef = eventStream.getDefinition();
+
+        Db.Event.Builder db_ev = Db.Event.newBuilder().setReceptionTime(rectime).setGenerationTime(gentime)
+                .setSource(source).setSeqNumber(seqCount);
+
+        if (ev.hasCreatedBy()) {
+            db_ev.setCreatedBy(ev.getCreatedBy());
+        }
+        if (ev.hasSeverity()) {
+            db_ev.setSeverity(ev.getSeverity());
+        }
+        if (ev.hasType()) {
+            db_ev.setType(ev.getType());
+        }
+        if (ev.hasMessage()) {
+            db_ev.setMessage(ev.getMessage());
+        }
+
+
+        Tuple t = new Tuple(tdef, new Object[] { gentime, source, seqCount, db_ev.build() });
+        dataCount.incrementAndGet();
+        eventStream.emitTuple(t);
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = subscription != null && !subscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+
+    @Override
+    public long getDataInCount() {
+        return dataCount.get();
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void resetCounters() {
+        dataCount.set(0);
+    }
+}
+```
+
+### `YamcsLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsLink.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.Link;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+public class YamcsLink extends AbstractLink implements AggregatedDataLink, ConnectionListener {
+    YamcsClient yclient;
+    String upstreamInstance;
+    List<Link> subLinks = new ArrayList<>();
+    YamcsTmLink tmLink;
+    YamcsTcLink tcLink;
+    YamcsParameterLink ppLink;
+    YamcsTmArchiveLink tmArchiveLink;
+    YamcsEventLink eventLink;
+
+    String upstreamName;
+    String upstreamProcessor;
+    ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1,
+            new ThreadFactoryBuilder().setNameFormat("YamcsLink").build());
+
+    long reconnectionDelay;
+
+    private String username;
+    private char[] password;
+
+    volatile boolean connected = false;
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        this.reconnectionDelay = config.getLong("reconnectionDelay", 5000);
+
+        yclient = YamcsClient.newBuilder(config.getString("yamcsUrl"))
+                .withConnectionAttempts(config.getInt("connectionAttempts", 20))
+                .withRetryDelay(reconnectionDelay)
+                .withVerifyTls(config.getBoolean("verifyTls", true))
+                .build();
+        yclient.addConnectionListener(this);
+
+        if (config.containsKey("username")) {
+            if (config.containsKey("password")) {
+                username = config.getString("username");
+                password = config.getString("password").toCharArray();
+            } else {
+                throw new ConfigurationException("Username provided with no password");
+            }
+        } else if (config.containsKey("password")) {
+            throw new ConfigurationException("Password provided with no username");
+        }
+
+        if (config.getBoolean("tm", true)) {
+            tmLink = new YamcsTmLink(this);
+            tmLink.init(instance, name + ".tm", config);
+            subLinks.add(tmLink);
+        }
+
+        if (config.getBoolean("tc", true)) {
+            tcLink = new YamcsTcLink(this);
+            tcLink.init(instance, name + ".tc", config);
+            subLinks.add(tcLink);
+        }
+
+        if (config.getBoolean("pp", true)) {
+            ppLink = new YamcsParameterLink(this);
+            ppLink.init(instance, name + ".pp", config);
+            subLinks.add(ppLink);
+        }
+
+        if (config.getBoolean("tmArchive", true)) {
+            tmArchiveLink = new YamcsTmArchiveLink(this);
+            tmArchiveLink.init(instance, name + ".tmArchive", config);
+            subLinks.add(tmArchiveLink);
+        }
+
+        if (config.getBoolean("event", true)) {
+            eventLink = new YamcsEventLink(this);
+            eventLink.init(instance, name + ".event", config);
+            subLinks.add(eventLink);
+        }
+
+        this.upstreamName = config.getString("upstreamName");
+
+        if (upstreamName.contains("<") || upstreamName.contains(">")) {
+            throw new ConfigurationException("Invalid upstream name '" + upstreamName + "'. It cannot contain < or >");
+        }
+        this.upstreamProcessor = config.getString("upstreamProcessor", "realtime");
+        this.upstreamInstance = config.getString("upstreamInstance");
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = getDefaultSpec();
+        spec.addOption("yamcsUrl", OptionType.STRING).withRequired(true)
+                .withDescription("The URL to connect to the server.");
+
+        spec.addOption("username", OptionType.STRING)
+                .withDescription("Username to connect to the server");
+
+        spec.addOption("password", OptionType.STRING).withSecret(true)
+                .withDescription("Password to connect to the server");
+
+        spec.addOption("upstreamInstance", OptionType.STRING).withRequired(true)
+                .withDescription("The instance to connect to.");
+
+        spec.addOption("upstreamProcessor", OptionType.STRING).withDefault("realtime")
+                .withDescription("The processor to connect to. Default is realtime");
+
+        spec.addOption("upstreamName", OptionType.STRING).withRequired(true)
+                .withDescription(
+                        "The name of the upstream Yamcs server. The name will be used in the command history entries");
+
+        spec.addOption("verifyTls", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("If the connection is over SSL, "
+                        + "this option can enable/disable the verification of the server certificate against local accepted CA list");
+
+        spec.addOption("reconnectionDelay", OptionType.INTEGER).withDefault(5000)
+                .withDescription("If the connection fails or breaks, "
+                        + "the time (in milliseconds) to wait before reconnection.");
+
+        spec.addOption("connectionAttempts", OptionType.INTEGER).withDefault(20)
+                .withDescription(
+                        "How many times to attempt reconnection if the connection fails. "
+                                + "Reconnection will not be reatempted if the authentication fails. "
+                                + "Link disable/enable is required to reattempt the connection");
+
+        /*
+         * TM
+         */
+        spec.addOption("tm", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Subscribe telemetry containers (packets). "
+                        + "The list of containers (packets) has to be specified using the containers option.");
+        spec.addOption("tmRealtimeStream", OptionType.STRING);
+
+        spec.addOption("tmArchive", OptionType.BOOLEAN)
+                .withAliases("archiveTm") // Legacy typo
+                .withDefault(true);
+        spec.addOption("tmArchiveStream", OptionType.STRING);
+
+        spec.addOption("containers", OptionType.LIST).withAliases("packets")
+                .withElementType(OptionType.STRING)
+                .withDescription("The list of packets to subscribe to.");
+
+        spec.when("tm", true).requireAll("containers");
+
+        spec.addOption("retrievalDays", OptionType.INTEGER);
+        spec.addOption("mergeTime", OptionType.INTEGER);
+        spec.addOption("gapFillingInterval", OptionType.INTEGER);
+
+        /*
+         * PP
+         */
+        spec.addOption("pp", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Subscribe parameters. "
+                        + "The list of parameters has to be specified using the parameters option.");
+        spec.addOption("ppRealtimeStream", OptionType.STRING);
+        spec.addOption("parameters", OptionType.LIST).withElementType(OptionType.STRING)
+                .withDescription("The list of parameters to subscribe to.");
+
+        /*
+         * TC
+         */
+        spec.addOption("tc", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Allow to send TC and subscribe to command history.");
+
+        spec.addOption("keepUpstreamAcks", OptionType.LIST)
+                .withElementType(OptionType.STRING)
+                .withDescription("List of command acknowledgements names received "
+                        + "from the upstream server to keep unmodified")
+                .withDefault(List.of(CommandHistoryPublisher.CcsdsSeq_KEY));
+
+        spec.addOption("commandMapping", OptionType.LIST).withElementType(OptionType.MAP)
+                .withSpec(CommandMapData.getSpec())
+                .withDescription("The mapping of commands and arguments between downstream and upstream.");
+        spec.addOption("failCommandIfNoMappingMatches", OptionType.BOOLEAN).withDefault(false)
+                .withDescription("Fail the command if no mapping matches");
+        spec.addOption("commandPostprocessorClassName", OptionType.STRING);
+        spec.addOption("commandPostprocessorArgs", OptionType.MAP).withSpec(Spec.ANY);
+
+        /*
+         * EV
+         */
+        spec.addOption("event", OptionType.BOOLEAN).withDefault(true)
+                .withDescription("Allow to subscribe to realtime events.");
+        spec.addOption("eventRealtimeStream", OptionType.STRING);
+
+        return spec;
+    }
+
+    @Override
+    public Status connectionStatus() {
+        return connected ? Status.OK : Status.UNAVAIL;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    @Override
+    public List<Link> getSubLinks() {
+        return subLinks;
+    }
+
+    @Override
+    public long getDataInCount() {
+        long count = 0;
+        for (Link l : subLinks) {
+            count += l.getDataInCount();
+        }
+        return count;
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return tcLink == null ? 0 : tcLink.getDataOutCount();
+    }
+
+    @Override
+    public void resetCounters() {
+        for (Link l : subLinks) {
+            l.resetCounters();
+        }
+    }
+
+    @Override
+    public void doDisable() {
+        WebSocketClient wsclient = yclient.getWebSocketClient();
+        if (wsclient != null && wsclient.isConnected()) {
+            wsclient.disconnect();
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        timer.execute(() -> connectToUpstream());
+    }
+
+    private void connectToUpstream() {
+        WebSocketClient wsclient = yclient.getWebSocketClient();
+        if (wsclient != null && wsclient.isConnected()) {
+            // we have to protect against double connection because there might be a timer and a user action that causes
+            // it to come in here
+            return;
+        }
+
+        try {
+            if (username != null) {
+                yclient.login(username, password);
+            }
+            yclient.connectWebSocket();
+        } catch (ClientException cause) {
+            log.warn("Connection to upstream Yamcs server failed", cause);
+            eventProducer.sendWarning("Connection to upstream Yamcs failed: " + cause);
+            return;
+        }
+
+        if (tmLink != null || tmArchiveLink != null) {
+            retrieveContainers();
+        }
+
+        if (tcLink != null && !tcLink.isDisabled()) {
+            tcLink.doEnable();
+        }
+
+        if (ppLink != null && !ppLink.isDisabled()) {
+            ppLink.doEnable();
+        }
+
+        if (eventLink != null && !eventLink.isDisabled()) {
+            eventLink.doEnable();
+        }
+    }
+
+    private void retrieveContainers() {
+        MissionDatabaseClient mdbClient = getClient().createMissionDatabaseClient(getUpstreamInstance());
+        ContainerFetcher.fetchAndMatch(mdbClient, config.getList("containers"), log)
+                .whenComplete((list, t) -> {
+                    if (t != null) {
+                        log.warn("Failed to fetch containers from remote: {}", t);
+                    }
+
+                    if (tmLink != null) {
+                        tmLink.setContainers(list);
+                        if (!tmLink.isDisabled()) {
+                            tmLink.subscribeContainers();
+                        }
+                    }
+                    if (tmArchiveLink != null) {
+                        tmArchiveLink.setContainers(list);
+                        if (!tmArchiveLink.isDisabled()) {
+                            tmArchiveLink.scheduleDataRetrieval();
+                        }
+                    }
+                });
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        yclient.close();
+        notifyStopped();
+    }
+
+    @Override
+    public void connecting() {
+        log.debug("Connecting to upstream Yamcs server");
+    }
+
+    @Override
+    public void connected() {
+        connected = true;
+        log.debug("Connected to upstream Yamcs server");
+    }
+
+    @Override
+    public void connectionFailed(Throwable cause) {
+        eventProducer.sendWarning("Connection to upstream Yamcs failed: " + cause);
+    }
+
+    @Override
+    public void disconnected() {
+        connected = false;
+        if (isRunningAndEnabled()) {
+            log.warn("Disconnected from upstream Yamcs server");
+            timer.schedule(() -> connectToUpstream(), reconnectionDelay, TimeUnit.MILLISECONDS);
+        } else {
+            log.debug("Disconnected from upstream Yamcs server");
+        }
+    }
+
+    YamcsClient getClient() {
+        return yclient;
+    }
+
+    String getUpstreamName() {
+        return upstreamName;
+    }
+
+    String getUpstreamInstance() {
+        return upstreamInstance;
+    }
+
+    String getUpstreamProcessor() {
+        return upstreamProcessor;
+    }
+
+    public ScheduledThreadPoolExecutor getExecutor() {
+        return timer;
+    }
+}
+```
+
+### `YamcsParameterLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsParameterLink.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.client.Page;
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Pvalue;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.ParameterDataLink;
+import org.yamcs.tctm.ParameterSink;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SpaceSystem;
+
+/**
+ * 
+ * Yamcs Parameter link - receives parameters from a Yamcs upstream server.
+ * <p>
+ * The parameters have to be defined in the local MDB and have the same name like in the remote MDB. This restriction
+ * may be lifted in the new versions.
+ *
+ */
+public class YamcsParameterLink extends AbstractLink implements ParameterDataLink {
+    YamcsLink parentLink;
+
+    List<String> parameters;
+    ParameterSubscription subscription;
+    ParameterSink paraSink;
+    AtomicLong paraCount = new AtomicLong();
+    int seqCount;
+    Mdb mdb;
+
+    // when subscribing to remote Yamcs parameters, we rename them to include the upstream name into their name
+    Map<String, String> remoteYamcsParams;
+
+    public YamcsParameterLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        config = YamcsTmLink.swapConfig(config, "ppRealtimeStream", "ppStream", "pp_realtime");
+        super.init(instance, name, config);
+        this.parameters = config.getList("parameters");
+        this.mdb = MdbFactory.getInstance(instance);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (subscription != null && !subscription.isDone()) {
+            return;
+        }
+        WebSocketClient wsclient = parentLink.getClient().getWebSocketClient();
+        if (wsclient.isConnected()) {
+            subscribeParameters();
+        }
+    }
+
+    public void subscribeParameters() {
+        YamcsClient yclient = parentLink.getClient();
+
+        subscription = yclient.createParameterSubscription();
+        subscription.addListener(new ParameterSubscription.Listener() {
+
+            @Override
+            public void onData(List<Pvalue.ParameterValue> values) {
+                processParameters(values);
+            }
+
+            @Override
+            public void onInvalidIdentification(NamedObjectId id) {
+                log.warn("Parameter subscription raised invalid identification(could be lack of permission): {}", id);
+            }
+        });
+        
+        SubscribeParametersRequest.Builder request = SubscribeParametersRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .setSendFromCache(false);
+
+        HashSet<String> toAdd = new HashSet<>();
+
+        List<String> requestedYamcsParamsFilter = new ArrayList<>();
+        boolean requestAllRemoteYamcsParams = false;
+
+        for(String p: parameters) {
+            if (p.equals("/yamcs/") || p.equals("/yamcs")) {
+                requestAllRemoteYamcsParams = true;
+                requestedYamcsParamsFilter.add(p);
+            } else if (p.startsWith("/yamcs/")) {
+                requestedYamcsParamsFilter.add(p);
+            } else if (p.endsWith("/")) {
+                SpaceSystem sps = mdb.getSpaceSystem(p.substring(0, p.length() - 1));
+
+                if (sps == null) {
+                    log.warn("Cannot find space system {} in local MDB; ignoring", p);
+                    continue;
+                }
+                sps.getParameters().forEach(pdef -> toAdd.add(pdef.getQualifiedName()));
+            } else {
+                PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + p);
+
+                boolean added = false;
+                for (Parameter param : mdb.getParameters()) {
+                    if (matcher.matches(Path.of(param.getQualifiedName()))) {
+                        toAdd.add(param.getQualifiedName());
+                        added = true;
+                    }
+                }
+
+                if (!added) {
+                    log.warn("Cannot find parameter {} in local MDB; ignoring", p);
+                }
+            }
+        }
+
+
+        toAdd.forEach(name -> request.addId(NamedObjectId.newBuilder().setName(name).build()));
+
+        log.debug("Sending parameter subcription {}", request);
+        subscription.sendMessage(request.build());
+
+        if (requestAllRemoteYamcsParams || !requestedYamcsParamsFilter.isEmpty()) {
+            if (requestAllRemoteYamcsParams) {
+                requestedYamcsParamsFilter.clear();
+                requestedYamcsParamsFilter.add("**");
+             }
+
+            remoteYamcsParams = new HashMap<>();
+            var mdbClient = parentLink.getClient().createMissionDatabaseClient(parentLink.getUpstreamInstance());
+
+            collectRemoteYamcsParameters(requestedYamcsParamsFilter,
+                    mdbClient.listParameters(ListOptions.details(false),
+                            ListOptions.system("/yamcs"), ListOptions.q("/")));
+        }
+
+    }
+
+
+    private void collectRemoteYamcsParameters(List<String> requestedYamcsParamsFilter,
+            CompletableFuture<Page<ParameterInfo>> cf) {
+
+        cf.whenComplete((page, t) -> {
+            if (t != null) {
+                log.warn("Failed to retrieve yamcs parameter names");
+            } else {
+                for (String p : requestedYamcsParamsFilter) {
+                    PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + p);
+                    boolean match = false;
+                    for (ParameterInfo pi : page) {
+                        if (!pi.getQualifiedName().startsWith("/yamcs/")) {
+                            log.warn("Remote yamcs parameter that does not start with /yamcs/?? '{}'", pi.getQualifiedName());
+                            continue;
+                        }
+                        if (matcher.matches(Path.of(pi.getQualifiedName()))) {
+                            String name = pi.getQualifiedName().replaceFirst("/yamcs/", "/yamcs/"+parentLink.getUpstreamName()+"_");
+                            remoteYamcsParams.put(pi.getQualifiedName(), name);
+                            match = true;
+                        }
+                    }
+                    if (!match) {
+                        log.info("No Yamcs parameter matching " + p + " found on the upstream server");
+                    }
+                }
+
+                if (page.hasNextPage()) {
+                    collectRemoteYamcsParameters(requestedYamcsParamsFilter, page.getNextPage());
+                } else {
+                    subscribeYamcsParameters();
+                }
+            }
+        });
+    }
+
+    void subscribeYamcsParameters() {
+        log.debug("Subscribing to the following yamcs parameters from upstream: {}", remoteYamcsParams.keySet());
+
+        SubscribeParametersRequest.Builder request = SubscribeParametersRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .setSendFromCache(false);
+
+        remoteYamcsParams.keySet().forEach(name -> request.addId(NamedObjectId.newBuilder().setName(name).build()));
+        subscription.sendMessage(request.build());
+    }
+
+
+    private void processParameters(List<Pvalue.ParameterValue> values) {
+        // group by time and group (although it's very likely they are already grouped by time)
+        Map<Long, Map<String, List<ParameterValue>>> vmap = new HashMap<>();
+
+        for (Pvalue.ParameterValue gpv : values) {
+            Parameter pdef;
+            if (gpv.getId().getName().startsWith("/yamcs")) {
+                String newName = remoteYamcsParams.get(gpv.getId().getName());
+                if (newName == null) {
+                    log.warn("Received system parameter not subscribed " + gpv);
+                    continue;
+                }
+                pdef = mdb.getParameter(newName);
+                if (pdef == null) {
+                    pdef = SystemParametersService.createSystemParameter(mdb, newName,
+                            ValueUtility.fromGpb(gpv.getEngValue()));
+                }
+            } else {
+                pdef = mdb.getParameter(gpv.getId());
+            }
+            if (pdef == null) {
+                log.warn("Ignoring unknown parameter {}", gpv.getId());
+                continue;
+            }
+
+            String group = pdef.getRecordingGroup();
+            ParameterValue pv = BasicParameterValue.fromGpb(pdef, gpv);
+            List<ParameterValue> l = vmap.computeIfAbsent(pv.getGenerationTime(), x -> new HashMap<>())
+                    .computeIfAbsent(group, x -> new ArrayList<>());
+            l.add(pv);
+        }
+
+        for (Map.Entry<Long, Map<String, List<ParameterValue>>> me : vmap.entrySet()) {
+            long gentime = me.getKey();
+            for (Map.Entry<String, List<ParameterValue>> me1 : me.getValue().entrySet()) {
+                paraSink.updateParameters(gentime, me1.getKey(), seqCount, me1.getValue());
+                paraCount.addAndGet(me1.getValue().size());
+            }
+            seqCount++;
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = subscription != null && !subscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+
+    @Override
+    public long getDataInCount() {
+        return paraCount.get();
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void resetCounters() {
+        paraCount.set(0);
+
+    }
+
+    @Override
+    public void setParameterSink(ParameterSink parameterSink) {
+        this.paraSink = parameterSink;
+    }
+}
+```
+
+### `YamcsTcLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTcLink.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.Command;
+import org.yamcs.client.CommandListener;
+import org.yamcs.client.CommandSubscription;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.processor.ProcessorClient.CommandBuilder;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.tctm.AbstractTcDataLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Argument;
+
+public class YamcsTcLink extends AbstractTcDataLink {
+    YamcsLink parentLink;
+    private CommandSubscription cmdSubscription;
+    private ProcessorClient procClient;
+    private MissionDatabaseClient mdbClient;
+    private String cmdOrigin;
+    private boolean failCommandIfNoMappingMatches;
+
+    private Set<String> keepUpstreamAcks = new HashSet<>();
+    private ArrayList<CommandMapData> commandMapDataList = new ArrayList<>();
+    Map<String, PreparedCommand> sentCommands = new ConcurrentHashMap<>();
+    Map<String, CommandInfo> upstreamCmdCache = new ConcurrentHashMap<>();
+    private AtomicInteger tcCount = new AtomicInteger();
+
+    public YamcsTcLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        this.cmdOrigin = YamcsServer.getServer().getServerId() + "-" + instance + "-" + this.linkName;
+        List<String> l;
+        if (config.containsKey("keepUpstreamAcks")) {
+            l = config.getList("keepUpstreamAcks");
+        } else {
+            l = List.of(CommandHistoryPublisher.CcsdsSeq_KEY);
+        }
+        if (config.containsKey("commandMapping")) {
+            List<YConfiguration> commandMapConfigList = config.getConfigList("commandMapping");
+            commandMapConfigList.forEach(conf -> commandMapDataList.add(new CommandMapData(conf)));
+        } else {
+            // add default direct command mapping.
+            log.info("Using default config for Cascading command mapping");
+            commandMapDataList.add(new CommandMapData());
+        }
+        failCommandIfNoMappingMatches = config.getBoolean("failCommandIfNoMappingMatches");
+
+        keepUpstreamAcks = new HashSet<>(l);
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand pc) {
+        for (CommandMapData data : commandMapDataList) {
+            if (data.getCommandType() == CommandMapData.CommandType.DEFAULT) {
+                return sendDirectCommand(pc, data);
+            }
+
+            String pcfqn = pc.getMetaCommand().getQualifiedName();
+            String pcCommandPath;
+            if (data.getLocalPath().endsWith("/")) {
+                pcCommandPath = pcfqn.substring(0, pcfqn.lastIndexOf("/") + 1);
+            } else {
+                pcCommandPath = pcfqn;
+            }
+            if (pcCommandPath.startsWith(data.getLocalPath())) {
+                switch (data.getCommandType()) {
+                case DIRECT:
+                    return sendDirectCommand(pc, data);
+                case EMBEDDED_BINARY:
+                    return sendEmbeddedBinaryCommand(pc, data);
+                default:
+                    throw new IllegalStateException();
+                }
+            }
+        }
+
+        if (failCommandIfNoMappingMatches) {
+            failedCommand(pc.getCommandId(), "No command mapping matched the command");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean sendEmbeddedBinaryCommand(PreparedCommand pc, CommandMapData data) {
+        CommandInfo upstreamCmd = getUpstreamCmd(data.getUpstreamPath());
+        if (upstreamCmd == null) {
+            String msg = "Cannot send the command because upstream command '" + data.getUpstreamPath()
+                    + "' is not available";
+            failedCommand(pc.getCommandId(), msg);
+            log.warn(msg);
+            return true;
+        }
+        byte[] cmdBinary = postprocess(pc);
+        if (cmdBinary == null) {
+            // the post-processor must have failed the command
+            return true;
+        }
+
+        CommandBuilder cb = procClient.prepareCommand(data.getUpstreamPath());
+        cb.withOrigin(cmdOrigin);
+        long count = tcCount.getAndIncrement();
+        cb.withSequenceNumber((int) count);
+
+        sentCommands.put(cmdOrigin + "-" + count, pc);
+
+        if (pc.getComment() != null) {
+            cb.withComment(pc.getComment());
+        }
+        List<ArgumentInfo> args = getUpstreamArguments(upstreamCmd);
+        boolean found = false;
+        for (ArgumentInfo entry : args) {
+            if (entry.getName().equals(data.getUpstreamArgumentName())) {
+                found = true;
+                cb.withArgument(data.getUpstreamArgumentName(), cmdBinary);
+            } else if (!entry.hasInitialValue()) {
+                log.warn("The upstream command requires a value also for argument '{}'", entry.getName());
+            }
+        }
+        if (!found) {
+            String msg = "Cannot send the command because upstream argument '" + data.getUpstreamArgumentName()
+                    + "' was not found";
+            failedCommand(pc.getCommandId(), msg);
+            log.warn(msg);
+            return true;
+        }
+
+        // we take the time now because after the command is issued, the current time will be after the upstream
+        // Queued/Released timestamps
+        long time = getCurrentTime();
+        var cf = cb.issue();
+        var size = cb.getSizeOfTheLastCommandIssued();
+        cf.whenComplete((c, t) -> {
+            if (t != null) {
+                log.warn("Error sending command ", t);
+                failedCommand(pc.getCommandId(), t.getMessage());
+            } else {
+                dataOut(1, size);
+                commandHistoryPublisher.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, time, AckStatus.OK);
+            }
+        });
+        return true;
+    }
+
+    private boolean sendDirectCommand(PreparedCommand pc, CommandMapData data) {
+        String upstreamCmdName;
+        String pcfqn = pc.getMetaCommand().getQualifiedName();
+
+        if (data.getCommandType() == CommandMapData.CommandType.DEFAULT) {
+            upstreamCmdName = pcfqn;
+        } else {
+            String upstreamCmdPath = data.getUpstreamPath();
+            if (upstreamCmdPath.endsWith("/")) {
+                upstreamCmdName = upstreamCmdPath + pcfqn.substring(data.getLocalPath().length());
+            } else {
+                upstreamCmdName = upstreamCmdPath;
+            }
+        }
+
+        CommandInfo upstreamCmd = getUpstreamCmd(upstreamCmdName);
+
+        if (upstreamCmd == null) {
+            String msg = "Cannot send the command because upstream command definition is not available";
+            failedCommand(pc.getCommandId(), msg);
+            log.warn(msg);
+            return true;
+        }
+
+        CommandBuilder cb = procClient.prepareCommand(upstreamCmd.getQualifiedName());
+        cb.withOrigin(cmdOrigin);
+        long count = tcCount.getAndIncrement();
+        cb.withSequenceNumber((int) count);
+
+        sentCommands.put(cmdOrigin + "-" + count, pc);
+
+        if (pc.getComment() != null) {
+            cb.withComment(pc.getComment());
+        }
+        List<ArgumentInfo> reqArgs = getUpstreamArguments(upstreamCmd);
+
+        for (Entry<Argument, ArgumentValue> entry : pc.getArgAssignment().entrySet()) {
+            String argName = entry.getKey().getName();
+
+            if (reqArgs.stream().anyMatch(ai -> argName.equals(ai.getName()))) {
+                // TODO aggregates/arrays
+                cb.withArgument(argName, toClientValue(entry.getValue()));
+            }
+        }
+
+        // we take the time now because after the command is issued, the current time will be after the upstream
+        // Queued/Released timestamps
+        long time = getCurrentTime();
+        cb.issue().whenComplete((c, t) -> {
+            if (t != null) {
+                log.warn("Error sending command ", t);
+                failedCommand(pc.getCommandId(), t.getMessage());
+            } else {
+                commandHistoryPublisher.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, time, AckStatus.OK);
+            }
+        });
+
+        return true;
+    }
+
+    private Object toClientValue(ArgumentValue value) {
+        return ValueUtility.getYarchValue(value.getEngValue());
+    }
+
+    // retrieve the arguments which can be sent in the upstream command
+    private List<ArgumentInfo> getUpstreamArguments(CommandInfo upstreamCmd) {
+        Set<String> assignedArgs = new HashSet<>();
+        CommandInfo ci = upstreamCmd;
+        while (true) {
+            for (ArgumentAssignmentInfo aai : ci.getArgumentAssignmentList()) {
+                assignedArgs.add(aai.getName());
+            }
+            if (ci.hasBaseCommand()) {
+                ci = ci.getBaseCommand();
+            } else {
+                break;
+            }
+        }
+
+        ci = upstreamCmd;
+        List<ArgumentInfo> reqArgs = new ArrayList<>();
+        while (true) {
+            for (ArgumentInfo ai : ci.getArgumentList()) {
+                if (!assignedArgs.contains(ai.getName())) {
+                    reqArgs.add(ai);
+                }
+            }
+            if (ci.hasBaseCommand()) {
+                ci = ci.getBaseCommand();
+            } else {
+                break;
+            }
+        }
+        return reqArgs;
+    }
+
+    private CommandInfo getUpstreamCmd(String upstreamCmdName) {
+        CommandInfo cinfo = upstreamCmdCache.get(upstreamCmdName);
+        if (cinfo == null) {
+            try {
+                log.debug("Retrieving information about command {} from upstream", upstreamCmdName);
+                cinfo = mdbClient.getCommand(upstreamCmdName).get();
+            } catch (InterruptedException | ExecutionException e) {
+                log.warn("Failed to retrieve command definition " + upstreamCmdName + " from upstream: " + e);
+                return null;
+            }
+            upstreamCmdCache.put(upstreamCmdName, cinfo);
+        }
+        return cinfo;
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (cmdSubscription != null) {
+            cmdSubscription.cancel(true);
+            cmdSubscription = null;
+        }
+    }
+
+    /**
+     * Called when a command history update is received from the upstream server
+     * 
+     * @param command
+     * @param cmdHistEntry
+     */
+    void commandUpdated(Command command, CommandHistoryEntry che) {
+        PreparedCommand pc = sentCommands.get(command.getOrigin() + "-" + command.getSequenceNumber());
+        if (pc != null) {
+            for (CommandHistoryAttribute cha : che.getAttrList()) {
+                String name = transformCommandHistoryAttributeName(cha.getName());
+                publishCmdHistory(pc.getCommandId(), name, cha.getValue());
+            }
+
+        } // else TODO: should we add to command history commands not sent by us?
+    }
+
+    private String transformCommandHistoryAttributeName(String name) {
+        if (keepUpstreamAcks.contains(name)) {
+            return name;
+        } else {
+            return "yamcs<" + parentLink.getUpstreamName() + ">_" + name;
+        }
+    }
+
+    private void publishCmdHistory(CommandId cmdId, String name, Value value) {
+        switch (value.getType()) {
+        case SINT32:
+            commandHistoryPublisher.publish(cmdId, name, value.getSint32Value());
+            break;
+        case UINT32:
+            commandHistoryPublisher.publish(cmdId, name, value.getUint32Value());
+            break;
+        case UINT64:
+            commandHistoryPublisher.publish(cmdId, name, value.getUint64Value());
+            break;
+        case SINT64:
+            commandHistoryPublisher.publish(cmdId, name, value.getSint64Value());
+            break;
+        case STRING:
+            commandHistoryPublisher.publish(cmdId, name, value.getStringValue());
+            break;
+        case TIMESTAMP:
+            commandHistoryPublisher.publish(cmdId, name, value.getTimestampValue());
+            break;
+        case BINARY:
+            commandHistoryPublisher.publish(cmdId, name, value.getBinaryValue().toByteArray());
+            break;
+        default:
+            log.warn("Cannot publish command history attributes of type {}", value.getType());
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (cmdSubscription != null && !cmdSubscription.isDone()) {
+            return;
+        }
+
+        if (parentLink.isConnected()) {
+            subscribeCommanding();
+        }
+    }
+
+    private void subscribeCommanding() {
+        YamcsClient yclient = parentLink.getClient();
+
+        procClient = yclient.createProcessorClient(parentLink.getUpstreamInstance(), parentLink.getUpstreamProcessor());
+        mdbClient = yclient.createMissionDatabaseClient(parentLink.getUpstreamInstance());
+        cmdSubscription = yclient.createCommandSubscription();
+        cmdSubscription.addListener(new CommandListener() {
+
+            @Override
+            public void onUpdate(Command command, CommandHistoryEntry cmdHistEntry) {
+                commandUpdated(command, cmdHistEntry);
+            }
+
+            public void onError(Throwable t) {
+                eventProducer.sendWarning("Got error when subscribign to commanding: " + t);
+            }
+
+            @Override
+            public void onUpdate(Command command) {
+            }
+
+        });
+        cmdSubscription.sendMessage(SubscribeCommandsRequest
+                .newBuilder().setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .build());
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = cmdSubscription != null && !cmdSubscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+}
+```
+
+### `YamcsTmArchiveLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTmArchiveLink.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import java.util.ArrayDeque;
+import java.util.Collections;
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.StreamOptions;
+import org.yamcs.client.archive.ArchiveClient.StreamOptions.StreamOption;
+import org.yamcs.protobuf.TmPacketData;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * 
+ * Yamcs TM Archive link - fetches archive data
+ *
+ */
+public class YamcsTmArchiveLink extends AbstractTmDataLink {
+    YamcsLink parentLink;
+
+    private List<String> containers;
+
+    int retrievalDays;
+    int mergeTime;
+    int gapFillingInterval;
+
+    Queue<Gap> queue = new ArrayDeque<>();
+    List<Gap> prevGaps;
+    CompletableFuture<Void> runningTask;
+    private long start;
+    private long stop;
+
+    public YamcsTmArchiveLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        config = YamcsTmLink.swapConfig(config, "tmArchiveStream", "tmStream", "tm_dump");
+        super.init(instance, name, config);
+        this.retrievalDays = config.getInt("retrievalDays", 120);
+        // when retrieving archive indexes, merge all the gaps smaller than 300 seconds
+        this.mergeTime = config.getInt("mergeTime", 300) * 1000;
+
+        this.mergeTime = 1000;
+        this.gapFillingInterval = config.getInt("gapFillingInterval", 300);
+
+        log.debug("Archive retrieval for {} days", retrievalDays);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+    }
+
+    @Override
+    public void doEnable() {
+        if (containers != null) {
+            scheduleDataRetrieval();
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return parentLink.connectionStatus();
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+
+    void scheduleDataRetrieval() {
+        parentLink.getExecutor().execute(this::retrieveGaps);
+    }
+
+    void retrieveGaps() {
+        if (connectionStatus() != Status.OK || isEffectivelyDisabled()) {
+            return;
+        }
+
+        if (runningTask != null && !runningTask.isDone()) {
+            return;
+        }
+
+        if (queue.isEmpty()) {
+            if (runningTask != null) {
+                log.debug("Retrieval finished, looking for new gaps");
+                runningTask = null;
+            }
+            if (prevGaps == null) {
+                identifyGaps();
+            } else {
+                checkRemainingGaps();
+            }
+        }
+        if (queue.isEmpty()) {
+            return;
+        } else {
+            retrieveGap(queue.poll());
+        }
+    }
+
+    private void processPacketData(TmPacketData data) {
+        long rectime = timeService.getMissionTime();
+        byte[] pktData = data.getPacket().toByteArray();
+
+        TmPacket pkt = new TmPacket(rectime, pktData);
+        if (data.hasGenerationTime()) {
+            pkt.setGenerationTime(TimeEncoding.fromProtobufTimestamp(data.getGenerationTime()));
+        }
+        pkt.setSequenceCount(data.getSequenceNumber());
+
+        packetCount.incrementAndGet();
+        processPacket(pkt);
+    }
+
+    /**
+     * retrieves the TM index from upstream and compares it with the local
+     * 
+     * @return
+     */
+    void identifyGaps() {
+        start = timeService.getMissionTime() - 86400_000 * retrievalDays;
+        stop = timeService.getMissionTime();
+
+        TmGapFinder gapFinder = new TmGapFinder(yamcsInstance, parentLink, eventProducer, retrievalDays,
+                p -> isPacketRequired(p));
+
+        var gaps = gapFinder.identifyGaps(start, stop);
+
+        if (gaps.size() == 0) {
+            log.debug("No gap identified.");
+            log.debug("Scheduling next gap filling in {} seconds", gapFillingInterval);
+            parentLink.getExecutor().schedule(this::retrieveGaps, gapFillingInterval, TimeUnit.SECONDS);
+            return;
+        }
+
+        Collections.sort(gaps);
+
+        prevGaps = gaps;
+        log.info("Identified {} gaps for the retrieval", gaps.size());
+        queue.addAll(gaps);
+    }
+
+    void checkRemainingGaps() {
+        TmGapFinder gapFinder = new TmGapFinder(yamcsInstance, parentLink, eventProducer, retrievalDays,
+                p -> isPacketRequired(p));
+
+        var gaps = gapFinder.identifyGaps(start, stop);
+
+        for (Gap gap : gaps) {
+            if (Collections.binarySearch(prevGaps, gap) >= 0) {
+                if (gap.stop < stop) {
+                    log.warn("Gap {} still remains after replay", gap);
+                }
+            }
+        }
+
+        prevGaps = null;
+        log.debug("Scheduling next gap filling in {} seconds", gapFillingInterval);
+        parentLink.getExecutor().schedule(this::retrieveGaps, gapFillingInterval, TimeUnit.SECONDS);
+    }
+
+    void retrieveGap(Gap g) {
+        log.debug("Retrieving gap {}", g);
+        ArchiveClient arcClient = parentLink.getClient().createArchiveClient(parentLink.getUpstreamInstance());
+        java.time.Instant startj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(g.start));
+
+        // the retrieval is exclusive on the right, so we increase the stop by one millisecond
+        java.time.Instant stopj = java.time.Instant.ofEpochMilli(TimeEncoding.toUnixMillisec(g.stop + 1));
+        StreamOption opt = StreamOptions.packets(containers.toArray(new String[0]));
+        runningTask = arcClient.streamPackets(pkt -> processPacketData(pkt), startj, stopj, opt);
+        runningTask.whenComplete((v, t) -> {
+            if (t != null) {
+                log.warn("Error in gap retrieval", t);
+            }
+            scheduleDataRetrieval();
+        });
+    }
+
+    private boolean isPacketRequired(String name) {
+        return containers.contains(name);
+    }
+
+    public void setContainers(List<String> containers) {
+        this.containers = containers;
+    }
+
+    static class Gap implements Comparable<Gap> {
+        long start;
+        long stop;
+
+        public Gap(long start, long stop) {
+            this.start = start;
+            this.stop = stop;
+        }
+
+        @Override
+        public int compareTo(Gap other) {
+            return Long.compare(start, other.start);
+        }
+
+        @Override
+        public String toString() {
+            return "[" + TimeEncoding.toString(start) + " - " + TimeEncoding.toString(stop) + "]";
+        }
+    }
+}
+```
+
+### `YamcsTmLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cascading/YamcsTmLink.java`
+
+
+```java
+package org.yamcs.cascading;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.TmPacket;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ContainerSubscription;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.protobuf.ContainerData;
+import org.yamcs.protobuf.SubscribeContainersRequest;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * 
+ * Yamcs TM link - subscribes to realtime telemetry
+ *
+ */
+public class YamcsTmLink extends AbstractTmDataLink {
+    YamcsLink parentLink;
+
+    public void setContainers(List<String> containers) {
+        this.containers = containers;
+    }
+
+    List<String> containers;
+    ContainerSubscription subscription;
+
+    public YamcsTmLink(YamcsLink parentLink) {
+        this.parentLink = parentLink;
+    }
+
+    public void init(String instance, String name, YConfiguration config) {
+        config = swapConfig(config, "tmRealtimeStream", "tmStream", "tm_realtime");
+        super.init(instance, name, config);
+    }
+
+    // a little bit of a hack: because we use only one config for the parent,
+    // we generate a new one for the sublink with the name tmRealtimeStream/tmArchiveStream changed to tmStream
+    // depending on which link it is
+    static YConfiguration swapConfig(YConfiguration config, String oldKey, String newKey, String defaultValue) {
+        Map<String, Object> root = new HashMap<>(config.getRoot());
+        String value = (String) root.remove(oldKey);
+        if (value == null) {
+            value = defaultValue;
+        }
+
+        root.put(newKey, value);
+        return YConfiguration.wrap(root);
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isEffectivelyDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doDisable() {
+        if (subscription != null) {
+            subscription.cancel(true);
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        if (subscription != null && !subscription.isDone()) {
+            return;
+        }
+
+        if (containers != null) {
+            subscribeContainers();
+        }
+    }
+
+    void subscribeContainers() {
+        YamcsClient yclient = parentLink.getClient();
+
+        subscription = yclient.createContainerSubscription();
+        subscription.addMessageListener(new MessageListener<ContainerData>() {
+            @Override
+            public void onMessage(ContainerData data) {
+                processContainerData(data);
+            }
+
+            public void onError(Throwable t) {
+                if (t instanceof ClientException) {
+                    eventProducer.sendWarning("Got error when subscribing to containers: " + t.getMessage());
+                } else {
+                    log.warn("Got error when subscribing to containers: " + t.getMessage());
+                }
+            }
+        });
+
+        subscription.sendMessage(SubscribeContainersRequest.newBuilder()
+                .setInstance(parentLink.getUpstreamInstance())
+                .setProcessor(parentLink.getUpstreamProcessor())
+                .addAllNames(containers).build());
+
+    }
+
+    private void processContainerData(ContainerData data) {
+        long rectime = timeService.getMissionTime();
+        byte[] pktData = data.getBinary().toByteArray();
+
+        TmPacket pkt = new TmPacket(rectime, pktData);
+        if (data.hasGenerationTime()) {
+            pkt.setGenerationTime(TimeEncoding.fromProtobufTimestamp(data.getGenerationTime()));
+        }
+        pkt.setSequenceCount(data.getSeqCount());
+        packetCount.incrementAndGet();
+        processPacket(pkt);
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            doDisable();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        Status parentStatus = parentLink.connectionStatus();
+        if (parentStatus == Status.OK) {
+            boolean ok = subscription != null && !subscription.isDone();
+            return ok ? Status.OK : Status.UNAVAIL;
+        } else {
+            return parentStatus;
+        }
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parentLink;
+    }
+}
+```

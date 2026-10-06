@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sbn/modules/protocol/spacewire/docs/dox_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 users_guide/index
 ```
 
-## 항목
-
-- [`fsw/apps/sbn/modules/protocol/spacewire/docs/dox_src/users_guide/`](users_guide/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

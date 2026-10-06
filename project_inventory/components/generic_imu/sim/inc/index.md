@@ -3,22 +3,275 @@
 
 **경로:** `components/generic_imu/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_imu_42_data_provider.hpp`
 
-file--generic_imu_42_data_provider.hpp
-file--generic_imu_data_point.hpp
-file--generic_imu_data_provider.hpp
-file--generic_imu_hardware_model.hpp
-file--generic_imu_shmem_data_provider.hpp
+**경로:** `components/generic_imu/sim/inc/generic_imu_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_IMU42DATAPROVIDER_HPP
+#define NOS3_GENERIC_IMU42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_imu_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_imu42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_imu42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_imu42DataProvider(void) {};
+        Generic_imu42DataProvider& operator=(const Generic_imu42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_imu_data_point.hpp`
 
-- [`components/generic_imu/sim/inc/generic_imu_42_data_provider.hpp`](file--generic_imu_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/sim/inc/generic_imu_data_point.hpp`](file--generic_imu_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/sim/inc/generic_imu_data_provider.hpp`](file--generic_imu_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/sim/inc/generic_imu_hardware_model.hpp`](file--generic_imu_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/sim/inc/generic_imu_shmem_data_provider.hpp`](file--generic_imu_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_imu/sim/inc/generic_imu_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_IMUDATAPOINT_HPP
+#define NOS3_GENERIC_IMUDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_imuDataPoint : public SimIDataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_imuDataPoint(double count);
+        Generic_imuDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+        Generic_imuDataPoint(double gyro_x, double gyro_y, double gyro_z, double accel_x, double accel_y, double accel_z);
+        ~Generic_imuDataPoint(void) {};
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        float       get_generic_imu_gyro_x(void) const {parse_data_point(); return _gyroRates[0];}
+        float       get_generic_imu_acc_x(void) const {parse_data_point(); return _accelRates[0];}
+        float       get_generic_imu_gyro_y(void) const {parse_data_point(); return _gyroRates[1];}
+        float       get_generic_imu_acc_y(void) const {parse_data_point(); return _accelRates[1];}
+        float       get_generic_imu_gyro_z(void) const {parse_data_point(); return _gyroRates[2];}
+        float       get_generic_imu_acc_z(void) const {parse_data_point(); return _accelRates[2];}
+
+        bool        is_generic_imu_data_valid(void) const {parse_data_point(); return _generic_imu_data_is_valid;}
+    
+    private:
+        /* Disallow these */
+        Generic_imuDataPoint(void) {};
+        Generic_imuDataPoint(const Generic_imuDataPoint&) {};
+
+         // Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        // Private data
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable bool   _generic_imu_data_is_valid;
+        mutable float _gyroRates[3];
+        mutable float _accelRates[3];
+    };
+}
+
+#endif
+```
+
+### `generic_imu_data_provider.hpp`
+
+**경로:** `components/generic_imu/sim/inc/generic_imu_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_IMUDATAPROVIDER_HPP
+#define NOS3_GENERIC_IMUDATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_imu_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class Generic_imuDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_imuDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_imuDataProvider(void) {};
+        Generic_imuDataProvider& operator=(const Generic_imuDataProvider&) {return *this;};
+
+        mutable double _request_count;
+    };
+}
+
+#endif
+```
+
+### `generic_imu_hardware_model.hpp`
+
+**경로:** `components/generic_imu/sim/inc/generic_imu_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_IMUHARDWAREMODEL_HPP
+#define NOS3_GENERIC_IMUHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Can/Client/CanSlave.hpp> 
+
+#include <sim_i_data_provider.hpp>
+#include <generic_imu_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Defines
+*/
+#define GENERIC_IMU_SIM_SUCCESS 0
+#define GENERIC_IMU_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_imuHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_imuHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_imuHardwareModel(void);
+        std::vector<uint8_t> determine_can_response(const std::vector<uint8_t>& in_data); /* Handle data the hardware receives from its protocol bus */
+
+    private:
+        /* Private helper methods */
+        void create_generic_imu_hk(std::vector<uint8_t>& out_data); 
+        void create_generic_imu_data(std::vector<uint8_t>& out_data, uint8_t axis); 
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+
+        /* Private data members */
+        class IMUCanSlaveConnection*                        _can_connection; 
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_imu_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::uint32_t                                       _count;
+        std::uint32_t                                       _status;
+
+        const uint8_t _IMU_CAN_CMD_SIZE = 2;
+    };
+
+        // The following two constants for conversion from float to
+        // uint32_t were chosen to be as precise as possible given
+        // a range of a range of -10<x<10 for x=linear acceleration (in g)
+        // and -400<x<400 for x=angular rotation rate (in deg/s).
+        const float _LIN_CONV_CONST = 214748364.0;
+        const float _ANG_CONV_CONST = 5368709.0;
+
+
+    class IMUCanSlaveConnection : public NosEngine::Can::CanSlave
+    {
+    public:
+        IMUCanSlaveConnection(Generic_imuHardwareModel* hm, int bus_address, std::string connection_string, std::string bus_name);
+        size_t can_read(uint8_t *rbuf, size_t rlen);
+        size_t can_write(const uint8_t *wbuf, size_t wlen);
+    private:
+        Generic_imuHardwareModel* _hardware_model;
+        std::vector<uint8_t> _can_out_data;  
+        const uint8_t _IMU_CAN_FRAME_SIZE = 14;
+    };
+
+}
+
+#endif
+```
+
+### `generic_imu_shmem_data_provider.hpp`
+
+**경로:** `components/generic_imu/sim/inc/generic_imu_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_IMUSHMEMDATAPROVIDER_HPP
+#define NOS3_GENERIC_IMUSHMEMDATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <generic_imu_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    class Generic_imuShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_imuShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_imuShmemDataProvider(void) {};
+        Generic_imuShmemDataProvider& operator=(const Generic_imuShmemDataProvider&) {return *this;};
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

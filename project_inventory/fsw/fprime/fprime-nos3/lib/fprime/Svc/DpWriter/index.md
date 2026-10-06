@@ -3,24 +3,584 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--DpWriter.cpp
-file--DpWriter.fpp
-file--DpWriter.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/DpWriter.cpp`](file--DpWriter.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/DpWriter.fpp`](file--DpWriter.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/DpWriter.hpp`](file--DpWriter.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/CMakeLists.txt`
+
+
+```cmake
+register_fprime_module(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/DpWriter.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/DpWriter.cpp"
+  DEPENDS
+    Fw_Dp
+)
+
+register_fprime_ut(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/DpWriter.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/AbstractState.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpWriterTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpWriterTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/BufferSendIn.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/CLEAR_EVENT_THROTTLE.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/FileOpenStatus.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/FileWriteStatus.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/SchedIn.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/Testers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Scenarios/Random.cpp"
+  DEPENDS
+    STest
+  UT_AUTO_HELPERS
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_Test_Stub
+)
+```
+
+### `DpWriter.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/DpWriter.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpWriter.cpp
+// \author bocchino
+// \brief  cpp file for DpWriter component implementation class
+// ======================================================================
+
+#include "Svc/DpWriter/DpWriter.hpp"
+#include "Fw/Com/ComPacket.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/FileNameString.hpp"
+#include "Fw/Types/Serializable.hpp"
+#include "Os/File.hpp"
+#include "Utils/Hash/Hash.hpp"
+#include "config/DpCfg.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+DpWriter::DpWriter(const char* const compName) : DpWriterComponentBase(compName), m_dpFileNamePrefix() {}
+
+DpWriter::~DpWriter() {}
+
+void DpWriter::configure(const Fw::StringBase& dpFileNamePrefix) {
+    this->m_dpFileNamePrefix = dpFileNamePrefix;
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void DpWriter::bufferSendIn_handler(const FwIndexType portNum, Fw::Buffer& buffer) {
+    Fw::Success::T status = Fw::Success::SUCCESS;
+    // portNum is unused
+    (void)portNum;
+    // Update num buffers received
+    ++this->m_numBuffersReceived;
+    // Check that the buffer is valid
+    if (!buffer.isValid()) {
+        this->log_WARNING_HI_InvalidBuffer();
+        status = Fw::Success::FAILURE;
+    }
+    // Check that the buffer is large enough to hold a data product packet
+    const FwSizeType bufferSize = buffer.getSize();
+    if (status == Fw::Success::SUCCESS) {
+        if (bufferSize < Fw::DpContainer::MIN_PACKET_SIZE) {
+            this->log_WARNING_HI_BufferTooSmallForPacket(static_cast<U32>(bufferSize),
+                                                         Fw::DpContainer::MIN_PACKET_SIZE);
+
+            status = Fw::Success::FAILURE;
+        }
+    }
+    // Set up the container and check that the header hash is valid
+    Fw::DpContainer container;
+    if (status == Fw::Success::SUCCESS) {
+        container.setBuffer(buffer);
+        Utils::HashBuffer storedHash;
+        Utils::HashBuffer computedHash;
+        status = container.checkHeaderHash(storedHash, computedHash);
+        if (status != Fw::Success::SUCCESS) {
+            this->log_WARNING_HI_InvalidHeaderHash(static_cast<U32>(bufferSize), storedHash.asBigEndianU32(),
+                                                   computedHash.asBigEndianU32());
+        }
+    }
+    // Deserialize the packet header
+    if (status == Fw::Success::SUCCESS) {
+        status = this->deserializePacketHeader(buffer, container);
+    }
+    // Check that the packet size fits in the buffer
+    if (status == Fw::Success::SUCCESS) {
+        const FwSizeType packetSize = container.getPacketSize();
+        if (bufferSize < packetSize) {
+            this->log_WARNING_HI_BufferTooSmallForData(static_cast<U32>(bufferSize), static_cast<U32>(packetSize));
+            status = Fw::Success::FAILURE;
+        }
+    }
+    // Perform the requested processing
+    if (status == Fw::Success::SUCCESS) {
+        this->performProcessing(container);
+    }
+    // Construct the file name
+    Fw::FileNameString fileName;
+    if (status == Fw::Success::SUCCESS) {
+        const FwDpIdType containerId = container.getId();
+        const Fw::Time timeTag = container.getTimeTag();
+        fileName.format(DP_FILENAME_FORMAT, this->m_dpFileNamePrefix.toChar(), containerId, timeTag.getSeconds(),
+                        timeTag.getUSeconds());
+    }
+    FwSizeType fileSize = 0;
+    // Write the file
+    if (status == Fw::Success::SUCCESS) {
+        status = this->writeFile(container, fileName, fileSize);
+    }
+    // Send the DpWritten notification
+    if (status == Fw::Success::SUCCESS) {
+        this->sendNotification(container, fileName, fileSize);
+    }
+    // Deallocate the buffer
+    if (buffer.isValid()) {
+        this->deallocBufferSendOut_out(0, buffer);
+    }
+    // Update the error count
+    if (status != Fw::Success::SUCCESS) {
+        this->m_numErrors++;
+    }
+}
+
+void DpWriter::schedIn_handler(const FwIndexType portNum, U32 context) {
+    // portNum and context are not used
+    (void)portNum;
+    (void)context;
+    // Write telemetry
+    this->tlmWrite_NumBuffersReceived(this->m_numBuffersReceived);
+    this->tlmWrite_NumBytesWritten(this->m_numBytesWritten);
+    this->tlmWrite_NumSuccessfulWrites(this->m_numSuccessfulWrites);
+    this->tlmWrite_NumFailedWrites(this->m_numFailedWrites);
+    this->tlmWrite_NumErrors(this->m_numErrors);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for commands
+// ----------------------------------------------------------------------
+
+void DpWriter::CLEAR_EVENT_THROTTLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    // opCode and cmdSeq are not used
+    (void)opCode;
+    (void)cmdSeq;
+    // Clear throttling
+    this->log_WARNING_HI_BufferTooSmallForData_ThrottleClear();
+    this->log_WARNING_HI_BufferTooSmallForPacket_ThrottleClear();
+    this->log_WARNING_HI_FileOpenError_ThrottleClear();
+    this->log_WARNING_HI_FileWriteError_ThrottleClear();
+    this->log_WARNING_HI_InvalidBuffer_ThrottleClear();
+    this->log_WARNING_HI_InvalidHeaderHash_ThrottleClear();
+    this->log_WARNING_HI_InvalidHeader_ThrottleClear();
+    // Return command response
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+// ----------------------------------------------------------------------
+// Private helper functions
+// ----------------------------------------------------------------------
+
+Fw::Success::T DpWriter::deserializePacketHeader(Fw::Buffer& buffer, Fw::DpContainer& container) {
+    Fw::Success::T status = Fw::Success::SUCCESS;
+    container.setBuffer(buffer);
+    const Fw::SerializeStatus serialStatus = container.deserializeHeader();
+    if (serialStatus != Fw::FW_SERIALIZE_OK) {
+        this->log_WARNING_HI_InvalidHeader(static_cast<U32>(buffer.getSize()), static_cast<U32>(serialStatus));
+        status = Fw::Success::FAILURE;
+    }
+    return status;
+}
+
+void DpWriter::performProcessing(const Fw::DpContainer& container) {
+    // Get the buffer
+    Fw::Buffer buffer = container.getBuffer();
+    // Get the bit mask for the processing types
+    const Fw::DpCfg::ProcType::SerialType procTypes = container.getProcTypes();
+    // Do the processing
+    for (FwIndexType portNum = 0; portNum < NUM_PROCBUFFERSENDOUT_OUTPUT_PORTS; ++portNum) {
+        if ((procTypes & (1 << portNum)) != 0) {
+            this->procBufferSendOut_out(portNum, buffer);
+        }
+    }
+}
+
+Fw::Success::T DpWriter::writeFile(const Fw::DpContainer& container,
+                                   const Fw::FileNameString& fileName,
+                                   FwSizeType& fileSize) {
+    Fw::Success::T status = Fw::Success::SUCCESS;
+    // Get the buffer
+    Fw::Buffer buffer = container.getBuffer();
+    // Get the file size
+    fileSize = container.getPacketSize();
+    // Open the file
+    Os::File file;
+    Os::File::Status fileStatus = file.open(fileName.toChar(), Os::File::OPEN_CREATE);
+    if (fileStatus != Os::File::OP_OK) {
+        this->log_WARNING_HI_FileOpenError(static_cast<U32>(fileStatus), fileName);
+        status = Fw::Success::FAILURE;
+    }
+    // Write the file
+    if (status == Fw::Success::SUCCESS) {
+        // Set write size to file size
+        // On entry to the write call, this is the number of bytes to write
+        // On return from the write call, this is the number of bytes written
+        FwSizeType writeSize = static_cast<FwSizeType>(fileSize);
+        fileStatus = file.write(buffer.getData(), writeSize);
+        // If a successful write occurred, then update the number of bytes written
+        if (fileStatus == Os::File::OP_OK) {
+            this->m_numBytesWritten += static_cast<U64>(writeSize);
+        }
+        if ((fileStatus == Os::File::OP_OK) and (writeSize == static_cast<FwSizeType>(fileSize))) {
+            // If the write status is success, and the number of bytes written
+            // is the expected number, then record the success
+            this->log_ACTIVITY_LO_FileWritten(static_cast<U32>(writeSize), fileName);
+        } else {
+            // Otherwise record the failure
+            this->log_WARNING_HI_FileWriteError(static_cast<U32>(fileStatus), static_cast<U32>(writeSize),
+                                                static_cast<U32>(fileSize), fileName);
+            status = Fw::Success::FAILURE;
+        }
+    }
+    // Update the count of successful or failed writes
+    if (status == Fw::Success::SUCCESS) {
+        this->m_numSuccessfulWrites++;
+    } else {
+        this->m_numFailedWrites++;
+    }
+    // Return the status
+    return status;
+}
+
+void DpWriter::sendNotification(const Fw::DpContainer& container,
+                                const Fw::FileNameString& fileName,
+                                FwSizeType fileSize) {
+    if (isConnected_dpWrittenOut_OutputPort(0)) {
+        // Get the priority
+        const FwDpPriorityType priority = container.getPriority();
+        this->dpWrittenOut_out(0, fileName, priority, fileSize);
+    }
+}
+
+}  // end namespace Svc
+```
+
+### `DpWriter.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/DpWriter.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for writing data products to disk
+  active component DpWriter {
+
+    # ----------------------------------------------------------------------
+    # Scheduling ports
+    # ----------------------------------------------------------------------
+
+    @ Schedule in port
+    async input port schedIn: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Ports for handling data products
+    # ----------------------------------------------------------------------
+
+    @ Port for receiving data products to write to disk
+    async input port bufferSendIn: Fw.BufferSend
+
+    @ Port for processing data products
+    output port procBufferSendOut: [DpWriterNumProcPorts] Fw.BufferSend
+
+    @ Port for sending DpWritten notifications
+    output port dpWrittenOut: DpWritten
+
+    @ Port for deallocating data product buffers
+    output port deallocBufferSendOut: Fw.BufferSend
+
+    # ----------------------------------------------------------------------
+    # F' special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port cmdIn
+
+    @ Command registration port
+    command reg port cmdRegIn
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Time get port
+    time get port timeGetOut
+
+    @ Telemetry port
+    telemetry port tlmOut
+
+    @ Event port
+    event port eventOut
+
+    @ Text event port
+    text event port textEventOut
+
+    # ----------------------------------------------------------------------
+    # Commands 
+    # ----------------------------------------------------------------------
+
+    @ Clear event throttling
+    async command CLEAR_EVENT_THROTTLE
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Received buffer is invalid
+    event InvalidBuffer \
+      severity warning high \
+      format "Received buffer is invalid" \
+      throttle 10
+
+    @ Received buffer is too small to hold a data product packet
+    event BufferTooSmallForPacket(
+                          bufferSize: FwSizeType @< The incoming buffer size
+                          minSize: U32 @< The minimum required size
+                        ) \
+      severity warning high \
+      format "Received buffer has size {}; minimum required size is {}" \
+      throttle 10
+
+    @ The received buffer has an invalid header hash
+    event InvalidHeaderHash(
+                             bufferSize: FwSizeType @< The incoming buffer size
+                             storedHash: U32 @< The stored hash value
+                             computedHash: U32 @< The computed hash value
+                           ) \
+      severity warning high \
+      format "Received a buffer of size {} with an invalid header hash (stored {x}, computed {x})" \
+      throttle 10
+
+    @ Error occurred when deserializing the packet header
+    event InvalidHeader(
+                         bufferSize: FwSizeType @< The incoming buffer size
+                         errorCode: U32 @< The error code
+                       ) \
+      severity warning high \
+      format "Received buffer of size {}; deserialization of packet header failed with error code {}" \
+      throttle 10
+
+    @ Received buffer is too small to hold the data specified in the header
+    event BufferTooSmallForData(
+                          bufferSize: FwSizeType @< The incoming buffer size
+                          minSize: U32 @< The minimum required size
+                        ) \
+      severity warning high \
+      format "Received buffer has size {}; minimum required size is {}" \
+      throttle 10
+
+    @ An error occurred when opening a file
+    event FileOpenError(
+                         status: U32 @< The status code returned from the open operation
+                         file: string size FileNameStringSize @< The file
+                       ) \
+      severity warning high \
+      format "Error {} opening file {}" \
+      throttle 10
+
+    @ An error occurred when writing to a file
+    event FileWriteError(
+                          status: U32 @< The status code returned from the write operation
+                          bytesWritten: U32 @< The number of bytes successfully written
+                          bytesToWrite: U32 @< The number of bytes attempted
+                          file: string size FileNameStringSize @< The file
+                        ) \
+      severity warning high \
+      format "Error {} while writing {} of {} bytes to {}" \
+      throttle 10
+
+    @ File written
+    event FileWritten(
+                       bytes: U32 @< The number of bytes written
+                       file: string size FileNameStringSize @< The file name
+                     ) \
+      severity activity low \
+      format "Wrote {} bytes to file {}"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ The number of buffers received
+    telemetry NumBuffersReceived: U32 update on change
+
+    @ The number of bytes written
+    telemetry NumBytesWritten: U64 update on change
+
+    @ The number of successful writes
+    telemetry NumSuccessfulWrites: U32 update on change
+
+    @ The number of failed writes
+    telemetry NumFailedWrites: U32 update on change
+
+    @ The number of errors
+    telemetry NumErrors: U32 update on change
+
+  }
+
+}
+```
+
+### `DpWriter.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/DpWriter.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpWriter.hpp
+// \author bocchino
+// \brief  hpp file for DpWriter component implementation class
+// ======================================================================
+
+#ifndef Svc_DpWriter_HPP
+#define Svc_DpWriter_HPP
+
+#include <config/DpCfg.hpp>
+
+#include "Fw/Dp/DpContainer.hpp"
+#include "Fw/Types/FileNameString.hpp"
+#include "Fw/Types/String.hpp"
+#include "Fw/Types/SuccessEnumAc.hpp"
+#include "Svc/DpWriter/DpWriterComponentAc.hpp"
+
+namespace Svc {
+
+class DpWriter final : public DpWriterComponentBase {
+    friend class DpWriterTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object DpWriter
+    //!
+    DpWriter(const char* const compName  //!< The component name
+    );
+
+    //! Destroy object DpWriter
+    //!
+    ~DpWriter();
+
+    //! Configure writer
+    void configure(const Fw::StringBase& dpFileNamePrefix  //!< The file name prefix for writing DP files
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for bufferSendIn
+    //!
+    void bufferSendIn_handler(const FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& fwBuffer        //!< The buffer
+                              ) final;
+
+    //! Handler implementation for schedIn
+    //!
+    void schedIn_handler(const FwIndexType portNum,  //!< The port number
+                         U32 context                 //!< The call order
+                         ) final;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for command CLEAR_EVENT_THROTTLE
+    //!
+    //! Clear event throttling
+    void CLEAR_EVENT_THROTTLE_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                         U32 cmdSeq            //!< The command sequence number
+                                         ) final;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper functions
+    // ----------------------------------------------------------------------
+
+    //! Deserialize the packet header
+    //! \return Success or failure
+    Fw::Success::T deserializePacketHeader(Fw::Buffer& buffer,         //!< The packet buffer
+                                           Fw::DpContainer& container  //!< The container
+    );
+
+    //! Perform processing on a packet buffer
+    void performProcessing(const Fw::DpContainer& container  //!< The container
+    );
+
+    //! Write the file
+    //! \return Success or failure
+    Fw::Success::T writeFile(const Fw::DpContainer& container,    //!< The container (input)
+                             const Fw::FileNameString& fileName,  //!< The file name
+                             FwSizeType& fileSize                 //!< The file size (output)
+    );
+
+    //! Send the DpWritten notification
+    void sendNotification(const Fw::DpContainer& container,    //!< The container
+                          const Fw::FileNameString& fileName,  //!< The file name
+                          FwSizeType packetSize                //!< The packet size
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The number of buffers received
+    U32 m_numBuffersReceived = 0;
+
+    //! The number of bytes written
+    U64 m_numBytesWritten = 0;
+
+    //! The number of successful writes
+    U32 m_numSuccessfulWrites = 0;
+
+    //! The number of failed writes
+    U32 m_numFailedWrites = 0;
+
+    //! The number of errors
+    U32 m_numErrors = 0;
+
+    //! The file name prefix for writing DP files
+    //! The precise meaning depends on the DP format string
+    //! For example, this could be a directory path prefix
+    Fw::FileNameString m_dpFileNamePrefix;
+};
+
+}  // end namespace Svc
+
+#endif
+```

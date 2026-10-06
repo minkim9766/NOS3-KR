@@ -3,28 +3,206 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Com.fpp
-file--Deframer.fpp
-file--FrameAccumulator.fpp
-file--Framer.fpp
-file--Router.fpp
-file--Time.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Com.fpp`](file--Com.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Deframer.fpp`](file--Deframer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/FrameAccumulator.fpp`](file--FrameAccumulator.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Framer.fpp`](file--Framer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Router.fpp`](file--Router.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Time.fpp`](file--Time.fpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+register_fprime_module(
+    Svc_Interfaces
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/Com.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Deframer.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/FrameAccumulator.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Framer.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Router.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Time.fpp"
+  INTERFACE
+)
+```
+
+### `Com.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Com.fpp`
+
+
+```fpp
+module Svc {
+    @ Communications Adapter Interface
+    interface Com {
+        @ Data to be sent on the wire (coming in to the component)
+        sync input port dataIn: Svc.ComDataWithContext
+
+        @ Data received from the wire (going out of the component)
+        output port dataOut: Svc.ComDataWithContext
+
+        @ Status of the last transmission
+        output port comStatusOut: Fw.SuccessCondition
+
+        # ----------------------------------------------------------------------
+        # Memory management
+        # ----------------------------------------------------------------------
+
+        @ Port returning ownership of data that came in on dataIn
+        output port dataReturnOut: Svc.ComDataWithContext
+
+        @ Port receiving back ownership of buffer sent out on dataOut
+        sync input port dataReturnIn: Svc.ComDataWithContext
+    }
+}
+```
+
+### `Deframer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Deframer.fpp`
+
+
+```fpp
+module Svc {
+    interface Deframer {
+        @ Port to receive framed data, with optional context
+        guarded input port dataIn: Svc.ComDataWithContext
+
+        @ Port to output deframed data, with optional context
+        output port dataOut: Svc.ComDataWithContext
+
+        @ Port for returning ownership of received buffers to deframe
+        output port dataReturnOut: Svc.ComDataWithContext
+
+        @ Port receiving back ownership of sent buffers
+        sync input port dataReturnIn: Svc.ComDataWithContext
+    }
+}
+```
+
+### `FrameAccumulator.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/FrameAccumulator.fpp`
+
+
+```fpp
+module Svc {
+    interface FrameAccumulator {
+        @ Receive raw bytes from a ComInterface (e.g. ComStub)
+        guarded input port dataIn: Svc.ComDataWithContext
+
+        @ Port for sending an extracted frame out
+        output port dataOut: Svc.ComDataWithContext
+
+        @ Port for returning ownership of buffers received on dataIn
+        output port dataReturnOut: Svc.ComDataWithContext
+
+        @ Port receiving back ownership of buffers sent on frameOut
+        sync input port dataReturnIn: Svc.ComDataWithContext
+    }
+}
+```
+
+### `Framer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Framer.fpp`
+
+
+```fpp
+module Svc {
+    @ ----------------------------------------------------------------------
+    @ Framing
+    @ ----------------------------------------------------------------------
+    interface Framer {
+        @ Port to receive data to frame, in a Fw::Buffer with optional context
+        sync input port dataIn: Svc.ComDataWithContext
+
+        @ Port to output framed data with optional context
+        output port dataOut: Svc.ComDataWithContext
+
+        # ----------------------------------------------------------------------
+        # Data ownership
+        # ----------------------------------------------------------------------
+        @ Port for returning ownership of the incoming Fw::Buffer to its sender
+        @ once framing is handled
+        output port dataReturnOut: Svc.ComDataWithContext
+
+        @ Buffer coming from a deallocate call in a ComDriver component
+        sync input port dataReturnIn: Svc.ComDataWithContext
+
+        # ----------------------------------------------------------------------
+        # Handling of ready signals (ComQueue <-> ComInterface)
+        # ----------------------------------------------------------------------
+        @ Port receiving the general status from the downstream component
+        @ indicating it is ready or not-ready for more input
+        sync input port comStatusIn: Fw.SuccessCondition
+
+        @ Port receiving indicating the status of framer for receiving more data
+        output port comStatusOut: Fw.SuccessCondition
+    }
+}
+```
+
+### `Router.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Router.fpp`
+
+
+```fpp
+module Svc {
+    interface Router {
+        # ---------------------------------------------
+        # Router <-> Deframers
+        # ---------------------------------------------
+
+        @ Receiving data (Fw::Buffer) to be routed with optional context to help with routing
+        sync input port dataIn: Svc.ComDataWithContext
+
+        @ Port for returning ownership of data (includes Fw.Buffer) received on dataIn
+        output port dataReturnOut: Svc.ComDataWithContext
+
+        # ---------------------------------------------
+        # Router <-> CmdDispatch/FileUplink
+        # ---------------------------------------------
+
+        @ Port for sending file packets as Fw::Buffer (ownership passed to receiver)
+        output port fileOut: Fw.BufferSend
+
+        @ Port for receiving ownership back of buffers sent on fileOut
+        sync input port fileBufferReturnIn: Fw.BufferSend
+
+        @ Port for sending command packets as Fw::ComBuffers
+        output port commandOut: Fw.Com
+
+        @ Port for receiving command responses from a command dispatcher (can be a no-op)
+        sync input port cmdResponseIn: Fw.CmdResponse
+    }
+}
+```
+
+### `Time.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/Time.fpp`
+
+
+```fpp
+module Svc {
+    interface Time {
+        @ Port to retrieve time
+        sync input port timeGetPort: Fw.Time
+    }
+}
+```

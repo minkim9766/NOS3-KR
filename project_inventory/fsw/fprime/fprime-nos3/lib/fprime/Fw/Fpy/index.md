@@ -3,20 +3,159 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--StatementArgBuffer.cpp
-file--StatementArgBuffer.fpp
-file--StatementArgBuffer.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(MOD_DEPS
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/StatementArgBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StatementArgBuffer.fpp"
+)
+register_fprime_module()
 ```
 
-## 항목
+### `StatementArgBuffer.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/StatementArgBuffer.cpp`](file--StatementArgBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/StatementArgBuffer.fpp`](file--StatementArgBuffer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/StatementArgBuffer.hpp`](file--StatementArgBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/StatementArgBuffer.cpp`
+
+
+```cpp
+#include <Fw/Fpy/StatementArgBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringBase.hpp>
+
+namespace Fw {
+
+StatementArgBuffer::StatementArgBuffer(const U8* args, FwSizeType size) {
+    SerializeStatus stat = SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+StatementArgBuffer::StatementArgBuffer() {}
+
+StatementArgBuffer::~StatementArgBuffer() {}
+
+StatementArgBuffer::StatementArgBuffer(const StatementArgBuffer& other) : Fw::SerializeBufferBase() {
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+StatementArgBuffer& StatementArgBuffer::operator=(const StatementArgBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+Serializable::SizeType StatementArgBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* StatementArgBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* StatementArgBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+bool StatementArgBuffer::operator==(const StatementArgBuffer& other) const {
+    if (this->getBuffLength() != other.getBuffLength()) {
+        return false;
+    }
+
+    const U8* us = this->getBuffAddr();
+    const U8* them = other.getBuffAddr();
+
+    FW_ASSERT(us);
+    FW_ASSERT(them);
+
+    for (Serializable::SizeType byte = 0; byte < this->getBuffLength(); byte++) {
+        if (us[byte] != them[byte]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+#if FW_SERIALIZABLE_TO_STRING
+void StatementArgBuffer::toString(Fw::StringBase& text) const {
+    static const char* formatString = "(data = %p, size = %" PRI_FwSizeType ")";
+    text.format(formatString, &this->m_bufferData, this->getBuffLength());
+}
+#endif
+}  // namespace Fw
+```
+
+### `StatementArgBuffer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/StatementArgBuffer.fpp`
+
+
+```fpp
+module Fw {
+    type StatementArgBuffer
+}
+```
+
+### `StatementArgBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Fpy/StatementArgBuffer.hpp`
+
+
+```cpp
+#ifndef FW_STATEMENT_BUFFER_HPP
+#define FW_STATEMENT_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerIds.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class StatementArgBuffer : public SerializeBufferBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_TLM_BUFF,
+        SERIALIZED_SIZE = FW_STATEMENT_ARG_BUFFER_MAX_SIZE + sizeof(FwBuffSizeType)
+    };
+
+    StatementArgBuffer(const U8* args, FwSizeType size);
+    StatementArgBuffer();
+    StatementArgBuffer(const StatementArgBuffer& other);
+    virtual ~StatementArgBuffer();
+    StatementArgBuffer& operator=(const StatementArgBuffer& other);
+
+    Serializable::SizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+    bool operator==(const StatementArgBuffer& other) const;
+
+#if FW_SERIALIZABLE_TO_STRING
+    void toString(Fw::StringBase& text) const;
+#endif
+  private:
+    U8 m_bufferData[FW_STATEMENT_ARG_BUFFER_MAX_SIZE];  // command argument buffer
+};
+
+}  // namespace Fw
+
+#endif
+```

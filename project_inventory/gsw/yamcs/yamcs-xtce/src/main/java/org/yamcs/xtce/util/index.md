@@ -3,32 +3,1356 @@
 
 **경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AggregateMemberNames.java`
 
-file--AggregateMemberNames.java
-file--AggregateTypeUtil.java
-file--ArgumentReference.java
-file--DataTypeUtil.java
-file--DoubleRange.java
-file--HexUtils.java
-file--IncompleteType.java
-file--NameReference.java
-file--ParameterReference.java
-file--ReferenceFinder.java
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/AggregateMemberNames.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Represents a list of aggregate member names.
+ * 
+ * <p>
+ * This class maintains a cache of aggregate members names in order to be reused for all the aggregate values with the
+ * same type.
+ * 
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class AggregateMemberNames {
+    private final static Map<AggregateMemberNames, AggregateMemberNames> uniqueValues = new HashMap<>();
+
+    private final String[] names;
+
+    private AggregateMemberNames(String[] names) {
+        this.names = names;
+    }
+
+    /**
+     * 
+     * @param name
+     * @return the index of the name in the list or -1 if it is not part of the list
+     * @throws
+     */
+    public int indexOf(String name) {
+        String tmp = name.intern();
+        for (int i = 0; i < names.length; i++) {
+            if (names[i] == tmp) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public String get(int idx) {
+        return names[idx];
+    }
+
+    /**
+     * 
+     * @return the number of member names in this list
+     */
+    public int size() {
+        return names.length;
+    }
+
+    /**
+     * Factory method that returns the unique object corresponding to the list of names.
+     * 
+     * @param names
+     *            - ordered list of names for which an object will be created if not already existing and returned
+     * @return - the unique object corresponding to the list of names
+     */
+    public static AggregateMemberNames get(String[] names) {
+        AggregateMemberNames amn = new AggregateMemberNames(names);
+        AggregateMemberNames amn1 = uniqueValues.get(amn);
+        if (amn1 != null) {
+            return amn1;
+        }
+        String[] nnames = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            nnames[i] = names[i].intern();
+        }
+        amn = new AggregateMemberNames(nnames);
+        uniqueValues.put(amn, amn);
+        return amn;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(names);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        AggregateMemberNames other = (AggregateMemberNames) obj;
+        if (!Arrays.equals(names, other.names))
+            return false;
+        return true;
+    }
+    
+    @Override
+    public String toString() {
+        return Arrays.deepToString(names);
+    }
+    
+}
 ```
 
-## 항목
+### `AggregateTypeUtil.java`
 
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/AggregateMemberNames.java`](file--AggregateMemberNames.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/AggregateTypeUtil.java`](file--AggregateTypeUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/ArgumentReference.java`](file--ArgumentReference.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/DataTypeUtil.java`](file--DataTypeUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/DoubleRange.java`](file--DoubleRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/HexUtils.java`](file--HexUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/IncompleteType.java`](file--IncompleteType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/NameReference.java`](file--NameReference.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/ParameterReference.java`](file--ParameterReference.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/ReferenceFinder.java`](file--ReferenceFinder.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/AggregateTypeUtil.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PathElement;
+
+
+/**
+ * operations to aggregates or arrays
+ * 
+ * @author nm
+ *
+ */
+public class AggregateTypeUtil {
+    /**
+     * finds the first occurrence of . or [ after the last /
+     * 
+     * @param s
+     * @return the position of the first occurrence of . or [ after the last slash; returns -1 if not found
+     */
+    public static int findSeparator(String s) {
+        int found = -1;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (found == -1 && ((c == '.') || (c == '['))) {
+                found = i;
+            } else if (c == '/') {
+                found = -1;
+            }
+        }
+        return found;
+    }
+
+    /**
+     * parses a reference of shape
+     * 
+     * <pre>
+     * x.y[3][4].z
+     * </pre>
+     * 
+     * into an array of PathElement
+     * 
+     * @param name
+     * @return
+     */
+    public static PathElement[] parseReference(String name) {
+        List<PathElement> tmp = new ArrayList<>();
+        String[] a = name.split("\\.");
+        for (String ps : a) {
+            if (!ps.isEmpty()) {
+                tmp.add(PathElement.fromString(ps));
+            }
+        }
+        return tmp.toArray(new PathElement[0]);
+    }
+
+    /**
+     * Verify that the path exists in the parameter type
+     * 
+     * @param parameterType
+     * @param path
+     * @return
+     */
+    public static boolean verifyPath(ParameterType parameterType, PathElement[] path) {
+        ParameterType ptype = parameterType;
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                if (!(ptype instanceof AggregateParameterType)) {
+                    return false;
+                }
+                Member m = ((AggregateParameterType) ptype).getMember(pe.getName());
+                if (m == null) {
+                    return false;
+                }
+                ptype = (ParameterType) m.getType();
+            }
+            if (pe.getIndex() != null) {
+                int[] idx = pe.getIndex();
+                if (!(ptype instanceof ArrayParameterType)) {
+                    return false;
+                }
+                ArrayParameterType at = (ArrayParameterType) ptype;
+                if (at.getNumberOfDimensions() != idx.length) {
+                    return false;
+                }
+                ptype = (ParameterType) at.getElementType();
+            }
+        }
+        return true;
+    }
+
+    public static ParameterType getMemberType(ParameterType parameterType, PathElement[] path) {
+        ParameterType ptype = parameterType;
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                if (!(ptype instanceof AggregateParameterType)) {
+                    return null;
+                }
+                Member m = ((AggregateParameterType) ptype).getMember(pe.getName());
+                if (m == null) {
+                    return null;
+                }
+                ptype = (ParameterType) m.getType();
+            }
+            if (pe.getIndex() != null) {
+                int[] idx = pe.getIndex();
+                if (!(ptype instanceof ArrayParameterType)) {
+                    return null;
+                }
+                ArrayParameterType at = (ArrayParameterType) ptype;
+                if (at.getNumberOfDimensions() != idx.length) {
+                    return null;
+                }
+                ptype = (ParameterType) at.getElementType();
+            }
+        }
+        return ptype;
+    }
+
+
+    public static String toString(PathElement[] path) {
+        StringBuilder sb = new StringBuilder();
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                sb.append(".").append(pe.getName());
+            }
+            if (pe.getIndex() != null) {
+                for(int x: pe.getIndex()) {
+                    sb.append("[").append(x).append("]");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+}
+```
+
+### `ArgumentReference.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/ArgumentReference.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.PathElement;
+
+/**
+ * Argument references are used in algorithms or match criteria expressions part of transmission constraints or command
+ * verifiers. Most references are solved locally, i.e. they refer to arguments directly defined in the command to which
+ * the verifier is attached.
+ * <p>
+ * However sometimes the argument is part of a parent command which is only found when assembling the whole MDB. In
+ * those cases, this class is used to store the reference and will be solved at the time of loading the database.
+ * <p>
+ * Note that the argument reference is different from the other {@link NameReference} because it does not contain an
+ * absolute path. The Argument references are local to a specific command and its parent hierarchy, not absolute like
+ * for a parameter or container.
+ *
+ */
+public class ArgumentReference extends NameReference {
+
+    @FunctionalInterface
+    public interface ArgumentResolvedAction extends ResolvedAction {
+        public boolean resolved(Argument parameter, PathElement[] path);
+
+        default void resolved(NameDescription nd) {
+            resolved((Argument) nd, null);
+        }
+
+    }
+
+    PathElement[] path;
+    final MetaCommand metaCmd;
+
+    public ArgumentReference(MetaCommand metaCmd, String argName, PathElement[] path) {
+        super(argName, Type.ARGUMENT);
+        this.metaCmd = metaCmd;
+        this.path = path;
+    }
+
+    public ArgumentReference(MetaCommand metaCmd, Argument arg, PathElement[] path) {
+        this(metaCmd, arg.getName(), path);
+        this.result = arg;
+    }
+
+    public void resolved(Argument argument, PathElement[] path) {
+        result = argument;
+
+        for (ResolvedAction ra : actions) {
+            if (ra instanceof ArgumentResolvedAction) {
+                ((ArgumentResolvedAction) ra).resolved(argument, path);
+            } else {
+                ra.resolved(argument);
+            }
+        }
+        actions.clear();
+    }
+
+    public ArgumentReference addResolvedAction(ArgumentResolvedAction action) {
+        actions.add(action);
+        if (result != null) {
+            if (!action.resolved((Argument) result, path)) {
+                actions.add(action);
+            }
+        }
+
+        return this;
+    }
+
+    public MetaCommand getMetaCommand() {
+        return metaCmd;
+    }
+
+    public String getArgName() {
+        return ref;
+    }
+
+    public PathElement[] getPath() {
+        return path;
+    }
+
+    static String toString(String argName, PathElement[] path) {
+        return path == null ? argName : argName + "." + AggregateTypeUtil.toString(path);
+    }
+
+    public static ArgumentReference getReference(MetaCommand metaCmd, String argRef) {
+        int pos = argRef.indexOf('.');
+        if (pos == -1) {
+            pos = argRef.indexOf('/');
+        }
+        String argName;
+        PathElement[] path;
+        if (pos == -1) {
+            argName = argRef;
+            path = null;
+        } else {
+            argName = argRef.substring(0, pos);
+            path = AggregateTypeUtil.parseReference(argRef.substring(pos));
+        }
+        MetaCommand tmpcmd = metaCmd;
+        Argument arg = null;
+        while (arg == null && tmpcmd != null) {
+            arg = tmpcmd.getArgument(argName);
+            tmpcmd = tmpcmd.getBaseMetaCommand();
+        }
+        if (arg == null || arg.getArgumentType() == null
+                || (path != null && !ReferenceFinder.verifyPath(arg.getArgumentType(), path))) {
+            return new ArgumentReference(metaCmd, argName, path);
+        } else {
+            return new ArgumentReference(metaCmd, arg, path);
+        }
+
+    }
+
+}
+```
+
+### `DataTypeUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/DataTypeUtil.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import org.yamcs.xtce.AggregateDataType;
+import org.yamcs.xtce.ArrayDataType;
+import org.yamcs.xtce.DataType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.PathElement;
+
+public class DataTypeUtil {
+    /**
+     * traverses the type hierarchy to retrieve the type referenced by path
+     * 
+     * @param type
+     *            - the type for which the hierarchy is traversed
+     * @param path
+     *            - the elements used to traverse the hierarchy
+     * @return - the found sub-member of the type or null if no member has been found.
+     */
+    public static DataType getMemberType(DataType type, PathElement[] path) {
+        DataType ptype = type;
+        if (path.length == 0) {
+            throw new IllegalArgumentException("path cannot be empty");
+        }
+
+        for (PathElement pe : path) {
+            String name = pe.getName();
+            if (ptype instanceof AggregateDataType) {
+                if (name == null) {
+                    return null;
+                }
+                Member m = ((AggregateDataType) ptype).getMember(name);
+                if (m == null) {
+                    return null;
+                }
+                ptype = m.getType();
+            } else if (name != null) {
+                return null;
+            }
+
+            if (ptype instanceof ArrayDataType) {
+                if (pe.getIndex() != null) {
+                    ptype = ((ArrayDataType) ptype).getElementType();
+                } else {
+                    return null;
+                }
+            }
+        }
+        return ptype;
+    }
+}
+```
+
+### `DoubleRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/DoubleRange.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import java.io.Serializable;
+
+/**
+ * A range of numbers [min, max) where both min and max can be inclusive or exclusive.
+ * <p>
+ * Both min and max can be Double.NaN meaning that the range is open at that end.
+ * 
+ * @author nm
+ *
+ */
+public class DoubleRange implements Serializable {
+
+    private static final long serialVersionUID = 3L;
+
+    final double min;
+    final double max;
+    final boolean minIncl;
+    final boolean maxIncl;
+
+    public DoubleRange(double min, double max, boolean minIncl, boolean maxIncl) {
+        this.min = min;
+        this.max = max;
+        this.minIncl = minIncl;
+        this.maxIncl = maxIncl;
+    }
+
+    public DoubleRange(double minInclusive, double maxInclusive) {
+        this.min = minInclusive;
+        this.max = maxInclusive;
+        this.minIncl = true;
+        this.maxIncl = true;
+    }
+
+    //copy constructor
+    public DoubleRange(DoubleRange range) {
+        this.min = range.min;
+        this.max = range.max;
+        this.minIncl = range.minIncl;
+        this.maxIncl = range.maxIncl;
+    }
+
+    /**
+     * Returns a range from the XTCE float range used for alarms which is in fact a union of two ranges
+     * 
+     * @param minExclusive
+     * @param maxExclusive
+     * @param minInclusive
+     * @param maxInclusive
+     * @return
+     */
+    public static DoubleRange fromXtceComplement(double minExclusive, double maxExclusive, double minInclusive,
+            double maxInclusive) {
+        double min = minExclusive;
+        double max = maxExclusive;
+        boolean minIncl = false;
+        boolean maxIncl = false;
+
+        if (!Double.isNaN(minInclusive)) {
+            min = minInclusive;
+            minIncl = true;
+        }
+        if (!Double.isNaN(maxInclusive)) {
+            max = maxInclusive;
+            maxIncl = true;
+        }
+
+        return new DoubleRange(min, max, minIncl, maxIncl);
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public double getMin() {
+        return min;
+    }
+
+    public boolean isMinInclusive() {
+        return minIncl;
+    }
+
+    public boolean isMaxInclusive() {
+        return maxIncl;
+    }
+
+    /**
+     * Checks if the value is in range.
+     * 
+     * @param v
+     * @return &lt;0 =0 or &gt;0 if the value v is lower than min, between min and max or greater than max respectively.
+     */
+    public int inRange(double v) {
+        if (!Double.isNaN(min) && ((minIncl && v < min) || (!minIncl && v <= min))) {
+            return -1;
+        }
+
+        if (!Double.isNaN(max) && ((maxIncl && v > max) || (!maxIncl && v >= max))) {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * E.g. a low limit of ]-Infinity, -22] and a high limit of [40, +Infinity[ intersect to [-22, 40] (which for
+     * practical purposes is actually the range inside of which pvals are _not_ out of limits)
+     */
+    public DoubleRange intersectWith(DoubleRange other) {
+        double xmin = Double.NEGATIVE_INFINITY;
+        boolean xminExcl = true;
+        if (!Double.isNaN(min) && min > xmin) {
+            xmin = min;
+            xminExcl = minIncl;
+        }
+        if (!Double.isNaN(other.min) && ((other.minIncl && other.min > xmin) || other.min >= xmin)) {
+            xmin = other.min;
+            xminExcl = other.minIncl;
+        }
+
+        if (Double.isInfinite(xmin)) {
+            xmin = Double.NaN;
+        }
+
+        double xmax = Double.POSITIVE_INFINITY;
+        boolean xmaxExcl = true;
+        if (!Double.isNaN(max) && max < xmax) {
+            xmax = max;
+            xmaxExcl = maxIncl;
+        }
+        if (!Double.isNaN(other.max) && ((other.maxIncl && other.max < xmax) || other.max <= xmax)) {
+            xmax = other.max;
+            xmaxExcl = other.maxIncl;
+        }
+
+        if (Double.isInfinite(xmax)) {
+            xmax = Double.NaN;
+        }
+
+        return new DoubleRange(xmin, xmax, xminExcl, xmaxExcl);
+    }
+
+    @Override
+    public String toString() {
+        return (minIncl ? "[" : "(") + (Double.isNaN(min) ? "-inf" : min) + "," + (Double.isNaN(max) ? "+inf" : max)
+                + (maxIncl ? "]" : ")");
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        long temp;
+        temp = Double.doubleToLongBits(max);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + (maxIncl ? 1231 : 1237);
+        temp = Double.doubleToLongBits(min);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + (minIncl ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DoubleRange other = (DoubleRange) obj;
+        if (Double.doubleToLongBits(max) != Double.doubleToLongBits(other.max))
+            return false;
+        if (Double.doubleToLongBits(min) != Double.doubleToLongBits(other.min))
+            return false;
+        if (minIncl != other.minIncl)
+            return false;
+        if (maxIncl != other.maxIncl)
+            return false;
+        return true;
+    }
+}
+```
+
+### `HexUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/HexUtils.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+public class HexUtils {
+
+    public static String hex(byte[] b) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < b.length; i++) {
+            sb.append(String.format("%02X", b[i] & 0xFF));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Convert a hex string into a byte array. If the string has an odd number of hex digits, it is padded with 0 at the
+     * <b>beginning</b>.
+     * 
+     * @param s
+     *            - string to be converted
+     * @return binary array representation of the hex string
+     */
+    public static byte[] unhex(String s) {
+        if ((s.length() & 1) == 1) {
+            s = "0" + s;
+        }
+        ;
+        byte[] b = new byte[s.length() >> 1];
+        for (int i = 0; i < b.length; i++) {
+            b[i] = (byte) (Integer.parseInt(s.substring(2 * i, 2 * i + 2), 16) & 0xFF);
+        }
+        return b;
+    }
+}
+```
+
+### `IncompleteType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/IncompleteType.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.xtce.ArgumentType;
+import org.yamcs.xtce.DataType;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.SpaceSystem;
+
+/**
+ * Stores an incomplete type together with some references which if all resolved, will make the type complete.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class IncompleteType {
+    final DataType.Builder<?> typeBuilder;
+    final SpaceSystem spaceSystem;
+    private List<NameReference> references;
+
+    /**
+     * Creates a new incomplete type together with the SpaceSystem where it should add once it is complete.
+     * 
+     * @param spaceSystem
+     * @param typeBuilder
+     */
+    public IncompleteType(SpaceSystem spaceSystem, DataType.Builder<?> typeBuilder) {
+        this.spaceSystem = spaceSystem;
+        this.typeBuilder = typeBuilder;
+    }
+
+    public DataType.Builder<?> getTypeBuilder() {
+        return typeBuilder;
+    }
+
+    /**
+     * Schedule the addition of the type to the SpaceSystem after all references are resolved
+     * <p>
+     * If there is no unresolved references, the type will be immediately added to the SpaceSystem
+     */
+    public void scheduleCompletion() {
+        if (references == null || references.isEmpty()) {
+            complete();
+            return;
+        }
+        for (NameReference nr : references) {
+            nr.addResolvedAction(nd -> {
+                tryComplete();
+            });
+        }
+        ;
+    }
+
+    private void tryComplete() {
+        for (NameReference nr : references) {
+            if (!nr.isResolved()) {
+                return;
+            }
+        }
+        complete();
+    }
+
+    private void complete() {
+        DataType type = typeBuilder.build();
+        if (type instanceof ParameterType) {
+            spaceSystem.addParameterType((ParameterType) type);
+        } else {
+            spaceSystem.addArgumentType((ArgumentType) type);
+        }
+    }
+
+    public void addReference(NameReference ref) {
+        if (references == null) {
+            references = new ArrayList<>();
+        }
+        references.add(ref);
+    }
+}
+```
+
+### `NameReference.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/NameReference.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.yamcs.xtce.NameDescription;
+
+/**
+ * Used when referencing a directory style "NameType".
+ * <p>
+ * All characters are legal.
+ * <p>
+ * All name references use a Unix ‘like’ name referencing mechanism across the SpaceSystem Tree
+ * (e.g., SimpleSat/Bus/EPDS/BatteryOne/Voltage) where the '/', ‘..’ and ‘.’ are used to navigate through the
+ * hierarchy. The use of an unqualified name will search for an item in the current SpaceSystem first, then
+ * if none is found, in progressively higher SpaceSystems. A SpaceSystem is a name space (i.e., a named type
+ * declared in MetaCommandData is also declared in TelemetryMetaData - and vice versa).
+ * <p>
+ * This is used only while reading the database, then all the references are resolved and we use
+ * Java references to real objects
+ * <p>
+ * The ResolvedAction.resolved will be called once the reference is resolved.
+ */
+public class NameReference {
+
+    public enum Type {
+        SEQUENCE_CONTAINER, COMMAND_CONTAINER, PARAMETER, PARAMETER_TYPE, META_COMMAND, ALGORITHM, ARGUMENT_TYPE, ARGUMENT
+    }
+
+    @FunctionalInterface
+    public interface ResolvedAction {
+        /**
+         * pushes the NameDescription through and returns true if the name reference is resolved and false otherwise
+         * 
+         * false can be returned in case the NameDescription refers to something which is not itself fully resolved
+         */
+        public void resolved(NameDescription nd);
+
+    }
+
+    protected List<ResolvedAction> actions = new ArrayList<>();
+    protected NameDescription result;
+
+    protected final String ref;
+    protected final Type type;
+
+    public NameReference(String ref, Type type) {
+        this.ref = ref;
+        this.type = type;
+    }
+
+    /**
+     * Execute all the actions (if not already executed).
+     * 
+     * @param nd
+     */
+    public void resolved(NameDescription nd) {
+        result = nd;
+        for (ResolvedAction ra : actions) {
+            ra.resolved(nd);
+        }
+        actions.clear();
+
+    }
+
+    /**
+     * Adds an action to the list to be executed when the reference is resolved and returns this.
+     * 
+     * If the reference is already resolved, execute the action immediately.
+     * 
+     * @param action
+     * @return this
+     */
+    public NameReference addResolvedAction(ResolvedAction action) {
+        if (result != null) {
+            action.resolved(result);
+        } else {
+            actions.add(action);
+        }
+
+        return this;
+    }
+
+    public String getReference() {
+        return ref;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public boolean isResolved() {
+        return result != null;
+    }
+
+    @Override
+    public String toString() {
+        return type + "(" + ref + ")";
+    }
+
+    public boolean isAbsolute() {
+        return ref.startsWith("/");
+    }
+}
+```
+
+### `ParameterReference.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/ParameterReference.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+
+public class ParameterReference extends NameReference {
+    @FunctionalInterface
+    public interface ParameterResolvedAction extends ResolvedAction {
+        /**
+         * pushes the NameDescription through and returns true if the name reference is resolved and false otherwise
+         * 
+         * false can be returned in case the NameDescription refers to something which is not itself fully resolved
+         * 
+         * if path is not null, it means that the reference has been resolved to a path inside an aggregate parameter
+         */
+        public void resolved(Parameter parameter, PathElement[] path);
+
+        default void resolved(NameDescription nd) {
+            resolved((Parameter) nd, null);
+        }
+
+    }
+
+    PathElement[] resultPath;
+
+    public ParameterReference(String ref) {
+        super(ref, Type.PARAMETER);
+    }
+
+    public void resolved(Parameter param, PathElement[] path) {
+        result = param;
+        resultPath = path;
+
+        for (ResolvedAction ra : actions) {
+            if (ra instanceof ParameterResolvedAction) {
+                ((ParameterResolvedAction) ra).resolved(param, path);
+            } else {
+                ra.resolved(param);
+            }
+        }
+    }
+
+    public ParameterReference addResolvedAction(ParameterResolvedAction action) {
+        if (result == null) {
+            actions.add(action);
+        } else {
+            action.resolved((Parameter) result, resultPath);
+        }
+
+        return this;
+    }
+
+}
+```
+
+### `ReferenceFinder.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/main/java/org/yamcs/xtce/util/ReferenceFinder.java`
+
+
+```java
+package org.yamcs.xtce.util;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.xtce.AggregateArgumentType;
+import org.yamcs.xtce.AggregateDataType;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.ArgumentType;
+import org.yamcs.xtce.ArrayDataType;
+import org.yamcs.xtce.Container;
+import org.yamcs.xtce.DataType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.SystemParameter;
+import org.yamcs.xtce.util.NameReference.Type;
+
+public class ReferenceFinder {
+    Consumer<String> logger;
+
+    public ReferenceFinder(Consumer<String> logger) {
+        this.logger = logger;
+    }
+
+    /**
+     * find the reference nr mentioned in the space system ss by looking either in root (if absolute reference) or in
+     * the parent hierarchy if relative reference
+     *
+     * @return null if the reference has not been found
+     */
+    public FoundReference findReference(SpaceSystem rootSs, NameReference nr, SpaceSystem ss) {
+        String ref = nr.getReference();
+        boolean absolute = false;
+        SpaceSystem startSs = null;
+
+        if (ref.startsWith("/")) {
+            absolute = true;
+            startSs = rootSs;
+        } else if (ref.startsWith("./") || ref.startsWith("..")) {
+            absolute = true;
+            startSs = ss;
+        }
+
+        if (absolute) {
+            return findReference(startSs, nr);
+        } else {
+            // go up until the root
+            FoundReference rr = null;
+            startSs = ss;
+            while (true) {
+                rr = findReference(startSs, nr);
+                if ((rr != null) || (startSs == rootSs)) {
+                    break;
+                }
+                startSs = startSs.getParent();
+            }
+            return rr;
+        }
+    }
+
+    /**
+     * looks in the SpaceSystem ss for a namedObject with the given alias. Prints a warning in case multiple references
+     * are found and returns the first one.
+     * 
+     * 
+     * @param ss
+     * @param nr
+     * @return
+     */
+    private FoundReference findAliasReference(SpaceSystem ss, NameReference nr) {
+
+        String alias = nr.getReference();
+        List<? extends NameDescription> l;
+        switch (nr.getType()) {
+        case PARAMETER:
+            l = ss.getParameterByAlias(alias);
+            break;
+        case SEQUENCE_CONTAINER:
+            l = ss.getSequenceContainerByAlias(alias);
+            break;
+        case META_COMMAND:
+            l = ss.getMetaCommandByAlias(alias);
+            break;
+        default:
+            return null;
+        }
+
+        if (l == null || l.isEmpty()) {
+            return null;
+        } else if (l.size() > 1) {
+            logger.accept("When looking for aliases '" + nr + "' found multiple matches: " + l);
+        }
+        return new FoundReference(l.get(0));
+    }
+
+    /**
+     * searches for aliases in the parent hierarchy
+     * 
+     * @param rootSs
+     * @param nr
+     * @param startSs
+     * @return
+     */
+    public FoundReference findAliasReference(SpaceSystem rootSs, NameReference nr, SpaceSystem startSs) {
+        // go up until the root
+        FoundReference nd = null;
+        SpaceSystem ss = startSs;
+        while (true) {
+            nd = findAliasReference(ss, nr);
+            if ((nd != null) || (ss == rootSs)) {
+                break;
+            }
+            ss = ss.getParent();
+        }
+        return nd;
+    }
+
+    /**
+     * find reference starting at startSs and looking through the SpaceSystem path
+     * 
+     * @param startSs
+     * @param nr
+     * @return
+     */
+    public static FoundReference findReference(SpaceSystem startSs, NameReference nr) {
+        String[] path = nr.getReference().split("/");
+        SpaceSystem ss = startSs;
+        for (int i = 0; i < path.length - 1; i++) {
+            if (".".equals(path[i]) || "".equals(path[i])) {
+                continue;
+            } else if ("..".equals(path[i])) {
+                ss = ss.getParent();
+                if (ss == null) {
+                    break; // this can only happen if the root has no parent (normally it is its own parent)
+                }
+                continue;
+            }
+
+            if (i == path.length - 1) {
+                break;
+            }
+            SpaceSystem ss1 = ss.getSubsystem(path[i]);
+
+            if ((ss1 == null) && nr.getType() == Type.PARAMETER) {
+                // check if it's an aggregate specified using path separator
+                Parameter p = ss.getParameter(path[i]);
+                if (p != null && p.getParameterType() instanceof AggregateParameterType) {
+
+                    PathElement[] aggregateMemberPath = getAggregateMemberPath(
+                            Arrays.copyOfRange(path, i + 1, path.length));
+                    if (verifyPath(p.getParameterType(), aggregateMemberPath)) {
+                        /*
+                         * Strangely enough, references to aggregate members using dot are not valid according to XTCE.
+                         * 
+                         * logger.accept("Found reference to an aggregate member using path separator '/': "
+                         * + nr.getReference() + ". Please use dot '.' separator instead.");
+                         */
+
+                        return new FoundReference(p, aggregateMemberPath);
+                    }
+                }
+                break;
+            }
+
+            if (ss1 == null) {
+                ss = ss1;
+                break;
+            }
+            ss = ss1;
+        }
+
+        if (ss == null) {
+            return null;
+        }
+
+        String name = path[path.length - 1];
+        if ("..".equals(name)) {
+            return null;
+        }
+        switch (nr.getType()) {
+        case PARAMETER:
+            return findParameterReference(ss, name);
+        case PARAMETER_TYPE:
+            return findSimpleReference((NameDescription) ss.getParameterType(name));
+        case SEQUENCE_CONTAINER:
+            return findSimpleReference(ss.getSequenceContainer(name));
+        case COMMAND_CONTAINER:
+            Container c = ss.getCommandContainer(name);
+            if (c == null) {
+                c = ss.getSequenceContainer(name);
+            }
+            return findSimpleReference(c);
+        case META_COMMAND:
+            return findSimpleReference(ss.getMetaCommand(name));
+        case ALGORITHM:
+            return findSimpleReference(ss.getAlgorithm(name));
+        case ARGUMENT_TYPE:
+            return findArgumentTypeReference(ss, name);
+        case ARGUMENT:
+            return findArgumentReference((ArgumentReference) nr);
+        default:
+            throw new IllegalStateException("Unknown reference of type " + nr.getType());
+        }
+    }
+
+    public static FoundReference findParameterReference(SpaceSystem ss, String name) {
+        PathElement[] path = null;
+
+        String pname = name;
+        int idx = findSeparator(name);
+        if (idx > 0) { // this is an array or aggregate element
+            path = parseReference(name.substring(idx));
+            pname = name.substring(0, idx);
+        }
+
+        Parameter p = ss.getParameter(pname);
+        if (p == null) {
+            return null;
+        }
+        ParameterType ptype = p.getParameterType();
+        if (ptype != null && path != null && !verifyPath(ptype, path)) {
+            return null;
+        }
+        return new FoundReference(p, path);
+
+    }
+
+    public static FoundReference findArgumentReference(ArgumentReference argRef) {
+        Argument arg = null;
+        MetaCommand cmd = argRef.getMetaCommand();
+        while (arg == null && cmd != null) {
+            arg = cmd.getArgument(argRef.getArgName());
+            cmd = cmd.getBaseMetaCommand();
+        }
+        if (arg == null) {
+            return null;
+        }
+        ArgumentType atype = arg.getArgumentType();
+
+        if (atype != null && argRef.getPath() != null && !verifyPath(arg.getArgumentType(), argRef.getPath())) {
+            return null;
+        }
+
+        return new FoundReference(arg, argRef.getPath());
+    }
+
+    public static FoundReference findArgumentTypeReference(SpaceSystem ss, String name) {
+        ArgumentType argumentType = ss.getArgumentType(name);
+
+        // For aggregate types, we expect all members to have a resolved type
+        if (argumentType != null && (argumentType instanceof AggregateArgumentType)) {
+            AggregateArgumentType aggregateArgumentType = (AggregateArgumentType) argumentType;
+            if (!isAggregateArgumentTypeResolved(aggregateArgumentType)) {
+                return null;
+            }
+        }
+
+        return findSimpleReference((NameDescription) ss.getArgumentType(name));
+    }
+
+    private static boolean isAggregateArgumentTypeResolved(AggregateArgumentType argumentType) {
+        for (Member member : argumentType.getMemberList()) {
+            if (member.getType() == null) {
+                return false;
+            } else if (member.getType() instanceof AggregateArgumentType) {
+                return isAggregateArgumentTypeResolved((AggregateArgumentType) member.getType());
+            }
+        }
+
+        return true; // All members (at any depth) have a type
+    }
+
+    public static PathElement[] parseReference(String name) {
+        List<PathElement> tmp = new ArrayList<>();
+        String[] p = name.split("\\.");
+        for (String ps : p) {
+            if (!ps.isEmpty()) {
+                tmp.add(PathElement.fromString(ps));
+            }
+        }
+        return tmp.toArray(new PathElement[0]);
+    }
+
+    public static boolean verifyPath(DataType dataType, PathElement[] path) {
+        DataType ptype = dataType;
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                if (!(ptype instanceof AggregateDataType)) {
+                    return false;
+                }
+                Member m = ((AggregateDataType) ptype).getMember(pe.getName());
+                if (m == null) {
+                    return false;
+                }
+                ptype = m.getType();
+            }
+            if (pe.getIndex() != null) {
+                int[] idx = pe.getIndex();
+                if (!(ptype instanceof ArrayDataType)) {
+                    return false;
+                }
+                ArrayDataType at = (ArrayDataType) ptype;
+                if (at.getNumberOfDimensions() != idx.length) {
+                    return false;
+                }
+                ptype = at.getElementType();
+            }
+        }
+
+        return ptype != null;
+    }
+
+    private static FoundReference findSimpleReference(NameDescription nd) {
+        if (nd == null) {
+            return null;
+        } else {
+            return new FoundReference(nd);
+        }
+    }
+
+    private static PathElement[] getAggregateMemberPath(String[] path) {
+        PathElement[] pea = new PathElement[path.length];
+        for (int i = 0; i < path.length; i++) {
+            pea[i] = PathElement.fromString(path[i]);
+        }
+        return pea;
+    }
+
+    public static class FoundReference {
+        private final NameDescription nd;
+        private final PathElement[] aggregateMemberPath;
+        // complete is false for parameters without type
+        boolean complete = true;
+
+        public FoundReference(NameDescription nd) {
+            this(nd, null);
+        }
+
+        public FoundReference(Parameter parameter, PathElement[] path) {
+            this((NameDescription) parameter, path);
+            // we allow system parameters without type
+            complete = (parameter instanceof SystemParameter || parameter.getParameterType() != null);
+        }
+
+        public FoundReference(Argument arg, PathElement[] path) {
+            this((NameDescription) arg, path);
+            complete = arg.getArgumentType() != null;
+        }
+
+        private FoundReference(NameDescription nd, PathElement[] aggregateMemberPath) {
+            if (nd == null) {
+                throw new NullPointerException("nd cannot be null");
+            }
+            this.nd = nd;
+            this.aggregateMemberPath = aggregateMemberPath;
+        }
+
+        public NameDescription getNameDescription() {
+            return nd;
+        }
+
+        public PathElement[] getAggregateMemberPath() {
+            return aggregateMemberPath;
+        }
+
+        public void resolved(NameReference nr) {
+            if (nr instanceof ParameterReference) {
+                ((ParameterReference) nr).resolved((Parameter) nd, aggregateMemberPath);
+            } else if (nr instanceof ArgumentReference) {
+                ((ArgumentReference) nr).resolved((Argument) nd, aggregateMemberPath);
+            } else {
+                nr.resolved(nd);
+            }
+        }
+
+        /**
+         * References to Parameters or Arguments are complete when their types are known.
+         * <p>
+         * Other references are always complete.
+         */
+        public boolean isComplete() {
+            return complete;
+        }
+
+        @Override
+        public String toString() {
+            return nd.getName() + (aggregateMemberPath == null ? "" : "." + Arrays.toString(aggregateMemberPath));
+        }
+    }
+
+    public static int findSeparator(String s) {
+        int found = -1;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (found == -1 && ((c == '.') || (c == '['))) {
+                found = i;
+            } else if (c == '/') {
+                found = -1;
+            }
+        }
+        return found;
+    }
+}
+```

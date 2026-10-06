@@ -3,16 +3,142 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-query-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `event-query-list.component.html`
 
-file--event-query-list.component.html
-file--event-query-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-query-list/event-query-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Events" />
+
+  <ya-panel>
+    <app-events-page-tabs />
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="ya-data-table expand"
+      style="margin-top: 16px">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef style="min-width: 200px">Name</th>
+        <td mat-cell *matCellDef="let item">
+          <a
+            routerLink="/events"
+            [queryParams]="{
+              filter: item.query.filter,
+              severity: item.query.severity,
+              source: item.query.source,
+              c: yamcs.context,
+            }">
+            {{ item.name }}
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="visibility">
+        <th mat-header-cell *matHeaderCellDef>Visibility</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.shared ? "Shared" : "Private" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let item">
+          <ya-more>
+            <button mat-menu-item (click)="openEditQueryDialog(item)">Edit query</button>
+            <button mat-menu-item (click)="openDeleteQueryDialog(item)">Delete query</button>
+          </ya-more>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `event-query-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-query-list/event-query-list.component.html`](file--event-query-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-query-list/event-query-list.component.ts`](file--event-query-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-query-list/event-query-list.component.ts`
+
+
+```typescript
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  MessageService,
+  Query,
+  WebappSdkModule,
+  YamcsService,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { EditEventQueryDialogComponent } from '../edit-event-query-dialog/edit-event-query-dialog.component';
+import { EventsPageTabsComponent } from '../events-page-tabs/events-page-tabs.component';
+
+@Component({
+  selector: 'app-event-query-list',
+  templateUrl: './event-query-list.component.html',
+  imports: [EventsPageTabsComponent, WebappSdkModule],
+})
+export class EventQueryListComponent {
+  displayedColumns = ['name', 'visibility', 'actions'];
+
+  dataSource = new MatTableDataSource<Query>();
+
+  sourceOptions: YaSelectOption[] = [];
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+  ) {
+    this.refreshTable();
+
+    yamcs.yamcsClient.getEventSources(yamcs.instance!).then((sources) => {
+      this.sourceOptions = sources.map((source) => ({
+        id: source,
+        label: source,
+      }));
+    });
+  }
+
+  private refreshTable() {
+    this.yamcs.yamcsClient
+      .getQueries(this.yamcs.instance!, 'events')
+      .then((queries) => (this.dataSource.data = queries))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  openEditQueryDialog(query: Query) {
+    this.dialog
+      .open(EditEventQueryDialogComponent, {
+        width: '800px',
+        data: {
+          query,
+          sourceOptions: this.sourceOptions,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.refreshTable();
+          this.messageService.showInfo('Query updated');
+        }
+      });
+  }
+
+  openDeleteQueryDialog(query: Query) {
+    if (confirm(`Are you sure you want to delete query ${query.name}`)) {
+      this.yamcs.yamcsClient
+        .deleteQuery(this.yamcs.instance!, 'events', query.id)
+        .then(() => this.refreshTable())
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+}
+```

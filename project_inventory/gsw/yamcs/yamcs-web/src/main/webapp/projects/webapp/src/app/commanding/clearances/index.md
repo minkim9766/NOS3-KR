@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,13 +12,65 @@ change-level-dialog/index
 clearances-action-log-tab/index
 clearances-list/index
 clearances-page-tabs/index
-file--clearances-enabled.guard.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/`](change-level-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-action-log-tab/`](clearances-action-log-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-list/`](clearances-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-page-tabs/`](clearances-page-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-enabled.guard.ts`](file--clearances-enabled.guard.ts) — UTF-8 텍스트 파일 본문 포함
+### `clearances-enabled.guard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-enabled.guard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { ConfigService, WebsiteConfig } from '@yamcs/webapp-sdk';
+
+export const clearancesEnabledGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(ClearancesEnabledGuard).canActivate(route, state);
+};
+
+export const clearancesEnabledGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(ClearancesEnabledGuard).canActivateChild(route, state);
+};
+
+@Injectable({
+  providedIn: 'root',
+})
+class ClearancesEnabledGuard {
+  private config: WebsiteConfig;
+
+  constructor(
+    configService: ConfigService,
+    private router: Router,
+  ) {
+    this.config = configService.getConfig();
+  }
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.config.commandClearanceEnabled;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,20 +13,86 @@ TestChainedAutocoder/index
 TestHeaderAutocoder/index
 TestRelative/index
 TestTargetAutocoder/index
-file--CMakeLists.txt
-file--constant1.fpp
-file--Main.cpp
-file--settings.ini
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/`](TestBuildAutocoder/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/`](TestChainedAutocoder/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/`](TestHeaderAutocoder/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/`](TestRelative/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestTargetAutocoder/`](TestTargetAutocoder/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/constant1.fpp`](file--constant1.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/Main.cpp`](file--Main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/CMakeLists.txt`
+
+
+```cmake
+####
+# 'TestDeployment' Deployment:
+#
+# A deployment used to test extra functions of the CMake setup.
+####
+
+# Base settings
+cmake_minimum_required(VERSION 3.16)
+cmake_policy(SET CMP0048 NEW)
+project(TestDeployment VERSION 1.0.0 LANGUAGES C CXX)
+
+include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime.cmake")
+
+register_fprime_build_autocoder("autocoder/test_build_autocoder" FALSE)
+register_fprime_build_autocoder("autocoder/test_header_autocoder" FALSE)
+register_fprime_target("target/test") # Test target and autocoder supporting it
+register_fprime_target("target/test_recursion") # Test recursive dependencies
+register_fprime_target("target/test_autocoder") # Test target-triggered autocoder
+register_fprime_target("target/test_chained_autocoder") # Test chained autocoder
+register_fprime_target("target/test_rerun_autocoder") # Test rerun autocoder
+
+# NOTE: register custom targets between these two lines
+include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
+run_sub_build(test-sub-build target/sub)
+
+add_fprime_subdirectory(./TestBuildAutocoder)
+add_fprime_subdirectory(./TestHeaderAutocoder)
+add_fprime_subdirectory(./TestTargetAutocoder)
+add_fprime_subdirectory(./TestChainedAutocoder)
+add_fprime_subdirectory(./TestRelative)
+
+set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/Main.cpp")
+set(MOD_DEPS  Svc_CmdDispatcher TestLibrary_TestComponent TestLibrary2_TestComponent)
+register_fprime_deployment()
+```
+
+### `constant1.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/constant1.fpp`
+
+
+```fpp
+# ======================================================================
+# \title  constant1.fpp
+# \author lestarch
+# \brief  defines a constant
+# ======================================================================
+constant relative_constant1 = true
+```
+
+### `Main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/Main.cpp`
+
+
+```cpp
+// No operation executable
+int main(int argc, char** argv) {
+    return 0;
+}
+```
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/settings.ini`
+
+
+```text
+[fprime]
+framework_path: ../../../..
+library_locations: ../test-fprime-library:../test-fprime-library2
+project_root: ..
+```

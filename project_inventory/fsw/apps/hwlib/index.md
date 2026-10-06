@@ -3,24 +3,111 @@
 
 **경로:** `fsw/apps/hwlib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 fsw/index
 sim/index
-file--.git
-file--arch_build.cmake
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/hwlib/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/hwlib/sim/`](sim/index) — 폴더
-- [`fsw/apps/hwlib/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `fsw/apps/hwlib/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/apps/hwlib
+```
+
+### `arch_build.cmake`
+
+**경로:** `fsw/apps/hwlib/arch_build.cmake`
+
+
+```cmake
+generate_config_includefile(
+    FILE_NAME           "device_cfg.h" 
+    MATCH_SUFFIX        "device_cfg.h"
+    PREFIXES            ${BUILD_CONFIG}
+)
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/hwlib/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_HWLIB C)
+
+# flight/nos psp names (based on CFE_SYSTEM_PSPNAME set by the toolchain from targets.cmake)
+set(NOS_PSPNAME "nos-linux")
+
+include(../../../components/ComponentSettings.cmake)
+
+# hwlib include directories
+include_directories(fsw/mission_inc
+                    fsw/platform_inc
+                    fsw/public_inc)
+
+# include directories for flight configuration
+IF(CFE_SYSTEM_PSPNAME STREQUAL "pc-linux")
+    message(STATUS "hwlib: linux configuration")
+    aux_source_directory(fsw/linux APP_SRC_FILES)
+ELSE()
+    message(STATUS "hwlib: NON-FLIGHT configuration")
+ENDIF()
+
+# create the hwlib app module
+aux_source_directory(fsw/src APP_SRC_FILES)
+add_cfe_app(hwlib ${APP_SRC_FILES})
+
+# stub out hardware for all non-flight configurations
+IF(CFE_SYSTEM_PSPNAME STREQUAL NOS_PSPNAME)
+    add_subdirectory(sim)
+    target_link_libraries(hwlib noslink)
+ELSEIF(CFE_SYSTEM_PSPNAME STREQUAL "pc-linux")
+	target_link_libraries(hwlib socketcan)
+ENDIF()
+```
+
+### `README.md`
+
+**경로:** `fsw/apps/hwlib/README.md`
+
+
+```markdown
+# Hardware Library
+The hardware library provides an abstraction layer for hardware interfaces across platforms such as:
+* linux
+* nos-linux
+
+Note that the hardware library does not include `cfe.h` or `osapi.h`.
+When using with cFS these includes must be in the `cpuX_device_cfg.h` file.
+
+# Protocol Specifics
+
+## CAN
+Note that the currently maximum number of allocated devices is 30.
+
+## I2C
+Note that the currently maximum number of allocated devices is 30.
+
+## SPI
+Note that currently the maximum number of allocated buses is 3, with each bus supporting 10 devices.
+Due to the use of GPIO pins as chip selects, it is expected that the following order is used when leveraging a device:
+* `spi_select_chip` - this grabs the bus specific mutex
+* Select GPIO pin if necessary
+* `spi_transaction`
+  - multiple if necessary
+* Unselect GPIO pin if necessary
+* `spi_unselect_chip`
+
+## UART
+Note that the currently maximum number of allocated devices is 30.
+```

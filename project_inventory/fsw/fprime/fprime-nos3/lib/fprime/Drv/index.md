@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -19,20 +19,31 @@ Ports/index
 TcpClient/index
 TcpServer/index
 Udp/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/`](ByteStreamDriverModel/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Interfaces/`](Interfaces/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/`](Ip/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxGpioDriver/`](LinuxGpioDriver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/`](LinuxI2cDriver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/`](LinuxSpiDriver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/`](LinuxUartDriver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/`](Ports/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpClient/`](TcpClient/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/`](TcpServer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Udp/`](Udp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/CMakeLists.txt`
+
+
+```cmake
+# Module subdirectories
+
+# Ports
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Interfaces/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports/")
+
+# Components
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ByteStreamDriverModel/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LinuxGpioDriver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LinuxUartDriver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LinuxI2cDriver/")
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ip/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TcpClient/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TcpServer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Udp/")
+```

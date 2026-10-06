@@ -3,54 +3,2343 @@
 
 **경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `InstrumentController.java`
 
-file--InstrumentController.java
-file--InstrumentDriver.java
-file--Interceptor.java
-file--LoggingInterceptor.java
-file--RequestTerminator.java
-file--ResponseBuffer.java
-file--ResponseListener.java
-file--SerialPortDriver.java
-file--TcpIpDriver.java
-file--TcTmServer.java
-file--TcTmServerHandler.java
-file--TelnetServer.java
-file--TelnetServerHandler.java
-file--TseCommander.java
-file--TseCommanderArgs.java
-file--TseDataLink.java
-file--TseDataLinkInboundHandler.java
-file--TseLoader.java
-file--TsePlugin.java
-file--TsePostprocessor.java
-file--UdpDriver.java
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/InstrumentController.java`
+
+
+```java
+package org.yamcs.tse;
+
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.yamcs.tse.api.TseCommand;
+
+import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
+/**
+ * Guarantees instruments are used by only one thread at a time, and establishes/closes device connections as-needed.
+ */
+public class InstrumentController extends AbstractService {
+
+    private List<InstrumentDriver> instruments = new ArrayList<>();
+    private Map<String, ListeningExecutorService> executorsByName = new HashMap<>();
+
+    public void addInstrument(InstrumentDriver instrument) {
+        instruments.add(instrument);
+    }
+
+    @Override
+    protected void doStart() {
+        for (InstrumentDriver instrument : instruments) {
+            executorsByName.put(instrument.getName(), listeningDecorator(Executors.newSingleThreadExecutor()));
+        }
+        notifyStarted();
+    }
+
+    public ListenableFuture<List<String>> queueCommand(InstrumentDriver instrument, TseCommand metadata, String command,
+            boolean expectResponse) {
+        ListeningExecutorService exec = executorsByName.get(instrument.getName());
+        return exec.submit(() -> instrument.command(command, metadata, expectResponse));
+    }
+
+    public InstrumentDriver getInstrument(String name) {
+        for (InstrumentDriver instrument : instruments) {
+            if (name.equals(instrument.getName())) {
+                return instrument;
+            }
+        }
+        return null;
+    }
+
+    public List<InstrumentDriver> getInstruments() {
+        return instruments.stream()
+                .sorted((i1, i2) -> i1.instrument.compareTo(i2.instrument))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    protected void doStop() {
+        ListeningExecutorService closers = listeningDecorator(Executors.newCachedThreadPool());
+
+        List<ListenableFuture<?>> closeFutures = new ArrayList<>();
+        for (ExecutorService exec : executorsByName.values()) {
+            closeFutures.add(closers.submit(() -> {
+                exec.shutdown();
+                return exec.awaitTermination(10, TimeUnit.SECONDS);
+            }));
+        }
+        executorsByName.clear();
+
+        closers.shutdown();
+        Futures.addCallback(Futures.allAsList(closeFutures), new FutureCallback<Object>() {
+
+            @Override
+            public void onSuccess(Object result) {
+                notifyStopped();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                notifyFailed(t);
+            }
+        }, MoreExecutors.directExecutor());
+    }
+}
 ```
 
-## 항목
+### `InstrumentDriver.java`
 
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/InstrumentController.java`](file--InstrumentController.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/InstrumentDriver.java`](file--InstrumentDriver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/Interceptor.java`](file--Interceptor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/LoggingInterceptor.java`](file--LoggingInterceptor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/RequestTerminator.java`](file--RequestTerminator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/ResponseBuffer.java`](file--ResponseBuffer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/ResponseListener.java`](file--ResponseListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/SerialPortDriver.java`](file--SerialPortDriver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TcpIpDriver.java`](file--TcpIpDriver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TcTmServer.java`](file--TcTmServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TcTmServerHandler.java`](file--TcTmServerHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TelnetServer.java`](file--TelnetServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TelnetServerHandler.java`](file--TelnetServerHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseCommander.java`](file--TseCommander.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseCommanderArgs.java`](file--TseCommanderArgs.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseDataLink.java`](file--TseDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseDataLinkInboundHandler.java`](file--TseDataLinkInboundHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseLoader.java`](file--TseLoader.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TsePlugin.java`](file--TsePlugin.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TsePostprocessor.java`](file--TsePostprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/UdpDriver.java`](file--UdpDriver.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/InstrumentDriver.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tse.api.TseCommand;
+import org.yamcs.utils.YObjectLoader;
+
+public abstract class InstrumentDriver {
+
+    private static final int DEFAULT_POLLING_INTERVAL = 20;
+
+    protected String instrument;
+
+    protected String commandSeparation;
+    protected String responseTermination;
+    protected int responseTimeout = 3000;
+    protected List<Interceptor> interceptors = new ArrayList<>();
+
+    private int pollingInterval;
+
+    protected Charset encoding = StandardCharsets.US_ASCII;
+
+    public void init(String name, YConfiguration config) {
+        this.instrument = name;
+
+        if (config.containsKey("commandSeparation")) {
+            commandSeparation = config.getString("commandSeparation");
+        }
+        if (config.containsKey("responseTermination")) {
+            responseTermination = config.getString("responseTermination");
+        }
+        if (config.containsKey("responseTimeout")) {
+            responseTimeout = config.getInt("responseTimeout");
+        }
+
+        String requestTermination = config.getString("requestTermination", getDefaultRequestTermination());
+        if (requestTermination != null) {
+            Map<String, Object> interceptorConfig = new HashMap<>();
+            interceptorConfig.put(RequestTerminator.CONFIG_TERMINATION, requestTermination);
+            interceptors.add(new RequestTerminator(YConfiguration.wrap(interceptorConfig)));
+        }
+        if (config.containsKey("interceptors")) {
+            for (YConfiguration interceptorConfig : config.getConfigList("interceptors")) {
+                try {
+                    Interceptor interceptor = YObjectLoader.loadObject(interceptorConfig.toMap());
+                    interceptors.add(interceptor);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        }
+
+        pollingInterval = Math.min(DEFAULT_POLLING_INTERVAL, responseTimeout);
+    }
+
+    public String getName() {
+        return instrument;
+    }
+
+    public String getCommandSeparation() {
+        return commandSeparation;
+    }
+
+    public String getResponseTermination() {
+        return responseTermination;
+    }
+
+    public int getResponseTimeout() {
+        return responseTimeout;
+    }
+
+    public List<String> command(String command, TseCommand metadata, boolean expectResponse)
+            throws IOException, TimeoutException {
+        try {
+            connect();
+            byte[] bytes = command.getBytes();
+            for (Interceptor interceptor : interceptors) {
+                bytes = interceptor.interceptCommand(metadata, bytes, encoding);
+            }
+            write(bytes);
+            if (expectResponse) {
+                ResponseBuffer responseBuffer = new ResponseBuffer(getResponseTermination(), isFragmented());
+                if (commandSeparation == null) {
+                    byte[] response = readSingleResponse(responseBuffer);
+                    if (response != null) {
+                        for (Interceptor interceptor : interceptors) {
+                            response = interceptor.interceptResponse(metadata, response, encoding);
+                        }
+                        return Arrays.asList(new String(response, encoding));
+                    }
+                } else { // Compound command where distinct responses are sent
+                    String[] parts = command.split(commandSeparation);
+                    List<String> responses = new ArrayList<>();
+                    for (String part : parts) {
+                        if (part.contains("?") || part.contains("!")) {
+                            byte[] response = readSingleResponse(responseBuffer);
+                            if (response != null) {
+                                for (Interceptor interceptor : interceptors) {
+                                    response = interceptor.interceptResponse(metadata, response, encoding);
+                                }
+                                responses.add(new String(response, encoding));
+                            }
+                        }
+                    }
+                    return responses;
+                }
+            }
+
+            return Collections.emptyList();
+        } catch (Exception e) {
+            disconnect();
+            throw e;
+        }
+    }
+
+    /**
+     * Attemps to read a full delimited TSE response by triggering repeated read polls on the underlying transport,
+     * until either a full response was assembled, or the global response timeout has been reached.
+     */
+    private byte[] readSingleResponse(ResponseBuffer responseBuffer) throws IOException, TimeoutException {
+        byte[] response = responseBuffer.readSingleResponse();
+        if (response != null) {
+            return response;
+        }
+
+        long time = System.currentTimeMillis();
+        long timeoutTime = time + responseTimeout;
+
+        while (System.currentTimeMillis() < timeoutTime) {
+            readAvailable(responseBuffer, pollingInterval);
+
+            response = responseBuffer.readSingleResponse();
+            if (response != null) {
+                return response;
+            }
+        }
+
+        // Timed out. Return whatever we have.
+        response = responseBuffer.readSingleResponse(true);
+        if (getResponseTermination() == null) {
+            return response;
+        } else {
+            throw new TimeoutException(response != null
+                    ? "Unterminated response: " + new String(response, encoding)
+                    : null);
+        }
+    }
+
+    public abstract void connect() throws IOException;
+
+    public abstract void disconnect() throws IOException;
+
+    public abstract void write(byte[] cmd) throws IOException;
+
+    public abstract void readAvailable(ResponseBuffer buffer, int timeout) throws IOException;
+
+    /**
+     * Returns whether this driver may require reassembly of multiple received fragments in order to obtain a full
+     * response.
+     * <p>
+     * Setting this to false, will allow to have a quick response, even if there is no response termination characters.
+     * That is, without needing to wait on timeouts.
+     */
+    public abstract boolean isFragmented();
+
+    /**
+     * Returns the driver-specific default pattern for terminating requests. This is the termination that gets used if
+     * the user does not explicitly configure anything.
+     * <p>
+     * Return {@code null} to do no request termination.
+     */
+    public abstract String getDefaultRequestTermination();
+}
+```
+
+### `Interceptor.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/Interceptor.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.nio.charset.Charset;
+
+import org.yamcs.tse.api.TseCommand;
+
+public interface Interceptor {
+
+    /**
+     * Intercepts a raw command just before passing it to driver-specific write logic.
+     * <p>
+     * Usually this corresponds to an encoded string, for which the encoding is provided too.
+     * 
+     * @param metadata
+     *            Metadata about the command. Note that full information is only available if the command was issued
+     *            through Yamcs. If instead an internal Telnet session was used, only the target instrument is known.
+     * @param bytes
+     *            The raw command (usually correspons to an encoded string)
+     * @param encoding
+     *            String encoding
+     */
+    default byte[] interceptCommand(TseCommand metadata, byte[] bytes, Charset encoding) {
+        return bytes;
+    }
+
+    /**
+     * Intercepts the response when it is provided by the driver-specific read logic.
+     * <p>
+     * This cannot be used for modifying how responses are delimited, because that's a responsibility of the driver.
+     *
+     * @param metadata
+     *            Metadata about the command. Note that full information is only available if the command was issued
+     *            through Yamcs. If instead an internal Telnet session was used, only the target instrument is known.
+     * @param bytes
+     *            The raw command response (usually corresponds to an encoded string)
+     * @param encoding
+     *            Expected string encoding
+     */
+    default byte[] interceptResponse(TseCommand metadata, byte[] bytes, Charset encoding) {
+        return bytes;
+    }
+}
+```
+
+### `LoggingInterceptor.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/LoggingInterceptor.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.nio.charset.Charset;
+import java.util.logging.Logger;
+
+import org.yamcs.tse.api.TseCommand;
+
+/**
+ * An interceptor that does just logs both incoming and outgoing messags.
+ */
+public class LoggingInterceptor implements Interceptor {
+
+    private static final Logger log = Logger.getLogger(LoggingInterceptor.class.getName());
+
+    @Override
+    public byte[] interceptCommand(TseCommand metadata, byte[] bytes, Charset encoding) {
+        log.info(String.format("%s <<< %s", metadata.getInstrument(), new String(bytes, encoding).trim()));
+        return bytes;
+    }
+
+    @Override
+    public byte[] interceptResponse(TseCommand metadata, byte[] bytes, Charset encoding) {
+        log.info(String.format("%s >>> %s", metadata.getInstrument(), new String(bytes, encoding)));
+        return bytes;
+    }
+}
+```
+
+### `RequestTerminator.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/RequestTerminator.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tse.api.TseCommand;
+
+/**
+ * Adds a termination pattern to the end of command string. This is typically used on stream-oriented protocols like TCP
+ * for delimiting messages.
+ */
+public class RequestTerminator implements Interceptor {
+
+    public static final String CONFIG_TERMINATION = "termination";
+
+    private byte[] requestTermination;
+
+    public RequestTerminator(YConfiguration config) {
+        requestTermination = config.getString(CONFIG_TERMINATION).getBytes();
+    }
+
+    @Override
+    public byte[] interceptCommand(TseCommand metadata, byte[] bytes, Charset encoding) {
+        return concat(bytes, requestTermination);
+    }
+
+    private static byte[] concat(byte[] a, byte[] b) {
+        byte[] c = Arrays.copyOf(a, a.length + b.length);
+        System.arraycopy(b, 0, c, a.length, b.length);
+        return c;
+    }
+}
+```
+
+### `ResponseBuffer.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/ResponseBuffer.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import com.google.common.primitives.Bytes;
+
+/**
+ * Buffers TSE output for extracting individual "responses". A response is defined as a string that ends with a
+ * configurable response termination.
+ */
+public class ResponseBuffer {
+
+    private ByteBuffer buf = ByteBuffer.allocate(65536);
+    private ByteBuffer view = buf.asReadOnlyBuffer();
+
+    private byte[] responseTermination;
+    private boolean fragmented;
+
+    /**
+     * @param responseTermination
+     *            characters that indicate the end of a message. May be null if there is no such indication.
+     * @param fragmented
+     *            whether multiple responses may need to be reassembled before obtaining a complete message.
+     */
+    public ResponseBuffer(String responseTermination, boolean fragmented) {
+        this.responseTermination = responseTermination != null ? responseTermination.getBytes() : null;
+        this.fragmented = fragmented;
+    }
+
+    public void append(byte b) {
+        buf.put(b);
+    }
+
+    public void append(byte[] b) {
+        buf.put(b);
+    }
+
+    public void append(byte[] b, int off, int len) {
+        buf.put(b, off, len);
+    }
+
+    /**
+     * Reads a single 'complete' response. If no response termination is defined, this will always return null (rely on
+     * timeouts).
+     * 
+     * @return bytes with termination stripped off.
+     */
+    public byte[] readSingleResponse() {
+        return readSingleResponse(false);
+    }
+
+    public byte[] readSingleResponse(boolean force) {
+        int remaining = buf.position() - view.position();
+        if (remaining > 0) {
+            view.mark();
+            byte[] remainingBytes = new byte[remaining];
+            view.get(remainingBytes);
+            view.reset();
+
+            if (!fragmented && responseTermination == null) {
+                view.position(buf.position());
+                return remainingBytes;
+            }
+
+            int idx = -1;
+            if (responseTermination != null) {
+                idx = Bytes.indexOf(remainingBytes, responseTermination);
+            }
+            if (idx != -1) {
+                view.position(view.position() + idx + responseTermination.length);
+                return Arrays.copyOfRange(remainingBytes, 0, idx);
+            } else if (force) {
+                view.position(buf.position());
+                return remainingBytes; // Unterminated response
+            }
+        }
+
+        return null;
+    }
+}
+```
+
+### `ResponseListener.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/ResponseListener.java`
+
+
+```java
+package org.yamcs.tse;
+
+public interface ResponseListener {
+
+    void onResponse(String command, String response);
+}
+```
+
+### `SerialPortDriver.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/SerialPortDriver.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.io.IOException;
+
+import org.yamcs.YConfiguration;
+
+import com.fazecast.jSerialComm.SerialPort;
+
+/**
+ * Connect and command a device over a serial port.
+ * 
+ * Not thread safe.
+ */
+public class SerialPortDriver extends InstrumentDriver {
+    private SerialPort link;
+
+    private String devicePath;
+    private int baudrate = 9600;
+    private int dataBits = 8;
+    private String parity;
+
+    @Override
+    public void init(String name, YConfiguration config) {
+        super.init(name, config);
+        this.devicePath = config.getString("path");
+
+        if (config.containsKey("baudrate")) {
+            baudrate = config.getInt("baudrate");
+        }
+        if (config.containsKey("dataBits")) {
+            dataBits = config.getInt("dataBits");
+        }
+        if (config.containsKey("parity")) {
+            parity = config.getString("parity");
+        }
+    }
+
+    public int getBaudrate() {
+        return baudrate;
+    }
+
+    public int getDataBits() {
+        return dataBits;
+    }
+
+    public String getParity() {
+        return parity;
+    }
+
+    public String getPath() {
+        return devicePath;
+    }
+
+    @Override
+    public void connect() {
+        if (link != null && link.isOpen()) {
+            return;
+        }
+
+        link = SerialPort.getCommPort(devicePath);
+        link.setBaudRate(baudrate);
+        link.setNumDataBits(dataBits);
+
+        if ("odd".equals(parity)) {
+            link.setParity(SerialPort.ODD_PARITY);
+        } else if ("even".equals(parity)) {
+            link.setParity(SerialPort.EVEN_PARITY);
+        } else {
+            link.setParity(SerialPort.NO_PARITY);
+        }
+
+        link.openPort();
+        link.setComPortTimeouts(SerialPort.TIMEOUT_NONBLOCKING, 0, 0);
+    }
+
+    @Override
+    public void write(byte[] bytes) {
+        link.writeBytes(bytes, bytes.length);
+    }
+
+    @Override
+    public void readAvailable(ResponseBuffer responseBuffer, int timeout) throws IOException {
+        try {
+            int n = link.bytesAvailable();
+            if (n == 0) {
+                Thread.sleep(timeout);
+                n = link.bytesAvailable();
+            }
+            if (n > 0) {
+                byte[] buf = new byte[n];
+                link.readBytes(buf, n);
+                responseBuffer.append(buf, 0, n);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        }
+    }
+
+    @Override
+    public void disconnect() {
+        if (link != null) {
+            link.closePort();
+        }
+    }
+
+    @Override
+    public String getDefaultRequestTermination() {
+        return null;
+    }
+
+    @Override
+    public boolean isFragmented() {
+        return true;
+    }
+}
+```
+
+### `TcpIpDriver.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TcpIpDriver.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.YConfiguration;
+
+/**
+ * Connect and command a device over TCP/IP. Typical use case is an instrument with LXI support.
+ * 
+ * Not thread safe.
+ */
+public class TcpIpDriver extends InstrumentDriver {
+
+    /*
+     * One idea that is not currently implemented (awaiting business need) is support for
+     * an argument called "pingCommand" that could be used to proactively detect a non-clean
+     * remote socket disconnect. For example:
+     * 
+     * class: org.yamcs.tse.TcpIpDriver
+     * args:
+     *   ...
+     *   pingCommand: "*OPC?"
+     *   pingInterval: 5000
+     * 
+     * The pingCommand would need to return any response. If it does not within responseTimeout,
+     * then we proactively disconnect the socket.
+     * 
+     * Without pingCommand, abrupt closure of a remote socket is only very slowly discovered
+     * and may lead to multiple commands being written to the send buffer before generating any
+     * errors. Queries (that expect a response) lead to only one failed command, but even that may
+     * still be too much.
+     */
+
+    private static final Logger log = LoggerFactory.getLogger(TcpIpDriver.class);
+
+    private String host;
+    private int port;
+
+    private SocketChannel socketChannel;
+    private Selector selector;
+    private SelectionKey selectionKey;
+
+    @Override
+    public void init(String name, YConfiguration config) {
+        super.init(name, config);
+        host = config.getString("host");
+        port = config.getInt("port");
+    }
+
+    @Override
+    public void connect() throws IOException {
+        if (socketChannel != null) {
+            Socket socket = socketChannel.socket();
+            if (socket.isConnected() && socket.isBound() && !socket.isClosed()) {
+                return;
+            }
+            disconnect();
+        }
+
+        log.info("Connecting to {}:{}", host, port);
+
+        selector = Selector.open();
+        socketChannel = SocketChannel.open();
+        socketChannel.socket().setKeepAlive(true);
+        socketChannel.socket().connect(new InetSocketAddress(host, port), responseTimeout);
+
+        socketChannel.configureBlocking(false);
+        selectionKey = socketChannel.register(selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ);
+        log.info("Connected to {}:{}", host, port);
+    }
+
+    @Override
+    public void disconnect() throws IOException {
+        if (socketChannel != null) {
+            socketChannel.close();
+            selector.close();
+
+            socketChannel = null;
+        }
+    }
+
+    @Override
+    public String getDefaultRequestTermination() {
+        return "\n";
+    }
+
+    @Override
+    public void write(byte[] cmd) throws IOException {
+        boolean sent = false;
+        while (!sent) {
+            selectionKey.interestOps(SelectionKey.OP_READ | SelectionKey.OP_WRITE);
+            selector.select();
+            if (selectionKey.isReadable()) {
+                // Discard any pending reads before writing.
+                // For example: a previous query command whose response was ignored.
+                ByteBuffer buf = ByteBuffer.allocate(4096);
+                try {
+                    int n = socketChannel.read(buf);
+                    while (n > 0) {
+                        buf.clear();
+                        n = socketChannel.read(buf);
+                    }
+
+                    // Apparent end of stream, attempt new socket
+                    if (n < 0) {
+                        throw new IOException("end-of-stream");
+                    }
+                } catch (IOException e) { // Either n < 0, or some deeper error like 'timeout' thrown by the read()
+                    log.warn(e.getMessage());
+                    disconnect();
+                    connect();
+                }
+            }
+            if (selectionKey.isWritable()) {
+                try {
+                    ByteBuffer bb = ByteBuffer.wrap(cmd);
+                    socketChannel.write(bb); // TODO write remainder in case of partial write
+                    sent = true;
+                } catch (IOException e) { // Ex.: Broken pipe
+                    log.warn(e.getMessage());
+                    disconnect();
+                    connect();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void readAvailable(ResponseBuffer responseBuffer, int timeout) throws IOException {
+        selectionKey.interestOps(SelectionKey.OP_READ);
+
+        // Block this on a small timeout only. Otherwise we may block longer than the
+        // global timeout managed by the caller.
+        selector.select(timeout);
+        if (selectionKey.isReadable()) {
+            ByteBuffer buf = ByteBuffer.allocate(4096);
+            int n = socketChannel.read(buf);
+            if (n > 0) {
+                responseBuffer.append(buf.array(), 0, n);
+            } else if (n < 0) {
+                // Apparent end-of-stream. Nothing we can do about it in read mode.
+                disconnect();
+                throw new IOException("end-of-stream");
+            }
+        }
+    }
+
+    @Override
+    public boolean isFragmented() {
+        return true;
+    }
+}
+```
+
+### `TcTmServer.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TcTmServer.java`
+
+
+```java
+package org.yamcs.tse;
+
+import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.tse.api.TseCommand;
+import org.yamcs.tse.api.TseCommandResponse;
+import org.yamcs.tse.api.TseCommanderMessage;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.ListenableFuture;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+
+/**
+ * Listens for TSE commands in the form of Protobuf messages over TCP/IP.
+ */
+public class TcTmServer extends AbstractService {
+
+    private static final Logger log = LoggerFactory.getLogger(TcTmServer.class);
+
+    private static final int MAX_FRAME_LENGTH = 1024 * 1024; // 1 MB
+    private static final Pattern ARGUMENT_REFERENCE = Pattern.compile("([^<]*)<(.*?)>([^<>]*)");
+    private static final Pattern PARAMETER_REFERENCE = Pattern.compile("([^`]*)`(.*?)`(\\{[0-9]+,?[0-9]*\\})?([^`]*)");
+
+    private InstrumentController instrumentController;
+    private int port = 8135;
+
+    private NioEventLoopGroup eventLoopGroup;
+    private int seq = 0;
+
+    public TcTmServer(int port, InstrumentController instrumentController) {
+        this.port = port;
+        this.instrumentController = instrumentController;
+    }
+
+    @Override
+    protected void doStart() {
+        eventLoopGroup = new NioEventLoopGroup();
+        ServerBootstrap b = new ServerBootstrap()
+                .group(eventLoopGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+
+                        pipeline.addLast(new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH, 0, 4, 0, 4));
+                        pipeline.addLast(new ProtobufDecoder(TseCommand.getDefaultInstance()));
+
+                        pipeline.addLast(new LengthFieldPrepender(4));
+                        pipeline.addLast(new ProtobufEncoder());
+
+                        pipeline.addLast(new TcTmServerHandler(TcTmServer.this));
+                    }
+                });
+
+        try {
+            b.bind(port).sync();
+            log.debug("TM/TC Server listening for clients on port " + port);
+            notifyStarted();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            notifyFailed(e);
+        }
+    }
+
+    public void processTseCommand(ChannelHandlerContext ctx, TseCommand metadata) {
+        InstrumentDriver instrument = instrumentController.getInstrument(metadata.getInstrument());
+        boolean expectResponse = metadata.hasResponse();
+
+        TseCommanderMessage.Builder msgb = TseCommanderMessage.newBuilder();
+
+        String commandString = replaceArguments(metadata.getCommand(), metadata);
+        ListenableFuture<List<String>> f = instrumentController.queueCommand(instrument, metadata, commandString,
+                expectResponse);
+        f.addListener(() -> {
+            TseCommandResponse.Builder responseb = TseCommandResponse.newBuilder()
+                    .setId(metadata.getId());
+
+            try {
+                List<String> responses = f.get();
+                if (expectResponse) {
+                    try {
+                        String fullResponse;
+                        if (instrument.getCommandSeparation() == null) {
+                            fullResponse = responses.get(0);
+                        } else { // Compound command where distinct responses were sent
+                            fullResponse = String.join(";", responses);
+                        }
+                        ParameterData pdata = parseResponse(metadata, fullResponse);
+                        msgb.setParameterData(pdata);
+                        responseb.setSuccess(true);
+                    } catch (MatchException e) {
+                        responseb.setSuccess(false);
+                        responseb.setErrorMessage(e.getMessage());
+                    }
+                } else {
+                    responseb.setSuccess(true);
+                }
+            } catch (ExecutionException e) {
+                log.error("Failed to execute command", e.getCause());
+                responseb.setSuccess(false);
+                String errorMessage = e.getCause().getClass().getSimpleName();
+                if (e.getCause().getMessage() != null) {
+                    errorMessage += ": " + e.getCause().getMessage();
+                }
+                responseb.setErrorMessage(errorMessage);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+
+            msgb.setCommandResponse(responseb);
+            ctx.writeAndFlush(msgb);
+
+        }, directExecutor());
+    }
+
+    private String replaceArguments(String template, TseCommand command) {
+        StringBuilder buf = new StringBuilder();
+        Matcher m = ARGUMENT_REFERENCE.matcher(template);
+        while (m.find()) {
+            String l = m.group(1);
+            String arg = m.group(2);
+            String r = m.group(3);
+            buf.append(l);
+
+            int sep = arg.indexOf(':');
+            if (sep == -1) {
+                Value v = command.getArgumentMappingMap().get(arg);
+                buf.append(StringConverter.toString(v));
+            } else {
+                // Support printf-style manipulations. For example:
+                // <n:%09.3f> with an argument 'n' set to 4917.24 becomes: 04917.240
+                String format = arg.substring(sep + 1);
+                arg = arg.substring(0, sep);
+                Value v = command.getArgumentMappingMap().get(arg);
+                buf.append(String.format(format, parseValue(v)));
+            }
+
+            buf.append(r);
+        }
+
+        String replaced = buf.toString();
+        return replaced.isEmpty() ? template : replaced;
+    }
+
+    private ParameterData parseResponse(TseCommand command, String response) throws MatchException {
+        long now = TimeEncoding.getWallclockTime();
+        ParameterData.Builder pdata = ParameterData.newBuilder();
+        pdata.setGenerationTime(now)
+                .setGroup("TSE")
+                .setSeqNum(seq++);
+
+        // Groups may not contain _ and other special characters. So map to a safe name.
+        Map<String, String> group2name = new HashMap<>();
+
+        StringBuilder regex = new StringBuilder();
+        Matcher m = PARAMETER_REFERENCE.matcher(command.getResponse());
+        while (m.find()) {
+            String l = m.group(1);
+            String name = m.group(2);
+            String r = m.group(4);
+            regex.append(Pattern.quote(l));
+            String groupName = "cap" + group2name.size();
+            group2name.put(groupName, name);
+            if (m.group(3) == null) {
+                regex.append("(?<").append(groupName).append(">.+)");
+            } else {
+                String charCountSpecifier = m.group(3); // {3,30}, {3}, {3,}
+                regex.append("(?<").append(groupName).append(">." + charCountSpecifier + ")");
+            }
+            regex.append(Pattern.quote(r));
+        }
+
+        Pattern p = Pattern.compile(regex.toString());
+        m = p.matcher(response);
+
+        if (!m.matches()) {
+            throw new MatchException(String.format("Instrument response '%s' could not be matched to pattern '%s'.",
+                    response, command.getResponse()));
+        }
+
+        for (Entry<String, String> entry : group2name.entrySet()) {
+            String value = m.group(entry.getKey());
+
+            String name = entry.getValue();
+            String qname = command.getParameterMappingMap().get(name);
+            qname = replaceArguments(qname, command);
+            pdata.addParameter(ParameterValue.newBuilder()
+                    .setGenerationTime(TimeEncoding.toProtobufTimestamp(now))
+                    .setId(NamedObjectId.newBuilder().setName(qname))
+                    .setRawValue(Value.newBuilder().setType(Type.STRING).setStringValue(value)));
+        }
+        return pdata.build();
+    }
+
+    @Override
+    public void doStop() {
+        eventLoopGroup.shutdownGracefully().addListener(future -> {
+            if (future.isSuccess()) {
+                notifyStopped();
+            } else {
+                notifyFailed(future.cause());
+            }
+        });
+    }
+
+    /**
+     * Converts a Protobuf value from the API into a Java equivalent
+     */
+    private static Object parseValue(Value value) {
+        switch (value.getType()) {
+        case FLOAT:
+            return value.getFloatValue();
+        case DOUBLE:
+            return value.getDoubleValue();
+        case SINT32:
+            return value.getSint32Value();
+        case UINT32:
+            return value.getUint32Value() & 0xFFFFFFFFL;
+        case UINT64:
+            return value.getUint64Value();
+        case SINT64:
+            return value.getSint64Value();
+        case STRING:
+            return value.getStringValue();
+        case BOOLEAN:
+            return value.getBooleanValue();
+        case TIMESTAMP:
+            return Date.from(Instant.parse(value.getStringValue()));
+        case ENUMERATED:
+            return value.getStringValue();
+        case BINARY:
+            return value.getBinaryValue().toByteArray();
+        case ARRAY:
+            List<Object> arr = new ArrayList<>(value.getArrayValueCount());
+            for (Value item : value.getArrayValueList()) {
+                arr.add(parseValue(item));
+            }
+            return arr;
+        case AGGREGATE:
+            Map<String, Object> obj = new LinkedHashMap<>();
+            for (int i = 0; i < value.getAggregateValue().getNameCount(); i++) {
+                obj.put(value.getAggregateValue().getName(i), value.getAggregateValue().getValue(i));
+            }
+            return obj;
+        default:
+            throw new IllegalStateException("Unexpected value type " + value.getType());
+        }
+    }
+
+    @SuppressWarnings("serial")
+    private static class MatchException extends Exception {
+
+        MatchException(String message) {
+            super(message);
+        }
+    }
+}
+```
+
+### `TcTmServerHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TcTmServerHandler.java`
+
+
+```java
+package org.yamcs.tse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tse.api.TseCommand;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
+public class TcTmServerHandler extends SimpleChannelInboundHandler<TseCommand> {
+
+    private static final Logger log = LoggerFactory.getLogger(TcTmServerHandler.class);
+
+    private TcTmServer tctmServer;
+
+    public TcTmServerHandler(TcTmServer tctmServer) {
+        this.tctmServer = tctmServer;
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("TM/TC client connected: " + ctx.channel().remoteAddress());
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, TseCommand command) throws Exception {
+        tctmServer.processTseCommand(ctx, command);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        cause.printStackTrace();
+        ctx.close();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("TM/TC client disconnected: " + ctx.channel().remoteAddress());
+    }
+}
+```
+
+### `TelnetServer.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TelnetServer.java`
+
+
+```java
+package org.yamcs.tse;
+
+import static io.netty.handler.codec.Delimiters.lineDelimiter;
+
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.util.concurrent.AbstractService;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
+
+public class TelnetServer extends AbstractService {
+
+    private static final Logger log = LoggerFactory.getLogger(TelnetServer.class);
+
+    // These are marked as '@Sharable'
+    private static final StringDecoder STRING_DECODER = new StringDecoder(CharsetUtil.US_ASCII);
+    private static final StringEncoder STRING_ENCODER = new StringEncoder(CharsetUtil.US_ASCII);
+
+    private InstrumentController instrumentController;
+    private int port;
+
+    private NioEventLoopGroup eventLoopGroup;
+
+    public TelnetServer(int port, InstrumentController instrumentController) {
+        this.port = port;
+        this.instrumentController = instrumentController;
+    }
+
+    @Override
+    protected void doStart() {
+        eventLoopGroup = new NioEventLoopGroup();
+        ServerBootstrap b = new ServerBootstrap()
+                .group(eventLoopGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new DelimiterBasedFrameDecoder(8192, lineDelimiter()));
+                        pipeline.addLast(STRING_DECODER);
+                        pipeline.addLast(STRING_ENCODER);
+                        pipeline.addLast(new TelnetServerHandler(instrumentController));
+                    }
+                });
+
+        try {
+            b.bind(port).sync();
+            log.debug("Listening for Telnet clients on port " + port);
+            notifyStarted();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        eventLoopGroup.shutdownGracefully(0, 10, TimeUnit.SECONDS).addListener(future -> {
+            if (future.isSuccess()) {
+                notifyStopped();
+            } else {
+                notifyFailed(future.cause());
+            }
+        });
+    }
+}
+```
+
+### `TelnetServerHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TelnetServerHandler.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tse.api.TseCommand;
+import org.yamcs.utils.StringConverter;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.MoreExecutors;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
+public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
+
+    private static final Logger log = LoggerFactory.getLogger(TelnetServerHandler.class);
+
+    private InstrumentController instrumentController;
+    private boolean printHex;
+    private InstrumentDriver currentInstrument;
+
+    public TelnetServerHandler(InstrumentController instrumentController) {
+        this.instrumentController = instrumentController;
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Telnet client connected: " + ctx.channel().remoteAddress());
+
+        String names = instrumentController.getInstruments().stream()
+                .map(d -> d.instrument)
+                .collect(Collectors.joining(", "));
+
+        ctx.write("======================================================================\r\n");
+        ctx.write("Yamcs TSE Commander.\r\n");
+        ctx.write("======================================================================\r\n");
+        ctx.write("Syntax:\r\n");
+        ctx.write("  :tse:instrument <name>\r\n");
+        ctx.write("  :tse:instrument?\r\n");
+        ctx.write("      Get or set current instrument.\r\n");
+        ctx.write("      <name> is one of: " + names + "\r\n");
+        ctx.write("\r\n");
+        ctx.write("  :tse:output:mode ascii|hex\r\n");
+        ctx.write("  :tse:output:mode?\r\n");
+        ctx.write("      Get or set output mode of instrument responses.\r\n");
+        ctx.write("\r\n");
+        ctx.write("Any other command is sent to the selected instrument.\r\n");
+        ctx.write("======================================================================\r\n");
+        ctx.flush();
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, String cmd) throws Exception {
+        cmd = cmd.trim();
+        if (cmd.startsWith(":tse")) {
+            handleRootCommand(ctx, cmd);
+        } else if (!cmd.isEmpty()) {
+            if (currentInstrument != null) {
+                handleInstrumentCommand(ctx, cmd);
+            } else {
+                ctx.writeAndFlush("Current instrument is not set. Use ':tse:instrument <name>'.\r\n");
+            }
+        }
+    }
+
+    private void handleRootCommand(ChannelHandlerContext ctx, String cmd) {
+        String[] parts = cmd.split("\\s+", 2);
+        switch (parts[0].toLowerCase()) {
+        case ":tse:instrument":
+            String name = parts[1];
+            InstrumentDriver instrument = instrumentController.getInstrument(name);
+            if (instrument != null) {
+                currentInstrument = instrument;
+            } else {
+                ctx.writeAndFlush("unknown instrument\r\n");
+            }
+            break;
+        case ":tse:instrument?":
+            if (currentInstrument != null) {
+                ctx.write(currentInstrument.instrument);
+            }
+            ctx.writeAndFlush("\r\n");
+            break;
+        case ":tse:output:mode":
+            String mode = parts[1];
+            if (mode.equals("hex")) {
+                printHex = true;
+            } else if (mode.equals("ascii")) {
+                printHex = false;
+            } else {
+                ctx.writeAndFlush("unsupported mode\r\n");
+            }
+            break;
+        case ":tse:output:mode?":
+            ctx.write(printHex ? "hex" : "ascii");
+            ctx.writeAndFlush("\r\n");
+            break;
+        default:
+            ctx.writeAndFlush("syntax error\r\n");
+        }
+    }
+
+    private void handleInstrumentCommand(ChannelHandlerContext ctx, String cmd) throws InterruptedException {
+        // TODO should probably make this configurable
+        boolean expectResponse = cmd.contains("?") || cmd.contains("!");
+        TseCommand metadata = TseCommand.newBuilder()
+                .setInstrument(currentInstrument.instrument)
+                .build();
+        ListenableFuture<List<String>> f = instrumentController.queueCommand(currentInstrument, metadata, cmd,
+                expectResponse);
+        f.addListener(() -> {
+            try {
+                List<String> responses = f.get();
+                for (String response : responses) {
+                    ctx.write(printHex ? StringConverter.arrayToHexString(response.getBytes()) : response);
+                    ctx.writeAndFlush("\r\n");
+                }
+            } catch (ExecutionException e) {
+                String message = e.getCause().getMessage();
+                if (message == null) {
+                    message = e.getCause().getClass().getName();
+                }
+                log.warn(message, e.getCause());
+                ctx.write("error: " + message);
+                ctx.writeAndFlush("\r\n");
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }, MoreExecutors.directExecutor());
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error("Closing channel due to exception", cause);
+        ctx.close();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Telnet client disconnected: " + ctx.channel().remoteAddress());
+    }
+}
+```
+
+### `TseCommander.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseCommander.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.LogManager;
+
+import org.yamcs.FileBasedConfigurationResolver;
+import org.yamcs.InitException;
+import org.yamcs.ProcessRunner;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.YObjectLoader;
+
+import com.beust.jcommander.JCommander;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.ServiceManager;
+
+public class TseCommander extends ProcessRunner {
+
+    @Override
+    public Spec getSpec() {
+        Spec telnetSpec = new Spec();
+        telnetSpec.addOption("port", OptionType.INTEGER);
+
+        Spec tmtcSpec = new Spec();
+        tmtcSpec.addOption("port", OptionType.INTEGER);
+
+        Spec spec = new Spec();
+        spec.addOption("telnet", OptionType.MAP).withSpec(telnetSpec);
+        spec.addOption("tctm", OptionType.MAP).withSpec(tmtcSpec);
+        spec.addOption("instruments", OptionType.LIST).withElementType(OptionType.ANY);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        YConfiguration telnetArgs = config.getConfig("telnet");
+        int telnetPort = telnetArgs.getInt("port");
+
+        YConfiguration yamcsArgs = config.getConfig("tctm");
+        int tctmPort = yamcsArgs.getInt("port");
+        Path configDirectory = YamcsServer.getServer().getConfigDirectory();
+
+        try {
+            Map<String, Object> processRunnerConfig = new HashMap<>();
+            processRunnerConfig.put("command", Arrays.asList(
+                    new File(System.getProperty("java.home"), "bin/java").toString(),
+                    TseCommander.class.getName(),
+                    "--etc-dir", configDirectory.toString(),
+                    "--telnet-port", "" + telnetPort,
+                    "--tctm-port", "" + tctmPort));
+            processRunnerConfig.put("logPrefix", "");
+            Map<String, Object> processEnvironment = new HashMap<>();
+            processEnvironment.put("CLASSPATH", System.getProperty("java.class.path"));
+            processRunnerConfig.put("environment", processEnvironment);
+            processRunnerConfig = super.getSpec().validate(processRunnerConfig);
+            super.init(yamcsInstance, serviceName, YConfiguration.wrap(processRunnerConfig));
+        } catch (ValidationException e) {
+            throw new InitException(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        TseCommanderArgs runtimeOptions = new TseCommanderArgs();
+        new JCommander(runtimeOptions).parse(args);
+
+        configureLogging();
+        TimeEncoding.setUp();
+
+        YConfiguration.setResolver(new FileBasedConfigurationResolver(runtimeOptions.configDirectory));
+        YConfiguration yconf = YConfiguration.getConfiguration("tse");
+
+        List<Service> services = createServices(yconf, runtimeOptions);
+
+        ServiceManager serviceManager = new ServiceManager(services);
+        serviceManager.addListener(new ServiceManager.Listener() {
+            @Override
+            public void failure(Service service) {
+                // Stop entire process as soon as one service fails.
+                service.failureCause().printStackTrace(System.err);
+                System.exit(1);
+            }
+        }, MoreExecutors.directExecutor());
+
+        // Allow services to shutdown gracefully
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    serviceManager.stopAsync().awaitStopped(10, TimeUnit.SECONDS);
+                } catch (TimeoutException e) {
+                    // ignore
+                }
+            }
+        });
+
+        serviceManager.startAsync();
+    }
+
+    private static void configureLogging() {
+        try {
+            LogManager logManager = LogManager.getLogManager();
+            try (InputStream in = TseCommander.class.getResourceAsStream("/tse-logging.properties")) {
+                logManager.readConfiguration(in);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to set up logging configuration: " + e.getMessage());
+        }
+    }
+
+    private static List<Service> createServices(YConfiguration yconf, TseCommanderArgs runtimeOptions) {
+        List<Service> services = new ArrayList<>();
+
+        InstrumentController instrumentController = new InstrumentController();
+        if (yconf.containsKey("instruments")) {
+            for (YConfiguration instrumentConfig : yconf.getConfigList("instruments")) {
+                String name = instrumentConfig.getString("name");
+                String instrumentClass = instrumentConfig.getString("class");
+                YConfiguration instrumentArgs = YConfiguration.emptyConfig();
+                if (instrumentConfig.containsKey("args")) {
+                    instrumentArgs = instrumentConfig.getConfig("args");
+                }
+                InstrumentDriver instrument = YObjectLoader.loadObject(instrumentClass);
+                instrument.init(name, instrumentArgs);
+                instrumentController.addInstrument(instrument);
+            }
+        }
+        services.add(instrumentController);
+
+        TelnetServer telnetServer = new TelnetServer(runtimeOptions.telnetPort, instrumentController);
+        services.add(telnetServer);
+
+        if (runtimeOptions.tctmPort != null) {
+            services.add(new TcTmServer(runtimeOptions.tctmPort, instrumentController));
+        }
+
+        return services;
+    }
+}
+```
+
+### `TseCommanderArgs.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseCommanderArgs.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.converters.PathConverter;
+
+public class TseCommanderArgs {
+
+    @Parameter(names = "--telnet-port")
+    public int telnetPort = 8023;
+
+    @Parameter(names = "--tctm-port")
+    public Integer tctmPort;
+
+    @Parameter(names = "--log-timestamp")
+    public boolean logTimestamp = true;
+
+    @Parameter(names = { "--etc-dir" }, converter = PathConverter.class, description = "Path to config directory")
+    public Path configDirectory = Paths.get("etc").toAbsolutePath();
+}
+```
+
+### `TseDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseDataLink.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.cmdhistory.StreamCommandHistoryPublisher;
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.Value;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.time.TimeService;
+import org.yamcs.tse.api.TseCommand;
+import org.yamcs.tse.api.TseCommanderMessage;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+
+public class TseDataLink extends AbstractLink {
+    private static final int MAX_FRAME_LENGTH = 1024 * 1024; // 1 MB
+
+    // Parameter references are surrounded by backticks (to distinguish from
+    // the angle brackets which are used for argument substitution)
+    private static final Pattern PARAMETER_REFERENCE = Pattern.compile("`(.*?)`");
+
+    private volatile long inStartCount = 0; // Where to start counting from. Used after counter reset.
+    private AtomicLong outCount = new AtomicLong();
+
+    private Mdb mdb;
+    private String host;
+    private int port;
+    private long initialDelay;
+
+    private Stream ppStream;
+
+    private Channel channel;
+
+    private CommandHistoryPublisher cmdhistPublisher;
+    private TsePostprocessor postprocessor;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("initialDelay", OptionType.INTEGER);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String name, YConfiguration config) {
+        super.init(yamcsInstance, name, config);
+
+        cmdhistPublisher = new StreamCommandHistoryPublisher(yamcsInstance);
+
+        mdb = MdbFactory.getInstance(yamcsInstance);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        host = config.getString("host");
+        port = config.getInt("port");
+        initialDelay = config.getLong("initialDelay", 0);
+
+        String tcStreamName = config.getString("tcStream", "tc_tse");
+        Stream tcStream = ydb.getStream(tcStreamName);
+        if (tcStream == null) {
+            throw new ConfigurationException("Cannot find stream '" + tcStreamName + "'");
+        }
+        tcStream.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream s, Tuple tuple) {
+                sendTc(PreparedCommand.fromTuple(tuple, mdb));
+            }
+
+            @Override
+            public void streamClosed(Stream s) {
+                stopAsync();
+            }
+        });
+
+        String ppStreamName = config.getString("ppStream", "pp_tse");
+        ppStream = ydb.getStream(ppStreamName);
+        if (ppStream == null) {
+            throw new ConfigurationException("Cannot find stream '" + ppStreamName + "'");
+        }
+
+        initPostprocessor(yamcsInstance, config);
+    }
+
+    private void initPostprocessor(String instance, YConfiguration config) {
+        String commandPostprocessorClassName = null;
+        YConfiguration commandPostprocessorArgs = null;
+        if (config != null && config.containsKey("commandPostprocessorClassName")) {
+            commandPostprocessorClassName = config.getString("commandPostprocessorClassName");
+            if (config.containsKey("commandPostprocessorArgs")) {
+                commandPostprocessorArgs = config.getConfig("commandPostprocessorArgs");
+            }
+        }
+
+        if (commandPostprocessorClassName != null) {
+            try {
+                if (commandPostprocessorArgs != null) {
+                    postprocessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance,
+                            commandPostprocessorArgs);
+                } else {
+                    postprocessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance);
+                }
+                postprocessor.setCommandHistoryPublisher(cmdhistPublisher);
+            } catch (ConfigurationException e) {
+                log.error("Cannot instantiate the command postprocessor", e);
+                throw e;
+            }
+        }
+    }
+
+    private void sendTc(PreparedCommand pc) {
+        if (getLinkStatus() != Status.OK) {
+            log.warn("Dropping command (link is not OK)");
+            long missionTime = timeService.getMissionTime();
+            cmdhistPublisher.commandFailed(pc.getCommandId(), missionTime, "Link is not OK");
+            return;
+        }
+
+        MetaCommand mc = pc.getMetaCommand();
+        String subsystemName = mc.getSubsystemName();
+        SpaceSystem subsystem = mdb.getSpaceSystem(subsystemName);
+
+        TseCommand.Builder msgb = TseCommand.newBuilder()
+                .setId(pc.getCommandId())
+                .setInstrument(subsystem.getName());
+
+        for (Entry<Argument, ArgumentValue> entry : pc.getArgAssignment().entrySet()) {
+            String name = entry.getKey().getName();
+            Value v = entry.getValue().getEngValue();
+            switch (name) {
+            case TseLoader.ARG_COMMAND:
+                msgb.setCommand(v.getStringValue());
+                break;
+            case TseLoader.ARG_RESPONSE:
+                msgb.setResponse(v.getStringValue());
+                break;
+            default:
+                msgb.putArgumentMapping(name, ValueUtility.toGbp(v));
+            }
+        }
+
+        if (msgb.hasResponse()) {
+            Matcher m = PARAMETER_REFERENCE.matcher(msgb.getResponse());
+            while (m.find()) {
+                String name = m.group(1);
+                String qname = subsystem.getQualifiedName() + "/" + name;
+                msgb.putParameterMapping(name, qname);
+            }
+        }
+
+        TseCommand command;
+        if (postprocessor == null) {
+            command = msgb.build();
+        } else {
+            command = postprocessor.process(msgb);
+        }
+        channel.writeAndFlush(command).addListener(f -> {
+            long missionTime = timeService.getMissionTime();
+            if (f.isSuccess()) {
+                cmdhistPublisher.publishAck(pc.getCommandId(), CommandHistoryPublisher.AcknowledgeSent_KEY,
+                        missionTime, AckStatus.OK);
+            } else {
+                cmdhistPublisher.publishAck(pc.getCommandId(), CommandHistoryPublisher.AcknowledgeSent_KEY,
+                        missionTime, AckStatus.NOK);
+            }
+        });
+        outCount.incrementAndGet();
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        return getLinkStatus().toString();
+    }
+
+    @Override
+    public long getDataInCount() {
+        return ppStream.getDataCount() - inStartCount;
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return outCount.get();
+    }
+
+    @Override
+    public void resetCounters() {
+        inStartCount = ppStream.getDataCount();
+        outCount.set(0);
+    }
+
+    @Override
+    protected void doStart() {
+        EventLoopGroup eventLoopGroup = getEventLoop();
+        eventLoopGroup.schedule(() -> createBootstrap(), initialDelay, TimeUnit.MILLISECONDS);
+        notifyStarted();
+    }
+
+    private void createBootstrap() {
+        if (disabled.get()) {
+            return;
+        }
+        if (channel != null && channel.isActive()) {
+            return;
+        }
+        TimeService timeService = YamcsServer.getTimeService(yamcsInstance);
+        EventLoopGroup eventLoopGroup = getEventLoop();
+        Bootstrap b = new Bootstrap()
+                .group(eventLoopGroup)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_KEEPALIVE, true)
+                .handler(new ChannelInitializer<>() {
+
+                    @Override
+                    protected void initChannel(Channel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+
+                        pipeline.addLast(new LengthFieldBasedFrameDecoder(MAX_FRAME_LENGTH, 0, 4, 0, 4));
+                        pipeline.addLast(new ProtobufDecoder(TseCommanderMessage.getDefaultInstance()));
+
+                        pipeline.addLast(new LengthFieldPrepender(4));
+                        pipeline.addLast(new ProtobufEncoder());
+
+                        pipeline.addLast(new TseDataLinkInboundHandler(
+                                cmdhistPublisher, mdb, timeService, ppStream));
+                    }
+                });
+
+        ChannelFuture future = b.connect(host, port);
+        future.addListener((ChannelFuture f) -> {
+            if (f.isSuccess()) {
+                log.info("Link established to {}:{}", host, port);
+                channel = f.channel();
+                channel.closeFuture().addListener(closeFuture -> {
+                    if (isRunningAndEnabled()) {
+                        log.warn("Link to {}:{} closed. Retrying in 10s", host, port);
+                        eventLoopGroup.schedule(() -> createBootstrap(), 10, TimeUnit.SECONDS);
+                    }
+                });
+            } else if (isRunningAndEnabled()) {
+                log.info("Cannot establish link to {}:{}: {}. Retrying in 10s",
+                        host, port, f.cause().getMessage());
+                eventLoopGroup.schedule(() -> createBootstrap(), 10, TimeUnit.SECONDS);
+            }
+        });
+    }
+
+    @Override
+    protected void doStop() {
+        if (channel == null) {
+            notifyStopped();
+            return;
+        }
+
+        channel.close().addListener(f -> {
+            if (f.isSuccess()) {
+                notifyStopped();
+            } else {
+                notifyFailed(f.cause());
+            }
+        });
+    }
+
+    @Override
+    protected void doEnable() throws Exception {
+        createBootstrap();
+    }
+
+    @Override
+    protected void doDisable() throws Exception {
+        if (channel != null) {
+            channel.close();
+        }
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        if (channel == null || !channel.isActive()) {
+            return Status.UNAVAIL;
+        }
+        return Status.OK;
+    }
+
+}
+```
+
+### `TseDataLinkInboundHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseDataLinkInboundHandler.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.time.TimeService;
+import org.yamcs.tse.api.TseCommandResponse;
+import org.yamcs.tse.api.TseCommanderMessage;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
+public class TseDataLinkInboundHandler extends SimpleChannelInboundHandler<TseCommanderMessage> {
+
+    private static final Logger log = LoggerFactory.getLogger(TseDataLinkInboundHandler.class);
+
+    private final TimeService timeService;
+    private final Stream stream;
+    private final Mdb mdb;
+    private final CommandHistoryPublisher cmdhistPublisher;
+
+    public TseDataLinkInboundHandler(CommandHistoryPublisher cmdhistPublisher, Mdb mdb, TimeService timeService,
+            Stream stream) {
+        this.cmdhistPublisher = cmdhistPublisher;
+        this.timeService = timeService;
+        this.stream = stream;
+        this.mdb = mdb;
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, TseCommanderMessage message) throws Exception {
+        if (message.hasCommandResponse()) {
+            handleCommandResponse(message.getCommandResponse());
+        }
+        if (message.hasParameterData()) {
+            handleParameterData(message.getParameterData());
+        }
+    }
+
+    private void handleCommandResponse(TseCommandResponse cmdResponse) {
+        if (cmdResponse.getSuccess()) {
+            cmdhistPublisher.publishAck(cmdResponse.getId(), CommandHistoryPublisher.CommandComplete_KEY,
+                    timeService.getMissionTime(), AckStatus.OK);
+        } else {
+            cmdhistPublisher.commandFailed(cmdResponse.getId(), timeService.getMissionTime(),
+                    cmdResponse.getErrorMessage());
+        }
+    }
+
+    private void handleParameterData(ParameterData pdata) {
+        long now = timeService.getMissionTime();
+
+        TupleDefinition tdef = null;
+        String group = null;
+        List<Object> cols = null;
+
+        for (org.yamcs.protobuf.Pvalue.ParameterValue proto : pdata.getParameterList()) {
+            String qualifiedName = proto.getId().getName();
+            ParameterValue pv = BasicParameterValue.fromGpb(qualifiedName, proto);
+            Parameter p = mdb.getParameter(qualifiedName);
+            if (p == null) {
+                log.warn("Ignoring unknown parameter {}", qualifiedName);
+                continue;
+            }
+            String newGroup = p.getRecordingGroup();
+            if ((group == null) || !group.equals(newGroup)) {
+                if (cols != null) {
+                    stream.emitTuple(new Tuple(tdef, cols));
+                }
+                group = newGroup;
+                tdef = StandardTupleDefinitions.PARAMETER.copy();
+                cols = new ArrayList<>(4 + pdata.getParameterCount());
+                cols.add(now);
+                cols.add(group);
+                cols.add(pdata.getSeqNum());
+                cols.add(now);
+            }
+            // Time of TSE Commander may not match mission time
+            pv.setGenerationTime(now);
+            int idx = tdef.getColumnIndex(qualifiedName);
+            if (idx != -1) {
+                log.warn("Duplicate value for {} \nfirst: {}" + "\n second: {} ", qualifiedName, cols.get(idx),
+                        pv);
+                continue;
+            }
+            tdef.addColumn(qualifiedName, DataType.PARAMETER_VALUE);
+            cols.add(pv);
+        }
+        if (cols != null) {
+            stream.emitTuple(new Tuple(tdef, cols));
+        }
+    }
+}
+```
+
+### `TseLoader.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TseLoader.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Collections;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.DatabaseLoadException;
+import org.yamcs.mdb.SpaceSystemLoader;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.ArgumentAssignment;
+import org.yamcs.xtce.ArgumentEntry;
+import org.yamcs.xtce.CommandContainer;
+import org.yamcs.xtce.IntegerArgumentType;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.SequenceEntry.ReferenceLocationType;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.StringArgumentType;
+import org.yamcs.xtce.StringDataEncoding;
+import org.yamcs.xtce.StringDataEncoding.SizeType;
+
+public class TseLoader implements SpaceSystemLoader {
+
+    public static final String CMD_COMMAND = "COMMAND";
+    public static final String CMD_QUERY = "QUERY";
+
+    public static final String ARG_TYPE = "type";
+    public static final String ARG_COMMAND = "command";
+    public static final String ARG_RESPONSE = "response";
+
+    private String name;
+
+    public TseLoader() {
+        this(Collections.emptyMap());
+    }
+
+    public TseLoader(Map<String, Object> config) {
+        name = YConfiguration.getString(config, "name", "TSE");
+    }
+
+    @Override
+    public boolean needsUpdate(RandomAccessFile consistencyDateFile) throws IOException, ConfigurationException {
+        return true;
+    }
+
+    @Override
+    public String getConfigName() throws ConfigurationException {
+        return name;
+    }
+
+    @Override
+    public void writeConsistencyDate(FileWriter consistencyDateFile) throws IOException {
+        // we want to load all the time the file as fresh so no consistency date
+    }
+
+    @Override
+    public SpaceSystem load() throws ConfigurationException, DatabaseLoadException {
+        SpaceSystem ss = new SpaceSystem(name);
+        ss.setShortDescription("Test Support Equipment");
+
+        MetaCommand tc = createTC();
+        ss.addMetaCommand(tc);
+        ss.addCommandContainer(tc.getCommandContainer());
+
+        MetaCommand command = createCOMMAND();
+        command.setBaseMetaCommand(tc);
+        ss.addMetaCommand(command);
+        ss.addCommandContainer(command.getCommandContainer());
+
+        MetaCommand query = createQUERY();
+        query.setBaseMetaCommand(tc);
+        ss.addMetaCommand(query);
+        ss.addCommandContainer(query.getCommandContainer());
+
+        return ss;
+    }
+
+    private MetaCommand createTC() {
+        CommandContainer container = new CommandContainer("TC");
+        MetaCommand command = new MetaCommand("TC");
+        command.setCommandContainer(container);
+        command.setAbstract(true);
+
+        Argument typeArgument = new Argument(ARG_TYPE);
+        IntegerArgumentType.Builder typeArgumentTypeBuilder = new IntegerArgumentType.Builder().setName(ARG_TYPE);
+        IntegerDataEncoding.Builder typeArgumentEncoding = new IntegerDataEncoding.Builder().setSizeInBits(8);
+        typeArgumentTypeBuilder.setEncoding(typeArgumentEncoding);
+        typeArgumentTypeBuilder.setSizeInBits(8);
+        typeArgumentTypeBuilder.setSigned(false);
+        typeArgument.setArgumentType(typeArgumentTypeBuilder.build());
+        command.addArgument(typeArgument);
+
+        ArgumentEntry typeArgumentEntry = new ArgumentEntry(0, ReferenceLocationType.CONTAINER_START,
+                typeArgument);
+        container.addEntry(typeArgumentEntry);
+
+        Argument commandArgument = new Argument(ARG_COMMAND);
+        StringArgumentType.Builder commandArgumentType = new StringArgumentType.Builder().setName(ARG_COMMAND);
+        StringDataEncoding.Builder commandArgumentEncoding = new StringDataEncoding.Builder()
+                .setSizeType(SizeType.TERMINATION_CHAR);
+        commandArgumentEncoding.setTerminationChar((byte) 0x00);
+        commandArgumentType.setEncoding(commandArgumentEncoding);
+        commandArgument.setArgumentType(commandArgumentType.build());
+        command.addArgument(commandArgument);
+
+        ArgumentEntry commandArgumentEntry = new ArgumentEntry(8, ReferenceLocationType.CONTAINER_START,
+                commandArgument);
+        container.addEntry(commandArgumentEntry);
+
+        return command;
+    }
+
+    private MetaCommand createCOMMAND() {
+        CommandContainer container = new CommandContainer(CMD_COMMAND);
+        MetaCommand command = new MetaCommand(CMD_COMMAND);
+        command.setCommandContainer(container);
+        command.setAbstract(true);
+
+        ArgumentAssignment assignment = new ArgumentAssignment(ARG_TYPE, "0");
+        command.addArgumentAssignment(assignment);
+
+        return command;
+    }
+
+    private MetaCommand createQUERY() {
+        CommandContainer container = new CommandContainer(CMD_QUERY);
+        MetaCommand command = new MetaCommand(CMD_QUERY);
+        command.setCommandContainer(container);
+        command.setAbstract(true);
+
+        ArgumentAssignment assignment = new ArgumentAssignment(ARG_TYPE, "1");
+        command.addArgumentAssignment(assignment);
+
+        Argument responseArgument = new Argument(ARG_RESPONSE);
+        StringArgumentType.Builder responseArgumentType = new StringArgumentType.Builder().setName(ARG_RESPONSE);
+        StringDataEncoding.Builder responseArgumentEncoding = new StringDataEncoding.Builder()
+                .setSizeType(SizeType.TERMINATION_CHAR);
+        responseArgumentEncoding.setTerminationChar((byte) 0x00);
+        responseArgumentType.setEncoding(responseArgumentEncoding);
+        responseArgument.setArgumentType(responseArgumentType.build());
+        command.addArgument(responseArgument);
+
+        ArgumentEntry responseArgumentEntry = new ArgumentEntry(responseArgument);
+        container.addEntry(responseArgumentEntry);
+
+        return command;
+    }
+}
+```
+
+### `TsePlugin.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TsePlugin.java`
+
+
+```java
+package org.yamcs.tse;
+
+import org.yamcs.AbstractPlugin;
+import org.yamcs.InitException;
+import org.yamcs.PluginException;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+
+public class TsePlugin extends AbstractPlugin {
+
+    @Override
+    public void init() throws PluginException {
+
+        // Activate TSE Commander (only if user did not manually add this service)
+        if (yamcs.getGlobalService(TseCommander.class) == null && YConfiguration.isDefined("tse")) {
+            addTseCommander(yamcs);
+        }
+    }
+
+    /**
+     * Starts the TseCommander. These can be configured in tse.yaml
+     */
+    private void addTseCommander(YamcsServer yamcs) throws PluginException {
+        YConfiguration yconf = YConfiguration.getConfiguration("tse");
+        try {
+            yamcs.addGlobalService("TSE Commander", TseCommander.class, yconf);
+        } catch (ValidationException | InitException e) {
+            throw new PluginException("Invalid configuration: " + e.getMessage());
+        }
+    }
+}
+```
+
+### `TsePostprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/TsePostprocessor.java`
+
+
+```java
+package org.yamcs.tse;
+
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.tse.api.TseCommand;
+
+public interface TsePostprocessor {
+
+    /**
+     * Process an instruction passed to TseCommander.
+     */
+    TseCommand process(TseCommand.Builder commandBuilder);
+
+    /**
+     * Sets the command history listener which can be used to provide command history entries related to the command
+     * processed.
+     */
+    default void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryListener) {
+    }
+}
+```
+
+### `UdpDriver.java`
+
+**경로:** `gsw/yamcs/yamcs-tse/src/main/java/org/yamcs/tse/UdpDriver.java`
+
+
+```java
+package org.yamcs.tse;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketTimeoutException;
+
+import org.yamcs.YConfiguration;
+
+public class UdpDriver extends InstrumentDriver {
+
+    private int sourcePort;
+    private String host;
+    private int port;
+
+    private DatagramSocket socket;
+    private InetAddress address;
+    private int maxLength;
+
+    @Override
+    public void init(String name, YConfiguration config) {
+        super.init(name, config);
+        sourcePort = config.getInt("sourcePort", 0);
+        host = config.getString("host");
+        port = config.getInt("port");
+        maxLength = config.getInt("maxLength", 1500);
+    }
+
+    @Override
+    public void connect() throws IOException {
+        socket = new DatagramSocket(sourcePort);
+        address = InetAddress.getByName(host);
+    }
+
+    @Override
+    public void disconnect() throws IOException {
+        if (socket != null) {
+            socket.close();
+        }
+    }
+
+    @Override
+    public void write(byte[] cmd) throws IOException {
+        var packet = new DatagramPacket(cmd, cmd.length, address, port);
+        socket.send(packet);
+    }
+
+    @Override
+    public void readAvailable(ResponseBuffer buffer, int timeout) throws IOException {
+        // Block receive on a small timeout, this method may be called
+        // many times for a single response.
+        socket.setSoTimeout(timeout);
+
+        var receivePacket = new DatagramPacket(new byte[maxLength], maxLength);
+        try {
+            socket.receive(receivePacket);
+            buffer.append(receivePacket.getData(), receivePacket.getOffset(), receivePacket.getLength());
+        } catch (SocketTimeoutException e) {
+            // Ignore, the real timeout is managed by the caller.
+        }
+    }
+
+    @Override
+    public String getDefaultRequestTermination() {
+        return null;
+    }
+
+    @Override
+    public boolean isFragmented() {
+        return false; // Assume one response message per datagram
+    }
+}
+```

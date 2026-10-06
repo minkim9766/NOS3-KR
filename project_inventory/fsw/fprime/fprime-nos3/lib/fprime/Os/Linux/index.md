@@ -3,28 +3,425 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--Cpu.cpp
-file--Cpu.hpp
-file--DefaultCpu.cpp
-file--DefaultMemory.cpp
-file--Memory.cpp
-file--Memory.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Cpu.cpp`](file--Cpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Cpu.hpp`](file--Cpu.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/DefaultCpu.cpp`](file--DefaultCpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/DefaultMemory.cpp`](file--DefaultMemory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Memory.cpp`](file--Memory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Memory.hpp`](file--Memory.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Linux)
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+register_os_implementation(Cpu Linux Os_File)
+register_os_implementation(Memory Linux Os_File)
+
+# -----------------------------------------
+### Os/Linux/Cpu Section
+# -----------------------------------------
+register_fprime_ut(
+    LinuxCpuTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/cpu/CommonCpuTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/LinuxCpuTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Cpu_Linux
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+
+# -----------------------------------------
+### Os/Linux/Memory Section
+# -----------------------------------------
+register_fprime_ut(
+    LinuxMemoryTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/memory/CommonMemoryTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/LinuxMemoryTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Memory_Linux
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+```
+
+### `Cpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Cpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/Cpu.cpp
+// \brief Linux implementation for Os::Cpu
+// ======================================================================
+#include <unistd.h>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Os/File.hpp>
+#include <Os/Linux/Cpu.hpp>
+#include <cstring>
+namespace Os {
+namespace Linux {
+namespace Cpu {
+
+// Proc FS /proc/stat file format example:
+//
+// cpu  270288 1598 88660 8470416 15185 9775 2990 867 0 0
+// cpu0 67462 108 22104 2118172 3779 2540 648 287 0 0
+// cpu1 74237 650 24059 2109680 2995 2447 667 93 0 0
+// cpu2 69388 630 22033 2115177 4428 2424 649 378 0 0
+// cpu3 59199 209 20462 2127387 3981 2363 1024 108 0 0
+// ...
+
+// Needed format, and compliant with kernel < 2.5
+enum ProcCpuMeasures { CPU_NUMBER = 0, USER = 1, NICE = 2, SYSTEM = 3, IDLE = 4, MAX_CPU_TICK_TYPES = 8 };
+
+using ProcCpuData = FwSizeType[ProcCpuMeasures::MAX_CPU_TICK_TYPES];
+constexpr FwSizeType LINE_SIZE = 255;  // log10(max(U64)) * 11 fields (kernel 2.6.33) = 220. Round to 256 - 1 (\0)
+
+CpuInterface::Status getCpuData(FwSizeType cpu_index, ProcCpuData data) {
+    Os::File file;
+    // Open the procfs file
+    constexpr char PROC_STAT_PATH[] = "/proc/stat";
+    if (file.open(PROC_STAT_PATH, Os::File::Mode::OPEN_READ) != Os::File::Status::OP_OK) {
+        return CpuInterface::Status::ERROR;
+    }
+    char proc_stat_line[LINE_SIZE + 1];
+    // File starts with cpu line, then individual CPUs.
+    for (FwSizeType i = 0; i < cpu_index + 2; i++) {
+        FwSizeType read_size = sizeof proc_stat_line - 1;
+        Os::File::Status file_status =
+            file.readline(reinterpret_cast<U8*>(proc_stat_line), read_size, Os::File::WaitType::NO_WAIT);
+        proc_stat_line[read_size + 1] = '\0';  // Null terminate
+        if (file_status != Os::File::Status::OP_OK) {
+            return CpuInterface::Status::ERROR;
+        }
+        // Make sure we've not strayed passed the cpu section
+        if (::strncmp(proc_stat_line, "cpu", 3) != 0) {
+            return CpuInterface::Status::ERROR;
+        }
+    }
+    char* token_start = proc_stat_line + 3;  // Length of "cpu"
+    for (FwSizeType i = 0; i < ProcCpuMeasures::MAX_CPU_TICK_TYPES; i++) {
+        FwSizeType token = 0;
+        Fw::StringUtils::StringToNumberStatus status = Fw::StringUtils::string_to_number(
+            token_start,
+            static_cast<FwSizeType>(sizeof proc_stat_line) - static_cast<FwSizeType>(token_start - proc_stat_line),
+            token, &token_start);
+        // Check conversion success
+        if (status != Fw::StringUtils::StringToNumberStatus::SUCCESSFUL_CONVERSION) {
+            return CpuInterface::Status::ERROR;
+        }
+        data[i] = token;
+        // Check cpu index is correct
+        if (i == ProcCpuMeasures::CPU_NUMBER and data[i] != cpu_index) {
+            return CpuInterface::Status::ERROR;
+        }
+    }
+    return CpuInterface::Status::OP_OK;
+}
+
+CpuInterface::Status LinuxCpu::_getCount(FwSizeType& cpu_count) {
+    long cpus = sysconf(_SC_NPROCESSORS_ONLN);
+    if ((cpus > 0) && (static_cast<FwSizeType>(cpus) < std::numeric_limits<FwSizeType>::max())) {
+        cpu_count = static_cast<FwSizeType>(cpus);
+        return Status::OP_OK;
+    }
+    cpu_count = 0;
+    return Status::ERROR;
+}
+
+CpuInterface::Status LinuxCpu::_getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) {
+    FwSizeType count = 0;
+    CpuInterface::Status status = this->_getCount(count);
+    if (status != CpuInterface::Status::OP_OK) {
+        return status;
+    } else if (cpu_index >= count) {
+        return CpuInterface::Status::ERROR;
+    }
+    ProcCpuData cpu_data = {0, 0, 0, 0, 0, 0, 0, 0};
+    status = getCpuData(cpu_index, cpu_data);
+    ticks.used = cpu_data[ProcCpuMeasures::USER] + cpu_data[ProcCpuMeasures::NICE] + cpu_data[ProcCpuMeasures::SYSTEM];
+    ticks.total = ticks.used + cpu_data[ProcCpuMeasures::IDLE];
+
+    return status;
+}
+
+CpuHandle* LinuxCpu::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Cpu
+}  // namespace Linux
+}  // namespace Os
+```
+
+### `Cpu.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Cpu.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/Cpu.hpp
+// \brief Linux implementation for Os::Cpu, header and test definitions
+// ======================================================================
+#include <Os/Cpu.hpp>
+#include <Os/File.hpp>
+#ifndef OS_Linux_Cpu_HPP
+#define OS_Linux_Cpu_HPP
+
+namespace Os {
+namespace Linux {
+namespace Cpu {
+
+//! CpuHandle class definition for stub implementations.
+//!
+struct LinuxCpuHandle : public CpuHandle {};
+
+//! \brief stub implementation of Os::CpuInterface
+//!
+//! Linux implementation of `CpuInterface` for use as a delegate class handling stub console operations.
+//!
+class LinuxCpu : public CpuInterface {
+  public:
+    //! \brief constructor
+    //!
+    LinuxCpu() = default;
+
+    //! \brief copy constructor
+    LinuxCpu(const LinuxCpu& other) = delete;
+
+    //! \brief default copy assignment
+    CpuInterface& operator=(const CpuInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~LinuxCpu() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+  public:
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    Status _getCount(FwSizeType& cpu_count) override;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! delegates to the underlying implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    Status _getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    CpuHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    LinuxCpuHandle m_handle;
+};
+}  // namespace Cpu
+}  // namespace Linux
+}  // namespace Os
+
+#endif  // OS_Linux_Cpu_HPP
+```
+
+### `DefaultCpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/DefaultCpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/DefaultCpu.cpp
+// \brief sets default Os::Cpu to Linux implementation via linker
+// ======================================================================
+#include "Os/Cpu.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Linux/Cpu.hpp"
+
+namespace Os {
+CpuInterface* CpuInterface::getDelegate(CpuHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<CpuInterface, Os::Linux::Cpu::LinuxCpu>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMemory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/DefaultMemory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/DefaultMemory.cpp
+// \brief sets default Os::Memory to Linux implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Linux/Memory.hpp"
+#include "Os/Memory.hpp"
+
+namespace Os {
+MemoryInterface* MemoryInterface::getDelegate(MemoryHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<MemoryInterface, Os::Linux::Memory::LinuxMemory>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `Memory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Memory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/Memory.cpp
+// \brief Linux implementation for Os::Memory
+// ======================================================================
+#include <sys/sysinfo.h>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Linux/Memory.hpp>
+#include <cstdio>
+#include <limits>
+namespace Os {
+namespace Linux {
+namespace Memory {
+
+MemoryInterface::Status LinuxMemory::_getUsage(Os::Memory::Usage& memory_usage) {
+    struct sysinfo info;
+    // Only error in sysinfo call is invalid address
+    FW_ASSERT(sysinfo(&info) == 0);
+    const FwSizeType MAX_MEASURABLE_RAM_UNITS = std::numeric_limits<FwSizeType>::max() / info.mem_unit;
+    if ((MAX_MEASURABLE_RAM_UNITS < info.totalram) || (MAX_MEASURABLE_RAM_UNITS < info.freeram)) {
+        memory_usage.total = 1;
+        memory_usage.used = 1;
+        return Status::ERROR;
+    }
+
+    memory_usage.total = info.totalram * info.mem_unit;
+    memory_usage.used = info.freeram * info.mem_unit;
+    return Status::OP_OK;
+}
+
+MemoryHandle* LinuxMemory::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Memory
+}  // namespace Linux
+}  // namespace Os
+```
+
+### `Memory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/Memory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/Memory.hpp
+// \brief Linux implementation for Os::Memory, header and test definitions
+// ======================================================================
+#include <Os/Memory.hpp>
+#ifndef OS_Linux_Memory_HPP
+#define OS_Linux_Memory_HPP
+
+namespace Os {
+namespace Linux {
+namespace Memory {
+
+//! MemoryHandle class definition for stub implementations.
+//!
+struct LinuxMemoryHandle : public MemoryHandle {};
+
+//! \brief stub implementation of Os::MemoryInterface
+//!
+//! Linux implementation of `MemoryInterface` for use as a delegate class handling stub console operations.
+//!
+class LinuxMemory : public MemoryInterface {
+  public:
+    //! \brief constructor
+    //!
+    LinuxMemory() = default;
+
+    //! \brief copy constructor
+    LinuxMemory(const LinuxMemory& other) = delete;
+
+    //! \brief default copy assignment
+    MemoryInterface& operator=(const MemoryInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~LinuxMemory() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+  public:
+    //! \brief get system memory usage
+    //!
+    //! This method delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return:  ERROR when error occurs, OK otherwise.
+    Status _getUsage(Os::Memory::Usage& memory_usage) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    MemoryHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    LinuxMemoryHandle m_handle;
+};
+}  // namespace Memory
+}  // namespace Linux
+}  // namespace Os
+
+#endif  // OS_Linux_Memory_HPP
+```

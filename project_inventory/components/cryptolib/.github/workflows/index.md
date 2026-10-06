@@ -3,18 +3,605 @@
 
 **경로:** `components/cryptolib/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build.yml`
 
-file--build.yml
-file--codeql.yml
-file--cpp-linter.yml
+**경로:** `components/cryptolib/.github/workflows/build.yml`
+
+
+```yaml
+name: CryptoLib
+
+on: 
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  #
+  # Minimal Build
+  #
+  minimal_build:
+    # Container Setup
+    runs-on: ubuntu-latest
+    container:
+        image: ivvitc/cryptolib:20250108
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update
+      run: apt-get update
+    - name: Install Dependencies
+      run: apt-get install -y lcov libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3
+    # End Container Setup
+    
+    - name: Minimal Build Script
+      working-directory: ${{github.workspace}}
+      run: bash ${GITHUB_WORKSPACE}/support/scripts/build_minimal.sh
+
+  #
+  # Internal Build
+  #
+  internal_build:
+    # Container Setup
+    runs-on: ubuntu-latest
+    container:
+        image: ivvitc/cryptolib:20250108
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update
+      run: apt-get update
+    - name: Install Dependencies
+      run: apt-get install -y lcov libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3
+    # End Container Setup
+    
+    - name: Internal Build Script
+      working-directory: ${{github.workspace}}
+      run: |
+        export CFLAGS="-fprofile-arcs -ftest-coverage -fcondition-coverage -g"
+        bash ${GITHUB_WORKSPACE}/support/scripts/build_internal.sh
+
+
+    # - name: Code-Coverage
+    #   working-directory: ${{github.workspace}}
+    #   run: make gcov
+
+    - name: Upload 
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: 'coverage/*.c.gcov'
+        verbose: true
+
+  #
+  # KMC Build
+  #
+  kmc_build:
+    # Container Setup
+    runs-on: ubuntu-latest
+    container:
+        image: ivvitc/cryptolib:20250108
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        repository: NASA-AMMOS/DCS
+        path: DCS
+        submodules: recursive
+        ref: main
+    - name: setup python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Set current branch
+      run: echo "BRANCH_NAME=$(echo ${{ github.head_ref || github.ref_name }})" >> $GITHUB_ENV
+    - name: Update
+      run: apt-get update
+    - name: Install Dependencies
+      run: apt-get install -y libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3 openjdk-17-jdk openjdk-17-jre cmake swig maven podman default-jdk
+    - name: Install Python Libraries
+      run: |
+        pip3 install --break-system-packages pycryptodome cffi invoke
+    - name: update Cryptolib
+      run: |
+        cd DCS/ammos-cryptolib
+        rm -rf CryptoLib
+        git clone --single-branch --branch $BRANCH_NAME https://github.com/nasa/CryptoLib.git
+    - name: add required jars
+      run: |
+        cd DCS/ammos-cryptolib/kmc_sdls/kmc_sdls_java/kmc_sdls_java_test
+        curl -LS https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar -o ./junit-4.13.2.jar 
+        curl -LS https://repo1.maven.org/maven2/org/hamcrest/hamcrest/2.2/hamcrest-2.2.jar -o ./hamcrest-2.2.jar
+    - name: build DCS
+      run: |
+        cd ./DCS
+        export JAVA_HOME=/lib/jvm/java-17-openjdk-amd64
+        ./kmc-resources/scripts/build.sh
+
+  #
+  # Wolf Build
+  #
+  wolf_build:
+    # Container Setup
+    runs-on: ubuntu-latest
+    container:
+        image: ivvitc/cryptolib:20250108
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update
+      run: apt-get update
+    - name: Install Dependencies
+      run: apt-get install -y lcov libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3 autoconf libtool
+    - name: Clone WolfSSL
+      run: git clone --depth 1 --branch v5.6.0-stable https://github.com/wolfSSL/wolfssl.git /tmp/wolfssl
+   
+     #      cmake -DCMAKE_INSTALL_PREFIX=/home/runner/.local -DWOLFSSL_AESCCM=yes -DWOLFSSL_AESSIV=yes -DWOLFSSL_CMAC=yes ..;
+    - name: Build WolfSSL
+      #  -DCMAKE_INSTALL_PREFIX=/home/runner/.local
+      #run: cd /tmp/wolfssl/;
+      #     sudo chown -R runner /usr/local; 
+      #     ./autogen.sh;
+      #     sudo ./configure --enable-aesccm --enable-aessiv --enable-cmac;
+      #     make;
+      #     make install;
+      #sudo chown -R runner /usr/local;
+      run: mkdir /tmp/wolfssl/build;
+           cd /tmp/wolfssl/build;
+           cmake -DWOLFSSL_AESCCM=yes -DWOLFSSL_AESSIV=yes -DWOLFSSL_CMAC=yes ..;
+           cmake --build .;
+           make install;
+           ldconfig;
+    # End Container Setup
+    
+    - name: Wolf Build Script
+      working-directory: ${{github.workspace}}
+      run: |
+        export CFLAGS="-fprofile-arcs -ftest-coverage -fcondition-coverage -g"
+        bash ${GITHUB_WORKSPACE}/support/scripts/build_wolf.sh
+    
+    # - name: Code-Coverage
+    #   working-directory: ${{github.workspace}}
+    #   run: make gcov
+
+    - name: Upload 
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: 'coverage/*.c.gcov'
+        verbose: true
+      
+  #
+  # RHEL Build
+  #
+  rhel_build:
+    # Container Setup
+    runs-on: ubuntu-latest
+    container:
+      image: rockylinux/rockylinux:9
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update
+      run: yum update -y
+    - name: Install Dependencies
+      run: yum install -y --enablerepo=devel python3-pip python3-devel epel-release libcurl-devel git cmake gcc java-11-openjdk-devel openssl wget bzip2 ldconfig mariadb-devel mariadb-common mariadb-connector-c mariadb-connector-c-config mariadb-errmsg mariadb-gssapi-server libasan
+      # Might want to trim this down, but these dependencies should work for KMC
+    - name: install lcov
+      run: yum install -y --enablerepo=epel lcov
+    - name: Install Libgcrypt
+      run: >
+        curl 
+        -LS https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.50.tar.bz2 
+        -o /tmp/libgpg-error-1.50.tar.bz2 
+        && tar -xjf /tmp/libgpg-error-1.50.tar.bz2 -C /tmp/ 
+        && cd /tmp/libgpg-error-1.50 
+        && ./configure 
+        && make install 
+        && curl  
+        -LS https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.11.0.tar.bz2 
+        -o /tmp/libgcrypt-1.11.0.tar.bz2 
+        && tar -xjf /tmp/libgcrypt-1.11.0.tar.bz2 -C /tmp/ 
+        && cd /tmp/libgcrypt-1.11.0 
+        && ./configure 
+        && make install  
+        && echo "export LD_LIBRARY_PATH=/usr/local/lib/:/usr/local/include:$LD_LIBRARY_PATH" >> ~/.bashrc 
+        && source ~/.bashrc 
+        && ldconfig
+    # End Container Setup
+
+    - name: RHEL Build Script
+      working-directory: ${{github.workspace}}
+      run: source ~/.bashrc && ${GITHUB_WORKSPACE}/support/scripts/build_rhel.sh
+    
+    - name: Code-Coverage
+      working-directory: ${{github.workspace}}
+      run: source ~/.bashrc && make gcov
+
+    - name: Upload 
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: 'coverage/*.c.gcov'
+        verbose: true
+
+  #
+  # Ext. Proc. Build
+  #
+  EP_build:
+    # Container Setup
+    runs-on: ubuntu-latest
+    container:
+        image: ivvitc/cryptolib:20250108
+    steps:
+    - uses: actions/checkout@v4
+    - name: Update
+      run: apt-get update
+    - name: Install Dependencies
+      run: apt-get install -y lcov libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3
+    # End Container Setup
+    
+    - name: Internal Build Script
+      working-directory: ${{github.workspace}}
+      run: |
+        export CFLAGS="-fprofile-arcs -ftest-coverage -fcondition-coverage -g"
+        bash ${GITHUB_WORKSPACE}/support/scripts/build_ep.sh
+
+    # - name: Code-Coverage
+    #   working-directory: ${{github.workspace}}
+    #   run: make gcov
+
+    - name: Upload 
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: 'coverage/*.c.gcov'
+        verbose: true
 ```
 
-## 항목
+### `codeql.yml`
 
-- [`components/cryptolib/.github/workflows/build.yml`](file--build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/.github/workflows/codeql.yml`](file--codeql.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/.github/workflows/cpp-linter.yml`](file--cpp-linter.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/cryptolib/.github/workflows/codeql.yml`
+
+
+```yaml
+# For most projects, this workflow file will not need changing; you simply need
+# to commit it to your repository.
+#
+# You may wish to alter this file to override the set of languages analyzed,
+# or to provide custom queries or build logic.
+#
+# ******** NOTE ********
+# We have attempted to detect the languages in your repository. Please check
+# the `language` matrix defined below to confirm you have the correct set of
+# supported CodeQL languages.
+#
+name: "CodeQL Advanced"
+
+on:
+  push: 
+    branches: [ dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build_internal:
+    name: Analyze Build_Internal
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    container:
+        image: ivvitc/cryptolib:20250108
+    permissions:
+      # required for all workflows
+      security-events: write
+
+      # required to fetch internal or private CodeQL packs
+      packages: read
+
+      # only required for workflows in private repositories
+      actions: write
+      contents: read
+
+    env: 
+      BUILD_STRING: build_internal.sh
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - language: c-cpp
+          build-mode: manual
+        # - language: python
+        #   build-mode: none
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Update Dependencies
+      run: |
+        bash ${GITHUB_WORKSPACE}/support/scripts/update_env.sh
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+
+    - if: matrix.build-mode == 'manual'
+      shell: bash
+      run: |
+        bash ${GITHUB_WORKSPACE}/support/scripts/$BUILD_STRING
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+  
+  build_minimal:
+      name: Analyze Build_Minimal
+      runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+      container:
+        image: ivvitc/cryptolib:20250108
+      permissions:
+        # required for all workflows
+        security-events: write
+
+        # required to fetch internal or private CodeQL packs
+        packages: read
+
+        # only required for workflows in private repositories
+        actions: read
+        contents: read
+
+      env: 
+        BUILD_STRING: build_minimal.sh
+
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+          - language: c-cpp
+            build-mode: manual
+          # - language: python
+          #   build-mode: none
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Dependencies
+        run: |
+          bash ${GITHUB_WORKSPACE}/support/scripts/update_env.sh
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - if: matrix.build-mode == 'manual'
+        shell: bash
+        run: |
+          bash ${GITHUB_WORKSPACE}/support/scripts/$BUILD_STRING
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+  build_wolf:
+      name: Analyze Build_Wolf
+      runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+      container:
+        image: ivvitc/cryptolib:20250108
+      permissions:
+        # required for all workflows
+        security-events: write
+
+        # required to fetch internal or private CodeQL packs
+        packages: read
+
+        # only required for workflows in private repositories
+        actions: read
+        contents: read
+
+      env: 
+        BUILD_STRING: build_wolf.sh
+
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+          - language: c-cpp
+            build-mode: manual
+          # - language: python
+          #   build-mode: none
+      
+      steps:
+      - name: Clone WolfSSL
+        run: git clone --depth 1 --branch v5.6.0-stable https://github.com/wolfSSL/wolfssl.git /tmp/wolfssl
+      
+      - name: Build WolfSSL
+        run: mkdir /tmp/wolfssl/build;
+           cd /tmp/wolfssl/build;
+           cmake -DWOLFSSL_AESCCM=yes -DWOLFSSL_AESSIV=yes -DWOLFSSL_CMAC=yes ..;
+           cmake --build .;
+           make install;
+           ldconfig;
+      - name: Install Dependencies
+        run: |
+          apt-get update
+          apt-get install -y lcov libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3 autoconf libtool
+
+      - name: Update Dependencies
+        run: >
+          curl -LS https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.50.tar.bz2 -o /tmp/libgpg-error-1.50.tar.bz2 
+          && tar -xjf /tmp/libgpg-error-1.50.tar.bz2 -C /tmp/ 
+          && cd /tmp/libgpg-error-1.50 
+          && ./configure 
+          && make install 
+          && curl -LS https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.11.0.tar.bz2 -o /tmp/libgcrypt-1.11.0.tar.bz2 
+          && tar -xjf /tmp/libgcrypt-1.11.0.tar.bz2 -C /tmp/ 
+          && cd /tmp/libgcrypt-1.11.0 
+          && ./configure 
+          && make install
+          && ldconfig
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - if: matrix.build-mode == 'manual'
+        shell: bash
+        run: |
+          bash ${GITHUB_WORKSPACE}/support/scripts/$BUILD_STRING
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+  build_rhel:
+      name: Analyze Build_RHEL
+      runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+      container:
+        image: ivvitc/cryptolib:20250108
+      permissions:
+        # required for all workflows
+        security-events: write
+
+        # required to fetch internal or private CodeQL packs
+        packages: read
+
+        # only required for workflows in private repositories
+        actions: read
+        contents: read
+
+      env: 
+        BUILD_STRING: build_rhel.sh
+
+      strategy:
+        fail-fast: false
+        matrix:
+          include:
+          - language: c-cpp
+            build-mode: manual
+          # - language: python
+          #   build-mode: none
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Dependencies
+        run: |
+          bash ${GITHUB_WORKSPACE}/support/scripts/update_env.sh
+
+      # Initializes the CodeQL tools for scanning.
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - if: matrix.build-mode == 'manual'
+        shell: bash
+        run: |
+          bash ${GITHUB_WORKSPACE}/support/scripts/$BUILD_STRING
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
+
+  build_ep:
+    name: Analyze Build_EP
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    container:
+        image: ivvitc/cryptolib:20250108
+    permissions:
+      # required for all workflows
+      security-events: write
+
+      # required to fetch internal or private CodeQL packs
+      packages: read
+
+      # only required for workflows in private repositories
+      actions: write
+      contents: read
+
+    env: 
+      BUILD_STRING: build_ep.sh
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - language: c-cpp
+          build-mode: manual
+        # - language: python
+        #   build-mode: none
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Update Dependencies
+      run: |
+        bash ${GITHUB_WORKSPACE}/support/scripts/update_env.sh
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+
+    - if: matrix.build-mode == 'manual'
+      shell: bash
+      run: |
+        bash ${GITHUB_WORKSPACE}/support/scripts/$BUILD_STRING
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+```
+
+### `cpp-linter.yml`
+
+**경로:** `components/cryptolib/.github/workflows/cpp-linter.yml`
+
+
+```yaml
+name: cpp-linter
+
+on:
+  pull_request:
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: sudo apt-get update && sudo apt-get install -y clang-format
+
+      - name: Run Linter
+        uses: DoozyX/clang-format-lint-action@v0.15
+        with:
+          source: '.'
+          extensions: 'c,h'
+          clangFormatVersion: 14
+          style: file
+          inplace: true
+
+      - name: Auto-Commit Formatting Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: auto-format via clang-format'
+          
+        
+```

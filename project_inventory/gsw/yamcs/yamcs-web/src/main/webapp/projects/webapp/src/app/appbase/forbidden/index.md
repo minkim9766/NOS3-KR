@@ -3,18 +3,76 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `forbidden.component.css`
 
-file--forbidden.component.css
-file--forbidden.component.html
-file--forbidden.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/forbidden.component.css`
+
+
+```css
+:host {
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `forbidden.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/forbidden.component.css`](file--forbidden.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/forbidden.component.html`](file--forbidden.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/forbidden.component.ts`](file--forbidden.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/forbidden.component.html`
+
+
+```html
+<ya-panel>
+  <p>&nbsp;</p>
+  <table style="padding-left: 60px; margin: 0 auto; padding-top: 100px">
+    <tr>
+      <td style="vertical-align: top">
+        <h2>403: Forbidden</h2>
+        <p>
+          You do not have sufficient privileges to access
+          @if (page) {
+            <a [href]="page" class="ya-link">{{ page }}</a>
+          }
+          @if (!page) {
+            this page
+          }
+        </p>
+        <a routerLink="/" class="ya-link">Go to homepage</a>
+      </td>
+      <td style="padding-left: 15em; padding-right: 5em">
+        <app-oops />
+      </td>
+    </tr>
+  </table>
+</ya-panel>
+```
+
+### `forbidden.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/forbidden/forbidden.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { OopsComponent } from '../oops/oops.component';
+
+@Component({
+  templateUrl: './forbidden.component.html',
+  styleUrl: './forbidden.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [OopsComponent, WebappSdkModule],
+})
+export class ForbiddenComponent implements OnInit {
+  page: string | null;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.page = this.route.snapshot.queryParamMap.get('page');
+  }
+}
+```

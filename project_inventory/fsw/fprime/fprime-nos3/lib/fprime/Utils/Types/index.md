@@ -3,28 +3,851 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CircularBuffer.cpp
-file--CircularBuffer.hpp
-file--CMakeLists.txt
-file--Queue.cpp
-file--Queue.hpp
-file--README.md
-file--SpscQueue.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CircularBuffer.cpp`](file--CircularBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CircularBuffer.hpp`](file--CircularBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/Queue.cpp`](file--Queue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/Queue.hpp`](file--Queue.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/SpscQueue.hpp`](file--SpscQueue.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CircularBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CircularBuffer.cpp`
+
+
+```cpp
+/*
+ * CircularBuffer.cpp:
+ *
+ * Buffer used to efficiently store data in ring data structure. Uses an externally supplied
+ * data store as the backing for this buffer. Thus it is dependent on receiving sole ownership
+ * of the supplied buffer.
+ *
+ * This implementation file contains the function definitions.
+ *
+ *  Created on: Apr 4, 2019
+ *      Author: lestarch
+ *  Revised March 2022
+ *      Author: bocchino
+ */
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Utils/Types/CircularBuffer.hpp>
+
+namespace Types {
+
+CircularBuffer :: CircularBuffer() :
+    m_store(nullptr),
+    m_store_size(0),
+    m_head_idx(0),
+    m_allocated_size(0),
+    m_high_water_mark(0)
+{
+
+}
+
+CircularBuffer :: CircularBuffer(U8* const buffer, const FwSizeType size) :
+    m_store(nullptr),
+    m_store_size(0),
+    m_head_idx(0),
+    m_allocated_size(0),
+    m_high_water_mark(0)
+{
+    setup(buffer, size);
+}
+
+void CircularBuffer :: setup(U8* const buffer, const FwSizeType size) {
+    FW_ASSERT(size > 0);
+    FW_ASSERT(buffer != nullptr);
+    FW_ASSERT(m_store == nullptr && m_store_size == 0); // Not already setup
+
+    // Initialize buffer data
+    m_store = buffer;
+    m_store_size = size;
+    m_head_idx = 0;
+    m_allocated_size = 0;
+    m_high_water_mark = 0;
+}
+
+FwSizeType CircularBuffer :: get_allocated_size() const {
+    return m_allocated_size;
+}
+
+FwSizeType CircularBuffer :: get_free_size() const {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    FW_ASSERT(m_allocated_size <= m_store_size, static_cast<FwAssertArgType>(m_allocated_size));
+    return m_store_size - m_allocated_size;
+}
+
+FwSizeType CircularBuffer :: advance_idx(FwSizeType idx, FwSizeType amount) const {
+    FW_ASSERT(idx < m_store_size, static_cast<FwAssertArgType>(idx));
+    return (idx + amount) % m_store_size;
+}
+
+Fw::SerializeStatus CircularBuffer :: serialize(const U8* const buffer, const FwSizeType size) {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    FW_ASSERT(buffer != nullptr);
+    // Check there is sufficient space
+    if (size > get_free_size()) {
+        return Fw::FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+    // Copy in all the supplied data
+    FwSizeType idx = advance_idx(m_head_idx, m_allocated_size);
+    for (U32 i = 0; i < size; i++) {
+        FW_ASSERT(idx < m_store_size, static_cast<FwAssertArgType>(idx));
+        m_store[idx] = buffer[i];
+        idx = advance_idx(idx);
+    }
+    m_allocated_size += size;
+    FW_ASSERT(m_allocated_size <= this->get_capacity(), static_cast<FwAssertArgType>(m_allocated_size));
+    m_high_water_mark = (m_high_water_mark > m_allocated_size) ? m_high_water_mark : m_allocated_size;
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(char& value, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    return peek(reinterpret_cast<U8&>(value), offset);
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(U8& value, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    // Check there is sufficient data
+    if ((sizeof(U8) + offset) > m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    const FwSizeType idx = advance_idx(m_head_idx, offset);
+    FW_ASSERT(idx < m_store_size, static_cast<FwAssertArgType>(idx));
+    value = m_store[idx];
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(U32& value, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    // Check there is sufficient data
+    if ((sizeof(U32) + offset) > m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    value = 0;
+    FwSizeType idx = advance_idx(m_head_idx, offset);
+
+    // Deserialize all the bytes from network format
+    for (FwSizeType i = 0; i < sizeof(U32); i++) {
+        FW_ASSERT(idx < m_store_size, static_cast<FwAssertArgType>(idx));
+        value = (value << 8) | static_cast<U32>(m_store[idx]);
+        idx = advance_idx(idx);
+    }
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: peek(U8* buffer, FwSizeType size, FwSizeType offset) const {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    FW_ASSERT(buffer != nullptr);
+    // Check there is sufficient data
+    if ((size + offset) > m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    FwSizeType idx = advance_idx(m_head_idx, offset);
+    // Deserialize all the bytes from network format
+    for (FwSizeType i = 0; i < size; i++) {
+        FW_ASSERT(idx < m_store_size, static_cast<FwAssertArgType>(idx));
+        buffer[i] = m_store[idx];
+        idx = advance_idx(idx);
+    }
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CircularBuffer :: rotate(FwSizeType amount) {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    // Check there is sufficient data
+    if (amount > m_allocated_size) {
+        return Fw::FW_DESERIALIZE_BUFFER_EMPTY;
+    }
+    m_head_idx = advance_idx(m_head_idx, amount);
+    m_allocated_size -= amount;
+    return Fw::FW_SERIALIZE_OK;
+}
+
+FwSizeType CircularBuffer ::get_capacity() const {
+    FW_ASSERT(m_store != nullptr && m_store_size != 0); // setup method was called
+    return m_store_size;
+}
+
+FwSizeType CircularBuffer ::get_high_water_mark() const {
+    return m_high_water_mark;
+}
+
+void CircularBuffer ::clear_high_water_mark() {
+    m_high_water_mark = 0;
+}
+
+} //End Namespace Types
+```
+
+### `CircularBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CircularBuffer.hpp`
+
+
+```cpp
+/*
+ * CircularBuffer.hpp:
+ *
+ * Buffer used to efficiently store data in ring data structure. Uses an externally supplied
+ * data store as the backing for this buffer. Thus it is dependent on receiving sole ownership
+ * of the supplied buffer.
+ *
+ * Note: this given implementation loses one byte of the data store in order to ensure that a
+ * separate wrap-around tracking variable is not needed.
+ *
+ *  Created on: Apr 4, 2019
+ *      Author: lestarch
+ *  Revised March 2022
+ *      Author: bocchino
+ */
+
+#ifndef TYPES_CIRCULAR_BUFFER_HPP
+#define TYPES_CIRCULAR_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Types {
+
+class CircularBuffer {
+
+    friend class CircularBufferTester;
+
+    public:
+        /**
+         * Circular buffer constructor. Wraps the supplied buffer as the new data store. Buffer
+         * size is supplied in the 'size' argument.
+         *
+         * Note: specification of storage buffer must be done using `setup` before use.
+         */
+        CircularBuffer();
+
+        /**
+         * Circular buffer constructor. Wraps the supplied buffer as the new data store. Buffer
+         * size is supplied in the 'size' argument. This is equivalent to calling the no-argument constructor followed
+         * by setup(buffer, size).
+         *
+         * Note: ownership of the supplied buffer is held until the circular buffer is deallocated
+         *
+         * \param buffer: supplied buffer used as a data store.
+         * \param size: the of the supplied data store.
+         */
+        CircularBuffer(U8* const buffer, const FwSizeType size);
+
+        /**
+         * Wraps the supplied buffer as the new data store. Buffer size is supplied in the 'size' argument. Cannot be
+         * called after successful setup.
+         *
+         * Note: ownership of the supplied buffer is held until the circular buffer is deallocated
+         *
+         * \param buffer: supplied buffer used as a data store.
+         * \param size: the of the supplied data store.
+         */
+        void setup(U8* const buffer, const FwSizeType size);
+
+        /**
+         * Serialize a given buffer into this circular buffer. Will not accept more data than
+         * space available. This means it will not overwrite existing data.
+         * \param buffer: supplied buffer to be serialized.
+         * \param size: size of the supplied buffer.
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus serialize(const U8* const buffer, const FwSizeType size);
+
+        /**
+         * Deserialize data into the given variable without moving the head index
+         * \param value: value to fill
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(char& value, FwSizeType offset = 0) const;
+        /**
+         * Deserialize data into the given variable without moving the head index
+         * \param value: value to fill
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(U8& value, FwSizeType offset = 0) const;
+        /**
+         * Deserialize data into the given variable without moving the head index
+         * \param value: value to fill
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(U32& value, FwSizeType offset = 0) const;
+
+        /**
+         * Deserialize data into the given buffer without moving the head variable.
+         * \param buffer: buffer to fill with data of the peek
+         * \param size: size in bytes to peek at
+         * \param offset: offset from head to start peak. Default: 0
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus peek(U8* buffer, FwSizeType size, FwSizeType offset = 0) const;
+
+        /**
+         * Rotate the head index, deleting data from the circular buffer and making
+         * space. Cannot rotate more than the available space.
+         * \param amount: amount to rotate by (in bytes)
+         * \return Fw::FW_SERIALIZE_OK on success or something else on error
+         */
+        Fw::SerializeStatus rotate(FwSizeType amount);
+
+        /**
+         * Get the number of bytes allocated in the buffer
+         * \return number of bytes
+         */
+        FwSizeType get_allocated_size() const;
+
+        /**
+         * Get the number of free bytes, i.e., the number
+         * of bytes that may be stored in the buffer without
+         * deleting data and without exceeding the buffer capacity
+         */
+        FwSizeType get_free_size() const;
+
+        /**
+         * Get the logical capacity of the buffer, i.e., the number of available
+         * bytes when the buffer is empty
+         */
+        FwSizeType get_capacity() const;
+
+        /**
+         * Return the largest tracked allocated size
+         */
+        FwSizeType get_high_water_mark() const;
+
+        /**
+         * Clear tracking of the largest allocated size
+         */
+        void clear_high_water_mark();
+
+    private:
+        /**
+         * Returns a wrap-advanced index into the store.
+         * \param idx: index to advance and wrap.
+         * \param amount: amount to advance
+         * \return: new index value
+         */
+        FwSizeType advance_idx(FwSizeType idx, FwSizeType amount = 1) const;
+        //! Physical store backing this circular buffer
+        U8* m_store;
+        //! Size of the physical store
+        FwSizeType m_store_size;
+        //! Index into m_store of byte zero in the logical store.
+        //! When memory is deallocated, this index moves forward and wraps around.
+        FwSizeType m_head_idx;
+        //! Allocated size (size of the logical store)
+        FwSizeType m_allocated_size;
+        //! Maximum allocated size
+        FwSizeType m_high_water_mark;
+};
+} //End Namespace Types
+#endif
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/CircularBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Queue.cpp"
+)
+set(MOD_DEPS
+  "Fw/Types"
+)
+register_fprime_module()
+
+# Rules based unit testing
+set(UT_MOD_DEPS
+    STest
+    Fw/Types
+)
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/CircularState.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/CircularRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/CircularBufferTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CircularBuffer/Main.cpp"
+)
+# STest Includes for this UT
+set (UT_TARGET_NAME "Types_Circular_Buffer_ut_exe")
+register_fprime_ut("${UT_TARGET_NAME}")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Queue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/Queue.cpp`
+
+
+```cpp
+/*
+ * Queue.cpp:
+ *
+ * Implementation of the queue data type.
+ *
+ *  Created on: July 5th, 2022
+ *      Author: lestarch
+ *
+ */
+#include "Queue.hpp"
+#include <Fw/Types/Assert.hpp>
+
+namespace Types {
+
+Queue::Queue() : m_internal(), m_message_size(0) {}
+
+void Queue::setup(U8* const storage, const FwSizeType storage_size, const FwSizeType depth, const FwSizeType message_size) {
+    // Ensure that enough storage was supplied
+    const FwSizeType total_needed_size = depth * message_size;
+    FW_ASSERT(
+        storage_size >= total_needed_size,
+        static_cast<FwAssertArgType>(storage_size),
+        static_cast<FwAssertArgType>(depth),
+        static_cast<FwAssertArgType>(message_size));
+    m_internal.setup(storage, total_needed_size);
+    m_message_size = message_size;
+}
+
+Fw::SerializeStatus Queue::enqueue(const U8* const message, const FwSizeType size) {
+    FW_ASSERT(m_message_size > 0, static_cast<FwAssertArgType>(m_message_size)); // Ensure initialization
+    FW_ASSERT(
+        m_message_size == size,
+        static_cast<FwAssertArgType>(size),
+        static_cast<FwAssertArgType>(m_message_size)); // Message size is as expected
+    return m_internal.serialize(message, m_message_size);
+}
+
+Fw::SerializeStatus Queue::dequeue(U8* const message, const FwSizeType size) {
+    FW_ASSERT(m_message_size > 0); // Ensure initialization
+    FW_ASSERT(
+        m_message_size <= size,
+        static_cast<FwAssertArgType>(size),
+        static_cast<FwAssertArgType>(m_message_size)); // Sufficient storage space for read message
+    Fw::SerializeStatus result = m_internal.peek(message, m_message_size, 0);
+    if (result != Fw::FW_SERIALIZE_OK) {
+        return result;
+    }
+    return m_internal.rotate(m_message_size);
+}
+
+FwSizeType Queue::get_high_water_mark() const {
+    FW_ASSERT(m_message_size > 0, static_cast<FwAssertArgType>(m_message_size));
+    return m_internal.get_high_water_mark() / m_message_size;
+}
+
+void Queue::clear_high_water_mark() {
+    m_internal.clear_high_water_mark();
+}
+
+FwSizeType Queue::getQueueSize() const {
+    FW_ASSERT(m_message_size > 0, static_cast<FwAssertArgType>(m_message_size));
+    return m_internal.get_allocated_size() / m_message_size;
+}
+
+
+}  // namespace Types
+```
+
+### `Queue.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/Queue.hpp`
+
+
+```cpp
+/*
+ * Queue.hpp:
+ *
+ * FIFO queue of fixed size messages. For use generally where non-concurrent, non-OS backed based FIFO queues are
+ * necessary. Message size is defined at construction time and all messages enqueued and dequeued must be of that fixed
+ * size. Wraps circular buffer to perform actual storage of messages. This implementation is not thread safe and the
+ * expectation is that the user will wrap it in concurrency constructs where necessary.
+ *
+ *  Created on: July 5th, 2022
+ *      Author: lestarch
+ *
+ */
+#ifndef _UTILS_TYPES_QUEUE_HPP
+#define _UTILS_TYPES_QUEUE_HPP
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/BasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Utils/Types/CircularBuffer.hpp>
+
+namespace Types {
+
+class Queue {
+  public:
+    /**
+     * \brief constructs an uninitialized queue
+     */
+    Queue();
+
+    /**
+     * \brief setup the queue object to setup storage
+     *
+     * The queue must be configured before use to setup storage parameters. This function supplies those parameters
+     * including depth, and message size.  Storage size must be greater than or equal to the depth x message size.
+     *
+     * \param storage: storage memory allocation
+     * \param storage_size: size of the provided allocation
+     * \param depth: depth of the queue
+     * \param message_size: size of individual messages
+     */
+    void setup(U8* const storage, const FwSizeType storage_size, const FwSizeType depth, const FwSizeType message_size);
+
+    /**
+     * \brief pushes a fixed-size message onto the back of the queue
+     *
+     * Pushes a fixed-size message onto the queue. This performs a copy of the data onto the queue so the user is free
+     * to dispose the message data as soon as the call returns. Note: message is required to be of the size message_size
+     * as defined by the construction of the queue. Size is provided as a safety check to ensure the sent size is
+     * consistent with the expected size of the queue.
+     *
+     * This will return a non-Fw::SERIALIZE_OK status when the queue is full.
+     *
+     * \param message: message of size m_message_size to enqueue
+     * \param size: size of the message being sent. Must be equivalent to queue's message size.
+     * \return: Fw::SERIALIZE_OK on success, something else on failure
+     */
+    Fw::SerializeStatus enqueue(const U8* const message, const FwSizeType size);
+
+    /**
+     * \brief pops a fixed-size message off the front of the queue
+     *
+     * Pops a fixed-size message off the front of the queue. This performs a copy of the data into the provided message
+     * buffer. Note: message is required to be of the size message_size as defined by the construction of the queue. The
+     * size must be greater or equal to message size, although only message size bytes will be used.
+     *
+     * This will return a non-Fw::SERIALIZE_OK status when the queue is empty.
+     *
+     * \param message: message of size m_message_size to dequeue
+     * \param size: size of the buffer being supplied.
+     * \return: Fw::SERIALIZE_OK on success, something else on failure
+     */
+    Fw::SerializeStatus dequeue(U8* const message, const FwSizeType size);
+
+    /**
+     * Return the largest tracked allocated size
+     */
+    FwSizeType get_high_water_mark() const;
+
+    /**
+     * Clear tracking of the largest allocated size
+     */
+    void clear_high_water_mark();
+
+    FwSizeType getQueueSize() const;
+
+  private:
+    CircularBuffer m_internal;
+    FwSizeType m_message_size;
+};
+}  // namespace Types
+#endif  // _UTILS_TYPES_QUEUE_HPP
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/README.md`
+
+
+````markdown
+# Utils::Types
+
+This directory contains a library of helper types.
+
+## Circular Buffer
+
+This type uses a circular buffer to implement a bounded FIFO stream,
+i.e., a logical store that can grow to a maximum
+size and can shrink.
+The logical store is byte addressable with addresses
+0 through _n - 1_, where _n_ is the current store size.
+It grows by increasing the top address from _n - 1_
+to _n + m - 1_ and copying _m_ bytes of data into the
+logical memory so allocated.
+It shrinks by deleting the lowest _m_ addresses
+and renumbering the logical addresses of the
+remaining bytes starting at zero.
+
+The implementation uses a fixed-size physical store.
+The logical store is represented as a base or head index into
+the physical store and an allocated size.
+Initially both are zero.
+When data is added to the circular buffer, the allocated size grows.
+When data is removed from the circular buffer, the allocated
+size shrinks, and the head pointer advances.
+
+The allocated store size never exceeds the physical store size.
+However, when the head index is greater than zero, the sum of
+the head index and the allocated size may exceed
+the physical store size.
+In this case, the logical store wraps around to the beginning
+of the physical store.
+Further, deleting data while in this state may cause
+the head index to wrap around.
+
+`CircularBuffer` does not provide concurrency control.
+If multiple threads use the buffer, the uses must
+be guarded by other concurrency control, e.g.,
+a queue or lock.
+
+The `CircularBuffer` type provides the following operations.
+
+### Constructor
+
+```c++
+CircularBuffer(U8* const buffer, const FwSizeType size)
+```
+
+Construct a circular buffer with the given physical store,
+specified as a starting pointer and a size in bytes.
+
+### Adding Data
+
+```c++
+Fw::SerializeStatus serializeTo(const U8* const buffer, const FwSizeType size);
+```
+
+If the current logical store size plus `size` exceeds
+the maximum logical store size, then return an error.
+Otherwise increase the logical store size by
+`size` bytes and copy `size` bytes starting at `buffer`
+into the new logical memory.
+
+The operation is called `serialize` following F Prime practice.
+No data is actually serialized (the data is copied byte for byte).
+
+### Reading Data
+
+```c++
+Fw::SerializeStatus peek(char& value, FwSizeType offset = 0) const;
+```
+
+If `offset` is not a valid address of the logical store,
+then return an error.
+Otherwise read a `char` value at address `offset` of the logical store
+and store the result into `value`.
+
+```c++
+Fw::SerializeStatus peek(U8& value, FwSizeType offset = 0) const;
+```
+
+Same as previous, but read a `U8` value.
+
+```c++
+Fw::SerializeStatus peek(U32& value, FwSizeType offset = 0) const;
+```
+
+If `offset` through `offset` + 3 are not valid addresses
+in the logical store, then return an error.
+Otherwise read four bytes of the logical store starting at `offset`,
+interpret them as an unsigned 32-bit integer in big endian order,
+and store the result into `value`.
+
+```c++
+Fw::SerializeStatus peek(U8* buffer, FwSizeType size, FwSizeType offset = 0) const;
+```
+
+If `offset` through `offset + size - 1` are not all valid
+addresses in the logical store, then return an error.
+Otherwise copy `size` bytes starting at `offset` into
+the memory starting at `buffer`.
+
+### Deleting Data
+
+```c++
+Fw::SerializeStatus rotate(FwSizeType amount);
+```
+
+If the logical store size _s_ is less than `amount`, then
+return an error.
+Otherwise delete `amount` bytes from the bottom of the
+logical store: reassign the bytes at addresses `amount`
+through _s_ - 1 to addresses zero through _s_ - `amount` - 1,
+and set the logical store size to _s_ - `amount`.
+
+### Querying Buffer State
+
+```c++
+FwSizeType get_allocated_size() const;
+```
+
+Return the number of allocated bytes, i.e., the
+current logical store size.
+This is the maximum number of bytes that may be read from
+the logical store without adding data.
+
+```c++
+FwSizeType get_free_size() const;
+```
+
+Return the number of free bytes, i.e., the
+maximum logical store size minus the current logical store size.
+This is the number of bytes that may be added to the logical
+store without deleting data.
+
+```c++
+FwSizeType get_capacity() const;
+```
+
+Return the maximum logical store size (equal to the physical store size).
+This is the total number of bytes that may be added to an empty
+circular buffer.
+````
+
+### `SpscQueue.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/SpscQueue.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpscQueue.hpp
+// \brief  Lightweight wait-free non-allocating single producer single consumer queue
+//
+// This algorithm is lock-free, wait-free, thread-safe, and ISR-safe, but
+// it relies on two restrictions to achieve these properties:
+//
+//    1. There may only be one producer thread, which is the thread
+//       that may call produce.
+//    2. There may only be one consumer thread, which is the thread
+//       that may call consume and peek.
+//
+// For the purposes of this algorithm, an ISR can be considered to be a
+// thread. In addition, multiple threads could share the responsibility of
+// being a producer or the responsibility of being a consumer if another
+// higher-level concurrency mechanism (like a Mutex) is used to ensure that
+// there is only a single thread acting as producer or a single thread acting
+// as consumer at any time.
+//
+// Attempting to produce from multiple threads or consume/peek from multiple
+// threads without higher-level synchronization can lead to memory corruption.
+//
+// The isFull() and isEmpty() operations may be used from either the
+// producer or consumer thread, but beware that the answer could potentially
+// get outdated, depending on which thread calls it. Here are the valid
+// uses:
+//
+//    1. If isEmpty() returns false when called by the consumer, then the
+//       next consume or peek operation is guaranteed to succeed.
+//    2. If isFull() returns false when called by the producer, then the
+//       next produce operation is guaranteed to succeed.
+//
+// In addition, this algorithm does not dynamically allocate memory, making
+// it robust for hard-real-time environments.
+//
+// ======================================================================
+
+#ifndef UTILS_TYPES_SPSC_QUEUE_HPP
+#define UTILS_TYPES_SPSC_QUEUE_HPP
+
+#include <atomic>
+
+namespace Types {
+
+// Note: FwSizeType is probably generally larger than we need,
+// but it should still be an efficient size to manipulate,
+// and it's guaranteed to be unsigned, which is crucial.
+template <class E, FwSizeType CAPACITY>
+class SpscQueue {
+  public:
+    static_assert(CAPACITY * 2 <= std::numeric_limits<FwSizeType>::max(),
+                  "This implementation distinguishes full and empty queues by using indices modulo CAPACITY * 2, "
+                  "so CAPACITY * 2 must fit in the index type");
+
+    SpscQueue() : m_elements{}, m_nextProduceIdx(0), m_nextConsumeIdx(0) {
+        FW_ASSERT(this->m_nextProduceIdx.is_lock_free() && this->m_nextConsumeIdx.is_lock_free());
+    }
+
+    bool isFull() const {
+        return countElements(this->m_nextProduceIdx.load(), this->m_nextConsumeIdx.load()) == CAPACITY;
+    }
+
+    bool isEmpty() const { return countElements(this->m_nextProduceIdx.load(), this->m_nextConsumeIdx.load()) == 0; }
+
+    // May only be called by the single producer thread.
+    bool produce(const E& element) {
+        FwSizeType nextProduceIdx = this->m_nextProduceIdx.load();
+        FwSizeType nextConsumeIdx = this->m_nextConsumeIdx.load();
+
+        if (countElements(nextProduceIdx, nextConsumeIdx) == CAPACITY) {
+            return false;
+        }
+
+        this->m_elements[nextProduceIdx % CAPACITY] = element;
+        this->m_nextProduceIdx.store((nextProduceIdx + 1) % (CAPACITY * 2));
+        return true;
+    }
+
+    // May only be called by the single consumer thread.
+    bool consume(E& elementOut) {
+        FwSizeType nextProduceIdx = this->m_nextProduceIdx.load();
+        FwSizeType nextConsumeIdx = this->m_nextConsumeIdx.load();
+
+        if (countElements(nextProduceIdx, nextConsumeIdx) == 0) {
+            return false;
+        }
+
+        elementOut = this->m_elements[nextConsumeIdx % CAPACITY];
+        this->m_nextConsumeIdx.store((nextConsumeIdx + 1) % (CAPACITY * 2));
+        return true;
+    }
+
+    // May only be called by the single consumer thread.
+    bool peek(E& elementOut) const {
+        FwSizeType nextProduceIdx = this->m_nextProduceIdx.load();
+        FwSizeType nextConsumeIdx = this->m_nextConsumeIdx.load();
+
+        if (countElements(nextProduceIdx, nextConsumeIdx) == 0) {
+            return false;
+        }
+
+        elementOut = this->m_elements[nextConsumeIdx % CAPACITY];
+        return true;
+    }
+
+    // May only be called by the single consumer thread.
+    bool consume() {
+        E ignored;
+        return consume(ignored);
+    }
+
+  private:
+    E m_elements[CAPACITY];
+    std::atomic<FwSizeType> m_nextProduceIdx;
+    std::atomic<FwSizeType> m_nextConsumeIdx;
+
+    static FwSizeType countElements(FwSizeType nextProduceIdx, FwSizeType nextConsumeIdx) {
+        FwSizeType count = (nextProduceIdx - nextConsumeIdx + CAPACITY * 2) % (CAPACITY * 2);
+        FW_ASSERT(count <= CAPACITY, nextProduceIdx, nextConsumeIdx, count, CAPACITY);
+        return count;
+    }
+};
+
+}  // namespace Types
+
+#endif
+```

@@ -3,18 +3,53 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `replication-state.component.css`
 
-file--replication-state.component.css
-file--replication-state.component.html
-file--replication-state.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/replication-state.component.css`
+
+
+```css
+.connected {
+  color: #00c752;
+}
+
+.disconnected {
+  color: lightgrey;
+}
 ```
 
-## 항목
+### `replication-state.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/replication-state.component.css`](file--replication-state.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/replication-state.component.html`](file--replication-state.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/replication-state.component.ts`](file--replication-state.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/replication-state.component.html`
+
+
+```html
+@if (connected()) {
+  <mat-icon class="connected">check_circle</mat-icon>
+} @else {
+  <mat-icon class="disconnected">lens</mat-icon>
+}
+```
+
+### `replication-state.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication-state/replication-state.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-replication-state',
+  templateUrl: './replication-state.component.html',
+  styleUrl: './replication-state.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ReplicationStateComponent {
+  connected = input<boolean>();
+}
+```

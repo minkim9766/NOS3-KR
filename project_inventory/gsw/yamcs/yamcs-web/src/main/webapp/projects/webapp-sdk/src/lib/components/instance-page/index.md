@@ -3,18 +3,63 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `instance-page.component.css`
 
-file--instance-page.component.css
-file--instance-page.component.html
-file--instance-page.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/instance-page.component.css`
+
+
+```css
+.page-content {
+  position: absolute;
+  top: 49px;
+  /* toolbar + its border */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  background-color: var(--y-background-color);
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `instance-page.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/instance-page.component.css`](file--instance-page.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/instance-page.component.html`](file--instance-page.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/instance-page.component.ts`](file--instance-page.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/instance-page.component.html`
+
+
+```html
+<ng-content select="ya-instance-toolbar" />
+
+<div class="page-content" [style.overflow]="noscroll() ? 'hidden' : 'auto'">
+  <ng-content select="ya-detail-pane" />
+  <ng-content />
+</div>
+```
+
+### `instance-page.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-page/instance-page.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
+
+@Component({
+  selector: 'ya-instance-page',
+  templateUrl: './instance-page.component.html',
+  styleUrl: './instance-page.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaInstancePage {
+  noscroll = input(false, { transform: booleanAttribute });
+}
+```

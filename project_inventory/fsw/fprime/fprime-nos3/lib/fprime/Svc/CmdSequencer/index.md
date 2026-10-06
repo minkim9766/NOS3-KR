@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,36 +11,2291 @@
 docs/index
 formats/index
 test/index
-file--.gitignore
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--CmdSequencer.fpp
-file--CmdSequencer.hpp
-file--CmdSequencerImpl.cpp
-file--CmdSequencerImpl.hpp
-file--Commands.fppi
-file--Events.cpp
-file--Events.fppi
-file--FPrimeSequence.cpp
-file--Sequence.cpp
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/`](formats/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencer.fpp`](file--CmdSequencer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencer.hpp`](file--CmdSequencer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencerImpl.cpp`](file--CmdSequencerImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencerImpl.hpp`](file--CmdSequencerImpl.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Events.cpp`](file--Events.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/FPrimeSequence.cpp`](file--FPrimeSequence.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Sequence.cpp`](file--Sequence.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/.gitignore`
+
+
+```text
+#Ignore Test Outputs
+bin
+```
+
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Svc::CmdSequencerComponentBase::FileReadStage
+Svc::CmdSequencer_FileReadStage
+
+Svc::CmdSequencerComponentBase::SEQ_READ_HEADER
+Svc::CmdSequencer_FileReadStage::READ_HEADER
+
+Svc::CmdSequencerComponentBase::SEQ_READ_HEADER_SIZE
+Svc::CmdSequencer_FileReadStage::READ_HEADER_SIZE
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_SIZE
+Svc::CmdSequencer_FileReadStage::DESER_SIZE
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_NUM_RECORDS
+Svc::CmdSequencer_FileReadStage::DESER_NUM_RECORDS
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_TIME_BASE
+Svc::CmdSequencer_FileReadStage::DESER_TIME_BASE
+
+Svc::CmdSequencerComponentBase::SEQ_DESER_TIME_CONTEXT
+Svc::CmdSequencer_FileReadStage::DESER_TIME_CONTEXT
+
+Svc::CmdSequencerComponentBase::SEQ_READ_SEQ_CRC
+Svc::CmdSequencer_FileReadStage::READ_SEQ_CRC
+
+Svc::CmdSequencerComponentBase::SEQ_READ_SEQ_DATA
+Svc::CmdSequencer_FileReadStage::READ_SEQ_DATA
+
+Svc::CmdSequencerComponentBase::SEQ_READ_SEQ_DATA_SIZE
+Svc::CmdSequencer_FileReadStage::READ_SEQ_DATA_SIZE
+
+Svc::CmdSequencerComponentBase::SeqMode
+Svc::CmdSequencer_SeqMode
+
+Svc::CmdSequencerComponentBase::SEQ_STEP_MODE
+Svc::CmdSequencer_SeqMode::STEP
+
+Svc::CmdSequencerComponentBase::SEQ_AUTO_MODE
+Svc::CmdSequencer_SeqMode::AUTO
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+register_fprime_module(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/CmdSequencer.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/CmdSequencerImpl.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Events.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/FPrimeSequence.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Sequence.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/formats/AMPCSSequence.cpp"
+)
+# ## UTs ###
+register_fprime_ut(
+  AUTOCODER_INPUTS
+    "${FPRIME_FRAMEWORK_PATH}/Svc/CmdSequencer/CmdSequencer.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/AMPCS.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CommandBuffers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Health.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ImmediateBase.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Immediate.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/ImmediateEOS.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Interceptors.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/InvalidFiles.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Mixed.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/MixedRelativeBase.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/NoFiles.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/NoRecords.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Relative.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/AMPCS/CRCs.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/AMPCS/Headers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/AMPCS/Records.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadCRCFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadDescriptorFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/NoRecordsFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadTimeBaseFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/BadTimeContextFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/Buffers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/DataAfterRecordsFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/EmptyFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/File.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/FPrime/CRCs.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/FPrime/Headers.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/FPrime/Records.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/ImmediateEOSFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/ImmediateFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/MissingCRCFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/MissingFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/MixedFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/RelativeFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/SizeFieldTooLargeFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/SizeFieldTooSmallFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/TooLargeFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SequenceFiles/USecFieldTooShortFile.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/JoinWait.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CmdSequencerMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/CmdSequencerTester.cpp"
+  DEPENDS
+    Os_File_Posix_Implementation
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_None
+)
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `CmdSequencer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencer.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for running command sequences
+  active component CmdSequencer {
+
+    # ----------------------------------------------------------------------
+    # Types
+    # ----------------------------------------------------------------------
+
+    @ The sequencer mode
+    enum SeqMode {
+      STEP = 0
+      AUTO = 1
+    }
+
+    @ Sequencer blocking state
+    enum BlockState {
+        BLOCK = 0
+        NO_BLOCK = 1
+    }
+
+    @ The stage of the file read operation
+    enum FileReadStage {
+      READ_HEADER
+      READ_HEADER_SIZE
+      DESER_SIZE
+      DESER_NUM_RECORDS
+      DESER_TIME_BASE
+      DESER_TIME_CONTEXT
+      READ_SEQ_CRC
+      READ_SEQ_DATA
+      READ_SEQ_DATA_SIZE
+    }
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port cmdIn
+
+    @ Command registration port
+    command reg port cmdRegOut
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Event port
+    event port logOut
+
+    @ Telemetry port
+    telemetry port tlmOut
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port timeCaller
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Sequence cancel port
+    async input port seqCancelIn: Svc.CmdSeqCancel
+
+    @ Command response in port
+    async input port cmdResponseIn: Fw.CmdResponse
+
+    @ Ping in port
+    async input port pingIn: Svc.Ping
+
+    @ Ping out port
+    output port pingOut: Svc.Ping
+
+    @ Port for indicating sequence done
+    output port seqDone: Fw.CmdResponse
+
+    @ Port for requests to run sequences
+    async input port seqRunIn: Svc.CmdSeqIn
+
+    @ Port for sending sequence commands
+    output port comCmdOut: Fw.Com
+
+    @ Schedule in port
+    async input port schedIn: Svc.Sched
+
+    @ Notifies that a sequence has started running
+    output port seqStartOut: Svc.CmdSeqIn
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+  }
+
+}
+```
+
+### `CmdSequencer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencer.hpp`
+
+
+```cpp
+// ======================================================================
+// CmdSequencer.hpp
+// Standardization header for CmdSequencer
+// ======================================================================
+
+#ifndef Svc_CmdSequencer_HPP
+#define Svc_CmdSequencer_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+typedef CmdSequencerComponentImpl CmdSequencer;
+
+}
+
+#endif
+```
+
+### `CmdSequencerImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencerImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdSequencerImpl.cpp
+// \author Bocchino/Canham
+// \brief  cpp file for CmdDispatcherComponentBase component implementation class
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include <Fw/Com/ComPacket.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/SerialBuffer.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Svc/CmdSequencer/CmdSequencerImpl.hpp>
+extern "C" {
+#include <Utils/Hash/libcrc/lib_crc.h>
+}
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+CmdSequencerComponentImpl::CmdSequencerComponentImpl(const char* name)
+    : CmdSequencerComponentBase(name),
+      m_FPrimeSequence(*this),
+      m_sequence(&this->m_FPrimeSequence),
+      m_loadCmdCount(0),
+      m_cancelCmdCount(0),
+      m_errorCount(0),
+      m_runMode(STOPPED),
+      m_stepMode(AUTO),
+      m_executedCount(0),
+      m_totalExecutedCount(0),
+      m_sequencesCompletedCount(0),
+      m_timeout(0),
+      m_blockState(Svc::CmdSequencer_BlockState::NO_BLOCK),
+      m_opCode(0),
+      m_cmdSeq(0),
+      m_join_waiting(false) {}
+
+void CmdSequencerComponentImpl::setTimeout(const U32 timeout) {
+    this->m_timeout = timeout;
+}
+
+void CmdSequencerComponentImpl ::setSequenceFormat(Sequence& sequence) {
+    this->m_sequence = &sequence;
+}
+
+void CmdSequencerComponentImpl ::allocateBuffer(const FwEnumStoreType identifier,
+                                                Fw::MemAllocator& allocator,
+                                                const FwSizeType bytes) {
+    this->m_sequence->allocateBuffer(identifier, allocator, bytes);
+}
+
+void CmdSequencerComponentImpl ::loadSequence(const Fw::StringBase& fileName) {
+    FW_ASSERT(this->m_runMode == STOPPED, this->m_runMode);
+    if (not this->loadFile(fileName)) {
+        this->m_sequence->clear();
+    }
+}
+
+void CmdSequencerComponentImpl ::deallocateBuffer(Fw::MemAllocator& allocator) {
+    this->m_sequence->deallocateBuffer(allocator);
+}
+
+CmdSequencerComponentImpl::~CmdSequencerComponentImpl() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations
+// ----------------------------------------------------------------------
+
+void CmdSequencerComponentImpl::CS_RUN_cmdHandler(FwOpcodeType opCode,
+                                                  U32 cmdSeq,
+                                                  const Fw::CmdStringArg& fileName,
+                                                  Svc::CmdSequencer_BlockState block) {
+    if (not this->requireRunMode(STOPPED)) {
+        if (m_join_waiting) {
+            // Inform user previous seq file is not complete
+            this->log_WARNING_HI_CS_JoinWaitingNotComplete();
+        }
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->m_blockState = block.e;
+    this->m_cmdSeq = cmdSeq;
+    this->m_opCode = opCode;
+
+    // load commands
+    if (not this->loadFile(fileName)) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->m_executedCount = 0;
+
+    // Check the step mode. If it is auto, start the sequence
+    if (AUTO == this->m_stepMode) {
+        this->m_runMode = RUNNING;
+        if (this->isConnected_seqStartOut_OutputPort(0)) {
+            this->seqStartOut_out(0, this->m_sequence->getStringFileName());
+        }
+        this->performCmd_Step();
+    }
+
+    if (Svc::CmdSequencer_BlockState::NO_BLOCK == this->m_blockState) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+}
+
+void CmdSequencerComponentImpl::CS_VALIDATE_cmdHandler(FwOpcodeType opCode,
+                                                       U32 cmdSeq,
+                                                       const Fw::CmdStringArg& fileName) {
+    if (!this->requireRunMode(STOPPED)) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // load commands
+    if (not this->loadFile(fileName)) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // clear the buffer
+    this->m_sequence->clear();
+
+    this->log_ACTIVITY_HI_CS_SequenceValid(this->m_sequence->getLogFileName());
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for input port seqRunIn
+void CmdSequencerComponentImpl::seqRunIn_handler(FwIndexType portNum, const Fw::StringBase& filename) {
+    if (!this->requireRunMode(STOPPED)) {
+        this->seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // If file name is non-empty, load a file.
+    // Empty file name means don't load.
+    if (filename != "") {
+        Fw::CmdStringArg cmdStr(filename);
+        const bool status = this->loadFile(cmdStr);
+        if (!status) {
+            this->seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+            return;
+        }
+    } else if (not this->m_sequence->hasMoreRecords()) {
+        // No sequence loaded
+        this->log_WARNING_LO_CS_NoSequenceActive();
+        this->error();
+        this->seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->m_executedCount = 0;
+
+    // Check the step mode. If it is auto, start the sequence
+    if (AUTO == this->m_stepMode) {
+        this->m_runMode = RUNNING;
+        if (this->isConnected_seqStartOut_OutputPort(0)) {
+            this->seqStartOut_out(0, this->m_sequence->getStringFileName());
+        }
+        this->performCmd_Step();
+    }
+
+    this->log_ACTIVITY_HI_CS_PortSequenceStarted(this->m_sequence->getLogFileName());
+}
+
+void CmdSequencerComponentImpl ::seqCancelIn_handler(const FwIndexType portNum) {
+    if (RUNNING == this->m_runMode) {
+        this->performCmd_Cancel();
+        this->log_ACTIVITY_HI_CS_SequenceCanceled(this->m_sequence->getLogFileName());
+        ++this->m_cancelCmdCount;
+        this->tlmWrite_CS_CancelCommands(this->m_cancelCmdCount);
+    } else {
+        this->log_WARNING_LO_CS_NoSequenceActive();
+    }
+}
+
+void CmdSequencerComponentImpl::CS_CANCEL_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    if (RUNNING == this->m_runMode) {
+        this->performCmd_Cancel();
+        this->log_ACTIVITY_HI_CS_SequenceCanceled(this->m_sequence->getLogFileName());
+        ++this->m_cancelCmdCount;
+        this->tlmWrite_CS_CancelCommands(this->m_cancelCmdCount);
+    } else {
+        this->log_WARNING_LO_CS_NoSequenceActive();
+    }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CmdSequencerComponentImpl::CS_JOIN_WAIT_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    // If there is no running sequence do not wait
+    if (m_runMode != RUNNING) {
+        this->log_WARNING_LO_CS_NoSequenceActive();
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    } else {
+        m_join_waiting = true;
+        Fw::LogStringArg& logFileName = this->m_sequence->getLogFileName();
+        this->log_ACTIVITY_HI_CS_JoinWaiting(logFileName, m_cmdSeq, m_opCode);
+        m_cmdSeq = cmdSeq;
+        m_opCode = opCode;
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+bool CmdSequencerComponentImpl ::loadFile(const Fw::StringBase& fileName) {
+    const bool status = this->m_sequence->loadFile(fileName);
+    if (status) {
+        Fw::LogStringArg& logFileName = this->m_sequence->getLogFileName();
+        this->log_ACTIVITY_LO_CS_SequenceLoaded(logFileName);
+        ++this->m_loadCmdCount;
+        this->tlmWrite_CS_LoadCommands(this->m_loadCmdCount);
+    }
+    return status;
+}
+
+void CmdSequencerComponentImpl::error() {
+    ++this->m_errorCount;
+    this->tlmWrite_CS_Errors(m_errorCount);
+}
+
+void CmdSequencerComponentImpl::performCmd_Cancel() {
+    this->m_sequence->reset();
+    this->m_runMode = STOPPED;
+    this->m_cmdTimer.clear();
+    this->m_cmdTimeoutTimer.clear();
+    this->m_executedCount = 0;
+    // write sequence done port with error, if connected
+    if (this->isConnected_seqDone_OutputPort(0)) {
+        this->seqDone_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+
+    if (Svc::CmdSequencer_BlockState::BLOCK == this->m_blockState || m_join_waiting) {
+        // Do not wait if sequence was canceled or a cmd failed
+        this->m_join_waiting = false;
+        this->cmdResponse_out(this->m_opCode, this->m_cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+
+    this->m_blockState = Svc::CmdSequencer_BlockState::NO_BLOCK;
+}
+
+void CmdSequencerComponentImpl ::cmdResponseIn_handler(FwIndexType portNum,
+                                                       FwOpcodeType opcode,
+                                                       U32 cmdSeq,
+                                                       const Fw::CmdResponse& response) {
+    if (this->m_runMode == STOPPED) {
+        // Sequencer is not running
+        this->log_WARNING_HI_CS_UnexpectedCompletion(opcode);
+    } else {
+        // clear command timeout
+        this->m_cmdTimeoutTimer.clear();
+        if (response != Fw::CmdResponse::OK) {
+            this->commandError(this->m_executedCount, opcode, response.e);
+            this->performCmd_Cancel();
+        } else if (this->m_runMode == RUNNING && this->m_stepMode == AUTO) {
+            // Auto mode
+            this->commandComplete(opcode);
+            if (not this->m_sequence->hasMoreRecords()) {
+                // No data left
+                this->m_runMode = STOPPED;
+                this->sequenceComplete();
+            } else {
+                this->performCmd_Step();
+            }
+        } else {
+            // Manual step mode
+            this->commandComplete(opcode);
+            if (not this->m_sequence->hasMoreRecords()) {
+                this->m_runMode = STOPPED;
+                this->sequenceComplete();
+            }
+        }
+    }
+}
+
+void CmdSequencerComponentImpl ::schedIn_handler(FwIndexType portNum, U32 order) {
+    Fw::Time currTime = this->getTime();
+    // check to see if a command time is pending
+    if (this->m_cmdTimer.isExpiredAt(currTime)) {
+        this->comCmdOut_out(0, m_record.m_command, 0);
+        this->m_cmdTimer.clear();
+        // start command timeout timer
+        this->setCmdTimeout(currTime);
+    } else if (this->m_cmdTimeoutTimer.isExpiredAt(this->getTime())) {  // check for command timeout
+        this->log_WARNING_HI_CS_SequenceTimeout(m_sequence->getLogFileName(), this->m_executedCount);
+        // If there is a command timeout, cancel the sequence
+        this->performCmd_Cancel();
+    }
+}
+
+void CmdSequencerComponentImpl ::CS_START_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (not this->m_sequence->hasMoreRecords()) {
+        // No sequence loaded
+        this->log_WARNING_LO_CS_NoSequenceActive();
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+    if (!this->requireRunMode(STOPPED)) {
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->m_blockState = Svc::CmdSequencer_BlockState::NO_BLOCK;
+    this->m_runMode = RUNNING;
+    this->performCmd_Step();
+    this->log_ACTIVITY_HI_CS_CmdStarted(this->m_sequence->getLogFileName());
+    if (this->isConnected_seqStartOut_OutputPort(0)) {
+        this->seqStartOut_out(0, this->m_sequence->getStringFileName());
+    }
+    this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CmdSequencerComponentImpl ::CS_STEP_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (this->requireRunMode(RUNNING)) {
+        this->performCmd_Step();
+        // check for special case where end of sequence entry was encountered
+        if (this->m_runMode != STOPPED) {
+            this->log_ACTIVITY_HI_CS_CmdStepped(this->m_sequence->getLogFileName(), this->m_executedCount);
+        }
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void CmdSequencerComponentImpl ::CS_AUTO_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (this->requireRunMode(STOPPED)) {
+        this->m_stepMode = AUTO;
+        this->log_ACTIVITY_HI_CS_ModeSwitched(CmdSequencer_SeqMode::AUTO);
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void CmdSequencerComponentImpl ::CS_MANUAL_cmdHandler(FwOpcodeType opcode, U32 cmdSeq) {
+    if (this->requireRunMode(STOPPED)) {
+        this->m_stepMode = MANUAL;
+        this->log_ACTIVITY_HI_CS_ModeSwitched(CmdSequencer_SeqMode::STEP);
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+bool CmdSequencerComponentImpl::requireRunMode(RunMode mode) {
+    if (this->m_runMode == mode) {
+        return true;
+    } else {
+        this->log_WARNING_HI_CS_InvalidMode();
+        return false;
+    }
+}
+
+void CmdSequencerComponentImpl ::commandError(const U32 number, const FwOpcodeType opCode, const U32 error) {
+    this->log_WARNING_HI_CS_CommandError(this->m_sequence->getLogFileName(), number, opCode, error);
+    this->error();
+}
+
+void CmdSequencerComponentImpl::performCmd_Step() {
+    this->m_sequence->nextRecord(m_record);
+    // set clock time base and context from value set when sequence was loaded
+    const Sequence::Header& header = this->m_sequence->getHeader();
+    this->m_record.m_timeTag.setTimeBase(header.m_timeBase);
+    this->m_record.m_timeTag.setTimeContext(header.m_timeContext);
+
+    Fw::Time currentTime = this->getTime();
+    switch (this->m_record.m_descriptor) {
+        case Sequence::Record::END_OF_SEQUENCE:
+            this->m_runMode = STOPPED;
+            this->sequenceComplete();
+            break;
+        case Sequence::Record::RELATIVE:
+            this->performCmd_Step_RELATIVE(currentTime);
+            break;
+        case Sequence::Record::ABSOLUTE:
+            this->performCmd_Step_ABSOLUTE(currentTime);
+            break;
+        default:
+            FW_ASSERT(0, m_record.m_descriptor);
+    }
+}
+
+void CmdSequencerComponentImpl::sequenceComplete() {
+    ++this->m_sequencesCompletedCount;
+    // reset buffer
+    this->m_sequence->clear();
+    this->log_ACTIVITY_HI_CS_SequenceComplete(this->m_sequence->getLogFileName());
+    this->tlmWrite_CS_SequencesCompleted(this->m_sequencesCompletedCount);
+    this->m_executedCount = 0;
+    // write sequence done port, if connected
+    if (this->isConnected_seqDone_OutputPort(0)) {
+        this->seqDone_out(0, 0, 0, Fw::CmdResponse::OK);
+    }
+
+    if (Svc::CmdSequencer_BlockState::BLOCK == this->m_blockState || m_join_waiting) {
+        this->cmdResponse_out(this->m_opCode, this->m_cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    m_join_waiting = false;
+    this->m_blockState = Svc::CmdSequencer_BlockState::NO_BLOCK;
+}
+
+void CmdSequencerComponentImpl::commandComplete(const FwOpcodeType opcode) {
+    this->log_ACTIVITY_LO_CS_CommandComplete(this->m_sequence->getLogFileName(), this->m_executedCount, opcode);
+    ++this->m_executedCount;
+    ++this->m_totalExecutedCount;
+    this->tlmWrite_CS_CommandsExecuted(this->m_totalExecutedCount);
+}
+
+void CmdSequencerComponentImpl ::performCmd_Step_RELATIVE(Fw::Time& currentTime) {
+    this->m_record.m_timeTag.add(currentTime.getSeconds(), currentTime.getUSeconds());
+    this->performCmd_Step_ABSOLUTE(currentTime);
+}
+
+void CmdSequencerComponentImpl ::performCmd_Step_ABSOLUTE(Fw::Time& currentTime) {
+    if (currentTime >= this->m_record.m_timeTag) {
+        this->comCmdOut_out(0, m_record.m_command, 0);
+        this->setCmdTimeout(currentTime);
+    } else {
+        this->m_cmdTimer.set(this->m_record.m_timeTag);
+    }
+}
+
+void CmdSequencerComponentImpl ::pingIn_handler(FwIndexType portNum, /*!< The port number*/
+                                                U32 key              /*!< Value to return to pinger*/
+) {
+    // send ping response
+    this->pingOut_out(0, key);
+}
+
+void CmdSequencerComponentImpl ::setCmdTimeout(const Fw::Time& currentTime) {
+    // start timeout timer if enabled and not in step mode
+    if ((this->m_timeout > 0) and (AUTO == this->m_stepMode)) {
+        Fw::Time expTime = currentTime;
+        expTime.add(this->m_timeout, 0);
+        this->m_cmdTimeoutTimer.set(expTime);
+    }
+}
+
+}  // namespace Svc
+```
+
+### `CmdSequencerImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/CmdSequencerImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdSequencerImpl.hpp
+// \author Bocchino/Canham
+// \brief  hpp file for CmdSequencer component implementation class
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_CmdSequencerImpl_HPP
+#define Svc_CmdSequencerImpl_HPP
+
+#include "Fw/Com/ComBuffer.hpp"
+#include "Fw/Types/MemAllocator.hpp"
+#include "Os/File.hpp"
+#include "Os/ValidateFile.hpp"
+#include "Svc/CmdSequencer/CmdSequencerComponentAc.hpp"
+
+namespace Svc {
+
+// Forward declaration for UTs
+namespace ImmediateBase {
+class CmdSequencerTester;
+}
+namespace Immediate {
+class CmdSequencerTester;
+}
+namespace ImmediateEOS {
+class CmdSequencerTester;
+}
+namespace Mixed {
+class CmdSequencerTester;
+}
+namespace MixedRelativeBase {
+class CmdSequencerTester;
+}
+namespace Relative {
+class CmdSequencerTester;
+}
+namespace JoinWait {
+class CmdSequencerTester;
+}
+
+class CmdSequencerComponentImpl final : public CmdSequencerComponentBase {
+    friend class CmdSequencerTester;
+    friend class Svc::ImmediateBase::CmdSequencerTester;
+    friend class Svc::Immediate::CmdSequencerTester;
+    friend class Svc::ImmediateEOS::CmdSequencerTester;
+    friend class Svc::Mixed::CmdSequencerTester;
+    friend class Svc::MixedRelativeBase::CmdSequencerTester;
+    friend class Svc::Relative::CmdSequencerTester;
+    friend class Svc::JoinWait::CmdSequencerTester;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private enumerations
+    // ----------------------------------------------------------------------
+
+    //! The run mode
+    enum RunMode { STOPPED, RUNNING };
+
+    //! The step mode
+    enum StepMode { AUTO, MANUAL };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public classes
+    // ----------------------------------------------------------------------
+
+    //! \class Sequence
+    //! \brief A sequence with unspecified binary format
+    class Sequence {
+      public:
+        //! \class Events
+        //! \brief Sequence event reporting
+        class Events {
+          public:
+            //! Construct an Events object
+            Events(Sequence& sequence  //!< The enclosing sequence
+            );
+
+          public:
+            //! File CRC failure
+            void fileCRCFailure(const U32 storedCRC,   //!< The CRC stored in the file
+                                const U32 computedCRC  //!< The CRC computed over the file
+            );
+
+            //! File invalid
+            void fileInvalid(const CmdSequencer_FileReadStage::t stage,  //!< The file read stage
+                             const I32 error                             //!< The error
+            );
+
+            //! File not found
+            void fileNotFound();
+
+            //! File read error
+            void fileReadError();
+
+            //! File size error
+            void fileSizeError(const U32 size  //!< The size
+            );
+
+            //! Record invalid
+            void recordInvalid(const U32 recordNumber,  //!< The record number
+                               const I32 error          //!< The error
+            );
+
+            //! Record mismatch
+            void recordMismatch(const U32 numRecords,  //!< The number of records in the header
+                                const U32 extraBytes   //!< The number of bytes beyond last record
+            );
+
+            //! Time base mismatch
+            void timeBaseMismatch(const TimeBase currTimeBase,  //!< The current time base
+                                  const TimeBase seqTimeBase    //!< The sequence file time base
+            );
+
+            //! Time context mismatch
+            void timeContextMismatch(const FwTimeContextStoreType currTimeContext,  //!< The current time context
+                                     const FwTimeContextStoreType seqTimeContext    //!< The sequence file time context
+            );
+
+            // No Records
+            void noRecords();
+
+          private:
+            //! The enclosing component
+            Sequence& m_sequence;
+        };
+
+      public:
+        //! Construct a Sequence object
+        Sequence(CmdSequencerComponentImpl& component  //!< The enclosing component
+        );
+
+        //! Destroy a Sequence object
+        virtual ~Sequence();
+
+      public:
+        //! \class Header
+        //! \brief A sequence header
+        class Header {
+          public:
+            enum Constants {
+                //! Serialized size of header
+                SERIALIZED_SIZE =
+                    sizeof(U32) + sizeof(U32) + sizeof(FwTimeBaseStoreType) + sizeof(FwTimeContextStoreType)
+            };
+
+          public:
+            //! Construct a Header object
+            Header();
+
+          public:
+            //! Validate the time field of the sequence header
+            //! \return Success or failure
+            bool validateTime(CmdSequencerComponentImpl& component  //!< Component for time and events
+            );
+
+          public:
+            //! The file size
+            U32 m_fileSize;
+
+            //! The number of records in the sequence
+            U32 m_numRecords;
+
+            //! The time base of the sequence
+            TimeBase m_timeBase;
+
+            //! The context of the sequence
+            FwTimeContextStoreType m_timeContext;
+        };
+
+      public:
+        //! \class Record
+        //! \brief A sequence record
+        class Record {
+          public:
+            enum Descriptor {
+                ABSOLUTE,        //!< Absolute time
+                RELATIVE,        //!< Relative time
+                END_OF_SEQUENCE  //!< end of sequence
+            };
+
+          public:
+            //! Construct a Record object
+            Record() : m_descriptor(END_OF_SEQUENCE) {}
+
+          public:
+            //! The descriptor
+            Descriptor m_descriptor;
+
+            //! The time tag. NOTE: timeBase and context not filled in
+            Fw::Time m_timeTag;
+
+            //! The command
+            Fw::ComBuffer m_command;
+        };
+
+      public:
+        //! Give the sequence representation a memory buffer
+        void allocateBuffer(FwEnumStoreType identifier,   //!< The identifier
+                            Fw::MemAllocator& allocator,  //!< The allocator
+                            FwSizeType bytes              //!< The number of bytes
+        );
+
+        //! Deallocate the buffer
+        void deallocateBuffer(Fw::MemAllocator& allocator  //!< The allocator
+        );
+
+        //! Set the file name. Also sets the log file name.
+        void setFileName(const Fw::StringBase& fileName);
+
+        //! Get the file name
+        //! \return The file name
+        Fw::CmdStringArg& getFileName();
+
+        //! Get the log file name
+        //! \return The log file name
+        Fw::LogStringArg& getLogFileName();
+
+        //! Get the normal string file name
+        //! \return The normal string file name
+        Fw::String& getStringFileName();
+
+        //! Get the sequence header
+        const Header& getHeader() const;
+
+        //! Load a sequence file
+        //! \return Success or failure
+        virtual bool loadFile(const Fw::StringBase& fileName  //!< The file name
+                              ) = 0;
+
+        //! Query whether the sequence has any more records
+        //! \return Yes or no
+        virtual bool hasMoreRecords() const = 0;
+
+        //! Get the next record in the sequence
+        //! Asserts on failure
+        virtual void nextRecord(Record& record  //!< The returned record
+                                ) = 0;
+
+        //! Reset the sequence to the beginning.
+        //! After calling this, hasMoreRecords should return true,
+        //! unless the sequence has no records
+        virtual void reset() = 0;
+
+        //! Clear the sequence records.
+        //! After calling this, hasMoreRecords should return false
+        virtual void clear() = 0;
+
+      protected:
+        //! The enclosing component
+        CmdSequencerComponentImpl& m_component;
+
+        //! Event reporting
+        Events m_events;
+
+        //! The sequence file name
+        Fw::CmdStringArg m_fileName;
+
+        //! Copy of file name for events
+        Fw::LogStringArg m_logFileName;
+
+        //! Copy of file name for ports
+        Fw::String m_stringFileName;
+
+        //! Serialize buffer to hold the binary sequence data
+        Fw::ExternalSerializeBuffer m_buffer;
+
+        //! The allocator ID
+        FwEnumStoreType m_allocatorId;
+
+        //! The sequence header
+        Header m_header;
+    };
+
+    //! \class FPrimeSequence
+    //! \brief A sequence that uses the F Prime binary format
+    class FPrimeSequence : public Sequence {
+      private:
+        enum Constants { INITIAL_COMPUTED_VALUE = 0xFFFFFFFFU };
+
+      public:
+        //! \class CRC
+        //! \brief Container for computed and stored CRC values
+        struct CRC {
+            //! Construct a CRC
+            CRC();
+
+            //! Initialize computed CRC
+            void init();
+
+            //! Update computed CRC
+            void update(const BYTE* buffer,    //!< The buffer
+                        FwSizeType bufferSize  //!< The buffer size
+            );
+
+            //! Finalize computed CRC
+            void finalize();
+
+            //! Computed CRC
+            U32 m_computed;
+
+            //! Stored CRC
+            U32 m_stored;
+        };
+
+      public:
+        //! Construct an FPrimeSequence
+        FPrimeSequence(CmdSequencerComponentImpl& component  //!< The enclosing component
+        );
+
+      public:
+        //! Load a sequence file
+        //! \return Success or failure
+        bool loadFile(const Fw::StringBase& fileName  //!< The file name
+        );
+
+        //! Query whether the sequence has any more records
+        //! \return Yes or no
+        bool hasMoreRecords() const;
+
+        //! Get the next record in the sequence.
+        //! Asserts on failure
+        void nextRecord(Record& record  //!< The returned record
+        );
+
+        //! Reset the sequence to the beginning.
+        //! After calling this, hasMoreRecords should return true, unless
+        //! the sequence has no records.
+        void reset();
+
+        //! Clear the sequence records.
+        //! After calling this, hasMoreRecords should return false.
+        void clear();
+
+      private:
+        //! Read a sequence file
+        //! \return Success or failure
+        bool readFile();
+
+        //! Read an open sequence file
+        //! \return Success or failure
+        bool readOpenFile();
+
+        //! Read a binary sequence header from the sequence file
+        //! into the buffer
+        //! \return Success or failure
+        bool readHeader();
+
+        //! Deserialize the binary sequence header from the buffer
+        //! \return Success or failure
+        bool deserializeHeader();
+
+        //! Read records and CRC into buffer
+        //! \return Success or failure
+        bool readRecordsAndCRC();
+
+        //! Extract CRC from record data
+        //! \return Success or failure
+        bool extractCRC();
+
+        //! Validate the CRC
+        //! \return Success or failure
+        bool validateCRC();
+
+        //! Deserialize a record from a buffer
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeRecord(Record& record  //!< The record
+        );
+
+        //! Deserialize a record descriptor
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeDescriptor(Record::Descriptor& descriptor  //!< The descriptor
+        );
+
+        //! Deserialize a time tag
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeTimeTag(Fw::Time& timeTag  //!< The time tag
+        );
+
+        //! Deserialize the record size
+        //! \return Serialize status
+        Fw::SerializeStatus deserializeRecordSize(U32& recordSize  //!< The record size
+        );
+
+        //! Copy the serialized command into a com buffer
+        //! \return Serialize status
+        Fw::SerializeStatus copyCommand(Fw::ComBuffer& comBuffer,  //!< The com buffer
+                                        const U32 recordSize       //!< The record size
+        );
+
+        //! Validate the sequence records in the buffer
+        //! \return Success or failure
+        bool validateRecords();
+
+      private:
+        //! The CRC values
+        CRC m_crc;
+
+        //! The sequence file
+        Os::File m_sequenceFile;
+    };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private classes
+    // ----------------------------------------------------------------------
+
+    //! \class Timer
+    //! \brief A class representing a timer
+    class Timer {
+        friend class CmdSequencerTester;
+        friend class Svc::ImmediateBase::CmdSequencerTester;
+        friend class Svc::Immediate::CmdSequencerTester;
+        friend class Svc::ImmediateEOS::CmdSequencerTester;
+        friend class Svc::Mixed::CmdSequencerTester;
+        friend class Svc::MixedRelativeBase::CmdSequencerTester;
+        friend class Svc::Relative::CmdSequencerTester;
+        friend class Svc::JoinWait::CmdSequencerTester;
+
+      private:
+        //! The timer state
+        typedef enum { SET, CLEAR } State;
+
+      public:
+        //! Construct a Timer object
+        Timer() : m_state(CLEAR) {}
+
+        //! Set the expiration time
+        void set(Fw::Time time  //!< The time
+        ) {
+            this->m_state = SET;
+            this->expirationTime = time;
+        }
+
+        //! Clear the timer
+        void clear() { this->m_state = CLEAR; }
+
+        //! Determine whether the timer is expired at a given time
+        //! \return Yes or no
+        bool isExpiredAt(Fw::Time time  //!< The time
+        ) {
+            if (this->m_state == CLEAR) {
+                return false;
+            } else if (Fw::Time::compare(this->expirationTime, time) == Fw::Time::GT) {
+                return false;
+            }
+            return true;
+        }
+
+      private:
+        //! The timer state
+        State m_state;
+
+        //! The expiration time
+        Fw::Time expirationTime;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct a CmdSequencer
+    CmdSequencerComponentImpl(const char* compName  //!< The component name
+    );
+
+    //! (Optional) Set a timeout.
+    //! Sequence will quit if a command takes longer than the number of
+    //! seconds in the timeout value.
+    void setTimeout(const U32 seconds  //!< The number of seconds
+    );
+
+    //! (Optional) Set the sequence format.
+    //! CmdSequencer will use the sequence object you pass in
+    //! to load and run sequences. By default, it uses an FPrimeSequence
+    //! object.
+    void setSequenceFormat(Sequence& sequence  //!< The sequence object
+    );
+
+    //! Give the sequence a memory buffer.
+    //! Call this after constructor and init, and after setting
+    //! the sequence format, but before task is spawned.
+    void allocateBuffer(const FwEnumStoreType identifier,  //!< The identifier
+                        Fw::MemAllocator& allocator,       //!< The allocator
+                        const FwSizeType bytes             //!< The number of bytes
+    );
+
+    //! (Optional) Load a sequence to run later.
+    //! When you call this function, the event ports must be connected.
+    void loadSequence(const Fw::StringBase& fileName  //!< The file name
+    );
+
+    //! Return allocated buffer. Call during shutdown.
+    void deallocateBuffer(Fw::MemAllocator& allocator  //!< The allocator
+    );
+
+    //! Destroy a CmdDispatcherComponentBase
+    ~CmdSequencerComponentImpl();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for input port cmdResponseIn
+    void cmdResponseIn_handler(FwIndexType portNum,             //!< The port number
+                               FwOpcodeType opcode,             //!< The command opcode
+                               U32 cmdSeq,                      //!< The command sequence number
+                               const Fw::CmdResponse& response  //!< The command response
+    );
+
+    //! Handler for input port schedIn
+    void schedIn_handler(FwIndexType portNum,  //!< The port number
+                         U32 order             //!< The call order
+    );
+
+    //! Handler for input port seqRunIn
+    void seqRunIn_handler(FwIndexType portNum,            //!< The port number
+                          const Fw::StringBase& filename  //!< The sequence file
+    );
+
+    //! Handler for ping port
+    void pingIn_handler(FwIndexType portNum,  //!< The port number
+                        U32 key               //!< Value to return to pinger
+    );
+
+    //! Handler implementation for seqCancelIn
+    //!
+    void seqCancelIn_handler(const FwIndexType portNum /*!< The port number*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Handler for command CS_AUTO
+    //! Set the run mode to AUTO.
+    void CS_AUTO_cmdHandler(FwOpcodeType opcode,  //!< The opcode
+                            U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Handler for command CS_CANCEL
+    //! Validate a command sequence file
+    void CS_CANCEL_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                              U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Handler for command CS_MANUAL
+    //! Set the run mode to MANUAL.
+    void CS_MANUAL_cmdHandler(FwOpcodeType opcode,  //!< The opcode
+                              U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Handler for command CS_RUN
+    void CS_RUN_cmdHandler(FwOpcodeType opCode,               //!< The opcode
+                           U32 cmdSeq,                        //!< The command sequence number
+                           const Fw::CmdStringArg& fileName,  //!< The file name
+                           Svc::CmdSequencer_BlockState block /*!< Return command status when complete or not*/
+    );
+
+    //! Handler for command CS_START
+    //! Start running a command sequence
+    void CS_START_cmdHandler(FwOpcodeType opcode,  //!< The opcode
+                             U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Handler for command CS_STEP
+    //! Perform one step in a command sequence.
+    //! Valid only if SequenceRunner is in MANUAL run mode.
+    void CS_STEP_cmdHandler(FwOpcodeType opcode,  //!< The opcode
+                            U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Handler for command CS_VALIDATE
+    //! Run a command sequence file
+    void CS_VALIDATE_cmdHandler(FwOpcodeType opCode,              //!< The opcode
+                                U32 cmdSeq,                       //!< The command sequence number
+                                const Fw::CmdStringArg& fileName  //!< The name of the sequence file
+    );
+
+    //! Implementation for CS_JOIN command handler
+    //! Wait for sequences that are running to finish.
+    //! Allow user to run multiple seq files in SEQ_NO_BLOCK mode
+    //! then wait for them to finish before allowing more seq run request.
+    void CS_JOIN_WAIT_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                 const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Load a sequence file
+    //! \return Success or failure
+    bool loadFile(const Fw::StringBase& fileName  //!< The file name
+    );
+
+    //! Perform a Cancel command
+    void performCmd_Cancel();
+
+    //! Perform a Step command
+    void performCmd_Step();
+
+    //! Perform a Step command with a relative time
+    void performCmd_Step_RELATIVE(Fw::Time& currentTime  //!< The time
+    );
+
+    //! Perform a Step command with an absolute time
+    void performCmd_Step_ABSOLUTE(Fw::Time& currentTime  //!< The time
+    );
+
+    //! Record a completed command
+    void commandComplete(const FwOpcodeType opCode  //!< The opcode
+    );
+
+    //! Record a sequence complete event
+    void sequenceComplete();
+
+    //! Record an error
+    void error();
+
+    //! Record an error in executing a sequence command
+    void commandError(const U32 number,           //!< The command number
+                      const FwOpcodeType opCode,  //!< The command opcode
+                      const U32 error             //!< The error code
+    );
+
+    //! Require a run mode
+    //! \return Whether we are in the correct mode
+    bool requireRunMode(RunMode mode  //!< The required mode
+    );
+
+    //! Set command timeout timer
+    void setCmdTimeout(const Fw::Time& currentTime  //!< The current time
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The F Prime sequence
+    FPrimeSequence m_FPrimeSequence;
+
+    //! The abstract sequence
+    Sequence* m_sequence;
+
+    //! The number of Load commands executed
+    U32 m_loadCmdCount;
+
+    //! The number of Cancel commands executed
+    U32 m_cancelCmdCount;
+
+    //! The number of errors
+    U32 m_errorCount;
+
+    //! The run mode
+    RunMode m_runMode;
+
+    //! The step mode
+    StepMode m_stepMode;
+
+    //! The sequence record currently being processed
+    Sequence::Record m_record;
+
+    //! The command time timer
+    Timer m_cmdTimer;
+
+    //! The number of commands executed in this sequence
+    U32 m_executedCount;
+
+    //! The total number of commands executed across all sequences
+    U32 m_totalExecutedCount;
+
+    //! The total number of sequences completed
+    U32 m_sequencesCompletedCount;
+
+    //! timeout value
+    U32 m_timeout;
+
+    //! timeout timer
+    Timer m_cmdTimeoutTimer;
+
+    //! Block mode for command status
+    Svc::CmdSequencer_BlockState::t m_blockState;
+    FwOpcodeType m_opCode;
+    U32 m_cmdSeq;
+    bool m_join_waiting;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Commands.fppi`
+
+
+```text
+
+
+@ Run a command sequence file
+async command CS_RUN(
+                      fileName: string size 240 @< The name of the sequence file
+                      $block: BlockState @< Return command status when complete or not
+                    ) \
+  opcode 0
+
+@ Validate a command sequence file
+async command CS_VALIDATE(
+                           fileName: string size 240 @< The name of the sequence file
+                         ) \
+  opcode 1
+
+@ Cancel a command sequence
+async command CS_CANCEL \
+  opcode 2
+
+@ Start running a command sequence
+async command CS_START \
+  opcode 3
+
+@ Perform one step in a command sequence. Valid only if CmdSequencer is in MANUAL run mode.
+async command CS_STEP \
+  opcode 4
+
+@ Set the run mode to AUTO.
+async command CS_AUTO \
+  opcode 5
+
+@ Set the run mode to MANUAL.
+async command CS_MANUAL \
+  opcode 6
+
+@ Wait for sequences that are running to finish. Allow user to run multiple seq files in SEQ_NO_BLOCK mode then wait for them to finish before allowing more seq run request.
+async command CS_JOIN_WAIT \
+  opcode 7
+```
+
+### `Events.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Events.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Events.cpp
+// \author Bocchino
+// \brief  Implementation for CmdSequencerComponentImpl::Sequence::Events
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Fw/Types/Assert.hpp"
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+CmdSequencerComponentImpl::Sequence::Events ::Events(Sequence& sequence) : m_sequence(sequence) {}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileCRCFailure(const U32 storedCRC, const U32 computedCRC) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileCrcFailure(logFileName, storedCRC, computedCRC);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileInvalid(const CmdSequencer_FileReadStage::t stage,
+                                                               const I32 error) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileInvalid(logFileName, stage, error);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileNotFound() {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileNotFound(logFileName);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileReadError() {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileReadError(logFileName);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::fileSizeError(const U32 size) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_FileSizeError(logFileName, size);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::recordInvalid(const U32 recordNumber, const I32 error) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_RecordInvalid(logFileName, recordNumber, error);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::recordMismatch(const U32 numRecords, const U32 extraBytes) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_RecordMismatch(logFileName, numRecords, extraBytes);
+    // TODO: Should this be an error?
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::timeBaseMismatch(const TimeBase currTimeBase,
+                                                                    const TimeBase seqTimeBase) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_TimeBaseMismatch(logFileName, currTimeBase, seqTimeBase);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::timeContextMismatch(const FwTimeContextStoreType currTimeContext,
+                                                                       const FwTimeContextStoreType seqTimeContext) {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_HI_CS_TimeContextMismatch(logFileName, currTimeContext, seqTimeContext);
+    component.error();
+}
+
+void CmdSequencerComponentImpl::Sequence::Events ::noRecords() {
+    Fw::LogStringArg& logFileName = this->m_sequence.getLogFileName();
+    CmdSequencerComponentImpl& component = this->m_sequence.m_component;
+    component.log_WARNING_LO_CS_NoRecords(logFileName);
+    component.error();
+}
+
+}  // namespace Svc
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Events.fppi`
+
+
+```text
+@ Sequence file was successfully loaded.
+event CS_SequenceLoaded(
+                         fileName: string size 60 @< The name of the sequence file
+                       ) \
+  severity activity low \
+  id 0 \
+  format "Loaded sequence {}"
+
+@ A command sequence was successfully canceled.
+event CS_SequenceCanceled(
+                           fileName: string size 60 @< The name of the sequence file
+                         ) \
+  severity activity high \
+  id 1 \
+  format "Sequence file {} canceled"
+
+@ The Sequence File Loader could not read the sequence file.
+event CS_FileReadError(
+                        fileName: string size 60 @< The name of the sequence file
+                      ) \
+  severity warning high \
+  id 2 \
+  format "Error reading sequence file {}"
+
+@ The sequence file format was invalid.
+event CS_FileInvalid(
+                      fileName: string size 60 @< The name of the sequence file
+                      stage: FileReadStage @< The read stage
+                      error: I32 @< The error code
+                    ) \
+  severity warning high \
+  id 3 \
+  format "Sequence file {} invalid. Stage: {} Error: {}"
+
+@ The format of a command record was invalid.
+event CS_RecordInvalid(
+                        fileName: string size 60 @< The name of the sequence file
+                        recordNumber: U32 @< The record number
+                        error: I32 @< The error code
+                      ) \
+  severity warning high \
+  id 4 \
+  format "Sequence file {}: Record {} invalid. Err: {}"
+
+@ The sequence file was too large.
+event CS_FileSizeError(
+                        fileName: string size 60 @< The name of the sequence file
+                        $size: U32 @< Invalid size
+                      ) \
+  severity warning high \
+  id 5 \
+  format "Sequence file {} too large. Size: {}"
+
+@ The sequence file was not found
+event CS_FileNotFound(
+                       fileName: string size 60 @< The sequence file
+                     ) \
+  severity warning high \
+  id 6 \
+  format "Sequence file {} not found."
+
+
+@ The sequence file validation failed
+event CS_FileCrcFailure(
+                         fileName: string size 60 @< The sequence file
+                         storedCRC: U32 @< The CRC stored in the file
+                         computedCRC: U32 @< The CRC computed over the file
+                       ) \
+  severity warning high \
+  id 7 \
+  format "Sequence file {} had invalid CRC. Stored 0x{x}, Computed 0x{x}."
+
+@ The Command Sequencer issued a command and received a success status in return.
+event CS_CommandComplete(
+                          fileName: string size 60 @< The name of the sequence file
+                          recordNumber: U32 @< The record number of the command
+                          opCode: FwOpcodeType @< The command opcode
+                        ) \
+  severity activity low \
+  id 8 \
+  format "Sequence file {}: Command {} (opcode {}) complete"
+
+@ A command sequence successfully completed.
+event CS_SequenceComplete(
+                           fileName: string size 60 @< The name of the sequence file
+                         ) \
+  severity activity high \
+  id 9 \
+  format "Sequence file {} complete"
+
+@ The Command Sequencer issued a command and received an error status in return.
+event CS_CommandError(
+                       fileName: string size 60 @< The name of the sequence file
+                       recordNumber: U32 @< The record number
+                       opCode: FwOpcodeType @< The opcode
+                       errorStatus: U32 @< The error status
+                     ) \
+  severity warning high \
+  id 10 \
+  format "Sequence file {}: Command {} (opcode {}) completed with error {}"
+
+@ The Command Sequencer received a command that was invalid for its current mode.
+event CS_InvalidMode \
+  severity warning high \
+  id 11 \
+  format "Invalid mode"
+
+@ Number of records in header doesn't match number in file
+event CS_RecordMismatch(
+                         fileName: string size 60 @< The name of the sequence file
+                         header_records: U32 @< The number of records in the header
+                         extra_bytes: U32 @< The number of bytes beyond last record
+                       ) \
+  severity warning high \
+  id 12 \
+  format "Sequence file {} header records mismatch: {} in header, found {} extra bytes."
+
+@ The running time base doesn't match the time base in the sequence files
+event CS_TimeBaseMismatch(
+                           fileName: string size 60 @< The name of the sequence file
+                           time_base: U16 @< The current time
+                           seq_time_base: U16 @< The sequence time base
+                         ) \
+  severity warning high \
+  id 13 \
+  format "Sequence file {}: Current time base doesn't match sequence time: base: {} seq: {}"
+
+@ The running time base doesn't match the time base in the sequence files
+event CS_TimeContextMismatch(
+                              fileName: string size 60 @< The name of the sequence file
+                              currTimeBase: U8 @< The current time base
+                              seqTimeBase: U8 @< The sequence time base
+                            ) \
+  severity warning high \
+  id 14 \
+  format "Sequence file {}: Current time context doesn't match sequence context: base: {} seq: {}"
+
+@ A local port request to run a sequence was started
+event CS_PortSequenceStarted(
+                              filename: string size 60 @< The sequence file
+                            ) \
+  severity activity high \
+  id 15 \
+  format "Local request for sequence {} started."
+
+@ A command status came back when no sequence was running
+event CS_UnexpectedCompletion(
+                               $opcode: FwOpcodeType @< The reported opcode
+                             ) \
+  severity warning high \
+  id 16 \
+  format "Command complete status received while no sequences active. Opcode: {}"
+
+@ Switched step mode
+event CS_ModeSwitched(
+                       mode: SeqMode @< The new mode
+                     ) \
+  severity activity high \
+  id 17 \
+  format "Sequencer switched to {} step mode"
+
+@ A sequence related command came with no active sequence
+event CS_NoSequenceActive \
+  severity warning low \
+  id 18 \
+  format "No sequence active."
+
+@ A sequence passed validation
+event CS_SequenceValid(
+                        filename: string size 60 @< The sequence file
+                      ) \
+  severity activity high \
+  id 19 \
+  format "Sequence {} is valid."
+
+@ A sequence passed validation
+event CS_SequenceTimeout(
+                          filename: string size 60 @< The sequence file
+                          $command: U32 @< The command that timed out
+                        ) \
+  severity warning high \
+  id 20 \
+  format "Sequence {} timed out on command {}"
+
+@ A command in a sequence was stepped through
+event CS_CmdStepped(
+                     filename: string size 60 @< The sequence file
+                     $command: U32 @< The command that was stepped
+                   ) \
+  severity activity high \
+  id 21 \
+  format "Sequence {} command {} stepped"
+
+@ A manual sequence was started
+event CS_CmdStarted(
+                     filename: string size 60 @< The sequence file
+                   ) \
+  severity activity high \
+  id 22 \
+  format "Sequence {} started"
+
+@ Wait for the current running sequence file complete
+event CS_JoinWaiting(
+                      filename: string size 60 @< The sequence file
+                      recordNumber: U32 @< The record number
+                      opCode: FwOpcodeType @< The opcode
+                    ) \
+  severity activity high \
+  id 23 \
+  format "Start waiting for sequence file {}: Command {} (opcode {}) to complete"
+
+@ Cannot run new sequence when current sequence file is still running.
+event CS_JoinWaitingNotComplete() \
+  severity warning high \
+  id 24 \
+  format "Still waiting for sequence file to complete"
+
+event CS_NoRecords(
+                      fileName: string size 60 @< The name of the sequence file
+                    ) \
+  severity warning low \
+  id 25 \
+  format "Sequence file {} has no records. Ignoring."
+```
+
+### `FPrimeSequence.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/FPrimeSequence.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FPrimeSequence.cpp
+// \author Bocchino/Canham
+// \brief  CmdSequencerComponentImpl::FPrimeSequence implementation
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Fw/Types/Assert.hpp"
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+extern "C" {
+#include "Utils/Hash/libcrc/lib_crc.h"
+}
+
+namespace Svc {
+
+CmdSequencerComponentImpl::FPrimeSequence::CRC ::CRC() : m_computed(INITIAL_COMPUTED_VALUE), m_stored(0) {}
+
+void CmdSequencerComponentImpl::FPrimeSequence::CRC ::init() {
+    this->m_computed = INITIAL_COMPUTED_VALUE;
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence::CRC ::update(const BYTE* buffer, FwSizeType bufferSize) {
+    FW_ASSERT(buffer);
+    for (FwSizeType index = 0; index < bufferSize; index++) {
+        this->m_computed = static_cast<U32>(update_crc_32(this->m_computed, static_cast<char>(buffer[index])));
+    }
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence::CRC ::finalize() {
+    this->m_computed = ~this->m_computed;
+}
+
+CmdSequencerComponentImpl::FPrimeSequence ::FPrimeSequence(CmdSequencerComponentImpl& component)
+    : Sequence(component) {}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::validateCRC() {
+    bool result = true;
+    if (this->m_crc.m_stored != this->m_crc.m_computed) {
+        this->m_events.fileCRCFailure(this->m_crc.m_stored, this->m_crc.m_computed);
+        result = false;
+    }
+    return result;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::loadFile(const Fw::StringBase& fileName) {
+    // make sure there is a buffer allocated
+    FW_ASSERT(this->m_buffer.getBuffAddr());
+
+    this->setFileName(fileName);
+
+    const bool status = this->readFile() and this->validateCRC() and this->m_header.validateTime(this->m_component) and
+                        this->validateRecords();
+
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::hasMoreRecords() const {
+    return this->m_buffer.getBuffLeft() > 0;
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence ::nextRecord(Record& record) {
+    Fw::SerializeStatus status = this->deserializeRecord(record);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence ::reset() {
+    this->m_buffer.resetDeser();
+}
+
+void CmdSequencerComponentImpl::FPrimeSequence ::clear() {
+    this->m_buffer.resetSer();
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readFile() {
+    bool result;
+
+    Os::File::Status status = this->m_sequenceFile.open(this->m_fileName.toChar(), Os::File::OPEN_READ);
+
+    if (status == Os::File::OP_OK) {
+        result = this->readOpenFile();
+    } else if (status == Os::File::DOESNT_EXIST) {
+        this->m_events.fileNotFound();
+        result = false;
+    } else {
+        this->m_events.fileReadError();
+        result = false;
+    }
+
+    this->m_sequenceFile.close();
+    return result;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readOpenFile() {
+    U8* const buffAddr = this->m_buffer.getBuffAddr();
+    this->m_crc.init();
+    bool status = this->readHeader();
+    if (status) {
+        this->m_crc.update(buffAddr, Sequence::Header::SERIALIZED_SIZE);
+        status = this->deserializeHeader() and this->readRecordsAndCRC() and this->extractCRC();
+    }
+    if (status) {
+        const FwSizeType buffLen = this->m_buffer.getBuffLength();
+        this->m_crc.update(buffAddr, buffLen);
+        this->m_crc.finalize();
+    }
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readHeader() {
+    Os::File& file = this->m_sequenceFile;
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    bool status = true;
+
+    FwSizeType readLen = Sequence::Header::SERIALIZED_SIZE;
+
+    const FwSizeType capacity = buffer.getBuffCapacity();
+    FW_ASSERT(capacity >= readLen, static_cast<FwAssertArgType>(capacity), static_cast<FwAssertArgType>(readLen));
+    Os::File::Status fileStatus = file.read(buffer.getBuffAddr(), readLen);
+
+    if (fileStatus != Os::File::OP_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER, fileStatus);
+        status = false;
+    }
+
+    if (status and readLen != Sequence::Header::SERIALIZED_SIZE) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER_SIZE, static_cast<I32>(readLen));
+        status = false;
+    }
+
+    if (status) {
+        const Fw::SerializeStatus serializeStatus = buffer.setBuffLen(static_cast<Fw::Serializable::SizeType>(readLen));
+        FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, serializeStatus);
+    }
+
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::deserializeHeader() {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    Header& header = this->m_header;
+
+    // File size
+    Fw::SerializeStatus serializeStatus = buffer.deserialize(header.m_fileSize);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_SIZE, serializeStatus);
+        return false;
+    }
+    if (header.m_fileSize > buffer.getBuffCapacity()) {
+        this->m_events.fileSizeError(header.m_fileSize);
+        return false;
+    }
+    // Number of records
+    serializeStatus = buffer.deserialize(header.m_numRecords);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_NUM_RECORDS, serializeStatus);
+        return false;
+    }
+    // Time base
+    TimeBase tbase;
+    serializeStatus = buffer.deserialize(tbase);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_TIME_BASE, serializeStatus);
+        return false;
+    }
+    header.m_timeBase = (tbase);
+    // Time context
+    serializeStatus = buffer.deserialize(header.m_timeContext);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::DESER_TIME_CONTEXT, serializeStatus);
+        return false;
+    }
+    return true;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::readRecordsAndCRC() {
+    Os::File& file = this->m_sequenceFile;
+    const FwSizeType size = this->m_header.m_fileSize;
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+
+    FwSizeType readLen = size;
+    Os::File::Status fileStatus = file.read(buffer.getBuffAddr(), readLen);
+    // check read status
+    if (fileStatus != Os::File::OP_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_DATA, fileStatus);
+        return false;
+    }
+    // check read size
+    if (size != static_cast<FwSizeType>(readLen)) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_DATA_SIZE, static_cast<I32>(readLen));
+        return false;
+    }
+    // set buffer size
+    Fw::SerializeStatus serializeStatus = buffer.setBuffLen(size);
+    FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, serializeStatus);
+    return true;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::extractCRC() {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    U32& crc = this->m_crc.m_stored;
+
+    // Compute the data size
+    const FwSizeType buffSize = buffer.getBuffLength();
+    const FwSizeType crcSize = sizeof(crc);
+    U8* const buffAddr = buffer.getBuffAddr();
+    if (buffSize < crcSize) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_CRC, static_cast<I32>(buffSize));
+        return false;
+    }
+    FW_ASSERT(buffSize >= crcSize, static_cast<FwAssertArgType>(buffSize), crcSize);
+    const FwSizeType dataSize = buffSize - crcSize;
+    // Create a CRC buffer pointing at the CRC in the main buffer, after the data
+    Fw::ExternalSerializeBuffer crcBuff(&buffAddr[dataSize], crcSize);
+    Fw::SerializeStatus status = crcBuff.setBuffLen(crcSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // Deserialize the CRC from the CRC buffer
+    status = crcBuff.deserialize(crc);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // Set the main buffer size to the data size
+    status = buffer.setBuffLen(dataSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    return true;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeRecord(Record& record) {
+    U32 recordSize;
+
+    Fw::SerializeStatus status = this->deserializeDescriptor(record.m_descriptor);
+
+    if (status == Fw::FW_SERIALIZE_OK and record.m_descriptor == Record::END_OF_SEQUENCE) {
+        return Fw::FW_SERIALIZE_OK;
+    }
+
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this->deserializeTimeTag(record.m_timeTag);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this->deserializeRecordSize(recordSize);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this->copyCommand(record.m_command, recordSize);
+    }
+
+    return status;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeDescriptor(Record::Descriptor& descriptor) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    U8 descEntry;
+
+    Fw::SerializeStatus status = buffer.deserialize(descEntry);
+    if (status != Fw::FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    if (descEntry > Sequence::Record::END_OF_SEQUENCE) {
+        return Fw::FW_DESERIALIZE_FORMAT_ERROR;
+    }
+
+    descriptor = static_cast<Record::Descriptor>(descEntry);
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeTimeTag(Fw::Time& timeTag) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    U32 seconds, useconds;
+    Fw::SerializeStatus status = buffer.deserialize(seconds);
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = buffer.deserialize(useconds);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        timeTag.set(seconds, useconds);
+    }
+    return status;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::deserializeRecordSize(U32& recordSize) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    Fw::SerializeStatus status = buffer.deserialize(recordSize);
+    if (status == Fw::FW_SERIALIZE_OK and recordSize > buffer.getBuffLeft()) {
+        // Not enough data left
+        status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    if (status == Fw::FW_SERIALIZE_OK and
+        recordSize + sizeof(FwPacketDescriptorType) > Fw::ComBuffer::SERIALIZED_SIZE) {
+        // Record size is too big for com buffer
+        status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    return status;
+}
+
+Fw::SerializeStatus CmdSequencerComponentImpl::FPrimeSequence ::copyCommand(Fw::ComBuffer& comBuffer,
+                                                                            const U32 recordSize) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    comBuffer.resetSer();
+    FwSizeType size = recordSize;
+    Fw::SerializeStatus status = comBuffer.setBuffLen(recordSize);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    status = buffer.deserialize(comBuffer.getBuffAddr(), size, Fw::Serialization::OMIT_LENGTH);
+    return status;
+}
+
+bool CmdSequencerComponentImpl::FPrimeSequence ::validateRecords() {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    const U32 numRecords = this->m_header.m_numRecords;
+    Sequence::Record record;
+
+    if (numRecords == 0) {
+        this->m_events.noRecords();
+        return false;
+    }
+
+    // Deserialize all records
+    for (U32 recordNumber = 0; recordNumber < numRecords; recordNumber++) {
+        Fw::SerializeStatus status = this->deserializeRecord(record);
+        if (status != Fw::FW_SERIALIZE_OK) {
+            this->m_events.recordInvalid(recordNumber, status);
+            return false;
+        }
+    }
+    // Check there is no data left
+    const FwSizeType buffLeftSize = buffer.getBuffLeft();
+    if (buffLeftSize > 0) {
+        this->m_events.recordMismatch(numRecords, static_cast<U32>(buffLeftSize));
+        return false;
+    }
+    // Rewind deserialization
+    buffer.resetDeser();
+
+    return true;
+}
+
+}  // namespace Svc
+```
+
+### `Sequence.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Sequence.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Sequence.cpp
+// \author Bocchino/Canham
+// \brief  Implementation file for CmdSequencer::Sequence
+//
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include <Fw/Types/Assert.hpp>
+#include <Svc/CmdSequencer/CmdSequencerImpl.hpp>
+
+namespace Svc {
+
+CmdSequencerComponentImpl::Sequence ::Sequence(CmdSequencerComponentImpl& component)
+    : m_component(component), m_events(*this), m_allocatorId(0) {}
+
+CmdSequencerComponentImpl::Sequence ::~Sequence() {}
+
+CmdSequencerComponentImpl::Sequence::Header ::Header()
+    : m_fileSize(0), m_numRecords(0), m_timeBase(TimeBase::TB_DONT_CARE), m_timeContext(FW_CONTEXT_DONT_CARE) {}
+
+bool CmdSequencerComponentImpl::Sequence::Header ::validateTime(CmdSequencerComponentImpl& component) {
+    Fw::Time validTime = component.getTime();
+    Events& events = component.m_sequence->m_events;
+    // Time base
+    const TimeBase validTimeBase = validTime.getTimeBase();
+    if ((this->m_timeBase != validTimeBase) and (this->m_timeBase != TimeBase::TB_DONT_CARE)) {
+        events.timeBaseMismatch(validTimeBase, this->m_timeBase);
+        return false;
+    }
+    // Time context
+    const FwTimeContextStoreType validContext = validTime.getContext();
+    if ((this->m_timeContext != validContext) and (this->m_timeContext != FW_CONTEXT_DONT_CARE)) {
+        events.timeContextMismatch(validContext, this->m_timeContext);
+        return false;
+    }
+    // Canonicalize time
+    this->m_timeBase = validTimeBase;
+    this->m_timeContext = validContext;
+    return true;
+}
+
+void CmdSequencerComponentImpl::Sequence ::allocateBuffer(FwEnumStoreType identifier,
+                                                          Fw::MemAllocator& allocator,
+                                                          FwSizeType bytes) {
+    // has to be at least as big as a header
+    FW_ASSERT(bytes >= Sequence::Header::SERIALIZED_SIZE);
+    bool recoverable;
+    this->m_allocatorId = identifier;
+    this->m_buffer.setExtBuffer(static_cast<U8*>(allocator.allocate(identifier, bytes, recoverable)), bytes);
+}
+
+void CmdSequencerComponentImpl::Sequence ::deallocateBuffer(Fw::MemAllocator& allocator) {
+    allocator.deallocate(this->m_allocatorId, this->m_buffer.getBuffAddr());
+    this->m_buffer.clear();
+}
+
+const CmdSequencerComponentImpl::Sequence::Header& CmdSequencerComponentImpl::Sequence ::getHeader() const {
+    return this->m_header;
+}
+
+void CmdSequencerComponentImpl::Sequence ::setFileName(const Fw::StringBase& fileName) {
+    this->m_fileName = fileName;
+    this->m_logFileName = fileName;
+    this->m_stringFileName = fileName;
+}
+
+Fw::CmdStringArg& CmdSequencerComponentImpl::Sequence ::getFileName() {
+    return this->m_fileName;
+}
+
+Fw::LogStringArg& CmdSequencerComponentImpl::Sequence ::getLogFileName() {
+    return this->m_logFileName;
+}
+
+Fw::String& CmdSequencerComponentImpl::Sequence ::getStringFileName() {
+    return this->m_stringFileName;
+}
+
+}  // namespace Svc
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/Telemetry.fppi`
+
+
+```text
+@ The number of Load commands executed
+telemetry CS_LoadCommands: U32 id 0
+
+@ The number of Cancel commands executed
+telemetry CS_CancelCommands: U32 id 1
+
+@ The number of errors that have occurred
+telemetry CS_Errors: U32 id 2
+
+@ The number of commands executed across all sequences.
+telemetry CS_CommandsExecuted: U32 id 3
+
+@ The number of sequences completed.
+telemetry CS_SequencesCompleted: U32 id 4
+```

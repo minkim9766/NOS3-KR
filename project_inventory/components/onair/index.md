@@ -3,22 +3,182 @@
 
 **경로:** `components/onair/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 fsw/index
-file--cfs_sample.ini
-file--cfs_sample_tlm.json
-file--CMakeLists.txt
-file--message_headers.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/onair/fsw/`](fsw/index) — 폴더
-- [`components/onair/cfs_sample.ini`](file--cfs_sample.ini) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/cfs_sample_tlm.json`](file--cfs_sample_tlm.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/message_headers.py`](file--message_headers.py) — UTF-8 텍스트 파일 본문 포함
+### `cfs_sample.ini`
+
+**경로:** `components/onair/cfs_sample.ini`
+
+
+```text
+[FILES]
+TelemetryFilePath = 
+TelemetryFile = 
+MetaFilePath = cf/onair
+MetaFile = cfs_sample_tlm.json
+
+[DATA_HANDLING]
+DataSourceFile = cf/onair/onair/data_handling/sbn_adapter.py
+
+[PLUGINS]
+KnowledgeRepPluginDict = {'generic': 'cf/onair/plugins/generic/__init__.py'}
+LearnersPluginDict = {}
+PlannersPluginDict = {}
+ComplexPluginDict = {}
+
+[OPTIONS]
+IO_Flag = true
+```
+
+### `cfs_sample_tlm.json`
+
+**경로:** `components/onair/cfs_sample_tlm.json`
+
+
+```json
+{
+    "subsystems": {
+        "NONE":{
+            "SAMPLE.CommandErrorCount":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Command Error Count"
+            },
+            "SAMPLE.CommandCount":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Command Count"
+            },
+            "SAMPLE.DeviceErrorCount":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Device Command Error Count"
+            },
+            "SAMPLE.DeviceCount":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Device Command Count"
+            },
+            "SAMPLE.DeviceEnabled":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Device Enabled/Disabled State Flag"
+            },
+            "SAMPLE.DeviceHK.DeviceCounter":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Device Command Count"
+            },
+            "SAMPLE.DeviceHK.DeviceConfig":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Device Configuration"
+            },
+            "SAMPLE.DeviceHK.DeviceStatus":{
+                "conversion": "",
+                "tests": {
+                    "NOOP": "[]"
+                },
+                "description": "Device Status Code"
+            }
+        },
+        "CDH":{},
+        "GNC":{},
+        "POWER":{},
+        "THERMAL":{}
+    },
+    "order":[
+        "SAMPLE.CommandErrorCount",
+        "SAMPLE.CommandCount",
+        "SAMPLE.DeviceErrorCount",
+        "SAMPLE.DeviceCount",
+        "SAMPLE.DeviceEnabled",
+        "SAMPLE.DeviceHK.DeviceCounter",
+        "SAMPLE.DeviceHK.DeviceConfig",
+        "SAMPLE.DeviceHK.DeviceStatus"
+    ],
+    "channels":{
+        "0x08FA": ["SAMPLE", "SAMPLE_Hk_tlm_t"]
+    }
+}
+```
+
+### `CMakeLists.txt`
+
+**경로:** `components/onair/CMakeLists.txt`
+
+
+```cmake
+project(ONAIR_COPY NONE)
+
+set(ONAIR_INSTALL_SUB onair)
+set(ONAIR_SOURCE_DIR "fsw/")
+set(ONAIR_SOURCE_ADDITIONAL
+    message_headers.py
+    cfs_sample_tlm.json
+    cfs_sample.ini
+    ${sbn_client_MISSION_DIR}/fsw/python_interface/sbn_python_client.py
+    )
+
+foreach(TGT ${INSTALL_TARGET_LIST})
+    install(DIRECTORY ${ONAIR_SOURCE_DIR} DESTINATION ${TGT}/${INSTALL_SUBDIR}/${ONAIR_INSTALL_SUB} FILES_MATCHING PATTERN "*.py")
+    install(DIRECTORY ${ONAIR_SOURCE_DIR} DESTINATION ${TGT}/${INSTALL_SUBDIR}/${ONAIR_INSTALL_SUB} FILES_MATCHING PATTERN "*.txt")
+    install(DIRECTORY ${ONAIR_SOURCE_DIR} DESTINATION ${TGT}/${INSTALL_SUBDIR}/${ONAIR_INSTALL_SUB} FILES_MATCHING PATTERN "*.ini")
+    install(DIRECTORY ${ONAIR_SOURCE_DIR} DESTINATION ${TGT}/${INSTALL_SUBDIR}/${ONAIR_INSTALL_SUB} FILES_MATCHING PATTERN "*.json")
+    install(FILES ${ONAIR_SOURCE_ADDITIONAL} DESTINATION ${TGT}/${INSTALL_SUBDIR}/${ONAIR_INSTALL_SUB})
+endforeach()
+```
+
+### `message_headers.py`
+
+**경로:** `components/onair/message_headers.py`
+
+
+```python
+from ctypes import *
+import sbn_python_client as sbn
+
+
+# these classes were generated with ChatGPT
+class SAMPLE_Device_HK_tlm_t(Structure):
+    _pack_ = 1
+    _fields_ = [
+        ("DeviceCounter", c_uint32),
+        ("DeviceConfig", c_uint32),
+        ("DeviceStatus", c_uint32)       
+    ]
+
+class SAMPLE_Hk_tlm_t(Structure):
+    _pack_ = 1
+    _fields_ = [
+        ("TlmHeader", sbn.CFE_SB_Msg_t),
+        ("CommandErrorCount", c_uint8),
+        ("CommandCount", c_uint8),
+        ("DeviceErrorCount", c_uint8),
+        ("DeviceCount", c_uint8),
+        ("DeviceEnabled", c_uint8),
+        ("DeviceHK", SAMPLE_Device_HK_tlm_t),
+    ]
+```

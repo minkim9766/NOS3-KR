@@ -3,7 +3,7 @@
 
 **경로:** `components/cryptolib/test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,21 +12,634 @@ core/index
 include/index
 kmc/index
 unit/index
-file--CMakeLists.txt
-file--db_validation.py
-file--encryption_test.py
-file--format.py
-file--key_generator.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/cryptolib/test/core/`](core/index) — 폴더
-- [`components/cryptolib/test/include/`](include/index) — 폴더
-- [`components/cryptolib/test/kmc/`](kmc/index) — 폴더
-- [`components/cryptolib/test/unit/`](unit/index) — 폴더
-- [`components/cryptolib/test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/db_validation.py`](file--db_validation.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/encryption_test.py`](file--encryption_test.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/format.py`](file--format.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/key_generator.py`](file--key_generator.py) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/cryptolib/test/CMakeLists.txt`
+
+
+```cmake
+# Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+# All Foreign Rights are Reserved to the U.S. Government.
+# 
+# This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+# including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+# of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+# documentation will conform to the program, or any warranty that the software will be error free.
+# 
+# In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+# consequential damages, arising out of, resulting from, or in any way connected with the software or its
+# documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+# from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+# 
+# ITC Team
+# NASA IV&V
+# jstar-development-team@mail.nasa.gov
+
+set(PROJECT_TEST_DIR ${CMAKE_BINARY_DIR})
+
+# add_test(NAME Process_Security
+#          COMMAND ${PROJECT_BINARY_DIR}/bin/process_security tc ${PROJECT_TEST_DIR}/data/tc4.1.dat
+#          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_TC_APPLY
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_tc_apply 
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_TC_PROCESS
+        COMMAND ${PROJECT_BINARY_DIR}/bin/ut_tc_process
+        WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_CRYPTO_CONFIG
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_crypto_config 
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_CRYPTO
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_crypto 
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_AOS_APPLY
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_aos_apply
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_AOS_PROCESS
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_aos_process
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_TM_APPLY
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_tm_apply 
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+add_test(NAME UT_TM_PROCESS
+         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_tm_process 
+         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+if(CRYPTO_EPROC)        
+    add_test(NAME UT_EP_MC
+            COMMAND ${PROJECT_BINARY_DIR}/bin/ut_ep_mc 
+            WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+            
+    add_test(NAME UT_EP_SA_MGMT
+            COMMAND ${PROJECT_BINARY_DIR}/bin/ut_ep_sa_mgmt 
+            WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+            
+    add_test(NAME UT_EP_KEY_MGMT
+            COMMAND ${PROJECT_BINARY_DIR}/bin/ut_ep_key_mgmt 
+            WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+endif()
+
+if(NOT ${CRYPTO_WOLFSSL})
+    add_test(NAME UT_AES_GCM_SIV
+            COMMAND ${PROJECT_BINARY_DIR}/bin/ut_aes_gcm_siv
+            WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+endif()
+
+if(SA_FILE)
+    add_test(NAME UT_SA_SAVE
+            COMMAND ${PROJECT_BINARY_DIR}/bin/ut_sa_save 
+            WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+endif()
+
+# add_test(NAME UT_MARIADB
+#          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_mariadb
+#          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+if((KMC_MDB_DB OR KMC_MDB_RH))
+    add_test(NAME UT_TC_KMC
+             COMMAND ${PROJECT_BINARY_DIR}/bin/ut_tc_kmc
+             WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+    add_test(NAME UT_KMC_CAM
+             COMMAND ${PROJECT_BINARY_DIR}/bin/ut_kmc_cam
+             WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+          
+endif()
+    # add_test(NAME UT_SADB_ERR_CASES_KMC_CRYPTO
+    #          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_sa_err_cases_kmc_crypto
+    #          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+    
+    # add_test(NAME UT_MYSQL_TLS_CONNECTION
+    #          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_mysql_tls_connection
+    #          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+    #add_test(NAME UT_MYSQL_M_TLS_CONNECTION
+    #         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_mysql_m_tls_connection
+    #         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+             
+    # add_test(NAME UT_MARIADB
+    #          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_mariadb
+    #          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+    
+    # add_test(NAME UT_KMC_CRYPTO
+    #          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_kmc_crypto
+    #          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+    # add_test(NAME UT_KMC_CRYPTO_WITH_MTLS_SADB
+    #          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_kmc_crypto_with_mtls_sadb
+    #          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+    
+    # This Test cannot yet be accomplished.  Need CAM
+    #add_test(NAME UT_KMC_CRYPTO_CAM
+    #         COMMAND ${PROJECT_BINARY_DIR}/bin/ut_kmc_crypto_cam
+    #         WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+
+    # add_test(NAME UT_KMC_CRYPTO_AUTH_ONLY
+    #          COMMAND ${PROJECT_BINARY_DIR}/bin/ut_kmc_crypto_auth_only
+    #          WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+#endif()
+
+# if(TEST_ENC)
+#     add_test(NAME ET_DT_VALIDATION
+#              COMMAND ${PROJECT_BINARY_DIR}/bin/et_dt_validation 
+#              WORKING_DIRECTORY ${PROJECT_TEST_DIR})
+# endif()
+
+include_directories(include)
+include_directories(../include) 
+
+# if(TEST_ENC)
+#     set(Python3_FIND_STRATEGY VERSION)
+#     find_package (Python3 REQUIRED COMPONENTS Interpreter Development)
+#     execute_process(COMMAND pip3 show pycryptodome RESULT_VARIABLE EXIT_CODE OUTPUT_QUIET)
+#     if(NOT ${EXIT_CODE} EQUAL 0)
+#         message(FATAL_ERROR "The \"pycryptodome\" Python3 package is not installed, and is required for TEST_ENC.")
+#     endif()
+# endif()
+
+file( GLOB UNIT_FILES unit/*.c)
+foreach(SOURCE_PATH ${UNIT_FILES})
+    get_filename_component(EXECUTABLE_NAME ${SOURCE_PATH} NAME_WE)
+
+    # if((NOT TEST_ENC) AND ${EXECUTABLE_NAME} STREQUAL et_dt_validation)
+    #     continue()
+    # else()
+    add_executable(${EXECUTABLE_NAME} ${SOURCE_PATH}) 
+    target_sources(${EXECUTABLE_NAME} PRIVATE core/shared_util.c)
+    target_link_libraries(${EXECUTABLE_NAME} LINK_PUBLIC crypto pthread)
+    # endif()
+
+    # if(TEST_ENC AND ${EXECUTABLE_NAME} STREQUAL et_dt_validation)
+    #     target_link_libraries(${EXECUTABLE_NAME} PUBLIC ${Python3_LIBRARIES}) 
+    #     target_include_directories(${EXECUTABLE_NAME} PUBLIC ${Python3_INCLUDE_DIRS}) 
+    #     find_library(${Python3_LIBRARIES} pycryptodome)
+    # endif()
+
+    add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${EXECUTABLE_NAME}> ${PROJECT_BINARY_DIR}/bin/${EXECUTABLE_NAME}
+            COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_FILE:${EXECUTABLE_NAME}>
+            COMMENT "Created ${PROJECT_BINARY_DIR}/bin/${EXECUTABLE_NAME}"
+            )
+endforeach(SOURCE_PATH ${UNIT_FILES}) 
+
+if(${KMC_MDB_RH} OR ${KMC_MDB_DB})
+    file( GLOB KMC_FILES kmc/*.c)
+    foreach(SOURCE_PATH ${KMC_FILES})
+        get_filename_component(EXECUTABLE_NAME ${SOURCE_PATH} NAME_WE)
+
+        add_executable(${EXECUTABLE_NAME} ${SOURCE_PATH}) 
+        target_sources(${EXECUTABLE_NAME} PRIVATE core/shared_util.c)
+        target_link_libraries(${EXECUTABLE_NAME} LINK_PUBLIC crypto pthread)
+
+        add_custom_command(TARGET ${EXECUTABLE_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${EXECUTABLE_NAME}> ${PROJECT_BINARY_DIR}/bin/${EXECUTABLE_NAME}
+                COMMAND ${CMAKE_COMMAND} -E remove $<TARGET_FILE:${EXECUTABLE_NAME}>
+                COMMENT "Created ${PROJECT_BINARY_DIR}/bin/${EXECUTABLE_NAME}"
+                )
+    endforeach(SOURCE_PATH ${KMC_FILES}) 
+endif()
+
+target_include_directories (crypto PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(OBJECT_DIR ${PROJECT_BINARY_DIR}/src/CMakeFiles/crypto.dir/core)
+
+if(${CODECOV})
+    # Create the gcov target. Run coverage tests with 'make gcov'
+    add_custom_target(gcov
+        COMMAND mkdir -p coverage
+        COMMAND ${CMAKE_MAKE_PROGRAM} test
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+        )
+    add_custom_command(TARGET gcov
+        COMMAND echo "=================== GCOV ===================="
+        #COMMAND gcov -b -o ${OBJECT_DIR} crypto_aos.c.gnco crypto_config.c.gnco crypto_key_mgmt.c.gnco crypto_mc.c.gnco crypto_print.c.gnco crypto_tc.c.gnco crypto_tm.c.gnco crypto_user.c.gnco crypto.c.gnco sa_routine_inmemory.template.c.gnco sa_routine.c.gnco
+        COMMAND gcov -b -o ${OBJECT_DIR} crypto_aos.c.gnco crypto_config.c.gnco crypto_key_mgmt.c.gnco crypto_mc.c.gnco crypto_tc.c.gnco crypto_tm.c.gnco crypto_user.c.gnco crypto.c.gnco sa_routine_inmemory.template.c.gnco 
+        # | grep -A 5 "Adder.cpp" > CoverageSummary.tmp
+        #COMMAND cat CoverageSummary.tmp
+        #COMMAND echo "-- Coverage files have been output to ${PROJECT_BINARY_DIR}/coverage"
+        #COMMAND lcov -c --directory ${OBJECT_DIR} --output-file ${PROJECT_BINARY_DIR}/coverage/results.info
+        #COMMAND genhtml ${PROJECT_BINARY_DIR}/coverage/results.info --output-directory ${PROJECT_BINARY_DIR}/coverage/results
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/coverage
+        )
+    #add_dependencies(gcov ut_tc_apply)
+    # Make sure to clean up the coverage folder
+    #set_property(DIRECTORY APPEND PROPERTY ADDITIONAL_MAKE_CLEAN_FILES coverage)
+
+    # Create the gcov-clean target. This cleans the build as well as generated 
+    # .gcda and .gcno files.
+    #add_custom_target(scrub
+    #COMMAND ${CMAKE_MAKE_PROGRAM} clean
+    #COMMAND rm -f ${OBJECT_DIR}/*.gcno
+    #COMMAND rm -f ${OBJECT_DIR}/*.gcda
+    #WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    #)
+endif(${CODECOV})
+```
+
+### `db_validation.py`
+
+**경로:** `components/cryptolib/test/db_validation.py`
+
+
+```python
+import mysql.connector
+from mysql.connector import Error
+
+def compare(arr1, arr2):
+    if (len(arr1) != len(arr2)):
+        print(f'Length Mismatch:\n/
+              \tarr1={len(arr1)}\n/
+              \tarr2={len(arr2)}')
+        return -1
+    
+    for i, item in enumerate(arr1):
+        if (arr1[i] != arr2[i]):
+            print(f'Value Mismatch:\n/
+              \tarr1{i}={arr1[i]}\n/
+              \tarr2{i}={arr2[i]}')
+        return -1
+    print("Arrays match!")
+    return 0
+
+class Database:
+    def __init__(self, host:str, port:int, db_name:str, table_name:str, user:str, password:str):
+        self.host=host
+        self.port=port
+        self.database=db_name
+        self.table=table_name
+        self.user=user
+        self.password=password
+        self.data=[]
+        
+    def fetch_all_data(self):
+        try:
+            # Define the connection details
+            self.connection = mysql.connector.connect(
+                host=self.host,
+                port=self.port,
+                database=self.database,
+                user=self.user,
+                password=self.password
+            )
+
+            if self.connection.is_connected():
+                print("Connected to the database")
+                
+                # Create a cursor object
+                self.cursor = self.connection.cursor()
+
+                # Execute a query to fetch all data from a table
+                query = f'SELECT * FROM {self.table}'
+                self.cursor.execute(query)
+
+                rows = self.cursor.fetchall()
+                for row in rows:
+                    self.data.append(row)
+                
+                self.close_connection()
+                return self.data
+        
+        except Error as e:
+            print(f"Error: {e}")
+
+    def close_connection(self):
+        if self.connection.is_connected():
+            self.cursor.close()
+            self.connection.close()
+            print("MySQL connection is closed")
+
+
+if __name__ == "__main__":
+    something=Database("localhost", 3306, "db_name", "table_name", "user", "pass")
+    db_data = something.fetch_all_data()
+
+    something2=Database("localhost", 3306, "db_name", "table_name", "user", "pass")
+    db_data2 = something.fetch_all_data()
+
+    compare(db_data, db_data2)
+```
+
+### `encryption_test.py`
+
+**경로:** `components/cryptolib/test/encryption_test.py`
+
+
+```python
+from Crypto.Cipher import AES
+from Crypto.Hash import CMAC, HMAC, SHA256, SHA512
+import codecs
+import sys
+
+
+"""
+Function: crc16
+Calculates the CRC16 for a set of byte data
+@param data: byte array
+@param offset: int
+@param length: int
+"""
+def crc16(data : bytearray, offset , length):
+    if data is None or offset < 0 or offset > len(data)- 1 and offset+length > len(data):
+        return 0
+    crc = 0xFFFF
+    for i in range(0, length):
+        crc ^= data[offset + i] << 8
+        for j in range(0,8):
+            if (crc & 0x8000) > 0:
+                crc =(crc << 1) ^ 0x1021
+            else:
+                crc = crc << 1
+    return crc & 0xFFFF
+
+
+"""
+Class: Encryption
+This class is used to perform AES, GCM encryption in order to provide a truth baseline.
+The baseline is compared against output created by gcrypt within TC_ApplySecurity
+"""
+class Encryption:
+    def __init__(self):
+        self.results = 0x00
+        self.length = 0.0
+
+    # Function: Encrypt
+    # Encrypts data - given a key, iv, header, and bitmask
+    def encrypt(self, data, key, iv, header, bitmask):
+        hex_header = header + iv             # Combines Header and IV (AAD)
+        bitmask_b = bytes.fromhex(bitmask)      
+        header_b = bytes.fromhex(hex_header)
+        key_b = bytes.fromhex(key)
+        iv_b = bytes.fromhex(iv)
+        data_b = bytes.fromhex(data)
+
+        # Create Cipher
+        cipher = AES.new(key_b, AES.MODE_GCM, nonce=iv_b)
+
+        # Performs some bitmasking if necessary -  This will need work if we get more advanced in testing
+        if len(bitmask) > 1:
+            zeroed_header = ''
+            zeroed_header_b = bytes.fromhex(zeroed_header)            
+            # Right now we're only zeroing out the header based on the bitmask existing
+            L = [header_b[i:i+1] for i in range (len(header_b))]
+
+            for pieces in L:
+                value_i = int.from_bytes(pieces, byteorder="big") & int.from_bytes(bitmask_b, byteorder="big")
+                value_b = value_i.to_bytes(max(len(pieces), len(bitmask_b)), byteorder="big")
+                zeroed_header_b += value_b
+            print("ZEROED AAD:", zeroed_header_b.hex())
+            print("DATA:", data_b.hex())
+            cipher.update(zeroed_header_b)
+            #cipher.update(header_b)
+        # Get Cipher and tag
+        ciphertext, tag = cipher.encrypt_and_digest(data_b)
+        print("Cipher: ", ciphertext.hex())
+        print("Tag: ", tag.hex())
+        
+        # Create final_val with non-zeroed header, cipher, and tag
+        final_val = header_b + ciphertext + tag
+
+        # Calculate check_sum
+        check_sum = crc16(bytearray(final_val), 0, len(final_val))
+        # Apply CRC to final_val
+        final_val += check_sum.to_bytes(2, byteorder = "big")
+
+        print(final_val.hex())
+        # Padding for Later
+        # while (len(final_val.hex()) %8) != 0:
+        #     final_val += bytes.fromhex("00")
+
+        final_val_len = (len(final_val.hex()) / 2)
+        self.results = final_val
+        self.length = final_val_len
+        #print(self.results, self.length)
+
+    def get_len(self):
+        #print(self.length)
+        return self.length
+    
+    def get_results(self):
+        #print(self.results.hex())
+        return self.results
+
+
+class Authentication:
+    def __init__(self):
+        self.results = 0x00
+        self.length = 0.0
+
+    def encrypt_cmac(self, data, key):
+        data_b = bytes.fromhex(data)
+        key_b = bytes.fromhex(key)
+
+        cmac_obj = CMAC.new(key_b, ciphermod=AES)
+        cmac_obj.update(data_b)
+
+        self.results = cmac_obj.hexdigest()
+        print(self.results)
+        self.length = len(self.results)
+
+    def encrypt_hmac_sha256(self, data, key):
+        data_b = bytes.fromhex(data)
+        key_b = bytes.fromhex(key)
+
+        hmac_obj = HMAC.new(key_b, digestmod=SHA256)
+        hmac_obj.update(data_b)
+
+        self.results = hmac_obj.hexdigest()
+        print(self.results)
+        self.length = len(self.results)
+
+    def encrypt_hmac_sha512(self, data, key):
+        data_b = bytes.fromhex(data)
+        key_b = bytes.fromhex(key)
+
+        hmac_obj = HMAC.new(key_b, digestmod=SHA512)
+        hmac_obj.update(data_b)
+
+        self.results = hmac_obj.hexdigest()
+        print(self.results)
+        self.length = len(self.results)    
+
+    def get_len(self):
+        #print(self.length)
+        return self.length
+    
+    def get_results(self):
+        #print(self.results.hex())
+        return self.results
+
+
+if __name__ == '__main__':
+    # Auth Example:
+    something=Authentication()
+    something.encrypt_cmac("02C000001800000C08010000000F00112233445566778899AABBCCDDEEFFA107FF000006D2ABBABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABBAABB", "ff9f9284cf599eac3b119905a7d18851e7e374cf63aea04358586b0f757670f9")
+    something.get_len()
+    something.get_results()
+```
+
+### `format.py`
+
+**경로:** `components/cryptolib/test/format.py`
+
+
+```python
+"""
+RUN THIS FILE FROM THE REPO ROOT DIRECTORY!
+"""
+
+
+import os
+import subprocess
+import pathspec
+
+def load_gitignore_patterns(gitignore_path):
+    """
+    Loads patterns from a .gitignore file.
+    
+    :param gitignore_path: Path to the .gitignore file.
+    :return: A pathspec.PathSpec object containing the patterns from .gitignore.
+    """
+    with open(gitignore_path, 'r') as file:
+        patterns = file.readlines()
+    return pathspec.PathSpec.from_lines('gitwildmatch', patterns)
+
+def should_ignore(file_path, gitignore_spec):
+    """
+    Checks if a file should be ignored based on .gitignore patterns.
+    
+    :param file_path: The path to the file.
+    :param gitignore_spec: The PathSpec object with .gitignore patterns.
+    :return: True if the file should be ignored, False otherwise.
+    """
+    return gitignore_spec.match_file(file_path)
+
+def format_files(directory):
+    """
+    Recursively formats all .c and .h files in the given directory using clang-format,
+    ignoring any files listed in the .gitignore.
+    
+    :param directory: The root directory to start searching for files.
+    """
+    # Load .gitignore patterns if the .gitignore file exists
+    gitignore_path = os.path.join(directory, '.gitignore')
+    gitignore_spec = load_gitignore_patterns(gitignore_path) if os.path.exists(gitignore_path) else None
+    
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.endswith(('.c', '.h')):
+                file_path = os.path.relpath(os.path.join(root, file), directory)
+                
+                # Check if the file is ignored by .gitignore
+                if gitignore_spec and should_ignore(file_path, gitignore_spec):
+                    print(f"Ignored: {file_path}")
+                    continue
+
+                try:
+                    # Run clang-format on the file
+                    subprocess.run(["clang-format", "-i", "--style=file", os.path.join(directory, file_path)], check=True)
+                    print(f"Formatted: {file_path}")
+                except subprocess.CalledProcessError as e:
+                    print(f"Failed to format {file_path}: {e}")
+
+if __name__ == "__main__":
+    # Get the current working directory
+    current_directory = os.getcwd()
+    
+    # Run the formatting process
+    format_files(current_directory)
+```
+
+### `key_generator.py`
+
+**경로:** `components/cryptolib/test/key_generator.py`
+
+
+```python
+from enum import Enum
+from random import randrange, choice
+
+class KeyStates(Enum):
+    KEY_PREACTIVE   = 1
+    KEY_ACTIVE      = 2
+    KEY_DEACTIVATED = 3
+    KEY_DESTROYED   = 4
+    KEY_CORRUPTED   = 5
+
+
+class New_Key:
+    def __init__(self, key:str = "", state:int = 0, index:int = 0, random:bool = False, rand_length:int = 0):
+        self.key = key
+        self.state = state
+        self.index = index
+        self.length = 0
+        self.rand_length = rand_length
+        self.key_bytes = []
+    
+        i = 0
+        if not random:
+            while(i < (len(self.key)-1)):
+                self.key_bytes.append("0x" + self.key[i] + self.key[i+1])
+                i += 2
+            self.length = len(self.key_bytes)
+        else:
+            self._do_random()
+
+    def _do_random(self):
+        i = 0
+        if not self.index:
+            self.index = randrange(0,256,1)
+        if not self.state:
+            self.state = randrange(1,5,1)
+        if not self.rand_length:
+            self.length = choice([16, 32, 64])
+        else:
+            self.length = self.rand_length
+        while(i<self.length):
+            value = randrange(0,255,1)
+            if value < 16:
+                self.key_bytes.append(("0x0" + hex(value).split('x')[1]))
+            else:
+                self.key_bytes.append(hex(value))
+            self.key += self.key_bytes[i].split('x')[1]
+            i += 1
+
+    def print_keyring_entry(self):
+        print(f'// {self.index} - {self.key}')
+        for i in range(self.length):
+            print(f'key_ring[{self.index}].value[{i}] = {self.key_bytes[i]};')
+        print(f'key_ring[{self.index}].key_len = {self.length};')
+        print(f'key_ring[{self.index}].key_state = {KeyStates(self.state).name};\n')
+
+    def get_len(self):
+        return self.length
+
+    def get_state(self):
+        return self.state
+
+
+
+if __name__ == '__main__':
+    # Key Example
+        # 1:
+    something = New_Key(key="101112131415161718191A1B1C1D1E1F101112131415161718191A1B1C1D1E1F", state=KeyStates.KEY_ACTIVE, index=69)
+    something.print_keyring_entry()
+
+        # 2:
+    something = New_Key(index=12, state=KeyStates.KEY_ACTIVE, random=True, rand_length=13)
+    something.print_keyring_entry()
+
+        # 3:
+    something = New_Key(random=True)
+    something.print_keyring_entry()
+```

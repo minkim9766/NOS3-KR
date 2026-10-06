@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -27,36 +27,618 @@ shared/index
 storage/index
 telemetry/index
 timeline/index
-file--app.component.css
-file--app.component.html
-file--app.component.ts
-file--app.routes.ts
-file--CustomPreloadingStrategy.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/`](activities/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/`](admin/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/`](alarms/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/`](algorithms/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/`](appbase/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/`](archive/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/`](commanding/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/`](core/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/`](events/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/`](file-transfer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/`](instance-home/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/`](links/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/`](procedures/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/`](search/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/`](shared/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/`](storage/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/`](telemetry/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/`](timeline/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.component.css`](file--app.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.component.html`](file--app.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.component.ts`](file--app.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.routes.ts`](file--app.routes.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/CustomPreloadingStrategy.ts`](file--CustomPreloadingStrategy.ts) — UTF-8 텍스트 파일 본문 포함
+### `app.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.component.css`
+
+
+```css
+:host {
+  --logo-width: 83px;
+  --logo-height: 35px;
+}
+
+mat-toolbar-row {
+  height: 48px;
+  box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.26);
+  z-index: 2;
+  padding-left: 6px;
+  padding-right: calc(24px - 16px);
+}
+
+.mat-toolbar.focus {
+  display: none;
+}
+
+.mat-toolbar-multiple-rows {
+  min-height: 48px;
+}
+
+.app-bar {
+  background-color: var(--y-app-bar-background-color);
+}
+
+.app-bar.replay {
+  background-color: darkviolet;
+}
+
+.app-bar .mat-mdc-button:not(:disabled) {
+  color: #fff !important;
+}
+
+.logo-wrapper {
+  padding-left: 16px;
+  padding-right: 16px;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-wrapper.nosidebar {
+  padding-left: 24px;
+}
+
+.logo-wrapper img {
+  max-height: var(--logo-height);
+  max-width: var(--logo-width);
+  height: auto;
+  width: auto;
+}
+
+.logo-wrapper:hover img {
+  opacity: 0.8;
+}
+
+.tag {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  pointer-events: none;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  color: #fff;
+}
+
+.selected-instance.mat-mdc-button {
+  border: 1px solid grey;
+  border-radius: 40px;
+  line-height: 24px;
+}
+
+::ng-deep .no-padding-dialog .mat-mdc-dialog-container {
+  padding: 0;
+  overflow: hidden;
+}
+
+::ng-deep .top-tabs.mat-mdc-tab-nav-bar {
+  border-bottom: none;
+}
+
+.mat-mdc-button:hover,
+::ng-deep .top-tabs.mat-mdc-tab-nav-bar .mat-mdc-tab-link:hover,
+::ng-deep .top-tabs.mat-mdc-tab-nav-bar .mat-mdc-tab-link.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+::ng-deep .top-tabs.mat-mdc-tab-nav-bar .mat-mdc-tab-link {
+  opacity: 1;
+  min-width: 0;
+  padding: 0 16px;
+}
+
+::ng-deep .top-tabs.mat-mdc-tab-nav-bar .mat-mdc-tab-link .mdc-tab__text-label {
+  color: #fff;
+  letter-spacing: 1.25px;
+}
+```
+
+### `app.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.component.html`
+
+
+```html
+<div #extensionInitializers></div>
+<mat-toolbar color="primary" [class.focus]="focusMode$ | async">
+  <mat-toolbar-row
+    class="app-bar"
+    [class.replay]="(connectionInfo$ | async)?.processor?.replay"
+    [class.nosidebar]="!(sidebar$ | async)">
+    @if (tag) {
+      <div class="tag">
+        {{ tag }}
+      </div>
+    }
+    <a class="logo-wrapper" routerLink="/">
+      <img src="yamcs@2x.png" />
+    </a>
+    @if (connectionInfo$ | async; as connectionInfo) {
+      <button mat-button (click)="openInstanceDialog()">
+        {{ connectionInfo.instance.name }} ▾
+      </button>
+    }
+
+    <div style="flex: 1 1 auto"></div>
+
+    @if (user$ | async; as user) {
+      <nav mat-tab-nav-bar class="top-tabs" [tabPanel]="tabPanel">
+        <!--a mat-tab-link matTooltip="Search (/)">
+        <mat-icon>search</mat-icon>
+      </a-->
+        <a mat-tab-link routerLink="storage" routerLinkActive="active">
+          <mat-icon>perm_media</mat-icon>
+          &nbsp;&nbsp;STORAGE
+        </a>
+        @if (user | mayAccessAdminArea) {
+          <a mat-tab-link routerLink="admin" routerLinkActive="active">
+            <mat-icon>security</mat-icon>
+            &nbsp;&nbsp;ADMIN AREA
+          </a>
+        }
+        @if (siteLinks.length) {
+          <a mat-tab-link [matMenuTriggerFor]="siteLinkMenu" style="padding: 0 8px">
+            <mat-icon>link</mat-icon>
+          </a>
+        }
+        <a mat-tab-link [matMenuTriggerFor]="userMenu">
+          <mat-icon>support_agent</mat-icon>
+          &nbsp;&nbsp;{{ user.getDisplayName() || user.getName() | uppercase }}
+        </a>
+      </nav>
+    }
+
+    <mat-menu #siteLinkMenu="matMenu" overlapTrigger="false" xPosition="before">
+      @for (link of siteLinks; track link) {
+        <a mat-menu-item [href]="link.url" [target]="link.external ? '_blank' : '_self'">
+          Go to {{ link.label }}
+          @if (link.external) {
+            &nbsp;
+            <mat-icon class="icon16">open_in_new</mat-icon>
+          }
+        </a>
+      }
+    </mat-menu>
+
+    <mat-menu #userMenu="matMenu" overlapTrigger="false" xPosition="before">
+      <a mat-menu-item routerLink="profile" routerLinkActive="active">
+        <mat-icon>account_box</mat-icon>
+        &nbsp;Profile
+      </a>
+      @if (authInfo.requireAuthentication) {
+        <a mat-menu-item (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          Sign out
+        </a>
+      }
+    </mat-menu>
+  </mat-toolbar-row>
+</mat-toolbar>
+<mat-tab-nav-panel #tabPanel>
+  <router-outlet />
+</mat-tab-nav-panel>
+<ya-print-zone />
+```
+
+### `app.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  AppearanceService,
+  AuthInfo,
+  AuthService,
+  ConfigService,
+  ConnectionInfo,
+  ExtensionService,
+  PreferenceStore,
+  SiteLink,
+  User,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+import { SelectInstanceDialogComponent } from './shared/select-instance-dialog/select-instance-dialog.component';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class]': 'componentCssClass',
+  },
+  imports: [WebappSdkModule],
+})
+export class AppComponent implements AfterViewInit, OnDestroy {
+  componentCssClass: string;
+
+  @ViewChild('extensionInitializers')
+  extensionInitializersRef: ElementRef<HTMLDivElement>;
+
+  title = 'Yamcs';
+  tag: string;
+  authInfo: AuthInfo;
+  siteLinks: SiteLink[];
+
+  connectionInfo$: Observable<ConnectionInfo | null>;
+  connected$: Observable<boolean>;
+  user$: Observable<User | null>;
+
+  showMdbItem$ = new BehaviorSubject<boolean>(false);
+  sidebar$: Observable<boolean>;
+  focusMode$: Observable<boolean>;
+
+  userSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    router: Router,
+    route: ActivatedRoute,
+    private authService: AuthService,
+    private preferenceStore: PreferenceStore,
+    private dialog: MatDialog,
+    private extensionService: ExtensionService,
+    appearanceService: AppearanceService,
+    private configService: ConfigService,
+  ) {
+    this.focusMode$ = appearanceService.focusMode$;
+    this.tag = configService.getTag();
+    this.authInfo = configService.getAuthInfo();
+    this.siteLinks = configService.getSiteLinks();
+    this.connected$ = yamcs.yamcsClient.connected$;
+    this.connectionInfo$ = yamcs.connectionInfo$;
+    this.user$ = authService.user$;
+
+    this.userSubscription = this.user$.subscribe((user) => {
+      if (user) {
+        this.showMdbItem$.next(user.hasSystemPrivilege('GetMissionDatabase'));
+      } else {
+        this.showMdbItem$.next(false);
+      }
+    });
+
+    this.sidebar$ = router.events.pipe(
+      filter((evt) => evt instanceof NavigationEnd),
+      map((evt) => {
+        // Emit ActivatedRoute updates for use in webcomponents
+        window.dispatchEvent(
+          new CustomEvent('YA_ACTIVATED_ROUTE', {
+            detail: { route },
+          }),
+        );
+
+        let child = route;
+        while (child.firstChild) {
+          child = child.firstChild;
+        }
+
+        if (
+          child.snapshot.data &&
+          child.snapshot.data['hasSidebar'] === false
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      }),
+    );
+  }
+
+  ngAfterViewInit() {
+    // Call custom elements named after each plugin id.
+    // This allows extensions to hook some custom initialization
+    // logic (for example: add to sidebar)
+    var html = this.configService
+      .getPluginIds()
+      .map((id) => `<${id}></${id}>`)
+      .join('');
+    this.extensionInitializersRef.nativeElement.innerHTML = html;
+    var childNodes = this.extensionInitializersRef.nativeElement.childNodes;
+    for (let i = 0; i < childNodes.length; i++) {
+      (childNodes[i] as any).extensionService = this.extensionService;
+    }
+  }
+
+  openInstanceDialog() {
+    this.dialog.open(SelectInstanceDialogComponent, {
+      width: '650px',
+      panelClass: ['no-padding-dialog'],
+    });
+  }
+
+  toggleSidebar() {
+    this.preferenceStore.setValue(
+      'sidebar',
+      !this.preferenceStore.getValue('sidebar'),
+    );
+  }
+
+  logout() {
+    this.authService.logout(true);
+  }
+
+  ngOnDestroy() {
+    this.userSubscription?.unsubscribe();
+  }
+}
+```
+
+### `app.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/app.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { ContextSwitchComponent } from './appbase/context-switch/context-switch.component';
+import { CreateInstancePage1Component } from './appbase/create-instance-page1/create-instance-page1.component';
+import { CreateInstancePage2Component } from './appbase/create-instance-page2/create-instance-page2.component';
+import { ExtensionComponent } from './appbase/extension/extension.component';
+import { extensionMatcher } from './appbase/extension/extension.matcher';
+import { ForbiddenComponent } from './appbase/forbidden/forbidden.component';
+import { HomeComponent } from './appbase/home/home.component';
+import { NotFoundComponent } from './appbase/not-found/not-found.component';
+import { ProfileComponent } from './appbase/profile/profile.component';
+import { ServerUnavailableComponent } from './appbase/server-unavailable/server-unavailable.component';
+import { attachContextGuardFn } from './core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from './core/guards/AuthGuard';
+import { clearContextGuardFn } from './core/guards/ClearContextGuard';
+import { openIDCallbackGuardFn } from './core/guards/OpenIDCallbackGuard';
+import { serverSideOpenIDCallbackGuardFn } from './core/guards/ServerSideOpenIDCallbackGuard';
+import { InstancePageComponent } from './shared/instance-page/instance-page.component';
+
+export const APP_ROUTES: Routes = [
+  {
+    path: '',
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: HomeComponent,
+        canActivate: [authGuardFn, clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'create-instance',
+        pathMatch: 'full',
+        component: CreateInstancePage1Component,
+        canActivate: [authGuardFn, clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'create-instance/:template',
+        component: CreateInstancePage2Component,
+        canActivate: [authGuardFn, clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'context-switch/:context/:current',
+        component: ContextSwitchComponent,
+        canActivate: [authGuardFn, clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [authGuardFn, clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'storage',
+        loadChildren: () =>
+          import('projects/webapp/src/app/storage/storage.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'activities',
+        loadChildren: () =>
+          import('projects/webapp/src/app/activities/activities.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'alarms',
+        loadChildren: () =>
+          import('projects/webapp/src/app/alarms/alarms.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'algorithms',
+        loadChildren: () =>
+          import('projects/webapp/src/app/algorithms/algorithms.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'archive',
+        loadChildren: () =>
+          import('projects/webapp/src/app/archive/archive.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'admin',
+        loadChildren: () =>
+          import('projects/webapp/src/app/admin/admin.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'file-transfer',
+        loadChildren: () =>
+          import(
+            'projects/webapp/src/app/file-transfer/file-transfer.routes'
+          ).then((m) => m.ROUTES),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'commanding',
+        loadChildren: () =>
+          import('projects/webapp/src/app/commanding/commanding.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'events',
+        loadChildren: () =>
+          import('projects/webapp/src/app/events/events.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'instance',
+        loadChildren: () =>
+          import(
+            'projects/webapp/src/app/instance-home/instance-home.routes'
+          ).then((m) => m.ROUTES),
+        canActivate: [authGuardFn],
+        data: { preload: true },
+      },
+      {
+        path: 'links',
+        loadChildren: () =>
+          import('projects/webapp/src/app/links/links.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'procedures',
+        loadChildren: () =>
+          import('projects/webapp/src/app/procedures/procedures.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'search',
+        loadChildren: () =>
+          import('projects/webapp/src/app/search/search.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+        data: { preload: true },
+      },
+      {
+        path: 'timeline',
+        loadChildren: () =>
+          import('projects/webapp/src/app/timeline/timeline.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'telemetry',
+        loadChildren: () =>
+          import('projects/webapp/src/app/telemetry/telemetry.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+        data: { preload: true },
+      },
+      {
+        path: 'mdb',
+        loadChildren: () =>
+          import('projects/webapp/src/app/mdb/mdb.routes').then(
+            (m) => m.ROUTES,
+          ),
+        canActivate: [authGuardFn],
+      },
+      {
+        path: 'ext',
+        canActivate: [authGuardFn, attachContextGuardFn],
+        canActivateChild: [authGuardChildFn],
+        runGuardsAndResolvers: 'always',
+        component: InstancePageComponent,
+        children: [
+          {
+            matcher: extensionMatcher,
+            component: ExtensionComponent,
+          },
+        ],
+      },
+      {
+        path: 'cb',
+        canActivate: [clearContextGuardFn, openIDCallbackGuardFn],
+        children: [],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'oidc-browser-callback',
+        canActivate: [clearContextGuardFn, serverSideOpenIDCallbackGuardFn],
+        children: [],
+        data: { hasSidebar: false },
+      },
+      {
+        path: 'down',
+        component: ServerUnavailableComponent,
+        canActivate: [clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: '403',
+        component: ForbiddenComponent,
+        canActivate: [clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+      {
+        path: '**',
+        component: NotFoundComponent,
+        canActivate: [clearContextGuardFn],
+        data: { hasSidebar: false },
+      },
+    ],
+  },
+];
+```
+
+### `CustomPreloadingStrategy.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/CustomPreloadingStrategy.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+import { PreloadingStrategy, Route } from '@angular/router';
+import { EMPTY, Observable } from 'rxjs';
+
+@Injectable({ providedIn: 'root' })
+export class CustomPreloadingStrategy implements PreloadingStrategy {
+  preload(route: Route, load: () => Observable<any>): Observable<any> {
+    return route.data && route.data['preload'] ? load() : EMPTY;
+  }
+}
+```

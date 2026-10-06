@@ -3,18 +3,225 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `database.component.css`
 
-file--database.component.css
-file--database.component.html
-file--database.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/database.component.css`
+
+
+```css
+.outlet-wrapper {
+  overflow: auto;
+  position: absolute;
+  /* size of tabs + border */
+  top: 37px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.sep {
+  margin-left: 10px;
+  margin-right: 10px;
+}
 ```
 
-## 항목
+### `database.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/database.component.css`](file--database.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/database.component.html`](file--database.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/database.component.ts`](file--database.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/database.component.html`
+
+
+```html
+@if (database$ | async; as database) {
+  <app-admin-page>
+    <app-admin-toolbar>
+      <ng-template app-admin-toolbar-label>
+        <ya-page-icon-button routerLink="/admin/databases" icon="account_tree" />
+        <mat-icon class="icon14 sep">navigate_next</mat-icon>
+        <a class="ya-link ya-header-link" [routerLink]="['/admin/databases', database.name]">
+          {{ database.name }}
+        </a>
+        @if (object$ | async; as obj) {
+          <mat-icon class="icon14 sep">navigate_next</mat-icon>
+          @if (obj.type === "table") {
+            <a
+              class="ya-link ya-header-link"
+              [routerLink]="['/admin/databases', database.name, 'tables']">
+              Tables
+            </a>
+          }
+          @if (obj.type === "stream") {
+            <a
+              class="ya-link ya-header-link"
+              [routerLink]="['/admin/databases', database.name, 'streams']">
+              Streams
+            </a>
+          }
+          <mat-icon class="icon14 sep">navigate_next</mat-icon>
+          {{ obj.name }}
+        }
+      </ng-template>
+    </app-admin-toolbar>
+
+    <ya-page-tabs>
+      @if (!(object$ | async)) {
+        <a
+          [routerLink]="['/admin/databases', database.name, 'tables']"
+          routerLinkActive
+          #rla="routerLinkActive"
+          [class.active]="rla.isActive">
+          Tables
+        </a>
+        <a
+          [routerLink]="['/admin/databases', database.name, 'streams']"
+          routerLinkActive
+          #rlb="routerLinkActive"
+          [class.active]="rlb.isActive">
+          Streams
+        </a>
+        @if (database.name !== "_global") {
+          <a
+            [routerLink]="['/admin/databases', database.name, 'parameter-archive']"
+            routerLinkActive
+            #rlc="routerLinkActive"
+            [class.active]="rlc.isActive">
+            Parameter archive
+          </a>
+        }
+      }
+      @if (object$ | async; as obj) {
+        @if (obj.type === "table") {
+          <a
+            [routerLink]="['/admin/databases', database.name, 'tables', obj.name, 'info']"
+            routerLinkActive
+            #rla1="routerLinkActive"
+            [class.active]="rla1.isActive">
+            Info
+          </a>
+          <a
+            [routerLink]="['/admin/databases', database.name, 'tables', obj.name, 'data']"
+            routerLinkActive
+            #rla2="routerLinkActive"
+            [class.active]="rla2.isActive">
+            Data
+          </a>
+          <a
+            [routerLink]="['/admin/databases', database.name, 'tables', obj.name, 'script']"
+            routerLinkActive
+            #rla3="routerLinkActive"
+            [class.active]="rla3.isActive">
+            Script
+          </a>
+        }
+        @if (obj.type === "stream") {
+          <a
+            [routerLink]="['/admin/databases', database.name, 'streams', obj.name, 'columns']"
+            routerLinkActive
+            #rlb1="routerLinkActive"
+            [class.active]="rlb1.isActive">
+            Columns
+          </a>
+          <a
+            [routerLink]="['/admin/databases', database.name, 'streams', obj.name, 'data']"
+            routerLinkActive
+            #rlb2="routerLinkActive"
+            [class.active]="rlb2.isActive">
+            Data
+          </a>
+          <a
+            [routerLink]="['/admin/databases', database.name, 'streams', obj.name, 'script']"
+            routerLinkActive
+            #rlb3="routerLinkActive"
+            [class.active]="rlb3.isActive">
+            Script
+          </a>
+        }
+      }
+    </ya-page-tabs>
+
+    <div class="outlet-wrapper">
+      <router-outlet />
+    </div>
+  </app-admin-page>
+}
+```
+
+### `database.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database/database.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  AuthService,
+  Database,
+  User,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+interface DatabaseObject {
+  type: 'table' | 'stream';
+  name: string;
+}
+
+@Component({
+  templateUrl: './database.component.html',
+  styleUrl: './database.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+  ],
+})
+export class DatabaseComponent implements OnDestroy {
+  database$: Promise<Database>;
+  object$ = new BehaviorSubject<DatabaseObject | null>(null);
+
+  private user: User;
+  private routerSubscription: Subscription;
+
+  constructor(
+    router: Router,
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    title: Title,
+    authService: AuthService,
+  ) {
+    this.user = authService.getUser()!;
+    this.routerSubscription = router.events.subscribe((evt: NavigationEnd) => {
+      const activeChild = route.snapshot.firstChild!;
+      let objectName = activeChild.paramMap.get('table');
+      if (objectName) {
+        this.object$.next({ type: 'table', name: objectName });
+        return;
+      }
+
+      objectName = activeChild.paramMap.get('stream');
+      if (objectName) {
+        this.object$.next({ type: 'stream', name: objectName });
+        return;
+      }
+
+      this.object$.next(null);
+    });
+    const name = route.snapshot.paramMap.get('database')!;
+    title.setTitle(name);
+    this.database$ = yamcs.yamcsClient.getDatabase(name);
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+  }
+}
+```

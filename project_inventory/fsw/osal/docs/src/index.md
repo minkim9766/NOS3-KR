@@ -3,30 +3,554 @@
 
 **경로:** `fsw/osal/docs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--default-settings.doxyfile
-file--generate-public-api-doxyfile.cmake
-file--osal-apiguide.doxyfile.in
-file--osal-common.doxyfile.in
-file--osal-public-api.doxyfile.in
-file--osal_frontpage.dox
-file--osal_fs.dox
-file--osal_timer.dox
+**경로:** `fsw/osal/docs/src/CMakeLists.txt`
+
+
+```cmake
+########################################################
+#
+# CMake Recipe to build OSAL API guide documentation
+#
+########################################################
+
+#
+# This CMake script currently defines a top-level target "osal-apiguide"
+# to build the OSAL API documentation.  This may be invoked either
+# from the main OSAL CMakeLists.txt as a subdirectory (useful in the
+# case of a self-contained/standalone build) or by a separate script
+# (useful if integrating into a larger project with a separate doc build)
+#
+# To invoke from a separate documentation build, the following vars
+# should be defined by the caller, before adding this subdirectory:
+#
+# OSAL_API_INCLUDE_DIRECTORIES :
+#   The list of directories that have the OSAL API headers
+#   This should include the path to osconfig.h to avoid warnings
+#   about undefined references.
+#
+# OSALDOC_PREDEFINED :
+#   Not used directly, but passed through to the "osal-common.doxyfile"
+#   This may be used to indicate preprocessor definitions that the
+#   documentation generator tool should be aware of
+#
+# Note that OSAL_API_INCLUDE_DIRECTORIES is defined by the parent script
+# in a standalone build environment.
+#
+
+cmake_minimum_required(VERSION 3.5)
+project(OSAL_DOCS NONE)
+
+# List of dox files to include -
+# note that order is relevant here, doxygen processes in the order listed.
+set(OSAL_DOCFILE_LIST
+    ${CMAKE_CURRENT_SOURCE_DIR}/osal_frontpage.dox
+    ${CMAKE_CURRENT_SOURCE_DIR}/osal_fs.dox
+    ${CMAKE_CURRENT_SOURCE_DIR}/osal_timer.dox
+)
+
+# For the generated Doxyfiles, the various paths should be in native form
+set(OSAL_NATIVE_APIGUIDE_SOURCEFILES)
+set(OSAL_NATIVE_INCLUDE_DIRS)
+set(OSAL_DOC_DEPENDENCY_LIST)
+
+foreach(SRC ${OSAL_DOCFILE_LIST})
+    file(TO_NATIVE_PATH "${SRC}" SRC)
+    string(APPEND OSAL_NATIVE_APIGUIDE_SOURCEFILES " \\\n  ${SRC}")
+endforeach()
+
+# The complete list of public API include directories may be determined by reading the property of
+# the "osal_public_api" interface target.  However, the CFE documentation build may want to influence
+# this and provide an alternate path, mainly to provide its own alternate version of "osconfig.h" for
+# docs.  It should be preferred to pull this info from the actual source such that it will track any
+# changes made within OSAL as far as header organization goes.
+if (TARGET osal_public_api AND NOT OSAL_API_INCLUDE_DIRECTORIES)
+    get_target_property(OSAL_API_INCLUDE_DIRECTORIES osal_public_api INTERFACE_INCLUDE_DIRECTORIES)
+    if (NOT OSAL_API_INCLUDE_DIRECTORIES)
+        set (OSAL_API_INCLUDE_DIRECTORIES)
+    endif()
+    get_target_property(OSAL_API_COMPILE_DEFINITIONS osal_public_api INTERFACE_COMPILE_DEFINITIONS)
+    if (NOT OSAL_API_COMPILE_DEFINITIONS)
+        set (OSAL_API_COMPILE_DEFINITIONS)
+    endif()
+endif ()
+
+# Generate the list of actual header files from the directories specified.  This is done
+# as a target that runs a separate script such that generator expressions can be evaluated.
+# This is done as a custom target such that it runs and gets updated every build
+add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/docs/osal-public-api.doxyfile"
+    COMMAND ${CMAKE_COMMAND}
+        -DINCLUDE_DIRECTORIES="${OSAL_API_INCLUDE_DIRECTORIES}"
+        -DCOMPILE_DEFINITIONS="${OSAL_API_COMPILE_DEFINITIONS}"
+        -DINPUT_TEMPLATE="${CMAKE_CURRENT_SOURCE_DIR}/osal-public-api.doxyfile.in"
+        -DOUTPUT_FILE="${CMAKE_BINARY_DIR}/docs/osal-public-api.doxyfile"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/generate-public-api-doxyfile.cmake"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
+add_custom_target(osal_public_api_headerlist
+    DEPENDS "${CMAKE_BINARY_DIR}/docs/osal-public-api.doxyfile")
+
+# if building as part of CFS, then generate the doxygen header list as part of the prebuild step
+# The "doc-prebuild" target is defined by the CFS build, and thus will not exist if building standalone
+if (TARGET doc-prebuild)
+   add_dependencies(doc-prebuild osal_public_api_headerlist)
+endif ()
+
+file(TO_NATIVE_PATH ${CMAKE_CURRENT_BINARY_DIR}/osal-apiguide-warnings.log OSAL_NATIVE_LOGFILE)
+file(TO_NATIVE_PATH ${CMAKE_BINARY_DIR}/docs/osal-common.doxyfile OSAL_NATIVE_COMMON_CFGFILE)
+file(TO_NATIVE_PATH ${CMAKE_CURRENT_BINARY_DIR}/osal-apiguide.doxyfile OSAL_NATIVE_APIGUIDE_CFGFILE)
+file(TO_NATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/default-settings.doxyfile OSAL_NATIVE_DEFAULT_SETTINGS)
+
+# Add a top level source directory if not defined
+if (NOT DEFINED MISSION_SOURCE_DIR)
+    set(MISSION_SOURCE_DIR ${CMAKE_SOURCE_DIR})
+endif()
+
+# generate the configuration files
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/osal-common.doxyfile.in
+        ${CMAKE_BINARY_DIR}/docs/osal-common.doxyfile
+        @ONLY
+)
+
+configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/osal-apiguide.doxyfile.in
+        ${CMAKE_CURRENT_BINARY_DIR}/osal-apiguide.doxyfile
+        @ONLY
+)
+
+add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
+    COMMAND doxygen ${OSAL_NATIVE_APIGUIDE_CFGFILE}
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/osal-apiguide.doxyfile"
+            "${CMAKE_BINARY_DIR}/docs/osal-common.doxyfile"
+            "${CMAKE_BINARY_DIR}/docs/osal-public-api.doxyfile"
+            ${OSAL_DOCFILE_LIST} ${OSAL_DOC_DEPENDENCY_LIST}
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+
+add_custom_target(osal-apiguide
+    COMMAND echo "OSAL API Guide: file://${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
+    DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/html/index.html"
+)
 ```
 
-## 항목
+### `default-settings.doxyfile`
 
-- [`fsw/osal/docs/src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/default-settings.doxyfile`](file--default-settings.doxyfile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/generate-public-api-doxyfile.cmake`](file--generate-public-api-doxyfile.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/osal-apiguide.doxyfile.in`](file--osal-apiguide.doxyfile.in) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/osal-common.doxyfile.in`](file--osal-common.doxyfile.in) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/osal-public-api.doxyfile.in`](file--osal-public-api.doxyfile.in) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/osal_frontpage.dox`](file--osal_frontpage.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/osal_fs.dox`](file--osal_fs.dox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/docs/src/osal_timer.dox`](file--osal_timer.dox) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/docs/src/default-settings.doxyfile`
+
+
+```text
+#---------------------------------------------------------------------------
+# Default Doxygen settings
+#---------------------------------------------------------------------------
+
+# Common aliases
+ALIASES               +=  nonnull="(must not be null)"
+ALIASES               +=  nonzero="(must not be zero)"
+ALIASES               +=  covtest="(return value only verified in coverage test)"
+
+# Source options
+OPTIMIZE_OUTPUT_FOR_C  = YES
+
+# Build related
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+CASE_SENSE_NAMES       = NO
+GENERATE_TODOLIST      = NO
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+
+# Warnings
+WARN_NO_PARAMDOC       = YES
+
+# Matching
+FILE_PATTERNS          = *.c *.cpp *.cc *.C *.h *.hh *.hpp *.H *.dox *.md
+RECURSIVE              = YES
+
+# Source browsing
+SOURCE_BROWSER         = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+
+# LaTeX output
+GENERATE_LATEX         = YES
+LATEX_CMD_NAME         = latex
+COMPACT_LATEX          = YES
+PAPER_TYPE             = letter
+
+# RTF output
+COMPACT_RTF            = YES
+
+# Dot tool
+CLASS_DIAGRAMS         = NO
+HAVE_DOT               = YES
+CLASS_GRAPH            = NO
+COLLABORATION_GRAPH    = NO
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
+CALL_GRAPH             = YES
+GRAPHICAL_HIERARCHY    = NO
+MAX_DOT_GRAPH_DEPTH    = 1000
+
+# Search engine
+SEARCHENGINE           = NO
+```
+
+### `generate-public-api-doxyfile.cmake`
+
+**경로:** `fsw/osal/docs/src/generate-public-api-doxyfile.cmake`
+
+
+```cmake
+#################################################################
+#
+# CMake helper script to generate list of header for API guide
+#
+#################################################################
+
+# This helper script is needed to evaluate the "INTERFACE_INCLUDE_DIRECTORIES" and
+# "INTERFACE_COMPILE_DEFINITIONS" properties on the osal_public_api target properly.
+# Note that either of these property values may contain generator expressions, and
+# thus can only be correctly evaluated in the context of a target command, hence the
+# need for this helper script.
+#
+# The property values are passed in via the command line, and this converts it into
+# a doxygen snippet containing of header files and predefined macro values.
+
+message(STATUS "Generating OSAL API documentation input list")
+set(OSAL_HEADERFILE_LIST)
+set(OSALDOC_PREDEFINED)
+separate_arguments(INCLUDE_DIRECTORIES)
+separate_arguments(COMPILE_DEFINITIONS)
+foreach(INPUT ${INCLUDE_DIRECTORIES})
+    if (IS_DIRECTORY ${INPUT})
+        message(STATUS "OSAL API: Scanning directory ${INPUT}")
+        file(GLOB INPUT "${INPUT}/*.h")
+    endif()
+    list(APPEND OSAL_HEADERFILE_LIST ${INPUT})
+endforeach()
+
+foreach(HDR ${OSAL_HEADERFILE_LIST})
+    list(APPEND OSAL_DOC_DEPENDENCY_LIST ${HDR})
+    file(TO_NATIVE_PATH "${HDR}" HDR)
+    string(APPEND OSAL_NATIVE_APIGUIDE_SOURCEFILES " \\\n  ${HDR}")
+endforeach()
+
+foreach(INPUT ${COMPILE_DEFINITIONS})
+    string(APPEND OSALDOC_PREDEFINED " \\\n  ${INPUT}")
+endforeach()
+
+configure_file(${INPUT_TEMPLATE} ${OUTPUT_FILE} @ONLY)
+```
+
+### `osal-apiguide.doxyfile.in`
+
+**경로:** `fsw/osal/docs/src/osal-apiguide.doxyfile.in`
+
+
+```text
+#---------------------------------------------------------------------------
+# Doxygen Configuration options to generate the "OSAL API Guide"
+#---------------------------------------------------------------------------
+
+# Common definitions, can be overridden here
+@INCLUDE               = @OSAL_NATIVE_COMMON_CFGFILE@
+
+PROJECT_NAME           = "OSAL User's Guide"
+WARN_LOGFILE           = @OSAL_NATIVE_LOGFILE@
+```
+
+### `osal-common.doxyfile.in`
+
+**경로:** `fsw/osal/docs/src/osal-common.doxyfile.in`
+
+
+```text
+#---------------------------------------------------------------------------
+# OSAL common setup for including in stand alone or mission documentation
+#---------------------------------------------------------------------------
+
+# Allow overrides
+@INCLUDE_PATH          = @MISSION_SOURCE_DIR@
+
+# Default settings
+@INCLUDE               = @OSAL_NATIVE_DEFAULT_SETTINGS@
+
+# Minimum set of source files (includes *.dox, followed by public headers)
+INPUT                 += @OSAL_NATIVE_APIGUIDE_SOURCEFILES@
+
+# Public header list is generated from the interface includes of the osal_public_api target
+@INCLUDE               = @CMAKE_BINARY_DIR@/docs/osal-public-api.doxyfile
+
+# Strip source dir from path
+STRIP_FROM_PATH       += @MISSION_SOURCE_DIR@
+```
+
+### `osal-public-api.doxyfile.in`
+
+**경로:** `fsw/osal/docs/src/osal-public-api.doxyfile.in`
+
+
+```text
+#---------------------------------------------------------------------------
+# OSAL API Documentation Input List (generated from build system)
+#---------------------------------------------------------------------------
+
+# List of compile definitions from osal_public_api
+PREDEFINED += @OSALDOC_PREDEFINED@
+
+# List of header files from osal_public_api
+INPUT      += @OSAL_NATIVE_APIGUIDE_SOURCEFILES@
+```
+
+### `osal_frontpage.dox`
+
+**경로:** `fsw/osal/docs/src/osal_frontpage.dox`
+
+
+```text
+/**
+  \page osalfrontpage Osal API Documentation
+
+  <UL>
+    <LI> General Information and Concepts
+    <UL>
+       <LI> \subpage osalIntro
+    </UL>
+    <LI> Core
+    <UL>
+      <LI> \ref OSReturnCodes
+      <LI> \ref OSObjectTypes
+      <LI> APIs
+      <UL>
+        <LI> \ref OSAPICore
+        <LI> \ref OSAPIObjUtil
+        <LI> \ref OSAPITask
+        <LI> \ref OSAPIMsgQueue
+        <LI> \ref OSAPIHeap
+        <LI> \ref OSAPIError
+        <LI> \ref OSAPISelect
+        <LI> \ref OSAPIPrintf
+        <LI> \ref OSAPIBsp
+        <LI> \ref OSAPIClock
+        <LI> \ref OSAPIShell
+      </UL>
+      <LI> \subpage osapi-common.h "Common Reference"
+      <LI> \subpage osapi-error.h "Return Code Reference"
+      <LI> \subpage osapi-idmap.h "Id Map Reference"
+      <LI> \subpage osapi-clock.h "Clock Reference"
+      <LI> \subpage osapi-task.h "Task Reference"
+      <LI> \subpage osapi-queue.h "Message Queue Reference"
+      <LI> \subpage osapi-heap.h "Heap Reference"
+      <LI> \subpage osapi-select.h "Select Reference"
+      <LI> \subpage osapi-printf.h "Printf Reference"
+      <LI> \subpage osapi-bsp.h "BSP Reference"
+      <LI> \subpage osapi-shell.h "Shell Reference"
+    </UL>
+    <LI> File System
+    <UL>
+      <LI> \subpage osalfsovr
+      <LI> \subpage osalfsfd
+      <LI> \ref OSFileAccess
+      <LI> \ref OSFileOffset
+      <LI> APIs
+      <UL>
+        <LI> \ref OSAPIFile
+        <LI> \ref OSAPIDir
+        <LI> \ref OSAPIFileSys
+      </UL>
+      <LI> \subpage osapi-filesys.h "File System Reference"
+      <LI> \subpage osapi-file.h "File Reference"
+      <LI> \subpage osapi-dir.h "Directory Reference"
+    </UL>
+    <LI> Object File Loader
+    <UL>
+      <LI> APIs
+      <UL>
+        <LI> \ref OSAPILoader
+      </UL>
+      <LI> \subpage osapi-module.h "File Loader Reference"
+    </UL>
+    <LI> Network
+    <UL>
+      <LI> APIs
+      <UL>
+        <LI> \ref OSAPINetwork
+        <LI> \ref OSAPISocketAddr
+        <LI> \ref OSAPISocket
+      </UL>
+      <LI> \subpage osapi-network.h "Network Reference"
+      <LI> \subpage osapi-sockets.h "Socket Reference"
+    </UL>
+    <LI> Timer
+    <UL>
+      <LI> \subpage osaltimerover
+      <LI> APIs
+      <UL>
+        <LI> \ref OSAPITimebase
+        <LI> \ref OSAPITimer
+      </UL>
+      <LI> \subpage osapi-timer.h "Timer Reference"
+      <LI> \subpage osapi-timebase.h "Time Base Reference"
+    </UL>
+    <LI> Semaphore and Mutex
+    <UL>
+      <LI> \ref OSSemaphoreStates
+      <LI> APIs
+      <UL>
+        <LI> \ref OSAPIBinSem
+        <LI> \ref OSAPICountSem
+        <LI> \ref OSAPIMutex
+      </UL>
+      <LI> \subpage osapi-binsem.h "Binary Semaphore Reference"
+      <LI> \subpage osapi-countsem.h "Counting Semaphore Reference"
+      <LI> \subpage osapi-mutex.h "Mutex Reference"
+    </UL>
+  </UL>
+**/
+
+/**
+ \page osalIntro OSAL Introduction
+
+ The goal of this library is to promote the creation of portable and
+ reusable real time embedded system software. Given the necessary OS
+ abstraction layer implementations, the same embedded software should
+ compile and run on a number of platforms ranging from spacecraft
+ computer systems to desktop PCs.
+
+ The OS Application Program Interfaces (APIs) are broken up into core,
+ file system, loader, network, and timer APIs.  See the related document
+ sections for full descriptions.
+
+ @note The majority of these APIs should be called from a task running
+ in the context of an OSAL application and in general should not be called
+ from an ISR. There are a few exceptions, such as the ability to give a
+ binary semaphore from an ISR.
+**/
+
+
+
+```
+
+### `osal_fs.dox`
+
+**경로:** `fsw/osal/docs/src/osal_fs.dox`
+
+
+```text
+/**
+\page osalfsovr File System Overview
+
+ The File System API is a thin wrapper around a selection of POSIX file APIs.
+ In addition the File System API presents a common directory structure and
+ volume view regardless of the underlying system type. For example, vxWorks
+ uses MS-DOS style volume names and directories where a vxWorks RAM disk might
+ have the volume “RAM:0”. With this File System API, volumes are represented
+ as Unix-style paths where each volume is mounted on the root file system:
+
+ <UL>
+    <LI>RAM:0/file1.dat becomes /mnt/ram/file1.dat
+    <LI>FL:0/file2.dat becomes /mnt/fl/file2.dat
+ </UL>
+
+ This abstraction allows the applications to use the same paths regardless of
+ the implementation and it also allows file systems to be simulated on a desktop
+ system for testing. On a desktop Linux system, the file system abstraction can
+ be set up to map virtual devices to a regular directory. This is accomplished
+ through the OS_mkfs call, OS_mount call, and a BSP specific volume table that
+ maps the virtual devices to real devices or underlying file systems.
+
+ In order to make this file system volume abstraction work, a “Volume Table”
+ needs to be provided in the Board Support Package of the application. The table
+ has the following fields:
+
+ <UL>
+   <LI> Device Name: This is the name of the virtual device that the Application
+        uses. Common names are “ramdisk1”, “flash1”, or “volatile1” etc. But the
+        name can be any unique string.
+   <LI> Physical Device Name: This is an implementation specific field. For
+        vxWorks it is not needed and can be left blank. For a File system based
+        implementation, it is the “mount point” on the root file system where all
+        of the volume will be mounted. A common place for this on Linux could
+        be a user’s home directory, “/tmp”, or even the current working
+        directory “.”. In the example of “/tmp” all of the directories created
+        for the volumes would be under “/tmp” on the Linux file system. For a real
+        disk device in Linux, such as a RAM disk, this field is the device
+        name “/dev/ram0”.
+   <LI> Volume Type: This field defines the type of volume. The types are:
+        FS_BASED which uses the existing file system, RAM_DISK which uses a
+        RAM_DISK device in vxWorks, RTEMS, or Linux, FLASH_DISK_FORMAT which uses
+        a flash disk that is to be formatted before use, FLASH_DISK_INIT which
+        uses a flash disk with an existing format that is just to be initialized
+        before it’s use, EEPROM which is for an EEPROM or PROM based system.
+   <LI> Volatile Flag: This flag indicates that the volume or disk is a volatile
+        disk (RAM disk ) or a non-volatile disk, that retains its contents when
+        the system is rebooted. This should be set to TRUE or FALSE.
+   <LI> Free Flag: This is an internal flag that should be set to FALSE or zero.
+   <LI> Is Mounted Flag: This is an internal flag that should be set to FALSE
+        or zero. Note that a “pre-mounted” FS_BASED path can be set up by setting
+        this flag to one.
+   <LI> Volume Name: This is an internal field and should be set to a space
+        character “ “.
+   <LI> Mount Point Field: This is an internal field and should be set to a space
+        character “ “.
+   <LI> Block Size Field: This is used to record the block size of the device and
+        does not need to be set by the user.
+ </UL>
+**/
+
+/**
+\page osalfsfd File Descriptors In Osal
+
+ The OSAL uses abstracted file descriptors. This means that the file descriptors
+ passed back from the OS_open and OS_creat calls will only work with other OSAL OS_*
+ calls. The reasoning for this is as follows:
+
+ Because the OSAL now keeps track of all file descriptors, OSAL specific information
+ can be associated with a specific file descriptor in an OS independent way. For
+instance, the path of the file that the file descriptor points to can be easily
+  retrieved. Also, the OSAL task ID of the task that opened the file can also be
+ retrieved easily.  Both of these pieces of information are very useful when trying
+ to determine statistics for a task, or the entire system. This information can all
+ be retrieved with a single API, OS_FDGetInfo.
+
+ All of the possible file system calls are not implemented.  "Special" files requiring
+ OS specific control/operations are by nature not portable.  Abstraction in this case
+ is not possible, so the raw OS calls should be used (including open/close/etc).  Mixing
+ with OSAL calls is not supported for such cases.  #OS_TranslatePath is available to
+ support using open directly by an app and maintain abstraction on the file system.
+
+ There are some small drawbacks with the OSAL file descriptors. Because the related
+ information is kept in a table, there is a define called OS_MAX_NUM_OPEN_FILES that
+ defines the maximum number of file descriptors available. This is a configuration
+parameter, and can be changed to fit your needs.
+
+ Also, if you open or create a file not using the OSAL calls (OS_open or OS_creat)
+ then none of the other OS_* calls that accept a file descriptor as a parameter will
+work (the results of doing so are undefined). Therefore, if you open a file with
+ the underlying OS's open call, you must continue to use the OS's calls until you
+ close the file descriptor. Be aware that by doing this your software may no longer
+ be OS agnostic.
+**/
+```
+
+### `osal_timer.dox`
+
+**경로:** `fsw/osal/docs/src/osal_timer.dox`
+
+
+```text
+/**
+ \page osaltimerover Timer Overview
+
+ The timer API is a generic interface to the OS timer facilities. It is
+ implemented using the POSIX timers on Linux and vxWorks and the native timer
+ API on RTEMS. The number of timers supported is controlled by the configuration
+ parameter OS_MAX_TIMERS.
+**/
+```

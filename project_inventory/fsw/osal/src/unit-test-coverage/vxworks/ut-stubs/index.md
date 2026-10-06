@@ -3,16 +3,38 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/`](src/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/CMakeLists.txt`
+
+
+```cmake
+add_library(ut_vxworks_impl_stubs
+    src/vxworks-os-impl-binsem-stubs.c
+    src/vxworks-os-impl-common-stubs.c
+    src/vxworks-os-impl-countsem-stubs.c
+    src/vxworks-os-impl-dir-stubs.c
+    src/vxworks-os-impl-file-stubs.c
+    src/vxworks-os-impl-idmap-stubs.c
+    src/vxworks-os-impl-module-stubs.c
+    src/vxworks-os-impl-mutex-stubs.c
+    src/vxworks-os-impl-queue-stubs.c
+    src/vxworks-os-impl-sockets-stubs.c
+    src/vxworks-os-impl-task-stubs.c
+    src/vxworks-os-impl-timer-stubs.c
+)
+
+target_link_libraries(ut_vxworks_impl_stubs PUBLIC 
+    ut_osapi_stub_headers
+)
+```

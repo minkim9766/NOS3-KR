@@ -3,14 +3,68 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/replication/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `replication.proto`
 
-file--replication.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/replication/replication.proto`
+
+
+```text
+syntax="proto2";
+  
+package yamcs.protobuf.replication;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "ReplicationProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+import "yamcs/api/annotations.proto";
+
+service ReplicationApi {
+
+  // Get replication info
+  rpc GetReplicationInfo(google.protobuf.Empty) returns (ReplicationInfo) {
+    option (yamcs.api.route) = {
+      get: "/api/replication"
+    };
+  }
+  
+  // Receive replication updates
+  rpc SubscribeReplicationInfo(google.protobuf.Empty) returns (stream ReplicationInfo) {
+    option (yamcs.api.websocket) = {
+      topic: "replication-info"
+    };
+  }
+}
+
+message ReplicationInfo {
+  repeated ReplicationMasterInfo masters = 1;
+  repeated ReplicationSlaveInfo slaves = 2;
+}
+
+message ReplicationMasterInfo {
+  // Yamcs instance name
+  optional string instance = 1;
+  repeated string streams = 2;
+  optional string localAddress = 3;
+  optional string remoteAddress = 4;
+  optional bool push = 5;
+  optional string pushTo = 6;
+  optional int64 localTx = 7;
+  optional int64 nextTx = 8;
+}
+
+message ReplicationSlaveInfo {
+  // Yamcs instance name
+  optional string instance = 1;
+  repeated string streams = 2;  
+  optional string localAddress = 3;
+  optional string remoteAddress = 4;
+  optional bool push = 5;
+  optional string pullFrom = 6;
+  optional int64 tx = 7;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/replication/replication.proto`](file--replication.proto) — UTF-8 텍스트 파일 본문 포함

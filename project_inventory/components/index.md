@@ -3,7 +3,7 @@
 
 **경로:** `components/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -27,28 +27,75 @@ novatel_oem615/index
 onair/index
 sample/index
 syn/index
-file--ComponentSettings.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/arducam/`](arducam/index) — 폴더
-- [`components/blackboard/`](blackboard/index) — 폴더
-- [`components/cryptolib/`](cryptolib/index) — 폴더
-- [`components/generic_adcs/`](generic_adcs/index) — 폴더
-- [`components/generic_css/`](generic_css/index) — 폴더
-- [`components/generic_eps/`](generic_eps/index) — 폴더
-- [`components/generic_fss/`](generic_fss/index) — 폴더
-- [`components/generic_imu/`](generic_imu/index) — 폴더
-- [`components/generic_mag/`](generic_mag/index) — 폴더
-- [`components/generic_radio/`](generic_radio/index) — 폴더
-- [`components/generic_reaction_wheel/`](generic_reaction_wheel/index) — 폴더
-- [`components/generic_star_tracker/`](generic_star_tracker/index) — 폴더
-- [`components/generic_thruster/`](generic_thruster/index) — 폴더
-- [`components/generic_torquer/`](generic_torquer/index) — 폴더
-- [`components/mgr/`](mgr/index) — 폴더
-- [`components/novatel_oem615/`](novatel_oem615/index) — 폴더
-- [`components/onair/`](onair/index) — 폴더
-- [`components/sample/`](sample/index) — 폴더
-- [`components/syn/`](syn/index) — 폴더
-- [`components/ComponentSettings.cmake`](file--ComponentSettings.cmake) — UTF-8 텍스트 파일 본문 포함
+### `ComponentSettings.cmake`
+
+**경로:** `components/ComponentSettings.cmake`
+
+
+```cmake
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    message(STATUS "Clang detected. ProjectSettings will invoke GCC Compile Flags")
+    set(CLANG_OVERRIDE True)
+endif()
+
+include(CheckCCompilerFlag)
+
+set(ITC_C_FLAGS "${ITC_C_FLAGS}"
+                #"-std=c99"
+                "-Wall"
+                "-Wextra"
+                "-Wpedantic" # should discuss this
+                #"-Werror"
+                #"-Werror=format"
+                "-Wformat=2"
+                #"-Wcast-align" # should discuss this 
+                #"-Wcast-qual"
+                "-Wno-discarded-qualifiers"
+                "-Winline"
+                "-Wpointer-arith"
+                "-Wredundant-decls"
+                "-Wwrite-strings"
+                "-Wuninitialized"
+                "-Winit-self"
+                "-Wswitch-default"
+                #"-Wsuggest-attribute"
+                #"-Wsuggest-attribute=const"
+                #"-Wsuggest-attribute=noreturn"
+                "-Wfloat-equal"
+                "-Wno-packed"           # should discuss this
+                "-Wno-unused-parameter" # should discuss this
+                #"-Wno-unused-variable"  # should discuss this
+                "-Wvariadic-macros"
+                "-Wvla"
+                "-Wstrict-overflow"
+                "-Wstrict-overflow=5"
+                "-fdiagnostics-show-option"
+                #"-Wstack-protector"
+                #"-fstack-protector-all"
+                #"-fsanitize=address"
+                #"-fstack-check"
+                #"-Weverything"
+                "-pedantic-errors"
+                "-fprofile-arcs" # code coverage
+                "-ftest-coverage" # ^
+                )
+
+#if(${TGTNAME} STREQUAL cpu1)
+#    set(ITC_C_FLAGS "${ITC_C_FLAGS}"
+#           "-Wformat=0")
+#endif()
+
+# Not Compatable with Clang
+if(CMAKE_COMPILER_IS_GNUCC)
+    set(ITC_C_FLAGS "${ITC_C_FLAGS}"
+                    "-Wlogical-op"
+                    "-Wunsafe-loop-optimizations")
+endif(CMAKE_COMPILER_IS_GNUCC)
+
+string(REPLACE ";" " " ITC_C_FLAGS "${ITC_C_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ITC_C_FLAGS}")
+```

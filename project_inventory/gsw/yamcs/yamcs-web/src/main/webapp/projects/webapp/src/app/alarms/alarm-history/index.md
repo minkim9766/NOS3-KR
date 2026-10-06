@@ -3,16 +3,422 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-history/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-history.component.html`
 
-file--alarm-history.component.html
-file--alarm-history.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-history/alarm-history.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Alarms" />
+
+  <div class="table-wrapper">
+    <ya-panel>
+      <app-alarms-page-tabs />
+
+      <ya-filter-bar [formGroup]="filterForm" style="margin-top: 16px">
+        <ya-select [options]="intervalOptions" icon="access_time" formControlName="interval" />
+        @if (filterForm.value["interval"] === "CUSTOM") {
+          <ya-date-time-input formControlName="customStart" />
+          <ya-date-time-input formControlName="customStop" />
+          <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+        }
+        @if (filterForm.value["interval"] !== "CUSTOM") {
+          <ya-button (click)="jumpToNow()">Jump to now</ya-button>
+        }
+      </ya-filter-bar>
+
+      @if (dataSource) {
+        <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+          <ng-container matColumnDef="severity">
+            <th mat-header-cell *matHeaderCellDef>Severity</th>
+            <td mat-cell *matCellDef="let alarm">
+              <app-alarm-level [level]="alarm.severity" [grayscale]="true" />
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Alarm type</th>
+            <td mat-cell *matCellDef="let alarm">
+              @if (alarm.type === "EVENT") {
+                <mat-icon style="vertical-align: middle">event_note</mat-icon>
+              }
+              @if (alarm.type === "PARAMETER") {
+                <mat-icon style="vertical-align: middle">toll</mat-icon>
+              }
+              {{ alarm.type || "-" | titlecase }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="start">
+            <th mat-header-cell *matHeaderCellDef>Start</th>
+            <td mat-cell *matCellDef="let alarm">{{ (alarm.triggerTime | datetime) || "-" }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="stop">
+            <th mat-header-cell *matHeaderCellDef>Stop</th>
+            <td mat-cell *matCellDef="let alarm">
+              {{ (alarm.updateTime | datetime) || "-" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="triggerValue">
+            <th mat-header-cell *matHeaderCellDef>Trip value</th>
+            <td mat-cell *matCellDef="let alarm" class="wrap200">
+              @if (alarm.parameterDetail; as parameterDetail) {
+                {{ parameterDetail.triggerValue.engValue | value }}
+                @if (parameterDetail.triggerValue.rangeCondition === "LOW") {
+                  <span>&#8595;</span>
+                }
+                @if (parameterDetail.triggerValue.rangeCondition === "HIGH") {
+                  <span>&#8593;</span>
+                }
+              }
+              @if (alarm.eventDetail; as eventDetail) {
+                {{ eventDetail.triggerEvent.message || "-" }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="alarm">
+            <th mat-header-cell *matHeaderCellDef>Alarm name</th>
+            <td mat-cell *matCellDef="let alarm">
+              @if (alarm.id.namespace && alarm.id.name) {
+                @if (alarm.parameterDetail) {
+                  <a
+                    [routerLink]="
+                      '/telemetry/parameters' + alarm.id.namespace + '/' + alarm.id.name
+                    "
+                    [queryParams]="{ c: yamcs.context }">
+                    {{ alarm.id.namespace }}/{{ alarm.id.name }}
+                  </a>
+                } @else {
+                  {{ alarm.id.namespace }}/{{ alarm.id.name }}
+                }
+              }
+              @if (alarm.id.namespace && !alarm.id.name) {
+                @if (alarm.parameterDetail) {
+                  <a
+                    [routerLink]="'/telemetry/parameters' + alarm.id.namespace"
+                    [queryParams]="{ c: yamcs.context }">
+                    {{ alarm.id.namespace }}
+                  </a>
+                } @else {
+                  {{ alarm.id.namespace }}
+                }
+              }
+              @if (!alarm.id.namespace && alarm.id.name) {
+                @if (alarm.parameterDetail) {
+                  <a
+                    [routerLink]="'/telemetry/parameters' + alarm.id.name"
+                    [queryParams]="{ c: yamcs.context }">
+                    {{ alarm.id.name }}
+                  </a>
+                } @else {
+                  {{ alarm.id.name }}
+                }
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="duration">
+            <th mat-header-cell *matHeaderCellDef>Duration</th>
+            <td mat-cell *matCellDef="let alarm">
+              @if (alarm.updateTime) {
+                {{ (durationFor(alarm) | duration) || "-" }}
+              }
+              @if (alarm.clearInfo?.clearedBy) {
+                (cleared by {{ alarm.clearInfo?.clearedBy }})
+                @if (alarm.clearInfo?.clearMessage) {
+                  <mat-icon [matTooltip]="alarm.clearInfo?.clearMessage">comment</mat-icon>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="violations">
+            <th mat-header-cell *matHeaderCellDef style="text-align: right">Violations</th>
+            <td mat-cell *matCellDef="let alarm" style="text-align: right">
+              @if (alarm.violations) {
+                {{ alarm.violations | number }}
+                ({{ (alarm.violations / alarm.count) * 100 | number: "1.2-2" }}%)
+              } @else {
+                -
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="expand"></th>
+            <td mat-cell *matCellDef="let row">
+              @if (row.parameterDetail) {
+                <ya-text-action icon="show_chart" (click)="showChart(row)">
+                  Show chart
+                </ya-text-action>
+              }
+              @if (row.parameterDetail) {
+                <ya-text-action icon="view_headline" (click)="showData(row)">
+                  Show data
+                </ya-text-action>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      }
+
+      <ya-toolbar appearance="bottom" align="center">
+        <ya-button [disabled]="true">Load more</ya-button>
+      </ya-toolbar>
+    </ya-panel>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `alarm-history.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-history/alarm-history.component.html`](file--alarm-history.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-history/alarm-history.component.ts`](file--alarm-history.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-history/alarm-history.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import {
+  Alarm,
+  BaseComponent,
+  GetAlarmsOptions,
+  WebappSdkModule,
+  YaSelectOption,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { addHours } from 'date-fns';
+import { AlarmLevelComponent } from '../../shared/alarm-level/alarm-level.component';
+import { AlarmsPageTabsComponent } from '../alarms-page-tabs/alarms-page-tabs.component';
+
+@Component({
+  templateUrl: './alarm-history.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlarmLevelComponent, AlarmsPageTabsComponent, WebappSdkModule],
+})
+export class AlarmHistoryComponent extends BaseComponent {
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new UntypedFormGroup({
+    interval: new UntypedFormControl('NO_LIMIT'),
+    customStart: new UntypedFormControl(null),
+    customStop: new UntypedFormControl(null),
+  });
+
+  displayedColumns = [
+    'severity',
+    'start',
+    'stop',
+    'duration',
+    'alarm',
+    'type',
+    'triggerValue',
+    'violations',
+    'actions',
+  ];
+
+  intervalOptions: YaSelectOption[] = [
+    { id: 'PT1H', label: 'Last hour' },
+    { id: 'PT6H', label: 'Last 6 hours' },
+    { id: 'P1D', label: 'Last 24 hours' },
+    { id: 'NO_LIMIT', label: 'No limit' },
+    { id: 'CUSTOM', label: 'Custom', group: true },
+  ];
+
+  dataSource = new MatTableDataSource<Alarm>();
+
+  constructor(private route: ActivatedRoute) {
+    super();
+    this.setTitle('Alarm history');
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const now = new Date();
+        const customStart = this.validStart || now;
+        const customStop = this.validStop || now;
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else {
+        this.validStop = new Date();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('interval')) {
+      this.appliedInterval = queryParams.get('interval')!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = queryParams.get('customStart')!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = utils.toDate(customStart);
+        const customStop = queryParams.get('customStop')!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = utils.toDate(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = new Date();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = 'NO_LIMIT';
+      this.validStop = null;
+      this.validStart = null;
+    }
+  }
+
+  jumpToNow() {
+    this.filterForm.get('interval')!.setValue('NO_LIMIT');
+  }
+
+  applyCustomDates() {
+    this.validStart = utils.toDate(this.filterForm.value['customStart']);
+    this.validStop = utils.toDate(this.filterForm.value['customStop']);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  loadData(next?: string) {
+    this.updateURL();
+    const options: GetAlarmsOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+
+    this.yamcs.yamcsClient
+      .getAlarms(this.yamcs.instance!, options)
+      .then((alarms) => (this.dataSource.data = alarms))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStart']
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStop']
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  durationFor(alarm: Alarm) {
+    if (!alarm.updateTime) {
+      return undefined;
+    }
+    return (
+      utils.toDate(alarm.updateTime).getTime() -
+      utils.toDate(alarm.triggerTime).getTime()
+    );
+  }
+
+  showChart(alarm: Alarm) {
+    const startIso = alarm.triggerTime;
+    const stopIso = alarm.updateTime || alarm.clearInfo?.clearTime;
+
+    let start: string;
+    let stop: string;
+    if (stopIso) {
+      start = startIso;
+      stop = stopIso;
+    } else {
+      start = startIso;
+      stop = addHours(utils.toDate(startIso), 1).toISOString();
+    }
+
+    this.router.navigate(
+      [
+        '/telemetry/parameters' + alarm.parameterDetail?.triggerValue.id.name,
+        '-',
+        'chart',
+      ],
+      {
+        queryParams: {
+          c: this.yamcs.context,
+          interval: 'CUSTOM',
+          customStart: start,
+          customStop: stop,
+        },
+      },
+    );
+  }
+
+  showData(alarm: Alarm) {
+    const startIso = alarm.triggerTime;
+    const stopIso = alarm.updateTime || alarm.clearInfo?.clearTime;
+
+    let start: string;
+    let stop: string;
+    if (stopIso) {
+      start = startIso;
+      stop = stopIso;
+    } else {
+      start = startIso;
+      stop = addHours(utils.toDate(startIso), 1).toISOString();
+    }
+
+    this.router.navigate(
+      [
+        '/telemetry/parameters' + alarm.parameterDetail?.triggerValue.id.name,
+        '-',
+        'data',
+      ],
+      {
+        queryParams: {
+          c: this.yamcs.context,
+          interval: 'CUSTOM',
+          customStart: start,
+          customStop: stop,
+        },
+      },
+    );
+  }
+}
+```

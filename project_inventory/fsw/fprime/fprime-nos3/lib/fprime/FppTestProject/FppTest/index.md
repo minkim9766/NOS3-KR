@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,22 +17,70 @@ state_machine/index
 struct/index
 typed_tests/index
 utils/index
-file--.gitignore
-file--CMakeLists.txt
-file--source.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/array/`](array/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/`](component/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/`](dp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/enum/`](enum/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/`](interfaces/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/`](state_machine/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/struct/`](struct/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/`](typed_tests/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/utils/`](utils/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/source.cpp`](file--source.cpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/.gitignore`
+
+
+```text
+coverage/
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/CMakeLists.txt`
+
+
+```cmake
+###
+# FPP Test
+#
+# Builds unit tests for FPP autocoder
+###
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/array/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/component/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/dp/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/state_machine/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/enum/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/interfaces/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/struct/")
+
+set(SOURCE_FILES "source.cpp")
+set(MOD_DEPS
+    ${PROJECT_NAME}/array
+    ${PROJECT_NAME}/component/active
+    ${PROJECT_NAME}/component/empty
+    ${PROJECT_NAME}/component/passive
+    ${PROJECT_NAME}/component/queued
+    ${PROJECT_NAME}/dp
+    ${PROJECT_NAME}/enum
+    ${PROJECT_NAME}/interfaces
+    ${PROJECT_NAME}/state_machine/external_instance
+    ${PROJECT_NAME}/state_machine/internal/initial
+    ${PROJECT_NAME}/state_machine/internal/state
+    ${PROJECT_NAME}/state_machine/internal_instance/initial
+    ${PROJECT_NAME}/state_machine/internal_instance/state
+    ${PROJECT_NAME}/struct
+)
+
+register_fprime_deployment()
+
+```
+
+### `source.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/source.cpp`
+
+
+```cpp
+// Source file so that SOURCES for target FppTest is not empty
+// This is a test collection, so main just returns success
+
+int main(int argc, char** argv) {
+    return 0;
+}
+```

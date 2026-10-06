@@ -3,26 +3,374 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CRCs.cpp`
 
-file--CRCs.cpp
-file--CRCs.hpp
-file--FPrime.hpp
-file--Headers.cpp
-file--Headers.hpp
-file--Records.cpp
-file--Records.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/CRCs.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRCs.hpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file CRCs
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/CRCs.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace FPrime {
+
+namespace CRCs {
+
+void serialize(Fw::SerializeBufferBase& destBuffer) {
+    CmdSequencerComponentImpl::FPrimeSequence::CRC crc;
+    crc.init();
+    crc.update(destBuffer.getBuffAddr(), destBuffer.getBuffLength());
+    crc.finalize();
+    ASSERT_EQ(destBuffer.serialize(crc.m_computed), Fw::FW_SERIALIZE_OK);
+}
+
+}  // namespace CRCs
+
+}  // namespace FPrime
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
 ```
 
-## 항목
+### `CRCs.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/CRCs.cpp`](file--CRCs.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/CRCs.hpp`](file--CRCs.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp`](file--FPrime.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Headers.cpp`](file--Headers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Headers.hpp`](file--Headers.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Records.cpp`](file--Records.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Records.hpp`](file--Records.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/CRCs.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRCs.hpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file CRCs
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_FPrime_CRCs_HPP
+#define Svc_SequenceFiles_FPrime_CRCs_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace FPrime {
+
+namespace CRCs {
+
+enum Constants {
+    //! CRC size
+    SIZE = sizeof(U32)
+};
+
+//! Compute and serialize a CRC
+//! destBuffer contains the input data; CRC gets added to the end
+void serialize(Fw::SerializeBufferBase& destBuffer  //!< The buffer
+);
+
+}  // namespace CRCs
+
+}  // namespace FPrime
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `FPrime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FPrime.hpp
+// \author Rob Bocchino
+// \brief  Interface for F Prime sequence files
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_FPrime_FPrime_HPP
+#define Svc_SequenceFiles_FPrime_FPrime_HPP
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/CRCs.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Headers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Records.hpp"
+
+#endif
+```
+
+### `Headers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Headers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Headers.cpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file headers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Headers.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace FPrime {
+
+namespace Headers {
+
+void serialize(U32 dataSize,
+               U32 numRecords,
+               FwTimeBaseStoreType timeBase,
+               FwTimeContextStoreType timeContext,
+               Fw::SerializeBufferBase& destBuffer) {
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(dataSize));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(numRecords));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(timeBase));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(timeContext));
+}
+
+}  // namespace Headers
+
+}  // namespace FPrime
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `Headers.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Headers.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Headers.hpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file headers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_FPrime_Headers_HPP
+#define Svc_SequenceFiles_FPrime_Headers_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace FPrime {
+
+namespace Headers {
+
+//! Serialize a header
+void serialize(U32 dataSize,                        //!< Size of data following header, including CRC
+               U32 numRecords,                      //!< Number of records
+               FwTimeBaseStoreType timeBase,        //!< Time base
+               FwTimeContextStoreType timeContext,  //!< Time context
+               Fw::SerializeBufferBase& destBuffer  //!< Destination buffer
+);
+
+}  // namespace Headers
+
+}  // namespace FPrime
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Records.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Records.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Records.cpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file records
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Records.hpp"
+#include "Fw/Com/ComPacket.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace FPrime {
+
+namespace Records {
+
+void serialize(Records::Descriptor desc,
+               const Fw::Time& time,
+               const Fw::ComBuffer& opcodeAndArgument,
+               Fw::SerializeBufferBase& destBuffer) {
+    const U8 descU8 = desc;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(descU8));
+    if (desc != CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE) {
+        const U8* const buffAddr = opcodeAndArgument.getBuffAddr();
+        const U32 size = opcodeAndArgument.getBuffLength();
+        const U32 recSize = sizeof(FwPacketDescriptorType) + size;
+        const FwPacketDescriptorType cmdDescriptor = Fw::ComPacketType::FW_PACKET_COMMAND;
+        const U32 seconds = time.getSeconds();
+        const U32 uSeconds = time.getUSeconds();
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(seconds));
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(uSeconds));
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(recSize));
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(cmdDescriptor));
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, destBuffer.serialize(buffAddr, size, Fw::Serialization::OMIT_LENGTH));
+    }
+}
+
+void serialize(Descriptor desc,
+               const Fw::Time& time,
+               const FwOpcodeType opcode,
+               const U32 argument,
+               Fw::SerializeBufferBase& destBuffer) {
+    Fw::ComBuffer opcodeAndArgument;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, opcodeAndArgument.serialize(opcode));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, opcodeAndArgument.serialize(argument));
+    Records::serialize(desc, time, opcodeAndArgument, destBuffer);
+}
+
+void serialize(Descriptor desc, const Fw::Time& time, Fw::SerializeBufferBase& destBuffer) {
+    Fw::ComBuffer opcodeAndArgument;
+    Records::serialize(desc, time, opcodeAndArgument, destBuffer);
+}
+
+}  // namespace Records
+
+}  // namespace FPrime
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `Records.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/Records.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Records.hpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file records
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_FPrime_Records_HPP
+#define Svc_SequenceFiles_FPrime_Records_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace FPrime {
+
+namespace Records {
+
+typedef CmdSequencerComponentImpl::Sequence::Record::Descriptor Descriptor;
+
+enum Constants {
+    //! Record descriptor size
+    RECORD_DESCRIPTOR_SIZE = sizeof(U8),
+    //! Seconds size
+    SECONDS_SIZE = sizeof(U32),
+    //! Microseconds size
+    MICROSECONDS_SIZE = sizeof(U32),
+    //! Size of record size
+    RECORD_SIZE_SIZE = sizeof(U32),
+    //! Size of standard arguments
+    STANDARD_ARG_SIZE = sizeof(U32),
+    //! Standard record size
+    STANDARD_SIZE = RECORD_DESCRIPTOR_SIZE + SECONDS_SIZE + MICROSECONDS_SIZE + RECORD_SIZE_SIZE +
+                    sizeof(FwPacketDescriptorType) + sizeof(FwOpcodeType) + STANDARD_ARG_SIZE,
+    //! EOS record size
+    EOS_SIZE = RECORD_DESCRIPTOR_SIZE
+};
+
+//! Serialize a record with pre-serialized opcode and argument
+void serialize(Records::Descriptor desc,                //!< Descriptor
+               const Fw::Time& time,                    //!< Time
+               const Fw::ComBuffer& opcodeAndArgument,  //!< Serialized opcode and argument
+               Fw::SerializeBufferBase& destBuffer      //!< Destination buffer
+);
+
+//! Serialize a record with an opcode and one U32 argument
+void serialize(Descriptor desc,                     //!< Descriptor
+               const Fw::Time& time,                //!< Time
+               const FwOpcodeType opcode,           //!< Opcode
+               const U32 argument,                  //!< Argument
+               Fw::SerializeBufferBase& destBuffer  //!< Destination buffer
+);
+
+//! Serialize a record with empty opcode and argument
+void serialize(Descriptor desc,                     //!< Descriptor
+               const Fw::Time& time,                //!< Time
+               Fw::SerializeBufferBase& destBuffer  //!< Destination buffer
+);
+
+}  // namespace Records
+
+}  // namespace FPrime
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```

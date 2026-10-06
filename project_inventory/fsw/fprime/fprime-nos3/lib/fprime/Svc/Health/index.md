@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,23 +12,685 @@ docs/index
 Stub/index
 test/index
 VxWorks/index
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--Health.fpp
-file--Health.hpp
-file--HealthComponentImpl.cpp
-file--HealthComponentImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/Stub/`](Stub/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/VxWorks/`](VxWorks/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/Health.fpp`](file--Health.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/Health.hpp`](file--Health.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/HealthComponentImpl.cpp`](file--HealthComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/HealthComponentImpl.hpp`](file--HealthComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Svc::HealthComponentBase::HealthEnabled
+Fw::Enabled
+
+Svc::HealthComponentBase::HLTH_CHK_DISABLED
+Fw::Enabled::DISABLED
+
+Svc::HealthComponentBase::HLTH_CHK_ENABLED
+Fw::Enabled::ENABLED
+
+Svc::HealthComponentBase::PingEnabled
+Fw::Enabled
+
+Svc::HealthComponentBase::HLTH_PING_DISABLED
+Fw::Enabled::DISABLED
+
+Svc::HealthComponentBase::HLTH_PING_ENABLED
+Fw::Enabled::ENABLED
+
+Svc::HealthComponentBase::HealthIsEnabled
+Fw::Enabled
+
+Svc::HealthComponentBase::HEALTH_CHECK_DISABLED
+Fw::Enabled::DISABLED
+
+Svc::HealthComponentBase::HEALTH_CHECK_ENABLED
+Fw::Enabled::ENABLED
+
+Svc::HealthComponentBase::HealthPingIsEnabled
+Fw::Enabled
+
+Svc::HealthComponentBase::HEALTH_PING_DISABLED
+Fw::Enabled::DISABLED
+
+Svc::HealthComponentBase::HEALTH_PING_ENABLED
+Fw::Enabled::ENABLED
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Health.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/HealthComponentImpl.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Stub/HealthComponentStubChecks.cpp"
+)
+
+register_fprime_module()
+# ### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/Health/Health.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/HealthTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/HealthTestMain.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Health.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/Health.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for checking the health of active components
+  queued component Health {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Ping output port
+    output port PingSend: [HealthPingPorts] Svc.Ping
+
+    @ Ping return port
+    async input port PingReturn: [HealthPingPorts] Svc.Ping
+
+    @ Run port
+    sync input port Run: Svc.Sched
+
+    @ Run port
+    output port WdogStroke: Svc.WatchDog
+
+    # ----------------------------------------------------------------------
+    # Port matching specifiers
+    # ----------------------------------------------------------------------
+
+    match PingSend with PingReturn
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+
+    @ A command to enable or disable health checks
+    async command HLTH_ENABLE(
+                               enable: Fw.Enabled @< whether or not health checks are enabled
+                             ) \
+      opcode 0x0
+
+    @ Ignore a particular ping entry
+    async command HLTH_PING_ENABLE(
+                                    $entry: string size 40 @< The entry to enable/disable
+                                    enable: Fw.Enabled @< whether or not a port is pinged
+                                  ) \
+      opcode 0x1
+
+    @ Change ping value
+    async command HLTH_CHNG_PING(
+                                  $entry: string size 40 @< The entry to modify
+                                  warningValue: U32 @< Ping warning threshold
+                                  fatalValue: U32 @< Ping fatal threshold
+                                ) \
+      opcode 0x2
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Warn that a ping target is longer than the warning value
+    event HLTH_PING_WARN(
+                          $entry: string size 40 @< The entry passing the warning level
+                        ) \
+      severity warning high \
+      id 0x0 \
+      format "Ping entry {} late warning"
+
+    @ Declare FATAL since task is no longer responding
+    event HLTH_PING_LATE(
+                          $entry: string size 40 @< The entry passing the warning level
+                        ) \
+      severity fatal \
+      id 0x1 \
+      format "Ping entry {} did not respond"
+
+    @ Declare FATAL since task is no longer responding
+    event HLTH_PING_WRONG_KEY(
+                               $entry: string size 40 @< The entry passing the warning level
+                               badKey: U32 @< The incorrect key value
+                             ) \
+      severity fatal \
+      id 0x2 \
+      format "Ping entry {} responded with wrong key 0x{x}"
+
+    @ Report checking turned on or off
+    event HLTH_CHECK_ENABLE(
+                             enabled: Fw.Enabled @< If health checking is enabled
+                           ) \
+      severity activity high \
+      id 0x3 \
+      format "Health checking set to {}"
+
+    @ Report a particular entry on or off
+    event HLTH_CHECK_PING(
+                           enabled: Fw.Enabled @< If health pinging is enabled for a particular entry
+                           $entry: string size 40 @< The entry passing the warning level
+                         ) \
+      severity activity high \
+      id 0x4 \
+      format "Health checking set to {} for {}"
+
+    @ Entry was not found
+    event HLTH_CHECK_LOOKUP_ERROR(
+                                   $entry: string size 40 @< The entry passing the warning level
+                                 ) \
+      severity warning low \
+      id 0x5 \
+      format "Couldn't find entry {}"
+
+    @ Report changed ping
+    event HLTH_PING_UPDATED(
+                             $entry: string size 40 @< The entry changed
+                             warn: U32 @< The new warning value
+                             $fatal: U32 @< The new FATAL value
+                           ) \
+      severity activity high \
+      id 0x6 \
+      format "Health ping for {} changed to WARN {} FATAL {}"
+
+    @ Report changed ping
+    event HLTH_PING_INVALID_VALUES(
+                                    $entry: string size 40 @< The entry changed
+                                    warn: U32 @< The new warning value
+                                    $fatal: U32 @< The new FATAL value
+                                  ) \
+      severity warning high \
+      id 0x7 \
+      format "Health ping for {} invalid values: WARN {} FATAL {}"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ Number of overrun warnings
+    telemetry PingLateWarnings: U32 id 0x0
+
+  }
+
+}
+```
+
+### `Health.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/Health.hpp`
+
+
+```cpp
+// ======================================================================
+// Health.hpp
+// Standardization header for Health
+// ======================================================================
+
+#ifndef Svc_Health_HPP
+#define Svc_Health_HPP
+
+#include "Svc/Health/HealthComponentImpl.hpp"
+
+namespace Svc {
+
+typedef HealthImpl Health;
+
+}
+
+#endif
+```
+
+### `HealthComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/HealthComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.hpp
+// \author Tim
+// \brief  hpp file for Health component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/Health/HealthComponentImpl.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+HealthImpl::HealthImpl(const char* const compName)
+    : HealthComponentBase(compName),
+      m_numPingEntries(0),
+      m_key(0),
+      m_watchDogCode(0),
+      m_warnings(0),
+      m_enabled(Fw::Enabled::ENABLED),
+      queue_depth(0) {
+    static_assert((HealthComponentBase::NUM_PINGSEND_OUTPUT_PORTS >= 0) &&
+                      (HealthComponentBase::NUM_PINGSEND_OUTPUT_PORTS <= std::numeric_limits<FwIndexType>::max()),
+                  "NUM_PINGSEND_OUTPUT_PORTS must fit in the positive range of FwIndexType");
+    // clear tracker by disabling pings
+    for (FwIndexType entry = 0; entry < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_pingTrackerEntries));
+         entry++) {
+        this->m_pingTrackerEntries[entry].enabled = Fw::Enabled::DISABLED;
+    }
+}
+
+void HealthImpl::init(const FwSizeType queueDepth, const FwEnumStoreType instance) {
+    HealthComponentBase::init(queueDepth, instance);
+    this->queue_depth = queueDepth;
+}
+
+void HealthImpl::setPingEntries(PingEntry* pingEntries, FwIndexType numPingEntries, U32 watchDogCode) {
+    FW_ASSERT(pingEntries);
+    // make sure not asking for more pings than ports
+    FW_ASSERT(numPingEntries <= NUM_PINGSEND_OUTPUT_PORTS);
+
+    this->m_numPingEntries = numPingEntries;
+    this->m_watchDogCode = watchDogCode;
+
+    // copy entries to private data
+    for (FwIndexType entry = 0; entry < numPingEntries; entry++) {
+        FW_ASSERT(pingEntries[entry].warnCycles <= pingEntries[entry].fatalCycles,
+                  static_cast<FwAssertArgType>(pingEntries[entry].warnCycles),
+                  static_cast<FwAssertArgType>(pingEntries[entry].fatalCycles));
+        this->m_pingTrackerEntries[entry].entry = pingEntries[entry];
+        this->m_pingTrackerEntries[entry].cycleCount = 0;
+        this->m_pingTrackerEntries[entry].enabled = Fw::Enabled::ENABLED;
+        this->m_pingTrackerEntries[entry].key = 0;
+    }
+}
+
+HealthImpl::~HealthImpl() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void HealthImpl::PingReturn_handler(const FwIndexType portNum, U32 key) {
+    // verify the key value
+    if (key != this->m_pingTrackerEntries[portNum].key) {
+        Fw::LogStringArg _arg = this->m_pingTrackerEntries[portNum].entry.entryName;
+        this->log_FATAL_HLTH_PING_WRONG_KEY(_arg, key);
+    } else {
+        // reset the counter and clear the key
+        this->m_pingTrackerEntries[portNum].cycleCount = 0;
+        this->m_pingTrackerEntries[portNum].key = 0;
+    }
+}
+
+void HealthImpl::Run_handler(const FwIndexType portNum, U32 context) {
+    // dispatch messages
+    for (FwSizeType i = 0; i < this->queue_depth; i++) {
+        MsgDispatchStatus stat = this->doDispatch();
+        if (MSG_DISPATCH_EMPTY == stat) {
+            break;
+        }
+        FW_ASSERT(MSG_DISPATCH_OK == stat);
+    }
+
+    if (this->m_enabled == Fw::Enabled::ENABLED) {
+        // cycle through ping table, pinging ports that are not awaiting a reply
+        // for ports that are awaiting a reply, decrement their counters
+        // and check for violations
+
+        for (FwIndexType entry = 0; entry < this->m_numPingEntries; entry++) {
+            if (Fw::Enabled::ENABLED == this->m_pingTrackerEntries[entry].enabled) {
+                // If clear entry
+                if (0 == this->m_pingTrackerEntries[entry].cycleCount) {
+                    // start a ping
+                    this->m_pingTrackerEntries[entry].key = this->m_key;
+                    // send ping
+                    this->PingSend_out(static_cast<FwIndexType>(entry), this->m_pingTrackerEntries[entry].key);
+                    // increment key
+                    this->m_key++;
+                    // increment cycles for the entry
+                    this->m_pingTrackerEntries[entry].cycleCount++;
+                } else {
+                    // check to see if it is at warning threshold
+                    if (this->m_pingTrackerEntries[entry].cycleCount ==
+                        this->m_pingTrackerEntries[entry].entry.warnCycles) {
+                        Fw::LogStringArg _arg = this->m_pingTrackerEntries[entry].entry.entryName;
+                        this->log_WARNING_HI_HLTH_PING_WARN(_arg);
+                        this->tlmWrite_PingLateWarnings(++this->m_warnings);
+                    } else {
+                        // check for FATAL timeout value
+                        if (this->m_pingTrackerEntries[entry].entry.fatalCycles ==
+                            this->m_pingTrackerEntries[entry].cycleCount) {
+                            Fw::LogStringArg _arg = this->m_pingTrackerEntries[entry].entry.entryName;
+                            this->log_FATAL_HLTH_PING_LATE(_arg);
+                        }
+                    }  // if at warning or fatal threshold
+
+                    this->m_pingTrackerEntries[entry].cycleCount++;
+                }  // if clear entry
+            }  // if entry has ping enabled
+        }  // for each entry
+
+        // do other specialized platform checks (e.g. VxWorks suspended tasks)
+        this->doOtherChecks();
+
+    }  // If health checking is enabled
+
+    // stroke watchdog.
+    if (this->isConnected_WdogStroke_OutputPort(0)) {
+        this->WdogStroke_out(0, this->m_watchDogCode);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void HealthImpl::HLTH_ENABLE_cmdHandler(const FwOpcodeType opCode, U32 cmdSeq, Fw::Enabled enable) {
+    this->m_enabled = enable;
+    Fw::Enabled isEnabled = Fw::Enabled::DISABLED;
+    if (enable == Fw::Enabled::ENABLED) {
+        isEnabled = Fw::Enabled::ENABLED;
+    }
+    this->log_ACTIVITY_HI_HLTH_CHECK_ENABLE(isEnabled);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void HealthImpl::HLTH_PING_ENABLE_cmdHandler(const FwOpcodeType opCode,
+                                             U32 cmdSeq,
+                                             const Fw::CmdStringArg& entry,
+                                             Fw::Enabled enable) {
+    // check to see if entry is in range
+    FwIndexType entryIndex = this->findEntry(entry);
+
+    if (-1 == entryIndex) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::VALIDATION_ERROR);
+        return;
+    }
+
+    this->m_pingTrackerEntries[entryIndex].enabled = enable.e;
+    Fw::Enabled isEnabled(Fw::Enabled::DISABLED);
+    if (enable == Fw::Enabled::ENABLED) {
+        isEnabled = Fw::Enabled::ENABLED;
+    }
+    Fw::LogStringArg arg;
+    arg = entry;
+    this->log_ACTIVITY_HI_HLTH_CHECK_PING(isEnabled, arg);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void HealthImpl::HLTH_CHNG_PING_cmdHandler(const FwOpcodeType opCode,
+                                           U32 cmdSeq,
+                                           const Fw::CmdStringArg& entry,
+                                           U32 warningValue,
+                                           U32 fatalValue) {
+    // check to see if entry is in range
+    FwIndexType entryIndex = this->findEntry(entry);
+    if (-1 == entryIndex) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::VALIDATION_ERROR);
+        return;
+    }
+
+    // check to see if warningValue less than or equal to fatalValue
+    if (warningValue > fatalValue) {
+        Fw::LogStringArg arg;
+        arg = entry;
+        this->log_WARNING_HI_HLTH_PING_INVALID_VALUES(arg, warningValue, fatalValue);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::VALIDATION_ERROR);
+        return;
+    }
+
+    this->m_pingTrackerEntries[entryIndex].entry.warnCycles = warningValue;
+    this->m_pingTrackerEntries[entryIndex].entry.fatalCycles = fatalValue;
+    Fw::LogStringArg arg = entry;
+    this->log_ACTIVITY_HI_HLTH_PING_UPDATED(arg, warningValue, fatalValue);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+FwIndexType HealthImpl::findEntry(const Fw::CmdStringArg& entry) {
+    static_assert(std::numeric_limits<FwIndexType>::is_signed, "FwIndexType must be signed to return -1 for error");
+    // walk through entries
+    for (FwIndexType tableEntry = 0; tableEntry < NUM_PINGSEND_OUTPUT_PORTS; tableEntry++) {
+        if (entry == this->m_pingTrackerEntries[tableEntry].entry.entryName) {
+            return static_cast<FwIndexType>(tableEntry);
+        }
+    }
+    Fw::LogStringArg arg = entry;
+    this->log_WARNING_LO_HLTH_CHECK_LOOKUP_ERROR(arg);
+
+    return -1;
+}
+
+}  // end namespace Svc
+```
+
+### `HealthComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/HealthComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.hpp
+// \author Tim, J.Perez
+// \brief  hpp file for Health component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Health_HPP
+#define Health_HPP
+
+#include <Fw/Types/String.hpp>
+#include <Svc/Health/HealthComponentAc.hpp>
+
+namespace Svc {
+
+//!  \class HealthImpl
+//!  \brief Health component implementation class
+//!
+//!  The health component iterates through each entry
+//!  in its table and checks its status. If a ping entry
+//!  tracker is enabled, it will ping its corresponding port
+//!  with a provided key. If a ping return is outstanding,
+//!  a counter is decremented, and its value is checked
+//!  against warning and fault thresholds. A watchdog is
+//!  always stroked in the run handler.
+
+class HealthImpl final : public HealthComponentBase {
+    friend class HealthTester;
+
+  public:
+    //!  \brief struct for ping entry
+    //!
+    //!  struct for ping entry thresholds.
+    //!  Countdown is via calls to the run()
+    //!  port. If no response by warnCycles,
+    //!  an EVR will be generated and telemetry
+    //!  count will be updated. If no response
+    //!  by fatalCycles, component will send FATAL
+    //!  event. A descriptive name is stored in entryName
+    //!  for events.
+    struct PingEntry {
+        FwSizeType warnCycles;   //!< number of cycles before WARNING
+        FwSizeType fatalCycles;  //!< number of cycles before FATAL
+        Fw::String entryName;    //!< the name of the entry
+    };
+
+    //!  \brief HealthImpl constructor
+    //!
+    //!  The constructor for Health
+    //!
+    //!  \param compName component name
+    HealthImpl(const char* const compName);
+
+    //!  \brief HealthImpl initialization function
+    //!
+    //!  Initializes the autocoded base class, ping table, and data members
+    //!
+    //!  \param queueDepth Depth of queue
+    //!  \param instance The instance number
+    void init(const FwSizeType queueDepth, const FwEnumStoreType instance);
+
+    //! \brief Set ping entry tables
+    //!
+    //! Provides a table of ping entries
+    //!
+    //!  \param pingEntries Pointer to provided ping table entries
+    //!  \param numPingEntries Number of ping entries in table
+    //!  \param watchDogCode Value that is sent to watchdog
+    void setPingEntries(PingEntry* pingEntries, FwIndexType numPingEntries, U32 watchDogCode);
+
+    //!  \brief Component destructor
+    //!
+    //!  The destructor for HealthImpl is empty
+    ~HealthImpl();
+
+  protected:
+    //!  \brief additional checks function
+    //!
+    //!  Does additional checks based on the platform
+    virtual void doOtherChecks();
+
+  private:
+    //!  \brief ping return handler
+    //!
+    //!  Handler implementation for pingReturn
+    //!
+    //!  \param portNum Port number
+    //!  \param key Key value
+    void PingReturn_handler(const FwIndexType portNum, U32 key);
+
+    //!  \brief run handler
+    //!
+    //!  Handler implementation for run
+    //!
+    //!  \param portNum Port number
+    //!  \param context Port Context
+    void Run_handler(const FwIndexType portNum, U32 context);
+
+    //!  \brief HLTH_ENABLE handler
+    //!
+    //!  Implementation for HLTH_ENABLE command handler
+    //!
+    //!  \param opCode Command opcode
+    //!  \param cmdSeq Command sequence
+    //!  \param enable Enum for enabling/disabling tracker
+    void HLTH_ENABLE_cmdHandler(const FwOpcodeType opCode, U32 cmdSeq, Fw::Enabled enable);
+
+    //!  \brief HLTH_PING_ENABLE handler
+    //!
+    //!  Handler for command HLTH_PING_ENABLE
+    //!
+    //!  \param opCode Command opcode
+    //!  \param cmdSeq Command sequence
+    //!  \param entry Ping entry number
+    //!  \param enable Enum for enabling/disabling tracker
+    void HLTH_PING_ENABLE_cmdHandler(FwOpcodeType opCode,
+                                     U32 cmdSeq,
+                                     const Fw::CmdStringArg& entry,
+                                     Fw::Enabled enable);
+
+    //!  \brief HLTH_CHNG_PING handler
+    //!
+    //!  Implementation for HLTH_CHNG_PING command handler
+    //!
+    //!  \param opCode Command opcode
+    //!  \param cmdSeq Command sequence
+    //!  \param entry Ping entry number
+    //!  \param warningValue Warning threshold value
+    //!  \param fatalValue Fatal threshold value
+    void HLTH_CHNG_PING_cmdHandler(const FwOpcodeType opCode,
+                                   U32 cmdSeq,
+                                   const Fw::CmdStringArg& entry,
+                                   U32 warningValue,
+                                   U32 fatalValue);
+
+    //!  \brief ping tracker struct
+    //!
+    //!  Array for storing ping table entries
+    struct PingTracker {
+        PingEntry entry;         //!< entry passed by user
+        U32 cycleCount;          //!< current cycle count
+        U32 key;                 //!< key passed to ping
+        Fw::Enabled::t enabled;  //!< if current ping result is checked
+    } m_pingTrackerEntries[NUM_PINGSEND_OUTPUT_PORTS];
+
+    FwIndexType findEntry(const Fw::CmdStringArg& entry);
+
+    //!  Private member data
+    FwIndexType m_numPingEntries;  //!< stores number of entries passed to constructor
+    U32 m_key;                     //!< current key value. Just increments for each ping entry.
+    U32 m_watchDogCode;            //!< stores code used for watchdog stroking
+    U32 m_warnings;                //!< number of slip warnings issued
+    Fw::Enabled m_enabled;         //!< if the pinger is enabled
+    FwSizeType queue_depth;        //!< queue depth passed by user
+};
+
+}  // end namespace Svc
+
+#endif
+```

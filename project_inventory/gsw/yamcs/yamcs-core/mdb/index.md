@@ -3,26 +3,83 @@
 
 **경로:** `gsw/yamcs/yamcs-core/mdb/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algolib.js`
 
-file--algolib.js
-file--algolib.py
-file--errmdb.xls
-file--refmdb-v6.xls
-file--refmdb.xls
-file--writable_subsys.xml
-file--writable_subsys_empty.xml
+**경로:** `gsw/yamcs/yamcs-core/mdb/algolib.js`
+
+
+```javascript
+function multiplyByThree(number) {
+    return number*3;
+}
+
+function divideByThree(number) {
+    return number/3;
+}
 ```
 
-## 항목
+### `algolib.py`
 
-- [`gsw/yamcs/yamcs-core/mdb/algolib.js`](file--algolib.js) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/mdb/algolib.py`](file--algolib.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/mdb/errmdb.xls`](file--errmdb.xls) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-core/mdb/refmdb-v6.xls`](file--refmdb-v6.xls) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-core/mdb/refmdb.xls`](file--refmdb.xls) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-core/mdb/writable_subsys.xml`](file--writable_subsys.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/mdb/writable_subsys_empty.xml`](file--writable_subsys_empty.xml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/mdb/algolib.py`
+
+
+```python
+from __future__ import division
+
+def multiplyByThreePy(number):
+    return number*3
+
+def divideByThreePy(number):
+    return number/3
+
+```
+
+### `errmdb.xls`
+
+**경로:** `gsw/yamcs/yamcs-core/mdb/errmdb.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `refmdb-v6.xls`
+
+**경로:** `gsw/yamcs/yamcs-core/mdb/refmdb-v6.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `refmdb.xls`
+
+**경로:** `gsw/yamcs/yamcs-core/mdb/refmdb.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `writable_subsys.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/mdb/writable_subsys.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  this is used for MdbModificationPersistenceTest test.
+This file is copied into the writable_subsys.xml and it is overwritten with the parameters/types added in the test -->
+
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" name="writable_subsys">
+</SpaceSystem>
+```
+
+### `writable_subsys_empty.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/mdb/writable_subsys_empty.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--  this is used for MdbModificationPersistenceTest test.
+This file is copied into the writable_subsys.xml and it is overwritten with the parameters/types added in the test -->
+
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" name="writable_subsys">
+</SpaceSystem>
+```

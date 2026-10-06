@@ -3,16 +3,281 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/instances/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `instances.proto`
 
-file--instances.proto
-file--instances_service.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/instances/instances.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.instances;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "InstancesProto";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/protobuf/mdb/mdb.proto";
+import "yamcs/protobuf/yamcsManagement/yamcsManagement.proto";
+
+
+message YamcsInstance {
+  enum InstanceState {
+    OFFLINE = 0;
+    INITIALIZING = 1;
+    INITIALIZED = 2;
+    STARTING = 3;
+    RUNNING = 4;
+    STOPPING = 5;
+    FAILED = 6;
+  }
+  // Instance name.
+  optional string name = 1;
+  optional mdb.MissionDatabase missionDatabase = 3;
+  repeated yamcsManagement.ProcessorInfo processors = 4;
+  optional InstanceState state = 11;
+
+  //in case the state=FAILED, this field will indicate the cause of the failure
+  // the missionDatabase and other fields may not be filled when this happens
+  optional string failureCause = 9;
+
+  optional google.protobuf.Timestamp missionTime = 10;
+
+  // Labels assigned to this instance. Each entry is keyed by the tag name
+  // of the label. The value represent the label value for that tag.
+  map<string, string> labels = 12;
+
+  // Feature capability hints for client use
+  repeated string capabilities = 13;
+  
+  // Name of the template, if this instance was generated  
+  optional string template = 14;
+  
+  // Arguments used during template processing, if this instance
+  // was generated
+  map<string, string> templateArgs = 15;
+  
+  // Whether the template is stil available
+  optional bool templateAvailable = 16;
+  
+  // Whether the template has changed since this instance was
+  // generated
+  optional bool templateChanged = 17;
+}
+
+message InstanceTemplate {
+  // Template name.
+  optional string name = 1;
+
+  // Human-friendly description
+  optional string description = 3;
+
+  // List of variables that this template may expect  
+  repeated TemplateVariable variables = 2;
+}
+
+message TemplateVariable {
+  // Variable name. 
+  optional string name = 1;
+  
+  // Verbose name for use in UI forms
+  optional string label = 6;
+  
+  // Type of variable (Java class extending org.yamcs.templating.Variable)
+  optional string type = 4;
+  
+  // Verbose user guidance (HTML)
+  optional string help = 2;
+  
+  // Whether this variable is required input
+  optional bool required = 3;
+  
+  // List of valid choices
+  repeated string choices = 5;
+  
+  // Initial value for use in UI forms
+  optional string initial = 7;
+}
 ```
 
-## 항목
+### `instances_service.proto`
 
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/instances/instances.proto`](file--instances.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/instances/instances_service.proto`](file--instances_service.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/instances/instances_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.instances;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "InstancesServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/instances/instances.proto";
+
+
+service InstancesApi {
+
+  // List instance templates
+  rpc ListInstanceTemplates(google.protobuf.Empty) returns (ListInstanceTemplatesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/instance-templates"
+    };
+  }
+
+  // Get an instance template
+  rpc GetInstanceTemplate(GetInstanceTemplateRequest) returns (InstanceTemplate) {
+    option (yamcs.api.route) = {
+      get: "/api/instance-templates/{template}"
+    };
+  }
+  
+  // List instances
+  rpc ListInstances(ListInstancesRequest) returns (ListInstancesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/instances"
+    };
+  }
+  
+  // Receive instance updates
+  rpc SubscribeInstances(google.protobuf.Empty) returns (stream YamcsInstance) {
+    option (yamcs.api.websocket) = {
+      topic: "instances"
+    };
+  }
+  
+  // Get an instance
+  // 
+  // If an instance does not have web services enabled, it will be listed among the
+  // results, but none of its URLs will be filled in.
+  rpc GetInstance(GetInstanceRequest) returns (YamcsInstance) {
+    option (yamcs.api.route) = {
+      get: "/api/instances/{instance}"
+    };
+  }
+  
+  // Create an instance
+  rpc CreateInstance(CreateInstanceRequest) returns (YamcsInstance) {
+    option (yamcs.api.route) = {
+      post: "/api/instances"
+      body: "*"
+    };
+  }
+
+  // Reconfigure a templated instance
+  //
+  // Regenerates the instance configuration based on the latest
+  // template source, and with optionally modified template variables.
+  rpc ReconfigureInstance(ReconfigureInstanceRequest) returns (YamcsInstance) {
+    option (yamcs.api.route) = {
+      post: "/api/instances/{instance}:reconfigure"
+      body: "*"
+    };
+  }
+  
+  // Start an instance
+  //
+  // If the instance is in the RUNNING state, this call will do nothing.
+  // Otherwise the instance will be started.
+  rpc StartInstance(StartInstanceRequest) returns (YamcsInstance) {
+    option (yamcs.api.route) = {
+      post: "/api/instances/{instance}:start"
+    };
+  }
+  
+  // Stop an instance
+  // 
+  // Stop all services of the instance. The instance state will be OFFLINE.
+  // If the instance state is already OFFLINE, this call will do nothing.
+  rpc StopInstance(StopInstanceRequest) returns (YamcsInstance) {
+    option (yamcs.api.route) = {
+      post: "/api/instances/{instance}:stop"
+    };
+  }
+  
+  // Restart an instance
+  //
+  // If the instance state is RUNNING, the instance will be stopped and then
+  // restarted. Otherwise the instance will be started. Note that the Mission
+  // Database will also be reloaded before restart.
+  rpc RestartInstance(RestartInstanceRequest) returns (YamcsInstance) {
+    option (yamcs.api.route) = {
+      post: "/api/instances/{instance}:restart"
+    };
+  }
+}
+
+message ListInstancesRequest {
+  repeated string filter = 1;
+}
+
+message ListInstancesResponse {
+  repeated YamcsInstance instances = 1;
+}
+
+message CreateInstanceRequest {
+  // **Required.** The name of the instance.
+  optional string name = 1;
+  
+  // **Required.** The name of the template for this instance.
+  optional string template = 2;
+  
+  // Arguments for substitution in the template definition. Each entry is
+  // keyed by the argument name. The value must be a string.
+  map<string, string> templateArgs = 3;
+  
+  // Labels assigned to this instance. Each entry is keyed by the tag name
+  // of the label. The value represent the label value for that tag.
+  map<string, string> labels = 4;
+}
+
+message ReconfigureInstanceRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+
+  // Arguments for substitution in the template definition. Each entry is
+  // keyed by the argument name. The value must be a string.
+  map<string, string> templateArgs = 2;
+  
+  // Labels assigned to this instance. Each entry is keyed by the tag name
+  // of the label. The value represent the label value for that tag.
+  map<string, string> labels = 3;
+}
+
+message ListInstanceTemplatesResponse {
+  repeated InstanceTemplate templates = 1; 
+}
+
+message GetInstanceTemplateRequest {
+  // Template name.
+  optional string template = 1;
+}
+
+message GetInstanceRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+}
+
+message StartInstanceRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+}
+
+message StopInstanceRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+}
+
+message RestartInstanceRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+}
+```

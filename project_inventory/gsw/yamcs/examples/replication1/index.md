@@ -3,18 +3,76 @@
 
 **경로:** `gsw/yamcs/examples/replication1/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--README
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/replication1/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/replication1/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication1/README`](file--README) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/replication1/pom.xml`
+
+
+```xml
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>replication1</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Yamcs :: Examples :: Replication1</name>
+  <description>
+    Example demonstrating the use of replication
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>simulator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `README`
+
+**경로:** `gsw/yamcs/examples/replication1/README`
+
+
+```text
+This contains an example with a Yamcs server with two instances node1 and node2 with the data replicating from node1(Master) to node2(Slave).
+node1 is acting as a TCP server and node2 is TCP client.
+
+The two instances can be separated on two different Yamcs servers by copying the instance configuration file. 
+
+In addition the ReplicationServer global service in yamcs.yaml has to be defined on the node1 (TCP server) side.
+
+To run execute mvn yamcs:run in this directory. 
+Connecting via a web-browser, you can go to nodeX->Archive->Streams and observe the stream count.
+The node1 data links counters are incrementing with the data recieved via the simulator while node2 data links are not connected.
+```

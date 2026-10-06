@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,36 @@ jump-to-dialog/index
 model/index
 modify-replay-dialog/index
 timeline-tooltip/index
-file--archive.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/archive-browser/`](archive-browser/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/download-dump-dialog/`](download-dump-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/jump-to-dialog/`](jump-to-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/`](model/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/modify-replay-dialog/`](modify-replay-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/timeline-tooltip/`](timeline-tooltip/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/archive.routes.ts`](file--archive.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `archive.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/archive.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { ArchiveBrowserComponent } from './archive-browser/archive-browser.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: ArchiveBrowserComponent,
+      },
+    ],
+  },
+];
+```

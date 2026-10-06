@@ -3,30 +3,1784 @@
 
 **경로:** `gsw/cosmos/lib/cfdp/unit_test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mock/index
-file--test_all.rb
-file--test_cfdp_ack.rb
-file--test_cfdp_eof.rb
-file--test_cfdp_filedata.rb
-file--test_cfdp_finished.rb
-file--test_cfdp_header.rb
-file--test_cfdp_metadata.rb
-file--test_cfdp_nak.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/lib/cfdp/unit_test/mock/`](mock/index) — 폴더
-- [`gsw/cosmos/lib/cfdp/unit_test/test_all.rb`](file--test_all.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_ack.rb`](file--test_cfdp_ack.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_eof.rb`](file--test_cfdp_eof.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_filedata.rb`](file--test_cfdp_filedata.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_finished.rb`](file--test_cfdp_finished.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_header.rb`](file--test_cfdp_header.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_metadata.rb`](file--test_cfdp_metadata.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/unit_test/test_cfdp_nak.rb`](file--test_cfdp_nak.rb) — UTF-8 텍스트 파일 본문 포함
+### `test_all.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_all.rb`
+
+
+```ruby
+require_relative "test_cfdp_ack.rb"
+require_relative "test_cfdp_header.rb"
+require_relative "test_cfdp_eof.rb"
+require_relative "test_cfdp_filedata.rb"
+require_relative "test_cfdp_finished.rb"
+require_relative "test_cfdp_metadata.rb"
+require_relative "test_cfdp_nak.rb"
+```
+
+### `test_cfdp_ack.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_ack.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+ACK_VALID_HASH = {directiveCode:0, directiveSubtypeCode:0, conditionCode:0, transactionStatus:0}
+ACK_VALID_ARRAY = [0, 0]
+ACK_TESTING_INPUT_TIMES = 100
+ACK_CORRECT_LENGTH = 10
+
+class Test_CFDP_Ack_Input_BinStream <  Minitest::Test
+
+  def test_length
+
+    # test ok
+    ack = CFDP::PDUACK.new(ACK_VALID_ARRAY)
+    assert_kind_of CFDP::PDUACK, ack
+
+    # test nil
+    assert_raises "VerifyError" do
+      CFDP::PDUACK.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      ack = CFDP::PDUACK.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      ack = CFDP::PDUACK.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      header = CFDP::PDUACK.new([])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      header = CFDP::PDUACK.new([0])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    validHeader = ACK_VALID_ARRAY
+    for i in 0..ACK_VALID_ARRAY.length-1
+
+      ACK_TESTING_INPUT_TIMES.times do
+
+        custom = ACK_VALID_ARRAY.dup
+        custom[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUACK.new(custom)
+        end
+        custom[i] = -1*rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUACK.new(custom)
+        end
+      end
+    end
+  end
+
+  def test_byte_1
+
+    bits = 4
+    arr = Array.new
+    # test directiveCode (4 bits)
+    ACK_TESTING_INPUT_TIMES.times{arr << rand(0..(2**bits)-1)}
+
+    for directiveCode in arr
+      ack = CFDP::PDUACK.new([(directiveCode<<4), 0])
+      assert_equal directiveCode, ack.directiveCode
+    end
+
+    arr = Array.new
+    # test directiveSubtypeCode (4 bits)
+    ACK_TESTING_INPUT_TIMES.times{arr << rand(0..(2**bits)-1)}
+
+    for directiveSubtypeCode in arr
+      ack = CFDP::PDUACK.new([directiveSubtypeCode, 0])
+      assert_equal directiveSubtypeCode, ack.directiveSubtypeCode
+    end
+  end
+
+  def test_byte_2
+
+    bits = 4
+    arr = Array.new
+    ACK_TESTING_INPUT_TIMES.times{arr << rand(0..(2**bits)-1)}
+    # test conditionCode (4 bits)
+
+    for conditionCode in arr
+      ack = CFDP::PDUACK.new([0, conditionCode<<4])
+      assert_equal conditionCode, ack.conditionCode
+    end
+
+    bits = 2
+    arr = Array.new
+    ACK_TESTING_INPUT_TIMES.times{arr << rand(0..(2**bits)-1)}
+    # test transactionStatus (2 bits)
+
+    for transactionStatus in arr
+      ack = CFDP::PDUACK.new([0, transactionStatus])
+      assert_equal transactionStatus, ack.transactionStatus
+    end
+  end
+end
+
+class Test_CFDP_Ack_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok ack
+    ack = CFDP::PDUACK.new(ACK_VALID_HASH)
+    assert_kind_of CFDP::PDUACK, ack
+    assert ack.valid?
+
+    # test empty ack
+    ack = CFDP::PDUACK.new
+    assert_kind_of CFDP::PDUACK, ack
+
+    # test missing any element
+    ACK_VALID_HASH.keys.each do |key|
+      newHash = ACK_VALID_HASH.dup
+      newHash.delete(key)
+      ack = CFDP::PDUACK.new(newHash)
+      assert !ack.valid?
+    end
+
+    # test bug for elements  < 0
+    ACK_VALID_HASH.each do |key, value|
+
+      newHash = ACK_VALID_HASH.dup
+      newHash[key] = -1*rand(2**4..256)
+      ack = CFDP::PDUACK.new(newHash)
+      assert !ack.valid?
+    end
+
+    # test bug for element > 4 bits
+    symbols = [:directiveCode, :directiveSubtypeCode, :conditionCode]
+    symbols.each do |symbol|
+
+      ACK_TESTING_INPUT_TIMES.times do
+
+        newHash = ACK_VALID_HASH.dup
+        newHash[symbol] = rand(2**4..256)
+        ack = CFDP::PDUACK.new(newHash)
+        assert !ack.valid?
+      end
+    end
+
+    # test transactionStatus > 2 bits
+    newHash = ACK_VALID_HASH.dup
+    ACK_TESTING_INPUT_TIMES.times do
+
+      newHash[:transactionStatus] = rand(2**2..256)
+      ack = CFDP::PDUACK.new(newHash)
+      assert !ack.valid?
+    end
+
+    # test wrong type input
+    symbols = ACK_VALID_HASH.keys
+    symbols.each do |symbol|
+      newHash = ACK_VALID_HASH.dup
+      # test string
+      newHash[symbol] = "a"
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "abcd"
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "1"
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1]
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, 2, 3]
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, [1]]
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUACK.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUACK.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_Ack_Methods < Minitest::Test
+
+  def test_method_length
+
+    ack = CFDP::PDUACK.new(ACK_VALID_HASH)
+    assert_equal 3, ack.length
+
+    newHash = ACK_VALID_HASH.dup
+    newHash[:directiveCode] = 1
+    ack = CFDP::PDUACK.new(newHash)
+    assert_equal 3, ack.length
+  end
+
+  def test_method_pack
+
+    ack = CFDP::PDUACK.new(ACK_VALID_HASH)
+    assert_equal [6, 0, 0], ack.pack
+
+    valid_array = [200, 128+3]
+    ack = CFDP::PDUACK.new(valid_array)
+    assert_equal [6]+valid_array, ack.pack
+
+    valid_array = [13, 80+3]
+    ack = CFDP::PDUACK.new(valid_array)
+    assert_equal [6]+valid_array, ack.pack
+  end
+
+  def test_method_to_s
+
+    assert_kind_of String, CFDP::PDUACK.new(ACK_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUACK.new([0, 0]).to_s
+  end
+end
+```
+
+### `test_cfdp_eof.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_eof.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+EOF_VALID_HASH = {conditionCode:0, fileChecksum:0, fileSize:0}
+EOF_VALID_ARRAY = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+EOF_TESTING_INPUT_TIMES = 100
+EOF_CORRECT_LENGTH = 10
+
+class Test_CFDP_Eof_Input_BinStream < Minitest::Test
+
+  def test_length
+
+    # test ok
+    eof = CFDP::PDUEOF.new(EOF_VALID_ARRAY)
+    assert_kind_of CFDP::PDUEOF, eof
+
+    # test nil
+    assert_raises "VerifyError" do
+      CFDP::PDUEOF.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      eof = CFDP::PDUEOF.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      eof = CFDP::PDUEOF.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      header = CFDP::PDUEOF.new([])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      header = CFDP::PDUEOF.new([0])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    for i in 0..EOF_VALID_ARRAY.length-1
+
+      EOF_TESTING_INPUT_TIMES.times do
+
+        custom = EOF_VALID_ARRAY.dup
+        custom[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUEOF.new(custom)
+        end
+        custom[i] = -1*rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUEOF.new(custom)
+        end
+      end
+    end
+  end
+
+  def test_byte_1
+
+    # test directiveCode (4 bits)
+    for conditionCode in 0..(2**4)-1
+      eof = CFDP::PDUEOF.new([(conditionCode<<4), 0, 0, 0, 0, 0, 0, 0, 0])
+      assert_equal conditionCode, eof.conditionCode
+    end
+  end
+
+  def test_byte_2_5
+
+    arr = Array.new
+    # test fileChecksum (32 bits)
+    EOF_TESTING_INPUT_TIMES.times{arr << rand(0..(2**32)-1)}
+    for fileChecksum in arr
+      arr = []
+      arr << 0
+      arr << ((fileChecksum & 0xFF000000) >> (8*3))
+      arr << ((fileChecksum & 0x00FF0000) >> (8*2))
+      arr << ((fileChecksum & 0x0000FF00) >> (8*1))
+      arr << ((fileChecksum & 0x000000FF) >> (8*0))
+      arr += [0, 0, 0, 0]
+      eof = CFDP::PDUEOF.new(arr)
+      assert_equal fileChecksum, eof.fileChecksum
+    end
+  end
+
+  def test_byte_6_9
+
+    arr = Array.new
+    # test fileChecksum (32 bits)
+    EOF_TESTING_INPUT_TIMES.times{arr << rand(0..(2**32)-1)}
+    for fileSize in arr
+      arr = [0, 0, 0, 0, 0]
+      arr << ((fileSize & 0xFF000000) >> (8*3))
+      arr << ((fileSize & 0x00FF0000) >> (8*2))
+      arr << ((fileSize & 0x0000FF00) >> (8*1))
+      arr << ((fileSize & 0x000000FF) >> (8*0))
+      eof = CFDP::PDUEOF.new(arr)
+      assert_equal fileSize, eof.fileSize
+    end
+  end
+end
+
+class Test_CFDP_Eof_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok
+    eof = CFDP::PDUEOF.new(EOF_VALID_HASH)
+    assert_kind_of CFDP::PDUEOF, eof
+    assert eof.valid?
+
+    # test empty eof
+    eof = CFDP::PDUEOF.new
+    assert_kind_of CFDP::PDUEOF, eof
+
+    # test missing any element
+    EOF_VALID_HASH.keys.each do |key|
+      newHash = EOF_VALID_HASH.dup
+      newHash.delete(key)
+      eof = CFDP::PDUEOF.new(newHash)
+      assert !eof.valid?
+    end
+
+    # test bug for elements  < 0
+    EOF_VALID_HASH.each do |key, value|
+      newHash = EOF_VALID_HASH.dup
+      newHash[key] = -1
+      eof = CFDP::PDUEOF.new(newHash)
+      assert !eof.valid?
+    end
+
+    # test bug for element 4 bits
+    symbols = [:conditionCode]
+    symbols.each do |symbol|
+      newHash = EOF_VALID_HASH.dup
+      newHash[symbol] = rand(2**4..256)
+      eof = CFDP::PDUEOF.new(newHash)
+      assert !eof.valid?
+    end
+
+    # test bug for element 32 bits
+    symbols = [:fileChecksum, :fileSize]
+    symbols.each do |symbol|
+      EOF_TESTING_INPUT_TIMES.times do
+        newHash = EOF_VALID_HASH.dup
+        newHash[symbol] = rand(2**32..2**40)
+        eof = CFDP::PDUEOF.new(newHash)
+        assert !eof.valid?
+      end
+    end
+
+    # test wrong type input
+    symbols = EOF_VALID_HASH.keys
+    symbols.each do |symbol|
+      newHash = EOF_VALID_HASH.dup
+      # test string
+      newHash[symbol] = "a"
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "abcd"
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "1"
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1]
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, 2, 3]
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, [1]]
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUEOF.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUEOF.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_Eof_Methods < Minitest::Test
+
+
+  def test_method_length
+
+    eof = CFDP::PDUEOF.new(EOF_VALID_HASH)
+    assert_equal EOF_CORRECT_LENGTH, eof.length
+
+    newHash = EOF_VALID_HASH.dup
+    newHash[:conditionCode] = 1
+    eof = CFDP::PDUEOF.new(newHash)
+    assert_equal EOF_CORRECT_LENGTH, eof.length
+  end
+
+  def test_method_pack
+
+    eof = CFDP::PDUEOF.new(EOF_VALID_HASH)
+    assert_equal [4, 0, 0, 0, 0, 0, 0, 0, 0, 0], eof.pack
+
+    valid_array = [0, 147, 140, 133, 158, 0, 1, 144, 0]
+    eof = CFDP::PDUEOF.new(valid_array)
+    assert_equal [4]+valid_array, eof.pack
+
+    valid_array = [0, 105, 236, 217, 249, 0, 1, 144, 0]
+    eof = CFDP::PDUEOF.new(valid_array)
+    assert_equal [4]+valid_array, eof.pack
+  end
+
+  def test_method_to_s
+
+    assert_kind_of String, CFDP::PDUEOF.new(EOF_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUEOF.new(EOF_VALID_ARRAY).to_s
+  end
+end
+```
+
+### `test_cfdp_filedata.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_filedata.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+FILEDATA_VALID_HASH = {offset:0, data:[0]}
+FILEDATA_VALID_ARRAY = [0, 0, 0, 0, 0]
+FILEDATA_TESTING_INPUT_TIMES = 100
+FILEDATA_CORRECT_LENGTH = 5
+
+class Test_CFDP_FileData_Input_BinStream < Minitest::Test
+
+  def test_length
+
+    # test ok
+    filedata = CFDP::PDUFileData.new(FILEDATA_VALID_ARRAY)
+    assert_kind_of CFDP::PDUFileData, filedata
+
+    # test nil
+    assert_raises "VerifyError" do
+      CFDP::PDUFileData.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      filedata = CFDP::PDUFileData.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      filedata = CFDP::PDUFileData.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      header = CFDP::PDUFileData.new([])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      header = CFDP::PDUFileData.new([0])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    for i in 0..FILEDATA_VALID_ARRAY.length-1
+
+      FILEDATA_TESTING_INPUT_TIMES.times do
+
+        custom = FILEDATA_VALID_ARRAY.dup
+        custom[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUFileData.new(custom)
+        end
+        custom[i] = -1*rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUFileData.new(custom)
+        end
+      end
+    end
+  end
+
+  def test_byte_1_4
+
+    arr = Array.new
+
+    # test offset (32 bits)
+    FILEDATA_TESTING_INPUT_TIMES.times{arr << rand(0..(2**32)-1)}
+    for offset in arr
+
+      customArray = []
+      customArray << ((offset & 0xFF000000) >> (8*3))
+      customArray << ((offset & 0x00FF0000) >> (8*2))
+      customArray << ((offset & 0x0000FF00) >> (8*1))
+      customArray << ((offset & 0x000000FF) >> (8*0))
+      customArray += [0]
+      filedata = CFDP::PDUFileData.new(customArray)
+      assert_equal offset, filedata.offset
+    end
+  end
+
+  def test_byte_4_end
+
+    # test data field
+    FILEDATA_TESTING_INPUT_TIMES.times do
+
+      arr = Array.new
+
+      FILEDATA_TESTING_INPUT_TIMES.times{arr << rand(0..(2**8)-1)}
+
+      customArray = [0, 0, 0, 0]
+      customArray += arr
+      filedata = CFDP::PDUFileData.new(customArray)
+      assert_equal arr, filedata.data
+    end
+  end
+end
+
+class Test_CFDP_FileData_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok
+    filedata = CFDP::PDUFileData.new(FILEDATA_VALID_HASH)
+    assert_kind_of CFDP::PDUFileData, filedata
+    assert filedata.valid?
+
+    # test empty filedata
+    filedata = CFDP::PDUFileData.new
+    assert_kind_of CFDP::PDUFileData, filedata
+
+    # test missing any element
+    FILEDATA_VALID_HASH.keys.each do |key|
+      newHash = FILEDATA_VALID_HASH.dup
+      newHash.delete(key)
+      filedata = CFDP::PDUFileData.new(newHash)
+      assert !filedata.valid?
+    end
+
+    # test bug for elements  < 0
+    FILEDATA_VALID_HASH.each do |key, value|
+      newHash = FILEDATA_VALID_HASH.dup
+      newHash[key] = -1
+      filedata = CFDP::PDUFileData.new(newHash)
+      assert !filedata.valid?
+    end
+
+    # test bug for element 4 bits
+    symbols = [:offset]
+    symbols.each do |symbol|
+      newHash = FILEDATA_VALID_HASH.dup
+      newHash[symbol] = rand(2**32..2**36)
+      filedata = CFDP::PDUFileData.new(newHash)
+      assert !filedata.valid?
+    end
+
+    # test wrong type input
+    symbols = FILEDATA_VALID_HASH.keys
+    symbols.each do |symbol|
+      newHash = FILEDATA_VALID_HASH.dup
+      # test string
+      newHash[symbol] = "a"
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "abcd"
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "1"
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test no data array
+      newHash[:data] = 1
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test no data array
+      newHash[:data] = 123
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test array
+      newHash[:offset] = [1]
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test array
+      newHash[:offset] = [1, 2, 3]
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test array
+      newHash[:offset] = [1, [1]]
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUFileData.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUFileData.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_FileData_Methods < Minitest::Test
+
+
+  def test_method_length
+
+    filedata = CFDP::PDUFileData.new(FILEDATA_VALID_HASH)
+    assert_equal FILEDATA_CORRECT_LENGTH, filedata.length
+
+    newHash = FILEDATA_VALID_HASH.dup
+    newHash[:offset] = 1
+    filedata = CFDP::PDUFileData.new(newHash)
+    assert_equal FILEDATA_CORRECT_LENGTH, filedata.length
+  end
+
+  def test_method_pack
+
+    filedata = CFDP::PDUFileData.new(FILEDATA_VALID_HASH)
+    assert_equal [0, 0, 0, 0, 0], filedata.pack
+
+    valid_array = [0, 0, 1, 144, 163, 146, 148, 121, 255, 158, 194, 184, 72, 114, 80, 60, 177, 243, 109, 242, 146, 40, 182, 87, 252, 5, 139, 15, 66, 131, 249, 252, 205, 143, 157, 112, 235, 239, 236, 152, 245, 218, 72, 99, 194, 177, 157, 177, 8, 119, 6, 51, 205, 194, 167, 78, 118, 253, 80, 39, 83, 217, 16, 39, 207, 34, 177, 143, 252, 169, 21, 236, 197, 190, 233, 207, 108, 21, 186, 255, 55, 203, 205, 83, 171, 170, 227, 172, 159, 252, 123, 60, 139, 187, 118, 137, 152, 142, 40, 44, 171, 129, 3, 177, 126, 148, 79, 229, 237, 244, 179, 33, 230, 73, 215, 124, 204, 18, 59, 88, 75, 226, 55, 162, 181, 176, 199, 196, 38, 88, 20, 116, 70, 101, 153, 143, 41, 153, 240, 157, 148, 180, 182, 2, 241, 180, 68, 247, 186, 220, 28, 245, 156, 151, 189, 228, 245, 203, 224, 151, 176, 215, 255, 109, 216, 173, 73, 131, 239, 124, 206, 190, 178, 128, 88, 242, 156, 236, 52, 192, 32, 152, 128, 187, 135, 141, 168, 169, 15, 191, 136, 200, 7, 164, 39, 89, 114, 185, 94, 75, 167, 128, 94, 182]
+    filedata = CFDP::PDUFileData.new(valid_array)
+    assert_equal valid_array, filedata.pack
+
+    valid_array = [0, 0, 4, 176, 206, 118, 198, 243, 62, 12, 231, 127, 0, 69, 42, 225, 182, 50, 184, 74, 134, 253, 111, 49, 146, 7, 182, 84, 34, 181, 209, 148, 225, 155, 63, 250, 187, 36, 244, 115, 184, 5, 177, 183, 138, 15, 111, 193, 32, 98, 156, 71, 84, 29, 57, 119, 96, 20, 228, 234, 118, 40, 107, 157, 95, 252, 187, 135, 168, 77, 197, 63, 109, 80, 2, 224, 43, 5, 241, 206, 226, 101, 202, 121, 17, 114, 80, 235, 98, 231, 165, 209, 31, 116, 97, 92, 228, 23, 78, 170, 233, 232, 3, 65, 10, 22, 12, 235, 194, 125, 209, 171, 61, 224, 216, 154, 46, 224, 136, 219, 10, 28, 124, 174, 39, 127, 80, 56, 213, 158, 242, 214, 176, 71, 182, 152, 192, 141, 73, 124, 119, 86, 28, 48, 62, 93, 198, 192, 202, 95, 22, 11, 225, 10, 178, 121, 34, 176, 164, 60, 68, 60, 11, 252, 7, 42, 200, 161, 12, 72, 107, 20, 58, 117, 195, 208, 110, 32, 47, 27, 71, 226, 183, 50, 179, 110, 3, 130, 94, 159, 138, 139, 230, 27, 207, 119, 152, 69, 41, 6, 164, 163, 8, 83]
+    filedata = CFDP::PDUFileData.new(valid_array)
+    assert_equal valid_array, filedata.pack
+  end
+
+  def test_method_to_s
+
+    assert_kind_of String, CFDP::PDUFileData.new(FILEDATA_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUFileData.new(FILEDATA_VALID_ARRAY).to_s
+  end
+end
+```
+
+### `test_cfdp_finished.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_finished.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+FINISHED_VALID_HASH = {conditionCode:0, endSystemStatus:0, deliveryCode:0, fileStatus:0}
+FINISHED_VALID_ARRAY = [0]
+FINISHED_TESTING_INPUT_TIMES = 100
+FINISHED_CORRECT_LENGTH = 10
+
+class Test_CFDP_Finished_Input_BinStream <  Minitest::Test
+
+  def test_length
+
+    # test ok
+    finished = CFDP::PDUFinished.new(FINISHED_VALID_ARRAY)
+    assert_kind_of CFDP::PDUFinished, finished
+
+    # test empty
+    finished = CFDP::PDUFinished.new
+    assert_kind_of CFDP::PDUFinished, finished
+
+    # test nil
+    assert_raises "VerifyError" do
+      finished = CFDP::PDUFinished.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      finished = CFDP::PDUFinished.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      finished = CFDP::PDUFinished.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      finished = CFDP::PDUFinished.new([])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    for i in 0..FINISHED_VALID_ARRAY.length-1
+
+      FINISHED_TESTING_INPUT_TIMES.times do
+
+        customFinished = FINISHED_VALID_ARRAY.dup
+        customFinished[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUFinished.new(customFinished)
+        end
+        customFinished[i] = -1
+        assert_raises "VerifyError" do
+          CFDP::PDUFinished.new(customFinished)
+        end
+      end
+    end
+  end
+
+  def test_byte_1
+
+    arr = Array.new
+    FINISHED_TESTING_INPUT_TIMES.times{arr << rand(0..(2**4)-1)}
+    # test conditionCode (4 bits)
+    for conditionCode in arr
+
+      finished = CFDP::PDUFinished.new([conditionCode<<4, 0])
+      assert_equal conditionCode, finished.conditionCode
+    end
+
+    # test endSystemStatus
+    finished = CFDP::PDUFinished.new([8, 0])
+    assert_equal finished.endSystemStatus, 1
+
+    # test end deliveryCode
+    finished = CFDP::PDUFinished.new([4, 0])
+    assert_equal finished.deliveryCode, 1
+
+    arr = Array.new
+    FINISHED_TESTING_INPUT_TIMES.times{arr << rand(0..(2**2)-1)}
+    # test fileStatus
+    for fileStatus in arr
+
+      finished = CFDP::PDUFinished.new([fileStatus, 0])
+      assert_equal fileStatus, finished.fileStatus
+    end
+  end
+end
+
+class Test_CFDP_Finished_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok finished
+    finished = CFDP::PDUFinished.new(FINISHED_VALID_HASH)
+    assert_kind_of CFDP::PDUFinished, finished
+    assert finished.valid?
+
+    # test empty finished
+    finished = CFDP::PDUFinished.new
+    assert_kind_of CFDP::PDUFinished, finished
+
+    # test missing any element
+    FINISHED_VALID_HASH.keys.each do |key|
+      newHash = FINISHED_VALID_HASH.dup
+      newHash.delete(key)
+      finished = CFDP::PDUFinished.new(newHash)
+      assert !finished.valid?
+    end
+
+    # test bug for elements  < 0
+    FINISHED_VALID_HASH.each do |key, value|
+      newHash = FINISHED_VALID_HASH.dup
+      newHash[key] = -1*rand(2**1..256)
+      finished = CFDP::PDUFinished.new(newHash)
+      assert !finished.valid?
+    end
+
+    # test higher > 4 bits
+    symbols = [:conditionCode]
+    symbols.each do |symbol|
+
+      FINISHED_TESTING_INPUT_TIMES.times do
+
+        newHash = FINISHED_VALID_HASH.dup
+        newHash[symbol] = rand(2**4..2**10)
+        finished = CFDP::PDUFinished.new(newHash)
+        assert !finished.valid?
+      end
+    end
+
+    # test all 1 bit thing
+    symbols = [:endSystemStatus, :deliveryCode]
+    symbols.each do |symbol|
+
+      FINISHED_TESTING_INPUT_TIMES.times do
+
+        newHash = FINISHED_VALID_HASH.dup
+        newHash[symbol] = rand(2**1..2**10)
+        finished = CFDP::PDUFinished.new(newHash)
+        assert !finished.valid?
+      end
+    end
+
+    # test wrong type input
+    symbols = FINISHED_VALID_HASH.keys
+    symbols.each do |symbol|
+      newHash = FINISHED_VALID_HASH.dup
+      # test string
+      newHash[symbol] = "a"
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "abcd"
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "1"
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1]
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, 2, 3]
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, [1]]
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUFinished.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUFinished.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_Finished_Methods < Minitest::Test
+
+  def test_method_length
+
+    newHash = FINISHED_VALID_HASH.dup
+    finished = CFDP::PDUFinished.new(newHash)
+    assert_equal finished.length, 2
+
+    newHash = FINISHED_VALID_HASH.dup
+    newHash[:conditionCode] = 1
+    finished = CFDP::PDUFinished.new(newHash)
+    assert_equal finished.length, 2
+
+    newHash = FINISHED_VALID_HASH.dup
+    newHash[:endSystemStatus] = 1
+    newHash[:fileStatus] = 3
+    finished = CFDP::PDUFinished.new(newHash)
+    assert_equal finished.length, 2
+  end
+
+  def test_method_pack
+
+    finished = CFDP::PDUFinished.new(FINISHED_VALID_HASH)
+    assert_equal finished.pack, [5, 0]
+
+    valid_array = [0]
+    finished = CFDP::PDUFinished.new(valid_array)
+    assert_equal finished.pack, [5] + valid_array
+
+    valid_array = [10]
+    finished = CFDP::PDUFinished.new(valid_array)
+    assert_equal finished.pack, [5] + valid_array
+  end
+
+  def test_method_to_s
+
+    # just shouldn't throw error and return a string
+    assert_kind_of String, CFDP::PDUFinished.new(FINISHED_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUFinished.new(FINISHED_VALID_ARRAY).to_s
+  end
+end
+```
+
+### `test_cfdp_header.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_header.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+HEADER_VALID_HASH = {version:0, pduType:0, direction:0, transmissionMode:0, crcFlag:0,
+      pduDataLength:0, idLength:0, sequenceLength:0, sourceID:0, sequenceNumber:0,
+      destinationID:0}
+HEADER_VALID_ARRAY = [0, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24]
+HEADER_TESTING_INPUT_TIMES = 100
+HEADER_CORRECT_LENGTH = 10
+
+class Test_CFDP_Header_Input_BinStream <  Minitest::Test
+
+  def test_length
+
+    # test ok
+    header = CFDP::PDUHeader.new(HEADER_VALID_ARRAY)
+    assert_kind_of CFDP::PDUHeader, header
+
+    # test empty
+    header = CFDP::PDUHeader.new
+    assert_kind_of CFDP::PDUHeader, header
+
+    # test nil
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([0, 0, 0])
+    end
+
+    # test below min_2
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([0, 0, 0, 0, 0, 0])
+    end
+
+    # test below min_3
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([0, 0, 0, 0, 0, 0])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    for i in 0..HEADER_VALID_ARRAY.length-1
+
+      HEADER_TESTING_INPUT_TIMES.times do
+
+        customHeader = HEADER_VALID_ARRAY.dup
+        customHeader[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUHeader.new(customHeader)
+        end
+        customHeader[i] = -1
+        assert_raises "VerifyError" do
+          CFDP::PDUHeader.new(customHeader)
+        end
+      end
+    end
+  end
+
+  def test_byte_1
+
+    # test wrong version (3 bits)
+    for conditionCode in 1..(2**3)-1
+      assert_raises do
+        header = CFDP::PDUHeader.new([conditionCode<<5, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+      end
+    end
+
+    # test wrong bit 8
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([0+1, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+    end
+
+    # test first byte
+    header = CFDP::PDUHeader.new([0, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.pduType, 0
+    assert_equal header.direction, 0
+    assert_equal header.transmissionMode, 0
+    assert_equal header.crcFlag, 0
+
+    # test pduType
+    header = CFDP::PDUHeader.new([16, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.pduType, 1
+
+    # test direction
+    header = CFDP::PDUHeader.new([8, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.direction, 1
+
+    # test transmissionMode
+    header = CFDP::PDUHeader.new([4, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.transmissionMode, 1
+
+    # test crcFlag
+    header = CFDP::PDUHeader.new([2, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.crcFlag, 1
+  end
+
+  def test_byte_2_3
+
+    # byte 2-3 is pdu data length
+    arr = Array.new
+    HEADER_TESTING_INPUT_TIMES.times{arr << rand(0..(2**16)-1)}
+
+    for dataLength in arr
+
+      header = CFDP::PDUHeader.new([0, (dataLength&0xFF00)>>8, dataLength&0x00FF, 19, 0, 21, 0, 0, 0, 69, 0, 24])
+      assert_equal header.pduDataLength, dataLength
+    end
+  end
+
+  def test_byte_4
+
+    # test wrong bit 25
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([0, 0, 0, 128, 0, 21, 0, 0, 0, 69, 0, 24])
+    end
+
+    # test wrong bit 29
+    assert_raises "VerifyError" do
+      header = CFDP::PDUHeader.new([0, 0, 0, 8, 0, 21, 0, 0, 0, 69, 0, 24])
+    end
+
+    # check for length entity ID
+    entityIDLength = 1
+    header = CFDP::PDUHeader.new([0, 0, 0, ((entityIDLength&0x07)<<4), 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.IDLength, entityIDLength
+
+    # check for length entity ID_2
+    entityIDLength = 2
+    header = CFDP::PDUHeader.new([0, 0, 0, ((entityIDLength&0x07)<<4)+3, 0, 0, 21, 0, 0, 0, 69, 0, 0, 24])
+    assert_equal header.IDLength, entityIDLength
+
+    # check for length sequence number transaction
+    transactionLength = 3
+    header = CFDP::PDUHeader.new([0, 0, 0, (transactionLength&0x07), 0, 0, 21, 0, 0, 0, 69, 0, 24])
+    assert_equal header.sequenceLength, transactionLength
+
+    # check for length sequence number transaction_2
+    transactionLength = 4
+    header = CFDP::PDUHeader.new([0, 0, 0, 4, 0, 0, 21, 0, 0, 0, 0, 69, 0, 24])
+    assert_equal header.sequenceLength, transactionLength
+
+    # check wrong size for length ID (only higher size, other errors are checked in PDUPacket. Header will ignore out of expected bytes.)
+    entityIDLength = 2
+    assert_raises "VerifyError" do
+      # + 3 is for transaction sequence length
+      header = CFDP::PDUHeader.new([0, 0, 0, ((entityIDLength&0x07)<<4)+3, 0, 21, 0, 0, 0, 69, 0, 24])
+    end
+
+    # check wrong size for length ID (only higher size, other errors are checked in PDUPacket. Header will ignore out of expected bytes.)
+    entityIDLength = 5
+    assert_raises "VerifyError" do
+      # + 3 is for transaction sequence length
+      header = CFDP::PDUHeader.new([0, 0, 0, ((entityIDLength&0x07)<<4)+3, 0, 21, 0, 0, 0, 69, 0, 24, 0, 0])
+    end
+
+    # check wrong size for sequenceLength ID (only higher size, other errors are checked in PDUPacket. Header will ignore out of expected bytes.)
+    transactionLength = 4
+    assert_raises "VerifyError" do
+      # 16 is for id length = 1
+      header = CFDP::PDUHeader.new([0, 0, 0, (transactionLength&0x07)+16, 0, 21, 0, 0, 0, 69, 0, 24])
+    end
+  end
+end
+
+class Test_CFDP_Header_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok header
+    header = CFDP::PDUHeader.new(HEADER_VALID_HASH)
+    assert_kind_of CFDP::PDUHeader, header
+    assert header.valid?
+
+    # test empty header
+    header = CFDP::PDUHeader.new
+    assert_kind_of CFDP::PDUHeader, header
+
+    # test missing any element
+    HEADER_VALID_HASH.keys.each do |key|
+      newHash = HEADER_VALID_HASH.dup
+      newHash.delete(key)
+      header = CFDP::PDUHeader.new(newHash)
+      assert !header.valid?
+    end
+
+    # test bug for elements  < 0
+    HEADER_VALID_HASH.each do |key, value|
+      newHash = HEADER_VALID_HASH.dup
+      newHash[key] = -1
+      header = CFDP::PDUHeader.new(newHash)
+      assert !header.valid?
+    end
+
+    # test version, lengthID and sequenceLength > 3 bits
+    symbols = [:version, :idLength, :sequenceLength]
+    symbols.each do |symbol|
+      newHash = HEADER_VALID_HASH.dup
+      newHash[symbol] = 8
+      header = CFDP::PDUHeader.new(newHash)
+      assert !header.valid?
+    end
+
+    # test all 1 bit thing
+    symbols = [:pduType, :direction, :transmissionMode, :crcFlag]
+    symbols.each do |symbol|
+      newHash = HEADER_VALID_HASH.dup
+      newHash[symbol] = 2
+      header = CFDP::PDUHeader.new(newHash)
+      assert !header.valid?
+    end
+
+    # test wrong type input
+    symbols = HEADER_VALID_HASH.keys
+    symbols.each do |symbol|
+      newHash = HEADER_VALID_HASH.dup
+      # test string
+      newHash[symbol] = "a"
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "abcd"
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "1"
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1]
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, 2, 3]
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, [1]]
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUHeader.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUHeader.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_Header_Methods < Minitest::Test
+
+  def test_method_headerSize
+
+    newHash = HEADER_VALID_HASH.dup
+    header = CFDP::PDUHeader.new(newHash)
+    assert_equal header.headerSize, 7
+
+    newHash = HEADER_VALID_HASH.dup
+    newHash[:idLength] = 1
+    header = CFDP::PDUHeader.new(newHash)
+    assert_equal header.headerSize, 9
+
+    newHash = HEADER_VALID_HASH.dup
+    newHash[:idLength] = 1
+    newHash[:sequenceLength] = 3
+    header = CFDP::PDUHeader.new(newHash)
+    assert_equal header.headerSize, 12
+  end
+
+  def test_method_pack
+
+    header = CFDP::PDUHeader.new(HEADER_VALID_HASH)
+    assert_equal header.pack, [0, 0, 0, 0, 0, 0, 0]
+
+    valid_array = [0, 0, 0, 19, 0, 21, 0, 0, 0, 69, 0, 24]
+    header = CFDP::PDUHeader.new(valid_array)
+    assert_equal header.pack, valid_array
+
+    valid_array = [0, 0, 0, 20, 0, 21, 0, 0, 0, 0, 69, 0, 24]
+    header = CFDP::PDUHeader.new(valid_array)
+    assert_equal header.pack, valid_array
+
+    valid_array = [0, 0, 0, 32+4, 0, 0, 21, 0, 0, 0, 0, 69, 0, 0, 24]
+    header = CFDP::PDUHeader.new(valid_array)
+    assert_equal header.pack, valid_array
+  end
+
+  def test_method_to_s
+
+    # just shouldn't throw error and return a string
+    assert_kind_of String, CFDP::PDUHeader.new(HEADER_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUHeader.new(HEADER_VALID_ARRAY).to_s
+  end
+end
+```
+
+### `test_cfdp_metadata.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_metadata.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+METADATA_VALID_HASH = {segmentationControl:0, fileSize:0, sourceFileName:"a", destinationFileName:"b"}
+METADATA_VALID_ARRAY = [0, 0, 0, 0, 0, 0, 0]
+METADATA_TESTING_INPUT_TIMES = 100
+METADATA_CORRECT_LENGTH = 10
+
+class Test_CFDP_Metadata_Input_BinStream <  Minitest::Test
+
+  def test_length
+
+    # test ok
+    metadata = CFDP::PDUMetadata.new(METADATA_VALID_ARRAY)
+    assert_kind_of CFDP::PDUMetadata, metadata
+
+    # test empty
+    metadata = CFDP::PDUMetadata.new
+    assert_kind_of CFDP::PDUMetadata, metadata
+
+    # test nil
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0])
+    end    
+
+    # test below min
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 0])
+    end
+
+    # test wrong first LV value
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 12, 0])
+    end
+
+    # test wrong first LV value
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 1, 0])
+    end
+
+    # test wrong first LV value
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 1, 0])
+    end    
+
+    # test wrong second LV value
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 1, 0, 1])
+    end 
+
+    # test wrong second LV value
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 0, 2, 1])
+    end
+
+    # test wrong second LV value
+    assert_raises "VerifyError" do
+      metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 1, 12, 2, 1])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    for i in 0..METADATA_VALID_ARRAY.length-1
+
+      METADATA_TESTING_INPUT_TIMES.times do
+
+        customMetadata = METADATA_VALID_ARRAY.dup
+        customMetadata[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUMetadata.new(customMetadata)
+        end
+        customMetadata[i] = -1
+        assert_raises "VerifyError" do
+          CFDP::PDUMetadata.new(customMetadata)
+        end
+      end
+    end
+  end
+
+  def test_byte_1
+
+    # check for segmentation control
+    metadata = CFDP::PDUMetadata.new([1<<7, 0, 0, 0, 0, 0, 0])
+    assert_equal 1, metadata.segmentationControl
+
+    # check for segmentation control
+    metadata = CFDP::PDUMetadata.new([0, 0, 0, 0, 0, 0, 0])
+    assert_equal 0, metadata.segmentationControl
+
+    # check for wrong bits 2-8
+    arr = Array.new
+    METADATA_TESTING_INPUT_TIMES.times{arr << rand(1..(2**7)-1)}
+
+    for test in arr
+
+      assert_raises do
+
+        CFDP::PDUMetadata.new([test, 0, 0, 0, 0, 0, 0])
+      end
+    end
+  end
+
+  def test_byte_2_5
+
+    arr = Array.new
+
+    # test offset (32 bits)
+    METADATA_TESTING_INPUT_TIMES.times{arr << rand(0..(2**32)-1)}
+    for fileSize in arr
+
+      customArray = [0]
+      customArray << ((fileSize & 0xFF000000) >> (8*3))
+      customArray << ((fileSize & 0x00FF0000) >> (8*2))
+      customArray << ((fileSize & 0x0000FF00) >> (8*1))
+      customArray << ((fileSize & 0x000000FF) >> (8*0))
+      customArray += [0, 0]
+      metadata = CFDP::PDUMetadata.new(customArray)
+      assert_equal fileSize, metadata.fileSize
+    end
+  end
+end
+
+class Test_CFDP_Metadata_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok metadata
+    metadata = CFDP::PDUMetadata.new(METADATA_VALID_HASH)
+    assert_kind_of CFDP::PDUMetadata, metadata
+    assert metadata.valid?
+
+    # test empty metadata
+    metadata = CFDP::PDUMetadata.new
+    assert_kind_of CFDP::PDUMetadata, metadata
+
+    # test missing any element
+    METADATA_VALID_HASH.keys.each do |key|
+      newHash = METADATA_VALID_HASH.dup
+      newHash.delete(key)
+      metadata = CFDP::PDUMetadata.new(newHash)
+      assert !metadata.valid?
+    end
+
+    # test bug for elements < 0
+    METADATA_VALID_HASH.each do |key, value|
+      newHash = METADATA_VALID_HASH.dup
+      newHash[key] = -1*rand(2**1..256)
+      metadata = CFDP::PDUMetadata.new(newHash)
+      assert !metadata.valid?
+    end
+
+    # test all 1 bit thing
+    symbols = [:segmentationControl]
+    symbols.each do |symbol|
+
+      METADATA_TESTING_INPUT_TIMES.times do
+
+        newHash = METADATA_VALID_HASH.dup
+        newHash[symbol] = rand(2**1..2**10)
+        metadata = CFDP::PDUMetadata.new(newHash)
+        assert !metadata.valid?
+      end
+    end
+
+    # test wrong type input
+    symbols = METADATA_VALID_HASH.keys
+    symbols.each do |symbol|
+
+      newHash = METADATA_VALID_HASH.dup
+
+      # test array
+      newHash[symbol] = [1]
+      assert !CFDP::PDUMetadata.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, 2, 3]
+      assert !CFDP::PDUMetadata.new(newHash).valid?
+
+      # test array
+      newHash[symbol] = [1, [1]]
+      assert !CFDP::PDUMetadata.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUMetadata.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUMetadata.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUMetadata.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_Metadata_Methods < Minitest::Test
+
+  def test_method_length
+
+    newHash = METADATA_VALID_HASH.dup
+    metadata = CFDP::PDUMetadata.new(newHash)
+    assert_equal metadata.length, 10
+
+    newHash = METADATA_VALID_HASH.dup
+    newHash[:segmentationControl] = 1
+    metadata = CFDP::PDUMetadata.new(newHash)
+    assert_equal metadata.length, 10
+
+    newHash = METADATA_VALID_HASH.dup
+    newHash[:sourceFileName] = "awaka"
+    newHash[:destinationFileName] = "awaka1"
+    metadata = CFDP::PDUMetadata.new(newHash)
+    assert_equal metadata.length, 1+5+6+7
+  end
+
+  def test_method_pack
+
+    metadata = CFDP::PDUMetadata.new(METADATA_VALID_HASH)
+    assert_equal metadata.pack, [7] + [0, 0, 0, 0, 0, 1, 97, 1, 98]
+
+    valid_array = [128, 0, 1, 144, 0, 16, 47, 114, 97, 109, 47, 116, 101, 115, 116, 49, 48, 48, 46, 116, 120, 116, 24, 67, 58, 47, 100, 111, 119, 110, 108, 105, 110, 107, 115, 47, 116, 101, 115, 116, 49, 48, 48, 46, 116, 120, 116]
+    metadata = CFDP::PDUMetadata.new(valid_array)
+    assert_equal metadata.pack, [7] + valid_array
+
+    valid_array = [128, 0, 0, 120, 0, 15, 47, 114, 97, 109, 47, 116, 101, 115, 116, 51, 48, 46, 116, 120, 116, 23, 67, 58, 47, 100, 111, 119, 110, 108, 105, 110, 107, 115, 47, 116, 101, 115, 116, 51, 48, 46, 116, 120, 116]
+    metadata = CFDP::PDUMetadata.new(valid_array)
+    assert_equal metadata.pack, [7] + valid_array
+  end
+
+  def test_method_to_s
+
+    # just shouldn't throw error and return a string
+    assert_kind_of String, CFDP::PDUMetadata.new(METADATA_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUMetadata.new(METADATA_VALID_ARRAY).to_s
+  end
+end
+```
+
+### `test_cfdp_nak.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/unit_test/test_cfdp_nak.rb`
+
+
+```ruby
+require 'minitest/autorun'
+
+require_relative 'mock/utils.rb'
+require_relative '../cfdp'
+
+NAK_VALID_HASH = {scopeStart:0, scopeEnd:0, segmentRequests:[{startOffset:0, endOffset:0}]}
+NAK_VALID_ARRAY = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+NAK_TESTING_INPUT_TIMES = 100
+NAK_CORRECT_LENGTH = 17
+
+class Test_CFDP_NAK_Input_BinStream < Minitest::Test
+
+  def test_length
+
+    # test ok
+    nak = CFDP::PDUNAK.new(NAK_VALID_ARRAY)
+    assert_kind_of CFDP::PDUNAK, nak
+
+    # test nil
+    assert_raises "VerifyError" do
+      CFDP::PDUNAK.new(nil)
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      nak = CFDP::PDUNAK.new("a")
+    end
+
+    # test wrong input
+    assert_raises "VerifyError" do
+      nak = CFDP::PDUNAK.new(12321312312)
+    end
+
+    # test empty array
+    assert_raises "VerifyError" do
+      header = CFDP::PDUNAK.new([])
+    end
+
+    # test below min
+    assert_raises "VerifyError" do
+      header = CFDP::PDUNAK.new([0])
+    end
+
+    # test anything bigger than 255 and lower than 0
+    for i in 0..NAK_VALID_ARRAY.length-1
+
+      NAK_TESTING_INPUT_TIMES.times do
+
+        custom = NAK_VALID_ARRAY.dup
+        custom[i] = rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUNAK.new(custom)
+        end
+        custom[i] = -1*rand(256..256**3)
+        assert_raises "VerifyError" do
+          CFDP::PDUNAK.new(custom)
+        end
+      end
+    end
+  end
+
+  def test_byte_1_4
+
+    arr = Array.new
+
+    # test offset (32 bits)
+    NAK_TESTING_INPUT_TIMES.times{arr << rand(0..(2**32)-1)}
+    for scopeStart in arr
+
+      customArray = []
+      customArray << ((scopeStart & 0xFF000000) >> (8*3))
+      customArray << ((scopeStart & 0x00FF0000) >> (8*2))
+      customArray << ((scopeStart & 0x0000FF00) >> (8*1))
+      customArray << ((scopeStart & 0x000000FF) >> (8*0))
+      customArray += [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      nak = CFDP::PDUNAK.new(customArray)
+      assert_equal scopeStart, nak.scopeStart
+    end
+  end
+
+  def test_byte_4_8
+
+    arr = Array.new
+
+    # test offset (32 bits)
+    NAK_TESTING_INPUT_TIMES.times{arr << rand(0..(2**32)-1)}
+    for scopeEnd in arr
+
+      customArray = [0, 0, 0, 0]
+      customArray << ((scopeEnd & 0xFF000000) >> (8*3))
+      customArray << ((scopeEnd & 0x00FF0000) >> (8*2))
+      customArray << ((scopeEnd & 0x0000FF00) >> (8*1))
+      customArray << ((scopeEnd & 0x000000FF) >> (8*0))
+      customArray += [0, 0, 0, 0, 0, 0, 0, 0]
+      nak = CFDP::PDUNAK.new(customArray)
+      assert_equal scopeEnd, nak.scopeEnd
+    end
+  end
+end
+
+class Test_CFDP_NAK_Input_Hash < Minitest::Test
+
+  def test_initialize
+
+    # test ok
+    nak = CFDP::PDUNAK.new(NAK_VALID_HASH)
+    assert_kind_of CFDP::PDUNAK, nak
+    assert nak.valid?
+
+    # test empty nak
+    nak = CFDP::PDUNAK.new
+    assert_kind_of CFDP::PDUNAK, nak
+
+    # test missing any element
+    NAK_VALID_HASH.keys.each do |key|
+      newHash = NAK_VALID_HASH.dup
+      newHash.delete(key)
+      nak = CFDP::PDUNAK.new(newHash)
+      assert !nak.valid?
+    end
+
+    # test bug for elements  < 0
+    NAK_VALID_HASH.each do |key, value|
+      newHash = NAK_VALID_HASH.dup
+      newHash[key] = -1
+      nak = CFDP::PDUNAK.new(newHash)
+      assert !nak.valid?
+    end
+
+    # test bug for element 32 bits
+    symbols = [:scopeStart, :scopeEnd]
+    symbols.each do |symbol|
+      newHash = NAK_VALID_HASH.dup
+      newHash[symbol] = rand(2**32..2**36)
+      nak = CFDP::PDUNAK.new(newHash)
+      assert !nak.valid?
+    end
+
+    # test wrong type input
+    symbols = NAK_VALID_HASH.keys
+    symbols.each do |symbol|
+      newHash = NAK_VALID_HASH.dup
+      # test string
+      newHash[symbol] = "a"
+      assert !CFDP::PDUNAK.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "abcd"
+      assert !CFDP::PDUNAK.new(newHash).valid?
+
+      # test string
+      newHash[symbol] = "1"
+      assert !CFDP::PDUNAK.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {symbol: 1}
+      assert !CFDP::PDUNAK.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>1}
+      assert !CFDP::PDUNAK.new(newHash).valid?
+
+      # test Hash
+      newHash[symbol] = {1=>[1]}
+      assert !CFDP::PDUNAK.new(newHash).valid?
+    end
+  end
+end
+
+class Test_CFDP_NAK_Methods < Minitest::Test
+
+
+  def test_method_length
+
+    nak = CFDP::PDUNAK.new(NAK_VALID_HASH)
+    assert_equal NAK_CORRECT_LENGTH, nak.length
+
+    newHash = NAK_VALID_HASH.dup
+    newHash[:startOffset] = 1
+    nak = CFDP::PDUNAK.new(newHash)
+    assert_equal NAK_CORRECT_LENGTH, nak.length
+  end
+
+  def test_method_pack
+
+    nak = CFDP::PDUNAK.new(NAK_VALID_HASH)
+    assert_equal [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], nak.pack
+
+    valid_array = [0, 0, 0, 0, 0, 1, 144, 0, 0, 0, 0, 0, 0, 0, 1, 144, 0, 0, 3, 232, 0, 0, 9, 96, 0, 0, 10, 40, 0, 0, 16, 104, 0, 0, 17, 248, 0, 0, 30, 120, 0, 0, 32, 8, 0, 0, 35, 240, 0, 0, 36, 184, 0, 0, 39, 216, 0, 0, 40, 160, 0, 0, 41, 104, 0, 0, 42, 48, 0, 0, 51, 144, 0, 0, 53, 232, 0, 0, 57, 208, 0, 0, 58, 152, 0, 0, 59, 96, 0, 0, 60, 40, 0, 0, 78, 232, 0, 0, 79, 176, 0, 0, 85, 40, 0, 0, 85, 240, 0, 0, 94, 136, 0, 0, 95, 80, 0, 0, 98, 112, 0, 0, 100, 0, 0, 0, 103, 232, 0, 0, 104, 176, 0, 0, 107, 8, 0, 0, 107, 208, 0, 0, 114, 16, 0, 0, 114, 216, 0, 0, 120, 80, 0, 0, 121, 24, 0, 0, 123, 112, 0, 0, 124, 56, 0, 0, 126, 144, 0, 0, 127, 88, 0, 0, 135, 240, 0, 0, 136, 184, 0, 0, 137, 128, 0, 0, 138, 72, 0, 0, 139, 216, 0, 0, 140, 160, 0, 0, 144, 136, 0, 0, 145, 80, 0, 0, 159, 96, 0, 0, 160, 40, 0, 0, 161, 184, 0, 0, 162, 128, 0, 0, 163, 72, 0, 0, 164, 216, 0, 0, 170, 80, 0, 0, 171, 24, 0, 0, 173, 112, 0, 0, 174, 56, 0, 0, 182, 208, 0, 0, 184, 96, 0, 0, 185, 40, 0, 0, 185, 240, 0, 0, 194, 136, 0, 0, 196, 24, 0, 0, 202, 88, 0, 0, 203, 232, 0, 0, 219, 136, 0, 0, 220, 80, 0, 0, 221, 24, 0, 0, 222, 168, 0, 0, 223, 112, 0, 0, 225, 200, 0, 0, 226, 144, 0, 0, 227, 88, 0, 0, 231, 64, 0, 0, 232, 208, 0, 0, 235, 40, 0, 0, 235, 240, 0, 0, 236, 184, 0, 0, 237, 128, 0, 0, 247, 168, 0, 0, 248, 112, 0, 1, 8, 216, 0, 1, 9, 160, 0, 1, 11, 48, 0, 1, 11, 248, 0, 1, 15, 24, 0, 1, 15, 224, 0, 1, 23, 176, 0, 1, 24, 120, 0, 1, 25, 64, 0, 1, 26, 8, 0, 1, 28, 96, 0, 1, 29, 40, 0, 1, 31, 128, 0, 1, 32, 72, 0, 1, 36, 248, 0, 1, 37, 192, 0, 1, 41, 168, 0, 1, 42, 112, 0, 1, 43, 56, 0, 1, 44, 0, 0, 1, 57, 72, 0, 1, 58, 16, 0, 1, 60, 104, 0, 1, 61, 48, 0, 1, 62, 192, 0, 1, 63, 136, 0, 1, 66, 168, 0, 1, 67, 112, 0, 1, 73, 176, 0, 1, 74, 120, 0, 1, 78, 96, 0, 1, 79, 40, 0, 1, 81, 128, 0, 1, 82, 72, 0, 1, 99, 120, 0, 1, 100, 64, 0, 1, 108, 16, 0, 1, 108, 216, 0, 1, 113, 136]
+    nak = CFDP::PDUNAK.new(valid_array)
+    assert_equal [8]+valid_array, nak.pack
+
+    valid_array = [0, 0, 0, 0, 0, 1, 144, 0, 0, 0, 29, 176, 0, 0, 30, 120, 0, 0, 32, 8, 0, 0, 35, 240, 0, 0, 36, 184, 0, 0, 39, 216, 0, 0, 40, 160, 0, 0, 41, 104, 0, 0, 42, 48, 0, 0, 51, 144, 0, 0, 53, 232, 0, 0, 57, 208, 0, 0, 58, 152, 0, 0, 59, 96, 0, 0, 60, 40, 0, 0, 78, 232, 0, 0, 79, 176, 0, 0, 85, 40, 0, 0, 85, 240, 0, 0, 94, 136, 0, 0, 95, 80, 0, 0, 98, 112, 0, 0, 100, 0, 0, 0, 103, 232, 0, 0, 104, 176, 0, 0, 107, 8, 0, 0, 107, 208, 0, 0, 114, 16, 0, 0, 114, 216, 0, 0, 120, 80, 0, 0, 121, 24, 0, 0, 123, 112, 0, 0, 124, 56, 0, 0, 126, 144, 0, 0, 127, 88, 0, 0, 135, 240, 0, 0, 136, 184, 0, 0, 137, 128, 0, 0, 138, 72, 0, 0, 139, 216, 0, 0, 140, 160, 0, 0, 144, 136, 0, 0, 145, 80, 0, 0, 159, 96, 0, 0, 160, 40, 0, 0, 161, 184, 0, 0, 162, 128, 0, 0, 163, 72, 0, 0, 164, 216, 0, 0, 170, 80, 0, 0, 171, 24, 0, 0, 173, 112, 0, 0, 174, 56, 0, 0, 182, 208, 0, 0, 184, 96, 0, 0, 185, 40, 0, 0, 185, 240, 0, 0, 194, 136, 0, 0, 196, 24, 0, 0, 202, 88, 0, 0, 203, 232, 0, 0, 219, 136, 0, 0, 220, 80, 0, 0, 221, 24, 0, 0, 222, 168, 0, 0, 223, 112, 0, 0, 225, 200, 0, 0, 226, 144, 0, 0, 227, 88, 0, 0, 231, 64, 0, 0, 232, 208, 0, 0, 235, 40, 0, 0, 235, 240, 0, 0, 236, 184, 0, 0, 237, 128, 0, 0, 247, 168, 0, 0, 248, 112, 0, 1, 8, 216, 0, 1, 9, 160, 0, 1, 11, 48, 0, 1, 11, 248, 0, 1, 15, 24, 0, 1, 15, 224, 0, 1, 23, 176, 0, 1, 24, 120, 0, 1, 25, 64, 0, 1, 26, 8, 0, 1, 28, 96, 0, 1, 29, 40, 0, 1, 31, 128, 0, 1, 32, 72, 0, 1, 36, 248, 0, 1, 37, 192, 0, 1, 41, 168, 0, 1, 42, 112, 0, 1, 43, 56, 0, 1, 44, 0, 0, 1, 57, 72, 0, 1, 58, 16, 0, 1, 60, 104, 0, 1, 61, 48, 0, 1, 62, 192, 0, 1, 63, 136, 0, 1, 66, 168, 0, 1, 67, 112, 0, 1, 73, 176, 0, 1, 74, 120, 0, 1, 78, 96, 0, 1, 79, 40, 0, 1, 81, 128, 0, 1, 82, 72, 0, 1, 99, 120, 0, 1, 100, 64, 0, 1, 108, 16, 0, 1, 108, 216, 0, 1, 113, 136, 0, 1, 115, 24, 0, 1, 125, 64, 0, 1, 126, 8, 0, 1, 126, 208, 0, 1, 127, 152, 0, 1, 132, 72]
+    nak = CFDP::PDUNAK.new(valid_array)
+    assert_equal [8]+valid_array, nak.pack
+  end
+
+  def test_method_to_s
+
+    assert_kind_of String, CFDP::PDUNAK.new(NAK_VALID_HASH).to_s
+    assert_kind_of String, CFDP::PDUNAK.new(NAK_VALID_ARRAY).to_s
+  end
+end
+```

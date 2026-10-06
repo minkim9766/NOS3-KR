@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,27 +12,992 @@ docs/index
 Hash/index
 test/index
 Types/index
-file--CMakeLists.txt
-file--CRCChecker.cpp
-file--CRCChecker.hpp
-file--RateLimiter.cpp
-file--RateLimiter.hpp
-file--TestUtils.hpp
-file--TokenBucket.cpp
-file--TokenBucket.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/`](Hash/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/`](Types/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/CRCChecker.cpp`](file--CRCChecker.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/CRCChecker.hpp`](file--CRCChecker.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/RateLimiter.cpp`](file--RateLimiter.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/RateLimiter.hpp`](file--RateLimiter.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/TestUtils.hpp`](file--TestUtils.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/TokenBucket.cpp`](file--TokenBucket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/TokenBucket.hpp`](file--TokenBucket.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/CMakeLists.txt`
+
+
+```cmake
+#Source files
+set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/RateLimiter.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/TokenBucket.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/CRCChecker.cpp"
+        )
+
+set(MOD_DEPS
+    Fw/Types
+    Fw/Time
+    Os
+    Utils/Hash
+   )
+
+register_fprime_module()
+set(UT_SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/main.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/RateLimiterTester.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/TokenBucketTester.cpp"
+        )
+set(UT_MOD_DEPS
+        STest
+        Fw/Types
+        Fw/Time
+        Os
+        )
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+
+# Module subdirectories
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Hash/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Types/")
+```
+
+### `CRCChecker.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/CRCChecker.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRCChecker.cpp
+// \author ortega
+// \brief  cpp file for a crc32 checker
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Utils/CRCChecker.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/File.hpp>
+#include <Os/FileSystem.hpp>
+#include <Utils/Hash/Hash.hpp>
+#include <Fw/Types/FileNameString.hpp>
+
+namespace Utils {
+static_assert(FW_USE_PRINTF_FAMILY_FUNCTIONS_IN_STRING_FORMATTING,
+        "Cannot use CRC checker without full string formatting");
+
+  crc_stat_t create_checksum_file(const char* const fname)
+  {
+    FW_ASSERT(fname != nullptr);
+
+    FwSizeType i;
+    FwSizeType blocks;
+    FwSizeType remaining_bytes;
+    FwSizeType filesize;
+    Os::File f;
+    Os::FileSystem::Status fs_stat;
+    Os::File::Status stat;
+    Utils::Hash hash;
+    U32 checksum;
+    FwSizeType bytes_to_read;
+    FwSizeType bytes_to_write;
+    Fw::FileNameString hashFilename;
+    U8 block_data[CRC_FILE_READ_BLOCK];
+
+    fs_stat = Os::FileSystem::getFileSize(fname, filesize);
+    if(fs_stat != Os::FileSystem::OP_OK)
+    {
+      return FAILED_FILE_SIZE;
+    }
+
+    // Open file
+    stat = f.open(fname, Os::File::OPEN_READ);
+    if(stat != Os::File::OP_OK)
+    {
+      return FAILED_FILE_OPEN;
+    }
+
+    // Read file
+    bytes_to_read = CRC_FILE_READ_BLOCK;
+    blocks = filesize / CRC_FILE_READ_BLOCK;
+    for(i = 0; i < blocks; i++)
+    {
+      stat = f.read(block_data, bytes_to_read);
+      if(stat != Os::File::OP_OK || bytes_to_read != CRC_FILE_READ_BLOCK)
+      {
+        f.close();
+        return  FAILED_FILE_READ;
+      }
+
+      hash.update(block_data, bytes_to_read);
+    }
+
+    remaining_bytes = filesize % CRC_FILE_READ_BLOCK;
+    bytes_to_read = remaining_bytes;
+    if(remaining_bytes > 0)
+    {
+      stat = f.read(block_data, bytes_to_read);
+      if(stat != Os::File::OP_OK || bytes_to_read != remaining_bytes)
+      {
+        f.close();
+        return FAILED_FILE_READ;
+      }
+
+      hash.update(block_data, remaining_bytes);
+    }
+
+    // close file
+    f.close();
+
+    // generate checksum
+    hash.final(checksum);
+
+    // open checksum file
+    Fw::FormatStatus formatStatus = hashFilename.format("%s%s", fname, HASH_EXTENSION_STRING);
+    FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+
+    stat = f.open(hashFilename.toChar(), Os::File::OPEN_WRITE);
+    if(stat != Os::File::OP_OK)
+    {
+      return FAILED_FILE_CRC_OPEN;
+    }
+
+    // Write  checksum  file
+    bytes_to_write = sizeof(checksum);
+    stat = f.write(reinterpret_cast<U8*>(&checksum), bytes_to_write);
+    if(stat != Os::File::OP_OK || sizeof(checksum) != bytes_to_write)
+    {
+      f.close();
+      return FAILED_FILE_CRC_WRITE;
+    }
+
+    // close checksum file
+    f.close();
+
+    return PASSED_FILE_CRC_WRITE;
+  }
+
+  crc_stat_t read_crc32_from_file(const char* const fname, U32 &checksum_from_file) {
+      Os::File f;
+      Os::File::Status stat;
+      Fw::FileNameString hashFilename;
+      FW_ASSERT(fname != nullptr);
+      // open checksum file
+      Fw::FormatStatus formatStatus = hashFilename.format("%s%s", fname, HASH_EXTENSION_STRING);
+      FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+
+      stat = f.open(hashFilename.toChar(), Os::File::OPEN_READ);
+      if(stat != Os::File::OP_OK)
+      {
+        return FAILED_FILE_CRC_OPEN;
+      }
+
+      // Read  checksum  file
+      FwSizeType checksum_from_file_size = static_cast<FwSizeType>(sizeof(checksum_from_file));
+      stat = f.read(reinterpret_cast<U8*>(&checksum_from_file), checksum_from_file_size);
+      if(stat != Os::File::OP_OK || checksum_from_file_size != sizeof(checksum_from_file))
+      {
+        f.close();
+        return FAILED_FILE_CRC_READ;
+      }
+
+      // close checksum file
+      f.close();
+      return PASSED_FILE_CRC_CHECK;
+  }
+
+  crc_stat_t verify_checksum(const char* const fname, U32 &expected, U32 &actual)
+  {
+    FW_ASSERT(fname != nullptr);
+
+    FwSizeType i;
+    FwSizeType blocks;
+    FwSizeType remaining_bytes;
+    FwSizeType filesize;
+    Os::File f;
+    Os::FileSystem::Status fs_stat;
+    Os::File::Status stat;
+    Utils::Hash hash;
+    U32 checksum;
+    U32 checksum_from_file;
+    FwSizeType bytes_to_read;
+    U8 block_data[CRC_FILE_READ_BLOCK];
+
+    fs_stat = Os::FileSystem::getFileSize(fname, filesize);
+    if(fs_stat != Os::FileSystem::OP_OK)
+    {
+      return FAILED_FILE_SIZE;
+    }
+
+    // Open file
+    stat = f.open(fname, Os::File::OPEN_READ);
+    if(stat != Os::File::OP_OK)
+    {
+      return FAILED_FILE_OPEN;
+    }
+
+    // Read file
+    bytes_to_read = CRC_FILE_READ_BLOCK;
+    blocks = filesize / CRC_FILE_READ_BLOCK;
+    for(i = 0; i < blocks; i++)
+    {
+      stat = f.read(block_data, bytes_to_read);
+      if(stat != Os::File::OP_OK || bytes_to_read != CRC_FILE_READ_BLOCK)
+      {
+        f.close();
+        return  FAILED_FILE_READ;
+      }
+
+      hash.update(block_data, static_cast<FwSizeType>(bytes_to_read));
+    }
+
+    remaining_bytes = filesize % CRC_FILE_READ_BLOCK;
+    bytes_to_read = remaining_bytes;
+    if(remaining_bytes > 0)
+    {
+      stat = f.read(block_data, bytes_to_read);
+      if(stat != Os::File::OP_OK || bytes_to_read != remaining_bytes)
+      {
+        f.close();
+        return FAILED_FILE_READ;
+      }
+
+      hash.update(block_data, remaining_bytes);
+    }
+
+    // close file
+    f.close();
+    // generate checksum
+    hash.final(checksum);
+
+    crc_stat_t crcstat = read_crc32_from_file(fname, checksum_from_file);
+    if (crcstat != PASSED_FILE_CRC_CHECK) {
+        return crcstat;
+    }
+
+    // compare checksums
+    if(checksum != checksum_from_file)
+    {
+      expected = checksum_from_file;
+      actual = checksum;
+      return FAILED_FILE_CRC_CHECK;
+    }
+
+    expected = checksum_from_file;
+    actual = checksum;
+    return PASSED_FILE_CRC_CHECK;
+  }
+
+}
+```
+
+### `CRCChecker.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/CRCChecker.hpp`
+
+
+```cpp
+// ====================================================================== 
+// \title  CRCChecker.hpp
+// \author ortega
+// \brief  hpp file for a crc32 checker
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ====================================================================== 
+
+#ifndef CRC_CHECKER_HPP
+#define CRC_CHECKER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <config/CRCCheckerConfig.hpp>
+
+namespace Utils {
+
+  static const FwSignedSizeType CRC_FILE_READ_BLOCK = CONFIG_CRC_FILE_READ_BLOCK ;
+ 
+
+  typedef enum
+  {
+    PASSED_FILE_CRC_CHECK = 0,
+    PASSED_FILE_CRC_WRITE,
+    FAILED_FILE_SIZE,
+    FAILED_FILE_SIZE_CAST,
+    FAILED_FILE_OPEN,
+    FAILED_FILE_READ,
+    FAILED_FILE_CRC_OPEN,
+    FAILED_FILE_CRC_READ,
+    FAILED_FILE_CRC_WRITE,
+    FAILED_FILE_CRC_CHECK
+  } crc_stat_t;
+
+  crc_stat_t create_checksum_file(const char* const filename);
+  crc_stat_t read_crc32_from_file(const char* const fname, U32 &checksum_from_file);
+  crc_stat_t verify_checksum(const char* const filename, U32 &expected, U32 &actual);
+
+}
+
+#endif
+```
+
+### `RateLimiter.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/RateLimiter.cpp`
+
+
+```cpp
+// ====================================================================== 
+// \title  RateLimiter.cpp
+// \author vwong
+// \brief  cpp file for a rate limiter utility class
+//
+// \copyright
+// Copyright (C) 2009-2020 California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ====================================================================== 
+
+#include <Utils/RateLimiter.hpp>
+
+namespace Utils {
+
+  RateLimiter ::
+    RateLimiter (
+        U32 counterCycle,
+        U32 timeCycle
+    ) :
+      m_counterCycle(counterCycle),
+      m_timeCycle(timeCycle)
+  {
+    this->reset();
+  }
+
+  RateLimiter ::
+    RateLimiter () :
+      m_counterCycle(0),
+      m_timeCycle(0)
+  {
+    this->reset();
+  }
+
+  void RateLimiter ::
+    setCounterCycle(
+        U32 counterCycle
+    )
+  {
+    this->m_counterCycle = counterCycle;
+  }
+
+  void RateLimiter ::
+    setTimeCycle(
+        U32 timeCycle
+    )
+  {
+    this->m_timeCycle = timeCycle;
+  }
+
+  void RateLimiter ::
+    reset()
+  {
+    this->resetCounter();
+    this->resetTime();
+  }
+
+  void RateLimiter ::
+    resetCounter()
+  {
+    this->m_counter = 0;
+  }
+
+  void RateLimiter ::
+    resetTime()
+  {
+    this->m_time = Fw::Time();
+    this->m_timeAtNegativeInfinity = true;
+  }
+
+  void RateLimiter ::
+    setCounter(
+        U32 counter
+    )
+  {
+    this->m_counter = counter;
+  }
+
+  void RateLimiter ::
+    setTime(
+        Fw::Time time
+    )
+  {
+    this->m_time = time;
+    this->m_timeAtNegativeInfinity = false;
+  }
+
+  bool RateLimiter ::
+    trigger(
+        Fw::Time time
+    )
+  {
+    // NB: this implements a 4-bit decision, logically equivalent to this pseudo-code
+    //
+    // A = HAS_COUNTER, B = HAS_TIME, C = COUNTER_TRIGGER, D = TIME_TRIGGER
+    //
+    // if (!A && !B) => true
+    // if (A && B) => C || D
+    // if (A) => C
+    // if (B) => D
+    // false
+    //
+    if (this->m_counterCycle == 0 && this->m_timeCycle == 0) {
+      return true;
+    }
+
+    // evaluate trigger criteria
+    bool shouldTrigger = false;
+    if (this->m_counterCycle > 0) {
+      shouldTrigger = shouldTrigger || this->shouldCounterTrigger();
+    }
+    if (this->m_timeCycle > 0) {
+      shouldTrigger = shouldTrigger || this->shouldTimeTrigger(time);
+    }
+
+    // update states
+    if (this->m_counterCycle > 0) {
+      this->updateCounter(shouldTrigger);
+    }
+    if (this->m_timeCycle > 0) {
+      this->updateTime(shouldTrigger, time);
+    }
+
+    return shouldTrigger;
+  }
+
+  bool RateLimiter ::
+    trigger()
+  {
+    FW_ASSERT(this->m_timeCycle == 0);
+    return trigger(Fw::Time::zero());
+  }
+
+  bool RateLimiter ::
+    shouldCounterTrigger()
+  {
+    FW_ASSERT(this->m_counterCycle > 0);
+
+    // trigger at 0
+    bool shouldTrigger = (this->m_counter == 0);
+
+    return shouldTrigger;
+  }
+
+  bool RateLimiter ::
+    shouldTimeTrigger(Fw::Time time)
+  {
+    FW_ASSERT(this->m_timeCycle > 0);
+
+    // trigger at prev trigger time + time cycle seconds OR when time is at negative infinity
+    Fw::Time timeCycle = Fw::Time(this->m_timeCycle, 0);
+    Fw::Time nextTrigger = Fw::Time::add(this->m_time, timeCycle);
+    bool shouldTrigger = (time >= nextTrigger) || this->m_timeAtNegativeInfinity;
+
+    return shouldTrigger;
+  }
+
+  void RateLimiter ::
+    updateCounter(bool triggered)
+  {
+    FW_ASSERT(this->m_counterCycle > 0);
+
+    if (triggered) {
+      // triggered, set to next state
+      this->m_counter = 1;
+
+    } else {
+      // otherwise, just increment and maybe wrap
+      if (++this->m_counter >= this->m_counterCycle) {
+        this->m_counter = 0;
+      }
+    }
+  }
+
+  void RateLimiter ::
+    updateTime(bool triggered, Fw::Time time)
+  {
+    FW_ASSERT(this->m_timeCycle > 0);
+
+    if (triggered) {
+      // mark time of trigger
+      this->m_time = time;
+    }
+    this->m_timeAtNegativeInfinity = false;
+  }
+
+} // end namespace Utils
+```
+
+### `RateLimiter.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/RateLimiter.hpp`
+
+
+```cpp
+// ====================================================================== 
+// \title  RateLimiter.hpp
+// \author vwong
+// \brief  hpp file for a rate limiter utility class
+//
+// \copyright
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ====================================================================== 
+
+#ifndef RateLimiter_HPP
+#define RateLimiter_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/Time.hpp>
+
+namespace Utils {
+
+  class RateLimiter
+  {
+
+    public:
+
+      // Construct with defined cycles
+      RateLimiter(U32 counterCycle, U32 timeCycle);
+
+      // Construct with cycles set to 0
+      RateLimiter();
+
+    public:
+
+      // Adjust cycles at run-time
+      void setCounterCycle(U32 counterCycle);
+      void setTimeCycle(U32 timeCycle);
+
+      // Main point of entry
+      //
+      // It will only factor in counter or time, whichever one has a cycle defined
+      //
+      // If both are defined, then satisfying _either_ one will work
+      // e.g. I want to trigger only once every X times or once every Y
+      // seconds, whichever comes first
+      //
+      // The argument-less version is a shorthand for counter-only RateLimiters
+      // If a time cycle is defined but the argument-less version is called,
+      // RateLimiter assumes the client forgot to supply a time, and asserts
+      //
+      bool trigger(Fw::Time time);
+      bool trigger();
+
+      // Manual state adjustments, if necessary
+      void reset();
+      void resetCounter();
+      void resetTime();
+      void setCounter(U32);
+      void setTime(Fw::Time time);
+
+    private:
+
+      // Helper functions to update each independently
+      bool shouldCounterTrigger();
+      bool shouldTimeTrigger(Fw::Time time);
+      void updateCounter(bool triggered);
+      void updateTime(bool triggered, Fw::Time time);
+
+    private:
+
+      // parameters
+      U32 m_counterCycle;
+      U32 m_timeCycle;
+
+      // state
+      U32 m_counter;
+      Fw::Time m_time;
+      bool m_timeAtNegativeInfinity;
+  };
+
+} // end namespace Utils
+
+#endif
+```
+
+### `TestUtils.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/TestUtils.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TestUtils.hpp
+// \author vwong
+// \brief  hpp file for unit test utility macros
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef TESTUTILS_HPP
+#define TESTUTILS_HPP
+
+// HOW TO USE:
+//
+// 1) in Tester.cpp, include this file
+//    e.g.: #include <Utils/TestUtils.hpp>
+//
+// 2) in Tester.cpp, set your component name in TEST_COMP macro
+//    e.g.: #define TEST_COMP PwrSwitchManagerComponentImpl
+//
+// 3) make sure INSTANCE and CMD_SEQ are also defined in Tester.cpp (they
+//    should be autogenerated)
+//
+// List of macros:
+//
+// - SEND_CMD(cmd, status, ...)
+// - SEND_CMD_NO_EXPECT(cmd, ...)
+// - ASSERT_LAST_CMD(cmd, status)
+// - ASSERT_LAST_TLM(name, value)
+// - ASSERT_LAST_EVENT(name, ...)
+// - ASSERT_LAST_PORT_OUT(port, ...)
+//
+// See below for detailed descriptions
+
+
+// SEND_CMD
+//
+// Send a command and expect a response status. This command essentially calls
+// sendCmd, doDispatch, and asserts a command response. The last command
+// response received must be for the command sent here for it to validate, i.e.
+// it may not work well if your component interleaves command responses.
+//
+// Example:
+//
+//   SEND_CMD(PWR_SW_MGR_PWR_ON, Fw::CmdResponse::OK, channel);
+//   SEND_CMD(PWR_SW_MGR_SET_DUTY_CYCLE, Fw::CmdResponse::OK, channel, dutyCycle);
+//   SEND_CMD(PWR_SW_MGR_PWR_ON, Fw::COMMAND_EXECUTION_ERROR, illegalChannel);
+//
+#define SEND_CMD(cmd, status, ...) \
+  SEND_CMD_COMP(TEST_COMP, cmd, status, ## __VA_ARGS__)
+
+#define SEND_CMD_COMP(comp, cmd, status, ...) \
+  this->sendCmd_ ## cmd(INSTANCE, CMD_SEQ, ## __VA_ARGS__); \
+  this->component.doDispatch(); \
+  ASSERT_LAST_CMD(cmd, status);
+
+// SEND_CMD_NO_EXPECT
+//
+// Send a command and performs dispatch, without asserting any command response.
+//
+// Example:
+//
+//   SEND_CMD_NO_EXPECT(FILE_DWN_SEND_APID, 100, 0, 0, 0);
+//   // ...
+//
+#define SEND_CMD_NO_EXPECT(cmd, ...) \
+  SEND_CMD_COMP_NO_EXPECT(TEST_COMP, cmd, ## __VA_ARGS__)
+
+#define SEND_CMD_COMP_NO_EXPECT(comp, cmd, ...) \
+  this->sendCmd_ ## cmd(INSTANCE, CMD_SEQ, ## __VA_ARGS__); \
+  this->component.doDispatch();
+
+// ASSERT_LAST_CMD
+//
+// Assert response status of command. This macro checks both that there was a
+// response and that the response is as expected and is for the command
+// specified.
+//
+// Example:
+//
+//   SEND_CMD_NO_EXPECT(FILE_DWN_SEND_APID, 100, 0, 0, 0);
+//   // ...
+//   ASSERT_LAST_CMD(FILE_DWN_SEND_APID, Fw::CmdResponse::OK);
+//
+#define ASSERT_LAST_CMD(cmd, status) \
+  ASSERT_LAST_CMD_COMP(TEST_COMP, cmd, status)
+
+#define ASSERT_LAST_CMD_COMP(comp, cmd, status) \
+  ASSERT_GT(this->cmdResponseHistory->size(), 0); \
+  ASSERT_CMD_RESPONSE(this->cmdResponseHistory->size()-1, comp::OPCODE_ ## cmd, CMD_SEQ, status);
+
+// ASSERT_LAST_TLM
+//
+// Assert the value last received in a given channel.
+//
+// Example:
+//
+//   ASSERT_LAST_TLM(NeaCamManager_ImageDataSize, dataSize);
+//   ASSERT_LAST_TLM(NeaCamManager_PatternDataSize, 0);
+//
+#define ASSERT_LAST_TLM(name, value) \
+  ASSERT_GT(this->tlmHistory_ ## name->size(), 0); \
+  ASSERT_TLM_ ## name(this->tlmHistory_ ## name->size()-1, value);
+
+// ASSERT_LAST_EVENT
+//
+// Assert the arguments in the last received EVR of a given name.
+//
+// Example:
+//
+//   SEND_CMD(PWR_SW_MGR_SET_DUTY_CYCLE, Fw::COMMAND_VALIDATION_ERROR, 0, 0);
+//   ASSERT_LAST_EVENT(PwrSwitchManager_DutyCyclingNotEnabled, i);
+//
+#define ASSERT_LAST_EVENT(name, ...) \
+  ASSERT_GT(this->eventHistory_ ## name->size(), 0); \
+  ASSERT_EVENTS_ ## name(this->eventHistory_ ## name->size()-1, ## __VA_ARGS__);
+
+// ASSERT_LAST_PORT_OUT
+//
+// Assert the arguments in the last output port call of a given port.
+//
+// Example:
+//
+//   this->invoke_to_PingRecv(0, 0xDEADBEEF);
+//   this->component.doDispatch();
+//   ASSERT_LAST_PORT_OUT(PingResponse, 0, 0xDEADBEEF);
+//
+#define ASSERT_LAST_PORT_OUT(port, ...) \
+  ASSERT_GT(this->fromPortHistory_ ## port->size(), 0); \
+  ASSERT_from_ ## port(__VA_ARGS__);
+
+
+#endif
+```
+
+### `TokenBucket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/TokenBucket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TokenBucket.cpp
+// \author vwong
+// \brief  cpp file for a rate limiter utility class
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include <Utils/TokenBucket.hpp>
+
+namespace Utils {
+
+  TokenBucket ::
+    TokenBucket (
+        U32 replenishInterval,
+        U32 maxTokens,
+        U32 replenishRate,
+        U32 startTokens,
+        Fw::Time startTime
+    ) :
+      m_replenishInterval(replenishInterval),
+      m_maxTokens(maxTokens),
+      m_replenishRate(replenishRate),
+      m_tokens(startTokens),
+      m_time(startTime)
+  {
+  }
+
+  TokenBucket ::
+    TokenBucket (
+        U32 replenishInterval,
+        U32 maxTokens
+    ) :
+      m_replenishInterval(replenishInterval),
+      m_maxTokens(maxTokens),
+      m_replenishRate(1),
+      m_tokens(maxTokens),
+      m_time(0, 0)
+  {
+    FW_ASSERT(this->m_maxTokens <= MAX_TOKEN_BUCKET_TOKENS, static_cast<FwAssertArgType>(this->m_maxTokens));
+  }
+
+  void TokenBucket ::
+    setReplenishInterval(
+        U32 replenishInterval
+    )
+  {
+    this->m_replenishInterval = replenishInterval;
+  }
+
+  void TokenBucket ::
+    setMaxTokens(
+        U32 maxTokens
+    )
+  {
+    this->m_maxTokens = maxTokens;
+  }
+
+  void TokenBucket ::
+    setReplenishRate(
+        U32 replenishRate
+    )
+  {
+    this->m_replenishRate = replenishRate;
+  }
+
+  void TokenBucket ::
+    replenish()
+  {
+    if (this->m_tokens < this->m_maxTokens) {
+      this->m_tokens = this->m_maxTokens;
+    }
+  }
+
+  U32 TokenBucket ::
+    getReplenishInterval() const
+  {
+    return this->m_replenishInterval;
+  }
+
+  U32 TokenBucket ::
+    getMaxTokens() const
+  {
+    return this->m_maxTokens;
+  }
+
+  U32 TokenBucket ::
+    getReplenishRate() const
+  {
+    return this->m_replenishRate;
+  }
+
+  U32 TokenBucket ::
+    getTokens() const
+  {
+    return this->m_tokens;
+  }
+
+  bool TokenBucket ::
+    trigger(
+        const Fw::Time time
+    )
+  {
+    // attempt replenishing
+    if (this->m_replenishRate > 0) {
+      Fw::Time replenishInterval = Fw::Time(this->m_replenishInterval / 1000000, this->m_replenishInterval % 1000000);
+      Fw::Time nextTime = Fw::Time::add(this->m_time, replenishInterval);
+      while (this->m_tokens < this->m_maxTokens && nextTime <= time) {
+        // replenish by replenish rate, or up to maxTokens
+        this->m_tokens += FW_MIN(this->m_replenishRate, this->m_maxTokens - this->m_tokens);
+        this->m_time = nextTime;
+        nextTime = Fw::Time::add(this->m_time, replenishInterval);
+      }
+      if (this->m_tokens >= this->m_maxTokens && this->m_time < time) {
+        this->m_time = time;
+      }
+    }
+
+    // attempt consuming token
+    if (this->m_tokens > 0) {
+      this->m_tokens--;
+      return true;
+
+    } else {
+      return false;
+    }
+  }
+
+} // end namespace Utils
+```
+
+### `TokenBucket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/TokenBucket.hpp`
+
+
+```cpp
+// ====================================================================== 
+// \title  TokenBucket.hpp
+// \author vwong
+// \brief  hpp file for a rate limiter utility class
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ====================================================================== 
+
+#ifndef TokenBucket_HPP
+#define TokenBucket_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/Time.hpp>
+
+#define MAX_TOKEN_BUCKET_TOKENS 1000
+
+namespace Utils {
+
+  class TokenBucket
+  {
+
+    public:
+
+      // Full constructor
+      //
+      // replenishInterval is in microseconds
+      //
+      TokenBucket(U32 replenishInterval, U32 maxTokens, U32 replenishRate, U32 startTokens, Fw::Time startTime);
+
+      // replenishRate=1, startTokens=maxTokens, startTime=0
+      TokenBucket(U32 replenishInterval, U32 maxTokens);
+
+    public:
+
+      // Adjust settings at runtime
+      void setMaxTokens(U32 maxTokens);
+      void setReplenishInterval(U32 replenishInterval);
+      void setReplenishRate(U32 replenishRate);
+
+      U32 getMaxTokens() const;
+      U32 getReplenishInterval() const;
+      U32 getReplenishRate() const;
+      U32 getTokens() const;
+
+      // Manual replenish
+      void replenish();
+
+      // Main point of entry
+      //
+      // Evaluates time since last trigger to determine number of tokens to
+      // replenish. If time moved backwards, always returns false.
+      //
+      // If number of tokens is not zero, consumes one and returns true.
+      // Otherwise, returns false.
+      //
+      bool trigger(const Fw::Time time);
+
+    private:
+
+      // parameters
+      U32 m_replenishInterval;
+      U32 m_maxTokens;
+      U32 m_replenishRate;
+
+      // state
+      U32 m_tokens;
+      Fw::Time m_time;
+  };
+
+} // end namespace Utils
+
+#endif
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/core_api/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,17 +12,135 @@ config/index
 eds/index
 fsw/index
 ut-stubs/index
-file--arch_build.cmake
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/core_api/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/core_api/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/core_api/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/core_api/ut-stubs/`](ut-stubs/index) — 폴더
-- [`fsw/cfe/modules/core_api/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/core_api/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# CFE arch/platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# Generate the "cfe_platform_cfg.h" and "cfe_msgids.h" header files
+# these must come from mission config
+
+generate_config_includefile(
+    FILE_NAME           "cfe_msgids.h"
+    MATCH_SUFFIX        "msgids.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_msgids.h"
+    PREFIXES            ${BUILD_CONFIG} cfe 
+)
+
+generate_config_includefile(
+    FILE_NAME           "cfe_core_api_base_msgids.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_core_api_base_msgids.h"
+    PREFIXES            ${BUILD_CONFIG}
+)
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/core_api/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Global/Public Application Interface
+#
+##################################################################
+
+# NOTE: This module is shared headers and configuration only, it has no
+# source files of its own.  It just defines the interfaces between the CFE core
+# modules and other private headers that define CFE internal shared data objects.
+add_library(core_api INTERFACE)
+
+# The fsw/inc here defines global/shared structures and interfaces
+target_include_directories(core_api INTERFACE fsw/inc)
+
+# Propagate any INTERFACE-level include dirs and compile definitions from
+# the modules into this abstract interface target
+foreach(MOD ${MISSION_CORE_MODULES})
+    target_include_directories(core_api INTERFACE
+        $<TARGET_PROPERTY:${MOD},INTERFACE_INCLUDE_DIRECTORIES>
+    )
+    target_compile_definitions(core_api INTERFACE
+        $<TARGET_PROPERTY:${MOD},INTERFACE_COMPILE_DEFINITIONS>
+    )
+endforeach(MOD ${MISSION_CORE_MODULES})
+
+# Add unit test coverage subdirectory
+# This provides stubs for functions declared in fsw/inc
+if (ENABLE_UNIT_TESTS)
+  add_subdirectory(ut-stubs)
+endif (ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(core_api
+    cfe_resourceid.h
+    cfe_endian.h
+    cfe_msg.h
+    cfe_error.h
+    cfe.h
+    cfe_version.h
+
+    cfe_es_extern_typedefs.h
+    cfe_evs_extern_typedefs.h
+    cfe_fs_extern_typedefs.h
+    cfe_sb_extern_typedefs.h
+    cfe_tbl_extern_typedefs.h
+    cfe_time_extern_typedefs.h
+
+    cfe_tbl_filedef.h
+)
+
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/core_api/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# CFE mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# Generate the "cfe_mission_cfg.h" and "cfe_perfids.h" header files
+# these must come from mission config
+generate_config_includefile(
+    FILE_NAME           "cfe_mission_cfg.h"
+    MATCH_SUFFIX        "mission_cfg.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_mission_cfg.h"
+    PREFIXES            ${MISSIONCONFIG} cfe
+)
+
+generate_config_includefile(
+    FILE_NAME           "cfe_perfids.h"
+    MATCH_SUFFIX        "perfids.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_perfids.h"
+    PREFIXES            ${MISSIONCONFIG} cfe
+)
+
+generate_config_includefile(
+    FILE_NAME           "cfe_core_api_interface_cfg.h"
+    FALLBACK_FILE        "${CMAKE_CURRENT_LIST_DIR}/config/default_cfe_core_api_interface_cfg.h"
+    PREFIXES            ${BUILD_CONFIG}
+)
+```

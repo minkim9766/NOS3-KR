@@ -3,18 +3,126 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-legend.component.css`
 
-file--parameter-legend.component.css
-file--parameter-legend.component.html
-file--parameter-legend.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/parameter-legend.component.css`
+
+
+```css
+.legend {
+  position: absolute;
+  top: 0;
+  left: 63px;
+  background-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.legend-box {
+  margin-top: 5px;
+  margin-right: 5px;
+  padding-left: 3px;
+  padding-right: 15px;
+  border-radius: 2px;
+  display: inline-block;
+  font-size: 10px;
+  line-height: 14px;
+  position: relative;
+}
+
+.trace-label {
+  cursor: pointer;
+}
+
+.trace-label:hover {
+  opacity: 0.7;
+}
+
+.yvalue {
+  margin-left: 5px;
+  font-weight: bold;
+}
+
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `parameter-legend.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/parameter-legend.component.css`](file--parameter-legend.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/parameter-legend.component.html`](file--parameter-legend.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/parameter-legend.component.ts`](file--parameter-legend.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/parameter-legend.component.html`
+
+
+```html
+@if (data) {
+  <div class="legend">
+    @for (trace of data.series; track trace; let i = $index) {
+      <div
+        class="legend-box"
+        [style.backgroundColor]="backgroundColor"
+        [style.border]="'1px solid ' + borderColor"
+        [style.borderLeft]="'3px solid ' + trace.color"
+        [style.paddingRight]="closable && i !== 0 ? '15px' : '5px'">
+        <span class="trace-label" (click)="select.emit(trace.label)">{{ trace.label }}</span>
+        @if (trace.yHTML) {
+          <span class="yvalue">{{ trace.yHTML }}</span>
+        }
+        @if (closable && i !== 0) {
+          <div class="close-button" (click)="close.emit(trace.label)">
+            <mat-icon class="icon12">close</mat-icon>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
+```
+
+### `parameter-legend.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/parameter-legend.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { DyLegendData } from '../dygraphs';
+
+@Component({
+  selector: 'app-parameter-legend',
+  templateUrl: './parameter-legend.component.html',
+  styleUrl: './parameter-legend.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon],
+})
+export class ParameterLegendComponent {
+  @Input()
+  data: DyLegendData;
+
+  @Input()
+  backgroundColor: string;
+
+  @Input()
+  borderColor: string;
+
+  @Input()
+  closable = false;
+
+  @Output()
+  select = new EventEmitter<string>();
+
+  @Output()
+  close = new EventEmitter<string>();
+}
+```

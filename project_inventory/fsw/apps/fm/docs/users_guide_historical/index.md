@@ -3,14 +3,10 @@
 
 **경로:** `fsw/apps/fm/docs/users_guide_historical/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cFS_FM_User_Guide_Doc_No_582-2014-001_Ver_1_0_2019_11-01.pdf`
 
-file--cFS_FM_User_Guide_Doc_No_582-2014-001_Ver_1_0_2019_11-01.pdf
-```
+**경로:** `fsw/apps/fm/docs/users_guide_historical/cFS_FM_User_Guide_Doc_No_582-2014-001_Ver_1_0_2019_11-01.pdf`
 
-## 항목
-
-- [`fsw/apps/fm/docs/users_guide_historical/cFS_FM_User_Guide_Doc_No_582-2014-001_Ver_1_0_2019_11-01.pdf`](file--cFS_FM_User_Guide_Doc_No_582-2014-001_Ver_1_0_2019_11-01.pdf) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

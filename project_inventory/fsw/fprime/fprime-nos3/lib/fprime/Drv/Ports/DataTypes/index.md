@@ -3,20 +3,137 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--DataBuffer.cpp
-file--DataBuffer.hpp
-file--DataTypes.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DataTypes.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/DataBuffer.cpp"
+)
+
+set(MOD_DEPS
+    Fw/Port
+)
+
+register_fprime_module()
 ```
 
-## 항목
+### `DataBuffer.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/DataBuffer.cpp`](file--DataBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/DataBuffer.hpp`](file--DataBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/DataTypes.fpp`](file--DataTypes.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/DataBuffer.cpp`
+
+
+```cpp
+#include <Drv/Ports/DataTypes/DataBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Drv {
+
+DataBuffer::DataBuffer(const U8* args, FwSizeType size) {
+    Fw::SerializeStatus stat = Fw::SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+DataBuffer::DataBuffer() {}
+
+DataBuffer::~DataBuffer() {}
+
+DataBuffer::DataBuffer(const DataBuffer& other) : Fw::SerializeBufferBase() {
+    Fw::SerializeStatus stat = Fw::SerializeBufferBase::setBuff(other.m_data, other.getBuffLength());
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+DataBuffer& DataBuffer::operator=(const DataBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    Fw::SerializeStatus stat = Fw::SerializeBufferBase::setBuff(other.m_data, other.getBuffLength());
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+FwSizeType DataBuffer::getBuffCapacity() const {
+    return sizeof(this->m_data);
+}
+
+const U8* DataBuffer::getBuffAddr() const {
+    return this->m_data;
+}
+
+U8* DataBuffer::getBuffAddr() {
+    return this->m_data;
+}
+
+}  // namespace Drv
+```
+
+### `DataBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/DataBuffer.hpp`
+
+
+```cpp
+#ifndef _DrvDataBuffer_hpp_
+#define _DrvDataBuffer_hpp_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Drv {
+
+class DataBuffer : public Fw::SerializeBufferBase {
+  public:
+    enum {
+        DATA_BUFFER_SIZE = 256,
+        SERIALIZED_TYPE_ID = 1010,
+        SERIALIZED_SIZE = DATA_BUFFER_SIZE + sizeof(FwBuffSizeType)
+    };
+
+    DataBuffer(const U8* args, FwSizeType size);
+    DataBuffer();
+    DataBuffer(const DataBuffer& other);
+    virtual ~DataBuffer();
+    DataBuffer& operator=(const DataBuffer& other);
+
+    FwSizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_data[DATA_BUFFER_SIZE];  // packet data buffer
+};
+}  // namespace Drv
+
+#endif
+```
+
+### `DataTypes.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/DataTypes.fpp`
+
+
+```fpp
+module Drv {
+
+  type DataBuffer
+
+  @ Data Buffer Port
+  port DataBuffer(
+                   ref buff: Drv.DataBuffer @< A data buffer
+                 )
+
+}
+```

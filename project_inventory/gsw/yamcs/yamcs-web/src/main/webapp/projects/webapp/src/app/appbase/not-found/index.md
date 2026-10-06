@@ -3,18 +3,77 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `not-found.component.css`
 
-file--not-found.component.css
-file--not-found.component.html
-file--not-found.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/not-found.component.css`
+
+
+```css
+:host {
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `not-found.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/not-found.component.css`](file--not-found.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/not-found.component.html`](file--not-found.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/not-found.component.ts`](file--not-found.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/not-found.component.html`
+
+
+```html
+<ya-panel>
+  <p>&nbsp;</p>
+  <table style="padding-left: 60px; margin: 0 auto; padding-top: 100px">
+    <tr>
+      <td style="vertical-align: top">
+        <h2>404: Not Found</h2>
+        <p>
+          It looks like
+          @if (page) {
+            the page
+            <a [href]="page" class="ya-link">{{ page }}</a>
+          } @else {
+            this page
+          }
+          doesn't exist.
+        </p>
+        <a routerLink="/" class="ya-link">Go to homepage</a>
+      </td>
+      <td style="padding-left: 15em; padding-right: 5em">
+        <app-oops />
+      </td>
+    </tr>
+  </table>
+</ya-panel>
+```
+
+### `not-found.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/not-found/not-found.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { OopsComponent } from '../oops/oops.component';
+
+@Component({
+  templateUrl: './not-found.component.html',
+  styleUrl: './not-found.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [OopsComponent, WebappSdkModule],
+})
+export class NotFoundComponent implements OnInit {
+  page: string | null;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.page = this.route.snapshot.queryParamMap.get('page');
+  }
+}
+```

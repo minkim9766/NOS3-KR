@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/time/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,17 +12,129 @@ config/index
 eds/index
 fsw/index
 ut-coverage/index
-file--arch_build.cmake
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/time/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/time/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/time/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/time/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/time/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/time/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/time/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# TIME Core Module platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the TIME configuration
+set(TIME_PLATFORM_CONFIG_FILE_LIST
+  cfe_time_internal_cfg.h
+  cfe_time_msgids.h
+  cfe_time_platform_cfg.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(TIME_CFGFILE ${TIME_PLATFORM_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${TIME_CFGFILE}" NAME_WE)
+  if (DEFINED TIME_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE "${TIME_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE "${CMAKE_CURRENT_LIST_DIR}/config/default_${TIME_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${TIME_CFGFILE}"
+    FALLBACK_FILE       ${DEFAULT_SOURCE}
+  )
+endforeach()
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/time/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Time Services (TIME) module CMake build recipe
+#
+##################################################################
+
+project(CFE_TIME C)
+
+# Time Services source files
+set(time_SOURCES
+    fsw/src/cfe_time_api.c
+    fsw/src/cfe_time_task.c
+    fsw/src/cfe_time_tone.c
+    fsw/src/cfe_time_utils.c
+    fsw/src/cfe_time_dispatch.c
+)
+add_library(time STATIC ${time_SOURCES})
+
+target_include_directories(time PUBLIC fsw/inc)
+target_link_libraries(time PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(${DEP}
+    cfe_time_eventids.h
+    cfe_time_msg.h
+)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/time/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# TIME Core Module mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the TIME configuration
+set(TIME_MISSION_CONFIG_FILE_LIST
+  cfe_time_mission_cfg.h
+  cfe_time_interface_cfg.h
+  cfe_time_extern_typedefs.h
+  cfe_time_fcncodes.h
+  cfe_time_msgdefs.h
+  cfe_time_msg.h
+  cfe_time_msgstruct.h
+  cfe_time_topicids.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(TIME_CFGFILE ${TIME_MISSION_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${TIME_CFGFILE}" NAME_WE)
+  if (DEFINED TIME_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE GENERATED_FILE "${TIME_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE FALLBACK_FILE "${CMAKE_CURRENT_LIST_DIR}/config/default_${TIME_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${TIME_CFGFILE}"
+    ${DEFAULT_SOURCE}
+  )
+endforeach()
+```

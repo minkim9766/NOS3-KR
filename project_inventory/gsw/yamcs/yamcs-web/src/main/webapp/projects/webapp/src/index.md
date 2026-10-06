@@ -3,24 +3,147 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 app/index
 assets/index
-file--index.template.html
-file--index.template.html.README
-file--main.ts
-file--manifest.webmanifest
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/`](app/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/`](assets/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/index.template.html`](file--index.template.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/index.template.html.README`](file--index.template.html.README) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/main.ts`](file--main.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/manifest.webmanifest`](file--manifest.webmanifest) — UTF-8 텍스트 파일 본문 포함
+### `index.template.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/index.template.html`
+
+
+```html
+<!doctype html>
+<html lang="en">
+
+<head>
+  <base href="{{ contextPath }}/">
+  <meta charset="utf-8">
+  <title>{% if config.tag %}{{ config.tag }}{% else %}Yamcs{% endif %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{% if config.tag %}{{ config.tag }}: {% endif %}Yamcs Mission Control">
+  <meta name="application-name" content="Yamcs">
+  <meta name="theme-color" content="#212121">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ contextPath }}/apple-touch-icon.png">
+  <link rel="mask-icon" href="{{ contextPath }}/safari-pinned-tab.svg" color="#0000001">
+  <link rel="shortcut icon" href="{{ contextPath }}/favicon.ico">
+  <!--link rel="manifest" href="{{ contextPath }}/manifest.webmanifest" crossorigin="use-credentials"-->
+  <!--[[ EXTRA_HEADER_HTML ]]-->
+</head>
+
+<body>
+  <script id="appConfig" type="application/json">
+    {{ configJson }}
+  </script>
+  <app-root></app-root>
+</body>
+
+</html>
+```
+
+### `index.template.html.README`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/index.template.html.README`
+
+
+```text
+Template tags in the index.html are interpreted server-side.
+It looks a bit like Angular syntax, but it's not.
+```
+
+### `main.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/main.ts`
+
+
+```typescript
+import { isDevMode, provideZonelessChangeDetection } from '@angular/core';
+import { bootstrapApplication } from '@angular/platform-browser';
+import {
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+  withRouterConfig,
+} from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
+import {
+  provideBaseHrefFromIndexHtml,
+  provideConfigInitializer,
+  provideSdkBridge,
+  provideYamcsMaterialConfiguration,
+} from '@yamcs/webapp-sdk';
+import { provideMaterialSymbols } from '../../webapp-sdk/src/public-api';
+import { CustomPreloadingStrategy } from './app/CustomPreloadingStrategy';
+import { AppComponent } from './app/app.component';
+import { APP_ROUTES } from './app/app.routes';
+import { AgoPipe } from './app/shared/pipes/ago.pipe';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideBaseHrefFromIndexHtml(),
+    provideYamcsMaterialConfiguration(),
+    provideConfigInitializer(),
+    provideSdkBridge(),
+    provideZonelessChangeDetection(),
+    provideMaterialSymbols(),
+    provideRouter(
+      APP_ROUTES,
+      withComponentInputBinding(),
+      withPreloading(CustomPreloadingStrategy),
+      withRouterConfig({
+        onSameUrlNavigation: 'reload',
+        paramsInheritanceStrategy: 'always',
+      }),
+    ),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: false && !isDevMode(),
+      registrationStrategy: 'registerWithDelay:5000',
+    }),
+    AgoPipe,
+  ],
+}).catch((e) => console.error(e));
+```
+
+### `manifest.webmanifest`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/manifest.webmanifest`
+
+
+```text
+{
+  "name": "Yamcs",
+  "short_name": "Yamcs",
+  "description": "Command and control of spacecrafts, satellites, payloads, ground stations and ground equipment.",
+  "theme_color": "#212121",
+  "background_color": "#fafafa",
+  "display": "standalone",
+  "id": "{{ contextPath }}/?source=pwa",
+  "scope": "{{ contextPath }}/?source=pwa",
+  "start_url": "{{ contextPath }}/",
+  "icons": [
+    {
+      "src": "{{ contextPath }}/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "{{ contextPath }}/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "{{ contextPath }}/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+```

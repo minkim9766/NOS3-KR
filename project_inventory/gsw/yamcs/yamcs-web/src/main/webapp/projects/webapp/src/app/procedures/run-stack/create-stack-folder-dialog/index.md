@@ -3,16 +3,83 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-folder-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-stack-folder-dialog.component.html`
 
-file--create-stack-folder-dialog.component.html
-file--create-stack-folder-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-folder-dialog/create-stack-folder-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Create folder</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Folder name">
+      <input type="text" formControlName="name" pattern="\w[\w\s\.\-\(\)\[\]]*" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">CREATE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-stack-folder-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-folder-dialog/create-stack-folder-dialog.component.html`](file--create-stack-folder-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-folder-dialog/create-stack-folder-dialog.component.ts`](file--create-stack-folder-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-folder-dialog/create-stack-folder-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-create-stack-folder-dialog',
+  templateUrl: './create-stack-folder-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CreateStackFolderDialogComponent {
+  form: UntypedFormGroup;
+
+  private storageClient: StorageClient;
+
+  constructor(
+    private dialogRef: MatDialogRef<CreateStackFolderDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.storageClient = yamcs.createStorageClient();
+    this.form = formBuilder.group({
+      name: ['', Validators.required],
+    });
+  }
+
+  save() {
+    let { path, bucket } = this.data;
+    // Full path should not have a leading slash
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
+    const folderName = this.form.value['name'];
+    const objectName = path ? `${path}/${folderName}/` : `${folderName}/`;
+    this.storageClient
+      .uploadObject(bucket, objectName, new Blob())
+      .then(() => this.dialogRef.close(true));
+  }
+}
+```

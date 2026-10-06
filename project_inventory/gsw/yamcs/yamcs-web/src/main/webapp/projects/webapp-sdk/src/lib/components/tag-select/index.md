@@ -3,18 +3,143 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `tag-select.component.css`
 
-file--tag-select.component.css
-file--tag-select.component.html
-file--tag-select.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/tag-select.component.css`
+
+
+```css
+.tag-select {
+  display: flex;
+  align-items: center;
+}
+
+.tag-select input {
+  margin-right: 5px;
+}
+
+.tag-icon {
+  vertical-align: middle;
+  font-size: 12px !important;
+  line-height: 16px;
+  height: 16px;
+  width: 16px;
+  color: grey;
+  cursor: pointer;
+}
+
+.tag-icon:hover {
+  color: inherit;
+}
 ```
 
-## 항목
+### `tag-select.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/tag-select.component.css`](file--tag-select.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/tag-select.component.html`](file--tag-select.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/tag-select.component.ts`](file--tag-select.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/tag-select.component.html`
+
+
+```html
+<div class="tag-select">
+  @if (tags$ | async; as tags) {
+    @for (tag of tags; track tag) {
+      <ya-label>
+        {{ tag }}
+        <mat-icon class="tag-icon" (click)="removeTag(tag)">close</mat-icon>
+      </ya-label>
+    }
+    @if (tags.length) {
+      &nbsp;
+    }
+  }
+  <input
+    type="text"
+    [formControl]="control"
+    (keydown.enter)="addTag(); $event.preventDefault()"
+    placeholder="my-tag"
+    style="width: 120px" />
+  <ya-button (click)="addTag()" [disabled]="!control.value">Add</ya-button>
+</div>
+```
+
+### `tag-select.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/tag-select/tag-select.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+  UntypedFormControl,
+} from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { BehaviorSubject } from 'rxjs';
+import { YaButton } from '../button/button.component';
+import { YaLabel } from '../label/label.component';
+
+@Component({
+  selector: 'ya-tag-select',
+  templateUrl: './tag-select.component.html',
+  styleUrl: './tag-select.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaTagSelect),
+      multi: true,
+    },
+  ],
+  imports: [AsyncPipe, MatIcon, ReactiveFormsModule, YaButton, YaLabel],
+})
+export class YaTagSelect implements ControlValueAccessor {
+  control = new UntypedFormControl(null);
+
+  private onChange = (_: string[]) => {};
+
+  tags$ = new BehaviorSubject<string[]>([]);
+
+  addTag() {
+    const tag = this.control.value;
+    if (tag) {
+      const tags = [...this.tags$.value];
+      if (tags.indexOf(tag) === -1) {
+        tags.push(tag);
+      }
+      tags.sort();
+      this.tags$.next(tags);
+    }
+    this.control.setValue('');
+    this.onChange(this.tags$.value);
+  }
+
+  removeTag(tag: string) {
+    const tags = [...this.tags$.value];
+    const idx = tags.indexOf(tag);
+    if (idx !== -1) {
+      tags.splice(idx, 1);
+    }
+    this.tags$.next(tags);
+    this.onChange(tags);
+  }
+
+  writeValue(obj: any) {
+    if (obj) {
+      const tags: string[] = obj;
+      this.tags$.next(tags);
+    } else {
+      this.tags$.next([]);
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+}
+```

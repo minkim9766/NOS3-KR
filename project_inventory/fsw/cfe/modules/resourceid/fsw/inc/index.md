@@ -3,16 +3,194 @@
 
 **경로:** `fsw/cfe/modules/resourceid/fsw/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_core_resourceid_basevalues.h`
 
-file--cfe_core_resourceid_basevalues.h
-file--cfe_resourceid_basevalue.h
+**경로:** `fsw/cfe/modules/resourceid/fsw/inc/cfe_core_resourceid_basevalues.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Contains CFE internal prototypes and definitions related to resource
+ * management and related CFE resource IDs.
+ *
+ * A CFE ES Resource ID is a common way to identify CFE-managed resources such
+ * as apps, tasks, counters, memory pools, CDS blocks, and other entities.
+ */
+
+#ifndef CFE_CORE_RESOURCEID_BASEVALUES_H
+#define CFE_CORE_RESOURCEID_BASEVALUES_H
+
+/*
+** Include Files
+*/
+#include "cfe_resourceid_basevalue.h"
+
+/** @defgroup CFEESResourceIDBase cFE Resource ID base values
+ * @{
+ */
+
+/*
+ * Assign unique offsets per resource types used in CFE core apps.
+ *
+ * Applications should not use these values directly, but rather
+ * in conjunction with the CFE_RESOURCEID_MAKE_BASE macro provided
+ * by the Resource ID module.  (see below)
+ */
+enum
+{
+    /*
+     * Note for Task ID base value --
+     * This currently shares the same offset as OSAL tasks, such that
+     * when "simple" (non-enforcing/backward-compatible) IDs are selected,
+     * the CFE task IDs and the OSAL task IDs end up as the same value.
+     *
+     * The "CFE_RESOURCEID_MARK" bit still differentiates the value when
+     * in strict mode, so there is no overlap in that case.
+     */
+    CFE_RESOURCEID_ES_TASKID_BASE_OFFSET = OS_OBJECT_TYPE_OS_TASK,
+
+    /* Other ES managed resources */
+    CFE_RESOURCEID_ES_APPID_BASE_OFFSET      = OS_OBJECT_TYPE_USER + 1,
+    CFE_RESOURCEID_ES_LIBID_BASE_OFFSET      = OS_OBJECT_TYPE_USER + 2,
+    CFE_RESOURCEID_ES_COUNTID_BASE_OFFSET    = OS_OBJECT_TYPE_USER + 3,
+    CFE_RESOURCEID_ES_POOLID_BASE_OFFSET     = OS_OBJECT_TYPE_USER + 4,
+    CFE_RESOURCEID_ES_CDSBLOCKID_BASE_OFFSET = OS_OBJECT_TYPE_USER + 5,
+
+    /* SB managed resources */
+    CFE_RESOURCEID_SB_PIPEID_RESOURCE_BASE_OFFSET = OS_OBJECT_TYPE_USER + 6,
+
+    /* configuration registry */
+    CFE_RESOURCEID_CONFIGID_BASE_OFFSET = OS_OBJECT_TYPE_USER + 7,
+};
+
+/*
+ * Assign actual base values from the offsets above
+ *
+ * Using "enum" ensures these are resolved as integers now, as opposed to at the point of use like macros.
+ */
+enum
+{
+    /* ES managed resources */
+    CFE_ES_TASKID_BASE     = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_ES_TASKID_BASE_OFFSET),
+    CFE_ES_APPID_BASE      = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_ES_APPID_BASE_OFFSET),
+    CFE_ES_LIBID_BASE      = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_ES_LIBID_BASE_OFFSET),
+    CFE_ES_COUNTID_BASE    = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_ES_COUNTID_BASE_OFFSET),
+    CFE_ES_POOLID_BASE     = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_ES_POOLID_BASE_OFFSET),
+    CFE_ES_CDSBLOCKID_BASE = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_ES_CDSBLOCKID_BASE_OFFSET),
+
+    /* SB managed resources */
+    CFE_SB_PIPEID_BASE = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_SB_PIPEID_RESOURCE_BASE_OFFSET),
+
+    /* configuration registry */
+    CFE_CONFIGID_BASE = CFE_RESOURCEID_MAKE_BASE(CFE_RESOURCEID_CONFIGID_BASE_OFFSET),
+};
+
+/** @} */
+
+#endif /* CFE_CORE_RESOURCEID_BASEVALUES_H */
 ```
 
-## 항목
+### `cfe_resourceid_basevalue.h`
 
-- [`fsw/cfe/modules/resourceid/fsw/inc/cfe_core_resourceid_basevalues.h`](file--cfe_core_resourceid_basevalues.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/resourceid/fsw/inc/cfe_resourceid_basevalue.h`](file--cfe_resourceid_basevalue.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/resourceid/fsw/inc/cfe_resourceid_basevalue.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * An implementation of CFE resource ID base values/limits that will be
+ * compatible with OSAL IDs.  This is intended as a transitional tool to
+ * provide runtime value uniqueness, particularly when the "simple" (compatible)
+ * resource ID implementation is used.  In this mode, compiler type checking
+ * is disabled, and so OSAL IDs can be silently interchanged with CFE IDs.
+ *
+ * However, by ensuring uniqueness in the runtime values, any ID handling
+ * errors may at least be detectable at runtime.
+ *
+ * This still works fine with the "strict" resource ID option, but is less
+ * important as the compiler type checking should prevent this type of error
+ * before the code even runs.
+ *
+ * The downside to this implementation is that it has a dependency on the
+ * OSAL ID structure.
+ */
+
+#ifndef CFE_RESOURCEID_BASEVALUE_H
+#define CFE_RESOURCEID_BASEVALUE_H
+
+/*
+** Include Files
+*/
+#include "cfe_resourceid_typedef.h"
+
+/*
+ * In this configuration, CFE resource IDs are tailored to not
+ * conflict/overlap with OSAL IDs, and are structured in a similar manner.
+ */
+#include "osapi-idmap.h"
+
+/*
+ * Limits/definitions related to CFE_ResourceId_t values.
+ *
+ * Defining based on OSAL ID values makes this object a superset of
+ * the OSAL ID type, such that OSAL IDs can be represented as resource IDs
+ * and not conflict with/alias each other.
+ *
+ * NOTE: This reflects a bit if "inside knowledge" about how OSAL IDs are
+ * constructed.  The overlap between OSAL IDs and ES IDs may not always be
+ * consistent, and they can diverge in a future version.
+ */
+#define CFE_RESOURCEID_SHIFT OS_OBJECT_TYPE_SHIFT
+#define CFE_RESOURCEID_MAX   OS_OBJECT_INDEX_MASK
+
+/**
+ * @brief A macro to generate a CFE resource ID base value from an offset
+ *
+ * Each CFE ID range is effectively an extension of OSAL ID ranges by
+ * starting at OS_OBJECT_TYPE_USER.
+ */
+#define CFE_RESOURCEID_MAKE_BASE(offset) (CFE_RESOURCEID_MARK | ((offset) << CFE_RESOURCEID_SHIFT))
+
+#endif /* CFE_RESOURCEID_BASEVALUE_H */
+```

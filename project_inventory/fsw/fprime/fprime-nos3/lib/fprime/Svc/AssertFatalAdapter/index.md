@@ -3,30 +3,460 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--AssertFatalAdapter.fpp
-file--AssertFatalAdapter.hpp
-file--AssertFatalAdapterComponentImpl.cpp
-file--AssertFatalAdapterComponentImpl.hpp
-file--AssertFatalEvents.fppi
-file--check
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapter.fpp`](file--AssertFatalAdapter.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapter.hpp`](file--AssertFatalAdapter.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.cpp`](file--AssertFatalAdapterComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.hpp`](file--AssertFatalAdapterComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalEvents.fppi`](file--AssertFatalEvents.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/check`](file--check) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `AssertFatalAdapter.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapter.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for turning FW_ASSERTs into FATALs
+  passive component AssertFatalAdapter {
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "AssertFatalEvents.fppi"
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Port for emitting events
+    event port Log
+
+    @ Port for emitting text events
+    text event port LogText
+
+    @ Port for getting the time
+    time get port Time
+
+  }
+
+}
+```
+
+### `AssertFatalAdapter.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapter.hpp`
+
+
+```cpp
+// ======================================================================
+// AssertFatalAdapter.hpp
+// Standardization header for AssertFatalAdapter
+// ======================================================================
+
+#ifndef Svc_AssertFatalAdapter_HPP
+#define Svc_AssertFatalAdapter_HPP
+
+#include "Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.hpp"
+
+namespace Svc {
+
+typedef AssertFatalAdapterComponentImpl AssertFatalAdapter;
+
+}
+
+#endif
+```
+
+### `AssertFatalAdapterComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AssertFatalAdapterImpl.cpp
+// \author tcanham
+// \brief  cpp file for AssertFatalAdapter component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.hpp>
+#include <cassert>
+#include <cstdio>
+
+namespace Fw {
+void defaultReportAssert(FILE_NAME_ARG file,
+                         FwSizeType lineNo,
+                         FwSizeType numArgs,
+                         FwAssertArgType arg1,
+                         FwAssertArgType arg2,
+                         FwAssertArgType arg3,
+                         FwAssertArgType arg4,
+                         FwAssertArgType arg5,
+                         FwAssertArgType arg6,
+                         CHAR* destBuffer,
+                         FwSizeType buffSize);
+
+}
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+AssertFatalAdapterComponentImpl ::AssertFatalAdapterComponentImpl(const char* const compName)
+    : AssertFatalAdapterComponentBase(compName) {
+    // register component with adapter
+    this->m_adapter.regAssertReporter(this);
+    // register adapter
+    this->m_adapter.registerHook();
+}
+
+AssertFatalAdapterComponentImpl ::~AssertFatalAdapterComponentImpl() {}
+
+void AssertFatalAdapterComponentImpl::AssertFatalAdapter::reportAssert(FILE_NAME_ARG file,
+                                                                       FwSizeType lineNo,
+                                                                       FwSizeType numArgs,
+                                                                       FwAssertArgType arg1,
+                                                                       FwAssertArgType arg2,
+                                                                       FwAssertArgType arg3,
+                                                                       FwAssertArgType arg4,
+                                                                       FwAssertArgType arg5,
+                                                                       FwAssertArgType arg6) {
+    if (m_compPtr) {
+        m_compPtr->reportAssert(file, lineNo, numArgs, arg1, arg2, arg3, arg4, arg5, arg6);
+    } else {
+        // Can't assert, what else can we do? Maybe somebody will see it.
+        Fw::Logger::log("Svc::AssertFatalAdapter not registered!\n");
+        assert(0);
+    }
+}
+
+void AssertFatalAdapterComponentImpl::AssertFatalAdapter::regAssertReporter(AssertFatalAdapterComponentImpl* compPtr) {
+    this->m_compPtr = compPtr;
+}
+
+AssertFatalAdapterComponentImpl::AssertFatalAdapter::AssertFatalAdapter() : m_compPtr(nullptr) {}
+
+AssertFatalAdapterComponentImpl::AssertFatalAdapter::~AssertFatalAdapter() {}
+
+void AssertFatalAdapterComponentImpl::AssertFatalAdapter::doAssert() {
+    // do nothing since there will be a FATAL
+}
+
+void AssertFatalAdapterComponentImpl::reportAssert(FILE_NAME_ARG file,
+                                                   FwSizeType lineNo,
+                                                   FwSizeType numArgs,
+                                                   FwAssertArgType arg1,
+                                                   FwAssertArgType arg2,
+                                                   FwAssertArgType arg3,
+                                                   FwAssertArgType arg4,
+                                                   FwAssertArgType arg5,
+                                                   FwAssertArgType arg6) {
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+    Fw::LogStringArg fileArg;
+    fileArg.format("0x%08" PRIX32, file);
+#else
+    Fw::LogStringArg fileArg(file);
+#endif
+
+    CHAR msg[Fw::StringBase::BUFFER_SIZE(FW_ASSERT_TEXT_SIZE)] = {0};
+    Fw::defaultReportAssert(file, static_cast<U32>(lineNo), numArgs, arg1, arg2, arg3, arg4, arg5, arg6, msg,
+                            sizeof(msg));
+    Fw::Logger::log("%s\n", msg);
+
+    // Handle the case where the ports aren't connected yet
+    if (not this->isConnected_Log_OutputPort(0)) {
+        assert(0);
+        return;
+    }
+
+    switch (numArgs) {
+        case 0:
+            this->log_FATAL_AF_ASSERT_0(fileArg, static_cast<U32>(lineNo));
+            break;
+        case 1:
+            this->log_FATAL_AF_ASSERT_1(fileArg, static_cast<U32>(lineNo), static_cast<U32>(arg1));
+            break;
+        case 2:
+            this->log_FATAL_AF_ASSERT_2(fileArg, static_cast<U32>(lineNo), static_cast<U32>(arg1),
+                                        static_cast<U32>(arg2));
+            break;
+        case 3:
+            this->log_FATAL_AF_ASSERT_3(fileArg, static_cast<U32>(lineNo), static_cast<U32>(arg1),
+                                        static_cast<U32>(arg2), static_cast<U32>(arg3));
+            break;
+        case 4:
+            this->log_FATAL_AF_ASSERT_4(fileArg, static_cast<U32>(lineNo), static_cast<U32>(arg1),
+                                        static_cast<U32>(arg2), static_cast<U32>(arg3), static_cast<U32>(arg4));
+            break;
+        case 5:
+            this->log_FATAL_AF_ASSERT_5(fileArg, static_cast<U32>(lineNo), static_cast<U32>(arg1),
+                                        static_cast<U32>(arg2), static_cast<U32>(arg3), static_cast<U32>(arg4),
+                                        static_cast<U32>(arg5));
+            break;
+        case 6:
+            this->log_FATAL_AF_ASSERT_6(fileArg, static_cast<U32>(lineNo), static_cast<U32>(arg1),
+                                        static_cast<U32>(arg2), static_cast<U32>(arg3), static_cast<U32>(arg4),
+                                        static_cast<U32>(arg5), static_cast<U32>(arg6));
+            break;
+        default:
+            this->log_FATAL_AF_UNEXPECTED_ASSERT(fileArg, static_cast<U32>(lineNo), static_cast<U32>(numArgs));
+            break;
+    }
+}
+}  // end namespace Svc
+```
+
+### `AssertFatalAdapterComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalAdapterComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  AssertFatalAdapterImpl.hpp
+// \author tcanham
+// \brief  hpp file for AssertFatalAdapter component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef AssertFatalAdapter_HPP
+#define AssertFatalAdapter_HPP
+
+#include "Svc/AssertFatalAdapter/AssertFatalAdapterComponentAc.hpp"
+
+namespace Svc {
+
+class AssertFatalAdapterComponentImpl final : public AssertFatalAdapterComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object AssertFatalAdapter
+    //!
+    AssertFatalAdapterComponentImpl(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object AssertFatalAdapter
+    //!
+    ~AssertFatalAdapterComponentImpl();
+
+    //! Report the assert as a FATAL
+    void reportAssert(FILE_NAME_ARG file,
+                      FwSizeType lineNo,
+                      FwSizeType numArgs,
+                      FwAssertArgType arg1,
+                      FwAssertArgType arg2,
+                      FwAssertArgType arg3,
+                      FwAssertArgType arg4,
+                      FwAssertArgType arg5,
+                      FwAssertArgType arg6);
+
+  private:
+    class AssertFatalAdapter : public Fw::AssertHook {
+      public:
+        AssertFatalAdapter();
+        ~AssertFatalAdapter();
+        void regAssertReporter(AssertFatalAdapterComponentImpl* compPtr);
+
+      private:
+        void reportAssert(FILE_NAME_ARG file,
+                          FwSizeType lineNo,
+                          FwSizeType numArgs,
+                          FwAssertArgType arg1,
+                          FwAssertArgType arg2,
+                          FwAssertArgType arg3,
+                          FwAssertArgType arg4,
+                          FwAssertArgType arg5,
+                          FwAssertArgType arg6);
+
+        // Prevent actual assert since FATAL handler will deal with it
+        void doAssert();
+
+        AssertFatalAdapterComponentImpl* m_compPtr;
+    };
+
+    AssertFatalAdapter m_adapter;
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `AssertFatalEvents.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/AssertFatalEvents.fppi`
+
+
+```text
+@ An assert happened
+event AF_ASSERT_0(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                 ) \
+  severity fatal \
+  id 0 \
+  format "Assert in file {}, line {}"
+
+@ An assert happened
+event AF_ASSERT_1(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                   arg1: U32 @< First assert argument
+                 ) \
+  severity fatal \
+  id 1 \
+  format "Assert in file {}, line {}: {}"
+
+@ An assert happened
+event AF_ASSERT_2(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                   arg1: U32 @< First assert argument
+                   arg2: U32 @< Second assert argument
+                 ) \
+  severity fatal \
+  id 2 \
+  format "Assert in file {}, line {}: {} {}"
+
+@ An assert happened
+event AF_ASSERT_3(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                   arg1: U32 @< First assert argument
+                   arg2: U32 @< Second assert argument
+                   arg3: U32 @< Third assert argument
+                 ) \
+  severity fatal \
+  id 3 \
+  format "Assert in file {}, line {}: {} {} {}"
+
+@ An assert happened
+event AF_ASSERT_4(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                   arg1: U32 @< First assert argument
+                   arg2: U32 @< Second assert argument
+                   arg3: U32 @< Third assert argument
+                   arg4: U32 @< Fourth assert argument
+                 ) \
+  severity fatal \
+  id 4 \
+  format "Assert in file {}, line {}: {} {} {} {}"
+
+@ An assert happened
+event AF_ASSERT_5(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                   arg1: U32 @< First assert argument
+                   arg2: U32 @< Second assert argument
+                   arg3: U32 @< Third assert argument
+                   arg4: U32 @< Fourth assert argument
+                   arg5: U32 @< Fifth assert argument
+                 ) \
+  severity fatal \
+  id 5 \
+  format "Assert in file {}, line {}: {} {} {} {} {}"
+
+@ An assert happened
+event AF_ASSERT_6(
+                   file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                   line: U32 @< Line number of the assert
+                   arg1: U32 @< First assert argument
+                   arg2: U32 @< Second assert argument
+                   arg3: U32 @< Third assert argument
+                   arg4: U32 @< Fourth assert argument
+                   arg5: U32 @< Fifth assert argument
+                   arg6: U32 @< Sixth assert argument
+                 ) \
+  severity fatal \
+  id 6 \
+  format "Assert in file {}, line {}: {} {} {} {} {} {}"
+
+@ An unexpected assert happened
+event AF_UNEXPECTED_ASSERT(
+                            file: string size AssertFatalAdapterEventFileSize @< The source file of the assert
+                            line: U32 @< Line number of the assert
+                            numArgs: U32 @< Number of unexpected arguments
+                          ) \
+  severity fatal \
+  id 7 \
+  format "Unexpected assert in file {}, line {}, args {}"
+```
+
+### `check`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/check`
+
+
+```text
+#!/bin/sh -e
+
+ut_build_dir=../../build-fprime-automatic-native-ut
+
+if ! test -e $ut_build_dir
+then
+  fprime-util generate --ut
+fi
+fprime-util build --ut
+$ut_build_dir/bin/`uname`/Svc_AssertFatalAdapter_ut_exe
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/AssertFatalAdapter.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/AssertFatalAdapterComponentImpl.cpp"
+
+)
+
+register_fprime_module()
+# UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/AssertFatalAdapter/AssertFatalAdapter.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/AssertFatalAdapterTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/main.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```

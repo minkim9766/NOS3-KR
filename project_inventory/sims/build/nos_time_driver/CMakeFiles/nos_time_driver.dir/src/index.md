@@ -3,16 +3,16 @@
 
 **경로:** `sims/build/nos_time_driver/CMakeFiles/nos_time_driver.dir/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `time_driver.cpp.o`
 
-file--time_driver.cpp.o
-file--time_driver.cpp.o.d
-```
+**경로:** `sims/build/nos_time_driver/CMakeFiles/nos_time_driver.dir/src/time_driver.cpp.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`sims/build/nos_time_driver/CMakeFiles/nos_time_driver.dir/src/time_driver.cpp.o`](file--time_driver.cpp.o) — 빌드 산출물 (경로만)
-- [`sims/build/nos_time_driver/CMakeFiles/nos_time_driver.dir/src/time_driver.cpp.o.d`](file--time_driver.cpp.o.d) — 빌드 산출물 (경로만)
+### `time_driver.cpp.o.d`
+
+**경로:** `sims/build/nos_time_driver/CMakeFiles/nos_time_driver.dir/src/time_driver.cpp.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

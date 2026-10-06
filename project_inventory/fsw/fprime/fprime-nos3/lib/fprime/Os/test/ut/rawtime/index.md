@@ -3,22 +3,498 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--RawTimeRules.cpp
-file--RawTimeRules.hpp
-file--RulesHeaders.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/rawtime/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/rawtime/CommonTests.hpp"
+#include "Fw/Buffer/Buffer.hpp"
+
+// ----------------------------------------------------------------------
+// Test Fixture
+// ----------------------------------------------------------------------
+
+std::unique_ptr<Os::Test::RawTime::Tester> get_tester_implementation() {
+    return std::unique_ptr<Os::Test::RawTime::Tester>(new Os::Test::RawTime::Tester());
+}
+
+Functionality::Functionality() : tester(get_tester_implementation()) {
+    tester->m_times.reserve(tester->TEST_TIME_COUNT);
+    tester->m_shadow_times.reserve(tester->TEST_TIME_COUNT);
+
+    for (U32 i = 0; i < tester->TEST_TIME_COUNT; ++i) {
+        tester->m_times.emplace_back();
+        tester->m_shadow_times.emplace_back();
+        tester->m_times[i].now();
+        tester->m_shadow_times[i] = std::chrono::system_clock::now();
+    }
+}
+
+void Functionality::SetUp() {
+    // All setup is done in the constructor (recommended by GTest)
+}
+
+void Functionality::TearDown() {
+    // No teardown required
+}
+
+// ----------------------------------------------------------------------
+// Test Cases
+// ----------------------------------------------------------------------
+
+// Now
+TEST_F(Functionality, Now) {
+    Os::Test::RawTime::Tester::Now get_time_rule;
+    get_time_rule.apply(*tester);
+}
+
+// SelfDiffIsZero
+TEST_F(Functionality, SelfDiffIsZero) {
+    Os::Test::RawTime::Tester::SelfDiffIsZero self_diff_rule;
+    self_diff_rule.apply(*tester);
+}
+
+// GetTimeDiffU32
+TEST_F(Functionality, GetTimeDiffU32) {
+    Os::Test::RawTime::Tester::GetTimeDiffU32 get_diff_rule;
+    get_diff_rule.apply(*tester);
+}
+
+// GetTimeInterval
+TEST_F(Functionality, GetTimeInterval) {
+    Os::Test::RawTime::Tester::GetTimeInterval get_interval_rule;
+    get_interval_rule.apply(*tester);
+}
+
+// Serialization
+TEST_F(Functionality, Serialization) {
+    Os::Test::RawTime::Tester::Serialization serialization_rule;
+    serialization_rule.apply(*tester);
+}
+
+// DiffU32 overflows if times are too far apart
+TEST_F(Functionality, DiffU32Overflow) {
+    Os::Test::RawTime::Tester::DiffU32Overflow overflow_rule;
+    overflow_rule.apply(*tester);
+}
+
+// RandomizedTesting
+TEST_F(Functionality, RandomizedTesting) {
+    // Enumerate all rules and construct an instance of each
+    Os::Test::RawTime::Tester::Now get_time_rule;
+    Os::Test::RawTime::Tester::SelfDiffIsZero diff_zero_rule;
+    Os::Test::RawTime::Tester::GetTimeDiffU32 get_diff_rule;
+    Os::Test::RawTime::Tester::GetTimeInterval get_interval_rule;
+    Os::Test::RawTime::Tester::Serialization serialization_rule;
+    Os::Test::RawTime::Tester::DiffU32Overflow overflow_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule<Os::Test::RawTime::Tester>* rules[] = {
+        &get_time_rule, &diff_zero_rule, &get_diff_rule, &get_interval_rule, &serialization_rule, &overflow_rule,
+    };
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario<Os::Test::RawTime::Tester> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario<Os::Test::RawTime::Tester> bounded("Bounded Random Rules Scenario", random, 5000);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps for RawTime.\n", numSteps);
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/RawTimeRules.cpp`](file--RawTimeRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/RawTimeRules.hpp`](file--RawTimeRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/CommonTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/rawtime/CommonTests.hpp
+// \brief GoogleTest fixture definitions used in common RawTime testing
+// ======================================================================
+#ifndef OS_TEST_UT_COMMON_RAWTIME_TESTS_HPP
+#define OS_TEST_UT_COMMON_RAWTIME_TESTS_HPP
+
+#include <gtest/gtest.h>
+#include <Os/RawTime.hpp>
+#include <Os/test/ut/rawtime/RulesHeaders.hpp>
+
+namespace Os {
+namespace Test {
+namespace RawTime {}  // namespace RawTime
+}  // namespace Test
+}  // namespace Os
+
+class Functionality : public ::testing::Test {
+  public:
+    //! Constructor
+    Functionality();
+
+    //! SetUp test fixture
+    void SetUp() override;
+
+    //! TearDown test fixture for safe destruction
+    void TearDown() override;
+
+    //! Tester/state implementation
+    std::unique_ptr<Os::Test::RawTime::Tester> tester;
+};
+
+#endif  // OS_TEST_UT_COMMON_RAWTIME_TESTS_HPP
+```
+
+### `RawTimeRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/RawTimeRules.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/rawtime/RawTimeRules.cpp
+// \brief rule implementations for common testing of RawTime
+// ======================================================================
+
+#include "RawTimeRules.hpp"
+#include "Fw/Buffer/Buffer.hpp"
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule SelfDiffIsZero
+// ------------------------------------------------------------------------------------------------------
+Os::Test::RawTime::Tester::SelfDiffIsZero::SelfDiffIsZero()
+    : STest::Rule<Os::Test::RawTime::Tester>("SelfDiffIsZero") {}
+
+bool Os::Test::RawTime::Tester::SelfDiffIsZero::precondition(const Os::Test::RawTime::Tester& state) {
+    return true;
+}
+
+void Os::Test::RawTime::Tester::SelfDiffIsZero::action(Os::Test::RawTime::Tester& state) {
+    U32 result;
+    FwIndexType index = state.pick_random_index();
+    Os::RawTime& raw_time = state.m_times[index];
+    Os::RawTime::Status status = raw_time.getDiffUsec(raw_time, result);
+    ASSERT_EQ(status, Os::RawTime::Status::OP_OK);
+    ASSERT_EQ(result, 0);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule Now
+// ------------------------------------------------------------------------------------------------------
+Os::Test::RawTime::Tester::Now::Now() : STest::Rule<Os::Test::RawTime::Tester>("Now") {}
+
+bool Os::Test::RawTime::Tester::Now::precondition(const Os::Test::RawTime::Tester& state) {
+    return true;
+}
+
+void Os::Test::RawTime::Tester::Now::action(Os::Test::RawTime::Tester& state) {
+    FwIndexType index = state.pick_random_index();
+
+    Os::RawTime::Status status = state.m_times[index].now();
+    state.shadow_now(index);
+    ASSERT_EQ(status, Os::RawTime::Status::OP_OK);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule GetTimeDiffU32
+// ------------------------------------------------------------------------------------------------------
+Os::Test::RawTime::Tester::GetTimeDiffU32::GetTimeDiffU32()
+    : STest::Rule<Os::Test::RawTime::Tester>("GetTimeDiffU32") {}
+
+bool Os::Test::RawTime::Tester::GetTimeDiffU32::precondition(const Os::Test::RawTime::Tester& state) {
+    return true;
+}
+
+void Os::Test::RawTime::Tester::GetTimeDiffU32::action(Os::Test::RawTime::Tester& state) {
+    U32 result;
+    FwIndexType index1 = state.pick_random_index();
+    FwIndexType index2 = state.pick_random_index();
+
+    Os::RawTime::Status status = state.m_times[index1].getDiffUsec(state.m_times[index2], result);
+    U32 shadow_result = state.shadow_getDiffUsec(state.m_shadow_times[index1], state.m_shadow_times[index2]);
+    ASSERT_EQ(status, Os::RawTime::Status::OP_OK);
+
+    state.shadow_validate_diff_result(result, shadow_result);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule GetTimeInterval
+// ------------------------------------------------------------------------------------------------------
+Os::Test::RawTime::Tester::GetTimeInterval::GetTimeInterval()
+    : STest::Rule<Os::Test::RawTime::Tester>("GetTimeInterval") {}
+
+bool Os::Test::RawTime::Tester::GetTimeInterval::precondition(const Os::Test::RawTime::Tester& state) {
+    return true;
+}
+
+void Os::Test::RawTime::Tester::GetTimeInterval::action(Os::Test::RawTime::Tester& state) {
+    Fw::TimeInterval interval;
+    FwIndexType index1 = state.pick_random_index();
+    FwIndexType index2 = state.pick_random_index();
+
+    Os::RawTime::Status status = state.m_times[index1].getTimeInterval(state.m_times[index2], interval);
+    ASSERT_EQ(status, Os::RawTime::Status::OP_OK);
+
+    state.shadow_validate_interval_result(index1, index2, interval);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule Serialization
+// ------------------------------------------------------------------------------------------------------
+Os::Test::RawTime::Tester::Serialization::Serialization() : STest::Rule<Os::Test::RawTime::Tester>("Serialization") {}
+
+bool Os::Test::RawTime::Tester::Serialization::precondition(const Os::Test::RawTime::Tester& state) {
+    return true;
+}
+
+void Os::Test::RawTime::Tester::Serialization::action(Os::Test::RawTime::Tester& state) {
+    // In this test, we:
+    //    1. Serialize a RawTime object in a buffer
+    //    2. Deserialize the buffer into a new (stack-allocated) RawTime object
+    //    3. Compare the deserialized RawTime object with the original RawTime object
+    U8 data[Os::RawTime::SERIALIZED_SIZE] = {0};
+    Fw::Buffer buffer(data, sizeof(data));
+
+    FwIndexType index = state.pick_random_index();
+
+    auto serializer = buffer.getSerializer();
+
+    state.m_times[index].serialize(serializer);
+
+    auto deserializer = buffer.getDeserializer();
+
+    Os::RawTime raw_time;
+    raw_time.deserialize(deserializer);
+
+    // We make sure that serialization and deserialization are successful by deserializing
+    // into a new Os::RawTime object and comparing the difference between the original RawTime
+    // test and the deserialized RawTime
+    U32 result = 1;  // initialize to non-zero value to ensure result is set by getDiffUsec
+    Os::RawTime::Status status = state.m_times[index].getDiffUsec(raw_time, result);
+    ASSERT_EQ(status, Os::RawTime::Status::OP_OK);
+    // We expect the result to be 0 since the deserialized RawTime should be the same as the original
+    ASSERT_EQ(result, 0) << "Serialization test failed";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule DiffU32Overflow
+// ------------------------------------------------------------------------------------------------------
+Os::Test::RawTime::Tester::DiffU32Overflow::DiffU32Overflow()
+    : STest::Rule<Os::Test::RawTime::Tester>("DiffU32Overflow") {}
+
+bool Os::Test::RawTime::Tester::DiffU32Overflow::precondition(const Os::Test::RawTime::Tester& state) {
+    return true;
+}
+
+void Os::Test::RawTime::Tester::DiffU32Overflow::action(Os::Test::RawTime::Tester& state) {
+    U32 result;
+    Os::RawTime zero_time;  // uninitialized time object is zero
+
+    FwIndexType index = state.pick_random_index();
+    Os::RawTime& now_time = state.m_times[index];
+
+    Os::RawTime::Status status = zero_time.getDiffUsec(now_time, result);
+    ASSERT_EQ(status, Os::RawTime::Status::OP_OVERFLOW);
+}
+```
+
+### `RawTimeRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/RawTimeRules.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/rawtime/RawTimeRules.hpp
+// \brief rule definitions for common testing of RawTime
+// ======================================================================
+// Stripped when compiled, here for IDEs
+#include "RulesHeaders.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule SelfDiffIsZero: RawTime diff with itself is zero
+// ------------------------------------------------------------------------------------------------------
+struct SelfDiffIsZero : public STest::Rule<Os::Test::RawTime::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    SelfDiffIsZero();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::RawTime::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::RawTime::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule Now: Get current RawTime
+// ------------------------------------------------------------------------------------------------------
+struct Now : public STest::Rule<Os::Test::RawTime::Tester> {
+    Now();
+    bool precondition(const Os::Test::RawTime::Tester& state);
+    void action(Os::Test::RawTime::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule GetTimeDiffU32: Get diff between two RawTime
+// ------------------------------------------------------------------------------------------------------
+struct GetTimeDiffU32 : public STest::Rule<Os::Test::RawTime::Tester> {
+    GetTimeDiffU32();
+    bool precondition(const Os::Test::RawTime::Tester& state);
+    void action(Os::Test::RawTime::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule GetTimeInterval: Get diff between two RawTime
+// ------------------------------------------------------------------------------------------------------
+struct GetTimeInterval : public STest::Rule<Os::Test::RawTime::Tester> {
+    GetTimeInterval();
+    bool precondition(const Os::Test::RawTime::Tester& state);
+    void action(Os::Test::RawTime::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule Serialization: Serialize and Deserialize RawTime
+// ------------------------------------------------------------------------------------------------------
+struct Serialization : public STest::Rule<Os::Test::RawTime::Tester> {
+    Serialization();
+    bool precondition(const Os::Test::RawTime::Tester& state);
+    void action(Os::Test::RawTime::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule DiffU32Overflow: DiffU32 overflows if times are too far apart
+// ------------------------------------------------------------------------------------------------------
+struct DiffU32Overflow : public STest::Rule<Os::Test::RawTime::Tester> {
+    DiffU32Overflow();
+    bool precondition(const Os::Test::RawTime::Tester& state);
+    void action(Os::Test::RawTime::Tester& state);
+};
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/RulesHeaders.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/rawtime/RulesHeaders.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+#include <gtest/gtest.h>
+#include <chrono>
+#include <vector>
+
+#include "Os/RawTime.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace RawTime {
+
+struct Tester {
+    // Constructors that ensures the mutex is always valid
+    Tester() = default;
+
+    // Destructor must be virtual
+    virtual ~Tester() = default;
+
+    // Number of instances of RawTime under test
+    static constexpr U32 TEST_TIME_COUNT = 5;
+
+    // Threshold for time differences, in microseconds
+    // This value was selected empirically, some platforms may need to adjust
+    static constexpr U32 INTERVAL_DIFF_THRESHOLD = 20;
+
+    //! RawTime (array thereof) under test
+    std::vector<Os::RawTime> m_times;
+
+    //! Shadow time for testing (vector of std time points)
+    std::vector<std::chrono::time_point<std::chrono::system_clock>> m_shadow_times;
+
+    //! Get time for shadow state, at specified index
+    void shadow_now(FwIndexType index) { this->m_shadow_times[index] = std::chrono::system_clock::now(); }
+
+    U32 shadow_getDiffUsec(std::chrono::time_point<std::chrono::system_clock>& t1,
+                           std::chrono::time_point<std::chrono::system_clock>& t2) const {
+        // Signedness is important here so we compare and substract accordingly
+        if (t1 < t2) {
+            return std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+        }
+        return std::chrono::duration_cast<std::chrono::microseconds>(t1 - t2).count();
+    }
+
+    void shadow_getTimeInterval(FwIndexType index1, FwIndexType index2, Fw::TimeInterval& interval) {
+        auto duration = this->m_shadow_times[index1] - this->m_shadow_times[index2];
+        if (duration < std::chrono::system_clock::duration::zero()) {
+            duration = -duration;
+        }
+
+        U32 microseconds = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+        U32 seconds = std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+
+        interval.set(seconds, microseconds);
+    }
+
+    void shadow_validate_interval_result(FwIndexType index1, FwIndexType index2, const Fw::TimeInterval& interval) {
+        Fw::TimeInterval shadow_interval;
+        Fw::TimeInterval result;
+        this->shadow_getTimeInterval(index1, index2, shadow_interval);
+        // Signedness is important here so we compare and substract accordingly
+        if (interval < shadow_interval) {
+            result = Fw::TimeInterval::sub(shadow_interval, interval);
+        } else {
+            result = Fw::TimeInterval::sub(interval, shadow_interval);
+        }
+        // Check that difference between 2 intervals is less than threshold
+        ASSERT_TRUE(result < Fw::TimeInterval(0, INTERVAL_DIFF_THRESHOLD)) << "Interval difference: " << result;
+    }
+
+    void shadow_validate_diff_result(U32 result, U32 shadow_result) {
+        U32 result_diff;
+        if (result > shadow_result) {
+            result_diff = result - shadow_result;
+        } else {
+            result_diff = shadow_result - result;
+        }
+        ASSERT_TRUE(result_diff < INTERVAL_DIFF_THRESHOLD)
+            << "Difference between results: " << result_diff << " microseconds";
+    }
+
+    FwIndexType pick_random_index() const { return STest::Pick::lowerUpper(0, TEST_TIME_COUNT - 1); }
+
+// Do NOT alter, adds rules to Tester as inner classes
+#include "RawTimeRules.hpp"
+};
+
+}  // namespace RawTime
+}  // namespace Test
+}  // namespace Os
+#endif  // __RULES_HEADERS__
+```

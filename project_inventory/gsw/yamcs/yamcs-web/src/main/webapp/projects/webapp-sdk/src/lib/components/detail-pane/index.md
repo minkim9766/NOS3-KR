@@ -3,16 +3,88 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-pane/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `detail-pane.component.css`
 
-file--detail-pane.component.css
-file--detail-pane.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-pane/detail-pane.component.css`
+
+
+```css
+:host {
+  background-color: #fcfcfc;
+  float: right;
+  height: 100%;
+  width: 450px;
+  overflow: auto;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
+
+:host.hidden {
+  display: none;
+}
+
+@media print {
+  :host {
+    display: none;
+  }
+}
 ```
 
-## 항목
+### `detail-pane.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-pane/detail-pane.component.css`](file--detail-pane.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-pane/detail-pane.component.ts`](file--detail-pane.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-pane/detail-pane.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { BaseComponent } from '../../abc/BaseComponent';
+
+@Component({
+  selector: 'ya-detail-pane',
+  template: '<ng-content />',
+  styleUrl: './detail-pane.component.css',
+  host: {
+    class: 'ya-detail-pane',
+    '[class.hidden]': 'hidden()',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaDetailPane extends BaseComponent implements OnInit, OnDestroy {
+  alwaysOpen = input(false, { transform: booleanAttribute });
+  closed = signal(true);
+
+  hidden = computed(() => {
+    return !this.alwaysOpen() && this.closed();
+  });
+
+  private detailPaneSubscription?: Subscription;
+
+  ngOnInit(): void {
+    this.detailPaneSubscription = this.appearanceService.detailPane$.subscribe(
+      (opened) => {
+        this.closed.set(!opened);
+      },
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.detailPaneSubscription?.unsubscribe();
+    this.closeDetailPane(); // Forget state
+  }
+}
+```

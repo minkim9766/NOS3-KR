@@ -3,18 +3,22 @@
 
 **경로:** `fsw/apps/sch/test_and_ground/scenarios/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SCH Functional Test Scenario.doc`
 
-file--SCH%20Functional%20Test%20Scenario.doc
-file--SCH%20General%20Commanding%20Test%20Scenario.doc
-file--SCH%20Timing%20Test%20Scenario.doc
-```
+**경로:** `fsw/apps/sch/test_and_ground/scenarios/SCH Functional Test Scenario.doc`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/apps/sch/test_and_ground/scenarios/SCH Functional Test Scenario.doc`](file--SCH%20Functional%20Test%20Scenario.doc) — 바이너리 (경로만)
-- [`fsw/apps/sch/test_and_ground/scenarios/SCH General Commanding Test Scenario.doc`](file--SCH%20General%20Commanding%20Test%20Scenario.doc) — 바이너리 (경로만)
-- [`fsw/apps/sch/test_and_ground/scenarios/SCH Timing Test Scenario.doc`](file--SCH%20Timing%20Test%20Scenario.doc) — 바이너리 (경로만)
+### `SCH General Commanding Test Scenario.doc`
+
+**경로:** `fsw/apps/sch/test_and_ground/scenarios/SCH General Commanding Test Scenario.doc`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `SCH Timing Test Scenario.doc`
+
+**경로:** `fsw/apps/sch/test_and_ground/scenarios/SCH Timing Test Scenario.doc`
+
+바이너리 파일입니다. 본문은 생략했습니다.

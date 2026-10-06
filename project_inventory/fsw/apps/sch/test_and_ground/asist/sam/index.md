@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sch/test_and_ground/asist/sam/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 fmt/index
 ```
 
-## 항목
-
-- [`fsw/apps/sch/test_and_ground/asist/sam/fmt/`](fmt/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

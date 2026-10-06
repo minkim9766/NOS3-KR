@@ -3,7 +3,7 @@
 
 **경로:** `components/sample/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ shared/index
 standalone/index
 ```
 
-## 항목
-
-- [`components/sample/fsw/cfs/`](cfs/index) — 폴더
-- [`components/sample/fsw/fprime/`](fprime/index) — 폴더
-- [`components/sample/fsw/shared/`](shared/index) — 폴더
-- [`components/sample/fsw/standalone/`](standalone/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,18 +3,74 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--.gitignore
-file--sdd.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/.gitignore`
+
+
+```text
+*.html
+```
+
+### `sdd.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/sdd.md`
+
+
+```markdown
+# Fw::PrmGet / PrmSet Ports
+
+## 1. Introduction
+
+The `Fw::PrmGet` port is used to retrieve a parameter value from storage. The parameter ID and a target buffer for the value is passed as arguments, and a status indicating the validity of the value is returned.
+
+The `Fw::PrmSet` port is used to update parameter values. The parameter ID and a buffer with the value is passed as arguments.
+
+## 2. Design
+
+### 2.1 Context
+
+#### 2.1.1 Port Diagram
+
+The `Fw::PrmGet` port has the following port diagram:
+
+![`Fw::PrmGet` Diagram](img/PrmGetBDD.jpg "Fw::PrmGet Port")
+
+The `Fw::PrmGet` port has the following return values:
+
+Value | Description
+----- | -----------
+PARAM_UNINIT | Used only in component; indicates parameter hasn't been initialized yet, i.e. loadParameters() call was never made 
+PARAM_VALID | Parameter was successfully retrieved from storage; returned by port call and used in component
+PARAM_INVALID | Parameter was not successfully retrieved from storage; returned by port call and used in component
+PARAM_DEFAULT | Default value was used for parameter if specified. Used only in component to indicate PARAM_INVALID was returned by port so default was needed
+
+The `Fw::PrmSet` port has the following port diagram:
+
+![`Fw::PrmSet` Diagram](img/PrmSetBDD.jpg "Fw::PrmSet Port")
+
+#### 2.1.2 Serializables
+
+##### 2.1.2.1 Fw::PrmBuffer
+
+The `Fw::PrmBuffer` class represents a buffer to store a serialized parameter value.
+
+## 3. Change Log
+
+Date | Description
+---- | -----------
+6/23/2015 |  Initial Version
+
+
+
+```

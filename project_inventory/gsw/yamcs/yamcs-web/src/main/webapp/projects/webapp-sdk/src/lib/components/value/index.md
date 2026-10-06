@@ -3,18 +3,248 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `value.component.css`
 
-file--value.component.css
-file--value.component.html
-file--value.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/value.component.css`
+
+
+```css
+.indent {
+  background-color: red;
+  display: inline-block;
+  line-height: 0;
+}
+
+.toggle {
+  cursor: pointer;
+  padding-right: 0.5em;
+}
+
+table.detail td:not(:first-child) {
+  padding-left: 10px;
+}
+
+.key {
+  color: purple;
+  font-weight: 500;
+}
+
+.symbol {
+  color: black;
+}
+
+.value {
+  color: blue;
+}
+
+.value.expandable {
+  color: inherit;
+  cursor: pointer;
+}
+
+table {
+  line-height: 1.1em;
+  font-family: "Roboto Mono", monospace;
+}
+
+td:first-child {
+  padding-left: 0 !important;
+}
 ```
 
-## 항목
+### `value.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/value.component.css`](file--value.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/value.component.html`](file--value.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/value.component.ts`](file--value.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/value.component.html`
+
+
+```html
+@if (value?.type === "AGGREGATE" || value?.type === "ARRAY") {
+  @if (nodes$ | async; as nodes) {
+    <table>
+      @for (node of nodes; track node) {
+        @if (!node.parent || node.parent.expanded) {
+          <tr>
+            <td>
+              <div class="indent" [style.width.px]="node.margin"></div>
+              @if (node.children) {
+                @if (!node.expanded) {
+                  <span class="toggle" (click)="expandNode(node)">▸</span>
+                }
+                @if (node.expanded) {
+                  <span class="toggle" (click)="collapseNode(node)">▾</span>
+                }
+              }
+              @if (node.key !== undefined) {
+                <span class="key">{{ node.key }}</span>
+                <span class="symbol">:</span>
+              }
+              @if (node.expanded) {
+                @if (node.value.type === "ARRAY") {
+                  <span class="value expandable" (click)="collapseNode(node)">
+                    Array({{ node.value.arrayValue?.length || 0 }})
+                  </span>
+                }
+                @if (node.value.type === "AGGREGATE") {
+                  <span class="value expandable" (click)="collapseNode(node)">&#123;...&#125;</span>
+                }
+              }
+              @if (
+                !node.expanded || (node.value.type !== "ARRAY" && node.value.type !== "AGGREGATE")
+              ) {
+                <span
+                  class="value"
+                  [class.expandable]="node.children"
+                  (click)="node.children ? expandNode(node) : false">
+                  {{ node.value | value }}
+                </span>
+              }
+            </td>
+          </tr>
+        }
+      }
+    </table>
+  }
+} @else {
+  {{ (value | value) ?? "-" }}
+}
+```
+
+### `value.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/value/value.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { AggregateValue, Value } from '../../client';
+import { ValuePipe } from '../../pipes/value.pipe';
+
+const indent = 20;
+
+interface ValueNode {
+  margin: number;
+  parent?: ValueNode;
+  expanded: boolean;
+  key?: string;
+  value: Value;
+  children?: ValueNode[];
+}
+
+@Component({
+  selector: 'ya-value',
+  templateUrl: './value.component.html',
+  styleUrl: './value.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, ValuePipe],
+})
+export class YaValue implements OnChanges {
+  @Input()
+  value?: Value;
+
+  @Input()
+  alwaysExpand = false;
+
+  nodes$ = new BehaviorSubject<ValueNode[]>([]);
+
+  collapsed$ = new BehaviorSubject<boolean>(true);
+
+  ngOnChanges() {
+    const { value } = this;
+    if (!value) {
+      this.nodes$.next([]);
+      return;
+    }
+
+    // Flattened list of nodes, which could be either
+    // leafs or have (flattened) children.
+    const nodes: ValueNode[] = [];
+    this.processValue(value, this.alwaysExpand, nodes);
+    this.nodes$.next(nodes);
+  }
+
+  private processValue(
+    value: Value,
+    expanded: boolean,
+    appendTo: ValueNode[],
+    parent?: ValueNode,
+  ) {
+    const node: ValueNode = {
+      margin: parent ? parent.margin + indent : 0,
+      parent,
+      expanded,
+      value,
+    };
+    appendTo.push(node);
+
+    if (value.type === 'AGGREGATE') {
+      node.children = this.processAggregateValue(
+        value.aggregateValue!,
+        appendTo,
+        node,
+      );
+    } else if (value.type === 'ARRAY') {
+      node.children = this.processArrayValue(
+        value.arrayValue || [],
+        appendTo,
+        node,
+      );
+    }
+
+    return node;
+  }
+
+  private processArrayValue(
+    arrayValue: Value[],
+    appendTo: ValueNode[],
+    parent: ValueNode,
+  ) {
+    const directChildren: ValueNode[] = [];
+    for (let i = 0; i < arrayValue.length; i++) {
+      const value = arrayValue[i];
+      const child = this.processValue(value, false, appendTo, parent);
+      child.key = String(i);
+      directChildren.push(child);
+    }
+
+    return directChildren;
+  }
+
+  private processAggregateValue(
+    aggregateValue: AggregateValue,
+    appendTo: ValueNode[],
+    parent: ValueNode,
+  ) {
+    const directChildren: ValueNode[] = [];
+    for (let i = 0; i < aggregateValue.name.length; i++) {
+      const value = aggregateValue.value[i];
+      const child = this.processValue(value, false, appendTo, parent);
+      child.key = aggregateValue.name[i];
+      directChildren.push(child);
+    }
+
+    return directChildren;
+  }
+
+  expandNode(node: ValueNode) {
+    node.expanded = true;
+    this.nodes$.next([...this.nodes$.value]);
+  }
+
+  collapseNode(node: ValueNode) {
+    node.expanded = false;
+    for (const child of node.children || []) {
+      this.collapseNode(child);
+    }
+    this.nodes$.next([...this.nodes$.value]);
+  }
+}
+```

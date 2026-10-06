@@ -3,16 +3,84 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/group/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `group.component.html`
 
-file--group.component.html
-file--group.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/group/group.component.html`
+
+
+```html
+@if (group$ | async; as group) {
+  <app-admin-page>
+    <app-admin-toolbar [label]="group.name">
+      <ya-page-button routerLink="edit" icon="edit">Edit group</ya-page-button>
+    </app-admin-toolbar>
+
+    <ya-panel class="ya-link">
+      @if (group.description) {
+        <div class="section-divider">
+          <mat-divider />
+        </div>
+        <h4>Description</h4>
+        <div style="white-space: pre-wrap">{{ group.description || "-" }}</div>
+      }
+      <br />
+      <div class="section-divider">
+        <mat-divider />
+      </div>
+      <h4>{{ group.users?.length || 0 }} members</h4>
+      @for (user of group.users; track user) {
+        <div>
+          <mat-icon class="icon16" style="vertical-align: middle" matTooltip="User">
+            person
+          </mat-icon>
+          <a [routerLink]="['/admin/iam/users', user.name]">{{ user.displayName || user.name }}</a>
+        </div>
+      }
+    </ya-panel>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `group.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/group/group.component.html`](file--group.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/group/group.component.ts`](file--group.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/group/group.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { GroupInfo, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './group.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class GroupComponent {
+  group$ = new BehaviorSubject<GroupInfo | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private title: Title,
+  ) {
+    route.paramMap.subscribe((params) => {
+      const name = params.get('name')!;
+      this.changeGroup(name);
+    });
+  }
+
+  private changeGroup(name: string) {
+    this.yamcs.yamcsClient.getGroup(name).then((group) => {
+      this.group$.next(group);
+      this.title.setTitle(group.name);
+    });
+  }
+}
+```

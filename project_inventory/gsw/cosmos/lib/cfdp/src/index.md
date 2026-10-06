@@ -3,30 +3,1072 @@
 
 **경로:** `gsw/cosmos/lib/cfdp/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `pduAck.rb`
 
-file--pduAck.rb
-file--pduEOF.rb
-file--pduFileData.rb
-file--pduFinished.rb
-file--pduHeader.rb
-file--pduMetadata.rb
-file--pduNAK.rb
-file--pduPacket.rb
-file--pduPrompt.rb
+**경로:** `gsw/cosmos/lib/cfdp/src/pduAck.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+  class PDUACK
+
+    attr_accessor :directiveCode
+    attr_accessor :directiveSubtypeCode
+    attr_accessor :conditionCode
+    attr_accessor :transactionStatus
+
+    @@fdCode = 6
+    @@minLength = 2
+    @@totalVariblesInstanceds = 4
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUACK
+      return if content.empty?
+      content = content[0]
+
+      if (content.is_a?(Array))
+
+        # First verify length of given pduACK
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        # Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        @directiveCode = Utils_visiona.getBits(content[0], 5, 8)
+        @directiveSubtypeCode = Utils_visiona.getBits(content[0], 1, 4)
+        @conditionCode = Utils_visiona.getBits(content[1], 5, 8)
+        @transactionStatus = Utils_visiona.getBits(content[1], 1, 2)
+      elsif (content.is_a?(Hash))
+
+        @directiveCode = content[:directiveCode] if Utils_visiona.hasSymbol?(content, :directiveCode, Integer, 4)
+        @directiveSubtypeCode = content[:directiveSubtypeCode] if Utils_visiona.hasSymbol?(content, :directiveSubtypeCode, Integer, 4)
+        @conditionCode = content[:conditionCode] if Utils_visiona.hasSymbol?(content, :conditionCode, Integer, 4)
+        @transactionStatus = content[:transactionStatus] if Utils_visiona.hasSymbol?(content, :transactionStatus, Integer, 2)
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for PDUACK with class #{content.class}"
+      end
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariblesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @directiveCode.is_a?(Integer)
+        return false unless @directiveSubtypeCode.is_a?(Integer)
+        return false unless @conditionCode.is_a?(Integer)
+        return false unless @transactionStatus.is_a?(Integer)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def length
+
+      # 1 for fdCode and 2 for stuffs
+      return 1 + 2
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Ack" unless valid?
+
+      binArray = Array.new
+      binArray << @@fdCode
+      binArray << ((@directiveCode << 4) + (@directiveSubtypeCode))
+      binArray << ((@conditionCode << 4) + @transactionStatus)
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Ack" unless valid?
+
+      output = ""
+      output << "This is the beginning of the ACK Pdu\n"
+      output << "Directive Code: #{@directiveCode}\n"
+      output << "Directive Subtype Code: #{@directiveSubtypeCode}\n"
+      output << "Condition Code: #{@conditionCode} (#{CFDP.conditionCodeToStr(@conditionCode)})\n"
+      output << "transaction Status: #{@transactionStatus}\n"
+      output << "This is the ending of the ACK Pdu\n"
+
+      return output
+    end
+  end # end class PDUACK
+end # end module CFDP
 ```
 
-## 항목
+### `pduEOF.rb`
 
-- [`gsw/cosmos/lib/cfdp/src/pduAck.rb`](file--pduAck.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduEOF.rb`](file--pduEOF.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduFileData.rb`](file--pduFileData.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduFinished.rb`](file--pduFinished.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduHeader.rb`](file--pduHeader.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduMetadata.rb`](file--pduMetadata.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduNAK.rb`](file--pduNAK.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduPacket.rb`](file--pduPacket.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/cfdp/src/pduPrompt.rb`](file--pduPrompt.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/lib/cfdp/src/pduEOF.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+# Warning:
+# This version does not support TLVs,
+# so there is no Fault Location field (and it will be ignored if given).
+
+module CFDP
+
+  class PDUEOF
+
+    attr_accessor :conditionCode
+    attr_accessor :fileChecksum
+    attr_accessor :fileSize
+
+    @@fdCode = 4
+    @@minLength = 9
+    @@totalVariablesInstanceds = 3
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUEOF
+      return if content.empty?
+      content = content[0]
+
+      if (content.is_a?(Array)) # i'm expecting a byte array
+
+        # first verify length of given pduEOF
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        # Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        # set stuff
+        @conditionCode = Utils_visiona.getBits(content[0], 5, 8)
+        @fileChecksum = ((content[1]<<24) + (content[2]<<16) + (content[3]<<8) + (content[4]))
+        @fileSize = ((content[5]<<24) + (content[6]<<16) + (content[7]<<8) + (content[8]))
+      elsif (content.is_a?(Hash))
+
+        @conditionCode = content[:conditionCode] if Utils_visiona.hasSymbol?(content, :conditionCode, Integer, 4)
+        @fileChecksum = content[:fileChecksum] if Utils_visiona.hasSymbol?(content, :fileChecksum, Integer, 32)
+        @fileSize = content[:fileSize] if Utils_visiona.hasSymbol?(content, :fileSize, Integer, 32)
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for PDUEOF with class #{content.class}"
+      end
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariablesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @conditionCode.is_a?(Integer)
+        return false unless @fileChecksum.is_a?(Integer)
+        return false unless @fileSize.is_a?(Integer)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def length
+
+      # 1 for FD Code + 9 for content
+      return 1 + 9
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU EOF" unless valid?
+
+      binArray = Array.new
+      binArray << @@fdCode
+      binArray << (Utils_visiona.getBits(@conditionCode, 1, 4) << 4)
+      for i in (0..3); binArray << Utils_visiona.getBits(@fileChecksum, 1+8*(3-i), 8+8*(3-i)); end
+      for i in (0..3); binArray << Utils_visiona.getBits(@fileSize, 1+8*(3-i), 8+8*(3-i)); end
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU EOF" unless valid?
+
+      output = ""
+      output << "This is beginning of EOF info\n"
+      output << "Condition Code: #{@conditionCode} (#{CFDP.conditionCodeToStr(@conditionCode)})\n"
+      output << "File Checksum: #{@fileChecksum}\n"
+      output << "File Size: #{@fileSize}\n"
+      output << "This is end of EOF info\n"
+
+      return output
+    end
+  end # class PDUEOF
+end # module CFDP
+```
+
+### `pduFileData.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduFileData.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+  class PDUFileData
+
+    attr_accessor :offset
+    attr_accessor :data
+
+    @@minLength = 5
+    @@totalVariblesInstanceds = 2
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUFileData
+      return if content.empty?
+      content = content[0]
+
+      if (content.is_a?(Array)) # i'm expecting a byte array
+
+        # verify length of given pdu File Data
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        #  Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        # set offset and data
+        @offset = ((content[0]<<24) + (content[1]<<16) + (content[2]<<8) + content[3])
+        @data = content[4..content.length]
+      elsif (content.is_a?(Hash))
+
+        @offset = content[:offset] if Utils_visiona.hasSymbol?(content, :offset, Integer, 32)
+        @data = content[:data] if Utils_visiona.hasSymbol?(content, :data, Array, 2**8)
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for PDUFileData with class #{content.class}"
+      end
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariblesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @offset.is_a?(Integer)
+        return false unless @data.is_a?(Array)
+
+        #  Verify if we have a Byte array data
+        Utils_visiona.checkByteArray(@data)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def length
+
+      # 4 bytes for offset + data length
+      return 4 + @data.length
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU FileData" unless valid?
+
+      binArray = Array.new
+      binArray << Utils_visiona.getBits(@offset, 25, 32)
+      binArray << Utils_visiona.getBits(@offset, 17, 24)
+      binArray << Utils_visiona.getBits(@offset, 9, 16)
+      binArray << Utils_visiona.getBits(@offset, 1, 8)
+      binArray += @data # Guarantee that data is an array
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDUFileData" unless valid?
+
+      output = ""
+      output << "This is the beginning of the PDUFileData" << "\n"
+      output << "Offset is #{@offset}" << "\n"
+      output << "Data is " << data.to_s << "\n"
+      output << "This is the ending of the PDUFileData" << "\n"
+
+      return output
+    end
+  end # class PDUFileData
+end # end module CFDP
+```
+
+### `pduFinished.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduFinished.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+  class PDUFinished
+
+    attr_accessor :conditionCode
+    attr_accessor :endSystemStatus
+    attr_accessor :deliveryCode
+    attr_accessor :fileStatus
+
+    @@fdCode = 5
+    @@minLength = 1
+    @@totalVariablesInstanceds = 4
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUFinished
+      return if content.empty?
+      content = content[0]
+
+      if (content.is_a?(Array)) # i'm expecting a byte array
+
+        # verify length of given pdu Finished
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        # Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        # set offset and data
+        @conditionCode = Utils_visiona.getBits(content[0], 5, 8)
+        @endSystemStatus = Utils_visiona.getBits(content[0], 4, 4)
+        @deliveryCode = Utils_visiona.getBits(content[0], 3, 3)
+        @fileStatus = Utils_visiona.getBits(content[0], 1, 2)
+      elsif (content.is_a?(Hash))
+
+        @conditionCode = content[:conditionCode] if Utils_visiona.hasSymbol?(content, :conditionCode, Integer, 4)
+        @endSystemStatus = content[:endSystemStatus] if Utils_visiona.hasSymbol?(content, :endSystemStatus, Integer, 1)
+        @deliveryCode = content[:deliveryCode] if Utils_visiona.hasSymbol?(content, :deliveryCode, Integer, 1)
+        @fileStatus = content[:fileStatus] if Utils_visiona.hasSymbol?(content, :fileStatus, Integer, 2)
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for PDUFinished with class #{content.class}"
+      end
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariablesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @conditionCode.is_a?(Integer)
+        return false unless @endSystemStatus.is_a?(Integer)
+        return false unless @deliveryCode.is_a?(Integer)
+        return false unless @fileStatus.is_a?(Integer)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def length
+
+      # 1 for FD Code + 1 for payload
+      return 1 + 1
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Finished" unless valid?
+
+      binArray = Array.new
+      binArray << @@fdCode
+      binArray << ((@conditionCode << 4) + (@endSystemStatus << 3) + (@deliveryCode << 2) + @fileStatus)
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Finished" unless valid?
+
+      output = ""
+      output << "This is the beginning of the FINISHED Pdu\n"
+      output << "End System Status: #{@endSystemStatus}\n"
+      output << "Condition Code: #{@conditionCode.to_s} (#{CFDP.conditionCodeToStr(@conditionCode)})\n"
+      output << "Deilivery Code: #{@deliveryCode}\n"
+      output << "File Status: #{@fileStatus}\n"
+      output << "This is the ending of FINISHED Pdu\n"
+
+      return output
+    end
+  end # class PDUFinished
+end # module CFDP
+```
+
+### `pduHeader.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduHeader.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+  class PDUHeader
+
+    attr_accessor :version
+    attr_accessor :pduType
+    attr_accessor :direction
+    attr_accessor :transmissionMode
+    attr_accessor :crcFlag
+    #attr_accessor :largeFileFlag
+    attr_accessor :pduDataLength
+    attr_accessor :IDLength
+    #attr_accessor :segmentMetadataFlag
+    attr_accessor :sequenceLength
+    attr_accessor :sourceID
+    attr_accessor :sequenceNumber
+    attr_accessor :destinationID
+
+    @@minLength = 7
+    @@totalVariblesInstanceds = 11
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUHeader
+      return if content.empty?
+      content = content[0]
+
+      # That means i'm creating a PDUHeader from a byte stream
+      if (content.is_a?(Array))
+
+        # first verify length of given pduHeader
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        # Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        # Verify bit 8, 25, 29 == 0
+        Utils_visiona.compareValues(Utils_visiona.getBits(content[0], 1, 1), 0, "on bit \#8 of PDUHeader")
+        Utils_visiona.compareValues(Utils_visiona.getBits(content[3], 8, 8), 0, "on bit \#25 of PDUHeader")
+        Utils_visiona.compareValues(Utils_visiona.getBits(content[3], 4, 4), 0, "on bit \#29 of PDUHeader")
+
+        # Set first 4 bytes
+        @version = Utils_visiona.getBits(content[0], 6, 8)
+        @pduType = Utils_visiona.getBits(content[0], 5, 5)
+        @direction = Utils_visiona.getBits(content[0], 4, 4)
+        @transmissionMode = Utils_visiona.getBits(content[0], 3, 3)
+        @crcFlag = Utils_visiona.getBits(content[0], 2, 2)
+        #@largeFileFlag = Utils_visiona.getBits(content[0], 1, 1)
+        @pduDataLength = (content[1]<<8)+content[2]
+        @IDLength = Utils_visiona.getBits(content[3], 5, 7)
+        #@segmentMetadataFlag = Utils_visiona.getBits(content[3], 4, 4)
+        @sequenceLength = Utils_visiona.getBits(content[3], 1, 3)
+
+        # new verification now that we have length of entity ID and sequence ID
+        # verify if version == 1
+        Utils_visiona.compareValues(@version, 1, "version number")
+        Utils_visiona.verifyLength("less", content.length, headerSize)
+
+        # passed verification, continue setting things
+        @sourceID = 0; for i in 0..@IDLength; @sourceID+=content[4+i]<<(8*(@IDLength-i)); end
+        @sequenceNumber = 0; for i in 0..@sequenceLength; @sequenceNumber+=content[4+@IDLength+1+i]<<(8*(@sequenceLength-i)); end
+        @destinationID = 0; for i in 0..@IDLength; @destinationID+=content[4+@IDLength+2+@sequenceLength+i]<<(8*(@IDLength-i)); end
+
+        # verify if it's all valid
+        valid?
+      elsif (content.is_a?(Hash)) # That means i'm creating a custom PDUHeader
+
+        @version = content[:version] if Utils_visiona.hasSymbol?(content, :version, Integer, 3)
+        @pduType = content[:pduType] if Utils_visiona.hasSymbol?(content, :pduType, Integer, 1)
+        @direction = content[:direction] if Utils_visiona.hasSymbol?(content, :direction, Integer, 1)
+        @transmissionMode = content[:transmissionMode] if Utils_visiona.hasSymbol?(content, :transmissionMode, Integer, 1)
+        @crcFlag = content[:crcFlag] if Utils_visiona.hasSymbol?(content, :crcFlag, Integer, 1)
+        @pduDataLength = content[:pduDataLength] if Utils_visiona.hasSymbol?(content, :pduDataLength, Integer, 16)
+        @IDLength = content[:idLength] if Utils_visiona.hasSymbol?(content, :idLength, Integer, 3)
+        @sequenceLength = content[:sequenceLength] if Utils_visiona.hasSymbol?(content, :sequenceLength, Integer, 3)
+        @sourceID = content[:sourceID] if Utils_visiona.hasSymbol?(content, :sourceID, Integer, 64)
+        @sequenceNumber = content[:sequenceNumber] if Utils_visiona.hasSymbol?(content, :sequenceNumber, Integer, 64)
+        @destinationID = content[:destinationID] if Utils_visiona.hasSymbol?(content, :destinationID, Integer, 64)
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for pduHeader with class #{content.class}"
+      end
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariblesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @version.is_a?(Integer)
+        return false unless @pduType.is_a?(Integer)
+        return false unless @direction.is_a?(Integer)
+        return false unless @transmissionMode.is_a?(Integer)
+        return false unless @crcFlag.is_a?(Integer)
+        return false unless @pduDataLength.is_a?(Integer)
+        return false unless @IDLength.is_a?(Integer)
+        return false unless @sequenceLength.is_a?(Integer)
+        return false unless @sourceID.is_a?(Integer)
+        return false unless @sequenceNumber.is_a?(Integer)
+        return false unless @destinationID.is_a?(Integer)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def headerSize
+
+      # this will figure the header size (in octets)
+      raise Utils_visiona::VerifyError if (@IDLength.nil? || @sequenceLength.nil?)
+
+      # 4 bytes for static header options. 2*id length for 2x id vars and 1x sequence var. +1 because it's var+1 octets (0 means 1 octet).
+      return 4 + 2*(@IDLength+1) + @sequenceLength+1
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDUHeader" unless valid?
+
+      # create array and insert values.
+      binArray = Array.new
+      binArray << ((@version << 5) + (@pduType << 4) + (@direction << 3) + (@transmissionMode << 2) + (crcFlag << 1) + 0)
+      binArray << Utils_visiona.getBits(@pduDataLength, 9, 16)
+      binArray << Utils_visiona.getBits(@pduDataLength, 1, 8)
+      binArray << ((@IDLength << 4) + (@sequenceLength))
+
+      # routine for variable length's vars
+      for i in (0..@IDLength); binArray << Utils_visiona.getBits(@sourceID, 1+8*(@IDLength-i), 8+8*(@IDLength-i)); end
+      for i in (0..@sequenceLength); binArray << Utils_visiona.getBits(@sequenceNumber, 1+8*(@sequenceLength-i), 8+8*(@sequenceLength-i)); end
+      for i in (0..@IDLength); binArray << Utils_visiona.getBits(@destinationID, 1+8*(@IDLength-i), 8+8*(@IDLength-i)); end
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Header" unless valid?
+
+      output = ""
+      output << "This is the beginning of the PDU Header\n"
+      output << "Version: #{@version}\n"
+      output << "PDU Type: #{(@pduType == 1 ? "File Data" : "File Directive")}\n"
+      output << "Direction: #{(@direction == 1 ? "Toward sender" : "Toward receiver")}\n"
+      output << "Transmission Mode: #{(@transmissionMode == 1 ? "UNACKNOWLEDGED" : "ACKNOWLEDGED")}\n"
+      output << "CRC Flag: #{(@crcFlag == 1 ? "present" : "not present")}\n"
+      output << "PDU Data Field Length: #{@pduDataLength}\n"
+      output << "Length Entity IDS: #{@IDLength}\n"
+      output << "Length of Transaction Sequence: #{@sequenceLength}\n"
+      output << "Source ID: #{@sourceID}\n"
+      output << "Transaction sequence number: #{@sequenceNumber}\n"
+      output << "Destination ID: #{@destinationID}\n"
+      output << "This is the end of the PDU Header\n"
+
+      return output
+    end
+  end
+end
+```
+
+### `pduMetadata.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduMetadata.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+# Does not support:
+# - Messages to User
+# - File of unbounded size
+# - Filestore requests
+# - Fault Handler overrides
+# - Flow label
+
+module CFDP
+
+  class PDUMetadata
+
+    attr_accessor :segmentationControl
+    attr_accessor :fileSize #in octets (bytes)
+    attr_accessor :sourceFileName
+    attr_accessor :destinationFileName
+
+    @@fdCode = 7
+    @@minLength = 7
+    @@totalVariblesInstanceds = 4
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUMetadata
+      return if content.empty?
+      content = content[0]
+
+      if (content.is_a?(Array)) # I'm expecting a byte array
+
+        # we first verify length of given pduPayload
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        # Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        # Verify bit 2-8
+        Utils_visiona.compareValues(Utils_visiona.getBits(content[0], 1, 7), 0, "on bits \#2-8 of PDUMetadata")
+
+        # set first 5 bytes
+        @segmentationControl = Utils_visiona.getBits(content[0], 8, 8)
+        @fileSize = (content[1]<<24) + (content[2]<<16) + (content[3]<<8) + content[4]
+
+        # first LV value (guaranteed that has this length, because minlength is 7)
+        lengthSourceFileName = content[5]
+        Utils_visiona.verifyLength("less", content.length, @@minLength+lengthSourceFileName)
+        @sourceFileName = ""; for i in 0..(lengthSourceFileName-1); @sourceFileName << content[6+i].chr; end unless lengthSourceFileName <= 0
+
+        # must check if we have at least one more byte for second LV value
+        Utils_visiona.verifyLength("less", content.length, 5+(1+lengthSourceFileName))
+
+        # second LV value
+        lengthDestinationFileName = content[6+lengthSourceFileName]
+        Utils_visiona.verifyLength("less", content.length, 5 + (1+lengthSourceFileName) + (1+lengthDestinationFileName))
+        @destinationFileName = ""; for i in 0..(lengthDestinationFileName-1); @destinationFileName << content[5+lengthSourceFileName+2+i].chr; end unless lengthDestinationFileName <= 0
+      elsif (content.is_a?(Hash))
+
+        @segmentationControl = content[:segmentationControl] if Utils_visiona.hasSymbol?(content, :segmentationControl, Integer, 1)
+        @fileSize = content[:fileSize] if Utils_visiona.hasSymbol?(content, :fileSize, Integer, 32)
+        @sourceFileName = content[:sourceFileName] if Utils_visiona.hasSymbol?(content, :sourceFileName, String, 2**8)
+        @destinationFileName = content[:destinationFileName] if Utils_visiona.hasSymbol?(content, :destinationFileName, String, 2**8)
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for PDUMetadata with class #{content.class}"
+      end
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariblesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @segmentationControl.is_a?(Integer)
+        return false unless @fileSize.is_a?(Integer)
+        return false unless @sourceFileName.is_a?(String)
+        return false unless @destinationFileName.is_a?(String)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def length
+
+      raise Utils_visiona::VerifyError if (@sourceFileName.nil? || @destinationFileName.nil?)
+
+      # 1 for fdCode, 1 for SegmentationCtrl, 4 for file size, 2x LV Values (L = 1 byte, V = L bytes)
+      return 1 + 1 + 4 + (1+ @sourceFileName.length) + (1 + @destinationFileName.length)
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Metadata" unless valid?
+
+      binArray = Array.new
+      binArray << @@fdCode
+      binArray << (@segmentationControl<<7)
+      binArray << Utils_visiona.getBits(@fileSize, 25, 32)
+      binArray << Utils_visiona.getBits(@fileSize, 17, 24)
+      binArray << Utils_visiona.getBits(@fileSize, 9, 16)
+      binArray << Utils_visiona.getBits(@fileSize, 1, 8)
+
+      unless @sourceFileName.length == 0
+
+        binArray << @sourceFileName.length
+        binArray << Utils_visiona.strToDecArray(@sourceFileName)
+      end
+      unless @destinationFileName.length == 0
+
+        binArray << @destinationFileName.length
+        binArray << Utils_visiona.strToDecArray(@destinationFileName)
+      end
+
+      binArray = binArray.flatten
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU Metadata" unless valid?
+
+      output = ""
+      output << "This is beginning of METADATA info\n"
+      output << "Segmentation Control: #{(@segmentationControl == 1 ? "Boundaries not respected" : " Boundaries respected")}\n"
+      output << "File Size: #{@fileSize} bytes\n"
+      output << "Length source file: #{@lengthSourceFileName}\n"
+      output << "Source file name: #{@sourceFileName}\n"
+      output << "Length destination file: #{@lengthDestinationFileName}\n"
+      output << "Destination file name: #{@destinationFileName}\n"
+      output << "This is end of METADATA info\n"
+
+      return output
+    end
+  end # end class PDUMetadata
+end # end module CFDP
+```
+
+### `pduNAK.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduNAK.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+  class PDUNAK
+
+    attr_accessor :scopeStart
+    attr_accessor :scopeEnd
+    attr_accessor :segmentRequests
+
+    @@fdCode = 8
+    @@minLength = 16
+    @@totalVariblesInstanceds = 3
+
+    def initialize(*content)
+
+      # Content empty means creation of empty PDUMetadata
+      return if content.empty?
+      content = content[0]
+
+      if (content.is_a?(Array))
+
+        # verify length
+        Utils_visiona.verifyLength("less", content.length, @@minLength)
+
+        # Verify if we have a Byte array
+        Utils_visiona.checkByteArray(content)
+
+        # set stuffs
+        @scopeStart = ((content[0]<<24) + (content[1]<<16) + (content[2]<<8) + content[3])
+        @scopeEnd = ((content[4]<<24) + (content[5]<<16) + (content[6]<<8) + content[7])
+
+        @segmentRequests = Array.new
+        totalSegmentsRequests = (content.length-8)/8
+        hashAux = {}
+        for i in 1..totalSegmentsRequests
+          startOffset = ((content[8*i]<<24) + (content[(8*i)+1]<<16) + (content[(8*i)+2]<<8) + content[(8*i)+3])
+          endOffset = ((content[(8*i)+4]<<24) + (content[(8*i)+5]<<16) + (content[(8*i)+6]<<8) + content[(8*i)+7])
+          hashAux[:startOffset] = startOffset
+          hashAux[:endOffset] = endOffset
+          @segmentRequests << hashAux.dup
+        end
+      elsif (content.is_a?(Hash))
+
+        @scopeStart = content[:scopeStart] if Utils_visiona.hasSymbol?(content, :scopeStart, Integer, 32)
+        @scopeEnd = content[:scopeEnd] if Utils_visiona.hasSymbol?(content, :scopeEnd, Integer, 32)
+        @segmentRequests = content[:segmentRequests] unless content[:segmentRequests].nil?
+      else
+
+        raise Utils_visiona::VerifyError, "Not a valid input for PDUNAK with class #{content.class}"
+      end
+    end # end initialize
+
+    def length
+
+      # this generates pdu length
+      return 1 + 8 + (@segmentRequests.length)*8
+    end
+
+    def valid?
+
+      begin
+
+        # Check for instanceds vars
+        Utils_visiona.compareValues(self.instance_variables.length, @@totalVariblesInstanceds, "variables instanceds")
+
+        # Check for types instanceds
+        return false unless @scopeStart.is_a?(Integer)
+        return false unless @scopeEnd.is_a?(Integer)
+        return false unless @segmentRequests.is_a?(Array)
+      rescue
+
+        return false
+      end
+
+      return true
+    end
+
+    def pack
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU NAK" unless valid?
+
+      binArray = Array.new
+      binArray << @@fdCode
+      binArray << Utils_visiona.getBits(@scopeStart, 25, 32)
+      binArray << Utils_visiona.getBits(@scopeStart, 17, 24)
+      binArray << Utils_visiona.getBits(@scopeStart, 9, 16)
+      binArray << Utils_visiona.getBits(@scopeStart, 1, 8)
+      binArray << Utils_visiona.getBits(@scopeEnd, 25, 32)
+      binArray << Utils_visiona.getBits(@scopeEnd, 17, 24)
+      binArray << Utils_visiona.getBits(@scopeEnd, 9, 16)
+      binArray << Utils_visiona.getBits(@scopeEnd, 1, 8)
+
+      for i in 0..@segmentRequests.length-1
+
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:startOffset], 25, 32)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:startOffset], 17, 24)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:startOffset], 9, 16)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:startOffset], 1, 8)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:endOffset], 25, 32)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:endOffset], 17, 24)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:endOffset], 9, 16)
+        binArray << Utils_visiona.getBits(@segmentRequests[i][:endOffset], 1, 8)
+      end
+
+      # this must be a byte array (0-255 values)
+      for i in 0..binArray.length-1 do
+        binArray[i] = binArray[i] & 0xFF
+      end
+
+      return binArray
+    end
+
+    def to_s
+
+      raise Utils_visiona::VerifyError, "Not a valid PDU NAK" unless valid?
+
+      output = ""
+      output << "This is the beginning of the NAK PDU\n"
+      output << "Start of scope is #{@scopeStart}\n"
+      output << "End of scope is #{@scopeEnd}\n"
+      output << "totalSegmentsRequests = #{@segmentRequests.length}\n"
+
+      for i in 1..@segmentRequests.length
+
+        output << "segmentRequest #{i}\n"
+        output << "Start offset = #{@segmentRequests[i-1][:startOffset]}\n"
+        output << "End offset = #{@segmentRequests[i-1][:endOffset]}\n"
+      end
+      output << "This is ending of the NAK PDU\n"
+
+      return output
+    end
+  end # end class PDUNAK
+end # end module CFDP
+```
+
+### `pduPacket.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduPacket.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+  class PDUPacket
+
+    attr_accessor :pduHeader
+    attr_accessor :pduPayload
+
+    def initialize(*content)
+
+      if (content[0].is_a?(Array))
+
+        content = content[0]
+        @pduHeader = CFDP::PDUHeader.new(content)
+        payloadData = content[@pduHeader.headerSize..content.length]
+
+        #puts "pduHeader"
+        #puts "  .version = #{@pduHeader.version}"
+        #puts "  .pduType = #{@pduHeader.pduType}"
+        #puts "  .direction = #{@pduHeader.direction}"
+        #puts "  .transmissionMode = #{@pduHeader.transmissionMode}"
+        #puts "  .crcFlag = #{@pduHeader.crcFlag}"
+        ##puts "  .largeFileFlag = #{@pduHeader.largeFileFlag}"
+        #puts "  .pduDataLength = #{@pduHeader.pduDataLength}"
+        #puts "  .IDLength = #{@pduHeader.IDLength}"
+        ##puts "  .segmentMetadataFlag = #{@pduHeader.segmentMetadataFlag}"
+        #puts "  .sequenceLength = #{@pduHeader.sequenceLength}"
+        #puts "  .sourceID = #{@pduHeader.sourceID}"
+        #puts "  .sequenceNumber = #{@pduHeader.sequenceNumber}"
+        #puts "  .destinationID = #{@pduHeader.destinationID}"
+        #puts "payloadData = #{payloadData}"
+
+        if (@pduHeader.pduType == 1)
+          #puts "-- PDUFileData.new(payloadData)"
+          #sleep 1
+          @pduPayload = CFDP::PDUFileData.new(payloadData)
+        else
+
+          fdCode = content[@pduHeader.headerSize]
+          payloadData = payloadData[1..payloadData.length]
+          #puts "-- fdCode = #{fdCode}"
+          #sleep 1
+          @pduPayload = case fdCode
+            when 4 then CFDP::PDUEOF.new(payloadData)
+            when 5 then CFDP::PDUFinished.new(payloadData)
+            when 6 then CFDP::PDUACK.new(payloadData)
+            when 7 then CFDP::PDUMetadata.new(payloadData)
+            when 8 then CFDP::PDUNAK.new(payloadData)
+            when 9 then raise "Not implemented Prompt PDU"
+            when 12 then raise "Not implemented Keep Alive PDU"
+            else raise "Unknown directive code"
+          end  
+        end
+        #puts "+"
+        #sleep 1
+      end
+    end
+
+    def pack
+
+      packet = @pduHeader.pack + @pduPayload.pack
+      crc = []
+
+      if @pduHeader.crcFlag == 1
+
+        crc_calc = CFDP.calculateCRC(packet.dup)
+        crc = [Utils_visiona.getBits(crc_calc, 9, 16),
+              Utils_visiona.getBits(crc_calc, 1, 8)]
+      end 
+
+      return packet + crc
+    end
+  end # end class pduPacket
+end # end module CFDP
+```
+
+### `pduPrompt.rb`
+
+**경로:** `gsw/cosmos/lib/cfdp/src/pduPrompt.rb`
+
+
+```ruby
+require "utils_visiona/utils" unless defined?(UTILS_VISIONA)
+
+module CFDP
+
+	class PDUPrompt
+
+		attr_reader :length
+		attr_accessor :responseRequired
+		@@fdCode = 9
+		@@exactlyLength = 1
+		@@totalVariblesInstanceds = 2
+
+		def initialize(*content)
+
+			if (content[0].is_a?(Array))
+
+				content = content[0]
+				Utils_visiona.verifyLength("less", content.length, @@exactlyLength)
+				@responseRequired = Utils_visiona.getBits(content[0], 8, 8)
+				setLength
+
+			elsif (content[0].is_a?(Hash))
+
+				content = content[0]
+				@responseRequired = content[:responseRequired] unless content[:responseRequired].nil?
+			end
+		end
+
+		def valid?
+
+			begin; setLength; rescue; return false; end
+			Utils_visiona.compareValues(self.instance_variables.length, @@totalVariblesInstanceds, "variables instanceds")
+			return true
+		end
+
+		def setLength
+
+			# 1 for fdCode and 1 for response
+			@length = 1 + 1
+		end
+
+		def pack
+
+			valid?
+			binArray = Array.new
+			binArray << @@fdCode
+			binArray << (@responseRequired<<7)
+		end
+
+		def to_s
+
+			output = ""
+			output << "This is the beggining of the PDUPrompt\n"
+			output << "Response Required is #{@responseRequired} (0-NAK; 1-KeepAlive)\n"
+			output << "This is the ending of the PDUPrompt\n"
+			return output
+		end
+	end # end class PDUPrompt
+end # end module CFDP
+```

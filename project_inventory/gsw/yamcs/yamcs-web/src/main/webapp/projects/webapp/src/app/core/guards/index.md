@@ -3,38 +3,793 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AttachContextGuard.ts`
 
-file--AttachContextGuard.ts
-file--AuthGuard.ts
-file--ClearContextGuard.ts
-file--MayAccessAdminAreaGuard.ts
-file--MayControlAccessGuard.ts
-file--MayControlArchivingGuard.ts
-file--MayControlCommandQueueGuard.ts
-file--MayControlServicesGuard.ts
-file--MayGetMissionDatabaseGuard.ts
-file--MayReadEventsGuard.ts
-file--MayReadSystemInfoGuard.ts
-file--OpenIDCallbackGuard.ts
-file--ServerSideOpenIDCallbackGuard.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/AttachContextGuard.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { YamcsService } from '@yamcs/webapp-sdk';
+
+export const attachContextGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(AttachContextGuard).canActivate(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class AttachContextGuard {
+  constructor(
+    private yamcsService: YamcsService,
+    private router: Router,
+    private location: Location,
+  ) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    let instanceId: string = route.queryParams['c'];
+    let processorId: string | undefined;
+    if (instanceId.indexOf('__') !== -1) {
+      const parts = instanceId.split('__');
+      instanceId = parts[0];
+      processorId = parts[1];
+    }
+
+    return new Promise<boolean>((resolve, reject) => {
+      this.yamcsService
+        .setContext(instanceId, processorId)
+        .then(() => resolve(true))
+        .catch((err) => {
+          if (err.statusCode === 404) {
+            this.router
+              .navigate(['/404'], {
+                queryParams: { page: state.url },
+              })
+              .then(() => {
+                // Keep the attempted URL in the address bar.
+                this.location.replaceState(state.url);
+              });
+          } else {
+            this.router.navigate(['/down']).then(() => {
+              // Keep the attempted URL in the address bar.
+              this.location.replaceState(state.url);
+            });
+          }
+          resolve(false);
+        });
+    });
+  }
+}
 ```
 
-## 항목
+### `AuthGuard.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/AttachContextGuard.ts`](file--AttachContextGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/AuthGuard.ts`](file--AuthGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/ClearContextGuard.ts`](file--ClearContextGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayAccessAdminAreaGuard.ts`](file--MayAccessAdminAreaGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlAccessGuard.ts`](file--MayControlAccessGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlArchivingGuard.ts`](file--MayControlArchivingGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlCommandQueueGuard.ts`](file--MayControlCommandQueueGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlServicesGuard.ts`](file--MayControlServicesGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayGetMissionDatabaseGuard.ts`](file--MayGetMissionDatabaseGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayReadEventsGuard.ts`](file--MayReadEventsGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayReadSystemInfoGuard.ts`](file--MayReadSystemInfoGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/OpenIDCallbackGuard.ts`](file--OpenIDCallbackGuard.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/ServerSideOpenIDCallbackGuard.ts`](file--ServerSideOpenIDCallbackGuard.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/AuthGuard.ts`
+
+
+```typescript
+import { APP_BASE_HREF } from '@angular/common';
+import { Inject, Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import {
+  AuthInfo,
+  AuthService,
+  ConfigService,
+  OpenIDConnectInfo,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+
+export const authGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(AuthGuard).canActivate(route, state);
+};
+
+export const authGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(AuthGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class AuthGuard {
+  private authInfo: AuthInfo;
+
+  constructor(
+    @Inject(APP_BASE_HREF) private baseHref: string,
+    private authService: AuthService,
+    private yamcs: YamcsService,
+    private router: Router,
+    private configService: ConfigService,
+  ) {
+    this.authInfo = configService.getAuthInfo();
+  }
+
+  async canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): Promise<boolean> {
+    try {
+      await this.authService.loginAutomatically();
+      this.yamcs.yamcsClient.prepareWebSocketClient();
+      return true;
+    } catch (err: any) {
+      if (err.name === 'NetworkError' || err.name === 'TypeError') {
+        // TypeError is how Fetch API reports network or CORS failure
+        this.router.navigate(['/down'], { skipLocationChange: true });
+        return false;
+      } else {
+        if (this.configService.getConfig().logoutRedirectUrl) {
+          this.authService.logout(true /* redirect to external login */);
+        } else {
+          this.authService.logout(false);
+        }
+        if (this.authInfo.openid) {
+          const redirectURI =
+            this.authService.buildServerSideOpenIDRedirectURI();
+          window.location.href = this.buildRedirector(
+            this.authInfo.openid,
+            redirectURI,
+            state.url,
+          );
+        } else if (!this.configService.getConfig().disableLoginForm) {
+          const redirectURI = this.authService.buildOpenIDRedirectURI();
+          window.location.href = this.buildRedirector(
+            {
+              clientId: 'yamcs-web',
+              authorizationEndpoint: `${location.protocol}//${location.host}${this.baseHref}auth/authorize`,
+              scope: 'openid',
+            },
+            redirectURI,
+            state.url,
+          );
+        }
+        return false;
+      }
+    }
+  }
+
+  async canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): Promise<boolean> {
+    return this.canActivate(route, state);
+  }
+
+  private buildRedirector(
+    openid: OpenIDConnectInfo,
+    redirectURI: string,
+    next: string,
+  ) {
+    // The current client-side URL gets passed as state
+    // When the whole OIDC setup is done, we will get it back on the /oidc-browser-callback route
+    // together with a code that we can exchange for a valid Yamcs access token.
+    const state = utils.toBase64URL(next);
+
+    let url = openid.authorizationEndpoint;
+    url += `?client_id=${encodeURIComponent(openid.clientId)}`;
+    url += `&state=${state}`;
+    url += '&response_mode=query';
+    url += '&response_type=code';
+    url += `&scope=${encodeURIComponent(openid.scope)}`;
+    url += `&redirect_uri=${encodeURIComponent(redirectURI)}`;
+
+    return url;
+  }
+}
+```
+
+### `ClearContextGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/ClearContextGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { CanActivateFn } from '@angular/router';
+import { YamcsService } from '@yamcs/webapp-sdk';
+
+export const clearContextGuardFn: CanActivateFn = () =>
+  inject(ClearContextGuard).canActivate();
+
+@Injectable({ providedIn: 'root' })
+class ClearContextGuard {
+  constructor(private yamcsService: YamcsService) {}
+
+  canActivate() {
+    this.yamcsService.clearContext();
+    return true;
+  }
+}
+```
+
+### `MayAccessAdminAreaGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayAccessAdminAreaGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayAccessAdminAreaGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayAccessAdminAreaGuard).canActivate(route, state);
+};
+
+export const mayAccessAdminAreaGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayAccessAdminAreaGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayAccessAdminAreaGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('web.AccessAdminArea')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayControlAccessGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlAccessGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayControlAccessGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlAccessGuard).canActivate(route, state);
+};
+
+export const mayControlAccessGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlAccessGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayControlAccessGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('ControlAccess')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayControlArchivingGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlArchivingGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayControlArchivingGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlArchivingGuard).canActivate(route, state);
+};
+
+export const mayControlArchivingGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlArchivingGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayControlArchivingGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('ControlArchiving')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayControlCommandQueueGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlCommandQueueGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayControlCommandQueueGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlCommandQueueGuard).canActivate(route, state);
+};
+
+export const mayControlCommandQueueGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlCommandQueueGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayControlCommandQueueGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('ControlCommandQueue')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayControlServicesGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayControlServicesGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayControlServicesGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlServicesGuard).canActivate(route, state);
+};
+
+export const mayControlServicesGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayControlServicesGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayControlServicesGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('ControlServices')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayGetMissionDatabaseGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayGetMissionDatabaseGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayGetMissionDatabaseGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayGetMissionDatabaseGuard).canActivate(route, state);
+};
+
+export const mayGetMissionDatabaseGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayGetMissionDatabaseGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayGetMissionDatabaseGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('GetMissionDatabase')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayReadEventsGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayReadEventsGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayReadEventsGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayReadEventsGuard).canActivate(route, state);
+};
+
+export const mayReadEventsGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayReadEventsGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayReadEventsGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('ReadEvents')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `MayReadSystemInfoGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/MayReadSystemInfoGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivateChildFn,
+  CanActivateFn,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
+import { AuthService } from '@yamcs/webapp-sdk';
+
+export const mayReadSystemInfoGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayReadSystemInfoGuard).canActivate(route, state);
+};
+
+export const mayReadSystemInfoGuardChildFn: CanActivateChildFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot,
+) => {
+  return inject(MayReadSystemInfoGuard).canActivateChild(route, state);
+};
+
+@Injectable({ providedIn: 'root' })
+class MayReadSystemInfoGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    if (this.authService.getUser()!.hasSystemPrivilege('ReadSystemInfo')) {
+      return true;
+    }
+
+    this.router.navigate(['/403'], { queryParams: { page: state.url } });
+    return false;
+  }
+
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+  ): boolean {
+    return this.canActivate(route, state);
+  }
+}
+```
+
+### `OpenIDCallbackGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/OpenIDCallbackGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
+import { AuthService, utils } from '@yamcs/webapp-sdk';
+
+export const openIDCallbackGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+) => {
+  return inject(OpenIDCallbackGuard).canActivate(route);
+};
+
+@Injectable({ providedIn: 'root' })
+class OpenIDCallbackGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  async canActivate(route: ActivatedRouteSnapshot) {
+    const oidcState = route.queryParamMap.get('state');
+    const oidcCode = route.queryParamMap.get('code');
+    // Note: this callback usually gives us a "session_state" as well. We're ignoring
+    // that as long as we don't have a need for it.
+
+    if (!oidcCode) {
+      console.error('Unexpected callback. Could not find query param: "code"');
+      return false;
+    }
+
+    // Exchange our upstream code for a Yamcs-level access token.
+    await this.authService.loginWithAuthorizationCode(oidcCode);
+
+    // At this point, everything worked. Yamcs cookies are in place. And we
+    // can navigate the user to the original attempted URL.
+    if (oidcState) {
+      this.router.navigateByUrl(utils.fromBase64URL(oidcState));
+    } else {
+      this.router.navigateByUrl('/');
+    }
+
+    return false;
+  }
+}
+```
+
+### `ServerSideOpenIDCallbackGuard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/core/guards/ServerSideOpenIDCallbackGuard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
+import { AuthService, utils } from '@yamcs/webapp-sdk';
+
+export const serverSideOpenIDCallbackGuardFn: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+) => {
+  return inject(ServerSideOpenIDCallbackGuard).canActivate(route);
+};
+
+@Injectable({ providedIn: 'root' })
+class ServerSideOpenIDCallbackGuard {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
+
+  async canActivate(route: ActivatedRouteSnapshot) {
+    const oidcState = route.queryParamMap.get('state');
+    const oidcCode = route.queryParamMap.get('code');
+    // Note: this callback usually gives us a "session_state" as well. We're ignoring
+    // that as long as we don't have a need for it.
+
+    if (!oidcCode) {
+      console.error('Unexpected callback. Could not find query param: "code"');
+      return false;
+    }
+
+    // Generate custom encoded data for interpretation by Yamcs when exchanging
+    // the upstream code for an upstream access token (the browser does not need to
+    // know about upstream tokens).
+    const thirdPartyData = utils.generateUnsignedJWT({
+      code: oidcCode,
+      redirect_uri: this.authService.buildServerSideOpenIDRedirectURI(),
+    });
+
+    // Exchange our upstream code for a Yamcs-level access token.
+    await this.authService.loginWithAuthorizationCode(`oidc ${thirdPartyData}`);
+
+    // At this point, everything worked. Yamcs cookies are in place. And we
+    // can navigate the user to the original attempted URL.
+    if (oidcState) {
+      this.router.navigateByUrl(utils.fromBase64URL(oidcState));
+    } else {
+      this.router.navigateByUrl('/');
+    }
+
+    return false;
+  }
+}
+```

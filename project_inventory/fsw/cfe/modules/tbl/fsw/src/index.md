@@ -3,34 +3,6458 @@
 
 **경로:** `fsw/cfe/modules/tbl/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_tbl_api.c`
 
-file--cfe_tbl_api.c
-file--cfe_tbl_dispatch.c
-file--cfe_tbl_dispatch.h
-file--cfe_tbl_internal.c
-file--cfe_tbl_internal.h
-file--cfe_tbl_module_all.h
-file--cfe_tbl_task.c
-file--cfe_tbl_task.h
-file--cfe_tbl_task_cmds.c
-file--cfe_tbl_task_cmds.h
-file--cfe_tbl_verify.h
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_api.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_tbl_api.c
+**
+** Purpose:  cFE Table Services (TBL) library API source file
+**
+** Author:   D. Kobe/the Hammers Company, Inc.
+**
+** Notes:
+**
+*/
+
+/*
+** Required header files...
+*/
+#include "cfe_tbl_module_all.h"
+
+#include <string.h>
+
+/*
+** Local Macros
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Register(CFE_TBL_Handle_t *TblHandlePtr, const char *Name, size_t Size, uint16 TblOptionFlags,
+                              CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr)
+{
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = NULL;
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = NULL;
+    CFE_TBL_LoadBuff_t *        WorkingBufferPtr;
+    CFE_TBL_CritRegRec_t *      CritRegRecPtr = NULL;
+    int32                       Status;
+    size_t                      NameLen;
+    int16                       RegIndx;
+    CFE_ES_AppId_t              ThisAppId;
+    char                        AppName[OS_MAX_API_NAME]           = {"UNKNOWN"};
+    char                        TblName[CFE_TBL_MAX_FULL_NAME_LEN] = {""};
+    CFE_TBL_Handle_t            AccessIndex;
+
+    if (TblHandlePtr == NULL || Name == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    /* Check to make sure calling application is legit */
+    Status = CFE_ES_GetAppID(&ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Assume we can't make a table and return a bad handle for now */
+        *TblHandlePtr = CFE_TBL_BAD_TABLE_HANDLE;
+
+        /* Make sure specified table name is not too long or too short */
+        NameLen = strlen(Name);
+        if ((NameLen > CFE_MISSION_TBL_MAX_NAME_LENGTH) || (NameLen == 0))
+        {
+            Status = CFE_TBL_ERR_INVALID_NAME;
+
+            /* Perform a buffer overrun safe copy of name for debug log message */
+            strncpy(TblName, Name, sizeof(TblName) - 1);
+            TblName[sizeof(TblName) - 1] = '\0';
+            CFE_ES_WriteToSysLog("%s: Table Name (%s) is bad length (%d)", __func__, TblName, (int)NameLen);
+        }
+        else
+        {
+            /* Generate application specific table name */
+            CFE_TBL_FormTableName(TblName, Name, ThisAppId);
+
+            /* Make sure the specified size is acceptable */
+            /* Single buffered tables are allowed to be up to CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE */
+            /* Double buffered tables are allowed to be up to CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE  */
+            if (Size == 0)
+            {
+                Status = CFE_TBL_ERR_INVALID_SIZE;
+
+                CFE_ES_WriteToSysLog("%s: Table %s has size of zero\n", __func__, Name);
+            }
+            else if ((Size > CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE) &&
+                     ((TblOptionFlags & CFE_TBL_OPT_BUFFER_MSK) == CFE_TBL_OPT_SNGL_BUFFER))
+            {
+                Status = CFE_TBL_ERR_INVALID_SIZE;
+
+                CFE_ES_WriteToSysLog("%s: Single Buffered Table '%s' has size %d > %d\n", __func__, Name, (int)Size,
+                                     CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE);
+            }
+            else if ((Size > CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE) &&
+                     ((TblOptionFlags & CFE_TBL_OPT_BUFFER_MSK) == CFE_TBL_OPT_DBL_BUFFER))
+            {
+                Status = CFE_TBL_ERR_INVALID_SIZE;
+
+                CFE_ES_WriteToSysLog("%s: Dbl Buffered Table '%s' has size %d > %d\n", __func__, Name, (int)Size,
+                                     CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE);
+            }
+
+            /* Verify Table Option settings are legal */
+            /* User defined table addresses are only legal for single buffered, dump-only, non-critical tables */
+            if ((TblOptionFlags & CFE_TBL_OPT_USR_DEF_MSK) == (CFE_TBL_OPT_USR_DEF_ADDR & CFE_TBL_OPT_USR_DEF_MSK))
+            {
+                if (((TblOptionFlags & CFE_TBL_OPT_BUFFER_MSK) == CFE_TBL_OPT_DBL_BUFFER) ||
+                    ((TblOptionFlags & CFE_TBL_OPT_LD_DMP_MSK) == CFE_TBL_OPT_LOAD_DUMP) ||
+                    ((TblOptionFlags & CFE_TBL_OPT_CRITICAL_MSK) == CFE_TBL_OPT_CRITICAL))
+                {
+                    Status = CFE_TBL_ERR_INVALID_OPTIONS;
+
+                    CFE_ES_WriteToSysLog("%s: User Def tbl '%s' cannot be dbl buff, load/dump or critical\n", __func__,
+                                         Name);
+                }
+            }
+            else if ((TblOptionFlags & CFE_TBL_OPT_LD_DMP_MSK) == CFE_TBL_OPT_DUMP_ONLY)
+            {
+                /* Dump Only tables cannot be double buffered, nor critical */
+                if (((TblOptionFlags & CFE_TBL_OPT_BUFFER_MSK) == CFE_TBL_OPT_DBL_BUFFER) ||
+                    ((TblOptionFlags & CFE_TBL_OPT_CRITICAL_MSK) == CFE_TBL_OPT_CRITICAL))
+                {
+                    Status = CFE_TBL_ERR_INVALID_OPTIONS;
+
+                    CFE_ES_WriteToSysLog("%s: Dump Only tbl '%s' cannot be double buffered or critical\n", __func__,
+                                         Name);
+                }
+            }
+        }
+    }
+    else /* Application ID was invalid */
+    {
+        CFE_ES_WriteToSysLog("%s: Bad AppId(%lu)\n", __func__, CFE_RESOURCEID_TO_ULONG(ThisAppId));
+    }
+
+    /* If input parameters appear acceptable, register the table */
+    if (Status == CFE_SUCCESS)
+    {
+        /* Lock Registry for update.  This prevents two applications from        */
+        /* trying to register/share tables at the same location at the same time */
+        CFE_TBL_LockRegistry();
+
+        /* Check for duplicate table name */
+        RegIndx = CFE_TBL_FindTableInRegistry(TblName);
+
+        /* Check to see if table is already in the registry */
+        if (RegIndx != CFE_TBL_NOT_FOUND)
+        {
+            /* Get pointer to Registry Record Entry to speed up processing */
+            RegRecPtr = &CFE_TBL_Global.Registry[RegIndx];
+
+            /* If this app previously owned the table, then allow them to re-register */
+            if (CFE_RESOURCEID_TEST_EQUAL(RegRecPtr->OwnerAppId, ThisAppId))
+            {
+                /* If the new table is the same size as the old, then no need to reallocate memory */
+                if (Size != RegRecPtr->Size)
+                {
+                    /* If the new size is different, the old table must deleted      */
+                    /* but this function can't do that because it is probably shared */
+                    /* and is probably still being accessed.  Someone else will need */
+                    /* to clean up this mess.                                        */
+                    Status = CFE_TBL_ERR_DUPLICATE_DIFF_SIZE;
+
+                    CFE_ES_WriteToSysLog("%s: Attempt to register existing table ('%s') with different size(%d!=%d)\n",
+                                         __func__, TblName, (int)Size, (int)RegRecPtr->Size);
+                }
+                else
+                {
+                    /* Warn calling application that this is a duplicate registration */
+                    Status = CFE_TBL_WARN_DUPLICATE;
+
+                    /* Find the existing access descriptor for the table       */
+                    /* and return the same handle that was returned previously */
+                    AccessIndex = RegRecPtr->HeadOfAccessList;
+                    while ((AccessIndex != CFE_TBL_END_OF_LIST) && (*TblHandlePtr == CFE_TBL_BAD_TABLE_HANDLE))
+                    {
+                        if ((CFE_TBL_Global.Handles[AccessIndex].UsedFlag == true) &&
+                            CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Handles[AccessIndex].AppId, ThisAppId) &&
+                            (CFE_TBL_Global.Handles[AccessIndex].RegIndex == RegIndx))
+                        {
+                            *TblHandlePtr = AccessIndex;
+                        }
+                        else
+                        {
+                            AccessIndex = CFE_TBL_Global.Handles[AccessIndex].NextLink;
+                        }
+                    }
+                }
+            }
+            else /* Duplicate named table owned by another Application */
+            {
+                Status = CFE_TBL_ERR_DUPLICATE_NOT_OWNED;
+
+                CFE_ES_WriteToSysLog("%s: App(%lu) Registering Duplicate Table '%s' owned by App(%lu)\n", __func__,
+                                     CFE_RESOURCEID_TO_ULONG(ThisAppId), TblName,
+                                     CFE_RESOURCEID_TO_ULONG(RegRecPtr->OwnerAppId));
+            }
+        }
+        else /* Table not already in registry */
+        {
+            /* Locate empty slot in table registry */
+            RegIndx = CFE_TBL_FindFreeRegistryEntry();
+        }
+
+        /* Check to make sure we found a free entry in registry */
+        if (RegIndx == CFE_TBL_NOT_FOUND)
+        {
+            Status = CFE_TBL_ERR_REGISTRY_FULL;
+            CFE_ES_WriteToSysLog("%s: Registry full\n", __func__);
+        }
+
+        /* If this is a duplicate registration, no other work is required */
+        if (Status != CFE_TBL_WARN_DUPLICATE)
+        {
+            /* Search Access Descriptor Array for free Descriptor */
+            *TblHandlePtr = CFE_TBL_FindFreeHandle();
+
+            /* Check to make sure there was a handle available */
+            if (*TblHandlePtr == CFE_TBL_END_OF_LIST)
+            {
+                Status = CFE_TBL_ERR_HANDLES_FULL;
+                CFE_ES_WriteToSysLog("%s: No more free handles\n", __func__);
+            }
+
+            /* If no errors, then initialize the table registry entry     */
+            /* and return the registry index to the caller as the handle  */
+            if ((Status & CFE_SEVERITY_BITMASK) != CFE_SEVERITY_ERROR)
+            {
+                /* Get pointer to Registry Record Entry to speed up processing */
+                RegRecPtr = &CFE_TBL_Global.Registry[RegIndx];
+
+                /* Initialize Registry Record to default settings */
+                CFE_TBL_InitRegistryRecord(RegRecPtr);
+
+                if ((TblOptionFlags & CFE_TBL_OPT_USR_DEF_MSK) != (CFE_TBL_OPT_USR_DEF_ADDR & CFE_TBL_OPT_USR_DEF_MSK))
+                {
+                    RegRecPtr->UserDefAddr = false;
+
+                    /* Allocate the memory buffer(s) for the table and inactive table, if necessary */
+                    Status = CFE_ES_GetPoolBuf(&RegRecPtr->Buffers[0].BufferPtr, CFE_TBL_Global.Buf.PoolHdl, Size);
+                    if (Status < 0)
+                    {
+                        CFE_ES_WriteToSysLog("%s: 1st Buf Alloc GetPool fail Stat=0x%08X MemPoolHndl=0x%08lX\n",
+                                             __func__, (unsigned int)Status,
+                                             CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.Buf.PoolHdl));
+                    }
+                    else
+                    {
+                        /* Zero the memory buffer */
+                        Status = CFE_SUCCESS;
+                        memset(RegRecPtr->Buffers[0].BufferPtr, 0x0, Size);
+                    }
+                }
+                else
+                {
+                    /* Set buffer pointer to NULL for user defined address tables */
+                    RegRecPtr->Buffers[0].BufferPtr = NULL;
+                    RegRecPtr->UserDefAddr          = true;
+                }
+
+                if (((TblOptionFlags & CFE_TBL_OPT_DBL_BUFFER) == CFE_TBL_OPT_DBL_BUFFER) &&
+                    ((Status & CFE_SEVERITY_BITMASK) != CFE_SEVERITY_ERROR))
+                {
+                    /* Allocate memory for the dedicated secondary buffer */
+                    Status = CFE_ES_GetPoolBuf(&RegRecPtr->Buffers[1].BufferPtr, CFE_TBL_Global.Buf.PoolHdl, Size);
+                    if (Status < 0)
+                    {
+                        CFE_ES_WriteToSysLog("%s: 2nd Buf Alloc GetPool fail Stat=0x%08X MemPoolHndl=0x%08lX\n",
+                                             __func__, (unsigned int)Status,
+                                             CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.Buf.PoolHdl));
+                    }
+                    else
+                    {
+                        /* Zero the dedicated secondary buffer */
+                        Status = CFE_SUCCESS;
+                        memset(RegRecPtr->Buffers[1].BufferPtr, 0x0, Size);
+                    }
+
+                    RegRecPtr->ActiveBufferIndex = 0;
+                    RegRecPtr->DoubleBuffered    = true;
+                }
+                else /* Single Buffered Table */
+                {
+                    RegRecPtr->DoubleBuffered    = false;
+                    RegRecPtr->ActiveBufferIndex = 0;
+                }
+
+                if ((Status & CFE_SEVERITY_BITMASK) != CFE_SEVERITY_ERROR)
+                {
+                    /* Save the size of the table */
+                    RegRecPtr->Size = Size;
+
+                    /* Save the Callback function pointer */
+                    RegRecPtr->ValidationFuncPtr = TblValidationFuncPtr;
+
+                    /* Save Table Name in Registry */
+                    strncpy(RegRecPtr->Name, TblName, sizeof(RegRecPtr->Name) - 1);
+                    RegRecPtr->Name[sizeof(RegRecPtr->Name) - 1] = '\0';
+
+                    /* Set the "Dump Only" flag to value based upon selected option */
+                    if ((TblOptionFlags & CFE_TBL_OPT_LD_DMP_MSK) == CFE_TBL_OPT_DUMP_ONLY)
+                    {
+                        RegRecPtr->DumpOnly = true;
+                    }
+                    else
+                    {
+                        RegRecPtr->DumpOnly = false;
+                    }
+
+                    /* Initialize the Table Access Descriptor */
+                    AccessDescPtr = &CFE_TBL_Global.Handles[*TblHandlePtr];
+
+                    AccessDescPtr->AppId    = ThisAppId;
+                    AccessDescPtr->LockFlag = false;
+                    AccessDescPtr->Updated  = false;
+
+                    if ((RegRecPtr->DumpOnly) && (!RegRecPtr->UserDefAddr))
+                    {
+                        /* Dump Only Tables are assumed to be loaded at all times    */
+                        /* unless the address is specified by the application. In    */
+                        /* that case, it isn't loaded until the address is specified */
+                        RegRecPtr->TableLoadedOnce = true;
+                    }
+
+                    AccessDescPtr->RegIndex = RegIndx;
+
+                    AccessDescPtr->PrevLink = CFE_TBL_END_OF_LIST; /* We are the head of the list */
+                    AccessDescPtr->NextLink = CFE_TBL_END_OF_LIST; /* We are the end of the list */
+
+                    AccessDescPtr->UsedFlag = true;
+
+                    /* Make sure the Table Registry entry points to First Access Descriptor */
+                    RegRecPtr->HeadOfAccessList = *TblHandlePtr;
+
+                    /* If the table is a critical table, allocate space for it in the Critical Data Store */
+                    /* OR locate its previous incarnation there and extract its previous contents */
+                    if ((TblOptionFlags & CFE_TBL_OPT_CRITICAL_MSK) == CFE_TBL_OPT_CRITICAL)
+                    {
+                        /* Register a CDS under the table name and determine if the table already exists there */
+                        Status = CFE_ES_RegisterCDSEx(&RegRecPtr->CDSHandle, Size, TblName, true);
+
+                        if (Status == CFE_ES_CDS_ALREADY_EXISTS)
+                        {
+                            Status = CFE_TBL_GetWorkingBuffer(&WorkingBufferPtr, RegRecPtr, true);
+
+                            if (Status != CFE_SUCCESS)
+                            {
+                                /* Unable to get a working buffer - this error is not really */
+                                /* possible at this point during table registration.  But we */
+                                /* do need to handle the error case because if the function */
+                                /* call did fail, WorkingBufferPtr would be a NULL pointer. */
+                                CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+                                CFE_ES_WriteToSysLog("%s: Failed to get work buffer for '%s.%s' (ErrCode=0x%08X)\n",
+                                                     __func__, AppName, Name, (unsigned int)Status);
+                            }
+                            else
+                            {
+                                /* CDS exists for this table - try to restore the data */
+                                Status = CFE_ES_RestoreFromCDS(WorkingBufferPtr->BufferPtr, RegRecPtr->CDSHandle);
+
+                                if (Status != CFE_SUCCESS)
+                                {
+                                    CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+                                    CFE_ES_WriteToSysLog("%s: Failed to recover '%s.%s' from CDS (ErrCode=0x%08X)\n",
+                                                         __func__, AppName, Name, (unsigned int)Status);
+                                }
+                            }
+
+                            if (Status != CFE_SUCCESS)
+                            {
+                                /* Treat a restore from existing CDS error the same as */
+                                /* after a power-on reset (CDS was created but is empty) */
+                                Status = CFE_SUCCESS;
+                            }
+                            else
+                            {
+                                /* Try to locate the associated information in the Critical Table Registry */
+                                CFE_TBL_FindCriticalTblInfo(&CritRegRecPtr, RegRecPtr->CDSHandle);
+
+                                if ((CritRegRecPtr != NULL) && (CritRegRecPtr->TableLoadedOnce))
+                                {
+                                    strncpy(WorkingBufferPtr->DataSource, CritRegRecPtr->LastFileLoaded,
+                                            sizeof(WorkingBufferPtr->DataSource) - 1);
+                                    WorkingBufferPtr->DataSource[sizeof(WorkingBufferPtr->DataSource) - 1] = '\0';
+                                    WorkingBufferPtr->FileCreateTimeSecs    = CritRegRecPtr->FileCreateTimeSecs;
+                                    WorkingBufferPtr->FileCreateTimeSubSecs = CritRegRecPtr->FileCreateTimeSubSecs;
+                                    strncpy(RegRecPtr->LastFileLoaded, CritRegRecPtr->LastFileLoaded,
+                                            sizeof(RegRecPtr->LastFileLoaded) - 1);
+                                    RegRecPtr->LastFileLoaded[sizeof(RegRecPtr->LastFileLoaded) - 1] = '\0';
+                                    RegRecPtr->TimeOfLastUpdate.Seconds    = CritRegRecPtr->TimeOfLastUpdate.Seconds;
+                                    RegRecPtr->TimeOfLastUpdate.Subseconds = CritRegRecPtr->TimeOfLastUpdate.Subseconds;
+                                    RegRecPtr->TableLoadedOnce             = CritRegRecPtr->TableLoadedOnce;
+
+                                    /* Compute the CRC on the specified table buffer */
+                                    WorkingBufferPtr->Crc = CFE_ES_CalculateCRC(
+                                        WorkingBufferPtr->BufferPtr, RegRecPtr->Size, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+                                    /* Make sure everyone who sees the table knows that it has been updated */
+                                    CFE_TBL_NotifyTblUsersOfUpdate(RegRecPtr);
+
+                                    /* Make sure the caller realizes the contents have been initialized */
+                                    Status = CFE_TBL_INFO_RECOVERED_TBL;
+                                }
+                                else
+                                {
+                                    /* If an error occurred while trying to get the previous contents registry info, */
+                                    /* Log the error in the System Log and pretend like we created a new CDS */
+                                    CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+                                    CFE_ES_WriteToSysLog("%s: Failed to recover '%s.%s' info from CDS TblReg\n",
+                                                         __func__, AppName, Name);
+                                    Status = CFE_SUCCESS;
+                                }
+                            }
+
+                            /* Mark the table as critical for future reference */
+                            RegRecPtr->CriticalTable = true;
+                        }
+
+                        if (Status == CFE_SUCCESS)
+                        {
+                            /* Find and initialize a free entry in the Critical Table Registry */
+                            CFE_TBL_FindCriticalTblInfo(&CritRegRecPtr, CFE_ES_CDS_BAD_HANDLE);
+
+                            if (CritRegRecPtr != NULL)
+                            {
+                                CritRegRecPtr->CDSHandle = RegRecPtr->CDSHandle;
+                                strncpy(CritRegRecPtr->Name, TblName, sizeof(CritRegRecPtr->Name) - 1);
+                                CritRegRecPtr->Name[sizeof(CritRegRecPtr->Name) - 1] = '\0';
+                                CritRegRecPtr->FileCreateTimeSecs                    = 0;
+                                CritRegRecPtr->FileCreateTimeSubSecs                 = 0;
+                                CritRegRecPtr->LastFileLoaded[0]                     = '\0';
+                                CritRegRecPtr->TimeOfLastUpdate.Seconds              = 0;
+                                CritRegRecPtr->TimeOfLastUpdate.Subseconds           = 0;
+                                CritRegRecPtr->TableLoadedOnce                       = false;
+
+                                CFE_ES_CopyToCDS(CFE_TBL_Global.CritRegHandle, CFE_TBL_Global.CritReg);
+                            }
+                            else
+                            {
+                                CFE_ES_WriteToSysLog("%s: Failed to find a free Crit Tbl Reg Rec for '%s'\n", __func__,
+                                                     RegRecPtr->Name);
+                            }
+
+                            /* Mark the table as critical for future reference */
+                            RegRecPtr->CriticalTable = true;
+                        }
+                        else if (Status != CFE_TBL_INFO_RECOVERED_TBL)
+                        {
+                            CFE_ES_WriteToSysLog("%s: Failed to register '%s.%s' as a CDS (ErrCode=0x%08X)\n", __func__,
+                                                 AppName, Name, (unsigned int)Status);
+
+                            /* Notify caller that although they asked for it to be critical, it isn't */
+                            Status = CFE_TBL_WARN_NOT_CRITICAL;
+                        }
+                    }
+
+                    /* The last step of the registration process is claiming ownership.    */
+                    /* By making it the last step, other APIs do not have to lock registry */
+                    /* to share the table or get its address because registry entries that */
+                    /* are unowned are not checked to see if they match names, etc.        */
+                    RegRecPtr->OwnerAppId = ThisAppId;
+                }
+            }
+        }
+
+        /* Unlock Registry for update */
+        CFE_TBL_UnlockRegistry();
+    }
+
+    /* On Error conditions, notify ground of screw up */
+    if (Status < 0)
+    {
+        /* Make sure the returned handle is invalid when an error occurs */
+        *TblHandlePtr = CFE_TBL_BAD_TABLE_HANDLE;
+
+        /* Translate AppID of caller into App Name */
+        CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+        CFE_EVS_SendEventWithAppID(CFE_TBL_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                   "%s Failed to Register '%s', Status=0x%08X", AppName, TblName, (unsigned int)Status);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Share(CFE_TBL_Handle_t *TblHandlePtr, const char *TblName)
+{
+    int32                       Status;
+    CFE_ES_AppId_t              ThisAppId;
+    int16                       RegIndx;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr            = NULL;
+    CFE_TBL_RegistryRec_t *     RegRecPtr                = NULL;
+    char                        AppName[OS_MAX_API_NAME] = {"UNKNOWN"};
+
+    if (TblHandlePtr == NULL || TblName == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    /* Get a valid Application ID for calling App */
+    Status = CFE_ES_GetAppID(&ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Lock Registry for update.  This prevents two applications from        */
+        /* trying to register/share tables at the same location at the same time */
+        CFE_TBL_LockRegistry();
+
+        RegIndx = CFE_TBL_FindTableInRegistry(TblName);
+
+        /* If we found the table, then get a new Access Descriptor and initialize it */
+        if (RegIndx != CFE_TBL_NOT_FOUND)
+        {
+            /* Get pointer to Registry Record Entry to speed up processing */
+            RegRecPtr = &CFE_TBL_Global.Registry[RegIndx];
+
+            /* Search Access Descriptor Array for free Descriptor */
+            *TblHandlePtr = CFE_TBL_FindFreeHandle();
+
+            /* Check to make sure there was a handle available */
+            if (*TblHandlePtr == CFE_TBL_END_OF_LIST)
+            {
+                Status = CFE_TBL_ERR_HANDLES_FULL;
+                CFE_ES_WriteToSysLog("%s: No more free handles\n", __func__);
+            }
+            else
+            {
+                /* Initialize the Table Access Descriptor */
+                AccessDescPtr = &CFE_TBL_Global.Handles[*TblHandlePtr];
+
+                AccessDescPtr->AppId    = ThisAppId;
+                AccessDescPtr->LockFlag = false;
+                AccessDescPtr->Updated  = false;
+
+                /* Check current state of table in order to set Notification flags properly */
+                if (RegRecPtr->TableLoadedOnce)
+                {
+                    AccessDescPtr->Updated = true;
+                }
+
+                AccessDescPtr->RegIndex = RegIndx;
+                AccessDescPtr->UsedFlag = true;
+
+                AccessDescPtr->PrevLink = CFE_TBL_END_OF_LIST; /* We are the new head of the list */
+                AccessDescPtr->NextLink = RegRecPtr->HeadOfAccessList;
+
+                /* Make sure the old head of the list now sees this as the head */
+                CFE_TBL_Global.Handles[RegRecPtr->HeadOfAccessList].PrevLink = *TblHandlePtr;
+
+                /* Make sure the Registry Record see this as the head of the list */
+                RegRecPtr->HeadOfAccessList = *TblHandlePtr;
+            }
+        }
+        else /* Table could not be found in registry */
+        {
+            Status = CFE_TBL_ERR_INVALID_NAME;
+
+            CFE_ES_WriteToSysLog("%s: Table '%s' not found in Registry\n", __func__, TblName);
+        }
+
+        CFE_TBL_UnlockRegistry();
+    }
+    else /* Application ID was invalid */
+    {
+        CFE_ES_WriteToSysLog("%s: Bad AppId(%lu)\n", __func__, CFE_RESOURCEID_TO_ULONG(ThisAppId));
+    }
+
+    /* On Error conditions, notify ground of screw up */
+    if (Status < 0)
+    {
+        /* Translate AppID of caller into App Name */
+        CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+        CFE_EVS_SendEventWithAppID(CFE_TBL_SHARE_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                   "%s Failed to Share '%s', Status=0x%08X", AppName, TblName, (unsigned int)Status);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Unregister(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status;
+    CFE_ES_AppId_t              ThisAppId;
+    CFE_TBL_RegistryRec_t *     RegRecPtr                = NULL;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr            = NULL;
+    char                        AppName[OS_MAX_API_NAME] = {"UNKNOWN"};
+
+    /* Verify that this application has the right to perform operation */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get a pointer to the relevant Access Descriptor */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+
+        /* Get a pointer to the relevant entry in the registry */
+        RegRecPtr = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+        /* Verify that the application unregistering the table owns the table */
+        if (CFE_RESOURCEID_TEST_EQUAL(RegRecPtr->OwnerAppId, ThisAppId))
+        {
+            /* Mark table as free, although, technically, it isn't free until the */
+            /* linked list of Access Descriptors has no links in it.              */
+            /* NOTE: Allocated memory is freed when all Access Links have been    */
+            /*       removed.  This allows Applications to continue to use the    */
+            /*       data until they acknowledge that the table has been removed. */
+            RegRecPtr->OwnerAppId = CFE_TBL_NOT_OWNED;
+
+            /* Remove Table Name */
+            RegRecPtr->Name[0] = '\0';
+        }
+
+        /* Remove the Access Descriptor Link from linked list */
+        /* NOTE: If this removes the last access link, then   */
+        /*       memory buffers are set free as well.         */
+        CFE_TBL_RemoveAccessLink(TblHandle);
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%d\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+    }
+
+    /* On Error conditions, notify ground of screw up */
+    if (Status < 0)
+    {
+        /* Translate AppID of caller into App Name */
+        CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+        CFE_EVS_SendEventWithAppID(CFE_TBL_UNREGISTER_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                   "%s Failed to Unregister '?', Status=0x%08X", AppName, (unsigned int)Status);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Load(CFE_TBL_Handle_t TblHandle, CFE_TBL_SrcEnum_t SrcType, const void *SrcDataPtr)
+{
+    int32                       Status;
+    CFE_ES_AppId_t              ThisAppId;
+    CFE_TBL_LoadBuff_t *        WorkingBufferPtr;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr;
+    CFE_TBL_RegistryRec_t *     RegRecPtr;
+    char                        AppName[OS_MAX_API_NAME] = {"UNKNOWN"};
+    bool                        FirstTime                = false;
+
+    if (SrcDataPtr == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    /* Verify access rights and get a valid Application ID for calling App */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_HANDLE_ACCESS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                   CFE_TBL_Global.TableTaskAppId, "%s: No access to Tbl Handle=%d", AppName,
+                                   (int)TblHandle);
+
+        return Status;
+    }
+
+    AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+    RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+    /* Translate AppID of caller into App Name */
+    CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+    /* Initialize return pointer to NULL */
+    WorkingBufferPtr = NULL;
+
+    /* Check to see if this is a dump only table */
+    if (RegRecPtr->DumpOnly)
+    {
+        if ((!RegRecPtr->UserDefAddr) || (RegRecPtr->TableLoadedOnce))
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_LOADING_A_DUMP_ONLY_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId, "%s: Attempted to load Dump Only Tbl '%s'",
+                                       AppName, RegRecPtr->Name);
+
+            return CFE_TBL_ERR_DUMP_ONLY;
+        }
+
+        /* The Application is allowed to call Load once when the address  */
+        /* of the dump only table is being defined by the application.    */
+        RegRecPtr->Buffers[0].BufferPtr = (void *)SrcDataPtr;
+        RegRecPtr->TableLoadedOnce      = true;
+
+        snprintf(RegRecPtr->Buffers[0].DataSource, sizeof(RegRecPtr->Buffers[0].DataSource), "Addr 0x%08lX",
+                 (unsigned long)SrcDataPtr);
+        RegRecPtr->Buffers[0].FileCreateTimeSecs    = 0;
+        RegRecPtr->Buffers[0].FileCreateTimeSubSecs = 0;
+
+        CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_SUCCESS_INF_EID, CFE_EVS_EventType_DEBUG, CFE_TBL_Global.TableTaskAppId,
+                                   "Successfully loaded '%s' from '%s'", RegRecPtr->Name,
+                                   RegRecPtr->Buffers[0].DataSource);
+
+        return CFE_SUCCESS;
+    }
+
+    /* Loads by an Application are not allowed if a table load is already in progress */
+    if (RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_IN_PROGRESS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                   CFE_TBL_Global.TableTaskAppId, "%s: Load already in progress for '%s'", AppName,
+                                   RegRecPtr->Name);
+
+        return CFE_TBL_ERR_LOAD_IN_PROGRESS;
+    }
+
+    /* Obtain a working buffer (either the table's dedicated buffer or one of the shared buffers) */
+    Status = CFE_TBL_GetWorkingBuffer(&WorkingBufferPtr, RegRecPtr, true);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_NO_WORK_BUFFERS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                   CFE_TBL_Global.TableTaskAppId, "%s: Failed to get Working Buffer (Stat=%u)", AppName,
+                                   (unsigned int)Status);
+
+        return Status;
+    }
+
+    /* Perform appropriate update to working buffer */
+    /* Determine whether the load is to occur from a file or from a block of memory */
+    switch (SrcType)
+    {
+        case CFE_TBL_SRC_FILE:
+            /* Load the data from the file into the specified buffer */
+            Status = CFE_TBL_LoadFromFile(AppName, WorkingBufferPtr, RegRecPtr, (const char *)SrcDataPtr);
+
+            if ((Status == CFE_TBL_WARN_PARTIAL_LOAD) && (!RegRecPtr->TableLoadedOnce))
+            {
+                /* Uninitialized tables cannot be loaded with partial table loads */
+                /* Partial loads can only occur on previously loaded tables.      */
+                CFE_EVS_SendEventWithAppID(CFE_TBL_PARTIAL_LOAD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                           CFE_TBL_Global.TableTaskAppId,
+                                           "%s: Attempted to load from partial Tbl '%s' from '%s' (Stat=%u)", AppName,
+                                           RegRecPtr->Name, (const char *)SrcDataPtr, (unsigned int)Status);
+
+                Status = CFE_TBL_ERR_PARTIAL_LOAD;
+            }
+
+            break;
+        case CFE_TBL_SRC_ADDRESS:
+            /* When the source is a block of memory, it is assumed to be a complete load */
+            memcpy(WorkingBufferPtr->BufferPtr, (uint8 *)SrcDataPtr, RegRecPtr->Size);
+
+            snprintf(WorkingBufferPtr->DataSource, sizeof(WorkingBufferPtr->DataSource), "Addr 0x%08lX",
+                     (unsigned long)SrcDataPtr);
+            WorkingBufferPtr->FileCreateTimeSecs    = 0;
+            WorkingBufferPtr->FileCreateTimeSubSecs = 0;
+
+            /* Compute the CRC on the specified table buffer */
+            WorkingBufferPtr->Crc =
+                CFE_ES_CalculateCRC(WorkingBufferPtr->BufferPtr, RegRecPtr->Size, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+            break;
+        default:
+            CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_TYPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId,
+                                       "%s: Attempted to load from illegal source type=%d", AppName, (int)SrcType);
+
+            Status = CFE_TBL_ERR_ILLEGAL_SRC_TYPE;
+    }
+
+    /* If the data was successfully loaded, then validate its contents */
+    if ((Status >= CFE_SUCCESS) && (RegRecPtr->ValidationFuncPtr != NULL))
+    {
+        Status = (RegRecPtr->ValidationFuncPtr)(WorkingBufferPtr->BufferPtr);
+
+        if (Status > CFE_SUCCESS)
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_VAL_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                       "%s: Validation func return code invalid (Stat=%u) for '%s'", AppName,
+                                       (unsigned int)Status, RegRecPtr->Name);
+
+            Status = -1;
+        }
+
+        if (Status < 0)
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_VALIDATION_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId,
+                                       "%s: Validation func reports table invalid (Stat=%u) for '%s'", AppName,
+                                       (unsigned int)Status, RegRecPtr->Name);
+
+            /* Zero out the buffer to remove any bad data */
+            memset(WorkingBufferPtr->BufferPtr, 0, RegRecPtr->Size);
+        }
+    }
+
+    /* Perform the table update to complete the load */
+    if (Status < CFE_SUCCESS)
+    {
+        /* The load has had a problem, free the working buffer for another attempt */
+        if ((!RegRecPtr->DoubleBuffered) && (RegRecPtr->TableLoadedOnce == true))
+        {
+            /* For single buffered tables, freeing entails resetting flag */
+            CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Taken = false;
+        }
+
+        /* For double buffered tables, freeing buffer is simple */
+        RegRecPtr->LoadInProgress = CFE_TBL_NO_LOAD_IN_PROGRESS;
+
+        return Status;
+    }
+
+    FirstTime = !RegRecPtr->TableLoadedOnce;
+
+    /* If this is not the first load, then the data must be moved from the inactive buffer      */
+    /* to the active buffer to complete the load.  First loads are done directly to the active. */
+    if (!FirstTime)
+    {
+        /* Force the table update */
+        RegRecPtr->LoadPending = true;
+
+        Status = CFE_TBL_UpdateInternal(TblHandle, RegRecPtr, AccessDescPtr);
+
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_UPDATE_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                       "%s: Failed to update '%s' (Stat=%u)", AppName, RegRecPtr->Name,
+                                       (unsigned int)Status);
+        }
+    }
+    else
+    {
+        /* On initial loads, make sure registry is given file/address of data source */
+        strncpy(RegRecPtr->LastFileLoaded, WorkingBufferPtr->DataSource, sizeof(RegRecPtr->LastFileLoaded) - 1);
+        RegRecPtr->LastFileLoaded[sizeof(RegRecPtr->LastFileLoaded) - 1] = '\0';
+
+        CFE_TBL_NotifyTblUsersOfUpdate(RegRecPtr);
+
+        /* If the table is a critical table, update the appropriate CDS with the new data */
+        if (RegRecPtr->CriticalTable == true)
+        {
+            CFE_TBL_UpdateCriticalTblCDS(RegRecPtr);
+        }
+
+        Status = CFE_SUCCESS;
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* The first time a table is loaded, the event message is DEBUG */
+        /* to help eliminate a flood of events during a startup         */
+        CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_SUCCESS_INF_EID,
+                                   FirstTime ? CFE_EVS_EventType_DEBUG : CFE_EVS_EventType_INFORMATION,
+                                   CFE_TBL_Global.TableTaskAppId, "Successfully loaded '%s' from '%s'", RegRecPtr->Name,
+                                   RegRecPtr->LastFileLoaded);
+
+        /* Save the index of the table for housekeeping telemetry */
+        CFE_TBL_Global.LastTblUpdated = AccessDescPtr->RegIndex;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Update(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status;
+    CFE_ES_AppId_t              ThisAppId;
+    CFE_TBL_RegistryRec_t *     RegRecPtr                = NULL;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr            = NULL;
+    char                        AppName[OS_MAX_API_NAME] = {"UNKNOWN"};
+
+    /* Verify access rights and get a valid Application ID for calling App */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get pointers to pertinent records in registry and handles */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+        RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+        Status = CFE_TBL_UpdateInternal(TblHandle, RegRecPtr, AccessDescPtr);
+
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: App(%lu) fail to update Tbl '%s' (Stat=0x%08X)\n", __func__,
+                                 CFE_RESOURCEID_TO_ULONG(ThisAppId), RegRecPtr->Name, (unsigned int)Status);
+        }
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%d\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+    }
+
+    if (Status != CFE_ES_ERR_RESOURCEID_NOT_VALID)
+    {
+        /* Translate AppID of caller into App Name */
+        CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+    }
+
+    /* On Error conditions, notify ground of screw up */
+    if (Status < 0)
+    {
+        if (RegRecPtr != NULL)
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_UPDATE_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                       "%s Failed to Update '%s', Status=0x%08X", AppName, RegRecPtr->Name,
+                                       (unsigned int)Status);
+        }
+        else
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_UPDATE_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                       "%s Failed to Update '?', Status=0x%08X", AppName, (unsigned int)Status);
+        }
+    }
+    else
+    {
+        /* If there was a warning (ie - Table is currently locked), then do not issue a message */
+        if (Status == CFE_SUCCESS)
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_UPDATE_SUCCESS_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                       CFE_TBL_Global.TableTaskAppId, "%s Successfully Updated '%s'", AppName,
+                                       RegRecPtr->Name);
+
+            /* Save the index of the table for housekeeping telemetry */
+            CFE_TBL_Global.LastTblUpdated = AccessDescPtr->RegIndex;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_GetAddress(void **TblPtr, CFE_TBL_Handle_t TblHandle)
+{
+    int32          Status;
+    CFE_ES_AppId_t ThisAppId;
+
+    if (TblPtr == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    /* Assume failure at returning the table address */
+    *TblPtr = NULL;
+
+    /* Validate the calling application's AppID */
+    Status = CFE_ES_GetAppID(&ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        Status = CFE_TBL_GetAddressInternal(TblPtr, TblHandle, ThisAppId);
+
+        /* NOTE: GetAddressInternal calls GetNextNotification which may not */
+        /*       be equal to CFE_SUCCESS and still not be an error.         */
+        /*       Therefore, a write to the SysLog is unnecessary.           */
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: Bad AppId=%lu\n", __func__, CFE_RESOURCEID_TO_ULONG(ThisAppId));
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_ReleaseAddress(CFE_TBL_Handle_t TblHandle)
+{
+    int32          Status;
+    CFE_ES_AppId_t ThisAppId;
+
+    /* Verify that this application has the right to perform operation */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Clear the lock flag */
+        CFE_TBL_Global.Handles[TblHandle].LockFlag = false;
+
+        /* Return any pending warning or info status indicators */
+        Status = CFE_TBL_GetNextNotification(TblHandle);
+
+        /* NOTE: GetNextNotification may not return CFE_SUCCESS  */
+        /*       and still not be an error.                      */
+        /*       Therefore, a write to the SysLog is unnecessary.*/
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%u\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(ThisAppId), (unsigned int)TblHandle);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_GetAddresses(void **TblPtrs[], uint16 NumTables, const CFE_TBL_Handle_t TblHandles[])
+{
+    uint16         i;
+    int32          Status;
+    CFE_ES_AppId_t ThisAppId;
+
+    if (TblPtrs == NULL || TblHandles == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    /* Assume failure at returning the table addresses */
+    for (i = 0; i < NumTables; i++)
+    {
+        *TblPtrs[i] = NULL;
+    }
+
+    /* Validate the calling application's AppID */
+    Status = CFE_ES_GetAppID(&ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        for (i = 0; i < NumTables; i++)
+        {
+            /* Continue to get the return status until one returns something other than CFE_SUCCESS */
+            if (Status == CFE_SUCCESS)
+            {
+                Status = CFE_TBL_GetAddressInternal(TblPtrs[i], TblHandles[i], ThisAppId);
+            }
+            else
+            {
+                /* Don't bother getting the status of other tables once one has returned */
+                /* a non CFE_SUCCESS value.                                              */
+                CFE_TBL_GetAddressInternal(TblPtrs[i], TblHandles[i], ThisAppId);
+            }
+        }
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: Bad AppId=%lu\n", __func__, CFE_RESOURCEID_TO_ULONG(ThisAppId));
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_ReleaseAddresses(uint16 NumTables, const CFE_TBL_Handle_t TblHandles[])
+{
+    CFE_Status_t Status = CFE_SUCCESS;
+    uint16       i;
+
+    if (TblHandles == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    for (i = 0; i < NumTables; i++)
+    {
+        /* Continue to get the return status until one returns something other than CFE_SUCCESS */
+        if (Status == CFE_SUCCESS)
+        {
+            Status = CFE_TBL_ReleaseAddress(TblHandles[i]);
+        }
+        else
+        {
+            /* Don't bother getting the status of other tables once one has returned */
+            /* a non CFE_SUCCESS value.                                              */
+            CFE_TBL_ReleaseAddress(TblHandles[i]);
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Validate(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status;
+    CFE_ES_AppId_t              ThisAppId;
+    CFE_TBL_RegistryRec_t *     RegRecPtr;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr;
+    char                        AppName[OS_MAX_API_NAME] = {"UNKNOWN"};
+
+    /* Verify that this application has the right to perform operation */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get pointers to pertinent records in registry and handles */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+        RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+        CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+        /* Identify the image to be validated, starting with the Inactive Buffer */
+        if (RegRecPtr->ValidateInactiveIndex != CFE_TBL_NO_VALIDATION_PENDING)
+        {
+            /* Identify whether the Inactive Buffer is a shared buffer or a dedicated one */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                /* Call the Application's Validation function for the Inactive Buffer */
+                Status =
+                    (RegRecPtr->ValidationFuncPtr)(RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)].BufferPtr);
+
+                /* Allow buffer to be activated after passing validation */
+                if (Status == CFE_SUCCESS)
+                {
+                    RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)].Validated = true;
+                }
+            }
+            else
+            {
+                /* Call the Application's Validation function for the appropriate shared buffer */
+                Status = (RegRecPtr->ValidationFuncPtr)(CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].BufferPtr);
+
+                /* Allow buffer to be activated after passing validation */
+                if (Status == CFE_SUCCESS)
+                {
+                    CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Validated = true;
+                }
+            }
+
+            if (Status == CFE_SUCCESS)
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_VALIDATION_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                           CFE_TBL_Global.TableTaskAppId, "%s validation successful for Inactive '%s'",
+                                           AppName, RegRecPtr->Name);
+            }
+            else
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_VALIDATION_ERR_EID, CFE_EVS_EventType_ERROR,
+                                           CFE_TBL_Global.TableTaskAppId,
+                                           "%s validation failed for Inactive '%s', Status=0x%08X", AppName,
+                                           RegRecPtr->Name, (unsigned int)Status);
+
+                if (Status > CFE_SUCCESS)
+                {
+                    CFE_ES_WriteToSysLog("%s: App(%lu) Validation func return code invalid (Stat=0x%08X) for '%s'\n",
+                                         __func__, CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.TableTaskAppId),
+                                         (unsigned int)Status, RegRecPtr->Name);
+                }
+            }
+
+            /* Save the result of the Validation function for the Table Services Task */
+            CFE_TBL_Global.ValidationResults[RegRecPtr->ValidateInactiveIndex].Result = Status;
+
+            /* Once validation is complete, set flags to indicate response is ready */
+            CFE_TBL_Global.ValidationResults[RegRecPtr->ValidateInactiveIndex].State = CFE_TBL_VALIDATION_PERFORMED;
+            RegRecPtr->ValidateInactiveIndex                                         = CFE_TBL_NO_VALIDATION_PENDING;
+
+            /* Since the validation was successfully performed (although maybe not a successful result) */
+            /* return a success status */
+            Status = CFE_SUCCESS;
+        }
+        else if (RegRecPtr->ValidateActiveIndex != CFE_TBL_NO_VALIDATION_PENDING)
+        {
+            /* Perform validation on the currently active table buffer */
+            /* Identify whether the Active Buffer is a shared buffer or a dedicated one */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                /* Call the Application's Validation function for the Dedicated Active Buffer */
+                Status = (RegRecPtr->ValidationFuncPtr)(RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr);
+            }
+            else
+            {
+                /* Call the Application's Validation function for the static buffer */
+                Status = (RegRecPtr->ValidationFuncPtr)(RegRecPtr->Buffers[0].BufferPtr);
+            }
+
+            if (Status == CFE_SUCCESS)
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_VALIDATION_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                           CFE_TBL_Global.TableTaskAppId, "%s validation successful for Active '%s'",
+                                           AppName, RegRecPtr->Name);
+            }
+            else
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_VALIDATION_ERR_EID, CFE_EVS_EventType_ERROR,
+                                           CFE_TBL_Global.TableTaskAppId,
+                                           "%s validation failed for Active '%s', Status=0x%08X", AppName,
+                                           RegRecPtr->Name, (unsigned int)Status);
+
+                if (Status > CFE_SUCCESS)
+                {
+                    CFE_ES_WriteToSysLog("%s: App(%lu) Validation func return code invalid (Stat=0x%08X) for '%s'\n",
+                                         __func__, CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.TableTaskAppId),
+                                         (unsigned int)Status, RegRecPtr->Name);
+                }
+            }
+
+            /* Save the result of the Validation function for the Table Services Task */
+            CFE_TBL_Global.ValidationResults[RegRecPtr->ValidateActiveIndex].Result = Status;
+
+            /* Once validation is complete, reset the flags */
+            CFE_TBL_Global.ValidationResults[RegRecPtr->ValidateActiveIndex].State = CFE_TBL_VALIDATION_PERFORMED;
+            RegRecPtr->ValidateActiveIndex                                         = CFE_TBL_NO_VALIDATION_PENDING;
+
+            /* Since the validation was successfully performed (although maybe not a successful result) */
+            /* return a success status */
+            Status = CFE_SUCCESS;
+        }
+        else
+        {
+            Status = CFE_TBL_INFO_NO_VALIDATION_PENDING;
+        }
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%d\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Manage(CFE_TBL_Handle_t TblHandle)
+{
+    int32 Status           = CFE_SUCCESS;
+    bool  FinishedManaging = false;
+
+    while (!FinishedManaging)
+    {
+        /* Determine if the table has a validation or update that needs to be performed */
+        Status = CFE_TBL_GetStatus(TblHandle);
+
+        if (Status == CFE_TBL_INFO_VALIDATION_PENDING)
+        {
+            /* Validate the specified Table */
+            Status = CFE_TBL_Validate(TblHandle);
+
+            if (Status != CFE_SUCCESS)
+            {
+                /* If an error occurred during Validate, then do not perform any more managing */
+                FinishedManaging = true;
+            }
+        }
+        else if (Status == CFE_TBL_INFO_DUMP_PENDING)
+        {
+            /* Dump the specified Table */
+            Status = CFE_TBL_DumpToBuffer(TblHandle);
+
+            /* After a Dump, always assume we are done (Dumps are on DumpOnly tables and cannot be "Updated") */
+            FinishedManaging = true;
+        }
+        else if (Status == CFE_TBL_INFO_UPDATE_PENDING)
+        {
+            /* Update the specified Table */
+            Status = CFE_TBL_Update(TblHandle);
+
+            /* If the update performed nominally, let the caller know the table has changed */
+            if (Status == CFE_SUCCESS)
+            {
+                Status = CFE_TBL_INFO_UPDATED;
+            }
+
+            /* After an Update, always assume we are done and return Update Status */
+            FinishedManaging = true;
+        }
+        else
+        {
+            FinishedManaging = true;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_GetStatus(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status;
+    CFE_ES_AppId_t              ThisAppId;
+    CFE_TBL_RegistryRec_t *     RegRecPtr;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr;
+
+    /* Verify that this application has the right to perform operation */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get pointers to pertinent records in registry and handles */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+        RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+        /* Perform validations prior to performing any updates */
+        if (RegRecPtr->LoadPending)
+        {
+            Status = CFE_TBL_INFO_UPDATE_PENDING;
+        }
+        else if ((RegRecPtr->ValidateActiveIndex != CFE_TBL_NO_VALIDATION_PENDING) ||
+                 (RegRecPtr->ValidateInactiveIndex != CFE_TBL_NO_VALIDATION_PENDING))
+        {
+            Status = CFE_TBL_INFO_VALIDATION_PENDING;
+        }
+        else if (RegRecPtr->DumpControlIndex != CFE_TBL_NO_DUMP_PENDING)
+        {
+            Status = CFE_TBL_INFO_DUMP_PENDING;
+        }
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%d\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_GetInfo(CFE_TBL_Info_t *TblInfoPtr, const char *TblName)
+{
+    int32                  Status = CFE_SUCCESS;
+    int16                  RegIndx;
+    int32                  NumAccessDescriptors = 0;
+    CFE_TBL_RegistryRec_t *RegRecPtr;
+    CFE_TBL_Handle_t       HandleIterator;
+
+    if (TblInfoPtr == NULL || TblName == NULL)
+    {
+        return CFE_TBL_BAD_ARGUMENT;
+    }
+
+    RegIndx = CFE_TBL_FindTableInRegistry(TblName);
+
+    /* If we found the table, then extract the information from the Registry */
+    if (RegIndx != CFE_TBL_NOT_FOUND)
+    {
+        /* Get pointer to Registry Record Entry to speed up processing */
+        RegRecPtr = &CFE_TBL_Global.Registry[RegIndx];
+
+        /* Return table characteristics */
+        TblInfoPtr->Size            = RegRecPtr->Size;
+        TblInfoPtr->DoubleBuffered  = RegRecPtr->DoubleBuffered;
+        TblInfoPtr->DumpOnly        = RegRecPtr->DumpOnly;
+        TblInfoPtr->UserDefAddr     = RegRecPtr->UserDefAddr;
+        TblInfoPtr->TableLoadedOnce = RegRecPtr->TableLoadedOnce;
+
+        /* Return information on last load and update */
+        TblInfoPtr->TimeOfLastUpdate      = RegRecPtr->TimeOfLastUpdate;
+        TblInfoPtr->FileCreateTimeSecs    = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSecs;
+        TblInfoPtr->FileCreateTimeSubSecs = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSubSecs;
+        TblInfoPtr->Crc                   = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].Crc;
+        strncpy(TblInfoPtr->LastFileLoaded, RegRecPtr->LastFileLoaded, sizeof(TblInfoPtr->LastFileLoaded) - 1);
+        TblInfoPtr->LastFileLoaded[sizeof(TblInfoPtr->LastFileLoaded) - 1] = 0;
+
+        /* Count the number of Access Descriptors to determine the number of users */
+        HandleIterator = RegRecPtr->HeadOfAccessList;
+        while (HandleIterator != CFE_TBL_END_OF_LIST)
+        {
+            NumAccessDescriptors++;
+            HandleIterator = CFE_TBL_Global.Handles[HandleIterator].NextLink;
+        }
+
+        TblInfoPtr->NumUsers = NumAccessDescriptors;
+
+        TblInfoPtr->Critical = RegRecPtr->CriticalTable;
+    }
+    else
+    {
+        Status = CFE_TBL_ERR_INVALID_NAME;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_DumpToBuffer(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = NULL;
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = NULL;
+    CFE_TBL_DumpControl_t *     DumpCtrlPtr   = NULL;
+    CFE_TIME_SysTime_t          DumpTime;
+
+    /* Make sure the table has been requested to be dumped */
+    Status = CFE_TBL_GetStatus(TblHandle);
+    if (Status == CFE_TBL_INFO_DUMP_PENDING)
+    {
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+        RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+        DumpCtrlPtr   = &CFE_TBL_Global.DumpControlBlocks[RegRecPtr->DumpControlIndex];
+
+        /* Copy the contents of the active buffer to the assigned dump buffer */
+        memcpy(DumpCtrlPtr->DumpBufferPtr->BufferPtr, RegRecPtr->Buffers[0].BufferPtr, DumpCtrlPtr->Size);
+
+        /* Save the current time so that the header in the dump file can have the correct time */
+        DumpTime                                          = CFE_TIME_GetTime();
+        DumpCtrlPtr->DumpBufferPtr->FileCreateTimeSecs    = DumpTime.Seconds;
+        DumpCtrlPtr->DumpBufferPtr->FileCreateTimeSubSecs = DumpTime.Subseconds;
+
+        /* Disassociate the dump request from the table */
+        RegRecPtr->DumpControlIndex = CFE_TBL_NO_DUMP_PENDING;
+
+        /* Notify the Table Services Application that the dump buffer is ready to be written to a file */
+        DumpCtrlPtr->State = CFE_TBL_DUMP_PERFORMED;
+
+        Status = CFE_SUCCESS;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_Modified(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = NULL;
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = NULL;
+    CFE_TBL_Handle_t            AccessIterator;
+    CFE_ES_AppId_t              ThisAppId;
+    size_t                      FilenameLen;
+
+    /* Verify that this application has the right to perform operation */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get pointers to pertinent records in registry and handles */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+        RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+        /* If the table is a critical table, update the appropriate CDS with the new data */
+        if (RegRecPtr->CriticalTable == true)
+        {
+            CFE_TBL_UpdateCriticalTblCDS(RegRecPtr);
+        }
+
+        /* Keep a record of change for the ground operators reference */
+        RegRecPtr->TimeOfLastUpdate                                      = CFE_TIME_GetTime();
+        RegRecPtr->LastFileLoaded[sizeof(RegRecPtr->LastFileLoaded) - 1] = '\0';
+
+        /* Update CRC on contents of table */
+        RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].Crc = CFE_ES_CalculateCRC(
+            RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr, RegRecPtr->Size, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+        FilenameLen = strlen(RegRecPtr->LastFileLoaded);
+        if (FilenameLen < (sizeof(RegRecPtr->LastFileLoaded) - 4))
+        {
+            strncpy(&RegRecPtr->LastFileLoaded[FilenameLen], "(*)", 4);
+        }
+        else
+        {
+            strncpy(&RegRecPtr->LastFileLoaded[sizeof(RegRecPtr->LastFileLoaded) - 4], "(*)", 4);
+        }
+
+        AccessIterator = RegRecPtr->HeadOfAccessList;
+        while (AccessIterator != CFE_TBL_END_OF_LIST)
+        {
+            /* Only notify *OTHER* applications that the contents have changed */
+            if (!CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Handles[AccessIterator].AppId, ThisAppId))
+            {
+                CFE_TBL_Global.Handles[AccessIterator].Updated = true;
+            }
+
+            AccessIterator = CFE_TBL_Global.Handles[AccessIterator].NextLink;
+        }
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%d\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_TBL_NotifyByMessage(CFE_TBL_Handle_t TblHandle, CFE_SB_MsgId_t MsgId, CFE_MSG_FcnCode_t CommandCode,
+                                     uint32 Parameter)
+{
+    int32                       Status;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = NULL;
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = NULL;
+    CFE_ES_AppId_t              ThisAppId;
+
+    /* Verify that this application has the right to perform operation */
+    Status = CFE_TBL_ValidateAccess(TblHandle, &ThisAppId);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get pointers to pertinent records in registry and handles */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+        RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+        /* Verify that the calling application is the table owner */
+        if (CFE_RESOURCEID_TEST_EQUAL(RegRecPtr->OwnerAppId, ThisAppId))
+        {
+            RegRecPtr->NotificationMsgId = MsgId;
+            RegRecPtr->NotificationCC    = CommandCode;
+            RegRecPtr->NotificationParam = Parameter;
+            RegRecPtr->NotifyByMsg       = true;
+        }
+        else
+        {
+            Status = CFE_TBL_ERR_NO_ACCESS;
+            CFE_ES_WriteToSysLog("%s: App(%lu) does not own Tbl Handle=%d\n", __func__,
+                                 CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+        }
+    }
+
+    return Status;
+}
 ```
 
-## 항목
+### `cfe_tbl_dispatch.c`
 
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_api.c`](file--cfe_tbl_api.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_dispatch.c`](file--cfe_tbl_dispatch.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_dispatch.h`](file--cfe_tbl_dispatch.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_internal.c`](file--cfe_tbl_internal.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_internal.h`](file--cfe_tbl_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_module_all.h`](file--cfe_tbl_module_all.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task.c`](file--cfe_tbl_task.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task.h`](file--cfe_tbl_task.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task_cmds.c`](file--cfe_tbl_task_cmds.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task_cmds.h`](file--cfe_tbl_task_cmds.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/fsw/src/cfe_tbl_verify.h`](file--cfe_tbl_verify.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_dispatch.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_tbl_task.c
+**
+** Subsystem: cFE TBL Task
+**
+** Author: David Kobe (the Hammers Company, Inc.)
+**
+** Notes:
+**
+*/
+
+/*
+** Required header files
+*/
+#include "cfe_tbl_module_all.h"
+
+#include <string.h>
+
+/**
+** Data structure of a single record in #CFE_TBL_CmdHandlerTbl
+*/
+typedef struct
+{
+    CFE_SB_MsgId_t           MsgId;          /**< \brief Acceptable Message ID */
+    CFE_MSG_FcnCode_t        CmdCode;        /**< \brief Acceptable Command Code (if necessary) */
+    size_t                   ExpectedLength; /**< \brief Expected Message Length (in bytes) including message header */
+    CFE_TBL_MsgProcFuncPtr_t MsgProcFuncPtr; /**< \brief Pointer to function to handle message  */
+    CFE_TBL_MsgType_t        MsgTypes;       /**< \brief Message Type (i.e. - with/without Cmd Code)   */
+} CFE_TBL_CmdHandlerTblRec_t;
+
+/*
+ * Macros to assist in building the CFE_TBL_CmdHandlerTbl -
+ *  For command handler entries, which have a command code, payload type, and a handler function
+ */
+#define CFE_TBL_ENTRY(mid, ccode, paramtype, handlerfunc, msgtype)                                             \
+    {                                                                                                          \
+        CFE_SB_MSGID_WRAP_VALUE(mid), ccode, sizeof(paramtype), (CFE_TBL_MsgProcFuncPtr_t)handlerfunc, msgtype \
+    }
+
+/* Constant Data */
+
+const CFE_TBL_CmdHandlerTblRec_t CFE_TBL_CmdHandlerTbl[] = {
+    /* SEND_HK Entry */
+    CFE_TBL_ENTRY(CFE_TBL_SEND_HK_MID, 0, CFE_TBL_NoArgsCmd_t, CFE_TBL_HousekeepingCmd, CFE_TBL_MSG_MSGTYPE),
+
+    /* Everything else */
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_NOOP_CC, CFE_TBL_NoopCmd_t, CFE_TBL_NoopCmd, CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_RESET_COUNTERS_CC, CFE_TBL_ResetCountersCmd_t, CFE_TBL_ResetCountersCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_LOAD_CC, CFE_TBL_LoadCmd_t, CFE_TBL_LoadCmd, CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_DUMP_CC, CFE_TBL_DumpCmd_t, CFE_TBL_DumpCmd, CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_VALIDATE_CC, CFE_TBL_ValidateCmd_t, CFE_TBL_ValidateCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_ACTIVATE_CC, CFE_TBL_ActivateCmd_t, CFE_TBL_ActivateCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_DUMP_REGISTRY_CC, CFE_TBL_DumpRegistryCmd_t, CFE_TBL_DumpRegistryCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_SEND_REGISTRY_CC, CFE_TBL_SendRegistryCmd_t, CFE_TBL_SendRegistryCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_DELETE_CDS_CC, CFE_TBL_DeleteCDSCmd_t, CFE_TBL_DeleteCDSCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+    CFE_TBL_ENTRY(CFE_TBL_CMD_MID, CFE_TBL_ABORT_LOAD_CC, CFE_TBL_AbortLoadCmd_t, CFE_TBL_AbortLoadCmd,
+                  CFE_TBL_CMD_MSGTYPE),
+
+    /* list terminator (keep last) */
+    {CFE_SB_MSGID_RESERVED, 0, 0, NULL, CFE_TBL_TERM_MSGTYPE}};
+
+/******************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_TaskPipe(const CFE_SB_Buffer_t *SBBufPtr)
+{
+    CFE_SB_MsgId_t       MessageID   = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t    CommandCode = 0;
+    int16                CmdIndx;
+    CFE_MSG_Size_t       ActualLength = 0;
+    CFE_TBL_CmdProcRet_t CmdStatus    = CFE_TBL_INC_ERR_CTR; /* Assume a failed command */
+
+    CFE_MSG_GetMsgId(&SBBufPtr->Msg, &MessageID);
+    CFE_MSG_GetFcnCode(&SBBufPtr->Msg, &CommandCode);
+
+    /* Search the Command Handler Table for a matching message */
+    CmdIndx = CFE_TBL_SearchCmdHndlrTbl(MessageID, CommandCode);
+
+    /* Check to see if a matching command was found */
+    if (CmdIndx >= 0)
+    {
+        /* Verify Message Length before processing */
+        CFE_MSG_GetSize(&SBBufPtr->Msg, &ActualLength);
+        if (ActualLength == CFE_TBL_CmdHandlerTbl[CmdIndx].ExpectedLength)
+        {
+            /* All checks have passed, call the appropriate message handler */
+            CmdStatus = (CFE_TBL_CmdHandlerTbl[CmdIndx].MsgProcFuncPtr)(SBBufPtr);
+        }
+        else /* Bad Message Length */
+        {
+            CFE_EVS_SendEvent(CFE_TBL_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid msg length -- ID = 0x%X, CC = %u, Len = %u, Expected = %u",
+                              (unsigned int)CFE_SB_MsgIdToValue(MessageID), (unsigned int)CommandCode,
+                              (unsigned int)ActualLength, (unsigned int)CFE_TBL_CmdHandlerTbl[CmdIndx].ExpectedLength);
+        }
+
+        /* Only update command counters when message has a command code */
+        if (CFE_TBL_CmdHandlerTbl[CmdIndx].MsgTypes == CFE_TBL_CMD_MSGTYPE)
+        {
+            if (CmdStatus == CFE_TBL_INC_CMD_CTR)
+            {
+                CFE_TBL_Global.CommandCounter++;
+            }
+            else if (CmdStatus == CFE_TBL_INC_ERR_CTR)
+            {
+                CFE_TBL_Global.CommandErrorCounter++;
+            }
+        }
+    }
+    else
+    {
+        /* Determine whether event message should be */
+        /* "Bad Command Code" or "Bad Message ID"    */
+        if (CmdIndx == CFE_TBL_BAD_CMD_CODE)
+        {
+            CFE_EVS_SendEvent(CFE_TBL_CC1_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid command code -- ID = 0x%X, CC = %u",
+                              (unsigned int)CFE_SB_MsgIdToValue(MessageID), (unsigned int)CommandCode);
+
+            /* Update the command error counter */
+            CFE_TBL_Global.CommandErrorCounter++;
+        }
+        else /* CmdIndx == CFE_TBL_BAD_MSG_ID */
+        {
+            CFE_EVS_SendEvent(CFE_TBL_MID_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid message ID -- ID = 0x%X",
+                              (unsigned int)CFE_SB_MsgIdToValue(MessageID));
+            /*
+            ** Note: we only increment the command error counter when
+            **    processing messages with command codes
+            */
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int16 CFE_TBL_SearchCmdHndlrTbl(CFE_SB_MsgId_t MessageID, uint16 CommandCode)
+{
+    int16 TblIndx    = CFE_TBL_BAD_CMD_CODE;
+    bool  FoundMsg   = false;
+    bool  FoundMatch = false;
+
+    do
+    {
+        /* Point to next entry in Command Handler Table */
+        TblIndx++;
+
+        /* Check to see if we found a matching Message ID */
+        if (CFE_SB_MsgId_Equal(CFE_TBL_CmdHandlerTbl[TblIndx].MsgId, MessageID) &&
+            (CFE_TBL_CmdHandlerTbl[TblIndx].MsgTypes != CFE_TBL_TERM_MSGTYPE))
+        {
+            /* Flag any found message IDs so that if there is an error,        */
+            /* we can determine if it was a bad message ID or bad command code */
+            FoundMsg = true;
+
+            /* If entry in the Command Handler Table is a command entry, */
+            /* then check for a matching command code                    */
+            if (CFE_TBL_CmdHandlerTbl[TblIndx].MsgTypes == CFE_TBL_CMD_MSGTYPE)
+            {
+                if (CFE_TBL_CmdHandlerTbl[TblIndx].CmdCode == CommandCode)
+                {
+                    /* Found matching message ID and Command Code */
+                    FoundMatch = true;
+                }
+            }
+            else /* Message is not a command message with specific command code */
+            {
+                /* Automatically assume a match when legit */
+                /* Message ID is all that is required      */
+                FoundMatch = true;
+            }
+        }
+    } while ((!FoundMatch) && (CFE_TBL_CmdHandlerTbl[TblIndx].MsgTypes != CFE_TBL_TERM_MSGTYPE));
+
+    /* If we failed to find a match, return a negative index */
+    if (!FoundMatch)
+    {
+        /* Determine if the message ID was bad or the command code */
+        if (FoundMsg)
+        {
+            /* A matching message ID was found, so the command code must be bad */
+            TblIndx = CFE_TBL_BAD_CMD_CODE;
+        }
+        else /* No matching message ID was found */
+        {
+            TblIndx = CFE_TBL_BAD_MSG_ID;
+        }
+    }
+
+    return TblIndx;
+}
+```
+
+### `cfe_tbl_dispatch.h`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_dispatch.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:  cFE Table Services (TBL) utility function interface file
+ *
+ * Author:   D. Kobe/the Hammers Company, Inc.
+ *
+ * Notes:
+ *
+ */
+
+#ifndef CFE_TBL_DISPATCH_H
+#define CFE_TBL_DISPATCH_H
+
+/*
+** Required header files...
+*/
+#include "cfe_tbl_api_typedefs.h"
+#include "cfe_sb_api_typedefs.h"
+#include "cfe_msg_api_typedefs.h"
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Processes command pipe messages
+**
+** \par Description
+**          Processes messages obtained from the command pipe.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in] SBBufPtr Pointer to the message received from the command pipe
+**
+*/
+void CFE_TBL_TaskPipe(const CFE_SB_Buffer_t *SBBufPtr);
+
+#endif /* CFE_TBL_DISPATCH_H */
+```
+
+### `cfe_tbl_internal.c`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_internal.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_tbl_internal.c
+**
+** Purpose:  cFE Table Services (TBL) utility function source file
+**
+** Author:   D. Kobe/the Hammers Company, Inc.
+**
+** Notes:
+**
+*/
+
+/*
+** Required header files...
+*/
+#include "cfe_tbl_module_all.h"
+
+#include <stdio.h>
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_EarlyInit(void)
+{
+    uint16 i;
+    uint32 j;
+    int32  OsStatus;
+    int32  Status;
+
+    /* Clear task global */
+    memset(&CFE_TBL_Global, 0, sizeof(CFE_TBL_Global));
+
+    /* Initialize the Table Registry */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_NUM_TABLES; i++)
+    {
+        CFE_TBL_InitRegistryRecord(&CFE_TBL_Global.Registry[i]);
+    }
+
+    /* Initialize the Table Access Descriptors nonzero values */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_NUM_HANDLES; i++)
+    {
+        CFE_TBL_Global.Handles[i].AppId    = CFE_TBL_NOT_OWNED;
+        CFE_TBL_Global.Handles[i].PrevLink = CFE_TBL_END_OF_LIST;
+        CFE_TBL_Global.Handles[i].NextLink = CFE_TBL_END_OF_LIST;
+    }
+
+    /* Initialize the Table Validation Results Records nonzero values */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS; i++)
+    {
+        CFE_TBL_Global.ValidationResults[i].State = CFE_TBL_VALIDATION_FREE;
+    }
+
+    /* Initialize the Dump-Only Table Dump Control Blocks nonzero values */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS; i++)
+    {
+        CFE_TBL_Global.DumpControlBlocks[i].State = CFE_TBL_DUMP_FREE;
+
+        /* Prevent Shared Buffers from being used until successfully allocated */
+        CFE_TBL_Global.LoadBuffs[i].Taken = true;
+    }
+
+    CFE_TBL_Global.HkTlmTblRegIndex = CFE_TBL_NOT_FOUND;
+    CFE_TBL_Global.LastTblUpdated   = CFE_TBL_NOT_FOUND;
+
+    /*
+    ** Create table registry access mutex
+    */
+    OsStatus = OS_MutSemCreate(&CFE_TBL_Global.RegistryMutex, CFE_TBL_MUT_REG_NAME, CFE_TBL_MUT_REG_VALUE);
+    if (OsStatus != OS_SUCCESS)
+    {
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    /*
+    ** Create working buffer access mutex
+    */
+    OsStatus = OS_MutSemCreate(&CFE_TBL_Global.WorkBufMutex, CFE_TBL_MUT_WORK_NAME, CFE_TBL_MUT_WORK_VALUE);
+    if (OsStatus != OS_SUCCESS)
+    {
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    /* Initialize memory partition and allocate shared table buffers. */
+    Status = CFE_ES_PoolCreate(&CFE_TBL_Global.Buf.PoolHdl, CFE_TBL_Global.Buf.Partition.Data,
+                               sizeof(CFE_TBL_Global.Buf.Partition));
+
+    if (Status < 0)
+    {
+        return Status;
+    }
+    else
+    {
+        /* Initialize each of the shared load buffers */
+        j = 0;
+        do
+        {
+            /* Allocate memory for shared load buffers */
+            Status = CFE_ES_GetPoolBuf(&CFE_TBL_Global.LoadBuffs[j].BufferPtr, CFE_TBL_Global.Buf.PoolHdl,
+                                       CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE);
+
+            if (Status < CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE)
+            {
+                return Status;
+            }
+            else
+            {
+                /* The buffer is successfully created, so allow it to be used */
+                CFE_TBL_Global.LoadBuffs[j].Taken = false;
+            }
+
+            j++;
+        } while (j < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS);
+    }
+
+    /* Try to obtain a previous image of the Critical Table Registry from the Critical Data Store */
+    Status = CFE_ES_RegisterCDSEx(&CFE_TBL_Global.CritRegHandle,
+                                  (sizeof(CFE_TBL_CritRegRec_t) * CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES),
+                                  "CFE_TBL.CritReg", true);
+
+    /* Assume for the moment that nothing is already in the CDS and zero out the Critical Table Registry */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES; i++)
+    {
+        CFE_TBL_Global.CritReg[i].CDSHandle = CFE_ES_CDS_BAD_HANDLE;
+    }
+
+    if (Status == CFE_ES_CDS_ALREADY_EXISTS)
+    {
+        /* Try to recover the Critical Table Registry from the CDS */
+        Status = CFE_ES_RestoreFromCDS(CFE_TBL_Global.CritReg, CFE_TBL_Global.CritRegHandle);
+
+        if (Status != CFE_SUCCESS)
+        {
+            /* Note if we were unable to recover error free Critical Table Registry from the CDS */
+            CFE_ES_WriteToSysLog("%s: Failed to recover Critical Table Registry (Err=0x%08X)\n", __func__,
+                                 (unsigned int)Status);
+        }
+
+        /* Whether we recovered the Critical Table Registry or not, we are successful with initialization */
+        Status = CFE_SUCCESS;
+    }
+    else if (Status != CFE_SUCCESS)
+    {
+        /* Not being able to support Critical Tables is not the end of the world */
+        /* Note the problem and move on */
+        CFE_ES_WriteToSysLog("%s: Failed to create Critical Table Registry (Err=0x%08X)\n", __func__,
+                             (unsigned int)Status);
+
+        /* Failure to support critical tables is not a good enough reason to exit the cFE on start up */
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        /* Save the initial version of the Critical Table Registry in the CDS */
+        Status = CFE_ES_CopyToCDS(CFE_TBL_Global.CritRegHandle, CFE_TBL_Global.CritReg);
+
+        if (Status != CFE_SUCCESS)
+        {
+            /* Not being able to support Critical Tables is not the end of the world */
+            /* Note the problem and move on */
+            CFE_ES_WriteToSysLog("%s: Failed to save Critical Table Registry (Err=0x%08X)\n", __func__,
+                                 (unsigned int)Status);
+
+            /* Failure to support critical tables is not a good enough reason to exit the cFE on start up */
+            Status = CFE_SUCCESS;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_InitRegistryRecord(CFE_TBL_RegistryRec_t *RegRecPtr)
+{
+    memset(RegRecPtr, 0, sizeof(*RegRecPtr));
+
+    RegRecPtr->OwnerAppId            = CFE_TBL_NOT_OWNED;
+    RegRecPtr->NotificationMsgId     = CFE_SB_INVALID_MSG_ID;
+    RegRecPtr->HeadOfAccessList      = CFE_TBL_END_OF_LIST;
+    RegRecPtr->LoadInProgress        = CFE_TBL_NO_LOAD_IN_PROGRESS;
+    RegRecPtr->ValidateActiveIndex   = CFE_TBL_NO_VALIDATION_PENDING;
+    RegRecPtr->ValidateInactiveIndex = CFE_TBL_NO_VALIDATION_PENDING;
+    RegRecPtr->CDSHandle             = CFE_ES_CDS_BAD_HANDLE;
+    RegRecPtr->DumpControlIndex      = CFE_TBL_NO_DUMP_PENDING;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_ValidateHandle(CFE_TBL_Handle_t TblHandle)
+{
+    /* Is the handle out of range? */
+    if (TblHandle >= CFE_PLATFORM_TBL_MAX_NUM_HANDLES)
+    {
+        return CFE_TBL_ERR_INVALID_HANDLE;
+    }
+    else
+    {
+        /* Check to see if the Handle is no longer valid for this Table */
+        if (CFE_TBL_Global.Handles[TblHandle].UsedFlag == false)
+        {
+            return CFE_TBL_ERR_INVALID_HANDLE;
+        }
+    }
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_ValidateAccess(CFE_TBL_Handle_t TblHandle, CFE_ES_AppId_t *AppIdPtr)
+{
+    int32 Status;
+
+    /* Check to make sure App ID is legit */
+    Status = CFE_ES_GetAppID(AppIdPtr);
+
+    if (Status != CFE_SUCCESS)
+    {
+        return Status;
+    }
+
+    /* Check table handle validity */
+    Status = CFE_TBL_ValidateHandle(TblHandle);
+
+    if (Status != CFE_SUCCESS)
+    {
+        return Status;
+    }
+
+    Status = CFE_TBL_CheckAccessRights(TblHandle, *AppIdPtr);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_CheckAccessRights(CFE_TBL_Handle_t TblHandle, CFE_ES_AppId_t ThisAppId)
+{
+    int32 Status = CFE_SUCCESS;
+
+    if (!CFE_RESOURCEID_TEST_EQUAL(ThisAppId, CFE_TBL_Global.Handles[TblHandle].AppId))
+    {
+        /* The Table Service Task always has access rights so that tables */
+        /* can be manipulated via ground command                          */
+        if (!CFE_RESOURCEID_TEST_EQUAL(ThisAppId, CFE_TBL_Global.TableTaskAppId))
+        {
+            Status = CFE_TBL_ERR_NO_ACCESS;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_RemoveAccessLink(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status        = CFE_SUCCESS;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+    /* Lock Access to the table while we modify the linked list */
+    CFE_TBL_LockRegistry();
+
+    /* If we are removing the head of the linked list, then point */
+    /* the head pointer to the link after this one                */
+    if (AccessDescPtr->PrevLink == CFE_TBL_END_OF_LIST)
+    {
+        RegRecPtr->HeadOfAccessList = AccessDescPtr->NextLink;
+
+        /* Update the next link, if there is one, to be the new head of the list */
+        if (AccessDescPtr->NextLink != CFE_TBL_END_OF_LIST)
+        {
+            CFE_TBL_Global.Handles[AccessDescPtr->NextLink].PrevLink = CFE_TBL_END_OF_LIST;
+        }
+    }
+    else /* Access Descriptor is not the head of the list */
+    {
+        /* Set the next link on the previous link to the next link of the link being removed */
+        CFE_TBL_Global.Handles[AccessDescPtr->PrevLink].NextLink = AccessDescPtr->NextLink;
+
+        /* If this link is not the end of the list, then complete two way linkage */
+        /* by setting the next link's previous link to the previous link of the link being removed */
+        if (AccessDescPtr->NextLink != CFE_TBL_END_OF_LIST)
+        {
+            CFE_TBL_Global.Handles[AccessDescPtr->NextLink].PrevLink = AccessDescPtr->PrevLink;
+        }
+    }
+
+    /* Return the Access Descriptor to the pool */
+    AccessDescPtr->UsedFlag = false;
+
+    /* If this was the last Access Descriptor for this table, we can free the memory buffers as well */
+    if (RegRecPtr->HeadOfAccessList == CFE_TBL_END_OF_LIST)
+    {
+        /* Only free memory that we have allocated.  If the image is User Defined, then don't bother */
+        if (RegRecPtr->UserDefAddr == false)
+        {
+            /* Free memory allocated to buffers */
+            Status = CFE_ES_PutPoolBuf(CFE_TBL_Global.Buf.PoolHdl, RegRecPtr->Buffers[0].BufferPtr);
+            RegRecPtr->Buffers[0].BufferPtr = NULL;
+
+            if (Status < 0)
+            {
+                CFE_ES_WriteToSysLog("%s: PutPoolBuf[0] Fail Stat=0x%08X, Hndl=0x%08lX, Buf=0x%08lX\n", __func__,
+                                     (unsigned int)Status, CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.Buf.PoolHdl),
+                                     (unsigned long)RegRecPtr->Buffers[0].BufferPtr);
+            }
+
+            /* If a double buffered table, then free the second buffer as well */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                Status = CFE_ES_PutPoolBuf(CFE_TBL_Global.Buf.PoolHdl, RegRecPtr->Buffers[1].BufferPtr);
+                RegRecPtr->Buffers[1].BufferPtr = NULL;
+
+                if (Status < 0)
+                {
+                    CFE_ES_WriteToSysLog("%s: PutPoolBuf[1] Fail Stat=0x%08X, Hndl=0x%08lX, Buf=0x%08lX\n", __func__,
+                                         (unsigned int)Status, CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.Buf.PoolHdl),
+                                         (unsigned long)RegRecPtr->Buffers[1].BufferPtr);
+                }
+            }
+            else
+            {
+                /* If a shared buffer has been allocated to the table, then release it as well */
+                if (RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+                {
+                    /* Free the working buffer */
+                    CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Taken = false;
+                    RegRecPtr->LoadInProgress                                 = CFE_TBL_NO_LOAD_IN_PROGRESS;
+                }
+            }
+        }
+    }
+
+    /* Unlock the registry to allow others to modify it */
+    CFE_TBL_UnlockRegistry();
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_GetAddressInternal(void **TblPtr, CFE_TBL_Handle_t TblHandle, CFE_ES_AppId_t ThisAppId)
+{
+    int32                       Status;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr;
+    CFE_TBL_RegistryRec_t *     RegRecPtr;
+
+    /* Check table handle validity */
+    Status = CFE_TBL_ValidateHandle(TblHandle);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Get a pointer to the Access Descriptor */
+        AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+
+        /* Verify that we are allowed access to the table */
+        Status = CFE_TBL_CheckAccessRights(TblHandle, ThisAppId);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /* Get a pointer to the Table Registry entry */
+            RegRecPtr = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+            /* If table is unowned, then owner must have unregistered it when we weren't looking */
+            if (CFE_RESOURCEID_TEST_EQUAL(RegRecPtr->OwnerAppId, CFE_TBL_NOT_OWNED))
+            {
+                Status = CFE_TBL_ERR_UNREGISTERED;
+
+                CFE_ES_WriteToSysLog("%s: App(%lu) attempt to access unowned Tbl Handle=%d\n", __func__,
+                                     CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+            }
+            else /* Table Registry Entry is valid */
+            {
+                /* Lock the table and return the current pointer */
+                AccessDescPtr->LockFlag = true;
+
+                /* Save the buffer we are using in the access descriptor */
+                /* This is used to ensure that if the buffer becomes inactive while */
+                /* we are using it, no one will modify it until we are done */
+                AccessDescPtr->BufferIndex = RegRecPtr->ActiveBufferIndex;
+
+                *TblPtr = RegRecPtr->Buffers[AccessDescPtr->BufferIndex].BufferPtr;
+
+                /* Return any pending warning or info status indicators */
+                Status = CFE_TBL_GetNextNotification(TblHandle);
+
+                /* Clear Table Updated Notify Bit so that caller only gets it once */
+                AccessDescPtr->Updated = false;
+            }
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: App(%lu) does not have access to Tbl Handle=%d\n", __func__,
+                                 CFE_RESOURCEID_TO_ULONG(ThisAppId), (int)TblHandle);
+        }
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: App(%lu) using invalid Tbl Handle=%d\n", __func__, CFE_RESOURCEID_TO_ULONG(ThisAppId),
+                             (int)TblHandle);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_GetNextNotification(CFE_TBL_Handle_t TblHandle)
+{
+    int32                       Status        = CFE_SUCCESS;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = &CFE_TBL_Global.Handles[TblHandle];
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+    if (!RegRecPtr->TableLoadedOnce)
+    {
+        /* If the table has never been loaded, return an error code for the address */
+        Status = CFE_TBL_ERR_NEVER_LOADED;
+    }
+    else if (AccessDescPtr->Updated)
+    {
+        /* If the table has been updated recently, return the update status */
+        Status = CFE_TBL_INFO_UPDATED;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int16 CFE_TBL_FindTableInRegistry(const char *TblName)
+{
+    int16 RegIndx = CFE_TBL_NOT_FOUND;
+    int16 i       = -1;
+
+    do
+    {
+        /* Point to next record in the Table Registry */
+        i++;
+
+        /* Check to see if the record is currently being used */
+        if (!CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Registry[i].OwnerAppId, CFE_TBL_NOT_OWNED))
+        {
+            /* Perform a case sensitive name comparison */
+            if (strcmp(TblName, CFE_TBL_Global.Registry[i].Name) == 0)
+            {
+                /* If the names match, then return the index */
+                RegIndx = i;
+            }
+        }
+    } while ((RegIndx == CFE_TBL_NOT_FOUND) && (i < (CFE_PLATFORM_TBL_MAX_NUM_TABLES - 1)));
+
+    return RegIndx;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int16 CFE_TBL_FindFreeRegistryEntry(void)
+{
+    int16 RegIndx = CFE_TBL_NOT_FOUND;
+    int16 i       = 0;
+
+    while ((RegIndx == CFE_TBL_NOT_FOUND) && (i < CFE_PLATFORM_TBL_MAX_NUM_TABLES))
+    {
+        /* A Table Registry is only "Free" when there isn't an owner AND */
+        /* all other applications are not sharing or locking the table   */
+        if (CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Registry[i].OwnerAppId, CFE_TBL_NOT_OWNED) &&
+            (CFE_TBL_Global.Registry[i].HeadOfAccessList == CFE_TBL_END_OF_LIST))
+        {
+            RegIndx = i;
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    return RegIndx;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_TBL_Handle_t CFE_TBL_FindFreeHandle(void)
+{
+    CFE_TBL_Handle_t HandleIndx = CFE_TBL_END_OF_LIST;
+    int16            i          = 0;
+
+    while ((HandleIndx == CFE_TBL_END_OF_LIST) && (i < CFE_PLATFORM_TBL_MAX_NUM_HANDLES))
+    {
+        if (CFE_TBL_Global.Handles[i].UsedFlag == false)
+        {
+            HandleIndx = i;
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    return HandleIndx;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_FormTableName(char *FullTblName, const char *TblName, CFE_ES_AppId_t ThisAppId)
+{
+    char AppName[OS_MAX_API_NAME];
+
+    CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+    /* Ensure that AppName is null terminated */
+    AppName[OS_MAX_API_NAME - 1] = '\0';
+
+    /* Complete formation of application specific table name */
+    sprintf(FullTblName, "%s.%s", AppName, TblName);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_LockRegistry(void)
+{
+    int32 OsStatus;
+    int32 Status;
+
+    OsStatus = OS_MutSemTake(CFE_TBL_Global.RegistryMutex);
+
+    if (OsStatus == OS_SUCCESS)
+    {
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_UnlockRegistry(void)
+{
+    int32 OsStatus;
+    int32 Status;
+
+    OsStatus = OS_MutSemGive(CFE_TBL_Global.RegistryMutex);
+
+    if (OsStatus == OS_SUCCESS)
+    {
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_GetWorkingBuffer(CFE_TBL_LoadBuff_t **WorkingBufferPtr, CFE_TBL_RegistryRec_t *RegRecPtr,
+                               bool CalledByApp)
+{
+    int32            Status = CFE_SUCCESS;
+    int32            OsStatus;
+    int32            i;
+    int32            InactiveBufferIndex;
+    CFE_TBL_Handle_t AccessIterator;
+
+    /* Initialize return pointer to NULL */
+    *WorkingBufferPtr = NULL;
+
+    /* If a load is already in progress, return the previously allocated working buffer */
+    if (RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+    {
+        if (RegRecPtr->DoubleBuffered)
+        {
+            *WorkingBufferPtr = &RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)];
+        }
+        else
+        {
+            *WorkingBufferPtr = &CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress];
+        }
+    }
+    else
+    {
+        /* If the table is uninitialized and the function is called by an application (rather than       */
+        /* by the Table Services application), then use the current active buffer as the working buffer. */
+        /* This allows many tasks with many tables to perform the initialization without conflict        */
+        /* over the accessibility of the shared working buffers.                                         */
+        if ((RegRecPtr->TableLoadedOnce == false) && (CalledByApp == true))
+        {
+            if (RegRecPtr->DoubleBuffered)
+            {
+                *WorkingBufferPtr = &RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex];
+            }
+            else
+            {
+                *WorkingBufferPtr = &RegRecPtr->Buffers[0];
+            }
+        }
+        else
+        {
+            /* If the table is a double buffered table, then check to make sure the */
+            /* inactive buffer has been freed by any Applications that may have been using it */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                /* Determine the index of the Inactive Buffer Pointer */
+                InactiveBufferIndex = 1 - RegRecPtr->ActiveBufferIndex;
+
+                /* Scan the access descriptor table to determine if anyone is still using the inactive buffer */
+                AccessIterator = RegRecPtr->HeadOfAccessList;
+                while ((AccessIterator != CFE_TBL_END_OF_LIST) && (Status == CFE_SUCCESS))
+                {
+                    if ((CFE_TBL_Global.Handles[AccessIterator].BufferIndex == InactiveBufferIndex) &&
+                        (CFE_TBL_Global.Handles[AccessIterator].LockFlag))
+                    {
+                        Status = CFE_TBL_ERR_NO_BUFFER_AVAIL;
+
+                        CFE_ES_WriteToSysLog("%s: Inactive Dbl Buff Locked for '%s' by AppId=%lu\n", __func__,
+                                             RegRecPtr->Name,
+                                             CFE_RESOURCEID_TO_ULONG(CFE_TBL_Global.Handles[AccessIterator].AppId));
+                    }
+
+                    /* Move to next access descriptor in linked list */
+                    AccessIterator = CFE_TBL_Global.Handles[AccessIterator].NextLink;
+                }
+
+                /* If buffer is free, then return the pointer to it */
+                if (Status == CFE_SUCCESS)
+                {
+                    *WorkingBufferPtr         = &RegRecPtr->Buffers[InactiveBufferIndex];
+                    RegRecPtr->LoadInProgress = InactiveBufferIndex;
+                }
+            }
+            else /* Single Buffered Table */
+            {
+                /* Take Mutex to make sure we are not trying to grab a working buffer that some */
+                /* other application is also trying to grab. */
+                OsStatus = OS_MutSemTake(CFE_TBL_Global.WorkBufMutex);
+
+                /* Make note of any errors but continue and hope for the best */
+                if (OsStatus != OS_SUCCESS)
+                {
+                    CFE_ES_WriteToSysLog("%s: Internal error taking WorkBuf Mutex (Status=%ld)\n", __func__,
+                                         (long)OsStatus);
+                }
+
+                /* Determine if there are any common buffers available */
+                i = 0;
+                while ((i < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS) && (CFE_TBL_Global.LoadBuffs[i].Taken == true))
+                {
+                    i++;
+                }
+
+                /* If a free buffer was found, then return the address to the associated shared buffer */
+                if (i < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS)
+                {
+                    CFE_TBL_Global.LoadBuffs[i].Taken = true;
+                    *WorkingBufferPtr                 = &CFE_TBL_Global.LoadBuffs[i];
+                    RegRecPtr->LoadInProgress         = i;
+
+                    /* Translate OS_SUCCESS into CFE_SUCCESS */
+                    Status = CFE_SUCCESS;
+                }
+                else
+                {
+                    Status = CFE_TBL_ERR_NO_BUFFER_AVAIL;
+
+                    CFE_ES_WriteToSysLog("%s: All shared buffers are locked\n", __func__);
+                }
+
+                /* Allow others to obtain a shared working buffer */
+                OS_MutSemGive(CFE_TBL_Global.WorkBufMutex);
+            }
+
+            if ((*WorkingBufferPtr) != NULL &&
+                (*WorkingBufferPtr)->BufferPtr != RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr)
+            {
+                /* In case the file contains a partial table load, get the active buffer contents first */
+                memcpy((*WorkingBufferPtr)->BufferPtr, RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr,
+                       RegRecPtr->Size);
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_LoadFromFile(const char *AppName, CFE_TBL_LoadBuff_t *WorkingBufferPtr, CFE_TBL_RegistryRec_t *RegRecPtr,
+                           const char *Filename)
+{
+    int32              Status = CFE_SUCCESS;
+    int32              OsStatus;
+    CFE_FS_Header_t    StdFileHeader;
+    CFE_TBL_File_Hdr_t TblFileHeader;
+    osal_id_t          FileDescriptor = OS_OBJECT_ID_UNDEFINED;
+    size_t             FilenameLen    = strlen(Filename);
+    uint32             NumBytes;
+    uint8              ExtraByte;
+
+    if (FilenameLen > (OS_MAX_PATH_LEN - 1))
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_FILENAME_LONG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                   CFE_TBL_Global.TableTaskAppId, "%s: Filename is too long ('%s' (%lu) > %lu)",
+                                   AppName, Filename, (long unsigned int)FilenameLen,
+                                   (long unsigned int)OS_MAX_PATH_LEN - 1);
+
+        return CFE_TBL_ERR_FILENAME_TOO_LONG;
+    }
+
+    /* Try to open the specified table file */
+    OsStatus = OS_OpenCreate(&FileDescriptor, Filename, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_FILE_ACCESS_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                   "%s: Unable to open file (Status=%ld)", AppName, (long)OsStatus);
+
+        return CFE_TBL_ERR_ACCESS;
+    }
+
+    Status = CFE_TBL_ReadHeaders(FileDescriptor, &StdFileHeader, &TblFileHeader, Filename);
+
+    if (Status != CFE_SUCCESS)
+    {
+        /* CFE_TBL_ReadHeaders() generates its own events */
+
+        OS_close(FileDescriptor);
+        return Status;
+    }
+
+    /* Verify that the specified file has compatible data for specified table */
+    if (strcmp(RegRecPtr->Name, TblFileHeader.TableName) != 0)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_LOAD_TBLNAME_MISMATCH_ERR_EID, CFE_EVS_EventType_ERROR,
+                                   CFE_TBL_Global.TableTaskAppId, "%s: Table name mismatch (exp=%s, tblfilhdr=%s)",
+                                   AppName, RegRecPtr->Name, TblFileHeader.TableName);
+
+        OS_close(FileDescriptor);
+        return CFE_TBL_ERR_FILE_FOR_WRONG_TABLE;
+    }
+
+    if ((TblFileHeader.Offset + TblFileHeader.NumBytes) > RegRecPtr->Size)
+    {
+        CFE_EVS_SendEventWithAppID(
+            CFE_TBL_LOAD_EXCEEDS_SIZE_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+            "%s: File reports size larger than expected (file=%lu, exp=%lu)", AppName,
+            (long unsigned int)(TblFileHeader.Offset + TblFileHeader.NumBytes), (long unsigned int)RegRecPtr->Size);
+
+        OS_close(FileDescriptor);
+        return CFE_TBL_ERR_FILE_TOO_LARGE;
+    }
+
+    /* Any Table load that starts beyond the first byte is a "partial load" */
+    /* But a file that starts with the first byte and ends before filling   */
+    /* the whole table is just considered "short".                          */
+    if (TblFileHeader.Offset > 0)
+    {
+        Status = CFE_TBL_WARN_PARTIAL_LOAD;
+    }
+    else if (TblFileHeader.NumBytes < RegRecPtr->Size)
+    {
+        Status = CFE_TBL_WARN_SHORT_FILE;
+    }
+
+    OsStatus =
+        OS_read(FileDescriptor, ((uint8 *)WorkingBufferPtr->BufferPtr) + TblFileHeader.Offset, TblFileHeader.NumBytes);
+    if (OsStatus >= OS_SUCCESS)
+    {
+        NumBytes = OsStatus; /* status code conversion (size) */
+    }
+    else
+    {
+        NumBytes = 0;
+    }
+
+    if (NumBytes != TblFileHeader.NumBytes)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_FILE_INCOMPLETE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                   CFE_TBL_Global.TableTaskAppId, "%s: File load incomplete (exp=%lu, read=%lu)",
+                                   AppName, (long unsigned int)TblFileHeader.NumBytes, (long unsigned int)NumBytes);
+
+        OS_close(FileDescriptor);
+        return CFE_TBL_ERR_LOAD_INCOMPLETE;
+    }
+
+    /* Check to see if the file is too large (ie - more data than header claims) */
+    OsStatus = OS_read(FileDescriptor, &ExtraByte, 1);
+    if (OsStatus >= OS_SUCCESS)
+    {
+        NumBytes = OsStatus; /* status code conversion (size) */
+    }
+    else
+    {
+        NumBytes = 0;
+    }
+
+    /* If successfully read another byte, then file must have too much data */
+    if (NumBytes == 1)
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_FILE_TOO_BIG_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                   "%s: File load too long (file length > %lu)", AppName,
+                                   (long unsigned int)TblFileHeader.NumBytes);
+
+        OS_close(FileDescriptor);
+        return CFE_TBL_ERR_FILE_TOO_LARGE;
+    }
+
+    strncpy(WorkingBufferPtr->DataSource, Filename, sizeof(WorkingBufferPtr->DataSource) - 1);
+    WorkingBufferPtr->DataSource[sizeof(WorkingBufferPtr->DataSource) - 1] = '\0';
+
+    /* Save file creation time for later storage into Registry */
+    WorkingBufferPtr->FileCreateTimeSecs    = StdFileHeader.TimeSeconds;
+    WorkingBufferPtr->FileCreateTimeSubSecs = StdFileHeader.TimeSubSeconds;
+
+    /* Compute the CRC on the specified table buffer */
+    WorkingBufferPtr->Crc =
+        CFE_ES_CalculateCRC(WorkingBufferPtr->BufferPtr, RegRecPtr->Size, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+    OS_close(FileDescriptor);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_UpdateInternal(CFE_TBL_Handle_t TblHandle, CFE_TBL_RegistryRec_t *RegRecPtr,
+                             CFE_TBL_AccessDescriptor_t *AccessDescPtr)
+{
+    int32            Status = CFE_SUCCESS;
+    CFE_TBL_Handle_t AccessIterator;
+    bool             LockStatus = false;
+
+    if ((!RegRecPtr->LoadPending) || (RegRecPtr->LoadInProgress == CFE_TBL_NO_LOAD_IN_PROGRESS))
+    {
+        /* Question: Should calling CFE_TBL_Update on a table with no load pending */
+        /* be considered an error?  Currently assuming it is not an error.         */
+        Status = CFE_TBL_INFO_NO_UPDATE_PENDING;
+    }
+    else
+    {
+        if (RegRecPtr->DoubleBuffered)
+        {
+            /* To update a double buffered table only requires a pointer swap */
+            RegRecPtr->ActiveBufferIndex = (uint8)RegRecPtr->LoadInProgress;
+
+            /* Source description in buffer should already have been updated by either */
+            /* the LoadFromFile function or the Load function (when a memory load).    */
+            /* However, we need to copy it into active registry area */
+            strncpy(RegRecPtr->LastFileLoaded, RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].DataSource,
+                    sizeof(RegRecPtr->LastFileLoaded) - 1);
+            RegRecPtr->LastFileLoaded[sizeof(RegRecPtr->LastFileLoaded) - 1] = '\0';
+
+            CFE_TBL_NotifyTblUsersOfUpdate(RegRecPtr);
+
+            /* If the table is a critical table, update the appropriate CDS with the new data */
+            if (RegRecPtr->CriticalTable == true)
+            {
+                CFE_TBL_UpdateCriticalTblCDS(RegRecPtr);
+            }
+        }
+        else
+        {
+            /* Check to see if the Table is locked by anyone */
+            AccessIterator = RegRecPtr->HeadOfAccessList;
+            while (AccessIterator != CFE_TBL_END_OF_LIST)
+            {
+                LockStatus = (LockStatus || CFE_TBL_Global.Handles[AccessIterator].LockFlag);
+
+                AccessIterator = CFE_TBL_Global.Handles[AccessIterator].NextLink;
+            }
+
+            if (LockStatus)
+            {
+                Status = CFE_TBL_INFO_TABLE_LOCKED;
+
+                CFE_ES_WriteToSysLog("%s: Unable to update locked table Handle=%d\n", __func__, TblHandle);
+            }
+            else
+            {
+                /* To update a single buffered table requires a memcpy from working buffer */
+                if (RegRecPtr->Buffers[0].BufferPtr != CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].BufferPtr)
+                {
+                    memcpy(RegRecPtr->Buffers[0].BufferPtr,
+                           CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].BufferPtr, RegRecPtr->Size);
+                }
+
+                /* Save source description with active buffer */
+                strncpy(RegRecPtr->Buffers[0].DataSource,
+                        CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].DataSource,
+                        sizeof(RegRecPtr->Buffers[0].DataSource) - 1);
+                RegRecPtr->Buffers[0].DataSource[sizeof(RegRecPtr->Buffers[0].DataSource) - 1] = 0;
+                strncpy(RegRecPtr->LastFileLoaded, CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].DataSource,
+                        sizeof(RegRecPtr->LastFileLoaded) - 1);
+                RegRecPtr->LastFileLoaded[sizeof(RegRecPtr->LastFileLoaded) - 1] = 0;
+
+                /* Save the file creation time from the loaded file into the Table Registry */
+                RegRecPtr->Buffers[0].FileCreateTimeSecs =
+                    CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].FileCreateTimeSecs;
+                RegRecPtr->Buffers[0].FileCreateTimeSubSecs =
+                    CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].FileCreateTimeSubSecs;
+
+                /* Save the previously computed CRC into the new buffer */
+                RegRecPtr->Buffers[0].Crc = CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Crc;
+
+                /* Free the working buffer */
+                CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Taken = false;
+
+                CFE_TBL_NotifyTblUsersOfUpdate(RegRecPtr);
+
+                /* If the table is a critical table, update the appropriate CDS with the new data */
+                if (RegRecPtr->CriticalTable == true)
+                {
+                    CFE_TBL_UpdateCriticalTblCDS(RegRecPtr);
+                }
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_NotifyTblUsersOfUpdate(CFE_TBL_RegistryRec_t *RegRecPtr)
+{
+    CFE_TBL_Handle_t AccessIterator;
+
+    /* Reset Load in Progress Values */
+    RegRecPtr->LoadInProgress   = CFE_TBL_NO_LOAD_IN_PROGRESS;
+    RegRecPtr->TimeOfLastUpdate = CFE_TIME_GetTime();
+
+    /* Clear notification of pending load (as well as NO LOAD) and notify everyone of update */
+    RegRecPtr->LoadPending     = false;
+    RegRecPtr->TableLoadedOnce = true;
+    AccessIterator             = RegRecPtr->HeadOfAccessList;
+    while (AccessIterator != CFE_TBL_END_OF_LIST)
+    {
+        CFE_TBL_Global.Handles[AccessIterator].Updated = true;
+
+        AccessIterator = CFE_TBL_Global.Handles[AccessIterator].NextLink;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_ReadHeaders(osal_id_t FileDescriptor, CFE_FS_Header_t *StdFileHeaderPtr,
+                          CFE_TBL_File_Hdr_t *TblFileHeaderPtr, const char *LoadFilename)
+{
+    int32 Status;
+    int32 OsStatus;
+    int32 EndianCheck = 0x01020304;
+
+#if (CFE_PLATFORM_TBL_VALID_SCID_COUNT > 0)
+    static uint32 ListSC[2] = {CFE_PLATFORM_TBL_VALID_SCID_1, CFE_PLATFORM_TBL_VALID_SCID_2};
+    uint32        IndexSC;
+#endif
+
+#if (CFE_PLATFORM_TBL_VALID_PRID_COUNT > 0)
+    static uint32 ListPR[4] = {CFE_PLATFORM_TBL_VALID_PRID_1, CFE_PLATFORM_TBL_VALID_PRID_2,
+                               CFE_PLATFORM_TBL_VALID_PRID_3, CFE_PLATFORM_TBL_VALID_PRID_4};
+    uint32        IndexPR;
+#endif
+
+    /* Once the file is open, read the headers to determine the target Table */
+    Status = CFE_FS_ReadHeader(StdFileHeaderPtr, FileDescriptor);
+
+    /* Verify successful read of standard cFE File Header */
+    if (Status != sizeof(CFE_FS_Header_t))
+    {
+        CFE_EVS_SendEventWithAppID(CFE_TBL_FILE_STD_HDR_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                                   "Unable to read std header for '%s', Status = 0x%08X", LoadFilename,
+                                   (unsigned int)Status);
+
+        Status = CFE_TBL_ERR_NO_STD_HEADER;
+    }
+    else
+    {
+        /* Verify the file type is a cFE compatible file */
+        if (StdFileHeaderPtr->ContentType != CFE_FS_FILE_CONTENT_ID)
+        {
+            CFE_EVS_SendEventWithAppID(CFE_TBL_FILE_TYPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId,
+                                       "File '%s' is not a cFE file type, ContentType = 0x%08X", LoadFilename,
+                                       (unsigned int)StdFileHeaderPtr->ContentType);
+
+            Status = CFE_TBL_ERR_BAD_CONTENT_ID;
+        }
+        else
+        {
+            /* Verify the SubType to ensure that it is a Table Image File */
+            if (StdFileHeaderPtr->SubType != CFE_FS_SubType_TBL_IMG)
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_FILE_SUBTYPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                           CFE_TBL_Global.TableTaskAppId,
+                                           "File subtype for '%s' is wrong. Subtype = 0x%08X", LoadFilename,
+                                           (unsigned int)StdFileHeaderPtr->SubType);
+
+                Status = CFE_TBL_ERR_BAD_SUBTYPE_ID;
+            }
+            else
+            {
+                OsStatus = OS_read(FileDescriptor, TblFileHeaderPtr, sizeof(CFE_TBL_File_Hdr_t));
+
+                /* Verify successful read of cFE Table File Header */
+                if (OsStatus != sizeof(CFE_TBL_File_Hdr_t))
+                {
+                    CFE_EVS_SendEventWithAppID(
+                        CFE_TBL_FILE_TBL_HDR_ERR_EID, CFE_EVS_EventType_ERROR, CFE_TBL_Global.TableTaskAppId,
+                        "Unable to read tbl header for '%s', Status = %ld", LoadFilename, (long)OsStatus);
+
+                    Status = CFE_TBL_ERR_NO_TBL_HEADER;
+                }
+                else
+                {
+                    /* All "required" checks have passed and we are pointing at the data */
+                    Status = CFE_SUCCESS;
+
+                    /* cppcheck-suppress knownConditionTrueFalse */
+                    if ((*(char *)&EndianCheck) == 0x04)
+                    {
+                        /* If this is a little endian processor, then the standard cFE Table Header,   */
+                        /* which is in big endian format, must be swapped so that the data is readable */
+                        CFE_TBL_ByteSwapTblHeader(TblFileHeaderPtr);
+                    }
+
+                    /*
+                     * Ensure termination of all local strings. These were read from a file, so they
+                     * must be treated with appropriate care.  This could happen in case the file got
+                     * damaged in transit or simply was not written properly to begin with.
+                     *
+                     * Since the "TblFileHeaderPtr" is a local buffer, this can be done directly.
+                     */
+                    TblFileHeaderPtr->TableName[sizeof(TblFileHeaderPtr->TableName) - 1] = '\0';
+
+/* Verify Spacecraft ID contained in table file header [optional] */
+#if (CFE_PLATFORM_TBL_VALID_SCID_COUNT > 0)
+                    if (Status == CFE_SUCCESS)
+                    {
+                        Status = CFE_TBL_ERR_BAD_SPACECRAFT_ID;
+                        for (IndexSC = 0; IndexSC < CFE_PLATFORM_TBL_VALID_SCID_COUNT; IndexSC++)
+                        {
+                            if (StdFileHeaderPtr->SpacecraftID == ListSC[IndexSC])
+                            {
+                                Status = CFE_SUCCESS;
+                            }
+                        }
+
+                        if (Status == CFE_TBL_ERR_BAD_SPACECRAFT_ID)
+                        {
+                            CFE_EVS_SendEventWithAppID(CFE_TBL_SPACECRAFT_ID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                                       CFE_TBL_Global.TableTaskAppId,
+                                                       "Unable to verify Spacecraft ID for '%s', ID = 0x%08X",
+                                                       LoadFilename, (unsigned int)StdFileHeaderPtr->SpacecraftID);
+                        }
+                    }
+#endif
+
+/* Verify Processor ID contained in table file header [optional] */
+#if (CFE_PLATFORM_TBL_VALID_PRID_COUNT > 0)
+                    if (Status == CFE_SUCCESS)
+                    {
+                        Status = CFE_TBL_ERR_BAD_PROCESSOR_ID;
+                        for (IndexPR = 0; IndexPR < CFE_PLATFORM_TBL_VALID_PRID_COUNT; IndexPR++)
+                        {
+                            if (StdFileHeaderPtr->ProcessorID == ListPR[IndexPR])
+                            {
+                                Status = CFE_SUCCESS;
+                            }
+                        }
+
+                        if (Status == CFE_TBL_ERR_BAD_PROCESSOR_ID)
+                        {
+                            CFE_EVS_SendEventWithAppID(CFE_TBL_PROCESSOR_ID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                                       CFE_TBL_Global.TableTaskAppId,
+                                                       "Unable to verify Processor ID for '%s', ID = 0x%08X",
+                                                       LoadFilename, (unsigned int)StdFileHeaderPtr->ProcessorID);
+                        }
+                    }
+#endif
+                }
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_ByteSwapTblHeader(CFE_TBL_File_Hdr_t *HdrPtr)
+{
+    CFE_TBL_ByteSwapUint32(&HdrPtr->Reserved);
+    CFE_TBL_ByteSwapUint32(&HdrPtr->Offset);
+    CFE_TBL_ByteSwapUint32(&HdrPtr->NumBytes);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_ByteSwapUint32(uint32 *Uint32ToSwapPtr)
+{
+    int32 Temp   = *Uint32ToSwapPtr;
+    char *InPtr  = (char *)&Temp;
+    char *OutPtr = (char *)Uint32ToSwapPtr;
+
+    OutPtr[0] = InPtr[3];
+    OutPtr[1] = InPtr[2];
+    OutPtr[2] = InPtr[1];
+    OutPtr[3] = InPtr[0];
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_CleanUpApp(CFE_ES_AppId_t AppId)
+{
+    uint32                      i;
+    CFE_TBL_RegistryRec_t *     RegRecPtr     = NULL;
+    CFE_TBL_AccessDescriptor_t *AccessDescPtr = NULL;
+
+    /* Scan Dump Requests to determine if any of the tables that */
+    /* were to be dumped will be deleted */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS; i++)
+    {
+        /* Check to see if the table to be dumped is owned by the App to be deleted */
+        if ((CFE_TBL_Global.DumpControlBlocks[i].State != CFE_TBL_DUMP_FREE) &&
+            CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.DumpControlBlocks[i].RegRecPtr->OwnerAppId, AppId))
+        {
+            /* If so, then remove the dump request */
+            CFE_TBL_Global.DumpControlBlocks[i].State = CFE_TBL_DUMP_FREE;
+        }
+    }
+
+    /* Scan Access Descriptors to determine if the Application had access to any tables */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_NUM_HANDLES; i++)
+    {
+        /* Check to see if the Handle belongs to the Application being deleted */
+        if (CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Handles[i].AppId, AppId) &&
+            CFE_TBL_Global.Handles[i].UsedFlag == true)
+        {
+            /* Delete the handle (and the table, if the App owned it) */
+            /* Get a pointer to the relevant Access Descriptor */
+            AccessDescPtr = &CFE_TBL_Global.Handles[i];
+
+            /* Get a pointer to the relevant entry in the registry */
+            RegRecPtr = &CFE_TBL_Global.Registry[AccessDescPtr->RegIndex];
+
+            /* Determine if the Application owned this particular table */
+            if (CFE_RESOURCEID_TEST_EQUAL(RegRecPtr->OwnerAppId, AppId))
+            {
+                /* Mark table as free, although, technically, it isn't free until the */
+                /* linked list of Access Descriptors has no links in it.              */
+                /* NOTE: Allocated memory is freed when all Access Links have been    */
+                /*       removed.  This allows Applications to continue to use the    */
+                /*       data until they acknowledge that the table has been removed. */
+                RegRecPtr->OwnerAppId = CFE_TBL_NOT_OWNED;
+
+                /* Remove Table Name */
+                RegRecPtr->Name[0] = '\0';
+            }
+
+            /* Remove the Access Descriptor Link from linked list */
+            /* NOTE: If this removes the last access link, then   */
+            /*       memory buffers are set free as well.         */
+            CFE_TBL_RemoveAccessLink(i);
+
+            CFE_TBL_Global.Handles[i].AppId = CFE_TBL_NOT_OWNED;
+        }
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_FindCriticalTblInfo(CFE_TBL_CritRegRec_t **CritRegRecPtr, CFE_ES_CDSHandle_t CDSHandleToFind)
+{
+    uint32 i;
+
+    /* Assume the record is never found */
+    *CritRegRecPtr = NULL;
+
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES; i++)
+    {
+        if (CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.CritReg[i].CDSHandle, CDSHandleToFind))
+        {
+            *CritRegRecPtr = &CFE_TBL_Global.CritReg[i];
+            break;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_UpdateCriticalTblCDS(CFE_TBL_RegistryRec_t *RegRecPtr)
+{
+    CFE_TBL_CritRegRec_t *CritRegRecPtr = NULL;
+
+    int32 Status;
+
+    /* Copy an image of the updated table to the CDS for safekeeping */
+    Status = CFE_ES_CopyToCDS(RegRecPtr->CDSHandle, RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Unable to update Critical Table '%s' in CDS (Err=0x%08X)\n", __func__,
+                             RegRecPtr->Name, (unsigned int)Status);
+    }
+    else
+    {
+        /* Locate entry in Critical Table Registry */
+        CFE_TBL_FindCriticalTblInfo(&CritRegRecPtr, RegRecPtr->CDSHandle);
+        if (CritRegRecPtr != NULL)
+        {
+            /* Save information related to the source of the data stored in the table in Critical Table Registry */
+            CritRegRecPtr->FileCreateTimeSecs = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSecs;
+            CritRegRecPtr->FileCreateTimeSubSecs =
+                RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSubSecs;
+            strncpy(CritRegRecPtr->LastFileLoaded, RegRecPtr->LastFileLoaded,
+                    sizeof(CritRegRecPtr->LastFileLoaded) - 1);
+            CritRegRecPtr->LastFileLoaded[sizeof(CritRegRecPtr->LastFileLoaded) - 1] = '\0';
+            CritRegRecPtr->TimeOfLastUpdate                                          = RegRecPtr->TimeOfLastUpdate;
+            CritRegRecPtr->TableLoadedOnce                                           = RegRecPtr->TableLoadedOnce;
+
+            /* Update copy of Critical Table Registry in the CDS */
+            Status = CFE_ES_CopyToCDS(CFE_TBL_Global.CritRegHandle, CFE_TBL_Global.CritReg);
+
+            if (Status != CFE_SUCCESS)
+            {
+                CFE_ES_WriteToSysLog("%s: Unable to update Critical Table Registry in CDS (Err=0x%08X)\n", __func__,
+                                     (unsigned int)Status);
+            }
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: Error finding '%s' in Critical Table Registry\n", __func__, RegRecPtr->Name);
+        }
+    }
+
+    /* Don't bother notifying the caller of the problem since the active table is still legitimate */
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_SendNotificationMsg(CFE_TBL_RegistryRec_t *RegRecPtr)
+{
+    int32 Status = CFE_SUCCESS;
+
+    /* First, determine if a message should be sent */
+    if (RegRecPtr->NotifyByMsg)
+    {
+        /* Set the message ID */
+        CFE_MSG_SetMsgId(CFE_MSG_PTR(CFE_TBL_Global.NotifyMsg.CommandHeader), RegRecPtr->NotificationMsgId);
+
+        /* Set the command code */
+        CFE_MSG_SetFcnCode(CFE_MSG_PTR(CFE_TBL_Global.NotifyMsg.CommandHeader), RegRecPtr->NotificationCC);
+
+        /* Set the command parameter */
+        CFE_TBL_Global.NotifyMsg.Payload.Parameter = RegRecPtr->NotificationParam;
+
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_TBL_Global.NotifyMsg.CommandHeader));
+        Status = CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_TBL_Global.NotifyMsg.CommandHeader), true);
+
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CFE_TBL_FAIL_NOTIFY_SEND_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Manage Notification Pkt Error(Status=0x%08X)", (unsigned int)Status);
+        }
+    }
+
+    return Status;
+}
+```
+
+### `cfe_tbl_internal.h`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:  cFE Table Services (TBL) utility function interface file
+ *
+ * Author:   D. Kobe/the Hammers Company, Inc.
+ *
+ * Notes:
+ *
+ */
+
+#ifndef CFE_TBL_INTERNAL_H
+#define CFE_TBL_INTERNAL_H
+
+/*
+** Required header files...
+*/
+#include "cfe.h"
+#include "cfe_platform_cfg.h"
+#include "cfe_msgids.h"
+#include "cfe_perfids.h"
+#include "cfe_tbl_task.h"
+#include "cfe_tbl_task_cmds.h"
+#include "cfe_tbl_eventids.h"
+#include "cfe_tbl_msg.h"
+
+/*********************  Macro and Constant Type Definitions   ***************************/
+
+#define CFE_TBL_NOT_OWNED   CFE_ES_APPID_UNDEFINED
+#define CFE_TBL_NOT_FOUND   (-1)
+#define CFE_TBL_END_OF_LIST (CFE_TBL_Handle_t)0xFFFF
+
+/*****************************  Function Prototypes   **********************************/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Validates specified handle to ensure legality
+**
+** \par Description
+**        Validates handle given by calling App to Table API. Validation
+**        includes ensuring the value is within an acceptable range and
+**        the Access Descriptor that it identifies is being "used".
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in]  TblHandle  - Handle to be validated
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_ERR_INVALID_HANDLE      \copydoc CFE_TBL_ERR_INVALID_HANDLE
+**
+*/
+int32 CFE_TBL_ValidateHandle(CFE_TBL_Handle_t TblHandle);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Determines whether handle is associated with calling Application
+**
+** \par Description
+**        Validates whether the calling application has the right to
+**        access the table identified with the given TblHandle.  Validation
+**        consists of verifying the calling Application's AppID, verifying
+**        the legitimacy of the given TblHandle, and checking to make sure
+**        the Access Descriptor identified by the TblHandle is associated
+**        with the calling Application.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in]  TblHandle Handle of table whose access is desired.
+**
+** \param[in, out]  AppIdPtr  Pointer to value that will hold AppID on return. *AppIdPtr is the AppID as obtained from
+*#CFE_ES_GetAppID
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_ES_ERR_RESOURCEID_NOT_VALID \copydoc CFE_ES_ERR_RESOURCEID_NOT_VALID
+** \retval #CFE_TBL_ERR_INVALID_HANDLE      \copydoc CFE_TBL_ERR_INVALID_HANDLE
+** \retval #CFE_TBL_ERR_NO_ACCESS           \copydoc CFE_TBL_ERR_NO_ACCESS
+**
+*/
+int32 CFE_TBL_ValidateAccess(CFE_TBL_Handle_t TblHandle, CFE_ES_AppId_t *AppIdPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Determines if calling application has the right to access specified table
+**
+** \par Description
+**        Validates whether the calling application has the right to
+**        access the table identified with the given TblHandle.  Validation
+**        consists of checking to make sure the Access Descriptor identified
+**        by the TblHandle is associated with the calling Application.
+**
+** \par Assumptions, External Events, and Notes:
+**        Note: The TblHandle and ThisAppId parameters are assumed to be valid.
+**
+** \param[in]  TblHandle Handle of table whose access is desired.
+**
+** \param[in]  ThisAppId Application ID of Application making the call
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_ERR_NO_ACCESS           \copydoc CFE_TBL_ERR_NO_ACCESS
+**
+*/
+int32 CFE_TBL_CheckAccessRights(CFE_TBL_Handle_t TblHandle, CFE_ES_AppId_t ThisAppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Removes Access Descriptor from Table's linked list of Access Descriptors
+**
+** \par Description
+**        Removes the given Access Descriptor from the Linked List
+**        of Access Descriptors associated with the table specified
+**        in the Access Descriptor itself.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function CAN block and should not be called by ISRs.
+**        -# This function assumes the Access Descriptor is completely
+**           filled out and the TblHandle has been validated.
+**
+** \param[in]  TblHandle Handle of Access Descriptor to be removed.
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+**
+*/
+int32 CFE_TBL_RemoveAccessLink(CFE_TBL_Handle_t TblHandle);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Obtains the data address for the specified table
+**
+** \par Description
+**        Validates the given TblHandle, finds the location of the
+**        Table data and returns the address to the data to the caller.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# It is possible that an Application that was sharing a table
+**           would discover, upon making this call, that the table has
+**           been unregistered by another Application.  In this situation,
+**           this function would return #CFE_TBL_ERR_UNREGISTERED.
+**        -# ThisAppId parameter is assumed to be validated.
+**
+** \param[in, out]  TblPtr    Pointer to pointer that will hold address of data upon return. *TblPtr is the address of
+**                            the Table Data.
+** \param[in]  TblHandle Handle of Table whose address is needed.
+** \param[in]  ThisAppId AppID of application making the address request.
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_ERR_INVALID_HANDLE      \copydoc CFE_TBL_ERR_INVALID_HANDLE
+** \retval #CFE_TBL_ERR_NO_ACCESS           \copydoc CFE_TBL_ERR_NO_ACCESS
+** \retval #CFE_TBL_ERR_UNREGISTERED        \copydoc CFE_TBL_ERR_UNREGISTERED
+**
+*/
+int32 CFE_TBL_GetAddressInternal(void **TblPtr, CFE_TBL_Handle_t TblHandle, CFE_ES_AppId_t ThisAppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Returns any pending non-error status code for the specified table.
+**
+** \par Description
+**        Returns any pending non-error status code for the specified table.
+**
+** \par Assumptions, External Events, and Notes:
+**        Note: This function assumes the TblHandle has been validated.
+**
+** \param[in]  TblHandle Handle of Table whose pending notifications are
+**                       to be returned.
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_INFO_UPDATE_PENDING     \copydoc CFE_TBL_INFO_UPDATE_PENDING
+** \retval #CFE_TBL_INFO_UPDATED            \copydoc CFE_TBL_INFO_UPDATED
+**
+*/
+int32 CFE_TBL_GetNextNotification(CFE_TBL_Handle_t TblHandle);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Returns the Registry Index for the specified Table Name
+**
+** \par Description
+**        Locates given Table Name in the Table Registry and
+**        returns the appropriate Registry Index.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in]  TblName - Pointer to character string containing complete
+**                       Table Name (of the format "AppName.TblName").
+**
+** \retval #CFE_TBL_NOT_FOUND or the Index into Registry for Table with specified name
+**
+*/
+int16 CFE_TBL_FindTableInRegistry(const char *TblName);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Locates a free slot in the Table Registry.
+**
+** \par Description
+**        Locates a free slot in the Table Registry.
+**
+** \par Assumptions, External Events, and Notes:
+**        Note: This function assumes the registry has been locked.
+**
+** \retval #CFE_TBL_NOT_FOUND or Index into Table Registry of unused entry
+*/
+int16 CFE_TBL_FindFreeRegistryEntry(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Locates a free Access Descriptor in the Table Handles Array.
+**
+** \par Description
+**        Locates a free Access Descriptor in the Table Handles Array.
+**
+** \par Assumptions, External Events, and Notes:
+**        Note: This function assumes the registry has been locked.
+**
+** \retval #CFE_TBL_END_OF_LIST or Table Handle of unused Access Descriptor
+*/
+CFE_TBL_Handle_t CFE_TBL_FindFreeHandle(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Creates a Full Table name from application name and table name
+**
+** \par Description
+**        Takes a given raw table name and combines it with the calling
+**        Application's name to make the application specific name of the
+**        form: "AppName.RawTableName"
+**
+** \par Assumptions, External Events, and Notes:
+**        AppName portion will be truncated to OS_MAX_API_NAME.
+**
+** \param[in, out] FullTblName  Pointer to character buffer of #CFE_TBL_MAX_FULL_NAME_LEN
+**                              size that will be filled with the application specific name
+**                              of the form "AppName.RawTableName"
+** \param[in] TblName           Pointer to character string containing the raw table name.
+** \param[in] ThisAppId         Application ID of the Application making the call.
+*/
+void CFE_TBL_FormTableName(char *FullTblName, const char *TblName, CFE_ES_AppId_t ThisAppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Locks access to the Table Registry
+**
+** \par Description
+**        Locks the Table Registry to prevent multiple tasks/threads
+**        from modifying it at once.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+*/
+int32 CFE_TBL_LockRegistry(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Unlocks access to the Table Registry
+**
+** \par Description
+**        Unlocks Table Registry to allow other tasks/threads to
+**        modify the Table Registry contents.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+**
+*/
+int32 CFE_TBL_UnlockRegistry(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Finds the address of a buffer compatible with the specified table
+**
+** \par Description
+**        Checks to see if the specified table has a dedicated working
+**        buffer (i.e. - is a double buffered table) or requires one
+**        from the common table buffer pool.  If it requires one from
+**        the pool, it locates, locks and returns its address.  If the
+**        table is double buffered, the access list is scanned to ensure
+**        that nobody is currently using the inactive buffer.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function assumes the TblHandle and MinBufferSize values
+**           are legitimate.
+**
+** \param[in, out]  WorkingBufferPtr  Pointer to variable that will contain the
+**                                    address of the first byte of the working buffer. *WorkingBufferPtr is the address
+**                                    of the first byte of the working buffer
+**
+** \param[in]  RegRecPtr         Pointer to Table Registry Entry for Table for whom
+**                               a working buffer is to be obtained
+**
+** \param[in]  CalledByApp       Boolean that identifies whether this internal API
+**                               function is being called by a user Application (true)
+**                               or by the Table Services Application (false)
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_ERR_NO_BUFFER_AVAIL     \copydoc CFE_TBL_ERR_NO_BUFFER_AVAIL
+**
+*/
+int32 CFE_TBL_GetWorkingBuffer(CFE_TBL_LoadBuff_t **WorkingBufferPtr, CFE_TBL_RegistryRec_t *RegRecPtr,
+                               bool CalledByApp);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Loads a table buffer with data from a specified file
+**
+** \par Description
+**        Locates the specified filename in the onboard filesystem
+**        and loads its contents into the specified working buffer.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function assumes parameters have been verified.
+**
+** \param[in]  AppName          The name of the application loading the table.
+**
+** \param[in]  WorkingBufferPtr Pointer to a working buffer that is to be loaded
+**                              with the contents of the specified file
+**
+** \param[in]  RegRecPtr        Pointer to Table Registry record for table whose
+**                              buffer is to filled with data from the specified file
+**
+** \param[in]  Filename         Pointer to ASCII string containing full path and filename
+**                              of table image file to be loaded
+**
+** \retval #CFE_SUCCESS                      \copydoc CFE_SUCCESS
+** \retval #OS_INVALID_POINTER               \copydoc OS_INVALID_POINTER
+** \retval #OS_FS_ERR_PATH_TOO_LONG          \copydoc OS_FS_ERR_PATH_TOO_LONG
+** \retval #OS_FS_ERR_PATH_INVALID           \copydoc OS_FS_ERR_PATH_INVALID
+** \retval #OS_FS_ERR_NAME_TOO_LONG          \copydoc OS_FS_ERR_NAME_TOO_LONG
+** \retval #OS_ERR_NO_FREE_IDS               \copydoc OS_ERR_NO_FREE_IDS
+** \retval #OS_ERROR                         \copydoc OS_ERROR
+** \retval #CFE_TBL_ERR_FILE_TOO_LARGE       \copydoc CFE_TBL_ERR_FILE_TOO_LARGE
+** \retval #CFE_TBL_WARN_SHORT_FILE          \copydoc CFE_TBL_WARN_SHORT_FILE
+** \retval #CFE_TBL_WARN_PARTIAL_LOAD        \copydoc CFE_TBL_WARN_PARTIAL_LOAD
+** \retval #CFE_TBL_ERR_FILENAME_TOO_LONG    \copydoc CFE_TBL_ERR_FILENAME_TOO_LONG
+** \retval #CFE_TBL_ERR_FILE_FOR_WRONG_TABLE \copydoc CFE_TBL_ERR_FILE_FOR_WRONG_TABLE
+** \retval #CFE_TBL_ERR_NO_STD_HEADER        \copydoc CFE_TBL_ERR_NO_STD_HEADER
+** \retval #CFE_TBL_ERR_NO_TBL_HEADER        \copydoc CFE_TBL_ERR_NO_TBL_HEADER
+** \retval #CFE_TBL_ERR_BAD_CONTENT_ID       \copydoc CFE_TBL_ERR_BAD_CONTENT_ID
+** \retval #CFE_TBL_ERR_BAD_SUBTYPE_ID       \copydoc CFE_TBL_ERR_BAD_SUBTYPE_ID
+**
+*/
+int32 CFE_TBL_LoadFromFile(const char *AppName, CFE_TBL_LoadBuff_t *WorkingBufferPtr, CFE_TBL_RegistryRec_t *RegRecPtr,
+                           const char *Filename);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Updates the active table buffer with contents of inactive buffer
+**
+** \par Description
+**        Copies pertinent data from working buffer (inactive buffer)
+**        to the active buffer (for single buffered tables) or just
+**        changes index to identifying the active buffer (for double
+**        buffered tables).
+**
+** \par Assumptions, External Events, and Notes:
+**        -# All parameters are assumed to be verified before function
+**           is called.
+**
+** \param[in]  TblHandle      Handle of Table to be updated.
+**
+** \param[in]  RegRecPtr      Pointer to Table Registry Entry for table to be updated
+**
+** \param[in]  AccessDescPtr  Pointer to appropriate access descriptor for table-application interface
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+*/
+int32 CFE_TBL_UpdateInternal(CFE_TBL_Handle_t TblHandle, CFE_TBL_RegistryRec_t *RegRecPtr,
+                             CFE_TBL_AccessDescriptor_t *AccessDescPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Sets flags in access descriptors associated with specified table
+**
+** \par Description
+**        Sets the flag in each access descriptor for a table to indicate the
+**        contents of the table have been updated.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# All parameters are assumed to be verified before function
+**           is called.
+**
+** \param[in]  RegRecPtr      Pointer to Table Registry Entry for table to be updated
+*/
+void CFE_TBL_NotifyTblUsersOfUpdate(CFE_TBL_RegistryRec_t *RegRecPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Reads Table File Headers
+**
+** \par Description
+**        Reads Table File Headers and performs rudimentary checks
+**        on header contents to ensure the acceptability of the
+**        file format.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# FileDescriptor is assumed to be valid
+**
+** \param[in]  FileDescriptor    File Descriptor, as provided by OS_fopen
+**
+** \param[in, out]  StdFileHeaderPtr  Pointer to buffer to be filled with the contents
+**                                    of the file's standard cFE Header. *StdFileHeaderPtr is the contents of the
+**                                    standard cFE File Header
+**
+** \param[in, out]  TblFileHeaderPtr  Pointer to buffer to be filled with the contents
+**                                    of the file's standard cFE Table Header. *TblFileHeaderPtr is the contents of the
+**                                    standard cFE Table File Header
+**
+** \param[in]  LoadFilename      Pointer to character string containing full path
+**                               and filename of table image to be loaded
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_ERR_NO_STD_HEADER       \copydoc CFE_TBL_ERR_NO_STD_HEADER
+** \retval #CFE_TBL_ERR_NO_TBL_HEADER       \copydoc CFE_TBL_ERR_NO_TBL_HEADER
+** \retval #CFE_TBL_ERR_BAD_CONTENT_ID      \copydoc CFE_TBL_ERR_BAD_CONTENT_ID
+** \retval #CFE_TBL_ERR_BAD_SUBTYPE_ID      \copydoc CFE_TBL_ERR_BAD_SUBTYPE_ID
+** \retval #CFE_TBL_ERR_BAD_SPACECRAFT_ID   \copydoc CFE_TBL_ERR_BAD_SPACECRAFT_ID
+** \retval #CFE_TBL_ERR_BAD_PROCESSOR_ID    \copydoc CFE_TBL_ERR_BAD_PROCESSOR_ID
+**
+*/
+int32 CFE_TBL_ReadHeaders(osal_id_t FileDescriptor, CFE_FS_Header_t *StdFileHeaderPtr,
+                          CFE_TBL_File_Hdr_t *TblFileHeaderPtr, const char *LoadFilename);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Initializes the entries of a single Table Registry Record
+**
+** \par Description
+**        Initializes the contents of a single Table Registry Record to default values
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function is intended to be called before populating a table registry record
+**
+*/
+void CFE_TBL_InitRegistryRecord(CFE_TBL_RegistryRec_t *RegRecPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Byte swaps a CFE_TBL_File_Hdr_t structure
+**
+** \par Description
+**        Converts a big-endian version of a CFE_TBL_File_Hdr_t structure to
+**        a little-endian version and vice-versa.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in, out]  HdrPtr   Pointer to table header that needs to be swapped. *HdrPtr provides the swapped header
+**
+*/
+void CFE_TBL_ByteSwapTblHeader(CFE_TBL_File_Hdr_t *HdrPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Searches the Critical Table Registry for the given handle
+**
+** \par Description
+**        This function scans the Critical Table Registry to find the specified
+**        handle.  Once located, the function returns a pointer to the appropriate
+**        Critical Table Registry Record that contains information on where the
+**        contents of the Table came from and when.  If a matching record is not
+**        found, the pointer returned is NULL.
+**
+** \par Assumptions, External Events, and Notes:
+**        None
+**
+** \param[in, out] **CritRegRecPtr    Pointer to a pointer that should be initialized with
+**                               the start address of the located Critical Table Registry
+**                               Record. *CritRegRecPtr is the pointer to the start address of the located Critical
+**                               Table Registry Record.  \c NULL if the record is not
+**                               found.
+**
+** \param[in]  CDSHandleToFind   CDS Handle to be located in Critical Table Registry.
+**
+*/
+void CFE_TBL_FindCriticalTblInfo(CFE_TBL_CritRegRec_t **CritRegRecPtr, CFE_ES_CDSHandle_t CDSHandleToFind);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Updates a CDS associated with a Critical Table
+**
+** \par Description
+**        Copies the contents of the active buffer into a previously allocated
+**        CDS associated with the table.  The Critical Table Registry is also
+**        updated and copied into the CDS to keep relevant information on the
+**        source of the data contained in the table.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in]  RegRecPtr Pointer to Registry Record of Critical Table whose CDS
+**                       needs to be updated.
+**
+*/
+void CFE_TBL_UpdateCriticalTblCDS(CFE_TBL_RegistryRec_t *RegRecPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief When enabled, will send a manage notification command message
+**
+** \par Description
+**        Whenever an application uses the #CFE_TBL_NotifyByMessage API, Table services
+**        will call this routine whenever a table requires management by the owning
+**        Application.  This routine will then issue the appropriate message to the
+**        software bus.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in]  RegRecPtr Pointer to Registry Record of Table whose owner needs notifying.
+**
+*/
+int32 CFE_TBL_SendNotificationMsg(CFE_TBL_RegistryRec_t *RegRecPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Performs a byte swap on a uint32 integer
+**
+** \par Description
+**        Converts a big-endian uint32 integer to a little-endian uint32 integer
+**        and vice-versa.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in, out]  Uint32ToSwapPtr Pointer to uint32 value to be swapped. *Uint32ToSwapPtr is the swapped uint32 value
+**
+*/
+void CFE_TBL_ByteSwapUint32(uint32 *Uint32ToSwapPtr);
+
+/*
+ * Internal helper functions for Table Registry dump
+ *
+ * These callbacks are used with the FS background write request API
+ * and are implemented per that specification.
+ */
+void CFE_TBL_DumpRegistryEventHandler(void *Meta, CFE_FS_FileWriteEvent_t Event, int32 Status, uint32 RecordNum,
+                                      size_t BlockSize, size_t Position);
+bool CFE_TBL_DumpRegistryGetter(void *Meta, uint32 RecordNum, void **Buffer, size_t *BufSize);
+
+/*
+** Globals specific to the TBL module
+*/
+extern CFE_TBL_Global_t CFE_TBL_Global;
+
+#endif /* CFE_TBL_INTERNAL_H */
+```
+
+### `cfe_tbl_module_all.h`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_module_all.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Encapsulates all TBL module internal header files, as well
+ * as the public API from all other CFE core modules, OSAL, and PSP.
+ *
+ * This simplifies the set of include files that need to be put at the
+ * start of every source file.
+ */
+
+#ifndef CFE_TBL_MODULE_ALL_H
+#define CFE_TBL_MODULE_ALL_H
+
+/*
+** Includes
+*/
+#include "cfe.h"
+#include "cfe_platform_cfg.h"
+#include "cfe_msgids.h"
+#include "cfe_perfids.h"
+
+#include "cfe_tbl_core_internal.h"
+
+#include "cfe_tbl_eventids.h"
+#include "cfe_tbl_msg.h"
+#include "cfe_tbl_internal.h"
+#include "cfe_tbl_task.h"
+#include "cfe_tbl_task_cmds.h"
+#include "cfe_tbl_dispatch.h"
+
+/*
+ * Additionally TBL needs to use special/extra CDS APIs that are not in the normal API
+ */
+#include "cfe_es_core_internal.h"
+
+#endif /* CFE_TBL_MODULE_ALL_H */
+```
+
+### `cfe_tbl_task.c`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_tbl_task.c
+**
+** Subsystem: cFE TBL Task
+**
+** Author: David Kobe (the Hammers Company, Inc.)
+**
+** Notes:
+**
+*/
+
+/*
+** Required header files
+*/
+#include "cfe_tbl_module_all.h"
+#include "cfe_version.h"
+#include "cfe_tbl_verify.h"
+
+#include <string.h>
+
+/*
+** Table task global data
+*/
+CFE_TBL_Global_t CFE_TBL_Global;
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_TaskMain(void)
+{
+    int32            Status;
+    CFE_SB_Buffer_t *SBBufPtr;
+
+    CFE_ES_PerfLogEntry(CFE_MISSION_TBL_MAIN_PERF_ID);
+
+    Status = CFE_TBL_TaskInit();
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Application Init Failed,RC=0x%08X\n", __func__, (unsigned int)Status);
+        CFE_ES_PerfLogExit(CFE_MISSION_TBL_MAIN_PERF_ID);
+        /* Note: CFE_ES_ExitApp will not return */
+        CFE_ES_ExitApp(CFE_ES_RunStatus_CORE_APP_INIT_ERROR);
+    }
+
+    /*
+     * Wait for other apps to start.
+     * It is important that the core apps are present before this starts receiving
+     * messages from the command pipe, as some of those handlers might depend on
+     * the other core apps.
+     */
+    CFE_ES_WaitForSystemState(CFE_ES_SystemState_CORE_READY, CFE_PLATFORM_CORE_MAX_STARTUP_MSEC);
+
+    /* Main loop */
+    while (Status == CFE_SUCCESS)
+    {
+        /* Increment the Main task Execution Counter */
+        CFE_ES_IncrementTaskCounter();
+
+        CFE_ES_PerfLogExit(CFE_MISSION_TBL_MAIN_PERF_ID);
+
+        /* Pend on receipt of packet */
+        Status = CFE_SB_ReceiveBuffer(&SBBufPtr, CFE_TBL_Global.CmdPipe, CFE_SB_PEND_FOREVER);
+
+        CFE_ES_PerfLogEntry(CFE_MISSION_TBL_MAIN_PERF_ID);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /* Process cmd pipe msg */
+            CFE_TBL_TaskPipe(SBBufPtr);
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: Error reading cmd pipe,RC=0x%08X\n", __func__, (unsigned int)Status);
+        }
+
+    } /* end while */
+
+    /* while loop exits only if CFE_SB_ReceiveBuffer returns error */
+    CFE_ES_ExitApp(CFE_ES_RunStatus_CORE_APP_RUNTIME_ERROR);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_TaskInit(void)
+{
+    int32 Status;
+
+    /*
+    ** Initialize global Table Services data
+    */
+    CFE_TBL_InitData();
+
+    /*
+    ** Register event filter table
+    */
+    Status = CFE_EVS_Register(NULL, 0, 0);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Call to CFE_EVS_Register Failed:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Create Software Bus message pipe
+    */
+    Status = CFE_SB_CreatePipe(&CFE_TBL_Global.CmdPipe, CFE_TBL_TASK_PIPE_DEPTH, CFE_TBL_TASK_PIPE_NAME);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error creating cmd pipe:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Subscribe to Housekeeping request commands
+    */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CFE_TBL_SEND_HK_MID), CFE_TBL_Global.CmdPipe);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error subscribing to HK Request:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Subscribe to Table task ground command packets
+    */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CFE_TBL_CMD_MID), CFE_TBL_Global.CmdPipe);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error subscribing to gnd cmds:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Task startup event message
+    */
+    Status = CFE_EVS_SendEvent(CFE_TBL_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "cFE TBL Initialized: %s",
+                               CFE_VERSION_STRING);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error sending init event:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_InitData(void)
+{
+    /* Get the assigned Application ID for the Table Services Task */
+    CFE_ES_GetAppID(&CFE_TBL_Global.TableTaskAppId);
+
+    /* Initialize Packet Headers */
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_TBL_Global.HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(CFE_TBL_HK_TLM_MID),
+                 sizeof(CFE_TBL_Global.HkPacket));
+
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_TBL_Global.TblRegPacket.TelemetryHeader), CFE_SB_ValueToMsgId(CFE_TBL_REG_TLM_MID),
+                 sizeof(CFE_TBL_Global.TblRegPacket));
+
+    /* Message ID is set when sent, so OK as 0 here */
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_TBL_Global.NotifyMsg.CommandHeader), CFE_SB_INVALID_MSG_ID,
+                 sizeof(CFE_TBL_Global.NotifyMsg));
+}
+```
+
+### `cfe_tbl_task.h`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:  cFE Table Services (TBL) task header file
+ *
+ * Author:   David Kobe (the Hammers Company, Inc.)
+ *
+ * Notes:
+ *
+ */
+
+#ifndef CFE_TBL_TASK_H
+#define CFE_TBL_TASK_H
+
+/*
+** Required header files
+*/
+#include "cfe_tbl_msg.h"
+
+/*************************************************************************/
+
+/*
+** Registry mutex definitions
+*/
+/** \name Registry Mutex Definitions */
+/**  \{ */
+#define CFE_TBL_MUT_REG_NAME   "TBL_REG_MUT" /**< \brief Name of Mutex controlling Registry Access */
+#define CFE_TBL_MUT_REG_VALUE  0             /**< \brief Initial Value of Registry Access Mutex */
+#define CFE_TBL_MUT_WORK_NAME  "TBL_WRK_MUT" /**< \brief Name of Mutex controlling Working Buffer Assignment */
+#define CFE_TBL_MUT_WORK_VALUE 0             /**< \brief Initial Value of Working Buffer Assignment Mutex */
+/** \} */
+
+/** \name Table Services Task Pipe Characteristics */
+/**  \{ */
+#define CFE_TBL_TASK_PIPE_NAME  "TBL_CMD_PIPE" /**< \brief Name of TBL Task Command Pipe */
+#define CFE_TBL_TASK_PIPE_DEPTH 12             /**< \brief Number of Commands that can be queued */
+/** \} */
+
+/** \brief Value indicating when no load is in progress */
+/**
+**  This macro is used to indicate no Load is in Progress by assigning it to
+**  #CFE_TBL_RegistryRec_t::LoadInProgress
+*/
+#define CFE_TBL_NO_LOAD_IN_PROGRESS (-1)
+
+/** \brief Value indicating when no Validation is Pending */
+/**
+**  This macro is used to indicate no Validation is Pending by assigning it to
+**  #CFE_TBL_RegistryRec_t::ValidateActiveIndex or #CFE_TBL_RegistryRec_t::ValidateInactiveIndex
+*/
+#define CFE_TBL_NO_VALIDATION_PENDING (-1)
+
+/** \brief Value indicating when no Dump is Pending on a Dump-Only Table */
+/**
+**  This macro is used to indicate no Dump is Pending by assigning it to
+**  #CFE_TBL_RegistryRec_t::DumpControlIndex
+*/
+#define CFE_TBL_NO_DUMP_PENDING (-1)
+
+/************************  Internal Structure Definitions  *****************************/
+
+/*******************************************************************************/
+/**  \brief Identifies the current state of a validation sequence.
+ */
+typedef enum
+{
+    CFE_TBL_VALIDATION_FREE = 0, /**< \brief Validation Result Block is Free */
+    CFE_TBL_VALIDATION_PENDING,  /**< \brief Validation Result Block waiting for Application */
+    CFE_TBL_VALIDATION_PERFORMED /**< \brief Validation Result Block contains Validation Results */
+} CFE_TBL_ValidationState_t;
+
+/*******************************************************************************/
+/**  \brief Identifies the current state of a dump request.
+ */
+typedef enum
+{
+    CFE_TBL_DUMP_FREE = 0, /**< \brief Dump Request Block is Free */
+    CFE_TBL_DUMP_PENDING,  /**< \brief Dump Request Block waiting for Application */
+    CFE_TBL_DUMP_PERFORMED /**< \brief Dump Request Block processed by Application */
+} CFE_TBL_DumpState_t;
+
+/*******************************************************************************/
+/**   \brief Validation Result Block
+**
+**    This structure holds the data to be returned to the Operator via telemetry
+**    on the results of a Validation request.
+*/
+typedef struct
+{
+    CFE_TBL_ValidationState_t State;      /**< \brief Current state of this block of data */
+    int32                     Result;     /**< \brief Result returned by Application's Validation function */
+    uint32                    CrcOfTable; /**< \brief Data Integrity Value computed on Table Buffer */
+    bool ActiveBuffer;                    /**< \brief Flag indicating whether Validation is on Active/Inactive Buffer */
+    char TableName[CFE_TBL_MAX_FULL_NAME_LEN]; /**< \brief Name of Table being Validated */
+} CFE_TBL_ValidationResult_t;
+
+/*******************************************************************************/
+/**   \brief Memory Pool Data Structure
+**
+**     This structure defines the variables related to the TBL buffers.
+*/
+typedef struct
+{
+    CFE_ES_MemHandle_t PoolHdl;
+    CFE_ES_STATIC_POOL_TYPE(CFE_PLATFORM_TBL_BUF_MEMORY_BYTES) Partition;
+} CFE_TBL_BufParams_t;
+
+/*******************************************************************************/
+/**   \brief Load Buffer Description Data
+**
+**     This structure holds a pointer to a table buffer along with its associated
+**     data such as the time from the file that was loaded into the buffer, whether
+**     the buffer has been allocated and a string describing the source of the data.
+*/
+typedef struct
+{
+    void * BufferPtr;             /**< \brief Pointer to Load Buffer */
+    uint32 FileCreateTimeSecs;    /**< \brief File creation time from last file loaded into table */
+    uint32 FileCreateTimeSubSecs; /**< \brief File creation time from last file loaded into table */
+    uint32 Crc;                   /**< \brief Last calculated CRC for this buffer's contents */
+    bool   Taken;                 /**< \brief Flag indicating whether buffer is in use */
+    bool   Validated;             /**< \brief Flag indicating whether the buffer has been successfully validated */
+    char   DataSource[OS_MAX_PATH_LEN]; /**< \brief Source of data put into buffer (filename or memory address) */
+} CFE_TBL_LoadBuff_t;
+
+/*******************************************************************************/
+/**   \brief Application to Table Access Descriptor
+**
+**     Table Access Descriptor data structure that contains information necessary
+**     to access the table without interfering with other threads.  TblHandles are
+**     an index into an array of Access Descriptors, thus identifying a specific
+**     AccessDescriptor for a particular Application for a table.
+*/
+typedef struct
+{
+    CFE_ES_AppId_t   AppId;       /**< \brief Application ID to verify access */
+    int16            RegIndex;    /**< \brief Index into Table Registry (a.k.a. - Global Table #) */
+    CFE_TBL_Handle_t PrevLink;    /**< \brief Index of previous access descriptor in linked list */
+    CFE_TBL_Handle_t NextLink;    /**< \brief Index of next access descriptor in linked list */
+    bool             UsedFlag;    /**< \brief Indicates whether this descriptor is being used or not  */
+    bool             LockFlag;    /**< \brief Indicates whether thread is currently accessing table data */
+    bool             Updated;     /**< \brief Indicates table has been updated since last GetAddress call */
+    uint8            BufferIndex; /**< \brief Index of buffer currently being used */
+} CFE_TBL_AccessDescriptor_t;
+
+/*******************************************************************************/
+/**   \brief Table Registry Record
+**
+**     Table Registry Record that contains all information associated
+**     with a particular table.
+*/
+typedef struct
+{
+    CFE_ES_AppId_t     OwnerAppId;        /**< \brief Application ID of App that Registered Table */
+    size_t             Size;              /**< \brief Size, in bytes, of Table */
+    CFE_SB_MsgId_t     NotificationMsgId; /**< \brief Message ID of an associated management notification message */
+    uint32             NotificationParam; /**< \brief Parameter of an associated management notification message */
+    CFE_TBL_LoadBuff_t Buffers[2];        /**< \brief Active and Inactive Buffer Pointers */
+    CFE_TBL_CallbackFuncPtr_t ValidationFuncPtr; /**< \brief Ptr to Owner App's function that validates tbl contents */
+    CFE_TIME_SysTime_t        TimeOfLastUpdate;  /**< \brief Time when Table was last updated */
+    CFE_TBL_Handle_t          HeadOfAccessList;  /**< \brief Index into Handles Array that starts Access Linked List */
+    int32              LoadInProgress;      /**< \brief Flag identifies inactive buffer and whether load in progress */
+    int32              ValidateActiveIndex; /**< \brief Index to Validation Request on Active Table Result data */
+    int32              ValidateInactiveIndex; /**< \brief Index to Validation Request on Inactive Table Result data */
+    int32              DumpControlIndex;      /**< \brief Index to Dump Control Block */
+    CFE_ES_CDSHandle_t CDSHandle;             /**< \brief Handle to Critical Data Store for Critical Tables */
+    CFE_MSG_FcnCode_t  NotificationCC;  /**< \brief Command Code of an associated management notification message */
+    bool               CriticalTable;   /**< \brief Flag indicating whether table is a Critical Table */
+    bool               TableLoadedOnce; /**< \brief Flag indicating whether table has been loaded once or not */
+    bool               LoadPending;     /**< \brief Flag indicating an inactive buffer is ready to be copied */
+    bool               DumpOnly;        /**< \brief Flag indicating Table is NOT to be loaded */
+    bool               DoubleBuffered;  /**< \brief Flag indicating Table has a dedicated inactive buffer */
+    bool               UserDefAddr;     /**< \brief Flag indicating Table address was defined by Owner Application */
+    bool               NotifyByMsg;     /**< \brief Flag indicating Table Services should notify owning App via message
+                                                    when table requires management */
+    uint8 ActiveBufferIndex;            /**< \brief Index identifying which buffer is the active buffer */
+    char  Name[CFE_TBL_MAX_FULL_NAME_LEN]; /**< \brief Processor specific table name */
+    char  LastFileLoaded[OS_MAX_PATH_LEN]; /**< \brief Filename of last file loaded into table */
+} CFE_TBL_RegistryRec_t;
+
+/*******************************************************************************/
+/**   \brief Critical Table Registry Record
+**
+**     Critical Table Registry Record that contains information about a Critical
+**     Table that must survive the reboot and repopulation of the Table Registry.
+*/
+typedef struct
+{
+    CFE_ES_CDSHandle_t CDSHandle;             /**< \brief Handle to Critical Data Store for Critical Tables */
+    uint32             FileCreateTimeSecs;    /**< \brief File creation time from last file loaded into table */
+    uint32             FileCreateTimeSubSecs; /**< \brief File creation time from last file loaded into table */
+    CFE_TIME_SysTime_t TimeOfLastUpdate;      /**< \brief Time when Table was last updated */
+    char               LastFileLoaded[OS_MAX_PATH_LEN]; /**< \brief Filename of last file loaded into table */
+    char               Name[CFE_TBL_MAX_FULL_NAME_LEN]; /**< \brief Processor specific table name */
+    bool               TableLoadedOnce; /**< \brief Flag indicating whether table has been loaded once or not */
+} CFE_TBL_CritRegRec_t;
+
+/*******************************************************************************/
+/**   \brief Dump Control Block
+**
+**    This structure holds the data associated with a dump request.
+*/
+typedef struct
+{
+    CFE_TBL_DumpState_t    State;         /**< \brief Current state of this block of data */
+    size_t                 Size;          /**< \brief Number of bytes to be dumped */
+    CFE_TBL_LoadBuff_t *   DumpBufferPtr; /**< \brief Address where dumped data is to be stored temporarily */
+    CFE_TBL_RegistryRec_t *RegRecPtr;     /**< \brief Ptr to dumped table's registry record */
+    char                   TableName[CFE_TBL_MAX_FULL_NAME_LEN]; /**< \brief Name of Table being Dumped */
+} CFE_TBL_DumpControl_t;
+
+/*******************************************************************************/
+/**   \brief Table Registry Dump Record
+**
+**     Shortened Table Registry Record that is used when dumping a table
+**     registry entry to a file.
+*/
+typedef struct
+{
+    CFE_ES_MemOffset_t Size;               /**< \brief Size, in bytes, of Table */
+    CFE_TIME_SysTime_t TimeOfLastUpdate;   /**< \brief Time when Table was last updated */
+    uint32             NumUsers;           /**< \brief Number of applications that are sharing the table */
+    int32              LoadInProgress;     /**< \brief Flag identifies inactive buffer and whether load in progress */
+    uint32             FileCreateTimeSecs; /**< \brief File creation time from last file loaded into table */
+    uint32             FileCreateTimeSubSecs; /**< \brief File creation time from last file loaded into table */
+    uint32             Crc;                   /**< \brief Most recent CRC computed by TBL Services on table contents */
+    bool               ValidationFunc;  /**< \brief Flag indicating whether table has an associated Validation func*/
+    bool               TableLoadedOnce; /**< \brief Flag indicating whether table has been loaded once or not */
+    bool               LoadPending;     /**< \brief Flag indicating an inactive buffer is ready to be copied */
+    bool               DumpOnly;        /**< \brief Flag indicating Table is NOT to be loaded */
+    bool               DoubleBuffered;  /**< \brief Flag indicating Table has a dedicated inactive buffer */
+    char               Name[CFE_TBL_MAX_FULL_NAME_LEN]; /**< \brief Processor specific table name */
+    char               LastFileLoaded[OS_MAX_PATH_LEN]; /**< \brief Filename of last file loaded into table */
+    char               OwnerAppName[OS_MAX_API_NAME];   /**< \brief Application Name of App that Registered Table */
+    bool               CriticalTable;                   /**< \brief Identifies whether table is Critical or Not */
+} CFE_TBL_RegDumpRec_t;
+
+/*******************************************************************************/
+/**   \brief Table Registry Dump background state information
+**
+**    State info for background table registry dump process and one temporary data record.
+*/
+typedef struct
+{
+    CFE_FS_FileWriteMetaData_t FileWrite; /**< FS state data - must be first */
+
+    bool                 FileExisted; /**< Set true if the file already existed at the time of request */
+    CFE_TBL_RegDumpRec_t DumpRecord;  /**< Current record buffer (reused each entry) */
+} CFE_TBL_RegDumpStateInfo_t;
+
+/*******************************************************************************/
+/**   \brief Table Task Global Data
+**
+**     Structure used to ensure Table Task Global Data is maintained as a single
+**     block of memory.  This improves Table Maintenance by simplifying the memory
+**     map and helps to keep the code in an "object oriented" style.
+*/
+typedef struct
+{
+    /*
+    ** Task command interface counters...
+    */
+    uint8 CommandCounter;      /**< \brief Counts number of valid commands received */
+    uint8 CommandErrorCounter; /**< \brief Counts number of invalid commands received */
+
+    /*
+    ** Table Validation Result counters...
+    */
+    uint8 SuccessValCounter; /**< \brief Counts number of successful table validations */
+    uint8 FailedValCounter;  /**< \brief Counts number of unsuccessful table validations */
+    uint8 NumValRequests;    /**< \brief Counts number of table validation requests made */
+
+    /*
+    ** Ground Interface Information
+    */
+    int16 LastTblUpdated; /**< \brief Index into Registry of last table updated */
+
+    /*
+    ** Task housekeeping and diagnostics telemetry packets...
+    */
+    CFE_TBL_HousekeepingTlm_t  HkPacket;     /**< \brief Housekeeping Telemetry Packet */
+    CFE_TBL_TableRegistryTlm_t TblRegPacket; /**< \brief Table Registry Entry Telemetry Packet */
+    CFE_TBL_NotifyCmd_t        NotifyMsg;    /**< \brief Table management notification command message */
+
+    /*
+    ** Task operational data (not reported in housekeeping)...
+    */
+    CFE_SB_PipeId_t CmdPipe; /**< \brief Table Task command pipe ID as obtained from Software Bus */
+
+    /*
+    ** Task initialization data (not reported in housekeeping)...
+    */
+    CFE_ES_AppId_t TableTaskAppId; /**< \brief Contains Table Task Application ID as assigned by OS AL */
+
+    int16  HkTlmTblRegIndex; /**< \brief Index of table registry entry to be telemetered with Housekeeping */
+    uint16 ValidationCounter;
+
+    /*
+    ** Registry Access Mutex and Load Buffer Semaphores
+    */
+    osal_id_t          RegistryMutex; /**< \brief Mutex that controls access to Table Registry */
+    osal_id_t          WorkBufMutex;  /**< \brief Mutex that controls assignment of Working Buffers */
+    CFE_ES_CDSHandle_t CritRegHandle; /**< \brief Handle to Critical Table Registry in CDS */
+    CFE_TBL_LoadBuff_t LoadBuffs[CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS]; /**< \brief Working table buffers shared by
+                                                                              single buffered tables */
+
+    /*
+    ** Registry Data
+    */
+    CFE_TBL_AccessDescriptor_t Handles[CFE_PLATFORM_TBL_MAX_NUM_HANDLES]; /**< \brief Array of Access Descriptors */
+    CFE_TBL_RegistryRec_t      Registry[CFE_PLATFORM_TBL_MAX_NUM_TABLES]; /**< \brief Array of Table Registry Records */
+    CFE_TBL_CritRegRec_t
+                        CritReg[CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES]; /**< \brief Array of Critical Table Registry Records */
+    CFE_TBL_BufParams_t Buf; /**< \brief Parameters associated with Table Task's Memory Pool */
+    CFE_TBL_ValidationResult_t
+                          ValidationResults[CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS]; /**< \brief Array of Table Validation Requests */
+    CFE_TBL_DumpControl_t DumpControlBlocks[CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS]; /**< \brief Array of Dump-Only
+                                                                                         Dump Control Blocks */
+
+    /*
+     * Registry dump state info (background job)
+     */
+    CFE_TBL_RegDumpStateInfo_t RegDumpState;
+} CFE_TBL_Global_t;
+
+/*************************************************************************/
+/*
+ * Functions
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Compares message with #CFE_TBL_CmdHandlerTbl to identify the message
+**
+** \par Description
+**          Searches the Command Handler Table for an entry matching the
+**          message ID and, if necessary, the Command Code.  If an entry
+**          is not located, an error code is returned.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in] MessageID message ID of command message received on command pipe
+**
+** \param[in] CommandCode command code from command message received on command pipe
+**
+** \retval #CFE_SUCCESS          \copydoc CFE_SUCCESS
+** \retval #CFE_TBL_BAD_CMD_CODE \copydoc CFE_TBL_BAD_CMD_CODE
+** \retval #CFE_TBL_BAD_MSG_ID   \copydoc CFE_TBL_BAD_MSG_ID
+**
+*/
+int16 CFE_TBL_SearchCmdHndlrTbl(CFE_SB_MsgId_t MessageID, uint16 CommandCode);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief cFE Table Services Core Application Initialization
+**
+** \par Description
+**        This function initializes all data associated with the cFE Table
+**        Services Core Application.  It is only called when the Application
+**        is first started.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \return #CFE_SUCCESS  \copydoc CFE_SUCCESS
+** \return Any of the return values from #CFE_EVS_Register
+** \return Any of the return values from #CFE_SB_CreatePipe
+** \return Any of the return values from #CFE_SB_Subscribe
+** \return Any of the return values from #CFE_EVS_SendEvent
+*/
+int32 CFE_TBL_TaskInit(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Table Service Application Data Initialization
+**
+** \par Description
+**          Initializes all data necessary for the Table Service Application.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+*/
+void CFE_TBL_InitData(void);
+
+#endif /* CFE_TBL_TASK_H */
+```
+
+### `cfe_tbl_task_cmds.c`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task_cmds.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_tbl_task_cmds.c
+**
+** Subsystem: cFE TBL Task Command Processing Functions
+**
+** Author: David Kobe (the Hammers Company, Inc.)
+**
+** Notes:
+**
+*/
+
+/*
+** Required header files
+*/
+#include "cfe_tbl_module_all.h"
+#include "cfe_version.h"
+
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_HousekeepingCmd(const CFE_MSG_CommandHeader_t *data)
+{
+    int32                  Status;
+    int32                  OsStatus;
+    uint32                 i;
+    CFE_TBL_DumpControl_t *DumpCtrlPtr;
+    CFE_TIME_SysTime_t     DumpTime;
+    osal_id_t              FileDescriptor;
+
+    /*
+    ** Collect housekeeping data from Table Services
+    */
+    CFE_TBL_GetHkData();
+
+    /*
+    ** Send housekeeping telemetry packet
+    */
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_TBL_Global.HkPacket.TelemetryHeader));
+    Status = CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_TBL_Global.HkPacket.TelemetryHeader), true);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CFE_TBL_FAIL_HK_SEND_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to send Hk Packet (Status=0x%08X)", (unsigned int)Status);
+    }
+
+    /* If a table's registry entry has been requested for telemetry, then pack it and send it */
+    if (CFE_TBL_Global.HkTlmTblRegIndex != CFE_TBL_NOT_FOUND)
+    {
+        CFE_TBL_GetTblRegData();
+
+        /*
+        ** Send Table Registry Info Packet
+        */
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_TBL_Global.TblRegPacket.TelemetryHeader));
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_TBL_Global.TblRegPacket.TelemetryHeader), true);
+
+        /* Once the data has been sent, clear the index so that we don't send it again and again */
+        CFE_TBL_Global.HkTlmTblRegIndex = CFE_TBL_NOT_FOUND;
+    }
+
+    /* Check to see if there are any dump-only table dumps pending */
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS; i++)
+    {
+        if (CFE_TBL_Global.DumpControlBlocks[i].State == CFE_TBL_DUMP_PERFORMED)
+        {
+            DumpCtrlPtr = &CFE_TBL_Global.DumpControlBlocks[i];
+            Status      = CFE_TBL_DumpToFile(DumpCtrlPtr->DumpBufferPtr->DataSource, DumpCtrlPtr->TableName,
+                                        DumpCtrlPtr->DumpBufferPtr->BufferPtr, DumpCtrlPtr->Size);
+
+            /* If dump file was successfully written, update the file header so that the timestamp */
+            /* is the time of the actual capturing of the data, NOT the time when it was written to the file */
+            if (Status == CFE_TBL_INC_CMD_CTR)
+            {
+                DumpTime.Seconds    = DumpCtrlPtr->DumpBufferPtr->FileCreateTimeSecs;
+                DumpTime.Subseconds = DumpCtrlPtr->DumpBufferPtr->FileCreateTimeSubSecs;
+
+                OsStatus = OS_OpenCreate(&FileDescriptor, DumpCtrlPtr->DumpBufferPtr->DataSource, OS_FILE_FLAG_NONE,
+                                         OS_READ_WRITE);
+
+                if (OsStatus == OS_SUCCESS)
+                {
+                    Status = CFE_FS_SetTimestamp(FileDescriptor, DumpTime);
+
+                    if (Status != CFE_SUCCESS)
+                    {
+                        CFE_ES_WriteToSysLog("%s: Unable to update timestamp in dump file '%s'\n", __func__,
+                                             DumpCtrlPtr->DumpBufferPtr->DataSource);
+                    }
+
+                    OS_close(FileDescriptor);
+                }
+                else
+                {
+                    CFE_ES_WriteToSysLog("%s: Unable to open dump file '%s' to update timestamp\n", __func__,
+                                         DumpCtrlPtr->DumpBufferPtr->DataSource);
+                }
+            }
+
+            /* Free the shared working buffer */
+            CFE_TBL_Global.LoadBuffs[DumpCtrlPtr->RegRecPtr->LoadInProgress].Taken = false;
+            DumpCtrlPtr->RegRecPtr->LoadInProgress                                 = CFE_TBL_NO_LOAD_IN_PROGRESS;
+
+            /* Free the Dump Control Block for later use */
+            DumpCtrlPtr->State = CFE_TBL_DUMP_FREE;
+        }
+    }
+
+    return CFE_TBL_DONT_INC_CTR;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_GetHkData(void)
+{
+    uint32                      i;
+    uint16                      Count;
+    CFE_TBL_ValidationResult_t *ValPtr = NULL;
+
+    /* Copy command counter data */
+    CFE_TBL_Global.HkPacket.Payload.CommandCounter      = CFE_TBL_Global.CommandCounter;
+    CFE_TBL_Global.HkPacket.Payload.CommandErrorCounter = CFE_TBL_Global.CommandErrorCounter;
+    CFE_TBL_Global.HkPacket.Payload.FailedValCounter    = CFE_TBL_Global.FailedValCounter;
+    CFE_TBL_Global.HkPacket.Payload.NumLoadPending      = 0;
+    CFE_TBL_Global.HkPacket.Payload.MemPoolHandle       = CFE_TBL_Global.Buf.PoolHdl;
+
+    /* Determine the number of tables currently registered and Number of Load Pending Tables */
+    Count = 0;
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_NUM_TABLES; i++)
+    {
+        if (!CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Registry[i].OwnerAppId, CFE_TBL_NOT_OWNED))
+        {
+            Count++;
+
+            if (CFE_TBL_Global.Registry[i].LoadPending)
+            {
+                CFE_TBL_Global.HkPacket.Payload.NumLoadPending++;
+            }
+        }
+    }
+    CFE_TBL_Global.HkPacket.Payload.NumTables = Count;
+
+    /* Determine the number of free shared buffers */
+    CFE_TBL_Global.HkPacket.Payload.NumFreeSharedBufs = CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS;
+    for (i = 0; i < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS; i++)
+    {
+        if (CFE_TBL_Global.LoadBuffs[i].Taken)
+        {
+            CFE_TBL_Global.HkPacket.Payload.NumFreeSharedBufs--;
+        }
+    }
+
+    /* Locate a completed, but unreported, validation request */
+    i = 0;
+    while ((i < CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS) && (ValPtr == NULL))
+    {
+        if (CFE_TBL_Global.ValidationResults[i].State == CFE_TBL_VALIDATION_PERFORMED)
+        {
+            ValPtr = &CFE_TBL_Global.ValidationResults[i];
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    if (ValPtr != NULL)
+    {
+        CFE_TBL_Global.HkPacket.Payload.LastValCrc    = ValPtr->CrcOfTable;
+        CFE_TBL_Global.HkPacket.Payload.LastValStatus = ValPtr->Result;
+        CFE_TBL_Global.HkPacket.Payload.ActiveBuffer  = ValPtr->ActiveBuffer;
+
+        /* Keep track of the number of failed and successful validations */
+        if (ValPtr->Result == CFE_SUCCESS)
+        {
+            CFE_TBL_Global.SuccessValCounter++;
+        }
+        else
+        {
+            CFE_TBL_Global.FailedValCounter++;
+        }
+
+        CFE_SB_MessageStringSet(CFE_TBL_Global.HkPacket.Payload.LastValTableName, ValPtr->TableName,
+                                sizeof(CFE_TBL_Global.HkPacket.Payload.LastValTableName), sizeof(ValPtr->TableName));
+        CFE_TBL_Global.ValidationCounter++;
+
+        /* Free the Validation Response Block for next time */
+        ValPtr->Result       = 0;
+        ValPtr->CrcOfTable   = 0;
+        ValPtr->TableName[0] = '\0';
+        ValPtr->ActiveBuffer = false;
+        ValPtr->State        = CFE_TBL_VALIDATION_FREE;
+    }
+
+    CFE_TBL_Global.HkPacket.Payload.ValidationCounter = CFE_TBL_Global.ValidationCounter;
+    CFE_TBL_Global.HkPacket.Payload.SuccessValCounter = CFE_TBL_Global.SuccessValCounter;
+    CFE_TBL_Global.HkPacket.Payload.FailedValCounter  = CFE_TBL_Global.FailedValCounter;
+    CFE_TBL_Global.HkPacket.Payload.NumValRequests    = CFE_TBL_Global.NumValRequests;
+
+    /* Validate the index of the last table updated before using it */
+    if ((CFE_TBL_Global.LastTblUpdated >= 0) && (CFE_TBL_Global.LastTblUpdated < CFE_PLATFORM_TBL_MAX_NUM_TABLES))
+    {
+        /* Check to make sure the Registry Entry is still valid */
+        if (!CFE_RESOURCEID_TEST_EQUAL(CFE_TBL_Global.Registry[CFE_TBL_Global.LastTblUpdated].OwnerAppId,
+                                       CFE_TBL_NOT_OWNED))
+        {
+            /* Get the time at the last table update */
+            CFE_TBL_Global.HkPacket.Payload.LastUpdateTime =
+                CFE_TBL_Global.Registry[CFE_TBL_Global.LastTblUpdated].TimeOfLastUpdate;
+
+            /* Get the table name used for the last table update */
+            CFE_SB_MessageStringSet(CFE_TBL_Global.HkPacket.Payload.LastUpdatedTable,
+                                    CFE_TBL_Global.Registry[CFE_TBL_Global.LastTblUpdated].Name,
+                                    sizeof(CFE_TBL_Global.HkPacket.Payload.LastUpdatedTable),
+                                    sizeof(CFE_TBL_Global.Registry[CFE_TBL_Global.LastTblUpdated].Name));
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_GetTblRegData(void)
+{
+    CFE_TBL_RegistryRec_t *RegRecPtr;
+
+    RegRecPtr = &CFE_TBL_Global.Registry[CFE_TBL_Global.HkTlmTblRegIndex];
+
+    CFE_TBL_Global.TblRegPacket.Payload.Size = CFE_ES_MEMOFFSET_C(RegRecPtr->Size);
+    CFE_TBL_Global.TblRegPacket.Payload.ActiveBufferAddr =
+        CFE_ES_MEMADDRESS_C(RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr);
+
+    if (RegRecPtr->DoubleBuffered)
+    {
+        /* For a double buffered table, the inactive is the other allocated buffer */
+        CFE_TBL_Global.TblRegPacket.Payload.InactiveBufferAddr =
+            CFE_ES_MEMADDRESS_C(RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)].BufferPtr);
+    }
+    else
+    {
+        /* Check to see if an inactive buffer has currently been allocated to the single buffered table */
+        if (RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+        {
+            CFE_TBL_Global.TblRegPacket.Payload.InactiveBufferAddr =
+                CFE_ES_MEMADDRESS_C(CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].BufferPtr);
+        }
+        else
+        {
+            CFE_TBL_Global.TblRegPacket.Payload.InactiveBufferAddr = CFE_ES_MEMADDRESS_C(0);
+        }
+    }
+
+    CFE_TBL_Global.TblRegPacket.Payload.ValidationFuncPtr = CFE_ES_MEMADDRESS_C(RegRecPtr->ValidationFuncPtr);
+    CFE_TBL_Global.TblRegPacket.Payload.TimeOfLastUpdate  = RegRecPtr->TimeOfLastUpdate;
+    CFE_TBL_Global.TblRegPacket.Payload.TableLoadedOnce   = RegRecPtr->TableLoadedOnce;
+    CFE_TBL_Global.TblRegPacket.Payload.LoadPending       = RegRecPtr->LoadPending;
+    CFE_TBL_Global.TblRegPacket.Payload.DumpOnly          = RegRecPtr->DumpOnly;
+    CFE_TBL_Global.TblRegPacket.Payload.DoubleBuffered    = RegRecPtr->DoubleBuffered;
+    CFE_TBL_Global.TblRegPacket.Payload.FileCreateTimeSecs =
+        RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSecs;
+    CFE_TBL_Global.TblRegPacket.Payload.FileCreateTimeSubSecs =
+        RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSubSecs;
+    CFE_TBL_Global.TblRegPacket.Payload.Crc      = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].Crc;
+    CFE_TBL_Global.TblRegPacket.Payload.Critical = RegRecPtr->CriticalTable;
+
+    CFE_SB_MessageStringSet(CFE_TBL_Global.TblRegPacket.Payload.Name, RegRecPtr->Name,
+                            sizeof(CFE_TBL_Global.TblRegPacket.Payload.Name), sizeof(RegRecPtr->Name));
+    CFE_SB_MessageStringSet(CFE_TBL_Global.TblRegPacket.Payload.LastFileLoaded, RegRecPtr->LastFileLoaded,
+                            sizeof(CFE_TBL_Global.TblRegPacket.Payload.LastFileLoaded),
+                            sizeof(RegRecPtr->LastFileLoaded));
+    CFE_ES_GetAppName(CFE_TBL_Global.TblRegPacket.Payload.OwnerAppName, RegRecPtr->OwnerAppId,
+                      sizeof(CFE_TBL_Global.TblRegPacket.Payload.OwnerAppName));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_NoopCmd(const CFE_TBL_NoopCmd_t *data)
+{
+    /* Acknowledge receipt of NOOP with Event Message */
+    CFE_EVS_SendEvent(CFE_TBL_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "No-op Cmd Rcvd: %s", CFE_VERSION_STRING);
+
+    return CFE_TBL_INC_CMD_CTR;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_ResetCountersCmd(const CFE_TBL_ResetCountersCmd_t *data)
+{
+    CFE_TBL_Global.CommandCounter      = 0;
+    CFE_TBL_Global.CommandErrorCounter = 0;
+    CFE_TBL_Global.SuccessValCounter   = 0;
+    CFE_TBL_Global.FailedValCounter    = 0;
+    CFE_TBL_Global.NumValRequests      = 0;
+    CFE_TBL_Global.ValidationCounter   = 0;
+
+    CFE_EVS_SendEvent(CFE_TBL_RESET_INF_EID, CFE_EVS_EventType_DEBUG, "Reset Counters command");
+
+    return CFE_TBL_DONT_INC_CTR;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_LoadCmd(const CFE_TBL_LoadCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t             ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    const CFE_TBL_LoadCmd_Payload_t *CmdPtr     = &data->Payload;
+    CFE_FS_Header_t                  StdFileHeader;
+    CFE_TBL_File_Hdr_t               TblFileHeader;
+    osal_id_t                        FileDescriptor = OS_OBJECT_ID_UNDEFINED;
+    int32                            Status;
+    int32                            OsStatus;
+    int16                            RegIndex;
+    CFE_TBL_RegistryRec_t *          RegRecPtr;
+    CFE_TBL_LoadBuff_t *             WorkingBufferPtr;
+    char                             LoadFilename[OS_MAX_PATH_LEN];
+    uint8                            ExtraByte;
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(LoadFilename, (char *)CmdPtr->LoadFilename, NULL, sizeof(LoadFilename),
+                            sizeof(CmdPtr->LoadFilename));
+
+    /* Try to open the specified table file */
+    OsStatus = OS_OpenCreate(&FileDescriptor, LoadFilename, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+
+    if (OsStatus == OS_SUCCESS)
+    {
+        Status = CFE_TBL_ReadHeaders(FileDescriptor, &StdFileHeader, &TblFileHeader, &LoadFilename[0]);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /* Locate specified table in registry */
+            RegIndex = CFE_TBL_FindTableInRegistry(TblFileHeader.TableName);
+
+            if (RegIndex == CFE_TBL_NOT_FOUND)
+            {
+                CFE_EVS_SendEvent(CFE_TBL_NO_SUCH_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Unable to locate '%s' in Table Registry", TblFileHeader.TableName);
+            }
+            else
+            {
+                /* Translate the registry index into a record pointer */
+                RegRecPtr = &CFE_TBL_Global.Registry[RegIndex];
+
+                if (RegRecPtr->DumpOnly)
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_LOADING_A_DUMP_ONLY_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Attempted to load DUMP-ONLY table '%s' from '%s'", TblFileHeader.TableName,
+                                      LoadFilename);
+                }
+                else if (RegRecPtr->LoadPending)
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_LOADING_PENDING_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Attempted to load table '%s' while previous load is still pending",
+                                      TblFileHeader.TableName);
+                }
+                else
+                {
+                    /* Make sure of the following:                                               */
+                    /*    1) If table has not been loaded previously, then make sure the current */
+                    /*       load starts with the first byte                                     */
+                    /*    2) The number of bytes to load is greater than zero                    */
+                    /*    3) The offset plus the number of bytes does not exceed the table size  */
+                    if (((RegRecPtr->TableLoadedOnce) || (TblFileHeader.Offset == 0)) && (TblFileHeader.NumBytes > 0) &&
+                        ((TblFileHeader.NumBytes + TblFileHeader.Offset) <= RegRecPtr->Size))
+                    {
+                        /* Get a working buffer, either a free one or one allocated with previous load command */
+                        Status = CFE_TBL_GetWorkingBuffer(&WorkingBufferPtr, RegRecPtr, false);
+
+                        if (Status == CFE_SUCCESS)
+                        {
+                            /* Copy data from file into working buffer */
+                            OsStatus =
+                                OS_read(FileDescriptor, ((uint8 *)WorkingBufferPtr->BufferPtr) + TblFileHeader.Offset,
+                                        TblFileHeader.NumBytes);
+
+                            /* Make sure the appropriate number of bytes were read */
+                            if ((long)OsStatus == TblFileHeader.NumBytes)
+                            {
+                                /* Check to ensure the file does not have any extra data at the end */
+                                OsStatus = OS_read(FileDescriptor, &ExtraByte, 1);
+
+                                /* If another byte was successfully read, then file contains more data than header
+                                 * claims */
+                                if ((long)OsStatus == 1)
+                                {
+                                    CFE_EVS_SendEvent(CFE_TBL_FILE_TOO_BIG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                                      "File '%s' has more data than Tbl Hdr indicates (%d)",
+                                                      LoadFilename, (int)TblFileHeader.NumBytes);
+                                }
+                                else /* If error reading file or zero bytes read, assume it was the perfect size */
+                                {
+                                    CFE_EVS_SendEvent(CFE_TBL_FILE_LOADED_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                                      "Successful load of '%s' into '%s' working buffer", LoadFilename,
+                                                      TblFileHeader.TableName);
+
+                                    /* Save file information statistics for later use in registry */
+                                    memcpy(WorkingBufferPtr->DataSource, LoadFilename, OS_MAX_PATH_LEN);
+
+                                    /* Save file creation time for later storage into Registry */
+                                    WorkingBufferPtr->FileCreateTimeSecs    = StdFileHeader.TimeSeconds;
+                                    WorkingBufferPtr->FileCreateTimeSubSecs = StdFileHeader.TimeSubSeconds;
+
+                                    /* Compute the CRC on the specified table buffer */
+                                    WorkingBufferPtr->Crc = CFE_ES_CalculateCRC(
+                                        WorkingBufferPtr->BufferPtr, RegRecPtr->Size, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+                                    /* Initialize validation flag with true if no Validation Function is required to be
+                                     * called */
+                                    WorkingBufferPtr->Validated = (RegRecPtr->ValidationFuncPtr == NULL);
+
+                                    /* Save file information statistics for housekeeping telemetry */
+                                    strncpy(CFE_TBL_Global.HkPacket.Payload.LastFileLoaded, LoadFilename,
+                                            sizeof(CFE_TBL_Global.HkPacket.Payload.LastFileLoaded) - 1);
+                                    CFE_TBL_Global.HkPacket.Payload
+                                        .LastFileLoaded[sizeof(CFE_TBL_Global.HkPacket.Payload.LastFileLoaded) - 1] =
+                                        '\0';
+                                    strncpy(CFE_TBL_Global.HkPacket.Payload.LastTableLoaded, TblFileHeader.TableName,
+                                            sizeof(CFE_TBL_Global.HkPacket.Payload.LastTableLoaded) - 1);
+                                    CFE_TBL_Global.HkPacket.Payload
+                                        .LastTableLoaded[sizeof(CFE_TBL_Global.HkPacket.Payload.LastTableLoaded) - 1] =
+                                        '\0';
+
+                                    /* Increment successful command completion counter */
+                                    ReturnCode = CFE_TBL_INC_CMD_CTR;
+                                }
+                            }
+                            else
+                            {
+                                /* A file whose header claims has 'x' amount of data but it only has 'y' */
+                                /* is considered a fatal error during a load process                     */
+                                CFE_EVS_SendEvent(CFE_TBL_FILE_INCOMPLETE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                                  "Incomplete load of '%s' into '%s' working buffer", LoadFilename,
+                                                  TblFileHeader.TableName);
+                            }
+                        }
+                        else
+                        {
+                            CFE_EVS_SendEvent(CFE_TBL_NO_WORK_BUFFERS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "No working buffers available for table '%s'", TblFileHeader.TableName);
+                        }
+                    }
+                    else
+                    {
+                        if ((TblFileHeader.NumBytes + TblFileHeader.Offset) > RegRecPtr->Size)
+                        {
+                            CFE_EVS_SendEvent(CFE_TBL_LOAD_EXCEEDS_SIZE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "Cannot load '%s' (%d) at offset %d in '%s' (%d)", LoadFilename,
+                                              (int)TblFileHeader.NumBytes, (int)TblFileHeader.Offset,
+                                              TblFileHeader.TableName, (int)RegRecPtr->Size);
+                        }
+                        else if (TblFileHeader.NumBytes == 0)
+                        {
+                            CFE_EVS_SendEvent(CFE_TBL_ZERO_LENGTH_LOAD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "Table Hdr in '%s' indicates no data in file", LoadFilename);
+                        }
+                        else
+                        {
+                            CFE_EVS_SendEvent(CFE_TBL_PARTIAL_LOAD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "'%s' has partial load for uninitialized table '%s'", LoadFilename,
+                                              TblFileHeader.TableName);
+                        }
+                    }
+                }
+            }
+        } /* No need to issue event messages in response to errors reading headers */
+          /* because the function that read the headers will generate messages     */
+
+        /* Close the file now that the contents have been read */
+        OS_close(FileDescriptor);
+    }
+    else
+    {
+        /* Error opening specified file */
+        CFE_EVS_SendEvent(CFE_TBL_FILE_ACCESS_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to open file '%s' for table load, Status = %ld", LoadFilename, (long)OsStatus);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_DumpCmd(const CFE_TBL_DumpCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t             ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    int16                            RegIndex;
+    const CFE_TBL_DumpCmd_Payload_t *CmdPtr = &data->Payload;
+    char                             DumpFilename[OS_MAX_PATH_LEN];
+    char                             TableName[CFE_TBL_MAX_FULL_NAME_LEN];
+    CFE_TBL_RegistryRec_t *          RegRecPtr;
+    void *                           DumpDataAddr = NULL;
+    CFE_TBL_LoadBuff_t *             WorkingBufferPtr;
+    int32                            DumpIndex;
+    int32                            Status;
+    CFE_TBL_DumpControl_t *          DumpCtrlPtr;
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(DumpFilename, (char *)CmdPtr->DumpFilename, NULL, sizeof(DumpFilename),
+                            sizeof(CmdPtr->DumpFilename));
+
+    CFE_SB_MessageStringGet(TableName, (char *)CmdPtr->TableName, NULL, sizeof(TableName), sizeof(CmdPtr->TableName));
+
+    /* Before doing anything, lets make sure the table that is to be dumped exists */
+    RegIndex = CFE_TBL_FindTableInRegistry(TableName);
+
+    if (RegIndex != CFE_TBL_NOT_FOUND)
+    {
+        /* Obtain a pointer to registry information about specified table */
+        RegRecPtr = &CFE_TBL_Global.Registry[RegIndex];
+
+        /* Determine what data is to be dumped */
+        if (CmdPtr->ActiveTableFlag == CFE_TBL_BufferSelect_ACTIVE)
+        {
+            DumpDataAddr = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr;
+        }
+        else if (CmdPtr->ActiveTableFlag == CFE_TBL_BufferSelect_INACTIVE) /* Dumping Inactive Buffer */
+        {
+            /* If this is a double buffered table, locating the inactive buffer is trivial */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                DumpDataAddr = RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)].BufferPtr;
+            }
+            else
+            {
+                /* For single buffered tables, the index to the inactive buffer is kept in 'LoadInProgress' */
+                /* Unless this is a table whose address was defined by the owning Application.              */
+                if ((RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS) && (!RegRecPtr->UserDefAddr))
+                {
+                    DumpDataAddr = CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].BufferPtr;
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_NO_INACTIVE_BUFFER_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "No Inactive Buffer for Table '%s' present", TableName);
+                }
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_TBL_ILLEGAL_BUFF_PARAM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Cmd for Table '%s' had illegal buffer parameter (0x%08X)", TableName,
+                              (unsigned int)CmdPtr->ActiveTableFlag);
+        }
+
+        /* If we have located the data to be dumped, then proceed with creating the file and dumping the data */
+        if (DumpDataAddr != NULL)
+        {
+            /* If this is not a dump only table, then we can perform the dump immediately */
+            if (!RegRecPtr->DumpOnly)
+            {
+                ReturnCode = CFE_TBL_DumpToFile(DumpFilename, TableName, DumpDataAddr, RegRecPtr->Size);
+            }
+            else /* Dump Only tables need to synchronize their dumps with the owner's execution */
+            {
+                /* Make sure a dump is not already in progress */
+                if (RegRecPtr->DumpControlIndex == CFE_TBL_NO_DUMP_PENDING)
+                {
+                    /* Find a free Dump Control Block */
+                    DumpIndex = 0;
+                    while ((DumpIndex < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS) &&
+                           (CFE_TBL_Global.DumpControlBlocks[DumpIndex].State != CFE_TBL_DUMP_FREE))
+                    {
+                        DumpIndex++;
+                    }
+
+                    if (DumpIndex < CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS)
+                    {
+                        /* Allocate a shared memory buffer for storing the data to be dumped */
+                        Status = CFE_TBL_GetWorkingBuffer(&WorkingBufferPtr, RegRecPtr, false);
+
+                        if (Status == CFE_SUCCESS)
+                        {
+                            DumpCtrlPtr            = &CFE_TBL_Global.DumpControlBlocks[DumpIndex];
+                            DumpCtrlPtr->State     = CFE_TBL_DUMP_PENDING;
+                            DumpCtrlPtr->RegRecPtr = RegRecPtr;
+
+                            /* Save the name of the desired dump filename, table name and size for later */
+                            DumpCtrlPtr->DumpBufferPtr = WorkingBufferPtr;
+                            memcpy(DumpCtrlPtr->DumpBufferPtr->DataSource, DumpFilename, OS_MAX_PATH_LEN);
+                            memcpy(DumpCtrlPtr->TableName, TableName, CFE_TBL_MAX_FULL_NAME_LEN);
+                            DumpCtrlPtr->Size = RegRecPtr->Size;
+
+                            /* Notify the owning application that a dump is pending */
+                            RegRecPtr->DumpControlIndex = DumpIndex;
+
+                            /* If application requested notification by message, then do so */
+                            CFE_TBL_SendNotificationMsg(RegRecPtr);
+
+                            /* Consider the command completed successfully */
+                            ReturnCode = CFE_TBL_INC_CMD_CTR;
+                        }
+                        else
+                        {
+                            CFE_EVS_SendEvent(CFE_TBL_NO_WORK_BUFFERS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "No working buffers available for table '%s'", TableName);
+                        }
+                    }
+                    else
+                    {
+                        CFE_EVS_SendEvent(CFE_TBL_TOO_MANY_DUMPS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                          "Too many Dump Only Table Dumps have been requested");
+                    }
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_DUMP_PENDING_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "A dump for '%s' is already pending", TableName);
+                }
+            }
+        }
+    }
+    else /* Table could not be found in Registry */
+    {
+        CFE_EVS_SendEvent(CFE_TBL_NO_SUCH_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to locate '%s' in Table Registry", TableName);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_TBL_CmdProcRet_t CFE_TBL_DumpToFile(const char *DumpFilename, const char *TableName, const void *DumpDataAddr,
+                                        size_t TblSizeInBytes)
+{
+    CFE_TBL_CmdProcRet_t ReturnCode      = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    bool                 FileExistedPrev = false;
+    CFE_FS_Header_t      StdFileHeader;
+    CFE_TBL_File_Hdr_t   TblFileHeader;
+    osal_id_t            FileDescriptor = OS_OBJECT_ID_UNDEFINED;
+    int32                Status;
+    int32                OsStatus;
+    int32                EndianCheck = 0x01020304;
+
+    /* Clear Header of any garbage before copying content */
+    memset(&TblFileHeader, 0, sizeof(CFE_TBL_File_Hdr_t));
+
+    /* Check to see if the dump file already exists */
+    OsStatus = OS_OpenCreate(&FileDescriptor, DumpFilename, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+
+    if (OsStatus == OS_SUCCESS)
+    {
+        FileExistedPrev = true;
+        OS_close(FileDescriptor);
+    }
+
+    /* Create a new dump file, overwriting anything that may have existed previously */
+    OsStatus = OS_OpenCreate(&FileDescriptor, DumpFilename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+
+    if (OsStatus == OS_SUCCESS)
+    {
+        /* Initialize the standard cFE File Header for the Dump File */
+        CFE_FS_InitHeader(&StdFileHeader, "Table Dump Image", CFE_FS_SubType_TBL_IMG);
+
+        /* Output the Standard cFE File Header to the Dump File */
+        Status = CFE_FS_WriteHeader(FileDescriptor, &StdFileHeader);
+
+        if (Status == sizeof(CFE_FS_Header_t))
+        {
+            /* Initialize the Table Image Header for the Dump File */
+            strncpy(TblFileHeader.TableName, TableName, sizeof(TblFileHeader.TableName) - 1);
+            TblFileHeader.TableName[sizeof(TblFileHeader.TableName) - 1] = 0;
+            TblFileHeader.Offset                                         = 0;
+            TblFileHeader.NumBytes                                       = TblSizeInBytes;
+            TblFileHeader.Reserved                                       = 0;
+
+            /* Determine if this is a little endian processor */
+            if ((*(char *)&EndianCheck) == 0x04)
+            {
+                /* If this is a little endian processor, then byte swap the header to a big endian format */
+                /* to maintain the cFE Header standards */
+                /* NOTE: FOR THE REMAINDER OF THIS FUNCTION, THE CONTENTS OF THE HEADER IS UNREADABLE BY */
+                /*       THIS PROCESSOR!  THE DATA WOULD NEED TO BE SWAPPED BACK BEFORE READING.         */
+                CFE_TBL_ByteSwapTblHeader(&TblFileHeader);
+            }
+
+            /* Output the Table Image Header to the Dump File */
+            OsStatus = OS_write(FileDescriptor, &TblFileHeader, sizeof(CFE_TBL_File_Hdr_t));
+
+            /* Make sure the header was output completely */
+            if ((long)OsStatus == sizeof(CFE_TBL_File_Hdr_t))
+            {
+                /* Output the requested data to the dump file */
+                /* Output the active table image data to the dump file */
+                OsStatus = OS_write(FileDescriptor, DumpDataAddr, TblSizeInBytes);
+
+                if ((long)OsStatus == TblSizeInBytes)
+                {
+                    if (FileExistedPrev)
+                    {
+                        CFE_EVS_SendEvent(CFE_TBL_OVERWRITE_DUMP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                          "Successfully overwrote '%s' with Table '%s'", DumpFilename, TableName);
+                    }
+                    else
+                    {
+                        CFE_EVS_SendEvent(CFE_TBL_WRITE_DUMP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                          "Successfully dumped Table '%s' to '%s'", TableName, DumpFilename);
+                    }
+
+                    /* Save file information statistics for housekeeping telemetry */
+                    strncpy(CFE_TBL_Global.HkPacket.Payload.LastFileDumped, DumpFilename,
+                            sizeof(CFE_TBL_Global.HkPacket.Payload.LastFileDumped) - 1);
+                    CFE_TBL_Global.HkPacket.Payload
+                        .LastFileDumped[sizeof(CFE_TBL_Global.HkPacket.Payload.LastFileDumped) - 1] = 0;
+
+                    /* Increment Successful Command Counter */
+                    ReturnCode = CFE_TBL_INC_CMD_CTR;
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_WRITE_TBL_IMG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Error writing Tbl image to '%s', Status=%ld", DumpFilename, (long)OsStatus);
+                }
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CFE_TBL_WRITE_TBL_HDR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Error writing Tbl image File Header to '%s', Status=%ld", DumpFilename,
+                                  (long)OsStatus);
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_TBL_WRITE_CFE_HDR_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error writing cFE File Header to '%s', Status=0x%08X", DumpFilename,
+                              (unsigned int)Status);
+        }
+
+        /* We are done outputting data to the dump file.  Close it. */
+        OS_close(FileDescriptor);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_TBL_CREATING_DUMP_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error creating dump file '%s', Status=%ld", DumpFilename, (long)OsStatus);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_ValidateCmd(const CFE_TBL_ValidateCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t                 ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    int16                                RegIndex;
+    const CFE_TBL_ValidateCmd_Payload_t *CmdPtr = &data->Payload;
+    CFE_TBL_RegistryRec_t *              RegRecPtr;
+    void *                               ValidationDataPtr = NULL;
+    char                                 TableName[CFE_TBL_MAX_FULL_NAME_LEN];
+    uint32                               CrcOfTable;
+    int32                                ValIndex;
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(TableName, (char *)CmdPtr->TableName, NULL, sizeof(TableName), sizeof(CmdPtr->TableName));
+
+    /* Before doing anything, lets make sure the table that is to be dumped exists */
+    RegIndex = CFE_TBL_FindTableInRegistry(TableName);
+
+    if (RegIndex != CFE_TBL_NOT_FOUND)
+    {
+        /* Obtain a pointer to registry information about specified table */
+        RegRecPtr = &CFE_TBL_Global.Registry[RegIndex];
+
+        /* Determine what data is to be validated */
+        if (CmdPtr->ActiveTableFlag == CFE_TBL_BufferSelect_ACTIVE)
+        {
+            ValidationDataPtr = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].BufferPtr;
+        }
+        else if (CmdPtr->ActiveTableFlag == CFE_TBL_BufferSelect_INACTIVE) /* Validating Inactive Buffer */
+        {
+            /* If this is a double buffered table, locating the inactive buffer is trivial */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                ValidationDataPtr = RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)].BufferPtr;
+            }
+            else
+            {
+                /* For single buffered tables, the index to the inactive buffer is kept in 'LoadInProgress' */
+                if (RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+                {
+                    ValidationDataPtr = CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].BufferPtr;
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_NO_INACTIVE_BUFFER_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "No Inactive Buffer for Table '%s' present", TableName);
+                }
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_TBL_ILLEGAL_BUFF_PARAM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Cmd for Table '%s' had illegal buffer parameter (0x%08X)", TableName,
+                              (unsigned int)CmdPtr->ActiveTableFlag);
+        }
+
+        /* If we have located the data to be validated, then proceed with notifying the application, if */
+        /* necessary, and computing the CRC value for the block of memory                               */
+        if (ValidationDataPtr != NULL)
+        {
+            /* Find a free Validation Response Block */
+            ValIndex = 0;
+            while ((ValIndex < CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS) &&
+                   (CFE_TBL_Global.ValidationResults[ValIndex].State != CFE_TBL_VALIDATION_FREE))
+            {
+                ValIndex++;
+            }
+
+            if (ValIndex < CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS)
+            {
+                /* Allocate this Validation Response Block */
+                CFE_TBL_Global.ValidationResults[ValIndex].State  = CFE_TBL_VALIDATION_PENDING;
+                CFE_TBL_Global.ValidationResults[ValIndex].Result = 0;
+                memcpy(CFE_TBL_Global.ValidationResults[ValIndex].TableName, TableName, CFE_TBL_MAX_FULL_NAME_LEN);
+
+                /* Compute the CRC on the specified table buffer */
+                CrcOfTable = CFE_ES_CalculateCRC(ValidationDataPtr, RegRecPtr->Size, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+                CFE_TBL_Global.ValidationResults[ValIndex].CrcOfTable   = CrcOfTable;
+                CFE_TBL_Global.ValidationResults[ValIndex].ActiveBuffer = (CmdPtr->ActiveTableFlag != 0);
+
+                /* If owner has a validation function, then notify the  */
+                /* table owner that there is data to be validated       */
+                if (RegRecPtr->ValidationFuncPtr != NULL)
+                {
+                    if (CmdPtr->ActiveTableFlag)
+                    {
+                        RegRecPtr->ValidateActiveIndex = ValIndex;
+                    }
+                    else
+                    {
+                        RegRecPtr->ValidateInactiveIndex = ValIndex;
+                    }
+
+                    /* If application requested notification by message, then do so */
+                    if (CFE_TBL_SendNotificationMsg(RegRecPtr) == CFE_SUCCESS)
+                    {
+                        /* Notify ground that validation request has been made */
+                        CFE_EVS_SendEvent(CFE_TBL_VAL_REQ_MADE_INF_EID, CFE_EVS_EventType_DEBUG,
+                                          "Tbl Services issued validation request for '%s'", TableName);
+                    }
+
+                    /* Maintain statistic on number of validation requests given to applications */
+                    CFE_TBL_Global.NumValRequests++;
+                }
+                else
+                {
+                    /* If there isn't a validation function pointer, then the process is complete  */
+                    /* By setting this value, we are letting the Housekeeping process recognize it */
+                    /* as data to be sent to the ground in telemetry.                              */
+                    CFE_TBL_Global.ValidationResults[ValIndex].State = CFE_TBL_VALIDATION_PERFORMED;
+
+                    CFE_EVS_SendEvent(CFE_TBL_ASSUMED_VALID_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "Tbl Services assumes '%s' is valid. No Validation Function has been registered",
+                                      TableName);
+                }
+
+                /* Increment Successful Command Counter */
+                ReturnCode = CFE_TBL_INC_CMD_CTR;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CFE_TBL_TOO_MANY_VALIDATIONS_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Too many Table Validations have been requested");
+            }
+        }
+    }
+    else /* Table could not be found in Registry */
+    {
+        CFE_EVS_SendEvent(CFE_TBL_NO_SUCH_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to locate '%s' in Table Registry", TableName);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_ActivateCmd(const CFE_TBL_ActivateCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t                 ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    int16                                RegIndex;
+    const CFE_TBL_ActivateCmd_Payload_t *CmdPtr = &data->Payload;
+    char                                 TableName[CFE_TBL_MAX_FULL_NAME_LEN];
+    CFE_TBL_RegistryRec_t *              RegRecPtr;
+    bool                                 ValidationStatus;
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(TableName, (char *)CmdPtr->TableName, NULL, sizeof(TableName), sizeof(CmdPtr->TableName));
+
+    /* Before doing anything, lets make sure the table that is to be dumped exists */
+    RegIndex = CFE_TBL_FindTableInRegistry(TableName);
+
+    if (RegIndex != CFE_TBL_NOT_FOUND)
+    {
+        /* Obtain a pointer to registry information about specified table */
+        RegRecPtr = &CFE_TBL_Global.Registry[RegIndex];
+
+        if (RegRecPtr->DumpOnly)
+        {
+            CFE_EVS_SendEvent(CFE_TBL_ACTIVATE_DUMP_ONLY_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Illegal attempt to activate dump-only table '%s'", TableName);
+        }
+        else if (RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+        {
+            /* Determine if the inactive buffer has been successfully validated or not */
+            if (RegRecPtr->DoubleBuffered)
+            {
+                ValidationStatus = RegRecPtr->Buffers[(1U - RegRecPtr->ActiveBufferIndex)].Validated;
+            }
+            else
+            {
+                ValidationStatus = CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Validated;
+            }
+
+            if (ValidationStatus == true)
+            {
+                CFE_TBL_Global.Registry[RegIndex].LoadPending = true;
+
+                /* If application requested notification by message, then do so */
+                if (CFE_TBL_SendNotificationMsg(RegRecPtr) == CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(CFE_TBL_LOAD_PEND_REQ_INF_EID, CFE_EVS_EventType_DEBUG,
+                                      "Tbl Services notifying App that '%s' has a load pending", TableName);
+                }
+
+                /* Increment Successful Command Counter */
+                ReturnCode = CFE_TBL_INC_CMD_CTR;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CFE_TBL_UNVALIDATED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Cannot activate table '%s'. Inactive image not Validated", TableName);
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_TBL_ACTIVATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Cannot activate table '%s'. No Inactive image available", TableName);
+        }
+    }
+    else /* Table could not be found in Registry */
+    {
+        CFE_EVS_SendEvent(CFE_TBL_NO_SUCH_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to locate '%s' in Table Registry", TableName);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_TBL_DumpRegistryGetter(void *Meta, uint32 RecordNum, void **Buffer, size_t *BufSize)
+{
+    CFE_TBL_RegDumpStateInfo_t *StatePtr = (CFE_TBL_RegDumpStateInfo_t *)Meta;
+    CFE_TBL_RegistryRec_t *     RegRecPtr;
+    CFE_TBL_Handle_t            HandleIterator;
+    CFE_ES_AppId_t              OwnerAppId;
+    bool                        IsValidEntry;
+
+    IsValidEntry = false;
+    OwnerAppId   = CFE_ES_APPID_UNDEFINED;
+
+    if (RecordNum < CFE_PLATFORM_TBL_MAX_NUM_TABLES)
+    {
+        /* Make a pointer to simplify code look and to remove redundant indexing into registry */
+        RegRecPtr = &CFE_TBL_Global.Registry[RecordNum];
+
+        /* should lock registry while copying out data to ensure its in consistent state */
+        CFE_TBL_LockRegistry();
+
+        /* Check to see if the Registry entry is empty */
+        if (!CFE_RESOURCEID_TEST_EQUAL(RegRecPtr->OwnerAppId, CFE_TBL_NOT_OWNED) ||
+            (RegRecPtr->HeadOfAccessList != CFE_TBL_END_OF_LIST))
+        {
+            IsValidEntry = true;
+            OwnerAppId   = RegRecPtr->OwnerAppId;
+
+            /* Fill Registry Dump Record with relevant information */
+            StatePtr->DumpRecord.Size             = CFE_ES_MEMOFFSET_C(RegRecPtr->Size);
+            StatePtr->DumpRecord.TimeOfLastUpdate = RegRecPtr->TimeOfLastUpdate;
+            StatePtr->DumpRecord.LoadInProgress   = RegRecPtr->LoadInProgress;
+            StatePtr->DumpRecord.ValidationFunc   = (RegRecPtr->ValidationFuncPtr != NULL);
+            StatePtr->DumpRecord.TableLoadedOnce  = RegRecPtr->TableLoadedOnce;
+            StatePtr->DumpRecord.LoadPending      = RegRecPtr->LoadPending;
+            StatePtr->DumpRecord.DumpOnly         = RegRecPtr->DumpOnly;
+            StatePtr->DumpRecord.DoubleBuffered   = RegRecPtr->DoubleBuffered;
+            StatePtr->DumpRecord.FileCreateTimeSecs =
+                RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSecs;
+            StatePtr->DumpRecord.FileCreateTimeSubSecs =
+                RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].FileCreateTimeSubSecs;
+            StatePtr->DumpRecord.Crc           = RegRecPtr->Buffers[RegRecPtr->ActiveBufferIndex].Crc;
+            StatePtr->DumpRecord.CriticalTable = RegRecPtr->CriticalTable;
+
+            /* Convert LoadInProgress flag into more meaningful information */
+            /* When a load is in progress, identify which buffer is being used as the inactive buffer */
+            if (StatePtr->DumpRecord.LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS)
+            {
+                if (StatePtr->DumpRecord.DoubleBuffered)
+                {
+                    /* For double buffered tables, the value of LoadInProgress, when a load is actually in progress, */
+                    /* should identify either buffer #0 or buffer #1.  Convert these to enumerated value for ground  */
+                    /* display.  LoadInProgress = -2 means Buffer #1, LoadInProgress = -3 means Buffer #0.           */
+                    StatePtr->DumpRecord.LoadInProgress = StatePtr->DumpRecord.LoadInProgress - 3;
+                }
+                /* For single buffered tables, the value of LoadInProgress, when a load is actually in progress,     */
+                /* indicates which shared buffer is allocated for the inactive buffer.  Since the number of inactive */
+                /* buffers is a platform configuration parameter, then 0 on up merely identifies the buffer number.  */
+                /* No translation is necessary for single buffered tables.                                           */
+            }
+
+            strncpy(StatePtr->DumpRecord.Name, RegRecPtr->Name, sizeof(StatePtr->DumpRecord.Name) - 1);
+            StatePtr->DumpRecord.Name[sizeof(StatePtr->DumpRecord.Name) - 1] = 0;
+
+            strncpy(StatePtr->DumpRecord.LastFileLoaded, RegRecPtr->LastFileLoaded,
+                    sizeof(StatePtr->DumpRecord.LastFileLoaded) - 1);
+            StatePtr->DumpRecord.LastFileLoaded[sizeof(StatePtr->DumpRecord.LastFileLoaded) - 1] = 0;
+
+            /* Walk the access descriptor list to determine the number of users */
+            StatePtr->DumpRecord.NumUsers = 0;
+            HandleIterator                = RegRecPtr->HeadOfAccessList;
+            while (HandleIterator != CFE_TBL_END_OF_LIST)
+            {
+                StatePtr->DumpRecord.NumUsers++;
+                HandleIterator = CFE_TBL_Global.Handles[HandleIterator].NextLink;
+            }
+        }
+
+        /* Unlock now - remainder of data gathering uses ES */
+        CFE_TBL_UnlockRegistry();
+    }
+
+    /*
+     * If table record had data, then export now.
+     * Need to also get the App name from ES to complete the record.
+     */
+    if (IsValidEntry)
+    {
+        /* Determine the name of the owning application */
+        if (!CFE_RESOURCEID_TEST_EQUAL(OwnerAppId, CFE_TBL_NOT_OWNED))
+        {
+            CFE_ES_GetAppName(StatePtr->DumpRecord.OwnerAppName, OwnerAppId, sizeof(StatePtr->DumpRecord.OwnerAppName));
+        }
+        else
+        {
+            strncpy(StatePtr->DumpRecord.OwnerAppName, "--UNOWNED--", sizeof(StatePtr->DumpRecord.OwnerAppName) - 1);
+            StatePtr->DumpRecord.OwnerAppName[sizeof(StatePtr->DumpRecord.OwnerAppName) - 1] = 0;
+        }
+
+        /* export data to caller */
+        *Buffer  = &StatePtr->DumpRecord;
+        *BufSize = sizeof(StatePtr->DumpRecord);
+    }
+    else
+    {
+        /* No data to write for this record */
+        *BufSize = 0;
+        *Buffer  = NULL;
+    }
+
+    /* Check for EOF (last entry) */
+    return (RecordNum >= (CFE_PLATFORM_TBL_MAX_NUM_TABLES - 1));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_DumpRegistryEventHandler(void *Meta, CFE_FS_FileWriteEvent_t Event, int32 Status, uint32 RecordNum,
+                                      size_t BlockSize, size_t Position)
+{
+    CFE_TBL_RegDumpStateInfo_t *StatePtr = (CFE_TBL_RegDumpStateInfo_t *)Meta;
+
+    /*
+     * Note that this runs in the context of ES background task (file writer background job)
+     * It does NOT run in the context of the CFE_TBL app task.
+     *
+     * Events should use CFE_EVS_SendEventWithAppID() rather than CFE_EVS_SendEvent()
+     * to get proper association with TBL task.
+     */
+    switch (Event)
+    {
+        case CFE_FS_FileWriteEvent_COMPLETE:
+            if (StatePtr->FileExisted)
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_OVERWRITE_REG_DUMP_INF_EID, CFE_EVS_EventType_DEBUG,
+                                           CFE_TBL_Global.TableTaskAppId,
+                                           "Successfully overwrote '%s' with Table Registry:Size=%d,Entries=%d",
+                                           StatePtr->FileWrite.FileName, (int)Position, (int)RecordNum);
+            }
+            else
+            {
+                CFE_EVS_SendEventWithAppID(CFE_TBL_WRITE_REG_DUMP_INF_EID, CFE_EVS_EventType_DEBUG,
+                                           CFE_TBL_Global.TableTaskAppId,
+                                           "Successfully dumped Table Registry to '%s':Size=%d,Entries=%d",
+                                           StatePtr->FileWrite.FileName, (int)Position, (int)RecordNum);
+            }
+            break;
+
+        case CFE_FS_FileWriteEvent_RECORD_WRITE_ERROR:
+            CFE_EVS_SendEventWithAppID(CFE_TBL_WRITE_TBL_REG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId, "Error writing Registry to '%s', Status=0x%08X",
+                                       StatePtr->FileWrite.FileName, (unsigned int)Status);
+            break;
+
+        case CFE_FS_FileWriteEvent_HEADER_WRITE_ERROR:
+            CFE_EVS_SendEventWithAppID(CFE_TBL_WRITE_CFE_HDR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId,
+                                       "Error writing cFE File Header to '%s', Status=0x%08X",
+                                       StatePtr->FileWrite.FileName, (unsigned int)Status);
+            break;
+
+        case CFE_FS_FileWriteEvent_CREATE_ERROR:
+            CFE_EVS_SendEventWithAppID(CFE_TBL_CREATING_DUMP_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                       CFE_TBL_Global.TableTaskAppId, "Error creating dump file '%s', Status=0x%08X",
+                                       StatePtr->FileWrite.FileName, (unsigned int)Status);
+            break;
+
+        default:
+            /* unhandled event - ignore */
+            break;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_DumpRegistryCmd(const CFE_TBL_DumpRegistryCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t                     ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    int32                                    Status;
+    const CFE_TBL_DumpRegistryCmd_Payload_t *CmdPtr = &data->Payload;
+    os_fstat_t                               FileStat;
+
+    CFE_TBL_RegDumpStateInfo_t *StatePtr;
+
+    StatePtr = &CFE_TBL_Global.RegDumpState;
+
+    /* If a reg dump was already pending, do not overwrite the current request */
+    if (!CFE_FS_BackgroundFileDumpIsPending(&StatePtr->FileWrite))
+    {
+        /*
+         * Fill out the remainder of meta data.
+         * This data is currently the same for every request
+         */
+        StatePtr->FileWrite.FileSubType = CFE_FS_SubType_TBL_REG;
+        snprintf(StatePtr->FileWrite.Description, sizeof(StatePtr->FileWrite.Description), "Table Registry");
+
+        StatePtr->FileWrite.GetData = CFE_TBL_DumpRegistryGetter;
+        StatePtr->FileWrite.OnEvent = CFE_TBL_DumpRegistryEventHandler;
+
+        /*
+        ** Copy the filename into local buffer with default name/path/extension if not specified
+        */
+        Status = CFE_FS_ParseInputFileNameEx(StatePtr->FileWrite.FileName, CmdPtr->DumpFilename,
+                                             sizeof(StatePtr->FileWrite.FileName), sizeof(CmdPtr->DumpFilename),
+                                             CFE_PLATFORM_TBL_DEFAULT_REG_DUMP_FILE,
+                                             CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                             CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+        if (Status == CFE_SUCCESS)
+        {
+            /*
+             * Before submitting the background request, use OS_stat() to check if the file exists already.
+             *
+             * This is needed because TBL services issues a different event ID in some cases if
+             * it is overwriting a file vs. creating a new file.
+             */
+            StatePtr->FileExisted = (OS_stat(StatePtr->FileWrite.FileName, &FileStat) == OS_SUCCESS);
+
+            Status = CFE_FS_BackgroundFileDumpRequest(&StatePtr->FileWrite);
+            if (Status == CFE_SUCCESS)
+            {
+                /* Increment the TBL generic command counter (successfully queued for background job) */
+                ReturnCode = CFE_TBL_INC_CMD_CTR;
+            }
+        }
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_SendRegistryCmd(const CFE_TBL_SendRegistryCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t                     ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    int16                                    RegIndex;
+    const CFE_TBL_SendRegistryCmd_Payload_t *CmdPtr = &data->Payload;
+    char                                     TableName[CFE_TBL_MAX_FULL_NAME_LEN];
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(TableName, (char *)CmdPtr->TableName, NULL, sizeof(TableName), sizeof(CmdPtr->TableName));
+
+    /* Before doing anything, lets make sure the table registry entry that is to be telemetered exists */
+    RegIndex = CFE_TBL_FindTableInRegistry(TableName);
+
+    if (RegIndex != CFE_TBL_NOT_FOUND)
+    {
+        /* Change the index used to identify what data is to be telemetered */
+        CFE_TBL_Global.HkTlmTblRegIndex = RegIndex;
+
+        CFE_EVS_SendEvent(CFE_TBL_TLM_REG_CMD_INF_EID, CFE_EVS_EventType_DEBUG,
+                          "Table Registry entry for '%s' will be telemetered", TableName);
+
+        /* Increment Successful Command Counter */
+        ReturnCode = CFE_TBL_INC_CMD_CTR;
+    }
+    else /* Table could not be found in Registry */
+    {
+        CFE_EVS_SendEvent(CFE_TBL_NO_SUCH_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to locate '%s' in Table Registry", TableName);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_DeleteCDSCmd(const CFE_TBL_DeleteCDSCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t               ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    const CFE_TBL_DelCDSCmd_Payload_t *CmdPtr     = &data->Payload;
+    char                               TableName[CFE_TBL_MAX_FULL_NAME_LEN];
+    CFE_TBL_CritRegRec_t *             CritRegRecPtr = NULL;
+    uint32                             i;
+    int16                              RegIndex;
+    int32                              Status;
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(TableName, (char *)CmdPtr->TableName, NULL, sizeof(TableName), sizeof(CmdPtr->TableName));
+
+    /* Before doing anything, lets make sure the table is no longer in the registry */
+    /* This would imply that the owning application has been terminated and that it */
+    /* is safe to delete the associated critical table image in the CDS. */
+    RegIndex = CFE_TBL_FindTableInRegistry(TableName);
+
+    if (RegIndex == CFE_TBL_NOT_FOUND)
+    {
+        /* Find table in the Critical Table Registry */
+        for (i = 0; i < CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES; i++)
+        {
+            if (strncmp(CFE_TBL_Global.CritReg[i].Name, TableName, CFE_TBL_MAX_FULL_NAME_LEN) == 0)
+            {
+                CritRegRecPtr = &CFE_TBL_Global.CritReg[i];
+                break;
+            }
+        }
+
+        if (CritRegRecPtr != NULL)
+        {
+            Status = CFE_ES_DeleteCDS(TableName, true);
+
+            if (Status == CFE_ES_CDS_WRONG_TYPE_ERR)
+            {
+                CFE_EVS_SendEvent(CFE_TBL_NOT_CRITICAL_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Table '%s' is in Critical Table Registry but CDS is not tagged as a table",
+                                  TableName);
+            }
+            else if (Status == CFE_ES_CDS_OWNER_ACTIVE_ERR)
+            {
+                CFE_EVS_SendEvent(CFE_TBL_CDS_OWNER_ACTIVE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "CDS '%s' owning app is still active", TableName);
+            }
+            else if (Status == CFE_ES_ERR_NAME_NOT_FOUND)
+            {
+                CFE_EVS_SendEvent(CFE_TBL_CDS_NOT_FOUND_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Unable to locate '%s' in CDS Registry", TableName);
+            }
+            else if (Status != CFE_SUCCESS)
+            {
+                CFE_EVS_SendEvent(CFE_TBL_CDS_DELETE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Error while deleting '%s' from CDS, See SysLog.(Err=0x%08X)", TableName,
+                                  (unsigned int)Status);
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CFE_TBL_CDS_DELETED_INFO_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Successfully removed '%s' from CDS", TableName);
+
+                /* Free the entry in the Critical Table Registry */
+                CritRegRecPtr->CDSHandle = CFE_ES_CDS_BAD_HANDLE;
+
+                /* Increment Successful Command Counter */
+                ReturnCode = CFE_TBL_INC_CMD_CTR;
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_TBL_NOT_IN_CRIT_REG_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Table '%s' is not found in Critical Table Registry", TableName);
+        }
+    }
+    else /* Table was found in Registry */
+    {
+        CFE_EVS_SendEvent(CFE_TBL_IN_REGISTRY_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "'%s' found in Table Registry. CDS cannot be deleted until table is unregistered", TableName);
+    }
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_TBL_AbortLoadCmd(const CFE_TBL_AbortLoadCmd_t *data)
+{
+    CFE_TBL_CmdProcRet_t                  ReturnCode = CFE_TBL_INC_ERR_CTR; /* Assume failure */
+    int16                                 RegIndex;
+    const CFE_TBL_AbortLoadCmd_Payload_t *CmdPtr = &data->Payload;
+    CFE_TBL_RegistryRec_t *               RegRecPtr;
+    char                                  TableName[CFE_TBL_MAX_FULL_NAME_LEN];
+
+    /* Make sure all strings are null terminated before attempting to process them */
+    CFE_SB_MessageStringGet(TableName, (char *)CmdPtr->TableName, NULL, sizeof(TableName), sizeof(CmdPtr->TableName));
+
+    /* Before doing anything, lets make sure the table registry entry that is to be telemetered exists */
+    RegIndex = CFE_TBL_FindTableInRegistry(TableName);
+
+    if (RegIndex != CFE_TBL_NOT_FOUND)
+    {
+        /* Make a pointer to simplify code look and to remove redundant indexing into registry */
+        RegRecPtr = &CFE_TBL_Global.Registry[RegIndex];
+
+        /* Check to make sure a load was in progress before trying to abort it */
+        /* NOTE: LoadInProgress contains index of buffer when dumping a dump-only table */
+        /* so we must ensure the table is not a dump-only table, otherwise, we would be aborting a dump */
+        if ((RegRecPtr->LoadInProgress != CFE_TBL_NO_LOAD_IN_PROGRESS) && (!RegRecPtr->DumpOnly))
+        {
+            CFE_TBL_AbortLoad(RegRecPtr);
+
+            /* Increment Successful Command Counter */
+            ReturnCode = CFE_TBL_INC_CMD_CTR;
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_TBL_LOAD_ABORT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Cannot abort load of '%s'. No load started.", TableName);
+        }
+    }
+    else /* Table could not be found in Registry */
+    {
+        CFE_EVS_SendEvent(CFE_TBL_NO_SUCH_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to locate '%s' in Table Registry", TableName);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_TBL_AbortLoad(CFE_TBL_RegistryRec_t *RegRecPtr)
+{
+    /* The ground has aborted the load, free the working buffer for another attempt */
+    if (!RegRecPtr->DoubleBuffered)
+    {
+        /* For single buffered tables, freeing shared buffer entails resetting flag */
+        CFE_TBL_Global.LoadBuffs[RegRecPtr->LoadInProgress].Taken = false;
+    }
+
+    /* For double buffered tables, freeing buffer is simple */
+    RegRecPtr->LoadInProgress = CFE_TBL_NO_LOAD_IN_PROGRESS;
+
+    /* Make sure the load was not already pending */
+    RegRecPtr->LoadPending = false;
+
+    CFE_EVS_SendEvent(CFE_TBL_LOAD_ABORT_INF_EID, CFE_EVS_EventType_INFORMATION, "Table Load Aborted for '%s'",
+                      RegRecPtr->Name);
+}
+```
+
+### `cfe_tbl_task_cmds.h`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_task_cmds.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Subsystem: cFE TBL Task Command Handler Interface Definition File
+ *
+ * Author: David Kobe (the Hammers Company, Inc.)
+ *
+ * Notes:
+ *
+ */
+
+#ifndef CFE_TBL_TASK_CMDS_H
+#define CFE_TBL_TASK_CMDS_H
+
+/*
+** Required header files
+*/
+#include "common_types.h"
+#include "cfe_tbl_task.h"
+#include "cfe_tbl_msg.h"
+#include "cfe_error.h"
+
+#include "cfe_sb_extern_typedefs.h"
+
+/*********************  Macro and Constant Type Definitions   ***************************/
+
+/*
+ * For backward compatibility, keep this enumeration for now but map the
+ * values to the globally-defined codes in cfe_error.h, so it won't be confusing
+ * if intermixed with a typical CFE int32 return code.
+ */
+typedef enum
+{
+    CFE_TBL_INC_ERR_CTR =
+        CFE_TBL_MESSAGE_ERROR, /**< Error detected in (or while processing) message, increment command error counter */
+    CFE_TBL_DONT_INC_CTR =
+        CFE_STATUS_NO_COUNTER_INCREMENT, /**< No errors detected but don't increment command counter */
+    CFE_TBL_INC_CMD_CTR = CFE_SUCCESS    /**< No errors detected and increment command counter */
+} CFE_TBL_CmdProcRet_t;
+
+typedef int32 (*CFE_TBL_MsgProcFuncPtr_t)(const void *MsgPtr);
+
+#define CFE_TBL_BAD_CMD_CODE (-1) /**< Command Code found in Message does not match any in #CFE_TBL_CmdHandlerTbl */
+#define CFE_TBL_BAD_MSG_ID   (-2) /**< Message ID found in Message does not match any in #CFE_TBL_CmdHandlerTbl */
+
+/*
+** Table task const data
+*/
+
+typedef enum
+{
+    CFE_TBL_TERM_MSGTYPE = 0, /**< \brief Command Handler Table Terminator Type */
+    CFE_TBL_MSG_MSGTYPE,      /**< \brief Message Type (requires Message ID match) */
+    CFE_TBL_CMD_MSGTYPE       /**< \brief Command Type (requires Message ID and Command Code match) */
+} CFE_TBL_MsgType_t;
+
+/* Command Message Processing Functions */
+/*****************************************************************************/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Gathers data and puts it into the Housekeeping Message format
+**
+** \par Description
+**        Gathers data from the Table Services Application, computes necessary data values and identifies
+**        what Table Validation information needs to be reported in Housekeeping Telemetry.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+*/
+void CFE_TBL_GetHkData(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Convert Table Registry Entry for a Table into a Message
+**
+** \par Description
+**        Extracts the Table Registry information for the table specified by the
+**        #CFE_TBL_Global_t::HkTlmTblRegIndex variable.  It then formats the
+**        Registry contents into a format appropriate for downlink.
+**
+** \par Assumptions, External Events, and Notes:
+**        #CFE_TBL_Global_t::HkTlmTblRegIndex is assumed to be a valid index into
+**           the Table Registry.
+**
+*/
+void CFE_TBL_GetTblRegData(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Housekeeping Request Message
+**
+** \par Description
+**        Constructs and sends a Housekeeping Packet (#CFE_TBL_HousekeepingTlm_t) from task data,
+**        sends the table registry packet if requested, and dumps any "dump-only" tables
+**        that are pending.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Housekeeping Request Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_DONT_INC_CTR \copydoc CFE_TBL_DONT_INC_CTR
+*/
+int32 CFE_TBL_HousekeepingCmd(const CFE_MSG_CommandHeader_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process NO OP Command Message
+**
+** \par Description
+**        Responds to the NOOP command by issuing an Event Message
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a NO OP Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_NoopCmd(const CFE_TBL_NoopCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Reset Counters Command Message
+**
+** \par Description
+**        Resets command counters and validation request counters
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Reset Counters Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_DONT_INC_CTR \copydoc CFE_TBL_DONT_INC_CTR
+*/
+int32 CFE_TBL_ResetCountersCmd(const CFE_TBL_ResetCountersCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Load Table Command Message
+**
+** \par Description
+**        Locates the file specified in the command message and loads the contents of the file into
+**        a buffer that is associated with the table specified within the file header.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Load Table Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_LoadCmd(const CFE_TBL_LoadCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Dump Table Command Message
+**
+** \par Description
+**        Locates the memory associated with the table identified in the command message and copies
+**        the data contents to the command message specified file.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Dump Table Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_DumpCmd(const CFE_TBL_DumpCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Validate Table Command Message
+**
+** \par Description
+**        Computes a Data Integrity Check Value for the command message specified table and notifies
+**        the table's parent Application, if it has an associated validation function, that a validation
+**        of the buffer's contents is required.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Validate Table Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_ValidateCmd(const CFE_TBL_ValidateCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Activate Table Command Message
+**
+** \par Description
+**        Notifies the table's owner Application that a new version of the table is pending and should
+**        be used.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as an Activate Table Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_ActivateCmd(const CFE_TBL_ActivateCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Dump Table Registry Command Message
+**
+** \par Description
+**        Copies the contents of the Table Registry to a command message specified file.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Dump Table Registry Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_DumpRegistryCmd(const CFE_TBL_DumpRegistryCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Telemeter Table Registry Entry Command Message
+**
+** \par Description
+**        Extracts the Table Registry information for a command message specified table and puts it into
+**        a message that is sent out.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Telemeter Table Registry Entry Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_SendRegistryCmd(const CFE_TBL_SendRegistryCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Delete Critical Table's CDS Command message
+**
+** \par Description
+**        Deletes a Critical Data Store used to hold a Critical Table's image
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as a Delete CDS Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_DeleteCDSCmd(const CFE_TBL_DeleteCDSCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Process Abort Load Command message
+**
+** \par Description
+**        Frees any resources associated with a previously loaded table.
+**
+** \par Assumptions, External Events, and Notes:
+**          The message pointed to by data has been identified as an Abort Load Command Message
+**
+** \param[in] data points to the message received via command pipe that needs processing
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+int32 CFE_TBL_AbortLoadCmd(const CFE_TBL_AbortLoadCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Output block of data to file with standard cFE Table Image Headers
+**
+** \par Description
+**        Writes the specified block of data in memory to the specified file
+**        with the standard cFE File and cFE Table Image Headers.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in] DumpFilename    Character string containing the full path of the file
+**                            to which the contents of the table are to be written
+**
+** \param[in] TableName       Name of table being dumped to a file
+**
+** \param[in] DumpDataAddr    Address of data buffer whose contents are to be written
+**                            to the specified file
+**
+** \param[in] TblSizeInBytes  Size of block of data to be written to the file
+**
+** \retval #CFE_TBL_INC_ERR_CTR  \copydoc CFE_TBL_INC_ERR_CTR
+** \retval #CFE_TBL_INC_CMD_CTR  \copydoc CFE_TBL_INC_CMD_CTR
+*/
+CFE_TBL_CmdProcRet_t CFE_TBL_DumpToFile(const char *DumpFilename, const char *TableName, const void *DumpDataAddr,
+                                        size_t TblSizeInBytes);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Aborts load by freeing associated inactive buffers and sending event message
+**
+** \par Description
+**        This function aborts the load for the table whose registry entry is identified
+**        by the registry record pointer given as an argument.  Aborting the load consists
+**        of freeing any associated inactive buffer and issuing an event message.
+**
+** \par Assumptions, External Events, and Notes:
+**        The given registry record pointer is assumed to be valid.
+**
+** \param[in] RegRecPtr   Pointer to registry record entry for the table whose load is to be aborted
+**
+*/
+void CFE_TBL_AbortLoad(CFE_TBL_RegistryRec_t *RegRecPtr);
+
+#endif /* CFE_TBL_TASK_CMDS_H */
+```
+
+### `cfe_tbl_verify.h`
+
+**경로:** `fsw/cfe/modules/tbl/fsw/src/cfe_tbl_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *    This header file performs compile time checking for TBL configuration
+ *    parameters.
+ *
+ */
+
+#ifndef CFE_TBL_VERIFY_H
+#define CFE_TBL_VERIFY_H
+
+#include "cfe_platform_cfg.h"
+
+#if (2 * CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE) > CFE_PLATFORM_TBL_BUF_MEMORY_BYTES
+#error Two buffers of size CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE cannot be greater than memory pool size of CFE_PLATFORM_TBL_BUF_MEMORY_BYTES!
+#endif
+
+#if ((CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS + 1) * CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE) > \
+    CFE_PLATFORM_TBL_BUF_MEMORY_BYTES
+#error Shared buffers and table of size CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE cannot be greater than memory pool size of CFE_PLATFORM_TBL_BUF_MEMORY_BYTES!
+#endif
+
+#if CFE_PLATFORM_TBL_MAX_NUM_HANDLES < CFE_PLATFORM_TBL_MAX_NUM_TABLES
+#error CFE_PLATFORM_TBL_MAX_NUM_HANDLES cannot be set less than CFE_PLATFORM_TBL_MAX_NUM_TABLES!
+#endif
+
+#if CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES > CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES
+#error CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES cannot be greater than CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES!
+#endif
+
+/*
+** Any modifications to the "_VALID_" limits defined below must match
+** source code changes made to the function CFE_TBL_ReadHeaders() in
+** the file "cfe_tbl_internal.c".
+*/
+#if CFE_PLATFORM_TBL_VALID_SCID_COUNT < 0
+#error CFE_PLATFORM_TBL_VALID_SCID_COUNT must be greater than or equal to zero
+#elif CFE_PLATFORM_TBL_VALID_SCID_COUNT > 2
+#error CFE_PLATFORM_TBL_VALID_SCID_COUNT must be less than or equal to 2
+#endif
+
+#if CFE_PLATFORM_TBL_VALID_PRID_COUNT < 0
+#error CFE_PLATFORM_TBL_VALID_PRID_COUNT must be greater than or equal to zero
+#elif CFE_PLATFORM_TBL_VALID_PRID_COUNT > 4
+#error CFE_PLATFORM_TBL_VALID_PRID_COUNT must be less than or equal to 4
+#endif
+
+/*
+** Validate task stack size...
+*/
+#if CFE_PLATFORM_TBL_START_TASK_STACK_SIZE < 2048
+#error CFE_PLATFORM_TBL_START_TASK_STACK_SIZE must be greater than or equal to 2048
+#endif
+
+/*
+ * For configuration values that should be multiples of 4
+ * as noted in the documentation, this confirms that they are.
+ */
+#if ((CFE_MISSION_TBL_MAX_NAME_LENGTH % 4) != 0)
+#error CFE_MISSION_TBL_MAX_NAME_LENGTH must be a multiple of 4
+#endif
+#if ((CFE_MISSION_TBL_MAX_FULL_NAME_LEN % 4) != 0)
+#error CFE_MISSION_TBL_MAX_FULL_NAME_LEN must be a multiple of 4
+#endif
+
+#endif /* CFE_TBL_VERIFY_H */
+```

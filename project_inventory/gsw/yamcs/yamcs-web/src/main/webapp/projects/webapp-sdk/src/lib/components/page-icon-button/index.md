@@ -3,18 +3,71 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `page-icon-button.component.css`
 
-file--page-icon-button.component.css
-file--page-icon-button.component.html
-file--page-icon-button.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/page-icon-button.component.css`
+
+
+```css
+:host.disabled {
+  pointer-events: none;
+}
 ```
 
-## 항목
+### `page-icon-button.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/page-icon-button.component.css`](file--page-icon-button.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/page-icon-button.component.html`](file--page-icon-button.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/page-icon-button.component.ts`](file--page-icon-button.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/page-icon-button.component.html`
+
+
+```html
+<button mat-icon-button [color]="color()" [disabled]="disabled()" (click)="onClick($event)">
+  <mat-icon [style.transform]="iconRotate90() ? 'rotate(90deg)' : 'none'">
+    {{ icon() }}
+  </mat-icon>
+</button>
+```
+
+### `page-icon-button.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-icon-button/page-icon-button.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-page-icon-button',
+  templateUrl: './page-icon-button.component.html',
+  styleUrl: './page-icon-button.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIconButton, MatIcon],
+  host: {
+    class: 'ya-page-icon-button',
+    '[class.disabled]': 'disabled()',
+  },
+})
+export class YaPageIconButton {
+  icon = input.required<string>();
+  iconRotate90 = input(false, { transform: booleanAttribute });
+  disabled = input(false, { transform: booleanAttribute });
+  color = input<string>('primary');
+
+  clicked = output<MouseEvent>();
+
+  onClick(event: MouseEvent) {
+    if (!this.disabled()) {
+      this.clicked.emit(event);
+    }
+  }
+}
+```

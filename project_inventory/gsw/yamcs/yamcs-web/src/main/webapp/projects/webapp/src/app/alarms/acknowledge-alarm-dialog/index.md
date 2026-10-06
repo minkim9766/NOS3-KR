@@ -3,16 +3,99 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/acknowledge-alarm-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `acknowledge-alarm-dialog.component.html`
 
-file--acknowledge-alarm-dialog.component.html
-file--acknowledge-alarm-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/acknowledge-alarm-dialog/acknowledge-alarm-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Acknowledge</h2>
+
+<mat-dialog-content>
+  <p>
+    @if (data.alarms.length === 1) {
+      {{ data.alarms[0].id.namespace }}
+      @if (data.alarms[0].id.name) {
+        /{{ data.alarms[0].id.name }}
+      }
+    }
+    @if (data.alarms.length !== 1) {
+      {{ data.alarms.length }} selected alarms.
+    }
+  </p>
+  <form [formGroup]="formGroup" class="ya-form">
+    <ya-field label="Comment">
+      <textarea formControlName="comment" rows="5" style="resize: none"></textarea>
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="acknowledge()" [disabled]="!formGroup.valid">
+    OK
+  </ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `acknowledge-alarm-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/acknowledge-alarm-dialog/acknowledge-alarm-dialog.component.html`](file--acknowledge-alarm-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/acknowledge-alarm-dialog/acknowledge-alarm-dialog.component.ts`](file--acknowledge-alarm-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/acknowledge-alarm-dialog/acknowledge-alarm-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  AcknowledgeAlarmOptions,
+  Alarm,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-acknowledge-alarm-dialog',
+  templateUrl: './acknowledge-alarm-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AcknowledgeAlarmDialogComponent {
+  formGroup: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<AcknowledgeAlarmDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.formGroup = formBuilder.group({
+      comment: undefined,
+    });
+  }
+
+  async acknowledge() {
+    const alarms = this.data.alarms as Alarm[];
+    const comment = this.formGroup.get('comment')!.value;
+
+    for (const alarm of alarms) {
+      const options: AcknowledgeAlarmOptions = {};
+      if (comment) {
+        options.comment = comment;
+      }
+      const alarmName =
+        alarm.id.namespace + (alarm.id.name ? '/' + alarm.id.name : '');
+      this.yamcs.yamcsClient.acknowledgeAlarm(
+        this.yamcs.instance!,
+        this.yamcs.processor!,
+        alarmName,
+        alarm.seqNum,
+        options,
+      );
+    }
+    this.dialogRef.close();
+  }
+}
+```

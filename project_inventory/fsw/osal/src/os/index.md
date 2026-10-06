@@ -3,7 +3,7 @@
 
 **경로:** `fsw/osal/src/os/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ shared/index
 vxworks/index
 ```
 
-## 항목
-
-- [`fsw/osal/src/os/inc/`](inc/index) — 폴더
-- [`fsw/osal/src/os/nos/`](nos/index) — 폴더
-- [`fsw/osal/src/os/portable/`](portable/index) — 폴더
-- [`fsw/osal/src/os/posix/`](posix/index) — 폴더
-- [`fsw/osal/src/os/rtems/`](rtems/index) — 폴더
-- [`fsw/osal/src/os/shared/`](shared/index) — 폴더
-- [`fsw/osal/src/os/vxworks/`](vxworks/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

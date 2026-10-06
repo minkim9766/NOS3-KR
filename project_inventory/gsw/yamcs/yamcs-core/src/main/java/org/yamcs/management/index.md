@@ -3,24 +3,1100 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `LinkListener.java`
 
-file--LinkListener.java
-file--LinkManager.java
-file--ManagementGpbHelper.java
-file--ManagementListener.java
-file--ManagementService.java
-file--TableStreamListener.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/LinkListener.java`
+
+
+```java
+package org.yamcs.management;
+
+import org.yamcs.protobuf.links.LinkInfo;
+import org.yamcs.tctm.Link;
+
+/**
+ * Used by LinkManager to distribute data link related updates
+ */
+public interface LinkListener {
+
+    /**
+     * A new link was added
+     */
+    void linkAdded(Link link);
+
+    /**
+     * An existing link was removed
+     */
+    void linkRemoved(Link link);
+
+    /**
+     * Implement {@link linkAdded} instead.
+     */
+    @Deprecated
+    default void linkRegistered(LinkInfo linkInfo) {
+    }
+
+    /**
+     * Implement {@link linkRemoved} instead.
+     */
+    @Deprecated
+    default void linkUnregistered(LinkInfo linkInfo) {
+    }
+}
 ```
 
-## 항목
+### `LinkManager.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/LinkListener.java`](file--LinkListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/LinkManager.java`](file--LinkManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/ManagementGpbHelper.java`](file--ManagementGpbHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/ManagementListener.java`](file--ManagementListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/ManagementService.java`](file--ManagementService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/TableStreamListener.java`](file--TableStreamListener.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/LinkManager.java`
+
+
+```java
+package org.yamcs.management;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.TmPacket;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.cmdhistory.StreamCommandHistoryPublisher;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.logging.Log;
+import org.yamcs.management.LinkManager.InvalidPacketAction.Action;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.memento.MementoDb;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.links.LinkInfo;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.Link;
+import org.yamcs.tctm.LinkMemento;
+import org.yamcs.tctm.LinkState;
+import org.yamcs.tctm.ParameterDataLink;
+import org.yamcs.tctm.StreamPbParameterSender;
+import org.yamcs.tctm.TcDataLink;
+import org.yamcs.tctm.TmPacketDataLink;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.ServiceUtil;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.util.concurrent.Service;
+import com.google.gson.Gson;
+
+/**
+ * Service that manages all the data links:
+ *
+ * <ul>
+ * <li>is endpoint for the /links API calls</li>
+ * <li>for the commanding links it will only send commands if the link is enabled. If no commanding link is enabled, a
+ * negative Sent ACK will be produced.</li>
+ * <li>TODO: can set exclusive flags - i.e. only one link from a group can be enabled at a time</li>
+ * </ul>
+ *
+ * The configuration of this service is done in the "dataLinks" sections of the yamcs.&lt;instance-name&gt;.yaml file.
+ *
+ */
+public class LinkManager {
+    private static final String MEMENTO_KEY = "yamcs.links";
+    public static final String PP_STREAM_KEY = "ppStream";
+
+    private Map<String, Link> linksByName = new HashMap<>();
+
+    private YarchDatabaseInstance ydb;
+    Log log;
+    final String yamcsInstance;
+    Set<LinkListener> linkListeners = new CopyOnWriteArraySet<>();
+    final CommandHistoryPublisher cmdHistPublisher;
+    Map<Stream, TcStreamSubscriber> tcStreamSubscribers = new HashMap<>();
+
+    // To be fully replaced by linksByName, currently still
+    // used for deprecated register/unregister methods in LinkListener.
+    @Deprecated
+    List<LinkWithInfo> links = new CopyOnWriteArrayList<>();
+
+    public LinkManager(String instanceName) throws ValidationException {
+        this.yamcsInstance = instanceName;
+        log = new Log(getClass(), instanceName);
+        ydb = YarchDatabase.getInstance(instanceName);
+        cmdHistPublisher = new StreamCommandHistoryPublisher(yamcsInstance);
+
+        YamcsServerInstance instance = YamcsServer.getServer().getInstance(instanceName);
+        YConfiguration instanceConfig = instance.getConfig();
+
+        if (instanceConfig.containsKey("dataLinks")) {
+            var mementoDb = MementoDb.getInstance(instanceName);
+            var memento = mementoDb.getObject(MEMENTO_KEY, LinkMemento.class)
+                    .orElse(new LinkMemento());
+
+            List<YConfiguration> linkConfigs = instanceConfig.getConfigList("dataLinks");
+            for (YConfiguration linkConfig : linkConfigs) {
+                createDataLink(linkConfig, memento);
+            }
+        } else {
+            log.info("No link created because the section dataLinks was not found");
+        }
+    }
+
+    private void createDataLink(YConfiguration linkConfig, LinkMemento memento) throws ValidationException {
+        String className = linkConfig.getString("class");
+        String linkName = linkConfig.getString("name");
+        if (linksByName.containsKey(linkName)) {
+            throw new ConfigurationException(
+                    "Instance " + yamcsInstance + ": there is already a link named '" + linkName + "'");
+        }
+
+        Link link = YObjectLoader.loadObject(className);
+
+        Spec spec = link.getSpec();
+        if (spec != null) {
+            if (log.isDebugEnabled()) {
+                Map<String, Object> unsafeArgs = ((YConfiguration) linkConfig).getRoot();
+                Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                log.debug("Raw args for {}: {}", linkName, safeArgs);
+            }
+
+            linkConfig = spec.validate((YConfiguration) linkConfig);
+
+            if (log.isDebugEnabled()) {
+                Map<String, Object> unsafeArgs = ((YConfiguration) linkConfig).getRoot();
+                Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                log.debug("Initializing {} with resolved args: {}", linkName, safeArgs);
+            }
+        }
+
+        link.init(yamcsInstance, linkName, linkConfig);
+
+        // Try to restore previous link state, but if enabledAtStartup
+        // is explicitly configured, give priority to that setting.
+        boolean enabledAtStartup = true;
+        if (linkConfig.containsKey("enabledAtStartup")) {
+            enabledAtStartup = linkConfig.getBoolean("enabledAtStartup");
+        } else {
+            var savedState = memento.getLinkState(linkName);
+            if (savedState != null) {
+                enabledAtStartup = savedState.isEnabled();
+            }
+        }
+
+        if (!enabledAtStartup) {
+            link.disable();
+        }
+
+        configureDataLink(link, linkConfig);
+    }
+
+    /**
+     * Connects the links to streams
+     * <p>
+     * Updates the mappings which are provided via API
+     * <p>
+     * Can be called dynamically for example when an aggregate link updates its sub-links
+     */
+    public void configureDataLink(Link link, YConfiguration linkArgs) {
+        if (linkArgs == null) {
+            linkArgs = YConfiguration.emptyConfig();
+        }
+        // this is the old configuration where each link was configured one stream
+        Stream singleStream = getStream(linkArgs, "stream");
+
+        // this is the new configuration where one can specify one of each stream for a link
+        // such that we can have links doing both TC and TM
+        Stream tcStream = getStream(linkArgs, "tcStream");
+        Stream tmStream = getStream(linkArgs, "tmStream");
+        Stream ppStream = getStream(linkArgs, PP_STREAM_KEY);
+
+        if (link instanceof TmPacketDataLink) {
+            TmPacketDataLink tmLink = (TmPacketDataLink) link;
+            if (tmLink.isTmPacketDataLinkImplemented()) {
+                Stream streamf = tmStream == null ? singleStream : tmStream;
+                if (streamf != null) {
+                    InvalidPacketAction ipa = getInvalidPacketAction(link.getName(), linkArgs);
+                    tmLink.setTmSink(tmPacket -> processTmPacket(tmLink, tmPacket, streamf, ipa));
+                } else {
+                    throw new ConfigurationException("No stream configured for the tm link " + link.getName()
+                            + ". Please set a stream using the 'tmStream; option");
+                }
+            }
+        }
+
+        if (link instanceof TcDataLink) {
+            TcDataLink tcLink = (TcDataLink) link;
+            if (tcLink.isTcDataLinkImplemented()) {
+                Stream stream = tcStream == null ? singleStream : tcStream;
+
+                if (stream != null) {
+                    TcStreamSubscriber tcs = tcStreamSubscribers.get(stream);
+                    if (tcs == null) {
+                        tcs = new TcStreamSubscriber(true);
+                        tcStreamSubscribers.put(stream, tcs);
+                        stream.addSubscriber(tcs);
+                    }
+                    tcs.addLink(tcLink);
+                }
+            }
+            // the Yamcs gateway links will send ygw registered commands even if the isTcDataLinkImplemented
+            // returns false (because it does not want to send normal MDB binary commands)
+            // thats why we set the command history publisher so it can still update the command history
+            tcLink.setCommandHistoryPublisher(cmdHistPublisher);
+        }
+
+        if (link instanceof ParameterDataLink) {
+            ParameterDataLink ppLink = (ParameterDataLink) link;
+            if (ppLink.isParameterDataLinkImplemented()) {
+                Stream stream = ppStream == null ? singleStream : ppStream;
+                if (stream != null) {
+                    ppLink.setParameterSink(new StreamPbParameterSender(yamcsInstance, stream));
+                }
+            }
+        }
+
+        if (link instanceof AggregatedDataLink) {
+            for (Link l : ((AggregatedDataLink) link).getSubLinks()) {
+                configureDataLink(l, l.getConfig());
+            }
+        }
+
+        linksByName.put(link.getName(), link);
+        String json = null;
+        if (!linkArgs.toMap().isEmpty()) {
+            json = new Gson().toJson(linkArgs.toMap());
+        }
+        registerLink(link.getName(), json, link);
+    }
+
+    Stream getStream(YConfiguration linkArgs, String configKey) {
+        Stream stream = null;
+        String streamName = linkArgs.getString(configKey, null);
+        if (streamName != null) {
+            stream = ydb.getStream(streamName);
+            if (stream == null) {
+                throw new ConfigurationException("Cannot find stream '" + streamName + "'");
+            }
+        }
+        return stream;
+    }
+
+    private void processTmPacket(TmPacketDataLink tmLink, TmPacket tmPacket, Stream stream, InvalidPacketAction ipa) {
+        if (tmPacket.isInvalid()) {
+            if (ipa.action == Action.DROP) {
+                return;
+            } else if (ipa.action == Action.DIVERT) {
+                Tuple t = new Tuple(StandardTupleDefinitions.INVALID_TM,
+                        new Object[] { tmPacket.getReceptionTime(), ipa.divertStream.getDataCount(),
+                                tmPacket.getPacket() });
+                ipa.divertStream.emitTuple(t);
+                return;
+            } // if action is PROCESS, continue below
+        }
+
+        Instant ertime = tmPacket.getEarthReceptionTime();
+        Tuple t = null;
+        if (ertime == Instant.INVALID_INSTANT) {
+            ertime = null;
+        }
+        Long obt = tmPacket.getObt() == Long.MIN_VALUE ? null : tmPacket.getObt();
+        String rootContainer = tmPacket.getRootContainer() != null
+                ? tmPacket.getRootContainer().getQualifiedName()
+                : null;
+        t = new Tuple(StandardTupleDefinitions.TM, new Object[] {
+                tmPacket.getGenerationTime(),
+                tmPacket.getSeqCount(),
+                tmPacket.getReceptionTime(),
+                tmPacket.getStatus(),
+                tmPacket.getPacket(),
+                ertime,
+                obt,
+                tmLink.getName(),
+                rootContainer,
+        });
+        stream.emitTuple(t);
+
+    }
+
+    private InvalidPacketAction getInvalidPacketAction(String linkName, YConfiguration linkArgs) {
+        InvalidPacketAction ipa = new InvalidPacketAction();
+        if (linkArgs.containsKey("invalidPackets")) {
+            ipa.action = linkArgs.getEnum("invalidPackets", Action.class);
+            if (ipa.action == Action.DIVERT) {
+                String divertStream = linkArgs.getString("invalidPacketsStream", "invalid_tm");
+                ipa.divertStream = ydb.getStream(divertStream);
+                if (ipa.divertStream == null) {
+                    throw new ConfigurationException("Cannot find stream '" + divertStream
+                            + "' (required if invalidPackets: DIVERT has been specified)");
+                }
+            }
+        } else {
+            ipa.action = Action.DROP;
+        }
+
+        return ipa;
+    }
+
+    public void startLinks() {
+        SystemParametersService collector = SystemParametersService.getInstance(yamcsInstance);
+
+        if (collector != null) {
+            linksByName.forEach((name, link) -> {
+                if (link instanceof SystemParametersProducer) {
+                    link.setupSystemParameters(collector);
+                    collector.registerProducer((SystemParametersProducer) link);
+                }
+            });
+        }
+
+        linksByName.forEach((name, link) -> {
+            if (link instanceof Service) {
+                log.debug("Starting service link {}", name);
+                ((Service) link).startAsync();
+            }
+        });
+        linksByName.forEach((name, link) -> {
+            if (link instanceof Service) {
+                ServiceUtil.awaitServiceRunning((Service) link);
+            }
+        });
+    }
+
+    public void stopLinks() {
+        linksByName.forEach((name, link) -> {
+            unregisterLink(name, link);
+            if (link instanceof Service) {
+                ((Service) link).stopAsync();
+            }
+        });
+        linksByName.forEach((name, link) -> {
+            if (link instanceof Service) {
+                log.info("Awaiting termination of link {}", link.getName());
+                ServiceUtil.awaitServiceTerminated((Service) link, YamcsServer.SERVICE_STOP_GRACE_TIME, log);
+            }
+        });
+    }
+
+    private void registerLink(String linkName, String spec, Link link) {
+        LinkInfo.Builder linkb = LinkInfo.newBuilder().setInstance(yamcsInstance)
+                .setName(linkName)
+                .setDisabled(link.isDisabled())
+                .setStatus(link.getLinkStatus().name())
+                .setType(link.getClass().getName())
+                .setSpec(spec)
+                .setDataInCount(link.getDataInCount())
+                .setDataOutCount(link.getDataOutCount());
+        if (link.getDetailedStatus() != null) {
+            linkb.setDetailedStatus(link.getDetailedStatus());
+        }
+        var extra = link.getExtraInfo();
+        if (extra != null) {
+            linkb.setExtra(WellKnownTypes.toStruct(extra));
+        }
+        Link parent = link.getParent();
+        if (parent != null) {
+            linkb.setParentName(parent.getName());
+        }
+        LinkInfo linkInfo = linkb.build();
+        links.add(new LinkWithInfo(link, linkInfo));
+        linkListeners.forEach(l -> {
+            l.linkAdded(link);
+            l.linkRegistered(linkInfo);
+        });
+    }
+
+    private void unregisterLink(String linkName, Link link) {
+        Optional<LinkWithInfo> o = getLinkWithInfo(linkName);
+        if (o.isPresent()) {
+            LinkWithInfo lwi = o.get();
+            links.remove(lwi);
+            linkListeners.forEach(l -> {
+                l.linkRemoved(link);
+                l.linkUnregistered(lwi.linkInfo);
+            });
+        }
+    }
+
+    /**
+     * Use {@link #getLink(String)} instead.
+     */
+    @Deprecated
+    public Optional<LinkWithInfo> getLinkWithInfo(String linkName) {
+        return links.stream()
+                .filter(lwi -> linkName.equals(lwi.linkInfo.getName()))
+                .findFirst();
+    }
+
+    /**
+     * Adds a listener that is to be notified when any processor, or any client is updated. Calling this multiple times
+     * has no extra effects. Either you listen, or you don't.
+     */
+    public boolean addLinkListener(LinkListener l) {
+        return linkListeners.add(l);
+    }
+
+    public void enableLink(String linkName) {
+        log.debug("received enableLink for {}", linkName);
+        checkAndGetLink(linkName).enable();
+        saveMemento();
+    }
+
+    public void disableLink(String linkName) {
+        log.debug("received disableLink for {}", linkName);
+        checkAndGetLink(linkName).disable();
+        saveMemento();
+    }
+
+    public void resetCounters(String linkName) {
+        log.debug("received resetCounters for {}", linkName);
+        checkAndGetLink(linkName).resetCounters();
+    }
+
+    private void saveMemento() {
+        var memento = new LinkMemento();
+
+        for (var link : getLinks()) {
+            var state = LinkState.forLink(link);
+            memento.addLinkState(link.getName(), state);
+        }
+
+        var mementoDb = MementoDb.getInstance(yamcsInstance);
+        mementoDb.putObject(MEMENTO_KEY, memento);
+    }
+
+    private Link checkAndGetLink(String linkName) {
+        Link link = getLink(linkName);
+        if (link == null) {
+            throw new IllegalArgumentException(
+                    "There is no link named '" + linkName + "' in instance " + yamcsInstance);
+        }
+        return link;
+    }
+
+    public boolean removeLinkListener(LinkListener l) {
+        return linkListeners.remove(l);
+    }
+
+    public List<Link> getLinks() {
+        return new ArrayList<>(linksByName.values());
+    }
+
+    /**
+     * Return the link by the given name or null if there is no such link.
+     */
+    public Link getLink(String linkName) {
+        return linksByName.get(linkName);
+    }
+
+    public Set<Stream> getCommandStreams() {
+        return tcStreamSubscribers.keySet();
+    }
+
+    /**
+     * What to do with invalid packets.
+     */
+    static class InvalidPacketAction {
+        enum Action {
+            /**
+             * Do nothing
+             */
+            DROP,
+
+            /**
+             * Send packets on the normal TM stream
+             */
+            PROCESS,
+
+            /**
+             * Send packets on an alternate stream
+             */
+            DIVERT
+        };
+
+        Stream divertStream;
+        Action action;
+    }
+
+    /**
+     * @deprecated Access to linkInfo copy will be removed in a future release.
+     */
+    @Deprecated
+    public class LinkWithInfo {
+        final Link link;
+        LinkInfo linkInfo;
+
+        public LinkWithInfo(Link link, LinkInfo linkInfo) {
+            this.link = link;
+            this.linkInfo = linkInfo;
+        }
+
+        public Link getLink() {
+            return link;
+        }
+    }
+
+    class TcStreamSubscriber implements StreamSubscriber {
+        final List<TcDataLink> tcLinks = new ArrayList<>();
+        final boolean failIfNoLinkAvailable;
+
+        public TcStreamSubscriber(boolean failIfNoLinkAvailable) {
+            this.failIfNoLinkAvailable = failIfNoLinkAvailable;
+        }
+
+        void addLink(TcDataLink tcLink) {
+            tcLinks.add(tcLink);
+        }
+
+        @Override
+        public void onTuple(Stream s, Tuple tuple) {
+            Mdb mdb = MdbFactory.getInstance(yamcsInstance);
+            PreparedCommand pc = PreparedCommand.fromTuple(tuple, mdb);
+            boolean sent = false;
+            String reason = "no link available";
+            for (TcDataLink tcLink : tcLinks) {
+                if (tcLink.isCommandingAvailable()) {
+                    try {
+                        if (tcLink.sendCommand(pc)) {
+                            sent = true;
+                            break;
+                        }
+                    } catch (Exception e) {
+                        log.error("Error sending command via link {}", tcLink, e);
+                        reason = "Error sending command via " + tcLink.getName() + ": " + e.getMessage();
+                    }
+                }
+            }
+
+            if (!sent && failIfNoLinkAvailable) {
+                CommandId commandId = pc.getCommandId();
+                log.info("Failing command stream: {}, cmdId: {}, reason: {}", s.getName(), pc.getCommandId(), reason);
+                long currentTime = YamcsServer.getTimeService(yamcsInstance).getMissionTime();
+                cmdHistPublisher.publishAck(commandId, AcknowledgeSent_KEY,
+                        currentTime, AckStatus.NOK, reason);
+                cmdHistPublisher.commandFailed(commandId, currentTime, reason);
+            }
+        }
+
+        @Override
+        public void streamClosed(Stream s) {
+            log.debug("Stream {} closed", s.getName());
+        }
+    }
+}
+```
+
+### `ManagementGpbHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/ManagementGpbHelper.java`
+
+
+```java
+package org.yamcs.management;
+
+import java.util.List;
+
+import org.yamcs.Processor;
+import org.yamcs.mdb.ProcessingStatistics;
+import org.yamcs.protobuf.AcknowledgmentInfo;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Statistics;
+import org.yamcs.protobuf.TmStatistics;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimestampUtil;
+
+/**
+ * Provides common functionality to assemble and disassemble GPB messages
+ */
+public final class ManagementGpbHelper {
+
+    public static Statistics buildStats(Processor processor, List<TmStatistics> statistics) {
+        ProcessingStatistics ps = processor.getTmProcessor().getStatistics();
+        Statistics.Builder statsb = Statistics.newBuilder()
+                .setInstance(processor.getInstance())
+                .setProcessor(processor.getName())
+                .setLastUpdated(TimestampUtil.java2Timestamp(ps.getLastUpdated()));
+        statsb.addAllTmstats(statistics);
+        return statsb.build();
+    }
+
+    public static ProcessorInfo toProcessorInfo(Processor processor) {
+        ProcessorInfo.Builder processorb = ProcessorInfo.newBuilder().setInstance(processor.getInstance())
+                .setName(processor.getName()).setType(processor.getType())
+                .setCreator(processor.getCreator())
+                .setHasCommanding(processor.hasCommanding())
+                .setHasAlarms(processor.hasAlarmServer())
+                .setState(processor.getState())
+                .setPersistent(processor.isPersistent())
+                .setProtected(processor.isProtected())
+                .setTime(TimeEncoding.toProtobufTimestamp(processor.getCurrentTime()))
+                .setReplay(processor.isReplay())
+                .setCheckCommandClearance(processor.getConfig().checkCommandClearance());
+
+        if (processor.isReplay()) {
+            ReplayRequest request = processor.getCurrentReplayRequest();
+            processorb.setReplayRequest(request);
+            processorb.setReplayState(processor.getReplayState());
+        }
+
+        for (var ack : processor.getAcknowledgments()) {
+            var ackInfo = AcknowledgmentInfo.newBuilder()
+                    .setName(ack.getName());
+            if (ack.getDescription() != null) {
+                ackInfo.setDescription(ack.getDescription());
+            }
+            processorb.addAcknowledgments(ackInfo);
+        }
+        return processorb.build();
+    }
+}
+```
+
+### `ManagementListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/ManagementListener.java`
+
+
+```java
+package org.yamcs.management;
+
+import org.yamcs.Processor;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.Statistics;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * Used by ManagementService to distribute various types of management-related updates
+ */
+public interface ManagementListener {
+
+    default void processorAdded(ProcessorInfo processorInfo) {
+    }
+
+    default void processorClosed(ProcessorInfo processorInfo) {
+    }
+
+    default void processorStateChanged(ProcessorInfo processorInfo) {
+    }
+
+    /**
+     * Called by the {@link ManagementService} when the statistics for the given processor were updated. This usually
+     * happens at about 1Hz.
+     */
+    default void statisticsUpdated(Processor processor, Statistics stats) {
+    }
+
+    /**
+     * Called when an instance state changes - for example when it is stopped/started
+     * 
+     * @param ysi
+     */
+    default void instanceStateChanged(YamcsServerInstance ysi) {
+    }
+
+    default void serviceRegistered(String instance, String serviceName, Service service) {
+    }
+
+    default void serviceUnregistered(String instance, String serviceName) {
+    }
+}
+```
+
+### `ManagementService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/ManagementService.java`
+
+
+```java
+package org.yamcs.management;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InstanceStateListener;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorException;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.ProcessorListener;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.commanding.CommandQueue;
+import org.yamcs.commanding.CommandQueueListener;
+import org.yamcs.commanding.CommandQueueManager;
+import org.yamcs.mdb.ProcessingStatistics;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.ProcessorManagementRequest;
+import org.yamcs.protobuf.Statistics;
+import org.yamcs.protobuf.Table.StreamInfo;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableDefinition;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * Responsible for providing to interested listeners info related to creation/removal/update of:
+ * <ul>
+ * <li>instances and processors - see {@link ManagementListener}
+ * <li>streams and tables - see {@link TableStreamListener}
+ * <li>command queues - see {@link CommandQueueListener}
+ * </ul>
+ */
+public class ManagementService implements ProcessorListener {
+    static Logger log = LoggerFactory.getLogger(ManagementService.class.getName());
+    static ManagementService managementService = new ManagementService();
+
+    // streams is accessed only from the timer thread
+    List<StreamWithInfo> streams = new ArrayList<>();
+
+    List<CommandQueueManager> qmanagers = new CopyOnWriteArrayList<>();
+    List<Processor> processors = new CopyOnWriteArrayList<>();
+
+    // Processors & Clients. Should maybe split up
+    Set<ManagementListener> managementListeners = new CopyOnWriteArraySet<>();
+
+    Set<CommandQueueListener> commandQueueListeners = new CopyOnWriteArraySet<>();
+    Set<TableStreamListener> tableStreamListeners = new CopyOnWriteArraySet<>();
+
+    static public ManagementService getInstance() {
+        return managementService;
+    }
+
+    private InstanceStateListener instanceListener;
+
+    public void init() {
+        var timer = YamcsServer.getServer().getThreadPoolExecutor();
+        Processor.addProcessorListener(this);
+        timer.scheduleAtFixedRate(() -> updateStatistics(), 1, 1, TimeUnit.SECONDS);
+        timer.scheduleAtFixedRate(() -> checkStreamUpdate(), 1, 1, TimeUnit.SECONDS);
+    }
+
+    public void shutdown() {
+        managementListeners.clear();
+    }
+
+    public void registerService(String instance, String serviceName, Service service) {
+        managementListeners.forEach(l -> l.serviceRegistered(instance, serviceName, service));
+    }
+
+    public void unregisterService(String instance, String serviceName) {
+        managementListeners.forEach(l -> l.serviceUnregistered(instance, serviceName));
+    }
+
+    public CommandQueueManager getQueueManager(String instance, String processorName) throws YamcsException {
+        for (int i = 0; i < qmanagers.size(); i++) {
+            CommandQueueManager cqm = qmanagers.get(i);
+            if (cqm.getInstance().equals(instance) && cqm.getChannelName().equals(processorName)) {
+                return cqm;
+            }
+        }
+
+        throw new YamcsException("Cannot find a command queue manager for " + instance + "/" + processorName);
+    }
+
+    public List<CommandQueueManager> getQueueManagers() {
+        return qmanagers;
+    }
+
+    public void createProcessor(ProcessorManagementRequest pmr, String username) throws YamcsException {
+        log.info("Creating new processor instance: {}, name: {}, type: {}, config: {}, persistent: {}",
+                pmr.getInstance(), pmr.getName(), pmr.getType(), pmr.getConfig(), pmr.getPersistent());
+        Processor processor;
+        try {
+            int n = 0;
+
+            Object spec = null;
+            if (pmr.hasConfig()) {
+                spec = pmr.getConfig();
+            }
+            processor = ProcessorFactory.create(pmr.getInstance(), pmr.getName(), pmr.getType(), username, spec);
+            processor.setPersistent(pmr.getPersistent());
+            if (n > 0 || pmr.getPersistent()) {
+                log.info("Starting new processor '{}'", processor.getName());
+                processor.startAsync();
+                processor.awaitRunning();
+            } else {
+                processor.quit();
+                throw new YamcsException("createProcessor invoked with a list full of invalid client ids");
+            }
+        } catch (ProcessorException | ConfigurationException e) {
+            throw new YamcsException(e.getMessage(), e.getCause());
+        } catch (IllegalStateException e1) {
+            Throwable t = e1.getCause();
+            if (t instanceof YamcsException) {
+                throw (YamcsException) t;
+            } else {
+                throw new YamcsException(t.getMessage(), t.getCause());
+            }
+        }
+    }
+
+    public void registerCommandQueueManager(String instance, String processorName, CommandQueueManager cqm) {
+        for (CommandQueue cq : cqm.getQueues()) {
+            commandQueueListeners.forEach(l -> l.commandQueueRegistered(instance, processorName, cq));
+        }
+        qmanagers.add(cqm);
+        for (CommandQueueListener l : commandQueueListeners) {
+            cqm.registerListener(l);
+            for (CommandQueue q : cqm.getQueues()) {
+                l.updateQueue(q);
+            }
+        }
+    }
+
+    public void unregisterCommandQueueManager(String instance, String processorName, CommandQueueManager cqm) {
+        try {
+            for (CommandQueue cq : cqm.getQueues()) {
+                commandQueueListeners.forEach(l -> l.commandQueueUnregistered(instance, processorName, cq));
+            }
+            qmanagers.remove(cqm);
+        } catch (Exception e) {
+            log.warn("Got exception when unregistering a command queue", e);
+        }
+    }
+
+    public List<CommandQueueManager> getCommandQueueManagers() {
+        return qmanagers;
+    }
+
+    public CommandQueueManager getCommandQueueManager(Processor processor) {
+        for (CommandQueueManager mgr : qmanagers) {
+            if (mgr.getInstance().equals(processor.getInstance())
+                    && mgr.getChannelName().equals(processor.getName())) {
+                return mgr;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Adds a listener that is to be notified when any processor, or any client is updated. Calling this multiple times
+     * has no extra effects. Either you listen, or you don't.
+     */
+    public boolean addManagementListener(ManagementListener l) {
+        return managementListeners.add(l);
+    }
+
+    public boolean removeManagementListener(ManagementListener l) {
+        return managementListeners.remove(l);
+    }
+
+    public boolean addCommandQueueListener(CommandQueueListener l) {
+        return commandQueueListeners.add(l);
+    }
+
+    public boolean addTableStreamListener(TableStreamListener l) {
+        return tableStreamListeners.add(l);
+    }
+
+    public boolean removeTableStreamListener(TableStreamListener l) {
+        return tableStreamListeners.remove(l);
+    }
+
+    public boolean removeCommandQueueListener(CommandQueueListener l) {
+        boolean removed = commandQueueListeners.remove(l);
+        qmanagers.forEach(m -> m.removeListener(l));
+        return removed;
+    }
+
+    private void updateStatistics() {
+        for (Processor processor : processors) {
+            ProcessingStatistics ps = processor.getTmProcessor().getStatistics();
+            Statistics stats = ManagementGpbHelper.buildStats(processor, ps.snapshot());
+            for (ManagementListener l : managementListeners) {
+                l.statisticsUpdated(processor, stats);
+            }
+        }
+    }
+
+    private void checkStreamUpdate() {
+        for (StreamWithInfo stream : streams) {
+            if (stream.hasChanged()) {
+                tableStreamListeners.forEach(l -> l.streamUpdated(
+                        stream.instance, stream.streamInfo));
+            }
+        }
+    }
+
+    @Override
+    public void processorAdded(Processor processor) {
+        ProcessorInfo pi = ManagementGpbHelper.toProcessorInfo(processor);
+        managementListeners.forEach(l -> l.processorAdded(pi));
+        processors.add(processor);
+    }
+
+    @Override
+    public void processorClosed(Processor processor) {
+        ProcessorInfo pi = ManagementGpbHelper.toProcessorInfo(processor);
+        managementListeners.forEach(l -> l.processorClosed(pi));
+        processors.remove(processor);
+    }
+
+    @Override
+    public void processorStateChanged(Processor processor) {
+        ProcessorInfo pi = ManagementGpbHelper.toProcessorInfo(processor);
+        managementListeners.forEach(l -> l.processorStateChanged(pi));
+    }
+
+    public void registerYamcsInstance(YamcsServerInstance ys) {
+        instanceListener = new InstanceStateListener() {
+            @Override
+            public void initializing() {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+
+            @Override
+            public void initialized() {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+
+            @Override
+            public void starting() {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+
+            @Override
+            public void running() {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+
+            @Override
+            public void stopping() {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+
+            @Override
+            public void offline() {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+
+            @Override
+            public void failed(Throwable failure) {
+                managementListeners.forEach(l -> l.instanceStateChanged(ys));
+            }
+        };
+        ys.addStateListener(instanceListener);
+    }
+
+    public void registerTable(String instance, TableDefinition tblDef) {
+        tableStreamListeners.forEach(l -> l.tableRegistered(instance, tblDef));
+    }
+
+    public void registerStream(String instance, Stream stream) {
+        var timer = YamcsServer.getServer().getThreadPoolExecutor();
+
+        timer.execute(() -> {
+            StreamInfo.Builder streamb = StreamInfo.newBuilder()
+                    .setName(stream.getName())
+                    .setDataCount(stream.getDataCount());
+            StreamInfo streamInfo = streamb.build();
+            streams.add(new StreamWithInfo(instance, stream, streamInfo));
+        });
+
+        tableStreamListeners.forEach(l -> l.streamRegistered(instance, stream));
+    }
+
+    public void unregisterTable(String instance, String tblName) {
+        tableStreamListeners.forEach(l -> l.tableUnregistered(instance, tblName));
+    }
+
+    public void unregisterStream(String instance, String name) {
+        var timer = YamcsServer.getServer().getThreadPoolExecutor();
+
+        tableStreamListeners.forEach(l -> l.streamUnregistered(instance, name));
+        timer.execute(() -> {
+            streams.removeIf(swi -> swi.instance.equals(instance) && swi.stream.getName().equals(name));
+        });
+    }
+
+    static class StreamWithInfo {
+        final String instance;
+        final Stream stream;
+        StreamInfo streamInfo;
+
+        public StreamWithInfo(String instance, Stream stream, StreamInfo streamInfo) {
+            this.instance = instance;
+            this.stream = stream;
+            this.streamInfo = streamInfo;
+        }
+
+        boolean hasChanged() {
+            if (streamInfo.getDataCount() != stream.getDataCount()) {
+                streamInfo = StreamInfo.newBuilder(streamInfo)
+                        .setDataCount(stream.getDataCount())
+                        .build();
+
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}
+```
+
+### `TableStreamListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/management/TableStreamListener.java`
+
+
+```java
+package org.yamcs.management;
+
+import org.yamcs.protobuf.Table.StreamInfo;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableDefinition;
+
+/**
+ * Implement and subscribe to the {@link ManagementService} to know when new tables or streams are created/removed
+ * 
+ * @author nm
+ *
+ */
+public interface TableStreamListener {
+
+    default void streamRegistered(String instance, Stream stream) {
+    }
+
+    default void streamUnregistered(String instance, String name) {
+    }
+
+    default void streamUpdated(String instance, StreamInfo stream) {
+    }
+
+    default void tableRegistered(String instance, TableDefinition tblDef) {
+    }
+
+    default void tableUnregistered(String instance, String tblName) {
+    }
+}
+```

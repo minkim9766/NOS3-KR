@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,28 +15,48 @@ onair/index
 plugins/index
 results/index
 test/index
-file--cfs_sample.ini
-file--cfs_sample_tlm.json
-file--conftest.py
-file--driver.py
-file--message_headers.py
-file--redis-experiment-publisher.py
-file--sbn_python_client.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/.github/`](.github/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/__pycache__/`](__pycache__/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/doc/`](doc/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/`](onair/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/plugins/`](plugins/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/results/`](results/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/`](test/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/cfs_sample.ini`](file--cfs_sample.ini) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/cfs_sample_tlm.json`](file--cfs_sample_tlm.json) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/conftest.py`](file--conftest.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/driver.py`](file--driver.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/message_headers.py`](file--message_headers.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/redis-experiment-publisher.py`](file--redis-experiment-publisher.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/sbn_python_client.py`](file--sbn_python_client.py) — 빌드 산출물 (경로만)
+### `cfs_sample.ini`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/cfs_sample.ini`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfs_sample_tlm.json`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/cfs_sample_tlm.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `conftest.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/conftest.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `driver.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/driver.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `message_headers.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/message_headers.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `redis-experiment-publisher.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/redis-experiment-publisher.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sbn_python_client.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/sbn_python_client.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

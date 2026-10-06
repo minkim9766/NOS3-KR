@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,56 +11,1049 @@
 arch/index
 drv/index
 sys/index
-file--blkIo.h
-file--cacheLib.h
-file--dosFsLib.h
-file--errnoLib.h
-file--excLib.h
-file--fppLib.h
-file--mcpx750.h
-file--moduleLib.h
-file--ramDrv.h
-file--rebootLib.h
-file--stdarg.h
-file--stdio.h
-file--stdlib.h
-file--string.h
-file--sysLib.h
-file--taskLib.h
-file--time.h
-file--unistd.h
-file--usrLib.h
-file--vxLib.h
-file--vxWorks.h
-file--xbdBlkDev.h
-file--xbdRamDisk.h
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/arch/`](arch/index) — 폴더
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/drv/`](drv/index) — 폴더
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/sys/`](sys/index) — 폴더
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/blkIo.h`](file--blkIo.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/cacheLib.h`](file--cacheLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/dosFsLib.h`](file--dosFsLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/errnoLib.h`](file--errnoLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/excLib.h`](file--excLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/fppLib.h`](file--fppLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/mcpx750.h`](file--mcpx750.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/moduleLib.h`](file--moduleLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/ramDrv.h`](file--ramDrv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/rebootLib.h`](file--rebootLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/stdarg.h`](file--stdarg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/stdio.h`](file--stdio.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/stdlib.h`](file--stdlib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/string.h`](file--string.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/sysLib.h`](file--sysLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/taskLib.h`](file--taskLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/time.h`](file--time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/unistd.h`](file--unistd.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/usrLib.h`](file--usrLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/vxLib.h`](file--vxLib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/vxWorks.h`](file--vxWorks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/xbdBlkDev.h`](file--xbdBlkDev.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/override_inc/xbdRamDisk.h`](file--xbdRamDisk.h) — UTF-8 텍스트 파일 본문 포함
+### `blkIo.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/blkIo.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for blkIo.h */
+#ifndef OVERRIDE_BLKIO_H
+#define OVERRIDE_BLKIO_H
+
+#include "PCS_blkIo.h"
+#include <vxWorks.h>
+
+/* ---------------------------------------*/
+/* mappings for declarations in blkIo.h */
+/* ---------------------------------------*/
+#define NULLDEV    PCS_NULLDEV
+#define BLK_DEV    PCS_BLK_DEV
+#define BLK_DEV_ID PCS_BLK_DEV_ID
+
+#endif
+```
+
+### `cacheLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/cacheLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for cacheLib.h */
+#ifndef OVERRIDE_CACHELIB_H
+#define OVERRIDE_CACHELIB_H
+
+#include "PCS_cacheLib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in cacheLib.h */
+/* ----------------------------------------- */
+#define cacheTextUpdate PCS_cacheTextUpdate
+
+#endif
+```
+
+### `dosFsLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/dosFsLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for dosFsLib.h */
+#ifndef OVERRIDE_DOSFSLIB_H
+#define OVERRIDE_DOSFSLIB_H
+
+#include "PCS_dosFsLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in dosFsLib.h */
+/* ----------------------------------------- */
+#define DOS_CHK_ONLY        PCS_DOS_CHK_ONLY
+#define DOS_CHK_REPAIR      PCS_DOS_CHK_REPAIR
+#define DOS_CHK_VERB_0      PCS_DOS_CHK_VERB_0
+#define DOS_CHK_VERB_SILENT PCS_DOS_CHK_VERB_SILENT
+#define DOS_OPT_BLANK       PCS_DOS_OPT_BLANK
+
+#define dosFsVolFormat PCS_dosFsVolFormat
+
+#endif
+```
+
+### `errnoLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/errnoLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for errnoLib.h */
+#ifndef OVERRIDE_ERRNOLIB_H
+#define OVERRIDE_ERRNOLIB_H
+
+#include "PCS_errnoLib.h"
+#include <vxWorks.h>
+
+/* -----------------------------------------  */
+/* mappings for declarations in errnoLib.h */
+/* -----------------------------------------  */
+#define errnoGet PCS_errnoGet
+
+#endif
+```
+
+### `excLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/excLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for excLib.h */
+#ifndef OVERRIDE_EXCLIB_H
+#define OVERRIDE_EXCLIB_H
+
+#include <vxWorks.h>
+#include "PCS_excLib.h"
+
+/* -----------------------------------------  */
+/* mappings for declarations in excLib.h */
+/* -----------------------------------------  */
+#define excHookAdd PCS_excHookAdd
+
+#endif
+```
+
+### `fppLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/fppLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for fppLib.h */
+#ifndef OVERRIDE_FPPLIB_H
+#define OVERRIDE_FPPLIB_H
+
+#include "PCS_fppLib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in fppLib.h */
+/* ----------------------------------------- */
+#define FP_CONTEXT PCS_FP_CONTEXT
+#define fppSave    PCS_fppSave
+
+#endif
+```
+
+### `mcpx750.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/mcpx750.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for mcpx750.h */
+#ifndef OVERRIDE_MCPX750_H
+#define OVERRIDE_MCPX750_H
+
+#include "PCS_mcpx750.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in mcpx750.h */
+/* ----------------------------------------- */
+#define SYS_REG_BLRR        PCS_SYS_REG_BLRR
+#define SYS_REG_BLRR_PWRON  PCS_SYS_REG_BLRR_PWRON
+#define SYS_REG_BLRR_PBRST  PCS_SYS_REG_BLRR_PBRST
+#define SYS_REG_BLRR_FBTN   PCS_SYS_REG_BLRR_FBTN
+#define SYS_REG_BLRR_WDT2   PCS_SYS_REG_BLRR_WDT2
+#define SYS_REG_BLRR_SWSRST PCS_SYS_REG_BLRR_SWSRST
+#define SYS_REG_BLRR_SWHRST PCS_SYS_REG_BLRR_SWHRST
+
+#define PCI_OUT_BYTE  PCS_PciOutByte
+#define PCI_OUT_LONG  PCS_PciOutLong
+#define sysPciWrite32 PCS_sysPciWrite32
+#define sysPciRead32  PCS_sysPciRead32
+
+#endif
+```
+
+### `moduleLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/moduleLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for moduleLib.h */
+#ifndef OVERRIDE_MODULELIB_H
+#define OVERRIDE_MODULELIB_H
+
+#include "PCS_moduleLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in moduleLib.h */
+/* ----------------------------------------- */
+
+#define MODULE_ID   PCS_MODULE_ID
+#define MODULE_INFO PCS_MODULE_INFO
+
+#define moduleInfoGet    PCS_moduleInfoGet
+#define moduleFindByName PCS_moduleFindByName
+
+#endif
+```
+
+### `ramDrv.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/ramDrv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for ramDrv.h */
+#ifndef OVERRIDE_RAMDRV_H
+#define OVERRIDE_RAMDRV_H
+
+#include "PCS_ramDrv.h"
+#include <vxWorks.h>
+#include <blkIo.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in ramDrv.h */
+/* ----------------------------------------- */
+
+#define ramDevCreate PCS_ramDevCreate
+
+#endif
+```
+
+### `rebootLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/rebootLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for rebootLib.h */
+#ifndef OVERRIDE_REBOOTLIB_H
+#define OVERRIDE_REBOOTLIB_H
+
+#include "PCS_rebootLib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in rebootLib.h */
+/* ----------------------------------------- */
+#define BOOT_CLEAR  PCS_BOOT_CLEAR
+#define BOOT_NORMAL PCS_BOOT_NORMAL
+
+#define reboot PCS_reboot
+
+#endif
+```
+
+### `stdarg.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/stdarg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for stdarg.h */
+#ifndef OVERRIDE_STDARG_H
+#define OVERRIDE_STDARG_H
+
+#include "PCS_stdarg.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdarg.h */
+/* ----------------------------------------- */
+
+#define va_list            PCS_va_list
+#define va_start(ap, last) PCS_va_start(ap, last)
+#define va_end(ap)         PCS_va_end(ap)
+
+#endif
+```
+
+### `stdio.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/stdio.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for stdio.h */
+#ifndef OVERRIDE_STDIO_H
+#define OVERRIDE_STDIO_H
+
+#include "PCS_stdio.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdio.h */
+/* ----------------------------------------- */
+
+#define FILE        PCS_FILE
+#define fclose      PCS_fclose
+#define fgets       PCS_fgets
+#define fopen       PCS_fopen
+#define fputs       PCS_fputs
+#define remove      PCS_remove
+#define rename      PCS_rename
+#define snprintf    PCS_snprintf
+#define vsnprintf   PCS_vsnprintf
+#define printf(...) PCS_printf(__VA_ARGS__)
+#define putchar     PCS_putchar
+
+#define stdin  PCS_stdin
+#define stdout PCS_stdout
+#define stderr PCS_stderr
+
+#endif
+```
+
+### `stdlib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/stdlib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for stdlib.h */
+#ifndef OVERRIDE_STDLIB_H
+#define OVERRIDE_STDLIB_H
+
+#include "PCS_stdlib.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in stdlib.h */
+/* ----------------------------------------- */
+
+#define EXIT_SUCCESS PCS_EXIT_SUCCESS
+#define EXIT_FAILURE PCS_EXIT_FAILURE
+#define exit         PCS_exit
+#define strtoul      PCS_strtoul
+#define system       PCS_system
+#define malloc       PCS_malloc
+#define free         PCS_free
+
+#endif
+```
+
+### `string.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/string.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for string.h */
+#ifndef OVERRIDE_STRING_H
+#define OVERRIDE_STRING_H
+
+#include "PCS_string.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in string.h */
+/* ----------------------------------------- */
+#define memcpy   PCS_memcpy
+#define memset   PCS_memset
+#define strcmp   PCS_strcmp
+#define strcpy   PCS_strcpy
+#define strlen   PCS_strlen
+#define strncmp  PCS_strncmp
+#define strncpy  PCS_strncpy
+#define strchr   PCS_strchr
+#define strrchr  PCS_strrchr
+#define strcat   PCS_strcat
+#define strncat  PCS_strncat
+#define strerror PCS_strerror
+
+#endif
+```
+
+### `sysLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/sysLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for sysLib.h */
+#ifndef OVERRIDE_SYSLIB_H
+#define OVERRIDE_SYSLIB_H
+
+#include "PCS_sysLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in sysLib.h */
+/* ----------------------------------------- */
+#define sysClkRateGet PCS_sysClkRateGet
+#define sysMemTop     PCS_sysMemTop
+
+/*
+ * These PCI accessors are related to sysLib but the prototype does not necessarily appear in this file
+ */
+#define PciOutByte    PCS_PciOutByte
+#define PciOutLong    PCS_PciOutLong
+#define sysPciWrite32 PCS_sysPciWrite32
+#define sysPciRead32  PCS_sysPciRead32
+
+/*
+ * These definitions are part of BSP integration which does not have a header file
+ */
+#define GetWrsKernelTextStart PCS_GetWrsKernelTextStart
+#define GetWrsKernelTextEnd   PCS_GetWrsKernelTextEnd
+
+#endif
+```
+
+### `taskLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/taskLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for taskLib.h */
+#ifndef OVERRIDE_TASKLIB_H
+#define OVERRIDE_TASKLIB_H
+
+#include "PCS_taskLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in taskLib.h */
+/* ----------------------------------------- */
+#define VX_FP_TASK PCS_VX_FP_TASK
+#define TASK_ID    PCS_TASK_ID
+#define WIND_TCB   PCS_WIND_TCB
+#define TASK_DESC  PCS_TASK_DESC
+
+#define taskName        PCS_taskName
+#define taskNameToId    PCS_taskNameToId
+#define taskIdDefault   PCS_taskIdDefault
+#define taskIsReady     PCS_taskIsReady
+#define taskIsSuspended PCS_taskIsSuspended
+#define taskGetInfo     PCS_taskGetInfo
+
+#define taskActivate    PCS_taskActivate
+#define taskExit        PCS_taskExit
+#define taskIdSelf      PCS_taskIdSelf
+#define taskDelay       PCS_taskDelay
+#define taskDelete      PCS_taskDelete
+#define taskDeleteForce PCS_taskDeleteForce
+#define taskSuspend     PCS_taskSuspend
+#define taskResume      PCS_taskResume
+#define taskPrioritySet PCS_taskPrioritySet
+#define taskSpawn       PCS_taskSpawn
+#define taskInit        PCS_taskInit
+#define taskTcb         PCS_taskTcb
+
+#endif
+```
+
+### `time.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for time.h */
+#ifndef OVERRIDE_TIME_H
+#define OVERRIDE_TIME_H
+
+#include "PCS_time.h"
+
+#endif
+```
+
+### `unistd.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/unistd.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for unistd.h */
+#ifndef OVERRIDE_UNISTD_H
+#define OVERRIDE_UNISTD_H
+
+#include "PCS_unistd.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in unistd.h */
+/* ----------------------------------------- */
+
+#define SEEK_SET      PCS_SEEK_SET
+#define SEEK_CUR      PCS_SEEK_CUR
+#define SEEK_END      PCS_SEEK_END
+#define STDIN_FILENO  PCS_STDIN_FILENO
+#define STDOUT_FILENO PCS_STDOUT_FILENO
+#define STDERR_FILENO PCS_STDERR_FILENO
+
+#define close       PCS_close
+#define getegid     PCS_getegid
+#define geteuid     PCS_geteuid
+#define gethostid   PCS_gethostid
+#define gethostname PCS_gethostname
+#define getpid      PCS_getpid
+#define lseek       PCS_lseek
+#define read        PCS_read
+#define rmdir       PCS_rmdir
+#define sysconf     PCS_sysconf
+#define write       PCS_write
+
+#endif
+```
+
+### `usrLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/usrLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for usrLib.h */
+#ifndef OVERRIDE_USRLIB_H
+#define OVERRIDE_USRLIB_H
+
+#include "PCS_usrLib.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in usrLib.h */
+/* ----------------------------------------- */
+
+#endif
+```
+
+### `vxLib.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/vxLib.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for vxLib.h */
+#ifndef OVERRIDE_VXLIB_H
+#define OVERRIDE_VXLIB_H
+
+#include "PCS_vxLib.h"
+#include <arch/ppc/vxPpcLib.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in vxLib.h */
+/* ----------------------------------------- */
+
+#endif
+```
+
+### `vxWorks.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/vxWorks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ *
+ *    Copyright (c) 2020, United States government as represented by the
+ *    administrator of the National Aeronautics Space Administration.
+ *    All rights reserved. This software was created at NASA Goddard
+ *    Space Flight Center pursuant to government contracts.
+ *
+ *    This is governed by the NASA Open Source Agreement and may be used,
+ *    distributed and modified only according to the terms of that agreement.
+ *
+ */
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#ifndef OVERRIDE_VXWORKS_H
+#define OVERRIDE_VXWORKS_H
+
+#include "PCS_vxWorks.h"
+
+#define IMPORT
+
+/* ----------------------------------------- */
+/* mappings for declarations in vxWorks.h */
+/* ----------------------------------------- */
+#define ERROR        PCS_ERROR
+#define OK           PCS_OK
+#define WAIT_FOREVER PCS_WAIT_FOREVER
+#define NO_WAIT      PCS_NO_WAIT
+
+#define STATUS      PCS_STATUS
+#define BOOL        PCS_BOOL
+#define FUNCPTR     PCS_FUNCPTR
+#define VOIDFUNCPTR PCS_VOIDFUNCPTR
+
+#define UINT   PCS_UINT
+#define INT8   PCS_INT8
+#define UINT8  PCS_UINT8
+#define INT16  PCS_INT16
+#define UINT16 PCS_UINT16
+#define INT32  PCS_INT32
+#define UINT32 PCS_UINT32
+
+#define _Vx_usr_arg_t PCS_Vx_usr_arg_t
+
+#endif
+```
+
+### `xbdBlkDev.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/xbdBlkDev.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for xbdBlkDev.h */
+#ifndef OVERRIDE_XBDBLKDEV_H
+#define OVERRIDE_XBDBLKDEV_H
+
+#include "PCS_xbdBlkDev.h"
+#include <vxWorks.h>
+#include <blkIo.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in xbdBlkDev.h */
+/* ----------------------------------------- */
+
+#define NULLDEV             PCS_NULLDEV
+#define device_t            PCS_device_t
+#define xbdBlkDevCreateSync PCS_xbdBlkDevCreateSync
+#define xbdBlkDevDelete     PCS_xbdBlkDevDelete
+
+#endif
+```
+
+### `xbdRamDisk.h`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/override_inc/xbdRamDisk.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for xbdRamDisk.h */
+#ifndef OVERRIDE_XBDRAMDISK_H
+#define OVERRIDE_XBDRAMDISK_H
+
+#include "PCS_xbdRamDisk.h"
+#include <vxWorks.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in xbdRamDisk.h */
+/* ----------------------------------------- */
+
+#endif
+```

@@ -3,16 +3,32 @@
 
 **경로:** `fsw/psp/cmake/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 Modules/index
-file--module_list.c.in
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/cmake/Modules/`](Modules/index) — 폴더
-- [`fsw/psp/cmake/module_list.c.in`](file--module_list.c.in) — UTF-8 텍스트 파일 본문 포함
+### `module_list.c.in`
+
+**경로:** `fsw/psp/cmake/module_list.c.in`
+
+
+```text
+/* This file is generated via CMake - do not edit in place */
+#include "cfe_psp_module.h"
+
+@GENERATED_EXTERNS@
+
+CFE_StaticModuleLoadEntry_t CFE_PSP_BASE_MODULE_LIST[] =
+{
+@GENERATED_KEYVALS@
+{ NULL }
+};
+
+/* END OF FILE */
+```

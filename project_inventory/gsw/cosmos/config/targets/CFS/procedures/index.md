@@ -3,16 +3,43 @@
 
 **경로:** `gsw/cosmos/config/targets/CFS/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--cfs_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/CFS/procedures/tests/`](tests/index) — 폴더
-- [`gsw/cosmos/config/targets/CFS/procedures/cfs_test.rb`](file--cfs_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `cfs_test.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFS/procedures/cfs_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+
+class Aliveness_Test < Cosmos::Test
+    def setup
+        # Unused constructor
+    end
+
+    def test_udp
+        start("tests/enable_udp.rb")
+    end
+
+    def teardown
+        # Unused constructor
+    end
+end
+
+class Cfs_Test < Cosmos::TestSuite
+    def initialize
+        super()
+      add_test('Aliveness_Test')
+    end
+end
+```

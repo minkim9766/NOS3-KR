@@ -3,22 +3,693 @@
 
 **경로:** `components/sample/fsw/fprime/sample_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--SampleSim.cpp
-file--SampleSim.fpp
-file--SampleSim.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/sample/fsw/fprime/sample_src/docs/`](docs/index) — 폴더
-- [`components/sample/fsw/fprime/sample_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/fprime/sample_src/SampleSim.cpp`](file--SampleSim.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/fprime/sample_src/SampleSim.fpp`](file--SampleSim.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/fprime/sample_src/SampleSim.hpp`](file--SampleSim.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/sample/fsw/fprime/sample_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+# include_directories("../../shared")
+# include_directories("../../standalone") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+
+
+# set(SOURCE_FILES
+#   "${CMAKE_CURRENT_LIST_DIR}/SampleSim.fpp"
+#   "${CMAKE_CURRENT_LIST_DIR}/SampleSim.cpp"
+#   "${CMAKE_CURRENT_LIST_DIR}/../../shared/sample_device.c"
+# )
+
+
+# # Uncomment and add any modules that this component depends on, else
+# # they might not be available when cmake tries to build this component.
+
+# # set(MOD_DEPS
+# #     Add your dependencies here
+# # )
+
+# set(MOD_DEPS
+#     ${ITC_Common_LIBRARIES}
+#     ${NOSENGINE_LIBRARIES}
+# )
+
+
+# register_fprime_module()
+
+include_directories("../../shared")
+include_directories("../../standalone") #device_cfg.h
+include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+include_directories("../platform_inc")
+# add_library(sample_device "${CMAKE_CURRENT_LIST_DIR}/../../shared/sample_device.c")
+register_fprime_module(
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/SampleSim.cpp"
+        # "${CMAKE_CURRENT_LIST_DIR}/../../shared/sample_device.c"
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/SampleSim.fpp"
+    DEPENDS
+        Fw_Types
+        ${ITC_Common_LIBRARIES}
+        ${NOSENGINE_LIBRARIES}
+        # sample_device
+)
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../shared/sample_device.c")
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+)
+```
+
+### `SampleSim.cpp`
+
+**경로:** `components/sample/fsw/fprime/sample_src/SampleSim.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SampleSim.cpp
+// \author jstar
+// \brief  cpp file for SampleSim component implementation class
+// ======================================================================
+
+#include "sample_src/SampleSim.hpp"
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Log/LogString.hpp>
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  SampleSim ::
+    SampleSim(const char *const compName) : SampleSimComponentBase(compName)
+{
+    SampleUart.deviceString = SAMPLE_CFG_STRING;
+    SampleUart.handle = SAMPLE_CFG_HANDLE;
+    SampleUart.isOpen = PORT_CLOSED;
+    SampleUart.baud = SAMPLE_CFG_BAUDRATE_HZ;
+    status = uart_init_port(&SampleUart);
+    status = uart_close_port(&SampleUart);
+
+    HkTelemetryPkt.DeviceEnabled = SAMPLE_DEVICE_DISABLED;
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+}
+  
+  SampleSim ::
+    ~SampleSim()
+  {
+      status = uart_close_port(&SampleUart);
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void SampleSim :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    status = SAMPLE_CommandDevice(&SampleUart, SAMPLE_DEVICE_NOOP_CMD, 0);
+    Fw::LogStringArg log_msg("NOOP SENT");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    // OS_printf("NOOP SENT\n");
+
+    this->tlmWrite_CommandCount(++HkTelemetryPkt.CommandCount);
+
+    this->tlmWrite_ReportedComponentCount(SampleHK.DeviceCounter);
+    this->tlmWrite_DeviceConfig(SampleHK.DeviceConfig);
+    this->tlmWrite_DeviceStatus(SampleHK.DeviceStatus);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void SampleSim :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    
+    if(HkTelemetryPkt.DeviceEnabled == SAMPLE_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+      status = SAMPLE_RequestHK(&SampleUart, &SampleHK);
+      if (status == OS_SUCCESS)
+      {
+          HkTelemetryPkt.DeviceCount++;
+          Fw::LogStringArg log_msg("RequestHK command success\n");
+          this->log_ACTIVITY_HI_TELEM(log_msg);
+          // OS_printf("Request Housekeeping Successful\n");
+      }
+      else
+      {
+          HkTelemetryPkt.DeviceErrorCount++;
+          Fw::LogStringArg log_msg("RequestHK command failed!\n");
+          this->log_ACTIVITY_HI_TELEM(log_msg);;
+          // OS_printf("Request Housekeeping Failed\n");
+      }
+
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("RequestHK failed: Device Disabled\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      // OS_printf("Request Housekeeping failed, Device Disabled\n");
+    }
+    
+    this->tlmWrite_ReportedComponentCount(SampleHK.DeviceCounter);
+    this->tlmWrite_DeviceConfig(SampleHK.DeviceConfig);
+    this->tlmWrite_DeviceStatus(SampleHK.DeviceStatus);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void SampleSim :: SAMPLE_SEQ_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    
+  // seq_toggle = 1;
+  
+    for(int i=0;i<20;i++){
+    // while(1){
+      sleep(1);
+      // printf("seq toggle is equal to %d \n", seq_toggle);
+      // if(seq_toggle==0){
+      //   break;
+      // }
+
+      if(HkTelemetryPkt.DeviceEnabled == SAMPLE_DEVICE_ENABLED)
+      {
+        HkTelemetryPkt.CommandCount++;
+        status = SAMPLE_RequestHK(&SampleUart, &SampleHK);
+        if (status == OS_SUCCESS)
+        {
+            HkTelemetryPkt.DeviceCount++;
+            Fw::LogStringArg log_msg("RequestHK command success\n");
+            this->log_ACTIVITY_HI_TELEM(log_msg);
+        }
+        else
+        {
+            HkTelemetryPkt.DeviceErrorCount++;
+            Fw::LogStringArg log_msg("RequestHK command failed!\n");
+            this->log_ACTIVITY_HI_TELEM(log_msg);
+        }
+
+      }
+      else
+      {
+        HkTelemetryPkt.CommandErrorCount++;
+        Fw::LogStringArg log_msg("RequestHK failed: Device Disabled\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      
+      this->tlmWrite_ReportedComponentCount(SampleHK.DeviceCounter);
+      this->tlmWrite_DeviceConfig(SampleHK.DeviceConfig);
+      this->tlmWrite_DeviceStatus(SampleHK.DeviceStatus);
+      this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+      this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+      this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+      this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+      this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    }
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void SampleSim :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    if(HkTelemetryPkt.DeviceEnabled == SAMPLE_DEVICE_DISABLED)
+    {
+
+      HkTelemetryPkt.CommandCount++;
+      
+      SampleUart.deviceString  = SAMPLE_CFG_STRING;
+      SampleUart.handle        = SAMPLE_CFG_HANDLE;
+      SampleUart.isOpen        = PORT_CLOSED;
+      SampleUart.baud          = SAMPLE_CFG_BAUDRATE_HZ;
+      SampleUart.access_option = uart_access_flag_RDWR;
+
+      status = uart_init_port(&SampleUart);
+      if(status == OS_SUCCESS)
+      {
+
+        HkTelemetryPkt.DeviceEnabled = SAMPLE_DEVICE_ENABLED;
+        HkTelemetryPkt.DeviceCount++;
+        
+        Fw::LogStringArg log_msg("Successfully Enabled");
+        this->log_ACTIVITY_HI_TELEM(log_msg); 
+        // OS_printf("SampleSim Enable Succeeded\n");  
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Enable failed, failed to init UART port");
+        this->log_ACTIVITY_HI_TELEM(log_msg);   
+        // OS_printf("SampleSim Enable Failed to init UART port\n");  
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Failed, Already Enabled");
+      this->log_ACTIVITY_HI_TELEM(log_msg); 
+      // OS_printf("SampleSim Enable Failed, Already Enabled\n");
+    }
+
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->tlmWrite_ReportedComponentCount(SampleHK.DeviceCounter);
+    this->tlmWrite_DeviceConfig(SampleHK.DeviceConfig);
+    this->tlmWrite_DeviceStatus(SampleHK.DeviceStatus);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void SampleSim :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    if(HkTelemetryPkt.DeviceEnabled == SAMPLE_DEVICE_ENABLED)
+    {
+
+      HkTelemetryPkt.CommandCount++;
+
+      status = uart_close_port(&SampleUart);
+      if (status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = SAMPLE_DEVICE_DISABLED;
+        HkTelemetryPkt.DeviceCount++;
+
+        Fw::LogStringArg log_msg("Disabled Successfully");
+        this->log_ACTIVITY_HI_TELEM(log_msg);  
+        // OS_printf("SampleSim Disable Succeeded\n");
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Disable Failed to close UART port");
+        this->log_ACTIVITY_HI_TELEM(log_msg);   
+        // OS_printf("SampleSim Disable Failed to close UART port\n");
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Failed, Already Disabled");
+      this->log_ACTIVITY_HI_TELEM(log_msg); 
+      // OS_printf("SampleSim Disable Failed, device already disabled\n");
+    }
+
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->tlmWrite_ReportedComponentCount(SampleHK.DeviceCounter);
+    this->tlmWrite_DeviceConfig(SampleHK.DeviceConfig);
+    this->tlmWrite_DeviceStatus(SampleHK.DeviceStatus);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void SampleSim :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+
+    Fw::LogStringArg log_msg("Counters have been Reset");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    // OS_printf("Counters have been Reset\n");
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+
+  }
+
+  void SampleSim :: CONFIGURE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const U32 config){
+
+    status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled != SAMPLE_DEVICE_ENABLED)
+    {
+      status = OS_ERROR;
+
+      HkTelemetryPkt.CommandErrorCount++;
+
+      Fw::LogStringArg log_msg("Configure Failed, Device Disabled");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      // OS_printf("Configure Failed, Device Disabled\n");
+    }
+
+    if(config == 0xFFFFFFFF) // 4294967295
+    {
+      status = OS_ERROR;
+
+      HkTelemetryPkt.CommandErrorCount++;
+
+      Fw::LogStringArg log_msg("Configure Failed, Invalid Configuration");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      // OS_printf("Configure Failed, Invalid Configuration Given\n");
+    }
+
+    if(status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = SAMPLE_CommandDevice(&SampleUart, SAMPLE_DEVICE_CFG_CMD, config);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Successfully Configured Device");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Device Successfully Configured\n");
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Failed to Configure Device");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        // OS_printf("Device Configuration Failed\n");
+      }
+    }
+
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_ReportedComponentCount(SampleHK.DeviceCounter);
+    this->tlmWrite_DeviceConfig(SampleHK.DeviceConfig);
+    this->tlmWrite_DeviceStatus(SampleHK.DeviceStatus);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+
+  }
+
+  inline SampleSim_ActiveState SampleSim :: get_active_state(uint8_t DeviceEnabled)
+  {
+    SampleSim_ActiveState state;
+
+    if(DeviceEnabled == SAMPLE_DEVICE_ENABLED)
+    {
+      state.e = SampleSim_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = SampleSim_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+  //  void SampleSim :: SAMPLE_SEQ_CANCEL_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    
+  //   seq_toggle = 0;
+  //   printf("seq toggle is equal to %d\n", seq_toggle);
+
+  //   this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  // }
+
+}
+```
+
+### `SampleSim.fpp`
+
+**경로:** `components/sample/fsw/fprime/sample_src/SampleSim.fpp`
+
+
+```fpp
+module Components {
+    @ Component for F Prime FSW framework.
+    active component SampleSim {
+
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        # # One async command/port is required for active components
+        @ Command to Request Housekeeping
+        async command REQUEST_HOUSEKEEPING(
+        )
+
+        @ Command to issue noop
+        async command NOOP(
+        )
+
+        @ Command to initialize Sequence Sample HK
+        async command SAMPLE_SEQ(
+        )
+
+        async command ENABLE(
+        )
+
+        async command DISABLE(
+        )
+
+        async command RESET_COUNTERS(
+        )
+
+        async command CONFIGURE(
+            config: U32 @< Configuration Integer
+        )
+
+        #@ Command to initialize Sequence Sample HK
+        #async command SAMPLE_SEQ_CANCEL(
+        #)priority 10
+
+        @ Greeting event with maximum greeting length of 40 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "SampleSim: {}"
+
+        #@ text event with maximum length of 30 characters
+        #event TEXTTELEM severity diagnostic format "This is testing noop"
+
+         @ A count of the number of greetings issued
+        telemetry ReportedComponentCount: U32
+
+         @ Device Config
+        telemetry DeviceConfig: U32
+
+         @ Device Status
+        telemetry DeviceStatus: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ A Count of Successful Commands from FSW to Sample
+        telemetry CommandCount: U32
+
+        @ A Count of Unsuccessful Commands from FSW to Sample
+        telemetry CommandErrorCount: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabled: ActiveState
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        #text event port textEventOut
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+
+    }
+}
+```
+
+### `SampleSim.hpp`
+
+**경로:** `components/sample/fsw/fprime/sample_src/SampleSim.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SampleSim.hpp
+// \author jstar
+// \brief  hpp file for SampleSim component implementation class
+// ======================================================================
+
+#ifndef Components_SampleSim_HPP
+#define Components_SampleSim_HPP
+
+#include "sample_src/SampleSimComponentAc.hpp"
+#include "sample_src/SampleSim_ActiveStateEnumAc.hpp"
+
+extern "C"{
+#include "sample_device.h"
+#include "libuart.h"
+}
+  
+
+#define SAMPLE_DEVICE_DISABLED 0
+#define SAMPLE_DEVICE_ENABLED  1
+
+typedef struct
+{
+    uint8_t                     CommandErrorCount;
+    uint8_t                     CommandCount;
+    uint8_t                     DeviceErrorCount;
+    uint8_t                     DeviceCount;
+    uint8_t                     DeviceEnabled;
+} __attribute__((packed)) SAMPLE_Hk_tlm_t;
+#define SAMPLE_HK_TLM_LNGTH sizeof(SAMPLE_Hk_tlm_t)
+
+
+namespace Components {
+
+  class SampleSim :
+    public SampleSimComponentBase
+  {
+
+    public:
+
+    uart_info_t SampleUart; 
+    SAMPLE_Device_HK_tlm_t SampleHK; 
+    SAMPLE_Device_Data_tlm_t SampleData;
+    int32_t status = OS_SUCCESS;
+
+    SAMPLE_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct SampleSim object
+      SampleSim(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy SampleSim object
+      ~SampleSim();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      )override;
+
+       void SAMPLE_SEQ_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      )override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      )override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      )override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      )override;
+
+      void CONFIGURE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        const U32 config
+      )override;
+
+      inline SampleSim_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

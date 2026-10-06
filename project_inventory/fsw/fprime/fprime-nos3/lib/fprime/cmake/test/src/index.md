@@ -3,34 +3,952 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.py`
 
-file--__init__.py
-file--cmake.py
-file--settings.py
-file--test_autocoder.py
-file--test_basic.py
-file--test_config.py
-file--test_feature.py
-file--test_implementation.py
-file--test_ref_shared.py
-file--test_symlink.py
-file--test_unittests.py
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/__init__.py`
+
+
+```python
 ```
 
-## 항목
+### `cmake.py`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/cmake.py`](file--cmake.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/settings.py`](file--settings.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_autocoder.py`](file--test_autocoder.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_basic.py`](file--test_basic.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_config.py`](file--test_config.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_feature.py`](file--test_feature.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_implementation.py`](file--test_implementation.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_ref_shared.py`](file--test_ref_shared.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_symlink.py`](file--test_symlink.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_unittests.py`](file--test_unittests.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/cmake.py`
+
+
+```python
+"""
+cmake.py:
+
+A wrapper used to call CMake given a directory, a target directory to build, and a list of expected
+outputs for the given run. Options to the run and build targets (make targets) can optionally be
+supplied. CMake is run as a command line call to the cmake system. Thus CMake must be installed.
+
+@author mstarch
+"""
+import multiprocessing
+import select
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import pytest
+
+# Constants to supplied to the calls to subprocess
+CPUS = multiprocessing.cpu_count()
+CMAKE = "cmake"
+MAKE_CALL = "make"
+MAKE_ARGS = [f"-j{CPUS}"]
+
+
+def subprocess_helper(args, cwd):
+    """Subprocess helper used to 'tee' the output to: console and capture"""
+
+    def read_available(proc, stdout, stderr):
+        """Read the available output from the process and return it"""
+
+        def capture_stream(stream, lines):
+            """Capture output from a stream, printing to console if needed"""
+            new_lines = stream.readlines()
+            lines[stream].extend(new_lines)
+            if "-s" in sys.argv or "--capture=no" in sys.argv:
+                for line in new_lines:
+                    print(
+                        line,
+                        end="",
+                        file=(sys.stdout if stream == stdout else sys.stderr),
+                    )
+
+        lines = {stdout: [], stderr: []}
+        while proc.poll() is None:
+            ready, _, _ = select.select([stdout, stderr], [], [])
+            for stream in ready:
+                capture_stream(stream, lines)
+        capture_stream(stdout, lines)
+        capture_stream(stderr, lines)
+        return (
+            proc.poll(),
+            [line for line in lines[stdout] if line.strip() != ""],
+            [line for line in lines[stderr] if line.strip() != ""],
+        )
+
+    # Verbose output desired from pytest
+    proc = subprocess.Popen(
+        args=args,
+        cwd=str(cwd),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return read_available(proc, proc.stdout, proc.stderr)
+
+
+def run_cmake(source_directory, build_path, options=None):
+    """
+    Runs the cmake in the current directory with the given options and build_path
+
+    :param source_directory: source directory to run CMake within
+    :param build_path: path to build
+    :param options: options to pass CMake
+    :return: True if successful, False otherwise
+    """
+    args = [CMAKE]
+    options = {} if options is None else options
+    for option in options.keys():
+        value = options[option]
+        args.append("-D{0}={1}".format(option, value))
+    args.append(source_directory)
+
+    return subprocess_helper(args, build_path)
+
+
+def run_make(build_directory, target):
+    """
+    Runs the make command to ensure that the CMake system can follow through and finish the build.
+    Note: this assumes that the provided application built properly. Thus, those unit tests should
+    run first.
+
+    :param build_directory: build directory to change to
+    :param target: target to the make command
+    :return: True if successful, False otherwise
+    """
+    args = [MAKE_CALL]
+    if target != "":
+        args.append(target)
+    args.extend(MAKE_ARGS)
+    return subprocess_helper(args, build_directory)
+
+
+def assert_process_success(data_object, errors_ok=False, targets=None):
+    """Assert the subprocess runs worked as expected"""
+    for field in ["source", "build", "install", "cmake", "targets"]:
+        assert field in data_object, f"Data object malformed: missing '{field}' field"
+        assert field in data_object, f"Data object malformed: missing '{field}' field"
+
+    return_code, stdout, stderr = data_object["cmake"]
+    assert return_code == 0, f"CMake generation failed with return code {return_code}"
+    assert stdout, "CMake generated no standard out process"
+    assert not stderr or errors_ok, f"CMake generated errors:\n{''.join(stderr)}"
+
+    targets = data_object["targets"].keys() if targets is None else targets
+    filtered = [
+        (target, output)
+        for target, output in data_object["targets"].items()
+        if target in targets
+    ]
+
+    for target, output in filtered:
+        return_code, stdout, stderr = output
+        assert return_code == 0, f"CMake failed building '{target}'"
+        assert stdout, f"CMake generated no standard out building '{target}'"
+
+
+def get_build(
+    fixture_name,
+    source_directory,
+    cmake_arguments=None,
+    make_targets=None,
+    install_directory=None,
+):
+    """Generate and build a cmake deployment, then returns a pytest fixture for it"""
+    base_cmake_arguments = {"FPRIME_SUB_BUILD_JOBS": f"{CPUS}"}
+    cmake_arguments = {} if cmake_arguments is None else cmake_arguments
+    cmake_arguments.update(base_cmake_arguments)
+    build_directory = Path(tempfile.mkdtemp())
+    install_directory_calc = Path(
+        Path(source_directory) / "build-artifacts"
+        if install_directory is None
+        else install_directory
+    )
+    make_targets = ["all"] if make_targets is None else make_targets
+    if install_directory is not None:
+        cmake_arguments["CMAKE_INSTALL_PREFIX"] = str(install_directory)
+
+    cmake_output = run_cmake(source_directory, build_directory, cmake_arguments)
+    target_outputs = {
+        target: run_make(build_directory, target) for target in make_targets
+    }
+
+    @pytest.fixture(scope="session", name=fixture_name)
+    def fixture_function():
+        yield {
+            "source": source_directory,
+            "build": build_directory,
+            "install": install_directory_calc,
+            "cmake": cmake_output,
+            "targets": target_outputs,
+        }
+        shutil.rmtree(build_directory, ignore_errors=True)
+        if install_directory is not None:
+            shutil.rmtree(install_directory, ignore_errors=True)
+
+    return fixture_function
+```
+
+### `settings.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/settings.py`
+
+
+```python
+"""
+cmake/test/settings.py:
+
+Settings for the CMake tests. Mostly constants that must be tracked.
+"""
+from pathlib import Path
+
+DATA_DIR = Path(__file__).parent.parent / "data"
+REF_APP_PATH = Path(__file__).parent.parent.parent.parent / "Ref"
+
+
+FRAMEWORK_MODULES = [
+    "Fw_Cmd",
+    "Fw_Com",
+    "Fw_Comp",
+    "Fw_CompQueued",
+    "Fw_Log",
+    "Fw_Logger",
+    "Fw_Obj",
+    "Fw_Port",
+    "Fw_Time",
+    "Fw_Tlm",
+    "Fw_Types",
+    "Os",
+]
+
+STANDARD_MODULES = [
+    "Fw_Buffer",
+    "Fw_FilePacket",
+    "Fw_Prm",
+    "CFDP_Checksum",
+    "Drv_ByteStreamDriverModel",
+    "Drv_Ports_DataTypes",
+    "Drv_Ip",
+    "Drv_TcpClient",
+    "Utils_Hash",
+    "Utils_Types",
+]
+
+REF_MODULES = [
+    "Svc_ActiveRateGroup",
+    "Svc_AssertFatalAdapter",
+    "Svc_BufferManager",
+    "Svc_CmdDispatcher",
+    "Svc_CmdSequencer",
+    "Svc_Cycle",
+    "Svc_EventManager",
+    "Svc_Fatal",
+    "Svc_FatalHandler",
+    "Svc_FileDownlink",
+    "Svc_FileManager",
+    "Svc_FileUplink",
+    "Svc_FprimeDeframer",
+    "Svc_Framer",
+    "Svc_FramingProtocol",
+    "Svc_Health",
+    "Svc_PosixTime",
+    "Svc_PassiveConsoleTextLogger",
+    "Svc_Ping",
+    "Svc_PrmDb",
+    "Svc_RateGroupDriver",
+    "Svc_Sched",
+    "Svc_Seq",
+    "Svc_StaticMemory",
+    "Svc_Time",
+    "Svc_TlmChan",
+    "Ref_BlockDriver",
+    "Ref_PingReceiver",
+    "Ref_RecvBuffApp",
+    "Ref_SendBuffApp",
+    "Ref_SignalGen",
+    "Ref_Top",
+]
+```
+
+### `test_autocoder.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_autocoder.py`
+
+
+```python
+from . import cmake
+from . import settings
+
+_ = cmake.get_build(
+    "AUTOCODER_BUILD",
+    settings.DATA_DIR / "TestDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-fprime-library"),
+                str(settings.DATA_DIR / "test-fprime-library2"),
+            ]
+        ),
+    },
+    make_targets=[
+        "TestBuildAutocoderModule",
+        "TestTargetAutocoderModule",
+        "TestChainedAutocoderModule",
+        "TestHeaderAutocoderModule",
+    ],
+)
+
+
+def test_build_autocoder(AUTOCODER_BUILD):
+    """Test that a build-autocoder works"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestBuildAutocoderModule"])
+
+
+def test_target_autocoder(AUTOCODER_BUILD):
+    """Test that a target-triggered autocoder works"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestTargetAutocoderModule"])
+
+
+def test_autocoder_non_build_files(AUTOCODER_BUILD):
+    """Test that a target-triggered autocoder works"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestTargetAutocoderModule"])
+    build_cache_path = (
+        AUTOCODER_BUILD["build"] / "TestDeployment" / "TestTargetAutocoder"
+    )
+    for created in [
+        "test1.test-target.generated.txt",
+        "test2.test-target.generated.txt",
+    ]:
+        full_created_path = build_cache_path / created
+        assert (
+            full_created_path.exists()
+        ), f"Failed to create non-build output: {created}"
+
+
+def test_autocoder_chaining(AUTOCODER_BUILD):
+    """Test that autocoder chaining works - where one autocoder's output becomes another's input"""
+    cmake.assert_process_success(
+        AUTOCODER_BUILD, targets=["TestChainedAutocoderModule"]
+    )
+    build_cache_path = (
+        AUTOCODER_BUILD["build"] / "TestDeployment" / "TestChainedAutocoder"
+    )
+
+    # Verify that chained autocoder files are created
+    # First autocoder should create intermediate files with .generated suffix
+    for intermediate in [
+        "test1.test-target.generated.txt",
+        "test2.test-target.generated.txt",
+    ]:
+        intermediate_path = build_cache_path / intermediate
+        assert (
+            intermediate_path.exists()
+        ), f"Failed to create intermediate autocoder output: {intermediate}"
+
+    # Second autocoder should process the intermediate files and create final outputs
+    for final in ["test1.chained.txt", "test2.chained.txt"]:
+        final_path = build_cache_path / final
+        assert (
+            final_path.exists()
+        ), f"Failed to create chained autocoder output: {final}"
+
+
+def test_autocoder_header_as_sources(AUTOCODER_BUILD):
+    """Test that autocoders can generate header files that are treated as sources"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestHeaderAutocoderModule"])
+
+
+def test_autocoder_rerun_autocoder(AUTOCODER_BUILD):
+    """Test that autocoders can generate header files that are treated as sources"""
+    cmake.assert_process_success(AUTOCODER_BUILD, targets=["TestBuildAutocoderModule"])
+    build_cache_path = (
+        AUTOCODER_BUILD["build"] / "TestDeployment" / "TestBuildAutocoder"
+    )
+    rerun_autocoder_output = build_cache_path / "test-rerun-autocoder.txt"
+    assert rerun_autocoder_output.exists(), "Failed to create rerun autocoder output"
+```
+
+### `test_basic.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_basic.py`
+
+
+```python
+from . import cmake
+from .test_feature import FEATURE_BUILD_RESULT
+
+
+def test_relative_paths(FEATURE_BUILD):
+    """Basic run test for feature build"""
+    cmake.assert_process_success(FEATURE_BUILD)
+```
+
+### `test_config.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_config.py`
+
+
+```python
+####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import pytest
+from . import cmake
+from . import settings
+
+_1 = cmake.get_build(
+    "CONFIG_BUILD",
+    settings.DATA_DIR / "TestConfigDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-config-library"),
+            ]
+        ),
+    },
+    make_targets=[
+        "TestModelOverride",
+        "TestHeaderOverride",
+        "TestFPrimeLibraryOverride",
+        "library_config",
+        "TestLibraryNewConfig",
+    ],
+)
+
+_2 = cmake.get_build(
+    "CONFIG_FAILED_OVERRIDE_BUILD",
+    settings.DATA_DIR / "TestConfigDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-config-library"),
+            ]
+        ),
+        "_TEST_CONFIG_BAD_OVERRIDE": "ON",
+    },
+    make_targets=[],
+)
+
+_3 = cmake.get_build(
+    "CONFIG_FAILED_NEW_FILE_BUILD",
+    settings.DATA_DIR / "TestConfigDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-config-library"),
+            ]
+        ),
+        "_TEST_CONFIG_BAD_NEW_FILE": "ON",
+    },
+    make_targets=[],
+)
+
+
+def test_fprime_model_override(CONFIG_BUILD):
+    """Test that the config override works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestModelOverride"])
+
+
+def test_fprime_header_override(CONFIG_BUILD):
+    """Test that the config override works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestHeaderOverride"])
+
+
+def test_fprime_library_override(CONFIG_BUILD):
+    """Test that the config override (from library) works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestFPrimeLibraryOverride"])
+
+
+def test_library_override(CONFIG_BUILD):
+    """Test that the config override (of library) works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["library_config"])
+
+
+def test_library_new_config(CONFIG_BUILD):
+    """Test that the new config (of library) works"""
+    cmake.assert_process_success(CONFIG_BUILD, targets=["TestLibraryNewConfig"])
+
+
+def test_library_bad_new_config(CONFIG_FAILED_NEW_FILE_BUILD):
+    """Test that the new config that accidentally overrides work works"""
+    with pytest.raises(AssertionError):
+        cmake.assert_process_success(CONFIG_FAILED_NEW_FILE_BUILD, targets=[])
+
+
+def test_library_bad_override_config(CONFIG_FAILED_OVERRIDE_BUILD):
+    """Test that the config that is not an override overrides work works"""
+    with pytest.raises(AssertionError):
+        cmake.assert_process_success(CONFIG_FAILED_OVERRIDE_BUILD, targets=[])
+```
+
+### `test_feature.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_feature.py`
+
+
+```python
+####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import json
+import platform
+
+from . import cmake
+from . import settings
+
+
+TOOLCHAIN_NAME = "generic-native"
+
+
+FEATURE_BUILD_RESULT = cmake.get_build(
+    "FEATURE_BUILD",
+    settings.DATA_DIR / "TestDeployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR,
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-fprime-library"),
+                str(settings.DATA_DIR / "test-fprime-library2"),
+            ]
+        ),
+        "CMAKE_TOOLCHAIN_FILE": str(
+            settings.DATA_DIR
+            / "test-fprime-library"
+            / "cmake"
+            / "toolchain"
+            / f"{TOOLCHAIN_NAME}.cmake"
+        ),
+        "FPRIME_PLATFORM": platform.system(),
+    },
+    make_targets=[
+        "TestDeployment",
+        "test",
+        "TestDeployment_test",
+        "TestLibrary_TestComponent_test",
+        "version",
+        "TestRelative",
+    ],
+)
+
+
+def test_feature_run(FEATURE_BUILD):
+    """Basic run test for feature build"""
+    cmake.assert_process_success(FEATURE_BUILD)
+
+
+def test_feature_framework(FEATURE_BUILD):
+    """Feature build check framework properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    for module in settings.FRAMEWORK_MODULES + ["Svc_CmdDispatcher"]:
+        library_name = f"lib{module}.a"
+        output_path = FEATURE_BUILD["build"] / "lib" / TOOLCHAIN_NAME / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+
+
+def test_feature_library(FEATURE_BUILD):
+    """Feature build check libraries properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    modules = ["TestLibrary_TestComponent", "TestLibrary2_TestComponent"]
+    for module in modules:
+        library_name = f"lib{module}.a"
+        output_path = FEATURE_BUILD["build"] / "lib" / TOOLCHAIN_NAME / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+
+
+def test_feature_deployment(FEATURE_BUILD):
+    """Feature build check deployment properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    library_name = "TestDeployment"
+    output_path = FEATURE_BUILD["build"] / "bin" / TOOLCHAIN_NAME / library_name
+    assert output_path.exists(), f"Failed to locate {library_name} in build output"
+
+
+def test_feature_autocoder(FEATURE_BUILD):
+    """Feature build check deployment properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    for output_file in ["test-ac-1", "test-ac-2"]:
+        output_path = FEATURE_BUILD["build"] / output_file
+        assert output_path.exists(), f"Failed to locate {output_file} in build output"
+
+
+def test_feature_targets(FEATURE_BUILD):
+    """Feature build check deployment properly detected"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    for output_file in [
+        "global-test",
+        "deployment-test",
+        "TestLibrary_TestComponent-test",
+    ]:
+        output_path = FEATURE_BUILD["build"] / output_file
+        assert output_path.exists(), f"Failed to locate {output_file} in build output"
+
+
+def test_feature_version_info(FEATURE_BUILD):
+    """Build and assert version files validity"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    version_hpp = FEATURE_BUILD["build"] / "versions" / "version.hpp"
+    version_json = FEATURE_BUILD["build"] / "versions" / "version.json"
+    assert version_hpp.exists(), "Failed to locate version.hpp in build output"
+    assert version_json.exists(), "Failed to locate version.json in build output"
+    versions_dict = json.loads(version_json.read_text())
+    for key in ["framework_version", "project_version", "library_versions"]:
+        assert key in versions_dict, f"Failed to locate key: {key} in version.json"
+    assert (
+        "test-fprime-library" in versions_dict["library_versions"]
+    ), "Library version missing "
+    assert (
+        "test-fprime-library2" in versions_dict["library_versions"]
+    ), "Library version missing"
+    assert (
+        versions_dict["library_versions"]["test-fprime-library"]
+        == versions_dict["framework_version"]
+    ), "Library version mismatch"
+    assert (
+        versions_dict["library_versions"]["test-fprime-library2"]
+        == versions_dict["framework_version"]
+    ), "Library version mismatch"
+
+
+def test_feature_installation(FEATURE_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(FEATURE_BUILD)
+    deployment_name = "TestDeployment"
+    for module in settings.FRAMEWORK_MODULES + [
+        "Svc_CmdDispatcher",
+        "TestLibrary_TestComponent",
+        "TestLibrary2_TestComponent",
+    ]:
+        library_name = f"lib{module}.a"
+        output_path = (
+            FEATURE_BUILD["install"]
+            / TOOLCHAIN_NAME
+            / deployment_name
+            / "lib"
+            / "static"
+            / library_name
+        )
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = (
+        FEATURE_BUILD["install"]
+        / TOOLCHAIN_NAME
+        / deployment_name
+        / "bin"
+        / deployment_name
+    )
+    assert output_path.exists(), "Failed to locate TestDeployment in build output"
+
+
+def test_sub_build(FEATURE_BUILD):
+    """Test that the sub buil process builds"""
+    output_paths = [
+        # Test that a file in the sub build exists
+        FEATURE_BUILD["build"] / f"sub-build-test-sub-build" / "sub-test",
+        # Test the sub build could "return" files to the primary build
+        FEATURE_BUILD["build"] / "sub-test",
+    ]
+    for output_path in output_paths:
+        assert output_path.exists(), "Failed to locate sub-build artifact"
+```
+
+### `test_implementation.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_implementation.py`
+
+
+```python
+####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import platform
+
+from . import cmake
+from . import settings
+
+
+_ = cmake.get_build(
+    "IMPLEMENTATION_TEST",
+    settings.DATA_DIR / "test-implementations" / "Deployment",
+    {
+        "FPRIME_FRAMEWORK_PATH": settings.REF_APP_PATH.parent,
+        "FPRIME_PROJECT_ROOT": settings.DATA_DIR / "test-implementations",
+        "FPRIME_LIBRARY_LOCATIONS": ";".join(
+            [
+                str(settings.DATA_DIR / "test-implementations" / "test-platforms"),
+            ]
+        ),
+    },
+    make_targets=["Deployment"],
+)
+
+
+def test_platform_implementation(IMPLEMENTATION_TEST):
+    """Check the platform-specified implementation was produced"""
+    cmake.assert_process_success(IMPLEMENTATION_TEST)
+
+
+def test_override_implementation(IMPLEMENTATION_TEST):
+    """Check the override-specified implementation was produced"""
+    cmake.assert_process_success(IMPLEMENTATION_TEST)
+
+
+def test_non_built_implementation(IMPLEMENTATION_TEST):
+    """Check the override target that wasn't use was not built along with the override platform target"""
+    cmake.assert_process_success(IMPLEMENTATION_TEST)
+```
+
+### `test_ref_shared.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_ref_shared.py`
+
+
+```python
+####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import platform
+import tempfile
+import json
+import pytest
+from pathlib import Path
+from . import cmake
+from . import settings
+
+
+if platform.system() == "Darwin":
+    pytestmark = pytest.mark.skip(reason="Shared modules are not supported on macOS")
+
+_ = cmake.get_build(
+    "REF_BUILD",
+    settings.REF_APP_PATH,
+    cmake_arguments={"BUILD_SHARED_LIBS": "ON"},
+    make_targets=["Ref"],
+    install_directory=tempfile.mkdtemp(),
+)
+MODULES = settings.FRAMEWORK_MODULES + settings.STANDARD_MODULES
+
+
+def test_ref_run(REF_BUILD):
+    """Basic run test for ref"""
+    cmake.assert_process_success(REF_BUILD)
+
+
+def test_ref_targets(REF_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(REF_BUILD)
+    for module in MODULES:
+        library_name = (
+            f"lib{module}{'.so' if platform.system() != 'Darwin' else '.dylib'}"
+        )
+        output_path = REF_BUILD["build"] / "lib" / platform.system() / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = REF_BUILD["build"] / "bin" / platform.system() / "Ref"
+    assert output_path.exists(), "Failed to locate Ref in build output"
+
+
+def test_ref_installation(REF_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(REF_BUILD)
+    for module in MODULES:
+        library_name = (
+            f"lib{module}{'.so' if platform.system() != 'Darwin' else '.dylib'}"
+        )
+        output_path = (
+            REF_BUILD["install"] / platform.system() / "Ref" / "lib" / library_name
+        )
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = REF_BUILD["install"] / platform.system() / "Ref" / "bin" / "Ref"
+    assert output_path.exists(), "Failed to locate Ref in build output"
+
+
+def test_ref_dictionary_json(REF_BUILD):
+    """Build Ref and assert JSON dictionary exists"""
+    cmake.assert_process_success(REF_BUILD)
+    output_path = (
+        REF_BUILD["install"]
+        / platform.system()
+        / "Ref"
+        / "dict"
+        / "RefTopologyDictionary.json"
+    )
+    assert output_path.exists(), "Failed to locate Ref JSON Dictionary in build output"
+    dict_metadata = json.loads(output_path.read_text()).get("metadata")
+    assert (
+        dict_metadata.get("projectVersion") is not None
+    ), "Project version missing in JSON Dictionary"
+    # For Ref, versions should match since it's the same Git repo
+    assert dict_metadata.get("frameworkVersion") == dict_metadata.get(
+        "projectVersion"
+    ), "Version mismatch in JSON Dictionary"
+```
+
+### `test_symlink.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_symlink.py`
+
+
+```python
+####
+# test_symlink.py:
+#
+# Test that a build from a directory that contains a symlink works correctly.
+#
+####
+import os
+import shutil
+import tempfile
+import pytest
+from pathlib import Path
+from . import cmake
+from . import settings
+
+
+SYMLINK_PATH = Path(tempfile.mkdtemp()) / "fprime-link"
+os.symlink(settings.REF_APP_PATH.parent, SYMLINK_PATH)
+
+
+_ = cmake.get_build(
+    "SYMLINKED_UT_BUILD",
+    SYMLINK_PATH / "Ref",
+    cmake_arguments={"BUILD_TESTING": "ON", "CMAKE_DEBUG_OUTPUT": "ON"},
+    make_targets=["Ref", "Ref_ut_exe"],
+    install_directory=tempfile.mkdtemp(),
+)
+
+
+@pytest.fixture(scope="session")
+def symlink_maker():
+    """Fixture for symlinked builds"""
+    yield None
+    shutil.rmtree(SYMLINK_PATH, ignore_errors=True)
+
+
+def test_unittest_run(SYMLINKED_UT_BUILD, symlink_maker):
+    """Basic run test for ref"""
+    cmake.assert_process_success(SYMLINKED_UT_BUILD, errors_ok=True)
+```
+
+### `test_unittests.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/src/test_unittests.py`
+
+
+```python
+####
+# test_basic.py:
+#
+# Basic CMake tests.
+#
+####
+import platform
+import tempfile
+from pathlib import Path
+from . import cmake
+from . import settings
+
+_ = cmake.get_build(
+    "UT_BUILD",
+    settings.REF_APP_PATH,
+    cmake_arguments={"BUILD_TESTING": "ON"},
+    make_targets=["all", "Ref", "Ref_ut_exe"],
+    install_directory=tempfile.mkdtemp(),
+)
+MODULES = settings.FRAMEWORK_MODULES + settings.STANDARD_MODULES
+
+UNIT_TESTS = [
+    "CFDP_Checksum_ut_exe",
+    "Drv_TcpClient_ut_exe",
+    "Drv_TcpServer_ut_exe",
+    "Drv_Udp_ut_exe",
+    "Fw_Buffer_ut_exe",
+    "Fw_FilePacket_ut_exe",
+    "Fw_Log_ut_exe",
+    "Fw_SerializableFile_ut_exe",
+    "Fw_Time_ut_exe",
+    "Fw_Tlm_ut_exe",
+    "Fw_Types_ut_exe",
+    "Os_ut_exe",
+    "Ref_SignalGen_ut_exe",
+    "Svc_EventManager_ut_exe",
+    "Svc_ActiveRateGroup_ut_exe",
+    "Svc_ActiveTextLogger_ut_exe",
+    "Svc_AssertFatalAdapter_ut_exe",
+    "Svc_BufferLogger_ut_exe",
+    "Svc_BufferManager_ut_exe",
+    "Svc_CmdDispatcher_ut_exe",
+    "Svc_CmdSequencer_ut_exe",
+    "Svc_ComLogger_ut_exe",
+    "Svc_ComSplitter_ut_exe",
+    "Svc_FileDownlink_ut_exe",
+    "Svc_FileManager_ut_exe",
+    "Svc_FileUplink_ut_exe",
+    "Svc_FprimeFramer_ut_exe",
+    "Svc_GenericHub_ut_exe",
+    "Svc_Health_ut_exe",
+    "Svc_PosixTime_ut_exe",
+    "Svc_LinuxTimer_ut_exe",
+    "Svc_PolyDb_ut_exe",
+    "Svc_PrmDb_ut_exe",
+    "Svc_RateGroupDriver_ut_exe",
+    "Svc_StaticMemory_ut_exe",
+    "Svc_TlmChan_ut_exe",
+    "Svc_TlmPacketizer_ut_exe",
+    "Types_Circular_Buffer_ut_exe",
+    "Utils_ut_exe",
+]
+
+
+def test_unittest_run(UT_BUILD):
+    """Basic run test for ref"""
+    cmake.assert_process_success(UT_BUILD, errors_ok=True)
+
+
+def test_unittest_targets(UT_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(UT_BUILD, errors_ok=True)
+    for module in MODULES:
+        library_name = f"lib{module}.a"
+        output_path = UT_BUILD["build"] / "lib" / platform.system() / library_name
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    for executable in ["Ref"] + UNIT_TESTS:
+        output_path = UT_BUILD["build"] / "bin" / platform.system() / executable
+        assert output_path.exists(), "Failed to locate Ref in build output"
+
+
+def test_unittest_installation(UT_BUILD):
+    """Run reference and assert reference targets exit"""
+    cmake.assert_process_success(UT_BUILD, errors_ok=True)
+    for module in MODULES:
+        library_name = f"lib{module}.a"
+        output_path = (
+            UT_BUILD["install"]
+            / platform.system()
+            / "Ref"
+            / "lib"
+            / "static"
+            / library_name
+        )
+        assert output_path.exists(), f"Failed to locate {library_name} in build output"
+    output_path = UT_BUILD["install"] / platform.system() / "Ref" / "bin" / "Ref"
+    assert output_path.exists(), "Failed to locate Ref in build output"
+```

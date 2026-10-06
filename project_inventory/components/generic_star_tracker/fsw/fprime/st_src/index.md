@@ -3,22 +3,660 @@
 
 **경로:** `components/generic_star_tracker/fsw/fprime/st_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_star_tracker.cpp
-file--Generic_star_tracker.fpp
-file--Generic_star_tracker.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_star_tracker/fsw/fprime/st_src/docs/`](docs/index) — 폴더
-- [`components/generic_star_tracker/fsw/fprime/st_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/fsw/fprime/st_src/Generic_star_tracker.cpp`](file--Generic_star_tracker.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/fsw/fprime/st_src/Generic_star_tracker.fpp`](file--Generic_star_tracker.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/fsw/fprime/st_src/Generic_star_tracker.hpp`](file--Generic_star_tracker.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_star_tracker/fsw/fprime/st_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared/") #device.h
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc") #platform_cfg.h
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_star_tracker.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_star_tracker.cpp"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_star_tracker_device.c"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+ "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_star_tracker_device.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+)
+```
+
+### `Generic_star_tracker.cpp`
+
+**경로:** `components/generic_star_tracker/fsw/fprime/st_src/Generic_star_tracker.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_star_tracker.cpp
+// \author jstar
+// \brief  cpp file for Generic_star_tracker component implementation class
+// ======================================================================
+
+#include "st_src/Generic_star_tracker.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_star_tracker ::
+    Generic_star_tracker(const char* const compName) :
+      Generic_star_trackerComponentBase(compName)
+  {
+    int32_t status = OS_SUCCESS;
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_ST_DEVICE_ENABLED;
+     /* Open device specific protocols */
+    Generic_star_trackerUart.deviceString = GENERIC_STAR_TRACKER_CFG_STRING;
+    Generic_star_trackerUart.handle = GENERIC_STAR_TRACKER_CFG_HANDLE;
+    Generic_star_trackerUart.isOpen = PORT_CLOSED;
+    Generic_star_trackerUart.baud = GENERIC_STAR_TRACKER_CFG_BAUDRATE_HZ;
+    status = uart_init_port(&Generic_star_trackerUart);
+     if (status == OS_SUCCESS)
+    {
+        printf("UART device %s configured with baudrate %d \n", Generic_star_trackerUart.deviceString, Generic_star_trackerUart.baud);
+    }
+    else
+    {
+        printf("UART device %s failed to initialize! \n", Generic_star_trackerUart.deviceString);
+    }
+
+    // status = uart_close_port(&Generic_star_trackerUart);
+
+  }
+
+  Generic_star_tracker ::
+    ~Generic_star_tracker()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  // void Generic_star_tracker ::
+  //   TODO_cmdHandler(
+  //       FwOpcodeType opCode,
+  //       U32 cmdSeq
+  //   )
+  // {
+  //   // TODO
+  //   this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  // }
+
+  // CMD_NOOP
+  void Generic_star_tracker :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+    
+    status = GENERIC_STAR_TRACKER_CommandDevice(&Generic_star_trackerUart, GENERIC_STAR_TRACKER_DEVICE_NOOP_CMD, 0);
+    if (status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.CommandCount++;
+      Fw::LogStringArg log_msg("Star Tracker NOOP command success\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      Fw::LogStringArg log_msg("Star Tracker NOOP command failed!\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_ReportedComponentCount(Generic_star_trackerHK.DeviceCounter);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  // GENERIC_STAR_TRACKER_RequestHK
+  void Generic_star_tracker :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_ST_DEVICE_ENABLED)
+    {  
+      HkTelemetryPkt.CommandCount++;
+      status = GENERIC_STAR_TRACKER_RequestHK(&Generic_star_trackerUart, &Generic_star_trackerHK);
+      if (status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("RequestHK command success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("RequestHK command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("RequestHK command failed, device disabled!\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_ReportedComponentCount(Generic_star_trackerHK.DeviceCounter);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_star_tracker :: updateData_handler(const FwIndexType portNum, U32 context)
+  {
+    int32_t status = OS_SUCCESS;
+
+    status = GENERIC_STAR_TRACKER_RequestData(&Generic_star_trackerUart, &Generic_star_trackerData);
+
+    if(status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+      this->STout_out(0, Generic_star_trackerData.Q0, Generic_star_trackerData.Q1, Generic_star_trackerData.Q2, Generic_star_trackerData.Q3, Generic_star_trackerData.IsValid);
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+    }
+  }
+
+  void Generic_star_tracker :: updateTlm_handler(const FwIndexType portNum, U32 context)
+  {
+    this->tlmWrite_ReportedComponentCount(Generic_star_trackerHK.DeviceCounter);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_Q0_Data(Generic_star_trackerData.Q0);
+    this->tlmWrite_Q1_Data(Generic_star_trackerData.Q1);
+    this->tlmWrite_Q2_Data(Generic_star_trackerData.Q2);
+    this->tlmWrite_Q3_Data(Generic_star_trackerData.Q3);
+    this->tlmWrite_IsValid(Generic_star_trackerData.IsValid);
+  }
+
+  //GENERIC_STAR_TRACKER_RequestData
+  void Generic_star_tracker :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_ST_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+      status = GENERIC_STAR_TRACKER_RequestData(&Generic_star_trackerUart, &Generic_star_trackerData);
+      if(status < 0)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("ST_RequestData: Success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("ST_RequestData: Command Failed");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Request Data Failed, Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    
+    this->tlmWrite_ReportedComponentCount(Generic_star_trackerHK.DeviceCounter);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_Q0_Data(Generic_star_trackerData.Q0);
+    this->tlmWrite_Q1_Data(Generic_star_trackerData.Q1);
+    this->tlmWrite_Q2_Data(Generic_star_trackerData.Q2);
+    this->tlmWrite_Q3_Data(Generic_star_trackerData.Q3);
+    this->tlmWrite_IsValid(Generic_star_trackerData.IsValid);
+
+
+    this->STout_out(0, Generic_star_trackerData.Q0, Generic_star_trackerData.Q1, Generic_star_trackerData.Q2, Generic_star_trackerData.Q3, Generic_star_trackerData.IsValid);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_star_tracker :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+
+    if (HkTelemetryPkt.DeviceEnabled == GENERIC_ST_DEVICE_ENABLED)
+    {
+        HkTelemetryPkt.CommandCount++;
+        status = uart_close_port(&Generic_star_trackerUart);
+        if (status == OS_SUCCESS)
+        {
+          HkTelemetryPkt.DeviceCount++;
+          HkTelemetryPkt.DeviceEnabled = GENERIC_ST_DEVICE_DISABLED;
+          Fw::LogStringArg log_msg("Successfully Disabled Star Tracker!");
+          this->log_ACTIVITY_HI_TELEM(log_msg);
+        }
+        else
+        {
+          HkTelemetryPkt.DeviceErrorCount++;
+          Fw::LogStringArg log_msg("Disable Failed, UART init fail");
+          this->log_ACTIVITY_HI_TELEM(log_msg);
+        }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Disable Failed, Already Disabled");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_star_tracker :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+
+    if (HkTelemetryPkt.DeviceEnabled == GENERIC_ST_DEVICE_DISABLED)
+    {
+        HkTelemetryPkt.CommandCount++;
+
+        Generic_star_trackerUart.deviceString  = GENERIC_STAR_TRACKER_CFG_STRING;
+        Generic_star_trackerUart.handle        = GENERIC_STAR_TRACKER_CFG_HANDLE;
+        Generic_star_trackerUart.isOpen        = PORT_CLOSED;
+        Generic_star_trackerUart.baud          = GENERIC_STAR_TRACKER_CFG_BAUDRATE_HZ;
+        Generic_star_trackerUart.access_option = uart_access_flag_RDWR;
+
+        /* Open device specific protocols */
+        status = uart_init_port(&Generic_star_trackerUart);
+        if (status == OS_SUCCESS)
+        {
+          HkTelemetryPkt.DeviceCount++;
+          HkTelemetryPkt.DeviceEnabled = GENERIC_ST_DEVICE_ENABLED;
+          Fw::LogStringArg log_msg("Successfully Enabled Star Tracker!");
+          this->log_ACTIVITY_HI_TELEM(log_msg);
+        }
+        else
+        {
+          HkTelemetryPkt.DeviceErrorCount++;
+          Fw::LogStringArg log_msg("Enable Failed, UART init fail");
+          this->log_ACTIVITY_HI_TELEM(log_msg);
+        }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Enable Failed, Already Enabled");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_star_tracker :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  inline Generic_star_tracker_ActiveState Generic_star_tracker :: get_active_state(uint8_t DeviceEnabled)
+  {
+    Generic_star_tracker_ActiveState state;
+
+    if(DeviceEnabled == GENERIC_ST_DEVICE_ENABLED)
+    {
+      state.e = Generic_star_tracker_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_star_tracker_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+}
+```
+
+### `Generic_star_tracker.fpp`
+
+**경로:** `components/generic_star_tracker/fsw/fprime/st_src/Generic_star_tracker.fpp`
+
+
+```fpp
+module Components {
+    @ generic_star_tracker
+    active component Generic_star_tracker {
+
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+
+        @ Star Tracker output port
+        output port STout: STDataPort
+
+        @ Periodic Data Star Tracker
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm Star Tracker
+        async input port updateTlm: Svc.Sched
+
+        @ Command to Request Housekeeping
+        async command REQUEST_HOUSEKEEPING(
+        )
+        @ Command to send NOOP
+        async command NOOP(
+        )
+
+        @ Command to request data
+        async command REQUEST_DATA (
+        )
+
+        @ Disable Command
+        async command DISABLE()
+
+        @ Enable Command
+        async command ENABLE()
+
+        @ Reset Counters Command
+        async command RESET_COUNTERS()
+
+        @ event with maximum greeting length of 40 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "Generic_star_tracker: {}"
+
+        #@ A count of the number of greetings issued
+        #telemetry DeviceConfig: U32
+
+        #@ A count of the number of greetings issued
+        #telemetry DeviceStatus: U32
+
+        @ Quaternion 0
+        telemetry Q0_Data: F64
+
+        @ Quaternion 1
+        telemetry Q1_Data: F64
+
+        @ Quaternion 2
+        telemetry Q2_Data: F64
+
+        @ Quaternion 3
+        telemetry Q3_Data: F64
+
+        @ 8-bit Valid Flag
+        telemetry IsValid: U8
+
+        @ Sim Device Counter Renamed
+        telemetry ReportedComponentCount: U32
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ Device Enable
+        telemetry DeviceEnabled: ActiveState
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_star_tracker.hpp`
+
+**경로:** `components/generic_star_tracker/fsw/fprime/st_src/Generic_star_tracker.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_star_tracker.hpp
+// \author jstar
+// \brief  hpp file for Generic_star_tracker component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_star_tracker_HPP
+#define Components_Generic_star_tracker_HPP
+
+#include "st_src/Generic_star_trackerComponentAc.hpp"
+#include "st_src/Generic_star_tracker_ActiveStateEnumAc.hpp"
+
+extern "C"{
+#include "generic_star_tracker_device.h"
+#include "libuart.h"
+}
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+} ST_Hk_tlm_t;
+#define ST_HK_TLM_LNGTH sizeof(ST_Hk_tlm_t)
+
+#define GENERIC_ST_DEVICE_DISABLED 0
+#define GENERIC_ST_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_star_tracker :
+    public Generic_star_trackerComponentBase
+  {
+
+    public:
+
+    uart_info_t Generic_star_trackerUart;
+    GENERIC_STAR_TRACKER_Device_HK_tlm_t Generic_star_trackerHK;
+    GENERIC_STAR_TRACKER_Device_Data_tlm_t Generic_star_trackerData;
+    ST_Hk_tlm_t HkTelemetryPkt;
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_star_tracker object
+      Generic_star_tracker(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_star_tracker object
+      ~Generic_star_tracker();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for command TODO
+      //!
+      //! TODO
+      // void TODO_cmdHandler(
+      //     FwOpcodeType opCode, //!< The opcode
+      //     U32 cmdSeq //!< The command sequence number
+      // ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_DATA_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void updateData_handler (
+        const FwIndexType portNum,
+        U32 context
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void ENABLE_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      inline Generic_star_tracker_ActiveState get_active_state(uint8_t DeviceEnabled);
+  };
+
+}
+
+#endif
+```

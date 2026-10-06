@@ -3,40 +3,3918 @@
 
 **경로:** `fsw/tools/elf2cfetbl/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 .github/index
-file--.git
-file--CHANGELOG.md
-file--CMakeLists.txt
-file--CONTRIBUTING.md
-file--elf2cfetbl.c
-file--elf2cfetbl_version.h
-file--ELF_Structures.h
-file--Guide-Creating-Table-files.txt
-file--LICENSE
-file--README.md
-file--README.txt
-file--SampleTblImg.c
-file--SECURITY.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/tools/elf2cfetbl/.github/`](.github/index) — 폴더
-- [`fsw/tools/elf2cfetbl/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/CHANGELOG.md`](file--CHANGELOG.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/CONTRIBUTING.md`](file--CONTRIBUTING.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/elf2cfetbl.c`](file--elf2cfetbl.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/elf2cfetbl_version.h`](file--elf2cfetbl_version.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/ELF_Structures.h`](file--ELF_Structures.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/Guide-Creating-Table-files.txt`](file--Guide-Creating-Table-files.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/LICENSE`](file--LICENSE) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/SampleTblImg.c`](file--SampleTblImg.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/SECURITY.md`](file--SECURITY.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `fsw/tools/elf2cfetbl/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/tools/elf2cfetbl
+```
+
+### `CHANGELOG.md`
+
+**경로:** `fsw/tools/elf2cfetbl/CHANGELOG.md`
+
+
+```markdown
+# Changelog
+
+## Development Build: v3.3.0-rc4+dev30
+- Remove C++-style comments
+- See <https://github.com/nasa/elf2cfetbl/pull/119>
+
+## Development Build: v3.3.0-rc4+dev26
+- Create CHANGELOG.md
+- See <https://github.com/nasa/elf2cfetbl/pull/117>
+
+## Development Build: v3.3.0-rc4+dev24
+
+- Resolve uninit var static analysis warnings
+- See <https://github.com/nasa/elf2cfetbl/pull/113> and <https://github.com/nasa/cFS/pull/492> 
+
+## Development Build: v3.3.0-rc4+dev18
+
+- Update Copyright Headers
+- Standardize version.h 
+- See <https://github.com/nasa/elf2cfetbl/pull/108> and <https://github.com/nasa/cFS/445>
+
+## Development Build: v3.3.0-rc4+dev11
+
+- Apply header guard standard 
+- Remove explicit filename doxygen comments
+- See <https://github.com/nasa/cFS/pull/432>
+
+## Development Build: v3.3.0-rc4+dev4
+
+- Fix Untrusted divisor (TAINTED_SCALAR) static analysis warning by checking `get_sh_entsize(SectionHeader)`
+- Set baseline for cFS-Caelum-rc4: v3.3.0-rc4
+- Update mission rev to use 0xFF for development version
+- See <https://github.com/nasa/elf2cfetbl/pull/98> and <https://github.com/nasa/cfs/pull/390>
+
+## Development Build: v3.2.0-rc1+dev30
+
+-  Implement Coding Standard in CodeQL workflow
+- See <https://github.com/nasa/elf2cfetbl/pull/81> and <https://github.com/nasa/cFS/pull/270>
+
+## Development Build: v3.2.0-rc1+dev24
+
+- Add Testing Tools to the Security Policy
+- See <https://github.com/nasa/elf2cfetbl/pull/75>
+
+## Development Build: v3.2.0+dev20
+
+- Changes cpp-styled comments to c-style to meet coding standard
+- See <https://github.com/nasa/elf2cfetbl/pull/72>
+
+## Development Build: v3.2.0+dev9
+
+- Restricts destination file permissions
+- Squash int comparison warning
+- Replace ctime (which generates LGTM warning) with ctime_r
+- Deconflicts global/local parameters
+- See <https://github.com/nasa/elf2cfetbl/pull/62>
+
+## Development Build: v3.1.0+dev39
+
+- Adds a null to the end of SrcFilename and DstFilename when using strncpy.
+- Support ELF files that have all strings, including ELF section names, in one single ".strtab" section in the ELF file.
+- Version reporting now uses the version numbers defined in elf_version.h and reports build number.
+- See  <https://github.com/nasa/elf2cfetbl/pull/47>
+
+## Development Build: 3.1.5
+
+- Apply code style
+- See <https://github.com/nasa/elf2cfetbl/pull/44>
+
+## Development Build: 3.1.4
+
+- Fix string termination warnings in GCC9
+- See <https://github.com/nasa/elf2cfetbl/pull/41>
+
+## Development Build: 3.1.3
+
+- Builds for vxworks w/ 32-bit host
+- See <https://github.com/nasa/elf2cfetbl/pull/40>
+
+## Development Build: 3.1.2
+
+- Minor bug fixes and documentation (see <https://github.com/nasa/elf2cfetbl/pull/25>)
+
+## Development Build: 3.1.1
+
+- Minor updates (see <https://github.com/nasa/elf2cfetbl/pull/19>)
+
+## **_OFFICIAL RELEASE: 3.1.0 - Aquila_**
+
+- Minor updates (see <https://github.com/nasa/elf2cfetbl/pull/13>)
+- Not backwards compatible with OSAL 4.2.1
+- Released as part of cFE 6.7.0, Apache 2.0
+
+## **_OFFICIAL RELEASE: 3.0a_**
+
+- Released as part of cFE 6.6.0a, Apache 2.0
+
+NOTE - there are other parameter set management schemes used with the cFS (JSON, csv, etc) which may be more applicable for modern missions. Contact the community as detailed below for more information.
+
+## Known issues
+
+This ground utility was developed for a specific mission/configuration, and may not be applicable for general use. The Makefile and for_build/Makefile are no longer supported or tested.
+
+## Getting Help
+
+For best results, submit issues:questions or issues:help wanted requests at <https://github.com/nasa/cFS>.
+
+Official cFS page: <http://cfs.gsfc.nasa.gov>
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/tools/elf2cfetbl/CMakeLists.txt`
+
+
+```cmake
+# CMake snippet for building elf2cfetbl
+#
+include_directories(${MISSION_BINARY_DIR}/inc)
+include_directories(${osal_MISSION_DIR}/src/os/inc)
+include_directories(${cfe-core_MISSION_DIR}/src/inc)
+
+add_executable(elf2cfetbl elf2cfetbl.c)
+
+install(TARGETS elf2cfetbl DESTINATION host)
+
+
+```
+
+### `CONTRIBUTING.md`
+
+**경로:** `fsw/tools/elf2cfetbl/CONTRIBUTING.md`
+
+
+```markdown
+# Contributing Guide
+
+Please see our [top-level contributing guide](https://github.com/nasa/cFS/blob/main/CONTRIBUTING.md) for more information on how to contribute. 
+```
+
+### `elf2cfetbl.c`
+
+**경로:** `fsw/tools/elf2cfetbl/elf2cfetbl.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *    This file implements the ELF file to Standard cFE Table file format tool
+ */
+
+/*
+** Required header files.
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <time.h>
+#include <sys/stat.h>
+#include <limits.h>
+#include "ELF_Structures.h"
+#include "cfe_tbl_filedef.h"
+#include "elf2cfetbl_version.h"
+
+#define MAX_SECTION_HDR_NAME_LEN (128)
+#define TBL_DEF_SYMBOL_NAME      "CFE_TBL_FileDef"
+#define SUCCESS                  (0)
+#define FAILED                   (1)
+
+/* macro to construct 32 bit value from 4 chars */
+#define U32FROM4CHARS(_C1, _C2, _C3, _C4) \
+    ((uint32)(_C1) << 24 | (uint32)(_C2) << 16 | (uint32)(_C3) << 8 | (uint32)(_C4))
+
+typedef struct
+{
+    int32 Value;
+    char  String[50];
+} ElfStrMap;
+
+/**
+ *    Function Prototypes
+ */
+int32 ProcessCmdLineOptions(int argc, char *argv[]);
+int32 GetSrcFilename(void);
+int32 GetDstFilename(void);
+int32 OpenSrcFile(void);
+int32 OpenDstFile(void);
+int32 GetElfHeader(void);
+void  SwapElfHeader(void);
+int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader);
+void  SwapSectionHeader(union Elf_Shdr *SectionHeader);
+int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol);
+void  SwapSymbol(union Elf_Sym *Symbol);
+int32 GetStringFromMap(char *Result, ElfStrMap *Map, int32 Key);
+void  SwapUInt16(uint16 *ValueToSwap);
+void  SwapUInt32(uint32 *ValueToSwap);
+void  SwapUInt64(uint64 *ValueToSwap);
+int32 AllocateSectionHeaders(void);
+void  DeallocateSectionHeaders(void);
+int32 AllocateSymbols(void);
+void  DeallocateSymbols(void);
+void  FreeMemoryAllocations(void);
+int32 GetTblDefInfo(void);
+int32 OutputDataToTargetFile(void);
+void  OutputVersionInfo(void);
+void  OutputHelpInfo(void);
+int32 LocateAndReadUserObject(void);
+
+void PrintSymbol32(union Elf_Sym *Symbol);
+void PrintSymbol64(union Elf_Sym *Symbol);
+void PrintSectionHeader32(union Elf_Shdr *SectionHeader);
+void PrintSectionHeader64(union Elf_Shdr *SectionHeader);
+void PrintElfHeader32(union Elf_Ehdr ElfHeaderLcl);
+void PrintElfHeader64(union Elf_Ehdr ElfHeaderLcl);
+
+/**
+ *    Global Variables
+ */
+char SrcFilename[PATH_MAX] = {""};
+char DstFilename[PATH_MAX] = {""};
+char TableName[38]         = {""};
+char Description[32]       = {""};
+char LineOfText[300]       = {""};
+
+bool Verbose                     = false;
+bool ReportVersion               = false;
+bool OutputHelp                  = false;
+bool ByteSwapRequired            = false;
+bool ScIDSpecified               = false;
+bool ProcIDSpecified             = false;
+bool AppIDSpecified              = false;
+bool ScEpochSpecified            = false;
+bool FileEpochSpecified          = false;
+bool TableNameOverride           = false;
+bool DescriptionOverride         = false;
+bool ThisMachineIsLittleEndian   = true;
+bool TargetMachineIsLittleEndian = true;
+bool EnableTimeTagInHeader       = false;
+bool TargetWordsizeIs32Bit       = true;
+
+bool TableDataIsAllZeros = false;
+
+FILE *SrcFileDesc = NULL;
+FILE *DstFileDesc = NULL;
+
+CFE_FS_Header_t    FileHeader;
+CFE_TBL_File_Hdr_t TableHeader;
+
+union Elf_Ehdr   ElfHeader;
+union Elf_Shdr **SectionHeaderPtrs                  = NULL;
+union Elf_Shdr   SectionHeaderStringTable           = {{0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
+int64            SectionHeaderStringTableDataOffset = 0;
+char **          SectionNamePtrs                    = NULL;
+
+struct stat SrcFileStats;
+
+uint64_t          StringTableDataOffset = 0;
+int32             SymbolTableDataOffset = 0;
+uint64_t          NumSymbols            = 0;
+uint64_t          SymbolTableEntrySize  = 0;
+union Elf_Sym **  SymbolPtrs            = NULL;
+char **           SymbolNames;
+int32             TblDefSymbolIndex = -1;
+CFE_TBL_FileDef_t TblFileDef;
+int32             UserObjSymbolIndex = -1;
+uint32            SpacecraftID       = 0;
+uint32            ProcessorID        = 0;
+uint32            ApplicationID      = 0;
+time_t            EpochTime          = 0;
+
+typedef struct
+{
+    uint32 Year;
+    uint32 Month;
+    uint32 Day;
+    uint32 Hour;
+    uint32 Minute;
+    uint32 Second;
+} SpecifiedEpoch_t;
+
+SpecifiedEpoch_t ScEpoch   = {1970, 1, 1, 0, 0, 0};
+SpecifiedEpoch_t FileEpoch = {1970, 1, 1, 0, 0, 0};
+time_t           EpochDelta;
+time_t           SrcFileTimeInScEpoch;
+
+/**
+ *    ELF Characteristic Maps
+ */
+ElfStrMap e_type_Map[] = {
+    {ET_NONE, "ET_NONE (0)"}, {ET_REL, "ET_REL (1)"},   {ET_EXEC, "ET_EXEC (2)"},
+    {ET_DYN, "ET_DYN (3)"},   {ET_CORE, "ET_CORE (4)"}, {0, "* Unknown Elf File Type (%d) *"},
+};
+
+ElfStrMap e_machine_Map[] = {
+    {EM_NONE, "EM_NONE         ( 0)"},
+    {EM_M32, "EM_M32          ( 1)"},
+    {EM_SPARC, "EM_SPARC        ( 2)"},
+    {EM_386, "EM_386          ( 3)"},
+    {EM_68K, "EM_68K          ( 4)"},
+    {EM_88K, "EM_88K          ( 5)"},
+    {EM_860, "EM_860          ( 7)"},
+    {EM_MIPS, "EM_MIPS         ( 8)"},
+    {EM_S370, "EM_S370         ( 9)"},
+    {EM_MIPS_RS3_LE, "EM_MIPS_RS3_LE  (10)"},
+    {EM_PARISC, "EM_PARISC       (15)"},
+    {EM_VPP500, "EM_VPP500       (17)"},
+    {EM_SPARC32PLUS, "EM_SPARC32PLUS  (18)"},
+    {EM_960, "EM_960          (19)"},
+    {EM_PPC, "EM_PPC          (20)"},
+    {EM_PPC64, "EM_PPC64        (21)"},
+    {EM_S390, "EM_S390         (22)"},
+    {EM_SPU, "EM_SPU          (23)"},
+    {EM_V800, "EM_V800         (36)"},
+    {EM_FR20, "EM_FR20         (37)"},
+    {EM_RH32, "EM_RH32         (38)"},
+    {EM_RCE, "EM_RCE          (39)"},
+    {EM_ARM, "EM_ARM          (40)"},
+    {EM_ALPHA, "EM_ALPHA        (41)"},
+    {EM_SH, "EM_SH           (42)"},
+    {EM_SPARCV9, "EM_SPARCV9      (43)"},
+    {EM_TRICORE, "EM_TRICORE      (44)"},
+    {EM_ARC, "EM_ARC          (45)"},
+    {EM_H8_300, "EM_H8_300       (46)"},
+    {EM_H8_300H, "EM_H8_300H      (47)"},
+    {EM_H8S, "EM_H8S          (48)"},
+    {EM_H8_500, "EM_H8_500       (49)"},
+    {EM_IA_64, "EM_IA_64        (50)"},
+    {EM_MIPS_X, "EM_MIPS_X       (51)"},
+    {EM_COLDFIRE, "EM_COLDFIRE     (52)"},
+    {EM_68HC12, "EM_68HC12       (53)"},
+    {EM_MMA, "EM_MMA          (54)"},
+    {EM_PCP, "EM_PCP          (55)"},
+    {EM_NCPU, "EM_NCPU         (56)"},
+    {EM_NDR1, "EM_NDR1         (57)"},
+    {EM_STARCORE, "EM_STARCORE     (58)"},
+    {EM_ME16, "EM_ME16         (59)"},
+    {EM_ST100, "EM_ST100        (60)"},
+    {EM_TINYJ, "EM_TINYJ        (61)"},
+    {EM_X86_64, "EM_X86_64       (62)"},
+    {EM_PDSP, "EM_PDSP         (63)"},
+    {EM_PDP10, "EM_PDP10        (64)"},
+    {EM_PDP11, "EM_PDP11        (65)"},
+    {EM_FX66, "EM_FX66         (66)"},
+    {EM_ST9PLUS, "EM_ST9PLUS      (67)"},
+    {EM_ST7, "EM_ST7          (68)"},
+    {EM_68HC16, "EM_68HC16       (69)"},
+    {EM_68HC11, "EM_68HC11       (70)"},
+    {EM_68HC08, "EM_68HC08       (71)"},
+    {EM_68HC05, "EM_68HC05       (72)"},
+    {EM_SVX, "EM_SVX          (73)"},
+    {EM_ST19, "EM_ST19         (74)"},
+    {EM_VAX, "EM_VAX          (75)"},
+    {EM_CRIS, "EM_CRIS         (76)"},
+    {EM_JAVELIN, "EM_JAVELIN      (77)"},
+    {EM_FIREPATH, "EM_FIREPATH     (78)"},
+    {EM_ZSP, "EM_ZSP          (79)"},
+    {EM_MMIX, "EM_MMIX         (80)"},
+    {EM_HUANY, "EM_HUANY        (81)"},
+    {EM_PRISM, "EM_PRISM        (82)"},
+    {EM_AVR, "EM_AVR          (83)"},
+    {EM_FR30, "EM_FR30         (84)"},
+    {EM_D10V, "EM_D10V         (85)"},
+    {EM_D30V, "EM_D30V         (86)"},
+    {EM_V850, "EM_V850         (87)"},
+    {EM_M32R, "EM_M32R         (88)"},
+    {EM_MN10300, "EM_MN10300      (89)"},
+    {EM_MN10200, "EM_MN10200      (90)"},
+    {EM_PJ, "EM_PJ           (91)"},
+    {EM_OPENRISC, "EM_OPENRISC     (92)"},
+    {EM_ARC_COMPACT, "EM_ARC_COMPACT  (93)"},
+    {EM_XTENSA, "EM_XTENSA       (94)"},
+    {EM_VIDEOCORE, "EM_VIDEOCORE    (95)"},
+    {EM_TMM_GPP, "EM_TMM_GPP      (96)"},
+    {EM_NS32K, "EM_NS32K        (97)"},
+    {EM_TPC, "EM_TPC          (98)"},
+    {EM_SNP1K, "EM_SNP1K        (99)"},
+    {EM_ST200, "EM_ST200       (100)"},
+    {EM_IP2K, "EM_IP2K        (101)"},
+    {EM_MAX, "EM_MAX         (102)"},
+    {EM_CR, "EM_CR          (103)"},
+    {EM_F2MC16, "EM_F2MC16      (104)"},
+    {EM_MSP430, "EM_MSP430      (105)"},
+    {EM_BLACKFIN, "EM_BLACKFIN    (106)"},
+    {EM_SE_C33, "EM_SE_C33      (107)"},
+    {EM_SEP, "EM_SEP         (108)"},
+    {EM_ARCA, "EM_ARCA        (109)"},
+    {EM_UNICORE, "EM_UNICORE     (110)"},
+    {EM_EXCESS, "EM_EXCESS      (111)"},
+    {EM_DXP, "EM_DXP         (112)"},
+    {EM_ALTERA_NIOS2, "EM_ALTERA_NIOS2 (113)"},
+    {EM_CRX, "EM_CRX         (114)"},
+    {EM_XGATE, "EM_XGATE       (115)"},
+    {EM_C166, "EM_C166        (116)"},
+    {EM_M16C, "EM_M16C        (117)"},
+    {EM_DSPIC30F, "EM_DSPIC30F    (118)"},
+    {EM_CE, "EM_CE          (119)"},
+    {EM_M32C, "EM_M32C        (120)"},
+    {EM_TSK3000, "EM_TSK3000     (131)"},
+    {EM_RS08, "EM_RS08        (132)"},
+    {EM_SHARC, "EM_SHARC       (133)"},
+    {EM_ECOG2, "EM_ECOG2       (134)"},
+    {EM_SCORE7, "EM_SCORE7      (135)"},
+    {EM_DSP24, "EM_DSP24       (136)"},
+    {EM_VIDEOCORE3, "EM_VIDEOCORE3  (137)"},
+    {EM_LATTICEMICO32, "EM_LATTICEMICO32(138)"},
+    {EM_SE_C17, "EM_SE_C17      (139)"},
+    {EM_TI_C6000, "EM_TI_C6000    (140)"},
+    {EM_TI_C2000, "EM_TI_C2000    (141)"},
+    {EM_TI_C5500, "EM_TI_C5500    (142)"},
+    {EM_TI_ARP32, "EM_TI_ARP32    (143)"},
+    {EM_TI_PRU, "EM_TI_PRU      (144)"},
+    {EM_MMDSP_PLUS, "EM_MMDSP_PLUS  (160)"},
+    {EM_CYPRESS_M8C, "EM_CYPRESS_M8C (161)"},
+    {EM_R32C, "EM_R32C        (162)"},
+    {EM_TRIMEDIA, "EM_TRIMEDIA    (163)"},
+    {EM_QDSP6, "EM_QDSP6       (164)"},
+    {EM_8051, "EM_8051        (165)"},
+    {EM_STXP7X, "EM_STXP7X      (166)"},
+    {EM_NDS32, "EM_NDS32       (167)"},
+    {EM_ECOG1, "EM_ECOG1       (168)"},
+    {EM_ECOG1X, "EM_ECOG1X      (168)"},
+    {EM_MAXQ30, "EM_MAXQ30      (169)"},
+    {EM_XIMO16, "EM_XIMO16      (170)"},
+    {EM_MANIK, "EM_MANIK       (171)"},
+    {EM_RX, "EM_RX          (173)"},
+    {EM_METAG, "EM_METAG       (174)"},
+    {EM_MCST_ELBRUS, "EM_MCST_ELBRUS (175)"},
+    {EM_ECOG16, "EM_ECOG16      (176)"},
+    {EM_CR16, "EM_CR16        (177)"},
+    {EM_ETPU, "EM_ETPU        (178)"},
+    {EM_SLE9X, "EM_SLE9X       (179)"},
+    {EM_L10M, "EM_L10M        (180)"},
+    {EM_K10M, "EM_K10M        (181)"},
+    {EM_AARCH64, "EM_AARCH64     (183)"},
+    {EM_AVR32, "EM_AVR32       (185)"},
+    {EM_STM8, "EM_STM8        (186)"},
+    {EM_TILE64, "EM_TILE64      (187)"},
+    {EM_TILEPRO, "EM_TILEPRO     (188)"},
+    {EM_MICROBLAZE, "EM_MICROBLAZE  (189)"},
+    {EM_CUDA, "EM_CUDA        (190)"},
+    {EM_TILEGX, "EM_TILEGX      (191)"},
+    {EM_CLOUDSHIELD, "EM_CLOUDSHIELD (192)"},
+    {EM_COREA_1ST, "EM_COREA_1ST   (193)"},
+    {EM_COREA_2ND, "EM_COREA_2ND   (194)"},
+    {EM_ARC_COMPACT2, "EM_ARC_COMPACT2 (195)"},
+    {EM_OPEN8, "EM_OPEN8       (196)"},
+    {EM_RL78, "EM_RL78        (197)"},
+    {EM_VIDEOCORE5, "EM_VIDEOCORE5  (198)"},
+    {EM_78KOR, "EM_78KOR       (199)"},
+    {EM_56800EX, "EM_56800EX     (200)"},
+    {EM_BA1, "EM_BA1         (201)"},
+    {EM_BA2, "EM_BA2         (202)"},
+    {EM_XCORE, "EM_XCORE       (203)"},
+    {EM_MCHP_PIC, "EM_MCHP_PIC    (204)"},
+    {EM_INTEL205, "EM_INTEL205    (205)"},
+    {EM_INTEL206, "EM_INTEL206    (206)"},
+    {EM_INTEL207, "EM_INTEL207    (207)"},
+    {EM_INTEL208, "EM_INTEL208    (208)"},
+    {EM_INTEL209, "EM_INTEL209    (209)"},
+    {EM_KM32, "EM_KM32        (210)"},
+    {EM_KMX32, "EM_KMX32       (211)"},
+    {EM_KMX16, "EM_KMX16       (212)"},
+    {EM_KMX8, "EM_KMX8        (213)"},
+    {EM_KVARC, "EM_KVARC       (214)"},
+    {EM_CDP, "EM_CDP         (215)"},
+    {EM_COGE, "EM_COGE        (216)"},
+    {EM_COOL, "EM_COOL        (217)"},
+    {EM_NORC, "EM_NORC        (218)"},
+    {EM_CSR_KALIMBA, "EM_CSR_KALIMBA (219)"},
+    {EM_Z80, "EM_Z80         (220)"},
+    {EM_VISIUM, "EM_VISIUM      (221)"},
+    {EM_FT32, "EM_FT32        (222)"},
+    {EM_MOXIE, "EM_MOXIE       (223)"},
+    {EM_AMDGPU, "EM_AMDGPU      (224)"},
+    {EM_RISCV, "EM_RISCV       (243)"},
+    {0, "* Unknown Machine Type (%d) *"},
+};
+
+/* Elf Header helper functions */
+uint8_t get_e_ident(const union Elf_Ehdr *ElfHeaderLcl, int index)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return ElfHeaderLcl->Ehdr32.e_ident[index];
+    }
+    else
+    {
+        return ElfHeaderLcl->Ehdr64.e_ident[index];
+    }
+}
+
+uint16_t get_e_type(const union Elf_Ehdr *ElfHeaderLcl)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return ElfHeaderLcl->Ehdr32.e_type;
+    }
+    else
+    {
+        return ElfHeaderLcl->Ehdr64.e_type;
+    }
+}
+
+uint16_t get_e_machine(const union Elf_Ehdr *ElfHeaderLcl)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return ElfHeaderLcl->Ehdr32.e_machine;
+    }
+    else
+    {
+        return ElfHeaderLcl->Ehdr64.e_machine;
+    }
+}
+
+uint32_t get_e_version(const union Elf_Ehdr *ElfHeaderLcl)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return ElfHeaderLcl->Ehdr32.e_version;
+    }
+    else
+    {
+        return ElfHeaderLcl->Ehdr64.e_version;
+    }
+}
+
+uint16_t get_e_shstrndx(const union Elf_Ehdr *ElfHeaderLcl)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return ElfHeaderLcl->Ehdr32.e_shstrndx;
+    }
+    else
+    {
+        return ElfHeaderLcl->Ehdr64.e_shstrndx;
+    }
+}
+
+uint16_t get_e_shnum(const union Elf_Ehdr *ElfHeaderLcl)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return ElfHeaderLcl->Ehdr32.e_shnum;
+    }
+    else
+    {
+        return ElfHeaderLcl->Ehdr64.e_shnum;
+    }
+}
+
+/* Elf Section Header helper functions */
+
+uint32_t get_sh_name(const union Elf_Shdr *SectionHeader)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return SectionHeader->Shdr32.sh_name;
+    }
+    else
+    {
+        return SectionHeader->Shdr64.sh_name;
+    }
+}
+
+uint32_t get_sh_type(const union Elf_Shdr *SectionHeader)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return SectionHeader->Shdr32.sh_type;
+    }
+    else
+    {
+        return SectionHeader->Shdr64.sh_type;
+    }
+}
+
+void print_sh_flags(const union Elf_Shdr *SectionHeader)
+{
+    char VerboseStr[60];
+
+    sprintf(VerboseStr, "/");
+    if (TargetWordsizeIs32Bit)
+    {
+        if ((SectionHeader->Shdr32.sh_flags & SHF_WRITE) == SHF_WRITE)
+        {
+            sprintf(VerboseStr, "SHF_WRITE/");
+        }
+
+        if ((SectionHeader->Shdr32.sh_flags & SHF_ALLOC) == SHF_ALLOC)
+        {
+            strcat(VerboseStr, "SHF_ALLOC/");
+        }
+
+        if ((SectionHeader->Shdr32.sh_flags & SHF_EXECINSTR) == SHF_EXECINSTR)
+        {
+            strcat(VerboseStr, "SHF_EXECINSTR/");
+        }
+
+        printf("   sh_flags      = %s\n", VerboseStr);
+    }
+    else
+    {
+        if ((SectionHeader->Shdr64.sh_flags & SHF_WRITE) == SHF_WRITE)
+        {
+            sprintf(VerboseStr, "SHF_WRITE/");
+        }
+
+        if ((SectionHeader->Shdr64.sh_flags & SHF_ALLOC) == SHF_ALLOC)
+        {
+            strcat(VerboseStr, "SHF_ALLOC/");
+        }
+
+        if ((SectionHeader->Shdr64.sh_flags & SHF_EXECINSTR) == SHF_EXECINSTR)
+        {
+            strcat(VerboseStr, "SHF_EXECINSTR/");
+        }
+
+        printf("   sh_flags      = %s\n", VerboseStr);
+    }
+}
+
+uint64_t get_sh_offset(const union Elf_Shdr *SectionHeader)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return SectionHeader->Shdr32.sh_offset;
+    }
+    else
+    {
+        return SectionHeader->Shdr64.sh_offset;
+    }
+}
+
+uint64_t get_sh_size(const union Elf_Shdr *SectionHeader)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return SectionHeader->Shdr32.sh_size;
+    }
+    else
+    {
+        return SectionHeader->Shdr64.sh_size;
+    }
+}
+
+uint64_t get_sh_entsize(const union Elf_Shdr *SectionHeader)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return SectionHeader->Shdr32.sh_entsize;
+    }
+    else
+    {
+        return SectionHeader->Shdr64.sh_entsize;
+    }
+}
+
+/* Elf_Sym helper functions */
+
+uint32_t get_st_name(const union Elf_Sym *Symbol)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return Symbol->Sym32.st_name;
+    }
+    else
+    {
+        return Symbol->Sym64.st_name;
+    }
+}
+
+uint64_t get_st_value(const union Elf_Sym *Symbol)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return Symbol->Sym32.st_value;
+    }
+    else
+    {
+        return Symbol->Sym64.st_value;
+    }
+}
+
+uint64_t get_st_size(const union Elf_Sym *Symbol)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return Symbol->Sym32.st_size;
+    }
+    else
+    {
+        return Symbol->Sym64.st_size;
+    }
+}
+
+void set_st_size(union Elf_Sym *Symbol, uint64_t new_value)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        Symbol->Sym32.st_size = (uint32_t)new_value;
+        if (Symbol->Sym32.st_size != new_value)
+        {
+            printf("ERROR: Sym32.st_size can not hold %lu\n", (long unsigned int)new_value);
+        }
+    }
+    else
+    {
+        Symbol->Sym64.st_size = new_value;
+    }
+}
+
+uint16_t get_st_shndx(const union Elf_Sym *Symbol)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        return Symbol->Sym32.st_shndx;
+    }
+    else
+    {
+        return Symbol->Sym64.st_shndx;
+    }
+}
+
+/**
+ *
+ */
+
+int main(int argc, char *argv[])
+{
+    int32 Status = SUCCESS;
+    int32 i      = 0;
+
+    Status = ProcessCmdLineOptions(argc, argv);
+    if (Status != SUCCESS)
+        return Status;
+
+    if (ReportVersion)
+        OutputVersionInfo();
+
+    Status = GetSrcFilename();
+    if (OutputHelp)
+        OutputHelpInfo();
+    if (Status != SUCCESS)
+        return Status;
+
+    Status = OpenSrcFile();
+    if (Status != SUCCESS)
+        return Status;
+
+    Status = GetElfHeader();
+    if (Status != SUCCESS)
+        return Status;
+
+    /* Get the string section header first */
+    Status = GetSectionHeader(get_e_shstrndx(&ElfHeader), &SectionHeaderStringTable);
+    if (Status != SUCCESS)
+        return Status;
+
+    if (TargetWordsizeIs32Bit)
+    {
+        SectionHeaderStringTableDataOffset = SectionHeaderStringTable.Shdr32.sh_offset;
+    }
+    else
+    {
+        SectionHeaderStringTableDataOffset = SectionHeaderStringTable.Shdr64.sh_offset;
+    }
+
+    /* Allocate memory for all of the ELF object file section headers */
+    Status = AllocateSectionHeaders();
+    if (Status != SUCCESS)
+    {
+        FreeMemoryAllocations();
+        return Status;
+    }
+
+    /* Read in each section header from input file */
+    for (i = 0; i < get_e_shnum(&ElfHeader); i++)
+    {
+        Status = GetSectionHeader(i, SectionHeaderPtrs[i]);
+        if (Status != SUCCESS)
+        {
+            FreeMemoryAllocations();
+            return Status;
+        }
+    }
+
+    if (StringTableDataOffset == 0)
+    {
+        printf("Error! Unable to locate ELF string table for symbol names\n");
+        return EXIT_FAILURE;
+    }
+
+    /* Allocate memory for all of the symbol table entries */
+    Status = AllocateSymbols();
+    if (Status != SUCCESS)
+    {
+        FreeMemoryAllocations();
+        return Status;
+    }
+
+    /* Read in each symbol table entry */
+    for (i = 0; i < NumSymbols; i++)
+    {
+        Status = GetSymbol(i, SymbolPtrs[i]);
+        if (Status != SUCCESS)
+        {
+            FreeMemoryAllocations();
+            return Status;
+        }
+    }
+
+    if (TblDefSymbolIndex == -1)
+    {
+        printf("Error! Unable to locate '%s' object in '%s'.\n", TBL_DEF_SYMBOL_NAME, SrcFilename);
+        FreeMemoryAllocations();
+        return EXIT_FAILURE;
+    }
+
+    /* Read in the definition of the table file */
+    Status = GetTblDefInfo();
+    if (Status != SUCCESS)
+    {
+        FreeMemoryAllocations();
+        return Status;
+    }
+
+    Status = GetDstFilename();
+    if (Status != SUCCESS)
+        return Status;
+
+    Status = OpenDstFile();
+    if (Status != SUCCESS)
+        return Status;
+
+    Status = LocateAndReadUserObject();
+    if (Status != SUCCESS)
+    {
+        FreeMemoryAllocations();
+        return Status;
+    }
+
+    Status = OutputDataToTargetFile();
+
+    FreeMemoryAllocations();
+
+    return SUCCESS;
+}
+
+/**
+ *
+ */
+
+int32 AllocateSectionHeaders(void)
+{
+    int32 Status = SUCCESS;
+    int32 i      = 0;
+
+    if (get_e_shnum(&ElfHeader) == 0)
+    {
+        printf("Error! Failed to locate any Section Headers in '%s'!\n", SrcFilename);
+        Status = FAILED;
+    }
+    else
+    {
+        SectionHeaderPtrs = (union Elf_Shdr **)malloc(sizeof(union Elf_Shdr *) * get_e_shnum(&ElfHeader));
+        if (SectionHeaderPtrs == NULL)
+        {
+            printf("Error! Insufficient memory for number of Sections in '%s'!\n", SrcFilename);
+            Status = FAILED;
+        }
+
+        SectionNamePtrs = (char **)malloc(sizeof(char *) * get_e_shnum(&ElfHeader));
+        if (SectionNamePtrs == NULL)
+        {
+            printf("Error! Insufficient memory for number of Sections in '%s'!\n", SrcFilename);
+            Status = FAILED;
+        }
+
+        if (Status == SUCCESS)
+        {
+            /* Initialize all of the pointers to NULL */
+            for (i = 0; i < get_e_shnum(&ElfHeader); i++)
+            {
+                SectionHeaderPtrs[i] = NULL;
+                SectionNamePtrs[i]   = NULL;
+            }
+
+            /* Allocate memory for each header */
+            for (i = 0; i < get_e_shnum(&ElfHeader); i++)
+            {
+                SectionHeaderPtrs[i] = (union Elf_Shdr *)malloc(sizeof(union Elf_Shdr));
+                if (SectionHeaderPtrs[i] == NULL)
+                {
+                    printf("Error! Insufficient memory to store Section Headers\n");
+                    Status = FAILED;
+                }
+
+                SectionNamePtrs[i] = (char *)malloc(MAX_SECTION_HDR_NAME_LEN);
+                if (SectionNamePtrs[i] == NULL)
+                {
+                    printf("Error! Insufficient memory to store Section Names\n");
+                    Status = FAILED;
+                }
+            }
+        }
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+void DeallocateSectionHeaders(void)
+{
+    int32 i = 0;
+
+    if (SectionHeaderPtrs != NULL)
+    {
+        while ((i < get_e_shnum(&ElfHeader)) && (SectionHeaderPtrs[i] != NULL))
+        {
+            free(SectionHeaderPtrs[i]);
+            i++;
+        }
+        free(SectionHeaderPtrs);
+    }
+
+    i = 0;
+
+    if (SectionNamePtrs != NULL)
+    {
+        while ((i < get_e_shnum(&ElfHeader)) && (SectionNamePtrs[i] != NULL))
+        {
+            free(SectionNamePtrs[i]);
+            i++;
+        }
+        free(SectionNamePtrs);
+    }
+}
+
+/**
+ *
+ */
+
+int32 AllocateSymbols(void)
+{
+    int32 Status = SUCCESS;
+    int32 i      = 0;
+
+    if (NumSymbols == 0)
+    {
+        printf("Error! Failed to locate any Symbols in '%s'!\n", SrcFilename);
+        Status = FAILED;
+    }
+    else
+    {
+        SymbolPtrs = malloc(sizeof(union Elf_Sym *) * NumSymbols);
+
+        if (SymbolPtrs == NULL)
+        {
+            printf("Error! Insufficient memory for number of Symbols in '%s'!\n", SrcFilename);
+            Status = FAILED;
+        }
+
+        SymbolNames = malloc(sizeof(char *) * NumSymbols);
+        if (SymbolNames == NULL)
+        {
+            printf("Error! Insufficient memory for number of Symbols in '%s'!\n", SrcFilename);
+            Status = FAILED;
+        }
+
+        for (i = 0; i < NumSymbols; i++)
+        {
+            SymbolPtrs[i]  = NULL;
+            SymbolNames[i] = NULL;
+        }
+
+        if (Status == SUCCESS)
+        {
+            /* Allocate memory for each symbol */
+            for (i = 0; i < NumSymbols; i++)
+            {
+                SymbolPtrs[i] = (union Elf_Sym *)malloc(sizeof(union Elf_Sym));
+                if (SymbolPtrs[i] == NULL)
+                {
+                    printf("Error! Insufficient memory to store Symbol Headers\n");
+                    Status = FAILED;
+                }
+            }
+        }
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+void DeallocateSymbols(void)
+{
+    int32 i = 0;
+
+    if (SymbolPtrs != NULL)
+    {
+        while ((i < NumSymbols) && (SymbolPtrs[i] != NULL))
+        {
+            free(SymbolPtrs[i]);
+
+            if (SymbolNames[i] != NULL)
+            {
+                free(SymbolNames[i]);
+            }
+
+            i++;
+        }
+        free(SymbolPtrs);
+    }
+}
+
+/**
+ *
+ */
+
+void FreeMemoryAllocations(void)
+{
+    DeallocateSymbols();
+    DeallocateSectionHeaders();
+
+    if (SrcFileDesc != NULL)
+    {
+        fclose(SrcFileDesc);
+    }
+
+    if (DstFileDesc != NULL)
+    {
+        fclose(DstFileDesc);
+    }
+}
+
+/**
+ *
+ */
+
+int32 ProcessCmdLineOptions(int ArgumentCount, char *Arguments[])
+{
+    int32     Status              = SUCCESS;
+    bool      InputFileSpecified  = false;
+    bool      OutputFileSpecified = false;
+    int       i                   = 1;
+    char *    EndPtr;
+    uint32    MaxDay;
+    struct tm FileEpochTm;
+    struct tm ScEpochTm;
+    time_t    FileEpochInSecs;
+    time_t    ScEpochInSecs;
+
+    while ((i < ArgumentCount) && (Status == SUCCESS))
+    {
+        if ((Arguments[i][0] == '-') && (Arguments[i][1] == 't'))
+        {
+            /* Extract the Table Name Override */
+            strncpy(TableName, &Arguments[i][2], sizeof(TableName) - 1);
+            TableName[sizeof(TableName) - 1] = 0;
+            TableNameOverride                = true;
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'd'))
+        {
+            /* Extract the Description Override */
+            strncpy(Description, &Arguments[i][2], sizeof(Description) - 1);
+            Description[sizeof(Description) - 1] = 0;
+            DescriptionOverride                  = true;
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 's'))
+        {
+            SpacecraftID = strtoul(&Arguments[i][2], &EndPtr, 0);
+            if (EndPtr != &Arguments[i][2])
+            {
+                ScIDSpecified = true;
+            }
+            else
+            {
+                printf("Error!, Spacecraft ID of '%s' cannot be interpreted as an integer.\n", &Arguments[i][2]);
+                Status = false;
+            }
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'S'))
+        {
+            if (strlen(&Arguments[i][2]) == 4)
+            {
+                SpacecraftID  = U32FROM4CHARS(Arguments[i][2], Arguments[i][3], Arguments[i][4], Arguments[i][5]);
+                ScIDSpecified = true;
+            }
+            else
+            {
+                printf("Error!, Spacecraft ID of '%s' does not have exactly 4 characters.\n", &Arguments[i][2]);
+                Status = false;
+            }
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'a'))
+        {
+            ApplicationID = strtoul(&Arguments[i][2], &EndPtr, 0);
+            if (EndPtr != &Arguments[i][2])
+            {
+                AppIDSpecified = true;
+            }
+            else
+            {
+                printf("Error!, Application ID of '%s' cannot be interpreted as an integer.\n", &Arguments[i][2]);
+                Status = false;
+            }
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'p'))
+        {
+            ProcIDSpecified = true;
+            ProcessorID     = strtoul(&Arguments[i][2], &EndPtr, 0);
+            if (EndPtr != &Arguments[i][2])
+            {
+                ProcIDSpecified = true;
+            }
+            else
+            {
+                printf("Error!, Processor ID of '%s' cannot be interpreted as an integer.\n", &Arguments[i][2]);
+                Status = false;
+            }
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'P'))
+        {
+            if (strlen(&Arguments[i][2]) == 4)
+            {
+                ProcessorID     = U32FROM4CHARS(Arguments[i][2], Arguments[i][3], Arguments[i][4], Arguments[i][5]);
+                ProcIDSpecified = true;
+            }
+            else
+            {
+                printf("Error!, Processor ID of '%s' does not have exactly 4 characters.\n", &Arguments[i][2]);
+                Status = false;
+            }
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'h'))
+        {
+            OutputHelp = true;
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'v'))
+        {
+            Verbose = true;
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'V'))
+        {
+            ReportVersion = true;
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'n'))
+        {
+            /* This option is ignored for compatibility */
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'T'))
+        {
+            EnableTimeTagInHeader = true;
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'e'))
+        {
+            ScEpoch.Year = strtoul(&Arguments[i][2], &EndPtr, 0);
+            if (EndPtr != &Arguments[i][6])
+            {
+                fprintf(stderr, "Error! Spacecraft Epoch Year is not of the form 'YYYY:'\n");
+                Status = false;
+            }
+            else
+            {
+                ScEpoch.Month = strtoul(&Arguments[i][7], &EndPtr, 0);
+                if ((EndPtr != &Arguments[i][9]) || (ScEpoch.Month == 0) || (ScEpoch.Month > 12))
+                {
+                    fprintf(
+                        stderr,
+                        "Error! Spacecraft Epoch Month is not of the form 'MM:' where MM is in the range of 1-12\n");
+                    Status = false;
+                }
+                else
+                {
+                    MaxDay = 31;
+                    if ((ScEpoch.Month == 4) || (ScEpoch.Month == 6) || (ScEpoch.Month == 9) || (ScEpoch.Month == 11))
+                    {
+                        MaxDay = 30;
+                    }
+                    else if (ScEpoch.Month == 2)
+                    {
+                        if ((ScEpoch.Year % 4) == 0)
+                        {
+                            if ((ScEpoch.Year % 100) == 0)
+                            {
+                                if ((ScEpoch.Year % 400) == 0)
+                                {
+                                    MaxDay = 29;
+                                }
+                                else
+                                {
+                                    MaxDay = 28;
+                                }
+                            }
+                            else
+                            {
+                                MaxDay = 29;
+                            }
+                        }
+                        else
+                        {
+                            MaxDay = 28;
+                        }
+                    }
+                    ScEpoch.Day = strtoul(&Arguments[i][10], &EndPtr, 0);
+                    if ((EndPtr != &Arguments[i][12]) || (ScEpoch.Day == 0) || (ScEpoch.Day > MaxDay))
+                    {
+                        fprintf(
+                            stderr,
+                            "Error! Spacecraft Epoch Day is not of the form 'DD:' where DD is in the range of 1-%d\n",
+                            MaxDay);
+                        Status = false;
+                    }
+                    else
+                    {
+                        ScEpoch.Hour = strtoul(&Arguments[i][13], &EndPtr, 0);
+                        if ((EndPtr != &Arguments[i][15]) || (ScEpoch.Hour > 23))
+                        {
+                            fprintf(stderr, "Error! Spacecraft Epoch Hour is not of the form 'hh:' where hh is in the "
+                                            "range of 0-23\n");
+                            Status = false;
+                        }
+                        else
+                        {
+                            ScEpoch.Minute = strtoul(&Arguments[i][16], &EndPtr, 0);
+                            if ((EndPtr != &Arguments[i][18]) || (ScEpoch.Minute > 59))
+                            {
+                                fprintf(stderr, "Error! Spacecraft Epoch Minute is not of the form 'mm:' where mm is "
+                                                "in the range of 0-59\n");
+                                Status = false;
+                            }
+                            else
+                            {
+                                ScEpoch.Second = strtoul(&Arguments[i][19], &EndPtr, 0);
+                                if ((EndPtr != &Arguments[i][21]) || (ScEpoch.Second > 59))
+                                {
+                                    fprintf(stderr, "Error! Spacecraft Epoch Second is not of the form 'ss' where ss "
+                                                    "is in the range of 0-59\n");
+                                    Status = false;
+                                }
+                                else
+                                {
+                                    ScEpochSpecified = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if ((Arguments[i][0] == '-') && (Arguments[i][1] == 'f'))
+        {
+            FileEpoch.Year = strtoul(&Arguments[i][2], &EndPtr, 0);
+            if (EndPtr != &Arguments[i][6])
+            {
+                fprintf(stderr, "Error! File Epoch Year is not of the form 'YYYY:'\n");
+                Status = false;
+            }
+            else
+            {
+                FileEpoch.Month = strtoul(&Arguments[i][7], &EndPtr, 0);
+                if ((EndPtr != &Arguments[i][9]) || (FileEpoch.Month == 0) || (FileEpoch.Month > 12))
+                {
+                    fprintf(stderr,
+                            "Error! File Epoch Month is not of the form 'MM:' where MM is in the range of 1-12\n");
+                    Status = false;
+                }
+                else
+                {
+                    MaxDay = 31;
+                    if ((FileEpoch.Month == 4) || (FileEpoch.Month == 6) || (FileEpoch.Month == 9) ||
+                        (FileEpoch.Month == 11))
+                    {
+                        MaxDay = 30;
+                    }
+                    else if (FileEpoch.Month == 2)
+                    {
+                        if ((FileEpoch.Year % 4) == 0)
+                        {
+                            if ((FileEpoch.Year % 100) == 0)
+                            {
+                                if ((FileEpoch.Year % 400) == 0)
+                                {
+                                    MaxDay = 29;
+                                }
+                                else
+                                {
+                                    MaxDay = 28;
+                                }
+                            }
+                            else
+                            {
+                                MaxDay = 29;
+                            }
+                        }
+                        else
+                        {
+                            MaxDay = 28;
+                        }
+                    }
+                    FileEpoch.Day = strtoul(&Arguments[i][10], &EndPtr, 0);
+                    if ((EndPtr != &Arguments[i][12]) || (FileEpoch.Day == 0) || (FileEpoch.Day > MaxDay))
+                    {
+                        fprintf(stderr,
+                                "Error! File Epoch Day is not of the form 'DD:' where DD is in the range of 1-%d\n",
+                                MaxDay);
+                        Status = false;
+                    }
+                    else
+                    {
+                        FileEpoch.Hour = strtoul(&Arguments[i][13], &EndPtr, 0);
+                        if ((EndPtr != &Arguments[i][15]) || (FileEpoch.Hour > 23))
+                        {
+                            fprintf(
+                                stderr,
+                                "Error! File Epoch Hour is not of the form 'hh:' where hh is in the range of 0-23\n");
+                            Status = false;
+                        }
+                        else
+                        {
+                            FileEpoch.Minute = strtoul(&Arguments[i][16], &EndPtr, 0);
+                            if ((EndPtr != &Arguments[i][18]) || (FileEpoch.Minute > 59))
+                            {
+                                fprintf(stderr, "Error! File Epoch Minute is not of the form 'mm:' where mm is in the "
+                                                "range of 0-59\n");
+                                Status = false;
+                            }
+                            else
+                            {
+                                FileEpoch.Second = strtoul(&Arguments[i][19], &EndPtr, 0);
+                                if ((EndPtr != &Arguments[i][21]) || (FileEpoch.Second > 59))
+                                {
+                                    fprintf(stderr, "Error! File Epoch Second is not of the form 'ss' where ss is in "
+                                                    "the range of 0-59\n");
+                                    Status = false;
+                                }
+                                else
+                                {
+                                    FileEpochSpecified = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else if (!InputFileSpecified)
+        {
+            strncpy(SrcFilename, Arguments[i], PATH_MAX - 1);
+            SrcFilename[PATH_MAX - 1] = '\0';
+            InputFileSpecified        = true;
+        }
+        else if (!OutputFileSpecified)
+        {
+            strncpy(DstFilename, Arguments[i], PATH_MAX - 1);
+            DstFilename[PATH_MAX - 1] = '\0';
+            OutputFileSpecified       = true;
+        }
+        else
+        {
+            printf("\nError! Unknown Command Line Option '%s'\n", Arguments[i]);
+            Status = FAILED;
+        }
+        i++;
+    }
+    FileEpochTm.tm_sec   = FileEpoch.Second;
+    FileEpochTm.tm_min   = FileEpoch.Minute;
+    FileEpochTm.tm_hour  = FileEpoch.Hour;
+    FileEpochTm.tm_mday  = FileEpoch.Day;
+    FileEpochTm.tm_mon   = FileEpoch.Month - 1;
+    FileEpochTm.tm_year  = FileEpoch.Year - 1900;
+    FileEpochTm.tm_isdst = -1;
+
+    FileEpochInSecs = mktime(&FileEpochTm);
+
+    ScEpochTm.tm_sec   = ScEpoch.Second;
+    ScEpochTm.tm_min   = ScEpoch.Minute;
+    ScEpochTm.tm_hour  = ScEpoch.Hour;
+    ScEpochTm.tm_mday  = ScEpoch.Day;
+    ScEpochTm.tm_mon   = ScEpoch.Month - 1;
+    ScEpochTm.tm_year  = ScEpoch.Year - 1900;
+    ScEpochTm.tm_isdst = -1;
+
+    ScEpochInSecs = mktime(&ScEpochTm);
+
+    EpochDelta = FileEpochInSecs - ScEpochInSecs;
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+void OutputVersionInfo(void)
+{
+    printf("\n%s\n", ELF2CFETBL_VERSION_STRING);
+}
+
+/**
+ *
+ */
+
+void OutputHelpInfo(void)
+{
+    printf("\nElf Object File to cFE Table Image File Conversion Tool (elf2cfetbl)\n\n");
+    printf("elf2cfetbl [-tTblName] [-d\"Description\"] [-h] [-v] [-V] [-s#] [-p#] [-n] \n");
+    printf("           [-T] [-eYYYY:MM:DD:hh:mm:ss] [-fYYYY:MM:DD:hh:mm:ss] SrcFilename [DestDirectory]\n");
+    printf("   where:\n");
+    printf("   -tTblName             replaces the table name specified in the object file with 'TblName'\n");
+    printf("   -d\"Description\"       replaces the description specified in the object file with 'Description'\n");
+    printf("   -h                    produces this output\n");
+    printf("   -v                    produces verbose output showing the breakdown of the object file in detail\n");
+    printf("   -V                    shows the version of this utility\n");
+    printf("   -s#                   specifies a Spacecraft ID to be put into file header.\n");
+    printf("                         # can be specified as decimal, octal (starting with a zero), or hex (starting "
+           "with '0x')\n");
+    printf("   -Scccc                specifies a Spacecraft ID as a 4 byte string to be put into the table file file "
+           "header.\n");
+    printf("                         cccc represents the 4 ASCII characters that will be encoded into the 32 bit "
+           "Spacecraft ID field.\n");
+    printf("                              examples: -SMMS1 or -SQQ#2\n");
+    printf("   -p#                   specifies a Processor ID to be put into file header.\n");
+    printf("                         # can be specified as decimal, octal (starting with a zero), or hex (starting "
+           "with '0x')\n");
+    printf(
+        "   -Pcccc                specifies a Processor ID as a 4 byte string to be put into the table file header.\n");
+    printf("                         cccc represents the 4 ASCII characters that will be encoded into the 32 bit "
+           "Processor ID field.\n");
+    printf("                              examples: -PMMS1 or -PQQ#2\n");
+    printf("   -a#                   specifies an Application ID to be put into file header.\n");
+    printf("                         # can be specified as decimal, octal (starting with a zero), or hex (starting "
+           "with '0x')\n");
+    printf("   -T                    enables insertion of the SrcFilename's file creation time into the standard cFE "
+           "File Header.\n");
+    printf("                         This option must be specified for either the '-e' and/or '-f' options below to "
+           "have any effect.\n");
+    printf("                         By default, the time tag fields are set to zero.\n");
+    printf("   -eYYYY:MM:DD:hh:mm:ss specifies the spacecraft epoch time.  The SrcFilename's file creation time will "
+           "be converted to\n");
+    printf("                         seconds since the specified epoch time and stored in the standard cFE File "
+           "Header.\n");
+    printf("                         where:   YYYY=year, MM=month (01-12), DD=day (01-31), \n");
+    printf("                                  hh=hour (00-23), mm=minute (00-59), ss=seconds (00-59)\n");
+    printf("                         If no epoch is specified, the default epoch is either 1970:01:01:00:00:00 or the "
+           "epoch specified\n");
+    printf("                         by the user using the '-f' option described below\n");
+    printf("                         This option requires the '-T' option, defined above, to be specified to have any "
+           "effect\n");
+    printf("   -fYYYY:MM:DD:hh:mm:ss specifies the file system epoch time.  The SrcFilename's file creation time is "
+           "obtained from the\n");
+    printf("                         file system as seconds since an epoch.  On most systems the file system epoch is "
+           "defined as\n");
+    printf("                         1970:01:01:00:00:00.  If the user is running this application on a machine with a "
+           "different epoch,\n");
+    printf("                         then the file system epoch should be defined with this option.\n");
+    printf("                         where:   YYYY=year, MM=month (01-12), DD=day (01-31), \n");
+    printf("                                  hh=hour (00-23), mm=minute (00-59), ss=seconds (00-59)\n");
+    printf("                         If no epoch is specified, the default epoch is 1970:01:01:00:00:00\n");
+    printf("                         This option requires the '-T' option, defined above, to be specified to have any "
+           "effect\n");
+    printf("   SrcFilename           specifies the object file to be converted\n");
+    printf("   DestDirectory         specifies the directory in which the cFE Table Image file is to be created.\n");
+    printf("                         If a directory is not specified './' is assumed.\n");
+    printf("\n");
+    printf("EXAMPLES:\n");
+    printf("   elf2cfetbl MyObjectFile ../../TblDefaultImgDir/\n");
+    printf("   elf2cfetbl -s12 -p0x0D -a016 -e2000:01:01:00:00:00 MyObjectFile ../../TblDefaultImgDir/\n");
+    printf("\n");
+    printf("NOTE: The name of the target file is specified within the source file as part of the CFE_TBL_FILEDEF "
+           "macro.\n");
+    printf("      If the macro has not been included in the source file, the utility will fail to convert the object "
+           "file.\n");
+}
+
+/**
+ *
+ */
+
+int32 GetSrcFilename(void)
+{
+    int32 Status = SUCCESS;
+
+    if (strlen(SrcFilename) == 0)
+    {
+        OutputHelp = true;
+        Status     = FAILED;
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 GetDstFilename(void)
+{
+    int32 Status = SUCCESS;
+
+    if (strlen(DstFilename) == 0)
+    {
+        strcpy(DstFilename, "./");
+    }
+
+    strcat(DstFilename, TblFileDef.TgtFilename);
+
+    if (Verbose)
+        printf("Target Filename: %s\n", DstFilename);
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 OpenSrcFile(void)
+{
+    int  RtnCode;
+    char TimeBuff[50];
+
+    /* Check to see if input file can be found and opened */
+    SrcFileDesc = fopen(SrcFilename, "r");
+
+    if (SrcFileDesc == NULL)
+    {
+        printf("'%s' was not opened\n", SrcFilename);
+        return FAILED;
+    }
+
+    /* Obtain time of object file's last modification */
+    RtnCode = stat(SrcFilename, &SrcFileStats);
+    if (RtnCode == 0)
+    {
+        SrcFileTimeInScEpoch = SrcFileStats.st_mtime + EpochDelta;
+
+        if (Verbose)
+        {
+            printf("Original Source File Modification Time: %s\n", ctime_r(&SrcFileStats.st_mtime, TimeBuff));
+            printf("Source File Modification Time in Seconds since S/C Epoch: %ld (0x%08lX)\n", SrcFileTimeInScEpoch,
+                   SrcFileTimeInScEpoch);
+        }
+    }
+    else
+    {
+        if (Verbose)
+            printf("Unable to get modification time from %s", SrcFilename);
+        SrcFileTimeInScEpoch = 0;
+    }
+
+    return SUCCESS;
+}
+
+int32 OpenDstFile(void)
+{
+    struct stat dststat;
+
+    /* Check to see if output file can be opened and written */
+    DstFileDesc = fopen(DstFilename, "w");
+
+    if (DstFileDesc == NULL)
+    {
+        printf("'%s' was not opened\n", DstFilename);
+        return FAILED;
+    }
+
+    /* Fix file if too permissive (CWE-732) */
+    if (stat(DstFilename, &dststat) == 0)
+    {
+        if (Verbose)
+            printf("%s: Destination file permissions after open = 0x%X\n", DstFilename, dststat.st_mode);
+        chmod(DstFilename, dststat.st_mode & ~(S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IWOTH | S_IXOTH));
+        stat(DstFilename, &dststat);
+        if (Verbose)
+            printf("%s: Destination file permissions after chmod = 0x%X\n", DstFilename, dststat.st_mode);
+    }
+
+    return SUCCESS;
+}
+
+/**
+ *
+ */
+
+int32 GetElfHeader(void)
+{
+    int32  Status      = SUCCESS;
+    size_t NumHdrsRead = 0;
+    char   VerboseStr[60];
+    int32  EndiannessCheck = 0x01020304;
+
+    if (((char *)&EndiannessCheck)[0] == 0x01)
+    {
+        ThisMachineIsLittleEndian = false;
+    }
+    else if (((char *)&EndiannessCheck)[0] != 0x04)
+    {
+        printf("Unable to determine endianness of this machine! (0x%02x, 0x%02x, 0x%02x, 0x%02x)\n",
+               ((char *)&EndiannessCheck)[0], ((char *)&EndiannessCheck)[1], ((char *)&EndiannessCheck)[2],
+               ((char *)&EndiannessCheck)[3]);
+        return FAILED;
+    }
+
+    /* Begin by reading e_ident characters */
+    NumHdrsRead = fread(&ElfHeader, EI_NIDENT, 1, SrcFileDesc);
+
+    if (NumHdrsRead != 1)
+    {
+        printf("Experienced error attempting to read e_ident of ELF Header from file '%s'\n", SrcFilename);
+        return FAILED;
+    }
+
+    if (Verbose)
+        printf("ELF Header:\n");
+    if (Verbose)
+        printf("   e_ident[EI_MAG0..3] = 0x%02x,%c%c%c\n", get_e_ident(&ElfHeader, EI_MAG0),
+               get_e_ident(&ElfHeader, EI_MAG1), get_e_ident(&ElfHeader, EI_MAG2), get_e_ident(&ElfHeader, EI_MAG3));
+
+    /* Verify the ELF file magic number */
+    if (get_e_ident(&ElfHeader, EI_MAG0) != ELFMAG0)
+        Status = FAILED;
+    if (get_e_ident(&ElfHeader, EI_MAG1) != ELFMAG1)
+        Status = FAILED;
+    if (get_e_ident(&ElfHeader, EI_MAG2) != ELFMAG2)
+        Status = FAILED;
+    if (get_e_ident(&ElfHeader, EI_MAG3) != ELFMAG3)
+        Status = FAILED;
+
+    if (Status == FAILED)
+    {
+        printf("Source File '%s' does not have an ELF Magic Number\n", SrcFilename);
+        printf("If this object file was compiled on a PC under cygwin, then it is probably in COFF format.\n");
+        printf("To convert it to an elf file, use the following command:\n");
+        printf("./objcopy -O elf32-little %s %s.elf\n", SrcFilename, SrcFilename);
+        printf("then try running this utility again on the %s.elf file\n", SrcFilename);
+        return Status;
+    }
+
+    /* Verify the processor class type */
+    switch (get_e_ident(&ElfHeader, EI_CLASS))
+    {
+        case ELFCLASSNONE:
+            sprintf(VerboseStr, "ELFCLASSNONE (0)");
+            Status = FAILED;
+            break;
+
+        case ELFCLASS32:
+            sprintf(VerboseStr, "ELFCLASS32 (1)");
+            if (Verbose)
+                printf("Target table is 32 bit\n");
+            TargetWordsizeIs32Bit = true;
+            break;
+
+        case ELFCLASS64:
+            sprintf(VerboseStr, "ELFCLASS64 (2)");
+            if (Verbose)
+                printf("Target table is 64 bit\n");
+            TargetWordsizeIs32Bit = false;
+            break;
+
+        default:
+            sprintf(VerboseStr, "Invalid Class (%d)", get_e_ident(&ElfHeader, EI_CLASS));
+            Status = FAILED;
+            break;
+    }
+
+    if (Status == FAILED)
+    {
+        printf("Source file '%s' contains objects of class type '%s' which is unsupported by this utility\n",
+               SrcFilename, VerboseStr);
+        return Status;
+    }
+
+    if (Verbose)
+        printf("   e_ident[EI_CLASS] = %s\n", VerboseStr);
+
+    /* Verify Data Encoding type */
+    switch (get_e_ident(&ElfHeader, EI_DATA))
+    {
+        case ELFDATANONE:
+            sprintf(VerboseStr, "ELFDATANONE");
+            Status = FAILED;
+            break;
+
+        case ELFDATA2LSB:
+            sprintf(VerboseStr, "ELFDATA2LSB (Little-Endian)");
+            TargetMachineIsLittleEndian = true;
+            if (ThisMachineIsLittleEndian == false)
+            {
+                ByteSwapRequired = true;
+            }
+            break;
+
+        case ELFDATA2MSB:
+            sprintf(VerboseStr, "ELFDATA2MSB (Big-Endian)");
+            TargetMachineIsLittleEndian = false;
+            if (ThisMachineIsLittleEndian == true)
+            {
+                ByteSwapRequired = true;
+            }
+            break;
+
+        default:
+            sprintf(VerboseStr, "Unknown Data Encoding Type (%d)", get_e_ident(&ElfHeader, EI_DATA));
+            Status = FAILED;
+            break;
+    }
+
+    if (Status == FAILED)
+    {
+        printf("Source file '%s' contains data encoded with '%s'\n", SrcFilename, VerboseStr);
+        return Status;
+    }
+
+    if (Verbose)
+        printf("   e_ident[EI_DATA] = %s\n", VerboseStr);
+
+    /* Verify ELF Header Version */
+    if (get_e_ident(&ElfHeader, EI_VERSION) != EV_CURRENT)
+    {
+        printf("Source file '%s' is improper ELF header version (%d)\n", SrcFilename,
+               get_e_ident(&ElfHeader, EI_VERSION));
+        return FAILED;
+    }
+
+    if (Verbose)
+        printf("   e_ident[EI_VERSION] = %d\n", get_e_ident(&ElfHeader, EI_VERSION));
+
+    /* Now that e_ident is processed (with word size), read rest of the header */
+    if (TargetWordsizeIs32Bit)
+    {
+        NumHdrsRead = fread(&(ElfHeader.Ehdr32.e_type), sizeof(Elf32_Ehdr) - EI_NIDENT, 1, SrcFileDesc);
+    }
+    else
+    {
+        NumHdrsRead = fread(&(ElfHeader.Ehdr64.e_type), sizeof(Elf64_Ehdr) - EI_NIDENT, 1, SrcFileDesc);
+    }
+
+    if (NumHdrsRead != 1)
+    {
+        printf("Experienced error attempting to read remaining ELF Header from file '%s'\n", SrcFilename);
+        return FAILED;
+    }
+
+    if (ByteSwapRequired == true)
+    {
+        SwapElfHeader();
+    }
+
+    /* Verify ELF Type */
+    Status = GetStringFromMap(&VerboseStr[0], e_type_Map, (int32)get_e_type(&ElfHeader));
+
+    if (Status == FAILED)
+    {
+        printf("Error in source file '%s' - %s\n", SrcFilename, VerboseStr);
+        return FAILED;
+    }
+
+    if (Verbose)
+        printf("   e_type = %s\n", VerboseStr);
+
+    /* Verify machine type */
+    Status = GetStringFromMap(&VerboseStr[0], e_machine_Map, (int32)get_e_machine(&ElfHeader));
+
+    if (Status == FAILED)
+    {
+        printf("Error in source file '%s' - %s\n", SrcFilename, VerboseStr);
+        return FAILED;
+    }
+
+    if (Verbose)
+        printf("   e_machine = %s\n", VerboseStr);
+
+    /* Verify ELF Object File Version */
+    if (get_e_version(&ElfHeader) != EV_CURRENT)
+    {
+        printf("Error in source file '%s' - Improper ELF object version (%d)\n", SrcFilename,
+               get_e_version(&ElfHeader));
+        return FAILED;
+    }
+
+    if (TargetWordsizeIs32Bit)
+    {
+        PrintElfHeader32(ElfHeader);
+    }
+    else
+    {
+        PrintElfHeader64(ElfHeader);
+    }
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 GetSectionHeader(int32 SectionIndex, union Elf_Shdr *SectionHeader)
+{
+    int32  Status      = SUCCESS;
+    size_t NumHdrsRead = 0;
+    char   VerboseStr[60];
+    int64  SeekOffset;
+    int32  Shentsize;
+    int32  i = 0;
+
+    if (TargetWordsizeIs32Bit)
+    {
+        SeekOffset = ElfHeader.Ehdr32.e_shoff;
+        Shentsize  = ElfHeader.Ehdr32.e_shentsize;
+    }
+    else
+    {
+        SeekOffset = ElfHeader.Ehdr64.e_shoff;
+        Shentsize  = ElfHeader.Ehdr64.e_shentsize;
+    }
+
+    if (SectionIndex > 0)
+    {
+        SeekOffset = SeekOffset + (SectionIndex * Shentsize);
+    }
+
+    Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+    if (Status != 0)
+    {
+        printf("Error locating Section Header #%d in file '%s'\n", SectionIndex, SrcFilename);
+        return FAILED;
+    }
+
+    if (TargetWordsizeIs32Bit)
+    {
+        NumHdrsRead = fread(SectionHeader, sizeof(Elf32_Shdr), 1, SrcFileDesc);
+    }
+    else
+    {
+        NumHdrsRead = fread(SectionHeader, sizeof(Elf64_Shdr), 1, SrcFileDesc);
+    }
+
+    if (NumHdrsRead != 1)
+    {
+        printf("Experienced error attempting to read Section Header #%d from file '%s'\n", SectionIndex, SrcFilename);
+        return FAILED;
+    }
+
+    if (ByteSwapRequired == true)
+        SwapSectionHeader(SectionHeader);
+
+    if ((SectionHeaderStringTableDataOffset != 0) && (get_sh_name(SectionHeader) != 0))
+    {
+        if (Verbose)
+            printf("Section Header #%d:\n", SectionIndex);
+
+        SeekOffset = SectionHeaderStringTableDataOffset + get_sh_name(SectionHeader);
+        if (Verbose)
+            printf("   sh_name       = 0x%08x - ", get_sh_name(SectionHeader));
+        fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+        while ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0')
+        {
+            i++;
+        }
+        if (Verbose)
+            printf("%s\n", VerboseStr);
+
+        /* Save the name for later reference */
+        strncpy(SectionNamePtrs[SectionIndex], VerboseStr, (MAX_SECTION_HDR_NAME_LEN - 1));
+        SectionNamePtrs[SectionIndex][(MAX_SECTION_HDR_NAME_LEN - 1)] = '\0';
+
+        switch (get_sh_type(SectionHeader))
+        {
+            case SHT_NULL:
+                sprintf(VerboseStr, "SHT_NULL (0)");
+                break;
+
+            case SHT_PROGBITS:
+                sprintf(VerboseStr, "SHT_PROGBITS (1)");
+                break;
+
+            case SHT_SYMTAB:
+                if (TargetWordsizeIs32Bit)
+                {
+                    SymbolTableDataOffset = SectionHeader->Shdr32.sh_offset + sizeof(Elf32_Sym);
+                }
+                else
+                {
+                    SymbolTableDataOffset = SectionHeader->Shdr64.sh_offset + sizeof(Elf64_Sym);
+                }
+                SymbolTableEntrySize = get_sh_entsize(SectionHeader);
+                if (SymbolTableEntrySize == 0)
+                {
+                    NumSymbols = 0;
+                }
+                else
+                {
+                    NumSymbols = (get_sh_size(SectionHeader) / SymbolTableEntrySize) - 1;
+                }
+                sprintf(VerboseStr, "SHT_SYMTAB (2) - # Symbols = %lu", (long unsigned int)NumSymbols);
+                break;
+
+            case SHT_STRTAB:
+                sprintf(VerboseStr, "SHT_STRTAB (3)");
+                /*
+                 * If the section name is ".strtab" then preferentially use this section for symbol name data
+                 * Otherwise use the first section which is NOT the section header string table (.shstrtab)
+                 *
+                 * Not all compilers generate a separate strtab for section header names; some put everything
+                 * into one string table.
+                 */
+                if (strcmp(SectionNamePtrs[SectionIndex], ".strtab") == 0 ||
+                    (StringTableDataOffset == 0 && SectionIndex != get_e_shstrndx(&ElfHeader)))
+                {
+                    StringTableDataOffset = get_sh_offset(SectionHeader);
+                }
+                break;
+
+            case SHT_RELA:
+                sprintf(VerboseStr, "SHT_RELA (4)");
+                break;
+
+            case SHT_HASH:
+                sprintf(VerboseStr, "SHT_HASH (5)");
+                break;
+
+            case SHT_DYNAMIC:
+                sprintf(VerboseStr, "SHT_DYNAMIC (6)");
+                break;
+
+            case SHT_NOTE:
+                sprintf(VerboseStr, "SHT_NOTE (7)");
+                break;
+
+            case SHT_NOBITS:
+                sprintf(VerboseStr, "SHT_NOBITS (8)");
+                break;
+
+            case SHT_REL:
+                sprintf(VerboseStr, "SHT_REL (9)");
+                break;
+
+            case SHT_SHLIB:
+                sprintf(VerboseStr, "SHT_SHLIB (10)");
+                break;
+
+            case SHT_DYNSYM:
+                sprintf(VerboseStr, "SHT_DYNSYM (11)");
+                break;
+
+            case SHT_INIT_ARRAY:
+                sprintf(VerboseStr, "SHT_INIT_ARRAY (14)");
+                break;
+
+            case SHT_FINI_ARRAY:
+                sprintf(VerboseStr, "SHT_FINI_ARRAY (15)");
+                break;
+
+            case SHT_PREINIT_ARRAY:
+                sprintf(VerboseStr, "SHT_PREINIT_ARRAY (16)");
+                break;
+
+            case SHT_GROUP:
+                sprintf(VerboseStr, "SHT_GROUP (17)");
+                break;
+
+            case SHT_SYMTAB_SHNDX:
+                sprintf(VerboseStr, "SHT_SYMTAB_SHNDX (18)");
+                break;
+
+            default:
+                sprintf(VerboseStr, "Unknown (%d)", get_sh_type(SectionHeader));
+                break;
+        }
+
+        if (Verbose)
+            printf("   sh_type       = %s\n", VerboseStr);
+
+        if (Verbose)
+            print_sh_flags(SectionHeader);
+
+        if (TargetWordsizeIs32Bit)
+        {
+            PrintSectionHeader32(SectionHeader);
+        }
+        else
+        {
+            PrintSectionHeader64(SectionHeader);
+        }
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 GetSymbol(int32 SymbolIndex, union Elf_Sym *Symbol)
+{
+    int32    Status            = SUCCESS;
+    int32    NumSymRead        = 0;
+    uint64_t calculated_offset = SymbolTableDataOffset + (SymbolIndex * SymbolTableEntrySize);
+    int32_t  SeekOffset        = (int32_t)calculated_offset;
+    char     VerboseStr[60];
+    int32    i = 0;
+
+    memset(VerboseStr, 0, sizeof(VerboseStr));
+
+    if (SeekOffset != calculated_offset)
+    {
+        printf("Error: SeekOffset may not be %lu\n", (long unsigned int)calculated_offset);
+        Status = FAILED;
+    }
+    else
+    {
+        Status = fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+    }
+
+    if (Status != 0)
+    {
+        printf("Error locating Symbol #%d in file '%s'\n", SymbolIndex, SrcFilename);
+        return FAILED;
+    }
+
+    if (TargetWordsizeIs32Bit)
+    {
+        NumSymRead = fread(Symbol, sizeof(Elf32_Sym), 1, SrcFileDesc);
+    }
+    else
+    {
+        NumSymRead = fread(Symbol, sizeof(Elf64_Sym), 1, SrcFileDesc);
+    }
+
+    if (NumSymRead != 1)
+    {
+        printf("Experienced error attempting to read Symbol #%d from file '%s'\n", SymbolIndex, SrcFilename);
+        return FAILED;
+    }
+
+    if (ByteSwapRequired)
+        SwapSymbol(Symbol);
+
+    if (Verbose)
+        printf("Symbol #%d:\n", (SymbolIndex + 1));
+
+    SeekOffset = StringTableDataOffset + get_st_name(Symbol);
+    if (Verbose)
+        printf("   st_name  = 0x%08x - ", get_st_name(Symbol));
+    fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+    while ((i < sizeof(VerboseStr)) && ((VerboseStr[i] = fgetc(SrcFileDesc)) != '\0'))
+    {
+        i++;
+    }
+
+    VerboseStr[i] = '\0'; /* Just in case i=sizeof(VerboseStr) */
+
+    SymbolNames[SymbolIndex] = malloc(i + 1);
+    strcpy(SymbolNames[SymbolIndex], VerboseStr);
+
+    if ((strcmp(VerboseStr, TBL_DEF_SYMBOL_NAME) == 0) || (strcmp(&VerboseStr[1], TBL_DEF_SYMBOL_NAME) == 0))
+    {
+        if (Verbose)
+            printf("*** %s ***\n", SymbolNames[SymbolIndex]);
+        TblDefSymbolIndex = SymbolIndex;
+    }
+    else
+    {
+        if (Verbose)
+            printf("%s\n", SymbolNames[SymbolIndex]);
+    }
+
+    if (TargetWordsizeIs32Bit)
+    {
+        PrintSymbol32(Symbol);
+    }
+    else
+    {
+        PrintSymbol64(Symbol);
+    }
+
+    return Status;
+}
+
+void PrintSymbol32(union Elf_Sym *Symbol)
+{
+    if (Verbose)
+        printf("   st_value = 0x%x\n", Symbol->Sym32.st_value);
+    if (Verbose)
+        printf("   st_size  = 0x%08x\n", Symbol->Sym32.st_size);
+    if (Verbose)
+        printf("   st_info  = 0x%02x\n", Symbol->Sym32.st_info);
+    if (Verbose)
+        printf("   st_other = 0x%02x\n", Symbol->Sym32.st_other);
+    if (Verbose)
+        printf("   st_shndx = 0x%04x\n", Symbol->Sym32.st_shndx);
+}
+
+void PrintSymbol64(union Elf_Sym *Symbol)
+{
+    if (Verbose)
+        printf("   st_value = 0x%lx\n", (long unsigned int)Symbol->Sym64.st_value);
+    if (Verbose)
+        printf("   st_size  = 0x%08lx\n", (long unsigned int)Symbol->Sym64.st_size);
+    if (Verbose)
+        printf("   st_info  = 0x%02x\n", Symbol->Sym64.st_info);
+    if (Verbose)
+        printf("   st_other = 0x%02x\n", Symbol->Sym64.st_other);
+    if (Verbose)
+        printf("   st_shndx = 0x%04x\n", Symbol->Sym64.st_shndx);
+}
+
+void PrintSectionHeader32(union Elf_Shdr *SectionHeader)
+{
+    if (Verbose)
+        printf("   sh_addr       = 0x%x\n", SectionHeader->Shdr32.sh_addr);
+    if (Verbose)
+        printf("   sh_offset     = 0x%08x\n", SectionHeader->Shdr32.sh_offset);
+    if (Verbose)
+        printf("   sh_size       = 0x%08x\n", SectionHeader->Shdr32.sh_size);
+    if (Verbose)
+        printf("   sh_link       = 0x%08x\n", SectionHeader->Shdr32.sh_link);
+    if (Verbose)
+        printf("   sh_info       = 0x%08x\n", SectionHeader->Shdr32.sh_info);
+    if (Verbose)
+        printf("   sh_addralign  = 0x%08x\n", SectionHeader->Shdr32.sh_addralign);
+    if (Verbose)
+        printf("   sh_entsize    = 0x%08x\n", SectionHeader->Shdr32.sh_entsize);
+}
+
+void PrintSectionHeader64(union Elf_Shdr *SectionHeader)
+{
+    if (Verbose)
+        printf("   sh_addr       = 0x%lx\n", (long unsigned int)SectionHeader->Shdr64.sh_addr);
+    if (Verbose)
+        printf("   sh_offset     = 0x%08lx\n", (long unsigned int)SectionHeader->Shdr64.sh_offset);
+    if (Verbose)
+        printf("   sh_size       = 0x%08lx\n", (long unsigned int)SectionHeader->Shdr64.sh_size);
+    if (Verbose)
+        printf("   sh_link       = 0x%08x\n", SectionHeader->Shdr64.sh_link);
+    if (Verbose)
+        printf("   sh_info       = 0x%08x\n", SectionHeader->Shdr64.sh_info);
+    if (Verbose)
+        printf("   sh_addralign  = 0x%08lx\n", (long unsigned int)SectionHeader->Shdr64.sh_addralign);
+    if (Verbose)
+        printf("   sh_entsize    = 0x%08lx\n", (long unsigned int)SectionHeader->Shdr64.sh_entsize);
+}
+
+void PrintElfHeader32(union Elf_Ehdr ElfHeaderLcl)
+{
+    if (Verbose)
+        printf("   e_version = %d\n", get_e_version(&ElfHeaderLcl));
+    if (Verbose)
+        printf("   e_entry = 0x%x\n", ElfHeaderLcl.Ehdr32.e_entry);
+    if (Verbose)
+        printf("   e_phoff = 0x%08x (%u)\n", ElfHeaderLcl.Ehdr32.e_phoff, ElfHeaderLcl.Ehdr32.e_phoff);
+    if (Verbose)
+        printf("   e_shoff = 0x%08x (%u)\n", ElfHeaderLcl.Ehdr32.e_shoff, ElfHeaderLcl.Ehdr32.e_shoff);
+    if (Verbose)
+        printf("   e_flags = 0x%08x\n", ElfHeaderLcl.Ehdr32.e_flags);
+    if (Verbose)
+        printf("   e_ehsize = %d\n", ElfHeaderLcl.Ehdr32.e_ehsize);
+    if (Verbose)
+        printf("   e_phentsize = %d\n", ElfHeaderLcl.Ehdr32.e_phentsize);
+    if (Verbose)
+        printf("   e_phnum = %d\n", ElfHeaderLcl.Ehdr32.e_phnum);
+    if (Verbose)
+        printf("   e_shentsize = %d\n", ElfHeaderLcl.Ehdr32.e_shentsize);
+    if (Verbose)
+        printf("   e_shnum = %d\n", get_e_shnum(&ElfHeaderLcl));
+    if (Verbose)
+        printf("   e_shstrndx = %d\n", get_e_shstrndx(&ElfHeaderLcl));
+}
+
+void PrintElfHeader64(union Elf_Ehdr ElfHeaderLcl)
+{
+    if (Verbose)
+        printf("   e_version = %d\n", get_e_version(&ElfHeaderLcl));
+    if (Verbose)
+        printf("   e_entry = 0x%lx\n", (long unsigned int)ElfHeaderLcl.Ehdr64.e_entry);
+    if (Verbose)
+        printf("   e_phoff = 0x%08lx (%lu)\n", (long unsigned int)ElfHeaderLcl.Ehdr64.e_phoff,
+               (long unsigned int)ElfHeaderLcl.Ehdr64.e_phoff);
+    if (Verbose)
+        printf("   e_shoff = 0x%08lx (%lu)\n", (long unsigned int)ElfHeaderLcl.Ehdr64.e_shoff,
+               (long unsigned int)ElfHeaderLcl.Ehdr64.e_shoff);
+    if (Verbose)
+        printf("   e_flags = 0x%08x\n", ElfHeaderLcl.Ehdr64.e_flags);
+    if (Verbose)
+        printf("   e_ehsize = %d\n", ElfHeaderLcl.Ehdr64.e_ehsize);
+    if (Verbose)
+        printf("   e_phentsize = %d\n", ElfHeaderLcl.Ehdr64.e_phentsize);
+    if (Verbose)
+        printf("   e_phnum = %d\n", ElfHeaderLcl.Ehdr64.e_phnum);
+    if (Verbose)
+        printf("   e_shentsize = %d\n", ElfHeaderLcl.Ehdr64.e_shentsize);
+    if (Verbose)
+        printf("   e_shnum = %d\n", get_e_shnum(&ElfHeaderLcl));
+    if (Verbose)
+        printf("   e_shstrndx = %d\n", get_e_shstrndx(&ElfHeaderLcl));
+}
+
+void SwapElfHeader(void)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        SwapUInt16(&ElfHeader.Ehdr32.e_type);
+        SwapUInt16(&ElfHeader.Ehdr32.e_machine);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr32.e_version);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr32.e_entry);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr32.e_phoff);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr32.e_shoff);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr32.e_flags);
+        SwapUInt16(&ElfHeader.Ehdr32.e_ehsize);
+        SwapUInt16(&ElfHeader.Ehdr32.e_phentsize);
+        SwapUInt16(&ElfHeader.Ehdr32.e_phnum);
+        SwapUInt16(&ElfHeader.Ehdr32.e_shentsize);
+        SwapUInt16(&ElfHeader.Ehdr32.e_shnum);
+        SwapUInt16(&ElfHeader.Ehdr32.e_shstrndx);
+    }
+    else
+    {
+        SwapUInt16(&ElfHeader.Ehdr64.e_type);
+        SwapUInt16(&ElfHeader.Ehdr64.e_machine);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr64.e_version);
+        SwapUInt64((uint64 *)&ElfHeader.Ehdr64.e_entry);
+        SwapUInt64(&ElfHeader.Ehdr64.e_phoff);
+        SwapUInt64(&ElfHeader.Ehdr64.e_shoff);
+        SwapUInt32((uint32 *)&ElfHeader.Ehdr64.e_flags);
+        SwapUInt16(&ElfHeader.Ehdr64.e_ehsize);
+        SwapUInt16(&ElfHeader.Ehdr64.e_phentsize);
+        SwapUInt16(&ElfHeader.Ehdr64.e_phnum);
+        SwapUInt16(&ElfHeader.Ehdr64.e_shentsize);
+        SwapUInt16(&ElfHeader.Ehdr64.e_shnum);
+        SwapUInt16(&ElfHeader.Ehdr64.e_shstrndx);
+    }
+}
+
+/**
+ *
+ */
+
+void SwapSectionHeader(union Elf_Shdr *SectionHeader)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_name));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_type));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_flags));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_addr));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_offset));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_size));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_addralign));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_entsize));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_link));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr32.sh_info));
+    }
+    else
+    {
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr64.sh_name));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr64.sh_type));
+        SwapUInt64((uint64 *)&(SectionHeader->Shdr64.sh_flags));
+        SwapUInt64((uint64 *)&(SectionHeader->Shdr64.sh_addr));
+        SwapUInt64((uint64 *)&(SectionHeader->Shdr64.sh_offset));
+        SwapUInt64((uint64 *)&(SectionHeader->Shdr64.sh_size));
+        SwapUInt64((uint64 *)&(SectionHeader->Shdr64.sh_addralign));
+        SwapUInt64((uint64 *)&(SectionHeader->Shdr64.sh_entsize));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr64.sh_link));
+        SwapUInt32((uint32 *)&(SectionHeader->Shdr64.sh_info));
+    }
+}
+
+/**
+ *
+ */
+
+void SwapSymbol(union Elf_Sym *Symbol)
+{
+    if (TargetWordsizeIs32Bit)
+    {
+        SwapUInt32((uint32 *)&(Symbol->Sym32.st_name));
+        SwapUInt32((uint32 *)&(Symbol->Sym32.st_value));
+        SwapUInt32((uint32 *)&(Symbol->Sym32.st_size));
+        SwapUInt16((uint16 *)&(Symbol->Sym32.st_shndx));
+    }
+    else
+    {
+        SwapUInt32((uint32 *)&(Symbol->Sym64.st_name));
+        SwapUInt64((uint64 *)&(Symbol->Sym64.st_value));
+        SwapUInt64((uint64 *)&(Symbol->Sym64.st_size));
+        SwapUInt16((uint16 *)&(Symbol->Sym64.st_shndx));
+    }
+}
+
+/**
+ *
+ */
+
+void SwapUInt16(uint16 *ValueToSwap)
+{
+    uint8 *BytePtr  = (uint8 *)ValueToSwap;
+    uint8  TempByte = BytePtr[1];
+    BytePtr[1]      = BytePtr[0];
+    BytePtr[0]      = TempByte;
+}
+
+/**
+ *
+ */
+
+void SwapUInt32(uint32 *ValueToSwap)
+{
+    uint8 *BytePtr  = (uint8 *)ValueToSwap;
+    uint8  TempByte = BytePtr[3];
+    BytePtr[3]      = BytePtr[0];
+    BytePtr[0]      = TempByte;
+    TempByte        = BytePtr[2];
+    BytePtr[2]      = BytePtr[1];
+    BytePtr[1]      = TempByte;
+}
+
+void SwapUInt64(uint64 *ValueToSwap)
+{
+    uint8 *BytePtr = (uint8 *)ValueToSwap;
+    uint8  TempByte;
+
+    TempByte   = BytePtr[7];
+    BytePtr[7] = BytePtr[0];
+    BytePtr[0] = TempByte;
+
+    TempByte   = BytePtr[6];
+    BytePtr[6] = BytePtr[1];
+    BytePtr[1] = TempByte;
+
+    TempByte   = BytePtr[5];
+    BytePtr[5] = BytePtr[2];
+    BytePtr[2] = TempByte;
+
+    TempByte   = BytePtr[4];
+    BytePtr[4] = BytePtr[3];
+    BytePtr[3] = TempByte;
+}
+
+/**
+ *
+ */
+
+int32 GetStringFromMap(char *Result, ElfStrMap *Map, int32 Key)
+{
+    int32 Status = FAILED;
+
+    while ((Map->String[0] != '*') && (Status == FAILED))
+    {
+        if (Map->Value == Key)
+        {
+            Status = SUCCESS;
+            strcpy(Result, Map->String);
+        }
+        else
+        {
+            Map++;
+        }
+    }
+
+    if (Status == FAILED)
+    {
+        sprintf(Result, Map->String, Key);
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 GetTblDefInfo(void)
+{
+    int32  Status      = SUCCESS;
+    uint32 SeekOffset  = 0;
+    int32  NumDefsRead = 0;
+
+    /* Read the data to be used to format the CFE File and Table Headers */
+    if ((get_st_size(SymbolPtrs[TblDefSymbolIndex]) != sizeof(CFE_TBL_FileDef_t)) &&
+        (get_st_size(SymbolPtrs[TblDefSymbolIndex]) != 0))
+    {
+        printf("Error! '%s' is not properly defined in '%s'.  Size of object is incorrect (%lu).\n",
+               TBL_DEF_SYMBOL_NAME, SrcFilename, (long unsigned int)get_st_size(SymbolPtrs[TblDefSymbolIndex]));
+        Status = FAILED;
+    }
+    else
+    {
+        /* fseek expects a long int, sh_offset and st_value are uint64 for elf64 */
+        uint64_t calculated_offset = get_sh_offset(SectionHeaderPtrs[get_st_shndx(SymbolPtrs[TblDefSymbolIndex])]) +
+                                     get_st_value(SymbolPtrs[TblDefSymbolIndex]);
+        SeekOffset = (uint32_t)(calculated_offset);
+        if (SeekOffset != calculated_offset)
+        {
+            printf("Error: SeekOffset may not be %lu\n", (long unsigned int)calculated_offset);
+            Status = FAILED;
+        }
+        fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+        NumDefsRead = fread(&TblFileDef, sizeof(CFE_TBL_FileDef_t), 1, SrcFileDesc);
+
+        /* ensuring all are strings are null-terminated */
+        TblFileDef.ObjectName[sizeof(TblFileDef.ObjectName) - 1]   = '\0';
+        TblFileDef.TableName[sizeof(TblFileDef.TableName) - 1]     = '\0';
+        TblFileDef.Description[sizeof(TblFileDef.Description) - 1] = '\0';
+        TblFileDef.TgtFilename[sizeof(TblFileDef.TgtFilename) - 1] = '\0';
+
+        if (NumDefsRead != 1)
+        {
+            printf("Error! Unable to read data content of '%s' from '%s'.\n", TBL_DEF_SYMBOL_NAME, SrcFilename);
+            Status = FAILED;
+        }
+
+        if (ByteSwapRequired)
+            SwapUInt32(&TblFileDef.ObjectSize);
+
+        if (Verbose)
+        {
+            printf("Table Defined as follows:\n");
+            printf("   Data Object: %s\n", TblFileDef.ObjectName);
+            printf("   Table Name : '%s'", TblFileDef.TableName);
+            if (TableNameOverride == true)
+            {
+                printf(" overridden with : '%s'", TableName);
+            }
+            printf("\n");
+            printf("   Description: '%s'", TblFileDef.Description);
+            if (DescriptionOverride == true)
+            {
+                printf(" overridden with : '%s'", Description);
+            }
+            printf("\n");
+            printf("   Output File: %s\n", TblFileDef.TgtFilename);
+            printf("   Object Size: %d (0x%08x)\n", TblFileDef.ObjectSize, TblFileDef.ObjectSize);
+        }
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 LocateAndReadUserObject(void)
+{
+    int32  Status     = SUCCESS;
+    int32  i          = 0;
+    int32  j          = 0;
+    uint32 SeekOffset = 0;
+    uint8  AByte;
+
+    /* Search the symbol table for the user defined object */
+    if (Verbose)
+        printf("\nTrying to match ObjectName '%s'... (length %lu)", TblFileDef.ObjectName,
+               (long unsigned int)strlen(TblFileDef.ObjectName));
+    while (i < NumSymbols)
+    {
+        if (Verbose)
+            printf("\nSymbol Search loop %d: SymbolName ='%s' ", i, SymbolNames[i]);
+        /* Check to see if the symbol names match as far as the ObjectName is defined */
+        if (strncmp(SymbolNames[i], TblFileDef.ObjectName, strlen(TblFileDef.ObjectName)) == 0)
+        {
+            if (Verbose)
+                printf("Found ObjectName '%s' inside SymbolName '%s'\n", TblFileDef.ObjectName, SymbolNames[i]);
+            /* Check to see if the Symbol Name happens to have one extra character */
+            if ((strlen(SymbolNames[i]) - strlen(TblFileDef.ObjectName)) == 1)
+            {
+                if (Verbose)
+                    printf("Found an extra character...\n");
+                /* If the character is non-printable, then we have a match */
+                if (isprint(SymbolNames[i][strlen(SymbolNames[i])]) == 0)
+                {
+                    if (Verbose)
+                        printf("...and it's unprintable!");
+                    break;
+                }
+            }
+            /* Check to see if the Symbol Name is an exact match */
+            else if ((strlen(SymbolNames[i]) - strlen(TblFileDef.ObjectName)) == 0)
+            {
+                if (Verbose)
+                    printf("\nFound an exact match! Symbol='%s' Object='%s'\n", SymbolNames[i], TblFileDef.ObjectName);
+                break;
+            }
+        }
+
+        if (Verbose)
+        {
+            printf("strstr[%d] = %s; strlenSN = %lu; strlenON = %lu\n", i,
+                   strstr(SymbolNames[i], TblFileDef.ObjectName), (long unsigned int)strlen(SymbolNames[i]),
+                   (long unsigned int)strlen(TblFileDef.ObjectName));
+        }
+
+        i++;
+    }
+
+    if (Verbose)
+    {
+        printf("\ni = %d, NumSymbols = %lu\n", i, (long unsigned int)NumSymbols);
+        if (i < NumSymbols)
+        {
+            printf("\nSymbolName = '%s', ObjectName = '%s'\n", SymbolNames[i], TblFileDef.ObjectName);
+            printf("\nSymbolName length = %lu, ObjectName length = %lu\n", (long unsigned int)strlen(SymbolNames[i]),
+                   (long unsigned int)strlen(TblFileDef.ObjectName));
+        }
+    }
+
+    if (i == NumSymbols)
+    {
+        printf("Error! Unable to find '%s' object in '%s'\n", TblFileDef.ObjectName, SrcFilename);
+        Status = FAILED;
+    }
+    else
+    {
+        if (Verbose)
+            printf("Found '%s' object as Symbol #%d\n", TblFileDef.ObjectName, (i + 1));
+        UserObjSymbolIndex = i;
+
+        if (strcmp(SectionNamePtrs[get_st_shndx(SymbolPtrs[UserObjSymbolIndex])], ".bss") == 0)
+        {
+            if (Verbose)
+                printf("Table contents are in '.bss' section and are assumed to be all zeros.\n");
+            TableDataIsAllZeros = true;
+
+            if (Verbose)
+            {
+                printf("Object Data:\n");
+                for (i = 0; i < get_st_size(SymbolPtrs[UserObjSymbolIndex]); i++)
+                {
+                    printf(" 0x%02x", 0);
+                    j++;
+                    if (j == 16)
+                    {
+                        printf("\n");
+                        j = 0;
+                    }
+                }
+            }
+        }
+        else
+        {
+            /* Locate data associated with symbol */
+            uint64_t calculated_offset =
+                get_sh_offset(SectionHeaderPtrs[get_st_shndx(SymbolPtrs[UserObjSymbolIndex])]) +
+                get_st_value(SymbolPtrs[UserObjSymbolIndex]);
+            SeekOffset = (uint32_t)(calculated_offset);
+            if (SeekOffset != calculated_offset)
+            {
+                printf("Error: SeekOffset may not be %lu\n", (long unsigned int)calculated_offset);
+                Status = FAILED;
+            }
+            fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+
+            /* Determine if the elf file contained the size of the object */
+            if (get_st_size(SymbolPtrs[UserObjSymbolIndex]) != 0)
+            {
+                /* Check to see if the size in the elf file agrees with the size specified in our table def structure */
+                if (get_st_size(SymbolPtrs[UserObjSymbolIndex]) != TblFileDef.ObjectSize)
+                {
+                    printf("ELF file indicates object '%s' is of size %lu but table definition structure indicates "
+                           "size %d",
+                           TblFileDef.ObjectName, (long unsigned int)get_st_size(SymbolPtrs[UserObjSymbolIndex]),
+                           TblFileDef.ObjectSize);
+                    if (TblFileDef.ObjectSize < get_st_size(SymbolPtrs[UserObjSymbolIndex]))
+                    {
+                        set_st_size(SymbolPtrs[UserObjSymbolIndex], TblFileDef.ObjectSize);
+                    }
+
+                    printf("Size of %lu is assumed.\n", (long unsigned int)get_st_size(SymbolPtrs[UserObjSymbolIndex]));
+                }
+            }
+            else
+            {
+                /* Since the size is not available from the elf file, assume the value in the table def structure is
+                 * right */
+                set_st_size(SymbolPtrs[UserObjSymbolIndex], TblFileDef.ObjectSize);
+            }
+
+            if (Verbose)
+            {
+                printf("Object Data:\n");
+                for (i = 0; i < get_st_size(SymbolPtrs[UserObjSymbolIndex]); i++)
+                {
+                    AByte = fgetc(SrcFileDesc);
+                    printf(" 0x%02x", AByte);
+                    j++;
+                    if (j == 16)
+                    {
+                        printf("\n");
+                        j = 0;
+                    }
+                }
+                /* Reset the file pointer */
+                fseek(SrcFileDesc, SeekOffset, SEEK_SET);
+            }
+        }
+    }
+
+    return Status;
+}
+
+/**
+ *
+ */
+
+int32 OutputDataToTargetFile()
+{
+    int32 Status = SUCCESS;
+    uint8 AByte  = 0;
+    int32 i      = 0;
+
+    /* Create the standard header */
+    FileHeader.ContentType = 0x63464531;
+    FileHeader.SubType     = CFE_FS_SubType_TBL_IMG;
+    FileHeader.Length      = sizeof(CFE_FS_Header_t);
+
+    if (ScIDSpecified == true)
+    {
+        FileHeader.SpacecraftID = SpacecraftID;
+    }
+    else
+    {
+        FileHeader.SpacecraftID = 0;
+    }
+
+    if (ProcIDSpecified == true)
+    {
+        FileHeader.ProcessorID = ProcessorID;
+    }
+    else
+    {
+        FileHeader.ProcessorID = 0;
+    }
+
+    if (AppIDSpecified == true)
+    {
+        FileHeader.ApplicationID = ApplicationID;
+    }
+    else
+    {
+        FileHeader.ApplicationID = 0;
+    }
+
+    if (EnableTimeTagInHeader)
+    {
+        FileHeader.TimeSeconds    = SrcFileTimeInScEpoch;
+        FileHeader.TimeSubSeconds = 0;
+    }
+    else
+    {
+        FileHeader.TimeSeconds    = 0;
+        FileHeader.TimeSubSeconds = 0;
+    }
+
+    memset(FileHeader.Description, 0, CFE_FS_HDR_DESC_MAX_LEN);
+
+    if (DescriptionOverride == true)
+    {
+        strcpy(FileHeader.Description, Description);
+    }
+    else
+    {
+        strcpy(FileHeader.Description, TblFileDef.Description);
+    }
+
+    /* If this machine is little endian, the CFE header must be swapped */
+    if (ThisMachineIsLittleEndian == true)
+    {
+        if (Verbose)
+            printf("\ncFE Headers are being byte-swapped because this machine is 'Little Endian'\n");
+        SwapUInt32(&FileHeader.ContentType);
+        SwapUInt32(&FileHeader.SubType);
+        SwapUInt32(&FileHeader.Length);
+        SwapUInt32(&FileHeader.SpacecraftID);
+        SwapUInt32(&FileHeader.ProcessorID);
+        SwapUInt32(&FileHeader.ApplicationID);
+        SwapUInt32(&FileHeader.TimeSeconds);
+        SwapUInt32(&FileHeader.TimeSubSeconds);
+    }
+
+    /* Create the standard cFE Table Header */
+    memset(&TableHeader, 0, sizeof(TableHeader));
+
+    TableHeader.NumBytes = (uint32_t)(get_st_size(SymbolPtrs[UserObjSymbolIndex]));
+    if (TableHeader.NumBytes != get_st_size(SymbolPtrs[UserObjSymbolIndex]))
+    {
+        printf("ERROR: TableHeader.NumBytes is too small for Sym64.st_size\n");
+        Status = FAILED;
+    }
+
+    if (TableNameOverride == true)
+    {
+        strcpy(TableHeader.TableName, TableName);
+    }
+    else
+    {
+        strcpy(TableHeader.TableName, TblFileDef.TableName);
+    }
+
+    /* If this machine is little endian, the TBL header must be swapped */
+    if (ThisMachineIsLittleEndian == true)
+    {
+        SwapUInt32(&TableHeader.Reserved);
+        SwapUInt32(&TableHeader.Offset);
+        SwapUInt32(&TableHeader.NumBytes);
+    }
+
+    /* Output the two headers to the target file */
+    fwrite(&FileHeader.ContentType, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.SubType, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.Length, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.SpacecraftID, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.ProcessorID, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.ApplicationID, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.TimeSeconds, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.TimeSubSeconds, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&FileHeader.Description[0], sizeof(FileHeader.Description), 1, DstFileDesc);
+
+    fwrite(&TableHeader.Reserved, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&TableHeader.Offset, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&TableHeader.NumBytes, sizeof(uint32), 1, DstFileDesc);
+    fwrite(&TableHeader.TableName[0], sizeof(TableHeader.TableName), 1, DstFileDesc);
+
+    /* Output the data from the object file */
+    if (TableDataIsAllZeros)
+    {
+        AByte = 0;
+        for (i = 0; i < get_st_size(SymbolPtrs[UserObjSymbolIndex]); i++)
+        {
+            fwrite(&AByte, 1, 1, DstFileDesc);
+        }
+    }
+    else
+    {
+        for (i = 0; i < get_st_size(SymbolPtrs[UserObjSymbolIndex]); i++)
+        {
+            AByte = fgetc(SrcFileDesc);
+            fwrite(&AByte, 1, 1, DstFileDesc);
+        }
+    }
+
+    return Status;
+}
+```
+
+### `elf2cfetbl_version.h`
+
+**경로:** `fsw/tools/elf2cfetbl/elf2cfetbl_version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*! @file
+ * @brief Purpose:
+ *  @details Provide version identifiers for the ELF to cFE Table Converter. @n
+ *  See @ref cfsversions for version and build number and description
+ *
+ */
+#ifndef ELF2CFETBL_VERSION_H
+#define ELF2CFETBL_VERSION_H
+
+/*
+ * Development Build Macro Definitions
+ */
+#define ELF2CFETBL_BUILD_NUMBER 30 /*!< @brief Number of commits since baseline */
+#define ELF2CFETBL_BUILD_BASELINE \
+    "v3.3.0-rc4" /*!< @brief Development Build: git tag that is the base for the current */
+
+/*
+ * Version Macros, see \ref cfsversions for definitions.
+ */
+#define ELF2CFETBL_MAJOR_VERSION 3  /*!< @brief Major version number */
+#define ELF2CFETBL_MINOR_VERSION 1  /*!< @brief Minor version number */
+#define ELF2CFETBL_REVISION      99 /*!< @brief Revision version number. Value of 99 indicates a development version.*/
+
+/*!
+ * @brief Mission revision.
+ *
+ * Reserved for mission use to denote patches/customizations as needed.
+ * Values 1-254 are reserved for mission use to denote patches/customizations as needed. NOTE: Reserving 0 and 0xFF for
+ * cFS open-source development use (pending resolution of nasa/cFS#440)
+ */
+#define ELF2CFETBL_MISSION_REV 0xFF
+
+/*
+ * Tools to construct version string
+ */
+#define ELF2CFETBL_STR_HELPER(x) #x /*!< @brief Helper function to concatenate strings from integer macros */
+#define ELF2CFETBL_STR(x) \
+    ELF2CFETBL_STR_HELPER(x) /*!< @brief Helper function to concatenate strings from integer macros */
+
+/*! @brief Development Build Version Number.
+ * @details Baseline git tag + Number of commits since baseline. @n
+ * See @ref cfsversions for format differences between development and release versions.
+ */
+#define ELF2CFETBL_VERSION ELF2CFETBL_BUILD_BASELINE ELF2CFETBL_STR(ELF2CFETBL_BUILD_NUMBER)
+
+/*! @brief Development Build Version String.
+ * @details Reports the current development build's baseline, number, and name. Also includes a note about the latest
+ * official version. @n See @ref cfsversions for format differences between development and release versions.
+ */
+#define ELF2CFETBL_VERSION_STRING                                                        \
+    " elf2cfetbl Development Build\n"                                                    \
+    " " ELF2CFETBL_VERSION " (Codename: Draco)\n" /* Codename for current development */ \
+    " Last Official Release: elf2cfetbl v3.1.0"   /* For full support please use official release version */
+
+#endif /* ELF2CFETBL_VERSION_H */
+```
+
+### `ELF_Structures.h`
+
+**경로:** `fsw/tools/elf2cfetbl/ELF_Structures.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+#ifndef ELF_STRUCTURES_H
+#define ELF_STRUCTURES_H
+
+#include <stdint.h>
+
+typedef uint32_t Elf32_Addr;
+typedef uint16_t Elf32_Half;
+typedef uint32_t Elf32_Off;
+typedef int32_t  Elf32_Sword;
+typedef uint32_t Elf32_Word;
+
+typedef uint64_t Elf64_Addr;
+typedef uint64_t Elf64_Off;
+typedef uint16_t Elf64_Half;
+typedef uint32_t Elf64_Word;
+typedef int32_t  Elf64_Sword;
+typedef uint64_t Elf64_Xword;
+typedef int64_t  Elf64_Sxword;
+
+#define EI_NIDENT 16 /**< \brief Size of e_ident[]       */
+
+/**
+ *    Elf 32 bit Header Format
+ */
+typedef struct
+{
+    unsigned char e_ident[EI_NIDENT]; /**< \brief Machine independent data to allow decoding of file */
+    Elf32_Half    e_type;             /**< \brief Identifies object file type */
+    Elf32_Half    e_machine;          /**< \brief Specifies required architecture for file */
+    Elf32_Word    e_version;          /**< \brief Object file version */
+    Elf32_Addr    e_entry;            /**< \brief Virtual start address for process */
+    Elf32_Off     e_phoff;            /**< \brief File offset to beginning of Program Header Table */
+    Elf32_Off     e_shoff;            /**< \brief File offset to beginning of Section Header Table */
+    Elf32_Word    e_flags;            /**< \brief Processor specific flags */
+    Elf32_Half    e_ehsize;           /**< \brief ELF Header's size, in bytes */
+    Elf32_Half    e_phentsize;        /**< \brief Size, in bytes, of each Program Header Table Entry */
+    Elf32_Half    e_phnum;            /**< \brief Number of entries the Program Header Table contains */
+    Elf32_Half    e_shentsize;        /**< \brief Size, in bytes, of each Section Header Table Entry */
+    Elf32_Half    e_shnum;            /**< \brief Number of entries the Section Header Table contains */
+    Elf32_Half    e_shstrndx;         /**< \brief Section Header Table index for the Section Name String Table */
+} Elf32_Ehdr;
+
+/**
+ *    Elf 64 bit Header Format
+ */
+typedef struct
+{
+    unsigned char e_ident[EI_NIDENT]; /**< \brief Machine independent data to allow decoding of file */
+    Elf64_Half    e_type;             /**< \brief Identifies object file type */
+    Elf64_Half    e_machine;          /**< \brief Specifies required architecture for file */
+    Elf64_Word    e_version;          /**< \brief Object file version */
+    Elf64_Addr    e_entry;            /**< \brief Virtual start address for process */
+    Elf64_Off     e_phoff;            /**< \brief File offset to beginning of Program Header Table */
+    Elf64_Off     e_shoff;            /**< \brief File offset to beginning of Section Header Table */
+    Elf64_Word    e_flags;            /**< \brief Processor specific flags */
+    Elf64_Half    e_ehsize;           /**< \brief ELF Header's size, in bytes */
+    Elf64_Half    e_phentsize;        /**< \brief Size, in bytes, of each Program Header Table Entry */
+    Elf64_Half    e_phnum;            /**< \brief Number of entries the Program Header Table contains */
+    Elf64_Half    e_shentsize;        /**< \brief Size, in bytes, of each Section Header Table Entry */
+    Elf64_Half    e_shnum;            /**< \brief Number of entries the Section Header Table contains */
+    Elf64_Half    e_shstrndx;         /**< \brief Section Header Table index for the Section Name String Table */
+} Elf64_Ehdr;
+
+union Elf_Ehdr
+{
+    Elf32_Ehdr Ehdr32;
+    Elf64_Ehdr Ehdr64;
+};
+
+/**
+ *    e_type values are as follows:
+ */
+
+#define ET_NONE   0      /**< \brief No file type        */
+#define ET_REL    1      /**< \brief Relocatable file    */
+#define ET_EXEC   2      /**< \brief Executable file     */
+#define ET_DYN    3      /**< \brief Shared object file  */
+#define ET_CORE   4      /**< \brief Core file           */
+#define ET_LOPROC 0xff00 /**< \brief Processor-specific  */
+#define ET_HIPROC 0xffff /**< \brief Processor-specific  */
+
+/**
+ *   e_machine values are as follows:
+ */
+#define EM_NONE          0   /**< \brief No machine                                                      */
+#define EM_M32           1   /**< \brief AT&T WE 32100                                                   */
+#define EM_SPARC         2   /**< \brief SPARC                                                           */
+#define EM_386           3   /**< \brief Intel 80386                                                     */
+#define EM_68K           4   /**< \brief Motorola 68000                                                  */
+#define EM_88K           5   /**< \brief Motorola 88000                                                  */
+#define EM_860           7   /**< \brief Intel 80860                                                     */
+#define EM_MIPS          8   /**< \brief MIPS RS3000                                                     */
+#define EM_S370          9   /**< \brief IBM System/370 Processor                                        */
+#define EM_MIPS_RS3_LE   10  /**< \brief MIPS RS3000 Little-endian                                       */
+#define EM_PARISC        15  /**< \brief Hewlett-Packard PA-RISC                                         */
+#define EM_VPP500        17  /**< \brief Fujitsu VPP500                                                  */
+#define EM_SPARC32PLUS   18  /**< \brief Enhanced instruction set SPARC                                  */
+#define EM_960           19  /**< \brief Intel 80960                                                     */
+#define EM_PPC           20  /**< \brief PowerPC                                                         */
+#define EM_PPC64         21  /**< \brief 64-bit PowerPC                                                  */
+#define EM_S390          22  /**< \brief IBM System/390 Processor                                        */
+#define EM_SPU           23  /**< \brief IBM SPU/SPC                                                     */
+#define EM_V800          36  /**< \brief NEC V800                                                        */
+#define EM_FR20          37  /**< \brief Fujitsu FR20                                                    */
+#define EM_RH32          38  /**< \brief TRW RH-32                                                       */
+#define EM_RCE           39  /**< \brief Motorola RCE                                                    */
+#define EM_ARM           40  /**< \brief Advanced RISC Machines ARM                                      */
+#define EM_ALPHA         41  /**< \brief Digital Alpha                                                   */
+#define EM_SH            42  /**< \brief Hitachi SH                                                      */
+#define EM_SPARCV9       43  /**< \brief SPARC Version 9                                                 */
+#define EM_TRICORE       44  /**< \brief Siemens Tricore embedded processor                              */
+#define EM_ARC           45  /**< \brief Argonaut RISC Core, Argonaut Technologies Inc.                  */
+#define EM_H8_300        46  /**< \brief Hitachi H8/300                                                  */
+#define EM_H8_300H       47  /**< \brief Hitachi H8/300H                                                 */
+#define EM_H8S           48  /**< \brief Hitachi H8S                                                     */
+#define EM_H8_500        49  /**< \brief Hitachi H8/500                                                  */
+#define EM_IA_64         50  /**< \brief Intel IA-64 processor architecture                              */
+#define EM_MIPS_X        51  /**< \brief Stanford MIPS-X                                                 */
+#define EM_COLDFIRE      52  /**< \brief Motorola ColdFire                                               */
+#define EM_68HC12        53  /**< \brief Motorola M68HC12                                                */
+#define EM_MMA           54  /**< \brief Fujitsu MMA Multimedia Accelerator                              */
+#define EM_PCP           55  /**< \brief Siemens PCP                                                     */
+#define EM_NCPU          56  /**< \brief Sony nCPU embedded RISC processor                               */
+#define EM_NDR1          57  /**< \brief Denso NDR1 microprocessor                                       */
+#define EM_STARCORE      58  /**< \brief Motorola Star*Core processor                                    */
+#define EM_ME16          59  /**< \brief Toyota ME16 processor                                           */
+#define EM_ST100         60  /**< \brief STMicroelectronics ST100 processor                              */
+#define EM_TINYJ         61  /**< \brief Advanced Logic Corp. TinyJ embedded processor family            */
+#define EM_X86_64        62  /**< \brief AMD x86-64 architecture                                         */
+#define EM_PDSP          63  /**< \brief Sony DSP Processor                                              */
+#define EM_PDP10         64  /**< \brief Digital Equipment Corp. PDP-10                                  */
+#define EM_PDP11         65  /**< \brief Digital Equipment Corp. PDP-11                                  */
+#define EM_FX66          66  /**< \brief Siemens FX66 microcontroller                                    */
+#define EM_ST9PLUS       67  /**< \brief STMicroelectronics ST9+ 8/16 bit microcontroller                */
+#define EM_ST7           68  /**< \brief STMicroelectronics ST7 8-bit microcontroller                    */
+#define EM_68HC16        69  /**< \brief Motorola MC68HC16 Microcontroller                               */
+#define EM_68HC11        70  /**< \brief Motorola MC68HC11 Microcontroller                               */
+#define EM_68HC08        71  /**< \brief Motorola MC68HC08 Microcontroller                               */
+#define EM_68HC05        72  /**< \brief Motorola MC68HC05 Microcontroller                               */
+#define EM_SVX           73  /**< \brief Silicon Graphics SVx                                            */
+#define EM_ST19          74  /**< \brief STMicroelectronics ST19 8-bit microcontroller                   */
+#define EM_VAX           75  /**< \brief Digital VAX                                                     */
+#define EM_CRIS          76  /**< \brief Axis Communications 32-bit embedded processor                   */
+#define EM_JAVELIN       77  /**< \brief Infineon Technologies 32-bit embedded processor                 */
+#define EM_FIREPATH      78  /**< \brief Element 14 64-bit DSP Processor                                 */
+#define EM_ZSP           79  /**< \brief LSI Logic 16-bit DSP Processor                                  */
+#define EM_MMIX          80  /**< \brief Donald Knuth's educational 64-bit processor                     */
+#define EM_HUANY         81  /**< \brief Harvard University machine-independent object files             */
+#define EM_PRISM         82  /**< \brief SiTera Prism                                                    */
+#define EM_AVR           83  /**< \brief Atmel AVR 8-bit microcontroller                                 */
+#define EM_FR30          84  /**< \brief Fujitsu FR30                                                    */
+#define EM_D10V          85  /**< \brief Mitsubishi D10V                                                 */
+#define EM_D30V          86  /**< \brief Mitsubishi D30V                                                 */
+#define EM_V850          87  /**< \brief NEC v850                                                        */
+#define EM_M32R          88  /**< \brief Mitsubishi M32R                                                 */
+#define EM_MN10300       89  /**< \brief Matsushita MN10300                                              */
+#define EM_MN10200       90  /**< \brief Matsushita MN10200                                              */
+#define EM_PJ            91  /**< \brief picoJava                                                        */
+#define EM_OPENRISC      92  /**< \brief OpenRISC 32-bit embedded processor                              */
+#define EM_ARC_COMPACT   93  /**< \brief ARC International ARCompact processor (old spelling/synonym: EM_ARC_A5) */
+#define EM_XTENSA        94  /**< \brief Tensilica Xtensa Architecture                                   */
+#define EM_VIDEOCORE     95  /**< \brief Alphamosaic VideoCore processor                                 */
+#define EM_TMM_GPP       96  /**< \brief Thompson Multimedia General Purpose Processor                   */
+#define EM_NS32K         97  /**< \brief National Semiconductor 32000 series                             */
+#define EM_TPC           98  /**< \brief Tenor Network TPC processor                                     */
+#define EM_SNP1K         99  /**< \brief Trebia SNP 1000 processor                                       */
+#define EM_ST200         100 /**< \brief STMicroelectronics (www.st.com) ST200 microcontroller           */
+#define EM_IP2K          101 /**< \brief Ubicom IP2xxx microcontroller family                            */
+#define EM_MAX           102 /**< \brief MAX Processor                                                   */
+#define EM_CR            103 /**< \brief National Semiconductor CompactRISC microprocessor               */
+#define EM_F2MC16        104 /**< \brief Fujitsu F2MC16                                                  */
+#define EM_MSP430        105 /**< \brief Texas Instruments embedded microcontroller msp430               */
+#define EM_BLACKFIN      106 /**< \brief Analog Devices Blackfin (DSP) processor                         */
+#define EM_SE_C33        107 /**< \brief S1C33 Family of Seiko Epson processors                          */
+#define EM_SEP           108 /**< \brief Sharp embedded microprocessor                                   */
+#define EM_ARCA          109 /**< \brief Arca RISC Microprocessor                                        */
+#define EM_UNICORE       110 /**< \brief Microprocessor series from PKU-Unity Ltd. and MPRC of Peking University */
+#define EM_EXCESS        111 /**< \brief eXcess: 16/32/64-bit configurable embedded CPU                  */
+#define EM_DXP           112 /**< \brief Icera Semiconductor Inc. Deep Execution Processor               */
+#define EM_ALTERA_NIOS2  113 /**< \brief Altera Nios II soft-core processor                            */
+#define EM_CRX           114 /**< \brief National Semiconductor CompactRISC CRX microprocessor           */
+#define EM_XGATE         115 /**< \brief Motorola XGATE embedded processor                               */
+#define EM_C166          116 /**< \brief Infineon C16x/XC16x processor                                   */
+#define EM_M16C          117 /**< \brief Renesas M16C series microprocessors                             */
+#define EM_DSPIC30F      118 /**< \brief Microchip Technology dsPIC30F Digital Signal Controller         */
+#define EM_CE            119 /**< \brief Freescale Communication Engine RISC core                        */
+#define EM_M32C          120 /**< \brief Renesas M32C series microprocessors                             */
+#define EM_TSK3000       131 /**< \brief Altium TSK3000 core                                             */
+#define EM_RS08          132 /**< \brief Freescale RS08 embedded processor                               */
+#define EM_SHARC         133 /**< \brief Analog Devices SHARC family of 32-bit DSP processors            */
+#define EM_ECOG2         134 /**< \brief Cyan Technology eCOG2 microprocessor                            */
+#define EM_SCORE7        135 /**< \brief Sunplus S+core7 RISC processor                                  */
+#define EM_DSP24         136 /**< \brief New Japan Radio (NJR) 24-bit DSP Processor                      */
+#define EM_VIDEOCORE3    137 /**< \brief Broadcom VideoCore III processor                                */
+#define EM_LATTICEMICO32 138 /**< \brief RISC processor for Lattice FPGA architecture                 */
+#define EM_SE_C17        139 /**< \brief Seiko Epson C17 family                                          */
+#define EM_TI_C6000      140 /**< \brief The Texas Instruments TMS320C6000 DSP family                    */
+#define EM_TI_C2000      141 /**< \brief The Texas Instruments TMS320C2000 DSP family                    */
+#define EM_TI_C5500      142 /**< \brief The Texas Instruments TMS320C55x DSP family                     */
+#define EM_TI_ARP32      143 /**< \brief Texas Instruments Application Specific RISC Processor, 32bit fetch */
+#define EM_TI_PRU        144 /**< \brief Texas Instruments Programmable Realtime Unit                    */
+#define EM_MMDSP_PLUS    160 /**< \brief EM_MMDSP_PLUS 160 STMicroelectronics 64bit VLIW Data Signal Processor */
+#define EM_CYPRESS_M8C   161 /**< \brief Cypress M8C microprocessor                                     */
+#define EM_R32C          162 /**< \brief Renesas R32C series microprocessors                             */
+#define EM_TRIMEDIA      163 /**< \brief NXP Semiconductors TriMedia architecture family                 */
+#define EM_QDSP6         164 /**< \brief QUALCOMM DSP6 Processor                                         */
+#define EM_8051          165 /**< \brief Intel 8051 and variants                                         */
+#define EM_STXP7X        166 /**< \brief STMicroelectronics STxP7x family of configurable and extensible RISC processors */
+#define EM_NDS32         167 /**< \brief Andes Technology compact code size embedded RISC processor family */
+#define EM_ECOG1         168 /**< \brief Cyan Technology eCOG1X family                                   */
+#define EM_ECOG1X        168 /**< \brief Cyan Technology eCOG1X family                                   */
+#define EM_MAXQ30        169 /**< \brief Dallas Semiconductor MAXQ30 Core Micro-controllers              */
+#define EM_XIMO16        170 /**< \brief New Japan Radio (NJR) 16-bit DSP Processor                      */
+#define EM_MANIK         171 /**< \brief M2000 Reconfigurable RISC Microprocessor                        */
+#define EM_RX            173 /**< \brief Renesas RX family                                               */
+#define EM_METAG         174 /**< \brief Imagination Technologies META processor architecture            */
+#define EM_MCST_ELBRUS   175 /**< \brief MCST Elbrus general purpose hardware architecture              */
+#define EM_ECOG16        176 /**< \brief Cyan Technology eCOG16 family                                   */
+#define EM_CR16          177 /**< \brief National Semiconductor CompactRISC CR16 16-bit microprocessor   */
+#define EM_ETPU          178 /**< \brief Freescale Extended Time Processing Unit                         */
+#define EM_SLE9X         179 /**< \brief Infineon Technologies SLE9X core                                */
+#define EM_L10M          180 /**< \brief Intel L10M                                                      */
+#define EM_K10M          181 /**< \brief Intel K10M                                                      */
+#define EM_AARCH64       183 /**< \brief ARM 64-bit architecture (AARCH64)                               */
+#define EM_AVR32         185 /**< \brief Atmel Corporation 32-bit microprocessor family                  */
+#define EM_STM8          186 /**< \brief STMicroeletronics STM8 8-bit microcontroller                    */
+#define EM_TILE64        187 /**< \brief Tilera TILE64 multicore architecture family                     */
+#define EM_TILEPRO       188 /**< \brief Tilera TILEPro multicore architecture family                    */
+#define EM_MICROBLAZE    189 /**< \brief Xilinx MicroBlaze 32-bit RISC soft processor core               */
+#define EM_CUDA          190 /**< \brief NVIDIA CUDA architecture                                        */
+#define EM_TILEGX        191 /**< \brief Tilera TILE-Gx multicore architecture family                    */
+#define EM_CLOUDSHIELD   192 /**< \brief CloudShield architecture family                                */
+#define EM_COREA_1ST     193 /**< \brief KIPO-KAIST Core-A 1st generation processor family               */
+#define EM_COREA_2ND     194 /**< \brief KIPO-KAIST Core-A 2nd generation processor family               */
+#define EM_ARC_COMPACT2  195 /**< \brief Synopsis ARCompact V2                                         */
+#define EM_OPEN8         196 /**< \brief Open8 8-bit RISC soft processor core                            */
+#define EM_RL78          197 /**< \brief Renesas RL78 family                                             */
+#define EM_VIDEOCORE5    198 /**< \brief Broadcom VideoCore V processor                                  */
+#define EM_78KOR         199 /**< \brief Renesas 78KOR family                                            */
+#define EM_56800EX       200 /**< \brief Freescale 56800EX Digital Signal Controller (DSC)               */
+#define EM_BA1           201 /**< \brief Beyond BA1 CPU architecture                                     */
+#define EM_BA2           202 /**< \brief Beyond BA2 CPU architecture                                     */
+#define EM_XCORE         203 /**< \brief XMOS xCORE processor family                                     */
+#define EM_MCHP_PIC      204 /**< \brief Microchip 8-bit PIC(r) family                                   */
+#define EM_INTEL205      205 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL206      206 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL207      207 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL208      208 /**< \brief Reserved by Intel                                               */
+#define EM_INTEL209      209 /**< \brief Reserved by Intel                                               */
+#define EM_KM32          210 /**< \brief KM211 KM32 32-bit processor                                     */
+#define EM_KMX32         211 /**< \brief KM211 KMX32 32-bit processor                                    */
+#define EM_KMX16         212 /**< \brief KM211 KMX16 16-bit processor                                    */
+#define EM_KMX8          213 /**< \brief KM211 KMX8 8-bit processor                                      */
+#define EM_KVARC         214 /**< \brief KM211 KVARC processor                                           */
+#define EM_CDP           215 /**< \brief Paneve CDP architecture family                                  */
+#define EM_COGE          216 /**< \brief Cognitive Smart Memory Processor                                */
+#define EM_COOL          217 /**< \brief Bluechip Systems CoolEngine                                     */
+#define EM_NORC          218 /**< \brief Nanoradio Optimized RISC                                        */
+#define EM_CSR_KALIMBA   219 /**< \brief CSR Kalimba architecture family                                */
+#define EM_Z80           220 /**< \brief Zilog Z80                                                       */
+#define EM_VISIUM        221 /**< \brief Controls and Data Services VISIUMcore processor                 */
+#define EM_FT32          222 /**< \brief FTDI Chip FT32 high performance 32-bit RISC architecture        */
+#define EM_MOXIE         223 /**< \brief Moxie processor family                                          */
+#define EM_AMDGPU        224 /**< \brief AMD GPU architecture                                            */
+#define EM_RISCV         243 /**< \brief RISC-VEM_FR30 84 Fujitsu FR30                                   */
+
+/**
+ *    e_version values are as follows:
+ */
+#define EV_NONE    0 /**< \brief version         */
+#define EV_CURRENT 1 /**< \brief Current version */
+
+/**
+ *    e_ident[] index values are as follows:
+ */
+#define EI_MAG0    0 /**< \brief File identification     */
+#define EI_MAG1    1 /**< \brief File identification     */
+#define EI_MAG2    2 /**< \brief File identification     */
+#define EI_MAG3    3 /**< \brief File identification     */
+#define EI_CLASS   4 /**< \brief File class              */
+#define EI_DATA    5 /**< \brief Data encoding           */
+#define EI_VERSION 6 /**< \brief File version            */
+#define EI_PAD     7 /**< \brief Start of padding bytes  */
+
+/**
+ *   e_ident[ELFMAG0...ELFMAG3] values are as follows:
+ */
+#define ELFMAG0 0x7f /**< \brief e_ident[EI_MAG0] */
+#define ELFMAG1 'E'  /**< \brief e_ident[EI_MAG1] */
+#define ELFMAG2 'L'  /**< \brief e_ident[EI_MAG2] */
+#define ELFMAG3 'F'  /**< \brief e_ident[EI_MAG3] */
+
+/**
+ *   e_ident[EI_CLASS] values are as follows:
+ */
+#define ELFCLASSNONE 0 /**< \brief Invalid class  */
+#define ELFCLASS32   1 /**< \brief 32-bit objects */
+#define ELFCLASS64   2 /**< \brief 64-bit objects */
+
+/**
+ *   e_ident[EI_DATA] values are as follows:
+ */
+#define ELFDATANONE 0 /**< \brief Invalid data encoding  */
+#define ELFDATA2LSB 1 /**< \brief Little-Endian storage  */
+#define ELFDATA2MSB 2 /**< \brief Big-Endian storage     */
+
+/**
+ *   Special Section Indexes:
+ */
+
+#define SHN_UNDEF     0      /**< \brief Marks an undefined, missing, irrelevant, or otherwise meaningless section */
+#define SHN_LORESERVE 0xff00 /**< \brief Specifies the lower bound of the range of reserved indexes */
+#define SHN_LOPROC    0xff00 /**< \brief Values >= than this are reserved for processor-specific semantics */
+#define SHN_HIPROC    0xff1f /**< \brief Values <= than this are reserved for processor-specific semantics */
+#define SHN_ABS       0xfff1 /**< \brief Specifies absolute values for the corresponding reference */
+#define SHN_COMMON    0xfff2 /**< \brief Symbols defined relative to this section are common symbols */
+#define SHN_HIRESERVE 0xffff /**< \brief Specifies the upper bound of the range of reserved indexes */
+
+/**
+ *    32 bit Section Header Format
+ */
+typedef struct
+{
+    Elf32_Word sh_name;      /**< \brief Index into Section Header String Table giving location of section name */
+    Elf32_Word sh_type;      /**< \brief Section type */
+    Elf32_Word sh_flags;     /**< \brief Section attributes */
+    Elf32_Addr sh_addr;      /**< \brief Address at which first byte of section should reside */
+    Elf32_Off  sh_offset;    /**< \brief File offset to first byte of Section */
+    Elf32_Word sh_size;      /**< \brief Section size, in bytes */
+    Elf32_Word sh_link;      /**< \brief Section Header Table index link (interpretation depends upon Section Type) */
+    Elf32_Word sh_info;      /**< \brief Extra information (interpretation depends upon Section Type) */
+    Elf32_Word sh_addralign; /**< \brief Section memory address alignment constraints */
+    Elf32_Word sh_entsize;   /**< \brief Size of an entry for a Section containing a table of fixed size entries */
+} Elf32_Shdr;
+
+/**
+ *    64 bit Section Header Format
+ */
+typedef struct
+{
+    Elf64_Word  sh_name;      /**< \brief Index into Section Header String Table giving location of section name */
+    Elf64_Word  sh_type;      /**< \brief Section type */
+    Elf64_Xword sh_flags;     /**< \brief Section attributes */
+    Elf64_Addr  sh_addr;      /**< \brief Address at which first byte of section should reside */
+    Elf64_Off   sh_offset;    /**< \brief File offset to first byte of Section */
+    Elf64_Xword sh_size;      /**< \brief Section size, in bytes */
+    Elf64_Word  sh_link;      /**< \brief Section Header Table index link (interpretation depends upon Section Type) */
+    Elf64_Word  sh_info;      /**< \brief Extra information (interpretation depends upon Section Type) */
+    Elf64_Xword sh_addralign; /**< \brief Section memory address alignment constraints */
+    Elf64_Xword sh_entsize;   /**< \brief Size of an entry for a Section containing a table of fixed size entries */
+} Elf64_Shdr;
+
+union Elf_Shdr
+{
+    Elf32_Shdr Shdr32;
+    Elf64_Shdr Shdr64;
+};
+
+/**
+ *    sh_type values are as follows:
+ */
+#define SHT_NULL          0  /**< \brief Marks Section Header as inactive */
+#define SHT_PROGBITS      1  /**< \brief Section contains information defined by program */
+#define SHT_SYMTAB        2  /**< \brief Section contains symbols for link editing */
+#define SHT_STRTAB        3  /**< \brief Section contains a string table */
+#define SHT_RELA          4  /**< \brief Section contains relocation entries with explicit addends */
+#define SHT_HASH          5  /**< \brief Section contains a symbol hash table */
+#define SHT_DYNAMIC       6  /**< \brief Section contains information for dynamic linking */
+#define SHT_NOTE          7  /**< \brief Section contains information for marking the file */
+#define SHT_NOBITS        8  /**< \brief Section occupies no file space but otherwise resembles #SHT_PROGBITS */
+#define SHT_REL           9  /**< \brief Section contains relocation entries without explicit addends */
+#define SHT_SHLIB         10 /**< \brief Reserved Section type */
+#define SHT_DYNSYM        11 /**< \brief Section contains minimal set of dynamic linking symbols */
+#define SHT_INIT_ARRAY    14 /**< \brief Array of pointers to initialization functions */
+#define SHT_FINI_ARRAY    15 /**< \brief Array of pointers to termination functions */
+#define SHT_PREINIT_ARRAY 16 /**< \brief Array of pointers to functions invoked prior to all init functions */
+#define SHT_GROUP         17 /**< \brief A set of sections that are related and must be treated specially by the linker */
+#define SHT_SYMTAB_SHNDX  18 /**< \brief An array of values corresponding (one-to-one) with symbol table entries */
+
+#define SHT_LOPROC 0x70000000 /**< \brief Values >= are reserved for Processor specific semantics */
+#define SHT_HIPROC 0x7fffffff /**< \brief Values <= are reserved for Processor specific semantics */
+#define SHT_LOUSER 0x80000000 /**< \brief Values >= are reserved for application programs */
+#define SHT_HIUSER 0xffffffff /**< \brief Values <= are reserved for application programs */
+
+/**
+ *    sh_flags values are as follows:
+ */
+#define SHF_WRITE            0x1   /**< \brief Section contains data that should be writable during execution */
+#define SHF_ALLOC            0x2   /**< \brief Section occupies memory during process execution */
+#define SHF_EXECINSTR        0x4   /**< \brief Section contains executable machine instructions */
+#define SHF_MERGE            0x10  /**< \brief Section contains data that can be merged to eliminate duplication */
+#define SHF_STRINGS          0x20  /**< \brief Section consists of null-terminated character strings */
+#define SHF_INFO_LINK        0x40  /**< \brief sh_info field of this section contains section header table index */
+#define SHF_LINK_ORDER       0x80  /**< \brief Section requires special ordering requirements for link editors */
+#define SHF_OS_NONCONFORMING 0x100 /**< \brief Section requires special OS-specific processing */
+#define SHF_GROUP            0x200 /**< \brief Section is a member of a section group */
+
+#define SHF_MASKPROC 0xf0000000 /**< \brief Bits in this mask are reserved for processor specific semantics */
+
+/**
+ *    32 bit Symbol Table Entry
+ */
+typedef struct
+{
+    Elf32_Word    st_name;  /**< \brief String Table Index that gives the symbol name */
+    Elf32_Addr    st_value; /**< \brief Value of associated symbol */
+    Elf32_Word    st_size;  /**< \brief Size, in bytes, of symbol */
+    unsigned char st_info;  /**< \brief Symbol's type and binding attributes */
+    unsigned char st_other; /**< \brief  */
+    Elf32_Half    st_shndx; /**< \brief  */
+} Elf32_Sym;
+
+/**
+ *    64 bit Symbol Table Entry
+ */
+typedef struct
+{
+    Elf64_Word    st_name;  /**< \brief String Table Index that gives the symbol name */
+    unsigned char st_info;  /**< \brief Symbol's type and binding attributes */
+    unsigned char st_other; /**< \brief  */
+    Elf64_Half    st_shndx; /**< \brief  */
+    Elf64_Addr    st_value; /**< \brief Value of associated symbol */
+    Elf64_Xword   st_size;  /**< \brief Size, in bytes, of symbol */
+} Elf64_Sym;
+
+union Elf_Sym
+{
+    Elf32_Sym Sym32;
+    Elf64_Sym Sym64;
+};
+
+#define ELF32_ST_INFO (b, t)(((b) << 4) + ((t)&0xf))
+
+/**
+ *   Extraction and possible values of symbol table entry binding attributes in st_info
+ */
+#define ELF32_ST_BIND (i)((i) >> 4)
+
+#define STB_LOCAL  0 /**< \brief Local symbols are not visible outside the object file */
+#define STB_GLOBAL 1 /**< \brief Global symbols are visible to all object files being combined */
+#define STB_WEAK   2 /**< \brief Same as Global but with lower precedence */
+
+#define STB_LOPROC 13 /**< \brief Values >= are reserved for processor specific semantics */
+#define STB_HIPROC 15 /**< \brief Values <= are reserved for processor specific semantics */
+
+/**
+ *   Extraction and possible values of symbol table entry type attributes in st_info
+ */
+#define ELF32_ST_TYPE (i)((i)&0xf)
+
+#define STT_NOTYPE  0 /**< \brief The symbol's type is unspecified */
+#define STT_OBJECT  1 /**< \brief Symbol associated with a data object (variable, array, etc) */
+#define STT_FUNC    2 /**< \brief Symbol associated with a function or other executable code  */
+#define STT_SECTION 3 /**< \brief Symbol associated with a section */
+#define STT_FILE    4 /**< \brief Symbol's name gives the source file */
+#define STT_COMMON  5 /**< \brief Symbol labels an uninitialized common block */
+
+#define STT_LOPROC 13 /**< \brief Values >= are reserved for processor specific semantics */
+#define STT_HIPROC 15 /**< \brief Values <= are reserved for processor specific semantics */
+
+#endif
+```
+
+### `Guide-Creating-Table-files.txt`
+
+**경로:** `fsw/tools/elf2cfetbl/Guide-Creating-Table-files.txt`
+
+
+```text
+Creating Table File(s) - Using CMakeLists.txt And elf2cfetbl
+-----------------------------------------------------------
+
+reference: cFE Application Developers Guide
+ 
+
+    1. Create the default contents for the table image. "SampleTblImg.c" is the example c file.
+
+    2. Place your <source_file>.c file in your application's "src" directory. 
+
+    3. In each application's directory, there is a CMakeLists.txt
+
+           a. Open and add "add_cfe_tables(<your_table_name> <table_location_and_name>)"
+              
+                  Example: add_cfe_tables(${APPNAME}_default fsw/src/${APPNAME}_default.c)
+
+                  *Note(s): The sequence for the table search path are as follow
+                            (where TBLWE==table basename without extension):
+                                
+                                1.${MISSION_DEFS}/tables/${TGT}_${TBLWE}.c
+                                2.${MISSION_SOURCE_DIR}/tables/${TGT}_${TBLWE}.c
+                                3.${MISSION_DEFS}/tables/${TBLWE}.c
+                                4.${MISSION_SOURCE_DIR}/tables/${TBLWE}.c
+                                5.(passed-in relative path)
+
+                            The supplied path does come into play, as the fallback at the end, 
+                            if the search path fails to find anything matching within the 
+                            mission-specific directories.
+
+    4. Go to your root cFS folder. Do "make" and "make install". If there are no errors, the table 
+       file is in cFS/build/exe/cpu1/cf 
+
+
+If you want to do this manually:
+
+    1. Compile the c file and elf2cfetbl. This creates the object file from the c file. 
+
+    2. Input the object file as a parameter to elf2cfetbl. Refer to cFE Application Developers Guide for 
+       reference.
+                   
+                   Example: ./elf2cfetbl <your_object_file>.o 
+
+Note(s)
+--------  
+
+    1. If you are getting install errors when you do a "make install", make sure your table's output name
+       is consistent in all program files. 
+```
+
+### `LICENSE`
+
+**경로:** `fsw/tools/elf2cfetbl/LICENSE`
+
+
+```text
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+```
+
+### `README.md`
+
+**경로:** `fsw/tools/elf2cfetbl/README.md`
+
+
+```markdown
+![Static Analysis](https://github.com/nasa/elf2cfetbl/workflows/Static%20Analysis/badge.svg)
+![Format Check](https://github.com/nasa/elf2cfetbl/workflows/Format%20Check/badge.svg)
+
+# Core Flight System : Framework : Tool : ELF to cFE Table Converter
+
+This repository contains NASA's ELF to cFE Table Converter Tool (elf2cfetbl), which is a framework component of the Core Flight System.
+
+This lab application is a ground utility to convert ELF to cFE binary tables for cFS. It is intended to be located in the `tools/elf2cfetbl` subdirectory of a cFS Mission Tree. The Core Flight System is bundled at <https://github.com/nasa/cFS>, which includes this tool as a submodule, and includes build and execution instructions.
+
+See README.txt for more information.
+
+## Known issues
+
+This ground utility was developed for a specific mission/configuration, and may not be applicable for general use. The Makefile and for_build/Makefile are no longer supported or tested.
+
+## Getting Help
+
+For best results, submit issues:questions or issues:help wanted requests at <https://github.com/nasa/cFS>.
+
+Official cFS page: <http://cfs.gsfc.nasa.gov>
+```
+
+### `README.txt`
+
+**경로:** `fsw/tools/elf2cfetbl/README.txt`
+
+
+```text
+This README file provides basic information on how to use the elf2cfetbl utility.
+
+SUMMARY:
+
+   The elf2cfetbl utility provides a method of converting an object file containing
+   the desired contents of a cFE Application's Table Image into a binary file that
+   is compatible with the cFE Table Services for loading the image.
+
+UTILITY SOURCE FILES:
+
+   In the elf2cfetbl utility directory, one should find the following files: 
+
+      cfe_tbl_filedef.h - a header file that should be placed into the fsw/cfe-core/inc
+                          directory. This file should only need to be #include'd by those 
+                          source files that define the initial contents of a table.
+
+      SampleTblImg.c    - a sample .c file that defines the default contents of a 
+                          table image.
+
+      ELF_Structures.h, elf2cfetbl.c - source files for the elf2cfetbl utility.
+
+CREATING THE UTILITY:
+
+   The elf2cfetbl utility and the tables it converts depend on processor
+   specific configuration parameters that are defined in cfe_platform_cfg.h.
+   Because of this, it is recommended that the elf2cfetbl utility is compiled
+   and used for each processor in a cFE/CFS mission directory structure.
+   Compiling the utility in this source directory and copying it to a 
+   common directory in the executable path on the development host can cause errors
+   when creating the flight software tables. 
+   If the elf2cfetbl utility is compiled and used in the build/<cpu> tree,
+   then the tables should always use the correct parameters, and the tool 
+   does not have to be installed on the development workstation. 
+
+   In order to setup the tool to build, check the build/<cpu> directory to see
+   if the "elf2cfetbl" directory and corresponding "elf2cfetbl/Makefile"
+   exists. If they are present, then the utility can be compiled by executing
+   the makefile from that directory:
+   $ cd build/cpu1/elf2cfetbl
+   $ make
+
+   If the elf2cfetbl directory and Makefile are not present in the build 
+   directory, the directory can be created, and the Makefile can be copied
+   from the "for_build" directory here. 
+
+   $ mkdir <path-to-build>/build/cpu1/elf2cfetbl
+   $ cp for-build/Makefile <path-to-build>/build/cpu1/elf2cfetbl
+
+   Once the directory is setup, the build for the CPU should use this utility.
+   If for some reason the build fails because the elf2cfetbl utility cannot be
+   found, then it is possible the build makefiles or PSP configuration has not 
+   been updated to look for the elf2cfetbl utility in the correct place. 
+   In this case, check the file:
+   <path-to-cfe>/cfe/fsw/cfe-core/src/make/table-rules.mak
+   In this file, make sure the table rule looks like this:
+   #
+   # Default table rule
+   #
+   .o.tbl:$(OBJS)
+          ../elf2cfetbl/$(TABLE_BIN) $<
+  
+PREPARING A SOURCE FILE FOR USE WITH THE UTILITY:
+
+   Preparing a .c file for use with the utility requires the use of a special macro.
+   At the bottom of the .c file, after defining the default contents of a table, the 
+   developer should insert the following macro:
+
+   CFE_TBL_FILEDEF(ObjName, TblName, Desc, Filename)
+
+   where:
+
+      ObjName is the name of the variable previously identified in the file for the 
+              instance of the table. Example: MyTblStruct
+   
+      TblName is the FULL name of the table including the owning application.  
+              Example: MyApp.TableName
+           
+      Desc is a 32 character or less description of the table image.  
+           (NOTE: Description cannot include commas) Example: Default Table Image
+        
+      Filename is the default filename that the application is expecting to load 
+               upon initialization.  Example: MyTblDefault.bin
+
+      An example of the usage of this macro is in the SampleTblImg.c file.
+
+UTILITY COMMAND LINE OPTIONS:
+
+   The command line format for the utility is as follows:
+    elf2cfetbl [-tTblName] [-d"Description"] [-h] [-v] [-V] [-s#] [-p#] [-n]
+               [-T] [-eYYYY:MM:DD:hh:mm:ss] [-fYYYY:MM:DD:hh:mm:ss] SrcFilename [DestDirectory]
+    where:
+       -tTblName             replaces the table name specified in the object file with 'TblName'
+       -d"Description"       replaces the description specified in the object file with 'Description'
+       -h                    produces this output
+       -v                    produces verbose output showing the breakdown of the object file in detail
+       -V                    shows the version of this utility
+       -s#                   specifies a Spacecraft ID to be put into file header.
+                             # can be specified as decimal, octal (starting with a zero), or hex (starting with '0x')
+       -p#                   specifies a Processor ID to be put into file header.
+                             # can be specified as decimal, octal (starting with a zero), or hex (starting with '0x')
+       -a#                   specifies an Application ID to be put into file header.
+                             # can be specified as decimal, octal (starting with a zero), or hex (starting with '0x')
+       -n                    specifies that output should NOT byte align FS header and secondary table header to nearest
+                             4-byte boundary. The default assumes a 4-byte alignment on both structures.
+       -T                    enables insertion of the SrcFilename's file creation time into the standard cFE File Header.
+                             This option must be specified for either the '-e' and/or '-f' options below to have any effect.
+                             By default, the time tag fields are set to zero.
+       -eYYYY:MM:DD:hh:mm:ss specifies the spacecraft epoch time.  The SrcFilename's file creation time will be converted to
+                             seconds since the specified epoch time and stored in the standard cFE File Header.
+                             where:   YYYY=year, MM=month (01-12), DD=day (01-31),
+                                      hh=hour (00-23), mm=minute (00-59), ss=seconds (00-59)
+                             If no epoch is specified, the default epoch is either 1970:01:01:00:00:00 or the epoch specified
+                             by the user using the '-f' option described below
+                             This option requires the '-T' option, defined above, to be specified to have any effect
+       -fYYYY:MM:DD:hh:mm:ss specifies the file system epoch time.  The SrcFilename's file creation time is obtained from the
+                             file system as seconds since an epoch.  On most systems the file system epoch is defined as
+                             1970:01:01:00:00:00.  If the user is running this application on a machine with a different epoch,
+                             then the file system epoch should be defined with this option.
+                             where:   YYYY=year, MM=month (01-12), DD=day (01-31), 
+                                      hh=hour (00-23), mm=minute (00-59), ss=seconds (00-59)
+                             If no epoch is specified, the default epoch is 1970:01:01:00:00:00
+                             This option requires the '-T' option, defined above, to be specified to have any effect
+       SrcFilename           specifies the object file to be converted
+       DestDirectory         specifies the directory in which the cFE Table Image file is to be created.
+                             If a directory is not specified './' is assumed.
+    
+    EXAMPLES:
+       elf2cfetbl MyObjectFile ../../TblDefaultImgDir/
+       elf2cfetbl -s12 -p0x0D -a016 -e2000:01:01:00:00:00 MyObjectFile ../../TblDefaultImgDir/
+    
+    NOTE: The name of the target file is specified within the source file as part of the CFE_TBL_FILEDEF macro.
+          If the macro has not been included in the source file, the utility will fail to convert the object file.
+
+SPECIAL NOTES: 
+
+1) If one wishes to use a table image file under cygwin, the cygwin object file needs to 
+   be converted from the COFF format to the ELF format before this utility can process it.  
+   Cygwin provides a utility to make this conversion, it is called objcopy. To perform the 
+   conversion, the user should issue a command similar to the following:
+
+   $ objcopy -O elf32-little MyObjFilenameInCoffFormat.o MyObjFilenameInElfFormat.o
+
+   where the first specified filename is the original object file and the second is the 
+   elf format of the same file.  The resulting elf format file should then be compatible
+   with the elf2cfetbl utility.
+```
+
+### `SampleTblImg.c`
+
+**경로:** `fsw/tools/elf2cfetbl/SampleTblImg.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+#include "cfe_tbl_filedef.h" /* Required to obtain the CFE_TBL_FILEDEF macro definition */
+
+/*
+** The following is an example of a data structure the application may have declared
+** as the format of their table.
+*/
+typedef struct
+{
+    int  Int1;
+    int  Int2;
+    int  Int3;
+    char Char1;
+} MyTblStruct_t;
+
+/*
+** The following is an example of the declaration statement that defines the desired
+** contents of the table image.
+*/
+MyTblStruct_t MyTblStruct = {0x01020304, 0x05060708, 0x090A0B0C, 0x0D};
+
+/*
+** The macro below identifies:
+**    1) the data structure type to use as the table image format
+**    2) the name of the table to be placed into the cFE Table File Header
+**    3) a brief description of the contents of the file image
+**    4) the desired name of the table image binary file that is cFE compatible
+*/
+CFE_TBL_FILEDEF(MyTblStruct, MyApp.TableName, Table Utility Test Table, MyTblDefault.bin)
+```
+
+### `SECURITY.md`
+
+**경로:** `fsw/tools/elf2cfetbl/SECURITY.md`
+
+
+```markdown
+# Security Policy
+
+## Reporting a Vulnerability
+
+To report a vulnerability for the elf2cfetbl subsystem please [submit an issue](https://github.com/nasa/elf2cfetbl/issues/new/choose).
+
+For general cFS vulnerabilities please [open a cFS framework issue](https://github.com/nasa/cfs/issues/new/choose) and see our [top-level security policy](https://github.com/nasa/cFS/security/policy) for additional information.
+
+In either case please use the "Bug Report" template and provide as much information as possible. Apply appropriate labels for each report. For security related reports, tag the issue with the "security" label.
+
+## Testing
+
+**Disclaimer: nasa/elf2cfetbl is not responsible for any liability incurred under the [Apache License 2.0](https://github.com/nasa/elf2cfetbl/blob/main/LICENSE).**
+
+Testing is an important aspect our team values to improve elf2cfetbl. 
+
+To view tools used for the cFS bundle, see our [top-level security policy](https://github.com/nasa/cFS/security/policy). 
+
+### CodeQL
+
+The [elf2cfetbl CodeQL GitHub Actions workflow](https://github.com/nasa/elf2cfetbl/actions/workflows/codeql-build.yml) is available to the public. To review the results, fork the elf2cfetbl repository and run the CodeQL workflow. 
+
+CodeQL is ran for every push and pull-request on all branches of elf2cfetbl in GitHub Actions. 
+
+For the CodeQL GitHub Actions setup, visit https://github.com/github/codeql-action. 
+
+### Cppcheck
+
+The [elf2cfetbl Cppcheck GitHub Actions workflow and results](https://github.com/nasa/elf2cfetbl/actions/workflows/static-analysis.yml) are available to the public. To view the results, select a workflow and download the artifacts. 
+
+Cppcheck is ran for every push on the main branch and every pull request on all branches of elf2cfetbl in Github Actions. 
+
+For more information about Cppcheck, visit http://cppcheck.sourceforge.net/.
+
+## Additional Support
+
+For additional support, submit a GitHub issue. You can also email the cfs community at cfs-community@lists.nasa.gov. 
+
+You can subscribe to the mailing list [here](https://lists.nasa.gov/mailman/listinfo/cfs-community) that includes all the community members/users of the NASA core Flight Software (cFS) product line. The mailing list is used to communicate any information related to the cFS product such as current releases, bug findings and fixes, enhancement requests, community meeting notifications, sending out meeting minutes, etc.
+
+If you wish to report a cybersecurity incident or concern, please contact the NASA Security Operations Center either by phone at 1-877-627-2732 or via email address soc@nasa.gov.
+```

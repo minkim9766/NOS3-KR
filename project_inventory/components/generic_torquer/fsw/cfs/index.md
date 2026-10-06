@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_torquer/fsw/cfs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,13 +12,40 @@ mission_inc/index
 platform_inc/index
 src/index
 unit-test/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_torquer/fsw/cfs/mission_inc/`](mission_inc/index) — 폴더
-- [`components/generic_torquer/fsw/cfs/platform_inc/`](platform_inc/index) — 폴더
-- [`components/generic_torquer/fsw/cfs/src/`](src/index) — 폴더
-- [`components/generic_torquer/fsw/cfs/unit-test/`](unit-test/index) — 폴더
-- [`components/generic_torquer/fsw/cfs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_torquer/fsw/cfs/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_GENERIC_TORQUER_APP C)
+
+include(../../../ComponentSettings.cmake)
+
+include_directories(public_inc)
+include_directories(mission_inc)
+include_directories(platform_inc)
+include_directories(src)
+
+include_directories(../shared)
+include_directories(${hwlib_MISSION_DIR}/fsw/public_inc)
+
+aux_source_directory(src APP_SRC_FILES)
+
+# Create the app module
+add_cfe_app(generic_torquer ${APP_SRC_FILES}
+            ../shared/generic_torquer_device.c)
+
+# If UT is enabled, then add the tests from the subdirectory
+# Note that this is an app, and therefore does not provide
+# stub functions, as other entities would not typically make
+# direct function calls into this application.
+if (ENABLE_UNIT_TESTS)
+  add_subdirectory(unit-test)
+endif (ENABLE_UNIT_TESTS)
+```

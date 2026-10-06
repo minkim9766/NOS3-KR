@@ -3,18 +3,67 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--ByteStreamDriverModel.fpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/ByteStreamDriverModel.fpp`](file--ByteStreamDriverModel.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `ByteStreamDriverModel.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/ByteStreamDriverModel.fpp`
+
+
+```fpp
+module Drv {
+
+    @ Status returned by the send call
+    enum ByteStreamStatus {
+        OP_OK         @< Operation worked as expected
+        SEND_RETRY    @< Data send should be retried
+        RECV_NO_DATA  @< Receive worked, but there was no data 
+        OTHER_ERROR   @< Error occurred, retrying may succeed
+    }
+
+    @ Port to exchange buffer and status with the ByteStreamDriver model
+    @ This port is used for receiving data from the driver as well as on
+    @ callback of an asynchronous send call
+    port ByteStreamData(
+        ref buffer: Fw.Buffer,
+        status: ByteStreamStatus
+    )
+
+    @ Synchronous only - Send data out through the byte stream
+    port ByteStreamSend(
+        ref sendBuffer: Fw.Buffer @< Data to send
+    ) -> ByteStreamStatus
+
+    @ Signal indicating the driver is ready to send and received data
+    port ByteStreamReady()
+
+}
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/ByteStreamDriverModel/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/ByteStreamDriverModel.fpp"
+)
+
+register_fprime_module()
+```

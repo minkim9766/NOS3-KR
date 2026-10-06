@@ -3,26 +3,1227 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Constants.java`
 
-file--Constants.java
-file--MessageTemplate.java
-file--Pus1Verifier.java
-file--PusCommandPostprocessor.java
-file--PusEventDecoder.java
-file--PusPacket.java
-file--PusPacketPreprocessor.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/Constants.java`
+
+
+```java
+package org.yamcs.pus;
+
+public class Constants {
+    //the offset of the time inside the regular PUS packets
+    public static final int DEFAULT_PKT_TIME_OFFSET = 13;
+   //the offset of the time inside the PUS time packets
+    public static final int DEFAULT_TIME_PACKET_TIME_OFFSET = 7;
+    
+    final static int PFIELD_TCID_TAI = 1;// 001 1-Jan-1958 epoch
+    final static int PFIELD_TCID_AGENCY_EPOCH = 2; // 010 agency defined epoch
+    final static int PFIELD_TCID_CDS = 4; // 100 CCSDS DAY SEGMENTED TIME CODE
+    final static int PFIELD_TCID_CCS = 5; // 101 CCSDS CALENDAR SEGMENTED TIME CODE
+    final static int PFIELD_TCID_LEVEL34 = 6; // 110 Level 3 or 4 Agency-defined code (i.e. not defined in the standard)
+ 
+    enum TimeEncodingType {
+        CUC, CDS, NONE;
+    }
+}
 ```
 
-## 항목
+### `MessageTemplate.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/Constants.java`](file--Constants.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/MessageTemplate.java`](file--MessageTemplate.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/Pus1Verifier.java`](file--Pus1Verifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusCommandPostprocessor.java`](file--PusCommandPostprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusEventDecoder.java`](file--PusEventDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusPacket.java`](file--PusPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusPacketPreprocessor.java`](file--PusPacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/MessageTemplate.java`
+
+
+```java
+package org.yamcs.pus;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.IllegalFormatException;
+import java.util.List;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.parameter.DoubleValue;
+import org.yamcs.parameter.FloatValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.parameter.SInt32Value;
+import org.yamcs.parameter.SInt64Value;
+import org.yamcs.parameter.UInt32Value;
+import org.yamcs.parameter.UInt64Value;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+
+/**
+ * Creates messages (strings) from templates by substituting parameter values
+ */
+public class MessageTemplate {
+    final static Log log = new Log(MessageTemplate.class);
+
+    final List<TemplatePart> parts;
+
+    MessageTemplate(String template) {
+        this(template, null);
+    }
+
+    MessageTemplate(String template, Mdb mdb) {
+        this.parts = new ArrayList<>();
+        int start = 0;
+
+        while (start < template.length()) {
+            int openBrace = template.indexOf('{', start);
+            if (openBrace == -1) {
+                // Add the remaining text as a TextTemplatePart
+                parts.add(new TextTemplatePart(template.substring(start)));
+                break;
+            }
+
+            // Add any text before the open brace as a TextTemplatePart
+            if (openBrace > start) {
+                parts.add(new TextTemplatePart(template.substring(start, openBrace)));
+            }
+
+            int closeBrace = template.indexOf('}', openBrace);
+            if (closeBrace == -1) {
+                // Unmatched '{' found; treat it as plain text
+                parts.add(new TextTemplatePart(template.substring(openBrace)));
+                break;
+            }
+
+            // Extract the placeholder content between '{' and '}'
+            String placeholder = template.substring(openBrace + 1, closeBrace);
+            parts.add(new ParameterTemplatePart(placeholder, mdb));
+
+            // Move the start position past the closing brace for the next iteration
+            start = closeBrace + 1;
+        }
+
+    }
+
+    interface TemplatePart {
+        String format(ParameterValueResolver resolver);
+    }
+
+    record TextTemplatePart(String text) implements TemplatePart {
+        @Override
+        public String format(ParameterValueResolver resolver) {
+            return text;
+        }
+    }
+
+    class ParameterTemplatePart implements TemplatePart {
+        Parameter para;
+        String paraName;
+        boolean raw;
+        PathElement[] path;
+        String format;
+
+        ParameterTemplatePart(String s, Mdb mdb) {
+            String[] a = s.split(";");
+            if (a.length > 1) {
+                this.format = a[1].trim();
+                s = a[0].trim();
+            }
+
+            if (s.endsWith(".raw")) {
+                this.raw = true;
+                s = s.substring(0, s.length() - 4);
+            }
+            var idx = s.indexOf('.');
+            if (idx == -1) {
+                this.paraName = s;
+            } else {
+                this.paraName = s.substring(0, idx);
+                this.path = AggregateUtil.parseReference(s.substring(idx + 1));
+            }
+
+            if (mdb != null && this.paraName.startsWith("/")) {
+                this.para = mdb.getParameter(this.paraName);
+                if (this.para == null) {
+                    throw new ConfigurationException("Cannot find parameter " + this.paraName);
+                }
+            }
+        }
+
+        @Override
+        public String format(ParameterValueResolver resolver) {
+            RawEngValue pv = null;
+            if (para != null) {
+                pv = resolver.resolve(para);
+            } else {
+                pv = resolver.resolve(paraName);
+            }
+            if (pv == null) {
+                return null;
+            }
+            Value v = raw ? pv.getRawValue() : pv.getEngValue();
+            if (path != null) {
+                v = AggregateUtil.getMemberValue(v, path);
+            }
+            if (v == null) {
+                return null;
+            }
+            if (format != null) {
+                try {
+                    return format(v);
+                } catch (IllegalFormatException e) {
+                    log.warn("Invalid format {} for parameter {}: {}", format, paraName, e.getMessage());
+                    return v.toString();
+                }
+            } else {
+                return v.toString();
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "ParameterTemplatePart [para=" + para + ", paraName=" + paraName + ", raw=" + raw + ", path="
+                    + Arrays.toString(path) + ", format=" + format + "]";
+        }
+
+        private String format(Value v) {
+            if (v instanceof FloatValue v1) {
+                return String.format(format, v1.getFloatValue());
+            } else if (v instanceof DoubleValue v1) {
+                return String.format(format, v1.getDoubleValue());
+            } else if (v instanceof SInt32Value v1) {
+                return String.format(format, v1.getSint32Value());
+            } else if (v instanceof SInt64Value v1) {
+                return String.format(format, v1.getSint64Value());
+            } else if (v instanceof UInt32Value v1) {
+                return String.format(format, v1.getUint32Value());
+            } else if (v instanceof UInt64Value v1) {
+                return String.format(format, v1.getUint64Value());
+            } else {
+                return v.toString();
+            }
+        }
+    }
+
+    public String format(ParameterValueResolver resolver) {
+        StringBuilder result = new StringBuilder();
+        for (var tp : parts) {
+            var s = tp.format(resolver);
+            if (s != null) {
+                result.append(s);
+            }
+        }
+        return result.toString();
+    }
+
+    /**
+     * The template can use either parameter absolute qualified names {/a/b/c/parameterName} or just {name}
+     * <p>
+     * When replacing patterns in the template the resolver has to be able to look up one of the two
+     */
+    interface ParameterValueResolver {
+        /**
+         * return the value for the parameter p.
+         * <p>
+         * may return null
+         */
+        RawEngValue resolve(Parameter p);
+
+        /**
+         * return the value for the given name.
+         * <p>
+         * may return null
+         */
+        RawEngValue resolve(String name);
+    }
+}
+```
+
+### `Pus1Verifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/Pus1Verifier.java`
+
+
+```java
+package org.yamcs.pus;
+
+import java.util.Collections;
+import java.util.HashMap;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.algorithms.AbstractAlgorithmExecutor;
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.algorithms.AlgorithmExecutionResult;
+import org.yamcs.commanding.VerificationResult;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.pus.MessageTemplate.ParameterValueResolver;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * PUS1 verifier.
+ * <p>
+ * The algorithm verifies one stage which is given as <code>verificationStage</code> in the constructor. For exmaple
+ * verificationStage=3 works for the stage Start - i.e. verifies reports PUS(1,3) and PUS(1,4).
+ * 
+ * <p>
+ * The algorithm requires at least 5 inputs, which must be defined in this exact order in the algorithm input list:
+ * </p>
+ * <ul>
+ * <li><b>sentApid</b> - the APID of the sent command.</li>
+ * <li><b>sentSeqCount</b> - the Sequence Count of the command sent, usually obtained from the command history.</li>
+ * <li><b>rcvdApid</b> - the APID present in the PUS1 report.</li>
+ * <li><b>rcvdSeqCount</b> - the Sequence Count in the PUS1 report.</li>
+ * <li><b>reportSubType</b> - the PUS1 sub-type of the incoming PUS1 report.</li>
+ * </ul>
+ * The sentApid, rcvdApid, rcvdSeqCount and reportSubType are expected to have a raw type as unsigned integer. The
+ * sentSeqCount is filled in by the post-processor and is expected to be signed 32 bit integer (the reason for that is
+ * becuase it is converted from a command history attribute)
+ * <p>
+ * In addition to these 5, other inputs may be used to get values in case of failure.
+ * 
+ * <p>
+ * The algorithm checks the following conditions:
+ * </p>
+ * <ul>
+ * <li><code>sentApid == rcvdApid</code></li>
+ * <li><code>sentSeqCount == rcvdSeqCount</code></li>
+ * <li>The <code>reportSubType=verificationStage or reportSubType=verificationStage+1</code></li>
+ * </ul>
+ * <p>
+ * If these conditions are met:
+ * </p>
+ * <ul>
+ * <li>If <code>reportSubType == verificationStage</code>, the verifier returns success.</li>
+ * <li>If <code>reportSubType == verificationStage + 1</code>, the verifier returns failure, using the provided template
+ * to construct the failure message. The template can use the inputs of the algorithm for message formatting.</li>
+ * </ul>
+ */
+public class Pus1Verifier extends AbstractAlgorithmExecutor {
+
+    private final int verificationStage;
+    private final MessageTemplate template;
+    public static AlgorithmExecutionResult NO_RESULT = new AlgorithmExecutionResult(Collections.emptyList());
+
+    public Pus1Verifier(Algorithm algorithmDef, AlgorithmExecutionContext execCtx, HashMap<String, Object> config) {
+        super(algorithmDef, execCtx);
+        var yc = YConfiguration.wrap(config);
+
+        verificationStage = yc.getInt("stage");
+
+        if (yc.containsKey("template")) {
+            template = new MessageTemplate(yc.getString("template"));
+        } else {
+            template = null;
+        }
+    }
+
+    @Override
+    public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext pctx) {
+
+        for (int i = 0; i < 5; i++) {
+            if (inputValues.get(i) == null) {
+                return NO_RESULT;
+            }
+        }
+        int sentApid = inputValues.get(0).getRawValue().getUint32Value();
+
+        // the sequence count set by the post-processor has no raw value
+        int sentSeq = inputValues.get(1).getEngValue().getSint32Value();
+        int rcvdApid = inputValues.get(2).getRawValue().getUint32Value();
+        int rcvdSeq = inputValues.get(3).getRawValue().getUint32Value();
+        int reportSubType = inputValues.get(4).getRawValue().getUint32Value();
+
+        if (sentApid != rcvdApid || sentSeq != rcvdSeq) {
+            return NO_RESULT;
+        }
+
+        if (reportSubType == verificationStage) {
+            return new AlgorithmExecutionResult(inputValues, VerificationResult.SUCCESS, Collections.emptyList());
+        } else if (reportSubType == verificationStage + 1) {
+            String msg = null;
+            if (template != null) {
+
+                msg = template.format(new ParameterValueResolver() {
+                    @Override
+                    public RawEngValue resolve(String name) {
+                        var algInputList = algorithmDef.getInputList();
+                        for (int i = 0; i < algInputList.size(); i++) {
+                            var alginput = algInputList.get(i);
+                            if (name.equals(alginput.getInputName())) {
+                                return inputValues.get(i);
+                            }
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public RawEngValue resolve(Parameter p) {
+                        return pctx.getTmParams().getLastInserted(p);
+                    }
+                });
+            }
+            VerificationResult result = new VerificationResult(false, msg);
+            return new AlgorithmExecutionResult(inputValues, result, Collections.emptyList());
+        } else {
+            return NO_RESULT;
+        }
+    }
+}
+```
+
+### `PusCommandPostprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusCommandPostprocessor.java`
+
+
+```java
+package org.yamcs.pus;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import org.yamcs.CommandOption;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.CommandOption.CommandOptionType;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.tctm.AbstractCommandPostProcessor;
+import org.yamcs.tctm.AbstractPacketPreprocessor;
+import org.yamcs.tctm.CcsdsPacket;
+import org.yamcs.tctm.CcsdsSeqCountFiller;
+import org.yamcs.tctm.ErrorDetectionWordCalculator;
+import org.yamcs.tctm.ccsds.time.CucTimeEncoder;
+import org.yamcs.time.TimeCorrelationService;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeEncoding;
+
+import static org.yamcs.tctm.AbstractPacketPreprocessor.CONFIG_KEY_TCO_SERVICE;
+
+public class PusCommandPostprocessor extends AbstractCommandPostProcessor {
+
+    public static final CommandOption OPTION_SCHEDULE_TIME = new CommandOption("pus11ScheduleAt", "Schedule Time",
+            CommandOptionType.TIMESTAMP).withHelp("If set, embeed this command into a PUS 11 SCHEDULE_TC commad");
+
+    static {
+        YamcsServer.getServer().addCommandOption(OPTION_SCHEDULE_TIME);
+    }
+
+    ErrorDetectionWordCalculator errorDetectionCalculator;
+    protected CcsdsSeqCountFiller seqFiller = new CcsdsSeqCountFiller();
+
+    protected CucTimeEncoder timeEncoder;
+    TimeCorrelationService tcoService;
+
+    int pus11SourceId = 0;
+    /**
+     * If true, the generated PUS(11,4) commands will contain a CRC
+     */
+    boolean pus11Crc;
+    /**
+     * if it is different than -1 it will be used as the APID for the TC(11,4)
+     */
+    int pus11Apid = -1;
+
+
+    @Override
+    public void init(String yamcsInstance, YConfiguration config) {
+        super.init(yamcsInstance, config);
+        this.pus11Crc = config.getBoolean("pus11Crc", true);
+        this.pus11Apid = config.getInt("pus11Apid", -1);
+
+        errorDetectionCalculator = AbstractPacketPreprocessor.getErrorDetectionWordCalculator(config);
+        if (config.containsKey("timeEncoding")) {
+            timeEncoder = configureTimeEncoding(config.getConfig("timeEncoding"));
+        } else {
+            timeEncoder = new CucTimeEncoder(0x2e, true);
+        }
+        if (config.containsKey(CONFIG_KEY_TCO_SERVICE)) {
+            String tcoServiceName = config.getString(CONFIG_KEY_TCO_SERVICE);
+            tcoService = YamcsServer.getServer().getInstance(yamcsInstance).getService(TimeCorrelationService.class,
+                    tcoServiceName);
+            if (tcoService == null) {
+                throw new ConfigurationException(
+                        "Cannot find a time correlation service with name " + tcoServiceName);
+            }
+        }
+    }
+
+    private CucTimeEncoder configureTimeEncoding(YConfiguration config) {
+        boolean implicitPfield = config.getBoolean("implicitPfield", true);
+        int pfield1 = config.getInt("pfield");
+        int pfield2 = config.getInt("pfieldCont", -1);
+
+        return new CucTimeEncoder(pfield1, pfield2, implicitPfield);
+    }
+
+    @Override
+    public byte[] process(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+
+        boolean hasCrc = hasCrc(pc);
+        if (hasCrc) { // 2 extra bytes for the checkword
+            binary = Arrays.copyOf(binary, binary.length + 2);
+        }
+
+        ByteBuffer bb = ByteBuffer.wrap(binary);
+        bb.putShort(4, (short) (binary.length - 7)); // write packet length
+        int seqCount = seqFiller.fill(binary); // write sequence count
+
+        commandHistoryPublisher.publish(pc.getCommandId(), "ccsds-seqcount", seqCount);
+
+        if (hasCrc) {
+            int pos = binary.length - 2;
+            try {
+                int checkword = errorDetectionCalculator.compute(binary, 0, pos);
+                log.debug("Appending checkword on position {}: {}", pos, Integer.toHexString(checkword));
+                bb.putShort(pos, (short) checkword);
+            } catch (IllegalArgumentException e) {
+                String msg = "Error when computing checkword: " + e.getMessage();
+                log.warn(msg);
+                commandHistoryPublisher.commandFailed(pc.getCommandId(), TimeEncoding.getWallclockTime(), msg);
+                return null;
+            }
+        }
+        commandHistoryPublisher.publish(pc.getCommandId(), PreparedCommand.CNAME_BINARY, binary);
+
+        if (pc.getAttribute("pus11ScheduleAt") != null) {
+            try {
+                long scheduleTime = pc.getAttribute("pus11ScheduleAt").getValue().getTimestampValue();
+                // We have embed the command into a PUS(11,4) insert into schedule TC
+                binary = buildScheduledTc(pc.getCommandId(), scheduleTime, binary);
+            } catch (Exception e) {
+                String msg = "Error building the TC(11,4) command " + e.getMessage();
+                log.warn(msg);
+                failCommand(pc.getCommandId(), msg);
+                return null;
+            }
+        }
+        return binary;
+    }
+
+
+    byte[] buildScheduledTc(CommandId cmdId, long scheduleTime, byte[] binary) {
+
+
+        // 6 bytes primary header
+        // 5 bytes secondary header
+        // 1 byte schedule-id
+        // 1 byte N
+        // n bytes time
+        int scheduleTcLength = 13 + timeEncoder.getEncodedLength() + binary.length;
+        if (pus11Crc) {
+            scheduleTcLength += 2;
+        }
+        byte[] scheduleTcPacket = new byte[scheduleTcLength];
+        var tc = CcsdsPacket.wrap(scheduleTcPacket);
+        int apid = pus11Apid >= 0 ? pus11Apid : CcsdsPacket.getAPID(binary);
+        tc.setHeader(apid,
+                /*tmtc*/ 1,
+                /*secondary header present*/1,
+                /*unsegmented data*/3,
+                /*seq count(it will be filled in later)*/ 0);
+
+        int offset = 6;
+        // 4 bits TC PUS version number = 2, 4 bits = ackflags.
+        scheduleTcPacket[offset++] = ((byte) 0x2D);
+        // type = 11
+        scheduleTcPacket[offset++] = 11;
+        // subtype = 4
+        scheduleTcPacket[offset++] = 4;
+        // source id
+        ByteArrayUtils.encodeUnsignedShort(pus11SourceId, scheduleTcPacket, offset);
+        offset += 2;
+        // schedule id
+        scheduleTcPacket[offset++] = 1; // TODO scheduleId;
+        // N (number of commands scheduled)
+        scheduleTcPacket[offset++] = 1;
+
+        if (tcoService == null) {
+            offset += timeEncoder.encode(scheduleTime, scheduleTcPacket, offset);
+        } else {
+            long obt = tcoService.getObt(scheduleTime);
+            if (obt == Long.MIN_VALUE) {
+                failCommand(cmdId, "Time corelation coefficients not available");
+                return null;
+            }
+            offset += timeEncoder.encodeRaw(obt, scheduleTcPacket, offset);
+        }
+        System.arraycopy(binary, 0, scheduleTcPacket, offset, binary.length);
+
+        int seqCount = seqFiller.fill(scheduleTcPacket); // write sequence count
+
+        commandHistoryPublisher.publish(cmdId, "pus11-apid", apid);
+        commandHistoryPublisher.publish(cmdId, "pus11-ccsds-seqcount", seqCount);
+
+        if (pus11Crc) {
+            int pos = scheduleTcPacket.length - 2;
+            int checkword = errorDetectionCalculator.compute(scheduleTcPacket, 0, pos);
+            log.debug("Appending checkword on position {}: {}", pos, Integer.toHexString(checkword));
+            ByteArrayUtils.encodeUnsignedShort(checkword, scheduleTcPacket, pos);
+        }
+        commandHistoryPublisher.publish(cmdId, "pus11-binary", scheduleTcPacket);
+
+        return scheduleTcPacket;
+    }
+
+    @Override
+    public int getBinaryLength(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        if (hasCrc(pc)) {
+            return binary.length + 2;
+        } else {
+            return binary.length;
+        }
+    }
+
+    private boolean hasCrc(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        boolean secHeaderFlag = CcsdsPacket.getSecondaryHeaderFlag(binary);
+        if (secHeaderFlag) {
+            return (errorDetectionCalculator != null);
+        } else {
+            return false;
+        }
+    }
+}
+```
+
+### `PusEventDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusEventDecoder.java`
+
+
+```java
+package org.yamcs.pus;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.Spec;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.StreamConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.mdb.ContainerProcessingResult;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.mdb.XtceTmExtractor;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.pus.MessageTemplate.ParameterValueResolver;
+import org.yamcs.time.TimeService;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.Yaml;
+
+
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StreamConfig.TmStreamConfigEntry;
+
+/**
+ * Generates Yamcs events from PUS event packets (PUS service 5).
+ * <p>
+ * This class reads a JSON configuration file that defines text templates for Yamcs events, each corresponding to a
+ * specific PUS event ID. The configuration file should contain entries in the following format:
+ * </p>
+ * 
+ * <pre>
+ * {
+ *   "eventId": 1234,
+ *   "template": "Event occurred: {parameter_name; format}"
+ * }
+ * </pre>
+ * 
+ * <p>
+ * The template string can include free text and placeholders in the format <code>{parameter_name; format}</code>. The
+ * <code>format</code> is optional. The <code>parameter_name</code> can be absolute or relative and may end with
+ * <code>.raw</code>, in which case the raw value is used instead of the engineering value.
+ * </p>
+ */
+
+public class PusEventDecoder extends AbstractYamcsService {
+    TimeService timeService;
+    Mdb mdb;
+    List<StreamEventDecoder> decoders;
+    Parameter eventIdParameter;
+    EventFormatter eventFormatter;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        mdb = MdbFactory.getInstance(yamcsInstance);
+        String idfqn = config.getString("eventIdParameter");
+        eventIdParameter = mdb.getParameter(idfqn);
+        if (eventIdParameter == null) {
+            throw new ConfigurationException("Parameter " + idfqn + " not found");
+        }
+        if (!(eventIdParameter.getParameterType() instanceof EnumeratedParameterType)) {
+            throw new ConfigurationException("Wrong type for " + idfqn + ". Expected EnumeratedParameterType but got "
+                    + eventIdParameter.getParameterType());
+        }
+        StreamConfig streamConfig = StreamConfig.getInstance(yamcsInstance);
+        decoders = new ArrayList<>();
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+
+        if (config.containsKey("realtimeStreams")) {
+            var realtimeEventStream = findStream(config.getString("realtimeEventStream"));
+
+            List<String> streamNames = config.getList("realtimeStreams");
+            for (String sn : streamNames) {
+                TmStreamConfigEntry sce = streamConfig.getTmEntry(sn);
+                if (sce == null) {
+                    throw new ConfigurationException("No stream config found for '" + sn + "'");
+                }
+                createDecoder(sce, realtimeEventStream);
+            }
+        } else {
+            Stream realtimeEventStream = null;
+            List<TmStreamConfigEntry> sceList = streamConfig.getTmEntries();
+            for (TmStreamConfigEntry sce : sceList) {
+                if ("realtime".equals(sce.getProcessor())) {
+                    if (realtimeEventStream == null) {
+                        realtimeEventStream = findStream(config.getString("realtimeEventStream"));
+                    }
+                    createDecoder(sce, realtimeEventStream);
+                }
+            }
+        }
+
+        if (config.containsKey("dumpStreams")) {
+            var dumpEventStream = findStream(config.getString("dumpEventStream"));
+
+            List<String> streamNames = config.getList("dumpStreams");
+            for (String sn : streamNames) {
+                TmStreamConfigEntry sce = streamConfig.getTmEntry(sn);
+                if (sce == null) {
+                    throw new ConfigurationException("No stream config found for '" + sn + "'");
+                }
+                createDecoder(sce, dumpEventStream);
+            }
+        }
+
+        eventFormatter = new EventFormatter(config.getString("eventTemplateFile"));
+    }
+
+    private void createDecoder(TmStreamConfigEntry sce, Stream eventStream) {
+        SequenceContainer rootsc = sce.getRootContainer();
+        if (rootsc == null) {
+            rootsc = mdb.getRootSequenceContainer();
+        }
+        if (rootsc == null) {
+            throw new ConfigurationException(
+                    "MDB does not have a root sequence container and no container was specified for decoding packets from "
+                            + sce.getName() + " stream");
+        }
+
+        Stream inputStream = findStream(sce.getName());
+        var decoder = new StreamEventDecoder(inputStream, eventStream, rootsc);
+        decoders.add(decoder);
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("eventIdParameter", OptionType.STRING)
+                .withRequired(true)
+                .withDescription("Enumerated or string parameter that gives "
+                        + "the name of the event and will use to determine the template to use");
+        spec.addOption("eventTemplateFile", OptionType.STRING).withRequired(true)
+                .withDescription("A file containing the templates for the events.");
+
+        spec.addOption("rootSequenceContainer", OptionType.STRING).withRequired(false)
+                .withDescription("The root container that will be used to parse the event packets."
+                        + "If not specified, the root container configured for each stream will be used");
+        spec.addOption("realtimeStreams", OptionType.LIST).withElementType(OptionType.STRING).withRequired(false)
+                .withDescription("The list of realtime streams. "
+                        + "The events resulting from data on these streams will be sent ot the events_realtime stream "
+                        + "(and thus available when subscribing to the realtime processor)");
+        spec.addOption("dumpStreams", OptionType.LIST).withElementType(OptionType.STRING).withRequired(false)
+                .withDescription("The list of realtime streams. "
+                        + "The events resulting from data on these streams will be sent ot the events_dump stream");
+        spec.addOption("realtimeEventStream", OptionType.STRING).withDefault(EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        spec.addOption("dumpEventStream", OptionType.STRING).withDefault(EventRecorder.DUMP_EVENT_STREAM_NAME);
+
+        return spec;
+    }
+
+    @Override
+    protected void doStart() {
+        for (var d : decoders) {
+            d.inputStream.addSubscriber(d);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        for (var d : decoders) {
+            d.inputStream.removeSubscriber(d);
+        }
+        notifyStopped();
+    }
+
+    EventSeverity getSeverity(int pusSubtype) {
+        return switch (pusSubtype) {
+        case 1 -> EventSeverity.INFO;
+        case 2 -> EventSeverity.WATCH;
+        case 3 -> EventSeverity.DISTRESS;
+        case 4 -> EventSeverity.CRITICAL;
+        default -> EventSeverity.WATCH;
+        };
+    }
+
+    class StreamEventDecoder implements StreamSubscriber {
+        final Stream inputStream;
+        final SequenceContainer rootsc;
+        Stream eventStream;
+        XtceTmExtractor tmExtractor;
+
+        public StreamEventDecoder(Stream inputStream, Stream eventStream, SequenceContainer rootsc) {
+            this.inputStream = inputStream;
+            this.eventStream = eventStream;
+            this.rootsc = rootsc;
+            var pdata = new ProcessorData(yamcsInstance, "XTCEPROC", mdb, new ProcessorConfig(),
+                    Collections.emptyMap());
+            tmExtractor = new XtceTmExtractor(mdb, pdata);
+            tmExtractor.provideAll();
+        }
+
+        @Override
+        public void onTuple(Stream stream, Tuple tuple) {
+            byte[] packet = tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+            if (packet.length < PusPacket.TM_MIN_SIZE) {
+                return;
+            }
+            int type = PusPacket.getType(packet);
+            if (type != PusPacket.SERVICE_TYPE_EVENT) {
+                return;
+            }
+
+            int apid = PusPacket.getApid(packet);
+            int subtype = PusPacket.getSubtype(packet);
+
+            long gentime = tuple.getColumn(StandardTupleDefinitions.GENTIME_COLUMN);
+            int seqCount = tuple.getColumn(StandardTupleDefinitions.SEQNUM_COLUMN);
+
+            ContainerProcessingResult cpr = tmExtractor.processPacket(packet, gentime, timeService.getMissionTime(),
+                    seqCount, rootsc);
+            var params = cpr.getTmParams();
+
+            var eventIdValue = params.getFirstInserted(eventIdParameter);
+            if (eventIdValue == null) {
+                log.warn("Did not find {} in packet extraction", eventIdParameter.getQualifiedName());
+                return;
+            }
+            String eventId = eventIdValue.getEngValue().getStringValue();
+
+            String msg = eventFormatter.format(apid, eventId, params);
+            if (msg == null) {
+                log.warn("No template found for message apid={}, eventId={}", apid, eventId);
+            } else {
+                Event ev = Event.newBuilder()
+                        .setType(eventId)
+                        .setSeverity(getSeverity(subtype))
+                        .setGenerationTime(gentime)
+                        .setSeqNumber(seqCount)
+                        .setMessage(msg).build();
+                TupleDefinition tdef = eventStream.getDefinition();
+                Tuple t = new Tuple(tdef, new Object[] { ev.getGenerationTime(),
+                        ev.getSource(), ev.getSeqNumber(), ev });
+                eventStream.emitTuple(t);
+            }
+
+        }
+    }
+
+    class EventFormatter {
+        // Map to hold the templates with eventId and apid as keys
+        private Map<String, MessageTemplate> templates = new HashMap<>();
+
+        public EventFormatter(String fileName) throws ConfigurationException {
+            LoaderOptions loaderOptions = new LoaderOptions();
+            int maxAliases = Integer.parseInt(System.getProperty("org.yamcs.yaml.maxAliases", "200"));
+            loaderOptions.setMaxAliasesForCollections(maxAliases);
+
+            var yaml = new Yaml(loaderOptions);
+            Object o;
+            try {
+                o = yaml.load(new FileReader(fileName));
+            } catch (FileNotFoundException e) {
+                throw new ConfigurationException("Cannot find event description file " + fileName);
+            }
+            if (!(o instanceof List<?>)) {
+                throw new ConfigurationException("Error in file " + fileName + ": top-level structure must be a list.");
+            }
+            for (Object o1 : (List<?>) o) {
+                if (o1 instanceof Map<?, ?>) {
+                    Map<?, ?> map = (Map<?, ?>) o1;
+                    String eventId = (String) map.get("eventId");
+                    String template = (String) map.get("template");
+
+                    MessageTemplate stemplate = new MessageTemplate(template, mdb);
+
+                    templates.put(eventId, stemplate);
+                } else {
+                    throw new ConfigurationException(
+                            "Error in file " + fileName + ": each list element must be a map.");
+                }
+            }
+        }
+
+        private String generateKey(String eventId, Integer apid) {
+            return apid != null ? eventId + "-" + apid : eventId;
+        }
+
+        // Format method to replace the template parameters with actual values
+        public String format(int apid, String eventId, ParameterValueList params) {
+            String key = generateKey(eventId, apid);
+            MessageTemplate template = templates.get(key);
+
+            if (template == null) {
+                key = generateKey(eventId, null);
+                template = templates.get(key);
+            }
+
+            if (template == null) {
+                return null; // No template found
+            }
+            return template.format(new ParameterValueResolver() {
+
+                @Override
+                public ParameterValue resolve(String name) {
+                    for (var pv : params) {
+                        if (name.equals(pv.getParameter().getName())) {
+                            return pv;
+                        }
+                    }
+                    return null;
+                }
+
+                @Override
+                public ParameterValue resolve(Parameter p) {             
+                    return params.getLastInserted(p);
+                }
+            });
+        }
+    }
+}
+```
+
+### `PusPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusPacket.java`
+
+
+```java
+package org.yamcs.pus;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Some constants and utitlities related to the PUS packets
+ */
+public class PusPacket {
+    public static final int TM_MIN_SIZE = 13;
+
+    static final int SERVICE_TYPE_HK = 3;
+    static final int SERVICE_TYPE_EVENT = 5;
+
+    static int getApid(byte[] packet) {
+        return ByteArrayUtils.decodeUnsignedShort(packet, 0) & 0x7FF;
+    }
+
+    static int getType(byte[] packet) {
+        return packet[7] & 0xFF;
+    }
+
+    static int getSubtype(byte[] packet) {
+        return packet[8] & 0xFF;
+    }
+
+}
+```
+
+### `PusPacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/pus/PusPacketPreprocessor.java`
+
+
+```java
+package org.yamcs.pus;
+
+import static org.yamcs.pus.Constants.*;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.CcsdsPacket;
+import org.yamcs.tctm.CcsdsPacketPreprocessor;
+import org.yamcs.tctm.ccsds.FrameStreamHelper;
+import org.yamcs.tctm.ccsds.time.CucTimeDecoder;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+
+/**
+ * Implementation for ECSS PUS (ECSS-E-ST-70-41C) packets.
+ *
+ * The header structure is:
+ *
+ * <p>
+ * Primary header (specified by CCSDS 133.0-B-1)
+ * <ul>
+ * <li>packet version number (3 bits)</li>
+ * <li>packet type (1 bit)</li>
+ * <li>secondary header flag (1 bit)</li>
+ * <li>application process ID (11 bits)</li>
+ * <li>sequence flags (2 bits)</li>
+ * <li>packet sequence count (14 bits)</li>
+ * </ul>
+ *
+ * <p>
+ * Secondary header (PUS specific)
+ * <ul>
+ * <li>TM packet PUS version number (4 bits)</li>
+ * <li>spacecraft time reference status (4 bits)</li>
+ * <li>service type ID (8 bits)</li>
+ * <li>message subtype ID (8 bits)</li>
+ * <li>message type counter (16 bits)</li>
+ * <li>destination ID (16 bits)</li>
+ * <li>time (absolute time) variable</li>
+ * <li>spare optional</li>
+ * </ul>
+ * <p>
+ * The time packets have no secondary header and the apid set to 0. The data part consists of the current onboard time
+ * in the same encoding like in the normal packets.
+ *
+ * <p>
+ * In this class we read
+ * <ul>
+ * <li>the APID and sequence count from the CCSDS primary header interested in the time and the sequence count.</li>
+ * <li>the time from the PUS secondary header and from the time packets.</li>
+ * </ul>
+ * <p>
+ * The offset of where the time is read from is configurable as this has changed between different versions of the
+ * standards.
+ * <p>
+ * Example configuration:
+ * 
+ * <pre>
+ * dataLinks:
+ * ...
+ * - name: tm_realtime
+ *   packetPreprocessorClassName: org.yamcs.tctm.pus.PusPacketPreprocessor
+ *   packetPreprocessorArgs:
+ *     errorDetection:
+ *       type: CRC-16-CCIIT
+ *     pktTimeOffset: 13
+ *     timePktTimeOffset: 7
+ *     timeEncoding:
+ *       epoch: CUSTOM
+ *       epochUTC: 1970-01-01T00:00:00Z
+ *       timeIncludesLeapSeconds: false
+ * </pre>
+ *
+ * Another example with time correlation:
+ *
+ * <pre>
+ * dataLinks:
+ * ...
+ * - name: tm_realtime
+ *   packetPreprocessorClassName: org.yamcs.tctm.pus.PusPacketPreprocessor
+ *   packetPreprocessorArgs:
+ *     errorDetection:
+ *       type: CRC-16-CCIIT
+ *     pktTimeOffset: 13
+ *     timePktTimeOffset: 7
+ *     performTimeCorrelation: true
+ *     goodFrameStream: good_frames
+ *     tcoService: tco0
+ * </pre>
+ *
+ * In this second example, the goodFramesStream option is required because the preprocessor will monitor the stream to
+ * determine the earth reception time of the frame to which the time packet refers to.
+ */
+public class PusPacketPreprocessor extends CcsdsPacketPreprocessor {
+    // where to look for time in the telemetry
+    int pktTimeOffset;
+    // the offset of the time inside the PUS time packets
+    int timePktTimeOffset;
+
+    boolean performTimeCorrelation;
+    RateErtRecorder ertRecorder;
+
+    public PusPacketPreprocessor(String yamcsInstance) {
+        this(yamcsInstance, YConfiguration.emptyConfig());
+    }
+
+    public PusPacketPreprocessor(String yamcsInstance, YConfiguration config) {
+        super(yamcsInstance, config);
+        pktTimeOffset = config.getInt("pktTimeOffset", DEFAULT_PKT_TIME_OFFSET);
+        performTimeCorrelation = config.getBoolean("performTimeCorrelation", false);
+
+        if (timeDecoder == null) {
+            this.timeDecoder = new CucTimeDecoder(-1);
+            this.timeEpoch = TimeEpochs.GPS;
+        }
+        if (performTimeCorrelation) {
+            ertRecorder = new RateErtRecorder();
+            timePktTimeOffset = config.getInt("timePktTimeOffset", DEFAULT_TIME_PACKET_TIME_OFFSET);
+
+            String goodFrameStream = config.getString("goodFrameStream", "good_frames");
+            var ydb = YarchDatabase.getInstance(yamcsInstance);
+            Stream stream = ydb.getStream(goodFrameStream);
+            if (stream == null) {
+                throw new ConfigurationException("Cannot find stream " + goodFrameStream);
+            }
+            stream.addSubscriber(this::processFrameTuple);
+        }
+    }
+
+    @Override
+    public TmPacket process(TmPacket tmPacket) {
+        byte[] packet = tmPacket.getPacket();
+        if (packet.length < 6) {
+            eventProducer.sendWarning("Short packet received, length: " + packet.length
+                    + "; minimum required length is 6 bytes.");
+            return null;
+        }
+        verifyCrc(tmPacket);
+        if (tmPacket.isInvalid()) {
+            // if the CRC has failed, do not go further
+            return null;
+        }
+        int apidseqcount = ByteArrayUtils.decodeInt(packet, 0);
+        int apid = (apidseqcount >> 16) & 0x07FF;
+        int seq = (apidseqcount) & 0x3FFF;
+        checkSequence(apid, seq);
+
+        boolean secondaryHeaderFlag = CcsdsPacket.getSecondaryHeaderFlag(packet);
+
+        if (!secondaryHeaderFlag) {
+            // in PUS only time packets are allowed without secondary header and they should have apid = 0
+            if (apid == 0) {
+                processTimePacket(tmPacket);
+                return tmPacket;
+            }
+            eventProducer.sendWarning("Packet with apid=" + apid
+                    + " and without secondary header received, ignoring.");
+            return null;
+        }
+
+        if (packet.length < 12) {
+            eventProducer.sendWarning("Short packet received, length: " + packet.length
+                    + "; minimum required length is 14 bytes.");
+            return null;
+        }
+
+        tmPacket.setSequenceCount(apidseqcount);
+
+        setRealtimePacketTime(tmPacket, pktTimeOffset);
+
+        if (log.isTraceEnabled()) {
+            log.trace("Received packet length: {}, apid: {}, seqcount: {}, gentime: {}, status: {}", packet.length,
+                    CcsdsPacket.getAPID(packet), CcsdsPacket.getSequenceCount(packet),
+                    TimeEncoding.toString(tmPacket.getGenerationTime()),
+                    Integer.toHexString(tmPacket.getStatus()));
+        }
+
+        return tmPacket;
+    }
+
+    private void processFrameTuple(Stream stream, Tuple tuple) {
+        long vcid = tuple.getIntColumn(FrameStreamHelper.VCID_CNAME);
+        if (vcid != 0) {
+            return;
+        }
+        long seq = tuple.getLongColumn(FrameStreamHelper.FRAME_SEQ_CNAME);
+        Instant ert = tuple.getColumn(FrameStreamHelper.ERTIME_CNAME);
+        ertRecorder.update(seq, ert);
+    }
+
+    private void processTimePacket(TmPacket tmPacket) {
+        byte[] packet = tmPacket.getPacket();
+        boolean corrupted = false;
+
+        int rate = packet[6] & 0xFF;
+        if (performTimeCorrelation) {
+            long obt = timeDecoder.decodeRaw(packet, timePktTimeOffset);
+            Instant ert = ertRecorder.get(rate, tmPacket.getFrameSeqCount());
+            if (ert != null) {
+                log.debug("Adding tco sample obt: {} , ert: {}", obt, ert);
+                tcoService.addSample(obt, ert);
+            }
+        }
+
+        setRealtimePacketTime(tmPacket, timePktTimeOffset);
+
+        int apidseqcount = ByteBuffer.wrap(packet).getInt(0);
+        tmPacket.setInvalid(corrupted);
+        tmPacket.setSequenceCount(apidseqcount);
+    }
+
+    static class RateErtRecorder {
+        long frameSeqNum;
+        Instant ert;
+        int rate = 4;
+
+        /**
+         * if the last rate bits of frameSeqNumber are 0, then store the ert
+         * <p>
+         * if all the bits except the last rate bits are different, then clear the ert
+         */
+        public synchronized void update(long frameSeqNumber, Instant ert) {
+            if ((frameSeqNumber & ((1L << rate) - 1)) == 0) {
+                this.ert = ert;
+                this.frameSeqNum = frameSeqNumber;
+            } else if ((this.frameSeqNum >> rate) != (frameSeqNumber >> rate)) {
+                this.ert = null;
+            }
+        }
+
+        /**
+         * if all the bits except the last rate are the same then return the currently stored ert, otherwise return null
+         */
+        public synchronized Instant get(int rate, long frameSeqNumber) {
+            this.rate = rate;
+
+            if ((this.frameSeqNum >> rate) == (frameSeqNumber >> rate)) {
+                return ert;
+            } else {
+                return null;
+            }
+        }
+    }
+}
+```

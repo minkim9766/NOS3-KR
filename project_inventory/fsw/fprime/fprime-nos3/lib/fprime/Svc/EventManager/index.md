@@ -3,24 +3,492 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--EventManager.cpp
-file--EventManager.fpp
-file--EventManager.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/EventManager.cpp`](file--EventManager.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/EventManager.fpp`](file--EventManager.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/EventManager.hpp`](file--EventManager.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/EventManager.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/EventManager.fpp"
+)
+
+### UTs ###
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/EventManagerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/EventManagerTester.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/EventManager.fpp"
+)
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `EventManager.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/EventManager.cpp`
+
+
+```cpp
+/*
+ * TestCommand1Impl.cpp
+ *
+ *  Created on: Mar 28, 2014
+ *      Author: tcanham
+ */
+
+#include <cstdio>
+
+#include <Fw/Types/Assert.hpp>
+#include <Os/File.hpp>
+#include <Svc/EventManager/EventManager.hpp>
+
+namespace Svc {
+static_assert(std::numeric_limits<FwSizeType>::max() >= TELEM_ID_FILTER_SIZE,
+              "TELEM_ID_FILTER_SIZE must fit within range of FwSizeType");
+typedef EventManager_Enabled Enabled;
+typedef EventManager_FilterSeverity FilterSeverity;
+
+EventManager::EventManager(const char* name) : EventManagerComponentBase(name) {
+    // set filter defaults
+    this->m_filterState[FilterSeverity::WARNING_HI].enabled =
+        FILTER_WARNING_HI_DEFAULT ? Enabled::ENABLED : Enabled::DISABLED;
+    this->m_filterState[FilterSeverity::WARNING_LO].enabled =
+        FILTER_WARNING_LO_DEFAULT ? Enabled::ENABLED : Enabled::DISABLED;
+    this->m_filterState[FilterSeverity::COMMAND].enabled =
+        FILTER_COMMAND_DEFAULT ? Enabled::ENABLED : Enabled::DISABLED;
+    this->m_filterState[FilterSeverity::ACTIVITY_HI].enabled =
+        FILTER_ACTIVITY_HI_DEFAULT ? Enabled::ENABLED : Enabled::DISABLED;
+    this->m_filterState[FilterSeverity::ACTIVITY_LO].enabled =
+        FILTER_ACTIVITY_LO_DEFAULT ? Enabled::ENABLED : Enabled::DISABLED;
+    this->m_filterState[FilterSeverity::DIAGNOSTIC].enabled =
+        FILTER_DIAGNOSTIC_DEFAULT ? Enabled::ENABLED : Enabled::DISABLED;
+
+    memset(m_filteredIDs, 0, sizeof(m_filteredIDs));
+}
+
+EventManager::~EventManager() {}
+
+void EventManager::LogRecv_handler(FwIndexType portNum,
+                                   FwEventIdType id,
+                                   Fw::Time& timeTag,
+                                   const Fw::LogSeverity& severity,
+                                   Fw::LogBuffer& args) {
+    // make sure ID is not zero. Zero is reserved for ID filter.
+    FW_ASSERT(id != 0);
+
+    switch (severity.e) {
+        case Fw::LogSeverity::FATAL:  // always pass FATAL
+            break;
+        case Fw::LogSeverity::WARNING_HI:
+            if (this->m_filterState[FilterSeverity::WARNING_HI].enabled == Enabled::DISABLED) {
+                return;
+            }
+            break;
+        case Fw::LogSeverity::WARNING_LO:
+            if (this->m_filterState[FilterSeverity::WARNING_LO].enabled == Enabled::DISABLED) {
+                return;
+            }
+            break;
+        case Fw::LogSeverity::COMMAND:
+            if (this->m_filterState[FilterSeverity::COMMAND].enabled == Enabled::DISABLED) {
+                return;
+            }
+            break;
+        case Fw::LogSeverity::ACTIVITY_HI:
+            if (this->m_filterState[FilterSeverity::ACTIVITY_HI].enabled == Enabled::DISABLED) {
+                return;
+            }
+            break;
+        case Fw::LogSeverity::ACTIVITY_LO:
+            if (this->m_filterState[FilterSeverity::ACTIVITY_LO].enabled == Enabled::DISABLED) {
+                return;
+            }
+            break;
+        case Fw::LogSeverity::DIAGNOSTIC:
+            if (this->m_filterState[FilterSeverity::DIAGNOSTIC].enabled == Enabled::DISABLED) {
+                return;
+            }
+            break;
+        default:
+            FW_ASSERT(0, static_cast<FwAssertArgType>(severity.e));
+            return;
+    }
+
+    // check ID filters
+    for (FwSizeType entry = 0; entry < TELEM_ID_FILTER_SIZE; entry++) {
+        if ((m_filteredIDs[entry] == id) && (severity != Fw::LogSeverity::FATAL)) {
+            return;
+        }
+    }
+
+    // send event to the logger thread
+    this->loqQueue_internalInterfaceInvoke(id, timeTag, severity, args);
+
+    // if connected, announce the FATAL
+    if (Fw::LogSeverity::FATAL == severity.e) {
+        if (this->isConnected_FatalAnnounce_OutputPort(0)) {
+            this->FatalAnnounce_out(0, id);
+        }
+    }
+}
+
+void EventManager::loqQueue_internalInterfaceHandler(FwEventIdType id,
+                                                     const Fw::Time& timeTag,
+                                                     const Fw::LogSeverity& severity,
+                                                     const Fw::LogBuffer& args) {
+    // Serialize event
+    this->m_logPacket.setId(id);
+    this->m_logPacket.setTimeTag(timeTag);
+    this->m_logPacket.setLogBuffer(args);
+    this->m_comBuffer.resetSer();
+    Fw::SerializeStatus stat = this->m_logPacket.serialize(this->m_comBuffer);
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+
+    if (this->isConnected_PktSend_OutputPort(0)) {
+        this->PktSend_out(0, this->m_comBuffer, 0);
+    }
+}
+
+void EventManager::SET_EVENT_FILTER_cmdHandler(FwOpcodeType opCode,
+                                               U32 cmdSeq,
+                                               FilterSeverity filterLevel,
+                                               Enabled filterEnable) {
+    this->m_filterState[filterLevel.e].enabled = filterEnable;
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void EventManager::SET_ID_FILTER_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                            U32 cmdSeq,           //!< The command sequence number
+                                            FwEventIdType ID,
+                                            Enabled idEnabled  //!< ID filter state
+) {
+    if (Enabled::ENABLED == idEnabled.e) {  // add ID
+        // search list for existing entry
+        for (FwSizeType entry = 0; entry < TELEM_ID_FILTER_SIZE; entry++) {
+            if (this->m_filteredIDs[entry] == ID) {
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+                this->log_ACTIVITY_HI_ID_FILTER_ENABLED(ID);
+                return;
+            }
+        }
+        // if not already a match, search for an open slot
+        for (FwSizeType entry = 0; entry < TELEM_ID_FILTER_SIZE; entry++) {
+            if (this->m_filteredIDs[entry] == 0) {
+                this->m_filteredIDs[entry] = ID;
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+                this->log_ACTIVITY_HI_ID_FILTER_ENABLED(ID);
+                return;
+            }
+        }
+        // if an empty slot was not found, send an error event
+        this->log_WARNING_LO_ID_FILTER_LIST_FULL(ID);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    } else {  // remove ID
+        // search list for existing entry
+        for (FwSizeType entry = 0; entry < TELEM_ID_FILTER_SIZE; entry++) {
+            if (this->m_filteredIDs[entry] == ID) {
+                this->m_filteredIDs[entry] = 0;  // zero entry
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+                this->log_ACTIVITY_HI_ID_FILTER_REMOVED(ID);
+                return;
+            }
+        }
+        // if it gets here, wasn't found
+        this->log_WARNING_LO_ID_FILTER_NOT_FOUND(ID);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void EventManager::DUMP_FILTER_STATE_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                                U32 cmdSeq            //!< The command sequence number
+) {
+    // first, iterate through severity filters
+    for (FwEnumStoreType filter = 0; filter < FilterSeverity::NUM_CONSTANTS; filter++) {
+        FilterSeverity filterState(static_cast<FilterSeverity::t>(filter));
+        this->log_ACTIVITY_LO_SEVERITY_FILTER_STATE(filterState,
+                                                    Enabled::ENABLED == this->m_filterState[filter].enabled.e);
+    }
+
+    // iterate through ID filter
+    for (FwSizeType entry = 0; entry < TELEM_ID_FILTER_SIZE; entry++) {
+        if (this->m_filteredIDs[entry] != 0) {
+            this->log_ACTIVITY_HI_ID_FILTER_ENABLED(this->m_filteredIDs[entry]);
+        }
+    }
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void EventManager::pingIn_handler(const FwIndexType portNum, U32 key) {
+    // return key
+    this->pingOut_out(0, key);
+}
+
+}  // namespace Svc
+```
+
+### `EventManager.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/EventManager.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for logging events
+  active component EventManager {
+
+    # ----------------------------------------------------------------------
+    # Types
+    # ----------------------------------------------------------------------
+
+    @ Severity level for event filtering
+    @ Similar to Fw::LogSeverity, but no FATAL event
+    enum FilterSeverity {
+      WARNING_HI = 0 @< Filter WARNING_HI events
+      WARNING_LO = 1 @< Filter WARNING_LO events
+      COMMAND = 2 @< Filter COMMAND events
+      ACTIVITY_HI = 3 @< Filter ACTIVITY_HI events
+      ACTIVITY_LO = 4 @< Filter ACTIVITY_LO events
+      DIAGNOSTIC = 5 @< Filter DIAGNOSTIC events
+    }
+
+    # TODO: Consider replacing this enum with Fw::Enabled
+    # However, the sense of 0 and 1 are reversed
+    @ Enabled and disabled state
+    enum Enabled {
+      ENABLED = 0 @< Enabled state
+      DISABLED = 1 @< Disabled state
+    }
+
+    # ----------------------------------------------------------------------
+    # Internal ports
+    # ----------------------------------------------------------------------
+
+    @ Internal interface to send log messages to component thread
+    internal port loqQueue(
+                            $id: FwEventIdType @< Log ID
+                            timeTag: Fw.Time @< Time Tag
+                            $severity: Fw.LogSeverity @< The severity argument
+                            args: Fw.LogBuffer @< Buffer containing serialized log entry
+                          ) \
+      drop
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Event input port
+    sync input port LogRecv: Fw.Log
+
+    @ Packet send port
+    output port PktSend: Fw.Com
+
+    @ FATAL event announce port
+    output port FatalAnnounce: Svc.FatalEvent
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Port for receiving commands
+    command recv port CmdDisp
+
+    @ Port for sending command registration requests
+    command reg port CmdReg
+
+    @ Port for sending command responses
+    command resp port CmdStatus
+
+    @ Port for emitting events
+    event port Log
+
+    @ Port for emitting text events
+    text event port LogText
+
+    @ Port for getting the time
+    time get port Time
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ Set filter for reporting events. Events are not stored in component.
+    sync command SET_EVENT_FILTER(
+                                   filterLevel: FilterSeverity @< Filter level
+                                   filterEnabled: Enabled @< Filter state
+                                 ) \
+      opcode 0
+
+    @ Filter a particular ID
+    async command SET_ID_FILTER(
+                                 ID: FwEventIdType
+                                 idFilterEnabled: Enabled @< ID filter state
+                               ) \
+      opcode 2
+
+    @ Dump the filter states via events
+    async command DUMP_FILTER_STATE \
+      opcode 3
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Dump severity filter state
+    event SEVERITY_FILTER_STATE(
+                                 $severity: FilterSeverity @< The severity level
+                                 enabled: bool
+                               ) \
+      severity activity low \
+      id 0 \
+      format "{} filter state. {}"
+
+    @ Indicate ID is filtered
+    event ID_FILTER_ENABLED(
+                             ID: FwEventIdType @< The ID filtered
+                           ) \
+      severity activity high \
+      id 1 \
+      format "ID {} is filtered."
+
+    @ Attempted to add ID to full ID filter ID
+    event ID_FILTER_LIST_FULL(
+                               ID: FwEventIdType @< The ID filtered
+                             ) \
+      severity warning low \
+      id 2 \
+      format "ID filter list is full. Cannot filter {} ."
+
+    @ Removed an ID from the filter
+    event ID_FILTER_REMOVED(
+                             ID: FwEventIdType @< The ID removed
+                           ) \
+      severity activity high \
+      id 3 \
+      format "ID filter ID {} removed."
+
+    @ ID not in filter
+    event ID_FILTER_NOT_FOUND(
+                               ID: FwEventIdType @< The ID removed
+                             ) \
+      severity warning low \
+      id 4 \
+      format "ID filter ID {} not found."
+
+  }
+
+}
+```
+
+### `EventManager.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/EventManager.hpp`
+
+
+```cpp
+/*
+ * EventManager.hpp
+ *
+ *  Created on: Mar 28, 2014
+ *      Author: tcanham
+ */
+
+#ifndef Svc_EventManager_HPP_
+#define Svc_EventManager_HPP_
+
+#include <Fw/Log/LogPacket.hpp>
+#include <Svc/EventManager/EventManagerComponentAc.hpp>
+#include <config/EventManagerCfg.hpp>
+
+namespace Svc {
+
+class EventManager final : public EventManagerComponentBase {
+  public:
+    EventManager(const char* compName);  //!< constructor
+    virtual ~EventManager();             //!< destructor
+
+  private:
+    void LogRecv_handler(FwIndexType portNum,
+                         FwEventIdType id,
+                         Fw::Time& timeTag,
+                         const Fw::LogSeverity& severity,
+                         Fw::LogBuffer& args);
+
+    void loqQueue_internalInterfaceHandler(FwEventIdType id,
+                                           const Fw::Time& timeTag,
+                                           const Fw::LogSeverity& severity,
+                                           const Fw::LogBuffer& args);
+
+    void SET_EVENT_FILTER_cmdHandler(FwOpcodeType opCode,
+                                     U32 cmdSeq,
+                                     EventManager_FilterSeverity filterLevel,
+                                     EventManager_Enabled filterEnabled);
+
+    void SET_ID_FILTER_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                  U32 cmdSeq,           //!< The command sequence number
+                                  FwEventIdType ID,
+                                  EventManager_Enabled idFilterEnabled  //!< ID filter state
+    );
+
+    void DUMP_FILTER_STATE_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                      U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum, /*!< The port number*/
+                        U32 key                    /*!< Value to return to pinger*/
+    );
+
+    // Filter state
+    struct t_filterState {
+        EventManager_Enabled enabled;  //<! filter is enabled
+    } m_filterState[EventManager_FilterSeverity::NUM_CONSTANTS];
+
+    // Working members
+    Fw::LogPacket m_logPacket;  //!< packet buffer for assembling log packets
+    Fw::ComBuffer m_comBuffer;  //!< com buffer for sending event buffers
+
+    // array of filtered event IDs.
+    // value of 0 means no entry
+    FwEventIdType m_filteredIDs[TELEM_ID_FILTER_SIZE];
+};
+
+}  // namespace Svc
+#endif /* Svc_EventManager_HPP_ */
+```

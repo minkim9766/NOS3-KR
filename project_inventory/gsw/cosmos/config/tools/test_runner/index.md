@@ -3,16 +3,43 @@
 
 **경로:** `gsw/cosmos/config/tools/test_runner/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 stash/index
-file--test_runner.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/tools/test_runner/stash/`](stash/index) — 폴더
-- [`gsw/cosmos/config/tools/test_runner/test_runner.txt`](file--test_runner.txt) — UTF-8 텍스트 파일 본문 포함
+### `test_runner.txt`
+
+**경로:** `gsw/cosmos/config/tools/test_runner/test_runner.txt`
+
+
+```text
+REQUIRE_UTILITY 'mission_test'
+REQUIRE_UTILITY 'generic_adcs_test'
+REQUIRE_UTILITY 'generic_css_test'
+REQUIRE_UTILITY 'generic_eps_test'
+REQUIRE_UTILITY 'generic_fss_test'
+REQUIRE_UTILITY 'generic_imu_test'
+REQUIRE_UTILITY 'generic_mag_test'
+REQUIRE_UTILITY 'generic_radio_test'
+REQUIRE_UTILITY 'generic_rw_test'
+REQUIRE_UTILITY 'generic_st_test'
+REQUIRE_UTILITY 'generic_thruster_test'
+REQUIRE_UTILITY 'generic_torquer_test'
+REQUIRE_UTILITY 'novatel_oem615_test'
+REQUIRE_UTILITY 'sample_test'
+
+LINE_DELAY 0
+ALLOW_DEBUG
+PAUSE_ON_ERROR TRUE
+CONTINUE_TEST_CASE_AFTER_ERROR TRUE
+ABORT_TESTING_AFTER_ERROR FALSE
+MANUAL TRUE
+LOOP_TESTING FALSE
+BREAK_LOOP_AFTER_ERROR FALSE
+```

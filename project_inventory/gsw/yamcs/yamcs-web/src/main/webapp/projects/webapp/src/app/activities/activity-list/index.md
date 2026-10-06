@@ -3,22 +3,810 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activities.datasource.ts`
 
-file--activities.datasource.ts
-file--activity-list.component.css
-file--activity-list.component.html
-file--activity-list.component.ts
-file--ActivityBuffer.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activities.datasource.ts`
+
+
+```typescript
+import { CollectionViewer } from '@angular/cdk/collections';
+import { DataSource } from '@angular/cdk/table';
+import {
+  Activity,
+  ActivitySubscription,
+  GetActivitiesOptions,
+  Synchronizer,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ActivityBuffer } from './ActivityBuffer';
+
+export class ActivitiesDataSource extends DataSource<Activity> {
+  pageSize = 100;
+  continuationToken?: string;
+  options: GetActivitiesOptions;
+  blockHasMore = false;
+
+  activities$ = new BehaviorSubject<Activity[]>([]);
+  private buffer: ActivityBuffer;
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+  public streaming$ = new BehaviorSubject<boolean>(false);
+
+  private realtimeSubscription: ActivitySubscription;
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+  ) {
+    super();
+    this.syncSubscription = synchronizer.sync(() => {
+      if (this.buffer.dirty && !this.loading$.getValue()) {
+        this.emitActivities();
+        this.buffer.dirty = false;
+      }
+    });
+
+    this.buffer = new ActivityBuffer(() => {
+      // Best solution for now, alternative is to re-establish
+      // the offscreenRecord after compacting.
+      this.blockHasMore = true;
+
+      this.buffer.compact(500);
+    });
+  }
+
+  override connect(
+    collectionViewer: CollectionViewer,
+  ): Observable<readonly Activity[]> {
+    return this.activities$;
+  }
+
+  private emitActivities() {
+    const activities = this.buffer.snapshot();
+    this.activities$.next(activities);
+  }
+
+  loadActivities(options: GetActivitiesOptions) {
+    this.loading$.next(true);
+    return Promise.all([
+      this.loadPage({
+        ...options,
+        limit: this.pageSize,
+      }),
+    ]).then((results) => {
+      const activities = results[0];
+
+      this.loading$.next(false);
+      this.buffer.reset();
+      this.blockHasMore = false;
+      this.buffer.addArchiveData(activities);
+
+      // Quick emit, don't wait on sync tick
+      this.emitActivities();
+
+      return activities;
+    });
+  }
+
+  hasMore() {
+    return !!this.continuationToken && !this.blockHasMore;
+  }
+
+  /**
+   * Fetches a page of data and keeps track of one invisible record that
+   * allows to determine if there are further page(s). The next to last
+   * record is used to determine the stop date of the next query because
+   * the server uses the interval bounds: [start,stop)
+   */
+  private loadPage(options: GetActivitiesOptions) {
+    this.options = options;
+    return this.yamcs.yamcsClient
+      .getActivities(this.yamcs.instance!, options)
+      .then((page) => {
+        this.continuationToken = page.continuationToken;
+        return page.activities || [];
+      });
+  }
+
+  /**
+   * Loads the next page of data starting at where the previous page was cut off.
+   */
+  loadMoreData(options: GetActivitiesOptions) {
+    if (!this.continuationToken) {
+      return;
+    }
+    this.loadPage({
+      ...options,
+      next: this.continuationToken,
+      limit: this.pageSize,
+    }).then((activities) => {
+      this.buffer.addArchiveData(activities);
+    });
+  }
+
+  startStreaming() {
+    this.streaming$.next(true);
+    this.realtimeSubscription =
+      this.yamcs.yamcsClient.createActivitySubscription(
+        {
+          instance: this.yamcs.instance!,
+        },
+        (activity) => {
+          if (!this.loading$.getValue() && this.matchesFilter(activity)) {
+            this.buffer.addRealtimeActivity(activity);
+          }
+        },
+      );
+  }
+
+  private matchesFilter(activity: Activity) {
+    if (this.options) {
+      if (this.options.type) {
+        if (activity.type !== this.options.type) {
+          return false;
+        }
+      }
+      if (this.options.status) {
+        if (activity.status !== this.options.status) {
+          return false;
+        }
+      }
+      if (this.options.q) {
+        if (
+          !activity.detail ||
+          activity.detail.indexOf(this.options.q) === -1
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }
+
+  stopStreaming() {
+    this.realtimeSubscription?.cancel();
+    this.streaming$.next(false);
+  }
+
+  override disconnect(collectionViewer: CollectionViewer): void {
+    this.stopStreaming();
+    this.syncSubscription?.unsubscribe();
+    this.activities$.complete();
+    this.loading$.complete();
+    this.streaming$.complete();
+  }
+}
 ```
 
-## 항목
+### `activity-list.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activities.datasource.ts`](file--activities.datasource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activity-list.component.css`](file--activity-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activity-list.component.html`](file--activity-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activity-list.component.ts`](file--activity-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/ActivityBuffer.ts`](file--ActivityBuffer.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activity-list.component.css`
+
+
+```css
+.alert {
+  color: var(--y-error-color) !important;
+}
+```
+
+### `activity-list.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activity-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Activities">
+    @if (mayControlActivities()) {
+      <ya-page-button
+        [disabled]="!isGroupCancelEnabled()"
+        (clicked)="cancelSelectedActivities()"
+        icon="cancel">
+        Cancel
+      </ya-page-button>
+    }
+  </ya-instance-toolbar>
+
+  <ya-panel>
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-search-filter formControlName="filter" placeholder="Filter by text search" />
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="activities" />
+    </ya-filter-bar>
+
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-multi-select
+        [options]="statusOptions$ | async"
+        formControlName="status"
+        emptyOption="Any status" />
+      <ya-multi-select
+        [options]="typeOptions$ | async"
+        formControlName="type"
+        emptyOption="Any type" />
+      <ya-select [options]="intervalOptions" icon="access_time" formControlName="interval" />
+      @if (filterForm.value["interval"] === "CUSTOM") {
+        <ya-date-time-input formControlName="customStart" />
+        <ya-date-time-input formControlName="customStop" />
+        <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+      } @else {
+        <ya-button (click)="jumpToNow()">Jump to now</ya-button>
+      }
+
+      @if (dataSource.loading$ | async) {
+        <ya-dots />
+      }
+    </ya-filter-bar>
+
+    <ya-table-window
+      [duration]="appliedInterval"
+      [start]="validStart"
+      [stop]="validStop"></ya-table-window>
+
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      [trackBy]="tableTrackerFn"
+      class="ya-data-table expand">
+      <ng-container cdkColumnDef="select">
+        <th mat-header-cell *cdkHeaderCellDef class="checkbox"></th>
+        <td
+          mat-cell
+          *cdkCellDef="let item"
+          class="checkbox"
+          (click)="cb.toggle(); $event.stopPropagation()">
+          <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" [item]="item" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef class="status"></th>
+        <td mat-cell *matCellDef="let row" class="status">
+          <app-activity-icon [activity]="row" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>Id</th>
+        <td mat-cell *matCellDef="let item" class="mono">
+          <a [routerLink]="item.id" [matTooltip]="item.id" [queryParams]="{ c: yamcs.context }">
+            {{ item.id.substring(0, 8) }}
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="start">
+        <th mat-header-cell *matHeaderCellDef>Start</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.start | datetime }}
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="type">
+        <th mat-header-cell *cdkHeaderCellDef>Type</th>
+        <td mat-cell *cdkCellDef="let item">
+          {{ item.type }}
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="detail">
+        <th mat-header-cell *cdkHeaderCellDef>Detail</th>
+        <td mat-cell *cdkCellDef="let item">
+          {{ item.detail || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="duration">
+        <th mat-header-cell *cdkHeaderCellDef>Duration</th>
+        <td mat-cell *cdkCellDef="let item">
+          @if (item.start) {
+            <app-activity-duration [activity]="item" />
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row">
+          @if (mayControlActivities()) {
+            <ya-more>
+              <button
+                mat-menu-item
+                (click)="cancelActivity(row)"
+                [disabled]="row.stop !== undefined || !mayControlActivities()">
+                Cancel
+              </button>
+            </ya-more>
+          }
+          @if (row.failureReason; as failureReason) {
+            <span class="alert">
+              {{ failureReason }}
+            </span>
+          }
+          @if (row.type === "MANUAL" && row.status === "RUNNING" && mayControlActivities()) {
+            <ya-button (click)="setSuccessful(row)" icon="thumb_up">Set successful</ya-button>
+            &nbsp;
+            <ya-button (click)="setFailed(row)" icon="thumb_down">Set failed</ya-button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+        [class.selected]="selection.isSelected(row)"
+        (click)="toggleOne(row)"></tr>
+    </table>
+
+    <ya-toolbar appearance="bottom" align="center">
+      <ya-button [disabled]="!dataSource.hasMore()" (click)="loadMoreData()">Load more</ya-button>
+    </ya-toolbar>
+  </ya-panel>
+</ya-instance-page>
+```
+
+### `activity-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/activity-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Activity,
+  AuthService,
+  GetActivitiesOptions,
+  MessageService,
+  Synchronizer,
+  WebappSdkModule,
+  YaColumnInfo,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, debounceTime } from 'rxjs';
+import { SetFailedDialogComponent } from '../set-failed-dialog/set-failed-dialog.component';
+import { ActivityDurationComponent } from '../shared/activity-duration.component';
+import { ActivityIconComponent } from '../shared/activity-icon.component';
+import { ActivitiesDataSource } from './activities.datasource';
+
+const defaultInterval = 'NO_LIMIT';
+
+@Component({
+  templateUrl: './activity-list.component.html',
+  styleUrl: './activity-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ActivityDurationComponent, ActivityIconComponent, WebappSdkModule],
+})
+export class ActivityListComponent {
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new UntypedFormGroup({
+    status: new UntypedFormControl([]),
+    filter: new UntypedFormControl(),
+    type: new UntypedFormControl([]),
+    interval: new UntypedFormControl(defaultInterval),
+    customStart: new UntypedFormControl(null),
+    customStop: new UntypedFormControl(null),
+  });
+
+  dataSource: ActivitiesDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'select', label: '', alwaysVisible: true },
+    { id: 'status', label: 'Status', alwaysVisible: true },
+    { id: 'id', label: 'Id', alwaysVisible: true },
+    { id: 'start', label: 'Start', visible: true },
+    { id: 'type', label: 'Type', visible: true },
+    { id: 'detail', label: 'Detail', visible: true },
+    { id: 'duration', label: 'Duration', visible: true },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  typeOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: 'MANUAL', label: 'Manual', icon: 'emoji_people' },
+  ]);
+
+  statusOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: 'RUNNING', label: 'Running', icon: 'cached' },
+    { id: 'SUCCESSFUL', label: 'Successful', icon: 'check_circle' },
+    { id: 'CANCELLED', label: 'Cancelled', icon: 'stop_circle' },
+    { id: 'FAILED', label: 'Failed', icon: 'highlight_off' },
+  ]);
+
+  intervalOptions: YaSelectOption[] = [
+    { id: 'PT1H', label: 'Last hour' },
+    { id: 'PT6H', label: 'Last 6 hours' },
+    { id: 'P1D', label: 'Last 24 hours' },
+    { id: 'NO_LIMIT', label: 'No limit' },
+    { id: 'CUSTOM', label: 'Custom', group: true },
+  ];
+
+  private status: string[] = [];
+  private type: string[] = [];
+  private filter: string;
+
+  selection = new SelectionModel<Activity>(true, []);
+
+  tableTrackerFn = (index: number, item: Activity) => item.id;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    title: Title,
+    synchronizer: Synchronizer,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+  ) {
+    title.setTitle('Activities');
+
+    yamcs.yamcsClient
+      .getExecutors(yamcs.instance!)
+      .then((executors) => {
+        for (const executor of executors) {
+          this.typeOptions$.next([
+            ...this.typeOptions$.value,
+            {
+              id: executor.type,
+              label: executor.displayName,
+              icon: executor.icon || 'new_label',
+            },
+          ]);
+        }
+      })
+      .catch((err) => this.messageService.showError(err));
+
+    this.dataSource = new ActivitiesDataSource(yamcs, synchronizer);
+    this.dataSource.startStreaming();
+
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm
+      .get('filter')!
+      .valueChanges.pipe(debounceTime(400))
+      .forEach((filter) => {
+        this.filter = filter;
+        this.loadData();
+      });
+
+    this.filterForm.get('status')!.valueChanges.forEach((status) => {
+      this.status = status;
+      this.loadData();
+    });
+
+    this.filterForm.get('type')!.valueChanges.forEach((type) => {
+      this.type = type;
+      this.loadData();
+    });
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else {
+        this.validStop = yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filter = queryParams.get('filter') || '';
+      this.filterForm.get('filter')!.setValue(this.filter);
+    }
+    if (queryParams.has('status')) {
+      this.type = queryParams.getAll('status')!;
+      this.filterForm.get('status')!.setValue(this.status);
+    }
+    if (queryParams.has('type')) {
+      this.type = queryParams.getAll('type')!;
+      this.filterForm.get('type')!.setValue(this.type);
+    }
+    if (queryParams.has('interval')) {
+      this.appliedInterval = queryParams.get('interval')!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = queryParams.get('customStart')!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = utils.toDate(customStart);
+        const customStop = queryParams.get('customStop')!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = utils.toDate(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = null;
+      this.validStart = null;
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.value['interval'];
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval === 'CUSTOM') {
+      // For simplicity reasons, just reset to default 1h interval.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else {
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  applyCustomDates() {
+    this.validStart = utils.toDate(this.filterForm.value['customStart']);
+    this.validStop = utils.toDate(this.filterForm.value['customStop']);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  /**
+   * Loads the first page of data within validStart and validStop
+   */
+  loadData() {
+    this.updateURL();
+    const options: GetActivitiesOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+    if (this.filter) {
+      options.q = this.filter;
+    }
+    if (this.status.length) {
+      options.status = this.status;
+    }
+    if (this.type.length) {
+      options.type = this.type;
+    }
+
+    this.dataSource
+      .loadActivities(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  loadMoreData() {
+    const options: GetActivitiesOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.status) {
+      options.status = this.status;
+    }
+    if (this.filter) {
+      options.q = this.filter;
+    }
+
+    this.dataSource.loadMoreData(options);
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: this.filter || null,
+        status: this.type.length ? this.status : null,
+        type: this.type.length ? this.type : null,
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStart']
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStop']
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  mayControlActivities() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlActivities');
+  }
+
+  toggleOne(row: Activity) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  isGroupCancelEnabled() {
+    // Allow if at least one of the selected activities is cancellable
+    for (const activity of this.selection.selected) {
+      if (!activity.stop) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  cancelSelectedActivities() {
+    for (const activity of this.selection.selected) {
+      if (!activity.stop) {
+      }
+      this.cancelActivity(activity);
+    }
+  }
+
+  cancelActivity(activity: Activity) {
+    this.yamcs.yamcsClient
+      .cancelActivity(this.yamcs.instance!, activity.id)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  setSuccessful(activity: Activity) {
+    this.yamcs.yamcsClient
+      .completeManualActivity(this.yamcs.instance!, activity.id)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  setFailed(activity: Activity) {
+    this.dialog
+      .open(SetFailedDialogComponent, {
+        width: '400px',
+        data: { activity },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.yamcs.yamcsClient
+            .completeManualActivity(this.yamcs.instance!, activity.id, {
+              failureReason: result.failureReason,
+            })
+            .catch((err) => this.messageService.showError(err));
+        }
+      });
+  }
+}
+```
+
+### `ActivityBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/ActivityBuffer.ts`
+
+
+```typescript
+import { Activity } from '@yamcs/webapp-sdk';
+
+export type WatermarkObserver = () => void;
+
+/**
+ * Combines archive activities obtained via REST
+ * with realtime activities obtained via WebSocket.
+ *
+ * This class does not care about whether archive samples
+ * and realtime values are connected. Both sets are joined and sorted under all conditions.
+ */
+export class ActivityBuffer {
+  public dirty = false;
+
+  private archiveActivities: Activity[] = [];
+
+  private realtimeBuffer: (Activity | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+
+  constructor(private watermarkObserver: WatermarkObserver) {
+    this.realtimeBuffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  addArchiveData(activities: Activity[]) {
+    this.archiveActivities = this.archiveActivities.concat(activities);
+    this.dirty = true;
+  }
+
+  addRealtimeActivity(activity: Activity) {
+    if (this.pointer < this.bufferSize) {
+      this.realtimeBuffer[this.pointer] = activity;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.alreadyWarned = true;
+        this.watermarkObserver();
+      }
+      this.pointer = this.pointer + 1;
+    }
+    this.dirty = true;
+  }
+
+  reset() {
+    this.archiveActivities = [];
+    this.realtimeBuffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+    this.dirty = true;
+  }
+
+  snapshot(): Activity[] {
+    const splicedActivities = this.archiveActivities;
+
+    this.realtimeBuffer.map((activity) => {
+      if (!activity) return;
+
+      const existingIndex = splicedActivities.findIndex(
+        (a) => a.id == activity.id,
+      );
+      if (existingIndex === -1) {
+        splicedActivities.push(activity);
+      } else {
+        splicedActivities[existingIndex] = activity;
+      }
+    });
+
+    splicedActivities.sort((e1, e2) => {
+      let res = -e1.start.localeCompare(e2.start);
+      return res !== 0 ? res : e2.seq - e1.seq;
+    });
+    return splicedActivities;
+  }
+
+  /**
+   * Transfers the realtime buffer into the archive buffer, and
+   * reduces its size to a set limit. The oldest activities (based
+   * on generation time) are removed first.
+   */
+  compact(limit: number) {
+    const snapshot = this.snapshot();
+    snapshot.length = Math.min(limit, snapshot.length);
+    this.reset();
+    this.archiveActivities = snapshot;
+    this.dirty = true;
+  }
+}
+```

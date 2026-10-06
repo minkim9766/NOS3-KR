@@ -3,34 +3,841 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Basic.fpp`
 
-file--Basic.fpp
-file--BasicTester.cpp
-file--BasicTester.hpp
-file--Choice.fpp
-file--ChoiceTester.cpp
-file--ChoiceTester.hpp
-file--CMakeLists.txt
-file--main.cpp
-file--Nested.fpp
-file--NestedTester.cpp
-file--NestedTester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/Basic.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceInitial {
+
+    queued component Basic {
+
+      sync input port schedIn: Svc.Sched
+
+      include "../../internal/initial/include/Basic.fppi"
+
+      state machine instance basic1: Basic
+
+      state machine instance basic2: Basic
+
+      state machine instance smInitialBasic1: SmInitial.Basic
+
+      state machine instance smInitialBasic2: SmInitial.Basic
+
+    }
+
+  }
+
+}
 ```
 
-## 항목
+### `BasicTester.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/Basic.fpp`](file--Basic.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/BasicTester.cpp`](file--BasicTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/BasicTester.hpp`](file--BasicTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/Choice.fpp`](file--Choice.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/ChoiceTester.cpp`](file--ChoiceTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/ChoiceTester.hpp`](file--ChoiceTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/Nested.fpp`](file--Nested.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/NestedTester.cpp`](file--NestedTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/NestedTester.hpp`](file--NestedTester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/BasicTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/initial/BasicTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceInitial {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTester::BasicTester(const char* const compName)
+    : BasicComponentBase(compName), m_basic1_action_a_history(), m_smInitialBasic1_action_a_history() {}
+
+BasicTester::~BasicTester() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void BasicTester::schedIn_handler(FwIndexType portNum, U32 context) {
+    // Nothing to do
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTester::FppTest_SmInitial_Basic_action_a(SmId smId, FppTest_SmInitial_Basic::Signal signal) {
+    ASSERT_TRUE((smId == SmId::smInitialBasic1) || (smId == SmId::smInitialBasic2));
+    if (smId == SmId::smInitialBasic1) {
+        this->m_smInitialBasic1_action_a_history.push(signal);
+    } else {
+        this->m_smInitialBasic2_action_a_history.push(signal);
+    }
+}
+
+void BasicTester::FppTest_SmInstanceInitial_Basic_Basic_action_a(SmId smId,
+                                                                 FppTest_SmInstanceInitial_Basic_Basic::Signal signal) {
+    ASSERT_TRUE((smId == SmId::basic1) || (smId == SmId::basic2));
+    if (smId == SmId::basic1) {
+        this->m_basic1_action_a_history.push(signal);
+    } else {
+        this->m_basic2_action_a_history.push(signal);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTester::test() {
+    this->m_basic1_action_a_history.clear();
+    this->m_smInitialBasic1_action_a_history.clear();
+    ASSERT_EQ(this->basic1_getState(), Basic_Basic::State::__FPRIME_AC_UNINITIALIZED);
+    ASSERT_EQ(this->smInitialBasic1_getState(), SmInitial_Basic::State::__FPRIME_AC_UNINITIALIZED);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->basic1_getState(), Basic_Basic::State::S);
+    ASSERT_EQ(this->smInitialBasic1_getState(), SmInitial_Basic::State::S);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_basic1_action_a_history.getSize(), expectedSize);
+    ASSERT_EQ(this->m_basic2_action_a_history.getSize(), expectedSize);
+    ASSERT_EQ(this->m_smInitialBasic1_action_a_history.getSize(), expectedSize);
+    ASSERT_EQ(this->m_smInitialBasic2_action_a_history.getSize(), expectedSize);
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(this->m_basic1_action_a_history.getItemAt(i), Basic_Basic::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+        ASSERT_EQ(this->m_basic2_action_a_history.getItemAt(i), Basic_Basic::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+        ASSERT_EQ(this->m_smInitialBasic1_action_a_history.getItemAt(i),
+                  SmInitial_Basic::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+        ASSERT_EQ(this->m_smInitialBasic2_action_a_history.getItemAt(i),
+                  SmInitial_Basic::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+}
+
+}  // namespace SmInstanceInitial
+
+}  // namespace FppTest
+```
+
+### `BasicTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/BasicTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceInitial_Basic_HPP
+#define FppTest_SmInstanceInitial_Basic_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/initial/BasicComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceInitial {
+
+class BasicTester : public BasicComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmInstanceInitial_Basic_Basic
+    using Basic_Basic = FppTest_SmInstanceInitial_Basic_Basic;
+
+    //! The type FppTest_SmInitial_Basic
+    using SmInitial_Basic = FppTest_SmInitial_Basic;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicTester object
+    BasicTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicTester object
+    ~BasicTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for schedIn
+    void schedIn_handler(FwIndexType portNum,  //!< The port number
+                         U32 context           //!< The call order
+                         ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmInitial_Basic
+    //!
+    //! Action a
+    void FppTest_SmInitial_Basic_action_a(SmId smId,                              //!< The state machine id
+                                          FppTest_SmInitial_Basic::Signal signal  //!< The signal
+                                          ) override;
+
+    //! Implementation for action a of state machine FppTest_SmInstanceInitial_Basic_Basic
+    //!
+    //! Action a
+    void FppTest_SmInstanceInitial_Basic_Basic_action_a(
+        SmId smId,                                            //!< The state machine id
+        FppTest_SmInstanceInitial_Basic_Basic::Signal signal  //!< The signal
+        ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of basic1
+    SmHarness::History<Basic_Basic::Signal, historySize> m_basic1_action_a_history;
+
+    //! The history associated with action a of basic2
+    SmHarness::History<Basic_Basic::Signal, historySize> m_basic2_action_a_history;
+
+    //! The history associated with action a of smInitialBasic1
+    SmHarness::History<SmInitial_Basic::Signal, historySize> m_smInitialBasic1_action_a_history;
+
+    //! The history associated with action a of smInitialBasic2
+    SmHarness::History<SmInitial_Basic::Signal, historySize> m_smInitialBasic2_action_a_history;
+};
+
+}  // namespace SmInstanceInitial
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `Choice.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/Choice.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceInitial {
+
+    active component Choice {
+
+      include "../../internal/initial/include/Choice.fppi"
+
+      state machine instance $choice: Choice priority 1 assert
+
+      state machine instance smInitialChoice: SmInitial.Choice priority 2 block
+
+    }
+
+  }
+
+}
+```
+
+### `ChoiceTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/ChoiceTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChoiceTester.cpp
+// \author bocchino
+// \brief  cpp file for ChoiceTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/initial/ChoiceTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceInitial {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+ChoiceTester::ChoiceTester(const char* const compName)
+    : ChoiceComponentBase(compName),
+      m_choice_action_a_history(),
+      m_smInitialChoice_action_a_history(),
+      m_choice_guard_g(),
+      m_smInitialChoice_guard_g() {}
+
+ChoiceTester::~ChoiceTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void ChoiceTester::FppTest_SmInitial_Choice_action_a(SmId smId, FppTest_SmInitial_Choice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smInitialChoice);
+    this->m_smInitialChoice_action_a_history.push(signal);
+}
+
+void ChoiceTester::FppTest_SmInstanceInitial_Choice_Choice_action_a(
+    SmId smId,
+    FppTest_SmInstanceInitial_Choice_Choice::Signal signal) {
+    ASSERT_EQ(smId, SmId::choice);
+    this->m_choice_action_a_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool ChoiceTester ::FppTest_SmInitial_Choice_guard_g(SmId smId, FppTest_SmInitial_Choice::Signal signal) const {
+    FW_ASSERT(smId == SmId::smInitialChoice, static_cast<FwAssertArgType>(smId));
+    return m_smInitialChoice_guard_g.call(signal);
+}
+
+bool ChoiceTester ::FppTest_SmInstanceInitial_Choice_Choice_guard_g(
+    SmId smId,
+    FppTest_SmInstanceInitial_Choice_Choice::Signal signal) const {
+    FW_ASSERT(smId == SmId::choice, static_cast<FwAssertArgType>(smId));
+    return m_choice_guard_g.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void ChoiceTester::testFalse() {
+    this->m_choice_action_a_history.clear();
+    this->m_smInitialChoice_action_a_history.clear();
+    this->m_choice_guard_g.reset();
+    this->m_smInitialChoice_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->choice_getState(), Choice_Choice::State::T);
+    ASSERT_EQ(this->smInitialChoice_getState(), SmInitial_Choice::State::T);
+    const FwIndexType expectedActionSize = 5;
+    const FwIndexType expectedGuardSize = 1;
+    this->checkActionsAndGuards(expectedActionSize, expectedGuardSize);
+}
+
+void ChoiceTester::testTrue() {
+    this->m_choice_action_a_history.clear();
+    this->m_smInitialChoice_action_a_history.clear();
+    this->m_choice_guard_g.reset();
+    this->m_smInitialChoice_guard_g.reset();
+    this->m_choice_guard_g.setReturnValue(true);
+    this->m_smInitialChoice_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->choice_getState(), Choice_Choice::State::S);
+    ASSERT_EQ(this->smInitialChoice_getState(), SmInitial_Choice::State::S);
+    const FwIndexType expectedActionSize = 3;
+    const FwIndexType expectedGuardSize = 1;
+    this->checkActionsAndGuards(expectedActionSize, expectedGuardSize);
+}
+
+// ----------------------------------------------------------------------
+// Helper functions
+// ----------------------------------------------------------------------
+
+void ChoiceTester::checkActionsAndGuards(FwIndexType expectedActionSize, FwIndexType expectedGuardSize) {
+    ASSERT_EQ(this->m_choice_action_a_history.getSize(), expectedActionSize);
+    ASSERT_EQ(this->m_smInitialChoice_action_a_history.getSize(), expectedActionSize);
+    for (FwIndexType i = 0; i < expectedActionSize; i++) {
+        ASSERT_EQ(this->m_choice_action_a_history.getItemAt(i), Choice_Choice::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+        ASSERT_EQ(this->m_smInitialChoice_action_a_history.getItemAt(i),
+                  SmInitial_Choice::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(this->m_choice_guard_g.getCallHistory().getSize(), expectedGuardSize);
+    ASSERT_EQ(this->m_smInitialChoice_guard_g.getCallHistory().getSize(), expectedGuardSize);
+    for (FwIndexType i = 0; i < expectedGuardSize; i++) {
+        ASSERT_EQ(this->m_choice_guard_g.getCallHistory().getItemAt(i),
+                  Choice_Choice::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+        ASSERT_EQ(this->m_smInitialChoice_guard_g.getCallHistory().getItemAt(i),
+                  SmInitial_Choice::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+}
+
+}  // namespace SmInstanceInitial
+
+}  // namespace FppTest
+```
+
+### `ChoiceTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/ChoiceTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChoiceTester.hpp
+// \author bocchino
+// \brief  hpp file for ChoiceTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceInitial_Choice_HPP
+#define FppTest_SmInstanceInitial_Choice_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/initial/ChoiceComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceInitial {
+
+class ChoiceTester : public ChoiceComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmInstanceInitial_Choice_Choice
+    using Choice_Choice = FppTest_SmInstanceInitial_Choice_Choice;
+
+    //! The type FppTest_SmInitial_Choice
+    using SmInitial_Choice = FppTest_SmInitial_Choice;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct ChoiceTester object
+    ChoiceTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy ChoiceTester object
+    ~ChoiceTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmInitial_Choice
+    //!
+    //! Action a
+    void FppTest_SmInitial_Choice_action_a(SmId smId,                               //!< The state machine id
+                                           FppTest_SmInitial_Choice::Signal signal  //!< The signal
+                                           ) override;
+
+    //! Implementation for action a of state machine FppTest_SmInstanceInitial_Choice_Choice
+    //!
+    //! Action a
+    void FppTest_SmInstanceInitial_Choice_Choice_action_a(
+        SmId smId,                                              //!< The state machine id
+        FppTest_SmInstanceInitial_Choice_Choice::Signal signal  //!< The signal
+        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmInitial_Choice
+    //!
+    //! Guard g
+    bool FppTest_SmInitial_Choice_guard_g(SmId smId,                               //!< The state machine id
+                                          FppTest_SmInitial_Choice::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard g of state machine FppTest_SmInstanceInitial_Choice_Choice
+    //!
+    //! Guard g
+    bool FppTest_SmInstanceInitial_Choice_Choice_guard_g(
+        SmId smId,                                              //!< The state machine id
+        FppTest_SmInstanceInitial_Choice_Choice::Signal signal  //!< The signal
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Helper function for checking actions and guards
+    void checkActionsAndGuards(FwIndexType expectedActionSize,  //!< The expected action size
+                               FwIndexType expectedGuardSize    //!< The expected guard size
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of choice
+    SmHarness::History<Choice_Choice::Signal, historySize> m_choice_action_a_history;
+
+    //! The history associated with action a of smInitialChoice
+    SmHarness::History<SmInitial_Choice::Signal, historySize> m_smInitialChoice_action_a_history;
+
+    //! The guard g of choice
+    SmHarness::NoArgGuard<Choice_Choice::Signal, historySize> m_choice_guard_g;
+
+    //! The guard g of smInitialChoice
+    SmHarness::NoArgGuard<SmInitial_Choice::Signal, historySize> m_smInitialChoice_guard_g;
+};
+
+}  // namespace SmInstanceInitial
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Choice.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Nested.fpp"
+)
+set(MOD_DEPS FppTest/state_machine/internal/harness)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ChoiceTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/NestedTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// main.cpp
+// ----------------------------------------------------------------------
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/initial/BasicTester.hpp"
+#include "FppTest/state_machine/internal_instance/initial/ChoiceTester.hpp"
+#include "FppTest/state_machine/internal_instance/initial/NestedTester.hpp"
+#include "STest/STest/Random/Random.hpp"
+
+TEST(Basic, Test) {
+    FppTest::SmInstanceInitial::BasicTester basic("basic");
+    basic.test();
+}
+
+TEST(Choice, False) {
+    FppTest::SmInstanceInitial::ChoiceTester choice("choice");
+    choice.testFalse();
+}
+
+TEST(Choice, True) {
+    FppTest::SmInstanceInitial::ChoiceTester choice("choice");
+    choice.testTrue();
+}
+
+TEST(Nested, Test) {
+    FppTest::SmInstanceInitial::NestedTester nested("nested");
+    nested.test();
+}
+
+// ----------------------------------------------------------------------
+// Main function
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Nested.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/Nested.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceInitial {
+
+    active component Nested {
+
+      include "../../internal/initial/include/Nested.fppi"
+
+      state machine instance nested: Nested priority 3 drop
+
+      state machine instance smInitialNested: SmInitial.Nested priority 4 hook
+
+    }
+
+  }
+
+}
+```
+
+### `NestedTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/NestedTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  NestedTester.cpp
+// \author bocchino
+// \brief  cpp file for NestedTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/initial/NestedTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceInitial {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+NestedTester::NestedTester(const char* const compName)
+    : NestedComponentBase(compName), m_nested_action_a_history(), m_smInitialNested_action_a_history() {}
+
+NestedTester::~NestedTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void NestedTester::FppTest_SmInitial_Nested_action_a(SmId smId, FppTest_SmInitial_Nested::Signal signal) {
+    ASSERT_EQ(smId, SmId::smInitialNested);
+    this->m_smInitialNested_action_a_history.push(signal);
+}
+
+void NestedTester::FppTest_SmInstanceInitial_Nested_Nested_action_a(
+    SmId smId,
+    FppTest_SmInstanceInitial_Nested_Nested::Signal signal) {
+    ASSERT_EQ(smId, SmId::nested);
+    this->m_nested_action_a_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Overflow hook implementations for internal state machines
+// ----------------------------------------------------------------------
+
+void NestedTester ::smInitialNested_stateMachineOverflowHook(SmId smId,
+                                                             FwEnumStoreType signal,
+                                                             Fw::SerializeBufferBase& buffer) {
+    // Nothing to do
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void NestedTester::test() {
+    this->m_nested_action_a_history.clear();
+    this->m_smInitialNested_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->nested_getState(), Nested_Nested::State::S_T);
+    ASSERT_EQ(this->smInitialNested_getState(), SmInitial_Nested::State::S_T);
+    const FwIndexType expectedActionSize = 6;
+    ASSERT_EQ(this->m_nested_action_a_history.getSize(), expectedActionSize);
+    ASSERT_EQ(this->m_smInitialNested_action_a_history.getSize(), expectedActionSize);
+    for (FwIndexType i = 0; i < expectedActionSize; i++) {
+        ASSERT_EQ(this->m_nested_action_a_history.getItemAt(i), Nested_Nested::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+        ASSERT_EQ(this->m_smInitialNested_action_a_history.getItemAt(i),
+                  SmInitial_Nested::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+}
+
+}  // namespace SmInstanceInitial
+
+}  // namespace FppTest
+```
+
+### `NestedTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/initial/NestedTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  NestedTester.hpp
+// \author bocchino
+// \brief  hpp file for NestedTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceInitial_Nested_HPP
+#define FppTest_SmInstanceInitial_Nested_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/initial/NestedComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceInitial {
+
+class NestedTester : public NestedComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmInstanceInitial_Nested_Nested
+    using Nested_Nested = FppTest_SmInstanceInitial_Nested_Nested;
+
+    //! The type FppTest_SmInitial_Nested
+    using SmInitial_Nested = FppTest_SmInitial_Nested;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct NestedTester object
+    NestedTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy NestedTester object
+    ~NestedTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmInitial_Nested
+    //!
+    //! Action a
+    void FppTest_SmInitial_Nested_action_a(SmId smId,                               //!< The state machine id
+                                           FppTest_SmInitial_Nested::Signal signal  //!< The signal
+                                           ) override;
+
+    //! Implementation for action a of state machine FppTest_SmInstanceInitial_Nested_Nested
+    //!
+    //! Action a
+    void FppTest_SmInstanceInitial_Nested_Nested_action_a(
+        SmId smId,                                              //!< The state machine id
+        FppTest_SmInstanceInitial_Nested_Nested::Signal signal  //!< The signal
+        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Overflow hook implementations for internal state machines
+    // ----------------------------------------------------------------------
+
+    //! Overflow hook implementation for smInitialNested
+    void smInitialNested_stateMachineOverflowHook(SmId smId,                       //!< The state machine ID
+                                                  FwEnumStoreType signal,          //!< The signal
+                                                  Fw::SerializeBufferBase& buffer  //!< The message buffer
+                                                  ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of nested
+    SmHarness::History<Nested_Nested::Signal, historySize> m_nested_action_a_history;
+
+    //! The history associated with action a of smInitialNested
+    SmHarness::History<SmInitial_Nested::Signal, historySize> m_smInitialNested_action_a_history;
+};
+
+}  // namespace SmInstanceInitial
+
+}  // namespace FppTest
+
+#endif
+```

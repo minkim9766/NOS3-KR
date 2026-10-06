@@ -3,44 +3,851 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ut-adaptor-binsem.h`
 
-file--ut-adaptor-binsem.h
-file--ut-adaptor-common.h
-file--ut-adaptor-console.h
-file--ut-adaptor-countsem.h
-file--ut-adaptor-dirs.h
-file--ut-adaptor-files.h
-file--ut-adaptor-filesys.h
-file--ut-adaptor-filetable-stub.h
-file--ut-adaptor-idmap.h
-file--ut-adaptor-loader.h
-file--ut-adaptor-mutex.h
-file--ut-adaptor-queues.h
-file--ut-adaptor-sockets.h
-file--ut-adaptor-symtab.h
-file--ut-adaptor-tasks.h
-file--ut-adaptor-timebase.h
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-binsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-binsem
+ */
+
+#ifndef UT_ADAPTOR_BINSEM_H
+#define UT_ADAPTOR_BINSEM_H
+
+#include "common_types.h"
+#include "utstubs.h"
+#include "OCS_taskLib.h"
+#include "OCS_semLib.h"
+
+extern void *const  UT_Ref_OS_impl_bin_sem_table;
+extern size_t const UT_Ref_OS_impl_bin_sem_table_SIZE;
+
+/*
+ * This also needs to expose the keys for the stubs to
+ * helper functions that the test case needs to configure.
+ *
+ * This is because the test case cannot directly include
+ * the internal header file which provides this API.
+ */
+extern const UT_EntryKey_t UT_StubKey_GenericSemTake;
+extern const UT_EntryKey_t UT_StubKey_GenericSemGive;
+
+extern int32 UT_Call_OS_VxWorks_BinSemAPI_Impl_Init(void);
+
+#endif /* UT_ADAPTOR_BINSEM_H */
 ```
 
-## 항목
+### `ut-adaptor-common.h`
 
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-binsem.h`](file--ut-adaptor-binsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-common.h`](file--ut-adaptor-common.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-console.h`](file--ut-adaptor-console.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-countsem.h`](file--ut-adaptor-countsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-dirs.h`](file--ut-adaptor-dirs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-files.h`](file--ut-adaptor-files.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-filesys.h`](file--ut-adaptor-filesys.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-filetable-stub.h`](file--ut-adaptor-filetable-stub.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-idmap.h`](file--ut-adaptor-idmap.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-loader.h`](file--ut-adaptor-loader.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-mutex.h`](file--ut-adaptor-mutex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-queues.h`](file--ut-adaptor-queues.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-sockets.h`](file--ut-adaptor-sockets.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-symtab.h`](file--ut-adaptor-symtab.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-tasks.h`](file--ut-adaptor-tasks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-timebase.h`](file--ut-adaptor-timebase.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-common.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-common
+ */
+
+#ifndef UT_ADAPTOR_COMMON_H
+#define UT_ADAPTOR_COMMON_H
+
+#include "common_types.h"
+#include "utstubs.h"
+#include "OCS_semLib.h"
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not part of the implementation API.
+ *
+ *****************************************************/
+
+void UT_CommonTest_SetImplTableMutex(uint32 idtype, OCS_SEM_ID vxid);
+
+extern int32 OS_VxWorks_GenericSemTake(OCS_SEM_ID vxid, int sys_ticks);
+extern int32 OS_VxWorks_GenericSemGive(OCS_SEM_ID vxid);
+
+/*
+ * This also needs to expose the keys for the stubs to
+ * helper functions that the test case needs to configure.
+ *
+ * This is because the test case cannot directly include
+ * the internal header file which provides this API.
+ */
+extern const UT_EntryKey_t UT_StubKey_OS_VxWorks_TableMutex_Init;
+
+#endif /* UT_ADAPTOR_COMMON_H */
+```
+
+### `ut-adaptor-console.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-console.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-console
+ */
+
+#ifndef UT_ADAPTOR_CONSOLE_H
+#define UT_ADAPTOR_CONSOLE_H
+
+#include "common_types.h"
+#include "ut-adaptor-common.h"
+
+extern void *const  UT_Ref_OS_impl_console_table;
+extern size_t const UT_Ref_OS_impl_console_table_SIZE;
+
+/**
+ * Invokes the console helper task entry point
+ */
+extern int UT_ConsoleTest_TaskEntry(int arg);
+
+#endif /* UT_ADAPTOR_CONSOLE_H */
+```
+
+### `ut-adaptor-countsem.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-countsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-countsem
+ */
+
+#ifndef UT_ADAPTOR_COUNTSEM_H
+#define UT_ADAPTOR_COUNTSEM_H
+
+#include "common_types.h"
+#include "OCS_taskLib.h"
+#include "OCS_semLib.h"
+
+extern void *const  UT_Ref_OS_impl_count_sem_table;
+extern size_t const UT_Ref_OS_impl_count_sem_table_SIZE;
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not exposed directly through the implementation API.
+ *
+ *****************************************************/
+
+int32 UT_Call_OS_VxWorks_CountSemAPI_Impl_Init(void);
+
+#endif /* UT_ADAPTOR_COUNTSEM_H */
+```
+
+### `ut-adaptor-dirs.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-dirs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-dirs
+ */
+
+#ifndef UT_ADAPTOR_DIRS_H
+#define UT_ADAPTOR_DIRS_H
+
+#include "common_types.h"
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not exposed directly through the implementation API.
+ *
+ *****************************************************/
+
+/*
+ * Prototype for table init function (needs to be called from UT)
+ */
+extern int32 UT_Call_OS_VxWorks_DirAPI_Impl_Init(void);
+
+#endif /* UT_ADAPTOR_DIRS_H */
+```
+
+### `ut-adaptor-files.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-files.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-files
+ */
+
+#ifndef UT_ADAPTOR_FILES_H
+#define UT_ADAPTOR_FILES_H
+
+#include "common_types.h"
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not exposed directly through the implementation API.
+ *
+ *****************************************************/
+
+/*
+ * Prototype for table init function (needs to be called from UT)
+ */
+extern int32 UT_Call_OS_VxWorks_StreamAPI_Impl_Init(void);
+
+/*
+ * Allow UT to get the value of the OS_IMPL_SELF_EUID and
+ * OS_IMPL_SELF_EGID constants.  These might be assigned
+ * at runtime by the init function (above) or they might be
+ * defined at compile time.
+ */
+unsigned int UT_FileTest_GetSelfEUID(void);
+unsigned int UT_FileTest_GetSelfEGID(void);
+
+void UT_FileTest_Set_Selectable(osal_index_t local_id, bool is_selectable);
+
+#endif /* UT_ADAPTOR_FILES_H */
+```
+
+### `ut-adaptor-filesys.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-filesys.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-filesys
+ */
+
+#ifndef UT_ADAPTOR_FILESYS_H
+#define UT_ADAPTOR_FILESYS_H
+
+#include "common_types.h"
+#include "OCS_xbdBlkDev.h"
+
+extern void *const  UT_Ref_OS_impl_filesys_table;
+extern size_t const UT_Ref_OS_impl_filesys_table_SIZE;
+
+void UT_FileSysTest_SetupFileSysEntry(osal_index_t id, OCS_BLK_DEV *blkdev, OCS_device_t xbddev, uint32 MaxParts);
+
+#endif /* UT_ADAPTOR_FILESYS_H */
+```
+
+### `ut-adaptor-filetable-stub.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-filetable-stub.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-filetable-stub
+ */
+
+#ifndef UT_ADAPTOR_FILETABLE_STUB_H
+#define UT_ADAPTOR_FILETABLE_STUB_H
+
+#include "common_types.h"
+#include "utstubs.h"
+
+extern void *const  UT_FileTableTest_OS_impl_filehandle_table;
+extern size_t const UT_FileTableTest_OS_impl_filehandle_table_SIZE;
+
+#endif /* UT_ADAPTOR_FILETABLE_STUB_H */
+```
+
+### `ut-adaptor-idmap.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-idmap.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-idmap
+ */
+
+#ifndef UT_ADAPTOR_IDMAP_H
+#define UT_ADAPTOR_IDMAP_H
+
+#include "common_types.h"
+#include "OCS_semLib.h"
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not part of the implementation API.
+ *
+ *****************************************************/
+int32 UT_Call_OS_VxWorks_TableMutex_Init(osal_objtype_t idtype);
+void  UT_IdMapTest_SetImplTableMutex(osal_objtype_t idtype, OCS_SEM_ID vxid);
+
+#endif /* UT_ADAPTOR_IDMAP_H */
+```
+
+### `ut-adaptor-loader.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-loader.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-loader
+ */
+
+#ifndef UT_ADAPTOR_LOADER_H
+#define UT_ADAPTOR_LOADER_H
+
+#include "common_types.h"
+#include "utstubs.h"
+#include "OCS_taskLib.h"
+#include "OCS_semLib.h"
+
+extern void *const  UT_Ref_OS_impl_module_table;
+extern size_t const UT_Ref_OS_impl_module_table_SIZE;
+
+extern int32 UT_Call_OS_VxWorks_ModuleAPI_Impl_Init(void);
+
+#endif /* UT_ADAPTOR_LOADER_H */
+```
+
+### `ut-adaptor-mutex.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-mutex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-mutex
+ */
+
+#ifndef UT_ADAPTOR_MUTEX_H
+#define UT_ADAPTOR_MUTEX_H
+
+#include "common_types.h"
+#include "OCS_taskLib.h"
+#include "OCS_semLib.h"
+
+extern void *const  UT_Ref_OS_impl_mutex_table;
+extern size_t const UT_Ref_OS_impl_mutex_table_SIZE;
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not exposed directly through the implementation API.
+ *
+ *****************************************************/
+
+int32 UT_Call_OS_VxWorks_MutexAPI_Impl_Init(void);
+
+#endif /* UT_ADAPTOR_MUTEX_H */
+```
+
+### `ut-adaptor-queues.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-queues.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-queues
+ */
+
+#ifndef UT_ADAPTOR_QUEUES_H
+#define UT_ADAPTOR_QUEUES_H
+
+#include "common_types.h"
+#include "OCS_msgQLib.h"
+
+extern void *const  UT_Ref_OS_impl_queue_table;
+extern size_t const UT_Ref_OS_impl_queue_table_SIZE;
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not part of the implementation API.
+ *
+ *****************************************************/
+
+int32 UT_Call_OS_VxWorks_QueueAPI_Impl_Init(void);
+
+#endif /* UT_ADAPTOR_QUEUES_H */
+```
+
+### `ut-adaptor-sockets.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-sockets.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-symtab
+ */
+
+#ifndef UT_ADAPTOR_SOCKETS_H
+#define UT_ADAPTOR_SOCKETS_H
+
+#include "common_types.h"
+
+void UT_SocketTest_CallVxWorksSetFlags_Impl(uint32 index);
+
+#endif /* UT_ADAPTOR_SOCKETS_H */
+```
+
+### `ut-adaptor-symtab.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-symtab.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-symtab
+ */
+
+#ifndef UT_ADAPTOR_SYMTAB_H
+#define UT_ADAPTOR_SYMTAB_H
+
+#include "common_types.h"
+
+int32 UT_SymTabTest_CallIteratorFunc(const char *name, void *val, size_t TestSize, size_t SizeLimit);
+int32 UT_SymTabTest_GetIteratorStatus(void);
+
+#endif /* UT_ADAPTOR_SYMTAB_H */
+```
+
+### `ut-adaptor-tasks.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-tasks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-tasks
+ */
+
+#ifndef UT_ADAPTOR_TASKS_H
+#define UT_ADAPTOR_TASKS_H
+
+#include "common_types.h"
+#include "OCS_taskLib.h"
+
+extern void *const  UT_Ref_OS_impl_task_table;
+extern size_t const UT_Ref_OS_impl_task_table_SIZE;
+
+/*****************************************************
+ *
+ * UT FUNCTION PROTOTYPES
+ *
+ * These are functions that need to be invoked by UT
+ * but are not exposed directly through the implementation API.
+ *
+ *****************************************************/
+
+int32         UT_Call_OS_VxWorks_TaskAPI_Impl_Init(void);
+void          UT_TaskTest_SetImplTaskId(osal_index_t local_id, OCS_TASK_ID TaskId);
+int           UT_TaskTest_CallEntryPoint(osal_id_t arg);
+OCS_WIND_TCB *UT_TaskTest_GetTaskTcb(osal_index_t local_id);
+
+#endif /* UT_ADAPTOR_TASKS_H */
+```
+
+### `ut-adaptor-timebase.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/adaptors/inc/ut-adaptor-timebase.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup adaptors
+ *
+ * Declarations and prototypes for ut-adaptor-timebase
+ */
+
+#ifndef UT_ADAPTOR_TIMEBASE_H
+#define UT_ADAPTOR_TIMEBASE_H
+
+#include "common_types.h"
+#include "OCS_symLib.h"
+#include "OCS_time.h"
+
+extern void *const  UT_Ref_OS_impl_timebase_table;
+extern size_t const UT_Ref_OS_impl_timebase_table_SIZE;
+
+int32 UT_Call_OS_VxWorks_TimeBaseAPI_Impl_Init(void);
+
+void UT_TimeBaseTest_Setup(osal_index_t local_id, int signo, bool reset_flag);
+
+/**
+ * Invokes OS_VxWorks_SigWait() with the given arguments.
+ * This is normally a static function but exposed via a non-static wrapper for UT purposes.
+ */
+int32 UT_TimeBaseTest_CallSigWaitFunc(osal_id_t timebase_id);
+
+/* Invokes the static OS_VxWorks_TimeBaseTask() function with given argument */
+int UT_TimeBaseTest_CallHelperTaskFunc(int arg);
+
+/* Invokes the static OS_VxWorks_RegisterTimer() function with given argument */
+void UT_TimeBaseTest_CallRegisterTimer(osal_id_t obj_id);
+
+/* Hook functions which set the timer registration state */
+void UT_TimeBaseTest_SetTimeBaseRegState(osal_index_t local_id, bool is_success);
+void UT_TimeBaseTest_ClearTimeBaseRegState(osal_index_t local_id);
+
+/* Hook functions which test the timer registration state */
+bool UT_TimeBaseTest_CheckTimeBaseRegisteredState(osal_index_t local_id);
+bool UT_TimeBaseTest_CheckTimeBaseErrorState(osal_index_t local_id);
+
+/* Invoke the internal UsecToTimespec API */
+void UT_TimeBaseTest_UsecToTimespec(uint32 usecs, struct OCS_timespec *time_spec);
+
+#endif /* UT_ADAPTOR_TIMEBASE_H */
+```

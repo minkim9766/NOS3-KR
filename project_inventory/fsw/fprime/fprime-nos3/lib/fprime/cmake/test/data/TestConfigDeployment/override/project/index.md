@@ -3,22 +3,222 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--config.cpp
-file--DoesNotExist.hpp
-file--DpCfg.hpp
-file--FpConfig.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/CMakeLists.txt`
+
+
+```cmake
+
+register_fprime_config(
+        project_config
+    CONFIGURATION_OVERRIDES
+        # Test header override from F Prime
+        "${CMAKE_CURRENT_LIST_DIR}/DpCfg.hpp"
+        # Test FPP override from F Prime
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.fpp"
+        # Test the library source was overridden
+        "${CMAKE_CURRENT_LIST_DIR}/config.cpp"
+    INTERFACE
+)
+# Special config to test bad overrides
+if (_TEST_CONFIG_BAD_OVERRIDE)
+    register_fprime_config(
+            project_config_bad_override
+        HEADERS
+            # Test new header that accidentally overrides F Prime
+            "${CMAKE_CURRENT_LIST_DIR}/DpCfg.hpp"
+        INTERFACE
+    )
+endif()
+# Special config to test bad overrides
+if (_TEST_CONFIG_BAD_NEW_FILE)
+    register_fprime_config(
+            project_config_bad_new_config
+        CONFIGURATION_OVERRIDES
+            # Test header override from F Prime
+            "${CMAKE_CURRENT_LIST_DIR}/DoesNotExist.hpp"
+        INTERFACE
+    )
+endif()
 ```
 
-## 항목
+### `config.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/config.cpp`](file--config.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/DoesNotExist.hpp`](file--DoesNotExist.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/DpCfg.hpp`](file--DpCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/FpConfig.fpp`](file--FpConfig.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/config.cpp`
+
+
+```cpp
+
+// ======================================================================
+// \title  config.cpp
+// \author mstarch
+// \brief  cpp file for library config override testing
+//
+// \description this file will prevent a fail to compile if the library source
+// file was overridden using the F Prime configuration build system
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+```
+
+### `DoesNotExist.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/DoesNotExist.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DoesNotExist.hpp
+// \author mstarch
+// \brief  hpp file for override testing
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+```
+
+### `DpCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/DpCfg.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpCfg.hpp
+// \author mstarch
+// \brief  hpp file for override testing
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef DPCFG_HPP
+#define DPCFG_HPP
+
+// THE ONLY DIFFERENCE: set a new value for override testing
+const bool OVERRIDE_TEST = true;
+// END OF THE ONLY DIFFERENCE
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+// The format string for a file name
+// The format arguments are base directory, container ID, time seconds, and time microseconds
+#define DP_EXT ".fdp"
+constexpr const char *DP_FILENAME_FORMAT = "%s/Dp_%08" PRI_FwDpIdType "_%08" PRIu32 "_%08" PRIu32 DP_EXT;
+
+#endif
+```
+
+### `FpConfig.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/project/FpConfig.fpp`
+
+
+```fpp
+# ======================================================================
+# \title  TestConfigDeployment/FpConfig.fpp
+# \author mstarch
+# \brief  FPP alias configuration file modified for testing purposes
+#
+# \copyright
+# Copyright 2025, by the California Institute of Technology.
+# ALL RIGHTS RESERVED.  United States Government Sponsorship
+# acknowledged.
+#
+# FPrime uses FPP to define a set of type aliases for various named types
+# used throughout the system. This file is used to configure those types.
+# ======================================================================
+
+# --- THE ONLY DIFFERENCE: force Chan ID to a specific type!  --- 
+# This differs from stock-fprime defaults and thus may be tested to ensure that
+# the system has overridden this file.
+type FwChanIdType = U64
+# --- END OF THE ONLY DIFFERENCE ---
+
+####
+# Integer type aliases:
+# Used for the project to override types supplied by the platform for things like sizes, indices, etc.
+####
+
+@ The unsigned type of larger sizes internal to the software,
+@ e.g., memory buffer sizes, file sizes. Must be unsigned.
+type FwSizeType = PlatformSizeType
+
+@ The signed type of larger sizes internal to the software, used
+@ for signed offsets, e.g., file seek offsets. Must be signed.
+type FwSignedSizeType = PlatformSignedSizeType
+
+@ The type of smaller indices internal to the software, used
+@ for array indices, e.g., port indices. Must be signed.
+type FwIndexType = PlatformIndexType
+
+@ The type of arguments to assert functions.
+type FwAssertArgType = PlatformAssertArgType
+
+@ The type of task priorities used.
+type FwTaskPriorityType = PlatformTaskPriorityType
+
+@ The type of queue priorities used.
+type FwQueuePriorityType = PlatformQueuePriorityType
+
+@ The type of task priorities used.
+type FwTaskIdType = PlatformTaskIdType
+
+####
+# GDS type aliases:
+# Used for the project to override types shared with GDSes and other remote systems.
+####
+
+@ The id type.
+type FwIdType = U32
+
+@ The type of a data product identifier
+type FwDpIdType = FwIdType
+
+@ The type of a data product priority
+type FwDpPriorityType = U32
+
+@ The type of an event identifier
+type FwEventIdType = FwIdType
+
+@ The type of a command opcode
+type FwOpcodeType = FwIdType
+
+@ The type of a com packet descriptor
+type FwPacketDescriptorType = FwIdType
+
+@ The type of a parameter identifier
+type FwPrmIdType = FwIdType
+
+@ The type used to serialize a size value
+type FwSizeStoreType = U16
+
+@ The type used to serialize a time base value
+type FwTimeBaseStoreType = U16
+
+@ The type used to serialize a time context value
+type FwTimeContextStoreType = U8
+
+@ The type of a telemetry packet identifier
+type FwTlmPacketizeIdType = U16
+
+@ The type of a trace identifier
+type FwTraceIdType = U32
+
+@ The type used to serialize a C++ enumeration constant
+@ FPP enumerations are serialized according to their representation types
+type FwEnumStoreType = I32
+```

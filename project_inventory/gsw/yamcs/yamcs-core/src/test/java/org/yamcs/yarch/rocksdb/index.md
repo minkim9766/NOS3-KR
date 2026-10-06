@@ -3,36 +3,2415 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BucketDbTest.java`
 
-file--BucketDbTest.java
-file--HistogramRebuilderTest.java
-file--PartitioningTest.java
-file--RdbEngineTest.java
-file--RDBFactoryTest.java
-file--RdbHistogramIteratorTest.java
-file--RdbPartitionManagerTest.java
-file--RdbPerformanceTest.java
-file--RdbSelectPerfTest.java
-file--RdbSelectTest.java
-file--RdbSequenceTest.java
-file--TablespaceTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/BucketDbTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.buckets.ObjectProperties;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+
+public class BucketDbTest {
+
+    static Path testDir = Path.of(System.getProperty("java.io.tmpdir"), "BucketDbTest");
+    Random random = new Random();
+
+    @BeforeAll
+    static public void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @BeforeEach
+    public void cleanup() throws Exception {
+        FileUtils.deleteRecursivelyIfExists(testDir);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        String dir = testDir + File.separator + "tablespace1";
+        Tablespace tablespace = new Tablespace("tablespace1");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        RdbBucketDatabase bucketDb = new RdbBucketDatabase("test", tablespace);
+        assertTrue(bucketDb.listBuckets().isEmpty());
+
+        RdbBucket rdbBucket = bucketDb.createBucket("bucket1");
+        assertNotNull(rdbBucket);
+        Exception e = null;
+        try {
+            bucketDb.createBucket("bucket1");
+        } catch (Exception e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        List<RdbBucket> bl = bucketDb.listBuckets();
+        assertEquals(1, bl.size());
+        RdbBucket bucket = bl.get(0);
+        assertEquals("bucket1", bucket.getName());
+        assertEquals(0, bucket.getProperties().size());
+
+        assertTrue(bucket.listObjects(null, x -> true).isEmpty());
+        Map<String, String> props = new HashMap<>();
+        props.put("prop1", "value1");
+        props.put("prop2", "value2");
+        byte[] objectData = new byte[1000];
+        random.nextBytes(objectData);
+        bucket.putObject("object1", null, props, objectData);
+        List<ObjectProperties> l = bucket.listObjects(null, x -> true);
+        assertEquals(1, l.size());
+        assertEquals("object1", l.get(0).name());
+
+        byte[] b = bucket.getObject("object1");
+        assertArrayEquals(objectData, b);
+
+        // closing and reopening
+        tablespace.close();
+        tablespace = new Tablespace("tablespace1bis");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        bucketDb = new RdbBucketDatabase("test", tablespace);
+
+        bl = bucketDb.listBuckets();
+        assertEquals(1, bl.size());
+        bucket = bl.get(0);
+        var bucketProps = bucket.getProperties();
+        assertEquals("bucket1", bucketProps.name());
+        assertEquals(1000, bucketProps.size());
+        assertEquals(1, bucketProps.numObjects());
+
+        bucket = bucketDb.getBucket("bucket1");
+
+        l = bucket.listObjects(null, x -> true);
+        assertEquals(1, l.size());
+        assertEquals("object1", l.get(0).name());
+
+        l = bucket.listObjects("x", x -> true);
+        assertEquals(0, l.size());
+
+        b = bucket.getObject("object1");
+        assertArrayEquals(objectData, b);
+
+        bucket.deleteObject("object1");
+        assertTrue(bucket.listObjects(null, x -> true).isEmpty());
+
+        bucketDb.deleteBucket("bucket1");
+        assertTrue(bucketDb.listBuckets().isEmpty());
+        tablespace.close();
+    }
+
+    @Test
+    public void test2() throws Exception {
+        String dir = testDir + File.separator + "tablespace2";
+        Tablespace tablespace = new Tablespace("tablespace2");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        RdbBucketDatabase bucketDb = new RdbBucketDatabase("test", tablespace);
+        assertTrue(bucketDb.listBuckets().isEmpty());
+
+        RdbBucket bucket = bucketDb.createBucket("bucket1");
+        bucket.putObject("object1", null, new HashMap<>(), new byte[100]);
+        bucket.putObject("object2", "plain/text", new HashMap<>(), new byte[100]);
+
+        List<ObjectProperties> l = bucket.listObjects("object", x -> true);
+        assertEquals(2, l.size());
+
+        assertEquals(4, tablespace.getRdb().getApproxNumRecords());
+        bucketDb.deleteBucket("bucket1");
+
+        tablespace.close();
+
+        // closing and reopening
+        tablespace = new Tablespace("tablespace2bis");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        bucketDb = new RdbBucketDatabase("test", tablespace);
+        bucket = bucketDb.getBucket("bucket1");
+        assertNull(bucket);
+        tablespace.close();
+    }
+
+    @Test
+    public void test3() throws Exception {
+        RdbBucketDatabase bucketDb = createDb(3);
+        RdbBucket b = bucketDb.createBucket("bucket1");
+        Exception e = null;
+        int n = RdbBucketDatabase.DEFAULT_MAX_OBJECTS_PER_BUCKET;
+        try {
+            for (int i = 0; i < n + 1; i++) {
+                b.putObject("obj" + i, null, null, new byte[10]);
+            }
+        } catch (Exception e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        b.deleteObject("obj0");
+        b.putObject("newobj", null, null, new byte[10]);
+        bucketDb.getTablespace().close();
+    }
+
+    @Test
+    public void test4() throws Exception {
+        RdbBucketDatabase bucketDb = createDb(4);
+        RdbBucket b = bucketDb.createBucket("bucket1");
+        Exception e = null;
+        try {
+            for (int i = 0; i < RdbBucketDatabase.DEFAULT_MAX_BUCKET_SIZE / (1024 * 1024) + 1; i++) {
+                b.putObject("obj" + i, null, null, new byte[1024 * 1024]);
+            }
+        } catch (Exception e1) {
+            e = e1;
+        }
+
+        assertNotNull(e);
+        b.deleteObject("obj0");
+        b.putObject("newobj", null, null, new byte[1024 * 1024]);
+        bucketDb.getTablespace().close();
+    }
+
+    private RdbBucketDatabase createDb(int n) throws Exception {
+        String dir = testDir + File.separator + "tablespace" + n;
+        Tablespace tablespace = new Tablespace("tablespace" + n);
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        return new RdbBucketDatabase("test", tablespace);
+    }
+}
 ```
 
-## 항목
+### `HistogramRebuilderTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/BucketDbTest.java`](file--BucketDbTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/HistogramRebuilderTest.java`](file--HistogramRebuilderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/PartitioningTest.java`](file--PartitioningTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbEngineTest.java`](file--RdbEngineTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RDBFactoryTest.java`](file--RDBFactoryTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbHistogramIteratorTest.java`](file--RdbHistogramIteratorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbPartitionManagerTest.java`](file--RdbPartitionManagerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbPerformanceTest.java`](file--RdbPerformanceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSelectPerfTest.java`](file--RdbSelectPerfTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSelectTest.java`](file--RdbSelectTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSequenceTest.java`](file--RdbSequenceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/TablespaceTest.java`](file--TablespaceTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/HistogramRebuilderTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Semaphore;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.HistogramRecord;
+import org.yamcs.yarch.PartitionManager;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchTestCase;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class HistogramRebuilderTest extends YarchTestCase {
+    String tblName = "HistogramRebuilderTest";
+    TableDefinition tblDef;
+    RdbStorageEngine rse;
+    long t1 = TimeEncoding.parse("2016-12-16T00:00:00");
+
+    void createTable(boolean partitioned) throws StreamSqlException, ParseException {
+        String query = "create table " + tblName
+                + "(gentime timestamp, seqNum int, name string, primary key(gentime, seqNum)) histogram(name) "
+                + (partitioned ? " partition by time(gentime)" : "");
+        ydb.execute(query);
+    }
+
+    public void populate(boolean partitioned) throws Exception {
+        createTable(partitioned);
+
+        tblDef = ydb.getTable(tblName);
+        rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { 1000L, 10, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { 2000L, 20, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { 3000L, 30, "p2" }));
+
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t1, 30, "p2" }));
+        tw.close();
+    }
+
+    @AfterEach
+    public void dropTable() throws Exception {
+        ydb.execute("drop table " + tblName);
+    }
+
+    @Test
+    public void testDeleteValues() throws Exception {
+        populate(true);
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        TimeInterval interval = new TimeInterval();
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        PartitionManager.Interval pminterval = ydb.getPartitionManager(tblDef)
+                .intervalIterator(new TimeInterval(1000L, 1000L)).next();
+        rebuilder.deleteHistograms(pminterval, new CompletableFuture<Void>());
+
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 1);
+        iter.close();
+
+        rebuilder.rebuild(new TimeInterval(0, 2000)).get();
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+    }
+
+    @Test
+    public void testRebuildAll() throws Exception {
+        populate(true);
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        ydb.getPartitionManager(tblDef).intervalIterator(new TimeInterval()).forEachRemaining(interval -> {
+            rebuilder.deleteHistograms(interval, new CompletableFuture<Void>());
+        });
+
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        assertNumElementsEqual(iter, 0);
+        iter.close();
+
+        rebuilder.rebuild().get();
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+    }
+
+    Thread startWriter(int n, int m, int seqStart, String p, Semaphore semaphore) {
+        Thread thread = new Thread(() -> {
+            int seq = seqStart;
+            for (int j = 0; j < n; j++) {
+                long start = 500_000 * j;
+                for (int i = 0; i < m; i++) {
+                    TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+                    tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { start + i, seq++, p }));
+                }
+                if (j == 2 && semaphore != null) {
+                    semaphore.release();
+                }
+            }
+        });
+        thread.start();
+
+        return thread;
+    }
+
+    @Test
+    public void testConcurrency() throws Exception {
+        int n = 5;
+        int m = 2;
+
+        createTable(false);
+        tblDef = ydb.getTable(tblName);
+        rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        Semaphore semaphore = new Semaphore(0);
+        Thread thread1 = startWriter(n, m, 0, "p1", semaphore);
+
+        // wait for the thread to write 2 cycles
+        semaphore.acquire();
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        // rebuild all the histograms
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        rebuilder.rebuild().get();
+
+        // wait for the thread to finish
+        thread1.join(100000);
+        // assertFalse(thread1.isAlive());
+
+        ColumnSerializer<String> cs = ColumnSerializerFactory.getBasicColumnSerializerV3(DataType.STRING);
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        List<HistogramRecord> p1List = new ArrayList<>();
+        while (iter.hasNext()) {
+            HistogramRecord hr = iter.next();
+            String p = cs.deserialize(ByteBuffer.wrap(hr.getColumnv()), null);
+            if ("p1".equals(p)) {
+                p1List.add(hr);
+            }
+        }
+        assertEquals(n, p1List.size());
+
+        for (int j = 0; j < n; j++) {
+            HistogramRecord hr1 = p1List.get(j);
+
+            assertEquals(j * 500_000, hr1.getStart());
+            assertEquals(j * 500_000 + m - 1, hr1.getStop());
+            assertEquals(m, hr1.getNumTuples());
+
+        }
+        iter.close();
+    }
+
+    /**
+     * This test shows that rebuilding a histogram with two fast concurrent writers may result in inconsistent results.
+     * <p>
+     * See {@link SingleColumnHistogramWriter#startQueueing(String)}.
+     * 
+     * @throws Exception
+     */
+    @Test
+    @Disabled
+    public void testConcurrencyDoubleThread() throws Exception {
+        int n = 5;
+        int m = 2;
+
+        createTable(false);
+        tblDef = ydb.getTable(tblName);
+        rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        Semaphore semaphore = new Semaphore(0);
+        Thread thread1 = startWriter(n, m, 0, "p1", semaphore);
+        Thread thread2 = startWriter(n, m, 1000_000, "p2", null);
+
+        // wait for the thread1 to write 2 cycles
+        semaphore.acquire();
+
+        // rebuild all the histograms
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, tblName);
+        rebuilder.rebuild().get();
+
+        // wait for the threads to finish
+        thread1.join(100000);
+        thread2.join(100000);
+        assertFalse(thread1.isAlive());
+        assertFalse(thread2.isAlive());
+
+        // now verify the results
+        ColumnSerializer<String> cs = ColumnSerializerFactory.getBasicColumnSerializerV3(DataType.STRING);
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", new TimeInterval());
+        List<HistogramRecord> p1List = new ArrayList<>();
+        List<HistogramRecord> p2List = new ArrayList<>();
+        while (iter.hasNext()) {
+            HistogramRecord hr = iter.next();
+            String p = cs.deserialize(ByteBuffer.wrap(hr.getColumnv()), null);
+            if ("p1".equals(p)) {
+                p1List.add(hr);
+            } else {
+                p2List.add(hr);
+            }
+        }
+        assertEquals(n, p1List.size());
+        assertEquals(n, p2List.size());
+
+        for (int j = 0; j < n; j++) {
+            HistogramRecord hr1 = p1List.get(j);
+            HistogramRecord hr2 = p2List.get(j);
+
+            assertEquals(j * 500_000, hr1.getStart());
+            assertEquals(j * 500_000 + m - 1, hr1.getStop());
+            assertEquals(m, hr1.getNumTuples());
+
+            assertEquals(j * 500_000, hr2.getStart());
+            assertEquals(j * 500_000 + m - 1, hr2.getStop());
+            assertEquals(m, hr2.getNumTuples());
+        }
+        iter.close();
+    }
+}
+```
+
+### `PartitioningTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/PartitioningTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Partition;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchTestCase;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class PartitioningTest extends YarchTestCase {
+
+    @Test
+    public void testIndexPartitioning() throws Exception {
+        execute("create table test1(gentime timestamp, apidSeqCount int, primary key(gentime,apidSeqCount)) partition by time(gentime('YYYY/DOY'))");
+        execute("create stream tm_in(gentime timestamp, apidSeqCount int)");
+        execute("insert into test1 select * from tm_in");
+        Stream tm_in = ydb.getStream("tm_in");
+
+        long instant1 = TimeEncoding.parse("1999-06-21T07:03:00");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant1, 20000 }));
+
+        TableDefinition tdef = ydb.getTable("test1");
+        RdbStorageEngine storageEngine = (RdbStorageEngine) ydb.getStorageEngine(tdef);
+        Tablespace tablespace = storageEngine.getTablespace(instance);
+
+        assertTrue(tdef.hasPartitioning());
+        RdbPartitionManager pmgr = storageEngine.getPartitionManager(ydb, tdef);
+        List<Partition> partitions = pmgr.getPartitions();
+        assertEquals(1, partitions.size());
+        RdbPartition p1 = (RdbPartition) partitions.iterator().next();
+        assertEquals("1999/172", p1.dir);
+        File f = new File(tablespace.getDataDir() + "/" + p1.dir);
+        assertTrue(f.exists());
+
+        long instant2 = TimeEncoding.parse("2001-01-01T00:00:00");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant2, 2000 }));
+        partitions = pmgr.getPartitions();
+        assertEquals(2, partitions.size());
+        Iterator<Partition> it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        RdbPartition p2 = (RdbPartition) it.next();
+        assertEquals("2001/001", p2.dir);
+
+        long instant3 = TimeEncoding.parse("2001-01-01T00:00:01");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant3, 2000 }));
+        partitions = pmgr.getPartitions();
+        assertEquals(2, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        p2 = (RdbPartition) it.next();
+        assertEquals("2001/001", p2.dir);
+
+        long instant4 = TimeEncoding.parse("2000-12-31T23:59:59");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant4, 2000 }));
+        partitions = pmgr.getPartitions();
+        assertEquals(3, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        p2 = (RdbPartition) it.next();
+        assertEquals("2000/366", p2.dir);
+        RdbPartition p3 = (RdbPartition) it.next();
+        assertEquals("2001/001", p3.dir);
+
+        long instant5 = TimeEncoding.parse("2008-12-31T23:59:60");
+        tm_in.emitTuple(new Tuple(tm_in.getDefinition(), new Object[] { instant5, 2000 }));
+        Thread.sleep(100);// give time to the other thread to finish reading the input
+        partitions = pmgr.getPartitions();
+        assertEquals(4, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+        p2 = (RdbPartition) it.next();
+        assertEquals("2000/366", p2.dir);
+        p3 = (RdbPartition) it.next();
+        assertEquals("2001/001", p3.dir);
+        RdbPartition p4 = (RdbPartition) it.next();
+        assertEquals("2008/366", p4.dir);
+        execute("close stream tm_in");
+
+        execute("create stream test1_out as select * from test1");
+
+        List<Tuple> tuples = fetchAll("test1_out");
+        assertEquals(5, tuples.size());
+        Iterator<Tuple> iter = tuples.iterator();
+
+        assertEquals(instant1, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant4, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant2, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant3, (long) (Long) iter.next().getColumn(0));
+        assertEquals(instant5, (long) (Long) iter.next().getColumn(0));
+
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2000/366/")).exists());
+
+        execute("drop table test1");
+        // for the new rocksdb storage engine we don't want the partitions to be removed because they may be shared by
+        // other tables
+        // we should check that no data is inside though
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001/")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2000/366/")).exists());
+        RDBFactory rdbFactory = tablespace.rdbFactory;
+        checkEmpty(rdbFactory.getRdb("1999/172", true));
+        checkEmpty(rdbFactory.getRdb("2001/001", true));
+        checkEmpty(rdbFactory.getRdb("2000/366", true));
+    }
+
+    private void checkEmpty(YRDB db) throws RocksDBException {
+        try (RocksIterator it1 = db.newIterator()) {
+            it1.seekToFirst();
+            assertFalse(it1.isValid());
+        }
+    }
+
+    private void doublePartitioningSelect(String whereCnd, final long[] expectedInstant)
+            throws InterruptedException, StreamSqlException, ParseException {
+        String query = "create stream testdp_out as select * from testdp"
+                + (whereCnd == null ? "" : " where " + whereCnd);
+        execute(query);
+        Stream test1_out = ydb.getStream("testdp_out");
+        final Semaphore semaphore = new Semaphore(0);
+        final AtomicInteger c = new AtomicInteger(0);
+        test1_out.addSubscriber(new StreamSubscriber() {
+
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                long inst = (Long) tuple.getColumn("gentime");
+                assertEquals(expectedInstant[c.getAndIncrement()], inst);
+            }
+        });
+        test1_out.start();
+        assertTrue(semaphore.tryAcquire(10, TimeUnit.SECONDS));
+        assertEquals(expectedInstant.length, c.get());
+    }
+
+    /**
+     * Tests partitioning by time and string value
+     *
+     * @throws ParseException
+     * @throws StreamSqlException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testDoublePartitioning() throws Exception {
+        final long[] instant = new long[4];
+        ydb.execute(
+                "create table testdp(gentime timestamp, seqNumber int, part enum, packet binary, primary key(gentime,seqNumber)) partition by time_and_value(gentime('YYYY/DOY'), part)");
+        ydb.execute("create stream tm_in(gentime timestamp, seqNumber int, part enum, packet binary)");
+        ydb.execute("insert into testdp select * from tm_in");
+        Stream tm_in = ydb.getStream("tm_in");
+        TupleDefinition tpdef = tm_in.getDefinition();
+        Tablespace tablespace = RdbStorageEngine.getInstance().getTablespace(instance);
+
+        instant[0] = TimeEncoding.parse("1999-06-21T07:03:00");
+        Tuple t11 = new Tuple(tpdef, new Object[] { instant[0], 1, "part1", new byte[1000] });
+        tm_in.emitTuple(t11);
+
+        instant[1] = instant[0];
+        Tuple t12 = new Tuple(tpdef, new Object[] { instant[1], 2, "partition2", new byte[1000] });
+        tm_in.emitTuple(t12);
+
+        instant[2] = TimeEncoding.parse("1999-06-21T07:03:01");
+        ;
+        Tuple t2 = new Tuple(tpdef, new Object[] { instant[2], 3, "partition2", new byte[1000] });
+        tm_in.emitTuple(t2);
+
+        TableDefinition tdef = ydb.getTable("testdp");
+        assertTrue(tdef.hasPartitioning());
+
+        RdbStorageEngine storageEngine = (RdbStorageEngine) ydb.getStorageEngine(tdef);
+
+        assertTrue(tdef.hasPartitioning());
+        RdbPartitionManager pmgr = storageEngine.getPartitionManager(ydb, tdef);
+
+        List<Partition> partitions = pmgr.getPartitions();
+        Iterator<Partition> it = partitions.iterator();
+        assertEquals(2, partitions.size());
+        RdbPartition p1 = (RdbPartition) it.next();
+        assertEquals("1999/172", p1.dir);
+
+        RdbPartition p2 = (RdbPartition) it.next();
+        assertEquals("1999/172", p2.dir);
+
+        Object[] pvalues = new Object[] { p1.getValue(), p2.getValue() };
+        Arrays.sort(pvalues);
+
+        assertEquals((short) 0, pvalues[0]);
+        assertEquals((short) 1, pvalues[1]);
+
+        File f = new File(tablespace.getDataDir() + "/1999/172");
+        assertTrue(f.exists());
+
+        instant[3] = TimeEncoding.parse("2001-01-01T00:00:00");
+        Tuple t3 = new Tuple(tpdef, new Object[] { instant[3], 4, "part3", new byte[1000] });
+        tm_in.emitTuple(t3);
+        partitions = pmgr.getPartitions();
+        assertEquals(3, partitions.size());
+        it = partitions.iterator();
+        it.next();
+        it.next();
+        RdbPartition p3 = (RdbPartition) it.next();
+
+        assertEquals("2001/001", p3.dir);
+        assertEquals((short) 2, p3.getValue());
+
+        execute("close stream tm_in");
+
+        doublePartitioningSelect(null, instant);
+
+        doublePartitioningSelect("part='partition2'", new long[] { instant[1], instant[2] });
+
+        doublePartitioningSelect("part='partition2' and gentime>" + instant[1], new long[] { instant[2] });
+
+        doublePartitioningSelect("part in ('part1','part3') and gentime<=" + instant[3],
+                new long[] { instant[0], instant[3] });
+
+        doublePartitioningSelect("part='partition2' and part='part3' and gentime>" + instant[1], new long[] {});
+
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001")).exists());
+
+        execute("drop table testdp");
+        assertTrue((new File(tablespace.getDataDir() + "/1999/172")).exists());
+        assertTrue((new File(tablespace.getDataDir() + "/2001/001")).exists());
+
+        checkEmpty(tablespace.rdbFactory.getRdb("1999/172", true));
+        checkEmpty(tablespace.rdbFactory.getRdb("2001/001", true));
+    }
+
+    /**
+     * Tests partitioning by enum value
+     *
+     * @throws ParseException
+     * @throws StreamSqlException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testEnumPartitioning() throws ParseException, StreamSqlException, IOException, InterruptedException {
+        final long[] instant = new long[4];
+        execute("create table testdp(gentime timestamp, seqNumber int, part enum, packet binary, primary key(gentime,seqNumber)) engine rocksdb2 partition by value(part)");
+        execute("create stream tm_in(gentime timestamp, seqNumber int, part enum, packet binary)");
+        execute("insert into testdp select * from tm_in");
+        Stream tm_in = ydb.getStream("tm_in");
+        TupleDefinition tpdef = tm_in.getDefinition();
+
+        instant[0] = TimeEncoding.parse("1999-06-21T07:03:00");
+        Tuple t11 = new Tuple(tpdef, new Object[] { instant[0], 1, "part0", new byte[1000] });
+        tm_in.emitTuple(t11);
+
+        instant[1] = instant[0];
+        Tuple t12 = new Tuple(tpdef, new Object[] { instant[1], 2, "partition1", new byte[1000] });
+        tm_in.emitTuple(t12);
+
+        instant[2] = TimeEncoding.parse("1999-06-21T07:03:01");
+        ;
+        Tuple t2 = new Tuple(tpdef, new Object[] { instant[2], 3, "partition1", new byte[1000] });
+        tm_in.emitTuple(t2);
+
+        TableDefinition tdef = ydb.getTable("testdp");
+        assertTrue(tdef.hasPartitioning());
+        RdbStorageEngine storageEngine = (RdbStorageEngine) ydb.getStorageEngine(tdef);
+
+        RdbPartitionManager pmgr = storageEngine.getPartitionManager(ydb, tdef);
+
+        Collection<Partition> partitions = pmgr.getPartitions();
+        Iterator<Partition> it = partitions.iterator();
+        assertEquals(2, partitions.size());
+        RdbPartition p1 = (RdbPartition) it.next();
+        assertNull(p1.dir);
+        assertEquals((short) 0, p1.getValue());
+
+        RdbPartition p2 = (RdbPartition) it.next();
+        assertNull(p2.dir);
+        assertEquals((short) 1, p2.getValue());
+
+        instant[3] = TimeEncoding.parse("2001-01-01T00:00:00");
+        Tuple t3 = new Tuple(tpdef, new Object[] { instant[3], 4, "part2", new byte[1000] });
+        tm_in.emitTuple(t3);
+        partitions = pmgr.getPartitions();
+        assertEquals(3, partitions.size());
+        it = partitions.iterator();
+        p1 = (RdbPartition) it.next();
+        assertNull(p1.dir);
+        assertEquals((short) 0, p1.getValue());
+
+        p2 = (RdbPartition) it.next();
+        RdbPartition p3 = (RdbPartition) it.next();
+        assertNull(p3.dir);
+
+        short[] pvalues = new short[] { (Short) p2.getValue(), (Short) p3.getValue() };
+        Arrays.sort(pvalues);
+        assertEquals((short) 1, pvalues[0]);
+
+        assertEquals((short) 2, pvalues[1]);
+
+        execute("close stream tm_in");
+
+        // doublePartitioningSelect(null, instant);
+
+        // doublePartitioningSelect("part='partition1'", new long[]{instant[1], instant[2]});
+
+        doublePartitioningSelect("part='partition1' and gentime>" + instant[1], new long[] { instant[2] });
+
+        doublePartitioningSelect("part in ('part0','part2') and gentime<=" + instant[3],
+                new long[] { instant[0], instant[3] });
+
+        doublePartitioningSelect("part='partition2' and part='part3' and gentime>" + instant[1], new long[] {});
+        execute("drop table testdp");
+    }
+}
+```
+
+### `RdbEngineTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbEngineTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ExecutionContext;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchTestCase;
+
+public class RdbEngineTest extends YarchTestCase {
+    @Test
+    public void testCreateDrop() throws Exception {
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        TableDefinition tblDef = new TableDefinition("RdbEngineTest", tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "packetid", "YYYY");
+        pspec.setValueColumnType(DataType.INT);
+        tblDef.setPartitioningSpec(pspec);
+
+        checkNoReaderStreamPossible(rse, tblDef);
+
+        rse.createTable(ydb, tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        Tuple t = new Tuple(tdef, new Object[] { 1000L, 10 });
+        tw.onTuple(null, t);
+
+        rse.dropTable(ydb, tblDef);
+
+        checkNoReaderStreamPossible(rse, tblDef);
+    }
+
+    @Test
+    public void testOpenClose() throws Exception {
+        TableDefinition tblDef = populate();
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        TimeInterval interval = new TimeInterval();
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+
+        rse.shutdown();
+
+        rse.loadTablespaces(false);
+        tblDef = rse.loadTables(ydb).get(0);
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        iter.close();
+    }
+
+    @Test
+    public void testOpenCloseWithTableDrop() throws Exception {
+        TableDefinition tblDef = populate();
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        rse.dropTable(ydb, tblDef);
+
+        rse.shutdown();
+
+        rse.loadTablespaces(false);
+        List<TableDefinition> tblList = rse.loadTables(ydb);
+        assertTrue(tblList.isEmpty());
+    }
+
+    private void checkNoReaderStreamPossible(RdbStorageEngine rse, TableDefinition tblDef) {
+        IllegalArgumentException iae = null;
+        try (ExecutionContext ctx = new ExecutionContext(ydb)) {
+            rse.newTableWalker(ctx, tblDef, true, true);
+        } catch (IllegalArgumentException e) {
+            iae = e;
+        }
+        assertNotNull(iae);
+    }
+
+    public TableDefinition populate() throws Exception {
+        String query = "create table table1(gentime timestamp, seqNum int, name string, vals string[], primary key(gentime, seqNum)) histogram(name) "
+                + "partition by time(gentime) table_format=compressed engine rocksdb2";
+        execute(query);
+        long t1 = TimeEncoding.parse("2016-12-16T00:00:00");
+
+        TableDefinition tblDef = ydb.getTable("table1");
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { 1000L, 10, "p1", Arrays.asList("x", "y") }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { 2000L, 20, "p1", Arrays.asList("x", "y") }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { 3000L, 30, "p2", Arrays.asList("x", "y") }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(),
+                new Object[] { t1, 30, "p2", Arrays.asList("x", "y") }));
+        tw.close();
+        return tblDef;
+    }
+
+}
+```
+
+### `RDBFactoryTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RDBFactoryTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.FileSystemException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.FileUtils;
+
+public class RDBFactoryTest {
+
+    @BeforeAll
+    public static void initRocksDb() {
+        RocksDB.loadLibrary();
+    }
+
+    private boolean isOpen(YRDB yrdb) {
+        return yrdb.isOpen();
+    }
+
+    @Test
+    public void testDispose() throws Exception {
+        YRDB[] dbs = new YRDB[RDBFactory.maxOpenDbs * 2];
+        Path dataDir = Path.of(System.getProperty("java.io.tmpdir"), "testDispose");
+        RDBFactory rdbf = new RDBFactory(dataDir.toString(), new ScheduledThreadPoolExecutor(1));
+
+        for (int i = 0; i < RDBFactory.maxOpenDbs; i++) {
+            dbs[i] = rdbf.getRdb("rdbfactorytest" + i, false);
+        }
+        for (int i = 0; i < RDBFactory.maxOpenDbs / 2; i++) {
+            rdbf.dispose(dbs[i]);
+        }
+        for (int i = 0; i < RDBFactory.maxOpenDbs; i++) {
+            assertTrue(isOpen(dbs[i]));
+        }
+        for (int i = RDBFactory.maxOpenDbs; i < 2 * RDBFactory.maxOpenDbs; i++) {
+            dbs[i] = rdbf.getRdb("rdbfactorytest" + i, false);
+        }
+        for (int i = 0; i < RDBFactory.maxOpenDbs / 2; i++) {
+            assertFalse(isOpen(dbs[i]));
+        }
+        for (int i = RDBFactory.maxOpenDbs / 2; i < 2 * RDBFactory.maxOpenDbs; i++) {
+            assertTrue(isOpen(dbs[i]));
+        }
+        // cleanup
+
+        for (int i = 0; i < 2 * RDBFactory.maxOpenDbs; i++) {
+            rdbf.closeIfOpen("rdbfactorytest" + i);
+            Path d = dataDir.resolve("rdbfactorytest" + i);
+            FileUtils.deleteRecursivelyIfExists(d);
+        }
+    }
+
+    @Test
+    public void testBackup() throws Exception {
+        Path dir = Path.of(System.getProperty("java.io.tmpdir"), "rdb_backup_test");
+        FileUtils.deleteRecursivelyIfExists(dir);
+        RDBFactory rdbf = new RDBFactory(dir.toString(), new ScheduledThreadPoolExecutor(1));
+
+        YRDB db1 = rdbf.getRdb("db1", false);
+        ColumnFamilyHandle cfh = db1.createColumnFamily("c1");
+        db1.put(cfh, "aaa".getBytes(), "bbb".getBytes());
+
+        db1.createColumnFamily("c2");
+
+        Path backupDir = dir.resolve("db1_back");
+        Files.createDirectories(backupDir);
+        rdbf.doBackup("db1", backupDir.toString()).get();
+
+        db1.createColumnFamily("c3");
+        rdbf.doBackup("db1", backupDir.toString()).get();
+
+        // try to backup on top of existing non backup directory -> should throw an exception
+        assertThrows(FileSystemException.class, () -> {
+            try {
+                rdbf.doBackup("db1", dir.resolve("db1").toString()).get();
+            } catch (ExecutionException e1) {
+                throw e1.getCause();
+            }
+        });
+
+        db1.put(cfh, "aaa1".getBytes(), "bbb1".getBytes());
+        byte[] b = db1.get(cfh, "aaa1".getBytes());
+        assertNotNull(b);
+        rdbf.close(db1);
+
+        rdbf.restoreBackup(1, backupDir.toString(), "db2").get();
+        YRDB db2 = rdbf.getRdb("db2", false);
+
+        assertNotNull(db2.getColumnFamilyHandle("c2"));
+        assertNull(db2.getColumnFamilyHandle("c3"));
+
+        ColumnFamilyHandle cfh_db2 = db2.getColumnFamilyHandle("c1");
+        assertNotNull(cfh_db2);
+
+        b = db2.get(cfh_db2, "aaa".getBytes());
+        assertNotNull(b);
+        b = db2.get(cfh_db2, "aaa1".getBytes());
+        assertNull(b);
+
+        rdbf.restoreBackup(-1, backupDir.toString(), "db3").get();
+        YRDB db3 = rdbf.getRdb("db3", false);
+
+        assertNotNull(db3.getColumnFamilyHandle("c2"));
+        assertNotNull(db3.getColumnFamilyHandle("c3"));
+    }
+}
+```
+
+### `RdbHistogramIteratorTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbHistogramIteratorTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.HistogramRecord;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchTestCase;
+
+public class RdbHistogramIteratorTest extends YarchTestCase {
+    long t0 = 0L;
+    long t1 = 100000000000L;
+
+    @Test
+    public void test1() throws Exception {
+        TableDefinition tblDef = populate();
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        TimeInterval interval = new TimeInterval();
+
+        HistogramIterator iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        assertNumElementsEqual(iter, 3);
+        assertFalse(iter.hasNext());
+        iter.close();
+
+        iter = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        iter.seek(colValue("p1"), t0 + 3000L);
+        assertTrue(iter.hasNext());
+        HistogramRecord hr = iter.next();
+        assertArrayEquals(colValue("p1"), hr.getColumnv());
+        assertNumElementsEqual(iter, 1);
+        iter.close();
+
+        HistogramIterator iter1 = rse.getHistogramIterator(ydb, tblDef, "name", interval);
+        iter1.seek(colValue("p1"), t1 + 1L);
+
+        assertNumElementsEqual(iter1, 0);
+        iter1.close();
+    }
+
+    private byte[] colValue(String s) {
+        ByteArray ba = new ByteArray();
+        ba.addNullTerminatedUTF("p1");
+        return ba.toArray();
+    }
+
+    public TableDefinition populate() throws Exception {
+        String query = "create table table1(gentime timestamp, seqNum int, name string, primary key(gentime, seqNum)) histogram(name) "
+                + "partition by time(gentime) table_format=compressed engine rocksdb2";
+        execute(query);
+
+        TableDefinition tblDef = ydb.getTable("table1");
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 1000L, 1, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 2000L, 2, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 40000L, 3, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t0 + 40001L, 4, "p1" }));
+        tw.onTuple(null, new Tuple(tblDef.getTupleDefinition(), new Object[] { t1, 4, "p1" }));
+
+        tw.close();
+        return tblDef;
+    }
+}
+```
+
+### `RdbPartitionManagerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbPartitionManagerTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Partition;
+import org.yamcs.yarch.PartitionManager;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TupleDefinition;
+
+public class RdbPartitionManagerTest {
+
+    @BeforeAll
+    static public void init() {
+        TimeEncoding.setUp();
+    }
+
+    TableDefinition getTableDefTimeAndValue() throws Exception {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        PartitioningSpec spec = PartitioningSpec.timeAndValueSpec("gentime", "packetid", "YYYY/DOY");
+
+        TableDefinition tblDef = new TableDefinition("tbltest", tdef, Arrays.asList("gentime"));
+        tblDef.setPartitioningSpec(spec);
+
+        return tblDef;
+    }
+
+    TableDefinition getTableDefValue() throws Exception {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        PartitioningSpec spec = PartitioningSpec.valueSpec("packetid");
+
+        TableDefinition tblDef = new TableDefinition("tbltest", tdef, Arrays.asList("gentime"));
+        tblDef.setPartitioningSpec(spec);
+
+        return tblDef;
+    }
+
+    TableDefinition getTableDefTime() throws Exception {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        PartitioningSpec spec = PartitioningSpec.timeSpec("gentime", "YYYYY/DOY");
+
+        TableDefinition tblDef = new TableDefinition("tbltest", tdef, Arrays.asList("gentime"));
+        tblDef.setPartitioningSpec(spec);
+
+        return tblDef;
+    }
+
+    @Test
+    public void createAndIteratePartitions() throws Exception {
+        Tablespace tablespace = new Tablespace("test");
+        String tmpdir = Files.createTempDirectory("RdbPartitionManagerTest").toString();
+        tablespace.setCustomDataDir(tmpdir);
+
+        tablespace.loadDb(false);
+
+        TableDefinition tblDef = getTableDefTimeAndValue();
+        RdbTable table = new RdbTable("test", tablespace, tblDef, 1, "default");
+
+        RdbPartitionManager pm = table.getPartitionManager();
+        RdbPartition part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-01-01T00:00:00"), 1);
+        assertEquals("2011/001", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-03-01T00:00:00"), 1);
+        assertEquals("2011/060", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-02-01T00:00:00"), 2);
+        assertEquals("2011/032", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-02-01T00:00:00"), 3);
+        assertEquals("2011/032", part.dir);
+
+        part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("2011-03-01T00:00:00"), 3);
+        assertEquals("2011/060", part.dir);
+
+        Set<Object> filter = new HashSet<>();
+        filter.add(1);
+        filter.add(3);
+        Iterator<PartitionManager.Interval> it = pm.iterator(TimeEncoding.parse("2011-02-01T00:00:00"), filter);
+        assertTrue(it.hasNext());
+        PartitionManager.Interval parts = it.next();
+        assertEquals(1, parts.size());
+
+        assertTrue(it.hasNext());
+        parts = it.next();
+        Iterator<Partition> pit = parts.iterator();
+        assertEquals("2011/060", ((RdbPartition) pit.next()).dir);
+        assertEquals("2011/060", ((RdbPartition) pit.next()).dir);
+
+        tablespace.close();
+
+        tablespace = new Tablespace("test");
+        tablespace.setCustomDataDir(tmpdir);
+
+        tablespace.loadDb(true);
+
+        table = new RdbTable("test", tablespace, tblDef, 1, "default");
+        pm = table.getPartitionManager();
+        pm.readPartitions();
+        List<Partition> plist = pm.getPartitions();
+        assertEquals(5, plist.size());
+        tablespace.close();
+
+        Path path = Paths.get(tmpdir);
+        FileUtils.deleteRecursivelyIfExists(path);
+    }
+
+    @Test
+    public void createAndIteratePartitions1() throws Exception {
+        Tablespace tablespace = new Tablespace("test");
+        String tmpdir = Files.createTempDirectory("RdbPartitionManagerTest").toString();
+        tablespace.setCustomDataDir(tmpdir);
+
+        tablespace.loadDb(false);
+
+        TableDefinition tblDef = getTableDefTimeAndValue();
+
+        RdbTable table = new RdbTable("test", tablespace, tblDef, 1, "default");
+
+        RdbPartitionManager pm = table.getPartitionManager();
+        RdbPartition part = (RdbPartition) pm.createAndGetPartition(TimeEncoding.parse("0001-01-01T00:00:00"), 1);
+        assertEquals("0001/001", part.dir);
+    }
+}
+```
+
+### `RdbPerformanceTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbPerformanceTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchTestCase;
+
+@Disabled // note that this one does not cleanup the test directory resulting in error if run multiple times
+public class RdbPerformanceTest extends YarchTestCase {
+    private TupleDefinition tdef;
+    private TableWriter tw;
+    int numPacketType = 20;
+    int[] freq = new int[] {
+            1, 1, 1, 1,
+            10, 10, 10, 10,
+            300, 300, 300, 300,
+            3600, 3600, 3600, 3600,
+            86400, 86400, 86400, 86400
+    };
+    String dir = "/storage/ptest";
+
+    void populate(TableDefinition tblDef, int n, boolean timeFirst) throws Exception {
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+
+        long baseTime = TimeEncoding.parse("2015-01-01T00:00:00");
+
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        byte[] b = new byte[256];
+        int numPackets = 0;
+
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < freq.length; j++) {
+                if (i % freq[j] == 0) {
+                    r.nextBytes(b);
+                    numPackets++;
+                    Tuple t;
+                    if (timeFirst) {
+                        t = new Tuple(tdef, new Object[] { baseTime + i * 1000L + j, "packet" + j, b });
+                    } else {
+                        t = new Tuple(tdef, new Object[] { "packet" + j, baseTime + i * 1000L + j, b });
+                    }
+                    tw.onTuple(null, t);
+                }
+            }
+        }
+        System.out.println("total numPackets: " + numPackets);
+        long t1 = System.currentTimeMillis();
+        System.out.println("time to populate " + ((t1 - t0) / 1000) + " seconds");
+    }
+
+    void read(String tblName, String packetName) throws Exception {
+        long t0 = System.currentTimeMillis();
+        String q = "create stream s as select * from " + tblName;
+        if (packetName != null) {
+            q = q + " where pname='" + packetName + "'";
+        }
+        execute(q);
+        Stream s = ydb.getStream("s");
+
+        Semaphore semaphore = new Semaphore(0);
+        AtomicInteger r = new AtomicInteger();
+        s.addSubscriber(new StreamSubscriber() {
+            int c = 0;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (packetName != null) {
+                    assertEquals(packetName, tuple.getColumn("pname"));
+                }
+                c++;
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                r.set(c);
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.acquire();
+
+        long t1 = System.currentTimeMillis();
+        System.out
+                .println("time to read " + r.get() + " tuples with " + packetName + ": " + (t1 - t0) + " miliseconds");
+    }
+
+    void populateAndRead(TableDefinition tbldef, boolean timeFirst) throws Exception {
+        String tblname = tbldef.getName();
+        System.out.println("********************** " + tblname + " timeFirst:" + timeFirst + " **********************");
+
+        // populate(tblDef, 365*24*60*60);
+        populate(tbldef, 90 * 24 * 60 * 60, timeFirst);
+        // Thread.sleep(1000);
+
+        // populate(tblDef, 100);
+        read(tblname, null);
+        read(tblname, "packet1");
+        read(tblname, "packet5");
+        read(tblname, "packet9");
+        read(tblname, "packet14");
+        read(tblname, "packet19");
+        System.out.println("sleeping 60 seconds to allow rocksdb consolidation");
+        Thread.currentThread().sleep(60000);
+        read(tblname, null);
+
+    }
+
+    @Test
+    public void testPname() throws Exception {
+        String tblname = "Pname";
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.valueSpec("pname");
+        pspec.setValueColumnType(DataType.ENUM);
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testNoPnameYYYY() throws Exception {
+        String tblname = "NoPname_YYYY";
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeSpec("gentime", "YYYY");
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testPnameYYYY() throws Exception {
+        String tblname = "Pname_YYYY";
+        tdef = new TupleDefinition();
+
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime", "pname"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "pname", "YYYY");
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, true);
+    }
+}
+/*
+ * Results
+ Intel(R) Core(TM) i7-4610M CPU @ 3.00GHz
+ Samsung SSD 850 EVO 500GB
+ 
+ 
+ * 
+ ********************** NoPname_YYYY timeFirst:true **********************
+total numPackets: 3814120
+time to populate 26 seconds
+time to read 3814120 tuples with null: 8196 miliseconds
+time to read 864000 tuples with packet1: 8440 miliseconds
+time to read 86400 tuples with packet5: 8500 miliseconds
+time to read 2880 tuples with packet9: 8072 miliseconds
+time to read 240 tuples with packet14: 8146 miliseconds
+time to read 10 tuples with packet19: 8110 miliseconds
+time to read 3814120 tuples with null: 7840 miliseconds
+********************** Pname timeFirst:true **********************
+total numPackets: 3814120
+time to populate 79 seconds
+time to read 3814120 tuples with null: 17420 miliseconds
+time to read 864000 tuples with packet1: 1855 miliseconds
+time to read 86400 tuples with packet5: 183 miliseconds
+time to read 2880 tuples with packet9: 6 miliseconds
+time to read 240 tuples with packet14: 1 miliseconds
+time to read 10 tuples with packet19: 2 miliseconds
+time to read 3814120 tuples with null: 8740 miliseconds
+********************** Pname_YYYY timeFirst:true **********************
+total numPackets: 3814120
+time to populate 90 seconds
+time to read 3814120 tuples with null: 17903 miliseconds
+time to read 864000 tuples with packet1: 3624 miliseconds
+time to read 86400 tuples with packet5: 340 miliseconds
+time to read 2880 tuples with packet9: 118 miliseconds
+time to read 240 tuples with packet14: 2 miliseconds
+time to read 10 tuples with packet19: 1 miliseconds
+time to read 3814120 tuples with null: 16988 miliseconds
+ 
+ */
+```
+
+### `RdbSelectPerfTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSelectPerfTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyDescriptor;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ColumnFamilyOptions;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchTestCase;
+
+@Disabled
+public class RdbSelectPerfTest extends YarchTestCase {
+    private TupleDefinition tdef;
+    private TableWriter tw;
+    int numPacketType = 20;
+    int[] freq = new int[] {
+            1, 1, 1, 1,
+            10, 10, 10, 10,
+            300, 300, 300, 300,
+            3600, 3600, 3600, 3600,
+            86400, 86400, 86400, 86400
+    };
+    String dir = "/storage/ptest";
+
+    void populate(TableDefinition tblDef, int n, boolean timeFirst) throws Exception {
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+
+        long baseTime = TimeEncoding.parse("2015-01-01T00:00:00");
+
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        byte[] b = new byte[256];
+        int numPackets = 0;
+
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < freq.length; j++) {
+                if (i % freq[j] == 0) {
+                    r.nextBytes(b);
+                    numPackets++;
+                    Tuple t;
+                    if (timeFirst) {
+                        t = new Tuple(tdef, new Object[] { baseTime + i * 1000L + j, "packet" + j, b });
+                    } else {
+                        t = new Tuple(tdef, new Object[] { "packet" + j, baseTime + i * 1000L + j, b });
+                    }
+                    tw.onTuple(null, t);
+                }
+            }
+        }
+        System.out.println("total numPackets: " + numPackets);
+        long t1 = System.currentTimeMillis();
+        System.out.println("time to populate " + ((t1 - t0) / 1000) + " seconds");
+    }
+
+    void read(String tblName, String packetName) throws Exception {
+        long t0 = System.currentTimeMillis();
+        String q = "create stream s as select * from " + tblName;
+        if (packetName != null) {
+            q = q + " where pname='" + packetName + "'";
+        }
+        execute(q);
+        Stream s = ydb.getStream("s");
+
+        Semaphore semaphore = new Semaphore(0);
+        AtomicInteger r = new AtomicInteger();
+        s.addSubscriber(new StreamSubscriber() {
+            int c = 0;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (packetName != null) {
+                    assertEquals(packetName, tuple.getColumn("pname"));
+                }
+                c++;
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                r.set(c);
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.acquire();
+
+        long t1 = System.currentTimeMillis();
+        System.out
+                .println("time to read " + r.get() + " tuples with " + packetName + ": " + (t1 - t0) + " miliseconds");
+    }
+
+    void populateAndRead(TableDefinition tbldef, boolean timeFirst) throws Exception {
+        String tblname = tbldef.getName();
+        System.out.println("********************** " + tblname + " timeFirst:" + timeFirst + " **********************");
+
+        // populate(tblDef, 365*24*60*60);
+        populate(tbldef, 90 * 24 * 60 * 60, timeFirst);
+        // populate(tblDef, 100);
+        read(tblname, null);
+        read(tblname, "packet1");
+        read(tblname, "packet5");
+        read(tblname, "packet9");
+        read(tblname, "packet14");
+        read(tblname, "packet19");
+    }
+
+    @Test
+    public void testPartition() throws Exception {
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition("part_YYYY_pname", tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "pname", "YYYY");
+        pspec.setValueColumnType(DataType.ENUM);
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testNoPnameYYYY() throws Exception {
+        String tblname = "NoPname_YYYY";
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeSpec("gentime", "YYYY");
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, true);
+    }
+
+    @Test
+    public void testNonePartition() throws Exception {
+        String tblname = "NonePartition";
+        tdef = new TupleDefinition();
+
+        tdef.addColumn(new ColumnDefinition("pname", DataType.ENUM));
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+        TableDefinition tblDef = new TableDefinition(tblname, tdef, Arrays.asList("pname", "gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.noneSpec();
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        populateAndRead(tblDef, false);
+    }
+
+    @Test
+    public void test() throws Exception {
+        String dir = "/storage/ptest/2015/NoPnameYYYY";
+
+        List<byte[]> cfl = RocksDB.listColumnFamilies(new Options(), dir);
+
+        List<ColumnFamilyDescriptor> cfdList = new ArrayList<>(cfl.size());
+        ColumnFamilyOptions cfoptions = new ColumnFamilyOptions();
+        cfoptions.setTargetFileSizeMultiplier(10);
+
+        for (byte[] b : cfl) {
+            cfdList.add(new ColumnFamilyDescriptor(b, cfoptions));
+        }
+
+        List<ColumnFamilyHandle> cfhList = new ArrayList<>(cfl.size());
+        RocksDB db = RocksDB.open(dir, cfdList, cfhList);
+        String s = db.getProperty(cfhList.get(1), "rocksdb.stats");
+        System.out.println(s);
+        Thread.sleep(100000);
+        db.close();
+    }
+
+}
+
+/* results
+writeBufferSize: 50240        #in KB
+
+HW config: Intel NUC
+Intel(R) Core(TM) i7-5557U CPU @ 3.10GHz 4 cores
+Disk: Crucial_CT240M500SSD1
+
+ ********************** NonePartition timeFirst:false **********************
+total numPackets: 34327080
+time to populate 567 seconds
+time to read 23937270 tuples with null: 33557 miliseconds
+time to read 7776000 tuples with packet1: 10678 miliseconds
+time to read 777600 tuples with packet5: 1055 miliseconds
+time to read 25920 tuples with packet9: 46 miliseconds
+time to read 2160 tuples with packet14: 4 miliseconds
+time to read 90 tuples with packet19: 1 miliseconds
+
+ls -ltrh NonePartition/|wc -l
+142
+ls -ltrh NonePartition/*sst|wc -l
+134
+du -h NonePartition/
+9,2G    NonePartition/
+
+
+********************** part_YYYY_pname timeFirst:true **********************
+total numPackets: 34327080
+time to populate 245 seconds
+time to read 34327080 tuples with null: 127798 miliseconds
+time to read 7776000 tuples with packet1: 11268 miliseconds
+time to read 777600 tuples with packet5: 1006 miliseconds
+time to read 25920 tuples with packet9: 34 miliseconds
+time to read 2160 tuples with packet14: 4 miliseconds
+time to read 90 tuples with packet19: 1 miliseconds
+
+ls -lh 2015/part_YYYY_pname/|wc -l
+261
+mache@sancho:/storage/ptest$ ls -lh 2015/part_YYYY_pname/*sst|wc -l
+216
+du -h 2015/part_YYYY_pname/
+11G     2015/part_YYYY_pname/
+
+ 
+ */
+```
+
+### `RdbSelectTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSelectTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.YarchTestCase;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class RdbSelectTest extends YarchTestCase {
+
+    private TupleDefinition tdef;
+    private TableWriter tw;
+
+    @BeforeEach
+    public void before() throws StreamSqlException, YarchException {
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        tdef.addColumn(new ColumnDefinition("packetid", DataType.INT));
+        tdef.addColumn(new ColumnDefinition("col3", DataType.INT));
+        TableDefinition tblDef = new TableDefinition("RdbSelectTest", tdef, Arrays.asList("gentime"));
+
+        PartitioningSpec pspec = PartitioningSpec.timeAndValueSpec("gentime", "packetid", "YYYY");
+        pspec.setValueColumnType(DataType.INT);
+        tblDef.setPartitioningSpec(pspec);
+
+        tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+        ydb.createTable(tblDef);
+
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+        tw.onTuple(null, new Tuple(tdef, new Object[] { 2000L, 20, 2 }));
+        tw.onTuple(null, new Tuple(tdef, new Object[] { 1000L, 10, 1 }));
+        tw.onTuple(null, new Tuple(tdef, new Object[] { 3000L, 30, 3 }));
+    }
+
+    @AfterEach
+    public void after() throws YarchException {
+        ydb.dropTable("RdbSelectTest");
+    }
+
+    @Test
+    public void testUnspecifiedOrder() throws Exception {
+        execute("create stream s1 as select * from RdbSelectTest");
+        Stream s1 = ydb.getStream("s1");
+        List<Tuple> tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered ascending by key
+        assertEquals(1000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(2).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testOrderAscending() throws Exception {
+        // keyword ORDER is allowed but unneeded (defaults to ascending)
+        execute("create stream s1 as select * from RdbSelectTest order");
+        Stream s1 = ydb.getStream("s1");
+        List<Tuple> tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered ascending by key
+        assertEquals(1000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(2).getLongColumn("gentime"));
+
+        // keywords ORDER ASC unneeded, but allowed
+        execute("create stream s2 as select * from RdbSelectTest order asc");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuples(s2);
+        assertEquals(3, tuples.size());
+
+        // Ordered ascending by key
+        assertEquals(1000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(2).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testOrderDescending() throws Exception {
+        execute("create stream s1 as select * from RdbSelectTest order desc");
+        Stream s1 = ydb.getStream("s1");
+        List<Tuple> tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered descending by key
+        // Every tuple comes from a different partition
+        assertEquals(3000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(2).getLongColumn("gentime"));
+
+        // Mix it up a bit, by adding a tuple that is more than a month separated
+        long t4 = TimeEncoding.getWallclockTime();
+        tw.onTuple(null, new Tuple(tdef, new Object[] { t4, 20, 2 }));
+
+        execute("create stream s2 as select * from RdbSelectTest order desc");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuples(s2);
+        assertEquals(4, tuples.size());
+        assertEquals(t4, tuples.get(0).getTimestampColumn("gentime"));
+        assertEquals(3000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(2).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(3).getLongColumn("gentime"));
+
+        // Filter with a strict range end
+        execute("create stream s3 as select * from RdbSelectTest where gentime<3000 order desc");
+        Stream s3 = ydb.getStream("s3");
+        tuples = fetchTuples(s3);
+
+        assertEquals(2, tuples.size());
+        assertEquals(2000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(1).getLongColumn("gentime"));
+
+        // Filter with a non-strict range end
+        execute("create stream s4 as select * from RdbSelectTest where gentime<=2000 order desc");
+        Stream s4 = ydb.getStream("s4");
+        tuples = fetchTuples(s4);
+        assertEquals(2, tuples.size());
+        assertEquals(2000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(1).getLongColumn("gentime"));
+
+        // Filter with a strict range start
+        execute("create stream s5 as select * from RdbSelectTest where gentime>2000 order desc");
+        Stream s5 = ydb.getStream("s5");
+        tuples = fetchTuples(s5);
+        assertEquals(2, tuples.size());
+        assertEquals(t4, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(3000L, tuples.get(1).getLongColumn("gentime"));
+
+        // Filter with a non-strict range start
+        execute("create stream s6 as select * from RdbSelectTest where gentime>=3000 order desc");
+        Stream s6 = ydb.getStream("s6");
+        tuples = fetchTuples(s6);
+        assertEquals(2, tuples.size());
+        assertEquals(t4, tuples.get(0).getTimestampColumn("gentime"));
+        assertEquals(3000L, tuples.get(1).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testOrderedMerge() throws Exception {
+        execute("create stream s1 as merge " +
+                "(select * from RdbSelectTest where gentime <3000 order desc), " +
+                "(select * from RdbSelectTest where gentime >= 3000 order desc) " +
+                "using gentime order desc");
+        Stream s1 = ydb.getStream("s1");
+        List<Tuple> tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Ordered descending by gentime
+        assertEquals(3000L, tuples.get(0).getLongColumn("gentime"));
+        assertEquals(2000L, tuples.get(1).getLongColumn("gentime"));
+        assertEquals(1000L, tuples.get(2).getLongColumn("gentime"));
+    }
+
+    @Test
+    public void testInvalidOrder() throws Exception {
+        assertThrows(ParseException.class, () -> {
+            execute("create stream s1 as select * from RdbSelectTest order blabla");
+        });
+    }
+
+    @Test
+    public void testFollow() throws Exception {
+        // Sanity check
+        execute("create stream s1 as select * from RdbSelectTest");
+        Stream s1 = ydb.getStream("s1");
+        List<Tuple> tuples = fetchTuples(s1);
+        assertEquals(3, tuples.size());
+
+        // Record a tuple in one of the existing partitions
+        // (and ordered -after- the first tuple of the table)
+        Tuple sameMonthTuple = new Tuple(tdef, new Object[] { 2001L, 20, 2 });
+        execute("create stream s2 as select * from RdbSelectTest");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuplesAndProduceOne(s2, sameMonthTuple);
+        assertEquals(4, tuples.size());
+
+        // Record a tuple that is sure to be in another partition
+        // (more than a month separated)
+        execute("create stream s3 as select * from RdbSelectTest");
+        Stream s3 = ydb.getStream("s3");
+        long t = TimeEncoding.getWallclockTime();
+        Tuple farOutTuple = new Tuple(tdef, new Object[] { t, 20, 2 });
+        tuples = fetchTuplesAndProduceOne(s3, farOutTuple);
+        // assertEquals(5, tuples.size());
+        // TODO this last test still fails
+    }
+
+    @Test
+    public void testNofollow() throws Exception {
+        int tableSize = 3;
+
+        // Sanity check
+        execute("create stream s1 as select * from RdbSelectTest nofollow");
+        Stream s1 = ydb.getStream("s1");
+        List<Tuple> tuples = fetchTuples(s1);
+        assertEquals(tableSize, tuples.size());
+
+        // Record a tuple in one of the existing partitions
+        // (and ordered -after- the first tuple of the table)
+        Tuple sameMonthTuple = new Tuple(tdef, new Object[] { 2001L, 20, 2 });
+        execute("create stream s2 as select * from RdbSelectTest nofollow");
+        Stream s2 = ydb.getStream("s2");
+        tuples = fetchTuplesAndProduceOne(s2, sameMonthTuple);
+        assertEquals(tableSize, tuples.size());
+
+        tableSize++;
+        // Record a tuple that is sure to be in another partition
+        // (more than a month separated)
+        execute("create stream s3 as select * from RdbSelectTest nofollow");
+        Stream s3 = ydb.getStream("s3");
+        long t = TimeEncoding.getWallclockTime();
+        Tuple farOutTuple = new Tuple(tdef, new Object[] { t, 20, 2 });
+        tuples = fetchTuplesAndProduceOne(s3, farOutTuple);
+        assertEquals(tableSize, tuples.size());
+    }
+
+    private List<Tuple> fetchTuples(Stream s) throws InterruptedException {
+        List<Tuple> tuples = new ArrayList<>();
+        Semaphore semaphore = new Semaphore(0);
+        s.addSubscriber(new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(5000, TimeUnit.SECONDS);
+        return tuples;
+    }
+
+    private List<Tuple> fetchTuplesAndProduceOne(Stream s, Tuple extraTuple) throws InterruptedException {
+        List<Tuple> tuples = new ArrayList<>();
+        Semaphore semaphore = new Semaphore(0);
+        s.addSubscriber(new StreamSubscriber() {
+
+            boolean first = true;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (first) {
+                    first = false;
+                    tw.onTuple(null, extraTuple);
+                }
+                tuples.add(tuple);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(5, TimeUnit.SECONDS);
+        return tuples;
+    }
+}
+```
+
+### `RdbSequenceTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/RdbSequenceTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.LongArray;
+import org.yamcs.yarch.YarchException;
+
+public class RdbSequenceTest {
+    static Path dbdir;
+
+    YRDB rdb;
+    ColumnFamilyHandle cfMetadata;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        RocksDB.loadLibrary();
+        dbdir = Files.createTempDirectory("rdbtest");
+    }
+
+    @AfterAll
+    public static void afterClass() throws Exception {
+        FileUtils.deleteRecursively(dbdir);
+    }
+
+    @BeforeEach
+    public void before() throws Exception {
+        openDb();
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        closeDb();
+    }
+
+    @Test
+    public void test1() throws Exception {
+        RdbSequence seq = new RdbSequence("test1", rdb, cfMetadata);
+        for (long i = 0; i < 234; i++) {
+            assertEquals(i, seq.next());
+        }
+        seq.close();
+        closeDb();
+        openDb();
+
+        RdbSequence seq1 = new RdbSequence("test1", rdb, cfMetadata);
+        for (long i = 234; i < 543; i++) {
+            assertEquals(i, seq1.next());
+        }
+        seq1.reset(100);
+        assertEquals(100, seq1.next());
+        seq1.close();
+        closeDb();
+        openDb();
+
+        RdbSequence seq2 = new RdbSequence("test1", rdb, cfMetadata);
+        assertEquals(101, seq2.next());
+
+    }
+
+    @Test
+    public void testnthreads() throws Exception {
+        int n = 200;
+        int m = 1000;
+        RdbSequence seq = new RdbSequence("testnthreads", rdb, cfMetadata);
+
+        ExecutorService executor = Executors.newFixedThreadPool(n);
+        Future<LongArray>[] f = new Future[n];
+
+        for (int k = 0; k < n; k++) {
+            f[k] = executor.submit(() -> {
+                LongArray a = new LongArray(m);
+                for (int i = 0; i < m; i++) {
+                    a.add(seq.next());
+                }
+                return a;
+            });
+        }
+        List<Long> list = new ArrayList<>(n * m);
+        for (int k = 0; k < n; k++) {
+            LongArray la = f[k].get();
+            assertEquals(m, la.size());
+            for (int i = 0; i < m; i++) {
+                list.add(la.get(i));
+            }
+        }
+        Collections.sort(list);
+        for (int i = 0; i < n * m; i++) {
+            assertEquals(i, (long) list.get(i));
+        }
+    }
+
+    @Test
+    public void testClose() {
+        assertThrows(YarchException.class, () -> {
+            RdbSequence seq = new RdbSequence("testclose", rdb, cfMetadata);
+            seq.close();
+            seq.next();
+        });
+    }
+
+    private void openDb() throws Exception {
+        rdb = new YRDB(dbdir.toString(), false);
+        cfMetadata = rdb.getColumnFamilyHandle("_metadata_");
+        if (cfMetadata == null) {
+            cfMetadata = rdb.createColumnFamily("_metadata_");
+        }
+    }
+
+    private void closeDb() {
+        cfMetadata.close();
+        rdb.close();
+    }
+}
+```
+
+### `TablespaceTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/TablespaceTest.java`
+
+
+```java
+package org.yamcs.yarch.rocksdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDBException;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord.Type;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TimeBasedPartition;
+
+import com.google.protobuf.ByteString;
+
+public class TablespaceTest {
+    static Path testDir = Path.of(System.getProperty("java.io.tmpdir"), "TablespaceTest");
+
+    @BeforeEach
+    public void cleanup() throws Exception {
+        FileUtils.deleteRecursivelyIfExists(testDir);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        String dir = testDir + File.separator + "tablespace1";
+        Tablespace tablespace = new Tablespace("tablespace1");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        createTablePartitionRecord(tablespace, "inst", "tbl1", null, null);
+        createTablePartitionRecord(tablespace, "tablespace1", "tbl2", "/tmp2/", null);
+
+        byte[] tbl3p1 = new byte[10];
+        new Random().nextBytes(tbl3p1);
+        createTablePartitionRecord(tablespace, "inst", "tbl3", "/tmp", tbl3p1);
+        byte[] tbl3p2 = new byte[10];
+        new Random().nextBytes(tbl3p2);
+        createTablePartitionRecord(tablespace, "inst", "tbl3", "/tmp", tbl3p2);
+
+        verify1(tablespace, tbl3p1, tbl3p2);
+        tablespace.close();
+
+        Tablespace tablespace2 = new Tablespace("tablespace2");
+        tablespace2.setCustomDataDir(dir);
+        tablespace2.loadDb(false);
+        verify1(tablespace2, tbl3p1, tbl3p2);
+        assertEquals(5, tablespace2.maxTbsIndex);
+        tablespace2.close();
+    }
+
+    private void verify1(Tablespace tablespace, byte[] tbl3p1, byte[] tbl3p2) throws RocksDBException, IOException {
+        List<TablespaceRecord> l = tablespace.getTablePartitions("inst", "tbl1");
+        assertEquals(1, l.size());
+        assertTrEquals1("inst", "tbl1", null, null, l.get(0));
+
+        l = tablespace.getTablePartitions("inst", "tbl3");
+        assertEquals(2, l.size());
+        assertTrEquals1("inst", "tbl3", "/tmp", tbl3p1, l.get(0));
+        assertTrEquals1("inst", "tbl3", "/tmp", tbl3p2, l.get(1));
+
+        l = tablespace.getTablePartitions(tablespace.getName(), "tbl2");
+        assertEquals(1, l.size());
+        assertTrEquals1(tablespace.getName(), "tbl2", "/tmp2/", null, l.get(0));
+
+    }
+
+    private void assertTrEquals1(String expectedInstance, String expectedTable, String expectedDir,
+            byte[] expectedValue, TablespaceRecord tr) {
+        assertEquals(Type.TABLE_PARTITION, tr.getType());
+        assertEquals(expectedInstance, tr.getInstanceName());
+        assertEquals(expectedTable, tr.getTableName());
+        if (expectedDir == null) {
+            assertFalse(tr.hasPartition());
+        } else {
+            assertTrue(tr.hasPartition());
+            assertEquals(expectedDir, tr.getPartition().getPartitionDir());
+        }
+        if (expectedValue == null) {
+            assertFalse(tr.hasPartitionValue());
+        } else {
+            assertTrue(tr.hasPartitionValue());
+            assertEquals(StringConverter.arrayToHexString(expectedValue),
+                    StringConverter.arrayToHexString(tr.getPartitionValue().toByteArray()));
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        String dir = testDir + File.separator + "tablespace2";
+        Tablespace tablespace = new Tablespace("tablespace2");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+
+        createHistogramRecord(tablespace, "inst", "tbl1", "col1", null);
+        createHistogramRecord(tablespace, "inst", "tbl2", "col2", "/tmp");
+        verify2(tablespace);
+
+        tablespace.close();
+
+        Tablespace tablespace2 = new Tablespace("tablespace2");
+        tablespace2.setCustomDataDir(dir);
+        tablespace2.loadDb(false);
+        tablespace2.close();
+    }
+
+    private void verify2(Tablespace tablespace) throws Exception {
+        List<TablespaceRecord> l = tablespace.getTableHistograms("inst", "tbl1");
+        assertEquals(1, l.size());
+        assertTrEquals2("inst", "tbl1", "col1", null, l.get(0));
+
+        l = tablespace.getTableHistograms("inst", "tbl2");
+        assertEquals(1, l.size());
+        assertTrEquals2("inst", "tbl2", "col2", "/tmp", l.get(0));
+    }
+
+    private void assertTrEquals2(String expectedInstance, String expectedTable, String expectedColumnName,
+            String expectedDir, TablespaceRecord tr) {
+        assertEquals(Type.HISTOGRAM, tr.getType());
+        assertEquals(expectedInstance, tr.getInstanceName());
+        assertEquals(expectedTable, tr.getTableName());
+        assertEquals(expectedColumnName, tr.getHistogramColumnName());
+        if (expectedDir == null) {
+            assertFalse(tr.hasPartition());
+        } else {
+            assertTrue(tr.hasPartition());
+            assertEquals(expectedDir, tr.getPartition().getPartitionDir());
+        }
+    }
+
+    @Test
+    public void testRenameTable() throws Exception {
+        String dir = testDir + File.separator + "tablespace3";
+        Tablespace tablespace = new Tablespace("tablespace3");
+        tablespace.setCustomDataDir(dir);
+        tablespace.loadDb(false);
+        TupleDefinition tupleDef = new TupleDefinition();
+        tupleDef.addColumn("x", DataType.INT);
+        TableDefinition tblDef = new TableDefinition("tbl1", tupleDef, Arrays.asList("x"));
+        tablespace.createTable("inst", tblDef);
+        createTablePartitionRecord(tablespace, "inst", "tbl1", null, null);
+
+        tablespace.renameTable("inst", tblDef, "tbl2");
+        assertEquals("tbl2", tblDef.getName());
+        tablespace.close();
+
+        Tablespace tablespace2 = new Tablespace("tablespace4");
+        tablespace2.setCustomDataDir(dir);
+        tablespace2.loadDb(false);
+
+        Collection<TableDefinition> tdefs = tablespace2.loadTables("inst");
+        assertEquals(1, tdefs.size());
+        TableDefinition tblDef2 = tdefs.iterator().next();
+        assertEquals("tbl2", tblDef2.getName());
+
+        List<TablespaceRecord> trList = tablespace2.getTablePartitions("inst", "tbl2");
+        assertEquals(1, trList.size());
+        tablespace2.close();
+    }
+
+    private TablespaceRecord createTablePartitionRecord(Tablespace tablespace, String yamcsInstance, String tblName,
+            String dir, byte[] bvalue) throws RocksDBException {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(Type.TABLE_PARTITION)
+                .setTableName(tblName);
+        if (dir != null) {
+            trb.setPartition(TimeBasedPartition.newBuilder().setPartitionDir(dir));
+        }
+        if (bvalue != null) {
+            trb.setPartitionValue(ByteString.copyFrom(bvalue));
+        }
+        TablespaceRecord tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+        return tr;
+    }
+
+    public TablespaceRecord createHistogramRecord(Tablespace tablespace, String yamcsInstance, String tblName,
+            String columnName, String partitionDir) throws RocksDBException {
+        TablespaceRecord.Builder trb = TablespaceRecord.newBuilder().setType(Type.HISTOGRAM)
+                .setTableName(tblName);
+
+        trb.setHistogramColumnName(columnName);
+
+        if (partitionDir != null) {
+            trb.setPartition(TimeBasedPartition.newBuilder().setPartitionDir(partitionDir));
+        }
+
+        TablespaceRecord tr = tablespace.createMetadataRecord(yamcsInstance, trb);
+        return tr;
+    }
+}
+```

@@ -3,16 +3,126 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/SAMPLE/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SAMPLE_CMD.txt`
 
-file--SAMPLE_CMD.txt
-file--SAMPLE_TLM.txt
+**경로:** `gsw/cosmos/COMPONENTS/SAMPLE/cmd_tlm/SAMPLE_CMD.txt`
+
+
+```text
+COMMAND SAMPLE SAMPLE_NOOP_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample NOOP Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FA "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND SAMPLE SAMPLE_RST_COUNTERS_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample Reset Counters Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FA "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 1        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND SAMPLE SAMPLE_ENABLE_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample Enable Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FA "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 2        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND SAMPLE SAMPLE_DISABLE_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample Disable Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FA "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 3        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND SAMPLE SAMPLE_CONFIG_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample Configuration Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FA "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 5      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 4        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+  APPEND_PARAMETER DEVICE_CONFIG       32 UINT MIN_UINT32 MAX_UINT32 0      "Device Configuration"
+
+COMMAND SAMPLE SAMPLE_REQ_HK <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample Request HK Packet Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FB "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND SAMPLE SAMPLE_REQ_DATA <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Sample Request Data Packet Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18FB "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 1        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
 ```
 
-## 항목
+### `SAMPLE_TLM.txt`
 
-- [`gsw/cosmos/COMPONENTS/SAMPLE/cmd_tlm/SAMPLE_CMD.txt`](file--SAMPLE_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/SAMPLE/cmd_tlm/SAMPLE_TLM.txt`](file--SAMPLE_TLM.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/COMPONENTS/SAMPLE/cmd_tlm/SAMPLE_TLM.txt`
+
+
+```text
+TELEMETRY SAMPLE SAMPLE_HK_TLM <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "SAMPLE_Hk_tlm_t"
+  APPEND_ID_ITEM CCSDS_STREAMID       16 UINT 0x08FA  "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SEQUENCE       16 UINT         "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_LENGTH         16 UINT         "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SECONDS        32 UINT         "CCSDS Telemetry Secondary Header (seconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SUBSECS        16 UINT         "CCSDS Telemetry Secondary Header (subseconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SPARE          32 UINT         ""
+  APPEND_ITEM    CMD_ERR_COUNT         8 UINT         "Command Error Count"
+  APPEND_ITEM    CMD_COUNT             8 UINT         "Command Count"
+  APPEND_ITEM    DEVICE_ERR_COUNT      8 UINT         "Device Command Error Count"
+  APPEND_ITEM    DEVICE_COUNT          8 UINT         "Device Command Count"
+  APPEND_ITEM    DEVICE_ENABLED        8 UINT         "Device Enable Status"
+    STATE DISABLED 0
+    STATE ENABLED  1 
+  # SAMPLE_Device_HK_tlm_t
+  APPEND_ITEM    DEVICE_COUNTER       32 UINT         "Reported Device Command Counter"
+  APPEND_ITEM    DEVICE_CONFIG        32 UINT         "Reported Device Configuration"
+  APPEND_ITEM    DEVICE_STATUS        32 UINT         "Reported Device Status"
+
+TELEMETRY SAMPLE SAMPLE_DATA_TLM <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "SAMPLE_Device_tlm_t"
+  APPEND_ID_ITEM CCSDS_STREAMID       16 UINT 0x08FB  "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SEQUENCE       16 UINT         "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_LENGTH         16 UINT         "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SECONDS        32 UINT         "CCSDS Telemetry Secondary Header (seconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SUBSECS        16 UINT         "CCSDS Telemetry Secondary Header (subseconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SPARE          32 UINT         ""
+  # SAMPLE_Device_Data_tlm_t
+  APPEND_ITEM    DEVICE_COUNTER       32 UINT         "Reported Device Command Counter"
+  APPEND_ITEM    RAW_SAMPLE_X         16 UINT         "Raw sample data x component (1-65535)"
+  APPEND_ITEM    RAW_SAMPLE_Y         16 UINT         "Raw sample data y component (1-65535)"
+  APPEND_ITEM    RAW_SAMPLE_Z         16 UINT         "Raw sample data z component (1-65535)"
+  APPEND_ITEM    SAMPLE_X              0 DERIVED      "Sample data unit vector x component (-1.0 to 1.0)"
+    GENERIC_READ_CONVERSION_START FLOAT 32
+      (packet.read("RAW_SAMPLE_X") - 32768.0)/32767.0
+    GENERIC_READ_CONVERSION_END
+  APPEND_ITEM    SAMPLE_Y              0 DERIVED      "Sample data unit vector y component (-1.0 to 1.0)"
+    GENERIC_READ_CONVERSION_START FLOAT 32
+      (packet.read("RAW_SAMPLE_Y") - 32768.0)/32767.0
+    GENERIC_READ_CONVERSION_END
+  APPEND_ITEM    SAMPLE_Z              0 DERIVED      "Sample data unit vector z component (-1.0 to 1.0)"
+    GENERIC_READ_CONVERSION_START FLOAT 32
+      (packet.read("RAW_SAMPLE_Z") - 32768.0)/32767.0
+    GENERIC_READ_CONVERSION_END
+# TODO: This is specific to the sample application, remove if using template generator
+  APPEND_ITEM    PassNumber             16 UINT       "Science Pass Number"
+  APPEND_ITEM    RegionStatus            8 UINT       "Science Region / Status"
+      STATE SCIENCE_OFF             0
+      STATE SCIENCE_INITIALIZED     1
+      STATE SCIENCE_OVER_AK         2
+      STATE SCIENCE_OVER_CONUS      3
+      STATE SCIENCE_OVER_HI         4
+      STATE NO_SCIENCE_LEFT_AK      5
+      STATE NO_SCIENCE_LEFT_CONUS   6
+      STATE NO_SCIENCE_LEFT_HI      7
+      STATE NO_SCIENCE_LOW_POWER    8
+      STATE NO_SCIENCE_RECHARGED    9
+      STATE EXITED_SCIENCE_MODE     10
+```

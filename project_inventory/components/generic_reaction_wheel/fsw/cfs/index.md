@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_reaction_wheel/fsw/cfs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,30 @@
 mission_inc/index
 platform_inc/index
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_reaction_wheel/fsw/cfs/mission_inc/`](mission_inc/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/cfs/platform_inc/`](platform_inc/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/cfs/src/`](src/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/cfs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_reaction_wheel/fsw/cfs/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_GENERIC_REACTION_WHEEL C)
+
+include(../../../ComponentSettings.cmake)
+
+include_directories(mission_inc)
+include_directories(platform_inc)
+include_directories(../shared)
+
+aux_source_directory(src APP_SRC_FILES)
+include_directories(${hwlib_MISSION_DIR}/fsw/public_inc)
+
+# Create the app module
+add_cfe_app(generic_rw ${APP_SRC_FILES}
+            ../shared/generic_reaction_wheel_device.c)
+
+```

@@ -3,22 +3,571 @@
 
 **경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CreateParameterBuilder.java`
 
-file--CreateParameterBuilder.java
-file--CreateParameterTypeBuilder.java
-file--MissionDatabaseClient.java
-file--StreamMissionDatabaseOptions.java
-file--SystemPage.java
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/CreateParameterBuilder.java`
+
+
+```java
+package org.yamcs.client.mdb;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.protobuf.Mdb.CreateParameterRequest;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.MdbApiClient;
+
+public class CreateParameterBuilder {
+
+    private MdbApiClient mdbService;
+    private CreateParameterRequest.Builder requestb;
+
+    CreateParameterBuilder(MissionDatabaseClient client, String parameter, DataSourceType dataSource) {
+        this(client.mdbService, client.instance, parameter, dataSource);
+    }
+
+    private CreateParameterBuilder(MdbApiClient mdbService, String instance, String parameter,
+            DataSourceType dataSource) {
+        this.mdbService = mdbService;
+        requestb = CreateParameterRequest.newBuilder()
+                .setInstance(instance)
+                .setName(parameter)
+                .setDataSource(dataSource);
+    }
+
+    public CreateParameterBuilder withShortDescription(String shortDescription) {
+        requestb.setShortDescription(shortDescription);
+        return this;
+    }
+
+    public CreateParameterBuilder withLongDescription(String longDescription) {
+        requestb.setLongDescription(longDescription);
+        return this;
+    }
+
+    public CreateParameterBuilder withAlias(String namespace, String name) {
+        requestb.putAliases(namespace, name);
+        return this;
+    }
+
+    public CreateParameterBuilder withParameterType(String parameterType) {
+        requestb.setParameterType(parameterType);
+        return this;
+    }
+
+    public CompletableFuture<ParameterInfo> create() {
+        var f = new CompletableFuture<ParameterInfo>();
+        var request = requestb.build();
+        mdbService.createParameter(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+}
 ```
 
-## 항목
+### `CreateParameterTypeBuilder.java`
 
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/CreateParameterBuilder.java`](file--CreateParameterBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/CreateParameterTypeBuilder.java`](file--CreateParameterTypeBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/MissionDatabaseClient.java`](file--MissionDatabaseClient.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/StreamMissionDatabaseOptions.java`](file--StreamMissionDatabaseOptions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/SystemPage.java`](file--SystemPage.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/CreateParameterTypeBuilder.java`
+
+
+```java
+package org.yamcs.client.mdb;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.protobuf.Mdb.AlarmInfo;
+import org.yamcs.protobuf.Mdb.ContextAlarmInfo;
+import org.yamcs.protobuf.Mdb.CreateParameterTypeRequest;
+import org.yamcs.protobuf.Mdb.EnumValue;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
+import org.yamcs.protobuf.MdbApiClient;
+
+public class CreateParameterTypeBuilder {
+
+    private MdbApiClient mdbService;
+    private CreateParameterTypeRequest.Builder requestb;
+
+    CreateParameterTypeBuilder(MissionDatabaseClient client, String parameter) {
+        this(client.mdbService, client.instance, parameter);
+    }
+
+    private CreateParameterTypeBuilder(MdbApiClient mdbService, String instance, String parameter) {
+        this.mdbService = mdbService;
+        requestb = CreateParameterTypeRequest.newBuilder()
+                .setInstance(instance)
+                .setName(parameter);
+    }
+
+    public CreateParameterTypeBuilder withShortDescription(String shortDescription) {
+        requestb.setShortDescription(shortDescription);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withLongDescription(String longDescription) {
+        requestb.setLongDescription(longDescription);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withAlias(String namespace, String name) {
+        requestb.putAliases(namespace, name);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withEngType(String engType) {
+        requestb.setEngType(engType);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withUnit(String unit) {
+        requestb.setUnit(unit);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withSigned(boolean signed) {
+        requestb.setSigned(signed);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withDefaultAlarm(AlarmInfo alarmInfo) {
+        requestb.setDefaultAlarm(alarmInfo);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withContextAlarm(ContextAlarmInfo contextAlarmInfo) {
+        requestb.addContextAlarms(contextAlarmInfo);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withEnumerationValues(Map<Long, String> enumerationValues) {
+        requestb.clearEnumerationValues();
+        for (var entry : enumerationValues.entrySet()) {
+            requestb.addEnumerationValues(EnumValue.newBuilder()
+                    .setValue(entry.getKey())
+                    .setLabel(entry.getValue()));
+        }
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withEnumerationValues(List<EnumValue> enumerationValues) {
+        requestb.clearEnumerationValues();
+        requestb.addAllEnumerationValues(enumerationValues);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withZeroStringValue(String zeroStringValue) {
+        requestb.setZeroStringValue(zeroStringValue);
+        return this;
+    }
+
+    public CreateParameterTypeBuilder withOneStringValue(String oneStringValue) {
+        requestb.setOneStringValue(oneStringValue);
+        return this;
+    }
+
+    public CompletableFuture<ParameterTypeInfo> create() {
+        var f = new CompletableFuture<ParameterTypeInfo>();
+        var request = requestb.build();
+        mdbService.createParameterType(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+}
+```
+
+### `MissionDatabaseClient.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/MissionDatabaseClient.java`
+
+
+```java
+package org.yamcs.client.mdb;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.MethodHandler;
+import org.yamcs.api.Observer;
+import org.yamcs.client.Page;
+import org.yamcs.client.StreamReceiver;
+import org.yamcs.client.base.AbstractPage;
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions.DetailsOption;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions.LimitOption;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions.ListOption;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions.QOption;
+import org.yamcs.client.mdb.MissionDatabaseClient.ListOptions.SystemOption;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Mdb.ContainerInfo;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.Mdb.ExportJavaMissionDatabaseRequest;
+import org.yamcs.protobuf.Mdb.GetCommandRequest;
+import org.yamcs.protobuf.Mdb.GetContainerRequest;
+import org.yamcs.protobuf.Mdb.GetParameterRequest;
+import org.yamcs.protobuf.Mdb.ListCommandsRequest;
+import org.yamcs.protobuf.Mdb.ListCommandsResponse;
+import org.yamcs.protobuf.Mdb.ListContainersRequest;
+import org.yamcs.protobuf.Mdb.ListContainersResponse;
+import org.yamcs.protobuf.Mdb.ListParametersRequest;
+import org.yamcs.protobuf.Mdb.ListParametersResponse;
+import org.yamcs.protobuf.Mdb.MissionDatabaseItem;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.StreamMissionDatabaseRequest;
+import org.yamcs.protobuf.MdbApiClient;
+
+public class MissionDatabaseClient {
+
+    String instance;
+    MdbApiClient mdbService;
+
+    public MissionDatabaseClient(MethodHandler handler, String instance) {
+        this.instance = instance;
+        mdbService = new MdbApiClient(handler);
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public CompletableFuture<ParameterInfo> getParameter(String name) {
+        GetParameterRequest.Builder requestb = GetParameterRequest.newBuilder()
+                .setInstance(instance)
+                .setName(name);
+        CompletableFuture<ParameterInfo> f = new CompletableFuture<>();
+        mdbService.getParameter(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CreateParameterBuilder createParameter(String name, DataSourceType dataSource) {
+        return new CreateParameterBuilder(this, name, dataSource);
+    }
+
+    public CreateParameterTypeBuilder createParameterType(String name) {
+        return new CreateParameterTypeBuilder(this, name);
+    }
+
+    public CompletableFuture<Page<ParameterInfo>> listParameters(ListOption... options) {
+        ListParametersRequest.Builder requestb = ListParametersRequest.newBuilder()
+                .setInstance(instance)
+                .setDetails(true);
+        for (ListOption option : options) {
+            if (option instanceof LimitOption) {
+                requestb.setLimit(((LimitOption) option).limit);
+            } else if (option instanceof SystemOption) {
+                requestb.setSystem(((SystemOption) option).system);
+            } else if (option instanceof QOption) {
+                requestb.setQ(((QOption) option).q);
+            } else if (option instanceof DetailsOption) {
+                requestb.setDetails(((DetailsOption) option).details);
+            } else {
+                throw new IllegalArgumentException("Unsupported option " + option.getClass());
+            }
+        }
+        return new ParameterPage(requestb.build()).future();
+    }
+
+    public CompletableFuture<ContainerInfo> getContainer(String name) {
+        GetContainerRequest.Builder requestb = GetContainerRequest.newBuilder()
+                .setInstance(instance)
+                .setName(name);
+        CompletableFuture<ContainerInfo> f = new CompletableFuture<>();
+        mdbService.getContainer(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<Page<ContainerInfo>> listContainers() {
+        ListContainersRequest request = ListContainersRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        return new ContainerPage(request).future();
+    }
+
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<SystemPage<ContainerInfo>> listContainersForSystem(String system) {
+        ListContainersRequest request = ListContainersRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        return (CompletableFuture<SystemPage<ContainerInfo>>) (Object) new ContainerPage(request).future();
+    }
+
+    public CompletableFuture<CommandInfo> getCommand(String name) {
+        GetCommandRequest.Builder requestb = GetCommandRequest.newBuilder()
+                .setInstance(instance)
+                .setName(name);
+        CompletableFuture<CommandInfo> f = new CompletableFuture<>();
+        mdbService.getCommand(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<Page<CommandInfo>> listCommands(ListOption... options) {
+        ListCommandsRequest.Builder requestb = ListCommandsRequest.newBuilder()
+                .setInstance(instance)
+                .setDetails(true);
+        for (ListOption option : options) {
+            if (option instanceof LimitOption) {
+                requestb.setLimit(((LimitOption) option).limit);
+            } else {
+                throw new IllegalArgumentException("Unsupported option " + option.getClass());
+            }
+        }
+        return new CommandPage(requestb.build()).future();
+    }
+
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<SystemPage<CommandInfo>> listCommandsForSystem(String system) {
+        ListCommandsRequest request = ListCommandsRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        return (CompletableFuture<SystemPage<CommandInfo>>) (Object) new CommandPage(request).future();
+    }
+
+    public CompletableFuture<Void> streamMissionDatabaseItems(StreamReceiver<MissionDatabaseItem> consumer,
+            StreamMissionDatabaseOptions options) {
+        var request = StreamMissionDatabaseRequest.newBuilder()
+                .setInstance(instance)
+                .setIncludeSpaceSystems(options.isIncludeSpaceSystems())
+                .setIncludeContainers(options.isIncludeContainers())
+                .setIncludeParameters(options.isIncludeParameters())
+                .setIncludeParameterTypes(options.isIncludeParameterTypes())
+                .setIncludeCommands(options.isIncludeCommands())
+                .setIncludeAlgorithms(options.isIncludeAlgorithms())
+                .build();
+        var f = new CompletableFuture<Void>();
+        mdbService.streamMissionDatabase(null, request, new Observer<MissionDatabaseItem>() {
+
+            @Override
+            public void next(MissionDatabaseItem message) {
+                consumer.accept(message);
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                f.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete() {
+                f.complete(null);
+            }
+        });
+        return f;
+    }
+
+    public CompletableFuture<byte[]> getSerializedJavaDump() {
+        ExportJavaMissionDatabaseRequest request = ExportJavaMissionDatabaseRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<HttpBody> f = new CompletableFuture<>();
+        mdbService.exportJavaMissionDatabase(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getData().toByteArray());
+    }
+
+    private class ParameterPage extends AbstractPage<ListParametersRequest, ListParametersResponse, ParameterInfo>
+            implements SystemPage<ParameterInfo> {
+
+        public ParameterPage(ListParametersRequest request) {
+            super(request, "parameters");
+        }
+
+        @Override
+        protected void fetch(ListParametersRequest request, Observer<ListParametersResponse> observer) {
+            mdbService.listParameters(null, request, observer);
+        }
+
+        @Override
+        public List<String> getSubsystems() {
+            return getResponse().getSystemsList().stream()
+                    .map(system -> system.getQualifiedName())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private class ContainerPage extends AbstractPage<ListContainersRequest, ListContainersResponse, ContainerInfo>
+            implements SystemPage<ContainerInfo> {
+
+        public ContainerPage(ListContainersRequest request) {
+            super(request, "containers");
+        }
+
+        @Override
+        protected void fetch(ListContainersRequest request, Observer<ListContainersResponse> observer) {
+            mdbService.listContainers(null, request, observer);
+        }
+
+        @Override
+        public List<String> getSubsystems() {
+            return getResponse().getSystemsList().stream()
+                    .map(system -> system.getQualifiedName())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private class CommandPage extends AbstractPage<ListCommandsRequest, ListCommandsResponse, CommandInfo>
+            implements SystemPage<CommandInfo> {
+
+        public CommandPage(ListCommandsRequest request) {
+            super(request, "commands");
+        }
+
+        @Override
+        protected void fetch(ListCommandsRequest request, Observer<ListCommandsResponse> observer) {
+            mdbService.listCommands(null, request, observer);
+        }
+
+        @Override
+        public List<String> getSubsystems() {
+            return getResponse().getSystemsList().stream()
+                    .map(system -> system.getQualifiedName())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    public static final class ListOptions {
+
+        public static interface ListOption {
+        }
+
+        public static ListOption limit(int limit) {
+            return new LimitOption(limit);
+        }
+
+        public static SystemOption system(String system) {
+            return new SystemOption(system);
+        }
+
+        public static QOption q(String q) {
+            return new QOption(q);
+        }
+
+        public static DetailsOption details(boolean details) {
+            return new DetailsOption(details);
+        }
+
+        static final class LimitOption implements ListOption {
+            final int limit;
+
+            public LimitOption(int limit) {
+                this.limit = limit;
+            }
+        }
+
+        static final class SystemOption implements ListOption {
+            final String system;
+
+            public SystemOption(String system) {
+                this.system = system;
+            }
+        }
+
+        static final class QOption implements ListOption {
+            final String q;
+
+            public QOption(String q) {
+                this.q = q;
+            }
+        }
+
+        static final class DetailsOption implements ListOption {
+            final boolean details;
+
+            public DetailsOption(boolean details) {
+                this.details = details;
+            }
+        }
+    }
+}
+```
+
+### `StreamMissionDatabaseOptions.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/StreamMissionDatabaseOptions.java`
+
+
+```java
+package org.yamcs.client.mdb;
+
+public class StreamMissionDatabaseOptions {
+
+    private boolean includeSpaceSystems;
+    private boolean includeContainers;
+    private boolean includeParameters;
+    private boolean includeParameterTypes;
+    private boolean includeCommands;
+    private boolean includeAlgorithms;
+
+    public boolean isIncludeSpaceSystems() {
+        return includeSpaceSystems;
+    }
+
+    public void setIncludeSpaceSystems(boolean includeSpaceSystems) {
+        this.includeSpaceSystems = includeSpaceSystems;
+    }
+
+    public boolean isIncludeContainers() {
+        return includeContainers;
+    }
+
+    public void setIncludeContainers(boolean includeContainers) {
+        this.includeContainers = includeContainers;
+    }
+
+    public boolean isIncludeParameters() {
+        return includeParameters;
+    }
+
+    public void setIncludeParameters(boolean includeParameters) {
+        this.includeParameters = includeParameters;
+    }
+
+    public boolean isIncludeParameterTypes() {
+        return includeParameterTypes;
+    }
+
+    public void setIncludeParameterTypes(boolean includeParameterTypes) {
+        this.includeParameterTypes = includeParameterTypes;
+    }
+
+    public boolean isIncludeCommands() {
+        return includeCommands;
+    }
+
+    public void setIncludeCommands(boolean includeCommands) {
+        this.includeCommands = includeCommands;
+    }
+
+    public boolean isIncludeAlgorithms() {
+        return includeAlgorithms;
+    }
+
+    public void setIncludeAlgorithms(boolean includeAlgorithms) {
+        this.includeAlgorithms = includeAlgorithms;
+    }
+}
+```
+
+### `SystemPage.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/SystemPage.java`
+
+
+```java
+package org.yamcs.client.mdb;
+
+import java.util.List;
+
+import org.yamcs.client.Page;
+
+/**
+ * A {@link Page} that also lists direct subsystems
+ */
+public interface SystemPage<T> extends Page<T> {
+
+    List<String> getSubsystems();
+}
+```

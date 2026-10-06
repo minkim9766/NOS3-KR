@@ -3,18 +3,135 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `display-file-dirty-dialog.component.html`
 
-file--display-file-dirty-dialog.component.html
-file--display-file-dirty-dialog.component.ts
-file--display-file-dirty.guard.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/display-file-dirty-dialog.component.html`
+
+
+```html
+<mat-dialog-content>
+  <p>You have unsaved changes on the current page. Do you want to discard them?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="confirmDiscard()">DISCARD</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `display-file-dirty-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/display-file-dirty-dialog.component.html`](file--display-file-dirty-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/display-file-dirty-dialog.component.ts`](file--display-file-dirty-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/display-file-dirty.guard.ts`](file--display-file-dirty.guard.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/display-file-dirty-dialog.component.ts`
+
+
+```typescript
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-display-file-page-dirty-dialog',
+  templateUrl: './display-file-dirty-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class DisplayFilePageDirtyDialogComponent {
+  constructor(
+    private dialogRef: MatDialogRef<DisplayFilePageDirtyDialogComponent>,
+  ) {}
+
+  confirmDiscard() {
+    this.dialogRef.close(true);
+  }
+}
+```
+
+### `display-file-dirty.guard.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-file-dirty-guard/display-file-dirty.guard.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+
+import { CanDeactivateFn } from '@angular/router';
+import { AuthService, ConfigService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Observer, of } from 'rxjs';
+import { DisplayFileComponent } from '../display-file/display-file.component';
+import { DisplayFilePageDirtyDialogComponent } from './display-file-dirty-dialog.component';
+
+export const displayFilePageDirtyGuardFn: CanDeactivateFn<
+  DisplayFileComponent
+> = (component: DisplayFileComponent) => {
+  return inject(DisplayFilePageDirtyGuard).canDeactivate(component);
+};
+
+@Injectable()
+export class DisplayFilePageDirtyGuard {
+  private bucket: string;
+
+  // TODO this is just a workaround around the fact that our current version
+  // of Angular seems to trigger our deactivate guard twice...
+  private dialogOpen$ = new BehaviorSubject<boolean>(false);
+  private dialogRef: MatDialogRef<DisplayFilePageDirtyDialogComponent, any>;
+
+  constructor(
+    private dialog: MatDialog,
+    private authService: AuthService,
+    configService: ConfigService,
+  ) {
+    this.bucket = configService.getDisplayBucket();
+  }
+
+  canDeactivate(component: DisplayFileComponent) {
+    // Copy the result of the first triggered dialog
+    if (this.dialogOpen$.value) {
+      return new Observable((observer: Observer<boolean>) => {
+        this.dialogRef.afterClosed().subscribe({
+          next: (result) => {
+            observer.next(result === true);
+            observer.complete();
+          },
+          error: () => {
+            observer.next(false);
+            observer.complete();
+          },
+        });
+      });
+    }
+
+    if (component.hasPendingChanges() && this.mayManageDisplays()) {
+      return new Observable((observer: Observer<boolean>) => {
+        this.dialogOpen$.next(true);
+        this.dialogRef = this.dialog.open(DisplayFilePageDirtyDialogComponent, {
+          width: '400px',
+        });
+        this.dialogRef.afterClosed().subscribe({
+          next: (result) => {
+            this.dialogOpen$.next(false);
+            observer.next(result === true);
+            observer.complete();
+          },
+          error: () => {
+            this.dialogOpen$.next(false);
+            observer.next(false);
+            observer.complete();
+          },
+        });
+      });
+    } else {
+      return of(true);
+    }
+  }
+
+  private mayManageDisplays() {
+    const user = this.authService.getUser()!;
+    return (
+      user.hasObjectPrivilege('ManageBucket', this.bucket) ||
+      user.hasSystemPrivilege('ManageAnyBucket')
+    );
+  }
+}
+```

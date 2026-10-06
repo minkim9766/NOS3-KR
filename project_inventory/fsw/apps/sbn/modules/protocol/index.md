@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sbn/modules/protocol/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,10 +15,4 @@ spacewire/index
 udp/index
 ```
 
-## 항목
-
-- [`fsw/apps/sbn/modules/protocol/dtn/`](dtn/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/sbn_tcp/`](sbn_tcp/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/serial/`](serial/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/spacewire/`](spacewire/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/udp/`](udp/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

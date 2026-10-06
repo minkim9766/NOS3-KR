@@ -3,16 +3,45 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/spacer-styles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `spacer-styles.component.html`
 
-file--spacer-styles.component.html
-file--spacer-styles.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/spacer-styles/spacer-styles.component.html`
+
+
+```html
+<form [formGroup]="form">
+  <table class="style-table" formGroupName="properties">
+    <tr>
+      <td class="property">Height</td>
+      <td class="widget">
+        <input type="number" formControlName="height" style="width: 100px" min="0" />
+      </td>
+    </tr>
+  </table>
+</form>
 ```
 
-## 항목
+### `spacer-styles.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/spacer-styles/spacer-styles.component.html`](file--spacer-styles.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/spacer-styles/spacer-styles.component.ts`](file--spacer-styles.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/spacer-styles/spacer-styles.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-spacer-styles',
+  templateUrl: './spacer-styles.component.html',
+  styleUrl: '../../shared/StyleTable.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SpacerStylesComponent {
+  @Input()
+  form: UntypedFormGroup;
+}
+```

@@ -3,34 +3,1441 @@
 
 **경로:** `fsw/apps/ds/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 override_inc/index
-file--ds_app_stubs.c
-file--ds_cmds_stubs.c
-file--ds_dispatch_stubs.c
-file--ds_file_stubs.c
-file--ds_global_stubs.c
-file--ds_table_stubs.c
-file--stub_basetypes.h
-file--stub_libc_stdio.c
-file--stub_stdarg.h
-file--stub_stdio.h
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/ds/unit-test/stubs/override_inc/`](override_inc/index) — 폴더
-- [`fsw/apps/ds/unit-test/stubs/ds_app_stubs.c`](file--ds_app_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/ds_cmds_stubs.c`](file--ds_cmds_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/ds_dispatch_stubs.c`](file--ds_dispatch_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/ds_file_stubs.c`](file--ds_file_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/ds_global_stubs.c`](file--ds_global_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/ds_table_stubs.c`](file--ds_table_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/stub_basetypes.h`](file--stub_basetypes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/stub_libc_stdio.c`](file--stub_libc_stdio.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/stub_stdarg.h`](file--stub_stdarg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/unit-test/stubs/stub_stdio.h`](file--stub_stdio.h) — UTF-8 텍스트 파일 본문 포함
+### `ds_app_stubs.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/ds_app_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in ds_app header
+ */
+
+#include "ds_app.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppInitialize()
+ * ----------------------------------------------------
+ */
+CFE_Status_t DS_AppInitialize(void)
+{
+    UT_GenStub_SetupReturnBuffer(DS_AppInitialize, CFE_Status_t);
+
+    UT_GenStub_Execute(DS_AppInitialize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_AppInitialize, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppMain()
+ * ----------------------------------------------------
+ */
+void DS_AppMain(void)
+{
+
+    UT_GenStub_Execute(DS_AppMain, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppSendHkCmd()
+ * ----------------------------------------------------
+ */
+void DS_AppSendHkCmd(void)
+{
+
+    UT_GenStub_Execute(DS_AppSendHkCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppStorePacket()
+ * ----------------------------------------------------
+ */
+void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_AppStorePacket, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(DS_AppStorePacket, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_AppStorePacket, Basic, NULL);
+}
+```
+
+### `ds_cmds_stubs.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/ds_cmds_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in ds_cmds header
+ */
+
+#include "ds_cmds.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AddMIDCmd()
+ * ----------------------------------------------------
+ */
+void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_AddMIDCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_AddMIDCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CloseAllCmd()
+ * ----------------------------------------------------
+ */
+void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CloseAllCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CloseAllCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_CloseFileCmd()
+ * ----------------------------------------------------
+ */
+void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_CloseFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_CloseFileCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_GetFileInfoCmd()
+ * ----------------------------------------------------
+ */
+void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_GetFileInfoCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_GetFileInfoCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_NoopCmd()
+ * ----------------------------------------------------
+ */
+void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_NoopCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_NoopCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_RemoveMIDCmd()
+ * ----------------------------------------------------
+ */
+void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_RemoveMIDCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_RemoveMIDCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_ResetCountersCmd()
+ * ----------------------------------------------------
+ */
+void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_ResetCountersCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_ResetCountersCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetAppStateCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetAppStateCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetAppStateCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestAgeCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestAgeCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestAgeCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestBaseCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestBaseCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestBaseCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestCountCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestCountCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestCountCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestExtCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestExtCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestExtCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestPathCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestPathCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestPathCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestSizeCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestSizeCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestSizeCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestStateCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestStateCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestStateCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetDestTypeCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetDestTypeCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetDestTypeCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetFilterFileCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetFilterFileCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetFilterFileCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetFilterParmsCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetFilterParmsCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetFilterParmsCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_SetFilterTypeCmd()
+ * ----------------------------------------------------
+ */
+void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_SetFilterTypeCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_SetFilterTypeCmd, Basic, NULL);
+}
+```
+
+### `ds_dispatch_stubs.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/ds_dispatch_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in ds_dispatch header
+ */
+
+#include "ds_dispatch.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppProcessCmd()
+ * ----------------------------------------------------
+ */
+void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_AppProcessCmd, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_AppProcessCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_AppProcessMsg()
+ * ----------------------------------------------------
+ */
+void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_AppProcessMsg, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_AppProcessMsg, Basic, NULL);
+}
+```
+
+### `ds_file_stubs.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/ds_file_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in ds_file header
+ */
+
+#include "ds_file.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCloseDest()
+ * ----------------------------------------------------
+ */
+void DS_FileCloseDest(int32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileCloseDest, int32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileCloseDest, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCreateDest()
+ * ----------------------------------------------------
+ */
+void DS_FileCreateDest(uint32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileCreateDest, uint32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileCreateDest, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCreateName()
+ * ----------------------------------------------------
+ */
+void DS_FileCreateName(uint32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileCreateName, uint32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileCreateName, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileCreateSequence()
+ * ----------------------------------------------------
+ */
+void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
+{
+    UT_GenStub_AddParam(DS_FileCreateSequence, char *, Buffer);
+    UT_GenStub_AddParam(DS_FileCreateSequence, uint32, Type);
+    UT_GenStub_AddParam(DS_FileCreateSequence, uint32, Count);
+
+    UT_GenStub_Execute(DS_FileCreateSequence, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileSetupWrite()
+ * ----------------------------------------------------
+ */
+void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_FileSetupWrite, int32, FileIndex);
+    UT_GenStub_AddParam(DS_FileSetupWrite, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_FileSetupWrite, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileStorePacket()
+ * ----------------------------------------------------
+ */
+void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_AddParam(DS_FileStorePacket, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(DS_FileStorePacket, const CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(DS_FileStorePacket, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileTestAge()
+ * ----------------------------------------------------
+ */
+void DS_FileTestAge(uint32 ElapsedSeconds)
+{
+    UT_GenStub_AddParam(DS_FileTestAge, uint32, ElapsedSeconds);
+
+    UT_GenStub_Execute(DS_FileTestAge, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileTransmit()
+ * ----------------------------------------------------
+ */
+void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
+{
+    UT_GenStub_AddParam(DS_FileTransmit, DS_AppFileStatus_t *, FileStatus);
+
+    UT_GenStub_Execute(DS_FileTransmit, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileUpdateHeader()
+ * ----------------------------------------------------
+ */
+void DS_FileUpdateHeader(int32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileUpdateHeader, int32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileUpdateHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileWriteData()
+ * ----------------------------------------------------
+ */
+void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
+{
+    UT_GenStub_AddParam(DS_FileWriteData, int32, FileIndex);
+    UT_GenStub_AddParam(DS_FileWriteData, const void *, FileData);
+    UT_GenStub_AddParam(DS_FileWriteData, uint32, DataLength);
+
+    UT_GenStub_Execute(DS_FileWriteData, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileWriteError()
+ * ----------------------------------------------------
+ */
+void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
+{
+    UT_GenStub_AddParam(DS_FileWriteError, uint32, FileIndex);
+    UT_GenStub_AddParam(DS_FileWriteError, uint32, DataLength);
+    UT_GenStub_AddParam(DS_FileWriteError, int32, WriteResult);
+
+    UT_GenStub_Execute(DS_FileWriteError, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_FileWriteHeader()
+ * ----------------------------------------------------
+ */
+void DS_FileWriteHeader(int32 FileIndex)
+{
+    UT_GenStub_AddParam(DS_FileWriteHeader, int32, FileIndex);
+
+    UT_GenStub_Execute(DS_FileWriteHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_IsPacketFiltered()
+ * ----------------------------------------------------
+ */
+int32 DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint16 Algorithm_N, uint16 Algorithm_X,
+                         uint16 Algorithm_O)
+{
+    UT_GenStub_SetupReturnBuffer(DS_IsPacketFiltered, int32);
+
+    UT_GenStub_AddParam(DS_IsPacketFiltered, CFE_MSG_Message_t *, MessagePtr);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, FilterType);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, Algorithm_N);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, Algorithm_X);
+    UT_GenStub_AddParam(DS_IsPacketFiltered, uint16, Algorithm_O);
+
+    UT_GenStub_Execute(DS_IsPacketFiltered, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_IsPacketFiltered, int32);
+}
+```
+
+### `ds_global_stubs.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/ds_global_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Unit testing stubs for the ds_app.c file.
+ */
+
+#include "ds_app.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Application global data structure                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+DS_AppData_t DS_AppData;
+```
+
+### `ds_table_stubs.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/ds_table_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in ds_table header
+ */
+
+#include "ds_table.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableAddMsgID()
+ * ----------------------------------------------------
+ */
+int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableAddMsgID, int32);
+
+    UT_GenStub_AddParam(DS_TableAddMsgID, CFE_SB_MsgId_t, MessageID);
+    UT_GenStub_AddParam(DS_TableAddMsgID, int32, FilterIndex);
+
+    UT_GenStub_Execute(DS_TableAddMsgID, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableAddMsgID, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableCreateCDS()
+ * ----------------------------------------------------
+ */
+CFE_Status_t DS_TableCreateCDS(void)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableCreateCDS, CFE_Status_t);
+
+    UT_GenStub_Execute(DS_TableCreateCDS, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableCreateCDS, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableCreateHash()
+ * ----------------------------------------------------
+ */
+void DS_TableCreateHash(void)
+{
+
+    UT_GenStub_Execute(DS_TableCreateHash, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableEntryUnused()
+ * ----------------------------------------------------
+ */
+int32 DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableEntryUnused, int32);
+
+    UT_GenStub_AddParam(DS_TableEntryUnused, const void *, TableEntry);
+    UT_GenStub_AddParam(DS_TableEntryUnused, int32, BufferSize);
+
+    UT_GenStub_Execute(DS_TableEntryUnused, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableEntryUnused, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableFindMsgID()
+ * ----------------------------------------------------
+ */
+int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableFindMsgID, int32);
+
+    UT_GenStub_AddParam(DS_TableFindMsgID, CFE_SB_MsgId_t, MessageID);
+
+    UT_GenStub_Execute(DS_TableFindMsgID, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableFindMsgID, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableHashFunction()
+ * ----------------------------------------------------
+ */
+uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableHashFunction, uint32);
+
+    UT_GenStub_AddParam(DS_TableHashFunction, CFE_SB_MsgId_t, MessageID);
+
+    UT_GenStub_Execute(DS_TableHashFunction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableHashFunction, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableInit()
+ * ----------------------------------------------------
+ */
+CFE_Status_t DS_TableInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableInit, CFE_Status_t);
+
+    UT_GenStub_Execute(DS_TableInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableInit, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableManageDestFile()
+ * ----------------------------------------------------
+ */
+void DS_TableManageDestFile(void)
+{
+
+    UT_GenStub_Execute(DS_TableManageDestFile, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableManageFilter()
+ * ----------------------------------------------------
+ */
+void DS_TableManageFilter(void)
+{
+
+    UT_GenStub_Execute(DS_TableManageFilter, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableSubscribe()
+ * ----------------------------------------------------
+ */
+void DS_TableSubscribe(void)
+{
+
+    UT_GenStub_Execute(DS_TableSubscribe, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableUnsubscribe()
+ * ----------------------------------------------------
+ */
+void DS_TableUnsubscribe(void)
+{
+
+    UT_GenStub_Execute(DS_TableUnsubscribe, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableUpdateCDS()
+ * ----------------------------------------------------
+ */
+void DS_TableUpdateCDS(void)
+{
+
+    UT_GenStub_Execute(DS_TableUpdateCDS, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyAge()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyAge(uint32 MaxFileAge)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyAge, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyAge, uint32, MaxFileAge);
+
+    UT_GenStub_Execute(DS_TableVerifyAge, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyAge, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyCount()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyCount(uint32 SequenceCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyCount, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyCount, uint32, SequenceCount);
+
+    UT_GenStub_Execute(DS_TableVerifyCount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyCount, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyDestFile()
+ * ----------------------------------------------------
+ */
+CFE_Status_t DS_TableVerifyDestFile(const void *TableData)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyDestFile, CFE_Status_t);
+
+    UT_GenStub_AddParam(DS_TableVerifyDestFile, const void *, TableData);
+
+    UT_GenStub_Execute(DS_TableVerifyDestFile, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyDestFile, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyDestFileEntry()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableIndex, int32 ErrorCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyDestFileEntry, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyDestFileEntry, DS_DestFileEntry_t *, DestFileEntry);
+    UT_GenStub_AddParam(DS_TableVerifyDestFileEntry, uint8, TableIndex);
+    UT_GenStub_AddParam(DS_TableVerifyDestFileEntry, int32, ErrorCount);
+
+    UT_GenStub_Execute(DS_TableVerifyDestFileEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyDestFileEntry, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyFileIndex()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyFileIndex(uint16 FileTableIndex)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFileIndex, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyFileIndex, uint16, FileTableIndex);
+
+    UT_GenStub_Execute(DS_TableVerifyFileIndex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFileIndex, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyFilter()
+ * ----------------------------------------------------
+ */
+CFE_Status_t DS_TableVerifyFilter(const void *TableData)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFilter, CFE_Status_t);
+
+    UT_GenStub_AddParam(DS_TableVerifyFilter, const void *, TableData);
+
+    UT_GenStub_Execute(DS_TableVerifyFilter, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFilter, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyFilterEntry()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyFilterEntry, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyFilterEntry, DS_PacketEntry_t *, PacketEntry);
+    UT_GenStub_AddParam(DS_TableVerifyFilterEntry, int32, TableIndex);
+    UT_GenStub_AddParam(DS_TableVerifyFilterEntry, int32, ErrorCount);
+
+    UT_GenStub_Execute(DS_TableVerifyFilterEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyFilterEntry, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyParms()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyParms, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_N);
+    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_X);
+    UT_GenStub_AddParam(DS_TableVerifyParms, uint16, Algorithm_O);
+
+    UT_GenStub_Execute(DS_TableVerifyParms, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyParms, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifySize()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifySize(uint32 MaxFileSize)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifySize, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifySize, uint32, MaxFileSize);
+
+    UT_GenStub_Execute(DS_TableVerifySize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifySize, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyState()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyState(uint16 EnableState)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyState, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyState, uint16, EnableState);
+
+    UT_GenStub_Execute(DS_TableVerifyState, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyState, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for DS_TableVerifyType()
+ * ----------------------------------------------------
+ */
+int32 DS_TableVerifyType(uint16 TimeVsCount)
+{
+    UT_GenStub_SetupReturnBuffer(DS_TableVerifyType, int32);
+
+    UT_GenStub_AddParam(DS_TableVerifyType, uint16, TimeVsCount);
+
+    UT_GenStub_Execute(DS_TableVerifyType, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(DS_TableVerifyType, int32);
+}
+```
+
+### `stub_basetypes.h`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/stub_basetypes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Coverage stub basic data types
+ */
+
+#ifndef STUB_BASETYPES_H
+#define STUB_BASETYPES_H
+
+/*
+ * NOTE: These header files are intentionally _not_ overridden
+ * in the replacement/override header directory, so this should
+ * pull in the actual (native system) version of these files.
+ *
+ * It is important to pull in these definitions first before any
+ * potential re-mapping (#define) statements are done.
+ */
+
+#include <stddef.h>  /* for correct size_t and ptrdiff_t types */
+#include <stdint.h>  /* for correct fixed-width integer types */
+#include <limits.h>  /* for correct INT_MAX, etc. */
+
+#endif
+```
+
+### `stub_libc_stdio.c`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/stub_libc_stdio.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Coverage stub replacement for stdio.h
+ */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+
+#include "stub_stdio.h"
+
+struct stub_FILE
+{
+    int f;
+};
+
+#define stub_STDIO_MAX_SIZE 0x01000000
+
+int stub_fclose(stub_FILE *stream)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(stub_fclose);
+
+    return Status;
+}
+
+char *stub_fgets(char *s, int n, stub_FILE *stream)
+{
+    int32  Status;
+    size_t CopySize;
+
+    Status = UT_DEFAULT_IMPL_RC(stub_fgets, stub_STDIO_MAX_SIZE);
+
+    if (Status > 0)
+    {
+        if (Status > n)
+        {
+            CopySize = n;
+        }
+        else
+        {
+            CopySize = Status;
+        }
+
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(stub_fgets), s, CopySize);
+
+        if (CopySize != 0)
+        {
+            Status = CopySize;
+        }
+        else if (Status <= n)
+        {
+            memset(s, 'x', Status);
+        }
+        else if (UT_GetStubCount(UT_KEY(stub_fgets) < 4))
+        {
+            memset(s, 'x', n);
+            Status = n;
+        }
+        else
+        {
+            Status = 0;
+        }
+    }
+
+    if (Status <= 0)
+    {
+        return NULL;
+    }
+
+    return s;
+}
+
+stub_FILE *stub_fopen(const char *filename, const char *modes)
+{
+    int32            Status;
+    stub_FILE *      retval;
+    static stub_FILE FOPEN_FP = {0};
+
+    Status = UT_DEFAULT_IMPL(stub_fopen);
+
+    if (Status == 0)
+    {
+        retval = &FOPEN_FP;
+    }
+    else
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+int stub_fputs(const char *s, stub_FILE *stream)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(stub_fputs);
+
+    return Status;
+}
+
+int stub_putchar(int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(stub_putchar);
+
+    return Status;
+}
+
+int stub_remove(const char *filename)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(stub_remove);
+
+    return Status;
+}
+
+int stub_rename(const char *old, const char *nw)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(stub_rename);
+
+    return Status;
+}
+
+int stub_snprintf(char *s, size_t maxlen, const char *format, ...)
+{
+    int32   Status;
+    int     actual = 0;
+    va_list ap;
+
+    Status = UT_DEFAULT_IMPL(stub_snprintf);
+
+    /* need to actually _do_ the snprintf */
+    if (Status >= 0)
+    {
+        va_start(ap, format);
+        actual = vsnprintf(s, maxlen, format, ap);
+        va_end(ap);
+    }
+
+    if (Status != 0)
+    {
+        actual = Status;
+    }
+
+    return actual;
+}
+
+int stub_vsnprintf(char *s, size_t maxlen, const char *format, stub_va_list arg)
+{
+    int32 Status;
+    int   actual = 0;
+
+    Status = UT_DEFAULT_IMPL(stub_vsnprintf);
+
+    /* need to actually _do_ something here -
+     * cannot do the real vsnprintf because we lost the args. */
+    if (Status >= 0)
+    {
+        actual = snprintf(s, maxlen, "%s", format);
+    }
+
+    if (Status != 0)
+    {
+        actual = Status;
+    }
+
+    return actual;
+}
+
+int stub_printf(const char *format, ...)
+{
+    return UT_DEFAULT_IMPL(stub_printf);
+}
+
+int stub_fprintf(stub_FILE *fp, const char *format, ...)
+{
+    return UT_DEFAULT_IMPL(stub_fprintf);
+}
+
+static stub_FILE LOCAL_FP[3] = {{10}, {11}, {12}};
+
+stub_FILE *stub_stdin  = &LOCAL_FP[0];
+stub_FILE *stub_stdout = &LOCAL_FP[1];
+stub_FILE *stub_stderr = &LOCAL_FP[2];
+```
+
+### `stub_stdarg.h`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/stub_stdarg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Coverage stub replacement for stdarg.h
+ */
+
+#ifndef STUB_STDARG_H
+#define STUB_STDARG_H
+
+#include "stub_basetypes.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdarg.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in stdarg.h */
+/* ----------------------------------------- */
+typedef struct
+{
+    void *p;
+} stub_va_list;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdarg.h */
+/* ----------------------------------------- */
+
+#define stub_va_start(ap, last) ap.p = &last
+#define stub_va_end(ap)
+
+#endif
+```
+
+### `stub_stdio.h`
+
+**경로:** `fsw/apps/ds/unit-test/stubs/stub_stdio.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Coverage stub replacement for stdio.h
+ */
+
+#ifndef STUB_STDIO_H
+#define STUB_STDIO_H
+
+#include "stub_basetypes.h"
+#include "stub_stdarg.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in stdio.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in stdio.h */
+/* ----------------------------------------- */
+typedef struct stub_FILE stub_FILE;
+
+/* ----------------------------------------- */
+/* prototypes normally declared in stdio.h */
+/* ----------------------------------------- */
+
+extern int        stub_fclose(stub_FILE *stream);
+extern char *     stub_fgets(char *s, int n, stub_FILE *stream);
+extern stub_FILE *stub_fopen(const char *filename, const char *modes);
+extern int        stub_fputs(const char *s, stub_FILE *stream);
+extern int        stub_remove(const char *filename);
+extern int        stub_rename(const char *old, const char *nw);
+extern int        stub_snprintf(char *s, size_t maxlen, const char *format, ...);
+extern int        stub_vsnprintf(char *s, size_t maxlen, const char *format, stub_va_list arg);
+extern int        stub_printf(const char *format, ...);
+extern int        stub_fprintf(stub_FILE *fp, const char *format, ...);
+extern int        stub_putchar(int c);
+
+extern stub_FILE *stub_stdin;
+extern stub_FILE *stub_stdout;
+extern stub_FILE *stub_stderr;
+
+#endif
+```

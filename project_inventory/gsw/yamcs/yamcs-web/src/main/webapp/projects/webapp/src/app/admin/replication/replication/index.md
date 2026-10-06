@@ -3,18 +3,283 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `replication.component.css`
 
-file--replication.component.css
-file--replication.component.html
-file--replication.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/replication.component.css`
+
+
+```css
+.streams {
+  border-bottom: 1px dotted #888;
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `replication.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/replication.component.css`](file--replication.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/replication.component.html`](file--replication.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/replication.component.ts`](file--replication.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/replication.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Replication" />
+
+  <ya-panel>
+    <h4>Inbound</h4>
+    @if (hasSlaves$ | async) {
+      <table mat-table [dataSource]="slavesDataSource" class="ya-data-table expand">
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef class="status"></th>
+          <td mat-cell *matCellDef="let slave" class="status">
+            <app-replication-state [connected]="!!slave.localAddress && !!slave.remoteAddress" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="instance">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 130px">Instance</th>
+          <td mat-cell *matCellDef="let row">{{ row.instance }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="streams">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 100px">Streams</th>
+          <td mat-cell *matCellDef="let row">
+            <span
+              (click)="showReplicationStreams(row.streams || [])"
+              matTooltip="Show streams"
+              class="streams">
+              {{ (row.streams || []).length }} streams
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mode">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 70px">Mode</th>
+          <td mat-cell *matCellDef="let row" style="text-align: center">
+            {{ row.push ? "PUSH" : "PULL" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="localAddress">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 200px">Local address</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.localAddress || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="remoteAddress">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 200px">Remote address</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.remoteAddress || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pullFrom">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 130px">Pull from</th>
+          <td mat-cell *matCellDef="let row">{{ row.pullFrom || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tx">
+          <th mat-header-cell *matHeaderCellDef style="width: 130px">TX</th>
+          <td mat-cell *matCellDef="let row">{{ (row.tx | number) || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="slaveColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: slaveColumns"></tr>
+      </table>
+    } @else {
+      <ya-empty-message marginTop="0">Not configured</ya-empty-message>
+    }
+    <p>&nbsp;</p>
+
+    <div class="section-divider">
+      <mat-divider />
+    </div>
+    <h4>Outbound</h4>
+    @if (hasMasters$ | async) {
+      <table mat-table [dataSource]="mastersDataSource" class="ya-data-table">
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef class="status"></th>
+          <td mat-cell *matCellDef="let master" class="status">
+            <app-replication-state [connected]="!!master.localAddress && !!master.remoteAddress" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="instance">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 130px">Instance</th>
+          <td mat-cell *matCellDef="let row">{{ row.instance }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="streams">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 100px">Streams</th>
+          <td mat-cell *matCellDef="let row">
+            <span
+              (click)="showReplicationStreams(row.streams || [])"
+              matTooltip="Show streams"
+              class="streams">
+              {{ (row.streams || []).length }} streams
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mode">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 70px">Mode</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.push ? "PUSH" : "PULL" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="localAddress">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 200px">Local address</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.localAddress || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="remoteAddress">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 200px">Remote address</th>
+          <td mat-cell *matCellDef="let row">
+            {{ row.remoteAddress || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="pushTo">
+          <th mat-header-cell *matHeaderCellDef style="min-width: 130px">Push to</th>
+          <td mat-cell *matCellDef="let row">{{ row.pushTo || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="localTx">
+          <th mat-header-cell *matHeaderCellDef>Local&nbsp;TX</th>
+          <td mat-cell *matCellDef="let row">
+            @if (row.localTx >= 0) {
+              {{ (row.localTx | number) || "-" }}
+            }
+            @if (row.localTx < 0) {
+              -
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nextTx">
+          <th mat-header-cell *matHeaderCellDef>
+            Next&nbsp;TX
+            <ya-help>Next Transaction ID expected by the remote Yamcs instance</ya-help>
+          </th>
+          <td mat-cell *matCellDef="let row">{{ (row.nextTx | number) || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="masterColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: masterColumns"></tr>
+      </table>
+    } @else {
+      <ya-empty-message marginTop="0">Not configured</ya-empty-message>
+    }
+  </ya-panel>
+</app-admin-page>
+```
+
+### `replication.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/replication/replication.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  ReplicationInfoSubscription,
+  ReplicationMaster,
+  ReplicationSlave,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { ReplicationStateComponent } from '../replication-state/replication-state.component';
+import { ShowStreamsDialogComponent } from '../show-streams-dialog/show-streams-dialog.component';
+
+@Component({
+  templateUrl: './replication.component.html',
+  styleUrl: './replication.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    ReplicationStateComponent,
+    WebappSdkModule,
+  ],
+})
+export class ReplicationComponent implements OnDestroy {
+  slaveColumns = [
+    'state',
+    'instance',
+    'streams',
+    'mode',
+    'localAddress',
+    'remoteAddress',
+    'pullFrom',
+    'tx',
+    'actions',
+  ];
+
+  masterColumns = [
+    'state',
+    'instance',
+    'streams',
+    'mode',
+    'localAddress',
+    'remoteAddress',
+    'pushTo',
+    'localTx',
+    'nextTx',
+    'actions',
+  ];
+
+  slavesDataSource = new MatTableDataSource<ReplicationSlave>();
+  mastersDataSource = new MatTableDataSource<ReplicationMaster>();
+  hasSlaves$ = new BehaviorSubject<boolean>(false);
+  hasMasters$ = new BehaviorSubject<boolean>(false);
+
+  private replicationInfoSubscription: ReplicationInfoSubscription;
+
+  constructor(
+    yamcs: YamcsService,
+    title: Title,
+    private dialog: MatDialog,
+  ) {
+    title.setTitle('Replication');
+    this.replicationInfoSubscription =
+      yamcs.yamcsClient.createReplicationInfoSubscription((info) => {
+        this.slavesDataSource.data = info.slaves || [];
+        this.mastersDataSource.data = info.masters || [];
+        this.hasSlaves$.next(this.slavesDataSource.data.length > 0);
+        this.hasMasters$.next(this.mastersDataSource.data.length > 0);
+      });
+  }
+
+  showReplicationStreams(streams: string) {
+    this.dialog.open(ShowStreamsDialogComponent, {
+      width: '500px',
+      data: { streams },
+    });
+  }
+
+  ngOnDestroy() {
+    this.replicationInfoSubscription?.cancel();
+  }
+}
+```

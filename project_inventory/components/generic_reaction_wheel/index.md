@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_reaction_wheel/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,19 +12,122 @@
 fsw/index
 gsw/index
 sim/index
-file--.clang-format
-file--.git
-file--.gitignore
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_reaction_wheel/.github/`](.github/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/`](fsw/index) — 폴더
-- [`components/generic_reaction_wheel/gsw/`](gsw/index) — 폴더
-- [`components/generic_reaction_wheel/sim/`](sim/index) — 폴더
-- [`components/generic_reaction_wheel/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `components/generic_reaction_wheel/.clang-format`
+
+
+```text
+---
+Language:        Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands:   true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit:     120
+CommentPragmas:  ''
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+ExperimentalAutoDetectBinPacking: false
+ForEachMacros: []
+IncludeBlocks:   Preserve
+IncludeCategories:  []
+IncludeIsMainRegex: '$'
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWidth:     4
+KeepEmptyLinesAtTheStartOfBlocks: true
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments:  true
+SortIncludes:    false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpaceBeforeCpp11BracedList: true
+SpacesBeforeTrailingComments: 1
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard:        c++11
+TabWidth:        8
+UseTab:          Never
+```
+
+### `.git`
+
+**경로:** `components/generic_reaction_wheel/.git`
+
+
+```text
+gitdir: ../../.git/modules/components/generic_reaction_wheel
+```
+
+### `.gitignore`
+
+**경로:** `components/generic_reaction_wheel/.gitignore`
+
+
+```text
+fsw/standalone/build/*
+```
+
+### `README.md`
+
+**경로:** `components/generic_reaction_wheel/README.md`
+
+
+```markdown
+# Generic Reaction Wheel - cFS Application
+
+This repository contains the generic reaction wheel cFS application.
+
+## Documentation
+
+### Versioning
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
+
+## Legal 
+If this project interests you or if you have any questions, please feel free to contact any developer.
+
+### License
+This project is licensed under the NOSA (NASA Open Source Agreement) License. 
+
+### Acknowledgments
+* Special thanks to all the developers involved!
+
+```

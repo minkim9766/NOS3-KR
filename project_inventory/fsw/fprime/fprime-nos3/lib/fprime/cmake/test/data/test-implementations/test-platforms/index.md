@@ -3,16 +3,20 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmake/index
-file--library.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/cmake/`](cmake/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/library.cmake`](file--library.cmake) — UTF-8 텍스트 파일 본문 포함
+### `library.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/library.cmake`
+
+
+```cmake
+```

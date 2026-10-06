@@ -3,14 +3,42 @@
 
 **경로:** `components/cryptolib/docs/wiki/_static/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `custom.css`
 
-file--custom.css
+**경로:** `components/cryptolib/docs/wiki/_static/custom.css`
+
+
+```css
+/* Center the content and give it a maximum width */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.wy-nav-content, .content, .main-content {
+    max-width: 100%; /* Adjust this to reduce the width */
+    margin: 10 auto; /* Center the content */
+    padding: 30px;  /* Add padding for better readability */
+    box-sizing: border-box; /* Ensure padding doesn't affect width calculation */
+}
+
+/* Optional: Adjust background or border styles for aesthetics */
+body {
+    background-color: #FFFFFF; /* Light background color */
+}
+
+.wy-nav-content, .content, .main-content {
+    background-color: #FFFFFF; /* Content background color */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+@media (max-width: 768px) {
+    .wy-nav-content, .content, .main-content {
+        max-width: 95%;
+        padding: 10px;
+    }
+}
 ```
-
-## 항목
-
-- [`components/cryptolib/docs/wiki/_static/custom.css`](file--custom.css) — UTF-8 텍스트 파일 본문 포함

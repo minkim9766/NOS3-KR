@@ -3,18 +3,71 @@
 
 **경로:** `fsw/apps/sbn/test/cFS/sample_defs/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cpu1_sch_lab_table.c`
 
-file--cpu1_sch_lab_table.c
-file--cpu2_sch_lab_table.c
-file--cpu3_sch_lab_table.c
+**경로:** `fsw/apps/sbn/test/cFS/sample_defs/tables/cpu1_sch_lab_table.c`
+
+
+```c
+#include "cfe_tbl_filedef.h"
+#include "sch_lab_table.h"
+#include "cfe_sb.h"
+#include "ci_lab_msgids.h"
+#include "sbn_msgids.h"
+
+SCH_LAB_ScheduleTable_t SCH_TBL_Structure = {.Config = {
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CI_LAB_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(SBN_CMD_MID), 4},
+                                             }};
+
+CFE_TBL_FILEDEF(SCH_TBL_Structure, SCH_LAB_APP.SCH_LAB_SchTbl, Schedule Lab MsgID Table, sch_lab_table.tbl)
 ```
 
-## 항목
+### `cpu2_sch_lab_table.c`
 
-- [`fsw/apps/sbn/test/cFS/sample_defs/tables/cpu1_sch_lab_table.c`](file--cpu1_sch_lab_table.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/sample_defs/tables/cpu2_sch_lab_table.c`](file--cpu2_sch_lab_table.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/sample_defs/tables/cpu3_sch_lab_table.c`](file--cpu3_sch_lab_table.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn/test/cFS/sample_defs/tables/cpu2_sch_lab_table.c`
+
+
+```c
+#include "cfe_tbl_filedef.h"
+#include "sch_lab_table.h"
+#include "cfe_sb.h"
+
+SCH_LAB_ScheduleTable_t SCH_TBL_Structure = {.Config = {
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_SEND_HK_MID), 4},
+                                             }};
+
+CFE_TBL_FILEDEF(SCH_TBL_Structure, SCH_LAB_APP.SCH_LAB_SchTbl, Schedule Lab MsgID Table, sch_lab_table.tbl)
+```
+
+### `cpu3_sch_lab_table.c`
+
+**경로:** `fsw/apps/sbn/test/cFS/sample_defs/tables/cpu3_sch_lab_table.c`
+
+
+```c
+#include "cfe_tbl_filedef.h"
+#include "sch_lab_table.h"
+#include "cfe_sb.h"
+
+SCH_LAB_ScheduleTable_t SCH_TBL_Structure = {.Config = {
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_SEND_HK_MID), 4},
+                                                 {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_SEND_HK_MID), 4},
+                                             }};
+
+CFE_TBL_FILEDEF(SCH_TBL_Structure, SCH_LAB_APP.SCH_LAB_SchTbl, Schedule Lab MsgID Table, sch_lab_table.tbl)
+```

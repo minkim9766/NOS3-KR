@@ -3,46 +3,706 @@
 
 **경로:** `scripts/gsw/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build_cryptolib.sh`
 
-file--build_cryptolib.sh
-file--gsw_ait_build.sh
-file--gsw_ait_launch.sh
-file--gsw_cosmos_build.sh
-file--gsw_cosmos_launch.sh
-file--gsw_cosmos_multi_build.sh
-file--gsw_fprime_build.sh
-file--gsw_fprime_launch.sh
-file--gsw_openc3_build.sh
-file--gsw_openc3_clean.sh
-file--gsw_openc3_launch.sh
-file--gsw_yamcs_build.sh
-file--gsw_yamcs_launch.sh
-file--gsw_yamcs_multi_launch.sh
-file--launch_gsw.sh
-file--stop_gsw.sh
-file--system_test.rb
+**경로:** `scripts/gsw/build_cryptolib.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+GROUND_SOFTWARE=$(sed -n 's:.*<gsw>\(.*\)</gsw>.*:\1:p' ./cfg/nos3-mission.xml)
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+# Make ground software build directory
+mkdir -p $BASE_DIR/gsw/build
+
+# Build
+$DFLAGS_CPUS -v $BASE_DIR:$BASE_DIR -e LD_LIBRARY_PATH="/usr/local/lib" -e GROUND_SOFTWARE=$GROUND_SOFTWARE -e CRYPTO_RX_GROUND_PORT=$CRYPTO_RX_GROUND_PORT -e CRYPTO_TX_GROUND_PORT=$CRYPTO_TX_GROUND_PORT -e CRYPTO_TX_RADIO_PORT=$CRYPTO_TX_RADIO_PORT -e CRYPTO_RX_RADIO_PORT=$CRYPTO_RX_RADIO_PORT --name "nos_build_cryptolib" -w $BASE_DIR $DBOX make -j$NUM_CPUS build-cryptolib
 ```
 
-## 항목
+### `gsw_ait_build.sh`
 
-- [`scripts/gsw/build_cryptolib.sh`](file--build_cryptolib.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_ait_build.sh`](file--gsw_ait_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_ait_launch.sh`](file--gsw_ait_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_cosmos_build.sh`](file--gsw_cosmos_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_cosmos_launch.sh`](file--gsw_cosmos_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_cosmos_multi_build.sh`](file--gsw_cosmos_multi_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_fprime_build.sh`](file--gsw_fprime_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_fprime_launch.sh`](file--gsw_fprime_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_openc3_build.sh`](file--gsw_openc3_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_openc3_clean.sh`](file--gsw_openc3_clean.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_openc3_launch.sh`](file--gsw_openc3_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_yamcs_build.sh`](file--gsw_yamcs_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_yamcs_launch.sh`](file--gsw_yamcs_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/gsw_yamcs_multi_launch.sh`](file--gsw_yamcs_multi_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/launch_gsw.sh`](file--launch_gsw.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/stop_gsw.sh`](file--stop_gsw.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/gsw/system_test.rb`](file--system_test.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `scripts/gsw/gsw_ait_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+
+echo "AIT build..."
+$DCALL image pull ghcr.io/sphinxdefense/gsw-ait:main
+$DCALL image pull ghcr.io/sphinxdefense/ttc-command:main
+echo ""
+```
+
+### `gsw_ait_launch.sh`
+
+**경로:** `scripts/gsw/gsw_ait_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+export GSW="ait"
+
+echo "AIT launch..."
+gnome-terminal --tab --title="AIT" -- $DCALL run --rm -it -v $BASE_DIR:$BASE_DIR -v /tmp/nos3:/tmp/nos3 --name ait -h ait -p 8001:8001 --network=nos3-core ghcr.io/sphinxdefense/gsw-ait:main "source ~/.bashrc && ait-server"
+$DCALL run --rm -d --cpus=$NUM_CPUS -h influxdb --name influxdb -p 8086:8086 -e INFLUXDB_DB=$INFLUXDB_DB -e INFLUXDB_ADMIN_USER=$INFLUXDB_ADMIN_USER -e INFLUXDB_ADMIN_PASSWORD=$INFLUXDB_ADMIN_PASSWORD --network=nos3-core influxdb:1.8
+$DCALL run --rm -d --cpus=$NUM_CPUS --name ttc-command -p 80:80 --network=nos3-core ghcr.io/sphinxdefense/ttc-command:main
+echo ""
+
+pidof firefox > /dev/null
+if [ $? -eq 1 ]
+then
+    echo "Firefox launch..."
+    sleep 3
+    firefox http://localhost:80 &
+    echo ""
+fi
+```
+
+### `gsw_cosmos_build.sh`
+
+**경로:** `scripts/gsw/gsw_cosmos_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+export GSW="cosmos-openc3-operator-1"
+
+echo "COSMOS build..."
+$DCALL image pull ballaerospace/cosmos:4.5.0
+mkdir $GSW_DIR/COMPONENTS 2> /dev/null
+rm -r $GSW_DIR/COMPONENTS/* 2> /dev/null
+cp -r $GSW_DIR/config/targets/SIM_CMDBUS_BRIDGE $GSW_DIR/COMPONENTS/
+for i in $(find $BASE_DIR/components/ -name "gsw" -type d)
+do
+    #echo "$i"
+    cp -r $i/* $GSW_DIR/COMPONENTS/
+    cp $i/*.txt $GSW_DIR/COMPONENTS/SIM_CMDBUS_BRIDGE/cmd_tlm/ 2> /dev/null
+done
+echo ""
+```
+
+### `gsw_cosmos_launch.sh`
+
+**경로:** `scripts/gsw/gsw_cosmos_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+export GSW="cosmos-openc3-operator-1"
+
+# Debugging
+#echo "Script directory = " $SCRIPT_DIR
+#echo "Base directory   = " $BASE_DIR
+#exit
+
+#echo "Make /tmp folders..."
+#mkdir /tmp/data 2> /dev/null
+#mkdir /tmp/data/hk 2> /dev/null
+#mkdir /tmp/uplink 2> /dev/null
+
+echo "COSMOS launch..."
+gnome-terminal --tab --title="Cosmos" -- $DFLAGS -v $BASE_DIR:$BASE_DIR -v /tmp/nos3:/tmp/nos3 -v /tmp/.X11-unix:/tmp/.X11-unix:ro -e DISPLAY=$DISPLAY -e QT_X11_NO_MITSHM=1 -e PROCESSOR_ENDIANNESS="LITTLE_ENDIAN" -w $GSW_DIR --name cosmos-openc3-operator-1 --network=nos3-core ballaerospace/cosmos:4.5.0
+```
+
+### `gsw_cosmos_multi_build.sh`
+
+**경로:** `scripts/gsw/gsw_cosmos_multi_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+export GSW="cosmos-openc3-operator-1"
+
+echo "COSMOS build..."
+$DCALL image pull ballaerospace/cosmos:4.5.0
+mkdir $GSW_DIR/COMPONENTS 2> /dev/null
+rm -r $GSW_DIR/COMPONENTS/* 2> /dev/null
+cp -r $GSW_DIR/config/targets/SIM_CMDBUS_BRIDGE $GSW_DIR/COMPONENTS/
+for i in $(find $BASE_DIR/components/ -name "gsw" -type d)
+do
+    #echo "$i"
+    cp -r $i/* $GSW_DIR/COMPONENTS/
+    cp $i/*.txt $GSW_DIR/COMPONENTS/SIM_CMDBUS_BRIDGE/cmd_tlm/ 2> /dev/null
+done
+echo ""
+
+rm -rf $USER_NOS3_DIR/yamcs 2> /dev/null
+cp -r $BASE_DIR/gsw/yamcs $USER_NOS3_DIR/
+echo ""
+```
+
+### `gsw_fprime_build.sh`
+
+**경로:** `scripts/gsw/gsw_fprime_build.sh`
+
+
+```bash
+#!/bin/bash
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+echo "GSW = FPRIMEGDS, Built into FSW"
+```
+
+### `gsw_fprime_launch.sh`
+
+**경로:** `scripts/gsw/gsw_fprime_launch.sh`
+
+
+```bash
+#!/bin/bash
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+echo "GSW = FPRIMEGDS, Built into FSW"
+#creating dummy container for 42 truth sim, since gds is included in fprime.
+docker run -dit --network nos3-core --name cosmos-openc3-operator-1 --network-alias cosmos alpine tail -f /dev/null
+
+```
+
+### `gsw_openc3_build.sh`
+
+**경로:** `scripts/gsw/gsw_openc3_build.sh`
+
+
+```bash
+#!/bin/bash
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+export GSW="openc3-openc3-operator-1"
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+echo "Prepare OpenC3 docker containers..."
+cd $USER_NOS3_DIR
+git clone https://github.com/nasa-itc/openc3-nos3.git -b dev $USER_NOS3_DIR/openc3
+$DOCKER_COMPOSE_COMMAND -f $OPENC3_DIR/compose.yaml pull 
+echo ""
+
+# Check that openc3 directory exists
+if [ ! -d $OPENC3_DIR ]; then
+    echo ""
+    echo "    OpenC3 Cloning Failed!"
+    echo ""
+    exit 1
+fi
+
+echo "Launch openc3 containers..."
+cd $OPENC3_DIR
+$OPENC3_PATH run
+echo ""
+
+#echo "Set a password in openc3 via firefox..."
+#echo "  Refresh webpage if error page shown."
+#echo ""
+#sleep 5
+#firefox localhost:2900 &
+
+# Start by changing to a known location
+cd $OPENC3_DIR
+
+# Delete any previous run info
+rm -rf build
+if [ -d "build" ]
+then
+    echo ""
+    echo "ERROR: Failed to delete build directory!"
+    echo ""
+    exit 1
+fi
+
+# Start generating the plugin
+mkdir build
+# cd build
+$OPENC3_CLI generate plugin nos3 --ruby
+if [ ! -d "openc3-cosmos-nos3" ]
+then
+    echo ""
+    echo "ERROR: cli generate plugin nos3 failed!"
+    echo ""
+    exit 1
+fi
+
+# Copy targets
+mkdir openc3-cosmos-nos3/targets
+cd openc3-cosmos-nos3/targets
+targets=""
+for i in $(find $BASE_DIR/components -name target.txt) 
+do 
+    j=$(dirname $i)
+    cp -r $j .
+    targets="$targets $(basename $j)"
+done
+for i in $(find $GSW_DIR/config/targets -name target.txt) 
+do 
+    j=$(dirname $i)
+    cp -r $j .
+    k=$(basename $j)
+    targets="$targets $(basename $j)"
+done
+for i in $(find . -name *.txt)
+do 
+    sed -i -e 's/<%= CosmosCfsConfig::PROCESSOR_ENDIAN %>/LITTLE_ENDIAN/; s/<%=CF_INCOMING_PDU_MID%>/0x1800/; s/<%=CF_SPACE_TO_GND_PDU_MID%>/0x0800/;' $i
+done
+cd ..
+
+# Copy lib
+cp -r $GSW_DIR/lib .
+
+# Create plugin.txt
+echo "Create plugin..."
+rm plugin.txt
+if [ -f "plugin.txt" ]
+then
+    echo ""
+    echo "ERROR: Failed to remove plugin.txt file!"
+    echo ""
+    exit 1
+fi
+
+for i in $targets
+do
+    if [ "$i" != "SIM_42_TRUTH" -a "$i" != "SYSTEM" -a "$i" != "TO_DEBUG" ]
+    then
+        debug=$i"_DEBUG"
+        radio=$i"_RADIO"
+        echo TARGET $i $debug >> plugin.txt
+        echo TARGET $i $radio >> plugin.txt
+    else
+        echo TARGET $i $i >> plugin.txt
+    fi
+done
+echo "" >> plugin.txt
+echo "INTERFACE DEBUG udp_interface.rb nos-fsw 5012 5013 nil nil 128 10.0 nil" >> plugin.txt
+for i in $targets
+do
+    if [ "$i" != "SIM_42_TRUTH" -a "$i" != "SYSTEM" -a "$i" != "TO_DEBUG" ]
+    then
+        debug=$i"_DEBUG"
+        echo "   MAP_TARGET $debug" >> plugin.txt
+    fi
+done
+echo "   MAP_TARGET TO_DEBUG" >> plugin.txt
+echo "" >> plugin.txt
+
+echo "INTERFACE RADIO udp_interface.rb cryptolib 6010 6011 nil nil 128 10.0 nil" >> plugin.txt
+for i in $targets
+do
+    if [ "$i" != "SIM_42_TRUTH" -a "$i" != "SYSTEM" -a "$i" != "TO_DEBUG" ]
+    then
+        radio=$i"_RADIO"
+        echo "   MAP_TARGET $radio" >> plugin.txt
+    fi
+done
+echo "" >> plugin.txt
+
+echo "INTERFACE SIM_42_TRUTH_INT udp_interface.rb truth42sim 5110 5111 nil nil 128 10.0 nil" >> plugin.txt
+echo "   MAP_TARGET SIM_42_TRUTH" >> plugin.txt
+
+# Capture date created
+echo "" >> plugin.txt
+echo "# Created on " $DATE >> plugin.txt
+echo ""
+
+# Build plugin
+echo "Build plugin..."
+$OPENC3_CLI rake build VERSION=1.0.$DATE
+if [ ! -f "openc3-cosmos-nos3-1.0.$DATE.gem" ]
+then
+    echo ""
+    echo "ERROR: cli rake build failed!"
+    echo ""
+    exit 1
+fi
+echo ""
+
+## Install plugin
+echo "Install plugin..."
+cd $OPENC3_DIR/openc3-cosmos-nos3
+$OPENC3_CLI geminstall ./openc3-cosmos-nos3-1.0.$DATE.gem
+INSTALL_STATUS=$?
+
+if [ $INSTALL_STATUS -eq 0 ]; then
+    echo "Gem installation successful"
+else
+    echo "Gem installation failed with exit code: $INSTALL_STATUS"
+    exit 1
+fi
+echo ""
+
+
+echo "OpenC3 build script complete."
+echo "Note that while this script is complete, OpenC3 is likely still be processing behind the scenes!"
+sleep 15
+echo "Done sleeping, but check cpu use prior to proceeding!"
+echo ""
+```
+
+### `gsw_openc3_clean.sh`
+
+**경로:** `scripts/gsw/gsw_openc3_clean.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+cd $OPENC3_DIR/openc3-cosmos-nos3
+rm -f openc3-cosmos-nos3-1.0.*.gem 2>/dev/null
+```
+
+### `gsw_openc3_launch.sh`
+
+**경로:** `scripts/gsw/gsw_openc3_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+export GSW="openc3-openc3-operator-1"
+
+# Debugging
+#echo "Script directory = " $SCRIPT_DIR
+#echo "Base directory   = " $BASE_DIR
+#exit
+
+#echo "Make /tmp folders..."
+#mkdir /tmp/data 2> /dev/null
+#mkdir /tmp/data/hk 2> /dev/null
+#mkdir /tmp/uplink 2> /dev/null
+
+echo "Prepare openc3 containers..."
+cd $OPENC3_DIR
+$OPENC3_PATH run
+echo ""
+
+echo "OpenC3 launch..."
+pidof firefox > /dev/null
+if [ $? -eq 1 ]
+then
+    firefox localhost:2900 &
+fi
+```
+
+### `gsw_yamcs_build.sh`
+
+**경로:** `scripts/gsw/gsw_yamcs_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+
+rm -rf $USER_NOS3_DIR/yamcs 2> /dev/null
+cp -r $BASE_DIR/gsw/yamcs $USER_NOS3_DIR/
+echo ""
+```
+
+### `gsw_yamcs_launch.sh`
+
+**경로:** `scripts/gsw/gsw_yamcs_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+
+# if $YAMCS_BINDING_HOST has a value then use the given value, else use 0.0.0.0
+YAMCS_BINDING_HOST=${YAMCS_BINDING_HOST}
+BINDING_HOST=${YAMCS_BINDING_HOST:-"0.0.0.0"}
+
+gnome-terminal --tab --title="YAMCS" -- $DFLAGS  -e COMPONENT_DIR=$COMPONENT_DIR -v $BASE_DIR:$BASE_DIR -v $USER_NOS3_DIR:$USER_NOS3_DIR -p ${BINDING_HOST}:8090:8090 -p 5012:5012 --name cosmos-openc3-operator-1 -h cosmos --network=nos3-core --network-alias=cosmos -w $USER_NOS3_DIR/yamcs $DBOX mvn ${MAVEN_HTTPS_PROXY} -Dmaven.repo.local=$USER_NOS3_DIR/.m2/repository -DCOMPONENT_DIR=$COMPONENT_DIR yamcs:run
+
+pidof firefox > /dev/null
+if [ $? -eq 1 ]
+then
+    curl -sf --retry 30 --retry-delay 1 --retry-all-errors --retry-connrefused \
+    http://localhost:8090/ >/dev/null && firefox http://localhost:8090/ &
+fi
+```
+
+### `gsw_yamcs_multi_launch.sh`
+
+**경로:** `scripts/gsw/gsw_yamcs_multi_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+CFG_BUILD_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+SCRIPT_DIR=$CFG_BUILD_DIR/../../scripts
+source $SCRIPT_DIR/env.sh
+
+# if $YAMCS_BINDING_HOST has a value then use the given value, else use 0.0.0.0
+YAMCS_BINDING_HOST=${YAMCS_BINDING_HOST}
+BINDING_HOST=${YAMCS_BINDING_HOST:-"0.0.0.0"}
+
+# gnome-terminal --tab --title="YAMCS" -- $DFLAGS  -e COMPONENT_DIR=$COMPONENT_DIR -v $BASE_DIR:$BASE_DIR -v $USER_NOS3_DIR:$USER_NOS3_DIR -p ${BINDING_HOST}:8090:8090 -p 5012:5012 --name cosmos-openc3-operator-1 -h cosmos --network=nos3-core --network-alias=cosmos -w $USER_NOS3_DIR/yamcs $DBOX mvn ${MAVEN_HTTPS_PROXY} -Dmaven.repo.local=$USER_NOS3_DIR/.m2/repository -DCOMPONENT_DIR=$COMPONENT_DIR yamcs:run
+
+gnome-terminal --tab --title="YAMCS" -- $DFLAGS  -e COMPONENT_DIR=$COMPONENT_DIR -v $BASE_DIR:$BASE_DIR -v $USER_NOS3_DIR:$USER_NOS3_DIR -p ${BINDING_HOST}:8090:8090 -p 5012:5012 --name cosmos-openc3-operator-2 -h yamcs --network=nos3-core --network-alias=yamcs -w $USER_NOS3_DIR/yamcs $DBOX mvn ${MAVEN_HTTPS_PROXY} -Dmaven.repo.local=$USER_NOS3_DIR/.m2/repository -DCOMPONENT_DIR=$COMPONENT_DIR yamcs:run
+
+pidof firefox > /dev/null
+if [ $? -eq 1 ]
+then
+    curl -sf --retry 30 --retry-delay 1 --retry-all-errors --retry-connrefused \
+    http://localhost:8090/ >/dev/null && firefox http://localhost:8090/ &
+fi
+```
+
+### `launch_gsw.sh`
+
+**경로:** `scripts/gsw/launch_gsw.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+echo "Make data folders..."
+# FSW Side
+mkdir $FSW_DIR/data 2> /dev/null
+mkdir $FSW_DIR/data/cam 2> /dev/null
+mkdir $FSW_DIR/data/evs 2> /dev/null
+mkdir $FSW_DIR/data/hk 2> /dev/null
+mkdir $FSW_DIR/data/inst 2> /dev/null
+# GSW Side
+mkdir /tmp/nos3 2> /dev/null
+mkdir /tmp/nos3/data 2> /dev/null
+mkdir /tmp/nos3/data/cam 2> /dev/null
+mkdir /tmp/nos3/data/evs 2> /dev/null
+mkdir /tmp/nos3/data/hk 2> /dev/null
+mkdir /tmp/nos3/data/inst 2> /dev/null
+mkdir /tmp/nos3/uplink 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2> /dev/null
+
+echo "Create networks..."
+$DNETWORK create \
+    --driver=overlay \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    --attachable \
+    nos3-core
+
+
+echo "Launch GSW..."
+$BASE_DIR/cfg/build/gsw_launch.sh
+echo ""
+
+# Note only currently working with a single spacecraft
+export SATNUM=1
+
+#
+# Spacecraft Loop
+#
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export SC_CFG_FILE="-f nos3-simulator.xml" #"-f sc_"$i"_nos3_simulator.xml"
+
+    $DNETWORK create \
+        --driver=overlay \
+        --attachable \
+        $SC_NETNAME
+
+    # Debugging
+    #echo "Spacecraft number        = " $SC_NUM
+    #echo "Spacecraft network       = " $SC_NETNAME
+    #echo "Spacecraft configuration = " $SC_CFG_FILE
+    
+    echo $SC_NUM " - Connect COSMOS to spacecraft network..."
+    $DNETWORK connect $SC_NETNAME openc3-openc3-operator-1 --alias cosmos
+    echo ""
+
+    echo ""
+done
+
+echo "Docker launch script completed!"
+```
+
+### `stop_gsw.sh`
+
+**경로:** `scripts/gsw/stop_gsw.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+echo "Stop gsw..."
+
+# OpenC3
+cd $OPENC3_DIR
+$OPENC3_PATH stop
+
+# COSMOS
+$DCALL ps --filter ancestor="ballaerospace/cosmos:4.5.0" -aq | xargs $DCALL stop > /dev/null 2>&1 &
+```
+
+### `system_test.rb`
+
+**경로:** `scripts/gsw/system_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+ 
+include Cosmos::Script
+puts("Begin SAMPLE Test Case:")
+initial_command_count = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+puts("Inital Command Count: #{initial_command_count}")
+initial_error_count = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+puts("Initial Error Count: #{initial_error_count}")
+initial_device_error_count = tlm("SAMPLE SAMPLE_HK_TLM DEVICE_ERR_COUNT")
+puts("Inital Device Error Count: #{initial_device_error_count}")
+cmd("SAMPLE SAMPLE_NOOP_CC")
+wait_check("SAMPLE SAMPLE_HK_TLM CMD_COUNT > #{initial_command_count}", 30)
+wait_check("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT == #{initial_error_count}", 30)
+wait_check("SAMPLE SAMPLE_HK_TLM DEVICE_ERR_COUNT == #{initial_device_error_count}", 30)
+puts("")
+puts("Final Values:")
+final_command_count = tlm("SAMPLE SAMPLE_HK_TLM CMD_COUNT")
+puts("Inital Command Count: #{final_command_count}")
+final_error_count = tlm("SAMPLE SAMPLE_HK_TLM CMD_ERR_COUNT")
+puts("Initial Error Count: #{final_error_count}")
+final_device_error_count = tlm("SAMPLE SAMPLE_HK_TLM DEVICE_ERR_COUNT")
+puts("Inital Device Error Count: #{final_device_error_count}")
+puts("")
+puts("SAMPLE TEST CASE COMPLETED SUCCESSFULLY!")
+puts("")
+```

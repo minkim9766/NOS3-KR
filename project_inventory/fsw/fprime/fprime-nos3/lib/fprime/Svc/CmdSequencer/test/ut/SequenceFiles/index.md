@@ -3,94 +3,2363 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 AMPCS/index
 FPrime/index
-file--BadCRCFile.cpp
-file--BadCRCFile.hpp
-file--BadDescriptorFile.cpp
-file--BadDescriptorFile.hpp
-file--BadTimeBaseFile.cpp
-file--BadTimeBaseFile.hpp
-file--BadTimeContextFile.cpp
-file--BadTimeContextFile.hpp
-file--Buffers.cpp
-file--Buffers.hpp
-file--DataAfterRecordsFile.cpp
-file--DataAfterRecordsFile.hpp
-file--EmptyFile.cpp
-file--EmptyFile.hpp
-file--File.cpp
-file--File.hpp
-file--ImmediateEOSFile.cpp
-file--ImmediateEOSFile.hpp
-file--ImmediateFile.cpp
-file--ImmediateFile.hpp
-file--MissingCRCFile.cpp
-file--MissingCRCFile.hpp
-file--MissingFile.cpp
-file--MissingFile.hpp
-file--MixedFile.cpp
-file--MixedFile.hpp
-file--NoRecordsFile.cpp
-file--NoRecordsFile.hpp
-file--RelativeFile.cpp
-file--RelativeFile.hpp
-file--SequenceFiles.hpp
-file--SizeFieldTooLargeFile.cpp
-file--SizeFieldTooLargeFile.hpp
-file--SizeFieldTooSmallFile.cpp
-file--SizeFieldTooSmallFile.hpp
-file--TooLargeFile.cpp
-file--TooLargeFile.hpp
-file--USecFieldTooShortFile.cpp
-file--USecFieldTooShortFile.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/`](AMPCS/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/`](FPrime/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.cpp`](file--BadCRCFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp`](file--BadCRCFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.cpp`](file--BadDescriptorFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp`](file--BadDescriptorFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.cpp`](file--BadTimeBaseFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp`](file--BadTimeBaseFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.cpp`](file--BadTimeContextFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp`](file--BadTimeContextFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.cpp`](file--Buffers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp`](file--Buffers.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.cpp`](file--DataAfterRecordsFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp`](file--DataAfterRecordsFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.cpp`](file--EmptyFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp`](file--EmptyFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp`](file--File.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.cpp`](file--ImmediateEOSFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp`](file--ImmediateEOSFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.cpp`](file--ImmediateFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp`](file--ImmediateFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.cpp`](file--MissingCRCFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp`](file--MissingCRCFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.cpp`](file--MissingFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp`](file--MissingFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.cpp`](file--MixedFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp`](file--MixedFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.cpp`](file--NoRecordsFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.hpp`](file--NoRecordsFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.cpp`](file--RelativeFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp`](file--RelativeFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SequenceFiles.hpp`](file--SequenceFiles.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.cpp`](file--SizeFieldTooLargeFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp`](file--SizeFieldTooLargeFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.cpp`](file--SizeFieldTooSmallFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp`](file--SizeFieldTooSmallFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.cpp`](file--TooLargeFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp`](file--TooLargeFile.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.cpp`](file--USecFieldTooShortFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp`](file--USecFieldTooShortFile.hpp) — UTF-8 텍스트 파일 본문 포함
+### `BadCRCFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadCRCFile.cpp
+// \author Rob Bocchino
+// \brief  BadCRCFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadCRCFile ::BadCRCFile(const Format::t a_format) : File("bad_crc", a_format) {}
+
+void BadCRCFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 recordData = 0x10;
+    const U32 dataSize = sizeof recordData + FPrime::CRCs::SIZE;
+    const U32 numRecords = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecords, timeBase, timeContext, buffer);
+    // Records
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(recordData));
+    // CRC
+    const U8* const addr = buffer.getBuffAddr();
+    const U32 size = buffer.getBuffLength();
+    this->crc.init();
+    this->crc.update(addr, size);
+    this->crc.finalize();
+    crc.m_stored = this->crc.m_computed + 1;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(this->crc.m_stored));
+}
+
+void BadCRCFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    const U32 recordData = 0x10;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(recordData));
+    // CRC
+    AMPCS::CRCs::computeCRC(buffer, this->crc);
+    this->crc.m_stored = this->crc.m_computed + 1;
+    AMPCS::CRCs::writeCRC(this->crc.m_stored, this->getName().toChar());
+}
+
+const CmdSequencerComponentImpl::FPrimeSequence::CRC& BadCRCFile ::getCRC() const {
+    return this->crc;
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `BadCRCFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadCRCFile.hpp
+// \author Rob Bocchino
+// \brief  BadCRCFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_BadCRCFile_HPP
+#define Svc_SequenceFiles_BadCRCFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a bad CRC
+class BadCRCFile : public File {
+  public:
+    //! Construct a BadCRCFile
+    BadCRCFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Get the CRC
+    const CmdSequencerComponentImpl::FPrimeSequence::CRC& getCRC() const;
+
+  private:
+    //! The CRC
+    CmdSequencerComponentImpl::FPrimeSequence::CRC crc;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `BadDescriptorFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadDescriptorFile.cpp
+// \author Rob Bocchino
+// \brief  BadDescriptorFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadDescriptorFile ::BadDescriptorFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String baseName;
+    baseName.format("bad_descriptor_%u", a_n);
+    this->setName(baseName.toChar());
+}
+
+void BadDescriptorFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    const U32 recordDataSize = this->n * SequenceFiles::FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    FPrime::Headers::serialize(dataSize, this->n, timeBase, timeContext, buffer);
+    // Records
+    for (U32 record = 0; record < this->n; record++) {
+        Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        // Force an invalid record descriptor
+        FPrime::Records::Descriptor descriptor = static_cast<FPrime::Records::Descriptor>(
+            10);  // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) intentional test
+        FPrime::Records::serialize(descriptor, t, record, record + 1, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void BadDescriptorFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    for (U32 i = 0; i < this->n; ++i) {
+        // Force an invalid time flag
+        const AMPCSSequence::Record::TimeFlag::t timeFlag = static_cast<AMPCSSequence::Record::TimeFlag::t>(
+            10);  // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) intentional test
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = i;
+        const U32 argument = i + 1;
+        AMPCS::Records::serialize(timeFlag, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `BadDescriptorFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadDescriptorFile.hpp
+// \author Rob Bocchino
+// \brief  BadDescriptorFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_BadDescriptorFile_HPP
+#define Svc_SequenceFiles_BadDescriptorFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a bad record descriptor
+class BadDescriptorFile : public File {
+  public:
+    //! Construct a BadDescriptorFile
+    BadDescriptorFile(const U32 a_n,                              //!< The number of records
+                      const Format::t a_format = Format::F_PRIME  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `BadTimeBaseFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadTimeBaseFile.cpp
+// \author Rob Bocchino
+// \brief  BadTimeBaseFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadTimeBaseFile ::BadTimeBaseFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("bad_time_base_%u", a_n);
+    this->setName(s.toChar());
+}
+
+void BadTimeBaseFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 recordDataSize = (this->n - 1) * FPrime::Records::STANDARD_SIZE + FPrime::Records::RECORD_DESCRIPTOR_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase headerTimeBase = TimeBase::TB_PROC_TIME;
+    // Create an invalid time base by adding 1 to the stored value
+    const FwTimeBaseStoreType headerTimeBaseStore = static_cast<FwTimeBaseStoreType>(headerTimeBase) + 1;
+    // First cast to the raw enum type TimeBase::T, then create a TimeBase from that
+    const TimeBase recordTimeBase(static_cast<TimeBase::T>(headerTimeBaseStore));
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this->n, headerTimeBase, timeContext, buffer);
+    // Records
+    Fw::Time t(recordTimeBase, 0, 0);
+    for (U32 i = 0; i < this->n - 1; ++i) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `BadTimeBaseFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadTimeBaseFile.hpp
+// \author Rob Bocchino
+// \brief  BadTimeBaseFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_BadTimeBaseFile_HPP
+#define Svc_SequenceFiles_BadTimeBaseFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing records with bad time bases
+class BadTimeBaseFile : public File {
+  public:
+    //! Construct a BadTimeBaseFile
+    BadTimeBaseFile(const U32 a_n,            //!< The number of records
+                    const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `BadTimeContextFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadTimeContextFile.cpp
+// \author Rob Bocchino
+// \brief  BadTimeContextFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+BadTimeContextFile ::BadTimeContextFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("bad_time_context_%u", n);
+    this->setName(s.toChar());
+}
+
+void BadTimeContextFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    ASSERT_GE(this->n, 2U);
+    // Header
+    const U32 recordDataSize = (this->n - 1) * FPrime::Records::STANDARD_SIZE + FPrime::Records::EOS_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 headerTimeContext = 1;
+    FPrime::Headers::serialize(dataSize, this->n, timeBase, headerTimeContext, buffer);
+    // Standard records
+    Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    for (U32 i = 0; i < this->n - 1; ++i) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // EOS record
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `BadTimeContextFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BadTimeContextFile.hpp
+// \author Rob Bocchino
+// \brief  BadTimeContextFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_BadTimeContextFile_HPP
+#define Svc_SequenceFiles_BadTimeContextFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing records with bad time bases
+class BadTimeContextFile : public File {
+  public:
+    //! Construct a BadTimeContextFile
+    BadTimeContextFile(const U32 a_n,            //!< The number of records
+                       const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Buffers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Buffers.cpp
+// \author Rob Bocchino
+// \brief  F Prime sequence file headers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Os/File.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace Buffers {
+
+FwSizeType FileBuffer ::getBuffCapacity() const {
+    return sizeof(m_buff);
+}
+
+U8* FileBuffer ::getBuffAddr() {
+    return m_buff;
+}
+
+const U8* FileBuffer ::getBuffAddr() const {
+    return m_buff;
+}
+
+void write(const Fw::SerializeBufferBase& buffer, const char* fileName) {
+    Os::File file;
+    ASSERT_EQ(file.open(fileName, Os::File::OPEN_WRITE), Os::File::OP_OK);
+    FwSizeType size = buffer.getBuffLength();
+    const U32 expectedSize = size;
+    const U8* const buffAddr = buffer.getBuffAddr();
+    ASSERT_EQ(file.write(buffAddr, size, Os::File::WaitType::WAIT), Os::File::OP_OK);
+    ASSERT_EQ(expectedSize, static_cast<U32>(size));
+    file.close();
+}
+
+}  // namespace Buffers
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `Buffers.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Buffers.hpp
+// \author Rob Bocchino
+// \brief  Sequence file buffers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_Buffers_HPP
+#define Svc_SequenceFiles_Buffers_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace Buffers {
+
+//! A file buffer
+class FileBuffer : public Fw::SerializeBufferBase {
+  public:
+    enum Constants { CAPACITY = 4096 };
+
+  public:
+    FwSizeType getBuffCapacity() const;
+
+    U8* getBuffAddr();
+
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_buff[CAPACITY];
+};
+
+//! Write a buffer to a file
+void write(const Fw::SerializeBufferBase& buffer,  //!< The buffer
+           const char* fileName                    //!< The file name
+);
+
+}  // namespace Buffers
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `DataAfterRecordsFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DataAfterRecordsFile.cpp
+// \author Rob Bocchino
+// \brief  DataAfterRecordsFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+DataAfterRecordsFile ::DataAfterRecordsFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("data_after_records_%u", n);
+    this->setName(s.toChar());
+}
+
+void DataAfterRecordsFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    ASSERT_GE(this->n, 2U);
+    // Header
+    const U32 recordDataSize = (this->n - 1) * FPrime::Records::STANDARD_SIZE + FPrime::Records::EOS_SIZE;
+    const U32 junkDataSize = 2 * sizeof(U32);
+    const U32 dataSize = recordDataSize + junkDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this->n, timeBase, timeContext, buffer);
+    // Standard records
+    Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    for (U32 i = 0; i < this->n - 1; ++i) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // EOS record
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // Extra junk data
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast<U32>(0x12345678)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast<U32>(0x87654321)));
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `DataAfterRecordsFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DataAfterRecordsFile.hpp
+// \author Rob Bocchino
+// \brief  DataAfterRecordsFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_DataAfterRecordsFile_HPP
+#define Svc_SequenceFiles_DataAfterRecordsFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing records with bad time bases
+class DataAfterRecordsFile : public File {
+  public:
+    //! Construct a DataAfterRecordsFile
+    DataAfterRecordsFile(const U32 a_n,            //!< The number of records
+                         const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `EmptyFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  EmptyFile.cpp
+// \author Rob Bocchino
+// \brief  EmptyFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+EmptyFile ::EmptyFile(const Format::t a_format) : File("empty", a_format) {}
+
+void EmptyFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Do nothing
+}
+
+void EmptyFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `EmptyFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  EmptyFile.hpp
+// \author Rob Bocchino
+// \brief  EmptyFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_EmptyFile_HPP
+#define Svc_SequenceFiles_EmptyFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! An empty file
+class EmptyFile : public File {
+  public:
+    //! Construct an empty file
+    EmptyFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize an empty file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize an empty file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/File.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  File.cpp
+// \author Rob Bocchino
+// \brief  File implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+#include "Fw/Types/String.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "gtest/gtest.h"
+
+#define BAD_FILE_FORMAT ASSERT_TRUE(0) << "Bad file format " << this->format << "\n"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+File ::File(const Format::t a_format) : format(a_format) {}
+
+File ::File(const char* const baseName, const Format::t a_format) : format(a_format) {
+    this->setName(baseName);
+}
+
+File ::~File() {}
+
+void File ::setName(const char* const baseName) {
+    this->name = "bin/";
+    switch (this->format) {
+        case Format::F_PRIME:
+            this->name += "f_prime_";
+            break;
+        case Format::AMPCS:
+            this->name += "ampcs_";
+            break;
+        default:
+            BAD_FILE_FORMAT;
+            break;
+    }
+    this->name += baseName;
+    this->name += ".bin";
+}
+
+const Fw::StringBase& File ::getName() const {
+    return this->name;
+}
+
+void File ::getErrorInfo(ErrorInfo& errorInfo) {
+    switch (this->format) {
+        case Format::F_PRIME:
+            errorInfo.open.fileName = this->name;
+            errorInfo.headerRead.waitCount = 0;
+            errorInfo.headerRead.fileName = this->name;
+            errorInfo.dataRead.waitCount = 1;
+            errorInfo.dataRead.fileName = this->name;
+            break;
+        case Format::AMPCS:
+            errorInfo.open.fileName = this->name;
+            errorInfo.open.fileName += ".CRC32";
+            errorInfo.headerRead.waitCount = 1;
+            errorInfo.headerRead.fileName = this->name;
+            errorInfo.dataRead.waitCount = 2;
+            errorInfo.dataRead.fileName = this->name;
+            break;
+        default:
+            BAD_FILE_FORMAT;
+            break;
+    }
+}
+
+void File ::write() {
+    Buffers::FileBuffer buffer;
+    switch (this->format) {
+        case Format::F_PRIME:
+            this->serializeFPrime(buffer);
+            break;
+        case Format::AMPCS:
+            this->serializeAMPCS(buffer);
+            break;
+        default:
+            BAD_FILE_FORMAT;
+            break;
+    };
+    Buffers::write(buffer, this->name.toChar());
+}
+
+void File ::remove() {
+    Fw::String s("rm -f ");
+    s += this->getName();
+    int status = system(s.toChar());
+    ASSERT_EQ(0, status);
+}
+
+void File ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    ASSERT_TRUE(0) << "serializeFPrime is not implemented for " << this->name << "\n";
+}
+
+void File ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    ASSERT_TRUE(0) << "serializeAMPCS is not implemented for " << this->name << "\n";
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `File.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  File.hpp
+// \author Rob Bocchino
+// \brief  File interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_File_HPP
+#define Svc_SequenceFiles_File_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A sequence file
+class File {
+  public:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! Binary file formats
+    struct Format {
+        typedef enum {
+            //! F Prime format
+            F_PRIME,
+            //! AMPCS format
+            AMPCS,
+        } t;
+    };
+
+    //! Information for error reporting
+    struct ErrorInfo {
+        //! The type of open errors
+        struct Open {
+            //! The name of the file for error reporting
+            Fw::String fileName;
+        };
+
+        //! The type of header read errors
+        struct HeaderRead {
+            //! The wait count
+            U32 waitCount;
+
+            //! The name of the file for error reporting
+            Fw::String fileName;
+        };
+
+        //! The type of data read errors
+        struct DataRead {
+            //! The wait count
+            U32 waitCount;
+
+            //! The name of the file for error reporting
+            Fw::String fileName;
+        };
+
+        //! Open errors
+        Open open;
+
+        //! Header read errors
+        HeaderRead headerRead;
+
+        //! Data read errors
+        DataRead dataRead;
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors and destructors
+    // ----------------------------------------------------------------------
+
+    //! Construct a File with default initialization
+    File(const Format::t a_format = Format::F_PRIME  //!< The file format
+    );
+
+    //! Construct a File with the given base name
+    File(const char* const baseName,                 //!< The base name
+         const Format::t a_format = Format::F_PRIME  //!< The file format
+    );
+
+    //! Destroy a file
+    virtual ~File();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public instance methods
+    // ----------------------------------------------------------------------
+
+    // Set the name from the given base name
+    void setName(const char* const baseName  //!< The base name
+    );
+
+    //! Write the file to the disk
+    void write();
+
+    //! Remove the file from the disk
+    void remove();
+
+    //! Get the file name
+    const Fw::StringBase& getName() const;
+
+    //! Get error info for the file
+    void getErrorInfo(ErrorInfo& errorInfo  //!< The error info
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Virtual interface
+    // ----------------------------------------------------------------------
+
+    //! Serialize the file in F Prime format
+    virtual void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    virtual void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The file name
+    Fw::String name;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member variables
+    // ----------------------------------------------------------------------
+
+    //! The file format
+    const Format::t format;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `ImmediateEOSFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateEOSFile.cpp
+// \author Rob Bocchino
+// \brief  ImmediateEOSFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+ImmediateEOSFile ::ImmediateEOSFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("immediate_%u_eos", n);
+    this->setName(s.toChar());
+}
+
+void ImmediateEOSFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    ASSERT_GE(this->n, 2U);
+    // Header
+    const U32 recordDataSize =
+        // n - 1 standard records
+        (this->n - 1) * FPrime::Records::STANDARD_SIZE +
+        // 1 end-of-sequence record
+        FPrime::Records::EOS_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    FPrime::Headers::serialize(dataSize, this->n, TimeBase::TB_WORKSTATION_TIME, 0, buffer);
+    // Standard records
+    Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    for (U32 i = 0; i < this->n - 1; i++) {
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // EOS record
+    FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::END_OF_SEQUENCE, t, buffer);
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `ImmediateEOSFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateEOSFile.hpp
+// \author Rob Bocchino
+// \brief  ImmediateEOSFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_ImmediateEOSFile_HPP
+#define Svc_SequenceFiles_ImmediateEOSFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing n records. Each of the first n-1 records
+//! is a relative command with a zero time tag.
+//! The last record is END_OF_SEQUENCE.
+class ImmediateEOSFile : public File {
+  public:
+    //! Construct an ImmediateEOSFile
+    ImmediateEOSFile(const U32 a_n,            //!< The number of records
+                     const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `ImmediateFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateFile.cpp
+// \author Rob Bocchino
+// \brief  ImmediateFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+ImmediateFile ::ImmediateFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("immediate_%u", a_n);
+    this->setName(s.toChar());
+}
+
+void ImmediateFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 recordDataSize = this->n * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this->n, timeBase, timeContext, buffer);
+    // Records
+    for (U32 i = 0; i < this->n; i++) {
+        Fw::Time t(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void ImmediateFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    for (U32 i = 0; i < this->n; ++i) {
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = i;
+        const U32 argument = i + 1;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `ImmediateFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateFile.hpp
+// \author Rob Bocchino
+// \brief  ImmediateFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_ImmediateFile_HPP
+#define Svc_SequenceFiles_ImmediateFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+// A file containing three immediate commands (i.e.,
+// commands with zero time tags)
+class ImmediateFile : public File {
+  public:
+    //! Construct an ImmediateFile
+    ImmediateFile(const U32 a_n,            //!< The number of records
+                  const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `MissingCRCFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  MissingCRCFile.cpp
+// \author Rob Bocchino
+// \brief  MissingCRCFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+MissingCRCFile ::MissingCRCFile(const Format::t a_format) : File("invalid_record", a_format) {}
+
+void MissingCRCFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U8 data = 1;
+    const U32 numRecords = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(sizeof data, numRecords, timeBase, timeContext, buffer);
+    // Records + CRC
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(data));
+}
+
+void MissingCRCFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    const U8 data = 1;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(data));
+    // CRC
+    AMPCS::CRCs::removeFile(this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `MissingCRCFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  MissingCRCFile.hpp
+// \author Rob Bocchino
+// \brief  MissingCRCFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_MissingCRCFile_HPP
+#define Svc_SequenceFiles_MissingCRCFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+class MissingCRCFile : public File {
+  public:
+    //! Construct a MissingCRCFile
+    MissingCRCFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `MissingFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  MissingFile.cpp
+// \author Rob Bocchino
+// \brief  MissingFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+MissingFile ::MissingFile(const Format::t a_format) : File("missing", a_format) {}
+
+void MissingFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `MissingFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  MissingFile.hpp
+// \author Rob Bocchino
+// \brief  MissingFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_MissingFile_HPP
+#define Svc_SequenceFiles_MissingFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A missing file
+class MissingFile : public File {
+  public:
+    //! Construct a MissingFile
+    MissingFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `MixedFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  MixedFile.cpp
+// \author Rob Bocchino
+// \brief  MixedFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+MixedFile ::MixedFile(const Format::t a_format) : File("mixed", a_format) {}
+
+void MixedFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const FwSizeType numRecs = 4;
+    const U32 recordDataSize = numRecs * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+    // Records
+    {
+        Fw::Time t;
+        // Record 1: Absolute command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 2, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::ABSOLUTE, t, 0, 1, buffer);
+        // Record 2: Immediate command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, 2, 3, buffer);
+        // Record 3: Relative command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 1, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, 4, 5, buffer);
+        // Record 4: Immediate command
+        t.set(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, 6, 7, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void MixedFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    {
+        // Record 1: Absolute command
+        const AMPCSSequence::Record::Time::t time = 2;
+        const AMPCSSequence::Record::Opcode::t opcode = 0;
+        const U32 argument = 1;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::ABSOLUTE, time, opcode, argument, buffer);
+    }
+    {
+        // Record 2: Immediate command
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = 2;
+        const U32 argument = 3;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    {
+        // Record 3: Relative command
+        const AMPCSSequence::Record::Time::t time = 1;
+        const AMPCSSequence::Record::Opcode::t opcode = 4;
+        const U32 argument = 5;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    {
+        // Record 4: Immediate command
+        const AMPCSSequence::Record::Time::t time = 0;
+        const AMPCSSequence::Record::Opcode::t opcode = 6;
+        const U32 argument = 7;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `MixedFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  MixedFile.hpp
+// \author Rob Bocchino
+// \brief  MixedFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_MixedFile_HPP
+#define Svc_SequenceFiles_MixedFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing mixed immediate, relative, and absolute commands:
+// 1. An absolute command
+// 2. An immediate command
+// 3. A relative command
+// 4. An immediate command
+class MixedFile : public File {
+  public:
+    //! Construct a MixedFile
+    MixedFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `NoRecordsFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  NoRecordsFile.cpp
+// \author Rob Bocchino
+// \brief  NoRecordsFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+NoRecordsFile ::NoRecordsFile(const Format::t a_format) : File("norecords", a_format) {}
+
+void NoRecordsFile::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const FwSizeType numRecs = 0;
+    const U32 recordDataSize = numRecs * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+
+    // No Records
+
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void NoRecordsFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // No Records
+
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `NoRecordsFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  NoRecordsFile.hpp
+// \author Joaquim Silveira
+// \brief  NoRecords interface
+
+#ifndef Svc_SequenceFiles_NoRecordsFile_HPP
+#define Svc_SequenceFiles_NoRecordsFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing no records
+class NoRecordsFile : public File {
+  public:
+    //! Construct a NoRecordsFile
+    NoRecordsFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `RelativeFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  RelativeFile.cpp
+// \author Rob Bocchino
+// \brief  RelativeFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+RelativeFile ::RelativeFile(const U32 a_n, const Format::t a_format) : File(a_format), n(a_n) {
+    Fw::String s;
+    s.format("relative_%u", a_n);
+    this->setName(s.toChar());
+}
+
+void RelativeFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 recordDataSize = this->n * FPrime::Records::STANDARD_SIZE;
+    const U32 dataSize = recordDataSize + FPrime::CRCs::SIZE;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, this->n, timeBase, timeContext, buffer);
+    // Records
+    for (U32 i = 0; i < n; ++i) {
+        const U32 seconds = 2;
+        const U32 microseconds = 0;
+        const FwOpcodeType opcode = i;
+        const U32 argument = i + 1;
+        Fw::Time t(TimeBase::TB_WORKSTATION_TIME, seconds, microseconds);
+        FPrime::Records::serialize(CmdSequencerComponentImpl::Sequence::Record::RELATIVE, t, opcode, argument, buffer);
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+void RelativeFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Records
+    for (U32 i = 0; i < this->n; ++i) {
+        const AMPCSSequence::Record::Time::t time = 2;
+        const AMPCSSequence::Record::Opcode::t opcode = i;
+        const U32 argument = i + 1;
+        AMPCS::Records::serialize(AMPCSSequence::Record::TimeFlag::RELATIVE, time, opcode, argument, buffer);
+    }
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `RelativeFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RelativeFile.hpp
+// \author Rob Bocchino
+// \brief  RelativeFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_RelativeFile_HPP
+#define Svc_SequenceFiles_RelativeFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file containing n commands, each of which has a non-zero
+//! relative time.
+class RelativeFile : public File {
+  public:
+    //! Construct a RelativeFile
+    RelativeFile(const U32 a_n,            //!< The number of records
+                 const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The number of records
+    const U32 n;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `SequenceFiles.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SequenceFiles.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceFiles.hpp
+// \author Rob Bocchino
+// \brief  Interface for F Prime sequence files
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_SequenceFiles_HPP
+#define Svc_SequenceFiles_SequenceFiles_HPP
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadDescriptorFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeBaseFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/BadTimeContextFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/DataAfterRecordsFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/EmptyFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateEOSFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/ImmediateFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingCRCFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MissingFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/MixedFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/RelativeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp"
+
+#endif
+```
+
+### `SizeFieldTooLargeFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SizeFieldTooLargeFile.cpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooLargeFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+SizeFieldTooLargeFile ::SizeFieldTooLargeFile(const U32 a_bufferSize, const Format::t a_format)
+    : File("size_field_too_large", a_format), bufferSize(a_bufferSize) {}
+
+void SizeFieldTooLargeFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 recordSize = sizeof(U8) +   // Descriptor
+                           sizeof(U32) +  // Seconds
+                           sizeof(U32) +  // Microseconds
+                           sizeof(U32);   // Size
+    const U32 dataSize = recordSize + FPrime::CRCs::SIZE;
+    const U32 numRecs = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+    // Records
+    {
+        // Descriptor
+        const FPrime::Records::Descriptor descriptor = CmdSequencerComponentImpl::Sequence::Record::RELATIVE;
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast<U8>(descriptor)));
+        // Seconds
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast<U32>(0)));
+        // Microseconds
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast<U32>(0)));
+        // Record size
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(static_cast<U32>(2 * this->bufferSize)));
+    }
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `SizeFieldTooLargeFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooLargeFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SizeFieldTooLargeFile.hpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooLargeFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_SizeFieldTooLargeFile_HPP
+#define Svc_SequenceFiles_SizeFieldTooLargeFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a size field that is too large
+class SizeFieldTooLargeFile : public File {
+  public:
+    //! Construct a SizeFieldTooLargeFile
+    SizeFieldTooLargeFile(const U32 a_bufferSize,   //!< The buffer size
+                          const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+  public:
+    //! The buffer size
+    const U32 bufferSize;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `SizeFieldTooSmallFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SizeFieldTooSmallFile.cpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooSmallFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+SizeFieldTooSmallFile ::SizeFieldTooSmallFile(const Format::t a_format) : File("size_field_too_small", a_format) {}
+
+void SizeFieldTooSmallFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 dataSize = FPrime::Records::RECORD_DESCRIPTOR_SIZE + sizeof(U32) +  // seconds
+                         sizeof(U32) +                                            // subseconds (CRC should land here)
+                         sizeof(U16);                                             // short size
+    const U32 numRecs = 1;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecs, timeBase, timeContext, buffer);
+    // Records
+    const FPrime::Records::Descriptor descriptor = CmdSequencerComponentImpl::Sequence::Record::RELATIVE;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast<U8>(descriptor)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast<U32>(0)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast<U16>(0)));
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `SizeFieldTooSmallFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/SizeFieldTooSmallFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SizeFieldTooSmallFile.hpp
+// \author Rob Bocchino
+// \brief  SizeFieldTooSmallFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_SizeFieldTooSmallFile_HPP
+#define Svc_SequenceFiles_SizeFieldTooSmallFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a size field that is too small
+class SizeFieldTooSmallFile : public File {
+  public:
+    //! Construct a SizeFieldTooSmallFile
+    SizeFieldTooSmallFile(const Format::t m_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `TooLargeFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TooLargeFile.cpp
+// \author Rob Bocchino
+// \brief  TooLargeFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+TooLargeFile ::TooLargeFile(const U32 a_bufferSize, const Format::t a_format)
+    : File("too_large", a_format), bufferSize(a_bufferSize) {}
+
+void TooLargeFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const U32 dataSize = this->getDataSize();
+    const U32 numRecords = 16;
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    FPrime::Headers::serialize(dataSize, numRecords, timeBase, timeContext, buffer);
+}
+
+void TooLargeFile ::serializeAMPCS(Fw::SerializeBufferBase& buffer) {
+    // Header
+    AMPCS::Headers::serialize(buffer);
+    // Data
+    const AMPCSSequence::Record::TimeFlag::t timeFlag = AMPCSSequence::Record::TimeFlag::RELATIVE;
+    const AMPCSSequence::Record::Time::t time = 0;
+    const U32 dataSize = this->getDataSize();
+    const U32 cmdFieldSize = dataSize - sizeof(AMPCSSequence::Record::TimeFlag::Serial::t) -
+                             sizeof(AMPCSSequence::Record::Time::t) - sizeof(AMPCSSequence::Record::CmdLength::t);
+    U8 cmdFieldBuffer[cmdFieldSize];
+    ::memset(cmdFieldBuffer, 0, cmdFieldSize);
+    Fw::SerialBuffer cmdField(cmdFieldBuffer, sizeof(cmdFieldBuffer));
+    cmdField.setBuffLen(cmdFieldSize);
+    AMPCS::Records::serialize(timeFlag, time, cmdField, buffer);
+    ASSERT_EQ(sizeof(AMPCSSequence::SequenceHeader::t) + dataSize, buffer.getBuffLength());
+    // CRC
+    AMPCS::CRCs::createFile(buffer, this->getName().toChar());
+}
+
+U32 TooLargeFile ::getDataSize() const {
+    return 2 * this->bufferSize;
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `TooLargeFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/TooLargeFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TooLargeFile.hpp
+// \author Rob Bocchino
+// \brief  TooLargeFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_SequenceFiles_TooLargeFile_HPP
+#define Svc_SequenceFiles_TooLargeFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file that is too large for the sequence buffer
+class TooLargeFile : public File {
+  public:
+    //! Construct a TooLargeFile
+    TooLargeFile(const U32 a_bufferSize,   //!< The sequence buffer size
+                 const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Serialize the file in AMPCS format
+    void serializeAMPCS(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+
+    //! Get the data size
+    U32 getDataSize() const;
+
+  public:
+    //! The sequence buffer size
+    const U32 bufferSize;
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `USecFieldTooShortFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  USecFieldTooShortFile.cpp
+// \author Rob Bocchino
+// \brief  USecFieldTooShortFile implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/Buffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+USecFieldTooShortFile ::USecFieldTooShortFile(const Format::t a_format) : File("usec_field_too_short", a_format) {}
+
+void USecFieldTooShortFile ::serializeFPrime(Fw::SerializeBufferBase& buffer) {
+    // Header
+    const TimeBase timeBase = TimeBase::TB_WORKSTATION_TIME;
+    const U32 timeContext = 0;
+    const U32 numRecords = 1;
+    const U32 recordSize = FPrime::Records::RECORD_DESCRIPTOR_SIZE +  // descriptor
+                           sizeof(U32) +                              // seconds (CRC should land here)
+                           sizeof(U16);                               // short microseconds
+    const U32 dataSize = numRecords * recordSize;
+    FPrime::Headers::serialize(dataSize, numRecords, timeBase, timeContext, buffer);
+    // Records
+    const FPrime::Records::Descriptor descriptor = CmdSequencerComponentImpl::Sequence::Record::RELATIVE;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast<U8>(descriptor)));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serializeFrom(static_cast<U16>(0)));
+    // CRC
+    FPrime::CRCs::serialize(buffer);
+}
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `USecFieldTooShortFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/USecFieldTooShortFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  USecFieldTooShortFile.hpp
+// \author Rob Bocchino
+// \brief  USecFieldTooShortFile interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_USecFieldTooShortFile_HPP
+#define Svc_SequenceFiles_USecFieldTooShortFile_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/File.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+//! A file with a microseconds field that is too short
+class USecFieldTooShortFile : public File {
+  public:
+    //! Construct a USecFieldTooShortFile
+    USecFieldTooShortFile(const Format::t a_format  //!< The file format
+    );
+
+  public:
+    //! Serialize the file in F Prime format
+    void serializeFPrime(Fw::SerializeBufferBase& buffer  //!< The buffer
+    );
+};
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```

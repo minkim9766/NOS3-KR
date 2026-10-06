@@ -3,28 +3,347 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CancelPacket.cpp`
 
-file--CancelPacket.cpp
-file--CMakeLists.txt
-file--DataPacket.cpp
-file--EndPacket.cpp
-file--FilePackets.hpp
-file--Header.cpp
-file--PathName.cpp
-file--StartPacket.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/CancelPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/CancelPacket.cpp
+// \author bocchino
+// \brief  Test utilities for data file packets
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/GTest/FilePackets.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void FilePackets::CancelPacket ::compare(const FilePacket::CancelPacket& expected,
+                                         const FilePacket::CancelPacket& actual) {
+    FilePackets::Header::compare(expected.asHeader(), actual.asHeader());
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
 ```
 
-## 항목
+### `CMakeLists.txt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/CancelPacket.cpp`](file--CancelPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/DataPacket.cpp`](file--DataPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/EndPacket.cpp`](file--EndPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/FilePackets.hpp`](file--FilePackets.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/Header.cpp`](file--Header.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/PathName.cpp`](file--PathName.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/StartPacket.cpp`](file--StartPacket.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+if (BUILD_TESTING)
+    set(SOURCE_FILES
+      "${CMAKE_CURRENT_LIST_DIR}/CancelPacket.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/DataPacket.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/EndPacket.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/Header.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/PathName.cpp"
+      "${CMAKE_CURRENT_LIST_DIR}/StartPacket.cpp"
+    )
+
+    set(MOD_DEPS
+      gtest
+      Fw/Types
+      Fw/Types/GTest
+      CFDP/Checksum
+      CFDP/Checksum/GTest
+      Fw/FilePacket
+      Fw/Comp
+      Fw/Port
+    )
+    register_fprime_module()
+endif()
+```
+
+### `DataPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/DataPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/DataPacket.cpp
+// \author bocchino
+// \brief  Test utilities for data file packets
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/GTest/FilePackets.hpp>
+#include <Fw/Types/GTest/Bytes.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void FilePackets::DataPacket ::compare(const FilePacket::DataPacket& expected, const FilePacket::DataPacket& actual) {
+    FilePackets::Header::compare(expected.asHeader(), actual.asHeader());
+    ASSERT_EQ(expected.getByteOffset(), actual.getByteOffset());
+    Bytes expectedData(expected.getData(), expected.getDataSize());
+    Bytes actualData(actual.getData(), actual.getDataSize());
+    Bytes::compare(expectedData, actualData);
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
+```
+
+### `EndPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/EndPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/EndPacket.cpp
+// \author bocchino
+// \brief  Test utilities for data file packets
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <CFDP/Checksum/GTest/Checksums.hpp>
+#include <Fw/FilePacket/GTest/FilePackets.hpp>
+#include <Fw/Types/GTest/Bytes.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void FilePackets::EndPacket ::compare(const FilePacket::EndPacket& expected, const FilePacket::EndPacket& actual) {
+    FilePackets::Header::compare(expected.asHeader(), actual.asHeader());
+    CFDP::Checksum expectedChecksum;
+    CFDP::Checksum actualChecksum;
+    expected.getChecksum(expectedChecksum);
+    actual.getChecksum(actualChecksum);
+    CFDP::GTest::Checksums::compare(expectedChecksum, actualChecksum);
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
+```
+
+### `FilePackets.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/FilePackets.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/FilePackets.hpp
+// \author bocchino
+// \brief  hpp file for File Packet testing utilities
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_GTest_FilePackets_HPP
+#define Fw_GTest_FilePackets_HPP
+
+#include <gtest/gtest.h>
+
+#include <Fw/FilePacket/FilePacket.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+//! Utilities for testing File Packet operations
+//!
+namespace FilePackets {
+
+namespace PathName {
+
+//! Compare two path names
+void compare(const FilePacket::PathName& expected, const FilePacket::PathName& actual);
+
+}  // namespace PathName
+
+namespace Header {
+
+//! Compare two file packet headers
+void compare(const FilePacket::Header& expected, const FilePacket::Header& actual);
+
+}  // namespace Header
+
+namespace StartPacket {
+
+//! Compare two start packets
+void compare(const FilePacket::StartPacket& expected, const FilePacket::StartPacket& actual);
+
+}  // namespace StartPacket
+
+namespace DataPacket {
+
+//! Compare two data packets
+void compare(const FilePacket::DataPacket& expected, const FilePacket::DataPacket& actual);
+
+}  // namespace DataPacket
+
+namespace EndPacket {
+
+//! Compare two end packets
+void compare(const FilePacket::EndPacket& expected, const FilePacket::EndPacket& actual);
+
+}  // namespace EndPacket
+
+namespace CancelPacket {
+
+//! Compare two cancel packets
+void compare(const FilePacket::CancelPacket& expected, const FilePacket::CancelPacket& actual);
+
+}  // namespace CancelPacket
+
+}  // namespace FilePackets
+
+}  // namespace GTest
+
+}  // namespace Fw
+
+#endif
+```
+
+### `Header.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/Header.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/Header.cpp
+// \author bocchino
+// \brief  Test utilities for file packet headers
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/GTest/FilePackets.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void FilePackets::Header ::compare(const FilePacket::Header& expected, const FilePacket::Header& actual) {
+    ASSERT_EQ(expected.getType(), actual.getType());
+    ASSERT_EQ(expected.getSequenceIndex(), actual.getSequenceIndex());
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
+```
+
+### `PathName.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/PathName.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/PathName.cpp
+// \author bocchino
+// \brief  Test utilities for start file packets
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/GTest/FilePackets.hpp>
+#include <Fw/Types/GTest/Bytes.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void FilePackets::PathName ::compare(const FilePacket::PathName& expected, const FilePacket::PathName& actual) {
+    ASSERT_EQ(expected.getLength(), actual.getLength());
+    Bytes expectedPath(reinterpret_cast<const U8*>(expected.getValue()), expected.getLength());
+    Bytes actualPath(reinterpret_cast<const U8*>(actual.getValue()), actual.getLength());
+    Bytes::compare(expectedPath, actualPath);
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
+```
+
+### `StartPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/StartPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Fw/FilePacket/GTest/StartPacket.cpp
+// \author bocchino
+// \brief  Test utilities for start file packets
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/GTest/FilePackets.hpp>
+#include <Fw/Types/GTest/Bytes.hpp>
+
+namespace Fw {
+
+namespace GTest {
+
+void FilePackets::StartPacket ::compare(const FilePacket::StartPacket& expected,
+                                        const FilePacket::StartPacket& actual) {
+    FilePackets::Header::compare(expected.asHeader(), actual.asHeader());
+    ASSERT_EQ(expected.getFileSize(), actual.getFileSize());
+    PathName::compare(expected.getSourcePath(), actual.getSourcePath());
+    PathName::compare(expected.getDestinationPath(), actual.getDestinationPath());
+}
+
+}  // namespace GTest
+
+}  // namespace Fw
+```

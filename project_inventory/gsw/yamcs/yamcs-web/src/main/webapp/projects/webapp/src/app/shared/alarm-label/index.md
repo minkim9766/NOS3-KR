@@ -3,18 +3,142 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-label.component.css`
 
-file--alarm-label.component.css
-file--alarm-label.component.html
-file--alarm-label.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/alarm-label.component.css`
+
+
+```css
+.count {
+  display: inline-block;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #000;
+  margin-left: 1em;
+  padding: 0 5px;
+}
+
+.count.unacked.watch,
+.count.unacked.warning {
+  background-color: var(--y-warning-color);
+  color: #fff;
+}
+
+.count.unacked.distress,
+.count.unacked.critical,
+.count.unacked.severe {
+  background-color: var(--y-error-color);
+  color: #fff;
+}
 ```
 
-## 항목
+### `alarm-label.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/alarm-label.component.css`](file--alarm-label.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/alarm-label.component.html`](file--alarm-label.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/alarm-label.component.ts`](file--alarm-label.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/alarm-label.component.html`
+
+
+```html
+@if (context$ | async; as context) {
+  <ya-sidebar-nav-item
+    activeWhen="/alarms"
+    routerLink="/alarms"
+    [queryParams]="{ c: yamcs.context }">
+    <mat-icon class="item-icon">notifications_none</mat-icon>
+    Alarms
+    @if (status$ | async; as status) {
+      @if (status.unacknowledgedCount) {
+        <div class="count unacked" [ngClass]="status.unacknowledgedSeverity | lowercase">
+          {{ status.unacknowledgedCount }} unacked
+        </div>
+      } @else if (status.acknowledgedCount) {
+        <div class="count acked">{{ status.acknowledgedCount }} acked</div>
+      }
+    }
+  </ya-sidebar-nav-item>
+}
+```
+
+### `alarm-label.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/alarm-label.component.ts`
+
+
+```typescript
+import { LowerCasePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  AuthService,
+  FaviconService,
+  GlobalAlarmStatus,
+  GlobalAlarmStatusSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-alarm-label',
+  templateUrl: './alarm-label.component.html',
+  styleUrl: './alarm-label.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LowerCasePipe, WebappSdkModule],
+})
+export class AlarmLabelComponent implements OnDestroy {
+  private connectionInfoSubscription: Subscription;
+
+  context$ = new BehaviorSubject<string | null>(null);
+  status$ = new BehaviorSubject<GlobalAlarmStatus | null>(null);
+
+  private statusSubscription: GlobalAlarmStatusSubscription;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    readonly faviconService: FaviconService,
+    authService: AuthService,
+  ) {
+    this.connectionInfoSubscription = yamcs.connectionInfo$.subscribe(
+      (connectionInfo) => {
+        if (connectionInfo && connectionInfo.instance) {
+          let context = connectionInfo.instance.name;
+          if (connectionInfo.processor) {
+            if (authService.getUser()!.hasSystemPrivilege('ReadAlarms')) {
+              const options = {
+                instance: connectionInfo.instance.name,
+                processor: connectionInfo.processor.name,
+              };
+              this.statusSubscription =
+                yamcs.yamcsClient.createGlobalAlarmStatusSubscription(
+                  options,
+                  (status) => {
+                    this.status$.next(status);
+                    const alarmCount =
+                      status.unacknowledgedCount + status.acknowledgedCount;
+                    this.faviconService.showNotification(alarmCount > 0);
+                  },
+                );
+            }
+            context += ';' + connectionInfo.processor;
+          }
+          this.context$.next(context);
+        } else {
+          this.clearAlarmSubscription();
+          this.context$.next(null);
+        }
+      },
+    );
+  }
+
+  private clearAlarmSubscription() {
+    this.statusSubscription?.cancel();
+    this.status$.next(null);
+    this.faviconService.showNotification(false);
+  }
+
+  ngOnDestroy() {
+    this.clearAlarmSubscription();
+    this.connectionInfoSubscription?.unsubscribe();
+  }
+}
+```

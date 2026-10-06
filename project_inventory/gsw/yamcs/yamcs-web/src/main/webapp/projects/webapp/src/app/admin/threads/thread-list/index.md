@@ -3,16 +3,187 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `thread-list.component.html`
 
-file--thread-list.component.html
-file--thread-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread-list/thread-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Threads">
+    <a mat-button color="primary" [href]="threadDumpURL">
+      <mat-icon>notes</mat-icon>
+      Text dump
+    </a>
+  </app-admin-toolbar>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter [formControl]="filterControl" placeholder="Filter threads" />
+    </ya-filter-bar>
+    <mat-tab-group animationDuration="0ms" class="secondary" [mat-stretch-tabs]="false">
+      <mat-tab>
+        <ng-template mat-tab-label>All ({{ allThreadCount$ | async }})</ng-template>
+        <br />
+        <app-threads-table [threads]="allThreads$ | async" [filter]="filterValue$ | async" />
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>Runnable ({{ runnableThreadCount$ | async }})</ng-template>
+        <br />
+        <app-threads-table [threads]="runnableThreads$ | async" [filter]="filterValue$ | async" />
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          Timed waiting ({{ timedWaitingThreadCount$ | async }})
+        </ng-template>
+        <br />
+        <app-threads-table
+          [threads]="timedWaitingThreads$ | async"
+          [filter]="filterValue$ | async" />
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>Waiting ({{ waitingThreadCount$ | async }})</ng-template>
+        <br />
+        <app-threads-table [threads]="waitingThreads$ | async" [filter]="filterValue$ | async" />
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>Blocked ({{ blockedThreadCount$ | async }})</ng-template>
+        <br />
+        <app-threads-table [threads]="blockedThreads$ | async" [filter]="filterValue$ | async" />
+      </mat-tab>
+    </mat-tab-group>
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `thread-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread-list/thread-list.component.html`](file--thread-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread-list/thread-list.component.ts`](file--thread-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread-list/thread-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Synchronizer,
+  ThreadInfo,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { ThreadsTableComponent } from '../threads-table/threads-table.component';
+
+@Component({
+  templateUrl: './thread-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    WebappSdkModule,
+    ThreadsTableComponent,
+  ],
+})
+export class ThreadListComponent implements AfterViewInit, OnDestroy {
+  filterControl = new UntypedFormControl();
+
+  filterValue$ = new BehaviorSubject<string | null>(null);
+
+  allThreads$ = new Subject<ThreadInfo[]>();
+
+  allThreadCount$ = this.allThreads$.pipe(map((threads) => threads.length));
+  runnableThreads$ = this.allThreads$.pipe(
+    map((threads) => threads.filter((t) => t.state === 'RUNNABLE')),
+  );
+  runnableThreadCount$ = this.runnableThreads$.pipe(
+    map((threads) => threads.length),
+  );
+  timedWaitingThreads$ = this.allThreads$.pipe(
+    map((threads) => threads.filter((t) => t.state === 'TIMED_WAITING')),
+  );
+  timedWaitingThreadCount$ = this.timedWaitingThreads$.pipe(
+    map((threads) => threads.length),
+  );
+  waitingThreads$ = this.allThreads$.pipe(
+    map((threads) => threads.filter((t) => t.state === 'WAITING')),
+  );
+  waitingThreadCount$ = this.waitingThreads$.pipe(
+    map((threads) => threads.length),
+  );
+  blockedThreads$ = this.allThreads$.pipe(
+    map((threads) => threads.filter((t) => t.state === 'BLOCKED')),
+  );
+  blockedThreadCount$ = this.blockedThreads$.pipe(
+    map((threads) => threads.length),
+  );
+
+  threadDumpURL: string;
+
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    synchronizer: Synchronizer,
+  ) {
+    title.setTitle('Threads');
+    this.threadDumpURL = yamcs.yamcsClient.getThreadDumpURL();
+
+    this.refresh();
+    this.syncSubscription = synchronizer.syncSlow(() => this.refresh());
+  }
+
+  private refresh() {
+    this.yamcs.yamcsClient.getThreads().then((response) => {
+      this.allThreads$.next(response.threads || []);
+    });
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.filterValue$.next(queryParams.get('filter')!.toLowerCase());
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.filterValue$.next(value.toLowerCase());
+    });
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+  }
+}
+```

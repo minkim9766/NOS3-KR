@@ -3,7 +3,7 @@
 
 **경로:** `gsw/ait/gswait/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,14 +13,14 @@ config/index
 handlers/index
 packets/index
 plugins/index
-file--__init__.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/ait/gswait/cmd/`](cmd/index) — 폴더
-- [`gsw/ait/gswait/config/`](config/index) — 폴더
-- [`gsw/ait/gswait/handlers/`](handlers/index) — 폴더
-- [`gsw/ait/gswait/packets/`](packets/index) — 폴더
-- [`gsw/ait/gswait/plugins/`](plugins/index) — 폴더
-- [`gsw/ait/gswait/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
+### `__init__.py`
+
+**경로:** `gsw/ait/gswait/__init__.py`
+
+
+```python
+```

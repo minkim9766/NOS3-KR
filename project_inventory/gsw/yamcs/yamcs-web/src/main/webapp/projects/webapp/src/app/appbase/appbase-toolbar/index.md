@@ -3,20 +3,140 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `appbase-toolbar-label.directive.ts`
 
-file--appbase-toolbar-label.directive.ts
-file--appbase-toolbar.component.css
-file--appbase-toolbar.component.html
-file--appbase-toolbar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar-label.directive.ts`
+
+
+```typescript
+import { CdkPortal } from '@angular/cdk/portal';
+import { Directive, InjectionToken, inject } from '@angular/core';
+
+/**
+ * Provide a label to a toolbar without causing a circular dependency
+ */
+export const APP_APPBASE_TOOLBAR = new InjectionToken<any>(
+  'APP_APPBASE_TOOLBAR',
+);
+
+/** Flag labels for use with the portal directive */
+@Directive({
+  selector: '[app-appbase-toolbar-label]',
+})
+export class AppAppBaseToolbarLabel extends CdkPortal {
+  _closestToolbar = inject(APP_APPBASE_TOOLBAR, { optional: true });
+}
 ```
 
-## 항목
+### `appbase-toolbar.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar-label.directive.ts`](file--appbase-toolbar-label.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar.component.css`](file--appbase-toolbar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar.component.html`](file--appbase-toolbar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar.component.ts`](file--appbase-toolbar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--y-background-color);
+  box-sizing: content-box;
+  padding: 0 16px 0 24px;
+  font:
+    400 20px / 28px Roboto,
+    sans-serif;
+  letter-spacing: 0.25px;
+}
+
+.app-appbase-toolbar-label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.app-appbase-toolbar-content {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.icon-action {
+  display: flex;
+  align-items: center;
+}
+```
+
+### `appbase-toolbar.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar.component.html`
+
+
+```html
+<div class="app-appbase-toolbar-label">
+  @if (templateLabel) {
+    <ng-template [cdkPortalOutlet]="templateLabel" />
+  } @else {
+    {{ textLabel() }}
+  }
+</div>
+<div class="app-appbase-toolbar-content">
+  <ng-content />
+</div>
+```
+
+### `appbase-toolbar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/appbase-toolbar/appbase-toolbar.component.ts`
+
+
+```typescript
+import { CdkPortalOutlet } from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  input,
+} from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import {
+  APP_APPBASE_TOOLBAR,
+  AppAppBaseToolbarLabel,
+} from './appbase-toolbar-label.directive';
+
+@Component({
+  selector: 'app-appbase-toolbar',
+  templateUrl: './appbase-toolbar.component.html',
+  styleUrl: './appbase-toolbar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: APP_APPBASE_TOOLBAR,
+      useExisting: AppAppBaseToolbar,
+    },
+  ],
+  host: {
+    class: 'app-appbase-toolbar',
+  },
+  imports: [CdkPortalOutlet, WebappSdkModule],
+})
+export class AppAppBaseToolbar {
+  // Plain text label, used when there is no template label
+  textLabel = input<string | undefined>(undefined, { alias: 'label' });
+
+  private _templateLabel: AppAppBaseToolbarLabel;
+
+  // Content for the attr label given by `<ng-template app-appbase-toolbar-label>`
+  @ContentChild(AppAppBaseToolbarLabel)
+  get templateLabel(): AppAppBaseToolbarLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: AppAppBaseToolbarLabel | undefined) {
+    if (value && value._closestToolbar === this) {
+      this._templateLabel = value;
+    }
+  }
+}
+```

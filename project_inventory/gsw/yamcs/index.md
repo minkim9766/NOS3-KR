@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -22,43 +22,2822 @@ yamcs-core/index
 yamcs-tse/index
 yamcs-web/index
 yamcs-xtce/index
-file--.git
-file--.gitignore
-file--AGPL-LICENSE.txt
-file--Changelog
-file--eclipse-yamcs-style.xml
-file--Makefile
-file--packet-viewer.sh
-file--pom.xml
-file--README.md
-file--run-example.cmd
-file--run-example.sh
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/.github/`](.github/index) — 폴더
-- [`gsw/yamcs/distribution/`](distribution/index) — 폴더
-- [`gsw/yamcs/docs/`](docs/index) — 폴더
-- [`gsw/yamcs/examples/`](examples/index) — 폴더
-- [`gsw/yamcs/nos3/`](nos3/index) — 폴더
-- [`gsw/yamcs/packet-viewer/`](packet-viewer/index) — 폴더
-- [`gsw/yamcs/simulator/`](simulator/index) — 폴더
-- [`gsw/yamcs/tests/`](tests/index) — 폴더
-- [`gsw/yamcs/yamcs-api/`](yamcs-api/index) — 폴더
-- [`gsw/yamcs/yamcs-client/`](yamcs-client/index) — 폴더
-- [`gsw/yamcs/yamcs-core/`](yamcs-core/index) — 폴더
-- [`gsw/yamcs/yamcs-tse/`](yamcs-tse/index) — 폴더
-- [`gsw/yamcs/yamcs-web/`](yamcs-web/index) — 폴더
-- [`gsw/yamcs/yamcs-xtce/`](yamcs-xtce/index) — 폴더
-- [`gsw/yamcs/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/AGPL-LICENSE.txt`](file--AGPL-LICENSE.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/Changelog`](file--Changelog) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/eclipse-yamcs-style.xml`](file--eclipse-yamcs-style.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer.sh`](file--packet-viewer.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/run-example.cmd`](file--run-example.cmd) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/run-example.sh`](file--run-example.sh) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `gsw/yamcs/.git`
+
+
+```text
+gitdir: ../../.git/modules/gsw/yamcs
+```
+
+### `.gitignore`
+
+**경로:** `gsw/yamcs/.gitignore`
+
+
+```text
+#Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+#Intellij
+.idea/
+*.iml
+
+target/
+server.lock
+
+#Vscode
+.vscode
+```
+
+### `AGPL-LICENSE.txt`
+
+**경로:** `gsw/yamcs/AGPL-LICENSE.txt`
+
+
+```text
+                    GNU AFFERO GENERAL PUBLIC LICENSE
+                       Version 3, 19 November 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+                            Preamble
+
+  The GNU Affero General Public License is a free, copyleft license for
+software and other kinds of works, specifically designed to ensure
+cooperation with the community in the case of network server software.
+
+  The licenses for most software and other practical works are designed
+to take away your freedom to share and change the works.  By contrast,
+our General Public Licenses are intended to guarantee your freedom to
+share and change all versions of a program--to make sure it remains free
+software for all its users.
+
+  When we speak of free software, we are referring to freedom, not
+price.  Our General Public Licenses are designed to make sure that you
+have the freedom to distribute copies of free software (and charge for
+them if you wish), that you receive source code or can get it if you
+want it, that you can change the software or use pieces of it in new
+free programs, and that you know you can do these things.
+
+  Developers that use our General Public Licenses protect your rights
+with two steps: (1) assert copyright on the software, and (2) offer
+you this License which gives you legal permission to copy, distribute
+and/or modify the software.
+
+  A secondary benefit of defending all users' freedom is that
+improvements made in alternate versions of the program, if they
+receive widespread use, become available for other developers to
+incorporate.  Many developers of free software are heartened and
+encouraged by the resulting cooperation.  However, in the case of
+software used on network servers, this result may fail to come about.
+The GNU General Public License permits making a modified version and
+letting the public access it on a server without ever releasing its
+source code to the public.
+
+  The GNU Affero General Public License is designed specifically to
+ensure that, in such cases, the modified source code becomes available
+to the community.  It requires the operator of a network server to
+provide the source code of the modified version running there to the
+users of that server.  Therefore, public use of a modified version, on
+a publicly accessible server, gives the public access to the source
+code of the modified version.
+
+  An older license, called the Affero General Public License and
+published by Affero, was designed to accomplish similar goals.  This is
+a different license, not a version of the Affero GPL, but Affero has
+released a new version of the Affero GPL which permits relicensing under
+this license.
+
+  The precise terms and conditions for copying, distribution and
+modification follow.
+
+                       TERMS AND CONDITIONS
+
+  0. Definitions.
+
+  "This License" refers to version 3 of the GNU Affero General Public License.
+
+  "Copyright" also means copyright-like laws that apply to other kinds of
+works, such as semiconductor masks.
+
+  "The Program" refers to any copyrightable work licensed under this
+License.  Each licensee is addressed as "you".  "Licensees" and
+"recipients" may be individuals or organizations.
+
+  To "modify" a work means to copy from or adapt all or part of the work
+in a fashion requiring copyright permission, other than the making of an
+exact copy.  The resulting work is called a "modified version" of the
+earlier work or a work "based on" the earlier work.
+
+  A "covered work" means either the unmodified Program or a work based
+on the Program.
+
+  To "propagate" a work means to do anything with it that, without
+permission, would make you directly or secondarily liable for
+infringement under applicable copyright law, except executing it on a
+computer or modifying a private copy.  Propagation includes copying,
+distribution (with or without modification), making available to the
+public, and in some countries other activities as well.
+
+  To "convey" a work means any kind of propagation that enables other
+parties to make or receive copies.  Mere interaction with a user through
+a computer network, with no transfer of a copy, is not conveying.
+
+  An interactive user interface displays "Appropriate Legal Notices"
+to the extent that it includes a convenient and prominently visible
+feature that (1) displays an appropriate copyright notice, and (2)
+tells the user that there is no warranty for the work (except to the
+extent that warranties are provided), that licensees may convey the
+work under this License, and how to view a copy of this License.  If
+the interface presents a list of user commands or options, such as a
+menu, a prominent item in the list meets this criterion.
+
+  1. Source Code.
+
+  The "source code" for a work means the preferred form of the work
+for making modifications to it.  "Object code" means any non-source
+form of a work.
+
+  A "Standard Interface" means an interface that either is an official
+standard defined by a recognized standards body, or, in the case of
+interfaces specified for a particular programming language, one that
+is widely used among developers working in that language.
+
+  The "System Libraries" of an executable work include anything, other
+than the work as a whole, that (a) is included in the normal form of
+packaging a Major Component, but which is not part of that Major
+Component, and (b) serves only to enable use of the work with that
+Major Component, or to implement a Standard Interface for which an
+implementation is available to the public in source code form.  A
+"Major Component", in this context, means a major essential component
+(kernel, window system, and so on) of the specific operating system
+(if any) on which the executable work runs, or a compiler used to
+produce the work, or an object code interpreter used to run it.
+
+  The "Corresponding Source" for a work in object code form means all
+the source code needed to generate, install, and (for an executable
+work) run the object code and to modify the work, including scripts to
+control those activities.  However, it does not include the work's
+System Libraries, or general-purpose tools or generally available free
+programs which are used unmodified in performing those activities but
+which are not part of the work.  For example, Corresponding Source
+includes interface definition files associated with source files for
+the work, and the source code for shared libraries and dynamically
+linked subprograms that the work is specifically designed to require,
+such as by intimate data communication or control flow between those
+subprograms and other parts of the work.
+
+  The Corresponding Source need not include anything that users
+can regenerate automatically from other parts of the Corresponding
+Source.
+
+  The Corresponding Source for a work in source code form is that
+same work.
+
+  2. Basic Permissions.
+
+  All rights granted under this License are granted for the term of
+copyright on the Program, and are irrevocable provided the stated
+conditions are met.  This License explicitly affirms your unlimited
+permission to run the unmodified Program.  The output from running a
+covered work is covered by this License only if the output, given its
+content, constitutes a covered work.  This License acknowledges your
+rights of fair use or other equivalent, as provided by copyright law.
+
+  You may make, run and propagate covered works that you do not
+convey, without conditions so long as your license otherwise remains
+in force.  You may convey covered works to others for the sole purpose
+of having them make modifications exclusively for you, or provide you
+with facilities for running those works, provided that you comply with
+the terms of this License in conveying all material for which you do
+not control copyright.  Those thus making or running the covered works
+for you must do so exclusively on your behalf, under your direction
+and control, on terms that prohibit them from making any copies of
+your copyrighted material outside their relationship with you.
+
+  Conveying under any other circumstances is permitted solely under
+the conditions stated below.  Sublicensing is not allowed; section 10
+makes it unnecessary.
+
+  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
+
+  No covered work shall be deemed part of an effective technological
+measure under any applicable law fulfilling obligations under article
+11 of the WIPO copyright treaty adopted on 20 December 1996, or
+similar laws prohibiting or restricting circumvention of such
+measures.
+
+  When you convey a covered work, you waive any legal power to forbid
+circumvention of technological measures to the extent such circumvention
+is effected by exercising rights under this License with respect to
+the covered work, and you disclaim any intention to limit operation or
+modification of the work as a means of enforcing, against the work's
+users, your or third parties' legal rights to forbid circumvention of
+technological measures.
+
+  4. Conveying Verbatim Copies.
+
+  You may convey verbatim copies of the Program's source code as you
+receive it, in any medium, provided that you conspicuously and
+appropriately publish on each copy an appropriate copyright notice;
+keep intact all notices stating that this License and any
+non-permissive terms added in accord with section 7 apply to the code;
+keep intact all notices of the absence of any warranty; and give all
+recipients a copy of this License along with the Program.
+
+  You may charge any price or no price for each copy that you convey,
+and you may offer support or warranty protection for a fee.
+
+  5. Conveying Modified Source Versions.
+
+  You may convey a work based on the Program, or the modifications to
+produce it from the Program, in the form of source code under the
+terms of section 4, provided that you also meet all of these conditions:
+
+    a) The work must carry prominent notices stating that you modified
+    it, and giving a relevant date.
+
+    b) The work must carry prominent notices stating that it is
+    released under this License and any conditions added under section
+    7.  This requirement modifies the requirement in section 4 to
+    "keep intact all notices".
+
+    c) You must license the entire work, as a whole, under this
+    License to anyone who comes into possession of a copy.  This
+    License will therefore apply, along with any applicable section 7
+    additional terms, to the whole of the work, and all its parts,
+    regardless of how they are packaged.  This License gives no
+    permission to license the work in any other way, but it does not
+    invalidate such permission if you have separately received it.
+
+    d) If the work has interactive user interfaces, each must display
+    Appropriate Legal Notices; however, if the Program has interactive
+    interfaces that do not display Appropriate Legal Notices, your
+    work need not make them do so.
+
+  A compilation of a covered work with other separate and independent
+works, which are not by their nature extensions of the covered work,
+and which are not combined with it such as to form a larger program,
+in or on a volume of a storage or distribution medium, is called an
+"aggregate" if the compilation and its resulting copyright are not
+used to limit the access or legal rights of the compilation's users
+beyond what the individual works permit.  Inclusion of a covered work
+in an aggregate does not cause this License to apply to the other
+parts of the aggregate.
+
+  6. Conveying Non-Source Forms.
+
+  You may convey a covered work in object code form under the terms
+of sections 4 and 5, provided that you also convey the
+machine-readable Corresponding Source under the terms of this License,
+in one of these ways:
+
+    a) Convey the object code in, or embodied in, a physical product
+    (including a physical distribution medium), accompanied by the
+    Corresponding Source fixed on a durable physical medium
+    customarily used for software interchange.
+
+    b) Convey the object code in, or embodied in, a physical product
+    (including a physical distribution medium), accompanied by a
+    written offer, valid for at least three years and valid for as
+    long as you offer spare parts or customer support for that product
+    model, to give anyone who possesses the object code either (1) a
+    copy of the Corresponding Source for all the software in the
+    product that is covered by this License, on a durable physical
+    medium customarily used for software interchange, for a price no
+    more than your reasonable cost of physically performing this
+    conveying of source, or (2) access to copy the
+    Corresponding Source from a network server at no charge.
+
+    c) Convey individual copies of the object code with a copy of the
+    written offer to provide the Corresponding Source.  This
+    alternative is allowed only occasionally and noncommercially, and
+    only if you received the object code with such an offer, in accord
+    with subsection 6b.
+
+    d) Convey the object code by offering access from a designated
+    place (gratis or for a charge), and offer equivalent access to the
+    Corresponding Source in the same way through the same place at no
+    further charge.  You need not require recipients to copy the
+    Corresponding Source along with the object code.  If the place to
+    copy the object code is a network server, the Corresponding Source
+    may be on a different server (operated by you or a third party)
+    that supports equivalent copying facilities, provided you maintain
+    clear directions next to the object code saying where to find the
+    Corresponding Source.  Regardless of what server hosts the
+    Corresponding Source, you remain obligated to ensure that it is
+    available for as long as needed to satisfy these requirements.
+
+    e) Convey the object code using peer-to-peer transmission, provided
+    you inform other peers where the object code and Corresponding
+    Source of the work are being offered to the general public at no
+    charge under subsection 6d.
+
+  A separable portion of the object code, whose source code is excluded
+from the Corresponding Source as a System Library, need not be
+included in conveying the object code work.
+
+  A "User Product" is either (1) a "consumer product", which means any
+tangible personal property which is normally used for personal, family,
+or household purposes, or (2) anything designed or sold for incorporation
+into a dwelling.  In determining whether a product is a consumer product,
+doubtful cases shall be resolved in favor of coverage.  For a particular
+product received by a particular user, "normally used" refers to a
+typical or common use of that class of product, regardless of the status
+of the particular user or of the way in which the particular user
+actually uses, or expects or is expected to use, the product.  A product
+is a consumer product regardless of whether the product has substantial
+commercial, industrial or non-consumer uses, unless such uses represent
+the only significant mode of use of the product.
+
+  "Installation Information" for a User Product means any methods,
+procedures, authorization keys, or other information required to install
+and execute modified versions of a covered work in that User Product from
+a modified version of its Corresponding Source.  The information must
+suffice to ensure that the continued functioning of the modified object
+code is in no case prevented or interfered with solely because
+modification has been made.
+
+  If you convey an object code work under this section in, or with, or
+specifically for use in, a User Product, and the conveying occurs as
+part of a transaction in which the right of possession and use of the
+User Product is transferred to the recipient in perpetuity or for a
+fixed term (regardless of how the transaction is characterized), the
+Corresponding Source conveyed under this section must be accompanied
+by the Installation Information.  But this requirement does not apply
+if neither you nor any third party retains the ability to install
+modified object code on the User Product (for example, the work has
+been installed in ROM).
+
+  The requirement to provide Installation Information does not include a
+requirement to continue to provide support service, warranty, or updates
+for a work that has been modified or installed by the recipient, or for
+the User Product in which it has been modified or installed.  Access to a
+network may be denied when the modification itself materially and
+adversely affects the operation of the network or violates the rules and
+protocols for communication across the network.
+
+  Corresponding Source conveyed, and Installation Information provided,
+in accord with this section must be in a format that is publicly
+documented (and with an implementation available to the public in
+source code form), and must require no special password or key for
+unpacking, reading or copying.
+
+  7. Additional Terms.
+
+  "Additional permissions" are terms that supplement the terms of this
+License by making exceptions from one or more of its conditions.
+Additional permissions that are applicable to the entire Program shall
+be treated as though they were included in this License, to the extent
+that they are valid under applicable law.  If additional permissions
+apply only to part of the Program, that part may be used separately
+under those permissions, but the entire Program remains governed by
+this License without regard to the additional permissions.
+
+  When you convey a copy of a covered work, you may at your option
+remove any additional permissions from that copy, or from any part of
+it.  (Additional permissions may be written to require their own
+removal in certain cases when you modify the work.)  You may place
+additional permissions on material, added by you to a covered work,
+for which you have or can give appropriate copyright permission.
+
+  Notwithstanding any other provision of this License, for material you
+add to a covered work, you may (if authorized by the copyright holders of
+that material) supplement the terms of this License with terms:
+
+    a) Disclaiming warranty or limiting liability differently from the
+    terms of sections 15 and 16 of this License; or
+
+    b) Requiring preservation of specified reasonable legal notices or
+    author attributions in that material or in the Appropriate Legal
+    Notices displayed by works containing it; or
+
+    c) Prohibiting misrepresentation of the origin of that material, or
+    requiring that modified versions of such material be marked in
+    reasonable ways as different from the original version; or
+
+    d) Limiting the use for publicity purposes of names of licensors or
+    authors of the material; or
+
+    e) Declining to grant rights under trademark law for use of some
+    trade names, trademarks, or service marks; or
+
+    f) Requiring indemnification of licensors and authors of that
+    material by anyone who conveys the material (or modified versions of
+    it) with contractual assumptions of liability to the recipient, for
+    any liability that these contractual assumptions directly impose on
+    those licensors and authors.
+
+  All other non-permissive additional terms are considered "further
+restrictions" within the meaning of section 10.  If the Program as you
+received it, or any part of it, contains a notice stating that it is
+governed by this License along with a term that is a further
+restriction, you may remove that term.  If a license document contains
+a further restriction but permits relicensing or conveying under this
+License, you may add to a covered work material governed by the terms
+of that license document, provided that the further restriction does
+not survive such relicensing or conveying.
+
+  If you add terms to a covered work in accord with this section, you
+must place, in the relevant source files, a statement of the
+additional terms that apply to those files, or a notice indicating
+where to find the applicable terms.
+
+  Additional terms, permissive or non-permissive, may be stated in the
+form of a separately written license, or stated as exceptions;
+the above requirements apply either way.
+
+  8. Termination.
+
+  You may not propagate or modify a covered work except as expressly
+provided under this License.  Any attempt otherwise to propagate or
+modify it is void, and will automatically terminate your rights under
+this License (including any patent licenses granted under the third
+paragraph of section 11).
+
+  However, if you cease all violation of this License, then your
+license from a particular copyright holder is reinstated (a)
+provisionally, unless and until the copyright holder explicitly and
+finally terminates your license, and (b) permanently, if the copyright
+holder fails to notify you of the violation by some reasonable means
+prior to 60 days after the cessation.
+
+  Moreover, your license from a particular copyright holder is
+reinstated permanently if the copyright holder notifies you of the
+violation by some reasonable means, this is the first time you have
+received notice of violation of this License (for any work) from that
+copyright holder, and you cure the violation prior to 30 days after
+your receipt of the notice.
+
+  Termination of your rights under this section does not terminate the
+licenses of parties who have received copies or rights from you under
+this License.  If your rights have been terminated and not permanently
+reinstated, you do not qualify to receive new licenses for the same
+material under section 10.
+
+  9. Acceptance Not Required for Having Copies.
+
+  You are not required to accept this License in order to receive or
+run a copy of the Program.  Ancillary propagation of a covered work
+occurring solely as a consequence of using peer-to-peer transmission
+to receive a copy likewise does not require acceptance.  However,
+nothing other than this License grants you permission to propagate or
+modify any covered work.  These actions infringe copyright if you do
+not accept this License.  Therefore, by modifying or propagating a
+covered work, you indicate your acceptance of this License to do so.
+
+  10. Automatic Licensing of Downstream Recipients.
+
+  Each time you convey a covered work, the recipient automatically
+receives a license from the original licensors, to run, modify and
+propagate that work, subject to this License.  You are not responsible
+for enforcing compliance by third parties with this License.
+
+  An "entity transaction" is a transaction transferring control of an
+organization, or substantially all assets of one, or subdividing an
+organization, or merging organizations.  If propagation of a covered
+work results from an entity transaction, each party to that
+transaction who receives a copy of the work also receives whatever
+licenses to the work the party's predecessor in interest had or could
+give under the previous paragraph, plus a right to possession of the
+Corresponding Source of the work from the predecessor in interest, if
+the predecessor has it or can get it with reasonable efforts.
+
+  You may not impose any further restrictions on the exercise of the
+rights granted or affirmed under this License.  For example, you may
+not impose a license fee, royalty, or other charge for exercise of
+rights granted under this License, and you may not initiate litigation
+(including a cross-claim or counterclaim in a lawsuit) alleging that
+any patent claim is infringed by making, using, selling, offering for
+sale, or importing the Program or any portion of it.
+
+  11. Patents.
+
+  A "contributor" is a copyright holder who authorizes use under this
+License of the Program or a work on which the Program is based.  The
+work thus licensed is called the contributor's "contributor version".
+
+  A contributor's "essential patent claims" are all patent claims
+owned or controlled by the contributor, whether already acquired or
+hereafter acquired, that would be infringed by some manner, permitted
+by this License, of making, using, or selling its contributor version,
+but do not include claims that would be infringed only as a
+consequence of further modification of the contributor version.  For
+purposes of this definition, "control" includes the right to grant
+patent sublicenses in a manner consistent with the requirements of
+this License.
+
+  Each contributor grants you a non-exclusive, worldwide, royalty-free
+patent license under the contributor's essential patent claims, to
+make, use, sell, offer for sale, import and otherwise run, modify and
+propagate the contents of its contributor version.
+
+  In the following three paragraphs, a "patent license" is any express
+agreement or commitment, however denominated, not to enforce a patent
+(such as an express permission to practice a patent or covenant not to
+sue for patent infringement).  To "grant" such a patent license to a
+party means to make such an agreement or commitment not to enforce a
+patent against the party.
+
+  If you convey a covered work, knowingly relying on a patent license,
+and the Corresponding Source of the work is not available for anyone
+to copy, free of charge and under the terms of this License, through a
+publicly available network server or other readily accessible means,
+then you must either (1) cause the Corresponding Source to be so
+available, or (2) arrange to deprive yourself of the benefit of the
+patent license for this particular work, or (3) arrange, in a manner
+consistent with the requirements of this License, to extend the patent
+license to downstream recipients.  "Knowingly relying" means you have
+actual knowledge that, but for the patent license, your conveying the
+covered work in a country, or your recipient's use of the covered work
+in a country, would infringe one or more identifiable patents in that
+country that you have reason to believe are valid.
+
+  If, pursuant to or in connection with a single transaction or
+arrangement, you convey, or propagate by procuring conveyance of, a
+covered work, and grant a patent license to some of the parties
+receiving the covered work authorizing them to use, propagate, modify
+or convey a specific copy of the covered work, then the patent license
+you grant is automatically extended to all recipients of the covered
+work and works based on it.
+
+  A patent license is "discriminatory" if it does not include within
+the scope of its coverage, prohibits the exercise of, or is
+conditioned on the non-exercise of one or more of the rights that are
+specifically granted under this License.  You may not convey a covered
+work if you are a party to an arrangement with a third party that is
+in the business of distributing software, under which you make payment
+to the third party based on the extent of your activity of conveying
+the work, and under which the third party grants, to any of the
+parties who would receive the covered work from you, a discriminatory
+patent license (a) in connection with copies of the covered work
+conveyed by you (or copies made from those copies), or (b) primarily
+for and in connection with specific products or compilations that
+contain the covered work, unless you entered into that arrangement,
+or that patent license was granted, prior to 28 March 2007.
+
+  Nothing in this License shall be construed as excluding or limiting
+any implied license or other defenses to infringement that may
+otherwise be available to you under applicable patent law.
+
+  12. No Surrender of Others' Freedom.
+
+  If conditions are imposed on you (whether by court order, agreement or
+otherwise) that contradict the conditions of this License, they do not
+excuse you from the conditions of this License.  If you cannot convey a
+covered work so as to satisfy simultaneously your obligations under this
+License and any other pertinent obligations, then as a consequence you may
+not convey it at all.  For example, if you agree to terms that obligate you
+to collect a royalty for further conveying from those to whom you convey
+the Program, the only way you could satisfy both those terms and this
+License would be to refrain entirely from conveying the Program.
+
+  13. Remote Network Interaction; Use with the GNU General Public License.
+
+  Notwithstanding any other provision of this License, if you modify the
+Program, your modified version must prominently offer all users
+interacting with it remotely through a computer network (if your version
+supports such interaction) an opportunity to receive the Corresponding
+Source of your version by providing access to the Corresponding Source
+from a network server at no charge, through some standard or customary
+means of facilitating copying of software.  This Corresponding Source
+shall include the Corresponding Source for any work covered by version 3
+of the GNU General Public License that is incorporated pursuant to the
+following paragraph.
+
+  Notwithstanding any other provision of this License, you have
+permission to link or combine any covered work with a work licensed
+under version 3 of the GNU General Public License into a single
+combined work, and to convey the resulting work.  The terms of this
+License will continue to apply to the part which is the covered work,
+but the work with which it is combined will remain governed by version
+3 of the GNU General Public License.
+
+  14. Revised Versions of this License.
+
+  The Free Software Foundation may publish revised and/or new versions of
+the GNU Affero General Public License from time to time.  Such new versions
+will be similar in spirit to the present version, but may differ in detail to
+address new problems or concerns.
+
+  Each version is given a distinguishing version number.  If the
+Program specifies that a certain numbered version of the GNU Affero General
+Public License "or any later version" applies to it, you have the
+option of following the terms and conditions either of that numbered
+version or of any later version published by the Free Software
+Foundation.  If the Program does not specify a version number of the
+GNU Affero General Public License, you may choose any version ever published
+by the Free Software Foundation.
+
+  If the Program specifies that a proxy can decide which future
+versions of the GNU Affero General Public License can be used, that proxy's
+public statement of acceptance of a version permanently authorizes you
+to choose that version for the Program.
+
+  Later license versions may give you additional or different
+permissions.  However, no additional obligations are imposed on any
+author or copyright holder as a result of your choosing to follow a
+later version.
+
+  15. Disclaimer of Warranty.
+
+  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
+APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
+HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
+OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
+IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
+ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+  16. Limitation of Liability.
+
+  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
+THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
+GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
+USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
+DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
+PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
+EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
+
+  17. Interpretation of Sections 15 and 16.
+
+  If the disclaimer of warranty and limitation of liability provided
+above cannot be given local legal effect according to their terms,
+reviewing courts shall apply local law that most closely approximates
+an absolute waiver of all civil liability in connection with the
+Program, unless a warranty or assumption of liability accompanies a
+copy of the Program in return for a fee.
+
+                     END OF TERMS AND CONDITIONS
+
+            How to Apply These Terms to Your New Programs
+
+  If you develop a new program, and you want it to be of the greatest
+possible use to the public, the best way to achieve this is to make it
+free software which everyone can redistribute and change under these terms.
+
+  To do so, attach the following notices to the program.  It is safest
+to attach them to the start of each source file to most effectively
+state the exclusion of warranty; and each file should have at least
+the "copyright" line and a pointer to where the full notice is found.
+
+    <one line to give the program's name and a brief idea of what it does.>
+    Copyright (C) <year>  <name of author>
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Also add information on how to contact you by electronic and paper mail.
+
+  If your software can interact with users remotely through a computer
+network, you should also make sure that it provides a way for users to
+get its source.  For example, if your program is a web application, its
+interface could display a "Source" link that leads users to an archive
+of the code.  There are many ways you could offer source, and different
+solutions will be better for different programs; see section 13 for the
+specific requirements.
+
+  You should also get your employer (if you work as a programmer) or school,
+if any, to sign a "copyright disclaimer" for the program, if necessary.
+For more information on this, and how to apply and follow the GNU AGPL, see
+<http://www.gnu.org/licenses/>.
+```
+
+### `Changelog`
+
+**경로:** `gsw/yamcs/Changelog`
+
+
+```text
+Version 5.12.0 released 16-Jul-2025
+- Rework calibrators to allow calibrating from any raw value type to any engineering value type. XTCE only allows calibrating numerical values (using polynomials or math expressions), so the new calibrators can only be used from the custom MDB loaders for the moment.
+- Fixes a directory traversal security vulnerability.
+- Add query filter capability to packets page.
+- Add low-level page to view Parameter Archive PIDs.
+- Where there is sufficient context, absolute names are now instead displayed as relative to that context. For example in the parameter extraction view, parameter names are relative to their container's system.
+- Many UI tweaks focusing on consistency between pages by improved componentization.
+- Other minor tweaks and fixes.
+
+Version 5.11.12 released 30-Jun-2025
+- Fixed a couple of XTCE export issues
+
+
+Version 5.11.10 released 09-May-2025
+- Fixed a bug related to OPS names permission checks introduced in the 5.11.9 release
+
+Version 5.11.9 released 07-May-2025
+- Allow command arguments containing arrays inside aggregates
+- Add support for using OPS names in ReadParameter and WriteParameter object permissions
+- Aallow IDLE service for TM frames
+
+Version 5.11.8 released 25-Mar-2025
+- Fixed a bug with the parameter archive realtime filler appearing when inserted data was unsorted
+- Unset dirty flag when leaving stack #1014
+- Minor changes in the TM and TC frame options to allow adding frame support to the Yamcs gateway plugin
+
+
+Version 5.11.7 released 19-Mar-2025
+- Fixed a bug in replication preventing old replication files to be removed.
+- Minor tweaks and fixes in yamcs-web.
+
+Version 5.11.6 released 05-Mar-2025
+- Fixed another parameter archive corruption bug triggered when the realtime filler is used
+
+Version 5.11.5 released 04-Mar-2025
+- Fixed parameter archive corruption bug
+- Fixed two issues in the replication service
+
+Version 5.11.3 released 02-Mar-2025
+- Fixed the parameter archive purge operation broken by the 5.11.1 release
+
+Version 5.11.2 released 20-Feb-2025
+- Yamcs web: added parameter plots and states in the timeline.
+- Minor tweaks and fixes.
+
+Version 5.11.1 released 13-Feb-2025
+- Added a streamUpdateFillPolicy to the parameter archive backfiller that allows to fine tune the automatic backfilling of the parameter archive. For example older parts of the archive can be excluded from automatic backfilling. 
+- Added some calls to allow enablign/disabling the automatic backfilling.
+- Disabled the default noreply option in the Parameter Retrieval Service introduced in 5.11.0. This means that if the backfiller is used and the Parameter Archive does not cover the requested data interval, and there is no cache or the cache does not contain the requested parameter, a replay will be performed to retrieve the last part of the interval (presumably corresponding to close to realtime data). If the realtime filler is used, the replay will not be performed.
+- Fixed a data consistency bug when reading from the parameter archive causing spurious DatabaseCorruption exceptions.
+
+Version 5.11.0 released 3-Feb-2025
+- Introduced a Parameter Retrieval Service (enabled by default) to handle code that combines retrieval from the parameter archive with replay and the parameter cache. Before this release, the code was scattered across the Yamcs API handling.
+- Added the ability to mirror alarm status via replication (see the replication1 example).
+- Made the pending status of an alarm explicit—this occurs when minViolations > 1 is defined for raising an alarm, and that number has not yet been reached.
+- Yamcs Web: Close the right detail pane by default; it only opens upon selection.
+- Yamcs Web: Tweaked Archive Browser visualization.
+- Yamcs Web: Added pending alarm view.
+- Yamcs Web: Fixed rendering issue when an argument is an array of aggregates.
+- Minor tweaks and fixes.
+
+
+Version 5.10.9 released 1-Dec-2024
+- Add stack step to insert arbitrary text
+- Add stack step to insert telemetry verifications
+
+Version 5.10.8 released 21-Nov-2024
+- Bug fix in the parameter archive: when rebuilding intervals with gaps, the gaps would not be properly encoded, causing errors in retrieval.
+  Implemented a consistency check which will inform if the parameter archive is corrupted and will suggest a rebuild of the specific interval.
+- Reorganize command form in collapsible sections
+- Allow privileged users to customize the stream when sending a command
+
+
+Version 5.10.7 released 12-Nov-2024
+- Fixed IndirectParameterRefEntry bug not referencing the previous parameter id
+- Fixed replays causing memory leaks
+- Added a TimeBinaryEncoder that can encode timestamps into commands supporting time correlation (unlike the pure XTCE time encoding)
+
+Version 5.10.6 released 7-Nov-2024
+- Small tweaks and fixes related to: CFDP, web UI, algorithms
+
+Version 5.10.5 released 24-Oct-2024
+- Small tweaks and fixes related to: Parameter Archive, CCSDS frames, web UI, Mission Database
+
+Version 5.10.4 released 15-Oct-2024
+- Changed the custom RocksDB library introduced in 5.10.0 to support CPUs as old as Intel Core 2.
+- Added support for XTCE IndirectParameterRefEntry
+- Fixed the export buttons
+- Fixed the Packet Viewer
+
+Version 5.10.3 released 7-Oct-2024
+- The alarm work done in 5.10.2 enabled by mistake the EventAlarmServer which used to be disabled by default. That causes Yamcs not to start in many configurations which used to work (including the Yamcs quickstart) due to missing the event_alarms_realtime. 
+  This version restores back the old behaviour - namely the EventAlarmServer is disabled by default. 
+
+Version 5.10.2 released 6-Oct-2024
+- Improvement in command stacks: they are called simply "stacks" and allow interleaving commands with comments and steps allowing the operator to check the live value of defined parameters.
+- Added event filtering.
+- Alarm reloading - when Yamcs restarts it will reload the non-cleared alarms from the database such that they are active again.
+- Smaller tweaks and fixes.
+
+Version 5.10.1 released 1-Sept-2024
+- Activities: Execute known script files with (configurable) external program.
+- Small tweaks and fixes related to Parameter Archive and the web plugin.
+
+Version 5.10.0 released 11-Aug-2024
+- Introduced RocksDB Merge Operator for the Parameter Archive. Archives created with this version will be incompatible with older versions of Yamcs. The Parameter Archive created with older versions of Yamcs will continue working with this version (and they are backward compatible). 
+ The advatange of the Merge Operator is that it requires much less memory when filling the Parameter Archive (the maxSegmentSize can be set to low values) without losing retrieval performance in the long run (RocksDB merges in the bagkround the small segments into larger intervals).
+ To take advantage of this new format, a complete rebuild of the Parameter Archive is required (can be done with yamcs parameter-archive purge, yamcs parameter-archive rebuild)
+- Java 17 or higher is required starting with this version
+- Fixes an MDB cache issue introduce in recent releases
+- File transfer list was reworked to show all transfers on a single page, with filter capability
+- Various other small tweaks and fixes
+
+Version 5.9.8 released 9-July-2024
+- small tweaks and fixes related to Parameter Archive, Frame valid/invalid counters, command dispatching, parameter link configuration.
+- updated yamcs-maven plugin to work with Java 22.
+
+Version 5.9.7 released 19-June-2024
+- Fix event/command text search not matching beyond limit.
+- Fix extra command options not considered when scheduling command or stack.
+- Fix LDAP unauthenticated bind issue when using LdapAuthModule.
+- Add yamcs-web configuration option to allow displaying local times instead of UTC. Default behaviour remains UTC.
+- Fix TC cascading when direct mapping was used.
+
+Version 5.9.6 released 24-May-2024
+- Allow descriptions for aggregate members defined in the spreadsheet
+- Small tweaks and fixes
+
+Version 5.9.5 released 11-May-2024
+- Add CSV export for commands
+- Small tweaks and fixes related to CFDP, Parameter Archive, Permissions, replication
+
+
+Version 5.9.4 released 11-Apr-2024
+- Implemented sparse groups in the parameter archive. This allows faster retrieval and less memory consumed during builtup and retrieval, at the expense of sliglthy higher disk usage
+- Added a processor option to persist the latest parameter values, such that when Yamcs restarts, it remembers the values for all parameters with the persist flag set. In XTCE, all parameters have the flag set by default. For spreadsheets, they have to be marked specifically using the newly added 'p' flag.
+- For web-rendered OPI displays, show past values on plots, in addition to realtime values
+- Automatically update plots following completion of a backfill operation
+- For `FilePollingTmDataLink`, add a `lastPacketStream` option, so that the last packet on a dump stream could be emitted to the realtime stream (for updating display state of connected clients)
+- On `GenericPacketPreprocessor`, add a `rootContainer` option. Previously this could only be done by making a new stream.
+
+
+Version 5.9.3 released 25-March-2024
+- Added a yamcs parameter-archive purge operation to remove completely the parameter archive before rebuilding.
+  Sometimes the rebuild does not properly remove old data resulting in duplicates (this bug will be addressed in a future release) and the purge can be run to overcome the problem.
+- Added system parameters for reporting memory consumed by RocksDB
+- Improve accuracy of Archive Browser display
+- Improve visualization of arrays/aggregates in on-demand packet extraction result
+- Update to Angular 17 - this requires minimum node version 18
+
+Version 5.9.2 released 12-March-2024
+- Tweak activity-related UI
+- Fix issue with cancelling of activities
+- Fix issue with verification of commands with non-parameter inputs
+- Fix yamcs-web packaging issue
+- Added a option dataPartitioningByTime to allow partitioning the tm, pp, events, alarms, cmdhistory tables and the parameter archive by time.
+
+
+Version 5.9.1 released 6-March-2024
+- Fixed a bug whereas Yamcs won't remember after the first restart that it stored the tm,pp and events table in a different RocksDB column family (option introduced in 5.9.0)
+
+
+Version 5.9.0 released 5-March-2024
+- Added activities and procedures services and improved the timeline service
+- Reorganized the archive for improving performance:
+   - Parameter Archive is stored on a separate column family "parameter-archive". The parameter-archive suffers frequent rebuilds and storing data in a different cf will leave other data undisturbed when the parameter archive rebuilds.
+   - The tm,pp and events tables are stored on a separate column family "rt_data" - these tables are mostly append only and require "realtimeish" performance.
+- Fix on-demand packet extraction in case of multiple on same timestamp
+- Add CSP 1.x pre/post processors
+- Add UdpTcTmDataLink for both TM and TC on a single socket pair
+- Improve application properties: dashes allowed, nesting allowed, spaces allowed in fallback value
+- Allow mapping verifier onSuccess/onFail/onTimeout from and to XTCE
+- Improve support for returning values from a verifier
+- Refresh OIDC tokens granted by external identity provider
+- Add opt-in OIDC back-channel logout support
+- Redirect to login following invalidation of the auth session
+- Allow seeing arguments inline, directly on command history page
+- Add ParameterListService for storing, and exporting lists of parameters
+- Rework server-side algorithm API to better allow for both system logging, as well as publishing events.
+
+Version 5.8.8 released 3-Nov-2023
+- Add API call to stream MDB items
+- Add API calls to add parameters/parameter types
+- Add API call to load large amounts of parameter values
+- Fixed some directory traversal vulnerabilities (CVE-2023-45278 and CVE-2023-45277)
+- Refactored the XtceDb/Mdb to allow writable (via API) SpaceSystems. This may break plugins using internal Xtce classes.
+
+Version 5.8.7 released 29-Sep-2023
+- Small tweaks and fixes
+
+Version 5.8.6 released 18-Sep-2023
+- Cascading: implemented command mapping such that the commands from downstream can be embeeded as binary arguments to upstream commands
+- First prototype for web extensions to allow plugins to add extensions to yamcs-web
+- Various smaller tweaks and fixes
+
+Version 5.8.5 released 02-Aug-2023
+- Fixes auth issue introduced in 5.8.4
+- Various smaller tweaks and fixes
+
+Version 5.8.4 released 28-July-2023
+- Group support on LDAP AuthModule
+- Various smaller tweaks and fixes
+
+Version 5.8.3 released 5-July-2023
+- Consider config properties in etc/application.properties
+- Fix validation of priorityScheme option
+- Add option to fully disable login form
+- yamcs-web: fix binary argument input not showing
+- Various smaller tweaks and fixes
+
+Version 5.8.2 released 12-May-2023
+- Add packet detail page, showing on-demand extraction result
+- Allow validation of link arguments, activated for all default links.
+- Serve static web UI files from root instead of /static
+- CFDP: allow to disable file listing and triggering file download from the yamcs-web. It requires setting two parameters in the CFDP configuration, please check the docs.
+- Various tweaks and fixes
+
+Version 5.8.1 released 2-May-2023
+- Contains fixes from 5.7.13 (developed separately from 5.8.x)
+- Restore link enabled state and queue state across restarts
+- Add configuration option to show custom logo on the yamcs-web
+- Documentation improvements
+- Various tweaks and fixes
+
+
+Version 5.8.0 released 3-Apr-2023
+- Upgraded to Rocksdb 7 (required for Apple ARM64 support). The new version should be backwards compatible but please make an extra backup of your data before upgrading.
+- Added support for Apple ARM64 (Apple M1 and M2 chips)
+- TSE (test support equipment): added support for UDP targets
+- Implemented more fine grained permissions for the yamcs-web Admin and File Transfer pages
+
+
+Version 5.7.10 released 14-Mar-2023
+- CFDP improvements: download via proxy request, file listing
+- Command Stack improvements: allow delay in between commands, allow specifying which acknowledgmetn to wait for
+- various tweaks and fixes
+
+
+Version 5.7.9 released 28-Oct-2022
+- Added cascading feature (one Yamcs downstream Yamcs server connecting to an upstream Yamcs server)
+- Improved the replay capabilities in yamcs-web
+- Various tweaks and fixes
+
+
+Version 5.7.8 released 5-Oct-2022
+- Fix for a case when CFDP service was configured with enableAtStartup: false. Before the fix, the service was still processing incoming PDUs.
+
+Version 5.7.7 released 3-Oct-2022
+- some fixes in the CFDP implementation:
+ - when the FIN ACK is lost: the sender will keep sending FIN ACK for each FIN packet received (even if the transaction from the sender point of view is completed)
+ - when the receiver is dead (or it does not acknowledge the EOF case). In that case Yamcs wanted to cancel the transaction but it got stuck
+ - when the service is stopped, do not process incoming packets
+- add support for (variable length) array command arguments (only one-dimensional arrays supported for now)
+- various tweaks and fixes
+
+Version 5.7.6 released 27-Jul-2022
+- added a low priority option when subscribing via websocket. This allows the yamcs-web to keep connected if there is high incoming data rate, at the expense of some of the messages not displayed.
+- bug fix parameter archive retrieval end conditions (sometimes it would send data that was past the stop time of the request)
+- allow java algorithms to specify their input list (if for any reason is not available in the xtce definition)
+
+Version 5.7.5 released 24-Jul-2022
+- CFDP fixes
+  - the pendingAfterCompletion parameter can be specified now
+  - when starting a new download the number of pending downloads excludes the ones just finished and also the uploads. The number is used to compare with the maxNumberDownloads parameter - if the maximum would be exceeded a new download transfer would not be initiated and the respective PDU dropped
+
+
+Version 5.7.4 released 15-Jun-2022
+- added an option to the /api/stream-archive/{instance}:streamParameterValues (which extracts parameters using replays) to filter the packets based on the tm links  
+on which they have been originally received.
+ For example typically a different link is used to receive dump (recorded on-board) packets; This option can be used to extract parameters only from those. Or could be used to retrieve only from the realtime packets skipping the dump.
+
+Version 5.7.3 released 9-Jun-2022
+- CCSDS TM/TC randomizer: fixed the interpretation of offset/length parameters (may affect custom encoders which want to randomize/derandomzie only parts of the frames).
+- Allow custom (Java) algorithms to provide the list of output parameters at runtime (rather than in the MDB definition) such that the algorithms are not skipped at replay time if no output parameter has been declared in the MDB def.
+- MDB: added internal support for ToString allowing to define how to display the values of parameters (will be implemented in the future in yamcs-web and Yamcs Studio)
+- yamcs-web:
+  - Show favicon badge when there is an alarm
+  - Add group action for queues
+  - Show process tree on system page
+  - Add Command detail page
+)
+Version 5.7.2 released 3-Jun-2022
+- yamcs-web: fix render issue with enumerated and command aggregate arguments
+
+Version 5.7.1 released 30-May-2022
+- Allow 200 aliaes in the yaml files (used to be 50). The number can be configured via the java property org.yamcs.yaml.maxAliases 
+- yamcs-web: Show detail field on links page
+- yamcs-client: fix generation of command source for command with binary arguments
+- fixed units in the data links synthesized parameters (e.g. /yamcs/<hostname>/tm_realtime/packetRate)
+
+
+Version 5.7.0 relased 27-May-2022
+- implemented backend support for raw TCs (telecommands which are not generated from the mission database) and bypassing the postprocessor.
+- Renamed several java packages to avoid having the same package in different jars (this practice has been discouraged since the introduction of java modules) 
+  The "org.yamcs.xtceproc" and "org.yamcs.xtce" in yamcs-core has bene renamed to "org.yamcs.mdb". May require update of custom plugins if they use classes from those packages.
+- Various tweaks and fixes
+
+
+Version 5.6.2 released 11-Apr-2022
+- Added support for Java 17 by using Nashorn javascript engine as a module
+- Removed support for Java 1.8 - 19
+- Various tweaks and fixes
+
+Version 5.6.1 released 4-Apr-2022
+- Replication: detect and recover dead replication links
+- Replication: allow to synchronize the mission time across replication
+- Buckets: allow configurable limits for total size and number of objects in a bucket
+- Various tweaks and fixes
+
+Version 5.6.0 released 2-Mar-2022
+- Keep a log of admin, link, queue and alarm activity
+- Add support for folder creation within buckets
+- Upgrade of protobuf dependency
+- Allow customizing message decoding of UdpParameterDataLink through extension
+- Add toggle to switch between hex/decimal input for unsigned integer arguments
+- API updates:
+    - Link actions are now separate (one method per action)
+    - Queue actions are now separate (one method per action)
+    - Alarm actions are now separate (one method per action)
+    - Old-style websocket is now fully removed (use new-style)
+    - Tags are gone (use timeline)
+- Various tweaks and fixes
+
+Version 5.5.7 released 3-Feb-2022
+- restored backward compatibility for GenericPacketPreprocessor time decoding (in version 5.5.6 it was using the CUC decoder by default instead of using the FIXED decoder)
+- allow raw frame decoding using Reed-Solomon and de-randomization.
+- allow enabling errorDetection for uplink at virtual channel level.
+- fixed bug in FilePollingTmDataLink which was double counting the packets
+
+Version 5.5.6 released 30-Jan-2022
+- added some functions to algorithms
+- allow disabling randomization for specific virtual channels
+- changed the time decoding handling in TM pre-processors to be more consistent
+- various tweaks and fixes
+
+Version 5.5.5 released 20-Oct-2021
+- yamcs-web: fixed display of command arguments in the command history
+
+Version 5.5.4 released 20-Oct-2021
+- Fixed the CLTU randomization sequence to conform to CCSDS 231.0 issue 4 when LDPC coding is enabled.
+- Accept numeric value of an enumeration command argument
+- Fixed lost frame count calculation
+- Allow DataSource=ground for parameters
+- Fixed CFDP reliable option not showing 
+- Fixed duplicate data in the parameter archive
+- Allow specification of generation time in set parameter value requests
+- minor tweaks and fixes
+
+
+Version 5.5.3 released 30-Jul-2021
+- first version of the Yamcs Timeline
+- minor tweaks and fixes
+
+Version 5.5.2 released 22-Jun-2021
+- Fixed XTCE reference solver of types para->Type->BaseType which were defined in reverse order in different files.
+- Fixed parameter archive retrieval of raw values only.
+- yamcs-web: fixed replication page not showing info.
+
+Version 5.5.1 released 8-Jun-2021
+- Fixed (again) the name of the packets shown on yamcs-web front page (TM statistics)
+- Fixed an XTCE reference solving bug
+- Fixed the retrieval from parameter archive with the option useRawValue=true
+
+Version 5.5.0 released 1-Jun-2021
+- Added algorithm status and tracing (currently only working for global algorithms)
+- Added support for XTCE transmission constraints and verifiers (using MatchCriteria, BooleanExpression...)
+- Added java-expression algorithms
+- Added types to system parameters
+- Fixed the realtime parameter archive - it can now be used as a preferred configuration for all systems receiving only realtime data (e.g. testing in an EGSE/Lab setup)
+- CCSDS Frame Processing: allow plugging user defined virtual channels handlers
+- Fixed the Parameter Archive to reconstruct aggregate and array parameters out of their components (which are stored separately in the archive)
+- minor tweaks and fixes
+
+Version 5.4.5  released 5-Apr-2021
+- Fixed a bug causing the rejection of aggregates with enumeration members when used as command arguments
+
+Version 5.4.4 released 2-Apr-2021
+- Fixed a bug in the TM partitioning flags causing the homepage of Yamcs to not display the packets beyond the top level.
+- Fixed a typo in reading the TCO configuration causing the defaultTof option to be ignored.
+
+Version 5.4.3 released 16-Mar-2021
+- Added some REST calls for getting more detailed information about parameter archive (can be used to investigate problems of missing data). 
+- Added possibility to trace algorithm executions.
+- minor tweaks and fixes
+
+Version 5.4.2 released 9-Mar-2021
+- Fixed the container name used as partition in the tm table. XtceTmRecorder will only use as partition (pname column in the tm table) the containers directly inherited from the root container defined on the stream on which the TM packet is received. Previously, if a container included another container inside, this last one would have been used as partition and also appear as the name of the packet in the home page of yamcs-web.
+- Added a maxValues parameter to the parameter range request
+- Added an API for instance reconfiguration  - the instances created from templates can now be updated following template changes, or with modified template variables.
+- Allow aggregate values (not only members) to be used in Java algorithms (not yet available in Python or Javascript algorithms - these have to make reference to aggregate members)
+- minor tweaks and fixes
+
+Version 5.4.1 released 17-Feb-2021
+- CFDP: allow to configure the inactivityTimeout
+- changed yamcs systemd script to not depend on bash being the system shell
+- add support for web response filtering
+- added a minRange option to the parameter range request allowing to limit the number of ranges returned. This is done by aggregating data into multi value range.
+
+Version 5.4.0 released 10-Feb-2021
+- Generalized file transfers: allow different than CFDP file transfer services to be implemented offering the same external API.
+- Added displayName/email attribute support to YamlAuthModule
+- Added queueing support to CFDP - files can be queued for later upload
+- Allow multi-purpose links (e.g. both TM and TC)
+- Added a perftest example useful to asses the performance of Yamcs
+- Added a bidirectional TCP TM/TC link
+- Save the link name in the tm table - this allows later to find out packets received via a certain link
+- The usage of time of flight estimatro (TOF) in the time correlation service (TOC) has been made optional (a config setting can be used to set the tof to a fixed value)
+- yamcs-web: show an view of the replication status
+- yamcs-web: moved the buckets out of the admin area
+- various other tweaks and fixes
+
+Version 5.3.5 released 20-Dec-2020
+- Fixed a bug related to CFDP transfer storage in archive (the entity id was not saved for the incoming transfers)
+
+Version 5.3.4 released 17-Dec-2020
+- Fixed a bug in replication introduced in version 5.3.2 when allowing tuples to contain null values.
+- Improved XTCE support for command verifiers, demonstrated with the PUS simulator.
+
+Version 5.3.3 released 14-Dec-2020
+- Added a simple PUS simulator to exemplify the usage of the time correlation (TCO) service with a free running on-board clock.
+- Save the OBT (value of the free running on-board clock) in the tm table.
+- TCP and UDP packet links populate the ERT (Earth Reception Time) field of the TM packets with the local mission time as this is required by the TCO service.
+
+Version 5.3.2 released 11-Dec-2020
+- Reorganized the service creation and initialization such that a pre-processor (which used to be initialized earlier) can have access to them.
+- CfsPacketPreprocessor can optionally use the time correlation service to verify the time extracted from the packet.
+- Removed the clock name from the time correlation service, use the serviceName instead.
+
+Version 5.3.1 released 8-Dec-2020
+- CFDP improvements
+- minor tweaks and fixes
+
+Version 5.3.0 released 25-Nov-2020
+- Added a bulk load option to be used by the command yamcs tables load. It does not update the histograms and also disables the RocksDB WAL (write ahead log) resulting in faster loads.
+  the histograms have to be rebuilt manually after this.
+- Introduced a table format V3 which sorts properly the negative numbers and also the strings
+   - most Yamcs tables use a timestamp as primary key and the timestamps before 1970 are represented as negative numbers and thus were not sorted properly
+   - the old format V2 is still supported but new tables created with this Yamcs version will not be readable by a previous Yamcs vsersion.
+- Preview feature: secondary indices on tables; not used for regular Yamcs tables (tm, events, cmd_history, etc) but it will be used for the soon to come Yamcs timeline.
+- Preview feature: time correlation service; can be used to correlate a free running on-board clock with the ground time.
+   - in case the on-board time is correlated using other means (e.g. on-board GPS receiver), the service can still be used for verifying the synchronization.
+- Yamcs-web: show a preview of the evaluation of transmission constraints before sending a command 
+- Yamcs-web: tables/streams are moved to admin section, and a web-based DB-shell is added
+- Yamcs-web: packets can now be individually exported or copied to clipboard
+
+
+Version 5.2.0 released 13-Oct-2020
+- Allow all TM data links to update a simulation time if configured
+- Allow the XTCE loader to load multiple files using a glob pattern or a list
+- Added support for absolute time command arguments
+- Added more options for time decoding of Cfs and Pus packet preprocessors.
+- Added support for command arguments of type aggregate
+- Minor tweaks and fixes
+
+Version 5.1.3 released 9-Sep-2020
+- minor tweaks and fixes
+
+Version 5.1.2 released 28-Aug-2020
+- add support for variables when creating instances from templates
+- Add RemoteUserAuthModule for proxied authentication (API only)
+- Fix retrieval of single packets
+- minor tweaks and fixes
+
+Version 5.1.1 released 2-Aug-2020
+- fixed the GenericCommandPostprocessor to work with errorDetection: NONE (which is also the default if no errorDetection is specified)
+
+Version 5.1.0 released 2-Aug-2020
+- moved the simulator into its own package out of the examples (such that the examples are independent of eachother)
+- changed the errorCorrection into errorDetection for TC frames (for consistency with TM links and also to documentation)
+- added a parameter on CfsCommandPostprocessor to allow swaping between checksum and command code (necessary on little endian systems with older versions of cFS)
+- added the possibility to specify patterns for the TC streams to define which command goes into which stream (before the way to do this was using some sql statements)
+- various bugfixes
+
+Version 5.0.0 released 3-Jul-2020
+- migrated the .def table definitions into the rocksdb. 
+  WARNING: the migration is automatic but once migrated the version 4 will not be able to read the data anymore! 
+  (the data in the database is not changed, if absolutely necessary we can make a version 4.10.x that can read it)
+- split Event and ParameterValue protobuf messages into internal and external. 
+  The internal messages use Yamcs timestamps whereas the external messages use protobuf timestamps.
+- changed the link configuration to be more consistent: removed the "args" parameter; 
+  all the properties should be moved one level up.
+- added a status bitfield on all packets where pre-processors can set specific flags such as:
+  packet invalid
+  local time used instead of spacecraft generation time extracted from packet
+  do not archive
+- implemented a replication service
+- removed default yearly partitions for tm/pp data (can still be done by creating manually the tables)
+- added an option to send raw frame data over streams (such that they can be monitored externally or saved into tables)
+- CfsEventDecoder: added an option to specify byte endianess with default to big endian (used to be hardcoded to little endian)
+                   added also an option for the charset used to decode the text string, default to US-ASCII
+- removed yamcs-artemis (since it was used mainly for replication)
+- removed the IndexServer:
+    The CCSDS completeness index functionality is provided now by the CcsdsTmIndex service. 
+    The histograms do not require definition of any extra service.
+- yamcs-xtce: 
+    all parameter and argument types need to be constructed through builders. 
+    all data encodings need to be constructed through builders. 
+    support the baseType XTCE property which allows a type to inherit properties from another type.
+    AbsoluteTimeParameterType uses java Instant as initial value (rather than Yamcs times)
+- remove the yamcs-simulation rpm. Simulation is one of the examples along others.
+- updated RocksdDB to a newer version such that Yamcs can be run now on Windows 64bits and Linux ARM64 (e.g. Raspberry Pi 4)
+
+
+Version 4.10.9 released 24-Apr-2020
+- reorganized the links by removing the DataLinkInitializer and creating a LinkManager 
+  that has more functionality, like for example being able to negatively acknowledge commands
+  if all the TC links are disabled.
+- add a filter box to Packet Viewer (thanks to QinetiQ Space)
+- minor other tweaks and fixes
+
+Version 4.10.8 released 28-Feb-2020
+- Fixed a shutdown issue with RealtimeArchiveFiller (#377)
+- Link activity is now protected by the ``ReadLinks`` privilege
+- Fixed an issue with completion of TSE commands
+- Minor other tweaks and fixes
+
+Version 4.10.7 released 19-Feb-2020
+- added command stacks on the yamcs-web
+- added command clearance functionality
+- allow to specify command options (such as enabling/disabling
+pre-transmission contrains and post-transmission command verifiers) when sending commands
+
+Version 4.10.6 released 13-Feb-2020
+- allow to save invalid packets into a stream/table for later retrieval
+- several improvements to CFDP
+- allow to configure CLTU start and tail sequence
+- added COP1 status subscription via websocket
+- other small fixes and improvements (see detailed git log for a list)
+
+
+Version 4.10.5 released 25-Nov-2019
+- small random fixes and improvements (see detailed git log for a list)
+
+Version 4.10.4 relesed 5-Nov-2019
+- made the command acknowledgments more uniform 
+- cancel the pending verifiers on command completion
+- improvements into the command queue definition
+- added CCSDS TC Data Link protocol including COP1
+- allow links to set an Earth Reception Time on TM packets (used by the SLE link
+to set the time as received from the ground station) - useful for
+spacecraft/ground time synchronization purposes
+- various changes in the web interface
+- various bugfixes
+
+Version 4.10.3 release 24-Sep-2019
+- changed the alarms to follow more closely the ISA-18.2 standard
+- added a user management module in the web interface
+- improved validation of yaml configuration files
+- many improvements in the web interface
+- various bugfixes
+
+Version 4.10.2 release 17-Jul-2019
+- various bugfixes 
+
+Version 4.10.1 released 8-Jul-2019
+- fixed bug with TSE driver not recovering from connection reset
+- allow specific buckets to map to the file system instead of rocksdb (previously it was all or nothing)
+
+Version 4.10.0 released 14-Jun-2019
+- added a UDP TC data link
+- added pre/post processors for cFS
+- added initial CFDP support
+
+Version 4.9.5 released 9-May-2019
+- fixed bug in 4.9.4 that causes the websocket packet subscriptions to fail (meaning
+that Packet Viewer was not working)
+
+Version 4.9.4 released 7-May-2019
+- fixes replay with multiple XTCE root containers
+- added support for HTTPS
+- added the Enumerated parameter value type (previously, the values for the XTCE Enumerated
+parameter types were represented as parameter values with String engineering
+value and Integer raw value)
+
+Version 4.9.3 released 3-April-2019
+- fixes command queues displays
+
+Version 4.9.2 released 1-April-2019
+- allow to set individual members of aggregates and elements of arrays
+- better support for XTCE initial values
+- various bugfixes
+
+Version 4.9.1 released 24-March-2019
+- allow to get and subscribe individual members of aggregates and elements of
+arrays
+- various bugfixes
+
+Version 4.9.0 released 19-February-2019
+- added support for CCSDS TM frame protocols (TM, AOS and USLP frames)
+- various improvements in yamcs-web
+
+Version 4.8.1 released 28-January-2019
+- allow multiple TSE commands in one telecommand
+- various bugfixes
+
+Version 4.8.0 released 28-January-2019
+- allow to create instances on the fly from templates
+- added a generic packet input stream (for spliting tcp stream into packets)
+- added a generic packet preprocessor at reads timestamps in UNIX millisec format and sequence count from user defined offsets
+
+Version 4.7.3 released 26-November-2018
+- allow to online (i.e. without modifying the MDB) change calibrations and alarms for parameters part of a running processor
+- various bugfixes
+
+Version 4.7.2 released 30-October-2018
+- various bugfixes
+
+Version 4.7.1 released 12-October-2018
+- various bugfixes
+
+Version 4.7 released 28-September-2018
+- implemented interface to Test Support Equipment (power supplies, osciloscopes, ...)
+- several changes in instance state - allow offline instances
+- implemented step by step replay
+- allow same DataLink to be IN and OUT
+
+Version 4.6.3 released 28-August-2018
+- limit the number of parameters that can be stored in one segment of the
+parameter arhchive to avoid OOM errors
+- various small bugfixes
+
+
+Version 4.6.2 released 18-July-2018
+- better cleanup before instance restart
+- store CCSDS TM Index also in the tablespace (rahter than in a separate
+rocksdb database)
+
+
+Version 4.6.1 released 18-July-2018
+- added support for XTCE IndirectParameterRefEntry
+- added EXTERNAL data sources to better support writable parameters not
+managed by yamcs
+
+
+Version 4.6.0 released 11-July-2018
+- introduced aggregate and array data types (not yet fully working with the
+parameter archive)
+- introduced a V7 spreadsheet loader that makes a distinction between
+parameters/arguments and their data types 
+- added support for MIL-STD-1750A floating point encoding (32 and 48 bits)
+- added a ECSS/PUS packet preprocessor 
+- added a CCSDS Unsegmented Time Code decoder
+- config: Deprecate webConfig in favour of args under HttpServer
+- archive: Add File System-based bucket implementation
+- web: Add file browser for quickly accessing displays in standalone mode
+- web: Add full-screen support for both displays and layouts
+- web: Add parameter table viewer
+- web: Fix top instance switcher
+
+
+Version 4.5.0 released 26-Jun-2018
+- added a simple object storage API (buckets)
+- security improvements - it is possible now to stack multiple AuthModules to
+provide authentication/authorization from diferent sources.
+- added a Kerberos/Spnego authModule
+- Introduced YamcsService as a required interface for global and instance services
+- Show contextual calibrators in web interface
+- Added various CLI commands (for buckets, processors, clients)
+- General clean-up of Yaml configuration files to match closer to the upcoming
+Server manual
+- added a last value cache that is present all the time.
+
+Version 4.4.2 released 23-May-2018
+- yamcs-web: support multiple series plots
+- TmLink: added the posibility to specify the checksum type in the Columbus
+pre-processor and added an option to drop corrupted packets.
+
+
+Version 4.4.1 released 14-May-2018
+- added the possibility to exclude parameter groups from replays
+- yamcs-web: added a view for the archive index
+- yamcs-web: support replays
+- fixed the retrieval of static files when zeroCopy was disabled
+- bugfix: in /api/instances do not reload the XtceDb from disk, instead
+provide information about the db already loaded
+- bugfix: when an instance fails to init - force it to the FAILED state
+(rather than NEW), also do not store the instances that failed to init in the instance list 
+
+
+Version 4.4.0 released 7-May-2018
+- added support for context calibrators
+- added support for XTCE MathOperationCalibrator
+- fixed the names in the spreadsheet such that additional columns can be inserted without loosing compatibility. 
+- added support for XTCE MathOperation algorithms
+- various XTCE parser fixes
+
+
+Version 4.3.1 released 25-Apr-2018
+- parameter archive: fixed encoding of boolean segments
+- XTCE parser: fixed parsing container references in command definition
+- yamcs-web: allow to set software parameters and display information about time parameters
+
+Version 4.3.0 released 23-Apr-2018
+- implemented IncludeCondition for container and parameter entries as per XTCE spec
+- server support for access token generation based on password credentials
+- updates to yamcs-web to support authentication and privilege checking (using access tokens)
+- fixed the parameter archive for boolean parameters
+- fixed the processing of XTCE absolute time parameters 
+
+Version 4.2.2 released 17-Apr-2018
+- partially fixed the parameter archive for boolean parameters
+
+Version 4.2.1 released 17-Apr-2018
+- send events when an algorithm execution fails 
+- read commands from XTCE XML files compatible with CCSDS green book
+
+
+Version 4.2.0 released 6-Apr-2018
+- more web improvements - alarm detail, plots improvement, event downloads...
+- added parameter ranges API
+- allow to filter stream data on protobuf message properties
+- better enforcements of privileges on table/stream downloads/uploads and other REST calls
+
+Version 4.1.2 released 14-Mar-2018
+- fixed bug in the parameter archive encoding of large integer numbers
+- fixed the handling of expiration of parameters when the processor is running with a simulated clock
+- Events significance: added the XTCE significance levels for Events produced from the MDB algorithms
+
+
+Version 4.1.1 released 7-Mar-2018
+ - added an alternative Parameter Cache that consumes less memory by using array of primitives to store parameter values
+ - refurbished yamcs-web
+ - support multiple parameter subscriptions via the websocket
+ - serialized XTCEDB use now a filename which is a SHA-1 of the old filename (which is made of the list of individual components of the XtceDB). This avoids problems with too long filenames.
+
+
+Version 4.0.1 released 23-Jan-2018
+ - fixed Artemis data links
+ - the parameter select dialog from the Archive Browser will show now also parameters that are not part of containers
+
+
+Version 4.0.0 released 10-Jan-2018
+- fixed the version 6.0 in refmdb.xls and the changelog (it was mistakenly written as version 5.7 not matching the SpreadsheetLoader)
+- TcpTcDataLink: the configuration can be made in the service declaration in yamcs.<instance>.yaml, not necessary to have the tcp.yaml anymore
+- changed algorithms to work as functions such that they can coexist in the same scriptEngine (to improve performance)
+- allow java-expressions to be used for command argument reverse calibrations (eng->raw value conversion)
+- Spreadsheet Loader: allow to better specify the encoding in the command arguments
+- Introduced tablespaces to
+    - use less rocksdb databases for one yamcs instance
+    - allow to share the same rocksdb databae for multiple instances (useful in case of short lived instances such as simulation/test sessions)
+    - improve starting performance - no more need to scan all the databases at startup
+- renamed yprocessor.yaml to processor.yaml and replaced "tmProvider", "commanReleaser", "parameterProviders" with generic "services"
+- changed WebSocket parameter unsubscribe all to unsubscribe both the "all" subscription as well as the individual subscriptions (if any). Fixes issue #210 in github.
+- Introduced two components part of the TM Packet Data Link:
+  - packet input stream - responsible for chopping up a stream into packets
+  - packet preprocessor - responsible for extracting basic information (time, seq count) from a packet
+
+
+
+Version 3.4.0  released 6-Dec-2017
+- moved artemis into a separate source project which yamcs-core does not depend on. 
+  Allow to connect to an external Artemis server by specifying artemisUrl: "tcp://..." into yamcs.<instance>.yaml or yamcs.yaml
+- added the possibility to restart instances and send information about current connected instance/processor via websocket
+- added command history cascading via Artemis
+- TcpTcDataLink: added an option to limit the rate of commands sent
+
+Version 3.3.0 Released 24-Oct-2017
+- Support index requests with parameters encoded in the HTTP request body in order to allow a large number of packets to be specified (otherwise, the request would exceed maximum URI size).
+- Allow alias parameter name  references in the MDB SpreadSheets (including in the Alarm sheet which didn't allow any reference at all)
+- Fixed the reading of ranges (inclusive vs exlcusive) from XTCE XML files
+- Added two options to parameter subscription: 
+  - send an update when parameters are expiring (by default false)
+  - send the first value from cache if available (by default true)
+- Change the expirationTime (absolute time) to expireMillis (relative time) in the ParameterValue.
+- Implemented parameter expiration in the USS web displays
+- Allow to specify custom decoders to be used in container(packet) processing
+- Added binary data encoding with leading size specified (similar to string)
+- Changed the spreadsheet to make it clerarer the difference between raw value, encoding (how to decode the raw value from the binary) and engineering value (raw value passed through a calibration function)
+- For standalone parameters (i.e. not extracted from XTCE packets) coming without an enginnering value, 
+  calibrate (raw->eng value) them inside the processor rather than before being injected in the stream.
+  This means the parameters are stored in the L0 archive also in the initial form (could be raw+eng,only raw or only eng) and they are calibrated (using the current MDB) for each replay
+  Of course ParameterArchive will store them calibrated.
+- Added a command to check the configuration by loading the services without starting them
+  
+
+Version 3.2.2 Released 17-May-2017
+- Fixed tag handling in Yamcs Monitor/Archive Browser
+
+
+Version 3.2.1 Released 15-May-2017
+- Added an option to yamcs rocksdb compact to specify the target file size and changed the default size from 64MB to 256MB
+- Java expressions can be used for raw->engineering value calibration (in addition to polynomial and spline). This allow to use mathematical expressions such as logarithms and trigonometric functions.
+- fixed seek in replays
+- Fix in Yamcs Monitor: remove closed processors
+- RocksDB: set by default the table block cache to 8MB (previously it was disabled)
+
+Version 3.2.0 Released 18-Apr-2017
+- Improved the yamcs command line with several new sub-commands (xtcedb, parchive)
+- Removed Artemis based replays and management (control processors)
+- Added a new yatch(table/stream) data type PARAMETER_VALUE to replace PROTOBUF(ParameterValue) for more flexibility
+
+Version 3.1.2 Released 17-Mar-2017
+- PacketViewer: fixed a bug causing the packetviewer to not be able to load files unless the -l (to limit the max num packets loaded) option was provided 
+
+Version 3.1.1 Released 14-Mar-2017
+- fixed a bug in RestClient causing Swing client tools (Yamcs Monitor &co) to NPE when doing File -> Connect to Yamcs (connection by specifying the http url in the command line still worked)
+
+
+Version 3.1.0 Released 13-Mar-2017
+- MDB: allow parameters without raw types if they are not part of a container
+- REST Api: add option to get the details of parameters in 'list parameter'
+- Ease extension of the FilePollingTmDatalink and TmFileReader.
+- if processor -> cacheall is disabled, retrieve at least all parameters that have alarms associated
+- allow algorithm manager to be usable in replays
+- Improved XTCE XML parsing support:
+      - read alarms
+      - read string parameters
+      - read multiple space systems    
+- Removed the name from the DataEncoding classes (in XTCE DataEncodings are not named)    
+- allow to remove a parameter from the XtceDB (to be used in a controlled way only)
+- Changed the order of starting the services:
+    1. All global services are created
+    2. All instance services are created
+    3. All global services are started
+    4. All instance services are started
+    
+    Used to be 1,3,(2,4)+ - and this makes for example the HttpServer to be started before the instances are created and some methods (like subscribe event,time,etc) will fail at first because the processor is not available.
+- updated to RocksDB 5.1.2
+
+Version 3.0.0 Released 12-Jan-2017
+- no change from 0.0.30 except this changelog
+
+
+Version 0.0.30 Released 12-Jan-2017
+- do now allow FixedString command arguments defined in the Spreadsheet to have a non multiple of 8 bitSize
+- fixed the encoding of command binary arguments
+- allow to specifiy the bitSize for LeadingString and TerminatedString command arguments and treat it as the minimum size of the encoded value (if the passed argument is shorter, the remaining will not be filled in) 
+- fixed REST parameter download  not finishing properly
+- allow profile based downloads
+- support downloading multiple parameters at the same time
+- fixed reading non-value RocksDB partitions from disk at startup
+- publish jvmTotalMemory, jvmMemoryUsed and jvmThreadCount as system parameter to allow monitoring java memory usage (in KB) and number of active threads
+- fix recording and replay of system parameters; all of them are using /yamcs/<instance-id> as recording group.
+- updated to rocksdb 4.8.0 (to solve some weird bug on 32bits column family options being ignored)
+- updated from HornetQ to ActiveMQ Artemis
+- changed all SWING Yamcs clients to use the REST and WebSocket API instead of HornetQ
+- allow to retrieve via REST internals of open RocksDB databases
+- implement backup support for RocksDB databases
+- RocksDB allow storage of partitions using the partitioning key in front of the key instead of creating different column family.
+- allow TM file injector to inject gzipped files
+- changed the histograms (indexes) to be part of the same rocksdb database as the main data. To convert from the old format to the new, use the yamcs command line.
+- added yamcs command line that allows to perform backups, some low level rocksdb operations and some archive upgrade capability.
+
+
+Version 0.29.4 Released 26-June-2016
+- fix 0.29.3 packaging error related to StringCovertors moved to yamcs-core from yamcs-api
+- fix changing speed in the replays
+- fix hornetq replays which were never releasing the threads
+- added posibility to configure RocksDB options
+- added checks for preventing one rocksdb database being open twice
+- changed tables to use default rocksdb partition if no partitioning is defined (previously an extra null partition was created) 
+  the code is backward compatbile. If old null partitions are present, they will be used instead of the default parttion.
+- parameter archive: 
+  - implemented some sanity checks to avoid,  detect and better report corruption or inconsistencies. 
+  - added a REST call that allows removing entire partitions (in order to recreate them from scratch from the raw data)
+- added possibility to filter command history requests by command names
+- bug fix in PacketViewer: when connecting to Yamcs, first disconnect if already connected, otherwise two connections will be open in parallel showing all packets duplicate
+- bug fix in PacketViwer: when loading file with CCSDS packets, the generation time in the left column is invalid
+- bug fix in PacketViwer: searching (ctrl+F) proceduces a ClassCastException
+
+
+Version 0.29.3 Released 28-Feb-2016
+- added backFiller config in the ParameterArchive
+- added an option in the web displays to use the ParameterArchive for parameter sampling and history
+- added a -noweb parameter to make-rpm.sh script to disable building the web stuff inside the rpm
+- implemented realtimeFiller for the parameter archive
+- un-hardcoded the stream names in the PpRecorder such that system parameters can also be recorded
+- various web improvements
+- replaced internal use of protbuf Value with java org.yamcs.parameter.Value to reduce memory usage
+
+Version 0.29.2 Released 19-Feb-2015
+- implemented ParameterArchive
+- various small bug fixes
+
+Version 0.29.1 Released 05-Feb-2015
+- more improvements to the yamcs-web: alarm history, events
+- converted the CCSDS Index to RocksDB from TokyoCabinet
+- removed TokyoCabinet (still available as a separate module)
+- more REST interface improvements: filtering events, command history, raw packet download
+- removed dependency on HornetQ in the IndexServer
+- added command history replay in replay processors
+- better distinction between replay (=via processor) and retrieval (=directly from archive without any reprocessing)
+
+Version 0.29.0 Released 10-Nov-2015
+- added the posibility to configure TM archiving on fine grained level
+- many changes in the WEB API (consistency, new features)
+- completely changed the yamcs-web to a new framework based on AngularJS and Bootstrap + added several features like MDB parameter browser, access to alarms.
+
+Version 0.28.0 Released 20-Sep-2015
+- switched commanding to XTCE
+- improved the rest interface
+- modularized more the creation of streams and channels
+- added rocksdb storage engine
+- added command pretransmission checks
+- added command verification
+- added parameter plots to (USS) web displays
+
+
+Version 0.27.3 Released 31-Oct-2014
+- fixed connection in PacketViewer:
+  - now the stream specified in the connection dialog is taken into account
+  - if the stream is not specified, then tm_realtime is used
+  - an "-s" option has been added such that the stream can be spefcified on the command line also
+
+Version 0.27.2 Released 21-Oct-2014
+- fixed bug in packetviewer
+
+Version 0.27.1 Released 10-Oct-2014
+- check if web connedction to yamcs is running via https and use wss:// instead of ws:// for websocket
+
+Version 0.27.0 Relased 23-Sep-2014
+- improvements into the GUIs
+- read the parameter type units (e.g. meter) from XTCE XML file
+
+
+Version 0.26.4 Released 27-Aug-2014 
+- Renamed system variables to system parameters for consistency
+- Added a system parameter for yamcs instance
+
+
+Version 0.26.3 Released 22-Aug-2014
+- Fixed the parameters passing through hornetq
+
+Version 0.26.2 Released 14-Aug-2014
+- Fix data count on HornetQPpProvider
+- Fix OnValueChange update of enum params
+- Fix bug where alarms were shared between params
+- Fix auto-scroll in Event Viewer when sorting columns
+
+Version 0.26.1 Released 13-June-2014
+- added REST API for data downloada
+- added a way to provide simulated parameters using xml scenario files
+
+Version 0.26.0 Released 16-Apr-2014
+- merged PP with the XTCE database
+
+Version 0.25.0 Released 10-Apr-2014
+- Fix bug with name referencing in xtce tree
+- Expose time in ms to algorithm
+- split the StreamAdapter into HornetQTmProvider and HornetQTmService and same for PP
+- various XTCE compatibility improvements
+
+
+Version 0.24.2 Released 11-Mar-2014
+- Add support for booleans in spreadsheet
+- Fix support for longs and doubles in spreadsheet
+- Improve type safety of XTCE algorithms
+- Enable calibration for output parameters
+
+Version 0.24.1 Released
+- Algorithms: support externally defined (shared) functions
+- Algorithms: support interdependent algorithms
+- Algorithms: support libraries and other languages
+- Algorithms: put dictionary-like object in scriptengine
+- Algorithms: Add data quality indicators to ValueBinding
+- Added the packet(container) name in the packet replay
+- made the column separator configurable in the ParameterFormatter and CommandHistoryFormatter
+
+
+Version 0.24.0 Released 19-Feb-2014
+- Allow the SpreadsheetLoader to support sing-magnitude integer representation
+- Added possibility to have extra columns in the Event Viewer
+- Moved YConfiguration and ConfigurationException in the yamcs-api package to allow usage by external clients (e.g. TYNA)
+- Slightly modified the structure of different types of ReplayRequests to be more consistent
+- Added XTCE support for extraction of 64-bit integers
+- Fixed a bug with the extraction of some 3-byte integers
+- Add initial support for XTCE eng units in spreadsheet
+- Clean-up some code
+
+
+Version 0.23.5 Released 04-June-2013
+- fix typos in the user manual
+
+Version 0.23.4 Released 08-May-2013
+- implemented some workaround for archive browser in java 7
+- read the dates in UTC-TAI.history file in english no matter what the user.language property is
+
+Version 0.23.3 Released ??
+
+
+Version 0.23.2 Released ??
+- Implemented a simple TAI to UTC converter to remove dependency on orekit
+- renamed several config files to .sample such that they are not installed by default as part of the rpm, and a rpm can be made for specific configurations/deployments
+
+
+Version 0.23.1 Released 14-December-2012
+- Services and event decoders in yamcs.instance.yaml can now be specified with {class: classname, args:...} map (in addition to the old way of just specifiyng the classname)
+- The CompactFormatter log formatter prints always the full class name (it used to remove the com.spaceapplications prefix)
+- added 64 bits signed and unsigned integer parameter types
+- Merged yamcs-era branch:
+  - fixed a bug in translating processed parameters from DaSS to Yamcs parameters
+  - changed the flatfile PP Map reader to allow spaces in the NameSpace. 
+    WARNING: all entries have to be separated by tab now (in the past both tab and space were allowed as separators)
+  - added a test generator for DaSS Processed Parameters to be used for ERA-SC
+  - cleanup the old shell scripts from the bin directory
+- moved to github and separate from yamcs-cdmcs, yamcs-busoc, yamcs-erasmus and yamcs-dass
+
+
+
+Version 0.23.0 Released 4-December-2012
+- FilePollingTmProvider and FilePollingPpProvider can work without a spec and use the standard incomingDir from yamcs.yaml
+- Fixed a bug that was causing incorrect display in the Archive Browser when two packets had the same suffix (e.g. SYSTEM_HK and ECM1_HK)
+- added histogram.sh - useful to print the content of the histogram files (e.g. when in doubt if the Archive Browser) shows correct data
+
+Version 0.22.2 Released 26-November-2012
+- tested a fixed a problem related to yamcs cascading via HornetQ bridging
+- fixed the commanding and command history 
+- the port on which the webserver listens, is configurable in yamcs.yaml
+- added parameter selection dialog
+- change the getRequestDatabase to be able to retrieve a XtceDb both by configname and instance name
+- implemented authentication via HornetQ 
+
+
+Version 0.22.1 Released 13-August-2012
+- added Mdb2Scoe conversion
+- replaced EngineeringValue and RawValue protobuf definitions with a generic Value (NOTE: this requires reimporting all the PP data) 
+- merged commanding into XTCE (but still reusing old CGS MDB structures)
+- added retrieval of command history to the Archive Brwoser
+- improved detection of CCSDS packets to work for packets with payload type=0
+- moved the configuration settings from yarch.yaml to yamcs.yaml
+- improvded the documentation
+
+
+Version 0.22.0 Released 7-June-2012
+- added FASTER event decoder (in the yamcs-erasmus sub-project)
+- added web based USS (alpha version)
+- added PET parameter formater
+- merged TC MDB into XTCE
+- fixed retrieval of archive index from old CORBA yamcs-monitor (Erasmus Bug 532)
+- renamed org.yamcs.gpb into org.yamcs.protobuf 
+  the name of the package appears in the pp.def and event.def table definitions and has to be changed, sorry for that). 
+  The messages themselves have not changed, so the archive data is ok
+
+Version 0.21.5 Released 18-Apr-2012
+- prevent crash in case duplicate PPs are received at once
+- added a config enabledAtStartup that can be used to start tm,pp/tc providers/uplinkers in a disabled state
+- fix closing the histogram streams (erasmus bug 517)
+- introduced a mergeTime=20secons for the PP histogram (archive index) records (to prevent Erasmus bug 517)
+- detect low memory conditions in the archive browser and stop receiving histogram (archive index) records (Erasmus bug 517)
+- fixed a bug caused by change of the mdb.yaml "pploaders" to "ppLoaders" (Erasmus bug 518) 
+- fixed the display of String parameters in the packet viewer
+
+
+Version 0.21.4 Released 12-Apr-2012
+- fixed the processing of the 24 bits parameters (Erasmus bug 513)
+- fixed a NullPointerExceptin when encountering a PUS Structure without an opsname
+- changed tmhost, tmport, tchost, tcport,pphost, ppport, tmgroup, ppgroup to tmHost, tmPort... in dass.yaml, tcp.yaml and tmaptcap.yaml and multicast.yaml
+- changed commandqueue.yaml to command-queue.yaml and queuenames to queueNames
+- updated UTC-TAI.history (new leap second in July 2012)
+
+Version 0.21.3 Released 05-Apr-2012
+- read the SpaceSystem aliases and header from the XTCE file and use them for providing MDB identification via CIS
+- added the possibility to specify names for TM,PP/ TC uplinkers/providers
+
+Version 0.21.2 Released 04-Apr-2012
+- bug fix in DaSSPpProvider 
+- bug fix in TableDefinition deserializer - compressed parameter was not deserialized
+
+Version 0.21.1 Released 03-Apr-2012
+- fixed the packet viewer to work with multiple XTCE databases versions
+- simplified the AcquisitionStatus in parameter-value.proto to remove the values which are never set by yamcs and to rename STATIC to EXPIRED
+- made it possible to have comments in the spreadsheets
+- changed the specifications of dass.yaml to allow to specify vehicle and type which were hardcoded earlier
+- dass connectors generate events
+- added detailed info for the tm/pp links
+- removed the obsolete ProcessedParameter tab from the yamcs monitor
+
+
+Version 0.21.0 Released 17-Mar-2012
+- added enum values for streams
+- changed the api to allow for passing the namespace when requesting tm index
+- created generic histograms for any table
+- separated the completeness index from the packet overview which is now implemented using the yarch histogram feature 
+- added a yarch PROTOBUF that allows to store google protocol buffer encoded objects
+- changed the processed parameter recording to use protobuf encoding and to use a dynamic table where each parameter is one column
+- added the concept of SpaceSystem and distinction between names and qualified names
+- added the posibility to specify both stop and start in the archive browser (NLP Issue 2.5.1)
+- added an ignorePackets configuration to the cdmcs-mdb.yaml to be able to ignore packets from MDB overwritten by spreadsheets
+
+
+Version 0.20.1 Released 31-Jan-2012
+- switch the configuration files from java properties to yaml
+- cleanup all the hrdp (the old code can be found in https://subversion.spaceapplications.com/svn/yamcs/tags/trunk-before-hrdp-cleanup)
+- added the possibility to have multiple loaded MDBs at the same time
+- changed the table definition format from java serialization to yaml (with custom tags)
+- change the AbstractStream to catch all the Exceptions such that one bad subscriber does not crash the entire stream (Erasmus bug 482)
+- fixed the EDR Event Viewer to not crash when a short pwd packet was received (Erasmus bug 482)
+- default filenames for parameter and packet dump are Windows compatible (NLP Issue 2.5.3)
+- include header line in the events output (NLP Issue 2.5.4)
+
+Version 0.20.0 Released 21-Nov-2011
+- change the package name in yamcs-core, yamcs-api and yamcs-xtce and yamcs-cdcs from com.spaceapplications.yamcs to org.yamcs
+
+
+Version 0.19.4 Released 3-Nov-2011
+- change the format of the value in the (key,value) recording. It records now the index of the column before each column value.
+   This allows to dynamicall add columns to an existing row (required by the command history). ALL THE DATA HAS TO BE REINSERTED.
+- fixed the privileges of the CIS clients
+- added recording of command history into yarch
+- added realtime parameter subscription via hornetq
+
+
+
+Version 0.19.3 Released 19-Aug-2011
+ - changed the relpos in spreadsheets to start from 0 instead of 1
+ - fixed the string parameter decoding
+ - keep some statistics XtceStaxReader
+
+Version 0.19.2  Released 18-Aug-2011
+ - added client-side ack support in the yamcs-api
+ - added support for temporary queues in yamcs-api
+ - fixed the starting parameters of the YamcsMonitor and ArchiveBrowser
+ - added options to the command line parameter extractor
+ - detect a dead client and close the queue containing index information
+ - fixed the handling of response packets
+```
+
+### `eclipse-yamcs-style.xml`
+
+**경로:** `gsw/yamcs/eclipse-yamcs-style.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<profiles version="13">
+    <profile kind="CodeFormatterProfile" name="yamcs" version="14">
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_ellipsis" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_enum_declarations" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_annotation_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_allocation_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_at_in_annotation_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_for_statment" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.new_lines_at_block_boundaries" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_constructor_declaration_parameters" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_package" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_method_invocation" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_enum_constant" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_after_imports" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_while" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_annotation_type_member_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_throws" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_switch_statement" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_javadoc_comments" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.indentation.size" value="8"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_postfix_operator" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_enum_constant_declaration" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_for_increments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_type_arguments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_inits" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_anonymous_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_for" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.disabling_tag" value="@formatter:off"/>
+        <setting id="org.eclipse.jdt.core.formatter.continuation_indentation" value="2"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_enum_constants" value="48"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_imports" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_after_package" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_binary_operator" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_multiple_local_declarations" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_if_while_statement" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_enum_constant" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_parameterized_type_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.indent_root_tags" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.wrap_before_or_operator_multicatch" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.enabling_tag" value="@formatter:on"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_closing_brace_in_block" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.count_line_length_from_starting_position" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_return" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_throws_clause_in_method_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_parameter" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.keep_then_statement_on_same_line" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_field" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_explicitconstructorcall_arguments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_block" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_prefix_operator" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_between_type_declarations" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_brace_in_array_initializer" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_for" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_catch" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_type_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_method" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_switch" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameterized_type_references" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_anonymous_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_parenthesized_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_enum_constant" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.never_indent_line_comments_on_first_column" value="false"/>
+        <setting id="org.eclipse.jdt.core.compiler.problem.enumIdentifier" value="error"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_and_in_type_parameter" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_for_inits" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_statements_compare_to_block" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_anonymous_type_declaration" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_question_in_wildcard" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_invocation_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_switch" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.line_length" value="120"/>
+        <setting id="org.eclipse.jdt.core.formatter.use_on_off_tags" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_brackets_in_array_allocation_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_enum_constant" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_invocation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_assignment_operator" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_for" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.preserve_white_space_between_code_and_line_comments" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_local_variable" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_method_declaration" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_invocation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_union_type_in_multicatch" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_colon_in_for" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.number_of_blank_lines_at_beginning_of_method_body" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_closing_angle_bracket_in_type_arguments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.keep_else_statement_on_same_line" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_binary_expression" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_catch_clause" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_parameterized_type_reference" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_array_initializer" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_multiple_field_declarations" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_explicit_constructor_call" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_annotation_declaration_header" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_superinterfaces" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_default" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_question_in_conditional" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_block" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_constructor_declaration" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_lambda_body" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.compact_else_if" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_type_parameters" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_catch" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_invocation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.put_empty_statement_on_new_line" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_constructor_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_type_parameters" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_invocation_arguments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_method_invocation" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_throws_clause_in_constructor_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.compiler.problem.assertIdentifier" value="error"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_block_comment" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_catch_in_try_statement" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_try" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_at_end_of_file_if_missing" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.clear_blank_lines_in_javadoc_comment" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_array_initializer" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_binary_operator" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_unary_operator" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_expressions_in_array_initializer" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.format_line_comment_starting_on_first_column" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_annotation" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_colon_in_case" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_ellipsis" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_try_resources" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_colon_in_assert" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_if" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_type_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_and_in_type_parameter" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_parenthesized_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_line_comments" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_colon_in_labeled_statement" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.align_type_members_on_columns" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_assignment" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_module_statements" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_method_body" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_type_header" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_enum_constant" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_type_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_first_class_body_declaration" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_conditional_expression" value="80"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_closing_brace_in_array_initializer" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_constructor_declaration_parameters" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.format_guardian_clause_on_one_line" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_if" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_annotation_on_type" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_block" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_enum_declaration" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_block_in_case" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_constructor_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_header" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_allocation_expression" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_invocation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_while" value="insert"/>
+        <setting id="org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode" value="enabled"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_switch" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_method_declaration" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_parens_in_constructor_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.wrap_before_conditional_operator" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_cases" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_bracket_in_array_allocation_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_synchronized" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.align_fields_grouping_blank_lines" value="2147483647"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.new_lines_at_javadoc_boundaries" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_annotation_type_declaration" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_for" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_resources_in_try" value="80"/>
+        <setting id="org.eclipse.jdt.core.formatter.use_tabs_only_for_leading_indentations" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_try_clause" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_selector_in_method_invocation" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.never_indent_block_comments_on_first_column" value="false"/>
+        <setting id="org.eclipse.jdt.core.compiler.source" value="9"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_synchronized" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_constructor_declaration_throws" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.tabulation.size" value="4"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_constant" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_allocation_expression" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_bracket_in_array_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_colon_in_conditional" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_source_code" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_array_initializer" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_try" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_semicolon_in_try_resources" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_field" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_at_in_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.continuation_indentation_for_array_initializer" value="2"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_question_in_wildcard" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_method" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_superclass_in_type_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_superinterfaces_in_enum_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_parenthesized_expression_in_throw" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.wrap_before_assignment_operator" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_labeled_statement" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.compiler.codegen.targetPlatform" value="9"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_switch" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_superinterfaces" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_parameters" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_type_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_brace_in_array_initializer" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_parenthesized_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_html" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_at_in_annotation_type_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_closing_angle_bracket_in_type_parameters" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_method_delcaration" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_compact_if" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_empty_lines" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_type_arguments" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_parameterized_type_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_unary_operator" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_enum_constant" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_annotation" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_enum_declarations" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.keep_empty_array_initializer_on_one_line" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_switchstatements_compare_to_switch" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_else_in_if_statement" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_assignment_operator" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_constructor_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_new_chunk" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_label" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_declaration_header" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_bracket_in_array_allocation_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_constructor_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_conditional" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_parameterized_type_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_method_declaration_parameters" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_type_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_cast" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_assert" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_member_type" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_while_in_do_statement" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_type_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_parameterized_type_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_arguments_in_qualified_allocation_expression" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_after_opening_brace_in_array_initializer" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_in_empty_enum_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_breaks_compare_to_cases" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_if" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_semicolon" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_postfix_operator" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_try" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_type_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_cast" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.format_block_comments" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_lambda_arrow" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.keep_imple_if_on_one_line" value="false"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_enum_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_parameters_in_method_declaration" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_brackets_in_array_type_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_angle_bracket_in_type_parameters" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_semicolon_in_for" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_method_declaration_throws" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_allocation_expression" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_statements_compare_to_body" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_multiple_fields" value="16"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_enum_constant_arguments" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_prefix_operator" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_array_initializer" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.wrap_before_binary_operator" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_method_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_type_parameters" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_catch" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.compiler.compliance" value="9"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_bracket_in_array_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_comma_in_annotation" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_enum_constant_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.parentheses_positions_in_lambda_declaration" value="common_lines"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_between_empty_braces_in_array_initializer" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_colon_in_case" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_multiple_local_declarations" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_annotation_type_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_bracket_in_array_reference" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_method_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.wrap_outer_expressions_when_nested" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_closing_paren_in_cast" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_enum_constant" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.brace_position_for_type_declaration" value="end_of_line"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_before_package" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_for" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_synchronized" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_for_increments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_annotation_type_member_declaration" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.alignment_for_expressions_in_for_loop_header" value="0"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_while" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_enum_constant" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_explicitconstructorcall_arguments" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_paren_in_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_angle_bracket_in_type_parameters" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.indent_body_declarations_compare_to_enum_constant_header" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_lambda_arrow" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_brace_in_constructor_declaration" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_constructor_declaration_throws" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.join_lines_in_comments" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_closing_angle_bracket_in_type_parameters" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_question_in_conditional" value="insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.comment.indent_parameter_description" value="true"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_new_line_before_finally_in_try_statement" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.tabulation.char" value="space"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_comma_in_multiple_field_declarations" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.blank_lines_between_import_groups" value="1"/>
+        <setting id="org.eclipse.jdt.core.formatter.lineSplit" value="120"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_after_opening_paren_in_annotation" value="do not insert"/>
+        <setting id="org.eclipse.jdt.core.formatter.insert_space_before_opening_paren_in_switch" value="insert"/>
+    </profile>
+</profiles>
+```
+
+### `Makefile`
+
+**경로:** `gsw/yamcs/Makefile`
+
+
+```make
+.DEFAULT_GOAL := all
+
+.PHONY: all
+all: build
+
+.PHONY: clean
+clean:
+	@mvn clean
+
+.PHONY: build
+build:
+	@mvn install -DskipTests
+
+.PHONY: rebuild
+rebuild: clean all
+
+.PHONY: test
+test:
+	@mvn test javadoc:javadoc
+```
+
+### `packet-viewer.sh`
+
+**경로:** `gsw/yamcs/packet-viewer.sh`
+
+
+```bash
+#!/bin/bash
+
+OPTS="$@"
+
+mvn -q -f packet-viewer/pom.xml compile exec:exec \
+    -Dexec.executable="java" \
+    -Dexec.args="-classpath etc:%classpath org.yamcs.ui.packetviewer.PacketViewer $OPTS"
+
+```
+
+### `pom.xml`
+
+**경로:** `gsw/yamcs/pom.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.yamcs</groupId>
+	<artifactId>yamcs</artifactId>
+	<version>5.12.1-SNAPSHOT</version>
+
+	<packaging>pom</packaging>
+
+	<name>Yamcs</name>
+	<url>https://yamcs.org</url>
+	<description>Yamcs Mission Control</description>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License (AGPL)</name>
+			<url>https://www.gnu.org/licenses/agpl-3.0.html</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:yamcs/yamcs.git</connection>
+		<developerConnection>scm:git:ssh@github.com:yamcs/yamcs.git</developerConnection>
+		<url>https://github.com/yamcs/yamcs</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<organization>
+		<name>Space Applications Services</name>
+		<url>https://www.spaceapplications.com</url>
+	</organization>
+
+	<developers>
+		<developer>
+			<id>fqqb</id>
+			<name>Fabian Diet</name>
+		</developer>
+		<developer>
+			<id>m-sc</id>
+			<name>Mathieu Schmitt</name>
+		</developer>
+		<developer>
+			<id>xpromache</id>
+			<name>Nicolae Mihalache</name>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<protobufVersion>3.25.5</protobufVersion>
+		<rocksdbVersion>9.4.0.11</rocksdbVersion>
+	</properties>
+
+	<modules>
+		<module>nos3</module>
+		<module>examples</module>
+		<module>packet-viewer</module>
+		<module>simulator</module>
+		<module>tests</module>
+		<module>yamcs-api</module>
+		<module>yamcs-client</module>
+		<module>yamcs-core</module>
+		<module>yamcs-tse</module>
+		<module>yamcs-web</module>
+		<module>yamcs-xtce</module>
+
+		<!-- Keep as last. It hosts the nexus uploading after a successful build -->
+		<module>distribution</module>
+	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.beust</groupId>
+				<artifactId>jcommander</artifactId>
+				<version>1.48</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fazecast</groupId>
+				<artifactId>jSerialComm</artifactId>
+				<version>2.10.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>2.11.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>33.3.1-jre</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.protobuf</groupId>
+				<artifactId>protobuf-java</artifactId>
+				<version>${protobufVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.protobuf</groupId>
+				<artifactId>protobuf-java-util</artifactId>
+				<version>${protobufVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.dropwizard.metrics</groupId>
+				<artifactId>metrics-core</artifactId>
+				<version>4.2.28</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-bom</artifactId>
+				<version>4.1.115.Final</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.javacsv</groupId>
+				<artifactId>javacsv</artifactId>
+				<version>2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>net.sourceforge.jexcelapi</groupId>
+				<artifactId>jxl</artifactId>
+				<version>2.6.12</version>
+				<exclusions>
+					<exclusion>
+						<!-- Prefer SLF4J replacement -->
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.codehaus.janino</groupId>
+				<artifactId>janino</artifactId>
+				<version>3.1.12</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit</groupId>
+				<artifactId>junit-bom</artifactId>
+				<version>5.10.5</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-core</artifactId>
+				<version>4.11.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjdk.nashorn</groupId>
+				<artifactId>nashorn-core</artifactId>
+				<version>15.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.python</groupId>
+				<artifactId>jython-standalone</artifactId>
+				<version>2.7.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-bom</artifactId>
+				<version>2.0.16</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.yamcs</groupId>
+				<artifactId>yamcs-rocksdb</artifactId>
+				<version>${rocksdbVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.yaml</groupId>
+				<artifactId>snakeyaml</artifactId>
+				<version>2.3</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-maven</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>3.6.0</version>
+								</requireMavenVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<version>3.1.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.6.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>3.3.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.12.1</version>
+					<configuration>
+						<release>17</release>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.6.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>3.4.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>3.0.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-help-plugin</artifactId>
+					<version>3.4.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.3.0</version>
+					<configuration>
+						<archive>
+							<manifest>
+								<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							</manifest>
+							<manifestEntries>
+								<Automatic-Module-Name>${javaModuleName}</Automatic-Module-Name>
+							</manifestEntries>
+						</archive>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>3.6.3</version>
+					<configuration>
+						<release>17</release>
+						<author>false</author>
+						<breakiterator>true</breakiterator>
+						<additionalOptions>
+							<additionalOption>-Xdoclint:none</additionalOption>
+							<additionalOption>-Xdoclint:html</additionalOption>
+							<additionalOption>-Xdoclint:reference</additionalOption>
+							<!-- the 'syntax' group is too strict with @param and @throws -->
+							<!-- additionalOption>-Xdoclint:syntax</additionalOption -->
+						</additionalOptions>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>3.3.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>3.3.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.2.5</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>3.1.0</version>
+					<configuration>
+						<!-- Trick exec-maven-plugin into suppressing useless Maven stacktraces
+							when Yamcs exits with a non-zero return code (e.g. validation
+							error) -->
+						<successCodes>
+							<successCode>0</successCode>
+							<successCode>1</successCode>
+							<successCode>134</successCode> <!-- JVM crash -->
+							<successCode>143</successCode> <!-- SIGTERM -->
+							<successCode>255</successCode>
+						</successCodes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>2.16.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>3.9.1.2184</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.central</groupId>
+					<artifactId>central-publishing-maven-plugin</artifactId>
+					<version>0.7.0</version>
+				</plugin>
+				<plugin>
+					<groupId>org.yamcs</groupId>
+					<artifactId>yamcs-maven-plugin</artifactId>
+					<version>1.3.5</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>central</id>
+			<url>https://central.sonatype.com/repository/maven-snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<profiles>
+		<profile>
+			<id>yamcs-release</id>
+			<activation>
+				<property>
+					<name>release</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<keyname>yamcs@spaceapplications.com</keyname>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+							<autoPublish>false</autoPublish>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>coverage</id>
+			<properties>
+				<aggregate.report.dir>tests/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
+				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+				<sonar.organization>yamcs</sonar.organization>
+				<sonar.exclusions>
+					**/me/lemire/integercompression/**,
+					**/org/yamcs/protobuf/**,
+					**/org/yamcs/yarch/streamsql/StreamSqlParser*,
+					**/org/yamcs/templating/TemplateParser*,
+					**/org/yamcs/ui/packetviewer/**,
+					**/org/yamcs/examples/**,
+					**/org/yamcs/xtce/xlsv6/*,
+					**/org/yamcs/simulator/**,
+					**/org/yamcs/utils/parser/*,
+					**/org/yamcs/cli/PasswordHashCli*,
+					**/org/yamcs/cli/RocksDbBenchmark*
+				</sonar.exclusions>
+				<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+				<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+				<sonar.language>java</sonar.language>
+			</properties>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.jacoco</groupId>
+							<artifactId>jacoco-maven-plugin</artifactId>
+							<version>0.8.8</version>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>prepare-agent</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
+```
+
+### `README.md`
+
+**경로:** `gsw/yamcs/README.md`
+
+
+```markdown
+# Yamcs Mission Control ![Maven Central](https://img.shields.io/maven-central/v/org.yamcs/yamcs.svg?label=release)
+
+* Website: https://yamcs.org
+* Mailing list: [Google Groups](https://groups.google.com/group/yamcs/)
+
+Yamcs is a mission control framework developed in Java. It uses an open-ended architecture that allows tailoring its feature set using yaml configuration files. You can also extend the default feature set by writing custom Java classes.
+
+To start developing your own Yamcs application, follow our [Getting Started](https://yamcs.org/getting-started) guide.
+
+
+## Documentation
+
+* Server Manual: https://docs.yamcs.org/yamcs-server-manual/
+* Javadoc: https://docs.yamcs.org/javadoc/yamcs/latest/
+
+
+## License
+
+Yamcs is licensed under Affero GPLv3.
+
+For commercial licensing please contact [Space Applications Services](https://www.spaceapplications.com) with your use case.
+
+
+## Development Setup
+
+To work on the core components of Yamcs you need JDK17+, Maven and npm.
+
+Build Java jars:
+
+    mvn clean install -DskipTests
+
+Build web interface:
+
+    cd yamcs-web/src/main/webapp
+    npm install
+    npm run build
+    cd -
+
+These commands will produce an optimized production version of the web interface. This process will take a few minutes. For faster incremental builds run in watch mode (`npm run watch`).
+
+For demo and development purposes we work with an all-in-one simulation environment that uses many Yamcs features. In this simulation, Yamcs receives TM from a simple simulator of a landing spacecraft. Yamcs can also send some basic TC. The simulator starts together with Yamcs as a subprocess.
+
+    ./run-example.sh simulation
+
+This configuration stores data to `/storage/yamcs-data`. Ensure this folder exists and that you can write to it.
+
+When Yamcs started successfully, you can visit the built-in web interface by navigating to `http://localhost:8090`.
+
+**Note to Windows users:** This repository uses some relative symbolic links. To support this on Windows:
+* Enable "Developer Mode" in Windows (allows to use `mklink` without administrative privileges).
+* Enable msysgit symlink support: `git config --global core.symlinks true`
+* If you already cloned the repository prior to these steps, `git status` will tell you how to convert the symlinks. 
+
+
+## Contributions
+
+While Yamcs is managed and developed by Space Applications Services, we also consider pull requests from other contributors. For non-trivial patches we ask you to sign our [CLA](https://yamcs.org/static/Yamcs_Contributor_Agreement_v2.0.pdf).
+
+
+```
+
+### `run-example.cmd`
+
+**경로:** `gsw/yamcs/run-example.cmd`
+
+
+```text
+@echo off
+setlocal
+
+if "%1" == "" (
+    echo usage: %0 EXAMPLE [options]
+    echo.
+    echo Where EXAMPLE is one of:
+    call :printExampleList
+    exit /B 1
+)
+
+if not exist examples\%1 (
+    echo Cannot find an example by the name '%1'. Use one of:
+    call :printExampleList
+    exit /B 1
+)
+
+rem Enable ansi color processing
+set ENABLE_VIRTUAL_TERMINAL_PROCESSING=1
+
+set example=%1
+set args=
+shift
+:readarg
+if not "%1" == "" (
+    set args=%args% %1
+    shift
+    goto readarg
+)
+
+mvn -f examples\%example%\pom.xml yamcs:run -Dyamcs.args="%YAMCS_OPTS% %args%"
+exit /B 0
+
+
+:printExampleList
+for /f %%i in ( 'dir /a:d /b examples ^| find /V "snippets" ^| findstr /V "\..*"' ) do (
+    echo.    %%i
+)
+```
+
+### `run-example.sh`
+
+**경로:** `gsw/yamcs/run-example.sh`
+
+
+```bash
+#!/bin/bash
+
+YAMCS_OPTS="$YAMCS_OPTS ${@:2}"
+
+print_example_list () {
+    for dir in `find examples -maxdepth 1 -mindepth 1 -type d ! -name '.*' ! -name snippets -exec basename {} \; | sort`; do
+        echo "    $dir"
+    done
+}
+
+if [[ -z "$1" ]]; then
+    echo "usage: $0 EXAMPLE [options]"
+    echo
+    echo "Where EXAMPLE is one of:"
+    print_example_list
+    exit 1
+fi
+if [[ ! -d "examples/$1" ]]; then
+    echo "Cannot find an example by the name '$1'. Use one of:"
+    print_example_list
+    exit 1
+fi
+
+mvn -f "examples/$1/pom.xml" yamcs:run \
+    -Dyamcs.args="$YAMCS_OPTS"
+```

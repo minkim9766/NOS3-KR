@@ -3,18 +3,84 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-top.component.css`
 
-file--table-top.component.css
-file--table-top.component.html
-file--table-top.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/table-top.component.css`
+
+
+```css
+:host {
+  background-color: #e6f1ef;
+  color: var(--y-accent);
+  border: 1px solid var(--y-border-color);
+  border-bottom: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+}
+
+:host.error {
+  background-color: #fcc;
+  color: var(--y-error-color);
+}
+
+:host > mat-icon {
+  margin-right: 4px;
+  font-size: 14px !important;
+  height: 14px !important;
+  width: 14px !important;
+}
 ```
 
-## 항목
+### `table-top.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/table-top.component.css`](file--table-top.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/table-top.component.html`](file--table-top.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/table-top.component.ts`](file--table-top.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/table-top.component.html`
+
+
+```html
+<mat-icon>
+  @if (icon() === "auto") {
+    @if (severity() === "info") {
+      info
+    } @else if (severity() === "error") {
+      error_outline
+    }
+  } @else {
+    {{ icon() }}
+  }
+</mat-icon>
+<ng-content />
+```
+
+### `table-top.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-top/table-top.component.ts`
+
+
+```typescript
+import { Component, input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-table-top',
+  templateUrl: './table-top.component.html',
+  styleUrl: './table-top.component.css',
+  host: {
+    '[class.error]': 'error',
+  },
+  imports: [MatIcon],
+})
+export class YaTableTop {
+  icon = input<string>('auto');
+  severity = input<'info' | 'error'>('info');
+
+  get error() {
+    return this.severity() === 'error';
+  }
+}
+```

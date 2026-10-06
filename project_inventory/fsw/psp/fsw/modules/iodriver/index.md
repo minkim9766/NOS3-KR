@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/fsw/modules/iodriver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,23 @@
 inc/index
 src/index
 ut-stubs/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/fsw/modules/iodriver/inc/`](inc/index) — 폴더
-- [`fsw/psp/fsw/modules/iodriver/src/`](src/index) — 폴더
-- [`fsw/psp/fsw/modules/iodriver/ut-stubs/`](ut-stubs/index) — 폴더
-- [`fsw/psp/fsw/modules/iodriver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/CMakeLists.txt`
+
+
+```cmake
+
+# Generic I/O device driver interface module
+add_psp_module(iodriver src/iodriver.c)
+
+target_include_directories(iodriver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/inc)
+
+if (ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-stubs)
+endif (ENABLE_UNIT_TESTS)
+```

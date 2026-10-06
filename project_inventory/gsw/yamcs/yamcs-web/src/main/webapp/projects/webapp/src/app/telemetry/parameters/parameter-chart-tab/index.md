@@ -3,18 +3,419 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-chart-tab.component.css`
 
-file--parameter-chart-tab.component.css
-file--parameter-chart-tab.component.html
-file--parameter-chart-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/parameter-chart-tab.component.css`
+
+
+```css
+.plot-container {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.zoom-actions {
+  position: absolute;
+  bottom: 35px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.zoom-actions-inner {
+  display: inline-block;
+  background-color: #fafafa;
+}
+
+.zoom-actions .mat-button {
+  line-height: inherit;
+  min-width: 0;
+}
+
+.no-data-message {
+  position: absolute;
+  top: 50%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-align: center;
+  pointer-events: none;
+}
+
+.plot-top-actions {
+  height: 24px;
+  line-height: 24px;
+}
+
+.separator {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
 ```
 
-## 항목
+### `parameter-chart-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/parameter-chart-tab.component.css`](file--parameter-chart-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/parameter-chart-tab.component.html`](file--parameter-chart-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/parameter-chart-tab.component.ts`](file--parameter-chart-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/parameter-chart-tab.component.html`
+
+
+```html
+@if (parameter$ | async; as parameter) {
+  <div style="padding-left: 12px; padding-right: 12px; padding-top: 12px">
+    @if (range$ | async; as range) {
+      <div class="plot-top-actions">
+        <ya-text-action icon="add_circle" (click)="compareParameter()">Comparison</ya-text-action>
+        <span class="separator"></span>
+        <ya-text-action (click)="chooseRange()" icon="date_range" [active]="range === 'CUSTOM'">
+          @if (range !== "CUSTOM") {
+            <span>Date Range</span>
+          }
+          @if (customStart$ | async; as customStart) {
+            @if (customStop$ | async; as customStop) {
+              @if (range === "CUSTOM") {
+                <span>{{ customStart | datetime }} - {{ customStop | datetime }}</span>
+              }
+            }
+          }
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT1M')" [active]="range === 'PT1M'">
+          1 minute
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT5M')" [active]="range === 'PT5M'">
+          5 minutes
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT15M')" [active]="range === 'PT15M'">
+          15 minutes
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT30M')" [active]="range === 'PT30M'">
+          30 minutes
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT1H')" [active]="range === 'PT1H'">
+          1 hour
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT6H')" [active]="range === 'PT6H'">
+          6 hours
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('PT12H')" [active]="range === 'PT12H'">
+          12 hours
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('P1D')" [active]="range === 'P1D'">
+          1 day
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('P2D')" [active]="range === 'P2D'">
+          2 days
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('P1W')" [active]="range === 'P1W'">
+          7 days
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('P2W')" [active]="range === 'P2W'">
+          14 days
+        </ya-text-action>
+        <ya-text-action (click)="loadLatest('P1M')" [active]="range === 'P1M'">
+          30 days
+        </ya-text-action>
+      </div>
+    }
+  </div>
+  <div class="plot-container">
+    <app-parameter-plot
+      #plot
+      [xGrid]="true"
+      [xAxisHeight]="24"
+      duration=""
+      [dataSource]="dataSource"
+      [stop]="missionTime"
+      [removableSeries]="true"
+      (onVisibleRange)="onVisibleRange($event)"
+      (onManualRangeChange)="onManualRangeChange()">
+      <app-parameter-series [parameter]="parameter.qualifiedName" [grid]="true" />
+    </app-parameter-plot>
+    <div class="zoom-actions">
+      <div class="zoom-actions-inner elevation-z1">
+        <button mat-button (click)="plot.zoomIn()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span class="separator"></span>
+        <button mat-button (click)="plot.zoomOut()">
+          <mat-icon>remove</mat-icon>
+        </button>
+      </div>
+    </div>
+    @if (dataSource.data$ | async; as data) {
+      @if (!(dataSource.loading$ | async)) {
+        @if (data.samples.length === 0) {
+          <div class="no-data-message">
+            @if (range$ | async; as range) {
+              <span class="mat-caption" style="color: #777">
+                There is no data for this chart in
+                @switch (range) {
+                  @case ("PT1M") {
+                    <span>the last minute</span>
+                  }
+                  @case ("PT5M") {
+                    <span>the last 5 minutes</span>
+                  }
+                  @case ("PT15M") {
+                    <span>the last 15 minutes</span>
+                  }
+                  @case ("PT30M") {
+                    <span>the last 30 minutes</span>
+                  }
+                  @case ("PT1H") {
+                    <span>the last hour</span>
+                  }
+                  @case ("PT6H") {
+                    <span>the last 6 hours</span>
+                  }
+                  @case ("PT12H") {
+                    <span>the last 12 hours</span>
+                  }
+                  @case ("P1D") {
+                    <span>the last 24 hours</span>
+                  }
+                  @case ("P2D") {
+                    <span>the last 2 days</span>
+                  }
+                  @case ("P1W") {
+                    <span>the last week</span>
+                  }
+                  @case ("P2W") {
+                    <span>the last 2 weeks</span>
+                  }
+                  @case ("P1M") {
+                    <span>the last month</span>
+                  }
+                  @default {
+                    <span>the selected range</span>
+                  }
+                }
+              </span>
+            }
+          </div>
+        }
+      }
+    }
+  </div>
+}
+```
+
+### `parameter-chart-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-chart-tab/parameter-chart-tab.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  input,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  BackfillingSubscription,
+  ConfigService,
+  Parameter,
+  Synchronizer,
+  WebappSdkModule,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { DyDataSource } from '../../../shared/parameter-plot/DyDataSource';
+import { ParameterPlotComponent } from '../../../shared/parameter-plot/parameter-plot.component';
+import { ParameterSeriesComponent } from '../../../shared/parameter-plot/parameter-series/parameter-series.component';
+import { CompareParameterDialogComponent } from '../compare-parameter-dialog/compare-parameter-dialog.component';
+import { SelectRangeDialogComponent } from '../select-range-dialog/select-range-dialog.component';
+
+@Component({
+  templateUrl: './parameter-chart-tab.component.html',
+  styleUrl: './parameter-chart-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ParameterPlotComponent, ParameterSeriesComponent, WebappSdkModule],
+})
+export class ParameterChartTabComponent implements OnInit, OnDestroy {
+  qualifiedName = input.required<string>({ alias: 'parameter' });
+
+  @ViewChild(ParameterPlotComponent)
+  plot: ParameterPlotComponent;
+
+  parameter$: Promise<Parameter>;
+  dataSource: DyDataSource;
+  missionTime: Date;
+  private timeSubscription: Subscription;
+  private backfillSubscription: BackfillingSubscription;
+
+  range$ = new BehaviorSubject<string>('PT15M');
+  customStart$ = new BehaviorSubject<Date | null>(null);
+  customStop$ = new BehaviorSubject<Date | null>(null);
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private dialog: MatDialog,
+    private synchronizer: Synchronizer,
+    private configService: ConfigService,
+  ) {}
+
+  ngOnInit() {
+    this.missionTime = this.yamcs.getMissionTime();
+    this.initializeOptions();
+
+    const qualifiedName = this.qualifiedName();
+    this.dataSource = new DyDataSource(
+      this.yamcs,
+      this.synchronizer,
+      this.configService,
+    );
+    this.parameter$ = this.yamcs.yamcsClient.getParameter(
+      this.yamcs.instance!,
+      qualifiedName,
+    );
+    this.parameter$.then((parameter) => {
+      // Override qualified name for possible array or aggregate offsets
+      parameter.qualifiedName = qualifiedName;
+      this.dataSource.addParameter(parameter);
+
+      const interval = this.range$.value;
+      if (interval === 'CUSTOM') {
+        const start = this.customStart$.value!;
+        const stop = this.customStop$.value!;
+        this.dataSource.updateWindow(start, stop, [null, null]);
+      } else {
+        const stop = this.yamcs.getMissionTime();
+        const start = utils.subtractDuration(stop, this.range$.value);
+        this.dataSource.updateWindow(start, stop, [null, null]);
+      }
+
+      // Autoscroll (don't care about data, that is triggered by plot buffer)
+      this.timeSubscription = this.yamcs.time$.subscribe(() => {
+        if (this.range$.value !== 'CUSTOM') {
+          const stop = this.yamcs.getMissionTime();
+          const start = utils.subtractDuration(stop, this.range$.value);
+          this.plot?.updateWindowOnly(start, stop);
+        }
+      });
+
+      this.backfillSubscription =
+        this.yamcs.yamcsClient.createBackfillingSubscription(
+          {
+            instance: this.yamcs.instance!,
+          },
+          (update) => {
+            if (update.finished) {
+              this.dataSource.reloadVisibleRange();
+            }
+          },
+        );
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('interval')) {
+      this.range$.next(queryParams.get('interval')!);
+      if (queryParams.get('interval') === 'CUSTOM') {
+        this.customStart$.next(new Date(queryParams.get('customStart')!));
+        this.customStop$.next(new Date(queryParams.get('customStop')!));
+      }
+    }
+    this.updateURL();
+  }
+
+  onVisibleRange(xRange: [Date, Date]) {
+    this.customStart$.next(xRange[0]);
+    this.customStop$.next(xRange[1]);
+  }
+
+  onManualRangeChange() {
+    this.range$.next('CUSTOM');
+  }
+
+  loadLatest(range: string) {
+    this.range$.next(range);
+    const stop = this.yamcs.getMissionTime();
+    const start = utils.subtractDuration(stop, range);
+    this.updateURL();
+    this.dataSource.updateWindow(start, stop, [null, null]);
+  }
+
+  chooseRange() {
+    const currentRange = this.plot.getDateRange();
+    if (currentRange) {
+      const dialogRef = this.dialog.open(SelectRangeDialogComponent, {
+        width: '400px',
+        data: {
+          start: currentRange[0],
+          stop: currentRange[1],
+        },
+      });
+
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.range$.next('CUSTOM');
+          this.customStart$.next(result.start);
+          this.customStop$.next(result.stop);
+          this.updateURL();
+          this.dataSource.updateWindow(result.start, result.stop, [null, null]);
+        }
+      });
+    }
+  }
+
+  compareParameter() {
+    const dialogRef = this.dialog.open(CompareParameterDialogComponent, {
+      width: '600px',
+      data: {
+        exclude: this.plot.getParameters(),
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.yamcs.yamcsClient
+          .getParameter(this.yamcs.instance!, result.qualifiedName)
+          .then((parameter) => {
+            const parameterConfig = new ParameterSeriesComponent();
+            parameterConfig.parameter = result.qualifiedName;
+            parameterConfig.color = result.color;
+            parameterConfig.strokeWidth = result.thickness;
+            // Override qualified name for possible array or aggregate offsets
+            parameter.qualifiedName = result.qualifiedName;
+            this.plot.addParameter(parameter, parameterConfig);
+          });
+      }
+    });
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        interval: this.range$.value,
+        customStart:
+          this.range$.value === 'CUSTOM' ? this.customStart$.value : null,
+        customStop:
+          this.range$.value === 'CUSTOM' ? this.customStop$.value : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  ngOnDestroy() {
+    this.backfillSubscription?.cancel();
+    this.timeSubscription?.unsubscribe();
+    this.dataSource?.disconnect();
+  }
+}
+```

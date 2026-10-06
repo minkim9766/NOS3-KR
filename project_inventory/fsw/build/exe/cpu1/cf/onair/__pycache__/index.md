@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/__pycache__/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `message_headers.cpython-310.pyc`
 
-file--message_headers.cpython-310.pyc
-file--sbn_python_client.cpython-310.pyc
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/__pycache__/message_headers.cpython-310.pyc`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/__pycache__/message_headers.cpython-310.pyc`](file--message_headers.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/__pycache__/sbn_python_client.cpython-310.pyc`](file--sbn_python_client.cpython-310.pyc) — 빌드 산출물 (경로만)
+### `sbn_python_client.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/__pycache__/sbn_python_client.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

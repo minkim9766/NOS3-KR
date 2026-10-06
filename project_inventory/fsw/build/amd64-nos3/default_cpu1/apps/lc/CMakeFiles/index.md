@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,18 @@ generate_table_cpu1_lc_lc_def_adt.dir/index
 generate_table_cpu1_lc_lc_def_wdt.dir/index
 lc.dir/index
 tblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.dir/index
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/generate_table_cpu1_lc_lc_def_adt.dir/`](generate_table_cpu1_lc_lc_def_adt.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/generate_table_cpu1_lc_lc_def_wdt.dir/`](generate_table_cpu1_lc_lc_def_wdt.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/`](lc.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/tblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.dir/`](tblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

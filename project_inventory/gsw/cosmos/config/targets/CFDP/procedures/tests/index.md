@@ -3,22 +3,152 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP/procedures/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `verify_downlink_class1.rb`
 
-file--verify_downlink_class1.rb
-file--verify_downlink_class2.rb
-file--verify_to_enabled.rb
-file--verify_uplink_class1.rb
-file--verify_uplink_class2.rb
+**경로:** `gsw/cosmos/config/targets/CFDP/procedures/tests/verify_downlink_class1.rb`
+
+
+```ruby
+# Verify Class 1 Downlink Capabilities
+require 'cosmos'
+require 'cosmos/script'
+
+# Prompt user for file name/location
+fsw_file_name = ask("Please enter the fsw path to the file to downlink via Class 1. e.g. '/cf/cfe_es_startup.scr'")
+# Extract file name without rest of path
+file_name = fsw_file_name.split('/')[-1].strip
+
+# Alert the user to the destination file name
+dst_file_name = "/tmp/" + file_name
+prompt("Once completed, the file should be located on your machine at #{dst_file_name}. Press Ok to begin downlink.")
+
+# Obtain starting number of successful transactions
+start_eng_successtrans = tlm("CFDP CFDP_ENGINE_HK ENG_DOWN_SUCCESSDOWNLINKS")
+
+# Start class 1 download
+cmd("CFS CF_PLAYBACK_FILE with CLASS 1, CHAN 0, PRIORITY 1, PRESERVE 1, PEER_ENTITY_ID '0.21', SRCFILENAME #{fsw_file_name}, DSTFILENAME '/tmp/#{file_name}'")
+status_bar("Downloading file...")
+
+# Verify class 1 upload
+wait_check("CFDP CFDP_ENGINE_HK ENG_DOWN_SUCCESSDOWNLINKS > #{start_eng_successtrans}", 60)
+
+status_bar("Download complete!")
+prompt("The transaction should be complete. Before pressing okay, please manually verify the downloaded file matches the original.")
+
 ```
 
-## 항목
+### `verify_downlink_class2.rb`
 
-- [`gsw/cosmos/config/targets/CFDP/procedures/tests/verify_downlink_class1.rb`](file--verify_downlink_class1.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/procedures/tests/verify_downlink_class2.rb`](file--verify_downlink_class2.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/procedures/tests/verify_to_enabled.rb`](file--verify_to_enabled.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/procedures/tests/verify_uplink_class1.rb`](file--verify_uplink_class1.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/procedures/tests/verify_uplink_class2.rb`](file--verify_uplink_class2.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/targets/CFDP/procedures/tests/verify_downlink_class2.rb`
+
+
+```ruby
+# Verify Class 2 Downlink Capabilities
+require 'cosmos'
+require 'cosmos/script'
+
+# Prompt user for file name/location
+fsw_file_name = ask("Please enter the fsw path to the file to downlink via Class 2. e.g. '/cf/cfe_es_startup.scr'")
+# Extract file name without rest of path
+file_name = fsw_file_name.split('/')[-1].strip
+
+# Alert the user to the destination file name
+dst_file_name = "/tmp/" + file_name
+prompt("Once completed, the file should be located on your machine at #{dst_file_name}. Press Ok to begin downlink.")
+
+# Obtain starting number of successful transactions
+start_eng_successtrans = tlm("CFDP CFDP_ENGINE_HK ENG_DOWN_SUCCESSDOWNLINKS")
+
+# Start class 2 download
+cmd("CFS CF_PLAYBACK_FILE with CLASS 2, CHAN 0, PRIORITY 1, PRESERVE 1, PEER_ENTITY_ID '0.21', SRCFILENAME #{fsw_file_name}, DSTFILENAME '/tmp/#{file_name}'")
+status_bar("Downloading file...")
+
+# Verify class 2 upload
+wait_check("CFDP CFDP_ENGINE_HK ENG_DOWN_SUCCESSDOWNLINKS > #{start_eng_successtrans}", 60)
+
+status_bar("Download complete!")
+prompt("The transaction should be complete. Before pressing okay, please manually verify the downloaded file matches the original.")
+
+```
+
+### `verify_to_enabled.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/procedures/tests/verify_to_enabled.rb`
+
+
+```ruby
+# Send the cFS TO_ENABLE command
+require 'cosmos'
+require 'cosmos/script'
+
+# Send the command
+cmd("CFS TO_ENABLE_OUTPUT with DEST_IP '127.0.0.1', DEST_PORT 5011")
+
+# Use CFE_ES_HKPACKET as benchmark to verify its enabled
+wait_packet("CFS", "CFE_ES_HKPACKET", 3, 15)
+
+```
+
+### `verify_uplink_class1.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/procedures/tests/verify_uplink_class1.rb`
+
+
+```ruby
+# Verify Class 1 uplink capabilities
+require 'cosmos'
+require 'cosmos/script'
+
+# Prompt user for file name/location
+prompt("A file dialog window will open. Please select the file to upload for class 1 test.")
+selected_file = open_file_dialog()
+status_bar(selected_file)
+# Extract file name without rest of system path
+file_name = selected_file.split('/')[-1].strip
+
+# Obtain starting number of successful transactions
+start_eng_successtrans = tlm("CFDP CFDP_ENGINE_HK ENG_UP_SUCCESSCOUNTER")
+
+# Start class 1 upload
+cmd("CFDP SEND_FILE with CLASS 1, DEST_ID '24', SRCFILENAME '#{selected_file}', DSTFILENAME '/cf/#{file_name}'")
+status_bar("Uploading file...")
+
+# Verify class 1 upload
+wait_check("CFDP CFDP_ENGINE_HK ENG_UP_SUCCESSCOUNTER > #{start_eng_successtrans}", 30)
+
+prompt("The transaction should be complete. Before pressing okay, please manually verify the uploaded file matches the original.")
+
+```
+
+### `verify_uplink_class2.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/procedures/tests/verify_uplink_class2.rb`
+
+
+```ruby
+# Verify Class 2 uplink capabilities
+require 'cosmos'
+require 'cosmos/script'
+
+# Prompt user for file name/location
+prompt("A file dialog window will open. Please select the file to upload for class 2 test.")
+selected_file = open_file_dialog()
+status_bar(selected_file)
+# Extract file name without rest of system path
+file_name = selected_file.split('/')[-1].strip
+
+# Obtain starting number of successful transactions
+start_eng_successtrans = tlm("CFDP CFDP_ENGINE_HK ENG_UP_SUCCESSCOUNTER")
+
+# Start Class 2 upload
+cmd("CFDP SEND_FILE with CLASS 2, DEST_ID '24', SRCFILENAME '#{selected_file}', DSTFILENAME '/cf/#{file_name}'")
+status_bar("Uploading file...")
+
+# Verify Class 2 upload
+wait_check("CFDP CFDP_ENGINE_HK ENG_UP_SUCCESSCOUNTER > #{start_eng_successtrans}", 30)
+
+prompt("The transaction should be complete. Before pressing okay, please manually verify the uploaded file matches the original.")
+
+```

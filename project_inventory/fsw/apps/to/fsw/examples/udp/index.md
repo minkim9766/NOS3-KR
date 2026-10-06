@@ -3,18 +3,475 @@
 
 **경로:** `fsw/apps/to/fsw/examples/udp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `MISSION_to_types.h`
 
-file--MISSION_to_types.h
-file--to_custom.c
-file--to_platform_cfg.h
+**경로:** `fsw/apps/to/fsw/examples/udp/MISSION_to_types.h`
+
+
+```c
+/******************************************************************************/
+/** \file  MISSION_to_types.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Command and telemetry data strucutres for TO application (UDP)
+*
+*   \par
+*       This header file contains definitions of command and telemetry data
+*       structures for TO applications for the UDP transport protocol example.
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Make use of the setup.sh script to move / link this file to the
+*     {MISSION_HOME}/apps/inc/ folder.
+*     - Standard command messages are defined in to_cmds.h
+*     - Default HK Telemetry structure is defined in to_hktlm.h
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*     - 2015-09-22 | Guy de Carufel | Moved hktlm to to_hktlm.h
+*******************************************************************************/
+#ifndef _MISSION_TO_TYPES_H_
+#define _MISSION_TO_TYPES_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "../to/fsw/src/to_hktlm.h"
+#include "cop1.h"
+
+/*
+** Defines
+*/
+#define TO_MAX_IP_STRING_SIZE 16
+
+
+/* Define enable / disable commands */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t	ucCmdHeader;
+   char     cDestIp[TO_MAX_IP_STRING_SIZE];   /* Destination IP */	
+   uint16   usDestPort;                       /* Destination PORT */ 
+} TO_EnableOutputCmd_t;
+
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t	ucCmdHeader;
+} TO_DisableOutputCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t	ucCmdHeader;
+    COP1_Clcw_t     clcw;  /**< COP-1 CLCW Data */
+} TO_CustomSetOcfCmd_t;
+
+
+/*************** Telemetry **************/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t ucTlmHeader;
+} TO_InData_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t ucTlmHeader;
+    uint32  uiCounter;
+} TO_OutData_t;
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _MISSION_TO_TYPES_H_ */
+
+/*==============================================================================
+** End of file MISSION_to_types.h
+**============================================================================*/
 ```
 
-## 항목
+### `to_custom.c`
 
-- [`fsw/apps/to/fsw/examples/udp/MISSION_to_types.h`](file--MISSION_to_types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/examples/udp/to_custom.c`](file--to_custom.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/examples/udp/to_platform_cfg.h`](file--to_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/to/fsw/examples/udp/to_custom.c`
+
+
+```c
+/******************************************************************************/
+/** \file  to_custom.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions for Custom Layer of TO Application for UDP
+*
+*   \par
+*     This file defines the functions for a custom implementation of the custom
+*     layer of the TO application over UDP Socket.
+*
+*   \par API Functions Defined:
+*     - TO_CustomInit() - Initialize the transport protocol
+*     - TO_CustomAppCmds() - Process custom App Commands
+*     - TO_CustomEnableOutputCmd() - Enable telemetry output
+*     - TO_CustomDisableOutputCmd() - Disable telemetry output
+*     - TO_CustomCleanup() - Cleanup callback to close transport channel.
+*     - TO_CustomProcessData() - Send output data over transport protocol.
+*
+*   \par Private Functions Defined:
+*     - TO_SendDataTypePktCmd() - Send Test packet (Reference to_lab app)
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - All input messages are CCSDS messages
+*     - All config macros defined in to_platform_cfg.h
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*     - 2015-06-02 | Guy de Carufel | Revised for new UDP API
+*******************************************************************************/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "cfe_msgids.h"
+#include "network_includes.h"
+#include "trans_udp.h"
+
+#include "to_app.h"
+#include "ci_msgids.h"
+
+/* Start additional includes for hostname snippet */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
+#include <arpa/inet.h>
+/* End additional includes for hostname snippet */
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+typedef struct
+{
+    IO_TransUdp_t   udp;        /**< UDP working              */
+} TO_CustomData_t;
+
+/*
+** External Global Variables
+*/
+extern TO_AppData_t g_TO_AppData; 
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+static TO_CustomData_t g_TO_CustomData;
+
+/*
+** Local Function Definitions
+*/
+extern void TO_SendDataTypePktCmd(CFE_MSG_Message_t *);
+
+/*******************************************************************************
+** Custom Application Functions 
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Custom Initialization
+*******************************************************************************/
+int32 TO_CustomInit(void)
+{
+    int32 iStatus = TO_SUCCESS;
+    
+    /* Create socket for outgoing */
+    if (IO_TransUdpCreateSocket(&g_TO_CustomData.udp) < 0)
+    {
+        iStatus = TO_ERROR;
+        goto end_of_function;
+    }
+
+    /* NOTE: For this simple UDP example, we are only requiring The following
+       3 messages.  If more message IDs should be included by default, add them
+       here and update the TO_NUM_CRITICAL_MIDS value. */ 
+
+    /* Set Critical Message Ids which must always be in config table. */
+    g_TO_AppData.criticalMid[0] = CFE_SB_ValueToMsgId(TO_HK_TLM_MID);
+    g_TO_AppData.criticalMid[1] = CFE_SB_ValueToMsgId(CI_HK_TLM_MID);
+    
+    /* Route 0: Udp. Linked to CF Channel Index 0. */
+    g_TO_AppData.routes[0].usExists = 1;
+    g_TO_AppData.routes[0].sCfChnlIdx = 0;
+    
+end_of_function:
+    return iStatus;
+}
+
+/******************************************************************************/
+/** \brief Process of custom app commands 
+*******************************************************************************/
+int32 TO_CustomAppCmds(CFE_MSG_Message_t* pMsg)
+{
+    int32 iStatus = TO_SUCCESS;
+    CFE_MSG_FcnCode_t uiCmdCode = 0;
+    CFE_MSG_GetFcnCode(pMsg, &uiCmdCode);
+    switch (uiCmdCode)
+    {
+        case TO_SEND_DATA_TYPE_CC:
+            TO_SendDataTypePktCmd(pMsg);
+            break;
+        
+        default:
+            iStatus = -1;
+            break;
+    }
+
+    return iStatus;
+}
+
+/******************************************************************************/
+/** \brief Process of output telemetry
+*******************************************************************************/
+int32 TO_CustomProcessData(CFE_MSG_Message_t * pMsg, int32 size, int32 iTblIdx,
+                           uint16 usRouteId)
+{
+    int32 iStatus = 0;
+
+    if (g_TO_AppData.routes[0].usIsEnabled == 0 || usRouteId != 0)
+    {
+        goto end_of_function;
+    }
+
+    iStatus = IO_TransUdpSnd(&g_TO_CustomData.udp, (uint8 *) pMsg, size);
+
+    if (iStatus < 0)
+    {
+        CFE_EVS_SendEvent(TO_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "TO UDP sendto errno %d. Telemetry output disabled.", 
+                          errno);
+        g_TO_AppData.usOutputEnabled = 0;
+    }
+
+end_of_function:
+    return iStatus;
+}
+
+/******************************************************************************/
+/** \brief Custom Cleanup 
+*******************************************************************************/
+void TO_CustomCleanup(void)
+{
+    if (g_TO_AppData.usOutputEnabled)
+    {
+        CFE_EVS_SendEvent(TO_CUSTOM_INF_EID, CFE_EVS_EventType_INFORMATION, 
+                          "TO - Closing Socket."); 
+        IO_TransUdpCloseSocket(&g_TO_CustomData.udp);
+    }
+
+    return;
+}
+
+/******************************************************************************/
+/** \brief Set the OCF trailer with the CLCW - Internal Cmd.
+*******************************************************************************/
+void TO_CustomSetOcfCmd(CFE_MSG_Message_t *pCmdMsg)
+{
+    // Do nothing, added to support TC uplink and SPP downlink
+    return;
+}
+
+/******************************************************************************/
+/** \brief Enable Output Command Response
+*******************************************************************************/
+int32 TO_CustomEnableOutputCmd(CFE_MSG_Message_t *pCmdMsg)
+{
+    int32 iStatus = IO_TRANS_UDP_NO_ERROR;
+    int32 routeMask = TO_ERROR;
+    char cDestIp[TO_MAX_IP_STRING_SIZE];
+    uint16 usDestPort = 0;
+
+    TO_EnableOutputCmd_t *pCustomCmd = (TO_EnableOutputCmd_t *)pCmdMsg;
+    strncpy(cDestIp, pCustomCmd->cDestIp, sizeof(cDestIp));
+
+    struct addrinfo hints, *res, *p;
+    int status;
+    void *addr;
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET; // Use AF_UNSPEC for IPv6 support
+    hints.ai_socktype = SOCK_STREAM;
+
+    if ((status = getaddrinfo(pCustomCmd->cDestIp, NULL, &hints, &res)) == 0)
+    {
+        // Loop through results and get the first valid IP
+        for (p = res; p != NULL; p = p->ai_next)
+        {
+            struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+            addr = &(ipv4->sin_addr);
+
+            // Convert to string and store it
+            if (inet_ntop(p->ai_family, addr, pCustomCmd->cDestIp, INET_ADDRSTRLEN) != NULL)
+            {
+                break;
+            }
+        }
+        freeaddrinfo(res);
+    }
+
+    if (pCustomCmd->usDestPort > 0)
+    {
+        usDestPort = pCustomCmd->usDestPort;
+    }
+    else
+    {
+        usDestPort = TO_DEFAULT_DEST_PORT;
+    }
+
+    iStatus = IO_TransUdpSetDestAddr(&g_TO_CustomData.udp, pCustomCmd->cDestIp, usDestPort);
+
+    if (iStatus < 0)
+    {
+        goto end_of_function;
+    }
+
+    /* We are done configuring route 0 */
+    TO_SetRouteAsConfigured(0);
+    routeMask = 0x0001;
+
+end_of_function:
+    return routeMask;
+}
+
+
+/******************************************************************************/
+/** \brief Disable Output Command Response
+*******************************************************************************/
+int32 TO_CustomDisableOutputCmd(CFE_MSG_Message_t *pCmdMsg)
+{
+    /* Disable */
+    g_TO_AppData.usOutputEnabled = 0;
+    return TO_SUCCESS;
+}
+
+
+/*******************************************************************************
+** Non standard custom Commands
+*******************************************************************************/
+
+/*==============================================================================
+** End of file to_custom.c
+**============================================================================*/
+```
+
+### `to_platform_cfg.h`
+
+**경로:** `fsw/apps/to/fsw/examples/udp/to_platform_cfg.h`
+
+
+```c
+/******************************************************************************/
+/** \file  to_platform_cfg.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Sample config file for TO Application with UDP device
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - Make use of the setup.sh script to move / link this file to the 
+*       {MISSION_HOME}/apps/to/fsw/platform_inc folder.
+*       - Overwrite any default settings by defining them here.
+*       - Define any implementation specific settings. 
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+    
+#ifndef _TO_PLATFORM_CFG_H_
+#define _TO_PLATFORM_CFG_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Pragmas
+*/
+
+/*
+** Local Defines  
+*/
+#define TO_NUM_CRITICAL_MIDS     3
+#define TO_DEFAULT_DEST_PORT     5011 
+#define TO_WAKEUP_TIMEOUT        50
+
+#define TO_SCH_PIPE_DEPTH  32
+#define TO_CMD_PIPE_DEPTH  32
+#define TO_TLM_PIPE_DEPTH  32
+
+/*
+** Include Files
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _TO_PLATFORM_CFG_H_ */
+
+/*==============================================================================
+** End of file to_platform_cfg.h
+**============================================================================*/
+    
+```

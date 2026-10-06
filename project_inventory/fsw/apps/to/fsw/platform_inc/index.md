@@ -3,14 +3,10 @@
 
 **경로:** `fsw/apps/to/fsw/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `to_msgids.h`
 
-file--to_msgids.h
-```
+**경로:** `fsw/apps/to/fsw/platform_inc/to_msgids.h`
 
-## 항목
-
-- [`fsw/apps/to/fsw/platform_inc/to_msgids.h`](file--to_msgids.h) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

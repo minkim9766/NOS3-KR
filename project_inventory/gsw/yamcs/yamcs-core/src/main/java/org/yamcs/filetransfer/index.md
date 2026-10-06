@@ -3,44 +3,1120 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractFileTransferService.java`
 
-file--AbstractFileTransferService.java
-file--BasicListingParser.java
-file--CsvListingParser.java
-file--FileAction.java
-file--FileActionIdentifier.java
-file--FileActionProvider.java
-file--FileListingParser.java
-file--FileListingService.java
-file--FileSaveHandler.java
-file--FileTransfer.java
-file--FileTransferFilter.java
-file--FileTransferService.java
-file--InvalidRequestException.java
-file--RemoteFileListMonitor.java
-file--TransferMonitor.java
-file--TransferOptions.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/AbstractFileTransferService.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.actions.ActionHelper;
+import org.yamcs.protobuf.FileTransferCapabilities;
+
+public abstract class AbstractFileTransferService extends AbstractYamcsService
+        implements FileTransferService, FileActionProvider {
+
+    private Map<String, FileAction> fileActions = new LinkedHashMap<>(); // Keep them in order of registration
+
+    protected void addFileAction(FileAction action) {
+        if (fileActions.containsKey(action.getId())) {
+            throw new IllegalArgumentException("Action '" + action.getId() + "' already registered");
+        }
+        fileActions.put(action.getId(), action);
+    }
+
+    @Override
+    public List<FileAction> getFileActions() {
+        return new ArrayList<>(fileActions.values());
+    }
+
+    @Override
+    public FileAction getFileAction(String actionId) {
+        return fileActions.get(actionId);
+    }
+
+    @Override
+    public final FileTransferCapabilities getCapabilities() {
+        var b = FileTransferCapabilities.newBuilder();
+        for (var action : fileActions.values()) {
+            var actionInfo = ActionHelper.toActionInfo(action);
+            b.addFileActions(actionInfo);
+        }
+
+        addCapabilities(b);
+        return b.build();
+    }
+
+    protected abstract void addCapabilities(FileTransferCapabilities.Builder builder);
+}
 ```
 
-## 항목
+### `BasicListingParser.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/AbstractFileTransferService.java`](file--AbstractFileTransferService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/BasicListingParser.java`](file--BasicListingParser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/CsvListingParser.java`](file--CsvListingParser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileAction.java`](file--FileAction.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileActionIdentifier.java`](file--FileActionIdentifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileActionProvider.java`](file--FileActionProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileListingParser.java`](file--FileListingParser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileListingService.java`](file--FileListingService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileSaveHandler.java`](file--FileSaveHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransfer.java`](file--FileTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransferFilter.java`](file--FileTransferFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransferService.java`](file--FileTransferService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/InvalidRequestException.java`](file--InvalidRequestException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/RemoteFileListMonitor.java`](file--RemoteFileListMonitor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/TransferMonitor.java`](file--TransferMonitor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/TransferOptions.java`](file--TransferOptions.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/BasicListingParser.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.RemoteFile;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+/**
+ * Parses a directory listing from a linebreak separated list of filenames
+ * Directories are detected when the file name ends with a directory terminator
+ */
+public class BasicListingParser extends FileListingParser {
+
+    private boolean removePrependingRemotePath;
+    private final List<String> DEFAULT_DIRECTORY_TERMINATORS = List.of("/");
+    private List<String> directoryTerminators;
+    private String directoryTerminatorsRegex;
+
+    private EventProducer eventProducer;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("removePrependingRemotePath", Spec.OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("directoryTerminators", Spec.OptionType.LIST).withElementType(Spec.OptionType.STRING)
+                .withDefault(DEFAULT_DIRECTORY_TERMINATORS);
+        return spec;
+    }
+
+    public BasicListingParser() {
+        setDirectoryTerminators(DEFAULT_DIRECTORY_TERMINATORS);
+    }
+
+    @Override
+    public void init(String yamcsInstance, YConfiguration config) {
+        super.init(yamcsInstance, config);
+        if(!"".equals(yamcsInstance)) {
+            eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "BasicListingParser", 10000);
+        }
+        removePrependingRemotePath = config.getBoolean("removePrependingRemotePath");
+        List<String> terminators = config.getList("directoryTerminators");
+        if(!terminators.equals(DEFAULT_DIRECTORY_TERMINATORS)) { // Only overwrite the directory terminators if config is not default
+            setDirectoryTerminators(terminators);
+        }
+    }
+
+    /**
+     * Sets the directory terminators for parsing
+     * @param directoryTerminators directory terminators
+     */
+    public void setDirectoryTerminators(List<String> directoryTerminators) {
+        this.directoryTerminators = directoryTerminators;
+        this.directoryTerminatorsRegex = "(" + directoryTerminators.stream().map(Pattern::quote).collect(Collectors.joining("|")) + ")";
+    }
+
+    @Override
+    public List<RemoteFile> parse(String remotePath, byte[] data) {
+        String textData = new String(data);
+        if(!removePrependingRemotePath) {
+            remotePath = "";
+        }
+
+        // TODO: maybe add (directoryTerminatorsRegex*) at the beginning?
+        String regex = "^(" + Pattern.quote(remotePath) + ")?(" + directoryTerminatorsRegex + "*)(?<name>.*?)(" + directoryTerminatorsRegex + "*)$";
+        return Arrays.stream(textData.replace("\r", "").split("\\n"))
+                .map(fileName -> {
+                    try {
+                        if (fileName.isBlank()) {
+                            return null;
+                        }
+
+                        return RemoteFile.newBuilder()
+                                .setName(fileName.replaceAll(regex, "${name}"))
+                                .setIsDirectory(directoryTerminators.stream().anyMatch(fileName::endsWith))
+                                .build();
+                    } catch (Exception e) {
+                        if(eventProducer != null) {
+                            eventProducer.sendWarning("Error parsing filename '" + fileName + "' in directory listing");
+                        }
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .sorted(fileDirComparator)
+                .collect(Collectors.toList());
+    }
+}
+```
+
+### `CsvListingParser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/CsvListingParser.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import com.csvreader.CsvReader;
+import com.google.protobuf.Descriptors;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.RemoteFile;
+import org.yamcs.utils.TimestampUtil;
+
+import java.io.IOException;
+import java.time.Instant;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * Parses a directory listing from Comma Separated Values (CSV) formatted data.
+ * Uses configurable mappings to associate columns to the correct file properties.
+ * Timestamps can be formatted as numbers or as strings in the ISO format.
+ */
+public class CsvListingParser extends FileListingParser {
+
+    /**
+     * Maps RemoteFile protobuf field names to the CSV colum number.
+     * Example: [ name -> 0, isDirectory -> 1, size -> 2, modified -> 3 ]
+     */
+    Map<String, Integer> protobufColumnNumberMapping; // Protobuf names -> column numbers
+
+    /**
+     * Maps CSV header column names to RemoteFile protobuf field names.
+     * Example: [ filename -> name, is_dir -> isDirectory, size -> size, last_updated -> modified ]
+     */
+    Map<String, String> headerProtobufMapping; // CSV column names -> protobuf names
+
+    /**
+     * Whether to parse the CSV header and to use for mapping values to the RemoteFile fields
+     */
+    private boolean useCsvHeader;
+
+    /**
+     * Multiplier for number encoded timestamps to get to the value in milliseconds
+     */
+    private double timestampMultiplier;
+
+    private EventProducer eventProducer;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("useCsvHeader", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("timestampMultiplier", OptionType.FLOAT).withDefault(1000);
+        spec.addOption("protobufColumnNumberMapping", OptionType.MAP).withSpec(Spec.ANY).withDefault(new HashMap<>( // Default: protobuf order
+                    RemoteFile.getDescriptor().getFields().stream()
+                            .collect(Collectors.toMap(Descriptors.FieldDescriptor::getName,fieldDescriptor -> fieldDescriptor.getNumber() - 1))));
+        spec.addOption("headerProtobufMapping", OptionType.MAP).withSpec(Spec.ANY).withDefault(new HashMap<>( // Default: assumes same names as protobuf
+                        RemoteFile.getDescriptor().getFields().stream()
+                                .collect(Collectors.toMap(Descriptors.FieldDescriptor::getName, Descriptors.FieldDescriptor::getName))));
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, YConfiguration config) {
+        super.init(yamcsInstance, config);
+        if(!"".equals(yamcsInstance)) {
+            eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "CsvListingParser", 10000);
+        }
+
+        useCsvHeader = config.getBoolean("useCsvHeader");
+        timestampMultiplier = config.getDouble("timestampMultiplier");
+        protobufColumnNumberMapping = config.getMap("protobufColumnNumberMapping");
+        headerProtobufMapping = config.getMap("headerProtobufMapping");
+    }
+
+    @Override
+    public List<RemoteFile> parse(String remotePath, byte[] data) {
+        String textData = new String(data);
+        ArrayList<RemoteFile> files = new ArrayList<>();
+
+        CsvReader reader = CsvReader.parse(textData);
+        try {
+            Map<String, Integer> mapping = getMapping(reader);
+
+            while (reader.readRecord()) {
+                List<String> values = List.of(reader.getValues());
+
+                RemoteFile.Builder builder = RemoteFile.newBuilder();
+
+                RemoteFile.getDescriptor().getFields().forEach(field -> {
+                    Integer id = mapping.get(field.getName());
+                    if (id != null && id < values.size() && values.get(id) != null) {
+                        try{
+                            builder.setField(field, parseValue(values.get(id), field));
+                        } catch (IllegalArgumentException | DateTimeParseException e) {
+                            sendInfo("Failed to parse value from directory listing CSV: " + values.get(id) + " as " + field.getJavaType() + " (" + e.getMessage() + ")");
+                        }
+                   }
+                });
+
+                if(builder.hasName()) {
+                    files.add(builder.build());
+                } else
+                    sendInfo("Failed to parse file info from file listing (no filename?): " + reader.getRawRecord());
+            }
+        } catch (IOException e) {
+            sendWarning("Exception while parsing directory listing CSV: " + e.getMessage());
+        }
+
+        files.sort(fileDirComparator);
+        return files;
+    }
+
+    private Object parseValue(String value, Descriptors.FieldDescriptor field) {
+        switch (field.getJavaType()) {
+        case INT:
+            return Integer.parseInt(value);
+        case LONG:
+            return Long.parseLong(value);
+        case FLOAT:
+            return Float.parseFloat(value);
+        case DOUBLE:
+            return Double.parseDouble(value);
+        case BOOLEAN:
+            return Boolean.parseBoolean(value);
+        case STRING:
+            return value.strip();
+        case MESSAGE:
+            if(field.getMessageType().getFullName().equals("google.protobuf.Timestamp")) {
+                try {
+                    return TimestampUtil.java2Timestamp((long) (Double.parseDouble(value) * timestampMultiplier));
+                } catch (NumberFormatException e) {
+                    return TimestampUtil.java2Timestamp(Instant.parse(value).toEpochMilli());
+                }
+            }
+            // Else do default case
+        case BYTE_STRING:
+        case ENUM:
+        default:
+            throw new IllegalArgumentException("Unsupported type in directory listing CSV: " + value + " (" + field.getJavaType() + ", " + field.getName() + ")");
+        }
+    }
+
+    private Map<String, Integer> getMapping(CsvReader reader) throws IOException {
+        if (useCsvHeader) {
+            if (reader.readHeaders()) {
+                String[] headers = reader.getHeaders();
+                if (headers != null && headers.length > 0) {
+                    Map<String, Integer> mapping = new HashMap<>();
+                    for (int i = 0; i < headers.length; i++) {
+                        String protobufName = headerProtobufMapping.get(headers[i]);
+                        if (protobufName != null) {
+                            mapping.put(protobufName, i);
+                        } else {
+                            sendInfo("Unknown directory listing CSV header value: " + headers[i]);
+                        }
+                    }
+
+                    return mapping;
+                }
+            }
+            sendWarning("Error parsing CSV header in directory listing");
+        }
+
+        return protobufColumnNumberMapping;
+    }
+
+    private void sendInfo(String msg) {
+        if (eventProducer != null) {
+            eventProducer.sendInfo(msg);
+        }
+    }
+
+    private void sendWarning(String msg) {
+        if (eventProducer != null) {
+            eventProducer.sendWarning(msg);
+        }
+    }
+
+}
+```
+
+### `FileAction.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileAction.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import org.yamcs.actions.Action;
+
+public abstract class FileAction extends Action<FileActionIdentifier> {
+
+    protected FileAction(String id, String label) {
+        super(id, label);
+    }
+}
+```
+
+### `FileActionIdentifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileActionIdentifier.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+public class FileActionIdentifier {
+    public final String entityName;
+    public final String fileName;
+
+    public FileActionIdentifier(String entityName, String fileName) {
+        this.entityName = entityName;
+        this.fileName = fileName;
+    }
+}
+```
+
+### `FileActionProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileActionProvider.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.util.List;
+
+public interface FileActionProvider {
+
+    List<FileAction> getFileActions();
+
+    FileAction getFileAction(String actionId);
+}
+```
+
+### `FileListingParser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileListingParser.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.protobuf.RemoteFile;
+
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * Interface for retrieving and saving the list of files of a certain remote directory.
+ */
+public abstract class FileListingParser {
+
+    String yamcsInstance;
+    YConfiguration config;
+
+    /**
+     * Comparator to compare 2 RemoteFile lexicographically by file name and by placing directories first
+     */
+    Comparator<RemoteFile> fileDirComparator = (file1, file2) -> { // Sort by filename placing directories first
+        int typeCmp = - Boolean.compare(file1.getIsDirectory(), file2.getIsDirectory());
+        return typeCmp != 0 ? typeCmp : file1.getName().compareToIgnoreCase(file2.getName());
+    };
+
+    public abstract Spec getSpec();
+
+    public void init(String yamcsInstance, YConfiguration config) {
+        this.yamcsInstance = yamcsInstance;
+        this.config = config;
+    }
+
+    /**
+     * Parse the provided text data into a list of RemoteFiles
+     *
+     * @param remotePath remote path where the file listing is located
+     * @param data text data (e.g. coming from a file)
+     * @return parsed remote files and directories
+     */
+    public abstract List<RemoteFile> parse(String remotePath, byte[] data);
+}
+
+```
+
+### `FileListingService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileListingService.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.util.Map;
+import java.util.Set;
+
+import org.yamcs.InitException;
+import org.yamcs.YConfiguration;
+import org.yamcs.protobuf.ListFilesResponse;
+
+public interface FileListingService {
+
+    default void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+    }
+
+    void registerRemoteFileListMonitor(RemoteFileListMonitor monitor);
+
+    void unregisterRemoteFileListMonitor(RemoteFileListMonitor monitor);
+
+    void notifyRemoteFileListMonitors(ListFilesResponse listFilesResponse);
+
+    Set<RemoteFileListMonitor> getRemoteFileListMonitors();
+
+    /**
+     * Return latest file list of the given destination.
+     *
+     * @param source
+     *            source requesting the file list (e.g. local entity for CFDP)
+     * @param destination
+     *            destination from which the file list is needed (e.g. remote entity for CFDP)
+     * @param remotePath
+     *            path on the destination from which to get the file list
+     * @param options
+     *            reliability of the file listing request (e.g. transmission mode for CFDP, may not be needed)
+     * @return file list
+     */
+    ListFilesResponse getFileList(String source, String destination, String remotePath, Map<String, Object> options);
+
+    /**
+     * Start fetching a new file list from remote.
+     *
+     * @param source
+     *            source requesting the file list (e.g. local entity for CFDP)
+     * @param destination
+     *            destination from which the file list is needed (e.g. remote entity for CFDP)
+     * @param remotePath
+     *            path on the destination from which to get the file list
+     * @param options
+     *            reliability of the file listing request (e.g. transmission mode for CFDP, may not be needed)
+     */
+    void fetchFileList(String source, String destination, String remotePath, Map<String, Object> options);
+
+    void saveFileList(ListFilesResponse listFilesResponse);
+}
+```
+
+### `FileSaveHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileSaveHandler.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.cfdp.DataFile;
+import org.yamcs.cfdp.FileDownloadRequests;
+import org.yamcs.logging.Log;
+
+public class FileSaveHandler {
+
+    private final Log log;
+    private final Bucket defaultBucket;
+    private FileDownloadRequests fileDownloadRequests;
+    private final boolean allowRemoteProvidedBucket;
+    private final boolean allowRemoteProvidedSubdirectory;
+    private final boolean allowDownloadOverwrites;
+    private final int maxExistingFileRenames;
+    private Bucket bucket;
+    private String objectName;
+
+    public FileSaveHandler(String yamcsInstance, Bucket defaultBucket, FileDownloadRequests fileDownloadRequests,
+            boolean allowRemoteProvidedBucket, boolean allowRemoteProvidedSubdirectory, boolean allowDownloadOverwrites,
+            int maxExistingFileRenames) {
+        this.log = new Log(this.getClass(), yamcsInstance);
+        this.defaultBucket = defaultBucket;
+        this.fileDownloadRequests = fileDownloadRequests;
+        this.allowRemoteProvidedBucket = allowRemoteProvidedBucket;
+        this.allowRemoteProvidedSubdirectory = allowRemoteProvidedSubdirectory;
+        this.allowDownloadOverwrites = allowDownloadOverwrites;
+        this.maxExistingFileRenames = maxExistingFileRenames;
+    }
+
+    public FileSaveHandler(String yamcsInstance, Bucket defaultBucket) {
+        this(yamcsInstance, defaultBucket, null, false, false, false, 1000);
+    }
+
+    public void saveFile(String objectName, DataFile file, Map<String, String> metadata,
+            CfdpTransactionId originatingTransactionId)
+            throws FileAlreadyExistsException {
+        setObjectName(objectName);
+        saveFile(file, metadata, originatingTransactionId);
+    }
+
+    public void saveFile(DataFile file, Map<String, String> metadata, CfdpTransactionId originatingTransactionId) {
+        if (objectName == null) {
+            log.warn("File name not set, not saving");
+            return;
+        }
+        if (bucket == null) {
+            bucket = defaultBucket;
+        }
+
+        try {
+            bucket.putObjectAsync(this.objectName, null, metadata, file.getData()).get();
+        } catch (ExecutionException e) {
+            throw new UncheckedIOException(new IOException("Cannot save incoming file in bucket: " + objectName
+                    + (bucket != null ? " -> " + bucket.getName() : ""), e.getCause()));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private String parseObjectName(String name) throws IOException {
+        if (bucket == null) {
+            bucket = defaultBucket;
+
+            if (allowRemoteProvidedBucket) {
+                String[] split = name.split(":", 2);
+                if (split.length == 2) {
+                    var bucketManager = YamcsServer.getServer().getBucketManager();
+
+                    Bucket customBucket = bucketManager.getBucket(split[0]);
+                    if (customBucket != null) {
+                        this.bucket = customBucket;
+                        name = split[1];
+                    }
+                }
+            }
+        }
+
+        if (!allowRemoteProvidedSubdirectory) {
+            name = name.replaceAll("[/\\\\]", "_");
+        } else {
+            // Removing leading slashes, spaces and dots (permitting ".filename")
+            name = name.replaceAll("^(?![.]\\w)[./\\\\ ]+", "");
+            // Removing directory traversal characters
+            name = name.replaceAll("[.]{2,}[/\\\\]", "");
+        }
+
+        name = name.strip();
+
+        if (allowDownloadOverwrites) {
+            return name;
+        } else {
+            try {
+                if (bucket.findObjectAsync(name).get() == null) {
+                    return name;
+                }
+
+                for (int i = 1; i < maxExistingFileRenames; i++) {
+                    String namei = name + "(" + i + ")";
+                    if (bucket.findObjectAsync(namei).get() == null) {
+                        return namei;
+                    }
+                }
+            } catch (ExecutionException e) {
+                throw new IOException("Failed to retrieve object", e.getCause());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        throw new FileAlreadyExistsException(
+                "CANCELLED: \"" + name + "\" already exists in bucket \"" + bucket.getName() + "\"");
+    }
+
+    public void setObjectName(String objectName) throws FileAlreadyExistsException {
+        if (objectName == null) {
+            return;
+        }
+
+        try {
+            this.objectName = parseObjectName(objectName);
+        } catch (FileAlreadyExistsException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot save incoming file in bucket: " + objectName
+                    + (bucket != null ? " -> " + bucket.getName() : ""), e);
+        }
+    }
+
+    public String getBucketName() {
+        return bucket != null ? bucket.getName() : null;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setBucket(Bucket bucket) {
+        this.bucket = bucket;
+    }
+
+    public Bucket getBucket() {
+        return bucket;
+    }
+
+    public void processOriginatingTransactionId(CfdpTransactionId originatingTransactionId) throws IOException {
+        String bucketName = fileDownloadRequests.getBuckets().get(originatingTransactionId);
+        fileDownloadRequests.removeTransfer(originatingTransactionId);
+        if (bucketName != null) {
+            var bucketManager = YamcsServer.getServer().getBucketManager();
+            try {
+                bucket = bucketManager.getBucket(bucketName);
+            } catch (IOException e) {
+                throw new IOException("Recognised originating transaction id " + originatingTransactionId
+                        + " from incoming transfer but bucket does not exist");
+            }
+        }
+    }
+}
+```
+
+### `FileTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransfer.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+
+public interface FileTransfer {
+    /**
+     * return the name of the bucket where the file is being transfered to/from.
+     * <p>
+     * Could be null for incoming transfers. For the CFDP service, the bucket is determined by the source or destination
+     * entity id and it is not null. However if the bucket was determined by the filename which is known only when the
+     * metadata packet is received, this could be null.
+     */
+    String getBucketName();
+
+    /**
+     * return the name of the object (file) which is being transfered. This is the filename on the local (Yamcs) site.
+     * <p>
+     * Can be null for incoming transfers - for example CFDP can start a transfer without knowing the filename if the
+     * first metadata packet has been lost.
+     */
+    String getObjectName();
+
+    /**
+     * return the remote path of the file which is being transfered.
+     * <p>
+     * Can be null for incoming transfers - for example CFDP can start a transfer without having this information if the
+     * first metadata packet has been lost.
+     */
+    String getRemotePath();
+
+    Long getLocalEntityId();
+
+    Long getRemoteEntityId();
+
+    TransferDirection getDirection();
+
+    /**
+     * return the file size in bytes or -1 if the size is not known.
+     * <p>
+     * For the CFDP service the incoming files can be unbounded (but this is not yet supported) or the size will be part
+     * of the metadata packet which may be missing.
+     */
+    long getTotalSize();
+
+    long getTransferredSize();
+
+    long getId();
+
+    TransferState getTransferState();
+
+    boolean isReliable();
+
+    String getFailuredReason();
+
+    long getCreationTime();
+
+    long getStartTime();
+
+    String getTransferType();
+
+    boolean pausable();
+
+    boolean cancellable();
+}
+```
+
+### `FileTransferFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransferFilter.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.TimeEncoding;
+
+public class FileTransferFilter {
+
+    public long start = TimeEncoding.INVALID_INSTANT;
+    public long stop = TimeEncoding.INVALID_INSTANT;
+    public TransferDirection direction;
+    public Long localEntityId;
+    public Long remoteEntityId;
+    public List<TransferState> states = new ArrayList<>();
+    public int limit = 100;
+    public boolean descending = true;
+}
+```
+
+### `FileTransferService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/FileTransferService.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+
+import org.yamcs.InitException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsService;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.protobuf.EntityInfo;
+import org.yamcs.protobuf.FileTransferCapabilities;
+import org.yamcs.protobuf.FileTransferOption;
+
+/**
+ * The file transfer service defines an interface for implementing file transfers.
+ * <p>
+ * The service provides file transfer operations between named "entities".
+ * <p>
+ * The entity term is borrowed from CFDP (CCSDS File Delivery Protocol) and it can mean anything for a particular
+ * implementation. For example it could mean a host in a traditional TCP/IP network.
+ * <p>
+ * Each file transfer is identified by a unique 64 bit identifier.
+ * 
+ * @author nm
+ *
+ */
+public interface FileTransferService extends YamcsService, FileListingService {
+
+    @Override
+    default void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+    }
+
+    /**
+     * Get the list of configured local entities. These contain the {@code source) used in the {@link
+     * #startUpload(String, Bucket, String, String, String, TransferOptions)} call.
+     * 
+     * <p>
+     * Can return an empty list if there is only one unnamed entity. @return
+     */
+    public List<EntityInfo> getLocalEntities();
+
+    /**
+     * Get the list of configured remote entity. These contain the {@code destination} used in the
+     * {@link #startUpload(String, Bucket, String, String, String, TransferOptions)} call.
+     * <p>
+     * Can return an empty list if there is only one unnamed remote entity.
+     * 
+     * @return
+     */
+    public List<EntityInfo> getRemoteEntities();
+
+    /**
+     * Get the capabilities supported by this service.
+     * <p>
+     * The capabilities are used by the yamcs-web to enable/disable some options.
+     * 
+     * @return
+     */
+    public FileTransferCapabilities getCapabilities();
+
+    /**
+     * Get configured options for the file transfers
+     *
+     * @return
+     */
+    default List<FileTransferOption> getFileTransferOptions() {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Start a file upload.
+     * 
+     * @param sourceEntity
+     *            the source (local) entity. Can be null if the service supports only one unnamed source entity.
+     * @param bucket
+     *            the bucket containing the object to be transferred.
+     * @param objectName
+     *            the object name to be transferred.
+     * @param destinationEntity
+     *            the destination (remote) entity. Can be null if the service supports only one unnamed destination
+     *            entity.
+     * @param destinationPath
+     *            the path on the destination where the file will be uploaded. Depending on the implementation this can
+     *            be the path of a directory in which case the objectName will be used as a destination file name or can
+     *            be the name of a (non-existent) file which will then be used as the destination file. if the
+     *            destinationPath is null, then the objectName will be used as the name at the destination.
+     * @param options
+     *            transfer options.
+     * @return
+     * @throws IOException
+     *             if there was a problem retrieving the object from the bucket.
+     * @throws InvalidRequestException
+     *             thrown if the request is invalid; possible reasons:
+     *             <ul>
+     *             <li>object does not exist in the bucket</li>
+     *             <li>the source or destination entities are not valid</li>
+     *             <li>the transfer options are invalid</li>
+     *             <li>other service specific error.</li>
+     *             </ul>
+     */
+    FileTransfer startUpload(String sourceEntity, Bucket bucket, String objectName,
+            String destinationEntity, String destinationPath,
+            TransferOptions options) throws IOException;
+
+    /**
+     * Start a file download.
+     * 
+     * @param sourceEntity
+     *            the source (remote) entity. Can be null if the service supports only one unnamed source entity.
+     * @param sourcePath
+     *            the path on the source representing the file to be transferred.
+     * @param destinationEntity
+     *            the destination (local) entity. Can be null if the service supports only one unnamed destination
+     *            entity.
+     * @param bucket
+     *            the bucket where the file will be stored.
+     * @param objectName
+     *            the object name where the file will be stored.
+     * @param options
+     *            transfer options.
+     * @return
+     * @throws IOException
+     *             if there was a problem retrieving the object from the bucket.
+     * @throws InvalidRequestException
+     *             thrown if the request is invalid; possible reasons:
+     *             <ul>
+     *             <li>the source or destination entities are not valid</li>
+     *             <li>the transfer options are invalid</li>
+     *             <li>download operation not supported or cannot be triggered by this call (most systems will have a
+     *             telecommand to trigger a download)</li>
+     *             <li>other service specific error.</li>
+     *             </ul>
+     */
+    FileTransfer startDownload(String sourceEntity, String sourcePath, String destinationEntity, Bucket bucket,
+            String objectName, TransferOptions options) throws IOException, InvalidRequestException;
+
+    /**
+     * Get the list of ongoing or past transfers.
+     * 
+     * @return the list of transfers
+     */
+    List<FileTransfer> getTransfers(FileTransferFilter filter);
+
+    /**
+     * Get the file transfer with the given identifier.
+     * 
+     * @param id
+     * @return
+     */
+    FileTransfer getFileTransfer(long id);
+
+    /**
+     * Pause the file transfer.
+     * <p>
+     * If the transfer is already paused, this operation has no effect.
+     * 
+     * @param transfer
+     *            the transfer to be paused.
+     * @throws UnsupportedOperationException
+     *             if the pause operation is not supported.
+     */
+    void pause(FileTransfer transfer);
+
+    /**
+     * Resume the file transfer.
+     * <p>
+     * If the transfer is not paused, this call has no effect.
+     * 
+     * @param transfer
+     *            the transfer to be resumed.
+     * @throws UnsupportedOperationException
+     *             if the resume operation is not supported.
+     */
+    void resume(FileTransfer transfer);
+
+    /**
+     * Cancel the file transfer.
+     * 
+     * @param transfer
+     * @throws UnsupportedOperationException
+     *             if the cancel operation is not supported.
+     */
+    void cancel(FileTransfer transfer);
+
+    /**
+     * Register a monitor to be called each time a file transfer is started or changes state.
+     */
+    void registerTransferMonitor(TransferMonitor listener);
+
+    /**
+     * Unregister the monitor. If the monitor was not registered, this call has no effect.
+     */
+    void unregisterTransferMonitor(TransferMonitor listener);
+}
+```
+
+### `InvalidRequestException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/InvalidRequestException.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+@SuppressWarnings("serial")
+public class InvalidRequestException extends RuntimeException {
+
+    public InvalidRequestException(String message) {
+        super(message);
+    }
+}
+```
+
+### `RemoteFileListMonitor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/RemoteFileListMonitor.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import org.yamcs.protobuf.ListFilesResponse;
+
+public interface RemoteFileListMonitor {
+    void receivedFileList(ListFilesResponse fileList);
+}
+```
+
+### `TransferMonitor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/TransferMonitor.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+public interface TransferMonitor {
+    void stateChanged(FileTransfer cfdpTransfer);
+}
+```
+
+### `TransferOptions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/filetransfer/TransferOptions.java`
+
+
+```java
+package org.yamcs.filetransfer;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class TransferOptions {
+    private boolean overwrite;
+    boolean reliable;
+    private boolean reliableSet = false;
+    // used in CFDP to indicate that the receiving entity should acknowledge the reception of the file even if the
+    // reliable is false
+    boolean closureRequested;
+
+    boolean createpath;
+    private boolean closureRequestedSet = false;
+
+    private final Map<String, Object> extraOptions = new HashMap<>();
+
+    public boolean isOverwrite() {
+        return overwrite;
+    }
+
+    public void setOverwrite(boolean overwrite) {
+        this.overwrite = overwrite;
+    }
+
+    public void setCreatePath(boolean createpath) {
+        this.createpath = createpath;
+    }
+
+    public boolean isCreatePath() {
+        return createpath;
+    }
+
+    public void setReliable(boolean reliable) {
+        this.reliable = reliable;
+        this.reliableSet = true; // Temporary solution
+    }
+
+    public boolean isReliable() {
+        return reliable;
+    }
+
+    public boolean isReliableSet() {
+        return reliableSet;
+    }
+
+    public void setClosureRequested(boolean closureRequested) {
+        this.closureRequested = closureRequested;
+        this.closureRequestedSet = true; // Temporary solution
+    }
+
+    public boolean isClosureRequested() {
+        return closureRequested;
+    }
+
+    public boolean isClosureRequestedSet() {
+        return closureRequestedSet;
+    }
+
+    public void putExtraOptions(Map<String, Object> options) {
+        extraOptions.putAll(options);
+    }
+
+    public Map<String, Object> getExtraOptions() {
+        return extraOptions;
+    }
+}
+```

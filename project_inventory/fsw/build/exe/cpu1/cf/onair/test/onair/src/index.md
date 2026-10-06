@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,10 +15,4 @@ systems/index
 util/index
 ```
 
-## 항목
-
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/`](ai_components/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/`](reasoning/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/run_scripts/`](run_scripts/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/systems/`](systems/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/util/`](util/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

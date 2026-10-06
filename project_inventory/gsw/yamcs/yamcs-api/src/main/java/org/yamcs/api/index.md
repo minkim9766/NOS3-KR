@@ -3,18 +3,105 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Api.java`
 
-file--Api.java
-file--MethodHandler.java
-file--Observer.java
+**경로:** `gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/Api.java`
+
+
+```java
+package org.yamcs.api;
+
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Descriptors.ServiceDescriptor;
+import com.google.protobuf.Message;
+
+public interface Api<T> {
+
+    ServiceDescriptor getDescriptorForType();
+
+    void callMethod(MethodDescriptor method, T ctx, Message request, Observer<Message> observer);
+
+    Observer<Message> callMethod(MethodDescriptor method, T ctx, Observer<Message> observer);
+
+    Message getRequestPrototype(MethodDescriptor method);
+
+    Message getResponsePrototype(MethodDescriptor method);
+}
 ```
 
-## 항목
+### `MethodHandler.java`
 
-- [`gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/Api.java`](file--Api.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/MethodHandler.java`](file--MethodHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/Observer.java`](file--Observer.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/MethodHandler.java`
+
+
+```java
+package org.yamcs.api;
+
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Message;
+
+public interface MethodHandler {
+
+    void call(MethodDescriptor method, Message request, Message responsePrototype,
+            Observer<? extends Message> observer);
+
+    Observer<? extends Message> streamingCall(MethodDescriptor method, Message request, Message responsePrototype,
+            Observer<? extends Message> responseObserver);
+}
+```
+
+### `Observer.java`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/java/org/yamcs/api/Observer.java`
+
+
+```java
+package org.yamcs.api;
+
+public interface Observer<T> {
+
+    /**
+     * Emit the next message.
+     */
+    void next(T message);
+
+    /**
+     * Complete with an exception.
+     */
+    void completeExceptionally(Throwable t);
+
+    /**
+     * Mark the successful end.
+     */
+    void complete();
+
+    /**
+     * Shortcut for:
+     * 
+     * <pre>
+     * next(message);
+     * complete();
+     * </pre>
+     */
+    default void complete(T message) {
+        next(message);
+        complete();
+    }
+
+    /**
+     * Returns whether this call has been cancelled by the remote peer
+     */
+    default boolean isCancelled() {
+        return false;
+    }
+
+    /**
+     * Set a {@link Runnable} that will be called when the call is cancelled. (example: peer disconnect)
+     */
+    default void setCancelHandler(Runnable cancelHandler) {
+        throw new UnsupportedOperationException();
+    }
+}
+```

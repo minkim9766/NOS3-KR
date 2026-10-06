@@ -3,18 +3,24 @@
 
 **경로:** `sims/build/blackboard/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 blackboard_sim.dir/index
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/blackboard/CMakeFiles/blackboard_sim.dir/`](blackboard_sim.dir/index) — 폴더
-- [`sims/build/blackboard/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/blackboard/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `sims/build/blackboard/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `sims/build/blackboard/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

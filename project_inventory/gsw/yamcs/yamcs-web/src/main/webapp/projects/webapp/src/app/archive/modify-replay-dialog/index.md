@@ -3,16 +3,95 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/modify-replay-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `modify-replay-dialog.component.html`
 
-file--modify-replay-dialog.component.html
-file--modify-replay-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/modify-replay-dialog/modify-replay-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Configure replay</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Start time">
+      <ya-date-time-input formControlName="start" />
+    </ya-field>
+
+    <ya-field label="Stop time" hint="(optional)">
+      <ya-date-time-input formControlName="stop" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="submit()" [disabled]="!form.valid">SUBMIT</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `modify-replay-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/modify-replay-dialog/modify-replay-dialog.component.html`](file--modify-replay-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/modify-replay-dialog/modify-replay-dialog.component.ts`](file--modify-replay-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/modify-replay-dialog/modify-replay-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  EditReplayProcessorRequest,
+  WebappSdkModule,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-modify-replay-dialog',
+  templateUrl: './modify-replay-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class ModifyReplayDialogComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<ModifyReplayDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    let initialStart = yamcs.getMissionTime();
+    let initialStop;
+
+    if (this.data) {
+      if (this.data.start) {
+        initialStart = this.data.start;
+      }
+      if (this.data.stop) {
+        initialStop = this.data.stop;
+      }
+    }
+
+    this.form = formBuilder.group({
+      start: [utils.toISOString(initialStart), [Validators.required]],
+      stop: [initialStop ? utils.toISOString(initialStop) : ''],
+    });
+  }
+
+  submit() {
+    const replayConfig: EditReplayProcessorRequest = {
+      start: utils.toISOString(this.form.value.start),
+    };
+    if (this.form.value.stop) {
+      replayConfig.stop = utils.toISOString(this.form.value.stop);
+    }
+
+    this.dialogRef.close(replayConfig);
+  }
+}
+```

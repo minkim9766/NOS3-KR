@@ -3,18 +3,60 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `storage-page-template.component.css`
 
-file--storage-page-template.component.css
-file--storage-page-template.component.html
-file--storage-page-template.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/storage-page-template.component.css`
+
+
+```css
+.page-content {
+  position: absolute;
+  top: 49px;
+  /* toolbar + its border */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `storage-page-template.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/storage-page-template.component.css`](file--storage-page-template.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/storage-page-template.component.html`](file--storage-page-template.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/storage-page-template.component.ts`](file--storage-page-template.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/storage-page-template.component.html`
+
+
+```html
+<ng-content select="app-storage-toolbar" />
+
+<div class="page-content" [style.overflow]="noscroll ? 'hidden' : 'auto'">
+  <ng-content select="ya-detail-pane" />
+  <ng-content />
+</div>
+```
+
+### `storage-page-template.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/storage-page-template.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-storage-page',
+  templateUrl: './storage-page-template.component.html',
+  styleUrl: './storage-page-template.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StoragePageTemplateComponent {
+  @Input()
+  noscroll = false;
+}
+```

@@ -3,18 +3,122 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `change-level-dialog.component.css`
 
-file--change-level-dialog.component.css
-file--change-level-dialog.component.html
-file--change-level-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/change-level-dialog.component.css`
+
+
+```css
+:focus {
+  outline: none;
+}
 ```
 
-## 항목
+### `change-level-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/change-level-dialog.component.css`](file--change-level-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/change-level-dialog.component.html`](file--change-level-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/change-level-dialog.component.ts`](file--change-level-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/change-level-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Command clearance</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field>
+      <div class="radio-group">
+        <label class="radio" [class.checked]="form.value.level === 'DISABLED'">
+          <input type="radio" formControlName="level" value="DISABLED" />
+          No clearance
+        </label>
+        <label class="radio" [class.checked]="form.value.level === 'NONE'">
+          <input type="radio" formControlName="level" value="NONE" />
+          <app-significance-level level="NONE" [grayscale]="true" />
+        </label>
+        <label class="radio" [class.checked]="form.value.level === 'WATCH'">
+          <input type="radio" formControlName="level" value="WATCH" />
+          <app-significance-level level="WATCH" [grayscale]="true" />
+        </label>
+        <label class="radio" [class.checked]="form.value.level === 'WARNING'">
+          <input type="radio" formControlName="level" value="WARNING" />
+          <app-significance-level level="WARNING" [grayscale]="true" />
+        </label>
+        <label class="radio" [class.checked]="form.value.level === 'DISTRESS'">
+          <input type="radio" formControlName="level" value="DISTRESS" />
+          <app-significance-level level="DISTRESS" [grayscale]="true" />
+        </label>
+        <label class="radio" [class.checked]="form.value.level === 'CRITICAL'">
+          <input type="radio" formControlName="level" value="CRITICAL" />
+          <app-significance-level level="CRITICAL" [grayscale]="true" />
+        </label>
+        <label class="radio" [class.checked]="form.value.level === 'SEVERE'">
+          <input type="radio" formControlName="level" value="SEVERE" />
+          <app-significance-level level="SEVERE" [grayscale]="true" />
+        </label>
+      </div>
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="confirm()" [disabled]="!form.valid">
+    SAVE CHANGES
+  </ya-button>
+</mat-dialog-actions>
+```
+
+### `change-level-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/change-level-dialog/change-level-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Clearance, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+
+@Component({
+  selector: 'app-change-level-dialog',
+  templateUrl: './change-level-dialog.component.html',
+  styleUrl: './change-level-dialog.component.css',
+  imports: [WebappSdkModule, SignificanceLevelComponent],
+})
+export class ChangeLevelDialogComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<ChangeLevelDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.form = formBuilder.group({
+      level: new UntypedFormControl(null, [Validators.required]),
+    });
+
+    if (data.clearance) {
+      const clearance = data.clearance as Clearance;
+      this.form.setValue({
+        level: clearance.level || 'DISABLED',
+      });
+    }
+  }
+
+  confirm() {
+    this.dialogRef.close({
+      level:
+        this.form.value['level'] === 'DISABLED'
+          ? undefined
+          : this.form.value['level'],
+    });
+  }
+}
+```

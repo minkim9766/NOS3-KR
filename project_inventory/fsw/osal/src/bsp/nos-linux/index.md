@@ -3,16 +3,85 @@
 
 **경로:** `fsw/osal/src/bsp/nos-linux/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build_options.cmake`
 
-file--build_options.cmake
-file--CMakeLists.txt
+**경로:** `fsw/osal/src/bsp/nos-linux/build_options.cmake`
+
+
+```cmake
+##########################################################################
+#
+# Build options for "nos-linux" BSP
+#
+##########################################################################
+
+# C flags that should be used when (re-) compiling code for unit testing.
+# Note: --coverage is just a shortcut for "-ftest-coverage" and "-fprofile-arcs"
+# This also does not work well when cross compiling since paths to the _compile_ dir
+# are baked into the executables, so they will not be there when copied to the target
+# Note - although GCC understands the same flags for compile and link here, this may
+# not be true on all platforms so the compile and link flags are specified separately.
+if (NOT CMAKE_CROSSCOMPILING AND NOT OSAL_OMIT_DEPRECATED)
+  # The variables here (UT_COVERAGE_COMPILE_FLAGS/LINK_FLAGS) should be phased out, prefer
+  # to use the interface libraries (ut_coverage_compile/link) instead, which are more flexible.
+  set(UT_COVERAGE_COMPILE_FLAGS -pg --coverage)
+  set(UT_COVERAGE_LINK_FLAGS    -pg --coverage)
+endif()
 ```
 
-## 항목
+### `CMakeLists.txt`
 
-- [`fsw/osal/src/bsp/nos-linux/build_options.cmake`](file--build_options.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/bsp/nos-linux/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/bsp/nos-linux/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for LINUX Board Support Package (BSP)
+#
+######################################################################
+
+# This basic implementation library should be generic enough to use
+# on any Linux-based processor board, as well as a standard development PC.
+add_library(osal_nos-linux_impl OBJECT
+	../generic-linux/src/bsp_start.c
+	../generic-linux/src/bsp_console.c
+)
+
+# OSAL needs conformance to at least POSIX.1c (aka POSIX 1995) - this includes all the
+# real-time support and threading extensions.
+#
+# When compiling against glibc, using "_XOPEN_SOURCE=600" enables the X/Open 6 standard.
+# XPG6 includes all necessary XPG5, POSIX.1c features as well as SUSv2/UNIX98 extensions.
+# This OSAL implementation uses clock_nanosleep(), mq_timedreceive(), and
+# mq_timedsend() which are enhancements added in the XPG6 standard.
+#
+# See http://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html
+# for a more detailed description of the feature test macros and available values
+target_compile_definitions(osal_public_api INTERFACE
+    _XOPEN_SOURCE=600
+)
+
+# Linux system libraries required for the final link of applications using OSAL
+target_link_libraries(osal_public_api INTERFACE
+    pthread dl rt
+)
+
+# This BSP only works with "posix" OS layer.
+# Confirming this reduces risk of accidental misconfiguration
+set_property(TARGET osal_nos-linux_impl PROPERTY OSAL_EXPECTED_OSTYPE "nos")
+
+# Configure the ut_coverage_compile and ut_coverage_link for enabling coverage
+# testing on this platform.
+if (NOT CMAKE_CROSSCOMPILING AND ENABLE_UNIT_TESTS)
+  # Support for other compilers/coverage tools could be added here.
+  # for now only the GNU "gcov" will be enabled
+  if (CMAKE_C_COMPILER_ID STREQUAL GNU)
+    target_compile_options(ut_coverage_compile INTERFACE -pg -ftest-coverage -fprofile-arcs)
+    target_link_libraries(ut_coverage_link INTERFACE gcov)
+  endif()
+endif()
+
+```

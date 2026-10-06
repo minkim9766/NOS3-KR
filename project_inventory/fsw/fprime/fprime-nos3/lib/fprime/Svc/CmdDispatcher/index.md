@@ -3,28 +3,700 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--CmdDispatcher.fpp
-file--CommandDispatcher.hpp
-file--CommandDispatcherImpl.cpp
-file--CommandDispatcherImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CmdDispatcher.fpp`](file--CmdDispatcher.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CommandDispatcher.hpp`](file--CommandDispatcher.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CommandDispatcherImpl.cpp`](file--CommandDispatcherImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CommandDispatcherImpl.hpp`](file--CommandDispatcherImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Svc::CommandDispatcherComponentBase::ErrorResponse
+Fw::CmdResponse
+
+Svc::CommandDispatcherComponentBase::ERR_INVALID_OPCODE
+Fw::CmdResponse::INVALID_OPCODE
+
+Svc::CommandDispatcherComponentBase::ERR_VALIDATION_ERROR
+Fw::CmdResponse::VALIDATION_ERROR
+
+Svc::CommandDispatcherComponentBase::ERR_FORMAT_ERROR
+Fw::CmdResponse::FORMAT_ERROR
+
+Svc::CommandDispatcherComponentBase::ERR_EXECUTION_ERROR
+Fw::CmdResponse::EXECUTION_ERROR
+
+Svc::CommandDispatcherComponentBase::ERR_BUSY
+Fw::CmdResponse::BUSY
+
+Svc::CommandDispatcherComponentBase::ERR_UNEXP
+N/A
+
+Svc::CommandDispatcherComponentBase::CmdSerError
+Fw::DeserialStatus
+
+Svc::CommandDispatcherComponentBase::ERR_BUFFER_TOO_SMALL
+Fw::DeserialStatus::BUFFER_EMPTY
+
+Svc::CommandDispatcherComponentBase::ERR_BUFFER_FORMAT
+Fw::DeserialStatus::FORMAT_ERROR
+
+Svc::CommandDispatcherComponentBase::ERR_SIZE_MISMATCH
+Fw::DeserialStatus::SIZE_MISMATCH
+
+Svc::CommandDispatcherComponentBase::ERR_TYPE_MISMATCH
+Fw::DeserialStatus::TYPE_MISMATCH
+
+Svc::CommandDispatcherComponentBase::ERR_UNEXP_STAT
+N/A
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CMakeLists.txt`
+
+
+```cmake
+
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/CmdDispatcher.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/CommandDispatcherImpl.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/CmdDispatcher.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/CommandDispatcherTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/CommandDispatcherTester.cpp"
+)
+register_fprime_ut()
+```
+
+### `CmdDispatcher.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CmdDispatcher.fpp`
+
+
+```fpp
+
+module Svc {
+
+  @ A component for dispatching commands
+  active component CommandDispatcher {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Command dispatch port
+    output port compCmdSend: [CmdDispatcherComponentCommandPorts] Fw.Cmd
+
+    @ Command Registration Port. max_number should match dispatch port.
+    guarded input port compCmdReg: [CmdDispatcherComponentCommandPorts] Fw.CmdReg
+
+    @ Input Command Status Port
+    async input port compCmdStat: Fw.CmdResponse
+
+    @ Output Command Status Port
+    output port seqCmdStatus: [CmdDispatcherSequencePorts] Fw.CmdResponse
+
+    @ Command buffer input port for sequencers or other sources of command buffers
+    async input port seqCmdBuff: [CmdDispatcherSequencePorts] Fw.Com
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Port matching specifiers
+    # ----------------------------------------------------------------------
+
+    match compCmdSend with compCmdReg
+
+    match seqCmdStatus with seqCmdBuff
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ No-op command
+    async command CMD_NO_OP \
+      opcode 0
+
+    @ No-op string command
+    async command CMD_NO_OP_STRING(
+                                    arg1: string size 40 @< The String command argument
+                                  ) \
+      opcode 1
+
+    @ No-op command
+    async command CMD_TEST_CMD_1(
+                                  arg1: I32 @< The I32 command argument
+                                  arg2: F32 @< The F32 command argument
+                                  arg3: U8 @< The U8 command argument
+                                ) \
+      opcode 2
+
+    @ Clear command tracking info to recover from components not returning status
+    async command CMD_CLEAR_TRACKING \
+      opcode 3
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    event OpCodeRegistered(
+                            Opcode: FwOpcodeType @< The opcode to register
+                            $port: I32 @< The registration port
+                            slot: I32 @< The dispatch slot it was placed in
+                          ) \
+      severity diagnostic \
+      id 0 \
+      format "Opcode 0x{x} registered to port {} slot {}"
+
+    @ Op code dispatched event
+    event OpCodeDispatched(
+                            Opcode: FwOpcodeType @< The opcode dispatched
+                            $port: I32 @< The port dispatched to
+                          ) \
+      severity command \
+      id 1 \
+      format "Opcode 0x{x} dispatched to port {}"
+
+    @ Op code completed event
+    event OpCodeCompleted(
+                           Opcode: FwOpcodeType @< The I32 command argument
+                         ) \
+      severity command \
+      id 2 \
+      format "Opcode 0x{x} completed"
+
+    @ Op code completed with error event
+    event OpCodeError(
+                       Opcode: FwOpcodeType @< The opcode with the error
+                       error: Fw.CmdResponse @< The error value
+                     ) \
+      severity command \
+      id 3 \
+      format "Opcode 0x{x} completed with error {}"
+
+    @ Received a malformed command packet
+    event MalformedCommand(
+                            Status: Fw.DeserialStatus @< The deserialization error
+                          ) \
+      severity warning high \
+      id 4 \
+      format "Received malformed command packet. Status: {}"
+
+    @ Received an invalid opcode
+    event InvalidCommand(
+                          Opcode: FwOpcodeType @< Invalid opcode
+                        ) \
+      severity warning high \
+      id 5 \
+      format "Invalid opcode 0x{x} received"
+
+    @ Exceeded the number of commands that can be simultaneously executed
+    event TooManyCommands(
+                           Opcode: FwOpcodeType @< The opcode that overflowed the list
+                         ) \
+      severity warning high \
+      id 6 \
+      format "Too many outstanding commands. opcode=0x{x}"
+
+    @ The command dispatcher has successfully received a NO-OP command
+    event NoOpReceived \
+      severity activity high \
+      id 7 \
+      format "Received a NO-OP command"
+
+    @ The command dispatcher has successfully received a NO-OP command from GUI with a string
+    event NoOpStringReceived(
+                              message: string size 40 @< The NO-OP string that is generated
+                            ) \
+      severity activity high \
+      id 8 \
+      format "Received a NO-OP string={}"
+
+    @ This log event message returns the TEST_CMD_1 arguments.
+    event TestCmd1Args(
+                        arg1: I32 @< Arg1
+                        arg2: F32 @< Arg2
+                        arg3: U8 @< Arg3
+                      ) \
+      severity activity high \
+      id 9 \
+      format "TEST_CMD_1 args: I32: {}, F32: {f}, U8: {}"
+
+    @ Op code reregistered event
+    event OpCodeReregistered(
+                              Opcode: FwOpcodeType @< The opcode reregistered
+                              $port: I32 @< The reregistration port
+                            ) \
+      severity diagnostic \
+      id 10 \
+      format "Opcode 0x{x} is already registered to port {}"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ Number of commands dispatched
+    telemetry CommandsDispatched: U32 id 0 update on change
+
+    @ Number of command errors
+    telemetry CommandErrors: U32 id 1 update on change
+
+  }
+
+}
+```
+
+### `CommandDispatcher.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CommandDispatcher.hpp`
+
+
+```cpp
+// ======================================================================
+// CommandDispatcher.hpp
+// Standardization header for CommandDispatcher
+// ======================================================================
+
+#ifndef Svc_CommandDispatcher_HPP
+#define Svc_CommandDispatcher_HPP
+
+#include "Svc/CmdDispatcher/CommandDispatcherImpl.hpp"
+
+namespace Svc {
+
+typedef CommandDispatcherImpl CommandDispatcher;
+
+}
+
+#endif
+```
+
+### `CommandDispatcherImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CommandDispatcherImpl.cpp`
+
+
+```cpp
+/*
+ * CommandDispatcherImpl.cpp
+ *
+ *  Created on: May 13, 2014
+ *      Author: Timothy Canham
+ */
+
+#include <Fw/Cmd/CmdPacket.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/CmdDispatcher/CommandDispatcherImpl.hpp>
+#include <cstdio>
+
+// Check the CMD_DISPATCHER_DISPATCH_TABLE_SIZE and CMD_DISPATCHER_SEQUENCER_TABLE_SIZE for overflow
+static_assert(CMD_DISPATCHER_DISPATCH_TABLE_SIZE <= std::numeric_limits<FwOpcodeType>::max(),
+              "Opcode table limited to opcode range");
+static_assert(CMD_DISPATCHER_SEQUENCER_TABLE_SIZE <= std::numeric_limits<U32>::max(),
+              "Sequencer table limited to range of U32");
+
+namespace Svc {
+CommandDispatcherImpl::CommandDispatcherImpl(const char* name)
+    : CommandDispatcherComponentBase(name), m_seq(0), m_numCmdsDispatched(0), m_numCmdErrors(0) {
+    memset(this->m_entryTable, 0, sizeof(this->m_entryTable));
+    memset(this->m_sequenceTracker, 0, sizeof(this->m_sequenceTracker));
+}
+
+CommandDispatcherImpl::~CommandDispatcherImpl() {}
+
+void CommandDispatcherImpl::compCmdReg_handler(FwIndexType portNum, FwOpcodeType opCode) {
+    // search for an empty slot
+    bool slotFound = false;
+    for (FwOpcodeType slot = 0; slot < FW_NUM_ARRAY_ELEMENTS(this->m_entryTable); slot++) {
+        if ((not this->m_entryTable[slot].used) and (not slotFound)) {
+            this->m_entryTable[slot].opcode = opCode;
+            this->m_entryTable[slot].port = portNum;
+            this->m_entryTable[slot].used = true;
+            this->log_DIAGNOSTIC_OpCodeRegistered(opCode, portNum, static_cast<I32>(slot));
+            slotFound = true;
+        } else if ((this->m_entryTable[slot].used) && (this->m_entryTable[slot].opcode == opCode) &&
+                   (this->m_entryTable[slot].port == portNum) && (not slotFound)) {
+            slotFound = true;
+            this->log_DIAGNOSTIC_OpCodeReregistered(opCode, portNum);
+        } else if (this->m_entryTable[slot].used) {  // make sure no duplicates
+            FW_ASSERT(this->m_entryTable[slot].opcode != opCode, static_cast<FwAssertArgType>(opCode));
+        }
+    }
+    FW_ASSERT(slotFound, static_cast<FwAssertArgType>(opCode));
+}
+
+void CommandDispatcherImpl::compCmdStat_handler(FwIndexType portNum,
+                                                FwOpcodeType opCode,
+                                                U32 cmdSeq,
+                                                const Fw::CmdResponse& response) {
+    // check response and log
+    if (Fw::CmdResponse::OK == response.e) {
+        this->log_COMMAND_OpCodeCompleted(opCode);
+    } else {
+        this->m_numCmdErrors++;
+        this->tlmWrite_CommandErrors(this->m_numCmdErrors);
+        FW_ASSERT(response.e != Fw::CmdResponse::OK);
+        this->log_COMMAND_OpCodeError(opCode, response);
+    }
+    // look for command source
+    FwIndexType portToCall = -1;
+    U32 context;
+    for (U32 pending = 0; pending < FW_NUM_ARRAY_ELEMENTS(this->m_sequenceTracker); pending++) {
+        if ((this->m_sequenceTracker[pending].seq == cmdSeq) && (this->m_sequenceTracker[pending].used)) {
+            portToCall = this->m_sequenceTracker[pending].callerPort;
+            context = this->m_sequenceTracker[pending].context;
+            FW_ASSERT(opCode == this->m_sequenceTracker[pending].opCode);
+            FW_ASSERT(portToCall < this->getNum_seqCmdStatus_OutputPorts());
+            this->m_sequenceTracker[pending].used = false;
+            break;
+        }
+    }
+
+    if (portToCall != -1) {
+        // call port to report status
+        if (this->isConnected_seqCmdStatus_OutputPort(portToCall)) {
+            // NOTE: seqCmdStatus port forwards three arguments: (opCode, cmdSeq, response).
+            //       However, the cmdSeq value has no meaning for the calling sequencer.
+            //       Instead, the context value is forwarded to allow the caller to utilize it if needed.
+            this->seqCmdStatus_out(portToCall, opCode, context, response);
+        }
+    }
+}
+
+void CommandDispatcherImpl::seqCmdBuff_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    Fw::CmdPacket cmdPkt;
+    Fw::SerializeStatus stat = cmdPkt.deserialize(data);
+
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        Fw::DeserialStatus serErr(static_cast<Fw::DeserialStatus::t>(stat));
+        this->log_WARNING_HI_MalformedCommand(serErr);
+        if (this->isConnected_seqCmdStatus_OutputPort(portNum)) {
+            this->seqCmdStatus_out(portNum, cmdPkt.getOpCode(), context, Fw::CmdResponse::VALIDATION_ERROR);
+        }
+        return;
+    }
+
+    // search for opcode in dispatch table
+    FwOpcodeType entry;
+    bool entryFound = false;
+
+    for (entry = 0; entry < FW_NUM_ARRAY_ELEMENTS(this->m_entryTable); entry++) {
+        if ((this->m_entryTable[entry].used) and (cmdPkt.getOpCode() == this->m_entryTable[entry].opcode)) {
+            entryFound = true;
+            break;
+        }
+    }
+    if (entryFound and this->isConnected_compCmdSend_OutputPort(this->m_entryTable[entry].port)) {
+        // register command in command tracker only if response port is connect
+        if (this->isConnected_seqCmdStatus_OutputPort(portNum)) {
+            bool pendingFound = false;
+
+            for (U32 pending = 0; pending < FW_NUM_ARRAY_ELEMENTS(this->m_sequenceTracker); pending++) {
+                if (not this->m_sequenceTracker[pending].used) {
+                    pendingFound = true;
+                    this->m_sequenceTracker[pending].used = true;
+                    this->m_sequenceTracker[pending].opCode = cmdPkt.getOpCode();
+                    this->m_sequenceTracker[pending].seq = this->m_seq;
+                    this->m_sequenceTracker[pending].context = context;
+                    this->m_sequenceTracker[pending].callerPort = portNum;
+                    break;
+                }
+            }
+
+            // if we couldn't find a slot to track the command, quit
+            if (not pendingFound) {
+                this->log_WARNING_HI_TooManyCommands(cmdPkt.getOpCode());
+                if (this->isConnected_seqCmdStatus_OutputPort(portNum)) {
+                    this->seqCmdStatus_out(portNum, cmdPkt.getOpCode(), context, Fw::CmdResponse::EXECUTION_ERROR);
+                }
+                return;
+            }
+        }  // end if status port connected
+        // pass arguments to argument buffer
+        this->compCmdSend_out(this->m_entryTable[entry].port, cmdPkt.getOpCode(), this->m_seq, cmdPkt.getArgBuffer());
+        // log dispatched command
+        this->log_COMMAND_OpCodeDispatched(cmdPkt.getOpCode(), this->m_entryTable[entry].port);
+
+        // increment command count
+        this->m_numCmdsDispatched++;
+        // write telemetry channel for dispatched commands
+        this->tlmWrite_CommandsDispatched(this->m_numCmdsDispatched);
+    } else {
+        this->log_WARNING_HI_InvalidCommand(cmdPkt.getOpCode());
+        this->m_numCmdErrors++;
+        // Fail command back to port, if connected
+        if (this->isConnected_seqCmdStatus_OutputPort(portNum)) {
+            this->seqCmdStatus_out(portNum, cmdPkt.getOpCode(), context, Fw::CmdResponse::INVALID_OPCODE);
+        }
+        this->tlmWrite_CommandErrors(this->m_numCmdErrors);
+    }
+
+    // increment sequence number
+    this->m_seq++;
+}
+
+void CommandDispatcherImpl::CMD_NO_OP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    Fw::LogStringArg no_op_string("Hello, World!");
+    // Log event for NO_OP here.
+    this->log_ACTIVITY_HI_NoOpReceived();
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CommandDispatcherImpl::CMD_NO_OP_STRING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::CmdStringArg& arg1) {
+    Fw::LogStringArg msg(arg1.toChar());
+    // Echo the NO_OP_STRING args here.
+    this->log_ACTIVITY_HI_NoOpStringReceived(msg);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CommandDispatcherImpl::CMD_TEST_CMD_1_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, I32 arg1, F32 arg2, U8 arg3) {
+    this->log_ACTIVITY_HI_TestCmd1Args(arg1, arg2, arg3);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CommandDispatcherImpl::CMD_CLEAR_TRACKING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    // clear tracking table
+    for (FwOpcodeType entry = 0; entry < CMD_DISPATCHER_SEQUENCER_TABLE_SIZE; entry++) {
+        this->m_sequenceTracker[entry].used = false;
+    }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void CommandDispatcherImpl::pingIn_handler(FwIndexType portNum, U32 key) {
+    // respond to ping
+    this->pingOut_out(0, key);
+}
+
+}  // namespace Svc
+```
+
+### `CommandDispatcherImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/CommandDispatcherImpl.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T.Canham
+ * \brief Component responsible for dispatching incoming commands to registered components
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+
+#ifndef COMMANDDISPATCHERIMPL_HPP_
+#define COMMANDDISPATCHERIMPL_HPP_
+
+#include <Os/Mutex.hpp>
+#include <Svc/CmdDispatcher/CommandDispatcherComponentAc.hpp>
+#include <config/CommandDispatcherImplCfg.hpp>
+
+namespace Svc {
+
+//! \class CommandDispatcherImpl
+//! \brief Command Dispatcher component class
+//!
+//! The command dispatcher takes incoming Fw::Com packets that contain
+//! encoded commands. It extracts the opcode and looks it up in a table
+//! that is populated by components at registration time. If a component
+//! is connected to the seqCmdStatus port with the same number
+//! as the port that submitted the command, the command status will be returned.
+
+class CommandDispatcherImpl final : public CommandDispatcherComponentBase {
+    friend class CommandDispatcherTester;
+
+  public:
+    //!  \brief Command Dispatcher constructor
+    //!
+    //!  The constructor initializes the state of the component.
+    //!  In this component, the opcode dispatch and tracking tables
+    //!  are initialized.
+    //!
+    //!  \param name the component instance name
+    CommandDispatcherImpl(const char* name);
+    //!  \brief Component destructor
+    //!
+    //!  The destructor for this component is empty
+    virtual ~CommandDispatcherImpl();
+
+  protected:
+  private:
+    //!  \brief component command status handler
+    //!
+    //!  The command status handler is called when a component
+    //!  reports the completion of a command.
+    //!
+    //!  \param portNum the number of the incoming port.
+    //!  \param opCode the opcode of the completed command.
+    //!  \param cmdSeq the sequence number assigned to the command when it was dispatched
+    //!  \param response the completion status of the command
+    void compCmdStat_handler(FwIndexType portNum, FwOpcodeType opCode, U32 cmdSeq, const Fw::CmdResponse& response);
+    //!  \brief component command buffer handler
+    //!
+    //!  The command buffer handler is called to submit a new
+    //!  command packet to be decoded
+    //!
+    //!  \param portNum the number of the incoming port.
+    //!  \param data the buffer containing the command.
+    //!  \param context a user value returned with the status
+    void seqCmdBuff_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context);
+    //!  \brief component command registration handler
+    //!
+    //!  The command registration handler is called to register
+    //!  new opcodes. The port number called is used to indicate
+    //!  which port should be used to dispatch the opcode.
+    //!
+    //!  \param portNum the number of the incoming port.
+    //!  \param opCode the opcode being registered.
+    void compCmdReg_handler(FwIndexType portNum, FwOpcodeType opCode);
+    //!  \brief component ping handler
+    //!
+    //!  The ping handler responds to messages to verify that the task
+    //!  is still executing. Will call output ping port
+    //!
+    //!  \param portNum the number of the incoming port.
+    //!  \param opCode the opcode being registered.
+    //!  \param key the key value that is returned with the ping response
+    void pingIn_handler(FwIndexType portNum, U32 key);
+    //!  \brief NO_OP command handler
+    //!
+    //!  A test command that does nothing
+    //!
+    //!  \param opCode the NO_OP opcode.
+    //!  \param cmdSeq the assigned sequence number for the command
+    void CMD_NO_OP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq);
+    //!  \brief NO_OP with string command handler
+    //!
+    //!  A test command that receives a string and sends an event
+    //!  with the string as an argument
+    //!
+    //!  \param opCode the NO_OP_STRING opcode.
+    //!  \param cmdSeq the assigned sequence number for the command
+    //!  \param arg1 the string argument
+    void CMD_NO_OP_STRING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Fw::CmdStringArg& arg1);
+    //!  \brief A test command with different argument types
+    //!
+    //!  A test command that receives a set of arguments of different types
+    //!
+    //!  \param opCode the TEST_CMD_1 opcode.
+    //!  \param cmdSeq the assigned sequence number for the command
+    //!  \param arg1 the I32 argument
+    //!  \param arg2 the F32 argument
+    //!  \param arg3 the U8 argument
+    void CMD_TEST_CMD_1_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, I32 arg1, F32 arg2, U8 arg3);
+    //!  \brief A command to clear the command tracking
+    //!
+    //!  This command will clear the table tracking the completion of commands.
+    //!  It is meant to be used if the tracking table has gotten full because of
+    //!  a software failure. It is dangerous in that it can clear a command
+    //!  that a sequencer is waiting for.
+    //!
+    //!  \param opCode the CLEAR_TRACKING opcode.
+    //!  \param cmdSeq the assigned sequence number for the command
+    void CMD_CLEAR_TRACKING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq);
+
+    //! \struct DispatchEntry
+    //! \brief table used to store opcode to port mappings
+    //!
+    //! The DispatchEntry table is used to map incoming opcodes to the port
+    //! connected to the component that implements the opcode.
+    //! As each command opcode is registered, a new entry is found
+    //! in the table by checking for the "used" flag. The opcode
+    //! member is set to the opcode, and the port member set to the
+    //! port to dispatch to. When a new opcode is received for
+    //! execution, the table is traversed until the opcode is located.
+
+    struct DispatchEntry {
+        bool used;                                       //!< if entry has been used yet
+        FwOpcodeType opcode;                             //!< opcode of entry
+        FwIndexType port;                                //!< which port the entry invokes
+    } m_entryTable[CMD_DISPATCHER_DISPATCH_TABLE_SIZE];  //!< table of dispatch entries
+
+    //! \struct SequenceTracker
+    //! \brief table used to store opcode that are being executed
+    //!
+    //! The SequenceTracker table is used to track commands that are being executed
+    //! but are not yet complete. When a new command opcode is received,
+    //! the status port that would be used to report the completion status
+    //! is checked. If it is connected, then an entry is placed in this table.
+    //! The "used" flag is set, and the "seq" member is set to the
+    //! assigned sequence number for the command. The "opCode" field is
+    //! used for the opcode, and the "callerPort" field is used to store
+    //! the port number of the caller so the status can be reported back to
+    //! correct port.
+
+    struct SequenceTracker {
+        bool used;                                             //!< if this slot is used
+        U32 seq;                                               //!< command sequence number
+        FwOpcodeType opCode;                                   //!< opcode being tracked
+        U32 context;                                           //!< context passed by user
+        FwIndexType callerPort;                                //!< port command source port
+    } m_sequenceTracker[CMD_DISPATCHER_SEQUENCER_TABLE_SIZE];  //!< sequence tracking port for command completions;
+
+    U32 m_seq;  //!< current command sequence number
+
+    U32 m_numCmdsDispatched;  //!< number of commands dispatched
+    U32 m_numCmdErrors;       //!< number of commands with an error
+};
+}  // namespace Svc
+
+#endif /* COMMANDDISPATCHERIMPL_HPP_ */
+```

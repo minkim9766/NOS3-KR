@@ -3,14 +3,34 @@
 
 **경로:** `components/generic_mag/fsw/cfs/mission_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_mag_perfids.h`
 
-file--generic_mag_perfids.h
+**경로:** `components/generic_mag/fsw/cfs/mission_inc/generic_mag_perfids.h`
+
+
+```c
+/*******************************************************************************
+** File:
+**   $Id: generic_mag_perfids.h $
+**
+** Purpose:
+**  Define GENERIC_MAG Performance IDs
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_MAG_PERFIDS_H_
+#define _GENERIC_MAG_PERFIDS_H_
+
+/*
+** define any performance id integer for the app - try to not have this
+** id conflict with other apps.  Performance IDs are used for cFE performance
+** metrics.
+*/
+#define GENERIC_MAG_PERF_ID        540
+#define GENERIC_MAG_DEVICE_PERF_ID 541
+
+#endif /* _GENERIC_MAG_PERFIDS_H_ */
 ```
-
-## 항목
-
-- [`components/generic_mag/fsw/cfs/mission_inc/generic_mag_perfids.h`](file--generic_mag_perfids.h) — UTF-8 텍스트 파일 본문 포함

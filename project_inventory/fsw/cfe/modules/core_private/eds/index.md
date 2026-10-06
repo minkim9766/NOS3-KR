@@ -3,16 +3,220 @@
 
 **경로:** `fsw/cfe/modules/core_private/eds/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `base_types.xml`
 
-file--base_types.xml
-file--config.xml
+**경로:** `fsw/cfe/modules/core_private/eds/base_types.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    Purpose:
+      This describes standard data types used throughout the Core Flight System
+
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+<Package name="BASE_TYPES" shortDescription="Standard type definitions for Core Flight System">
+
+   <!-- Define "base" data types for which all other containers/interfaces/etc will use -->
+   <DataTypeSet>
+
+      <BooleanDataType name="StatusBit" shortDescription="Single true/false status bit">
+        <BooleanDataEncoding sizeInBits="1"/>
+      </BooleanDataType>
+
+      <!-- Fixed width integer types -->
+      <IntegerDataType name="int8" shortDescription="Signed 8 bit integer">
+        <IntegerDataEncoding sizeInBits="8" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}"  byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="127" min="-128" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint8" shortDescription="Unsigned 8 bit integer">
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned"  byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="255" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="int16" shortDescription="Signed 16 bit integer">
+        <IntegerDataEncoding sizeInBits="16" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="32767" min="-32768" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint16" shortDescription="Unsigned 16 bit integer">
+        <IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="65535" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="int32" shortDescription="Signed 32 bit integer">
+        <IntegerDataEncoding sizeInBits="32" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="2147483647" min="-2147483648" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint32" shortDescription="Unsigned 32 bit integer">
+        <IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="4294967295" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="int64" shortDescription="Signed 64 bit integer">
+        <IntegerDataEncoding sizeInBits="64" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="9223372036854775807" min="-9223372036854775808" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint64" shortDescription="Unsigned 64 bit integer">
+        <IntegerDataEncoding sizeInBits="64" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="18446744073709551615" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <!-- Floating point types -->
+      <FloatDataType name="float" shortDescription="Single precision (32 bit) floating point value">
+        <FloatDataEncoding encodingAndPrecision="IEEE754_2008_single" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" sizeInBits="32" />
+        <Range>
+          <PrecisionRange>single</PrecisionRange>
+        </Range>
+      </FloatDataType>
+      <FloatDataType name="double" shortDescription="Double precision (64 bit) floating point value">
+        <FloatDataEncoding encodingAndPrecision="IEEE754_2008_double" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" sizeInBits="64" />
+        <Range>
+          <PrecisionRange>double</PrecisionRange>
+        </Range>
+      </FloatDataType>
+
+      <!-- Commonly used string types in all CFE/CFS messages -->
+      <StringDataType name="ApiName" length="${CFE_MISSION/MAX_API_LEN}" />
+      <StringDataType name="PathName" length="${CFE_MISSION/MAX_PATH_LEN}" />
+
+      <!--
+        CPU memory addresses in messages can be either 32 or 64 bits.
+        This depends on specific CPUs in use, but it should be consistent
+        across all cpus.
+       -->
+      <IntegerDataType name="CpuAddress" shortDescription="CPU memory address">
+        <IntegerDataEncoding sizeInBits="${CFE_MISSION/MAX_CPU_ADDRESS_SIZE} * 8" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="2 ^ (8 * ${CFE_MISSION/MAX_CPU_ADDRESS_SIZE})" min="0" rangeType="inclusiveMinExclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <!--
+        The following data types are a test/example of how 20-bit microseconds
+        can be used in outgoing telemetry packets.  It defines a container with
+        a 20 bit "Micros" field followed by 12 bits of padding to create 32 bits.
+        If this is desired then two configuration parameters need to change:
+         - Set the 'TELEMETRY_SUBSECONDS_TYPE' EDS directive
+         - Set the 'CFE_SB_PACKET_TIME_SUBSECONDS_UNITS' config directive
+        And uncomment these types...
+
+
+      <IntegerDataType name="MicrosecondsValue">
+        <IntegerDataEncoding sizeInBits="20" encoding="unsigned" />
+      </IntegerDataType>
+      <IntegerDataType name="MicrosecondsPad">
+        <IntegerDataEncoding sizeInBits="12" encoding="unsigned" />
+      </IntegerDataType>
+
+      <ContainerDataType name="TlmMicrosecs">
+        <EntryList>
+            <Entry name="Micros" type="MicrosecondsValue" />
+            <Entry name="Pad" type="MicrosecondsPad" />
+        </EntryList>
+      </ContainerDataType>
+
+      -->
+
+   </DataTypeSet>
+
+</Package>
+</PackageFile>
 ```
 
-## 항목
+### `config.xml`
 
-- [`fsw/cfe/modules/core_private/eds/base_types.xml`](file--base_types.xml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/eds/config.xml`](file--config.xml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/core_private/eds/config.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    Purpose:
+      Assign values to basic configuration parameters of the Core Flight
+      System (cFS).  The CFS EDS toolchain uses values defined here to
+      as substitutions for the ${} syntax in EDS files.
+
+-->
+<DesignParameters>
+
+  <Package name="CFE_EVS" shortDescription="Event Services Configuration">
+     <!-- The bitmasks do not yet have a way to directly associate with the data structure yet -->
+     <Define name="DEBUG_BIT" value="0x0001" />
+     <Define name="INFORMATION_BIT" value="0x0002" />
+     <Define name="ERROR_BIT" value="0x0004" />
+     <Define name="CRITICAL_BIT" value="0x0008" />
+
+     <Define name="PORT1_BIT" value="0x0001" />
+     <Define name="PORT2_BIT" value="0x0002" />
+     <Define name="PORT3_BIT" value="0x0004" />
+     <Define name="PORT4_BIT" value="0x0008" />
+  </Package>
+
+  <Package name="CFE_FS" shortDescription="File Services Configuration">
+     <Define name="FILE_CONTENT_ID" value="0x63464531" shortDescription="Magic Number for cFE compliant files (= cFE1)" />
+  </Package>
+
+  <Package name="CFE_SB" shortDescription="Software Bus Configuration">
+     <Define name="SUB_ENTRIES_PER_PKT" value="20" />
+     <Define name="MSGID_BIT_SIZE" value="32" />
+  </Package>
+
+  <Package name="CCSDS_SPACEPACKET" shortDescription="CCSDS Configuration">
+     <!-- Select CCSDS v1 headers only (no APID qualifiers) -->
+     <!-- <Define name="HEADER_TYPE" value="PriHdr" /> -->
+     <!-- Select CCSDS v2 headers (with APID qualifiers) -->
+     <Define name="HEADER_TYPE" value="APIDQHdr" />
+  </Package>
+
+</DesignParameters>
+```

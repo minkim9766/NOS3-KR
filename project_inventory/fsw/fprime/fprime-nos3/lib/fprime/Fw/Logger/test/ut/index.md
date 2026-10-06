@@ -3,22 +3,512 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FakeLogger.cpp`
 
-file--FakeLogger.cpp
-file--FakeLogger.hpp
-file--LoggerMain.cpp
-file--LoggerRules.cpp
-file--LoggerRules.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/FakeLogger.cpp`
+
+
+```cpp
+/**
+ * FakeLogger.cpp:
+ *
+ * Setup a fake logger for use with the testing. This allows for the capture of messages from the system and ensure that
+ * the proper log messages are coming through as expected.
+ *
+ * @author mstarch
+ */
+#include <gtest/gtest.h>
+#include <Fw/Logger/test/ut/FakeLogger.hpp>
+
+namespace MockLogging {
+Fw::Logger* FakeLogger::s_current = nullptr;
+
+FakeLogger::FakeLogger() : m_last("") {}
+
+void FakeLogger::writeMessage(const Fw::StringBase& message) {
+    m_last = message.toChar();
+}
+
+void FakeLogger::check(const char* message) {
+    ASSERT_EQ(m_last, std::string(message));
+}
+
+void FakeLogger::reset() {
+    m_last = "";
+}
+}  // namespace MockLogging
 ```
 
-## 항목
+### `FakeLogger.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/FakeLogger.cpp`](file--FakeLogger.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/FakeLogger.hpp`](file--FakeLogger.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/LoggerMain.cpp`](file--LoggerMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/LoggerRules.cpp`](file--LoggerRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/LoggerRules.hpp`](file--LoggerRules.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/FakeLogger.hpp`
+
+
+```cpp
+/**
+ * FakeLogger.hpp:
+ *
+ * Setup a fake logger for use with the testing. This allows for the capture of messages from the system and ensure that
+ * the proper log messages are coming through as expected.
+ *
+ * @author mstarch
+ */
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/String.hpp>
+#include <string>
+
+#ifndef FPRIME_FAKELOGGER_HPP
+#define FPRIME_FAKELOGGER_HPP
+namespace MockLogging {
+/**
+ * Fake logger used for two purposes:
+ *   1. it acts as logging truth for the test
+ *   2. it intercepts logging calls bound for the system
+ */
+class FakeLogger : public Fw::Logger {
+  public:
+    //!< Constructor
+    FakeLogger();
+
+    /**
+     * Fake implementation of the logger.
+     * @param message: formatted message to log
+     */
+    void writeMessage(const Fw::StringBase& message);
+
+    /**
+     * Check last message.
+     * @param message: formatted message to check
+     * @param size: size to log
+     */
+    virtual void check(const char* message);
+
+    //!< Reset this logger
+    void reset();
+
+    //!< Last message that came in
+    std::string m_last;
+    //!< Logger to use within the system
+    static Fw::Logger* s_current;
+};
+}  // namespace MockLogging
+#endif  // FPRIME_FAKELOGGER_HPP
+```
+
+### `LoggerMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/LoggerMain.cpp`
+
+
+```cpp
+/**
+ * Main.cpp:
+ *
+ * Setup the GTests for rules-based testing of Fw::Logger and runs these tests.
+ *
+ *  Created on: May 23, 2019
+ *      Author: mstarch
+ */
+#include <STest/Scenario/BoundedScenario.hpp>
+#include <STest/Scenario/RandomScenario.hpp>
+#include <STest/Scenario/Scenario.hpp>
+
+#include <gtest/gtest.h>
+#include <Fw/Logger/test/ut/LoggerRules.hpp>
+#include <Fw/Test/UnitTest.hpp>
+
+#include <cstdio>
+
+#define STEP_COUNT 10000
+
+/**
+ * A random hopper for rules. Apply STEP_COUNT times.
+ */
+TEST(LoggerTests, RandomLoggerTests) {
+    MockLogging::FakeLogger logger;
+
+    // Create rules, and assign them into the array
+    LoggerRules::Register reg(Fw::String("Register"));
+    LoggerRules::LogGood log(Fw::String("Log Successfully"));
+    LoggerRules::LogBad nolog(Fw::String("Log unsuccessfully"));
+    LoggerRules::LogBad string_log(Fw::String("Log Successfully (String)"));
+
+    // Setup a list of rules to choose from
+    STest::Rule<MockLogging::FakeLogger>* rules[] = {&reg, &log, &nolog, &string_log};
+    // Construct the random scenario and run it with the defined bounds
+    STest::RandomScenario<MockLogging::FakeLogger> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Setup a bounded scenario to run rules a set number of times
+    STest::BoundedScenario<MockLogging::FakeLogger> bounded("Bounded Random Rules Scenario", random, STEP_COUNT);
+    // Run!
+    const U32 numSteps = bounded.run(logger);
+    printf("Ran %u steps.\n", numSteps);
+}
+/**
+ * Test that the most basic logging function works.
+ */
+TEST(LoggerTests, BasicGoodLogger) {
+    // Setup and register logger
+    MockLogging::FakeLogger logger;
+    Fw::Logger::registerLogger(&logger);
+    logger.s_current = &logger;
+    // Basic logging
+    LoggerRules::LogGood log(Fw::String("Log Successfully"));
+    log.apply(logger);
+}
+/**
+ * Test that the most basic logging function works.
+ */
+TEST(LoggerTests, BasicGoodStringLogger) {
+    // Setup and register logger
+    MockLogging::FakeLogger logger;
+    Fw::Logger::registerLogger(&logger);
+    logger.s_current = &logger;
+    // Basic logging
+    LoggerRules::LogGoodStringObject log(Fw::String("Log Successfully"));
+    log.apply(logger);
+}
+
+/**
+ * Test that null-logging function works.
+ */
+TEST(LoggerTests, BasicBadLogger) {
+    // Basic discard logging
+    MockLogging::FakeLogger logger;
+    Fw::Logger::registerLogger(nullptr);
+    logger.s_current = nullptr;
+    LoggerRules::LogBad log(Fw::String("Log Discarded"));
+    log.apply(logger);
+}
+
+/**
+ * Test that registration works. Multiple times, as contains randomness.
+ */
+TEST(LoggerTests, BasicRegLogger) {
+    // Basic discard logging
+    MockLogging::FakeLogger logger;
+    LoggerRules::Register reg(Fw::String("Register"));
+    reg.apply(logger);
+    reg.apply(logger);
+    reg.apply(logger);
+    reg.apply(logger);
+    reg.apply(logger);
+    reg.apply(logger);
+    reg.apply(logger);
+}
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `LoggerRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/LoggerRules.cpp`
+
+
+```cpp
+/**
+ * LoggerRules.cpp:
+ *
+ * This file specifies Rule classes for testing of the Fw::Logger. These rules can then be used by the main testing
+ * program to test the code.
+ *
+ * Logging rules:
+ *
+ * 1. a logger can be registered at any time.
+ * 2. NULL loggers discard log calls
+ * 3. if a valid logger is registered, the log message is called
+ *
+ * @author mstarch
+ */
+#include "Fw/Logger/test/ut/LoggerRules.hpp"
+
+namespace LoggerRules {
+
+// Constructor
+Register::Register(const Fw::String& name) : STest::Rule<MockLogging::FakeLogger>(name.toChar()) {}
+
+// Check for registration, always allowed
+bool Register::precondition(const MockLogging::FakeLogger& truth) {
+    return true;
+}
+
+// Register NULL or truth as the system logger
+void Register::action(MockLogging::FakeLogger& truth) {
+    // Select a registration value: 1 -> logger, 0 -> NULL
+    U32 random = STest::Pick::lowerUpper(0, 1);
+    if (random == 1) {
+        Fw::Logger::registerLogger(&truth);
+        truth.s_current = &truth;
+    } else {
+        Fw::Logger::registerLogger(nullptr);
+        truth.s_current = nullptr;
+    }
+    ASSERT_EQ(truth.s_current, Fw::Logger::s_current_logger);
+}
+
+// Constructor
+LogGood::LogGood(const Fw::String& name) : STest::Rule<MockLogging::FakeLogger>(name.toChar()) {}
+
+// Check for logging, only when not NULL
+bool LogGood::precondition(const MockLogging::FakeLogger& truth) {
+    return truth.s_current != nullptr;
+}
+
+// Log valid messages
+void LogGood::action(MockLogging::FakeLogger& truth) {
+    U32 random = STest::Pick::lowerUpper(0, 10);
+    U32 ra[10];
+    for (int i = 0; i < 10; ++i) {
+        ra[i] = STest::Pick::lowerUpper(0, 0xffffffff);
+    }
+    Fw::String correct;
+    switch (random) {
+        case 0:
+            Fw::Logger::log("No args");
+            correct = "No args";
+            break;
+        case 1:
+            Fw::Logger::log("One arg: %lu", ra[0]);
+            correct.format("One arg: %lu", ra[0]);
+            break;
+        case 2:
+            Fw::Logger::log("Two arg: %lu  %lu", ra[0], ra[1]);
+            correct.format("Two arg: %lu  %lu", ra[0], ra[1]);
+            break;
+        case 3:
+            Fw::Logger::log("Three arg: %lu  %lu  %lu", ra[0], ra[1], ra[2]);
+            correct.format("Three arg: %lu  %lu  %lu", ra[0], ra[1], ra[2]);
+            break;
+        case 4:
+            Fw::Logger::log("Four arg: %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3]);
+            correct.format("Four arg: %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3]);
+            break;
+        case 5:
+            Fw::Logger::log("Five arg: %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4]);
+            correct.format("Five arg: %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4]);
+            break;
+        case 6:
+            Fw::Logger::log("Six arg: %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5]);
+            correct.format("Six arg: %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5]);
+            break;
+        case 7:
+            Fw::Logger::log("Seven arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5],
+                            ra[6]);
+            correct.format("Seven arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5],
+                           ra[6]);
+            break;
+        case 8:
+            Fw::Logger::log("Eight arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4],
+                            ra[5], ra[6], ra[7]);
+            correct.format("Eight arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4],
+                           ra[5], ra[6], ra[7]);
+            break;
+        case 9:
+            Fw::Logger::log("Nine arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4],
+                            ra[5], ra[6], ra[7], ra[8]);
+            correct.format("Nine arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3], ra[4],
+                           ra[5], ra[6], ra[7], ra[8]);
+            break;
+        case 10:
+            Fw::Logger::log("Ten arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3],
+                            ra[4], ra[5], ra[6], ra[7], ra[8], ra[9]);
+            correct.format("Ten arg: %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu  %lu", ra[0], ra[1], ra[2], ra[3],
+                           ra[4], ra[5], ra[6], ra[7], ra[8], ra[9]);
+            break;
+
+        default:
+            ASSERT_EQ(0, 1);
+    }
+    truth.check(correct.toChar());
+    truth.reset();
+}
+
+// Constructor
+LogGoodStringObject::LogGoodStringObject(const Fw::String& name)
+    : STest::Rule<MockLogging::FakeLogger>(name.toChar()) {}
+
+// Check for logging, only when not NULL
+bool LogGoodStringObject::precondition(const MockLogging::FakeLogger& truth) {
+    return truth.s_current != nullptr;
+}
+
+// Log valid messages
+void LogGoodStringObject::action(MockLogging::FakeLogger& truth) {
+    Fw::String my_string;
+    U32 random = STest::Pick::lowerUpper(0, my_string.getCapacity() - 1);
+    for (U32 i = 0; i < random; ++i) {
+        const_cast<char*>(my_string.toChar())[i] =
+            static_cast<char>(STest::Pick::lowerUpper(0, std::numeric_limits<unsigned char>::max()));
+    }
+    const_cast<char*>(my_string.toChar())[random] = 0;
+    Fw::String copy1 = my_string.toChar();
+    Fw::Logger::log(copy1);
+    truth.check(my_string.toChar());
+    truth.reset();
+}
+
+// Constructor
+LogBad::LogBad(const Fw::String& name) : STest::Rule<MockLogging::FakeLogger>(name.toChar()) {}
+
+// Check for logging, only when not NULL
+bool LogBad::precondition(const MockLogging::FakeLogger& truth) {
+    return truth.s_current == nullptr;
+}
+
+// Log valid messages
+void LogBad::action(MockLogging::FakeLogger& truth) {
+    U32 random = STest::Pick::lowerUpper(0, 10);
+    U32 ra[10];
+    for (int i = 0; i < 10; ++i) {
+        ra[i] = STest::Pick::lowerUpper(0, 0xffffffff);
+    }
+
+    switch (random) {
+        case 0:
+            Fw::Logger::log("No args");
+            break;
+        case 1:
+            Fw::Logger::log("One arg: %lu", ra[0]);
+            break;
+        case 2:
+            Fw::Logger::log("Two arg: %lu", ra[0], ra[1]);
+            break;
+        case 3:
+            Fw::Logger::log("Three arg: %lu", ra[0], ra[1], ra[2]);
+            break;
+        case 4:
+            Fw::Logger::log("Four arg: %lu", ra[0], ra[1], ra[2], ra[3]);
+            break;
+        case 5:
+            Fw::Logger::log("Five arg: %lu", ra[0], ra[1], ra[2], ra[3], ra[4]);
+            break;
+        case 6:
+            Fw::Logger::log("Six arg: %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5]);
+            break;
+        case 7:
+            Fw::Logger::log("Seven arg: %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5], ra[6]);
+            break;
+        case 8:
+            Fw::Logger::log("Eight arg: %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5], ra[6], ra[7]);
+            break;
+        case 9:
+            Fw::Logger::log("Nine arg: %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5], ra[6], ra[7], ra[8]);
+            break;
+        case 10:
+            Fw::Logger::log("Ten arg: %lu", ra[0], ra[1], ra[2], ra[3], ra[4], ra[5], ra[6], ra[7], ra[8], ra[9]);
+            break;
+        default:
+            ASSERT_EQ(0, 1);
+    }
+    truth.check("");
+    truth.reset();
+}
+}  // namespace LoggerRules
+```
+
+### `LoggerRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Logger/test/ut/LoggerRules.hpp`
+
+
+```cpp
+/**
+ * LoggerRules.hpp:
+ *
+ * This file specifies Rule classes for testing of the Fw::Logger. These rules can then be used by the main testing
+ * program to test the code.
+ *
+ * Logging rules:
+ *
+ * 1. a logger can be registered at any time.
+ * 2. NULL loggers discard log calls
+ * 3. if a valid logger is registered, the log message is called
+ *
+ * @author mstarch
+ */
+#ifndef FPRIME_LOGGERRULES_HPP
+#define FPRIME_LOGGERRULES_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/test/ut/FakeLogger.hpp>
+#include <Fw/Types/String.hpp>
+#include <STest/STest/Pick/Pick.hpp>
+#include <STest/STest/Rule/Rule.hpp>
+
+namespace LoggerRules {
+
+/**
+ * Register:
+ *
+ * Rule to handle the registration of a logger to the global logger. It may also register a "NULL" logger and thus
+ * stop output logging.
+ */
+struct Register : public STest::Rule<MockLogging::FakeLogger> {
+    // Constructor
+    explicit Register(const Fw::String& name);
+
+    // Check for registration, always allowed
+    bool precondition(const MockLogging::FakeLogger& truth);
+
+    // Register NULL or truth as the system logger
+    void action(MockLogging::FakeLogger& truth);
+};
+
+/**
+ * LogGood:
+ *
+ * As long as a non-NULL logger is set as the system logger, then valid log messages should be processed.
+ */
+struct LogGood : public STest::Rule<MockLogging::FakeLogger> {
+    // Constructor
+    explicit LogGood(const Fw::String& name);
+
+    // Check for logging, only when not NULL
+    bool precondition(const MockLogging::FakeLogger& truth);
+
+    // Log valid messages
+    void action(MockLogging::FakeLogger& truth);
+};
+
+/**
+ * LogBad:
+ *
+ * As long as a non-NULL logger is set as the system logger, then valid log messages should be processed.
+ */
+struct LogBad : public STest::Rule<MockLogging::FakeLogger> {
+    // Constructor
+    explicit LogBad(const Fw::String& name);
+
+    // Check for logging, only when not NULL
+    bool precondition(const MockLogging::FakeLogger& truth);
+
+    // Log valid messages
+    void action(MockLogging::FakeLogger& truth);
+};
+
+/**
+ * LogGoodStringObject:
+ *
+ * As long as a non-NULL logger is set as the system logger, then valid log messages should be processed.
+ */
+struct LogGoodStringObject : public STest::Rule<MockLogging::FakeLogger> {
+    // Constructor
+    explicit LogGoodStringObject(const Fw::String& name);
+
+    // Check for logging, only when not NULL
+    bool precondition(const MockLogging::FakeLogger& truth);
+
+    // Log valid messages
+    void action(MockLogging::FakeLogger& truth);
+};
+}  // namespace LoggerRules
+#endif  // FPRIME_LOGGERRULES_HPP
+```

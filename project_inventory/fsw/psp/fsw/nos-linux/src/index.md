@@ -3,18 +3,1342 @@
 
 **경로:** `fsw/psp/fsw/nos-linux/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_psp_exception.c`
 
-file--cfe_psp_exception.c
-file--cfe_psp_start.c
-file--cfe_psp_timer.c
+**경로:** `fsw/psp/fsw/nos-linux/src/cfe_psp_exception.c`
+
+
+```c
+/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/******************************************************************************
+S
+** File:  cfe_psp_exception.c
+**
+**      POSIX ( Mac OS X, Linux, Cygwin ) version
+**
+** Purpose:
+**   cFE PSP Exception handling functions
+**
+** History:
+**   2007/05/29  A. Cudmore      | POSIX Version
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+#include <pthread.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+#include "cfe_psp_exceptionstorage_types.h"
+#include "cfe_psp_exceptionstorage_api.h"
+
+#include <execinfo.h>
+#include <signal.h>
+
+#include "NOS-time.h"
+
+/*
+ * A set of asynchronous signals which will be masked during other signal processing
+ */
+sigset_t    CFE_PSP_AsyncMask;
+
+
+/***************************************************************************
+ **                        FUNCTIONS DEFINITIONS
+ ***************************************************************************/
+
+
+/*
+** Name: CFE_PSP_ExceptionSigHandler
+**
+** Installed as a signal handler to log exception events.
+**
+*/
+void CFE_PSP_ExceptionSigHandler (int signo, siginfo_t *si, void *ctxt)
+{
+    CFE_PSP_Exception_LogData_t* Buffer;
+    int NumAddrs;
+
+    /*
+     * Note that the time between CFE_PSP_Exception_GetNextContextBuffer()
+     * and CFE_PSP_Exception_WriteComplete() is sensitive in that it is
+     * accessing a global.
+     *
+     * Cannot use a conventional lock because this is a signal handler, the
+     * solution would need to involve a signal-safe spinlock and/or C11
+     * atomic ops.
+     *
+     * This means if another exception occurs on another task during this
+     * time window, it may use the same buffer.
+     *
+     * However, exceptions should be rare enough events that this is highly
+     * unlikely to occur, so leaving this unhandled for now.
+     */
+    Buffer = CFE_PSP_Exception_GetNextContextBuffer();
+    if (Buffer != NULL)
+    {
+        /*
+         * read the clock as a timestamp - note "clock_gettime" is signal safe per POSIX,
+         *
+         * _not_ going through OSAL to read this as it may do something signal-unsafe...
+         * (current implementation would be safe, but it is not guaranteed to always be).
+         */
+        NOS_clock_gettime(CLOCK_MONOTONIC, &Buffer->context_info.event_time);
+        memcpy(&Buffer->context_info.si, si, sizeof(Buffer->context_info.si));
+        NumAddrs = backtrace(Buffer->context_info.bt_addrs, CFE_PSP_MAX_EXCEPTION_BACKTRACE_SIZE);
+        Buffer->context_size = offsetof(CFE_PSP_Exception_ContextDataEntry_t, bt_addrs[NumAddrs]);
+        /* pthread_self() is signal-safe per POSIX.1-2013 */
+        Buffer->sys_task_id = pthread_self();
+        CFE_PSP_Exception_WriteComplete();
+    }
+
+    /*
+     * notify the main (idle) thread that an interesting event occurred.
+     * Note on this platform this cannot _directly_ invoke CFE from a signal handler.
+     */
+    pthread_kill(CFE_PSP_IdleTaskState.ThreadID, CFE_PSP_EXCEPTION_EVENT_SIGNAL);
+}
+
+/*
+** Name: CFE_PSP_ExceptionSigHandlerSuspend
+**
+** An extension of CFE_PSP_ExceptionSigHandler that also
+** suspends the calling task and prevents returning to the
+** application.
+**
+** This is required for handling events like Floating Point exceptions,
+** where returning to the application would resume at the same instruction
+** and re-trigger the exception, resulting in a loop.
+**
+*/
+void CFE_PSP_ExceptionSigHandlerSuspend (int signo, siginfo_t *si, void *ctxt)
+{
+    /*
+     * Perform normal exception logging
+     */
+    CFE_PSP_ExceptionSigHandler(signo, si, ctxt);
+
+    /*
+     * calling "sigsuspend" with an empty mask should
+     * block this thread indefinitely.  This is intended
+     * to replicate the behavior of vxworks which suspends
+     * the task after an exception.
+     *
+     * This stops execution of the thread in anticipation that it
+     * will be deleted by the CFE/OSAL.
+     */
+    sigsuspend(&CFE_PSP_AsyncMask);
+
+} /* end function */
+
+/*
+ * Helper function to call sigaction() to attach a signal handler
+ */
+void CFE_PSP_AttachSigHandler (int signo)
+{
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_mask = CFE_PSP_AsyncMask;
+
+    if(!sigismember(&CFE_PSP_AsyncMask, signo))
+    {
+        /*
+         * In the event that the handler is being installed for one of the
+         * synchronous events, use the CFE_PSP_ExceptionSigHandlerSuspend variant.
+         *
+         * This suspends the caller and prevents returning to the application.
+         */
+        sa.sa_sigaction = CFE_PSP_ExceptionSigHandlerSuspend;
+
+        /*
+         * add it back to the mask set.
+         * This is supposed to be default unless SA_NODEFER flag is set,
+         * but also setting it here to be sure.
+         */
+        sigaddset(&sa.sa_mask, signo);
+    }
+    else
+    {
+        /*
+         * Use default handler which will return to the application
+         * after logging the event
+         */
+        sa.sa_sigaction = CFE_PSP_ExceptionSigHandler;
+    }
+    sa.sa_flags = SA_SIGINFO;
+
+    sigaction(signo, &sa, NULL);
+}
+
+
+
+/*
+**   Name: CFE_PSP_AttachExceptions
+**
+**   This is called from the CFE Main task, before any other threads
+**   are started.  Use this opportunity to install the handler for
+**   CTRL+C events, which will now be treated as an exception.
+**
+**   Not only does this clean up the code by NOT requiring a specific
+**   handler for CTRL+C, it also provides a way to exercise and test
+**   the exception handling in general, which tends to be infrequently
+**   invoked because otherwise it only happens with off nominal behavior.
+**
+**   This has yet another benefit that SIGINT events will make their
+**   way into the exception and reset log, so it is visible why the
+**   CFE shut down.
+*/
+
+void CFE_PSP_AttachExceptions(void)
+{
+    void *Addr[1];
+
+    /*
+     * preemptively call "backtrace" -
+     * The manpage notes that backtrace is implemented in libgcc
+     * which may be dynamically linked with lazy binding. So
+     * by calling it once we ensure that it is loaded and therefore
+     * it is safe to use in a signal handler.
+     */
+    backtrace(Addr, 1);
+
+    OS_printf("CFE_PSP: CFE_PSP_AttachExceptions Called\n");
+
+    /*
+     * Block most other signals during handler execution.
+     * Exceptions are for synchronous errors SIGFPE/SIGSEGV/SIGILL/SIGBUS
+     */
+    sigfillset(&CFE_PSP_AsyncMask);
+    sigdelset(&CFE_PSP_AsyncMask, SIGILL);
+    sigdelset(&CFE_PSP_AsyncMask, SIGFPE);
+    sigdelset(&CFE_PSP_AsyncMask, SIGBUS);
+    sigdelset(&CFE_PSP_AsyncMask, SIGSEGV);
+
+    /*
+     * Install sigint_handler as the signal handler for SIGINT.
+     *
+     * In the event that the user presses CTRL+C at the console
+     * this will be recorded as an exception and use the general
+     * purpose exception processing logic to shut down CFE.
+     *
+     * Also include SIGTERM so it will invoke a graceful shutdown
+     */
+    CFE_PSP_AttachSigHandler(SIGINT);
+    CFE_PSP_AttachSigHandler(SIGTERM);
+
+    /*
+     * Clear any pending exceptions.
+     *
+     * This is just in case this is a PROCESSOR reset and there
+     * was something still in the queue from the last lifetime.
+     *
+     * It should have been logged already, but if not, then
+     * don't action on it now.
+     */
+    CFE_PSP_Exception_Reset();
+}
+
+/*
+**
+**   Name: CFE_PSP_SetDefaultExceptionEnvironment
+**
+**   Purpose: This function sets a default exception environment that can be used
+**
+**   Notes: The exception environment is local to each task Therefore this must be
+**          called for each task that that wants to do floating point and catch exceptions
+**          Currently, this is automaticall called from OS_TaskRegister for every task
+*/
+
+void CFE_PSP_SetDefaultExceptionEnvironment(void)
+{
+    /*
+     * This additionally sets a handler for SIGFPE which will catch arithmetic errors
+     * such as divide by zero.  Other possibilities are SIGILL/SIGBUS/SIGSEGV.
+     *
+     * This is primarily used as a proof-of-concept on this platform to demonstrate
+     * how the exception handling feature works.
+     *
+     * As the PC-Linux platform is often used for debugging, it is better to
+     * maintain the default signal handler for the SIGILL/SIGBUS/SIGSEGV which will
+     * abort the program and generate a core file.
+     */
+    CFE_PSP_AttachSigHandler(SIGFPE);
+}
+
+int32 CFE_PSP_ExceptionGetSummary_Impl(const CFE_PSP_Exception_LogData_t* Buffer, char *ReasonBuf, uint32 ReasonSize)
+{
+    const char *ComputedReason = "unknown";
+
+    /* check the "code" within the siginfo structure, which reveals more info about the FP exception */
+    if (Buffer->context_info.si.si_signo == SIGFPE)
+    {
+        switch(Buffer->context_info.si.si_code)
+        {
+        case FPE_INTDIV:
+            ComputedReason = "Integer divide by zero";
+            break;
+        case FPE_INTOVF:
+            ComputedReason = "Integer overflow";
+            break;
+        case FPE_FLTDIV:
+            ComputedReason = "Floating-point divide by zero";
+            break;
+        case FPE_FLTOVF:
+            ComputedReason = "Floating-point overflow";
+            break;
+        case FPE_FLTUND:
+            ComputedReason = "Floating-point underflow";
+            break;
+        case FPE_FLTRES:
+            ComputedReason = "Floating-point inexact result";
+            break;
+        case FPE_FLTINV:
+            ComputedReason = "Invalid floating-point operation";
+            break;
+        case FPE_FLTSUB:
+            ComputedReason = "Subscript out of range";
+            break;
+        default:
+            ComputedReason = "Unknown SIGFPE";
+        }
+        (void)snprintf(ReasonBuf, ReasonSize, "%s at ip 0x%lx", ComputedReason,
+                (unsigned long)Buffer->context_info.si.si_addr);
+
+    }
+    else if (Buffer->context_info.si.si_signo == SIGINT)
+    {
+        /* interrupt e.g. CTRL+C */
+        (void)snprintf(ReasonBuf, ReasonSize, "Caught SIGINT");
+    }
+    else
+    {
+        /*
+         * other signal....
+         * POSIX 2008 does provide a strsignal() function to get the name, but this
+         * is a newer spec than what is targeted by CFE, so just print the number.
+         */
+        (void)snprintf(ReasonBuf, ReasonSize, "Caught Signal %d",Buffer->context_info.si.si_signo);
+    }
+
+    return CFE_PSP_SUCCESS;
+}
+
+
 ```
 
-## 항목
+### `cfe_psp_start.c`
 
-- [`fsw/psp/fsw/nos-linux/src/cfe_psp_exception.c`](file--cfe_psp_exception.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/nos-linux/src/cfe_psp_start.c`](file--cfe_psp_start.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/nos-linux/src/cfe_psp_timer.c`](file--cfe_psp_timer.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/fsw/nos-linux/src/cfe_psp_start.c`
+
+
+```c
+/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/******************************************************************************
+** File:  cfe_psp_start.c
+**
+** Purpose:
+**   cFE BSP main entry point.
+**
+** History:
+**   2005/07/26  A. Cudmore      | Initial version for OS X/Linux 
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/time.h>
+#include <getopt.h>
+#include <string.h>
+#include <limits.h>
+#include <pthread.h>
+#include <sched.h>
+#include <errno.h>
+
+/*
+** cFE includes 
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+/*
+ * The preferred way to obtain the CFE tunable values at runtime is via
+ * the dynamically generated configuration object.  This allows a single build
+ * of the PSP to be completely CFE-independent.
+ */
+#include <target_config.h>
+#include "cfe_psp_module.h"
+
+/* nos engine includes */
+#include "Client/CInterface.h"
+#include "nos_link.h"
+
+#define CFE_PSP_MAIN_FUNCTION        (*GLOBAL_CONFIGDATA.CfeConfig->SystemMain)
+#define CFE_PSP_1HZ_FUNCTION         (*GLOBAL_CONFIGDATA.CfeConfig->System1HzISR)
+#define CFE_PSP_NONVOL_STARTUP_FILE  (GLOBAL_CONFIGDATA.CfeConfig->NonvolStartupFile)
+#define CFE_PSP_CPU_ID               (GLOBAL_CONFIGDATA.Default_CpuId)
+#define CFE_PSP_CPU_NAME             (GLOBAL_CONFIGDATA.Default_CpuName)
+#define CFE_PSP_SPACECRAFT_ID        (GLOBAL_CONFIGDATA.Default_SpacecraftId)
+
+/*
+** Defines
+*/
+
+#define CFE_PSP_CPU_NAME_LENGTH  32
+#define CFE_PSP_RESET_NAME_LENGTH 10
+
+/* Constants used for NOS Engine Time and NOS Engine bus */
+#define ENGINE_SERVER_URI       "tcp://nos-engine-server:12000"
+#define ENGINE_BUS_NAME         "command"
+#define TICKS_PER_SECOND        100
+NE_Bus          *CFE_PSP_Bus;
+pthread_mutex_t  CFE_PSP_sim_time_mutex;
+NE_SimTime       CFE_PSP_sim_time;
+int64_t          CFE_PSP_ticks_per_second;
+extern void NOS_timer_fire(NE_SimTime time);
+
+/*
+** Typedefs for this module
+*/
+
+/*
+** Structure for the Command line parameters
+*/
+typedef struct
+{   
+   char     ResetType[CFE_PSP_RESET_NAME_LENGTH];   /* Reset type can be "PO" for Power on or "PR" for Processor Reset */
+   uint32   GotResetType;    /* did we get the ResetType parameter ? */
+
+   uint32   SubType;         /* Reset Sub Type ( 1 - 5 )  */
+   uint32   GotSubType;      /* did we get the ResetSubType parameter ? */
+   
+   char     CpuName[CFE_PSP_CPU_NAME_LENGTH];     /* CPU Name */
+   uint32   GotCpuName;      /* Did we get a CPU Name ? */
+
+   uint32   CpuId;            /* CPU ID */
+   uint32   GotCpuId;         /* Did we get a CPU Id ?*/
+
+   uint32   SpacecraftId;     /* Spacecraft ID */ 
+   uint32   GotSpacecraftId;  /* Did we get a Spacecraft ID */
+   
+} CFE_PSP_CommandData_t;
+
+/*
+** Prototypes for this module
+*/
+void CFE_PSP_TimerHandler (int signum);
+void CFE_PSP_DisplayUsage(char *Name );
+void CFE_PSP_ProcessArgumentDefaults(CFE_PSP_CommandData_t *CommandDataDefault);
+void CFE_PSP_SetupLocal1Hz(void);
+void CFE_PSP_NosTickCallback(NE_SimTime time);
+
+static void print_splash(void);
+
+/*
+** Global variables
+*/
+uint32              TimerCounter;
+CFE_PSP_CommandData_t CommandData;
+uint32              CFE_PSP_SpacecraftId;
+uint32              CFE_PSP_CpuId;
+char                CFE_PSP_CpuName[CFE_PSP_CPU_NAME_LENGTH];
+
+CFE_PSP_IdleTaskState_t  CFE_PSP_IdleTaskState;
+
+/*
+** getopts parameter passing options string
+*/
+static const char *optString = "R:S:C:I:N:h";
+
+/*
+** getopts_long long form argument table
+*/
+static const struct option longOpts[] = {
+   { "reset",     required_argument, NULL, 'R' },
+   { "subtype",   required_argument, NULL, 'S' },
+   { "cpuid",     required_argument, NULL, 'C' },
+   { "scid",      required_argument, NULL, 'I'},
+   { "cpuname",   required_argument, NULL, 'N'},
+   { "help",      no_argument,       NULL, 'h' },
+   { NULL,        no_argument,       NULL,  0 }
+};
+
+
+/******************************************************************************
+**  Function:  main()
+**
+**  Purpose:
+**    BSP Application entry point.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void OS_Application_Startup(void)
+{
+   uint32             reset_type;
+   uint32             reset_subtype;
+   int32              time_status;
+   uint32             sys_timebase_id;
+   uint32             fs_id;
+   int                opt = 0;
+   int                longIndex = 0;
+   int32              Status;
+   char * const *     argv;
+   int                argc;
+
+   /* nos3 splash screen */
+   print_splash();
+
+   /*
+   ** Initialize the CommandData struct 
+   */
+   memset(&(CommandData), 0, sizeof(CFE_PSP_CommandData_t));
+
+   /* 
+   ** Process the arguments with getopt_long(), then 
+   ** start the cFE
+   */
+   argc = OS_BSP_GetArgC();
+   argv = OS_BSP_GetArgV();
+   opt = getopt_long( argc, argv, optString, longOpts, &longIndex );
+   while( opt != -1 ) 
+   {
+      switch( opt ) 
+      {
+         case 'R':
+            strncpy(CommandData.ResetType, optarg, CFE_PSP_RESET_NAME_LENGTH-1);
+            CommandData.ResetType[CFE_PSP_RESET_NAME_LENGTH-1] = 0;
+
+            if ((strncmp(CommandData.ResetType, "PO", CFE_PSP_RESET_NAME_LENGTH ) != 0 ) &&
+                (strncmp(CommandData.ResetType, "PR", CFE_PSP_RESET_NAME_LENGTH ) != 0 ))
+            {
+               printf("\nERROR: Invalid Reset Type: %s\n\n",CommandData.ResetType);
+               CommandData.GotResetType = 0;
+               CFE_PSP_DisplayUsage(argv[0]);
+               break;
+            }
+            printf("CFE_PSP: Reset Type: %s\n",(char *)optarg);
+            CommandData.GotResetType = 1;
+            break;
+				
+         case 'S':
+            CommandData.SubType = strtol(optarg, NULL, 0 );
+            if ( CommandData.SubType < 1 || CommandData.SubType > 5 )
+            {
+               printf("\nERROR: Invalid Reset SubType: %s\n\n",optarg);
+               CommandData.SubType = 0;
+               CommandData.GotSubType = 0;
+               CFE_PSP_DisplayUsage(argv[0]);
+               break;
+            }
+            printf("CFE_PSP: Reset SubType: %d\n",(int)CommandData.SubType);
+            CommandData.GotSubType = 1;
+            break;
+
+         case 'N':
+            strncpy(CommandData.CpuName, optarg, CFE_PSP_CPU_NAME_LENGTH-1 );
+            CommandData.CpuName[CFE_PSP_CPU_NAME_LENGTH-1] = 0;
+            printf("CFE_PSP: CPU Name: %s\n",CommandData.CpuName);
+            CommandData.GotCpuName = 1;
+            break;
+
+         case 'C':
+            CommandData.CpuId = strtol(optarg, NULL, 0 );
+            printf("CFE_PSP: CPU ID: %d\n",(int)CommandData.CpuId);
+            CommandData.GotCpuId = 1;
+            break;
+
+         case 'I':
+            CommandData.SpacecraftId = strtol(optarg, NULL, 0 );
+            printf("CFE_PSP: Spacecraft ID: %d\n",(int)CommandData.SpacecraftId);
+            CommandData.GotSpacecraftId = 1;
+            break;
+
+         case 'h':
+            CFE_PSP_DisplayUsage(argv[0]);
+            break;
+	
+         default:
+            CFE_PSP_DisplayUsage(argv[0]);
+            break;
+       }
+		
+       opt = getopt_long( argc, argv, optString, longOpts, &longIndex );
+   } /* end while */
+   
+   /*
+   ** Set the defaults for values that were not given for the 
+   ** optional arguments, and check for arguments that are required.
+   */
+   CFE_PSP_ProcessArgumentDefaults(&CommandData);
+
+   /*
+   ** Assign the Spacecraft ID, CPU ID, and CPU Name
+   */
+   CFE_PSP_SpacecraftId = CommandData.SpacecraftId;
+   CFE_PSP_CpuId = CommandData.CpuId;
+   strncpy(CFE_PSP_CpuName, CommandData.CpuName, sizeof(CFE_PSP_CpuName)-1);
+   CFE_PSP_CpuName[sizeof(CFE_PSP_CpuName)-1] = 0;
+
+   /*
+   ** Set the reset subtype
+   */
+   reset_subtype = CommandData.SubType;
+
+   CFE_PSP_ticks_per_second = TICKS_PER_SECOND;
+
+   /*
+   ** Initialize the OS API data structures
+   */
+   Status = OS_API_Init();
+   if (Status != OS_SUCCESS)
+   {
+       /* irrecoverable error if OS_API_Init() fails. */
+       /* note: use printf here, as OS_printf may not work */
+       printf("CFE_PSP: OS_API_Init() failure\n");
+       CFE_PSP_Panic(Status);
+   }
+
+   /*
+    * Map the PSP shared memory segments
+    */
+   CFE_PSP_SetupReservedMemoryMap();
+
+   /*
+    * Prepare for exception handling in the idle task
+    */
+   memset(&CFE_PSP_IdleTaskState, 0, sizeof(CFE_PSP_IdleTaskState));
+   CFE_PSP_IdleTaskState.ThreadID = pthread_self();
+
+   /*
+   ** Initialize the NOS engine link (note: this also creates the common hub)
+   */
+   nos_init_link();
+
+   /*
+   ** Set the NOS Engine Timer Tick Callback
+   */
+   CFE_PSP_Bus = NE_create_bus(hub, ENGINE_BUS_NAME, ENGINE_SERVER_URI);
+   NE_bus_add_time_tick_callback(CFE_PSP_Bus, CFE_PSP_NosTickCallback);
+
+   /*
+   ** Set up the timebase, if OSAL supports it
+   ** Done here so that the modules can also use it, if desired
+   **
+   ** This is a clock named "cFS-Master" that will serve to drive
+   ** all time-related CFE functions including the 1Hz signal.
+   **
+   ** Note the timebase is only prepared here; the application is
+   ** not ready to receive a callback yet, as it hasn't been started.
+   ** CFE TIME registers its own callback when it is ready to do so.
+   */
+   time_status = OS_TimeBaseCreate(&sys_timebase_id, "cFS-Master", NULL);
+   if (time_status == OS_SUCCESS)
+   {
+       /*
+        * Set the clock to trigger with 50ms resolution - slow enough that
+        * it will not hog CPU resources but fast enough to have sufficient resolution
+        * for most general timing purposes.
+        * (It may be better to move this to the mission config file)
+        */
+       time_status = OS_TimeBaseSet(sys_timebase_id, 50000, 50000);
+   }
+   else
+   {
+       /*
+        * Cannot create a timebase in OSAL.
+        *
+        * Note: Most likely this is due to building with
+        * the old/classic POSIX OSAL which does not support this.
+        *
+        * See below for workaround.
+        */
+       sys_timebase_id = 0;
+   }
+
+   /*
+   ** Set up the virtual FS mapping for the "/cf" directory
+   ** On this platform it is just a local/relative dir of the same name.
+   */
+   Status = OS_FileSysAddFixedMap(&fs_id, "./cf", "/cf");
+   if (Status != OS_SUCCESS)
+   {
+       /* Print for informational purposes --
+        * startup can continue, but loads may fail later, depending on config. */
+       OS_printf("CFE_PSP: OS_FileSysAddFixedMap() failure: %d\n", (int)Status);
+   }
+
+   /*
+   ** Set up virtual FS mapping for the "/data" directory
+   ** This folder is for storing housekeeping, science, and other data provided by the DS application.
+   */
+   Status = OS_FileSysAddFixedMap(&fs_id, "./data", "/data");
+   if (Status != OS_SUCCESS)
+   {
+       /* Print for informational purposes --
+        * startup can continue, but loads may fail later, depending on config. */
+       OS_printf("CFE_PSP: OS_FileSysAddFixedMap() failure: %d\n", (int)Status);
+   }
+
+   /*
+   ** Initialize the statically linked modules (if any)
+   ** This is only applicable to CMake build - classic build
+   ** does not have the logic to selectively include/exclude modules
+   */
+   CFE_PSP_ModuleInit();
+     
+   sleep(1);
+
+   /*
+    * For informational purposes, show the state of the last exit
+    */
+   if (CFE_PSP_ReservedMemoryMap.BootPtr->ValidityFlag == CFE_PSP_BOOTRECORD_VALID)
+   {
+       OS_printf("CFE_PSP: Normal exit from previous cFE instance\n");
+   }
+   else if (CFE_PSP_ReservedMemoryMap.BootPtr->ValidityFlag == CFE_PSP_BOOTRECORD_INVALID)
+   {
+       OS_printf("CFE_PSP: Abnormal exit from previous cFE instance\n");
+   }
+
+   /*
+    * determine reset type...
+    * If not specified at the command line, then check the "boot record"
+    */
+   reset_type = 0;
+   if (!CommandData.GotResetType)
+   {
+       if (CFE_PSP_ReservedMemoryMap.BootPtr->ValidityFlag == CFE_PSP_BOOTRECORD_VALID ||
+               CFE_PSP_ReservedMemoryMap.BootPtr->ValidityFlag == CFE_PSP_BOOTRECORD_INVALID)
+       {
+           reset_type = CFE_PSP_ReservedMemoryMap.BootPtr->NextResetType;
+       }
+   }
+   else if (strncmp("PR", CommandData.ResetType, 2 ) == 0 )
+   {
+       reset_type = CFE_PSP_RST_TYPE_PROCESSOR;
+   }
+
+   if (reset_type == CFE_PSP_RST_TYPE_PROCESSOR)
+   {
+       OS_printf("CFE_PSP: Starting the cFE with a PROCESSOR reset.\n");
+   }
+   else
+   {
+       /* catch-all for anything else */
+       reset_type = CFE_PSP_RST_TYPE_POWERON;
+       OS_printf("CFE_PSP: Starting the cFE with a POWER ON reset.\n");
+   }
+
+
+   /*
+   ** Initialize the reserved memory 
+   */
+   Status = CFE_PSP_InitProcessorReservedMemory(reset_type);
+   if (Status != CFE_PSP_SUCCESS)
+   {
+       OS_printf("CFE_PSP: CFE_PSP_InitProcessorReservedMemory() Failure");
+       CFE_PSP_Panic(Status);
+   }
+
+   /*
+   ** Call cFE entry point.
+   */
+   CFE_PSP_MAIN_FUNCTION(reset_type, reset_subtype, 1, CFE_PSP_NONVOL_STARTUP_FILE);
+
+   /*
+    * Backward compatibility for old OSAL.
+    */
+   if (sys_timebase_id == 0 || time_status != OS_SUCCESS)
+   {
+       OS_printf("CFE_PSP: WARNING - Compatibility mode - using local 1Hz Interrupt\n");
+       CFE_PSP_SetupLocal1Hz();
+   }
+
+}
+
+void OS_Application_Run(void)
+{
+    int sig;
+    int ret;
+    sigset_t sigset;
+
+
+    /*
+     * Now that all main tasks are created,
+     * this original thread will exist just to service signals
+     * that aren't directed to a specific task.
+     *
+     * OSAL sets a very conservative signal mask that
+     * blocks most signals. Start by unblocking the
+     * ones that should be handled.
+     *
+     * Unblock SIGQUIT so the user can force exit the CFE
+     * by pressing CTRL+\ (default handler).  Also allow
+     * SIGTERM for which a handler was installed in CFE_PSP_AttachExceptions()
+     */
+    sigemptyset(&sigset);
+    sigaddset(&sigset, SIGQUIT);
+    sigaddset(&sigset, SIGTERM);
+    pthread_sigmask(SIG_UNBLOCK, &sigset, NULL);
+
+    /*
+     * Reset to the signal for background events (SIGUSR1)
+     */
+    sigemptyset(&sigset);
+    sigaddset(&sigset, CFE_PSP_EXCEPTION_EVENT_SIGNAL);
+
+    /*
+    ** just wait for events to occur and notify CFE
+    **
+    ** "shutdownreq" will become true if CFE calls CFE_PSP_Restart(),
+    ** indicating a request to gracefully exit and restart CFE.
+    */
+    while (!CFE_PSP_IdleTaskState.ShutdownReq)
+    {
+        /* go idle and wait for an event */
+        ret = sigwait(&sigset, &sig);
+
+        if (ret == 0 && !CFE_PSP_IdleTaskState.ShutdownReq &&
+                sig == CFE_PSP_EXCEPTION_EVENT_SIGNAL &&
+                GLOBAL_CFE_CONFIGDATA.SystemNotify != NULL)
+        {
+            /* notify the CFE of the event */
+            GLOBAL_CFE_CONFIGDATA.SystemNotify();
+        }
+    }
+
+   /*
+    * This happens if an unhandled exception occurs, or if the user presses CTRL+C
+    */
+   OS_printf("\nCFE_PSP: Shutdown initiated - Exiting cFE\n");
+   OS_TaskDelay(100);
+
+   OS_DeleteAllObjects();
+
+   /*
+   ** Cleanup NOS engine resources
+   */
+   NE_destroy_bus(&CFE_PSP_Bus);
+   nos_destroy_link();
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_NosTickCallback()
+**
+**  Purpose:
+**    NOS engine tick callback.
+**    This timer handler will execute 4 times a second.
+**
+**  Arguments:
+**    time -- the NOS engine time.
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_NosTickCallback(NE_SimTime time)
+{
+    pthread_mutex_lock(&CFE_PSP_sim_time_mutex);
+    CFE_PSP_sim_time = time;
+    pthread_mutex_unlock(&CFE_PSP_sim_time_mutex);
+    NOS_timer_fire(time);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_TimerHandler()
+**
+**  Purpose:
+**    1hz "isr" routine for linux/OSX
+**    This timer handler will execute 4 times a second.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_TimerHandler (int signum)
+{
+      /*
+      ** call the CFE_TIME 1hz ISR
+      */
+      if((TimerCounter % 4) == 0) CFE_PSP_1HZ_FUNCTION();
+
+	  /* update timer counter */
+	  TimerCounter++;
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_DisplayUsage
+**
+**  Purpose:
+**    Display program usage, and exit.
+**
+**  Arguments:
+**    Name -- the name of the binary.
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_DisplayUsage(char *Name )
+{
+
+   printf("usage : %s [-R <value>] [-S <value>] [-C <value] [-N <value] [-I <value] [-h] \n", Name);
+   printf("\n");
+   printf("        All parameters are optional and can be used in any order\n");
+   printf("\n");
+   printf("        Parameters include:\n");
+   printf("        -R [ --reset ] Reset Type is one of:\n");
+   printf("             PO   for Power On reset ( default )\n");
+   printf("             PR   for Processor Reset\n");
+   printf("        -S [ --subtype ] Reset Sub Type is one of\n");
+   printf("             1   for  Power on ( default )\n");
+   printf("             2   for  Push Button Reset\n");
+   printf("             3   for  Hardware Special Command Reset\n");
+   printf("             4   for  Watchdog Reset\n");
+   printf("             5   for  Reset Command\n");
+   printf("        -C [ --cpuid ]   CPU ID is an integer CPU identifier.\n");
+   printf("             The default  CPU ID is from the platform configuration file: %d\n",CFE_PSP_CPU_ID);
+   printf("        -N [ --cpuname ] CPU Name is a string to identify the CPU.\n");
+   printf("             The default  CPU Name is from the platform configuration file: %s\n",CFE_PSP_CPU_NAME);
+   printf("        -I [ --scid ]    Spacecraft ID is an integer Spacecraft identifier.\n");
+   printf("             The default Spacecraft ID is from the mission configuration file: %d\n",CFE_PSP_SPACECRAFT_ID);
+   printf("        -h [ --help ]    This message.\n");
+   printf("\n");
+   printf("       Example invocation:\n");
+   printf(" \n");
+   printf("       Short form:\n");
+   printf("       %s -R PO -S 1 -C 1 -N CPU1 -I 32\n",Name);
+   printf("       Long form:\n");
+   printf("       %s --reset PO --subtype 1 --cpuid 1 --cpuname CPU1 --scid 32\n",Name);
+   printf(" \n");
+
+   exit( 1 );
+}
+/******************************************************************************
+**  Function: CFE_PSP_ProcessArgumentDefaults
+**
+**  Purpose:
+**    This function assigns defaults to parameters and checks to make sure
+**    the user entered required parameters 
+**
+**  Arguments:
+**    CFE_PSP_CommandData_t *CommandDataDefault -- A pointer to the command parameters.
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_ProcessArgumentDefaults(CFE_PSP_CommandData_t *CommandDataDefault)
+{
+   if ( CommandDataDefault->GotSubType == 0 )
+   {
+      CommandDataDefault->SubType = 1;
+      printf("CFE_PSP: Default Reset SubType = 1\n");
+      CommandDataDefault->GotSubType = 1;
+   }
+   
+   if ( CommandDataDefault->GotCpuId == 0 )
+   {
+      CommandDataDefault->CpuId = CFE_PSP_CPU_ID;
+      printf("CFE_PSP: Default CPU ID = %d\n",CFE_PSP_CPU_ID);
+      CommandDataDefault->GotCpuId = 1;
+   }
+   
+   if ( CommandDataDefault->GotSpacecraftId == 0 )
+   {
+      CommandDataDefault->SpacecraftId = CFE_PSP_SPACECRAFT_ID;
+      printf("CFE_PSP: Default Spacecraft ID = %d\n",CFE_PSP_SPACECRAFT_ID);
+      CommandDataDefault->GotSpacecraftId = 1;
+   }
+   
+   if ( CommandDataDefault->GotCpuName == 0 )
+   {
+      strncpy(CommandDataDefault->CpuName, CFE_PSP_CPU_NAME, CFE_PSP_CPU_NAME_LENGTH-1 );
+      CommandDataDefault->CpuName[CFE_PSP_CPU_NAME_LENGTH-1] = 0;
+      printf("CFE_PSP: Default CPU Name: %s\n",CFE_PSP_CPU_NAME);
+      CommandDataDefault->GotCpuName = 1;
+   }
+
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_SetupLocal1Hz
+**
+**  Purpose:
+**    This is a backward-compatible timer setup that is invoked when
+**    there is a failure to set up the timebase in OSAL.  It is basically
+**    the old way of doing things.
+**
+**    IMPORTANT: Note this is technically incorrect as it gives the
+**    callback directly in the context of the signal handler.  It is
+**    against spec to use most OSAL functions within a signal.
+**
+**    This is included merely to mimic the previous system behavior. It
+**    should be removed in a future version of the PSP.
+**
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+**
+*/
+
+void CFE_PSP_SetupLocal1Hz(void)
+{
+    struct sigaction    sa;
+    struct itimerval    timer;
+    int ret;
+
+    /*
+    ** Init timer counter
+    */
+    TimerCounter = 0;
+
+    /*
+    ** Install timer_handler as the signal handler for SIGALRM.
+    */
+    memset (&sa, 0, sizeof (sa));
+    sa.sa_handler = &CFE_PSP_TimerHandler;
+
+    /*
+    ** Configure the timer to expire after 250ms
+    **
+    ** (this is historical; the actual callback is invoked
+    ** only on every 4th timer tick.  previous versions of the
+    ** PSP did it this way, so this is preserved here).
+    */
+    timer.it_value.tv_sec  = 0;
+    timer.it_value.tv_usec = 250000;
+    timer.it_interval.tv_sec  = 0;
+    timer.it_interval.tv_usec = 250000;
+
+    ret = sigaction (SIGALRM, &sa, NULL);
+
+    if (ret < 0)
+    {
+        OS_printf("CFE_PSP: sigaction() error %d: %s \n", ret, strerror(errno));
+    }
+    else
+    {
+        ret = setitimer (ITIMER_REAL, &timer, NULL);
+        if (ret < 0)
+        {
+            OS_printf("CFE_PSP: setitimer() error %d: %s \n", ret, strerror(errno));
+        }
+    }
+}
+
+static void print_splash(void)
+{
+    const char *splash = "   \x1B[1;37m*                                      *                    *\n\
+       *                                                  *                *             \n\
+\x1B[1;37m            ]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]            ]]]]]]\033[0m\n\
+\x1B[32m          ]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]            ]]]]]] \033[0m\n\
+\x1B[1;33m    \x1B[1;37m*\x1B[1;33m    ]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]]  ]]]]]]]]]]]]]]]]            ]]]]]]  \033[0m\n\
+\x1B[33m         ]]]]]]              ]]]]]]       ]]]]]]]                     ]]]]]]   \033[0m\n\
+\x1B[1;31m         ]]]]]]]]       \x1B[1;37m*\033[0m\x1B[1;31m   ]]]]]]       ]]]]]]]]]]]]]]   ]]]]]]]]   ]]]]]]    \033[0m\n\
+\x1B[1;35m \x1B[1;37m*\x1B[1;35m        ]]]]]]]]         ]]]]]]       ]]]]]]]]]]]]]]   ]]]]]]]]   ]]]]]]     \033[0m\n\
+\x1B[1;34m             ]]]]]]      ]]]]]]]  \x1B[1;37m*\x1B[1;34m    ]]]]]]]                     ]]]]]]      \033[0m\n\
+\x1B[1;37m   ]]]]]]]]]]]]]]]      ]]]]]]]       ]]]]]]]   FLIGHT SOFTWARE   ]]]]]]     *  \033[0m\n\
+\x1B[37m  ]]]]]]]]]]]]]]]      ]]]]]]]       ]]]]]]]                     ]]]]]]        \033[0m\n\
+\x1B[1;30m ]]]]]]]]]]]]]]       ]]]]]]]       ]]]]]]]                     ]]]]]]\033[0m\n\
+\x1B[1;37m      *                        *                        *                         *\n\
+ *                                     *                                *               *\n\
+                *\n\
+\n\
+";
+
+    printf("%s", splash);
+}
+```
+
+### `cfe_psp_timer.c`
+
+**경로:** `fsw/psp/fsw/nos-linux/src/cfe_psp_timer.c`
+
+
+```c
+/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/************************************************************************************************
+** File:  cfe_psp_timer.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually dont fit well in the OS abstraction layer.
+**
+** History:
+**   2005/06/05  K.Audra    | Initial version,
+**
+*************************************************************************************************/
+
+/*
+**  Include Files
+*/
+
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+**  System Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+
+#include "NOS-time.h"
+
+/*
+ * The specific clock ID to use with clock_gettime
+ *
+ * Linux provides some special (non-posix) clock IDs that also
+ * could be relevant/useful:
+ *
+ * CLOCK_MONOTONIC_COARSE - emphasis on read speed at the (possible?) expense of precision
+ * CLOCK_MONOTONIC_RAW - possibly hardware based, not affected by NTP or other sync software
+ * CLOCK_BOOTTIME - includes time the system is suspended.
+ *
+ * Defaulting to the POSIX-specified "MONOTONIC" but it should be possible to use
+ * one of the Linux-specific variants if the target system provides it.
+ */
+#define CFE_PSP_TIMEBASE_REF_CLOCK CLOCK_MONOTONIC
+
+
+/******************* Macro Definitions ***********************/
+
+#define CFE_PSP_TIMER_TICKS_PER_SECOND       1000000    /* Resolution of the least significant 32 bits of the 64 bit
+                                                           time stamp returned by OS_BSPGet_Timebase in timer ticks per second.
+                                                           The timer resolution for accuracy should not be any slower than 1000000
+                                                           ticks per second or 1 us per tick */
+#define CFE_PSP_TIMER_LOW32_ROLLOVER         1000000    /* The number that the least significant 32 bits of the 64 bit
+                                                           time stamp returned by OS_BSPGet_Timebase rolls over.  If the lower 32
+                                                           bits rolls at 1 second, then the OS_BSP_TIMER_LOW32_ROLLOVER will be 1000000.
+                                                           if the lower 32 bits rolls at its maximum value (2^32) then
+                                                           OS_BSP_TIMER_LOW32_ROLLOVER will be 0. */
+
+/******************************************************************************
+**  Function:  CFE_PSP_GetTime()
+**
+**  Purpose: Gets the value of the time from the hardware
+**
+**  Arguments: LocalTime - where the time is returned through
+******************************************************************************/
+
+void CFE_PSP_GetTime( OS_time_t *LocalTime)
+{
+    struct timespec now;
+
+    if (NOS_clock_gettime(CFE_PSP_TIMEBASE_REF_CLOCK, &now) != 0)
+    {
+        /* unlikely - but avoids undefined behavior */
+        now.tv_sec  = 0;
+        now.tv_nsec = 0;
+    }
+
+    *LocalTime = OS_TimeAssembleFromNanoseconds(now.tv_sec, now.tv_nsec);
+
+}/* end CFE_PSP_GetLocalTime */
+
+
+
+/******************************************************************************
+**  Function:  CFE_PSP_Get_Timer_Tick()
+**
+**  Purpose:
+**    Provides a common interface to system clock tick. This routine
+**    is in the BSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**  OS system clock ticks per second
+*/
+uint32 CFE_PSP_Get_Timer_Tick(void)
+{
+   /* SUB -add function call code*/
+   return (0);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_GetTimerTicksPerSecond()
+**
+**  Purpose:
+**    Provides the resolution of the least significant 32 bits of the 64 bit
+**    time stamp returned by OS_BSPGet_Timebase in timer ticks per second.
+**    The timer resolution for accuracy should not be any slower than 1000000
+**    ticks per second or 1 us per tick
+**
+**  Arguments:
+**
+**  Return:
+**    The number of timer ticks per second of the time stamp returned
+**    by CFE_PSP_Get_Timebase
+*/
+uint32 CFE_PSP_GetTimerTicksPerSecond(void)
+{
+    return(CFE_PSP_TIMER_TICKS_PER_SECOND);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_GetTimerLow32Rollover()
+**
+**  Purpose:
+**    Provides the number that the least significant 32 bits of the 64 bit
+**    time stamp returned by CFE_PSP_Get_Timebase rolls over.  If the lower 32
+**    bits rolls at 1 second, then the CFE_PSP_TIMER_LOW32_ROLLOVER will be 1000000.
+**    if the lower 32 bits rolls at its maximum value (2^32) then
+**    CFE_PSP_TIMER_LOW32_ROLLOVER will be 0.
+**
+**  Arguments:
+**
+**  Return:
+**    The number that the least significant 32 bits of the 64 bit time stamp
+**    returned by CFE_PSP_Get_Timebase rolls over.
+*/
+uint32 CFE_PSP_GetTimerLow32Rollover(void)
+{
+    return(CFE_PSP_TIMER_LOW32_ROLLOVER);
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_Get_Timebase()
+**
+**  Purpose:
+**    Provides a common interface to system timebase. This routine
+**    is in the BSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**  Timebase register value
+*/
+void CFE_PSP_Get_Timebase(uint32 *Tbu, uint32* Tbl)
+{
+   struct timespec now;
+
+    if (NOS_clock_gettime(CFE_PSP_TIMEBASE_REF_CLOCK, &now) != 0)
+    {
+        /* unlikely - but avoids undefined behavior */
+        now.tv_sec  = 0;
+        now.tv_nsec = 0;
+    }
+
+    *Tbu = now.tv_sec & 0xFFFFFFFF;
+    *Tbl = now.tv_nsec;
+}
+
+/******************************************************************************
+**  Function:  CFE_PSP_Get_Dec()
+**
+**  Purpose:
+**    Provides a common interface to decrementer counter. This routine
+**    is in the PSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**  Timebase register value
+*/
+
+uint32 CFE_PSP_Get_Dec(void)
+{
+   /* SUB -add function call code*/
+   return(0);
+}
+
+```

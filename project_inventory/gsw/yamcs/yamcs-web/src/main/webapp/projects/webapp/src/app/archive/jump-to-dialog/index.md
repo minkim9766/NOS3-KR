@@ -3,16 +3,59 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/jump-to-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `jump-to-dialog.component.html`
 
-file--jump-to-dialog.component.html
-file--jump-to-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/jump-to-dialog/jump-to-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Jump to date</h2>
+
+<mat-dialog-content class="ya-form">
+  <ya-field label="Date">
+    <ya-date-time-input [formControl]="date" [showNow]="true" />
+  </ya-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="select()">OK</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `jump-to-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/jump-to-dialog/jump-to-dialog.component.html`](file--jump-to-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/jump-to-dialog/jump-to-dialog.component.ts`](file--jump-to-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/jump-to-dialog/jump-to-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import { UntypedFormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule, utils } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-jump-to-dialog',
+  templateUrl: './jump-to-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class JumpToDialogComponent {
+  date = new UntypedFormControl(null, [Validators.required]);
+
+  constructor(
+    private dialogRef: MatDialogRef<JumpToDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    if (this.data.date) {
+      this.date.setValue(utils.toISOString(this.data.date));
+    }
+  }
+
+  select() {
+    const date = utils.toDate(this.date.value);
+    this.dialogRef.close({ date });
+  }
+}
+```

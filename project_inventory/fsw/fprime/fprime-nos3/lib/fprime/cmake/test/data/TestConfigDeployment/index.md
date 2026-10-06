@@ -3,26 +3,178 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 override/index
-file--CMakeLists.txt
-file--settings.ini
-file--TestFPrimeHeaderOverride.cpp
-file--TestFPrimeLibraryOverride.cpp
-file--TestFPrimeModelOverride.cpp
-file--TestLibraryNewConfig.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/override/`](override/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestFPrimeHeaderOverride.cpp`](file--TestFPrimeHeaderOverride.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestFPrimeLibraryOverride.cpp`](file--TestFPrimeLibraryOverride.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestFPrimeModelOverride.cpp`](file--TestFPrimeModelOverride.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestLibraryNewConfig.cpp`](file--TestLibraryNewConfig.cpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/CMakeLists.txt`
+
+
+```cmake
+####
+# 'TestDeployment' Deployment:
+#
+# A deployment used to test extra functions of the CMake setup.
+####
+
+# Base settings
+cmake_minimum_required(VERSION 3.16)
+cmake_policy(SET CMP0048 NEW)
+project(TestConfigDeployment VERSION 1.0.0 LANGUAGES C CXX)
+
+include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime.cmake")
+# NOTE: register custom targets between these two lines
+include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/override/project")
+
+register_fprime_library(
+        TestModelOverride
+    SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/TestFPrimeModelOverride.cpp"
+    DEPENDS
+        project_config
+)
+register_fprime_library(
+        TestHeaderOverride
+    SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/TestFPrimeHeaderOverride.cpp"
+    DEPENDS
+        project_config
+)
+register_fprime_library(
+        TestFPrimeLibraryOverride
+    SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/TestFPrimeLibraryOverride.cpp"
+    DEPENDS
+        project_config
+)
+register_fprime_library(
+        TestLibraryNewConfig
+    SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/TestLibraryNewConfig.cpp"
+    DEPENDS
+        project_config
+)
+```
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/settings.ini`
+
+
+```text
+[fprime]
+framework_path: ../../../..
+project_root: ..
+library_locations: ../test-config-library
+```
+
+### `TestFPrimeHeaderOverride.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestFPrimeHeaderOverride.cpp`
+
+
+```cpp
+
+// ======================================================================
+// \title  TestFPrimeHeaderOverride.cpp
+// \author mstarch
+// \brief  cpp file for config override testing
+//
+// \description this file will fail to compile if the DpCfg.hpp header was
+//    not overridden using the F Prime configuration build system
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include "config/DpCfg.hpp"
+static_assert(OVERRIDE_TEST, "OVERRIDE_TEST is not set, header override failed");
+              
+```
+
+### `TestFPrimeLibraryOverride.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestFPrimeLibraryOverride.cpp`
+
+
+```cpp
+
+// ======================================================================
+// \title  TestFprimeLibraryOverride.cpp
+// \author mstarch
+// \brief  cpp file for config override testing
+//
+// \description this file will fail to compile if the library was unable to
+//     override a file from the F Prime configuration build system support.
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include "config/StaticMemoryConfig.hpp"
+static_assert(MY_LIBRARY_OVERRIDE, "MY_LIBRARY_OVERRIDE is not set, library override failed");
+```
+
+### `TestFPrimeModelOverride.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestFPrimeModelOverride.cpp`
+
+
+```cpp
+
+// ======================================================================
+// \title  TestFPrimeModelOverride.cpp
+// \author mstarch
+// \brief  cpp file for config override testing
+//
+// \description this file will fail to compile if the model (FpConfig.fpp)
+//    was not overridden using the F Prime configuration build system
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include <type_traits>
+#include <cstdint>
+#include "config/FwChanIdTypeAliasAc.h"
+static_assert(std::is_same<FwChanIdType,uint64_t>::value, "FwChanIdType not a U64, model override failed");
+```
+
+### `TestLibraryNewConfig.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/TestLibraryNewConfig.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TestLibraryNewConfig.cpp
+// \author mstarch
+// \brief  cpp file for new library config testing
+//
+// \description this file will fail to compile if libraries cannot add new
+//     configuration options using the F Prime configuration build system
+//
+// \copyright
+// Copyright 2025, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include "config/config.hpp"
+static_assert(MY_LIBRARY_CONFIG, "MY_LIBRARY_CONFIG is not set, library new config failed");
+```

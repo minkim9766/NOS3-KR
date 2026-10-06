@@ -3,18 +3,77 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-band-wizard-step.component.css`
 
-file--create-band-wizard-step.component.css
-file--create-band-wizard-step.component.html
-file--create-band-wizard-step.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/create-band-wizard-step.component.css`
+
+
+```css
+span {
+  cursor: default;
+}
+
+span span {
+  opacity: 0.3;
+}
+
+span span.active {
+  opacity: 1;
+}
+
+mat-toolbar.sub {
+  border-bottom: 1px solid #d3d3d3;
+  background-color: #fff;
+  font-size: 12px;
+}
+
+.mat-toolbar-row {
+  height: 32px;
+  padding: 0 24px;
+}
+
+.mat-toolbar-multiple-rows {
+  min-height: 32px;
+}
 ```
 
-## 항목
+### `create-band-wizard-step.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/create-band-wizard-step.component.css`](file--create-band-wizard-step.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/create-band-wizard-step.component.html`](file--create-band-wizard-step.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/create-band-wizard-step.component.ts`](file--create-band-wizard-step.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/create-band-wizard-step.component.html`
+
+
+```html
+<mat-toolbar class="sub">
+  <mat-toolbar-row>
+    <span>
+      <span [class.active]="step === '1'">1. Select band type</span>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span [class.active]="step === '2'">2. Configure band</span>
+    </span>
+  </mat-toolbar-row>
+</mat-toolbar>
+```
+
+### `create-band-wizard-step.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/create-band-wizard-step.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-create-band-wizard-step',
+  templateUrl: './create-band-wizard-step.component.html',
+  styleUrl: './create-band-wizard-step.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CreateBandWizardStepComponent {
+  @Input()
+  step: string;
+}
+```

@@ -3,50 +3,5979 @@
 
 **경로:** `fsw/cfe/modules/core_api/ut-stubs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_config_handlers.c`
 
-file--cfe_config_handlers.c
-file--cfe_config_stubs.c
-file--cfe_error_stubs.c
-file--cfe_es_handlers.c
-file--cfe_es_stubs.c
-file--cfe_evs_handlers.c
-file--cfe_evs_stubs.c
-file--cfe_fs_handlers.c
-file--cfe_fs_stubs.c
-file--cfe_msg_handlers.c
-file--cfe_msg_stubs.c
-file--cfe_resourceid_handlers.c
-file--cfe_resourceid_stubs.c
-file--cfe_sb_handlers.c
-file--cfe_sb_stubs.c
-file--cfe_tbl_handlers.c
-file--cfe_tbl_stubs.c
-file--cfe_time_handlers.c
-file--cfe_time_stubs.c
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_config_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_config_handlers.c
+**
+** Purpose:
+** Unit test handlers for Configuration Service routines
+**
+** Notes:
+** Mostly implement a NULL default return where needed, as this is not done
+** automatically by UT assert.
+**
+*/
+
+/*
+** Includes
+*/
+#include <string.h>
+#include "cfe_config.h"
+
+#include "utstubs.h"
+#include "utassert.h"
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_Config_GetString coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_Config_GetString(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32      status;
+    const char FIXED_BUFFER[] = "UT";
+    void *     Buffer;
+
+    Buffer = NULL;
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_GetDataBuffer(FuncKey, &Buffer, NULL, NULL);
+
+        /*
+         * The public API has a contract _not_ to return a NULL
+         * pointer, so this should be mimiced by the UT stub
+         */
+        if (Buffer == NULL)
+        {
+            Buffer = (void *)FIXED_BUFFER;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Buffer);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_Config_GetObjPointer coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_Config_GetObjPointer(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32 status;
+    void *Buffer;
+
+    Buffer = NULL;
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_GetDataBuffer(FuncKey, &Buffer, NULL, NULL);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Buffer);
+}
 ```
 
-## 항목
+### `cfe_config_stubs.c`
 
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_config_handlers.c`](file--cfe_config_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_config_stubs.c`](file--cfe_config_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_error_stubs.c`](file--cfe_error_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_es_handlers.c`](file--cfe_es_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_es_stubs.c`](file--cfe_es_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_evs_handlers.c`](file--cfe_evs_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_evs_stubs.c`](file--cfe_evs_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_fs_handlers.c`](file--cfe_fs_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_fs_stubs.c`](file--cfe_fs_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_msg_handlers.c`](file--cfe_msg_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_msg_stubs.c`](file--cfe_msg_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_resourceid_handlers.c`](file--cfe_resourceid_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_resourceid_stubs.c`](file--cfe_resourceid_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_sb_handlers.c`](file--cfe_sb_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_sb_stubs.c`](file--cfe_sb_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_tbl_handlers.c`](file--cfe_tbl_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_tbl_stubs.c`](file--cfe_tbl_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_time_handlers.c`](file--cfe_time_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/ut-stubs/src/cfe_time_stubs.c`](file--cfe_time_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_config_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_config header
+ */
+
+#include "cfe_config.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_Config_GetObjPointer(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_Config_GetString(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_GetIdByName()
+ * ----------------------------------------------------
+ */
+CFE_ConfigId_t CFE_Config_GetIdByName(const char *Name)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_Config_GetIdByName, CFE_ConfigId_t);
+
+    UT_GenStub_AddParam(CFE_Config_GetIdByName, const char *, Name);
+
+    UT_GenStub_Execute(CFE_Config_GetIdByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_Config_GetIdByName, CFE_ConfigId_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_GetName()
+ * ----------------------------------------------------
+ */
+const char *CFE_Config_GetName(CFE_ConfigId_t ConfigId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_Config_GetName, const char *);
+
+    UT_GenStub_AddParam(CFE_Config_GetName, CFE_ConfigId_t, ConfigId);
+
+    UT_GenStub_Execute(CFE_Config_GetName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_Config_GetName, const char *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_GetObjPointer()
+ * ----------------------------------------------------
+ */
+const void *CFE_Config_GetObjPointer(CFE_ConfigId_t ConfigId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_Config_GetObjPointer, const void *);
+
+    UT_GenStub_AddParam(CFE_Config_GetObjPointer, CFE_ConfigId_t, ConfigId);
+
+    UT_GenStub_Execute(CFE_Config_GetObjPointer, Basic, UT_DefaultHandler_CFE_Config_GetObjPointer);
+
+    return UT_GenStub_GetReturnValue(CFE_Config_GetObjPointer, const void *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_GetString()
+ * ----------------------------------------------------
+ */
+const char *CFE_Config_GetString(CFE_ConfigId_t ConfigId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_Config_GetString, const char *);
+
+    UT_GenStub_AddParam(CFE_Config_GetString, CFE_ConfigId_t, ConfigId);
+
+    UT_GenStub_Execute(CFE_Config_GetString, Basic, UT_DefaultHandler_CFE_Config_GetString);
+
+    return UT_GenStub_GetReturnValue(CFE_Config_GetString, const char *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_GetValue()
+ * ----------------------------------------------------
+ */
+uint32 CFE_Config_GetValue(CFE_ConfigId_t ConfigId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_Config_GetValue, uint32);
+
+    UT_GenStub_AddParam(CFE_Config_GetValue, CFE_ConfigId_t, ConfigId);
+
+    UT_GenStub_Execute(CFE_Config_GetValue, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_Config_GetValue, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_Config_IterateAll()
+ * ----------------------------------------------------
+ */
+void CFE_Config_IterateAll(void *Arg, CFE_Config_Callback_t Callback)
+{
+    UT_GenStub_AddParam(CFE_Config_IterateAll, void *, Arg);
+    UT_GenStub_AddParam(CFE_Config_IterateAll, CFE_Config_Callback_t, Callback);
+
+    UT_GenStub_Execute(CFE_Config_IterateAll, Basic, NULL);
+}
+```
+
+### `cfe_error_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_error_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_error header
+ */
+
+#include "cfe_error.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_StatusToString()
+ * ----------------------------------------------------
+ */
+char *CFE_ES_StatusToString(CFE_Status_t status, CFE_StatusString_t *status_string)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_StatusToString, char *);
+
+    UT_GenStub_AddParam(CFE_ES_StatusToString, CFE_Status_t, status);
+    UT_GenStub_AddParam(CFE_ES_StatusToString, CFE_StatusString_t *, status_string);
+
+    UT_GenStub_Execute(CFE_ES_StatusToString, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_StatusToString, char *);
+}
+```
+
+### `cfe_es_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_es_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_es_stubs.c
+**
+** Purpose:
+** Unit test stubs for Executive Service routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include <string.h>
+#include "cfe_es.h"
+#include "cfe_resourceid.h"
+#include "cfe_resourceid_basevalue.h"
+
+#include "utstubs.h"
+#include "utassert.h"
+
+/*
+ * Assign ID base values for UT
+ */
+enum
+{
+    UT_CFE_ES_TASKID_BASE     = CFE_RESOURCEID_MAKE_BASE(0x21),
+    UT_CFE_ES_APPID_BASE      = CFE_RESOURCEID_MAKE_BASE(0x22),
+    UT_CFE_ES_LIBID_BASE      = CFE_RESOURCEID_MAKE_BASE(0x23),
+    UT_CFE_ES_COUNTID_BASE    = CFE_RESOURCEID_MAKE_BASE(0x24),
+    UT_CFE_ES_POOLID_BASE     = CFE_RESOURCEID_MAKE_BASE(0x25),
+    UT_CFE_ES_CDSBLOCKID_BASE = CFE_RESOURCEID_MAKE_BASE(0x26)
+};
+
+struct UT_AlignTest
+{
+    char               Byte;
+    CFE_ES_PoolAlign_t Align;
+};
+
+/*
+ * Determine the actual alignment of the CFE_ES_PoolAlign_t structure.
+ * This is done by checking the offset of a struct member of that type following a single byte.
+ */
+static const cpuaddr UT_ESPOOL_ALIGN_MASK = ((cpuaddr) & ((struct UT_AlignTest *)0)->Align) - 1;
+
+/*
+ * Unit-test stub definitions/limits
+ *
+ * Note these limits only apply to the ES _stubs_ and not
+ * the normal implementation.  It should not be necessary
+ * to configure these on a deployment basis.
+ */
+
+/*
+ * Maximum block size for ES pool requests
+ *
+ * This is only for pool block requests where the test
+ * case does _not_ register its own buffer, and therefore
+ * gets serviced from the default (static) pool buffer.
+ *
+ * This fixed value should be enough for most simple test
+ * cases.  If a test case requires a larger block, it should
+ * register its own simulated pool using UT_SetDataBuffer,
+ * rather than changing this value.
+ */
+#define CFE_UT_ES_POOL_STATIC_BLOCK_SIZE 4096
+
+/*
+ * Default value to return from calls that output an App ID, if the
+ * test case does not provide a value
+ */
+#define CFE_UT_ES_DEFAULT_APPID CFE_ES_APPID_C(CFE_ResourceId_FromInteger(UT_CFE_ES_APPID_BASE + 1))
+
+/*
+ * Default value to return from calls that output a Task ID, if the
+ * test case does not provide a value
+ */
+#define CFE_UT_ES_DEFAULT_TASKID CFE_ES_TASKID_C(CFE_ResourceId_FromInteger(UT_CFE_ES_TASKID_BASE + 1))
+
+/*
+ * Default value to return from calls that output a CDS ID, if the
+ * test case does not provide a value
+ */
+#define CFE_UT_ES_DEFAULT_CDSID CFE_ES_CDSHANDLE_C(CFE_ResourceId_FromInteger(UT_CFE_ES_CDSBLOCKID_BASE + 1))
+
+/*
+ * Invalid value to output from calls as resource ID for the
+ * calls that return failure.  If subsequently used by application code,
+ * it will likely induce a segfault or other noticeably bad behavior.
+ */
+#define CFE_UT_ES_ID_INVALID CFE_ResourceId_FromInteger(0xDEADBEEF)
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_CreateChildTask coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_CreateChildTask(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_TaskId_t *TaskIdPtr = UT_Hook_GetArgValueByName(Context, "TaskIdPtr", CFE_ES_TaskId_t *);
+    int32            status;
+    void *           IdBuff;
+    size_t           BuffSize;
+    size_t           Position;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_GetDataBuffer(UT_KEY(CFE_ES_GetAppID), &IdBuff, &BuffSize, &Position);
+        if (IdBuff != NULL && BuffSize == sizeof(*TaskIdPtr))
+        {
+            memcpy(TaskIdPtr, IdBuff, sizeof(*TaskIdPtr));
+        }
+        else
+        {
+            *TaskIdPtr = CFE_UT_ES_DEFAULT_TASKID;
+        }
+    }
+
+    if (status < 0)
+    {
+        *TaskIdPtr = CFE_ES_TASKID_UNDEFINED;
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetAppID coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetAppID(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_AppId_t *AppIdPtr = UT_Hook_GetArgValueByName(Context, "AppIdPtr", CFE_ES_AppId_t *);
+    int32           status;
+    void *          IdBuff;
+    size_t          BuffSize;
+    size_t          Position;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_GetDataBuffer(UT_KEY(CFE_ES_GetAppID), &IdBuff, &BuffSize, &Position);
+        if (IdBuff != NULL && BuffSize == sizeof(*AppIdPtr))
+        {
+            memcpy(AppIdPtr, IdBuff, sizeof(*AppIdPtr));
+        }
+        else
+        {
+            *AppIdPtr = CFE_UT_ES_DEFAULT_APPID;
+        }
+    }
+
+    if (status < 0)
+    {
+        *AppIdPtr = CFE_ES_APPID_C(CFE_UT_ES_ID_INVALID);
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetTaskID coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetTaskID(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_TaskId_t *TaskIdPtr = UT_Hook_GetArgValueByName(Context, "TaskIdPtr", CFE_ES_TaskId_t *);
+    int32            status;
+    void *           IdBuff;
+    size_t           BuffSize;
+    size_t           Position;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_GetDataBuffer(UT_KEY(CFE_ES_GetTaskID), &IdBuff, &BuffSize, &Position);
+        if (IdBuff != NULL && BuffSize == sizeof(*TaskIdPtr))
+        {
+            memcpy(TaskIdPtr, IdBuff, sizeof(*TaskIdPtr));
+        }
+        else
+        {
+            *TaskIdPtr = CFE_UT_ES_DEFAULT_TASKID;
+        }
+    }
+
+    if (status < 0)
+    {
+        *TaskIdPtr = CFE_ES_TASKID_C(CFE_UT_ES_ID_INVALID);
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetAppIDByName coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetAppIDByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_AppId_t *AppIdPtr = UT_Hook_GetArgValueByName(Context, "AppIdPtr", CFE_ES_AppId_t *);
+    const char *    AppName  = UT_Hook_GetArgValueByName(Context, "AppName", const char *);
+
+    size_t UserBuffSize;
+    size_t BuffPosition;
+    void * NameBuff;
+    void * IdBuff;
+    int32  status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(CFE_ES_GetAppIDByName), AppIdPtr, sizeof(*AppIdPtr)) < sizeof(*AppIdPtr))
+        {
+            IdBuff = NULL;
+            UT_GetDataBuffer(UT_KEY(CFE_ES_GetAppName), &NameBuff, &UserBuffSize, &BuffPosition);
+            if (NameBuff != NULL && UserBuffSize > 0 && strncmp((const char *)NameBuff, AppName, UserBuffSize) == 0)
+            {
+                UT_GetDataBuffer(UT_KEY(CFE_ES_GetAppID), &IdBuff, &UserBuffSize, &BuffPosition);
+            }
+
+            if (IdBuff != NULL && UserBuffSize == sizeof(*AppIdPtr))
+            {
+                memcpy(AppIdPtr, IdBuff, sizeof(*AppIdPtr));
+            }
+            else
+            {
+                *AppIdPtr = CFE_UT_ES_DEFAULT_APPID;
+            }
+        }
+    }
+
+    if (status < 0)
+    {
+        *AppIdPtr = CFE_ES_APPID_C(CFE_UT_ES_ID_INVALID);
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetAppName coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetAppName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char * AppName      = UT_Hook_GetArgValueByName(Context, "AppName", char *);
+    size_t BufferLength = UT_Hook_GetArgValueByName(Context, "BufferLength", size_t);
+
+    size_t      UserBuffSize;
+    size_t      BuffPosition;
+    const char *NameBuff;
+    void *      TempBuff;
+    int32       status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0 && BufferLength > 0)
+    {
+        UT_GetDataBuffer(UT_KEY(CFE_ES_GetAppName), &TempBuff, &UserBuffSize, &BuffPosition);
+        if (TempBuff == NULL || UserBuffSize == 0)
+        {
+            NameBuff     = "UT";
+            UserBuffSize = 2;
+        }
+        else
+        {
+            NameBuff = TempBuff;
+        }
+
+        if (UserBuffSize < BufferLength)
+        {
+            BuffPosition = UserBuffSize;
+        }
+        else
+        {
+            BuffPosition = BufferLength - 1;
+        }
+
+        strncpy(AppName, NameBuff, BuffPosition);
+        AppName[BuffPosition] = 0;
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_WriteToSysLog coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context,
+                                            va_list va)
+{
+    const char *SpecStringPtr = UT_Hook_GetArgValueByName(Context, "SpecStringPtr", const char *);
+
+    int32 status;
+    char  str[128];
+    char *newline;
+
+    vsnprintf(str, sizeof(str), SpecStringPtr, va);
+
+    /* Replace newline since UtDebug already adds one */
+    newline = strchr(str, '\n');
+    if (newline != NULL)
+    {
+        *newline = '\0';
+    }
+
+    UtDebug("CFE_ES_WriteToSysLog: %s", str);
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_ES_WriteToSysLog), SpecStringPtr, strlen(SpecStringPtr));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetPoolBuf coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetPoolBuf(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_MemPoolBuf_t *BufPtr = UT_Hook_GetArgValueByName(Context, "BufPtr", CFE_ES_MemPoolBuf_t *);
+    size_t               Size   = UT_Hook_GetArgValueByName(Context, "Size", size_t);
+
+    static union
+    {
+        uint32             Start;
+        CFE_ES_PoolAlign_t Align;
+        uint8              Bytes[CFE_UT_ES_POOL_STATIC_BLOCK_SIZE];
+    } Buffer;
+
+    size_t  PoolSize;
+    size_t  PositionStart;
+    size_t  PositionEnd;
+    void *  PoolPtr;
+    cpuaddr BufAddrStart;
+    cpuaddr BufAddrEnd;
+    int32   status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = Size;
+    }
+
+    if (status > 0)
+    {
+        Size = status;
+
+        UT_GetDataBuffer(UT_KEY(CFE_ES_GetPoolBuf), (void **)&PoolPtr, &PoolSize, &PositionStart);
+        if (PoolSize == 0)
+        {
+            /*
+             * This means the test case did not register a buffer.
+             * Use the static buffer to fulfill the request.
+             */
+            PoolPtr       = Buffer.Bytes;
+            PoolSize      = sizeof(Buffer);
+            PositionStart = 0;
+        }
+
+        BufAddrStart = (cpuaddr)PoolPtr + PositionStart;
+        BufAddrStart = (BufAddrStart + UT_ESPOOL_ALIGN_MASK) & ~UT_ESPOOL_ALIGN_MASK;
+        BufAddrEnd   = (BufAddrStart + Size + UT_ESPOOL_ALIGN_MASK) & ~UT_ESPOOL_ALIGN_MASK;
+        PositionEnd  = BufAddrEnd - (cpuaddr)PoolPtr;
+
+        if (PositionEnd <= PoolSize)
+        {
+            *BufPtr = CFE_ES_MEMPOOLBUF_C(BufAddrStart);
+            memset((void *)BufAddrStart, 0x55, Size);
+
+            /*
+             * Unfortunately the UT assert stub library is missing
+             * the ability to set the buffer position, the only way
+             * to do it is by calling CopyFromLocal to advance the position.
+             */
+            Size = PositionEnd - PositionStart;
+            while (Size > sizeof(Buffer))
+            {
+                UT_Stub_CopyFromLocal(UT_KEY(CFE_ES_GetPoolBuf), &Buffer, sizeof(Buffer));
+                Size -= sizeof(Buffer);
+            }
+            UT_Stub_CopyFromLocal(UT_KEY(CFE_ES_GetPoolBuf), &Buffer, Size);
+        }
+        else
+        {
+            /*
+             * This is a bug in the test case.
+             *
+             * The buffer is insufficient, so the test case must
+             * use UT_SetDataBuffer() to register a pool buffer that is
+             * sufficient for the code under test.
+             */
+            UtAssert_Failed("Pool buffer empty in %s: need at least %lu bytes, given %lu", __func__,
+                            (unsigned long)PositionEnd, (unsigned long)PoolSize);
+
+            UtAssert_Abort("Configuration error, pool buffer too small for test cases");
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_PoolCreate coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_PoolCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_MemHandle_t *PoolID = UT_Hook_GetArgValueByName(Context, "PoolID", CFE_ES_MemHandle_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_ES_PoolCreate), PoolID, sizeof(*PoolID));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_PoolCreateNoSem coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_PoolCreateNoSem(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_MemHandle_t *PoolID = UT_Hook_GetArgValueByName(Context, "PoolID", CFE_ES_MemHandle_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_ES_PoolCreateNoSem), PoolID, sizeof(*PoolID));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetTaskInfo coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetTaskInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_TaskInfo_t *TaskInfo = UT_Hook_GetArgValueByName(Context, "TaskInfo", CFE_ES_TaskInfo_t *);
+
+    int32 status = CFE_SUCCESS;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(CFE_ES_GetTaskInfo), (uint8 *)TaskInfo, sizeof(*TaskInfo)) < sizeof(*TaskInfo))
+        {
+            memset(TaskInfo, 0, sizeof(*TaskInfo));
+            TaskInfo->AppId = CFE_UT_ES_DEFAULT_APPID;
+            strncpy((char *)&TaskInfo->AppName, "UT", sizeof(TaskInfo->AppName));
+            strncpy((char *)&TaskInfo->TaskName, "UT", sizeof(TaskInfo->TaskName));
+        }
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_ExitApp coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_ExitApp(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint32 ExitStatus = UT_Hook_GetArgValueByName(Context, "ExitStatus", uint32);
+
+    UT_Stub_CopyFromLocal(UT_KEY(CFE_ES_ExitApp), &ExitStatus, sizeof(ExitStatus));
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_RunLoop coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_RunLoop(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32 status;
+    bool  return_value;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    return_value = (status != 0);
+
+    UT_Stub_SetReturnValue(FuncKey, return_value);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_CopyToCDS coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_CopyToCDS(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void *DataToCopy = UT_Hook_GetArgValueByName(Context, "DataToCopy", void *);
+
+    int32  status;
+    size_t CdsBufferSize;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        /* query the size of the supplied data buffer, if any */
+        UT_GetDataBuffer(UT_KEY(CFE_ES_CopyToCDS), NULL, &CdsBufferSize, NULL);
+        if (CdsBufferSize > 0)
+        {
+            UT_Stub_CopyFromLocal(UT_KEY(CFE_ES_CopyToCDS), DataToCopy, CdsBufferSize);
+        }
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_RestoreFromCDS coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_RestoreFromCDS(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void *RestoreToMemory = UT_Hook_GetArgValueByName(Context, "RestoreToMemory", void *);
+
+    int32  status;
+    size_t CdsBufferSize;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        /* query the size of the supplied data buffer, if any */
+        UT_GetDataBuffer(UT_KEY(CFE_ES_RestoreFromCDS), NULL, &CdsBufferSize, NULL);
+        if (CdsBufferSize > 0)
+        {
+            UT_Stub_CopyToLocal(UT_KEY(CFE_ES_RestoreFromCDS), RestoreToMemory, CdsBufferSize);
+        }
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_GetResetType coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_GetResetType(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint32 *ResetSubtypePtr = UT_Hook_GetArgValueByName(Context, "ResetSubtypePtr", uint32 *);
+    int32   status          = CFE_SUCCESS;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_ES_GetResetType), ResetSubtypePtr, sizeof(*ResetSubtypePtr));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_AppID_ToIndex coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_AppID_ToIndex(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_AppId_t AppID = UT_Hook_GetArgValueByName(Context, "AppID", CFE_ES_AppId_t);
+    uint32 *       Idx   = UT_Hook_GetArgValueByName(Context, "Idx", uint32 *);
+    int32          return_code;
+
+    UT_Stub_GetInt32StatusCode(Context, &return_code);
+
+    if (return_code != CFE_SUCCESS)
+    {
+        *Idx = 0xDEADBEEFU;
+    }
+    else if (UT_Stub_CopyToLocal(UT_KEY(CFE_ES_AppID_ToIndex), Idx, sizeof(*Idx)) < sizeof(*Idx))
+    {
+        *Idx = CFE_RESOURCEID_TO_ULONG(AppID) & 0xFFFF;
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ES_TaskID_ToIndex coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ES_TaskID_ToIndex(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ES_TaskId_t TaskID = UT_Hook_GetArgValueByName(Context, "TaskID", CFE_ES_TaskId_t);
+    uint32 *        Idx    = UT_Hook_GetArgValueByName(Context, "Idx", uint32 *);
+    int32           return_code;
+
+    UT_Stub_GetInt32StatusCode(Context, &return_code);
+
+    if (return_code != CFE_SUCCESS)
+    {
+        *Idx = 0xDEADBEEFU;
+    }
+    else if (UT_Stub_CopyToLocal(UT_KEY(CFE_ES_TaskID_ToIndex), Idx, sizeof(*Idx)) < sizeof(*Idx))
+    {
+        *Idx = CFE_RESOURCEID_TO_ULONG(TaskID) & 0xFFFF;
+    }
+}
+```
+
+### `cfe_es_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_es_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_es header
+ */
+
+#include <stdarg.h>
+
+#include "cfe_es.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_ES_AppID_ToIndex(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_CopyToCDS(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_CreateChildTask(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_ExitApp(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetAppID(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetAppIDByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetAppName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetPoolBuf(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetResetType(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetTaskID(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_GetTaskInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_PoolCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_PoolCreateNoSem(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_RestoreFromCDS(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_RunLoop(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_TaskID_ToIndex(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ES_WriteToSysLog(void *, UT_EntryKey_t, const UT_StubContext_t *, va_list);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_AppID_ToIndex()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_AppID_ToIndex(CFE_ES_AppId_t AppID, uint32 *Idx)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_AppID_ToIndex, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_AppID_ToIndex, CFE_ES_AppId_t, AppID);
+    UT_GenStub_AddParam(CFE_ES_AppID_ToIndex, uint32 *, Idx);
+
+    UT_GenStub_Execute(CFE_ES_AppID_ToIndex, Basic, UT_DefaultHandler_CFE_ES_AppID_ToIndex);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_AppID_ToIndex, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_BackgroundWakeup()
+ * ----------------------------------------------------
+ */
+void CFE_ES_BackgroundWakeup(void)
+{
+
+    UT_GenStub_Execute(CFE_ES_BackgroundWakeup, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_CalculateCRC()
+ * ----------------------------------------------------
+ */
+uint32 CFE_ES_CalculateCRC(const void *DataPtr, size_t DataLength, uint32 InputCRC, CFE_ES_CrcType_Enum_t TypeCRC)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_CalculateCRC, uint32);
+
+    UT_GenStub_AddParam(CFE_ES_CalculateCRC, const void *, DataPtr);
+    UT_GenStub_AddParam(CFE_ES_CalculateCRC, size_t, DataLength);
+    UT_GenStub_AddParam(CFE_ES_CalculateCRC, uint32, InputCRC);
+    UT_GenStub_AddParam(CFE_ES_CalculateCRC, CFE_ES_CrcType_Enum_t, TypeCRC);
+
+    UT_GenStub_Execute(CFE_ES_CalculateCRC, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_CalculateCRC, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_CopyToCDS()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_CopyToCDS(CFE_ES_CDSHandle_t Handle, const void *DataToCopy)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_CopyToCDS, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_CopyToCDS, CFE_ES_CDSHandle_t, Handle);
+    UT_GenStub_AddParam(CFE_ES_CopyToCDS, const void *, DataToCopy);
+
+    UT_GenStub_Execute(CFE_ES_CopyToCDS, Basic, UT_DefaultHandler_CFE_ES_CopyToCDS);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_CopyToCDS, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_CounterID_ToIndex()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_CounterID_ToIndex(CFE_ES_CounterId_t CounterId, uint32 *Idx)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_CounterID_ToIndex, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_CounterID_ToIndex, CFE_ES_CounterId_t, CounterId);
+    UT_GenStub_AddParam(CFE_ES_CounterID_ToIndex, uint32 *, Idx);
+
+    UT_GenStub_Execute(CFE_ES_CounterID_ToIndex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_CounterID_ToIndex, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_CreateChildTask()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_CreateChildTask(CFE_ES_TaskId_t *TaskIdPtr, const char *TaskName,
+                                    CFE_ES_ChildTaskMainFuncPtr_t FunctionPtr, CFE_ES_StackPointer_t StackPtr,
+                                    size_t StackSize, CFE_ES_TaskPriority_Atom_t Priority, uint32 Flags)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_CreateChildTask, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, CFE_ES_TaskId_t *, TaskIdPtr);
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, const char *, TaskName);
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, CFE_ES_ChildTaskMainFuncPtr_t, FunctionPtr);
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, CFE_ES_StackPointer_t, StackPtr);
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, size_t, StackSize);
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, CFE_ES_TaskPriority_Atom_t, Priority);
+    UT_GenStub_AddParam(CFE_ES_CreateChildTask, uint32, Flags);
+
+    UT_GenStub_Execute(CFE_ES_CreateChildTask, Basic, UT_DefaultHandler_CFE_ES_CreateChildTask);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_CreateChildTask, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_DeleteApp()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_DeleteApp(CFE_ES_AppId_t AppID)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_DeleteApp, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_DeleteApp, CFE_ES_AppId_t, AppID);
+
+    UT_GenStub_Execute(CFE_ES_DeleteApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_DeleteApp, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_DeleteChildTask()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_DeleteChildTask(CFE_ES_TaskId_t TaskId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_DeleteChildTask, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_DeleteChildTask, CFE_ES_TaskId_t, TaskId);
+
+    UT_GenStub_Execute(CFE_ES_DeleteChildTask, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_DeleteChildTask, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_DeleteGenCounter()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_DeleteGenCounter(CFE_ES_CounterId_t CounterId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_DeleteGenCounter, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_DeleteGenCounter, CFE_ES_CounterId_t, CounterId);
+
+    UT_GenStub_Execute(CFE_ES_DeleteGenCounter, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_DeleteGenCounter, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_ExitApp()
+ * ----------------------------------------------------
+ */
+void CFE_ES_ExitApp(uint32 ExitStatus)
+{
+    UT_GenStub_AddParam(CFE_ES_ExitApp, uint32, ExitStatus);
+
+    UT_GenStub_Execute(CFE_ES_ExitApp, Basic, UT_DefaultHandler_CFE_ES_ExitApp);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_ExitChildTask()
+ * ----------------------------------------------------
+ */
+void CFE_ES_ExitChildTask(void)
+{
+
+    UT_GenStub_Execute(CFE_ES_ExitChildTask, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetAppID()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetAppID(CFE_ES_AppId_t *AppIdPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetAppID, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetAppID, CFE_ES_AppId_t *, AppIdPtr);
+
+    UT_GenStub_Execute(CFE_ES_GetAppID, Basic, UT_DefaultHandler_CFE_ES_GetAppID);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetAppID, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetAppIDByName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetAppIDByName(CFE_ES_AppId_t *AppIdPtr, const char *AppName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetAppIDByName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetAppIDByName, CFE_ES_AppId_t *, AppIdPtr);
+    UT_GenStub_AddParam(CFE_ES_GetAppIDByName, const char *, AppName);
+
+    UT_GenStub_Execute(CFE_ES_GetAppIDByName, Basic, UT_DefaultHandler_CFE_ES_GetAppIDByName);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetAppIDByName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetAppInfo()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetAppInfo(CFE_ES_AppInfo_t *AppInfo, CFE_ES_AppId_t AppId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetAppInfo, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetAppInfo, CFE_ES_AppInfo_t *, AppInfo);
+    UT_GenStub_AddParam(CFE_ES_GetAppInfo, CFE_ES_AppId_t, AppId);
+
+    UT_GenStub_Execute(CFE_ES_GetAppInfo, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetAppInfo, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetAppName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetAppName(char *AppName, CFE_ES_AppId_t AppId, size_t BufferLength)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetAppName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetAppName, char *, AppName);
+    UT_GenStub_AddParam(CFE_ES_GetAppName, CFE_ES_AppId_t, AppId);
+    UT_GenStub_AddParam(CFE_ES_GetAppName, size_t, BufferLength);
+
+    UT_GenStub_Execute(CFE_ES_GetAppName, Basic, UT_DefaultHandler_CFE_ES_GetAppName);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetAppName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetCDSBlockIDByName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetCDSBlockIDByName(CFE_ES_CDSHandle_t *BlockIdPtr, const char *BlockName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetCDSBlockIDByName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetCDSBlockIDByName, CFE_ES_CDSHandle_t *, BlockIdPtr);
+    UT_GenStub_AddParam(CFE_ES_GetCDSBlockIDByName, const char *, BlockName);
+
+    UT_GenStub_Execute(CFE_ES_GetCDSBlockIDByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetCDSBlockIDByName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetCDSBlockName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetCDSBlockName(char *BlockName, CFE_ES_CDSHandle_t BlockId, size_t BufferLength)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetCDSBlockName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetCDSBlockName, char *, BlockName);
+    UT_GenStub_AddParam(CFE_ES_GetCDSBlockName, CFE_ES_CDSHandle_t, BlockId);
+    UT_GenStub_AddParam(CFE_ES_GetCDSBlockName, size_t, BufferLength);
+
+    UT_GenStub_Execute(CFE_ES_GetCDSBlockName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetCDSBlockName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetGenCount()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetGenCount(CFE_ES_CounterId_t CounterId, uint32 *Count)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetGenCount, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetGenCount, CFE_ES_CounterId_t, CounterId);
+    UT_GenStub_AddParam(CFE_ES_GetGenCount, uint32 *, Count);
+
+    UT_GenStub_Execute(CFE_ES_GetGenCount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetGenCount, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetGenCounterIDByName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetGenCounterIDByName(CFE_ES_CounterId_t *CounterIdPtr, const char *CounterName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetGenCounterIDByName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetGenCounterIDByName, CFE_ES_CounterId_t *, CounterIdPtr);
+    UT_GenStub_AddParam(CFE_ES_GetGenCounterIDByName, const char *, CounterName);
+
+    UT_GenStub_Execute(CFE_ES_GetGenCounterIDByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetGenCounterIDByName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetGenCounterName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetGenCounterName(char *CounterName, CFE_ES_CounterId_t CounterId, size_t BufferLength)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetGenCounterName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetGenCounterName, char *, CounterName);
+    UT_GenStub_AddParam(CFE_ES_GetGenCounterName, CFE_ES_CounterId_t, CounterId);
+    UT_GenStub_AddParam(CFE_ES_GetGenCounterName, size_t, BufferLength);
+
+    UT_GenStub_Execute(CFE_ES_GetGenCounterName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetGenCounterName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetLibIDByName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetLibIDByName(CFE_ES_LibId_t *LibIdPtr, const char *LibName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetLibIDByName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetLibIDByName, CFE_ES_LibId_t *, LibIdPtr);
+    UT_GenStub_AddParam(CFE_ES_GetLibIDByName, const char *, LibName);
+
+    UT_GenStub_Execute(CFE_ES_GetLibIDByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetLibIDByName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetLibInfo()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_GetLibInfo(CFE_ES_AppInfo_t *LibInfo, CFE_ES_LibId_t LibId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetLibInfo, int32);
+
+    UT_GenStub_AddParam(CFE_ES_GetLibInfo, CFE_ES_AppInfo_t *, LibInfo);
+    UT_GenStub_AddParam(CFE_ES_GetLibInfo, CFE_ES_LibId_t, LibId);
+
+    UT_GenStub_Execute(CFE_ES_GetLibInfo, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetLibInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetLibName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetLibName(char *LibName, CFE_ES_LibId_t LibId, size_t BufferLength)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetLibName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetLibName, char *, LibName);
+    UT_GenStub_AddParam(CFE_ES_GetLibName, CFE_ES_LibId_t, LibId);
+    UT_GenStub_AddParam(CFE_ES_GetLibName, size_t, BufferLength);
+
+    UT_GenStub_Execute(CFE_ES_GetLibName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetLibName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetMemPoolStats()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetMemPoolStats(CFE_ES_MemPoolStats_t *BufPtr, CFE_ES_MemHandle_t Handle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetMemPoolStats, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetMemPoolStats, CFE_ES_MemPoolStats_t *, BufPtr);
+    UT_GenStub_AddParam(CFE_ES_GetMemPoolStats, CFE_ES_MemHandle_t, Handle);
+
+    UT_GenStub_Execute(CFE_ES_GetMemPoolStats, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetMemPoolStats, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetModuleInfo()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_GetModuleInfo(CFE_ES_AppInfo_t *ModuleInfo, CFE_ResourceId_t ResourceId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetModuleInfo, int32);
+
+    UT_GenStub_AddParam(CFE_ES_GetModuleInfo, CFE_ES_AppInfo_t *, ModuleInfo);
+    UT_GenStub_AddParam(CFE_ES_GetModuleInfo, CFE_ResourceId_t, ResourceId);
+
+    UT_GenStub_Execute(CFE_ES_GetModuleInfo, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetModuleInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetPoolBuf()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_GetPoolBuf(CFE_ES_MemPoolBuf_t *BufPtr, CFE_ES_MemHandle_t Handle, size_t Size)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetPoolBuf, int32);
+
+    UT_GenStub_AddParam(CFE_ES_GetPoolBuf, CFE_ES_MemPoolBuf_t *, BufPtr);
+    UT_GenStub_AddParam(CFE_ES_GetPoolBuf, CFE_ES_MemHandle_t, Handle);
+    UT_GenStub_AddParam(CFE_ES_GetPoolBuf, size_t, Size);
+
+    UT_GenStub_Execute(CFE_ES_GetPoolBuf, Basic, UT_DefaultHandler_CFE_ES_GetPoolBuf);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetPoolBuf, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetPoolBufInfo()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetPoolBufInfo(CFE_ES_MemHandle_t Handle, CFE_ES_MemPoolBuf_t BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetPoolBufInfo, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetPoolBufInfo, CFE_ES_MemHandle_t, Handle);
+    UT_GenStub_AddParam(CFE_ES_GetPoolBufInfo, CFE_ES_MemPoolBuf_t, BufPtr);
+
+    UT_GenStub_Execute(CFE_ES_GetPoolBufInfo, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetPoolBufInfo, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetResetType()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_GetResetType(uint32 *ResetSubtypePtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetResetType, int32);
+
+    UT_GenStub_AddParam(CFE_ES_GetResetType, uint32 *, ResetSubtypePtr);
+
+    UT_GenStub_Execute(CFE_ES_GetResetType, Basic, UT_DefaultHandler_CFE_ES_GetResetType);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetResetType, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetTaskID()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetTaskID(CFE_ES_TaskId_t *TaskIdPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetTaskID, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetTaskID, CFE_ES_TaskId_t *, TaskIdPtr);
+
+    UT_GenStub_Execute(CFE_ES_GetTaskID, Basic, UT_DefaultHandler_CFE_ES_GetTaskID);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetTaskID, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetTaskIDByName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetTaskIDByName(CFE_ES_TaskId_t *TaskIdPtr, const char *TaskName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetTaskIDByName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetTaskIDByName, CFE_ES_TaskId_t *, TaskIdPtr);
+    UT_GenStub_AddParam(CFE_ES_GetTaskIDByName, const char *, TaskName);
+
+    UT_GenStub_Execute(CFE_ES_GetTaskIDByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetTaskIDByName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetTaskInfo()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetTaskInfo(CFE_ES_TaskInfo_t *TaskInfo, CFE_ES_TaskId_t TaskId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetTaskInfo, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetTaskInfo, CFE_ES_TaskInfo_t *, TaskInfo);
+    UT_GenStub_AddParam(CFE_ES_GetTaskInfo, CFE_ES_TaskId_t, TaskId);
+
+    UT_GenStub_Execute(CFE_ES_GetTaskInfo, Basic, UT_DefaultHandler_CFE_ES_GetTaskInfo);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetTaskInfo, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_GetTaskName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_GetTaskName(char *TaskName, CFE_ES_TaskId_t TaskId, size_t BufferLength)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_GetTaskName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_GetTaskName, char *, TaskName);
+    UT_GenStub_AddParam(CFE_ES_GetTaskName, CFE_ES_TaskId_t, TaskId);
+    UT_GenStub_AddParam(CFE_ES_GetTaskName, size_t, BufferLength);
+
+    UT_GenStub_Execute(CFE_ES_GetTaskName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_GetTaskName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_IncrementGenCounter()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_IncrementGenCounter(CFE_ES_CounterId_t CounterId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_IncrementGenCounter, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_IncrementGenCounter, CFE_ES_CounterId_t, CounterId);
+
+    UT_GenStub_Execute(CFE_ES_IncrementGenCounter, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_IncrementGenCounter, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_IncrementTaskCounter()
+ * ----------------------------------------------------
+ */
+void CFE_ES_IncrementTaskCounter(void)
+{
+
+    UT_GenStub_Execute(CFE_ES_IncrementTaskCounter, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_LibID_ToIndex()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_LibID_ToIndex(CFE_ES_LibId_t LibId, uint32 *Idx)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_LibID_ToIndex, int32);
+
+    UT_GenStub_AddParam(CFE_ES_LibID_ToIndex, CFE_ES_LibId_t, LibId);
+    UT_GenStub_AddParam(CFE_ES_LibID_ToIndex, uint32 *, Idx);
+
+    UT_GenStub_Execute(CFE_ES_LibID_ToIndex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_LibID_ToIndex, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_Main()
+ * ----------------------------------------------------
+ */
+void CFE_ES_Main(uint32 StartType, uint32 StartSubtype, uint32 ModeId, const char *StartFilePath)
+{
+    UT_GenStub_AddParam(CFE_ES_Main, uint32, StartType);
+    UT_GenStub_AddParam(CFE_ES_Main, uint32, StartSubtype);
+    UT_GenStub_AddParam(CFE_ES_Main, uint32, ModeId);
+    UT_GenStub_AddParam(CFE_ES_Main, const char *, StartFilePath);
+
+    UT_GenStub_Execute(CFE_ES_Main, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_PerfLogAdd()
+ * ----------------------------------------------------
+ */
+void CFE_ES_PerfLogAdd(uint32 Marker, uint32 EntryExit)
+{
+    UT_GenStub_AddParam(CFE_ES_PerfLogAdd, uint32, Marker);
+    UT_GenStub_AddParam(CFE_ES_PerfLogAdd, uint32, EntryExit);
+
+    UT_GenStub_Execute(CFE_ES_PerfLogAdd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_PoolCreate()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_PoolCreate(CFE_ES_MemHandle_t *PoolID, void *MemPtr, size_t Size)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_PoolCreate, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_PoolCreate, CFE_ES_MemHandle_t *, PoolID);
+    UT_GenStub_AddParam(CFE_ES_PoolCreate, void *, MemPtr);
+    UT_GenStub_AddParam(CFE_ES_PoolCreate, size_t, Size);
+
+    UT_GenStub_Execute(CFE_ES_PoolCreate, Basic, UT_DefaultHandler_CFE_ES_PoolCreate);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_PoolCreate, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_PoolCreateEx()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_PoolCreateEx(CFE_ES_MemHandle_t *PoolID, void *MemPtr, size_t Size, uint16 NumBlockSizes,
+                                 const size_t *BlockSizes, bool UseMutex)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_PoolCreateEx, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_PoolCreateEx, CFE_ES_MemHandle_t *, PoolID);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateEx, void *, MemPtr);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateEx, size_t, Size);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateEx, uint16, NumBlockSizes);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateEx, const size_t *, BlockSizes);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateEx, bool, UseMutex);
+
+    UT_GenStub_Execute(CFE_ES_PoolCreateEx, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_PoolCreateEx, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_PoolCreateNoSem()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_PoolCreateNoSem(CFE_ES_MemHandle_t *PoolID, void *MemPtr, size_t Size)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_PoolCreateNoSem, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_PoolCreateNoSem, CFE_ES_MemHandle_t *, PoolID);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateNoSem, void *, MemPtr);
+    UT_GenStub_AddParam(CFE_ES_PoolCreateNoSem, size_t, Size);
+
+    UT_GenStub_Execute(CFE_ES_PoolCreateNoSem, Basic, UT_DefaultHandler_CFE_ES_PoolCreateNoSem);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_PoolCreateNoSem, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_PoolDelete()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_PoolDelete(CFE_ES_MemHandle_t PoolID)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_PoolDelete, int32);
+
+    UT_GenStub_AddParam(CFE_ES_PoolDelete, CFE_ES_MemHandle_t, PoolID);
+
+    UT_GenStub_Execute(CFE_ES_PoolDelete, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_PoolDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_ProcessAsyncEvent()
+ * ----------------------------------------------------
+ */
+void CFE_ES_ProcessAsyncEvent(void)
+{
+
+    UT_GenStub_Execute(CFE_ES_ProcessAsyncEvent, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_PutPoolBuf()
+ * ----------------------------------------------------
+ */
+int32 CFE_ES_PutPoolBuf(CFE_ES_MemHandle_t Handle, CFE_ES_MemPoolBuf_t BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_PutPoolBuf, int32);
+
+    UT_GenStub_AddParam(CFE_ES_PutPoolBuf, CFE_ES_MemHandle_t, Handle);
+    UT_GenStub_AddParam(CFE_ES_PutPoolBuf, CFE_ES_MemPoolBuf_t, BufPtr);
+
+    UT_GenStub_Execute(CFE_ES_PutPoolBuf, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_PutPoolBuf, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_RegisterCDS()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_RegisterCDS(CFE_ES_CDSHandle_t *CDSHandlePtr, size_t BlockSize, const char *Name)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_RegisterCDS, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_RegisterCDS, CFE_ES_CDSHandle_t *, CDSHandlePtr);
+    UT_GenStub_AddParam(CFE_ES_RegisterCDS, size_t, BlockSize);
+    UT_GenStub_AddParam(CFE_ES_RegisterCDS, const char *, Name);
+
+    UT_GenStub_Execute(CFE_ES_RegisterCDS, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_RegisterCDS, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_RegisterGenCounter()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_RegisterGenCounter(CFE_ES_CounterId_t *CounterIdPtr, const char *CounterName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_RegisterGenCounter, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_RegisterGenCounter, CFE_ES_CounterId_t *, CounterIdPtr);
+    UT_GenStub_AddParam(CFE_ES_RegisterGenCounter, const char *, CounterName);
+
+    UT_GenStub_Execute(CFE_ES_RegisterGenCounter, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_RegisterGenCounter, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_ReloadApp()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_ReloadApp(CFE_ES_AppId_t AppID, const char *AppFileName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_ReloadApp, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_ReloadApp, CFE_ES_AppId_t, AppID);
+    UT_GenStub_AddParam(CFE_ES_ReloadApp, const char *, AppFileName);
+
+    UT_GenStub_Execute(CFE_ES_ReloadApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_ReloadApp, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_ResetCFE()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_ResetCFE(uint32 ResetType)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_ResetCFE, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_ResetCFE, uint32, ResetType);
+
+    UT_GenStub_Execute(CFE_ES_ResetCFE, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_ResetCFE, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_RestartApp()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_RestartApp(CFE_ES_AppId_t AppID)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_RestartApp, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_RestartApp, CFE_ES_AppId_t, AppID);
+
+    UT_GenStub_Execute(CFE_ES_RestartApp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_RestartApp, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_RestoreFromCDS()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_RestoreFromCDS(void *RestoreToMemory, CFE_ES_CDSHandle_t Handle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_RestoreFromCDS, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_RestoreFromCDS, void *, RestoreToMemory);
+    UT_GenStub_AddParam(CFE_ES_RestoreFromCDS, CFE_ES_CDSHandle_t, Handle);
+
+    UT_GenStub_Execute(CFE_ES_RestoreFromCDS, Basic, UT_DefaultHandler_CFE_ES_RestoreFromCDS);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_RestoreFromCDS, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_RunLoop()
+ * ----------------------------------------------------
+ */
+bool CFE_ES_RunLoop(uint32 *RunStatus)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_RunLoop, bool);
+
+    UT_GenStub_AddParam(CFE_ES_RunLoop, uint32 *, RunStatus);
+
+    UT_GenStub_Execute(CFE_ES_RunLoop, Basic, UT_DefaultHandler_CFE_ES_RunLoop);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_RunLoop, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_SetGenCount()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_SetGenCount(CFE_ES_CounterId_t CounterId, uint32 Count)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_SetGenCount, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_SetGenCount, CFE_ES_CounterId_t, CounterId);
+    UT_GenStub_AddParam(CFE_ES_SetGenCount, uint32, Count);
+
+    UT_GenStub_Execute(CFE_ES_SetGenCount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_SetGenCount, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_TaskID_ToIndex()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_TaskID_ToIndex(CFE_ES_TaskId_t TaskID, uint32 *Idx)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_TaskID_ToIndex, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_TaskID_ToIndex, CFE_ES_TaskId_t, TaskID);
+    UT_GenStub_AddParam(CFE_ES_TaskID_ToIndex, uint32 *, Idx);
+
+    UT_GenStub_Execute(CFE_ES_TaskID_ToIndex, Basic, UT_DefaultHandler_CFE_ES_TaskID_ToIndex);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_TaskID_ToIndex, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_WaitForStartupSync()
+ * ----------------------------------------------------
+ */
+void CFE_ES_WaitForStartupSync(uint32 TimeOutMilliseconds)
+{
+    UT_GenStub_AddParam(CFE_ES_WaitForStartupSync, uint32, TimeOutMilliseconds);
+
+    UT_GenStub_Execute(CFE_ES_WaitForStartupSync, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_WaitForSystemState()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_WaitForSystemState(uint32 MinSystemState, uint32 TimeOutMilliseconds)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ES_WaitForSystemState, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_WaitForSystemState, uint32, MinSystemState);
+    UT_GenStub_AddParam(CFE_ES_WaitForSystemState, uint32, TimeOutMilliseconds);
+
+    UT_GenStub_Execute(CFE_ES_WaitForSystemState, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_WaitForSystemState, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ES_WriteToSysLog()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_ES_WriteToSysLog(const char *SpecStringPtr, ...)
+{
+    va_list UtStub_ArgList;
+
+    UT_GenStub_SetupReturnBuffer(CFE_ES_WriteToSysLog, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_ES_WriteToSysLog, const char *, SpecStringPtr);
+
+    va_start(UtStub_ArgList, SpecStringPtr);
+    UT_GenStub_Execute(CFE_ES_WriteToSysLog, Va, UT_DefaultHandler_CFE_ES_WriteToSysLog, UtStub_ArgList);
+    va_end(UtStub_ArgList);
+
+    return UT_GenStub_GetReturnValue(CFE_ES_WriteToSysLog, CFE_Status_t);
+}
+```
+
+### `cfe_evs_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_evs_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_evs_stubs.c
+**
+** Purpose:
+** Unit test stubs for Event Service routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include <string.h>
+#include "cfe_evs.h"
+
+#include "utstubs.h"
+#include "uttools.h"
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_EVS_SendEvent coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context,
+                                         va_list va)
+{
+    uint16      EventID = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
+    const char *Spec    = UT_Hook_GetArgValueByName(Context, "Spec", const char *);
+
+    int32 status;
+
+    UtDebug("CFE_EVS_SendEvent: %u - %s", EventID, Spec);
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_EVS_SendEvent), (uint8 *)&EventID, sizeof(EventID));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_EVS_SendTimedEvent coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_EVS_SendTimedEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context,
+                                              va_list va)
+{
+    uint16      EventID = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
+    const char *Spec    = UT_Hook_GetArgValueByName(Context, "Spec", const char *);
+
+    int32 status;
+
+    UtDebug("CFE_EVS_SendTimedEvent: %u - %s", EventID, Spec);
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_EVS_SendTimedEvent), (uint8 *)&EventID, sizeof(EventID));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_EVS_SendEventWithAppID coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_EVS_SendEventWithAppID(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context,
+                                                  va_list va)
+{
+    uint16      EventID = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
+    const char *Spec    = UT_Hook_GetArgValueByName(Context, "Spec", const char *);
+
+    int32 status;
+
+    UtDebug("CFE_EVS_SendEventWithAppID: %u - %s", EventID, Spec);
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_EVS_SendEventWithAppID), (uint8 *)&EventID, sizeof(EventID));
+    }
+}
+```
+
+### `cfe_evs_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_evs_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_evs header
+ */
+
+#include <stdarg.h>
+
+#include "cfe_evs.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_EVS_SendEvent(void *, UT_EntryKey_t, const UT_StubContext_t *, va_list);
+void UT_DefaultHandler_CFE_EVS_SendEventWithAppID(void *, UT_EntryKey_t, const UT_StubContext_t *, va_list);
+void UT_DefaultHandler_CFE_EVS_SendTimedEvent(void *, UT_EntryKey_t, const UT_StubContext_t *, va_list);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_Register()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_EVS_Register(const void *Filters, uint16 NumEventFilters, uint16 FilterScheme)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_Register, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_EVS_Register, const void *, Filters);
+    UT_GenStub_AddParam(CFE_EVS_Register, uint16, NumEventFilters);
+    UT_GenStub_AddParam(CFE_EVS_Register, uint16, FilterScheme);
+
+    UT_GenStub_Execute(CFE_EVS_Register, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_Register, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_ResetAllFilters()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_EVS_ResetAllFilters(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_ResetAllFilters, CFE_Status_t);
+
+    UT_GenStub_Execute(CFE_EVS_ResetAllFilters, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_ResetAllFilters, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_ResetFilter()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_EVS_ResetFilter(uint16 EventID)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_ResetFilter, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_EVS_ResetFilter, uint16, EventID);
+
+    UT_GenStub_Execute(CFE_EVS_ResetFilter, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_ResetFilter, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_SendEvent()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_EVS_SendEvent(uint16 EventID, uint16 EventType, const char *Spec, ...)
+{
+    va_list UtStub_ArgList;
+
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_SendEvent, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_EVS_SendEvent, uint16, EventID);
+    UT_GenStub_AddParam(CFE_EVS_SendEvent, uint16, EventType);
+    UT_GenStub_AddParam(CFE_EVS_SendEvent, const char *, Spec);
+
+    va_start(UtStub_ArgList, Spec);
+    UT_GenStub_Execute(CFE_EVS_SendEvent, Va, UT_DefaultHandler_CFE_EVS_SendEvent, UtStub_ArgList);
+    va_end(UtStub_ArgList);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_SendEvent, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_SendEventWithAppID()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_EVS_SendEventWithAppID(uint16 EventID, uint16 EventType, CFE_ES_AppId_t AppID, const char *Spec, ...)
+{
+    va_list UtStub_ArgList;
+
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_SendEventWithAppID, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_EVS_SendEventWithAppID, uint16, EventID);
+    UT_GenStub_AddParam(CFE_EVS_SendEventWithAppID, uint16, EventType);
+    UT_GenStub_AddParam(CFE_EVS_SendEventWithAppID, CFE_ES_AppId_t, AppID);
+    UT_GenStub_AddParam(CFE_EVS_SendEventWithAppID, const char *, Spec);
+
+    va_start(UtStub_ArgList, Spec);
+    UT_GenStub_Execute(CFE_EVS_SendEventWithAppID, Va, UT_DefaultHandler_CFE_EVS_SendEventWithAppID, UtStub_ArgList);
+    va_end(UtStub_ArgList);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_SendEventWithAppID, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_EVS_SendTimedEvent()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_EVS_SendTimedEvent(CFE_TIME_SysTime_t Time, uint16 EventID, uint16 EventType, const char *Spec, ...)
+{
+    va_list UtStub_ArgList;
+
+    UT_GenStub_SetupReturnBuffer(CFE_EVS_SendTimedEvent, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_EVS_SendTimedEvent, CFE_TIME_SysTime_t, Time);
+    UT_GenStub_AddParam(CFE_EVS_SendTimedEvent, uint16, EventID);
+    UT_GenStub_AddParam(CFE_EVS_SendTimedEvent, uint16, EventType);
+    UT_GenStub_AddParam(CFE_EVS_SendTimedEvent, const char *, Spec);
+
+    va_start(UtStub_ArgList, Spec);
+    UT_GenStub_Execute(CFE_EVS_SendTimedEvent, Va, UT_DefaultHandler_CFE_EVS_SendTimedEvent, UtStub_ArgList);
+    va_end(UtStub_ArgList);
+
+    return UT_GenStub_GetReturnValue(CFE_EVS_SendTimedEvent, CFE_Status_t);
+}
+```
+
+### `cfe_fs_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_fs_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_fs_stubs.c
+**
+** Purpose:
+** Unit test stubs for File Service routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include <string.h>
+#include "cfe.h"
+#include "utstubs.h"
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_GetDefaultMountPoint coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_GetDefaultMountPoint(void *UserObj, UT_EntryKey_t FuncKey,
+                                                   const UT_StubContext_t *Context)
+{
+    int32             Status;
+    static const char DEFAULT_MOUNTPOINT[] = "/ut";
+    void *            TempBuff;
+    const char *      Result;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+    Result = NULL;
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* If the test case supplied a buffer, return it, otherwise return fixed value */
+        UT_GetDataBuffer(UT_KEY(CFE_FS_GetDefaultMountPoint), &TempBuff, NULL, NULL);
+        if (TempBuff == NULL)
+        {
+            Result = DEFAULT_MOUNTPOINT;
+        }
+        else
+        {
+            Result = TempBuff;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_GetDefaultExtension coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_GetDefaultExtension(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32             Status;
+    static const char DEFAULT_EXTENSION[] = ".ut";
+    void *            TempBuff;
+    const char *      Result;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+    Result = NULL;
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* If the test case supplied a buffer, return it, otherwise return fixed value */
+        UT_GetDataBuffer(UT_KEY(CFE_FS_GetDefaultExtension), &TempBuff, NULL, NULL);
+        if (TempBuff == NULL)
+        {
+            Result = DEFAULT_EXTENSION;
+        }
+        else
+        {
+            Result = TempBuff;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_WriteHeader coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_WriteHeader(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_FS_Header_t *Hdr = UT_Hook_GetArgValueByName(Context, "Hdr", CFE_FS_Header_t *);
+
+    int32 status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = sizeof(CFE_FS_Header_t);
+        UT_Stub_SetReturnValue(FuncKey, status);
+    }
+
+    if (status > 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_FS_WriteHeader), Hdr, status);
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_ReadHeader coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_ReadHeader(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_FS_Header_t *Hdr = UT_Hook_GetArgValueByName(Context, "Hdr", CFE_FS_Header_t *);
+
+    int32 status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = sizeof(CFE_FS_Header_t);
+        UT_Stub_SetReturnValue(FuncKey, status);
+    }
+
+    if (status > 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_FS_ReadHeader), Hdr, status);
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_ParseInputFileNameEx coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_ParseInputFileNameEx(void *UserObj, UT_EntryKey_t FuncKey,
+                                                   const UT_StubContext_t *Context)
+{
+    char *      OutputBuffer  = UT_Hook_GetArgValueByName(Context, "OutputBuffer", char *);
+    size_t      OutputBufSize = UT_Hook_GetArgValueByName(Context, "OutputBufSize", size_t);
+    const char *InputBuffer   = UT_Hook_GetArgValueByName(Context, "InputBuffer", const char *);
+    const char *DefaultInput  = UT_Hook_GetArgValueByName(Context, "DefaultInput", const char *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    /* Copy any specific output supplied by test case */
+    if (status >= 0 && UT_Stub_CopyToLocal(UT_KEY(CFE_FS_ParseInputFileNameEx), OutputBuffer, OutputBufSize) == 0 &&
+        OutputBufSize > 0)
+    {
+        if (DefaultInput != NULL)
+        {
+            /* Use default if set */
+            strncpy(OutputBuffer, DefaultInput, OutputBufSize);
+        }
+        else
+        {
+            /* Fall back to copy input to avoid uninitialized output */
+            strncpy(OutputBuffer, InputBuffer, OutputBufSize);
+        }
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_ParseInputFileName coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_ParseInputFileName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char *      OutputBuffer  = UT_Hook_GetArgValueByName(Context, "OutputBuffer", char *);
+    size_t      OutputBufSize = UT_Hook_GetArgValueByName(Context, "OutputBufSize", size_t);
+    const char *InputName     = UT_Hook_GetArgValueByName(Context, "InputName", const char *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    /* Copy any specific output supplied by test case */
+    if (status >= 0 && UT_Stub_CopyToLocal(UT_KEY(CFE_FS_ParseInputFileName), OutputBuffer, OutputBufSize) == 0 &&
+        OutputBufSize > 0)
+    {
+        /* Otherwise fall back to simple copy */
+        strncpy(OutputBuffer, InputName, OutputBufSize);
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_ExtractFilenameFromPath coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_ExtractFilenameFromPath(void *UserObj, UT_EntryKey_t FuncKey,
+                                                      const UT_StubContext_t *Context)
+{
+    const char *OriginalPath = UT_Hook_GetArgValueByName(Context, "OriginalPath", const char *);
+    char *      FileNameOnly = UT_Hook_GetArgValueByName(Context, "FileNameOnly", char *);
+
+    int    i, j;
+    int    StringLength;
+    int    DirMarkIdx;
+    int32  status;
+    uint32 UserBuffLen;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        if (OriginalPath == NULL || FileNameOnly == NULL)
+        {
+            status = CFE_FS_BAD_ARGUMENT;
+        }
+        else
+        {
+            UserBuffLen = UT_Stub_CopyToLocal(UT_KEY(CFE_FS_ExtractFilenameFromPath), FileNameOnly, OS_MAX_FILE_NAME);
+
+            if (UserBuffLen >= OS_MAX_FILE_NAME)
+            {
+                FileNameOnly[OS_MAX_FILE_NAME - 1] = 0;
+            }
+            else if (UserBuffLen > 0)
+            {
+                /* Just ensure that the output is null terminated */
+                FileNameOnly[UserBuffLen] = 0;
+            }
+            else
+            {
+                /* Get the string length of the original file path */
+                StringLength = strlen(OriginalPath);
+
+                /* Extract the filename from the Path:
+                     Find the last '/' Character */
+                DirMarkIdx = -1;
+
+                for (i = 0; i < StringLength; i++)
+                {
+                    if (OriginalPath[i] == '/')
+                    {
+                        DirMarkIdx = i;
+                    }
+                }
+
+                /* Verify the filename isn't too long */
+                if ((StringLength - (DirMarkIdx + 1)) < OS_MAX_PATH_LEN)
+                {
+                    /* Extract the filename portion */
+                    if (DirMarkIdx > 0)
+                    {
+                        /* Extract the filename portion */
+                        j = 0;
+
+                        for (i = DirMarkIdx + 1; i < StringLength; i++)
+                        {
+                            FileNameOnly[j] = OriginalPath[i];
+                            j++;
+                        }
+
+                        FileNameOnly[j] = '\0';
+                    }
+                    else
+                    {
+                        status = CFE_FS_INVALID_PATH;
+                    }
+                }
+                else
+                {
+                    status = CFE_FS_FNAME_TOO_LONG;
+                }
+            }
+        }
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_BackgroundFileDumpIsPending coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_BackgroundFileDumpIsPending(void *UserObj, UT_EntryKey_t FuncKey,
+                                                          const UT_StubContext_t *Context)
+{
+    int32 status;
+    bool  return_value;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    return_value = status;
+
+    UT_Stub_SetReturnValue(FuncKey, return_value);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_FS_BackgroundFileDumpRequest coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_FS_BackgroundFileDumpRequest(void *UserObj, UT_EntryKey_t FuncKey,
+                                                        const UT_StubContext_t *Context)
+{
+    CFE_FS_FileWriteMetaData_t *Meta = UT_Hook_GetArgValueByName(Context, "Meta", CFE_FS_FileWriteMetaData_t *);
+    int32                       status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == CFE_SUCCESS)
+    {
+        /* Snapshot the request, in case the UT test case wants to look */
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_FS_BackgroundFileDumpRequest), Meta, sizeof(*Meta));
+    }
+}
+```
+
+### `cfe_fs_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_fs_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_fs header
+ */
+
+#include "cfe_fs.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_FS_BackgroundFileDumpIsPending(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_BackgroundFileDumpRequest(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_ExtractFilenameFromPath(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_GetDefaultExtension(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_GetDefaultMountPoint(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_ParseInputFileName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_ParseInputFileNameEx(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_ReadHeader(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_FS_WriteHeader(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_BackgroundFileDumpIsPending()
+ * ----------------------------------------------------
+ */
+bool CFE_FS_BackgroundFileDumpIsPending(const CFE_FS_FileWriteMetaData_t *Meta)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_BackgroundFileDumpIsPending, bool);
+
+    UT_GenStub_AddParam(CFE_FS_BackgroundFileDumpIsPending, const CFE_FS_FileWriteMetaData_t *, Meta);
+
+    UT_GenStub_Execute(CFE_FS_BackgroundFileDumpIsPending, Basic, UT_DefaultHandler_CFE_FS_BackgroundFileDumpIsPending);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_BackgroundFileDumpIsPending, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_BackgroundFileDumpRequest()
+ * ----------------------------------------------------
+ */
+int32 CFE_FS_BackgroundFileDumpRequest(CFE_FS_FileWriteMetaData_t *Meta)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_BackgroundFileDumpRequest, int32);
+
+    UT_GenStub_AddParam(CFE_FS_BackgroundFileDumpRequest, CFE_FS_FileWriteMetaData_t *, Meta);
+
+    UT_GenStub_Execute(CFE_FS_BackgroundFileDumpRequest, Basic, UT_DefaultHandler_CFE_FS_BackgroundFileDumpRequest);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_BackgroundFileDumpRequest, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_ExtractFilenameFromPath()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_FS_ExtractFilenameFromPath(const char *OriginalPath, char *FileNameOnly)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_ExtractFilenameFromPath, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_FS_ExtractFilenameFromPath, const char *, OriginalPath);
+    UT_GenStub_AddParam(CFE_FS_ExtractFilenameFromPath, char *, FileNameOnly);
+
+    UT_GenStub_Execute(CFE_FS_ExtractFilenameFromPath, Basic, UT_DefaultHandler_CFE_FS_ExtractFilenameFromPath);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_ExtractFilenameFromPath, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_GetDefaultExtension()
+ * ----------------------------------------------------
+ */
+const char *CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_t FileCategory)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_GetDefaultExtension, const char *);
+
+    UT_GenStub_AddParam(CFE_FS_GetDefaultExtension, CFE_FS_FileCategory_t, FileCategory);
+
+    UT_GenStub_Execute(CFE_FS_GetDefaultExtension, Basic, UT_DefaultHandler_CFE_FS_GetDefaultExtension);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_GetDefaultExtension, const char *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_GetDefaultMountPoint()
+ * ----------------------------------------------------
+ */
+const char *CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_t FileCategory)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_GetDefaultMountPoint, const char *);
+
+    UT_GenStub_AddParam(CFE_FS_GetDefaultMountPoint, CFE_FS_FileCategory_t, FileCategory);
+
+    UT_GenStub_Execute(CFE_FS_GetDefaultMountPoint, Basic, UT_DefaultHandler_CFE_FS_GetDefaultMountPoint);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_GetDefaultMountPoint, const char *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_InitHeader()
+ * ----------------------------------------------------
+ */
+void CFE_FS_InitHeader(CFE_FS_Header_t *Hdr, const char *Description, uint32 SubType)
+{
+    UT_GenStub_AddParam(CFE_FS_InitHeader, CFE_FS_Header_t *, Hdr);
+    UT_GenStub_AddParam(CFE_FS_InitHeader, const char *, Description);
+    UT_GenStub_AddParam(CFE_FS_InitHeader, uint32, SubType);
+
+    UT_GenStub_Execute(CFE_FS_InitHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_ParseInputFileName()
+ * ----------------------------------------------------
+ */
+int32 CFE_FS_ParseInputFileName(char *OutputBuffer, const char *InputName, size_t OutputBufSize,
+                                CFE_FS_FileCategory_t FileCategory)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_ParseInputFileName, int32);
+
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileName, char *, OutputBuffer);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileName, const char *, InputName);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileName, size_t, OutputBufSize);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileName, CFE_FS_FileCategory_t, FileCategory);
+
+    UT_GenStub_Execute(CFE_FS_ParseInputFileName, Basic, UT_DefaultHandler_CFE_FS_ParseInputFileName);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_ParseInputFileName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_ParseInputFileNameEx()
+ * ----------------------------------------------------
+ */
+int32 CFE_FS_ParseInputFileNameEx(char *OutputBuffer, const char *InputBuffer, size_t OutputBufSize,
+                                  size_t InputBufSize, const char *DefaultInput, const char *DefaultPath,
+                                  const char *DefaultExtension)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_ParseInputFileNameEx, int32);
+
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, char *, OutputBuffer);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, const char *, InputBuffer);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, size_t, OutputBufSize);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, size_t, InputBufSize);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, const char *, DefaultInput);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, const char *, DefaultPath);
+    UT_GenStub_AddParam(CFE_FS_ParseInputFileNameEx, const char *, DefaultExtension);
+
+    UT_GenStub_Execute(CFE_FS_ParseInputFileNameEx, Basic, UT_DefaultHandler_CFE_FS_ParseInputFileNameEx);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_ParseInputFileNameEx, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_ReadHeader()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_FS_ReadHeader(CFE_FS_Header_t *Hdr, osal_id_t FileDes)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_ReadHeader, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_FS_ReadHeader, CFE_FS_Header_t *, Hdr);
+    UT_GenStub_AddParam(CFE_FS_ReadHeader, osal_id_t, FileDes);
+
+    UT_GenStub_Execute(CFE_FS_ReadHeader, Basic, UT_DefaultHandler_CFE_FS_ReadHeader);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_ReadHeader, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_SetTimestamp()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_FS_SetTimestamp(osal_id_t FileDes, CFE_TIME_SysTime_t NewTimestamp)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_SetTimestamp, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_FS_SetTimestamp, osal_id_t, FileDes);
+    UT_GenStub_AddParam(CFE_FS_SetTimestamp, CFE_TIME_SysTime_t, NewTimestamp);
+
+    UT_GenStub_Execute(CFE_FS_SetTimestamp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_SetTimestamp, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_FS_WriteHeader()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_FS_WriteHeader(osal_id_t FileDes, CFE_FS_Header_t *Hdr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_FS_WriteHeader, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_FS_WriteHeader, osal_id_t, FileDes);
+    UT_GenStub_AddParam(CFE_FS_WriteHeader, CFE_FS_Header_t *, Hdr);
+
+    UT_GenStub_Execute(CFE_FS_WriteHeader, Basic, UT_DefaultHandler_CFE_FS_WriteHeader);
+
+    return UT_GenStub_GetReturnValue(CFE_FS_WriteHeader, CFE_Status_t);
+}
+```
+
+### `cfe_msg_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_msg_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_msg_stubs.c
+**
+** Purpose:
+** Unit test stubs for MSG routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include "cfe.h"
+#include "utstubs.h"
+#include "uttools.h"
+
+/*
+** Defines
+*/
+
+/* For reporting no value for get */
+#define UTASSERT_GETSTUB(Expression) \
+    UtAssert_Type(TSF, Expression, "%s: Check for get value provided by test", __func__);
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetApId coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetApId(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_ApId_t *ApId = UT_Hook_GetArgValueByName(Context, "ApId", CFE_MSG_ApId_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetApId), ApId, sizeof(*ApId)) == sizeof(*ApId));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetEDSVersion coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetEDSVersion(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_EDSVersion_t *Version = UT_Hook_GetArgValueByName(Context, "Version", CFE_MSG_EDSVersion_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetEDSVersion), Version, sizeof(*Version)) ==
+                         sizeof(*Version));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetEndian coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetEndian(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Endian_t *Endian = UT_Hook_GetArgValueByName(Context, "Endian", CFE_MSG_Endian_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetEndian), Endian, sizeof(*Endian)) == sizeof(*Endian));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetFcnCode coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetFcnCode(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_FcnCode_t *FcnCode = UT_Hook_GetArgValueByName(Context, "FcnCode", CFE_MSG_FcnCode_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetFcnCode), FcnCode, sizeof(*FcnCode)) ==
+                         sizeof(*FcnCode));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetHasSecondaryHeader coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetHasSecondaryHeader(void *UserObj, UT_EntryKey_t FuncKey,
+                                                     const UT_StubContext_t *Context)
+{
+    bool *HasSecondary = UT_Hook_GetArgValueByName(Context, "HasSecondary", bool *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetHasSecondaryHeader), HasSecondary,
+                                             sizeof(*HasSecondary)) == sizeof(*HasSecondary));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetHeaderVersion coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetHeaderVersion(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_HeaderVersion_t *Version = UT_Hook_GetArgValueByName(Context, "Version", CFE_MSG_HeaderVersion_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetHeaderVersion), Version, sizeof(*Version)) ==
+                         sizeof(*Version));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetMsgId coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetMsgId(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_MsgId_t *MsgId = UT_Hook_GetArgValueByName(Context, "MsgId", CFE_SB_MsgId_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetMsgId), MsgId, sizeof(*MsgId)) == sizeof(*MsgId));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetMsgTime coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetMsgTime(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_TIME_SysTime_t *Time = UT_Hook_GetArgValueByName(Context, "Time", CFE_TIME_SysTime_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetMsgTime), Time, sizeof(*Time)) == sizeof(*Time));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetPlaybackFlag coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetPlaybackFlag(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_PlaybackFlag_t *PlayFlag = UT_Hook_GetArgValueByName(Context, "PlayFlag", CFE_MSG_PlaybackFlag_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetPlaybackFlag), PlayFlag, sizeof(*PlayFlag)) ==
+                         sizeof(*PlayFlag));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetSegmentationFlag coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetSegmentationFlag(void *UserObj, UT_EntryKey_t FuncKey,
+                                                   const UT_StubContext_t *Context)
+{
+    CFE_MSG_SegmentationFlag_t *SegFlag = UT_Hook_GetArgValueByName(Context, "SegFlag", CFE_MSG_SegmentationFlag_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetSegmentationFlag), SegFlag, sizeof(*SegFlag)) ==
+                         sizeof(*SegFlag));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetSequenceCount coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetSequenceCount(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_SequenceCount_t *SeqCnt = UT_Hook_GetArgValueByName(Context, "SeqCnt", CFE_MSG_SequenceCount_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetSequenceCount), SeqCnt, sizeof(*SeqCnt)) ==
+                         sizeof(*SeqCnt));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetSize coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetSize(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Size_t *Size = UT_Hook_GetArgValueByName(Context, "Size", CFE_MSG_Size_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetSize), Size, sizeof(*Size)) == sizeof(*Size));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetSubsystem coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetSubsystem(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Subsystem_t *Subsystem = UT_Hook_GetArgValueByName(Context, "Subsystem", CFE_MSG_Subsystem_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetSubsystem), Subsystem, sizeof(*Subsystem)) ==
+                         sizeof(*Subsystem));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetSystem coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetSystem(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_System_t *System = UT_Hook_GetArgValueByName(Context, "System", CFE_MSG_System_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetSystem), System, sizeof(*System)) == sizeof(*System));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetType coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetType(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Type_t *Type = UT_Hook_GetArgValueByName(Context, "Type", CFE_MSG_Type_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetType), Type, sizeof(*Type)) == sizeof(*Type));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetTypeFromMsgId coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetTypeFromMsgId(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Type_t *Type = UT_Hook_GetArgValueByName(Context, "Type", CFE_MSG_Type_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_GetTypeFromMsgId), Type, sizeof(*Type)) == sizeof(*Type));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_ValidateChecksum coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_ValidateChecksum(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    bool *IsValid = UT_Hook_GetArgValueByName(Context, "IsValid", bool *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UTASSERT_GETSTUB(UT_Stub_CopyToLocal(UT_KEY(CFE_MSG_ValidateChecksum), IsValid, sizeof(*IsValid)) ==
+                         sizeof(*IsValid));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_MSG_GetNextSequenceCount coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_MSG_GetNextSequenceCount(void *UserObj, UT_EntryKey_t FuncKey,
+                                                    const UT_StubContext_t *Context)
+{
+    int32                   status;
+    CFE_MSG_SequenceCount_t return_value;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    return_value = status;
+
+    UT_Stub_SetReturnValue(FuncKey, return_value);
+}
+```
+
+### `cfe_msg_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_msg_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_msg header
+ */
+
+#include "cfe_msg.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_MSG_GetApId(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetEDSVersion(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetEndian(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetFcnCode(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetHasSecondaryHeader(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetHeaderVersion(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetMsgId(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetMsgTime(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetNextSequenceCount(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetPlaybackFlag(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetSegmentationFlag(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetSequenceCount(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetSize(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetSubsystem(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetSystem(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetType(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_GetTypeFromMsgId(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_MSG_ValidateChecksum(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GenerateChecksum()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GenerateChecksum(CFE_MSG_Message_t *MsgPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GenerateChecksum, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GenerateChecksum, CFE_MSG_Message_t *, MsgPtr);
+
+    UT_GenStub_Execute(CFE_MSG_GenerateChecksum, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GenerateChecksum, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetApId()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetApId(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_ApId_t *ApId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetApId, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetApId, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetApId, CFE_MSG_ApId_t *, ApId);
+
+    UT_GenStub_Execute(CFE_MSG_GetApId, Basic, UT_DefaultHandler_CFE_MSG_GetApId);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetApId, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetEDSVersion()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetEDSVersion(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_EDSVersion_t *Version)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetEDSVersion, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetEDSVersion, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetEDSVersion, CFE_MSG_EDSVersion_t *, Version);
+
+    UT_GenStub_Execute(CFE_MSG_GetEDSVersion, Basic, UT_DefaultHandler_CFE_MSG_GetEDSVersion);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetEDSVersion, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetEndian()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetEndian(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Endian_t *Endian)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetEndian, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetEndian, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetEndian, CFE_MSG_Endian_t *, Endian);
+
+    UT_GenStub_Execute(CFE_MSG_GetEndian, Basic, UT_DefaultHandler_CFE_MSG_GetEndian);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetEndian, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetFcnCode()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetFcnCode(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_FcnCode_t *FcnCode)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetFcnCode, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetFcnCode, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetFcnCode, CFE_MSG_FcnCode_t *, FcnCode);
+
+    UT_GenStub_Execute(CFE_MSG_GetFcnCode, Basic, UT_DefaultHandler_CFE_MSG_GetFcnCode);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetFcnCode, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetHasSecondaryHeader()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetHasSecondaryHeader(const CFE_MSG_Message_t *MsgPtr, bool *HasSecondary)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetHasSecondaryHeader, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetHasSecondaryHeader, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetHasSecondaryHeader, bool *, HasSecondary);
+
+    UT_GenStub_Execute(CFE_MSG_GetHasSecondaryHeader, Basic, UT_DefaultHandler_CFE_MSG_GetHasSecondaryHeader);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetHasSecondaryHeader, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetHeaderVersion()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetHeaderVersion(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_HeaderVersion_t *Version)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetHeaderVersion, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetHeaderVersion, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetHeaderVersion, CFE_MSG_HeaderVersion_t *, Version);
+
+    UT_GenStub_Execute(CFE_MSG_GetHeaderVersion, Basic, UT_DefaultHandler_CFE_MSG_GetHeaderVersion);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetHeaderVersion, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetMsgId()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetMsgId(const CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t *MsgId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetMsgId, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetMsgId, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetMsgId, CFE_SB_MsgId_t *, MsgId);
+
+    UT_GenStub_Execute(CFE_MSG_GetMsgId, Basic, UT_DefaultHandler_CFE_MSG_GetMsgId);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetMsgId, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetMsgTime()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetMsgTime(const CFE_MSG_Message_t *MsgPtr, CFE_TIME_SysTime_t *Time)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetMsgTime, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetMsgTime, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetMsgTime, CFE_TIME_SysTime_t *, Time);
+
+    UT_GenStub_Execute(CFE_MSG_GetMsgTime, Basic, UT_DefaultHandler_CFE_MSG_GetMsgTime);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetMsgTime, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetNextSequenceCount()
+ * ----------------------------------------------------
+ */
+CFE_MSG_SequenceCount_t CFE_MSG_GetNextSequenceCount(CFE_MSG_SequenceCount_t SeqCnt)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetNextSequenceCount, CFE_MSG_SequenceCount_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetNextSequenceCount, CFE_MSG_SequenceCount_t, SeqCnt);
+
+    UT_GenStub_Execute(CFE_MSG_GetNextSequenceCount, Basic, UT_DefaultHandler_CFE_MSG_GetNextSequenceCount);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetNextSequenceCount, CFE_MSG_SequenceCount_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetPlaybackFlag()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetPlaybackFlag(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_PlaybackFlag_t *PlayFlag)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetPlaybackFlag, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetPlaybackFlag, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetPlaybackFlag, CFE_MSG_PlaybackFlag_t *, PlayFlag);
+
+    UT_GenStub_Execute(CFE_MSG_GetPlaybackFlag, Basic, UT_DefaultHandler_CFE_MSG_GetPlaybackFlag);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetPlaybackFlag, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetSegmentationFlag()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetSegmentationFlag(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_SegmentationFlag_t *SegFlag)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetSegmentationFlag, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetSegmentationFlag, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetSegmentationFlag, CFE_MSG_SegmentationFlag_t *, SegFlag);
+
+    UT_GenStub_Execute(CFE_MSG_GetSegmentationFlag, Basic, UT_DefaultHandler_CFE_MSG_GetSegmentationFlag);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetSegmentationFlag, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetSequenceCount()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetSequenceCount(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_SequenceCount_t *SeqCnt)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetSequenceCount, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetSequenceCount, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetSequenceCount, CFE_MSG_SequenceCount_t *, SeqCnt);
+
+    UT_GenStub_Execute(CFE_MSG_GetSequenceCount, Basic, UT_DefaultHandler_CFE_MSG_GetSequenceCount);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetSequenceCount, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetSize()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetSize(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t *Size)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetSize, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetSize, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetSize, CFE_MSG_Size_t *, Size);
+
+    UT_GenStub_Execute(CFE_MSG_GetSize, Basic, UT_DefaultHandler_CFE_MSG_GetSize);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetSize, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetSubsystem()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetSubsystem(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Subsystem_t *Subsystem)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetSubsystem, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetSubsystem, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetSubsystem, CFE_MSG_Subsystem_t *, Subsystem);
+
+    UT_GenStub_Execute(CFE_MSG_GetSubsystem, Basic, UT_DefaultHandler_CFE_MSG_GetSubsystem);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetSubsystem, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetSystem()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetSystem(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_System_t *System)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetSystem, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetSystem, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetSystem, CFE_MSG_System_t *, System);
+
+    UT_GenStub_Execute(CFE_MSG_GetSystem, Basic, UT_DefaultHandler_CFE_MSG_GetSystem);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetSystem, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetType()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetType(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Type_t *Type)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetType, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetType, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_GetType, CFE_MSG_Type_t *, Type);
+
+    UT_GenStub_Execute(CFE_MSG_GetType, Basic, UT_DefaultHandler_CFE_MSG_GetType);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetType, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_GetTypeFromMsgId()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_GetTypeFromMsgId(CFE_SB_MsgId_t MsgId, CFE_MSG_Type_t *Type)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_GetTypeFromMsgId, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_GetTypeFromMsgId, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_MSG_GetTypeFromMsgId, CFE_MSG_Type_t *, Type);
+
+    UT_GenStub_Execute(CFE_MSG_GetTypeFromMsgId, Basic, UT_DefaultHandler_CFE_MSG_GetTypeFromMsgId);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_GetTypeFromMsgId, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_Init()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_Init(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t MsgId, CFE_MSG_Size_t Size)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_Init, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_Init, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_Init, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_MSG_Init, CFE_MSG_Size_t, Size);
+
+    UT_GenStub_Execute(CFE_MSG_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_Init, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetApId()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetApId(CFE_MSG_Message_t *MsgPtr, CFE_MSG_ApId_t ApId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetApId, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetApId, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetApId, CFE_MSG_ApId_t, ApId);
+
+    UT_GenStub_Execute(CFE_MSG_SetApId, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetApId, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetEDSVersion()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetEDSVersion(CFE_MSG_Message_t *MsgPtr, CFE_MSG_EDSVersion_t Version)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetEDSVersion, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetEDSVersion, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetEDSVersion, CFE_MSG_EDSVersion_t, Version);
+
+    UT_GenStub_Execute(CFE_MSG_SetEDSVersion, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetEDSVersion, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetEndian()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetEndian(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Endian_t Endian)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetEndian, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetEndian, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetEndian, CFE_MSG_Endian_t, Endian);
+
+    UT_GenStub_Execute(CFE_MSG_SetEndian, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetEndian, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetFcnCode()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetFcnCode(CFE_MSG_Message_t *MsgPtr, CFE_MSG_FcnCode_t FcnCode)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetFcnCode, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetFcnCode, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetFcnCode, CFE_MSG_FcnCode_t, FcnCode);
+
+    UT_GenStub_Execute(CFE_MSG_SetFcnCode, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetFcnCode, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetHasSecondaryHeader()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetHasSecondaryHeader(CFE_MSG_Message_t *MsgPtr, bool HasSecondary)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetHasSecondaryHeader, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetHasSecondaryHeader, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetHasSecondaryHeader, bool, HasSecondary);
+
+    UT_GenStub_Execute(CFE_MSG_SetHasSecondaryHeader, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetHasSecondaryHeader, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetHeaderVersion()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetHeaderVersion(CFE_MSG_Message_t *MsgPtr, CFE_MSG_HeaderVersion_t Version)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetHeaderVersion, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetHeaderVersion, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetHeaderVersion, CFE_MSG_HeaderVersion_t, Version);
+
+    UT_GenStub_Execute(CFE_MSG_SetHeaderVersion, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetHeaderVersion, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetMsgId()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetMsgId(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t MsgId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetMsgId, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetMsgId, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetMsgId, CFE_SB_MsgId_t, MsgId);
+
+    UT_GenStub_Execute(CFE_MSG_SetMsgId, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetMsgId, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetMsgTime()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetMsgTime(CFE_MSG_Message_t *MsgPtr, CFE_TIME_SysTime_t NewTime)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetMsgTime, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetMsgTime, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetMsgTime, CFE_TIME_SysTime_t, NewTime);
+
+    UT_GenStub_Execute(CFE_MSG_SetMsgTime, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetMsgTime, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetPlaybackFlag()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetPlaybackFlag(CFE_MSG_Message_t *MsgPtr, CFE_MSG_PlaybackFlag_t PlayFlag)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetPlaybackFlag, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetPlaybackFlag, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetPlaybackFlag, CFE_MSG_PlaybackFlag_t, PlayFlag);
+
+    UT_GenStub_Execute(CFE_MSG_SetPlaybackFlag, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetPlaybackFlag, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetSegmentationFlag()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetSegmentationFlag(CFE_MSG_Message_t *MsgPtr, CFE_MSG_SegmentationFlag_t SegFlag)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetSegmentationFlag, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetSegmentationFlag, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetSegmentationFlag, CFE_MSG_SegmentationFlag_t, SegFlag);
+
+    UT_GenStub_Execute(CFE_MSG_SetSegmentationFlag, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetSegmentationFlag, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetSequenceCount()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetSequenceCount(CFE_MSG_Message_t *MsgPtr, CFE_MSG_SequenceCount_t SeqCnt)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetSequenceCount, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetSequenceCount, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetSequenceCount, CFE_MSG_SequenceCount_t, SeqCnt);
+
+    UT_GenStub_Execute(CFE_MSG_SetSequenceCount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetSequenceCount, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetSize()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetSize(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t Size)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetSize, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetSize, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetSize, CFE_MSG_Size_t, Size);
+
+    UT_GenStub_Execute(CFE_MSG_SetSize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetSize, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetSubsystem()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetSubsystem(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Subsystem_t Subsystem)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetSubsystem, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetSubsystem, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetSubsystem, CFE_MSG_Subsystem_t, Subsystem);
+
+    UT_GenStub_Execute(CFE_MSG_SetSubsystem, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetSubsystem, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetSystem()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetSystem(CFE_MSG_Message_t *MsgPtr, CFE_MSG_System_t System)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetSystem, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetSystem, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetSystem, CFE_MSG_System_t, System);
+
+    UT_GenStub_Execute(CFE_MSG_SetSystem, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetSystem, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_SetType()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_SetType(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Type_t Type)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_SetType, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_SetType, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_SetType, CFE_MSG_Type_t, Type);
+
+    UT_GenStub_Execute(CFE_MSG_SetType, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_SetType, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_UpdateHeader()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_UpdateHeader(CFE_MSG_Message_t *MsgPtr, CFE_MSG_SequenceCount_t SeqCnt)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_UpdateHeader, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_UpdateHeader, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_UpdateHeader, CFE_MSG_SequenceCount_t, SeqCnt);
+
+    UT_GenStub_Execute(CFE_MSG_UpdateHeader, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_UpdateHeader, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_MSG_ValidateChecksum()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_MSG_ValidateChecksum(const CFE_MSG_Message_t *MsgPtr, bool *IsValid)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_MSG_ValidateChecksum, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_MSG_ValidateChecksum, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_MSG_ValidateChecksum, bool *, IsValid);
+
+    UT_GenStub_Execute(CFE_MSG_ValidateChecksum, Basic, UT_DefaultHandler_CFE_MSG_ValidateChecksum);
+
+    return UT_GenStub_GetReturnValue(CFE_MSG_ValidateChecksum, CFE_Status_t);
+}
+```
+
+### `cfe_resourceid_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_resourceid_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+#include "osapi.h"
+#include "cfe.h"
+#include "utstubs.h"
+#include "cfe_resourceid.h"
+#include "cfe_resourceid_basevalue.h"
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ResourceId_GetBase coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ResourceId_GetBase(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ResourceId_t ResourceId = UT_Hook_GetArgValueByName(Context, "ResourceId", CFE_ResourceId_t);
+    int32            status;
+    uint32           base_value;
+
+    /* If a return code value was set, return it directly */
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        base_value = (uint32)status;
+    }
+    else
+    {
+        /* otherwise mimic a typical output (mask upper bits) */
+        base_value = CFE_ResourceId_ToInteger(ResourceId) & ~((uint32)CFE_RESOURCEID_MAX);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, base_value);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ResourceId_GetSerial coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ResourceId_GetSerial(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ResourceId_t ResourceId = UT_Hook_GetArgValueByName(Context, "ResourceId", CFE_ResourceId_t);
+    int32            status;
+    uint32           serial_value;
+
+    /* If a return code value was set, return it directly */
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        serial_value = (uint32)status;
+    }
+    else
+    {
+        /* otherwise mimic a typical output (mask lower bits) */
+        serial_value = (CFE_ResourceId_ToInteger(ResourceId) & ((uint32)CFE_RESOURCEID_MAX));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, serial_value);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ResourceId_FindNext coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ResourceId_FindNext(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ResourceId_t StartId = UT_Hook_GetArgValueByName(Context, "StartId", CFE_ResourceId_t);
+    CFE_ResourceId_t NextId;
+    int32            status;
+
+    /* Using "1" by default here produces a sequential result when called multiple times */
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = 1;
+    }
+
+    if (status < 0)
+    {
+        NextId = CFE_RESOURCEID_UNDEFINED;
+    }
+    else
+    {
+        /*
+         * The test case may set the return code to indicate the offset from the start ID
+         */
+        NextId = CFE_ResourceId_FromInteger(CFE_ResourceId_ToInteger(StartId) + status);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, NextId);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_ResourceId_ToIndex coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_ResourceId_ToIndex(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_ResourceId_t Id        = UT_Hook_GetArgValueByName(Context, "Id", CFE_ResourceId_t);
+    uint32           BaseValue = UT_Hook_GetArgValueByName(Context, "BaseValue", uint32);
+    uint32           TableSize = UT_Hook_GetArgValueByName(Context, "TableSize", uint32);
+    uint32 *         Idx       = UT_Hook_GetArgValueByName(Context, "Idx", uint32 *);
+
+    int32 return_code;
+
+    UT_Stub_GetInt32StatusCode(Context, &return_code);
+
+    if (return_code < 0)
+    {
+        /* fill with a very bad value that should cause a problem if used */
+        *Idx = 0xDEADBEEF;
+    }
+    else if (UT_Stub_CopyToLocal(UT_KEY(CFE_ResourceId_ToIndex), Idx, sizeof(*Idx)) < sizeof(*Idx))
+    {
+        /* fill with default value if unspecified by test case */
+        if (CFE_ResourceId_IsDefined(Id))
+        {
+            *Idx = (CFE_ResourceId_ToInteger(Id) - BaseValue) % TableSize;
+        }
+        else
+        {
+            *Idx        = 0xDEADBEEF;
+            return_code = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+            UT_Stub_SetReturnValue(FuncKey, return_code);
+        }
+    }
+}
+```
+
+### `cfe_resourceid_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_resourceid_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_resourceid header
+ */
+
+#include "cfe_resourceid.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_ResourceId_FindNext(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ResourceId_GetBase(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ResourceId_GetSerial(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_ResourceId_ToIndex(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ResourceId_FindNext()
+ * ----------------------------------------------------
+ */
+CFE_ResourceId_t CFE_ResourceId_FindNext(CFE_ResourceId_t StartId, uint32 TableSize,
+                                         bool (*CheckFunc)(CFE_ResourceId_t))
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ResourceId_FindNext, CFE_ResourceId_t);
+
+    UT_GenStub_AddParam(CFE_ResourceId_FindNext, CFE_ResourceId_t, StartId);
+    UT_GenStub_AddParam(CFE_ResourceId_FindNext, uint32, TableSize);
+
+    UT_GenStub_Execute(CFE_ResourceId_FindNext, Basic, UT_DefaultHandler_CFE_ResourceId_FindNext);
+
+    return UT_GenStub_GetReturnValue(CFE_ResourceId_FindNext, CFE_ResourceId_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ResourceId_GetBase()
+ * ----------------------------------------------------
+ */
+uint32 CFE_ResourceId_GetBase(CFE_ResourceId_t ResourceId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ResourceId_GetBase, uint32);
+
+    UT_GenStub_AddParam(CFE_ResourceId_GetBase, CFE_ResourceId_t, ResourceId);
+
+    UT_GenStub_Execute(CFE_ResourceId_GetBase, Basic, UT_DefaultHandler_CFE_ResourceId_GetBase);
+
+    return UT_GenStub_GetReturnValue(CFE_ResourceId_GetBase, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ResourceId_GetSerial()
+ * ----------------------------------------------------
+ */
+uint32 CFE_ResourceId_GetSerial(CFE_ResourceId_t ResourceId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ResourceId_GetSerial, uint32);
+
+    UT_GenStub_AddParam(CFE_ResourceId_GetSerial, CFE_ResourceId_t, ResourceId);
+
+    UT_GenStub_Execute(CFE_ResourceId_GetSerial, Basic, UT_DefaultHandler_CFE_ResourceId_GetSerial);
+
+    return UT_GenStub_GetReturnValue(CFE_ResourceId_GetSerial, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_ResourceId_ToIndex()
+ * ----------------------------------------------------
+ */
+int32 CFE_ResourceId_ToIndex(CFE_ResourceId_t Id, uint32 BaseValue, uint32 TableSize, uint32 *Idx)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_ResourceId_ToIndex, int32);
+
+    UT_GenStub_AddParam(CFE_ResourceId_ToIndex, CFE_ResourceId_t, Id);
+    UT_GenStub_AddParam(CFE_ResourceId_ToIndex, uint32, BaseValue);
+    UT_GenStub_AddParam(CFE_ResourceId_ToIndex, uint32, TableSize);
+    UT_GenStub_AddParam(CFE_ResourceId_ToIndex, uint32 *, Idx);
+
+    UT_GenStub_Execute(CFE_ResourceId_ToIndex, Basic, UT_DefaultHandler_CFE_ResourceId_ToIndex);
+
+    return UT_GenStub_GetReturnValue(CFE_ResourceId_ToIndex, int32);
+}
+```
+
+### `cfe_sb_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_sb_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_sb_stubs.c
+**
+** Purpose:
+** Unit test stubs for Software Bus routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include <string.h>
+#include "cfe_sb.h"
+#include "cfe_time_extern_typedefs.h"
+
+#include "utstubs.h"
+
+typedef struct
+{
+    CFE_SB_MsgId_t     MsgId;
+    uint32             UserLength;
+    uint32             TotalLength;
+    uint16             CommandCode;
+    CFE_TIME_SysTime_t TimeStamp;
+} CFE_SB_StubMsg_MetaData_t;
+
+static CFE_SB_StubMsg_MetaData_t *CFE_SB_StubMsg_GetMetaData(const CFE_MSG_Message_t *MsgPtr)
+{
+    void *                    MetaPtr;
+    CFE_SB_StubMsg_MetaData_t DefaultMeta;
+    size_t                    MetaSize;
+    UT_EntryKey_t             MsgKey = (UT_EntryKey_t)MsgPtr;
+
+    UT_GetDataBuffer(MsgKey, &MetaPtr, &MetaSize, NULL);
+    if (MetaPtr == NULL || MetaSize != sizeof(DefaultMeta))
+    {
+        memset(&DefaultMeta, 0, sizeof(DefaultMeta));
+        DefaultMeta.MsgId = CFE_SB_INVALID_MSG_ID;
+        UT_ResetState(MsgKey);
+        UT_SetDataBuffer(MsgKey, &DefaultMeta, sizeof(DefaultMeta), true);
+
+        /* Because "allocate copy" is true above, this gets a pointer to the copy */
+        UT_GetDataBuffer(MsgKey, &MetaPtr, &MetaSize, NULL);
+    }
+
+    return MetaPtr;
+}
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_CreatePipe coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_CreatePipe(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_PipeId_t *PipeIdPtr = UT_Hook_GetArgValueByName(Context, "PipeIdPtr", CFE_SB_PipeId_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_SB_CreatePipe), PipeIdPtr, sizeof(*PipeIdPtr));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_DeletePipe coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_DeletePipe(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_PipeId_t PipeId = UT_Hook_GetArgValueByName(Context, "PipeId", CFE_SB_PipeId_t);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_SB_DeletePipe), &PipeId, sizeof(PipeId));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_GetPipeName coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_GetPipeName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char * PipeNameBuf  = UT_Hook_GetArgValueByName(Context, "PipeNameBuf", char *);
+    size_t PipeNameSize = UT_Hook_GetArgValueByName(Context, "PipeNameSize", size_t);
+
+    size_t      UserBuffSize;
+    size_t      BuffPosition;
+    void *      TempBuff;
+    const char *NameBuff;
+    int32       status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0 && PipeNameSize > 0)
+    {
+        UT_GetDataBuffer(UT_KEY(CFE_SB_GetPipeName), &TempBuff, &UserBuffSize, &BuffPosition);
+        if (TempBuff == NULL || UserBuffSize == 0)
+        {
+            NameBuff     = "UT";
+            UserBuffSize = 2;
+        }
+        else
+        {
+            NameBuff = TempBuff;
+        }
+
+        if (UserBuffSize < PipeNameSize)
+        {
+            BuffPosition = UserBuffSize;
+        }
+        else
+        {
+            BuffPosition = PipeNameSize - 1;
+        }
+
+        strncpy(PipeNameBuf, NameBuff, BuffPosition);
+        PipeNameBuf[BuffPosition] = 0;
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_TimeStampMsg coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_TimeStampMsg(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Message_t *MsgPtr = UT_Hook_GetArgValueByName(Context, "MsgPtr", CFE_MSG_Message_t *);
+    UT_Stub_CopyFromLocal(UT_KEY(CFE_SB_TimeStampMsg), &MsgPtr, sizeof(MsgPtr));
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_GetPipeIdByName coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_GetPipeIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_PipeId_t *PipeIdPtr = UT_Hook_GetArgValueByName(Context, "PipeIdPtr", CFE_SB_PipeId_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(CFE_SB_GetPipeIdByName), PipeIdPtr, sizeof(*PipeIdPtr)) == sizeof(*PipeIdPtr))
+        {
+            status = CFE_SUCCESS;
+        }
+        else
+        {
+            status     = CFE_SB_BAD_ARGUMENT;
+            *PipeIdPtr = CFE_SB_INVALID_PIPE;
+        }
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_ReceiveBuffer coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_ReceiveBuffer(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_Buffer_t **BufPtr = UT_Hook_GetArgValueByName(Context, "BufPtr", CFE_SB_Buffer_t **);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_SB_ReceiveBuffer), BufPtr, sizeof(*BufPtr));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_TransmitMsg coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_TransmitMsg(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Message_t *MsgPtr = UT_Hook_GetArgValueByName(Context, "MsgPtr", CFE_MSG_Message_t *);
+
+    int32 status = CFE_SUCCESS;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_SB_TransmitMsg), &MsgPtr, sizeof(MsgPtr));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_TransmitBuffer coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_TransmitBuffer(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_Buffer_t *BufPtr = UT_Hook_GetArgValueByName(Context, "BufPtr", CFE_SB_Buffer_t *);
+
+    int32 status = CFE_SUCCESS;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(CFE_SB_TransmitBuffer), &BufPtr, sizeof(BufPtr));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_MessageStringGet coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_MessageStringGet(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char *      DestStringPtr   = UT_Hook_GetArgValueByName(Context, "DestStringPtr", char *);
+    const char *SourceStringPtr = UT_Hook_GetArgValueByName(Context, "SourceStringPtr", const char *);
+    const char *DefaultString   = UT_Hook_GetArgValueByName(Context, "DefaultString", const char *);
+    size_t      DestMaxSize     = UT_Hook_GetArgValueByName(Context, "DestMaxSize", size_t);
+    size_t      SourceMaxSize   = UT_Hook_GetArgValueByName(Context, "SourceMaxSize", size_t);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == 0)
+    {
+        if (DestMaxSize == 0)
+        {
+            status = CFE_SB_BAD_ARGUMENT;
+        }
+        else
+        {
+            /*
+             * Check if should use the default, which is if
+             * the source string has zero length (first char is NUL).
+             */
+            if (DefaultString != NULL && (SourceMaxSize == 0 || *SourceStringPtr == 0))
+            {
+                SourceStringPtr = DefaultString;
+                SourceMaxSize   = DestMaxSize;
+            }
+
+            /* For the UT implementation, just call strncpy() */
+            strncpy(DestStringPtr, SourceStringPtr, DestMaxSize - 1);
+            DestStringPtr[DestMaxSize - 1] = 0;
+
+            status = strlen(DestStringPtr);
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_MessageStringSet coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_MessageStringSet(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char *      DestStringPtr   = UT_Hook_GetArgValueByName(Context, "DestStringPtr", char *);
+    const char *SourceStringPtr = UT_Hook_GetArgValueByName(Context, "SourceStringPtr", const char *);
+    size_t      DestMaxSize     = UT_Hook_GetArgValueByName(Context, "DestMaxSize", size_t);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == 0)
+    {
+        if (DestMaxSize == 0)
+        {
+            status = CFE_SB_BAD_ARGUMENT;
+        }
+        else
+        {
+            /* For the UT implementation, just call strncpy() */
+            strncpy(DestStringPtr, SourceStringPtr, DestMaxSize);
+            if (DestStringPtr[DestMaxSize - 1] != 0)
+            {
+                status = DestMaxSize;
+            }
+            else
+            {
+                status = strlen(DestStringPtr);
+            }
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_GetUserData coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_GetUserData(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Message_t *MsgPtr = UT_Hook_GetArgValueByName(Context, "MsgPtr", CFE_MSG_Message_t *);
+    uint8 *            BytePtr;
+    void *             Result;
+    uint16             HdrSize;
+
+    if (UT_Stub_CopyToLocal(UT_KEY(CFE_SB_GetUserData), &Result, sizeof(Result)) != sizeof(Result))
+    {
+        BytePtr = (uint8 *)MsgPtr;
+        if ((MsgPtr->Byte[0] & 0x10) != 0)
+        {
+            HdrSize = sizeof(CFE_MSG_CommandHeader_t);
+        }
+        else
+        {
+            HdrSize = sizeof(CFE_MSG_TelemetryHeader_t);
+        }
+
+        Result = (BytePtr + HdrSize);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_GetUserDataLength coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_GetUserDataLength(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const CFE_MSG_Message_t *MsgPtr = UT_Hook_GetArgValueByName(Context, "MsgPtr", const CFE_MSG_Message_t *);
+    int32                    status;
+    size_t                   Result;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        Result = status;
+    }
+    else
+    {
+        Result = CFE_SB_StubMsg_GetMetaData(MsgPtr)->UserLength;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_IsValidMsgId coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_IsValidMsgId(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32          status;
+    bool           return_value;
+    CFE_SB_MsgId_t MsgId = UT_Hook_GetArgValueByName(Context, "MsgId", CFE_SB_MsgId_t);
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        return_value = status;
+    }
+    else
+    {
+        /* The only invalid value UT's should be using is CFE_SB_INVALID_MSG_ID */
+        return_value = !CFE_SB_MsgId_Equal(MsgId, CFE_SB_INVALID_MSG_ID);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, return_value);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_SetUserDataLength coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_SetUserDataLength(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_MSG_Message_t *MsgPtr     = UT_Hook_GetArgValueByName(Context, "MsgPtr", CFE_MSG_Message_t *);
+    size_t             DataLength = UT_Hook_GetArgValueByName(Context, "DataLength", size_t);
+
+    CFE_SB_StubMsg_GetMetaData(MsgPtr)->UserLength = DataLength;
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_SB_AllocateMessageBuffer coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_SB_AllocateMessageBuffer(void *UserObj, UT_EntryKey_t FuncKey,
+                                                    const UT_StubContext_t *Context)
+{
+    int32            status;
+    CFE_SB_Buffer_t *SBBufPtr = NULL;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == CFE_SUCCESS)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_SB_AllocateMessageBuffer), &SBBufPtr, sizeof(SBBufPtr));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, SBBufPtr);
+}
+```
+
+### `cfe_sb_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_sb_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_sb header
+ */
+
+#include "cfe_sb.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_SB_AllocateMessageBuffer(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_CreatePipe(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_DeletePipe(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_GetPipeIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_GetPipeName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_GetUserData(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_GetUserDataLength(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_IsValidMsgId(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_MessageStringGet(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_MessageStringSet(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_ReceiveBuffer(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_SetUserDataLength(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_TimeStampMsg(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_TransmitBuffer(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_SB_TransmitMsg(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_AllocateMessageBuffer()
+ * ----------------------------------------------------
+ */
+CFE_SB_Buffer_t *CFE_SB_AllocateMessageBuffer(size_t MsgSize)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_AllocateMessageBuffer, CFE_SB_Buffer_t *);
+
+    UT_GenStub_AddParam(CFE_SB_AllocateMessageBuffer, size_t, MsgSize);
+
+    UT_GenStub_Execute(CFE_SB_AllocateMessageBuffer, Basic, UT_DefaultHandler_CFE_SB_AllocateMessageBuffer);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_AllocateMessageBuffer, CFE_SB_Buffer_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_CreatePipe()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_CreatePipe(CFE_SB_PipeId_t *PipeIdPtr, uint16 Depth, const char *PipeName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_CreatePipe, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_CreatePipe, CFE_SB_PipeId_t *, PipeIdPtr);
+    UT_GenStub_AddParam(CFE_SB_CreatePipe, uint16, Depth);
+    UT_GenStub_AddParam(CFE_SB_CreatePipe, const char *, PipeName);
+
+    UT_GenStub_Execute(CFE_SB_CreatePipe, Basic, UT_DefaultHandler_CFE_SB_CreatePipe);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_CreatePipe, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_DeletePipe()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_DeletePipe(CFE_SB_PipeId_t PipeId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_DeletePipe, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_DeletePipe, CFE_SB_PipeId_t, PipeId);
+
+    UT_GenStub_Execute(CFE_SB_DeletePipe, Basic, UT_DefaultHandler_CFE_SB_DeletePipe);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_DeletePipe, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_GetPipeIdByName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_GetPipeIdByName(CFE_SB_PipeId_t *PipeIdPtr, const char *PipeName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_GetPipeIdByName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_GetPipeIdByName, CFE_SB_PipeId_t *, PipeIdPtr);
+    UT_GenStub_AddParam(CFE_SB_GetPipeIdByName, const char *, PipeName);
+
+    UT_GenStub_Execute(CFE_SB_GetPipeIdByName, Basic, UT_DefaultHandler_CFE_SB_GetPipeIdByName);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_GetPipeIdByName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_GetPipeName()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_GetPipeName(char *PipeNameBuf, size_t PipeNameSize, CFE_SB_PipeId_t PipeId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_GetPipeName, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_GetPipeName, char *, PipeNameBuf);
+    UT_GenStub_AddParam(CFE_SB_GetPipeName, size_t, PipeNameSize);
+    UT_GenStub_AddParam(CFE_SB_GetPipeName, CFE_SB_PipeId_t, PipeId);
+
+    UT_GenStub_Execute(CFE_SB_GetPipeName, Basic, UT_DefaultHandler_CFE_SB_GetPipeName);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_GetPipeName, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_GetPipeOpts()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_GetPipeOpts(CFE_SB_PipeId_t PipeId, uint8 *OptsPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_GetPipeOpts, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_GetPipeOpts, CFE_SB_PipeId_t, PipeId);
+    UT_GenStub_AddParam(CFE_SB_GetPipeOpts, uint8 *, OptsPtr);
+
+    UT_GenStub_Execute(CFE_SB_GetPipeOpts, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_GetPipeOpts, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_GetUserData()
+ * ----------------------------------------------------
+ */
+void *CFE_SB_GetUserData(CFE_MSG_Message_t *MsgPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_GetUserData, void *);
+
+    UT_GenStub_AddParam(CFE_SB_GetUserData, CFE_MSG_Message_t *, MsgPtr);
+
+    UT_GenStub_Execute(CFE_SB_GetUserData, Basic, UT_DefaultHandler_CFE_SB_GetUserData);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_GetUserData, void *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_GetUserDataLength()
+ * ----------------------------------------------------
+ */
+size_t CFE_SB_GetUserDataLength(const CFE_MSG_Message_t *MsgPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_GetUserDataLength, size_t);
+
+    UT_GenStub_AddParam(CFE_SB_GetUserDataLength, const CFE_MSG_Message_t *, MsgPtr);
+
+    UT_GenStub_Execute(CFE_SB_GetUserDataLength, Basic, UT_DefaultHandler_CFE_SB_GetUserDataLength);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_GetUserDataLength, size_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_IsValidMsgId()
+ * ----------------------------------------------------
+ */
+bool CFE_SB_IsValidMsgId(CFE_SB_MsgId_t MsgId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_IsValidMsgId, bool);
+
+    UT_GenStub_AddParam(CFE_SB_IsValidMsgId, CFE_SB_MsgId_t, MsgId);
+
+    UT_GenStub_Execute(CFE_SB_IsValidMsgId, Basic, UT_DefaultHandler_CFE_SB_IsValidMsgId);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_IsValidMsgId, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_MessageStringGet()
+ * ----------------------------------------------------
+ */
+int32 CFE_SB_MessageStringGet(char *DestStringPtr, const char *SourceStringPtr, const char *DefaultString,
+                              size_t DestMaxSize, size_t SourceMaxSize)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_MessageStringGet, int32);
+
+    UT_GenStub_AddParam(CFE_SB_MessageStringGet, char *, DestStringPtr);
+    UT_GenStub_AddParam(CFE_SB_MessageStringGet, const char *, SourceStringPtr);
+    UT_GenStub_AddParam(CFE_SB_MessageStringGet, const char *, DefaultString);
+    UT_GenStub_AddParam(CFE_SB_MessageStringGet, size_t, DestMaxSize);
+    UT_GenStub_AddParam(CFE_SB_MessageStringGet, size_t, SourceMaxSize);
+
+    UT_GenStub_Execute(CFE_SB_MessageStringGet, Basic, UT_DefaultHandler_CFE_SB_MessageStringGet);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_MessageStringGet, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_MessageStringSet()
+ * ----------------------------------------------------
+ */
+int32 CFE_SB_MessageStringSet(char *DestStringPtr, const char *SourceStringPtr, size_t DestMaxSize,
+                              size_t SourceMaxSize)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_MessageStringSet, int32);
+
+    UT_GenStub_AddParam(CFE_SB_MessageStringSet, char *, DestStringPtr);
+    UT_GenStub_AddParam(CFE_SB_MessageStringSet, const char *, SourceStringPtr);
+    UT_GenStub_AddParam(CFE_SB_MessageStringSet, size_t, DestMaxSize);
+    UT_GenStub_AddParam(CFE_SB_MessageStringSet, size_t, SourceMaxSize);
+
+    UT_GenStub_Execute(CFE_SB_MessageStringSet, Basic, UT_DefaultHandler_CFE_SB_MessageStringSet);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_MessageStringSet, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_PipeId_ToIndex()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_PipeId_ToIndex(CFE_SB_PipeId_t PipeID, uint32 *Idx)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_PipeId_ToIndex, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_PipeId_ToIndex, CFE_SB_PipeId_t, PipeID);
+    UT_GenStub_AddParam(CFE_SB_PipeId_ToIndex, uint32 *, Idx);
+
+    UT_GenStub_Execute(CFE_SB_PipeId_ToIndex, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_PipeId_ToIndex, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_ReceiveBuffer()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_ReceiveBuffer(CFE_SB_Buffer_t **BufPtr, CFE_SB_PipeId_t PipeId, int32 TimeOut)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_ReceiveBuffer, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_ReceiveBuffer, CFE_SB_Buffer_t **, BufPtr);
+    UT_GenStub_AddParam(CFE_SB_ReceiveBuffer, CFE_SB_PipeId_t, PipeId);
+    UT_GenStub_AddParam(CFE_SB_ReceiveBuffer, int32, TimeOut);
+
+    UT_GenStub_Execute(CFE_SB_ReceiveBuffer, Basic, UT_DefaultHandler_CFE_SB_ReceiveBuffer);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_ReceiveBuffer, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_ReleaseMessageBuffer()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_ReleaseMessageBuffer(CFE_SB_Buffer_t *BufPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_ReleaseMessageBuffer, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_ReleaseMessageBuffer, CFE_SB_Buffer_t *, BufPtr);
+
+    UT_GenStub_Execute(CFE_SB_ReleaseMessageBuffer, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_ReleaseMessageBuffer, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_SetPipeOpts()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_SetPipeOpts(CFE_SB_PipeId_t PipeId, uint8 Opts)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_SetPipeOpts, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_SetPipeOpts, CFE_SB_PipeId_t, PipeId);
+    UT_GenStub_AddParam(CFE_SB_SetPipeOpts, uint8, Opts);
+
+    UT_GenStub_Execute(CFE_SB_SetPipeOpts, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_SetPipeOpts, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_SetUserDataLength()
+ * ----------------------------------------------------
+ */
+void CFE_SB_SetUserDataLength(CFE_MSG_Message_t *MsgPtr, size_t DataLength)
+{
+    UT_GenStub_AddParam(CFE_SB_SetUserDataLength, CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_SB_SetUserDataLength, size_t, DataLength);
+
+    UT_GenStub_Execute(CFE_SB_SetUserDataLength, Basic, UT_DefaultHandler_CFE_SB_SetUserDataLength);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_Subscribe()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_Subscribe(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_Subscribe, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_Subscribe, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_SB_Subscribe, CFE_SB_PipeId_t, PipeId);
+
+    UT_GenStub_Execute(CFE_SB_Subscribe, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_Subscribe, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_SubscribeEx()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_SubscribeEx(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId, CFE_SB_Qos_t Quality, uint16 MsgLim)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_SubscribeEx, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_SubscribeEx, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_SB_SubscribeEx, CFE_SB_PipeId_t, PipeId);
+    UT_GenStub_AddParam(CFE_SB_SubscribeEx, CFE_SB_Qos_t, Quality);
+    UT_GenStub_AddParam(CFE_SB_SubscribeEx, uint16, MsgLim);
+
+    UT_GenStub_Execute(CFE_SB_SubscribeEx, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_SubscribeEx, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_SubscribeLocal()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_SubscribeLocal(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId, uint16 MsgLim)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_SubscribeLocal, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_SubscribeLocal, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_SB_SubscribeLocal, CFE_SB_PipeId_t, PipeId);
+    UT_GenStub_AddParam(CFE_SB_SubscribeLocal, uint16, MsgLim);
+
+    UT_GenStub_Execute(CFE_SB_SubscribeLocal, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_SubscribeLocal, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_TimeStampMsg()
+ * ----------------------------------------------------
+ */
+void CFE_SB_TimeStampMsg(CFE_MSG_Message_t *MsgPtr)
+{
+    UT_GenStub_AddParam(CFE_SB_TimeStampMsg, CFE_MSG_Message_t *, MsgPtr);
+
+    UT_GenStub_Execute(CFE_SB_TimeStampMsg, Basic, UT_DefaultHandler_CFE_SB_TimeStampMsg);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_TransmitBuffer()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_TransmitBuffer(CFE_SB_Buffer_t *BufPtr, bool UpdateHeader)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_TransmitBuffer, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_TransmitBuffer, CFE_SB_Buffer_t *, BufPtr);
+    UT_GenStub_AddParam(CFE_SB_TransmitBuffer, bool, UpdateHeader);
+
+    UT_GenStub_Execute(CFE_SB_TransmitBuffer, Basic, UT_DefaultHandler_CFE_SB_TransmitBuffer);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_TransmitBuffer, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_TransmitMsg()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_TransmitMsg(const CFE_MSG_Message_t *MsgPtr, bool UpdateHeader)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_TransmitMsg, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_TransmitMsg, const CFE_MSG_Message_t *, MsgPtr);
+    UT_GenStub_AddParam(CFE_SB_TransmitMsg, bool, UpdateHeader);
+
+    UT_GenStub_Execute(CFE_SB_TransmitMsg, Basic, UT_DefaultHandler_CFE_SB_TransmitMsg);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_TransmitMsg, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_Unsubscribe()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_Unsubscribe(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_Unsubscribe, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_Unsubscribe, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_SB_Unsubscribe, CFE_SB_PipeId_t, PipeId);
+
+    UT_GenStub_Execute(CFE_SB_Unsubscribe, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_Unsubscribe, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_SB_UnsubscribeLocal()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_SB_UnsubscribeLocal(CFE_SB_MsgId_t MsgId, CFE_SB_PipeId_t PipeId)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_SB_UnsubscribeLocal, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_SB_UnsubscribeLocal, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_SB_UnsubscribeLocal, CFE_SB_PipeId_t, PipeId);
+
+    UT_GenStub_Execute(CFE_SB_UnsubscribeLocal, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_SB_UnsubscribeLocal, CFE_Status_t);
+}
+```
+
+### `cfe_tbl_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_tbl_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** Includes
+*/
+#include <string.h>
+#include "cfe_tbl.h"
+
+#include "utstubs.h"
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TBL_Register coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TBL_Register(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_TBL_Handle_t *TblHandlePtr = UT_Hook_GetArgValueByName(Context, "TblHandlePtr", CFE_TBL_Handle_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TBL_Register), TblHandlePtr, sizeof(CFE_TBL_Handle_t));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TBL_GetAddress coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TBL_GetAddress(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void **TblPtr = UT_Hook_GetArgValueByName(Context, "TblPtr", void **);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TBL_GetAddress), (uint8 *)TblPtr, sizeof(void *));
+    }
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TBL_GetInfo coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TBL_GetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_TBL_Info_t *TblInfoPtr = UT_Hook_GetArgValueByName(Context, "TblInfoPtr", CFE_TBL_Info_t *);
+
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0 &&
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TBL_GetInfo), TblInfoPtr, sizeof(*TblInfoPtr)) < sizeof(*TblInfoPtr))
+    {
+        /* just clear the output struct */
+        memset(TblInfoPtr, 0, sizeof(*TblInfoPtr));
+    }
+}
+```
+
+### `cfe_tbl_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_tbl_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_tbl header
+ */
+
+#include "cfe_tbl.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_TBL_GetAddress(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TBL_GetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TBL_Register(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_DumpToBuffer()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_DumpToBuffer(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_DumpToBuffer, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_DumpToBuffer, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_DumpToBuffer, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_DumpToBuffer, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_GetAddress()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_GetAddress(void **TblPtr, CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_GetAddress, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_GetAddress, void **, TblPtr);
+    UT_GenStub_AddParam(CFE_TBL_GetAddress, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_GetAddress, Basic, UT_DefaultHandler_CFE_TBL_GetAddress);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_GetAddress, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_GetAddresses()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_GetAddresses(void **TblPtrs[], uint16 NumTables, const CFE_TBL_Handle_t TblHandles[])
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_GetAddresses, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_GetAddresses, uint16, NumTables);
+
+    UT_GenStub_Execute(CFE_TBL_GetAddresses, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_GetAddresses, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_GetInfo()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_GetInfo(CFE_TBL_Info_t *TblInfoPtr, const char *TblName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_GetInfo, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_GetInfo, CFE_TBL_Info_t *, TblInfoPtr);
+    UT_GenStub_AddParam(CFE_TBL_GetInfo, const char *, TblName);
+
+    UT_GenStub_Execute(CFE_TBL_GetInfo, Basic, UT_DefaultHandler_CFE_TBL_GetInfo);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_GetInfo, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_GetStatus()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_GetStatus(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_GetStatus, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_GetStatus, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_GetStatus, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_GetStatus, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Load()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Load(CFE_TBL_Handle_t TblHandle, CFE_TBL_SrcEnum_t SrcType, const void *SrcDataPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Load, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Load, CFE_TBL_Handle_t, TblHandle);
+    UT_GenStub_AddParam(CFE_TBL_Load, CFE_TBL_SrcEnum_t, SrcType);
+    UT_GenStub_AddParam(CFE_TBL_Load, const void *, SrcDataPtr);
+
+    UT_GenStub_Execute(CFE_TBL_Load, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Load, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Manage()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Manage(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Manage, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Manage, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_Manage, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Manage, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Modified()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Modified(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Modified, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Modified, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_Modified, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Modified, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_NotifyByMessage()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_NotifyByMessage(CFE_TBL_Handle_t TblHandle, CFE_SB_MsgId_t MsgId, CFE_MSG_FcnCode_t CommandCode,
+                                     uint32 Parameter)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_NotifyByMessage, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_NotifyByMessage, CFE_TBL_Handle_t, TblHandle);
+    UT_GenStub_AddParam(CFE_TBL_NotifyByMessage, CFE_SB_MsgId_t, MsgId);
+    UT_GenStub_AddParam(CFE_TBL_NotifyByMessage, CFE_MSG_FcnCode_t, CommandCode);
+    UT_GenStub_AddParam(CFE_TBL_NotifyByMessage, uint32, Parameter);
+
+    UT_GenStub_Execute(CFE_TBL_NotifyByMessage, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_NotifyByMessage, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Register()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Register(CFE_TBL_Handle_t *TblHandlePtr, const char *Name, size_t Size, uint16 TblOptionFlags,
+                              CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Register, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Register, CFE_TBL_Handle_t *, TblHandlePtr);
+    UT_GenStub_AddParam(CFE_TBL_Register, const char *, Name);
+    UT_GenStub_AddParam(CFE_TBL_Register, size_t, Size);
+    UT_GenStub_AddParam(CFE_TBL_Register, uint16, TblOptionFlags);
+    UT_GenStub_AddParam(CFE_TBL_Register, CFE_TBL_CallbackFuncPtr_t, TblValidationFuncPtr);
+
+    UT_GenStub_Execute(CFE_TBL_Register, Basic, UT_DefaultHandler_CFE_TBL_Register);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Register, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_ReleaseAddress()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_ReleaseAddress(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_ReleaseAddress, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_ReleaseAddress, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_ReleaseAddress, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_ReleaseAddress, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_ReleaseAddresses()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_ReleaseAddresses(uint16 NumTables, const CFE_TBL_Handle_t TblHandles[])
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_ReleaseAddresses, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_ReleaseAddresses, uint16, NumTables);
+
+    UT_GenStub_Execute(CFE_TBL_ReleaseAddresses, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_ReleaseAddresses, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Share()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Share(CFE_TBL_Handle_t *TblHandlePtr, const char *TblName)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Share, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Share, CFE_TBL_Handle_t *, TblHandlePtr);
+    UT_GenStub_AddParam(CFE_TBL_Share, const char *, TblName);
+
+    UT_GenStub_Execute(CFE_TBL_Share, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Share, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Unregister()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Unregister(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Unregister, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Unregister, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_Unregister, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Unregister, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Update()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Update(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Update, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Update, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_Update, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Update, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TBL_Validate()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TBL_Validate(CFE_TBL_Handle_t TblHandle)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TBL_Validate, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TBL_Validate, CFE_TBL_Handle_t, TblHandle);
+
+    UT_GenStub_Execute(CFE_TBL_Validate, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TBL_Validate, CFE_Status_t);
+}
+```
+
+### `cfe_time_handlers.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_time_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: ut_time_stubs.c
+**
+** Purpose:
+** Unit test stubs for Time routines
+**
+** Notes:
+** Minimal work is done, only what is required for unit testing
+**
+*/
+
+/*
+** Includes
+*/
+#include <stdio.h>
+#include <string.h>
+#include "cfe_time.h"
+
+#include "utstubs.h"
+
+/*
+** Functions
+*/
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_Print coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_Print(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char *             PrintBuffer = UT_Hook_GetArgValueByName(Context, "PrintBuffer", char *);
+    CFE_TIME_SysTime_t TimeToPrint = UT_Hook_GetArgValueByName(Context, "TimeToPrint", CFE_TIME_SysTime_t);
+
+    snprintf(PrintBuffer, CFE_TIME_PRINTED_STRING_SIZE, "UT %u.%u -", (unsigned int)TimeToPrint.Seconds,
+             (unsigned int)TimeToPrint.Subseconds);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_GetTime coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_GetTime(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    static CFE_TIME_SysTime_t SimTime = {0};
+    CFE_TIME_SysTime_t        Result  = {0};
+    int32                     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_GetTime), &Result, sizeof(Result)) < sizeof(Result))
+        {
+            SimTime.Seconds++;
+            SimTime.Subseconds++;
+            Result = SimTime;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_Add coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_Add(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    static CFE_TIME_SysTime_t SimTime = {0};
+    CFE_TIME_SysTime_t        Result  = {0};
+    int32                     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_Add), (uint8 *)&Result, sizeof(Result)) < sizeof(Result))
+        {
+            SimTime.Seconds++;
+            SimTime.Subseconds++;
+            Result = SimTime;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_GetMET coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_GetMET(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              status;
+    CFE_TIME_SysTime_t Result = {0};
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_GetMET), &Result, sizeof(Result));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_GetSTCF coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_GetSTCF(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              status;
+    CFE_TIME_SysTime_t Result = {0};
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_GetSTCF), &Result, sizeof(Result));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_GetTAI coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_GetTAI(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              status;
+    CFE_TIME_SysTime_t Result = {0};
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_GetTAI), &Result, sizeof(Result));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_GetUTC coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_GetUTC(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              status;
+    CFE_TIME_SysTime_t Result = {0};
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_GetUTC), &Result, sizeof(Result));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_MET2SCTime coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_MET2SCTime(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              status;
+    CFE_TIME_SysTime_t Result = {0};
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_MET2SCTime), &Result, sizeof(Result));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+
+/*------------------------------------------------------------
+ *
+ * Default handler for CFE_TIME_Subtract coverage stub function
+ *
+ *------------------------------------------------------------*/
+void UT_DefaultHandler_CFE_TIME_Subtract(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              status;
+    CFE_TIME_SysTime_t Result = {0};
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+    if (status >= 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(CFE_TIME_Subtract), &Result, sizeof(Result));
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Result);
+}
+```
+
+### `cfe_time_stubs.c`
+
+**경로:** `fsw/cfe/modules/core_api/ut-stubs/src/cfe_time_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cfe_time header
+ */
+
+#include "cfe_time.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CFE_TIME_Add(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_GetMET(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_GetSTCF(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_GetTAI(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_GetTime(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_GetUTC(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_MET2SCTime(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_Print(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CFE_TIME_Subtract(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Add()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_Add(CFE_TIME_SysTime_t Time1, CFE_TIME_SysTime_t Time2)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_Add, CFE_TIME_SysTime_t);
+
+    UT_GenStub_AddParam(CFE_TIME_Add, CFE_TIME_SysTime_t, Time1);
+    UT_GenStub_AddParam(CFE_TIME_Add, CFE_TIME_SysTime_t, Time2);
+
+    UT_GenStub_Execute(CFE_TIME_Add, Basic, UT_DefaultHandler_CFE_TIME_Add);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_Add, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Compare()
+ * ----------------------------------------------------
+ */
+CFE_TIME_Compare_t CFE_TIME_Compare(CFE_TIME_SysTime_t TimeA, CFE_TIME_SysTime_t TimeB)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_Compare, CFE_TIME_Compare_t);
+
+    UT_GenStub_AddParam(CFE_TIME_Compare, CFE_TIME_SysTime_t, TimeA);
+    UT_GenStub_AddParam(CFE_TIME_Compare, CFE_TIME_SysTime_t, TimeB);
+
+    UT_GenStub_Execute(CFE_TIME_Compare, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_Compare, CFE_TIME_Compare_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_ExternalGPS()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_ExternalGPS(CFE_TIME_SysTime_t NewTime, int16 NewLeaps)
+{
+    UT_GenStub_AddParam(CFE_TIME_ExternalGPS, CFE_TIME_SysTime_t, NewTime);
+    UT_GenStub_AddParam(CFE_TIME_ExternalGPS, int16, NewLeaps);
+
+    UT_GenStub_Execute(CFE_TIME_ExternalGPS, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_ExternalMET()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_ExternalMET(CFE_TIME_SysTime_t NewMET)
+{
+    UT_GenStub_AddParam(CFE_TIME_ExternalMET, CFE_TIME_SysTime_t, NewMET);
+
+    UT_GenStub_Execute(CFE_TIME_ExternalMET, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_ExternalTime()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_ExternalTime(CFE_TIME_SysTime_t NewTime)
+{
+    UT_GenStub_AddParam(CFE_TIME_ExternalTime, CFE_TIME_SysTime_t, NewTime);
+
+    UT_GenStub_Execute(CFE_TIME_ExternalTime, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_ExternalTone()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_ExternalTone(void)
+{
+
+    UT_GenStub_Execute(CFE_TIME_ExternalTone, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetClockInfo()
+ * ----------------------------------------------------
+ */
+uint16 CFE_TIME_GetClockInfo(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetClockInfo, uint16);
+
+    UT_GenStub_Execute(CFE_TIME_GetClockInfo, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetClockInfo, uint16);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetClockState()
+ * ----------------------------------------------------
+ */
+CFE_TIME_ClockState_Enum_t CFE_TIME_GetClockState(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetClockState, CFE_TIME_ClockState_Enum_t);
+
+    UT_GenStub_Execute(CFE_TIME_GetClockState, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetClockState, CFE_TIME_ClockState_Enum_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetLeapSeconds()
+ * ----------------------------------------------------
+ */
+int16 CFE_TIME_GetLeapSeconds(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetLeapSeconds, int16);
+
+    UT_GenStub_Execute(CFE_TIME_GetLeapSeconds, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetLeapSeconds, int16);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetMET()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_GetMET(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetMET, CFE_TIME_SysTime_t);
+
+    UT_GenStub_Execute(CFE_TIME_GetMET, Basic, UT_DefaultHandler_CFE_TIME_GetMET);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetMET, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetMETseconds()
+ * ----------------------------------------------------
+ */
+uint32 CFE_TIME_GetMETseconds(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetMETseconds, uint32);
+
+    UT_GenStub_Execute(CFE_TIME_GetMETseconds, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetMETseconds, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetMETsubsecs()
+ * ----------------------------------------------------
+ */
+uint32 CFE_TIME_GetMETsubsecs(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetMETsubsecs, uint32);
+
+    UT_GenStub_Execute(CFE_TIME_GetMETsubsecs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetMETsubsecs, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetSTCF()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_GetSTCF(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetSTCF, CFE_TIME_SysTime_t);
+
+    UT_GenStub_Execute(CFE_TIME_GetSTCF, Basic, UT_DefaultHandler_CFE_TIME_GetSTCF);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetSTCF, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetTAI()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_GetTAI(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetTAI, CFE_TIME_SysTime_t);
+
+    UT_GenStub_Execute(CFE_TIME_GetTAI, Basic, UT_DefaultHandler_CFE_TIME_GetTAI);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetTAI, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetTime()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_GetTime(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetTime, CFE_TIME_SysTime_t);
+
+    UT_GenStub_Execute(CFE_TIME_GetTime, Basic, UT_DefaultHandler_CFE_TIME_GetTime);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetTime, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_GetUTC()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_GetUTC(void)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_GetUTC, CFE_TIME_SysTime_t);
+
+    UT_GenStub_Execute(CFE_TIME_GetUTC, Basic, UT_DefaultHandler_CFE_TIME_GetUTC);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_GetUTC, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Local1HzISR()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_Local1HzISR(void)
+{
+
+    UT_GenStub_Execute(CFE_TIME_Local1HzISR, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_MET2SCTime()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_MET2SCTime(CFE_TIME_SysTime_t METTime)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_MET2SCTime, CFE_TIME_SysTime_t);
+
+    UT_GenStub_AddParam(CFE_TIME_MET2SCTime, CFE_TIME_SysTime_t, METTime);
+
+    UT_GenStub_Execute(CFE_TIME_MET2SCTime, Basic, UT_DefaultHandler_CFE_TIME_MET2SCTime);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_MET2SCTime, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Micro2SubSecs()
+ * ----------------------------------------------------
+ */
+uint32 CFE_TIME_Micro2SubSecs(uint32 MicroSeconds)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_Micro2SubSecs, uint32);
+
+    UT_GenStub_AddParam(CFE_TIME_Micro2SubSecs, uint32, MicroSeconds);
+
+    UT_GenStub_Execute(CFE_TIME_Micro2SubSecs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_Micro2SubSecs, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Print()
+ * ----------------------------------------------------
+ */
+void CFE_TIME_Print(char *PrintBuffer, CFE_TIME_SysTime_t TimeToPrint)
+{
+    UT_GenStub_AddParam(CFE_TIME_Print, char *, PrintBuffer);
+    UT_GenStub_AddParam(CFE_TIME_Print, CFE_TIME_SysTime_t, TimeToPrint);
+
+    UT_GenStub_Execute(CFE_TIME_Print, Basic, UT_DefaultHandler_CFE_TIME_Print);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_RegisterSynchCallback()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TIME_RegisterSynchCallback(CFE_TIME_SynchCallbackPtr_t CallbackFuncPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_RegisterSynchCallback, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TIME_RegisterSynchCallback, CFE_TIME_SynchCallbackPtr_t, CallbackFuncPtr);
+
+    UT_GenStub_Execute(CFE_TIME_RegisterSynchCallback, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_RegisterSynchCallback, CFE_Status_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Sub2MicroSecs()
+ * ----------------------------------------------------
+ */
+uint32 CFE_TIME_Sub2MicroSecs(uint32 SubSeconds)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_Sub2MicroSecs, uint32);
+
+    UT_GenStub_AddParam(CFE_TIME_Sub2MicroSecs, uint32, SubSeconds);
+
+    UT_GenStub_Execute(CFE_TIME_Sub2MicroSecs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_Sub2MicroSecs, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_Subtract()
+ * ----------------------------------------------------
+ */
+CFE_TIME_SysTime_t CFE_TIME_Subtract(CFE_TIME_SysTime_t Time1, CFE_TIME_SysTime_t Time2)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_Subtract, CFE_TIME_SysTime_t);
+
+    UT_GenStub_AddParam(CFE_TIME_Subtract, CFE_TIME_SysTime_t, Time1);
+    UT_GenStub_AddParam(CFE_TIME_Subtract, CFE_TIME_SysTime_t, Time2);
+
+    UT_GenStub_Execute(CFE_TIME_Subtract, Basic, UT_DefaultHandler_CFE_TIME_Subtract);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_Subtract, CFE_TIME_SysTime_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CFE_TIME_UnregisterSynchCallback()
+ * ----------------------------------------------------
+ */
+CFE_Status_t CFE_TIME_UnregisterSynchCallback(CFE_TIME_SynchCallbackPtr_t CallbackFuncPtr)
+{
+    UT_GenStub_SetupReturnBuffer(CFE_TIME_UnregisterSynchCallback, CFE_Status_t);
+
+    UT_GenStub_AddParam(CFE_TIME_UnregisterSynchCallback, CFE_TIME_SynchCallbackPtr_t, CallbackFuncPtr);
+
+    UT_GenStub_Execute(CFE_TIME_UnregisterSynchCallback, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CFE_TIME_UnregisterSynchCallback, CFE_Status_t);
+}
+```

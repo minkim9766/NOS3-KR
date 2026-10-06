@@ -3,70 +3,21084 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BUILD.bazel`
 
-file--BUILD.bazel
-file--gmock-actions_test.cc
-file--gmock-cardinalities_test.cc
-file--gmock-function-mocker_test.cc
-file--gmock-internal-utils_test.cc
-file--gmock-matchers-arithmetic_test.cc
-file--gmock-matchers-comparisons_test.cc
-file--gmock-matchers-containers_test.cc
-file--gmock-matchers-misc_test.cc
-file--gmock-matchers_test.h
-file--gmock-more-actions_test.cc
-file--gmock-nice-strict_test.cc
-file--gmock-port_test.cc
-file--gmock-pp-string_test.cc
-file--gmock-pp_test.cc
-file--gmock-spec-builders_test.cc
-file--gmock_all_test.cc
-file--gmock_ex_test.cc
-file--gmock_leak_test.py
-file--gmock_leak_test_.cc
-file--gmock_link2_test.cc
-file--gmock_link_test.cc
-file--gmock_link_test.h
-file--gmock_output_test.py
-file--gmock_output_test_.cc
-file--gmock_output_test_golden.txt
-file--gmock_stress_test.cc
-file--gmock_test.cc
-file--gmock_test_utils.py
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/BUILD.bazel`
+
+
+```text
+# Copyright 2017 Google Inc.
+# All Rights Reserved.
+#
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#   Bazel Build for Google C++ Testing Framework(Google Test)-googlemock
+
+load("@rules_python//python:defs.bzl", "py_library", "py_test")
+
+licenses(["notice"])
+
+# Tests for GMock itself
+cc_test(
+    name = "gmock_all_test",
+    size = "small",
+    srcs = glob(include = ["gmock-*.cc"]) + ["gmock-matchers_test.h"],
+    linkopts = select({
+        "//:qnx": [],
+        "//:windows": [],
+        "//conditions:default": ["-pthread"],
+    }),
+    deps = ["//:gtest"],
+)
+
+# Python tests
+py_library(
+    name = "gmock_test_utils",
+    testonly = 1,
+    srcs = ["gmock_test_utils.py"],
+    deps = [
+        "//googletest/test:gtest_test_utils",
+    ],
+)
+
+cc_binary(
+    name = "gmock_leak_test_",
+    testonly = 1,
+    srcs = ["gmock_leak_test_.cc"],
+    deps = ["//:gtest_main"],
+)
+
+py_test(
+    name = "gmock_leak_test",
+    size = "medium",
+    srcs = ["gmock_leak_test.py"],
+    data = [
+        ":gmock_leak_test_",
+        ":gmock_test_utils",
+    ],
+    tags = [
+        "no_test_msvc2015",
+        "no_test_msvc2017",
+    ],
+)
+
+cc_test(
+    name = "gmock_link_test",
+    size = "small",
+    srcs = [
+        "gmock_link2_test.cc",
+        "gmock_link_test.cc",
+        "gmock_link_test.h",
+    ],
+    deps = ["//:gtest_main"],
+)
+
+cc_binary(
+    name = "gmock_output_test_",
+    srcs = ["gmock_output_test_.cc"],
+    deps = ["//:gtest"],
+)
+
+py_test(
+    name = "gmock_output_test",
+    size = "medium",
+    srcs = ["gmock_output_test.py"],
+    data = [
+        ":gmock_output_test_",
+        ":gmock_output_test_golden.txt",
+    ],
+    tags = [
+        "no_test_msvc2015",
+        "no_test_msvc2017",
+    ],
+    deps = [":gmock_test_utils"],
+)
+
+cc_test(
+    name = "gmock_test",
+    size = "small",
+    srcs = ["gmock_test.cc"],
+    deps = ["//:gtest_main"],
+)
 ```
 
-## 항목
+### `gmock-actions_test.cc`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/BUILD.bazel`](file--BUILD.bazel) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-actions_test.cc`](file--gmock-actions_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-cardinalities_test.cc`](file--gmock-cardinalities_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-function-mocker_test.cc`](file--gmock-function-mocker_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-internal-utils_test.cc`](file--gmock-internal-utils_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-arithmetic_test.cc`](file--gmock-matchers-arithmetic_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-comparisons_test.cc`](file--gmock-matchers-comparisons_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-containers_test.cc`](file--gmock-matchers-containers_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-misc_test.cc`](file--gmock-matchers-misc_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers_test.h`](file--gmock-matchers_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-more-actions_test.cc`](file--gmock-more-actions_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-nice-strict_test.cc`](file--gmock-nice-strict_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-port_test.cc`](file--gmock-port_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-pp-string_test.cc`](file--gmock-pp-string_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-pp_test.cc`](file--gmock-pp_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-spec-builders_test.cc`](file--gmock-spec-builders_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_all_test.cc`](file--gmock_all_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_ex_test.cc`](file--gmock_ex_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_leak_test.py`](file--gmock_leak_test.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_leak_test_.cc`](file--gmock_leak_test_.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_link2_test.cc`](file--gmock_link2_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_link_test.cc`](file--gmock_link_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_link_test.h`](file--gmock_link_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_output_test.py`](file--gmock_output_test.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_output_test_.cc`](file--gmock_output_test_.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_output_test_golden.txt`](file--gmock_output_test_golden.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_stress_test.cc`](file--gmock_stress_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_test.cc`](file--gmock_test.cc) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_test_utils.py`](file--gmock_test_utils.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-actions_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the built-in actions.
+
+// Silence C4100 (unreferenced formal parameter) and C4503 (decorated name
+// length exceeded) for MSVC.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#pragma warning(disable : 4503)
+#if _MSC_VER == 1900
+// and silence C4800 (C4800: 'int *const ': forcing value
+// to bool 'true' or 'false') for MSVC 15
+#pragma warning(disable : 4800)
+#endif
+#endif
+
+#include "gmock/gmock-actions.h"
+
+#include <algorithm>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <vector>
+
+#include "gmock/gmock.h"
+#include "gmock/internal/gmock-port.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+
+namespace testing {
+namespace {
+
+using ::testing::internal::BuiltInDefaultValue;
+
+TEST(TypeTraits, Negation) {
+  // Direct use with std types.
+  static_assert(std::is_base_of<std::false_type,
+                                internal::negation<std::true_type>>::value,
+                "");
+
+  static_assert(std::is_base_of<std::true_type,
+                                internal::negation<std::false_type>>::value,
+                "");
+
+  // With other types that fit the requirement of a value member that is
+  // convertible to bool.
+  static_assert(std::is_base_of<
+                    std::true_type,
+                    internal::negation<std::integral_constant<int, 0>>>::value,
+                "");
+
+  static_assert(std::is_base_of<
+                    std::false_type,
+                    internal::negation<std::integral_constant<int, 1>>>::value,
+                "");
+
+  static_assert(std::is_base_of<
+                    std::false_type,
+                    internal::negation<std::integral_constant<int, -1>>>::value,
+                "");
+}
+
+// Weird false/true types that aren't actually bool constants (but should still
+// be legal according to [meta.logical] because `bool(T::value)` is valid), are
+// distinct from std::false_type and std::true_type, and are distinct from other
+// instantiations of the same template.
+//
+// These let us check finicky details mandated by the standard like
+// "std::conjunction should evaluate to a type that inherits from the first
+// false-y input".
+template <int>
+struct MyFalse : std::integral_constant<int, 0> {};
+
+template <int>
+struct MyTrue : std::integral_constant<int, -1> {};
+
+TEST(TypeTraits, Conjunction) {
+  // Base case: always true.
+  static_assert(std::is_base_of<std::true_type, internal::conjunction<>>::value,
+                "");
+
+  // One predicate: inherits from that predicate, regardless of value.
+  static_assert(
+      std::is_base_of<MyFalse<0>, internal::conjunction<MyFalse<0>>>::value,
+      "");
+
+  static_assert(
+      std::is_base_of<MyTrue<0>, internal::conjunction<MyTrue<0>>>::value, "");
+
+  // Multiple predicates, with at least one false: inherits from that one.
+  static_assert(
+      std::is_base_of<MyFalse<1>, internal::conjunction<MyTrue<0>, MyFalse<1>,
+                                                        MyTrue<2>>>::value,
+      "");
+
+  static_assert(
+      std::is_base_of<MyFalse<1>, internal::conjunction<MyTrue<0>, MyFalse<1>,
+                                                        MyFalse<2>>>::value,
+      "");
+
+  // Short circuiting: in the case above, additional predicates need not even
+  // define a value member.
+  struct Empty {};
+  static_assert(
+      std::is_base_of<MyFalse<1>, internal::conjunction<MyTrue<0>, MyFalse<1>,
+                                                        Empty>>::value,
+      "");
+
+  // All predicates true: inherits from the last.
+  static_assert(
+      std::is_base_of<MyTrue<2>, internal::conjunction<MyTrue<0>, MyTrue<1>,
+                                                       MyTrue<2>>>::value,
+      "");
+}
+
+TEST(TypeTraits, Disjunction) {
+  // Base case: always false.
+  static_assert(
+      std::is_base_of<std::false_type, internal::disjunction<>>::value, "");
+
+  // One predicate: inherits from that predicate, regardless of value.
+  static_assert(
+      std::is_base_of<MyFalse<0>, internal::disjunction<MyFalse<0>>>::value,
+      "");
+
+  static_assert(
+      std::is_base_of<MyTrue<0>, internal::disjunction<MyTrue<0>>>::value, "");
+
+  // Multiple predicates, with at least one true: inherits from that one.
+  static_assert(
+      std::is_base_of<MyTrue<1>, internal::disjunction<MyFalse<0>, MyTrue<1>,
+                                                       MyFalse<2>>>::value,
+      "");
+
+  static_assert(
+      std::is_base_of<MyTrue<1>, internal::disjunction<MyFalse<0>, MyTrue<1>,
+                                                       MyTrue<2>>>::value,
+      "");
+
+  // Short circuiting: in the case above, additional predicates need not even
+  // define a value member.
+  struct Empty {};
+  static_assert(
+      std::is_base_of<MyTrue<1>, internal::disjunction<MyFalse<0>, MyTrue<1>,
+                                                       Empty>>::value,
+      "");
+
+  // All predicates false: inherits from the last.
+  static_assert(
+      std::is_base_of<MyFalse<2>, internal::disjunction<MyFalse<0>, MyFalse<1>,
+                                                        MyFalse<2>>>::value,
+      "");
+}
+
+TEST(TypeTraits, IsInvocableRV) {
+  struct C {
+    int operator()() const { return 0; }
+    void operator()(int) & {}
+    std::string operator()(int) && { return ""; };
+  };
+
+  // The first overload is callable for const and non-const rvalues and lvalues.
+  // It can be used to obtain an int, cv void, or anything int is convertible
+  // to.
+  static_assert(internal::is_callable_r<int, C>::value, "");
+  static_assert(internal::is_callable_r<int, C&>::value, "");
+  static_assert(internal::is_callable_r<int, const C>::value, "");
+  static_assert(internal::is_callable_r<int, const C&>::value, "");
+
+  static_assert(internal::is_callable_r<void, C>::value, "");
+  static_assert(internal::is_callable_r<const volatile void, C>::value, "");
+  static_assert(internal::is_callable_r<char, C>::value, "");
+
+  // It's possible to provide an int. If it's given to an lvalue, the result is
+  // void. Otherwise it is std::string (which is also treated as allowed for a
+  // void result type).
+  static_assert(internal::is_callable_r<void, C&, int>::value, "");
+  static_assert(!internal::is_callable_r<int, C&, int>::value, "");
+  static_assert(!internal::is_callable_r<std::string, C&, int>::value, "");
+  static_assert(!internal::is_callable_r<void, const C&, int>::value, "");
+
+  static_assert(internal::is_callable_r<std::string, C, int>::value, "");
+  static_assert(internal::is_callable_r<void, C, int>::value, "");
+  static_assert(!internal::is_callable_r<int, C, int>::value, "");
+
+  // It's not possible to provide other arguments.
+  static_assert(!internal::is_callable_r<void, C, std::string>::value, "");
+  static_assert(!internal::is_callable_r<void, C, int, int>::value, "");
+
+  // In C++17 and above, where it's guaranteed that functions can return
+  // non-moveable objects, everything should work fine for non-moveable rsult
+  // types too.
+#if defined(__cplusplus) && __cplusplus >= 201703L
+  {
+    struct NonMoveable {
+      NonMoveable() = default;
+      NonMoveable(NonMoveable&&) = delete;
+    };
+
+    static_assert(!std::is_move_constructible_v<NonMoveable>);
+
+    struct Callable {
+      NonMoveable operator()() { return NonMoveable(); }
+    };
+
+    static_assert(internal::is_callable_r<NonMoveable, Callable>::value);
+    static_assert(internal::is_callable_r<void, Callable>::value);
+    static_assert(
+        internal::is_callable_r<const volatile void, Callable>::value);
+
+    static_assert(!internal::is_callable_r<int, Callable>::value);
+    static_assert(!internal::is_callable_r<NonMoveable, Callable, int>::value);
+  }
+#endif  // C++17 and above
+
+  // Nothing should choke when we try to call other arguments besides directly
+  // callable objects, but they should not show up as callable.
+  static_assert(!internal::is_callable_r<void, int>::value, "");
+  static_assert(!internal::is_callable_r<void, void (C::*)()>::value, "");
+  static_assert(!internal::is_callable_r<void, void (C::*)(), C*>::value, "");
+}
+
+// Tests that BuiltInDefaultValue<T*>::Get() returns NULL.
+TEST(BuiltInDefaultValueTest, IsNullForPointerTypes) {
+  EXPECT_TRUE(BuiltInDefaultValue<int*>::Get() == nullptr);
+  EXPECT_TRUE(BuiltInDefaultValue<const char*>::Get() == nullptr);
+  EXPECT_TRUE(BuiltInDefaultValue<void*>::Get() == nullptr);
+}
+
+// Tests that BuiltInDefaultValue<T*>::Exists() return true.
+TEST(BuiltInDefaultValueTest, ExistsForPointerTypes) {
+  EXPECT_TRUE(BuiltInDefaultValue<int*>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<const char*>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<void*>::Exists());
+}
+
+// Tests that BuiltInDefaultValue<T>::Get() returns 0 when T is a
+// built-in numeric type.
+TEST(BuiltInDefaultValueTest, IsZeroForNumericTypes) {
+  EXPECT_EQ(0U, BuiltInDefaultValue<unsigned char>::Get());
+  EXPECT_EQ(0, BuiltInDefaultValue<signed char>::Get());
+  EXPECT_EQ(0, BuiltInDefaultValue<char>::Get());
+#if GMOCK_WCHAR_T_IS_NATIVE_
+#if !defined(__WCHAR_UNSIGNED__)
+  EXPECT_EQ(0, BuiltInDefaultValue<wchar_t>::Get());
+#else
+  EXPECT_EQ(0U, BuiltInDefaultValue<wchar_t>::Get());
+#endif
+#endif
+  EXPECT_EQ(0U, BuiltInDefaultValue<unsigned short>::Get());  // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<signed short>::Get());     // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<short>::Get());            // NOLINT
+  EXPECT_EQ(0U, BuiltInDefaultValue<unsigned int>::Get());
+  EXPECT_EQ(0, BuiltInDefaultValue<signed int>::Get());
+  EXPECT_EQ(0, BuiltInDefaultValue<int>::Get());
+  EXPECT_EQ(0U, BuiltInDefaultValue<unsigned long>::Get());       // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<signed long>::Get());          // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<long>::Get());                 // NOLINT
+  EXPECT_EQ(0U, BuiltInDefaultValue<unsigned long long>::Get());  // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<signed long long>::Get());     // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<long long>::Get());            // NOLINT
+  EXPECT_EQ(0, BuiltInDefaultValue<float>::Get());
+  EXPECT_EQ(0, BuiltInDefaultValue<double>::Get());
+}
+
+// Tests that BuiltInDefaultValue<T>::Exists() returns true when T is a
+// built-in numeric type.
+TEST(BuiltInDefaultValueTest, ExistsForNumericTypes) {
+  EXPECT_TRUE(BuiltInDefaultValue<unsigned char>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<signed char>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<char>::Exists());
+#if GMOCK_WCHAR_T_IS_NATIVE_
+  EXPECT_TRUE(BuiltInDefaultValue<wchar_t>::Exists());
+#endif
+  EXPECT_TRUE(BuiltInDefaultValue<unsigned short>::Exists());  // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<signed short>::Exists());    // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<short>::Exists());           // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<unsigned int>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<signed int>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<int>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<unsigned long>::Exists());       // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<signed long>::Exists());         // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<long>::Exists());                // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<unsigned long long>::Exists());  // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<signed long long>::Exists());    // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<long long>::Exists());           // NOLINT
+  EXPECT_TRUE(BuiltInDefaultValue<float>::Exists());
+  EXPECT_TRUE(BuiltInDefaultValue<double>::Exists());
+}
+
+// Tests that BuiltInDefaultValue<bool>::Get() returns false.
+TEST(BuiltInDefaultValueTest, IsFalseForBool) {
+  EXPECT_FALSE(BuiltInDefaultValue<bool>::Get());
+}
+
+// Tests that BuiltInDefaultValue<bool>::Exists() returns true.
+TEST(BuiltInDefaultValueTest, BoolExists) {
+  EXPECT_TRUE(BuiltInDefaultValue<bool>::Exists());
+}
+
+// Tests that BuiltInDefaultValue<T>::Get() returns "" when T is a
+// string type.
+TEST(BuiltInDefaultValueTest, IsEmptyStringForString) {
+  EXPECT_EQ("", BuiltInDefaultValue<::std::string>::Get());
+}
+
+// Tests that BuiltInDefaultValue<T>::Exists() returns true when T is a
+// string type.
+TEST(BuiltInDefaultValueTest, ExistsForString) {
+  EXPECT_TRUE(BuiltInDefaultValue<::std::string>::Exists());
+}
+
+// Tests that BuiltInDefaultValue<const T>::Get() returns the same
+// value as BuiltInDefaultValue<T>::Get() does.
+TEST(BuiltInDefaultValueTest, WorksForConstTypes) {
+  EXPECT_EQ("", BuiltInDefaultValue<const std::string>::Get());
+  EXPECT_EQ(0, BuiltInDefaultValue<const int>::Get());
+  EXPECT_TRUE(BuiltInDefaultValue<char* const>::Get() == nullptr);
+  EXPECT_FALSE(BuiltInDefaultValue<const bool>::Get());
+}
+
+// A type that's default constructible.
+class MyDefaultConstructible {
+ public:
+  MyDefaultConstructible() : value_(42) {}
+
+  int value() const { return value_; }
+
+ private:
+  int value_;
+};
+
+// A type that's not default constructible.
+class MyNonDefaultConstructible {
+ public:
+  // Does not have a default ctor.
+  explicit MyNonDefaultConstructible(int a_value) : value_(a_value) {}
+
+  int value() const { return value_; }
+
+ private:
+  int value_;
+};
+
+TEST(BuiltInDefaultValueTest, ExistsForDefaultConstructibleType) {
+  EXPECT_TRUE(BuiltInDefaultValue<MyDefaultConstructible>::Exists());
+}
+
+TEST(BuiltInDefaultValueTest, IsDefaultConstructedForDefaultConstructibleType) {
+  EXPECT_EQ(42, BuiltInDefaultValue<MyDefaultConstructible>::Get().value());
+}
+
+TEST(BuiltInDefaultValueTest, DoesNotExistForNonDefaultConstructibleType) {
+  EXPECT_FALSE(BuiltInDefaultValue<MyNonDefaultConstructible>::Exists());
+}
+
+// Tests that BuiltInDefaultValue<T&>::Get() aborts the program.
+TEST(BuiltInDefaultValueDeathTest, IsUndefinedForReferences) {
+  EXPECT_DEATH_IF_SUPPORTED({ BuiltInDefaultValue<int&>::Get(); }, "");
+  EXPECT_DEATH_IF_SUPPORTED({ BuiltInDefaultValue<const char&>::Get(); }, "");
+}
+
+TEST(BuiltInDefaultValueDeathTest, IsUndefinedForNonDefaultConstructibleType) {
+  EXPECT_DEATH_IF_SUPPORTED(
+      { BuiltInDefaultValue<MyNonDefaultConstructible>::Get(); }, "");
+}
+
+// Tests that DefaultValue<T>::IsSet() is false initially.
+TEST(DefaultValueTest, IsInitiallyUnset) {
+  EXPECT_FALSE(DefaultValue<int>::IsSet());
+  EXPECT_FALSE(DefaultValue<MyDefaultConstructible>::IsSet());
+  EXPECT_FALSE(DefaultValue<const MyNonDefaultConstructible>::IsSet());
+}
+
+// Tests that DefaultValue<T> can be set and then unset.
+TEST(DefaultValueTest, CanBeSetAndUnset) {
+  EXPECT_TRUE(DefaultValue<int>::Exists());
+  EXPECT_FALSE(DefaultValue<const MyNonDefaultConstructible>::Exists());
+
+  DefaultValue<int>::Set(1);
+  DefaultValue<const MyNonDefaultConstructible>::Set(
+      MyNonDefaultConstructible(42));
+
+  EXPECT_EQ(1, DefaultValue<int>::Get());
+  EXPECT_EQ(42, DefaultValue<const MyNonDefaultConstructible>::Get().value());
+
+  EXPECT_TRUE(DefaultValue<int>::Exists());
+  EXPECT_TRUE(DefaultValue<const MyNonDefaultConstructible>::Exists());
+
+  DefaultValue<int>::Clear();
+  DefaultValue<const MyNonDefaultConstructible>::Clear();
+
+  EXPECT_FALSE(DefaultValue<int>::IsSet());
+  EXPECT_FALSE(DefaultValue<const MyNonDefaultConstructible>::IsSet());
+
+  EXPECT_TRUE(DefaultValue<int>::Exists());
+  EXPECT_FALSE(DefaultValue<const MyNonDefaultConstructible>::Exists());
+}
+
+// Tests that DefaultValue<T>::Get() returns the
+// BuiltInDefaultValue<T>::Get() when DefaultValue<T>::IsSet() is
+// false.
+TEST(DefaultValueDeathTest, GetReturnsBuiltInDefaultValueWhenUnset) {
+  EXPECT_FALSE(DefaultValue<int>::IsSet());
+  EXPECT_TRUE(DefaultValue<int>::Exists());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible>::IsSet());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible>::Exists());
+
+  EXPECT_EQ(0, DefaultValue<int>::Get());
+
+  EXPECT_DEATH_IF_SUPPORTED({ DefaultValue<MyNonDefaultConstructible>::Get(); },
+                            "");
+}
+
+TEST(DefaultValueTest, GetWorksForMoveOnlyIfSet) {
+  EXPECT_TRUE(DefaultValue<std::unique_ptr<int>>::Exists());
+  EXPECT_TRUE(DefaultValue<std::unique_ptr<int>>::Get() == nullptr);
+  DefaultValue<std::unique_ptr<int>>::SetFactory(
+      [] { return std::unique_ptr<int>(new int(42)); });
+  EXPECT_TRUE(DefaultValue<std::unique_ptr<int>>::Exists());
+  std::unique_ptr<int> i = DefaultValue<std::unique_ptr<int>>::Get();
+  EXPECT_EQ(42, *i);
+}
+
+// Tests that DefaultValue<void>::Get() returns void.
+TEST(DefaultValueTest, GetWorksForVoid) { return DefaultValue<void>::Get(); }
+
+// Tests using DefaultValue with a reference type.
+
+// Tests that DefaultValue<T&>::IsSet() is false initially.
+TEST(DefaultValueOfReferenceTest, IsInitiallyUnset) {
+  EXPECT_FALSE(DefaultValue<int&>::IsSet());
+  EXPECT_FALSE(DefaultValue<MyDefaultConstructible&>::IsSet());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible&>::IsSet());
+}
+
+// Tests that DefaultValue<T&>::Exists is false initiallly.
+TEST(DefaultValueOfReferenceTest, IsInitiallyNotExisting) {
+  EXPECT_FALSE(DefaultValue<int&>::Exists());
+  EXPECT_FALSE(DefaultValue<MyDefaultConstructible&>::Exists());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible&>::Exists());
+}
+
+// Tests that DefaultValue<T&> can be set and then unset.
+TEST(DefaultValueOfReferenceTest, CanBeSetAndUnset) {
+  int n = 1;
+  DefaultValue<const int&>::Set(n);
+  MyNonDefaultConstructible x(42);
+  DefaultValue<MyNonDefaultConstructible&>::Set(x);
+
+  EXPECT_TRUE(DefaultValue<const int&>::Exists());
+  EXPECT_TRUE(DefaultValue<MyNonDefaultConstructible&>::Exists());
+
+  EXPECT_EQ(&n, &(DefaultValue<const int&>::Get()));
+  EXPECT_EQ(&x, &(DefaultValue<MyNonDefaultConstructible&>::Get()));
+
+  DefaultValue<const int&>::Clear();
+  DefaultValue<MyNonDefaultConstructible&>::Clear();
+
+  EXPECT_FALSE(DefaultValue<const int&>::Exists());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible&>::Exists());
+
+  EXPECT_FALSE(DefaultValue<const int&>::IsSet());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible&>::IsSet());
+}
+
+// Tests that DefaultValue<T&>::Get() returns the
+// BuiltInDefaultValue<T&>::Get() when DefaultValue<T&>::IsSet() is
+// false.
+TEST(DefaultValueOfReferenceDeathTest, GetReturnsBuiltInDefaultValueWhenUnset) {
+  EXPECT_FALSE(DefaultValue<int&>::IsSet());
+  EXPECT_FALSE(DefaultValue<MyNonDefaultConstructible&>::IsSet());
+
+  EXPECT_DEATH_IF_SUPPORTED({ DefaultValue<int&>::Get(); }, "");
+  EXPECT_DEATH_IF_SUPPORTED({ DefaultValue<MyNonDefaultConstructible>::Get(); },
+                            "");
+}
+
+// Tests that ActionInterface can be implemented by defining the
+// Perform method.
+
+typedef int MyGlobalFunction(bool, int);
+
+class MyActionImpl : public ActionInterface<MyGlobalFunction> {
+ public:
+  int Perform(const std::tuple<bool, int>& args) override {
+    return std::get<0>(args) ? std::get<1>(args) : 0;
+  }
+};
+
+TEST(ActionInterfaceTest, CanBeImplementedByDefiningPerform) {
+  MyActionImpl my_action_impl;
+  (void)my_action_impl;
+}
+
+TEST(ActionInterfaceTest, MakeAction) {
+  Action<MyGlobalFunction> action = MakeAction(new MyActionImpl);
+
+  // When exercising the Perform() method of Action<F>, we must pass
+  // it a tuple whose size and type are compatible with F's argument
+  // types.  For example, if F is int(), then Perform() takes a
+  // 0-tuple; if F is void(bool, int), then Perform() takes a
+  // std::tuple<bool, int>, and so on.
+  EXPECT_EQ(5, action.Perform(std::make_tuple(true, 5)));
+}
+
+// Tests that Action<F> can be constructed from a pointer to
+// ActionInterface<F>.
+TEST(ActionTest, CanBeConstructedFromActionInterface) {
+  Action<MyGlobalFunction> action(new MyActionImpl);
+}
+
+// Tests that Action<F> delegates actual work to ActionInterface<F>.
+TEST(ActionTest, DelegatesWorkToActionInterface) {
+  const Action<MyGlobalFunction> action(new MyActionImpl);
+
+  EXPECT_EQ(5, action.Perform(std::make_tuple(true, 5)));
+  EXPECT_EQ(0, action.Perform(std::make_tuple(false, 1)));
+}
+
+// Tests that Action<F> can be copied.
+TEST(ActionTest, IsCopyable) {
+  Action<MyGlobalFunction> a1(new MyActionImpl);
+  Action<MyGlobalFunction> a2(a1);  // Tests the copy constructor.
+
+  // a1 should continue to work after being copied from.
+  EXPECT_EQ(5, a1.Perform(std::make_tuple(true, 5)));
+  EXPECT_EQ(0, a1.Perform(std::make_tuple(false, 1)));
+
+  // a2 should work like the action it was copied from.
+  EXPECT_EQ(5, a2.Perform(std::make_tuple(true, 5)));
+  EXPECT_EQ(0, a2.Perform(std::make_tuple(false, 1)));
+
+  a2 = a1;  // Tests the assignment operator.
+
+  // a1 should continue to work after being copied from.
+  EXPECT_EQ(5, a1.Perform(std::make_tuple(true, 5)));
+  EXPECT_EQ(0, a1.Perform(std::make_tuple(false, 1)));
+
+  // a2 should work like the action it was copied from.
+  EXPECT_EQ(5, a2.Perform(std::make_tuple(true, 5)));
+  EXPECT_EQ(0, a2.Perform(std::make_tuple(false, 1)));
+}
+
+// Tests that an Action<From> object can be converted to a
+// compatible Action<To> object.
+
+class IsNotZero : public ActionInterface<bool(int)> {  // NOLINT
+ public:
+  bool Perform(const std::tuple<int>& arg) override {
+    return std::get<0>(arg) != 0;
+  }
+};
+
+TEST(ActionTest, CanBeConvertedToOtherActionType) {
+  const Action<bool(int)> a1(new IsNotZero);           // NOLINT
+  const Action<int(char)> a2 = Action<int(char)>(a1);  // NOLINT
+  EXPECT_EQ(1, a2.Perform(std::make_tuple('a')));
+  EXPECT_EQ(0, a2.Perform(std::make_tuple('\0')));
+}
+
+// The following two classes are for testing MakePolymorphicAction().
+
+// Implements a polymorphic action that returns the second of the
+// arguments it receives.
+class ReturnSecondArgumentAction {
+ public:
+  // We want to verify that MakePolymorphicAction() can work with a
+  // polymorphic action whose Perform() method template is either
+  // const or not.  This lets us verify the non-const case.
+  template <typename Result, typename ArgumentTuple>
+  Result Perform(const ArgumentTuple& args) {
+    return std::get<1>(args);
+  }
+};
+
+// Implements a polymorphic action that can be used in a nullary
+// function to return 0.
+class ReturnZeroFromNullaryFunctionAction {
+ public:
+  // For testing that MakePolymorphicAction() works when the
+  // implementation class' Perform() method template takes only one
+  // template parameter.
+  //
+  // We want to verify that MakePolymorphicAction() can work with a
+  // polymorphic action whose Perform() method template is either
+  // const or not.  This lets us verify the const case.
+  template <typename Result>
+  Result Perform(const std::tuple<>&) const {
+    return 0;
+  }
+};
+
+// These functions verify that MakePolymorphicAction() returns a
+// PolymorphicAction<T> where T is the argument's type.
+
+PolymorphicAction<ReturnSecondArgumentAction> ReturnSecondArgument() {
+  return MakePolymorphicAction(ReturnSecondArgumentAction());
+}
+
+PolymorphicAction<ReturnZeroFromNullaryFunctionAction>
+ReturnZeroFromNullaryFunction() {
+  return MakePolymorphicAction(ReturnZeroFromNullaryFunctionAction());
+}
+
+// Tests that MakePolymorphicAction() turns a polymorphic action
+// implementation class into a polymorphic action.
+TEST(MakePolymorphicActionTest, ConstructsActionFromImpl) {
+  Action<int(bool, int, double)> a1 = ReturnSecondArgument();  // NOLINT
+  EXPECT_EQ(5, a1.Perform(std::make_tuple(false, 5, 2.0)));
+}
+
+// Tests that MakePolymorphicAction() works when the implementation
+// class' Perform() method template has only one template parameter.
+TEST(MakePolymorphicActionTest, WorksWhenPerformHasOneTemplateParameter) {
+  Action<int()> a1 = ReturnZeroFromNullaryFunction();
+  EXPECT_EQ(0, a1.Perform(std::make_tuple()));
+
+  Action<void*()> a2 = ReturnZeroFromNullaryFunction();
+  EXPECT_TRUE(a2.Perform(std::make_tuple()) == nullptr);
+}
+
+// Tests that Return() works as an action for void-returning
+// functions.
+TEST(ReturnTest, WorksForVoid) {
+  const Action<void(int)> ret = Return();  // NOLINT
+  return ret.Perform(std::make_tuple(1));
+}
+
+// Tests that Return(v) returns v.
+TEST(ReturnTest, ReturnsGivenValue) {
+  Action<int()> ret = Return(1);  // NOLINT
+  EXPECT_EQ(1, ret.Perform(std::make_tuple()));
+
+  ret = Return(-5);
+  EXPECT_EQ(-5, ret.Perform(std::make_tuple()));
+}
+
+// Tests that Return("string literal") works.
+TEST(ReturnTest, AcceptsStringLiteral) {
+  Action<const char*()> a1 = Return("Hello");
+  EXPECT_STREQ("Hello", a1.Perform(std::make_tuple()));
+
+  Action<std::string()> a2 = Return("world");
+  EXPECT_EQ("world", a2.Perform(std::make_tuple()));
+}
+
+// Return(x) should work fine when the mock function's return type is a
+// reference-like wrapper for decltype(x), as when x is a std::string and the
+// mock function returns std::string_view.
+TEST(ReturnTest, SupportsReferenceLikeReturnType) {
+  // A reference wrapper for std::vector<int>, implicitly convertible from it.
+  struct Result {
+    const std::vector<int>* v;
+    Result(const std::vector<int>& v) : v(&v) {}  // NOLINT
+  };
+
+  // Set up an action for a mock function that returns the reference wrapper
+  // type, initializing it with an actual vector.
+  //
+  // The returned wrapper should be initialized with a copy of that vector
+  // that's embedded within the action itself (which should stay alive as long
+  // as the mock object is alive), rather than e.g. a reference to the temporary
+  // we feed to Return. This should work fine both for WillOnce and
+  // WillRepeatedly.
+  MockFunction<Result()> mock;
+  EXPECT_CALL(mock, Call)
+      .WillOnce(Return(std::vector<int>{17, 19, 23}))
+      .WillRepeatedly(Return(std::vector<int>{29, 31, 37}));
+
+  EXPECT_THAT(mock.AsStdFunction()(),
+              Field(&Result::v, Pointee(ElementsAre(17, 19, 23))));
+
+  EXPECT_THAT(mock.AsStdFunction()(),
+              Field(&Result::v, Pointee(ElementsAre(29, 31, 37))));
+}
+
+TEST(ReturnTest, PrefersConversionOperator) {
+  // Define types In and Out such that:
+  //
+  //  *  In is implicitly convertible to Out.
+  //  *  Out also has an explicit constructor from In.
+  //
+  struct In;
+  struct Out {
+    int x;
+
+    explicit Out(const int x) : x(x) {}
+    explicit Out(const In&) : x(0) {}
+  };
+
+  struct In {
+    operator Out() const { return Out{19}; }  // NOLINT
+  };
+
+  // Assumption check: the C++ language rules are such that a function that
+  // returns Out which uses In a return statement will use the implicit
+  // conversion path rather than the explicit constructor.
+  EXPECT_THAT([]() -> Out { return In(); }(), Field(&Out::x, 19));
+
+  // Return should work the same way: if the mock function's return type is Out
+  // and we feed Return an In value, then the Out should be created through the
+  // implicit conversion path rather than the explicit constructor.
+  MockFunction<Out()> mock;
+  EXPECT_CALL(mock, Call).WillOnce(Return(In()));
+  EXPECT_THAT(mock.AsStdFunction()(), Field(&Out::x, 19));
+}
+
+// It should be possible to use Return(R) with a mock function result type U
+// that is convertible from const R& but *not* R (such as
+// std::reference_wrapper). This should work for both WillOnce and
+// WillRepeatedly.
+TEST(ReturnTest, ConversionRequiresConstLvalueReference) {
+  using R = int;
+  using U = std::reference_wrapper<const int>;
+
+  static_assert(std::is_convertible<const R&, U>::value, "");
+  static_assert(!std::is_convertible<R, U>::value, "");
+
+  MockFunction<U()> mock;
+  EXPECT_CALL(mock, Call).WillOnce(Return(17)).WillRepeatedly(Return(19));
+
+  EXPECT_EQ(17, mock.AsStdFunction()());
+  EXPECT_EQ(19, mock.AsStdFunction()());
+}
+
+// Return(x) should not be usable with a mock function result type that's
+// implicitly convertible from decltype(x) but requires a non-const lvalue
+// reference to the input. It doesn't make sense for the conversion operator to
+// modify the input.
+TEST(ReturnTest, ConversionRequiresMutableLvalueReference) {
+  // Set up a type that is implicitly convertible from std::string&, but not
+  // std::string&& or `const std::string&`.
+  //
+  // Avoid asserting about conversion from std::string on MSVC, which seems to
+  // implement std::is_convertible incorrectly in this case.
+  struct S {
+    S(std::string&) {}  // NOLINT
+  };
+
+  static_assert(std::is_convertible<std::string&, S>::value, "");
+#ifndef _MSC_VER
+  static_assert(!std::is_convertible<std::string&&, S>::value, "");
+#endif
+  static_assert(!std::is_convertible<const std::string&, S>::value, "");
+
+  // It shouldn't be possible to use the result of Return(std::string) in a
+  // context where an S is needed.
+  //
+  // Here too we disable the assertion for MSVC, since its incorrect
+  // implementation of is_convertible causes our SFINAE to be wrong.
+  using RA = decltype(Return(std::string()));
+
+  static_assert(!std::is_convertible<RA, Action<S()>>::value, "");
+#ifndef _MSC_VER
+  static_assert(!std::is_convertible<RA, OnceAction<S()>>::value, "");
+#endif
+}
+
+TEST(ReturnTest, MoveOnlyResultType) {
+  // Return should support move-only result types when used with WillOnce.
+  {
+    MockFunction<std::unique_ptr<int>()> mock;
+    EXPECT_CALL(mock, Call)
+        // NOLINTNEXTLINE
+        .WillOnce(Return(std::unique_ptr<int>(new int(17))));
+
+    EXPECT_THAT(mock.AsStdFunction()(), Pointee(17));
+  }
+
+  // The result of Return should not be convertible to Action (so it can't be
+  // used with WillRepeatedly).
+  static_assert(!std::is_convertible<decltype(Return(std::unique_ptr<int>())),
+                                     Action<std::unique_ptr<int>()>>::value,
+                "");
+}
+
+// Tests that Return(v) is covaraint.
+
+struct Base {
+  bool operator==(const Base&) { return true; }
+};
+
+struct Derived : public Base {
+  bool operator==(const Derived&) { return true; }
+};
+
+TEST(ReturnTest, IsCovariant) {
+  Base base;
+  Derived derived;
+  Action<Base*()> ret = Return(&base);
+  EXPECT_EQ(&base, ret.Perform(std::make_tuple()));
+
+  ret = Return(&derived);
+  EXPECT_EQ(&derived, ret.Perform(std::make_tuple()));
+}
+
+// Tests that the type of the value passed into Return is converted into T
+// when the action is cast to Action<T(...)> rather than when the action is
+// performed. See comments on testing::internal::ReturnAction in
+// gmock-actions.h for more information.
+class FromType {
+ public:
+  explicit FromType(bool* is_converted) : converted_(is_converted) {}
+  bool* converted() const { return converted_; }
+
+ private:
+  bool* const converted_;
+};
+
+class ToType {
+ public:
+  // Must allow implicit conversion due to use in ImplicitCast_<T>.
+  ToType(const FromType& x) { *x.converted() = true; }  // NOLINT
+};
+
+TEST(ReturnTest, ConvertsArgumentWhenConverted) {
+  bool converted = false;
+  FromType x(&converted);
+  Action<ToType()> action(Return(x));
+  EXPECT_TRUE(converted) << "Return must convert its argument in its own "
+                         << "conversion operator.";
+  converted = false;
+  action.Perform(std::tuple<>());
+  EXPECT_FALSE(converted) << "Action must NOT convert its argument "
+                          << "when performed.";
+}
+
+// Tests that ReturnNull() returns NULL in a pointer-returning function.
+TEST(ReturnNullTest, WorksInPointerReturningFunction) {
+  const Action<int*()> a1 = ReturnNull();
+  EXPECT_TRUE(a1.Perform(std::make_tuple()) == nullptr);
+
+  const Action<const char*(bool)> a2 = ReturnNull();  // NOLINT
+  EXPECT_TRUE(a2.Perform(std::make_tuple(true)) == nullptr);
+}
+
+// Tests that ReturnNull() returns NULL for shared_ptr and unique_ptr returning
+// functions.
+TEST(ReturnNullTest, WorksInSmartPointerReturningFunction) {
+  const Action<std::unique_ptr<const int>()> a1 = ReturnNull();
+  EXPECT_TRUE(a1.Perform(std::make_tuple()) == nullptr);
+
+  const Action<std::shared_ptr<int>(std::string)> a2 = ReturnNull();
+  EXPECT_TRUE(a2.Perform(std::make_tuple("foo")) == nullptr);
+}
+
+// Tests that ReturnRef(v) works for reference types.
+TEST(ReturnRefTest, WorksForReference) {
+  const int n = 0;
+  const Action<const int&(bool)> ret = ReturnRef(n);  // NOLINT
+
+  EXPECT_EQ(&n, &ret.Perform(std::make_tuple(true)));
+}
+
+// Tests that ReturnRef(v) is covariant.
+TEST(ReturnRefTest, IsCovariant) {
+  Base base;
+  Derived derived;
+  Action<Base&()> a = ReturnRef(base);
+  EXPECT_EQ(&base, &a.Perform(std::make_tuple()));
+
+  a = ReturnRef(derived);
+  EXPECT_EQ(&derived, &a.Perform(std::make_tuple()));
+}
+
+template <typename T, typename = decltype(ReturnRef(std::declval<T&&>()))>
+bool CanCallReturnRef(T&&) {
+  return true;
+}
+bool CanCallReturnRef(Unused) { return false; }
+
+// Tests that ReturnRef(v) is working with non-temporaries (T&)
+TEST(ReturnRefTest, WorksForNonTemporary) {
+  int scalar_value = 123;
+  EXPECT_TRUE(CanCallReturnRef(scalar_value));
+
+  std::string non_scalar_value("ABC");
+  EXPECT_TRUE(CanCallReturnRef(non_scalar_value));
+
+  const int const_scalar_value{321};
+  EXPECT_TRUE(CanCallReturnRef(const_scalar_value));
+
+  const std::string const_non_scalar_value("CBA");
+  EXPECT_TRUE(CanCallReturnRef(const_non_scalar_value));
+}
+
+// Tests that ReturnRef(v) is not working with temporaries (T&&)
+TEST(ReturnRefTest, DoesNotWorkForTemporary) {
+  auto scalar_value = []() -> int { return 123; };
+  EXPECT_FALSE(CanCallReturnRef(scalar_value()));
+
+  auto non_scalar_value = []() -> std::string { return "ABC"; };
+  EXPECT_FALSE(CanCallReturnRef(non_scalar_value()));
+
+  // cannot use here callable returning "const scalar type",
+  // because such const for scalar return type is ignored
+  EXPECT_FALSE(CanCallReturnRef(static_cast<const int>(321)));
+
+  auto const_non_scalar_value = []() -> const std::string { return "CBA"; };
+  EXPECT_FALSE(CanCallReturnRef(const_non_scalar_value()));
+}
+
+// Tests that ReturnRefOfCopy(v) works for reference types.
+TEST(ReturnRefOfCopyTest, WorksForReference) {
+  int n = 42;
+  const Action<const int&()> ret = ReturnRefOfCopy(n);
+
+  EXPECT_NE(&n, &ret.Perform(std::make_tuple()));
+  EXPECT_EQ(42, ret.Perform(std::make_tuple()));
+
+  n = 43;
+  EXPECT_NE(&n, &ret.Perform(std::make_tuple()));
+  EXPECT_EQ(42, ret.Perform(std::make_tuple()));
+}
+
+// Tests that ReturnRefOfCopy(v) is covariant.
+TEST(ReturnRefOfCopyTest, IsCovariant) {
+  Base base;
+  Derived derived;
+  Action<Base&()> a = ReturnRefOfCopy(base);
+  EXPECT_NE(&base, &a.Perform(std::make_tuple()));
+
+  a = ReturnRefOfCopy(derived);
+  EXPECT_NE(&derived, &a.Perform(std::make_tuple()));
+}
+
+// Tests that ReturnRoundRobin(v) works with initializer lists
+TEST(ReturnRoundRobinTest, WorksForInitList) {
+  Action<int()> ret = ReturnRoundRobin({1, 2, 3});
+
+  EXPECT_EQ(1, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(2, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(3, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(1, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(2, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(3, ret.Perform(std::make_tuple()));
+}
+
+// Tests that ReturnRoundRobin(v) works with vectors
+TEST(ReturnRoundRobinTest, WorksForVector) {
+  std::vector<double> v = {4.4, 5.5, 6.6};
+  Action<double()> ret = ReturnRoundRobin(v);
+
+  EXPECT_EQ(4.4, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(5.5, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(6.6, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(4.4, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(5.5, ret.Perform(std::make_tuple()));
+  EXPECT_EQ(6.6, ret.Perform(std::make_tuple()));
+}
+
+// Tests that DoDefault() does the default action for the mock method.
+
+class MockClass {
+ public:
+  MockClass() {}
+
+  MOCK_METHOD1(IntFunc, int(bool flag));  // NOLINT
+  MOCK_METHOD0(Foo, MyNonDefaultConstructible());
+  MOCK_METHOD0(MakeUnique, std::unique_ptr<int>());
+  MOCK_METHOD0(MakeUniqueBase, std::unique_ptr<Base>());
+  MOCK_METHOD0(MakeVectorUnique, std::vector<std::unique_ptr<int>>());
+  MOCK_METHOD1(TakeUnique, int(std::unique_ptr<int>));
+  MOCK_METHOD2(TakeUnique,
+               int(const std::unique_ptr<int>&, std::unique_ptr<int>));
+
+ private:
+  MockClass(const MockClass&) = delete;
+  MockClass& operator=(const MockClass&) = delete;
+};
+
+// Tests that DoDefault() returns the built-in default value for the
+// return type by default.
+TEST(DoDefaultTest, ReturnsBuiltInDefaultValueByDefault) {
+  MockClass mock;
+  EXPECT_CALL(mock, IntFunc(_)).WillOnce(DoDefault());
+  EXPECT_EQ(0, mock.IntFunc(true));
+}
+
+// Tests that DoDefault() throws (when exceptions are enabled) or aborts
+// the process when there is no built-in default value for the return type.
+TEST(DoDefaultDeathTest, DiesForUnknowType) {
+  MockClass mock;
+  EXPECT_CALL(mock, Foo()).WillRepeatedly(DoDefault());
+#if GTEST_HAS_EXCEPTIONS
+  EXPECT_ANY_THROW(mock.Foo());
+#else
+  EXPECT_DEATH_IF_SUPPORTED({ mock.Foo(); }, "");
+#endif
+}
+
+// Tests that using DoDefault() inside a composite action leads to a
+// run-time error.
+
+void VoidFunc(bool /* flag */) {}
+
+TEST(DoDefaultDeathTest, DiesIfUsedInCompositeAction) {
+  MockClass mock;
+  EXPECT_CALL(mock, IntFunc(_))
+      .WillRepeatedly(DoAll(Invoke(VoidFunc), DoDefault()));
+
+  // Ideally we should verify the error message as well.  Sadly,
+  // EXPECT_DEATH() can only capture stderr, while Google Mock's
+  // errors are printed on stdout.  Therefore we have to settle for
+  // not verifying the message.
+  EXPECT_DEATH_IF_SUPPORTED({ mock.IntFunc(true); }, "");
+}
+
+// Tests that DoDefault() returns the default value set by
+// DefaultValue<T>::Set() when it's not overridden by an ON_CALL().
+TEST(DoDefaultTest, ReturnsUserSpecifiedPerTypeDefaultValueWhenThereIsOne) {
+  DefaultValue<int>::Set(1);
+  MockClass mock;
+  EXPECT_CALL(mock, IntFunc(_)).WillOnce(DoDefault());
+  EXPECT_EQ(1, mock.IntFunc(false));
+  DefaultValue<int>::Clear();
+}
+
+// Tests that DoDefault() does the action specified by ON_CALL().
+TEST(DoDefaultTest, DoesWhatOnCallSpecifies) {
+  MockClass mock;
+  ON_CALL(mock, IntFunc(_)).WillByDefault(Return(2));
+  EXPECT_CALL(mock, IntFunc(_)).WillOnce(DoDefault());
+  EXPECT_EQ(2, mock.IntFunc(false));
+}
+
+// Tests that using DoDefault() in ON_CALL() leads to a run-time failure.
+TEST(DoDefaultTest, CannotBeUsedInOnCall) {
+  MockClass mock;
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        ON_CALL(mock, IntFunc(_)).WillByDefault(DoDefault());
+      },
+      "DoDefault() cannot be used in ON_CALL()");
+}
+
+// Tests that SetArgPointee<N>(v) sets the variable pointed to by
+// the N-th (0-based) argument to v.
+TEST(SetArgPointeeTest, SetsTheNthPointee) {
+  typedef void MyFunction(bool, int*, char*);
+  Action<MyFunction> a = SetArgPointee<1>(2);
+
+  int n = 0;
+  char ch = '\0';
+  a.Perform(std::make_tuple(true, &n, &ch));
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('\0', ch);
+
+  a = SetArgPointee<2>('a');
+  n = 0;
+  ch = '\0';
+  a.Perform(std::make_tuple(true, &n, &ch));
+  EXPECT_EQ(0, n);
+  EXPECT_EQ('a', ch);
+}
+
+// Tests that SetArgPointee<N>() accepts a string literal.
+TEST(SetArgPointeeTest, AcceptsStringLiteral) {
+  typedef void MyFunction(std::string*, const char**);
+  Action<MyFunction> a = SetArgPointee<0>("hi");
+  std::string str;
+  const char* ptr = nullptr;
+  a.Perform(std::make_tuple(&str, &ptr));
+  EXPECT_EQ("hi", str);
+  EXPECT_TRUE(ptr == nullptr);
+
+  a = SetArgPointee<1>("world");
+  str = "";
+  a.Perform(std::make_tuple(&str, &ptr));
+  EXPECT_EQ("", str);
+  EXPECT_STREQ("world", ptr);
+}
+
+TEST(SetArgPointeeTest, AcceptsWideStringLiteral) {
+  typedef void MyFunction(const wchar_t**);
+  Action<MyFunction> a = SetArgPointee<0>(L"world");
+  const wchar_t* ptr = nullptr;
+  a.Perform(std::make_tuple(&ptr));
+  EXPECT_STREQ(L"world", ptr);
+
+#if GTEST_HAS_STD_WSTRING
+
+  typedef void MyStringFunction(std::wstring*);
+  Action<MyStringFunction> a2 = SetArgPointee<0>(L"world");
+  std::wstring str = L"";
+  a2.Perform(std::make_tuple(&str));
+  EXPECT_EQ(L"world", str);
+
+#endif
+}
+
+// Tests that SetArgPointee<N>() accepts a char pointer.
+TEST(SetArgPointeeTest, AcceptsCharPointer) {
+  typedef void MyFunction(bool, std::string*, const char**);
+  const char* const hi = "hi";
+  Action<MyFunction> a = SetArgPointee<1>(hi);
+  std::string str;
+  const char* ptr = nullptr;
+  a.Perform(std::make_tuple(true, &str, &ptr));
+  EXPECT_EQ("hi", str);
+  EXPECT_TRUE(ptr == nullptr);
+
+  char world_array[] = "world";
+  char* const world = world_array;
+  a = SetArgPointee<2>(world);
+  str = "";
+  a.Perform(std::make_tuple(true, &str, &ptr));
+  EXPECT_EQ("", str);
+  EXPECT_EQ(world, ptr);
+}
+
+TEST(SetArgPointeeTest, AcceptsWideCharPointer) {
+  typedef void MyFunction(bool, const wchar_t**);
+  const wchar_t* const hi = L"hi";
+  Action<MyFunction> a = SetArgPointee<1>(hi);
+  const wchar_t* ptr = nullptr;
+  a.Perform(std::make_tuple(true, &ptr));
+  EXPECT_EQ(hi, ptr);
+
+#if GTEST_HAS_STD_WSTRING
+
+  typedef void MyStringFunction(bool, std::wstring*);
+  wchar_t world_array[] = L"world";
+  wchar_t* const world = world_array;
+  Action<MyStringFunction> a2 = SetArgPointee<1>(world);
+  std::wstring str;
+  a2.Perform(std::make_tuple(true, &str));
+  EXPECT_EQ(world_array, str);
+#endif
+}
+
+// Tests that SetArgumentPointee<N>(v) sets the variable pointed to by
+// the N-th (0-based) argument to v.
+TEST(SetArgumentPointeeTest, SetsTheNthPointee) {
+  typedef void MyFunction(bool, int*, char*);
+  Action<MyFunction> a = SetArgumentPointee<1>(2);
+
+  int n = 0;
+  char ch = '\0';
+  a.Perform(std::make_tuple(true, &n, &ch));
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('\0', ch);
+
+  a = SetArgumentPointee<2>('a');
+  n = 0;
+  ch = '\0';
+  a.Perform(std::make_tuple(true, &n, &ch));
+  EXPECT_EQ(0, n);
+  EXPECT_EQ('a', ch);
+}
+
+// Sample functions and functors for testing Invoke() and etc.
+int Nullary() { return 1; }
+
+class NullaryFunctor {
+ public:
+  int operator()() { return 2; }
+};
+
+bool g_done = false;
+void VoidNullary() { g_done = true; }
+
+class VoidNullaryFunctor {
+ public:
+  void operator()() { g_done = true; }
+};
+
+short Short(short n) { return n; }  // NOLINT
+char Char(char ch) { return ch; }
+
+const char* CharPtr(const char* s) { return s; }
+
+bool Unary(int x) { return x < 0; }
+
+const char* Binary(const char* input, short n) { return input + n; }  // NOLINT
+
+void VoidBinary(int, char) { g_done = true; }
+
+int Ternary(int x, char y, short z) { return x + y + z; }  // NOLINT
+
+int SumOf4(int a, int b, int c, int d) { return a + b + c + d; }
+
+class Foo {
+ public:
+  Foo() : value_(123) {}
+
+  int Nullary() const { return value_; }
+
+ private:
+  int value_;
+};
+
+// Tests InvokeWithoutArgs(function).
+TEST(InvokeWithoutArgsTest, Function) {
+  // As an action that takes one argument.
+  Action<int(int)> a = InvokeWithoutArgs(Nullary);  // NOLINT
+  EXPECT_EQ(1, a.Perform(std::make_tuple(2)));
+
+  // As an action that takes two arguments.
+  Action<int(int, double)> a2 = InvokeWithoutArgs(Nullary);  // NOLINT
+  EXPECT_EQ(1, a2.Perform(std::make_tuple(2, 3.5)));
+
+  // As an action that returns void.
+  Action<void(int)> a3 = InvokeWithoutArgs(VoidNullary);  // NOLINT
+  g_done = false;
+  a3.Perform(std::make_tuple(1));
+  EXPECT_TRUE(g_done);
+}
+
+// Tests InvokeWithoutArgs(functor).
+TEST(InvokeWithoutArgsTest, Functor) {
+  // As an action that takes no argument.
+  Action<int()> a = InvokeWithoutArgs(NullaryFunctor());  // NOLINT
+  EXPECT_EQ(2, a.Perform(std::make_tuple()));
+
+  // As an action that takes three arguments.
+  Action<int(int, double, char)> a2 =  // NOLINT
+      InvokeWithoutArgs(NullaryFunctor());
+  EXPECT_EQ(2, a2.Perform(std::make_tuple(3, 3.5, 'a')));
+
+  // As an action that returns void.
+  Action<void()> a3 = InvokeWithoutArgs(VoidNullaryFunctor());
+  g_done = false;
+  a3.Perform(std::make_tuple());
+  EXPECT_TRUE(g_done);
+}
+
+// Tests InvokeWithoutArgs(obj_ptr, method).
+TEST(InvokeWithoutArgsTest, Method) {
+  Foo foo;
+  Action<int(bool, char)> a =  // NOLINT
+      InvokeWithoutArgs(&foo, &Foo::Nullary);
+  EXPECT_EQ(123, a.Perform(std::make_tuple(true, 'a')));
+}
+
+// Tests using IgnoreResult() on a polymorphic action.
+TEST(IgnoreResultTest, PolymorphicAction) {
+  Action<void(int)> a = IgnoreResult(Return(5));  // NOLINT
+  a.Perform(std::make_tuple(1));
+}
+
+// Tests using IgnoreResult() on a monomorphic action.
+
+int ReturnOne() {
+  g_done = true;
+  return 1;
+}
+
+TEST(IgnoreResultTest, MonomorphicAction) {
+  g_done = false;
+  Action<void()> a = IgnoreResult(Invoke(ReturnOne));
+  a.Perform(std::make_tuple());
+  EXPECT_TRUE(g_done);
+}
+
+// Tests using IgnoreResult() on an action that returns a class type.
+
+MyNonDefaultConstructible ReturnMyNonDefaultConstructible(double /* x */) {
+  g_done = true;
+  return MyNonDefaultConstructible(42);
+}
+
+TEST(IgnoreResultTest, ActionReturningClass) {
+  g_done = false;
+  Action<void(int)> a =
+      IgnoreResult(Invoke(ReturnMyNonDefaultConstructible));  // NOLINT
+  a.Perform(std::make_tuple(2));
+  EXPECT_TRUE(g_done);
+}
+
+TEST(AssignTest, Int) {
+  int x = 0;
+  Action<void(int)> a = Assign(&x, 5);
+  a.Perform(std::make_tuple(0));
+  EXPECT_EQ(5, x);
+}
+
+TEST(AssignTest, String) {
+  ::std::string x;
+  Action<void(void)> a = Assign(&x, "Hello, world");
+  a.Perform(std::make_tuple());
+  EXPECT_EQ("Hello, world", x);
+}
+
+TEST(AssignTest, CompatibleTypes) {
+  double x = 0;
+  Action<void(int)> a = Assign(&x, 5);
+  a.Perform(std::make_tuple(0));
+  EXPECT_DOUBLE_EQ(5, x);
+}
+
+// DoAll should support &&-qualified actions when used with WillOnce.
+TEST(DoAll, SupportsRefQualifiedActions) {
+  struct InitialAction {
+    void operator()(const int arg) && { EXPECT_EQ(17, arg); }
+  };
+
+  struct FinalAction {
+    int operator()() && { return 19; }
+  };
+
+  MockFunction<int(int)> mock;
+  EXPECT_CALL(mock, Call).WillOnce(DoAll(InitialAction{}, FinalAction{}));
+  EXPECT_EQ(19, mock.AsStdFunction()(17));
+}
+
+// DoAll should never provide rvalue references to the initial actions. If the
+// mock action itself accepts an rvalue reference or a non-scalar object by
+// value then the final action should receive an rvalue reference, but initial
+// actions should receive only lvalue references.
+TEST(DoAll, ProvidesLvalueReferencesToInitialActions) {
+  struct Obj {};
+
+  // Mock action accepts by value: the initial action should be fed a const
+  // lvalue reference, and the final action an rvalue reference.
+  {
+    struct InitialAction {
+      void operator()(Obj&) const { FAIL() << "Unexpected call"; }
+      void operator()(const Obj&) const {}
+      void operator()(Obj&&) const { FAIL() << "Unexpected call"; }
+      void operator()(const Obj&&) const { FAIL() << "Unexpected call"; }
+    };
+
+    MockFunction<void(Obj)> mock;
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(InitialAction{}, InitialAction{}, [](Obj&&) {}))
+        .WillRepeatedly(DoAll(InitialAction{}, InitialAction{}, [](Obj&&) {}));
+
+    mock.AsStdFunction()(Obj{});
+    mock.AsStdFunction()(Obj{});
+  }
+
+  // Mock action accepts by const lvalue reference: both actions should receive
+  // a const lvalue reference.
+  {
+    struct InitialAction {
+      void operator()(Obj&) const { FAIL() << "Unexpected call"; }
+      void operator()(const Obj&) const {}
+      void operator()(Obj&&) const { FAIL() << "Unexpected call"; }
+      void operator()(const Obj&&) const { FAIL() << "Unexpected call"; }
+    };
+
+    MockFunction<void(const Obj&)> mock;
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(InitialAction{}, InitialAction{}, [](const Obj&) {}))
+        .WillRepeatedly(
+            DoAll(InitialAction{}, InitialAction{}, [](const Obj&) {}));
+
+    mock.AsStdFunction()(Obj{});
+    mock.AsStdFunction()(Obj{});
+  }
+
+  // Mock action accepts by non-const lvalue reference: both actions should get
+  // a non-const lvalue reference if they want them.
+  {
+    struct InitialAction {
+      void operator()(Obj&) const {}
+      void operator()(Obj&&) const { FAIL() << "Unexpected call"; }
+    };
+
+    MockFunction<void(Obj&)> mock;
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(InitialAction{}, InitialAction{}, [](Obj&) {}))
+        .WillRepeatedly(DoAll(InitialAction{}, InitialAction{}, [](Obj&) {}));
+
+    Obj obj;
+    mock.AsStdFunction()(obj);
+    mock.AsStdFunction()(obj);
+  }
+
+  // Mock action accepts by rvalue reference: the initial actions should receive
+  // a non-const lvalue reference if it wants it, and the final action an rvalue
+  // reference.
+  {
+    struct InitialAction {
+      void operator()(Obj&) const {}
+      void operator()(Obj&&) const { FAIL() << "Unexpected call"; }
+    };
+
+    MockFunction<void(Obj &&)> mock;
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(InitialAction{}, InitialAction{}, [](Obj&&) {}))
+        .WillRepeatedly(DoAll(InitialAction{}, InitialAction{}, [](Obj&&) {}));
+
+    mock.AsStdFunction()(Obj{});
+    mock.AsStdFunction()(Obj{});
+  }
+
+  // &&-qualified initial actions should also be allowed with WillOnce.
+  {
+    struct InitialAction {
+      void operator()(Obj&) && {}
+    };
+
+    MockFunction<void(Obj&)> mock;
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(InitialAction{}, InitialAction{}, [](Obj&) {}));
+
+    Obj obj;
+    mock.AsStdFunction()(obj);
+  }
+
+  {
+    struct InitialAction {
+      void operator()(Obj&) && {}
+    };
+
+    MockFunction<void(Obj &&)> mock;
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(InitialAction{}, InitialAction{}, [](Obj&&) {}));
+
+    mock.AsStdFunction()(Obj{});
+  }
+}
+
+// DoAll should support being used with type-erased Action objects, both through
+// WillOnce and WillRepeatedly.
+TEST(DoAll, SupportsTypeErasedActions) {
+  // With only type-erased actions.
+  const Action<void()> initial_action = [] {};
+  const Action<int()> final_action = [] { return 17; };
+
+  MockFunction<int()> mock;
+  EXPECT_CALL(mock, Call)
+      .WillOnce(DoAll(initial_action, initial_action, final_action))
+      .WillRepeatedly(DoAll(initial_action, initial_action, final_action));
+
+  EXPECT_EQ(17, mock.AsStdFunction()());
+
+  // With &&-qualified and move-only final action.
+  {
+    struct FinalAction {
+      FinalAction() = default;
+      FinalAction(FinalAction&&) = default;
+
+      int operator()() && { return 17; }
+    };
+
+    EXPECT_CALL(mock, Call)
+        .WillOnce(DoAll(initial_action, initial_action, FinalAction{}));
+
+    EXPECT_EQ(17, mock.AsStdFunction()());
+  }
+}
+
+// Tests using WithArgs and with an action that takes 1 argument.
+TEST(WithArgsTest, OneArg) {
+  Action<bool(double x, int n)> a = WithArgs<1>(Invoke(Unary));  // NOLINT
+  EXPECT_TRUE(a.Perform(std::make_tuple(1.5, -1)));
+  EXPECT_FALSE(a.Perform(std::make_tuple(1.5, 1)));
+}
+
+// Tests using WithArgs with an action that takes 2 arguments.
+TEST(WithArgsTest, TwoArgs) {
+  Action<const char*(const char* s, double x, short n)> a =  // NOLINT
+      WithArgs<0, 2>(Invoke(Binary));
+  const char s[] = "Hello";
+  EXPECT_EQ(s + 2, a.Perform(std::make_tuple(CharPtr(s), 0.5, Short(2))));
+}
+
+struct ConcatAll {
+  std::string operator()() const { return {}; }
+  template <typename... I>
+  std::string operator()(const char* a, I... i) const {
+    return a + ConcatAll()(i...);
+  }
+};
+
+// Tests using WithArgs with an action that takes 10 arguments.
+TEST(WithArgsTest, TenArgs) {
+  Action<std::string(const char*, const char*, const char*, const char*)> a =
+      WithArgs<0, 1, 2, 3, 2, 1, 0, 1, 2, 3>(Invoke(ConcatAll{}));
+  EXPECT_EQ("0123210123",
+            a.Perform(std::make_tuple(CharPtr("0"), CharPtr("1"), CharPtr("2"),
+                                      CharPtr("3"))));
+}
+
+// Tests using WithArgs with an action that is not Invoke().
+class SubtractAction : public ActionInterface<int(int, int)> {
+ public:
+  int Perform(const std::tuple<int, int>& args) override {
+    return std::get<0>(args) - std::get<1>(args);
+  }
+};
+
+TEST(WithArgsTest, NonInvokeAction) {
+  Action<int(const std::string&, int, int)> a =
+      WithArgs<2, 1>(MakeAction(new SubtractAction));
+  std::tuple<std::string, int, int> dummy =
+      std::make_tuple(std::string("hi"), 2, 10);
+  EXPECT_EQ(8, a.Perform(dummy));
+}
+
+// Tests using WithArgs to pass all original arguments in the original order.
+TEST(WithArgsTest, Identity) {
+  Action<int(int x, char y, short z)> a =  // NOLINT
+      WithArgs<0, 1, 2>(Invoke(Ternary));
+  EXPECT_EQ(123, a.Perform(std::make_tuple(100, Char(20), Short(3))));
+}
+
+// Tests using WithArgs with repeated arguments.
+TEST(WithArgsTest, RepeatedArguments) {
+  Action<int(bool, int m, int n)> a =  // NOLINT
+      WithArgs<1, 1, 1, 1>(Invoke(SumOf4));
+  EXPECT_EQ(4, a.Perform(std::make_tuple(false, 1, 10)));
+}
+
+// Tests using WithArgs with reversed argument order.
+TEST(WithArgsTest, ReversedArgumentOrder) {
+  Action<const char*(short n, const char* input)> a =  // NOLINT
+      WithArgs<1, 0>(Invoke(Binary));
+  const char s[] = "Hello";
+  EXPECT_EQ(s + 2, a.Perform(std::make_tuple(Short(2), CharPtr(s))));
+}
+
+// Tests using WithArgs with compatible, but not identical, argument types.
+TEST(WithArgsTest, ArgsOfCompatibleTypes) {
+  Action<long(short x, char y, double z, char c)> a =  // NOLINT
+      WithArgs<0, 1, 3>(Invoke(Ternary));
+  EXPECT_EQ(123,
+            a.Perform(std::make_tuple(Short(100), Char(20), 5.6, Char(3))));
+}
+
+// Tests using WithArgs with an action that returns void.
+TEST(WithArgsTest, VoidAction) {
+  Action<void(double x, char c, int n)> a = WithArgs<2, 1>(Invoke(VoidBinary));
+  g_done = false;
+  a.Perform(std::make_tuple(1.5, 'a', 3));
+  EXPECT_TRUE(g_done);
+}
+
+TEST(WithArgsTest, ReturnReference) {
+  Action<int&(int&, void*)> aa = WithArgs<0>([](int& a) -> int& { return a; });
+  int i = 0;
+  const int& res = aa.Perform(std::forward_as_tuple(i, nullptr));
+  EXPECT_EQ(&i, &res);
+}
+
+TEST(WithArgsTest, InnerActionWithConversion) {
+  Action<Derived*()> inner = [] { return nullptr; };
+
+  MockFunction<Base*(double)> mock;
+  EXPECT_CALL(mock, Call)
+      .WillOnce(WithoutArgs(inner))
+      .WillRepeatedly(WithoutArgs(inner));
+
+  EXPECT_EQ(nullptr, mock.AsStdFunction()(1.1));
+  EXPECT_EQ(nullptr, mock.AsStdFunction()(1.1));
+}
+
+// It should be possible to use an &&-qualified inner action as long as the
+// whole shebang is used as an rvalue with WillOnce.
+TEST(WithArgsTest, RefQualifiedInnerAction) {
+  struct SomeAction {
+    int operator()(const int arg) && {
+      EXPECT_EQ(17, arg);
+      return 19;
+    }
+  };
+
+  MockFunction<int(int, int)> mock;
+  EXPECT_CALL(mock, Call).WillOnce(WithArg<1>(SomeAction{}));
+  EXPECT_EQ(19, mock.AsStdFunction()(0, 17));
+}
+
+#if !GTEST_OS_WINDOWS_MOBILE
+
+class SetErrnoAndReturnTest : public testing::Test {
+ protected:
+  void SetUp() override { errno = 0; }
+  void TearDown() override { errno = 0; }
+};
+
+TEST_F(SetErrnoAndReturnTest, Int) {
+  Action<int(void)> a = SetErrnoAndReturn(ENOTTY, -5);
+  EXPECT_EQ(-5, a.Perform(std::make_tuple()));
+  EXPECT_EQ(ENOTTY, errno);
+}
+
+TEST_F(SetErrnoAndReturnTest, Ptr) {
+  int x;
+  Action<int*(void)> a = SetErrnoAndReturn(ENOTTY, &x);
+  EXPECT_EQ(&x, a.Perform(std::make_tuple()));
+  EXPECT_EQ(ENOTTY, errno);
+}
+
+TEST_F(SetErrnoAndReturnTest, CompatibleTypes) {
+  Action<double()> a = SetErrnoAndReturn(EINVAL, 5);
+  EXPECT_DOUBLE_EQ(5.0, a.Perform(std::make_tuple()));
+  EXPECT_EQ(EINVAL, errno);
+}
+
+#endif  // !GTEST_OS_WINDOWS_MOBILE
+
+// Tests ByRef().
+
+// Tests that the result of ByRef() is copyable.
+TEST(ByRefTest, IsCopyable) {
+  const std::string s1 = "Hi";
+  const std::string s2 = "Hello";
+
+  auto ref_wrapper = ByRef(s1);
+  const std::string& r1 = ref_wrapper;
+  EXPECT_EQ(&s1, &r1);
+
+  // Assigns a new value to ref_wrapper.
+  ref_wrapper = ByRef(s2);
+  const std::string& r2 = ref_wrapper;
+  EXPECT_EQ(&s2, &r2);
+
+  auto ref_wrapper1 = ByRef(s1);
+  // Copies ref_wrapper1 to ref_wrapper.
+  ref_wrapper = ref_wrapper1;
+  const std::string& r3 = ref_wrapper;
+  EXPECT_EQ(&s1, &r3);
+}
+
+// Tests using ByRef() on a const value.
+TEST(ByRefTest, ConstValue) {
+  const int n = 0;
+  // int& ref = ByRef(n);  // This shouldn't compile - we have a
+  // negative compilation test to catch it.
+  const int& const_ref = ByRef(n);
+  EXPECT_EQ(&n, &const_ref);
+}
+
+// Tests using ByRef() on a non-const value.
+TEST(ByRefTest, NonConstValue) {
+  int n = 0;
+
+  // ByRef(n) can be used as either an int&,
+  int& ref = ByRef(n);
+  EXPECT_EQ(&n, &ref);
+
+  // or a const int&.
+  const int& const_ref = ByRef(n);
+  EXPECT_EQ(&n, &const_ref);
+}
+
+// Tests explicitly specifying the type when using ByRef().
+TEST(ByRefTest, ExplicitType) {
+  int n = 0;
+  const int& r1 = ByRef<const int>(n);
+  EXPECT_EQ(&n, &r1);
+
+  // ByRef<char>(n);  // This shouldn't compile - we have a negative
+  // compilation test to catch it.
+
+  Derived d;
+  Derived& r2 = ByRef<Derived>(d);
+  EXPECT_EQ(&d, &r2);
+
+  const Derived& r3 = ByRef<const Derived>(d);
+  EXPECT_EQ(&d, &r3);
+
+  Base& r4 = ByRef<Base>(d);
+  EXPECT_EQ(&d, &r4);
+
+  const Base& r5 = ByRef<const Base>(d);
+  EXPECT_EQ(&d, &r5);
+
+  // The following shouldn't compile - we have a negative compilation
+  // test for it.
+  //
+  // Base b;
+  // ByRef<Derived>(b);
+}
+
+// Tests that Google Mock prints expression ByRef(x) as a reference to x.
+TEST(ByRefTest, PrintsCorrectly) {
+  int n = 42;
+  ::std::stringstream expected, actual;
+  testing::internal::UniversalPrinter<const int&>::Print(n, &expected);
+  testing::internal::UniversalPrint(ByRef(n), &actual);
+  EXPECT_EQ(expected.str(), actual.str());
+}
+
+struct UnaryConstructorClass {
+  explicit UnaryConstructorClass(int v) : value(v) {}
+  int value;
+};
+
+// Tests using ReturnNew() with a unary constructor.
+TEST(ReturnNewTest, Unary) {
+  Action<UnaryConstructorClass*()> a = ReturnNew<UnaryConstructorClass>(4000);
+  UnaryConstructorClass* c = a.Perform(std::make_tuple());
+  EXPECT_EQ(4000, c->value);
+  delete c;
+}
+
+TEST(ReturnNewTest, UnaryWorksWhenMockMethodHasArgs) {
+  Action<UnaryConstructorClass*(bool, int)> a =
+      ReturnNew<UnaryConstructorClass>(4000);
+  UnaryConstructorClass* c = a.Perform(std::make_tuple(false, 5));
+  EXPECT_EQ(4000, c->value);
+  delete c;
+}
+
+TEST(ReturnNewTest, UnaryWorksWhenMockMethodReturnsPointerToConst) {
+  Action<const UnaryConstructorClass*()> a =
+      ReturnNew<UnaryConstructorClass>(4000);
+  const UnaryConstructorClass* c = a.Perform(std::make_tuple());
+  EXPECT_EQ(4000, c->value);
+  delete c;
+}
+
+class TenArgConstructorClass {
+ public:
+  TenArgConstructorClass(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
+                         int a8, int a9, int a10)
+      : value_(a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10) {}
+  int value_;
+};
+
+// Tests using ReturnNew() with a 10-argument constructor.
+TEST(ReturnNewTest, ConstructorThatTakes10Arguments) {
+  Action<TenArgConstructorClass*()> a = ReturnNew<TenArgConstructorClass>(
+      1000000000, 200000000, 30000000, 4000000, 500000, 60000, 7000, 800, 90,
+      0);
+  TenArgConstructorClass* c = a.Perform(std::make_tuple());
+  EXPECT_EQ(1234567890, c->value_);
+  delete c;
+}
+
+std::unique_ptr<int> UniquePtrSource() {
+  return std::unique_ptr<int>(new int(19));
+}
+
+std::vector<std::unique_ptr<int>> VectorUniquePtrSource() {
+  std::vector<std::unique_ptr<int>> out;
+  out.emplace_back(new int(7));
+  return out;
+}
+
+TEST(MockMethodTest, CanReturnMoveOnlyValue_Return) {
+  MockClass mock;
+  std::unique_ptr<int> i(new int(19));
+  EXPECT_CALL(mock, MakeUnique()).WillOnce(Return(ByMove(std::move(i))));
+  EXPECT_CALL(mock, MakeVectorUnique())
+      .WillOnce(Return(ByMove(VectorUniquePtrSource())));
+  Derived* d = new Derived;
+  EXPECT_CALL(mock, MakeUniqueBase())
+      .WillOnce(Return(ByMove(std::unique_ptr<Derived>(d))));
+
+  std::unique_ptr<int> result1 = mock.MakeUnique();
+  EXPECT_EQ(19, *result1);
+
+  std::vector<std::unique_ptr<int>> vresult = mock.MakeVectorUnique();
+  EXPECT_EQ(1u, vresult.size());
+  EXPECT_NE(nullptr, vresult[0]);
+  EXPECT_EQ(7, *vresult[0]);
+
+  std::unique_ptr<Base> result2 = mock.MakeUniqueBase();
+  EXPECT_EQ(d, result2.get());
+}
+
+TEST(MockMethodTest, CanReturnMoveOnlyValue_DoAllReturn) {
+  testing::MockFunction<void()> mock_function;
+  MockClass mock;
+  std::unique_ptr<int> i(new int(19));
+  EXPECT_CALL(mock_function, Call());
+  EXPECT_CALL(mock, MakeUnique())
+      .WillOnce(DoAll(InvokeWithoutArgs(&mock_function,
+                                        &testing::MockFunction<void()>::Call),
+                      Return(ByMove(std::move(i)))));
+
+  std::unique_ptr<int> result1 = mock.MakeUnique();
+  EXPECT_EQ(19, *result1);
+}
+
+TEST(MockMethodTest, CanReturnMoveOnlyValue_Invoke) {
+  MockClass mock;
+
+  // Check default value
+  DefaultValue<std::unique_ptr<int>>::SetFactory(
+      [] { return std::unique_ptr<int>(new int(42)); });
+  EXPECT_EQ(42, *mock.MakeUnique());
+
+  EXPECT_CALL(mock, MakeUnique()).WillRepeatedly(Invoke(UniquePtrSource));
+  EXPECT_CALL(mock, MakeVectorUnique())
+      .WillRepeatedly(Invoke(VectorUniquePtrSource));
+  std::unique_ptr<int> result1 = mock.MakeUnique();
+  EXPECT_EQ(19, *result1);
+  std::unique_ptr<int> result2 = mock.MakeUnique();
+  EXPECT_EQ(19, *result2);
+  EXPECT_NE(result1, result2);
+
+  std::vector<std::unique_ptr<int>> vresult = mock.MakeVectorUnique();
+  EXPECT_EQ(1u, vresult.size());
+  EXPECT_NE(nullptr, vresult[0]);
+  EXPECT_EQ(7, *vresult[0]);
+}
+
+TEST(MockMethodTest, CanTakeMoveOnlyValue) {
+  MockClass mock;
+  auto make = [](int i) { return std::unique_ptr<int>(new int(i)); };
+
+  EXPECT_CALL(mock, TakeUnique(_)).WillRepeatedly([](std::unique_ptr<int> i) {
+    return *i;
+  });
+  // DoAll() does not compile, since it would move from its arguments twice.
+  // EXPECT_CALL(mock, TakeUnique(_, _))
+  //     .WillRepeatedly(DoAll(Invoke([](std::unique_ptr<int> j) {}),
+  //     Return(1)));
+  EXPECT_CALL(mock, TakeUnique(testing::Pointee(7)))
+      .WillOnce(Return(-7))
+      .RetiresOnSaturation();
+  EXPECT_CALL(mock, TakeUnique(testing::IsNull()))
+      .WillOnce(Return(-1))
+      .RetiresOnSaturation();
+
+  EXPECT_EQ(5, mock.TakeUnique(make(5)));
+  EXPECT_EQ(-7, mock.TakeUnique(make(7)));
+  EXPECT_EQ(7, mock.TakeUnique(make(7)));
+  EXPECT_EQ(7, mock.TakeUnique(make(7)));
+  EXPECT_EQ(-1, mock.TakeUnique({}));
+
+  // Some arguments are moved, some passed by reference.
+  auto lvalue = make(6);
+  EXPECT_CALL(mock, TakeUnique(_, _))
+      .WillOnce([](const std::unique_ptr<int>& i, std::unique_ptr<int> j) {
+        return *i * *j;
+      });
+  EXPECT_EQ(42, mock.TakeUnique(lvalue, make(7)));
+
+  // The unique_ptr can be saved by the action.
+  std::unique_ptr<int> saved;
+  EXPECT_CALL(mock, TakeUnique(_)).WillOnce([&saved](std::unique_ptr<int> i) {
+    saved = std::move(i);
+    return 0;
+  });
+  EXPECT_EQ(0, mock.TakeUnique(make(42)));
+  EXPECT_EQ(42, *saved);
+}
+
+// It should be possible to use callables with an &&-qualified call operator
+// with WillOnce, since they will be called only once. This allows actions to
+// contain and manipulate move-only types.
+TEST(MockMethodTest, ActionHasRvalueRefQualifiedCallOperator) {
+  struct Return17 {
+    int operator()() && { return 17; }
+  };
+
+  // Action is directly compatible with mocked function type.
+  {
+    MockFunction<int()> mock;
+    EXPECT_CALL(mock, Call).WillOnce(Return17());
+
+    EXPECT_EQ(17, mock.AsStdFunction()());
+  }
+
+  // Action doesn't want mocked function arguments.
+  {
+    MockFunction<int(int)> mock;
+    EXPECT_CALL(mock, Call).WillOnce(Return17());
+
+    EXPECT_EQ(17, mock.AsStdFunction()(0));
+  }
+}
+
+// Edge case: if an action has both a const-qualified and an &&-qualified call
+// operator, there should be no "ambiguous call" errors. The &&-qualified
+// operator should be used by WillOnce (since it doesn't need to retain the
+// action beyond one call), and the const-qualified one by WillRepeatedly.
+TEST(MockMethodTest, ActionHasMultipleCallOperators) {
+  struct ReturnInt {
+    int operator()() && { return 17; }
+    int operator()() const& { return 19; }
+  };
+
+  // Directly compatible with mocked function type.
+  {
+    MockFunction<int()> mock;
+    EXPECT_CALL(mock, Call).WillOnce(ReturnInt()).WillRepeatedly(ReturnInt());
+
+    EXPECT_EQ(17, mock.AsStdFunction()());
+    EXPECT_EQ(19, mock.AsStdFunction()());
+    EXPECT_EQ(19, mock.AsStdFunction()());
+  }
+
+  // Ignores function arguments.
+  {
+    MockFunction<int(int)> mock;
+    EXPECT_CALL(mock, Call).WillOnce(ReturnInt()).WillRepeatedly(ReturnInt());
+
+    EXPECT_EQ(17, mock.AsStdFunction()(0));
+    EXPECT_EQ(19, mock.AsStdFunction()(0));
+    EXPECT_EQ(19, mock.AsStdFunction()(0));
+  }
+}
+
+// WillOnce should have no problem coping with a move-only action, whether it is
+// &&-qualified or not.
+TEST(MockMethodTest, MoveOnlyAction) {
+  // &&-qualified
+  {
+    struct Return17 {
+      Return17() = default;
+      Return17(Return17&&) = default;
+
+      Return17(const Return17&) = delete;
+      Return17 operator=(const Return17&) = delete;
+
+      int operator()() && { return 17; }
+    };
+
+    MockFunction<int()> mock;
+    EXPECT_CALL(mock, Call).WillOnce(Return17());
+    EXPECT_EQ(17, mock.AsStdFunction()());
+  }
+
+  // Not &&-qualified
+  {
+    struct Return17 {
+      Return17() = default;
+      Return17(Return17&&) = default;
+
+      Return17(const Return17&) = delete;
+      Return17 operator=(const Return17&) = delete;
+
+      int operator()() const { return 17; }
+    };
+
+    MockFunction<int()> mock;
+    EXPECT_CALL(mock, Call).WillOnce(Return17());
+    EXPECT_EQ(17, mock.AsStdFunction()());
+  }
+}
+
+// It should be possible to use an action that returns a value with a mock
+// function that doesn't, both through WillOnce and WillRepeatedly.
+TEST(MockMethodTest, ActionReturnsIgnoredValue) {
+  struct ReturnInt {
+    int operator()() const { return 0; }
+  };
+
+  MockFunction<void()> mock;
+  EXPECT_CALL(mock, Call).WillOnce(ReturnInt()).WillRepeatedly(ReturnInt());
+
+  mock.AsStdFunction()();
+  mock.AsStdFunction()();
+}
+
+// Despite the fanciness around move-only actions and so on, it should still be
+// possible to hand an lvalue reference to a copyable action to WillOnce.
+TEST(MockMethodTest, WillOnceCanAcceptLvalueReference) {
+  MockFunction<int()> mock;
+
+  const auto action = [] { return 17; };
+  EXPECT_CALL(mock, Call).WillOnce(action);
+
+  EXPECT_EQ(17, mock.AsStdFunction()());
+}
+
+// A callable that doesn't use SFINAE to restrict its call operator's overload
+// set, but is still picky about which arguments it will accept.
+struct StaticAssertSingleArgument {
+  template <typename... Args>
+  static constexpr bool CheckArgs() {
+    static_assert(sizeof...(Args) == 1, "");
+    return true;
+  }
+
+  template <typename... Args, bool = CheckArgs<Args...>()>
+  int operator()(Args...) const {
+    return 17;
+  }
+};
+
+// WillOnce and WillRepeatedly should both work fine with naïve implementations
+// of actions that don't use SFINAE to limit the overload set for their call
+// operator. If they are compatible with the actual mocked signature, we
+// shouldn't probe them with no arguments and trip a static_assert.
+TEST(MockMethodTest, ActionSwallowsAllArguments) {
+  MockFunction<int(int)> mock;
+  EXPECT_CALL(mock, Call)
+      .WillOnce(StaticAssertSingleArgument{})
+      .WillRepeatedly(StaticAssertSingleArgument{});
+
+  EXPECT_EQ(17, mock.AsStdFunction()(0));
+  EXPECT_EQ(17, mock.AsStdFunction()(0));
+}
+
+struct ActionWithTemplatedConversionOperators {
+  template <typename... Args>
+  operator OnceAction<int(Args...)>() && {  // NOLINT
+    return [] { return 17; };
+  }
+
+  template <typename... Args>
+  operator Action<int(Args...)>() const {  // NOLINT
+    return [] { return 19; };
+  }
+};
+
+// It should be fine to hand both WillOnce and WillRepeatedly a function that
+// defines templated conversion operators to OnceAction and Action. WillOnce
+// should prefer the OnceAction version.
+TEST(MockMethodTest, ActionHasTemplatedConversionOperators) {
+  MockFunction<int()> mock;
+  EXPECT_CALL(mock, Call)
+      .WillOnce(ActionWithTemplatedConversionOperators{})
+      .WillRepeatedly(ActionWithTemplatedConversionOperators{});
+
+  EXPECT_EQ(17, mock.AsStdFunction()());
+  EXPECT_EQ(19, mock.AsStdFunction()());
+}
+
+// Tests for std::function based action.
+
+int Add(int val, int& ref, int* ptr) {  // NOLINT
+  int result = val + ref + *ptr;
+  ref = 42;
+  *ptr = 43;
+  return result;
+}
+
+int Deref(std::unique_ptr<int> ptr) { return *ptr; }
+
+struct Double {
+  template <typename T>
+  T operator()(T t) {
+    return 2 * t;
+  }
+};
+
+std::unique_ptr<int> UniqueInt(int i) {
+  return std::unique_ptr<int>(new int(i));
+}
+
+TEST(FunctorActionTest, ActionFromFunction) {
+  Action<int(int, int&, int*)> a = &Add;
+  int x = 1, y = 2, z = 3;
+  EXPECT_EQ(6, a.Perform(std::forward_as_tuple(x, y, &z)));
+  EXPECT_EQ(42, y);
+  EXPECT_EQ(43, z);
+
+  Action<int(std::unique_ptr<int>)> a1 = &Deref;
+  EXPECT_EQ(7, a1.Perform(std::make_tuple(UniqueInt(7))));
+}
+
+TEST(FunctorActionTest, ActionFromLambda) {
+  Action<int(bool, int)> a1 = [](bool b, int i) { return b ? i : 0; };
+  EXPECT_EQ(5, a1.Perform(std::make_tuple(true, 5)));
+  EXPECT_EQ(0, a1.Perform(std::make_tuple(false, 5)));
+
+  std::unique_ptr<int> saved;
+  Action<void(std::unique_ptr<int>)> a2 = [&saved](std::unique_ptr<int> p) {
+    saved = std::move(p);
+  };
+  a2.Perform(std::make_tuple(UniqueInt(5)));
+  EXPECT_EQ(5, *saved);
+}
+
+TEST(FunctorActionTest, PolymorphicFunctor) {
+  Action<int(int)> ai = Double();
+  EXPECT_EQ(2, ai.Perform(std::make_tuple(1)));
+  Action<double(double)> ad = Double();  // Double? Double double!
+  EXPECT_EQ(3.0, ad.Perform(std::make_tuple(1.5)));
+}
+
+TEST(FunctorActionTest, TypeConversion) {
+  // Numeric promotions are allowed.
+  const Action<bool(int)> a1 = [](int i) { return i > 1; };
+  const Action<int(bool)> a2 = Action<int(bool)>(a1);
+  EXPECT_EQ(1, a1.Perform(std::make_tuple(42)));
+  EXPECT_EQ(0, a2.Perform(std::make_tuple(42)));
+
+  // Implicit constructors are allowed.
+  const Action<bool(std::string)> s1 = [](std::string s) { return !s.empty(); };
+  const Action<int(const char*)> s2 = Action<int(const char*)>(s1);
+  EXPECT_EQ(0, s2.Perform(std::make_tuple("")));
+  EXPECT_EQ(1, s2.Perform(std::make_tuple("hello")));
+
+  // Also between the lambda and the action itself.
+  const Action<bool(std::string)> x1 = [](Unused) { return 42; };
+  const Action<bool(std::string)> x2 = [] { return 42; };
+  EXPECT_TRUE(x1.Perform(std::make_tuple("hello")));
+  EXPECT_TRUE(x2.Perform(std::make_tuple("hello")));
+
+  // Ensure decay occurs where required.
+  std::function<int()> f = [] { return 7; };
+  Action<int(int)> d = f;
+  f = nullptr;
+  EXPECT_EQ(7, d.Perform(std::make_tuple(1)));
+
+  // Ensure creation of an empty action succeeds.
+  Action<void(int)>(nullptr);
+}
+
+TEST(FunctorActionTest, UnusedArguments) {
+  // Verify that users can ignore uninteresting arguments.
+  Action<int(int, double y, double z)> a = [](int i, Unused, Unused) {
+    return 2 * i;
+  };
+  std::tuple<int, double, double> dummy = std::make_tuple(3, 7.3, 9.44);
+  EXPECT_EQ(6, a.Perform(dummy));
+}
+
+// Test that basic built-in actions work with move-only arguments.
+TEST(MoveOnlyArgumentsTest, ReturningActions) {
+  Action<int(std::unique_ptr<int>)> a = Return(1);
+  EXPECT_EQ(1, a.Perform(std::make_tuple(nullptr)));
+
+  a = testing::WithoutArgs([]() { return 7; });
+  EXPECT_EQ(7, a.Perform(std::make_tuple(nullptr)));
+
+  Action<void(std::unique_ptr<int>, int*)> a2 = testing::SetArgPointee<1>(3);
+  int x = 0;
+  a2.Perform(std::make_tuple(nullptr, &x));
+  EXPECT_EQ(x, 3);
+}
+
+ACTION(ReturnArity) { return std::tuple_size<args_type>::value; }
+
+TEST(ActionMacro, LargeArity) {
+  EXPECT_EQ(
+      1, testing::Action<int(int)>(ReturnArity()).Perform(std::make_tuple(0)));
+  EXPECT_EQ(
+      10,
+      testing::Action<int(int, int, int, int, int, int, int, int, int, int)>(
+          ReturnArity())
+          .Perform(std::make_tuple(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)));
+  EXPECT_EQ(
+      20,
+      testing::Action<int(int, int, int, int, int, int, int, int, int, int, int,
+                          int, int, int, int, int, int, int, int, int)>(
+          ReturnArity())
+          .Perform(std::make_tuple(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
+                                   14, 15, 16, 17, 18, 19)));
+}
+
+}  // namespace
+}  // namespace testing
+```
+
+### `gmock-cardinalities_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-cardinalities_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the built-in cardinalities.
+
+#include "gmock/gmock.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+
+namespace {
+
+using std::stringstream;
+using testing::AnyNumber;
+using testing::AtLeast;
+using testing::AtMost;
+using testing::Between;
+using testing::Cardinality;
+using testing::CardinalityInterface;
+using testing::Exactly;
+using testing::IsSubstring;
+using testing::MakeCardinality;
+
+class MockFoo {
+ public:
+  MockFoo() {}
+  MOCK_METHOD0(Bar, int());  // NOLINT
+
+ private:
+  MockFoo(const MockFoo&) = delete;
+  MockFoo& operator=(const MockFoo&) = delete;
+};
+
+// Tests that Cardinality objects can be default constructed.
+TEST(CardinalityTest, IsDefaultConstructable) { Cardinality c; }
+
+// Tests that Cardinality objects are copyable.
+TEST(CardinalityTest, IsCopyable) {
+  // Tests the copy constructor.
+  Cardinality c = Exactly(1);
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(0));
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(1));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(1));
+
+  // Tests the assignment operator.
+  c = Exactly(2);
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(1));
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(2));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(2));
+}
+
+TEST(CardinalityTest, IsOverSaturatedByCallCountWorks) {
+  const Cardinality c = AtMost(5);
+  EXPECT_FALSE(c.IsOverSaturatedByCallCount(4));
+  EXPECT_FALSE(c.IsOverSaturatedByCallCount(5));
+  EXPECT_TRUE(c.IsOverSaturatedByCallCount(6));
+}
+
+// Tests that Cardinality::DescribeActualCallCountTo() creates the
+// correct description.
+TEST(CardinalityTest, CanDescribeActualCallCount) {
+  stringstream ss0;
+  Cardinality::DescribeActualCallCountTo(0, &ss0);
+  EXPECT_EQ("never called", ss0.str());
+
+  stringstream ss1;
+  Cardinality::DescribeActualCallCountTo(1, &ss1);
+  EXPECT_EQ("called once", ss1.str());
+
+  stringstream ss2;
+  Cardinality::DescribeActualCallCountTo(2, &ss2);
+  EXPECT_EQ("called twice", ss2.str());
+
+  stringstream ss3;
+  Cardinality::DescribeActualCallCountTo(3, &ss3);
+  EXPECT_EQ("called 3 times", ss3.str());
+}
+
+// Tests AnyNumber()
+TEST(AnyNumber, Works) {
+  const Cardinality c = AnyNumber();
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(1));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(1));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(9));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(9));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called any number of times", ss.str());
+}
+
+TEST(AnyNumberTest, HasCorrectBounds) {
+  const Cardinality c = AnyNumber();
+  EXPECT_EQ(0, c.ConservativeLowerBound());
+  EXPECT_EQ(INT_MAX, c.ConservativeUpperBound());
+}
+
+// Tests AtLeast(n).
+
+TEST(AtLeastTest, OnNegativeNumber) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        AtLeast(-1);
+      },
+      "The invocation lower bound must be >= 0");
+}
+
+TEST(AtLeastTest, OnZero) {
+  const Cardinality c = AtLeast(0);
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(1));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(1));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "any number of times", ss.str());
+}
+
+TEST(AtLeastTest, OnPositiveNumber) {
+  const Cardinality c = AtLeast(2);
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(0));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(1));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(1));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(2));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(2));
+
+  stringstream ss1;
+  AtLeast(1).DescribeTo(&ss1);
+  EXPECT_PRED_FORMAT2(IsSubstring, "at least once", ss1.str());
+
+  stringstream ss2;
+  c.DescribeTo(&ss2);
+  EXPECT_PRED_FORMAT2(IsSubstring, "at least twice", ss2.str());
+
+  stringstream ss3;
+  AtLeast(3).DescribeTo(&ss3);
+  EXPECT_PRED_FORMAT2(IsSubstring, "at least 3 times", ss3.str());
+}
+
+TEST(AtLeastTest, HasCorrectBounds) {
+  const Cardinality c = AtLeast(2);
+  EXPECT_EQ(2, c.ConservativeLowerBound());
+  EXPECT_EQ(INT_MAX, c.ConservativeUpperBound());
+}
+
+// Tests AtMost(n).
+
+TEST(AtMostTest, OnNegativeNumber) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        AtMost(-1);
+      },
+      "The invocation upper bound must be >= 0");
+}
+
+TEST(AtMostTest, OnZero) {
+  const Cardinality c = AtMost(0);
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(1));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(1));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "never called", ss.str());
+}
+
+TEST(AtMostTest, OnPositiveNumber) {
+  const Cardinality c = AtMost(2);
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(1));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(1));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(2));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(2));
+
+  stringstream ss1;
+  AtMost(1).DescribeTo(&ss1);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called at most once", ss1.str());
+
+  stringstream ss2;
+  c.DescribeTo(&ss2);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called at most twice", ss2.str());
+
+  stringstream ss3;
+  AtMost(3).DescribeTo(&ss3);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called at most 3 times", ss3.str());
+}
+
+TEST(AtMostTest, HasCorrectBounds) {
+  const Cardinality c = AtMost(2);
+  EXPECT_EQ(0, c.ConservativeLowerBound());
+  EXPECT_EQ(2, c.ConservativeUpperBound());
+}
+
+// Tests Between(m, n).
+
+TEST(BetweenTest, OnNegativeStart) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        Between(-1, 2);
+      },
+      "The invocation lower bound must be >= 0, but is actually -1");
+}
+
+TEST(BetweenTest, OnNegativeEnd) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        Between(1, -2);
+      },
+      "The invocation upper bound must be >= 0, but is actually -2");
+}
+
+TEST(BetweenTest, OnStartBiggerThanEnd) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        Between(2, 1);
+      },
+      "The invocation upper bound (1) must be >= "
+      "the invocation lower bound (2)");
+}
+
+TEST(BetweenTest, OnZeroStartAndZeroEnd) {
+  const Cardinality c = Between(0, 0);
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(1));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(1));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "never called", ss.str());
+}
+
+TEST(BetweenTest, OnZeroStartAndNonZeroEnd) {
+  const Cardinality c = Between(0, 2);
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(2));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(2));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(4));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(4));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called at most twice", ss.str());
+}
+
+TEST(BetweenTest, OnSameStartAndEnd) {
+  const Cardinality c = Between(3, 3);
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(2));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(2));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(3));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(3));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(4));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(4));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called 3 times", ss.str());
+}
+
+TEST(BetweenTest, OnDifferentStartAndEnd) {
+  const Cardinality c = Between(3, 5);
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(2));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(2));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(3));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(3));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(5));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(5));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(6));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(6));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called between 3 and 5 times", ss.str());
+}
+
+TEST(BetweenTest, HasCorrectBounds) {
+  const Cardinality c = Between(3, 5);
+  EXPECT_EQ(3, c.ConservativeLowerBound());
+  EXPECT_EQ(5, c.ConservativeUpperBound());
+}
+
+// Tests Exactly(n).
+
+TEST(ExactlyTest, OnNegativeNumber) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        Exactly(-1);
+      },
+      "The invocation lower bound must be >= 0");
+}
+
+TEST(ExactlyTest, OnZero) {
+  const Cardinality c = Exactly(0);
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(0));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(1));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(1));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_PRED_FORMAT2(IsSubstring, "never called", ss.str());
+}
+
+TEST(ExactlyTest, OnPositiveNumber) {
+  const Cardinality c = Exactly(2);
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(0));
+  EXPECT_FALSE(c.IsSaturatedByCallCount(0));
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(2));
+  EXPECT_TRUE(c.IsSaturatedByCallCount(2));
+
+  stringstream ss1;
+  Exactly(1).DescribeTo(&ss1);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called once", ss1.str());
+
+  stringstream ss2;
+  c.DescribeTo(&ss2);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called twice", ss2.str());
+
+  stringstream ss3;
+  Exactly(3).DescribeTo(&ss3);
+  EXPECT_PRED_FORMAT2(IsSubstring, "called 3 times", ss3.str());
+}
+
+TEST(ExactlyTest, HasCorrectBounds) {
+  const Cardinality c = Exactly(3);
+  EXPECT_EQ(3, c.ConservativeLowerBound());
+  EXPECT_EQ(3, c.ConservativeUpperBound());
+}
+
+// Tests that a user can make their own cardinality by implementing
+// CardinalityInterface and calling MakeCardinality().
+
+class EvenCardinality : public CardinalityInterface {
+ public:
+  // Returns true if and only if call_count calls will satisfy this
+  // cardinality.
+  bool IsSatisfiedByCallCount(int call_count) const override {
+    return (call_count % 2 == 0);
+  }
+
+  // Returns true if and only if call_count calls will saturate this
+  // cardinality.
+  bool IsSaturatedByCallCount(int /* call_count */) const override {
+    return false;
+  }
+
+  // Describes self to an ostream.
+  void DescribeTo(::std::ostream* ss) const override {
+    *ss << "called even number of times";
+  }
+};
+
+TEST(MakeCardinalityTest, ConstructsCardinalityFromInterface) {
+  const Cardinality c = MakeCardinality(new EvenCardinality);
+
+  EXPECT_TRUE(c.IsSatisfiedByCallCount(2));
+  EXPECT_FALSE(c.IsSatisfiedByCallCount(3));
+
+  EXPECT_FALSE(c.IsSaturatedByCallCount(10000));
+
+  stringstream ss;
+  c.DescribeTo(&ss);
+  EXPECT_EQ("called even number of times", ss.str());
+}
+
+}  // Unnamed namespace
+```
+
+### `gmock-function-mocker_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-function-mocker_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Silence C4503 (decorated name length exceeded) for MSVC.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4503)
+#endif
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the function mocker classes.
+#include "gmock/gmock-function-mocker.h"
+
+#if GTEST_OS_WINDOWS
+// MSDN says the header file to be included for STDMETHOD is BaseTyps.h but
+// we are getting compiler errors if we use basetyps.h, hence including
+// objbase.h for definition of STDMETHOD.
+#include <objbase.h>
+#endif  // GTEST_OS_WINDOWS
+
+#include <functional>
+#include <map>
+#include <string>
+#include <type_traits>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+
+namespace testing {
+namespace gmock_function_mocker_test {
+
+using testing::_;
+using testing::A;
+using testing::An;
+using testing::AnyNumber;
+using testing::Const;
+using testing::DoDefault;
+using testing::Eq;
+using testing::Lt;
+using testing::MockFunction;
+using testing::Ref;
+using testing::Return;
+using testing::ReturnRef;
+using testing::TypedEq;
+
+template <typename T>
+class TemplatedCopyable {
+ public:
+  TemplatedCopyable() {}
+
+  template <typename U>
+  TemplatedCopyable(const U& other) {}  // NOLINT
+};
+
+class FooInterface {
+ public:
+  virtual ~FooInterface() {}
+
+  virtual void VoidReturning(int x) = 0;
+
+  virtual int Nullary() = 0;
+  virtual bool Unary(int x) = 0;
+  virtual long Binary(short x, int y) = 0;                     // NOLINT
+  virtual int Decimal(bool b, char c, short d, int e, long f,  // NOLINT
+                      float g, double h, unsigned i, char* j,
+                      const std::string& k) = 0;
+
+  virtual bool TakesNonConstReference(int& n) = 0;  // NOLINT
+  virtual std::string TakesConstReference(const int& n) = 0;
+  virtual bool TakesConst(const int x) = 0;
+
+  virtual int OverloadedOnArgumentNumber() = 0;
+  virtual int OverloadedOnArgumentNumber(int n) = 0;
+
+  virtual int OverloadedOnArgumentType(int n) = 0;
+  virtual char OverloadedOnArgumentType(char c) = 0;
+
+  virtual int OverloadedOnConstness() = 0;
+  virtual char OverloadedOnConstness() const = 0;
+
+  virtual int TypeWithHole(int (*func)()) = 0;
+  virtual int TypeWithComma(const std::map<int, std::string>& a_map) = 0;
+  virtual int TypeWithTemplatedCopyCtor(const TemplatedCopyable<int>&) = 0;
+
+  virtual int (*ReturnsFunctionPointer1(int))(bool) = 0;
+  using fn_ptr = int (*)(bool);
+  virtual fn_ptr ReturnsFunctionPointer2(int) = 0;
+
+  virtual int RefQualifiedConstRef() const& = 0;
+  virtual int RefQualifiedConstRefRef() const&& = 0;
+  virtual int RefQualifiedRef() & = 0;
+  virtual int RefQualifiedRefRef() && = 0;
+
+  virtual int RefQualifiedOverloaded() const& = 0;
+  virtual int RefQualifiedOverloaded() const&& = 0;
+  virtual int RefQualifiedOverloaded() & = 0;
+  virtual int RefQualifiedOverloaded() && = 0;
+
+#if GTEST_OS_WINDOWS
+  STDMETHOD_(int, CTNullary)() = 0;
+  STDMETHOD_(bool, CTUnary)(int x) = 0;
+  STDMETHOD_(int, CTDecimal)
+  (bool b, char c, short d, int e, long f,  // NOLINT
+   float g, double h, unsigned i, char* j, const std::string& k) = 0;
+  STDMETHOD_(char, CTConst)(int x) const = 0;
+#endif  // GTEST_OS_WINDOWS
+};
+
+// Const qualifiers on arguments were once (incorrectly) considered
+// significant in determining whether two virtual functions had the same
+// signature. This was fixed in Visual Studio 2008. However, the compiler
+// still emits a warning that alerts about this change in behavior.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4373)
+#endif
+class MockFoo : public FooInterface {
+ public:
+  MockFoo() {}
+
+  // Makes sure that a mock function parameter can be named.
+  MOCK_METHOD(void, VoidReturning, (int n));  // NOLINT
+
+  MOCK_METHOD(int, Nullary, ());  // NOLINT
+
+  // Makes sure that a mock function parameter can be unnamed.
+  MOCK_METHOD(bool, Unary, (int));          // NOLINT
+  MOCK_METHOD(long, Binary, (short, int));  // NOLINT
+  MOCK_METHOD(int, Decimal,
+              (bool, char, short, int, long, float,  // NOLINT
+               double, unsigned, char*, const std::string& str),
+              (override));
+
+  MOCK_METHOD(bool, TakesNonConstReference, (int&));  // NOLINT
+  MOCK_METHOD(std::string, TakesConstReference, (const int&));
+  MOCK_METHOD(bool, TakesConst, (const int));  // NOLINT
+
+  // Tests that the function return type can contain unprotected comma.
+  MOCK_METHOD((std::map<int, std::string>), ReturnTypeWithComma, (), ());
+  MOCK_METHOD((std::map<int, std::string>), ReturnTypeWithComma, (int),
+              (const));  // NOLINT
+
+  MOCK_METHOD(int, OverloadedOnArgumentNumber, ());     // NOLINT
+  MOCK_METHOD(int, OverloadedOnArgumentNumber, (int));  // NOLINT
+
+  MOCK_METHOD(int, OverloadedOnArgumentType, (int));    // NOLINT
+  MOCK_METHOD(char, OverloadedOnArgumentType, (char));  // NOLINT
+
+  MOCK_METHOD(int, OverloadedOnConstness, (), (override));          // NOLINT
+  MOCK_METHOD(char, OverloadedOnConstness, (), (override, const));  // NOLINT
+
+  MOCK_METHOD(int, TypeWithHole, (int (*)()), ());  // NOLINT
+  MOCK_METHOD(int, TypeWithComma, ((const std::map<int, std::string>&)));
+  MOCK_METHOD(int, TypeWithTemplatedCopyCtor,
+              (const TemplatedCopyable<int>&));  // NOLINT
+
+  MOCK_METHOD(int (*)(bool), ReturnsFunctionPointer1, (int), ());
+  MOCK_METHOD(fn_ptr, ReturnsFunctionPointer2, (int), ());
+
+#if GTEST_OS_WINDOWS
+  MOCK_METHOD(int, CTNullary, (), (Calltype(STDMETHODCALLTYPE)));
+  MOCK_METHOD(bool, CTUnary, (int), (Calltype(STDMETHODCALLTYPE)));
+  MOCK_METHOD(int, CTDecimal,
+              (bool b, char c, short d, int e, long f, float g, double h,
+               unsigned i, char* j, const std::string& k),
+              (Calltype(STDMETHODCALLTYPE)));
+  MOCK_METHOD(char, CTConst, (int), (const, Calltype(STDMETHODCALLTYPE)));
+  MOCK_METHOD((std::map<int, std::string>), CTReturnTypeWithComma, (),
+              (Calltype(STDMETHODCALLTYPE)));
+#endif  // GTEST_OS_WINDOWS
+
+  // Test reference qualified functions.
+  MOCK_METHOD(int, RefQualifiedConstRef, (), (const, ref(&), override));
+  MOCK_METHOD(int, RefQualifiedConstRefRef, (), (const, ref(&&), override));
+  MOCK_METHOD(int, RefQualifiedRef, (), (ref(&), override));
+  MOCK_METHOD(int, RefQualifiedRefRef, (), (ref(&&), override));
+
+  MOCK_METHOD(int, RefQualifiedOverloaded, (), (const, ref(&), override));
+  MOCK_METHOD(int, RefQualifiedOverloaded, (), (const, ref(&&), override));
+  MOCK_METHOD(int, RefQualifiedOverloaded, (), (ref(&), override));
+  MOCK_METHOD(int, RefQualifiedOverloaded, (), (ref(&&), override));
+
+ private:
+  MockFoo(const MockFoo&) = delete;
+  MockFoo& operator=(const MockFoo&) = delete;
+};
+
+class LegacyMockFoo : public FooInterface {
+ public:
+  LegacyMockFoo() {}
+
+  // Makes sure that a mock function parameter can be named.
+  MOCK_METHOD1(VoidReturning, void(int n));  // NOLINT
+
+  MOCK_METHOD0(Nullary, int());  // NOLINT
+
+  // Makes sure that a mock function parameter can be unnamed.
+  MOCK_METHOD1(Unary, bool(int));                                  // NOLINT
+  MOCK_METHOD2(Binary, long(short, int));                          // NOLINT
+  MOCK_METHOD10(Decimal, int(bool, char, short, int, long, float,  // NOLINT
+                             double, unsigned, char*, const std::string& str));
+
+  MOCK_METHOD1(TakesNonConstReference, bool(int&));  // NOLINT
+  MOCK_METHOD1(TakesConstReference, std::string(const int&));
+  MOCK_METHOD1(TakesConst, bool(const int));  // NOLINT
+
+  // Tests that the function return type can contain unprotected comma.
+  MOCK_METHOD0(ReturnTypeWithComma, std::map<int, std::string>());
+  MOCK_CONST_METHOD1(ReturnTypeWithComma,
+                     std::map<int, std::string>(int));  // NOLINT
+
+  MOCK_METHOD0(OverloadedOnArgumentNumber, int());     // NOLINT
+  MOCK_METHOD1(OverloadedOnArgumentNumber, int(int));  // NOLINT
+
+  MOCK_METHOD1(OverloadedOnArgumentType, int(int));    // NOLINT
+  MOCK_METHOD1(OverloadedOnArgumentType, char(char));  // NOLINT
+
+  MOCK_METHOD0(OverloadedOnConstness, int());         // NOLINT
+  MOCK_CONST_METHOD0(OverloadedOnConstness, char());  // NOLINT
+
+  MOCK_METHOD1(TypeWithHole, int(int (*)()));  // NOLINT
+  MOCK_METHOD1(TypeWithComma,
+               int(const std::map<int, std::string>&));  // NOLINT
+  MOCK_METHOD1(TypeWithTemplatedCopyCtor,
+               int(const TemplatedCopyable<int>&));  // NOLINT
+
+  MOCK_METHOD1(ReturnsFunctionPointer1, int (*(int))(bool));
+  MOCK_METHOD1(ReturnsFunctionPointer2, fn_ptr(int));
+
+#if GTEST_OS_WINDOWS
+  MOCK_METHOD0_WITH_CALLTYPE(STDMETHODCALLTYPE, CTNullary, int());
+  MOCK_METHOD1_WITH_CALLTYPE(STDMETHODCALLTYPE, CTUnary, bool(int));  // NOLINT
+  MOCK_METHOD10_WITH_CALLTYPE(STDMETHODCALLTYPE, CTDecimal,
+                              int(bool b, char c, short d, int e,  // NOLINT
+                                  long f, float g, double h,       // NOLINT
+                                  unsigned i, char* j, const std::string& k));
+  MOCK_CONST_METHOD1_WITH_CALLTYPE(STDMETHODCALLTYPE, CTConst,
+                                   char(int));  // NOLINT
+
+  // Tests that the function return type can contain unprotected comma.
+  MOCK_METHOD0_WITH_CALLTYPE(STDMETHODCALLTYPE, CTReturnTypeWithComma,
+                             std::map<int, std::string>());
+#endif  // GTEST_OS_WINDOWS
+
+  // We can't mock these with the old macros, but we need to define them to make
+  // it concrete.
+  int RefQualifiedConstRef() const& override { return 0; }
+  int RefQualifiedConstRefRef() const&& override { return 0; }
+  int RefQualifiedRef() & override { return 0; }
+  int RefQualifiedRefRef() && override { return 0; }
+  int RefQualifiedOverloaded() const& override { return 0; }
+  int RefQualifiedOverloaded() const&& override { return 0; }
+  int RefQualifiedOverloaded() & override { return 0; }
+  int RefQualifiedOverloaded() && override { return 0; }
+
+ private:
+  LegacyMockFoo(const LegacyMockFoo&) = delete;
+  LegacyMockFoo& operator=(const LegacyMockFoo&) = delete;
+};
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+template <class T>
+class FunctionMockerTest : public testing::Test {
+ protected:
+  FunctionMockerTest() : foo_(&mock_foo_) {}
+
+  FooInterface* const foo_;
+  T mock_foo_;
+};
+using FunctionMockerTestTypes = ::testing::Types<MockFoo, LegacyMockFoo>;
+TYPED_TEST_SUITE(FunctionMockerTest, FunctionMockerTestTypes);
+
+// Tests mocking a void-returning function.
+TYPED_TEST(FunctionMockerTest, MocksVoidFunction) {
+  EXPECT_CALL(this->mock_foo_, VoidReturning(Lt(100)));
+  this->foo_->VoidReturning(0);
+}
+
+// Tests mocking a nullary function.
+TYPED_TEST(FunctionMockerTest, MocksNullaryFunction) {
+  EXPECT_CALL(this->mock_foo_, Nullary())
+      .WillOnce(DoDefault())
+      .WillOnce(Return(1));
+
+  EXPECT_EQ(0, this->foo_->Nullary());
+  EXPECT_EQ(1, this->foo_->Nullary());
+}
+
+// Tests mocking a unary function.
+TYPED_TEST(FunctionMockerTest, MocksUnaryFunction) {
+  EXPECT_CALL(this->mock_foo_, Unary(Eq(2))).Times(2).WillOnce(Return(true));
+
+  EXPECT_TRUE(this->foo_->Unary(2));
+  EXPECT_FALSE(this->foo_->Unary(2));
+}
+
+// Tests mocking a binary function.
+TYPED_TEST(FunctionMockerTest, MocksBinaryFunction) {
+  EXPECT_CALL(this->mock_foo_, Binary(2, _)).WillOnce(Return(3));
+
+  EXPECT_EQ(3, this->foo_->Binary(2, 1));
+}
+
+// Tests mocking a decimal function.
+TYPED_TEST(FunctionMockerTest, MocksDecimalFunction) {
+  EXPECT_CALL(this->mock_foo_,
+              Decimal(true, 'a', 0, 0, 1L, A<float>(), Lt(100), 5U, NULL, "hi"))
+      .WillOnce(Return(5));
+
+  EXPECT_EQ(5, this->foo_->Decimal(true, 'a', 0, 0, 1, 0, 0, 5, nullptr, "hi"));
+}
+
+// Tests mocking a function that takes a non-const reference.
+TYPED_TEST(FunctionMockerTest, MocksFunctionWithNonConstReferenceArgument) {
+  int a = 0;
+  EXPECT_CALL(this->mock_foo_, TakesNonConstReference(Ref(a)))
+      .WillOnce(Return(true));
+
+  EXPECT_TRUE(this->foo_->TakesNonConstReference(a));
+}
+
+// Tests mocking a function that takes a const reference.
+TYPED_TEST(FunctionMockerTest, MocksFunctionWithConstReferenceArgument) {
+  int a = 0;
+  EXPECT_CALL(this->mock_foo_, TakesConstReference(Ref(a)))
+      .WillOnce(Return("Hello"));
+
+  EXPECT_EQ("Hello", this->foo_->TakesConstReference(a));
+}
+
+// Tests mocking a function that takes a const variable.
+TYPED_TEST(FunctionMockerTest, MocksFunctionWithConstArgument) {
+  EXPECT_CALL(this->mock_foo_, TakesConst(Lt(10))).WillOnce(DoDefault());
+
+  EXPECT_FALSE(this->foo_->TakesConst(5));
+}
+
+// Tests mocking functions overloaded on the number of arguments.
+TYPED_TEST(FunctionMockerTest, MocksFunctionsOverloadedOnArgumentNumber) {
+  EXPECT_CALL(this->mock_foo_, OverloadedOnArgumentNumber())
+      .WillOnce(Return(1));
+  EXPECT_CALL(this->mock_foo_, OverloadedOnArgumentNumber(_))
+      .WillOnce(Return(2));
+
+  EXPECT_EQ(2, this->foo_->OverloadedOnArgumentNumber(1));
+  EXPECT_EQ(1, this->foo_->OverloadedOnArgumentNumber());
+}
+
+// Tests mocking functions overloaded on the types of argument.
+TYPED_TEST(FunctionMockerTest, MocksFunctionsOverloadedOnArgumentType) {
+  EXPECT_CALL(this->mock_foo_, OverloadedOnArgumentType(An<int>()))
+      .WillOnce(Return(1));
+  EXPECT_CALL(this->mock_foo_, OverloadedOnArgumentType(TypedEq<char>('a')))
+      .WillOnce(Return('b'));
+
+  EXPECT_EQ(1, this->foo_->OverloadedOnArgumentType(0));
+  EXPECT_EQ('b', this->foo_->OverloadedOnArgumentType('a'));
+}
+
+// Tests mocking functions overloaded on the const-ness of this object.
+TYPED_TEST(FunctionMockerTest, MocksFunctionsOverloadedOnConstnessOfThis) {
+  EXPECT_CALL(this->mock_foo_, OverloadedOnConstness());
+  EXPECT_CALL(Const(this->mock_foo_), OverloadedOnConstness())
+      .WillOnce(Return('a'));
+
+  EXPECT_EQ(0, this->foo_->OverloadedOnConstness());
+  EXPECT_EQ('a', Const(*this->foo_).OverloadedOnConstness());
+}
+
+TYPED_TEST(FunctionMockerTest, MocksReturnTypeWithComma) {
+  const std::map<int, std::string> a_map;
+  EXPECT_CALL(this->mock_foo_, ReturnTypeWithComma()).WillOnce(Return(a_map));
+  EXPECT_CALL(this->mock_foo_, ReturnTypeWithComma(42)).WillOnce(Return(a_map));
+
+  EXPECT_EQ(a_map, this->mock_foo_.ReturnTypeWithComma());
+  EXPECT_EQ(a_map, this->mock_foo_.ReturnTypeWithComma(42));
+}
+
+TYPED_TEST(FunctionMockerTest, MocksTypeWithTemplatedCopyCtor) {
+  EXPECT_CALL(this->mock_foo_, TypeWithTemplatedCopyCtor(_))
+      .WillOnce(Return(true));
+  EXPECT_TRUE(this->foo_->TypeWithTemplatedCopyCtor(TemplatedCopyable<int>()));
+}
+
+#if GTEST_OS_WINDOWS
+// Tests mocking a nullary function with calltype.
+TYPED_TEST(FunctionMockerTest, MocksNullaryFunctionWithCallType) {
+  EXPECT_CALL(this->mock_foo_, CTNullary())
+      .WillOnce(Return(-1))
+      .WillOnce(Return(0));
+
+  EXPECT_EQ(-1, this->foo_->CTNullary());
+  EXPECT_EQ(0, this->foo_->CTNullary());
+}
+
+// Tests mocking a unary function with calltype.
+TYPED_TEST(FunctionMockerTest, MocksUnaryFunctionWithCallType) {
+  EXPECT_CALL(this->mock_foo_, CTUnary(Eq(2)))
+      .Times(2)
+      .WillOnce(Return(true))
+      .WillOnce(Return(false));
+
+  EXPECT_TRUE(this->foo_->CTUnary(2));
+  EXPECT_FALSE(this->foo_->CTUnary(2));
+}
+
+// Tests mocking a decimal function with calltype.
+TYPED_TEST(FunctionMockerTest, MocksDecimalFunctionWithCallType) {
+  EXPECT_CALL(this->mock_foo_, CTDecimal(true, 'a', 0, 0, 1L, A<float>(),
+                                         Lt(100), 5U, NULL, "hi"))
+      .WillOnce(Return(10));
+
+  EXPECT_EQ(10, this->foo_->CTDecimal(true, 'a', 0, 0, 1, 0, 0, 5, NULL, "hi"));
+}
+
+// Tests mocking functions overloaded on the const-ness of this object.
+TYPED_TEST(FunctionMockerTest, MocksFunctionsConstFunctionWithCallType) {
+  EXPECT_CALL(Const(this->mock_foo_), CTConst(_)).WillOnce(Return('a'));
+
+  EXPECT_EQ('a', Const(*this->foo_).CTConst(0));
+}
+
+TYPED_TEST(FunctionMockerTest, MocksReturnTypeWithCommaAndCallType) {
+  const std::map<int, std::string> a_map;
+  EXPECT_CALL(this->mock_foo_, CTReturnTypeWithComma()).WillOnce(Return(a_map));
+
+  EXPECT_EQ(a_map, this->mock_foo_.CTReturnTypeWithComma());
+}
+
+#endif  // GTEST_OS_WINDOWS
+
+TEST(FunctionMockerTest, RefQualified) {
+  MockFoo mock_foo;
+
+  EXPECT_CALL(mock_foo, RefQualifiedConstRef).WillOnce(Return(1));
+  EXPECT_CALL(std::move(mock_foo),  // NOLINT
+              RefQualifiedConstRefRef)
+      .WillOnce(Return(2));
+  EXPECT_CALL(mock_foo, RefQualifiedRef).WillOnce(Return(3));
+  EXPECT_CALL(std::move(mock_foo),  // NOLINT
+              RefQualifiedRefRef)
+      .WillOnce(Return(4));
+
+  EXPECT_CALL(static_cast<const MockFoo&>(mock_foo), RefQualifiedOverloaded())
+      .WillOnce(Return(5));
+  EXPECT_CALL(static_cast<const MockFoo&&>(mock_foo), RefQualifiedOverloaded())
+      .WillOnce(Return(6));
+  EXPECT_CALL(static_cast<MockFoo&>(mock_foo), RefQualifiedOverloaded())
+      .WillOnce(Return(7));
+  EXPECT_CALL(static_cast<MockFoo&&>(mock_foo), RefQualifiedOverloaded())
+      .WillOnce(Return(8));
+
+  EXPECT_EQ(mock_foo.RefQualifiedConstRef(), 1);
+  EXPECT_EQ(std::move(mock_foo).RefQualifiedConstRefRef(), 2);  // NOLINT
+  EXPECT_EQ(mock_foo.RefQualifiedRef(), 3);
+  EXPECT_EQ(std::move(mock_foo).RefQualifiedRefRef(), 4);  // NOLINT
+
+  EXPECT_EQ(std::cref(mock_foo).get().RefQualifiedOverloaded(), 5);
+  EXPECT_EQ(std::move(std::cref(mock_foo).get())  // NOLINT
+                .RefQualifiedOverloaded(),
+            6);
+  EXPECT_EQ(mock_foo.RefQualifiedOverloaded(), 7);
+  EXPECT_EQ(std::move(mock_foo).RefQualifiedOverloaded(), 8);  // NOLINT
+}
+
+class MockB {
+ public:
+  MockB() {}
+
+  MOCK_METHOD(void, DoB, ());
+
+ private:
+  MockB(const MockB&) = delete;
+  MockB& operator=(const MockB&) = delete;
+};
+
+class LegacyMockB {
+ public:
+  LegacyMockB() {}
+
+  MOCK_METHOD0(DoB, void());
+
+ private:
+  LegacyMockB(const LegacyMockB&) = delete;
+  LegacyMockB& operator=(const LegacyMockB&) = delete;
+};
+
+template <typename T>
+class ExpectCallTest : public ::testing::Test {};
+using ExpectCallTestTypes = ::testing::Types<MockB, LegacyMockB>;
+TYPED_TEST_SUITE(ExpectCallTest, ExpectCallTestTypes);
+
+// Tests that functions with no EXPECT_CALL() rules can be called any
+// number of times.
+TYPED_TEST(ExpectCallTest, UnmentionedFunctionCanBeCalledAnyNumberOfTimes) {
+  { TypeParam b; }
+
+  {
+    TypeParam b;
+    b.DoB();
+  }
+
+  {
+    TypeParam b;
+    b.DoB();
+    b.DoB();
+  }
+}
+
+// Tests mocking template interfaces.
+
+template <typename T>
+class StackInterface {
+ public:
+  virtual ~StackInterface() {}
+
+  // Template parameter appears in function parameter.
+  virtual void Push(const T& value) = 0;
+  virtual void Pop() = 0;
+  virtual int GetSize() const = 0;
+  // Template parameter appears in function return type.
+  virtual const T& GetTop() const = 0;
+};
+
+template <typename T>
+class MockStack : public StackInterface<T> {
+ public:
+  MockStack() {}
+
+  MOCK_METHOD(void, Push, (const T& elem), ());
+  MOCK_METHOD(void, Pop, (), (final));
+  MOCK_METHOD(int, GetSize, (), (const, override));
+  MOCK_METHOD(const T&, GetTop, (), (const));
+
+  // Tests that the function return type can contain unprotected comma.
+  MOCK_METHOD((std::map<int, int>), ReturnTypeWithComma, (), ());
+  MOCK_METHOD((std::map<int, int>), ReturnTypeWithComma, (int), (const));
+
+ private:
+  MockStack(const MockStack&) = delete;
+  MockStack& operator=(const MockStack&) = delete;
+};
+
+template <typename T>
+class LegacyMockStack : public StackInterface<T> {
+ public:
+  LegacyMockStack() {}
+
+  MOCK_METHOD1_T(Push, void(const T& elem));
+  MOCK_METHOD0_T(Pop, void());
+  MOCK_CONST_METHOD0_T(GetSize, int());  // NOLINT
+  MOCK_CONST_METHOD0_T(GetTop, const T&());
+
+  // Tests that the function return type can contain unprotected comma.
+  MOCK_METHOD0_T(ReturnTypeWithComma, std::map<int, int>());
+  MOCK_CONST_METHOD1_T(ReturnTypeWithComma, std::map<int, int>(int));  // NOLINT
+
+ private:
+  LegacyMockStack(const LegacyMockStack&) = delete;
+  LegacyMockStack& operator=(const LegacyMockStack&) = delete;
+};
+
+template <typename T>
+class TemplateMockTest : public ::testing::Test {};
+using TemplateMockTestTypes =
+    ::testing::Types<MockStack<int>, LegacyMockStack<int>>;
+TYPED_TEST_SUITE(TemplateMockTest, TemplateMockTestTypes);
+
+// Tests that template mock works.
+TYPED_TEST(TemplateMockTest, Works) {
+  TypeParam mock;
+
+  EXPECT_CALL(mock, GetSize())
+      .WillOnce(Return(0))
+      .WillOnce(Return(1))
+      .WillOnce(Return(0));
+  EXPECT_CALL(mock, Push(_));
+  int n = 5;
+  EXPECT_CALL(mock, GetTop()).WillOnce(ReturnRef(n));
+  EXPECT_CALL(mock, Pop()).Times(AnyNumber());
+
+  EXPECT_EQ(0, mock.GetSize());
+  mock.Push(5);
+  EXPECT_EQ(1, mock.GetSize());
+  EXPECT_EQ(5, mock.GetTop());
+  mock.Pop();
+  EXPECT_EQ(0, mock.GetSize());
+}
+
+TYPED_TEST(TemplateMockTest, MethodWithCommaInReturnTypeWorks) {
+  TypeParam mock;
+
+  const std::map<int, int> a_map;
+  EXPECT_CALL(mock, ReturnTypeWithComma()).WillOnce(Return(a_map));
+  EXPECT_CALL(mock, ReturnTypeWithComma(1)).WillOnce(Return(a_map));
+
+  EXPECT_EQ(a_map, mock.ReturnTypeWithComma());
+  EXPECT_EQ(a_map, mock.ReturnTypeWithComma(1));
+}
+
+#if GTEST_OS_WINDOWS
+// Tests mocking template interfaces with calltype.
+
+template <typename T>
+class StackInterfaceWithCallType {
+ public:
+  virtual ~StackInterfaceWithCallType() {}
+
+  // Template parameter appears in function parameter.
+  STDMETHOD_(void, Push)(const T& value) = 0;
+  STDMETHOD_(void, Pop)() = 0;
+  STDMETHOD_(int, GetSize)() const = 0;
+  // Template parameter appears in function return type.
+  STDMETHOD_(const T&, GetTop)() const = 0;
+};
+
+template <typename T>
+class MockStackWithCallType : public StackInterfaceWithCallType<T> {
+ public:
+  MockStackWithCallType() {}
+
+  MOCK_METHOD(void, Push, (const T& elem),
+              (Calltype(STDMETHODCALLTYPE), override));
+  MOCK_METHOD(void, Pop, (), (Calltype(STDMETHODCALLTYPE), override));
+  MOCK_METHOD(int, GetSize, (), (Calltype(STDMETHODCALLTYPE), override, const));
+  MOCK_METHOD(const T&, GetTop, (),
+              (Calltype(STDMETHODCALLTYPE), override, const));
+
+ private:
+  MockStackWithCallType(const MockStackWithCallType&) = delete;
+  MockStackWithCallType& operator=(const MockStackWithCallType&) = delete;
+};
+
+template <typename T>
+class LegacyMockStackWithCallType : public StackInterfaceWithCallType<T> {
+ public:
+  LegacyMockStackWithCallType() {}
+
+  MOCK_METHOD1_T_WITH_CALLTYPE(STDMETHODCALLTYPE, Push, void(const T& elem));
+  MOCK_METHOD0_T_WITH_CALLTYPE(STDMETHODCALLTYPE, Pop, void());
+  MOCK_CONST_METHOD0_T_WITH_CALLTYPE(STDMETHODCALLTYPE, GetSize, int());
+  MOCK_CONST_METHOD0_T_WITH_CALLTYPE(STDMETHODCALLTYPE, GetTop, const T&());
+
+ private:
+  LegacyMockStackWithCallType(const LegacyMockStackWithCallType&) = delete;
+  LegacyMockStackWithCallType& operator=(const LegacyMockStackWithCallType&) =
+      delete;
+};
+
+template <typename T>
+class TemplateMockTestWithCallType : public ::testing::Test {};
+using TemplateMockTestWithCallTypeTypes =
+    ::testing::Types<MockStackWithCallType<int>,
+                     LegacyMockStackWithCallType<int>>;
+TYPED_TEST_SUITE(TemplateMockTestWithCallType,
+                 TemplateMockTestWithCallTypeTypes);
+
+// Tests that template mock with calltype works.
+TYPED_TEST(TemplateMockTestWithCallType, Works) {
+  TypeParam mock;
+
+  EXPECT_CALL(mock, GetSize())
+      .WillOnce(Return(0))
+      .WillOnce(Return(1))
+      .WillOnce(Return(0));
+  EXPECT_CALL(mock, Push(_));
+  int n = 5;
+  EXPECT_CALL(mock, GetTop()).WillOnce(ReturnRef(n));
+  EXPECT_CALL(mock, Pop()).Times(AnyNumber());
+
+  EXPECT_EQ(0, mock.GetSize());
+  mock.Push(5);
+  EXPECT_EQ(1, mock.GetSize());
+  EXPECT_EQ(5, mock.GetTop());
+  mock.Pop();
+  EXPECT_EQ(0, mock.GetSize());
+}
+#endif  // GTEST_OS_WINDOWS
+
+#define MY_MOCK_METHODS1_                       \
+  MOCK_METHOD(void, Overloaded, ());            \
+  MOCK_METHOD(int, Overloaded, (int), (const)); \
+  MOCK_METHOD(bool, Overloaded, (bool f, int n))
+
+#define LEGACY_MY_MOCK_METHODS1_              \
+  MOCK_METHOD0(Overloaded, void());           \
+  MOCK_CONST_METHOD1(Overloaded, int(int n)); \
+  MOCK_METHOD2(Overloaded, bool(bool f, int n))
+
+class MockOverloadedOnArgNumber {
+ public:
+  MockOverloadedOnArgNumber() {}
+
+  MY_MOCK_METHODS1_;
+
+ private:
+  MockOverloadedOnArgNumber(const MockOverloadedOnArgNumber&) = delete;
+  MockOverloadedOnArgNumber& operator=(const MockOverloadedOnArgNumber&) =
+      delete;
+};
+
+class LegacyMockOverloadedOnArgNumber {
+ public:
+  LegacyMockOverloadedOnArgNumber() {}
+
+  LEGACY_MY_MOCK_METHODS1_;
+
+ private:
+  LegacyMockOverloadedOnArgNumber(const LegacyMockOverloadedOnArgNumber&) =
+      delete;
+  LegacyMockOverloadedOnArgNumber& operator=(
+      const LegacyMockOverloadedOnArgNumber&) = delete;
+};
+
+template <typename T>
+class OverloadedMockMethodTest : public ::testing::Test {};
+using OverloadedMockMethodTestTypes =
+    ::testing::Types<MockOverloadedOnArgNumber,
+                     LegacyMockOverloadedOnArgNumber>;
+TYPED_TEST_SUITE(OverloadedMockMethodTest, OverloadedMockMethodTestTypes);
+
+TYPED_TEST(OverloadedMockMethodTest, CanOverloadOnArgNumberInMacroBody) {
+  TypeParam mock;
+  EXPECT_CALL(mock, Overloaded());
+  EXPECT_CALL(mock, Overloaded(1)).WillOnce(Return(2));
+  EXPECT_CALL(mock, Overloaded(true, 1)).WillOnce(Return(true));
+
+  mock.Overloaded();
+  EXPECT_EQ(2, mock.Overloaded(1));
+  EXPECT_TRUE(mock.Overloaded(true, 1));
+}
+
+#define MY_MOCK_METHODS2_                     \
+  MOCK_CONST_METHOD1(Overloaded, int(int n)); \
+  MOCK_METHOD1(Overloaded, int(int n))
+
+class MockOverloadedOnConstness {
+ public:
+  MockOverloadedOnConstness() {}
+
+  MY_MOCK_METHODS2_;
+
+ private:
+  MockOverloadedOnConstness(const MockOverloadedOnConstness&) = delete;
+  MockOverloadedOnConstness& operator=(const MockOverloadedOnConstness&) =
+      delete;
+};
+
+TEST(MockMethodOverloadedMockMethodTest, CanOverloadOnConstnessInMacroBody) {
+  MockOverloadedOnConstness mock;
+  const MockOverloadedOnConstness* const_mock = &mock;
+  EXPECT_CALL(mock, Overloaded(1)).WillOnce(Return(2));
+  EXPECT_CALL(*const_mock, Overloaded(1)).WillOnce(Return(3));
+
+  EXPECT_EQ(2, mock.Overloaded(1));
+  EXPECT_EQ(3, const_mock->Overloaded(1));
+}
+
+TEST(MockMethodMockFunctionTest, WorksForVoidNullary) {
+  MockFunction<void()> foo;
+  EXPECT_CALL(foo, Call());
+  foo.Call();
+}
+
+TEST(MockMethodMockFunctionTest, WorksForNonVoidNullary) {
+  MockFunction<int()> foo;
+  EXPECT_CALL(foo, Call()).WillOnce(Return(1)).WillOnce(Return(2));
+  EXPECT_EQ(1, foo.Call());
+  EXPECT_EQ(2, foo.Call());
+}
+
+TEST(MockMethodMockFunctionTest, WorksForVoidUnary) {
+  MockFunction<void(int)> foo;
+  EXPECT_CALL(foo, Call(1));
+  foo.Call(1);
+}
+
+TEST(MockMethodMockFunctionTest, WorksForNonVoidBinary) {
+  MockFunction<int(bool, int)> foo;
+  EXPECT_CALL(foo, Call(false, 42)).WillOnce(Return(1)).WillOnce(Return(2));
+  EXPECT_CALL(foo, Call(true, Ge(100))).WillOnce(Return(3));
+  EXPECT_EQ(1, foo.Call(false, 42));
+  EXPECT_EQ(2, foo.Call(false, 42));
+  EXPECT_EQ(3, foo.Call(true, 120));
+}
+
+TEST(MockMethodMockFunctionTest, WorksFor10Arguments) {
+  MockFunction<int(bool a0, char a1, int a2, int a3, int a4, int a5, int a6,
+                   char a7, int a8, bool a9)>
+      foo;
+  EXPECT_CALL(foo, Call(_, 'a', _, _, _, _, _, _, _, _))
+      .WillOnce(Return(1))
+      .WillOnce(Return(2));
+  EXPECT_EQ(1, foo.Call(false, 'a', 0, 0, 0, 0, 0, 'b', 0, true));
+  EXPECT_EQ(2, foo.Call(true, 'a', 0, 0, 0, 0, 0, 'b', 1, false));
+}
+
+TEST(MockMethodMockFunctionTest, AsStdFunction) {
+  MockFunction<int(int)> foo;
+  auto call = [](const std::function<int(int)>& f, int i) { return f(i); };
+  EXPECT_CALL(foo, Call(1)).WillOnce(Return(-1));
+  EXPECT_CALL(foo, Call(2)).WillOnce(Return(-2));
+  EXPECT_EQ(-1, call(foo.AsStdFunction(), 1));
+  EXPECT_EQ(-2, call(foo.AsStdFunction(), 2));
+}
+
+TEST(MockMethodMockFunctionTest, AsStdFunctionReturnsReference) {
+  MockFunction<int&()> foo;
+  int value = 1;
+  EXPECT_CALL(foo, Call()).WillOnce(ReturnRef(value));
+  int& ref = foo.AsStdFunction()();
+  EXPECT_EQ(1, ref);
+  value = 2;
+  EXPECT_EQ(2, ref);
+}
+
+TEST(MockMethodMockFunctionTest, AsStdFunctionWithReferenceParameter) {
+  MockFunction<int(int&)> foo;
+  auto call = [](const std::function<int(int&)>& f, int& i) { return f(i); };
+  int i = 42;
+  EXPECT_CALL(foo, Call(i)).WillOnce(Return(-1));
+  EXPECT_EQ(-1, call(foo.AsStdFunction(), i));
+}
+
+namespace {
+
+template <typename Expected, typename F>
+static constexpr bool IsMockFunctionTemplateArgumentDeducedTo(
+    const internal::MockFunction<F>&) {
+  return std::is_same<F, Expected>::value;
+}
+
+}  // namespace
+
+template <typename F>
+class MockMethodMockFunctionSignatureTest : public Test {};
+
+using MockMethodMockFunctionSignatureTypes =
+    Types<void(), int(), void(int), int(int), int(bool, int),
+          int(bool, char, int, int, int, int, int, char, int, bool)>;
+TYPED_TEST_SUITE(MockMethodMockFunctionSignatureTest,
+                 MockMethodMockFunctionSignatureTypes);
+
+TYPED_TEST(MockMethodMockFunctionSignatureTest,
+           IsMockFunctionTemplateArgumentDeducedForRawSignature) {
+  using Argument = TypeParam;
+  MockFunction<Argument> foo;
+  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<TypeParam>(foo));
+}
+
+TYPED_TEST(MockMethodMockFunctionSignatureTest,
+           IsMockFunctionTemplateArgumentDeducedForStdFunction) {
+  using Argument = std::function<TypeParam>;
+  MockFunction<Argument> foo;
+  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<TypeParam>(foo));
+}
+
+TYPED_TEST(
+    MockMethodMockFunctionSignatureTest,
+    IsMockFunctionCallMethodSignatureTheSameForRawSignatureAndStdFunction) {
+  using ForRawSignature = decltype(&MockFunction<TypeParam>::Call);
+  using ForStdFunction =
+      decltype(&MockFunction<std::function<TypeParam>>::Call);
+  EXPECT_TRUE((std::is_same<ForRawSignature, ForStdFunction>::value));
+}
+
+template <typename F>
+struct AlternateCallable {};
+
+TYPED_TEST(MockMethodMockFunctionSignatureTest,
+           IsMockFunctionTemplateArgumentDeducedForAlternateCallable) {
+  using Argument = AlternateCallable<TypeParam>;
+  MockFunction<Argument> foo;
+  EXPECT_TRUE(IsMockFunctionTemplateArgumentDeducedTo<TypeParam>(foo));
+}
+
+TYPED_TEST(MockMethodMockFunctionSignatureTest,
+           IsMockFunctionCallMethodSignatureTheSameForAlternateCallable) {
+  using ForRawSignature = decltype(&MockFunction<TypeParam>::Call);
+  using ForStdFunction =
+      decltype(&MockFunction<std::function<TypeParam>>::Call);
+  EXPECT_TRUE((std::is_same<ForRawSignature, ForStdFunction>::value));
+}
+
+struct MockMethodSizes0 {
+  MOCK_METHOD(void, func, ());
+};
+struct MockMethodSizes1 {
+  MOCK_METHOD(void, func, (int));
+};
+struct MockMethodSizes2 {
+  MOCK_METHOD(void, func, (int, int));
+};
+struct MockMethodSizes3 {
+  MOCK_METHOD(void, func, (int, int, int));
+};
+struct MockMethodSizes4 {
+  MOCK_METHOD(void, func, (int, int, int, int));
+};
+
+struct LegacyMockMethodSizes0 {
+  MOCK_METHOD0(func, void());
+};
+struct LegacyMockMethodSizes1 {
+  MOCK_METHOD1(func, void(int));
+};
+struct LegacyMockMethodSizes2 {
+  MOCK_METHOD2(func, void(int, int));
+};
+struct LegacyMockMethodSizes3 {
+  MOCK_METHOD3(func, void(int, int, int));
+};
+struct LegacyMockMethodSizes4 {
+  MOCK_METHOD4(func, void(int, int, int, int));
+};
+
+TEST(MockMethodMockFunctionTest, MockMethodSizeOverhead) {
+  EXPECT_EQ(sizeof(MockMethodSizes0), sizeof(MockMethodSizes1));
+  EXPECT_EQ(sizeof(MockMethodSizes0), sizeof(MockMethodSizes2));
+  EXPECT_EQ(sizeof(MockMethodSizes0), sizeof(MockMethodSizes3));
+  EXPECT_EQ(sizeof(MockMethodSizes0), sizeof(MockMethodSizes4));
+
+  EXPECT_EQ(sizeof(LegacyMockMethodSizes0), sizeof(LegacyMockMethodSizes1));
+  EXPECT_EQ(sizeof(LegacyMockMethodSizes0), sizeof(LegacyMockMethodSizes2));
+  EXPECT_EQ(sizeof(LegacyMockMethodSizes0), sizeof(LegacyMockMethodSizes3));
+  EXPECT_EQ(sizeof(LegacyMockMethodSizes0), sizeof(LegacyMockMethodSizes4));
+
+  EXPECT_EQ(sizeof(LegacyMockMethodSizes0), sizeof(MockMethodSizes0));
+}
+
+void hasTwoParams(int, int);
+void MaybeThrows();
+void DoesntThrow() noexcept;
+struct MockMethodNoexceptSpecifier {
+  MOCK_METHOD(void, func1, (), (noexcept));
+  MOCK_METHOD(void, func2, (), (noexcept(true)));
+  MOCK_METHOD(void, func3, (), (noexcept(false)));
+  MOCK_METHOD(void, func4, (), (noexcept(noexcept(MaybeThrows()))));
+  MOCK_METHOD(void, func5, (), (noexcept(noexcept(DoesntThrow()))));
+  MOCK_METHOD(void, func6, (), (noexcept(noexcept(DoesntThrow())), const));
+  MOCK_METHOD(void, func7, (), (const, noexcept(noexcept(DoesntThrow()))));
+  // Put commas in the noexcept expression
+  MOCK_METHOD(void, func8, (), (noexcept(noexcept(hasTwoParams(1, 2))), const));
+};
+
+TEST(MockMethodMockFunctionTest, NoexceptSpecifierPreserved) {
+  EXPECT_TRUE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func1()));
+  EXPECT_TRUE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func2()));
+  EXPECT_FALSE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func3()));
+  EXPECT_FALSE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func4()));
+  EXPECT_TRUE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func5()));
+  EXPECT_TRUE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func6()));
+  EXPECT_TRUE(noexcept(std::declval<MockMethodNoexceptSpecifier>().func7()));
+  EXPECT_EQ(noexcept(std::declval<MockMethodNoexceptSpecifier>().func8()),
+            noexcept(hasTwoParams(1, 2)));
+}
+
+}  // namespace gmock_function_mocker_test
+}  // namespace testing
+```
+
+### `gmock-internal-utils_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-internal-utils_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the internal utilities.
+
+#include "gmock/internal/gmock-internal-utils.h"
+
+#include <stdlib.h>
+
+#include <cstdint>
+#include <map>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
+
+#include "gmock/gmock.h"
+#include "gmock/internal/gmock-port.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+
+// Indicates that this translation unit is part of Google Test's
+// implementation.  It must come before gtest-internal-inl.h is
+// included, or there will be a compiler error.  This trick is to
+// prevent a user from accidentally including gtest-internal-inl.h in
+// their code.
+#define GTEST_IMPLEMENTATION_ 1
+#include "src/gtest-internal-inl.h"
+#undef GTEST_IMPLEMENTATION_
+
+#if GTEST_OS_CYGWIN
+#include <sys/types.h>  // For ssize_t. NOLINT
+#endif
+
+namespace proto2 {
+class Message;
+}  // namespace proto2
+
+namespace testing {
+namespace internal {
+
+namespace {
+
+TEST(JoinAsKeyValueTupleTest, JoinsEmptyTuple) {
+  EXPECT_EQ("", JoinAsKeyValueTuple({}, Strings()));
+}
+
+TEST(JoinAsKeyValueTupleTest, JoinsOneTuple) {
+  EXPECT_EQ("(a: 1)", JoinAsKeyValueTuple({"a"}, {"1"}));
+}
+
+TEST(JoinAsKeyValueTupleTest, JoinsTwoTuple) {
+  EXPECT_EQ("(a: 1, b: 2)", JoinAsKeyValueTuple({"a", "b"}, {"1", "2"}));
+}
+
+TEST(JoinAsKeyValueTupleTest, JoinsTenTuple) {
+  EXPECT_EQ(
+      "(a: 1, b: 2, c: 3, d: 4, e: 5, f: 6, g: 7, h: 8, i: 9, j: 10)",
+      JoinAsKeyValueTuple({"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"},
+                          {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
+}
+
+TEST(ConvertIdentifierNameToWordsTest, WorksWhenNameContainsNoWord) {
+  EXPECT_EQ("", ConvertIdentifierNameToWords(""));
+  EXPECT_EQ("", ConvertIdentifierNameToWords("_"));
+  EXPECT_EQ("", ConvertIdentifierNameToWords("__"));
+}
+
+TEST(ConvertIdentifierNameToWordsTest, WorksWhenNameContainsDigits) {
+  EXPECT_EQ("1", ConvertIdentifierNameToWords("_1"));
+  EXPECT_EQ("2", ConvertIdentifierNameToWords("2_"));
+  EXPECT_EQ("34", ConvertIdentifierNameToWords("_34_"));
+  EXPECT_EQ("34 56", ConvertIdentifierNameToWords("_34_56"));
+}
+
+TEST(ConvertIdentifierNameToWordsTest, WorksWhenNameContainsCamelCaseWords) {
+  EXPECT_EQ("a big word", ConvertIdentifierNameToWords("ABigWord"));
+  EXPECT_EQ("foo bar", ConvertIdentifierNameToWords("FooBar"));
+  EXPECT_EQ("foo", ConvertIdentifierNameToWords("Foo_"));
+  EXPECT_EQ("foo bar", ConvertIdentifierNameToWords("_Foo_Bar_"));
+  EXPECT_EQ("foo and bar", ConvertIdentifierNameToWords("_Foo__And_Bar"));
+}
+
+TEST(ConvertIdentifierNameToWordsTest, WorksWhenNameContains_SeparatedWords) {
+  EXPECT_EQ("foo bar", ConvertIdentifierNameToWords("foo_bar"));
+  EXPECT_EQ("foo", ConvertIdentifierNameToWords("_foo_"));
+  EXPECT_EQ("foo bar", ConvertIdentifierNameToWords("_foo_bar_"));
+  EXPECT_EQ("foo and bar", ConvertIdentifierNameToWords("_foo__and_bar"));
+}
+
+TEST(ConvertIdentifierNameToWordsTest, WorksWhenNameIsMixture) {
+  EXPECT_EQ("foo bar 123", ConvertIdentifierNameToWords("Foo_bar123"));
+  EXPECT_EQ("chapter 11 section 1",
+            ConvertIdentifierNameToWords("_Chapter11Section_1_"));
+}
+
+TEST(GetRawPointerTest, WorksForSmartPointers) {
+  const char* const raw_p1 = new const char('a');  // NOLINT
+  const std::unique_ptr<const char> p1(raw_p1);
+  EXPECT_EQ(raw_p1, GetRawPointer(p1));
+  double* const raw_p2 = new double(2.5);  // NOLINT
+  const std::shared_ptr<double> p2(raw_p2);
+  EXPECT_EQ(raw_p2, GetRawPointer(p2));
+}
+
+TEST(GetRawPointerTest, WorksForRawPointers) {
+  int* p = nullptr;
+  EXPECT_TRUE(nullptr == GetRawPointer(p));
+  int n = 1;
+  EXPECT_EQ(&n, GetRawPointer(&n));
+}
+
+TEST(GetRawPointerTest, WorksForStdReferenceWrapper) {
+  int n = 1;
+  EXPECT_EQ(&n, GetRawPointer(std::ref(n)));
+  EXPECT_EQ(&n, GetRawPointer(std::cref(n)));
+}
+
+// Tests KindOf<T>.
+
+class Base {};
+class Derived : public Base {};
+
+TEST(KindOfTest, Bool) {
+  EXPECT_EQ(kBool, GMOCK_KIND_OF_(bool));  // NOLINT
+}
+
+TEST(KindOfTest, Integer) {
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(char));                // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(signed char));         // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(unsigned char));       // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(short));               // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(unsigned short));      // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(int));                 // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(unsigned int));        // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(long));                // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(unsigned long));       // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(long long));           // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(unsigned long long));  // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(wchar_t));             // NOLINT
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(size_t));              // NOLINT
+#if GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_CYGWIN
+  // ssize_t is not defined on Windows and possibly some other OSes.
+  EXPECT_EQ(kInteger, GMOCK_KIND_OF_(ssize_t));  // NOLINT
+#endif
+}
+
+TEST(KindOfTest, FloatingPoint) {
+  EXPECT_EQ(kFloatingPoint, GMOCK_KIND_OF_(float));        // NOLINT
+  EXPECT_EQ(kFloatingPoint, GMOCK_KIND_OF_(double));       // NOLINT
+  EXPECT_EQ(kFloatingPoint, GMOCK_KIND_OF_(long double));  // NOLINT
+}
+
+TEST(KindOfTest, Other) {
+  EXPECT_EQ(kOther, GMOCK_KIND_OF_(void*));   // NOLINT
+  EXPECT_EQ(kOther, GMOCK_KIND_OF_(char**));  // NOLINT
+  EXPECT_EQ(kOther, GMOCK_KIND_OF_(Base));    // NOLINT
+}
+
+// Tests LosslessArithmeticConvertible<T, U>.
+
+TEST(LosslessArithmeticConvertibleTest, BoolToBool) {
+  EXPECT_TRUE((LosslessArithmeticConvertible<bool, bool>::value));
+}
+
+TEST(LosslessArithmeticConvertibleTest, BoolToInteger) {
+  EXPECT_TRUE((LosslessArithmeticConvertible<bool, char>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<bool, int>::value));
+  EXPECT_TRUE(
+      (LosslessArithmeticConvertible<bool, unsigned long>::value));  // NOLINT
+}
+
+TEST(LosslessArithmeticConvertibleTest, BoolToFloatingPoint) {
+  EXPECT_TRUE((LosslessArithmeticConvertible<bool, float>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<bool, double>::value));
+}
+
+TEST(LosslessArithmeticConvertibleTest, IntegerToBool) {
+  EXPECT_FALSE((LosslessArithmeticConvertible<unsigned char, bool>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<int, bool>::value));
+}
+
+TEST(LosslessArithmeticConvertibleTest, IntegerToInteger) {
+  // Unsigned => larger signed is fine.
+  EXPECT_TRUE((LosslessArithmeticConvertible<unsigned char, int>::value));
+
+  // Unsigned => larger unsigned is fine.
+  EXPECT_TRUE((LosslessArithmeticConvertible<unsigned short,
+                                             uint64_t>::value));  // NOLINT
+
+  // Signed => unsigned is not fine.
+  EXPECT_FALSE(
+      (LosslessArithmeticConvertible<short, uint64_t>::value));  // NOLINT
+  EXPECT_FALSE((LosslessArithmeticConvertible<signed char,
+                                              unsigned int>::value));  // NOLINT
+
+  // Same size and same signedness: fine too.
+  EXPECT_TRUE(
+      (LosslessArithmeticConvertible<unsigned char, unsigned char>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<int, int>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<wchar_t, wchar_t>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<unsigned long,
+                                             unsigned long>::value));  // NOLINT
+
+  // Same size, different signedness: not fine.
+  EXPECT_FALSE(
+      (LosslessArithmeticConvertible<unsigned char, signed char>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<int, unsigned int>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<uint64_t, int64_t>::value));
+
+  // Larger size => smaller size is not fine.
+  EXPECT_FALSE((LosslessArithmeticConvertible<long, char>::value));  // NOLINT
+  EXPECT_FALSE((LosslessArithmeticConvertible<int, signed char>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<int64_t, unsigned int>::value));
+}
+
+TEST(LosslessArithmeticConvertibleTest, IntegerToFloatingPoint) {
+  // Integers cannot be losslessly converted to floating-points, as
+  // the format of the latter is implementation-defined.
+  EXPECT_FALSE((LosslessArithmeticConvertible<char, float>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<int, double>::value));
+  EXPECT_FALSE(
+      (LosslessArithmeticConvertible<short, long double>::value));  // NOLINT
+}
+
+TEST(LosslessArithmeticConvertibleTest, FloatingPointToBool) {
+  EXPECT_FALSE((LosslessArithmeticConvertible<float, bool>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<double, bool>::value));
+}
+
+TEST(LosslessArithmeticConvertibleTest, FloatingPointToInteger) {
+  EXPECT_FALSE((LosslessArithmeticConvertible<float, long>::value));  // NOLINT
+  EXPECT_FALSE((LosslessArithmeticConvertible<double, int64_t>::value));
+  EXPECT_FALSE((LosslessArithmeticConvertible<long double, int>::value));
+}
+
+TEST(LosslessArithmeticConvertibleTest, FloatingPointToFloatingPoint) {
+  // Smaller size => larger size is fine.
+  EXPECT_TRUE((LosslessArithmeticConvertible<float, double>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<float, long double>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<double, long double>::value));
+
+  // Same size: fine.
+  EXPECT_TRUE((LosslessArithmeticConvertible<float, float>::value));
+  EXPECT_TRUE((LosslessArithmeticConvertible<double, double>::value));
+
+  // Larger size => smaller size is not fine.
+  EXPECT_FALSE((LosslessArithmeticConvertible<double, float>::value));
+  GTEST_INTENTIONAL_CONST_COND_PUSH_()
+  if (sizeof(double) == sizeof(long double)) {  // NOLINT
+    GTEST_INTENTIONAL_CONST_COND_POP_()
+    // In some implementations (e.g. MSVC), double and long double
+    // have the same size.
+    EXPECT_TRUE((LosslessArithmeticConvertible<long double, double>::value));
+  } else {
+    EXPECT_FALSE((LosslessArithmeticConvertible<long double, double>::value));
+  }
+}
+
+// Tests the TupleMatches() template function.
+
+TEST(TupleMatchesTest, WorksForSize0) {
+  std::tuple<> matchers;
+  std::tuple<> values;
+
+  EXPECT_TRUE(TupleMatches(matchers, values));
+}
+
+TEST(TupleMatchesTest, WorksForSize1) {
+  std::tuple<Matcher<int>> matchers(Eq(1));
+  std::tuple<int> values1(1), values2(2);
+
+  EXPECT_TRUE(TupleMatches(matchers, values1));
+  EXPECT_FALSE(TupleMatches(matchers, values2));
+}
+
+TEST(TupleMatchesTest, WorksForSize2) {
+  std::tuple<Matcher<int>, Matcher<char>> matchers(Eq(1), Eq('a'));
+  std::tuple<int, char> values1(1, 'a'), values2(1, 'b'), values3(2, 'a'),
+      values4(2, 'b');
+
+  EXPECT_TRUE(TupleMatches(matchers, values1));
+  EXPECT_FALSE(TupleMatches(matchers, values2));
+  EXPECT_FALSE(TupleMatches(matchers, values3));
+  EXPECT_FALSE(TupleMatches(matchers, values4));
+}
+
+TEST(TupleMatchesTest, WorksForSize5) {
+  std::tuple<Matcher<int>, Matcher<char>, Matcher<bool>,
+             Matcher<long>,  // NOLINT
+             Matcher<std::string>>
+      matchers(Eq(1), Eq('a'), Eq(true), Eq(2L), Eq("hi"));
+  std::tuple<int, char, bool, long, std::string>  // NOLINT
+      values1(1, 'a', true, 2L, "hi"), values2(1, 'a', true, 2L, "hello"),
+      values3(2, 'a', true, 2L, "hi");
+
+  EXPECT_TRUE(TupleMatches(matchers, values1));
+  EXPECT_FALSE(TupleMatches(matchers, values2));
+  EXPECT_FALSE(TupleMatches(matchers, values3));
+}
+
+// Tests that Assert(true, ...) succeeds.
+TEST(AssertTest, SucceedsOnTrue) {
+  Assert(true, __FILE__, __LINE__, "This should succeed.");
+  Assert(true, __FILE__, __LINE__);  // This should succeed too.
+}
+
+// Tests that Assert(false, ...) generates a fatal failure.
+TEST(AssertTest, FailsFatallyOnFalse) {
+  EXPECT_DEATH_IF_SUPPORTED(
+      { Assert(false, __FILE__, __LINE__, "This should fail."); }, "");
+
+  EXPECT_DEATH_IF_SUPPORTED({ Assert(false, __FILE__, __LINE__); }, "");
+}
+
+// Tests that Expect(true, ...) succeeds.
+TEST(ExpectTest, SucceedsOnTrue) {
+  Expect(true, __FILE__, __LINE__, "This should succeed.");
+  Expect(true, __FILE__, __LINE__);  // This should succeed too.
+}
+
+// Tests that Expect(false, ...) generates a non-fatal failure.
+TEST(ExpectTest, FailsNonfatallyOnFalse) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        Expect(false, __FILE__, __LINE__, "This should fail.");
+      },
+      "This should fail");
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        Expect(false, __FILE__, __LINE__);
+      },
+      "Expectation failed");
+}
+
+// Tests LogIsVisible().
+
+class LogIsVisibleTest : public ::testing::Test {
+ protected:
+  void SetUp() override { original_verbose_ = GMOCK_FLAG_GET(verbose); }
+
+  void TearDown() override { GMOCK_FLAG_SET(verbose, original_verbose_); }
+
+  std::string original_verbose_;
+};
+
+TEST_F(LogIsVisibleTest, AlwaysReturnsTrueIfVerbosityIsInfo) {
+  GMOCK_FLAG_SET(verbose, kInfoVerbosity);
+  EXPECT_TRUE(LogIsVisible(kInfo));
+  EXPECT_TRUE(LogIsVisible(kWarning));
+}
+
+TEST_F(LogIsVisibleTest, AlwaysReturnsFalseIfVerbosityIsError) {
+  GMOCK_FLAG_SET(verbose, kErrorVerbosity);
+  EXPECT_FALSE(LogIsVisible(kInfo));
+  EXPECT_FALSE(LogIsVisible(kWarning));
+}
+
+TEST_F(LogIsVisibleTest, WorksWhenVerbosityIsWarning) {
+  GMOCK_FLAG_SET(verbose, kWarningVerbosity);
+  EXPECT_FALSE(LogIsVisible(kInfo));
+  EXPECT_TRUE(LogIsVisible(kWarning));
+}
+
+#if GTEST_HAS_STREAM_REDIRECTION
+
+// Tests the Log() function.
+
+// Verifies that Log() behaves correctly for the given verbosity level
+// and log severity.
+void TestLogWithSeverity(const std::string& verbosity, LogSeverity severity,
+                         bool should_print) {
+  const std::string old_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, verbosity);
+  CaptureStdout();
+  Log(severity, "Test log.\n", 0);
+  if (should_print) {
+    EXPECT_THAT(
+        GetCapturedStdout().c_str(),
+        ContainsRegex(severity == kWarning
+                          ? "^\nGMOCK WARNING:\nTest log\\.\nStack trace:\n"
+                          : "^\nTest log\\.\nStack trace:\n"));
+  } else {
+    EXPECT_STREQ("", GetCapturedStdout().c_str());
+  }
+  GMOCK_FLAG_SET(verbose, old_flag);
+}
+
+// Tests that when the stack_frames_to_skip parameter is negative,
+// Log() doesn't include the stack trace in the output.
+TEST(LogTest, NoStackTraceWhenStackFramesToSkipIsNegative) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, kInfoVerbosity);
+  CaptureStdout();
+  Log(kInfo, "Test log.\n", -1);
+  EXPECT_STREQ("\nTest log.\n", GetCapturedStdout().c_str());
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+struct MockStackTraceGetter : testing::internal::OsStackTraceGetterInterface {
+  std::string CurrentStackTrace(int max_depth, int skip_count) override {
+    return (testing::Message() << max_depth << "::" << skip_count << "\n")
+        .GetString();
+  }
+  void UponLeavingGTest() override {}
+};
+
+// Tests that in opt mode, a positive stack_frames_to_skip argument is
+// treated as 0.
+TEST(LogTest, NoSkippingStackFrameInOptMode) {
+  MockStackTraceGetter* mock_os_stack_trace_getter = new MockStackTraceGetter;
+  GetUnitTestImpl()->set_os_stack_trace_getter(mock_os_stack_trace_getter);
+
+  CaptureStdout();
+  Log(kWarning, "Test log.\n", 100);
+  const std::string log = GetCapturedStdout();
+
+  std::string expected_trace =
+      (testing::Message() << GTEST_FLAG_GET(stack_trace_depth) << "::")
+          .GetString();
+  std::string expected_message =
+      "\nGMOCK WARNING:\n"
+      "Test log.\n"
+      "Stack trace:\n" +
+      expected_trace;
+  EXPECT_THAT(log, HasSubstr(expected_message));
+  int skip_count = atoi(log.substr(expected_message.size()).c_str());
+
+#if defined(NDEBUG)
+  // In opt mode, no stack frame should be skipped.
+  const int expected_skip_count = 0;
+#else
+  // In dbg mode, the stack frames should be skipped.
+  const int expected_skip_count = 100;
+#endif
+
+  // Note that each inner implementation layer will +1 the number to remove
+  // itself from the trace. This means that the value is a little higher than
+  // expected, but close enough.
+  EXPECT_THAT(skip_count,
+              AllOf(Ge(expected_skip_count), Le(expected_skip_count + 10)));
+
+  // Restores the default OS stack trace getter.
+  GetUnitTestImpl()->set_os_stack_trace_getter(nullptr);
+}
+
+// Tests that all logs are printed when the value of the
+// --gmock_verbose flag is "info".
+TEST(LogTest, AllLogsArePrintedWhenVerbosityIsInfo) {
+  TestLogWithSeverity(kInfoVerbosity, kInfo, true);
+  TestLogWithSeverity(kInfoVerbosity, kWarning, true);
+}
+
+// Tests that only warnings are printed when the value of the
+// --gmock_verbose flag is "warning".
+TEST(LogTest, OnlyWarningsArePrintedWhenVerbosityIsWarning) {
+  TestLogWithSeverity(kWarningVerbosity, kInfo, false);
+  TestLogWithSeverity(kWarningVerbosity, kWarning, true);
+}
+
+// Tests that no logs are printed when the value of the
+// --gmock_verbose flag is "error".
+TEST(LogTest, NoLogsArePrintedWhenVerbosityIsError) {
+  TestLogWithSeverity(kErrorVerbosity, kInfo, false);
+  TestLogWithSeverity(kErrorVerbosity, kWarning, false);
+}
+
+// Tests that only warnings are printed when the value of the
+// --gmock_verbose flag is invalid.
+TEST(LogTest, OnlyWarningsArePrintedWhenVerbosityIsInvalid) {
+  TestLogWithSeverity("invalid", kInfo, false);
+  TestLogWithSeverity("invalid", kWarning, true);
+}
+
+// Verifies that Log() behaves correctly for the given verbosity level
+// and log severity.
+std::string GrabOutput(void (*logger)(), const char* verbosity) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, verbosity);
+  CaptureStdout();
+  logger();
+  GMOCK_FLAG_SET(verbose, saved_flag);
+  return GetCapturedStdout();
+}
+
+class DummyMock {
+ public:
+  MOCK_METHOD0(TestMethod, void());
+  MOCK_METHOD1(TestMethodArg, void(int dummy));
+};
+
+void ExpectCallLogger() {
+  DummyMock mock;
+  EXPECT_CALL(mock, TestMethod());
+  mock.TestMethod();
+}
+
+// Verifies that EXPECT_CALL logs if the --gmock_verbose flag is set to "info".
+TEST(ExpectCallTest, LogsWhenVerbosityIsInfo) {
+  EXPECT_THAT(std::string(GrabOutput(ExpectCallLogger, kInfoVerbosity)),
+              HasSubstr("EXPECT_CALL(mock, TestMethod())"));
+}
+
+// Verifies that EXPECT_CALL doesn't log
+// if the --gmock_verbose flag is set to "warning".
+TEST(ExpectCallTest, DoesNotLogWhenVerbosityIsWarning) {
+  EXPECT_STREQ("", GrabOutput(ExpectCallLogger, kWarningVerbosity).c_str());
+}
+
+// Verifies that EXPECT_CALL doesn't log
+// if the --gmock_verbose flag is set to "error".
+TEST(ExpectCallTest, DoesNotLogWhenVerbosityIsError) {
+  EXPECT_STREQ("", GrabOutput(ExpectCallLogger, kErrorVerbosity).c_str());
+}
+
+void OnCallLogger() {
+  DummyMock mock;
+  ON_CALL(mock, TestMethod());
+}
+
+// Verifies that ON_CALL logs if the --gmock_verbose flag is set to "info".
+TEST(OnCallTest, LogsWhenVerbosityIsInfo) {
+  EXPECT_THAT(std::string(GrabOutput(OnCallLogger, kInfoVerbosity)),
+              HasSubstr("ON_CALL(mock, TestMethod())"));
+}
+
+// Verifies that ON_CALL doesn't log
+// if the --gmock_verbose flag is set to "warning".
+TEST(OnCallTest, DoesNotLogWhenVerbosityIsWarning) {
+  EXPECT_STREQ("", GrabOutput(OnCallLogger, kWarningVerbosity).c_str());
+}
+
+// Verifies that ON_CALL doesn't log if
+// the --gmock_verbose flag is set to "error".
+TEST(OnCallTest, DoesNotLogWhenVerbosityIsError) {
+  EXPECT_STREQ("", GrabOutput(OnCallLogger, kErrorVerbosity).c_str());
+}
+
+void OnCallAnyArgumentLogger() {
+  DummyMock mock;
+  ON_CALL(mock, TestMethodArg(_));
+}
+
+// Verifies that ON_CALL prints provided _ argument.
+TEST(OnCallTest, LogsAnythingArgument) {
+  EXPECT_THAT(std::string(GrabOutput(OnCallAnyArgumentLogger, kInfoVerbosity)),
+              HasSubstr("ON_CALL(mock, TestMethodArg(_)"));
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
+
+// Tests StlContainerView.
+
+TEST(StlContainerViewTest, WorksForStlContainer) {
+  StaticAssertTypeEq<std::vector<int>,
+                     StlContainerView<std::vector<int>>::type>();
+  StaticAssertTypeEq<const std::vector<double>&,
+                     StlContainerView<std::vector<double>>::const_reference>();
+
+  typedef std::vector<char> Chars;
+  Chars v1;
+  const Chars& v2(StlContainerView<Chars>::ConstReference(v1));
+  EXPECT_EQ(&v1, &v2);
+
+  v1.push_back('a');
+  Chars v3 = StlContainerView<Chars>::Copy(v1);
+  EXPECT_THAT(v3, Eq(v3));
+}
+
+TEST(StlContainerViewTest, WorksForStaticNativeArray) {
+  StaticAssertTypeEq<NativeArray<int>, StlContainerView<int[3]>::type>();
+  StaticAssertTypeEq<NativeArray<double>,
+                     StlContainerView<const double[4]>::type>();
+  StaticAssertTypeEq<NativeArray<char[3]>,
+                     StlContainerView<const char[2][3]>::type>();
+
+  StaticAssertTypeEq<const NativeArray<int>,
+                     StlContainerView<int[2]>::const_reference>();
+
+  int a1[3] = {0, 1, 2};
+  NativeArray<int> a2 = StlContainerView<int[3]>::ConstReference(a1);
+  EXPECT_EQ(3U, a2.size());
+  EXPECT_EQ(a1, a2.begin());
+
+  const NativeArray<int> a3 = StlContainerView<int[3]>::Copy(a1);
+  ASSERT_EQ(3U, a3.size());
+  EXPECT_EQ(0, a3.begin()[0]);
+  EXPECT_EQ(1, a3.begin()[1]);
+  EXPECT_EQ(2, a3.begin()[2]);
+
+  // Makes sure a1 and a3 aren't aliases.
+  a1[0] = 3;
+  EXPECT_EQ(0, a3.begin()[0]);
+}
+
+TEST(StlContainerViewTest, WorksForDynamicNativeArray) {
+  StaticAssertTypeEq<NativeArray<int>,
+                     StlContainerView<std::tuple<const int*, size_t>>::type>();
+  StaticAssertTypeEq<
+      NativeArray<double>,
+      StlContainerView<std::tuple<std::shared_ptr<double>, int>>::type>();
+
+  StaticAssertTypeEq<
+      const NativeArray<int>,
+      StlContainerView<std::tuple<const int*, int>>::const_reference>();
+
+  int a1[3] = {0, 1, 2};
+  const int* const p1 = a1;
+  NativeArray<int> a2 =
+      StlContainerView<std::tuple<const int*, int>>::ConstReference(
+          std::make_tuple(p1, 3));
+  EXPECT_EQ(3U, a2.size());
+  EXPECT_EQ(a1, a2.begin());
+
+  const NativeArray<int> a3 = StlContainerView<std::tuple<int*, size_t>>::Copy(
+      std::make_tuple(static_cast<int*>(a1), 3));
+  ASSERT_EQ(3U, a3.size());
+  EXPECT_EQ(0, a3.begin()[0]);
+  EXPECT_EQ(1, a3.begin()[1]);
+  EXPECT_EQ(2, a3.begin()[2]);
+
+  // Makes sure a1 and a3 aren't aliases.
+  a1[0] = 3;
+  EXPECT_EQ(0, a3.begin()[0]);
+}
+
+// Tests the Function template struct.
+
+TEST(FunctionTest, Nullary) {
+  typedef Function<int()> F;  // NOLINT
+  EXPECT_EQ(0u, F::ArgumentCount);
+  EXPECT_TRUE((std::is_same<int, F::Result>::value));
+  EXPECT_TRUE((std::is_same<std::tuple<>, F::ArgumentTuple>::value));
+  EXPECT_TRUE((std::is_same<std::tuple<>, F::ArgumentMatcherTuple>::value));
+  EXPECT_TRUE((std::is_same<void(), F::MakeResultVoid>::value));
+  EXPECT_TRUE((std::is_same<IgnoredValue(), F::MakeResultIgnoredValue>::value));
+}
+
+TEST(FunctionTest, Unary) {
+  typedef Function<int(bool)> F;  // NOLINT
+  EXPECT_EQ(1u, F::ArgumentCount);
+  EXPECT_TRUE((std::is_same<int, F::Result>::value));
+  EXPECT_TRUE((std::is_same<bool, F::Arg<0>::type>::value));
+  EXPECT_TRUE((std::is_same<std::tuple<bool>, F::ArgumentTuple>::value));
+  EXPECT_TRUE((
+      std::is_same<std::tuple<Matcher<bool>>, F::ArgumentMatcherTuple>::value));
+  EXPECT_TRUE((std::is_same<void(bool), F::MakeResultVoid>::value));  // NOLINT
+  EXPECT_TRUE((std::is_same<IgnoredValue(bool),                       // NOLINT
+                            F::MakeResultIgnoredValue>::value));
+}
+
+TEST(FunctionTest, Binary) {
+  typedef Function<int(bool, const long&)> F;  // NOLINT
+  EXPECT_EQ(2u, F::ArgumentCount);
+  EXPECT_TRUE((std::is_same<int, F::Result>::value));
+  EXPECT_TRUE((std::is_same<bool, F::Arg<0>::type>::value));
+  EXPECT_TRUE((std::is_same<const long&, F::Arg<1>::type>::value));  // NOLINT
+  EXPECT_TRUE((std::is_same<std::tuple<bool, const long&>,           // NOLINT
+                            F::ArgumentTuple>::value));
+  EXPECT_TRUE(
+      (std::is_same<std::tuple<Matcher<bool>, Matcher<const long&>>,  // NOLINT
+                    F::ArgumentMatcherTuple>::value));
+  EXPECT_TRUE((std::is_same<void(bool, const long&),  // NOLINT
+                            F::MakeResultVoid>::value));
+  EXPECT_TRUE((std::is_same<IgnoredValue(bool, const long&),  // NOLINT
+                            F::MakeResultIgnoredValue>::value));
+}
+
+TEST(FunctionTest, LongArgumentList) {
+  typedef Function<char(bool, int, char*, int&, const long&)> F;  // NOLINT
+  EXPECT_EQ(5u, F::ArgumentCount);
+  EXPECT_TRUE((std::is_same<char, F::Result>::value));
+  EXPECT_TRUE((std::is_same<bool, F::Arg<0>::type>::value));
+  EXPECT_TRUE((std::is_same<int, F::Arg<1>::type>::value));
+  EXPECT_TRUE((std::is_same<char*, F::Arg<2>::type>::value));
+  EXPECT_TRUE((std::is_same<int&, F::Arg<3>::type>::value));
+  EXPECT_TRUE((std::is_same<const long&, F::Arg<4>::type>::value));  // NOLINT
+  EXPECT_TRUE(
+      (std::is_same<std::tuple<bool, int, char*, int&, const long&>,  // NOLINT
+                    F::ArgumentTuple>::value));
+  EXPECT_TRUE(
+      (std::is_same<
+          std::tuple<Matcher<bool>, Matcher<int>, Matcher<char*>, Matcher<int&>,
+                     Matcher<const long&>>,  // NOLINT
+          F::ArgumentMatcherTuple>::value));
+  EXPECT_TRUE(
+      (std::is_same<void(bool, int, char*, int&, const long&),  // NOLINT
+                    F::MakeResultVoid>::value));
+  EXPECT_TRUE((
+      std::is_same<IgnoredValue(bool, int, char*, int&, const long&),  // NOLINT
+                   F::MakeResultIgnoredValue>::value));
+}
+
+TEST(Base64Unescape, InvalidString) {
+  std::string unescaped;
+  EXPECT_FALSE(Base64Unescape("(invalid)", &unescaped));
+}
+
+TEST(Base64Unescape, ShortString) {
+  std::string unescaped;
+  EXPECT_TRUE(Base64Unescape("SGVsbG8gd29ybGQh", &unescaped));
+  EXPECT_EQ("Hello world!", unescaped);
+}
+
+TEST(Base64Unescape, ShortStringWithPadding) {
+  std::string unescaped;
+  EXPECT_TRUE(Base64Unescape("SGVsbG8gd29ybGQ=", &unescaped));
+  EXPECT_EQ("Hello world", unescaped);
+}
+
+TEST(Base64Unescape, ShortStringWithoutPadding) {
+  std::string unescaped;
+  EXPECT_TRUE(Base64Unescape("SGVsbG8gd29ybGQ", &unescaped));
+  EXPECT_EQ("Hello world", unescaped);
+}
+
+TEST(Base64Unescape, LongStringWithWhiteSpaces) {
+  std::string escaped =
+      R"(TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlz
+  IHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2Yg
+  dGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGlu
+  dWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo
+  ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=)";
+  std::string expected =
+      "Man is distinguished, not only by his reason, but by this singular "
+      "passion from other animals, which is a lust of the mind, that by a "
+      "perseverance of delight in the continued and indefatigable generation "
+      "of knowledge, exceeds the short vehemence of any carnal pleasure.";
+  std::string unescaped;
+  EXPECT_TRUE(Base64Unescape(escaped, &unescaped));
+  EXPECT_EQ(expected, unescaped);
+}
+
+}  // namespace
+}  // namespace internal
+}  // namespace testing
+```
+
+### `gmock-matchers-arithmetic_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-arithmetic_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests some commonly used argument matchers.
+
+// Silence warning C4244: 'initializing': conversion from 'int' to 'short',
+// possible loss of data and C4100, unreferenced local parameter
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4100)
+#endif
+
+#include "test/gmock-matchers_test.h"
+
+namespace testing {
+namespace gmock_matchers_test {
+namespace {
+
+typedef ::std::tuple<long, int> Tuple2;  // NOLINT
+
+// Tests that Eq() matches a 2-tuple where the first field == the
+// second field.
+TEST(Eq2Test, MatchesEqualArguments) {
+  Matcher<const Tuple2&> m = Eq();
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 5)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 6)));
+}
+
+// Tests that Eq() describes itself properly.
+TEST(Eq2Test, CanDescribeSelf) {
+  Matcher<const Tuple2&> m = Eq();
+  EXPECT_EQ("are an equal pair", Describe(m));
+}
+
+// Tests that Ge() matches a 2-tuple where the first field >= the
+// second field.
+TEST(Ge2Test, MatchesGreaterThanOrEqualArguments) {
+  Matcher<const Tuple2&> m = Ge();
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 4)));
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 5)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 6)));
+}
+
+// Tests that Ge() describes itself properly.
+TEST(Ge2Test, CanDescribeSelf) {
+  Matcher<const Tuple2&> m = Ge();
+  EXPECT_EQ("are a pair where the first >= the second", Describe(m));
+}
+
+// Tests that Gt() matches a 2-tuple where the first field > the
+// second field.
+TEST(Gt2Test, MatchesGreaterThanArguments) {
+  Matcher<const Tuple2&> m = Gt();
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 4)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 5)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 6)));
+}
+
+// Tests that Gt() describes itself properly.
+TEST(Gt2Test, CanDescribeSelf) {
+  Matcher<const Tuple2&> m = Gt();
+  EXPECT_EQ("are a pair where the first > the second", Describe(m));
+}
+
+// Tests that Le() matches a 2-tuple where the first field <= the
+// second field.
+TEST(Le2Test, MatchesLessThanOrEqualArguments) {
+  Matcher<const Tuple2&> m = Le();
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 6)));
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 5)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 4)));
+}
+
+// Tests that Le() describes itself properly.
+TEST(Le2Test, CanDescribeSelf) {
+  Matcher<const Tuple2&> m = Le();
+  EXPECT_EQ("are a pair where the first <= the second", Describe(m));
+}
+
+// Tests that Lt() matches a 2-tuple where the first field < the
+// second field.
+TEST(Lt2Test, MatchesLessThanArguments) {
+  Matcher<const Tuple2&> m = Lt();
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 6)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 5)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 4)));
+}
+
+// Tests that Lt() describes itself properly.
+TEST(Lt2Test, CanDescribeSelf) {
+  Matcher<const Tuple2&> m = Lt();
+  EXPECT_EQ("are a pair where the first < the second", Describe(m));
+}
+
+// Tests that Ne() matches a 2-tuple where the first field != the
+// second field.
+TEST(Ne2Test, MatchesUnequalArguments) {
+  Matcher<const Tuple2&> m = Ne();
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 6)));
+  EXPECT_TRUE(m.Matches(Tuple2(5L, 4)));
+  EXPECT_FALSE(m.Matches(Tuple2(5L, 5)));
+}
+
+// Tests that Ne() describes itself properly.
+TEST(Ne2Test, CanDescribeSelf) {
+  Matcher<const Tuple2&> m = Ne();
+  EXPECT_EQ("are an unequal pair", Describe(m));
+}
+
+TEST(PairMatchBaseTest, WorksWithMoveOnly) {
+  using Pointers = std::tuple<std::unique_ptr<int>, std::unique_ptr<int>>;
+  Matcher<Pointers> matcher = Eq();
+  Pointers pointers;
+  // Tested values don't matter; the point is that matcher does not copy the
+  // matched values.
+  EXPECT_TRUE(matcher.Matches(pointers));
+}
+
+// Tests that IsNan() matches a NaN, with float.
+TEST(IsNan, FloatMatchesNan) {
+  float quiet_nan = std::numeric_limits<float>::quiet_NaN();
+  float other_nan = std::nanf("1");
+  float real_value = 1.0f;
+
+  Matcher<float> m = IsNan();
+  EXPECT_TRUE(m.Matches(quiet_nan));
+  EXPECT_TRUE(m.Matches(other_nan));
+  EXPECT_FALSE(m.Matches(real_value));
+
+  Matcher<float&> m_ref = IsNan();
+  EXPECT_TRUE(m_ref.Matches(quiet_nan));
+  EXPECT_TRUE(m_ref.Matches(other_nan));
+  EXPECT_FALSE(m_ref.Matches(real_value));
+
+  Matcher<const float&> m_cref = IsNan();
+  EXPECT_TRUE(m_cref.Matches(quiet_nan));
+  EXPECT_TRUE(m_cref.Matches(other_nan));
+  EXPECT_FALSE(m_cref.Matches(real_value));
+}
+
+// Tests that IsNan() matches a NaN, with double.
+TEST(IsNan, DoubleMatchesNan) {
+  double quiet_nan = std::numeric_limits<double>::quiet_NaN();
+  double other_nan = std::nan("1");
+  double real_value = 1.0;
+
+  Matcher<double> m = IsNan();
+  EXPECT_TRUE(m.Matches(quiet_nan));
+  EXPECT_TRUE(m.Matches(other_nan));
+  EXPECT_FALSE(m.Matches(real_value));
+
+  Matcher<double&> m_ref = IsNan();
+  EXPECT_TRUE(m_ref.Matches(quiet_nan));
+  EXPECT_TRUE(m_ref.Matches(other_nan));
+  EXPECT_FALSE(m_ref.Matches(real_value));
+
+  Matcher<const double&> m_cref = IsNan();
+  EXPECT_TRUE(m_cref.Matches(quiet_nan));
+  EXPECT_TRUE(m_cref.Matches(other_nan));
+  EXPECT_FALSE(m_cref.Matches(real_value));
+}
+
+// Tests that IsNan() matches a NaN, with long double.
+TEST(IsNan, LongDoubleMatchesNan) {
+  long double quiet_nan = std::numeric_limits<long double>::quiet_NaN();
+  long double other_nan = std::nan("1");
+  long double real_value = 1.0;
+
+  Matcher<long double> m = IsNan();
+  EXPECT_TRUE(m.Matches(quiet_nan));
+  EXPECT_TRUE(m.Matches(other_nan));
+  EXPECT_FALSE(m.Matches(real_value));
+
+  Matcher<long double&> m_ref = IsNan();
+  EXPECT_TRUE(m_ref.Matches(quiet_nan));
+  EXPECT_TRUE(m_ref.Matches(other_nan));
+  EXPECT_FALSE(m_ref.Matches(real_value));
+
+  Matcher<const long double&> m_cref = IsNan();
+  EXPECT_TRUE(m_cref.Matches(quiet_nan));
+  EXPECT_TRUE(m_cref.Matches(other_nan));
+  EXPECT_FALSE(m_cref.Matches(real_value));
+}
+
+// Tests that IsNan() works with Not.
+TEST(IsNan, NotMatchesNan) {
+  Matcher<float> mf = Not(IsNan());
+  EXPECT_FALSE(mf.Matches(std::numeric_limits<float>::quiet_NaN()));
+  EXPECT_FALSE(mf.Matches(std::nanf("1")));
+  EXPECT_TRUE(mf.Matches(1.0));
+
+  Matcher<double> md = Not(IsNan());
+  EXPECT_FALSE(md.Matches(std::numeric_limits<double>::quiet_NaN()));
+  EXPECT_FALSE(md.Matches(std::nan("1")));
+  EXPECT_TRUE(md.Matches(1.0));
+
+  Matcher<long double> mld = Not(IsNan());
+  EXPECT_FALSE(mld.Matches(std::numeric_limits<long double>::quiet_NaN()));
+  EXPECT_FALSE(mld.Matches(std::nanl("1")));
+  EXPECT_TRUE(mld.Matches(1.0));
+}
+
+// Tests that IsNan() can describe itself.
+TEST(IsNan, CanDescribeSelf) {
+  Matcher<float> mf = IsNan();
+  EXPECT_EQ("is NaN", Describe(mf));
+
+  Matcher<double> md = IsNan();
+  EXPECT_EQ("is NaN", Describe(md));
+
+  Matcher<long double> mld = IsNan();
+  EXPECT_EQ("is NaN", Describe(mld));
+}
+
+// Tests that IsNan() can describe itself with Not.
+TEST(IsNan, CanDescribeSelfWithNot) {
+  Matcher<float> mf = Not(IsNan());
+  EXPECT_EQ("isn't NaN", Describe(mf));
+
+  Matcher<double> md = Not(IsNan());
+  EXPECT_EQ("isn't NaN", Describe(md));
+
+  Matcher<long double> mld = Not(IsNan());
+  EXPECT_EQ("isn't NaN", Describe(mld));
+}
+
+// Tests that FloatEq() matches a 2-tuple where
+// FloatEq(first field) matches the second field.
+TEST(FloatEq2Test, MatchesEqualArguments) {
+  typedef ::std::tuple<float, float> Tpl;
+  Matcher<const Tpl&> m = FloatEq();
+  EXPECT_TRUE(m.Matches(Tpl(1.0f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(0.3f, 0.1f + 0.1f + 0.1f)));
+  EXPECT_FALSE(m.Matches(Tpl(1.1f, 1.0f)));
+}
+
+// Tests that FloatEq() describes itself properly.
+TEST(FloatEq2Test, CanDescribeSelf) {
+  Matcher<const ::std::tuple<float, float>&> m = FloatEq();
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that NanSensitiveFloatEq() matches a 2-tuple where
+// NanSensitiveFloatEq(first field) matches the second field.
+TEST(NanSensitiveFloatEqTest, MatchesEqualArgumentsWithNaN) {
+  typedef ::std::tuple<float, float> Tpl;
+  Matcher<const Tpl&> m = NanSensitiveFloatEq();
+  EXPECT_TRUE(m.Matches(Tpl(1.0f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(std::numeric_limits<float>::quiet_NaN(),
+                            std::numeric_limits<float>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(1.1f, 1.0f)));
+  EXPECT_FALSE(m.Matches(Tpl(1.0f, std::numeric_limits<float>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(std::numeric_limits<float>::quiet_NaN(), 1.0f)));
+}
+
+// Tests that NanSensitiveFloatEq() describes itself properly.
+TEST(NanSensitiveFloatEqTest, CanDescribeSelfWithNaNs) {
+  Matcher<const ::std::tuple<float, float>&> m = NanSensitiveFloatEq();
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that DoubleEq() matches a 2-tuple where
+// DoubleEq(first field) matches the second field.
+TEST(DoubleEq2Test, MatchesEqualArguments) {
+  typedef ::std::tuple<double, double> Tpl;
+  Matcher<const Tpl&> m = DoubleEq();
+  EXPECT_TRUE(m.Matches(Tpl(1.0, 1.0)));
+  EXPECT_TRUE(m.Matches(Tpl(0.3, 0.1 + 0.1 + 0.1)));
+  EXPECT_FALSE(m.Matches(Tpl(1.1, 1.0)));
+}
+
+// Tests that DoubleEq() describes itself properly.
+TEST(DoubleEq2Test, CanDescribeSelf) {
+  Matcher<const ::std::tuple<double, double>&> m = DoubleEq();
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that NanSensitiveDoubleEq() matches a 2-tuple where
+// NanSensitiveDoubleEq(first field) matches the second field.
+TEST(NanSensitiveDoubleEqTest, MatchesEqualArgumentsWithNaN) {
+  typedef ::std::tuple<double, double> Tpl;
+  Matcher<const Tpl&> m = NanSensitiveDoubleEq();
+  EXPECT_TRUE(m.Matches(Tpl(1.0f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(std::numeric_limits<double>::quiet_NaN(),
+                            std::numeric_limits<double>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(1.1f, 1.0f)));
+  EXPECT_FALSE(m.Matches(Tpl(1.0f, std::numeric_limits<double>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(std::numeric_limits<double>::quiet_NaN(), 1.0f)));
+}
+
+// Tests that DoubleEq() describes itself properly.
+TEST(NanSensitiveDoubleEqTest, CanDescribeSelfWithNaNs) {
+  Matcher<const ::std::tuple<double, double>&> m = NanSensitiveDoubleEq();
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that FloatEq() matches a 2-tuple where
+// FloatNear(first field, max_abs_error) matches the second field.
+TEST(FloatNear2Test, MatchesEqualArguments) {
+  typedef ::std::tuple<float, float> Tpl;
+  Matcher<const Tpl&> m = FloatNear(0.5f);
+  EXPECT_TRUE(m.Matches(Tpl(1.0f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(1.3f, 1.0f)));
+  EXPECT_FALSE(m.Matches(Tpl(1.8f, 1.0f)));
+}
+
+// Tests that FloatNear() describes itself properly.
+TEST(FloatNear2Test, CanDescribeSelf) {
+  Matcher<const ::std::tuple<float, float>&> m = FloatNear(0.5f);
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that NanSensitiveFloatNear() matches a 2-tuple where
+// NanSensitiveFloatNear(first field) matches the second field.
+TEST(NanSensitiveFloatNearTest, MatchesNearbyArgumentsWithNaN) {
+  typedef ::std::tuple<float, float> Tpl;
+  Matcher<const Tpl&> m = NanSensitiveFloatNear(0.5f);
+  EXPECT_TRUE(m.Matches(Tpl(1.0f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(1.1f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(std::numeric_limits<float>::quiet_NaN(),
+                            std::numeric_limits<float>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(1.6f, 1.0f)));
+  EXPECT_FALSE(m.Matches(Tpl(1.0f, std::numeric_limits<float>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(std::numeric_limits<float>::quiet_NaN(), 1.0f)));
+}
+
+// Tests that NanSensitiveFloatNear() describes itself properly.
+TEST(NanSensitiveFloatNearTest, CanDescribeSelfWithNaNs) {
+  Matcher<const ::std::tuple<float, float>&> m = NanSensitiveFloatNear(0.5f);
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that FloatEq() matches a 2-tuple where
+// DoubleNear(first field, max_abs_error) matches the second field.
+TEST(DoubleNear2Test, MatchesEqualArguments) {
+  typedef ::std::tuple<double, double> Tpl;
+  Matcher<const Tpl&> m = DoubleNear(0.5);
+  EXPECT_TRUE(m.Matches(Tpl(1.0, 1.0)));
+  EXPECT_TRUE(m.Matches(Tpl(1.3, 1.0)));
+  EXPECT_FALSE(m.Matches(Tpl(1.8, 1.0)));
+}
+
+// Tests that DoubleNear() describes itself properly.
+TEST(DoubleNear2Test, CanDescribeSelf) {
+  Matcher<const ::std::tuple<double, double>&> m = DoubleNear(0.5);
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that NanSensitiveDoubleNear() matches a 2-tuple where
+// NanSensitiveDoubleNear(first field) matches the second field.
+TEST(NanSensitiveDoubleNearTest, MatchesNearbyArgumentsWithNaN) {
+  typedef ::std::tuple<double, double> Tpl;
+  Matcher<const Tpl&> m = NanSensitiveDoubleNear(0.5f);
+  EXPECT_TRUE(m.Matches(Tpl(1.0f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(1.1f, 1.0f)));
+  EXPECT_TRUE(m.Matches(Tpl(std::numeric_limits<double>::quiet_NaN(),
+                            std::numeric_limits<double>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(1.6f, 1.0f)));
+  EXPECT_FALSE(m.Matches(Tpl(1.0f, std::numeric_limits<double>::quiet_NaN())));
+  EXPECT_FALSE(m.Matches(Tpl(std::numeric_limits<double>::quiet_NaN(), 1.0f)));
+}
+
+// Tests that NanSensitiveDoubleNear() describes itself properly.
+TEST(NanSensitiveDoubleNearTest, CanDescribeSelfWithNaNs) {
+  Matcher<const ::std::tuple<double, double>&> m = NanSensitiveDoubleNear(0.5f);
+  EXPECT_EQ("are an almost-equal pair", Describe(m));
+}
+
+// Tests that Not(m) matches any value that doesn't match m.
+TEST(NotTest, NegatesMatcher) {
+  Matcher<int> m;
+  m = Not(Eq(2));
+  EXPECT_TRUE(m.Matches(3));
+  EXPECT_FALSE(m.Matches(2));
+}
+
+// Tests that Not(m) describes itself properly.
+TEST(NotTest, CanDescribeSelf) {
+  Matcher<int> m = Not(Eq(5));
+  EXPECT_EQ("isn't equal to 5", Describe(m));
+}
+
+// Tests that monomorphic matchers are safely cast by the Not matcher.
+TEST(NotTest, NotMatcherSafelyCastsMonomorphicMatchers) {
+  // greater_than_5 is a monomorphic matcher.
+  Matcher<int> greater_than_5 = Gt(5);
+
+  Matcher<const int&> m = Not(greater_than_5);
+  Matcher<int&> m2 = Not(greater_than_5);
+  Matcher<int&> m3 = Not(m);
+}
+
+// Helper to allow easy testing of AllOf matchers with num parameters.
+void AllOfMatches(int num, const Matcher<int>& m) {
+  SCOPED_TRACE(Describe(m));
+  EXPECT_TRUE(m.Matches(0));
+  for (int i = 1; i <= num; ++i) {
+    EXPECT_FALSE(m.Matches(i));
+  }
+  EXPECT_TRUE(m.Matches(num + 1));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(AllOfTest);
+
+// Tests that AllOf(m1, ..., mn) matches any value that matches all of
+// the given matchers.
+TEST(AllOfTest, MatchesWhenAllMatch) {
+  Matcher<int> m;
+  m = AllOf(Le(2), Ge(1));
+  EXPECT_TRUE(m.Matches(1));
+  EXPECT_TRUE(m.Matches(2));
+  EXPECT_FALSE(m.Matches(0));
+  EXPECT_FALSE(m.Matches(3));
+
+  m = AllOf(Gt(0), Ne(1), Ne(2));
+  EXPECT_TRUE(m.Matches(3));
+  EXPECT_FALSE(m.Matches(2));
+  EXPECT_FALSE(m.Matches(1));
+  EXPECT_FALSE(m.Matches(0));
+
+  m = AllOf(Gt(0), Ne(1), Ne(2), Ne(3));
+  EXPECT_TRUE(m.Matches(4));
+  EXPECT_FALSE(m.Matches(3));
+  EXPECT_FALSE(m.Matches(2));
+  EXPECT_FALSE(m.Matches(1));
+  EXPECT_FALSE(m.Matches(0));
+
+  m = AllOf(Ge(0), Lt(10), Ne(3), Ne(5), Ne(7));
+  EXPECT_TRUE(m.Matches(0));
+  EXPECT_TRUE(m.Matches(1));
+  EXPECT_FALSE(m.Matches(3));
+
+  // The following tests for varying number of sub-matchers. Due to the way
+  // the sub-matchers are handled it is enough to test every sub-matcher once
+  // with sub-matchers using the same matcher type. Varying matcher types are
+  // checked for above.
+  AllOfMatches(2, AllOf(Ne(1), Ne(2)));
+  AllOfMatches(3, AllOf(Ne(1), Ne(2), Ne(3)));
+  AllOfMatches(4, AllOf(Ne(1), Ne(2), Ne(3), Ne(4)));
+  AllOfMatches(5, AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5)));
+  AllOfMatches(6, AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6)));
+  AllOfMatches(7, AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6), Ne(7)));
+  AllOfMatches(8,
+               AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6), Ne(7), Ne(8)));
+  AllOfMatches(
+      9, AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6), Ne(7), Ne(8), Ne(9)));
+  AllOfMatches(10, AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6), Ne(7), Ne(8),
+                         Ne(9), Ne(10)));
+  AllOfMatches(
+      50, AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6), Ne(7), Ne(8), Ne(9),
+                Ne(10), Ne(11), Ne(12), Ne(13), Ne(14), Ne(15), Ne(16), Ne(17),
+                Ne(18), Ne(19), Ne(20), Ne(21), Ne(22), Ne(23), Ne(24), Ne(25),
+                Ne(26), Ne(27), Ne(28), Ne(29), Ne(30), Ne(31), Ne(32), Ne(33),
+                Ne(34), Ne(35), Ne(36), Ne(37), Ne(38), Ne(39), Ne(40), Ne(41),
+                Ne(42), Ne(43), Ne(44), Ne(45), Ne(46), Ne(47), Ne(48), Ne(49),
+                Ne(50)));
+}
+
+// Tests that AllOf(m1, ..., mn) describes itself properly.
+TEST(AllOfTest, CanDescribeSelf) {
+  Matcher<int> m;
+  m = AllOf(Le(2), Ge(1));
+  EXPECT_EQ("(is <= 2) and (is >= 1)", Describe(m));
+
+  m = AllOf(Gt(0), Ne(1), Ne(2));
+  std::string expected_descr1 =
+      "(is > 0) and (isn't equal to 1) and (isn't equal to 2)";
+  EXPECT_EQ(expected_descr1, Describe(m));
+
+  m = AllOf(Gt(0), Ne(1), Ne(2), Ne(3));
+  std::string expected_descr2 =
+      "(is > 0) and (isn't equal to 1) and (isn't equal to 2) and (isn't equal "
+      "to 3)";
+  EXPECT_EQ(expected_descr2, Describe(m));
+
+  m = AllOf(Ge(0), Lt(10), Ne(3), Ne(5), Ne(7));
+  std::string expected_descr3 =
+      "(is >= 0) and (is < 10) and (isn't equal to 3) and (isn't equal to 5) "
+      "and (isn't equal to 7)";
+  EXPECT_EQ(expected_descr3, Describe(m));
+}
+
+// Tests that AllOf(m1, ..., mn) describes its negation properly.
+TEST(AllOfTest, CanDescribeNegation) {
+  Matcher<int> m;
+  m = AllOf(Le(2), Ge(1));
+  std::string expected_descr4 = "(isn't <= 2) or (isn't >= 1)";
+  EXPECT_EQ(expected_descr4, DescribeNegation(m));
+
+  m = AllOf(Gt(0), Ne(1), Ne(2));
+  std::string expected_descr5 =
+      "(isn't > 0) or (is equal to 1) or (is equal to 2)";
+  EXPECT_EQ(expected_descr5, DescribeNegation(m));
+
+  m = AllOf(Gt(0), Ne(1), Ne(2), Ne(3));
+  std::string expected_descr6 =
+      "(isn't > 0) or (is equal to 1) or (is equal to 2) or (is equal to 3)";
+  EXPECT_EQ(expected_descr6, DescribeNegation(m));
+
+  m = AllOf(Ge(0), Lt(10), Ne(3), Ne(5), Ne(7));
+  std::string expected_desr7 =
+      "(isn't >= 0) or (isn't < 10) or (is equal to 3) or (is equal to 5) or "
+      "(is equal to 7)";
+  EXPECT_EQ(expected_desr7, DescribeNegation(m));
+
+  m = AllOf(Ne(1), Ne(2), Ne(3), Ne(4), Ne(5), Ne(6), Ne(7), Ne(8), Ne(9),
+            Ne(10), Ne(11));
+  AllOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+  EXPECT_THAT(Describe(m), EndsWith("and (isn't equal to 11)"));
+  AllOfMatches(11, m);
+}
+
+// Tests that monomorphic matchers are safely cast by the AllOf matcher.
+TEST(AllOfTest, AllOfMatcherSafelyCastsMonomorphicMatchers) {
+  // greater_than_5 and less_than_10 are monomorphic matchers.
+  Matcher<int> greater_than_5 = Gt(5);
+  Matcher<int> less_than_10 = Lt(10);
+
+  Matcher<const int&> m = AllOf(greater_than_5, less_than_10);
+  Matcher<int&> m2 = AllOf(greater_than_5, less_than_10);
+  Matcher<int&> m3 = AllOf(greater_than_5, m2);
+
+  // Tests that BothOf works when composing itself.
+  Matcher<const int&> m4 = AllOf(greater_than_5, less_than_10, less_than_10);
+  Matcher<int&> m5 = AllOf(greater_than_5, less_than_10, less_than_10);
+}
+
+TEST_P(AllOfTestP, ExplainsResult) {
+  Matcher<int> m;
+
+  // Successful match.  Both matchers need to explain.  The second
+  // matcher doesn't give an explanation, so only the first matcher's
+  // explanation is printed.
+  m = AllOf(GreaterThan(10), Lt(30));
+  EXPECT_EQ("which is 15 more than 10", Explain(m, 25));
+
+  // Successful match.  Both matchers need to explain.
+  m = AllOf(GreaterThan(10), GreaterThan(20));
+  EXPECT_EQ("which is 20 more than 10, and which is 10 more than 20",
+            Explain(m, 30));
+
+  // Successful match.  All matchers need to explain.  The second
+  // matcher doesn't given an explanation.
+  m = AllOf(GreaterThan(10), Lt(30), GreaterThan(20));
+  EXPECT_EQ("which is 15 more than 10, and which is 5 more than 20",
+            Explain(m, 25));
+
+  // Successful match.  All matchers need to explain.
+  m = AllOf(GreaterThan(10), GreaterThan(20), GreaterThan(30));
+  EXPECT_EQ(
+      "which is 30 more than 10, and which is 20 more than 20, "
+      "and which is 10 more than 30",
+      Explain(m, 40));
+
+  // Failed match.  The first matcher, which failed, needs to
+  // explain.
+  m = AllOf(GreaterThan(10), GreaterThan(20));
+  EXPECT_EQ("which is 5 less than 10", Explain(m, 5));
+
+  // Failed match.  The second matcher, which failed, needs to
+  // explain.  Since it doesn't given an explanation, nothing is
+  // printed.
+  m = AllOf(GreaterThan(10), Lt(30));
+  EXPECT_EQ("", Explain(m, 40));
+
+  // Failed match.  The second matcher, which failed, needs to
+  // explain.
+  m = AllOf(GreaterThan(10), GreaterThan(20));
+  EXPECT_EQ("which is 5 less than 20", Explain(m, 15));
+}
+
+// Helper to allow easy testing of AnyOf matchers with num parameters.
+static void AnyOfMatches(int num, const Matcher<int>& m) {
+  SCOPED_TRACE(Describe(m));
+  EXPECT_FALSE(m.Matches(0));
+  for (int i = 1; i <= num; ++i) {
+    EXPECT_TRUE(m.Matches(i));
+  }
+  EXPECT_FALSE(m.Matches(num + 1));
+}
+
+static void AnyOfStringMatches(int num, const Matcher<std::string>& m) {
+  SCOPED_TRACE(Describe(m));
+  EXPECT_FALSE(m.Matches(std::to_string(0)));
+
+  for (int i = 1; i <= num; ++i) {
+    EXPECT_TRUE(m.Matches(std::to_string(i)));
+  }
+  EXPECT_FALSE(m.Matches(std::to_string(num + 1)));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(AnyOfTest);
+
+// Tests that AnyOf(m1, ..., mn) matches any value that matches at
+// least one of the given matchers.
+TEST(AnyOfTest, MatchesWhenAnyMatches) {
+  Matcher<int> m;
+  m = AnyOf(Le(1), Ge(3));
+  EXPECT_TRUE(m.Matches(1));
+  EXPECT_TRUE(m.Matches(4));
+  EXPECT_FALSE(m.Matches(2));
+
+  m = AnyOf(Lt(0), Eq(1), Eq(2));
+  EXPECT_TRUE(m.Matches(-1));
+  EXPECT_TRUE(m.Matches(1));
+  EXPECT_TRUE(m.Matches(2));
+  EXPECT_FALSE(m.Matches(0));
+
+  m = AnyOf(Lt(0), Eq(1), Eq(2), Eq(3));
+  EXPECT_TRUE(m.Matches(-1));
+  EXPECT_TRUE(m.Matches(1));
+  EXPECT_TRUE(m.Matches(2));
+  EXPECT_TRUE(m.Matches(3));
+  EXPECT_FALSE(m.Matches(0));
+
+  m = AnyOf(Le(0), Gt(10), 3, 5, 7);
+  EXPECT_TRUE(m.Matches(0));
+  EXPECT_TRUE(m.Matches(11));
+  EXPECT_TRUE(m.Matches(3));
+  EXPECT_FALSE(m.Matches(2));
+
+  // The following tests for varying number of sub-matchers. Due to the way
+  // the sub-matchers are handled it is enough to test every sub-matcher once
+  // with sub-matchers using the same matcher type. Varying matcher types are
+  // checked for above.
+  AnyOfMatches(2, AnyOf(1, 2));
+  AnyOfMatches(3, AnyOf(1, 2, 3));
+  AnyOfMatches(4, AnyOf(1, 2, 3, 4));
+  AnyOfMatches(5, AnyOf(1, 2, 3, 4, 5));
+  AnyOfMatches(6, AnyOf(1, 2, 3, 4, 5, 6));
+  AnyOfMatches(7, AnyOf(1, 2, 3, 4, 5, 6, 7));
+  AnyOfMatches(8, AnyOf(1, 2, 3, 4, 5, 6, 7, 8));
+  AnyOfMatches(9, AnyOf(1, 2, 3, 4, 5, 6, 7, 8, 9));
+  AnyOfMatches(10, AnyOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
+}
+
+// Tests the variadic version of the AnyOfMatcher.
+TEST(AnyOfTest, VariadicMatchesWhenAnyMatches) {
+  // Also make sure AnyOf is defined in the right namespace and does not depend
+  // on ADL.
+  Matcher<int> m = ::testing::AnyOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11);
+
+  EXPECT_THAT(Describe(m), EndsWith("or (is equal to 11)"));
+  AnyOfMatches(11, m);
+  AnyOfMatches(50, AnyOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+                         17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+                         31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+                         45, 46, 47, 48, 49, 50));
+  AnyOfStringMatches(
+      50, AnyOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
+                "13", "14", "15", "16", "17", "18", "19", "20", "21", "22",
+                "23", "24", "25", "26", "27", "28", "29", "30", "31", "32",
+                "33", "34", "35", "36", "37", "38", "39", "40", "41", "42",
+                "43", "44", "45", "46", "47", "48", "49", "50"));
+}
+
+TEST(ConditionalTest, MatchesFirstIfCondition) {
+  Matcher<std::string> eq_red = Eq("red");
+  Matcher<std::string> ne_red = Ne("red");
+  Matcher<std::string> m = Conditional(true, eq_red, ne_red);
+  EXPECT_TRUE(m.Matches("red"));
+  EXPECT_FALSE(m.Matches("green"));
+
+  StringMatchResultListener listener;
+  StringMatchResultListener expected;
+  EXPECT_FALSE(m.MatchAndExplain("green", &listener));
+  EXPECT_FALSE(eq_red.MatchAndExplain("green", &expected));
+  EXPECT_THAT(listener.str(), Eq(expected.str()));
+}
+
+TEST(ConditionalTest, MatchesSecondIfCondition) {
+  Matcher<std::string> eq_red = Eq("red");
+  Matcher<std::string> ne_red = Ne("red");
+  Matcher<std::string> m = Conditional(false, eq_red, ne_red);
+  EXPECT_FALSE(m.Matches("red"));
+  EXPECT_TRUE(m.Matches("green"));
+
+  StringMatchResultListener listener;
+  StringMatchResultListener expected;
+  EXPECT_FALSE(m.MatchAndExplain("red", &listener));
+  EXPECT_FALSE(ne_red.MatchAndExplain("red", &expected));
+  EXPECT_THAT(listener.str(), Eq(expected.str()));
+}
+
+// Tests that AnyOf(m1, ..., mn) describes itself properly.
+TEST(AnyOfTest, CanDescribeSelf) {
+  Matcher<int> m;
+  m = AnyOf(Le(1), Ge(3));
+
+  EXPECT_EQ("(is <= 1) or (is >= 3)", Describe(m));
+
+  m = AnyOf(Lt(0), Eq(1), Eq(2));
+  EXPECT_EQ("(is < 0) or (is equal to 1) or (is equal to 2)", Describe(m));
+
+  m = AnyOf(Lt(0), Eq(1), Eq(2), Eq(3));
+  EXPECT_EQ("(is < 0) or (is equal to 1) or (is equal to 2) or (is equal to 3)",
+            Describe(m));
+
+  m = AnyOf(Le(0), Gt(10), 3, 5, 7);
+  EXPECT_EQ(
+      "(is <= 0) or (is > 10) or (is equal to 3) or (is equal to 5) or (is "
+      "equal to 7)",
+      Describe(m));
+}
+
+// Tests that AnyOf(m1, ..., mn) describes its negation properly.
+TEST(AnyOfTest, CanDescribeNegation) {
+  Matcher<int> m;
+  m = AnyOf(Le(1), Ge(3));
+  EXPECT_EQ("(isn't <= 1) and (isn't >= 3)", DescribeNegation(m));
+
+  m = AnyOf(Lt(0), Eq(1), Eq(2));
+  EXPECT_EQ("(isn't < 0) and (isn't equal to 1) and (isn't equal to 2)",
+            DescribeNegation(m));
+
+  m = AnyOf(Lt(0), Eq(1), Eq(2), Eq(3));
+  EXPECT_EQ(
+      "(isn't < 0) and (isn't equal to 1) and (isn't equal to 2) and (isn't "
+      "equal to 3)",
+      DescribeNegation(m));
+
+  m = AnyOf(Le(0), Gt(10), 3, 5, 7);
+  EXPECT_EQ(
+      "(isn't <= 0) and (isn't > 10) and (isn't equal to 3) and (isn't equal "
+      "to 5) and (isn't equal to 7)",
+      DescribeNegation(m));
+}
+
+// Tests that monomorphic matchers are safely cast by the AnyOf matcher.
+TEST(AnyOfTest, AnyOfMatcherSafelyCastsMonomorphicMatchers) {
+  // greater_than_5 and less_than_10 are monomorphic matchers.
+  Matcher<int> greater_than_5 = Gt(5);
+  Matcher<int> less_than_10 = Lt(10);
+
+  Matcher<const int&> m = AnyOf(greater_than_5, less_than_10);
+  Matcher<int&> m2 = AnyOf(greater_than_5, less_than_10);
+  Matcher<int&> m3 = AnyOf(greater_than_5, m2);
+
+  // Tests that EitherOf works when composing itself.
+  Matcher<const int&> m4 = AnyOf(greater_than_5, less_than_10, less_than_10);
+  Matcher<int&> m5 = AnyOf(greater_than_5, less_than_10, less_than_10);
+}
+
+TEST_P(AnyOfTestP, ExplainsResult) {
+  Matcher<int> m;
+
+  // Failed match.  Both matchers need to explain.  The second
+  // matcher doesn't give an explanation, so only the first matcher's
+  // explanation is printed.
+  m = AnyOf(GreaterThan(10), Lt(0));
+  EXPECT_EQ("which is 5 less than 10", Explain(m, 5));
+
+  // Failed match.  Both matchers need to explain.
+  m = AnyOf(GreaterThan(10), GreaterThan(20));
+  EXPECT_EQ("which is 5 less than 10, and which is 15 less than 20",
+            Explain(m, 5));
+
+  // Failed match.  All matchers need to explain.  The second
+  // matcher doesn't given an explanation.
+  m = AnyOf(GreaterThan(10), Gt(20), GreaterThan(30));
+  EXPECT_EQ("which is 5 less than 10, and which is 25 less than 30",
+            Explain(m, 5));
+
+  // Failed match.  All matchers need to explain.
+  m = AnyOf(GreaterThan(10), GreaterThan(20), GreaterThan(30));
+  EXPECT_EQ(
+      "which is 5 less than 10, and which is 15 less than 20, "
+      "and which is 25 less than 30",
+      Explain(m, 5));
+
+  // Successful match.  The first matcher, which succeeded, needs to
+  // explain.
+  m = AnyOf(GreaterThan(10), GreaterThan(20));
+  EXPECT_EQ("which is 5 more than 10", Explain(m, 15));
+
+  // Successful match.  The second matcher, which succeeded, needs to
+  // explain.  Since it doesn't given an explanation, nothing is
+  // printed.
+  m = AnyOf(GreaterThan(10), Lt(30));
+  EXPECT_EQ("", Explain(m, 0));
+
+  // Successful match.  The second matcher, which succeeded, needs to
+  // explain.
+  m = AnyOf(GreaterThan(30), GreaterThan(20));
+  EXPECT_EQ("which is 5 more than 20", Explain(m, 25));
+}
+
+// The following predicate function and predicate functor are for
+// testing the Truly(predicate) matcher.
+
+// Returns non-zero if the input is positive.  Note that the return
+// type of this function is not bool.  It's OK as Truly() accepts any
+// unary function or functor whose return type can be implicitly
+// converted to bool.
+int IsPositive(double x) { return x > 0 ? 1 : 0; }
+
+// This functor returns true if the input is greater than the given
+// number.
+class IsGreaterThan {
+ public:
+  explicit IsGreaterThan(int threshold) : threshold_(threshold) {}
+
+  bool operator()(int n) const { return n > threshold_; }
+
+ private:
+  int threshold_;
+};
+
+// For testing Truly().
+const int foo = 0;
+
+// This predicate returns true if and only if the argument references foo and
+// has a zero value.
+bool ReferencesFooAndIsZero(const int& n) { return (&n == &foo) && (n == 0); }
+
+// Tests that Truly(predicate) matches what satisfies the given
+// predicate.
+TEST(TrulyTest, MatchesWhatSatisfiesThePredicate) {
+  Matcher<double> m = Truly(IsPositive);
+  EXPECT_TRUE(m.Matches(2.0));
+  EXPECT_FALSE(m.Matches(-1.5));
+}
+
+// Tests that Truly(predicate_functor) works too.
+TEST(TrulyTest, CanBeUsedWithFunctor) {
+  Matcher<int> m = Truly(IsGreaterThan(5));
+  EXPECT_TRUE(m.Matches(6));
+  EXPECT_FALSE(m.Matches(4));
+}
+
+// A class that can be implicitly converted to bool.
+class ConvertibleToBool {
+ public:
+  explicit ConvertibleToBool(int number) : number_(number) {}
+  operator bool() const { return number_ != 0; }
+
+ private:
+  int number_;
+};
+
+ConvertibleToBool IsNotZero(int number) { return ConvertibleToBool(number); }
+
+// Tests that the predicate used in Truly() may return a class that's
+// implicitly convertible to bool, even when the class has no
+// operator!().
+TEST(TrulyTest, PredicateCanReturnAClassConvertibleToBool) {
+  Matcher<int> m = Truly(IsNotZero);
+  EXPECT_TRUE(m.Matches(1));
+  EXPECT_FALSE(m.Matches(0));
+}
+
+// Tests that Truly(predicate) can describe itself properly.
+TEST(TrulyTest, CanDescribeSelf) {
+  Matcher<double> m = Truly(IsPositive);
+  EXPECT_EQ("satisfies the given predicate", Describe(m));
+}
+
+// Tests that Truly(predicate) works when the matcher takes its
+// argument by reference.
+TEST(TrulyTest, WorksForByRefArguments) {
+  Matcher<const int&> m = Truly(ReferencesFooAndIsZero);
+  EXPECT_TRUE(m.Matches(foo));
+  int n = 0;
+  EXPECT_FALSE(m.Matches(n));
+}
+
+// Tests that Truly(predicate) provides a helpful reason when it fails.
+TEST(TrulyTest, ExplainsFailures) {
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(Truly(IsPositive), -1, &listener));
+  EXPECT_EQ(listener.str(), "didn't satisfy the given predicate");
+}
+
+// Tests that Matches(m) is a predicate satisfied by whatever that
+// matches matcher m.
+TEST(MatchesTest, IsSatisfiedByWhatMatchesTheMatcher) {
+  EXPECT_TRUE(Matches(Ge(0))(1));
+  EXPECT_FALSE(Matches(Eq('a'))('b'));
+}
+
+// Tests that Matches(m) works when the matcher takes its argument by
+// reference.
+TEST(MatchesTest, WorksOnByRefArguments) {
+  int m = 0, n = 0;
+  EXPECT_TRUE(Matches(AllOf(Ref(n), Eq(0)))(n));
+  EXPECT_FALSE(Matches(Ref(m))(n));
+}
+
+// Tests that a Matcher on non-reference type can be used in
+// Matches().
+TEST(MatchesTest, WorksWithMatcherOnNonRefType) {
+  Matcher<int> eq5 = Eq(5);
+  EXPECT_TRUE(Matches(eq5)(5));
+  EXPECT_FALSE(Matches(eq5)(2));
+}
+
+// Tests Value(value, matcher).  Since Value() is a simple wrapper for
+// Matches(), which has been tested already, we don't spend a lot of
+// effort on testing Value().
+TEST(ValueTest, WorksWithPolymorphicMatcher) {
+  EXPECT_TRUE(Value("hi", StartsWith("h")));
+  EXPECT_FALSE(Value(5, Gt(10)));
+}
+
+TEST(ValueTest, WorksWithMonomorphicMatcher) {
+  const Matcher<int> is_zero = Eq(0);
+  EXPECT_TRUE(Value(0, is_zero));
+  EXPECT_FALSE(Value('a', is_zero));
+
+  int n = 0;
+  const Matcher<const int&> ref_n = Ref(n);
+  EXPECT_TRUE(Value(n, ref_n));
+  EXPECT_FALSE(Value(1, ref_n));
+}
+
+TEST(AllArgsTest, WorksForTuple) {
+  EXPECT_THAT(std::make_tuple(1, 2L), AllArgs(Lt()));
+  EXPECT_THAT(std::make_tuple(2L, 1), Not(AllArgs(Lt())));
+}
+
+TEST(AllArgsTest, WorksForNonTuple) {
+  EXPECT_THAT(42, AllArgs(Gt(0)));
+  EXPECT_THAT('a', Not(AllArgs(Eq('b'))));
+}
+
+class AllArgsHelper {
+ public:
+  AllArgsHelper() {}
+
+  MOCK_METHOD2(Helper, int(char x, int y));
+
+ private:
+  AllArgsHelper(const AllArgsHelper&) = delete;
+  AllArgsHelper& operator=(const AllArgsHelper&) = delete;
+};
+
+TEST(AllArgsTest, WorksInWithClause) {
+  AllArgsHelper helper;
+  ON_CALL(helper, Helper(_, _)).With(AllArgs(Lt())).WillByDefault(Return(1));
+  EXPECT_CALL(helper, Helper(_, _));
+  EXPECT_CALL(helper, Helper(_, _)).With(AllArgs(Gt())).WillOnce(Return(2));
+
+  EXPECT_EQ(1, helper.Helper('\1', 2));
+  EXPECT_EQ(2, helper.Helper('a', 1));
+}
+
+class OptionalMatchersHelper {
+ public:
+  OptionalMatchersHelper() {}
+
+  MOCK_METHOD0(NoArgs, int());
+
+  MOCK_METHOD1(OneArg, int(int y));
+
+  MOCK_METHOD2(TwoArgs, int(char x, int y));
+
+  MOCK_METHOD1(Overloaded, int(char x));
+  MOCK_METHOD2(Overloaded, int(char x, int y));
+
+ private:
+  OptionalMatchersHelper(const OptionalMatchersHelper&) = delete;
+  OptionalMatchersHelper& operator=(const OptionalMatchersHelper&) = delete;
+};
+
+TEST(AllArgsTest, WorksWithoutMatchers) {
+  OptionalMatchersHelper helper;
+
+  ON_CALL(helper, NoArgs).WillByDefault(Return(10));
+  ON_CALL(helper, OneArg).WillByDefault(Return(20));
+  ON_CALL(helper, TwoArgs).WillByDefault(Return(30));
+
+  EXPECT_EQ(10, helper.NoArgs());
+  EXPECT_EQ(20, helper.OneArg(1));
+  EXPECT_EQ(30, helper.TwoArgs('\1', 2));
+
+  EXPECT_CALL(helper, NoArgs).Times(1);
+  EXPECT_CALL(helper, OneArg).WillOnce(Return(100));
+  EXPECT_CALL(helper, OneArg(17)).WillOnce(Return(200));
+  EXPECT_CALL(helper, TwoArgs).Times(0);
+
+  EXPECT_EQ(10, helper.NoArgs());
+  EXPECT_EQ(100, helper.OneArg(1));
+  EXPECT_EQ(200, helper.OneArg(17));
+}
+
+// Tests floating-point matchers.
+template <typename RawType>
+class FloatingPointTest : public testing::Test {
+ protected:
+  typedef testing::internal::FloatingPoint<RawType> Floating;
+  typedef typename Floating::Bits Bits;
+
+  FloatingPointTest()
+      : max_ulps_(Floating::kMaxUlps),
+        zero_bits_(Floating(0).bits()),
+        one_bits_(Floating(1).bits()),
+        infinity_bits_(Floating(Floating::Infinity()).bits()),
+        close_to_positive_zero_(
+            Floating::ReinterpretBits(zero_bits_ + max_ulps_ / 2)),
+        close_to_negative_zero_(
+            -Floating::ReinterpretBits(zero_bits_ + max_ulps_ - max_ulps_ / 2)),
+        further_from_negative_zero_(-Floating::ReinterpretBits(
+            zero_bits_ + max_ulps_ + 1 - max_ulps_ / 2)),
+        close_to_one_(Floating::ReinterpretBits(one_bits_ + max_ulps_)),
+        further_from_one_(Floating::ReinterpretBits(one_bits_ + max_ulps_ + 1)),
+        infinity_(Floating::Infinity()),
+        close_to_infinity_(
+            Floating::ReinterpretBits(infinity_bits_ - max_ulps_)),
+        further_from_infinity_(
+            Floating::ReinterpretBits(infinity_bits_ - max_ulps_ - 1)),
+        max_(Floating::Max()),
+        nan1_(Floating::ReinterpretBits(Floating::kExponentBitMask | 1)),
+        nan2_(Floating::ReinterpretBits(Floating::kExponentBitMask | 200)) {}
+
+  void TestSize() { EXPECT_EQ(sizeof(RawType), sizeof(Bits)); }
+
+  // A battery of tests for FloatingEqMatcher::Matches.
+  // matcher_maker is a pointer to a function which creates a FloatingEqMatcher.
+  void TestMatches(
+      testing::internal::FloatingEqMatcher<RawType> (*matcher_maker)(RawType)) {
+    Matcher<RawType> m1 = matcher_maker(0.0);
+    EXPECT_TRUE(m1.Matches(-0.0));
+    EXPECT_TRUE(m1.Matches(close_to_positive_zero_));
+    EXPECT_TRUE(m1.Matches(close_to_negative_zero_));
+    EXPECT_FALSE(m1.Matches(1.0));
+
+    Matcher<RawType> m2 = matcher_maker(close_to_positive_zero_);
+    EXPECT_FALSE(m2.Matches(further_from_negative_zero_));
+
+    Matcher<RawType> m3 = matcher_maker(1.0);
+    EXPECT_TRUE(m3.Matches(close_to_one_));
+    EXPECT_FALSE(m3.Matches(further_from_one_));
+
+    // Test commutativity: matcher_maker(0.0).Matches(1.0) was tested above.
+    EXPECT_FALSE(m3.Matches(0.0));
+
+    Matcher<RawType> m4 = matcher_maker(-infinity_);
+    EXPECT_TRUE(m4.Matches(-close_to_infinity_));
+
+    Matcher<RawType> m5 = matcher_maker(infinity_);
+    EXPECT_TRUE(m5.Matches(close_to_infinity_));
+
+    // This is interesting as the representations of infinity_ and nan1_
+    // are only 1 DLP apart.
+    EXPECT_FALSE(m5.Matches(nan1_));
+
+    // matcher_maker can produce a Matcher<const RawType&>, which is needed in
+    // some cases.
+    Matcher<const RawType&> m6 = matcher_maker(0.0);
+    EXPECT_TRUE(m6.Matches(-0.0));
+    EXPECT_TRUE(m6.Matches(close_to_positive_zero_));
+    EXPECT_FALSE(m6.Matches(1.0));
+
+    // matcher_maker can produce a Matcher<RawType&>, which is needed in some
+    // cases.
+    Matcher<RawType&> m7 = matcher_maker(0.0);
+    RawType x = 0.0;
+    EXPECT_TRUE(m7.Matches(x));
+    x = 0.01f;
+    EXPECT_FALSE(m7.Matches(x));
+  }
+
+  // Pre-calculated numbers to be used by the tests.
+
+  const Bits max_ulps_;
+
+  const Bits zero_bits_;      // The bits that represent 0.0.
+  const Bits one_bits_;       // The bits that represent 1.0.
+  const Bits infinity_bits_;  // The bits that represent +infinity.
+
+  // Some numbers close to 0.0.
+  const RawType close_to_positive_zero_;
+  const RawType close_to_negative_zero_;
+  const RawType further_from_negative_zero_;
+
+  // Some numbers close to 1.0.
+  const RawType close_to_one_;
+  const RawType further_from_one_;
+
+  // Some numbers close to +infinity.
+  const RawType infinity_;
+  const RawType close_to_infinity_;
+  const RawType further_from_infinity_;
+
+  // Maximum representable value that's not infinity.
+  const RawType max_;
+
+  // Some NaNs.
+  const RawType nan1_;
+  const RawType nan2_;
+};
+
+// Tests floating-point matchers with fixed epsilons.
+template <typename RawType>
+class FloatingPointNearTest : public FloatingPointTest<RawType> {
+ protected:
+  typedef FloatingPointTest<RawType> ParentType;
+
+  // A battery of tests for FloatingEqMatcher::Matches with a fixed epsilon.
+  // matcher_maker is a pointer to a function which creates a FloatingEqMatcher.
+  void TestNearMatches(testing::internal::FloatingEqMatcher<RawType> (
+      *matcher_maker)(RawType, RawType)) {
+    Matcher<RawType> m1 = matcher_maker(0.0, 0.0);
+    EXPECT_TRUE(m1.Matches(0.0));
+    EXPECT_TRUE(m1.Matches(-0.0));
+    EXPECT_FALSE(m1.Matches(ParentType::close_to_positive_zero_));
+    EXPECT_FALSE(m1.Matches(ParentType::close_to_negative_zero_));
+    EXPECT_FALSE(m1.Matches(1.0));
+
+    Matcher<RawType> m2 = matcher_maker(0.0, 1.0);
+    EXPECT_TRUE(m2.Matches(0.0));
+    EXPECT_TRUE(m2.Matches(-0.0));
+    EXPECT_TRUE(m2.Matches(1.0));
+    EXPECT_TRUE(m2.Matches(-1.0));
+    EXPECT_FALSE(m2.Matches(ParentType::close_to_one_));
+    EXPECT_FALSE(m2.Matches(-ParentType::close_to_one_));
+
+    // Check that inf matches inf, regardless of the of the specified max
+    // absolute error.
+    Matcher<RawType> m3 = matcher_maker(ParentType::infinity_, 0.0);
+    EXPECT_TRUE(m3.Matches(ParentType::infinity_));
+    EXPECT_FALSE(m3.Matches(ParentType::close_to_infinity_));
+    EXPECT_FALSE(m3.Matches(-ParentType::infinity_));
+
+    Matcher<RawType> m4 = matcher_maker(-ParentType::infinity_, 0.0);
+    EXPECT_TRUE(m4.Matches(-ParentType::infinity_));
+    EXPECT_FALSE(m4.Matches(-ParentType::close_to_infinity_));
+    EXPECT_FALSE(m4.Matches(ParentType::infinity_));
+
+    // Test various overflow scenarios.
+    Matcher<RawType> m5 = matcher_maker(ParentType::max_, ParentType::max_);
+    EXPECT_TRUE(m5.Matches(ParentType::max_));
+    EXPECT_FALSE(m5.Matches(-ParentType::max_));
+
+    Matcher<RawType> m6 = matcher_maker(-ParentType::max_, ParentType::max_);
+    EXPECT_FALSE(m6.Matches(ParentType::max_));
+    EXPECT_TRUE(m6.Matches(-ParentType::max_));
+
+    Matcher<RawType> m7 = matcher_maker(ParentType::max_, 0);
+    EXPECT_TRUE(m7.Matches(ParentType::max_));
+    EXPECT_FALSE(m7.Matches(-ParentType::max_));
+
+    Matcher<RawType> m8 = matcher_maker(-ParentType::max_, 0);
+    EXPECT_FALSE(m8.Matches(ParentType::max_));
+    EXPECT_TRUE(m8.Matches(-ParentType::max_));
+
+    // The difference between max() and -max() normally overflows to infinity,
+    // but it should still match if the max_abs_error is also infinity.
+    Matcher<RawType> m9 =
+        matcher_maker(ParentType::max_, ParentType::infinity_);
+    EXPECT_TRUE(m8.Matches(-ParentType::max_));
+
+    // matcher_maker can produce a Matcher<const RawType&>, which is needed in
+    // some cases.
+    Matcher<const RawType&> m10 = matcher_maker(0.0, 1.0);
+    EXPECT_TRUE(m10.Matches(-0.0));
+    EXPECT_TRUE(m10.Matches(ParentType::close_to_positive_zero_));
+    EXPECT_FALSE(m10.Matches(ParentType::close_to_one_));
+
+    // matcher_maker can produce a Matcher<RawType&>, which is needed in some
+    // cases.
+    Matcher<RawType&> m11 = matcher_maker(0.0, 1.0);
+    RawType x = 0.0;
+    EXPECT_TRUE(m11.Matches(x));
+    x = 1.0f;
+    EXPECT_TRUE(m11.Matches(x));
+    x = -1.0f;
+    EXPECT_TRUE(m11.Matches(x));
+    x = 1.1f;
+    EXPECT_FALSE(m11.Matches(x));
+    x = -1.1f;
+    EXPECT_FALSE(m11.Matches(x));
+  }
+};
+
+// Instantiate FloatingPointTest for testing floats.
+typedef FloatingPointTest<float> FloatTest;
+
+TEST_F(FloatTest, FloatEqApproximatelyMatchesFloats) { TestMatches(&FloatEq); }
+
+TEST_F(FloatTest, NanSensitiveFloatEqApproximatelyMatchesFloats) {
+  TestMatches(&NanSensitiveFloatEq);
+}
+
+TEST_F(FloatTest, FloatEqCannotMatchNaN) {
+  // FloatEq never matches NaN.
+  Matcher<float> m = FloatEq(nan1_);
+  EXPECT_FALSE(m.Matches(nan1_));
+  EXPECT_FALSE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST_F(FloatTest, NanSensitiveFloatEqCanMatchNaN) {
+  // NanSensitiveFloatEq will match NaN.
+  Matcher<float> m = NanSensitiveFloatEq(nan1_);
+  EXPECT_TRUE(m.Matches(nan1_));
+  EXPECT_TRUE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST_F(FloatTest, FloatEqCanDescribeSelf) {
+  Matcher<float> m1 = FloatEq(2.0f);
+  EXPECT_EQ("is approximately 2", Describe(m1));
+  EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
+
+  Matcher<float> m2 = FloatEq(0.5f);
+  EXPECT_EQ("is approximately 0.5", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5", DescribeNegation(m2));
+
+  Matcher<float> m3 = FloatEq(nan1_);
+  EXPECT_EQ("never matches", Describe(m3));
+  EXPECT_EQ("is anything", DescribeNegation(m3));
+}
+
+TEST_F(FloatTest, NanSensitiveFloatEqCanDescribeSelf) {
+  Matcher<float> m1 = NanSensitiveFloatEq(2.0f);
+  EXPECT_EQ("is approximately 2", Describe(m1));
+  EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
+
+  Matcher<float> m2 = NanSensitiveFloatEq(0.5f);
+  EXPECT_EQ("is approximately 0.5", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5", DescribeNegation(m2));
+
+  Matcher<float> m3 = NanSensitiveFloatEq(nan1_);
+  EXPECT_EQ("is NaN", Describe(m3));
+  EXPECT_EQ("isn't NaN", DescribeNegation(m3));
+}
+
+// Instantiate FloatingPointTest for testing floats with a user-specified
+// max absolute error.
+typedef FloatingPointNearTest<float> FloatNearTest;
+
+TEST_F(FloatNearTest, FloatNearMatches) { TestNearMatches(&FloatNear); }
+
+TEST_F(FloatNearTest, NanSensitiveFloatNearApproximatelyMatchesFloats) {
+  TestNearMatches(&NanSensitiveFloatNear);
+}
+
+TEST_F(FloatNearTest, FloatNearCanDescribeSelf) {
+  Matcher<float> m1 = FloatNear(2.0f, 0.5f);
+  EXPECT_EQ("is approximately 2 (absolute error <= 0.5)", Describe(m1));
+  EXPECT_EQ("isn't approximately 2 (absolute error > 0.5)",
+            DescribeNegation(m1));
+
+  Matcher<float> m2 = FloatNear(0.5f, 0.5f);
+  EXPECT_EQ("is approximately 0.5 (absolute error <= 0.5)", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5 (absolute error > 0.5)",
+            DescribeNegation(m2));
+
+  Matcher<float> m3 = FloatNear(nan1_, 0.0);
+  EXPECT_EQ("never matches", Describe(m3));
+  EXPECT_EQ("is anything", DescribeNegation(m3));
+}
+
+TEST_F(FloatNearTest, NanSensitiveFloatNearCanDescribeSelf) {
+  Matcher<float> m1 = NanSensitiveFloatNear(2.0f, 0.5f);
+  EXPECT_EQ("is approximately 2 (absolute error <= 0.5)", Describe(m1));
+  EXPECT_EQ("isn't approximately 2 (absolute error > 0.5)",
+            DescribeNegation(m1));
+
+  Matcher<float> m2 = NanSensitiveFloatNear(0.5f, 0.5f);
+  EXPECT_EQ("is approximately 0.5 (absolute error <= 0.5)", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5 (absolute error > 0.5)",
+            DescribeNegation(m2));
+
+  Matcher<float> m3 = NanSensitiveFloatNear(nan1_, 0.1f);
+  EXPECT_EQ("is NaN", Describe(m3));
+  EXPECT_EQ("isn't NaN", DescribeNegation(m3));
+}
+
+TEST_F(FloatNearTest, FloatNearCannotMatchNaN) {
+  // FloatNear never matches NaN.
+  Matcher<float> m = FloatNear(ParentType::nan1_, 0.1f);
+  EXPECT_FALSE(m.Matches(nan1_));
+  EXPECT_FALSE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST_F(FloatNearTest, NanSensitiveFloatNearCanMatchNaN) {
+  // NanSensitiveFloatNear will match NaN.
+  Matcher<float> m = NanSensitiveFloatNear(nan1_, 0.1f);
+  EXPECT_TRUE(m.Matches(nan1_));
+  EXPECT_TRUE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+// Instantiate FloatingPointTest for testing doubles.
+typedef FloatingPointTest<double> DoubleTest;
+
+TEST_F(DoubleTest, DoubleEqApproximatelyMatchesDoubles) {
+  TestMatches(&DoubleEq);
+}
+
+TEST_F(DoubleTest, NanSensitiveDoubleEqApproximatelyMatchesDoubles) {
+  TestMatches(&NanSensitiveDoubleEq);
+}
+
+TEST_F(DoubleTest, DoubleEqCannotMatchNaN) {
+  // DoubleEq never matches NaN.
+  Matcher<double> m = DoubleEq(nan1_);
+  EXPECT_FALSE(m.Matches(nan1_));
+  EXPECT_FALSE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST_F(DoubleTest, NanSensitiveDoubleEqCanMatchNaN) {
+  // NanSensitiveDoubleEq will match NaN.
+  Matcher<double> m = NanSensitiveDoubleEq(nan1_);
+  EXPECT_TRUE(m.Matches(nan1_));
+  EXPECT_TRUE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST_F(DoubleTest, DoubleEqCanDescribeSelf) {
+  Matcher<double> m1 = DoubleEq(2.0);
+  EXPECT_EQ("is approximately 2", Describe(m1));
+  EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
+
+  Matcher<double> m2 = DoubleEq(0.5);
+  EXPECT_EQ("is approximately 0.5", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5", DescribeNegation(m2));
+
+  Matcher<double> m3 = DoubleEq(nan1_);
+  EXPECT_EQ("never matches", Describe(m3));
+  EXPECT_EQ("is anything", DescribeNegation(m3));
+}
+
+TEST_F(DoubleTest, NanSensitiveDoubleEqCanDescribeSelf) {
+  Matcher<double> m1 = NanSensitiveDoubleEq(2.0);
+  EXPECT_EQ("is approximately 2", Describe(m1));
+  EXPECT_EQ("isn't approximately 2", DescribeNegation(m1));
+
+  Matcher<double> m2 = NanSensitiveDoubleEq(0.5);
+  EXPECT_EQ("is approximately 0.5", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5", DescribeNegation(m2));
+
+  Matcher<double> m3 = NanSensitiveDoubleEq(nan1_);
+  EXPECT_EQ("is NaN", Describe(m3));
+  EXPECT_EQ("isn't NaN", DescribeNegation(m3));
+}
+
+// Instantiate FloatingPointTest for testing floats with a user-specified
+// max absolute error.
+typedef FloatingPointNearTest<double> DoubleNearTest;
+
+TEST_F(DoubleNearTest, DoubleNearMatches) { TestNearMatches(&DoubleNear); }
+
+TEST_F(DoubleNearTest, NanSensitiveDoubleNearApproximatelyMatchesDoubles) {
+  TestNearMatches(&NanSensitiveDoubleNear);
+}
+
+TEST_F(DoubleNearTest, DoubleNearCanDescribeSelf) {
+  Matcher<double> m1 = DoubleNear(2.0, 0.5);
+  EXPECT_EQ("is approximately 2 (absolute error <= 0.5)", Describe(m1));
+  EXPECT_EQ("isn't approximately 2 (absolute error > 0.5)",
+            DescribeNegation(m1));
+
+  Matcher<double> m2 = DoubleNear(0.5, 0.5);
+  EXPECT_EQ("is approximately 0.5 (absolute error <= 0.5)", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5 (absolute error > 0.5)",
+            DescribeNegation(m2));
+
+  Matcher<double> m3 = DoubleNear(nan1_, 0.0);
+  EXPECT_EQ("never matches", Describe(m3));
+  EXPECT_EQ("is anything", DescribeNegation(m3));
+}
+
+TEST_F(DoubleNearTest, ExplainsResultWhenMatchFails) {
+  EXPECT_EQ("", Explain(DoubleNear(2.0, 0.1), 2.05));
+  EXPECT_EQ("which is 0.2 from 2", Explain(DoubleNear(2.0, 0.1), 2.2));
+  EXPECT_EQ("which is -0.3 from 2", Explain(DoubleNear(2.0, 0.1), 1.7));
+
+  const std::string explanation =
+      Explain(DoubleNear(2.1, 1e-10), 2.1 + 1.2e-10);
+  // Different C++ implementations may print floating-point numbers
+  // slightly differently.
+  EXPECT_TRUE(explanation == "which is 1.2e-10 from 2.1" ||  // GCC
+              explanation == "which is 1.2e-010 from 2.1")   // MSVC
+      << " where explanation is \"" << explanation << "\".";
+}
+
+TEST_F(DoubleNearTest, NanSensitiveDoubleNearCanDescribeSelf) {
+  Matcher<double> m1 = NanSensitiveDoubleNear(2.0, 0.5);
+  EXPECT_EQ("is approximately 2 (absolute error <= 0.5)", Describe(m1));
+  EXPECT_EQ("isn't approximately 2 (absolute error > 0.5)",
+            DescribeNegation(m1));
+
+  Matcher<double> m2 = NanSensitiveDoubleNear(0.5, 0.5);
+  EXPECT_EQ("is approximately 0.5 (absolute error <= 0.5)", Describe(m2));
+  EXPECT_EQ("isn't approximately 0.5 (absolute error > 0.5)",
+            DescribeNegation(m2));
+
+  Matcher<double> m3 = NanSensitiveDoubleNear(nan1_, 0.1);
+  EXPECT_EQ("is NaN", Describe(m3));
+  EXPECT_EQ("isn't NaN", DescribeNegation(m3));
+}
+
+TEST_F(DoubleNearTest, DoubleNearCannotMatchNaN) {
+  // DoubleNear never matches NaN.
+  Matcher<double> m = DoubleNear(ParentType::nan1_, 0.1);
+  EXPECT_FALSE(m.Matches(nan1_));
+  EXPECT_FALSE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST_F(DoubleNearTest, NanSensitiveDoubleNearCanMatchNaN) {
+  // NanSensitiveDoubleNear will match NaN.
+  Matcher<double> m = NanSensitiveDoubleNear(nan1_, 0.1);
+  EXPECT_TRUE(m.Matches(nan1_));
+  EXPECT_TRUE(m.Matches(nan2_));
+  EXPECT_FALSE(m.Matches(1.0));
+}
+
+TEST(NotTest, WorksOnMoveOnlyType) {
+  std::unique_ptr<int> p(new int(3));
+  EXPECT_THAT(p, Pointee(Eq(3)));
+  EXPECT_THAT(p, Not(Pointee(Eq(2))));
+}
+
+TEST(AllOfTest, HugeMatcher) {
+  // Verify that using AllOf with many arguments doesn't cause
+  // the compiler to exceed template instantiation depth limit.
+  EXPECT_THAT(0, testing::AllOf(_, _, _, _, _, _, _, _, _,
+                                testing::AllOf(_, _, _, _, _, _, _, _, _, _)));
+}
+
+TEST(AnyOfTest, HugeMatcher) {
+  // Verify that using AnyOf with many arguments doesn't cause
+  // the compiler to exceed template instantiation depth limit.
+  EXPECT_THAT(0, testing::AnyOf(_, _, _, _, _, _, _, _, _,
+                                testing::AnyOf(_, _, _, _, _, _, _, _, _, _)));
+}
+
+namespace adl_test {
+
+// Verifies that the implementation of ::testing::AllOf and ::testing::AnyOf
+// don't issue unqualified recursive calls.  If they do, the argument dependent
+// name lookup will cause AllOf/AnyOf in the 'adl_test' namespace to be found
+// as a candidate and the compilation will break due to an ambiguous overload.
+
+// The matcher must be in the same namespace as AllOf/AnyOf to make argument
+// dependent lookup find those.
+MATCHER(M, "") {
+  (void)arg;
+  return true;
+}
+
+template <typename T1, typename T2>
+bool AllOf(const T1& /*t1*/, const T2& /*t2*/) {
+  return true;
+}
+
+TEST(AllOfTest, DoesNotCallAllOfUnqualified) {
+  EXPECT_THAT(42,
+              testing::AllOf(M(), M(), M(), M(), M(), M(), M(), M(), M(), M()));
+}
+
+template <typename T1, typename T2>
+bool AnyOf(const T1&, const T2&) {
+  return true;
+}
+
+TEST(AnyOfTest, DoesNotCallAnyOfUnqualified) {
+  EXPECT_THAT(42,
+              testing::AnyOf(M(), M(), M(), M(), M(), M(), M(), M(), M(), M()));
+}
+
+}  // namespace adl_test
+
+TEST(AllOfTest, WorksOnMoveOnlyType) {
+  std::unique_ptr<int> p(new int(3));
+  EXPECT_THAT(p, AllOf(Pointee(Eq(3)), Pointee(Gt(0)), Pointee(Lt(5))));
+  EXPECT_THAT(p, Not(AllOf(Pointee(Eq(3)), Pointee(Gt(0)), Pointee(Lt(3)))));
+}
+
+TEST(AnyOfTest, WorksOnMoveOnlyType) {
+  std::unique_ptr<int> p(new int(3));
+  EXPECT_THAT(p, AnyOf(Pointee(Eq(5)), Pointee(Lt(0)), Pointee(Lt(5))));
+  EXPECT_THAT(p, Not(AnyOf(Pointee(Eq(5)), Pointee(Lt(0)), Pointee(Gt(5)))));
+}
+
+}  // namespace
+}  // namespace gmock_matchers_test
+}  // namespace testing
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+```
+
+### `gmock-matchers-comparisons_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-comparisons_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests some commonly used argument matchers.
+
+// Silence warning C4244: 'initializing': conversion from 'int' to 'short',
+// possible loss of data and C4100, unreferenced local parameter
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4100)
+#endif
+
+#include "test/gmock-matchers_test.h"
+
+namespace testing {
+namespace gmock_matchers_test {
+namespace {
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(MonotonicMatcherTest);
+
+TEST_P(MonotonicMatcherTestP, IsPrintable) {
+  stringstream ss;
+  ss << GreaterThan(5);
+  EXPECT_EQ("is > 5", ss.str());
+}
+
+TEST(MatchResultListenerTest, StreamingWorks) {
+  StringMatchResultListener listener;
+  listener << "hi" << 5;
+  EXPECT_EQ("hi5", listener.str());
+
+  listener.Clear();
+  EXPECT_EQ("", listener.str());
+
+  listener << 42;
+  EXPECT_EQ("42", listener.str());
+
+  // Streaming shouldn't crash when the underlying ostream is NULL.
+  DummyMatchResultListener dummy;
+  dummy << "hi" << 5;
+}
+
+TEST(MatchResultListenerTest, CanAccessUnderlyingStream) {
+  EXPECT_TRUE(DummyMatchResultListener().stream() == nullptr);
+  EXPECT_TRUE(StreamMatchResultListener(nullptr).stream() == nullptr);
+
+  EXPECT_EQ(&std::cout, StreamMatchResultListener(&std::cout).stream());
+}
+
+TEST(MatchResultListenerTest, IsInterestedWorks) {
+  EXPECT_TRUE(StringMatchResultListener().IsInterested());
+  EXPECT_TRUE(StreamMatchResultListener(&std::cout).IsInterested());
+
+  EXPECT_FALSE(DummyMatchResultListener().IsInterested());
+  EXPECT_FALSE(StreamMatchResultListener(nullptr).IsInterested());
+}
+
+// Makes sure that the MatcherInterface<T> interface doesn't
+// change.
+class EvenMatcherImpl : public MatcherInterface<int> {
+ public:
+  bool MatchAndExplain(int x,
+                       MatchResultListener* /* listener */) const override {
+    return x % 2 == 0;
+  }
+
+  void DescribeTo(ostream* os) const override { *os << "is an even number"; }
+
+  // We deliberately don't define DescribeNegationTo() and
+  // ExplainMatchResultTo() here, to make sure the definition of these
+  // two methods is optional.
+};
+
+// Makes sure that the MatcherInterface API doesn't change.
+TEST(MatcherInterfaceTest, CanBeImplementedUsingPublishedAPI) {
+  EvenMatcherImpl m;
+}
+
+// Tests implementing a monomorphic matcher using MatchAndExplain().
+
+class NewEvenMatcherImpl : public MatcherInterface<int> {
+ public:
+  bool MatchAndExplain(int x, MatchResultListener* listener) const override {
+    const bool match = x % 2 == 0;
+    // Verifies that we can stream to a listener directly.
+    *listener << "value % " << 2;
+    if (listener->stream() != nullptr) {
+      // Verifies that we can stream to a listener's underlying stream
+      // too.
+      *listener->stream() << " == " << (x % 2);
+    }
+    return match;
+  }
+
+  void DescribeTo(ostream* os) const override { *os << "is an even number"; }
+};
+
+TEST(MatcherInterfaceTest, CanBeImplementedUsingNewAPI) {
+  Matcher<int> m = MakeMatcher(new NewEvenMatcherImpl);
+  EXPECT_TRUE(m.Matches(2));
+  EXPECT_FALSE(m.Matches(3));
+  EXPECT_EQ("value % 2 == 0", Explain(m, 2));
+  EXPECT_EQ("value % 2 == 1", Explain(m, 3));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(MatcherTest);
+
+// Tests default-constructing a matcher.
+TEST(MatcherTest, CanBeDefaultConstructed) { Matcher<double> m; }
+
+// Tests that Matcher<T> can be constructed from a MatcherInterface<T>*.
+TEST(MatcherTest, CanBeConstructedFromMatcherInterface) {
+  const MatcherInterface<int>* impl = new EvenMatcherImpl;
+  Matcher<int> m(impl);
+  EXPECT_TRUE(m.Matches(4));
+  EXPECT_FALSE(m.Matches(5));
+}
+
+// Tests that value can be used in place of Eq(value).
+TEST(MatcherTest, CanBeImplicitlyConstructedFromValue) {
+  Matcher<int> m1 = 5;
+  EXPECT_TRUE(m1.Matches(5));
+  EXPECT_FALSE(m1.Matches(6));
+}
+
+// Tests that NULL can be used in place of Eq(NULL).
+TEST(MatcherTest, CanBeImplicitlyConstructedFromNULL) {
+  Matcher<int*> m1 = nullptr;
+  EXPECT_TRUE(m1.Matches(nullptr));
+  int n = 0;
+  EXPECT_FALSE(m1.Matches(&n));
+}
+
+// Tests that matchers can be constructed from a variable that is not properly
+// defined. This should be illegal, but many users rely on this accidentally.
+struct Undefined {
+  virtual ~Undefined() = 0;
+  static const int kInt = 1;
+};
+
+TEST(MatcherTest, CanBeConstructedFromUndefinedVariable) {
+  Matcher<int> m1 = Undefined::kInt;
+  EXPECT_TRUE(m1.Matches(1));
+  EXPECT_FALSE(m1.Matches(2));
+}
+
+// Test that a matcher parameterized with an abstract class compiles.
+TEST(MatcherTest, CanAcceptAbstractClass) { Matcher<const Undefined&> m = _; }
+
+// Tests that matchers are copyable.
+TEST(MatcherTest, IsCopyable) {
+  // Tests the copy constructor.
+  Matcher<bool> m1 = Eq(false);
+  EXPECT_TRUE(m1.Matches(false));
+  EXPECT_FALSE(m1.Matches(true));
+
+  // Tests the assignment operator.
+  m1 = Eq(true);
+  EXPECT_TRUE(m1.Matches(true));
+  EXPECT_FALSE(m1.Matches(false));
+}
+
+// Tests that Matcher<T>::DescribeTo() calls
+// MatcherInterface<T>::DescribeTo().
+TEST(MatcherTest, CanDescribeItself) {
+  EXPECT_EQ("is an even number", Describe(Matcher<int>(new EvenMatcherImpl)));
+}
+
+// Tests Matcher<T>::MatchAndExplain().
+TEST_P(MatcherTestP, MatchAndExplain) {
+  Matcher<int> m = GreaterThan(0);
+  StringMatchResultListener listener1;
+  EXPECT_TRUE(m.MatchAndExplain(42, &listener1));
+  EXPECT_EQ("which is 42 more than 0", listener1.str());
+
+  StringMatchResultListener listener2;
+  EXPECT_FALSE(m.MatchAndExplain(-9, &listener2));
+  EXPECT_EQ("which is 9 less than 0", listener2.str());
+}
+
+// Tests that a C-string literal can be implicitly converted to a
+// Matcher<std::string> or Matcher<const std::string&>.
+TEST(StringMatcherTest, CanBeImplicitlyConstructedFromCStringLiteral) {
+  Matcher<std::string> m1 = "hi";
+  EXPECT_TRUE(m1.Matches("hi"));
+  EXPECT_FALSE(m1.Matches("hello"));
+
+  Matcher<const std::string&> m2 = "hi";
+  EXPECT_TRUE(m2.Matches("hi"));
+  EXPECT_FALSE(m2.Matches("hello"));
+}
+
+// Tests that a string object can be implicitly converted to a
+// Matcher<std::string> or Matcher<const std::string&>.
+TEST(StringMatcherTest, CanBeImplicitlyConstructedFromString) {
+  Matcher<std::string> m1 = std::string("hi");
+  EXPECT_TRUE(m1.Matches("hi"));
+  EXPECT_FALSE(m1.Matches("hello"));
+
+  Matcher<const std::string&> m2 = std::string("hi");
+  EXPECT_TRUE(m2.Matches("hi"));
+  EXPECT_FALSE(m2.Matches("hello"));
+}
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+// Tests that a C-string literal can be implicitly converted to a
+// Matcher<StringView> or Matcher<const StringView&>.
+TEST(StringViewMatcherTest, CanBeImplicitlyConstructedFromCStringLiteral) {
+  Matcher<internal::StringView> m1 = "cats";
+  EXPECT_TRUE(m1.Matches("cats"));
+  EXPECT_FALSE(m1.Matches("dogs"));
+
+  Matcher<const internal::StringView&> m2 = "cats";
+  EXPECT_TRUE(m2.Matches("cats"));
+  EXPECT_FALSE(m2.Matches("dogs"));
+}
+
+// Tests that a std::string object can be implicitly converted to a
+// Matcher<StringView> or Matcher<const StringView&>.
+TEST(StringViewMatcherTest, CanBeImplicitlyConstructedFromString) {
+  Matcher<internal::StringView> m1 = std::string("cats");
+  EXPECT_TRUE(m1.Matches("cats"));
+  EXPECT_FALSE(m1.Matches("dogs"));
+
+  Matcher<const internal::StringView&> m2 = std::string("cats");
+  EXPECT_TRUE(m2.Matches("cats"));
+  EXPECT_FALSE(m2.Matches("dogs"));
+}
+
+// Tests that a StringView object can be implicitly converted to a
+// Matcher<StringView> or Matcher<const StringView&>.
+TEST(StringViewMatcherTest, CanBeImplicitlyConstructedFromStringView) {
+  Matcher<internal::StringView> m1 = internal::StringView("cats");
+  EXPECT_TRUE(m1.Matches("cats"));
+  EXPECT_FALSE(m1.Matches("dogs"));
+
+  Matcher<const internal::StringView&> m2 = internal::StringView("cats");
+  EXPECT_TRUE(m2.Matches("cats"));
+  EXPECT_FALSE(m2.Matches("dogs"));
+}
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+
+// Tests that a std::reference_wrapper<std::string> object can be implicitly
+// converted to a Matcher<std::string> or Matcher<const std::string&> via Eq().
+TEST(StringMatcherTest,
+     CanBeImplicitlyConstructedFromEqReferenceWrapperString) {
+  std::string value = "cats";
+  Matcher<std::string> m1 = Eq(std::ref(value));
+  EXPECT_TRUE(m1.Matches("cats"));
+  EXPECT_FALSE(m1.Matches("dogs"));
+
+  Matcher<const std::string&> m2 = Eq(std::ref(value));
+  EXPECT_TRUE(m2.Matches("cats"));
+  EXPECT_FALSE(m2.Matches("dogs"));
+}
+
+// Tests that MakeMatcher() constructs a Matcher<T> from a
+// MatcherInterface* without requiring the user to explicitly
+// write the type.
+TEST(MakeMatcherTest, ConstructsMatcherFromMatcherInterface) {
+  const MatcherInterface<int>* dummy_impl = new EvenMatcherImpl;
+  Matcher<int> m = MakeMatcher(dummy_impl);
+}
+
+// Tests that MakePolymorphicMatcher() can construct a polymorphic
+// matcher from its implementation using the old API.
+const int g_bar = 1;
+class ReferencesBarOrIsZeroImpl {
+ public:
+  template <typename T>
+  bool MatchAndExplain(const T& x, MatchResultListener* /* listener */) const {
+    const void* p = &x;
+    return p == &g_bar || x == 0;
+  }
+
+  void DescribeTo(ostream* os) const { *os << "g_bar or zero"; }
+
+  void DescribeNegationTo(ostream* os) const {
+    *os << "doesn't reference g_bar and is not zero";
+  }
+};
+
+// This function verifies that MakePolymorphicMatcher() returns a
+// PolymorphicMatcher<T> where T is the argument's type.
+PolymorphicMatcher<ReferencesBarOrIsZeroImpl> ReferencesBarOrIsZero() {
+  return MakePolymorphicMatcher(ReferencesBarOrIsZeroImpl());
+}
+
+TEST(MakePolymorphicMatcherTest, ConstructsMatcherUsingOldAPI) {
+  // Using a polymorphic matcher to match a reference type.
+  Matcher<const int&> m1 = ReferencesBarOrIsZero();
+  EXPECT_TRUE(m1.Matches(0));
+  // Verifies that the identity of a by-reference argument is preserved.
+  EXPECT_TRUE(m1.Matches(g_bar));
+  EXPECT_FALSE(m1.Matches(1));
+  EXPECT_EQ("g_bar or zero", Describe(m1));
+
+  // Using a polymorphic matcher to match a value type.
+  Matcher<double> m2 = ReferencesBarOrIsZero();
+  EXPECT_TRUE(m2.Matches(0.0));
+  EXPECT_FALSE(m2.Matches(0.1));
+  EXPECT_EQ("g_bar or zero", Describe(m2));
+}
+
+// Tests implementing a polymorphic matcher using MatchAndExplain().
+
+class PolymorphicIsEvenImpl {
+ public:
+  void DescribeTo(ostream* os) const { *os << "is even"; }
+
+  void DescribeNegationTo(ostream* os) const { *os << "is odd"; }
+
+  template <typename T>
+  bool MatchAndExplain(const T& x, MatchResultListener* listener) const {
+    // Verifies that we can stream to the listener directly.
+    *listener << "% " << 2;
+    if (listener->stream() != nullptr) {
+      // Verifies that we can stream to the listener's underlying stream
+      // too.
+      *listener->stream() << " == " << (x % 2);
+    }
+    return (x % 2) == 0;
+  }
+};
+
+PolymorphicMatcher<PolymorphicIsEvenImpl> PolymorphicIsEven() {
+  return MakePolymorphicMatcher(PolymorphicIsEvenImpl());
+}
+
+TEST(MakePolymorphicMatcherTest, ConstructsMatcherUsingNewAPI) {
+  // Using PolymorphicIsEven() as a Matcher<int>.
+  const Matcher<int> m1 = PolymorphicIsEven();
+  EXPECT_TRUE(m1.Matches(42));
+  EXPECT_FALSE(m1.Matches(43));
+  EXPECT_EQ("is even", Describe(m1));
+
+  const Matcher<int> not_m1 = Not(m1);
+  EXPECT_EQ("is odd", Describe(not_m1));
+
+  EXPECT_EQ("% 2 == 0", Explain(m1, 42));
+
+  // Using PolymorphicIsEven() as a Matcher<char>.
+  const Matcher<char> m2 = PolymorphicIsEven();
+  EXPECT_TRUE(m2.Matches('\x42'));
+  EXPECT_FALSE(m2.Matches('\x43'));
+  EXPECT_EQ("is even", Describe(m2));
+
+  const Matcher<char> not_m2 = Not(m2);
+  EXPECT_EQ("is odd", Describe(not_m2));
+
+  EXPECT_EQ("% 2 == 0", Explain(m2, '\x42'));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(MatcherCastTest);
+
+// Tests that MatcherCast<T>(m) works when m is a polymorphic matcher.
+TEST_P(MatcherCastTestP, FromPolymorphicMatcher) {
+  Matcher<int16_t> m;
+  if (use_gtest_matcher_) {
+    m = MatcherCast<int16_t>(GtestGreaterThan(int64_t{5}));
+  } else {
+    m = MatcherCast<int16_t>(Gt(int64_t{5}));
+  }
+  EXPECT_TRUE(m.Matches(6));
+  EXPECT_FALSE(m.Matches(4));
+}
+
+// For testing casting matchers between compatible types.
+class IntValue {
+ public:
+  // An int can be statically (although not implicitly) cast to a
+  // IntValue.
+  explicit IntValue(int a_value) : value_(a_value) {}
+
+  int value() const { return value_; }
+
+ private:
+  int value_;
+};
+
+// For testing casting matchers between compatible types.
+bool IsPositiveIntValue(const IntValue& foo) { return foo.value() > 0; }
+
+// Tests that MatcherCast<T>(m) works when m is a Matcher<U> where T
+// can be statically converted to U.
+TEST(MatcherCastTest, FromCompatibleType) {
+  Matcher<double> m1 = Eq(2.0);
+  Matcher<int> m2 = MatcherCast<int>(m1);
+  EXPECT_TRUE(m2.Matches(2));
+  EXPECT_FALSE(m2.Matches(3));
+
+  Matcher<IntValue> m3 = Truly(IsPositiveIntValue);
+  Matcher<int> m4 = MatcherCast<int>(m3);
+  // In the following, the arguments 1 and 0 are statically converted
+  // to IntValue objects, and then tested by the IsPositiveIntValue()
+  // predicate.
+  EXPECT_TRUE(m4.Matches(1));
+  EXPECT_FALSE(m4.Matches(0));
+}
+
+// Tests that MatcherCast<T>(m) works when m is a Matcher<const T&>.
+TEST(MatcherCastTest, FromConstReferenceToNonReference) {
+  Matcher<const int&> m1 = Eq(0);
+  Matcher<int> m2 = MatcherCast<int>(m1);
+  EXPECT_TRUE(m2.Matches(0));
+  EXPECT_FALSE(m2.Matches(1));
+}
+
+// Tests that MatcherCast<T>(m) works when m is a Matcher<T&>.
+TEST(MatcherCastTest, FromReferenceToNonReference) {
+  Matcher<int&> m1 = Eq(0);
+  Matcher<int> m2 = MatcherCast<int>(m1);
+  EXPECT_TRUE(m2.Matches(0));
+  EXPECT_FALSE(m2.Matches(1));
+}
+
+// Tests that MatcherCast<const T&>(m) works when m is a Matcher<T>.
+TEST(MatcherCastTest, FromNonReferenceToConstReference) {
+  Matcher<int> m1 = Eq(0);
+  Matcher<const int&> m2 = MatcherCast<const int&>(m1);
+  EXPECT_TRUE(m2.Matches(0));
+  EXPECT_FALSE(m2.Matches(1));
+}
+
+// Tests that MatcherCast<T&>(m) works when m is a Matcher<T>.
+TEST(MatcherCastTest, FromNonReferenceToReference) {
+  Matcher<int> m1 = Eq(0);
+  Matcher<int&> m2 = MatcherCast<int&>(m1);
+  int n = 0;
+  EXPECT_TRUE(m2.Matches(n));
+  n = 1;
+  EXPECT_FALSE(m2.Matches(n));
+}
+
+// Tests that MatcherCast<T>(m) works when m is a Matcher<T>.
+TEST(MatcherCastTest, FromSameType) {
+  Matcher<int> m1 = Eq(0);
+  Matcher<int> m2 = MatcherCast<int>(m1);
+  EXPECT_TRUE(m2.Matches(0));
+  EXPECT_FALSE(m2.Matches(1));
+}
+
+// Tests that MatcherCast<T>(m) works when m is a value of the same type as the
+// value type of the Matcher.
+TEST(MatcherCastTest, FromAValue) {
+  Matcher<int> m = MatcherCast<int>(42);
+  EXPECT_TRUE(m.Matches(42));
+  EXPECT_FALSE(m.Matches(239));
+}
+
+// Tests that MatcherCast<T>(m) works when m is a value of the type implicitly
+// convertible to the value type of the Matcher.
+TEST(MatcherCastTest, FromAnImplicitlyConvertibleValue) {
+  const int kExpected = 'c';
+  Matcher<int> m = MatcherCast<int>('c');
+  EXPECT_TRUE(m.Matches(kExpected));
+  EXPECT_FALSE(m.Matches(kExpected + 1));
+}
+
+struct NonImplicitlyConstructibleTypeWithOperatorEq {
+  friend bool operator==(
+      const NonImplicitlyConstructibleTypeWithOperatorEq& /* ignored */,
+      int rhs) {
+    return 42 == rhs;
+  }
+  friend bool operator==(
+      int lhs,
+      const NonImplicitlyConstructibleTypeWithOperatorEq& /* ignored */) {
+    return lhs == 42;
+  }
+};
+
+// Tests that MatcherCast<T>(m) works when m is a neither a matcher nor
+// implicitly convertible to the value type of the Matcher, but the value type
+// of the matcher has operator==() overload accepting m.
+TEST(MatcherCastTest, NonImplicitlyConstructibleTypeWithOperatorEq) {
+  Matcher<NonImplicitlyConstructibleTypeWithOperatorEq> m1 =
+      MatcherCast<NonImplicitlyConstructibleTypeWithOperatorEq>(42);
+  EXPECT_TRUE(m1.Matches(NonImplicitlyConstructibleTypeWithOperatorEq()));
+
+  Matcher<NonImplicitlyConstructibleTypeWithOperatorEq> m2 =
+      MatcherCast<NonImplicitlyConstructibleTypeWithOperatorEq>(239);
+  EXPECT_FALSE(m2.Matches(NonImplicitlyConstructibleTypeWithOperatorEq()));
+
+  // When updating the following lines please also change the comment to
+  // namespace convertible_from_any.
+  Matcher<int> m3 =
+      MatcherCast<int>(NonImplicitlyConstructibleTypeWithOperatorEq());
+  EXPECT_TRUE(m3.Matches(42));
+  EXPECT_FALSE(m3.Matches(239));
+}
+
+// ConvertibleFromAny does not work with MSVC. resulting in
+// error C2440: 'initializing': cannot convert from 'Eq' to 'M'
+// No constructor could take the source type, or constructor overload
+// resolution was ambiguous
+
+#if !defined _MSC_VER
+
+// The below ConvertibleFromAny struct is implicitly constructible from anything
+// and when in the same namespace can interact with other tests. In particular,
+// if it is in the same namespace as other tests and one removes
+//   NonImplicitlyConstructibleTypeWithOperatorEq::operator==(int lhs, ...);
+// then the corresponding test still compiles (and it should not!) by implicitly
+// converting NonImplicitlyConstructibleTypeWithOperatorEq to ConvertibleFromAny
+// in m3.Matcher().
+namespace convertible_from_any {
+// Implicitly convertible from any type.
+struct ConvertibleFromAny {
+  ConvertibleFromAny(int a_value) : value(a_value) {}
+  template <typename T>
+  ConvertibleFromAny(const T& /*a_value*/) : value(-1) {
+    ADD_FAILURE() << "Conversion constructor called";
+  }
+  int value;
+};
+
+bool operator==(const ConvertibleFromAny& a, const ConvertibleFromAny& b) {
+  return a.value == b.value;
+}
+
+ostream& operator<<(ostream& os, const ConvertibleFromAny& a) {
+  return os << a.value;
+}
+
+TEST(MatcherCastTest, ConversionConstructorIsUsed) {
+  Matcher<ConvertibleFromAny> m = MatcherCast<ConvertibleFromAny>(1);
+  EXPECT_TRUE(m.Matches(ConvertibleFromAny(1)));
+  EXPECT_FALSE(m.Matches(ConvertibleFromAny(2)));
+}
+
+TEST(MatcherCastTest, FromConvertibleFromAny) {
+  Matcher<ConvertibleFromAny> m =
+      MatcherCast<ConvertibleFromAny>(Eq(ConvertibleFromAny(1)));
+  EXPECT_TRUE(m.Matches(ConvertibleFromAny(1)));
+  EXPECT_FALSE(m.Matches(ConvertibleFromAny(2)));
+}
+}  // namespace convertible_from_any
+
+#endif  // !defined _MSC_VER
+
+struct IntReferenceWrapper {
+  IntReferenceWrapper(const int& a_value) : value(&a_value) {}
+  const int* value;
+};
+
+bool operator==(const IntReferenceWrapper& a, const IntReferenceWrapper& b) {
+  return a.value == b.value;
+}
+
+TEST(MatcherCastTest, ValueIsNotCopied) {
+  int n = 42;
+  Matcher<IntReferenceWrapper> m = MatcherCast<IntReferenceWrapper>(n);
+  // Verify that the matcher holds a reference to n, not to its temporary copy.
+  EXPECT_TRUE(m.Matches(n));
+}
+
+class Base {
+ public:
+  virtual ~Base() {}
+  Base() {}
+
+ private:
+  Base(const Base&) = delete;
+  Base& operator=(const Base&) = delete;
+};
+
+class Derived : public Base {
+ public:
+  Derived() : Base() {}
+  int i;
+};
+
+class OtherDerived : public Base {};
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(SafeMatcherCastTest);
+
+// Tests that SafeMatcherCast<T>(m) works when m is a polymorphic matcher.
+TEST_P(SafeMatcherCastTestP, FromPolymorphicMatcher) {
+  Matcher<char> m2;
+  if (use_gtest_matcher_) {
+    m2 = SafeMatcherCast<char>(GtestGreaterThan(32));
+  } else {
+    m2 = SafeMatcherCast<char>(Gt(32));
+  }
+  EXPECT_TRUE(m2.Matches('A'));
+  EXPECT_FALSE(m2.Matches('\n'));
+}
+
+// Tests that SafeMatcherCast<T>(m) works when m is a Matcher<U> where
+// T and U are arithmetic types and T can be losslessly converted to
+// U.
+TEST(SafeMatcherCastTest, FromLosslesslyConvertibleArithmeticType) {
+  Matcher<double> m1 = DoubleEq(1.0);
+  Matcher<float> m2 = SafeMatcherCast<float>(m1);
+  EXPECT_TRUE(m2.Matches(1.0f));
+  EXPECT_FALSE(m2.Matches(2.0f));
+
+  Matcher<char> m3 = SafeMatcherCast<char>(TypedEq<int>('a'));
+  EXPECT_TRUE(m3.Matches('a'));
+  EXPECT_FALSE(m3.Matches('b'));
+}
+
+// Tests that SafeMatcherCast<T>(m) works when m is a Matcher<U> where T and U
+// are pointers or references to a derived and a base class, correspondingly.
+TEST(SafeMatcherCastTest, FromBaseClass) {
+  Derived d, d2;
+  Matcher<Base*> m1 = Eq(&d);
+  Matcher<Derived*> m2 = SafeMatcherCast<Derived*>(m1);
+  EXPECT_TRUE(m2.Matches(&d));
+  EXPECT_FALSE(m2.Matches(&d2));
+
+  Matcher<Base&> m3 = Ref(d);
+  Matcher<Derived&> m4 = SafeMatcherCast<Derived&>(m3);
+  EXPECT_TRUE(m4.Matches(d));
+  EXPECT_FALSE(m4.Matches(d2));
+}
+
+// Tests that SafeMatcherCast<T&>(m) works when m is a Matcher<const T&>.
+TEST(SafeMatcherCastTest, FromConstReferenceToReference) {
+  int n = 0;
+  Matcher<const int&> m1 = Ref(n);
+  Matcher<int&> m2 = SafeMatcherCast<int&>(m1);
+  int n1 = 0;
+  EXPECT_TRUE(m2.Matches(n));
+  EXPECT_FALSE(m2.Matches(n1));
+}
+
+// Tests that MatcherCast<const T&>(m) works when m is a Matcher<T>.
+TEST(SafeMatcherCastTest, FromNonReferenceToConstReference) {
+  Matcher<std::unique_ptr<int>> m1 = IsNull();
+  Matcher<const std::unique_ptr<int>&> m2 =
+      SafeMatcherCast<const std::unique_ptr<int>&>(m1);
+  EXPECT_TRUE(m2.Matches(std::unique_ptr<int>()));
+  EXPECT_FALSE(m2.Matches(std::unique_ptr<int>(new int)));
+}
+
+// Tests that SafeMatcherCast<T&>(m) works when m is a Matcher<T>.
+TEST(SafeMatcherCastTest, FromNonReferenceToReference) {
+  Matcher<int> m1 = Eq(0);
+  Matcher<int&> m2 = SafeMatcherCast<int&>(m1);
+  int n = 0;
+  EXPECT_TRUE(m2.Matches(n));
+  n = 1;
+  EXPECT_FALSE(m2.Matches(n));
+}
+
+// Tests that SafeMatcherCast<T>(m) works when m is a Matcher<T>.
+TEST(SafeMatcherCastTest, FromSameType) {
+  Matcher<int> m1 = Eq(0);
+  Matcher<int> m2 = SafeMatcherCast<int>(m1);
+  EXPECT_TRUE(m2.Matches(0));
+  EXPECT_FALSE(m2.Matches(1));
+}
+
+#if !defined _MSC_VER
+
+namespace convertible_from_any {
+TEST(SafeMatcherCastTest, ConversionConstructorIsUsed) {
+  Matcher<ConvertibleFromAny> m = SafeMatcherCast<ConvertibleFromAny>(1);
+  EXPECT_TRUE(m.Matches(ConvertibleFromAny(1)));
+  EXPECT_FALSE(m.Matches(ConvertibleFromAny(2)));
+}
+
+TEST(SafeMatcherCastTest, FromConvertibleFromAny) {
+  Matcher<ConvertibleFromAny> m =
+      SafeMatcherCast<ConvertibleFromAny>(Eq(ConvertibleFromAny(1)));
+  EXPECT_TRUE(m.Matches(ConvertibleFromAny(1)));
+  EXPECT_FALSE(m.Matches(ConvertibleFromAny(2)));
+}
+}  // namespace convertible_from_any
+
+#endif  // !defined _MSC_VER
+
+TEST(SafeMatcherCastTest, ValueIsNotCopied) {
+  int n = 42;
+  Matcher<IntReferenceWrapper> m = SafeMatcherCast<IntReferenceWrapper>(n);
+  // Verify that the matcher holds a reference to n, not to its temporary copy.
+  EXPECT_TRUE(m.Matches(n));
+}
+
+TEST(ExpectThat, TakesLiterals) {
+  EXPECT_THAT(1, 1);
+  EXPECT_THAT(1.0, 1.0);
+  EXPECT_THAT(std::string(), "");
+}
+
+TEST(ExpectThat, TakesFunctions) {
+  struct Helper {
+    static void Func() {}
+  };
+  void (*func)() = Helper::Func;
+  EXPECT_THAT(func, Helper::Func);
+  EXPECT_THAT(func, &Helper::Func);
+}
+
+// Tests that A<T>() matches any value of type T.
+TEST(ATest, MatchesAnyValue) {
+  // Tests a matcher for a value type.
+  Matcher<double> m1 = A<double>();
+  EXPECT_TRUE(m1.Matches(91.43));
+  EXPECT_TRUE(m1.Matches(-15.32));
+
+  // Tests a matcher for a reference type.
+  int a = 2;
+  int b = -6;
+  Matcher<int&> m2 = A<int&>();
+  EXPECT_TRUE(m2.Matches(a));
+  EXPECT_TRUE(m2.Matches(b));
+}
+
+TEST(ATest, WorksForDerivedClass) {
+  Base base;
+  Derived derived;
+  EXPECT_THAT(&base, A<Base*>());
+  // This shouldn't compile: EXPECT_THAT(&base, A<Derived*>());
+  EXPECT_THAT(&derived, A<Base*>());
+  EXPECT_THAT(&derived, A<Derived*>());
+}
+
+// Tests that A<T>() describes itself properly.
+TEST(ATest, CanDescribeSelf) { EXPECT_EQ("is anything", Describe(A<bool>())); }
+
+// Tests that An<T>() matches any value of type T.
+TEST(AnTest, MatchesAnyValue) {
+  // Tests a matcher for a value type.
+  Matcher<int> m1 = An<int>();
+  EXPECT_TRUE(m1.Matches(9143));
+  EXPECT_TRUE(m1.Matches(-1532));
+
+  // Tests a matcher for a reference type.
+  int a = 2;
+  int b = -6;
+  Matcher<int&> m2 = An<int&>();
+  EXPECT_TRUE(m2.Matches(a));
+  EXPECT_TRUE(m2.Matches(b));
+}
+
+// Tests that An<T>() describes itself properly.
+TEST(AnTest, CanDescribeSelf) { EXPECT_EQ("is anything", Describe(An<int>())); }
+
+// Tests that _ can be used as a matcher for any type and matches any
+// value of that type.
+TEST(UnderscoreTest, MatchesAnyValue) {
+  // Uses _ as a matcher for a value type.
+  Matcher<int> m1 = _;
+  EXPECT_TRUE(m1.Matches(123));
+  EXPECT_TRUE(m1.Matches(-242));
+
+  // Uses _ as a matcher for a reference type.
+  bool a = false;
+  const bool b = true;
+  Matcher<const bool&> m2 = _;
+  EXPECT_TRUE(m2.Matches(a));
+  EXPECT_TRUE(m2.Matches(b));
+}
+
+// Tests that _ describes itself properly.
+TEST(UnderscoreTest, CanDescribeSelf) {
+  Matcher<int> m = _;
+  EXPECT_EQ("is anything", Describe(m));
+}
+
+// Tests that Eq(x) matches any value equal to x.
+TEST(EqTest, MatchesEqualValue) {
+  // 2 C-strings with same content but different addresses.
+  const char a1[] = "hi";
+  const char a2[] = "hi";
+
+  Matcher<const char*> m1 = Eq(a1);
+  EXPECT_TRUE(m1.Matches(a1));
+  EXPECT_FALSE(m1.Matches(a2));
+}
+
+// Tests that Eq(v) describes itself properly.
+
+class Unprintable {
+ public:
+  Unprintable() : c_('a') {}
+
+  bool operator==(const Unprintable& /* rhs */) const { return true; }
+  // -Wunused-private-field: dummy accessor for `c_`.
+  char dummy_c() { return c_; }
+
+ private:
+  char c_;
+};
+
+TEST(EqTest, CanDescribeSelf) {
+  Matcher<Unprintable> m = Eq(Unprintable());
+  EXPECT_EQ("is equal to 1-byte object <61>", Describe(m));
+}
+
+// Tests that Eq(v) can be used to match any type that supports
+// comparing with type T, where T is v's type.
+TEST(EqTest, IsPolymorphic) {
+  Matcher<int> m1 = Eq(1);
+  EXPECT_TRUE(m1.Matches(1));
+  EXPECT_FALSE(m1.Matches(2));
+
+  Matcher<char> m2 = Eq(1);
+  EXPECT_TRUE(m2.Matches('\1'));
+  EXPECT_FALSE(m2.Matches('a'));
+}
+
+// Tests that TypedEq<T>(v) matches values of type T that's equal to v.
+TEST(TypedEqTest, ChecksEqualityForGivenType) {
+  Matcher<char> m1 = TypedEq<char>('a');
+  EXPECT_TRUE(m1.Matches('a'));
+  EXPECT_FALSE(m1.Matches('b'));
+
+  Matcher<int> m2 = TypedEq<int>(6);
+  EXPECT_TRUE(m2.Matches(6));
+  EXPECT_FALSE(m2.Matches(7));
+}
+
+// Tests that TypedEq(v) describes itself properly.
+TEST(TypedEqTest, CanDescribeSelf) {
+  EXPECT_EQ("is equal to 2", Describe(TypedEq<int>(2)));
+}
+
+// Tests that TypedEq<T>(v) has type Matcher<T>.
+
+// Type<T>::IsTypeOf(v) compiles if and only if the type of value v is T, where
+// T is a "bare" type (i.e. not in the form of const U or U&).  If v's type is
+// not T, the compiler will generate a message about "undefined reference".
+template <typename T>
+struct Type {
+  static bool IsTypeOf(const T& /* v */) { return true; }
+
+  template <typename T2>
+  static void IsTypeOf(T2 v);
+};
+
+TEST(TypedEqTest, HasSpecifiedType) {
+  // Verfies that the type of TypedEq<T>(v) is Matcher<T>.
+  Type<Matcher<int>>::IsTypeOf(TypedEq<int>(5));
+  Type<Matcher<double>>::IsTypeOf(TypedEq<double>(5));
+}
+
+// Tests that Ge(v) matches anything >= v.
+TEST(GeTest, ImplementsGreaterThanOrEqual) {
+  Matcher<int> m1 = Ge(0);
+  EXPECT_TRUE(m1.Matches(1));
+  EXPECT_TRUE(m1.Matches(0));
+  EXPECT_FALSE(m1.Matches(-1));
+}
+
+// Tests that Ge(v) describes itself properly.
+TEST(GeTest, CanDescribeSelf) {
+  Matcher<int> m = Ge(5);
+  EXPECT_EQ("is >= 5", Describe(m));
+}
+
+// Tests that Gt(v) matches anything > v.
+TEST(GtTest, ImplementsGreaterThan) {
+  Matcher<double> m1 = Gt(0);
+  EXPECT_TRUE(m1.Matches(1.0));
+  EXPECT_FALSE(m1.Matches(0.0));
+  EXPECT_FALSE(m1.Matches(-1.0));
+}
+
+// Tests that Gt(v) describes itself properly.
+TEST(GtTest, CanDescribeSelf) {
+  Matcher<int> m = Gt(5);
+  EXPECT_EQ("is > 5", Describe(m));
+}
+
+// Tests that Le(v) matches anything <= v.
+TEST(LeTest, ImplementsLessThanOrEqual) {
+  Matcher<char> m1 = Le('b');
+  EXPECT_TRUE(m1.Matches('a'));
+  EXPECT_TRUE(m1.Matches('b'));
+  EXPECT_FALSE(m1.Matches('c'));
+}
+
+// Tests that Le(v) describes itself properly.
+TEST(LeTest, CanDescribeSelf) {
+  Matcher<int> m = Le(5);
+  EXPECT_EQ("is <= 5", Describe(m));
+}
+
+// Tests that Lt(v) matches anything < v.
+TEST(LtTest, ImplementsLessThan) {
+  Matcher<const std::string&> m1 = Lt("Hello");
+  EXPECT_TRUE(m1.Matches("Abc"));
+  EXPECT_FALSE(m1.Matches("Hello"));
+  EXPECT_FALSE(m1.Matches("Hello, world!"));
+}
+
+// Tests that Lt(v) describes itself properly.
+TEST(LtTest, CanDescribeSelf) {
+  Matcher<int> m = Lt(5);
+  EXPECT_EQ("is < 5", Describe(m));
+}
+
+// Tests that Ne(v) matches anything != v.
+TEST(NeTest, ImplementsNotEqual) {
+  Matcher<int> m1 = Ne(0);
+  EXPECT_TRUE(m1.Matches(1));
+  EXPECT_TRUE(m1.Matches(-1));
+  EXPECT_FALSE(m1.Matches(0));
+}
+
+// Tests that Ne(v) describes itself properly.
+TEST(NeTest, CanDescribeSelf) {
+  Matcher<int> m = Ne(5);
+  EXPECT_EQ("isn't equal to 5", Describe(m));
+}
+
+class MoveOnly {
+ public:
+  explicit MoveOnly(int i) : i_(i) {}
+  MoveOnly(const MoveOnly&) = delete;
+  MoveOnly(MoveOnly&&) = default;
+  MoveOnly& operator=(const MoveOnly&) = delete;
+  MoveOnly& operator=(MoveOnly&&) = default;
+
+  bool operator==(const MoveOnly& other) const { return i_ == other.i_; }
+  bool operator!=(const MoveOnly& other) const { return i_ != other.i_; }
+  bool operator<(const MoveOnly& other) const { return i_ < other.i_; }
+  bool operator<=(const MoveOnly& other) const { return i_ <= other.i_; }
+  bool operator>(const MoveOnly& other) const { return i_ > other.i_; }
+  bool operator>=(const MoveOnly& other) const { return i_ >= other.i_; }
+
+ private:
+  int i_;
+};
+
+struct MoveHelper {
+  MOCK_METHOD1(Call, void(MoveOnly));
+};
+
+// Disable this test in VS 2015 (version 14), where it fails when SEH is enabled
+#if defined(_MSC_VER) && (_MSC_VER < 1910)
+TEST(ComparisonBaseTest, DISABLED_WorksWithMoveOnly) {
+#else
+TEST(ComparisonBaseTest, WorksWithMoveOnly) {
+#endif
+  MoveOnly m{0};
+  MoveHelper helper;
+
+  EXPECT_CALL(helper, Call(Eq(ByRef(m))));
+  helper.Call(MoveOnly(0));
+  EXPECT_CALL(helper, Call(Ne(ByRef(m))));
+  helper.Call(MoveOnly(1));
+  EXPECT_CALL(helper, Call(Le(ByRef(m))));
+  helper.Call(MoveOnly(0));
+  EXPECT_CALL(helper, Call(Lt(ByRef(m))));
+  helper.Call(MoveOnly(-1));
+  EXPECT_CALL(helper, Call(Ge(ByRef(m))));
+  helper.Call(MoveOnly(0));
+  EXPECT_CALL(helper, Call(Gt(ByRef(m))));
+  helper.Call(MoveOnly(1));
+}
+
+// Tests that IsNull() matches any NULL pointer of any type.
+TEST(IsNullTest, MatchesNullPointer) {
+  Matcher<int*> m1 = IsNull();
+  int* p1 = nullptr;
+  int n = 0;
+  EXPECT_TRUE(m1.Matches(p1));
+  EXPECT_FALSE(m1.Matches(&n));
+
+  Matcher<const char*> m2 = IsNull();
+  const char* p2 = nullptr;
+  EXPECT_TRUE(m2.Matches(p2));
+  EXPECT_FALSE(m2.Matches("hi"));
+
+  Matcher<void*> m3 = IsNull();
+  void* p3 = nullptr;
+  EXPECT_TRUE(m3.Matches(p3));
+  EXPECT_FALSE(m3.Matches(reinterpret_cast<void*>(0xbeef)));
+}
+
+TEST(IsNullTest, StdFunction) {
+  const Matcher<std::function<void()>> m = IsNull();
+
+  EXPECT_TRUE(m.Matches(std::function<void()>()));
+  EXPECT_FALSE(m.Matches([] {}));
+}
+
+// Tests that IsNull() describes itself properly.
+TEST(IsNullTest, CanDescribeSelf) {
+  Matcher<int*> m = IsNull();
+  EXPECT_EQ("is NULL", Describe(m));
+  EXPECT_EQ("isn't NULL", DescribeNegation(m));
+}
+
+// Tests that NotNull() matches any non-NULL pointer of any type.
+TEST(NotNullTest, MatchesNonNullPointer) {
+  Matcher<int*> m1 = NotNull();
+  int* p1 = nullptr;
+  int n = 0;
+  EXPECT_FALSE(m1.Matches(p1));
+  EXPECT_TRUE(m1.Matches(&n));
+
+  Matcher<const char*> m2 = NotNull();
+  const char* p2 = nullptr;
+  EXPECT_FALSE(m2.Matches(p2));
+  EXPECT_TRUE(m2.Matches("hi"));
+}
+
+TEST(NotNullTest, LinkedPtr) {
+  const Matcher<std::shared_ptr<int>> m = NotNull();
+  const std::shared_ptr<int> null_p;
+  const std::shared_ptr<int> non_null_p(new int);
+
+  EXPECT_FALSE(m.Matches(null_p));
+  EXPECT_TRUE(m.Matches(non_null_p));
+}
+
+TEST(NotNullTest, ReferenceToConstLinkedPtr) {
+  const Matcher<const std::shared_ptr<double>&> m = NotNull();
+  const std::shared_ptr<double> null_p;
+  const std::shared_ptr<double> non_null_p(new double);
+
+  EXPECT_FALSE(m.Matches(null_p));
+  EXPECT_TRUE(m.Matches(non_null_p));
+}
+
+TEST(NotNullTest, StdFunction) {
+  const Matcher<std::function<void()>> m = NotNull();
+
+  EXPECT_TRUE(m.Matches([] {}));
+  EXPECT_FALSE(m.Matches(std::function<void()>()));
+}
+
+// Tests that NotNull() describes itself properly.
+TEST(NotNullTest, CanDescribeSelf) {
+  Matcher<int*> m = NotNull();
+  EXPECT_EQ("isn't NULL", Describe(m));
+}
+
+// Tests that Ref(variable) matches an argument that references
+// 'variable'.
+TEST(RefTest, MatchesSameVariable) {
+  int a = 0;
+  int b = 0;
+  Matcher<int&> m = Ref(a);
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_FALSE(m.Matches(b));
+}
+
+// Tests that Ref(variable) describes itself properly.
+TEST(RefTest, CanDescribeSelf) {
+  int n = 5;
+  Matcher<int&> m = Ref(n);
+  stringstream ss;
+  ss << "references the variable @" << &n << " 5";
+  EXPECT_EQ(ss.str(), Describe(m));
+}
+
+// Test that Ref(non_const_varialbe) can be used as a matcher for a
+// const reference.
+TEST(RefTest, CanBeUsedAsMatcherForConstReference) {
+  int a = 0;
+  int b = 0;
+  Matcher<const int&> m = Ref(a);
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_FALSE(m.Matches(b));
+}
+
+// Tests that Ref(variable) is covariant, i.e. Ref(derived) can be
+// used wherever Ref(base) can be used (Ref(derived) is a sub-type
+// of Ref(base), but not vice versa.
+
+TEST(RefTest, IsCovariant) {
+  Base base, base2;
+  Derived derived;
+  Matcher<const Base&> m1 = Ref(base);
+  EXPECT_TRUE(m1.Matches(base));
+  EXPECT_FALSE(m1.Matches(base2));
+  EXPECT_FALSE(m1.Matches(derived));
+
+  m1 = Ref(derived);
+  EXPECT_TRUE(m1.Matches(derived));
+  EXPECT_FALSE(m1.Matches(base));
+  EXPECT_FALSE(m1.Matches(base2));
+}
+
+TEST(RefTest, ExplainsResult) {
+  int n = 0;
+  EXPECT_THAT(Explain(Matcher<const int&>(Ref(n)), n),
+              StartsWith("which is located @"));
+
+  int m = 0;
+  EXPECT_THAT(Explain(Matcher<const int&>(Ref(n)), m),
+              StartsWith("which is located @"));
+}
+
+// Tests string comparison matchers.
+
+template <typename T = std::string>
+std::string FromStringLike(internal::StringLike<T> str) {
+  return std::string(str);
+}
+
+TEST(StringLike, TestConversions) {
+  EXPECT_EQ("foo", FromStringLike("foo"));
+  EXPECT_EQ("foo", FromStringLike(std::string("foo")));
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  EXPECT_EQ("foo", FromStringLike(internal::StringView("foo")));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+
+  // Non deducible types.
+  EXPECT_EQ("", FromStringLike({}));
+  EXPECT_EQ("foo", FromStringLike({'f', 'o', 'o'}));
+  const char buf[] = "foo";
+  EXPECT_EQ("foo", FromStringLike({buf, buf + 3}));
+}
+
+TEST(StrEqTest, MatchesEqualString) {
+  Matcher<const char*> m = StrEq(std::string("Hello"));
+  EXPECT_TRUE(m.Matches("Hello"));
+  EXPECT_FALSE(m.Matches("hello"));
+  EXPECT_FALSE(m.Matches(nullptr));
+
+  Matcher<const std::string&> m2 = StrEq("Hello");
+  EXPECT_TRUE(m2.Matches("Hello"));
+  EXPECT_FALSE(m2.Matches("Hi"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  Matcher<const internal::StringView&> m3 =
+      StrEq(internal::StringView("Hello"));
+  EXPECT_TRUE(m3.Matches(internal::StringView("Hello")));
+  EXPECT_FALSE(m3.Matches(internal::StringView("hello")));
+  EXPECT_FALSE(m3.Matches(internal::StringView()));
+
+  Matcher<const internal::StringView&> m_empty = StrEq("");
+  EXPECT_TRUE(m_empty.Matches(internal::StringView("")));
+  EXPECT_TRUE(m_empty.Matches(internal::StringView()));
+  EXPECT_FALSE(m_empty.Matches(internal::StringView("hello")));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(StrEqTest, CanDescribeSelf) {
+  Matcher<std::string> m = StrEq("Hi-\'\"?\\\a\b\f\n\r\t\v\xD3");
+  EXPECT_EQ("is equal to \"Hi-\'\\\"?\\\\\\a\\b\\f\\n\\r\\t\\v\\xD3\"",
+            Describe(m));
+
+  std::string str("01204500800");
+  str[3] = '\0';
+  Matcher<std::string> m2 = StrEq(str);
+  EXPECT_EQ("is equal to \"012\\04500800\"", Describe(m2));
+  str[0] = str[6] = str[7] = str[9] = str[10] = '\0';
+  Matcher<std::string> m3 = StrEq(str);
+  EXPECT_EQ("is equal to \"\\012\\045\\0\\08\\0\\0\"", Describe(m3));
+}
+
+TEST(StrNeTest, MatchesUnequalString) {
+  Matcher<const char*> m = StrNe("Hello");
+  EXPECT_TRUE(m.Matches(""));
+  EXPECT_TRUE(m.Matches(nullptr));
+  EXPECT_FALSE(m.Matches("Hello"));
+
+  Matcher<std::string> m2 = StrNe(std::string("Hello"));
+  EXPECT_TRUE(m2.Matches("hello"));
+  EXPECT_FALSE(m2.Matches("Hello"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  Matcher<const internal::StringView> m3 = StrNe(internal::StringView("Hello"));
+  EXPECT_TRUE(m3.Matches(internal::StringView("")));
+  EXPECT_TRUE(m3.Matches(internal::StringView()));
+  EXPECT_FALSE(m3.Matches(internal::StringView("Hello")));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(StrNeTest, CanDescribeSelf) {
+  Matcher<const char*> m = StrNe("Hi");
+  EXPECT_EQ("isn't equal to \"Hi\"", Describe(m));
+}
+
+TEST(StrCaseEqTest, MatchesEqualStringIgnoringCase) {
+  Matcher<const char*> m = StrCaseEq(std::string("Hello"));
+  EXPECT_TRUE(m.Matches("Hello"));
+  EXPECT_TRUE(m.Matches("hello"));
+  EXPECT_FALSE(m.Matches("Hi"));
+  EXPECT_FALSE(m.Matches(nullptr));
+
+  Matcher<const std::string&> m2 = StrCaseEq("Hello");
+  EXPECT_TRUE(m2.Matches("hello"));
+  EXPECT_FALSE(m2.Matches("Hi"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  Matcher<const internal::StringView&> m3 =
+      StrCaseEq(internal::StringView("Hello"));
+  EXPECT_TRUE(m3.Matches(internal::StringView("Hello")));
+  EXPECT_TRUE(m3.Matches(internal::StringView("hello")));
+  EXPECT_FALSE(m3.Matches(internal::StringView("Hi")));
+  EXPECT_FALSE(m3.Matches(internal::StringView()));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(StrCaseEqTest, MatchesEqualStringWith0IgnoringCase) {
+  std::string str1("oabocdooeoo");
+  std::string str2("OABOCDOOEOO");
+  Matcher<const std::string&> m0 = StrCaseEq(str1);
+  EXPECT_FALSE(m0.Matches(str2 + std::string(1, '\0')));
+
+  str1[3] = str2[3] = '\0';
+  Matcher<const std::string&> m1 = StrCaseEq(str1);
+  EXPECT_TRUE(m1.Matches(str2));
+
+  str1[0] = str1[6] = str1[7] = str1[10] = '\0';
+  str2[0] = str2[6] = str2[7] = str2[10] = '\0';
+  Matcher<const std::string&> m2 = StrCaseEq(str1);
+  str1[9] = str2[9] = '\0';
+  EXPECT_FALSE(m2.Matches(str2));
+
+  Matcher<const std::string&> m3 = StrCaseEq(str1);
+  EXPECT_TRUE(m3.Matches(str2));
+
+  EXPECT_FALSE(m3.Matches(str2 + "x"));
+  str2.append(1, '\0');
+  EXPECT_FALSE(m3.Matches(str2));
+  EXPECT_FALSE(m3.Matches(std::string(str2, 0, 9)));
+}
+
+TEST(StrCaseEqTest, CanDescribeSelf) {
+  Matcher<std::string> m = StrCaseEq("Hi");
+  EXPECT_EQ("is equal to (ignoring case) \"Hi\"", Describe(m));
+}
+
+TEST(StrCaseNeTest, MatchesUnequalStringIgnoringCase) {
+  Matcher<const char*> m = StrCaseNe("Hello");
+  EXPECT_TRUE(m.Matches("Hi"));
+  EXPECT_TRUE(m.Matches(nullptr));
+  EXPECT_FALSE(m.Matches("Hello"));
+  EXPECT_FALSE(m.Matches("hello"));
+
+  Matcher<std::string> m2 = StrCaseNe(std::string("Hello"));
+  EXPECT_TRUE(m2.Matches(""));
+  EXPECT_FALSE(m2.Matches("Hello"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  Matcher<const internal::StringView> m3 =
+      StrCaseNe(internal::StringView("Hello"));
+  EXPECT_TRUE(m3.Matches(internal::StringView("Hi")));
+  EXPECT_TRUE(m3.Matches(internal::StringView()));
+  EXPECT_FALSE(m3.Matches(internal::StringView("Hello")));
+  EXPECT_FALSE(m3.Matches(internal::StringView("hello")));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(StrCaseNeTest, CanDescribeSelf) {
+  Matcher<const char*> m = StrCaseNe("Hi");
+  EXPECT_EQ("isn't equal to (ignoring case) \"Hi\"", Describe(m));
+}
+
+// Tests that HasSubstr() works for matching string-typed values.
+TEST(HasSubstrTest, WorksForStringClasses) {
+  const Matcher<std::string> m1 = HasSubstr("foo");
+  EXPECT_TRUE(m1.Matches(std::string("I love food.")));
+  EXPECT_FALSE(m1.Matches(std::string("tofo")));
+
+  const Matcher<const std::string&> m2 = HasSubstr("foo");
+  EXPECT_TRUE(m2.Matches(std::string("I love food.")));
+  EXPECT_FALSE(m2.Matches(std::string("tofo")));
+
+  const Matcher<std::string> m_empty = HasSubstr("");
+  EXPECT_TRUE(m_empty.Matches(std::string()));
+  EXPECT_TRUE(m_empty.Matches(std::string("not empty")));
+}
+
+// Tests that HasSubstr() works for matching C-string-typed values.
+TEST(HasSubstrTest, WorksForCStrings) {
+  const Matcher<char*> m1 = HasSubstr("foo");
+  EXPECT_TRUE(m1.Matches(const_cast<char*>("I love food.")));
+  EXPECT_FALSE(m1.Matches(const_cast<char*>("tofo")));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const char*> m2 = HasSubstr("foo");
+  EXPECT_TRUE(m2.Matches("I love food."));
+  EXPECT_FALSE(m2.Matches("tofo"));
+  EXPECT_FALSE(m2.Matches(nullptr));
+
+  const Matcher<const char*> m_empty = HasSubstr("");
+  EXPECT_TRUE(m_empty.Matches("not empty"));
+  EXPECT_TRUE(m_empty.Matches(""));
+  EXPECT_FALSE(m_empty.Matches(nullptr));
+}
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+// Tests that HasSubstr() works for matching StringView-typed values.
+TEST(HasSubstrTest, WorksForStringViewClasses) {
+  const Matcher<internal::StringView> m1 =
+      HasSubstr(internal::StringView("foo"));
+  EXPECT_TRUE(m1.Matches(internal::StringView("I love food.")));
+  EXPECT_FALSE(m1.Matches(internal::StringView("tofo")));
+  EXPECT_FALSE(m1.Matches(internal::StringView()));
+
+  const Matcher<const internal::StringView&> m2 = HasSubstr("foo");
+  EXPECT_TRUE(m2.Matches(internal::StringView("I love food.")));
+  EXPECT_FALSE(m2.Matches(internal::StringView("tofo")));
+  EXPECT_FALSE(m2.Matches(internal::StringView()));
+
+  const Matcher<const internal::StringView&> m3 = HasSubstr("");
+  EXPECT_TRUE(m3.Matches(internal::StringView("foo")));
+  EXPECT_TRUE(m3.Matches(internal::StringView("")));
+  EXPECT_TRUE(m3.Matches(internal::StringView()));
+}
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+
+// Tests that HasSubstr(s) describes itself properly.
+TEST(HasSubstrTest, CanDescribeSelf) {
+  Matcher<std::string> m = HasSubstr("foo\n\"");
+  EXPECT_EQ("has substring \"foo\\n\\\"\"", Describe(m));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(KeyTest);
+
+TEST(KeyTest, CanDescribeSelf) {
+  Matcher<const pair<std::string, int>&> m = Key("foo");
+  EXPECT_EQ("has a key that is equal to \"foo\"", Describe(m));
+  EXPECT_EQ("doesn't have a key that is equal to \"foo\"", DescribeNegation(m));
+}
+
+TEST_P(KeyTestP, ExplainsResult) {
+  Matcher<pair<int, bool>> m = Key(GreaterThan(10));
+  EXPECT_EQ("whose first field is a value which is 5 less than 10",
+            Explain(m, make_pair(5, true)));
+  EXPECT_EQ("whose first field is a value which is 5 more than 10",
+            Explain(m, make_pair(15, true)));
+}
+
+TEST(KeyTest, MatchesCorrectly) {
+  pair<int, std::string> p(25, "foo");
+  EXPECT_THAT(p, Key(25));
+  EXPECT_THAT(p, Not(Key(42)));
+  EXPECT_THAT(p, Key(Ge(20)));
+  EXPECT_THAT(p, Not(Key(Lt(25))));
+}
+
+TEST(KeyTest, WorksWithMoveOnly) {
+  pair<std::unique_ptr<int>, std::unique_ptr<int>> p;
+  EXPECT_THAT(p, Key(Eq(nullptr)));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(PairTest);
+
+template <size_t I>
+struct Tag {};
+
+struct PairWithGet {
+  int member_1;
+  std::string member_2;
+  using first_type = int;
+  using second_type = std::string;
+
+  const int& GetImpl(Tag<0>) const { return member_1; }
+  const std::string& GetImpl(Tag<1>) const { return member_2; }
+};
+template <size_t I>
+auto get(const PairWithGet& value) -> decltype(value.GetImpl(Tag<I>())) {
+  return value.GetImpl(Tag<I>());
+}
+TEST(PairTest, MatchesPairWithGetCorrectly) {
+  PairWithGet p{25, "foo"};
+  EXPECT_THAT(p, Key(25));
+  EXPECT_THAT(p, Not(Key(42)));
+  EXPECT_THAT(p, Key(Ge(20)));
+  EXPECT_THAT(p, Not(Key(Lt(25))));
+
+  std::vector<PairWithGet> v = {{11, "Foo"}, {29, "gMockIsBestMock"}};
+  EXPECT_THAT(v, Contains(Key(29)));
+}
+
+TEST(KeyTest, SafelyCastsInnerMatcher) {
+  Matcher<int> is_positive = Gt(0);
+  Matcher<int> is_negative = Lt(0);
+  pair<char, bool> p('a', true);
+  EXPECT_THAT(p, Key(is_positive));
+  EXPECT_THAT(p, Not(Key(is_negative)));
+}
+
+TEST(KeyTest, InsideContainsUsingMap) {
+  map<int, char> container;
+  container.insert(make_pair(1, 'a'));
+  container.insert(make_pair(2, 'b'));
+  container.insert(make_pair(4, 'c'));
+  EXPECT_THAT(container, Contains(Key(1)));
+  EXPECT_THAT(container, Not(Contains(Key(3))));
+}
+
+TEST(KeyTest, InsideContainsUsingMultimap) {
+  multimap<int, char> container;
+  container.insert(make_pair(1, 'a'));
+  container.insert(make_pair(2, 'b'));
+  container.insert(make_pair(4, 'c'));
+
+  EXPECT_THAT(container, Not(Contains(Key(25))));
+  container.insert(make_pair(25, 'd'));
+  EXPECT_THAT(container, Contains(Key(25)));
+  container.insert(make_pair(25, 'e'));
+  EXPECT_THAT(container, Contains(Key(25)));
+
+  EXPECT_THAT(container, Contains(Key(1)));
+  EXPECT_THAT(container, Not(Contains(Key(3))));
+}
+
+TEST(PairTest, Typing) {
+  // Test verifies the following type conversions can be compiled.
+  Matcher<const pair<const char*, int>&> m1 = Pair("foo", 42);
+  Matcher<const pair<const char*, int>> m2 = Pair("foo", 42);
+  Matcher<pair<const char*, int>> m3 = Pair("foo", 42);
+
+  Matcher<pair<int, const std::string>> m4 = Pair(25, "42");
+  Matcher<pair<const std::string, int>> m5 = Pair("25", 42);
+}
+
+TEST(PairTest, CanDescribeSelf) {
+  Matcher<const pair<std::string, int>&> m1 = Pair("foo", 42);
+  EXPECT_EQ(
+      "has a first field that is equal to \"foo\""
+      ", and has a second field that is equal to 42",
+      Describe(m1));
+  EXPECT_EQ(
+      "has a first field that isn't equal to \"foo\""
+      ", or has a second field that isn't equal to 42",
+      DescribeNegation(m1));
+  // Double and triple negation (1 or 2 times not and description of negation).
+  Matcher<const pair<int, int>&> m2 = Not(Pair(Not(13), 42));
+  EXPECT_EQ(
+      "has a first field that isn't equal to 13"
+      ", and has a second field that is equal to 42",
+      DescribeNegation(m2));
+}
+
+TEST_P(PairTestP, CanExplainMatchResultTo) {
+  // If neither field matches, Pair() should explain about the first
+  // field.
+  const Matcher<pair<int, int>> m = Pair(GreaterThan(0), GreaterThan(0));
+  EXPECT_EQ("whose first field does not match, which is 1 less than 0",
+            Explain(m, make_pair(-1, -2)));
+
+  // If the first field matches but the second doesn't, Pair() should
+  // explain about the second field.
+  EXPECT_EQ("whose second field does not match, which is 2 less than 0",
+            Explain(m, make_pair(1, -2)));
+
+  // If the first field doesn't match but the second does, Pair()
+  // should explain about the first field.
+  EXPECT_EQ("whose first field does not match, which is 1 less than 0",
+            Explain(m, make_pair(-1, 2)));
+
+  // If both fields match, Pair() should explain about them both.
+  EXPECT_EQ(
+      "whose both fields match, where the first field is a value "
+      "which is 1 more than 0, and the second field is a value "
+      "which is 2 more than 0",
+      Explain(m, make_pair(1, 2)));
+
+  // If only the first match has an explanation, only this explanation should
+  // be printed.
+  const Matcher<pair<int, int>> explain_first = Pair(GreaterThan(0), 0);
+  EXPECT_EQ(
+      "whose both fields match, where the first field is a value "
+      "which is 1 more than 0",
+      Explain(explain_first, make_pair(1, 0)));
+
+  // If only the second match has an explanation, only this explanation should
+  // be printed.
+  const Matcher<pair<int, int>> explain_second = Pair(0, GreaterThan(0));
+  EXPECT_EQ(
+      "whose both fields match, where the second field is a value "
+      "which is 1 more than 0",
+      Explain(explain_second, make_pair(0, 1)));
+}
+
+TEST(PairTest, MatchesCorrectly) {
+  pair<int, std::string> p(25, "foo");
+
+  // Both fields match.
+  EXPECT_THAT(p, Pair(25, "foo"));
+  EXPECT_THAT(p, Pair(Ge(20), HasSubstr("o")));
+
+  // 'first' doesnt' match, but 'second' matches.
+  EXPECT_THAT(p, Not(Pair(42, "foo")));
+  EXPECT_THAT(p, Not(Pair(Lt(25), "foo")));
+
+  // 'first' matches, but 'second' doesn't match.
+  EXPECT_THAT(p, Not(Pair(25, "bar")));
+  EXPECT_THAT(p, Not(Pair(25, Not("foo"))));
+
+  // Neither field matches.
+  EXPECT_THAT(p, Not(Pair(13, "bar")));
+  EXPECT_THAT(p, Not(Pair(Lt(13), HasSubstr("a"))));
+}
+
+TEST(PairTest, WorksWithMoveOnly) {
+  pair<std::unique_ptr<int>, std::unique_ptr<int>> p;
+  p.second.reset(new int(7));
+  EXPECT_THAT(p, Pair(Eq(nullptr), Ne(nullptr)));
+}
+
+TEST(PairTest, SafelyCastsInnerMatchers) {
+  Matcher<int> is_positive = Gt(0);
+  Matcher<int> is_negative = Lt(0);
+  pair<char, bool> p('a', true);
+  EXPECT_THAT(p, Pair(is_positive, _));
+  EXPECT_THAT(p, Not(Pair(is_negative, _)));
+  EXPECT_THAT(p, Pair(_, is_positive));
+  EXPECT_THAT(p, Not(Pair(_, is_negative)));
+}
+
+TEST(PairTest, InsideContainsUsingMap) {
+  map<int, char> container;
+  container.insert(make_pair(1, 'a'));
+  container.insert(make_pair(2, 'b'));
+  container.insert(make_pair(4, 'c'));
+  EXPECT_THAT(container, Contains(Pair(1, 'a')));
+  EXPECT_THAT(container, Contains(Pair(1, _)));
+  EXPECT_THAT(container, Contains(Pair(_, 'a')));
+  EXPECT_THAT(container, Not(Contains(Pair(3, _))));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(FieldsAreTest);
+
+TEST(FieldsAreTest, MatchesCorrectly) {
+  std::tuple<int, std::string, double> p(25, "foo", .5);
+
+  // All fields match.
+  EXPECT_THAT(p, FieldsAre(25, "foo", .5));
+  EXPECT_THAT(p, FieldsAre(Ge(20), HasSubstr("o"), DoubleEq(.5)));
+
+  // Some don't match.
+  EXPECT_THAT(p, Not(FieldsAre(26, "foo", .5)));
+  EXPECT_THAT(p, Not(FieldsAre(25, "fo", .5)));
+  EXPECT_THAT(p, Not(FieldsAre(25, "foo", .6)));
+}
+
+TEST(FieldsAreTest, CanDescribeSelf) {
+  Matcher<const pair<std::string, int>&> m1 = FieldsAre("foo", 42);
+  EXPECT_EQ(
+      "has field #0 that is equal to \"foo\""
+      ", and has field #1 that is equal to 42",
+      Describe(m1));
+  EXPECT_EQ(
+      "has field #0 that isn't equal to \"foo\""
+      ", or has field #1 that isn't equal to 42",
+      DescribeNegation(m1));
+}
+
+TEST_P(FieldsAreTestP, CanExplainMatchResultTo) {
+  // The first one that fails is the one that gives the error.
+  Matcher<std::tuple<int, int, int>> m =
+      FieldsAre(GreaterThan(0), GreaterThan(0), GreaterThan(0));
+
+  EXPECT_EQ("whose field #0 does not match, which is 1 less than 0",
+            Explain(m, std::make_tuple(-1, -2, -3)));
+  EXPECT_EQ("whose field #1 does not match, which is 2 less than 0",
+            Explain(m, std::make_tuple(1, -2, -3)));
+  EXPECT_EQ("whose field #2 does not match, which is 3 less than 0",
+            Explain(m, std::make_tuple(1, 2, -3)));
+
+  // If they all match, we get a long explanation of success.
+  EXPECT_EQ(
+      "whose all elements match, "
+      "where field #0 is a value which is 1 more than 0"
+      ", and field #1 is a value which is 2 more than 0"
+      ", and field #2 is a value which is 3 more than 0",
+      Explain(m, std::make_tuple(1, 2, 3)));
+
+  // Only print those that have an explanation.
+  m = FieldsAre(GreaterThan(0), 0, GreaterThan(0));
+  EXPECT_EQ(
+      "whose all elements match, "
+      "where field #0 is a value which is 1 more than 0"
+      ", and field #2 is a value which is 3 more than 0",
+      Explain(m, std::make_tuple(1, 0, 3)));
+
+  // If only one has an explanation, then print that one.
+  m = FieldsAre(0, GreaterThan(0), 0);
+  EXPECT_EQ(
+      "whose all elements match, "
+      "where field #1 is a value which is 1 more than 0",
+      Explain(m, std::make_tuple(0, 1, 0)));
+}
+
+#if defined(__cpp_structured_bindings) && __cpp_structured_bindings >= 201606
+TEST(FieldsAreTest, StructuredBindings) {
+  // testing::FieldsAre can also match aggregates and such with C++17 and up.
+  struct MyType {
+    int i;
+    std::string str;
+  };
+  EXPECT_THAT((MyType{17, "foo"}), FieldsAre(Eq(17), HasSubstr("oo")));
+
+  // Test all the supported arities.
+  struct MyVarType1 {
+    int a;
+  };
+  EXPECT_THAT(MyVarType1{}, FieldsAre(0));
+  struct MyVarType2 {
+    int a, b;
+  };
+  EXPECT_THAT(MyVarType2{}, FieldsAre(0, 0));
+  struct MyVarType3 {
+    int a, b, c;
+  };
+  EXPECT_THAT(MyVarType3{}, FieldsAre(0, 0, 0));
+  struct MyVarType4 {
+    int a, b, c, d;
+  };
+  EXPECT_THAT(MyVarType4{}, FieldsAre(0, 0, 0, 0));
+  struct MyVarType5 {
+    int a, b, c, d, e;
+  };
+  EXPECT_THAT(MyVarType5{}, FieldsAre(0, 0, 0, 0, 0));
+  struct MyVarType6 {
+    int a, b, c, d, e, f;
+  };
+  EXPECT_THAT(MyVarType6{}, FieldsAre(0, 0, 0, 0, 0, 0));
+  struct MyVarType7 {
+    int a, b, c, d, e, f, g;
+  };
+  EXPECT_THAT(MyVarType7{}, FieldsAre(0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType8 {
+    int a, b, c, d, e, f, g, h;
+  };
+  EXPECT_THAT(MyVarType8{}, FieldsAre(0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType9 {
+    int a, b, c, d, e, f, g, h, i;
+  };
+  EXPECT_THAT(MyVarType9{}, FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType10 {
+    int a, b, c, d, e, f, g, h, i, j;
+  };
+  EXPECT_THAT(MyVarType10{}, FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType11 {
+    int a, b, c, d, e, f, g, h, i, j, k;
+  };
+  EXPECT_THAT(MyVarType11{}, FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType12 {
+    int a, b, c, d, e, f, g, h, i, j, k, l;
+  };
+  EXPECT_THAT(MyVarType12{}, FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType13 {
+    int a, b, c, d, e, f, g, h, i, j, k, l, m;
+  };
+  EXPECT_THAT(MyVarType13{}, FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType14 {
+    int a, b, c, d, e, f, g, h, i, j, k, l, m, n;
+  };
+  EXPECT_THAT(MyVarType14{},
+              FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType15 {
+    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o;
+  };
+  EXPECT_THAT(MyVarType15{},
+              FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+  struct MyVarType16 {
+    int a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p;
+  };
+  EXPECT_THAT(MyVarType16{},
+              FieldsAre(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+}
+#endif
+
+TEST(PairTest, UseGetInsteadOfMembers) {
+  PairWithGet pair{7, "ABC"};
+  EXPECT_THAT(pair, Pair(7, "ABC"));
+  EXPECT_THAT(pair, Pair(Ge(7), HasSubstr("AB")));
+  EXPECT_THAT(pair, Not(Pair(Lt(7), "ABC")));
+
+  std::vector<PairWithGet> v = {{11, "Foo"}, {29, "gMockIsBestMock"}};
+  EXPECT_THAT(v,
+              ElementsAre(Pair(11, std::string("Foo")), Pair(Ge(10), Not(""))));
+}
+
+// Tests StartsWith(s).
+
+TEST(StartsWithTest, MatchesStringWithGivenPrefix) {
+  const Matcher<const char*> m1 = StartsWith(std::string(""));
+  EXPECT_TRUE(m1.Matches("Hi"));
+  EXPECT_TRUE(m1.Matches(""));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const std::string&> m2 = StartsWith("Hi");
+  EXPECT_TRUE(m2.Matches("Hi"));
+  EXPECT_TRUE(m2.Matches("Hi Hi!"));
+  EXPECT_TRUE(m2.Matches("High"));
+  EXPECT_FALSE(m2.Matches("H"));
+  EXPECT_FALSE(m2.Matches(" Hi"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  const Matcher<internal::StringView> m_empty =
+      StartsWith(internal::StringView(""));
+  EXPECT_TRUE(m_empty.Matches(internal::StringView()));
+  EXPECT_TRUE(m_empty.Matches(internal::StringView("")));
+  EXPECT_TRUE(m_empty.Matches(internal::StringView("not empty")));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(StartsWithTest, CanDescribeSelf) {
+  Matcher<const std::string> m = StartsWith("Hi");
+  EXPECT_EQ("starts with \"Hi\"", Describe(m));
+}
+
+// Tests EndsWith(s).
+
+TEST(EndsWithTest, MatchesStringWithGivenSuffix) {
+  const Matcher<const char*> m1 = EndsWith("");
+  EXPECT_TRUE(m1.Matches("Hi"));
+  EXPECT_TRUE(m1.Matches(""));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const std::string&> m2 = EndsWith(std::string("Hi"));
+  EXPECT_TRUE(m2.Matches("Hi"));
+  EXPECT_TRUE(m2.Matches("Wow Hi Hi"));
+  EXPECT_TRUE(m2.Matches("Super Hi"));
+  EXPECT_FALSE(m2.Matches("i"));
+  EXPECT_FALSE(m2.Matches("Hi "));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  const Matcher<const internal::StringView&> m4 =
+      EndsWith(internal::StringView(""));
+  EXPECT_TRUE(m4.Matches("Hi"));
+  EXPECT_TRUE(m4.Matches(""));
+  EXPECT_TRUE(m4.Matches(internal::StringView()));
+  EXPECT_TRUE(m4.Matches(internal::StringView("")));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(EndsWithTest, CanDescribeSelf) {
+  Matcher<const std::string> m = EndsWith("Hi");
+  EXPECT_EQ("ends with \"Hi\"", Describe(m));
+}
+
+// Tests WhenBase64Unescaped.
+
+TEST(WhenBase64UnescapedTest, MatchesUnescapedBase64Strings) {
+  const Matcher<const char*> m1 = WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_FALSE(m1.Matches("invalid base64"));
+  EXPECT_FALSE(m1.Matches("aGVsbG8gd29ybGQ="));  // hello world
+  EXPECT_TRUE(m1.Matches("aGVsbG8gd29ybGQh"));   // hello world!
+
+  const Matcher<const std::string&> m2 = WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_FALSE(m2.Matches("invalid base64"));
+  EXPECT_FALSE(m2.Matches("aGVsbG8gd29ybGQ="));  // hello world
+  EXPECT_TRUE(m2.Matches("aGVsbG8gd29ybGQh"));   // hello world!
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  const Matcher<const internal::StringView&> m3 =
+      WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_FALSE(m3.Matches("invalid base64"));
+  EXPECT_FALSE(m3.Matches("aGVsbG8gd29ybGQ="));  // hello world
+  EXPECT_TRUE(m3.Matches("aGVsbG8gd29ybGQh"));   // hello world!
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(WhenBase64UnescapedTest, CanDescribeSelf) {
+  const Matcher<const char*> m = WhenBase64Unescaped(EndsWith("!"));
+  EXPECT_EQ("matches after Base64Unescape ends with \"!\"", Describe(m));
+}
+
+// Tests MatchesRegex().
+
+TEST(MatchesRegexTest, MatchesStringMatchingGivenRegex) {
+  const Matcher<const char*> m1 = MatchesRegex("a.*z");
+  EXPECT_TRUE(m1.Matches("az"));
+  EXPECT_TRUE(m1.Matches("abcz"));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const std::string&> m2 = MatchesRegex(new RE("a.*z"));
+  EXPECT_TRUE(m2.Matches("azbz"));
+  EXPECT_FALSE(m2.Matches("az1"));
+  EXPECT_FALSE(m2.Matches("1az"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  const Matcher<const internal::StringView&> m3 = MatchesRegex("a.*z");
+  EXPECT_TRUE(m3.Matches(internal::StringView("az")));
+  EXPECT_TRUE(m3.Matches(internal::StringView("abcz")));
+  EXPECT_FALSE(m3.Matches(internal::StringView("1az")));
+  EXPECT_FALSE(m3.Matches(internal::StringView()));
+  const Matcher<const internal::StringView&> m4 =
+      MatchesRegex(internal::StringView(""));
+  EXPECT_TRUE(m4.Matches(internal::StringView("")));
+  EXPECT_TRUE(m4.Matches(internal::StringView()));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(MatchesRegexTest, CanDescribeSelf) {
+  Matcher<const std::string> m1 = MatchesRegex(std::string("Hi.*"));
+  EXPECT_EQ("matches regular expression \"Hi.*\"", Describe(m1));
+
+  Matcher<const char*> m2 = MatchesRegex(new RE("a.*"));
+  EXPECT_EQ("matches regular expression \"a.*\"", Describe(m2));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  Matcher<const internal::StringView> m3 = MatchesRegex(new RE("0.*"));
+  EXPECT_EQ("matches regular expression \"0.*\"", Describe(m3));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+// Tests ContainsRegex().
+
+TEST(ContainsRegexTest, MatchesStringContainingGivenRegex) {
+  const Matcher<const char*> m1 = ContainsRegex(std::string("a.*z"));
+  EXPECT_TRUE(m1.Matches("az"));
+  EXPECT_TRUE(m1.Matches("0abcz1"));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const std::string&> m2 = ContainsRegex(new RE("a.*z"));
+  EXPECT_TRUE(m2.Matches("azbz"));
+  EXPECT_TRUE(m2.Matches("az1"));
+  EXPECT_FALSE(m2.Matches("1a"));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  const Matcher<const internal::StringView&> m3 = ContainsRegex(new RE("a.*z"));
+  EXPECT_TRUE(m3.Matches(internal::StringView("azbz")));
+  EXPECT_TRUE(m3.Matches(internal::StringView("az1")));
+  EXPECT_FALSE(m3.Matches(internal::StringView("1a")));
+  EXPECT_FALSE(m3.Matches(internal::StringView()));
+  const Matcher<const internal::StringView&> m4 =
+      ContainsRegex(internal::StringView(""));
+  EXPECT_TRUE(m4.Matches(internal::StringView("")));
+  EXPECT_TRUE(m4.Matches(internal::StringView()));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+TEST(ContainsRegexTest, CanDescribeSelf) {
+  Matcher<const std::string> m1 = ContainsRegex("Hi.*");
+  EXPECT_EQ("contains regular expression \"Hi.*\"", Describe(m1));
+
+  Matcher<const char*> m2 = ContainsRegex(new RE("a.*"));
+  EXPECT_EQ("contains regular expression \"a.*\"", Describe(m2));
+
+#if GTEST_INTERNAL_HAS_STRING_VIEW
+  Matcher<const internal::StringView> m3 = ContainsRegex(new RE("0.*"));
+  EXPECT_EQ("contains regular expression \"0.*\"", Describe(m3));
+#endif  // GTEST_INTERNAL_HAS_STRING_VIEW
+}
+
+// Tests for wide strings.
+#if GTEST_HAS_STD_WSTRING
+TEST(StdWideStrEqTest, MatchesEqual) {
+  Matcher<const wchar_t*> m = StrEq(::std::wstring(L"Hello"));
+  EXPECT_TRUE(m.Matches(L"Hello"));
+  EXPECT_FALSE(m.Matches(L"hello"));
+  EXPECT_FALSE(m.Matches(nullptr));
+
+  Matcher<const ::std::wstring&> m2 = StrEq(L"Hello");
+  EXPECT_TRUE(m2.Matches(L"Hello"));
+  EXPECT_FALSE(m2.Matches(L"Hi"));
+
+  Matcher<const ::std::wstring&> m3 = StrEq(L"\xD3\x576\x8D3\xC74D");
+  EXPECT_TRUE(m3.Matches(L"\xD3\x576\x8D3\xC74D"));
+  EXPECT_FALSE(m3.Matches(L"\xD3\x576\x8D3\xC74E"));
+
+  ::std::wstring str(L"01204500800");
+  str[3] = L'\0';
+  Matcher<const ::std::wstring&> m4 = StrEq(str);
+  EXPECT_TRUE(m4.Matches(str));
+  str[0] = str[6] = str[7] = str[9] = str[10] = L'\0';
+  Matcher<const ::std::wstring&> m5 = StrEq(str);
+  EXPECT_TRUE(m5.Matches(str));
+}
+
+TEST(StdWideStrEqTest, CanDescribeSelf) {
+  Matcher<::std::wstring> m = StrEq(L"Hi-\'\"?\\\a\b\f\n\r\t\v");
+  EXPECT_EQ("is equal to L\"Hi-\'\\\"?\\\\\\a\\b\\f\\n\\r\\t\\v\"",
+            Describe(m));
+
+  Matcher<::std::wstring> m2 = StrEq(L"\xD3\x576\x8D3\xC74D");
+  EXPECT_EQ("is equal to L\"\\xD3\\x576\\x8D3\\xC74D\"", Describe(m2));
+
+  ::std::wstring str(L"01204500800");
+  str[3] = L'\0';
+  Matcher<const ::std::wstring&> m4 = StrEq(str);
+  EXPECT_EQ("is equal to L\"012\\04500800\"", Describe(m4));
+  str[0] = str[6] = str[7] = str[9] = str[10] = L'\0';
+  Matcher<const ::std::wstring&> m5 = StrEq(str);
+  EXPECT_EQ("is equal to L\"\\012\\045\\0\\08\\0\\0\"", Describe(m5));
+}
+
+TEST(StdWideStrNeTest, MatchesUnequalString) {
+  Matcher<const wchar_t*> m = StrNe(L"Hello");
+  EXPECT_TRUE(m.Matches(L""));
+  EXPECT_TRUE(m.Matches(nullptr));
+  EXPECT_FALSE(m.Matches(L"Hello"));
+
+  Matcher<::std::wstring> m2 = StrNe(::std::wstring(L"Hello"));
+  EXPECT_TRUE(m2.Matches(L"hello"));
+  EXPECT_FALSE(m2.Matches(L"Hello"));
+}
+
+TEST(StdWideStrNeTest, CanDescribeSelf) {
+  Matcher<const wchar_t*> m = StrNe(L"Hi");
+  EXPECT_EQ("isn't equal to L\"Hi\"", Describe(m));
+}
+
+TEST(StdWideStrCaseEqTest, MatchesEqualStringIgnoringCase) {
+  Matcher<const wchar_t*> m = StrCaseEq(::std::wstring(L"Hello"));
+  EXPECT_TRUE(m.Matches(L"Hello"));
+  EXPECT_TRUE(m.Matches(L"hello"));
+  EXPECT_FALSE(m.Matches(L"Hi"));
+  EXPECT_FALSE(m.Matches(nullptr));
+
+  Matcher<const ::std::wstring&> m2 = StrCaseEq(L"Hello");
+  EXPECT_TRUE(m2.Matches(L"hello"));
+  EXPECT_FALSE(m2.Matches(L"Hi"));
+}
+
+TEST(StdWideStrCaseEqTest, MatchesEqualStringWith0IgnoringCase) {
+  ::std::wstring str1(L"oabocdooeoo");
+  ::std::wstring str2(L"OABOCDOOEOO");
+  Matcher<const ::std::wstring&> m0 = StrCaseEq(str1);
+  EXPECT_FALSE(m0.Matches(str2 + ::std::wstring(1, L'\0')));
+
+  str1[3] = str2[3] = L'\0';
+  Matcher<const ::std::wstring&> m1 = StrCaseEq(str1);
+  EXPECT_TRUE(m1.Matches(str2));
+
+  str1[0] = str1[6] = str1[7] = str1[10] = L'\0';
+  str2[0] = str2[6] = str2[7] = str2[10] = L'\0';
+  Matcher<const ::std::wstring&> m2 = StrCaseEq(str1);
+  str1[9] = str2[9] = L'\0';
+  EXPECT_FALSE(m2.Matches(str2));
+
+  Matcher<const ::std::wstring&> m3 = StrCaseEq(str1);
+  EXPECT_TRUE(m3.Matches(str2));
+
+  EXPECT_FALSE(m3.Matches(str2 + L"x"));
+  str2.append(1, L'\0');
+  EXPECT_FALSE(m3.Matches(str2));
+  EXPECT_FALSE(m3.Matches(::std::wstring(str2, 0, 9)));
+}
+
+TEST(StdWideStrCaseEqTest, CanDescribeSelf) {
+  Matcher<::std::wstring> m = StrCaseEq(L"Hi");
+  EXPECT_EQ("is equal to (ignoring case) L\"Hi\"", Describe(m));
+}
+
+TEST(StdWideStrCaseNeTest, MatchesUnequalStringIgnoringCase) {
+  Matcher<const wchar_t*> m = StrCaseNe(L"Hello");
+  EXPECT_TRUE(m.Matches(L"Hi"));
+  EXPECT_TRUE(m.Matches(nullptr));
+  EXPECT_FALSE(m.Matches(L"Hello"));
+  EXPECT_FALSE(m.Matches(L"hello"));
+
+  Matcher<::std::wstring> m2 = StrCaseNe(::std::wstring(L"Hello"));
+  EXPECT_TRUE(m2.Matches(L""));
+  EXPECT_FALSE(m2.Matches(L"Hello"));
+}
+
+TEST(StdWideStrCaseNeTest, CanDescribeSelf) {
+  Matcher<const wchar_t*> m = StrCaseNe(L"Hi");
+  EXPECT_EQ("isn't equal to (ignoring case) L\"Hi\"", Describe(m));
+}
+
+// Tests that HasSubstr() works for matching wstring-typed values.
+TEST(StdWideHasSubstrTest, WorksForStringClasses) {
+  const Matcher<::std::wstring> m1 = HasSubstr(L"foo");
+  EXPECT_TRUE(m1.Matches(::std::wstring(L"I love food.")));
+  EXPECT_FALSE(m1.Matches(::std::wstring(L"tofo")));
+
+  const Matcher<const ::std::wstring&> m2 = HasSubstr(L"foo");
+  EXPECT_TRUE(m2.Matches(::std::wstring(L"I love food.")));
+  EXPECT_FALSE(m2.Matches(::std::wstring(L"tofo")));
+}
+
+// Tests that HasSubstr() works for matching C-wide-string-typed values.
+TEST(StdWideHasSubstrTest, WorksForCStrings) {
+  const Matcher<wchar_t*> m1 = HasSubstr(L"foo");
+  EXPECT_TRUE(m1.Matches(const_cast<wchar_t*>(L"I love food.")));
+  EXPECT_FALSE(m1.Matches(const_cast<wchar_t*>(L"tofo")));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const wchar_t*> m2 = HasSubstr(L"foo");
+  EXPECT_TRUE(m2.Matches(L"I love food."));
+  EXPECT_FALSE(m2.Matches(L"tofo"));
+  EXPECT_FALSE(m2.Matches(nullptr));
+}
+
+// Tests that HasSubstr(s) describes itself properly.
+TEST(StdWideHasSubstrTest, CanDescribeSelf) {
+  Matcher<::std::wstring> m = HasSubstr(L"foo\n\"");
+  EXPECT_EQ("has substring L\"foo\\n\\\"\"", Describe(m));
+}
+
+// Tests StartsWith(s).
+
+TEST(StdWideStartsWithTest, MatchesStringWithGivenPrefix) {
+  const Matcher<const wchar_t*> m1 = StartsWith(::std::wstring(L""));
+  EXPECT_TRUE(m1.Matches(L"Hi"));
+  EXPECT_TRUE(m1.Matches(L""));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const ::std::wstring&> m2 = StartsWith(L"Hi");
+  EXPECT_TRUE(m2.Matches(L"Hi"));
+  EXPECT_TRUE(m2.Matches(L"Hi Hi!"));
+  EXPECT_TRUE(m2.Matches(L"High"));
+  EXPECT_FALSE(m2.Matches(L"H"));
+  EXPECT_FALSE(m2.Matches(L" Hi"));
+}
+
+TEST(StdWideStartsWithTest, CanDescribeSelf) {
+  Matcher<const ::std::wstring> m = StartsWith(L"Hi");
+  EXPECT_EQ("starts with L\"Hi\"", Describe(m));
+}
+
+// Tests EndsWith(s).
+
+TEST(StdWideEndsWithTest, MatchesStringWithGivenSuffix) {
+  const Matcher<const wchar_t*> m1 = EndsWith(L"");
+  EXPECT_TRUE(m1.Matches(L"Hi"));
+  EXPECT_TRUE(m1.Matches(L""));
+  EXPECT_FALSE(m1.Matches(nullptr));
+
+  const Matcher<const ::std::wstring&> m2 = EndsWith(::std::wstring(L"Hi"));
+  EXPECT_TRUE(m2.Matches(L"Hi"));
+  EXPECT_TRUE(m2.Matches(L"Wow Hi Hi"));
+  EXPECT_TRUE(m2.Matches(L"Super Hi"));
+  EXPECT_FALSE(m2.Matches(L"i"));
+  EXPECT_FALSE(m2.Matches(L"Hi "));
+}
+
+TEST(StdWideEndsWithTest, CanDescribeSelf) {
+  Matcher<const ::std::wstring> m = EndsWith(L"Hi");
+  EXPECT_EQ("ends with L\"Hi\"", Describe(m));
+}
+
+#endif  // GTEST_HAS_STD_WSTRING
+
+TEST(ExplainMatchResultTest, WorksWithPolymorphicMatcher) {
+  StringMatchResultListener listener1;
+  EXPECT_TRUE(ExplainMatchResult(PolymorphicIsEven(), 42, &listener1));
+  EXPECT_EQ("% 2 == 0", listener1.str());
+
+  StringMatchResultListener listener2;
+  EXPECT_FALSE(ExplainMatchResult(Ge(42), 1.5, &listener2));
+  EXPECT_EQ("", listener2.str());
+}
+
+TEST(ExplainMatchResultTest, WorksWithMonomorphicMatcher) {
+  const Matcher<int> is_even = PolymorphicIsEven();
+  StringMatchResultListener listener1;
+  EXPECT_TRUE(ExplainMatchResult(is_even, 42, &listener1));
+  EXPECT_EQ("% 2 == 0", listener1.str());
+
+  const Matcher<const double&> is_zero = Eq(0);
+  StringMatchResultListener listener2;
+  EXPECT_FALSE(ExplainMatchResult(is_zero, 1.5, &listener2));
+  EXPECT_EQ("", listener2.str());
+}
+
+MATCHER(ConstructNoArg, "") { return true; }
+MATCHER_P(Construct1Arg, arg1, "") { return true; }
+MATCHER_P2(Construct2Args, arg1, arg2, "") { return true; }
+
+TEST(MatcherConstruct, ExplicitVsImplicit) {
+  {
+    // No arg constructor can be constructed with empty brace.
+    ConstructNoArgMatcher m = {};
+    (void)m;
+    // And with no args
+    ConstructNoArgMatcher m2;
+    (void)m2;
+  }
+  {
+    // The one arg constructor has an explicit constructor.
+    // This is to prevent the implicit conversion.
+    using M = Construct1ArgMatcherP<int>;
+    EXPECT_TRUE((std::is_constructible<M, int>::value));
+    EXPECT_FALSE((std::is_convertible<int, M>::value));
+  }
+  {
+    // Multiple arg matchers can be constructed with an implicit construction.
+    Construct2ArgsMatcherP2<int, double> m = {1, 2.2};
+    (void)m;
+  }
+}
+
+MATCHER_P(Really, inner_matcher, "") {
+  return ExplainMatchResult(inner_matcher, arg, result_listener);
+}
+
+TEST(ExplainMatchResultTest, WorksInsideMATCHER) {
+  EXPECT_THAT(0, Really(Eq(0)));
+}
+
+TEST(DescribeMatcherTest, WorksWithValue) {
+  EXPECT_EQ("is equal to 42", DescribeMatcher<int>(42));
+  EXPECT_EQ("isn't equal to 42", DescribeMatcher<int>(42, true));
+}
+
+TEST(DescribeMatcherTest, WorksWithMonomorphicMatcher) {
+  const Matcher<int> monomorphic = Le(0);
+  EXPECT_EQ("is <= 0", DescribeMatcher<int>(monomorphic));
+  EXPECT_EQ("isn't <= 0", DescribeMatcher<int>(monomorphic, true));
+}
+
+TEST(DescribeMatcherTest, WorksWithPolymorphicMatcher) {
+  EXPECT_EQ("is even", DescribeMatcher<int>(PolymorphicIsEven()));
+  EXPECT_EQ("is odd", DescribeMatcher<int>(PolymorphicIsEven(), true));
+}
+
+MATCHER_P(FieldIIs, inner_matcher, "") {
+  return ExplainMatchResult(inner_matcher, arg.i, result_listener);
+}
+
+#if GTEST_HAS_RTTI
+TEST(WhenDynamicCastToTest, SameType) {
+  Derived derived;
+  derived.i = 4;
+
+  // Right type. A pointer is passed down.
+  Base* as_base_ptr = &derived;
+  EXPECT_THAT(as_base_ptr, WhenDynamicCastTo<Derived*>(Not(IsNull())));
+  EXPECT_THAT(as_base_ptr, WhenDynamicCastTo<Derived*>(Pointee(FieldIIs(4))));
+  EXPECT_THAT(as_base_ptr,
+              Not(WhenDynamicCastTo<Derived*>(Pointee(FieldIIs(5)))));
+}
+
+TEST(WhenDynamicCastToTest, WrongTypes) {
+  Base base;
+  Derived derived;
+  OtherDerived other_derived;
+
+  // Wrong types. NULL is passed.
+  EXPECT_THAT(&base, Not(WhenDynamicCastTo<Derived*>(Pointee(_))));
+  EXPECT_THAT(&base, WhenDynamicCastTo<Derived*>(IsNull()));
+  Base* as_base_ptr = &derived;
+  EXPECT_THAT(as_base_ptr, Not(WhenDynamicCastTo<OtherDerived*>(Pointee(_))));
+  EXPECT_THAT(as_base_ptr, WhenDynamicCastTo<OtherDerived*>(IsNull()));
+  as_base_ptr = &other_derived;
+  EXPECT_THAT(as_base_ptr, Not(WhenDynamicCastTo<Derived*>(Pointee(_))));
+  EXPECT_THAT(as_base_ptr, WhenDynamicCastTo<Derived*>(IsNull()));
+}
+
+TEST(WhenDynamicCastToTest, AlreadyNull) {
+  // Already NULL.
+  Base* as_base_ptr = nullptr;
+  EXPECT_THAT(as_base_ptr, WhenDynamicCastTo<Derived*>(IsNull()));
+}
+
+struct AmbiguousCastTypes {
+  class VirtualDerived : public virtual Base {};
+  class DerivedSub1 : public VirtualDerived {};
+  class DerivedSub2 : public VirtualDerived {};
+  class ManyDerivedInHierarchy : public DerivedSub1, public DerivedSub2 {};
+};
+
+TEST(WhenDynamicCastToTest, AmbiguousCast) {
+  AmbiguousCastTypes::DerivedSub1 sub1;
+  AmbiguousCastTypes::ManyDerivedInHierarchy many_derived;
+  // Multiply derived from Base. dynamic_cast<> returns NULL.
+  Base* as_base_ptr =
+      static_cast<AmbiguousCastTypes::DerivedSub1*>(&many_derived);
+  EXPECT_THAT(as_base_ptr,
+              WhenDynamicCastTo<AmbiguousCastTypes::VirtualDerived*>(IsNull()));
+  as_base_ptr = &sub1;
+  EXPECT_THAT(
+      as_base_ptr,
+      WhenDynamicCastTo<AmbiguousCastTypes::VirtualDerived*>(Not(IsNull())));
+}
+
+TEST(WhenDynamicCastToTest, Describe) {
+  Matcher<Base*> matcher = WhenDynamicCastTo<Derived*>(Pointee(_));
+  const std::string prefix =
+      "when dynamic_cast to " + internal::GetTypeName<Derived*>() + ", ";
+  EXPECT_EQ(prefix + "points to a value that is anything", Describe(matcher));
+  EXPECT_EQ(prefix + "does not point to a value that is anything",
+            DescribeNegation(matcher));
+}
+
+TEST(WhenDynamicCastToTest, Explain) {
+  Matcher<Base*> matcher = WhenDynamicCastTo<Derived*>(Pointee(_));
+  Base* null = nullptr;
+  EXPECT_THAT(Explain(matcher, null), HasSubstr("NULL"));
+  Derived derived;
+  EXPECT_TRUE(matcher.Matches(&derived));
+  EXPECT_THAT(Explain(matcher, &derived), HasSubstr("which points to "));
+
+  // With references, the matcher itself can fail. Test for that one.
+  Matcher<const Base&> ref_matcher = WhenDynamicCastTo<const OtherDerived&>(_);
+  EXPECT_THAT(Explain(ref_matcher, derived),
+              HasSubstr("which cannot be dynamic_cast"));
+}
+
+TEST(WhenDynamicCastToTest, GoodReference) {
+  Derived derived;
+  derived.i = 4;
+  Base& as_base_ref = derived;
+  EXPECT_THAT(as_base_ref, WhenDynamicCastTo<const Derived&>(FieldIIs(4)));
+  EXPECT_THAT(as_base_ref, WhenDynamicCastTo<const Derived&>(Not(FieldIIs(5))));
+}
+
+TEST(WhenDynamicCastToTest, BadReference) {
+  Derived derived;
+  Base& as_base_ref = derived;
+  EXPECT_THAT(as_base_ref, Not(WhenDynamicCastTo<const OtherDerived&>(_)));
+}
+#endif  // GTEST_HAS_RTTI
+
+class DivisibleByImpl {
+ public:
+  explicit DivisibleByImpl(int a_divider) : divider_(a_divider) {}
+
+  // For testing using ExplainMatchResultTo() with polymorphic matchers.
+  template <typename T>
+  bool MatchAndExplain(const T& n, MatchResultListener* listener) const {
+    *listener << "which is " << (n % divider_) << " modulo " << divider_;
+    return (n % divider_) == 0;
+  }
+
+  void DescribeTo(ostream* os) const { *os << "is divisible by " << divider_; }
+
+  void DescribeNegationTo(ostream* os) const {
+    *os << "is not divisible by " << divider_;
+  }
+
+  void set_divider(int a_divider) { divider_ = a_divider; }
+  int divider() const { return divider_; }
+
+ private:
+  int divider_;
+};
+
+PolymorphicMatcher<DivisibleByImpl> DivisibleBy(int n) {
+  return MakePolymorphicMatcher(DivisibleByImpl(n));
+}
+
+// Tests that when AllOf() fails, only the first failing matcher is
+// asked to explain why.
+TEST(ExplainMatchResultTest, AllOf_False_False) {
+  const Matcher<int> m = AllOf(DivisibleBy(4), DivisibleBy(3));
+  EXPECT_EQ("which is 1 modulo 4", Explain(m, 5));
+}
+
+// Tests that when AllOf() fails, only the first failing matcher is
+// asked to explain why.
+TEST(ExplainMatchResultTest, AllOf_False_True) {
+  const Matcher<int> m = AllOf(DivisibleBy(4), DivisibleBy(3));
+  EXPECT_EQ("which is 2 modulo 4", Explain(m, 6));
+}
+
+// Tests that when AllOf() fails, only the first failing matcher is
+// asked to explain why.
+TEST(ExplainMatchResultTest, AllOf_True_False) {
+  const Matcher<int> m = AllOf(Ge(1), DivisibleBy(3));
+  EXPECT_EQ("which is 2 modulo 3", Explain(m, 5));
+}
+
+// Tests that when AllOf() succeeds, all matchers are asked to explain
+// why.
+TEST(ExplainMatchResultTest, AllOf_True_True) {
+  const Matcher<int> m = AllOf(DivisibleBy(2), DivisibleBy(3));
+  EXPECT_EQ("which is 0 modulo 2, and which is 0 modulo 3", Explain(m, 6));
+}
+
+TEST(ExplainMatchResultTest, AllOf_True_True_2) {
+  const Matcher<int> m = AllOf(Ge(2), Le(3));
+  EXPECT_EQ("", Explain(m, 2));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(ExplainmatcherResultTest);
+
+TEST_P(ExplainmatcherResultTestP, MonomorphicMatcher) {
+  const Matcher<int> m = GreaterThan(5);
+  EXPECT_EQ("which is 1 more than 5", Explain(m, 6));
+}
+
+// Tests PolymorphicMatcher::mutable_impl().
+TEST(PolymorphicMatcherTest, CanAccessMutableImpl) {
+  PolymorphicMatcher<DivisibleByImpl> m(DivisibleByImpl(42));
+  DivisibleByImpl& impl = m.mutable_impl();
+  EXPECT_EQ(42, impl.divider());
+
+  impl.set_divider(0);
+  EXPECT_EQ(0, m.mutable_impl().divider());
+}
+
+// Tests PolymorphicMatcher::impl().
+TEST(PolymorphicMatcherTest, CanAccessImpl) {
+  const PolymorphicMatcher<DivisibleByImpl> m(DivisibleByImpl(42));
+  const DivisibleByImpl& impl = m.impl();
+  EXPECT_EQ(42, impl.divider());
+}
+
+}  // namespace
+}  // namespace gmock_matchers_test
+}  // namespace testing
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+```
+
+### `gmock-matchers-containers_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-containers_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests some commonly used argument matchers.
+
+// Silence warning C4244: 'initializing': conversion from 'int' to 'short',
+// possible loss of data and C4100, unreferenced local parameter
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4100)
+#endif
+
+#include "test/gmock-matchers_test.h"
+
+namespace testing {
+namespace gmock_matchers_test {
+namespace {
+
+std::vector<std::unique_ptr<int>> MakeUniquePtrs(const std::vector<int>& ints) {
+  std::vector<std::unique_ptr<int>> pointers;
+  for (int i : ints) pointers.emplace_back(new int(i));
+  return pointers;
+}
+
+std::string OfType(const std::string& type_name) {
+#if GTEST_HAS_RTTI
+  return IsReadableTypeName(type_name) ? " (of type " + type_name + ")" : "";
+#else
+  return "";
+#endif
+}
+
+TEST(ContainsTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(Contains(Pointee(2))));
+  helper.Call(MakeUniquePtrs({1, 2}));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(ElementsAreTest);
+
+// Tests the variadic version of the ElementsAreMatcher
+TEST(ElementsAreTest, HugeMatcher) {
+  vector<int> test_vector{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+
+  EXPECT_THAT(test_vector,
+              ElementsAre(Eq(1), Eq(2), Lt(13), Eq(4), Eq(5), Eq(6), Eq(7),
+                          Eq(8), Eq(9), Eq(10), Gt(1), Eq(12)));
+}
+
+// Tests the variadic version of the UnorderedElementsAreMatcher
+TEST(ElementsAreTest, HugeMatcherStr) {
+  vector<std::string> test_vector{
+      "literal_string", "", "", "", "", "", "", "", "", "", "", ""};
+
+  EXPECT_THAT(test_vector, UnorderedElementsAre("literal_string", _, _, _, _, _,
+                                                _, _, _, _, _, _));
+}
+
+// Tests the variadic version of the UnorderedElementsAreMatcher
+TEST(ElementsAreTest, HugeMatcherUnordered) {
+  vector<int> test_vector{2, 1, 8, 5, 4, 6, 7, 3, 9, 12, 11, 10};
+
+  EXPECT_THAT(test_vector, UnorderedElementsAre(
+                               Eq(2), Eq(1), Gt(7), Eq(5), Eq(4), Eq(6), Eq(7),
+                               Eq(3), Eq(9), Eq(12), Eq(11), Ne(122)));
+}
+
+// Tests that ASSERT_THAT() and EXPECT_THAT() work when the value
+// matches the matcher.
+TEST(MatcherAssertionTest, WorksWhenMatcherIsSatisfied) {
+  ASSERT_THAT(5, Ge(2)) << "This should succeed.";
+  ASSERT_THAT("Foo", EndsWith("oo"));
+  EXPECT_THAT(2, AllOf(Le(7), Ge(0))) << "This should succeed too.";
+  EXPECT_THAT("Hello", StartsWith("Hell"));
+}
+
+// Tests that ASSERT_THAT() and EXPECT_THAT() work when the value
+// doesn't match the matcher.
+TEST(MatcherAssertionTest, WorksWhenMatcherIsNotSatisfied) {
+  // 'n' must be static as it is used in an EXPECT_FATAL_FAILURE(),
+  // which cannot reference auto variables.
+  static unsigned short n;  // NOLINT
+  n = 5;
+
+  EXPECT_FATAL_FAILURE(ASSERT_THAT(n, Gt(10)),
+                       "Value of: n\n"
+                       "Expected: is > 10\n"
+                       "  Actual: 5" +
+                           OfType("unsigned short"));
+  n = 0;
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(n, AllOf(Le(7), Ge(5))),
+                          "Value of: n\n"
+                          "Expected: (is <= 7) and (is >= 5)\n"
+                          "  Actual: 0" +
+                              OfType("unsigned short"));
+}
+
+// Tests that ASSERT_THAT() and EXPECT_THAT() work when the argument
+// has a reference type.
+TEST(MatcherAssertionTest, WorksForByRefArguments) {
+  // We use a static variable here as EXPECT_FATAL_FAILURE() cannot
+  // reference auto variables.
+  static int n;
+  n = 0;
+  EXPECT_THAT(n, AllOf(Le(7), Ref(n)));
+  EXPECT_FATAL_FAILURE(ASSERT_THAT(n, Not(Ref(n))),
+                       "Value of: n\n"
+                       "Expected: does not reference the variable @");
+  // Tests the "Actual" part.
+  EXPECT_FATAL_FAILURE(ASSERT_THAT(n, Not(Ref(n))),
+                       "Actual: 0" + OfType("int") + ", which is located @");
+}
+
+// Tests that ASSERT_THAT() and EXPECT_THAT() work when the matcher is
+// monomorphic.
+TEST(MatcherAssertionTest, WorksForMonomorphicMatcher) {
+  Matcher<const char*> starts_with_he = StartsWith("he");
+  ASSERT_THAT("hello", starts_with_he);
+
+  Matcher<const std::string&> ends_with_ok = EndsWith("ok");
+  ASSERT_THAT("book", ends_with_ok);
+  const std::string bad = "bad";
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(bad, ends_with_ok),
+                          "Value of: bad\n"
+                          "Expected: ends with \"ok\"\n"
+                          "  Actual: \"bad\"");
+  Matcher<int> is_greater_than_5 = Gt(5);
+  EXPECT_NONFATAL_FAILURE(EXPECT_THAT(5, is_greater_than_5),
+                          "Value of: 5\n"
+                          "Expected: is > 5\n"
+                          "  Actual: 5" +
+                              OfType("int"));
+}
+
+TEST(PointeeTest, RawPointer) {
+  const Matcher<int*> m = Pointee(Ge(0));
+
+  int n = 1;
+  EXPECT_TRUE(m.Matches(&n));
+  n = -1;
+  EXPECT_FALSE(m.Matches(&n));
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+TEST(PointeeTest, RawPointerToConst) {
+  const Matcher<const double*> m = Pointee(Ge(0));
+
+  double x = 1;
+  EXPECT_TRUE(m.Matches(&x));
+  x = -1;
+  EXPECT_FALSE(m.Matches(&x));
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+TEST(PointeeTest, ReferenceToConstRawPointer) {
+  const Matcher<int* const&> m = Pointee(Ge(0));
+
+  int n = 1;
+  EXPECT_TRUE(m.Matches(&n));
+  n = -1;
+  EXPECT_FALSE(m.Matches(&n));
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+TEST(PointeeTest, ReferenceToNonConstRawPointer) {
+  const Matcher<double*&> m = Pointee(Ge(0));
+
+  double x = 1.0;
+  double* p = &x;
+  EXPECT_TRUE(m.Matches(p));
+  x = -1;
+  EXPECT_FALSE(m.Matches(p));
+  p = nullptr;
+  EXPECT_FALSE(m.Matches(p));
+}
+
+TEST(PointeeTest, SmartPointer) {
+  const Matcher<std::unique_ptr<int>> m = Pointee(Ge(0));
+
+  std::unique_ptr<int> n(new int(1));
+  EXPECT_TRUE(m.Matches(n));
+}
+
+TEST(PointeeTest, SmartPointerToConst) {
+  const Matcher<std::unique_ptr<const int>> m = Pointee(Ge(0));
+
+  // There's no implicit conversion from unique_ptr<int> to const
+  // unique_ptr<const int>, so we must pass a unique_ptr<const int> into the
+  // matcher.
+  std::unique_ptr<const int> n(new int(1));
+  EXPECT_TRUE(m.Matches(n));
+}
+
+TEST(PointerTest, RawPointer) {
+  int n = 1;
+  const Matcher<int*> m = Pointer(Eq(&n));
+
+  EXPECT_TRUE(m.Matches(&n));
+
+  int* p = nullptr;
+  EXPECT_FALSE(m.Matches(p));
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+TEST(PointerTest, RawPointerToConst) {
+  int n = 1;
+  const Matcher<const int*> m = Pointer(Eq(&n));
+
+  EXPECT_TRUE(m.Matches(&n));
+
+  int* p = nullptr;
+  EXPECT_FALSE(m.Matches(p));
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+TEST(PointerTest, SmartPointer) {
+  std::unique_ptr<int> n(new int(10));
+  int* raw_n = n.get();
+  const Matcher<std::unique_ptr<int>> m = Pointer(Eq(raw_n));
+
+  EXPECT_TRUE(m.Matches(n));
+}
+
+TEST(PointerTest, SmartPointerToConst) {
+  std::unique_ptr<const int> n(new int(10));
+  const int* raw_n = n.get();
+  const Matcher<std::unique_ptr<const int>> m = Pointer(Eq(raw_n));
+
+  // There's no implicit conversion from unique_ptr<int> to const
+  // unique_ptr<const int>, so we must pass a unique_ptr<const int> into the
+  // matcher.
+  std::unique_ptr<const int> p(new int(10));
+  EXPECT_FALSE(m.Matches(p));
+}
+
+// Minimal const-propagating pointer.
+template <typename T>
+class ConstPropagatingPtr {
+ public:
+  typedef T element_type;
+
+  ConstPropagatingPtr() : val_() {}
+  explicit ConstPropagatingPtr(T* t) : val_(t) {}
+  ConstPropagatingPtr(const ConstPropagatingPtr& other) : val_(other.val_) {}
+
+  T* get() { return val_; }
+  T& operator*() { return *val_; }
+  // Most smart pointers return non-const T* and T& from the next methods.
+  const T* get() const { return val_; }
+  const T& operator*() const { return *val_; }
+
+ private:
+  T* val_;
+};
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(PointeeTest);
+
+TEST(PointeeTest, WorksWithConstPropagatingPointers) {
+  const Matcher<ConstPropagatingPtr<int>> m = Pointee(Lt(5));
+  int three = 3;
+  const ConstPropagatingPtr<int> co(&three);
+  ConstPropagatingPtr<int> o(&three);
+  EXPECT_TRUE(m.Matches(o));
+  EXPECT_TRUE(m.Matches(co));
+  *o = 6;
+  EXPECT_FALSE(m.Matches(o));
+  EXPECT_FALSE(m.Matches(ConstPropagatingPtr<int>()));
+}
+
+TEST(PointeeTest, NeverMatchesNull) {
+  const Matcher<const char*> m = Pointee(_);
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+// Tests that we can write Pointee(value) instead of Pointee(Eq(value)).
+TEST(PointeeTest, MatchesAgainstAValue) {
+  const Matcher<int*> m = Pointee(5);
+
+  int n = 5;
+  EXPECT_TRUE(m.Matches(&n));
+  n = -1;
+  EXPECT_FALSE(m.Matches(&n));
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+TEST(PointeeTest, CanDescribeSelf) {
+  const Matcher<int*> m = Pointee(Gt(3));
+  EXPECT_EQ("points to a value that is > 3", Describe(m));
+  EXPECT_EQ("does not point to a value that is > 3", DescribeNegation(m));
+}
+
+TEST_P(PointeeTestP, CanExplainMatchResult) {
+  const Matcher<const std::string*> m = Pointee(StartsWith("Hi"));
+
+  EXPECT_EQ("", Explain(m, static_cast<const std::string*>(nullptr)));
+
+  const Matcher<long*> m2 = Pointee(GreaterThan(1));  // NOLINT
+  long n = 3;                                         // NOLINT
+  EXPECT_EQ("which points to 3" + OfType("long") + ", which is 2 more than 1",
+            Explain(m2, &n));
+}
+
+TEST(PointeeTest, AlwaysExplainsPointee) {
+  const Matcher<int*> m = Pointee(0);
+  int n = 42;
+  EXPECT_EQ("which points to 42" + OfType("int"), Explain(m, &n));
+}
+
+// An uncopyable class.
+class Uncopyable {
+ public:
+  Uncopyable() : value_(-1) {}
+  explicit Uncopyable(int a_value) : value_(a_value) {}
+
+  int value() const { return value_; }
+  void set_value(int i) { value_ = i; }
+
+ private:
+  int value_;
+  Uncopyable(const Uncopyable&) = delete;
+  Uncopyable& operator=(const Uncopyable&) = delete;
+};
+
+// Returns true if and only if x.value() is positive.
+bool ValueIsPositive(const Uncopyable& x) { return x.value() > 0; }
+
+MATCHER_P(UncopyableIs, inner_matcher, "") {
+  return ExplainMatchResult(inner_matcher, arg.value(), result_listener);
+}
+
+// A user-defined struct for testing Field().
+struct AStruct {
+  AStruct() : x(0), y(1.0), z(5), p(nullptr) {}
+  AStruct(const AStruct& rhs)
+      : x(rhs.x), y(rhs.y), z(rhs.z.value()), p(rhs.p) {}
+
+  int x;           // A non-const field.
+  const double y;  // A const field.
+  Uncopyable z;    // An uncopyable field.
+  const char* p;   // A pointer field.
+};
+
+// A derived struct for testing Field().
+struct DerivedStruct : public AStruct {
+  char ch;
+};
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(FieldTest);
+
+// Tests that Field(&Foo::field, ...) works when field is non-const.
+TEST(FieldTest, WorksForNonConstField) {
+  Matcher<AStruct> m = Field(&AStruct::x, Ge(0));
+  Matcher<AStruct> m_with_name = Field("x", &AStruct::x, Ge(0));
+
+  AStruct a;
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_TRUE(m_with_name.Matches(a));
+  a.x = -1;
+  EXPECT_FALSE(m.Matches(a));
+  EXPECT_FALSE(m_with_name.Matches(a));
+}
+
+// Tests that Field(&Foo::field, ...) works when field is const.
+TEST(FieldTest, WorksForConstField) {
+  AStruct a;
+
+  Matcher<AStruct> m = Field(&AStruct::y, Ge(0.0));
+  Matcher<AStruct> m_with_name = Field("y", &AStruct::y, Ge(0.0));
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_TRUE(m_with_name.Matches(a));
+  m = Field(&AStruct::y, Le(0.0));
+  m_with_name = Field("y", &AStruct::y, Le(0.0));
+  EXPECT_FALSE(m.Matches(a));
+  EXPECT_FALSE(m_with_name.Matches(a));
+}
+
+// Tests that Field(&Foo::field, ...) works when field is not copyable.
+TEST(FieldTest, WorksForUncopyableField) {
+  AStruct a;
+
+  Matcher<AStruct> m = Field(&AStruct::z, Truly(ValueIsPositive));
+  EXPECT_TRUE(m.Matches(a));
+  m = Field(&AStruct::z, Not(Truly(ValueIsPositive)));
+  EXPECT_FALSE(m.Matches(a));
+}
+
+// Tests that Field(&Foo::field, ...) works when field is a pointer.
+TEST(FieldTest, WorksForPointerField) {
+  // Matching against NULL.
+  Matcher<AStruct> m = Field(&AStruct::p, static_cast<const char*>(nullptr));
+  AStruct a;
+  EXPECT_TRUE(m.Matches(a));
+  a.p = "hi";
+  EXPECT_FALSE(m.Matches(a));
+
+  // Matching a pointer that is not NULL.
+  m = Field(&AStruct::p, StartsWith("hi"));
+  a.p = "hill";
+  EXPECT_TRUE(m.Matches(a));
+  a.p = "hole";
+  EXPECT_FALSE(m.Matches(a));
+}
+
+// Tests that Field() works when the object is passed by reference.
+TEST(FieldTest, WorksForByRefArgument) {
+  Matcher<const AStruct&> m = Field(&AStruct::x, Ge(0));
+
+  AStruct a;
+  EXPECT_TRUE(m.Matches(a));
+  a.x = -1;
+  EXPECT_FALSE(m.Matches(a));
+}
+
+// Tests that Field(&Foo::field, ...) works when the argument's type
+// is a sub-type of Foo.
+TEST(FieldTest, WorksForArgumentOfSubType) {
+  // Note that the matcher expects DerivedStruct but we say AStruct
+  // inside Field().
+  Matcher<const DerivedStruct&> m = Field(&AStruct::x, Ge(0));
+
+  DerivedStruct d;
+  EXPECT_TRUE(m.Matches(d));
+  d.x = -1;
+  EXPECT_FALSE(m.Matches(d));
+}
+
+// Tests that Field(&Foo::field, m) works when field's type and m's
+// argument type are compatible but not the same.
+TEST(FieldTest, WorksForCompatibleMatcherType) {
+  // The field is an int, but the inner matcher expects a signed char.
+  Matcher<const AStruct&> m = Field(&AStruct::x, Matcher<signed char>(Ge(0)));
+
+  AStruct a;
+  EXPECT_TRUE(m.Matches(a));
+  a.x = -1;
+  EXPECT_FALSE(m.Matches(a));
+}
+
+// Tests that Field() can describe itself.
+TEST(FieldTest, CanDescribeSelf) {
+  Matcher<const AStruct&> m = Field(&AStruct::x, Ge(0));
+
+  EXPECT_EQ("is an object whose given field is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose given field isn't >= 0", DescribeNegation(m));
+}
+
+TEST(FieldTest, CanDescribeSelfWithFieldName) {
+  Matcher<const AStruct&> m = Field("field_name", &AStruct::x, Ge(0));
+
+  EXPECT_EQ("is an object whose field `field_name` is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose field `field_name` isn't >= 0",
+            DescribeNegation(m));
+}
+
+// Tests that Field() can explain the match result.
+TEST_P(FieldTestP, CanExplainMatchResult) {
+  Matcher<const AStruct&> m = Field(&AStruct::x, Ge(0));
+
+  AStruct a;
+  a.x = 1;
+  EXPECT_EQ("whose given field is 1" + OfType("int"), Explain(m, a));
+
+  m = Field(&AStruct::x, GreaterThan(0));
+  EXPECT_EQ(
+      "whose given field is 1" + OfType("int") + ", which is 1 more than 0",
+      Explain(m, a));
+}
+
+TEST_P(FieldTestP, CanExplainMatchResultWithFieldName) {
+  Matcher<const AStruct&> m = Field("field_name", &AStruct::x, Ge(0));
+
+  AStruct a;
+  a.x = 1;
+  EXPECT_EQ("whose field `field_name` is 1" + OfType("int"), Explain(m, a));
+
+  m = Field("field_name", &AStruct::x, GreaterThan(0));
+  EXPECT_EQ("whose field `field_name` is 1" + OfType("int") +
+                ", which is 1 more than 0",
+            Explain(m, a));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(FieldForPointerTest);
+
+// Tests that Field() works when the argument is a pointer to const.
+TEST(FieldForPointerTest, WorksForPointerToConst) {
+  Matcher<const AStruct*> m = Field(&AStruct::x, Ge(0));
+
+  AStruct a;
+  EXPECT_TRUE(m.Matches(&a));
+  a.x = -1;
+  EXPECT_FALSE(m.Matches(&a));
+}
+
+// Tests that Field() works when the argument is a pointer to non-const.
+TEST(FieldForPointerTest, WorksForPointerToNonConst) {
+  Matcher<AStruct*> m = Field(&AStruct::x, Ge(0));
+
+  AStruct a;
+  EXPECT_TRUE(m.Matches(&a));
+  a.x = -1;
+  EXPECT_FALSE(m.Matches(&a));
+}
+
+// Tests that Field() works when the argument is a reference to a const pointer.
+TEST(FieldForPointerTest, WorksForReferenceToConstPointer) {
+  Matcher<AStruct* const&> m = Field(&AStruct::x, Ge(0));
+
+  AStruct a;
+  EXPECT_TRUE(m.Matches(&a));
+  a.x = -1;
+  EXPECT_FALSE(m.Matches(&a));
+}
+
+// Tests that Field() does not match the NULL pointer.
+TEST(FieldForPointerTest, DoesNotMatchNull) {
+  Matcher<const AStruct*> m = Field(&AStruct::x, _);
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+// Tests that Field(&Foo::field, ...) works when the argument's type
+// is a sub-type of const Foo*.
+TEST(FieldForPointerTest, WorksForArgumentOfSubType) {
+  // Note that the matcher expects DerivedStruct but we say AStruct
+  // inside Field().
+  Matcher<DerivedStruct*> m = Field(&AStruct::x, Ge(0));
+
+  DerivedStruct d;
+  EXPECT_TRUE(m.Matches(&d));
+  d.x = -1;
+  EXPECT_FALSE(m.Matches(&d));
+}
+
+// Tests that Field() can describe itself when used to match a pointer.
+TEST(FieldForPointerTest, CanDescribeSelf) {
+  Matcher<const AStruct*> m = Field(&AStruct::x, Ge(0));
+
+  EXPECT_EQ("is an object whose given field is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose given field isn't >= 0", DescribeNegation(m));
+}
+
+TEST(FieldForPointerTest, CanDescribeSelfWithFieldName) {
+  Matcher<const AStruct*> m = Field("field_name", &AStruct::x, Ge(0));
+
+  EXPECT_EQ("is an object whose field `field_name` is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose field `field_name` isn't >= 0",
+            DescribeNegation(m));
+}
+
+// Tests that Field() can explain the result of matching a pointer.
+TEST_P(FieldForPointerTestP, CanExplainMatchResult) {
+  Matcher<const AStruct*> m = Field(&AStruct::x, Ge(0));
+
+  AStruct a;
+  a.x = 1;
+  EXPECT_EQ("", Explain(m, static_cast<const AStruct*>(nullptr)));
+  EXPECT_EQ("which points to an object whose given field is 1" + OfType("int"),
+            Explain(m, &a));
+
+  m = Field(&AStruct::x, GreaterThan(0));
+  EXPECT_EQ("which points to an object whose given field is 1" + OfType("int") +
+                ", which is 1 more than 0",
+            Explain(m, &a));
+}
+
+TEST_P(FieldForPointerTestP, CanExplainMatchResultWithFieldName) {
+  Matcher<const AStruct*> m = Field("field_name", &AStruct::x, Ge(0));
+
+  AStruct a;
+  a.x = 1;
+  EXPECT_EQ("", Explain(m, static_cast<const AStruct*>(nullptr)));
+  EXPECT_EQ(
+      "which points to an object whose field `field_name` is 1" + OfType("int"),
+      Explain(m, &a));
+
+  m = Field("field_name", &AStruct::x, GreaterThan(0));
+  EXPECT_EQ("which points to an object whose field `field_name` is 1" +
+                OfType("int") + ", which is 1 more than 0",
+            Explain(m, &a));
+}
+
+// A user-defined class for testing Property().
+class AClass {
+ public:
+  AClass() : n_(0) {}
+
+  // A getter that returns a non-reference.
+  int n() const { return n_; }
+
+  void set_n(int new_n) { n_ = new_n; }
+
+  // A getter that returns a reference to const.
+  const std::string& s() const { return s_; }
+
+  const std::string& s_ref() const& { return s_; }
+
+  void set_s(const std::string& new_s) { s_ = new_s; }
+
+  // A getter that returns a reference to non-const.
+  double& x() const { return x_; }
+
+ private:
+  int n_;
+  std::string s_;
+
+  static double x_;
+};
+
+double AClass::x_ = 0.0;
+
+// A derived class for testing Property().
+class DerivedClass : public AClass {
+ public:
+  int k() const { return k_; }
+
+ private:
+  int k_;
+};
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(PropertyTest);
+
+// Tests that Property(&Foo::property, ...) works when property()
+// returns a non-reference.
+TEST(PropertyTest, WorksForNonReferenceProperty) {
+  Matcher<const AClass&> m = Property(&AClass::n, Ge(0));
+  Matcher<const AClass&> m_with_name = Property("n", &AClass::n, Ge(0));
+
+  AClass a;
+  a.set_n(1);
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_TRUE(m_with_name.Matches(a));
+
+  a.set_n(-1);
+  EXPECT_FALSE(m.Matches(a));
+  EXPECT_FALSE(m_with_name.Matches(a));
+}
+
+// Tests that Property(&Foo::property, ...) works when property()
+// returns a reference to const.
+TEST(PropertyTest, WorksForReferenceToConstProperty) {
+  Matcher<const AClass&> m = Property(&AClass::s, StartsWith("hi"));
+  Matcher<const AClass&> m_with_name =
+      Property("s", &AClass::s, StartsWith("hi"));
+
+  AClass a;
+  a.set_s("hill");
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_TRUE(m_with_name.Matches(a));
+
+  a.set_s("hole");
+  EXPECT_FALSE(m.Matches(a));
+  EXPECT_FALSE(m_with_name.Matches(a));
+}
+
+// Tests that Property(&Foo::property, ...) works when property() is
+// ref-qualified.
+TEST(PropertyTest, WorksForRefQualifiedProperty) {
+  Matcher<const AClass&> m = Property(&AClass::s_ref, StartsWith("hi"));
+  Matcher<const AClass&> m_with_name =
+      Property("s", &AClass::s_ref, StartsWith("hi"));
+
+  AClass a;
+  a.set_s("hill");
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_TRUE(m_with_name.Matches(a));
+
+  a.set_s("hole");
+  EXPECT_FALSE(m.Matches(a));
+  EXPECT_FALSE(m_with_name.Matches(a));
+}
+
+// Tests that Property(&Foo::property, ...) works when property()
+// returns a reference to non-const.
+TEST(PropertyTest, WorksForReferenceToNonConstProperty) {
+  double x = 0.0;
+  AClass a;
+
+  Matcher<const AClass&> m = Property(&AClass::x, Ref(x));
+  EXPECT_FALSE(m.Matches(a));
+
+  m = Property(&AClass::x, Not(Ref(x)));
+  EXPECT_TRUE(m.Matches(a));
+}
+
+// Tests that Property(&Foo::property, ...) works when the argument is
+// passed by value.
+TEST(PropertyTest, WorksForByValueArgument) {
+  Matcher<AClass> m = Property(&AClass::s, StartsWith("hi"));
+
+  AClass a;
+  a.set_s("hill");
+  EXPECT_TRUE(m.Matches(a));
+
+  a.set_s("hole");
+  EXPECT_FALSE(m.Matches(a));
+}
+
+// Tests that Property(&Foo::property, ...) works when the argument's
+// type is a sub-type of Foo.
+TEST(PropertyTest, WorksForArgumentOfSubType) {
+  // The matcher expects a DerivedClass, but inside the Property() we
+  // say AClass.
+  Matcher<const DerivedClass&> m = Property(&AClass::n, Ge(0));
+
+  DerivedClass d;
+  d.set_n(1);
+  EXPECT_TRUE(m.Matches(d));
+
+  d.set_n(-1);
+  EXPECT_FALSE(m.Matches(d));
+}
+
+// Tests that Property(&Foo::property, m) works when property()'s type
+// and m's argument type are compatible but different.
+TEST(PropertyTest, WorksForCompatibleMatcherType) {
+  // n() returns an int but the inner matcher expects a signed char.
+  Matcher<const AClass&> m = Property(&AClass::n, Matcher<signed char>(Ge(0)));
+
+  Matcher<const AClass&> m_with_name =
+      Property("n", &AClass::n, Matcher<signed char>(Ge(0)));
+
+  AClass a;
+  EXPECT_TRUE(m.Matches(a));
+  EXPECT_TRUE(m_with_name.Matches(a));
+  a.set_n(-1);
+  EXPECT_FALSE(m.Matches(a));
+  EXPECT_FALSE(m_with_name.Matches(a));
+}
+
+// Tests that Property() can describe itself.
+TEST(PropertyTest, CanDescribeSelf) {
+  Matcher<const AClass&> m = Property(&AClass::n, Ge(0));
+
+  EXPECT_EQ("is an object whose given property is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose given property isn't >= 0",
+            DescribeNegation(m));
+}
+
+TEST(PropertyTest, CanDescribeSelfWithPropertyName) {
+  Matcher<const AClass&> m = Property("fancy_name", &AClass::n, Ge(0));
+
+  EXPECT_EQ("is an object whose property `fancy_name` is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose property `fancy_name` isn't >= 0",
+            DescribeNegation(m));
+}
+
+// Tests that Property() can explain the match result.
+TEST_P(PropertyTestP, CanExplainMatchResult) {
+  Matcher<const AClass&> m = Property(&AClass::n, Ge(0));
+
+  AClass a;
+  a.set_n(1);
+  EXPECT_EQ("whose given property is 1" + OfType("int"), Explain(m, a));
+
+  m = Property(&AClass::n, GreaterThan(0));
+  EXPECT_EQ(
+      "whose given property is 1" + OfType("int") + ", which is 1 more than 0",
+      Explain(m, a));
+}
+
+TEST_P(PropertyTestP, CanExplainMatchResultWithPropertyName) {
+  Matcher<const AClass&> m = Property("fancy_name", &AClass::n, Ge(0));
+
+  AClass a;
+  a.set_n(1);
+  EXPECT_EQ("whose property `fancy_name` is 1" + OfType("int"), Explain(m, a));
+
+  m = Property("fancy_name", &AClass::n, GreaterThan(0));
+  EXPECT_EQ("whose property `fancy_name` is 1" + OfType("int") +
+                ", which is 1 more than 0",
+            Explain(m, a));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(PropertyForPointerTest);
+
+// Tests that Property() works when the argument is a pointer to const.
+TEST(PropertyForPointerTest, WorksForPointerToConst) {
+  Matcher<const AClass*> m = Property(&AClass::n, Ge(0));
+
+  AClass a;
+  a.set_n(1);
+  EXPECT_TRUE(m.Matches(&a));
+
+  a.set_n(-1);
+  EXPECT_FALSE(m.Matches(&a));
+}
+
+// Tests that Property() works when the argument is a pointer to non-const.
+TEST(PropertyForPointerTest, WorksForPointerToNonConst) {
+  Matcher<AClass*> m = Property(&AClass::s, StartsWith("hi"));
+
+  AClass a;
+  a.set_s("hill");
+  EXPECT_TRUE(m.Matches(&a));
+
+  a.set_s("hole");
+  EXPECT_FALSE(m.Matches(&a));
+}
+
+// Tests that Property() works when the argument is a reference to a
+// const pointer.
+TEST(PropertyForPointerTest, WorksForReferenceToConstPointer) {
+  Matcher<AClass* const&> m = Property(&AClass::s, StartsWith("hi"));
+
+  AClass a;
+  a.set_s("hill");
+  EXPECT_TRUE(m.Matches(&a));
+
+  a.set_s("hole");
+  EXPECT_FALSE(m.Matches(&a));
+}
+
+// Tests that Property() does not match the NULL pointer.
+TEST(PropertyForPointerTest, WorksForReferenceToNonConstProperty) {
+  Matcher<const AClass*> m = Property(&AClass::x, _);
+  EXPECT_FALSE(m.Matches(nullptr));
+}
+
+// Tests that Property(&Foo::property, ...) works when the argument's
+// type is a sub-type of const Foo*.
+TEST(PropertyForPointerTest, WorksForArgumentOfSubType) {
+  // The matcher expects a DerivedClass, but inside the Property() we
+  // say AClass.
+  Matcher<const DerivedClass*> m = Property(&AClass::n, Ge(0));
+
+  DerivedClass d;
+  d.set_n(1);
+  EXPECT_TRUE(m.Matches(&d));
+
+  d.set_n(-1);
+  EXPECT_FALSE(m.Matches(&d));
+}
+
+// Tests that Property() can describe itself when used to match a pointer.
+TEST(PropertyForPointerTest, CanDescribeSelf) {
+  Matcher<const AClass*> m = Property(&AClass::n, Ge(0));
+
+  EXPECT_EQ("is an object whose given property is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose given property isn't >= 0",
+            DescribeNegation(m));
+}
+
+TEST(PropertyForPointerTest, CanDescribeSelfWithPropertyDescription) {
+  Matcher<const AClass*> m = Property("fancy_name", &AClass::n, Ge(0));
+
+  EXPECT_EQ("is an object whose property `fancy_name` is >= 0", Describe(m));
+  EXPECT_EQ("is an object whose property `fancy_name` isn't >= 0",
+            DescribeNegation(m));
+}
+
+// Tests that Property() can explain the result of matching a pointer.
+TEST_P(PropertyForPointerTestP, CanExplainMatchResult) {
+  Matcher<const AClass*> m = Property(&AClass::n, Ge(0));
+
+  AClass a;
+  a.set_n(1);
+  EXPECT_EQ("", Explain(m, static_cast<const AClass*>(nullptr)));
+  EXPECT_EQ(
+      "which points to an object whose given property is 1" + OfType("int"),
+      Explain(m, &a));
+
+  m = Property(&AClass::n, GreaterThan(0));
+  EXPECT_EQ("which points to an object whose given property is 1" +
+                OfType("int") + ", which is 1 more than 0",
+            Explain(m, &a));
+}
+
+TEST_P(PropertyForPointerTestP, CanExplainMatchResultWithPropertyName) {
+  Matcher<const AClass*> m = Property("fancy_name", &AClass::n, Ge(0));
+
+  AClass a;
+  a.set_n(1);
+  EXPECT_EQ("", Explain(m, static_cast<const AClass*>(nullptr)));
+  EXPECT_EQ("which points to an object whose property `fancy_name` is 1" +
+                OfType("int"),
+            Explain(m, &a));
+
+  m = Property("fancy_name", &AClass::n, GreaterThan(0));
+  EXPECT_EQ("which points to an object whose property `fancy_name` is 1" +
+                OfType("int") + ", which is 1 more than 0",
+            Explain(m, &a));
+}
+
+// Tests ResultOf.
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f is a
+// function pointer.
+std::string IntToStringFunction(int input) {
+  return input == 1 ? "foo" : "bar";
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(ResultOfTest);
+
+TEST(ResultOfTest, WorksForFunctionPointers) {
+  Matcher<int> matcher = ResultOf(&IntToStringFunction, Eq(std::string("foo")));
+
+  EXPECT_TRUE(matcher.Matches(1));
+  EXPECT_FALSE(matcher.Matches(2));
+}
+
+// Tests that ResultOf() can describe itself.
+TEST(ResultOfTest, CanDescribeItself) {
+  Matcher<int> matcher = ResultOf(&IntToStringFunction, StrEq("foo"));
+
+  EXPECT_EQ(
+      "is mapped by the given callable to a value that "
+      "is equal to \"foo\"",
+      Describe(matcher));
+  EXPECT_EQ(
+      "is mapped by the given callable to a value that "
+      "isn't equal to \"foo\"",
+      DescribeNegation(matcher));
+}
+
+// Tests that ResultOf() can describe itself when provided a result description.
+TEST(ResultOfTest, CanDescribeItselfWithResultDescription) {
+  Matcher<int> matcher =
+      ResultOf("string conversion", &IntToStringFunction, StrEq("foo"));
+
+  EXPECT_EQ("whose string conversion is equal to \"foo\"", Describe(matcher));
+  EXPECT_EQ("whose string conversion isn't equal to \"foo\"",
+            DescribeNegation(matcher));
+}
+
+// Tests that ResultOf() can explain the match result.
+int IntFunction(int input) { return input == 42 ? 80 : 90; }
+
+TEST_P(ResultOfTestP, CanExplainMatchResult) {
+  Matcher<int> matcher = ResultOf(&IntFunction, Ge(85));
+  EXPECT_EQ("which is mapped by the given callable to 90" + OfType("int"),
+            Explain(matcher, 36));
+
+  matcher = ResultOf(&IntFunction, GreaterThan(85));
+  EXPECT_EQ("which is mapped by the given callable to 90" + OfType("int") +
+                ", which is 5 more than 85",
+            Explain(matcher, 36));
+}
+
+TEST_P(ResultOfTestP, CanExplainMatchResultWithResultDescription) {
+  Matcher<int> matcher = ResultOf("magic int conversion", &IntFunction, Ge(85));
+  EXPECT_EQ("whose magic int conversion is 90" + OfType("int"),
+            Explain(matcher, 36));
+
+  matcher = ResultOf("magic int conversion", &IntFunction, GreaterThan(85));
+  EXPECT_EQ("whose magic int conversion is 90" + OfType("int") +
+                ", which is 5 more than 85",
+            Explain(matcher, 36));
+}
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f(x)
+// returns a non-reference.
+TEST(ResultOfTest, WorksForNonReferenceResults) {
+  Matcher<int> matcher = ResultOf(&IntFunction, Eq(80));
+
+  EXPECT_TRUE(matcher.Matches(42));
+  EXPECT_FALSE(matcher.Matches(36));
+}
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f(x)
+// returns a reference to non-const.
+double& DoubleFunction(double& input) { return input; }  // NOLINT
+
+Uncopyable& RefUncopyableFunction(Uncopyable& obj) {  // NOLINT
+  return obj;
+}
+
+TEST(ResultOfTest, WorksForReferenceToNonConstResults) {
+  double x = 3.14;
+  double x2 = x;
+  Matcher<double&> matcher = ResultOf(&DoubleFunction, Ref(x));
+
+  EXPECT_TRUE(matcher.Matches(x));
+  EXPECT_FALSE(matcher.Matches(x2));
+
+  // Test that ResultOf works with uncopyable objects
+  Uncopyable obj(0);
+  Uncopyable obj2(0);
+  Matcher<Uncopyable&> matcher2 = ResultOf(&RefUncopyableFunction, Ref(obj));
+
+  EXPECT_TRUE(matcher2.Matches(obj));
+  EXPECT_FALSE(matcher2.Matches(obj2));
+}
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f(x)
+// returns a reference to const.
+const std::string& StringFunction(const std::string& input) { return input; }
+
+TEST(ResultOfTest, WorksForReferenceToConstResults) {
+  std::string s = "foo";
+  std::string s2 = s;
+  Matcher<const std::string&> matcher = ResultOf(&StringFunction, Ref(s));
+
+  EXPECT_TRUE(matcher.Matches(s));
+  EXPECT_FALSE(matcher.Matches(s2));
+}
+
+// Tests that ResultOf(f, m) works when f(x) and m's
+// argument types are compatible but different.
+TEST(ResultOfTest, WorksForCompatibleMatcherTypes) {
+  // IntFunction() returns int but the inner matcher expects a signed char.
+  Matcher<int> matcher = ResultOf(IntFunction, Matcher<signed char>(Ge(85)));
+
+  EXPECT_TRUE(matcher.Matches(36));
+  EXPECT_FALSE(matcher.Matches(42));
+}
+
+// Tests that the program aborts when ResultOf is passed
+// a NULL function pointer.
+TEST(ResultOfDeathTest, DiesOnNullFunctionPointers) {
+  EXPECT_DEATH_IF_SUPPORTED(
+      ResultOf(static_cast<std::string (*)(int dummy)>(nullptr),
+               Eq(std::string("foo"))),
+      "NULL function pointer is passed into ResultOf\\(\\)\\.");
+}
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f is a
+// function reference.
+TEST(ResultOfTest, WorksForFunctionReferences) {
+  Matcher<int> matcher = ResultOf(IntToStringFunction, StrEq("foo"));
+  EXPECT_TRUE(matcher.Matches(1));
+  EXPECT_FALSE(matcher.Matches(2));
+}
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f is a
+// function object.
+struct Functor {
+  std::string operator()(int input) const { return IntToStringFunction(input); }
+};
+
+TEST(ResultOfTest, WorksForFunctors) {
+  Matcher<int> matcher = ResultOf(Functor(), Eq(std::string("foo")));
+
+  EXPECT_TRUE(matcher.Matches(1));
+  EXPECT_FALSE(matcher.Matches(2));
+}
+
+// Tests that ResultOf(f, ...) compiles and works as expected when f is a
+// functor with more than one operator() defined. ResultOf() must work
+// for each defined operator().
+struct PolymorphicFunctor {
+  typedef int result_type;
+  int operator()(int n) { return n; }
+  int operator()(const char* s) { return static_cast<int>(strlen(s)); }
+  std::string operator()(int* p) { return p ? "good ptr" : "null"; }
+};
+
+TEST(ResultOfTest, WorksForPolymorphicFunctors) {
+  Matcher<int> matcher_int = ResultOf(PolymorphicFunctor(), Ge(5));
+
+  EXPECT_TRUE(matcher_int.Matches(10));
+  EXPECT_FALSE(matcher_int.Matches(2));
+
+  Matcher<const char*> matcher_string = ResultOf(PolymorphicFunctor(), Ge(5));
+
+  EXPECT_TRUE(matcher_string.Matches("long string"));
+  EXPECT_FALSE(matcher_string.Matches("shrt"));
+}
+
+TEST(ResultOfTest, WorksForPolymorphicFunctorsIgnoringResultType) {
+  Matcher<int*> matcher = ResultOf(PolymorphicFunctor(), "good ptr");
+
+  int n = 0;
+  EXPECT_TRUE(matcher.Matches(&n));
+  EXPECT_FALSE(matcher.Matches(nullptr));
+}
+
+TEST(ResultOfTest, WorksForLambdas) {
+  Matcher<int> matcher = ResultOf(
+      [](int str_len) {
+        return std::string(static_cast<size_t>(str_len), 'x');
+      },
+      "xxx");
+  EXPECT_TRUE(matcher.Matches(3));
+  EXPECT_FALSE(matcher.Matches(1));
+}
+
+TEST(ResultOfTest, WorksForNonCopyableArguments) {
+  Matcher<std::unique_ptr<int>> matcher = ResultOf(
+      [](const std::unique_ptr<int>& str_len) {
+        return std::string(static_cast<size_t>(*str_len), 'x');
+      },
+      "xxx");
+  EXPECT_TRUE(matcher.Matches(std::unique_ptr<int>(new int(3))));
+  EXPECT_FALSE(matcher.Matches(std::unique_ptr<int>(new int(1))));
+}
+
+const int* ReferencingFunction(const int& n) { return &n; }
+
+struct ReferencingFunctor {
+  typedef const int* result_type;
+  result_type operator()(const int& n) { return &n; }
+};
+
+TEST(ResultOfTest, WorksForReferencingCallables) {
+  const int n = 1;
+  const int n2 = 1;
+  Matcher<const int&> matcher2 = ResultOf(ReferencingFunction, Eq(&n));
+  EXPECT_TRUE(matcher2.Matches(n));
+  EXPECT_FALSE(matcher2.Matches(n2));
+
+  Matcher<const int&> matcher3 = ResultOf(ReferencingFunctor(), Eq(&n));
+  EXPECT_TRUE(matcher3.Matches(n));
+  EXPECT_FALSE(matcher3.Matches(n2));
+}
+
+TEST(SizeIsTest, ImplementsSizeIs) {
+  vector<int> container;
+  EXPECT_THAT(container, SizeIs(0));
+  EXPECT_THAT(container, Not(SizeIs(1)));
+  container.push_back(0);
+  EXPECT_THAT(container, Not(SizeIs(0)));
+  EXPECT_THAT(container, SizeIs(1));
+  container.push_back(0);
+  EXPECT_THAT(container, Not(SizeIs(0)));
+  EXPECT_THAT(container, SizeIs(2));
+}
+
+TEST(SizeIsTest, WorksWithMap) {
+  map<std::string, int> container;
+  EXPECT_THAT(container, SizeIs(0));
+  EXPECT_THAT(container, Not(SizeIs(1)));
+  container.insert(make_pair("foo", 1));
+  EXPECT_THAT(container, Not(SizeIs(0)));
+  EXPECT_THAT(container, SizeIs(1));
+  container.insert(make_pair("bar", 2));
+  EXPECT_THAT(container, Not(SizeIs(0)));
+  EXPECT_THAT(container, SizeIs(2));
+}
+
+TEST(SizeIsTest, WorksWithReferences) {
+  vector<int> container;
+  Matcher<const vector<int>&> m = SizeIs(1);
+  EXPECT_THAT(container, Not(m));
+  container.push_back(0);
+  EXPECT_THAT(container, m);
+}
+
+TEST(SizeIsTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(SizeIs(3)));
+  helper.Call(MakeUniquePtrs({1, 2, 3}));
+}
+
+// SizeIs should work for any type that provides a size() member function.
+// For example, a size_type member type should not need to be provided.
+struct MinimalistCustomType {
+  int size() const { return 1; }
+};
+TEST(SizeIsTest, WorksWithMinimalistCustomType) {
+  MinimalistCustomType container;
+  EXPECT_THAT(container, SizeIs(1));
+  EXPECT_THAT(container, Not(SizeIs(0)));
+}
+
+TEST(SizeIsTest, CanDescribeSelf) {
+  Matcher<vector<int>> m = SizeIs(2);
+  EXPECT_EQ("size is equal to 2", Describe(m));
+  EXPECT_EQ("size isn't equal to 2", DescribeNegation(m));
+}
+
+TEST(SizeIsTest, ExplainsResult) {
+  Matcher<vector<int>> m1 = SizeIs(2);
+  Matcher<vector<int>> m2 = SizeIs(Lt(2u));
+  Matcher<vector<int>> m3 = SizeIs(AnyOf(0, 3));
+  Matcher<vector<int>> m4 = SizeIs(Gt(1u));
+  vector<int> container;
+  EXPECT_EQ("whose size 0 doesn't match", Explain(m1, container));
+  EXPECT_EQ("whose size 0 matches", Explain(m2, container));
+  EXPECT_EQ("whose size 0 matches", Explain(m3, container));
+  EXPECT_EQ("whose size 0 doesn't match", Explain(m4, container));
+  container.push_back(0);
+  container.push_back(0);
+  EXPECT_EQ("whose size 2 matches", Explain(m1, container));
+  EXPECT_EQ("whose size 2 doesn't match", Explain(m2, container));
+  EXPECT_EQ("whose size 2 doesn't match", Explain(m3, container));
+  EXPECT_EQ("whose size 2 matches", Explain(m4, container));
+}
+
+TEST(WhenSortedByTest, WorksForEmptyContainer) {
+  const vector<int> numbers;
+  EXPECT_THAT(numbers, WhenSortedBy(less<int>(), ElementsAre()));
+  EXPECT_THAT(numbers, Not(WhenSortedBy(less<int>(), ElementsAre(1))));
+}
+
+TEST(WhenSortedByTest, WorksForNonEmptyContainer) {
+  vector<unsigned> numbers;
+  numbers.push_back(3);
+  numbers.push_back(1);
+  numbers.push_back(2);
+  numbers.push_back(2);
+  EXPECT_THAT(numbers,
+              WhenSortedBy(greater<unsigned>(), ElementsAre(3, 2, 2, 1)));
+  EXPECT_THAT(numbers,
+              Not(WhenSortedBy(greater<unsigned>(), ElementsAre(1, 2, 2, 3))));
+}
+
+TEST(WhenSortedByTest, WorksForNonVectorContainer) {
+  list<std::string> words;
+  words.push_back("say");
+  words.push_back("hello");
+  words.push_back("world");
+  EXPECT_THAT(words, WhenSortedBy(less<std::string>(),
+                                  ElementsAre("hello", "say", "world")));
+  EXPECT_THAT(words, Not(WhenSortedBy(less<std::string>(),
+                                      ElementsAre("say", "hello", "world"))));
+}
+
+TEST(WhenSortedByTest, WorksForNativeArray) {
+  const int numbers[] = {1, 3, 2, 4};
+  const int sorted_numbers[] = {1, 2, 3, 4};
+  EXPECT_THAT(numbers, WhenSortedBy(less<int>(), ElementsAre(1, 2, 3, 4)));
+  EXPECT_THAT(numbers,
+              WhenSortedBy(less<int>(), ElementsAreArray(sorted_numbers)));
+  EXPECT_THAT(numbers, Not(WhenSortedBy(less<int>(), ElementsAre(1, 3, 2, 4))));
+}
+
+TEST(WhenSortedByTest, CanDescribeSelf) {
+  const Matcher<vector<int>> m = WhenSortedBy(less<int>(), ElementsAre(1, 2));
+  EXPECT_EQ(
+      "(when sorted) has 2 elements where\n"
+      "element #0 is equal to 1,\n"
+      "element #1 is equal to 2",
+      Describe(m));
+  EXPECT_EQ(
+      "(when sorted) doesn't have 2 elements, or\n"
+      "element #0 isn't equal to 1, or\n"
+      "element #1 isn't equal to 2",
+      DescribeNegation(m));
+}
+
+TEST(WhenSortedByTest, ExplainsMatchResult) {
+  const int a[] = {2, 1};
+  EXPECT_EQ("which is { 1, 2 } when sorted, whose element #0 doesn't match",
+            Explain(WhenSortedBy(less<int>(), ElementsAre(2, 3)), a));
+  EXPECT_EQ("which is { 1, 2 } when sorted",
+            Explain(WhenSortedBy(less<int>(), ElementsAre(1, 2)), a));
+}
+
+// WhenSorted() is a simple wrapper on WhenSortedBy().  Hence we don't
+// need to test it as exhaustively as we test the latter.
+
+TEST(WhenSortedTest, WorksForEmptyContainer) {
+  const vector<int> numbers;
+  EXPECT_THAT(numbers, WhenSorted(ElementsAre()));
+  EXPECT_THAT(numbers, Not(WhenSorted(ElementsAre(1))));
+}
+
+TEST(WhenSortedTest, WorksForNonEmptyContainer) {
+  list<std::string> words;
+  words.push_back("3");
+  words.push_back("1");
+  words.push_back("2");
+  words.push_back("2");
+  EXPECT_THAT(words, WhenSorted(ElementsAre("1", "2", "2", "3")));
+  EXPECT_THAT(words, Not(WhenSorted(ElementsAre("3", "1", "2", "2"))));
+}
+
+TEST(WhenSortedTest, WorksForMapTypes) {
+  map<std::string, int> word_counts;
+  word_counts["and"] = 1;
+  word_counts["the"] = 1;
+  word_counts["buffalo"] = 2;
+  EXPECT_THAT(word_counts,
+              WhenSorted(ElementsAre(Pair("and", 1), Pair("buffalo", 2),
+                                     Pair("the", 1))));
+  EXPECT_THAT(word_counts,
+              Not(WhenSorted(ElementsAre(Pair("and", 1), Pair("the", 1),
+                                         Pair("buffalo", 2)))));
+}
+
+TEST(WhenSortedTest, WorksForMultiMapTypes) {
+  multimap<int, int> ifib;
+  ifib.insert(make_pair(8, 6));
+  ifib.insert(make_pair(2, 3));
+  ifib.insert(make_pair(1, 1));
+  ifib.insert(make_pair(3, 4));
+  ifib.insert(make_pair(1, 2));
+  ifib.insert(make_pair(5, 5));
+  EXPECT_THAT(ifib,
+              WhenSorted(ElementsAre(Pair(1, 1), Pair(1, 2), Pair(2, 3),
+                                     Pair(3, 4), Pair(5, 5), Pair(8, 6))));
+  EXPECT_THAT(ifib,
+              Not(WhenSorted(ElementsAre(Pair(8, 6), Pair(2, 3), Pair(1, 1),
+                                         Pair(3, 4), Pair(1, 2), Pair(5, 5)))));
+}
+
+TEST(WhenSortedTest, WorksForPolymorphicMatcher) {
+  std::deque<int> d;
+  d.push_back(2);
+  d.push_back(1);
+  EXPECT_THAT(d, WhenSorted(ElementsAre(1, 2)));
+  EXPECT_THAT(d, Not(WhenSorted(ElementsAre(2, 1))));
+}
+
+TEST(WhenSortedTest, WorksForVectorConstRefMatcher) {
+  std::deque<int> d;
+  d.push_back(2);
+  d.push_back(1);
+  Matcher<const std::vector<int>&> vector_match = ElementsAre(1, 2);
+  EXPECT_THAT(d, WhenSorted(vector_match));
+  Matcher<const std::vector<int>&> not_vector_match = ElementsAre(2, 1);
+  EXPECT_THAT(d, Not(WhenSorted(not_vector_match)));
+}
+
+// Deliberately bare pseudo-container.
+// Offers only begin() and end() accessors, yielding InputIterator.
+template <typename T>
+class Streamlike {
+ private:
+  class ConstIter;
+
+ public:
+  typedef ConstIter const_iterator;
+  typedef T value_type;
+
+  template <typename InIter>
+  Streamlike(InIter first, InIter last) : remainder_(first, last) {}
+
+  const_iterator begin() const {
+    return const_iterator(this, remainder_.begin());
+  }
+  const_iterator end() const { return const_iterator(this, remainder_.end()); }
+
+ private:
+  class ConstIter {
+   public:
+    using iterator_category = std::input_iterator_tag;
+    using value_type = T;
+    using difference_type = ptrdiff_t;
+    using pointer = const value_type*;
+    using reference = const value_type&;
+
+    ConstIter(const Streamlike* s, typename std::list<value_type>::iterator pos)
+        : s_(s), pos_(pos) {}
+
+    const value_type& operator*() const { return *pos_; }
+    const value_type* operator->() const { return &*pos_; }
+    ConstIter& operator++() {
+      s_->remainder_.erase(pos_++);
+      return *this;
+    }
+
+    // *iter++ is required to work (see std::istreambuf_iterator).
+    // (void)iter++ is also required to work.
+    class PostIncrProxy {
+     public:
+      explicit PostIncrProxy(const value_type& value) : value_(value) {}
+      value_type operator*() const { return value_; }
+
+     private:
+      value_type value_;
+    };
+    PostIncrProxy operator++(int) {
+      PostIncrProxy proxy(**this);
+      ++(*this);
+      return proxy;
+    }
+
+    friend bool operator==(const ConstIter& a, const ConstIter& b) {
+      return a.s_ == b.s_ && a.pos_ == b.pos_;
+    }
+    friend bool operator!=(const ConstIter& a, const ConstIter& b) {
+      return !(a == b);
+    }
+
+   private:
+    const Streamlike* s_;
+    typename std::list<value_type>::iterator pos_;
+  };
+
+  friend std::ostream& operator<<(std::ostream& os, const Streamlike& s) {
+    os << "[";
+    typedef typename std::list<value_type>::const_iterator Iter;
+    const char* sep = "";
+    for (Iter it = s.remainder_.begin(); it != s.remainder_.end(); ++it) {
+      os << sep << *it;
+      sep = ",";
+    }
+    os << "]";
+    return os;
+  }
+
+  mutable std::list<value_type> remainder_;  // modified by iteration
+};
+
+TEST(StreamlikeTest, Iteration) {
+  const int a[5] = {2, 1, 4, 5, 3};
+  Streamlike<int> s(a, a + 5);
+  Streamlike<int>::const_iterator it = s.begin();
+  const int* ip = a;
+  while (it != s.end()) {
+    SCOPED_TRACE(ip - a);
+    EXPECT_EQ(*ip++, *it++);
+  }
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(BeginEndDistanceIsTest);
+
+TEST(BeginEndDistanceIsTest, WorksWithForwardList) {
+  std::forward_list<int> container;
+  EXPECT_THAT(container, BeginEndDistanceIs(0));
+  EXPECT_THAT(container, Not(BeginEndDistanceIs(1)));
+  container.push_front(0);
+  EXPECT_THAT(container, Not(BeginEndDistanceIs(0)));
+  EXPECT_THAT(container, BeginEndDistanceIs(1));
+  container.push_front(0);
+  EXPECT_THAT(container, Not(BeginEndDistanceIs(0)));
+  EXPECT_THAT(container, BeginEndDistanceIs(2));
+}
+
+TEST(BeginEndDistanceIsTest, WorksWithNonStdList) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  Streamlike<int> s(a, a + 5);
+  EXPECT_THAT(s, BeginEndDistanceIs(5));
+}
+
+TEST(BeginEndDistanceIsTest, CanDescribeSelf) {
+  Matcher<vector<int>> m = BeginEndDistanceIs(2);
+  EXPECT_EQ("distance between begin() and end() is equal to 2", Describe(m));
+  EXPECT_EQ("distance between begin() and end() isn't equal to 2",
+            DescribeNegation(m));
+}
+
+TEST(BeginEndDistanceIsTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(BeginEndDistanceIs(2)));
+  helper.Call(MakeUniquePtrs({1, 2}));
+}
+
+TEST_P(BeginEndDistanceIsTestP, ExplainsResult) {
+  Matcher<vector<int>> m1 = BeginEndDistanceIs(2);
+  Matcher<vector<int>> m2 = BeginEndDistanceIs(Lt(2));
+  Matcher<vector<int>> m3 = BeginEndDistanceIs(AnyOf(0, 3));
+  Matcher<vector<int>> m4 = BeginEndDistanceIs(GreaterThan(1));
+  vector<int> container;
+  EXPECT_EQ("whose distance between begin() and end() 0 doesn't match",
+            Explain(m1, container));
+  EXPECT_EQ("whose distance between begin() and end() 0 matches",
+            Explain(m2, container));
+  EXPECT_EQ("whose distance between begin() and end() 0 matches",
+            Explain(m3, container));
+  EXPECT_EQ(
+      "whose distance between begin() and end() 0 doesn't match, which is 1 "
+      "less than 1",
+      Explain(m4, container));
+  container.push_back(0);
+  container.push_back(0);
+  EXPECT_EQ("whose distance between begin() and end() 2 matches",
+            Explain(m1, container));
+  EXPECT_EQ("whose distance between begin() and end() 2 doesn't match",
+            Explain(m2, container));
+  EXPECT_EQ("whose distance between begin() and end() 2 doesn't match",
+            Explain(m3, container));
+  EXPECT_EQ(
+      "whose distance between begin() and end() 2 matches, which is 1 more "
+      "than 1",
+      Explain(m4, container));
+}
+
+TEST(WhenSortedTest, WorksForStreamlike) {
+  // Streamlike 'container' provides only minimal iterator support.
+  // Its iterators are tagged with input_iterator_tag.
+  const int a[5] = {2, 1, 4, 5, 3};
+  Streamlike<int> s(std::begin(a), std::end(a));
+  EXPECT_THAT(s, WhenSorted(ElementsAre(1, 2, 3, 4, 5)));
+  EXPECT_THAT(s, Not(WhenSorted(ElementsAre(2, 1, 4, 5, 3))));
+}
+
+TEST(WhenSortedTest, WorksForVectorConstRefMatcherOnStreamlike) {
+  const int a[] = {2, 1, 4, 5, 3};
+  Streamlike<int> s(std::begin(a), std::end(a));
+  Matcher<const std::vector<int>&> vector_match = ElementsAre(1, 2, 3, 4, 5);
+  EXPECT_THAT(s, WhenSorted(vector_match));
+  EXPECT_THAT(s, Not(WhenSorted(ElementsAre(2, 1, 4, 5, 3))));
+}
+
+TEST(IsSupersetOfTest, WorksForNativeArray) {
+  const int subset[] = {1, 4};
+  const int superset[] = {1, 2, 4};
+  const int disjoint[] = {1, 0, 3};
+  EXPECT_THAT(subset, IsSupersetOf(subset));
+  EXPECT_THAT(subset, Not(IsSupersetOf(superset)));
+  EXPECT_THAT(superset, IsSupersetOf(subset));
+  EXPECT_THAT(subset, Not(IsSupersetOf(disjoint)));
+  EXPECT_THAT(disjoint, Not(IsSupersetOf(subset)));
+}
+
+TEST(IsSupersetOfTest, WorksWithDuplicates) {
+  const int not_enough[] = {1, 2};
+  const int enough[] = {1, 1, 2};
+  const int expected[] = {1, 1};
+  EXPECT_THAT(not_enough, Not(IsSupersetOf(expected)));
+  EXPECT_THAT(enough, IsSupersetOf(expected));
+}
+
+TEST(IsSupersetOfTest, WorksForEmpty) {
+  vector<int> numbers;
+  vector<int> expected;
+  EXPECT_THAT(numbers, IsSupersetOf(expected));
+  expected.push_back(1);
+  EXPECT_THAT(numbers, Not(IsSupersetOf(expected)));
+  expected.clear();
+  numbers.push_back(1);
+  numbers.push_back(2);
+  EXPECT_THAT(numbers, IsSupersetOf(expected));
+  expected.push_back(1);
+  EXPECT_THAT(numbers, IsSupersetOf(expected));
+  expected.push_back(2);
+  EXPECT_THAT(numbers, IsSupersetOf(expected));
+  expected.push_back(3);
+  EXPECT_THAT(numbers, Not(IsSupersetOf(expected)));
+}
+
+TEST(IsSupersetOfTest, WorksForStreamlike) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  Streamlike<int> s(std::begin(a), std::end(a));
+
+  vector<int> expected;
+  expected.push_back(1);
+  expected.push_back(2);
+  expected.push_back(5);
+  EXPECT_THAT(s, IsSupersetOf(expected));
+
+  expected.push_back(0);
+  EXPECT_THAT(s, Not(IsSupersetOf(expected)));
+}
+
+TEST(IsSupersetOfTest, TakesStlContainer) {
+  const int actual[] = {3, 1, 2};
+
+  ::std::list<int> expected;
+  expected.push_back(1);
+  expected.push_back(3);
+  EXPECT_THAT(actual, IsSupersetOf(expected));
+
+  expected.push_back(4);
+  EXPECT_THAT(actual, Not(IsSupersetOf(expected)));
+}
+
+TEST(IsSupersetOfTest, Describe) {
+  typedef std::vector<int> IntVec;
+  IntVec expected;
+  expected.push_back(111);
+  expected.push_back(222);
+  expected.push_back(333);
+  EXPECT_THAT(
+      Describe<IntVec>(IsSupersetOf(expected)),
+      Eq("a surjection from elements to requirements exists such that:\n"
+         " - an element is equal to 111\n"
+         " - an element is equal to 222\n"
+         " - an element is equal to 333"));
+}
+
+TEST(IsSupersetOfTest, DescribeNegation) {
+  typedef std::vector<int> IntVec;
+  IntVec expected;
+  expected.push_back(111);
+  expected.push_back(222);
+  expected.push_back(333);
+  EXPECT_THAT(
+      DescribeNegation<IntVec>(IsSupersetOf(expected)),
+      Eq("no surjection from elements to requirements exists such that:\n"
+         " - an element is equal to 111\n"
+         " - an element is equal to 222\n"
+         " - an element is equal to 333"));
+}
+
+TEST(IsSupersetOfTest, MatchAndExplain) {
+  std::vector<int> v;
+  v.push_back(2);
+  v.push_back(3);
+  std::vector<int> expected;
+  expected.push_back(1);
+  expected.push_back(2);
+  StringMatchResultListener listener;
+  ASSERT_FALSE(ExplainMatchResult(IsSupersetOf(expected), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(),
+              Eq("where the following matchers don't match any elements:\n"
+                 "matcher #0: is equal to 1"));
+
+  v.push_back(1);
+  listener.Clear();
+  ASSERT_TRUE(ExplainMatchResult(IsSupersetOf(expected), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(), Eq("where:\n"
+                                 " - element #0 is matched by matcher #1,\n"
+                                 " - element #2 is matched by matcher #0"));
+}
+
+TEST(IsSupersetOfTest, WorksForRhsInitializerList) {
+  const int numbers[] = {1, 3, 6, 2, 4, 5};
+  EXPECT_THAT(numbers, IsSupersetOf({1, 2}));
+  EXPECT_THAT(numbers, Not(IsSupersetOf({3, 0})));
+}
+
+TEST(IsSupersetOfTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(IsSupersetOf({Pointee(1)})));
+  helper.Call(MakeUniquePtrs({1, 2}));
+  EXPECT_CALL(helper, Call(Not(IsSupersetOf({Pointee(1), Pointee(2)}))));
+  helper.Call(MakeUniquePtrs({2}));
+}
+
+TEST(IsSubsetOfTest, WorksForNativeArray) {
+  const int subset[] = {1, 4};
+  const int superset[] = {1, 2, 4};
+  const int disjoint[] = {1, 0, 3};
+  EXPECT_THAT(subset, IsSubsetOf(subset));
+  EXPECT_THAT(subset, IsSubsetOf(superset));
+  EXPECT_THAT(superset, Not(IsSubsetOf(subset)));
+  EXPECT_THAT(subset, Not(IsSubsetOf(disjoint)));
+  EXPECT_THAT(disjoint, Not(IsSubsetOf(subset)));
+}
+
+TEST(IsSubsetOfTest, WorksWithDuplicates) {
+  const int not_enough[] = {1, 2};
+  const int enough[] = {1, 1, 2};
+  const int actual[] = {1, 1};
+  EXPECT_THAT(actual, Not(IsSubsetOf(not_enough)));
+  EXPECT_THAT(actual, IsSubsetOf(enough));
+}
+
+TEST(IsSubsetOfTest, WorksForEmpty) {
+  vector<int> numbers;
+  vector<int> expected;
+  EXPECT_THAT(numbers, IsSubsetOf(expected));
+  expected.push_back(1);
+  EXPECT_THAT(numbers, IsSubsetOf(expected));
+  expected.clear();
+  numbers.push_back(1);
+  numbers.push_back(2);
+  EXPECT_THAT(numbers, Not(IsSubsetOf(expected)));
+  expected.push_back(1);
+  EXPECT_THAT(numbers, Not(IsSubsetOf(expected)));
+  expected.push_back(2);
+  EXPECT_THAT(numbers, IsSubsetOf(expected));
+  expected.push_back(3);
+  EXPECT_THAT(numbers, IsSubsetOf(expected));
+}
+
+TEST(IsSubsetOfTest, WorksForStreamlike) {
+  const int a[5] = {1, 2};
+  Streamlike<int> s(std::begin(a), std::end(a));
+
+  vector<int> expected;
+  expected.push_back(1);
+  EXPECT_THAT(s, Not(IsSubsetOf(expected)));
+  expected.push_back(2);
+  expected.push_back(5);
+  EXPECT_THAT(s, IsSubsetOf(expected));
+}
+
+TEST(IsSubsetOfTest, TakesStlContainer) {
+  const int actual[] = {3, 1, 2};
+
+  ::std::list<int> expected;
+  expected.push_back(1);
+  expected.push_back(3);
+  EXPECT_THAT(actual, Not(IsSubsetOf(expected)));
+
+  expected.push_back(2);
+  expected.push_back(4);
+  EXPECT_THAT(actual, IsSubsetOf(expected));
+}
+
+TEST(IsSubsetOfTest, Describe) {
+  typedef std::vector<int> IntVec;
+  IntVec expected;
+  expected.push_back(111);
+  expected.push_back(222);
+  expected.push_back(333);
+
+  EXPECT_THAT(
+      Describe<IntVec>(IsSubsetOf(expected)),
+      Eq("an injection from elements to requirements exists such that:\n"
+         " - an element is equal to 111\n"
+         " - an element is equal to 222\n"
+         " - an element is equal to 333"));
+}
+
+TEST(IsSubsetOfTest, DescribeNegation) {
+  typedef std::vector<int> IntVec;
+  IntVec expected;
+  expected.push_back(111);
+  expected.push_back(222);
+  expected.push_back(333);
+  EXPECT_THAT(
+      DescribeNegation<IntVec>(IsSubsetOf(expected)),
+      Eq("no injection from elements to requirements exists such that:\n"
+         " - an element is equal to 111\n"
+         " - an element is equal to 222\n"
+         " - an element is equal to 333"));
+}
+
+TEST(IsSubsetOfTest, MatchAndExplain) {
+  std::vector<int> v;
+  v.push_back(2);
+  v.push_back(3);
+  std::vector<int> expected;
+  expected.push_back(1);
+  expected.push_back(2);
+  StringMatchResultListener listener;
+  ASSERT_FALSE(ExplainMatchResult(IsSubsetOf(expected), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(),
+              Eq("where the following elements don't match any matchers:\n"
+                 "element #1: 3"));
+
+  expected.push_back(3);
+  listener.Clear();
+  ASSERT_TRUE(ExplainMatchResult(IsSubsetOf(expected), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(), Eq("where:\n"
+                                 " - element #0 is matched by matcher #1,\n"
+                                 " - element #1 is matched by matcher #2"));
+}
+
+TEST(IsSubsetOfTest, WorksForRhsInitializerList) {
+  const int numbers[] = {1, 2, 3};
+  EXPECT_THAT(numbers, IsSubsetOf({1, 2, 3, 4}));
+  EXPECT_THAT(numbers, Not(IsSubsetOf({1, 2})));
+}
+
+TEST(IsSubsetOfTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(IsSubsetOf({Pointee(1), Pointee(2)})));
+  helper.Call(MakeUniquePtrs({1}));
+  EXPECT_CALL(helper, Call(Not(IsSubsetOf({Pointee(1)}))));
+  helper.Call(MakeUniquePtrs({2}));
+}
+
+// Tests using ElementsAre() and ElementsAreArray() with stream-like
+// "containers".
+
+TEST(ElemensAreStreamTest, WorksForStreamlike) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  Streamlike<int> s(std::begin(a), std::end(a));
+  EXPECT_THAT(s, ElementsAre(1, 2, 3, 4, 5));
+  EXPECT_THAT(s, Not(ElementsAre(2, 1, 4, 5, 3)));
+}
+
+TEST(ElemensAreArrayStreamTest, WorksForStreamlike) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  Streamlike<int> s(std::begin(a), std::end(a));
+
+  vector<int> expected;
+  expected.push_back(1);
+  expected.push_back(2);
+  expected.push_back(3);
+  expected.push_back(4);
+  expected.push_back(5);
+  EXPECT_THAT(s, ElementsAreArray(expected));
+
+  expected[3] = 0;
+  EXPECT_THAT(s, Not(ElementsAreArray(expected)));
+}
+
+TEST(ElementsAreTest, WorksWithUncopyable) {
+  Uncopyable objs[2];
+  objs[0].set_value(-3);
+  objs[1].set_value(1);
+  EXPECT_THAT(objs, ElementsAre(UncopyableIs(-3), Truly(ValueIsPositive)));
+}
+
+TEST(ElementsAreTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(ElementsAre(Pointee(1), Pointee(2))));
+  helper.Call(MakeUniquePtrs({1, 2}));
+
+  EXPECT_CALL(helper, Call(ElementsAreArray({Pointee(3), Pointee(4)})));
+  helper.Call(MakeUniquePtrs({3, 4}));
+}
+
+TEST(ElementsAreTest, TakesStlContainer) {
+  const int actual[] = {3, 1, 2};
+
+  ::std::list<int> expected;
+  expected.push_back(3);
+  expected.push_back(1);
+  expected.push_back(2);
+  EXPECT_THAT(actual, ElementsAreArray(expected));
+
+  expected.push_back(4);
+  EXPECT_THAT(actual, Not(ElementsAreArray(expected)));
+}
+
+// Tests for UnorderedElementsAreArray()
+
+TEST(UnorderedElementsAreArrayTest, SucceedsWhenExpected) {
+  const int a[] = {0, 1, 2, 3, 4};
+  std::vector<int> s(std::begin(a), std::end(a));
+  do {
+    StringMatchResultListener listener;
+    EXPECT_TRUE(ExplainMatchResult(UnorderedElementsAreArray(a), s, &listener))
+        << listener.str();
+  } while (std::next_permutation(s.begin(), s.end()));
+}
+
+TEST(UnorderedElementsAreArrayTest, VectorBool) {
+  const bool a[] = {0, 1, 0, 1, 1};
+  const bool b[] = {1, 0, 1, 1, 0};
+  std::vector<bool> expected(std::begin(a), std::end(a));
+  std::vector<bool> actual(std::begin(b), std::end(b));
+  StringMatchResultListener listener;
+  EXPECT_TRUE(ExplainMatchResult(UnorderedElementsAreArray(expected), actual,
+                                 &listener))
+      << listener.str();
+}
+
+TEST(UnorderedElementsAreArrayTest, WorksForStreamlike) {
+  // Streamlike 'container' provides only minimal iterator support.
+  // Its iterators are tagged with input_iterator_tag, and it has no
+  // size() or empty() methods.
+  const int a[5] = {2, 1, 4, 5, 3};
+  Streamlike<int> s(std::begin(a), std::end(a));
+
+  ::std::vector<int> expected;
+  expected.push_back(1);
+  expected.push_back(2);
+  expected.push_back(3);
+  expected.push_back(4);
+  expected.push_back(5);
+  EXPECT_THAT(s, UnorderedElementsAreArray(expected));
+
+  expected.push_back(6);
+  EXPECT_THAT(s, Not(UnorderedElementsAreArray(expected)));
+}
+
+TEST(UnorderedElementsAreArrayTest, TakesStlContainer) {
+  const int actual[] = {3, 1, 2};
+
+  ::std::list<int> expected;
+  expected.push_back(1);
+  expected.push_back(2);
+  expected.push_back(3);
+  EXPECT_THAT(actual, UnorderedElementsAreArray(expected));
+
+  expected.push_back(4);
+  EXPECT_THAT(actual, Not(UnorderedElementsAreArray(expected)));
+}
+
+TEST(UnorderedElementsAreArrayTest, TakesInitializerList) {
+  const int a[5] = {2, 1, 4, 5, 3};
+  EXPECT_THAT(a, UnorderedElementsAreArray({1, 2, 3, 4, 5}));
+  EXPECT_THAT(a, Not(UnorderedElementsAreArray({1, 2, 3, 4, 6})));
+}
+
+TEST(UnorderedElementsAreArrayTest, TakesInitializerListOfCStrings) {
+  const std::string a[5] = {"a", "b", "c", "d", "e"};
+  EXPECT_THAT(a, UnorderedElementsAreArray({"a", "b", "c", "d", "e"}));
+  EXPECT_THAT(a, Not(UnorderedElementsAreArray({"a", "b", "c", "d", "ef"})));
+}
+
+TEST(UnorderedElementsAreArrayTest, TakesInitializerListOfSameTypedMatchers) {
+  const int a[5] = {2, 1, 4, 5, 3};
+  EXPECT_THAT(a,
+              UnorderedElementsAreArray({Eq(1), Eq(2), Eq(3), Eq(4), Eq(5)}));
+  EXPECT_THAT(
+      a, Not(UnorderedElementsAreArray({Eq(1), Eq(2), Eq(3), Eq(4), Eq(6)})));
+}
+
+TEST(UnorderedElementsAreArrayTest,
+     TakesInitializerListOfDifferentTypedMatchers) {
+  const int a[5] = {2, 1, 4, 5, 3};
+  // The compiler cannot infer the type of the initializer list if its
+  // elements have different types.  We must explicitly specify the
+  // unified element type in this case.
+  EXPECT_THAT(a, UnorderedElementsAreArray<Matcher<int>>(
+                     {Eq(1), Ne(-2), Ge(3), Le(4), Eq(5)}));
+  EXPECT_THAT(a, Not(UnorderedElementsAreArray<Matcher<int>>(
+                     {Eq(1), Ne(-2), Ge(3), Le(4), Eq(6)})));
+}
+
+TEST(UnorderedElementsAreArrayTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper,
+              Call(UnorderedElementsAreArray({Pointee(1), Pointee(2)})));
+  helper.Call(MakeUniquePtrs({2, 1}));
+}
+
+class UnorderedElementsAreTest : public testing::Test {
+ protected:
+  typedef std::vector<int> IntVec;
+};
+
+TEST_F(UnorderedElementsAreTest, WorksWithUncopyable) {
+  Uncopyable objs[2];
+  objs[0].set_value(-3);
+  objs[1].set_value(1);
+  EXPECT_THAT(objs,
+              UnorderedElementsAre(Truly(ValueIsPositive), UncopyableIs(-3)));
+}
+
+TEST_F(UnorderedElementsAreTest, SucceedsWhenExpected) {
+  const int a[] = {1, 2, 3};
+  std::vector<int> s(std::begin(a), std::end(a));
+  do {
+    StringMatchResultListener listener;
+    EXPECT_TRUE(ExplainMatchResult(UnorderedElementsAre(1, 2, 3), s, &listener))
+        << listener.str();
+  } while (std::next_permutation(s.begin(), s.end()));
+}
+
+TEST_F(UnorderedElementsAreTest, FailsWhenAnElementMatchesNoMatcher) {
+  const int a[] = {1, 2, 3};
+  std::vector<int> s(std::begin(a), std::end(a));
+  std::vector<Matcher<int>> mv;
+  mv.push_back(1);
+  mv.push_back(2);
+  mv.push_back(2);
+  // The element with value '3' matches nothing: fail fast.
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(UnorderedElementsAreArray(mv), s, &listener))
+      << listener.str();
+}
+
+TEST_F(UnorderedElementsAreTest, WorksForStreamlike) {
+  // Streamlike 'container' provides only minimal iterator support.
+  // Its iterators are tagged with input_iterator_tag, and it has no
+  // size() or empty() methods.
+  const int a[5] = {2, 1, 4, 5, 3};
+  Streamlike<int> s(std::begin(a), std::end(a));
+
+  EXPECT_THAT(s, UnorderedElementsAre(1, 2, 3, 4, 5));
+  EXPECT_THAT(s, Not(UnorderedElementsAre(2, 2, 3, 4, 5)));
+}
+
+TEST_F(UnorderedElementsAreTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(UnorderedElementsAre(Pointee(1), Pointee(2))));
+  helper.Call(MakeUniquePtrs({2, 1}));
+}
+
+// One naive implementation of the matcher runs in O(N!) time, which is too
+// slow for many real-world inputs. This test shows that our matcher can match
+// 100 inputs very quickly (a few milliseconds).  An O(100!) is 10^158
+// iterations and obviously effectively incomputable.
+// [ RUN      ] UnorderedElementsAreTest.Performance
+// [       OK ] UnorderedElementsAreTest.Performance (4 ms)
+TEST_F(UnorderedElementsAreTest, Performance) {
+  std::vector<int> s;
+  std::vector<Matcher<int>> mv;
+  for (int i = 0; i < 100; ++i) {
+    s.push_back(i);
+    mv.push_back(_);
+  }
+  mv[50] = Eq(0);
+  StringMatchResultListener listener;
+  EXPECT_TRUE(ExplainMatchResult(UnorderedElementsAreArray(mv), s, &listener))
+      << listener.str();
+}
+
+// Another variant of 'Performance' with similar expectations.
+// [ RUN      ] UnorderedElementsAreTest.PerformanceHalfStrict
+// [       OK ] UnorderedElementsAreTest.PerformanceHalfStrict (4 ms)
+TEST_F(UnorderedElementsAreTest, PerformanceHalfStrict) {
+  std::vector<int> s;
+  std::vector<Matcher<int>> mv;
+  for (int i = 0; i < 100; ++i) {
+    s.push_back(i);
+    if (i & 1) {
+      mv.push_back(_);
+    } else {
+      mv.push_back(i);
+    }
+  }
+  StringMatchResultListener listener;
+  EXPECT_TRUE(ExplainMatchResult(UnorderedElementsAreArray(mv), s, &listener))
+      << listener.str();
+}
+
+TEST_F(UnorderedElementsAreTest, FailMessageCountWrong) {
+  std::vector<int> v;
+  v.push_back(4);
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(UnorderedElementsAre(1, 2, 3), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(), Eq("which has 1 element"));
+}
+
+TEST_F(UnorderedElementsAreTest, FailMessageCountWrongZero) {
+  std::vector<int> v;
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(UnorderedElementsAre(1, 2, 3), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(), Eq(""));
+}
+
+TEST_F(UnorderedElementsAreTest, FailMessageUnmatchedMatchers) {
+  std::vector<int> v;
+  v.push_back(1);
+  v.push_back(1);
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(UnorderedElementsAre(1, 2), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(),
+              Eq("where the following matchers don't match any elements:\n"
+                 "matcher #1: is equal to 2"));
+}
+
+TEST_F(UnorderedElementsAreTest, FailMessageUnmatchedElements) {
+  std::vector<int> v;
+  v.push_back(1);
+  v.push_back(2);
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(UnorderedElementsAre(1, 1), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(),
+              Eq("where the following elements don't match any matchers:\n"
+                 "element #1: 2"));
+}
+
+TEST_F(UnorderedElementsAreTest, FailMessageUnmatchedMatcherAndElement) {
+  std::vector<int> v;
+  v.push_back(2);
+  v.push_back(3);
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(UnorderedElementsAre(1, 2), v, &listener))
+      << listener.str();
+  EXPECT_THAT(listener.str(),
+              Eq("where"
+                 " the following matchers don't match any elements:\n"
+                 "matcher #0: is equal to 1\n"
+                 "and"
+                 " where"
+                 " the following elements don't match any matchers:\n"
+                 "element #1: 3"));
+}
+
+// Test helper for formatting element, matcher index pairs in expectations.
+static std::string EMString(int element, int matcher) {
+  stringstream ss;
+  ss << "(element #" << element << ", matcher #" << matcher << ")";
+  return ss.str();
+}
+
+TEST_F(UnorderedElementsAreTest, FailMessageImperfectMatchOnly) {
+  // A situation where all elements and matchers have a match
+  // associated with them, but the max matching is not perfect.
+  std::vector<std::string> v;
+  v.push_back("a");
+  v.push_back("b");
+  v.push_back("c");
+  StringMatchResultListener listener;
+  EXPECT_FALSE(ExplainMatchResult(
+      UnorderedElementsAre("a", "a", AnyOf("b", "c")), v, &listener))
+      << listener.str();
+
+  std::string prefix =
+      "where no permutation of the elements can satisfy all matchers, "
+      "and the closest match is 2 of 3 matchers with the "
+      "pairings:\n";
+
+  // We have to be a bit loose here, because there are 4 valid max matches.
+  EXPECT_THAT(
+      listener.str(),
+      AnyOf(
+          prefix + "{\n  " + EMString(0, 0) + ",\n  " + EMString(1, 2) + "\n}",
+          prefix + "{\n  " + EMString(0, 1) + ",\n  " + EMString(1, 2) + "\n}",
+          prefix + "{\n  " + EMString(0, 0) + ",\n  " + EMString(2, 2) + "\n}",
+          prefix + "{\n  " + EMString(0, 1) + ",\n  " + EMString(2, 2) +
+              "\n}"));
+}
+
+TEST_F(UnorderedElementsAreTest, Describe) {
+  EXPECT_THAT(Describe<IntVec>(UnorderedElementsAre()), Eq("is empty"));
+  EXPECT_THAT(Describe<IntVec>(UnorderedElementsAre(345)),
+              Eq("has 1 element and that element is equal to 345"));
+  EXPECT_THAT(Describe<IntVec>(UnorderedElementsAre(111, 222, 333)),
+              Eq("has 3 elements and there exists some permutation "
+                 "of elements such that:\n"
+                 " - element #0 is equal to 111, and\n"
+                 " - element #1 is equal to 222, and\n"
+                 " - element #2 is equal to 333"));
+}
+
+TEST_F(UnorderedElementsAreTest, DescribeNegation) {
+  EXPECT_THAT(DescribeNegation<IntVec>(UnorderedElementsAre()),
+              Eq("isn't empty"));
+  EXPECT_THAT(
+      DescribeNegation<IntVec>(UnorderedElementsAre(345)),
+      Eq("doesn't have 1 element, or has 1 element that isn't equal to 345"));
+  EXPECT_THAT(DescribeNegation<IntVec>(UnorderedElementsAre(123, 234, 345)),
+              Eq("doesn't have 3 elements, or there exists no permutation "
+                 "of elements such that:\n"
+                 " - element #0 is equal to 123, and\n"
+                 " - element #1 is equal to 234, and\n"
+                 " - element #2 is equal to 345"));
+}
+
+// Tests Each().
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(EachTest);
+
+TEST_P(EachTestP, ExplainsMatchResultCorrectly) {
+  set<int> a;  // empty
+
+  Matcher<set<int>> m = Each(2);
+  EXPECT_EQ("", Explain(m, a));
+
+  Matcher<const int(&)[1]> n = Each(1);  // NOLINT
+
+  const int b[1] = {1};
+  EXPECT_EQ("", Explain(n, b));
+
+  n = Each(3);
+  EXPECT_EQ("whose element #0 doesn't match", Explain(n, b));
+
+  a.insert(1);
+  a.insert(2);
+  a.insert(3);
+  m = Each(GreaterThan(0));
+  EXPECT_EQ("", Explain(m, a));
+
+  m = Each(GreaterThan(10));
+  EXPECT_EQ("whose element #0 doesn't match, which is 9 less than 10",
+            Explain(m, a));
+}
+
+TEST(EachTest, DescribesItselfCorrectly) {
+  Matcher<vector<int>> m = Each(1);
+  EXPECT_EQ("only contains elements that is equal to 1", Describe(m));
+
+  Matcher<vector<int>> m2 = Not(m);
+  EXPECT_EQ("contains some element that isn't equal to 1", Describe(m2));
+}
+
+TEST(EachTest, MatchesVectorWhenAllElementsMatch) {
+  vector<int> some_vector;
+  EXPECT_THAT(some_vector, Each(1));
+  some_vector.push_back(3);
+  EXPECT_THAT(some_vector, Not(Each(1)));
+  EXPECT_THAT(some_vector, Each(3));
+  some_vector.push_back(1);
+  some_vector.push_back(2);
+  EXPECT_THAT(some_vector, Not(Each(3)));
+  EXPECT_THAT(some_vector, Each(Lt(3.5)));
+
+  vector<std::string> another_vector;
+  another_vector.push_back("fee");
+  EXPECT_THAT(another_vector, Each(std::string("fee")));
+  another_vector.push_back("fie");
+  another_vector.push_back("foe");
+  another_vector.push_back("fum");
+  EXPECT_THAT(another_vector, Not(Each(std::string("fee"))));
+}
+
+TEST(EachTest, MatchesMapWhenAllElementsMatch) {
+  map<const char*, int> my_map;
+  const char* bar = "a string";
+  my_map[bar] = 2;
+  EXPECT_THAT(my_map, Each(make_pair(bar, 2)));
+
+  map<std::string, int> another_map;
+  EXPECT_THAT(another_map, Each(make_pair(std::string("fee"), 1)));
+  another_map["fee"] = 1;
+  EXPECT_THAT(another_map, Each(make_pair(std::string("fee"), 1)));
+  another_map["fie"] = 2;
+  another_map["foe"] = 3;
+  another_map["fum"] = 4;
+  EXPECT_THAT(another_map, Not(Each(make_pair(std::string("fee"), 1))));
+  EXPECT_THAT(another_map, Not(Each(make_pair(std::string("fum"), 1))));
+  EXPECT_THAT(another_map, Each(Pair(_, Gt(0))));
+}
+
+TEST(EachTest, AcceptsMatcher) {
+  const int a[] = {1, 2, 3};
+  EXPECT_THAT(a, Each(Gt(0)));
+  EXPECT_THAT(a, Not(Each(Gt(1))));
+}
+
+TEST(EachTest, WorksForNativeArrayAsTuple) {
+  const int a[] = {1, 2};
+  const int* const pointer = a;
+  EXPECT_THAT(std::make_tuple(pointer, 2), Each(Gt(0)));
+  EXPECT_THAT(std::make_tuple(pointer, 2), Not(Each(Gt(1))));
+}
+
+TEST(EachTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(Each(Pointee(Gt(0)))));
+  helper.Call(MakeUniquePtrs({1, 2}));
+}
+
+// For testing Pointwise().
+class IsHalfOfMatcher {
+ public:
+  template <typename T1, typename T2>
+  bool MatchAndExplain(const std::tuple<T1, T2>& a_pair,
+                       MatchResultListener* listener) const {
+    if (std::get<0>(a_pair) == std::get<1>(a_pair) / 2) {
+      *listener << "where the second is " << std::get<1>(a_pair);
+      return true;
+    } else {
+      *listener << "where the second/2 is " << std::get<1>(a_pair) / 2;
+      return false;
+    }
+  }
+
+  void DescribeTo(ostream* os) const {
+    *os << "are a pair where the first is half of the second";
+  }
+
+  void DescribeNegationTo(ostream* os) const {
+    *os << "are a pair where the first isn't half of the second";
+  }
+};
+
+PolymorphicMatcher<IsHalfOfMatcher> IsHalfOf() {
+  return MakePolymorphicMatcher(IsHalfOfMatcher());
+}
+
+TEST(PointwiseTest, DescribesSelf) {
+  vector<int> rhs;
+  rhs.push_back(1);
+  rhs.push_back(2);
+  rhs.push_back(3);
+  const Matcher<const vector<int>&> m = Pointwise(IsHalfOf(), rhs);
+  EXPECT_EQ(
+      "contains 3 values, where each value and its corresponding value "
+      "in { 1, 2, 3 } are a pair where the first is half of the second",
+      Describe(m));
+  EXPECT_EQ(
+      "doesn't contain exactly 3 values, or contains a value x at some "
+      "index i where x and the i-th value of { 1, 2, 3 } are a pair "
+      "where the first isn't half of the second",
+      DescribeNegation(m));
+}
+
+TEST(PointwiseTest, MakesCopyOfRhs) {
+  list<signed char> rhs;
+  rhs.push_back(2);
+  rhs.push_back(4);
+
+  int lhs[] = {1, 2};
+  const Matcher<const int(&)[2]> m = Pointwise(IsHalfOf(), rhs);
+  EXPECT_THAT(lhs, m);
+
+  // Changing rhs now shouldn't affect m, which made a copy of rhs.
+  rhs.push_back(6);
+  EXPECT_THAT(lhs, m);
+}
+
+TEST(PointwiseTest, WorksForLhsNativeArray) {
+  const int lhs[] = {1, 2, 3};
+  vector<int> rhs;
+  rhs.push_back(2);
+  rhs.push_back(4);
+  rhs.push_back(6);
+  EXPECT_THAT(lhs, Pointwise(Lt(), rhs));
+  EXPECT_THAT(lhs, Not(Pointwise(Gt(), rhs)));
+}
+
+TEST(PointwiseTest, WorksForRhsNativeArray) {
+  const int rhs[] = {1, 2, 3};
+  vector<int> lhs;
+  lhs.push_back(2);
+  lhs.push_back(4);
+  lhs.push_back(6);
+  EXPECT_THAT(lhs, Pointwise(Gt(), rhs));
+  EXPECT_THAT(lhs, Not(Pointwise(Lt(), rhs)));
+}
+
+// Test is effective only with sanitizers.
+TEST(PointwiseTest, WorksForVectorOfBool) {
+  vector<bool> rhs(3, false);
+  rhs[1] = true;
+  vector<bool> lhs = rhs;
+  EXPECT_THAT(lhs, Pointwise(Eq(), rhs));
+  rhs[0] = true;
+  EXPECT_THAT(lhs, Not(Pointwise(Eq(), rhs)));
+}
+
+TEST(PointwiseTest, WorksForRhsInitializerList) {
+  const vector<int> lhs{2, 4, 6};
+  EXPECT_THAT(lhs, Pointwise(Gt(), {1, 2, 3}));
+  EXPECT_THAT(lhs, Not(Pointwise(Lt(), {3, 3, 7})));
+}
+
+TEST(PointwiseTest, RejectsWrongSize) {
+  const double lhs[2] = {1, 2};
+  const int rhs[1] = {0};
+  EXPECT_THAT(lhs, Not(Pointwise(Gt(), rhs)));
+  EXPECT_EQ("which contains 2 values", Explain(Pointwise(Gt(), rhs), lhs));
+
+  const int rhs2[3] = {0, 1, 2};
+  EXPECT_THAT(lhs, Not(Pointwise(Gt(), rhs2)));
+}
+
+TEST(PointwiseTest, RejectsWrongContent) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {2, 6, 4};
+  EXPECT_THAT(lhs, Not(Pointwise(IsHalfOf(), rhs)));
+  EXPECT_EQ(
+      "where the value pair (2, 6) at index #1 don't match, "
+      "where the second/2 is 3",
+      Explain(Pointwise(IsHalfOf(), rhs), lhs));
+}
+
+TEST(PointwiseTest, AcceptsCorrectContent) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {2, 4, 6};
+  EXPECT_THAT(lhs, Pointwise(IsHalfOf(), rhs));
+  EXPECT_EQ("", Explain(Pointwise(IsHalfOf(), rhs), lhs));
+}
+
+TEST(PointwiseTest, AllowsMonomorphicInnerMatcher) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {2, 4, 6};
+  const Matcher<std::tuple<const double&, const int&>> m1 = IsHalfOf();
+  EXPECT_THAT(lhs, Pointwise(m1, rhs));
+  EXPECT_EQ("", Explain(Pointwise(m1, rhs), lhs));
+
+  // This type works as a std::tuple<const double&, const int&> can be
+  // implicitly cast to std::tuple<double, int>.
+  const Matcher<std::tuple<double, int>> m2 = IsHalfOf();
+  EXPECT_THAT(lhs, Pointwise(m2, rhs));
+  EXPECT_EQ("", Explain(Pointwise(m2, rhs), lhs));
+}
+
+MATCHER(PointeeEquals, "Points to an equal value") {
+  return ExplainMatchResult(::testing::Pointee(::testing::get<1>(arg)),
+                            ::testing::get<0>(arg), result_listener);
+}
+
+TEST(PointwiseTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(Pointwise(PointeeEquals(), std::vector<int>{1, 2})));
+  helper.Call(MakeUniquePtrs({1, 2}));
+}
+
+TEST(UnorderedPointwiseTest, DescribesSelf) {
+  vector<int> rhs;
+  rhs.push_back(1);
+  rhs.push_back(2);
+  rhs.push_back(3);
+  const Matcher<const vector<int>&> m = UnorderedPointwise(IsHalfOf(), rhs);
+  EXPECT_EQ(
+      "has 3 elements and there exists some permutation of elements such "
+      "that:\n"
+      " - element #0 and 1 are a pair where the first is half of the second, "
+      "and\n"
+      " - element #1 and 2 are a pair where the first is half of the second, "
+      "and\n"
+      " - element #2 and 3 are a pair where the first is half of the second",
+      Describe(m));
+  EXPECT_EQ(
+      "doesn't have 3 elements, or there exists no permutation of elements "
+      "such that:\n"
+      " - element #0 and 1 are a pair where the first is half of the second, "
+      "and\n"
+      " - element #1 and 2 are a pair where the first is half of the second, "
+      "and\n"
+      " - element #2 and 3 are a pair where the first is half of the second",
+      DescribeNegation(m));
+}
+
+TEST(UnorderedPointwiseTest, MakesCopyOfRhs) {
+  list<signed char> rhs;
+  rhs.push_back(2);
+  rhs.push_back(4);
+
+  int lhs[] = {2, 1};
+  const Matcher<const int(&)[2]> m = UnorderedPointwise(IsHalfOf(), rhs);
+  EXPECT_THAT(lhs, m);
+
+  // Changing rhs now shouldn't affect m, which made a copy of rhs.
+  rhs.push_back(6);
+  EXPECT_THAT(lhs, m);
+}
+
+TEST(UnorderedPointwiseTest, WorksForLhsNativeArray) {
+  const int lhs[] = {1, 2, 3};
+  vector<int> rhs;
+  rhs.push_back(4);
+  rhs.push_back(6);
+  rhs.push_back(2);
+  EXPECT_THAT(lhs, UnorderedPointwise(Lt(), rhs));
+  EXPECT_THAT(lhs, Not(UnorderedPointwise(Gt(), rhs)));
+}
+
+TEST(UnorderedPointwiseTest, WorksForRhsNativeArray) {
+  const int rhs[] = {1, 2, 3};
+  vector<int> lhs;
+  lhs.push_back(4);
+  lhs.push_back(2);
+  lhs.push_back(6);
+  EXPECT_THAT(lhs, UnorderedPointwise(Gt(), rhs));
+  EXPECT_THAT(lhs, Not(UnorderedPointwise(Lt(), rhs)));
+}
+
+TEST(UnorderedPointwiseTest, WorksForRhsInitializerList) {
+  const vector<int> lhs{2, 4, 6};
+  EXPECT_THAT(lhs, UnorderedPointwise(Gt(), {5, 1, 3}));
+  EXPECT_THAT(lhs, Not(UnorderedPointwise(Lt(), {1, 1, 7})));
+}
+
+TEST(UnorderedPointwiseTest, RejectsWrongSize) {
+  const double lhs[2] = {1, 2};
+  const int rhs[1] = {0};
+  EXPECT_THAT(lhs, Not(UnorderedPointwise(Gt(), rhs)));
+  EXPECT_EQ("which has 2 elements",
+            Explain(UnorderedPointwise(Gt(), rhs), lhs));
+
+  const int rhs2[3] = {0, 1, 2};
+  EXPECT_THAT(lhs, Not(UnorderedPointwise(Gt(), rhs2)));
+}
+
+TEST(UnorderedPointwiseTest, RejectsWrongContent) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {2, 6, 6};
+  EXPECT_THAT(lhs, Not(UnorderedPointwise(IsHalfOf(), rhs)));
+  EXPECT_EQ(
+      "where the following elements don't match any matchers:\n"
+      "element #1: 2",
+      Explain(UnorderedPointwise(IsHalfOf(), rhs), lhs));
+}
+
+TEST(UnorderedPointwiseTest, AcceptsCorrectContentInSameOrder) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {2, 4, 6};
+  EXPECT_THAT(lhs, UnorderedPointwise(IsHalfOf(), rhs));
+}
+
+TEST(UnorderedPointwiseTest, AcceptsCorrectContentInDifferentOrder) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {6, 4, 2};
+  EXPECT_THAT(lhs, UnorderedPointwise(IsHalfOf(), rhs));
+}
+
+TEST(UnorderedPointwiseTest, AllowsMonomorphicInnerMatcher) {
+  const double lhs[3] = {1, 2, 3};
+  const int rhs[3] = {4, 6, 2};
+  const Matcher<std::tuple<const double&, const int&>> m1 = IsHalfOf();
+  EXPECT_THAT(lhs, UnorderedPointwise(m1, rhs));
+
+  // This type works as a std::tuple<const double&, const int&> can be
+  // implicitly cast to std::tuple<double, int>.
+  const Matcher<std::tuple<double, int>> m2 = IsHalfOf();
+  EXPECT_THAT(lhs, UnorderedPointwise(m2, rhs));
+}
+
+TEST(UnorderedPointwiseTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(UnorderedPointwise(PointeeEquals(),
+                                              std::vector<int>{1, 2})));
+  helper.Call(MakeUniquePtrs({2, 1}));
+}
+
+TEST(PointeeTest, WorksOnMoveOnlyType) {
+  std::unique_ptr<int> p(new int(3));
+  EXPECT_THAT(p, Pointee(Eq(3)));
+  EXPECT_THAT(p, Not(Pointee(Eq(2))));
+}
+
+class PredicateFormatterFromMatcherTest : public ::testing::Test {
+ protected:
+  enum Behavior { kInitialSuccess, kAlwaysFail, kFlaky };
+
+  // A matcher that can return different results when used multiple times on the
+  // same input. No real matcher should do this; but this lets us test that we
+  // detect such behavior and fail appropriately.
+  class MockMatcher : public MatcherInterface<Behavior> {
+   public:
+    bool MatchAndExplain(Behavior behavior,
+                         MatchResultListener* listener) const override {
+      *listener << "[MatchAndExplain]";
+      switch (behavior) {
+        case kInitialSuccess:
+          // The first call to MatchAndExplain should use a "not interested"
+          // listener; so this is expected to return |true|. There should be no
+          // subsequent calls.
+          return !listener->IsInterested();
+
+        case kAlwaysFail:
+          return false;
+
+        case kFlaky:
+          // The first call to MatchAndExplain should use a "not interested"
+          // listener; so this will return |false|. Subsequent calls should have
+          // an "interested" listener; so this will return |true|, thus
+          // simulating a flaky matcher.
+          return listener->IsInterested();
+      }
+
+      GTEST_LOG_(FATAL) << "This should never be reached";
+      return false;
+    }
+
+    void DescribeTo(ostream* os) const override { *os << "[DescribeTo]"; }
+
+    void DescribeNegationTo(ostream* os) const override {
+      *os << "[DescribeNegationTo]";
+    }
+  };
+
+  AssertionResult RunPredicateFormatter(Behavior behavior) {
+    auto matcher = MakeMatcher(new MockMatcher);
+    PredicateFormatterFromMatcher<Matcher<Behavior>> predicate_formatter(
+        matcher);
+    return predicate_formatter("dummy-name", behavior);
+  }
+};
+
+TEST_F(PredicateFormatterFromMatcherTest, ShortCircuitOnSuccess) {
+  AssertionResult result = RunPredicateFormatter(kInitialSuccess);
+  EXPECT_TRUE(result);  // Implicit cast to bool.
+  std::string expect;
+  EXPECT_EQ(expect, result.message());
+}
+
+TEST_F(PredicateFormatterFromMatcherTest, NoShortCircuitOnFailure) {
+  AssertionResult result = RunPredicateFormatter(kAlwaysFail);
+  EXPECT_FALSE(result);  // Implicit cast to bool.
+  std::string expect =
+      "Value of: dummy-name\nExpected: [DescribeTo]\n"
+      "  Actual: 1" +
+      OfType(internal::GetTypeName<Behavior>()) + ", [MatchAndExplain]";
+  EXPECT_EQ(expect, result.message());
+}
+
+TEST_F(PredicateFormatterFromMatcherTest, DetectsFlakyShortCircuit) {
+  AssertionResult result = RunPredicateFormatter(kFlaky);
+  EXPECT_FALSE(result);  // Implicit cast to bool.
+  std::string expect =
+      "Value of: dummy-name\nExpected: [DescribeTo]\n"
+      "  The matcher failed on the initial attempt; but passed when rerun to "
+      "generate the explanation.\n"
+      "  Actual: 2" +
+      OfType(internal::GetTypeName<Behavior>()) + ", [MatchAndExplain]";
+  EXPECT_EQ(expect, result.message());
+}
+
+// Tests for ElementsAre().
+
+TEST(ElementsAreTest, CanDescribeExpectingNoElement) {
+  Matcher<const vector<int>&> m = ElementsAre();
+  EXPECT_EQ("is empty", Describe(m));
+}
+
+TEST(ElementsAreTest, CanDescribeExpectingOneElement) {
+  Matcher<vector<int>> m = ElementsAre(Gt(5));
+  EXPECT_EQ("has 1 element that is > 5", Describe(m));
+}
+
+TEST(ElementsAreTest, CanDescribeExpectingManyElements) {
+  Matcher<list<std::string>> m = ElementsAre(StrEq("one"), "two");
+  EXPECT_EQ(
+      "has 2 elements where\n"
+      "element #0 is equal to \"one\",\n"
+      "element #1 is equal to \"two\"",
+      Describe(m));
+}
+
+TEST(ElementsAreTest, CanDescribeNegationOfExpectingNoElement) {
+  Matcher<vector<int>> m = ElementsAre();
+  EXPECT_EQ("isn't empty", DescribeNegation(m));
+}
+
+TEST(ElementsAreTest, CanDescribeNegationOfExpectingOneElement) {
+  Matcher<const list<int>&> m = ElementsAre(Gt(5));
+  EXPECT_EQ(
+      "doesn't have 1 element, or\n"
+      "element #0 isn't > 5",
+      DescribeNegation(m));
+}
+
+TEST(ElementsAreTest, CanDescribeNegationOfExpectingManyElements) {
+  Matcher<const list<std::string>&> m = ElementsAre("one", "two");
+  EXPECT_EQ(
+      "doesn't have 2 elements, or\n"
+      "element #0 isn't equal to \"one\", or\n"
+      "element #1 isn't equal to \"two\"",
+      DescribeNegation(m));
+}
+
+TEST(ElementsAreTest, DoesNotExplainTrivialMatch) {
+  Matcher<const list<int>&> m = ElementsAre(1, Ne(2));
+
+  list<int> test_list;
+  test_list.push_back(1);
+  test_list.push_back(3);
+  EXPECT_EQ("", Explain(m, test_list));  // No need to explain anything.
+}
+
+TEST_P(ElementsAreTestP, ExplainsNonTrivialMatch) {
+  Matcher<const vector<int>&> m =
+      ElementsAre(GreaterThan(1), 0, GreaterThan(2));
+
+  const int a[] = {10, 0, 100};
+  vector<int> test_vector(std::begin(a), std::end(a));
+  EXPECT_EQ(
+      "whose element #0 matches, which is 9 more than 1,\n"
+      "and whose element #2 matches, which is 98 more than 2",
+      Explain(m, test_vector));
+}
+
+TEST(ElementsAreTest, CanExplainMismatchWrongSize) {
+  Matcher<const list<int>&> m = ElementsAre(1, 3);
+
+  list<int> test_list;
+  // No need to explain when the container is empty.
+  EXPECT_EQ("", Explain(m, test_list));
+
+  test_list.push_back(1);
+  EXPECT_EQ("which has 1 element", Explain(m, test_list));
+}
+
+TEST_P(ElementsAreTestP, CanExplainMismatchRightSize) {
+  Matcher<const vector<int>&> m = ElementsAre(1, GreaterThan(5));
+
+  vector<int> v;
+  v.push_back(2);
+  v.push_back(1);
+  EXPECT_EQ("whose element #0 doesn't match", Explain(m, v));
+
+  v[0] = 1;
+  EXPECT_EQ("whose element #1 doesn't match, which is 4 less than 5",
+            Explain(m, v));
+}
+
+TEST(ElementsAreTest, MatchesOneElementVector) {
+  vector<std::string> test_vector;
+  test_vector.push_back("test string");
+
+  EXPECT_THAT(test_vector, ElementsAre(StrEq("test string")));
+}
+
+TEST(ElementsAreTest, MatchesOneElementList) {
+  list<std::string> test_list;
+  test_list.push_back("test string");
+
+  EXPECT_THAT(test_list, ElementsAre("test string"));
+}
+
+TEST(ElementsAreTest, MatchesThreeElementVector) {
+  vector<std::string> test_vector;
+  test_vector.push_back("one");
+  test_vector.push_back("two");
+  test_vector.push_back("three");
+
+  EXPECT_THAT(test_vector, ElementsAre("one", StrEq("two"), _));
+}
+
+TEST(ElementsAreTest, MatchesOneElementEqMatcher) {
+  vector<int> test_vector;
+  test_vector.push_back(4);
+
+  EXPECT_THAT(test_vector, ElementsAre(Eq(4)));
+}
+
+TEST(ElementsAreTest, MatchesOneElementAnyMatcher) {
+  vector<int> test_vector;
+  test_vector.push_back(4);
+
+  EXPECT_THAT(test_vector, ElementsAre(_));
+}
+
+TEST(ElementsAreTest, MatchesOneElementValue) {
+  vector<int> test_vector;
+  test_vector.push_back(4);
+
+  EXPECT_THAT(test_vector, ElementsAre(4));
+}
+
+TEST(ElementsAreTest, MatchesThreeElementsMixedMatchers) {
+  vector<int> test_vector;
+  test_vector.push_back(1);
+  test_vector.push_back(2);
+  test_vector.push_back(3);
+
+  EXPECT_THAT(test_vector, ElementsAre(1, Eq(2), _));
+}
+
+TEST(ElementsAreTest, MatchesTenElementVector) {
+  const int a[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  vector<int> test_vector(std::begin(a), std::end(a));
+
+  EXPECT_THAT(test_vector,
+              // The element list can contain values and/or matchers
+              // of different types.
+              ElementsAre(0, Ge(0), _, 3, 4, Ne(2), Eq(6), 7, 8, _));
+}
+
+TEST(ElementsAreTest, DoesNotMatchWrongSize) {
+  vector<std::string> test_vector;
+  test_vector.push_back("test string");
+  test_vector.push_back("test string");
+
+  Matcher<vector<std::string>> m = ElementsAre(StrEq("test string"));
+  EXPECT_FALSE(m.Matches(test_vector));
+}
+
+TEST(ElementsAreTest, DoesNotMatchWrongValue) {
+  vector<std::string> test_vector;
+  test_vector.push_back("other string");
+
+  Matcher<vector<std::string>> m = ElementsAre(StrEq("test string"));
+  EXPECT_FALSE(m.Matches(test_vector));
+}
+
+TEST(ElementsAreTest, DoesNotMatchWrongOrder) {
+  vector<std::string> test_vector;
+  test_vector.push_back("one");
+  test_vector.push_back("three");
+  test_vector.push_back("two");
+
+  Matcher<vector<std::string>> m =
+      ElementsAre(StrEq("one"), StrEq("two"), StrEq("three"));
+  EXPECT_FALSE(m.Matches(test_vector));
+}
+
+TEST(ElementsAreTest, WorksForNestedContainer) {
+  constexpr std::array<const char*, 2> strings = {{"Hi", "world"}};
+
+  vector<list<char>> nested;
+  for (const auto& s : strings) {
+    nested.emplace_back(s, s + strlen(s));
+  }
+
+  EXPECT_THAT(nested, ElementsAre(ElementsAre('H', Ne('e')),
+                                  ElementsAre('w', 'o', _, _, 'd')));
+  EXPECT_THAT(nested, Not(ElementsAre(ElementsAre('H', 'e'),
+                                      ElementsAre('w', 'o', _, _, 'd'))));
+}
+
+TEST(ElementsAreTest, WorksWithByRefElementMatchers) {
+  int a[] = {0, 1, 2};
+  vector<int> v(std::begin(a), std::end(a));
+
+  EXPECT_THAT(v, ElementsAre(Ref(v[0]), Ref(v[1]), Ref(v[2])));
+  EXPECT_THAT(v, Not(ElementsAre(Ref(v[0]), Ref(v[1]), Ref(a[2]))));
+}
+
+TEST(ElementsAreTest, WorksWithContainerPointerUsingPointee) {
+  int a[] = {0, 1, 2};
+  vector<int> v(std::begin(a), std::end(a));
+
+  EXPECT_THAT(&v, Pointee(ElementsAre(0, 1, _)));
+  EXPECT_THAT(&v, Not(Pointee(ElementsAre(0, _, 3))));
+}
+
+TEST(ElementsAreTest, WorksWithNativeArrayPassedByReference) {
+  int array[] = {0, 1, 2};
+  EXPECT_THAT(array, ElementsAre(0, 1, _));
+  EXPECT_THAT(array, Not(ElementsAre(1, _, _)));
+  EXPECT_THAT(array, Not(ElementsAre(0, _)));
+}
+
+class NativeArrayPassedAsPointerAndSize {
+ public:
+  NativeArrayPassedAsPointerAndSize() {}
+
+  MOCK_METHOD(void, Helper, (int* array, int size));
+
+ private:
+  NativeArrayPassedAsPointerAndSize(const NativeArrayPassedAsPointerAndSize&) =
+      delete;
+  NativeArrayPassedAsPointerAndSize& operator=(
+      const NativeArrayPassedAsPointerAndSize&) = delete;
+};
+
+TEST(ElementsAreTest, WorksWithNativeArrayPassedAsPointerAndSize) {
+  int array[] = {0, 1};
+  ::std::tuple<int*, size_t> array_as_tuple(array, 2);
+  EXPECT_THAT(array_as_tuple, ElementsAre(0, 1));
+  EXPECT_THAT(array_as_tuple, Not(ElementsAre(0)));
+
+  NativeArrayPassedAsPointerAndSize helper;
+  EXPECT_CALL(helper, Helper(_, _)).With(ElementsAre(0, 1));
+  helper.Helper(array, 2);
+}
+
+TEST(ElementsAreTest, WorksWithTwoDimensionalNativeArray) {
+  const char a2[][3] = {"hi", "lo"};
+  EXPECT_THAT(a2, ElementsAre(ElementsAre('h', 'i', '\0'),
+                              ElementsAre('l', 'o', '\0')));
+  EXPECT_THAT(a2, ElementsAre(StrEq("hi"), StrEq("lo")));
+  EXPECT_THAT(a2, ElementsAre(Not(ElementsAre('h', 'o', '\0')),
+                              ElementsAre('l', 'o', '\0')));
+}
+
+TEST(ElementsAreTest, AcceptsStringLiteral) {
+  std::string array[] = {"hi", "one", "two"};
+  EXPECT_THAT(array, ElementsAre("hi", "one", "two"));
+  EXPECT_THAT(array, Not(ElementsAre("hi", "one", "too")));
+}
+
+// Declared here with the size unknown.  Defined AFTER the following test.
+extern const char kHi[];
+
+TEST(ElementsAreTest, AcceptsArrayWithUnknownSize) {
+  // The size of kHi is not known in this test, but ElementsAre() should
+  // still accept it.
+
+  std::string array1[] = {"hi"};
+  EXPECT_THAT(array1, ElementsAre(kHi));
+
+  std::string array2[] = {"ho"};
+  EXPECT_THAT(array2, Not(ElementsAre(kHi)));
+}
+
+const char kHi[] = "hi";
+
+TEST(ElementsAreTest, MakesCopyOfArguments) {
+  int x = 1;
+  int y = 2;
+  // This should make a copy of x and y.
+  ::testing::internal::ElementsAreMatcher<std::tuple<int, int>>
+      polymorphic_matcher = ElementsAre(x, y);
+  // Changing x and y now shouldn't affect the meaning of the above matcher.
+  x = y = 0;
+  const int array1[] = {1, 2};
+  EXPECT_THAT(array1, polymorphic_matcher);
+  const int array2[] = {0, 0};
+  EXPECT_THAT(array2, Not(polymorphic_matcher));
+}
+
+// Tests for ElementsAreArray().  Since ElementsAreArray() shares most
+// of the implementation with ElementsAre(), we don't test it as
+// thoroughly here.
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithValueArray) {
+  const int a[] = {1, 2, 3};
+
+  vector<int> test_vector(std::begin(a), std::end(a));
+  EXPECT_THAT(test_vector, ElementsAreArray(a));
+
+  test_vector[2] = 0;
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(a)));
+}
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithArraySize) {
+  std::array<const char*, 3> a = {{"one", "two", "three"}};
+
+  vector<std::string> test_vector(std::begin(a), std::end(a));
+  EXPECT_THAT(test_vector, ElementsAreArray(a.data(), a.size()));
+
+  const char** p = a.data();
+  test_vector[0] = "1";
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(p, a.size())));
+}
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithoutArraySize) {
+  const char* a[] = {"one", "two", "three"};
+
+  vector<std::string> test_vector(std::begin(a), std::end(a));
+  EXPECT_THAT(test_vector, ElementsAreArray(a));
+
+  test_vector[0] = "1";
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(a)));
+}
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithMatcherArray) {
+  const Matcher<std::string> kMatcherArray[] = {StrEq("one"), StrEq("two"),
+                                                StrEq("three")};
+
+  vector<std::string> test_vector;
+  test_vector.push_back("one");
+  test_vector.push_back("two");
+  test_vector.push_back("three");
+  EXPECT_THAT(test_vector, ElementsAreArray(kMatcherArray));
+
+  test_vector.push_back("three");
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(kMatcherArray)));
+}
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithVector) {
+  const int a[] = {1, 2, 3};
+  vector<int> test_vector(std::begin(a), std::end(a));
+  const vector<int> expected(std::begin(a), std::end(a));
+  EXPECT_THAT(test_vector, ElementsAreArray(expected));
+  test_vector.push_back(4);
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(expected)));
+}
+
+TEST(ElementsAreArrayTest, TakesInitializerList) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  EXPECT_THAT(a, ElementsAreArray({1, 2, 3, 4, 5}));
+  EXPECT_THAT(a, Not(ElementsAreArray({1, 2, 3, 5, 4})));
+  EXPECT_THAT(a, Not(ElementsAreArray({1, 2, 3, 4, 6})));
+}
+
+TEST(ElementsAreArrayTest, TakesInitializerListOfCStrings) {
+  const std::string a[5] = {"a", "b", "c", "d", "e"};
+  EXPECT_THAT(a, ElementsAreArray({"a", "b", "c", "d", "e"}));
+  EXPECT_THAT(a, Not(ElementsAreArray({"a", "b", "c", "e", "d"})));
+  EXPECT_THAT(a, Not(ElementsAreArray({"a", "b", "c", "d", "ef"})));
+}
+
+TEST(ElementsAreArrayTest, TakesInitializerListOfSameTypedMatchers) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  EXPECT_THAT(a, ElementsAreArray({Eq(1), Eq(2), Eq(3), Eq(4), Eq(5)}));
+  EXPECT_THAT(a, Not(ElementsAreArray({Eq(1), Eq(2), Eq(3), Eq(4), Eq(6)})));
+}
+
+TEST(ElementsAreArrayTest, TakesInitializerListOfDifferentTypedMatchers) {
+  const int a[5] = {1, 2, 3, 4, 5};
+  // The compiler cannot infer the type of the initializer list if its
+  // elements have different types.  We must explicitly specify the
+  // unified element type in this case.
+  EXPECT_THAT(
+      a, ElementsAreArray<Matcher<int>>({Eq(1), Ne(-2), Ge(3), Le(4), Eq(5)}));
+  EXPECT_THAT(a, Not(ElementsAreArray<Matcher<int>>(
+                     {Eq(1), Ne(-2), Ge(3), Le(4), Eq(6)})));
+}
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithMatcherVector) {
+  const int a[] = {1, 2, 3};
+  const Matcher<int> kMatchers[] = {Eq(1), Eq(2), Eq(3)};
+  vector<int> test_vector(std::begin(a), std::end(a));
+  const vector<Matcher<int>> expected(std::begin(kMatchers),
+                                      std::end(kMatchers));
+  EXPECT_THAT(test_vector, ElementsAreArray(expected));
+  test_vector.push_back(4);
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(expected)));
+}
+
+TEST(ElementsAreArrayTest, CanBeCreatedWithIteratorRange) {
+  const int a[] = {1, 2, 3};
+  const vector<int> test_vector(std::begin(a), std::end(a));
+  const vector<int> expected(std::begin(a), std::end(a));
+  EXPECT_THAT(test_vector, ElementsAreArray(expected.begin(), expected.end()));
+  // Pointers are iterators, too.
+  EXPECT_THAT(test_vector, ElementsAreArray(std::begin(a), std::end(a)));
+  // The empty range of NULL pointers should also be okay.
+  int* const null_int = nullptr;
+  EXPECT_THAT(test_vector, Not(ElementsAreArray(null_int, null_int)));
+  EXPECT_THAT((vector<int>()), ElementsAreArray(null_int, null_int));
+}
+
+// Since ElementsAre() and ElementsAreArray() share much of the
+// implementation, we only do a test for native arrays here.
+TEST(ElementsAreArrayTest, WorksWithNativeArray) {
+  ::std::string a[] = {"hi", "ho"};
+  ::std::string b[] = {"hi", "ho"};
+
+  EXPECT_THAT(a, ElementsAreArray(b));
+  EXPECT_THAT(a, ElementsAreArray(b, 2));
+  EXPECT_THAT(a, Not(ElementsAreArray(b, 1)));
+}
+
+TEST(ElementsAreArrayTest, SourceLifeSpan) {
+  const int a[] = {1, 2, 3};
+  vector<int> test_vector(std::begin(a), std::end(a));
+  vector<int> expect(std::begin(a), std::end(a));
+  ElementsAreArrayMatcher<int> matcher_maker =
+      ElementsAreArray(expect.begin(), expect.end());
+  EXPECT_THAT(test_vector, matcher_maker);
+  // Changing in place the values that initialized matcher_maker should not
+  // affect matcher_maker anymore. It should have made its own copy of them.
+  for (int& i : expect) {
+    i += 10;
+  }
+  EXPECT_THAT(test_vector, matcher_maker);
+  test_vector.push_back(3);
+  EXPECT_THAT(test_vector, Not(matcher_maker));
+}
+
+// Tests Contains().
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(ContainsTest);
+
+TEST(ContainsTest, ListMatchesWhenElementIsInContainer) {
+  list<int> some_list;
+  some_list.push_back(3);
+  some_list.push_back(1);
+  some_list.push_back(2);
+  some_list.push_back(3);
+  EXPECT_THAT(some_list, Contains(1));
+  EXPECT_THAT(some_list, Contains(Gt(2.5)));
+  EXPECT_THAT(some_list, Contains(Eq(2.0f)));
+
+  list<std::string> another_list;
+  another_list.push_back("fee");
+  another_list.push_back("fie");
+  another_list.push_back("foe");
+  another_list.push_back("fum");
+  EXPECT_THAT(another_list, Contains(std::string("fee")));
+}
+
+TEST(ContainsTest, ListDoesNotMatchWhenElementIsNotInContainer) {
+  list<int> some_list;
+  some_list.push_back(3);
+  some_list.push_back(1);
+  EXPECT_THAT(some_list, Not(Contains(4)));
+}
+
+TEST(ContainsTest, SetMatchesWhenElementIsInContainer) {
+  set<int> some_set;
+  some_set.insert(3);
+  some_set.insert(1);
+  some_set.insert(2);
+  EXPECT_THAT(some_set, Contains(Eq(1.0)));
+  EXPECT_THAT(some_set, Contains(Eq(3.0f)));
+  EXPECT_THAT(some_set, Contains(2));
+
+  set<std::string> another_set;
+  another_set.insert("fee");
+  another_set.insert("fie");
+  another_set.insert("foe");
+  another_set.insert("fum");
+  EXPECT_THAT(another_set, Contains(Eq(std::string("fum"))));
+}
+
+TEST(ContainsTest, SetDoesNotMatchWhenElementIsNotInContainer) {
+  set<int> some_set;
+  some_set.insert(3);
+  some_set.insert(1);
+  EXPECT_THAT(some_set, Not(Contains(4)));
+
+  set<std::string> c_string_set;
+  c_string_set.insert("hello");
+  EXPECT_THAT(c_string_set, Not(Contains(std::string("goodbye"))));
+}
+
+TEST_P(ContainsTestP, ExplainsMatchResultCorrectly) {
+  const int a[2] = {1, 2};
+  Matcher<const int(&)[2]> m = Contains(2);
+  EXPECT_EQ("whose element #1 matches", Explain(m, a));
+
+  m = Contains(3);
+  EXPECT_EQ("", Explain(m, a));
+
+  m = Contains(GreaterThan(0));
+  EXPECT_EQ("whose element #0 matches, which is 1 more than 0", Explain(m, a));
+
+  m = Contains(GreaterThan(10));
+  EXPECT_EQ("", Explain(m, a));
+}
+
+TEST(ContainsTest, DescribesItselfCorrectly) {
+  Matcher<vector<int>> m = Contains(1);
+  EXPECT_EQ("contains at least one element that is equal to 1", Describe(m));
+
+  Matcher<vector<int>> m2 = Not(m);
+  EXPECT_EQ("doesn't contain any element that is equal to 1", Describe(m2));
+}
+
+TEST(ContainsTest, MapMatchesWhenElementIsInContainer) {
+  map<std::string, int> my_map;
+  const char* bar = "a string";
+  my_map[bar] = 2;
+  EXPECT_THAT(my_map, Contains(pair<const char* const, int>(bar, 2)));
+
+  map<std::string, int> another_map;
+  another_map["fee"] = 1;
+  another_map["fie"] = 2;
+  another_map["foe"] = 3;
+  another_map["fum"] = 4;
+  EXPECT_THAT(another_map,
+              Contains(pair<const std::string, int>(std::string("fee"), 1)));
+  EXPECT_THAT(another_map, Contains(pair<const std::string, int>("fie", 2)));
+}
+
+TEST(ContainsTest, MapDoesNotMatchWhenElementIsNotInContainer) {
+  map<int, int> some_map;
+  some_map[1] = 11;
+  some_map[2] = 22;
+  EXPECT_THAT(some_map, Not(Contains(pair<const int, int>(2, 23))));
+}
+
+TEST(ContainsTest, ArrayMatchesWhenElementIsInContainer) {
+  const char* string_array[] = {"fee", "fie", "foe", "fum"};
+  EXPECT_THAT(string_array, Contains(Eq(std::string("fum"))));
+}
+
+TEST(ContainsTest, ArrayDoesNotMatchWhenElementIsNotInContainer) {
+  int int_array[] = {1, 2, 3, 4};
+  EXPECT_THAT(int_array, Not(Contains(5)));
+}
+
+TEST(ContainsTest, AcceptsMatcher) {
+  const int a[] = {1, 2, 3};
+  EXPECT_THAT(a, Contains(Gt(2)));
+  EXPECT_THAT(a, Not(Contains(Gt(4))));
+}
+
+TEST(ContainsTest, WorksForNativeArrayAsTuple) {
+  const int a[] = {1, 2};
+  const int* const pointer = a;
+  EXPECT_THAT(std::make_tuple(pointer, 2), Contains(1));
+  EXPECT_THAT(std::make_tuple(pointer, 2), Not(Contains(Gt(3))));
+}
+
+TEST(ContainsTest, WorksForTwoDimensionalNativeArray) {
+  int a[][3] = {{1, 2, 3}, {4, 5, 6}};
+  EXPECT_THAT(a, Contains(ElementsAre(4, 5, 6)));
+  EXPECT_THAT(a, Contains(Contains(5)));
+  EXPECT_THAT(a, Not(Contains(ElementsAre(3, 4, 5))));
+  EXPECT_THAT(a, Contains(Not(Contains(5))));
+}
+
+}  // namespace
+}  // namespace gmock_matchers_test
+}  // namespace testing
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+```
+
+### `gmock-matchers-misc_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers-misc_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests some commonly used argument matchers.
+
+// Silence warning C4244: 'initializing': conversion from 'int' to 'short',
+// possible loss of data and C4100, unreferenced local parameter
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4100)
+#endif
+
+#include "test/gmock-matchers_test.h"
+
+namespace testing {
+namespace gmock_matchers_test {
+namespace {
+
+TEST(AddressTest, NonConst) {
+  int n = 1;
+  const Matcher<int> m = Address(Eq(&n));
+
+  EXPECT_TRUE(m.Matches(n));
+
+  int other = 5;
+
+  EXPECT_FALSE(m.Matches(other));
+
+  int& n_ref = n;
+
+  EXPECT_TRUE(m.Matches(n_ref));
+}
+
+TEST(AddressTest, Const) {
+  const int n = 1;
+  const Matcher<int> m = Address(Eq(&n));
+
+  EXPECT_TRUE(m.Matches(n));
+
+  int other = 5;
+
+  EXPECT_FALSE(m.Matches(other));
+}
+
+TEST(AddressTest, MatcherDoesntCopy) {
+  std::unique_ptr<int> n(new int(1));
+  const Matcher<std::unique_ptr<int>> m = Address(Eq(&n));
+
+  EXPECT_TRUE(m.Matches(n));
+}
+
+TEST(AddressTest, Describe) {
+  Matcher<int> matcher = Address(_);
+  EXPECT_EQ("has address that is anything", Describe(matcher));
+  EXPECT_EQ("does not have address that is anything",
+            DescribeNegation(matcher));
+}
+
+// The following two tests verify that values without a public copy
+// ctor can be used as arguments to matchers like Eq(), Ge(), and etc
+// with the help of ByRef().
+
+class NotCopyable {
+ public:
+  explicit NotCopyable(int a_value) : value_(a_value) {}
+
+  int value() const { return value_; }
+
+  bool operator==(const NotCopyable& rhs) const {
+    return value() == rhs.value();
+  }
+
+  bool operator>=(const NotCopyable& rhs) const {
+    return value() >= rhs.value();
+  }
+
+ private:
+  int value_;
+
+  NotCopyable(const NotCopyable&) = delete;
+  NotCopyable& operator=(const NotCopyable&) = delete;
+};
+
+TEST(ByRefTest, AllowsNotCopyableConstValueInMatchers) {
+  const NotCopyable const_value1(1);
+  const Matcher<const NotCopyable&> m = Eq(ByRef(const_value1));
+
+  const NotCopyable n1(1), n2(2);
+  EXPECT_TRUE(m.Matches(n1));
+  EXPECT_FALSE(m.Matches(n2));
+}
+
+TEST(ByRefTest, AllowsNotCopyableValueInMatchers) {
+  NotCopyable value2(2);
+  const Matcher<NotCopyable&> m = Ge(ByRef(value2));
+
+  NotCopyable n1(1), n2(2);
+  EXPECT_FALSE(m.Matches(n1));
+  EXPECT_TRUE(m.Matches(n2));
+}
+
+TEST(IsEmptyTest, ImplementsIsEmpty) {
+  vector<int> container;
+  EXPECT_THAT(container, IsEmpty());
+  container.push_back(0);
+  EXPECT_THAT(container, Not(IsEmpty()));
+  container.push_back(1);
+  EXPECT_THAT(container, Not(IsEmpty()));
+}
+
+TEST(IsEmptyTest, WorksWithString) {
+  std::string text;
+  EXPECT_THAT(text, IsEmpty());
+  text = "foo";
+  EXPECT_THAT(text, Not(IsEmpty()));
+  text = std::string("\0", 1);
+  EXPECT_THAT(text, Not(IsEmpty()));
+}
+
+TEST(IsEmptyTest, CanDescribeSelf) {
+  Matcher<vector<int>> m = IsEmpty();
+  EXPECT_EQ("is empty", Describe(m));
+  EXPECT_EQ("isn't empty", DescribeNegation(m));
+}
+
+TEST(IsEmptyTest, ExplainsResult) {
+  Matcher<vector<int>> m = IsEmpty();
+  vector<int> container;
+  EXPECT_EQ("", Explain(m, container));
+  container.push_back(0);
+  EXPECT_EQ("whose size is 1", Explain(m, container));
+}
+
+TEST(IsEmptyTest, WorksWithMoveOnly) {
+  ContainerHelper helper;
+  EXPECT_CALL(helper, Call(IsEmpty()));
+  helper.Call({});
+}
+
+TEST(IsTrueTest, IsTrueIsFalse) {
+  EXPECT_THAT(true, IsTrue());
+  EXPECT_THAT(false, IsFalse());
+  EXPECT_THAT(true, Not(IsFalse()));
+  EXPECT_THAT(false, Not(IsTrue()));
+  EXPECT_THAT(0, Not(IsTrue()));
+  EXPECT_THAT(0, IsFalse());
+  EXPECT_THAT(nullptr, Not(IsTrue()));
+  EXPECT_THAT(nullptr, IsFalse());
+  EXPECT_THAT(-1, IsTrue());
+  EXPECT_THAT(-1, Not(IsFalse()));
+  EXPECT_THAT(1, IsTrue());
+  EXPECT_THAT(1, Not(IsFalse()));
+  EXPECT_THAT(2, IsTrue());
+  EXPECT_THAT(2, Not(IsFalse()));
+  int a = 42;
+  EXPECT_THAT(a, IsTrue());
+  EXPECT_THAT(a, Not(IsFalse()));
+  EXPECT_THAT(&a, IsTrue());
+  EXPECT_THAT(&a, Not(IsFalse()));
+  EXPECT_THAT(false, Not(IsTrue()));
+  EXPECT_THAT(true, Not(IsFalse()));
+  EXPECT_THAT(std::true_type(), IsTrue());
+  EXPECT_THAT(std::true_type(), Not(IsFalse()));
+  EXPECT_THAT(std::false_type(), IsFalse());
+  EXPECT_THAT(std::false_type(), Not(IsTrue()));
+  EXPECT_THAT(nullptr, Not(IsTrue()));
+  EXPECT_THAT(nullptr, IsFalse());
+  std::unique_ptr<int> null_unique;
+  std::unique_ptr<int> nonnull_unique(new int(0));
+  EXPECT_THAT(null_unique, Not(IsTrue()));
+  EXPECT_THAT(null_unique, IsFalse());
+  EXPECT_THAT(nonnull_unique, IsTrue());
+  EXPECT_THAT(nonnull_unique, Not(IsFalse()));
+}
+
+#if GTEST_HAS_TYPED_TEST
+// Tests ContainerEq with different container types, and
+// different element types.
+
+template <typename T>
+class ContainerEqTest : public testing::Test {};
+
+typedef testing::Types<set<int>, vector<size_t>, multiset<size_t>, list<int>>
+    ContainerEqTestTypes;
+
+TYPED_TEST_SUITE(ContainerEqTest, ContainerEqTestTypes);
+
+// Tests that the filled container is equal to itself.
+TYPED_TEST(ContainerEqTest, EqualsSelf) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  TypeParam my_set(vals, vals + 6);
+  const Matcher<TypeParam> m = ContainerEq(my_set);
+  EXPECT_TRUE(m.Matches(my_set));
+  EXPECT_EQ("", Explain(m, my_set));
+}
+
+// Tests that missing values are reported.
+TYPED_TEST(ContainerEqTest, ValueMissing) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {2, 1, 8, 5};
+  TypeParam my_set(vals, vals + 6);
+  TypeParam test_set(test_vals, test_vals + 4);
+  const Matcher<TypeParam> m = ContainerEq(my_set);
+  EXPECT_FALSE(m.Matches(test_set));
+  EXPECT_EQ("which doesn't have these expected elements: 3",
+            Explain(m, test_set));
+}
+
+// Tests that added values are reported.
+TYPED_TEST(ContainerEqTest, ValueAdded) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {1, 2, 3, 5, 8, 46};
+  TypeParam my_set(vals, vals + 6);
+  TypeParam test_set(test_vals, test_vals + 6);
+  const Matcher<const TypeParam&> m = ContainerEq(my_set);
+  EXPECT_FALSE(m.Matches(test_set));
+  EXPECT_EQ("which has these unexpected elements: 46", Explain(m, test_set));
+}
+
+// Tests that added and missing values are reported together.
+TYPED_TEST(ContainerEqTest, ValueAddedAndRemoved) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {1, 2, 3, 8, 46};
+  TypeParam my_set(vals, vals + 6);
+  TypeParam test_set(test_vals, test_vals + 5);
+  const Matcher<TypeParam> m = ContainerEq(my_set);
+  EXPECT_FALSE(m.Matches(test_set));
+  EXPECT_EQ(
+      "which has these unexpected elements: 46,\n"
+      "and doesn't have these expected elements: 5",
+      Explain(m, test_set));
+}
+
+// Tests duplicated value -- expect no explanation.
+TYPED_TEST(ContainerEqTest, DuplicateDifference) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {1, 2, 3, 5, 8};
+  TypeParam my_set(vals, vals + 6);
+  TypeParam test_set(test_vals, test_vals + 5);
+  const Matcher<const TypeParam&> m = ContainerEq(my_set);
+  // Depending on the container, match may be true or false
+  // But in any case there should be no explanation.
+  EXPECT_EQ("", Explain(m, test_set));
+}
+#endif  // GTEST_HAS_TYPED_TEST
+
+// Tests that multiple missing values are reported.
+// Using just vector here, so order is predictable.
+TEST(ContainerEqExtraTest, MultipleValuesMissing) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {2, 1, 5};
+  vector<int> my_set(vals, vals + 6);
+  vector<int> test_set(test_vals, test_vals + 3);
+  const Matcher<vector<int>> m = ContainerEq(my_set);
+  EXPECT_FALSE(m.Matches(test_set));
+  EXPECT_EQ("which doesn't have these expected elements: 3, 8",
+            Explain(m, test_set));
+}
+
+// Tests that added values are reported.
+// Using just vector here, so order is predictable.
+TEST(ContainerEqExtraTest, MultipleValuesAdded) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {1, 2, 92, 3, 5, 8, 46};
+  list<size_t> my_set(vals, vals + 6);
+  list<size_t> test_set(test_vals, test_vals + 7);
+  const Matcher<const list<size_t>&> m = ContainerEq(my_set);
+  EXPECT_FALSE(m.Matches(test_set));
+  EXPECT_EQ("which has these unexpected elements: 92, 46",
+            Explain(m, test_set));
+}
+
+// Tests that added and missing values are reported together.
+TEST(ContainerEqExtraTest, MultipleValuesAddedAndRemoved) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {1, 2, 3, 92, 46};
+  list<size_t> my_set(vals, vals + 6);
+  list<size_t> test_set(test_vals, test_vals + 5);
+  const Matcher<const list<size_t>> m = ContainerEq(my_set);
+  EXPECT_FALSE(m.Matches(test_set));
+  EXPECT_EQ(
+      "which has these unexpected elements: 92, 46,\n"
+      "and doesn't have these expected elements: 5, 8",
+      Explain(m, test_set));
+}
+
+// Tests to see that duplicate elements are detected,
+// but (as above) not reported in the explanation.
+TEST(ContainerEqExtraTest, MultiSetOfIntDuplicateDifference) {
+  static const int vals[] = {1, 1, 2, 3, 5, 8};
+  static const int test_vals[] = {1, 2, 3, 5, 8};
+  vector<int> my_set(vals, vals + 6);
+  vector<int> test_set(test_vals, test_vals + 5);
+  const Matcher<vector<int>> m = ContainerEq(my_set);
+  EXPECT_TRUE(m.Matches(my_set));
+  EXPECT_FALSE(m.Matches(test_set));
+  // There is nothing to report when both sets contain all the same values.
+  EXPECT_EQ("", Explain(m, test_set));
+}
+
+// Tests that ContainerEq works for non-trivial associative containers,
+// like maps.
+TEST(ContainerEqExtraTest, WorksForMaps) {
+  map<int, std::string> my_map;
+  my_map[0] = "a";
+  my_map[1] = "b";
+
+  map<int, std::string> test_map;
+  test_map[0] = "aa";
+  test_map[1] = "b";
+
+  const Matcher<const map<int, std::string>&> m = ContainerEq(my_map);
+  EXPECT_TRUE(m.Matches(my_map));
+  EXPECT_FALSE(m.Matches(test_map));
+
+  EXPECT_EQ(
+      "which has these unexpected elements: (0, \"aa\"),\n"
+      "and doesn't have these expected elements: (0, \"a\")",
+      Explain(m, test_map));
+}
+
+TEST(ContainerEqExtraTest, WorksForNativeArray) {
+  int a1[] = {1, 2, 3};
+  int a2[] = {1, 2, 3};
+  int b[] = {1, 2, 4};
+
+  EXPECT_THAT(a1, ContainerEq(a2));
+  EXPECT_THAT(a1, Not(ContainerEq(b)));
+}
+
+TEST(ContainerEqExtraTest, WorksForTwoDimensionalNativeArray) {
+  const char a1[][3] = {"hi", "lo"};
+  const char a2[][3] = {"hi", "lo"};
+  const char b[][3] = {"lo", "hi"};
+
+  // Tests using ContainerEq() in the first dimension.
+  EXPECT_THAT(a1, ContainerEq(a2));
+  EXPECT_THAT(a1, Not(ContainerEq(b)));
+
+  // Tests using ContainerEq() in the second dimension.
+  EXPECT_THAT(a1, ElementsAre(ContainerEq(a2[0]), ContainerEq(a2[1])));
+  EXPECT_THAT(a1, ElementsAre(Not(ContainerEq(b[0])), ContainerEq(a2[1])));
+}
+
+TEST(ContainerEqExtraTest, WorksForNativeArrayAsTuple) {
+  const int a1[] = {1, 2, 3};
+  const int a2[] = {1, 2, 3};
+  const int b[] = {1, 2, 3, 4};
+
+  const int* const p1 = a1;
+  EXPECT_THAT(std::make_tuple(p1, 3), ContainerEq(a2));
+  EXPECT_THAT(std::make_tuple(p1, 3), Not(ContainerEq(b)));
+
+  const int c[] = {1, 3, 2};
+  EXPECT_THAT(std::make_tuple(p1, 3), Not(ContainerEq(c)));
+}
+
+TEST(ContainerEqExtraTest, CopiesNativeArrayParameter) {
+  std::string a1[][3] = {{"hi", "hello", "ciao"}, {"bye", "see you", "ciao"}};
+
+  std::string a2[][3] = {{"hi", "hello", "ciao"}, {"bye", "see you", "ciao"}};
+
+  const Matcher<const std::string(&)[2][3]> m = ContainerEq(a2);
+  EXPECT_THAT(a1, m);
+
+  a2[0][0] = "ha";
+  EXPECT_THAT(a1, m);
+}
+
+namespace {
+
+// Used as a check on the more complex max flow method used in the
+// real testing::internal::FindMaxBipartiteMatching. This method is
+// compatible but runs in worst-case factorial time, so we only
+// use it in testing for small problem sizes.
+template <typename Graph>
+class BacktrackingMaxBPMState {
+ public:
+  // Does not take ownership of 'g'.
+  explicit BacktrackingMaxBPMState(const Graph* g) : graph_(g) {}
+
+  ElementMatcherPairs Compute() {
+    if (graph_->LhsSize() == 0 || graph_->RhsSize() == 0) {
+      return best_so_far_;
+    }
+    lhs_used_.assign(graph_->LhsSize(), kUnused);
+    rhs_used_.assign(graph_->RhsSize(), kUnused);
+    for (size_t irhs = 0; irhs < graph_->RhsSize(); ++irhs) {
+      matches_.clear();
+      RecurseInto(irhs);
+      if (best_so_far_.size() == graph_->RhsSize()) break;
+    }
+    return best_so_far_;
+  }
+
+ private:
+  static const size_t kUnused = static_cast<size_t>(-1);
+
+  void PushMatch(size_t lhs, size_t rhs) {
+    matches_.push_back(ElementMatcherPair(lhs, rhs));
+    lhs_used_[lhs] = rhs;
+    rhs_used_[rhs] = lhs;
+    if (matches_.size() > best_so_far_.size()) {
+      best_so_far_ = matches_;
+    }
+  }
+
+  void PopMatch() {
+    const ElementMatcherPair& back = matches_.back();
+    lhs_used_[back.first] = kUnused;
+    rhs_used_[back.second] = kUnused;
+    matches_.pop_back();
+  }
+
+  bool RecurseInto(size_t irhs) {
+    if (rhs_used_[irhs] != kUnused) {
+      return true;
+    }
+    for (size_t ilhs = 0; ilhs < graph_->LhsSize(); ++ilhs) {
+      if (lhs_used_[ilhs] != kUnused) {
+        continue;
+      }
+      if (!graph_->HasEdge(ilhs, irhs)) {
+        continue;
+      }
+      PushMatch(ilhs, irhs);
+      if (best_so_far_.size() == graph_->RhsSize()) {
+        return false;
+      }
+      for (size_t mi = irhs + 1; mi < graph_->RhsSize(); ++mi) {
+        if (!RecurseInto(mi)) return false;
+      }
+      PopMatch();
+    }
+    return true;
+  }
+
+  const Graph* graph_;  // not owned
+  std::vector<size_t> lhs_used_;
+  std::vector<size_t> rhs_used_;
+  ElementMatcherPairs matches_;
+  ElementMatcherPairs best_so_far_;
+};
+
+template <typename Graph>
+const size_t BacktrackingMaxBPMState<Graph>::kUnused;
+
+}  // namespace
+
+// Implement a simple backtracking algorithm to determine if it is possible
+// to find one element per matcher, without reusing elements.
+template <typename Graph>
+ElementMatcherPairs FindBacktrackingMaxBPM(const Graph& g) {
+  return BacktrackingMaxBPMState<Graph>(&g).Compute();
+}
+
+class BacktrackingBPMTest : public ::testing::Test {};
+
+// Tests the MaxBipartiteMatching algorithm with square matrices.
+// The single int param is the # of nodes on each of the left and right sides.
+class BipartiteTest : public ::testing::TestWithParam<size_t> {};
+
+// Verify all match graphs up to some moderate number of edges.
+TEST_P(BipartiteTest, Exhaustive) {
+  size_t nodes = GetParam();
+  MatchMatrix graph(nodes, nodes);
+  do {
+    ElementMatcherPairs matches = internal::FindMaxBipartiteMatching(graph);
+    EXPECT_EQ(FindBacktrackingMaxBPM(graph).size(), matches.size())
+        << "graph: " << graph.DebugString();
+    // Check that all elements of matches are in the graph.
+    // Check that elements of first and second are unique.
+    std::vector<bool> seen_element(graph.LhsSize());
+    std::vector<bool> seen_matcher(graph.RhsSize());
+    SCOPED_TRACE(PrintToString(matches));
+    for (size_t i = 0; i < matches.size(); ++i) {
+      size_t ilhs = matches[i].first;
+      size_t irhs = matches[i].second;
+      EXPECT_TRUE(graph.HasEdge(ilhs, irhs));
+      EXPECT_FALSE(seen_element[ilhs]);
+      EXPECT_FALSE(seen_matcher[irhs]);
+      seen_element[ilhs] = true;
+      seen_matcher[irhs] = true;
+    }
+  } while (graph.NextGraph());
+}
+
+INSTANTIATE_TEST_SUITE_P(AllGraphs, BipartiteTest,
+                         ::testing::Range(size_t{0}, size_t{5}));
+
+// Parameterized by a pair interpreted as (LhsSize, RhsSize).
+class BipartiteNonSquareTest
+    : public ::testing::TestWithParam<std::pair<size_t, size_t>> {};
+
+TEST_F(BipartiteNonSquareTest, SimpleBacktracking) {
+  //   .......
+  // 0:-----\ :
+  // 1:---\ | :
+  // 2:---\ | :
+  // 3:-\ | | :
+  //  :.......:
+  //    0 1 2
+  MatchMatrix g(4, 3);
+  constexpr std::array<std::array<size_t, 2>, 4> kEdges = {
+      {{{0, 2}}, {{1, 1}}, {{2, 1}}, {{3, 0}}}};
+  for (size_t i = 0; i < kEdges.size(); ++i) {
+    g.SetEdge(kEdges[i][0], kEdges[i][1], true);
+  }
+  EXPECT_THAT(FindBacktrackingMaxBPM(g),
+              ElementsAre(Pair(3, 0), Pair(AnyOf(1, 2), 1), Pair(0, 2)))
+      << g.DebugString();
+}
+
+// Verify a few nonsquare matrices.
+TEST_P(BipartiteNonSquareTest, Exhaustive) {
+  size_t nlhs = GetParam().first;
+  size_t nrhs = GetParam().second;
+  MatchMatrix graph(nlhs, nrhs);
+  do {
+    EXPECT_EQ(FindBacktrackingMaxBPM(graph).size(),
+              internal::FindMaxBipartiteMatching(graph).size())
+        << "graph: " << graph.DebugString()
+        << "\nbacktracking: " << PrintToString(FindBacktrackingMaxBPM(graph))
+        << "\nmax flow: "
+        << PrintToString(internal::FindMaxBipartiteMatching(graph));
+  } while (graph.NextGraph());
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    AllGraphs, BipartiteNonSquareTest,
+    testing::Values(std::make_pair(1, 2), std::make_pair(2, 1),
+                    std::make_pair(3, 2), std::make_pair(2, 3),
+                    std::make_pair(4, 1), std::make_pair(1, 4),
+                    std::make_pair(4, 3), std::make_pair(3, 4)));
+
+class BipartiteRandomTest
+    : public ::testing::TestWithParam<std::pair<int, int>> {};
+
+// Verifies a large sample of larger graphs.
+TEST_P(BipartiteRandomTest, LargerNets) {
+  int nodes = GetParam().first;
+  int iters = GetParam().second;
+  MatchMatrix graph(static_cast<size_t>(nodes), static_cast<size_t>(nodes));
+
+  auto seed = static_cast<uint32_t>(GTEST_FLAG_GET(random_seed));
+  if (seed == 0) {
+    seed = static_cast<uint32_t>(time(nullptr));
+  }
+
+  for (; iters > 0; --iters, ++seed) {
+    srand(static_cast<unsigned int>(seed));
+    graph.Randomize();
+    EXPECT_EQ(FindBacktrackingMaxBPM(graph).size(),
+              internal::FindMaxBipartiteMatching(graph).size())
+        << " graph: " << graph.DebugString()
+        << "\nTo reproduce the failure, rerun the test with the flag"
+           " --"
+        << GTEST_FLAG_PREFIX_ << "random_seed=" << seed;
+  }
+}
+
+// Test argument is a std::pair<int, int> representing (nodes, iters).
+INSTANTIATE_TEST_SUITE_P(Samples, BipartiteRandomTest,
+                         testing::Values(std::make_pair(5, 10000),
+                                         std::make_pair(6, 5000),
+                                         std::make_pair(7, 2000),
+                                         std::make_pair(8, 500),
+                                         std::make_pair(9, 100)));
+
+// Tests IsReadableTypeName().
+
+TEST(IsReadableTypeNameTest, ReturnsTrueForShortNames) {
+  EXPECT_TRUE(IsReadableTypeName("int"));
+  EXPECT_TRUE(IsReadableTypeName("const unsigned char*"));
+  EXPECT_TRUE(IsReadableTypeName("MyMap<int, void*>"));
+  EXPECT_TRUE(IsReadableTypeName("void (*)(int, bool)"));
+}
+
+TEST(IsReadableTypeNameTest, ReturnsTrueForLongNonTemplateNonFunctionNames) {
+  EXPECT_TRUE(IsReadableTypeName("my_long_namespace::MyClassName"));
+  EXPECT_TRUE(IsReadableTypeName("int [5][6][7][8][9][10][11]"));
+  EXPECT_TRUE(IsReadableTypeName("my_namespace::MyOuterClass::MyInnerClass"));
+}
+
+TEST(IsReadableTypeNameTest, ReturnsFalseForLongTemplateNames) {
+  EXPECT_FALSE(
+      IsReadableTypeName("basic_string<char, std::char_traits<char> >"));
+  EXPECT_FALSE(IsReadableTypeName("std::vector<int, std::alloc_traits<int> >"));
+}
+
+TEST(IsReadableTypeNameTest, ReturnsFalseForLongFunctionTypeNames) {
+  EXPECT_FALSE(IsReadableTypeName("void (&)(int, bool, char, float)"));
+}
+
+// Tests FormatMatcherDescription().
+
+TEST(FormatMatcherDescriptionTest, WorksForEmptyDescription) {
+  EXPECT_EQ("is even",
+            FormatMatcherDescription(false, "IsEven", {}, Strings()));
+  EXPECT_EQ("not (is even)",
+            FormatMatcherDescription(true, "IsEven", {}, Strings()));
+
+  EXPECT_EQ("equals (a: 5)",
+            FormatMatcherDescription(false, "Equals", {"a"}, {"5"}));
+
+  EXPECT_EQ(
+      "is in range (a: 5, b: 8)",
+      FormatMatcherDescription(false, "IsInRange", {"a", "b"}, {"5", "8"}));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(MatcherTupleTest);
+
+TEST_P(MatcherTupleTestP, ExplainsMatchFailure) {
+  stringstream ss1;
+  ExplainMatchFailureTupleTo(
+      std::make_tuple(Matcher<char>(Eq('a')), GreaterThan(5)),
+      std::make_tuple('a', 10), &ss1);
+  EXPECT_EQ("", ss1.str());  // Successful match.
+
+  stringstream ss2;
+  ExplainMatchFailureTupleTo(
+      std::make_tuple(GreaterThan(5), Matcher<char>(Eq('a'))),
+      std::make_tuple(2, 'b'), &ss2);
+  EXPECT_EQ(
+      "  Expected arg #0: is > 5\n"
+      "           Actual: 2, which is 3 less than 5\n"
+      "  Expected arg #1: is equal to 'a' (97, 0x61)\n"
+      "           Actual: 'b' (98, 0x62)\n",
+      ss2.str());  // Failed match where both arguments need explanation.
+
+  stringstream ss3;
+  ExplainMatchFailureTupleTo(
+      std::make_tuple(GreaterThan(5), Matcher<char>(Eq('a'))),
+      std::make_tuple(2, 'a'), &ss3);
+  EXPECT_EQ(
+      "  Expected arg #0: is > 5\n"
+      "           Actual: 2, which is 3 less than 5\n",
+      ss3.str());  // Failed match where only one argument needs
+                   // explanation.
+}
+
+// Sample optional type implementation with minimal requirements for use with
+// Optional matcher.
+template <typename T>
+class SampleOptional {
+ public:
+  using value_type = T;
+  explicit SampleOptional(T value)
+      : value_(std::move(value)), has_value_(true) {}
+  SampleOptional() : value_(), has_value_(false) {}
+  operator bool() const { return has_value_; }
+  const T& operator*() const { return value_; }
+
+ private:
+  T value_;
+  bool has_value_;
+};
+
+TEST(OptionalTest, DescribesSelf) {
+  const Matcher<SampleOptional<int>> m = Optional(Eq(1));
+  EXPECT_EQ("value is equal to 1", Describe(m));
+}
+
+TEST(OptionalTest, ExplainsSelf) {
+  const Matcher<SampleOptional<int>> m = Optional(Eq(1));
+  EXPECT_EQ("whose value 1 matches", Explain(m, SampleOptional<int>(1)));
+  EXPECT_EQ("whose value 2 doesn't match", Explain(m, SampleOptional<int>(2)));
+}
+
+TEST(OptionalTest, MatchesNonEmptyOptional) {
+  const Matcher<SampleOptional<int>> m1 = Optional(1);
+  const Matcher<SampleOptional<int>> m2 = Optional(Eq(2));
+  const Matcher<SampleOptional<int>> m3 = Optional(Lt(3));
+  SampleOptional<int> opt(1);
+  EXPECT_TRUE(m1.Matches(opt));
+  EXPECT_FALSE(m2.Matches(opt));
+  EXPECT_TRUE(m3.Matches(opt));
+}
+
+TEST(OptionalTest, DoesNotMatchNullopt) {
+  const Matcher<SampleOptional<int>> m = Optional(1);
+  SampleOptional<int> empty;
+  EXPECT_FALSE(m.Matches(empty));
+}
+
+TEST(OptionalTest, WorksWithMoveOnly) {
+  Matcher<SampleOptional<std::unique_ptr<int>>> m = Optional(Eq(nullptr));
+  EXPECT_TRUE(m.Matches(SampleOptional<std::unique_ptr<int>>(nullptr)));
+}
+
+class SampleVariantIntString {
+ public:
+  SampleVariantIntString(int i) : i_(i), has_int_(true) {}
+  SampleVariantIntString(const std::string& s) : s_(s), has_int_(false) {}
+
+  template <typename T>
+  friend bool holds_alternative(const SampleVariantIntString& value) {
+    return value.has_int_ == std::is_same<T, int>::value;
+  }
+
+  template <typename T>
+  friend const T& get(const SampleVariantIntString& value) {
+    return value.get_impl(static_cast<T*>(nullptr));
+  }
+
+ private:
+  const int& get_impl(int*) const { return i_; }
+  const std::string& get_impl(std::string*) const { return s_; }
+
+  int i_;
+  std::string s_;
+  bool has_int_;
+};
+
+TEST(VariantTest, DescribesSelf) {
+  const Matcher<SampleVariantIntString> m = VariantWith<int>(Eq(1));
+  EXPECT_THAT(Describe(m), ContainsRegex("is a variant<> with value of type "
+                                         "'.*' and the value is equal to 1"));
+}
+
+TEST(VariantTest, ExplainsSelf) {
+  const Matcher<SampleVariantIntString> m = VariantWith<int>(Eq(1));
+  EXPECT_THAT(Explain(m, SampleVariantIntString(1)),
+              ContainsRegex("whose value 1"));
+  EXPECT_THAT(Explain(m, SampleVariantIntString("A")),
+              HasSubstr("whose value is not of type '"));
+  EXPECT_THAT(Explain(m, SampleVariantIntString(2)),
+              "whose value 2 doesn't match");
+}
+
+TEST(VariantTest, FullMatch) {
+  Matcher<SampleVariantIntString> m = VariantWith<int>(Eq(1));
+  EXPECT_TRUE(m.Matches(SampleVariantIntString(1)));
+
+  m = VariantWith<std::string>(Eq("1"));
+  EXPECT_TRUE(m.Matches(SampleVariantIntString("1")));
+}
+
+TEST(VariantTest, TypeDoesNotMatch) {
+  Matcher<SampleVariantIntString> m = VariantWith<int>(Eq(1));
+  EXPECT_FALSE(m.Matches(SampleVariantIntString("1")));
+
+  m = VariantWith<std::string>(Eq("1"));
+  EXPECT_FALSE(m.Matches(SampleVariantIntString(1)));
+}
+
+TEST(VariantTest, InnerDoesNotMatch) {
+  Matcher<SampleVariantIntString> m = VariantWith<int>(Eq(1));
+  EXPECT_FALSE(m.Matches(SampleVariantIntString(2)));
+
+  m = VariantWith<std::string>(Eq("1"));
+  EXPECT_FALSE(m.Matches(SampleVariantIntString("2")));
+}
+
+class SampleAnyType {
+ public:
+  explicit SampleAnyType(int i) : index_(0), i_(i) {}
+  explicit SampleAnyType(const std::string& s) : index_(1), s_(s) {}
+
+  template <typename T>
+  friend const T* any_cast(const SampleAnyType* any) {
+    return any->get_impl(static_cast<T*>(nullptr));
+  }
+
+ private:
+  int index_;
+  int i_;
+  std::string s_;
+
+  const int* get_impl(int*) const { return index_ == 0 ? &i_ : nullptr; }
+  const std::string* get_impl(std::string*) const {
+    return index_ == 1 ? &s_ : nullptr;
+  }
+};
+
+TEST(AnyWithTest, FullMatch) {
+  Matcher<SampleAnyType> m = AnyWith<int>(Eq(1));
+  EXPECT_TRUE(m.Matches(SampleAnyType(1)));
+}
+
+TEST(AnyWithTest, TestBadCastType) {
+  Matcher<SampleAnyType> m = AnyWith<std::string>(Eq("fail"));
+  EXPECT_FALSE(m.Matches(SampleAnyType(1)));
+}
+
+TEST(AnyWithTest, TestUseInContainers) {
+  std::vector<SampleAnyType> a;
+  a.emplace_back(1);
+  a.emplace_back(2);
+  a.emplace_back(3);
+  EXPECT_THAT(
+      a, ElementsAreArray({AnyWith<int>(1), AnyWith<int>(2), AnyWith<int>(3)}));
+
+  std::vector<SampleAnyType> b;
+  b.emplace_back("hello");
+  b.emplace_back("merhaba");
+  b.emplace_back("salut");
+  EXPECT_THAT(b, ElementsAreArray({AnyWith<std::string>("hello"),
+                                   AnyWith<std::string>("merhaba"),
+                                   AnyWith<std::string>("salut")}));
+}
+TEST(AnyWithTest, TestCompare) {
+  EXPECT_THAT(SampleAnyType(1), AnyWith<int>(Gt(0)));
+}
+
+TEST(AnyWithTest, DescribesSelf) {
+  const Matcher<const SampleAnyType&> m = AnyWith<int>(Eq(1));
+  EXPECT_THAT(Describe(m), ContainsRegex("is an 'any' type with value of type "
+                                         "'.*' and the value is equal to 1"));
+}
+
+TEST(AnyWithTest, ExplainsSelf) {
+  const Matcher<const SampleAnyType&> m = AnyWith<int>(Eq(1));
+
+  EXPECT_THAT(Explain(m, SampleAnyType(1)), ContainsRegex("whose value 1"));
+  EXPECT_THAT(Explain(m, SampleAnyType("A")),
+              HasSubstr("whose value is not of type '"));
+  EXPECT_THAT(Explain(m, SampleAnyType(2)), "whose value 2 doesn't match");
+}
+
+// Tests Args<k0, ..., kn>(m).
+
+TEST(ArgsTest, AcceptsZeroTemplateArg) {
+  const std::tuple<int, bool> t(5, true);
+  EXPECT_THAT(t, Args<>(Eq(std::tuple<>())));
+  EXPECT_THAT(t, Not(Args<>(Ne(std::tuple<>()))));
+}
+
+TEST(ArgsTest, AcceptsOneTemplateArg) {
+  const std::tuple<int, bool> t(5, true);
+  EXPECT_THAT(t, Args<0>(Eq(std::make_tuple(5))));
+  EXPECT_THAT(t, Args<1>(Eq(std::make_tuple(true))));
+  EXPECT_THAT(t, Not(Args<1>(Eq(std::make_tuple(false)))));
+}
+
+TEST(ArgsTest, AcceptsTwoTemplateArgs) {
+  const std::tuple<short, int, long> t(4, 5, 6L);  // NOLINT
+
+  EXPECT_THAT(t, (Args<0, 1>(Lt())));
+  EXPECT_THAT(t, (Args<1, 2>(Lt())));
+  EXPECT_THAT(t, Not(Args<0, 2>(Gt())));
+}
+
+TEST(ArgsTest, AcceptsRepeatedTemplateArgs) {
+  const std::tuple<short, int, long> t(4, 5, 6L);  // NOLINT
+  EXPECT_THAT(t, (Args<0, 0>(Eq())));
+  EXPECT_THAT(t, Not(Args<1, 1>(Ne())));
+}
+
+TEST(ArgsTest, AcceptsDecreasingTemplateArgs) {
+  const std::tuple<short, int, long> t(4, 5, 6L);  // NOLINT
+  EXPECT_THAT(t, (Args<2, 0>(Gt())));
+  EXPECT_THAT(t, Not(Args<2, 1>(Lt())));
+}
+
+MATCHER(SumIsZero, "") {
+  return std::get<0>(arg) + std::get<1>(arg) + std::get<2>(arg) == 0;
+}
+
+TEST(ArgsTest, AcceptsMoreTemplateArgsThanArityOfOriginalTuple) {
+  EXPECT_THAT(std::make_tuple(-1, 2), (Args<0, 0, 1>(SumIsZero())));
+  EXPECT_THAT(std::make_tuple(1, 2), Not(Args<0, 0, 1>(SumIsZero())));
+}
+
+TEST(ArgsTest, CanBeNested) {
+  const std::tuple<short, int, long, int> t(4, 5, 6L, 6);  // NOLINT
+  EXPECT_THAT(t, (Args<1, 2, 3>(Args<1, 2>(Eq()))));
+  EXPECT_THAT(t, (Args<0, 1, 3>(Args<0, 2>(Lt()))));
+}
+
+TEST(ArgsTest, CanMatchTupleByValue) {
+  typedef std::tuple<char, int, int> Tuple3;
+  const Matcher<Tuple3> m = Args<1, 2>(Lt());
+  EXPECT_TRUE(m.Matches(Tuple3('a', 1, 2)));
+  EXPECT_FALSE(m.Matches(Tuple3('b', 2, 2)));
+}
+
+TEST(ArgsTest, CanMatchTupleByReference) {
+  typedef std::tuple<char, char, int> Tuple3;
+  const Matcher<const Tuple3&> m = Args<0, 1>(Lt());
+  EXPECT_TRUE(m.Matches(Tuple3('a', 'b', 2)));
+  EXPECT_FALSE(m.Matches(Tuple3('b', 'b', 2)));
+}
+
+// Validates that arg is printed as str.
+MATCHER_P(PrintsAs, str, "") { return testing::PrintToString(arg) == str; }
+
+TEST(ArgsTest, AcceptsTenTemplateArgs) {
+  EXPECT_THAT(std::make_tuple(0, 1L, 2, 3L, 4, 5, 6, 7, 8, 9),
+              (Args<9, 8, 7, 6, 5, 4, 3, 2, 1, 0>(
+                  PrintsAs("(9, 8, 7, 6, 5, 4, 3, 2, 1, 0)"))));
+  EXPECT_THAT(std::make_tuple(0, 1L, 2, 3L, 4, 5, 6, 7, 8, 9),
+              Not(Args<9, 8, 7, 6, 5, 4, 3, 2, 1, 0>(
+                  PrintsAs("(0, 8, 7, 6, 5, 4, 3, 2, 1, 0)"))));
+}
+
+TEST(ArgsTest, DescirbesSelfCorrectly) {
+  const Matcher<std::tuple<int, bool, char>> m = Args<2, 0>(Lt());
+  EXPECT_EQ(
+      "are a tuple whose fields (#2, #0) are a pair where "
+      "the first < the second",
+      Describe(m));
+}
+
+TEST(ArgsTest, DescirbesNestedArgsCorrectly) {
+  const Matcher<const std::tuple<int, bool, char, int>&> m =
+      Args<0, 2, 3>(Args<2, 0>(Lt()));
+  EXPECT_EQ(
+      "are a tuple whose fields (#0, #2, #3) are a tuple "
+      "whose fields (#2, #0) are a pair where the first < the second",
+      Describe(m));
+}
+
+TEST(ArgsTest, DescribesNegationCorrectly) {
+  const Matcher<std::tuple<int, char>> m = Args<1, 0>(Gt());
+  EXPECT_EQ(
+      "are a tuple whose fields (#1, #0) aren't a pair "
+      "where the first > the second",
+      DescribeNegation(m));
+}
+
+TEST(ArgsTest, ExplainsMatchResultWithoutInnerExplanation) {
+  const Matcher<std::tuple<bool, int, int>> m = Args<1, 2>(Eq());
+  EXPECT_EQ("whose fields (#1, #2) are (42, 42)",
+            Explain(m, std::make_tuple(false, 42, 42)));
+  EXPECT_EQ("whose fields (#1, #2) are (42, 43)",
+            Explain(m, std::make_tuple(false, 42, 43)));
+}
+
+// For testing Args<>'s explanation.
+class LessThanMatcher : public MatcherInterface<std::tuple<char, int>> {
+ public:
+  void DescribeTo(::std::ostream* /*os*/) const override {}
+
+  bool MatchAndExplain(std::tuple<char, int> value,
+                       MatchResultListener* listener) const override {
+    const int diff = std::get<0>(value) - std::get<1>(value);
+    if (diff > 0) {
+      *listener << "where the first value is " << diff
+                << " more than the second";
+    }
+    return diff < 0;
+  }
+};
+
+Matcher<std::tuple<char, int>> LessThan() {
+  return MakeMatcher(new LessThanMatcher);
+}
+
+TEST(ArgsTest, ExplainsMatchResultWithInnerExplanation) {
+  const Matcher<std::tuple<char, int, int>> m = Args<0, 2>(LessThan());
+  EXPECT_EQ(
+      "whose fields (#0, #2) are ('a' (97, 0x61), 42), "
+      "where the first value is 55 more than the second",
+      Explain(m, std::make_tuple('a', 42, 42)));
+  EXPECT_EQ("whose fields (#0, #2) are ('\\0', 43)",
+            Explain(m, std::make_tuple('\0', 42, 43)));
+}
+
+// Tests for the MATCHER*() macro family.
+
+// Tests that a simple MATCHER() definition works.
+
+MATCHER(IsEven, "") { return (arg % 2) == 0; }
+
+TEST(MatcherMacroTest, Works) {
+  const Matcher<int> m = IsEven();
+  EXPECT_TRUE(m.Matches(6));
+  EXPECT_FALSE(m.Matches(7));
+
+  EXPECT_EQ("is even", Describe(m));
+  EXPECT_EQ("not (is even)", DescribeNegation(m));
+  EXPECT_EQ("", Explain(m, 6));
+  EXPECT_EQ("", Explain(m, 7));
+}
+
+// This also tests that the description string can reference 'negation'.
+MATCHER(IsEven2, negation ? "is odd" : "is even") {
+  if ((arg % 2) == 0) {
+    // Verifies that we can stream to result_listener, a listener
+    // supplied by the MATCHER macro implicitly.
+    *result_listener << "OK";
+    return true;
+  } else {
+    *result_listener << "% 2 == " << (arg % 2);
+    return false;
+  }
+}
+
+// This also tests that the description string can reference matcher
+// parameters.
+MATCHER_P2(EqSumOf, x, y,
+           std::string(negation ? "doesn't equal" : "equals") + " the sum of " +
+               PrintToString(x) + " and " + PrintToString(y)) {
+  if (arg == (x + y)) {
+    *result_listener << "OK";
+    return true;
+  } else {
+    // Verifies that we can stream to the underlying stream of
+    // result_listener.
+    if (result_listener->stream() != nullptr) {
+      *result_listener->stream() << "diff == " << (x + y - arg);
+    }
+    return false;
+  }
+}
+
+// Tests that the matcher description can reference 'negation' and the
+// matcher parameters.
+TEST(MatcherMacroTest, DescriptionCanReferenceNegationAndParameters) {
+  const Matcher<int> m1 = IsEven2();
+  EXPECT_EQ("is even", Describe(m1));
+  EXPECT_EQ("is odd", DescribeNegation(m1));
+
+  const Matcher<int> m2 = EqSumOf(5, 9);
+  EXPECT_EQ("equals the sum of 5 and 9", Describe(m2));
+  EXPECT_EQ("doesn't equal the sum of 5 and 9", DescribeNegation(m2));
+}
+
+// Tests explaining match result in a MATCHER* macro.
+TEST(MatcherMacroTest, CanExplainMatchResult) {
+  const Matcher<int> m1 = IsEven2();
+  EXPECT_EQ("OK", Explain(m1, 4));
+  EXPECT_EQ("% 2 == 1", Explain(m1, 5));
+
+  const Matcher<int> m2 = EqSumOf(1, 2);
+  EXPECT_EQ("OK", Explain(m2, 3));
+  EXPECT_EQ("diff == -1", Explain(m2, 4));
+}
+
+// Tests that the body of MATCHER() can reference the type of the
+// value being matched.
+
+MATCHER(IsEmptyString, "") {
+  StaticAssertTypeEq<::std::string, arg_type>();
+  return arg.empty();
+}
+
+MATCHER(IsEmptyStringByRef, "") {
+  StaticAssertTypeEq<const ::std::string&, arg_type>();
+  return arg.empty();
+}
+
+TEST(MatcherMacroTest, CanReferenceArgType) {
+  const Matcher<::std::string> m1 = IsEmptyString();
+  EXPECT_TRUE(m1.Matches(""));
+
+  const Matcher<const ::std::string&> m2 = IsEmptyStringByRef();
+  EXPECT_TRUE(m2.Matches(""));
+}
+
+// Tests that MATCHER() can be used in a namespace.
+
+namespace matcher_test {
+MATCHER(IsOdd, "") { return (arg % 2) != 0; }
+}  // namespace matcher_test
+
+TEST(MatcherMacroTest, WorksInNamespace) {
+  Matcher<int> m = matcher_test::IsOdd();
+  EXPECT_FALSE(m.Matches(4));
+  EXPECT_TRUE(m.Matches(5));
+}
+
+// Tests that Value() can be used to compose matchers.
+MATCHER(IsPositiveOdd, "") {
+  return Value(arg, matcher_test::IsOdd()) && arg > 0;
+}
+
+TEST(MatcherMacroTest, CanBeComposedUsingValue) {
+  EXPECT_THAT(3, IsPositiveOdd());
+  EXPECT_THAT(4, Not(IsPositiveOdd()));
+  EXPECT_THAT(-1, Not(IsPositiveOdd()));
+}
+
+// Tests that a simple MATCHER_P() definition works.
+
+MATCHER_P(IsGreaterThan32And, n, "") { return arg > 32 && arg > n; }
+
+TEST(MatcherPMacroTest, Works) {
+  const Matcher<int> m = IsGreaterThan32And(5);
+  EXPECT_TRUE(m.Matches(36));
+  EXPECT_FALSE(m.Matches(5));
+
+  EXPECT_EQ("is greater than 32 and (n: 5)", Describe(m));
+  EXPECT_EQ("not (is greater than 32 and (n: 5))", DescribeNegation(m));
+  EXPECT_EQ("", Explain(m, 36));
+  EXPECT_EQ("", Explain(m, 5));
+}
+
+// Tests that the description is calculated correctly from the matcher name.
+MATCHER_P(_is_Greater_Than32and_, n, "") { return arg > 32 && arg > n; }
+
+TEST(MatcherPMacroTest, GeneratesCorrectDescription) {
+  const Matcher<int> m = _is_Greater_Than32and_(5);
+
+  EXPECT_EQ("is greater than 32 and (n: 5)", Describe(m));
+  EXPECT_EQ("not (is greater than 32 and (n: 5))", DescribeNegation(m));
+  EXPECT_EQ("", Explain(m, 36));
+  EXPECT_EQ("", Explain(m, 5));
+}
+
+// Tests that a MATCHER_P matcher can be explicitly instantiated with
+// a reference parameter type.
+
+class UncopyableFoo {
+ public:
+  explicit UncopyableFoo(char value) : value_(value) { (void)value_; }
+
+  UncopyableFoo(const UncopyableFoo&) = delete;
+  void operator=(const UncopyableFoo&) = delete;
+
+ private:
+  char value_;
+};
+
+MATCHER_P(ReferencesUncopyable, variable, "") { return &arg == &variable; }
+
+TEST(MatcherPMacroTest, WorksWhenExplicitlyInstantiatedWithReference) {
+  UncopyableFoo foo1('1'), foo2('2');
+  const Matcher<const UncopyableFoo&> m =
+      ReferencesUncopyable<const UncopyableFoo&>(foo1);
+
+  EXPECT_TRUE(m.Matches(foo1));
+  EXPECT_FALSE(m.Matches(foo2));
+
+  // We don't want the address of the parameter printed, as most
+  // likely it will just annoy the user.  If the address is
+  // interesting, the user should consider passing the parameter by
+  // pointer instead.
+  EXPECT_EQ("references uncopyable (variable: 1-byte object <31>)",
+            Describe(m));
+}
+
+// Tests that the body of MATCHER_Pn() can reference the parameter
+// types.
+
+MATCHER_P3(ParamTypesAreIntLongAndChar, foo, bar, baz, "") {
+  StaticAssertTypeEq<int, foo_type>();
+  StaticAssertTypeEq<long, bar_type>();  // NOLINT
+  StaticAssertTypeEq<char, baz_type>();
+  return arg == 0;
+}
+
+TEST(MatcherPnMacroTest, CanReferenceParamTypes) {
+  EXPECT_THAT(0, ParamTypesAreIntLongAndChar(10, 20L, 'a'));
+}
+
+// Tests that a MATCHER_Pn matcher can be explicitly instantiated with
+// reference parameter types.
+
+MATCHER_P2(ReferencesAnyOf, variable1, variable2, "") {
+  return &arg == &variable1 || &arg == &variable2;
+}
+
+TEST(MatcherPnMacroTest, WorksWhenExplicitlyInstantiatedWithReferences) {
+  UncopyableFoo foo1('1'), foo2('2'), foo3('3');
+  const Matcher<const UncopyableFoo&> const_m =
+      ReferencesAnyOf<const UncopyableFoo&, const UncopyableFoo&>(foo1, foo2);
+
+  EXPECT_TRUE(const_m.Matches(foo1));
+  EXPECT_TRUE(const_m.Matches(foo2));
+  EXPECT_FALSE(const_m.Matches(foo3));
+
+  const Matcher<UncopyableFoo&> m =
+      ReferencesAnyOf<UncopyableFoo&, UncopyableFoo&>(foo1, foo2);
+
+  EXPECT_TRUE(m.Matches(foo1));
+  EXPECT_TRUE(m.Matches(foo2));
+  EXPECT_FALSE(m.Matches(foo3));
+}
+
+TEST(MatcherPnMacroTest,
+     GeneratesCorretDescriptionWhenExplicitlyInstantiatedWithReferences) {
+  UncopyableFoo foo1('1'), foo2('2');
+  const Matcher<const UncopyableFoo&> m =
+      ReferencesAnyOf<const UncopyableFoo&, const UncopyableFoo&>(foo1, foo2);
+
+  // We don't want the addresses of the parameters printed, as most
+  // likely they will just annoy the user.  If the addresses are
+  // interesting, the user should consider passing the parameters by
+  // pointers instead.
+  EXPECT_EQ(
+      "references any of (variable1: 1-byte object <31>, variable2: 1-byte "
+      "object <32>)",
+      Describe(m));
+}
+
+// Tests that a simple MATCHER_P2() definition works.
+
+MATCHER_P2(IsNotInClosedRange, low, hi, "") { return arg < low || arg > hi; }
+
+TEST(MatcherPnMacroTest, Works) {
+  const Matcher<const long&> m = IsNotInClosedRange(10, 20);  // NOLINT
+  EXPECT_TRUE(m.Matches(36L));
+  EXPECT_FALSE(m.Matches(15L));
+
+  EXPECT_EQ("is not in closed range (low: 10, hi: 20)", Describe(m));
+  EXPECT_EQ("not (is not in closed range (low: 10, hi: 20))",
+            DescribeNegation(m));
+  EXPECT_EQ("", Explain(m, 36L));
+  EXPECT_EQ("", Explain(m, 15L));
+}
+
+// Tests that MATCHER*() definitions can be overloaded on the number
+// of parameters; also tests MATCHER_Pn() where n >= 3.
+
+MATCHER(EqualsSumOf, "") { return arg == 0; }
+MATCHER_P(EqualsSumOf, a, "") { return arg == a; }
+MATCHER_P2(EqualsSumOf, a, b, "") { return arg == a + b; }
+MATCHER_P3(EqualsSumOf, a, b, c, "") { return arg == a + b + c; }
+MATCHER_P4(EqualsSumOf, a, b, c, d, "") { return arg == a + b + c + d; }
+MATCHER_P5(EqualsSumOf, a, b, c, d, e, "") { return arg == a + b + c + d + e; }
+MATCHER_P6(EqualsSumOf, a, b, c, d, e, f, "") {
+  return arg == a + b + c + d + e + f;
+}
+MATCHER_P7(EqualsSumOf, a, b, c, d, e, f, g, "") {
+  return arg == a + b + c + d + e + f + g;
+}
+MATCHER_P8(EqualsSumOf, a, b, c, d, e, f, g, h, "") {
+  return arg == a + b + c + d + e + f + g + h;
+}
+MATCHER_P9(EqualsSumOf, a, b, c, d, e, f, g, h, i, "") {
+  return arg == a + b + c + d + e + f + g + h + i;
+}
+MATCHER_P10(EqualsSumOf, a, b, c, d, e, f, g, h, i, j, "") {
+  return arg == a + b + c + d + e + f + g + h + i + j;
+}
+
+TEST(MatcherPnMacroTest, CanBeOverloadedOnNumberOfParameters) {
+  EXPECT_THAT(0, EqualsSumOf());
+  EXPECT_THAT(1, EqualsSumOf(1));
+  EXPECT_THAT(12, EqualsSumOf(10, 2));
+  EXPECT_THAT(123, EqualsSumOf(100, 20, 3));
+  EXPECT_THAT(1234, EqualsSumOf(1000, 200, 30, 4));
+  EXPECT_THAT(12345, EqualsSumOf(10000, 2000, 300, 40, 5));
+  EXPECT_THAT("abcdef",
+              EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e", 'f'));
+  EXPECT_THAT("abcdefg",
+              EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e", 'f', 'g'));
+  EXPECT_THAT("abcdefgh", EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e",
+                                      'f', 'g', "h"));
+  EXPECT_THAT("abcdefghi", EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e",
+                                       'f', 'g', "h", 'i'));
+  EXPECT_THAT("abcdefghij",
+              EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e", 'f', 'g', "h",
+                          'i', ::std::string("j")));
+
+  EXPECT_THAT(1, Not(EqualsSumOf()));
+  EXPECT_THAT(-1, Not(EqualsSumOf(1)));
+  EXPECT_THAT(-12, Not(EqualsSumOf(10, 2)));
+  EXPECT_THAT(-123, Not(EqualsSumOf(100, 20, 3)));
+  EXPECT_THAT(-1234, Not(EqualsSumOf(1000, 200, 30, 4)));
+  EXPECT_THAT(-12345, Not(EqualsSumOf(10000, 2000, 300, 40, 5)));
+  EXPECT_THAT("abcdef ",
+              Not(EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e", 'f')));
+  EXPECT_THAT("abcdefg ", Not(EqualsSumOf(::std::string("a"), 'b', 'c', "d",
+                                          "e", 'f', 'g')));
+  EXPECT_THAT("abcdefgh ", Not(EqualsSumOf(::std::string("a"), 'b', 'c', "d",
+                                           "e", 'f', 'g', "h")));
+  EXPECT_THAT("abcdefghi ", Not(EqualsSumOf(::std::string("a"), 'b', 'c', "d",
+                                            "e", 'f', 'g', "h", 'i')));
+  EXPECT_THAT("abcdefghij ",
+              Not(EqualsSumOf(::std::string("a"), 'b', 'c', "d", "e", 'f', 'g',
+                              "h", 'i', ::std::string("j"))));
+}
+
+// Tests that a MATCHER_Pn() definition can be instantiated with any
+// compatible parameter types.
+TEST(MatcherPnMacroTest, WorksForDifferentParameterTypes) {
+  EXPECT_THAT(123, EqualsSumOf(100L, 20, static_cast<char>(3)));
+  EXPECT_THAT("abcd", EqualsSumOf(::std::string("a"), "b", 'c', "d"));
+
+  EXPECT_THAT(124, Not(EqualsSumOf(100L, 20, static_cast<char>(3))));
+  EXPECT_THAT("abcde", Not(EqualsSumOf(::std::string("a"), "b", 'c', "d")));
+}
+
+// Tests that the matcher body can promote the parameter types.
+
+MATCHER_P2(EqConcat, prefix, suffix, "") {
+  // The following lines promote the two parameters to desired types.
+  std::string prefix_str(prefix);
+  char suffix_char = static_cast<char>(suffix);
+  return arg == prefix_str + suffix_char;
+}
+
+TEST(MatcherPnMacroTest, SimpleTypePromotion) {
+  Matcher<std::string> no_promo = EqConcat(std::string("foo"), 't');
+  Matcher<const std::string&> promo = EqConcat("foo", static_cast<int>('t'));
+  EXPECT_FALSE(no_promo.Matches("fool"));
+  EXPECT_FALSE(promo.Matches("fool"));
+  EXPECT_TRUE(no_promo.Matches("foot"));
+  EXPECT_TRUE(promo.Matches("foot"));
+}
+
+// Verifies the type of a MATCHER*.
+
+TEST(MatcherPnMacroTest, TypesAreCorrect) {
+  // EqualsSumOf() must be assignable to a EqualsSumOfMatcher variable.
+  EqualsSumOfMatcher a0 = EqualsSumOf();
+
+  // EqualsSumOf(1) must be assignable to a EqualsSumOfMatcherP variable.
+  EqualsSumOfMatcherP<int> a1 = EqualsSumOf(1);
+
+  // EqualsSumOf(p1, ..., pk) must be assignable to a EqualsSumOfMatcherPk
+  // variable, and so on.
+  EqualsSumOfMatcherP2<int, char> a2 = EqualsSumOf(1, '2');
+  EqualsSumOfMatcherP3<int, int, char> a3 = EqualsSumOf(1, 2, '3');
+  EqualsSumOfMatcherP4<int, int, int, char> a4 = EqualsSumOf(1, 2, 3, '4');
+  EqualsSumOfMatcherP5<int, int, int, int, char> a5 =
+      EqualsSumOf(1, 2, 3, 4, '5');
+  EqualsSumOfMatcherP6<int, int, int, int, int, char> a6 =
+      EqualsSumOf(1, 2, 3, 4, 5, '6');
+  EqualsSumOfMatcherP7<int, int, int, int, int, int, char> a7 =
+      EqualsSumOf(1, 2, 3, 4, 5, 6, '7');
+  EqualsSumOfMatcherP8<int, int, int, int, int, int, int, char> a8 =
+      EqualsSumOf(1, 2, 3, 4, 5, 6, 7, '8');
+  EqualsSumOfMatcherP9<int, int, int, int, int, int, int, int, char> a9 =
+      EqualsSumOf(1, 2, 3, 4, 5, 6, 7, 8, '9');
+  EqualsSumOfMatcherP10<int, int, int, int, int, int, int, int, int, char> a10 =
+      EqualsSumOf(1, 2, 3, 4, 5, 6, 7, 8, 9, '0');
+
+  // Avoid "unused variable" warnings.
+  (void)a0;
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  (void)a5;
+  (void)a6;
+  (void)a7;
+  (void)a8;
+  (void)a9;
+  (void)a10;
+}
+
+// Tests that matcher-typed parameters can be used in Value() inside a
+// MATCHER_Pn definition.
+
+// Succeeds if arg matches exactly 2 of the 3 matchers.
+MATCHER_P3(TwoOf, m1, m2, m3, "") {
+  const int count = static_cast<int>(Value(arg, m1)) +
+                    static_cast<int>(Value(arg, m2)) +
+                    static_cast<int>(Value(arg, m3));
+  return count == 2;
+}
+
+TEST(MatcherPnMacroTest, CanUseMatcherTypedParameterInValue) {
+  EXPECT_THAT(42, TwoOf(Gt(0), Lt(50), Eq(10)));
+  EXPECT_THAT(0, Not(TwoOf(Gt(-1), Lt(1), Eq(0))));
+}
+
+// Tests Contains().Times().
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(ContainsTimes);
+
+TEST(ContainsTimes, ListMatchesWhenElementQuantityMatches) {
+  list<int> some_list;
+  some_list.push_back(3);
+  some_list.push_back(1);
+  some_list.push_back(2);
+  some_list.push_back(3);
+  EXPECT_THAT(some_list, Contains(3).Times(2));
+  EXPECT_THAT(some_list, Contains(2).Times(1));
+  EXPECT_THAT(some_list, Contains(Ge(2)).Times(3));
+  EXPECT_THAT(some_list, Contains(Ge(2)).Times(Gt(2)));
+  EXPECT_THAT(some_list, Contains(4).Times(0));
+  EXPECT_THAT(some_list, Contains(_).Times(4));
+  EXPECT_THAT(some_list, Not(Contains(5).Times(1)));
+  EXPECT_THAT(some_list, Contains(5).Times(_));  // Times(_) always matches
+  EXPECT_THAT(some_list, Not(Contains(3).Times(1)));
+  EXPECT_THAT(some_list, Contains(3).Times(Not(1)));
+  EXPECT_THAT(list<int>{}, Not(Contains(_)));
+}
+
+TEST_P(ContainsTimesP, ExplainsMatchResultCorrectly) {
+  const int a[2] = {1, 2};
+  Matcher<const int(&)[2]> m = Contains(2).Times(3);
+  EXPECT_EQ(
+      "whose element #1 matches but whose match quantity of 1 does not match",
+      Explain(m, a));
+
+  m = Contains(3).Times(0);
+  EXPECT_EQ("has no element that matches and whose match quantity of 0 matches",
+            Explain(m, a));
+
+  m = Contains(3).Times(4);
+  EXPECT_EQ(
+      "has no element that matches and whose match quantity of 0 does not "
+      "match",
+      Explain(m, a));
+
+  m = Contains(2).Times(4);
+  EXPECT_EQ(
+      "whose element #1 matches but whose match quantity of 1 does not "
+      "match",
+      Explain(m, a));
+
+  m = Contains(GreaterThan(0)).Times(2);
+  EXPECT_EQ("whose elements (0, 1) match and whose match quantity of 2 matches",
+            Explain(m, a));
+
+  m = Contains(GreaterThan(10)).Times(Gt(1));
+  EXPECT_EQ(
+      "has no element that matches and whose match quantity of 0 does not "
+      "match",
+      Explain(m, a));
+
+  m = Contains(GreaterThan(0)).Times(GreaterThan<size_t>(5));
+  EXPECT_EQ(
+      "whose elements (0, 1) match but whose match quantity of 2 does not "
+      "match, which is 3 less than 5",
+      Explain(m, a));
+}
+
+TEST(ContainsTimes, DescribesItselfCorrectly) {
+  Matcher<vector<int>> m = Contains(1).Times(2);
+  EXPECT_EQ("quantity of elements that match is equal to 1 is equal to 2",
+            Describe(m));
+
+  Matcher<vector<int>> m2 = Not(m);
+  EXPECT_EQ("quantity of elements that match is equal to 1 isn't equal to 2",
+            Describe(m2));
+}
+
+// Tests AllOfArray()
+
+TEST(AllOfArrayTest, BasicForms) {
+  // Iterator
+  std::vector<int> v0{};
+  std::vector<int> v1{1};
+  std::vector<int> v2{2, 3};
+  std::vector<int> v3{4, 4, 4};
+  EXPECT_THAT(0, AllOfArray(v0.begin(), v0.end()));
+  EXPECT_THAT(1, AllOfArray(v1.begin(), v1.end()));
+  EXPECT_THAT(2, Not(AllOfArray(v1.begin(), v1.end())));
+  EXPECT_THAT(3, Not(AllOfArray(v2.begin(), v2.end())));
+  EXPECT_THAT(4, AllOfArray(v3.begin(), v3.end()));
+  // Pointer +  size
+  int ar[6] = {1, 2, 3, 4, 4, 4};
+  EXPECT_THAT(0, AllOfArray(ar, 0));
+  EXPECT_THAT(1, AllOfArray(ar, 1));
+  EXPECT_THAT(2, Not(AllOfArray(ar, 1)));
+  EXPECT_THAT(3, Not(AllOfArray(ar + 1, 3)));
+  EXPECT_THAT(4, AllOfArray(ar + 3, 3));
+  // Array
+  // int ar0[0];  Not usable
+  int ar1[1] = {1};
+  int ar2[2] = {2, 3};
+  int ar3[3] = {4, 4, 4};
+  // EXPECT_THAT(0, Not(AllOfArray(ar0)));  // Cannot work
+  EXPECT_THAT(1, AllOfArray(ar1));
+  EXPECT_THAT(2, Not(AllOfArray(ar1)));
+  EXPECT_THAT(3, Not(AllOfArray(ar2)));
+  EXPECT_THAT(4, AllOfArray(ar3));
+  // Container
+  EXPECT_THAT(0, AllOfArray(v0));
+  EXPECT_THAT(1, AllOfArray(v1));
+  EXPECT_THAT(2, Not(AllOfArray(v1)));
+  EXPECT_THAT(3, Not(AllOfArray(v2)));
+  EXPECT_THAT(4, AllOfArray(v3));
+  // Initializer
+  EXPECT_THAT(0, AllOfArray<int>({}));  // Requires template arg.
+  EXPECT_THAT(1, AllOfArray({1}));
+  EXPECT_THAT(2, Not(AllOfArray({1})));
+  EXPECT_THAT(3, Not(AllOfArray({2, 3})));
+  EXPECT_THAT(4, AllOfArray({4, 4, 4}));
+}
+
+TEST(AllOfArrayTest, Matchers) {
+  // vector
+  std::vector<Matcher<int>> matchers{Ge(1), Lt(2)};
+  EXPECT_THAT(0, Not(AllOfArray(matchers)));
+  EXPECT_THAT(1, AllOfArray(matchers));
+  EXPECT_THAT(2, Not(AllOfArray(matchers)));
+  // initializer_list
+  EXPECT_THAT(0, Not(AllOfArray({Ge(0), Ge(1)})));
+  EXPECT_THAT(1, AllOfArray({Ge(0), Ge(1)}));
+}
+
+INSTANTIATE_GTEST_MATCHER_TEST_P(AnyOfArrayTest);
+
+TEST(AnyOfArrayTest, BasicForms) {
+  // Iterator
+  std::vector<int> v0{};
+  std::vector<int> v1{1};
+  std::vector<int> v2{2, 3};
+  EXPECT_THAT(0, Not(AnyOfArray(v0.begin(), v0.end())));
+  EXPECT_THAT(1, AnyOfArray(v1.begin(), v1.end()));
+  EXPECT_THAT(2, Not(AnyOfArray(v1.begin(), v1.end())));
+  EXPECT_THAT(3, AnyOfArray(v2.begin(), v2.end()));
+  EXPECT_THAT(4, Not(AnyOfArray(v2.begin(), v2.end())));
+  // Pointer +  size
+  int ar[3] = {1, 2, 3};
+  EXPECT_THAT(0, Not(AnyOfArray(ar, 0)));
+  EXPECT_THAT(1, AnyOfArray(ar, 1));
+  EXPECT_THAT(2, Not(AnyOfArray(ar, 1)));
+  EXPECT_THAT(3, AnyOfArray(ar + 1, 2));
+  EXPECT_THAT(4, Not(AnyOfArray(ar + 1, 2)));
+  // Array
+  // int ar0[0];  Not usable
+  int ar1[1] = {1};
+  int ar2[2] = {2, 3};
+  // EXPECT_THAT(0, Not(AnyOfArray(ar0)));  // Cannot work
+  EXPECT_THAT(1, AnyOfArray(ar1));
+  EXPECT_THAT(2, Not(AnyOfArray(ar1)));
+  EXPECT_THAT(3, AnyOfArray(ar2));
+  EXPECT_THAT(4, Not(AnyOfArray(ar2)));
+  // Container
+  EXPECT_THAT(0, Not(AnyOfArray(v0)));
+  EXPECT_THAT(1, AnyOfArray(v1));
+  EXPECT_THAT(2, Not(AnyOfArray(v1)));
+  EXPECT_THAT(3, AnyOfArray(v2));
+  EXPECT_THAT(4, Not(AnyOfArray(v2)));
+  // Initializer
+  EXPECT_THAT(0, Not(AnyOfArray<int>({})));  // Requires template arg.
+  EXPECT_THAT(1, AnyOfArray({1}));
+  EXPECT_THAT(2, Not(AnyOfArray({1})));
+  EXPECT_THAT(3, AnyOfArray({2, 3}));
+  EXPECT_THAT(4, Not(AnyOfArray({2, 3})));
+}
+
+TEST(AnyOfArrayTest, Matchers) {
+  // We negate test AllOfArrayTest.Matchers.
+  // vector
+  std::vector<Matcher<int>> matchers{Lt(1), Ge(2)};
+  EXPECT_THAT(0, AnyOfArray(matchers));
+  EXPECT_THAT(1, Not(AnyOfArray(matchers)));
+  EXPECT_THAT(2, AnyOfArray(matchers));
+  // initializer_list
+  EXPECT_THAT(0, AnyOfArray({Lt(0), Lt(1)}));
+  EXPECT_THAT(1, Not(AllOfArray({Lt(0), Lt(1)})));
+}
+
+TEST_P(AnyOfArrayTestP, ExplainsMatchResultCorrectly) {
+  // AnyOfArray and AllOfArry use the same underlying template-template,
+  // thus it is sufficient to test one here.
+  const std::vector<int> v0{};
+  const std::vector<int> v1{1};
+  const std::vector<int> v2{2, 3};
+  const Matcher<int> m0 = AnyOfArray(v0);
+  const Matcher<int> m1 = AnyOfArray(v1);
+  const Matcher<int> m2 = AnyOfArray(v2);
+  EXPECT_EQ("", Explain(m0, 0));
+  EXPECT_EQ("", Explain(m1, 1));
+  EXPECT_EQ("", Explain(m1, 2));
+  EXPECT_EQ("", Explain(m2, 3));
+  EXPECT_EQ("", Explain(m2, 4));
+  EXPECT_EQ("()", Describe(m0));
+  EXPECT_EQ("(is equal to 1)", Describe(m1));
+  EXPECT_EQ("(is equal to 2) or (is equal to 3)", Describe(m2));
+  EXPECT_EQ("()", DescribeNegation(m0));
+  EXPECT_EQ("(isn't equal to 1)", DescribeNegation(m1));
+  EXPECT_EQ("(isn't equal to 2) and (isn't equal to 3)", DescribeNegation(m2));
+  // Explain with matchers
+  const Matcher<int> g1 = AnyOfArray({GreaterThan(1)});
+  const Matcher<int> g2 = AnyOfArray({GreaterThan(1), GreaterThan(2)});
+  // Explains the first positive match and all prior negative matches...
+  EXPECT_EQ("which is 1 less than 1", Explain(g1, 0));
+  EXPECT_EQ("which is the same as 1", Explain(g1, 1));
+  EXPECT_EQ("which is 1 more than 1", Explain(g1, 2));
+  EXPECT_EQ("which is 1 less than 1, and which is 2 less than 2",
+            Explain(g2, 0));
+  EXPECT_EQ("which is the same as 1, and which is 1 less than 2",
+            Explain(g2, 1));
+  EXPECT_EQ("which is 1 more than 1",  // Only the first
+            Explain(g2, 2));
+}
+
+MATCHER(IsNotNull, "") { return arg != nullptr; }
+
+// Verifies that a matcher defined using MATCHER() can work on
+// move-only types.
+TEST(MatcherMacroTest, WorksOnMoveOnlyType) {
+  std::unique_ptr<int> p(new int(3));
+  EXPECT_THAT(p, IsNotNull());
+  EXPECT_THAT(std::unique_ptr<int>(), Not(IsNotNull()));
+}
+
+MATCHER_P(UniquePointee, pointee, "") { return *arg == pointee; }
+
+// Verifies that a matcher defined using MATCHER_P*() can work on
+// move-only types.
+TEST(MatcherPMacroTest, WorksOnMoveOnlyType) {
+  std::unique_ptr<int> p(new int(3));
+  EXPECT_THAT(p, UniquePointee(3));
+  EXPECT_THAT(p, Not(UniquePointee(2)));
+}
+
+#if GTEST_HAS_EXCEPTIONS
+
+// std::function<void()> is used below for compatibility with older copies of
+// GCC. Normally, a raw lambda is all that is needed.
+
+// Test that examples from documentation compile
+TEST(ThrowsTest, Examples) {
+  EXPECT_THAT(
+      std::function<void()>([]() { throw std::runtime_error("message"); }),
+      Throws<std::runtime_error>());
+
+  EXPECT_THAT(
+      std::function<void()>([]() { throw std::runtime_error("message"); }),
+      ThrowsMessage<std::runtime_error>(HasSubstr("message")));
+}
+
+TEST(ThrowsTest, PrintsExceptionWhat) {
+  EXPECT_THAT(
+      std::function<void()>([]() { throw std::runtime_error("ABC123XYZ"); }),
+      ThrowsMessage<std::runtime_error>(HasSubstr("ABC123XYZ")));
+}
+
+TEST(ThrowsTest, DoesNotGenerateDuplicateCatchClauseWarning) {
+  EXPECT_THAT(std::function<void()>([]() { throw std::exception(); }),
+              Throws<std::exception>());
+}
+
+TEST(ThrowsTest, CallableExecutedExactlyOnce) {
+  size_t a = 0;
+
+  EXPECT_THAT(std::function<void()>([&a]() {
+                a++;
+                throw 10;
+              }),
+              Throws<int>());
+  EXPECT_EQ(a, 1u);
+
+  EXPECT_THAT(std::function<void()>([&a]() {
+                a++;
+                throw std::runtime_error("message");
+              }),
+              Throws<std::runtime_error>());
+  EXPECT_EQ(a, 2u);
+
+  EXPECT_THAT(std::function<void()>([&a]() {
+                a++;
+                throw std::runtime_error("message");
+              }),
+              ThrowsMessage<std::runtime_error>(HasSubstr("message")));
+  EXPECT_EQ(a, 3u);
+
+  EXPECT_THAT(std::function<void()>([&a]() {
+                a++;
+                throw std::runtime_error("message");
+              }),
+              Throws<std::runtime_error>(
+                  Property(&std::runtime_error::what, HasSubstr("message"))));
+  EXPECT_EQ(a, 4u);
+}
+
+TEST(ThrowsTest, Describe) {
+  Matcher<std::function<void()>> matcher = Throws<std::runtime_error>();
+  std::stringstream ss;
+  matcher.DescribeTo(&ss);
+  auto explanation = ss.str();
+  EXPECT_THAT(explanation, HasSubstr("std::runtime_error"));
+}
+
+TEST(ThrowsTest, Success) {
+  Matcher<std::function<void()>> matcher = Throws<std::runtime_error>();
+  StringMatchResultListener listener;
+  EXPECT_TRUE(matcher.MatchAndExplain(
+      []() { throw std::runtime_error("error message"); }, &listener));
+  EXPECT_THAT(listener.str(), HasSubstr("std::runtime_error"));
+}
+
+TEST(ThrowsTest, FailWrongType) {
+  Matcher<std::function<void()>> matcher = Throws<std::runtime_error>();
+  StringMatchResultListener listener;
+  EXPECT_FALSE(matcher.MatchAndExplain(
+      []() { throw std::logic_error("error message"); }, &listener));
+  EXPECT_THAT(listener.str(), HasSubstr("std::logic_error"));
+  EXPECT_THAT(listener.str(), HasSubstr("\"error message\""));
+}
+
+TEST(ThrowsTest, FailWrongTypeNonStd) {
+  Matcher<std::function<void()>> matcher = Throws<std::runtime_error>();
+  StringMatchResultListener listener;
+  EXPECT_FALSE(matcher.MatchAndExplain([]() { throw 10; }, &listener));
+  EXPECT_THAT(listener.str(),
+              HasSubstr("throws an exception of an unknown type"));
+}
+
+TEST(ThrowsTest, FailNoThrow) {
+  Matcher<std::function<void()>> matcher = Throws<std::runtime_error>();
+  StringMatchResultListener listener;
+  EXPECT_FALSE(matcher.MatchAndExplain([]() { (void)0; }, &listener));
+  EXPECT_THAT(listener.str(), HasSubstr("does not throw any exception"));
+}
+
+class ThrowsPredicateTest
+    : public TestWithParam<Matcher<std::function<void()>>> {};
+
+TEST_P(ThrowsPredicateTest, Describe) {
+  Matcher<std::function<void()>> matcher = GetParam();
+  std::stringstream ss;
+  matcher.DescribeTo(&ss);
+  auto explanation = ss.str();
+  EXPECT_THAT(explanation, HasSubstr("std::runtime_error"));
+  EXPECT_THAT(explanation, HasSubstr("error message"));
+}
+
+TEST_P(ThrowsPredicateTest, Success) {
+  Matcher<std::function<void()>> matcher = GetParam();
+  StringMatchResultListener listener;
+  EXPECT_TRUE(matcher.MatchAndExplain(
+      []() { throw std::runtime_error("error message"); }, &listener));
+  EXPECT_THAT(listener.str(), HasSubstr("std::runtime_error"));
+}
+
+TEST_P(ThrowsPredicateTest, FailWrongType) {
+  Matcher<std::function<void()>> matcher = GetParam();
+  StringMatchResultListener listener;
+  EXPECT_FALSE(matcher.MatchAndExplain(
+      []() { throw std::logic_error("error message"); }, &listener));
+  EXPECT_THAT(listener.str(), HasSubstr("std::logic_error"));
+  EXPECT_THAT(listener.str(), HasSubstr("\"error message\""));
+}
+
+TEST_P(ThrowsPredicateTest, FailWrongTypeNonStd) {
+  Matcher<std::function<void()>> matcher = GetParam();
+  StringMatchResultListener listener;
+  EXPECT_FALSE(matcher.MatchAndExplain([]() { throw 10; }, &listener));
+  EXPECT_THAT(listener.str(),
+              HasSubstr("throws an exception of an unknown type"));
+}
+
+TEST_P(ThrowsPredicateTest, FailNoThrow) {
+  Matcher<std::function<void()>> matcher = GetParam();
+  StringMatchResultListener listener;
+  EXPECT_FALSE(matcher.MatchAndExplain([]() {}, &listener));
+  EXPECT_THAT(listener.str(), HasSubstr("does not throw any exception"));
+}
+
+INSTANTIATE_TEST_SUITE_P(
+    AllMessagePredicates, ThrowsPredicateTest,
+    Values(Matcher<std::function<void()>>(
+        ThrowsMessage<std::runtime_error>(HasSubstr("error message")))));
+
+// Tests that Throws<E1>(Matcher<E2>{}) compiles even when E2 != const E1&.
+TEST(ThrowsPredicateCompilesTest, ExceptionMatcherAcceptsBroadType) {
+  {
+    Matcher<std::function<void()>> matcher =
+        ThrowsMessage<std::runtime_error>(HasSubstr("error message"));
+    EXPECT_TRUE(
+        matcher.Matches([]() { throw std::runtime_error("error message"); }));
+    EXPECT_FALSE(
+        matcher.Matches([]() { throw std::runtime_error("wrong message"); }));
+  }
+
+  {
+    Matcher<uint64_t> inner = Eq(10);
+    Matcher<std::function<void()>> matcher = Throws<uint32_t>(inner);
+    EXPECT_TRUE(matcher.Matches([]() { throw(uint32_t) 10; }));
+    EXPECT_FALSE(matcher.Matches([]() { throw(uint32_t) 11; }));
+  }
+}
+
+// Tests that ThrowsMessage("message") is equivalent
+// to ThrowsMessage(Eq<std::string>("message")).
+TEST(ThrowsPredicateCompilesTest, MessageMatcherAcceptsNonMatcher) {
+  Matcher<std::function<void()>> matcher =
+      ThrowsMessage<std::runtime_error>("error message");
+  EXPECT_TRUE(
+      matcher.Matches([]() { throw std::runtime_error("error message"); }));
+  EXPECT_FALSE(matcher.Matches(
+      []() { throw std::runtime_error("wrong error message"); }));
+}
+
+#endif  // GTEST_HAS_EXCEPTIONS
+
+}  // namespace
+}  // namespace gmock_matchers_test
+}  // namespace testing
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+```
+
+### `gmock-matchers_test.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-matchers_test.h`
+
+
+```c
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests some commonly used argument matchers.
+
+#ifndef GOOGLEMOCK_TEST_GMOCK_MATCHERS_TEST_H_
+#define GOOGLEMOCK_TEST_GMOCK_MATCHERS_TEST_H_
+
+#include <string.h>
+#include <time.h>
+
+#include <array>
+#include <cstdint>
+#include <deque>
+#include <forward_list>
+#include <functional>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <map>
+#include <memory>
+#include <set>
+#include <sstream>
+#include <string>
+#include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
+
+#include "gmock/gmock-matchers.h"
+#include "gmock/gmock-more-matchers.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+
+namespace testing {
+namespace gmock_matchers_test {
+
+using std::greater;
+using std::less;
+using std::list;
+using std::make_pair;
+using std::map;
+using std::multimap;
+using std::multiset;
+using std::ostream;
+using std::pair;
+using std::set;
+using std::stringstream;
+using std::vector;
+using testing::internal::DummyMatchResultListener;
+using testing::internal::ElementMatcherPair;
+using testing::internal::ElementMatcherPairs;
+using testing::internal::ElementsAreArrayMatcher;
+using testing::internal::ExplainMatchFailureTupleTo;
+using testing::internal::FloatingEqMatcher;
+using testing::internal::FormatMatcherDescription;
+using testing::internal::IsReadableTypeName;
+using testing::internal::MatchMatrix;
+using testing::internal::PredicateFormatterFromMatcher;
+using testing::internal::RE;
+using testing::internal::StreamMatchResultListener;
+using testing::internal::Strings;
+
+// Helper for testing container-valued matchers in mock method context. It is
+// important to test matchers in this context, since it requires additional type
+// deduction beyond what EXPECT_THAT does, thus making it more restrictive.
+struct ContainerHelper {
+  MOCK_METHOD1(Call, void(std::vector<std::unique_ptr<int>>));
+};
+
+// For testing ExplainMatchResultTo().
+template <typename T>
+struct GtestGreaterThanMatcher {
+  using is_gtest_matcher = void;
+
+  void DescribeTo(ostream* os) const { *os << "is > " << rhs; }
+  void DescribeNegationTo(ostream* os) const { *os << "is <= " << rhs; }
+
+  bool MatchAndExplain(T lhs, MatchResultListener* listener) const {
+    if (lhs > rhs) {
+      *listener << "which is " << (lhs - rhs) << " more than " << rhs;
+    } else if (lhs == rhs) {
+      *listener << "which is the same as " << rhs;
+    } else {
+      *listener << "which is " << (rhs - lhs) << " less than " << rhs;
+    }
+
+    return lhs > rhs;
+  }
+
+  T rhs;
+};
+
+template <typename T>
+GtestGreaterThanMatcher<typename std::decay<T>::type> GtestGreaterThan(
+    T&& rhs) {
+  return {rhs};
+}
+
+// As the matcher above, but using the base class with virtual functions.
+template <typename T>
+class GreaterThanMatcher : public MatcherInterface<T> {
+ public:
+  explicit GreaterThanMatcher(T rhs) : impl_{rhs} {}
+
+  void DescribeTo(ostream* os) const override { impl_.DescribeTo(os); }
+  void DescribeNegationTo(ostream* os) const override {
+    impl_.DescribeNegationTo(os);
+  }
+
+  bool MatchAndExplain(T lhs, MatchResultListener* listener) const override {
+    return impl_.MatchAndExplain(lhs, listener);
+  }
+
+ private:
+  const GtestGreaterThanMatcher<T> impl_;
+};
+
+// Names and instantiates a new instance of GTestMatcherTestP.
+#define INSTANTIATE_GTEST_MATCHER_TEST_P(TestSuite)                         \
+  using TestSuite##P = GTestMatcherTestP;                                   \
+  INSTANTIATE_TEST_SUITE_P(MatcherInterface, TestSuite##P, Values(false));  \
+  INSTANTIATE_TEST_SUITE_P(GtestMatcher, TestSuite##P, Values(true))
+
+class GTestMatcherTestP : public testing::TestWithParam<bool> {
+ public:
+  template <typename T>
+  Matcher<T> GreaterThan(T n) {
+    if (use_gtest_matcher_) {
+      return GtestGreaterThan(n);
+    } else {
+      return MakeMatcher(new GreaterThanMatcher<T>(n));
+    }
+  }
+  const bool use_gtest_matcher_ = GetParam();
+};
+
+// Returns the description of the given matcher.
+template <typename T>
+std::string Describe(const Matcher<T>& m) {
+  return DescribeMatcher<T>(m);
+}
+
+// Returns the description of the negation of the given matcher.
+template <typename T>
+std::string DescribeNegation(const Matcher<T>& m) {
+  return DescribeMatcher<T>(m, true);
+}
+
+// Returns the reason why x matches, or doesn't match, m.
+template <typename MatcherType, typename Value>
+std::string Explain(const MatcherType& m, const Value& x) {
+  StringMatchResultListener listener;
+  ExplainMatchResult(m, x, &listener);
+  return listener.str();
+}
+
+}  // namespace gmock_matchers_test
+}  // namespace testing
+
+#endif  // GOOGLEMOCK_TEST_GMOCK_MATCHERS_TEST_H_
+```
+
+### `gmock-more-actions_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-more-actions_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the built-in actions in gmock-actions.h.
+
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4577)
+#endif
+
+#include "gmock/gmock-more-actions.h"
+
+#include <functional>
+#include <memory>
+#include <sstream>
+#include <string>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+
+namespace testing {
+namespace gmock_more_actions_test {
+
+using ::std::plus;
+using ::std::string;
+using testing::Action;
+using testing::DeleteArg;
+using testing::Invoke;
+using testing::ReturnArg;
+using testing::ReturnPointee;
+using testing::SaveArg;
+using testing::SaveArgPointee;
+using testing::SetArgReferee;
+using testing::Unused;
+using testing::WithArg;
+using testing::WithoutArgs;
+
+// For suppressing compiler warnings on conversion possibly losing precision.
+inline short Short(short n) { return n; }  // NOLINT
+inline char Char(char ch) { return ch; }
+
+// Sample functions and functors for testing Invoke() and etc.
+int Nullary() { return 1; }
+
+bool g_done = false;
+
+bool Unary(int x) { return x < 0; }
+
+bool ByConstRef(const std::string& s) { return s == "Hi"; }
+
+const double g_double = 0;
+bool ReferencesGlobalDouble(const double& x) { return &x == &g_double; }
+
+struct UnaryFunctor {
+  int operator()(bool x) { return x ? 1 : -1; }
+};
+
+const char* Binary(const char* input, short n) { return input + n; }  // NOLINT
+
+int Ternary(int x, char y, short z) { return x + y + z; }  // NOLINT
+
+int SumOf4(int a, int b, int c, int d) { return a + b + c + d; }
+
+int SumOfFirst2(int a, int b, Unused, Unused) { return a + b; }
+
+int SumOf5(int a, int b, int c, int d, int e) { return a + b + c + d + e; }
+
+struct SumOf5Functor {
+  int operator()(int a, int b, int c, int d, int e) {
+    return a + b + c + d + e;
+  }
+};
+
+int SumOf6(int a, int b, int c, int d, int e, int f) {
+  return a + b + c + d + e + f;
+}
+
+struct SumOf6Functor {
+  int operator()(int a, int b, int c, int d, int e, int f) {
+    return a + b + c + d + e + f;
+  }
+};
+
+std::string Concat7(const char* s1, const char* s2, const char* s3,
+                    const char* s4, const char* s5, const char* s6,
+                    const char* s7) {
+  return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7;
+}
+
+std::string Concat8(const char* s1, const char* s2, const char* s3,
+                    const char* s4, const char* s5, const char* s6,
+                    const char* s7, const char* s8) {
+  return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7 + s8;
+}
+
+std::string Concat9(const char* s1, const char* s2, const char* s3,
+                    const char* s4, const char* s5, const char* s6,
+                    const char* s7, const char* s8, const char* s9) {
+  return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9;
+}
+
+std::string Concat10(const char* s1, const char* s2, const char* s3,
+                     const char* s4, const char* s5, const char* s6,
+                     const char* s7, const char* s8, const char* s9,
+                     const char* s10) {
+  return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10;
+}
+
+class Foo {
+ public:
+  Foo() : value_(123) {}
+
+  int Nullary() const { return value_; }
+
+  short Unary(long x) { return static_cast<short>(value_ + x); }  // NOLINT
+
+  std::string Binary(const std::string& str, char c) const { return str + c; }
+
+  int Ternary(int x, bool y, char z) { return value_ + x + y * z; }
+
+  int SumOf4(int a, int b, int c, int d) const {
+    return a + b + c + d + value_;
+  }
+
+  int SumOfLast2(Unused, Unused, int a, int b) const { return a + b; }
+
+  int SumOf5(int a, int b, int c, int d, int e) { return a + b + c + d + e; }
+
+  int SumOf6(int a, int b, int c, int d, int e, int f) {
+    return a + b + c + d + e + f;
+  }
+
+  std::string Concat7(const char* s1, const char* s2, const char* s3,
+                      const char* s4, const char* s5, const char* s6,
+                      const char* s7) {
+    return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7;
+  }
+
+  std::string Concat8(const char* s1, const char* s2, const char* s3,
+                      const char* s4, const char* s5, const char* s6,
+                      const char* s7, const char* s8) {
+    return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7 + s8;
+  }
+
+  std::string Concat9(const char* s1, const char* s2, const char* s3,
+                      const char* s4, const char* s5, const char* s6,
+                      const char* s7, const char* s8, const char* s9) {
+    return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9;
+  }
+
+  std::string Concat10(const char* s1, const char* s2, const char* s3,
+                       const char* s4, const char* s5, const char* s6,
+                       const char* s7, const char* s8, const char* s9,
+                       const char* s10) {
+    return std::string(s1) + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9 + s10;
+  }
+
+ private:
+  int value_;
+};
+
+// Tests using Invoke() with a nullary function.
+TEST(InvokeTest, Nullary) {
+  Action<int()> a = Invoke(Nullary);  // NOLINT
+  EXPECT_EQ(1, a.Perform(std::make_tuple()));
+}
+
+// Tests using Invoke() with a unary function.
+TEST(InvokeTest, Unary) {
+  Action<bool(int)> a = Invoke(Unary);  // NOLINT
+  EXPECT_FALSE(a.Perform(std::make_tuple(1)));
+  EXPECT_TRUE(a.Perform(std::make_tuple(-1)));
+}
+
+// Tests using Invoke() with a binary function.
+TEST(InvokeTest, Binary) {
+  Action<const char*(const char*, short)> a = Invoke(Binary);  // NOLINT
+  const char* p = "Hello";
+  EXPECT_EQ(p + 2, a.Perform(std::make_tuple(p, Short(2))));
+}
+
+// Tests using Invoke() with a ternary function.
+TEST(InvokeTest, Ternary) {
+  Action<int(int, char, short)> a = Invoke(Ternary);  // NOLINT
+  EXPECT_EQ(6, a.Perform(std::make_tuple(1, '\2', Short(3))));
+}
+
+// Tests using Invoke() with a 4-argument function.
+TEST(InvokeTest, FunctionThatTakes4Arguments) {
+  Action<int(int, int, int, int)> a = Invoke(SumOf4);  // NOLINT
+  EXPECT_EQ(1234, a.Perform(std::make_tuple(1000, 200, 30, 4)));
+}
+
+// Tests using Invoke() with a 5-argument function.
+TEST(InvokeTest, FunctionThatTakes5Arguments) {
+  Action<int(int, int, int, int, int)> a = Invoke(SumOf5);  // NOLINT
+  EXPECT_EQ(12345, a.Perform(std::make_tuple(10000, 2000, 300, 40, 5)));
+}
+
+// Tests using Invoke() with a 6-argument function.
+TEST(InvokeTest, FunctionThatTakes6Arguments) {
+  Action<int(int, int, int, int, int, int)> a = Invoke(SumOf6);  // NOLINT
+  EXPECT_EQ(123456,
+            a.Perform(std::make_tuple(100000, 20000, 3000, 400, 50, 6)));
+}
+
+// A helper that turns the type of a C-string literal from const
+// char[N] to const char*.
+inline const char* CharPtr(const char* s) { return s; }
+
+// Tests using Invoke() with a 7-argument function.
+TEST(InvokeTest, FunctionThatTakes7Arguments) {
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*)>
+      a = Invoke(Concat7);
+  EXPECT_EQ("1234567",
+            a.Perform(std::make_tuple(CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                                      CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                                      CharPtr("7"))));
+}
+
+// Tests using Invoke() with a 8-argument function.
+TEST(InvokeTest, FunctionThatTakes8Arguments) {
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*, const char*)>
+      a = Invoke(Concat8);
+  EXPECT_EQ("12345678",
+            a.Perform(std::make_tuple(CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                                      CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                                      CharPtr("7"), CharPtr("8"))));
+}
+
+// Tests using Invoke() with a 9-argument function.
+TEST(InvokeTest, FunctionThatTakes9Arguments) {
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*, const char*,
+                     const char*)>
+      a = Invoke(Concat9);
+  EXPECT_EQ("123456789", a.Perform(std::make_tuple(
+                             CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                             CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                             CharPtr("7"), CharPtr("8"), CharPtr("9"))));
+}
+
+// Tests using Invoke() with a 10-argument function.
+TEST(InvokeTest, FunctionThatTakes10Arguments) {
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*, const char*,
+                     const char*, const char*)>
+      a = Invoke(Concat10);
+  EXPECT_EQ("1234567890",
+            a.Perform(std::make_tuple(CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                                      CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                                      CharPtr("7"), CharPtr("8"), CharPtr("9"),
+                                      CharPtr("0"))));
+}
+
+// Tests using Invoke() with functions with parameters declared as Unused.
+TEST(InvokeTest, FunctionWithUnusedParameters) {
+  Action<int(int, int, double, const std::string&)> a1 = Invoke(SumOfFirst2);
+  std::tuple<int, int, double, std::string> dummy =
+      std::make_tuple(10, 2, 5.6, std::string("hi"));
+  EXPECT_EQ(12, a1.Perform(dummy));
+
+  Action<int(int, int, bool, int*)> a2 = Invoke(SumOfFirst2);
+  EXPECT_EQ(
+      23, a2.Perform(std::make_tuple(20, 3, true, static_cast<int*>(nullptr))));
+}
+
+// Tests using Invoke() with methods with parameters declared as Unused.
+TEST(InvokeTest, MethodWithUnusedParameters) {
+  Foo foo;
+  Action<int(std::string, bool, int, int)> a1 = Invoke(&foo, &Foo::SumOfLast2);
+  EXPECT_EQ(12, a1.Perform(std::make_tuple(CharPtr("hi"), true, 10, 2)));
+
+  Action<int(char, double, int, int)> a2 = Invoke(&foo, &Foo::SumOfLast2);
+  EXPECT_EQ(23, a2.Perform(std::make_tuple('a', 2.5, 20, 3)));
+}
+
+// Tests using Invoke() with a functor.
+TEST(InvokeTest, Functor) {
+  Action<long(long, int)> a = Invoke(plus<long>());  // NOLINT
+  EXPECT_EQ(3L, a.Perform(std::make_tuple(1, 2)));
+}
+
+// Tests using Invoke(f) as an action of a compatible type.
+TEST(InvokeTest, FunctionWithCompatibleType) {
+  Action<long(int, short, char, bool)> a = Invoke(SumOf4);  // NOLINT
+  EXPECT_EQ(4321, a.Perform(std::make_tuple(4000, Short(300), Char(20), true)));
+}
+
+// Tests using Invoke() with an object pointer and a method pointer.
+
+// Tests using Invoke() with a nullary method.
+TEST(InvokeMethodTest, Nullary) {
+  Foo foo;
+  Action<int()> a = Invoke(&foo, &Foo::Nullary);  // NOLINT
+  EXPECT_EQ(123, a.Perform(std::make_tuple()));
+}
+
+// Tests using Invoke() with a unary method.
+TEST(InvokeMethodTest, Unary) {
+  Foo foo;
+  Action<short(long)> a = Invoke(&foo, &Foo::Unary);  // NOLINT
+  EXPECT_EQ(4123, a.Perform(std::make_tuple(4000)));
+}
+
+// Tests using Invoke() with a binary method.
+TEST(InvokeMethodTest, Binary) {
+  Foo foo;
+  Action<std::string(const std::string&, char)> a = Invoke(&foo, &Foo::Binary);
+  std::string s("Hell");
+  std::tuple<std::string, char> dummy = std::make_tuple(s, 'o');
+  EXPECT_EQ("Hello", a.Perform(dummy));
+}
+
+// Tests using Invoke() with a ternary method.
+TEST(InvokeMethodTest, Ternary) {
+  Foo foo;
+  Action<int(int, bool, char)> a = Invoke(&foo, &Foo::Ternary);  // NOLINT
+  EXPECT_EQ(1124, a.Perform(std::make_tuple(1000, true, Char(1))));
+}
+
+// Tests using Invoke() with a 4-argument method.
+TEST(InvokeMethodTest, MethodThatTakes4Arguments) {
+  Foo foo;
+  Action<int(int, int, int, int)> a = Invoke(&foo, &Foo::SumOf4);  // NOLINT
+  EXPECT_EQ(1357, a.Perform(std::make_tuple(1000, 200, 30, 4)));
+}
+
+// Tests using Invoke() with a 5-argument method.
+TEST(InvokeMethodTest, MethodThatTakes5Arguments) {
+  Foo foo;
+  Action<int(int, int, int, int, int)> a =
+      Invoke(&foo, &Foo::SumOf5);  // NOLINT
+  EXPECT_EQ(12345, a.Perform(std::make_tuple(10000, 2000, 300, 40, 5)));
+}
+
+// Tests using Invoke() with a 6-argument method.
+TEST(InvokeMethodTest, MethodThatTakes6Arguments) {
+  Foo foo;
+  Action<int(int, int, int, int, int, int)> a =  // NOLINT
+      Invoke(&foo, &Foo::SumOf6);
+  EXPECT_EQ(123456,
+            a.Perform(std::make_tuple(100000, 20000, 3000, 400, 50, 6)));
+}
+
+// Tests using Invoke() with a 7-argument method.
+TEST(InvokeMethodTest, MethodThatTakes7Arguments) {
+  Foo foo;
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*)>
+      a = Invoke(&foo, &Foo::Concat7);
+  EXPECT_EQ("1234567",
+            a.Perform(std::make_tuple(CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                                      CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                                      CharPtr("7"))));
+}
+
+// Tests using Invoke() with a 8-argument method.
+TEST(InvokeMethodTest, MethodThatTakes8Arguments) {
+  Foo foo;
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*, const char*)>
+      a = Invoke(&foo, &Foo::Concat8);
+  EXPECT_EQ("12345678",
+            a.Perform(std::make_tuple(CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                                      CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                                      CharPtr("7"), CharPtr("8"))));
+}
+
+// Tests using Invoke() with a 9-argument method.
+TEST(InvokeMethodTest, MethodThatTakes9Arguments) {
+  Foo foo;
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*, const char*,
+                     const char*)>
+      a = Invoke(&foo, &Foo::Concat9);
+  EXPECT_EQ("123456789", a.Perform(std::make_tuple(
+                             CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                             CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                             CharPtr("7"), CharPtr("8"), CharPtr("9"))));
+}
+
+// Tests using Invoke() with a 10-argument method.
+TEST(InvokeMethodTest, MethodThatTakes10Arguments) {
+  Foo foo;
+  Action<std::string(const char*, const char*, const char*, const char*,
+                     const char*, const char*, const char*, const char*,
+                     const char*, const char*)>
+      a = Invoke(&foo, &Foo::Concat10);
+  EXPECT_EQ("1234567890",
+            a.Perform(std::make_tuple(CharPtr("1"), CharPtr("2"), CharPtr("3"),
+                                      CharPtr("4"), CharPtr("5"), CharPtr("6"),
+                                      CharPtr("7"), CharPtr("8"), CharPtr("9"),
+                                      CharPtr("0"))));
+}
+
+// Tests using Invoke(f) as an action of a compatible type.
+TEST(InvokeMethodTest, MethodWithCompatibleType) {
+  Foo foo;
+  Action<long(int, short, char, bool)> a =  // NOLINT
+      Invoke(&foo, &Foo::SumOf4);
+  EXPECT_EQ(4444, a.Perform(std::make_tuple(4000, Short(300), Char(20), true)));
+}
+
+// Tests using WithoutArgs with an action that takes no argument.
+TEST(WithoutArgsTest, NoArg) {
+  Action<int(int n)> a = WithoutArgs(Invoke(Nullary));  // NOLINT
+  EXPECT_EQ(1, a.Perform(std::make_tuple(2)));
+}
+
+// Tests using WithArg with an action that takes 1 argument.
+TEST(WithArgTest, OneArg) {
+  Action<bool(double x, int n)> b = WithArg<1>(Invoke(Unary));  // NOLINT
+  EXPECT_TRUE(b.Perform(std::make_tuple(1.5, -1)));
+  EXPECT_FALSE(b.Perform(std::make_tuple(1.5, 1)));
+}
+
+TEST(ReturnArgActionTest, WorksForOneArgIntArg0) {
+  const Action<int(int)> a = ReturnArg<0>();
+  EXPECT_EQ(5, a.Perform(std::make_tuple(5)));
+}
+
+TEST(ReturnArgActionTest, WorksForMultiArgBoolArg0) {
+  const Action<bool(bool, bool, bool)> a = ReturnArg<0>();
+  EXPECT_TRUE(a.Perform(std::make_tuple(true, false, false)));
+}
+
+TEST(ReturnArgActionTest, WorksForMultiArgStringArg2) {
+  const Action<std::string(int, int, std::string, int)> a = ReturnArg<2>();
+  EXPECT_EQ("seven", a.Perform(std::make_tuple(5, 6, std::string("seven"), 8)));
+}
+
+TEST(ReturnArgActionTest, WorksForNonConstRefArg0) {
+  const Action<std::string&(std::string&)> a = ReturnArg<0>();
+  std::string s = "12345";
+  EXPECT_EQ(&s, &a.Perform(std::forward_as_tuple(s)));
+}
+
+TEST(SaveArgActionTest, WorksForSameType) {
+  int result = 0;
+  const Action<void(int n)> a1 = SaveArg<0>(&result);
+  a1.Perform(std::make_tuple(5));
+  EXPECT_EQ(5, result);
+}
+
+TEST(SaveArgActionTest, WorksForCompatibleType) {
+  int result = 0;
+  const Action<void(bool, char)> a1 = SaveArg<1>(&result);
+  a1.Perform(std::make_tuple(true, 'a'));
+  EXPECT_EQ('a', result);
+}
+
+TEST(SaveArgPointeeActionTest, WorksForSameType) {
+  int result = 0;
+  const int value = 5;
+  const Action<void(const int*)> a1 = SaveArgPointee<0>(&result);
+  a1.Perform(std::make_tuple(&value));
+  EXPECT_EQ(5, result);
+}
+
+TEST(SaveArgPointeeActionTest, WorksForCompatibleType) {
+  int result = 0;
+  char value = 'a';
+  const Action<void(bool, char*)> a1 = SaveArgPointee<1>(&result);
+  a1.Perform(std::make_tuple(true, &value));
+  EXPECT_EQ('a', result);
+}
+
+TEST(SetArgRefereeActionTest, WorksForSameType) {
+  int value = 0;
+  const Action<void(int&)> a1 = SetArgReferee<0>(1);
+  a1.Perform(std::tuple<int&>(value));
+  EXPECT_EQ(1, value);
+}
+
+TEST(SetArgRefereeActionTest, WorksForCompatibleType) {
+  int value = 0;
+  const Action<void(int, int&)> a1 = SetArgReferee<1>('a');
+  a1.Perform(std::tuple<int, int&>(0, value));
+  EXPECT_EQ('a', value);
+}
+
+TEST(SetArgRefereeActionTest, WorksWithExtraArguments) {
+  int value = 0;
+  const Action<void(bool, int, int&, const char*)> a1 = SetArgReferee<2>('a');
+  a1.Perform(std::tuple<bool, int, int&, const char*>(true, 0, value, "hi"));
+  EXPECT_EQ('a', value);
+}
+
+// A class that can be used to verify that its destructor is called: it will set
+// the bool provided to the constructor to true when destroyed.
+class DeletionTester {
+ public:
+  explicit DeletionTester(bool* is_deleted) : is_deleted_(is_deleted) {
+    // Make sure the bit is set to false.
+    *is_deleted_ = false;
+  }
+
+  ~DeletionTester() { *is_deleted_ = true; }
+
+ private:
+  bool* is_deleted_;
+};
+
+TEST(DeleteArgActionTest, OneArg) {
+  bool is_deleted = false;
+  DeletionTester* t = new DeletionTester(&is_deleted);
+  const Action<void(DeletionTester*)> a1 = DeleteArg<0>();  // NOLINT
+  EXPECT_FALSE(is_deleted);
+  a1.Perform(std::make_tuple(t));
+  EXPECT_TRUE(is_deleted);
+}
+
+TEST(DeleteArgActionTest, TenArgs) {
+  bool is_deleted = false;
+  DeletionTester* t = new DeletionTester(&is_deleted);
+  const Action<void(bool, int, int, const char*, bool, int, int, int, int,
+                    DeletionTester*)>
+      a1 = DeleteArg<9>();
+  EXPECT_FALSE(is_deleted);
+  a1.Perform(std::make_tuple(true, 5, 6, CharPtr("hi"), false, 7, 8, 9, 10, t));
+  EXPECT_TRUE(is_deleted);
+}
+
+#if GTEST_HAS_EXCEPTIONS
+
+TEST(ThrowActionTest, ThrowsGivenExceptionInVoidFunction) {
+  const Action<void(int n)> a = Throw('a');
+  EXPECT_THROW(a.Perform(std::make_tuple(0)), char);
+}
+
+class MyException {};
+
+TEST(ThrowActionTest, ThrowsGivenExceptionInNonVoidFunction) {
+  const Action<double(char ch)> a = Throw(MyException());
+  EXPECT_THROW(a.Perform(std::make_tuple('0')), MyException);
+}
+
+TEST(ThrowActionTest, ThrowsGivenExceptionInNullaryFunction) {
+  const Action<double()> a = Throw(MyException());
+  EXPECT_THROW(a.Perform(std::make_tuple()), MyException);
+}
+
+class Object {
+ public:
+  virtual ~Object() {}
+  virtual void Func() {}
+};
+
+class MockObject : public Object {
+ public:
+  ~MockObject() override {}
+  MOCK_METHOD(void, Func, (), (override));
+};
+
+TEST(ThrowActionTest, Times0) {
+  EXPECT_NONFATAL_FAILURE(
+      [] {
+        try {
+          MockObject m;
+          ON_CALL(m, Func()).WillByDefault([] { throw "something"; });
+          EXPECT_CALL(m, Func()).Times(0);
+          m.Func();
+        } catch (...) {
+          // Exception is caught but Times(0) still triggers a failure.
+        }
+      }(),
+      "");
+}
+
+#endif  // GTEST_HAS_EXCEPTIONS
+
+// Tests that SetArrayArgument<N>(first, last) sets the elements of the array
+// pointed to by the N-th (0-based) argument to values in range [first, last).
+TEST(SetArrayArgumentTest, SetsTheNthArray) {
+  using MyFunction = void(bool, int*, char*);
+  int numbers[] = {1, 2, 3};
+  Action<MyFunction> a = SetArrayArgument<1>(numbers, numbers + 3);
+
+  int n[4] = {};
+  int* pn = n;
+  char ch[4] = {};
+  char* pch = ch;
+  a.Perform(std::make_tuple(true, pn, pch));
+  EXPECT_EQ(1, n[0]);
+  EXPECT_EQ(2, n[1]);
+  EXPECT_EQ(3, n[2]);
+  EXPECT_EQ(0, n[3]);
+  EXPECT_EQ('\0', ch[0]);
+  EXPECT_EQ('\0', ch[1]);
+  EXPECT_EQ('\0', ch[2]);
+  EXPECT_EQ('\0', ch[3]);
+
+  // Tests first and last are iterators.
+  std::string letters = "abc";
+  a = SetArrayArgument<2>(letters.begin(), letters.end());
+  std::fill_n(n, 4, 0);
+  std::fill_n(ch, 4, '\0');
+  a.Perform(std::make_tuple(true, pn, pch));
+  EXPECT_EQ(0, n[0]);
+  EXPECT_EQ(0, n[1]);
+  EXPECT_EQ(0, n[2]);
+  EXPECT_EQ(0, n[3]);
+  EXPECT_EQ('a', ch[0]);
+  EXPECT_EQ('b', ch[1]);
+  EXPECT_EQ('c', ch[2]);
+  EXPECT_EQ('\0', ch[3]);
+}
+
+// Tests SetArrayArgument<N>(first, last) where first == last.
+TEST(SetArrayArgumentTest, SetsTheNthArrayWithEmptyRange) {
+  using MyFunction = void(bool, int*);
+  int numbers[] = {1, 2, 3};
+  Action<MyFunction> a = SetArrayArgument<1>(numbers, numbers);
+
+  int n[4] = {};
+  int* pn = n;
+  a.Perform(std::make_tuple(true, pn));
+  EXPECT_EQ(0, n[0]);
+  EXPECT_EQ(0, n[1]);
+  EXPECT_EQ(0, n[2]);
+  EXPECT_EQ(0, n[3]);
+}
+
+// Tests SetArrayArgument<N>(first, last) where *first is convertible
+// (but not equal) to the argument type.
+TEST(SetArrayArgumentTest, SetsTheNthArrayWithConvertibleType) {
+  using MyFunction = void(bool, int*);
+  char chars[] = {97, 98, 99};
+  Action<MyFunction> a = SetArrayArgument<1>(chars, chars + 3);
+
+  int codes[4] = {111, 222, 333, 444};
+  int* pcodes = codes;
+  a.Perform(std::make_tuple(true, pcodes));
+  EXPECT_EQ(97, codes[0]);
+  EXPECT_EQ(98, codes[1]);
+  EXPECT_EQ(99, codes[2]);
+  EXPECT_EQ(444, codes[3]);
+}
+
+// Test SetArrayArgument<N>(first, last) with iterator as argument.
+TEST(SetArrayArgumentTest, SetsTheNthArrayWithIteratorArgument) {
+  using MyFunction = void(bool, std::back_insert_iterator<std::string>);
+  std::string letters = "abc";
+  Action<MyFunction> a = SetArrayArgument<1>(letters.begin(), letters.end());
+
+  std::string s;
+  a.Perform(std::make_tuple(true, back_inserter(s)));
+  EXPECT_EQ(letters, s);
+}
+
+TEST(ReturnPointeeTest, Works) {
+  int n = 42;
+  const Action<int()> a = ReturnPointee(&n);
+  EXPECT_EQ(42, a.Perform(std::make_tuple()));
+
+  n = 43;
+  EXPECT_EQ(43, a.Perform(std::make_tuple()));
+}
+
+// Tests InvokeArgument<N>(...).
+
+// Tests using InvokeArgument with a nullary function.
+TEST(InvokeArgumentTest, Function0) {
+  Action<int(int, int (*)())> a = InvokeArgument<1>();  // NOLINT
+  EXPECT_EQ(1, a.Perform(std::make_tuple(2, &Nullary)));
+}
+
+// Tests using InvokeArgument with a unary function.
+TEST(InvokeArgumentTest, Functor1) {
+  Action<int(UnaryFunctor)> a = InvokeArgument<0>(true);  // NOLINT
+  EXPECT_EQ(1, a.Perform(std::make_tuple(UnaryFunctor())));
+}
+
+// Tests using InvokeArgument with a 5-ary function.
+TEST(InvokeArgumentTest, Function5) {
+  Action<int(int (*)(int, int, int, int, int))> a =  // NOLINT
+      InvokeArgument<0>(10000, 2000, 300, 40, 5);
+  EXPECT_EQ(12345, a.Perform(std::make_tuple(&SumOf5)));
+}
+
+// Tests using InvokeArgument with a 5-ary functor.
+TEST(InvokeArgumentTest, Functor5) {
+  Action<int(SumOf5Functor)> a =  // NOLINT
+      InvokeArgument<0>(10000, 2000, 300, 40, 5);
+  EXPECT_EQ(12345, a.Perform(std::make_tuple(SumOf5Functor())));
+}
+
+// Tests using InvokeArgument with a 6-ary function.
+TEST(InvokeArgumentTest, Function6) {
+  Action<int(int (*)(int, int, int, int, int, int))> a =  // NOLINT
+      InvokeArgument<0>(100000, 20000, 3000, 400, 50, 6);
+  EXPECT_EQ(123456, a.Perform(std::make_tuple(&SumOf6)));
+}
+
+// Tests using InvokeArgument with a 6-ary functor.
+TEST(InvokeArgumentTest, Functor6) {
+  Action<int(SumOf6Functor)> a =  // NOLINT
+      InvokeArgument<0>(100000, 20000, 3000, 400, 50, 6);
+  EXPECT_EQ(123456, a.Perform(std::make_tuple(SumOf6Functor())));
+}
+
+// Tests using InvokeArgument with a 7-ary function.
+TEST(InvokeArgumentTest, Function7) {
+  Action<std::string(std::string(*)(const char*, const char*, const char*,
+                                    const char*, const char*, const char*,
+                                    const char*))>
+      a = InvokeArgument<0>("1", "2", "3", "4", "5", "6", "7");
+  EXPECT_EQ("1234567", a.Perform(std::make_tuple(&Concat7)));
+}
+
+// Tests using InvokeArgument with a 8-ary function.
+TEST(InvokeArgumentTest, Function8) {
+  Action<std::string(std::string(*)(const char*, const char*, const char*,
+                                    const char*, const char*, const char*,
+                                    const char*, const char*))>
+      a = InvokeArgument<0>("1", "2", "3", "4", "5", "6", "7", "8");
+  EXPECT_EQ("12345678", a.Perform(std::make_tuple(&Concat8)));
+}
+
+// Tests using InvokeArgument with a 9-ary function.
+TEST(InvokeArgumentTest, Function9) {
+  Action<std::string(std::string(*)(const char*, const char*, const char*,
+                                    const char*, const char*, const char*,
+                                    const char*, const char*, const char*))>
+      a = InvokeArgument<0>("1", "2", "3", "4", "5", "6", "7", "8", "9");
+  EXPECT_EQ("123456789", a.Perform(std::make_tuple(&Concat9)));
+}
+
+// Tests using InvokeArgument with a 10-ary function.
+TEST(InvokeArgumentTest, Function10) {
+  Action<std::string(std::string(*)(
+      const char*, const char*, const char*, const char*, const char*,
+      const char*, const char*, const char*, const char*, const char*))>
+      a = InvokeArgument<0>("1", "2", "3", "4", "5", "6", "7", "8", "9", "0");
+  EXPECT_EQ("1234567890", a.Perform(std::make_tuple(&Concat10)));
+}
+
+// Tests using InvokeArgument with a function that takes a pointer argument.
+TEST(InvokeArgumentTest, ByPointerFunction) {
+  Action<const char*(const char* (*)(const char* input, short n))>  // NOLINT
+      a = InvokeArgument<0>(static_cast<const char*>("Hi"), Short(1));
+  EXPECT_STREQ("i", a.Perform(std::make_tuple(&Binary)));
+}
+
+// Tests using InvokeArgument with a function that takes a const char*
+// by passing it a C-string literal.
+TEST(InvokeArgumentTest, FunctionWithCStringLiteral) {
+  Action<const char*(const char* (*)(const char* input, short n))>  // NOLINT
+      a = InvokeArgument<0>("Hi", Short(1));
+  EXPECT_STREQ("i", a.Perform(std::make_tuple(&Binary)));
+}
+
+// Tests using InvokeArgument with a function that takes a const reference.
+TEST(InvokeArgumentTest, ByConstReferenceFunction) {
+  Action<bool(bool (*function)(const std::string& s))> a =  // NOLINT
+      InvokeArgument<0>(std::string("Hi"));
+  // When action 'a' is constructed, it makes a copy of the temporary
+  // string object passed to it, so it's OK to use 'a' later, when the
+  // temporary object has already died.
+  EXPECT_TRUE(a.Perform(std::make_tuple(&ByConstRef)));
+}
+
+// Tests using InvokeArgument with ByRef() and a function that takes a
+// const reference.
+TEST(InvokeArgumentTest, ByExplicitConstReferenceFunction) {
+  Action<bool(bool (*)(const double& x))> a =  // NOLINT
+      InvokeArgument<0>(ByRef(g_double));
+  // The above line calls ByRef() on a const value.
+  EXPECT_TRUE(a.Perform(std::make_tuple(&ReferencesGlobalDouble)));
+
+  double x = 0;
+  a = InvokeArgument<0>(ByRef(x));  // This calls ByRef() on a non-const.
+  EXPECT_FALSE(a.Perform(std::make_tuple(&ReferencesGlobalDouble)));
+}
+
+// Tests DoAll(a1, a2).
+TEST(DoAllTest, TwoActions) {
+  int n = 0;
+  Action<int(int*)> a = DoAll(SetArgPointee<0>(1),  // NOLINT
+                              Return(2));
+  EXPECT_EQ(2, a.Perform(std::make_tuple(&n)));
+  EXPECT_EQ(1, n);
+}
+
+// Tests DoAll(a1, a2, a3).
+TEST(DoAllTest, ThreeActions) {
+  int m = 0, n = 0;
+  Action<int(int*, int*)> a = DoAll(SetArgPointee<0>(1),  // NOLINT
+                                    SetArgPointee<1>(2), Return(3));
+  EXPECT_EQ(3, a.Perform(std::make_tuple(&m, &n)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+}
+
+// Tests DoAll(a1, a2, a3, a4).
+TEST(DoAllTest, FourActions) {
+  int m = 0, n = 0;
+  char ch = '\0';
+  Action<int(int*, int*, char*)> a =  // NOLINT
+      DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2), SetArgPointee<2>('a'),
+            Return(3));
+  EXPECT_EQ(3, a.Perform(std::make_tuple(&m, &n, &ch)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', ch);
+}
+
+// Tests DoAll(a1, a2, a3, a4, a5).
+TEST(DoAllTest, FiveActions) {
+  int m = 0, n = 0;
+  char a = '\0', b = '\0';
+  Action<int(int*, int*, char*, char*)> action =  // NOLINT
+      DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2), SetArgPointee<2>('a'),
+            SetArgPointee<3>('b'), Return(3));
+  EXPECT_EQ(3, action.Perform(std::make_tuple(&m, &n, &a, &b)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', a);
+  EXPECT_EQ('b', b);
+}
+
+// Tests DoAll(a1, a2, ..., a6).
+TEST(DoAllTest, SixActions) {
+  int m = 0, n = 0;
+  char a = '\0', b = '\0', c = '\0';
+  Action<int(int*, int*, char*, char*, char*)> action =  // NOLINT
+      DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2), SetArgPointee<2>('a'),
+            SetArgPointee<3>('b'), SetArgPointee<4>('c'), Return(3));
+  EXPECT_EQ(3, action.Perform(std::make_tuple(&m, &n, &a, &b, &c)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', a);
+  EXPECT_EQ('b', b);
+  EXPECT_EQ('c', c);
+}
+
+// Tests DoAll(a1, a2, ..., a7).
+TEST(DoAllTest, SevenActions) {
+  int m = 0, n = 0;
+  char a = '\0', b = '\0', c = '\0', d = '\0';
+  Action<int(int*, int*, char*, char*, char*, char*)> action =  // NOLINT
+      DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2), SetArgPointee<2>('a'),
+            SetArgPointee<3>('b'), SetArgPointee<4>('c'), SetArgPointee<5>('d'),
+            Return(3));
+  EXPECT_EQ(3, action.Perform(std::make_tuple(&m, &n, &a, &b, &c, &d)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', a);
+  EXPECT_EQ('b', b);
+  EXPECT_EQ('c', c);
+  EXPECT_EQ('d', d);
+}
+
+// Tests DoAll(a1, a2, ..., a8).
+TEST(DoAllTest, EightActions) {
+  int m = 0, n = 0;
+  char a = '\0', b = '\0', c = '\0', d = '\0', e = '\0';
+  Action<int(int*, int*, char*, char*, char*, char*,  // NOLINT
+             char*)>
+      action =
+          DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2), SetArgPointee<2>('a'),
+                SetArgPointee<3>('b'), SetArgPointee<4>('c'),
+                SetArgPointee<5>('d'), SetArgPointee<6>('e'), Return(3));
+  EXPECT_EQ(3, action.Perform(std::make_tuple(&m, &n, &a, &b, &c, &d, &e)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', a);
+  EXPECT_EQ('b', b);
+  EXPECT_EQ('c', c);
+  EXPECT_EQ('d', d);
+  EXPECT_EQ('e', e);
+}
+
+// Tests DoAll(a1, a2, ..., a9).
+TEST(DoAllTest, NineActions) {
+  int m = 0, n = 0;
+  char a = '\0', b = '\0', c = '\0', d = '\0', e = '\0', f = '\0';
+  Action<int(int*, int*, char*, char*, char*, char*,  // NOLINT
+             char*, char*)>
+      action = DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2),
+                     SetArgPointee<2>('a'), SetArgPointee<3>('b'),
+                     SetArgPointee<4>('c'), SetArgPointee<5>('d'),
+                     SetArgPointee<6>('e'), SetArgPointee<7>('f'), Return(3));
+  EXPECT_EQ(3, action.Perform(std::make_tuple(&m, &n, &a, &b, &c, &d, &e, &f)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', a);
+  EXPECT_EQ('b', b);
+  EXPECT_EQ('c', c);
+  EXPECT_EQ('d', d);
+  EXPECT_EQ('e', e);
+  EXPECT_EQ('f', f);
+}
+
+// Tests DoAll(a1, a2, ..., a10).
+TEST(DoAllTest, TenActions) {
+  int m = 0, n = 0;
+  char a = '\0', b = '\0', c = '\0', d = '\0';
+  char e = '\0', f = '\0', g = '\0';
+  Action<int(int*, int*, char*, char*, char*, char*,  // NOLINT
+             char*, char*, char*)>
+      action =
+          DoAll(SetArgPointee<0>(1), SetArgPointee<1>(2), SetArgPointee<2>('a'),
+                SetArgPointee<3>('b'), SetArgPointee<4>('c'),
+                SetArgPointee<5>('d'), SetArgPointee<6>('e'),
+                SetArgPointee<7>('f'), SetArgPointee<8>('g'), Return(3));
+  EXPECT_EQ(
+      3, action.Perform(std::make_tuple(&m, &n, &a, &b, &c, &d, &e, &f, &g)));
+  EXPECT_EQ(1, m);
+  EXPECT_EQ(2, n);
+  EXPECT_EQ('a', a);
+  EXPECT_EQ('b', b);
+  EXPECT_EQ('c', c);
+  EXPECT_EQ('d', d);
+  EXPECT_EQ('e', e);
+  EXPECT_EQ('f', f);
+  EXPECT_EQ('g', g);
+}
+
+TEST(DoAllTest, NoArgs) {
+  bool ran_first = false;
+  Action<bool()> a =
+      DoAll([&] { ran_first = true; }, [&] { return ran_first; });
+  EXPECT_TRUE(a.Perform({}));
+}
+
+TEST(DoAllTest, MoveOnlyArgs) {
+  bool ran_first = false;
+  Action<int(std::unique_ptr<int>)> a =
+      DoAll(InvokeWithoutArgs([&] { ran_first = true; }),
+            [](std::unique_ptr<int> p) { return *p; });
+  EXPECT_EQ(7, a.Perform(std::make_tuple(std::unique_ptr<int>(new int(7)))));
+  EXPECT_TRUE(ran_first);
+}
+
+TEST(DoAllTest, ImplicitlyConvertsActionArguments) {
+  bool ran_first = false;
+  // Action<void(std::vector<int>)> isn't an
+  // Action<void(const std::vector<int>&) but can be converted.
+  Action<void(std::vector<int>)> first = [&] { ran_first = true; };
+  Action<int(std::vector<int>)> a =
+      DoAll(first, [](std::vector<int> arg) { return arg.front(); });
+  EXPECT_EQ(7, a.Perform(std::make_tuple(std::vector<int>{7})));
+  EXPECT_TRUE(ran_first);
+}
+
+// The ACTION*() macros trigger warning C4100 (unreferenced formal
+// parameter) in MSVC with -W4.  Unfortunately they cannot be fixed in
+// the macro definition, as the warnings are generated when the macro
+// is expanded and macro expansion cannot contain #pragma.  Therefore
+// we suppress them here.
+// Also suppress C4503 decorated name length exceeded, name was truncated
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#pragma warning(disable : 4503)
+#endif
+// Tests the ACTION*() macro family.
+
+// Tests that ACTION() can define an action that doesn't reference the
+// mock function arguments.
+ACTION(Return5) { return 5; }
+
+TEST(ActionMacroTest, WorksWhenNotReferencingArguments) {
+  Action<double()> a1 = Return5();
+  EXPECT_DOUBLE_EQ(5, a1.Perform(std::make_tuple()));
+
+  Action<int(double, bool)> a2 = Return5();
+  EXPECT_EQ(5, a2.Perform(std::make_tuple(1, true)));
+}
+
+// Tests that ACTION() can define an action that returns void.
+ACTION(IncrementArg1) { (*arg1)++; }
+
+TEST(ActionMacroTest, WorksWhenReturningVoid) {
+  Action<void(int, int*)> a1 = IncrementArg1();
+  int n = 0;
+  a1.Perform(std::make_tuple(5, &n));
+  EXPECT_EQ(1, n);
+}
+
+// Tests that the body of ACTION() can reference the type of the
+// argument.
+ACTION(IncrementArg2) {
+  StaticAssertTypeEq<int*, arg2_type>();
+  arg2_type temp = arg2;
+  (*temp)++;
+}
+
+TEST(ActionMacroTest, CanReferenceArgumentType) {
+  Action<void(int, bool, int*)> a1 = IncrementArg2();
+  int n = 0;
+  a1.Perform(std::make_tuple(5, false, &n));
+  EXPECT_EQ(1, n);
+}
+
+// Tests that the body of ACTION() can reference the argument tuple
+// via args_type and args.
+ACTION(Sum2) {
+  StaticAssertTypeEq<std::tuple<int, char, int*>, args_type>();
+  args_type args_copy = args;
+  return std::get<0>(args_copy) + std::get<1>(args_copy);
+}
+
+TEST(ActionMacroTest, CanReferenceArgumentTuple) {
+  Action<int(int, char, int*)> a1 = Sum2();
+  int dummy = 0;
+  EXPECT_EQ(11, a1.Perform(std::make_tuple(5, Char(6), &dummy)));
+}
+
+namespace {
+
+// Tests that the body of ACTION() can reference the mock function
+// type.
+int Dummy(bool flag) { return flag ? 1 : 0; }
+
+}  // namespace
+
+ACTION(InvokeDummy) {
+  StaticAssertTypeEq<int(bool), function_type>();
+  function_type* fp = &Dummy;
+  return (*fp)(true);
+}
+
+TEST(ActionMacroTest, CanReferenceMockFunctionType) {
+  Action<int(bool)> a1 = InvokeDummy();
+  EXPECT_EQ(1, a1.Perform(std::make_tuple(true)));
+  EXPECT_EQ(1, a1.Perform(std::make_tuple(false)));
+}
+
+// Tests that the body of ACTION() can reference the mock function's
+// return type.
+ACTION(InvokeDummy2) {
+  StaticAssertTypeEq<int, return_type>();
+  return_type result = Dummy(true);
+  return result;
+}
+
+TEST(ActionMacroTest, CanReferenceMockFunctionReturnType) {
+  Action<int(bool)> a1 = InvokeDummy2();
+  EXPECT_EQ(1, a1.Perform(std::make_tuple(true)));
+  EXPECT_EQ(1, a1.Perform(std::make_tuple(false)));
+}
+
+// Tests that ACTION() works for arguments passed by const reference.
+ACTION(ReturnAddrOfConstBoolReferenceArg) {
+  StaticAssertTypeEq<const bool&, arg1_type>();
+  return &arg1;
+}
+
+TEST(ActionMacroTest, WorksForConstReferenceArg) {
+  Action<const bool*(int, const bool&)> a = ReturnAddrOfConstBoolReferenceArg();
+  const bool b = false;
+  EXPECT_EQ(&b, a.Perform(std::tuple<int, const bool&>(0, b)));
+}
+
+// Tests that ACTION() works for arguments passed by non-const reference.
+ACTION(ReturnAddrOfIntReferenceArg) {
+  StaticAssertTypeEq<int&, arg0_type>();
+  return &arg0;
+}
+
+TEST(ActionMacroTest, WorksForNonConstReferenceArg) {
+  Action<int*(int&, bool, int)> a = ReturnAddrOfIntReferenceArg();
+  int n = 0;
+  EXPECT_EQ(&n, a.Perform(std::tuple<int&, bool, int>(n, true, 1)));
+}
+
+// Tests that ACTION() can be used in a namespace.
+namespace action_test {
+ACTION(Sum) { return arg0 + arg1; }
+}  // namespace action_test
+
+TEST(ActionMacroTest, WorksInNamespace) {
+  Action<int(int, int)> a1 = action_test::Sum();
+  EXPECT_EQ(3, a1.Perform(std::make_tuple(1, 2)));
+}
+
+// Tests that the same ACTION definition works for mock functions with
+// different argument numbers.
+ACTION(PlusTwo) { return arg0 + 2; }
+
+TEST(ActionMacroTest, WorksForDifferentArgumentNumbers) {
+  Action<int(int)> a1 = PlusTwo();
+  EXPECT_EQ(4, a1.Perform(std::make_tuple(2)));
+
+  Action<double(float, void*)> a2 = PlusTwo();
+  int dummy;
+  EXPECT_DOUBLE_EQ(6, a2.Perform(std::make_tuple(4.0f, &dummy)));
+}
+
+// Tests that ACTION_P can define a parameterized action.
+ACTION_P(Plus, n) { return arg0 + n; }
+
+TEST(ActionPMacroTest, DefinesParameterizedAction) {
+  Action<int(int m, bool t)> a1 = Plus(9);
+  EXPECT_EQ(10, a1.Perform(std::make_tuple(1, true)));
+}
+
+// Tests that the body of ACTION_P can reference the argument types
+// and the parameter type.
+ACTION_P(TypedPlus, n) {
+  arg0_type t1 = arg0;
+  n_type t2 = n;
+  return t1 + t2;
+}
+
+TEST(ActionPMacroTest, CanReferenceArgumentAndParameterTypes) {
+  Action<int(char m, bool t)> a1 = TypedPlus(9);
+  EXPECT_EQ(10, a1.Perform(std::make_tuple(Char(1), true)));
+}
+
+// Tests that a parameterized action can be used in any mock function
+// whose type is compatible.
+TEST(ActionPMacroTest, WorksInCompatibleMockFunction) {
+  Action<std::string(const std::string& s)> a1 = Plus("tail");
+  const std::string re = "re";
+  std::tuple<const std::string> dummy = std::make_tuple(re);
+  EXPECT_EQ("retail", a1.Perform(dummy));
+}
+
+// Tests that we can use ACTION*() to define actions overloaded on the
+// number of parameters.
+
+ACTION(OverloadedAction) { return arg0 ? arg1 : "hello"; }
+
+ACTION_P(OverloadedAction, default_value) {
+  return arg0 ? arg1 : default_value;
+}
+
+ACTION_P2(OverloadedAction, true_value, false_value) {
+  return arg0 ? true_value : false_value;
+}
+
+TEST(ActionMacroTest, CanDefineOverloadedActions) {
+  using MyAction = Action<const char*(bool, const char*)>;
+
+  const MyAction a1 = OverloadedAction();
+  EXPECT_STREQ("hello", a1.Perform(std::make_tuple(false, CharPtr("world"))));
+  EXPECT_STREQ("world", a1.Perform(std::make_tuple(true, CharPtr("world"))));
+
+  const MyAction a2 = OverloadedAction("hi");
+  EXPECT_STREQ("hi", a2.Perform(std::make_tuple(false, CharPtr("world"))));
+  EXPECT_STREQ("world", a2.Perform(std::make_tuple(true, CharPtr("world"))));
+
+  const MyAction a3 = OverloadedAction("hi", "you");
+  EXPECT_STREQ("hi", a3.Perform(std::make_tuple(true, CharPtr("world"))));
+  EXPECT_STREQ("you", a3.Perform(std::make_tuple(false, CharPtr("world"))));
+}
+
+// Tests ACTION_Pn where n >= 3.
+
+ACTION_P3(Plus, m, n, k) { return arg0 + m + n + k; }
+
+TEST(ActionPnMacroTest, WorksFor3Parameters) {
+  Action<double(int m, bool t)> a1 = Plus(100, 20, 3.4);
+  EXPECT_DOUBLE_EQ(3123.4, a1.Perform(std::make_tuple(3000, true)));
+
+  Action<std::string(const std::string& s)> a2 = Plus("tail", "-", ">");
+  const std::string re = "re";
+  std::tuple<const std::string> dummy = std::make_tuple(re);
+  EXPECT_EQ("retail->", a2.Perform(dummy));
+}
+
+ACTION_P4(Plus, p0, p1, p2, p3) { return arg0 + p0 + p1 + p2 + p3; }
+
+TEST(ActionPnMacroTest, WorksFor4Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4, a1.Perform(std::make_tuple(10)));
+}
+
+ACTION_P5(Plus, p0, p1, p2, p3, p4) { return arg0 + p0 + p1 + p2 + p3 + p4; }
+
+TEST(ActionPnMacroTest, WorksFor5Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4, 5);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4 + 5, a1.Perform(std::make_tuple(10)));
+}
+
+ACTION_P6(Plus, p0, p1, p2, p3, p4, p5) {
+  return arg0 + p0 + p1 + p2 + p3 + p4 + p5;
+}
+
+TEST(ActionPnMacroTest, WorksFor6Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4, 5, 6);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4 + 5 + 6, a1.Perform(std::make_tuple(10)));
+}
+
+ACTION_P7(Plus, p0, p1, p2, p3, p4, p5, p6) {
+  return arg0 + p0 + p1 + p2 + p3 + p4 + p5 + p6;
+}
+
+TEST(ActionPnMacroTest, WorksFor7Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4, 5, 6, 7);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4 + 5 + 6 + 7, a1.Perform(std::make_tuple(10)));
+}
+
+ACTION_P8(Plus, p0, p1, p2, p3, p4, p5, p6, p7) {
+  return arg0 + p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7;
+}
+
+TEST(ActionPnMacroTest, WorksFor8Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4, 5, 6, 7, 8);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8,
+            a1.Perform(std::make_tuple(10)));
+}
+
+ACTION_P9(Plus, p0, p1, p2, p3, p4, p5, p6, p7, p8) {
+  return arg0 + p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8;
+}
+
+TEST(ActionPnMacroTest, WorksFor9Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4, 5, 6, 7, 8, 9);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9,
+            a1.Perform(std::make_tuple(10)));
+}
+
+ACTION_P10(Plus, p0, p1, p2, p3, p4, p5, p6, p7, p8, last_param) {
+  arg0_type t0 = arg0;
+  last_param_type t9 = last_param;
+  return t0 + p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + t9;
+}
+
+TEST(ActionPnMacroTest, WorksFor10Parameters) {
+  Action<int(int)> a1 = Plus(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  EXPECT_EQ(10 + 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10,
+            a1.Perform(std::make_tuple(10)));
+}
+
+// Tests that the action body can promote the parameter types.
+
+ACTION_P2(PadArgument, prefix, suffix) {
+  // The following lines promote the two parameters to desired types.
+  std::string prefix_str(prefix);
+  char suffix_char = static_cast<char>(suffix);
+  return prefix_str + arg0 + suffix_char;
+}
+
+TEST(ActionPnMacroTest, SimpleTypePromotion) {
+  Action<std::string(const char*)> no_promo =
+      PadArgument(std::string("foo"), 'r');
+  Action<std::string(const char*)> promo =
+      PadArgument("foo", static_cast<int>('r'));
+  EXPECT_EQ("foobar", no_promo.Perform(std::make_tuple(CharPtr("ba"))));
+  EXPECT_EQ("foobar", promo.Perform(std::make_tuple(CharPtr("ba"))));
+}
+
+// Tests that we can partially restrict parameter types using a
+// straight-forward pattern.
+
+// Defines a generic action that doesn't restrict the types of its
+// parameters.
+ACTION_P3(ConcatImpl, a, b, c) {
+  std::stringstream ss;
+  ss << a << b << c;
+  return ss.str();
+}
+
+// Next, we try to restrict that either the first parameter is a
+// string, or the second parameter is an int.
+
+// Defines a partially specialized wrapper that restricts the first
+// parameter to std::string.
+template <typename T1, typename T2>
+// ConcatImplActionP3 is the class template ACTION_P3 uses to
+// implement ConcatImpl.  We shouldn't change the name as this
+// pattern requires the user to use it directly.
+ConcatImplActionP3<std::string, T1, T2> Concat(const std::string& a, T1 b,
+                                               T2 c) {
+  GTEST_INTENTIONAL_CONST_COND_PUSH_()
+  if (true) {
+    GTEST_INTENTIONAL_CONST_COND_POP_()
+    // This branch verifies that ConcatImpl() can be invoked without
+    // explicit template arguments.
+    return ConcatImpl(a, b, c);
+  } else {
+    // This branch verifies that ConcatImpl() can also be invoked with
+    // explicit template arguments.  It doesn't really need to be
+    // executed as this is a compile-time verification.
+    return ConcatImpl<std::string, T1, T2>(a, b, c);
+  }
+}
+
+// Defines another partially specialized wrapper that restricts the
+// second parameter to int.
+template <typename T1, typename T2>
+ConcatImplActionP3<T1, int, T2> Concat(T1 a, int b, T2 c) {
+  return ConcatImpl(a, b, c);
+}
+
+TEST(ActionPnMacroTest, CanPartiallyRestrictParameterTypes) {
+  Action<const std::string()> a1 = Concat("Hello", "1", 2);
+  EXPECT_EQ("Hello12", a1.Perform(std::make_tuple()));
+
+  a1 = Concat(1, 2, 3);
+  EXPECT_EQ("123", a1.Perform(std::make_tuple()));
+}
+
+// Verifies the type of an ACTION*.
+
+ACTION(DoFoo) {}
+ACTION_P(DoFoo, p) {}
+ACTION_P2(DoFoo, p0, p1) {}
+
+TEST(ActionPnMacroTest, TypesAreCorrect) {
+  // DoFoo() must be assignable to a DoFooAction variable.
+  DoFooAction a0 = DoFoo();
+
+  // DoFoo(1) must be assignable to a DoFooActionP variable.
+  DoFooActionP<int> a1 = DoFoo(1);
+
+  // DoFoo(p1, ..., pk) must be assignable to a DoFooActionPk
+  // variable, and so on.
+  DoFooActionP2<int, char> a2 = DoFoo(1, '2');
+  PlusActionP3<int, int, char> a3 = Plus(1, 2, '3');
+  PlusActionP4<int, int, int, char> a4 = Plus(1, 2, 3, '4');
+  PlusActionP5<int, int, int, int, char> a5 = Plus(1, 2, 3, 4, '5');
+  PlusActionP6<int, int, int, int, int, char> a6 = Plus(1, 2, 3, 4, 5, '6');
+  PlusActionP7<int, int, int, int, int, int, char> a7 =
+      Plus(1, 2, 3, 4, 5, 6, '7');
+  PlusActionP8<int, int, int, int, int, int, int, char> a8 =
+      Plus(1, 2, 3, 4, 5, 6, 7, '8');
+  PlusActionP9<int, int, int, int, int, int, int, int, char> a9 =
+      Plus(1, 2, 3, 4, 5, 6, 7, 8, '9');
+  PlusActionP10<int, int, int, int, int, int, int, int, int, char> a10 =
+      Plus(1, 2, 3, 4, 5, 6, 7, 8, 9, '0');
+
+  // Avoid "unused variable" warnings.
+  (void)a0;
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  (void)a5;
+  (void)a6;
+  (void)a7;
+  (void)a8;
+  (void)a9;
+  (void)a10;
+}
+
+// Tests that an ACTION_P*() action can be explicitly instantiated
+// with reference-typed parameters.
+
+ACTION_P(Plus1, x) { return x; }
+ACTION_P2(Plus2, x, y) { return x + y; }
+ACTION_P3(Plus3, x, y, z) { return x + y + z; }
+ACTION_P10(Plus10, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) {
+  return a0 + a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9;
+}
+
+TEST(ActionPnMacroTest, CanExplicitlyInstantiateWithReferenceTypes) {
+  int x = 1, y = 2, z = 3;
+  const std::tuple<> empty = std::make_tuple();
+
+  Action<int()> a = Plus1<int&>(x);
+  EXPECT_EQ(1, a.Perform(empty));
+
+  a = Plus2<const int&, int&>(x, y);
+  EXPECT_EQ(3, a.Perform(empty));
+
+  a = Plus3<int&, const int&, int&>(x, y, z);
+  EXPECT_EQ(6, a.Perform(empty));
+
+  int n[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  a = Plus10<const int&, int&, const int&, int&, const int&, int&, const int&,
+             int&, const int&, int&>(n[0], n[1], n[2], n[3], n[4], n[5], n[6],
+                                     n[7], n[8], n[9]);
+  EXPECT_EQ(55, a.Perform(empty));
+}
+
+class TenArgConstructorClass {
+ public:
+  TenArgConstructorClass(int a1, int a2, int a3, int a4, int a5, int a6, int a7,
+                         int a8, int a9, int a10)
+      : value_(a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10) {}
+  int value_;
+};
+
+// Tests that ACTION_TEMPLATE works when there is no value parameter.
+ACTION_TEMPLATE(CreateNew, HAS_1_TEMPLATE_PARAMS(typename, T),
+                AND_0_VALUE_PARAMS()) {
+  return new T;
+}
+
+TEST(ActionTemplateTest, WorksWithoutValueParam) {
+  const Action<int*()> a = CreateNew<int>();
+  int* p = a.Perform(std::make_tuple());
+  delete p;
+}
+
+// Tests that ACTION_TEMPLATE works when there are value parameters.
+ACTION_TEMPLATE(CreateNew, HAS_1_TEMPLATE_PARAMS(typename, T),
+                AND_1_VALUE_PARAMS(a0)) {
+  return new T(a0);
+}
+
+TEST(ActionTemplateTest, WorksWithValueParams) {
+  const Action<int*()> a = CreateNew<int>(42);
+  int* p = a.Perform(std::make_tuple());
+  EXPECT_EQ(42, *p);
+  delete p;
+}
+
+// Tests that ACTION_TEMPLATE works for integral template parameters.
+ACTION_TEMPLATE(MyDeleteArg, HAS_1_TEMPLATE_PARAMS(int, k),
+                AND_0_VALUE_PARAMS()) {
+  delete std::get<k>(args);
+}
+
+// Resets a bool variable in the destructor.
+class BoolResetter {
+ public:
+  explicit BoolResetter(bool* value) : value_(value) {}
+  ~BoolResetter() { *value_ = false; }
+
+ private:
+  bool* value_;
+};
+
+TEST(ActionTemplateTest, WorksForIntegralTemplateParams) {
+  const Action<void(int*, BoolResetter*)> a = MyDeleteArg<1>();
+  int n = 0;
+  bool b = true;
+  auto* resetter = new BoolResetter(&b);
+  a.Perform(std::make_tuple(&n, resetter));
+  EXPECT_FALSE(b);  // Verifies that resetter is deleted.
+}
+
+// Tests that ACTION_TEMPLATES works for template template parameters.
+ACTION_TEMPLATE(ReturnSmartPointer,
+                HAS_1_TEMPLATE_PARAMS(template <typename Pointee> class,
+                                      Pointer),
+                AND_1_VALUE_PARAMS(pointee)) {
+  return Pointer<pointee_type>(new pointee_type(pointee));
+}
+
+TEST(ActionTemplateTest, WorksForTemplateTemplateParameters) {
+  const Action<std::shared_ptr<int>()> a =
+      ReturnSmartPointer<std::shared_ptr>(42);
+  std::shared_ptr<int> p = a.Perform(std::make_tuple());
+  EXPECT_EQ(42, *p);
+}
+
+// Tests that ACTION_TEMPLATE works for 10 template parameters.
+template <typename T1, typename T2, typename T3, int k4, bool k5,
+          unsigned int k6, typename T7, typename T8, typename T9>
+struct GiantTemplate {
+ public:
+  explicit GiantTemplate(int a_value) : value(a_value) {}
+  int value;
+};
+
+ACTION_TEMPLATE(ReturnGiant,
+                HAS_10_TEMPLATE_PARAMS(typename, T1, typename, T2, typename, T3,
+                                       int, k4, bool, k5, unsigned int, k6,
+                                       class, T7, class, T8, class, T9,
+                                       template <typename T> class, T10),
+                AND_1_VALUE_PARAMS(value)) {
+  return GiantTemplate<T10<T1>, T2, T3, k4, k5, k6, T7, T8, T9>(value);
+}
+
+TEST(ActionTemplateTest, WorksFor10TemplateParameters) {
+  using Giant = GiantTemplate<std::shared_ptr<int>, bool, double, 5, true, 6,
+                              char, unsigned, int>;
+  const Action<Giant()> a = ReturnGiant<int, bool, double, 5, true, 6, char,
+                                        unsigned, int, std::shared_ptr>(42);
+  Giant giant = a.Perform(std::make_tuple());
+  EXPECT_EQ(42, giant.value);
+}
+
+// Tests that ACTION_TEMPLATE works for 10 value parameters.
+ACTION_TEMPLATE(ReturnSum, HAS_1_TEMPLATE_PARAMS(typename, Number),
+                AND_10_VALUE_PARAMS(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)) {
+  return static_cast<Number>(v1) + v2 + v3 + v4 + v5 + v6 + v7 + v8 + v9 + v10;
+}
+
+TEST(ActionTemplateTest, WorksFor10ValueParameters) {
+  const Action<int()> a = ReturnSum<int>(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+  EXPECT_EQ(55, a.Perform(std::make_tuple()));
+}
+
+// Tests that ACTION_TEMPLATE and ACTION/ACTION_P* can be overloaded
+// on the number of value parameters.
+
+ACTION(ReturnSum) { return 0; }
+
+ACTION_P(ReturnSum, x) { return x; }
+
+ACTION_TEMPLATE(ReturnSum, HAS_1_TEMPLATE_PARAMS(typename, Number),
+                AND_2_VALUE_PARAMS(v1, v2)) {
+  return static_cast<Number>(v1) + v2;
+}
+
+ACTION_TEMPLATE(ReturnSum, HAS_1_TEMPLATE_PARAMS(typename, Number),
+                AND_3_VALUE_PARAMS(v1, v2, v3)) {
+  return static_cast<Number>(v1) + v2 + v3;
+}
+
+ACTION_TEMPLATE(ReturnSum, HAS_2_TEMPLATE_PARAMS(typename, Number, int, k),
+                AND_4_VALUE_PARAMS(v1, v2, v3, v4)) {
+  return static_cast<Number>(v1) + v2 + v3 + v4 + k;
+}
+
+TEST(ActionTemplateTest, CanBeOverloadedOnNumberOfValueParameters) {
+  const Action<int()> a0 = ReturnSum();
+  const Action<int()> a1 = ReturnSum(1);
+  const Action<int()> a2 = ReturnSum<int>(1, 2);
+  const Action<int()> a3 = ReturnSum<int>(1, 2, 3);
+  const Action<int()> a4 = ReturnSum<int, 10000>(2000, 300, 40, 5);
+  EXPECT_EQ(0, a0.Perform(std::make_tuple()));
+  EXPECT_EQ(1, a1.Perform(std::make_tuple()));
+  EXPECT_EQ(3, a2.Perform(std::make_tuple()));
+  EXPECT_EQ(6, a3.Perform(std::make_tuple()));
+  EXPECT_EQ(12345, a4.Perform(std::make_tuple()));
+}
+
+}  // namespace gmock_more_actions_test
+}  // namespace testing
+```
+
+### `gmock-nice-strict_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-nice-strict_test.cc`
+
+
+```cpp
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#include "gmock/gmock-nice-strict.h"
+
+#include <string>
+#include <utility>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+
+// This must not be defined inside the ::testing namespace, or it will
+// clash with ::testing::Mock.
+class Mock {
+ public:
+  Mock() {}
+
+  MOCK_METHOD0(DoThis, void());
+
+ private:
+  Mock(const Mock&) = delete;
+  Mock& operator=(const Mock&) = delete;
+};
+
+namespace testing {
+namespace gmock_nice_strict_test {
+
+using testing::HasSubstr;
+using testing::NaggyMock;
+using testing::NiceMock;
+using testing::StrictMock;
+
+#if GTEST_HAS_STREAM_REDIRECTION
+using testing::internal::CaptureStdout;
+using testing::internal::GetCapturedStdout;
+#endif
+
+// Class without default constructor.
+class NotDefaultConstructible {
+ public:
+  explicit NotDefaultConstructible(int) {}
+};
+
+class CallsMockMethodInDestructor {
+ public:
+  ~CallsMockMethodInDestructor() { OnDestroy(); }
+  MOCK_METHOD(void, OnDestroy, ());
+};
+
+// Defines some mock classes needed by the tests.
+
+class Foo {
+ public:
+  virtual ~Foo() {}
+
+  virtual void DoThis() = 0;
+  virtual int DoThat(bool flag) = 0;
+};
+
+class MockFoo : public Foo {
+ public:
+  MockFoo() {}
+  void Delete() { delete this; }
+
+  MOCK_METHOD0(DoThis, void());
+  MOCK_METHOD1(DoThat, int(bool flag));
+  MOCK_METHOD0(ReturnNonDefaultConstructible, NotDefaultConstructible());
+
+ private:
+  MockFoo(const MockFoo&) = delete;
+  MockFoo& operator=(const MockFoo&) = delete;
+};
+
+class MockBar {
+ public:
+  explicit MockBar(const std::string& s) : str_(s) {}
+
+  MockBar(char a1, char a2, std::string a3, std::string a4, int a5, int a6,
+          const std::string& a7, const std::string& a8, bool a9, bool a10) {
+    str_ = std::string() + a1 + a2 + a3 + a4 + static_cast<char>(a5) +
+           static_cast<char>(a6) + a7 + a8 + (a9 ? 'T' : 'F') +
+           (a10 ? 'T' : 'F');
+  }
+
+  virtual ~MockBar() {}
+
+  const std::string& str() const { return str_; }
+
+  MOCK_METHOD0(This, int());
+  MOCK_METHOD2(That, std::string(int, bool));
+
+ private:
+  std::string str_;
+
+  MockBar(const MockBar&) = delete;
+  MockBar& operator=(const MockBar&) = delete;
+};
+
+class MockBaz {
+ public:
+  class MoveOnly {
+   public:
+    MoveOnly() = default;
+
+    MoveOnly(const MoveOnly&) = delete;
+    MoveOnly& operator=(const MoveOnly&) = delete;
+
+    MoveOnly(MoveOnly&&) = default;
+    MoveOnly& operator=(MoveOnly&&) = default;
+  };
+
+  MockBaz(MoveOnly) {}
+};
+
+#if GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that a raw mock generates warnings for uninteresting calls.
+TEST(RawMockTest, WarningForUninterestingCall) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "warning");
+
+  MockFoo raw_foo;
+
+  CaptureStdout();
+  raw_foo.DoThis();
+  raw_foo.DoThat(true);
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+// Tests that a raw mock generates warnings for uninteresting calls
+// that delete the mock object.
+TEST(RawMockTest, WarningForUninterestingCallAfterDeath) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "warning");
+
+  MockFoo* const raw_foo = new MockFoo;
+
+  ON_CALL(*raw_foo, DoThis()).WillByDefault(Invoke(raw_foo, &MockFoo::Delete));
+
+  CaptureStdout();
+  raw_foo->DoThis();
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+// Tests that a raw mock generates informational logs for
+// uninteresting calls.
+TEST(RawMockTest, InfoForUninterestingCall) {
+  MockFoo raw_foo;
+
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "info");
+  CaptureStdout();
+  raw_foo.DoThis();
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+TEST(RawMockTest, IsNaggy_IsNice_IsStrict) {
+  MockFoo raw_foo;
+  EXPECT_TRUE(Mock::IsNaggy(&raw_foo));
+  EXPECT_FALSE(Mock::IsNice(&raw_foo));
+  EXPECT_FALSE(Mock::IsStrict(&raw_foo));
+}
+
+// Tests that a nice mock generates no warning for uninteresting calls.
+TEST(NiceMockTest, NoWarningForUninterestingCall) {
+  NiceMock<MockFoo> nice_foo;
+
+  CaptureStdout();
+  nice_foo.DoThis();
+  nice_foo.DoThat(true);
+  EXPECT_EQ("", GetCapturedStdout());
+}
+
+// Tests that a nice mock generates no warning for uninteresting calls
+// that delete the mock object.
+TEST(NiceMockTest, NoWarningForUninterestingCallAfterDeath) {
+  NiceMock<MockFoo>* const nice_foo = new NiceMock<MockFoo>;
+
+  ON_CALL(*nice_foo, DoThis())
+      .WillByDefault(Invoke(nice_foo, &MockFoo::Delete));
+
+  CaptureStdout();
+  nice_foo->DoThis();
+  EXPECT_EQ("", GetCapturedStdout());
+}
+
+// Tests that a nice mock generates informational logs for
+// uninteresting calls.
+TEST(NiceMockTest, InfoForUninterestingCall) {
+  NiceMock<MockFoo> nice_foo;
+
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "info");
+  CaptureStdout();
+  nice_foo.DoThis();
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that a nice mock allows expected calls.
+TEST(NiceMockTest, AllowsExpectedCall) {
+  NiceMock<MockFoo> nice_foo;
+
+  EXPECT_CALL(nice_foo, DoThis());
+  nice_foo.DoThis();
+}
+
+// Tests that an unexpected call on a nice mock which returns a
+// not-default-constructible type throws an exception and the exception contains
+// the method's name.
+TEST(NiceMockTest, ThrowsExceptionForUnknownReturnTypes) {
+  NiceMock<MockFoo> nice_foo;
+#if GTEST_HAS_EXCEPTIONS
+  try {
+    nice_foo.ReturnNonDefaultConstructible();
+    FAIL();
+  } catch (const std::runtime_error& ex) {
+    EXPECT_THAT(ex.what(), HasSubstr("ReturnNonDefaultConstructible"));
+  }
+#else
+  EXPECT_DEATH_IF_SUPPORTED({ nice_foo.ReturnNonDefaultConstructible(); }, "");
+#endif
+}
+
+// Tests that an unexpected call on a nice mock fails.
+TEST(NiceMockTest, UnexpectedCallFails) {
+  NiceMock<MockFoo> nice_foo;
+
+  EXPECT_CALL(nice_foo, DoThis()).Times(0);
+  EXPECT_NONFATAL_FAILURE(nice_foo.DoThis(), "called more times than expected");
+}
+
+// Tests that NiceMock works with a mock class that has a non-default
+// constructor.
+TEST(NiceMockTest, NonDefaultConstructor) {
+  NiceMock<MockBar> nice_bar("hi");
+  EXPECT_EQ("hi", nice_bar.str());
+
+  nice_bar.This();
+  nice_bar.That(5, true);
+}
+
+// Tests that NiceMock works with a mock class that has a 10-ary
+// non-default constructor.
+TEST(NiceMockTest, NonDefaultConstructor10) {
+  NiceMock<MockBar> nice_bar('a', 'b', "c", "d", 'e', 'f', "g", "h", true,
+                             false);
+  EXPECT_EQ("abcdefghTF", nice_bar.str());
+
+  nice_bar.This();
+  nice_bar.That(5, true);
+}
+
+TEST(NiceMockTest, AllowLeak) {
+  NiceMock<MockFoo>* leaked = new NiceMock<MockFoo>;
+  Mock::AllowLeak(leaked);
+  EXPECT_CALL(*leaked, DoThis());
+  leaked->DoThis();
+}
+
+TEST(NiceMockTest, MoveOnlyConstructor) {
+  NiceMock<MockBaz> nice_baz(MockBaz::MoveOnly{});
+}
+
+// Tests that NiceMock<Mock> compiles where Mock is a user-defined
+// class (as opposed to ::testing::Mock).
+TEST(NiceMockTest, AcceptsClassNamedMock) {
+  NiceMock< ::Mock> nice;
+  EXPECT_CALL(nice, DoThis());
+  nice.DoThis();
+}
+
+TEST(NiceMockTest, IsNiceInDestructor) {
+  {
+    NiceMock<CallsMockMethodInDestructor> nice_on_destroy;
+    // Don't add an expectation for the call before the mock goes out of scope.
+  }
+}
+
+TEST(NiceMockTest, IsNaggy_IsNice_IsStrict) {
+  NiceMock<MockFoo> nice_foo;
+  EXPECT_FALSE(Mock::IsNaggy(&nice_foo));
+  EXPECT_TRUE(Mock::IsNice(&nice_foo));
+  EXPECT_FALSE(Mock::IsStrict(&nice_foo));
+}
+
+#if GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that a naggy mock generates warnings for uninteresting calls.
+TEST(NaggyMockTest, WarningForUninterestingCall) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "warning");
+
+  NaggyMock<MockFoo> naggy_foo;
+
+  CaptureStdout();
+  naggy_foo.DoThis();
+  naggy_foo.DoThat(true);
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+// Tests that a naggy mock generates a warning for an uninteresting call
+// that deletes the mock object.
+TEST(NaggyMockTest, WarningForUninterestingCallAfterDeath) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "warning");
+
+  NaggyMock<MockFoo>* const naggy_foo = new NaggyMock<MockFoo>;
+
+  ON_CALL(*naggy_foo, DoThis())
+      .WillByDefault(Invoke(naggy_foo, &MockFoo::Delete));
+
+  CaptureStdout();
+  naggy_foo->DoThis();
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that a naggy mock allows expected calls.
+TEST(NaggyMockTest, AllowsExpectedCall) {
+  NaggyMock<MockFoo> naggy_foo;
+
+  EXPECT_CALL(naggy_foo, DoThis());
+  naggy_foo.DoThis();
+}
+
+// Tests that an unexpected call on a naggy mock fails.
+TEST(NaggyMockTest, UnexpectedCallFails) {
+  NaggyMock<MockFoo> naggy_foo;
+
+  EXPECT_CALL(naggy_foo, DoThis()).Times(0);
+  EXPECT_NONFATAL_FAILURE(naggy_foo.DoThis(),
+                          "called more times than expected");
+}
+
+// Tests that NaggyMock works with a mock class that has a non-default
+// constructor.
+TEST(NaggyMockTest, NonDefaultConstructor) {
+  NaggyMock<MockBar> naggy_bar("hi");
+  EXPECT_EQ("hi", naggy_bar.str());
+
+  naggy_bar.This();
+  naggy_bar.That(5, true);
+}
+
+// Tests that NaggyMock works with a mock class that has a 10-ary
+// non-default constructor.
+TEST(NaggyMockTest, NonDefaultConstructor10) {
+  NaggyMock<MockBar> naggy_bar('0', '1', "2", "3", '4', '5', "6", "7", true,
+                               false);
+  EXPECT_EQ("01234567TF", naggy_bar.str());
+
+  naggy_bar.This();
+  naggy_bar.That(5, true);
+}
+
+TEST(NaggyMockTest, AllowLeak) {
+  NaggyMock<MockFoo>* leaked = new NaggyMock<MockFoo>;
+  Mock::AllowLeak(leaked);
+  EXPECT_CALL(*leaked, DoThis());
+  leaked->DoThis();
+}
+
+TEST(NaggyMockTest, MoveOnlyConstructor) {
+  NaggyMock<MockBaz> naggy_baz(MockBaz::MoveOnly{});
+}
+
+// Tests that NaggyMock<Mock> compiles where Mock is a user-defined
+// class (as opposed to ::testing::Mock).
+TEST(NaggyMockTest, AcceptsClassNamedMock) {
+  NaggyMock< ::Mock> naggy;
+  EXPECT_CALL(naggy, DoThis());
+  naggy.DoThis();
+}
+
+TEST(NaggyMockTest, IsNaggyInDestructor) {
+  const std::string saved_flag = GMOCK_FLAG_GET(verbose);
+  GMOCK_FLAG_SET(verbose, "warning");
+  CaptureStdout();
+
+  {
+    NaggyMock<CallsMockMethodInDestructor> naggy_on_destroy;
+    // Don't add an expectation for the call before the mock goes out of scope.
+  }
+
+  EXPECT_THAT(GetCapturedStdout(),
+              HasSubstr("Uninteresting mock function call"));
+
+  GMOCK_FLAG_SET(verbose, saved_flag);
+}
+
+TEST(NaggyMockTest, IsNaggy_IsNice_IsStrict) {
+  NaggyMock<MockFoo> naggy_foo;
+  EXPECT_TRUE(Mock::IsNaggy(&naggy_foo));
+  EXPECT_FALSE(Mock::IsNice(&naggy_foo));
+  EXPECT_FALSE(Mock::IsStrict(&naggy_foo));
+}
+
+// Tests that a strict mock allows expected calls.
+TEST(StrictMockTest, AllowsExpectedCall) {
+  StrictMock<MockFoo> strict_foo;
+
+  EXPECT_CALL(strict_foo, DoThis());
+  strict_foo.DoThis();
+}
+
+// Tests that an unexpected call on a strict mock fails.
+TEST(StrictMockTest, UnexpectedCallFails) {
+  StrictMock<MockFoo> strict_foo;
+
+  EXPECT_CALL(strict_foo, DoThis()).Times(0);
+  EXPECT_NONFATAL_FAILURE(strict_foo.DoThis(),
+                          "called more times than expected");
+}
+
+// Tests that an uninteresting call on a strict mock fails.
+TEST(StrictMockTest, UninterestingCallFails) {
+  StrictMock<MockFoo> strict_foo;
+
+  EXPECT_NONFATAL_FAILURE(strict_foo.DoThis(),
+                          "Uninteresting mock function call");
+}
+
+// Tests that an uninteresting call on a strict mock fails, even if
+// the call deletes the mock object.
+TEST(StrictMockTest, UninterestingCallFailsAfterDeath) {
+  StrictMock<MockFoo>* const strict_foo = new StrictMock<MockFoo>;
+
+  ON_CALL(*strict_foo, DoThis())
+      .WillByDefault(Invoke(strict_foo, &MockFoo::Delete));
+
+  EXPECT_NONFATAL_FAILURE(strict_foo->DoThis(),
+                          "Uninteresting mock function call");
+}
+
+// Tests that StrictMock works with a mock class that has a
+// non-default constructor.
+TEST(StrictMockTest, NonDefaultConstructor) {
+  StrictMock<MockBar> strict_bar("hi");
+  EXPECT_EQ("hi", strict_bar.str());
+
+  EXPECT_NONFATAL_FAILURE(strict_bar.That(5, true),
+                          "Uninteresting mock function call");
+}
+
+// Tests that StrictMock works with a mock class that has a 10-ary
+// non-default constructor.
+TEST(StrictMockTest, NonDefaultConstructor10) {
+  StrictMock<MockBar> strict_bar('a', 'b', "c", "d", 'e', 'f', "g", "h", true,
+                                 false);
+  EXPECT_EQ("abcdefghTF", strict_bar.str());
+
+  EXPECT_NONFATAL_FAILURE(strict_bar.That(5, true),
+                          "Uninteresting mock function call");
+}
+
+TEST(StrictMockTest, AllowLeak) {
+  StrictMock<MockFoo>* leaked = new StrictMock<MockFoo>;
+  Mock::AllowLeak(leaked);
+  EXPECT_CALL(*leaked, DoThis());
+  leaked->DoThis();
+}
+
+TEST(StrictMockTest, MoveOnlyConstructor) {
+  StrictMock<MockBaz> strict_baz(MockBaz::MoveOnly{});
+}
+
+// Tests that StrictMock<Mock> compiles where Mock is a user-defined
+// class (as opposed to ::testing::Mock).
+TEST(StrictMockTest, AcceptsClassNamedMock) {
+  StrictMock< ::Mock> strict;
+  EXPECT_CALL(strict, DoThis());
+  strict.DoThis();
+}
+
+TEST(StrictMockTest, IsStrictInDestructor) {
+  EXPECT_NONFATAL_FAILURE(
+      {
+        StrictMock<CallsMockMethodInDestructor> strict_on_destroy;
+        // Don't add an expectation for the call before the mock goes out of
+        // scope.
+      },
+      "Uninteresting mock function call");
+}
+
+TEST(StrictMockTest, IsNaggy_IsNice_IsStrict) {
+  StrictMock<MockFoo> strict_foo;
+  EXPECT_FALSE(Mock::IsNaggy(&strict_foo));
+  EXPECT_FALSE(Mock::IsNice(&strict_foo));
+  EXPECT_TRUE(Mock::IsStrict(&strict_foo));
+}
+
+}  // namespace gmock_nice_strict_test
+}  // namespace testing
+```
+
+### `gmock-port_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-port_test.cc`
+
+
+```cpp
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the internal cross-platform support utilities.
+
+#include "gmock/internal/gmock-port.h"
+
+#include "gtest/gtest.h"
+
+// NOTE: if this file is left without tests for some reason, put a dummy
+// test here to make references to symbols in the gtest library and avoid
+// 'undefined symbol' linker errors in gmock_main:
+
+TEST(DummyTest, Dummy) {}
+```
+
+### `gmock-pp-string_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-pp-string_test.cc`
+
+
+```cpp
+// Copyright 2018, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the internal preprocessor macro library.
+#include <string>
+
+#include "gmock/gmock.h"
+#include "gmock/internal/gmock-pp.h"
+
+namespace testing {
+namespace {
+
+// Matcher to verify that to strings are identical up to whitespace
+// Not 100% correct, because it treats "AB" as equal to "A B".
+::testing::Matcher<const std::string&> SameExceptSpaces(const std::string& s) {
+  auto remove_spaces = [](std::string to_split) {
+    to_split.erase(std::remove(to_split.begin(), to_split.end(), ' '),
+                   to_split.end());
+    return to_split;
+  };
+  return ::testing::ResultOf(remove_spaces, remove_spaces(s));
+}
+
+// Verify that a macro expands to a given text. Ignores whitespace difference.
+// In MSVC, GMOCK_PP_STRINGIZE() returns nothing, rather than "". So concatenate
+// with an empty string.
+#define EXPECT_EXPANSION(Result, Macro) \
+  EXPECT_THAT("" GMOCK_PP_STRINGIZE(Macro), SameExceptSpaces(Result))
+
+TEST(Macros, Cat) {
+  EXPECT_EXPANSION("14", GMOCK_PP_CAT(1, 4));
+  EXPECT_EXPANSION("+=", GMOCK_PP_CAT(+, =));
+}
+
+TEST(Macros, Narg) {
+  EXPECT_EXPANSION("1", GMOCK_PP_NARG());
+  EXPECT_EXPANSION("1", GMOCK_PP_NARG(x));
+  EXPECT_EXPANSION("2", GMOCK_PP_NARG(x, y));
+  EXPECT_EXPANSION("3", GMOCK_PP_NARG(x, y, z));
+  EXPECT_EXPANSION("4", GMOCK_PP_NARG(x, y, z, w));
+
+  EXPECT_EXPANSION("0", GMOCK_PP_NARG0());
+  EXPECT_EXPANSION("1", GMOCK_PP_NARG0(x));
+  EXPECT_EXPANSION("2", GMOCK_PP_NARG0(x, y));
+}
+
+TEST(Macros, Comma) {
+  EXPECT_EXPANSION("0", GMOCK_PP_HAS_COMMA());
+  EXPECT_EXPANSION("1", GMOCK_PP_HAS_COMMA(, ));
+  EXPECT_EXPANSION("0", GMOCK_PP_HAS_COMMA((, )));
+}
+
+TEST(Macros, IsEmpty) {
+  EXPECT_EXPANSION("1", GMOCK_PP_IS_EMPTY());
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_EMPTY(, ));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_EMPTY(a));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_EMPTY(()));
+
+#define GMOCK_PP_INTERNAL_IS_EMPTY_TEST_1
+  EXPECT_EXPANSION("1", GMOCK_PP_IS_EMPTY(GMOCK_PP_INTERNAL_IS_EMPTY_TEST_1));
+}
+
+TEST(Macros, If) {
+  EXPECT_EXPANSION("1", GMOCK_PP_IF(1, 1, 2));
+  EXPECT_EXPANSION("2", GMOCK_PP_IF(0, 1, 2));
+}
+
+TEST(Macros, HeadTail) {
+  EXPECT_EXPANSION("1", GMOCK_PP_HEAD(1));
+  EXPECT_EXPANSION("1", GMOCK_PP_HEAD(1, 2));
+  EXPECT_EXPANSION("1", GMOCK_PP_HEAD(1, 2, 3));
+
+  EXPECT_EXPANSION("", GMOCK_PP_TAIL(1));
+  EXPECT_EXPANSION("2", GMOCK_PP_TAIL(1, 2));
+  EXPECT_EXPANSION("2", GMOCK_PP_HEAD(GMOCK_PP_TAIL(1, 2, 3)));
+}
+
+TEST(Macros, Parentheses) {
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_BEGIN_PARENS(sss));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_BEGIN_PARENS(sss()));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_BEGIN_PARENS(sss() sss));
+  EXPECT_EXPANSION("1", GMOCK_PP_IS_BEGIN_PARENS((sss)));
+  EXPECT_EXPANSION("1", GMOCK_PP_IS_BEGIN_PARENS((sss)ss));
+
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_ENCLOSED_PARENS(sss));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_ENCLOSED_PARENS(sss()));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_ENCLOSED_PARENS(sss() sss));
+  EXPECT_EXPANSION("1", GMOCK_PP_IS_ENCLOSED_PARENS((sss)));
+  EXPECT_EXPANSION("0", GMOCK_PP_IS_ENCLOSED_PARENS((sss)ss));
+
+  EXPECT_EXPANSION("1 + 1", GMOCK_PP_REMOVE_PARENS((1 + 1)));
+}
+
+TEST(Macros, Increment) {
+  EXPECT_EXPANSION("1", GMOCK_PP_INC(0));
+  EXPECT_EXPANSION("2", GMOCK_PP_INC(1));
+  EXPECT_EXPANSION("3", GMOCK_PP_INC(2));
+  EXPECT_EXPANSION("4", GMOCK_PP_INC(3));
+  EXPECT_EXPANSION("5", GMOCK_PP_INC(4));
+
+  EXPECT_EXPANSION("16", GMOCK_PP_INC(15));
+}
+
+#define JOINER_CAT(a, b) a##b
+#define JOINER(_N, _Data, _Elem) JOINER_CAT(_Data, _N) = _Elem
+
+TEST(Macros, Repeat) {
+  EXPECT_EXPANSION("", GMOCK_PP_REPEAT(JOINER, X, 0));
+  EXPECT_EXPANSION("X0=", GMOCK_PP_REPEAT(JOINER, X, 1));
+  EXPECT_EXPANSION("X0= X1=", GMOCK_PP_REPEAT(JOINER, X, 2));
+  EXPECT_EXPANSION("X0= X1= X2=", GMOCK_PP_REPEAT(JOINER, X, 3));
+  EXPECT_EXPANSION("X0= X1= X2= X3=", GMOCK_PP_REPEAT(JOINER, X, 4));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4=", GMOCK_PP_REPEAT(JOINER, X, 5));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5=", GMOCK_PP_REPEAT(JOINER, X, 6));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6=",
+                   GMOCK_PP_REPEAT(JOINER, X, 7));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6= X7=",
+                   GMOCK_PP_REPEAT(JOINER, X, 8));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6= X7= X8=",
+                   GMOCK_PP_REPEAT(JOINER, X, 9));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6= X7= X8= X9=",
+                   GMOCK_PP_REPEAT(JOINER, X, 10));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6= X7= X8= X9= X10=",
+                   GMOCK_PP_REPEAT(JOINER, X, 11));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6= X7= X8= X9= X10= X11=",
+                   GMOCK_PP_REPEAT(JOINER, X, 12));
+  EXPECT_EXPANSION("X0= X1= X2= X3= X4= X5= X6= X7= X8= X9= X10= X11= X12=",
+                   GMOCK_PP_REPEAT(JOINER, X, 13));
+  EXPECT_EXPANSION(
+      "X0= X1= X2= X3= X4= X5= X6= X7= X8= X9= X10= X11= X12= X13=",
+      GMOCK_PP_REPEAT(JOINER, X, 14));
+  EXPECT_EXPANSION(
+      "X0= X1= X2= X3= X4= X5= X6= X7= X8= X9= X10= X11= X12= X13= X14=",
+      GMOCK_PP_REPEAT(JOINER, X, 15));
+}
+TEST(Macros, ForEach) {
+  EXPECT_EXPANSION("", GMOCK_PP_FOR_EACH(JOINER, X, ()));
+  EXPECT_EXPANSION("X0=a", GMOCK_PP_FOR_EACH(JOINER, X, (a)));
+  EXPECT_EXPANSION("X0=a X1=b", GMOCK_PP_FOR_EACH(JOINER, X, (a, b)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c", GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c X3=d",
+                   GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c X3=d X4=e",
+                   GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c X3=d X4=e X5=f",
+                   GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c X3=d X4=e X5=f X6=g",
+                   GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h",
+                   GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h)));
+  EXPECT_EXPANSION("X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i",
+                   GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h, i)));
+  EXPECT_EXPANSION(
+      "X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i X9=j",
+      GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h, i, j)));
+  EXPECT_EXPANSION(
+      "X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i X9=j X10=k",
+      GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h, i, j, k)));
+  EXPECT_EXPANSION(
+      "X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i X9=j X10=k X11=l",
+      GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h, i, j, k, l)));
+  EXPECT_EXPANSION(
+      "X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i X9=j X10=k X11=l X12=m",
+      GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h, i, j, k, l, m)));
+  EXPECT_EXPANSION(
+      "X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i X9=j X10=k X11=l X12=m "
+      "X13=n",
+      GMOCK_PP_FOR_EACH(JOINER, X, (a, b, c, d, e, f, g, h, i, j, k, l, m, n)));
+  EXPECT_EXPANSION(
+      "X0=a X1=b X2=c X3=d X4=e X5=f X6=g X7=h X8=i X9=j X10=k X11=l X12=m "
+      "X13=n X14=o",
+      GMOCK_PP_FOR_EACH(JOINER, X,
+                        (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o)));
+}
+
+}  // namespace
+}  // namespace testing
+```
+
+### `gmock-pp_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-pp_test.cc`
+
+
+```cpp
+#include "gmock/internal/gmock-pp.h"
+
+// Used to test MSVC treating __VA_ARGS__ with a comma in it as one value
+#define GMOCK_TEST_REPLACE_comma_WITH_COMMA_I_comma ,
+#define GMOCK_TEST_REPLACE_comma_WITH_COMMA(x) \
+  GMOCK_PP_CAT(GMOCK_TEST_REPLACE_comma_WITH_COMMA_I_, x)
+
+// Static assertions.
+namespace testing {
+namespace internal {
+namespace gmockpp {
+
+static_assert(GMOCK_PP_CAT(1, 4) == 14, "");
+static_assert(GMOCK_PP_INTERNAL_INTERNAL_16TH(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
+                                              12, 13, 14, 15, 16, 17, 18) == 16,
+              "");
+static_assert(GMOCK_PP_NARG() == 1, "");
+static_assert(GMOCK_PP_NARG(x) == 1, "");
+static_assert(GMOCK_PP_NARG(x, y) == 2, "");
+static_assert(GMOCK_PP_NARG(x, y, z) == 3, "");
+static_assert(GMOCK_PP_NARG(x, y, z, w) == 4, "");
+static_assert(!GMOCK_PP_HAS_COMMA(), "");
+static_assert(GMOCK_PP_HAS_COMMA(b, ), "");
+static_assert(!GMOCK_PP_HAS_COMMA((, )), "");
+static_assert(GMOCK_PP_HAS_COMMA(GMOCK_TEST_REPLACE_comma_WITH_COMMA(comma)),
+              "");
+static_assert(
+    GMOCK_PP_HAS_COMMA(GMOCK_TEST_REPLACE_comma_WITH_COMMA(comma(unrelated))),
+    "");
+static_assert(!GMOCK_PP_IS_EMPTY(, ), "");
+static_assert(!GMOCK_PP_IS_EMPTY(a), "");
+static_assert(!GMOCK_PP_IS_EMPTY(()), "");
+static_assert(GMOCK_PP_IF(1, 1, 2) == 1, "");
+static_assert(GMOCK_PP_IF(0, 1, 2) == 2, "");
+static_assert(GMOCK_PP_NARG0(x) == 1, "");
+static_assert(GMOCK_PP_NARG0(x, y) == 2, "");
+static_assert(GMOCK_PP_HEAD(1) == 1, "");
+static_assert(GMOCK_PP_HEAD(1, 2) == 1, "");
+static_assert(GMOCK_PP_HEAD(1, 2, 3) == 1, "");
+static_assert(GMOCK_PP_TAIL(1, 2) == 2, "");
+static_assert(GMOCK_PP_HEAD(GMOCK_PP_TAIL(1, 2, 3)) == 2, "");
+static_assert(!GMOCK_PP_IS_BEGIN_PARENS(sss), "");
+static_assert(!GMOCK_PP_IS_BEGIN_PARENS(sss()), "");
+static_assert(!GMOCK_PP_IS_BEGIN_PARENS(sss() sss), "");
+static_assert(GMOCK_PP_IS_BEGIN_PARENS((sss)), "");
+static_assert(GMOCK_PP_IS_BEGIN_PARENS((sss)ss), "");
+static_assert(!GMOCK_PP_IS_ENCLOSED_PARENS(sss), "");
+static_assert(!GMOCK_PP_IS_ENCLOSED_PARENS(sss()), "");
+static_assert(!GMOCK_PP_IS_ENCLOSED_PARENS(sss() sss), "");
+static_assert(!GMOCK_PP_IS_ENCLOSED_PARENS((sss)ss), "");
+static_assert(GMOCK_PP_REMOVE_PARENS((1 + 1)) * 2 == 3, "");
+static_assert(GMOCK_PP_INC(4) == 5, "");
+
+template <class... Args>
+struct Test {
+  static constexpr int kArgs = sizeof...(Args);
+};
+#define GMOCK_PP_INTERNAL_TYPE_TEST(_i, _Data, _element) \
+  GMOCK_PP_COMMA_IF(_i) _element
+static_assert(Test<GMOCK_PP_FOR_EACH(GMOCK_PP_INTERNAL_TYPE_TEST, ~,
+                                     (int, float, double, char))>::kArgs == 4,
+              "");
+#define GMOCK_PP_INTERNAL_VAR_TEST_1(_x) 1
+#define GMOCK_PP_INTERNAL_VAR_TEST_2(_x, _y) 2
+#define GMOCK_PP_INTERNAL_VAR_TEST_3(_x, _y, _z) 3
+
+#define GMOCK_PP_INTERNAL_VAR_TEST(...) \
+  GMOCK_PP_VARIADIC_CALL(GMOCK_PP_INTERNAL_VAR_TEST_, __VA_ARGS__)
+static_assert(GMOCK_PP_INTERNAL_VAR_TEST(x, y) == 2, "");
+static_assert(GMOCK_PP_INTERNAL_VAR_TEST(silly) == 1, "");
+static_assert(GMOCK_PP_INTERNAL_VAR_TEST(x, y, z) == 3, "");
+
+// TODO(iserna): The following asserts fail in --config=lexan.
+#define GMOCK_PP_INTERNAL_IS_EMPTY_TEST_1
+static_assert(GMOCK_PP_IS_EMPTY(GMOCK_PP_INTERNAL_IS_EMPTY_TEST_1), "");
+static_assert(GMOCK_PP_IS_EMPTY(), "");
+static_assert(GMOCK_PP_IS_ENCLOSED_PARENS((sss)), "");
+static_assert(GMOCK_PP_IS_EMPTY(GMOCK_PP_TAIL(1)), "");
+static_assert(GMOCK_PP_NARG0() == 0, "");
+
+}  // namespace gmockpp
+}  // namespace internal
+}  // namespace testing
+```
+
+### `gmock-spec-builders_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock-spec-builders_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests the spec builder syntax.
+
+#include "gmock/gmock-spec-builders.h"
+
+#include <memory>
+#include <ostream>  // NOLINT
+#include <sstream>
+#include <string>
+#include <type_traits>
+
+#include "gmock/gmock.h"
+#include "gmock/internal/gmock-port.h"
+#include "gtest/gtest-spi.h"
+#include "gtest/gtest.h"
+#include "gtest/internal/gtest-port.h"
+
+namespace testing {
+namespace {
+
+using ::testing::internal::FormatFileLocation;
+using ::testing::internal::kAllow;
+using ::testing::internal::kErrorVerbosity;
+using ::testing::internal::kFail;
+using ::testing::internal::kInfoVerbosity;
+using ::testing::internal::kWarn;
+using ::testing::internal::kWarningVerbosity;
+
+#if GTEST_HAS_STREAM_REDIRECTION
+using ::testing::internal::CaptureStdout;
+using ::testing::internal::GetCapturedStdout;
+#endif
+
+class Incomplete;
+
+class MockIncomplete {
+ public:
+  // This line verifies that a mock method can take a by-reference
+  // argument of an incomplete type.
+  MOCK_METHOD1(ByRefFunc, void(const Incomplete& x));
+};
+
+// Tells Google Mock how to print a value of type Incomplete.
+void PrintTo(const Incomplete& x, ::std::ostream* os);
+
+TEST(MockMethodTest, CanInstantiateWithIncompleteArgType) {
+  // Even though this mock class contains a mock method that takes
+  // by-reference an argument whose type is incomplete, we can still
+  // use the mock, as long as Google Mock knows how to print the
+  // argument.
+  MockIncomplete incomplete;
+  EXPECT_CALL(incomplete, ByRefFunc(_)).Times(AnyNumber());
+}
+
+// The definition of the printer for the argument type doesn't have to
+// be visible where the mock is used.
+void PrintTo(const Incomplete& /* x */, ::std::ostream* os) {
+  *os << "incomplete";
+}
+
+class Result {};
+
+// A type that's not default constructible.
+class NonDefaultConstructible {
+ public:
+  explicit NonDefaultConstructible(int /* dummy */) {}
+};
+
+class MockA {
+ public:
+  MockA() {}
+
+  MOCK_METHOD1(DoA, void(int n));
+  MOCK_METHOD1(ReturnResult, Result(int n));
+  MOCK_METHOD0(ReturnNonDefaultConstructible, NonDefaultConstructible());
+  MOCK_METHOD2(Binary, bool(int x, int y));
+  MOCK_METHOD2(ReturnInt, int(int x, int y));
+
+ private:
+  MockA(const MockA&) = delete;
+  MockA& operator=(const MockA&) = delete;
+};
+
+class MockB {
+ public:
+  MockB() {}
+
+  MOCK_CONST_METHOD0(DoB, int());  // NOLINT
+  MOCK_METHOD1(DoB, int(int n));   // NOLINT
+
+ private:
+  MockB(const MockB&) = delete;
+  MockB& operator=(const MockB&) = delete;
+};
+
+class ReferenceHoldingMock {
+ public:
+  ReferenceHoldingMock() {}
+
+  MOCK_METHOD1(AcceptReference, void(std::shared_ptr<MockA>*));
+
+ private:
+  ReferenceHoldingMock(const ReferenceHoldingMock&) = delete;
+  ReferenceHoldingMock& operator=(const ReferenceHoldingMock&) = delete;
+};
+
+// Tests that EXPECT_CALL and ON_CALL compile in a presence of macro
+// redefining a mock method name. This could happen, for example, when
+// the tested code #includes Win32 API headers which define many APIs
+// as macros, e.g. #define TextOut TextOutW.
+
+#define Method MethodW
+
+class CC {
+ public:
+  virtual ~CC() {}
+  virtual int Method() = 0;
+};
+class MockCC : public CC {
+ public:
+  MockCC() {}
+
+  MOCK_METHOD0(Method, int());
+
+ private:
+  MockCC(const MockCC&) = delete;
+  MockCC& operator=(const MockCC&) = delete;
+};
+
+// Tests that a method with expanded name compiles.
+TEST(OnCallSyntaxTest, CompilesWithMethodNameExpandedFromMacro) {
+  MockCC cc;
+  ON_CALL(cc, Method());
+}
+
+// Tests that the method with expanded name not only compiles but runs
+// and returns a correct value, too.
+TEST(OnCallSyntaxTest, WorksWithMethodNameExpandedFromMacro) {
+  MockCC cc;
+  ON_CALL(cc, Method()).WillByDefault(Return(42));
+  EXPECT_EQ(42, cc.Method());
+}
+
+// Tests that a method with expanded name compiles.
+TEST(ExpectCallSyntaxTest, CompilesWithMethodNameExpandedFromMacro) {
+  MockCC cc;
+  EXPECT_CALL(cc, Method());
+  cc.Method();
+}
+
+// Tests that it works, too.
+TEST(ExpectCallSyntaxTest, WorksWithMethodNameExpandedFromMacro) {
+  MockCC cc;
+  EXPECT_CALL(cc, Method()).WillOnce(Return(42));
+  EXPECT_EQ(42, cc.Method());
+}
+
+#undef Method  // Done with macro redefinition tests.
+
+// Tests that ON_CALL evaluates its arguments exactly once as promised
+// by Google Mock.
+TEST(OnCallSyntaxTest, EvaluatesFirstArgumentOnce) {
+  MockA a;
+  MockA* pa = &a;
+
+  ON_CALL(*pa++, DoA(_));
+  EXPECT_EQ(&a + 1, pa);
+}
+
+TEST(OnCallSyntaxTest, EvaluatesSecondArgumentOnce) {
+  MockA a;
+  int n = 0;
+
+  ON_CALL(a, DoA(n++));
+  EXPECT_EQ(1, n);
+}
+
+// Tests that the syntax of ON_CALL() is enforced at run time.
+
+TEST(OnCallSyntaxTest, WithIsOptional) {
+  MockA a;
+
+  ON_CALL(a, DoA(5)).WillByDefault(Return());
+  ON_CALL(a, DoA(_)).With(_).WillByDefault(Return());
+}
+
+TEST(OnCallSyntaxTest, WithCanAppearAtMostOnce) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        ON_CALL(a, ReturnResult(_))
+            .With(_)
+            .With(_)
+            .WillByDefault(Return(Result()));
+      },
+      ".With() cannot appear more than once in an ON_CALL()");
+}
+
+TEST(OnCallSyntaxTest, WillByDefaultIsMandatory) {
+  MockA a;
+
+  EXPECT_DEATH_IF_SUPPORTED(
+      {
+        ON_CALL(a, DoA(5));
+        a.DoA(5);
+      },
+      "");
+}
+
+TEST(OnCallSyntaxTest, WillByDefaultCanAppearAtMostOnce) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        ON_CALL(a, DoA(5)).WillByDefault(Return()).WillByDefault(Return());
+      },
+      ".WillByDefault() must appear exactly once in an ON_CALL()");
+}
+
+// Tests that EXPECT_CALL evaluates its arguments exactly once as
+// promised by Google Mock.
+TEST(ExpectCallSyntaxTest, EvaluatesFirstArgumentOnce) {
+  MockA a;
+  MockA* pa = &a;
+
+  EXPECT_CALL(*pa++, DoA(_));
+  a.DoA(0);
+  EXPECT_EQ(&a + 1, pa);
+}
+
+TEST(ExpectCallSyntaxTest, EvaluatesSecondArgumentOnce) {
+  MockA a;
+  int n = 0;
+
+  EXPECT_CALL(a, DoA(n++));
+  a.DoA(0);
+  EXPECT_EQ(1, n);
+}
+
+// Tests that the syntax of EXPECT_CALL() is enforced at run time.
+
+TEST(ExpectCallSyntaxTest, WithIsOptional) {
+  MockA a;
+
+  EXPECT_CALL(a, DoA(5)).Times(0);
+  EXPECT_CALL(a, DoA(6)).With(_).Times(0);
+}
+
+TEST(ExpectCallSyntaxTest, WithCanAppearAtMostOnce) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(6)).With(_).With(_);
+      },
+      ".With() cannot appear more than once in an EXPECT_CALL()");
+
+  a.DoA(6);
+}
+
+TEST(ExpectCallSyntaxTest, WithMustBeFirstClause) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).Times(1).With(_);
+      },
+      ".With() must be the first clause in an EXPECT_CALL()");
+
+  a.DoA(1);
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(2)).WillOnce(Return()).With(_);
+      },
+      ".With() must be the first clause in an EXPECT_CALL()");
+
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, TimesCanBeInferred) {
+  MockA a;
+
+  EXPECT_CALL(a, DoA(1)).WillOnce(Return());
+
+  EXPECT_CALL(a, DoA(2)).WillOnce(Return()).WillRepeatedly(Return());
+
+  a.DoA(1);
+  a.DoA(2);
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, TimesCanAppearAtMostOnce) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).Times(1).Times(2);
+      },
+      ".Times() cannot appear more than once in an EXPECT_CALL()");
+
+  a.DoA(1);
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, TimesMustBeBeforeInSequence) {
+  MockA a;
+  Sequence s;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).InSequence(s).Times(1);
+      },
+      ".Times() may only appear *before* ");
+
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, InSequenceIsOptional) {
+  MockA a;
+  Sequence s;
+
+  EXPECT_CALL(a, DoA(1));
+  EXPECT_CALL(a, DoA(2)).InSequence(s);
+
+  a.DoA(1);
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, InSequenceCanAppearMultipleTimes) {
+  MockA a;
+  Sequence s1, s2;
+
+  EXPECT_CALL(a, DoA(1)).InSequence(s1, s2).InSequence(s1);
+
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, InSequenceMustBeBeforeAfter) {
+  MockA a;
+  Sequence s;
+
+  Expectation e = EXPECT_CALL(a, DoA(1)).Times(AnyNumber());
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(2)).After(e).InSequence(s);
+      },
+      ".InSequence() cannot appear after ");
+
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, InSequenceMustBeBeforeWillOnce) {
+  MockA a;
+  Sequence s;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).WillOnce(Return()).InSequence(s);
+      },
+      ".InSequence() cannot appear after ");
+
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, AfterMustBeBeforeWillOnce) {
+  MockA a;
+
+  Expectation e = EXPECT_CALL(a, DoA(1));
+  EXPECT_NONFATAL_FAILURE(
+      { EXPECT_CALL(a, DoA(2)).WillOnce(Return()).After(e); },
+      ".After() cannot appear after ");
+
+  a.DoA(1);
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, WillIsOptional) {
+  MockA a;
+
+  EXPECT_CALL(a, DoA(1));
+  EXPECT_CALL(a, DoA(2)).WillOnce(Return());
+
+  a.DoA(1);
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, WillCanAppearMultipleTimes) {
+  MockA a;
+
+  EXPECT_CALL(a, DoA(1))
+      .Times(AnyNumber())
+      .WillOnce(Return())
+      .WillOnce(Return())
+      .WillOnce(Return());
+}
+
+TEST(ExpectCallSyntaxTest, WillMustBeBeforeWillRepeatedly) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).WillRepeatedly(Return()).WillOnce(Return());
+      },
+      ".WillOnce() cannot appear after ");
+
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, WillRepeatedlyIsOptional) {
+  MockA a;
+
+  EXPECT_CALL(a, DoA(1)).WillOnce(Return());
+  EXPECT_CALL(a, DoA(2)).WillOnce(Return()).WillRepeatedly(Return());
+
+  a.DoA(1);
+  a.DoA(2);
+  a.DoA(2);
+}
+
+TEST(ExpectCallSyntaxTest, WillRepeatedlyCannotAppearMultipleTimes) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).WillRepeatedly(Return()).WillRepeatedly(
+            Return());
+      },
+      ".WillRepeatedly() cannot appear more than once in an "
+      "EXPECT_CALL()");
+}
+
+TEST(ExpectCallSyntaxTest, WillRepeatedlyMustBeBeforeRetiresOnSaturation) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).RetiresOnSaturation().WillRepeatedly(Return());
+      },
+      ".WillRepeatedly() cannot appear after ");
+}
+
+TEST(ExpectCallSyntaxTest, RetiresOnSaturationIsOptional) {
+  MockA a;
+
+  EXPECT_CALL(a, DoA(1));
+  EXPECT_CALL(a, DoA(1)).RetiresOnSaturation();
+
+  a.DoA(1);
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, RetiresOnSaturationCannotAppearMultipleTimes) {
+  MockA a;
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        EXPECT_CALL(a, DoA(1)).RetiresOnSaturation().RetiresOnSaturation();
+      },
+      ".RetiresOnSaturation() cannot appear more than once");
+
+  a.DoA(1);
+}
+
+TEST(ExpectCallSyntaxTest, DefaultCardinalityIsOnce) {
+  {
+    MockA a;
+    EXPECT_CALL(a, DoA(1));
+    a.DoA(1);
+  }
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        MockA a;
+        EXPECT_CALL(a, DoA(1));
+      },
+      "to be called once");
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        MockA a;
+        EXPECT_CALL(a, DoA(1));
+        a.DoA(1);
+        a.DoA(1);
+      },
+      "to be called once");
+}
+
+#if GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that Google Mock doesn't print a warning when the number of
+// WillOnce() is adequate.
+TEST(ExpectCallSyntaxTest, DoesNotWarnOnAdequateActionCount) {
+  CaptureStdout();
+  {
+    MockB b;
+
+    // It's always fine to omit WillOnce() entirely.
+    EXPECT_CALL(b, DoB()).Times(0);
+    EXPECT_CALL(b, DoB(1)).Times(AtMost(1));
+    EXPECT_CALL(b, DoB(2)).Times(1).WillRepeatedly(Return(1));
+
+    // It's fine for the number of WillOnce()s to equal the upper bound.
+    EXPECT_CALL(b, DoB(3))
+        .Times(Between(1, 2))
+        .WillOnce(Return(1))
+        .WillOnce(Return(2));
+
+    // It's fine for the number of WillOnce()s to be smaller than the
+    // upper bound when there is a WillRepeatedly().
+    EXPECT_CALL(b, DoB(4)).Times(AtMost(3)).WillOnce(Return(1)).WillRepeatedly(
+        Return(2));
+
+    // Satisfies the above expectations.
+    b.DoB(2);
+    b.DoB(3);
+  }
+  EXPECT_STREQ("", GetCapturedStdout().c_str());
+}
+
+// Tests that Google Mock warns on having too many actions in an
+// expectation compared to its cardinality.
+TEST(ExpectCallSyntaxTest, WarnsOnTooManyActions) {
+  CaptureStdout();
+  {
+    MockB b;
+
+    // Warns when the number of WillOnce()s is larger than the upper bound.
+    EXPECT_CALL(b, DoB()).Times(0).WillOnce(Return(1));  // #1
+    EXPECT_CALL(b, DoB()).Times(AtMost(1)).WillOnce(Return(1)).WillOnce(
+        Return(2));  // #2
+    EXPECT_CALL(b, DoB(1))
+        .Times(1)
+        .WillOnce(Return(1))
+        .WillOnce(Return(2))
+        .RetiresOnSaturation();  // #3
+
+    // Warns when the number of WillOnce()s equals the upper bound and
+    // there is a WillRepeatedly().
+    EXPECT_CALL(b, DoB()).Times(0).WillRepeatedly(Return(1));  // #4
+    EXPECT_CALL(b, DoB(2)).Times(1).WillOnce(Return(1)).WillRepeatedly(
+        Return(2));  // #5
+
+    // Satisfies the above expectations.
+    b.DoB(1);
+    b.DoB(2);
+  }
+  const std::string output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring,
+                      "Too many actions specified in EXPECT_CALL(b, DoB())...\n"
+                      "Expected to be never called, but has 1 WillOnce().",
+                      output);  // #1
+  EXPECT_PRED_FORMAT2(IsSubstring,
+                      "Too many actions specified in EXPECT_CALL(b, DoB())...\n"
+                      "Expected to be called at most once, "
+                      "but has 2 WillOnce()s.",
+                      output);  // #2
+  EXPECT_PRED_FORMAT2(
+      IsSubstring,
+      "Too many actions specified in EXPECT_CALL(b, DoB(1))...\n"
+      "Expected to be called once, but has 2 WillOnce()s.",
+      output);  // #3
+  EXPECT_PRED_FORMAT2(IsSubstring,
+                      "Too many actions specified in EXPECT_CALL(b, DoB())...\n"
+                      "Expected to be never called, but has 0 WillOnce()s "
+                      "and a WillRepeatedly().",
+                      output);  // #4
+  EXPECT_PRED_FORMAT2(
+      IsSubstring,
+      "Too many actions specified in EXPECT_CALL(b, DoB(2))...\n"
+      "Expected to be called once, but has 1 WillOnce() "
+      "and a WillRepeatedly().",
+      output);  // #5
+}
+
+// Tests that Google Mock warns on having too few actions in an
+// expectation compared to its cardinality.
+TEST(ExpectCallSyntaxTest, WarnsOnTooFewActions) {
+  MockB b;
+
+  EXPECT_CALL(b, DoB()).Times(Between(2, 3)).WillOnce(Return(1));
+
+  CaptureStdout();
+  b.DoB();
+  const std::string output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring,
+                      "Too few actions specified in EXPECT_CALL(b, DoB())...\n"
+                      "Expected to be called between 2 and 3 times, "
+                      "but has only 1 WillOnce().",
+                      output);
+  b.DoB();
+}
+
+TEST(ExpectCallSyntaxTest, WarningIsErrorWithFlag) {
+  int original_behavior = GMOCK_FLAG_GET(default_mock_behavior);
+
+  GMOCK_FLAG_SET(default_mock_behavior, kAllow);
+  CaptureStdout();
+  {
+    MockA a;
+    a.DoA(0);
+  }
+  std::string output = GetCapturedStdout();
+  EXPECT_TRUE(output.empty()) << output;
+
+  GMOCK_FLAG_SET(default_mock_behavior, kWarn);
+  CaptureStdout();
+  {
+    MockA a;
+    a.DoA(0);
+  }
+  std::string warning_output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring, "GMOCK WARNING", warning_output);
+  EXPECT_PRED_FORMAT2(IsSubstring, "Uninteresting mock function call",
+                      warning_output);
+
+  GMOCK_FLAG_SET(default_mock_behavior, kFail);
+  EXPECT_NONFATAL_FAILURE(
+      {
+        MockA a;
+        a.DoA(0);
+      },
+      "Uninteresting mock function call");
+
+  // Out of bounds values are converted to kWarn
+  GMOCK_FLAG_SET(default_mock_behavior, -1);
+  CaptureStdout();
+  {
+    MockA a;
+    a.DoA(0);
+  }
+  warning_output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring, "GMOCK WARNING", warning_output);
+  EXPECT_PRED_FORMAT2(IsSubstring, "Uninteresting mock function call",
+                      warning_output);
+  GMOCK_FLAG_SET(default_mock_behavior, 3);
+  CaptureStdout();
+  {
+    MockA a;
+    a.DoA(0);
+  }
+  warning_output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring, "GMOCK WARNING", warning_output);
+  EXPECT_PRED_FORMAT2(IsSubstring, "Uninteresting mock function call",
+                      warning_output);
+
+  GMOCK_FLAG_SET(default_mock_behavior, original_behavior);
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
+
+// Tests the semantics of ON_CALL().
+
+// Tests that the built-in default action is taken when no ON_CALL()
+// is specified.
+TEST(OnCallTest, TakesBuiltInDefaultActionWhenNoOnCall) {
+  MockB b;
+  EXPECT_CALL(b, DoB());
+
+  EXPECT_EQ(0, b.DoB());
+}
+
+// Tests that the built-in default action is taken when no ON_CALL()
+// matches the invocation.
+TEST(OnCallTest, TakesBuiltInDefaultActionWhenNoOnCallMatches) {
+  MockB b;
+  ON_CALL(b, DoB(1)).WillByDefault(Return(1));
+  EXPECT_CALL(b, DoB(_));
+
+  EXPECT_EQ(0, b.DoB(2));
+}
+
+// Tests that the last matching ON_CALL() action is taken.
+TEST(OnCallTest, PicksLastMatchingOnCall) {
+  MockB b;
+  ON_CALL(b, DoB(_)).WillByDefault(Return(3));
+  ON_CALL(b, DoB(2)).WillByDefault(Return(2));
+  ON_CALL(b, DoB(1)).WillByDefault(Return(1));
+  EXPECT_CALL(b, DoB(_));
+
+  EXPECT_EQ(2, b.DoB(2));
+}
+
+// Tests the semantics of EXPECT_CALL().
+
+// Tests that any call is allowed when no EXPECT_CALL() is specified.
+TEST(ExpectCallTest, AllowsAnyCallWhenNoSpec) {
+  MockB b;
+  EXPECT_CALL(b, DoB());
+  // There is no expectation on DoB(int).
+
+  b.DoB();
+
+  // DoB(int) can be called any number of times.
+  b.DoB(1);
+  b.DoB(2);
+}
+
+// Tests that the last matching EXPECT_CALL() fires.
+TEST(ExpectCallTest, PicksLastMatchingExpectCall) {
+  MockB b;
+  EXPECT_CALL(b, DoB(_)).WillRepeatedly(Return(2));
+  EXPECT_CALL(b, DoB(1)).WillRepeatedly(Return(1));
+
+  EXPECT_EQ(1, b.DoB(1));
+}
+
+// Tests lower-bound violation.
+TEST(ExpectCallTest, CatchesTooFewCalls) {
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        MockB b;
+        EXPECT_CALL(b, DoB(5)).Times(AtLeast(2));
+
+        b.DoB(5);
+      },
+      "Actual function call count doesn't match EXPECT_CALL(b, DoB(5))...\n"
+      "         Expected: to be called at least twice\n"
+      "           Actual: called once - unsatisfied and active");
+}
+
+// Tests that the cardinality can be inferred when no Times(...) is
+// specified.
+TEST(ExpectCallTest, InfersCardinalityWhenThereIsNoWillRepeatedly) {
+  {
+    MockB b;
+    EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillOnce(Return(2));
+
+    EXPECT_EQ(1, b.DoB());
+    EXPECT_EQ(2, b.DoB());
+  }
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        MockB b;
+        EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillOnce(Return(2));
+
+        EXPECT_EQ(1, b.DoB());
+      },
+      "to be called twice");
+
+  {  // NOLINT
+    MockB b;
+    EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillOnce(Return(2));
+
+    EXPECT_EQ(1, b.DoB());
+    EXPECT_EQ(2, b.DoB());
+    EXPECT_NONFATAL_FAILURE(b.DoB(), "to be called twice");
+  }
+}
+
+TEST(ExpectCallTest, InfersCardinality1WhenThereIsWillRepeatedly) {
+  {
+    MockB b;
+    EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillRepeatedly(Return(2));
+
+    EXPECT_EQ(1, b.DoB());
+  }
+
+  {  // NOLINT
+    MockB b;
+    EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillRepeatedly(Return(2));
+
+    EXPECT_EQ(1, b.DoB());
+    EXPECT_EQ(2, b.DoB());
+    EXPECT_EQ(2, b.DoB());
+  }
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        MockB b;
+        EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillRepeatedly(Return(2));
+      },
+      "to be called at least once");
+}
+
+#if defined(__cplusplus) && __cplusplus >= 201703L
+
+// It should be possible to return a non-moveable type from a mock action in
+// C++17 and above, where it's guaranteed that such a type can be initialized
+// from a prvalue returned from a function.
+TEST(ExpectCallTest, NonMoveableType) {
+  // Define a non-moveable result type.
+  struct Result {
+    explicit Result(int x_in) : x(x_in) {}
+    Result(Result&&) = delete;
+
+    int x;
+  };
+
+  static_assert(!std::is_move_constructible_v<Result>);
+  static_assert(!std::is_copy_constructible_v<Result>);
+
+  static_assert(!std::is_move_assignable_v<Result>);
+  static_assert(!std::is_copy_assignable_v<Result>);
+
+  // We should be able to use a callable that returns that result as both a
+  // OnceAction and an Action, whether the callable ignores arguments or not.
+  const auto return_17 = [] { return Result(17); };
+
+  static_cast<void>(OnceAction<Result()>{return_17});
+  static_cast<void>(Action<Result()>{return_17});
+
+  static_cast<void>(OnceAction<Result(int)>{return_17});
+  static_cast<void>(Action<Result(int)>{return_17});
+
+  // It should be possible to return the result end to end through an
+  // EXPECT_CALL statement, with both WillOnce and WillRepeatedly.
+  MockFunction<Result()> mock;
+  EXPECT_CALL(mock, Call)   //
+      .WillOnce(return_17)  //
+      .WillRepeatedly(return_17);
+
+  EXPECT_EQ(17, mock.AsStdFunction()().x);
+  EXPECT_EQ(17, mock.AsStdFunction()().x);
+  EXPECT_EQ(17, mock.AsStdFunction()().x);
+}
+
+#endif  // C++17 and above
+
+// Tests that the n-th action is taken for the n-th matching
+// invocation.
+TEST(ExpectCallTest, NthMatchTakesNthAction) {
+  MockB b;
+  EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillOnce(Return(2)).WillOnce(
+      Return(3));
+
+  EXPECT_EQ(1, b.DoB());
+  EXPECT_EQ(2, b.DoB());
+  EXPECT_EQ(3, b.DoB());
+}
+
+// Tests that the WillRepeatedly() action is taken when the WillOnce(...)
+// list is exhausted.
+TEST(ExpectCallTest, TakesRepeatedActionWhenWillListIsExhausted) {
+  MockB b;
+  EXPECT_CALL(b, DoB()).WillOnce(Return(1)).WillRepeatedly(Return(2));
+
+  EXPECT_EQ(1, b.DoB());
+  EXPECT_EQ(2, b.DoB());
+  EXPECT_EQ(2, b.DoB());
+}
+
+#if GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that the default action is taken when the WillOnce(...) list is
+// exhausted and there is no WillRepeatedly().
+TEST(ExpectCallTest, TakesDefaultActionWhenWillListIsExhausted) {
+  MockB b;
+  EXPECT_CALL(b, DoB(_)).Times(1);
+  EXPECT_CALL(b, DoB())
+      .Times(AnyNumber())
+      .WillOnce(Return(1))
+      .WillOnce(Return(2));
+
+  CaptureStdout();
+  EXPECT_EQ(0, b.DoB(1));  // Shouldn't generate a warning as the
+                           // expectation has no action clause at all.
+  EXPECT_EQ(1, b.DoB());
+  EXPECT_EQ(2, b.DoB());
+  const std::string output1 = GetCapturedStdout();
+  EXPECT_STREQ("", output1.c_str());
+
+  CaptureStdout();
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB());
+  const std::string output2 = GetCapturedStdout();
+  EXPECT_THAT(output2.c_str(),
+              HasSubstr("Actions ran out in EXPECT_CALL(b, DoB())...\n"
+                        "Called 3 times, but only 2 WillOnce()s are specified"
+                        " - returning default value."));
+  EXPECT_THAT(output2.c_str(),
+              HasSubstr("Actions ran out in EXPECT_CALL(b, DoB())...\n"
+                        "Called 4 times, but only 2 WillOnce()s are specified"
+                        " - returning default value."));
+}
+
+TEST(FunctionMockerMessageTest, ReportsExpectCallLocationForExhausedActions) {
+  MockB b;
+  std::string expect_call_location = FormatFileLocation(__FILE__, __LINE__ + 1);
+  EXPECT_CALL(b, DoB()).Times(AnyNumber()).WillOnce(Return(1));
+
+  EXPECT_EQ(1, b.DoB());
+
+  CaptureStdout();
+  EXPECT_EQ(0, b.DoB());
+  const std::string output = GetCapturedStdout();
+  // The warning message should contain the call location.
+  EXPECT_PRED_FORMAT2(IsSubstring, expect_call_location, output);
+}
+
+TEST(FunctionMockerMessageTest,
+     ReportsDefaultActionLocationOfUninterestingCallsForNaggyMock) {
+  std::string on_call_location;
+  CaptureStdout();
+  {
+    NaggyMock<MockB> b;
+    on_call_location = FormatFileLocation(__FILE__, __LINE__ + 1);
+    ON_CALL(b, DoB(_)).WillByDefault(Return(0));
+    b.DoB(0);
+  }
+  EXPECT_PRED_FORMAT2(IsSubstring, on_call_location, GetCapturedStdout());
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that an uninteresting call performs the default action.
+TEST(UninterestingCallTest, DoesDefaultAction) {
+  // When there is an ON_CALL() statement, the action specified by it
+  // should be taken.
+  MockA a;
+  ON_CALL(a, Binary(_, _)).WillByDefault(Return(true));
+  EXPECT_TRUE(a.Binary(1, 2));
+
+  // When there is no ON_CALL(), the default value for the return type
+  // should be returned.
+  MockB b;
+  EXPECT_EQ(0, b.DoB());
+}
+
+// Tests that an unexpected call performs the default action.
+TEST(UnexpectedCallTest, DoesDefaultAction) {
+  // When there is an ON_CALL() statement, the action specified by it
+  // should be taken.
+  MockA a;
+  ON_CALL(a, Binary(_, _)).WillByDefault(Return(true));
+  EXPECT_CALL(a, Binary(0, 0));
+  a.Binary(0, 0);
+  bool result = false;
+  EXPECT_NONFATAL_FAILURE(result = a.Binary(1, 2),
+                          "Unexpected mock function call");
+  EXPECT_TRUE(result);
+
+  // When there is no ON_CALL(), the default value for the return type
+  // should be returned.
+  MockB b;
+  EXPECT_CALL(b, DoB(0)).Times(0);
+  int n = -1;
+  EXPECT_NONFATAL_FAILURE(n = b.DoB(1), "Unexpected mock function call");
+  EXPECT_EQ(0, n);
+}
+
+// Tests that when an unexpected void function generates the right
+// failure message.
+TEST(UnexpectedCallTest, GeneratesFailureForVoidFunction) {
+  // First, tests the message when there is only one EXPECT_CALL().
+  MockA a1;
+  EXPECT_CALL(a1, DoA(1));
+  a1.DoA(1);
+  // Ideally we should match the failure message against a regex, but
+  // EXPECT_NONFATAL_FAILURE doesn't support that, so we test for
+  // multiple sub-strings instead.
+  EXPECT_NONFATAL_FAILURE(
+      a1.DoA(9),
+      "Unexpected mock function call - returning directly.\n"
+      "    Function call: DoA(9)\n"
+      "Google Mock tried the following 1 expectation, but it didn't match:");
+  EXPECT_NONFATAL_FAILURE(
+      a1.DoA(9),
+      "  Expected arg #0: is equal to 1\n"
+      "           Actual: 9\n"
+      "         Expected: to be called once\n"
+      "           Actual: called once - saturated and active");
+
+  // Next, tests the message when there are more than one EXPECT_CALL().
+  MockA a2;
+  EXPECT_CALL(a2, DoA(1));
+  EXPECT_CALL(a2, DoA(3));
+  a2.DoA(1);
+  EXPECT_NONFATAL_FAILURE(
+      a2.DoA(2),
+      "Unexpected mock function call - returning directly.\n"
+      "    Function call: DoA(2)\n"
+      "Google Mock tried the following 2 expectations, but none matched:");
+  EXPECT_NONFATAL_FAILURE(
+      a2.DoA(2),
+      "tried expectation #0: EXPECT_CALL(a2, DoA(1))...\n"
+      "  Expected arg #0: is equal to 1\n"
+      "           Actual: 2\n"
+      "         Expected: to be called once\n"
+      "           Actual: called once - saturated and active");
+  EXPECT_NONFATAL_FAILURE(
+      a2.DoA(2),
+      "tried expectation #1: EXPECT_CALL(a2, DoA(3))...\n"
+      "  Expected arg #0: is equal to 3\n"
+      "           Actual: 2\n"
+      "         Expected: to be called once\n"
+      "           Actual: never called - unsatisfied and active");
+  a2.DoA(3);
+}
+
+// Tests that an unexpected non-void function generates the right
+// failure message.
+TEST(UnexpectedCallTest, GeneartesFailureForNonVoidFunction) {
+  MockB b1;
+  EXPECT_CALL(b1, DoB(1));
+  b1.DoB(1);
+  EXPECT_NONFATAL_FAILURE(
+      b1.DoB(2),
+      "Unexpected mock function call - returning default value.\n"
+      "    Function call: DoB(2)\n"
+      "          Returns: 0\n"
+      "Google Mock tried the following 1 expectation, but it didn't match:");
+  EXPECT_NONFATAL_FAILURE(
+      b1.DoB(2),
+      "  Expected arg #0: is equal to 1\n"
+      "           Actual: 2\n"
+      "         Expected: to be called once\n"
+      "           Actual: called once - saturated and active");
+}
+
+// Tests that Google Mock explains that an retired expectation doesn't
+// match the call.
+TEST(UnexpectedCallTest, RetiredExpectation) {
+  MockB b;
+  EXPECT_CALL(b, DoB(1)).RetiresOnSaturation();
+
+  b.DoB(1);
+  EXPECT_NONFATAL_FAILURE(b.DoB(1),
+                          "         Expected: the expectation is active\n"
+                          "           Actual: it is retired");
+}
+
+// Tests that Google Mock explains that an expectation that doesn't
+// match the arguments doesn't match the call.
+TEST(UnexpectedCallTest, UnmatchedArguments) {
+  MockB b;
+  EXPECT_CALL(b, DoB(1));
+
+  EXPECT_NONFATAL_FAILURE(b.DoB(2),
+                          "  Expected arg #0: is equal to 1\n"
+                          "           Actual: 2\n");
+  b.DoB(1);
+}
+
+// Tests that Google Mock explains that an expectation with
+// unsatisfied pre-requisites doesn't match the call.
+TEST(UnexpectedCallTest, UnsatisifiedPrerequisites) {
+  Sequence s1, s2;
+  MockB b;
+  EXPECT_CALL(b, DoB(1)).InSequence(s1);
+  EXPECT_CALL(b, DoB(2)).Times(AnyNumber()).InSequence(s1);
+  EXPECT_CALL(b, DoB(3)).InSequence(s2);
+  EXPECT_CALL(b, DoB(4)).InSequence(s1, s2);
+
+  ::testing::TestPartResultArray failures;
+  {
+    ::testing::ScopedFakeTestPartResultReporter reporter(&failures);
+    b.DoB(4);
+    // Now 'failures' contains the Google Test failures generated by
+    // the above statement.
+  }
+
+  // There should be one non-fatal failure.
+  ASSERT_EQ(1, failures.size());
+  const ::testing::TestPartResult& r = failures.GetTestPartResult(0);
+  EXPECT_EQ(::testing::TestPartResult::kNonFatalFailure, r.type());
+
+  // Verifies that the failure message contains the two unsatisfied
+  // pre-requisites but not the satisfied one.
+#if GTEST_USES_PCRE
+  EXPECT_THAT(
+      r.message(),
+      ContainsRegex(
+          // PCRE has trouble using (.|\n) to match any character, but
+          // supports the (?s) prefix for using . to match any character.
+          "(?s)the following immediate pre-requisites are not satisfied:\n"
+          ".*: pre-requisite #0\n"
+          ".*: pre-requisite #1"));
+#elif GTEST_USES_POSIX_RE
+  EXPECT_THAT(r.message(),
+              ContainsRegex(
+                  // POSIX RE doesn't understand the (?s) prefix, but has no
+                  // trouble with (.|\n).
+                  "the following immediate pre-requisites are not satisfied:\n"
+                  "(.|\n)*: pre-requisite #0\n"
+                  "(.|\n)*: pre-requisite #1"));
+#else
+  // We can only use Google Test's own simple regex.
+  EXPECT_THAT(r.message(),
+              ContainsRegex(
+                  "the following immediate pre-requisites are not satisfied:"));
+  EXPECT_THAT(r.message(), ContainsRegex(": pre-requisite #0"));
+  EXPECT_THAT(r.message(), ContainsRegex(": pre-requisite #1"));
+#endif  // GTEST_USES_PCRE
+
+  b.DoB(1);
+  b.DoB(3);
+  b.DoB(4);
+}
+
+TEST(UndefinedReturnValueTest,
+     ReturnValueIsMandatoryWhenNotDefaultConstructible) {
+  MockA a;
+  // FIXME: We should really verify the output message,
+  // but we cannot yet due to that EXPECT_DEATH only captures stderr
+  // while Google Mock logs to stdout.
+#if GTEST_HAS_EXCEPTIONS
+  EXPECT_ANY_THROW(a.ReturnNonDefaultConstructible());
+#else
+  EXPECT_DEATH_IF_SUPPORTED(a.ReturnNonDefaultConstructible(), "");
+#endif
+}
+
+// Tests that an excessive call (one whose arguments match the
+// matchers but is called too many times) performs the default action.
+TEST(ExcessiveCallTest, DoesDefaultAction) {
+  // When there is an ON_CALL() statement, the action specified by it
+  // should be taken.
+  MockA a;
+  ON_CALL(a, Binary(_, _)).WillByDefault(Return(true));
+  EXPECT_CALL(a, Binary(0, 0));
+  a.Binary(0, 0);
+  bool result = false;
+  EXPECT_NONFATAL_FAILURE(result = a.Binary(0, 0),
+                          "Mock function called more times than expected");
+  EXPECT_TRUE(result);
+
+  // When there is no ON_CALL(), the default value for the return type
+  // should be returned.
+  MockB b;
+  EXPECT_CALL(b, DoB(0)).Times(0);
+  int n = -1;
+  EXPECT_NONFATAL_FAILURE(n = b.DoB(0),
+                          "Mock function called more times than expected");
+  EXPECT_EQ(0, n);
+}
+
+// Tests that when a void function is called too many times,
+// the failure message contains the argument values.
+TEST(ExcessiveCallTest, GeneratesFailureForVoidFunction) {
+  MockA a;
+  EXPECT_CALL(a, DoA(_)).Times(0);
+  EXPECT_NONFATAL_FAILURE(
+      a.DoA(9),
+      "Mock function called more times than expected - returning directly.\n"
+      "    Function call: DoA(9)\n"
+      "         Expected: to be never called\n"
+      "           Actual: called once - over-saturated and active");
+}
+
+// Tests that when a non-void function is called too many times, the
+// failure message contains the argument values and the return value.
+TEST(ExcessiveCallTest, GeneratesFailureForNonVoidFunction) {
+  MockB b;
+  EXPECT_CALL(b, DoB(_));
+  b.DoB(1);
+  EXPECT_NONFATAL_FAILURE(
+      b.DoB(2),
+      "Mock function called more times than expected - "
+      "returning default value.\n"
+      "    Function call: DoB(2)\n"
+      "          Returns: 0\n"
+      "         Expected: to be called once\n"
+      "           Actual: called twice - over-saturated and active");
+}
+
+// Tests using sequences.
+
+TEST(InSequenceTest, AllExpectationInScopeAreInSequence) {
+  MockA a;
+  {
+    InSequence dummy;
+
+    EXPECT_CALL(a, DoA(1));
+    EXPECT_CALL(a, DoA(2));
+  }
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        a.DoA(2);
+      },
+      "Unexpected mock function call");
+
+  a.DoA(1);
+  a.DoA(2);
+}
+
+TEST(InSequenceTest, NestedInSequence) {
+  MockA a;
+  {
+    InSequence dummy;
+
+    EXPECT_CALL(a, DoA(1));
+    {
+      InSequence dummy2;
+
+      EXPECT_CALL(a, DoA(2));
+      EXPECT_CALL(a, DoA(3));
+    }
+  }
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        a.DoA(1);
+        a.DoA(3);
+      },
+      "Unexpected mock function call");
+
+  a.DoA(2);
+  a.DoA(3);
+}
+
+TEST(InSequenceTest, ExpectationsOutOfScopeAreNotAffected) {
+  MockA a;
+  {
+    InSequence dummy;
+
+    EXPECT_CALL(a, DoA(1));
+    EXPECT_CALL(a, DoA(2));
+  }
+  EXPECT_CALL(a, DoA(3));
+
+  EXPECT_NONFATAL_FAILURE(
+      {  // NOLINT
+        a.DoA(2);
+      },
+      "Unexpected mock function call");
+
+  a.DoA(3);
+  a.DoA(1);
+  a.DoA(2);
+}
+
+// Tests that any order is allowed when no sequence is used.
+TEST(SequenceTest, AnyOrderIsOkByDefault) {
+  {
+    MockA a;
+    MockB b;
+
+    EXPECT_CALL(a, DoA(1));
+    EXPECT_CALL(b, DoB()).Times(AnyNumber());
+
+    a.DoA(1);
+    b.DoB();
+  }
+
+  {  // NOLINT
+    MockA a;
+    MockB b;
+
+    EXPECT_CALL(a, DoA(1));
+    EXPECT_CALL(b, DoB()).Times(AnyNumber());
+
+    b.DoB();
+    a.DoA(1);
+  }
+}
+
+// Tests that the calls must be in strict order when a complete order
+// is specified.
+TEST(SequenceTest, CallsMustBeInStrictOrderWhenSaidSo1) {
+  MockA a;
+  ON_CALL(a, ReturnResult(_)).WillByDefault(Return(Result()));
+
+  Sequence s;
+  EXPECT_CALL(a, ReturnResult(1)).InSequence(s);
+  EXPECT_CALL(a, ReturnResult(2)).InSequence(s);
+  EXPECT_CALL(a, ReturnResult(3)).InSequence(s);
+
+  a.ReturnResult(1);
+
+  // May only be called after a.ReturnResult(2).
+  EXPECT_NONFATAL_FAILURE(a.ReturnResult(3), "Unexpected mock function call");
+
+  a.ReturnResult(2);
+  a.ReturnResult(3);
+}
+
+// Tests that the calls must be in strict order when a complete order
+// is specified.
+TEST(SequenceTest, CallsMustBeInStrictOrderWhenSaidSo2) {
+  MockA a;
+  ON_CALL(a, ReturnResult(_)).WillByDefault(Return(Result()));
+
+  Sequence s;
+  EXPECT_CALL(a, ReturnResult(1)).InSequence(s);
+  EXPECT_CALL(a, ReturnResult(2)).InSequence(s);
+
+  // May only be called after a.ReturnResult(1).
+  EXPECT_NONFATAL_FAILURE(a.ReturnResult(2), "Unexpected mock function call");
+
+  a.ReturnResult(1);
+  a.ReturnResult(2);
+}
+
+// Tests specifying a DAG using multiple sequences.
+class PartialOrderTest : public testing::Test {
+ protected:
+  PartialOrderTest() {
+    ON_CALL(a_, ReturnResult(_)).WillByDefault(Return(Result()));
+
+    // Specifies this partial ordering:
+    //
+    // a.ReturnResult(1) ==>
+    //                       a.ReturnResult(2) * n  ==>  a.ReturnResult(3)
+    // b.DoB() * 2       ==>
+    Sequence x, y;
+    EXPECT_CALL(a_, ReturnResult(1)).InSequence(x);
+    EXPECT_CALL(b_, DoB()).Times(2).InSequence(y);
+    EXPECT_CALL(a_, ReturnResult(2)).Times(AnyNumber()).InSequence(x, y);
+    EXPECT_CALL(a_, ReturnResult(3)).InSequence(x);
+  }
+
+  MockA a_;
+  MockB b_;
+};
+
+TEST_F(PartialOrderTest, CallsMustConformToSpecifiedDag1) {
+  a_.ReturnResult(1);
+  b_.DoB();
+
+  // May only be called after the second DoB().
+  EXPECT_NONFATAL_FAILURE(a_.ReturnResult(2), "Unexpected mock function call");
+
+  b_.DoB();
+  a_.ReturnResult(3);
+}
+
+TEST_F(PartialOrderTest, CallsMustConformToSpecifiedDag2) {
+  // May only be called after ReturnResult(1).
+  EXPECT_NONFATAL_FAILURE(a_.ReturnResult(2), "Unexpected mock function call");
+
+  a_.ReturnResult(1);
+  b_.DoB();
+  b_.DoB();
+  a_.ReturnResult(3);
+}
+
+TEST_F(PartialOrderTest, CallsMustConformToSpecifiedDag3) {
+  // May only be called last.
+  EXPECT_NONFATAL_FAILURE(a_.ReturnResult(3), "Unexpected mock function call");
+
+  a_.ReturnResult(1);
+  b_.DoB();
+  b_.DoB();
+  a_.ReturnResult(3);
+}
+
+TEST_F(PartialOrderTest, CallsMustConformToSpecifiedDag4) {
+  a_.ReturnResult(1);
+  b_.DoB();
+  b_.DoB();
+  a_.ReturnResult(3);
+
+  // May only be called before ReturnResult(3).
+  EXPECT_NONFATAL_FAILURE(a_.ReturnResult(2), "Unexpected mock function call");
+}
+
+TEST(SequenceTest, Retirement) {
+  MockA a;
+  Sequence s;
+
+  EXPECT_CALL(a, DoA(1)).InSequence(s);
+  EXPECT_CALL(a, DoA(_)).InSequence(s).RetiresOnSaturation();
+  EXPECT_CALL(a, DoA(1)).InSequence(s);
+
+  a.DoA(1);
+  a.DoA(2);
+  a.DoA(1);
+}
+
+// Tests Expectation.
+
+TEST(ExpectationTest, ConstrutorsWork) {
+  MockA a;
+  Expectation e1;  // Default ctor.
+
+  // Ctor from various forms of EXPECT_CALL.
+  Expectation e2 = EXPECT_CALL(a, DoA(2));
+  Expectation e3 = EXPECT_CALL(a, DoA(3)).With(_);
+  {
+    Sequence s;
+    Expectation e4 = EXPECT_CALL(a, DoA(4)).Times(1);
+    Expectation e5 = EXPECT_CALL(a, DoA(5)).InSequence(s);
+  }
+  Expectation e6 = EXPECT_CALL(a, DoA(6)).After(e2);
+  Expectation e7 = EXPECT_CALL(a, DoA(7)).WillOnce(Return());
+  Expectation e8 = EXPECT_CALL(a, DoA(8)).WillRepeatedly(Return());
+  Expectation e9 = EXPECT_CALL(a, DoA(9)).RetiresOnSaturation();
+
+  Expectation e10 = e2;  // Copy ctor.
+
+  EXPECT_THAT(e1, Ne(e2));
+  EXPECT_THAT(e2, Eq(e10));
+
+  a.DoA(2);
+  a.DoA(3);
+  a.DoA(4);
+  a.DoA(5);
+  a.DoA(6);
+  a.DoA(7);
+  a.DoA(8);
+  a.DoA(9);
+}
+
+TEST(ExpectationTest, AssignmentWorks) {
+  MockA a;
+  Expectation e1;
+  Expectation e2 = EXPECT_CALL(a, DoA(1));
+
+  EXPECT_THAT(e1, Ne(e2));
+
+  e1 = e2;
+  EXPECT_THAT(e1, Eq(e2));
+
+  a.DoA(1);
+}
+
+// Tests ExpectationSet.
+
+TEST(ExpectationSetTest, MemberTypesAreCorrect) {
+  ::testing::StaticAssertTypeEq<Expectation, ExpectationSet::value_type>();
+}
+
+TEST(ExpectationSetTest, ConstructorsWork) {
+  MockA a;
+
+  Expectation e1;
+  const Expectation e2;
+  ExpectationSet es1;                           // Default ctor.
+  ExpectationSet es2 = EXPECT_CALL(a, DoA(1));  // Ctor from EXPECT_CALL.
+  ExpectationSet es3 = e1;                      // Ctor from Expectation.
+  ExpectationSet es4(e1);    // Ctor from Expectation; alternative syntax.
+  ExpectationSet es5 = e2;   // Ctor from const Expectation.
+  ExpectationSet es6(e2);    // Ctor from const Expectation; alternative syntax.
+  ExpectationSet es7 = es2;  // Copy ctor.
+
+  EXPECT_EQ(0, es1.size());
+  EXPECT_EQ(1, es2.size());
+  EXPECT_EQ(1, es3.size());
+  EXPECT_EQ(1, es4.size());
+  EXPECT_EQ(1, es5.size());
+  EXPECT_EQ(1, es6.size());
+  EXPECT_EQ(1, es7.size());
+
+  EXPECT_THAT(es3, Ne(es2));
+  EXPECT_THAT(es4, Eq(es3));
+  EXPECT_THAT(es5, Eq(es4));
+  EXPECT_THAT(es6, Eq(es5));
+  EXPECT_THAT(es7, Eq(es2));
+  a.DoA(1);
+}
+
+TEST(ExpectationSetTest, AssignmentWorks) {
+  ExpectationSet es1;
+  ExpectationSet es2 = Expectation();
+
+  es1 = es2;
+  EXPECT_EQ(1, es1.size());
+  EXPECT_THAT(*(es1.begin()), Eq(Expectation()));
+  EXPECT_THAT(es1, Eq(es2));
+}
+
+TEST(ExpectationSetTest, InsertionWorks) {
+  ExpectationSet es1;
+  Expectation e1;
+  es1 += e1;
+  EXPECT_EQ(1, es1.size());
+  EXPECT_THAT(*(es1.begin()), Eq(e1));
+
+  MockA a;
+  Expectation e2 = EXPECT_CALL(a, DoA(1));
+  es1 += e2;
+  EXPECT_EQ(2, es1.size());
+
+  ExpectationSet::const_iterator it1 = es1.begin();
+  ExpectationSet::const_iterator it2 = it1;
+  ++it2;
+  EXPECT_TRUE(*it1 == e1 || *it2 == e1);  // e1 must be in the set.
+  EXPECT_TRUE(*it1 == e2 || *it2 == e2);  // e2 must be in the set too.
+  a.DoA(1);
+}
+
+TEST(ExpectationSetTest, SizeWorks) {
+  ExpectationSet es;
+  EXPECT_EQ(0, es.size());
+
+  es += Expectation();
+  EXPECT_EQ(1, es.size());
+
+  MockA a;
+  es += EXPECT_CALL(a, DoA(1));
+  EXPECT_EQ(2, es.size());
+
+  a.DoA(1);
+}
+
+TEST(ExpectationSetTest, IsEnumerable) {
+  ExpectationSet es;
+  EXPECT_TRUE(es.begin() == es.end());
+
+  es += Expectation();
+  ExpectationSet::const_iterator it = es.begin();
+  EXPECT_TRUE(it != es.end());
+  EXPECT_THAT(*it, Eq(Expectation()));
+  ++it;
+  EXPECT_TRUE(it == es.end());
+}
+
+// Tests the .After() clause.
+
+TEST(AfterTest, SucceedsWhenPartialOrderIsSatisfied) {
+  MockA a;
+  ExpectationSet es;
+  es += EXPECT_CALL(a, DoA(1));
+  es += EXPECT_CALL(a, DoA(2));
+  EXPECT_CALL(a, DoA(3)).After(es);
+
+  a.DoA(1);
+  a.DoA(2);
+  a.DoA(3);
+}
+
+TEST(AfterTest, SucceedsWhenTotalOrderIsSatisfied) {
+  MockA a;
+  MockB b;
+  // The following also verifies that const Expectation objects work
+  // too.  Do not remove the const modifiers.
+  const Expectation e1 = EXPECT_CALL(a, DoA(1));
+  const Expectation e2 = EXPECT_CALL(b, DoB()).Times(2).After(e1);
+  EXPECT_CALL(a, DoA(2)).After(e2);
+
+  a.DoA(1);
+  b.DoB();
+  b.DoB();
+  a.DoA(2);
+}
+
+// Calls must be in strict order when specified so using .After().
+TEST(AfterTest, CallsMustBeInStrictOrderWhenSpecifiedSo1) {
+  MockA a;
+  MockB b;
+
+  // Define ordering:
+  //   a.DoA(1) ==> b.DoB() ==> a.DoA(2)
+  Expectation e1 = EXPECT_CALL(a, DoA(1));
+  Expectation e2 = EXPECT_CALL(b, DoB()).After(e1);
+  EXPECT_CALL(a, DoA(2)).After(e2);
+
+  a.DoA(1);
+
+  // May only be called after DoB().
+  EXPECT_NONFATAL_FAILURE(a.DoA(2), "Unexpected mock function call");
+
+  b.DoB();
+  a.DoA(2);
+}
+
+// Calls must be in strict order when specified so using .After().
+TEST(AfterTest, CallsMustBeInStrictOrderWhenSpecifiedSo2) {
+  MockA a;
+  MockB b;
+
+  // Define ordering:
+  //   a.DoA(1) ==> b.DoB() * 2 ==> a.DoA(2)
+  Expectation e1 = EXPECT_CALL(a, DoA(1));
+  Expectation e2 = EXPECT_CALL(b, DoB()).Times(2).After(e1);
+  EXPECT_CALL(a, DoA(2)).After(e2);
+
+  a.DoA(1);
+  b.DoB();
+
+  // May only be called after the second DoB().
+  EXPECT_NONFATAL_FAILURE(a.DoA(2), "Unexpected mock function call");
+
+  b.DoB();
+  a.DoA(2);
+}
+
+// Calls must satisfy the partial order when specified so.
+TEST(AfterTest, CallsMustSatisfyPartialOrderWhenSpecifiedSo) {
+  MockA a;
+  ON_CALL(a, ReturnResult(_)).WillByDefault(Return(Result()));
+
+  // Define ordering:
+  //   a.DoA(1) ==>
+  //   a.DoA(2) ==> a.ReturnResult(3)
+  Expectation e = EXPECT_CALL(a, DoA(1));
+  const ExpectationSet es = EXPECT_CALL(a, DoA(2));
+  EXPECT_CALL(a, ReturnResult(3)).After(e, es);
+
+  // May only be called last.
+  EXPECT_NONFATAL_FAILURE(a.ReturnResult(3), "Unexpected mock function call");
+
+  a.DoA(2);
+  a.DoA(1);
+  a.ReturnResult(3);
+}
+
+// Calls must satisfy the partial order when specified so.
+TEST(AfterTest, CallsMustSatisfyPartialOrderWhenSpecifiedSo2) {
+  MockA a;
+
+  // Define ordering:
+  //   a.DoA(1) ==>
+  //   a.DoA(2) ==> a.DoA(3)
+  Expectation e = EXPECT_CALL(a, DoA(1));
+  const ExpectationSet es = EXPECT_CALL(a, DoA(2));
+  EXPECT_CALL(a, DoA(3)).After(e, es);
+
+  a.DoA(2);
+
+  // May only be called last.
+  EXPECT_NONFATAL_FAILURE(a.DoA(3), "Unexpected mock function call");
+
+  a.DoA(1);
+  a.DoA(3);
+}
+
+// .After() can be combined with .InSequence().
+TEST(AfterTest, CanBeUsedWithInSequence) {
+  MockA a;
+  Sequence s;
+  Expectation e = EXPECT_CALL(a, DoA(1));
+  EXPECT_CALL(a, DoA(2)).InSequence(s);
+  EXPECT_CALL(a, DoA(3)).InSequence(s).After(e);
+
+  a.DoA(1);
+
+  // May only be after DoA(2).
+  EXPECT_NONFATAL_FAILURE(a.DoA(3), "Unexpected mock function call");
+
+  a.DoA(2);
+  a.DoA(3);
+}
+
+// .After() can be called multiple times.
+TEST(AfterTest, CanBeCalledManyTimes) {
+  MockA a;
+  Expectation e1 = EXPECT_CALL(a, DoA(1));
+  Expectation e2 = EXPECT_CALL(a, DoA(2));
+  Expectation e3 = EXPECT_CALL(a, DoA(3));
+  EXPECT_CALL(a, DoA(4)).After(e1).After(e2).After(e3);
+
+  a.DoA(3);
+  a.DoA(1);
+  a.DoA(2);
+  a.DoA(4);
+}
+
+// .After() accepts up to 5 arguments.
+TEST(AfterTest, AcceptsUpToFiveArguments) {
+  MockA a;
+  Expectation e1 = EXPECT_CALL(a, DoA(1));
+  Expectation e2 = EXPECT_CALL(a, DoA(2));
+  Expectation e3 = EXPECT_CALL(a, DoA(3));
+  ExpectationSet es1 = EXPECT_CALL(a, DoA(4));
+  ExpectationSet es2 = EXPECT_CALL(a, DoA(5));
+  EXPECT_CALL(a, DoA(6)).After(e1, e2, e3, es1, es2);
+
+  a.DoA(5);
+  a.DoA(2);
+  a.DoA(4);
+  a.DoA(1);
+  a.DoA(3);
+  a.DoA(6);
+}
+
+// .After() allows input to contain duplicated Expectations.
+TEST(AfterTest, AcceptsDuplicatedInput) {
+  MockA a;
+  ON_CALL(a, ReturnResult(_)).WillByDefault(Return(Result()));
+
+  // Define ordering:
+  //   DoA(1) ==>
+  //   DoA(2) ==> ReturnResult(3)
+  Expectation e1 = EXPECT_CALL(a, DoA(1));
+  Expectation e2 = EXPECT_CALL(a, DoA(2));
+  ExpectationSet es;
+  es += e1;
+  es += e2;
+  EXPECT_CALL(a, ReturnResult(3)).After(e1, e2, es, e1);
+
+  a.DoA(1);
+
+  // May only be after DoA(2).
+  EXPECT_NONFATAL_FAILURE(a.ReturnResult(3), "Unexpected mock function call");
+
+  a.DoA(2);
+  a.ReturnResult(3);
+}
+
+// An Expectation added to an ExpectationSet after it has been used in
+// an .After() has no effect.
+TEST(AfterTest, ChangesToExpectationSetHaveNoEffectAfterwards) {
+  MockA a;
+  ExpectationSet es1 = EXPECT_CALL(a, DoA(1));
+  Expectation e2 = EXPECT_CALL(a, DoA(2));
+  EXPECT_CALL(a, DoA(3)).After(es1);
+  es1 += e2;
+
+  a.DoA(1);
+  a.DoA(3);
+  a.DoA(2);
+}
+
+// Tests that Google Mock correctly handles calls to mock functions
+// after a mock object owning one of their pre-requisites has died.
+
+// Tests that calls that satisfy the original spec are successful.
+TEST(DeletingMockEarlyTest, Success1) {
+  MockB* const b1 = new MockB;
+  MockA* const a = new MockA;
+  MockB* const b2 = new MockB;
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(*b1, DoB(_)).WillOnce(Return(1));
+    EXPECT_CALL(*a, Binary(_, _))
+        .Times(AnyNumber())
+        .WillRepeatedly(Return(true));
+    EXPECT_CALL(*b2, DoB(_)).Times(AnyNumber()).WillRepeatedly(Return(2));
+  }
+
+  EXPECT_EQ(1, b1->DoB(1));
+  delete b1;
+  // a's pre-requisite has died.
+  EXPECT_TRUE(a->Binary(0, 1));
+  delete b2;
+  // a's successor has died.
+  EXPECT_TRUE(a->Binary(1, 2));
+  delete a;
+}
+
+// Tests that calls that satisfy the original spec are successful.
+TEST(DeletingMockEarlyTest, Success2) {
+  MockB* const b1 = new MockB;
+  MockA* const a = new MockA;
+  MockB* const b2 = new MockB;
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(*b1, DoB(_)).WillOnce(Return(1));
+    EXPECT_CALL(*a, Binary(_, _)).Times(AnyNumber());
+    EXPECT_CALL(*b2, DoB(_)).Times(AnyNumber()).WillRepeatedly(Return(2));
+  }
+
+  delete a;  // a is trivially satisfied.
+  EXPECT_EQ(1, b1->DoB(1));
+  EXPECT_EQ(2, b2->DoB(2));
+  delete b1;
+  delete b2;
+}
+
+// Tests that it's OK to delete a mock object itself in its action.
+
+// Suppresses warning on unreferenced formal parameter in MSVC with
+// -W4.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#endif
+
+ACTION_P(Delete, ptr) { delete ptr; }
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+TEST(DeletingMockEarlyTest, CanDeleteSelfInActionReturningVoid) {
+  MockA* const a = new MockA;
+  EXPECT_CALL(*a, DoA(_)).WillOnce(Delete(a));
+  a->DoA(42);  // This will cause a to be deleted.
+}
+
+TEST(DeletingMockEarlyTest, CanDeleteSelfInActionReturningValue) {
+  MockA* const a = new MockA;
+  EXPECT_CALL(*a, ReturnResult(_)).WillOnce(DoAll(Delete(a), Return(Result())));
+  a->ReturnResult(42);  // This will cause a to be deleted.
+}
+
+// Tests that calls that violate the original spec yield failures.
+TEST(DeletingMockEarlyTest, Failure1) {
+  MockB* const b1 = new MockB;
+  MockA* const a = new MockA;
+  MockB* const b2 = new MockB;
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(*b1, DoB(_)).WillOnce(Return(1));
+    EXPECT_CALL(*a, Binary(_, _)).Times(AnyNumber());
+    EXPECT_CALL(*b2, DoB(_)).Times(AnyNumber()).WillRepeatedly(Return(2));
+  }
+
+  delete a;  // a is trivially satisfied.
+  EXPECT_NONFATAL_FAILURE({ b2->DoB(2); }, "Unexpected mock function call");
+  EXPECT_EQ(1, b1->DoB(1));
+  delete b1;
+  delete b2;
+}
+
+// Tests that calls that violate the original spec yield failures.
+TEST(DeletingMockEarlyTest, Failure2) {
+  MockB* const b1 = new MockB;
+  MockA* const a = new MockA;
+  MockB* const b2 = new MockB;
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(*b1, DoB(_));
+    EXPECT_CALL(*a, Binary(_, _)).Times(AnyNumber());
+    EXPECT_CALL(*b2, DoB(_)).Times(AnyNumber());
+  }
+
+  EXPECT_NONFATAL_FAILURE(delete b1, "Actual: never called");
+  EXPECT_NONFATAL_FAILURE(a->Binary(0, 1), "Unexpected mock function call");
+  EXPECT_NONFATAL_FAILURE(b2->DoB(1), "Unexpected mock function call");
+  delete a;
+  delete b2;
+}
+
+class EvenNumberCardinality : public CardinalityInterface {
+ public:
+  // Returns true if and only if call_count calls will satisfy this
+  // cardinality.
+  bool IsSatisfiedByCallCount(int call_count) const override {
+    return call_count % 2 == 0;
+  }
+
+  // Returns true if and only if call_count calls will saturate this
+  // cardinality.
+  bool IsSaturatedByCallCount(int /* call_count */) const override {
+    return false;
+  }
+
+  // Describes self to an ostream.
+  void DescribeTo(::std::ostream* os) const override {
+    *os << "called even number of times";
+  }
+};
+
+Cardinality EvenNumber() { return Cardinality(new EvenNumberCardinality); }
+
+TEST(ExpectationBaseTest,
+     AllPrerequisitesAreSatisfiedWorksForNonMonotonicCardinality) {
+  MockA* a = new MockA;
+  Sequence s;
+
+  EXPECT_CALL(*a, DoA(1)).Times(EvenNumber()).InSequence(s);
+  EXPECT_CALL(*a, DoA(2)).Times(AnyNumber()).InSequence(s);
+  EXPECT_CALL(*a, DoA(3)).Times(AnyNumber());
+
+  a->DoA(3);
+  a->DoA(1);
+  EXPECT_NONFATAL_FAILURE(a->DoA(2), "Unexpected mock function call");
+  EXPECT_NONFATAL_FAILURE(delete a, "to be called even number of times");
+}
+
+// The following tests verify the message generated when a mock
+// function is called.
+
+struct Printable {};
+
+inline void operator<<(::std::ostream& os, const Printable&) {
+  os << "Printable";
+}
+
+struct Unprintable {
+  Unprintable() : value(0) {}
+  int value;
+};
+
+class MockC {
+ public:
+  MockC() {}
+
+  MOCK_METHOD6(VoidMethod, void(bool cond, int n, std::string s, void* p,
+                                const Printable& x, Unprintable y));
+  MOCK_METHOD0(NonVoidMethod, int());  // NOLINT
+
+ private:
+  MockC(const MockC&) = delete;
+  MockC& operator=(const MockC&) = delete;
+};
+
+class VerboseFlagPreservingFixture : public testing::Test {
+ protected:
+  VerboseFlagPreservingFixture()
+      : saved_verbose_flag_(GMOCK_FLAG_GET(verbose)) {}
+
+  ~VerboseFlagPreservingFixture() override {
+    GMOCK_FLAG_SET(verbose, saved_verbose_flag_);
+  }
+
+ private:
+  const std::string saved_verbose_flag_;
+
+  VerboseFlagPreservingFixture(const VerboseFlagPreservingFixture&) = delete;
+  VerboseFlagPreservingFixture& operator=(const VerboseFlagPreservingFixture&) =
+      delete;
+};
+
+#if GTEST_HAS_STREAM_REDIRECTION
+
+// Tests that an uninteresting mock function call on a naggy mock
+// generates a warning without the stack trace when
+// --gmock_verbose=warning is specified.
+TEST(FunctionCallMessageTest,
+     UninterestingCallOnNaggyMockGeneratesNoStackTraceWhenVerboseWarning) {
+  GMOCK_FLAG_SET(verbose, kWarningVerbosity);
+  NaggyMock<MockC> c;
+  CaptureStdout();
+  c.VoidMethod(false, 5, "Hi", nullptr, Printable(), Unprintable());
+  const std::string output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring, "GMOCK WARNING", output);
+  EXPECT_PRED_FORMAT2(IsNotSubstring, "Stack trace:", output);
+}
+
+// Tests that an uninteresting mock function call on a naggy mock
+// generates a warning containing the stack trace when
+// --gmock_verbose=info is specified.
+TEST(FunctionCallMessageTest,
+     UninterestingCallOnNaggyMockGeneratesFyiWithStackTraceWhenVerboseInfo) {
+  GMOCK_FLAG_SET(verbose, kInfoVerbosity);
+  NaggyMock<MockC> c;
+  CaptureStdout();
+  c.VoidMethod(false, 5, "Hi", nullptr, Printable(), Unprintable());
+  const std::string output = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring, "GMOCK WARNING", output);
+  EXPECT_PRED_FORMAT2(IsSubstring, "Stack trace:", output);
+
+#ifndef NDEBUG
+
+  // We check the stack trace content in dbg-mode only, as opt-mode
+  // may inline the call we are interested in seeing.
+
+  // Verifies that a void mock function's name appears in the stack
+  // trace.
+  EXPECT_PRED_FORMAT2(IsSubstring, "VoidMethod(", output);
+
+  // Verifies that a non-void mock function's name appears in the
+  // stack trace.
+  CaptureStdout();
+  c.NonVoidMethod();
+  const std::string output2 = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(IsSubstring, "NonVoidMethod(", output2);
+
+#endif  // NDEBUG
+}
+
+// Tests that an uninteresting mock function call on a naggy mock
+// causes the function arguments and return value to be printed.
+TEST(FunctionCallMessageTest,
+     UninterestingCallOnNaggyMockPrintsArgumentsAndReturnValue) {
+  // A non-void mock function.
+  NaggyMock<MockB> b;
+  CaptureStdout();
+  b.DoB();
+  const std::string output1 = GetCapturedStdout();
+  EXPECT_PRED_FORMAT2(
+      IsSubstring,
+      "Uninteresting mock function call - returning default value.\n"
+      "    Function call: DoB()\n"
+      "          Returns: 0\n",
+      output1.c_str());
+  // Makes sure the return value is printed.
+
+  // A void mock function.
+  NaggyMock<MockC> c;
+  CaptureStdout();
+  c.VoidMethod(false, 5, "Hi", nullptr, Printable(), Unprintable());
+  const std::string output2 = GetCapturedStdout();
+  EXPECT_THAT(
+      output2.c_str(),
+      ContainsRegex("Uninteresting mock function call - returning directly\\.\n"
+                    "    Function call: VoidMethod"
+                    "\\(false, 5, \"Hi\", NULL, @.+ "
+                    "Printable, 4-byte object <00-00 00-00>\\)"));
+  // A void function has no return value to print.
+}
+
+// Tests how the --gmock_verbose flag affects Google Mock's output.
+
+class GMockVerboseFlagTest : public VerboseFlagPreservingFixture {
+ public:
+  // Verifies that the given Google Mock output is correct.  (When
+  // should_print is true, the output should match the given regex and
+  // contain the given function name in the stack trace.  When it's
+  // false, the output should be empty.)
+  void VerifyOutput(const std::string& output, bool should_print,
+                    const std::string& expected_substring,
+                    const std::string& function_name) {
+    if (should_print) {
+      EXPECT_THAT(output.c_str(), HasSubstr(expected_substring));
+#ifndef NDEBUG
+      // We check the stack trace content in dbg-mode only, as opt-mode
+      // may inline the call we are interested in seeing.
+      EXPECT_THAT(output.c_str(), HasSubstr(function_name));
+#else
+      // Suppresses 'unused function parameter' warnings.
+      static_cast<void>(function_name);
+#endif  // NDEBUG
+    } else {
+      EXPECT_STREQ("", output.c_str());
+    }
+  }
+
+  // Tests how the flag affects expected calls.
+  void TestExpectedCall(bool should_print) {
+    MockA a;
+    EXPECT_CALL(a, DoA(5));
+    EXPECT_CALL(a, Binary(_, 1)).WillOnce(Return(true));
+
+    // A void-returning function.
+    CaptureStdout();
+    a.DoA(5);
+    VerifyOutput(GetCapturedStdout(), should_print,
+                 "Mock function call matches EXPECT_CALL(a, DoA(5))...\n"
+                 "    Function call: DoA(5)\n"
+                 "Stack trace:\n",
+                 "DoA");
+
+    // A non-void-returning function.
+    CaptureStdout();
+    a.Binary(2, 1);
+    VerifyOutput(GetCapturedStdout(), should_print,
+                 "Mock function call matches EXPECT_CALL(a, Binary(_, 1))...\n"
+                 "    Function call: Binary(2, 1)\n"
+                 "          Returns: true\n"
+                 "Stack trace:\n",
+                 "Binary");
+  }
+
+  // Tests how the flag affects uninteresting calls on a naggy mock.
+  void TestUninterestingCallOnNaggyMock(bool should_print) {
+    NaggyMock<MockA> a;
+    const std::string note =
+        "NOTE: You can safely ignore the above warning unless this "
+        "call should not happen.  Do not suppress it by blindly adding "
+        "an EXPECT_CALL() if you don't mean to enforce the call.  "
+        "See "
+        "https://github.com/google/googletest/blob/master/docs/"
+        "gmock_cook_book.md#"
+        "knowing-when-to-expect for details.";
+
+    // A void-returning function.
+    CaptureStdout();
+    a.DoA(5);
+    VerifyOutput(GetCapturedStdout(), should_print,
+                 "\nGMOCK WARNING:\n"
+                 "Uninteresting mock function call - returning directly.\n"
+                 "    Function call: DoA(5)\n" +
+                     note,
+                 "DoA");
+
+    // A non-void-returning function.
+    CaptureStdout();
+    a.Binary(2, 1);
+    VerifyOutput(GetCapturedStdout(), should_print,
+                 "\nGMOCK WARNING:\n"
+                 "Uninteresting mock function call - returning default value.\n"
+                 "    Function call: Binary(2, 1)\n"
+                 "          Returns: false\n" +
+                     note,
+                 "Binary");
+  }
+};
+
+// Tests that --gmock_verbose=info causes both expected and
+// uninteresting calls to be reported.
+TEST_F(GMockVerboseFlagTest, Info) {
+  GMOCK_FLAG_SET(verbose, kInfoVerbosity);
+  TestExpectedCall(true);
+  TestUninterestingCallOnNaggyMock(true);
+}
+
+// Tests that --gmock_verbose=warning causes uninteresting calls to be
+// reported.
+TEST_F(GMockVerboseFlagTest, Warning) {
+  GMOCK_FLAG_SET(verbose, kWarningVerbosity);
+  TestExpectedCall(false);
+  TestUninterestingCallOnNaggyMock(true);
+}
+
+// Tests that --gmock_verbose=warning causes neither expected nor
+// uninteresting calls to be reported.
+TEST_F(GMockVerboseFlagTest, Error) {
+  GMOCK_FLAG_SET(verbose, kErrorVerbosity);
+  TestExpectedCall(false);
+  TestUninterestingCallOnNaggyMock(false);
+}
+
+// Tests that --gmock_verbose=SOME_INVALID_VALUE has the same effect
+// as --gmock_verbose=warning.
+TEST_F(GMockVerboseFlagTest, InvalidFlagIsTreatedAsWarning) {
+  GMOCK_FLAG_SET(verbose, "invalid");  // Treated as "warning".
+  TestExpectedCall(false);
+  TestUninterestingCallOnNaggyMock(true);
+}
+
+#endif  // GTEST_HAS_STREAM_REDIRECTION
+
+// A helper class that generates a failure when printed.  We use it to
+// ensure that Google Mock doesn't print a value (even to an internal
+// buffer) when it is not supposed to do so.
+class PrintMeNot {};
+
+void PrintTo(PrintMeNot /* dummy */, ::std::ostream* /* os */) {
+  ADD_FAILURE() << "Google Mock is printing a value that shouldn't be "
+                << "printed even to an internal buffer.";
+}
+
+class LogTestHelper {
+ public:
+  LogTestHelper() {}
+
+  MOCK_METHOD1(Foo, PrintMeNot(PrintMeNot));
+
+ private:
+  LogTestHelper(const LogTestHelper&) = delete;
+  LogTestHelper& operator=(const LogTestHelper&) = delete;
+};
+
+class GMockLogTest : public VerboseFlagPreservingFixture {
+ protected:
+  LogTestHelper helper_;
+};
+
+TEST_F(GMockLogTest, DoesNotPrintGoodCallInternallyIfVerbosityIsWarning) {
+  GMOCK_FLAG_SET(verbose, kWarningVerbosity);
+  EXPECT_CALL(helper_, Foo(_)).WillOnce(Return(PrintMeNot()));
+  helper_.Foo(PrintMeNot());  // This is an expected call.
+}
+
+TEST_F(GMockLogTest, DoesNotPrintGoodCallInternallyIfVerbosityIsError) {
+  GMOCK_FLAG_SET(verbose, kErrorVerbosity);
+  EXPECT_CALL(helper_, Foo(_)).WillOnce(Return(PrintMeNot()));
+  helper_.Foo(PrintMeNot());  // This is an expected call.
+}
+
+TEST_F(GMockLogTest, DoesNotPrintWarningInternallyIfVerbosityIsError) {
+  GMOCK_FLAG_SET(verbose, kErrorVerbosity);
+  ON_CALL(helper_, Foo(_)).WillByDefault(Return(PrintMeNot()));
+  helper_.Foo(PrintMeNot());  // This should generate a warning.
+}
+
+// Tests Mock::AllowLeak().
+
+TEST(AllowLeakTest, AllowsLeakingUnusedMockObject) {
+  MockA* a = new MockA;
+  Mock::AllowLeak(a);
+}
+
+TEST(AllowLeakTest, CanBeCalledBeforeOnCall) {
+  MockA* a = new MockA;
+  Mock::AllowLeak(a);
+  ON_CALL(*a, DoA(_)).WillByDefault(Return());
+  a->DoA(0);
+}
+
+TEST(AllowLeakTest, CanBeCalledAfterOnCall) {
+  MockA* a = new MockA;
+  ON_CALL(*a, DoA(_)).WillByDefault(Return());
+  Mock::AllowLeak(a);
+}
+
+TEST(AllowLeakTest, CanBeCalledBeforeExpectCall) {
+  MockA* a = new MockA;
+  Mock::AllowLeak(a);
+  EXPECT_CALL(*a, DoA(_));
+  a->DoA(0);
+}
+
+TEST(AllowLeakTest, CanBeCalledAfterExpectCall) {
+  MockA* a = new MockA;
+  EXPECT_CALL(*a, DoA(_)).Times(AnyNumber());
+  Mock::AllowLeak(a);
+}
+
+TEST(AllowLeakTest, WorksWhenBothOnCallAndExpectCallArePresent) {
+  MockA* a = new MockA;
+  ON_CALL(*a, DoA(_)).WillByDefault(Return());
+  EXPECT_CALL(*a, DoA(_)).Times(AnyNumber());
+  Mock::AllowLeak(a);
+}
+
+// Tests that we can verify and clear a mock object's expectations
+// when none of its methods has expectations.
+TEST(VerifyAndClearExpectationsTest, NoMethodHasExpectations) {
+  MockB b;
+  ASSERT_TRUE(Mock::VerifyAndClearExpectations(&b));
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can verify and clear a mock object's expectations
+// when some, but not all, of its methods have expectations *and* the
+// verification succeeds.
+TEST(VerifyAndClearExpectationsTest, SomeMethodsHaveExpectationsAndSucceed) {
+  MockB b;
+  EXPECT_CALL(b, DoB()).WillOnce(Return(1));
+  b.DoB();
+  ASSERT_TRUE(Mock::VerifyAndClearExpectations(&b));
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can verify and clear a mock object's expectations
+// when some, but not all, of its methods have expectations *and* the
+// verification fails.
+TEST(VerifyAndClearExpectationsTest, SomeMethodsHaveExpectationsAndFail) {
+  MockB b;
+  EXPECT_CALL(b, DoB()).WillOnce(Return(1));
+  bool result = true;
+  EXPECT_NONFATAL_FAILURE(result = Mock::VerifyAndClearExpectations(&b),
+                          "Actual: never called");
+  ASSERT_FALSE(result);
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can verify and clear a mock object's expectations
+// when all of its methods have expectations.
+TEST(VerifyAndClearExpectationsTest, AllMethodsHaveExpectations) {
+  MockB b;
+  EXPECT_CALL(b, DoB()).WillOnce(Return(1));
+  EXPECT_CALL(b, DoB(_)).WillOnce(Return(2));
+  b.DoB();
+  b.DoB(1);
+  ASSERT_TRUE(Mock::VerifyAndClearExpectations(&b));
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can verify and clear a mock object's expectations
+// when a method has more than one expectation.
+TEST(VerifyAndClearExpectationsTest, AMethodHasManyExpectations) {
+  MockB b;
+  EXPECT_CALL(b, DoB(0)).WillOnce(Return(1));
+  EXPECT_CALL(b, DoB(_)).WillOnce(Return(2));
+  b.DoB(1);
+  bool result = true;
+  EXPECT_NONFATAL_FAILURE(result = Mock::VerifyAndClearExpectations(&b),
+                          "Actual: never called");
+  ASSERT_FALSE(result);
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can call VerifyAndClearExpectations() on the same
+// mock object multiple times.
+TEST(VerifyAndClearExpectationsTest, CanCallManyTimes) {
+  MockB b;
+  EXPECT_CALL(b, DoB());
+  b.DoB();
+  Mock::VerifyAndClearExpectations(&b);
+
+  EXPECT_CALL(b, DoB(_)).WillOnce(Return(1));
+  b.DoB(1);
+  Mock::VerifyAndClearExpectations(&b);
+  Mock::VerifyAndClearExpectations(&b);
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can clear a mock object's default actions when none
+// of its methods has default actions.
+TEST(VerifyAndClearTest, NoMethodHasDefaultActions) {
+  MockB b;
+  // If this crashes or generates a failure, the test will catch it.
+  Mock::VerifyAndClear(&b);
+  EXPECT_EQ(0, b.DoB());
+}
+
+// Tests that we can clear a mock object's default actions when some,
+// but not all of its methods have default actions.
+TEST(VerifyAndClearTest, SomeMethodsHaveDefaultActions) {
+  MockB b;
+  ON_CALL(b, DoB()).WillByDefault(Return(1));
+
+  Mock::VerifyAndClear(&b);
+
+  // Verifies that the default action of int DoB() was removed.
+  EXPECT_EQ(0, b.DoB());
+}
+
+// Tests that we can clear a mock object's default actions when all of
+// its methods have default actions.
+TEST(VerifyAndClearTest, AllMethodsHaveDefaultActions) {
+  MockB b;
+  ON_CALL(b, DoB()).WillByDefault(Return(1));
+  ON_CALL(b, DoB(_)).WillByDefault(Return(2));
+
+  Mock::VerifyAndClear(&b);
+
+  // Verifies that the default action of int DoB() was removed.
+  EXPECT_EQ(0, b.DoB());
+
+  // Verifies that the default action of int DoB(int) was removed.
+  EXPECT_EQ(0, b.DoB(0));
+}
+
+// Tests that we can clear a mock object's default actions when a
+// method has more than one ON_CALL() set on it.
+TEST(VerifyAndClearTest, AMethodHasManyDefaultActions) {
+  MockB b;
+  ON_CALL(b, DoB(0)).WillByDefault(Return(1));
+  ON_CALL(b, DoB(_)).WillByDefault(Return(2));
+
+  Mock::VerifyAndClear(&b);
+
+  // Verifies that the default actions (there are two) of int DoB(int)
+  // were removed.
+  EXPECT_EQ(0, b.DoB(0));
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can call VerifyAndClear() on a mock object multiple
+// times.
+TEST(VerifyAndClearTest, CanCallManyTimes) {
+  MockB b;
+  ON_CALL(b, DoB()).WillByDefault(Return(1));
+  Mock::VerifyAndClear(&b);
+  Mock::VerifyAndClear(&b);
+
+  ON_CALL(b, DoB(_)).WillByDefault(Return(1));
+  Mock::VerifyAndClear(&b);
+
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that VerifyAndClear() works when the verification succeeds.
+TEST(VerifyAndClearTest, Success) {
+  MockB b;
+  ON_CALL(b, DoB()).WillByDefault(Return(1));
+  EXPECT_CALL(b, DoB(1)).WillOnce(Return(2));
+
+  b.DoB();
+  b.DoB(1);
+  ASSERT_TRUE(Mock::VerifyAndClear(&b));
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that VerifyAndClear() works when the verification fails.
+TEST(VerifyAndClearTest, Failure) {
+  MockB b;
+  ON_CALL(b, DoB(_)).WillByDefault(Return(1));
+  EXPECT_CALL(b, DoB()).WillOnce(Return(2));
+
+  b.DoB(1);
+  bool result = true;
+  EXPECT_NONFATAL_FAILURE(result = Mock::VerifyAndClear(&b),
+                          "Actual: never called");
+  ASSERT_FALSE(result);
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that VerifyAndClear() works when the default actions and
+// expectations are set on a const mock object.
+TEST(VerifyAndClearTest, Const) {
+  MockB b;
+  ON_CALL(Const(b), DoB()).WillByDefault(Return(1));
+
+  EXPECT_CALL(Const(b), DoB()).WillOnce(DoDefault()).WillOnce(Return(2));
+
+  b.DoB();
+  b.DoB();
+  ASSERT_TRUE(Mock::VerifyAndClear(&b));
+
+  // There should be no expectations on the methods now, so we can
+  // freely call them.
+  EXPECT_EQ(0, b.DoB());
+  EXPECT_EQ(0, b.DoB(1));
+}
+
+// Tests that we can set default actions and expectations on a mock
+// object after VerifyAndClear() has been called on it.
+TEST(VerifyAndClearTest, CanSetDefaultActionsAndExpectationsAfterwards) {
+  MockB b;
+  ON_CALL(b, DoB()).WillByDefault(Return(1));
+  EXPECT_CALL(b, DoB(_)).WillOnce(Return(2));
+  b.DoB(1);
+
+  Mock::VerifyAndClear(&b);
+
+  EXPECT_CALL(b, DoB()).WillOnce(Return(3));
+  ON_CALL(b, DoB(_)).WillByDefault(Return(4));
+
+  EXPECT_EQ(3, b.DoB());
+  EXPECT_EQ(4, b.DoB(1));
+}
+
+// Tests that calling VerifyAndClear() on one mock object does not
+// affect other mock objects (either of the same type or not).
+TEST(VerifyAndClearTest, DoesNotAffectOtherMockObjects) {
+  MockA a;
+  MockB b1;
+  MockB b2;
+
+  ON_CALL(a, Binary(_, _)).WillByDefault(Return(true));
+  EXPECT_CALL(a, Binary(_, _)).WillOnce(DoDefault()).WillOnce(Return(false));
+
+  ON_CALL(b1, DoB()).WillByDefault(Return(1));
+  EXPECT_CALL(b1, DoB(_)).WillOnce(Return(2));
+
+  ON_CALL(b2, DoB()).WillByDefault(Return(3));
+  EXPECT_CALL(b2, DoB(_));
+
+  b2.DoB(0);
+  Mock::VerifyAndClear(&b2);
+
+  // Verifies that the default actions and expectations of a and b1
+  // are still in effect.
+  EXPECT_TRUE(a.Binary(0, 0));
+  EXPECT_FALSE(a.Binary(0, 0));
+
+  EXPECT_EQ(1, b1.DoB());
+  EXPECT_EQ(2, b1.DoB(0));
+}
+
+TEST(VerifyAndClearTest,
+     DestroyingChainedMocksDoesNotDeadlockThroughExpectations) {
+  std::shared_ptr<MockA> a(new MockA);
+  ReferenceHoldingMock test_mock;
+
+  // EXPECT_CALL stores a reference to a inside test_mock.
+  EXPECT_CALL(test_mock, AcceptReference(_))
+      .WillRepeatedly(SetArgPointee<0>(a));
+
+  // Throw away the reference to the mock that we have in a. After this, the
+  // only reference to it is stored by test_mock.
+  a.reset();
+
+  // When test_mock goes out of scope, it destroys the last remaining reference
+  // to the mock object originally pointed to by a. This will cause the MockA
+  // destructor to be called from inside the ReferenceHoldingMock destructor.
+  // The state of all mocks is protected by a single global lock, but there
+  // should be no deadlock.
+}
+
+TEST(VerifyAndClearTest,
+     DestroyingChainedMocksDoesNotDeadlockThroughDefaultAction) {
+  std::shared_ptr<MockA> a(new MockA);
+  ReferenceHoldingMock test_mock;
+
+  // ON_CALL stores a reference to a inside test_mock.
+  ON_CALL(test_mock, AcceptReference(_)).WillByDefault(SetArgPointee<0>(a));
+
+  // Throw away the reference to the mock that we have in a. After this, the
+  // only reference to it is stored by test_mock.
+  a.reset();
+
+  // When test_mock goes out of scope, it destroys the last remaining reference
+  // to the mock object originally pointed to by a. This will cause the MockA
+  // destructor to be called from inside the ReferenceHoldingMock destructor.
+  // The state of all mocks is protected by a single global lock, but there
+  // should be no deadlock.
+}
+
+// Tests that a mock function's action can call a mock function
+// (either the same function or a different one) either as an explicit
+// action or as a default action without causing a dead lock.  It
+// verifies that the action is not performed inside the critical
+// section.
+TEST(SynchronizationTest, CanCallMockMethodInAction) {
+  MockA a;
+  MockC c;
+  ON_CALL(a, DoA(_)).WillByDefault(
+      IgnoreResult(InvokeWithoutArgs(&c, &MockC::NonVoidMethod)));
+  EXPECT_CALL(a, DoA(1));
+  EXPECT_CALL(a, DoA(1))
+      .WillOnce(Invoke(&a, &MockA::DoA))
+      .RetiresOnSaturation();
+  EXPECT_CALL(c, NonVoidMethod());
+
+  a.DoA(1);
+  // This will match the second EXPECT_CALL() and trigger another a.DoA(1),
+  // which will in turn match the first EXPECT_CALL() and trigger a call to
+  // c.NonVoidMethod() that was specified by the ON_CALL() since the first
+  // EXPECT_CALL() did not specify an action.
+}
+
+TEST(ParameterlessExpectationsTest, CanSetExpectationsWithoutMatchers) {
+  MockA a;
+  int do_a_arg0 = 0;
+  ON_CALL(a, DoA).WillByDefault(SaveArg<0>(&do_a_arg0));
+  int do_a_47_arg0 = 0;
+  ON_CALL(a, DoA(47)).WillByDefault(SaveArg<0>(&do_a_47_arg0));
+
+  a.DoA(17);
+  EXPECT_THAT(do_a_arg0, 17);
+  EXPECT_THAT(do_a_47_arg0, 0);
+  a.DoA(47);
+  EXPECT_THAT(do_a_arg0, 17);
+  EXPECT_THAT(do_a_47_arg0, 47);
+
+  ON_CALL(a, Binary).WillByDefault(Return(true));
+  ON_CALL(a, Binary(_, 14)).WillByDefault(Return(false));
+  EXPECT_THAT(a.Binary(14, 17), true);
+  EXPECT_THAT(a.Binary(17, 14), false);
+}
+
+TEST(ParameterlessExpectationsTest, CanSetExpectationsForOverloadedMethods) {
+  MockB b;
+  ON_CALL(b, DoB()).WillByDefault(Return(9));
+  ON_CALL(b, DoB(5)).WillByDefault(Return(11));
+
+  EXPECT_THAT(b.DoB(), 9);
+  EXPECT_THAT(b.DoB(1), 0);  // default value
+  EXPECT_THAT(b.DoB(5), 11);
+}
+
+struct MockWithConstMethods {
+ public:
+  MOCK_CONST_METHOD1(Foo, int(int));
+  MOCK_CONST_METHOD2(Bar, int(int, const char*));
+};
+
+TEST(ParameterlessExpectationsTest, CanSetExpectationsForConstMethods) {
+  MockWithConstMethods mock;
+  ON_CALL(mock, Foo).WillByDefault(Return(7));
+  ON_CALL(mock, Bar).WillByDefault(Return(33));
+
+  EXPECT_THAT(mock.Foo(17), 7);
+  EXPECT_THAT(mock.Bar(27, "purple"), 33);
+}
+
+class MockConstOverload {
+ public:
+  MOCK_METHOD1(Overloaded, int(int));
+  MOCK_CONST_METHOD1(Overloaded, int(int));
+};
+
+TEST(ParameterlessExpectationsTest,
+     CanSetExpectationsForConstOverloadedMethods) {
+  MockConstOverload mock;
+  ON_CALL(mock, Overloaded(_)).WillByDefault(Return(7));
+  ON_CALL(mock, Overloaded(5)).WillByDefault(Return(9));
+  ON_CALL(Const(mock), Overloaded(5)).WillByDefault(Return(11));
+  ON_CALL(Const(mock), Overloaded(7)).WillByDefault(Return(13));
+
+  EXPECT_THAT(mock.Overloaded(1), 7);
+  EXPECT_THAT(mock.Overloaded(5), 9);
+  EXPECT_THAT(mock.Overloaded(7), 7);
+
+  const MockConstOverload& const_mock = mock;
+  EXPECT_THAT(const_mock.Overloaded(1), 0);
+  EXPECT_THAT(const_mock.Overloaded(5), 11);
+  EXPECT_THAT(const_mock.Overloaded(7), 13);
+}
+
+}  // namespace
+}  // namespace testing
+
+// Allows the user to define their own main and then invoke gmock_main
+// from it. This might be necessary on some platforms which require
+// specific setup and teardown.
+#if GMOCK_RENAME_MAIN
+int gmock_main(int argc, char** argv) {
+#else
+int main(int argc, char** argv) {
+#endif  // GMOCK_RENAME_MAIN
+  testing::InitGoogleMock(&argc, argv);
+  // Ensures that the tests pass no matter what value of
+  // --gmock_catch_leaked_mocks and --gmock_verbose the user specifies.
+  GMOCK_FLAG_SET(catch_leaked_mocks, true);
+  GMOCK_FLAG_SET(verbose, testing::internal::kWarningVerbosity);
+
+  return RUN_ALL_TESTS();
+}
+```
+
+### `gmock_all_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_all_test.cc`
+
+
+```cpp
+// Copyright 2009, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+//
+// Tests for Google C++ Mocking Framework (Google Mock)
+//
+// Some users use a build system that Google Mock doesn't support directly,
+// yet they still want to build and run Google Mock's own tests.  This file
+// includes most such tests, making it easier for these users to maintain
+// their build scripts (they just need to build this file, even though the
+// below list of actual *_test.cc files might change).
+#include "test/gmock-actions_test.cc"
+#include "test/gmock-cardinalities_test.cc"
+#include "test/gmock-internal-utils_test.cc"
+#include "test/gmock-matchers-arithmetic_test.cc"
+#include "test/gmock-matchers-comparisons_test.cc"
+#include "test/gmock-matchers-containers_test.cc"
+#include "test/gmock-matchers-misc_test.cc"
+#include "test/gmock-more-actions_test.cc"
+#include "test/gmock-nice-strict_test.cc"
+#include "test/gmock-port_test.cc"
+#include "test/gmock-spec-builders_test.cc"
+#include "test/gmock_test.cc"
+```
+
+### `gmock_ex_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_ex_test.cc`
+
+
+```cpp
+// Copyright 2013, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Tests Google Mock's functionality that depends on exceptions.
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+
+#if GTEST_HAS_EXCEPTIONS
+namespace {
+
+using testing::HasSubstr;
+
+using testing::internal::GoogleTestFailureException;
+
+// A type that cannot be default constructed.
+class NonDefaultConstructible {
+ public:
+  explicit NonDefaultConstructible(int /* dummy */) {}
+};
+
+class MockFoo {
+ public:
+  // A mock method that returns a user-defined type.  Google Mock
+  // doesn't know what the default value for this type is.
+  MOCK_METHOD0(GetNonDefaultConstructible, NonDefaultConstructible());
+};
+
+TEST(DefaultValueTest, ThrowsRuntimeErrorWhenNoDefaultValue) {
+  MockFoo mock;
+  try {
+    // No expectation is set on this method, so Google Mock must
+    // return the default value.  However, since Google Mock knows
+    // nothing about the return type, it doesn't know what to return,
+    // and has to throw (when exceptions are enabled) or abort
+    // (otherwise).
+    mock.GetNonDefaultConstructible();
+    FAIL() << "GetNonDefaultConstructible()'s return type has no default "
+           << "value, so Google Mock should have thrown.";
+  } catch (const GoogleTestFailureException& /* unused */) {
+    FAIL() << "Google Test does not try to catch an exception of type "
+           << "GoogleTestFailureException, which is used for reporting "
+           << "a failure to other testing frameworks.  Google Mock should "
+           << "not throw a GoogleTestFailureException as it will kill the "
+           << "entire test program instead of just the current TEST.";
+  } catch (const std::exception& ex) {
+    EXPECT_THAT(ex.what(), HasSubstr("has no default value"));
+  }
+}
+
+}  // unnamed namespace
+#endif
+```
+
+### `gmock_leak_test.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_leak_test.py`
+
+
+```python
+#!/usr/bin/env python
+#
+# Copyright 2009, Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""Tests that leaked mock objects can be caught be Google Mock."""
+
+from googlemock.test import gmock_test_utils
+
+PROGRAM_PATH = gmock_test_utils.GetTestExecutablePath('gmock_leak_test_')
+TEST_WITH_EXPECT_CALL = [PROGRAM_PATH, '--gtest_filter=*ExpectCall*']
+TEST_WITH_ON_CALL = [PROGRAM_PATH, '--gtest_filter=*OnCall*']
+TEST_MULTIPLE_LEAKS = [PROGRAM_PATH, '--gtest_filter=*MultipleLeaked*']
+
+environ = gmock_test_utils.environ
+SetEnvVar = gmock_test_utils.SetEnvVar
+
+# Tests in this file run a Google-Test-based test program and expect it
+# to terminate prematurely.  Therefore they are incompatible with
+# the premature-exit-file protocol by design.  Unset the
+# premature-exit filepath to prevent Google Test from creating
+# the file.
+SetEnvVar(gmock_test_utils.PREMATURE_EXIT_FILE_ENV_VAR, None)
+
+
+class GMockLeakTest(gmock_test_utils.TestCase):
+
+  def testCatchesLeakedMockByDefault(self):
+    self.assertNotEqual(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_EXPECT_CALL,
+                                    env=environ).exit_code)
+    self.assertNotEqual(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_ON_CALL,
+                                    env=environ).exit_code)
+
+  def testDoesNotCatchLeakedMockWhenDisabled(self):
+    self.assertEquals(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_EXPECT_CALL +
+                                    ['--gmock_catch_leaked_mocks=0'],
+                                    env=environ).exit_code)
+    self.assertEquals(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_ON_CALL +
+                                    ['--gmock_catch_leaked_mocks=0'],
+                                    env=environ).exit_code)
+
+  def testCatchesLeakedMockWhenEnabled(self):
+    self.assertNotEqual(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_EXPECT_CALL +
+                                    ['--gmock_catch_leaked_mocks'],
+                                    env=environ).exit_code)
+    self.assertNotEqual(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_ON_CALL +
+                                    ['--gmock_catch_leaked_mocks'],
+                                    env=environ).exit_code)
+
+  def testCatchesLeakedMockWhenEnabledWithExplictFlagValue(self):
+    self.assertNotEqual(
+        0,
+        gmock_test_utils.Subprocess(TEST_WITH_EXPECT_CALL +
+                                    ['--gmock_catch_leaked_mocks=1'],
+                                    env=environ).exit_code)
+
+  def testCatchesMultipleLeakedMocks(self):
+    self.assertNotEqual(
+        0,
+        gmock_test_utils.Subprocess(TEST_MULTIPLE_LEAKS +
+                                    ['--gmock_catch_leaked_mocks'],
+                                    env=environ).exit_code)
+
+
+if __name__ == '__main__':
+  gmock_test_utils.Main()
+```
+
+### `gmock_leak_test_.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_leak_test_.cc`
+
+
+```cpp
+// Copyright 2009, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This program is for verifying that a leaked mock object can be
+// caught by Google Mock's leak detector.
+
+#include "gmock/gmock.h"
+
+namespace {
+
+using ::testing::Return;
+
+class FooInterface {
+ public:
+  virtual ~FooInterface() {}
+  virtual void DoThis() = 0;
+};
+
+class MockFoo : public FooInterface {
+ public:
+  MockFoo() {}
+
+  MOCK_METHOD0(DoThis, void());
+
+ private:
+  MockFoo(const MockFoo&) = delete;
+  MockFoo& operator=(const MockFoo&) = delete;
+};
+
+TEST(LeakTest, LeakedMockWithExpectCallCausesFailureWhenLeakCheckingIsEnabled) {
+  MockFoo* foo = new MockFoo;
+
+  EXPECT_CALL(*foo, DoThis());
+  foo->DoThis();
+
+  // In order to test the leak detector, we deliberately leak foo.
+
+  // Makes sure Google Mock's leak detector can change the exit code
+  // to 1 even when the code is already exiting with 0.
+  exit(0);
+}
+
+TEST(LeakTest, LeakedMockWithOnCallCausesFailureWhenLeakCheckingIsEnabled) {
+  MockFoo* foo = new MockFoo;
+
+  ON_CALL(*foo, DoThis()).WillByDefault(Return());
+
+  // In order to test the leak detector, we deliberately leak foo.
+
+  // Makes sure Google Mock's leak detector can change the exit code
+  // to 1 even when the code is already exiting with 0.
+  exit(0);
+}
+
+TEST(LeakTest, CatchesMultipleLeakedMockObjects) {
+  MockFoo* foo1 = new MockFoo;
+  MockFoo* foo2 = new MockFoo;
+
+  ON_CALL(*foo1, DoThis()).WillByDefault(Return());
+  EXPECT_CALL(*foo2, DoThis());
+  foo2->DoThis();
+
+  // In order to test the leak detector, we deliberately leak foo1 and
+  // foo2.
+
+  // Makes sure Google Mock's leak detector can change the exit code
+  // to 1 even when the code is already exiting with 0.
+  exit(0);
+}
+
+}  // namespace
+```
+
+### `gmock_link2_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_link2_test.cc`
+
+
+```cpp
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file is for verifying that various Google Mock constructs do not
+// produce linker errors when instantiated in different translation units.
+// Please see gmock_link_test.h for details.
+
+#define LinkTest LinkTest2
+
+#include "test/gmock_link_test.h"
+```
+
+### `gmock_link_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_link_test.cc`
+
+
+```cpp
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file is for verifying that various Google Mock constructs do not
+// produce linker errors when instantiated in different translation units.
+// Please see gmock_link_test.h for details.
+
+#define LinkTest LinkTest1
+
+#include "test/gmock_link_test.h"
+```
+
+### `gmock_link_test.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_link_test.h`
+
+
+```c
+// Copyright 2009, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests that:
+// a. A header file defining a mock class can be included in multiple
+//    translation units without causing a link error.
+// b. Actions and matchers can be instantiated with identical template
+//    arguments in different translation units without causing link
+//    errors.
+//    The following constructs are currently tested:
+//    Actions:
+//      Return()
+//      Return(value)
+//      ReturnNull
+//      ReturnRef
+//      Assign
+//      SetArgPointee
+//      SetArrayArgument
+//      SetErrnoAndReturn
+//      Invoke(function)
+//      Invoke(object, method)
+//      InvokeWithoutArgs(function)
+//      InvokeWithoutArgs(object, method)
+//      InvokeArgument
+//      WithArg
+//      WithArgs
+//      WithoutArgs
+//      DoAll
+//      DoDefault
+//      IgnoreResult
+//      Throw
+//      ACTION()-generated
+//      ACTION_P()-generated
+//      ACTION_P2()-generated
+//    Matchers:
+//      _
+//      A
+//      An
+//      Eq
+//      Gt, Lt, Ge, Le, Ne
+//      NotNull
+//      Ref
+//      TypedEq
+//      DoubleEq
+//      FloatEq
+//      NanSensitiveDoubleEq
+//      NanSensitiveFloatEq
+//      ContainsRegex
+//      MatchesRegex
+//      EndsWith
+//      HasSubstr
+//      StartsWith
+//      StrCaseEq
+//      StrCaseNe
+//      StrEq
+//      StrNe
+//      ElementsAre
+//      ElementsAreArray
+//      ContainerEq
+//      Field
+//      Property
+//      ResultOf(function)
+//      ResultOf(callback)
+//      Pointee
+//      Truly(predicate)
+//      AddressSatisfies
+//      AllOf
+//      AnyOf
+//      Not
+//      MatcherCast<T>
+//
+//  Please note: this test does not verify the functioning of these
+//  constructs, only that the programs using them will link successfully.
+//
+// Implementation note:
+// This test requires identical definitions of Interface and Mock to be
+// included in different translation units.  We achieve this by writing
+// them in this header and #including it in gmock_link_test.cc and
+// gmock_link2_test.cc.  Because the symbols generated by the compiler for
+// those constructs must be identical in both translation units,
+// definitions of Interface and Mock tests MUST be kept in the SAME
+// NON-ANONYMOUS namespace in this file.  The test fixture class LinkTest
+// is defined as LinkTest1 in gmock_link_test.cc and as LinkTest2 in
+// gmock_link2_test.cc to avoid producing linker errors.
+
+#ifndef GOOGLEMOCK_TEST_GMOCK_LINK_TEST_H_
+#define GOOGLEMOCK_TEST_GMOCK_LINK_TEST_H_
+
+#include "gmock/gmock.h"
+
+#if !GTEST_OS_WINDOWS_MOBILE
+#include <errno.h>
+#endif
+
+#include <iostream>
+#include <vector>
+
+#include "gtest/gtest.h"
+#include "gtest/internal/gtest-port.h"
+
+using testing::_;
+using testing::A;
+using testing::Action;
+using testing::AllOf;
+using testing::AnyOf;
+using testing::Assign;
+using testing::ContainerEq;
+using testing::DoAll;
+using testing::DoDefault;
+using testing::DoubleEq;
+using testing::ElementsAre;
+using testing::ElementsAreArray;
+using testing::EndsWith;
+using testing::Eq;
+using testing::Field;
+using testing::FloatEq;
+using testing::Ge;
+using testing::Gt;
+using testing::HasSubstr;
+using testing::IgnoreResult;
+using testing::Invoke;
+using testing::InvokeArgument;
+using testing::InvokeWithoutArgs;
+using testing::IsNull;
+using testing::IsSubsetOf;
+using testing::IsSupersetOf;
+using testing::Le;
+using testing::Lt;
+using testing::Matcher;
+using testing::MatcherCast;
+using testing::NanSensitiveDoubleEq;
+using testing::NanSensitiveFloatEq;
+using testing::Ne;
+using testing::Not;
+using testing::NotNull;
+using testing::Pointee;
+using testing::Property;
+using testing::Ref;
+using testing::ResultOf;
+using testing::Return;
+using testing::ReturnNull;
+using testing::ReturnRef;
+using testing::SetArgPointee;
+using testing::SetArrayArgument;
+using testing::StartsWith;
+using testing::StrCaseEq;
+using testing::StrCaseNe;
+using testing::StrEq;
+using testing::StrNe;
+using testing::Truly;
+using testing::TypedEq;
+using testing::WithArg;
+using testing::WithArgs;
+using testing::WithoutArgs;
+
+#if !GTEST_OS_WINDOWS_MOBILE
+using testing::SetErrnoAndReturn;
+#endif
+
+#if GTEST_HAS_EXCEPTIONS
+using testing::Throw;
+#endif
+
+using testing::ContainsRegex;
+using testing::MatchesRegex;
+
+class Interface {
+ public:
+  virtual ~Interface() {}
+  virtual void VoidFromString(char* str) = 0;
+  virtual char* StringFromString(char* str) = 0;
+  virtual int IntFromString(char* str) = 0;
+  virtual int& IntRefFromString(char* str) = 0;
+  virtual void VoidFromFunc(void (*func)(char* str)) = 0;
+  virtual void VoidFromIntRef(int& n) = 0;  // NOLINT
+  virtual void VoidFromFloat(float n) = 0;
+  virtual void VoidFromDouble(double n) = 0;
+  virtual void VoidFromVector(const std::vector<int>& v) = 0;
+};
+
+class Mock : public Interface {
+ public:
+  Mock() {}
+
+  MOCK_METHOD1(VoidFromString, void(char* str));
+  MOCK_METHOD1(StringFromString, char*(char* str));
+  MOCK_METHOD1(IntFromString, int(char* str));
+  MOCK_METHOD1(IntRefFromString, int&(char* str));
+  MOCK_METHOD1(VoidFromFunc, void(void (*func)(char* str)));
+  MOCK_METHOD1(VoidFromIntRef, void(int& n));  // NOLINT
+  MOCK_METHOD1(VoidFromFloat, void(float n));
+  MOCK_METHOD1(VoidFromDouble, void(double n));
+  MOCK_METHOD1(VoidFromVector, void(const std::vector<int>& v));
+
+ private:
+  Mock(const Mock&) = delete;
+  Mock& operator=(const Mock&) = delete;
+};
+
+class InvokeHelper {
+ public:
+  static void StaticVoidFromVoid() {}
+  void VoidFromVoid() {}
+  static void StaticVoidFromString(char* /* str */) {}
+  void VoidFromString(char* /* str */) {}
+  static int StaticIntFromString(char* /* str */) { return 1; }
+  static bool StaticBoolFromString(const char* /* str */) { return true; }
+};
+
+class FieldHelper {
+ public:
+  explicit FieldHelper(int a_field) : field_(a_field) {}
+  int field() const { return field_; }
+  int field_;  // NOLINT -- need external access to field_ to test
+               //           the Field matcher.
+};
+
+// Tests the linkage of the ReturnVoid action.
+TEST(LinkTest, TestReturnVoid) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(Return());
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the Return action.
+TEST(LinkTest, TestReturn) {
+  Mock mock;
+  char ch = 'x';
+
+  EXPECT_CALL(mock, StringFromString(_)).WillOnce(Return(&ch));
+  mock.StringFromString(nullptr);
+}
+
+// Tests the linkage of the ReturnNull action.
+TEST(LinkTest, TestReturnNull) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(Return());
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the ReturnRef action.
+TEST(LinkTest, TestReturnRef) {
+  Mock mock;
+  int n = 42;
+
+  EXPECT_CALL(mock, IntRefFromString(_)).WillOnce(ReturnRef(n));
+  mock.IntRefFromString(nullptr);
+}
+
+// Tests the linkage of the Assign action.
+TEST(LinkTest, TestAssign) {
+  Mock mock;
+  char ch = 'x';
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(Assign(&ch, 'y'));
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the SetArgPointee action.
+TEST(LinkTest, TestSetArgPointee) {
+  Mock mock;
+  char ch = 'x';
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(SetArgPointee<0>('y'));
+  mock.VoidFromString(&ch);
+}
+
+// Tests the linkage of the SetArrayArgument action.
+TEST(LinkTest, TestSetArrayArgument) {
+  Mock mock;
+  char ch = 'x';
+  char ch2 = 'y';
+
+  EXPECT_CALL(mock, VoidFromString(_))
+      .WillOnce(SetArrayArgument<0>(&ch2, &ch2 + 1));
+  mock.VoidFromString(&ch);
+}
+
+#if !GTEST_OS_WINDOWS_MOBILE
+
+// Tests the linkage of the SetErrnoAndReturn action.
+TEST(LinkTest, TestSetErrnoAndReturn) {
+  Mock mock;
+
+  int saved_errno = errno;
+  EXPECT_CALL(mock, IntFromString(_)).WillOnce(SetErrnoAndReturn(1, -1));
+  mock.IntFromString(nullptr);
+  errno = saved_errno;
+}
+
+#endif  // !GTEST_OS_WINDOWS_MOBILE
+
+// Tests the linkage of the Invoke(function) and Invoke(object, method) actions.
+TEST(LinkTest, TestInvoke) {
+  Mock mock;
+  InvokeHelper test_invoke_helper;
+
+  EXPECT_CALL(mock, VoidFromString(_))
+      .WillOnce(Invoke(&InvokeHelper::StaticVoidFromString))
+      .WillOnce(Invoke(&test_invoke_helper, &InvokeHelper::VoidFromString));
+  mock.VoidFromString(nullptr);
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the InvokeWithoutArgs action.
+TEST(LinkTest, TestInvokeWithoutArgs) {
+  Mock mock;
+  InvokeHelper test_invoke_helper;
+
+  EXPECT_CALL(mock, VoidFromString(_))
+      .WillOnce(InvokeWithoutArgs(&InvokeHelper::StaticVoidFromVoid))
+      .WillOnce(
+          InvokeWithoutArgs(&test_invoke_helper, &InvokeHelper::VoidFromVoid));
+  mock.VoidFromString(nullptr);
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the InvokeArgument action.
+TEST(LinkTest, TestInvokeArgument) {
+  Mock mock;
+  char ch = 'x';
+
+  EXPECT_CALL(mock, VoidFromFunc(_)).WillOnce(InvokeArgument<0>(&ch));
+  mock.VoidFromFunc(InvokeHelper::StaticVoidFromString);
+}
+
+// Tests the linkage of the WithArg action.
+TEST(LinkTest, TestWithArg) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_))
+      .WillOnce(WithArg<0>(Invoke(&InvokeHelper::StaticVoidFromString)));
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the WithArgs action.
+TEST(LinkTest, TestWithArgs) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_))
+      .WillOnce(WithArgs<0>(Invoke(&InvokeHelper::StaticVoidFromString)));
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the WithoutArgs action.
+TEST(LinkTest, TestWithoutArgs) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(WithoutArgs(Return()));
+  mock.VoidFromString(nullptr);
+}
+
+// Tests the linkage of the DoAll action.
+TEST(LinkTest, TestDoAll) {
+  Mock mock;
+  char ch = 'x';
+
+  EXPECT_CALL(mock, VoidFromString(_))
+      .WillOnce(DoAll(SetArgPointee<0>('y'), Return()));
+  mock.VoidFromString(&ch);
+}
+
+// Tests the linkage of the DoDefault action.
+TEST(LinkTest, TestDoDefault) {
+  Mock mock;
+  char ch = 'x';
+
+  ON_CALL(mock, VoidFromString(_)).WillByDefault(Return());
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(DoDefault());
+  mock.VoidFromString(&ch);
+}
+
+// Tests the linkage of the IgnoreResult action.
+TEST(LinkTest, TestIgnoreResult) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(IgnoreResult(Return(42)));
+  mock.VoidFromString(nullptr);
+}
+
+#if GTEST_HAS_EXCEPTIONS
+// Tests the linkage of the Throw action.
+TEST(LinkTest, TestThrow) {
+  Mock mock;
+
+  EXPECT_CALL(mock, VoidFromString(_)).WillOnce(Throw(42));
+  EXPECT_THROW(mock.VoidFromString(nullptr), int);
+}
+#endif  // GTEST_HAS_EXCEPTIONS
+
+// The ACTION*() macros trigger warning C4100 (unreferenced formal
+// parameter) in MSVC with -W4.  Unfortunately they cannot be fixed in
+// the macro definition, as the warnings are generated when the macro
+// is expanded and macro expansion cannot contain #pragma.  Therefore
+// we suppress them here.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#endif
+
+// Tests the linkage of actions created using ACTION macro.
+namespace {
+ACTION(Return1) { return 1; }
+}  // namespace
+
+TEST(LinkTest, TestActionMacro) {
+  Mock mock;
+
+  EXPECT_CALL(mock, IntFromString(_)).WillOnce(Return1());
+  mock.IntFromString(nullptr);
+}
+
+// Tests the linkage of actions created using ACTION_P macro.
+namespace {
+ACTION_P(ReturnArgument, ret_value) { return ret_value; }
+}  // namespace
+
+TEST(LinkTest, TestActionPMacro) {
+  Mock mock;
+
+  EXPECT_CALL(mock, IntFromString(_)).WillOnce(ReturnArgument(42));
+  mock.IntFromString(nullptr);
+}
+
+// Tests the linkage of actions created using ACTION_P2 macro.
+namespace {
+ACTION_P2(ReturnEqualsEitherOf, first, second) {
+  return arg0 == first || arg0 == second;
+}
+}  // namespace
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+TEST(LinkTest, TestActionP2Macro) {
+  Mock mock;
+  char ch = 'x';
+
+  EXPECT_CALL(mock, IntFromString(_))
+      .WillOnce(ReturnEqualsEitherOf("one", "two"));
+  mock.IntFromString(&ch);
+}
+
+// Tests the linkage of the "_" matcher.
+TEST(LinkTest, TestMatcherAnything) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(_)).WillByDefault(Return());
+}
+
+// Tests the linkage of the A matcher.
+TEST(LinkTest, TestMatcherA) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(A<char*>())).WillByDefault(Return());
+}
+
+// Tests the linkage of the Eq and the "bare value" matcher.
+TEST(LinkTest, TestMatchersEq) {
+  Mock mock;
+  const char* p = "x";
+
+  ON_CALL(mock, VoidFromString(Eq(p))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromString(const_cast<char*>("y"))).WillByDefault(Return());
+}
+
+// Tests the linkage of the Lt, Gt, Le, Ge, and Ne matchers.
+TEST(LinkTest, TestMatchersRelations) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromFloat(Lt(1.0f))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromFloat(Gt(1.0f))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromFloat(Le(1.0f))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromFloat(Ge(1.0f))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromFloat(Ne(1.0f))).WillByDefault(Return());
+}
+
+// Tests the linkage of the NotNull matcher.
+TEST(LinkTest, TestMatcherNotNull) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(NotNull())).WillByDefault(Return());
+}
+
+// Tests the linkage of the IsNull matcher.
+TEST(LinkTest, TestMatcherIsNull) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(IsNull())).WillByDefault(Return());
+}
+
+// Tests the linkage of the Ref matcher.
+TEST(LinkTest, TestMatcherRef) {
+  Mock mock;
+  int a = 0;
+
+  ON_CALL(mock, VoidFromIntRef(Ref(a))).WillByDefault(Return());
+}
+
+// Tests the linkage of the TypedEq matcher.
+TEST(LinkTest, TestMatcherTypedEq) {
+  Mock mock;
+  long a = 0;
+
+  ON_CALL(mock, VoidFromIntRef(TypedEq<int&>(a))).WillByDefault(Return());
+}
+
+// Tests the linkage of the FloatEq, DoubleEq, NanSensitiveFloatEq and
+// NanSensitiveDoubleEq matchers.
+TEST(LinkTest, TestMatchersFloatingPoint) {
+  Mock mock;
+  float a = 0;
+
+  ON_CALL(mock, VoidFromFloat(FloatEq(a))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromDouble(DoubleEq(a))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromFloat(NanSensitiveFloatEq(a))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromDouble(NanSensitiveDoubleEq(a)))
+      .WillByDefault(Return());
+}
+
+// Tests the linkage of the ContainsRegex matcher.
+TEST(LinkTest, TestMatcherContainsRegex) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(ContainsRegex(".*"))).WillByDefault(Return());
+}
+
+// Tests the linkage of the MatchesRegex matcher.
+TEST(LinkTest, TestMatcherMatchesRegex) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(MatchesRegex(".*"))).WillByDefault(Return());
+}
+
+// Tests the linkage of the StartsWith, EndsWith, and HasSubstr matchers.
+TEST(LinkTest, TestMatchersSubstrings) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromString(StartsWith("a"))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromString(EndsWith("c"))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromString(HasSubstr("b"))).WillByDefault(Return());
+}
+
+// Tests the linkage of the StrEq, StrNe, StrCaseEq, and StrCaseNe matchers.
+TEST(LinkTest, TestMatchersStringEquality) {
+  Mock mock;
+  ON_CALL(mock, VoidFromString(StrEq("a"))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromString(StrNe("a"))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromString(StrCaseEq("a"))).WillByDefault(Return());
+  ON_CALL(mock, VoidFromString(StrCaseNe("a"))).WillByDefault(Return());
+}
+
+// Tests the linkage of the ElementsAre matcher.
+TEST(LinkTest, TestMatcherElementsAre) {
+  Mock mock;
+
+  ON_CALL(mock, VoidFromVector(ElementsAre('a', _))).WillByDefault(Return());
+}
+
+// Tests the linkage of the ElementsAreArray matcher.
+TEST(LinkTest, TestMatcherElementsAreArray) {
+  Mock mock;
+  char arr[] = {'a', 'b'};
+
+  ON_CALL(mock, VoidFromVector(ElementsAreArray(arr))).WillByDefault(Return());
+}
+
+// Tests the linkage of the IsSubsetOf matcher.
+TEST(LinkTest, TestMatcherIsSubsetOf) {
+  Mock mock;
+  char arr[] = {'a', 'b'};
+
+  ON_CALL(mock, VoidFromVector(IsSubsetOf(arr))).WillByDefault(Return());
+}
+
+// Tests the linkage of the IsSupersetOf matcher.
+TEST(LinkTest, TestMatcherIsSupersetOf) {
+  Mock mock;
+  char arr[] = {'a', 'b'};
+
+  ON_CALL(mock, VoidFromVector(IsSupersetOf(arr))).WillByDefault(Return());
+}
+
+// Tests the linkage of the ContainerEq matcher.
+TEST(LinkTest, TestMatcherContainerEq) {
+  Mock mock;
+  std::vector<int> v;
+
+  ON_CALL(mock, VoidFromVector(ContainerEq(v))).WillByDefault(Return());
+}
+
+// Tests the linkage of the Field matcher.
+TEST(LinkTest, TestMatcherField) {
+  FieldHelper helper(0);
+
+  Matcher<const FieldHelper&> m = Field(&FieldHelper::field_, Eq(0));
+  EXPECT_TRUE(m.Matches(helper));
+
+  Matcher<const FieldHelper*> m2 = Field(&FieldHelper::field_, Eq(0));
+  EXPECT_TRUE(m2.Matches(&helper));
+}
+
+// Tests the linkage of the Property matcher.
+TEST(LinkTest, TestMatcherProperty) {
+  FieldHelper helper(0);
+
+  Matcher<const FieldHelper&> m = Property(&FieldHelper::field, Eq(0));
+  EXPECT_TRUE(m.Matches(helper));
+
+  Matcher<const FieldHelper*> m2 = Property(&FieldHelper::field, Eq(0));
+  EXPECT_TRUE(m2.Matches(&helper));
+}
+
+// Tests the linkage of the ResultOf matcher.
+TEST(LinkTest, TestMatcherResultOf) {
+  Matcher<char*> m = ResultOf(&InvokeHelper::StaticIntFromString, Eq(1));
+  EXPECT_TRUE(m.Matches(nullptr));
+}
+
+// Tests the linkage of the ResultOf matcher.
+TEST(LinkTest, TestMatcherPointee) {
+  int n = 1;
+
+  Matcher<int*> m = Pointee(Eq(1));
+  EXPECT_TRUE(m.Matches(&n));
+}
+
+// Tests the linkage of the Truly matcher.
+TEST(LinkTest, TestMatcherTruly) {
+  Matcher<const char*> m = Truly(&InvokeHelper::StaticBoolFromString);
+  EXPECT_TRUE(m.Matches(nullptr));
+}
+
+// Tests the linkage of the AllOf matcher.
+TEST(LinkTest, TestMatcherAllOf) {
+  Matcher<int> m = AllOf(_, Eq(1));
+  EXPECT_TRUE(m.Matches(1));
+}
+
+// Tests the linkage of the AnyOf matcher.
+TEST(LinkTest, TestMatcherAnyOf) {
+  Matcher<int> m = AnyOf(_, Eq(1));
+  EXPECT_TRUE(m.Matches(1));
+}
+
+// Tests the linkage of the Not matcher.
+TEST(LinkTest, TestMatcherNot) {
+  Matcher<int> m = Not(_);
+  EXPECT_FALSE(m.Matches(1));
+}
+
+// Tests the linkage of the MatcherCast<T>() function.
+TEST(LinkTest, TestMatcherCast) {
+  Matcher<const char*> m = MatcherCast<const char*>(_);
+  EXPECT_TRUE(m.Matches(nullptr));
+}
+
+#endif  // GOOGLEMOCK_TEST_GMOCK_LINK_TEST_H_
+```
+
+### `gmock_output_test.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_output_test.py`
+
+
+```python
+#!/usr/bin/env python
+#
+# Copyright 2008, Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+r"""Tests the text output of Google C++ Mocking Framework.
+
+To update the golden file:
+gmock_output_test.py --build_dir=BUILD/DIR --gengolden
+where BUILD/DIR contains the built gmock_output_test_ file.
+gmock_output_test.py --gengolden
+gmock_output_test.py
+
+"""
+
+from io import open    # pylint: disable=redefined-builtin, g-importing-member
+import os
+import re
+import sys
+from googlemock.test import gmock_test_utils
+
+
+# The flag for generating the golden file
+GENGOLDEN_FLAG = '--gengolden'
+
+PROGRAM_PATH = gmock_test_utils.GetTestExecutablePath('gmock_output_test_')
+COMMAND = [PROGRAM_PATH, '--gtest_stack_trace_depth=0', '--gtest_print_time=0']
+GOLDEN_NAME = 'gmock_output_test_golden.txt'
+GOLDEN_PATH = os.path.join(gmock_test_utils.GetSourceDir(), GOLDEN_NAME)
+
+
+def ToUnixLineEnding(s):
+  """Changes all Windows/Mac line endings in s to UNIX line endings."""
+
+  return s.replace('\r\n', '\n').replace('\r', '\n')
+
+
+def RemoveReportHeaderAndFooter(output):
+  """Removes Google Test result report's header and footer from the output."""
+
+  output = re.sub(r'.*gtest_main.*\n', '', output)
+  output = re.sub(r'\[.*\d+ tests.*\n', '', output)
+  output = re.sub(r'\[.* test environment .*\n', '', output)
+  output = re.sub(r'\[=+\] \d+ tests .* ran.*', '', output)
+  output = re.sub(r'.* FAILED TESTS\n', '', output)
+  return output
+
+
+def RemoveLocations(output):
+  """Removes all file location info from a Google Test program's output.
+
+  Args:
+       output:  the output of a Google Test program.
+
+  Returns:
+       output with all file location info (in the form of
+       'DIRECTORY/FILE_NAME:LINE_NUMBER: 'or
+       'DIRECTORY\\FILE_NAME(LINE_NUMBER): ') replaced by
+       'FILE:#: '.
+  """
+
+  return re.sub(r'.*[/\\](.+)(\:\d+|\(\d+\))\:', 'FILE:#:', output)
+
+
+def NormalizeErrorMarker(output):
+  """Normalizes the error marker, which is different on Windows vs on Linux."""
+
+  return re.sub(r' error: ', ' Failure\n', output)
+
+
+def RemoveMemoryAddresses(output):
+  """Removes memory addresses from the test output."""
+
+  return re.sub(r'@\w+', '@0x#', output)
+
+
+def RemoveTestNamesOfLeakedMocks(output):
+  """Removes the test names of leaked mock objects from the test output."""
+
+  return re.sub(r'\(used in test .+\) ', '', output)
+
+
+def GetLeakyTests(output):
+  """Returns a list of test names that leak mock objects."""
+
+  # findall() returns a list of all matches of the regex in output.
+  # For example, if '(used in test FooTest.Bar)' is in output, the
+  # list will contain 'FooTest.Bar'.
+  return re.findall(r'\(used in test (.+)\)', output)
+
+
+def GetNormalizedOutputAndLeakyTests(output):
+  """Normalizes the output of gmock_output_test_.
+
+  Args:
+    output: The test output.
+
+  Returns:
+    A tuple (the normalized test output, the list of test names that have
+    leaked mocks).
+  """
+
+  output = ToUnixLineEnding(output)
+  output = RemoveReportHeaderAndFooter(output)
+  output = NormalizeErrorMarker(output)
+  output = RemoveLocations(output)
+  output = RemoveMemoryAddresses(output)
+  return (RemoveTestNamesOfLeakedMocks(output), GetLeakyTests(output))
+
+
+def GetShellCommandOutput(cmd):
+  """Runs a command in a sub-process, and returns its STDOUT in a string."""
+
+  return gmock_test_utils.Subprocess(cmd, capture_stderr=False).output
+
+
+def GetNormalizedCommandOutputAndLeakyTests(cmd):
+  """Runs a command and returns its normalized output and a list of leaky tests.
+
+  Args:
+    cmd:  the shell command.
+  """
+
+  # Disables exception pop-ups on Windows.
+  os.environ['GTEST_CATCH_EXCEPTIONS'] = '1'
+  return GetNormalizedOutputAndLeakyTests(GetShellCommandOutput(cmd))
+
+
+class GMockOutputTest(gmock_test_utils.TestCase):
+
+  def testOutput(self):
+    (output, leaky_tests) = GetNormalizedCommandOutputAndLeakyTests(COMMAND)
+    golden_file = open(GOLDEN_PATH, 'rb')
+    golden = golden_file.read().decode('utf-8')
+    golden_file.close()
+
+    # The normalized output should match the golden file.
+    self.assertEqual(golden, output)
+
+    # The raw output should contain 2 leaked mock object errors for
+    # test GMockOutputTest.CatchesLeakedMocks.
+    self.assertEqual(['GMockOutputTest.CatchesLeakedMocks',
+                      'GMockOutputTest.CatchesLeakedMocks'],
+                     leaky_tests)
+
+
+if __name__ == '__main__':
+  if sys.argv[1:] == [GENGOLDEN_FLAG]:
+    (output, _) = GetNormalizedCommandOutputAndLeakyTests(COMMAND)
+    golden_file = open(GOLDEN_PATH, 'wb')
+    golden_file.write(output)
+    golden_file.close()
+    # Suppress the error "googletest was imported but a call to its main()
+    # was never detected."
+    os._exit(0)
+  else:
+    gmock_test_utils.Main()
+```
+
+### `gmock_output_test_.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_output_test_.cc`
+
+
+```cpp
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Tests Google Mock's output in various scenarios.  This ensures that
+// Google Mock's messages are readable and useful.
+
+#include <stdio.h>
+
+#include <string>
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+
+// Silence C4100 (unreferenced formal parameter)
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#endif
+
+using testing::_;
+using testing::AnyNumber;
+using testing::Ge;
+using testing::InSequence;
+using testing::NaggyMock;
+using testing::Ref;
+using testing::Return;
+using testing::Sequence;
+using testing::Value;
+
+class MockFoo {
+ public:
+  MockFoo() {}
+
+  MOCK_METHOD3(Bar, char(const std::string& s, int i, double x));
+  MOCK_METHOD2(Bar2, bool(int x, int y));
+  MOCK_METHOD2(Bar3, void(int x, int y));
+
+ private:
+  MockFoo(const MockFoo&) = delete;
+  MockFoo& operator=(const MockFoo&) = delete;
+};
+
+class GMockOutputTest : public testing::Test {
+ protected:
+  NaggyMock<MockFoo> foo_;
+};
+
+TEST_F(GMockOutputTest, ExpectedCall) {
+  GMOCK_FLAG_SET(verbose, "info");
+
+  EXPECT_CALL(foo_, Bar2(0, _));
+  foo_.Bar2(0, 0);  // Expected call
+
+  GMOCK_FLAG_SET(verbose, "warning");
+}
+
+TEST_F(GMockOutputTest, ExpectedCallToVoidFunction) {
+  GMOCK_FLAG_SET(verbose, "info");
+
+  EXPECT_CALL(foo_, Bar3(0, _));
+  foo_.Bar3(0, 0);  // Expected call
+
+  GMOCK_FLAG_SET(verbose, "warning");
+}
+
+TEST_F(GMockOutputTest, ExplicitActionsRunOut) {
+  EXPECT_CALL(foo_, Bar2(_, _)).Times(2).WillOnce(Return(false));
+  foo_.Bar2(2, 2);
+  foo_.Bar2(1, 1);  // Explicit actions in EXPECT_CALL run out.
+}
+
+TEST_F(GMockOutputTest, UnexpectedCall) {
+  EXPECT_CALL(foo_, Bar2(0, _));
+
+  foo_.Bar2(1, 0);  // Unexpected call
+  foo_.Bar2(0, 0);  // Expected call
+}
+
+TEST_F(GMockOutputTest, UnexpectedCallToVoidFunction) {
+  EXPECT_CALL(foo_, Bar3(0, _));
+
+  foo_.Bar3(1, 0);  // Unexpected call
+  foo_.Bar3(0, 0);  // Expected call
+}
+
+TEST_F(GMockOutputTest, ExcessiveCall) {
+  EXPECT_CALL(foo_, Bar2(0, _));
+
+  foo_.Bar2(0, 0);  // Expected call
+  foo_.Bar2(0, 1);  // Excessive call
+}
+
+TEST_F(GMockOutputTest, ExcessiveCallToVoidFunction) {
+  EXPECT_CALL(foo_, Bar3(0, _));
+
+  foo_.Bar3(0, 0);  // Expected call
+  foo_.Bar3(0, 1);  // Excessive call
+}
+
+TEST_F(GMockOutputTest, UninterestingCall) {
+  foo_.Bar2(0, 1);  // Uninteresting call
+}
+
+TEST_F(GMockOutputTest, UninterestingCallToVoidFunction) {
+  foo_.Bar3(0, 1);  // Uninteresting call
+}
+
+TEST_F(GMockOutputTest, RetiredExpectation) {
+  EXPECT_CALL(foo_, Bar2(_, _)).RetiresOnSaturation();
+  EXPECT_CALL(foo_, Bar2(0, 0));
+
+  foo_.Bar2(1, 1);
+  foo_.Bar2(1, 1);  // Matches a retired expectation
+  foo_.Bar2(0, 0);
+}
+
+TEST_F(GMockOutputTest, UnsatisfiedPrerequisite) {
+  {
+    InSequence s;
+    EXPECT_CALL(foo_, Bar(_, 0, _));
+    EXPECT_CALL(foo_, Bar2(0, 0));
+    EXPECT_CALL(foo_, Bar2(1, _));
+  }
+
+  foo_.Bar2(1, 0);  // Has one immediate unsatisfied pre-requisite
+  foo_.Bar("Hi", 0, 0);
+  foo_.Bar2(0, 0);
+  foo_.Bar2(1, 0);
+}
+
+TEST_F(GMockOutputTest, UnsatisfiedPrerequisites) {
+  Sequence s1, s2;
+
+  EXPECT_CALL(foo_, Bar(_, 0, _)).InSequence(s1);
+  EXPECT_CALL(foo_, Bar2(0, 0)).InSequence(s2);
+  EXPECT_CALL(foo_, Bar2(1, _)).InSequence(s1, s2);
+
+  foo_.Bar2(1, 0);  // Has two immediate unsatisfied pre-requisites
+  foo_.Bar("Hi", 0, 0);
+  foo_.Bar2(0, 0);
+  foo_.Bar2(1, 0);
+}
+
+TEST_F(GMockOutputTest, UnsatisfiedWith) {
+  EXPECT_CALL(foo_, Bar2(_, _)).With(Ge());
+}
+
+TEST_F(GMockOutputTest, UnsatisfiedExpectation) {
+  EXPECT_CALL(foo_, Bar(_, _, _));
+  EXPECT_CALL(foo_, Bar2(0, _)).Times(2);
+
+  foo_.Bar2(0, 1);
+}
+
+TEST_F(GMockOutputTest, MismatchArguments) {
+  const std::string s = "Hi";
+  EXPECT_CALL(foo_, Bar(Ref(s), _, Ge(0)));
+
+  foo_.Bar("Ho", 0, -0.1);  // Mismatch arguments
+  foo_.Bar(s, 0, 0);
+}
+
+TEST_F(GMockOutputTest, MismatchWith) {
+  EXPECT_CALL(foo_, Bar2(Ge(2), Ge(1))).With(Ge());
+
+  foo_.Bar2(2, 3);  // Mismatch With()
+  foo_.Bar2(2, 1);
+}
+
+TEST_F(GMockOutputTest, MismatchArgumentsAndWith) {
+  EXPECT_CALL(foo_, Bar2(Ge(2), Ge(1))).With(Ge());
+
+  foo_.Bar2(1, 3);  // Mismatch arguments and mismatch With()
+  foo_.Bar2(2, 1);
+}
+
+TEST_F(GMockOutputTest, UnexpectedCallWithDefaultAction) {
+  ON_CALL(foo_, Bar2(_, _)).WillByDefault(Return(true));   // Default action #1
+  ON_CALL(foo_, Bar2(1, _)).WillByDefault(Return(false));  // Default action #2
+
+  EXPECT_CALL(foo_, Bar2(2, 2));
+  foo_.Bar2(1, 0);  // Unexpected call, takes default action #2.
+  foo_.Bar2(0, 0);  // Unexpected call, takes default action #1.
+  foo_.Bar2(2, 2);  // Expected call.
+}
+
+TEST_F(GMockOutputTest, ExcessiveCallWithDefaultAction) {
+  ON_CALL(foo_, Bar2(_, _)).WillByDefault(Return(true));   // Default action #1
+  ON_CALL(foo_, Bar2(1, _)).WillByDefault(Return(false));  // Default action #2
+
+  EXPECT_CALL(foo_, Bar2(2, 2));
+  EXPECT_CALL(foo_, Bar2(1, 1));
+
+  foo_.Bar2(2, 2);  // Expected call.
+  foo_.Bar2(2, 2);  // Excessive call, takes default action #1.
+  foo_.Bar2(1, 1);  // Expected call.
+  foo_.Bar2(1, 1);  // Excessive call, takes default action #2.
+}
+
+TEST_F(GMockOutputTest, UninterestingCallWithDefaultAction) {
+  ON_CALL(foo_, Bar2(_, _)).WillByDefault(Return(true));   // Default action #1
+  ON_CALL(foo_, Bar2(1, _)).WillByDefault(Return(false));  // Default action #2
+
+  foo_.Bar2(2, 2);  // Uninteresting call, takes default action #1.
+  foo_.Bar2(1, 1);  // Uninteresting call, takes default action #2.
+}
+
+TEST_F(GMockOutputTest, ExplicitActionsRunOutWithDefaultAction) {
+  ON_CALL(foo_, Bar2(_, _)).WillByDefault(Return(true));  // Default action #1
+
+  EXPECT_CALL(foo_, Bar2(_, _)).Times(2).WillOnce(Return(false));
+  foo_.Bar2(2, 2);
+  foo_.Bar2(1, 1);  // Explicit actions in EXPECT_CALL run out.
+}
+
+TEST_F(GMockOutputTest, CatchesLeakedMocks) {
+  MockFoo* foo1 = new MockFoo;
+  MockFoo* foo2 = new MockFoo;
+
+  // Invokes ON_CALL on foo1.
+  ON_CALL(*foo1, Bar(_, _, _)).WillByDefault(Return('a'));
+
+  // Invokes EXPECT_CALL on foo2.
+  EXPECT_CALL(*foo2, Bar2(_, _));
+  EXPECT_CALL(*foo2, Bar2(1, _));
+  EXPECT_CALL(*foo2, Bar3(_, _)).Times(AnyNumber());
+  foo2->Bar2(2, 1);
+  foo2->Bar2(1, 1);
+
+  // Both foo1 and foo2 are deliberately leaked.
+}
+
+MATCHER_P2(IsPair, first, second, "") {
+  return Value(arg.first, first) && Value(arg.second, second);
+}
+
+TEST_F(GMockOutputTest, PrintsMatcher) {
+  const testing::Matcher<int> m1 = Ge(48);
+  EXPECT_THAT((std::pair<int, bool>(42, true)), IsPair(m1, true));
+}
+
+void TestCatchesLeakedMocksInAdHocTests() {
+  MockFoo* foo = new MockFoo;
+
+  // Invokes EXPECT_CALL on foo.
+  EXPECT_CALL(*foo, Bar2(_, _));
+  foo->Bar2(2, 1);
+
+  // foo is deliberately leaked.
+}
+
+int main(int argc, char** argv) {
+  testing::InitGoogleMock(&argc, argv);
+  // Ensures that the tests pass no matter what value of
+  // --gmock_catch_leaked_mocks and --gmock_verbose the user specifies.
+  GMOCK_FLAG_SET(catch_leaked_mocks, true);
+  GMOCK_FLAG_SET(verbose, "warning");
+
+  TestCatchesLeakedMocksInAdHocTests();
+  return RUN_ALL_TESTS();
+}
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+```
+
+### `gmock_output_test_golden.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_output_test_golden.txt`
+
+
+```text
+[ RUN      ] GMockOutputTest.ExpectedCall
+
+FILE:#: EXPECT_CALL(foo_, Bar2(0, _)) invoked
+Stack trace:
+
+FILE:#: Mock function call matches EXPECT_CALL(foo_, Bar2(0, _))...
+    Function call: Bar2(0, 0)
+          Returns: false
+Stack trace:
+[       OK ] GMockOutputTest.ExpectedCall
+[ RUN      ] GMockOutputTest.ExpectedCallToVoidFunction
+
+FILE:#: EXPECT_CALL(foo_, Bar3(0, _)) invoked
+Stack trace:
+
+FILE:#: Mock function call matches EXPECT_CALL(foo_, Bar3(0, _))...
+    Function call: Bar3(0, 0)
+Stack trace:
+[       OK ] GMockOutputTest.ExpectedCallToVoidFunction
+[ RUN      ] GMockOutputTest.ExplicitActionsRunOut
+
+GMOCK WARNING:
+FILE:#: Too few actions specified in EXPECT_CALL(foo_, Bar2(_, _))...
+Expected to be called twice, but has only 1 WillOnce().
+GMOCK WARNING:
+FILE:#: Actions ran out in EXPECT_CALL(foo_, Bar2(_, _))...
+Called 2 times, but only 1 WillOnce() is specified - returning default value.
+Stack trace:
+[       OK ] GMockOutputTest.ExplicitActionsRunOut
+[ RUN      ] GMockOutputTest.UnexpectedCall
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar2(1, 0)
+          Returns: false
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar2(0, _))...
+  Expected arg #0: is equal to 0
+           Actual: 1
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnexpectedCall
+[ RUN      ] GMockOutputTest.UnexpectedCallToVoidFunction
+unknown file: Failure
+
+Unexpected mock function call - returning directly.
+    Function call: Bar3(1, 0)
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar3(0, _))...
+  Expected arg #0: is equal to 0
+           Actual: 1
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnexpectedCallToVoidFunction
+[ RUN      ] GMockOutputTest.ExcessiveCall
+FILE:#: Failure
+Mock function called more times than expected - returning default value.
+    Function call: Bar2(0, 1)
+          Returns: false
+         Expected: to be called once
+           Actual: called twice - over-saturated and active
+[  FAILED  ] GMockOutputTest.ExcessiveCall
+[ RUN      ] GMockOutputTest.ExcessiveCallToVoidFunction
+FILE:#: Failure
+Mock function called more times than expected - returning directly.
+    Function call: Bar3(0, 1)
+         Expected: to be called once
+           Actual: called twice - over-saturated and active
+[  FAILED  ] GMockOutputTest.ExcessiveCallToVoidFunction
+[ RUN      ] GMockOutputTest.UninterestingCall
+
+GMOCK WARNING:
+Uninteresting mock function call - returning default value.
+    Function call: Bar2(0, 1)
+          Returns: false
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+[       OK ] GMockOutputTest.UninterestingCall
+[ RUN      ] GMockOutputTest.UninterestingCallToVoidFunction
+
+GMOCK WARNING:
+Uninteresting mock function call - returning directly.
+    Function call: Bar3(0, 1)
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+[       OK ] GMockOutputTest.UninterestingCallToVoidFunction
+[ RUN      ] GMockOutputTest.RetiredExpectation
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar2(1, 1)
+          Returns: false
+Google Mock tried the following 2 expectations, but none matched:
+
+FILE:#: tried expectation #0: EXPECT_CALL(foo_, Bar2(_, _))...
+         Expected: the expectation is active
+           Actual: it is retired
+         Expected: to be called once
+           Actual: called once - saturated and retired
+FILE:#: tried expectation #1: EXPECT_CALL(foo_, Bar2(0, 0))...
+  Expected arg #0: is equal to 0
+           Actual: 1
+  Expected arg #1: is equal to 0
+           Actual: 1
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.RetiredExpectation
+[ RUN      ] GMockOutputTest.UnsatisfiedPrerequisite
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar2(1, 0)
+          Returns: false
+Google Mock tried the following 2 expectations, but none matched:
+
+FILE:#: tried expectation #0: EXPECT_CALL(foo_, Bar2(0, 0))...
+  Expected arg #0: is equal to 0
+           Actual: 1
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+FILE:#: tried expectation #1: EXPECT_CALL(foo_, Bar2(1, _))...
+         Expected: all pre-requisites are satisfied
+           Actual: the following immediate pre-requisites are not satisfied:
+FILE:#: pre-requisite #0
+                   (end of pre-requisites)
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnsatisfiedPrerequisite
+[ RUN      ] GMockOutputTest.UnsatisfiedPrerequisites
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar2(1, 0)
+          Returns: false
+Google Mock tried the following 2 expectations, but none matched:
+
+FILE:#: tried expectation #0: EXPECT_CALL(foo_, Bar2(0, 0))...
+  Expected arg #0: is equal to 0
+           Actual: 1
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+FILE:#: tried expectation #1: EXPECT_CALL(foo_, Bar2(1, _))...
+         Expected: all pre-requisites are satisfied
+           Actual: the following immediate pre-requisites are not satisfied:
+FILE:#: pre-requisite #0
+FILE:#: pre-requisite #1
+                   (end of pre-requisites)
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnsatisfiedPrerequisites
+[ RUN      ] GMockOutputTest.UnsatisfiedWith
+FILE:#: Failure
+Actual function call count doesn't match EXPECT_CALL(foo_, Bar2(_, _))...
+    Expected args: are a pair where the first >= the second
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnsatisfiedWith
+[ RUN      ] GMockOutputTest.UnsatisfiedExpectation
+FILE:#: Failure
+Actual function call count doesn't match EXPECT_CALL(foo_, Bar2(0, _))...
+         Expected: to be called twice
+           Actual: called once - unsatisfied and active
+FILE:#: Failure
+Actual function call count doesn't match EXPECT_CALL(foo_, Bar(_, _, _))...
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnsatisfiedExpectation
+[ RUN      ] GMockOutputTest.MismatchArguments
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar(@0x# "Ho", 0, -0.1)
+          Returns: '\0'
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar(Ref(s), _, Ge(0)))...
+  Expected arg #0: references the variable @0x# "Hi"
+           Actual: "Ho", which is located @0x#
+  Expected arg #2: is >= 0
+           Actual: -0.1
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.MismatchArguments
+[ RUN      ] GMockOutputTest.MismatchWith
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar2(2, 3)
+          Returns: false
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar2(Ge(2), Ge(1)))...
+    Expected args: are a pair where the first >= the second
+           Actual: don't match
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.MismatchWith
+[ RUN      ] GMockOutputTest.MismatchArgumentsAndWith
+unknown file: Failure
+
+Unexpected mock function call - returning default value.
+    Function call: Bar2(1, 3)
+          Returns: false
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar2(Ge(2), Ge(1)))...
+  Expected arg #0: is >= 2
+           Actual: 1
+    Expected args: are a pair where the first >= the second
+           Actual: don't match
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.MismatchArgumentsAndWith
+[ RUN      ] GMockOutputTest.UnexpectedCallWithDefaultAction
+unknown file: Failure
+
+Unexpected mock function call - taking default action specified at:
+FILE:#:
+    Function call: Bar2(1, 0)
+          Returns: false
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar2(2, 2))...
+  Expected arg #0: is equal to 2
+           Actual: 1
+  Expected arg #1: is equal to 2
+           Actual: 0
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+unknown file: Failure
+
+Unexpected mock function call - taking default action specified at:
+FILE:#:
+    Function call: Bar2(0, 0)
+          Returns: true
+Google Mock tried the following 1 expectation, but it didn't match:
+
+FILE:#: EXPECT_CALL(foo_, Bar2(2, 2))...
+  Expected arg #0: is equal to 2
+           Actual: 0
+  Expected arg #1: is equal to 2
+           Actual: 0
+         Expected: to be called once
+           Actual: never called - unsatisfied and active
+[  FAILED  ] GMockOutputTest.UnexpectedCallWithDefaultAction
+[ RUN      ] GMockOutputTest.ExcessiveCallWithDefaultAction
+FILE:#: Failure
+Mock function called more times than expected - taking default action specified at:
+FILE:#:
+    Function call: Bar2(2, 2)
+          Returns: true
+         Expected: to be called once
+           Actual: called twice - over-saturated and active
+FILE:#: Failure
+Mock function called more times than expected - taking default action specified at:
+FILE:#:
+    Function call: Bar2(1, 1)
+          Returns: false
+         Expected: to be called once
+           Actual: called twice - over-saturated and active
+[  FAILED  ] GMockOutputTest.ExcessiveCallWithDefaultAction
+[ RUN      ] GMockOutputTest.UninterestingCallWithDefaultAction
+
+GMOCK WARNING:
+Uninteresting mock function call - taking default action specified at:
+FILE:#:
+    Function call: Bar2(2, 2)
+          Returns: true
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+
+GMOCK WARNING:
+Uninteresting mock function call - taking default action specified at:
+FILE:#:
+    Function call: Bar2(1, 1)
+          Returns: false
+NOTE: You can safely ignore the above warning unless this call should not happen.  Do not suppress it by blindly adding an EXPECT_CALL() if you don't mean to enforce the call.  See https://github.com/google/googletest/blob/master/docs/gmock_cook_book.md#knowing-when-to-expect for details.
+[       OK ] GMockOutputTest.UninterestingCallWithDefaultAction
+[ RUN      ] GMockOutputTest.ExplicitActionsRunOutWithDefaultAction
+
+GMOCK WARNING:
+FILE:#: Too few actions specified in EXPECT_CALL(foo_, Bar2(_, _))...
+Expected to be called twice, but has only 1 WillOnce().
+GMOCK WARNING:
+FILE:#: Actions ran out in EXPECT_CALL(foo_, Bar2(_, _))...
+Called 2 times, but only 1 WillOnce() is specified - taking default action specified at:
+FILE:#:
+Stack trace:
+[       OK ] GMockOutputTest.ExplicitActionsRunOutWithDefaultAction
+[ RUN      ] GMockOutputTest.CatchesLeakedMocks
+[       OK ] GMockOutputTest.CatchesLeakedMocks
+[ RUN      ] GMockOutputTest.PrintsMatcher
+FILE:#: Failure
+Value of: (std::pair<int, bool>(42, true))
+Expected: is pair (first: is >= 48, second: true)
+  Actual: (42, true) (of type std::pair<int, bool>)
+[  FAILED  ] GMockOutputTest.PrintsMatcher
+[  FAILED  ] GMockOutputTest.UnexpectedCall
+[  FAILED  ] GMockOutputTest.UnexpectedCallToVoidFunction
+[  FAILED  ] GMockOutputTest.ExcessiveCall
+[  FAILED  ] GMockOutputTest.ExcessiveCallToVoidFunction
+[  FAILED  ] GMockOutputTest.RetiredExpectation
+[  FAILED  ] GMockOutputTest.UnsatisfiedPrerequisite
+[  FAILED  ] GMockOutputTest.UnsatisfiedPrerequisites
+[  FAILED  ] GMockOutputTest.UnsatisfiedWith
+[  FAILED  ] GMockOutputTest.UnsatisfiedExpectation
+[  FAILED  ] GMockOutputTest.MismatchArguments
+[  FAILED  ] GMockOutputTest.MismatchWith
+[  FAILED  ] GMockOutputTest.MismatchArgumentsAndWith
+[  FAILED  ] GMockOutputTest.UnexpectedCallWithDefaultAction
+[  FAILED  ] GMockOutputTest.ExcessiveCallWithDefaultAction
+[  FAILED  ] GMockOutputTest.PrintsMatcher
+
+
+FILE:#: ERROR: this mock object should be deleted but never is. Its address is @0x#.
+FILE:#: ERROR: this mock object should be deleted but never is. Its address is @0x#.
+FILE:#: ERROR: this mock object should be deleted but never is. Its address is @0x#.
+ERROR: 3 leaked mock objects found at program exit. Expectations on a mock object are verified when the object is destructed. Leaking a mock means that its expectations aren't verified, which is usually a test bug. If you really intend to leak a mock, you can suppress this error using testing::Mock::AllowLeak(mock_object), or you may use a fake or stub instead of a mock.
+```
+
+### `gmock_stress_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_stress_test.cc`
+
+
+```cpp
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Tests that Google Mock constructs can be used in a large number of
+// threads concurrently.
+
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
+
+namespace testing {
+namespace {
+
+// From gtest-port.h.
+using ::testing::internal::ThreadWithParam;
+
+// The maximum number of test threads (not including helper threads)
+// to create.
+const int kMaxTestThreads = 50;
+
+// How many times to repeat a task in a test thread.
+const int kRepeat = 50;
+
+class MockFoo {
+ public:
+  MOCK_METHOD1(Bar, int(int n));                                   // NOLINT
+  MOCK_METHOD2(Baz, char(const char* s1, const std::string& s2));  // NOLINT
+};
+
+// Helper for waiting for the given thread to finish and then deleting it.
+template <typename T>
+void JoinAndDelete(ThreadWithParam<T>* t) {
+  t->Join();
+  delete t;
+}
+
+struct Dummy {};
+
+// Tests that different mock objects can be used in their respective
+// threads.  This should generate no Google Test failure.
+void TestConcurrentMockObjects(Dummy /* dummy */) {
+  // Creates a mock and does some typical operations on it.
+  MockFoo foo;
+  ON_CALL(foo, Bar(_)).WillByDefault(Return(1));
+  ON_CALL(foo, Baz(_, _)).WillByDefault(Return('b'));
+  ON_CALL(foo, Baz(_, "you")).WillByDefault(Return('a'));
+
+  EXPECT_CALL(foo, Bar(0)).Times(AtMost(3));
+  EXPECT_CALL(foo, Baz(_, _));
+  EXPECT_CALL(foo, Baz("hi", "you"))
+      .WillOnce(Return('z'))
+      .WillRepeatedly(DoDefault());
+
+  EXPECT_EQ(1, foo.Bar(0));
+  EXPECT_EQ(1, foo.Bar(0));
+  EXPECT_EQ('z', foo.Baz("hi", "you"));
+  EXPECT_EQ('a', foo.Baz("hi", "you"));
+  EXPECT_EQ('b', foo.Baz("hi", "me"));
+}
+
+// Tests invoking methods of the same mock object in multiple threads.
+
+struct Helper1Param {
+  MockFoo* mock_foo;
+  int* count;
+};
+
+void Helper1(Helper1Param param) {
+  for (int i = 0; i < kRepeat; i++) {
+    const char ch = param.mock_foo->Baz("a", "b");
+    if (ch == 'a') {
+      // It was an expected call.
+      (*param.count)++;
+    } else {
+      // It was an excessive call.
+      EXPECT_EQ('\0', ch);
+    }
+
+    // An unexpected call.
+    EXPECT_EQ('\0', param.mock_foo->Baz("x", "y")) << "Expected failure.";
+
+    // An uninteresting call.
+    EXPECT_EQ(1, param.mock_foo->Bar(5));
+  }
+}
+
+// This should generate 3*kRepeat + 1 failures in total.
+void TestConcurrentCallsOnSameObject(Dummy /* dummy */) {
+  MockFoo foo;
+
+  ON_CALL(foo, Bar(_)).WillByDefault(Return(1));
+  EXPECT_CALL(foo, Baz(_, "b")).Times(kRepeat).WillRepeatedly(Return('a'));
+  EXPECT_CALL(foo, Baz(_, "c"));  // Expected to be unsatisfied.
+
+  // This chunk of code should generate kRepeat failures about
+  // excessive calls, and 2*kRepeat failures about unexpected calls.
+  int count1 = 0;
+  const Helper1Param param = {&foo, &count1};
+  ThreadWithParam<Helper1Param>* const t =
+      new ThreadWithParam<Helper1Param>(Helper1, param, nullptr);
+
+  int count2 = 0;
+  const Helper1Param param2 = {&foo, &count2};
+  Helper1(param2);
+  JoinAndDelete(t);
+
+  EXPECT_EQ(kRepeat, count1 + count2);
+
+  // foo's destructor should generate one failure about unsatisfied
+  // expectation.
+}
+
+// Tests using the same mock object in multiple threads when the
+// expectations are partially ordered.
+
+void Helper2(MockFoo* foo) {
+  for (int i = 0; i < kRepeat; i++) {
+    foo->Bar(2);
+    foo->Bar(3);
+  }
+}
+
+// This should generate no Google Test failures.
+void TestPartiallyOrderedExpectationsWithThreads(Dummy /* dummy */) {
+  MockFoo foo;
+  Sequence s1, s2;
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(foo, Bar(0));
+    EXPECT_CALL(foo, Bar(1)).InSequence(s1, s2);
+  }
+
+  EXPECT_CALL(foo, Bar(2))
+      .Times(2 * kRepeat)
+      .InSequence(s1)
+      .RetiresOnSaturation();
+  EXPECT_CALL(foo, Bar(3)).Times(2 * kRepeat).InSequence(s2);
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(foo, Bar(2)).InSequence(s1, s2);
+    EXPECT_CALL(foo, Bar(4));
+  }
+
+  foo.Bar(0);
+  foo.Bar(1);
+
+  ThreadWithParam<MockFoo*>* const t =
+      new ThreadWithParam<MockFoo*>(Helper2, &foo, nullptr);
+  Helper2(&foo);
+  JoinAndDelete(t);
+
+  foo.Bar(2);
+  foo.Bar(4);
+}
+
+// Tests using Google Mock constructs in many threads concurrently.
+TEST(StressTest, CanUseGMockWithThreads) {
+  void (*test_routines[])(Dummy dummy) = {
+      &TestConcurrentMockObjects,
+      &TestConcurrentCallsOnSameObject,
+      &TestPartiallyOrderedExpectationsWithThreads,
+  };
+
+  const int kRoutines = sizeof(test_routines) / sizeof(test_routines[0]);
+  const int kCopiesOfEachRoutine = kMaxTestThreads / kRoutines;
+  const int kTestThreads = kCopiesOfEachRoutine * kRoutines;
+  ThreadWithParam<Dummy>* threads[kTestThreads] = {};
+  for (int i = 0; i < kTestThreads; i++) {
+    // Creates a thread to run the test function.
+    threads[i] = new ThreadWithParam<Dummy>(test_routines[i % kRoutines],
+                                            Dummy(), nullptr);
+    GTEST_LOG_(INFO) << "Thread #" << i << " running . . .";
+  }
+
+  // At this point, we have many threads running.
+  for (int i = 0; i < kTestThreads; i++) {
+    JoinAndDelete(threads[i]);
+  }
+
+  // Ensures that the correct number of failures have been reported.
+  const TestInfo* const info = UnitTest::GetInstance()->current_test_info();
+  const TestResult& result = *info->result();
+  const int kExpectedFailures = (3 * kRepeat + 1) * kCopiesOfEachRoutine;
+  GTEST_CHECK_(kExpectedFailures == result.total_part_count())
+      << "Expected " << kExpectedFailures << " failures, but got "
+      << result.total_part_count();
+}
+
+}  // namespace
+}  // namespace testing
+
+int main(int argc, char** argv) {
+  testing::InitGoogleMock(&argc, argv);
+
+  const int exit_code = RUN_ALL_TESTS();  // Expected to fail.
+  GTEST_CHECK_(exit_code != 0) << "RUN_ALL_TESTS() did not fail as expected";
+
+  printf("\nPASS\n");
+  return 0;
+}
+```
+
+### `gmock_test.cc`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_test.cc`
+
+
+```cpp
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file tests code in gmock.cc.
+
+#include "gmock/gmock.h"
+
+#include <string>
+
+#include "gtest/gtest.h"
+#include "gtest/internal/custom/gtest.h"
+
+#if !defined(GTEST_CUSTOM_INIT_GOOGLE_TEST_FUNCTION_)
+
+using testing::InitGoogleMock;
+
+// Verifies that calling InitGoogleMock() on argv results in new_argv,
+// and the gmock_verbose flag's value is set to expected_gmock_verbose.
+template <typename Char, int M, int N>
+void TestInitGoogleMock(const Char* (&argv)[M], const Char* (&new_argv)[N],
+                        const ::std::string& expected_gmock_verbose) {
+  const ::std::string old_verbose = GMOCK_FLAG_GET(verbose);
+
+  int argc = M - 1;
+  InitGoogleMock(&argc, const_cast<Char**>(argv));
+  ASSERT_EQ(N - 1, argc) << "The new argv has wrong number of elements.";
+
+  for (int i = 0; i < N; i++) {
+    EXPECT_STREQ(new_argv[i], argv[i]);
+  }
+
+  EXPECT_EQ(expected_gmock_verbose, GMOCK_FLAG_GET(verbose));
+  GMOCK_FLAG_SET(verbose, old_verbose);  // Restores the gmock_verbose flag.
+}
+
+TEST(InitGoogleMockTest, ParsesInvalidCommandLine) {
+  const char* argv[] = {nullptr};
+
+  const char* new_argv[] = {nullptr};
+
+  TestInitGoogleMock(argv, new_argv, GMOCK_FLAG_GET(verbose));
+}
+
+TEST(InitGoogleMockTest, ParsesEmptyCommandLine) {
+  const char* argv[] = {"foo.exe", nullptr};
+
+  const char* new_argv[] = {"foo.exe", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, GMOCK_FLAG_GET(verbose));
+}
+
+TEST(InitGoogleMockTest, ParsesSingleFlag) {
+  const char* argv[] = {"foo.exe", "--gmock_verbose=info", nullptr};
+
+  const char* new_argv[] = {"foo.exe", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, "info");
+}
+
+TEST(InitGoogleMockTest, ParsesMultipleFlags) {
+  int old_default_behavior = GMOCK_FLAG_GET(default_mock_behavior);
+  const wchar_t* argv[] = {L"foo.exe", L"--gmock_verbose=info",
+                           L"--gmock_default_mock_behavior=2", nullptr};
+
+  const wchar_t* new_argv[] = {L"foo.exe", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, "info");
+  EXPECT_EQ(2, GMOCK_FLAG_GET(default_mock_behavior));
+  EXPECT_NE(2, old_default_behavior);
+  GMOCK_FLAG_SET(default_mock_behavior, old_default_behavior);
+}
+
+TEST(InitGoogleMockTest, ParsesUnrecognizedFlag) {
+  const char* argv[] = {"foo.exe", "--non_gmock_flag=blah", nullptr};
+
+  const char* new_argv[] = {"foo.exe", "--non_gmock_flag=blah", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, GMOCK_FLAG_GET(verbose));
+}
+
+TEST(InitGoogleMockTest, ParsesGoogleMockFlagAndUnrecognizedFlag) {
+  const char* argv[] = {"foo.exe", "--non_gmock_flag=blah",
+                        "--gmock_verbose=error", nullptr};
+
+  const char* new_argv[] = {"foo.exe", "--non_gmock_flag=blah", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, "error");
+}
+
+TEST(WideInitGoogleMockTest, ParsesInvalidCommandLine) {
+  const wchar_t* argv[] = {nullptr};
+
+  const wchar_t* new_argv[] = {nullptr};
+
+  TestInitGoogleMock(argv, new_argv, GMOCK_FLAG_GET(verbose));
+}
+
+TEST(WideInitGoogleMockTest, ParsesEmptyCommandLine) {
+  const wchar_t* argv[] = {L"foo.exe", nullptr};
+
+  const wchar_t* new_argv[] = {L"foo.exe", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, GMOCK_FLAG_GET(verbose));
+}
+
+TEST(WideInitGoogleMockTest, ParsesSingleFlag) {
+  const wchar_t* argv[] = {L"foo.exe", L"--gmock_verbose=info", nullptr};
+
+  const wchar_t* new_argv[] = {L"foo.exe", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, "info");
+}
+
+TEST(WideInitGoogleMockTest, ParsesMultipleFlags) {
+  int old_default_behavior = GMOCK_FLAG_GET(default_mock_behavior);
+  const wchar_t* argv[] = {L"foo.exe", L"--gmock_verbose=info",
+                           L"--gmock_default_mock_behavior=2", nullptr};
+
+  const wchar_t* new_argv[] = {L"foo.exe", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, "info");
+  EXPECT_EQ(2, GMOCK_FLAG_GET(default_mock_behavior));
+  EXPECT_NE(2, old_default_behavior);
+  GMOCK_FLAG_SET(default_mock_behavior, old_default_behavior);
+}
+
+TEST(WideInitGoogleMockTest, ParsesUnrecognizedFlag) {
+  const wchar_t* argv[] = {L"foo.exe", L"--non_gmock_flag=blah", nullptr};
+
+  const wchar_t* new_argv[] = {L"foo.exe", L"--non_gmock_flag=blah", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, GMOCK_FLAG_GET(verbose));
+}
+
+TEST(WideInitGoogleMockTest, ParsesGoogleMockFlagAndUnrecognizedFlag) {
+  const wchar_t* argv[] = {L"foo.exe", L"--non_gmock_flag=blah",
+                           L"--gmock_verbose=error", nullptr};
+
+  const wchar_t* new_argv[] = {L"foo.exe", L"--non_gmock_flag=blah", nullptr};
+
+  TestInitGoogleMock(argv, new_argv, "error");
+}
+
+#endif  // !defined(GTEST_CUSTOM_INIT_GOOGLE_TEST_FUNCTION_)
+
+// Makes sure Google Mock flags can be accessed in code.
+TEST(FlagTest, IsAccessibleInCode) {
+  bool dummy =
+      GMOCK_FLAG_GET(catch_leaked_mocks) && GMOCK_FLAG_GET(verbose) == "";
+  (void)dummy;  // Avoids the "unused local variable" warning.
+}
+```
+
+### `gmock_test_utils.py`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/test/gmock_test_utils.py`
+
+
+```python
+# Copyright 2006, Google Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""Unit test utilities for Google C++ Mocking Framework."""
+
+import os
+
+# pylint: disable=C6204
+from googletest.test import gtest_test_utils
+
+
+def GetSourceDir():
+  """Returns the absolute path of the directory where the .py files are."""
+
+  return gtest_test_utils.GetSourceDir()
+
+
+def GetTestExecutablePath(executable_name):
+  """Returns the absolute path of the test binary given its name.
+
+  The function will print a message and abort the program if the resulting file
+  doesn't exist.
+
+  Args:
+    executable_name: name of the test binary that the test script runs.
+
+  Returns:
+    The absolute path of the test binary.
+  """
+
+  return gtest_test_utils.GetTestExecutablePath(executable_name)
+
+
+def GetExitStatus(exit_code):
+  """Returns the argument to exit(), or -1 if exit() wasn't called.
+
+  Args:
+    exit_code: the result value of os.system(command).
+  """
+
+  if os.name == 'nt':
+    # On Windows, os.WEXITSTATUS() doesn't work and os.system() returns
+    # the argument to exit() directly.
+    return exit_code
+  else:
+    # On Unix, os.WEXITSTATUS() must be used to extract the exit status
+    # from the result of os.system().
+    if os.WIFEXITED(exit_code):
+      return os.WEXITSTATUS(exit_code)
+    else:
+      return -1
+
+
+# Suppresses the "Invalid const name" lint complaint
+# pylint: disable-msg=C6409
+
+# Exposes utilities from gtest_test_utils.
+Subprocess = gtest_test_utils.Subprocess
+TestCase = gtest_test_utils.TestCase
+environ = gtest_test_utils.environ
+SetEnvVar = gtest_test_utils.SetEnvVar
+PREMATURE_EXIT_FILE_ENV_VAR = gtest_test_utils.PREMATURE_EXIT_FILE_ENV_VAR
+
+# pylint: enable-msg=C6409
+
+
+def Main():
+  """Runs the unit test."""
+
+  gtest_test_utils.Main()
+```

@@ -3,16 +3,16 @@
 
 **경로:** `fsw/apps/ci/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SDD_Generic_CI-TO_V1_5.doc`
 
-file--SDD_Generic_CI-TO_V1_5.doc
-file--SDD_Generic_CI-TO_V1_5.pdf
-```
+**경로:** `fsw/apps/ci/docs/SDD_Generic_CI-TO_V1_5.doc`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/apps/ci/docs/SDD_Generic_CI-TO_V1_5.doc`](file--SDD_Generic_CI-TO_V1_5.doc) — 바이너리 (경로만)
-- [`fsw/apps/ci/docs/SDD_Generic_CI-TO_V1_5.pdf`](file--SDD_Generic_CI-TO_V1_5.pdf) — 바이너리 (경로만)
+### `SDD_Generic_CI-TO_V1_5.pdf`
+
+**경로:** `fsw/apps/ci/docs/SDD_Generic_CI-TO_V1_5.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

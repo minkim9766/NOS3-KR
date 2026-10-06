@@ -3,24 +3,270 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--OsTime.cpp
-file--OsTime.fpp
-file--OsTime.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/OsTime.cpp`](file--OsTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/OsTime.fpp`](file--OsTime.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/OsTime.hpp`](file--OsTime.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/user-manual/cmake/cmake-api/
+#
+####
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/RawTimeTester")
+
+register_fprime_module(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/OsTime.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/OsTime.cpp"
+  DEPENDS
+    Svc_Ports_OsTimeEpoch
+)
+
+register_fprime_ut(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/OsTime.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/OsTimeTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/OsTimeTestMain.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Svc_OsTime_test_RawTimeTester
+  UT_AUTO_HELPERS
+)
+```
+
+### `OsTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/OsTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  OsTime.cpp
+// \author kubiak
+// \brief  cpp file for OsTime component implementation class
+// ======================================================================
+
+#include "Svc/OsTime/OsTime.hpp"
+#include "config/FpConfig.hpp"
+
+#include <Fw/Time/TimeInterval.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+OsTime ::OsTime(const char* const compName)
+    : OsTimeComponentBase(compName),
+      m_epoch_fw_time(Fw::ZERO_TIME),
+      m_epoch_os_time(),
+      m_epoch_valid(false),
+      m_epoch_lock() {}
+
+OsTime ::~OsTime() {}
+
+void OsTime::set_epoch(const Fw::Time& fw_time, const Os::RawTime& os_time) {
+    Os::ScopeLock lock(m_epoch_lock);
+    m_epoch_fw_time = fw_time;
+    m_epoch_os_time = os_time;
+    m_epoch_valid = true;
+}
+
+void OsTime::SetCurrentTime_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, U32 seconds_now) {
+    Os::RawTime time_now;
+    Os::RawTime::Status stat = time_now.now();
+    if (stat != Os::RawTime::OP_OK) {
+        this->log_WARNING_HI_SetCurrentTimeError(stat);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+    Os::ScopeLock lock(m_epoch_lock);
+    m_epoch_fw_time = Fw::Time(seconds_now, 0);
+    m_epoch_os_time = time_now;
+    m_epoch_valid = true;
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void OsTime ::timeGetPort_handler(FwIndexType portNum, Fw::Time& time) {
+    Fw::Time temp_epoch_fw_time;
+    Os::RawTime temp_epoch_os_time;
+    bool temp_epoch_valid;
+
+    // Copy class state inside of a mutex
+    {
+        Os::ScopeLock lock(m_epoch_lock);
+        temp_epoch_fw_time = m_epoch_fw_time;
+        temp_epoch_os_time = m_epoch_os_time;
+        temp_epoch_valid = m_epoch_valid;
+    }
+
+    time = Fw::ZERO_TIME;
+    if (!temp_epoch_valid) {
+        return;
+    }
+
+    Os::RawTime time_now;
+    Os::RawTime::Status stat = time_now.now();
+    if (stat != Os::RawTime::OP_OK) {
+        return;
+    }
+
+    Fw::TimeInterval elapsed;
+    stat = time_now.getTimeInterval(temp_epoch_os_time, elapsed);
+    if (stat != Os::RawTime::OP_OK) {
+        return;
+    }
+
+    time = temp_epoch_fw_time;
+    time.add(elapsed.getSeconds(), elapsed.getUSeconds());
+}
+
+void OsTime ::setEpoch_handler(FwIndexType portNum, const Fw::Time& fw_time, const Os::RawTime& os_time) {
+    set_epoch(fw_time, os_time);
+}
+
+}  // namespace Svc
+```
+
+### `OsTime.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/OsTime.fpp`
+
+
+```fpp
+module Svc {
+
+    @ A time component using OSAL RawTime abstractions
+    passive component OsTime {
+        import Time
+
+        sync input port setEpoch: OsTimeEpoch
+
+        @ Port for receiving commands
+        command recv port CmdDisp
+
+        @ Port for sending command registration requests
+        command reg port CmdReg
+
+        @ Port for sending command responses
+        command resp port CmdStatus
+
+        @ Event port
+        event port EventOut
+
+        @ Text event port
+        text event port LogText
+
+        @ Time get port
+        time get port timeCaller
+
+        sync command SetCurrentTime(seconds_now: U32) opcode 0x00
+
+        @ An error occurred while attempting to set the current time
+        event SetCurrentTimeError(
+                            status: U32 @< The error status
+                            ) \
+        severity warning high \
+        id 0x00 \
+        format "Could not set current time due to RawTime error status {}"
+
+    }
+}
+```
+
+### `OsTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/OsTime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  OsTime.hpp
+// \author kubiak
+// \brief  hpp file for OsTime component implementation class
+// ======================================================================
+
+#ifndef Svc_OsTime_HPP
+#define Svc_OsTime_HPP
+
+#include "Svc/OsTime/OsTimeComponentAc.hpp"
+
+#include <Fw/Time/Time.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/RawTime.hpp>
+
+namespace Svc {
+
+class OsTime final : public OsTimeComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct OsTime object
+    OsTime(const char* const compName  //!< The component name
+    );
+
+    //! Destroy OsTime object
+    ~OsTime();
+
+    //! Set an epoch time that is used to offset
+    //! future Os::RawTime readings
+    void set_epoch(const Fw::Time& fw_time, const Os::RawTime& os_time);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for timeGetPort
+    //!
+    //! Port to retrieve time
+    void timeGetPort_handler(FwIndexType portNum,  //!< The port number
+                             Fw::Time& time        //!< Reference to Time object
+                             ) override;
+
+    //! Handler implementation for setEpoch
+    void setEpoch_handler(FwIndexType portNum, const Fw::Time& fw_time, const Os::RawTime& os_time) override;
+
+    //! Handler implementation for command SetCurrentTime
+    void SetCurrentTime_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                   U32 cmdSeq,           //!< The command sequence number
+                                   U32 seconds_now) override;
+
+    Fw::Time m_epoch_fw_time;
+    Os::RawTime m_epoch_os_time;
+    bool m_epoch_valid;
+    Os::Mutex m_epoch_lock;
+};
+
+}  // namespace Svc
+
+#endif
+```

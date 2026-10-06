@@ -3,152 +3,4356 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 include/index
-file--Basic.cpp
-file--Basic.fpp
-file--Basic.hpp
-file--BasicGuard.cpp
-file--BasicGuard.fpp
-file--BasicGuard.hpp
-file--BasicGuardString.cpp
-file--BasicGuardString.fpp
-file--BasicGuardString.hpp
-file--BasicGuardTestAbsType.cpp
-file--BasicGuardTestAbsType.fpp
-file--BasicGuardTestAbsType.hpp
-file--BasicGuardTestArray.cpp
-file--BasicGuardTestArray.fpp
-file--BasicGuardTestArray.hpp
-file--BasicGuardTestEnum.cpp
-file--BasicGuardTestEnum.fpp
-file--BasicGuardTestEnum.hpp
-file--BasicGuardTestStruct.cpp
-file--BasicGuardTestStruct.fpp
-file--BasicGuardTestStruct.hpp
-file--BasicGuardU32.cpp
-file--BasicGuardU32.fpp
-file--BasicGuardU32.hpp
-file--BasicInternal.cpp
-file--BasicInternal.fpp
-file--BasicInternal.hpp
-file--BasicSelf.cpp
-file--BasicSelf.fpp
-file--BasicSelf.hpp
-file--BasicString.cpp
-file--BasicString.fpp
-file--BasicString.hpp
-file--BasicTestAbsType.cpp
-file--BasicTestAbsType.fpp
-file--BasicTestAbsType.hpp
-file--BasicTestArray.cpp
-file--BasicTestArray.fpp
-file--BasicTestArray.hpp
-file--BasicTestEnum.cpp
-file--BasicTestEnum.fpp
-file--BasicTestEnum.hpp
-file--BasicTestStruct.cpp
-file--BasicTestStruct.fpp
-file--BasicTestStruct.hpp
-file--BasicU32.cpp
-file--BasicU32.fpp
-file--BasicU32.hpp
-file--CMakeLists.txt
-file--Internal.cpp
-file--Internal.fpp
-file--Internal.hpp
-file--main.cpp
-file--Polymorphism.cpp
-file--Polymorphism.fpp
-file--Polymorphism.hpp
-file--README.md
-file--StateToChild.cpp
-file--StateToChild.fpp
-file--StateToChild.hpp
-file--StateToChoice.cpp
-file--StateToChoice.fpp
-file--StateToChoice.hpp
-file--StateToSelf.cpp
-file--StateToSelf.fpp
-file--StateToSelf.hpp
-file--StateToState.cpp
-file--StateToState.fpp
-file--StateToState.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/`](include/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Basic.cpp`](file--Basic.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Basic.fpp`](file--Basic.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Basic.hpp`](file--Basic.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuard.cpp`](file--BasicGuard.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuard.fpp`](file--BasicGuard.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuard.hpp`](file--BasicGuard.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardString.cpp`](file--BasicGuardString.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardString.fpp`](file--BasicGuardString.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardString.hpp`](file--BasicGuardString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestAbsType.cpp`](file--BasicGuardTestAbsType.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestAbsType.fpp`](file--BasicGuardTestAbsType.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestAbsType.hpp`](file--BasicGuardTestAbsType.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestArray.cpp`](file--BasicGuardTestArray.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestArray.fpp`](file--BasicGuardTestArray.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestArray.hpp`](file--BasicGuardTestArray.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestEnum.cpp`](file--BasicGuardTestEnum.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestEnum.fpp`](file--BasicGuardTestEnum.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestEnum.hpp`](file--BasicGuardTestEnum.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestStruct.cpp`](file--BasicGuardTestStruct.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestStruct.fpp`](file--BasicGuardTestStruct.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestStruct.hpp`](file--BasicGuardTestStruct.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardU32.cpp`](file--BasicGuardU32.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardU32.fpp`](file--BasicGuardU32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardU32.hpp`](file--BasicGuardU32.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicInternal.cpp`](file--BasicInternal.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicInternal.fpp`](file--BasicInternal.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicInternal.hpp`](file--BasicInternal.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicSelf.cpp`](file--BasicSelf.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicSelf.fpp`](file--BasicSelf.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicSelf.hpp`](file--BasicSelf.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicString.cpp`](file--BasicString.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicString.fpp`](file--BasicString.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicString.hpp`](file--BasicString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestAbsType.cpp`](file--BasicTestAbsType.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestAbsType.fpp`](file--BasicTestAbsType.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestAbsType.hpp`](file--BasicTestAbsType.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestArray.cpp`](file--BasicTestArray.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestArray.fpp`](file--BasicTestArray.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestArray.hpp`](file--BasicTestArray.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestEnum.cpp`](file--BasicTestEnum.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestEnum.fpp`](file--BasicTestEnum.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestEnum.hpp`](file--BasicTestEnum.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestStruct.cpp`](file--BasicTestStruct.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestStruct.fpp`](file--BasicTestStruct.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestStruct.hpp`](file--BasicTestStruct.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicU32.cpp`](file--BasicU32.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicU32.fpp`](file--BasicU32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicU32.hpp`](file--BasicU32.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Internal.cpp`](file--Internal.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Internal.fpp`](file--Internal.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Internal.hpp`](file--Internal.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Polymorphism.cpp`](file--Polymorphism.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Polymorphism.fpp`](file--Polymorphism.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Polymorphism.hpp`](file--Polymorphism.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChild.cpp`](file--StateToChild.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChild.fpp`](file--StateToChild.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChild.hpp`](file--StateToChild.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChoice.cpp`](file--StateToChoice.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChoice.fpp`](file--StateToChoice.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChoice.hpp`](file--StateToChoice.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToSelf.cpp`](file--StateToSelf.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToSelf.fpp`](file--StateToSelf.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToSelf.hpp`](file--StateToSelf.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToState.cpp`](file--StateToState.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToState.fpp`](file--StateToState.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToState.hpp`](file--StateToState.hpp) — UTF-8 텍스트 파일 본문 포함
+### `Basic.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Basic.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Basic.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/Basic.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+Basic::Basic() : BasicStateMachineBase(), m_action_a_history() {}
+
+void Basic::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void Basic::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedSize = 6;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedSize);
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `Basic.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Basic.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/Basic.fppi"
+
+  }
+
+}
+```
+
+### `Basic.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Basic.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Basic.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_Basic_HPP
+#define FppTest_State_Basic_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine
+class Basic final : public BasicStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    Basic();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuard.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuard.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuard.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuard.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuard::BasicGuard() : BasicGuardStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuard::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+bool BasicGuard::guard_g(Signal signal) const {
+    return this->m_guard_g.call(signal);
+}
+
+void BasicGuard::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::S);
+    this->checkActionsAndGuards(0, 1);
+}
+
+void BasicGuard::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::T);
+    this->checkActionsAndGuards(6, 1);
+}
+
+void BasicGuard::checkActionsAndGuards(FwIndexType expectedActionSize, FwIndexType expectedGuardSize) {
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedActionSize);
+    for (FwIndexType i = 0; i < expectedActionSize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), expectedGuardSize);
+    for (FwIndexType i = 0; i < expectedGuardSize; i++) {
+        ASSERT_EQ(this->m_guard_g.getCallHistory().getItemAt(i), Signal::s);
+    }
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuard.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuard.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuard.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuard.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuard.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuard.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuard_HPP
+#define FppTest_State_BasicGuard_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a guard
+class BasicGuard final : public BasicGuardStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuard();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal  //!< The signal
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! Helper function for checking actions and guards
+    void checkActionsAndGuards(FwIndexType expectedActionSize,  //!< The expected action size
+                               FwIndexType expectedGuardSize    //!< The expected guard size
+    );
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::NoArgGuard<Signal, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuardString.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardString.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardString.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with string guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuardString.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuardString::BasicGuardString() : BasicGuardStringStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuardString::action_a(Signal signal, const Fw::StringBase& value) {
+    this->m_action_a_history.push(signal, Fw::String(value));
+}
+
+bool BasicGuardString::guard_g(Signal signal, const Fw::StringBase& value) const {
+    return this->m_guard_g.call(signal, Fw::String(value));
+}
+
+void BasicGuardString::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 0);
+    Fw::String value;
+    SmHarness::Pick::string(value);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void BasicGuardString::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    Fw::String value;
+    SmHarness::Pick::string(value);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuardString.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardString.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuardString.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuardString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardString.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardString.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with string guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuardString_HPP
+#define FppTest_State_BasicGuardString_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardStringStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a String guard
+class BasicGuardString final : public BasicGuardStringStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuardString();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal,               //!< The signal
+                  const Fw::StringBase& value  //!< The value
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal,               //!< The signal
+                 const Fw::StringBase& value  //!< The value
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! The history associated with action a
+    SmHarness::SignalValueHistory<Signal, Fw::String, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::Guard<Signal, Fw::String, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestAbsType.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestAbsType.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestAbsType.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestAbsType guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuardTestAbsType.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuardTestAbsType::BasicGuardTestAbsType()
+    : BasicGuardTestAbsTypeStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuardTestAbsType::action_a(Signal signal, const SmHarness::TestAbsType& value) {
+    this->m_action_a_history.push(signal, value);
+}
+
+bool BasicGuardTestAbsType::guard_g(Signal signal, const SmHarness::TestAbsType& value) const {
+    return this->m_guard_g.call(signal, value);
+}
+
+void BasicGuardTestAbsType::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 0);
+    const SmHarness::TestAbsType value = SmHarness::Pick::testAbsType();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestAbsType::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestAbsType value = SmHarness::Pick::testAbsType();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuardTestAbsType.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestAbsType.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuardTestAbsType.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuardTestAbsType.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestAbsType.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestAbsType.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestAbsType guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuardTestAbsType_HPP
+#define FppTest_State_BasicGuardTestAbsType_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestAbsTypeStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a TestAbsType guard
+class BasicGuardTestAbsType final : public BasicGuardTestAbsTypeStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuardTestAbsType();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal,                       //!< The signal
+                  const SmHarness::TestAbsType& value  //!< The value
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal,                       //!< The signal
+                 const SmHarness::TestAbsType& value  //!< The value
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! The history associated with action a
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestAbsType, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::Guard<Signal, SmHarness::TestAbsType, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestArray.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestArray.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestArray.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestArray guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuardTestArray.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuardTestArray::BasicGuardTestArray() : BasicGuardTestArrayStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuardTestArray::action_a(Signal signal, const SmHarness::TestArray& value) {
+    this->m_action_a_history.push(signal, value);
+}
+
+bool BasicGuardTestArray::guard_g(Signal signal, const SmHarness::TestArray& value) const {
+    return this->m_guard_g.call(signal, value);
+}
+
+void BasicGuardTestArray::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 0);
+    const SmHarness::TestArray value = SmHarness::Pick::testArray();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestArray::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestArray value = SmHarness::Pick::testArray();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuardTestArray.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestArray.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuardTestArray.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuardTestArray.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestArray.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestArray.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestArray guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuardTestArray_HPP
+#define FppTest_State_BasicGuardTestArray_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestArrayStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a TestArray guard
+class BasicGuardTestArray final : public BasicGuardTestArrayStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuardTestArray();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal,                     //!< The signal
+                  const SmHarness::TestArray& value  //!< The value
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal,                     //!< The signal
+                 const SmHarness::TestArray& value  //!< The value
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! The history associated with action a
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestArray, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::Guard<Signal, SmHarness::TestArray, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestEnum.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestEnum.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestEnum.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestEnum guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuardTestEnum.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuardTestEnum::BasicGuardTestEnum() : BasicGuardTestEnumStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuardTestEnum::action_a(Signal signal, const SmHarness::TestEnum& value) {
+    this->m_action_a_history.push(signal, value);
+}
+
+bool BasicGuardTestEnum::guard_g(Signal signal, const SmHarness::TestEnum& value) const {
+    return this->m_guard_g.call(signal, value);
+}
+
+void BasicGuardTestEnum::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 0);
+    const SmHarness::TestEnum value = SmHarness::Pick::testEnum();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestEnum::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestEnum value = SmHarness::Pick::testEnum();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuardTestEnum.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestEnum.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuardTestEnum.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuardTestEnum.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestEnum.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestEnum.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestEnum guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuardTestEnum_HPP
+#define FppTest_State_BasicGuardTestEnum_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestEnumStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a TestEnum guard
+class BasicGuardTestEnum final : public BasicGuardTestEnumStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuardTestEnum();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal,                    //!< The signal
+                  const SmHarness::TestEnum& value  //!< The value
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal,                    //!< The signal
+                 const SmHarness::TestEnum& value  //!< The value
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! The history associated with action a
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestEnum, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::Guard<Signal, SmHarness::TestEnum, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestStruct.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestStruct.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestStruct.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestStruct guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuardTestStruct.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuardTestStruct::BasicGuardTestStruct()
+    : BasicGuardTestStructStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuardTestStruct::action_a(Signal signal, const SmHarness::TestStruct& value) {
+    this->m_action_a_history.push(signal, value);
+}
+
+bool BasicGuardTestStruct::guard_g(Signal signal, const SmHarness::TestStruct& value) const {
+    return this->m_guard_g.call(signal, value);
+}
+
+void BasicGuardTestStruct::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 0);
+    const SmHarness::TestStruct value = SmHarness::Pick::testStruct();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestStruct::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestStruct value = SmHarness::Pick::testStruct();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuardTestStruct.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestStruct.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuardTestStruct.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuardTestStruct.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardTestStruct.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardTestStruct.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestStruct guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuardTestStruct_HPP
+#define FppTest_State_BasicGuardTestStruct_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestStructStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a TestStruct guard
+class BasicGuardTestStruct final : public BasicGuardTestStructStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuardTestStruct();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal,                      //!< The signal
+                  const SmHarness::TestStruct& value  //!< The value
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal,                      //!< The signal
+                 const SmHarness::TestStruct& value  //!< The value
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! The history associated with action a
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestStruct, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::Guard<Signal, SmHarness::TestStruct, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicGuardU32.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardU32.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardU32.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with U32 guard (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicGuardU32.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicGuardU32::BasicGuardU32() : BasicGuardU32StateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void BasicGuardU32::action_a(Signal signal, U32 value) {
+    this->m_action_a_history.push(signal, value);
+}
+
+bool BasicGuardU32::guard_g(Signal signal, U32 value) const {
+    return this->m_guard_g.call(signal, value);
+}
+
+void BasicGuardU32::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void BasicGuardU32::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicGuardU32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardU32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicGuardU32.fppi"
+
+  }
+
+}
+```
+
+### `BasicGuardU32.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicGuardU32.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicGuardU32.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with U32 guard (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicGuardU32_HPP
+#define FppTest_State_BasicGuardU32_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardU32StateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a U32 guard
+class BasicGuardU32 final : public BasicGuardU32StateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicGuardU32();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal,  //!< The signal
+                  U32 value       //!< The value
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal,  //!< The signal
+                 U32 value       //!< The value
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! The history associated with action a
+    SmHarness::SignalValueHistory<Signal, U32, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::Guard<Signal, U32, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicInternal.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicInternal.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicInternal.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicInternal.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicInternal::BasicInternal() : BasicInternalStateMachineBase(), m_action_a_history() {}
+
+void BasicInternal::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicInternal::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getItemAt(0), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    this->m_action_a_history.clear();
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getItemAt(0), Signal::s);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicInternal.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicInternal.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicInternal.fppi"
+
+  }
+
+}
+```
+
+### `BasicInternal.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicInternal.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicInternal.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicInternal_HPP
+#define FppTest_State_BasicInternal_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicInternalStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with an internal transition
+class BasicInternal final : public BasicInternalStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicInternal();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicSelf.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicSelf.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicSelf.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with self transition (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicSelf.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicSelf::BasicSelf() : BasicSelfStateMachineBase(), m_action_a_history() {}
+
+void BasicSelf::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicSelf::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getItemAt(0), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    this->m_action_a_history.clear();
+    this->sendSignal_s();
+    ASSERT_EQ(this->getState(), State::S);
+    const FwIndexType expectedSize = 6;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedSize);
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicSelf.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicSelf.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicSelf.fppi"
+
+  }
+
+}
+```
+
+### `BasicSelf.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicSelf.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicSelf.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with self transition (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicSelf_HPP
+#define FppTest_State_BasicSelf_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicSelfStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with a self transition
+class BasicSelf final : public BasicSelfStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicSelf();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicString.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicString.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicString.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with string actions (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicString.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicString::BasicString() : BasicStringStateMachineBase(), m_action_a_history(), m_action_b_history() {}
+
+void BasicString::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicString::action_b(Signal signal, const Fw::StringBase& value) {
+    this->m_action_b_history.push(signal, Fw::String(value));
+}
+
+void BasicString::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    Fw::String value;
+    SmHarness::Pick::string(value);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_b_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicString.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicString.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicString.fppi"
+
+  }
+
+}
+```
+
+### `BasicString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicString.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicString.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with string actions (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicString_HPP
+#define FppTest_State_BasicString_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicStringStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with string actions
+class BasicString final : public BasicStringStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicString();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of action b
+    void action_b(Signal signal,               //!< The signal
+                  const Fw::StringBase& value  //!< The value
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The history associated with action b
+    SmHarness::SignalValueHistory<Signal, Fw::String, historySize> m_action_b_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicTestAbsType.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestAbsType.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestAbsType.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestAbsType actions (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicTestAbsType.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicTestAbsType::BasicTestAbsType() : BasicTestAbsTypeStateMachineBase(), m_action_a_history(), m_action_b_history() {}
+
+void BasicTestAbsType::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicTestAbsType::action_b(Signal signal, const SmHarness::TestAbsType& value) {
+    this->m_action_b_history.push(signal, value);
+}
+
+void BasicTestAbsType::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestAbsType value = SmHarness::Pick::testAbsType();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_b_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicTestAbsType.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestAbsType.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicTestAbsType.fppi"
+
+  }
+
+}
+```
+
+### `BasicTestAbsType.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestAbsType.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestAbsType.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestAbsType actions (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicTestAbsType_HPP
+#define FppTest_State_BasicTestAbsType_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestAbsTypeStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with TestAbsType actions
+class BasicTestAbsType final : public BasicTestAbsTypeStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicTestAbsType();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of action b
+    void action_b(Signal signal,                       //!< The signal
+                  const SmHarness::TestAbsType& value  //!< The value
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The history associated with action b
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestAbsType, historySize> m_action_b_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicTestArray.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestArray.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestArray.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestArray actions (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicTestArray.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicTestArray::BasicTestArray() : BasicTestArrayStateMachineBase(), m_action_a_history(), m_action_b_history() {}
+
+void BasicTestArray::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicTestArray::action_b(Signal signal, const SmHarness::TestArray& value) {
+    this->m_action_b_history.push(signal, value);
+}
+
+void BasicTestArray::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestArray value = SmHarness::Pick::testArray();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_b_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicTestArray.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestArray.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicTestArray.fppi"
+
+  }
+
+}
+```
+
+### `BasicTestArray.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestArray.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestArray.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestArray actions (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicTestArray_HPP
+#define FppTest_State_BasicTestArray_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestArrayStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with TestArray actions
+class BasicTestArray final : public BasicTestArrayStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicTestArray();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of action b
+    void action_b(Signal signal,                     //!< The signal
+                  const SmHarness::TestArray& value  //!< The value
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The history associated with action b
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestArray, historySize> m_action_b_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicTestEnum.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestEnum.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestEnum.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestEnum actions (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicTestEnum.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicTestEnum::BasicTestEnum() : BasicTestEnumStateMachineBase(), m_action_a_history(), m_action_b_history() {}
+
+void BasicTestEnum::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicTestEnum::action_b(Signal signal, const SmHarness::TestEnum& value) {
+    this->m_action_b_history.push(signal, value);
+}
+
+void BasicTestEnum::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestEnum value = SmHarness::Pick::testEnum();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_b_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicTestEnum.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestEnum.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicTestEnum.fppi"
+
+  }
+
+}
+```
+
+### `BasicTestEnum.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestEnum.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestEnum.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestEnum actions (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicTestEnum_HPP
+#define FppTest_State_BasicTestEnum_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestEnumStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with TestEnum actions
+class BasicTestEnum final : public BasicTestEnumStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicTestEnum();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of action b
+    void action_b(Signal signal,                    //!< The signal
+                  const SmHarness::TestEnum& value  //!< The value
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The history associated with action b
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestEnum, historySize> m_action_b_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicTestStruct.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestStruct.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestStruct.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestStruct actions (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicTestStruct.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicTestStruct::BasicTestStruct() : BasicTestStructStateMachineBase(), m_action_a_history(), m_action_b_history() {}
+
+void BasicTestStruct::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicTestStruct::action_b(Signal signal, const SmHarness::TestStruct& value) {
+    this->m_action_b_history.push(signal, value);
+}
+
+void BasicTestStruct::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const SmHarness::TestStruct value = SmHarness::Pick::testStruct();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_b_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicTestStruct.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestStruct.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicTestStruct.fppi"
+
+  }
+
+}
+```
+
+### `BasicTestStruct.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicTestStruct.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicTestStruct.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with TestStruct actions (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicTestStruct_HPP
+#define FppTest_State_BasicTestStruct_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestStructStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with TestStruct actions
+class BasicTestStruct final : public BasicTestStructStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicTestStruct();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of action b
+    void action_b(Signal signal,                      //!< The signal
+                  const SmHarness::TestStruct& value  //!< The value
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The history associated with action b
+    SmHarness::SignalValueHistory<Signal, SmHarness::TestStruct, historySize> m_action_b_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `BasicU32.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicU32.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicU32.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with U32 actions (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/BasicU32.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+BasicU32::BasicU32() : BasicU32StateMachineBase(), m_action_a_history(), m_action_b_history() {}
+
+void BasicU32::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void BasicU32::action_b(Signal signal, U32 value) {
+    this->m_action_b_history.push(signal, value);
+}
+
+void BasicU32::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    this->sendSignal_s(value);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::s);
+    }
+    ASSERT_EQ(this->m_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_b_history.getSignals().getItemAt(0), Signal::s);
+    ASSERT_EQ(this->m_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `BasicU32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicU32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/BasicU32.fppi"
+
+  }
+
+}
+```
+
+### `BasicU32.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/BasicU32.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  BasicU32.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine with U32 actions (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_BasicU32_HPP
+#define FppTest_State_BasicU32_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/BasicU32StateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A basic state machine with U32 actions
+class BasicU32 final : public BasicU32StateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    BasicU32();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of action b
+    void action_b(Signal signal,  //!< The signal
+                  U32 value       //!< The value
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The history associated with action b
+    SmHarness::SignalValueHistory<Signal, U32, historySize> m_action_b_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuard.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardString.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestAbsType.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestArray.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestEnum.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestStruct.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardU32.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicInternal.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicSelf.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicString.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestAbsType.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestArray.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestEnum.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestStruct.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicU32.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Internal.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Polymorphism.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChild.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChoice.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToSelf.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToState.fpp"
+)
+set(MOD_DEPS FppTest/state_machine/internal/harness)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuard.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardString.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestAbsType.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestArray.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestEnum.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestStruct.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardU32.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicInternal.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicSelf.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicString.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestAbsType.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestArray.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestEnum.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestStruct.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicU32.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Internal.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Polymorphism.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChild.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChoice.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToSelf.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToState.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `Internal.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Internal.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Internal.hpp
+// \author R. Bocchino
+// \brief  Test class for internal state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/Internal.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+Internal::Internal() : InternalStateMachineBase(), m_action_a_history() {}
+
+void Internal::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void Internal::testInit() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void Internal::testS2_internal() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    this->sendSignal_S1_internal();
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getItemAt(0), Signal::S1_internal);
+}
+
+void Internal::testS2_to_S3() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    this->sendSignal_S2_to_S3();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 0);
+}
+
+void Internal::testS3_internal() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    this->sendSignal_S1_internal();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    ASSERT_EQ(this->m_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_action_a_history.getItemAt(0), Signal::S1_internal);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `Internal.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Internal.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/Internal.fppi"
+
+  }
+
+}
+```
+
+### `Internal.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Internal.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Internal.hpp
+// \author R. Bocchino
+// \brief  Test class for internal state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_Internal_HPP
+#define FppTest_State_Internal_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/InternalStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A hierarchical state machine with an internal transition
+class Internal final : public InternalStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    Internal();
+
+  private:
+    //! Action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+  public:
+    //! Test initial transition
+    void testInit();
+
+    //! Test internal transition in S2
+    void testS2_internal();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test internal transition in S3
+    void testS3_internal();
+
+  private:
+    //! The history of action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// main.cpp
+// ----------------------------------------------------------------------
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/Basic.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuard.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardString.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestAbsType.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestArray.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestEnum.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardTestStruct.hpp"
+#include "FppTest/state_machine/internal/state/BasicGuardU32.hpp"
+#include "FppTest/state_machine/internal/state/BasicInternal.hpp"
+#include "FppTest/state_machine/internal/state/BasicSelf.hpp"
+#include "FppTest/state_machine/internal/state/BasicString.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestAbsType.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestArray.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestEnum.hpp"
+#include "FppTest/state_machine/internal/state/BasicTestStruct.hpp"
+#include "FppTest/state_machine/internal/state/BasicU32.hpp"
+#include "FppTest/state_machine/internal/state/Internal.hpp"
+#include "FppTest/state_machine/internal/state/Polymorphism.hpp"
+#include "FppTest/state_machine/internal/state/StateToChild.hpp"
+#include "FppTest/state_machine/internal/state/StateToChoice.hpp"
+#include "FppTest/state_machine/internal/state/StateToSelf.hpp"
+#include "FppTest/state_machine/internal/state/StateToState.hpp"
+#include "STest/STest/Random/Random.hpp"
+
+TEST(Basic, Test) {
+    FppTest::SmState::Basic basic;
+    basic.test();
+}
+
+TEST(BasicGuard, False) {
+    FppTest::SmState::BasicGuard basicGuard;
+    basicGuard.testFalse();
+}
+
+TEST(BasicGuard, True) {
+    FppTest::SmState::BasicGuard basicGuard;
+    basicGuard.testTrue();
+}
+
+TEST(BasicGuardString, False) {
+    FppTest::SmState::BasicGuardString basicGuardString;
+    basicGuardString.testFalse();
+}
+
+TEST(BasicGuardString, True) {
+    FppTest::SmState::BasicGuardString basicGuardString;
+    basicGuardString.testTrue();
+}
+
+TEST(BasicGuardTestAbsType, False) {
+    FppTest::SmState::BasicGuardTestAbsType basicGuardTestAbsType;
+    basicGuardTestAbsType.testFalse();
+}
+
+TEST(BasicGuardTestAbsType, True) {
+    FppTest::SmState::BasicGuardTestAbsType basicGuardTestAbsType;
+    basicGuardTestAbsType.testTrue();
+}
+
+TEST(BasicGuardTestArray, False) {
+    FppTest::SmState::BasicGuardTestArray basicGuardTestArray;
+    basicGuardTestArray.testFalse();
+}
+
+TEST(BasicGuardTestArray, True) {
+    FppTest::SmState::BasicGuardTestArray basicGuardTestArray;
+    basicGuardTestArray.testTrue();
+}
+
+TEST(BasicGuardTestEnum, False) {
+    FppTest::SmState::BasicGuardTestEnum basicGuardTestEnum;
+    basicGuardTestEnum.testFalse();
+}
+
+TEST(BasicGuardTestEnum, True) {
+    FppTest::SmState::BasicGuardTestEnum basicGuardTestEnum;
+    basicGuardTestEnum.testTrue();
+}
+
+TEST(BasicGuardTestStruct, False) {
+    FppTest::SmState::BasicGuardTestStruct basicGuardTestStruct;
+    basicGuardTestStruct.testFalse();
+}
+
+TEST(BasicGuardTestStruct, True) {
+    FppTest::SmState::BasicGuardTestStruct basicGuardTestStruct;
+    basicGuardTestStruct.testTrue();
+}
+
+TEST(BasicGuardU32, False) {
+    FppTest::SmState::BasicGuardU32 basicGuardU32;
+    basicGuardU32.testFalse();
+}
+
+TEST(BasicGuardU32, True) {
+    FppTest::SmState::BasicGuardU32 basicGuardU32;
+    basicGuardU32.testTrue();
+}
+
+TEST(BasicInternal, Test) {
+    FppTest::SmState::BasicInternal basicInternal;
+    basicInternal.test();
+}
+
+TEST(BasicSelf, Test) {
+    FppTest::SmState::BasicSelf basicSelf;
+    basicSelf.test();
+}
+
+TEST(BasicString, Test) {
+    FppTest::SmState::BasicString basicString;
+    basicString.test();
+}
+
+TEST(BasicTestAbsType, Test) {
+    FppTest::SmState::BasicTestAbsType basicTestAbsType;
+    basicTestAbsType.test();
+}
+
+TEST(BasicTestArray, Test) {
+    FppTest::SmState::BasicTestArray basicTestArray;
+    basicTestArray.test();
+}
+
+TEST(BasicTestEnum, Test) {
+    FppTest::SmState::BasicTestEnum basicTestEnum;
+    basicTestEnum.test();
+}
+
+TEST(BasicTestStruct, Test) {
+    FppTest::SmState::BasicTestStruct basicTestStruct;
+    basicTestStruct.test();
+}
+
+TEST(BasicU32, Test) {
+    FppTest::SmState::BasicU32 basicU32;
+    basicU32.test();
+}
+
+TEST(Internal, Init) {
+    FppTest::SmState::Internal internal;
+    internal.testInit();
+}
+
+TEST(Internal, S2_internal) {
+    FppTest::SmState::Internal internal;
+    internal.testS2_internal();
+}
+
+TEST(Internal, S2_to_S3) {
+    FppTest::SmState::Internal internal;
+    internal.testS2_to_S3();
+}
+
+TEST(Internal, S3_internal) {
+    FppTest::SmState::Internal internal;
+    internal.testS3_internal();
+}
+
+TEST(Polymorphism, Init) {
+    FppTest::SmState::Polymorphism polymorphism;
+    polymorphism.testInit();
+}
+
+TEST(Polymorphism, S2_poly) {
+    FppTest::SmState::Polymorphism polymorphism;
+    polymorphism.testS2_poly();
+}
+
+TEST(Polymorphism, S2_to_S3) {
+    FppTest::SmState::Polymorphism polymorphism;
+    polymorphism.testS2_to_S3();
+}
+
+TEST(Polymorphism, S3_poly) {
+    FppTest::SmState::Polymorphism polymorphism;
+    polymorphism.testS3_poly();
+}
+
+TEST(StateToChild, Init) {
+    FppTest::SmState::StateToChild stateToChild;
+    stateToChild.testInit();
+}
+
+TEST(StateToChild, S2_to_S2) {
+    FppTest::SmState::StateToChild stateToChild;
+    stateToChild.testS2_to_S2();
+}
+
+TEST(StateToChild, S2_to_S3) {
+    FppTest::SmState::StateToChild stateToChild;
+    stateToChild.testS2_to_S3();
+}
+
+TEST(StateToChild, S3_to_S2) {
+    FppTest::SmState::StateToChild stateToChild;
+    stateToChild.testS3_to_S2();
+}
+
+TEST(StateToChoice, Init) {
+    FppTest::SmState::StateToChoice stateToChoice;
+    stateToChoice.testInit();
+}
+
+TEST(StateToChoice, S2_to_C) {
+    FppTest::SmState::StateToChoice stateToChoice;
+    stateToChoice.testS2_to_C();
+}
+
+TEST(StateToChoice, S2_to_S4) {
+    FppTest::SmState::StateToChoice stateToChoice;
+    stateToChoice.testS2_to_S4();
+}
+
+TEST(StateToChoice, S2_to_S3) {
+    FppTest::SmState::StateToChoice stateToChoice;
+    stateToChoice.testS2_to_S3();
+}
+
+TEST(StateToChoice, S3_to_C) {
+    FppTest::SmState::StateToChoice stateToChoice;
+    stateToChoice.testS3_to_C();
+}
+
+TEST(StateToChoice, S3_to_S4) {
+    FppTest::SmState::StateToChoice stateToChoice;
+    stateToChoice.testS3_to_S4();
+}
+
+TEST(StateToSelf, Init) {
+    FppTest::SmState::StateToSelf stateToSelf;
+    stateToSelf.testInit();
+}
+
+TEST(StateToSelf, S2_to_S1) {
+    FppTest::SmState::StateToSelf stateToSelf;
+    stateToSelf.testS2_to_S1();
+}
+
+TEST(StateToSelf, S2_to_S3) {
+    FppTest::SmState::StateToSelf stateToSelf;
+    stateToSelf.testS2_to_S3();
+}
+
+TEST(StateToSelf, S3_to_S1) {
+    FppTest::SmState::StateToSelf stateToSelf;
+    stateToSelf.testS3_to_S1();
+}
+
+TEST(StateToState, Init) {
+    FppTest::SmState::StateToState stateToState;
+    stateToState.testInit();
+}
+
+TEST(StateToState, S2_to_S3) {
+    FppTest::SmState::StateToState stateToState;
+    stateToState.testS2_to_S3();
+}
+
+TEST(StateToState, S2_to_S4) {
+    FppTest::SmState::StateToState stateToState;
+    stateToState.testS2_to_S4();
+}
+
+TEST(StateToState, S2_to_S5) {
+    FppTest::SmState::StateToState stateToState;
+    stateToState.testS2_to_S5();
+}
+
+TEST(StateToState, S3_to_S4) {
+    FppTest::SmState::StateToState stateToState;
+    stateToState.testS3_to_S4();
+}
+
+TEST(StateToState, S3_to_S5) {
+    FppTest::SmState::StateToState stateToState;
+    stateToState.testS3_to_S5();
+}
+
+// ----------------------------------------------------------------------
+// Main function
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Polymorphism.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Polymorphism.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Polymorphism.hpp
+// \author R. Bocchino
+// \brief  Test class for polymorphic state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/Polymorphism.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+Polymorphism::Polymorphism() : PolymorphismStateMachineBase() {}
+
+void Polymorphism::testInit() {
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+}
+
+void Polymorphism::testS2_poly() {
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    this->sendSignal_poly();
+    this->sendSignal_poly();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S4);
+}
+
+void Polymorphism::testS2_to_S3() {
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    this->sendSignal_S2_to_S3();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+}
+
+void Polymorphism::testS3_poly() {
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    this->sendSignal_poly();
+    this->sendSignal_poly();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S5);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `Polymorphism.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Polymorphism.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/Polymorphism.fppi"
+
+  }
+
+}
+```
+
+### `Polymorphism.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/Polymorphism.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Polymorphism.hpp
+// \author R. Bocchino
+// \brief  Test class for polymorphic state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_Polymorphism_HPP
+#define FppTest_State_Polymorphism_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/PolymorphismStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A hierarchical state machine with behavioral polymorphism
+class Polymorphism final : public PolymorphismStateMachineBase {
+  public:
+    //! Constructor
+    Polymorphism();
+
+  public:
+    //! Test initial transition
+    void testInit();
+
+    //! Test polymorphic transition in S2
+    void testS2_poly();
+
+    //! Test transition from S2 to S3
+    void testS2_to_S3();
+
+    //! Test polymorphic transition in S3
+    void testS3_poly();
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/README.md`
+
+
+```markdown
+# state_machine/internal/states
+
+Tests for transitions out of states in FPP internal state machines.
+```
+
+### `StateToChild.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChild.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToChild.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-self state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/StateToChild.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+StateToChild::StateToChild() : StateToChildStateMachineBase(), m_actionHistory() {}
+
+void StateToChild::action_exitS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToChild::action_exitS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToChild::action_a(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToChild::action_enterS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToChild::action_enterS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+void StateToChild::testInit() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    ASSERT_EQ(this->m_actionHistory.getSize(), 1);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    ASSERT_EQ(signals.getItemAt(0), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S2);
+}
+
+void StateToChild::testS2_to_S2() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S2();
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S2);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::ENTER_S2);
+}
+
+void StateToChild::testS2_to_S3() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S2_to_S3();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToChild::testS3_to_S2() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    this->m_actionHistory.clear();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    this->sendSignal_S1_to_S2();
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S2);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::ENTER_S2);
+}
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `StateToChild.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChild.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/StateToChild.fppi"
+
+  }
+
+}
+```
+
+### `StateToChild.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChild.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToChild.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-self state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_StateToChild_HPP
+#define FppTest_State_StateToChild_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/StateToChildStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A state machine for testing state-to-child transitions with hierarchy
+class StateToChild final : public StateToChildStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Action IDs
+    enum class ActionId { EXIT_S2, EXIT_S3, A, ENTER_S2, ENTER_S3 };
+
+  public:
+    //! Constructor
+    StateToChild();
+
+  private:
+    //! Exit S2
+    void action_exitS2(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S3
+    void action_exitS3(Signal signal  //!< The signal
+                       ) final;
+
+    //! Action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Enter S2
+    void action_enterS2(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S3
+    void action_enterS3(Signal signal  //!< The signal
+                        ) final;
+
+  public:
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition from S2 to S2
+    void testS2_to_S2();
+
+    //! Test transition from S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition from S3 to S2
+    void testS3_to_S2();
+
+  private:
+    //! The action history
+    SmHarness::SignalValueHistory<Signal, ActionId, historySize> m_actionHistory;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `StateToChoice.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChoice.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToChoice.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-state state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/StateToChoice.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+StateToChoice::StateToChoice() : StateToChoiceStateMachineBase(), m_actionHistory(), m_guard_g() {}
+
+void StateToChoice::action_exitS1(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void StateToChoice::action_exitS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToChoice::action_exitS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToChoice::action_a(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToChoice::action_enterS1(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S1);
+}
+
+void StateToChoice::action_enterS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToChoice::action_enterS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+void StateToChoice::action_enterS4(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S4);
+}
+
+bool StateToChoice::guard_g(Signal signal) const {
+    return this->m_guard_g.call(signal);
+}
+
+void StateToChoice::testInit() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S2);
+}
+
+void StateToChoice::testS2_to_C() {
+    this->m_actionHistory.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_C();
+    this->sendSignal_S1_to_C();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S4_S5);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_C);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+void StateToChoice::testS2_to_S3() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S2_to_S3();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToChoice::testS2_to_S4() {
+    this->m_actionHistory.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S4();
+    this->sendSignal_S1_to_S4();
+    ASSERT_EQ(this->getState(), State::S4_S5);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+void StateToChoice::testS3_to_C() {
+    this->m_actionHistory.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_C();
+    this->sendSignal_S1_to_C();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S4_S6);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_C);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+void StateToChoice::testS3_to_S4() {
+    this->m_actionHistory.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S4();
+    this->sendSignal_S1_to_S4();
+    ASSERT_EQ(this->getState(), State::S4_S6);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `StateToChoice.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChoice.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/StateToChoice.fppi"
+
+  }
+
+}
+```
+
+### `StateToChoice.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToChoice.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToChoice.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-choice state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_StateToChoice_HPP
+#define FppTest_State_StateToChoice_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/StateToChoiceStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A state machine for testing state-to-choice transitions with hierarchy
+class StateToChoice final : public StateToChoiceStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Action IDs
+    enum class ActionId { EXIT_S1, EXIT_S2, EXIT_S3, A, ENTER_S1, ENTER_S2, ENTER_S3, ENTER_S4 };
+
+  public:
+    //! Constructor
+    StateToChoice();
+
+  private:
+    //! Exit S1
+    void action_exitS1(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S2
+    void action_exitS2(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S3
+    void action_exitS3(Signal signal  //!< The signal
+                       ) final;
+
+    //! Action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Enter S1
+    void action_enterS1(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S2
+    void action_enterS2(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S3
+    void action_enterS3(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S4
+    void action_enterS4(Signal signal  //!< The signal
+                        ) final;
+
+    //! Guard g
+    bool guard_g(Signal signal  //!< The signal
+    ) const final;
+
+  public:
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition S2 to C
+    void testS2_to_C();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition S2 to S4
+    void testS2_to_S4();
+
+    //! Test transition S3 to C
+    void testS3_to_C();
+
+    //! Test transition S3 to S4
+    void testS3_to_S4();
+
+  private:
+    //! The action history
+    SmHarness::SignalValueHistory<Signal, ActionId, historySize> m_actionHistory;
+
+    //! The guard g
+    SmHarness::NoArgGuard<Signal, historySize> m_guard_g;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `StateToSelf.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToSelf.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToSelf.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-self state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/StateToSelf.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+StateToSelf::StateToSelf() : StateToSelfStateMachineBase(), m_actionHistory() {}
+
+void StateToSelf::action_exitS1(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void StateToSelf::action_exitS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToSelf::action_exitS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToSelf::action_a(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToSelf::action_enterS1(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S1);
+}
+
+void StateToSelf::action_enterS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToSelf::action_enterS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+void StateToSelf::testInit() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S2);
+}
+
+void StateToSelf::testS2_to_S1() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S1();
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S1);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S2);
+}
+
+void StateToSelf::testS2_to_S3() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S2_to_S3();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToSelf::testS3_to_S1() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S1();
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S1);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S2);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `StateToSelf.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToSelf.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/StateToSelf.fppi"
+
+  }
+
+}
+```
+
+### `StateToSelf.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToSelf.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToSelf.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-self state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_StateToSelf_HPP
+#define FppTest_State_StateToSelf_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/StateToSelfStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A state machine for testing state-to-self transitions with hierarchy
+class StateToSelf final : public StateToSelfStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Action IDs
+    enum class ActionId { EXIT_S1, EXIT_S2, EXIT_S3, A, ENTER_S1, ENTER_S2, ENTER_S3 };
+
+  public:
+    //! Constructor
+    StateToSelf();
+
+  private:
+    //! Exit S1
+    void action_exitS1(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S2
+    void action_exitS2(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S3
+    void action_exitS3(Signal signal  //!< The signal
+                       ) final;
+
+    //! Action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Enter S1
+    void action_enterS1(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S2
+    void action_enterS2(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S3
+    void action_enterS3(Signal signal  //!< The signal
+                        ) final;
+
+  public:
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition S2 to S1
+    void testS2_to_S1();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition S3 to S1
+    void testS3_to_S1();
+
+  private:
+    //! The action history
+    SmHarness::SignalValueHistory<Signal, ActionId, historySize> m_actionHistory;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `StateToState.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToState.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToState.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-state state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/StateToState.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+StateToState::StateToState() : StateToStateStateMachineBase(), m_actionHistory() {}
+
+void StateToState::action_exitS1(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void StateToState::action_exitS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToState::action_exitS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToState::action_a(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToState::action_enterS1(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S1);
+}
+
+void StateToState::action_enterS2(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToState::action_enterS3(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+void StateToState::action_enterS4(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S4);
+}
+
+void StateToState::action_enterS5(Signal signal) {
+    this->m_actionHistory.push(signal, ActionId::ENTER_S5);
+}
+
+void StateToState::testInit() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S1_S2);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S2);
+}
+
+void StateToState::testS2_to_S3() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S2_to_S3();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToState::testS2_to_S4() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S4();
+    this->sendSignal_S1_to_S4();
+    ASSERT_EQ(this->getState(), State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+void StateToState::testS2_to_S5() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S5();
+    this->sendSignal_S1_to_S5();
+    ASSERT_EQ(this->getState(), State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S5);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+void StateToState::testS3_to_S4() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S4();
+    this->sendSignal_S2_to_S3();
+    ASSERT_EQ(this->getState(), State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+void StateToState::testS3_to_S5() {
+    this->m_actionHistory.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    this->sendSignal_S2_to_S3();
+    this->m_actionHistory.clear();
+    this->sendSignal_S1_to_S5();
+    ASSERT_EQ(this->getState(), State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_actionHistory.getSignals();
+    const auto& actions = this->m_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), Signal::S1_to_S5);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+```
+
+### `StateToState.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToState.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmState {
+
+    include "include/StateToState.fppi"
+
+  }
+
+}
+```
+
+### `StateToState.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/StateToState.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  StateToState.hpp
+// \author R. Bocchino
+// \brief  Test class for state-to-state state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_State_StateToState_HPP
+#define FppTest_State_StateToState_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/state/StateToStateStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmState {
+
+//! A state machine for testing state-to-state transitions with hierarchy
+class StateToState final : public StateToStateStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Action IDs
+    enum class ActionId { EXIT_S1, EXIT_S2, EXIT_S3, A, ENTER_S1, ENTER_S2, ENTER_S3, ENTER_S4, ENTER_S5 };
+
+  public:
+    //! Constructor
+    StateToState();
+
+  private:
+    //! Exit S1
+    void action_exitS1(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S2
+    void action_exitS2(Signal signal  //!< The signal
+                       ) final;
+
+    //! Exit S3
+    void action_exitS3(Signal signal  //!< The signal
+                       ) final;
+
+    //! Action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Enter S1
+    void action_enterS1(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S2
+    void action_enterS2(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S3
+    void action_enterS3(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S4
+    void action_enterS4(Signal signal  //!< The signal
+                        ) final;
+
+    //! Enter S5
+    void action_enterS5(Signal signal  //!< The signal
+                        ) final;
+
+  public:
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition S2 to S4
+    void testS2_to_S4();
+
+    //! Test transition S2 to S5
+    void testS2_to_S5();
+
+    //! Test transition S3 to S4
+    void testS3_to_S4();
+
+    //! Test transition S3 to S5
+    void testS3_to_S5();
+
+  private:
+    //! The action history
+    SmHarness::SignalValueHistory<Signal, ActionId, historySize> m_actionHistory;
+};
+
+}  // namespace SmState
+
+}  // end namespace FppTest
+
+#endif
+```

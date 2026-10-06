@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000001/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,12 @@
 asdp/index
 predict/index
 validate/index
-file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000001/asdp/`](asdp/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000001/predict/`](predict/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000001/validate/`](validate/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/assets/asdp000000001/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json`](file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json) — 빌드 산출물 (경로만)
+### `2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json`
+
+**경로:** `fsw/build/exe/cpu1/data/owls/assets/asdp000000001/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,18 +3,288 @@
 
 **경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/pus/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PusIntegrationTest.java`
 
-file--PusIntegrationTest.java
-file--PusTmPacket.java
-file--PusTmTestLink.java
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/pus/PusIntegrationTest.java`
+
+
+```java
+package org.yamcs.pus;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import org.yamcs.*;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.mdb.*;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.tests.AbstractIntegrationTest;
+import org.yamcs.tests.MessageCaptor;
+import org.yamcs.xtce.*;
+
+public class PusIntegrationTest {
+    
+    @Mock
+    Parameter eventIdParameter;
+
+    @Mock
+    XtceTmExtractor tmExtractor;
+
+    @Mock
+    SequenceContainer sequenceContainer;
+
+    PusTmTestLink tmLink;
+    static YamcsServer yamcsServer;
+
+    YamcsClient yamcsClient;
+    MessageCaptor<Event> eventCaptor;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        YConfiguration.setupTest("pus");
+
+        yamcsServer = YamcsServer.getServer();
+        yamcsServer.prepareStart();
+        yamcsServer.start();
+
+    }
+
+    @BeforeEach
+    public void before() throws Exception {
+        tmLink = (PusTmTestLink) yamcsServer.getInstance("instance1").getLinkManager().getLink("tm_realtime");
+        assertNotNull(tmLink);
+
+        yamcsClient = YamcsClient.newBuilder("localhost", 9190)
+                .withUserAgent("it-junit")
+                .build();
+
+        yamcsClient.connectWebSocket();
+        var subscription = yamcsClient.createEventSubscription();
+        SubscribeEventsRequest request = SubscribeEventsRequest.newBuilder()
+                .setInstance("instance1")
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        eventCaptor = MessageCaptor.of(subscription);
+    }
+
+    @AfterEach
+    public void after() throws InterruptedException {
+        if (yamcsClient != null) {
+            yamcsClient.close();
+        }
+    }
+
+    @AfterAll
+    public static void shutDownYamcs() throws Exception {
+        YamcsServer.getServer().shutDown();
+    }
+
+    @Test
+    public void testEvent1() throws Exception {
+        tmLink.generateEvent1(1, (short) 2, (short) 5);
+        Event ev = eventCaptor.expectTimely();
+
+        assertEquals(EventSeverity.INFO, ev.getSeverity());
+        assertEquals("this is 2 and 5", ev.getMessage());
+
+        tmLink.generateEvent1(2, (short) 2, (short) 5);
+        ev = eventCaptor.expectTimely();
+        assertEquals(EventSeverity.WATCH, ev.getSeverity());
+
+        tmLink.generateEvent1(3, (short) 2, (short) 5);
+        ev = eventCaptor.expectTimely();
+        assertEquals(EventSeverity.DISTRESS, ev.getSeverity());
+
+        tmLink.generateEvent1(4, (short) 2, (short) 5);
+        ev = eventCaptor.expectTimely();
+        assertEquals(EventSeverity.CRITICAL, ev.getSeverity());
+    }
+
+    @Test
+    public void testEvent2() throws Exception {
+        tmLink.generateEvent2(1, 3.14159265f);
+        Event ev = eventCaptor.expectTimely();
+
+        assertEquals(EventSeverity.INFO, ev.getSeverity());
+        assertEquals("formatted 3.142", ev.getMessage());
+    }
+}
 ```
 
-## 항목
+### `PusTmPacket.java`
 
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/pus/PusIntegrationTest.java`](file--PusIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/pus/PusTmPacket.java`](file--PusTmPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/pus/PusTmTestLink.java`](file--PusTmTestLink.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/pus/PusTmPacket.java`
+
+
+```java
+package org.yamcs.pus;
+
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.tctm.CcsdsPacket;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+
+/**
+ * TM packets according to PUS standard ECSS-E-ST-70-41C 15 April 2016
+ * 
+ * 
+ * <pre>
+ * Secondary header (16 bytes)
+ * 
+ *  version number - 4 bits
+ *  spacecraft time reference status - 4 bits
+ *  service type  -   8 bits
+ *  message subtype  - 8 bits
+ *  message type counter - 16 bits
+ *  destination Id - 16 bits
+ *  time - variable size but we use 7 bytes
+ * </pre>
+ * 
+ */
+public class PusTmPacket extends CcsdsPacket {
+    public static final int SH_OFFSET = 6;
+    public static final int DATA_OFFSET = SH_OFFSET + 7 + 7;
+    protected static HashMap<Integer, AtomicInteger> seqMap = new HashMap<>(2); // apid -> seq
+
+
+    static final CrcCciitCalculator crcCalculator = new CrcCciitCalculator();
+    protected static HashMap<Integer, AtomicInteger> countMap = new HashMap<>(2); // destination -> msgCounter
+
+    public PusTmPacket(byte[] packet) {
+        super(packet);
+    }
+
+    public PusTmPacket(int apid, int userDataLength, int type, int subtype) {
+        super(ByteBuffer.allocate(getPacketLength(userDataLength)));
+        setHeader(apid, 0, 1, 3, getSeq(apid));
+        bb.position(SH_OFFSET);
+        bb.put((byte) (0x21));
+        bb.put((byte) type);
+        bb.put((byte) subtype);
+        int destination = 0;
+        bb.putShort((short) getCount(destination));
+        bb.putShort((short) destination);
+        encode7BytesTime(bb, System.currentTimeMillis());
+    }
+
+    static void encode7BytesTime(ByteBuffer bb, long t) {
+        bb.putInt((int) (t >> 32));
+        bb.putShort((short) (t >> 8));
+        bb.put((byte) t);
+    }
+
+    public void setType(int type) {
+        bb.put(SH_OFFSET + 1, (byte) type);
+
+    }
+
+    public void setSubtype(int subtype) {
+        bb.put(SH_OFFSET + 2, (byte) subtype);
+    }
+
+    private static int getPacketLength(int userDataLength) {
+        return DATA_OFFSET + userDataLength + 2;// 2 bytes for the CRC
+    }
+
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(DATA_OFFSET);
+        return bb.slice();
+    }
+
+    protected void fillChecksum() {
+        int crc = crcCalculator.compute(bb.array(), bb.arrayOffset(), bb.capacity() - bb.arrayOffset() - 2);
+        bb.position(bb.capacity() - 2);
+        bb.putShort((short) crc);
+    }
+
+    protected static int getCount(int apid) {
+        AtomicInteger count = countMap.computeIfAbsent(apid, a -> new AtomicInteger(0));
+        return count.getAndIncrement() & 0xFFFF;
+    }
+
+    static int getSeq(int apid) {
+        AtomicInteger seq = seqMap.computeIfAbsent(apid, a -> new AtomicInteger(0));
+        return seq.getAndIncrement() & 0xFFFF;
+    }
+}
+```
+
+### `PusTmTestLink.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/pus/PusTmTestLink.java`
+
+
+```java
+package org.yamcs.pus;
+
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+public class PusTmTestLink extends AbstractTmDataLink {
+
+        @Override
+        public void init(String yamcsInstance, String linkName, YConfiguration config) {
+            super.init(yamcsInstance, linkName, config);
+            System.out.println("in PusTmTestLink init");
+        }
+
+
+        public void generateEvent1(int subtype, short para1, short para2) {
+            PusTmPacket pkt = new PusTmPacket(1, 5, 5, subtype);
+            var bb = pkt.getUserDataBuffer();
+            bb.put((byte) 1);// event_id
+            bb.putShort(para1);
+            bb.putShort(para2);
+
+            process(pkt);
+        }
+
+        public void generateEvent2(int subtype, float para3) {
+            PusTmPacket pkt = new PusTmPacket(1, 5, 5, subtype);
+            var bb = pkt.getUserDataBuffer();
+            bb.put((byte) 2);// event_id
+            bb.putFloat(para3);
+
+            process(pkt);
+        }
+
+        void process(PusTmPacket pusPkt) {
+            long now = TimeEncoding.getWallclockTime();
+            TmPacket pkt = new TmPacket(now, pusPkt.getBytes());
+            pkt.setGenerationTime(now);
+            processPacket(pkt);
+        }
+
+        @Override
+        protected Status connectionStatus() {
+            return Status.OK;
+        }
+
+        @Override
+        protected void doStart() {
+            notifyStarted();
+        }
+
+        @Override
+        protected void doStop() {
+            notifyStopped();
+        }
+    }
+```

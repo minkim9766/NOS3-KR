@@ -3,7 +3,7 @@
 
 **경로:** `components/cryptolib/src/crypto/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ wolfssl/index
 wolfssl_stub/index
 ```
 
-## 항목
-
-- [`components/cryptolib/src/crypto/custom_stub/`](custom_stub/index) — 폴더
-- [`components/cryptolib/src/crypto/kmc/`](kmc/index) — 폴더
-- [`components/cryptolib/src/crypto/kmc_stub/`](kmc_stub/index) — 폴더
-- [`components/cryptolib/src/crypto/libgcrypt/`](libgcrypt/index) — 폴더
-- [`components/cryptolib/src/crypto/libgcrypt_stub/`](libgcrypt_stub/index) — 폴더
-- [`components/cryptolib/src/crypto/wolfssl/`](wolfssl/index) — 폴더
-- [`components/cryptolib/src/crypto/wolfssl_stub/`](wolfssl_stub/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

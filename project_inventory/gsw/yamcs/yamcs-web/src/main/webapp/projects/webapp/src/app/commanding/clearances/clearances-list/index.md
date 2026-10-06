@@ -3,16 +3,240 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `clearances-list.component.html`
 
-file--clearances-list.component.html
-file--clearances-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-list/clearances-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      Clearances
+      <ya-help>
+        <p>
+          Clearances allow central control over the level of commands that users are able to send.
+        </p>
+        <p>
+          Clearance works in addition to regular permission checks. So if a user does anyway not
+          have authorization to send certain commands, giving this user clearance will not change
+          this fact.
+        </p>
+      </ya-help>
+    </ng-template>
+
+    <ya-page-button
+      [disabled]="!isGroupChangeLevelEnabled()"
+      (clicked)="openChangeLevelDialog()"
+      icon="how_to_reg">
+      Change level
+    </ya-page-button>
+  </ya-instance-toolbar>
+
+  <ya-panel>
+    <app-clearances-page-tabs />
+    @if (dataSource) {
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        class="ya-data-table expand"
+        style="margin-top: 16px"
+        matSortActive="username"
+        matSortDirection="asc"
+        matSortDisableClear>
+        <ng-container cdkColumnDef="select">
+          <th
+            mat-header-cell
+            *cdkHeaderCellDef
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+          </th>
+          <td
+            mat-cell
+            *cdkCellDef="let item"
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox
+              #cb
+              [dataSource]="dataSource"
+              [selection]="selection"
+              [item]="item" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
+          <td mat-cell *matCellDef="let clearance">
+            {{ clearance.username }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="hasCommandPrivileges">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>May command</th>
+          <td mat-cell *matCellDef="let clearance">
+            {{ clearance.hasCommandPrivileges ? "Yes" : "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="level">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Clearance level</th>
+          <td mat-cell *matCellDef="let clearance">
+            @if (!clearance.level) {
+              No clearance
+            } @else {
+              <app-significance-level [level]="clearance.level" [grayscale]="true" />
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="issued">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Issued</th>
+          <td mat-cell *matCellDef="let clearance">
+            {{ (clearance.issueTime | datetime) || "-" }}
+            @if (clearance.issuedBy) {
+              by {{ clearance.issuedBy }}
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" class="expand"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.selected]="selection.isSelected(row)"
+          (click)="toggleOne(row)"></tr>
+      </table>
+    }
+    <mat-paginator [pageSize]="100" [hidePageSize]="true" [showFirstLastButtons]="true" />
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `clearances-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-list/clearances-list.component.html`](file--clearances-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-list/clearances-list.component.ts`](file--clearances-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/clearances/clearances-list/clearances-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { Clearance, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+import { ChangeLevelDialogComponent } from '../change-level-dialog/change-level-dialog.component';
+import { ClearancesPageTabsComponent } from '../clearances-page-tabs/clearances-page-tabs.component';
+
+@Component({
+  templateUrl: './clearances-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ClearancesPageTabsComponent,
+    WebappSdkModule,
+    SignificanceLevelComponent,
+  ],
+})
+export class ClearancesListComponent implements AfterViewInit {
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
+
+  displayedColumns = [
+    'select',
+    'username',
+    'hasCommandPrivileges',
+    'level',
+    'issued',
+    'actions',
+  ];
+
+  dataSource = new MatTableDataSource<Clearance>();
+  selection = new SelectionModel<Clearance>(true, []);
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+    private dialog: MatDialog,
+  ) {
+    title.setTitle('Clearances');
+    this.refresh();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  toggleOne(row: Clearance) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  refresh() {
+    this.selection.clear();
+    this.yamcs.yamcsClient.getClearances().then((page) => {
+      this.dataSource.data = page.clearances || [];
+    });
+  }
+
+  isGroupChangeLevelEnabled() {
+    return !this.selection.isEmpty();
+  }
+
+  openChangeLevelDialog() {
+    let clearance: Clearance | undefined;
+    if (this.selection.selected.length === 1) {
+      clearance = this.selection.selected[0];
+    }
+
+    const dialogRef = this.dialog.open(ChangeLevelDialogComponent, {
+      data: { clearance },
+      width: '400px',
+    });
+    dialogRef.afterClosed().subscribe((response) => {
+      if (response) {
+        const promises: Array<Promise<any>> = [];
+        if (response.level) {
+          for (const clearance of this.selection.selected) {
+            promises.push(
+              this.yamcs.yamcsClient.changeClearance(clearance.username, {
+                level: response.level,
+              }),
+            );
+          }
+        } else {
+          for (const clearance of this.selection.selected) {
+            promises.push(
+              this.yamcs.yamcsClient.deleteClearance(clearance.username),
+            );
+          }
+        }
+        if (promises.length) {
+          Promise.all(promises).then(() => this.refresh());
+        }
+      }
+    });
+  }
+}
+```

@@ -3,18 +3,80 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `expirable.component.css`
 
-file--expirable.component.css
-file--expirable.component.html
-file--expirable.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/expirable.component.css`
+
+
+```css
+.expired {
+  font-style: italic;
+}
+
+mat-icon {
+  color: #1b61b9;
+  font-size: 12px !important;
+  height: 12px !important;
+  width: 12px !important;
+}
+
+:host ::ng-deep .mat-tooltip {
+  white-space: pre-line;
+}
 ```
 
-## 항목
+### `expirable.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/expirable.component.css`](file--expirable.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/expirable.component.html`](file--expirable.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/expirable.component.ts`](file--expirable.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/expirable.component.html`
+
+
+```html
+<span [class.expired]="expired">
+  <ng-content />
+  @if (expired) {
+    &nbsp;
+    <mat-icon [matTooltip]="getExpiredTooltip()" matTooltipClass="multiline">access_time</mat-icon>
+  }
+</span>
+```
+
+### `expirable.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/expirable/expirable.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { ParameterValue } from '../../client';
+
+@Component({
+  selector: 'ya-expirable',
+  templateUrl: './expirable.component.html',
+  styleUrl: './expirable.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon, MatTooltip],
+})
+export class YaExpirable {
+  @Input()
+  pval: ParameterValue;
+
+  get expired() {
+    return this.pval && this.pval.acquisitionStatus === 'EXPIRED';
+  }
+
+  getExpiredTooltip() {
+    if (this.pval) {
+      let msg = 'EXPIRED VALUE.\n';
+      msg += `Generated: ${this.pval.generationTime}\n`;
+      msg += `Received: ${this.pval.acquisitionTime}`;
+      return msg;
+    } else {
+      return 'EXPIRED VALUE';
+    }
+  }
+}
+```

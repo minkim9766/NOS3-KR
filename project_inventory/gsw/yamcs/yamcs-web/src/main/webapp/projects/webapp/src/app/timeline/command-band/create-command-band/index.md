@@ -3,16 +3,100 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/create-command-band/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-command-band.component.html`
 
-file--create-command-band.component.html
-file--create-command-band.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/create-command-band/create-command-band.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Create band" />
+
+  <app-create-band-wizard-step step="2" />
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-field label="Label" hint="(required)">
+        <input type="text" formControlName="name" />
+      </ya-field>
+
+      <ya-field label="Description" hint="(optional)">
+        <textarea formControlName="description" rows="3"></textarea>
+      </ya-field>
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="../.." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `create-command-band.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/create-command-band/create-command-band.component.html`](file--create-command-band.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/create-command-band/create-command-band.component.ts`](file--create-command-band.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/create-command-band/create-command-band.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import {
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { CreateBandWizardStepComponent } from '../../create-band-wizard-step/create-band-wizard-step.component';
+
+@Component({
+  templateUrl: './create-command-band.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CreateBandWizardStepComponent, WebappSdkModule],
+})
+export class CreateCommandBandComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    title: Title,
+    formBuilder: UntypedFormBuilder,
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private router: Router,
+  ) {
+    title.setTitle('Configure Command Band');
+    this.form = formBuilder.group({
+      name: ['', [Validators.required]],
+      description: '',
+      properties: formBuilder.group({}),
+    });
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    this.yamcs.yamcsClient
+      .createTimelineBand(this.yamcs.instance!, {
+        name: formValue.name,
+        description: formValue.description,
+        type: 'COMMAND_BAND',
+        shared: true,
+        properties: formValue.properties,
+      })
+      .then(() =>
+        this.router.navigateByUrl(`/timeline/bands?c=${this.yamcs.context}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

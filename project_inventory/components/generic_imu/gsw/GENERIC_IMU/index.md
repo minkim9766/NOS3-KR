@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_imu/gsw/GENERIC_IMU/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,13 +12,29 @@ cmd_tlm/index
 lib/index
 procedures/index
 tools/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_imu/gsw/GENERIC_IMU/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`components/generic_imu/gsw/GENERIC_IMU/lib/`](lib/index) — 폴더
-- [`components/generic_imu/gsw/GENERIC_IMU/procedures/`](procedures/index) — 폴더
-- [`components/generic_imu/gsw/GENERIC_IMU/tools/`](tools/index) — 폴더
-- [`components/generic_imu/gsw/GENERIC_IMU/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `components/generic_imu/gsw/GENERIC_IMU/target.txt`
+
+
+```text
+# Ignored Parameters
+# IGNORE_PARAMETER parameter_name
+
+#
+# Required Libraries
+#
+#REQUIRE 'mission_lib.rb'
+
+# CCSDS 
+IGNORE_PARAMETER CCSDS_STREAMID
+IGNORE_PARAMETER CCSDS_SEQUENCE
+IGNORE_PARAMETER CCSDS_LENGTH
+IGNORE_PARAMETER CCSDS_SPARE
+IGNORE_PARAMETER CCSDS_FC  
+IGNORE_PARAMETER CCSDS_CHECKSUM 
+```

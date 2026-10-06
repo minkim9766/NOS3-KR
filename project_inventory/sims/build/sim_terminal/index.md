@@ -3,20 +3,30 @@
 
 **경로:** `sims/build/sim_terminal/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--libsim_terminal.so
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/sim_terminal/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`sims/build/sim_terminal/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/sim_terminal/libsim_terminal.so`](file--libsim_terminal.so) — 빌드 산출물 (경로만)
-- [`sims/build/sim_terminal/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `sims/build/sim_terminal/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libsim_terminal.so`
+
+**경로:** `sims/build/sim_terminal/libsim_terminal.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `sims/build/sim_terminal/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

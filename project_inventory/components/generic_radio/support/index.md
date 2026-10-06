@@ -3,20 +3,413 @@
 
 **경로:** `components/generic_radio/support/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--device_cfg.h
-file--generic_radio_checkout.c
-file--generic_radio_checkout.h
+**경로:** `components/generic_radio/support/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+
+# Specify the cross compiler executables
+# Typically these would be installed in a home directory or somewhere
+# in /opt.  However in this example the system compiler is used.
+if(DEFINED ENV{TARGET_CROSS})
+  SET(CMAKE_C_COMPILER            "$ENV{TARGET_CROSS}gcc")
+  SET(CMAKE_CXX_COMPILER          "$ENV{TARGET_CROSS}g++")
+else(NOT DEFINED ENV{TARGET_CROSS})
+  SET(CMAKE_C_COMPILER            "/usr/bin/gcc")
+  SET(CMAKE_CXX_COMPILER          "/usr/bin/g++")
+endif()
+
+project (generic_radio_checkout)
+
+set(TGTNAME cpu2)
+include(../../ComponentSettings.cmake)
+
+include_directories("./")
+include_directories("../fsw/mission_inc")
+include_directories("../fsw/src")
+include_directories("../../../fsw/apps/hwlib/fsw/public_inc")
+
+add_executable(generic_radio_checkout 
+               generic_radio_checkout.c 
+               ../fsw/src/generic_radio_device.c
+               ../../../fsw/apps/hwlib/fsw/linux/libuart.c
+              )
+target_link_libraries(generic_radio_checkout)
 ```
 
-## 항목
+### `device_cfg.h`
 
-- [`components/generic_radio/support/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/support/device_cfg.h`](file--device_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/support/generic_radio_checkout.c`](file--generic_radio_checkout.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/support/generic_radio_checkout.h`](file--generic_radio_checkout.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_radio/support/device_cfg.h`
+
+
+```c
+#ifndef _GENERIC_RADIO_CHECKOUT_DEVICE_CFG_H_
+#define _GENERIC_RADIO_CHECKOUT_DEVICE_CFG_H_
+
+/*
+** GENERIC_RADIO Checkout Configuration
+*/
+#define GENERIC_RADIO_CFG
+/* Note: NOS3 uart requires matching handle and bus number */
+#define GENERIC_RADIO_CFG_STRING      "/dev/usart_29"
+#define GENERIC_RADIO_CFG_HANDLE      29
+#define GENERIC_RADIO_CFG_BAUDRATE_HZ 115200
+#define GENERIC_RADIO_CFG_MS_TIMEOUT  250
+#define GENERIC_RADIO_CFG_DEBUG
+
+#endif /* _GENERIC_RADIO_CHECKOUT_DEVICE_CFG_H_ */
+```
+
+### `generic_radio_checkout.c`
+
+**경로:** `components/generic_radio/support/generic_radio_checkout.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_radio_checkout.c
+**
+** Purpose:
+**   This checkout can be run without cFS and is used to quickly develop and
+**   test functions required for a specific component.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_radio_checkout.h"
+
+/*
+** Global Variables
+*/
+uart_info_t                     Generic_radioUart;
+GENERIC_RADIO_Device_HK_tlm_t   Generic_radioHK;
+GENERIC_RADIO_Device_Data_tlm_t Generic_radioData;
+
+/*
+** Component Functions
+*/
+void print_help(void)
+{
+    printf(PROMPT "command [args]\n"
+                  "---------------------------------------------------------------------\n"
+                  "help                               - Display help                    \n"
+                  "exit                               - Exit app                        \n"
+                  "noop                               - No operation command to device  \n"
+                  "  n                                - ^                               \n"
+                  "hk                                 - Request device housekeeping     \n"
+                  "  h                                - ^                               \n"
+                  "generic_radio                             - Request generic_radio data  "
+                  "           \n"
+                  "  s                                - ^                               \n"
+                  "cfg #                              - Send configuration #            \n"
+                  "  c #                              - ^                               \n"
+                  "\n");
+}
+
+int get_command(const char *str)
+{
+    int  status = CMD_UNKNOWN;
+    char lcmd[MAX_INPUT_TOKEN_SIZE];
+    strncpy(lcmd, str, MAX_INPUT_TOKEN_SIZE);
+
+    /* Convert command to lower case */
+    to_lower(lcmd);
+
+    if (strcmp(lcmd, "help") == 0)
+    {
+        status = CMD_HELP;
+    }
+    else if (strcmp(lcmd, "exit") == 0)
+    {
+        status = CMD_EXIT;
+    }
+    else if (strcmp(lcmd, "noop") == 0)
+    {
+        status = CMD_NOOP;
+    }
+    else if (strcmp(lcmd, "n") == 0)
+    {
+        status = CMD_NOOP;
+    }
+    else if (strcmp(lcmd, "hk") == 0)
+    {
+        status = CMD_HK;
+    }
+    else if (strcmp(lcmd, "h") == 0)
+    {
+        status = CMD_HK;
+    }
+    else if (strcmp(lcmd, "generic_radio") == 0)
+    {
+        status = CMD_GENERIC_RADIO;
+    }
+    else if (strcmp(lcmd, "s") == 0)
+    {
+        status = CMD_GENERIC_RADIO;
+    }
+    else if (strcmp(lcmd, "cfg") == 0)
+    {
+        status = CMD_CFG;
+    }
+    else if (strcmp(lcmd, "c") == 0)
+    {
+        status = CMD_CFG;
+    }
+    return status;
+}
+
+int process_command(int cc, int num_tokens, char *tokens)
+{
+    int32_t status      = OS_SUCCESS;
+    int32_t exit_status = OS_SUCCESS;
+    int     config;
+
+    /* Process command */
+    switch (cc)
+    {
+        case CMD_HELP:
+            print_help();
+            break;
+
+        case CMD_EXIT:
+            exit_status = OS_ERROR;
+            break;
+
+        case CMD_NOOP:
+            if (check_number_arguments(num_tokens, 1) == OS_SUCCESS)
+            {
+                status = GENERIC_RADIO_CommandDevice(Generic_radioUart.handle, GENERIC_RADIO_DEVICE_NOOP_CMD, 0);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("NOOP command success\n");
+                }
+                else
+                {
+                    OS_printf("NOOP command failed!\n");
+                }
+            }
+            break;
+
+        case CMD_HK:
+            if (check_number_arguments(num_tokens, 1) == OS_SUCCESS)
+            {
+                status = GENERIC_RADIO_RequestHK(Generic_radioUart.handle, &Generic_radioHK);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("GENERIC_RADIO_RequestHK command success\n");
+                }
+                else
+                {
+                    OS_printf("GENERIC_RADIO_RequestHK command failed!\n");
+                }
+            }
+            break;
+
+        case CMD_GENERIC_RADIO:
+            if (check_number_arguments(num_tokens, 1) == OS_SUCCESS)
+            {
+                status = GENERIC_RADIO_RequestData(Generic_radioUart.handle, &Generic_radioData);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("GENERIC_RADIO_RequestHK command success\n");
+                }
+                else
+                {
+                    OS_printf("GENERIC_RADIO_RequestHK command failed!\n");
+                }
+            }
+            break;
+
+        case CMD_CFG:
+            if (check_number_arguments(num_tokens, 1) == OS_SUCCESS)
+            {
+                config = atoi(&tokens[0]);
+                status = GENERIC_RADIO_CommandDevice(Generic_radioUart.handle, GENERIC_RADIO_DEVICE_CFG_CMD, config);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("Configuration command success with value %d\n", config);
+                }
+                else
+                {
+                    OS_printf("Configuration command failed!\n");
+                }
+            }
+            break;
+
+        default:
+            OS_printf("Invalid command format, type 'help' for more info\n");
+            break;
+    }
+    return exit_status;
+}
+
+int main(int argc, char *argv[])
+{
+    int     status = OS_SUCCESS;
+    char    input_buf[MAX_INPUT_BUF];
+    char    input_tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE];
+    int     num_input_tokens;
+    int     cmd;
+    char   *token_ptr;
+    uint8_t run_status = OS_SUCCESS;
+
+    /* Open device specific protocols */
+    Generic_radioUart.deviceString = GENERIC_RADIO_CFG_STRING;
+    Generic_radioUart.handle       = GENERIC_RADIO_CFG_HANDLE;
+    Generic_radioUart.isOpen       = PORT_CLOSED;
+    Generic_radioUart.baud         = GENERIC_RADIO_CFG_BAUDRATE_HZ;
+    status                         = uart_init_port(&Generic_radioUart);
+    if (status == OS_SUCCESS)
+    {
+        printf("UART device %s configured with baudrate %d \n", Generic_radioUart.deviceString, Generic_radioUart.baud);
+    }
+    else
+    {
+        printf("UART device %s failed to initialize! \n", Generic_radioUart.deviceString);
+        run_status = OS_ERROR;
+    }
+
+    /* Main loop */
+    print_help();
+    while (run_status == OS_SUCCESS)
+    {
+        num_input_tokens = -1;
+        cmd              = CMD_UNKNOWN;
+
+        /* Read user input */
+        printf(PROMPT);
+        fgets(input_buf, MAX_INPUT_BUF, stdin);
+
+        /* Tokenize line buffer */
+        token_ptr = strtok(input_buf, " \t\n");
+        while ((num_input_tokens < MAX_INPUT_TOKENS) && (token_ptr != NULL))
+        {
+            if (num_input_tokens == -1)
+            {
+                /* First token is command */
+                cmd = get_command(token_ptr);
+            }
+            else
+            {
+                strncpy(input_tokens[num_input_tokens], token_ptr, MAX_INPUT_TOKEN_SIZE);
+            }
+            token_ptr = strtok(NULL, " \t\n");
+            num_input_tokens++;
+        }
+
+        /* Process command if valid */
+        if (num_input_tokens >= 0)
+        {
+            /* Process command */
+            run_status = process_command(cmd, num_input_tokens, token_ptr);
+        }
+    }
+
+    // Close the device
+    uart_close_port(Generic_radioUart.handle);
+
+    OS_printf("Cleanly exiting generic_radio application...\n\n");
+    return 1;
+}
+
+/*
+** Generic Functions
+*/
+int check_number_arguments(int actual, int expected)
+{
+    int status = OS_SUCCESS;
+    if (actual != expected)
+    {
+        status = OS_ERROR;
+        OS_printf("Invalid command format, type 'help' for more info\n");
+    }
+    return status;
+}
+
+void to_lower(char *str)
+{
+    char *ptr = str;
+    while (*ptr)
+    {
+        *ptr = tolower((unsigned char)*ptr);
+        ptr++;
+    }
+    return;
+}
+```
+
+### `generic_radio_checkout.h`
+
+**경로:** `components/generic_radio/support/generic_radio_checkout.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_radio_checkout.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_RADIO checkout.
+**
+*******************************************************************************/
+#ifndef _GENERIC_RADIO_CHECKOUT_H_
+#define _GENERIC_RADIO_CHECKOUT_H_
+
+/*
+** Includes
+*/
+#include <ctype.h>
+#include <fcntl.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <termios.h>
+#include <time.h>
+#include <unistd.h>
+
+#include "device_cfg.h"
+#include "generic_radio_device.h"
+#include "hwlib.h"
+
+/*
+** Standard Defines
+*/
+#define PROMPT               "generic_radio> "
+#define MAX_INPUT_BUF        512
+#define MAX_INPUT_TOKENS     64
+#define MAX_INPUT_TOKEN_SIZE 50
+#define TELEM_BUF_LEN        8
+
+/*
+** Command Defines
+*/
+#define CMD_UNKNOWN       -1
+#define CMD_HELP          0
+#define CMD_EXIT          1
+#define CMD_NOOP          2
+#define CMD_HK            3
+#define CMD_GENERIC_RADIO 4
+#define CMD_CFG           5
+
+/*
+** Prototypes
+*/
+void print_help(void);
+int  get_command(const char *str);
+int  main(int argc, char *argv[]);
+
+/*
+** Generic Prototypes
+*/
+int  check_number_arguments(int actual, int expected);
+void to_lower(char *str);
+
+#endif /* _GENERIC_RADIO_CHECKOUT_H_ */
+```

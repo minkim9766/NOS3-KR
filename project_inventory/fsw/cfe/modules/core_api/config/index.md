@@ -3,20 +3,320 @@
 
 **경로:** `fsw/cfe/modules/core_api/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_cfe_core_api_base_msgids.h`
 
-file--default_cfe_core_api_base_msgids.h
-file--default_cfe_core_api_interface_cfg.h
-file--default_cfe_mission_cfg.h
-file--default_cfe_msgids.h
+**경로:** `fsw/cfe/modules/core_api/config/default_cfe_core_api_base_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *   This header file contains the Message Id's for messages used by the
+ *   cFE core.
+ *
+ */
+
+#ifndef CFE_CORE_BASE_MSGIDS_H
+#define CFE_CORE_BASE_MSGIDS_H
+
+/**
+ * \brief Platform command message ID base offset
+ *
+ * Example mechanism for setting default command bits and deconflicting MIDs across multiple
+ * platforms in a mission.  For any sufficiently complex mission this method is
+ * typically replaced by a centralized message ID management scheme.
+ *
+ * 0x1800 - Nominal value for default message ID implementation (V1). This sets the command
+ *          field and the secondary header present field.  Typical V1 command MID range
+ *          is 0x1800-1FFF.  Additional cpus can deconflict message IDs by incrementing
+ *          this value to provide sub-allocations (0x1900 for example).
+ * 0x0080 - Command bit for MISSION_MSGID_V2 message ID implementation (V2).  Although
+ *          this can be used for the value below due to the relatively small set
+ *          of MIDs in the framework it will not scale so an alternative
+ *          method of deconfliction is recommended.
+ */
+#define CFE_PLATFORM_CMD_MID_BASE 0x1800
+
+/**
+ * \brief Platform telemetry message ID base offset
+ *
+ * 0x0800 - Nominal for message ID V1
+ * 0x0000 - Potential value for MISSION_MSGID_V2, but limited to a range of
+ *          0x0000-0x007F since the command bit is 0x0080.  Alternative
+ *          method of deconfliction is recommended.
+ *
+ * See #CFE_PLATFORM_CMD_MID_BASE for more information
+ */
+#define CFE_PLATFORM_TLM_MID_BASE 0x0800
+
+/**
+ * \brief "Global" command message ID base offset
+ *
+ * 0x1860 - Nominal value for message ID V1
+ * 0x00E0 - Potential value for MISSION_MSGID_V2, note command bit is 0x0080.
+ *          Works in limited cases only, alternative method of deconfliction
+ *          is recommended.
+ * See #CFE_PLATFORM_CMD_MID_BASE for more information
+ */
+#define CFE_PLATFORM_CMD_MID_BASE_GLOB 0x1860
+
+#endif /* CFE_CORE_BASE_MSGIDS_H */
 ```
 
-## 항목
+### `default_cfe_core_api_interface_cfg.h`
 
-- [`fsw/cfe/modules/core_api/config/default_cfe_core_api_base_msgids.h`](file--default_cfe_core_api_base_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/config/default_cfe_core_api_interface_cfg.h`](file--default_cfe_core_api_interface_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/config/default_cfe_mission_cfg.h`](file--default_cfe_mission_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/config/default_cfe_msgids.h`](file--default_cfe_msgids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/core_api/config/default_cfe_core_api_interface_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *   This header file contains the mission configuration parameters and
+ *   typedefs with mission scope.
+ */
+
+#ifndef CFE_CORE_API_INTERFACE_CFG_H
+#define CFE_CORE_API_INTERFACE_CFG_H
+
+/**
+**  \cfemissioncfg cFE Maximum length for pathnames within data exchange structures
+**
+**  \par Description:
+**       The value of this constant dictates the size of pathnames within all structures
+**       used for external data exchange, such as Software bus messages and table definitions.
+**       This is typically the same as OS_MAX_PATH_LEN but that is OSAL dependent --
+**       and as such it definable on a per-processor/OS basis and hence may be different
+**       across multiple processors.  It is recommended to set this to the value of the
+**       largest OS_MAX_PATH_LEN in use on any CPU on the mission.
+**
+**       This affects only the layout of command/telemetry messages and table definitions;
+**       internal allocation may use the platform-specific OS_MAX_PATH_LEN value.
+**
+**       This length must include an extra character for NULL termination.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) and ground tools must share the
+**       same definition.
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_MAX_PATH_LEN 64
+
+/**
+**  \cfemissioncfg cFE Maximum length for filenames within data exchange structures
+**
+**  \par Description:
+**       The value of this constant dictates the size of filenames within all structures
+**       used for external data exchange, such as Software bus messages and table definitions.
+**       This is typically the same as OS_MAX_FILE_LEN but that is OSAL dependent --
+**       and as such it definable on a per-processor/OS basis and hence may be different
+**       across multiple processors.  It is recommended to set this to the value of the
+**       largest OS_MAX_FILE_LEN in use on any CPU on the mission.
+**
+**       This affects only the layout of command/telemetry messages and table definitions;
+**       internal allocation may use the platform-specific OS_MAX_FILE_LEN value.
+**
+**       This length must include an extra character for NULL termination.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) and ground tools must share the
+**       same definition.
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_MAX_FILE_LEN 20
+
+/**
+**  \cfemissioncfg cFE Maximum length for API names within data exchange structures
+**
+**  \par Description:
+**       The value of this constant dictates the size of filenames within all structures
+**       used for external data exchange, such as Software bus messages and table definitions.
+**       This is typically the same as OS_MAX_API_LEN but that is OSAL dependent --
+**       and as such it definable on a per-processor/OS basis and hence may be different
+**       across multiple processors.  It is recommended to set this to the value of the
+**       largest OS_MAX_API_LEN in use on any CPU on the mission.
+**
+**       This affects only the layout of command/telemetry messages and table definitions;
+**       internal allocation may use the platform-specific OS_MAX_API_LEN value.
+**
+**       This length must include an extra character for NULL termination.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_MAX_API_LEN 20
+
+/**
+**  \cfemissioncfg cFE Maximum number of files in a message/data exchange
+**
+**  \par Description:
+**       The value of this constant dictates the maximum number of files within all structures
+**       used for external data exchange, such as Software bus messages and table definitions.
+**       This is typically the same as OS_MAX_NUM_OPEN_FILES but that is OSAL dependent --
+**       and as such it definable on a per-processor/OS basis and hence may be different
+**       across multiple processors.  It is recommended to set this to the value of the
+**       largest OS_MAX_NUM_OPEN_FILES in use on any CPU on the mission.
+**
+**       This affects only the layout of command/telemetry messages and table definitions;
+**       internal allocation may use the platform-specific OS_MAX_NUM_OPEN_FILES value.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+*/
+#define CFE_MISSION_MAX_NUM_FILES 50
+
+#endif /* SAMPLE_MISSION_CFG_H */
+```
+
+### `default_cfe_mission_cfg.h`
+
+**경로:** `fsw/cfe/modules/core_api/config/default_cfe_mission_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *   This header file contains the mission configuration parameters and
+ *   typedefs with mission scope.
+ *
+ */
+
+#ifndef CFE_MISSION_CFG_H
+#define CFE_MISSION_CFG_H
+
+#include "cfe_core_api_interface_cfg.h"
+#include "cfe_es_mission_cfg.h"
+#include "cfe_evs_mission_cfg.h"
+#include "cfe_sb_mission_cfg.h"
+#include "cfe_tbl_mission_cfg.h"
+#include "cfe_time_mission_cfg.h"
+#include "cfe_fs_mission_cfg.h"
+
+#endif /* CFE_MISSION_CFG_H */
+```
+
+### `default_cfe_msgids.h`
+
+**경로:** `fsw/cfe/modules/core_api/config/default_cfe_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *   This header file contains the Message Id's for messages used by the
+ *   cFE core.
+ *
+ */
+
+#ifndef CFE_MSGIDS_H
+#define CFE_MSGIDS_H
+
+/*
+** Includes
+*/
+
+#include "cfe_es_msgids.h"
+#include "cfe_evs_msgids.h"
+#include "cfe_sb_msgids.h"
+#include "cfe_tbl_msgids.h"
+#include "cfe_time_msgids.h"
+
+#endif /* CFE_MSGIDS_H */
+```

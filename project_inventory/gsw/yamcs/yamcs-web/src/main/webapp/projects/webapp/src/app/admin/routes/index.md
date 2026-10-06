@@ -3,18 +3,38 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 route-detail/index
 route-list/index
-file--message-name.pipe.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-detail/`](route-detail/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/`](route-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/message-name.pipe.ts`](file--message-name.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+### `message-name.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/message-name.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'messageName',
+})
+export class MessageNamePipe implements PipeTransform {
+  transform(value: string): string | null {
+    if (!value) {
+      return value;
+    }
+    if (value === '.google.protobuf.Empty') {
+      return null;
+    }
+    const idx = value.lastIndexOf('.');
+    return idx > 0 ? value.substr(idx + 1) : value;
+  }
+}
+```

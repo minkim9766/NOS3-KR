@@ -3,14 +3,46 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/DISCUSSION_TEMPLATE/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `pattern-request.yml`
 
-file--pattern-request.yml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/DISCUSSION_TEMPLATE/pattern-request.yml`
+
+
+```yaml
+title: "[Summarize the pattern. Be as clear and concise as possible.] "
+labels: ["ROSES"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > [!TIP]
+        > The **Title** may be the only thing the community sees when voting on your pattern.
+       
+        This work is funded through [NASA ROSES](https://github.com/nasa/fprime/discussions/3041).
+  - type: textarea
+    id: pattern
+    attributes:
+      label: Pattern
+      description: "Describe what you want documented."
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        > [!TIP]
+        > Describe the **Pattern** without trying to sell it. Describe what you need.
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: "(Optional) Describe why you want it documented. Sell it to the community."
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        > [!TIP]        
+        > Use the **Rationale** to sell your idea to the community. Describe why you need this.
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/DISCUSSION_TEMPLATE/pattern-request.yml`](file--pattern-request.yml) — UTF-8 텍스트 파일 본문 포함

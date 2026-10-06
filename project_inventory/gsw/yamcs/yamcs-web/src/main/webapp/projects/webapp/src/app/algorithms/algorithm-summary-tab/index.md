@@ -3,16 +3,81 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-summary-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm-summary-tab.component.html`
 
-file--algorithm-summary-tab.component.html
-file--algorithm-summary-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-summary-tab/algorithm-summary-tab.component.html`
+
+
+```html
+<ya-panel>
+  @if (algorithm$ | async; as algorithm) {
+    <app-algorithm-detail [algorithm]="algorithm" [status]="status$ | async" />
+  }
+</ya-panel>
 ```
 
-## 항목
+### `algorithm-summary-tab.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-summary-tab/algorithm-summary-tab.component.html`](file--algorithm-summary-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-summary-tab/algorithm-summary-tab.component.ts`](file--algorithm-summary-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-summary-tab/algorithm-summary-tab.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  input,
+} from '@angular/core';
+import {
+  AlgorithmStatus,
+  AlgorithmStatusSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AlgorithmDetailComponent } from '../algorithm-detail/algorithm-detail.component';
+
+@Component({
+  templateUrl: './algorithm-summary-tab.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlgorithmDetailComponent, WebappSdkModule],
+})
+export class AlgorithmSummaryTabComponent implements OnInit, OnDestroy {
+  qualifiedName = input.required<string>({ alias: 'algorithm' });
+
+  algorithm$: Promise<Algorithm>;
+  status$ = new BehaviorSubject<AlgorithmStatus | null>(null);
+
+  private algorithmStatusSubscription: AlgorithmStatusSubscription;
+
+  constructor(readonly yamcs: YamcsService) {}
+
+  ngOnInit(): void {
+    const instance = this.yamcs.instance!;
+
+    this.algorithm$ = this.yamcs.yamcsClient.getAlgorithm(
+      instance,
+      this.qualifiedName(),
+    );
+
+    if (this.yamcs.processor) {
+      this.algorithmStatusSubscription =
+        this.yamcs.yamcsClient.createAlgorithmStatusSubscription(
+          {
+            instance: this.yamcs.instance!,
+            processor: this.yamcs.processor,
+            name: this.qualifiedName(),
+          },
+          (status) => this.status$.next(status),
+        );
+    }
+  }
+
+  ngOnDestroy() {
+    this.algorithmStatusSubscription?.cancel();
+  }
+}
+```

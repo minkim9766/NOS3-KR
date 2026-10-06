@@ -3,18 +3,24 @@
 
 **경로:** `fsw/build/CMakeFiles/3.26.0/CompilerIdC/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tmp/index
-file--a.out
-file--CMakeCCompilerId.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/CMakeFiles/3.26.0/CompilerIdC/tmp/`](tmp/index) — 폴더
-- [`fsw/build/CMakeFiles/3.26.0/CompilerIdC/a.out`](file--a.out) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/3.26.0/CompilerIdC/CMakeCCompilerId.c`](file--CMakeCCompilerId.c) — 빌드 산출물 (경로만)
+### `a.out`
+
+**경로:** `fsw/build/CMakeFiles/3.26.0/CompilerIdC/a.out`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCCompilerId.c`
+
+**경로:** `fsw/build/CMakeFiles/3.26.0/CompilerIdC/CMakeCCompilerId.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

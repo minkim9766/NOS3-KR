@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,47 +16,3299 @@ sub-build/index
 target/index
 test/index
 toolchain/index
-file--API.cmake
-file--config_assembler.cmake
-file--deployment-CMakeLists.txt.template
-file--empty.cpp
-file--FPrime-Code.cmake
-file--fprime-util.cmake
-file--FPrime.cmake
-file--FPrimeConfig.cmake
-file--implementation.cmake
-file--module.cmake
-file--options.cmake
-file--required.cmake
-file--sanitizers.cmake
-file--settings.cmake
-file--utilities.cmake
-file--valid-empty.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/`](autocoder/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/`](platform/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/settings/`](settings/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/sub-build/`](sub-build/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/`](target/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/`](toolchain/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/API.cmake`](file--API.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/config_assembler.cmake`](file--config_assembler.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/deployment-CMakeLists.txt.template`](file--deployment-CMakeLists.txt.template) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/empty.cpp`](file--empty.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/FPrime-Code.cmake`](file--FPrime-Code.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/fprime-util.cmake`](file--fprime-util.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/FPrime.cmake`](file--FPrime.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/FPrimeConfig.cmake`](file--FPrimeConfig.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/implementation.cmake`](file--implementation.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/module.cmake`](file--module.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/options.cmake`](file--options.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/required.cmake`](file--required.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/sanitizers.cmake`](file--sanitizers.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/settings.cmake`](file--settings.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/utilities.cmake`](file--utilities.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/valid-empty.cpp`](file--valid-empty.cpp) — UTF-8 텍스트 파일 본문 포함
+### `API.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/API.cmake`
+
+
+````cmake
+####
+# API.cmake:
+#
+# API of the fprime CMake system. These functions represent the external interface to all of the fprime CMake system.
+# Users and developers should understand these functions in order to perform basic CMake setup while building as part
+# of an fprime project.
+#
+# The standard patterns include:
+# - Add a directory to the fprime system. Use this in place of add_subdirectory to get cleanly organized builds.
+# - Register an fprime module/executable/ut to receive the benefits of autocoding.
+# - Register an fprime build target/build stage to allow custom build steps. (Experimental)
+#
+####
+include_guard()
+include(utilities)
+include(module)
+include(config_assembler)
+include(sub-build/sub-build)
+include(fprime-util)
+set(FPRIME_TARGET_LIST "" CACHE INTERNAL "FPRIME_TARGET_LIST: custom fprime targets" FORCE)
+set(FPRIME_UT_TARGET_LIST "" CACHE INTERNAL "FPRIME_UT_TARGET_LIST: custom fprime targets" FORCE)
+set(FPRIME_AUTOCODER_TARGET_LIST "" CACHE INTERNAL "FPRIME_AUTOCODER_TARGET_LIST: custom fprime targets" FORCE)
+
+####
+# Macro `skip_on_sub_build`:
+#
+# Skip this remaining code in the current function or file when executing in the context of a sub build. Sub builds
+# execute utility and setup functions in fprime. However, certain CMake functions are not appropriate in this context
+# and should be skipped.
+####
+macro(skip_on_sub_build)
+    if (FPRIME_IS_SUB_BUILD)
+        return()
+    endif()
+endmacro()
+
+####
+# Macro `restrict_platforms`:
+#
+# Restricts a CMakeLists.txt file to a given list of supported platforms, toolchains, and features. This prevents
+# usage on platforms/toolchains  for which the module is incapable of being used and replaces the historical pattern of
+# an if-tree detecting unsupported platforms in most circumstances.
+#
+# Valid inputs include names of platforms (e.g. Linux), names of specific toolchains (e.g. aarch64-linux), and platform
+# supported feature sets (e.g. SOCKETS, which inspects the FPRIME_HAS_SOCKETS flag).
+#
+# Usage:
+#    restrict_platforms(Linux Darwin) # Restricts to Linux and Darwin platforms
+#        -or-
+#    restrict_platforms(Posix) # Restricts to posix systems
+#        -or-
+#    restrict_platforms(SOCKETS) # Restricts to platforms where FPRIME_HAS_SOCKETS is TRUE
+#
+# Args:
+#   ARGN: list of platforms that are supported
+#####
+macro(restrict_platforms)
+    set(__CHECKER ${ARGN})
+
+    # Determine if any of the restrict-tos maps to a fprime feature flag of the form FPRIME_HAS_XYZ as set in the
+    # platform support file. If this feature is set and true, then the restriction block may pass.
+    set(__HAS_SUPPORTED_FEATURE FALSE)
+    foreach (__RESTRICTION IN LISTS __CHECKER)
+        string(TOUPPER "${__RESTRICTION}" __RESTRICTION_UPPER)
+        if (FPRIME_HAS_${__RESTRICTION_UPPER})
+            set(__HAS_SUPPORTED_FEATURE TRUE)
+            break()
+        endif()
+    endforeach()
+    # Each of these empty if blocks are the valid-case, that is, the platform is supported.
+    # However, the reason why this is necessary is that this is implemented as a macro and not a function.
+    # Macros copy-paste the code into the calling context. Thus, all these valid cases want to avoid calling return.
+    # The return call  in the else block returns from the calling context (i.e. a restricted CMakeList.txt will
+    # return and not process the component setup). We do not want this return when the platform is allowed.
+
+    if (FPRIME_TOOLCHAIN_NAME IN_LIST __CHECKER)
+    elseif(FPRIME_PLATFORM IN_LIST __CHECKER)
+    # New style FPRIME_HAS_<FEATURE>
+    elseif(__HAS_SUPPORTED_FEATURE)
+    # Old style posix FPRIME_USE_POSIX
+    elseif("Posix" IN_LIST __CHECKER AND FPRIME_USE_POSIX)
+    else()
+        get_module_name("${CMAKE_CURRENT_LIST_DIR}")
+        message(STATUS "Neither toolchain ${FPRIME_TOOLCHAIN_NAME} nor platform ${FPRIME_PLATFORM} supported for module ${MODULE_NAME}")
+        append_list_property("${MODULE_NAME}" GLOBAL PROPERTY RESTRICTED_TARGETS)
+        return()
+    endif()
+endmacro()
+
+####
+# Function `add_fprime_subdirectory`:
+#
+# Adds a subdirectory to the build system. This allows the system to find new available modules,
+# executables, and unit tests. Every module, used or not, by the deployment/root CMAKE file should
+# be added as a subdirectory somewhere in the tree. CMake's dependency system will prevent superfluous building, and
+# `add_fprime_subdirectory` calls construct the super-graph from which the build graph is realized. Thus
+# it is inconsequential to add a subdirectory that will not be used, but all code should be found within this
+# super-graph to be available to the build.
+#
+# Every subdirectory added should declare a `CMakeLists.txt`. These in-turn may add their own sub-
+# directories. This creates a directed acyclic graph of modules, one subgraph of which will be built
+# for each executable/module/library defined in the system.  The subgraph should also be a DAG.
+#
+# This directory is computed based off the closest path in `FPRIME_BUILD_LOCATIONS`. It must be set to
+# be used. Otherwise, an error will occur. `EXCLUDE_FROM_ALL` can also be supplied.
+# See: https://cmake.org/cmake/help/latest/command/add_fprime_subdirectory.html
+#
+# **Note:** Replaces CMake `add_subdirectory` call in order to automate the [binary_dir] argument.
+#           fprime subdirectories have specific binary roots to avoid collisions, and provide for
+#           the standard fprime #include paths rooted at the root of the repo.
+#
+# **Arguments:**
+#  - **FP_SOURCE_DIR:** directory to add (same as add_directory)
+#  - **EXCLUDE_FROM_ALL:** (optional) exclude any targets from 'all'. See:
+#                          https://cmake.org/cmake/help/latest/command/add_fprime_subdirectory.html
+####
+function(add_fprime_subdirectory FP_SOURCE_DIR)
+    get_module_name("${FP_SOURCE_DIR}")
+    set(FPRIME_CURRENT_MODULE "${MODULE_NAME}")
+
+    # Unset all variables that carry special meaning as it is dangerous to pass them through
+    foreach (VARIABLE IN ITEMS SOURCE_FILES MOD_DEPS UT_SOURCE_FILES UT_MOD_DEPS EXECUTABLE_NAME)
+        set(${VARIABLE} PARENT_SCOPE)
+    endforeach()
+    get_filename_component(ABSOLUTE_SOURCE_PATH "${FP_SOURCE_DIR}" ABSOLUTE)
+    file(RELATIVE_PATH NEW_BIN_DIR "${CMAKE_CURRENT_SOURCE_DIR}" "${ABSOLUTE_SOURCE_PATH}")
+
+    # Check if the binary and source directory are in agreement. If they agree, then normally add
+    # the directory, as no adjustments need be made.
+    get_filename_component(CBD_NAME "${CMAKE_CURRENT_BINARY_DIR}" NAME)
+    get_filename_component(CSD_NAME "${CMAKE_CURRENT_SOURCE_DIR}" NAME)
+    if ("${CBD_NAME}" STREQUAL "${CSD_NAME}")
+        fprime_util_metadata_add_subdirectory("${FP_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/${NEW_BIN_DIR}")
+        add_subdirectory(${ARGV}) # List of all args, not just extras
+        return()
+    endif()
+    if (${ARGC} GREATER 2)
+        message(FATAL_ERROR "Cannot use 'add_fprime_subdirectory' with [binary_dir] argument.")
+    endif()
+    # Make the path resolved: absolute, links resolved, etc.
+    # This allows the relative path commands (below) to work correctly.
+    resolve_path_variables(FP_SOURCE_DIR)
+    get_nearest_build_root("${FP_SOURCE_DIR}")
+    file(RELATIVE_PATH NEW_BIN_DIR "${FPRIME_CLOSEST_BUILD_ROOT}" "${FP_SOURCE_DIR}")
+    # Add component subdirectories using normal add_subdirectory with overridden binary_dir
+    fprime_util_metadata_add_subdirectory("${FP_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/${NEW_BIN_DIR}")
+    add_subdirectory("${FP_SOURCE_DIR}" "${NEW_BIN_DIR}" ${ARGN})
+endfunction(add_fprime_subdirectory)
+
+####
+# Function `fprime_attach_custom_targets`:
+#
+# Attaches custom fprime targets (cmake/targets) and their associated autocoding to the supplied build
+# target. This is done automatically by the `register_fprime_*` family of functions and provides deferred
+# target setup for use with `fprime_add_*_build_target` family functions.
+#
+# **BUILD_TARGET_NAME:** name of build target to attach targets and autocoding to
+#
+####
+function(fprime_attach_custom_targets BUILD_TARGET_NAME)
+    setup_module_targets("${BUILD_TARGET_NAME}")
+endfunction()
+
+####
+# Function `register_fprime_library`:
+#
+# Registers a library using the fprime build system. This comes with dependency management and fprime
+# autocoding capabilities. The first argument is the name of this module and will become the build target
+# name. Sources, autocoder inputs, link dependencies, and headers are each passed in after the directives
+# SOURCES, AUTOCODER_INPUTS, DEPENDS, and HEADERS, respectively.  Each directive may be used one time and
+# dictates the contents of arguments until the next directive.
+#
+# **Example:**
+#
+# ```
+# register_fprime_library(
+#         MyFprimeModule
+#     SOURCES
+#         source1.cpp
+#         source2.cpp
+#     AUTOCODER_INPUTS
+#         model.fpp
+#     DEPENDS
+#         -lm
+#     HEADERS
+#         module.h
+# )
+# ```
+#
+# > [!NOTE]
+# > This delegates to CMake's `add_library` call. The library argument EXCLUDE_FROM_ALL is supported.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(register_fprime_library)
+    fprime_add_library_build_target(${ARGN})
+    clear_historical_variables()
+    # Set up target/ targets for this module
+    fprime_attach_custom_targets("${INTERNAL_MODULE_NAME}")
+endfunction(register_fprime_library)
+
+####
+# Function `register_fprime_module`:
+#
+# See `register_fprime_library`. This provides the same capability as `register_fprime_library` using the
+# backwards-compatible name.
+#
+# > [!NOTE]
+# > Variables SOURCE_FILES, MOD_DEPS, etc. are still supported but are no longer recommended.  Users are
+# > encouraged to update at their convenience.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(register_fprime_module)
+    register_fprime_library(${ARGN})
+endfunction(register_fprime_module)
+
+####
+# Function `fprime_add_library_build_target`:
+#
+# Registers a library using the fprime build system without setting up autocoding or target
+# support. See `register_fprime_library`.
+#
+# > [!NOTE]
+# > Users may set up custom target and autocoder support by calling `fprime_attach_custom_targets`.
+#
+# This function sets "INTERNAL_MODULE_NAME" in PARENT_SCOPE to pass-back module name for target
+# registration.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(fprime_add_library_build_target)
+    fprime__internal_add_build_target("Library" "INTERFACE;OBJECT" ${ARGN})
+    clear_historical_variables()
+    set(INTERNAL_MODULE_NAME "${INTERNAL_MODULE_NAME}" PARENT_SCOPE)
+endfunction()
+
+####
+# Function `register_fprime_executable`:
+#
+# Registers an executable using the fprime build system. This comes with dependency management and fprime
+# autocoding capabilities. The call format is identical to `register_fprime_library`.
+#
+# **Example:**
+#
+# ```
+# register_fprime_executable(
+#         MyFprimeExecutable
+#     SOURCES
+#         source1.cpp
+#         source2.cpp
+#     AUTOCODER_INPUTS
+#         model.fpp
+#     DEPENDS
+#         -lm
+#     HEADERS
+#         module.h
+# )
+# ```
+#
+# > [!NOTE]
+# > This delegates to CMake's `add_executable` call. The argument EXCLUDE_FROM_ALL is supported.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(register_fprime_executable)
+    if (DEFINED EXECUTABLE_NAME)
+        fprime_cmake_fatal_error("EXECUTABLE_NAME variable no longer supported")
+    endif()
+    fprime_add_executable_build_target(${ARGN})
+
+    # Set up target/ targets for this module
+    fprime_attach_custom_targets("${INTERNAL_MODULE_NAME}")
+endfunction(register_fprime_executable)
+
+####
+# Function `fprime_add_executable_build_target`:
+#
+# Registers a executable using the fprime build system without setting up autocoding or target
+# support. See `register_fprime_executable`.
+#
+# > [!NOTE]
+# > Users may set up custom target and autocoder support by calling `fprime_attach_custom_targets`.
+#
+# This function sets "INTERNAL_MODULE_NAME" in PARENT_SCOPE to pass-back module name for target
+# registration.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(fprime_add_executable_build_target)
+    fprime__internal_add_build_target("Executable" "CHOOSES_IMPLEMENTATIONS" ${ARGN})
+    clear_historical_variables()
+    set(INTERNAL_MODULE_NAME "${INTERNAL_MODULE_NAME}" PARENT_SCOPE)
+endfunction()
+
+####
+# Function `register_fprime_deployment`:
+#
+# Registers a deployment using the fprime build system. This comes with dependency management and fprime
+# autocoding capabilities. The call format is identical to `register_fprime_library`. Deployments come
+# with custom target and autocoding support that allows them to run "targets" across their dependency
+# trees (i.e. run all unit tests for components used in this deployment).
+#
+# **Example:**
+#
+# ```
+# register_fprime_deployment(
+#         MyFprimeDeployment
+#     SOURCES
+#         source1.cpp
+#         source2.cpp
+#     AUTOCODER_INPUTS
+#         model.fpp
+#     DEPENDS
+#         MyFprimeDeployment_Top
+#     HEADERS
+#         module.h
+# )
+# ```
+#
+# > [!NOTE]
+# > This delegates to CMake's `add_executable` call. The argument EXCLUDE_FROM_ALL is supported.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(register_fprime_deployment)
+    # Fallback to PROJECT_NAME when it is not set
+    if (NOT DEFINED FPRIME_CURRENT_MODULE)
+        set(FPRIME_CURRENT_MODULE "${PROJECT_NAME}")
+    endif()
+    fprime_add_deployment_build_target(${ARGN})
+
+    # Set up target/ targets for this module
+    fprime_attach_custom_targets("${INTERNAL_MODULE_NAME}")
+endfunction(register_fprime_deployment)
+
+####
+# Function `fprime_add_deployment_build_target`:
+#
+# Registers a deployment using the fprime build system without setting up autocoding or target
+# support. See `register_fprime_deployment`.
+#
+# > [!NOTE]
+# > Users may set up custom target and autocoder support by calling `fprime_attach_custom_targets`.
+#
+# This function sets "INTERNAL_MODULE_NAME" in PARENT_SCOPE to pass-back module name for target
+# registration.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(fprime_add_deployment_build_target)
+    fprime__internal_add_build_target("Deployment" "CHOOSES_IMPLEMENTATIONS" ${ARGN})
+    clear_historical_variables()
+    set(INTERNAL_MODULE_NAME "${INTERNAL_MODULE_NAME}" PARENT_SCOPE)
+endfunction()
+
+####
+# Function `register_fprime_config`:
+#
+# Registers a configuration build target using the fprime build system. This comes with dependency management and
+# fprime autocoding capabilities. The call format is identical to `register_fprime_library` and additionally supports
+# the CONFIGURATION_OVERRIDES directive. This allows users to override the configuration files supplied by previous
+# configuration modules supplied by the build (e.g. fprime default configuration and library configuration). DEPENDS
+# and EXCLUDE_FROM_ALL are not supported.
+#
+# All configuration module sources (SOURCES, HEADERS, and AUTOCODER_INPUTS) are copied into the build cache.
+# Overrides are copied into the original module's build that the file overrides as this preserves the original build
+# module set up. Overrides only work in order of detection within the CMakeList.txt tree:
+#
+#    platform -> fprime config -> library -> project.
+#
+#
+# > [!WARNING]
+# > Specifying headers in this command is crucial to providing as configuration.
+#
+# > [!NOTE]
+# > Configuration is built as a series of STATIC libraries in order to allow for interdependencies between config and
+# > Fw_Types regardless of the Fw_Types library type.
+#
+# Example:
+# ```
+# register_fprime_config(
+#         MyFprimeConfig
+#     SOURCES
+#         config.cpp
+#     AUTOCODER_INPUTS
+#         config.fpp
+#     HEADERS
+#         config.hpp
+#     CONFIGURATION_OVERRIDES
+#         FpConfig.fpp
+#         FpConfig.hpp
+# ```
+####
+function(register_fprime_config)
+    fprime_add_config_build_target(${ARGN})
+    # Clear the historical variables and set up autocode
+    clear_historical_variables()
+    fprime_attach_custom_targets("${INTERNAL_MODULE_NAME}")
+endfunction()
+
+####
+# Function `fprime_add_config_build_target`:
+#
+# Registers config using the fprime build system without setting up autocoding or target
+# support. See `register_fprime_config`.
+#
+# > [!NOTE]
+# > Users may set up custom target and autocoder support by calling `fprime_attach_custom_targets`.
+#
+# This function sets "INTERNAL_MODULE_NAME" in PARENT_SCOPE to pass-back module name for target
+# registration.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(fprime_add_config_build_target)
+    set(ARGN_PASS ${ARGN})
+    # Ensure library is STATIC when supplying SOURCE or AUTOCODER_INPUTS
+    if (SOURCE IN_LIST ARGN_PASS OR AUTOCODER_INPUTS IN_LIST ARGN_PASS)
+        if (NOT "STATIC" IN_LIST ARGN_PASS AND NOT INTERFACE IN_LIST ARGN_PASS)
+            list(APPEND ARGN_PASS STATIC)
+        endif()
+    endif()
+    #### Split module processing ####
+    #
+    # Configuration works by copying sources into the build cache. These new copied sources are
+    # substituted for the original sources. Thus the module processing must happen before the
+    # configuration processing, which is before the build target processing.
+    #
+    # This implies:
+    # 1. The helper cannot be used as it combines module and build target processing
+    # 2. Configuration processing must be called in-between
+    ####
+    fprime__process_module_setup("Library"
+        "CONFIGURATION_OVERRIDES;STATIC;INTERFACE;CHOOSES_IMPLEMENTATIONS;BASE_CONFIG" ${ARGN_PASS})
+    fprime__internal_process_configuration_sources(
+        "${INTERNAL_MODULE_NAME}"
+        "${INTERNAL_SOURCES}"
+        "${INTERNAL_AUTOCODER_INPUTS}"
+        "${INTERNAL_HEADERS}"
+        "${INTERNAL_CONFIGURATION_OVERRIDES}"
+        "${INTERNAL_DEPENDS}"
+    )
+    fprime__internal_add_build_target_helper("${INTERNAL_MODULE_NAME}" "Library" "${INTERNAL_SOURCES}"
+                                             "${INTERNAL_AUTOCODER_INPUTS}" "${INTERNAL_HEADERS}" "${INTERNAL_DEPENDS}"
+                                             "${INTERNAL_REQUIRES_IMPLEMENTATIONS}"
+                                             "${INTERNAL_CHOOSES_IMPLEMENTATIONS}" "${INTERNAL_CMAKE_ADD_OPTIONS}")
+
+    # The new module should include the root configuration directory
+    fprime_target_include_directories("${INTERNAL_MODULE_NAME}" PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/..")
+    # The configuration target should depend on the new module
+    if (INTERNAL_BASE_CONFIG)
+        target_link_libraries("${FPRIME__INTERNAL_CONFIG_TARGET_NAME}" INTERFACE "${INTERNAL_MODULE_NAME}")
+    endif()
+    # Set up the new module to be marked as FPRIME_CONFIGURATION
+    append_list_property("${INTERNAL_MODULE_NAME}" GLOBAL PROPERTY "FPRIME_CONFIG_MODULES")
+    set_property(TARGET "${INTERNAL_MODULE_NAME}" PROPERTY FPRIME_CONFIGURATION TRUE)
+    # Targets likely do not exist yet, so just aggregate the complete list of chosen implementations
+    # for processing later
+    append_list_property("${INTERNAL_CHOOSES_IMPLEMENTATIONS}" TARGET "${FPRIME__INTERNAL_CONFIG_TARGET_NAME}" PROPERTY FPRIME_CHOSEN_IMPLEMENTATIONS)
+
+    # Static libraries must be position independent when building shared libraries
+    get_target_property(CONFIG_LIBRARY_TYPE "${INTERNAL_MODULE_NAME}" TYPE)
+    if (BUILD_SHARED_LIBS AND CONFIG_LIBRARY_TYPE STREQUAL "STATIC_LIBRARY")
+        target_compile_options(${INTERNAL_MODULE_NAME} PRIVATE -fPIC)
+    endif()
+    # Set INTERNAL_MODULE_NAME for caller
+    set(INTERNAL_MODULE_NAME "${INTERNAL_MODULE_NAME}" PARENT_SCOPE)
+endfunction()
+
+####
+# Function `register_fprime_ut`:
+#
+#
+# Registers a unit test using the fprime build system. This comes with dependency management and fprime
+# autocoding capabilities. The call format is identical to `register_fprime_library`. Unit tests come
+# with custom target and autocoding support.
+#
+# This function only creates a target when unit test support is enabled on the build.
+#
+# **Example:**
+#
+# ```
+# register_fprime_ut(
+#         MyUnitTest
+#     SOURCES
+#         source1.cpp
+#         source2.cpp
+#     AUTOCODER_INPUTS
+#         model.fpp
+#     DEPENDS
+#         MyFprimeModule
+#     HEADERS
+#         module.h
+# )
+# ```
+#
+# > [!NOTE]
+# > This delegates to CMake's `add_executable` call. The argument EXCLUDE_FROM_ALL is supported.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(register_fprime_ut)
+    # Bail out if not doing a unit test build
+    # TODO: should this add a fake target?
+    if (NOT BUILD_TESTING OR __FPRIME_NO_UT_GEN__)
+        return()
+    endif()
+    fprime_add_unit_test_build_target(${ARGN})
+    # Set up target/ targets for this module
+    fprime_attach_custom_targets("${INTERNAL_MODULE_NAME}")
+endfunction(register_fprime_ut)
+
+####
+# Function `fprime_add_unit_test_build_target`:
+#
+# Registers a unit test using the fprime build system without setting up autocoding or target
+# support. See `register_fprime_ut`.
+#
+# > [!NOTE]
+# > Users may set up custom target and autocoder support by calling `fprime_attach_custom_targets`.
+#
+# This function sets "INTERNAL_MODULE_NAME" in PARENT_SCOPE to pass-back module name for target
+# registration.
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(fprime_add_unit_test_build_target)
+    fprime__internal_add_build_target("Unit Test" "INCLUDE_GTEST;UT_AUTO_HELPERS;CHOOSES_IMPLEMENTATIONS;TESTED_MODULE" ${ARGN})
+    clear_historical_variables()
+    set(INTERNAL_MODULE_NAME "${INTERNAL_MODULE_NAME}" PARENT_SCOPE)
+endfunction()
+
+
+####
+# Macro `register_fprime_target`:
+#
+# This function allows users to register custom build targets into the build system.  These targets are defined in a
+# CMake file and consist of three functions that operate on different parts of the build: global, per-module, and
+# per-deployment. See: [Targets](./target/target.md).
+#
+# This function takes in either a file path to a CMake file defining targets, or an short include path that accomplishes
+# the same thing. Note: make sure the directory is on the CMake include path to use the second form. The supplied file
+# should define three functions: `add_global_target`, `add_module_target`, and `add_deployment_target`.
+#
+# **TARGET_FILE_PATH:** include path or file path file defining above functions
+###
+macro(register_fprime_target TARGET_FILE_PATH)
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "[target] Registering custom target: ${TARGET_FILE_PATH}")
+    endif()
+    register_fprime_list_helper("${TARGET_FILE_PATH}" FPRIME_TARGET_LIST OFF)
+endmacro(register_fprime_target)
+
+####
+# Macro `register_fprime_ut_target`:
+#
+# Identical to the above `register_fprime_target` function except that these targets are only created when the system
+# is building unit tests. e.g. BUILD_TESTING=ON.
+#
+# **TARGET_FILE_PATH:** include path or file path files
+###
+macro(register_fprime_ut_target TARGET_FILE_PATH)
+    # UT targets only allowed when testing
+    if (BUILD_TESTING)
+        if (CMAKE_DEBUG_OUTPUT)
+            message(STATUS "[target] Registering custom target: ${TARGET_FILE_PATH}")
+        endif()
+        register_fprime_list_helper("${TARGET_FILE_PATH}" FPRIME_UT_TARGET_LIST OFF)
+    endif()
+endmacro(register_fprime_ut_target)
+
+####
+# Macro `register_fprime_list_helper`:
+#
+# Helper function to do the actual registration. Also used to side-load prescan to bypass the not-on-prescan check. Takes in a boolean argument TO_PREPEND to determine if the target should be prepended to the list.
+####
+macro(register_fprime_list_helper TARGET_FILE_PATH TARGET_LIST TO_PREPEND)
+    if (NOT DEFINED FPRIME_SUB_BUILD_TARGETS OR "${TARGET_FILE_PATH}" IN_LIST FPRIME_SUB_BUILD_TARGETS)
+        include("${TARGET_FILE_PATH}")
+        # Prevent out-of-order setups
+        get_property(MODULE_DETECTION_STARTED GLOBAL PROPERTY MODULE_DETECTION SET)
+        if (MODULE_DETECTION_STARTED)
+            message(FATAL_ERROR "Cannot register fprime target after including subdirectories or FPrime-Code.cmake'")
+        endif()
+        get_property(TARGETS GLOBAL PROPERTY "${TARGET_LIST}")
+        if (NOT TARGET_FILE_PATH IN_LIST TARGETS)
+            if (${TO_PREPEND})
+                get_property(TMP_LIST GLOBAL PROPERTY "${TARGET_LIST}")
+                set(TMP_LIST "${TARGET_FILE_PATH}" ${TMP_LIST})
+                set_property(GLOBAL PROPERTY "${TARGET_LIST}" ${TMP_LIST})
+            else()
+                set_property(GLOBAL APPEND PROPERTY "${TARGET_LIST}" "${TARGET_FILE_PATH}")
+            endif()
+        endif()
+    endif()
+endmacro(register_fprime_list_helper)
+
+
+####
+# Macro `register_fprime_build_autocoder`:
+#
+# This function allows users to register custom autocoders into the build system. These autocoders will execute during
+# the build process. An autocoder is defined in a CMake file and must do three things:
+# 1. Call one of `autocoder_setup_for_individual_sources()` or `autocoder_setup_for_multiple_sources()` from file scope
+# 2. Implement `<autocoder name>_is_supported(AC_POSSIBLE_INPUT_FILE)` returning true the autocoder processes given source
+# 3. Implement `<autocoder name>_setup_autocode AC_INPUT_FILE)` to run the autocoder on files filter by item 2.
+#
+# This function takes in either a file path to a CMake file defining an autocoder target, or an short include path that accomplishes
+# the same thing. Note: make sure the directory is on the CMake include path to use the second form.
+#
+# **TARGET_FILE_PATH:** include path or file path file defining above functions
+####
+macro(register_fprime_build_autocoder TARGET_FILE_PATH TO_PREPEND)
+    # Normal registered targets don't run in pre-builds
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "[autocoder] Registering custom build target autocoder: ${TARGET_FILE_PATH} prepend: ${TO_PREPEND}")
+    endif()
+    register_fprime_list_helper("${TARGET_FILE_PATH}" FPRIME_AUTOCODER_TARGET_LIST ${TO_PREPEND})
+endmacro(register_fprime_build_autocoder)
+
+####
+# Function `create_implementation_interface`:
+#
+# Helper function to create implementation interface library once and only once to ensure it exists.
+#
+# **IMPLEMENTATION**: implementation library name (resolved)
+####
+function (create_implementation_interface IMPLEMENTATION)
+    if (TARGET "${IMPLEMENTATION}")
+        return()
+    endif()
+    add_library("${IMPLEMENTATION}" INTERFACE)
+endfunction()
+
+####
+# Function `register_fprime_implementation`:
+#
+# Designates that the given implementor implements the required implementation and registers it as a library. This
+# library will always be of type OBJECT to ensure that it will override at link time as expected. The call format is
+# identical to `register_fprime_library`, but requires the IMPLEMENTS <implementation interface> directive to indicate
+# which implementation is being implemented.
+#
+# > [!WARNING]
+# > The result of this call will always be an OBJECT library.
+#
+# **Example:**
+#
+# ```
+# register_fprime_implementation(
+#         MyImplementation
+#     IMPLEMENTS
+#         SomeImplementationInterface
+#     SOURCES
+#         source1.cpp
+#         source2.cpp
+#     AUTOCODER_INPUTS
+#         model.fpp
+#     HEADERS
+#         module.h
+# )
+# ```
+#
+# **MODULE_NAME**: (optional) module name. Default: ${FPRIME_CURRENT_MODULE}
+# **ARGN**: sources, autocoder inputs, etc preceded by a directive (i.e. SOURCES or DEPENDS)
+#
+####
+function(register_fprime_implementation)
+    # Update ARGN to include OBJECT and EX
+    set(ARGN_PASS "${ARGN}")
+    if (NOT "OBJECT" IN_LIST ARGN_PASS AND NOT INTERFACE IN_LIST ARGN_PASS)
+        list(APPEND ARGN_PASS OBJECT)
+    endif()
+    fprime__internal_add_build_target("Library" "IMPLEMENTS;OBJECT;INTERFACE" ${ARGN_PASS})
+
+    #### Special implementation handling ####
+
+    # Validate the number of implementations passed to "IMPLEMENTS"
+    list(LENGTH INTERNAL_IMPLEMENTS INTERNAL_IMPLEMENTS_LENGTH)
+    if (NOT INTERNAL_IMPLEMENTS_LENGTH EQUAL 1 OR "${INTERNAL_IMPLEMENTS}" STREQUAL "TRUE")
+        fprime_cmake_fatal_error("Must supply exactly 1 argument to the IMPLEMENTS directive")
+    endif()
+    # Check implementation properties still in-sync before setting the target-driven equivalents
+    get_property(OLD_IMPLEMENTS GLOBAL PROPERTY FPRIME_${INTERNAL_MODULE_NAME}_IMPLEMENTS)
+    fprime_cmake_ASSERT(
+        "${INTERNAL_MODULE_NAME} implementation changed from: ${OLD_IMPLEMENTS} to ${INTERNAL_IMPLEMENTS}"
+        NOT OLD_IMPLEMENTS OR OLD_IMPLEMENTS STREQUAL INTERNAL_IMPLEMENTS
+    )
+    set_target_properties("${INTERNAL_MODULE_NAME}" PROPERTIES FPRIME_IMPLEMENTS "${INTERNAL_IMPLEMENTS}")
+    append_list_property("${INTERNAL_MODULE_NAME}" GLOBAL PROPERTY "FPRIME_${INTERNAL_IMPLEMENTS}_IMPLEMENTORS")
+
+    fprime_attach_custom_targets("${INTERNAL_MODULE_NAME}")
+endfunction()
+
+####
+# Adds a named os implementation.
+#
+# Assumptions:
+#   1. NAMES is a list of 1 or more named files separated by ;
+#   2. There exists a file named Default${FIRST_ITEM}, where FIRST_ITEM is the first element in NAME, in the same
+#       directory where this cmake function was called
+#   3. For each item e listed in NAMES, there exists a file called ${e}.hpp and ${e}.cpp in the same directory
+#       where this cmake function was called
+#
+# NAMES: list of named files to add to this module.  The first will be treated as the name of the module.
+#        i.e. File;Directory;FileSystem will contain the file, directory, and filesystem files in a module called File.
+# SUFFIX: suffix to implementation (e.g. Posix)
+# ARGN: extra MOD_DEPS to add (e.g. Fw_Time)
+####
+function(register_os_implementation NAMES SUFFIX)
+    add_fprime_supplied_os_module("${NAMES}" "${SUFFIX}" "${ARGN}")
+endfunction()
+
+#### Documentation links
+# Next Topics:
+#  - Setting Options: [Options](options.md) are used to vary a CMake build.
+#  - Adding Modules: [Modules](module.md) register fprime Ports, Components, etc.
+#  - Creating Toolchains: [Toolchains](../../../user-manual/build-system/cmake-toolchains.md) setup standard CMake Cross-Compiling.
+#  - Adding Platforms: [Platforms](../../../user-manual/build-system/cmake-platforms.md) help fprime set Cross-Compiling specific items.
+#  - Adding Targets: [Targets](./target/target.md) for help defining custom build targets
+#  - Implementation Packages Design: [Implementation Packages](../../../user-manual/build-system/package-implementations.md)
+####
+````
+
+### `config_assembler.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/config_assembler.cmake`
+
+
+```cmake
+####
+# config_assembler.cmake:
+#
+# CMake configuration handling function.
+####
+include_guard()
+# Create a target to act as an interface to all fprime configuration modules
+set(FPRIME__INTERNAL_CONFIG_TARGET_NAME "__fprime_config")
+add_library(${FPRIME__INTERNAL_CONFIG_TARGET_NAME} INTERFACE)
+
+####
+# Function `fprime__internal_process_configuration_sources`:
+#
+# This function will process the configuration sources from various calls to set up configuration modules. It will
+# ensure that SOURCES/HEADERS are unique across module and will ensure CONFIGURATION_OVERRIDES override existing source
+# and header files.
+#
+# Arguments:
+# - `MODULE_NAME`: the name of the module being processed
+# - `SOURCES`: list of sources to process
+# - `AUTOCODER_INPUTS`: list of autocoder inputs to process
+# - `HEADERS`: list of headers to process
+# - `OVERRIDES`: list of configuration overrides to process
+# - `DEPENDS`: list of dependencies to append to
+#
+# Returns:
+# - `INTERNAL_SOURCES`: list of sources in their final configuration location (set in caller)
+# - `INTERNAL_AUTOCODER_INPUTS`: list of autocoder inputs in their final configuration location (set in caller)
+# - `INTERNAL_HEADERS`: list of headers in their final configuration location (set in caller)
+# - `INTERNAL_DEPENDS`: list of dependencies, new and old
+####
+function(fprime__internal_process_configuration_sources MODULE_NAME SOURCES AUTOCODER_INPUTS HEADERS OVERRIDES DEPENDS)
+    # Process source files and update INTERNAL_SOURCES in caller and track new dependencies
+    fprime__internal_process_configuration_source_set(
+        "${MODULE_NAME}" "${SOURCES}" FALSE
+    )
+    set(INTERNAL_SOURCES "${PROCESSED_SOURCES}" PARENT_SCOPE)
+    set(DEPENDS ${DEPENDS} ${NEW_DEPENDS})
+    # Process source files and update INTERNAL_AUTOCODER_INPUTS in caller and track new dependencies
+    fprime__internal_process_configuration_source_set(
+        "${MODULE_NAME}" "${AUTOCODER_INPUTS}" FALSE
+    )
+    set(INTERNAL_AUTOCODER_INPUTS "${PROCESSED_SOURCES}" PARENT_SCOPE)
+    set(DEPENDS ${DEPENDS} ${NEW_DEPENDS})
+    # Process header files and update INTERNAL_HEADERS in caller and track new dependencies
+    fprime__internal_process_configuration_source_set(
+        "${MODULE_NAME}" "${HEADERS}" FALSE
+    )
+    set(INTERNAL_HEADERS "${PROCESSED_SOURCES}" PARENT_SCOPE)
+    set(DEPENDS ${DEPENDS} ${NEW_DEPENDS})
+    # Process configuration overrides. Since these are already in a module, they need not be updated in caller.
+    # New dependencies are tracked.
+    fprime__internal_process_configuration_source_set(
+        "${MODULE_NAME}" "${OVERRIDES}" TRUE
+    )
+    set(INTERNAL_DEPENDS ${DEPENDS} ${NEW_DEPENDS} PARENT_SCOPE)
+endfunction()
+
+####
+# Function `fprime__internal_process_configuration_source_set`:
+#
+# Processes a single set of configuration files checking to see if files collide and if they must collide.
+#
+# Arguments:
+# - `MODULE_NAME`: the name of the module being processed
+# - `SOURCE_SET`: list of sources to process
+# - `EXPECT_OVERRIDE`: if true, the source must exist and will be overridden, false if it must not exist
+#
+# Returns:
+# - `PROCESSED_SOURCES`: list (set in caller)
+# - `NEW_DEPENDS`: list of new dependencies (set in caller)
+####
+function(fprime__internal_process_configuration_source_set MODULE_NAME SOURCE_SET EXPECT_OVERRIDE)
+    list(REMOVE_DUPLICATES SOURCE_SET)
+    set(RETURNED_SOURCES)
+    set(NEW_DEPENDS)
+
+    foreach(SOURCE IN LISTS SOURCE_SET)
+        get_filename_component(SOURCE_NAME "${SOURCE}" NAME)
+
+        fprime_internal_get_configuration_destination("${MODULE_NAME}" "${SOURCE_NAME}")
+
+        # Check if the source cannot exist, and yet it was found
+        if (NOT EXPECT_OVERRIDE AND DESTINATION_OVERRIDE)
+            message(FATAL_ERROR
+                "${SOURCE_NAME} is SOURCE/HEADER but overrides existing file: ${DESTINATION}. Use CONFIGURATION_OVERRIDES.")
+        # Check if the source must exist, and yet it was not found
+        elseif (EXPECT_OVERRIDE AND NOT DESTINATION_OVERRIDE)
+            message(FATAL_ERROR
+                "${SOURCE_NAME} is CONFIGURATION_OVERRIDE but overrides nonexistent file: ${DESTINATION}. Use SOURCES/HEADERS.")
+        # If the source must exist and it was found, overwrite it
+        elseif(EXPECT_OVERRIDE)
+            fprime_cmake_debug_message("[config] Overriding ${DESTINATION} with ${SOURCE}")
+            file(COPY_FILE "${SOURCE}" "${DESTINATION}" ONLY_IF_DIFFERENT)
+            list(APPEND NEW_DEPENDS "${DESTINATION_MODULE}")
+            set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${SOURCE}")
+        # If the source is new, move it to the binary directory
+        else()
+            fprime_cmake_debug_message("[config] Initial config ${DESTINATION} from ${SOURCE}")
+            list(APPEND RETURNED_SOURCES "${DESTINATION}")
+            file(MAKE_DIRECTORY "${DESTINATION_DIRECTORY}")
+            file(COPY_FILE "${SOURCE}" "${DESTINATION}" ONLY_IF_DIFFERENT)
+            set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${SOURCE}")
+        endif()
+    endforeach()
+    set(PROCESSED_SOURCES "${RETURNED_SOURCES}" PARENT_SCOPE)
+    set(NEW_DEPENDS "${NEW_DEPENDS}" PARENT_SCOPE)
+endfunction()
+
+####
+# Function `fprime_internal_get_configuration_destination`:
+#
+# This function will determine the destination of a configuration file by checking to see if the file is in use by any
+# other configuration modules. If it is, it will return the destination of the read from that module's original source
+# via the DESTINATION variable. If it is not, it will unset the DESTINATION variable in PARENT_SCOPE.
+#
+# Arguments:
+# - `CONFIG_NAME`: the relative path to the configuration file
+#
+# Returns:
+# - `DESTINATION`: the destination of the configuration file or unset (in caller)
+####
+function(fprime_internal_get_configuration_destination MODULE_NAME NEW_CONFIG_NAME)
+    # Get all registered configuration modules
+    get_property(CONFIG_MODULES GLOBAL PROPERTY FPRIME_CONFIG_MODULES)
+    foreach(CONFIG_MODULE IN LISTS CONFIG_MODULES)
+        # Read the sources, headers, and autocoder inputs from the module
+        get_target_property(CONFIG_SOURCES ${CONFIG_MODULE} SUPPLIED_SOURCES)
+        get_target_property(CONFIG_HEADERS ${CONFIG_MODULE} SUPPLIED_HEADERS)
+        get_target_property(CONFIG_AUTOCODER_INPUTS ${CONFIG_MODULE} SUPPLIED_AUTOCODER_INPUTS)
+
+        # Loop through all read files
+        foreach(CONFIG_FILE IN LISTS CONFIG_SOURCES CONFIG_HEADERS CONFIG_AUTOCODER_INPUTS)
+            # Determine if the names match, if so set the destination
+            get_filename_component(CONFIG_NAME "${CONFIG_FILE}" NAME)
+            if (NEW_CONFIG_NAME STREQUAL CONFIG_NAME)
+                set(DESTINATION "${CONFIG_FILE}" PARENT_SCOPE)
+                set(DESTINATION_MODULE "${CONFIG_MODULE}" PARENT_SCOPE)
+                set(DESTINATION_OVERRIDE TRUE PARENT_SCOPE)
+                return()
+            endif()
+        endforeach()
+    endforeach()
+    # F Prime sub-builds still need to calculate (and copy) the files to the base build cache specified by FPRIME_BINARY_DIR
+    # This is needed for locations generation to calculate the correct paths.
+    #
+    # This code calculates the relative path from the cmake build cache of the current built to the current binary directory.
+    # This is the relative path within the build current build cache.  Then it applies this relative path to FPRIME_BINARY_DIR
+    # if it is set, otherwise it just recalculates the current binary directory.
+    cmake_path(RELATIVE_PATH CMAKE_CURRENT_BINARY_DIR BASE_DIRECTORY ${CMAKE_BINARY_DIR} OUTPUT_VARIABLE RELATIVE_PATH)
+    
+    set(DESTINATION_BASE "${CMAKE_BINARY_DIR}")
+    if (DEFINED FPRIME_BINARY_DIR)
+        set(DESTINATION_BASE "${FPRIME_BINARY_DIR}")
+    endif()
+    get_filename_component(SOURCE_NAME "${NEW_CONFIG_NAME}" NAME)
+    set(DESTINATION_DIRECTORY "${DESTINATION_BASE}/${RELATIVE_PATH}")
+    set(DESTINATION "${DESTINATION_DIRECTORY}/${SOURCE_NAME}" PARENT_SCOPE)
+    set(DESTINATION_MODULE "${MODULE_NAME}" PARENT_SCOPE)
+    set(DESTINATION_DIRECTORY "${DESTINATION_DIRECTORY}" PARENT_SCOPE)
+    set(DESTINATION_OVERRIDE FALSE PARENT_SCOPE)
+endfunction()
+
+```
+
+### `deployment-CMakeLists.txt.template`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/deployment-CMakeLists.txt.template`
+
+
+````text
+####
+# Deployment 'CMakeLists.txt':
+#
+# fprime deployments setup the most basic CMake settings, include the F prime build system, and
+# list deployment specific modules. In one or more of these deployment modules, executables should
+# be registered using `register_fprime_executable`. This is usually done in a `Top` module, but not
+# strictly required.
+#
+# To create a deployment, create a `CMakeLists.txt` file following this template structure in a
+# directory. This `CMakeLists.txt` is buildable as part of CMake. Thus, the user can build the
+# deployment using the following commands. Unless building unit tests, these commands are the
+# recommended way of building F prime projects.
+#
+# **Build Commands**
+# ```
+# mkdir build_dir
+# cd build_dir
+# cmake <path to deployment CMakeLists.txt>
+# ```
+#
+# This file can be constructed in three sections.
+#
+# ### Section 1: Setup the Basic CMake Infrastructure ###
+#
+# Section 1 sets up the basic CMake infrastructure. This infrastructure configures CMake by setting
+# the minimum setup for a CMake project. This requires calling several CMake functions, and setting
+# a CMake variable.
+#
+# First, the user must call `project` to setup the project and default deployment executable name.
+# Also the project languages "C" and "CXX" (C++) must be supplied.
+#
+# Next, call `cmake_minimum_required` and set VERSION to 3.16 or greater.
+#
+# **Example:**
+# ```
+# project(Ref C CXX)
+# cmake_minimum_required(VERSION 3.16)
+# ```
+#
+# ### Section 2: Include F prime Core Build System
+#
+# This section includes the `cmake/FPrime.cmake` file from the root of the F prime library.
+#
+# **Example:**
+# ```
+# include("${CMAKE_CURRENT_LIST_DIR}/../cmake/FPrime.cmake")
+# include("${CMAKE_CURRENT_LIST_DIR}/../cmake/FPrime-Code.cmake")
+# ```
+# **Note:** if custom targets are desired, then they should be registered between the two includes.
+#
+# ### Section 3: Include Modules and Topologies
+#
+# The last section is to include all the modules that are specific to this deployment. This uses
+# the `add_fprime_subdirectory` function to help with adding F prime deployment modules and
+# keeping the F prime import structure correct.
+#
+# **Note:** Topology directories are included here.
+#
+# **Example:**
+# ```
+# add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PingReceiver/")
+# add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/RecvBuffApp/")
+# add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SendBuffApp/")
+# add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SignalGen/")
+# # Add Topology subdirectory
+# add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
+# ```
+####
+
+##
+# Section 1: Basic Project Setup
+#
+# This contains the basic project information. Specifically, a cmake version and
+# project definition.
+# Step 1: set <OPTIONAL>
+##
+project(<OPTIONAL> C CXX)
+cmake_minimum_required(VERSION 3.16)
+# Optional: set CMake build type
+
+##
+# Section 2: F prime Core
+#
+# This includes all of the F prime core components, and imports the make-system. F prime core
+# components will be placed in the 'F-Prime' binary subdirectory to keep them from
+# colliding with deployment specific items.
+#
+# Step 2: set `<PATH-TO>`. Usually this is `${CMAKE_CURRENT_LIST_DIR}`
+##
+include("<PATH-TO>/cmake/FPrime.cmake")
+#NOTE: add custom targets here
+include("<PATH-TO>/cmake/FPrime-Code.cmake")
+
+##
+# Section 3: Components and Topology
+#
+# This section includes deployment specific directories. This allows use of non-
+# core components in the topology, which is also added here.
+#
+# Step 4: include all the subdirectories.
+##
+# Add component subdirectories
+add_fprime_subdirectory("<PATH-TO-MODULE>")
+add_fprime_subdirectory("<PATH-TO-MODULE>")
+...
+add_fprime_subdirectory("<PATH-TO-TOP>")
+````
+
+### `empty.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/empty.cpp`
+
+
+```cpp
+static_assert(false, "empty.cpp should never be compiled");
+```
+
+### `FPrime-Code.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/FPrime-Code.cmake`
+
+
+```cmake
+####
+# FPrime-Code:
+#
+# FPrime code. This cmake file includes the basic directories that make up the mainline F prime framework. This is
+# separated from the CMake includes themselves such that this is built after all CMake setup.
+#
+# Note: given F prime's historical folder structure, this is not organized as an fprime library.
+####
+include_guard()
+
+# Ensure that the FPrime build system is setup
+include("${CMAKE_CURRENT_LIST_DIR}/FPrime.cmake")
+
+# Setup fprime code followed by all libraries
+fprime_setup_included_code()
+```
+
+### `fprime-util.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/fprime-util.cmake`
+
+
+```cmake
+####
+# fprime-util.cmake:
+#
+# This file contains utility functions for writing the metadata used by `fprime-util` for supporting the standard
+# fprime development process.
+####
+include_guard()
+
+set(FPRIME__INTERNAL_UTILITY_SUFFIX "fprime-util")
+set(FPRIME__INTERNAL_UTILITY_BUILD_TARGETS_FILE "build-targets.${FPRIME__INTERNAL_UTILITY_SUFFIX}")
+set(FPRIME__INTERNAL_UTILITY_SUBDIRECTORY_FILE "sub-directories.${FPRIME__INTERNAL_UTILITY_SUFFIX}")
+set(FPRIME__INTERNAL_UTILITY_TESTS_FILE "tests.${FPRIME__INTERNAL_UTILITY_SUFFIX}")
+
+####
+# Function `fprime_util_metadata_clear`:
+#
+# Clears all metadata files written to a subdirectory. This is expected to be called when the subdirectory is added and
+# removes all files written to this directory.
+#
+# **Parameters:**
+# - `CHILD_DIRECTORY`: directory to clear metadata from
+####
+function(fprime_util_metadata_clear CHILD_DIRECTORY)
+    file(WRITE "${CHILD_DIRECTORY}/${FPRIME__INTERNAL_UTILITY_BUILD_TARGETS_FILE}" "")
+    file(WRITE "${CHILD_DIRECTORY}/${FPRIME__INTERNAL_UTILITY_SUBDIRECTORY_FILE}" "")
+    file(WRITE "${CHILD_DIRECTORY}/${FPRIME__INTERNAL_UTILITY_TESTS_FILE}" "")
+endfunction()
+
+####
+# Function `fprime_util_metadata_add_subdirectory`:
+#
+# This adds a new subdirectory from a metadata perspective by performing several steps:
+# 1. Clears the metadata for the subdirectory
+# 2. Adds the subdirectory to the current directory's subdirectory list
+#
+# **Parameters:**
+# - `CHILD_SOURCE_DIRECTORY`: source directory of the subdirectory
+# - `CHILD_BINARY_DIRECTORY`: binary directory of the subdirectory
+####
+function(fprime_util_metadata_add_subdirectory CHILD_SOURCE_DIRECTORY CHILD_BINARY_DIRECTORY)
+    fprime_util_metadata_clear("${CHILD_BINARY_DIRECTORY}")
+    file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/${FPRIME__INTERNAL_UTILITY_SUBDIRECTORY_FILE}" "${CHILD_SOURCE_DIRECTORY}\n")
+endfunction()
+
+####
+# Function `fprime_util_metadata_add_build_target`:
+#
+# This adds a new build target from a metadata perspective by adding it to the list in the current directory.
+#
+# **Parameters:**
+# - `BUILD_TARGET`: name of the build target to add
+####
+function(fprime_util_metadata_add_build_target BUILD_TARGET)
+    file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/${FPRIME__INTERNAL_UTILITY_BUILD_TARGETS_FILE}" "${BUILD_TARGET}\n")
+endfunction()
+
+####
+# Function `fprime_util_metadata_add_test`:
+#
+# This adds a new test from a metadata perspective by adding it to the list in the current directory.
+#
+# **Parameters:**
+# - `TEST_NAME`: name of the test to add
+####
+function(fprime_util_metadata_add_test TEST_NAME)
+    file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/${FPRIME__INTERNAL_UTILITY_TESTS_FILE}" "${TEST_NAME}\n")
+endfunction()
+```
+
+### `FPrime.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/FPrime.cmake`
+
+
+```cmake
+####
+# FPrime.cmake:
+#
+# This file is the entry point for building fprime projects, libraries. It does not setup F prime as a project, but
+# rather allows the users to build against fprime, fprime libraries while taking advantage of fprime's autocoding
+# support. This file includes the cmake build system setup for building like fprime.
+####
+include_guard()
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+include(utilities)
+include(options)
+include(sanitizers) # Enable sanitizers if they are requested
+include(required)
+include(config_assembler)
+include(fprime-util)
+
+# Add project root's cmake folder to module path
+if (IS_DIRECTORY "${FPRIME_PROJECT_ROOT}/cmake")
+    list(APPEND CMAKE_MODULE_PATH "${FPRIME_PROJECT_ROOT}/cmake")
+endif()
+
+# for adding libraries from the _fprime_packages directory
+if (IS_DIRECTORY "${FPRIME_PROJECT_ROOT}/_fprime_packages")
+    if (EXISTS "${FPRIME_PROJECT_ROOT}/_fprime_packages/packages.cmake")
+        include("${FPRIME_PROJECT_ROOT}/_fprime_packages/packages.cmake")
+        message(STATUS "[FPRIME] Including libraries from ${FPRIME_PROJECT_ROOT}/_fprime_packages")
+    else()
+        message(WARNING "[FPRIME] ${FPRIME_PROJECT_ROOT}/_fprime_packages/packages.cmake does not exist. Skipping.")
+    endif()
+endif()
+
+# Setup fprime library locations
+list(REMOVE_DUPLICATES FPRIME_LIBRARY_LOCATIONS)
+
+# F Prime build locations represent the root of the module paths in F Prime. This allows us to detect module names from the
+# paths to given files.
+# Now that modules can build within the build cache, the build cache locations (root, F-Prime) are added to the list of
+# locations. This allows for the detection of modules that are built within the build cache.
+set(FPRIME_BUILD_LOCATIONS "${FPRIME_FRAMEWORK_PATH}" ${FPRIME_LIBRARY_LOCATIONS} "${FPRIME_PROJECT_ROOT}"
+    "${CMAKE_BINARY_DIR}/F-Prime" "${CMAKE_BINARY_DIR}")
+list(REMOVE_DUPLICATES FPRIME_BUILD_LOCATIONS)
+resolve_path_variables(FPRIME_BUILD_LOCATIONS)
+
+# Message describing the fprime setup
+message(STATUS "[FPRIME] Module locations: ${FPRIME_BUILD_LOCATIONS}")
+message(STATUS "[FPRIME] Installation directory: ${CMAKE_INSTALL_PREFIX}")
+include(platform/platform) # Now that module locations are known, load platform settings
+
+# Module setup functions, attaches targets to modules, etc.
+include(module)
+# Support for autocoder implementations
+include(autocoder/autocoder)
+# Support for build target registration
+include(target/target)
+# Load domain-specific CMake functions
+include(API)
+# Sub-build support
+include(sub-build/sub-build)
+# C and C++ settings for building the framework
+include(settings)
+####
+# Function `fprime_setup_global_includes`:
+#
+# Adds basic include directories that make fprime work. This ensures that configuration, framework, and project all
+# function as expected. This will also include the internal build-cache directories.
+####
+function(fprime_setup_global_includes)
+    # Setup the global include directories that exist outside of the build cache
+    include_directories("${FPRIME_FRAMEWORK_PATH}")
+    include_directories("${FPRIME_PROJECT_ROOT}")
+
+    # Setup the include directories that exist within the build-cache
+    include_directories("${CMAKE_BINARY_DIR}")
+    include_directories("${CMAKE_BINARY_DIR}/F-Prime")
+endfunction(fprime_setup_global_includes)
+
+####
+# Function `fprime_detect_libraries`:
+#
+# This function detects libraries using the FPRIME_LIBRARY_LOCATIONS variable. Fore each library path, the following is
+# done:
+# 1. Detect a manifest file from in-order: `library.cmake`, and then `<library name>.cmake`
+# 2. Add the library's top-level cmake directory to the CMAKE_MODULE_PATH
+# 3. Add the library root as an include directory
+# 4. Add option() to disable library UTs
+####
+macro(fprime_detect_libraries)
+    foreach (LIBRARY_DIRECTORY IN LISTS FPRIME_LIBRARY_LOCATIONS)
+        get_filename_component(LIBRARY_NAME "${LIBRARY_DIRECTORY}" NAME)
+        get_fprime_library_option_string(LIBRARY_OPTION "${LIBRARY_NAME}")
+        # Detect manifest file:
+        #  1. library.cmake (preferred)
+        #  2. <library>.cmake (old standard)
+        if (EXISTS "${LIBRARY_DIRECTORY}/library.cmake")
+            set(MANIFEST_FILE "${LIBRARY_DIRECTORY}/library.cmake")
+        elseif (EXISTS "${LIBRARY_DIRECTORY}/${LIBRARY_NAME}.cmake")
+            set(MANIFEST_FILE "${LIBRARY_DIRECTORY}/${LIBRARY_NAME}.cmake")
+        else()
+            message(WARNING "[LIBRARY] ${LIBRARY_DIRECTORY} does not define library.cmake nor ${LIBRARY_NAME}.cmake. Skipping.")
+            continue()
+        endif()
+        message(STATUS "[LIBRARY] Including library ${LIBRARY_NAME} at ${LIBRARY_DIRECTORY}")
+        if (CMAKE_DEBUG_OUTPUT)
+            message(STATUS "[LIBRARY] ${LIBRARY_NAME} using manifest ${MANIFEST_FILE}")
+        endif()
+        append_list_property("${MANIFEST_FILE}" GLOBAL PROPERTY FPRIME_LIBRARY_MANIFESTS)
+        # Check to see if the cmake directory exists and add it
+        if (IS_DIRECTORY "${LIBRARY_DIRECTORY}/cmake")
+            list(APPEND CMAKE_MODULE_PATH "${LIBRARY_DIRECTORY}/cmake")
+        endif()
+        include_directories("${LIBRARY_DIRECTORY}")
+        option(FPRIME_ENABLE_${LIBRARY_OPTION}_UTS "Enable UT generation for ${LIBRARY_NAME}" ON)
+    endforeach()
+endmacro(fprime_detect_libraries)
+
+####
+# Function `fprime_setup_standard_targets`:
+#
+# Registers the targets required for a standard fprime build. This will be changed when FPRIME_SUB_BUILD_TARGETS.
+####
+macro(fprime_setup_standard_targets)
+    # Prevent registration of standard targets when specific targets are supplied
+    # This is done for efficiency to not load all the below files
+    if (NOT DEFINED FPRIME_SUB_BUILD_TARGETS)
+        # FPP locations must come at the front of the list, then build
+        register_fprime_target(target/build)
+        register_fprime_build_autocoder(autocoder/fpp OFF)
+        register_fprime_target(target/version)
+        register_fprime_target(target/dictionary)
+        register_fprime_target(target/install)
+        register_fprime_ut_target(target/ut)
+        register_fprime_target(target/sbom)
+        register_fprime_target(target/refresh_cache)
+    endif()
+endmacro(fprime_setup_standard_targets)
+
+####
+# Function `fprime_setup_override_targets`:
+#
+# Override the targets that are registered by the default build with those supplied in FPRIME_SUB_BUILD_TARGETS. If
+# FPRIME_SUB_BUILD_TARGETS is defined, nothing happens.
+#####
+macro(fprime_setup_override_targets)
+    # Required to prevent overriding when not used
+    if (FPRIME_SUB_BUILD_TARGETS)
+        foreach (OVERRIDE_TARGET IN LISTS FPRIME_SUB_BUILD_TARGETS)
+            register_fprime_target("${OVERRIDE_TARGET}")
+        endforeach ()
+    elseif(CMAKE_DEBUG_OUTPUT)
+        message(STATUS "FPRIME_SUB_BUILD_TARGETS not defined, skipping.")
+    endif()
+endmacro(fprime_setup_override_targets)
+
+macro(fprime_initialize_build_system)
+    cmake_minimum_required(VERSION 3.16)
+    fprime_setup_global_includes()
+    fprime_detect_libraries()
+    fprime_setup_standard_targets()
+    fprime_setup_override_targets()
+    set_property(GLOBAL PROPERTY FPRIME_BUILD_SYSTEM_LOADED ON)
+
+    # Perform necessary sub-builds
+    if (NOT FPRIME_IS_SUB_BUILD)
+        run_sub_build(info-cache target/sub-build/fpp_locs target/sub-build/fpp_depend target/sub-build/module_info)
+        # Import the pre-computed properties!
+        include("${CMAKE_BINARY_DIR}/fprime_module_info.cmake")
+    endif()
+endmacro(fprime_initialize_build_system)
+
+####
+# Function `fprime_setup_included_code`:
+#
+# Sets up the code/build for fprime and libraries. Call after all project specific targets and autocoders are set up and
+# registered.
+####
+function(fprime_setup_included_code)
+    # Must be done before code is registered but after custom target registration
+    setup_global_targets()
+    # For BUILD_TESTING builds then set up libraries that support testing
+    if (BUILD_TESTING AND NOT DEFINED FPRIME_SUB_BUILD_TARGETS)
+        if (NOT EXISTS "${FPRIME_FRAMEWORK_PATH}/googletest/CMakeLists.txt")
+            message(FATAL_ERROR "googletest submodule not initialized or corrupted. Please run `git submodule update --init --recursive`.")
+        endif()
+        add_subdirectory("${FPRIME_FRAMEWORK_PATH}/googletest/" "${CMAKE_BINARY_DIR}/F-Prime/googletest")
+        # Flags attached to GTest compile: disable conversion warnings
+        set(GTEST_FLAGS "-Wno-conversion")
+        target_compile_options(gmock      PRIVATE "${GTEST_FLAGS}")
+        target_compile_options(gmock_main PRIVATE "${GTEST_FLAGS}")
+        target_compile_options(gtest      PRIVATE "${GTEST_FLAGS}")
+        target_compile_options(gtest_main PRIVATE "${GTEST_FLAGS}")
+    endif()
+    if (BUILD_TESTING)
+        add_subdirectory("${FPRIME_FRAMEWORK_PATH}/STest/" "${CMAKE_BINARY_DIR}/F-Prime/STest")
+    endif()
+    # By default we shutoff framework UTs
+    set(__FPRIME_NO_UT_GEN__ ON)
+    # Check if we are allowing framework UTs
+    if (FPRIME_ENABLE_FRAMEWORK_UTS)
+        set(__FPRIME_NO_UT_GEN__ OFF)
+    endif()
+    message(STATUS "[LIBRARY] Adding modules from F´ framework")
+    # Faux libraries used as interfaces to non-autocoded fpp items
+    add_library(Fpp INTERFACE)
+
+    # Specific configuration module handling:
+    #
+    # add_fprime_subdirectory cannot be run until later in the build process. Otherwise detection
+    # for model specific post processing is messed up. Thus we synthesize the behavior by setting
+    # the current module and then calling stock "add_subdirectory".
+    fprime__include_platform_file()
+    # Add "all" target to top level and a target to match all tests
+    fprime_util_metadata_add_build_target("all")
+    if (BUILD_TESTING)
+        fprime_util_metadata_add_test(".*")
+    endif()
+    set(_FP_CORE_PACKAGES Fpp default Fw Svc Os Drv CFDP Utils)
+    foreach (_FP_PACKAGE_DIR IN LISTS _FP_CORE_PACKAGES)
+        set(FPRIME_CURRENT_MODULE "${_FP_PACKAGE_DIR}")
+        fprime_util_metadata_add_subdirectory("${FPRIME_FRAMEWORK_PATH}/${_FP_PACKAGE_DIR}/" "${CMAKE_BINARY_DIR}/F-Prime/${_FP_PACKAGE_DIR}")
+        add_subdirectory("${FPRIME_FRAMEWORK_PATH}/${_FP_PACKAGE_DIR}/" "${CMAKE_BINARY_DIR}/F-Prime/${_FP_PACKAGE_DIR}")
+    endforeach ()
+    unset(FPRIME_CURRENT_MODULE)
+    message(STATUS "[LIBRARY] Adding modules from F´ framework - DONE")
+    get_property(FPRIME_LIBRARY_MANIFESTS GLOBAL PROPERTY FPRIME_LIBRARY_MANIFESTS)
+    foreach (LIBRARY_MANIFEST IN LISTS FPRIME_LIBRARY_MANIFESTS)
+        set(__FPRIME_NO_UT_GEN__ OFF)
+        get_filename_component(LIBRARY_DIRECTORY "${LIBRARY_MANIFEST}" DIRECTORY)
+        get_filename_component(LIBRARY_NAME "${LIBRARY_DIRECTORY}" NAME)
+        get_fprime_library_option_string(LIBRARY_OPTION "${LIBRARY_NAME}")
+        if (NOT FPRIME_ENABLE_${LIBRARY_OPTION}_UTS)
+            set(__FPRIME_NO_UT_GEN__ ON)
+        endif()
+        message(STATUS "[LIBRARY] Adding modules from ${LIBRARY_NAME}")
+        include("${LIBRARY_MANIFEST}")
+	message(STATUS "[LIBRARY] Adding modules from ${LIBRARY_NAME} - DONE")
+    endforeach()
+    # Always enable UTs for a project
+    set(__FPRIME_NO_UT_GEN__ OFF)
+endfunction(fprime_setup_included_code)
+
+
+# Load the build system exactly one time
+get_property(FPRIME_BUILD_SYSTEM_LOADED GLOBAL PROPERTY FPRIME_BUILD_SYSTEM_LOADED)
+if (NOT FPRIME_BUILD_SYSTEM_LOADED)
+    fprime_initialize_build_system()
+endif ()
+```
+
+### `FPrimeConfig.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/FPrimeConfig.cmake`
+
+
+```cmake
+message(STATUS "[F Prime] F Prime CMake package found at: ${CMAKE_CURRENT_LIST_FILE}")
+include("${CMAKE_CURRENT_LIST_DIR}/FPrime.cmake")
+
+# By default the F Prime package will load the codebase. This can be set OFF by setting the variable
+# FPRIME_INCLUDE_FRAMEWORK_CODE to OFF. When set OFF, the user must call fprime_setup_included_code()
+# to be able to use F Prime code. 
+if ((NOT DEFINED FPRIME_INCLUDE_FRAMEWORK_CODE) OR (FPRIME_INCLUDE_FRAMEWORK_CODE))
+    fprime_setup_included_code()    
+endif()
+```
+
+### `implementation.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/implementation.cmake`
+
+
+```cmake
+####
+# implementation.cmake:
+#
+# This file handles enables deployments (and other executables) to choose implementations that resolve
+# at link time. This enables projects to choose different underlying implementations for specific concepts
+# (e.g. OS, Memory, etc.) at link time.
+####
+include_guard()
+include(config_assembler)
+
+####
+# Function `fprime_target_implementations`:
+#
+# This function will calculate and add the implementations required for a target. It will use the default
+# implementations if no OVERRIDES are provided. Default implementations are the final set of chosen
+# implementations as specified in `register_fprime_config` using the CHOOSES_IMPLEMENTATIONS call.
+#
+# Choosing implementations ensures that there is some implementation of all globally required
+# implementations specified by `register_fprime_*` via the REQUIRED_IMPLEMENTATIONS argument.
+#
+# > [!WARNING]
+# > This function may only be called on targets that already exist
+#
+# > [!NOTE]
+# > Target will be updated with FPRIME_CHOSEN_IMPLEMENTATIONS property and FPRIME_CHOSEN_<IMPLEMENTATION>
+# > properties for each implementation.  `target_link_libraries` will be updated.
+#
+# Args:
+#  **BUILD_SYSTEM_TARGET**: the target in the build system to add implementations dependencies to
+#  **ARGN**: a list of implementations to override the default implementations with
+####
+function(fprime_target_implementations BUILD_SYSTEM_TARGET)
+    append_list_property("${ARGN}" TARGET "${BUILD_SYSTEM_TARGET}" PROPERTY FPRIME_CHOSEN_IMPLEMENTATIONS)
+    fprime__internal_choose_implementations("${BUILD_SYSTEM_TARGET}" INTERNAL_ALL_IMPLEMENTATIONS)
+    fprime_target_dependencies("${BUILD_SYSTEM_TARGET}" PRIVATE "${INTERNAL_ALL_IMPLEMENTATIONS}")
+endfunction()
+
+####
+# Function `fprime__internal_implementation_detect_implementations`:
+#
+# This function will scan the list of global default implementations (detected via the config modules and set in
+# the sub-build) and the implementations chosen by the current module. It will then choose one implementation for
+# each "IMPLEMENTS" type.
+#
+# If IMPLEMENTS cannot be determined it is added to the list of unknown implementations.
+#
+# Args:
+#  CURRENT_MODULE: the module to check for implementations
+####
+function(fprime__internal_implementation_detect_implementations CURRENT_MODULE)
+    get_target_property(MODULE_CHOSEN "${CURRENT_MODULE}" FPRIME_CHOSEN_IMPLEMENTATIONS)
+    get_property(CONFIG_CHOSEN GLOBAL PROPERTY FPRIME_BASE_CHOSEN_IMPLEMENTATIONS)
+    fprime_cmake_debug_message("[implementation] ${CURRENT_MODULE} has chosen implementations: ${MODULE_CHOSEN}")   
+    fprime_cmake_debug_message("[implementation]     and base implementations: ${CONFIG_CHOSEN}")   
+
+    foreach (IMPLEMENTATION IN LISTS CONFIG_CHOSEN MODULE_CHOSEN)
+        # Break our from empty property
+        if (NOT IMPLEMENTATION)
+            continue()
+        endif()
+        # If we know about this implementation, add it as a chosen property
+        get_property(IMPLEMENTS GLOBAL PROPERTY "FPRIME_${IMPLEMENTATION}_IMPLEMENTS")
+        if (IMPLEMENTS)
+            set_target_properties("${CURRENT_MODULE}" PROPERTIES "FPRIME_CHOSEN_${IMPLEMENTS}" "${IMPLEMENTATION}")
+        # # None implementation is a special case, the caller is responsible for 
+        # elseif(IMPLEMENTATION MATCHES ".*None")
+        # Otherwise add it as an unknown implementation
+        elseif(NOT FPRIME_IS_SUB_BUILD)
+            message(WARNING "[implementation] ${CURRENT_MODULE} has chosen unknown implementation: ${IMPLEMENTATION}")
+            append_list_property("${IMPLEMENTATION}" TARGET "${CURRENT_MODULE}" PROPERTY FPRIME_UNKNOWN_IMPLEMENTATIONS)
+        endif()
+    endforeach()
+endfunction()
+
+####
+# Function `fprime__internal_choose_implementations`:
+#
+# This function will scan the list of global default implementations module choices via
+# `fprime__internal_implementation_detect_implementations`. It will then ensure that each REQUIRED implementation
+# has a chosen implementation.
+#
+# It is an error to not have a chosen implementation for required unless there is a set of unknown implementations
+# and in that case it is a warning.
+#
+# > [!WARNING]
+# > If UNKNOWN implementations are set, it is assumed that one of them fills any missing REQUIRED implementations
+# > but users should update those modules to explicitly set IMPLEMENTS flag to avoid this warning.
+# >
+# > If the UNKNOWN implementations do not provided the required implementations a linker error will occur.
+#
+# Args:
+#  CURRENT_MODULE: the module to check for implementations
+#  OUTPUT_VARIABLE: the variable to set with the list of chosen implementations
+####
+function(fprime__internal_choose_implementations CURRENT_MODULE OUTPUT_VARIABLE)
+    set(IMPLEMENTATION_DEPENDENCIES)
+    fprime__internal_implementation_detect_implementations("${CURRENT_MODULE}")
+    
+    # Need to know the modules that were chosen but not known yet
+    get_target_property(UNKNOWNS "${CURRENT_MODULE}" FPRIME_UNKNOWN_IMPLEMENTATIONS)
+    if (UNKNOWNS)
+        list(APPEND IMPLEMENTATION_DEPENDENCIES "${UNKNOWNS}")
+    endif()
+
+    # Get all required implementations
+    get_property(REQUIRED_IMPLEMENTATIONS GLOBAL PROPERTY "FPRIME_REQUIRED_IMPLEMENTATIONS")
+    foreach(REQUIRED IN LISTS REQUIRED_IMPLEMENTATIONS)
+        get_target_property(IMPLEMENTOR "${CURRENT_MODULE}" "FPRIME_CHOSEN_${REQUIRED}")
+        if (IMPLEMENTOR)
+            fprime_cmake_debug_message("[implementation] ${CURRENT_MODULE} has chosen implementation: ${IMPLEMENTOR} for ${REQUIRED}")
+            list(APPEND IMPLEMENTATION_DEPENDENCIES "${IMPLEMENTOR}")
+        elseif(UNKNOWNS AND NOT FPRIME_IS_SUB_BUILD)
+            fprime_cmake_warning("[implementation] ${CURRENT_MODULE} requires implementation of ${REQUIRED} assuming one of ${UNKNOWNS} is correct")
+        elseif(NOT FPRIME_IS_SUB_BUILD)
+            fprime_cmake_fatal_error("[implementation] ${CURRENT_MODULE} requires implementation of ${REQUIRED} but none was chosen")
+        endif()
+    endforeach()
+
+    append_list_property("${IMPLEMENTATION_DEPENDENCIES}" TARGET "${CURRENT_MODULE}" PROPERTY FPRIME_CHOSEN_IMPLEMENTATIONS)
+    set("${OUTPUT_VARIABLE}" "${IMPLEMENTATION_DEPENDENCIES}" PARENT_SCOPE)
+endfunction()
+```
+
+### `module.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/module.cmake`
+
+
+```cmake
+####
+# Module.cmake:
+#
+# This cmake file contains the functions needed to compile a module for F prime. This
+# includes code for generating Enums, Serializables, Ports, Components, and Topologies.
+#
+# These are used as the building blocks of F prime items. This includes deployments,
+# tools, and individual components.
+####
+include_guard()
+include(target/target)
+include(implementation)
+include(target/ut) # For FPRIME__INTERNAL_UT_TARGET variable
+include(utilities)
+include(fprime-util)
+set(FPRIME__INTERNAL_BASE_CONTROL_SETS "HEADERS" "SOURCES" "DEPENDS" "EXCLUDE_FROM_ALL" "AUTOCODER_INPUTS" "REQUIRES_IMPLEMENTATIONS")
+
+set(FPRIME__INTERNAL_EMPTY_CPP "${FPRIME_FRAMEWORK_PATH}/cmake/empty.cpp")
+
+####
+# Function `fprime__internal_add_build_target`:
+#
+# Processes the module arguments and set variables, then adds a build target with target properties set.
+#
+# Target properties set:
+# - SOURCES: source files (C++ build)
+# - LINK_LIBRARIES: link dependencies (C++ build) 
+# - SUPPLIED_HEADERS: headers (for code counting)
+# - SUPPLIED_SOURCES: original SOURCES before autocoding attached
+# - SUPPLIED_DEPENDENCIES: original link dependencies before autocoding attached
+# - AUTOCODER_INPUTS: input source file list for autocoding
+# - FPRIME_TYPE: set to ${BUILD_TARGET_TYPE_STRING}
+#
+# This function sets "INTERNAL_MODULE_NAME" in PARENT_SCOPE to pass-back module name for target
+# registration. It also sets "INTERNAL_*" for each of the extra control directives for processing in the
+# calling scope.
+#
+# - **BUILD_TARGET_TYPE_STRING:** "Library", "Executable", "Deployment", and "Unit Test".
+# - **EXTRA_CONTROL_DIRECTIVES:** extra CMake `add_*` arguments (e.g. INTERFACE for interface libraries)
+####
+function(fprime__internal_add_build_target BUILD_TARGET_TYPE_STRING EXTRA_CONTROL_DIRECTIVES)
+    fprime__process_module_setup("${BUILD_TARGET_TYPE_STRING}" "${EXTRA_CONTROL_DIRECTIVES}" ${ARGN})
+    fprime__internal_add_build_target_helper("${INTERNAL_MODULE_NAME}" "${BUILD_TARGET_TYPE_STRING}" "${INTERNAL_SOURCES}"
+                                             "${INTERNAL_AUTOCODER_INPUTS}" "${INTERNAL_HEADERS}" "${INTERNAL_DEPENDS}"
+                                             "${INTERNAL_REQUIRES_IMPLEMENTATIONS}"
+                                             "${INTERNAL_CHOOSES_IMPLEMENTATIONS}" "${INTERNAL_CMAKE_ADD_OPTIONS}")
+    set(INTERNAL_MODULE_NAME "${INTERNAL_MODULE_NAME}" PARENT_SCOPE)
+    foreach(DIRECTIVE IN LISTS EXTRA_CONTROL_DIRECTIVES FPRIME__INTERNAL_BASE_CONTROL_SETS)
+        if (DEFINED "INTERNAL_${DIRECTIVE}")
+            set("INTERNAL_${DIRECTIVE}" "${INTERNAL_${DIRECTIVE}}" PARENT_SCOPE)
+        endif()
+    endforeach()
+endfunction()
+
+####
+# Function `fprime__process_module_setup`:
+#
+# This function is used to process the module setup. It takes a list of arguments and sorts them into
+# SOURCES, HEADERS, and DEPENDS. It also sets the module name based on the first argument or the
+# FPRIME_CURRENT_MODULE variable. If neither is provided, it will throw an error.
+#
+# It handles the backwards compatibility with the old structure where users set SOURCE_FILES, MOD_DEPS,
+# etc. variables.
+#
+# - **FPRIME_MODULE_TYPE**: fprime type of module
+# - **ADDITIONAL_CONTROL_SETS**: additional control directives to support (e.g. INTERFACE for libraries)
+# - **ARGN**: list of arguments to process.
+####
+function(fprime__process_module_setup FPRIME_MODULE_TYPE ADDITIONAL_CONTROL_SETS)
+    # Initial setup
+    set(INPUT_ARGUMENTS ${ARGN})
+    list(GET INPUT_ARGUMENTS 0 FIRST_ARGUMENT)
+    list(LENGTH INPUT_ARGUMENTS INPUT_COUNT)
+
+    # List of control words, file-based control words, and CMAKE control words from (add_library and add_executable)
+    set(FPRIME_CONTROL_SETS)
+    set(CONTROL_SETS ${FPRIME__INTERNAL_BASE_CONTROL_SETS} ${ADDITIONAL_CONTROL_SETS})
+    set(FILE_CONTROL_SETS "HEADERS" "SOURCES" "AUTOCODER_INPUTS")
+    set(FPRIME_CMAKE_ADD_OPTIONS "WIN32" "MACOSX_BUNDLE" "OBJECT" "INTERFACE" "IMPORTED" "ALIAS" "GLOBAL"
+        "STATIC" "SHARED" "MODULE" "EXCLUDE_FROM_ALL")
+    # Set module name as passed in, then defaulting to FPRIME_CURRENT_MODULE
+    if (${INPUT_COUNT} GREATER 0 AND NOT FIRST_ARGUMENT IN_LIST CONTROL_SETS)
+        list(POP_FRONT INPUT_ARGUMENTS MODULE_NAME)
+    elseif(DEFINED FPRIME_CURRENT_MODULE AND FPRIME_MODULE_TYPE STREQUAL "Unit Test")
+        set(MODULE_NAME ${FPRIME_CURRENT_MODULE}_${FPRIME__INTERNAL_UT_TARGET})
+    elseif(DEFINED FPRIME_CURRENT_MODULE)
+        set(MODULE_NAME ${FPRIME_CURRENT_MODULE})
+    else()
+        fprime_cmake_fatal_error("FPRIME_CURRENT_MODULE not defined. Please supply name to: register_fprime_module(<module name>)")
+    endif()
+    list(LENGTH INPUT_ARGUMENTS INPUT_COUNT)
+
+    # Support the old structure where SOURCE_FILES and MOD_DEPS were set to specify module lists
+    if (INPUT_COUNT EQUAL 0 AND NOT DEFINED SOURCE_FILES AND NOT FPRIME_MODULE_TYPE STREQUAL "Unit Test")
+        fprime_cmake_fatal_error("Must supply SOURCES to register_fprime_*")
+    elseif (INPUT_COUNT EQUAL 0 AND NOT DEFINED UT_SOURCE_FILES AND FPRIME_MODULE_TYPE STREQUAL "Unit Test")
+        fprime_cmake_fatal_error("Must supply SOURCES to register_fprime_ut")
+    elseif (INPUT_COUNT EQUAL 0 AND FPRIME_MODULE_TYPE STREQUAL "Unit Test" AND DEFINED UT_SOURCE_FILES)
+        # Support old-style passing
+        if (UT_AUTO_HELPERS)
+            set(LIST_UT_AUTO_HELPERS TRUE)
+        endif()
+        # C/CPP/ASM files end with "c", "cpp", "cc", "cxx", "S", "asm". SOURCES are C/CPP/ASM matching SOURCE_FILES and
+        # AUTOCODER_INPUTS are non-matching SOURCE_FILES.
+        sort_buildable_from_non_buildable_sources(LIST_SOURCES LIST_AUTOCODER_INPUTS "${UT_SOURCE_FILES}")
+        set(LIST_HEADERS "${UT_HEADER_FILES}")
+        resolve_dependencies(MOD_DEPS_RESOLVED ${UT_MOD_DEPS})
+        set(LIST_DEPENDS "${MOD_DEPS_RESOLVED}")
+        # Historically, the current module was added automatically to the UT dependencies 
+        if (TARGET "${FPRIME_CURRENT_MODULE}")
+            # Ensure the current module build target is linkable
+            get_target_property(CURRENT_TARGET_TYPE "${FPRIME_CURRENT_MODULE}" TYPE)
+            if (CURRENT_TARGET_TYPE MATCHES "[A-Z]*_LIBRARY")
+                list(APPEND LIST_DEPENDS "${FPRIME_CURRENT_MODULE}")
+            endif()
+        endif()
+    elseif (INPUT_COUNT EQUAL 0 AND DEFINED SOURCE_FILES)
+        # C/CPP/ASM files end with "c", "cpp", "cc", "cxx", "S", "asm". SOURCES are C/CPP/ASM matching SOURCE_FILES and
+        # AUTOCODER_INPUTS are non-matching SOURCE_FILES.
+        sort_buildable_from_non_buildable_sources(LIST_SOURCES LIST_AUTOCODER_INPUTS "${SOURCE_FILES}")
+        set(LIST_HEADERS "${HEADER_FILES}")
+        resolve_dependencies(MOD_DEPS_RESOLVED ${MOD_DEPS})
+        set(LIST_DEPENDS "${MOD_DEPS_RESOLVED}")
+    # Check other definitions
+    elseif (DEFINED SOURCE_FILES)
+        fprime_cmake_fatal_error("Cannot both set SOURCE_FILES and supply source list to register_fprime_module")
+    elseif (DEFINED MOD_DEPS)
+        fprime_cmake_fatal_error("Cannot both set MOD_DEPS and supply a dependency list to register_fprime_module")
+    elseif (DEFINED HEADER_FILES)
+        fprime_cmake_fatal_error("Cannot both set HEADER_FILES and supply a header list to register_fprime_module")
+    elseif (DEFINED UT_SOURCE_FILES)
+        fprime_cmake_fatal_error("Cannot both set UT_SOURCE_FILES and supply a source list to register_fprime_ut")
+    elseif (DEFINED UT_MOD_DEPS)
+        fprime_cmake_fatal_error("Cannot both set UT_MOD_DEPS and supply a dependency list to register_fprime_ut")
+    elseif (DEFINED UT_AUTO_HELPERS)
+        fprime_cmake_fatal_error("Cannot both set UT_AUTO_HELPERS and supply use new-style register_fprime_ut")
+    else()
+        # Unset all the control lists so the module can track what controls were passed in along with their arguments
+        # allowing signal control sets that do not take arguments.
+        foreach(CONTROL_SET IN LISTS CONTROL_SETS)
+            unset("${CONTROL_SET}")
+        endforeach()
+    endif()
+    unset(CURRENT_LIST_NAME)
+    # Process all arguments and fill in the module sources
+    foreach (ARGUMENT IN LISTS INPUT_ARGUMENTS)
+        # EXISTS only defined for resolved absolute paths
+        set(RESOLVED_ARGUMENT "${ARGUMENT}")
+        resolve_path_variables(RESOLVED_ARGUMENT)
+        # If the argument is one of our control tokens, and the list is already defined, this means the user has specified
+        # the argument twice. This is likely an error.
+        if (ARGUMENT IN_LIST CONTROL_SETS AND DEFINED "${ARGUMENT}")
+            fprime_cmake_fatal_error("${ARGUMENT} supplied multiple times in call to register_fprime_module")
+        # Now update the current list and define the backing store for it. This will allow us to capture arguments
+        # between this and other control words.
+        elseif(ARGUMENT IN_LIST CONTROL_SETS)
+            # Check for control words that are zero-argument (flags) and set them to true
+            if (DEFINED CURRENT_LIST_NAME AND NOT DEFINED "LIST_${CURRENT_LIST_NAME}")
+                set("LIST_${CURRENT_LIST_NAME}" TRUE)
+            endif()
+            set(CURRENT_LIST_NAME "${ARGUMENT}")
+            set("LIST_${CURRENT_LIST_NAME}")
+        # Check that file types' files exist
+        elseif(DEFINED CURRENT_LIST_NAME AND CURRENT_LIST_NAME IN_LIST FILE_CONTROL_SETS AND NOT EXISTS "${RESOLVED_ARGUMENT}")
+            fprime_cmake_fatal_error("${ARGUMENT} does not exist but was specified as a SOURCE/HEADER/AUTOCODER_INPUT")
+        # Add in an element to the active control list
+        elseif(DEFINED CURRENT_LIST_NAME)
+            list(APPEND "LIST_${CURRENT_LIST_NAME}" "${ARGUMENT}")
+        # Handle arguments supplied before any control word
+        else()
+            string(REPLACE ";" " " CONTROL_SETS_STRING "${CONTROL_SETS}")
+            fprime_cmake_fatal_error("One of ${CONTROL_SETS_STRING} must be specified before list elements: ${ARGUMENT}")
+        endif()
+    endforeach()
+    # Check for control words that are zero-argument (flags) and set them to true
+    if (DEFINED CURRENT_LIST_NAME AND NOT DEFINED "LIST_${CURRENT_LIST_NAME}")
+        set("LIST_${CURRENT_LIST_NAME}" TRUE)
+    endif()
+    # Update caller scope with the new variables
+    set(INTERNAL_CMAKE_ADD_OPTIONS)
+    set(INTERNAL_MODULE_NAME "${MODULE_NAME}" PARENT_SCOPE)
+    foreach(CONTROL_SET IN LISTS CONTROL_SETS)
+        # Roll-up CMake options into a single list INTERNAL_CMAKE_OPTIONS when the option is defined and TRUE
+        if (CONTROL_SET IN_LIST FPRIME_CMAKE_ADD_OPTIONS AND DEFINED "LIST_${CONTROL_SET}" AND "${LIST_${CONTROL_SET}}")
+            list(APPEND INTERNAL_CMAKE_ADD_OPTIONS "${CONTROL_SET}")
+        # Otherwise define listed argument in parent scope only when they were defined within this file. This will
+        # unused control words to be undefined lists in parent scope distinguishing them from empty words.
+        elseif (DEFINED "LIST_${CONTROL_SET}")
+            # FPP, Python, and other non-native (virtualized) tooling deal in absolute resolved paths. This is a
+            # function of how the virtual machines underpinning these technologies work.
+            #
+            # Thus to make life easier on tool developers, we automatically resolve all paths as part of the interface
+            # ensuring that this step is not required on each tool integration.
+            resolve_path_variables(LIST_${CONTROL_SET})
+            set(INTERNAL_${CONTROL_SET} "${LIST_${CONTROL_SET}}" PARENT_SCOPE)
+        endif()
+    endforeach(CONTROL_SET IN LISTS CONTROL_SETS)
+    # Set rolled-up CMAKE_ADD_OPTIONS
+    set(INTERNAL_CMAKE_ADD_OPTIONS "${INTERNAL_CMAKE_ADD_OPTIONS}" PARENT_SCOPE)
+    clear_historical_variables(PARENT_SCOPE)
+endfunction()
+
+####
+# Function `fprime__internal_add_build_target_helper`:
+#
+# Helper to add the target and set target properties.
+#
+# Target properties set:
+# - SOURCES: source files (C++ build)
+# - LINK_LIBRARIES: link dependencies (C++ build) 
+# - SUPPLIED_HEADERS: headers (for code counting)
+# - SUPPLIED_SOURCES: original SOURCES before autocoding attached
+# - SUPPLIED_DEPENDENCIES: original link dependencies before autocoding attached
+# - AUTOCODER_INPUTS: input source file list for autocoding
+# - FPRIME_TYPE: set to ${BUILD_TARGET_TYPE_STRING}
+#
+# - **BUILD_TARGET_TYPE_STRING:** "Library", "Executable", "Deployment", and "Unit Test".
+# - **FPRIME_CMAKE_ADD_OPTIONS:** extra CMake `add_*` options (e.g. INTERFACE for interface libraries)
+####
+function(fprime__internal_add_build_target_helper TARGET_NAME TYPE SOURCES AUTOCODER_INPUTS HEADERS DEPENDENCIES REQUIRES_IMPLEMENTATIONS CHOOSES_IMPLEMENTATIONS FPRIME_CMAKE_ADD_OPTIONS)
+    # Historical status message for posterity...and to prevent panic amongst users
+    message(STATUS "Adding ${TYPE}: ${TARGET_NAME}")
+    # Remap F Prime target type to CMake targe type
+    if (INTERFACE IN_LIST FPRIME_CMAKE_ADD_OPTIONS AND SOURCES)
+        fprime_cmake_fatal_error("INTERFACE libraries cannot have SOURCES")
+    elseif (TYPE STREQUAL "Executable" OR TYPE STREQUAL "Deployment" OR TYPE STREQUAL "Unit Test")
+        add_executable("${TARGET_NAME}" ${FPRIME_CMAKE_ADD_OPTIONS} "${SOURCES}")
+        fprime_target_implementations("${TARGET_NAME}" ${CHOOSES_IMPLEMENTATIONS})
+    elseif(TYPE STREQUAL "Library")
+        add_library("${TARGET_NAME}" ${FPRIME_CMAKE_ADD_OPTIONS} ${SOURCES})
+    else()
+        fprime_cmake_fatal_error("Cannot register compilation target of type ${TYPE}")
+    endif()
+    if (TYPE STREQUAL "Unit Test" AND INTERNAL_UT_AUTO_HELPERS)
+        set_target_properties("${TARGET_NAME}" PROPERTIES 
+            FPRIME_UT_AUTO_HELPERS TRUE
+        )
+    endif()
+    if (DEFINED INTERNAL_TESTED_MODULE)
+        set_target_properties("${TARGET_NAME}" PROPERTIES 
+            FPRIME_TESTED_MODULE "${INTERNAL_TESTED_MODULE}"
+        )
+    endif()
+    fprime_util_metadata_add_build_target("${TARGET_NAME}")
+    # TODO: this is needed because sub-builds still attempt register targets, but without the build target to add back in the
+    #       autocoding output. Thus empty must be substituted. Would it be possible to force the library to be an INTERFACE
+    #       instead?  Or only add empty on sub-builds?
+    target_sources("${TARGET_NAME}" PRIVATE "${FPRIME__INTERNAL_EMPTY_CPP}")
+
+    # Add the link libraries safely in both real and INTERFACE libraries
+    fprime_target_dependencies("${TARGET_NAME}" PUBLIC ${DEPENDENCIES} ${REQUIRED_IMPLEMENTATIONS})
+
+    # Set F Prime target properties
+    set_target_properties("${TARGET_NAME}"
+        PROPERTIES
+            SUPPLIED_HEADERS "${HEADERS}"
+            SUPPLIED_SOURCES "${SOURCES}"
+            SUPPLIED_DEPENDENCIES "${DEPENDENCIES}"
+            SUPPLIED_AUTOCODER_INPUTS "${AUTOCODER_INPUTS}"
+            AUTOCODER_INPUTS "${AUTOCODER_INPUTS}"
+            FPRIME_TYPE "${TYPE}"
+            FPRIME_REQUIRES_IMPLEMENTATIONS "${REQUIRES_IMPLEMENTATIONS}"
+    )
+
+    # Set F Prime system-wide properties
+    set_property(GLOBAL PROPERTY MODULE_DETECTION TRUE)
+    set_property(GLOBAL APPEND PROPERTY FPRIME_MODULES "${TARGET_NAME}")
+    fprime_cmake_ASSERT("Target (${TARGET_NAME}) not defined" TARGET "${TARGET_NAME}")
+
+    # Add required implementations to the target
+    if (REQUIRES_IMPLEMENTATIONS)
+        message(STATUS "Adding required implementations of ${REQUIRES_IMPLEMENTATIONS}")
+        append_list_property("${REQUIRES_IMPLEMENTATIONS}" GLOBAL PROPERTY FPRIME_REQUIRED_IMPLEMENTATIONS)
+    endif()      
+endfunction()
+
+```
+
+### `options.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/options.cmake`
+
+
+```cmake
+####
+# Command Line Options:
+#
+# Command line options are used to change how the F prime CMake setup builds an F prime deployment. These options
+# typically have sensible defaults that configure the build in the most common way.  Most users do not need to use these
+# options directly, but may choose to do so.
+#
+# Note: some deployments may specify their own `-D` cmake flags and these deployments should take care to ensure there
+# is no collision with the arguments described here.
+#
+# Users need not specified any of the options to build F prime, however; when non-standard build behavior is desired,
+# then these options can be used. These options are specified with the -D<OPTION>=<VALUE> flag. Usually the value is
+# "ON" or "OFF". Other values are documented along side the option.
+#
+# Note: `fprime-util` will specify some settings for users. Additional settings can be passed through fprime-util with
+# the `-D` option there.
+#
+####
+include_guard()
+# Remap changed settings
+if (DEFINED FPRIME_INSTALL_DEST)
+    set(CMAKE_INSTALL_PREFIX ${FPRIME_INSTALL_DEST} CACHE PATH "Install dir" FORCE)
+endif()
+include("settings/ini")
+ini_to_cache()
+
+
+####
+# `CMAKE_TOOLCHAIN_FILE:`
+#
+# CMake option to specify toolchain file. For F prime, toolchains are kept in the framework and library cmake/toolchain
+# folder, although theoretically any CMake toolchain can be used. Default: none, which will use the native system build.
+#
+# e.g. `-DCMAKE_TOOLCHAIN_FILE=/path/to/cmake/toolchain`
+####
+
+####
+# `CMAKE_DEBUG_OUTPUT`:
+#
+# Turns on the reporting of debug output of the CMake build. Can help refine the CMake system, and repair errors. For
+# normal usage, this is not necessary. This only changes the verbosity of fprime CMake integration and does not effect
+# CMake itself.
+#
+# **Values:**
+# - ON: generate debugging output
+# - OFF: (default) do *not* generate debugging output
+#
+# e.g. `-DCMAKE_DEBUG_OUTPUT=ON`
+####
+option(CMAKE_DEBUG_OUTPUT "Generate F prime's debug output while running CMake" OFF)
+
+####
+# `FPRIME_USE_STUBBED_DRIVERS`:
+#
+# Tells fprime to use the specific stubbed set of drivers as opposed to full implementation. This applies to drivers in
+# the Drv package with the exception of the serial and ipv4 drivers where a generic cross-platform solution is expected.
+#
+# If unspecified, it will be set in the platform file for the given architecture. If specified, may be set to ON to use
+# the stubbed drivers or OFF to used full driver implementations.
+#
+# **Values:**
+# - ON: use stubbed forms of drivers
+# - OFF: use full implementation of drivers, driver and OS support needed
+#   Note: the chosen platform file will set the default value for this switch
+#
+# e.g. `-DFPRIME_USE_STUBBED_DRIVERS=ON`
+###
+if (DEFINED FPRIME_USE_STUBBED_DRIVERS AND NOT FPRIME_USE_STUBBED_DRIVERS STREQUAL "ON" AND NOT FPRIME_USE_STUBBED_DRIVERS STREQUAL "OFF")
+    message(FATAL_ERROR "FPRIME_USE_STUBBED_DRIVERS must be set to ON, OFF, or not supplied at all.")
+endif()
+
+####
+# `FPRIME_USE_BAREMETAL_SCHEDULER`:
+#
+# Tells fprime to use the baremetal scheduler. This scheduler replaces any OS scheduler with one that loops through
+# active components calling each one dispatch at a time. This is designed for use with baremetal (no-OS) system,
+# however; it may be set to limit execution to a single thread and or test the baremetal scheduler on a PC.
+#
+# If unspecified, it will be set in the platform file for the given architecture. If specified, may be set to ON to use
+# the scheduler or OFF to use the OS thread scheduler.
+#
+# **Values:**
+# - ON: use baremetal (single context) scheduling
+# - OFF: use default (system thread library) scheduling
+#   Note: the chosen platform file will set the default value for this switch
+#
+# e.g. `-DFPRIME_USE_BAREMETAL_SCHEDULER=ON`
+###
+if (DEFINED FPRIME_USE_BAREMETAL_SCHEDULER AND NOT "${FPRIME_USE_BAREMETAL_SCHEDULER}" STREQUAL "ON" AND NOT "${FPRIME_USE_BAREMETAL_SCHEDULER}" STREQUAL "OFF")
+    message(FATAL_ERROR "FPRIME_USE_BAREMETAL_SCHEDULER must be set to ON, OFF, or not supplied at all")
+endif()
+
+####
+# `FPRIME_ENABLE_FRAMEWORK_UTS`:
+#
+# Allow a project to run fprime UTs from the core framework. Default: on,  run fprime framework UTs. This
+# does not affect project specified UTs.
+#
+# **Values:**
+# - ON: (default) adds framework UT targets to the total list of targets
+# - OFF: do not add framework UTs to the target list
+#
+# e.g. `-DFPRIME_ENABLE_FRAMEWORK_UTS=OFF`
+####
+option(FPRIME_ENABLE_FRAMEWORK_UTS "Enable framework UT generation" ON)
+
+####
+# `FPRIME_ENABLE_AUTOCODER_UTS:`
+#
+# When FPRIME_ENABLE_FRAMEWORK_UTS is set, this allows a projects to also enable running the autocoder UTs which do not
+# represent the correctness of the C++/product software, but rather the operation of the autocoder tools.
+#
+# **Values:**
+# - ON: (default) retains the autocoder UTs in the target list
+# - OFF: removes autocoder UTs from the target list
+#
+# e.g. `-DFPRIME_ENABLE_AUTOCODER_UTS=OFF`
+####
+option(FPRIME_ENABLE_AUTOCODER_UTS "Enable autocoder UT generation" OFF)
+
+####
+# `FPRIME_ENABLE_UT_COVERAGE`:
+#
+# Enables coverage calculation within the unit test code of fprime. Disabling this may improve unit test performance when
+# unit test coverage is not wanted. Note: this will also remove the coverage targets.
+#
+# **Values:**
+# - ON: (default) calculate unit test coverage
+# - OFF: do not calculate unit test coverage, remove coverage targets
+#
+# e.g. `-DFPRIME_ENABLE_UT_COVERAGE=OFF`
+####
+option(FPRIME_ENABLE_UT_COVERAGE "Calculate unit test coverage" ON)
+
+####
+# `FPRIME_ENABLE_TEXT_LOGGERS:`
+#
+# When FPRIME_ENABLE_TEXT_LOGGERS is set, the ActiveTextLogger and PassiveConsoleTextLogger 
+# svc components are included in the build. When unset, those components are excluded, 
+# allowing FpConfig.hpp:FW_ENABLE_TEXT_LOGGING to be unset as well, to save space.
+# TextLoggers will fail to build if FW_ENABLE_TEXT_LOGGING=0.
+#
+# **Values:**
+# - ON: (default) retains the text logger components in the target list
+# - OFF: removes text logger components from the target list
+#
+# e.g. `-DFPRIME_ENABLE_TEXT_LOGGERS=OFF`
+####
+option(FPRIME_ENABLE_TEXT_LOGGERS "Enable text loggers in build" ON)
+
+####
+# `FPRIME_SKIP_TOOLS_VERSION_CHECK`:
+#
+# Skips version checking on fprime tools. This is an advanced option that should be used when the user knows the version
+# of their tools is appropriate and the system would otherwise detect the tool version as an incompatible version. This
+# can be used, specifically, to enable user maintained variants of standard tools.
+#
+# Note: no version checking will be done and as such version miss-matches will not be reported at all. Errors that
+# result from version incompatibilities will be up to the user to resolve.
+#
+# **Values:**
+# - ON:  skip the tool version check, enabling any tools found on the PATH to run
+# - OFF: (default) ensure that the tools found on the path have the required version before running
+#
+# e.g. `-DFPRIME_SKIP_TOOLS_VERSION_CHECK=ON`
+####
+option(FPRIME_SKIP_TOOLS_VERSION_CHECK "Skip the version checking of tools" OFF)
+
+####
+# `FPRIME_CHECK_FRAMEWORK_VERSION`:
+#
+# For internal use only.  Used to check the framework version has been updated on tags.
+####
+option(FPRIME_CHECK_FRAMEWORK_VERSION "(Internal) Check framework version when building." OFF)
+
+####
+# `ENABLE_SANITIZER_ADDRESS:`
+#
+# Enables Google's AddressSanitizer. AddressSanitizer is a memory error detector for C/C++.
+# More information: https://github.com/google/sanitizers/wiki/AddressSanitizer
+# Practically, this adds the -fsanitizers=address flag to both the compiler and linker for the whole build.
+#
+# **Values:**
+# - ON: enables AddressSanitizer.
+# - OFF: does not enable AddressSanitizer.
+#
+# Defaults to ON when BUILD_TESTING is ON
+#
+# e.g. `-DENABLE_SANITIZER_ADDRESS=OFF`
+####
+option(ENABLE_SANITIZER_ADDRESS "Enable address sanitizer" ${BUILD_TESTING})
+
+####
+# `ENABLE_SANITIZER_LEAK:`
+#
+# Enables Google's LeakSanitizer. LeakSanitizer is a memory leak detector which is integrated into AddressSanitizer.
+# More information: https://github.com/google/sanitizers/wiki/AddressSanitizerLeakSanitizer
+# Practically, this adds the -fsanitizers=leak flag to both the compiler and linker for the whole build.
+# 
+# Note: LeakSanitizer is not available on macOS. Use AddressSanitizer instead.
+#
+# **Values:**
+# - ON: enables LeakSanitizer.
+# - OFF: does not enable LeakSanitizer.
+#
+# Defaults to ON when BUILD_TESTING is ON
+#
+# e.g. `-DENABLE_SANITIZER_LEAK=OFF`
+####
+option(ENABLE_SANITIZER_LEAK "Enable leak sanitizer" ${BUILD_TESTING})
+
+####
+# `ENABLE_SANITIZER_UNDEFINED_BEHAVIOR:`
+#
+# Enables Google's UndefinedBehaviorSanitizer. UndefinedBehaviorSanitizer is an undefined behavior detector.
+# More information: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+# Practically, this adds the -fsanitizers=undefined flag to both the compiler and linker for the whole build.
+#
+# **Values:**
+# - ON: enables UndefinedBehaviorSanitizer.
+# - OFF: does not enable UndefinedBehaviorSanitizer.
+#
+# Defaults to ON when BUILD_TESTING is ON
+#
+# e.g. `-DENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON`
+####
+option(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR "Enable undefined behavior sanitizer" ${BUILD_TESTING})
+
+####
+# `ENABLE_SANITIZER_THREAD:`
+#
+# Enables Google's ThreadSanitizer. ThreadSanitizer is a tool that detects data races.
+# More information: https://clang.llvm.org/docs/ThreadSanitizer.html
+# Practically, this adds the -fsanitizers=thread flag to both the compiler and linker for the whole build.
+# 
+# Note: ThreadSanitizer does not work with Address or Leak sanitizer enabled
+#
+# **Values:**
+# - ON: enables ThreadSanitizer.
+# - OFF: (default) does not enable ThreadSanitizer.
+#
+# e.g. `-DENABLE_SANITIZER_THREAD=ON`
+####
+option(ENABLE_SANITIZER_THREAD "Enable thread sanitizer" OFF)
+
+# CTest inclusion will default BUILD_TESTING to ON but F Prime uses a default of OFF instead
+# Must come before include(CTest)
+option(BUILD_TESTING "Enable unit testing in the build" OFF)
+include(CTest)
+
+####
+# Locations `FPRIME_FRAMEWORK_PATH`, `FPRIME_PROJECT_ROOT`, and `FPRIME_LIBRARY_LOCATIONS`:
+#
+# Note: these settings are supplied by `fprime-util` and need not be provided unless running CMake directly or through
+# any way bypassing that utility (e.g. inside your beloved IDE).
+#
+# These locations specify the locations of the needed F prime paths. These are described below. Defaults are set to
+# support the historical in-source deployments where F prime is merged with deployment code. Specify these settings if
+# using the newer deployment structure. `fprime-util` does this for you.
+#
+# FPRIME_FRAMEWORK_PATH: location of F prime framework installation, always the directory above this file, however;
+# since it is supplied by the project, it is validated to ensure that it points to a valid F prime framework install.
+# Default: the folder above this file.
+#
+# e.g. `-DFPRIME_FRAMEWORK_PATH=/path/to/fprime/framework`
+#
+# FPRIME_PROJECT_ROOT: root path of an F prime project. This is used for relative paths for c++ includes, component
+# includes, etc. Default is FPRIME_FRAMEWORK_PATH if the PROJECT_SOURCE_DIR is a child of FPRIME_FRAMEWORK_PATH
+# otherwise PROJECT_SOURCE_DIR is used as the project root.
+#
+# e.g. `-DFPRIME_FRAMEWORK_PATH=/path/to/fprime/project`
+#
+# FPRIME_LIBRARY_LOCATIONS: locations of libraries included in the build. CMake list supplied in ; separated format like
+# other CMake lists. Default: "", no libraries available.
+#
+# e.g. `-DFPRIME_LIBRARY_LOCATIONS=/path/to/fprime/library1;/path/to/fprime/library2`
+#
+# Additional locations FPRIME_SETTINGS_FILE and FPRIME_ENVIRONMENT_FILE:
+#
+# These files are used for settings in fprime-util. If supplied (typically only by fprime-util) then
+# they will be added as dependencies into the build system.
+####
+get_filename_component(DETECTED_FRAMEWORK_PATH "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
+if (DEFINED FPRIME_FRAMEWORK_PATH)
+     get_filename_component(FPRIME_FRAMEWORK_PATH "${FPRIME_FRAMEWORK_PATH}" ABSOLUTE)
+     # Sanity check the framework path as supplied
+     if (NOT FPRIME_FRAMEWORK_PATH STREQUAL DETECTED_FRAMEWORK_PATH)
+         message(FATAL_ERROR "Inconsistent FPrime location: ${FPRIME_FRAMEWORK_PATH}. Check settings.ini")
+     endif()
+endif()
+# Force framework path to be absolute
+set(FPRIME_FRAMEWORK_PATH "${DETECTED_FRAMEWORK_PATH}" CACHE PATH "F Prime framework location" FORCE)
+
+# Setup project root
+get_filename_component(FULL_PROJECT_PATH "${CMAKE_PROJECT_DIR}" ABSOLUTE)
+file(RELATIVE_PATH TEMP_PATH "${FPRIME_FRAMEWORK_PATH}" "${FULL_PROJECT_PATH}")
+# If defined then force it to be absolute
+if (DEFINED FPRIME_PROJECT_ROOT)
+    get_filename_component(FPRIME_PROJECT_ROOT_ABS "${FPRIME_PROJECT_ROOT}" ABSOLUTE)
+    set(FPRIME_PROJECT_ROOT "${FPRIME_PROJECT_ROOT_ABS}" CACHE PATH "F Prime project location" FORCE)
+# Forces framework path as project root, if a child
+elseif( "${TEMP_PATH}" MATCHES "^[^./].*" )
+    set(FPRIME_PROJECT_ROOT "${FPRIME_FRAMEWORK_PATH}" CACHE PATH "F Prime project location" FORCE)
+# Force PROJECT_ROOT
+else()
+    set(FPRIME_PROJECT_ROOT "${FULL_PROJECT_PATH}" CACHE PATH "F Prime project location" FORCE)
+endif()
+# Force  FPRIME_LIBRARY_LOCATIONS to be absolute
+set(FPRIME_LIBRARY_LOCATIONS_ABS)
+foreach (LIBLOC  ${FPRIME_LIBRARY_LOCATIONS})
+    get_filename_component(LIBLOC_ABS "${LIBLOC}" ABSOLUTE)
+    list(APPEND FPRIME_LIBRARY_LOCATIONS_ABS "${LIBLOC_ABS}")
+endforeach()
+set(FPRIME_LIBRARY_LOCATIONS "${FPRIME_LIBRARY_LOCATIONS_ABS}" CACHE STRING "F prime library locations" FORCE)
+# Add in addition file dependencies from CMake
+if (DEFINED FPRIME_SETTINGS_FILE)
+    get_filename_component(FPRIME_SETTINGS_FILE  "${FPRIME_SETTINGS_FILE}" ABSOLUTE)
+    set(FPRIME_SETTINGS_FILE "${FPRIME_SETTINGS_FILE}" CACHE PATH "F prime settings file" FORCE)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${FPRIME_SETTINGS_FILE}")
+endif()
+if (DEFINED FPRIME_ENVIRONMENT_FILE)
+    get_filename_component(FPRIME_ENVIRONMENT_FILE  "${FPRIME_ENVIRONMENT_FILE}" ABSOLUTE)
+    set(FPRIME_ENVIRONMENT_FILE "${FPRIME_ENVIRONMENT_FILE}" CACHE PATH "F prime environment file" FORCE)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${FPRIME_ENVIRONMENT_FILE}")
+endif()
+
+# Set FPRIME_TOOLCHAIN_NAME when not set by toolchain directly
+if (NOT DEFINED FPRIME_TOOLCHAIN_NAME)
+    if (DEFINED CMAKE_TOOLCHAIN_FILE)
+        get_filename_component(FPRIME_TOOLCHAIN_NAME "${CMAKE_TOOLCHAIN_FILE}" NAME_WE CACHE)
+    else()
+        set(FPRIME_TOOLCHAIN_NAME "native" CACHE INTERNAL "Name of toolchain used" FORCE)
+    endif()
+endif()
+```
+
+### `required.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/required.cmake`
+
+
+```cmake
+####
+# required.cmake:
+#
+# Required tools for the fprime CMake system. This system pre-checks all the tools needed to generate and build through
+# cmake. These items are strictly required and will fail if not found, which will prevent confusing errors further
+# within the build process.
+####
+include_guard()
+include(autocoder/fpp)
+
+find_program(PYTHON NAMES python3 python)
+find_program(FPUTIL NAMES fprime-util)
+
+locate_fpp_tools()
+
+set(FPRIME__INTERNAL_FRAGMENT "pip install -r \"${FPRIME_FRAMEWORK_PATH}/requirements.txt\"")
+set(FPRIME__INTERNAL_TO_INSTALL_MESSAGE "Install with:\n  '${FPRIME__INTERNAL_FRAGMENT}'")
+set(FPRIME__INTERNAL_TO_REINSTALL "Reinstall with:\n  '${FPRIME__INTERNAL_FRAGMENT} -U --force-reinstall'")
+# Check python was found
+if (NOT FPUTIL)
+    message(FATAL_ERROR " fprime-util was not found. ${FPRIME__INTERNAL_TO_INSTALL_MESSAGE}")
+elseif (NOT PYTHON)
+    message(FATAL_ERROR " python3 was not found. Please see: https://www.python.org/downloads/")
+elseif (DEFINED FPP_ERROR_MESSAGE)
+    message(FATAL_ERROR " ${FPP_ERROR_MESSAGE}")
+elseif (DEFINED FPP_REINSTALL_ERROR_MESSAGE)
+    message(FATAL_ERROR " ${FPP_REINSTALL_ERROR_MESSAGE}. ${FPRIME__INTERNAL_TO_REINSTALL}")
+elseif(NOT FPP_FOUND)
+    message(FATAL_ERROR " fpp tools not found. ${FPRIME__INTERNAL_TO_INSTALL_MESSAGE}")
+endif()
+
+
+
+message(STATUS "[python3] python3 found at: ${PYTHON}")
+message(STATUS "[fpp-tools] fpp-depend found at: ${FPP_DEPEND}")
+message(STATUS "[fpp-tools] fpp-to-cpp found at: ${FPP_TO_CPP}")
+message(STATUS "[fpp-tools] fpp-to-dict found at: ${FPP_TO_DICT}")
+message(STATUS "[fpp-tools] fpp-locate-defs found at: ${FPP_LOCATE_DEFS}")
+```
+
+### `sanitizers.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/sanitizers.cmake`
+
+
+```cmake
+####
+# sanitizers.cmake:
+#
+# Enables sanitizers in the build settings when requested by the user with -DENABLE_SANITIZER_<...>=ON.
+#
+# Sanitizers, by default, output their logs to stderr. To redirect the output to files instead, use the 
+# `log_path` option from the sanitizer <SAN>_OPTIONS environment variable at runtime. For example, with UBSAN:
+# >>> UBSAN_OPTIONS="log_path=/path/to/output_dir/file_prefix" fprime-util check
+# or
+# >>> UBSAN_OPTIONS="log_path=/path/to/output_dir/file_prefix" ./path/to/executable
+#
+# Note: <file_prefix> is a prefix to which the sanitizer will add a unique ID to generate a unique filename.
+# If a relative path is specified, this will be relative to the component's folder **in the build cache** 
+# if using fprime-util check, OR relative to the current directory if running a single executable.
+####
+include_guard()
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    set(SANITIZERS)
+
+    if(ENABLE_SANITIZER_ADDRESS)
+        list(APPEND SANITIZERS "address")
+    endif()
+
+    if(ENABLE_SANITIZER_UNDEFINED_BEHAVIOR)
+        list(APPEND SANITIZERS "undefined")
+    endif()
+
+    if(ENABLE_SANITIZER_LEAK)
+        if(APPLE) 
+            message(STATUS "[WARNING] Leak sanitizer is not supported on macOS")
+        else()
+            list(APPEND SANITIZERS "leak")
+        endif()
+    endif()
+
+    if(ENABLE_SANITIZER_THREAD)
+        if("address" IN_LIST SANITIZERS OR "leak" IN_LIST SANITIZERS)
+            message(STATUS "[WARNING] Thread sanitizer does not work with Address or Leak sanitizer enabled")
+        else()
+            list(APPEND SANITIZERS "thread")
+        endif()
+    endif()
+
+    list(JOIN SANITIZERS "," LIST_OF_SANITIZERS)
+
+    if(LIST_OF_SANITIZERS AND NOT "${LIST_OF_SANITIZERS}" STREQUAL "")
+            message(STATUS "Enabled the following sanitizers: ${LIST_OF_SANITIZERS}")
+            add_compile_options(-fsanitize=${LIST_OF_SANITIZERS})
+            add_link_options(-fsanitize=${LIST_OF_SANITIZERS})
+    endif()
+endif()
+```
+
+### `settings.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/settings.cmake`
+
+
+```cmake
+####
+# settings.cmake:
+#
+# Required build settings for building against the fprime framework. This list **should** be kept small, only setting
+# items that are strictly required for building fprime. Settings must be restricted to items that are required to ensure
+# fprime builds properly.
+#
+# Required settings:
+# - C standard 99
+# - C++ 11 standard, fprime uses C++11 items
+# - UT flags overrides
+####
+include_guard()
+# fprime framework is build with C++11 and C99 support, project may override these settings, but results are not guaranteed
+# when overriding for F Prime framework code.
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+if (NOT DEFINED CMAKE_C_STANDARD)
+    set(CMAKE_C_STANDARD 99)
+    set(CMAKE_C_STANDARD_REQUIRED ON)
+    set(CMAKE_C_EXTENSIONS OFF)
+endif()
+ 
+# fprime unit testing methodology requires the following flags
+if (BUILD_TESTING)
+    add_compile_options(-g -DBUILD_UT)
+endif()
+```
+
+### `utilities.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/utilities.cmake`
+
+
+```cmake
+####
+# utilities.cmake:
+#
+# Utility and support functions for the fprime CMake build system.
+####
+include_guard()
+set_property(GLOBAL PROPERTY C_CPP_ASM_REGEX ".*\.(c|cpp|cc|cxx|S|asm)$")
+
+####
+# Function `sort_buildable_from_non_buildable_sources`:
+#
+# Sorts C/C++ "buildable" sources from other sources. This uses the GLOBAL property C_CPP_ASM_REGEX to
+# determine how to sort. Ideally users would use SOURCES and AUTOCODER_INPUTS to distinguish but this
+# provides some backwards compatibility with the merged SOURCE_FILES variable.
+#
+# - **BUILDABLE_SOURCE_OUTPUT**: output name for buildable sources to be set in parent scope
+# - **NON_BUILDABLE_SOURCE_OUTPUT**: output name for non-buildable sources to be set in parent scope
+####
+function(sort_buildable_from_non_buildable_sources BUILDABLE_SOURCE_OUTPUT NON_BUILDABLE_SOURCE_OUTPUT)
+    get_property(SORT_REGEX GLOBAL PROPERTY C_CPP_ASM_REGEX )
+    set(CPP_LIST_NAME ${ARGN})
+    set(NON_CPP_LIST_NAME ${ARGN})
+    list(FILTER CPP_LIST_NAME INCLUDE REGEX "${SORT_REGEX}")
+    list(FILTER NON_CPP_LIST_NAME EXCLUDE REGEX "${SORT_REGEX}")
+    set("${BUILDABLE_SOURCE_OUTPUT}" ${CPP_LIST_NAME} PARENT_SCOPE)
+    set("${NON_BUILDABLE_SOURCE_OUTPUT}" ${NON_CPP_LIST_NAME} PARENT_SCOPE)
+endfunction()
+
+####
+# Macro `clear_historical_variables`:
+#
+# Clears old variables `MOD_DEPS`, `SOURCE_FILES`, `HEADER_FILES`, etc. from the scope of the
+# caller. This removes accidental uses of these variables within the refactored system from this
+# scope and below.
+#
+# This is a macro to ensure the caller's scope is affected.
+#
+# **ARGN:** passed to the `unset` calls (for things like PARENT_SCOPE)
+####
+function(clear_historical_variables)
+    unset(SOURCE_FILES ${ARGN})
+    unset(MOD_DEPS ${ARGN})
+    unset(HEADER_FILES ${ARGN})
+    unset(UT_SOURCE_FILES ${ARGN})
+    unset(UT_MOD_DEPS ${ARGN})
+    unset(UT_HEADER_FILES ${ARGN})
+endfunction()
+
+####
+# Function `plugin_name`:
+#
+# From a plugin include path retrieve the plugin name. This is the name without any .cmake extension.
+#
+# INCLUDE_PATH: path to plugin
+# OUTPUT_VARIABLE: variable to set in caller's scope with result
+####
+function(plugin_name INCLUDE_PATH OUTPUT_VARIABLE)
+    get_filename_component(TEMP_NAME "${INCLUDE_PATH}" NAME_WE)
+    set("${OUTPUT_VARIABLE}" ${TEMP_NAME} PARENT_SCOPE)
+endfunction(plugin_name)
+
+####
+# Function `generate_individual_function_call`:
+#
+# Generates a routing table entry for the faux cmake_language call for an individual function. This call consists of
+# a single `elseif(name == function and ARGC == ARG_COUNT)` to support a call to the function with ARG_COUNT arguments.
+# This is a helper function intended for use within `generate_faux_cmake_language`.
+#
+# OUTPUT_FILE: file to write these `elseif` blocks into
+# FUNCTION: name of function to write out
+# ARG_COUNT: number of args for this particular invocation of the call
+####
+function(generate_individual_function_call OUTPUT_FILE FUNCTION ARG_COUNT)
+    # Build an invocation string of the form: ${FUNCTION}("${ARGV2}" "${ARGV3}" ..."${ARG_COUNT -1 + 2}")
+    # Notice several properties:
+    #     1. Calling function by a substituted name
+    #     2. Arguments are specifically escaped. Thus **must** be done to ensure that empty, and list arguments are
+    #        correctly handled. Otherwise they randomly expand or disappear
+    #     3. Arg numbers start at 2. This accounts for ARGV0==CALL and ARGV1==Function name in the calling function
+    set(ARG_STRING "")
+    math(EXPR BOUND "${ARG_COUNT} - 1")
+    foreach(ARG_IT RANGE "${BOUND}")
+        math(EXPR ARG_NUM "${ARG_IT} + 2")
+        set(ARG_STRING "${ARG_STRING} \"\${ARGV${ARG_NUM}}\"")
+    endforeach()
+    math(EXPR ARG_NUM "${ARG_COUNT} + 2")
+    set(INVOCATION "${FUNCTION}(${ARG_STRING})")
+    file(APPEND "${FAUX_FILE}" "    elseif (\"\${FUNCTION_NAME}\" STREQUAL ${FUNCTION} AND \${ARGC} EQUAL ${ARG_NUM})\n")
+    file(APPEND "${FAUX_FILE}" "        ${INVOCATION}\n")
+endfunction(generate_individual_function_call)
+
+####
+# Function `generate_faux_cmake_language`:
+#
+# This function is used to setup a fake implementation of `cmake_language` calls on implementations of CMake that
+# predate its creation.  The facsimile is incomplete, but for the purposes of this build system, it will be sufficient
+# meaning that it can route all the plugin functions correctly but specifically **not** arbitrary function calls.
+#
+# Functions supported by this call are expected in the GLOBAL property: CMAKE_LANGUAGE_ROUTE_LIST
+#
+# This is accomplished by writing out a CMake file that contains a macro that looks like the `cmake_language(CALL)`
+# feature but is implemented by an `if (NAME == FUNCTION) FUNCTION() endif()` table. This file is built within and
+# included when finished.
+#
+# In terms of performance:
+#   - Native `cmake_language(CALL)` is incredibly fast
+#   - This faux implementation is slow
+#   - Repetitive including of .cmake files to "switch" implementations (as done in fprime v3.0.0) is **much** slower
+####
+function(generate_faux_cmake_language)
+    set(FAUX_FILE "${CMAKE_BINARY_DIR}/cmake_language.cmake")
+    set(ARG_MAX 5)
+    file(WRITE  "${FAUX_FILE}" "#### AUTOGENERATED, DO NOT EDIT ####\n")
+    file(APPEND "${FAUX_FILE}" "macro(cmake_language ACTION FUNCTION_NAME)\n")
+    file(APPEND "${FAUX_FILE}" "    if (NOT \"\${ACTION}\" STREQUAL \"CALL\")\n")
+    file(APPEND "${FAUX_FILE}" "        message(FATAL_ERROR \"Cannot use \${ACTION} with faux cmake_language\")\n")
+    file(APPEND "${FAUX_FILE}" "    elseif (NOT COMMAND \"\${FUNCTION_NAME}\")\n")
+    file(APPEND "${FAUX_FILE}" "        message(FATAL_ERROR \"Unknown function \${FUNCTION_NAME} supplied to faux cmake_language\")\n")
+    # Generate one if block set for each function in the routing database
+    get_property(FUNCTIONS GLOBAL PROPERTY CMAKE_LANGUAGE_ROUTE_LIST)
+    foreach(FUNCTION IN LISTS FUNCTIONS)
+        if (CMAKE_DEBUG_OUTPUT)
+            math(EXPR ARG_TOP "${ARG_MAX} + 2")
+            message(STATUS "Mimicking cmake_language(CALL ${FUNCTION} \"\${ARGV2}\" ... \"\${ARGV${ARG_TOP}}\"")
+        endif()
+        foreach(ARG_COUNT RANGE "${ARG_MAX}")
+            generate_individual_function_call("${FAUX_FILE}" "${FUNCTION}" ${ARG_COUNT})
+        endforeach()
+        file(APPEND "${FAUX_FILE}" "    elseif (\"\${FUNCTION_NAME}\" STREQUAL ${FUNCTION})\n")
+        file(APPEND "${FAUX_FILE}" "        message(FATAL_ERROR \"Faux cmake_language called with too-many arguments: \${ARGC}\")\n")
+    endforeach()
+    file(APPEND "${FAUX_FILE}" "    endif()\n")
+    file(APPEND "${FAUX_FILE}" "endmacro(cmake_language)\n")
+    include("${FAUX_FILE}")
+endfunction()
+
+####
+# Function `plugin_include_helper`:
+#
+# Designed to help include API files (targets, autocoders) in an efficient way within CMake. This function imports a
+# CMake file and defines a `dispatch_<function>(PLUGIN_NAME ...)` function for each function name in ARGN. Thus users
+# of the imported plugin can call `dispatch_<function>(PLUGIN_NAME ...)` to dispatch a function as implemented in a
+# plugin.
+#
+# OUTPUT_VARIABLE: set with the plugin name that has last been included
+# INCLUDE_PATH: path to file to include
+####
+function(plugin_include_helper OUTPUT_VARIABLE INCLUDE_PATH)
+    plugin_name("${INCLUDE_PATH}" PLUGIN_NAME)
+    # Get the global property of all function items
+    get_property(TEMP_LIST GLOBAL PROPERTY CMAKE_LANGUAGE_ROUTE_LIST)
+    set(CHANGED FALSE)
+    foreach(PLUGIN_FUNCTION IN LISTS ARGN)
+        # Include the file if we have not found the prefixed function name yet
+        if (NOT COMMAND "${PLUGIN_NAME}_${PLUGIN_FUNCTION}")
+            include("${INCLUDE_PATH}")
+        endif()
+        # Add the function if any of the set were determined missing
+        if (NOT "${PLUGIN_NAME}_${PLUGIN_FUNCTION}" IN_LIST TEMP_LIST)
+            set_property(GLOBAL APPEND PROPERTY CMAKE_LANGUAGE_ROUTE_LIST "${PLUGIN_NAME}_${PLUGIN_FUNCTION}")
+            set(CHANGED TRUE)
+        endif()
+    endforeach()
+
+    # If cmake_language is not available, we have to implement it
+    if(CHANGED AND ${CMAKE_VERSION} VERSION_LESS "3.18.0")
+        generate_faux_cmake_language()
+    endif()
+    set("${OUTPUT_VARIABLE}" "${PLUGIN_NAME}" PARENT_SCOPE)
+endfunction(plugin_include_helper)
+
+####
+# starts_with:
+#
+# Check if the string input starts with the given prefix. Sets OUTPUT_VAR to TRUE when it does and sets OUTPUT_VAR to
+# FALSE when it does not. OUTPUT_VAR is the name of the variable in PARENT_SCOPE that will be set.
+#
+# Note: regexs in CMake are known to be inefficient. Thus `starts_with` and `ends_with` are implemented without them
+# in order to ensure speed.
+#
+# OUTPUT_VAR: variable to set
+# STRING: string to check
+# PREFIX: expected ending
+####
+function(starts_with OUTPUT_VAR STRING PREFIX)
+    set("${OUTPUT_VAR}" FALSE PARENT_SCOPE)
+    string(LENGTH "${PREFIX}" PREFIX_LENGTH)
+    string(SUBSTRING "${STRING}" "0" "${PREFIX_LENGTH}" FOUND_PREFIX)
+    # Check the substring
+    if (FOUND_PREFIX STREQUAL "${PREFIX}")
+        set("${OUTPUT_VAR}" TRUE PARENT_SCOPE)
+    endif()
+endfunction(starts_with)
+
+####
+# ends_with:
+#
+# Check if the string input ends with the given suffix. Sets OUTPUT_VAR to TRUE when it does and  sets OUTPUT_VAR to
+# FALSE when it does not. OUTPUT_VAR is the name of the variable in PARENT_SCOPE that will be set.
+#
+# Note: regexs in CMake are known to be inefficient. Thus `starts_with` and `ends_with` are implemented without them
+# in order to ensure speed.
+#
+# OUTPUT_VAR: variable to set
+# STRING: string to check
+# SUFFIX: expected ending
+####
+function(ends_with OUTPUT_VAR STRING SUFFIX)
+    set("${OUTPUT_VAR}" FALSE PARENT_SCOPE)
+    string(LENGTH "${STRING}" INPUT_LENGTH)
+    string(LENGTH "${SUFFIX}" SUFFIX_LENGTH)
+    if (INPUT_LENGTH GREATER_EQUAL SUFFIX_LENGTH)
+        # Calculate the substring of suffix length at end of string
+        math(EXPR START "${INPUT_LENGTH} - ${SUFFIX_LENGTH}")
+        string(SUBSTRING "${STRING}" "${START}" "${SUFFIX_LENGTH}" FOUND_SUFFIX)
+        # Check the substring
+        if (FOUND_SUFFIX STREQUAL "${SUFFIX}")
+            set("${OUTPUT_VAR}" TRUE PARENT_SCOPE)
+        endif()
+    endif()
+endfunction(ends_with)
+
+####
+# init_variables:
+#
+# Initialize all variables passed in to empty variables in the calling scope.
+####
+function(init_variables)
+    foreach (VARIABLE IN LISTS ARGN)
+        set(${VARIABLE} "" PARENT_SCOPE)
+    endforeach()
+endfunction(init_variables)
+
+####
+# normalize_paths:
+#
+# Take in any number of lists of paths and normalize the paths returning a single list.
+# OUTPUT_NAME: name of variable to set in parent scope
+####
+function(normalize_paths OUTPUT_NAME)
+    set(OUTPUT_LIST)
+    # Loop over the list and check
+    foreach (PATH_LIST IN LISTS ARGN)
+        foreach(PATH IN LISTS PATH_LIST)
+            get_filename_component(PATH "${PATH}" ABSOLUTE)
+            list(APPEND OUTPUT_LIST "${PATH}")
+        endforeach()
+    endforeach()
+    set(${OUTPUT_NAME} "${OUTPUT_LIST}" PARENT_SCOPE)
+endfunction(normalize_paths)
+
+####
+# resolve_dependencies:
+#
+# Sets OUTPUT_VAR in parent scope to be the set of dependencies in canonical form: relative path from root replacing
+# directory separators with "_".  E.g. fprime/Fw/Time becomes Fw_Time.
+#
+# OUTPUT_VAR: variable to fill in parent scope
+# ARGN: list of dependencies to resolve
+####
+function(resolve_dependencies OUTPUT_VAR)
+    # Resolve all dependencies
+    set(RESOLVED)
+    foreach(DEPENDENCY IN LISTS ARGN)
+        # No resolution is done on linker-only dependencies
+        linker_only(LINKER_ONLY "${DEPENDENCY}")
+        if (LINKER_ONLY)
+            list(APPEND RESOLVED "${DEPENDENCY}")
+            continue()
+        endif()
+        get_module_name(${DEPENDENCY})
+        if (NOT MODULE_NAME IN_LIST RESOLVED)
+            list(APPEND RESOLVED "${MODULE_NAME}")
+        endif()
+    endforeach()
+    set(${OUTPUT_VAR} "${RESOLVED}" PARENT_SCOPE)
+endfunction(resolve_dependencies)
+
+####
+# Function `is_target_real`:
+#
+# Does this target represent a real item (executable, library)? OUTPUT is set to TRUE when real, and FALSE otherwise.
+# Non-real targets include TARGET_TYPE=UTILITY and ALIASED_TARGET.
+#
+# OUTPUT: variable to set
+# TEST_TARGET: target to set
+####
+function(is_target_real OUTPUT TEST_TARGET)
+    if (TARGET "${DEPENDENCY}")
+        get_target_property(TARGET_TYPE "${DEPENDENCY}" TYPE)
+        # Make sure this is not a utility target
+        get_target_property(IS_ALIAS "${TEST_TARGET}" ALIASED_TARGET)
+        if (NOT TARGET_TYPE STREQUAL "UTILITY" AND NOT IS_ALIAS)
+            set("${OUTPUT}" TRUE PARENT_SCOPE)
+            return()
+        endif()
+    endif()
+    set("${OUTPUT}" FALSE PARENT_SCOPE)
+endfunction()
+
+####
+# Function `is_target_library`:
+#
+# Does this target represent a real library? OUTPUT is set to TRUE when real, and FALSE otherwise.
+#
+# OUTPUT: variable to set
+# TEST_TARGET: target to set
+####
+function(is_target_library OUTPUT TEST_TARGET)
+    set("${OUTPUT}" FALSE PARENT_SCOPE)
+    if (TARGET "${TEST_TARGET}")
+        get_target_property(TARGET_TYPE "${TEST_TARGET}" TYPE)
+        ends_with(IS_LIBRARY "${TARGET_TYPE}" "_LIBRARY")
+        set("${OUTPUT}" "${IS_LIBRARY}" PARENT_SCOPE)
+    endif()
+endfunction()
+
+####
+# linker_only:
+#
+# Checks if a given dependency should be supplied to the linker only. These will not be supplied as CMake dependencies
+# but will be supplied as link libraries. These tokens are of several types:
+#
+# 1. Linker flags: starts with -l
+# 2. Existing Files: accounts for preexisting libraries shared and otherwise
+#
+# OUTPUT_VAR: variable to set in PARENT_SCOPE to TRUE/FALSE
+# TOKEN: token to check if "linker only"
+####
+function(linker_only OUTPUT_VAR TOKEN)
+    set("${OUTPUT_VAR}" FALSE PARENT_SCOPE)
+    starts_with(IS_LINKER_FLAG "${TOKEN}" "-l")
+    if (IS_LINKER_FLAG OR (EXISTS "${TOKEN}" AND NOT IS_DIRECTORY "${TOKEN}"))
+        set("${OUTPUT_VAR}" TRUE PARENT_SCOPE)
+    endif()
+endfunction()
+
+####
+# build_relative_path:
+#
+# Calculate the path to an item relative to known build paths.  Search is performed in the following order erring if the
+# item is found in multiple paths.
+#
+# INPUT_PATH: input path to search
+# OUTPUT_VAR: output variable to fill
+####
+function(build_relative_path INPUT_PATH OUTPUT_VAR)
+    # Implementation assertion
+    if (NOT DEFINED FPRIME_BUILD_LOCATIONS)
+        message(FATAL_ERROR "FPRIME_BUILD_LOCATIONS not set before build_relative_path was called")
+    endif()
+    normalize_paths(FPRIME_LOCS_NORM ${FPRIME_BUILD_LOCATIONS})
+    normalize_paths(INPUT_PATH ${INPUT_PATH})
+    foreach(PARENT IN LISTS FPRIME_LOCS_NORM)
+        string(REGEX REPLACE "${PARENT}/(.*)$" "\\1" LOC_TEMP "${INPUT_PATH}")
+        if (NOT LOC_TEMP STREQUAL INPUT_PATH AND NOT LOC_TEMP MATCHES "${LOC}$")
+            message(FATAL_ERROR "Found ${INPUT_PATH} at multiple locations: ${LOC} and ${LOC_TEMP}")
+        elseif(NOT LOC_TEMP STREQUAL INPUT_PATH AND NOT DEFINED LOC)
+            set(LOC "${LOC_TEMP}")
+        endif()
+    endforeach()
+    if (LOC STREQUAL "")
+        message(FATAL_ERROR "Failed to find location for: ${INPUT_PATH}")
+    endif()
+    set(${OUTPUT_VAR} ${LOC} PARENT_SCOPE)
+endfunction(build_relative_path)
+
+####
+# on_any_changed:
+#
+# Sets VARIABLE to true if any file has been noted as changed from the "on_changed" function.  Will create cache files
+# in the binary directory.  Please see: on_changed
+#
+# INPUT_FILES: files to check for changes
+# ARGN: passed into execute_process via on_changed call
+####
+function (on_any_changed INPUT_FILES VARIABLE)
+    foreach(INPUT_FILE IN LISTS INPUT_FILES)
+        on_changed("${INPUT_FILE}" TEMP_ON_CHANGED ${ARGN})
+        if (TEMP_ON_CHANGED)
+            set(${VARIABLE} TRUE PARENT_SCOPE)
+            return()
+        endif()
+    endforeach()
+    set(${VARIABLE} FALSE PARENT_SCOPE)
+endfunction()
+
+####
+# on_changed:
+#
+# Sets VARIABLE to true if and only if the given file has changed since the last time this function was invoked. It will
+# create "${INPUT_FILE}.prev" in the binary directory as a cache from the previous invocation. The result is always TRUE
+# unless a successful no-difference is calculated.
+#
+# INPUT_FILE: file to check if it has changed
+# ARGN: passed into execute_process
+####
+function (on_changed INPUT_FILE VARIABLE)
+    get_filename_component(INPUT_BASENAME "${INPUT_FILE}" NAME)
+    set(PREVIOUS_FILE "${CMAKE_CURRENT_BINARY_DIR}/${INPUT_BASENAME}.prev")
+
+    execute_process(COMMAND "${CMAKE_COMMAND}" -E compare_files "${INPUT_FILE}" "${PREVIOUS_FILE}"
+                    RESULT_VARIABLE difference OUTPUT_QUIET ERROR_QUIET)
+    # Files are the same, leave this function
+    if (difference EQUAL 0)
+        set(${VARIABLE} FALSE PARENT_SCOPE)
+        return()
+    endif()
+    set(${VARIABLE} TRUE PARENT_SCOPE)
+    # Update the file with the latest
+    if (EXISTS "${INPUT_FILE}")
+        execute_process(COMMAND "${CMAKE_COMMAND}" -E copy "${INPUT_FILE}" "${PREVIOUS_FILE}" OUTPUT_QUIET)
+    endif()
+endfunction()
+
+####
+# read_from_lines:
+#
+# Reads a set of variables from a newline delimited test base. This will read each variable as a separate line. It is
+# based on the number of arguments passed in.
+####
+function (read_from_lines CONTENT)
+    # Loop through each arg
+    foreach(NAME IN LISTS ARGN)
+        string(REGEX MATCH   "^([^\r\n]+)" VALUE "${CONTENT}")
+        string(REGEX REPLACE "^([^\r\n]*)\r?\n(.*)" "\\2" CONTENT "${CONTENT}")
+        set(${NAME} "${VALUE}" PARENT_SCOPE)
+    endforeach()
+endfunction()
+
+####
+# Function `full_path_from_build_relative_path`:
+#
+# Creates a full path from the shortened build-relative path.
+# -**SHORT_PATH:** build relative path
+# Return: full path from relative path
+####
+function(full_path_from_build_relative_path SHORT_PATH OUTPUT_VARIABLE)
+    foreach(FPRIME_LOCATION IN LISTS FPRIME_BUILD_LOCATIONS)
+        if (EXISTS "${FPRIME_LOCATION}/${SHORT_PATH}")
+            set("${OUTPUT_VARIABLE}" "${FPRIME_LOCATION}/${SHORT_PATH}" PARENT_SCOPE)
+            return()
+        endif()
+    endforeach()
+    set("${OUTPUT_VARIABLE}" "" PARENT_SCOPE)
+endfunction(full_path_from_build_relative_path)
+
+####
+# Function `get_nearest_build_root`:
+#
+# Finds the nearest build root from ${FPRIME_BUILD_LOCATIONS} that is a parent of DIRECTORY_PATH.
+#
+# - **DIRECTORY_PATH:** path to detect nearest build root
+# Return: nearest parent from ${FPRIME_BUILD_LOCATIONS}
+####
+function(get_nearest_build_root DIRECTORY_PATH)
+    get_filename_component(DIRECTORY_PATH "${DIRECTORY_PATH}" ABSOLUTE)
+    set(FOUND_BUILD_ROOT "${DIRECTORY_PATH}")
+    set(LAST_REL "${DIRECTORY_PATH}")
+    foreach(FPRIME_BUILD_LOC ${FPRIME_BUILD_LOCATIONS} ${CMAKE_BINARY_DIR}/F-Prime ${CMAKE_BINARY_DIR})
+        get_filename_component(FPRIME_BUILD_LOC "${FPRIME_BUILD_LOC}" ABSOLUTE)
+        file(RELATIVE_PATH TEMP_MODULE ${FPRIME_BUILD_LOC} ${DIRECTORY_PATH})
+        string(LENGTH "${LAST_REL}" LEN1)
+        string(LENGTH "${TEMP_MODULE}" LEN2)
+        if (LEN2 LESS LEN1 AND TEMP_MODULE MATCHES "^[^./].*")
+            set(FOUND_BUILD_ROOT "${FPRIME_BUILD_LOC}")
+            set(LAST_REL "${TEMP_MODULE}")
+        endif()
+    endforeach()
+    if ("${FOUND_BUILD_ROOT}" STREQUAL "${DIRECTORY_PATH}")
+        message(FATAL_ERROR "No build root found for: ${DIRECTORY_PATH}")
+    endif()
+    set(FPRIME_CLOSEST_BUILD_ROOT "${FOUND_BUILD_ROOT}" PARENT_SCOPE)
+endfunction()
+####
+# Function `get_module_name`:
+#
+# Takes a path, or something path-like and returns the module's name. This breaks down as the
+# following:
+#
+#  1. If passed a path, the module name is the '_'ed variant of the relative path from BUILD_ROOT
+#  2. If passes something which does not exist on the file system, it is just '_'ed
+#
+# i.e. ${BUILD_ROOT}/Svc/EventManager becomes Svc_EventManager
+#      Svc/EventManager also becomes Svc_EventManager
+#
+# - **DIRECTORY_PATH:** (optional) path to infer MODULE_NAME from. Default: CMAKE_CURRENT_LIST_DIR
+# - **Return: MODULE_NAME** (set in parent scope)
+####
+function(get_module_name)
+    # Set optional arguments
+    if (ARGN)
+        set(DIRECTORY_PATH "${ARGN}")
+    else()
+        set(DIRECTORY_PATH "${CMAKE_CURRENT_LIST_DIR}")
+    endif()
+    resolve_path_variables(DIRECTORY_PATH)
+    # If DIRECTORY_PATH exists, then find its offset from BUILD_ROOT to calculate the module
+    # name. If it does not exist, then it is assumed to be an offset already and is carried
+    # forward in the calculation.
+    if (EXISTS ${DIRECTORY_PATH} AND IS_ABSOLUTE ${DIRECTORY_PATH})
+        # Module names a based on the current directory, not a file
+        if (NOT IS_DIRECTORY ${DIRECTORY_PATH})
+            get_filename_component(DIRECTORY_PATH "${DIRECTORY_PATH}" DIRECTORY)
+        endif()
+        # Get path name relative to the root directory
+        get_nearest_build_root(${DIRECTORY_PATH})
+        File(RELATIVE_PATH TEMP_MODULE_NAME ${FPRIME_CLOSEST_BUILD_ROOT} ${DIRECTORY_PATH})
+    else()
+        set(TEMP_MODULE_NAME ${DIRECTORY_PATH})
+    endif()
+    # Replace slash with underscore to have valid name
+    string(REPLACE "/" "_" TEMP_MODULE_NAME ${TEMP_MODULE_NAME})
+    set(MODULE_NAME ${TEMP_MODULE_NAME} PARENT_SCOPE)
+endfunction(get_module_name)
+
+####
+# Function `get_expected_tool_version`:
+#
+# Gets the expected tool version named using version identifier VID to name the tools package
+# file. This will be returned via the variable supplied in FILL_VARIABLE setting it in PARENT_SCOPE.
+####
+function(get_expected_tool_version VID FILL_VARIABLE)
+    find_program(TOOLS_CHECK NAMES fprime-version-check REQUIRED)
+
+    # Try project root as a source
+    set(REQUIREMENT_FILE "${FPRIME_PROJECT_ROOT}/requirements.txt")
+    if (EXISTS "${REQUIREMENT_FILE}")
+        execute_process(COMMAND "${TOOLS_CHECK}" "${VID}" "${REQUIREMENT_FILE}" OUTPUT_VARIABLE VERSION_TEXT ERROR_VARIABLE ERRORS RESULT_VARIABLE RESULT_OUT OUTPUT_STRIP_TRAILING_WHITESPACE)
+        if (CMAKE_DEBUG_OUTPUT)
+            message(STATUS "[VERSION] Could not detect version from: ${REQUIREMENT_FILE}. ${ERRORS}")
+        endif()
+        if (RESULT_OUT EQUAL 0)
+            set("${FILL_VARIABLE}" "${VERSION_TEXT}" PARENT_SCOPE)
+            return()
+        endif()
+    endif()
+    # Fallback to requirements.txt in fprime
+    set(REQUIREMENT_FILE "${FPRIME_FRAMEWORK_PATH}/requirements.txt")
+    execute_process(COMMAND "${TOOLS_CHECK}" "${VID}" "${REQUIREMENT_FILE}" OUTPUT_VARIABLE VERSION_TEXT ERROR_VARIABLE ERRORS RESULT_VARIABLE RESULT_OUT OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if (RESULT_OUT EQUAL 0)
+        set("${FILL_VARIABLE}" "${VERSION_TEXT}" PARENT_SCOPE)
+        return()
+    endif()
+    message(WARNING "[VERSION] Could not detect version from: ${REQUIREMENT_FILE}. ${ERRORS}. Skipping check.")
+    set("${FILL_VARIABLE}" "" PARENT_SCOPE)
+endfunction(get_expected_tool_version)
+
+####
+# Function `set_assert_flags`:
+#
+# Adds a -DASSERT_FILE_ID=(First 8 digits of MD5) to each source file, and records the output in
+# hashes.txt. This allows for asserts on file ID not string. Also adds the -DASSERT_RELATIVE_PATH
+# flag for handling relative path asserts.
+####
+function(set_assert_flags SRC)
+    if (NOT SRC MATCHES "^[$].*") # skip if generator expression
+        get_nearest_build_root("${SRC}") # sets FPRIME_CLOSEST_BUILD_ROOT in current scope
+    endif()
+    get_filename_component(FPRIME_CLOSEST_BUILD_ROOT_ABS "${FPRIME_CLOSEST_BUILD_ROOT}" ABSOLUTE)
+    get_filename_component(FPRIME_PROJECT_ROOT_ABS "${FPRIME_PROJECT_ROOT}" ABSOLUTE)
+    string(REPLACE "${FPRIME_CLOSEST_BUILD_ROOT_ABS}/" "" SHORT_SRC "${SRC}")
+    string(REPLACE "${FPRIME_PROJECT_ROOT_ABS}/" "" SHORT_SRC "${SHORT_SRC}")
+
+    string(MD5 HASH_VAL "${SHORT_SRC}")
+    string(SUBSTRING "${HASH_VAL}" 0 8 HASH_32)
+    file(APPEND "${CMAKE_BINARY_DIR}/hashes.txt" "${SHORT_SRC}: 0x${HASH_32}\n")
+    SET_SOURCE_FILES_PROPERTIES(${SRC} PROPERTIES COMPILE_FLAGS "-DASSERT_FILE_ID=0x${HASH_32} -DASSERT_RELATIVE_PATH='\"${SHORT_SRC}\"'")
+endfunction(set_assert_flags)
+
+
+####
+# Function `print_property`:
+#
+# Prints a given property for the module.
+# - **TARGET**: target to print properties
+# - **PROPERTY**: name of property to print
+####
+function (print_property TARGET PROPERTY)
+    get_target_property(OUT "${TARGET}" "${PROPERTY}")
+    if (NOT OUT MATCHES ".*-NOTFOUND")
+        message(STATUS "[F´ Module] ${TARGET} ${PROPERTY}:")
+        foreach (PROPERTY IN LISTS OUT)
+            message(STATUS "[F´ Module]    ${PROPERTY}")
+        endforeach()
+    endif()
+endfunction(print_property)
+
+####
+# Function `introspect`:
+#
+# Prints the dependency list of the module supplied as well as the include directories.
+#
+# - **MODULE_NAME**: module name to print dependencies
+####
+function(introspect MODULE_NAME)
+    print_property("${MODULE_NAME}" SOURCES)
+    print_property("${MODULE_NAME}" SUPPLIED_HEADERS)
+    print_property("${MODULE_NAME}" INCLUDE_DIRECTORIES)
+    print_property("${MODULE_NAME}" LINK_LIBRARIES)
+    print_property("${MODULE_NAME}" INTERFACE_LINK_LIBRARIES)
+endfunction(introspect)
+
+####
+# Function `execute_process_or_fail`:
+#
+# Calls CMake's `execute_process` with the arguments passed in via ARGN. This call is wrapped to print out the command
+# line invocation when CMAKE_DEBUG_OUTPUT is set ON, and will check that the command processes correctly.  Any error
+# message is output should the command fail. No handling is done of standard error.
+#
+# Errors are determined by checking the process's return code where a FATAL_ERROR is produced on non-zero.
+#
+# - **ERROR_MESSAGE**: message to output should an error occurs
+####
+function(execute_process_or_fail ERROR_MESSAGE)
+    # Quiet standard output unless we are doing verbose output (handled below)
+    set(OUTPUT_ARGS OUTPUT_QUIET)
+    # Print the invocation if debug output is set
+    if (CMAKE_DEBUG_OUTPUT)
+        set(OUTPUT_ARGS)
+        set(COMMAND_AS_STRING "")
+        foreach(ARG IN LISTS ARGN)
+            set(COMMAND_AS_STRING "${COMMAND_AS_STRING}\"${ARG}\" ")
+        endforeach()
+        message(STATUS "[cli] ${COMMAND_AS_STRING}")
+    endif()
+    # Ninja pipes stderr to stdout so remove quiet output to see errors
+    if (CMAKE_GENERATOR MATCHES "Ninja")
+        set(OUTPUT_ARGS)
+    endif()
+    execute_process(
+        COMMAND ${ARGN}
+        RESULT_VARIABLE RETURN_CODE
+        OUTPUT_VARIABLE STANDARD_OUTPUT
+        ERROR_VARIABLE STANDARD_ERROR
+        ERROR_STRIP_TRAILING_WHITESPACE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ${OUTPUT_ARGS}
+    )
+    if (NOT RETURN_CODE EQUAL 0)
+        set(FATAL_MESSAGE "${ERROR_MESSAGE}:\n${STANDARD_ERROR}")
+        # Ninja pipes stderr to stdout so we have to print stdout to see errors
+        if (CMAKE_GENERATOR MATCHES "Ninja")
+            string(APPEND FATAL_MESSAGE "\n${STANDARD_OUTPUT}")
+        endif()
+        message(FATAL_ERROR "${FATAL_MESSAGE}")
+    endif()
+endfunction()
+
+####
+# Function `append_list_property`:
+#
+# Appends the NEW_ITEM to a property. ARGN is a set of arguments that are passed into the get and set property calls.
+# This function calls get_property with ARGN appends NEW_ITEM to the result and then turns around and calls set_property
+# with the new list. Callers **should not** supply the variable name argument to get_property.
+#
+# Duplicate entries are removed.
+#
+# Args:
+# - `NEW_ITEM`: item to append to the property
+# - `ARGN`: list of arguments forwarded to get and set property calls.
+####
+function(append_list_property NEW_ITEM)
+    get_property(LOCAL_COPY ${ARGN})
+    list(APPEND LOCAL_COPY ${NEW_ITEM})
+    list(REMOVE_DUPLICATES LOCAL_COPY)
+    set_property(${ARGN} "${LOCAL_COPY}")
+endfunction()
+
+####
+# Function `filter_lists`:
+#
+# Filters lists set in ARGN to to ensure that they are not in the exclude list. Sets the <LIST>_FILTERED variable in
+# PARENT_SCOPE with the results
+# **EXCLUDE_LIST**: list of items to filter-out of ARGN lists
+# **ARGN:** list of list names in parent scope to filter
+####
+function (filter_lists EXCLUDE_LIST)
+    foreach(SOURCE_LIST IN LISTS ARGN)
+        set(${SOURCE_LIST}_FILTERED "")
+        foreach(SOURCE IN LISTS ${SOURCE_LIST})
+            if (NOT SOURCE IN_LIST EXCLUDE_LIST)
+                list(APPEND ${SOURCE_LIST}_FILTERED "${SOURCE}")
+            endif()
+        endforeach()
+        set(${SOURCE_LIST}_FILTERED "${${SOURCE_LIST}_FILTERED}" PARENT_SCOPE)
+    endforeach()
+endfunction(filter_lists)
+
+####
+# Function `get_fprime_library_option_string`:
+#
+# Returns a standard library option string from a name. Library option strings are derived from the directory and
+# converted to a set of valid characters: [A-Z0-9_]. Alphabetic characters are made uppercase, numeric characters are
+# maintained, and other characters are replaced with _.
+#
+# If multiple directories convert to the same name, these are effectively merged with respect to library options.
+#
+# OUTPUT_VAR: output variable to be set in parent scope
+# LIBRARY_NAME: library name to convert to option
+####
+function(get_fprime_library_option_string OUTPUT_VAR LIBRARY_NAME)
+    string(TOUPPER "${LIBRARY_NAME}" LIBRARY_NAME_UPPER)
+    string(REGEX REPLACE "[^A-Z0-9_]" "_" LIBRARY_OPTION "${LIBRARY_NAME_UPPER}")
+    set("${OUTPUT_VAR}" "${LIBRARY_OPTION}" PARENT_SCOPE)
+endfunction(get_fprime_library_option_string)
+
+####
+# Function `resolve_path_variables`:
+#
+# Resolve paths updating parent scope.  ARGN should contain a list of variables to update.
+#
+# ARGN: list of variables to update
+####
+function(resolve_path_variables)
+    # Loop through all variables
+    foreach (INPUT_NAME IN LISTS ARGN)
+        set(NEW_LIST)
+        # Loop through each item in INPUT_NAME
+        foreach(UNRESOLVED IN LISTS ${INPUT_NAME})
+            get_filename_component(ABSOLUTE_UNRESOLVED "${UNRESOLVED}" ABSOLUTE)
+            # If it is a path, resolve it
+            if (EXISTS ${ABSOLUTE_UNRESOLVED})
+                get_filename_component(RESOLVED "${ABSOLUTE_UNRESOLVED}" REALPATH)
+            else()
+                set(RESOLVED "${UNRESOLVED}")
+            endif()
+            list(APPEND NEW_LIST "${RESOLVED}")
+        endforeach()
+        set("${INPUT_NAME}" "${NEW_LIST}" PARENT_SCOPE)
+    endforeach()
+endfunction(resolve_path_variables)
+
+####
+# Function `fprime_cmake_fatal_error`:
+#
+# Prints a fatal error message to the user, highlighted with ---- to make it obvious. For multi-line
+# messages, place a \n at the end of the previous message.
+#
+# - **ARGN**: message(s) to print separated by ' 's
+####
+function(fprime_cmake_fatal_error)
+    fprime_cmake_clear_message(FATAL_ERROR ${ARGN})
+endfunction(fprime_cmake_fatal_error)
+
+####
+# Function `fprime_cmake_warning`:
+#
+# Prints a warning message to the user, highlighted with ---- to make it obvious. For multi-line
+# messages, place a \n at the end of the previous message.
+#
+# - **ARGN**: message(s) to print separated by ' 's
+####
+function(fprime_cmake_warning)
+    fprime_cmake_clear_message(WARNING ${ARGN})
+endfunction(fprime_cmake_warning)
+
+####
+# Function `fprime_cmake_debug_message`:
+#
+# Prints a debug message.
+#
+# - **MESSAGE**: message to print
+####
+function(fprime_cmake_debug_message MESSAGE)
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS " [DEBUG] ${MESSAGE}")
+    endif()
+endfunction(fprime_cmake_debug_message)
+
+####
+# Function `fprime__cmake_clear_message`:
+#
+# Prints a message to the user, highlighted with ---- to make it obvious and including the list file
+# that is failing. For multi-line messages, place a \n at the end of the previous message.
+#
+# - **SEVERITY**: message severity to use
+# - **ARGN**: message(s) to print separated by ' 's
+####
+function(fprime_cmake_clear_message SEVERITY)
+    string(REPLACE ";" " " MESSAGE "${ARGN}")
+    message("${SEVERITY}" " ----------------------------------------\n"
+                        " ${MESSAGE} in:\n"
+                        "     ${CMAKE_CURRENT_LIST_FILE}\n"
+                        " ----------------------------------------\n")
+endfunction()
+
+####
+# Macro `fprime_cmake_ASSERT`:
+#
+# Checks condition, prints message. This is a macro so the condition is pasted into the message as well as
+# the conditional clause.
+#
+# - **CONDITION**: condition to evaluate with if (${CONDITION})
+####
+macro(fprime_cmake_ASSERT MESSAGE)
+    # Simplify the evaluation of the condition by not placing NOT in front. Just have a no-op if clause
+    # where the else prints the FATAL message.
+    if (${ARGN})
+    else ()
+        string(REPLACE ";" " " FPRIME_INTERNAL_STRING_FROM_ARGN "${ARGN}")
+        message(FATAL_ERROR " ----------------------------------------\n"
+            " Assertion (${FPRIME_INTERNAL_STRING_FROM_ARGN}) failed with message '${MESSAGE}'. In:\n"
+            "     ${CMAKE_CURRENT_FUNCTION_LIST_FILE}:${CMAKE_CURRENT_FUNCTION_LIST_LINE}\n"
+            " ----------------------------------------\n")
+    endif()
+endmacro()
+
+####
+# Function `recurse_target_properties`:
+#
+# Recurses the supplied PROPERTY_NAMES of the CMAKE_BUILD_TARGET_NAME target. Sets three variables TRANSITIVE_LINKS_OUTPUT, EXTERNAL_LINKS_OUTPUT,
+# and NON_EXISTENT_LINKS_OUTPUT. Where TRANSITIVE_LINKS_OUTPUT holds the transitive values of target/links found in those properties (recursively),
+# EXTERNAL_LINKS_OUTPUT holds IMPORTED type targets found in the recursion, and NON_EXISTENT_LINKS_OUTPUT holds unknown/non-target values found
+# (recursively).
+#
+# NON_EXISTENT_LINKS_OUTPUT will include directly linked files, linker flags, and other non-target values.
+#
+# > [!WARNING]
+# > Properties supplied through PROPERTY_NAMES must be composed of mostly target names (e.g. LINK_LIBRARIES, MANUALLY_ADDED_DEPENDENCIES, etc.)
+#
+# - **CMAKE_BUILD_TARGET_NAME**: name of the target in the CMake system
+# - **PROPERTY_NAMES**: list of properties containing other CMake target names to be read recursively
+# - **TRANSITIVE_LINKS_OUTPUT**: name of output to write transitive links/dependencies in PARENT_SCOPE
+# - **EXTERNAL_LINKS_OUTPUT**: name of output to write external (IMPORTED) links/dependencies in PARENT_SCOPE
+# - **NON_EXISTENT_LINKS_OUTPUT**: name of output to write non-target links/dependencies in PARENT_SCOPE
+####
+function(recurse_target_properties CMAKE_BUILD_TARGET_NAME PROPERTY_NAMES TRANSITIVE_LINKS_OUTPUT EXTERNAL_LINKS_OUTPUT NON_EXISTENT_LINKS_OUTPUT)
+    # Recursive leafs:
+    #  1. This is not a known target
+    #  2. This target has not further links
+
+    # If the current item is not a target, tell the parent that this is a nonexistent entity
+    if (NOT TARGET "${CMAKE_BUILD_TARGET_NAME}")
+        set("${NON_EXISTENT_LINKS_OUTPUT}" "${CMAKE_BUILD_TARGET_NAME}" PARENT_SCOPE)
+        set("${TRANSITIVE_LINKS_OUTPUT}" PARENT_SCOPE)
+        set("${EXTERNAL_LINKS_OUTPUT}" PARENT_SCOPE)
+        return()
+    endif()
+    # If the target is imported, tell the parent that this is an external target
+    get_target_property(IMPORTED_TARGET "${CMAKE_BUILD_TARGET_NAME}" IMPORTED)
+    if (IMPORTED_TARGET)
+        set("${NON_EXISTENT_LINKS_OUTPUT}" PARENT_SCOPE)
+        set("${TRANSITIVE_LINKS_OUTPUT}" PARENT_SCOPE)
+	set("${EXTERNAL_LINKS_OUTPUT}" "${CMAKE_BUILD_TARGET_NAME}" PARENT_SCOPE)
+        return()
+    endif()
+    # Read all supplied properties and add them to the list of items to recurse
+    set(PROPERTY_LIST)
+    foreach(PROPERTY_NAME IN LISTS PROPERTY_NAMES)
+        get_target_property(PROPERTY_LIST_LOOPED "${CMAKE_BUILD_TARGET_NAME}" "${PROPERTY_NAME}")
+        if (PROPERTY_LIST_LOOPED)
+            list(APPEND PROPERTY_LIST ${PROPERTY_LIST_LOOPED})
+        endif()
+    endforeach()
+    list(REMOVE_DUPLICATES PROPERTY_LIST)
+    # When there are no other link libraries below this one, return current target as the singular dependency
+    if (NOT PROPERTY_LIST)
+        set("${NON_EXISTENT_LINKS_OUTPUT}" PARENT_SCOPE)
+        set("${TRANSITIVE_LINKS_OUTPUT}" "${CMAKE_BUILD_TARGET_NAME}" PARENT_SCOPE)
+        set("${EXTERNAL_LINKS_OUTPUT}" PARENT_SCOPE)
+        return()
+    endif()
+    set(PREVIOUSLY_RECURSED ${ARGN} ${CMAKE_BUILD_TARGET_NAME})
+
+    # Look through each current link library using a recursive call
+    set(RECURSED_TRANSITIVE)
+    set(RECURSED_UNKNOWN)
+    set(RECURSED_EXTERNAL)
+    foreach(LINK IN LISTS PROPERTY_LIST)
+        unset(INTERNAL_TRANSITIVE)
+        unset(INTERNAL_UNKNOWN)
+        # Prevent redundant recursion
+        if (NOT LINK IN_LIST PREVIOUSLY_RECURSED AND NOT LINK STREQUAL "")
+            fprime_cmake_ASSERT("'${LINK}' is a null dependency of '${CMAKE_BUILD_TARGET_NAME}'" LINK)
+            # Recurse through each link and append the recursively determined additions to the list
+            # while ensuring there are no duplicates
+            # if("${LINK}" STREQUAL "TRUE")
+            #   message(FATAL_ERROR "BAD MODULE ${CMAKE_BUILD_TARGET_NAME}")
+            # endif()
+            recurse_target_properties("${LINK}" "${PROPERTY_NAMES}" INTERNAL_TRANSITIVE INTERNAL_EXTERNAL INTERNAL_UNKNOWN ${PREVIOUSLY_RECURSED})
+            # The current link must occur in one list or the other
+            fprime_cmake_ASSERT("'${LINK}' must appear in '${INTERNAL_TRANSITIVE}' or '${INTERNAL_UNKNOWN}'"
+		    LINK IN_LIST INTERNAL_TRANSITIVE OR LINK IN_LIST INTERNAL_UNKNOWN OR LINK IN_LIST INTERNAL_EXTERNAL)
+            # Append the lists to the aggregated output
+            list(APPEND RECURSED_TRANSITIVE ${INTERNAL_TRANSITIVE})
+            list(APPEND RECURSED_UNKNOWN ${INTERNAL_UNKNOWN})
+            list(APPEND RECURSED_EXTERNAL ${INTERNAL_EXTERNAL})
+            list(REMOVE_DUPLICATES RECURSED_TRANSITIVE)
+            list(REMOVE_DUPLICATES RECURSED_UNKNOWN)
+            list(REMOVE_DUPLICATES RECURSED_EXTERNAL)
+            # Update previously touched modules
+            list(APPEND PREVIOUSLY_RECURSED ${INTERNAL_TRANSITIVE} ${INTERNAL_UNKNOWN} ${INTERNAL_EXTERNAL})
+            list(REMOVE_DUPLICATES PREVIOUSLY_RECURSED)
+        endif()
+    endforeach()
+    # Return the results of this stage of the recursion
+    set("${NON_EXISTENT_LINKS_OUTPUT}" ${RECURSED_UNKNOWN} PARENT_SCOPE)
+    set("${TRANSITIVE_LINKS_OUTPUT}" ${CMAKE_BUILD_TARGET_NAME} ${RECURSED_TRANSITIVE} PARENT_SCOPE)
+    set("${EXTERNAL_LINKS_OUTPUT}" ${RECURSED_EXTERNAL} PARENT_SCOPE)
+endfunction()
+
+####
+# Function `fprime__internal_target_interceptor`:
+#
+# A function that intercepts calls to target_* functions and translates the scope from PUBLIC to INTERFACE when the
+# target is an INTERFACE target.
+#
+# - **FUNCTION_NAME**: name of the target_* function to intercept
+# - **BUILD_TARGET_NAME**: name of the target to set
+# - **SCOPE**: scope of the target to intercept and change
+# - **ARGN**: arguments to pass to the target_* function
+####
+function(fprime__internal_target_interceptor FUNCTION_NAME BUILD_TARGET_NAME SCOPE)
+    # Get the target type
+    get_target_property(TARGET_TYPE "${BUILD_TARGET_NAME}" TYPE)
+    # If the target is an INTERFACE_LIBRARY, change the scope to INTERFACE
+    if (TARGET_TYPE STREQUAL "INTERFACE_LIBRARY" AND SCOPE STREQUAL "PUBLIC")
+        set(SCOPE INTERFACE)
+    endif()
+    # Call the target_* function with the new scope
+    cmake_language(CALL "${FUNCTION_NAME}" "${BUILD_TARGET_NAME}" "${SCOPE}" ${ARGN})
+endfunction()
+####
+# Function `fprime_target_link_libraries`:
+#
+# This function wraps `target_link_libraries` to ensure that PUBLIC scope additions translate to INTERFACE when
+# the target is an INTERFACE target. This makes it easier to deal with INTERFACE targets.
+#
+# See: target_link_libraries
+####
+function(fprime_target_link_libraries BUILD_TARGET_NAME SCOPE)
+    fprime__internal_target_interceptor("target_link_libraries" "${BUILD_TARGET_NAME}" "${SCOPE}" ${ARGN})
+endfunction()
+
+####
+# Function `fprime_target_include_directories`:
+#
+# This function wraps `target_include_directories` to ensure that PUBLIC scope additions translate to INTERFACE when
+# the target is an INTERFACE target. This makes it easier to deal with INTERFACE targets.
+#
+# See: target_include_directories
+#
+####
+function(fprime_target_include_directories BUILD_TARGET_NAME SCOPE)
+    fprime__internal_target_interceptor("target_include_directories" "${BUILD_TARGET_NAME}" "${SCOPE}" ${ARGN})
+endfunction()
+
+####
+# Function `fprime_target_dependencies`:
+#
+# Adds dependencies to the supplied BUILD_TARGET_NAME properly handling scope (see fprime_target_link_libraries). Adding a dependency
+# involves 2 steps:
+# 1. Adding a link dependency from BUILD_TARGET_NAME to supplied dependencies
+# 2. Append supplied dependencies to the FPRIME_DEPENDENCIES property of BUILD_TARGET_NAME
+#
+# - **BUILD_TARGET_NAME**: name of the target to add dependencies to
+# - **SCOPE**: scope of the target to intercept and change from PUBLIC to INTERFACE for INTERFACE_LIBRARY targets targets
+# - **ARGN**: dependencies to add to the target
+####
+function(fprime_target_dependencies BUILD_TARGET_NAME SCOPE)
+    fprime_target_link_libraries("${BUILD_TARGET_NAME}" "${SCOPE}" ${ARGN})
+    append_list_property("${ARGN}" TARGET "${BUILD_TARGET_NAME}" PROPERTY FPRIME_DEPENDENCIES)
+endfunction()
+```
+
+### `valid-empty.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/valid-empty.cpp`
+
+
+```cpp
+static constexpr bool __INTENTIONALLY_UNUSED_SYMBOL__ = false;
+```

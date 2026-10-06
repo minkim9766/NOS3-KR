@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -20,15 +20,4 @@ upload-progress-dialog/index
 view-object-metadata-dialog/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-list/`](bucket-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/`](bucket-object-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/`](bucket-page-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-placeholder/`](bucket-placeholder/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/`](bucket-properties/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-bucket-dialog/`](create-bucket-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-folder-dialog/`](create-folder-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/rename-object-dialog/`](rename-object-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/`](upload-progress-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/view-object-metadata-dialog/`](view-object-metadata-dialog/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

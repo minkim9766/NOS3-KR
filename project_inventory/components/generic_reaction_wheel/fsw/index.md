@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_reaction_wheel/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ shared/index
 standalone/index
 ```
 
-## 항목
-
-- [`components/generic_reaction_wheel/fsw/cfs/`](cfs/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/fprime/`](fprime/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/shared/`](shared/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/standalone/`](standalone/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,16 +3,156 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/select/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `select.component.html`
 
-file--select.component.html
-file--select.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/select/select.component.html`
+
+
+```html
+<ya-button [matMenuTriggerFor]="selMenu" [icon]="icon()" dropdown="true">
+  @if (label(); as label) {
+    {{ label }}
+  } @else {
+    <span style="color: grey">{{ emptyOption() }}</span>
+  }
+</ya-button>
+@if (showClear()) {
+  <ya-icon-action
+    icon="clear"
+    [padding]="true"
+    [disabled]="!label()"
+    (click)="clearValue()"
+    matTooltip="Clear value" />
+}
+
+<mat-menu #selMenu="matMenu" yPosition="below" class="ya-menu" [overlapTrigger]="false">
+  @for (option of options(); track option) {
+    @if (option.group) {
+      <mat-divider />
+    }
+    <button mat-menu-item (click)="writeValue(option.id)">
+      <mat-icon [style.visibility]="isSelected(option.id) ? 'visible' : 'hidden'">check</mat-icon>
+      {{ option.label }}
+    </button>
+  }
+  @for (option of optionChildren(); track option) {
+    @if (option.group()) {
+      <mat-divider />
+    }
+    <button mat-menu-item (click)="writeValue(option.id())">
+      <mat-icon [style.visibility]="isSelected(option.id()) ? 'visible' : 'hidden'">check</mat-icon>
+      {{ option.label() }}
+    </button>
+  }
+</mat-menu>
 ```
 
-## 항목
+### `select.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/select/select.component.html`](file--select.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/select/select.component.ts`](file--select.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/select/select.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  contentChildren,
+  forwardRef,
+  input,
+  signal,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltip } from '@angular/material/tooltip';
+import { YaButton } from '../button/button.component';
+import { YaIconAction } from '../icon-action/icon-action.component';
+import { YaOption } from '../option/option.component';
+
+export interface YaSelectOption {
+  id: string;
+  label: string;
+  group?: boolean;
+  icon?: string;
+}
+
+@Component({
+  selector: 'ya-select',
+  templateUrl: './select.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaSelect),
+      multi: true,
+    },
+  ],
+  imports: [
+    MatDivider,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTooltip,
+    YaButton,
+    YaIconAction,
+  ],
+})
+export class YaSelect implements ControlValueAccessor {
+  icon = input<string>();
+  emptyOption = input<string>('-- select an option --');
+  showClear = input<boolean>(false);
+
+  // Options are allowed to be provided as children, or
+  // in a single attribute.
+  options = input<YaSelectOption[]>([]);
+  optionChildren = contentChildren(YaOption);
+
+  selected = signal<string | null>(null);
+
+  label = computed(() => {
+    const selectedId = this.selected() || '';
+
+    for (const option of this.options()) {
+      if (option.id === selectedId) {
+        return option.label || option.id;
+      }
+    }
+    for (const option of this.optionChildren()) {
+      if (option.id() === selectedId) {
+        return option.label() || option.id();
+      }
+    }
+    return selectedId;
+  });
+
+  private onChange = (_: string | null) => {};
+
+  public isSelected(id: string) {
+    const value = this.selected();
+    if (id === '') {
+      return value === id || value === null;
+    }
+    return value === id;
+  }
+
+  clearValue() {
+    this.writeValue(null);
+  }
+
+  writeValue(value: any) {
+    this.selected.set(value);
+    this.onChange(value);
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+}
+```

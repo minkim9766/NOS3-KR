@@ -3,18 +3,64 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `session-expired-dialog.component.css`
 
-file--session-expired-dialog.component.css
-file--session-expired-dialog.component.html
-file--session-expired-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/session-expired-dialog.component.css`
+
+
+```css
+.title-bar {
+  display: flex;
+  align-items: center;
+}
+
+.title-bar .material-symbols {
+  padding-right: 4px;
+}
 ```
 
-## 항목
+### `session-expired-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/session-expired-dialog.component.css`](file--session-expired-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/session-expired-dialog.component.html`](file--session-expired-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/session-expired-dialog.component.ts`](file--session-expired-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/session-expired-dialog.component.html`
+
+
+```html
+<div class="title-bar" mat-dialog-title>
+  <mat-icon>offline_bolt</mat-icon>
+  No connection
+</div>
+
+<mat-dialog-content>Connection to Yamcs was lost.</mat-dialog-content>
+
+<mat-dialog-actions>
+  <ya-button appearance="primary" mat-dialog-close (click)="reload()">RELOAD</ya-button>
+</mat-dialog-actions>
+```
+
+### `session-expired-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/session-expired-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-session-expired-dialog',
+  templateUrl: './session-expired-dialog.component.html',
+  styleUrl: './session-expired-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SessionExpiredDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  reload() {
+    window.location.reload();
+  }
+}
+```

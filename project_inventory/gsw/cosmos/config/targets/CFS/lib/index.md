@@ -3,22 +3,598 @@
 
 **경로:** `gsw/cosmos/config/targets/CFS/lib/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bit_field_conversion.rb`
 
-file--bit_field_conversion.rb
-file--cfs_lib.rb
-file--cfs_lib_radio.rb
-file--cosmos_cfs_config.rb
-file--evs_terminal.rb
+**경로:** `gsw/cosmos/config/targets/CFS/lib/bit_field_conversion.rb`
+
+
+```ruby
+require 'cosmos/conversions/conversion'
+
+#
+# Example usage:
+#
+#  APPEND_ITEM    RNG_AND_CNT         16 UINT            "Range"
+#  ITEM           RNG                 0 0 DERIVED        "Config Register State"
+#    READ_CONVERSION bit_field_conversion.rb 'RNG_AND_CNT' 15
+#    STATE LO 0
+#    STATE HI 1
+#  ITEM           RNG_SELECT          0 0 DERIVED        "Range Selection"
+#    READ_CONVERSION bit_field_mask.rb 'RNG_AND_CNT' 14 13
+#    STATE "Autorange"                  0x00
+#    STATE "Manual Low"                 0x02
+#    STATE "Manual Hi"                  0x03
+#
+
+module Cosmos
+  class BitFieldConversion < Conversion
+    def initialize(packet_field, bit_idx)
+      super()
+      @packet_field = packet_field
+      @bit_idx = bit_idx.to_i
+    end
+    def call(value, packet, buffer)
+      mask = 1 << @bit_idx
+      return (packet.read(@packet_field) & mask) >> @bit_idx
+    end
+  end
+end
 ```
 
-## 항목
+### `cfs_lib.rb`
 
-- [`gsw/cosmos/config/targets/CFS/lib/bit_field_conversion.rb`](file--bit_field_conversion.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFS/lib/cfs_lib.rb`](file--cfs_lib.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFS/lib/cfs_lib_radio.rb`](file--cfs_lib_radio.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFS/lib/cosmos_cfs_config.rb`](file--cosmos_cfs_config.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFS/lib/evs_terminal.rb`](file--evs_terminal.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/targets/CFS/lib/cfs_lib.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+
+#
+# Definitions
+#
+CFS_CMD_SLEEP = 0.25
+CFS_RESPONSE_TIMEOUT = 5
+CFS_TEST_LOOP_COUNT = 1
+
+#
+# CCSDS File Delivery Protocol (CF)
+#
+def get_cf_hk()
+    cmd("CFS CF_SEND_HK")
+    wait_check_packet("CFS", "CF_HKPACKET", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+def cf_cmd(*command)
+    count = tlm("CFS CF_HKPACKET CMDCOUNTER") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_CMD_SLEEP)
+    get_cf_hk()
+    current = tlm("CFS CF_HKPACKET CMDCOUNTER")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_CMD_SLEEP)
+        get_cf_hk()
+        current = tlm("CFS CF_HKPACKET CMDCOUNTER")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_CMD_SLEEP)
+            get_cf_hk()
+            current = tlm("CFS CF_HKPACKET CMDCOUNTER")
+        end
+    end
+    check("CFS CF_HKPACKET CMDCOUNTER >= #{count}")
+end
+
+#
+# Data Storage (DS)
+#
+def get_ds_hk()
+    cmd("CFS DS_SEND_HK")
+    wait_check_packet("CFS", "DS_HKPACKET", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+def ds_cmd(*command)
+    count = tlm("CFS DS_HKPACKET CMDACCEPTEDCOUNTER") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_CMD_SLEEP)
+    get_ds_hk()
+    current = tlm("CFS DS_HKPACKET CMDACCEPTEDCOUNTER")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_CMD_SLEEP)
+        get_ds_hk()
+        current = tlm("CFS DS_HKPACKET CMDACCEPTEDCOUNTER")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_CMD_SLEEP)
+            get_ds_hk()
+            current = tlm("CFS DS_HKPACKET CMDACCEPTEDCOUNTER")
+        end
+    end
+    check("CFS DS_HKPACKET CMDACCEPTEDCOUNTER >= #{count}")
+end
+
+#
+# File Manager (FM)
+#
+def get_fm_hk()
+    cmd("CFS FM_SEND_HK")
+    wait_check_packet("CFS", "FM_HOUSEKEEPINGPKT", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+def fm_cmd(*command)
+    count = tlm("CFS FM_HOUSEKEEPINGPKT COMMANDCOUNTER") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_CMD_SLEEP)
+    get_fm_hk()
+    current = tlm("CFS FM_HOUSEKEEPINGPKT COMMANDCOUNTER")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_CMD_SLEEP)
+        get_fm_hk()
+        current = tlm("CFS FM_HOUSEKEEPINGPKT COMMANDCOUNTER")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_CMD_SLEEP)
+            get_fm_hk()
+            current = tlm("CFS FM_HOUSEKEEPINGPKT COMMANDCOUNTER")
+        end
+    end
+    check("CFS FM_HOUSEKEEPINGPKT COMMANDCOUNTER >= #{count}")
+end
+
+def get_fm_files(directory, offset)
+    cmd("CFS FM_GET_DIR_PKT with DIRECTORY '#{directory}', DIRLISTOFFSET #{offset}, GETSIZETIMEMODE 0xFFFFFFFF")
+    wait_check_packet("CFS", "FM_DIRLISTPKT", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+#
+# Limit Checker (LC)
+#
+def get_lc_hk()
+    cmd("CFS LC_SEND_HK")
+    wait_check_packet("CFS", "LC_HKPACKET", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+def lc_cmd(*command)
+    count = tlm("CFS LC_HKPACKET CMDCOUNT") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_CMD_SLEEP)
+    get_lc_hk()
+    current = tlm("CFS LC_HKPACKET CMDCOUNT")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_CMD_SLEEP)
+        get_lc_hk()
+        current = tlm("CFS LC_HKPACKET CMDCOUNT")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_CMD_SLEEP)
+            get_lc_hk()
+            current = tlm("CFS LC_HKPACKET CMDCOUNT")
+        end
+    end
+    check("CFS LC_HKPACKET CMDCOUNT >= #{count}")
+end
+
+#
+# Stored Commands (SC)
+#
+def get_sc_hk()
+    cmd("CFS SC_SEND_HK")
+    wait_check_packet("CFS", "SC_HKTLM", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+def sc_cmd(*command)
+    count = tlm("CFS SC_HKTLM CMDCTR") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_CMD_SLEEP)
+    get_sc_hk()
+    current = tlm("CFS SC_HKTLM CMDCTR")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_CMD_SLEEP)
+        get_sc_hk()
+        current = tlm("CFS SC_HKTLM CMDCTR")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_CMD_SLEEP)
+            get_sc_hk()
+            current = tlm("CFS SC_HKTLM CMDCTR")
+        end
+    end
+    check("CFS SC_HKTLM CMDCTR >= #{count}")
+end
+
+#
+# Misc. Functions
+#
+def set_met()
+    # Constant number of seconds from Jan 1, 1958 to Jan 1, 1970 (4383 days)
+    seconds_from_tai_to_unix_epoch = 378691200
+    set_met_timeout = 5
+    set_met_success = false
+
+    # Request current spacecraft time
+    cmd("CFS CFE_TIME_SEND_HK")
+
+    # Obtain current unix timestamp from ruby
+    current_time = Time.now.to_i
+
+    # Convert current unix time to TAI time
+    cfs_seconds = current_time + seconds_from_tai_to_unix_epoch
+    # Subseconds must be 0 or cFS will reject the new time
+    cfs_subseconds = 0
+
+    # Send the command to cFS
+    cmd("CFS CFE_TIME_SET_MET with SECONDS #{cfs_seconds}, MICROSECONDS #{cfs_subseconds}")
+end
+```
+
+### `cfs_lib_radio.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFS/lib/cfs_lib_radio.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+
+#
+# Definitions
+#
+CFS_RADIO_CMD_SLEEP = 0.25
+CFS_RADIO_RESPONSE_TIMEOUT = 5
+CFS_RADIO_TEST_LOOP_COUNT = 1
+
+
+#
+# CCSDS File Delivery Protocol (CF) Radio
+#
+def get_cf_hk_radio()
+    cmd("CFS_RADIO CF_SEND_HK")
+    wait_check_packet("CFS_RADIO", "CF_HKPACKET", 1, CFS_RADIO_RESPONSE_TIMEOUT)
+end
+
+def cf_cmd_radio(*command)
+    count = tlm("CFS_RADIO CF_HKPACKET CMDCOUNTER") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_RADIO_CMD_SLEEP)
+    get_cf_hk_radio()
+    current = tlm("CFS_RADIO CF_HKPACKET CMDCOUNTER")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_RADIO_CMD_SLEEP)
+        get_cf_hk_radio()
+        current = tlm("CFS_RADIO CF_HKPACKET CMDCOUNTER")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_RADIO_CMD_SLEEP)
+            get_cf_hk_radio()
+            current = tlm("CFS_RADIO CF_HKPACKET CMDCOUNTER")
+        end
+    end
+    check("CFS_RADIO CF_HKPACKET CMDCOUNTER >= #{count}")
+end
+
+#
+# Data Storage (DS) Radio
+#
+def get_ds_hk_radio()
+    cmd("CFS_RADIO DS_SEND_HK")
+    wait_check_packet("CFS_RADIO", "DS_HKPACKET", 1, CFS_RADIO_RESPONSE_TIMEOUT)
+end
+
+def ds_cmd_radio(*command)
+    count = tlm("CFS_RADIO DS_HKPACKET CMDACCEPTEDCOUNTER") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_RADIO_CMD_SLEEP)
+    get_ds_hk_radio()
+    current = tlm("CFS_RADIO DS_HKPACKET CMDACCEPTEDCOUNTER")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_RADIO_CMD_SLEEP)
+        get_ds_hk_radio()
+        current = tlm("CFS_RADIO DS_HKPACKET CMDACCEPTEDCOUNTER")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_RADIO_CMD_SLEEP)
+            get_ds_hk_radio()
+            current = tlm("CFS_RADIO DS_HKPACKET CMDACCEPTEDCOUNTER")
+        end
+    end
+    check("CFS_RADIO DS_HKPACKET CMDACCEPTEDCOUNTER >= #{count}")
+end
+
+#
+# File Manager (FM) Radio
+#
+def get_fm_hk_radio()
+    cmd("CFS_RADIO FM_SEND_HK")
+    wait_check_packet("CFS_RADIO", "FM_HOUSEKEEPINGPKT", 1, CFS_RADIO_RESPONSE_TIMEOUT)
+end
+
+def fm_cmd_radio(*command)
+    count = tlm("CFS_RADIO FM_HOUSEKEEPINGPKT COMMANDCOUNTER") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_RADIO_CMD_SLEEP)
+    get_fm_hk_radio()
+    current = tlm("CFS_RADIO FM_HOUSEKEEPINGPKT COMMANDCOUNTER")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_RADIO_CMD_SLEEP)
+        get_fm_hk_radio()
+        current = tlm("CFS_RADIO FM_HOUSEKEEPINGPKT COMMANDCOUNTER")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_RADIO_CMD_SLEEP)
+            get_fm_hk_radio()
+            current = tlm("CFS_RADIO FM_HOUSEKEEPINGPKT COMMANDCOUNTER")
+        end
+    end
+    check("CFS FM_HOUSEKEEPINGPKT COMMANDCOUNTER >= #{count}")
+end
+
+def get_fm_files_radio(directory, offset)
+    cmd("CFS_RADIO FM_GET_DIR_PKT with DIRECTORY '#{directory}', DIRLISTOFFSET #{offset}, GETSIZETIMEMODE 0xFFFFFFFF")
+    wait_check_packet("CFS_RADIO", "FM_DIRLISTPKT", 1, CFS_RADIO_RESPONSE_TIMEOUT)
+end
+
+#
+# Limit Checker (LC) Radio
+#
+def get_lc_hk_radio()
+    cmd("CFS_RADIO LC_SEND_HK")
+    wait_check_packet("CFS_RADIO", "LC_HKPACKET", 1, CFS_RESPONSE_TIMEOUT)
+end
+
+def lc_cmd_radio(*command)
+    count = tlm("CFS_RADIO LC_HKPACKET CMDCOUNT") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_RADIO_CMD_SLEEP)
+    get_lc_hk_radio()
+    current = tlm("CFS_RADIO LC_HKPACKET CMDCOUNT")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_RADIO_CMD_SLEEP)
+        get_lc_hk_radio()
+        current = tlm("CFS_RADIO LC_HKPACKET CMDCOUNT")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_RADIO_CMD_SLEEP)
+            get_lc_hk_radio()
+            current = tlm("CFS_RADIO LC_HKPACKET CMDCOUNT")
+        end
+    end
+    check("CFS_RADIO LC_HKPACKET CMDCOUNT >= #{count}")
+end
+
+#
+# Stored Commands (SC) Radio
+#
+def get_sc_hk_radio()
+    cmd("CFS_RADIO SC_SEND_HK")
+    wait_check_packet("CFS_RADIO", "SC_HKTLM", 1, CFS_RADIO_RESPONSE_TIMEOUT)
+end
+
+def sc_cmd_radio(*command)
+    count = tlm("CFS_RADIO SC_HKTLM CMDCTR") + 1
+
+    if (count == 256)
+        count = 0
+    end
+
+    cmd *command
+    sleep(CFS_RADIO_CMD_SLEEP)
+    get_sc_hk_radio()
+    current = tlm("CFS_RADIO SC_HKTLM CMDCTR")
+    if (current != count)
+        # Try again
+        cmd *command
+        sleep(CFS_RADIO_CMD_SLEEP)
+        get_sc_hk_radio()
+        current = tlm("CFS_RADIO SC_HKTLM CMDCTR")
+        if (current != count)
+            # Third times the charm
+            cmd *command
+            sleep(CFS_RADIO_CMD_SLEEP)
+            get_sc_hk_radio()
+            current = tlm("CFS_RADIO SC_HKTLM CMDCTR")
+        end
+    end
+    check("CFS_RADIO SC_HKTLM CMDCTR >= #{count}")
+end
+
+#
+# Misc. Functions
+#
+def set_met_radio()
+    # Constant number of seconds from Jan 1, 1958 to Jan 1, 1970 (4383 days)
+    seconds_from_tai_to_unix_epoch = 378691200
+    set_met_timeout = 5
+    set_met_success = false
+
+    # Request current spacecraft time
+    cmd("CFS_RADIO CFE_TIME_SEND_HK")
+
+    # Obtain current unix timestamp from ruby
+    current_time = Time.now.to_i
+
+    # Convert current unix time to TAI time
+    cfs_seconds = current_time + seconds_from_tai_to_unix_epoch
+    # Subseconds must be 0 or cFS will reject the new time
+    cfs_subseconds = 0
+
+    # Send the command to cFS
+    cmd("CFS_RADIO CFE_TIME_SET_MET with SECONDS #{cfs_seconds}, MICROSECONDS #{cfs_subseconds}")
+end
+
+# Jam spacecraft mission elapsed time with the current time on the ground
+# Note that this call requires the "leo_bus" target to be in use
+def set_met_from_ground()
+    # Constant number of seconds from Jan 1, 1958 to Jan 1, 1970 (4383 days)
+    seconds_from_tai_to_unix_epoch = 378691200
+    set_met_timeout = 30
+    attempts = 0
+    max_attempts = 5
+    set_met_success = false
+
+    # Obtain starting command counters
+    wait_check_packet("CFS_RADIO", "CFE_TIME_HKPACKET", 1, set_met_timeout)
+    time_cmd_counter = tlm("CFS_RADIO CFE_TIME_HKPACKET CMDCOUNTER")
+    wait_check_packet("LEO_BUS_RADIO", "LEO_BUS_HK_TLM_T", 1, set_met_timeout)
+    leo_bus_cmd_counter = tlm("LEO_BUS_RADIO LEO_BUS_HK_TLM_T COMMANDCOUNT")
+
+    while attempts < max_attempts and set_met_success == false
+        # Obtain current unix timestamp in UTC from ruby
+        current_time = Time.now.getutc.to_i
+
+        # Convert current unix time to TAI time
+        cfs_seconds = current_time + seconds_from_tai_to_unix_epoch
+        # Subseconds must be 0 or cFS will reject the new time
+        cfs_subseconds = 0
+
+        # Send the command to cFS
+        cmd("CFS_RADIO CFE_TIME_SET_MET with SECONDS #{cfs_seconds}, MICROSECONDS #{cfs_subseconds}")
+        wait_check_packet("CFS_RADIO", "CFE_TIME_HKPACKET", 1, set_met_timeout)
+        new_time_cmd_counter = tlm("CFS_RADIO CFE_TIME_HKPACKET CMDCOUNTER")
+        if new_time_cmd_counter > time_cmd_counter
+            set_met_success = true
+        end
+        attempts = attempts + 1
+    end
+    raise 'Failed to set cFS MET!' if attempts >= max_attempts
+
+    # Reset previous number of attempts
+    attempts = 0
+    set_met_success = false
+
+    while attempts < max_attempts and set_met_success == false
+        # Tell LEO_BUS to save the new time to disk
+        cmd("LEO_BUS_RADIO LEO_BUS_SAVE_MET_TO_FILE_CC")
+        wait_check_packet("LEO_BUS_RADIO", "LEO_BUS_HK_TLM_T", 1, set_met_timeout)
+        new_leo_bus_cmd_counter = tlm("LEO_BUS_RADIO LEO_BUS_HK_TLM_T COMMANDCOUNT")
+        if new_leo_bus_cmd_counter > leo_bus_cmd_counter
+            set_met_success = true
+        end
+        attempts = attempts + 1
+    end
+    raise 'Failed to send LEO_BUS SAVE_MET_TO_FILE command!' if attempts >= max_attempts
+end
+```
+
+### `cosmos_cfs_config.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFS/lib/cosmos_cfs_config.rb`
+
+
+```ruby
+# -*- coding: utf-8 -*-
+module CosmosCfsConfig
+    PROCESSOR_ENDIAN = ENV.fetch('PROCESSOR_ENDIANNESS', 'LITTLE_ENDIAN')
+end
+```
+
+### `evs_terminal.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFS/lib/evs_terminal.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/tools/data_viewer/data_viewer_component'
+
+module Cosmos
+
+    class EvsTerminal < DataViewerComponent
+
+        def initialize(parent, tab_name)
+            super(parent, tab_name)
+            @file = File.open(File.join(@log_file_directory, File.build_timestamped_filename(['CFE_EVS_Terminal'], '.csv')), 'a+')
+            @file.write("CCSDS_SECONDS,CCSDS_SUBSECS,PACKETID_APPNAME,PACKETID_EVENTID,PACKETID_EVENTTYPE,MESSAGE,\n")
+        end
+
+        def process_packet(packet)
+            processed_text =  ""
+            processed_text += "%6.6d, " % packet.read('CCSDS_LENGTH')
+            processed_text += "%10.10d, " % packet.read('CCSDS_SECONDS')
+            processed_text += "%6.6d, " % packet.read('CCSDS_SUBSECS')
+            processed_text += "%-10s, " % packet.read('PACKETID_APPNAME')
+            processed_text += "%6.6u, " % packet.read('PACKETID_EVENTID')
+            processed_text += "%6.6u, " % packet.read('PACKETID_EVENTTYPE')
+            processed_text += "%-s, " % packet.read('MESSAGE').tr(',','')
+            if @processed_queue.length < 1000
+               @processed_queue << processed_text
+            end
+            @file.write(processed_text + "\n")
+            @file.flush
+        end
+    end
+end
+```

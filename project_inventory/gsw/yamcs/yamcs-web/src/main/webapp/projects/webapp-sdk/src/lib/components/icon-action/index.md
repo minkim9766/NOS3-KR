@@ -3,18 +3,102 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `icon-action.component.css`
 
-file--icon-action.component.css
-file--icon-action.component.html
-file--icon-action.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/icon-action.component.css`
+
+
+```css
+:host {
+  text-decoration: none;
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  font-size: 12px;
+  height: 18px;
+}
+
+:host:hover {
+  color: #009e87;
+}
+
+:host.disabled {
+  cursor: not-allowed;
+  color: #aaa;
+}
+
+:host.padding {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.material-symbols {
+  vertical-align: middle;
+  font-size: 18px !important;
+  height: 18px !important;
+  width: 18px !important;
+}
+
+.material-symbols:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-radius: 50%;
+}
 ```
 
-## 항목
+### `icon-action.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/icon-action.component.css`](file--icon-action.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/icon-action.component.html`](file--icon-action.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/icon-action.component.ts`](file--icon-action.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/icon-action.component.html`
+
+
+```html
+<mat-icon (click)="onClick($event)">{{ icon() }}</mat-icon>
+```
+
+### `icon-action.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-action/icon-action.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-icon-action',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './icon-action.component.html',
+  styleUrl: './icon-action.component.css',
+  host: {
+    class: 'ya-icon-action',
+    '[class.padding]': 'padding()',
+    '[class.disabled]': 'disabled()',
+  },
+  imports: [MatIcon],
+})
+export class YaIconAction {
+  icon = input.required<string>();
+  padding = input(true, { transform: booleanAttribute });
+  disabled = input(false, { transform: booleanAttribute });
+
+  click = output<MouseEvent>();
+
+  onClick(event: MouseEvent) {
+    event.stopPropagation();
+    if (!this.disabled()) {
+      this.click.emit(event);
+    }
+  }
+}
+```

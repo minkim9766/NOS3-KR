@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CMakeFiles/crypto.dir/key/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ internal/index
 kmc_stub/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CMakeFiles/crypto.dir/key/custom_stub/`](custom_stub/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CMakeFiles/crypto.dir/key/internal/`](internal/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CMakeFiles/crypto.dir/key/kmc_stub/`](kmc_stub/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

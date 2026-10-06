@@ -3,16 +3,46 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/OsTimeEpoch/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--OsTimeEpoch.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/OsTimeEpoch/CMakeLists.txt`
+
+
+```cmake
+####
+# CMakeLists.txt:
+#
+# Sets up the fprime module build within CMake.
+####
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/OsTimeEpoch.fpp"
+)
+register_fprime_module()
 ```
 
-## 항목
+### `OsTimeEpoch.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/OsTimeEpoch/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/OsTimeEpoch/OsTimeEpoch.fpp`](file--OsTimeEpoch.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/OsTimeEpoch/OsTimeEpoch.fpp`
+
+
+```fpp
+#####
+# OsTimeEpoch:
+#
+# Used to set Epoch time pairs for OsTime
+#####
+
+
+module Svc {
+
+    @ A pair of timestamps representing an Epoch time in
+    @ an Fw::Time and Os::RawTime object
+    port OsTimeEpoch(
+        fw_time: Fw.Time,
+        os_time: Os.RawTime
+    )
+
+}
+```

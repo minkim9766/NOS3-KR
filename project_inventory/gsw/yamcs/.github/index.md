@@ -3,16 +3,41 @@
 
 **경로:** `gsw/yamcs/.github/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 workflows/index
-file--PULL_REQUEST_TEMPLATE.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/.github/workflows/`](workflows/index) — 폴더
-- [`gsw/yamcs/.github/PULL_REQUEST_TEMPLATE.md`](file--PULL_REQUEST_TEMPLATE.md) — UTF-8 텍스트 파일 본문 포함
+### `PULL_REQUEST_TEMPLATE.md`
+
+**경로:** `gsw/yamcs/.github/PULL_REQUEST_TEMPLATE.md`
+
+
+```markdown
+
+<!--
+Thank you for opening a Pull Request! Before submitting anything
+non-trivial (more than a few lines), there are a few things you can
+do to make sure it goes smoothly:
+
+* Please start a discussion, before writing your code! That way we
+  can discuss the change, evaluate designs, and agree on the general
+  idea.
+
+* You will need to sign a Contributor License Agreement (CLA):
+  https://yamcs.org/static/Yamcs_Contributor_Agreement_v2.0.pdf
+
+  You remain owner of your contribution, but in addition you give
+  "Space Applications Services" the legal permission to use and
+  distribute your contribution. This ensures that we can continue
+  providing alternative licensing as a commercial feature.
+
+Thanks again!
+-->
+
+```

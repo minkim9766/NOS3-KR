@@ -3,16 +3,105 @@
 
 **경로:** `components/generic_reaction_wheel/fsw/cfs/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_reaction_wheel_msgids.h`
 
-file--generic_reaction_wheel_msgids.h
-file--generic_reaction_wheel_platform_cfg.h
+**경로:** `components/generic_reaction_wheel/fsw/cfs/platform_inc/generic_reaction_wheel_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**  generic_reaction_wheel_msgids.h
+**
+** Purpose:
+**  Define Generic Reaction Wheel Message IDs
+**
+** Notes:
+**
+**
+*************************************************************************/
+#ifndef _generic_reaction_wheel_msgids_h_
+#define _generic_reaction_wheel_h_
+
+#define GENERIC_RW_APP_CMD_MID     0x1992
+#define GENERIC_RW_APP_SEND_HK_MID 0x1993
+#define GENERIC_RW_APP_HK_TLM_MID  0x0993
+
+#endif /* _generic_reaction_wheel_msgids_h_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
 ```
 
-## 항목
+### `generic_reaction_wheel_platform_cfg.h`
 
-- [`components/generic_reaction_wheel/fsw/cfs/platform_inc/generic_reaction_wheel_msgids.h`](file--generic_reaction_wheel_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/fsw/cfs/platform_inc/generic_reaction_wheel_platform_cfg.h`](file--generic_reaction_wheel_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_reaction_wheel/fsw/cfs/platform_inc/generic_reaction_wheel_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_reaction_wheel_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_reaction_wheel Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_REACTION_WHEEL_PLATFORM_CFG_H_
+#define _GENERIC_REACTION_WHEEL_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_REACTION_WHEEL_1 Configuration
+*/
+#ifndef GENERIC_REACTION_WHEEL_1_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_REACTION_WHEEL_1_CFG_STRING      "/dev/tty2"
+#define GENERIC_REACTION_WHEEL_1_CFG_HANDLE      2
+#define GENERIC_REACTION_WHEEL_1_CFG_IS_OPEN     PORT_CLOSED
+#define GENERIC_REACTION_WHEEL_1_CFG_BAUDRATE_HZ 115200
+#define GENERIC_REACTION_WHEEL_1_CFG_MS_TIMEOUT  50 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_REACTION_WHEEL_1_CFG_DEBUG
+#endif
+
+/*
+** Default GENERIC_REACTION_WHEEL_2 Configuration
+*/
+#ifndef GENERIC_REACTION_WHEEL_2_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_REACTION_WHEEL_2_CFG_STRING      "/dev/tty3"
+#define GENERIC_REACTION_WHEEL_2_CFG_HANDLE      3
+#define GENERIC_REACTION_WHEEL_2_CFG_IS_OPEN     PORT_CLOSED
+#define GENERIC_REACTION_WHEEL_2_CFG_BAUDRATE_HZ 115200
+#define GENERIC_REACTION_WHEEL_2_CFG_MS_TIMEOUT  50 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_REACTION_WHEEL_2_CFG_DEBUG
+#endif
+
+/*
+** Default GENERIC_REACTION_WHEEL_3 Configuration
+*/
+#ifndef GENERIC_REACTION_WHEEL_3_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_REACTION_WHEEL_3_CFG_STRING      "/dev/tty4"
+#define GENERIC_REACTION_WHEEL_3_CFG_HANDLE      4
+#define GENERIC_REACTION_WHEEL_3_CFG_IS_OPEN     PORT_CLOSED
+#define GENERIC_REACTION_WHEEL_3_CFG_BAUDRATE_HZ 115200
+#define GENERIC_REACTION_WHEEL_3_CFG_MS_TIMEOUT  50 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_REACTION_WHEEL_3_CFG_DEBUG
+#endif
+
+#endif /* _GENERIC_REACTION_WHEEL_PLATFORM_CFG_H_ */
+```

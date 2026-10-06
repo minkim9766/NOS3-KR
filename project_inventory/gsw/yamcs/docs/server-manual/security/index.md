@@ -3,24 +3,267 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/security/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 authmodules/index
-file--configuration.rst
-file--index.rst
-file--object-privileges.rst
-file--superuser.rst
-file--system-privileges.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/security/authmodules/`](authmodules/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/security/configuration.rst`](file--configuration.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/object-privileges.rst`](file--object-privileges.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/superuser.rst`](file--superuser.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/system-privileges.rst`](file--system-privileges.rst) — UTF-8 텍스트 파일 본문 포함
+### `configuration.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/configuration.rst`
+
+
+```rst
+Configuration
+=============
+
+The security system is configured in the file :file:`etc/security.yaml`. Example:
+
+.. code-block:: yaml
+
+    enabled: true
+    authModules:
+      - class: org.yamcs.security.LdapAuthModule
+        args:
+           ...
+
+This requires that all login attempts are validated against an external LDAP server.
+
+These options are supported:
+
+authModules (list of maps)
+  List of AuthModules that participate in the login process. Each AuthModule may support custom configuration options which can be defined under the ``args`` key. If empty only the internal Yamcs directory is used as a source of users and roles.
+
+blockUnknownUsers (boolean)
+    Use this if you need fine control over who can access Yamcs. Successful login attempts from users that were not yet known by Yamcs will be blocked by default. A privileged user may unblock them. The typical use case is when Yamcs uses an external identity provider that allows more users than really should be allowed access to Yamcs.
+
+    Default: false
+
+enabled (boolean)
+    Control whether authentication is enforced.
+    
+    Default: ``true`` if :file:`etc/security.yaml` is present, ``false`` otherwise.
+
+guest (map)
+    Overrides the user properties of the guest user. This user is used for all access when authentication is not being enforced.
+
+
+.. rubric:: Roles
+
+Roles are configured in the :file:`etc/roles.yaml`. This file defines which privileges belong to which roles. Example:
+
+.. code-block:: yaml
+
+    Operator:
+      ReadParameter: [".*"]
+      WriteParameter: []
+      ReadPacket: [".*"]
+      Command: [".*"]
+      CommandHistory: [".*"]
+      System:
+        - ControlProcessor
+        - ModifyCommandHistory
+        - ControlCommandQueue
+        - GetMissionDatabase
+        - ControlAlarms
+        - ControlArchiving
+
+This example specifies one role ``Operator``. It also demonstrates the use of regular expressions to grant a set of object privileges.
+
+System privileges must be defined under the key ``System``. System privileges may not use regular expressions.
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/index.rst`
+
+
+```rst
+Security
+========
+
+
+Yamcs includes a security subsystem which allows authenticating and authorizing users. Authentication is the act of identifying the user, whereas authorization involves determining what privileges this user has.
+
+Once authorized, the user may be assigned one or more privileges that determine what actions the user can perform. Yamcs distinguishes between system privileges and object privileges.
+
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    configuration
+    system-privileges
+    object-privileges
+    superuser
+    authmodules/index
+```
+
+### `object-privileges.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/object-privileges.rst`
+
+
+```rst
+Object Privileges
+=================
+
+An object privilege is the right to perform a particular action on an object. The object is assumed to be identifiable by a single string. The object may also be expressed as a regular expression, in which case Yamcs will perform pattern matching when doing authorization checks.
+
+Command
+    Allows to issue a specific command.
+
+CommandHistory
+    Allow access to the command history of a specific command.
+
+ManageBucket
+    Allow control over a specific :doc:`bucket <../data-management/buckets>`.
+
+    A typical installation includes at least the buckets ``displays`` and ``stacks``.
+
+ReadAlgorithm
+    Allow to read a specific algorithm.
+
+ReadBucket
+    Allow readonly access to a specific :doc:`bucket <../data-management/buckets>`.
+
+    A typical installation includes at least the buckets ``displays`` and ``stacks``.
+ReadPacket
+    Allow to read a specific packet.
+
+ReadParameter
+    Allow to read a specific parameter.
+
+Stream
+    Allow to read and emit to a specific stream.
+
+WriteParameter
+    Allows to set the value of a specific parameter.
+
+
+.. note::
+
+    Yamcs plugins may support additional object privileges.
+```
+
+### `superuser.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/superuser.rst`
+
+
+```rst
+Superuser
+=========
+
+A user may have the attribute ``superuser``. Such a user is not subject to privilege checking. Any check of any kind will automatically pass. An example of such a user is the ``System`` user which is used internally by Yamcs on some actions that cannot be tied to a specific user. The ``superuser`` attribute may also be assigned to end users if the AuthModule supports it.
+```
+
+### `system-privileges.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/system-privileges.rst`
+
+
+```rst
+System Privileges
+=================
+
+A system privilege is the right to perform a particular action or to perform an action on any object of a particular type.
+
+ControlProcessor
+    Allows to control any processor.
+
+CreateInstances
+    Allows to create instances.
+
+ModifyCommandHistory
+    Allows to modify command history.
+
+ControlCommandClearances
+    Allows to clear users for commanding.
+
+ControlCommandQueue
+    Allows to manage command queues.
+
+CommandOptions
+    Allows specifying command options (extra attributes in the command history, disable/modify verifiers, stream selection).
+
+GetMissionDatabase
+    Allows to read Mission Database definitions.
+
+ChangeMissionDatabase
+    Allows online changes to Mission Database definitions.
+
+ReadAlarms
+    Allows to read alarms.
+
+ControlAlarms
+    Allows to manage alarms.
+
+ReadActivities
+    Allows to read activities.
+
+ControlActivities
+    Allows to manage activities.
+
+ControlArchiving
+    Allows to manage archiving properties of Yamcs.
+
+ReadLinks
+    Allows to read link state.
+
+ControlLinks
+    Allows to control the lifecycle of any link.
+
+ControlServices
+    Allows to manage the lifecycle of services.
+
+ManageParameterLists
+    Allows to manage the definition of parameter lists.
+
+ManageAnyBucket
+    Provides full control over any :doc:`bucket <../data-management/buckets>` (including user buckets).
+
+    A typical installation includes at least the buckets ``displays`` and ``stacks``.
+
+ReadEvents
+    Allows to read any event.
+
+WriteEvents
+    Allows to manually create events.
+
+WriteTables
+    Allows to manually add records to tables.
+
+ReadTables
+    Allows to read tables.
+
+ReadTimeline
+    Allows to view the timeline.
+
+ControlTimeline
+    Allows to modify the timeline.
+
+ControlAccess
+    Allows to control access (users, groups, roles, ...)
+
+ReadSystemInfo
+    Allows to view system information (:abbr:`OS ( Operating System)`, :abbr:`JVM (Java Virtual Machine)`, threads, replication, ...)
+
+ControlFileTransfers
+    Allows to create file transfers.
+
+ReadFileTransfers
+    Allows read access to file transfer information.
+
+
+.. note::
+
+    Yamcs plugins may support additional system privileges.
+
+    For example, the yamcs-web plugin uses the following privilege to control access to the Admin Area: ``web.AccessAdminArea``
+```

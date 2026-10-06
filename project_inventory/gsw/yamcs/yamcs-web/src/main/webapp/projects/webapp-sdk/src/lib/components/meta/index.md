@@ -3,18 +3,71 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `meta.component.css`
 
-file--meta.component.css
-file--meta.component.html
-file--meta.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/meta.component.css`
+
+
+```css
+:host {
+  flex: none;
+  background-color: #eee;
+  font-weight: normal;
+  font-family: "Roboto Mono", monospace;
+  font-size: 11px;
+  line-height: 12px;
+  color: rgba(0, 0, 0, 0.654);
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+:host.ya-meta-action:hover {
+  background-color: #009e97;
+  color: white;
+  cursor: pointer;
+}
+
+:host-context(.error) {
+  background-color: var(--y-error-color);
+  color: white;
+}
 ```
 
-## 항목
+### `meta.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/meta.component.css`](file--meta.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/meta.component.html`](file--meta.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/meta.component.ts`](file--meta.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/meta.component.html`
+
+
+```html
+<ng-content />
+```
+
+### `meta.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/meta/meta.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
+
+@Component({
+  selector: 'ya-meta',
+  templateUrl: './meta.component.html',
+  styleUrl: './meta.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-meta',
+    '[class.ya-meta-action]': 'action()',
+  },
+})
+export class YaMeta {
+  action = input(false, { transform: booleanAttribute });
+}
+```

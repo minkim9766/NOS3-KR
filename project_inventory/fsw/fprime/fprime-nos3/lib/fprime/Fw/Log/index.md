@@ -3,38 +3,723 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--AmpcsEvrLogPacket.cpp
-file--AmpcsEvrLogPacket.hpp
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--Log.fpp
-file--LogBuffer.cpp
-file--LogBuffer.hpp
-file--LogPacket.cpp
-file--LogPacket.hpp
-file--LogString.hpp
-file--TextLogString.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/AmpcsEvrLogPacket.cpp`](file--AmpcsEvrLogPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/AmpcsEvrLogPacket.hpp`](file--AmpcsEvrLogPacket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/Log.fpp`](file--Log.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogBuffer.cpp`](file--LogBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogBuffer.hpp`](file--LogBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogPacket.cpp`](file--LogPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogPacket.hpp`](file--LogPacket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogString.hpp`](file--LogString.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/TextLogString.hpp`](file--TextLogString.hpp) — UTF-8 텍스트 파일 본문 포함
+### `AmpcsEvrLogPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/AmpcsEvrLogPacket.cpp`
+
+
+```cpp
+/*
+ * AmpcsEvrLogPacket.cpp
+ *
+ *  Created on: October 07, 2016
+ *      Author: Kevin F. Ortega
+ *              Aadil Rizvi
+ */
+
+#include <Fw/Log/AmpcsEvrLogPacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+AmpcsEvrLogPacket::AmpcsEvrLogPacket() : m_eventID(0), m_overSeqNum(0), m_catSeqNum(0) {
+    this->m_type = FW_PACKET_LOG;
+}
+AmpcsEvrLogPacket::~AmpcsEvrLogPacket() {}
+
+SerializeStatus AmpcsEvrLogPacket::serializeTo(SerializeBufferBase& buffer) const {
+    SerializeStatus stat;
+
+    stat = buffer.serializeFrom(this->m_taskName, AMPCS_EVR_TASK_NAME_LEN, Fw::Serialization::OMIT_LENGTH);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.serializeFrom(this->m_eventID);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.serializeFrom(this->m_overSeqNum);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.serializeFrom(this->m_catSeqNum);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    return buffer.serializeFrom(this->m_logBuffer.getBuffAddr(), m_logBuffer.getBuffLength(),
+                                Fw::Serialization::OMIT_LENGTH);
+}
+
+SerializeStatus AmpcsEvrLogPacket::deserializeFrom(SerializeBufferBase& buffer) {
+    FwSizeType len;
+
+    SerializeStatus stat;
+    SerializeStatus stat;
+
+    len = AMPCS_EVR_TASK_NAME_LEN;
+    stat = buffer.deserializeTo(this->m_taskName, len, true);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.deserializeTo(this->m_eventID);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.deserializeTo(this->m_overSeqNum);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.deserializeTo(this->m_catSeqNum);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    FwSizeType size = buffer.getBuffLeft();
+    stat = buffer.deserializeTo(this->m_logBuffer.getBuffAddr(), size, true);
+    if (stat == FW_SERIALIZE_OK) {
+        // Shouldn't fail
+        stat = this->m_logBuffer.setBuffLen(size);
+        FW_ASSERT(stat == FW_SERIALIZE_OK, static_cast<FwAssertArgType>(stat));
+    }
+    return stat;
+}
+
+void AmpcsEvrLogPacket::setTaskName(U8* taskName, U8 len) {
+    FW_ASSERT(taskName != nullptr);
+    FW_ASSERT(len == AMPCS_EVR_TASK_NAME_LEN);
+
+    memcpy(this->m_taskName, (const void*)taskName, len);
+}
+
+void AmpcsEvrLogPacket::setId(U32 eventID) {
+    this->m_eventID = eventID;
+}
+
+void AmpcsEvrLogPacket::setOverSeqNum(U32 overSeqNum) {
+    this->m_overSeqNum = overSeqNum;
+}
+
+void AmpcsEvrLogPacket::setCatSeqNum(U32 catSeqNum) {
+    this->m_catSeqNum = catSeqNum;
+}
+
+void AmpcsEvrLogPacket::setLogBuffer(LogBuffer& buffer) {
+    this->m_logBuffer = buffer;
+}
+
+const U8* AmpcsEvrLogPacket::getTaskName() const {
+    return this->m_taskName;
+}
+
+U32 AmpcsEvrLogPacket::getId() const {
+    return this->m_eventID;
+}
+
+U32 AmpcsEvrLogPacket::getOverSeqNum() const {
+    return this->m_overSeqNum;
+}
+
+U32 AmpcsEvrLogPacket::getCatSeqNum() const {
+    return this->m_catSeqNum;
+}
+
+LogBuffer& AmpcsEvrLogPacket::getLogBuffer() {
+    return this->m_logBuffer;
+}
+
+} /* namespace Fw */
+```
+
+### `AmpcsEvrLogPacket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/AmpcsEvrLogPacket.hpp`
+
+
+```cpp
+/*
+ * AmpcsEvrLogPacket.hpp
+ *
+ *  Created on: October 07, 2016
+ *      Author: Kevin F. Ortega
+ *              Aadil Rizvi
+ */
+
+#ifndef AMPCS_EVR_LOGPACKET_HPP_
+#define AMPCS_EVR_LOGPACKET_HPP_
+
+#include <Fw/Com/ComPacket.hpp>
+#include <Fw/Log/LogBuffer.hpp>
+#include <Fw/Time/Time.hpp>
+#include <cstring>
+
+#define AMPCS_EVR_TASK_NAME_LEN 6
+
+namespace Fw {
+
+class AmpcsEvrLogPacket : public ComPacket {
+  public:
+    AmpcsEvrLogPacket();
+    virtual ~AmpcsEvrLogPacket();
+
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const;  //!< serialize contents
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer);
+
+    void setTaskName(U8* taskName, U8 len);
+    void setId(U32 eventID);
+    void setOverSeqNum(U32 overSeqNum);
+    void setCatSeqNum(U32 catSeqNum);
+    void setLogBuffer(LogBuffer& buffer);
+
+    const U8* getTaskName() const;
+    U32 getId() const;
+    U32 getOverSeqNum() const;
+    U32 getCatSeqNum() const;
+    LogBuffer& getLogBuffer();
+
+  protected:
+    U8 m_taskName[AMPCS_EVR_TASK_NAME_LEN];
+    U32 m_eventID;
+    U32 m_overSeqNum;
+    U32 m_catSeqNum;
+    LogBuffer m_logBuffer;  // !< serialized argument data
+};
+
+} /* namespace Fw */
+
+#endif /* AMPCS_EVR_LOGPACKET_HPP_ */
+```
+
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Fw::TextLogSeverity
+Fw::LogSeverity
+
+Fw::LOG_FATAL
+Fw::LogSeverity::FATAL
+
+Fw::LOG_WARNING_HI
+Fw::LogSeverity::WARNING_HI
+
+Fw::LOG_WARNING_LO
+Fw::LogSeverity::WARNING_LO
+
+Fw::LOG_COMMAND
+Fw::LogSeverity::COMMAND
+
+Fw::LOG_ACTIVITY_HI
+Fw::LogSeverity::ACTIVITY_HI
+
+Fw::LOG_ACTIVITY_LO
+Fw::LogSeverity::ACTIVITY_LO
+
+Fw::LOG_DIAGNOSTIC
+Fw::LogSeverity::DIAGNOSTIC
+
+Fw::TEXT_LOG_FATAL
+Fw::LogSeverity::FATAL
+
+Fw::TEXT_LOG_WARNING_HI
+Fw::LogSeverity::WARNING_HI
+
+Fw::TEXT_LOG_WARNING_LO
+Fw::LogSeverity::WARNING_LO
+
+Fw::TEXT_LOG_COMMAND
+Fw::LogSeverity::COMMAND
+
+Fw::TEXT_LOG_ACTIVITY_HI
+Fw::LogSeverity::ACTIVITY_HI
+
+Fw::TEXT_LOG_ACTIVITY_LO
+Fw::LogSeverity::ACTIVITY_LO
+
+Fw::TEXT_LOG_DIAGNOSTIC
+Fw::LogSeverity::DIAGNOSTIC
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(MOD_DEPS
+    Fw/Com
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/LogBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/LogPacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Log.fpp"
+
+)
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/LogTest.cpp"
+)
+set(UT_MOD_DEPS
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Com"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Obj"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Port"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Time"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Types"
+)
+register_fprime_ut()
+```
+
+### `Log.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/Log.fpp`
+
+
+```fpp
+module Fw {
+
+  type LogBuffer
+  type TextLogString
+
+  @ Enum representing event severity
+  enum LogSeverity {
+    FATAL = 1 @< A fatal non-recoverable event
+    WARNING_HI = 2 @< A serious but recoverable event
+    WARNING_LO = 3 @< A less serious but recoverable event
+    COMMAND = 4 @< An activity related to commanding
+    ACTIVITY_HI = 5 @< Important informational events
+    ACTIVITY_LO = 6 @< Less important informational events
+    DIAGNOSTIC = 7 @< Software diagnostic events
+  }
+
+  @ Event log port
+  port Log(
+            $id: FwEventIdType @< Log ID
+            ref timeTag: Fw.Time @< Time Tag
+            $severity: LogSeverity @< The severity argument
+            ref args: LogBuffer @< Buffer containing serialized log entry
+          )
+
+
+  @ Text event log port
+  @ Use for development and debugging, turn off for flight
+  port LogText(
+                $id: FwEventIdType @< Log ID
+                ref timeTag: Fw.Time @< Time Tag
+                $severity: LogSeverity @< The severity argument
+                ref $text: Fw.TextLogString @< Text of log message
+              )
+
+}
+```
+
+### `LogBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogBuffer.cpp`
+
+
+```cpp
+#include <Fw/Log/LogBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+LogBuffer::LogBuffer(const U8* args, FwSizeType size) {
+    SerializeStatus stat = SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+LogBuffer::LogBuffer() {}
+
+LogBuffer::~LogBuffer() {}
+
+LogBuffer::LogBuffer(const LogBuffer& other) : Fw::SerializeBufferBase() {
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+LogBuffer& LogBuffer::operator=(const LogBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+FwSizeType LogBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* LogBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* LogBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+}  // namespace Fw
+```
+
+### `LogBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogBuffer.hpp`
+
+
+```cpp
+/*
+ * LogBuffer.hpp
+ *
+ *  Created on: Sep 10, 2012
+ *      Author: ppandian
+ */
+
+/*
+ * Description:
+ * This object contains the LogBuffer type, used for storing log entries
+ */
+#ifndef FW_LOG_BUFFER_HPP
+#define FW_LOG_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerIds.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class LogBuffer final : public SerializeBufferBase {
+  public:
+    enum { SERIALIZED_TYPE_ID = FW_TYPEID_LOG_BUFF, SERIALIZED_SIZE = FW_LOG_BUFFER_MAX_SIZE + sizeof(FwBuffSizeType) };
+
+    LogBuffer(const U8* args, FwSizeType size);
+    LogBuffer();
+    LogBuffer(const LogBuffer& other);
+    virtual ~LogBuffer();
+    LogBuffer& operator=(const LogBuffer& other);
+
+    FwSizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_bufferData[FW_LOG_BUFFER_MAX_SIZE];  // command argument buffer
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `LogPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogPacket.cpp`
+
+
+```cpp
+/*
+ * LogPacket.cpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#include <Fw/Log/LogPacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+LogPacket::LogPacket() : m_id(0) {
+    this->m_type = ComPacketType::FW_PACKET_LOG;
+}
+
+LogPacket::~LogPacket() {}
+
+SerializeStatus LogPacket::serializeTo(SerializeBufferBase& buffer) const {
+    SerializeStatus stat = ComPacket::serializeBase(buffer);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.serializeFrom(this->m_id);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.serializeFrom(this->m_timeTag);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // We want to add data but not size for the ground software
+    return buffer.serializeFrom(this->m_logBuffer.getBuffAddr(), m_logBuffer.getBuffLength(),
+                                Fw::Serialization::OMIT_LENGTH);
+}
+
+SerializeStatus LogPacket::deserializeFrom(SerializeBufferBase& buffer) {
+    SerializeStatus stat = deserializeBase(buffer);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.deserializeTo(this->m_id);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    stat = buffer.deserializeTo(this->m_timeTag);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // remainder of buffer must be telemetry value
+    FwSizeType size = buffer.getBuffLeft();
+    stat = buffer.deserializeTo(this->m_logBuffer.getBuffAddr(), size, Fw::Serialization::OMIT_LENGTH);
+    if (stat == FW_SERIALIZE_OK) {
+        // Shouldn't fail
+        stat = this->m_logBuffer.setBuffLen(size);
+        FW_ASSERT(stat == FW_SERIALIZE_OK, static_cast<FwAssertArgType>(stat));
+    }
+    return stat;
+}
+
+void LogPacket::setId(FwEventIdType id) {
+    this->m_id = id;
+}
+
+void LogPacket::setLogBuffer(const LogBuffer& buffer) {
+    this->m_logBuffer = buffer;
+}
+
+void LogPacket::setTimeTag(const Fw::Time& timeTag) {
+    this->m_timeTag = timeTag;
+}
+
+FwEventIdType LogPacket::getId() {
+    return this->m_id;
+}
+
+Fw::Time& LogPacket::getTimeTag() {
+    return this->m_timeTag;
+}
+
+LogBuffer& LogPacket::getLogBuffer() {
+    return this->m_logBuffer;
+}
+
+} /* namespace Fw */
+```
+
+### `LogPacket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogPacket.hpp`
+
+
+```cpp
+/*
+ * LogPacket.hpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#ifndef LOGPACKET_HPP_
+#define LOGPACKET_HPP_
+
+#include <Fw/Com/ComPacket.hpp>
+#include <Fw/Log/LogBuffer.hpp>
+#include <Fw/Time/Time.hpp>
+
+namespace Fw {
+
+class LogPacket : public ComPacket {
+  public:
+    LogPacket();
+    virtual ~LogPacket();
+
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const override;  //!< serialize contents
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer) override;
+
+    void setId(FwEventIdType id);
+    void setLogBuffer(const LogBuffer& buffer);
+    void setTimeTag(const Fw::Time& timeTag);
+
+    FwEventIdType getId();
+    Fw::Time& getTimeTag();
+    LogBuffer& getLogBuffer();
+
+  protected:
+    FwEventIdType m_id;     // !< Channel id
+    Fw::Time m_timeTag;     // !< time tag
+    LogBuffer m_logBuffer;  // !< serialized argument data
+};
+
+} /* namespace Fw */
+
+#endif /* LOGPACKET_HPP_ */
+```
+
+### `LogString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/LogString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   LogString.hpp
+// @author F Prime
+// @brief  A string sized for an event log entry
+// ======================================================================
+
+#ifndef FW_LOG_STRING_HPP
+#define FW_LOG_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class LogStringArg final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_LOG_STR,
+        STRING_SIZE = FW_LOG_STRING_MAX_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    LogStringArg() : StringBase() { *this = ""; }
+
+    LogStringArg(const LogStringArg& src) : StringBase() { *this = src; }
+
+    LogStringArg(const StringBase& src) : StringBase() { *this = src; }
+
+    LogStringArg(const char* src) : StringBase() { *this = src; }
+
+    ~LogStringArg() {}
+
+    LogStringArg& operator=(const LogStringArg& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    LogStringArg& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    LogStringArg& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```
+
+### `TextLogString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Log/TextLogString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   TextLogString.hpp
+// @author F Prime
+// @brief  A string sized for an event log entry
+// ======================================================================
+
+#ifndef FW_TEXT_LOG_STRING_HPP
+#define FW_TEXT_LOG_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class TextLogString final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_LOG_STR,
+        STRING_SIZE = FW_LOG_TEXT_BUFFER_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    TextLogString() : StringBase() { *this = ""; }
+
+    TextLogString(const TextLogString& src) : StringBase() { *this = src; }
+
+    TextLogString(const StringBase& src) : StringBase() { *this = src; }
+
+    TextLogString(const char* src) : StringBase() { *this = src; }
+
+    ~TextLogString() {}
+
+    TextLogString& operator=(const TextLogString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    TextLogString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    TextLogString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```

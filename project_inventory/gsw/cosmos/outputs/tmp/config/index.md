@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ targets/index
 tools/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/outputs/tmp/config/system/`](system/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/targets/`](targets/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/tools/`](tools/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

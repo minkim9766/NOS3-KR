@@ -3,16 +3,123 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/utils/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Utils.cpp`
 
-file--Utils.cpp
-file--Utils.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/utils/Utils.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Utils.cpp
+// \author T. Chieu
+// \brief  cpp file for Utils class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <string>
+#include <limits>
+#include <iostream>
+
+#include "Fw/Types/Assert.hpp"
+#include "STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+    namespace Utils {
+
+        U8 getNonzeroU8() {
+            return static_cast<U8>(STest::Pick::lowerUpper(
+                1,
+                std::numeric_limits<U8>::max()
+            ));
+        }
+
+        U32 getNonzeroU32() {
+            return STest::Pick::lowerUpper(
+                1,
+                std::numeric_limits<U32>::max()
+            );
+        }
+
+        char getChar() {
+            return static_cast<char>(STest::Pick::lowerUpper(32, 126));
+        }
+
+        void setString(char* buf, FwSizeType capacity, FwSizeType minLength) {
+            FW_ASSERT(buf != nullptr);
+            // capacity must be able to hold a null-terminated string
+            FW_ASSERT(capacity > 0);
+            // min length must fit within capacity
+            FW_ASSERT(minLength < capacity);
+            U32 length = STest::Pick::lowerUpper(static_cast<U32>(minLength), static_cast<U32>(capacity - 1));
+
+            for (U32 i = 0; i < length; i++) {
+                FW_ASSERT(i < capacity);
+                buf[i] = getChar();
+            }
+
+            FW_ASSERT(length < capacity);
+            buf[length] = 0;
+        }
+
+    } // namespace Utils
+
+} // namespace FppTest
 ```
 
-## 항목
+### `Utils.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/utils/Utils.cpp`](file--Utils.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/utils/Utils.hpp`](file--Utils.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/utils/Utils.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Utils.hpp
+// \author T. Chieu
+// \brief  hpp file for Utils class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_UTILS_HPP
+#define FPP_TEST_UTILS_HPP
+
+namespace FppTest {
+
+    namespace Utils {
+    
+        // Returns a random nonzero U8
+        U8 getNonzeroU8();
+
+        // Returns a random nonzero U32
+        U32 getNonzeroU32();
+
+        // Returns a random non-null char
+        char getChar();
+
+        // Populates buf with a random string of random length that fits
+        // within capacity, including the null terminator (i.e., length + 1 <= capacity)
+        void setString(
+            char *buf, //!< The buffer pointer
+            FwSizeType capacity, //!< The buffer capacity
+            FwSizeType minLength = 0 //!< The minimum string length, not including the null terminator
+                                     //!< minLength + 1 must be <= capacity
+        );
+            
+    } // namespace Utils
+
+} // namespace FppTest
+
+#endif
+```

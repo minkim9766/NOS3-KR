@@ -3,18 +3,178 @@
 
 **경로:** `components/onair/fsw/onair/src/reasoning/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `agent.py`
 
-file--agent.py
-file--complex_reasoning_interface.py
-file--diagnosis.py
+**경로:** `components/onair/fsw/onair/src/reasoning/agent.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+Agent Class
+Deals with supervised learning for diagnosing statuses
+"""
+from ..ai_components.learners_interface import LearnersInterface
+from ..ai_components.planners_interface import PlannersInterface
+from ..reasoning.complex_reasoning_interface import ComplexReasoningInterface
+from ..reasoning.diagnosis import Diagnosis
+
+class Agent:
+    def __init__(self, vehicle, learners_plugin_dict, planners_plugin_dict, complex_plugin_dict):
+
+        self.vehicle_rep = vehicle
+        self.mission_status = self.vehicle_rep.get_status()
+        self.bayesian_status = self.vehicle_rep.get_bayesian_status()
+
+        # AI Interfaces
+        self.learning_systems = LearnersInterface(self.vehicle_rep.get_headers(),learners_plugin_dict)
+        self.planning_systems = PlannersInterface(self.vehicle_rep.get_headers(),planners_plugin_dict)
+        self.complex_reasoning_systems = ComplexReasoningInterface(self.vehicle_rep.get_headers(),complex_plugin_dict)
+
+    def reason(self, frame):
+        aggregate_high_level_info = {}
+        self.vehicle_rep.update(frame)
+        aggregate_high_level_info['vehicle_rep'] = self.vehicle_rep.get_state_information()
+        self.learning_systems.update(self.vehicle_rep.curr_data, aggregate_high_level_info)
+        aggregate_high_level_info['learning_systems'] = self.learning_systems.render_reasoning()
+        self.planning_systems.update(aggregate_high_level_info)
+        aggregate_high_level_info['planning_systems'] = self.planning_systems.render_reasoning()
+
+        return self.complex_reasoning_systems.update_and_render_reasoning(aggregate_high_level_info)
+
+    def diagnose(self, time_step):
+        """ Grab the mnemonics from the """
+        learning_system_results = self.learning_systems.render_reasoning()
+        diagnosis = Diagnosis(time_step,
+                              learning_system_results,
+                              self.bayesian_status,
+                              self.vehicle_rep.get_current_faulting_mnemonics())
+        return diagnosis.perform_diagnosis()
 ```
 
-## 항목
+### `complex_reasoning_interface.py`
 
-- [`components/onair/fsw/onair/src/reasoning/agent.py`](file--agent.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/reasoning/complex_reasoning_interface.py`](file--complex_reasoning_interface.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/reasoning/diagnosis.py`](file--diagnosis.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/onair/src/reasoning/complex_reasoning_interface.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+Reasoning interface class for managing all complex custom reasoning components
+"""
+
+from ..util.data_conversion import *
+from ..util.plugin_import import import_plugins
+
+class ComplexReasoningInterface:
+    def __init__(self, headers, _reasoning_plugins={}):
+        assert(len(headers)>0), 'Headers are required'
+        self.headers = headers
+        self.reasoning_constructs = import_plugins(self.headers,_reasoning_plugins)
+
+    def update_and_render_reasoning(self, high_level_data):
+        intelligent_outcomes = high_level_data
+        intelligent_outcomes['complex_systems'] = {}
+        for plugin in self.reasoning_constructs:
+            plugin.update(high_level_data=intelligent_outcomes)
+            intelligent_outcomes['complex_systems'].update({plugin.component_name:plugin.render_reasoning()})
+        return intelligent_outcomes
+
+    def check_for_salient_event(self):
+        pass
+
+```
+
+### `diagnosis.py`
+
+**경로:** `components/onair/fsw/onair/src/reasoning/diagnosis.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+import copy
+import random 
+
+
+class Diagnosis:
+    """ Diagnosis Class used to store and summarize diagnosis results from individaul AIComponent"""
+    NO_DIAGNOSIS = "NO_DIAGNOSIS"
+
+    def __init__(self, 
+                 time_step, 
+                 learning_system_results, 
+                 status_confidence,
+                 currently_faulting_mnemonics, 
+                 ground_truth=None) -> None:
+
+        self.time_step = time_step
+        self.status_confidence = status_confidence
+        self.learning_system_results = learning_system_results
+        self.currently_faulting_mnemonics = currently_faulting_mnemonics
+        self.ground_truth = ground_truth
+
+        self.has_kalman = "kalman" in learning_system_results
+        self.kalman_results = learning_system_results["kalman"] if self.has_kalman else None
+        
+    def perform_diagnosis(self):
+        """ Diagnose the learning system results """
+
+        ret = {}
+        if self.has_kalman:
+            # just pick a random mnemonic for testing
+            mnemonic_name = random.choice(list(self.kalman_results[0]))
+            top = self.walkdown(mnemonic_name)
+
+            ret = {
+                "top": top
+            }
+
+        return ret
+
+        
+    def walkdown(self, mnemonic_name, used_mnemonics=[]):
+        """ 
+        Go through the active AIComponents in an ordered way to decide on a diagnosis. 
+        There's a lot of specificity in this function until the method of combining the AIComponents is learned   
+        """
+        if len(used_mnemonics) == 0:
+            used_mnemonics = copy.deepcopy(self.currently_faulting_mnemonics)
+
+        if mnemonic_name == '':
+            return Diagnosis.NO_DIAGNOSIS
+
+        if self.has_kalman:
+            # NOTE: This is certainly wrong since the logic is pulled from a statement with many AIComponents
+            if not (mnemonic_name in list(self.kalman_results[0])):
+                return self.kalman_results[0][0]
+            else: return Diagnosis.NO_DIAGNOSIS
+        else:
+            return Diagnosis.NO_DIAGNOSIS
+        
+```

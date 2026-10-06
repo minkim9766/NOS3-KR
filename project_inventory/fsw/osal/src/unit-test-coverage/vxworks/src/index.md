@@ -3,52 +3,3073 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `coveragetest-binsem.c`
 
-file--coveragetest-binsem.c
-file--coveragetest-common.c
-file--coveragetest-console.c
-file--coveragetest-countsem.c
-file--coveragetest-dirs-globals.c
-file--coveragetest-files.c
-file--coveragetest-filesys.c
-file--coveragetest-heap.c
-file--coveragetest-idmap.c
-file--coveragetest-loader.c
-file--coveragetest-mutex.c
-file--coveragetest-network.c
-file--coveragetest-no-module.c
-file--coveragetest-queues.c
-file--coveragetest-shell.c
-file--coveragetest-sockets.c
-file--coveragetest-symtab.c
-file--coveragetest-tasks.c
-file--coveragetest-timebase.c
-file--os-vxworks-coveragetest.h
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-binsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-binsem.h"
+
+#include "os-shared-binsem.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+#include "OCS_errno.h"
+#include "OCS_objLib.h"
+
+void Test_OS_VxWorks_BinSemAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_BinSemAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_BinSemAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_BinSemCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemCreate_Impl (uint32 sem_id, uint32 initial_value, uint32 options)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate_Impl(&token, 0, 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semBInitialize), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate_Impl(&token, 0, 0), OS_SEM_FAILURE);
+}
+
+void Test_OS_BinSemDelete_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemDelete_Impl (uint32 sem_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemDelete_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_BinSemGive_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemGive_Impl ( uint32 sem_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGive_Impl(&token), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_StubKey_GenericSemGive, OS_SEM_FAILURE);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGive_Impl(&token), OS_SEM_FAILURE);
+}
+
+void Test_OS_BinSemFlush_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemFlush_Impl (uint32 sem_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemFlush_Impl(&token), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semFlush), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemFlush_Impl(&token), OS_SEM_FAILURE);
+}
+
+void Test_OS_BinSemTake_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemTake_Impl ( uint32 sem_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTake_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_BinSemTimedWait_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemTimedWait_Impl ( uint32 sem_id, uint32 msecs )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTimedWait_Impl(&token, 100), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_StubKey_GenericSemTake, OS_SEM_FAILURE);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTimedWait_Impl(&token, 100), OS_SEM_FAILURE);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_Milli2Ticks), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTimedWait_Impl(&token, 100), OS_ERROR);
+}
+
+void Test_OS_BinSemGetInfo_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemGetInfo_Impl (uint32 sem_id, OS_bin_sem_prop_t *sem_prop)
+     */
+    OS_bin_sem_prop_t sem_prop;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&sem_prop, 0xEE, sizeof(sem_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGetInfo_Impl(&token, &sem_prop), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(OS_bin_sem_table, 0, sizeof(OS_bin_sem_table));
+    memset(OS_global_bin_sem_table, 0, sizeof(OS_common_record_t) * OS_MAX_BIN_SEMAPHORES);
+
+    memset(UT_Ref_OS_impl_bin_sem_table, 0, UT_Ref_OS_impl_bin_sem_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_BinSemAPI_Impl_Init);
+    ADD_TEST(OS_BinSemCreate_Impl);
+    ADD_TEST(OS_BinSemDelete_Impl);
+    ADD_TEST(OS_BinSemGive_Impl);
+    ADD_TEST(OS_BinSemFlush_Impl);
+    ADD_TEST(OS_BinSemTake_Impl);
+    ADD_TEST(OS_BinSemTimedWait_Impl);
+    ADD_TEST(OS_BinSemGetInfo_Impl);
+}
 ```
 
-## 항목
+### `coveragetest-common.c`
 
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-binsem.c`](file--coveragetest-binsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-common.c`](file--coveragetest-common.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-console.c`](file--coveragetest-console.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-countsem.c`](file--coveragetest-countsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-dirs-globals.c`](file--coveragetest-dirs-globals.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-files.c`](file--coveragetest-files.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-filesys.c`](file--coveragetest-filesys.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-heap.c`](file--coveragetest-heap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-idmap.c`](file--coveragetest-idmap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-loader.c`](file--coveragetest-loader.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-mutex.c`](file--coveragetest-mutex.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-network.c`](file--coveragetest-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-no-module.c`](file--coveragetest-no-module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-queues.c`](file--coveragetest-queues.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-shell.c`](file--coveragetest-shell.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-sockets.c`](file--coveragetest-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-symtab.c`](file--coveragetest-symtab.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-tasks.c`](file--coveragetest-tasks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-timebase.c`](file--coveragetest-timebase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/src/os-vxworks-coveragetest.h`](file--os-vxworks-coveragetest.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-common.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-common.h"
+
+#include "os-shared-common.h"
+
+#include "OCS_errno.h"
+#include "OCS_objLib.h"
+
+OCS_SEM TestGlobalSem;
+
+void Test_OS_API_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_API_Impl_Init(uint32 idtype)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(0), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_StubKey_OS_VxWorks_TableMutex_Init, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_TASK), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_StubKey_OS_VxWorks_TableMutex_Init);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_TASK), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_QUEUE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_BINSEM), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_COUNTSEM), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_MUTEX), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_MODULE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_TIMEBASE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_STREAM), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Impl_Init(OS_OBJECT_TYPE_OS_DIR), OS_SUCCESS);
+}
+
+void Test_OS_IdleLoop_Impl(void)
+{
+    /*
+     * Test Case For:
+     * void OS_IdleLoop_Impl()
+     */
+    /* just call the function for coverage */
+    OS_IdleLoop_Impl();
+}
+
+void Test_OS_ApplicationShutdown_Impl(void)
+{
+    /*
+     * Test Case For:
+     * void OS_ApplicationShutdown_Impl()
+     */
+    /* just call the function for coverage */
+    OS_ApplicationShutdown_Impl();
+}
+
+void Test_OS_VxWorks_GenericSemGive(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_GenericSemGive(SEM_ID vxid)
+     */
+    OCS_SEM_ID SemID = NULL;
+
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemGive(SemID), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semGive), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemGive(SemID), OS_SEM_FAILURE);
+}
+
+void Test_OS_VxWorks_GenericSemTake(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_GenericSemTake(SEM_ID vxid, int sys_ticks)
+     */
+    OCS_SEM_ID SemID = NULL;
+
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemTake(SemID, 10), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semTake), OCS_ERROR);
+    OCS_errno = OCS_S_objLib_OBJ_TIMEOUT;
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemTake(SemID, 0), OS_SEM_TIMEOUT);
+    OCS_errno = OCS_S_objLib_OBJ_ID_ERROR;
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemTake(SemID, 0), OS_SEM_FAILURE);
+    OCS_errno = OCS_S_objLib_OBJ_UNAVAILABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemTake(SemID, 0), OS_SEM_TIMEOUT);
+    OSAPI_TEST_FUNCTION_RC(OS_VxWorks_GenericSemTake(SemID, 1), OS_SEM_FAILURE);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(&OS_SharedGlobalVars, 0, sizeof(OS_SharedGlobalVars));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_API_Impl_Init);
+    ADD_TEST(OS_IdleLoop_Impl);
+    ADD_TEST(OS_ApplicationShutdown_Impl);
+    ADD_TEST(OS_VxWorks_GenericSemGive);
+    ADD_TEST(OS_VxWorks_GenericSemTake);
+}
+```
+
+### `coveragetest-console.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-console.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-console.h"
+#include "os-shared-printf.h"
+#include "os-shared-common.h"
+
+#include "OCS_unistd.h"
+#include "OCS_semLib.h"
+#include "OCS_taskLib.h"
+#include "OCS_errnoLib.h"
+#include "OCS_stdio.h"
+
+void Test_OS_ConsoleWakeup_Impl(void)
+{
+    /*
+     * Test Case For:
+     * void OS_ConsoleWakeup_Impl(const char *string)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    /* this just gives the sem, only called in async mode */
+    OS_ConsoleWakeup_Impl(&token);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_semGive)) == 1, "semGive() called in async mode");
+
+    /* Failure only causes a debug message to be generated, no error handling here */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semGive), -1);
+    OS_ConsoleWakeup_Impl(&token);
+}
+
+void Test_OS_ConsoleCreate_Impl(void)
+{
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    /* Verify coverage when configured for sync mode */
+    OS_console_table[0].IsAsync = false;
+    OSAPI_TEST_FUNCTION_RC(OS_ConsoleCreate_Impl(&token), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OCS_taskSpawn, 0); /* Task _was not_ spawned */
+
+    /* Verify coverage when configured for async mode */
+    OS_console_table[0].IsAsync = true;
+    OSAPI_TEST_FUNCTION_RC(OS_ConsoleCreate_Impl(&token), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OCS_taskSpawn, 1); /* Task _was_ spawned */
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semCInitialize), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ConsoleCreate_Impl(&token), OS_SEM_FAILURE);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_semCInitialize));
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskSpawn), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ConsoleCreate_Impl(&token), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_taskSpawn));
+
+    token.obj_idx = OS_MAX_CONSOLES + 1;
+    OSAPI_TEST_FUNCTION_RC(OS_ConsoleCreate_Impl(&token), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_VxWorks_ConsoleTask_Entry(void)
+{
+    /* This task has an infinite loop, which only exits if semTake fails */
+    UT_SetDeferredRetcode(UT_KEY(OCS_semTake), 2, OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(UT_ConsoleTest_TaskEntry(0), OCS_OK);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(UT_ConsoleTest_TaskEntry(0), OCS_OK);
+
+    OS_SharedGlobalVars.GlobalState = OS_SHUTDOWN_MAGIC_NUMBER;
+    OSAPI_TEST_FUNCTION_RC(UT_ConsoleTest_TaskEntry(0), OCS_OK);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_console_table, 0, sizeof(OS_console_table));
+    memset(UT_Ref_OS_impl_console_table, 0, UT_Ref_OS_impl_console_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ConsoleCreate_Impl);
+    ADD_TEST(OS_ConsoleWakeup_Impl);
+    ADD_TEST(OS_VxWorks_ConsoleTask_Entry);
+}
+```
+
+### `coveragetest-countsem.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-countsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-countsem.h"
+
+#include "os-shared-countsem.h"
+#include "os-shared-timebase.h"
+
+void Test_OS_VxWorks_CountSemAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_CountSemAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_CountSemAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_CountSemCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemCreate_Impl (uint32 sem_id, uint32 sem_initial_value, uint32 options)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate_Impl(&token, 0, 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semCInitialize), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate_Impl(&token, 0, 0), OS_SEM_FAILURE);
+}
+
+void Test_OS_CountSemDelete_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemDelete_Impl (uint32 sem_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemDelete_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_CountSemGive_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemGive_Impl ( uint32 sem_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGive_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_CountSemTake_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemTake_Impl ( uint32 sem_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTake_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_CountSemTimedWait_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemTimedWait_Impl ( uint32 sem_id, uint32 msecs )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTimedWait_Impl(&token, 100), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_Milli2Ticks), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTimedWait_Impl(&token, 100), OS_ERROR);
+}
+
+void Test_OS_CountSemGetInfo_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemGetInfo_Impl (uint32 sem_id, OS_count_sem_prop_t *count_prop)
+     */
+    OS_count_sem_prop_t count_prop;
+    OS_object_token_t   token = UT_TOKEN_0;
+
+    memset(&count_prop, 0xEE, sizeof(count_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGetInfo_Impl(&token, &count_prop), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(OS_count_sem_table, 0, sizeof(OS_count_sem_table));
+    memset(OS_global_count_sem_table, 0, sizeof(OS_common_record_t) * OS_MAX_COUNT_SEMAPHORES);
+
+    memset(UT_Ref_OS_impl_count_sem_table, 0, UT_Ref_OS_impl_count_sem_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_CountSemAPI_Impl_Init);
+    ADD_TEST(OS_CountSemCreate_Impl);
+    ADD_TEST(OS_CountSemDelete_Impl);
+    ADD_TEST(OS_CountSemGive_Impl);
+    ADD_TEST(OS_CountSemTake_Impl);
+    ADD_TEST(OS_CountSemTimedWait_Impl);
+    ADD_TEST(OS_CountSemGetInfo_Impl);
+}
+```
+
+### `coveragetest-dirs-globals.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-dirs-globals.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   steven.seeger@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-dirs.h"
+
+#include "os-shared-dir.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_taskLib.h"
+#include "OCS_dirent.h"
+#include "OCS_unistd.h"
+#include "OCS_stat.h"
+
+void Test_OS_VxWorks_DirAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_DirAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_DirAPI_Impl_Init(), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_DirAPI_Impl_Init);
+}
+```
+
+### `coveragetest-files.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-files.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-files.h"
+
+#include "os-shared-file.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_taskLib.h"
+#include "OCS_shellLib.h"
+#include "OCS_unistd.h"
+#include "OCS_stat.h"
+
+void Test_OS_VxWorks_StreamAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_Works_StreamAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_StreamAPI_Impl_Init(), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_StreamAPI_Impl_Init);
+}
+```
+
+### `coveragetest-filesys.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-filesys.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-filesys.h"
+
+#include "os-shared-filesys.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_sys_ioctl.h"
+#include "OCS_stat.h"
+#include "OCS_fcntl.h"
+#include "OCS_unistd.h"
+#include "OCS_ramDrv.h"
+#include "OCS_dosFsLib.h"
+#include "OCS_xbdBlkDev.h"
+
+void Test_OS_FileSysStartVolume_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileSysStartVolume_Impl (uint32 filesys_id)
+     */
+    int32             expected;
+    OS_object_token_t token;
+
+    token = UT_TOKEN_0;
+
+    /* Emulate an UNKNOWN entry */
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_UNKNOWN;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStartVolume_Impl(&token), OS_ERR_NOT_IMPLEMENTED);
+
+    /* Emulate an FS_BASED entry */
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_FS_BASED;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStartVolume_Impl(&token), OS_SUCCESS);
+
+    /* Emulate a VOLATILE_DISK entry (ramdisk) */
+    OS_filesys_table[1].fstype = OS_FILESYS_TYPE_VOLATILE_DISK;
+    token.obj_idx              = UT_INDEX_1;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStartVolume_Impl(&token), OS_SUCCESS);
+
+    /* Emulate a NORMAL_DISK entry (ATA) */
+    OS_filesys_table[2].fstype = OS_FILESYS_TYPE_NORMAL_DISK;
+    /* the expected value depends on whether it is compiled with USE_VXWORKS_ATA_DRIVER */
+#ifdef USE_VXWORKS_ATA_DRIVER
+    expected = OS_SUCCESS;
+#else
+    expected = OS_ERR_NOT_IMPLEMENTED;
+#endif
+    token = UT_TOKEN_2;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStartVolume_Impl(&token), expected);
+
+    /* Failure to create XBD layer */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_xbdBlkDevCreateSync), -1);
+    token = UT_TOKEN_1;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStartVolume_Impl(&token), OS_FS_ERR_DRIVE_NOT_CREATED);
+
+    /* Failure to create low level block dev */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_ramDevCreate), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStartVolume_Impl(&token), OS_FS_ERR_DRIVE_NOT_CREATED);
+}
+
+void Test_OS_FileSysStopVolume_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_FileSysStopVolume_Impl (uint32 filesys_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStopVolume_Impl(&token), OS_SUCCESS);
+
+    /* Failure to delete XBD layer */
+    OS_filesys_table[1].fstype = OS_FILESYS_TYPE_VOLATILE_DISK;
+    UT_FileSysTest_SetupFileSysEntry(1, NULL, 1, 4);
+    token = UT_TOKEN_1;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStopVolume_Impl(&token), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_xbdBlkDevDelete)) == 1, "xbdBlkDevDelete() called");
+
+    /* Test alternative branches */
+    UT_ResetState(UT_KEY(OCS_xbdBlkDevDelete));
+    UT_FileSysTest_SetupFileSysEntry(1, NULL, OCS_NULLDEV, 4);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStopVolume_Impl(&token), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_xbdBlkDevDelete)) == 0, "xbdBlkDevDelete() not called");
+
+    UT_FileSysTest_SetupFileSysEntry(1, NULL, 1, 0);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStopVolume_Impl(&token), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_xbdBlkDevDelete)) == 0, "xbdBlkDevDelete() not called");
+}
+
+void Test_OS_FileSysFormatVolume_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_FileSysFormatVolume_Impl (uint32 filesys_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    /* test unimplemented fs type */
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_UNKNOWN;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysFormatVolume_Impl(&token), OS_ERR_NOT_IMPLEMENTED);
+
+    /* fs-based should be noop */
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_FS_BASED;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysFormatVolume_Impl(&token), OS_SUCCESS);
+
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_VOLATILE_DISK;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysFormatVolume_Impl(&token), OS_SUCCESS);
+
+    /* Failure of the dosFsVolFormat() call */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_dosFsVolFormat), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysFormatVolume_Impl(&token), OS_FS_ERR_DRIVE_NOT_CREATED);
+}
+
+void Test_OS_FileSysMountVolume_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_FileSysMountVolume_Impl (uint32 filesys_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+    struct OCS_stat   statbuf;
+
+    memset(&OS_filesys_table[0], 0, sizeof(OS_filesys_table[0]));
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_NORMAL_DISK;
+    strcpy(OS_filesys_table[0].system_mountpt, "/ut");
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysMountVolume_Impl(&token), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysMountVolume_Impl(&token), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_open));
+
+    /* Additional cases for the FS_BASED handling */
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_FS_BASED;
+
+    /* Mount dir does not exist but can be created */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_stat), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysMountVolume_Impl(&token), OS_SUCCESS);
+
+    /* Mount dir does not exist and cannot be created */
+    UT_SetDeferredRetcode(UT_KEY(OCS_mkdir), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysMountVolume_Impl(&token), OS_FS_ERR_DRIVE_NOT_CREATED);
+
+    /* Mount dir does exist but not a directory */
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_stat));
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysMountVolume_Impl(&token), OS_FS_ERR_PATH_INVALID);
+
+    /* Mount dir does exist and is a directory */
+    memset(&statbuf, 0, sizeof(statbuf));
+    statbuf.st_mode = OCS_S_IFDIR;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &statbuf, sizeof(statbuf), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysMountVolume_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_FileSysUnmountVolume_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_FileSysUnmountVolume_Impl (uint32 filesys_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&OS_filesys_table[0], 0, sizeof(OS_filesys_table[0]));
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_NORMAL_DISK;
+    strcpy(OS_filesys_table[0].system_mountpt, "/ut");
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysUnmountVolume_Impl(&token), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysUnmountVolume_Impl(&token), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_open));
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_ioctl), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysUnmountVolume_Impl(&token), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_ioctl));
+
+    /* Additional cases for the FS_BASED handling (no op on unmount) */
+    OS_filesys_table[0].fstype = OS_FILESYS_TYPE_FS_BASED;
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysUnmountVolume_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_FileSysStatVolume_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileSysStatVolume_Impl (uint32 filesys_id, OS_statvfs_t *result)
+     */
+    OS_statvfs_t      stat;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStatVolume_Impl(&token, &stat), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_statvfs), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysStatVolume_Impl(&token, &stat), OS_ERROR);
+}
+
+void Test_OS_FileSysCheckVolume_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileSysCheckVolume_Impl (uint32 filesys_id, bool repair)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysCheckVolume_Impl(&token, true), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysCheckVolume_Impl(&token, false), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_open));
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_ioctl), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysCheckVolume_Impl(&token, false), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(OS_filesys_table, 0, sizeof(OS_filesys_table));
+    memset(OS_global_filesys_table, 0, sizeof(OS_common_record_t) * OS_MAX_FILE_SYSTEMS);
+
+    memset(UT_Ref_OS_impl_filesys_table, 0, UT_Ref_OS_impl_filesys_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_FileSysStartVolume_Impl);
+    ADD_TEST(OS_FileSysStopVolume_Impl);
+    ADD_TEST(OS_FileSysFormatVolume_Impl);
+    ADD_TEST(OS_FileSysCheckVolume_Impl);
+    ADD_TEST(OS_FileSysStatVolume_Impl);
+    ADD_TEST(OS_FileSysMountVolume_Impl);
+    ADD_TEST(OS_FileSysUnmountVolume_Impl);
+}
+```
+
+### `coveragetest-heap.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-heap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "os-shared-heap.h"
+
+#include "OCS_memPartLib.h"
+
+void Test_OS_HeapGetInfo_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_HeapGetInfo_Impl(OS_heap_prop_t *heap_prop)
+     */
+    OS_heap_prop_t heap_prop;
+
+    memset(&heap_prop, 0xEE, sizeof(heap_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_HeapGetInfo_Impl(&heap_prop), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memPartInfoGet), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_HeapGetInfo_Impl(&heap_prop), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_HeapGetInfo_Impl);
+}
+```
+
+### `coveragetest-idmap.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-idmap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-idmap.h"
+
+#include "os-shared-idmap.h"
+
+#include "OCS_errno.h"
+#include "OCS_objLib.h"
+
+OCS_SEM TestGlobalSem;
+
+void Test_OS_Lock_Global_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_Lock_Global_Impl(uint32 idtype)
+     */
+
+    UT_IdMapTest_SetImplTableMutex(OS_OBJECT_TYPE_OS_TASK, &TestGlobalSem);
+    OS_Lock_Global_Impl(OS_OBJECT_TYPE_OS_TASK);
+    UtAssert_STUB_COUNT(OCS_semTake, 1);
+
+    /* The "undefined" type should not have a lock instantiated */
+    OS_Lock_Global_Impl(OS_OBJECT_TYPE_UNDEFINED);
+    UtAssert_STUB_COUNT(OCS_semTake, 1);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semTake), -1);
+    OS_Lock_Global_Impl(OS_OBJECT_TYPE_OS_TASK); /* for coverage of error path */
+}
+
+void Test_OS_Unlock_Global_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_Unlock_Global_Impl(uint32 idtype)
+     */
+
+    UT_IdMapTest_SetImplTableMutex(OS_OBJECT_TYPE_OS_TASK, &TestGlobalSem);
+    OS_Unlock_Global_Impl(OS_OBJECT_TYPE_OS_TASK);
+    UtAssert_STUB_COUNT(OCS_semGive, 1);
+
+    /* The "undefined" type should not have a lock instantiated */
+    OS_Unlock_Global_Impl(OS_OBJECT_TYPE_UNDEFINED);
+    UtAssert_STUB_COUNT(OCS_semGive, 1);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semGive), -1);
+    OS_Unlock_Global_Impl(OS_OBJECT_TYPE_OS_TASK); /* for coverage of error path */
+}
+
+void Test_OS_API_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_API_Impl_Init(uint32 idtype)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_TableMutex_Init(0), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semMInitialize), -1);
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_TableMutex_Init(OS_OBJECT_TYPE_OS_TASK), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_semMInitialize));
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_TableMutex_Init(OS_OBJECT_TYPE_OS_TASK), OS_SUCCESS);
+}
+
+void Test_OS_WaitForStateChange_Impl(void)
+{
+    /*
+     * Test Case For:
+     * void OS_WaitForStateChange_Impl(osal_objtype_t idtype, uint32 attempts)
+     */
+
+    /*
+     * This has no return value/error results - just needs to be called for coverage.
+     * Call it once with a low number and once with a high number of attempts -
+     * which should cause it to hit its limit for wait time.
+     */
+    OS_WaitForStateChange_Impl(OS_OBJECT_TYPE_OS_TASK, 1);
+    OS_WaitForStateChange_Impl(OS_OBJECT_TYPE_OS_TASK, 1000);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_Lock_Global_Impl);
+    ADD_TEST(OS_Unlock_Global_Impl);
+    ADD_TEST(OS_API_Impl_Init);
+    ADD_TEST(OS_WaitForStateChange_Impl);
+}
+```
+
+### `coveragetest-loader.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-loader.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-loader.h"
+
+#include "os-shared-module.h"
+
+#include "OCS_string.h"
+#include "OCS_fcntl.h"
+#include "OCS_unistd.h"
+#include "OCS_errnoLib.h"
+#include "OCS_moduleLib.h"
+#include "OCS_loadLib.h"
+#include "OCS_unldLib.h"
+
+void Test_OS_VxWorks_ModuleAPI_Impl_Init(void)
+{
+    /* Test Case For:
+     * int32 OS_VxWorks_ModuleAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_ModuleAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_ModuleLoad_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleLoad_Impl ( uint32 module_id, char *translated_path )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl(&token, "local"), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl(&token, "local"), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_open));
+    UT_SetDefaultReturnValue(UT_KEY(OCS_loadModule), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl(&token, "local"), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_loadModule));
+}
+
+void Test_OS_ModuleUnload_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleUnload_Impl ( uint32 module_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload_Impl(&token), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_unldByModuleId), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload_Impl(&token), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_unldByModuleId));
+}
+
+void Test_OS_ModuleGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleGetInfo_Impl ( uint32 module_id, OS_module_prop_t *module_prop )
+     */
+    OS_module_prop_t  module_prop;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&module_prop, 0, sizeof(module_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleGetInfo_Impl(&token, &module_prop), OS_SUCCESS);
+    UtAssert_True(module_prop.addr.valid, "addresses in output valid");
+
+    /*
+     * This returns OS_ERROR if the underlying call fails,
+     * and the boolean in the output struct should be false.
+     */
+    memset(&module_prop, 0, sizeof(module_prop));
+    UT_SetDefaultReturnValue(UT_KEY(OCS_moduleInfoGet), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleGetInfo_Impl(&token, &module_prop), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_moduleInfoGet));
+    UtAssert_True(!module_prop.addr.valid, "addresses in output not valid");
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(OS_module_table, 0, sizeof(OS_module_table));
+    memset(OS_global_module_table, 0, sizeof(OS_common_record_t) * OS_MAX_MODULES);
+
+    memset(UT_Ref_OS_impl_module_table, 0, UT_Ref_OS_impl_module_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_ModuleAPI_Impl_Init);
+    ADD_TEST(OS_ModuleLoad_Impl);
+    ADD_TEST(OS_ModuleUnload_Impl);
+    ADD_TEST(OS_ModuleGetInfo_Impl);
+}
+```
+
+### `coveragetest-mutex.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-mutex.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-mutex.h"
+#include "os-shared-mutex.h"
+
+void Test_OS_VxWorks_MutexAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_MutexAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_MutexAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_MutSemCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemCreate_Impl (uint32 sem_id, uint32 options)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate_Impl(&token, 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semMInitialize), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate_Impl(&token, 0), OS_SEM_FAILURE);
+}
+
+void Test_OS_MutSemDelete_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemDelete_Impl (uint32 sem_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemDelete_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_MutSemGive_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemGive_Impl ( uint32 sem_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGive_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_MutSemTake_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemTake_Impl ( uint32 sem_id )
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemTake_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_MutSemGetInfo_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemGetInfo_Impl (uint32 sem_id, OS_mut_sem_prop_t *mut_prop)
+     */
+    OS_mut_sem_prop_t mut_prop;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&mut_prop, 0xEE, sizeof(mut_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetInfo_Impl(&token, &mut_prop), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_MutexAPI_Impl_Init);
+    ADD_TEST(OS_MutSemCreate_Impl);
+    ADD_TEST(OS_MutSemDelete_Impl);
+    ADD_TEST(OS_MutSemGive_Impl);
+    ADD_TEST(OS_MutSemTake_Impl);
+    ADD_TEST(OS_MutSemGetInfo_Impl);
+}
+```
+
+### `coveragetest-network.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+
+#include "os-shared-network.h"
+
+#include "OCS_unistd.h"
+#include "OCS_hostLib.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void Test_OS_NetworkGetHostName_Impl(void)
+
+{
+    /*
+     * Test Case For:
+     * int32 OS_NetworkGetHostName_Impl       (char *host_name, uint32 name_len)
+     */
+    char buffer[16];
+
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName_Impl(buffer, sizeof(buffer)), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_gethostname), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName_Impl(buffer, sizeof(buffer)), OS_ERROR);
+}
+
+void Test_OS_NetworkGetID_Impl(void)
+
+{
+    /*
+     * Test Case For:
+     * int32 OS_NetworkGetID_Impl             (int32 *IdBuf)
+     */
+    int32 IdBuf = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_hostGetByName), 1234);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID_Impl(&IdBuf), OS_SUCCESS);
+    UtAssert_True(IdBuf == 1234, "IdBuf (%ld) == 1234", (long)IdBuf);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_hostGetByName), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID_Impl(&IdBuf), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_gethostname), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID_Impl(&IdBuf), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_NetworkGetID_Impl);
+    ADD_TEST(OS_NetworkGetHostName_Impl);
+}
+```
+
+### `coveragetest-no-module.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-no-module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-no-module.h"
+
+#include "OCS_string.h"
+#include "OCS_fcntl.h"
+#include "OCS_unistd.h"
+#include "OCS_errnoLib.h"
+#include "OCS_moduleLib.h"
+#include "OCS_loadLib.h"
+#include "OCS_unldLib.h"
+
+void Test_OS_VxWorks_ModuleAPI_Impl_Init(void)
+{
+    /* Test Case For:
+     * int32 OS_VxWorks_ModuleAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_ModuleAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_ModuleLoad_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleLoad_Impl ( uint32 module_id, char *translated_path )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl(0, "local"), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl(0, "local"), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_open));
+    UT_SetDefaultReturnValue(UT_KEY(OCS_loadModule), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl(0, "local"), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_loadModule));
+}
+
+void Test_OS_ModuleUnload_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleUnload_Impl ( uint32 module_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload_Impl(0), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_unldByModuleId), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload_Impl(0), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_unldByModuleId));
+}
+
+void Test_OS_ModuleGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleGetInfo_Impl ( uint32 module_id, OS_module_prop_t *module_prop )
+     */
+    OS_module_prop_t module_prop;
+
+    memset(&module_prop, 0, sizeof(module_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleGetInfo_Impl(0, &module_prop), OS_SUCCESS);
+    UtAssert_True(module_prop.addr.valid, "addresses in output valid");
+
+    /*
+     * Note this still returns SUCCESS if the underlying call fails,
+     * but the boolean in the output struct should be false.
+     */
+    memset(&module_prop, 0, sizeof(module_prop));
+    UT_SetDefaultReturnValue(UT_KEY(OCS_moduleInfoGet), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleGetInfo_Impl(0, &module_prop), OS_SUCCESS);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_moduleInfoGet));
+    UtAssert_True(!module_prop.addr.valid, "addresses in output not valid");
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(&OS_SharedGlobalVars, 0, sizeof(OS_SharedGlobalVars));
+    memset(OS_module_table, 0, sizeof(OS_module_table));
+    memset(OS_global_module_table, 0, sizeof(OS_common_record_t) * OS_MAX_MODULES);
+
+    memset(UT_Ref_OS_impl_module_table, 0, UT_Ref_OS_impl_module_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_ModuleAPI_Impl_Init);
+    ADD_TEST(OS_ModuleLoad_Impl);
+    ADD_TEST(OS_ModuleUnload_Impl);
+    ADD_TEST(OS_ModuleGetInfo_Impl);
+}
+```
+
+### `coveragetest-queues.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-queues.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-queues.h"
+#include "os-shared-queue.h"
+#include "os-shared-timebase.h"
+
+#include "OCS_msgQLib.h"
+#include "OCS_errno.h"
+
+void Test_OS_VxWorks_QueueAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_QueueAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_QueueAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_QueueCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueCreate_Impl (uint32 queue_id, uint32 flags)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate_Impl(&token, 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_msgQCreate), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate_Impl(&token, 0), OS_ERROR);
+}
+
+void Test_OS_QueueDelete_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueDelete_Impl (uint32 queue_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueDelete_Impl(&token), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_msgQDelete), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueDelete_Impl(&token), OS_ERROR);
+}
+
+void Test_OS_QueueGet_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueGet_Impl (uint32 queue_id, void *data, uint32 size, uint32 *size_copied, int32 timeout)
+     */
+    char              Data[16];
+    size_t            ActSz;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, OS_PEND), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, OS_CHECK), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, 100), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_Milli2Ticks), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, 100), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_msgQReceive), OCS_ERROR);
+    OCS_errno = OCS_S_objLib_OBJ_TIMEOUT;
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, OS_CHECK), OS_QUEUE_TIMEOUT);
+    OCS_errno = OCS_S_objLib_OBJ_UNAVAILABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, OS_CHECK), OS_QUEUE_EMPTY);
+    OCS_errno = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet_Impl(&token, &Data, sizeof(Data), &ActSz, OS_CHECK), OS_ERROR);
+}
+
+void Test_OS_QueuePut_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueuePut_Impl (uint32 queue_id, const void *data, uint32 size, uint32 flags)
+     */
+    char              Data[16] = "Test";
+    OS_object_token_t token    = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut_Impl(&token, Data, sizeof(Data), 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_msgQSend), OCS_ERROR);
+    OCS_errno = OCS_S_objLib_OBJ_UNAVAILABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut_Impl(&token, Data, sizeof(Data), 0), OS_QUEUE_FULL);
+    OCS_errno = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut_Impl(&token, Data, sizeof(Data), 0), OS_ERROR);
+}
+
+void Test_OS_QueueGetInfo_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueGetInfo_Impl (uint32 queue_id, OS_queue_prop_t *queue_prop)
+     */
+    OS_queue_prop_t   queue_prop;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&queue_prop, 0xEE, sizeof(queue_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetInfo_Impl(&token, &queue_prop), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(OS_queue_table, 0, sizeof(OS_queue_table));
+    memset(OS_global_queue_table, 0, sizeof(OS_common_record_t) * OS_MAX_QUEUES);
+
+    memset(UT_Ref_OS_impl_queue_table, 0, UT_Ref_OS_impl_queue_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_QueueAPI_Impl_Init);
+    ADD_TEST(OS_QueueCreate_Impl);
+    ADD_TEST(OS_QueueDelete_Impl);
+    ADD_TEST(OS_QueueGet_Impl);
+    ADD_TEST(OS_QueuePut_Impl);
+    ADD_TEST(OS_QueueGetInfo_Impl);
+}
+```
+
+### `coveragetest-shell.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-shell.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-filetable-stub.h"
+#include "os-shared-file.h"
+
+#include "OCS_shellLib.h"
+#include "OCS_taskLib.h"
+
+void Test_OS_ShellOutputToFile_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ShellOutputToFile_Impl(uint32 file_id, const char *Cmd)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    /*
+     * The ShellOutputToFile will loop until the
+     * taskNameToId() function returns ERROR, so this
+     * must be set to avoid getting into an endless loop.
+     */
+    UT_SetDeferredRetcode(UT_KEY(OCS_taskNameToId), 2, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_ShellOutputToFile_Impl(&token, "TestCmd"), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_shellGenericInit)) == 1, "shellGenericInit() called");
+
+    /* failure to open the output file */
+    UT_SetDeferredRetcode(UT_KEY(OS_OpenCreate), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ShellOutputToFile_Impl(&token, "TestCmd"), OS_ERROR);
+
+    /* Shell failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_shellGenericInit), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ShellOutputToFile_Impl(&token, "TestCmd"), OS_ERROR);
+
+    /* ID failure */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskNameToId), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_ShellOutputToFile_Impl(&token, "TestCmd"), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(UT_FileTableTest_OS_impl_filehandle_table, 0, UT_FileTableTest_OS_impl_filehandle_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ShellOutputToFile_Impl);
+}
+```
+
+### `coveragetest-sockets.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-sockets.h"
+
+#include "OCS_ioLib.h"
+
+void Test_OS_VxWorks_SetSocketFlags_Impl(void)
+{
+    UtAssert_VOIDCALL(UT_SocketTest_CallVxWorksSetFlags_Impl(0));
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_ioctl), OCS_ERROR);
+    UtAssert_VOIDCALL(UT_SocketTest_CallVxWorksSetFlags_Impl(0));
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_SetSocketFlags_Impl);
+}
+```
+
+### `coveragetest-symtab.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-symtab.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-symtab.h"
+#include "os-shared-module.h"
+
+#include "OCS_string.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_symLib.h"
+
+void Test_OS_SymbolLookup_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_SymbolLookup_Impl( cpuaddr *SymbolAddress, const char *SymbolName )
+     */
+    cpuaddr SymAddr;
+
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup_Impl(&SymAddr, "symname"), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup_Impl(NULL, "symname"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup_Impl(&SymAddr, NULL), OS_INVALID_POINTER);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_symFind), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup_Impl(&SymAddr, "symname"), OS_ERROR);
+}
+
+void Test_OS_ModuleSymbolLookup_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleSymbolLookup_Impl( uint32 local_id, cpuaddr *SymbolAddress, const char *SymbolName )
+     */
+    cpuaddr           SymAddr;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup_Impl(&token, &SymAddr, "symname"), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup_Impl(&token, NULL, "symname"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup_Impl(&token, &SymAddr, NULL), OS_INVALID_POINTER);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_symFind), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup_Impl(&token, &SymAddr, "symname"), OS_ERROR);
+}
+
+void Test_OS_SymTableIterator_Impl(void)
+{
+    /* Test Case For:
+     * BOOL OS_SymTableIterator_Impl(char *name, SYM_VALUE val, SYM_TYPE type, int arg, SYM_GROUP group)
+     */
+    uint32 Data = 0;
+
+    /* nominal case - nothing goes wrong */
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_CallIteratorFunc("ut", &Data, 100, 1000), true);
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_GetIteratorStatus(), OS_SUCCESS);
+
+    /* Check case where next entry will exceed size limit */
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_CallIteratorFunc("ut", &Data, 100, 101), false);
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_GetIteratorStatus(), OS_ERR_OUTPUT_TOO_LARGE);
+
+    /* Check case where entry has a name that is too long */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_CallIteratorFunc("ut", &Data, 100, 1000), true);
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_GetIteratorStatus(), OS_ERR_NAME_TOO_LONG);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_memchr));
+
+    /* Check case where writing to file fails */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_write), -1);
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_CallIteratorFunc("ut", &Data, 100, 1000), false);
+    OSAPI_TEST_FUNCTION_RC(UT_SymTabTest_GetIteratorStatus(), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_write));
+}
+
+static int32 UT_symEachHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    uint32 Data = 0;
+    UT_SymTabTest_CallIteratorFunc("ut", &Data, 100, 1000);
+    return StubRetcode;
+}
+
+void Test_OS_SymbolTableDump_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_SymbolTableDump_Impl ( const char *filename, uint32 SizeLimit )
+     */
+
+    /* With no action in symEach(), this will yield an empty file, which is an error */
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolTableDump_Impl("file", 10000), OS_ERROR);
+
+    /* Check failure in open() */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolTableDump_Impl("file", 10000), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_open));
+
+    /* Set up a hook function for symEach() to provide at least one entry */
+    UT_SetHookFunction(UT_KEY(OCS_symEach), UT_symEachHook, NULL);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolTableDump_Impl("file", 10000), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SymTableIterator_Impl);
+    ADD_TEST(OS_SymbolLookup_Impl);
+    ADD_TEST(OS_ModuleSymbolLookup_Impl);
+    ADD_TEST(OS_SymbolTableDump_Impl);
+}
+```
+
+### `coveragetest-tasks.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-tasks.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-tasks.h"
+
+#include "os-shared-task.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+#include "OCS_stdlib.h"
+
+/*
+ * A chunk of memory usable as a heap for malloc() emulation
+ */
+unsigned long TestHeap[4096];
+int           TestGlobalSem;
+
+void Test_OS_VxWorks_TaskAPI_Impl_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_VxWorks_TaskAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_TaskAPI_Impl_Init(), OS_SUCCESS);
+}
+
+void Test_OS_VxWorksEntry(void)
+{
+    /*
+     * Test Case For:
+     * static int OS_VxWorksEntry(int arg)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_TaskTest_CallEntryPoint(OS_OBJECT_ID_UNDEFINED), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OS_TaskEntryPoint)) == 1, "OS_TaskEntryPoint() called");
+}
+
+void Test_OS_TaskCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskCreate_Impl (uint32 task_id, uint32 flags)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+    char              userstack[500];
+
+    UT_SetDataBuffer(UT_KEY(OCS_malloc), TestHeap, sizeof(TestHeap), false);
+    UT_SetDataBuffer(UT_KEY(OCS_free), TestHeap, sizeof(TestHeap), false);
+
+    /* create task with stack size of 250 - this should invoke malloc() to get the stack.
+     * The first call checks the failure path and ensures that a malloc failure gets handled */
+    OS_task_table[0].stack_size = 250;
+    UT_SetDefaultReturnValue(UT_KEY(OCS_malloc), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate_Impl(&token, 0), OS_ERROR);
+
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_malloc));
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate_Impl(&token, OS_FP_ENABLED), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_malloc)) == 2, "malloc() called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_free)) == 0, "free() not called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_taskInit)) == 1, "taskInit() called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_taskActivate)) == 1, "taskActivate() called");
+
+    /* create again with smaller stack - this should re-use existing buffer */
+    OS_task_table[0].stack_size = 100;
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate_Impl(&token, OS_FP_ENABLED), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_malloc)) == 2, "malloc() not called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_free)) == 0, "free() not called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_taskInit)) == 2, "taskInit() called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_taskActivate)) == 2, "taskActivate() called");
+
+    /* create again with larger stack - this should free existing and malloc() new buffer */
+    OS_task_table[0].stack_size = 400;
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate_Impl(&token, OS_FP_ENABLED), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_malloc)) == 3, "malloc() called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_free)) == 1, "free() called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_taskInit)) == 3, "taskInit() called");
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_taskActivate)) == 3, "taskActivate() called");
+
+    /* create again with nonzero userstackbase */
+    OS_task_table[0].stack_pointer = userstack;
+    OS_task_table[0].stack_size    = sizeof(userstack);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate_Impl(&token, OS_FP_ENABLED), OS_SUCCESS);
+    UtAssert_True(UT_GetStubCount(UT_KEY(OCS_malloc)) == 3, "malloc() not called");
+
+    /* other failure modes */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskInit), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate_Impl(&token, 0), OS_ERROR);
+}
+
+void Test_OS_TaskMatch_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskMatch_Impl(uint32 task_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    UT_TaskTest_SetImplTaskId(UT_INDEX_0, OCS_taskIdSelf());
+    OSAPI_TEST_FUNCTION_RC(OS_TaskMatch_Impl(&token), OS_SUCCESS);
+    UT_TaskTest_SetImplTaskId(UT_INDEX_0, (OCS_TASK_ID)0);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskMatch_Impl(&token), OS_ERROR);
+}
+
+void Test_OS_TaskDelete_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskDelete_Impl (uint32 task_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelete_Impl(&token), OS_SUCCESS);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskDelete), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelete_Impl(&token), OS_ERROR);
+}
+
+void Test_OS_TaskDetach_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskDetach_Impl(const OS_object_token_t *token)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    /* no-op on VxWorks - always returns success */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDetach_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_TaskExit_Impl(void)
+{
+    /*
+     * Test Case For:
+     * void OS_TaskExit_Impl()
+     */
+    /* just call the function for coverage */
+    OS_TaskExit_Impl();
+}
+
+void Test_OS_TaskDelay_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskDelay_Impl(uint32 millisecond)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelay_Impl(100), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskDelay), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelay_Impl(100), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_Milli2Ticks), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelay_Impl(100), OS_ERROR);
+}
+
+void Test_OS_TaskSetPriority_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskSetPriority_Impl (uint32 task_id, uint32 new_priority)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskSetPriority_Impl(&token, OSAL_PRIORITY_C(100)), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskPrioritySet), OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskSetPriority_Impl(&token, OSAL_PRIORITY_C(100)), OS_ERROR);
+}
+
+void Test_OS_TaskRegister_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskRegister_Impl(uint32 global_task_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskRegister_Impl(OS_OBJECT_ID_UNDEFINED), OS_SUCCESS);
+}
+
+void Test_OS_TaskGetId_Impl(void)
+{
+    /*
+     * Test Case For:
+     * uint32 OS_TaskGetId_Impl (void)
+     */
+    OCS_WIND_TCB *TaskTcb;
+    osal_id_t     id1;
+    osal_id_t     id2;
+
+    memset(&id1, 0x11, sizeof(osal_id_t));
+    OS_global_task_table[1].active_id = id1;
+    TaskTcb                           = UT_TaskTest_GetTaskTcb(UT_INDEX_1);
+    UT_SetDataBuffer(UT_KEY(OCS_taskTcb), &TaskTcb, sizeof(TaskTcb), false);
+    id2 = OS_TaskGetId_Impl();
+    UtAssert_MemCmp(&id1, &id2, sizeof(osal_id_t), "OS_TaskGetId_Impl()");
+
+    /* bad lrec */
+    TaskTcb = (OCS_WIND_TCB *)(&OS_global_task_table[0] + OS_MAX_TASKS);
+    UT_SetDataBuffer(UT_KEY(OCS_taskTcb), &TaskTcb, sizeof(TaskTcb), false);
+    id1 = OS_OBJECT_ID_UNDEFINED;
+    id2 = OS_TaskGetId_Impl();
+    UtAssert_MemCmp(&id1, &id2, sizeof(osal_id_t), "OS_TaskGetId_Impl() - invalid lrec");
+
+    /* NULL lrec */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskTcb), -1);
+    id1 = OS_OBJECT_ID_UNDEFINED;
+    id2 = OS_TaskGetId_Impl();
+    UtAssert_MemCmp(&id1, &id2, sizeof(osal_id_t), "OS_TaskGetId_Impl() - invalid lrec");
+}
+
+void Test_OS_TaskGetInfo_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskGetInfo_Impl (uint32 task_id, OS_task_prop_t *task_prop)
+     */
+    OS_task_prop_t    task_prop;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&task_prop, 0xEE, sizeof(task_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetInfo_Impl(&token, &task_prop), OS_SUCCESS);
+}
+
+void Test_OS_TaskValidateSystemData_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskValidateSystemData_Impl(const void *sysdata, uint32 sysdata_size)
+     */
+    OCS_TASK_ID test_sys_id;
+
+    memset(&test_sys_id, 'x', sizeof(test_sys_id));
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskValidateSystemData_Impl(&test_sys_id, sizeof(test_sys_id)), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskValidateSystemData_Impl(NULL, sizeof(test_sys_id)), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskValidateSystemData_Impl(&test_sys_id, sizeof(test_sys_id) - 1), OS_INVALID_POINTER);
+}
+
+void Test_OS_TaskIdMatchSystemData_Impl(void)
+{
+    /*
+     * Test Case For:
+     * bool OS_TaskIdMatchSystemData_Impl(void *ref, uint32 local_id, const OS_common_record_t *obj)
+     */
+    OCS_TASK_ID       test_sys_id;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    memset(&test_sys_id, 'x', sizeof(test_sys_id));
+
+    UT_TaskTest_SetImplTaskId(UT_INDEX_0, test_sys_id);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskIdMatchSystemData_Impl(&test_sys_id, &token, NULL), true);
+
+    memset(&test_sys_id, 'y', sizeof(test_sys_id));
+    OSAPI_TEST_FUNCTION_RC(OS_TaskIdMatchSystemData_Impl(&test_sys_id, &token, NULL), false);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_task_table, 0, sizeof(OS_task_table));
+    memset(OS_global_task_table, 0, sizeof(OS_common_record_t) * OS_MAX_TASKS);
+
+    memset(UT_Ref_OS_impl_task_table, 0, UT_Ref_OS_impl_task_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_TaskAPI_Impl_Init);
+    ADD_TEST(OS_TaskCreate_Impl);
+    ADD_TEST(OS_VxWorksEntry);
+    ADD_TEST(OS_TaskMatch_Impl);
+    ADD_TEST(OS_TaskDelete_Impl);
+    ADD_TEST(OS_TaskDetach_Impl);
+    ADD_TEST(OS_TaskExit_Impl);
+    ADD_TEST(OS_TaskDelay_Impl);
+    ADD_TEST(OS_TaskSetPriority_Impl);
+    ADD_TEST(OS_TaskRegister_Impl);
+    ADD_TEST(OS_TaskGetId_Impl);
+    ADD_TEST(OS_TaskGetInfo_Impl);
+    ADD_TEST(OS_TaskValidateSystemData_Impl);
+    ADD_TEST(OS_TaskIdMatchSystemData_Impl);
+}
+```
+
+### `coveragetest-timebase.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/coveragetest-timebase.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-vxworks-coveragetest.h"
+#include "ut-adaptor-timebase.h"
+#include "os-shared-timebase.h"
+
+#include "OCS_taskLib.h"
+#include "OCS_signal.h"
+#include "OCS_time.h"
+#include "OCS_sysLib.h"
+#include "OCS_semLib.h"
+
+void Test_OS_VxWorks_TimeBaseAPI_Impl_Init(void)
+{
+    /* Test Case For:
+     * int32 OS_VxWorks_TimeBaseAPI_Impl_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_TimeBaseAPI_Impl_Init(), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_sysClkRateGet), -1);
+    OSAPI_TEST_FUNCTION_RC(UT_Call_OS_VxWorks_TimeBaseAPI_Impl_Init(), OS_ERROR);
+}
+
+void Test_OS_TimeBaseLock_Impl(void)
+{
+    /* Test Case For:
+     * void OS_TimeBaseLock_Impl(uint32 local_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+    OS_TimeBaseLock_Impl(&token);
+}
+
+void Test_OS_TimeBaseUnlock_Impl(void)
+{
+    /* Test Case For:
+     * void OS_TimeBaseUnlock_Impl(uint32 local_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+    OS_TimeBaseUnlock_Impl(&token);
+}
+
+static int32 UT_TimeBaseTest_TimeBaseRegHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                             const UT_StubContext_t *Context)
+{
+    UT_TimeBaseTest_SetTimeBaseRegState(UT_INDEX_0, true);
+    return 0;
+}
+
+void Test_OS_Impl_UsecToTimespec(void)
+{
+    /* Test Case For:
+     * static void OS_Impl_UsecToTimespec(uint32 usecs, struct timespec *time_spec)
+     *
+     * This is invoked through a wrapper, to get coverage on the function.
+     *
+     * Note: For some reason, the vxworks implementation does this differently for intervals
+     * less than one second vs. one second or more, even though it does not need this
+     * complexity/special case, because the "one-or-more" code works for all.  Nonetheless,
+     * this needs to exist to test both ways.
+     */
+
+    struct OCS_timespec ts;
+
+    memset(&ts, 255, sizeof(ts));
+    UT_TimeBaseTest_UsecToTimespec(1, &ts);
+    UtAssert_True(ts.tv_sec == 0, "ts.tv_sec (%ld) == 0", (long)ts.tv_sec);
+    UtAssert_True(ts.tv_nsec == 1000, "ts.tv_nsec (%ld) == 1000", (long)ts.tv_sec);
+
+    memset(&ts, 255, sizeof(ts));
+    UT_TimeBaseTest_UsecToTimespec(1000000000, &ts);
+    UtAssert_True(ts.tv_sec == 1000, "ts.tv_sec (%ld) == 1000", (long)ts.tv_sec);
+    UtAssert_True(ts.tv_nsec == 0, "ts.tv_nsec (%ld) == 0", (long)ts.tv_sec);
+}
+
+void Test_OS_TimeBaseCreate_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_TimeBaseCreate_Impl(uint32 timer_id)
+     */
+    osal_id_t         id;
+    OS_object_token_t token = UT_TOKEN_0;
+
+    /*
+     * Test paths through the signal number assignment.
+     *
+     * This should be done first as it will assign the "external_sync"
+     * and therefore cause future calls to skip this block.
+     */
+    id = OS_ObjectIdFromInteger(OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT);
+
+    OS_global_timebase_table[0].active_id = id;
+    UT_TimeBaseTest_Setup(UT_INDEX_0, OCS_SIGRTMIN, false);
+
+    id = OS_ObjectIdFromInteger(OS_ObjectIdToInteger(id) + 1);
+
+    OS_global_timebase_table[1].active_id = id;
+    UT_TimeBaseTest_Setup(UT_INDEX_1, 1 + OCS_SIGRTMIN, false);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_sigismember), true);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate_Impl(&token), OS_TIMER_ERR_UNAVAILABLE);
+    UT_ResetState(UT_KEY(OCS_sigismember));
+
+    /* fail to initialize the sem */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_semMInitialize), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate_Impl(&token), OS_TIMER_ERR_INTERNAL);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_semMInitialize));
+
+    /* fail to spawn the task */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_taskSpawn), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate_Impl(&token), OS_TIMER_ERR_INTERNAL);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_taskSpawn));
+
+    /*
+     * this call to TimeBaseCreate_Impl should also fail, because
+     * this mimics the situation where the reg global is never
+     * set past OS_TimerRegState_INIT
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate_Impl(&token), OS_TIMER_ERR_INTERNAL);
+
+    /*
+     * Do Nominal/success case now.
+     * Using the hook function, this sets the global state to
+     * mimic registration success
+     */
+    UT_SetHookFunction(UT_KEY(OCS_taskSpawn), UT_TimeBaseTest_TimeBaseRegHook, NULL);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate_Impl(&token), OS_SUCCESS);
+
+    /*
+     * For coverage, call the  OS_VxWorks_TimeBaseTask() function.
+     */
+    UT_TimeBaseTest_CallHelperTaskFunc(0);
+
+    /*
+     * Check outputs of OS_VxWorks_RegisterTimer() function.
+     */
+    UT_TimeBaseTest_Setup(UT_INDEX_0, 10, false);
+    UT_TimeBaseTest_ClearTimeBaseRegState(UT_INDEX_0);
+    UT_TimeBaseTest_CallRegisterTimer(token.obj_id);
+    UtAssert_True(UT_TimeBaseTest_CheckTimeBaseRegisteredState(UT_INDEX_0),
+                  "timer successfully registered, with signal");
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, 10, false);
+    UT_TimeBaseTest_ClearTimeBaseRegState(UT_INDEX_0);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_timer_create), -1);
+    UT_TimeBaseTest_CallRegisterTimer(token.obj_id);
+    UtAssert_True(UT_TimeBaseTest_CheckTimeBaseErrorState(UT_INDEX_0), "timer registration failure state");
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, 10, false);
+    UT_TimeBaseTest_ClearTimeBaseRegState(UT_INDEX_0);
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    UT_TimeBaseTest_CallRegisterTimer(token.obj_id);
+    UtAssert_True(!UT_TimeBaseTest_CheckTimeBaseRegisteredState(UT_INDEX_0), "timer registration bad ID");
+    UT_ResetState(UT_KEY(OS_ObjectIdGetById));
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, 0, false);
+    UT_TimeBaseTest_ClearTimeBaseRegState(UT_INDEX_0);
+    UT_TimeBaseTest_CallRegisterTimer(token.obj_id);
+    UtAssert_True(UT_TimeBaseTest_CheckTimeBaseRegisteredState(UT_INDEX_0), "timer successfully registered, no signal");
+}
+
+void Test_OS_VxWorks_SigWait(void)
+{
+    /* Test Case For:
+     * static uint32 OS_VxWorks_SigWait(uint32 local_id)
+     * (invocation of static function through a wrapper)
+     */
+    int                   signo = OCS_SIGRTMIN;
+    struct OCS_itimerspec config_value;
+    osal_id_t             id;
+    OS_object_token_t     token = UT_TOKEN_0;
+
+    /* OS_ObjectIdGetById error case */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(UT_TimeBaseTest_CallSigWaitFunc(OS_OBJECT_ID_UNDEFINED), 0);
+
+    memset(&id, 0x02, sizeof(id));
+    OS_global_timebase_table[0].active_id      = id;
+    OS_timebase_table[0].nominal_start_time    = 8888;
+    OS_timebase_table[0].nominal_interval_time = 5555;
+
+    memset(&config_value, 0, sizeof(config_value));
+    UT_SetDataBuffer(UT_KEY(OCS_timer_settime), &config_value, sizeof(config_value), false);
+    UT_SetDataBuffer(UT_KEY(OCS_timer_gettime), &config_value, sizeof(config_value), false);
+    UT_TimeBaseTest_Setup(UT_INDEX_0, signo, true);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet_Impl(&token, 1111111, 2222222), OS_SUCCESS);
+
+    UT_SetDataBuffer(UT_KEY(OCS_timer_settime), &config_value, sizeof(config_value), false);
+    UT_SetDeferredRetcode(UT_KEY(OCS_timer_gettime), 1, OCS_ERROR);
+    UT_TimeBaseTest_Setup(UT_INDEX_0, signo, true);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet_Impl(&token, 1111111, 2222222), OS_ERROR);
+
+    UT_SetDataBuffer(UT_KEY(OCS_sigwait), &signo, sizeof(signo), false);
+    OSAPI_TEST_FUNCTION_RC(UT_TimeBaseTest_CallSigWaitFunc(OS_OBJECT_ID_UNDEFINED), 1111111);
+    UT_SetDataBuffer(UT_KEY(OCS_sigwait), &signo, sizeof(signo), false);
+    OSAPI_TEST_FUNCTION_RC(UT_TimeBaseTest_CallSigWaitFunc(OS_OBJECT_ID_UNDEFINED), 2222222);
+    UT_SetDataBuffer(UT_KEY(OCS_sigwait), &signo, sizeof(signo), false);
+    OSAPI_TEST_FUNCTION_RC(UT_TimeBaseTest_CallSigWaitFunc(OS_OBJECT_ID_UNDEFINED), 2222222);
+
+    /* sigwait interrupt cases */
+    UT_SetDeferredRetcode(UT_KEY(OCS_sigwait), 1, OCS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(UT_TimeBaseTest_CallSigWaitFunc(OS_OBJECT_ID_UNDEFINED), 0);
+    signo++;
+    UT_SetDataBuffer(UT_KEY(OCS_sigwait), &signo, sizeof(signo), false);
+    OSAPI_TEST_FUNCTION_RC(UT_TimeBaseTest_CallSigWaitFunc(OS_OBJECT_ID_UNDEFINED), 0);
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, 0, false);
+    OS_global_timebase_table[0].active_id      = OS_OBJECT_ID_UNDEFINED;
+    OS_timebase_table[0].nominal_interval_time = 0;
+}
+
+void Test_OS_TimeBaseSet_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_TimeBaseSet_Impl(uint32 timer_id, int32 start_time, int32 interval_time)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, 0, false);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet_Impl(&token, 1, 1), OS_SUCCESS);
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, OCS_SIGRTMIN, false);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet_Impl(&token, 1, 1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_timer_settime), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet_Impl(&token, 1, 1), OS_TIMER_ERR_INVALID_ARGS);
+
+    /* reset_flag false and return_code != OS_SUCCESS branch */
+    UT_TimeBaseTest_Setup(UT_INDEX_0, OCS_SIGRTMIN, false);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet_Impl(&token, 1, 1), OS_TIMER_ERR_INVALID_ARGS);
+}
+
+void Test_OS_TimeBaseDelete_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_TimeBaseDelete_Impl(uint32 timer_id)
+     */
+    OS_object_token_t token = UT_TOKEN_0;
+
+    UT_TimeBaseTest_Setup(UT_INDEX_0, OCS_SIGRTMIN, false);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseDelete_Impl(&token), OS_SUCCESS);
+
+    /* Second call to cover assigned_signal == 0 */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseDelete_Impl(&token), OS_SUCCESS);
+}
+
+void Test_OS_TimeBaseGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_TimeBaseGetInfo_Impl (uint32 timer_id, OS_timebase_prop_t *timer_prop)
+     */
+    OS_timebase_prop_t timer_prop;
+    OS_object_token_t  token = UT_TOKEN_0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetInfo_Impl(&token, &timer_prop), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    memset(OS_timebase_table, 0, sizeof(OS_timebase_table));
+    memset(OS_global_timebase_table, 0, sizeof(OS_common_record_t) * OS_MAX_TIMEBASES);
+
+    memset(UT_Ref_OS_impl_timebase_table, 0, UT_Ref_OS_impl_timebase_table_SIZE);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_VxWorks_TimeBaseAPI_Impl_Init);
+    ADD_TEST(OS_TimeBaseLock_Impl);
+    ADD_TEST(OS_TimeBaseUnlock_Impl);
+    ADD_TEST(OS_TimeBaseCreate_Impl);
+    ADD_TEST(OS_VxWorks_SigWait);
+    ADD_TEST(OS_TimeBaseSet_Impl);
+    ADD_TEST(OS_TimeBaseDelete_Impl);
+    ADD_TEST(OS_TimeBaseGetInfo_Impl);
+    ADD_TEST(OS_Impl_UsecToTimespec);
+}
+```
+
+### `os-vxworks-coveragetest.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/src/os-vxworks-coveragetest.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup vxworks
+ *
+ * Declarations and prototypes for os-vxworks-coveragetest
+ */
+
+#ifndef OS_VXWORKS_COVERAGETEST_H
+#define OS_VXWORKS_COVERAGETEST_H
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utstubs.h"
+
+#include "os-shared-idmap.h"
+
+#define OSAPI_TEST_FUNCTION_RC(func, exp)                                                             \
+    {                                                                                                 \
+        int32 rcexp = exp;                                                                            \
+        int32 rcact = func;                                                                           \
+        UtAssert_True(rcact == rcexp, "%s (%ld) == %s (%ld)", #func, (long)rcact, #exp, (long)rcexp); \
+    }
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+#define UT_INDEX_0 OSAL_INDEX_C(0)
+#define UT_INDEX_1 OSAL_INDEX_C(1)
+#define UT_INDEX_2 OSAL_INDEX_C(2)
+
+#define UT_TOKEN_0                                    \
+    (OS_object_token_t)                               \
+    {                                                 \
+        .obj_id = (osal_id_t) {0x10000}, .obj_idx = 0 \
+    }
+#define UT_TOKEN_1                                    \
+    (OS_object_token_t)                               \
+    {                                                 \
+        .obj_id = (osal_id_t) {0x10001}, .obj_idx = 1 \
+    }
+#define UT_TOKEN_2                                    \
+    (OS_object_token_t)                               \
+    {                                                 \
+        .obj_id = (osal_id_t) {0x10002}, .obj_idx = 2 \
+    }
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void);
+void Osapi_Test_Teardown(void);
+
+#endif /* OS_VXWORKS_COVERAGETEST_H */
+```

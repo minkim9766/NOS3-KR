@@ -3,24 +3,247 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--PassiveRateGroup.cpp
-file--PassiveRateGroup.fpp
-file--PassiveRateGroup.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/PassiveRateGroup.cpp`](file--PassiveRateGroup.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/PassiveRateGroup.fpp`](file--PassiveRateGroup.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/PassiveRateGroup.hpp`](file--PassiveRateGroup.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/CMakeLists.txt`
+
+
+```cmake
+#### CMakeLists.txt PassiveRateGroup ####
+
+# Specifies the sources for this module with optional sources included by platform
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/PassiveRateGroup.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/PassiveRateGroup.hpp"
+    "${CMAKE_CURRENT_LIST_DIR}/PassiveRateGroup.fpp"
+)
+
+
+# Specifies any module dependencies not detectable via the model file dependency detection
+#set(MOD_DEPS ...)
+
+# Registers this module with the fprime build system
+register_fprime_module()
+
+# Specifies the sources specifically associated with unit tests in this module
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PassiveRateGroupTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PassiveRateGroupTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/PassiveRateGroup.fpp"
+)
+
+
+# Specifies any unit test modules
+#set(UT_MOD_DEPS ...)
+
+# Registers this module with the fprime build system
+register_fprime_ut()
+```
+
+### `PassiveRateGroup.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/PassiveRateGroup.cpp`
+
+
+```cpp
+/*
+ * \author: Tim Canham
+ * \file:
+ * \brief
+ *
+ * This file implements the PassiveRateGroup component,
+ * which invokes a set of components the comprise the rate group.
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ */
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Console.hpp>
+#include <Svc/PassiveRateGroup/PassiveRateGroup.hpp>
+
+namespace Svc {
+PassiveRateGroup::PassiveRateGroup(const char* compName)
+    : PassiveRateGroupComponentBase(compName), m_cycles(0), m_maxTime(0), m_numContexts(0) {}
+
+PassiveRateGroup::~PassiveRateGroup() {}
+
+void PassiveRateGroup::configure(U32 contexts[], FwIndexType numContexts) {
+    FW_ASSERT(contexts);
+    FW_ASSERT(numContexts == this->getNum_RateGroupMemberOut_OutputPorts(), static_cast<FwAssertArgType>(numContexts),
+              static_cast<FwAssertArgType>(this->getNum_RateGroupMemberOut_OutputPorts()));
+    FW_ASSERT(FW_NUM_ARRAY_ELEMENTS(this->m_contexts) == this->getNum_RateGroupMemberOut_OutputPorts(),
+              static_cast<FwAssertArgType>(FW_NUM_ARRAY_ELEMENTS(this->m_contexts)),
+              static_cast<FwAssertArgType>(this->getNum_RateGroupMemberOut_OutputPorts()));
+
+    this->m_numContexts = numContexts;
+    // copy context values
+    for (FwIndexType entry = 0; entry < this->m_numContexts; entry++) {
+        this->m_contexts[entry] = static_cast<U32>(contexts[entry]);
+    }
+}
+
+void PassiveRateGroup::CycleIn_handler(FwIndexType portNum, Os::RawTime& cycleStart) {
+    Os::RawTime endTime;
+    FW_ASSERT(this->m_numContexts);
+
+    // invoke any members of the rate group
+    for (FwIndexType port = 0; port < this->getNum_RateGroupMemberOut_OutputPorts(); port++) {
+        if (this->isConnected_RateGroupMemberOut_OutputPort(port)) {
+            this->RateGroupMemberOut_out(port, this->m_contexts[port]);
+        }
+    }
+
+    // grab timer for endTime of cycle
+    endTime.now();
+
+    // get rate group execution time
+    U32 cycleTime;
+    // Cast to void as the only possible error is overflow, which we can't handle other
+    // than capping cycleTime to max value of U32 (which is done in getDiffUsec anyways)
+    (void)endTime.getDiffUsec(cycleStart, cycleTime);
+    // check to see if the time has exceeded the previous maximum
+    if (cycleTime > this->m_maxTime) {
+        this->m_maxTime = cycleTime;
+    }
+    this->tlmWrite_MaxCycleTime(this->m_maxTime);
+    this->tlmWrite_CycleTime(cycleTime);
+    this->tlmWrite_CycleCount(++this->m_cycles);
+}
+
+}  // namespace Svc
+```
+
+### `PassiveRateGroup.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/PassiveRateGroup.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A rate group passive component with input and output scheduler ports
+  passive component PassiveRateGroup {
+
+    @ The rate group cycle input
+    sync input port CycleIn: Cycle
+
+    @ Scheduler output port to rate group members
+    output port RateGroupMemberOut: [PassiveRateGroupOutputPorts] Sched
+
+    @ Max execution time of rate group cycle
+    telemetry MaxCycleTime: U32 update on change format "{} us"
+
+    @ Execution time of current cycle
+    telemetry CycleTime: U32 format "{} us"
+
+    @ Count of number of cycles
+    telemetry CycleCount: U32
+
+    # Standard ports
+    @ A port for getting the time
+    time get port Time
+
+    @ A port for emitting telemetry
+    telemetry port Tlm
+
+  }
+
+}
+```
+
+### `PassiveRateGroup.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/PassiveRateGroup.hpp`
+
+
+```cpp
+/*
+ * \author: Tim Canham
+ * \file:
+ * \brief
+ *
+ * This file implements the PassiveRateGroup component,
+ * which invokes a set of components the comprise the rate group.
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ */
+
+#ifndef SVC_PASSIVERATEGROUP_IMPL_HPP
+#define SVC_PASSIVERATEGROUP_IMPL_HPP
+
+#include <Svc/PassiveRateGroup/PassiveRateGroupComponentAc.hpp>
+
+namespace Svc {
+
+//! \class PassiveRateGroupImpl
+//! \brief Executes a set of components as part of a rate group
+//!
+//! PassiveRateGroup takes an input cycle call to begin the rate group cycle.
+//! It calls each output port in succession and passes the value in the context
+//! array at the index corresponding to the output port number. It keeps track of the execution
+//! time of the rate group and detects overruns.
+//!
+
+class PassiveRateGroup final : public PassiveRateGroupComponentBase {
+  public:
+    //!  \brief PassiveRateGroupImpl constructor
+    //!
+    //!  The constructor of the class clears all the flags and copies the
+    //!  contents of the context array to private storage.
+    //!
+    //!  \param compName Name of the component
+    explicit PassiveRateGroup(const char* compName);  //!  \brief PassiveRateGroupImpl initialization function
+
+    //!  \brief PassiveRateGroup configuration function
+    //!
+    //!  The configuration function takes an array of context values to pass to
+    //!  members of the rate group.
+    //!
+    //!  \param contexts Array of integers that contain the context values that will be sent
+    //!         to each member component. The index of the array corresponds to the
+    //!         output port number.
+    //!  \param numContexts The number of elements in the context array.
+    void configure(U32 contexts[], FwIndexType numContexts);
+
+    //!  \brief PassiveRateGroupImpl destructor
+    //!
+    //!  The destructor of the class is empty
+    ~PassiveRateGroup();
+
+  private:
+    //!  \brief Input cycle port handler
+    //!
+    //!  The cycle port handler calls each component in the rate group in turn,
+    //!  passing the context value. It computes the execution time each cycle,
+    //!  and writes it to a telemetry value if it reaches a maximum time
+    //!
+    //!  \param portNum incoming port call. For this class, should always be zero
+    //!  \param cycleStart value stored by the cycle driver, used to compute execution time.
+    void CycleIn_handler(FwIndexType portNum, Os::RawTime& cycleStart);
+
+    U32 m_cycles;                                         //!< cycles executed
+    U32 m_maxTime;                                        //!< maximum execution time in microseconds
+    FwIndexType m_numContexts;                            //!< number of contexts
+    U32 m_contexts[NUM_RATEGROUPMEMBEROUT_OUTPUT_PORTS];  //!< Must match number of output ports
+};
+
+}  // namespace Svc
+
+#endif
+```

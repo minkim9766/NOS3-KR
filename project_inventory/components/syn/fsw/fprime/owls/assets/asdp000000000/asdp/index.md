@@ -3,20 +3,42 @@
 
 **경로:** `components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mugshots/index
-file--2021.05.26_12.03.03.157_dd.csv
-file--2021.05.26_12.03.03.157_dqe.csv
-file--2021.05.26_12.03.03.157_sue.csv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/mugshots/`](mugshots/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/2021.05.26_12.03.03.157_dd.csv`](file--2021.05.26_12.03.03.157_dd.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/2021.05.26_12.03.03.157_dqe.csv`](file--2021.05.26_12.03.03.157_dqe.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/2021.05.26_12.03.03.157_sue.csv`](file--2021.05.26_12.03.03.157_sue.csv) — UTF-8 텍스트 파일 본문 포함
+### `2021.05.26_12.03.03.157_dd.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/2021.05.26_12.03.03.157_dd.csv`
+
+
+```text
+bbox_area_min_pc10.0,bbox_area_min_pc50.0,bbox_area_min_pc90.0,disp_e2e_norm_pc10.0,disp_e2e_norm_pc50.0,disp_e2e_norm_pc90.0,speed_mean_pc10.0,speed_mean_pc50.0,speed_mean_pc90.0
+0.07886666666666667,0.1111111111111111,0.1111111111111111,0.001436325965583461,0.007030396384051943,0.03710894689341319,0.02807966286652037,0.051721862980167836,0.09503929215686009
+```
+
+### `2021.05.26_12.03.03.157_dqe.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/2021.05.26_12.03.03.157_dqe.csv`
+
+
+```text
+DQE
+0.9199999999999999
+```
+
+### `2021.05.26_12.03.03.157_sue.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000000/asdp/2021.05.26_12.03.03.157_sue.csv`
+
+
+```text
+SUE
+0.14227810087647624
+```

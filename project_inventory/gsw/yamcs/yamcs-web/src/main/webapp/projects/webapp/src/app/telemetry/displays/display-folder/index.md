@@ -3,20 +3,588 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `display-folder.component.css`
 
-file--display-folder.component.css
-file--display-folder.component.html
-file--display-folder.component.ts
-file--display-type.pipe.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-folder.component.css`
+
+
+```css
+.droparea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.droparea-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: rgba(27, 97, 185, 0.1);
+  border: 1px solid rgba(27, 97, 185, 1);
+  z-index: 10;
+}
 ```
 
-## 항목
+### `display-folder.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-folder.component.css`](file--display-folder.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-folder.component.html`](file--display-folder.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-folder.component.ts`](file--display-folder.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-type.pipe.ts`](file--display-type.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-folder.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Displays">
+    @if (mayManageDisplays()) {
+      <ya-page-button (clicked)="createDisplay()" icon="add_box">Create display</ya-page-button>
+    }
+    @if (mayManageDisplays()) {
+      <ya-page-button (clicked)="uploader.click()" icon="file_upload">
+        Upload files
+        <input #uploader type="file" hidden multiple (change)="uploadFiles()" />
+      </ya-page-button>
+    }
+    @if (mayManageDisplays()) {
+      <ya-page-button (clicked)="createFolder()" icon="create_new_folder">
+        Create folder
+      </ya-page-button>
+    }
+    @if (mayManageDisplays()) {
+      <ya-page-button
+        (clicked)="deleteSelectedDisplays()"
+        [disabled]="!selection.hasValue()"
+        icon="delete">
+        Delete
+      </ya-page-button>
+    }
+  </ya-instance-toolbar>
+
+  <div
+    #droparea
+    class="droparea"
+    [class.active]="dragActive$ | async"
+    (dragenter)="dragEnter($event)">
+    <div
+      class="droparea-overlay"
+      [class.hide]="!(dragActive$ | async)"
+      (dragover)="dragOver($event)"
+      (dragleave)="dragLeave($event)"
+      (drop)="drop($event)"></div>
+
+    <ya-panel>
+      @if (breadcrumb$ | async; as breadcrumb) {
+        @if (breadcrumb.length) {
+          <ya-breadcrumb-trail>
+            <ya-breadcrumb
+              link="/telemetry/displays/browse"
+              [queryParams]="{ c: yamcs.context }"
+              icon="account_tree" />
+            @for (item of breadcrumb; track item) {
+              <ya-breadcrumb
+                [link]="item.route"
+                [queryParams]="{ c: yamcs.context }"
+                [label]="item.name" />
+            }
+          </ya-breadcrumb-trail>
+        }
+      }
+      @if (dataSource && dataSource.data.length) {
+        <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+          <ng-container cdkColumnDef="select">
+            <th
+              mat-header-cell
+              *cdkHeaderCellDef
+              class="checkbox"
+              (click)="cb.toggle(); $event.stopPropagation()">
+              <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+            </th>
+            <td
+              mat-cell
+              *cdkCellDef="let item"
+              class="checkbox"
+              (click)="cb.toggle(); $event.stopPropagation()">
+              <ya-table-checkbox
+                #cb
+                [dataSource]="dataSource"
+                [selection]="selection"
+                [item]="item" />
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="name">
+            <th mat-header-cell *cdkHeaderCellDef>Name</th>
+            <td mat-cell *cdkCellDef="let item">
+              @if (item.folder) {
+                <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+                  folder
+                </mat-icon>
+                <a
+                  [routerLink]="'/telemetry/displays/browse/' + item.name"
+                  [queryParams]="{ c: yamcs.context }"
+                  (click)="$event.stopPropagation()">
+                  {{ item.name | filename }}
+                </a>
+              } @else {
+                <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+                  description
+                </mat-icon>
+                <a
+                  [routerLink]="'/telemetry/displays/files/' + item.name"
+                  [queryParams]="{ c: yamcs.context }"
+                  (click)="$event.stopPropagation()">
+                  {{ item.name | filename }}
+                </a>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="type">
+            <th mat-header-cell *cdkHeaderCellDef>Type</th>
+            <td mat-cell *cdkCellDef="let item">
+              @if (item.folder) {
+                Folder
+              } @else {
+                {{ (item.name | displayType) || "-" }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container cdkColumnDef="visibility">
+            <th mat-header-cell *cdkHeaderCellDef>Visibility</th>
+            <td mat-cell *cdkCellDef="let item">Private</td>
+          </ng-container>
+          <ng-container cdkColumnDef="modified">
+            <th mat-header-cell *cdkHeaderCellDef>Date modified</th>
+            <td mat-cell *cdkCellDef="let item">
+              {{ (item.modified | datetime) || "-" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="expand"></th>
+            <td mat-cell *matCellDef="let item">
+              @if (!item.folder) {
+                @if (mayManageDisplays()) {
+                  <ya-more>
+                    <button mat-menu-item (click)="renameFile(item)">Rename</button>
+                    <a mat-menu-item [href]="item.objectUrl" download>Download</a>
+                    <mat-divider />
+                    <button mat-menu-item (click)="deleteFile(item)">Delete</button>
+                  </ya-more>
+                }
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *cdkHeaderRowDef="displayedColumns()"></tr>
+          <tr
+            mat-row
+            *cdkRowDef="let row; columns: displayedColumns()"
+            [class.selected]="selection.isSelected(row)"
+            (click)="toggleOne(row)"></tr>
+        </table>
+      } @else {
+        <ya-empty-message>Empty directory.</ya-empty-message>
+      }
+    </ya-panel>
+  </div>
+</ya-instance-page>
+```
+
+### `display-folder.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-folder.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  AuthService,
+  ConfigService,
+  ListObjectsOptions,
+  ListObjectsResponse,
+  MessageService,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import * as dnd from '../../../shared/dnd';
+import { CreateDisplayDialogComponent } from '../create-display-dialog/create-display-dialog.component';
+import { CreateDisplayFolderDialogComponent } from '../create-display-folder-dialog/create-display-folder-dialog.component';
+import { RenameDisplayDialogComponent } from '../rename-display-dialog/rename-display-dialog.component';
+import { DisplayTypePipe } from './display-type.pipe';
+
+@Component({
+  templateUrl: './display-folder.component.html',
+  styleUrl: './display-folder.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [DisplayTypePipe, WebappSdkModule],
+})
+export class DisplayFolderComponent implements OnDestroy {
+  @ViewChild('droparea', { static: true })
+  dropArea: ElementRef;
+
+  @ViewChild('uploader')
+  private uploaderEl: ElementRef<HTMLInputElement>;
+
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+  dragActive$ = new BehaviorSubject<boolean>(false);
+
+  displayedColumns = signal<string[]>(['name', 'type', 'modified', 'actions']);
+  dataSource = new MatTableDataSource<BrowseItem>([]);
+  selection = new SelectionModel<BrowseItem>(true, []);
+
+  private routerSubscription: Subscription;
+  private storageClient: StorageClient;
+
+  private bucket: string;
+
+  constructor(
+    private dialog: MatDialog,
+    readonly yamcs: YamcsService,
+    title: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService,
+    private messageService: MessageService,
+    configService: ConfigService,
+  ) {
+    title.setTitle('Displays');
+    this.storageClient = yamcs.createStorageClient();
+
+    this.bucket = configService.getDisplayBucket();
+
+    this.loadCurrentFolder();
+    this.routerSubscription = router.events
+      .pipe(filter((evt) => evt instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadCurrentFolder();
+      });
+
+    if (this.mayManageDisplays()) {
+      this.displayedColumns.set(['select', ...this.displayedColumns()]);
+    }
+  }
+
+  private loadCurrentFolder() {
+    const options: ListObjectsOptions = {
+      delimiter: '/',
+    };
+
+    const routeSegments = this.route.snapshot.url;
+    if (routeSegments.length) {
+      options.prefix = routeSegments.map((s) => s.path).join('/') + '/';
+    }
+
+    this.storageClient.listObjects(this.bucket, options).then((dir) => {
+      this.updateBrowsePath();
+      this.changedir(dir);
+    });
+  }
+
+  private changedir(dir: ListObjectsResponse) {
+    this.selection.clear();
+    const items: BrowseItem[] = [];
+    for (const prefix of dir.prefixes || []) {
+      items.push({
+        folder: true,
+        name: prefix,
+      });
+    }
+    for (const object of dir.objects || []) {
+      // Ignore fake objects that represent an empty directory
+      if (object.name.endsWith('/')) {
+        continue;
+      }
+      items.push({
+        folder: false,
+        name: object.name,
+        modified: object.created,
+        objectUrl: this.storageClient.getObjectURL(this.bucket, object.name),
+      });
+    }
+    this.dataSource.data = items;
+  }
+
+  toggleOne(row: BrowseItem) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  createDisplay() {
+    const dialogRef = this.dialog.open(CreateDisplayDialogComponent, {
+      width: '400px',
+      data: {
+        path: this.getCurrentPath(),
+        prefix: '',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigateByUrl(
+          `/telemetry/displays/files/${result}?c=${this.yamcs.context}`,
+        );
+      }
+    });
+  }
+
+  createFolder() {
+    this.dialog
+      .open(CreateDisplayFolderDialogComponent, {
+        width: '400px',
+        data: {
+          bucket: this.bucket,
+          path: this.getCurrentPath(),
+        },
+      })
+      .afterClosed()
+      .subscribe({
+        next: () => this.loadCurrentFolder(),
+      });
+  }
+
+  uploadFiles() {
+    let path = this.getCurrentPath();
+    // Full path should not have a leading slash
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
+
+    const files = this.uploaderEl.nativeElement.files;
+
+    const uploadPromises = [];
+    for (const key in files) {
+      if (!isNaN(parseInt(key, 10))) {
+        const file = files[key as any];
+        const fullPath = path ? path + '/' + file.name : file.name;
+        const prefix = '';
+        const objectName = prefix + fullPath;
+        const promise = this.storageClient.uploadObject(
+          this.bucket,
+          objectName,
+          file,
+        );
+        uploadPromises.push(promise);
+      }
+    }
+
+    Promise.all(uploadPromises)
+      .then(() => this.loadCurrentFolder())
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private getCurrentPath() {
+    let path = '';
+    for (const segment of this.route.snapshot.url) {
+      path += '/' + segment.path;
+    }
+    return path || '/';
+  }
+
+  deleteSelectedDisplays() {
+    const deletableObjects: string[] = [];
+    const findObjectPromises = [];
+    for (const item of this.selection.selected) {
+      if (item.folder) {
+        findObjectPromises.push(
+          this.storageClient
+            .listObjects(this.bucket, {
+              prefix: item.name,
+            })
+            .then((response) => {
+              const objects = response.objects || [];
+              deletableObjects.push(...objects.map((o) => o.name));
+            }),
+        );
+      } else {
+        deletableObjects.push(item.name);
+      }
+    }
+
+    Promise.all(findObjectPromises).then(() => {
+      if (
+        confirm(
+          `You are about to delete ${deletableObjects.length} files. Are you sure you want to continue?`,
+        )
+      ) {
+        const deletePromises = [];
+        for (const object of deletableObjects) {
+          deletePromises.push(
+            this.storageClient.deleteObject(this.bucket, object),
+          );
+        }
+
+        Promise.all(deletePromises).then(() => {
+          this.loadCurrentFolder();
+        });
+      }
+    });
+  }
+
+  renameFile(item: BrowseItem) {
+    const dialogRef = this.dialog.open(RenameDisplayDialogComponent, {
+      data: {
+        name: item.name,
+      },
+      width: '400px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadCurrentFolder();
+      }
+    });
+  }
+
+  deleteFile(item: BrowseItem) {
+    if (confirm(`Are you sure you want to delete ${item.name}?`)) {
+      this.storageClient.deleteObject(this.bucket, item.name).then(() => {
+        this.loadCurrentFolder();
+      });
+    }
+  }
+
+  dragEnter(evt: DragEvent) {
+    this.dragActive$.next(true);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  dragOver(evt: DragEvent) {
+    // This event must be prevented. Otherwise drop doesn't trigger.
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  dragLeave(evt: DragEvent) {
+    this.dragActive$.next(false);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  drop(evt: DragEvent) {
+    const dataTransfer: any = evt.dataTransfer || {};
+    if (dataTransfer) {
+      let objectPrefix = this.getCurrentPath().substring(1);
+      if (objectPrefix !== '') {
+        objectPrefix += '/';
+      }
+
+      dnd.listDroppedFiles(dataTransfer).then((droppedFiles) => {
+        const uploadPromises: any[] = [];
+        for (const droppedFile of droppedFiles) {
+          const objectPath = objectPrefix + droppedFile._fullPath;
+          const promise = this.storageClient.uploadObject(
+            this.bucket,
+            objectPath,
+            droppedFile,
+          );
+          uploadPromises.push(promise);
+        }
+        Promise.all(uploadPromises).finally(() => {
+          this.loadCurrentFolder();
+        });
+      });
+    }
+    this.dragActive$.next(false);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  mayManageDisplays() {
+    const user = this.authService.getUser()!;
+    return (
+      user.hasObjectPrivilege('ManageBucket', this.bucket) ||
+      user.hasSystemPrivilege('ManageAnyBucket')
+    );
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    for (const segment of this.route.snapshot.url) {
+      path += '/' + segment.path;
+      breadcrumb.push({
+        name: segment.path,
+        route: '/telemetry/displays/browse' + path,
+      });
+    }
+    this.breadcrumb$.next(breadcrumb);
+    return path || '/';
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+  }
+}
+
+export class BrowseItem {
+  folder: boolean;
+  name: string;
+  modified?: string;
+  objectUrl?: string;
+}
+
+export interface BreadCrumbItem {
+  name: string;
+  route: string;
+}
+```
+
+### `display-type.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/display-folder/display-type.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'displayType',
+})
+export class DisplayTypePipe implements PipeTransform {
+  transform(path?: string): string | null {
+    if (!path) {
+      return null;
+    }
+    const lc = path.toLowerCase();
+    if (lc.endsWith('.opi')) {
+      return 'Operator Interface';
+    } else if (lc.endsWith('.par')) {
+      return 'Parameter Table';
+    } else if (lc.endsWith('.js')) {
+      return 'Script File';
+    } else if (lc.indexOf('.') !== -1) {
+      const extension = lc.substr(lc.lastIndexOf('.') + 1);
+      return extension.toUpperCase() + ' File';
+    } else {
+      return null;
+    }
+  }
+}
+```

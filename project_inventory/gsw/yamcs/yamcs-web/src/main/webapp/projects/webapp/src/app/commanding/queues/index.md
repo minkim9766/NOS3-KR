@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ queues-action-log-tab/index
 queues-list/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-tab/`](queued-commands-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/`](queued-commands-table/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-action-log-tab/`](queues-action-log-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queues-list/`](queues-list/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

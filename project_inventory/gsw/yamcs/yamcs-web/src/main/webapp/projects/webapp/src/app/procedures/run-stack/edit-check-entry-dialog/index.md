@@ -3,18 +3,172 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-check-entry-dialog.component.css`
 
-file--edit-check-entry-dialog.component.css
-file--edit-check-entry-dialog.component.html
-file--edit-check-entry-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/edit-check-entry-dialog.component.css`
+
+
+```css
+.parameter-table td:first-child {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+:host ::ng-deep .parameter-table input {
+  margin: 0 !important;
+}
 ```
 
-## 항목
+### `edit-check-entry-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/edit-check-entry-dialog.component.css`](file--edit-check-entry-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/edit-check-entry-dialog.component.html`](file--edit-check-entry-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/edit-check-entry-dialog.component.ts`](file--edit-check-entry-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/edit-check-entry-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Step: List parameters</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Parameters">
+      <table class="parameter-table" style="width: 100%" formArrayName="parameters">
+        @for (
+          parameter of parameterControls;
+          track parameter;
+          let i = $index;
+          let first = $first;
+          let last = $last
+        ) {
+          <tr>
+            <td style="width: 100%">
+              <app-parameter-input [formControlName]="i" />
+            </td>
+            <td style="white-space: nowrap">
+              <ya-icon-action
+                icon="keyboard_arrow_down"
+                [disabled]="last"
+                (click)="moveParameterControlDown(i)" />
+              <ya-icon-action
+                icon="keyboard_arrow_up"
+                [disabled]="first"
+                (click)="moveParameterControlUp(i)" />
+              <ya-text-action icon="delete" (click)="removeParameterControl(i)">
+                DELETE
+              </ya-text-action>
+            </td>
+          </tr>
+        }
+        <tr>
+          <td colspan="1">
+            <ya-button icon="add_circle" (click)="addParameterControl()">Add</ya-button>
+          </td>
+        </tr>
+      </table>
+    </ya-field>
+
+    <ya-field label="Comment">
+      <app-markdown-input formControlName="comment" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div style="flex: 1 1 auto"></div>
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()">
+    {{ data.edit ? "UPDATE" : "ADD TO STACK" }}
+  </ya-button>
+</mat-dialog-actions>
+```
+
+### `edit-check-entry-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/edit-check-entry-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AppMarkdownInput } from '../../../shared/markdown-input/markdown-input.component';
+import { AppParameterInput } from '../../../shared/parameter-input/parameter-input.component';
+import { StackedCheckEntry } from '../stack-file/StackedEntry';
+
+@Component({
+  selector: 'app-edit-check-entry-dialog',
+  templateUrl: './edit-check-entry-dialog.component.html',
+  styleUrl: './edit-check-entry-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppMarkdownInput, AppParameterInput, WebappSdkModule],
+})
+export class EditCheckEntryDialogComponent {
+  form: FormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<EditCheckEntryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA)
+    readonly data: { edit: boolean; entry?: StackedCheckEntry },
+  ) {
+    this.form = new FormGroup({
+      parameters: new FormArray([]),
+      comment: new FormControl(''),
+    });
+
+    if (data.entry) {
+      const parameters = (data.entry.parameters || []).map((c) => c.parameter);
+      for (const check of parameters) {
+        this.addParameterControl();
+      }
+
+      this.form.setValue({
+        parameters: parameters || [],
+        comment: data.entry.comment || '',
+      });
+    }
+
+    // At least one blank line
+    if (!this.parameterFormArray.length) {
+      this.addParameterControl();
+    }
+  }
+
+  get parameterFormArray() {
+    return this.form.controls.parameters as FormArray;
+  }
+
+  get parameterControls() {
+    return this.parameterFormArray.controls;
+  }
+
+  addParameterControl() {
+    this.parameterFormArray.push(new FormControl(''));
+  }
+
+  removeParameterControl(idx: number) {
+    this.parameterFormArray.removeAt(idx);
+  }
+
+  moveParameterControlDown(idx: number) {
+    const control = this.parameterFormArray.controls[idx];
+    this.parameterFormArray.removeAt(idx);
+    this.parameterFormArray.insert(idx + 1, control);
+  }
+
+  moveParameterControlUp(idx: number) {
+    const control = this.parameterFormArray.controls[idx];
+    this.parameterFormArray.removeAt(idx);
+    this.parameterFormArray.insert(idx - 1, control);
+  }
+
+  save() {
+    const { value } = this.form;
+    const result = {
+      comment: value.comment,
+      parameters: value.parameters.map((p: string) => ({ parameter: p })),
+    };
+    this.dialogRef.close(result);
+  }
+}
+```

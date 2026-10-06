@@ -3,16 +3,153 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `service-list.component.html`
 
-file--service-list.component.html
-file--service-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-list/service-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Services">
+    <ya-page-button (clicked)="refresh()" icon="refresh">Refresh view</ya-page-button>
+  </app-admin-toolbar>
+
+  <ya-panel>
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-select [options]="instanceOptions$ | async" formControlName="instance" />
+    </ya-filter-bar>
+
+    <app-services-table
+      [dataSource]="dataSource"
+      (startService)="startService($event)"
+      (stopService)="stopService($event)" />
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `service-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-list/service-list.component.html`](file--service-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-list/service-list.component.ts`](file--service-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-list/service-list.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Service,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { ServicesTableComponent } from '../services-table/services-table.component';
+
+@Component({
+  templateUrl: './service-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    ServicesTableComponent,
+    WebappSdkModule,
+  ],
+})
+export class ServiceListComponent {
+  instance = '_global';
+
+  filterForm = new UntypedFormGroup({
+    instance: new UntypedFormControl('_global'),
+  });
+
+  instanceOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: '_global', label: '_global' },
+  ]);
+
+  dataSource = new MatTableDataSource<Service>();
+
+  constructor(
+    private yamcs: YamcsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    title: Title,
+  ) {
+    title.setTitle('Services');
+
+    yamcs.yamcsClient
+      .getInstances({
+        filter: 'state=RUNNING',
+      })
+      .then((instances) => {
+        for (const instance of instances) {
+          this.instanceOptions$.next([
+            ...this.instanceOptions$.value,
+            {
+              id: instance.name,
+              label: instance.name,
+            },
+          ]);
+        }
+      });
+
+    this.initializeOptions();
+    this.refresh();
+
+    this.filterForm.get('instance')!.valueChanges.forEach((instance) => {
+      this.instance = instance;
+      this.refresh();
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('instance')) {
+      this.instance = queryParams.get('instance')!;
+      this.filterForm.get('instance')!.setValue(this.instance);
+    }
+  }
+
+  startService(name: string) {
+    if (confirm(`Are you sure you want to start ${name} ?`)) {
+      const instance = this.filterForm.get('instance')!.value;
+      this.yamcs.yamcsClient
+        .startService(instance, name)
+        .then(() => this.refresh());
+    }
+  }
+
+  stopService(name: string) {
+    if (confirm(`Are you sure you want to stop ${name} ?`)) {
+      const instance = this.filterForm.get('instance')!.value;
+      this.yamcs.yamcsClient
+        .stopService(instance, name)
+        .then(() => this.refresh());
+    }
+  }
+
+  refresh() {
+    this.updateURL();
+    const instance = this.filterForm.get('instance')!.value;
+    this.yamcs.yamcsClient.getServices(instance).then((services) => {
+      this.dataSource.data = services;
+    });
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        instance: this.instance || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+}
+```

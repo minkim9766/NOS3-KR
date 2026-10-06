@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/tools/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ cmd_tlm_server/index
 launcher/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/outputs/tmp/config/tools/cmd_tlm_server/`](cmd_tlm_server/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/tools/launcher/`](launcher/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

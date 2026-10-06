@@ -3,20 +3,732 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `QueuedTestTester.cpp`
 
-file--QueuedTestTester.cpp
-file--QueuedTestTester.hpp
-file--Tester.hpp
-file--TesterHelpers.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/QueuedTestTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  QueuedTest/test/ut/QueuedTestTester.cpp
+// \author tiffany
+// \brief  cpp file for QueuedTest test harness implementation class
+// ======================================================================
+
+#include "QueuedTestTester.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+QueuedTestTester ::QueuedTestTester()
+    : QueuedTestGTestBase("QueuedTestTester", QueuedTestTester::MAX_HISTORY_SIZE),
+      component("QueuedTest"),
+      primitiveBuf(primitiveData, sizeof(primitiveData)),
+      stringBuf(stringData, sizeof(stringData)),
+      enumBuf(enumData, sizeof(enumData)),
+      arrayBuf(arrayData, sizeof(arrayData)),
+      structBuf(structData, sizeof(structData)),
+      serialBuf(serialData, sizeof(serialData)),
+      time(STest::Pick::any(), STest::Pick::any()) {
+    this->initComponents();
+    this->connectPorts();
+    this->connectAsyncPorts();
+    this->component.registerExternalParameters(&this->paramTesterDelegate);
+}
+
+QueuedTestTester ::~QueuedTestTester() {}
+
+void QueuedTestTester ::initComponents() {
+    this->init();
+    this->component.init(QueuedTestTester::TEST_INSTANCE_QUEUE_DEPTH, QueuedTestTester::TEST_INSTANCE_ID);
+}
+
+Fw::ParamValid QueuedTestTester ::from_prmGetIn_handler(const FwIndexType portNum,
+                                                        FwPrmIdType id,
+                                                        Fw::ParamBuffer& val) {
+    val.resetSer();
+
+    Fw::SerializeStatus status;
+    U32 id_base = component.getIdBase();
+
+    FW_ASSERT(id >= id_base);
+
+    switch (id - id_base) {
+        case QueuedTestComponentBase::PARAMID_PARAMBOOL:
+            status = val.serialize(boolPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMU32:
+            status = val.serialize(u32Prm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMSTRING:
+            status = val.serialize(stringPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMENUM:
+            status = val.serialize(enumPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMARRAY:
+            status = val.serialize(arrayPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMSTRUCT:
+            status = val.serialize(structPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+    }
+
+    this->pushFromPortEntry_prmGetIn(id, val);
+
+    return prmValid;
+}
+
+void QueuedTestTester ::from_prmSetIn_handler(const FwIndexType portNum, FwPrmIdType id, Fw::ParamBuffer& val) {
+    Fw::SerializeStatus status;
+    U32 id_base = component.getIdBase();
+
+    FW_ASSERT(id >= id_base);
+
+    switch (id - id_base) {
+        case QueuedTestComponentBase::PARAMID_PARAMBOOL:
+            status = val.deserialize(boolPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMU32:
+            status = val.deserialize(u32Prm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMSTRING:
+            status = val.deserialize(stringPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMENUM:
+            status = val.deserialize(enumPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMARRAY:
+            status = val.deserialize(arrayPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+
+        case QueuedTestComponentBase::PARAMID_PARAMSTRUCT:
+            status = val.deserialize(structPrm.args.val);
+            FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+            break;
+    }
+
+    this->pushFromPortEntry_prmSetIn(id, val);
+}
+
+// ----------------------------------------------------------------------
+// Unit test implementation of external parameter delegate serialization/deserialization
+// ----------------------------------------------------------------------
+
+Fw::SerializeStatus QueuedTestTester::QueuedTestComponentBaseParamExternalDelegate ::deserializeParam(
+    const FwPrmIdType base_id,
+    const FwPrmIdType local_id,
+    const Fw::ParamValid prmStat,
+    Fw::SerializeBufferBase& buff) {
+    Fw::SerializeStatus stat;
+    (void)base_id;
+
+    // Serialize the parameter based on ID
+    switch (local_id) {
+        // ParamBoolExternal
+        case QueuedTestComponentBase::PARAMID_PARAMBOOLEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamBoolExternal);
+            break;
+        // ParamI32External
+        case QueuedTestComponentBase::PARAMID_PARAMI32EXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamI32External);
+            break;
+        // ParamStringExternal
+        case QueuedTestComponentBase::PARAMID_PARAMSTRINGEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamStringExternal);
+            break;
+        // ParamEnumExternal
+        case QueuedTestComponentBase::PARAMID_PARAMENUMEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamEnumExternal);
+            break;
+        // ParamArrayExternal
+        case QueuedTestComponentBase::PARAMID_PARAMARRAYEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamArrayExternal);
+            break;
+        // ParamStructExternal
+        case QueuedTestComponentBase::PARAMID_PARAMSTRUCTEXTERNAL:
+            stat = buff.deserialize(this->m_param_ParamStructExternal);
+            break;
+        default:
+            // Unknown ID should not have gotten here
+            FW_ASSERT(false, static_cast<FwAssertArgType>(local_id));
+    }
+
+    return stat;
+}
+
+Fw::SerializeStatus QueuedTestTester::QueuedTestComponentBaseParamExternalDelegate ::serializeParam(
+    const FwPrmIdType base_id,
+    const FwPrmIdType local_id,
+    Fw::SerializeBufferBase& buff) const {
+    Fw::SerializeStatus stat;
+    (void)base_id;
+
+    // Serialize the parameter based on ID
+    switch (local_id) {
+        // ParamBoolExternal
+        case QueuedTestComponentBase::PARAMID_PARAMBOOLEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamBoolExternal);
+            break;
+        // ParamI32External
+        case QueuedTestComponentBase::PARAMID_PARAMI32EXTERNAL:
+            stat = buff.serialize(this->m_param_ParamI32External);
+            break;
+        // ParamStringExternal
+        case QueuedTestComponentBase::PARAMID_PARAMSTRINGEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamStringExternal);
+            break;
+        // ParamEnumExternal
+        case QueuedTestComponentBase::PARAMID_PARAMENUMEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamEnumExternal);
+            break;
+        // ParamArrayExternal
+        case QueuedTestComponentBase::PARAMID_PARAMARRAYEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamArrayExternal);
+            break;
+        // ParamStructExternal
+        case QueuedTestComponentBase::PARAMID_PARAMSTRUCTEXTERNAL:
+            stat = buff.serialize(this->m_param_ParamStructExternal);
+            break;
+        default:
+            // Unknown ID should not have gotten here
+            FW_ASSERT(false, static_cast<FwAssertArgType>(local_id));
+    }
+
+    return stat;
+}
 ```
 
-## 항목
+### `QueuedTestTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/QueuedTestTester.cpp`](file--QueuedTestTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/QueuedTestTester.hpp`](file--QueuedTestTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/Tester.hpp`](file--Tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/TesterHelpers.cpp`](file--TesterHelpers.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/QueuedTestTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  QueuedTest/test/ut/QueuedTestTester.hpp
+// \author tiffany
+// \brief  hpp file for QueuedTest test harness implementation class
+// ======================================================================
+
+#ifndef QUEUED_TEST_TESTER_HPP
+#define QUEUED_TEST_TESTER_HPP
+
+#include "FppTest/component/active/SerialPortIndexEnumAc.hpp"
+#include "FppTest/component/active/TypedPortIndexEnumAc.hpp"
+#include "FppTest/component/queued/QueuedTest.hpp"
+#include "FppTest/component/tests/CmdTests.hpp"
+#include "FppTest/component/tests/EventTests.hpp"
+#include "FppTest/component/tests/ExternalParamTests.hpp"
+#include "FppTest/component/tests/InternalInterfaceTests.hpp"
+#include "FppTest/component/tests/ParamTests.hpp"
+#include "FppTest/component/tests/PortTests.hpp"
+#include "FppTest/component/tests/TlmTests.hpp"
+#include "FppTest/component/types/FormalParamTypes.hpp"
+#include "QueuedTestGTestBase.hpp"
+
+class QueuedTestTester : public QueuedTestGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 100;
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+    //! Construct object QueuedTestTester
+    //!
+    QueuedTestTester();
+
+    //! Destroy object QueuedTestTester
+    //!
+    ~QueuedTestTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    PORT_TEST_DECLS
+    PORT_TEST_DECLS_ASYNC
+
+    CMD_TEST_DECLS
+    CMD_TEST_DECLS_ASYNC
+
+    EVENT_TEST_DECLS
+
+    TLM_TEST_DECLS
+
+    void testParam();
+    PARAM_CMD_TEST_DECLS
+
+    void testExternalParam();
+    EXTERNAL_PARAM_CMD_TEST_DECLS
+
+    INTERNAL_INT_TEST_DECLS
+
+    void testTime();
+
+    void testOverflowAssert();
+
+    void testOverflowDrop();
+
+    void testOverflowHook();
+
+  private:
+#include "FppTest/component/common/tester.hpp"
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for serial from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_serialOut
+    //!
+    void from_serialOut_handler(FwIndexType portNum,             //!< The port number
+                                Fw::SerializeBufferBase& Buffer  //!< The serialization buffer
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Connect async ports
+    void connectAsyncPorts();
+
+    //! Connect prmSetIn port
+    void connectPrmSetIn();
+
+    //! Connect timeGetOut port
+    void connectTimeGetOut();
+
+    //! Connect serial ports to special ports
+    void connectSpecialPortsSerial();
+
+    //! Set prmValid
+    void setPrmValid(Fw::ParamValid valid);
+
+    //! Call doDispatch() on component under test
+    Fw::QueuedComponentBase::MsgDispatchStatus doDispatch();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+    //! Check successful status of a serial port invocation
+    void checkSerializeStatusSuccess();
+
+    //! Check unsuccessful status of a serial port invocation
+    void checkSerializeStatusBufferEmpty();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    QueuedTest component;
+
+    // Values returned by typed output ports
+    FppTest::Types::BoolType noParamReturnVal;
+    FppTest::Types::U32Type primitiveReturnVal;
+    FppTest::Types::EnumType enumReturnVal;
+    FppTest::Types::ArrayType arrayReturnVal;
+    FppTest::Types::StructType structReturnVal;
+    FppTest::Types::StringType stringReturnVal;
+    FppTest::Types::StringType stringAliasReturnVal;
+    FppTest::Types::AliasStringArrayType arrayStringAliasReturnVal;
+
+    // Buffers from serial output ports;
+    U8 primitiveData[InputPrimitiveArgsPort::SERIALIZED_SIZE];
+    U8 stringData[InputStringArgsPort::SERIALIZED_SIZE];
+    U8 enumData[InputEnumArgsPort::SERIALIZED_SIZE];
+    U8 arrayData[InputArrayArgsPort::SERIALIZED_SIZE];
+    U8 structData[InputStructArgsPort::SERIALIZED_SIZE];
+    U8 serialData[SERIAL_ARGS_BUFFER_CAPACITY];
+
+    Fw::SerialBuffer primitiveBuf;
+    Fw::SerialBuffer stringBuf;
+    Fw::SerialBuffer enumBuf;
+    Fw::SerialBuffer arrayBuf;
+    Fw::SerialBuffer structBuf;
+    Fw::SerialBuffer serialBuf;
+
+    // Parameter test values
+    FppTest::Types::BoolParam boolPrm;
+    FppTest::Types::U32Param u32Prm;
+    FppTest::Types::PrmStringParam stringPrm;
+    FppTest::Types::EnumParam enumPrm;
+    FppTest::Types::ArrayParam arrayPrm;
+    FppTest::Types::StructParam structPrm;
+    Fw::ParamValid prmValid;
+
+    // Time test values
+    Fw::Time time;
+
+    //! External Parameter Delegate
+    class QueuedTestComponentBaseParamExternalDelegate : public Fw::ParamExternalDelegate {
+      public:
+        // ----------------------------------------------------------------------
+        // Parameter validity flags
+        // ----------------------------------------------------------------------
+
+        //! True if ParamBoolExternal was successfully received
+        Fw::ParamValid m_param_ParamBoolExternal_valid;
+
+        //! True if ParamI32External was successfully received
+        Fw::ParamValid m_param_ParamI32External_valid;
+
+        //! True if ParamStringExternal was successfully received
+        Fw::ParamValid m_param_ParamStringExternal_valid;
+
+        //! True if ParamEnumExternal was successfully received
+        Fw::ParamValid m_param_ParamEnumExternal_valid;
+
+        //! True if ParamArrayExternal was successfully received
+        Fw::ParamValid m_param_ParamArrayExternal_valid;
+
+        //! True if ParamStructExternal was successfully received
+        Fw::ParamValid m_param_ParamStructExternal_valid;
+
+      public:
+        // ----------------------------------------------------------------------
+        // Parameter variables
+        // ----------------------------------------------------------------------
+
+        //! Parameter ParamBoolExternal
+        bool m_param_ParamBoolExternal;
+
+        //! Parameter ParamI32External
+        I32 m_param_ParamI32External;
+
+        //! Parameter ParamStringExternal
+        Fw::ParamString m_param_ParamStringExternal;
+
+        //! Parameter ParamEnumExternal
+        FormalParamEnum m_param_ParamEnumExternal;
+
+        //! Parameter ParamArrayExternal
+        FormalParamArray m_param_ParamArrayExternal;
+
+        //! Parameter ParamStructExternal
+        FormalParamStruct m_param_ParamStructExternal;
+
+      public:
+        // ----------------------------------------------------------------------
+        // Unit test implementation of external parameter delegate serialization/deserialization
+        // ----------------------------------------------------------------------
+
+        //! Parameter deserialization function for external parameter unit testing
+        Fw::SerializeStatus deserializeParam(
+            const FwPrmIdType base_id,     //!< The component base parameter ID to deserialize
+            const FwPrmIdType local_id,    //!< The parameter local ID to deserialize
+            const Fw::ParamValid prmStat,  //!< The parameter validity status
+            Fw::SerializeBufferBase& buff  //!< The buffer containing the parameter to deserialize
+            ) override;
+
+        //! Parameter serialization function for external parameter unit testing
+        Fw::SerializeStatus serializeParam(
+            const FwPrmIdType base_id,     //!< The component base parameter ID to serialize
+            const FwPrmIdType local_id,    //!< The parameter local ID to serialize
+            Fw::SerializeBufferBase& buff  //!< The buffer to serialize the parameter into
+        ) const override;
+    };
+
+    // ----------------------------------------------------------------------
+    // Parameter delegates
+    // ----------------------------------------------------------------------
+
+    //! Delegate to serialize/deserialize an externally stored parameter
+    QueuedTestComponentBaseParamExternalDelegate paramTesterDelegate;
+};
+
+#endif
+```
+
+### `Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/Tester.hpp`
+
+
+```cpp
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+// QueuedTestTester is the full implementation - using it as the Tester class
+#include "QueuedTestTester.hpp"
+class QueuedTestTester;
+typedef QueuedTestTester Tester;
+
+#endif
+```
+
+### `TesterHelpers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/test/ut/TesterHelpers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  QueuedTest/test/ut/TesterHelpers.cpp
+// \author Auto-generated
+// \brief  cpp file for QueuedTest component test harness base class
+//
+// NOTE: this file was automatically generated
+//
+// ======================================================================
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void Tester ::connectPorts() {
+    // arrayArgsAsyncBlockPriority
+    this->connect_to_arrayArgsAsyncBlockPriority(0, this->component.get_arrayArgsAsyncBlockPriority_InputPort(0));
+
+    // arrayArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_arrayArgsGuarded(i, this->component.get_arrayArgsGuarded_InputPort(i));
+    }
+
+    // arrayArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_arrayArgsSync(i, this->component.get_arrayArgsSync_InputPort(i));
+    }
+
+    // arrayReturnGuarded
+    this->connect_to_arrayReturnGuarded(0, this->component.get_arrayReturnGuarded_InputPort(0));
+
+    // arrayReturnSync
+    this->connect_to_arrayReturnSync(0, this->component.get_arrayReturnSync_InputPort(0));
+
+    // cmdIn
+    this->connect_to_cmdIn(0, this->component.get_cmdIn_InputPort(0));
+
+    // enumArgsAsyncAssert
+    this->connect_to_enumArgsAsyncAssert(0, this->component.get_enumArgsAsyncAssert_InputPort(0));
+
+    // enumArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_enumArgsGuarded(i, this->component.get_enumArgsGuarded_InputPort(i));
+    }
+
+    // enumArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_enumArgsSync(i, this->component.get_enumArgsSync_InputPort(i));
+    }
+
+    // enumReturnGuarded
+    this->connect_to_enumReturnGuarded(0, this->component.get_enumReturnGuarded_InputPort(0));
+
+    // enumReturnSync
+    this->connect_to_enumReturnSync(0, this->component.get_enumReturnSync_InputPort(0));
+
+    // noArgsAsync
+    this->connect_to_noArgsAsync(0, this->component.get_noArgsAsync_InputPort(0));
+
+    // noArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_noArgsGuarded(i, this->component.get_noArgsGuarded_InputPort(i));
+    }
+
+    // noArgsReturnGuarded
+    this->connect_to_noArgsReturnGuarded(0, this->component.get_noArgsReturnGuarded_InputPort(0));
+
+    // noArgsReturnSync
+    this->connect_to_noArgsReturnSync(0, this->component.get_noArgsReturnSync_InputPort(0));
+
+    // noArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_noArgsSync(i, this->component.get_noArgsSync_InputPort(i));
+    }
+
+    // primitiveArgsAsync
+    this->connect_to_primitiveArgsAsync(0, this->component.get_primitiveArgsAsync_InputPort(0));
+
+    // primitiveArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_primitiveArgsGuarded(i, this->component.get_primitiveArgsGuarded_InputPort(i));
+    }
+
+    // primitiveArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_primitiveArgsSync(i, this->component.get_primitiveArgsSync_InputPort(i));
+    }
+
+    // primitiveReturnGuarded
+    this->connect_to_primitiveReturnGuarded(0, this->component.get_primitiveReturnGuarded_InputPort(0));
+
+    // primitiveReturnSync
+    this->connect_to_primitiveReturnSync(0, this->component.get_primitiveReturnSync_InputPort(0));
+
+    // stringArgsAsync
+    this->connect_to_stringArgsAsync(0, this->component.get_stringArgsAsync_InputPort(0));
+
+    // stringArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_stringArgsGuarded(i, this->component.get_stringArgsGuarded_InputPort(i));
+    }
+
+    // stringArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_stringArgsSync(i, this->component.get_stringArgsSync_InputPort(i));
+    }
+
+    // structArgsAsyncDropPriority
+    this->connect_to_structArgsAsyncDropPriority(0, this->component.get_structArgsAsyncDropPriority_InputPort(0));
+
+    // structArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_structArgsGuarded(i, this->component.get_structArgsGuarded_InputPort(i));
+    }
+
+    // structArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_structArgsSync(i, this->component.get_structArgsSync_InputPort(i));
+    }
+
+    // structReturnGuarded
+    this->connect_to_structReturnGuarded(0, this->component.get_structReturnGuarded_InputPort(0));
+
+    // structReturnSync
+    this->connect_to_structReturnSync(0, this->component.get_structReturnSync_InputPort(0));
+
+    // arrayArgsOut
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->component.set_arrayArgsOut_OutputPort(i, this->get_from_arrayArgsOut(i));
+    }
+
+    // arrayReturnOut
+    this->component.set_arrayReturnOut_OutputPort(0, this->get_from_arrayReturnOut(0));
+
+    // cmdRegOut
+    this->component.set_cmdRegOut_OutputPort(0, this->get_from_cmdRegOut(0));
+
+    // cmdResponseOut
+    this->component.set_cmdResponseOut_OutputPort(0, this->get_from_cmdResponseOut(0));
+
+    // enumArgsOut
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->component.set_enumArgsOut_OutputPort(i, this->get_from_enumArgsOut(i));
+    }
+
+    // enumReturnOut
+    this->component.set_enumReturnOut_OutputPort(0, this->get_from_enumReturnOut(0));
+
+    // eventOut
+    this->component.set_eventOut_OutputPort(0, this->get_from_eventOut(0));
+
+    // noArgsOut
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->component.set_noArgsOut_OutputPort(i, this->get_from_noArgsOut(i));
+    }
+
+    // noArgsReturnOut
+    this->component.set_noArgsReturnOut_OutputPort(0, this->get_from_noArgsReturnOut(0));
+
+    // primitiveArgsOut
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->component.set_primitiveArgsOut_OutputPort(i, this->get_from_primitiveArgsOut(i));
+    }
+
+    // primitiveReturnOut
+    this->component.set_primitiveReturnOut_OutputPort(0, this->get_from_primitiveReturnOut(0));
+
+    // prmGetOut
+    this->component.set_prmGetOut_OutputPort(0, this->get_from_prmGetOut(0));
+
+    // prmSetOut
+    this->component.set_prmSetOut_OutputPort(0, this->get_from_prmSetOut(0));
+
+    // stringArgsOut
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->component.set_stringArgsOut_OutputPort(i, this->get_from_stringArgsOut(i));
+    }
+
+    // structArgsOut
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->component.set_structArgsOut_OutputPort(i, this->get_from_structArgsOut(i));
+    }
+
+    // structReturnOut
+    this->component.set_structReturnOut_OutputPort(0, this->get_from_structReturnOut(0));
+
+    // textEventOut
+    this->component.set_textEventOut_OutputPort(0, this->get_from_textEventOut(0));
+
+    // timeGetOut
+    this->component.set_timeGetOut_OutputPort(0, this->get_from_timeGetOut(0));
+
+    // tlmOut
+    this->component.set_tlmOut_OutputPort(0, this->get_from_tlmOut(0));
+
+    // ----------------------------------------------------------------------
+    // Connect serial output ports
+    // ----------------------------------------------------------------------
+    for (FwSizeType i = 0; i < 5; ++i) {
+        this->component.set_serialOut_OutputPort(i, this->get_from_serialOut(i));
+    }
+
+    // ----------------------------------------------------------------------
+    // Connect serial input ports
+    // ----------------------------------------------------------------------
+    // serialAsync
+    this->connect_to_serialAsync(0, this->component.get_serialAsync_InputPort(0));
+
+    // serialAsyncAssert
+    this->connect_to_serialAsyncAssert(0, this->component.get_serialAsyncAssert_InputPort(0));
+
+    // serialAsyncBlockPriority
+    this->connect_to_serialAsyncBlockPriority(0, this->component.get_serialAsyncBlockPriority_InputPort(0));
+
+    // serialAsyncDropPriority
+    this->connect_to_serialAsyncDropPriority(0, this->component.get_serialAsyncDropPriority_InputPort(0));
+
+    // serialGuarded
+    this->connect_to_serialGuarded(0, this->component.get_serialGuarded_InputPort(0));
+
+    // serialSync
+    this->connect_to_serialSync(0, this->component.get_serialSync_InputPort(0));
+}
+
+void Tester ::initComponents() {
+    this->init();
+    this->component.init(Tester::TEST_INSTANCE_QUEUE_DEPTH, Tester::TEST_INSTANCE_ID);
+}
+```

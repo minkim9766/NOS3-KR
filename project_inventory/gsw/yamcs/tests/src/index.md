@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/tests/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ main/index
 test/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/tests/src/main/`](main/index) — 폴더
-- [`gsw/yamcs/tests/src/test/`](test/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

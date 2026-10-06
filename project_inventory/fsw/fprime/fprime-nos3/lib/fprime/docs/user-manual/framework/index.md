@@ -3,32 +3,2763 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `assert.md`
 
-file--assert.md
-file--autocoded-functions.md
-file--baremetal-multicore.md
-file--building-topology.md
-file--configuring-fprime.md
-file--data-products.md
-file--dynamic-memory.md
-file--ground-interface.md
-file--state-machines.md
-file--supported-platforms.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/assert.md`
+
+
+````markdown
+# Asserts in F
+
+The F′ framework uses asserts to perform run-time checks for software
+errors. They are a method for verifying conditions that should be true
+unless there is a software or processor error. Assert.hpp defines macros
+to declare an assertion in C++ code. CAssert.hpp defines macros to
+declare an assertion in C code.
+
+The definition for the framework assert is found in Fw/Types/Assert.hpp.
+The user calls the `FW_ASSERT(cond, arg1, ...)` macro with up to six arguments. The
+arguments can consist of any basic types shown below.
+
+  - I8 8-bit signed integer
+
+  - U8 8-bit unsigned integer
+
+  - I16 16-bit signed integer
+
+  - U16 16-bit unsigned integer
+
+  - I32 32-bit signed integer
+
+  - U32 32-bit unsigned integer
+
+  - F32 32-bit IEEE floating point number (float)
+
+  - F64 64-bit floating point number (double)
+
+  - I64 64-bit signed integer
+
+  - U64 64-bit unsigned integer
+
+  - bool C++ Boolean type
+
+These types are used in FPP specifications. Note that not all types are
+available on all processor architectures. The types that are available
+is a configurable feature of the architecture and is typically set by
+compiler arguments.
+
+## C Assertion Macros
+
+For C code, the framework provides `FW_CASSERT` macros in Fw/Types/CAssert.h:
+
+- `FW_CASSERT(cond)` - Basic assertion with condition only
+- `FW_CASSERT_1(cond, arg1)` - Assertion with condition and one argument for reporting
+
+The C assertion macros support the same argument types as the C++ version and integrate with the same assertion hook system.
+
+### Example C Assertion Usage
+
+```c
+#include <Fw/Types/CAssert.h>
+
+void example_function(int value) {
+    // Basic assertion
+    FW_CASSERT(value > 0);
+
+    // Assertion with argument reporting
+    FW_CASSERT_1(value <= 1000, value);
+}
 ```
 
-## 항목
+The assert can be configured in the following ways:
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/assert.md`](file--assert.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/autocoded-functions.md`](file--autocoded-functions.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/baremetal-multicore.md`](file--baremetal-multicore.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/building-topology.md`](file--building-topology.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/configuring-fprime.md`](file--configuring-fprime.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/data-products.md`](file--data-products.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/dynamic-memory.md`](file--dynamic-memory.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/ground-interface.md`](file--ground-interface.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/state-machines.md`](file--state-machines.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/supported-platforms.md`](file--supported-platforms.md) — UTF-8 텍스트 파일 본문 포함
+  - FW\_ASSERT\_LEVEL Sets the level or reporting for the asserts.
+
+      - FW\_NO\_ASSERT Shows the asserts turned off. The code to check
+        the condition is not compiled. Some developers prefer this once
+        the code has been tested to regain some processing performance.
+
+      - FW\_FILEID\_ASSERT Identifies an integer value for the file
+        where the assert occurs (as opposed to \_\_FILE\_\_). It saves
+        code space since no file name is stored.
+
+      - FW\_FILENAME\_ASSERT Identifies which file the assert occurred
+        in. (The \_\_FILE\_\_ macro is used.)
+
+  - FW\_ASSERT\_TEXT\_SIZE Identifies the size of the buffer used to
+    store the text of the assert.
+
+## AssertHook
+
+By default, when FW\_ASSERT is called the framework prints a message
+(location of and arguments to the macro), and then calls the C assert()
+function. The framework also provides a function that allows the
+registration of a user-defined handler. The handler is
+registerAssertHook and can be found in FwAssert.hpp. The assert hook is
+called with a string representing the text of the assert. The user
+implements a derived class that implements the reportAssert() pure
+virtual method, and does whatever project-specific logic is required.
+
+### reportAssert
+
+When formatting an assert message use the default message line hash or
+name, and argument approach.
+
+### printAssert
+
+When outputting the assert message use the default Fw::Logger. Force the
+Fw::Logger default to printf for systems with print f.
+
+### doAssert
+
+Actually asserts (action of assert).
+````
+
+### `autocoded-functions.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/autocoded-functions.md`
+
+
+```markdown
+# F´ Autocoded Functions and Component Classes
+
+> [!NOTE]
+> for a hands-on walk-through of build topologies, please see: [Tutorials](../../tutorials/index.md)
+
+The FPP compiler takes the FPP definitions and
+generates C++ base classes. The developer writes classes that derive
+from those base classes and implements the project-specific logic. For
+input ports and commands, the base classes declare pure virtual methods
+for the derived class to implement. If a developer forgets to implement
+these functions, the compilation of the code will fail. For output
+ports, telemetry channels, events, and parameters, the base class
+provides methods for the base class to call.
+
+Depending on the kind of the component, the virtual calls will be made
+on the thread of the component itself or the thread of a component
+calling a synchronous or guarded port.
+
+This guide walks through how to use the autocoded setup for:
+
+- [Ports](#ports)
+- [Commands](#commands)
+- [Channels/Telemetry](#telemetry)
+- [Events](#events)
+- [Parameters](#parameters)
+
+Advanced topics:
+
+- [Internal Interfaces](#internal-interfaces)
+- [Message Pre-Hooks](#message-pre-hooks)
+- [Initialization Code](#initialization-code)
+
+
+> [!TIP]
+> For all the autocoded functions provided by FPP, your IDE's language support can be quite useful for auto-completing function names and looking up argument types.
+
+> [!TIP]
+> All those functions that are autocoded by FPP are located in the build cache, for example under `build-fprime-automatic-native/Components/MyComponent`
+
+
+## Ports
+
+### Input port calls
+
+The pure virtual function to implement a port call is derived from the
+name of the port declaration in the component FPP. The function is
+declared in the protected section of the class and has the following
+naming scheme:
+
+> \<port name\>\_handler(NATIVE\_INT\_TYPE portNum, \<argument list\>) =
+> 0;
+
+where
+
+> \<port name\> = The name given to the port in the name= tag in the
+> port section of the FPP.
+>
+> portNum = If the FPP defines a port array instead of a single port, this allows
+> the developer to know which port was invoked. The value is the port
+> instance indexed to zero. In the event the FPP port is a single input
+> port (i.e. not a port array), this value will be zero.
+>
+> \<argument\_list\> = The list of arguments specified in the args
+> section of the port definition.
+
+### Output port calls
+
+The base class function for outgoing port calls is derived from the name
+and type of the port declaration in the component FPP. The function is
+declared in the protected section of the class and has the following
+naming scheme:
+
+> \<port name\>\_out(NATIVE\_INT\_TYPE portNum, \<argument list\>);
+
+where
+
+> \<port name\> = The name given to the port FPP
+>
+> portNum = If the FPP defines a port array instead of a single port, this allows
+> the developer to know which port was invoked. The value is the port
+> instance indexed to zero. In the event the FPP port is a single input
+> port (i.e. not a port array), this value will be zero.
+>
+> \<argument\_list\> = The list of arguments specified in the args
+> section of the port definition.
+
+The call will invoke the port methods defined on whatever component the
+component in consideration is interconnected with. If those ports are defined as
+synchronous or guarded, the other component’s logic will execute on the
+thread of the call.
+
+If the port is not connected and is called, the code will assert. If the
+design calls for ports that are optionally connected, the connection
+status can be checked before calling via this function:
+
+> isConnected \_\<port name\>\_OutputPort(NATIVE\_INT\_TYPE portNum);
+
+### Port number calls
+
+A method in the base class can be called to get the number of ports
+available. The method has the following naming scheme:
+
+> NATIVE\_INT\_TYPE getNum\_\<port name\>\_\<direction\>Ports();
+
+where
+
+> \<port name\> = The name given to the port in the FPP.
+>
+> \<direction\> = The direction of the port, Input or Output.
+
+The developer can use this to automatically scale the code to the number
+of ports specified in the FPP. If the port output function is called
+with a portNum value greater than the number of ports minus one, the
+code will assert.
+
+## Commands
+
+The pure virtual function to implement a command is derived from the
+mnemonic in the command declaration in the component FPP. The function
+is declared in the protected section of the class and has the following
+naming scheme:
+
+> \<mnemonic\>\_cmdHandler(FwOpcodeType opcode, U32 cmdSeq, \<argument
+> list\>) = 0;
+
+where
+
+> \<mnemonic\> = The mnemonic string of the command given in the component FPP definition.
+>
+> \<argument\_list\> = The list of arguments specified the FPP command definition.
+
+When the command has been completed, a command response method must be
+called in the base class to inform the dispatcher of the command that it
+has completed. That function call is as follows:
+
+> void cmdResponse\_out(FwOpcodeType opCode, U32 cmdSeq,
+> Fw::CommandResponse response);
+
+The opcode and cmdSeq values passed by the function should be passed to
+the command response function as well as a status indicating the success
+or failure of a command. The opcode is specified in the FPP, and cmdSeq
+will be set by the command dispatcher to track where the command is in a
+sequence of commands. If more information about a failure is needed, an
+event should be specified and called with the additional information
+(see Section 6.7.4). If a command takes a number of steps and the call
+to the command dispatch function does not complete the command, the
+opcode and command sequence should be stored for a later call to the
+command response function.
+
+## Telemetry
+
+A telemetry channel is intended to be used for periodically measured
+data. It is a snapshot in time, and all values may not be permanently
+recorded and sent to the command and data handling software. The code
+generator generates a base class function for each telemetry channel
+defined in the FPP. The developer calls this to write a new value of the
+telemetry being stored. The function is declared in the protected
+section of the class and has the following naming scheme:
+
+> tlmWrite\_\<channel name\>(\<type\>& arg);
+
+where
+
+> \<channel name\> = The name given to the channel in the component FPP
+>
+> \<type\> = The type of the channel.
+
+The argument is always passed by reference to avoid copying. The call
+internally adds a timestamp to the value. There is a method getTime() in
+the base class if the developer wishes to use a time value for other
+purposes.
+
+## Events
+
+Events are intermittent and are all recorded to reconstruct a series of
+actions or events after the fact. The code generator generates a base
+class function for each event defined in the FPP. The developer calls
+whenever the event to be recorded happens. The function is declared in
+the protected section of the class and has the following naming scheme:
+
+> log\_\<severity\>\_\<event name\>(\<event arguments\>);
+
+where
+
+> \<severity\> = The value of the severity attribute in the FPP for the event.
+>
+> \<event name\> = The name of the event given in the name attribute in
+> the FPP.
+>
+> \<event arguments\> = The argument list of the event.
+
+The call internally adds a timestamp to the event. There is a method
+getTime() in the base class if the developer wishes to use a time value
+for other purposes.
+
+## Parameters
+
+Parameters are values that are stored non-volatilely and are ways to
+influence the behavior of the software without requiring software
+updates. During initialization, the parameters are retrieved and stored
+in the component base class for later use be the developer’s derived
+class. If for some reason the parameters cannot be retrieved, the
+default value specified in the FPP is returned. The function is declared
+in the protected section of the class and has the following naming
+scheme:
+
+> \<parameter type\> paramGet\_\<parameter name\>(Fw::ParamValid&
+> valid);
+
+where
+
+> \<parameter type\> = The type of the parameter specified by the
+> data\_type tag in the FPP.
+>
+> \<parameter name\> = The name of the parameter given in the name
+> attribute in the FPP.
+
+The parameter value is returned by reference to avoid copying the data.
+The valid value should be checked after the call to see what the status
+of the parameter value is. Table 21 provides the possible values of the
+status and their meanings.
+
+**Table 21.** Parameter retrieval status
+values.
+
+| Value              | Meaning                                                                                                                                                                                               |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Fw::PARAM\_UNINIT  | The code to attempt to retrieve the value was never called. This is most likely an error in forgetting to call the loadParameters() public function for the component during software initialization. |
+| Fw::PARAM\_VALID   | The parameter was successfully retrieved.                                                                                                                                                             |
+| Fw::PARAM\_INVALID | The parameter was not successfully retrieved, and no default was specified.                                                                                                                           |
+| Fw::PARAM\_DEFAULT | The parameter was not successfully retrieved, but a default was provided.                                                                                                                             |
+
+A virtual method is defined in the base class:
+
+> void parameterUpdated(FwPrmIdType id);
+
+By default this method does nothing, but the developer can override the
+method if the implementation needs a notification of when a parameter
+value is updated. It is called each time a parameter is updated.
+
+### External Parameters
+
+In F Prime, parameters are typically defined and managed within a component's
+autocoded base class. These parameter values are accessed from the component
+implementation using autogenerated getter functions.
+
+However, in certain cases, a parameter may need to be stored and managed
+outside the component. Such parameters are referred to as *external
+parameters*.
+
+#### Implementing External Parameter Support
+
+Components using externally managed parameters must still support the standard
+parameter operations—*set*, *save*, and *get*. To enable this, the component
+must be able to serialize and deserialize parameter values. This functionality
+is provided by implementing the interface defined in the
+[`ParamExternalDelegate` abstract base class](../../../Fw/Prm/PrmExternalTypes.hpp).
+
+To activate external parameter handling, a concrete implementation of
+`ParamExternalDelegate` must be registered with the component using the
+`registerExternalParameters()` function. This registration can occur in the
+component constructor or be exposed as a public method that is called during
+topology setup.
+
+The `ParamExternalDelegate` interface defines two pure virtual methods that
+must be implemented:
+
+- **`deserializeParam()`**
+  Retrieves the value of an external parameter from a serialized buffer. This
+  method is called when the component needs to load the most recent value from
+  external storage.
+
+- **`serializeParam()`**
+  Serializes the current value of a parameter into a buffer, allowing it to be
+  saved or transmitted externally. This method is typically called when the
+  parameter value is updated.
+
+By implementing this interface, developers enable F Prime components to
+interact with external parameter sources, allowing flexible and decoupled
+parameter management.
+
+An autogenerated concrete implementation of `ParamExternalDelegate` is
+provided in the component tester base class. This default implementation may
+be used for unit testing, or developers may provide their own. In either case,
+the implementation must be registered with the component via
+`registerExternalParameters()` during FSW initialization.
+
+## Internal Interfaces
+
+When internal interfaces are specified in the component FPP, a function
+is generated that can be called by implementation code to dispatch a
+message for a message loop. The function has the following name:
+
+> \<internal interface name\>\_internalInterfaceInvoke(\<arguments\>);
+
+A handler function definition is also defined for the function that will
+be called when the internal interface message is dispatched. The
+function has the following name:
+
+> \<internal interface name\>\_internalInterfaceHandler(\<arguments\>);
+
+The function is defined as a pure virtual to make sure it is
+implemented.
+
+## Message Pre-hooks
+
+When asynchronous ports or commands are specified, the code generator
+defines functions that can be called prior to dispatching the message.
+This provides a lightweight mechanism to do some work before the message
+is dispatched. The function is defined as a virtual (not pure) function
+with a default implementation that is empty. The implementer can
+override the function with an alternate version.
+
+The function name for ports is as follows:
+
+> void \<port name\>\_preMsgHook(NATIVE\_INT\_TYPE portNum, \<port
+> arguments\>);
+
+The values of the port arguments are passed to the function.
+
+The function name for commands is as follows:
+
+> void \<command mnemonic\>\_preMsgHook(FswOpcodeType opcode, U32
+> cmdSeq);
+
+It does not provide the arguments for the command since they are not
+extracted until the command message is processed.
+
+## Initialization Code
+
+### Constructor
+
+The component framework has the option of storing component names for
+component interconnection testing and tracing. This is enabled or
+disabled via the class naming configuration discussed in Section 9.2.
+The macro that indicates whether or not the naming is enabled is
+FW\_OBJECT\_NAMES*.* The developer should define and implement two
+alternate constructors, one that takes a name argument and one that does
+not. As seen in the example, the only difference between the two
+constructor implementations is that the base class constructor needs to
+be passed the name argument. The user can add any custom constructor
+code as well, but at this stage, the component base class is not
+initialized so no port calls should be made.
+
+### Initialization
+
+Each component base class has an init() function that must be called
+before interconnecting components. If the component is queued or active,
+a queue depth argument must be provided. In addition, there is an
+optional instance argument if the component is going to be instanced
+more than once. This function can be called from a parallel init()
+function in the derived class.
+
+### Task Preamble/Finalizer
+
+Active components provide a preamble prototype for code that can be run
+once before the thread blocks waiting for port invocations and a
+finalizer prototype for code that runs when the component exits the
+message loop. These two functions are called on the thread of the active
+component. They are declared as virtual functions in C++, so they are
+not required. The preamble function is named preamble(void) and the
+finalizer is named finalizer(void). They can be used to do one-time activities
+such as data structure initialization and cleanup.
+```
+
+### `baremetal-multicore.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/baremetal-multicore.md`
+
+
+````markdown
+# F´ On Baremetal and Multi-Core Systems
+
+F´ supports use on baremetal, multi-core, and even multi-device systems. This guide seeks to walk the user through some
+of the caveats and delicacies of such systems. It includes
+
+- [Baremetal Systems](#baremetal-systems)
+    - [The Joy of Passive Components](#the-joy-of-passive-components)
+    - [Choosing an Execution Context](#choosing-an-execution-context)
+- [Multi-Core and Multi-Device Systems](#multi-core-and-multi-device-systems)
+- [Thread Virtualization](#thread-virtualization)
+    - [Defining Custom Tasks](#defining-custom-tasks)
+    - [How It Works](#how-it-works)
+
+## Baremetal Systems
+
+A baremetal system is a system that does not run an Operating System to support the F´ software. Thus, the F´ software
+must provide for basic services such as filesystems, thread schedulers, etc, to run.  Since F´ was originally run on
+systems that provide these services, a number of precautions must be taken when designing F´systems for baremetal
+platforms.
+
+### The Joy of Passive Components
+
+First and foremost, baremetal F´ systems should avoid using **Active Components**  at all costs because these components
+require quasi-asynchronous execution contexts in which to run. i.e. they need thread such that they can execute in
+"parallel" with each other.
+
+> [!NOTE]
+> If you **must** use **Active Components** you should thoroughly review the [thread virtualization](#thread-virtualization) section of this document and associated technology.
+
+If your system can be entirely defined by **Passive Components** then implicitly every port **invocation** would be
+synchronous and the execution context would be entirely delegated to every component.  A discussion of the source
+of that delegated execution context comes next.
+
+### Choosing an Execution Context
+
+Since the OS is not around to execute F´, the implementer of the F´ project must choose an execution context for F´ to
+run on. That is, ensuring that some call invokes all of the **Components** that compose the F´ system. Otherwise, some
+components will not run. Typically, this is handled by composing an F´ baremetal system into components that are all
+driven by [rate groups](../design-patterns/rate-group.md). Designing the system this way ensures that all execution is derived from
+one source: the rate group driver and thus reducing the problem to supplying an execution context to the rate group
+driver at a set rate.  All calls needed will execute during a sweep through the rate groups and their derived rates.
+
+> [!NOTE]
+> Other options exist (see [Thread Virtualization](#thread-virtualization) below).
+
+Although a full discussion of supplying execution context to the rate group driver is outside the scope of this
+documentation, this author wanted to provide a few tips. First, F´ execution should be primarily derived from the main
+program loop. i.e. embedded software typically looks like the following and the loop-forever `execute();` action should
+trigger the rate group driver at a set interval.
+
+```C
+// Run once setup
+setup();
+
+// Do this forever
+while (true) {
+   execute();
+}
+```
+
+Now all that is required is to determine when this interval has elapsed. This can be done by spinning on a hardware clock
+signal, calculating elapsed time by the reading of clock registers, using timing library functions, the `sleep()` call, or
+by a timer-driven interrupt service routine (ISR).
+
+> [!NOTE]
+> ISRs are complex items and should be studied in detail before going this route.  Notably, the ISR should not execute the rate group directly, but rather should set a flag or queue a start message and allow the `while (true) {}` spin in the main loop to detect this signal and start the rate groups.
+
+## Multi-Core and Multi-Device Systems
+
+We have yet to see any issues running F´ on multi-core systems. Some users have been successful in scheduling high-priority
+components to designated cores.  In general, these systems behave just fine.
+
+> [!NOTE]
+> Some portions of F´ use `U32` types so synchronize between threads. In many systems this is a safe atomic operation, however; this is not guaranteed in all systems. A project should use care to ensure that its system will behave as expected.  These usages are under review and will be corrected over time.
+
+When running F´ on multi-platform systems, users typically define a deployment for each platform in the system. These
+deployments are then linked over the platform's inter-communication architecture.  Should  users want F´ execution
+across these deployments to look like a single F´ deployment, users are advised to adopt the
+[hub pattern](../design-patterns/hub-pattern.md) to invoke F´ port calls across multiple devices.
+
+## Thread Virtualization
+
+> [!NOTE]
+> This is an experimental technology with respect to F´. Care to understand its implementation should be taken before using it in a production/flight context.
+
+Some systems, even baremetal systems, require the use of **Active Components**.  Many of the `Svc` components are by
+design active components. It is impractical to assume that all projects can, at the moment of conception, discard all
+use of the framework provided **Active Components**.  Thus F´ was augmented with the ability to virtualize threading, such
+that projects could use these components during development as they migrate to a fully passive-component system.
+
+To activate this feature see: [Configuring F´](configuring-fprime.md). Continue reading for all the fancy details of
+how this system is designed.  TODO: put a link to the thread scheduler API documentation.
+
+### Defining Custom Tasks
+
+When using the thread virtualization technology, care should be taken with custom tasks/threads. This design, as
+described below, is dependent on threads that "run once" and externalize the looping part of the thread. Therefore,
+custom tasks must wrap functions that obey the following implementation requirements:
+
+1. The function shall not loop
+2. The function shall never block execution
+3. The function shall perform "one slice" of the thread and then return
+
+Failure to comply with these requirements will cause the thread virtualization technology to fail, and the F´
+application to lock up or otherwise behave erratically.
+
+### How It Works
+
+At the core of **Active Components** is a thread, which typically requires an Os to provide a scheduler for it to run,
+and through this scheduler, it gets designated an execution context to run in. Thus threads can execute as if they fully
+own their execution context and the Os masks this behind the scenes. The purpose of the thread virtualization when
+enabled for an F´ project is to unroll these threads such that they can share a single execution context and the
+parallel behavior of the threads is "virtualized". The technique is known as protothreading. We'll explore this concept
+with relation to F´ below.
+
+Each F´ thread supporting an Active component can be roughly modeled by the code below.  The thread loops until the
+system shuts down. For each iteration through the loop it blocks (pauses execution) until a message arrives. It then
+dispatches the message and returns to a blocked state waiting for the next message.
+
+```C++
+Component1 :: run_thread() {
+    while (!shutdown) {
+        msg = block_get_message();
+        dispatch(msg);
+    }
+}
+```
+
+Here `block_get_messages();` retrieves messages, blocking until one arrives. This loop could have easily been
+implemented using a less-efficient model by iterating continuously through the loop and checking if a message has
+arrived and dispatching if and only if a message is available. As can be seen below, the wait-by-blocking has been
+replaced by the busy wait of constantly iterating through the loop.
+
+```C++
+void Component1 :: run_once() {
+    if (message_count() > 0) {
+        msg = nonblock_get_message();
+        dispatch(msg);
+    }
+    return;
+}
+
+Component1 :: run_thread() {
+    while (!shutdown) {
+        comp1.run_once();
+    }
+}
+```
+
+Here, we extracted the iteration into a `run_once` function for clarity. The blocking wait in the first function is
+replaced with a spin on an if-condition until a message is available, then the dispatch happens.
+
+It should be only a slight extrapolation that one could move all the component `run_once` functions into a single loop
+and call each in succession. As long as these calls return in a reasonable amount of time, and none of these calls
+block internally, then crude parallelism is achieved.
+
+```C++
+while (!shutdown) {
+    comp1.run_once();
+    comp2.run_once();
+    comp3.run_once();
+    ...
+}
+```
+Here, as seen above, `run_once` does not block and so each component gets a slice of execution time before yielding to
+the next. Parallelism has been virtualized and the processor is shareable without writing a full-blown thread scheduler
+nor requiring processor instruction set support to switch threading contexts.
+
+Inside F´ a parallel implementation of the active component task was implemented such that it returns rather than blocks
+on receiving messages. When `BAREMETAL_SCHEDULER` is enabled in the F´ configuration, this alternate implementation is
+used. Under `Os/Baremetal`, an implementation of a sequential scheduler exists.  This scheduler snoops on task
+registration and will call all thread executions in a loop driven from the main program loop similar to below.
+
+```C++
+setup(); // Setup F´
+while (true) {
+    scheduler.run_once();
+}
+```
+````
+
+### `building-topology.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/building-topology.md`
+
+
+```markdown
+# Constructing the F´ Topology
+
+> [!NOTE]
+> For a hands-on walk-through of build topologies, please see: [Tutorials](../../tutorials/index.md)
+
+The executing software consists of a set of interconnected components
+executing on the threads of the active components or driven by other
+events in the system such as hardware interrupts or timing sources. This
+section will describe the steps necessary to get the software up and
+running.
+
+This guide discusses:
+
+- [Instantiating the Components](#instantiating-the-components)
+- [Initializing the Components](#initializing-the-components)
+- [Interconnecting the Components](#interconnecting-the-components)
+- [Registering Commands](#registering-commands)
+- [Loading Parameters](#loading-parameters)
+- [Starting Active Components](#starting-active-components)
+
+
+## Instantiating the Components
+
+The constructors in the component base classes have been designed so
+that the components can be instantiated using whatever memory model the
+developer wishes. They can be created statically, on the heap, or on the
+stack. As described in Section 6.7.8.1, the constructor has either a
+name argument or none at all. The developer’s derived class constructors
+may have extra arguments that are particular to that application. If
+classes are declared statically, the developer should keep in mind
+uncertainties about execution order.
+
+## Initializing the Components
+
+As discussed in Section 6.8.2, each component has an init() call that
+initializes the component base classes. This call should be made after
+instantiating the components. For queued and active components, the
+queue size is passed. The queue should be sized based on an
+understanding of task priorities and message traffic between the
+components.
+
+## Interconnecting the Components
+
+The components in the software are interconnected by connecting the
+ports of the components together. Ports are connected by passing
+pointers to input ports to the output ports that are calling them.
+Methods are generated in the component base classes to get input port
+pointers and pass them to output ports. The following sections describe
+the connections of different port types.
+
+### Interface Ports
+
+Interface ports are the regular ports that are used to connect
+components together. For each port type and name on a component, the
+method naming scheme is as follows:
+
+Get input port pointer:
+
+> \<PortType\>\* get\_\<port name\>\_InputPort(NATIVE\_INT\_TYPE
+> portNum);
+
+where
+
+> \<PortType\> = The full port type specified in the data\_type
+> attribute in the definition of the port in the component FPP.
+>
+> \<port name\> = The name of the port in the name attribute of the port
+> definition.
+
+The portNum argument to the method should be set to zero if there is
+only one instance of the port.
+
+Set output port pointer:
+
+The value of the input pointer retrieved via the method in the last
+section is given to an output port of the same type by calling:
+
+> void set\_\<port name\>\_OutputPort(NATIVE\_INT\_TYPE portNum,
+> \<PortType\>\*port);
+
+where
+
+> \<PortType\> = The full port type specified in the data\_type
+> attribute in the definition of the port in the component FPP.
+>
+> \<port name\> = The name of the port in the name attribute of the port
+> definition.
+
+The portNum argument to the method should be set to zero if there is
+only one instance of the port.
+
+There is a second overloaded version of the method to set an output port
+when the input port being passed to it is a serialized port:
+
+> void set\_\<port name\>\_OutputPort(NATIVE\_INT\_TYPE portNum,
+> Fw::InputSerializePort \*port);
+
+### Command Ports
+
+As discussed in Section 6.6.4, the code generator will create the
+correct set of command-related ports for a component that has commands
+defined. For that component, the functions used to get or set
+command-related port pointers have standard names. The names are as
+follows:
+
+Get command input port:
+
+> Fw::InputFwCmdPort\* get\_CmdDisp\_InputPort();
+
+Set command status port:
+
+> void set\_CmdStatus\_OutputPort(Fw::InputCmdResponse\_Port\* port);
+
+Set command registration port:
+
+> void set\_CmdReg\_OutputPort(Fw::InputCmdRegPort\* port);
+
+For the component(s) that are connected to those ports, they would use
+the normal methods for accessing the port pointers as described in the
+last section.
+
+### Telemetry Ports
+
+The standard port accessor functions for telemetry are as follows:
+
+Set telemetry output ports:
+
+> void set\_Tlm\_OutputPort(Fw::InputTlmPort\* port);
+
+Set time output ports:
+
+> void set\_Time\_OutputPort(Fw::InputTimePort\* port);
+
+### Event Logging Ports
+
+The standard port accessor functions for logging events are as follows:
+
+Set logging output ports:
+
+> void set\_Log\_OutputPort(Fw::InputLogPort\* port);
+>
+> void set\_TextLog\_OutputPort(Fw::InputFwLogTextPort\* port);
+
+Set time output ports:
+
+> void set\_Time\_OutputPort(Fw::InputFwTimePort\* port);
+
+Note that the set\_Time\_OutputPort() call is shared with the telemetry
+ports. It can be called once for both.
+
+### Parameter Ports
+
+The standard port accessor functions for parameters is as follows:
+
+> void set\_ParamGet\_OutputPort(Fw::InputFwPrmGetPort\* port);
+>
+> void set\_ParamSet\_OutputPort(Fw::InputFwPrmSetPort\* port);
+
+## Registering Commands
+
+The pattern for dispatching commands is for a user-implemented command
+dispatch component to connect an output command port to the input
+command port for each component servicing commands. Internally, the
+dispatcher would map the set of opcodes for a particular component to
+the port that is connected to that component. To aid that process, the
+code generator creates a command registration function when there are
+commands specified for a component. It takes as an argument the port
+number on the dispatcher component that is connected to the component’s
+command port. The registration port should be connected to the
+dispatcher’s registration port as described in Section 6.8.3.2. Then the
+regCommands() method can be called in the component, which will invoke
+the registration port for each of the opcodes defined. This method
+should be called for each component that has commands.
+
+## Loading Parameters
+
+Section 6.8.3.5 describes how to connect a parameter output port to a
+component providing parameter storage. After the two components are
+connected, the base class method loadParameters() can be called. That
+method will request the values of all parameters for that component via
+the parameter port. From then on, they will be available to the
+implementation class for use. Although it is common to only read
+parameters at software initialization, there is nothing that prevents a
+re-read after the software has started running by invoking the
+loadParameters() call again in the event that the parameter storage was
+updated.
+
+## Starting Active Components
+
+The last action in constructing the topology is to start the tasks for
+any active components. The start() method is found in the
+ActiveComponentBase base class in Fw/Comp/FwActiveComponentBase.hpp.
+Table 22 provides the arguments and their meanings.
+
+**Table 22.** Active component start()
+arguments.
+
+| Argument   | Meaning                                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------------- |
+| identifier | A thread-independent value that is used to identify activities of the thread. Should be unique in the system. |
+| priority   | The execution priority of the task: 0 = low priority, 255 = high priority.                                    |
+| stackSize  | The size of the stack given to the task.                                                                      |
+
+As mentioned in Section 6.7.8.3, the functions preamble() and
+finalizer() will be run once before and after the loop waiting for port
+invocations.
+```
+
+### `configuring-fprime.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/configuring-fprime.md`
+
+
+````markdown
+# Configuring F´
+
+This guide is a first attempt to describe the various configuration settings in F´.  Most users can operate with the
+default settings, but as the system design is finalized, some of these options may need to be changed such that the
+system is most efficient.
+
+This guide includes:
+
+- [How to Configure F´](#how-to-configure-f)
+- [AcConstants.fpp](#acconstantsfpp)
+- [FpConfig.hpp](#fpconfigh)
+    - [Type Settings](#type-settings)
+    - [Object Settings](#object-settings)
+    - [Asserts](#asserts)
+    - [Port Tracing](#port-tracing)
+    - [Port Serialization](#port-serialization)
+    - [Serialization Type ID](#serializable-type-id)
+    - [Buffer Sizes](#buffer-sizes)
+    - [Text Logging](#text-logging)
+    - [Misc Configuration Settings](#misc-configuration-settings)
+- [Component Configuration](#component-configuration)
+- [Conclusion](#conclusion)
+
+
+## How To Configure F´
+
+All configurable files (top-level and component-specific) for F´ are available in the top-level
+`config` directory. By default, all deployments use the F´ provided default configuration options.
+
+Projects can also take ownership of the `config` directory to provide their own `AcConstants.fpp`
+and configuration `*.hpp` files. To do so, copy the `config` directory into your project and use the
+`config_directory` options in the project's `settings.ini` file.
+See the [settings.ini guide](../build-system/settings.md) for more details.
+
+The `FpConfig.h` file is a C header allowing the user to define global settings.
+Where components allow specific configuration, a `<component>Cfg.hpp` is available to be modified as well.
+
+## AcConstants.fpp
+
+`AcConstants.fpp` is used to set the constants for the autocoded components provided by the framework. This allows
+projects to appropriately size the number of ports provided by many of the command and data handling components defined
+in the `Svc` package.
+
+> [!NOTE]
+> Internal configurations like table sizes are set in the component-specific header as these settings aren't autocoded. See: [Component Configuration](#component-configuration)
+
+These settings may need to be increased for large projects with many components, or minimized for projects with a small
+number of components.
+
+| Setting                            | Description                                                                                           | Default | Valid Values     |
+|------------------------------------|-------------------------------------------------------------------------------------------------------|---------|------------------|
+| ActiveRateGroupOutputPorts         | Number of outputs from active rate group. Limits number of components attached to a single rate group | 10      | Positive integer |
+| CmdDispatcherComponentCommandPorts | Number of command and command registration ports. Limits number of components handling commands       | 30      | Positive integer |
+| CmdDispatcherSequencePorts         | Number of incoming ports to command dispatcher, e.g. uplink and command sequencer                     | 5       | Positive integer |
+| RateGroupDriverRateGroupPorts      | Number of rate group driver output ports. Limits total number of different rate groups                | 3       | Positive integer |
+| HealthPingPorts                    | Number of health ping output ports. Limits number of components attached to health component          | 25      | Positive integer |
+| SeqDispatcherSequencerPorts         | Number of CmdSequencers that the SeqDispatcher can dispatch sequences to | 2 | Positive integer
+
+## FpConfig.h
+
+Some configurations may be changed during compilation time. The F′ framework has a number of optional features that can
+be enabled or disabled by editing the `config/FpConfig.h` file.  These changes affect of the whole of the F´
+deployment. Users can change or override defined *C* macro values that activate or disable code by using compiler flags
+for different deployment settings. During flight software (FSW) execution, disabling unnecessary features saves memory
+and CPU cycles.
+
+All of these settings should be set in `FpConfig.h` and for most projects, this whole file will be cloned and owned
+for their specific settings. Typically, the user will define the setting to be 0 for off and 1 for on.
+
+e.g.
+```c
+#define FW_SOME_SETTING 1
+```
+
+### Type Settings
+
+Many architectures support different sizes of types. In addition, projects may wish to change the size of the various
+custom types specified in the framework. This section will describe these settings. These are typically provided by the
+and can be changed in the `FpConfig.h` header.  These types are described in the
+[numerical types design document](../../reference/numerical-types.md).
+
+The above document also describes the methods for configuring the configurable types used to adjust various fprime
+types.
+
+### IEEE 754 compliance of the floating point implementation
+
+> [!NOTE]
+> this configuration is performed in the `PlatformTypes.h` header as it is platform dependent and not project dependent.
+
+Some industrial coding rules for safety and critical systems require floating point implementations to conform to a
+defined floating point standard, such as IEEE 754. The reason for this is that if the implementation does not conform to
+a standard, it can lead to problems with the accuracy and reliability of calculations.
+
+By default, F´ checks for IEEE754 compliant floating point arithmetic at compile time. However, if a user does not have
+a C++11 implementation on their platform that supports IEEE754 floating point arithmetic, an option is provided to
+bypass this check:
+
+| Macro                           | Definition                                                       | Default | Valid Values   |
+| --------------------------------| -----------------------------------------------------------------|---------|----------------|
+| SKIP_FLOAT_IEEE_754_COMPLIANCE  | Skip IEEE 754 compliance check of floating point implementation. | 0 (off) | 0 (off) 1 (on) |
+
+
+#### Time Base and Time Context
+
+The F′ time tags have a field that specifies the time base of the time tag. A time base is defined as a clock in the
+system correlated with a known epoch. It is often the case that when a system is being initialized, it does not always
+have access to a clock correlated to external operations. It can transition through several time bases (processor,
+radio, Earth) on the way to becoming fully operational. The TimeBase type defines the set of clocks in the system that
+can produce a time tag. It lets users of the system see which clock was used when time tagging telemetry.
+
+Time contexts are another value associated with time. By default time context is NOT used in Time comparisons, in
+other words Times having the same TimeBase are comparable regardless of what the context value is set to. This also
+means by default when doing mathematical operations on Fw:Time objects (i.e. add, subtract), by default it is NOT
+checked that the time contexts match. If they do match, math results will preserve the (matching) time context,
+otherwise it will be set to 0.
+
+Time base and time context are now always used in the Fw::Time class implementation. The TimeBase enum defines the
+possible time base values used by the system and is set in the FpConfig.fpp file.
+
+The following time base options are required:
+
+| Enum | Description |
+|------|-------------|
+| TB_NONE | No time base has been established |
+| TB_WORKSTATION_TIME | Time as reported on workstation where software is running. For testing. |
+| TB_DONT_CARE | Don't care value for sequences. If FwTimeBaseStoreType is changed, value should be changed |
+
+
+### Object Settings
+
+The architecture allows for various settings to control, monitor, and trace objects in the system. These settings
+typically result in a larger binary size but make the framework and system easier to debug. This section includes
+a discussion of OS objects like Tasks and Queues as well.
+
+#### Object Naming
+
+The architecture can store names for each object created. This is useful when using object registries or tracing to see
+what objects exist and how they interact. The object naming does increase the per-object storage and code size, so in a
+resource-constrained environment, disabling this feature might be desirable. This macro should be used in developer
+implementation classes to call the correct constructor in the code-generated base classes. Table 35 provides the
+macros related to this feature.
+
+The `Os::Queue` class stores a queue name as private data. Table 35 provides the macro for this feature. The `Os::Task`
+class stores a task name as private data. Table 35 provides the macro for this feature as well.
+
+**Table 35.** Macros for object naming, queue naming, and task naming
+
+| Macro                     | Definition                                  | Default | Valid Values      |
+|---------------------------| ------------------------------------------- |---------|-------------------|
+| FW_OBJECT_NAMES           | Enables storage and retrieval of the name   | 1 (on)  | 0 (off) 1 (on)    |
+| FW_OBJ_NAME_BUFFER_SIZE   | Size of the buffer storing the object name  | 80      | Positive integer  |
+| FW_QUEUE_NAME_BUFFER_SIZE | Size of the buffer storing the queue names  | 80      | Positive integer  |
+| FW_TASK_NAME_BUFFER_SIZE  | Size of the buffer storing task names       | 80      | Positive integer  |
+
+> [!NOTE]
+> The macro `FW_OPTIONAL_NAME("string")` can be used to conditionally return the given string or an empty string depending on whether `FW_OBJECT_NAMES` is on. This can be used to strip out component names from code when building without `FW_OBJECT_NAMES`.
+
+> [!NOTE]
+> If the size of the string passed to the code-generated component base classes is larger than this size, the string will be truncated. `FW_OBJECT_NAMES` must be turned on for `FW_OBJ_NAME_BUFFER_SIZE` to have any effect.
+
+> [!NOTE]
+> `FW_QUEUE_NAME_BUFFER_SIZE` and `FW_TASK_NAME_BUFFER_SIZE` are only used if `FW_OBJECT_NAMES` is **turned off**. Otherwise, the supplied object name is used.
+
+#### Object to String
+
+The framework port and object classes have an optional `toString()` method. This method by default returns the instance
+name of the object, but `toString()` is defined as a virtual method so a developer class can override this and provide
+custom information. Table 36 provides the macros to configure this feature.
+
+> [!NOTE]
+> For these settings to work `FW_OBJECT_NAMES` must be turned on.
+
+**Table 36.** Macros for object to string.
+
+| Macro                                 | Definition                                                  | Default | Valid Values      |
+| ------------------------------------- | ----------------------------------------------------------- |---------|-------------------|
+| FW_OBJECT_TO_STRING                   | Enables the toString() method                               | 1 (on)  | 0 (off) 1 (on)    |
+| FW_OBJ_TO_STRING_BUFFER_SIZE          | Defines buffer size used to store toString() results        | 255     | Positive integer  |
+| FW_SERIALIZABLE_TO_STRING             | Defines a toString() method for code-generated serializable | 1 (on)  | 0 (off) 1 (on)    |
+| FW_SERIALIZABLE_TO_STRING_BUFFER_SIZE | Defines buffer size of toString() result for serializables  | 255     | Positive integer  |
+| FW_ARRAY_TO_STRING                    | Defines a toString() method for code-generated arrays       | 1 (on)  | 0 (off) 1 (on)    |
+| FW_ARRAY_TO_STRING_BUFFER_SIZE        | Defines buffer size of toString() result for arrays         | 256     | Positive integer  |
+
+
+#### Object Registry
+
+An object registry is a class that holds a list of framework component and port objects. The registry can be used to
+list all the objects, or call common functions on all objects. A base class for the object registry is defined in
+`Fw/Obj/ObjBase.hpp`, and a simple implementation can be found in `Fw/Obj/SimpleObjRegistry.hpp`.
+Table 37 provides the macros to configure this feature. Message queues allow for their own registration such that the
+project may track them as well.
+
+**Table 37.** Macros for object
+registry.
+
+| Macro                         | Definition                                                                  | Default | Valid Values      |
+| ----------------------------- | ----------------------------------------------------------------------------|---------|-------------------|
+| FW_OBJECT_REGISTRATION        | Enables object registries.                                                  | 1 (on)  | 0 (off) 1 (on)    |
+| FW_OBJ_SIMPLE_REG_ENTRIES     | The size of the array in the simple object registry used to store objects.  | 500     | Positive integer  |
+| FW_OBJ_SIMPLE_REG_BUFF_SIZE   | The size of the buffer used to store object names in the simple registry.   | 255     | Positive integer  |
+| FW_QUEUE_REGISTRATION         | Enables queue registries.                                                   | 1 (on)  | 0 (off) 1 (on)    |
+| FW_QUEUE_SIMPLE_QUEUE_ENTRIES | The size of the array in the simple object registry used to store queues.   | 100     | Positive integer  |
+
+> [!NOTE]
+> `FW_OBJECT_REGISTRATION` must be turned on for `FW_OBJ_SIMPLE_REG_ENTRIES` and `FW_OBJ_SIMPLE_REG_BUFF_SIZE` to have any effect.
+
+> [!NOTE]
+> See table 35 for configuring queue name sizes.
+
+
+### Asserts
+
+The assert feature is described in [F´ Asserts](assert.md). This configuration allows a project to turn asserts off,
+use hash IDs for the assert message, or use full filenames for the assert message. Table 38 provides ways that asserts
+can be configured.
+
+**Table 38.** Macros for assert.
+
+| Macro                  | Definition                       |                                                                    | Default            |
+| ---------------------- | ---------------------------------| -------------------------------------------------------------------|--------------------|
+| FW_ASSERT_LEVEL        | Sets the assert report level to: |                                                                    | FW_FILENAME_ASSERT |
+|                        | **Value**                        | **Definition**                                                     |                    |
+|                        | FW_NO_ASSERT                     | Asserts turned off, removing all assert code.                      |                    |
+|                        | FW_FILEID_ASSERT                 | Asserts turned on, hash value used in place of __FILE__ on message |                    |
+|                        | FW_FILENAME_ASSERT               | Asserts turned on, __FILE__ macro is used in the assert message    |                    |
+| FW_ASSERT_TEXT_SIZE    | The buffer size used to store the assert message  |                                                   | 120                |
+
+Setting assert level `FW_FILEID_ASSERT`  saves a lot of code space since no file name is stored. The make system
+supplies this to the compiler by hashing the file name. The original filename can be recovered by running
+`fprime-util hash-to-file <hash>`.
+
+Setting assert level to `FW_ASSERT_TEXT_SIZE` can ease debugging asserts, but typically `FW_ASSERT_TEXT_SIZE` must be
+increased as most file name paths are longer than 120.
+
+
+### Port Tracing
+
+When components are interconnected, it is often useful to trace the set of invocations through components and ports. The
+port base class has a `trace()` call that is invoked by the derived port classes whenever the port is invoked. The
+`trace()` calls `Os::Log::log()` with the name of the port once the port base class method `setTrace()` has been called.
+Individual ports can have tracing turned on and off by calling the `overrideTrace()` method on the port instance.
+Table 39 provides the macro to configure this feature.
+
+**Table 39.** Macro for port tracing.
+
+
+| Macro             | Definition            | Default | Valid Values      |
+| ----------------- | --------------------- |---------|-------------------|
+| FW_PORT_TRACING   | Enables port tracing. | 1 (on)  | 0 (off) 1 (on)    |
+
+### Port Serialization
+
+As discussed in the user guide, a port type (Input/OutputSerializePort) exists that has no interface type, but instead
+receives (or sends) a serialized form of the port invocation for the attached port. The primary pattern for this is to
+invoke components on remote nodes. The code generator generates code in each port that will serialize or deserialize the
+invocation if it detects that it is connected to a serializing port. If development is for a single node, this feature
+can be disabled to reduce the code size. Table 40 provides the macro to configure this feature.
+
+**Table 40.** Macro for port serialization.
+
+| Macro                   | Definition                  | Default | Valid Values      |
+| ----------------------- | --------------------------- |---------|-------------------|
+| FW_PORT_SERIALIZATION   | Enables port serialization. | 1 (on)  | 0 (off) 1 (on)    |
+
+### Serializable Type ID
+
+As described [in serializable types](../overview/05-enum-arr-ser.md), serializable types can be defined for use in the code.
+When objects of those types are serialized, an integer representing the type ID can be serialized along with the object
+data. This allows the type to be determined later if only the serialized form is available. Turning off this feature
+will lower the amount of data moved around for a given object when it is serialized. Table 41 provides
+the macros to configure this feature.
+
+
+**Table 41.** Macros for serializable type ID.
+
+| Macro                          | Definition                       | Default | Valid Values      |
+| -------------------------------| ---------------------------------|---------|-------------------|
+| FW_SERIALIZATION_TYPE_ID       | Enables serializing the type ID  | 0 (off) | 0 (off) 1 (on)    |
+| FW_SERIALIZATION_TYPE_ID_BYTES | Defines size of serialization ID | 4       | 1 - 4             |
+
+> [!NOTE]
+> Smaller values for `FW_SERIALIZATION_TYPE_ID_BYTES` means that less data storage is needed, but also limits the number of types that can be defined. `FW_SERIALIZATION_TYPE_ID` is required to have type IDs in the buffer and thus to introspect what type is contained in the buffer.
+
+
+### Buffer Sizes
+
+Many of the built-in F´ data types define buffer sizes that allow them to be passed as a com buffer type, sent out
+through the ground interface, serialized, and more. This section will discuss the com buffer configuration,
+command, channel, event, parameter, and other buffer size arguments.
+
+The com buffer must be able to store all the other types such that they can all be passed as generic communication. Thus
+`FW_COM_BUFFER_MAX_SIZE` must be large enough to hold each buffer size **and** the header data for each type. Thus these
+settings are typically derived and this is done by default.
+
+> [!WARNING]
+> only modify the comm buffer size to ensure that there will be no faults in the system.
+
+In all cases, these definitions are global for each type in the system. Thus the buffer **must** be large enough to
+hold the data for the largest of a given type in the system.  An assert will result if the buffer is set too small. i.e.
+the `FW_CMD_ARG_BUFFER_MAX_SIZE` cannot be smaller than the serialized size of the command with the largest arguments.
+
+These types also provide optional string sizes for their constituent pieces. However, the `MAX_STRING_SIZE` settings must
+**always** be smaller than the `BUFFER_MAX_SIZE`. i.e. the command string max size cannot be larger than the command
+buffer max size, as the string is serialized into the buffer.
+
+Commands serialize argument values into these buffers. Events (aka log events) also serialize just the arguments.
+Channelized telemetry and parameters serialize the values. Other information like event strings is not serialized but
+rather reconstructed when needed from the dictionary. This is all placed in a comm buffer.
+
+Table 42 provides the macros to configure these features.
+
+**Table 42.** Macros for buffers.
+
+| Macro                           | Definition                                            | Default | Valid Values     |
+| ------------------------------- | ------------------------------------------------------|---------|------------------|
+| FW_COM_BUFFER_MAX_SIZE          | Defines the size of a com buffer                      | 128     | Positive integer |
+| FW_CMD_ARG_BUFFER_MAX_SIZE      | Defines the size of command argument buffers          | Derived |                  |
+| FW_CMD_STRING_MAX_SIZE          | Defines the maximum size of a command string argument | 40      |                  |
+| FW_LOG_BUFFER_MAX_SIZE          | Defines the size of event buffers                     | Derived |                  |
+| FW_LOG_STRING_MAX_SIZE          | Defines the maximum size of an event string argument  | 100     |                  |
+| FW_TLM_BUFFER_MAX_SIZE          | Defines the size of telemetry channel buffers         | Derived |                  |
+| FW_TLM_STRING_MAX_SIZE          | Defines the maximum size of a channel string value    | 40      |                  |
+| FW_PRM_BUFFER_MAX_SIZE          | Defines the size of parameter buffers                 | Derived |                  |
+| FW_PRM_STRING_MAX_SIZE          | Defines the maximum size of a parameter string value  | 40      |                  |
+
+Other Buffers are defined in the system for specific purposes. These do not need to fit inside a comm buffer, and thus
+are less restrictive in size.
+
+| Macro                      | Definition                                                 | Default | Valid Values     |
+| -------------------------- | -----------------------------------------------------------|---------|------------------|
+| FW_FILE_BUFFER_MAX_SIZE    | Defines buffer and chunk size for file uplink and downlink | `FW_COM_BUFFER_MAX_SIZE`     | Positive integer |
+| FW_INTERNAL_INTERFACE_STRING_MAX_SIZE | Maximum size for interface string               | 40      | Positive integer |
+
+### Text Logging
+
+Event functions that are called are turned into two output port calls. One is a binary port that is used to store the
+event to be transported to ground software or a testing interface external to the software. The component also takes
+the format string specified in the FPP and populates it with the event arguments, and calls an output port with a
+readable text version of the event. This is meant to be used for a console interface so the user can see, in text form,
+the same events being stored for transmission. A component with the text logging input port can be used to display the
+text. A very simple implementation of this can be seen in `Svc/PassiveConsoleTextLogger`. In a resource-constrained
+environment or in a flight implementation where the console is not viewable, the text formatting and extra code can
+consume an undesirable number of processor cycles. For this reason, the text logging can be turned off via a macro. This
+compiles out the code and format strings for text logging. Table 46 provides the macros to configure text logging.
+
+**Table 46.** Macros for text logging.
+
+| Macro                       | Definition                                              | Default | Valid Values     |
+| --------------------------- | --------------------------------------------------------|---------|------------------|
+| FW_ENABLE_TEXT_LOGGING      | Enables or disables text logging                        | 1 (on)  | 0 (off) 1 (on)   |
+| FW_LOG_TEXT_BUFFER_SIZE     | Maximum size of the textual representation of the event | 256     | Positive integer |
+
+> [!NOTE]
+> The `FW_LOG_TEXT_BUFFER_SIZE` should be large enough to store the full event including its text format string after being populated with arguments.
+
+
+### Misc Configuration Settings
+
+This setting describes some of the other settings available in `FpConfig.hpp` and did not fit in other sections. These
+are described in the tables below.
+
+Table 47 describes other user settings.
+
+**Table 47.** Misc macros available to the user.
+
+| Macro                       | Definition                                              | Default | Valid Values     |
+| --------------------------- | --------------------------------------------------------|---------|------------------|
+| FW_CMD_CHECK_RESIDUAL       | Enables command serialization extra bytes check         | 1 (on)  | 0 (off) 1 (on)   |
+| FW_AMPCS_COMPATIBLE         | Adds argument sizes to event argument serialization     | 0 (off) | 0 (off) 1 (on)   |
+
+> [!NOTE]
+> Normally when a command is deserialized, the handler checks to see if there are any leftover bytes in the buffer. If there are, it assumes that the command was corrupted somehow since the serialized size should match the serialized size of the argument list. In some cases, command buffers are padded so the data can be larger than the serialized size of the command. Turning `FW_CMD_CHECK_RESIDUAL` off can disable this check and allow leftover bytes.
+
+> [!NOTE]
+> Some ground systems require the size of the event argument to be serialized into the buffer instead of predicting the size using the dictionary. Setting `FW_AMPCS_COMPATIBLE` will serialize these sizes into the event buffers **and** break compatibility with the F´ ground system as it does not use this feature.
+
+> [!NOTE]
+> The following settings are defined by the build system and are in `FpConfig.hpp` to provide a default off value. These must be set by the build system as the setting works in unison with other modules that the build system includes when enabling these settings.
+
+## Component Configuration
+
+Component configurations are also provided as part of the project's config directory. If the directory is not provided,
+then the default from the framework is used. **Remember:** if the project overrides any configuration, that new
+directory must contain all the component headers as well as the `FpConfig.hpp` as C++ prevents including individual
+headers.
+
+These component headers follow the form `<Component>Cfg.hpp` and allows a project to set the configuration for each
+component's C++ implementation. This is typically to set maximum sizes for tables, and other static memory allocations.
+Some components allow users to turn on and off features. If a component does not have a header, it has no configuration
+for the user to set.
+
+Users are encouraged to look through the header for the component of interest as they should be self-descriptive.
+
+## Conclusion
+
+The user should now have a very detailed understanding of how to configure F´. Although there are some automatic checks
+built into F´ to check for some invalid configurations, the user should take care to understand the implication of
+changes to these settings. The F´ team sincerely hopes this bombardment of information will prove useful.
+````
+
+### `data-products.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/data-products.md`
+
+
+````markdown
+# Data Products
+
+## 1. Introduction
+
+A **data product** is any data that is produced by an embedded
+system, stored on board the system, and transmitted to the ground,
+typically in priority order.
+F Prime provides several features for managing the generation, storage,
+and downlink of data products.
+In this section, we document those features.
+
+## 2. Basic Concepts
+
+First we explain some basic concepts.
+
+### 2.1. Records, Containers, and Dictionaries
+
+F Prime data products are based on **records** and **containers**.
+A record is a basic unit of data.
+For example, it may be a struct, an array of typed objects of
+statically known size, or an array of bytes of statically unknown size.
+A container has an identifier and a priority and stores records.
+In C++, a container is represented as a class object with member fields that
+(1) store header data and (2) store an `Fw::Buffer` object pointing
+to the memory that stores the records.
+
+The set of all container specifications forms the **data product dictionary**.
+To manage the data product dictionary, F Prime uses the same general approach
+as for commands, telemetry, events, and parameters:
+
+1. Each component _C_ specifies records and containers.
+The container IDs are local to _C_.
+Typically they have the values 0, 1, 2, ... .
+
+2. Each instance _I_ of _C_ contributes one container _I.c_ to the
+dictionary for each container _c_ defined in _C_.
+The global identifier for _I.c_ is the base identifier of _I_ plus
+the local identifier for _c_.
+For example, if the base identifier is 0x1000, then the global identifiers
+might be 0x1000, 0x1001, 0x1002, ... .
+
+3. For any topology _T_, the global identifiers _I.c_ for all the component
+instances of _T_ form the data product dictionary for _T_.
+
+### 2.2. F Prime Components
+
+Typically a data product system in an F Prime application consists of the following
+components:
+
+1. One or more **data product producers**.
+   These components produce data products and are typically mission-specific.
+   For example, they may produce science data.
+
+1. Standard F Prime components for managing data products.
+
+   1. A **data product manager**.
+      This component allocates memory for empty containers.
+      It also forwards filled containers to the data product writer.
+      See [`Svc::DpManager`](../../../Svc/DpManager/docs/sdd.md).
+
+   1. A **data product writer**.
+      This component receives filled containers from data product
+      producers. It writes the contents of the containers to non-volatile
+      storage. See [`Svc::DpWriter`](../../../Svc/DpWriter/docs/sdd.md).
+
+   1. A **data product catalog**.
+      This component maintains a database of available data
+      products. By command, it downlinks and deletes data products.
+      See [`Svc::DpCatalog`](../../../Svc/DpCatalog/docs/sdd.md).
+
+   1. A **data product processor**.
+      This component is not yet developed.
+      When it is developed, it will perform in-memory processing on data
+      product containers.
+
+Note that when using data products, you need to develop only the
+producer components. The other components are provided by F Prime.
+
+## 3. Producer Components
+
+In this section we provide more detail about producer components.
+
+### 3.1. Activities
+
+A producer component typically repeats the following activities,
+as often as necessary:
+
+1. Request a container from a data manager component.
+
+2. When the container is received, serialize records into the
+container.
+This action fills the container with data.
+
+3. When the container is full, send the container to the
+data product manager, which forwards it to the data
+product writer.
+
+The FPP model and the autocoded C++ have several features that
+support these activities.
+We discuss these features in the following sections.
+
+### 3.2. FPP Modeling
+
+In this section we summarize the features of the FPP modeling
+language used in constructing data product producer components.
+Each of these features is fully documented in
+[_The FPP User's Guide_](https://nasa.github.io/fpp/fpp-users-guide.html)
+and [_The FPP Language Specification_](https://nasa.github.io/fpp/fpp-spec.html).
+
+#### 3.2.1. Ports
+
+FPP provides the following special ports for managing data products:
+
+1. A **product get port** of type [`Fw::DpGet`](../../../Fw/Dp/docs/sdd.md).
+   This is an output port for synchronously requesting
+   memory from a buffer manager.
+   The request is served on the thread that invokes the port
+   and causes a mutex lock to be taken on that thread.
+   Example syntax:
+   ```
+   product get port productGetOut
+   ```
+
+1. A **product request port** of type [`Fw::DpRequest`](../../../Fw/Dp/docs/sdd.md).
+   This is an output port for asynchronously requesting memory
+   from a data product manager.
+   The request is served on the thread of the data product manager.
+   This approach incurs the overhead of a separate thread, but it
+   does not require the requesting thread to take a lock.
+   Example syntax:
+   ```
+   product request port productRequestOut
+   ```
+
+1. A **product receive port** of type [`Fw::DpResponse`](../../../Fw/Dp/docs/sdd.md).
+   This is an input port for receiving an empty container in response
+   to an asynchronous request. Example syntax:
+   ```
+   async product recv port productRecvIn
+   ```
+
+1. A **product send port** of type [`Fw::DpSend`](../../../Fw/Dp/docs/sdd.md).
+   This is an output port for sending a filled container
+   to a data product writer. Example syntax:
+   ```
+   product send port productSendOut
+   ```
+
+Each data product producer component must have the following
+ports in its component model:
+
+1. One or both of a `product` `get` port and a `product` `request` port.
+
+1. A `product` `send` port.
+
+ A component that has a `product` `request` port must also have
+ a `product` `receive` port.
+
+#### 3.2.2. Records
+
+A record is a unit of data.
+When defining a producer component, you can specify one or more
+records.
+A record specification consists of a name, a type specifier, and an optional identifier.
+The type specifier may be one of the following:
+
+1. An FPP type _T_. In this case, the record contains a single value of type
+   _T_. _T_ may be any FPP type, including a struct or array type.
+
+1. An FPP type _T_ followed by the keyword `array`.
+   In this case, the record is an array of values of type _T_
+   of statically unknown size.
+   The size of the array is stored in the record.
+
+In either case, _T_ may be any FPP type, including a struct or array type.
+
+Example syntax:
+```
+@ A struct with a fixed-size member array
+struct FixedSizeData {
+  data: [1024] F32
+}
+@ A record containing fixed-size data
+product record FixedSizeDataRecord: FixedSizeData id 0x00
+@ A record containing a variable-size array
+product record F32ArrayRecord: F32 array id 0x01
+```
+
+#### 3.2.3. Containers
+
+A container is a data structure that stores records.
+When defining a producer component, you can specify one or more containers.
+Each container specified in a component can store
+any of the records specified in the component.
+
+A container specification consists of a name, an optional
+identifier, and an optional default priority.
+The default priority is the priority to use if no
+other priority is specified for the container
+during operations.
+Example syntax:
+```
+product container C1
+product container C2 id 0x01 default priority 10
+```
+
+### 3.3. Autocoded C++
+
+The autocoded C++ base class for a producer component _C_ provides
+the following API elements:
+
+1. Enumerations defining the available container IDs, container
+priorities, and record IDs.
+
+1. A member class _C_ `::DpContainer`. This class is derived from
+[`Fw::DpContainer`](../../../Fw/Dp/docs/sdd.md) and represents a container
+specialized to the data products defined in _C_.
+Each instance of _C_ `::DpContainer` is a wrapper for an `Fw::Buffer` _B_,
+which points to allocated memory.
+The class provides operations for serializing the records
+defined in _C_ into the memory pointed to by _B_.
+There is one operation _C_ `::DpContainer::serialize_` _R_
+for each record _R_ defined in _C_.
+For the serialized format of each record, see the documentation
+for [`Fw::DpContainer`](../../../Fw/Dp/docs/sdd.md).
+
+1. If _C_ has a `product` `get` port, a member function `dpGet_`
+_c_ for each container _c_ defined in _C_.
+This function takes a data size and a reference
+to a data product container _D_.
+It invokes `productGetOut`, which is typically connected
+to a data product manager component.
+In the nominal case, the invocation returns an `Fw::Buffer` _B_ large enough
+to store a data product packet with the requested data size.
+The `dpGet` function then uses the ID and _B_ to initialize _D_.
+It returns a status value indicating whether the buffer
+allocation succeeded.
+
+1. If _C_ has a `product` `request` port, a member function
+`dpRequest_` _c_ for each container _c_ defined in _C_.
+This function takes a data size.
+It sends out a request on `productRequestOut`, which is
+typically connected to a data product manager component.
+The request is for a buffer large enough to store a data
+product packet with the requested data size.
+
+1. If _C_ has a `product` `recv` port, a pure virtual
+member function `dpRecv_` _c_ `_handler` for each container _c_
+defined in _C_.
+When a fresh container arrives in response to a
+`dpRequest` invocation, the autocoded C++ uses the container ID to
+select and invoke the appropriate `dpRecv` handler.
+The implementation of _C_ must override each handler
+to provide the mission-specific behavior for filling
+in the corresponding container.
+The arguments to `dpRecv_` _c_ `_handler` provide
+(1) a reference to the container, which the implementation can fill in;
+and (2) a status value indicating whether the container
+is valid. An invalid container can result if the buffer
+allocation fails.
+
+1. A member function `dpSend` for sending a filled
+data product container.
+This function takes a reference to a container _c_ and an
+optional time tag.
+It does the following:
+
+   1. If no time tag is provided, then invoke `timeGetOut`
+      to get the system time and use it to set the time tag.
+
+   1. Store the time tag into _c_.
+
+   1. Send _c_ on `productSendOut`.
+
+1. Constant expressions representing the sizes of the records.
+
+   1. If a record _R_ holds a single value, then
+      the expression `SIZE_OF_` _R_ `_RECORD`
+      evaluates to the size of that record.
+
+   1. Otherwise _R_ is an array record. In this case
+      the expression `SIZE_OF_` _R_ `_RECORD(` _size_ `)`
+      evaluates to the size of an array record _R_ with
+      _size_ array elements.
+
+   You can use these expressions to compute data sizes
+   when requesting data product buffers. For example,
+   if a component specifies a record `Image`,
+   then inside the component implementation the expression
+   `10 * SIZE_OF_Image_RECORD` represents the size of the
+   storage necessary to hold 10 `Image` records.
+
+### 3.4. Unit Test Support
+
+In F Prime, each component _C_ comes with auto-generated
+classes _C_ `TesterBase` and _C_ `GTestBase` for writing
+unit tests against _C_.
+_C_ `GTestBase` is derived from _C_ `TesterBase`; it
+provides test macros based on the Google Test framework.
+
+To write unit tests, you construct a class _C_ `Tester`.
+Typically _C_ `Tester` is derived from _C_ `GTestBase` and
+uses the Google Test framework macros.
+If for some reason you can't use the Google Test framework
+(e.g., because you are running on a platform that does not support it),
+then your _C_ `Tester` class can be derived from _C_ `TesterBase`.
+
+This section documents the unit test support for producer components.
+
+#### 3.4.1. The TesterBase Class
+
+**History data structures:**
+The class _C_ `TesterBase` provides the following histories:
+
+1. If _C_ has a product get port,
+then _C_ `TesterBase` has a history called `productGetHistory`.
+Each element in the history is of type `DpGet`.
+`DpGet` is a struct with fields storing the container ID and the
+size emitted on the product get port.
+
+1. If _C_ has a product request port, then _C_ `TesterBase` has a
+corresponding history called `productRequestHistory`.
+Each element in the history is of type `DpRequest`.
+`DpRequest` is a struct with fields storing the container ID and the
+size emitted on the product request port.
+
+1. _C_ `TesterBase` has a history called `productSendHistory`.
+Each element in the history is of type `DpSend`.
+`DpSend` is a struct with fields storing the container ID and
+a shallow copy of the buffer emitted on the product send port.
+
+**History functions:**
+The class _C_ `TesterBase` provides the following functions
+for managing the histories:
+
+1. If _C_ has a product get port, then _C_ `TesterBase` provides
+   the following functions:
+
+   1. `pushProductGetEntry`: This function takes a container ID and
+      a size. It constructs the corresponding `DpGet` history object
+      and pushes it on `productGetHistory`. Typically this function is
+      called by `productGet_handler` (see below).
+
+   1. `productGet_handler`: This function is called when the tester
+      component receives data emitted on the product get port of the
+      component under test. It takes a container ID, a size, and a
+      mutable reference to a buffer _B_. By default it calls
+      `pushProductGetEntry` with the ID and size and returns `FAILURE`,
+      indicating that no memory was allocated and _B_ was not updated.
+      This function is virtual, so you can override it with your own
+      behavior. For example, your function could call `pushProductGetEntry`,
+      allocate a buffer, store the allocated buffer into _B_, and return
+      `SUCCESS`.
+
+1. If _C_ has a product request port, then _C_ `TesterBase` provides
+   the following functions:
+
+   1. `pushProductRequestEntry`: This function takes a container ID and
+      a size. It constructs the corresponding `DpRequest` history object
+      and pushes it on `productRequestHistory`. Typically this function is
+      called by `productRequest_handler` (see below).
+
+   1. `productRequest_handler`: This function is called when the tester
+      component receives data emitted on the product request port of the
+      component under test. It takes a container ID and a size. By default
+      it calls `pushProductRequestEntry` with the ID and size. This function
+      is virtual, so you can override it with your own behavior.
+
+1. _C_ `TesterBase` provides the following functions:
+
+   1. `pushProductSendEntry`: This function takes a container ID and a
+      const reference to a buffer.  It constructs the corresponding
+      `DpSend` history object and pushes it on `productSendHistory`.
+      Typically this function is called by `productSend_handler` (see below).
+
+   1. `productSend_handler`: This function is called when the tester
+      component receives data emitted on the product send port of the
+      component under test. It takes a container ID and a const reference
+      to a buffer. By default it calls `pushProductSendEntry` with the
+      ID and buffer. This function is virtual, so you can override it
+      with your own behavior.
+
+#### 3.4.2. The GTestBase Class
+
+**Testing macros:**
+The class _C_ `GTestBase` provides the following macros for
+verifying the histories managed by _C_ `TesterBase`.
+
+1. If _C_ defines data products and has a product get port, then _C_
+   `GTestBase` provides the following macros:
+
+   1. `ASSERT_PRODUCT_GET_SIZE(size)`: This macro checks that `productGetHistory`
+      has the specified size (number of entries).
+
+   1. `ASSERT_PRODUCT_GET(index, id, size)`: This macro checks that
+      `productGetHistory` has the specified container ID and size
+      at the specified history index.
+
+1. If _C_ defines data products and has a product request port,
+   then _C_ `GTestBase` provides the following macros:
+
+   1. `ASSERT_PRODUCT_REQUEST_SIZE(size)`: This macro checks that
+      `productRequestHistory` has the specified size (number of entries).
+
+   1. `ASSERT_PRODUCT_REQUEST(index, id, size)`: This macro checks that
+      `productRequestHistory` has the specified container ID and size
+      at the specified history index.
+
+1. If _C_ defines data products, then _C_ `GTestBase` provides
+   the following macros:
+
+   1. `ASSERT_PRODUCT_SEND_SIZE(size)`: This macro checks that
+      `productSendHistory` has the specified size (number of entries).
+
+   1. `ASSERT_PRODUCT_SEND(index, id, priority, timeTag, procType, userData, dataSize, buffer)`:
+      All the arguments of this macro are inputs (read-only) except `buffer`, which is
+      a by-reference output and must be a variable of type `Fw::Buffer&`.
+      This macro verifies the entry `entry` stored at the specified
+      index of `productSendHistory`. It does the following:
+
+      1. Check that `entry.id` matches the specified ID.
+
+      1. Deserialize the data product header stored in `entry.buffer`.
+
+      1. Check that the container ID, priority, time tag, processor type,
+         user data, and data size stored in the deserialized header
+         match the specified values.
+
+      1. Assign `entry.buffer` to `buffer`. After this macro runs,
+         the deserialization pointer of `buffer` points into the start
+         of the data payload of `entry.buffer`. You can write additional
+         code to deserialize and check the data payload.
+
+**Container IDs:**
+The container IDs emitted by the component under test are global
+IDs.
+Therefore, when constructing specified IDs you must add
+the ID base specified in the tester component to the local
+ID specified in the component under test.
+For example, for container `CONTAINER` in component `Component`,
+you would write
+```cpp
+ID_BASE + Component::ContainerId::CONTAINER
+```
+`ID_BASE` is a standard constant defined in each Tester implementation
+and provided to the Tester base classes in their constructors.
+
+## 4. Use Cases
+
+In this section we discuss several common use cases involving
+data products.
+
+**Requesting and sending data products:**
+See the example uses in the documentation for
+[`Svc::DpManager`](../../../Svc/DpManager/docs/sdd.md).
+The component referred to as `producer` in that document
+is a data product producer.
+
+**Writing data products to non-volatile storage:**
+See the example uses in the documentation for
+[`Svc::DpWriter`](../../../Svc/DpWriter/docs/sdd.md).
+The component referred to as `producer` in that document
+is a data product producer.
+
+**Cataloging and downlinking data products:**
+For a preliminary implementation of the data product catalog,
+see [`Svc::DpCatalog`](../../../Svc/DpCatalog/docs/sdd.md).
+
+**Processing data products:**
+TODO
+````
+
+### `dynamic-memory.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/dynamic-memory.md`
+
+
+````markdown
+# Dynamic Memory and Buffer Management
+
+In embedded systems, dynamic memory allocation (a.k.a heap allocation) is typically avoided to reduce the steady-state
+variability in a running system. Avoiding dynamic memory allocation also avoids the problem of what to do in the case of
+a failed allocation. However, sometimes dynamic allocation provides for a simpler or more efficient solution.
+
+Safe dynamic allocation is available using the buffer manager pattern in F´. In short, this pattern allows components to
+dynamically allocate memory through a port call to a component designed to manage memory for the system. There are three steps in this process:
+
+1. Call allocation port receiving an`Fw::Buffer`
+2. Use allocated in the `Fw::Buffer`
+3. Call deallocation port providing the `Fw::Buffer`
+
+## Component Setup and Buffer Usage
+
+This section will describe the work done within a component to allocate, use, and deallocate buffers. 
+
+## Allocating and Deallocating `Fw::Buffer`s
+
+Allocation and deallocation are done through port calls to a buffer managing component. The component needing dynamic
+memory allocation should include two output ports:
+
+1. Output port of type `Fw::BufferGet` to request a buffer
+2. Output port of type `Fw::BufferSend` to deallocate the requested buffer.
+
+In the case that allocation fails, the `Fw::Buffer` return from the `Fw::BufferGet` port will have a size of zero.
+Developers must check that the size is not smaller than requested before proceeding to use the memory.
+
+In the example below, the ports are called `allocate` and `deallocate`. First the port definitions are presented
+followed by the usage in C++.
+
+**Example Component Definition**
+```fpp
+    @ Allocation port for a buffer
+    output port allocate: Fw.BufferGet
+
+    @ Deallocation port for buffers
+    output port deallocate: Fw.BufferSend
+    
+    @ Allocation failed event
+    event MemoryAllocationFailed() severity warning low id 0 format "Failed to allocate memory"
+```
+
+**Example Component Allocation and Deallocation**
+```c++
+    ...
+    const U32 needed_size = 1024;
+    Fw::Buffer my_buffer = this->allocate_out(0, needed_size);
+    
+    if (my_buffer.getSize() < needed_size) {
+        this->deallocate_out(0, my_buffer);
+        this->log_WARNING_LO_MemoryAllocationFailed();
+    } else {
+        ...
+        ...
+        this->deallocate_out(0, my_buffer);
+    }
+```
+
+### Working With F´ Buffers
+
+`Fw::Buffer` objects function as a wrapper for generic memory regions. They consist of a pointer to memory and the 
+size of the memory region pointed to by the pointer. An easy way to work with an `Fw::Buffer` is to use the 
+serialization representation of the buffer. 
+
+To use this method, get either a serializer or deserializer using the `Fw::Buffer.getSerializer()` 
+or `Fw::Buffer.getDeserializer()` methods. Both of these methods return a `Fw::ExternalSerializeBufferWithMemberCopy` 
+object which you can then call `.serializeFrom()` or `.deserializeTo()` on.
+
+**Example Using Serialization and Deserialization Methods**
+
+```c++
+U32 my_value = 123;
+Fw::Buffer my_buffer = ...;
+my_buffer.getSerializer().serializeFrom(mv_value);
+
+U32 my_value_again = 0;
+my_buffer.getDeserializer().deserializeTo(mv_value_again);
+```
+> [!NOTE]
+> To use this method types must inherit from `Fw::Serializable` or be basic types.
+
+Users can access the `Fw::Buffer`'s data directly using `Fw::Buffer.getData()`, which will return a `U8*` pointer to the
+buffer's memory. Care should be taken as this is a raw pointer and thus buffer overruns are possible.
+
+**Example Using Raw Data**
+
+```c++
+Fw::Buffer my_buffer = ...;
+U8* const data = my_buffer.getData();
+
+FW_ASSERT(my_buffer.getSize() >= 4); // Prevent overrun on next line
+data[3] = 1;
+```
+
+Full [`Fw::Buffer` documentation is available](../../reference/api/cpp/html/class_fw_1_1_buffer.html).
+
+
+## Topology Consideration
+
+There are several components designed to allow for memory allocation and they differ in terms of complexity and use
+cases. They both support the `Fw::BufferGet` and `Fw::BufferSend` port interface for allocation and deallocation and
+thus can be used interchangeably subject to the descriptions in this section.
+
+Each section will describe any special setup needed in the topology and how to hook up the manager's ports.
+
+### Svc.StaticMemory
+
+Svc.StaticMemory uses a stack-based pool of memory to support allocation. This pool is composed of fixed-size regions
+each of which is tied to a specific client. Each client's allocation **must** be deallocated before a subsequent request by
+the same client. Since allocation and deallocation ports are port arrays, each client's allocation and deallocation
+ports must be hooked up in parallel.
+
+This component is designed for simplicity of implementation. System memory usage is **always** the number of clients
+multiplied by the size of the memory regions. This memory is allocated as a large array on the stack. Valid memory 
+allocations will always be returned or a software error will be tripped.
+
+[Svc.StaticMemory is described in more detail](../../../Svc/StaticMemory/docs/sdd.md).
+
+**When To Use Svc.StaticMemory**
+
+Use Svc.StaticMemory in situations where memory must always be available and sharing or efficient use of memory is a concern. Svc.StaticMemory is typically not suitable for situations where asynchronous memory handling occurs between 
+allocation and deallocation.
+
+***Usage Requirements***
+
+Since this component is designed to be simple, its usage has several caveats. These caveats are, for the most part, enforced by assertions, and thus failure to abide by them will result in software termination.
+
+1. Allocations will always return with the size of `Svc::StaticMemoryConfig::STATIC_MEMORY_ALLOCATION_SIZE`
+2. Allocations above `Svc::StaticMemoryConfig::STATIC_MEMORY_ALLOCATION_SIZE` is considered an error
+3. It is an error for a client to allocate memory before deallocating previously allocated memory
+
+These rules imply that memory allocated from Svc.StaticMemory should never be sent through an asynchronous port as this will risk violating item 3.
+
+
+**Connections**
+
+All connections to Svc.StaticMemory are done using parallel port indices per-client. This is shown in the Topology
+snippet shown below:
+
+```fpp
+      client1.allocate -> my_static_memory.bufferAllocate[0]
+      client1.deallocate -> my_static_memory.bufferDeallocate[0]
+      
+      client2.allocate -> my_static_memory.bufferAllocate[1]
+      client2.deallocate -> my_static_memory.bufferDeallocate[1]
+```
+
+Svc.StaticMemory does not use any other ports. Please review the configuration to ensure that sufficient regions are
+available for the number of clients used.
+
+***Configuration and Setup***
+
+Allocation region size is configured in the `StaticMemoryConfig.hpp` header using the `STATIC_MEMORY_ALLOCATION_SIZE`
+value and maximum client number is configured in `AcConstants.fpp` using the `StaticMemoryAllocations` value. No other
+configuration or setup is necessary.
+
+### Svc.BufferManager
+
+Svc.BufferManager uses multiple bins of memory with fixed-size sub-allocations within a bin. It has a single allocate
+and deallocate port that may take any size allocation request. Svc.BufferManager searches all bins with sub-allocation
+size larger than the request for an available buffer, which it then marks as used and returns.
+
+There is no restriction on the ordering of calls for allocation and deallocation. Clients may have multiple outstanding allocations and thus asynchronous usage of these allocations is supported.
+
+For more details, see the [Svc.BufferManager SDD](../../../Svc/BufferManager/docs/sdd.md).
+
+**When To Use Svc.BufferManager**
+
+Svc.BufferManager must be used when asynchronous handling of memory is needed or sharing of memory is desired. It can
+be used generically but comes at the cost of complexity of implementation and setup.
+
+**Usage Requirements**
+
+Allocating more memory than available will result in buffers with size 0 being returned and is not an error. However,
+buffers must be allocated and returned using the same instance of Svc.BufferManager. 
+
+Buffer manager will assert under the following conditions:
+1. A returned buffer has the incorrect manager ID (returned to the wrong instance).
+2. A returned buffer has an incorrect buffer ID (invalid buffer returned).
+3. A returned buffer is returned with a correct buffer ID but hasn't already been allocated.
+4. A returned buffer has an indicated size larger than originally allocated.
+5. A returned buffer has a pointer outside the region originally allocated.
+
+**Connections**
+
+All connections to Svc.BufferManager can be done using the single pair of allocate and deallocate ports. This is shown
+in the following snippet of a topology:
+
+```fpp
+      client1.allocate -> my_buffer_manager.bufferGetCallee
+      client1.deallocate -> my_buffer_manager.bufferSendIn
+      
+      client2.allocate -> my_buffer_manager.bufferGetCallee
+      client2.deallocate -> my_buffer_manager.bufferSendIn
+```
+
+The buffer manager should also be hooked up to a rate group used to downlink telemetry and it requires standard
+telemetry, events, and time connections.
+
+**Configuration and Setup**
+
+The number of sub allocations is configured in the `BufferManagerComponentImplCfg.hpp` header using the 
+`BUFFERMGR_MAX_NUM_BINS` value.
+
+When using Svc.BufferManager the `Svc::BufferManagerComponentImpl.setup()` method must be called supplying a U16 manager
+ID, a buffer id, an implementation of [Fw::MemAllocator](../../reference/api/cpp/html/class_fw_1_1_mem_allocator.html) used to
+allocate memory for the sub-allocations, and a
+[Svc::BufferManagerComponentImpl::BufferBins](../../reference/api/cpp/html/struct_svc_1_1_buffer_manager_component_impl_1_1_buffer_bin.html)
+struct configuring the sub allocations.
+
+The Svc::BufferManagerComponentImpl::BufferBins is a table specifying N buffers of M size per bin. Up to MAX_NUM_BINS
+bins can be specified. The table is copied when setup() is called, so it does not need to be retained after the call.
+
+The rules for specifying bins:
+1. For each bin (BufferBins.bins[n]), specify the size of the buffers (bufferSize) in the bin and how many buffers for
+   that bin (numBuffers).
+2. The bins must be ordered based on an increasing bufferSize to allow BufferManager to search for available buffers.
+   When receiving a request for a buffer, the component will search for the first buffer from the bins that are equal to
+   or greater than the requested size, starting at the beginning of the table.
+3. Any unused bins should have numBuffers set to 0.
+4. A single bin can be specified if a single size is needed. 
+   
+> [!NOTE]
+> a pointer to the Fw::MemAllocator used in setup() is stored for later memory cleanup. The instance of the allocator must persist beyond calling the cleanup() function or the destructor of BufferManager if cleanup() is not called. If a project-specific manual memory allocator is not needed, Fw::MallocAllocator can be used to supply heap allocated memory.
+
+**Example Setup of Svc.BufferManager**
+```c++
+Fw::MallocAllocator allocator;
+Svc::BufferManagerComponentImpl my_buffer_manager;
+
+...
+{
+    Svc::BufferManager::BufferBins my_bins;
+    memset(&my_bins, 0, sizeof(my_bins)); // All non-specified bins are zero
+
+    my_bins.bins[0].bufferSize = 1024; // Buffers in bin 0 are of size 1024
+    my_bins.bins[0].numBuffers = 2; // Two buffers of size 1024 are available in bin 0
+    my_bins.bins[1].bufferSize = 10240; // Buffers in bin 1 are of size 10240
+    my_bins.bins[1].numBuffers = 1; // One buffers of size 10240 are available in bin 1
+    
+    my_buffer_manager.setup(123, 0, allocator, my_bins);
+}
+
+...
+{
+    my_buffer_manager.cleanup();
+}
+```
+
+**Rules of Thumb for Bin Sizes**
+
+Buffers bins should be tailored based on expected usage. If many small requests are expected, then set up a large number of smaller bins. If larger allocations are expected, set bins of that size.
+
+The above trivial example allows for a few small allocations and one large allocation. In this case, there is a risk that the large allocation is used for the small allocation use case and thus care should be taken to ensure that the smaller use
+cases have a sufficient number of buffers to prevent stealing of larger allocations.
+
+## Separation of `Fw::Buffer` Allocation and Deallocation
+
+There is no requirement that the allocating component and the deallocating component are the same. Thus components may
+be chained together for multiple processing steps before deallocation. There are two requirements:
+
+1. `Fw::Buffers` must eventually be returned to the instance that allocated them
+2. `Svc.StaticMemory` cannot be used in chains involving asynchronous calls
+
+Inter-component connections typically use the same `Fw.BufferSend` port to pass the buffer along the chain. A sample
+chain is shown here using Svc.BufferManager as the allocation source.
+
+```fpp
+      comp1.allocate -> my_buffer_manager.bufferGetCallee
+      comp1.sendToProcess -> comp2.process
+      comp2.sendToProcessMore -> comp3.processMore
+      comp3.deallocate -> my_buffer_manager.bufferSendIn
+```
+````
+
+### `ground-interface.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/ground-interface.md`
+
+
+````markdown
+# Ground Interface Architecture and Customization
+
+This guide will discuss the F´ ground interface layers and how to customize them. There are two parts to the ground
+interface: the spacecraft side, and the ground side. This guide will primarily focus on the spacecraft side adaptation
+as the most common pattern is to adapt F´ flight software for some other ground system (e.g.
+[Cosmos]( https://github.com/BallAerospace/COSMOS), [OpenMCT](https://nasa.github.io/openmct/), etc). This
+document will walk through common adaptations in hopes that projects will not need to replace the ground interface
+entirely.
+
+In the most basic form, the F´ ground system pattern consists of two sides: uplink and downlink. These two sides each
+have two layers: framing and driver.  Uplink handles data coming from the remote side of the interface, downlink handles
+data going to the remote interface, framing handles serializing and deserializing data to and from byte buffers, and the
+driver layer handles writing data to and from the hardware.
+
+![Ground Interface Block Diagram](../../img/ground-interface.jpg)
+
+
+Also of note is the framing protocol, which breaks out the handling of the byte serialization for quick adaptation. Each
+of these stages need to allocate memory and thus users should also consult the [buffer management](../framework/dynamic-memory.md)
+guide.
+
+> [!NOTE]
+> in this guide we will refer to the driver layer but many projects will refer to it as the radio or communication layer. The function of this layer is to read and write bytes to some hardware and the nature of that hardware is irrelevant as long as it can send and receive bytes.
+
+## Ground Interface Architecture
+
+Standard F´ components handle two types of data: com buffers and raw buffers. Com buffers transmit standard F´ items
+(e.g. events, telemetry, and commands) whereas raw buffers (`Fw::Buffer`) transmit any raw bytes like file data. Thus
+the F´ ground interface must handle both types of data. Communications hardware typically only transmits bytes of data
+and knows nothing about the nature of that data. The goal of the ground interfaces is to ensure that the various types
+of F´ data can be translated into a sequence of bytes that can be reconstructed on the other side of the interface. This
+architecture is described below.
+
+### Driver
+
+Drivers manage hardware communications. These can be simple hardware interfaces (e.g. TCP or UART) or far more complex
+constructs (e.g. radios, spacecraft buses). From the perspective of F´, the driver has two functions: provide incoming
+data and handle outgoing data.
+
+> [!NOTE]
+> typically projects use a single driver to handle both input and output, however; two drivers may be used too if differing behavior is needed for uplink and downlink.(e.g. UDP downlink for speed and  Tcp uplink reliability).
+
+All drivers implement an input port receiving data from the framer. The driver should write input data to the hardware
+the driver manages. Drivers implement at least one of two methods to retrieve data from hardware: an input port
+to poll for available data and an output read port for asynchronous data, which often is supported by a read thread.
+Generic drivers implement both such that they can be used in a threaded context or rate group-driven polling context.
+The driver is responsible for reading the data from the hardware in either context.
+
+> [!NOTE]
+> the F´ uplink layer is compatible with both polling and receiving drivers as described in **Uplink** below.
+
+**Sending Data**
+
+To send data to a driver, an `Fw::Buffer` is passed to the driver's send input port and the data wrapped by the buffer
+will be pushed out to the hardware. Drivers respond to sends with one of the following statuses:
+
+1. SendStatus.OP_OK: indicates the send was successful
+2. SendStatus.SEND_RETRY: indicates subsequent retransmission will likely succeed 
+3. SendStatus.OTHER_ERROR: send failed, the data was not sent, and future success cannot be predicted
+
+**Polling Data**
+
+Polling for data allows the system to determine when to look for available data. This often means the driver does not
+need a thread constantly trying to read data. It is used in rate-group-driven baremetal systems to schedule the
+reception of data and remove the need for a task to spin looking for data. To poll data, an `Fw::Buffer` is passed to
+the driver's poll input port where the buffer is filled with available data.  Polling returns the following statuses:
+
+1. PollStatus.POLL_OK: indicates the buffer is filled with valid data
+2. PollStatus.POLL_RETRY: indicates a subsequent retry of the polling call will likely result in valid data
+3. PollStatus.POLL_ERROR: polling failed, the buffer data is invalid, and future success cannot be predicted
+
+**Receiving Data**
+
+Receiving data is to handle asynchronous input of data without the need to poll for it. This typically means the driver
+has an internal task that calls the receive output port when data has been received. Receive ports are passed
+`Fw::Buffer`s and a receive status as described below. Receive RETRY status is not used as the external system has
+nothing to retry.
+
+
+1. RecvStatus.OP_OK: receive works as expected and the buffer has valid data
+2. RecvStatus.OTHER_ERROR: receive failed and the buffer does not have valid data
+
+### Uplink
+
+Uplink handles received data, unpacks F´ data types, and routes these to the greater F´ system. In a typical formation,
+these com buffers are sent to the command dispatcher and raw buffers are sent to the file uplink. Uplink is implemented with
+the [Svc.Deframer](../../../Svc/Deframer/docs/sdd.md) component. This component may be rate group driven in which case
+it polls for data or it may be driven by a driver's receive output port in which case it handles the data on that
+incoming port call. Svc.Deframer implements the
+[DeframingProtocolInterface](../../reference/api/cpp/html/class_svc_1_1_deframing_protocol_interface.html).
+
+Svc.Deframer unpacks F´ data from the supplied buffer using a
+[Svc::DeframingProtocol](../../reference/api/cpp/html/class_svc_1_1_deframing_protocol.html), which calls back through the
+DeframingProtocolInterface to send deframed packets out to F´ components.
+
+Internally, Svc.Deframer uses a circular buffer to store incoming data such that messages are not required to be
+complete. This buffer is updated with the latest data and then processed for messages on each poll or receiving of data.
+
+### Downlink
+
+Downlink takes in F´ data and wraps the data with bytes supporting the necessary protocol. This assembled data is then
+sent to the driver for handling. Downlink is implemented with the [Svc.Framer](../../../Svc/Framer/docs/sdd.md)
+component, which implements the [FramingProtocolInterface](../../reference/api/cpp/html/class_svc_1_1_framing_protocol_interface.html).
+
+Svc.Framer packs F´ data using a [Svc::FramingProtocol](../../reference/api/cpp/html/class_svc_1_1_framing_protocol.html), which
+calls back through the FramingProtocolInterface to send framed packets out to the driver.
+
+## Adding a Custom Wire Protocol
+
+To add a custom wire protocol an implementation needs to be written for two interfaces (virtual base classes). These are
+[Svc::FramingProtocol](../../reference/api/cpp/html/class_svc_1_1_framing_protocol.html) and
+[Svc::DeframingProtocol](../../reference/api/cpp/html/class_svc_1_1_deframing_protocol.html).
+
+Svc::FramingProtocol implementors need to implement one function: frame, taking in a pointer to the data to frame, the
+size of the data, and a packet type for the data. The base class supplies a
+[FramingProtocolInterface](../../reference/api/cpp/html/class_svc_1_1_framing_protocol_interface.html) member variable, `m_interface`, that
+allows implementors to call out for allocating data and sending the newly framed data. A minimal implementation is:
+
+```c++
+class MyFrameProtocol : public Svc::FramingProtocol {
+  public:
+    MyFrameProtocol() {}
+
+    void frame(const U8 *const data, const U32 size, Fw::ComPacketType packet_type) {
+        Fw::Buffer my_framed_data = m_interface.allocate(size);
+        auto serializer = my_framed_data.getSerializer();
+        serializer.serializeFrom(0xdeadbeef); // Some start word
+        serializer.serializeFrom(size);       // Write size
+        serializer.serializeFrom(data, size, Fw::Serialization::OMIT_LENGTH); // Data copied to buffer no length included
+        m_interface.send(my_framed_data);
+    }
+};
+```
+Here the protocol starts a frame with `0xdeadbeef`, followed by the data size, and then the data.
+
+Svc::DeframingProtocol implementors need to implement one function: deframe, taking in a circular buffer supplying data,
+filling the needed variable, and returning a status. The base class supplies a
+[DeframingProtocolInterface](../../reference/api/cpp/html/class_svc_1_1_deframing_protocol_interface.html) member variable, `m_interface`,
+that allows implementors to call out for allocating data and routing the deframed data. A minimal implementation is:
+
+```c++
+class MyDeframeProtocol : public DeframingProtocol {
+  public:
+    MyDeframeProtocol() {}
+    
+    DeframingProtocol::DeframingStatus deframe(Types::CircularBuffer& ring, U32& needed) {
+        U32 start = 0;
+        U32 size = 0;
+        // Check for header or ask for more data
+        if (ring.get_remaining_size() < 8) {
+            needed = 8;
+            return DeframingProtocol::DEFRAMING_MORE_NEEDED;
+        }
+        // Peek into the header and read out values
+        (void) ring.peek(start, 0);
+        (void) ring.peek(size, 0);
+        needed = 4 + 4 + size; // start + size + data
+        
+        // Not enough data, call out for more
+        if (ring.get_remaining_size() < size) {
+            return DeframingProtocol::DEFRAMING_MORE_NEEDED;
+        }
+        // Protocol violation
+         else if (start != 0xdeadbeef) {
+            return DeframingProtocol::DEFRAMING_INVALID_CHECKSUM;
+        }
+        Fw::Buffer buffer = m_interface->allocate(size);
+        buffer.setSize(size);
+        ring.peek(buffer.getData(), size, 8);
+        m_interface->route(buffer);
+        return DeframingProtocol::DEFRAMING_STATUS_SUCCESS;
+    }
+```
+Here the protocol starts a frame with `0xdeadbeef` and uses size to extra the data. Deframing is typically the inverse
+of the framing protocol as seen in this example.
+
+> [!NOTE]
+> implementors should always use `peak` to get data and never rotate it, as Svc.Deframer will rotate the buffer based on the status.
+
+## Adding a Custom Driver 
+
+To be compatible with this ground interface, a driver must implement the
+[byte steam model interface](https://github.com/nasa/fprime/blob/devel/Drv/ByteStreamDriverModel/ByteStreamDriverModel.fpp).
+The driver may add any other ports, events, telemetry, or other F´ constructs as needed but it must define the ports as
+described in the ByteStreamDriverModel.  These ports are called out in the below FPP snippet.
+
+```fpp
+    output port ready: Drv.ByteStreamReady
+    guarded input port send: Drv.ByteStreamSend
+    
+    output port $recv: Drv.ByteStreamRecv
+    guarded input port poll: Drv.ByteStreamPoll
+```
+
+1. **ready**: (output) drivers call this port without arguments to signal it is ready to receive data via the send port.
+2. **send**: (input) clients call this port passing in an `Fw::Buffer` to send data.
+3. **recv**: (output) drivers operating in asynchronous mode call this port with a RecvStatus and `Fw::Buffer` to
+   provide data.
+4. **poll**: (input) drivers operating in poll mode fill an `Fw::Buffer` and return a PollStatus to provide data.
+````
+
+### `state-machines.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/state-machines.md`
+
+
+````markdown
+# State Machines
+
+## 1. Introduction
+
+A **state machine** is a software subsystem whose behavior is
+described by states and transitions, together with related concepts
+such as signals, actions, and guards.
+State machines are important in flight software and embedded programming.
+In this section, we document the features of F Prime that support
+programming with state machines.
+
+## 2. External and Internal State Machines
+
+F Prime supports two kinds of state machines:
+**external state machines** and **internal state machines**.
+An external state machine is specified by an external tool,
+typically the
+[State Autocoding for Real-Time Systems (STARS)
+tool](https://github.com/JPLOpenSource/STARS/tree/main).
+An internal state machine is specified in FPP, the modeling language
+for F Prime.
+
+To program with external state machines, you typically do the following:
+
+1. Use an external tool, such as the Quantum Modeler or Plant UML,
+to express the state machine.
+1. Use the STARS autocoder to generate an implementation from the model.
+1. Write a small amount of code to make the FPP model aware of
+the implementation.
+1. Instantiate the state machine in one or more F Prime components.
+1. In the component implementations, write code that interacts with
+the state machine instances.
+
+Steps 1, 2, and 5 are described in the STARS documentation.
+Steps 3 and 4 are described in the
+[_The FPP User's Guide_](https://nasa.github.io/fpp/fpp-users-guide.html).
+In the rest of this document, we will focus on the design of internal
+state machines.
+
+## 3. FPP Modeling and Code Generation
+
+To work with internal state machines in FPP, you do the following:
+
+1. Define one or more state machines, specifying their behavior.
+
+1. Add one or more instances of the state machines defined in step 1 to a
+   component _C_.
+
+1. In the implementation of _C_, write code that interacts with the
+generated code for the instances defined in step 2.
+
+Steps 1 and 2 are fully documented in
+[_The FPP User's Guide_](https://nasa.github.io/fpp/fpp-users-guide.html).
+Here we focus on the generated code for state machines and for
+state machine instances.
+
+## 4. State Machine Definitions
+
+In this section we describe the generated code for a state machine definition
+_D_ with name _M_.
+This code is generated into files _M_`StateMachineAc.hpp` and
+_M_`StateMachineAc.cpp`
+when you run `fpp-to-cpp` on an FPP model that includes _D_.
+
+In the ordinary way of programming with F Prime, it is unlikely
+that you will directly interact with the code described here.
+Instead, you will use the component interface to state machine instances
+described in the [next section](#state-machine-instances).
+Therefore, if your primary interest is to program with F Prime state
+machines, you can skip this section.
+
+For examples of generated code, you can do the following:
+
+1. In a local installation of the `fprime` repository, go into `FppTest` and
+run `fprime-util generate --ut` and then `fprime-util check`.
+
+1. Look at the FPP models in `fprime/FppTest/state_machine/internal/state`.
+
+1. Look at the generated files in
+   `fprime/FppTest/build-fprime-automatic-native-ut/FppTest/state_machine/internal/state`.
+
+<a name="sm-base-class"></a>
+### 4.1. The State Machine Base Class
+
+Each state machine definition _D_ in the FPP model becomes a C++ base class
+_M_`StateMachineBase`, where _M_ is the unqualified name of the definition.
+This class is enclosed in the namespaces, if any, given by the qualified
+name of _D_.
+For example, a state machine definition whose qualified name is `A.B.M` in FPP
+becomes a class `A::B::MStateMachineBase` in C++.
+The base class provides a partial implementation which is completed when
+the state machine is [instantiated](#state-machine-instances).
+
+<a name="sm-public"></a>
+### 4.2. The Public Interface
+
+Each generated state machine has the following public interface.
+
+**Types:**
+
+* There is an enumeration representing the states of the state machine.
+These are the leaf states specified in the FPP model
+together with a special uninitialized state.
+
+* There is an enumeration representing the signals of the state machine.
+These are the signals specified in the FPP model together with a
+special signal that represents the initial transition on startup.
+
+**Member functions:**
+
+* There is a function `getState` for getting the current state
+of the state machine.
+
+* There is one function `sendSignal` _s_ for each signal _s_
+specified in the FPP model.
+If the signal _s_ carries a value of type _T_, then this function has one
+formal parameter of type _paramType(T)_; otherwise it has no formal parameters.
+Here _paramType(T)_ means (1) _T_ if _T_ is a primitive type; otherwise (2)
+`const` reference to `Fw::StringBase` if _T_ is a string type; otherwise
+(3) `const` reference to _T_.
+
+<a name="sm-protected"></a>
+### 4.3. The Protected Interface
+
+**Constructors and destructors:**
+There is a zero-argument constructor and a destructor.
+
+**Initialization:**
+There is a function `initBase` with a single formal parameter `id`
+of type `FwEnumStoreType`.
+This function must be called on a state machine instance before
+any signals are sent to the instance.
+The parameter `id` represents the state machine identifier.
+The type is `FwEnumStoreType` because the state machine identifier
+type is an enumeration defined in the subclass.
+
+**Actions:**
+There is one pure virtual function `action_`_a_ for each action
+_a_ specified in the FPP model.
+Each action returns `void` has a formal parameter `signal` of type `Signal`.
+If the action has a type _T_, then there is a second
+formal parameter of type _paramType(T)_.
+
+**Guards:**
+There is one pure virtual `const` function `guard_`_g_ for each guard
+_g_ specified in the FPP model.
+Each guard returns `bool` and has a formal parameter `signal` of type `Signal`.
+If the guard has a type _T_, then there is a second
+formal parameter of type _paramType(T)_.
+
+**Member variables:**
+Each state machine base class has the following member variables:
+
+* A member `m_id` of type `FwEnumStoreType`.
+This variable records the current state of the state machine,
+represented as `FwEnumStoreType`.
+The initial value is zero.
+
+* A member `m_state` of type `State`.
+This variable records the current state of the state machine.
+The initial value is `State::__FPRIME_AC_UNINITIALIZED`.
+
+### 4.4. The Private Interface
+
+For each state _S_ and choice _C_ in the state machine there is one
+entry function for _S_ or _C_.
+This function implements the entry behavior for _S_ or _C_
+as specified in
+[_The FPP Language Specification_](https://nasa.github.io/fpp/fpp-spec.html).
+
+
+<a name="state-machine-instances"></a>
+## 5. State Machine Instances
+
+In this section we describe the generated code for instances of state machines
+that are part of a component _C_.
+This code is part of the auto-generated base class for _C_.
+In general there may be any number of instances of any number
+of state machines.
+
+For examples of generated code, you can do the following:
+
+1. In a local installation of the `fprime` repository, go into `FppTest` and
+run `fprime-util generate --ut` and then `fprime-util check`.
+
+1. Look at the FPP models in
+   `fprime/FppTest/state_machine/internal_instance/state`.
+
+1. Look at the generated files in
+   `fprime/FppTest/build-fprime-automatic-native-ut/FppTest/state_machine/internal_instance/state`.
+
+### 5.1. State Machine Identifiers
+
+There is an enumeration `SmId` with numeric type `FwEnumStoreType`
+that represents the state machine identifiers.
+There is one enumerated constant for each state machine instance
+in _C_.
+
+<a name="state-machine-impl"></a>
+### 5.2. State Machine Implementation Classes
+
+There is one implementation class for each state machine definition
+_M_ that is the type of a state machine instance in _C_.
+For example, if a state machine instance
+```
+state machine instance m: M
+```
+appears in the definition of _C_, then the auto-generated base
+class for _C_ contains an implementation class for _M_.
+This class has the following properties:
+
+* It is a protected inner class of the auto-generated base class for _C_.
+
+* Its name is the fully qualified name of the state machine,
+converted to a C++ identifier by replacing the dots with underscores.
+For example, if a state machine has name `A.B.M` in FPP,
+the C++ name of its implementation class is `A_B_M`.
+We will refer to this name as _fqCppIdent(M)_.
+
+* It is a public derived class of the [state machine base
+class for _M_](#sm-base-class).
+
+The following class diagram shows these properties, for a state
+machine `A.B.M` instantiated in a component `C`:
+
+![State Machine Implementation Class Diagram](../../img/sm-impl-class-diagram.png)
+
+Each state machine implementation class has the following
+elements in its interface.
+
+**Member variables:**
+There is a member `m_component` that is a reference to
+the enclosing component instance.
+This way the state machine instance can call into
+the interface of the component instance.
+
+**Construction:** There is a public constructor
+that takes a reference `*this` to the enclosing component
+as an argument.
+It initializes the member variable described above.
+
+**Initialization:** There is a public function
+`init` with one formal parameter `smId` of type `SmId`.
+This function casts its argument to `FwEnumStoreType`
+and calls the function `initBase` defined in the base class.
+Thus it provides a type-safe way to initialize the state
+machine ID.
+
+**State ID:** There is a public function `getId`
+that returns the state machine ID.
+It gets the value out of the `m_id` field defined
+in the base class and casts it to `SmId`.
+Thus it provides a type-safe way to get the state
+machine ID.
+
+**Actions:** For each action _a_ of _M_, there is one private function that
+implements the [pure virtual function for _a_ defined in the base
+class for _M_](#sm-protected).
+The implementation calls the [pure virtual function in the bass class for _C_
+that corresponds to to _M_ and _a_](#component-pure-virtual).
+It passes in the state machine ID of `*this`.
+
+**Guards:** For each guard _g_ of _M_, there is one private function that
+implements the [pure virtual function for _g_ defined in the base
+class for _M_](#sm-protected).
+The implementation calls the [pure virtual function in the base class for _C_
+that corresponds to to _M_ and _g_](#component-pure-virtual).
+It passes in the state machine ID of `*this` and returns the Boolean value returned
+by that function.
+
+### 5.3. State Machine Instance Variables
+
+For each state machine _m_ in the FPP component model, there is
+one private member variable `m_stateMachine_`_m_.
+Its type is the [state machine implementation class](#state-machine-impl)
+corresponding to the state machine _M_ instantiated by _m_.
+
+### 5.4. State Machine Initialization
+
+When a component _C_ instantiates one or more state machines,
+the standard _init_ function of _C_ calls the _init_ function
+on each state machine instance, passing in the enumerated
+constant for each state machine ID.
+In the standard sequence for F Prime FSW initialization,
+the _init_ function is called before any component instances
+are connected.
+Therefore, the initial transition of any state machine,
+including any entry actions of the initial state, may
+not emit events or telemetry or invoke any output port.
+If you need to emit events or telemetry or invoke an output port
+at the start of steady-state execution, you can have the
+initial state be a state _INIT_ that does nothing but transition to another 
+state _START_ on an RTI signal.
+When the component instance receives an RTI call on its `schedIn` port,
+it can send the RTI signal to the state machine, causing
+the transition to _START_.
+At this point the components are connected, and the transition
+to _START_ can emit events or telemetry or invoke an output port.
+
+### 5.5. Protected Member Functions
+
+The auto-generated base class for _C_ has the following protected functions.
+
+#### 5.5.1. Implemented Functions
+
+The following functions have complete implementations.
+They are available to call in the derived class that implements _C_.
+
+**State getter functions:**
+For each state machine instance _m_ in _C_, there is a `const` function
+_m_`_getState` that gets the current state of _m_.
+
+**Signal send functions:**
+For each state machine instance _m_, and for each signal _s_ defined
+in the state machine _M_ instantiated by _m_, there is a function
+_m_`_sendSignal_`_s_ for sending _s_ to _m_.
+If _s_ carries data of type _T_, then this function has a single
+formal parameter of type [_paramType(T)_](#sm-public); otherwise it has no
+formal parameters.
+
+Calling a signal send function puts a message on the queue of the
+current instance of the component _C_.
+When the message is dispatched, the auto-generated code calls
+the function that sends the signal to the state machine.
+This way state machines can safely send signals when they
+are doing actions.
+
+Each send signal function does the following:
+
+1. Call [`sendSignalStart`](#component-private) to begin constructing a message
+   buffer _B_.
+
+1. If the signal carries data, then serialize the data into _B_.
+
+1. Call the appropriate [`sendSignalFinish`](#component-private) function to
+put _B_ onto the component queue and handle overflow.
+
+<a name="component-pure-virtual"></a>
+#### 5.5.2. Pure Virtual Functions
+
+The following functions are pure virtual in the generated base class for _C_.
+You must implement them in the derived class that implements _C_.
+When you generate a C++ component implementation template for _C_, you get
+a stub for each of these functions that you can fill in.
+
+**Action functions:**
+For each state machine _M_ instantiated in _C_, for each action _a_
+specified in _M_, there is a pure virtual function _fqCppIdent(M)_`_action_`_a_.
+Recall that _fqCppIdent(M)_ is the fully qualified name of _M_ represented
+as a C++ identifier, i.e., the fully qualified name of _M_ in FPP with
+the dots replaced by underscores.
+This function has at least two formal parameters: the state machine ID
+and the signal.
+If the action requires a value of type _T_, then there is a third
+formal parameter of type [_paramType(T)_](#sm-public).
+
+When an instance _m_ of _M_ does action _a_, it calls the action function
+for _a_ in the [auto-generated base class of _M_](#state-machine-impl).
+That function calls _fqCppIdent(M)_`_action_`_a_ with the correct state machine
+ID, signal, and value, if any.
+
+**Guard functions:**
+For each state machine _M_ is instantiated in _C_, for each guard _g_
+specified in _M_, there is a pure virtual function _fqCppIdent(M)_`_guard_`_g_.
+This is a `const` function that returns `bool`.
+It has the same formal parameters as an action function that requires the same
+value type, if any.
+
+When an instance _m_ of _M_ evaluates guard _g_, it calls the guard function
+for _g_ in the [auto-generated base class of _M_](#state-machine-impl).
+That function calls _fqCppIdent(M)_`_guard_`_g_ with the correct state machine
+ID, signal, and value, if any, and returns the resulting Boolean value.
+
+**Overflow hook functions:**
+For each state machine instance _m_ that has overflow behavior `hook`,
+there is a pure virtual function _m_`_stateMachineOverflowHook` with
+the following formal parameters: the state machine ID,
+the signal, and a reference to the message buffer.
+The deserialization pointer of the message buffer points to the start
+of the message data, so the data can be deserialized if needed.
+If the signal that caused the overflow carries no data, then the
+deserialization pointer is at the end of the buffer, and deserializing
+data from the buffer will return a `BUFFER_EMPTY` error.
+
+<a name="component-private"></a>
+### 5.6. Private Member Functions
+
+The generated base class for _C_ has the following private member functions.
+
+**Send signal helper functions:**
+
+* A function `sendSignalStart`.
+Each send signal function calls this function to begin
+constructing a message buffer for sending a state machine signal.
+This function serializes the following data into the message buffer:
+message type, the port number, the state machine ID, and the signal.
+
+* For each state machine instance _m_, a function _m_`_sendSignalFinish`.
+This function puts the message buffer on the queue with the correct
+priority and overflow behavior for _m_.
+
+**Helper functions for state machine dispatch:**
+
+* A function `smDispatch` for initial dispatch of a state machine
+signal message from the queue.
+This function does the following:
+
+  1. Call `deserializeSmIdAndSignal` to deserialize the state machine ID and
+     signal from the message buffer as `FwEnumStoreType` values.
+
+  1. Cast the state machine ID to `SmId` and use it to select the
+     target state machine instance _m_.
+
+  1. Cast the signal to the appropriate type for _m_.
+
+  1. Call the appropriate `smDispatch` helper for the state machine _M_ of
+     which _m_ is an instance, passing the message buffer, a reference to
+     `m_stateMachine_`_m_, and the signal.
+
+* A function `deserializeSmIdAndSignal` for deserializing the state
+  machine ID and signal from the message buffer as `FwEnumStoreType` values.
+
+* For each state machine _M_ that is instantiated in _C_, a function
+  _fqCppIdent(M)_`_smDispatch` for finishing the dispatch of a signal to a
+state machine instance of type _M_.
+  It takes as arguments the message buffer _B_, a reference _sm_ to a state
+machine instance, and a signal _s_.
+  It deserializes the data from _B_ if there is any for _s_.
+  Then it calls _sm_`.sendSignal_`_s_, passing in the data, if any.
+````
+
+### `supported-platforms.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/supported-platforms.md`
+
+
+```markdown
+# Supported Platforms
+
+| Hardware         | OS | Architecture   | Reference Project |
+| ---------------- | -------------------- | -------------- | ---------------------------------- |
+| BeagleBone Black | VxWorks 7 | ARMv7 | [`fprime-vxworks-reference`](https://github.com/fprime-community/fprime-vxworks-reference) |
+| Raspberry Pi     | Linux     | ARMv8 | [`fprime-workshop-led-blinker`](https://github.com/fprime-community/fprime-workshop-led-blinker) |
+| x86              | Linux     | x86\_64 | [`F Prime Ref`](https://github.com/nasa/fprime) |
+| Apple M*         | Darwin    | ARM  | [`F Prime Ref`](https://github.com/nasa/fprime) |
+
+## Targeted Platforms (Planned Support)
+
+These are platforms that the F Prime community or core team is actively working or planning to support. They may have partial implementations, early-stage deployments, or nothing yet.
+
+| Hardware | OS        | Architecture | Status              | Reference Project             | Delivery Date |
+| -------- | --------- | ------------ | ------------------- | ---------------- |----------------|
+| PyCubed  | Baremetal | RISC-V | In development |[`fprime-baremetal-reference`](https://github.com/fprime-community/fprime-baremetal-reference) | 9/30/2025 |
+| PyCubed  | Zephyr | RISC-V | In development ||TBD|
+| 3PySquared | Baremetal  | ARM | In development |[`fprime-baremetal-reference`](https://github.com/fprime-community/fprime-baremetal-reference) | 9/30/2025 |
+| 3PySquared | Zephyr  | ARM | In development | |TBD|
+| Pi Pico 2| Baremetal | RISC-V | In development |[`fprime-baremetal-reference`](https://github.com/fprime-community/fprime-baremetal-reference) | 9/30/2025 |
+| Pi Pico 2| Zephyr | RISC-V | In development ||TBD|
+| Pi Pico  | Baremetal  | ARM | In development |[`fprime-baremetal-reference`](https://github.com/fprime-community/fprime-baremetal-reference) | 9/30/2025 |
+| Feather M4 | FreeRTOS  | ARM | In development  | | 9/30/2025 |
+| HPSC | VxWorks 7 | RISC-V | In development | | 9/30/2025 |
+| HPSC | Linux | RISC-V | In development | | 9/30/2025 |
+| PolarFire SoC  | VxWorks 7 | RISC-V | In development | | 9/30/2025 |
+| PolarFire SoC  | Linux | RISC-V | Not started | |TBD|
+| GR712RC | VxWorks 7 | SPARC V8 | Not started | |TBD|
+| GR740 | VxWorks 7 | SPARC V8 | Not started | |TBD|
+| Vorago | Baremetal | ARM | In development | |TBD|
+| VOXL2 | Linux | ARM64 | In development | | 9/30/2025 |
+
+## What does "Supported Platform" Mean?
+
+A **platform** refers to a combination of hardware and operating system (OS). A **supported platform** satisfies the following criteria:
+
+1. Reference project has been delivered to F Prime maintainers.
+1. Platform library exists and is used as part of a reference application. The platform library provides OSAL implementation, cmake support, drivers, and anything else needed to build and run the Reference project.
+1. Tested continuously as part of a continuous integration (CI) pipeline (e.g., unit tests, integration tests).
+1. Actively maintained by the F Prime community or core F Prime team.
+1. Documented build and run instructions are available for users.
+
+## How to Contribute a New Supported Platform
+
+We welcome contributions to expand the list of supported platforms! Here’s how to get started:
+
+1. Pick a hardware and OS platform that is not in development or is not listed.
+1. Create a platform library. Take a look at [`How-To: Develop an F Prime Library`](https://fprime.jpl.nasa.gov/latest/docs/how-to/develop-fprime-libraries/).
+1. Create a reference project for your platform that uses your platform library. Use [`fprime-vxworks-reference`](https://github.com/fprime-community/fprime-vxworks-reference) or [`fprime-baremetal-reference`](https://github.com/fprime-community/fprime-baremetal-reference) as examples for the file structure.
+1. Include build, run, and hardware setup instructions in a README.md.
+1. Set up CI for your reference project and have CI run the F Prime provided integration test scripts.
+1. Optional: You may submit a request to transfer your reference project to the fprime-community by [opening a discussion](https://github.com/nasa/fprime/discussions). Please include a description of your platform and links to your reference project repositories. To transfer a repository to fprime-community, you need to transfer ownership of the repository to an fprime maintainer. If accepted, then they will transfer the repository to the fprime-community organization.
+   
+> [!TIP]
+> 1. Follow the naming and file-structure convention as the example reference projects.
+> 1. Avoid using hardcoded paths in your toolchain file. Use environment variables.
+> 1. Test on actual hardware if possible—emulated environments may behave differently.
+```

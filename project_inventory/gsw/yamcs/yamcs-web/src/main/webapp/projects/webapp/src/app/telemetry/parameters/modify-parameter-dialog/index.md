@@ -3,16 +3,73 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/modify-parameter-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `modify-parameter-dialog.component.html`
 
-file--modify-parameter-dialog.component.html
-file--modify-parameter-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/modify-parameter-dialog/modify-parameter-dialog.component.html`
+
+
+```html
+<mat-dialog-content>
+  <ya-field label="Color">
+    <app-color-palette
+      #palette
+      [selectedColor]="data.color"
+      (select)="thickness.changeColor($event)" />
+  </ya-field>
+
+  <ya-field label="Thickness">
+    <app-thickness #thickness [selectedThickness]="data.strokeWidth" [color]="data.color" />
+  </ya-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="select()">OK</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `modify-parameter-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/modify-parameter-dialog/modify-parameter-dialog.component.html`](file--modify-parameter-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/modify-parameter-dialog/modify-parameter-dialog.component.ts`](file--modify-parameter-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/modify-parameter-dialog/modify-parameter-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  ViewChild,
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { ColorPaletteComponent } from '../color-palette/color-palette.component';
+import { ThicknessComponent } from '../thickness/thickness.component';
+
+@Component({
+  selector: 'app-modify-parameter-dialog',
+  templateUrl: './modify-parameter-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ColorPaletteComponent, WebappSdkModule, ThicknessComponent],
+})
+export class ModifyParameterDialogComponent {
+  @ViewChild('palette', { static: true })
+  palette: ColorPaletteComponent;
+
+  @ViewChild('thickness', { static: true })
+  thickness: ThicknessComponent;
+
+  constructor(
+    private dialogRef: MatDialogRef<ModifyParameterDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {}
+
+  select() {
+    this.dialogRef.close({
+      color: this.palette.selectedColor,
+      thickness: this.thickness.selectedThickness,
+    });
+  }
+}
+```

@@ -3,30 +3,844 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--PrmDb.fpp
-file--PrmDb.hpp
-file--PrmDbCmdDict.fppi
-file--PrmDbImpl.cpp
-file--PrmDbImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDb.fpp`](file--PrmDb.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDb.hpp`](file--PrmDb.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDbCmdDict.fppi`](file--PrmDbCmdDict.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDbImpl.cpp`](file--PrmDbImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDbImpl.hpp`](file--PrmDbImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Svc::PrmDbComponentBase::PrmReadError
+Svc::PrmDb_PrmReadError
+
+Svc::PrmDbComponentBase::PRM_READ_OPEN
+Svc::PrmDb_PrmReadError::OPEN
+
+Svc::PrmDbComponentBase::PRM_READ_DELIMITER
+Svc::PrmDb_PrmReadError::DELIMITER
+
+Svc::PrmDbComponentBase::PRM_READ_DELIMITER_SIZE
+Svc::PrmDb_PrmReadError::DELIMITER_SIZE
+
+Svc::PrmDbComponentBase::PRM_READ_DELIMITER_VALUE
+Svc::PrmDb_PrmReadError::DELIMITER_VALUE
+
+Svc::PrmDbComponentBase::PRM_READ_RECORD_SIZE
+Svc::PrmDb_PrmReadError::RECORD_SIZE
+
+Svc::PrmDbComponentBase::PRM_READ_RECORD_SIZE_SIZE
+Svc::PrmDb_PrmReadError::RECORD_SIZE_SIZE
+
+Svc::PrmDbComponentBase::PRM_READ_RECORD_SIZE_VALUE
+Svc::PrmDb_PrmReadError::RECORD_SIZE_VALUE
+
+Svc::PrmDbComponentBase::PRM_READ_PARAMETER_ID
+Svc::PrmDb_PrmReadError::PARAMETER_ID
+
+Svc::PrmDbComponentBase::PRM_READ_PARAMETER_ID_SIZE
+Svc::PrmDb_PrmReadError::PARAMETER_ID_SIZE
+
+Svc::PrmDbComponentBase::PRM_READ_PARAMETER_VALUE
+Svc::PrmDb_PrmReadError::PARAMETER_VALUE
+
+Svc::PrmDbComponentBase::PRM_READ_PARAMETER_VALUE_SIZE
+Svc::PrmDb_PrmReadError::PARAMETER_VALUE_SIZE
+
+Svc::PrmDbComponentBase::PrmWriteError
+Svc::PrmDb_PrmWriteError
+
+Svc::PrmDbComponentBase::PRM_WRITE_OPEN
+Svc::PrmDb_PrmWriteError::OPEN
+
+Svc::PrmDbComponentBase::PRM_WRITE_DELIMITER
+Svc::PrmDb_PrmWriteError::DELIMITER
+
+Svc::PrmDbComponentBase::PRM_WRITE_DELIMITER_SIZE
+Svc::PrmDb_PrmWriteError::DELIMITER_SIZE
+
+Svc::PrmDbComponentBase::PRM_WRITE_RECORD_SIZE
+Svc::PrmDb_PrmWriteError::RECORD_SIZE
+
+Svc::PrmDbComponentBase::PRM_WRITE_RECORD_SIZE_SIZE
+Svc::PrmDb_PrmWriteError::RECORD_SIZE_SIZE
+
+Svc::PrmDbComponentBase::PRM_WRITE_PARAMETER_ID
+Svc::PrmDb_PrmWriteError::PARAMETER_ID
+
+Svc::PrmDbComponentBase::PRM_WRITE_PARAMETER_ID_SIZE
+Svc::PrmDb_PrmWriteError::PARAMETER_ID_SIZE
+
+Svc::PrmDbComponentBase::PRM_WRITE_PARAMETER_VALUE
+Svc::PrmDb_PrmWriteError::PARAMETER_VALUE
+
+Svc::PrmDbComponentBase::PRM_WRITE_PARAMETER_VALUE_SIZE
+Svc::PrmDb_PrmWriteError::VALUE_SIZE
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+register_fprime_module(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/PrmDb.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/PrmDbImpl.cpp"
+)
+
+### UTs ###
+register_fprime_ut(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/PrmDb.fpp"
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PrmDbTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PrmDbTester.cpp"
+  DEPENDS
+    Os_File_Test_Stub_Implementation
+    Os_File_Stub_Implementation
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_None
+)
+
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `PrmDb.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDb.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for storing parameters
+  active component PrmDb {
+
+    # ----------------------------------------------------------------------
+    # Types
+    # ----------------------------------------------------------------------
+
+    @ Parameter read error
+    enum PrmReadError {
+      OPEN
+      DELIMITER
+      DELIMITER_SIZE
+      DELIMITER_VALUE
+      RECORD_SIZE
+      RECORD_SIZE_SIZE
+      RECORD_SIZE_VALUE
+      PARAMETER_ID
+      PARAMETER_ID_SIZE
+      PARAMETER_VALUE
+      PARAMETER_VALUE_SIZE
+    }
+
+    @ Parameter write error
+    enum PrmWriteError {
+      OPEN
+      DELIMITER
+      DELIMITER_SIZE
+      RECORD_SIZE
+      RECORD_SIZE_SIZE
+      PARAMETER_ID
+      PARAMETER_ID_SIZE
+      PARAMETER_VALUE
+      PARAMETER_VALUE_SIZE
+    }
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Port to get parameter values
+    guarded input port getPrm: Fw.PrmGet
+
+    @ Port to update parameters
+    async input port setPrm: Fw.PrmSet
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ Command to save parameter image to file. Uses file name passed to constructor
+    async command PRM_SAVE_FILE \
+      opcode 0
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Parameter ID not found in database.
+    event PrmIdNotFound(
+                         Id: FwPrmIdType @< The parameter ID
+                       ) \
+      severity warning low \
+      id 0 \
+      format "Parameter ID 0x{x} not found" \
+      throttle 5
+
+    @ Parameter ID updated in database
+    event PrmIdUpdated(
+                        Id: FwPrmIdType @< The parameter ID
+                      ) \
+      severity activity high \
+      id 1 \
+      format "Parameter ID 0x{x} updated"
+
+    @ Parameter database is full
+    event PrmDbFull(
+                     Id: FwPrmIdType @< The parameter ID
+                   ) \
+      severity fatal \
+      id 2 \
+      format "Parameter DB full when adding ID 0x{x} "
+
+
+    @ Parameter ID added to database
+    event PrmIdAdded(
+                      Id: FwPrmIdType @< The parameter ID
+                    ) \
+      severity activity high \
+      id 3 \
+      format "Parameter ID 0x{x} added"
+
+    @ Failed to write parameter file
+    event PrmFileWriteError(
+                             stage: PrmWriteError @< The write stage
+                             $record: I32 @< The record that had the failure
+                             error: I32 @< The error code
+                           ) \
+      severity warning high \
+      id 4 \
+      format "Parameter write failed in stage {} with record {} and error {}"
+
+    @ Save of parameter file completed
+    event PrmFileSaveComplete(
+                               records: U32 @< The number of records saved
+                             ) \
+      severity activity high \
+      id 5 \
+      format "Parameter file save completed. Wrote {} records."
+
+    @ Failed to read parameter file
+    event PrmFileReadError(
+                            stage: PrmReadError @< The read stage
+                            $record: I32 @< The record that had the failure
+                            error: I32 @< The error code
+                          ) \
+      severity warning high \
+      id 6 \
+      format "Parameter file read failed in stage {} with record {} and error {}"
+
+    @ Load of parameter file completed
+    event PrmFileLoadComplete(
+                               records: U32 @< The number of records loaded
+                             ) \
+      severity activity high \
+      id 7 \
+      format "Parameter file load completed. Read {} records."
+
+  }
+
+}
+```
+
+### `PrmDb.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDb.hpp`
+
+
+```cpp
+// ======================================================================
+// PrmDb.hpp
+// Standardization header for PrmDb
+// ======================================================================
+
+#ifndef Svc_PrmDb_HPP
+#define Svc_PrmDb_HPP
+
+#include "Svc/PrmDb/PrmDbImpl.hpp"
+
+namespace Svc {
+
+typedef PrmDbImpl PrmDb;
+
+}
+
+#endif
+```
+
+### `PrmDbCmdDict.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDbCmdDict.fppi`
+
+
+```text
+@ Command to save parameter image to file. Uses file name passed to constructor
+async command PRM_SAVE_FILE \
+  opcode 0
+```
+
+### `PrmDbImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDbImpl.cpp`
+
+
+```cpp
+/*
+ * PrmDbImpl.cpp
+ *
+ *  Created on: March 9, 2015
+ *      Author: Timothy Canham
+ */
+
+#include <Fw/Types/Assert.hpp>
+#include <Svc/PrmDb/PrmDbImpl.hpp>
+
+#include <Os/File.hpp>
+
+#include <cstdio>
+#include <cstring>
+
+static_assert(std::numeric_limits<FwSizeType>::max() >= PRMDB_NUM_DB_ENTRIES,
+              "PRMDB_NUM_DB_ENTRIES must fit within range of FwSizeType");
+
+namespace Svc {
+
+typedef PrmDb_PrmWriteError PrmWriteError;
+typedef PrmDb_PrmReadError PrmReadError;
+// anonymous namespace for buffer declaration
+namespace {
+class WorkingBuffer : public Fw::SerializeBufferBase {
+  public:
+    FwSizeType getBuffCapacity() const { return sizeof(m_buff); }
+
+    U8* getBuffAddr() { return m_buff; }
+
+    const U8* getBuffAddr() const { return m_buff; }
+
+  private:
+    // Set to max of parameter buffer + id
+    U8 m_buff[FW_PARAM_BUFFER_MAX_SIZE + sizeof(FwPrmIdType)];
+};
+}  // namespace
+
+PrmDbImpl::PrmDbImpl(const char* name) : PrmDbComponentBase(name) {
+    this->clearDb();
+}
+
+void PrmDbImpl::configure(const char* file) {
+    FW_ASSERT(file != nullptr);
+    this->m_fileName = file;
+}
+
+void PrmDbImpl::clearDb() {
+    for (FwSizeType entry = 0; entry < PRMDB_NUM_DB_ENTRIES; entry++) {
+        this->m_db[entry].used = false;
+        this->m_db[entry].id = 0;
+    }
+}
+
+// If ports are no longer guarded, these accesses need to be protected from each other
+// If there are a lot of accesses, perhaps an interrupt lock could be used instead of guarded ports
+
+Fw::ParamValid PrmDbImpl::getPrm_handler(FwIndexType portNum, FwPrmIdType id, Fw::ParamBuffer& val) {
+    // search for entry
+    Fw::ParamValid stat = Fw::ParamValid::INVALID;
+
+    for (FwSizeType entry = 0; entry < PRMDB_NUM_DB_ENTRIES; entry++) {
+        if (this->m_db[entry].used) {
+            if (this->m_db[entry].id == id) {
+                val = this->m_db[entry].val;
+                stat = Fw::ParamValid::VALID;
+                break;
+            }
+        }
+    }
+
+    // if unable to find parameter, send error message
+    if (Fw::ParamValid::INVALID == stat.e) {
+        this->log_WARNING_LO_PrmIdNotFound(id);
+    }
+
+    return stat;
+}
+
+void PrmDbImpl::setPrm_handler(FwIndexType portNum, FwPrmIdType id, Fw::ParamBuffer& val) {
+    this->lock();
+
+    // search for existing entry
+
+    bool existingEntry = false;
+    bool noSlots = true;
+
+    for (FwSizeType entry = 0; entry < PRMDB_NUM_DB_ENTRIES; entry++) {
+        if ((this->m_db[entry].used) && (id == this->m_db[entry].id)) {
+            this->m_db[entry].val = val;
+            existingEntry = true;
+            break;
+        }
+    }
+
+    // if there is no existing entry, add one
+    if (!existingEntry) {
+        for (FwSizeType entry = 0; entry < PRMDB_NUM_DB_ENTRIES; entry++) {
+            if (!(this->m_db[entry].used)) {
+                this->m_db[entry].val = val;
+                this->m_db[entry].id = id;
+                this->m_db[entry].used = true;
+                noSlots = false;
+                break;
+            }
+        }
+    }
+
+    this->unLock();
+
+    if (existingEntry) {
+        this->log_ACTIVITY_HI_PrmIdUpdated(id);
+    } else if (noSlots) {
+        this->log_FATAL_PrmDbFull(id);
+    } else {
+        this->log_ACTIVITY_HI_PrmIdAdded(id);
+    }
+}
+
+void PrmDbImpl::PRM_SAVE_FILE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    FW_ASSERT(this->m_fileName.length() > 0);
+    Os::File paramFile;
+    WorkingBuffer buff;
+
+    Os::File::Status stat = paramFile.open(this->m_fileName.toChar(), Os::File::OPEN_WRITE);
+    if (stat != Os::File::OP_OK) {
+        this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::OPEN, 0, stat);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->lock();
+
+    // Traverse the parameter list, saving each entry
+
+    U32 numRecords = 0;
+
+    for (FwSizeType entry = 0; entry < FW_NUM_ARRAY_ELEMENTS(this->m_db); entry++) {
+        if (this->m_db[entry].used) {
+            // write delimiter
+            static const U8 delim = PRMDB_ENTRY_DELIMITER;
+            FwSizeType writeSize = static_cast<FwSizeType>(sizeof(delim));
+            stat = paramFile.write(&delim, writeSize, Os::File::WaitType::WAIT);
+            if (stat != Os::File::OP_OK) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::DELIMITER, static_cast<I32>(numRecords), stat);
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+            if (writeSize != sizeof(delim)) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::DELIMITER_SIZE, static_cast<I32>(numRecords),
+                                                       static_cast<I32>(writeSize));
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+            // serialize record size = id field + data
+            U32 recordSize = static_cast<U32>(sizeof(FwPrmIdType) + this->m_db[entry].val.getBuffLength());
+
+            // reset buffer
+            buff.resetSer();
+            Fw::SerializeStatus serStat = buff.serialize(recordSize);
+            // should always work
+            FW_ASSERT(Fw::FW_SERIALIZE_OK == serStat, static_cast<FwAssertArgType>(serStat));
+
+            // write record size
+            writeSize = static_cast<FwSizeType>(buff.getBuffLength());
+            stat = paramFile.write(buff.getBuffAddr(), writeSize, Os::File::WaitType::WAIT);
+            if (stat != Os::File::OP_OK) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::RECORD_SIZE, static_cast<I32>(numRecords), stat);
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+            if (writeSize != sizeof(recordSize)) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::RECORD_SIZE_SIZE, static_cast<I32>(numRecords),
+                                                       static_cast<I32>(writeSize));
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+
+            // reset buffer
+            buff.resetSer();
+
+            // serialize parameter id
+
+            serStat = buff.serialize(this->m_db[entry].id);
+            // should always work
+            FW_ASSERT(Fw::FW_SERIALIZE_OK == serStat, static_cast<FwAssertArgType>(serStat));
+
+            // write parameter ID
+            writeSize = static_cast<FwSizeType>(buff.getBuffLength());
+            stat = paramFile.write(buff.getBuffAddr(), writeSize, Os::File::WaitType::WAIT);
+            if (stat != Os::File::OP_OK) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::PARAMETER_ID, static_cast<I32>(numRecords), stat);
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+            if (writeSize != static_cast<FwSizeType>(buff.getBuffLength())) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::PARAMETER_ID_SIZE, static_cast<I32>(numRecords),
+                                                       static_cast<I32>(writeSize));
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+
+            // write serialized parameter value
+
+            writeSize = static_cast<FwSizeType>(this->m_db[entry].val.getBuffLength());
+            stat = paramFile.write(this->m_db[entry].val.getBuffAddr(), writeSize, Os::File::WaitType::WAIT);
+            if (stat != Os::File::OP_OK) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::PARAMETER_VALUE, static_cast<I32>(numRecords),
+                                                       stat);
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+            if (writeSize != static_cast<FwSizeType>(this->m_db[entry].val.getBuffLength())) {
+                this->unLock();
+                this->log_WARNING_HI_PrmFileWriteError(PrmWriteError::PARAMETER_VALUE_SIZE,
+                                                       static_cast<I32>(numRecords), static_cast<I32>(writeSize));
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+                return;
+            }
+            numRecords++;
+        }  // end if record in use
+    }  // end for each record
+
+    this->unLock();
+    this->log_ACTIVITY_HI_PrmFileSaveComplete(numRecords);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+PrmDbImpl::~PrmDbImpl() {}
+
+void PrmDbImpl::readParamFile() {
+    FW_ASSERT(this->m_fileName.length() > 0);
+    // load file. FIXME: Put more robust file checking, such as a CRC.
+    Os::File paramFile;
+
+    Os::File::Status stat = paramFile.open(this->m_fileName.toChar(), Os::File::OPEN_READ);
+    if (stat != Os::File::OP_OK) {
+        this->log_WARNING_HI_PrmFileReadError(PrmReadError::OPEN, 0, stat);
+        return;
+    }
+
+    WorkingBuffer buff;
+
+    U32 recordNum = 0;
+
+    this->clearDb();
+
+    for (FwSizeType entry = 0; entry < PRMDB_NUM_DB_ENTRIES; entry++) {
+        U8 delimiter;
+        FwSizeType readSize = static_cast<FwSizeType>(sizeof(delimiter));
+
+        // read delimiter
+        Os::File::Status fStat = paramFile.read(&delimiter, readSize, Os::File::WaitType::WAIT);
+
+        // check for end of file (read size 0)
+        if (0 == readSize) {
+            break;
+        }
+
+        if (fStat != Os::File::OP_OK) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::DELIMITER, static_cast<I32>(recordNum), fStat);
+            return;
+        }
+
+        if (sizeof(delimiter) != readSize) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::DELIMITER_SIZE, static_cast<I32>(recordNum),
+                                                  static_cast<I32>(readSize));
+            return;
+        }
+
+        if (PRMDB_ENTRY_DELIMITER != delimiter) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::DELIMITER_VALUE, static_cast<I32>(recordNum),
+                                                  delimiter);
+            return;
+        }
+
+        U32 recordSize = 0;
+        // read record size
+        readSize = sizeof(recordSize);
+
+        fStat = paramFile.read(buff.getBuffAddr(), readSize, Os::File::WaitType::WAIT);
+        if (fStat != Os::File::OP_OK) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::RECORD_SIZE, static_cast<I32>(recordNum), fStat);
+            return;
+        }
+        if (sizeof(recordSize) != readSize) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::RECORD_SIZE_SIZE, static_cast<I32>(recordNum),
+                                                  static_cast<I32>(readSize));
+            return;
+        }
+        // set serialized size to read size
+        Fw::SerializeStatus desStat = buff.setBuffLen(static_cast<Fw::Serializable::SizeType>(readSize));
+        // should never fail
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == desStat, static_cast<FwAssertArgType>(desStat));
+        // reset deserialization
+        buff.resetDeser();
+        // deserialize, since record size is serialized in file
+        desStat = buff.deserializeTo(recordSize);
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == desStat);
+
+        // sanity check value. It can't be larger than the maximum parameter buffer size + id
+        // or smaller than the record id
+        if ((recordSize > FW_PARAM_BUFFER_MAX_SIZE + sizeof(U32)) or (recordSize < sizeof(U32))) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::RECORD_SIZE_VALUE, static_cast<I32>(recordNum),
+                                                  static_cast<I32>(recordSize));
+            return;
+        }
+
+        // read the parameter ID
+        FwPrmIdType parameterId = 0;
+        readSize = static_cast<FwSizeType>(sizeof(FwPrmIdType));
+
+        fStat = paramFile.read(buff.getBuffAddr(), readSize, Os::File::WaitType::WAIT);
+        if (fStat != Os::File::OP_OK) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::PARAMETER_ID, static_cast<I32>(recordNum), fStat);
+            return;
+        }
+        if (sizeof(parameterId) != static_cast<FwSizeType>(readSize)) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::PARAMETER_ID_SIZE, static_cast<I32>(recordNum),
+                                                  static_cast<I32>(readSize));
+            return;
+        }
+
+        // set serialized size to read parameter ID
+        desStat = buff.setBuffLen(static_cast<Fw::Serializable::SizeType>(readSize));
+        // should never fail
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == desStat, static_cast<FwAssertArgType>(desStat));
+        // reset deserialization
+        buff.resetDeser();
+        // deserialize, since parameter ID is serialized in file
+        desStat = buff.deserializeTo(parameterId);
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == desStat);
+
+        // copy parameter
+        this->m_db[entry].used = true;
+        this->m_db[entry].id = parameterId;
+        readSize = recordSize - sizeof(parameterId);
+
+        fStat = paramFile.read(this->m_db[entry].val.getBuffAddr(), readSize);
+
+        if (fStat != Os::File::OP_OK) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::PARAMETER_VALUE, static_cast<I32>(recordNum), fStat);
+            return;
+        }
+        if (static_cast<U32>(readSize) != recordSize - sizeof(parameterId)) {
+            this->log_WARNING_HI_PrmFileReadError(PrmReadError::PARAMETER_VALUE_SIZE, static_cast<I32>(recordNum),
+                                                  static_cast<I32>(readSize));
+            return;
+        }
+
+        // set serialized size to read size
+        desStat = this->m_db[entry].val.setBuffLen(static_cast<Fw::Serializable::SizeType>(readSize));
+        // should never fail
+        FW_ASSERT(Fw::FW_SERIALIZE_OK == desStat, static_cast<FwAssertArgType>(desStat));
+        recordNum++;
+    }
+
+    this->log_ACTIVITY_HI_PrmFileLoadComplete(recordNum);
+}
+
+void PrmDbImpl::pingIn_handler(FwIndexType portNum, U32 key) {
+    // respond to ping
+    this->pingOut_out(0, key);
+}
+
+}  // namespace Svc
+```
+
+### `PrmDbImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/PrmDbImpl.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T.Canham
+ * \brief Component for managing parameters
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+
+#ifndef PRMDBIMPL_HPP_
+#define PRMDBIMPL_HPP_
+
+#include <Fw/Types/String.hpp>
+#include <Os/Mutex.hpp>
+#include <Svc/PrmDb/PrmDbComponentAc.hpp>
+#include <config/PrmDbImplCfg.hpp>
+
+namespace Svc {
+
+//! \class PrmDbImpl
+//! \brief Component class for managing parameters
+//!
+//! This component supports storing, setting and saving of serialized parameters
+//! for components.
+//!
+
+class PrmDbImpl final : public PrmDbComponentBase {
+  public:
+    friend class PrmDbTester;
+
+    //!  \brief PrmDb constructor
+    //!
+    //!  The constructor for the PrmDbImpl class.
+    //!   The constructor clears the database and stores
+    //!   the file name for opening later.
+    //!
+    //!  \param name component instance name
+    PrmDbImpl(const char* name);
+
+    //!  \brief PrmDb configure method
+    //!
+    //!  The configure method stores the file name for opening later.
+    //!
+    //!  \param file file where parameters are stored.
+    void configure(const char* file);
+
+    //!  \brief PrmDb file read function
+    //!
+    //!  The readFile function reads the set of parameters from the file passed in to
+    //!  the constructor.
+    //!
+    void readParamFile();  // NOTE: Assumed to run at initialization time. No guard of data structure.
+
+    //!  \brief PrmDb destructor
+    //!
+    virtual ~PrmDbImpl();
+
+  protected:
+  private:
+    //!  \brief PrmDb parameter get handler
+    //!
+    //!  This function retrieves a parameter value from the loaded set of stored parameters
+    //!
+    //!  \param portNum input port number. Should always be zero
+    //!  \param id identifier for parameter being used.
+    //!  \param val buffer where value is placed.
+    //!  \return status of retrieval. PARAM_VALID = successful read, PARAM_INVALID = unsuccessful read
+    Fw::ParamValid getPrm_handler(FwIndexType portNum, FwPrmIdType id, Fw::ParamBuffer& val);
+    //!  \brief PrmDb parameter set handler
+    //!
+    //!  This function updates the value of the parameter stored in RAM. The PRM_SAVE_FILE
+    //!  must be called to save the value to a file.
+    //!
+    //!  \param portNum input port number. Should always be zero
+    //!  \param id identifier for parameter being used.
+    //!  \param val buffer where value to be saved is stored.
+    void setPrm_handler(FwIndexType portNum, FwPrmIdType id, Fw::ParamBuffer& val);
+
+    //!  \brief component ping handler
+    //!
+    //!  The ping handler responds to messages to verify that the task
+    //!  is still executing. Will call output ping port
+    //!
+    //!  \param portNum the number of the incoming port.
+    //!  \param opCode the opcode being registered.
+    //!  \param key the key value that is returned with the ping response
+
+    void pingIn_handler(FwIndexType portNum, U32 key);
+    //!  \brief PrmDb PRM_SAVE_FILE command handler
+    //!
+    //!  This function saves the parameter values stored in RAM to the file
+    //!  specified in the constructor. Any updates to parameters are not saved
+    //!  until this function is called.
+    //!
+    //!  \param opCode The opcode of this commands
+    //!  \param cmdSeq The sequence number of the command
+    void PRM_SAVE_FILE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq);
+
+    //!  \brief PrmDb clear database function
+    //!
+    //!  This function clears all entries from the RAM database
+    //!
+
+    void clearDb();  //!< clear the parameter database
+
+    Fw::String m_fileName;  //!< filename for parameter storage
+
+    struct t_dbStruct {
+        bool used;            //!< whether slot is being used
+        FwPrmIdType id;       //!< the id being stored in the slot
+        Fw::ParamBuffer val;  //!< the serialized value of the parameter
+    } m_db[PRMDB_NUM_DB_ENTRIES];
+};
+}  // namespace Svc
+
+#endif /* PRMDBIMPL_HPP_ */
+```

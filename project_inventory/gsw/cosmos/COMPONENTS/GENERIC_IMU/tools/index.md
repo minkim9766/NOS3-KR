@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/GENERIC_IMU/tools/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 tlm_grapher/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/COMPONENTS/GENERIC_IMU/tools/tlm_grapher/`](tlm_grapher/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

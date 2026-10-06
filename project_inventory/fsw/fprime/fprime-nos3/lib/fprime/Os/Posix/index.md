@@ -3,64 +3,2524 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--ConditionVariable.cpp
-file--ConditionVariable.hpp
-file--Console.cpp
-file--Console.hpp
-file--DefaultConsole.cpp
-file--DefaultFile.cpp
-file--DefaultMutex.cpp
-file--DefaultRawTime.cpp
-file--DefaultTask.cpp
-file--Directory.cpp
-file--Directory.hpp
-file--error.cpp
-file--error.hpp
-file--File.cpp
-file--File.hpp
-file--FileSystem.cpp
-file--FileSystem.hpp
-file--Mutex.cpp
-file--Mutex.hpp
-file--RawTime.cpp
-file--RawTime.hpp
-file--Task.cpp
-file--Task.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/ConditionVariable.cpp`](file--ConditionVariable.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/ConditionVariable.hpp`](file--ConditionVariable.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Console.cpp`](file--Console.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Console.hpp`](file--Console.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultConsole.cpp`](file--DefaultConsole.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultFile.cpp`](file--DefaultFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultMutex.cpp`](file--DefaultMutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultRawTime.cpp`](file--DefaultRawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultTask.cpp`](file--DefaultTask.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Directory.cpp`](file--Directory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Directory.hpp`](file--Directory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/error.cpp`](file--error.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/error.hpp`](file--error.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/File.hpp`](file--File.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/FileSystem.cpp`](file--FileSystem.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/FileSystem.hpp`](file--FileSystem.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Mutex.cpp`](file--Mutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Mutex.hpp`](file--Mutex.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/RawTime.cpp`](file--RawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/RawTime.hpp`](file--RawTime.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Task.cpp`](file--Task.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Task.hpp`](file--Task.hpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/.gitignore`
+
+
+```text
+#Ignore Test Outputs
+posix_test_dir
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Posix)
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+# -----------------------------------------
+## Shared Section
+# -----------------------------------------
+
+if (BUILD_TESTING)
+    add_compile_options(
+        -Wno-conversion
+    )
+endif()
+
+register_fprime_module(
+    Os_Posix_Shared
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/error.cpp"
+  HEADERS
+    "${CMAKE_CURRENT_LIST_DIR}/error.hpp"
+  DEPENDS
+    Fw_Time
+    Fw_Types
+)
+
+# Set up Posix implementations
+register_os_implementation("File;FileSystem;Directory" Posix Os_Posix_Shared)
+register_os_implementation("Console" Posix)
+
+register_os_implementation("Task" Posix Os_Posix_Shared Fw_Time)
+register_os_implementation("Mutex;ConditionVariable" Posix Os_Posix_Shared)
+register_os_implementation("RawTime" Posix Os_Posix_Shared)
+
+# -----------------------------------------
+### Os/File/Posix Test Section
+# -----------------------------------------
+register_fprime_ut(PosixFileTest 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/file/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/file/FileRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixFileTests.cpp"     
+  DEPENDS
+    Fw_Types
+    Os_Test_File_SyntheticFileSystem
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_File_Posix" 
+)
+
+# -----------------------------------------
+### Os/Console/Posix Test Section
+# -----------------------------------------
+register_fprime_ut(
+     PosixConsoleTest 
+  SOURCES
+     "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixConsoleTests.cpp"
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_Console_Posix"
+)
+
+# -----------------------------------------
+### Os/Task/Posix Test Section
+# -----------------------------------------
+register_fprime_ut(
+     PosixTaskTest 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/task/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/task/TaskRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixTaskTests.cpp"   
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+     "Os_Task_Posix"
+)
+
+# -----------------------------------------
+### Os/Mutex/Posix Test Section
+# -----------------------------------------
+
+register_fprime_ut(
+     PosixMutexTest 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/mutex/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/mutex/MutexRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixMutexTests.cpp"
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_Mutex_Posix"
+)
+
+# -----------------------------------------
+### Os/FileSystem/Posix Test Section
+# -----------------------------------------
+register_fprime_ut(
+     PosixFileSystemTest 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/filesystem/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/filesystem/FileSystemRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixFileSystemTests.cpp"     
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_File_Posix"
+)
+
+# -----------------------------------------
+### Os/Directory/Posix Test Section
+# -----------------------------------------
+
+register_fprime_ut(
+     PosixDirectoryTest 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/directory/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/directory/DirectoryRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixDirectoryTests.cpp"
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_File_Posix"
+)
+
+# -----------------------------------------
+### Os/ConditionVariable/Posix Test Section
+# -----------------------------------------
+
+register_fprime_ut(
+     PosixConditionTests 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/condition/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/condition/ConditionRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixConditionTests.cpp"     
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_Mutex_Posix"
+)
+
+# -----------------------------------------
+### Os/RawTime/Posix Test Section
+# -----------------------------------------
+register_fprime_ut(
+     PosixRawTimeTest 
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/rawtime/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/rawtime/RawTimeRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixRawTimeTests.cpp"     
+  DEPENDS
+    Fw_Types
+    STest
+  CHOOSES_IMPLEMENTATIONS
+    "Os_RawTime_Posix"
+)
+```
+
+### `ConditionVariable.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/ConditionVariable.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/ConditionVariable.cpp
+// \brief Posix implementations for Os::ConditionVariable
+// ======================================================================
+#include "Os/Posix/ConditionVariable.hpp"
+#include "Fw/Types/Assert.hpp"
+#include "Os/Posix/Mutex.hpp"
+#include "Os/Posix/error.hpp"
+
+namespace Os {
+namespace Posix {
+namespace Mutex {
+
+PosixConditionVariable::PosixConditionVariable() {
+    int status = pthread_cond_init(&this->m_handle.m_condition, nullptr);
+    FW_ASSERT(status == 0, static_cast<FwAssertArgType>(status));  // If this fails, something horrible happened.
+}
+PosixConditionVariable::~PosixConditionVariable() {
+    (void)pthread_cond_destroy(&this->m_handle.m_condition);
+}
+
+PosixConditionVariable::Status PosixConditionVariable::pend(Os::Mutex& mutex) {
+    PosixMutexHandle* mutex_handle = reinterpret_cast<PosixMutexHandle*>(mutex.getHandle());
+    int status = pthread_cond_wait(&this->m_handle.m_condition, &mutex_handle->m_mutex_descriptor);
+    return posix_status_to_conditional_status(status);
+}
+void PosixConditionVariable::notify() {
+    FW_ASSERT(pthread_cond_signal(&this->m_handle.m_condition) == 0);
+}
+void PosixConditionVariable::notifyAll() {
+    FW_ASSERT(pthread_cond_broadcast(&this->m_handle.m_condition) == 0);
+}
+
+ConditionVariableHandle* PosixConditionVariable::getHandle() {
+    return &m_handle;
+}
+
+}  // namespace Mutex
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `ConditionVariable.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/ConditionVariable.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/ConditionVariable.hpp
+// \brief Posix definitions for Os::ConditionVariable
+// ======================================================================
+#ifndef OS_POSIX_CONDITION_VARIABLE_HPP
+#define OS_POSIX_CONDITION_VARIABLE_HPP
+#include <pthread.h>
+#include <Os/Condition.hpp>
+
+namespace Os {
+namespace Posix {
+namespace Mutex {
+
+struct PosixConditionVariableHandle : public ConditionVariableHandle {
+    pthread_cond_t m_condition;  //! The condition variable
+};
+
+//! \brief Posix implementation of Os::ConditionVariable
+//!
+//! Posix implementation of `ConditionVariable` for use as a delegate class handling error-only file operations.
+//!
+class PosixConditionVariable : public ConditionVariableInterface {
+  public:
+    //! \brief constructor
+    //!
+    PosixConditionVariable();
+
+    //! \brief destructor
+    //!
+    ~PosixConditionVariable() override;
+
+    ConditionVariableInterface& operator=(const ConditionVariableInterface& other) override = delete;
+
+    //! \brief wait releasing mutex
+    PosixConditionVariable::Status pend(Os::Mutex& mutex) override;
+
+    //! \brief notify a single waiter
+    void notify() override;
+
+    //! \brief notify all current waiters
+    void notifyAll() override;
+
+    //! \brief get handle
+    ConditionVariableHandle* getHandle() override;
+
+  private:
+    //! Handle for PosixMutex
+    PosixConditionVariableHandle m_handle;
+};
+
+}  // namespace Mutex
+}  // namespace Posix
+}  // namespace Os
+#endif  // OS_POSIX_CONDITION_VARIABLE_HPP
+```
+
+### `Console.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Console.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Console.cpp
+// \brief posix implementation for Os::Console
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/Posix/Console.hpp>
+#include <cstdio>
+#include <limits>
+
+namespace Os {
+namespace Posix {
+namespace Console {
+
+void PosixConsole::writeMessage(const CHAR* message, const FwSizeType size) {
+    // size_t is defined as different sizes on different platforms. Since FwSizeType is likely larger than size_t
+    // on these platforms, and the user is unlikely to console-log more than size_t-max data, we cap the total
+    // size at the limit of the interface.
+    FwSizeType capped_size = (size <= std::numeric_limits<size_t>::max()) ? size : std::numeric_limits<size_t>::max();
+    if (message != nullptr) {
+        (void)::fwrite(message, sizeof(CHAR), static_cast<size_t>(capped_size), this->m_handle.m_file_descriptor);
+        (void)::fflush(this->m_handle.m_file_descriptor);
+    }
+}
+
+ConsoleHandle* PosixConsole::getHandle() {
+    return &this->m_handle;
+}
+
+void PosixConsole ::setOutputStream(Stream stream) {
+    switch (stream) {
+        case STANDARD_OUT:
+            this->m_handle.m_file_descriptor = stdout;
+            break;
+        case STANDARD_ERROR:
+            this->m_handle.m_file_descriptor = stderr;
+            break;
+        default:
+            FW_ASSERT(0);
+            break;
+    }
+}
+
+}  // namespace Console
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `Console.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Console.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Console.hpp
+// \brief posix implementation for Os::Console, header and test definitions
+// ======================================================================
+#include <Os/Console.hpp>
+#include <cstdio>
+#ifndef OS_POSIX_Console_HPP
+#define OS_POSIX_Console_HPP
+
+namespace Os {
+namespace Posix {
+namespace Console {
+
+//! ConsoleHandle class definition for posix implementations.
+//!
+struct PosixConsoleHandle : public ConsoleHandle {
+    //! Posix console file descriptor
+    FILE* m_file_descriptor = stdout;
+};
+
+//! \brief posix implementation of Os::ConsoleInterface
+//!
+//! Posix implementation of `ConsoleInterface` for use as a delegate class handling posix console operations. Posix
+//! consoles write to either standard out or standard error. The default file descriptor used is standard out. This may
+//! be changed by calling `setOutputStream`.
+//!
+class PosixConsole : public ConsoleInterface {
+  public:
+    //! Stream selection enumeration
+    enum Stream {
+        STANDARD_OUT = 0,   //!< Use standard output stream
+        STANDARD_ERROR = 1  //!< Use standard error stream
+    };
+    //! \brief constructor
+    //!
+    PosixConsole() = default;
+
+    //! \brief copy constructor
+    PosixConsole(const PosixConsole& other) = default;
+
+    //! \brief assignment operator that copies the internal representation
+    PosixConsole& operator=(const PosixConsole& other) = default;
+
+    //! \brief destructor
+    //!
+    ~PosixConsole() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console with a bounded size. This will use the active file descriptor as the output
+    //! destination.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    void writeMessage(const CHAR* message, const FwSizeType size) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    ConsoleHandle* getHandle() override;
+
+    //! \brief select the output stream
+    //!
+    //! There are two streams defined: standard out, and standard error. This allows users of the posix log
+    //! implementation to chose which stream to use.
+    void setOutputStream(Stream stream);
+
+  private:
+    //! File handle for PosixFile
+    PosixConsoleHandle m_handle;
+};
+}  // namespace Console
+}  // namespace Posix
+}  // namespace Os
+
+#endif  // OS_POSIX_Console_HPP
+```
+
+### `DefaultConsole.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultConsole.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/DefaultConsole.cpp
+// \brief sets default Os::Console to posix implementation via linker
+// ======================================================================
+#include "Os/Console.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Posix/Console.hpp"
+
+namespace Os {
+ConsoleInterface* ConsoleInterface::getDelegate(ConsoleHandleStorage& aligned_new_memory,
+                                                const ConsoleInterface* to_copy) {
+    return Os::Delegate::makeDelegate<ConsoleInterface, Os::Posix::Console::PosixConsole>(aligned_new_memory, to_copy);
+}
+}  // namespace Os
+```
+
+### `DefaultFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/DefaultFile.cpp
+// \brief sets default Os::File to posix implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Directory.hpp"
+#include "Os/File.hpp"
+#include "Os/FileSystem.hpp"
+#include "Os/Posix/Directory.hpp"
+#include "Os/Posix/File.hpp"
+#include "Os/Posix/FileSystem.hpp"
+
+namespace Os {
+FileInterface* FileInterface::getDelegate(FileHandleStorage& aligned_new_memory, const FileInterface* to_copy) {
+    return Os::Delegate::makeDelegate<FileInterface, Os::Posix::File::PosixFile>(aligned_new_memory, to_copy);
+}
+FileSystemInterface* FileSystemInterface::getDelegate(FileSystemHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<FileSystemInterface, Os::Posix::FileSystem::PosixFileSystem>(aligned_new_memory);
+}
+DirectoryInterface* DirectoryInterface::getDelegate(DirectoryHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<DirectoryInterface, Os::Posix::Directory::PosixDirectory>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultMutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/DefaultMutex.cpp
+// \brief sets default Os::Mutex Posix implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Posix/ConditionVariable.hpp"
+#include "Os/Posix/Mutex.hpp"
+namespace Os {
+
+//! \brief get a delegate for MutexInterface that intercepts calls for Posix
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+MutexInterface* MutexInterface::getDelegate(MutexHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<MutexInterface, Os::Posix::Mutex::PosixMutex>(aligned_new_memory);
+}
+
+//! \brief get a delegate for MutexInterface that intercepts calls for Posix
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+ConditionVariableInterface* ConditionVariableInterface::getDelegate(
+    ConditionVariableHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<ConditionVariableInterface, Os::Posix::Mutex::PosixConditionVariable,
+                                      ConditionVariableHandleStorage>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultRawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultRawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/DefaultRawTime.cpp
+// \brief sets default Os::RawTime Posix implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Posix/RawTime.hpp"
+
+namespace Os {
+
+//! \brief get a delegate for RawTimeInterface that intercepts calls for Posix
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+RawTimeInterface* RawTimeInterface::getDelegate(RawTimeHandleStorage& aligned_new_memory,
+                                                const RawTimeInterface* to_copy) {
+    return Os::Delegate::makeDelegate<RawTimeInterface, Os::Posix::RawTime::PosixRawTime, RawTimeHandleStorage>(
+        aligned_new_memory, to_copy);
+}
+
+}  // namespace Os
+```
+
+### `DefaultTask.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/DefaultTask.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/DefaultTask.cpp
+// \brief sets default Os::Task to posix implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Posix/Task.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+
+TaskInterface* TaskInterface::getDelegate(TaskHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<TaskInterface, Os::Posix::Task::PosixTask>(aligned_new_memory);
+}
+
+}  // namespace Os
+```
+
+### `Directory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Directory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Directory.cpp
+// \brief Posix implementation for Os::Directory
+// ======================================================================
+#include <sys/stat.h>
+#include <cerrno>
+#include <cstring>
+
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Os/Posix/Directory.hpp>
+#include <Os/Posix/error.hpp>
+
+namespace Os {
+namespace Posix {
+namespace Directory {
+
+PosixDirectory::PosixDirectory() : Os::DirectoryInterface(), m_handle() {}
+
+DirectoryHandle* PosixDirectory::getHandle() {
+    return &this->m_handle;
+}
+
+PosixDirectory::Status PosixDirectory::open(const char* path, OpenMode mode) {
+    Status status = Status::OP_OK;
+
+    // If one of the CREATE mode, attempt to create the directory
+    if (mode == OpenMode::CREATE_EXCLUSIVE || mode == OpenMode::CREATE_IF_MISSING) {
+        if (::mkdir(path, S_IRWXU) == -1) {
+            status = errno_to_directory_status(errno);
+            // If error is not ALREADY_EXISTS, return the error
+            // If any error and mode CREATE_EXCLUSIVE, return the error
+            // Else, we keep going with OP_OK
+            if (status != Status::ALREADY_EXISTS || mode == OpenMode::CREATE_EXCLUSIVE) {
+                return status;
+            } else {
+                status = Status::OP_OK;
+            }
+        }
+    }
+
+    DIR* dir = ::opendir(path);
+
+    if (dir == nullptr) {
+        status = errno_to_directory_status(errno);
+    }
+
+    this->m_handle.m_dir_descriptor = dir;
+    return status;
+}
+
+PosixDirectory::Status PosixDirectory::rewind() {
+    Status status = Status::OP_OK;
+    // no errors defined in man page for rewinddir
+    ::rewinddir(this->m_handle.m_dir_descriptor);
+    return status;
+}
+
+PosixDirectory::Status PosixDirectory::read(char* fileNameBuffer, FwSizeType bufSize) {
+    FW_ASSERT(fileNameBuffer);
+
+    Status status = Status::OP_OK;
+
+    // Set errno to 0 so we know why we exited readdir
+    // This is recommended by the manual pages (man 3 readdir)
+    errno = 0;
+
+    struct dirent* direntData = nullptr;
+    while ((direntData = ::readdir(this->m_handle.m_dir_descriptor)) != nullptr) {
+        // Skip . and .. directory entries
+        if ((direntData->d_name[0] == '.' and direntData->d_name[1] == '\0') or
+            (direntData->d_name[0] == '.' and direntData->d_name[1] == '.' and direntData->d_name[2] == '\0')) {
+            continue;
+        } else {
+            (void)Fw::StringUtils::string_copy(fileNameBuffer, direntData->d_name, bufSize);
+            break;
+        }
+    }
+    if (direntData == nullptr) {
+        // loop ended because readdir failed, did it error or did we run out of files?
+        if (errno != 0) {
+            // Only error from readdir is EBADF
+            status = Status::BAD_DESCRIPTOR;
+        } else {
+            status = Status::NO_MORE_FILES;
+        }
+    }
+    return status;
+}
+
+void PosixDirectory::close() {
+    // ::closedir errors if dir descriptor is nullptr
+    if (this->m_handle.m_dir_descriptor != nullptr) {
+        (void)::closedir(this->m_handle.m_dir_descriptor);
+    }
+    this->m_handle.m_dir_descriptor = nullptr;
+}
+
+}  // namespace Directory
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `Directory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Directory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Directory.hpp
+// \brief Posix definitions for Os::Directory
+// ======================================================================
+#ifndef OS_POSIX_DIRECTORY_HPP
+#define OS_POSIX_DIRECTORY_HPP
+#include <dirent.h>
+#include <Os/Directory.hpp>
+
+namespace Os {
+namespace Posix {
+namespace Directory {
+
+struct PosixDirectoryHandle : public DirectoryHandle {
+    DIR* m_dir_descriptor = nullptr;
+};
+
+//! \brief Posix implementation of Os::Directory
+//!
+//! Posix implementation of `DirectoryInterface` for use as a delegate class handling error-only file operations.
+class PosixDirectory : public DirectoryInterface {
+  public:
+    //! \brief constructor
+    PosixDirectory();
+
+    //! \brief destructor
+    ~PosixDirectory() = default;
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal mutex handle representation
+    DirectoryHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific Directory member functions
+    // ------------------------------------------------------------
+
+    //! \brief Open or create a directory
+    //!
+    //! Using the path provided, this function will open or create a directory.
+    //! Use OpenMode::READ to open an existing directory and error if the directory is not found
+    //! Use OpenMode::CREATE_IF_MISSING to open a directory, creating the directory if it doesn't exist
+    //! Use OpenMode::CREATE_EXCLUSIVE to open a directory, creating the directory and erroring if it already exists
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //!
+    //! \param path: path of directory to open
+    //! \param mode: enum (READ, CREATE_IF_MISSING, CREATE_EXCLUSIVE). See notes above for more information
+    //! \return status of the operation
+    Status open(const char* path, OpenMode mode) override;
+
+    //! \brief Check if Directory is open or not
+    //! \return true if Directory is open, false otherwise
+    bool isOpen();
+
+    //! \brief Rewind directory stream
+    //!
+    //! Each read operation moves the seek position forward. This function resets the seek position to the beginning.
+    //!
+    //! \return status of the operation
+    Status rewind() override;
+
+    //! \brief Get next filename from directory stream
+    //!
+    //! Writes at most buffSize characters of the file name to fileNameBuffer.
+    //! This function skips the current directory (.) and parent directory (..) entries.
+    //! Returns NO_MORE_FILES if there are no more files to read from the buffer.
+    //!
+    //! It is invalid to pass `nullptr` as fileNameBuffer.
+    //!
+    //! \param fileNameBuffer: buffer to store filename
+    //! \param buffSize: size of fileNameBuffer
+    //! \return status of the operation
+    Status read(char* fileNameBuffer, FwSizeType buffSize) override;
+
+    //! \brief Close directory
+    void close() override;
+
+  private:
+    //! Handle for PosixDirectory
+    PosixDirectoryHandle m_handle;
+};
+
+}  // namespace Directory
+}  // namespace Posix
+}  // namespace Os
+#endif  // OS_POSIX_DIRECTORY_HPP
+```
+
+### `error.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/error.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/error.cpp
+// \brief implementation for posix errno conversion
+// ======================================================================
+#include "Os/Posix/error.hpp"
+#include <cerrno>
+
+namespace Os {
+namespace Posix {
+
+File::Status errno_to_file_status(int errno_input) {
+    File::Status status = File::Status::OP_OK;
+    switch (errno_input) {
+        case 0:
+            status = File::Status::OP_OK;
+            break;
+        // Fallthrough intended
+        case ENOSPC:
+        case EFBIG:
+            status = File::Status::NO_SPACE;
+            break;
+        case ENOENT:
+            status = File::Status::DOESNT_EXIST;
+            break;
+        // Fallthrough intended
+        case EPERM:
+        case EACCES:
+            status = File::Status::NO_PERMISSION;
+            break;
+        case EEXIST:
+            status = File::Status::FILE_EXISTS;
+            break;
+        case EBADF:
+            status = File::Status::NOT_OPENED;
+            break;
+        // Fallthrough intended
+        case ENOSYS:
+        case EOPNOTSUPP:
+            status = File::Status::NOT_SUPPORTED;
+            break;
+        case EINVAL:
+            status = File::Status::INVALID_ARGUMENT;
+            break;
+        default:
+            status = File::Status::OTHER_ERROR;
+            break;
+    }
+    return status;
+}
+
+FileSystem::Status errno_to_filesystem_status(int errno_input) {
+    FileSystem::Status status = FileSystem::Status::OP_OK;
+    switch (errno_input) {
+        case 0:
+            status = FileSystem::Status::OP_OK;
+            break;
+        // All fall through are intended to fallback on OTHER_ERROR
+        case EACCES:
+            status = FileSystem::Status::NO_PERMISSION;
+            break;
+        case EPERM:
+        case EROFS:
+        case EFAULT:
+            status = FileSystem::Status::NO_PERMISSION;
+            break;
+        case EEXIST:
+            status = FileSystem::Status::ALREADY_EXISTS;
+            break;
+        case ELOOP:
+        case ENOENT:
+            status = FileSystem::Status::DOESNT_EXIST;
+            break;
+        case ENAMETOOLONG:
+            status = FileSystem::Status::INVALID_PATH;
+            break;
+        case ENOTDIR:
+            status = FileSystem::Status::NOT_DIR;
+            break;
+        case EDQUOT:
+            status = FileSystem::Status::NO_SPACE;
+            break;
+        case EMLINK:
+            status = FileSystem::Status::FILE_LIMIT;
+            break;
+        case ENOSPC:
+        case EFBIG:
+            status = FileSystem::Status::NO_SPACE;
+            break;
+        case ENOSYS:
+        case EOPNOTSUPP:
+            status = FileSystem::Status::NOT_SUPPORTED;
+            break;
+        case ERANGE:
+            status = FileSystem::Status::BUFFER_TOO_SMALL;
+            break;
+        case EXDEV:
+            status = FileSystem::Status::EXDEV_ERROR;
+            break;
+        default:
+            status = FileSystem::Status::OTHER_ERROR;
+            break;
+    }
+    return status;
+}
+
+Directory::Status errno_to_directory_status(int errno_input) {
+    Directory::Status status = Directory::Status::OP_OK;
+    switch (errno_input) {
+        case 0:
+            status = Directory::Status::OP_OK;
+            break;
+        case ENOENT:
+            status = Directory::Status::DOESNT_EXIST;
+            break;
+        case EACCES:
+            status = Directory::Status::NO_PERMISSION;
+            break;
+        case ENOTDIR:
+            status = Directory::Status::NOT_DIR;
+            break;
+        case EEXIST:
+            status = Directory::Status::ALREADY_EXISTS;
+            break;
+        default:
+            status = Directory::Status::OTHER_ERROR;
+            break;
+    }
+    return status;
+}
+
+RawTime::Status errno_to_rawtime_status(int errno_input) {
+    RawTime::Status status = RawTime::Status::OP_OK;
+    switch (errno_input) {
+        case 0:
+            status = RawTime::Status::OP_OK;
+            break;
+        case EINVAL:
+            status = RawTime::Status::INVALID_PARAMS;
+            break;
+        default:
+            status = RawTime::Status::OTHER_ERROR;
+            break;
+    }
+    return status;
+}
+
+Task::Status posix_status_to_task_status(int posix_status) {
+    Task::Status status = Task::Status::OP_OK;
+    switch (posix_status) {
+        case 0:
+            status = Task::Status::OP_OK;
+            break;
+        case EINVAL:
+            status = Task::Status::INVALID_PARAMS;
+            break;
+        case EPERM:
+            status = Task::Status::ERROR_PERMISSION;
+            break;
+        case EAGAIN:
+            status = Task::Status::ERROR_RESOURCES;
+            break;
+        default:
+            status = Task::Status::UNKNOWN_ERROR;
+            break;
+    }
+    return status;
+}
+
+Mutex::Status posix_status_to_mutex_status(int posix_status) {
+    Mutex::Status status = Mutex::Status::ERROR_OTHER;
+    switch (posix_status) {
+        case 0:
+            status = Mutex::Status::OP_OK;
+            break;
+        case EBUSY:
+            status = Mutex::Status::ERROR_BUSY;
+            break;
+        case EDEADLK:
+            status = Mutex::Status::ERROR_DEADLOCK;
+            break;
+        default:
+            status = Mutex::Status::ERROR_OTHER;
+            break;
+    }
+    return status;
+}
+
+ConditionVariable::Status posix_status_to_conditional_status(int posix_status) {
+    ConditionVariable::Status status = ConditionVariable::Status::ERROR_OTHER;
+    switch (posix_status) {
+        case 0:
+            status = ConditionVariable::Status::OP_OK;
+            break;
+        case EPERM:
+            status = ConditionVariable::Status::ERROR_MUTEX_NOT_HELD;
+            break;
+        default:
+            status = ConditionVariable::Status::ERROR_OTHER;
+            break;
+    }
+    return status;
+}
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `error.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/error.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/error.hpp
+// \brief header for posix errno conversion
+// ======================================================================
+#ifndef OS_POSIX_ERRNO_HPP
+#define OS_POSIX_ERRNO_HPP
+#include "Os/Condition.hpp"
+#include "Os/Directory.hpp"
+#include "Os/File.hpp"
+#include "Os/FileSystem.hpp"
+#include "Os/RawTime.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+namespace Posix {
+
+//! Convert an errno representation of an error to the Os::File::Status representation.
+//! \param errno_input: errno representation of the error
+//! \return: Os::File::Status representation of the error
+//!
+Os::File::Status errno_to_file_status(int errno_input);
+
+//! Convert an errno representation of an error to the Os::FileSystem::Status representation.
+//! \param errno_input: errno representation of the error
+//! \return: Os::FileSystem::Status representation of the error
+//!
+Os::FileSystem::Status errno_to_filesystem_status(int errno_input);
+
+//! Convert an errno representation of an error to the Os::FileSystem::Status representation.
+//! \param errno_input: errno representation of the error
+//! \return: Os::Directory::Status representation of the error
+//!
+Os::Directory::Status errno_to_directory_status(int errno_input);
+
+//! Convert an errno representation of an error to the Os::RawTime::Status representation.
+//! \param errno_input: errno representation of the error
+//! \return: Os::RawTime::Status representation of the error
+//!
+Os::RawTime::Status errno_to_rawtime_status(int errno_input);
+
+//! Convert an posix task representation of an error to the Os::Task::Status representation.
+//! \param posix_status: errno representation of the error
+//! \return: Os::Task::Status representation of the error
+//!
+Os::Task::Status posix_status_to_task_status(int posix_status);
+
+//! Convert a Posix return status (int) for mutex operations to the Os::Mutex::Status representation.
+//! \param posix_status: return status
+//! \return: Os::Mutex::Status representation of the error
+//!
+Os::Mutex::Status posix_status_to_mutex_status(int posix_status);
+
+//! Convert a Posix return status (int) for Conditional Variable operations to the Os::ConditionVariable::Status
+//! representation.
+//! \param posix_status: return status
+//! \return: Os::ConditionVariable::Status representation of the error
+//!
+Os::ConditionVariable::Status posix_status_to_conditional_status(int posix_status);
+
+}  // namespace Posix
+}  // namespace Os
+#endif
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/File.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/File.cpp
+// \brief posix implementation for Os::File
+// ======================================================================
+#include <fcntl.h>
+#include <unistd.h>
+#include <cerrno>
+#include <limits>
+#include <type_traits>
+
+#include <Fw/Types/Assert.hpp>
+#include <Os/File.hpp>
+#include <Os/Posix/File.hpp>
+#include <Os/Posix/error.hpp>
+
+namespace Os {
+namespace Posix {
+namespace File {
+
+// Sets up the default file permission as user read + user write
+// Some posix systems (e.g. Darwin) use the older S_IREAD and S_IWRITE flags while other systems (e.g. Linux) use the
+// newer S_IRUSR and S_IWUSR flags, and some don't support these flags at all. Hence, we look if flags are defined then
+// set USER_FLAGS to be the set of flags supported or 0 in the case neither is defined.
+#if defined(S_IREAD) && defined(S_IWRITE)
+#define USER_FLAGS (S_IREAD | S_IWRITE)
+#elif defined(S_IRUSR) && defined(S_IWUSR)
+#define USER_FLAGS (S_IRUSR | S_IWUSR)
+#else
+#define USER_FLAGS (0)
+#endif
+
+// Create constants for the max limits of the signed types
+// These constants are used for comparisons with complementary unsigned types to avoid sign-compare warning
+using UnsignedOffT = std::make_unsigned<off_t>::type;
+static const UnsignedOffT OFF_T_MAX_LIMIT = static_cast<UnsignedOffT>(std::numeric_limits<off_t>::max());
+using UnsignedSSizeT = std::make_unsigned<ssize_t>::type;
+static const UnsignedSSizeT SSIZE_T_MAX_LIMIT = static_cast<UnsignedSSizeT>(std::numeric_limits<ssize_t>::max());
+
+// Ensure size of FwSizeType is large enough to fit eh necessary range
+static_assert(sizeof(FwSignedSizeType) >= sizeof(off_t),
+              "FwSignedSizeType is not large enough to store values of type off_t");
+static_assert(sizeof(FwSignedSizeType) >= sizeof(ssize_t),
+              "FwSignedSizeType is not large enough to store values of type ssize_t");
+static_assert(sizeof(FwSizeType) >= sizeof(size_t), "FwSizeType is not large enough to store values of type size_t");
+
+// Now check ranges of FwSizeType
+static_assert(std::numeric_limits<FwSignedSizeType>::max() >= std::numeric_limits<off_t>::max(),
+              "Maximum value of FwSignedSizeType less than the maximum value of off_t. Configure a larger type.");
+static_assert(std::numeric_limits<FwSizeType>::max() >= OFF_T_MAX_LIMIT,
+              "Maximum value of FwSizeType less than the maximum value of off_t. Configure a larger type.");
+static_assert(std::numeric_limits<FwSignedSizeType>::max() >= std::numeric_limits<ssize_t>::max(),
+              "Maximum value of FwSignedSizeType less than the maximum value of ssize_t. Configure a larger type.");
+static_assert(std::numeric_limits<FwSignedSizeType>::min() <= std::numeric_limits<off_t>::min(),
+              "Minimum value of FwSignedSizeType larger than the minimum value of off_t. Configure a larger type.");
+static_assert(std::numeric_limits<FwSignedSizeType>::min() <= std::numeric_limits<ssize_t>::min(),
+              "Minimum value of FwSizeType larger than the minimum value of ssize_t. Configure a larger type.");
+static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<size_t>::max(),
+              "Maximum value of FwSizeType less than the maximum value of size_t. Configure a larger type.");
+
+//!\brief default copy constructor
+PosixFile::PosixFile(const PosixFile& other) {
+    // Must properly duplicate the file handle
+    this->m_handle.m_file_descriptor = fcntl(other.m_handle.m_file_descriptor, F_DUPFD, 0);
+}
+
+PosixFile& PosixFile::operator=(const PosixFile& other) {
+    if (this != &other) {
+        this->m_handle.m_file_descriptor = fcntl(other.m_handle.m_file_descriptor, F_DUPFD, 0);
+    }
+    return *this;
+}
+
+PosixFile::Status PosixFile::open(const char* filepath,
+                                  PosixFile::Mode requested_mode,
+                                  PosixFile::OverwriteType overwrite) {
+    int mode_flags = 0;
+    Status status = OP_OK;
+    switch (requested_mode) {
+        case OPEN_READ:
+            mode_flags = O_RDONLY;
+            break;
+        case OPEN_WRITE:
+            mode_flags = O_WRONLY | O_CREAT;
+            break;
+        case OPEN_SYNC_WRITE:
+            mode_flags = O_WRONLY | O_CREAT | O_SYNC;
+            break;
+        case OPEN_CREATE:
+            mode_flags =
+                O_WRONLY | O_CREAT | O_TRUNC | ((overwrite == PosixFile::OverwriteType::OVERWRITE) ? 0 : O_EXCL);
+            break;
+        case OPEN_APPEND:
+            mode_flags = O_WRONLY | O_CREAT | O_APPEND;
+            break;
+        default:
+            FW_ASSERT(0, requested_mode);
+            break;
+    }
+    int descriptor = ::open(filepath, mode_flags, USER_FLAGS);
+    if (PosixFileHandle::INVALID_FILE_DESCRIPTOR == descriptor) {
+        int errno_store = errno;
+        status = Os::Posix::errno_to_file_status(errno_store);
+    }
+    this->m_handle.m_file_descriptor = descriptor;
+    return status;
+}
+
+void PosixFile::close() {
+    // Only close file handles that are not open
+    if (PosixFileHandle::INVALID_FILE_DESCRIPTOR != this->m_handle.m_file_descriptor) {
+        (void)::close(this->m_handle.m_file_descriptor);
+        this->m_handle.m_file_descriptor = PosixFileHandle::INVALID_FILE_DESCRIPTOR;
+    }
+}
+
+PosixFile::Status PosixFile::size(FwSizeType& size_result) {
+    FwSizeType current_position = 0;
+    Status status = this->position(current_position);
+    size_result = 0;
+    if (Os::File::Status::OP_OK == status) {
+        // Must be a coding error if current_position is larger than off_t max in Posix File
+        FW_ASSERT(current_position <= OFF_T_MAX_LIMIT);
+        // Seek to the end of the file to determine size
+        off_t end_of_file = ::lseek(this->m_handle.m_file_descriptor, 0, SEEK_END);
+        if (PosixFileHandle::ERROR_RETURN_VALUE == end_of_file) {
+            int errno_store = errno;
+            status = Os::Posix::errno_to_file_status(errno_store);
+        }
+        // Return to original position
+        (void)::lseek(this->m_handle.m_file_descriptor, static_cast<off_t>(current_position), SEEK_SET);
+        size_result = static_cast<FwSizeType>(end_of_file);
+    }
+    return status;
+}
+
+PosixFile::Status PosixFile::position(FwSizeType& position_result) {
+    Status status = OP_OK;
+    position_result = 0;
+    off_t actual = ::lseek(this->m_handle.m_file_descriptor, 0, SEEK_CUR);
+    if (PosixFileHandle::ERROR_RETURN_VALUE == actual) {
+        int errno_store = errno;
+        status = Os::Posix::errno_to_file_status(errno_store);
+    }
+    // Protected by static assertion (FwSizeType >= off_t)
+    position_result = static_cast<FwSizeType>(actual);
+    return status;
+}
+
+PosixFile::Status PosixFile::preallocate(FwSizeType offset, FwSizeType length) {
+    PosixFile::Status status = Os::File::Status::NOT_SUPPORTED;
+    // Check for larger size than posix supports
+    if ((length > OFF_T_MAX_LIMIT) || (offset > OFF_T_MAX_LIMIT) ||
+        (std::numeric_limits<off_t>::max() - length) < offset) {
+        status = Os::File::Status::BAD_SIZE;
+    }
+    // posix_fallocate is only available with the posix C-API post version 200112L, however; it is not guaranteed that
+    // this call is properly implemented. This code starts with a status of "NOT_SUPPORTED".  When the standard is met
+    // an attempt will be made to called posix_fallocate, and should that still return NOT_SUPPORTED then fallback
+    // code is engaged to synthesize this behavior.
+#if _POSIX_C_SOURCE >= 200112L
+    else {
+        int errno_status =
+            ::posix_fallocate(this->m_handle.m_file_descriptor, static_cast<off_t>(offset), static_cast<off_t>(length));
+        status = Os::Posix::errno_to_file_status(errno_status);
+    }
+#endif
+    // When the operation is not supported or posix-API is not sufficient, fallback to a slower algorithm
+    if (Os::File::Status::NOT_SUPPORTED == status) {
+        // Calculate size
+        FwSizeType file_size = 0;
+        status = this->size(file_size);
+        if (Os::File::Status::OP_OK == status) {
+            // Calculate current position
+            FwSizeType file_position = 0;
+            status = this->position(file_position);
+            // Check for overflow in seek calls
+            if (file_position > static_cast<FwSizeType>(std::numeric_limits<FwSignedSizeType>::max()) ||
+                file_size > static_cast<FwSizeType>(std::numeric_limits<FwSignedSizeType>::max())) {
+                status = Os::File::Status::BAD_SIZE;
+            }
+            // Only allocate when the file is smaller than the allocation
+            else if ((Os::File::Status::OP_OK == status) && (file_size < (offset + length))) {
+                const FwSizeType write_length = (offset + length) - file_size;
+                status = this->seek(static_cast<FwSignedSizeType>(file_size), PosixFile::SeekType::ABSOLUTE);
+                if (Os::File::Status::OP_OK == status) {
+                    // Fill in zeros past size of file to ensure compatibility with fallocate
+                    for (FwSizeType i = 0; i < write_length; i++) {
+                        FwSizeType write_size = 1;
+                        status =
+                            this->write(reinterpret_cast<const U8*>("\0"), write_size, PosixFile::WaitType::NO_WAIT);
+                        if (Status::OP_OK != status || write_size != 1) {
+                            break;
+                        }
+                    }
+                    // Return to original position
+                    if (Os::File::Status::OP_OK == status) {
+                        status =
+                            this->seek(static_cast<FwSignedSizeType>(file_position), PosixFile::SeekType::ABSOLUTE);
+                    }
+                }
+            }
+        }
+    }
+    return status;
+}
+
+PosixFile::Status PosixFile::seek(FwSignedSizeType offset, PosixFile::SeekType seekType) {
+    Status status = OP_OK;
+    if (offset > std::numeric_limits<off_t>::max()) {
+        status = BAD_SIZE;
+    } else {
+        off_t actual = ::lseek(this->m_handle.m_file_descriptor, static_cast<off_t>(offset),
+                               (seekType == SeekType::ABSOLUTE) ? SEEK_SET : SEEK_CUR);
+        int errno_store = errno;
+        if (actual == PosixFileHandle::ERROR_RETURN_VALUE) {
+            status = Os::Posix::errno_to_file_status(errno_store);
+        } else if ((seekType == SeekType::ABSOLUTE) && (actual != offset)) {
+            status = Os::File::Status::OTHER_ERROR;
+        }
+    }
+    return status;
+}
+
+PosixFile::Status PosixFile::flush() {
+    PosixFile::Status status = OP_OK;
+    if (PosixFileHandle::ERROR_RETURN_VALUE == ::fsync(this->m_handle.m_file_descriptor)) {
+        int errno_store = errno;
+        status = Os::Posix::errno_to_file_status(errno_store);
+    }
+    return status;
+}
+
+PosixFile::Status PosixFile::read(U8* buffer, FwSizeType& size, PosixFile::WaitType wait) {
+    Status status = OP_OK;
+    FwSizeType accumulated = 0;
+    // Loop up to 2 times for each by, bounded to prevent overflow
+    const FwSizeType maximum =
+        (size > (std::numeric_limits<FwSizeType>::max() / 2)) ? std::numeric_limits<FwSizeType>::max() : size * 2;
+    // POSIX APIs are implementation dependent when dealing with sizes larger than the signed return value
+    // thus we ensure a clear decision: BAD_SIZE
+    if (size > SSIZE_T_MAX_LIMIT) {
+        return BAD_SIZE;
+    }
+
+    for (FwSizeType i = 0; i < maximum && accumulated < size; i++) {
+        // char* for some posix implementations
+        ssize_t read_size = ::read(this->m_handle.m_file_descriptor, reinterpret_cast<CHAR*>(&buffer[accumulated]),
+                                   static_cast<size_t>(size - accumulated));
+        // Non-interrupt error
+        if (PosixFileHandle::ERROR_RETURN_VALUE == read_size) {
+            int errno_store = errno;
+            // Interrupted w/o read, try again
+            if (EINTR != errno_store) {
+                continue;
+            }
+            status = Os::Posix::errno_to_file_status(errno_store);
+            break;
+        }
+        // End-of-file
+        else if (read_size == 0) {
+            break;
+        }
+        accumulated += static_cast<FwSizeType>(read_size);
+        // Stop looping when we had a good read and are not waiting
+        if (not wait) {
+            break;
+        }
+    }
+    size = accumulated;
+    return status;
+}
+
+PosixFile::Status PosixFile::write(const U8* buffer, FwSizeType& size, PosixFile::WaitType wait) {
+    Status status = OP_OK;
+    FwSizeType accumulated = 0;
+    // Loop up to 2 times for each by, bounded to prevent overflow
+    const FwSizeType maximum =
+        (size > (std::numeric_limits<FwSizeType>::max() / 2)) ? std::numeric_limits<FwSizeType>::max() : size * 2;
+    // POSIX APIs are implementation dependent when dealing with sizes larger than the signed return value
+    // thus we ensure a clear decision: BAD_SIZE
+    if (size > SSIZE_T_MAX_LIMIT) {
+        return BAD_SIZE;
+    }
+
+    for (FwSizeType i = 0; i < maximum && accumulated < size; i++) {
+        // char* for some posix implementations
+        ssize_t write_size =
+            ::write(this->m_handle.m_file_descriptor, reinterpret_cast<const CHAR*>(&buffer[accumulated]),
+                    static_cast<size_t>(size - accumulated));
+        // Non-interrupt error
+        if (PosixFileHandle::ERROR_RETURN_VALUE == write_size || write_size < 0) {
+            int errno_store = errno;
+            // Interrupted w/o write, try again
+            if (EINTR != errno_store) {
+                continue;
+            }
+            status = Os::Posix::errno_to_file_status(errno_store);
+            break;
+        }
+        accumulated += static_cast<FwSizeType>(write_size);
+    }
+    size = accumulated;
+    // When waiting, sync to disk
+    if (wait) {
+        int fsync_return = ::fsync(this->m_handle.m_file_descriptor);
+        if (PosixFileHandle::ERROR_RETURN_VALUE == fsync_return) {
+            int errno_store = errno;
+            status = Os::Posix::errno_to_file_status(errno_store);
+        }
+    }
+    return status;
+}
+
+FileHandle* PosixFile::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace File
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `File.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/File.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/File.hpp
+// \brief posix implementation for Os::File, header and test definitions
+// ======================================================================
+#include <Os/File.hpp>
+#ifndef OS_POSIX_FILE_HPP
+#define OS_POSIX_FILE_HPP
+
+namespace Os {
+namespace Posix {
+namespace File {
+
+//! FileHandle class definition for posix implementations.
+//!
+struct PosixFileHandle : public FileHandle {
+    static constexpr int INVALID_FILE_DESCRIPTOR = -1;
+    static constexpr int ERROR_RETURN_VALUE = -1;
+
+    //! Posix file descriptor
+    int m_file_descriptor = INVALID_FILE_DESCRIPTOR;
+};
+
+//! \brief posix implementation of Os::File
+//!
+//! Posix implementation of `FileInterface` for use as a delegate class handling posix file operations. Posix files use
+//! standard `open`, `read`, and `write` posix calls. The handle is represented as a `PosixFileHandle` which wraps a
+//! single `int` type file descriptor used in those API calls.
+//!
+class PosixFile : public FileInterface {
+  public:
+    //! \brief constructor
+    //!
+    PosixFile() = default;
+
+    //! \brief copy constructor
+    PosixFile(const PosixFile& other);
+
+    //! \brief assignment operator that copies the internal representation
+    PosixFile& operator=(const PosixFile& other);
+
+    //! \brief destructor
+    //!
+    ~PosixFile() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! Open the file passed in with the given mode. If overwrite is set to OVERWRITE, then opening files in
+    //! OPEN_CREATE mode will clobber existing files. Set overwrite to NO_OVERWRITE to preserve existing files.
+    //! The status of the open request is returned from the function call. Delegates to the chosen
+    //! implementation's `open` function.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //! It is invalid to supply `overwrite` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \param overwrite: overwrite existing file on create
+    //! \return: status of the open
+    //!
+    Os::FileInterface::Status open(const char* path, Mode mode, OverwriteType overwrite) override;
+
+    //! \brief close the file, if not opened then do nothing
+    //!
+    //! Closes the file, if open. Otherwise this function does nothing. Delegates to the chosen implementation's
+    //! `closeInternal` function. `mode` is set to `OPEN_NO_MODE`.
+    //!
+    void close() override;
+
+    //! \brief get size of currently open file
+    //!
+    //! Get the size of the currently open file and fill the size parameter. Return status of the operation.
+    //! \param size: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status size(FwSizeType& size_result) override;
+
+    //! \brief get file pointer position of the currently open file
+    //!
+    //! Get the current position of the read/write pointer of the open file.
+    //! \param position: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status position(FwSizeType& position_result) override;
+
+    //! \brief pre-allocate file storage
+    //!
+    //! Pre-allocates file storage with at least `length` storage starting at `offset`. No-op on implementations
+    //! that cannot pre-allocate.
+    //!
+    //! It is invalid to pass a negative `offset`.
+    //! It is invalid to pass a negative `length`.
+    //!
+    //! \param offset: offset into file
+    //! \param length: length after offset to preallocate
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status preallocate(FwSizeType offset, FwSizeType length) override;
+
+    //! \brief seek the file pointer to the given offset
+    //!
+    //! Seek the file pointer to the given `offset`. If `seekType` is set to `ABSOLUTE` then the offset is calculated
+    //! from the start of the file, and if it is set to `RELATIVE` it is calculated from the current position.
+    //!
+    //! \param offset: offset to seek to
+    //! \param seekType: `ABSOLUTE` for seeking from beginning of file, `RELATIVE` to use current position.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status seek(FwSignedSizeType offset, SeekType seekType) override;
+
+    //! \brief flush file contents to storage
+    //!
+    //! Flushes the file contents to storage (i.e. out of the OS cache to disk). Does nothing in implementations
+    //! that do not support flushing.
+    //!
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status flush() override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Read data from this file up to the `size` and store it in `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been read successfully read or the end of the file has been
+    //! reached. When `wait` is set to `NO_WAIT` it will return whatever data is currently available.
+    //!
+    //! `size` will be updated to the count of bytes actually read. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status read(U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Write data to this file up to the `size` from the `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been written successfully to disk. When `wait` is set to
+    //! `NO_WAIT` it will return once the data is sent to the OS.
+    //!
+    //! `size` will be updated to the count of bytes actually written. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data to write to disk, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status write(const U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief returns the raw file handle
+    //!
+    //! Gets the raw file handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw file handle
+    //!
+    FileHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    PosixFileHandle m_handle;
+};
+}  // namespace File
+}  // namespace Posix
+}  // namespace Os
+
+#endif  // OS_POSIX_FILE_HPP
+```
+
+### `FileSystem.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/FileSystem.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/FileSystem.cpp
+// \brief Posix implementation for Os::FileSystem
+// ======================================================================
+#include "Os/Posix/FileSystem.hpp"
+#include "Os/Posix/error.hpp"
+
+#include <dirent.h>
+#ifndef TGT_OS_TYPE_VXWORKS
+#include <sys/statvfs.h>
+#endif
+#include <sys/stat.h>
+#include <unistd.h>
+#include <cstdio>
+
+#include <cerrno>
+
+namespace Os {
+namespace Posix {
+namespace FileSystem {
+
+PosixFileSystem::Status PosixFileSystem::_removeDirectory(const char* path) {
+    Status status = OP_OK;
+    if (::rmdir(path) == -1) {
+        status = errno_to_filesystem_status(errno);
+    }
+    return status;
+}
+
+PosixFileSystem::Status PosixFileSystem::_removeFile(const char* path) {
+    Status status = OP_OK;
+    if (::unlink(path) == -1) {
+        status = errno_to_filesystem_status(errno);
+    }
+    return status;
+}
+
+PosixFileSystem::Status PosixFileSystem::_rename(const char* originPath, const char* destPath) {
+    Status status = OP_OK;
+    if (::rename(originPath, destPath) == -1) {
+        status = errno_to_filesystem_status(errno);
+    }
+    return status;
+}
+
+PosixFileSystem::Status PosixFileSystem::_getWorkingDirectory(char* path, FwSizeType bufferSize) {
+    Status status = OP_OK;
+    if (::getcwd(path, static_cast<size_t>(bufferSize)) == nullptr) {
+        status = errno_to_filesystem_status(errno);
+    }
+    return status;
+}
+
+PosixFileSystem::Status PosixFileSystem::_changeWorkingDirectory(const char* path) {
+    Status status = OP_OK;
+    if (::chdir(path) == -1) {
+        status = errno_to_filesystem_status(errno);
+    }
+    return status;
+}
+
+PosixFileSystem::Status PosixFileSystem::_getFreeSpace(const char* path,
+                                                       FwSizeType& totalBytes,
+                                                       FwSizeType& freeBytes) {
+#ifdef TGT_OS_TYPE_VXWORKS
+    return Status::NOT_SUPPORTED;
+#else
+    Status stat = OP_OK;
+    static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<fsblkcnt_t>::max(),
+                  "FwSizeType must be able to hold fsblkcnt_t");
+    static_assert(std::numeric_limits<FwSizeType>::min() <= std::numeric_limits<fsblkcnt_t>::min(),
+                  "FwSizeType must be able to hold fsblkcnt_t");
+    static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<unsigned long>::max(),
+                  "FwSizeType must be able to hold unsigned long");
+    struct statvfs fsStat;
+    int ret = statvfs(path, &fsStat);
+    if (ret) {
+        return errno_to_filesystem_status(errno);
+    }
+
+    const FwSizeType block_size = static_cast<FwSizeType>(fsStat.f_frsize);
+    const FwSizeType free_blocks = static_cast<FwSizeType>(fsStat.f_bfree);
+    const FwSizeType total_blocks = static_cast<FwSizeType>(fsStat.f_blocks);
+
+    // Check for overflow in multiplication
+    if (free_blocks > (std::numeric_limits<FwSizeType>::max() / block_size) ||
+        total_blocks > (std::numeric_limits<FwSizeType>::max() / block_size)) {
+        return OVERFLOW_ERROR;
+    }
+    freeBytes = free_blocks * block_size;
+    totalBytes = total_blocks * block_size;
+    return stat;
+#endif
+}
+
+FileSystemHandle* PosixFileSystem::getHandle() {
+    return &this->m_handle;
+}
+
+PosixFileSystem::Status PosixFileSystem::_getPathType(const char* path, PathType& pathType) {
+    FW_ASSERT(path != nullptr);
+    struct stat path_stat;
+    const I32 status = lstat(path, &path_stat);
+    if (status == 0) {
+        if (S_ISDIR(path_stat.st_mode)) {
+            pathType = PathType::DIRECTORY;
+        } else if (S_ISREG(path_stat.st_mode)) {
+            pathType = PathType::FILE;
+        } else {
+            pathType = PathType::OTHER;
+        }
+        return Status::OP_OK;
+    } else {
+        return errno_to_filesystem_status(errno);
+    }
+}
+
+}  // namespace FileSystem
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `FileSystem.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/FileSystem.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/FileSystem.hpp
+// \brief Posix FileSystem definitions for Os::FileSystem
+// ======================================================================
+#ifndef OS_POSIX_FILESYSTEM_HPP
+#define OS_POSIX_FILESYSTEM_HPP
+
+#include "Os/FileSystem.hpp"
+
+namespace Os {
+namespace Posix {
+namespace FileSystem {
+
+struct PosixFileSystemHandle : public FileSystemHandle {};
+
+//! \brief Posix implementation of Os::FileSystem
+//!
+//! Posix implementation of `FileSystemInterface` for use as a delegate class handling error-only fileSystem operations.
+//!
+class PosixFileSystem : public FileSystemInterface {
+  public:
+    //! \brief constructor
+    PosixFileSystem() = default;
+
+    //! \brief destructor
+    ~PosixFileSystem() override = default;
+
+    // ------------------------------------------------------------
+    // Implementation-specific member functions - overrides
+    // ------------------------------------------------------------
+
+    //! \brief Remove a directory at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the directory to remove
+    //! \return Status of the operation
+    Status _removeDirectory(const char* path) override;
+
+    //! \brief Remove a file at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file to remove
+    //! \return Status of the operation
+    Status _removeFile(const char* path) override;
+
+    //! \brief Rename a file from source to destination
+    //!
+    //! If the rename fails due to a cross-device operation, this function should return EXDEV_ERROR
+    //! and moveFile can be used instead to force a copy-and-remove.
+    //!
+    //! It is invalid to pass `nullptr` as sourcePath or destPath.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    Status _rename(const char* sourcePath, const char* destPath) override;
+
+    //! \brief Get filesystem free and total space in bytes on the filesystem containing the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path on the filesystem to query
+    //! \param totalBytes Reference to store the total bytes on the filesystem
+    //! \param freeBytes Reference to store the free bytes on the filesystem
+    //! \return Status of the operation
+    Status _getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) override;
+
+    //! \brief Get the current working directory
+    //!
+    //! Writes the current working directory path to the provided buffer of size bufferSize.
+    //! If the buffer is too small to hold the full path, the function will return BUFFER_TOO_SMALL.
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to pass a bufferSize of 0.
+    //!
+    //! \param path Buffer to store the current working directory path
+    //! \param bufferSize Size of the buffer
+    //! \return Status of the operation
+    Status _getWorkingDirectory(char* path, FwSizeType bufferSize) override;
+
+    //! \brief Change the current working directory to the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the new working directory
+    //! \return Status of the operation
+    Status _changeWorkingDirectory(const char* path) override;
+
+    //! \brief Get the raw FileSystem handle
+    //!
+    //! Gets the raw FileSystem handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it *must* be passed as an opaque type.
+    //!
+    //! \return raw fileSystem handle
+    FileSystemHandle* getHandle() override;
+
+    //! \brief Get the type of the path (file, directory, etc.)
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check
+    //! \return PathType of the path
+    Status _getPathType(const char* path, PathType& pathType) override;
+
+  private:
+    //! FileSystem handle for PosixFileSystem
+    PosixFileSystemHandle m_handle;
+};  // class PosixFileSystem
+
+}  // namespace FileSystem
+}  // namespace Posix
+}  // namespace Os
+#endif  // OS_POSIX_FILESYSTEM_HPP
+```
+
+### `Mutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Mutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Mutex.cpp
+// \brief Posix implementation for Os::Mutex
+// ======================================================================
+#include <Fw/Types/Assert.hpp>
+#include <Os/Posix/Mutex.hpp>
+#include <Os/Posix/error.hpp>
+
+namespace Os {
+namespace Posix {
+namespace Mutex {
+
+PosixMutex::PosixMutex() : Os::MutexInterface(), m_handle() {
+    // set attributes
+    pthread_mutexattr_t attribute;
+    int status = pthread_mutexattr_init(&attribute);
+    FW_ASSERT(status == 0, static_cast<FwAssertArgType>(status));
+
+    // set to normal mutex type
+    status = pthread_mutexattr_settype(&attribute, PTHREAD_MUTEX_ERRORCHECK);
+    FW_ASSERT(status == 0, static_cast<FwAssertArgType>(status));
+
+    // set to check for priority inheritance
+    status = pthread_mutexattr_setprotocol(&attribute, PTHREAD_PRIO_INHERIT);
+    FW_ASSERT(status == 0, static_cast<FwAssertArgType>(status));
+
+    status = pthread_mutex_init(&this->m_handle.m_mutex_descriptor, &attribute);
+    FW_ASSERT(status == 0, static_cast<FwAssertArgType>(status));
+}
+
+PosixMutex::~PosixMutex() {
+    int status = pthread_mutex_destroy(&this->m_handle.m_mutex_descriptor);
+    FW_ASSERT(status == 0, static_cast<FwAssertArgType>(status));
+}
+
+PosixMutex::Status PosixMutex::take() {
+    int status = pthread_mutex_lock(&this->m_handle.m_mutex_descriptor);
+    return Os::Posix::posix_status_to_mutex_status(status);
+}
+
+PosixMutex::Status PosixMutex::release() {
+    int status = pthread_mutex_unlock(&this->m_handle.m_mutex_descriptor);
+    return Os::Posix::posix_status_to_mutex_status(status);
+}
+
+MutexHandle* PosixMutex::getHandle() {
+    return &this->m_handle;
+}
+}  // namespace Mutex
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `Mutex.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Mutex.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Mutex.hpp
+// \brief Posix definitions for Os::Mutex
+// ======================================================================
+#ifndef OS_POSIX_MUTEX_HPP
+#define OS_POSIX_MUTEX_HPP
+#include <pthread.h>
+#include <Os/Mutex.hpp>
+
+namespace Os {
+namespace Posix {
+namespace Mutex {
+
+struct PosixMutexHandle : public MutexHandle {
+    pthread_mutex_t m_mutex_descriptor = PTHREAD_MUTEX_INITIALIZER;
+};
+
+//! \brief Posix implementation of Os::Mutex
+//!
+//! Posix implementation of `MutexInterface` for use as a delegate class handling error-only file operations.
+//!
+class PosixMutex : public MutexInterface {
+  public:
+    //! \brief constructor
+    //!
+    PosixMutex();
+
+    //! \brief destructor
+    //!
+    ~PosixMutex() override;
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal mutex handle representation
+    MutexHandle* getHandle() override;
+
+    Status take() override;     //!<  lock the mutex and get return status
+    Status release() override;  //!<  unlock the mutex and get return status
+
+  private:
+    //! Handle for PosixMutex
+    PosixMutexHandle m_handle;
+};
+
+}  // namespace Mutex
+}  // namespace Posix
+}  // namespace Os
+#endif  // OS_POSIX_MUTEX_HPP
+```
+
+### `RawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/RawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/RawTime.cpp
+// \brief Posix implementation for Os::RawTime
+// ======================================================================
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Posix/RawTime.hpp>
+#include <Os/Posix/error.hpp>
+#include <cerrno>
+
+namespace Os {
+namespace Posix {
+namespace RawTime {
+
+PosixRawTime::Status PosixRawTime::now() {
+    int status = clock_gettime(CLOCK_REALTIME, &this->m_handle.m_timespec);
+    if (status != 0) {
+        return errno_to_rawtime_status(errno);
+    }
+    return Status::OP_OK;
+}
+
+PosixRawTime::Status PosixRawTime::getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const {
+    timespec t1 = this->m_handle.m_timespec;
+    timespec t2 = static_cast<PosixRawTimeHandle*>(const_cast<Os::RawTime&>(other).getHandle())->m_timespec;
+
+    // Guarantee t1 is the later time to make the calculation below easier
+    if ((t1.tv_sec < t2.tv_sec) or (t1.tv_sec == t2.tv_sec and t1.tv_nsec < t2.tv_nsec)) {
+        t1 = static_cast<PosixRawTimeHandle*>(const_cast<Os::RawTime&>(other).getHandle())->m_timespec;
+        t2 = this->m_handle.m_timespec;
+    }
+
+    // Here we have guaranteed that t1 > t2, so there is no underflow
+    U32 sec = static_cast<U32>(t1.tv_sec - t2.tv_sec);
+    U32 nanosec = 0;
+    if (t1.tv_nsec < t2.tv_nsec) {
+        sec -= 1;  // subtract nsec carry to seconds
+        nanosec = static_cast<U32>(t1.tv_nsec + (1000000000 - t2.tv_nsec));
+    } else {
+        nanosec = static_cast<U32>(t1.tv_nsec - t2.tv_nsec);
+    }
+
+    interval.set(sec, nanosec / 1000);
+    return Status::OP_OK;
+}
+
+Fw::SerializeStatus PosixRawTime::serializeTo(Fw::SerializeBufferBase& buffer) const {
+    static_assert(PosixRawTime::SERIALIZED_SIZE >= 2 * sizeof(U32),
+                  "PosixRawTime implementation requires at least 2*sizeof(U32) serialization size");
+    Fw::SerializeStatus status = buffer.serializeFrom(static_cast<U32>(this->m_handle.m_timespec.tv_sec));
+    if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        return status;
+    }
+    return buffer.serializeFrom(static_cast<U32>(this->m_handle.m_timespec.tv_nsec));
+}
+
+Fw::SerializeStatus PosixRawTime::deserializeFrom(Fw::SerializeBufferBase& buffer) {
+    static_assert(PosixRawTime::SERIALIZED_SIZE >= 2 * sizeof(U32),
+                  "PosixRawTime implementation requires at least 2*sizeof(U32) serialization size");
+    U32 sec = 0;
+    U32 nsec = 0;
+    Fw::SerializeStatus status = buffer.deserializeTo(sec);
+    if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        return status;
+    }
+    status = buffer.deserializeTo(nsec);
+    if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        return status;
+    }
+    this->m_handle.m_timespec = {static_cast<time_t>(sec), static_cast<long>(nsec)};
+    return Fw::SerializeStatus::FW_SERIALIZE_OK;
+}
+
+RawTimeHandle* PosixRawTime::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace RawTime
+}  // namespace Posix
+}  // namespace Os
+```
+
+### `RawTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/RawTime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/RawTime.hpp
+// \brief Posix definitions for Os::RawTime
+// ======================================================================
+#ifndef OS_POSIX_RAWTIME_HPP
+#define OS_POSIX_RAWTIME_HPP
+
+#include <Os/RawTime.hpp>
+#include <ctime>
+
+namespace Os {
+namespace Posix {
+namespace RawTime {
+
+struct PosixRawTimeHandle : public RawTimeHandle {
+    timespec m_timespec = {0, 0};
+};
+
+//! \brief Posix implementation of Os::RawTime
+//!
+//! Posix implementation of `RawTimeInterface` for use as a delegate class handling error-only file operations.
+//!
+class PosixRawTime : public RawTimeInterface {
+  public:
+    //! \brief constructor
+    PosixRawTime() = default;
+
+    //! \brief destructor
+    ~PosixRawTime() override = default;
+
+    //! \brief return the underlying RawTime handle (implementation specific)
+    //! \return internal RawTime handle representation
+    RawTimeHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific RawTime overrides
+    // ------------------------------------------------------------
+    //! \brief Get the current time.
+    //!
+    //! This function retrieves the current time and stores it in the RawTime object.
+    //! Each implementation should define its RawTimeHandle type for storing the time.
+    //!
+    //! \return Status indicating the result of the operation.
+    Status now() override;
+
+    //! \brief Calculate the time interval between this and another raw time.
+    //!
+    //! This function calculates the time interval between the current raw time and another
+    //! specified raw time. The result is stored in the provided (output) interval object.
+    //!
+    //! \param other The other RawTimeHandle to compare against.
+    //! \param interval Output parameter to store the calculated time interval.
+    //! \return Status indicating the result of the operation.
+    Status getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const override;
+
+    //! \brief Serialize the contents of the RawTimeInterface object into a buffer.
+    //!
+    //! This function serializes the contents of the RawTimeInterface object into the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to serialize the contents into.
+    //! \return Fw::SerializeStatus indicating the result of the serialization.
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& buffer) const override;
+
+    //! \brief Deserialize the contents of the RawTimeInterface object from a buffer.
+    //!
+    //! This function deserializes the contents of the RawTimeInterface object from the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to deserialize the contents from.
+    //! \return Fw::SerializeStatus indicating the result of the deserialization.
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& buffer) override;
+
+  private:
+    //! Handle for PosixRawTime
+    PosixRawTimeHandle m_handle;
+};
+
+}  // namespace RawTime
+}  // namespace Posix
+}  // namespace Os
+#endif  // OS_POSIX_RAWTIME_HPP
+```
+
+### `Task.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Task.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Task.cpp
+// \brief implementation of Posix implementation of Os::Task
+// ======================================================================
+#include <pthread.h>
+#include <unistd.h>
+#include <cerrno>
+#include <climits>
+#include <cstring>
+
+#include "Fw/Logger/Logger.hpp"
+#include "Fw/Types/Assert.hpp"
+#include "Os/Posix/Task.hpp"
+#include "Os/Posix/error.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+namespace Posix {
+namespace Task {
+std::atomic<bool> PosixTask::s_permissions_reported(false);
+static const int SCHED_POLICY = SCHED_RR;
+
+typedef void* (*pthread_func_ptr)(void*);
+
+void* pthread_entry_wrapper(void* wrapper_pointer) {
+    FW_ASSERT(wrapper_pointer != nullptr);
+    Os::Task::TaskRoutineWrapper& wrapper = *reinterpret_cast<Os::Task::TaskRoutineWrapper*>(wrapper_pointer);
+    wrapper.run(&wrapper);
+    return nullptr;
+}
+
+int set_stack_size(pthread_attr_t& attributes, const Os::Task::Arguments& arguments) {
+    int status = PosixTaskHandle::SUCCESS;
+    FwSizeType stack = arguments.m_stackSize;
+// Check for stack size multiple of page size or skip when the function
+// is unavailable.
+#ifdef _SC_PAGESIZE
+    long page_size = sysconf(_SC_PAGESIZE);
+#else
+    long page_size = -1;  // Force skip and warning
+#endif
+    if (page_size <= 0) {
+        Fw::Logger::log("[WARNING] %s could not determine page size %s. Skipping stack-size check.\n",
+                        const_cast<CHAR*>(arguments.m_name.toChar()), strerror(errno));
+    } else if ((stack % static_cast<FwSizeType>(page_size)) != 0) {
+        // Round-down to nearest page size multiple
+        FwSizeType rounded = (stack / static_cast<FwSizeType>(page_size)) * static_cast<FwSizeType>(page_size);
+        Fw::Logger::log("[WARNING] %s stack size of %" PRI_FwSizeType
+                        " is not multiple of page size %ld, rounding to %" PRI_FwSizeType "\n",
+                        const_cast<CHAR*>(arguments.m_name.toChar()), stack, page_size, rounded);
+        stack = rounded;
+    }
+
+    // Clamp invalid stack sizes
+    if (stack <= static_cast<FwSizeType>(PTHREAD_STACK_MIN)) {
+        Fw::Logger::log(
+            "[WARNING] %s stack size of %" PRI_FwSizeType "  is too small, clamping to %" PRI_FwSizeType "\n",
+            const_cast<CHAR*>(arguments.m_name.toChar()), stack, static_cast<FwSizeType>(PTHREAD_STACK_MIN));
+        stack = static_cast<FwSizeType>(PTHREAD_STACK_MIN);
+    }
+    status = pthread_attr_setstacksize(&attributes, static_cast<size_t>(stack));
+    return status;
+}
+
+int set_priority_params(pthread_attr_t& attributes, const Os::Task::Arguments& arguments) {
+    const FwSizeType min_priority = static_cast<FwSizeType>(sched_get_priority_min(SCHED_POLICY));
+    const FwSizeType max_priority = static_cast<FwSizeType>(sched_get_priority_max(SCHED_POLICY));
+    int status = PosixTaskHandle::SUCCESS;
+    FwSizeType priority = arguments.m_priority;
+    // Clamp to minimum priority
+    if (priority < min_priority) {
+        Fw::Logger::log("[WARNING] %s low task priority of %" PRI_FwSizeType " clamped to %" PRI_FwSizeType "\n",
+                        const_cast<CHAR*>(arguments.m_name.toChar()), priority, min_priority);
+        priority = min_priority;
+    }
+    // Clamp to maximum priority
+    else if (priority > max_priority) {
+        Fw::Logger::log("[WARNING] %s high task priority of %" PRI_FwSizeType " clamped to %" PRI_FwSizeType "\n",
+                        const_cast<CHAR*>(arguments.m_name.toChar()), priority, max_priority);
+        priority = max_priority;
+    }
+
+    // Set attributes required for priority
+    status = pthread_attr_setschedpolicy(&attributes, SCHED_POLICY);
+    if (status == PosixTaskHandle::SUCCESS) {
+        status = pthread_attr_setinheritsched(&attributes, PTHREAD_EXPLICIT_SCHED);
+    }
+    if (status == PosixTaskHandle::SUCCESS) {
+        sched_param schedParam;
+        memset(&schedParam, 0, sizeof(sched_param));
+        schedParam.sched_priority = static_cast<int>(priority);
+        status = pthread_attr_setschedparam(&attributes, &schedParam);
+    }
+    return status;
+}
+
+int set_cpu_affinity(pthread_attr_t& attributes, const Os::Task::Arguments& arguments) {
+    int status = 0;
+// pthread_attr_setaffinity_np is a non-POSIX function. Notably, it is not available on musl.
+// Limit its use to builds that involve glibc, on Linux, with _GNU_SOURCE defined.
+// That's the circumstance in which we expect this feature to work.
+#if defined(TGT_OS_TYPE_LINUX) && defined(__GLIBC__) && defined(_GNU_SOURCE)
+    const FwSizeType affinity = arguments.m_cpuAffinity;
+    cpu_set_t cpu_set;
+    CPU_ZERO(&cpu_set);
+    CPU_SET(static_cast<int>(affinity), &cpu_set);
+
+    // According to the man-page this function sets errno rather than returning an error status like other functions
+    status = pthread_attr_setaffinity_np(&attributes, sizeof(cpu_set_t), &cpu_set);
+    status = (status == PosixTaskHandle::SUCCESS) ? status : errno;
+#else
+    Fw::Logger::log("[WARNING] %s setting CPU affinity is only available with GNU pthreads\n",
+                    const_cast<CHAR*>(arguments.m_name.toChar()));
+#endif
+    return status;
+}
+
+Os::Task::Status PosixTask::create(const Os::Task::Arguments& arguments,
+                                   const PosixTask::PermissionExpectation permissions) {
+    int pthread_status = PosixTaskHandle::SUCCESS;
+    PosixTaskHandle& handle = this->m_handle;
+    const bool expect_permission = (permissions == EXPECT_PERMISSION);
+    // Initialize and clear pthread attributes
+    pthread_attr_t attributes;
+    memset(&attributes, 0, sizeof(attributes));
+    pthread_status = pthread_attr_init(&attributes);
+    if ((arguments.m_stackSize != Os::Task::TASK_DEFAULT) && (expect_permission) &&
+        (pthread_status == PosixTaskHandle::SUCCESS)) {
+        pthread_status = set_stack_size(attributes, arguments);
+    }
+    if ((arguments.m_priority != Os::Task::TASK_PRIORITY_DEFAULT) && (expect_permission) &&
+        (pthread_status == PosixTaskHandle::SUCCESS)) {
+        pthread_status = set_priority_params(attributes, arguments);
+    }
+    if ((arguments.m_cpuAffinity != Os::Task::TASK_DEFAULT) && (expect_permission) &&
+        (pthread_status == PosixTaskHandle::SUCCESS)) {
+        pthread_status = set_cpu_affinity(attributes, arguments);
+    }
+    if (pthread_status == PosixTaskHandle::SUCCESS) {
+        pthread_status =
+            pthread_create(&handle.m_task_descriptor, &attributes, pthread_entry_wrapper, arguments.m_routine_argument);
+    }
+    // Successful execution of all precious steps will result in a valid task handle
+    if (pthread_status == PosixTaskHandle::SUCCESS) {
+        handle.m_is_valid = true;
+    }
+
+    (void)pthread_attr_destroy(&attributes);
+    return Posix::posix_status_to_task_status(pthread_status);
+}
+
+void PosixTask::onStart() {}
+
+Os::Task::Status PosixTask::start(const Arguments& arguments) {
+    FW_ASSERT(arguments.m_routine != nullptr);
+
+    // Try to create thread with assuming permissions
+    Os::Task::Status status = this->create(arguments, PermissionExpectation::EXPECT_PERMISSION);
+    // Failure due to permission automatically retried
+    if (status == Os::Task::Status::ERROR_PERMISSION) {
+        if (not PosixTask::s_permissions_reported) {
+            Fw::Logger::log("\n");
+            Fw::Logger::log("[NOTE] Task Permissions:\n");
+            Fw::Logger::log("[NOTE]\n");
+            Fw::Logger::log(
+                "[NOTE] You have insufficient permissions to create a task with priority and/or cpu affinity.\n");
+            Fw::Logger::log("[NOTE] A task without priority and affinity will be created.\n");
+            Fw::Logger::log("[NOTE]\n");
+            Fw::Logger::log("[NOTE] There are three possible resolutions:\n");
+            Fw::Logger::log("[NOTE] 1. Use tasks without priority and affinity using parameterless start()\n");
+            Fw::Logger::log("[NOTE] 2. Run this executable as a user with task priority permission\n");
+            Fw::Logger::log("[NOTE] 3. Grant capability with \"setcap 'cap_sys_nice=eip'\" or equivalent\n");
+            Fw::Logger::log("\n");
+            PosixTask::s_permissions_reported = true;
+        }
+        // Fallback with no permission
+        status = this->create(arguments, PermissionExpectation::EXPECT_NO_PERMISSION);
+    } else if (status != Os::Task::Status::OP_OK) {
+        Fw::Logger::log("[ERROR] Failed to create task with status: %d", static_cast<int>(status));
+    }
+    return status;
+}
+
+Os::Task::Status PosixTask::join() {
+    Os::Task::Status status = Os::Task::Status::JOIN_ERROR;
+    if (not this->m_handle.m_is_valid) {
+        status = Os::Task::Status::INVALID_HANDLE;
+    } else {
+        int stat = ::pthread_join(this->m_handle.m_task_descriptor, nullptr);
+        status = (stat == PosixTaskHandle::SUCCESS) ? Os::Task::Status::OP_OK : Os::Task::Status::JOIN_ERROR;
+    }
+    return status;
+}
+
+TaskHandle* PosixTask::getHandle() {
+    return &this->m_handle;
+}
+
+// Note: not implemented for Posix threads. Must be manually done using a mutex or other blocking construct as there
+// is no top-level pthreads support for suspend and resume.
+void PosixTask::suspend(Os::Task::SuspensionType suspensionType) {
+    FW_ASSERT(0);
+}
+
+void PosixTask::resume() {
+    FW_ASSERT(0);
+}
+
+Os::Task::Status PosixTask::_delay(Fw::TimeInterval interval) {
+    Os::Task::Status task_status = Os::Task::OP_OK;
+    timespec sleep_interval;
+    sleep_interval.tv_sec = interval.getSeconds();
+    sleep_interval.tv_nsec = interval.getUSeconds() * 1000;
+
+    timespec remaining_interval;
+    remaining_interval.tv_sec = 0;
+    remaining_interval.tv_nsec = 0;
+
+    while (true) {
+        int status = nanosleep(&sleep_interval, &remaining_interval);
+        // Success, return ok
+        if (0 == status) {
+            break;
+        }
+        // Interrupted, reset sleep and iterate
+        else if (EINTR == errno) {
+            sleep_interval = remaining_interval;
+            continue;
+        }
+        // Anything else is an error
+        else {
+            task_status = Os::Task::Status::DELAY_ERROR;
+            break;
+        }
+    }
+    return task_status;
+}
+
+}  // end namespace Task
+}  // end namespace Posix
+}  // end namespace Os
+```
+
+### `Task.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/Task.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/Task.hpp
+// \brief definitions of Posix implementation of Os::Task
+// ======================================================================
+#ifndef Os_Posix_Task_hpp_
+#define Os_Posix_Task_hpp_
+
+#include <pthread.h>
+#include <Os/Task.hpp>
+#include <atomic>
+
+#include <Fw/Deprecate.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/TaskString.hpp>
+
+namespace Os {
+namespace Posix {
+namespace Task {
+
+//! TaskHandle class definition for posix implementations.
+//!
+struct PosixTaskHandle : public TaskHandle {
+    static constexpr int SUCCESS = 0;
+
+    //! Posix task descriptor
+    pthread_t m_task_descriptor;
+    //! Is the above descriptor valid
+    bool m_is_valid = false;
+};
+
+//! Posix task implementation as driven by pthreads implementation
+class PosixTask : public TaskInterface {
+  public:
+    //! Enumeration of permission expectations
+    enum PermissionExpectation {
+        EXPECT_PERMISSION,    //!< Expect that you hold necessary permissions
+        EXPECT_NO_PERMISSION  //!< Expect that you do not hold necessary permissions
+    };
+
+    //! \brief default constructor
+    PosixTask() = default;
+
+    //! \brief default virtual destructor
+    ~PosixTask() = default;
+
+    //! \brief copy constructor is forbidden
+    PosixTask(const PosixTask& other) = delete;
+
+    //! \brief assignment operator is forbidden
+    PosixTask& operator=(const PosixTask& other) = delete;
+
+    //! \brief perform required task start actions
+    void onStart() override;
+
+    //! \brief start the task
+    //!
+    //! Starts the task given the supplied arguments. This is done via a task routine wrapper intermediary that
+    //! ensures that `setStarted` is called once the task has actually started to run. The task then runs the user
+    //! routine. This function may return before the new task begins to run.
+    //
+    //! It is illegal for arguments.m_routine to be null.
+    //!
+    //! \param arguments: arguments supplied to the task start call
+    //! \return status of the task start
+    Status start(const Arguments& arguments) override;
+
+    //! \brief block until the task has ended
+    //!
+    //! Blocks the current (calling) task until this task execution has ended. Callers should ensure that any
+    //! signals required to stop this task have already been emitted or will be emitted by another task.
+    //!
+    //! \return status of the block
+    Status join() override;  //!< Wait for task to finish
+
+    //! \brief suspend the task given the suspension type
+    //!
+    //! Suspends the task. Some implementations track if the suspension of a task was intentional or
+    //! unintentional. The supplied `suspensionType` parameter indicates that this was intentional or
+    //! unintentional. The type of suspension is also returned when calling `isSuspended`.
+    //!
+    //! \param suspensionType intentionality of the suspension
+    void suspend(SuspensionType suspensionType) override;
+
+    //! \brief resume a suspended task
+    //!
+    //! Resumes this task. Not started, running, and exited tasks take no action.
+    //!
+    void resume() override;
+
+    //! \brief delay the current task
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    Status _delay(Fw::TimeInterval interval) override;
+
+    //! \brief return the underlying task handle (implementation specific)
+    //! \return internal task handle representation
+    TaskHandle* getHandle() override;
+
+  private:
+    //! \brief create a configured pthread
+    //!
+    //! Creates, and configures, but does not start a pthread. This may be called twice, once to try setting
+    //! permissions and once to fallback to no permissions.
+    //!
+    //! \param arguments: arguments used to set priority, affinity, etc
+    //! \param permissions: whether to expect permissions or not
+    //! \return OP_OK on success, or an error
+    Status create(const Os::Task::Arguments& arguments, const PosixTask::PermissionExpectation permissions);
+
+    PosixTaskHandle m_handle;                         //!< Posix task tracking
+    static std::atomic<bool> s_permissions_reported;  //!< Permission errors have been reported
+};
+}  // end namespace Task
+}  // end namespace Posix
+}  // end namespace Os
+#endif
+```

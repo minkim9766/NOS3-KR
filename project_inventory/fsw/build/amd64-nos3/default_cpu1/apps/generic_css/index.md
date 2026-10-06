@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_css/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 fsw/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_css/fsw/`](fsw/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

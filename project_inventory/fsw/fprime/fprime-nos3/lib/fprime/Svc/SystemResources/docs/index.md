@@ -3,14 +3,23 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sdd.md`
 
-file--sdd.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/docs/sdd.md`
+
+
+```markdown
+# SystemResources Component
+
+The system resources component downlinks information about the running F´ system. This information includes:
+
+1. Free Memory
+2. CPU load
+3. Disk space
+
+These items are downlinked as telemetry channels in response to a rate group port invocation.
+
+**Note:** system resources requires `U64` types to be available on the target architecture.
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함

@@ -3,22 +3,678 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--DirectoryRules.cpp
-file--DirectoryRules.hpp
-file--RulesHeaders.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/directory/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/directory/CommonTests.hpp"
+
+#include <Os/FileSystem.hpp>  // for setup
+#include "STest/Pick/Pick.hpp"
+
+std::unique_ptr<Os::Test::Directory::Tester> get_tester_implementation() {
+    return std::unique_ptr<Os::Test::Directory::Tester>(new Os::Test::Directory::Tester());
+}
+
+Functionality::Functionality() : tester(get_tester_implementation()) {}
+
+//! Create a directory with a number of files in it
+void Functionality::SetUp() {
+    Os::Test::Directory::setUp(this->tester.get());
+}
+
+void Functionality::TearDown() {
+    Os::Test::Directory::tearDown(this->tester.get());
+}
+
+// ----------------------------------------------------------------------
+// Test Cases
+// ----------------------------------------------------------------------
+
+// Open directory and check it is open
+TEST_F(Functionality, OpenIsOpen) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    open_rule.apply(*tester);
+    is_open_rule.apply(*tester);
+}
+
+// Open directory and check it is open
+TEST_F(Functionality, OpenExclusive) {
+    Os::Test::Directory::Tester::OpenAlreadyExistsError open_existing_rule;
+    open_existing_rule.apply(*tester);
+}
+
+// Do not open directory and check it is not open
+TEST_F(Functionality, IsNotOpen) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsNotOpen is_not_open_rule;
+    is_not_open_rule.apply(*tester);
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    is_not_open_rule.apply(*tester);
+}
+
+// Read file from directory
+TEST_F(Functionality, ReadOneFile) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::ReadOneFile read_one_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    open_rule.apply(*tester);
+    is_open_rule.apply(*tester);
+    read_one_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Read file from directory using read(StringBase&) overload
+TEST_F(Functionality, ReadOneFileString) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::ReadOneFileString read_str_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    open_rule.apply(*tester);
+    is_open_rule.apply(*tester);
+    read_str_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Read file from directory
+TEST_F(Functionality, ReadRewindRead) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::ReadOneFile read_rule;
+    Os::Test::Directory::Tester::Rewind rewind_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    open_rule.apply(*tester);
+    is_open_rule.apply(*tester);
+    read_rule.apply(*tester);
+    rewind_rule.apply(*tester);
+    read_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Read file from directory
+TEST_F(Functionality, GetFileCount) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::GetFileCount file_count_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    open_rule.apply(*tester);
+    is_open_rule.apply(*tester);
+    file_count_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Read file from directory
+TEST_F(Functionality, ReadAllFiles) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::ReadAllFiles read_all_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    open_rule.apply(*tester);
+    is_open_rule.apply(*tester);
+    read_all_rule.apply(*tester);
+    close_rule.apply(*tester);
+}
+
+// Read a closed directory and expect an error
+TEST_F(Functionality, ReadClosedDirectory) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::ReadWithoutOpen read_closed_rule;
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    read_closed_rule.apply(*tester);
+}
+
+// Rewind a closed directory and expect an error
+TEST_F(Functionality, RewindClosedDirectory) {
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::RewindWithoutOpen rewind_closed_rule;
+    open_rule.apply(*tester);
+    close_rule.apply(*tester);
+    rewind_closed_rule.apply(*tester);
+}
+
+TEST_F(Functionality, RandomizedTesting) {
+    // Enumerate all rules and construct an instance of each
+    Os::Test::Directory::Tester::Open open_rule;
+    Os::Test::Directory::Tester::Close close_rule;
+    Os::Test::Directory::Tester::IsOpen is_open_rule;
+    Os::Test::Directory::Tester::IsNotOpen is_not_open_rule;
+    Os::Test::Directory::Tester::ReadOneFile read_rule;
+    Os::Test::Directory::Tester::ReadOneFileString read_str_rule;
+    Os::Test::Directory::Tester::Rewind rewind_rule;
+    Os::Test::Directory::Tester::ReadAllFiles read_all_rule;
+    Os::Test::Directory::Tester::GetFileCount file_count_rule;
+    Os::Test::Directory::Tester::ReadWithoutOpen read_closed_rule;
+    Os::Test::Directory::Tester::RewindWithoutOpen rewind_closed_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule<Os::Test::Directory::Tester>* rules[] = {
+        &open_rule,   &close_rule,    &is_open_rule,    &is_not_open_rule, &read_rule,         &read_str_rule,
+        &rewind_rule, &read_all_rule, &file_count_rule, &read_closed_rule, &rewind_closed_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario<Os::Test::Directory::Tester> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario<Os::Test::Directory::Tester> bounded("Bounded Random Rules Scenario", random, 1000);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps with %zu files in test directory.\n", numSteps, tester->m_filenames.size());
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/DirectoryRules.cpp`](file--DirectoryRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/DirectoryRules.hpp`](file--DirectoryRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/CommonTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/directory/CommonTests.hpp
+// \brief GoogleTest fixture definitions used in common Directory testing
+// ======================================================================
+#ifndef OS_TEST_UT_COMMON_DIRECTORY_TESTS_HPP
+#define OS_TEST_UT_COMMON_DIRECTORY_TESTS_HPP
+
+#include <gtest/gtest.h>
+#include <Os/Directory.hpp>
+#include <Os/test/ut/directory/RulesHeaders.hpp>
+
+// ----------------------------------------------------------------------
+//! Notes on CommonTests.cpp reusability
+//
+//! In order to reuse these tests, the implementor of an OSAL implementation shall
+//! provide a setUp and tearDown implementation in the Os::Test::Directory namespace
+//! An example is in Os/Posix/test/ut/PosixDirectoryTests.cpp
+//! The setUp function shall create a test directory and populate it with files
+//! The directory and files shall be tracked in the tester object with:
+//!   - The path of the test directory shall be assigned to the tester->m_path member
+//!   - The name of each file shall be pushed in tester->m_filenames vector
+//! There are no requirement on the number of the files, a random number >=0 is recommended
+//! The tearDown function shall remove the test directory and all files in it
+// ----------------------------------------------------------------------
+
+namespace Os {
+namespace Test {
+namespace Directory {
+
+//! Set up function as defined by the unit test implementor
+void setUp(Os::Test::Directory::Tester* tester);
+
+//! Tear down function as defined by the unit test implementor
+void tearDown(Os::Test::Directory::Tester* tester);
+
+}  // namespace Directory
+}  // namespace Test
+}  // namespace Os
+
+class Functionality : public ::testing::Test {
+  public:
+    //! Constructor
+    Functionality();
+
+    //! SetUp test fixture
+    void SetUp() override;
+
+    //! TearDown test fixture for safe destruction
+    void TearDown() override;
+
+    //! Tester/state implementation
+    std::unique_ptr<Os::Test::Directory::Tester> tester;
+};
+
+#endif  // OS_TEST_UT_COMMON_DIRECTORY_TESTS_HPP
+```
+
+### `DirectoryRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/DirectoryRules.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/directory/DirectoryRules.cpp
+// \brief rule implementations for common testing of directory
+// ======================================================================
+
+#include "DirectoryRules.hpp"
+#include <string>
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Open -> Open a directory
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Directory::Tester::Open::Open() : STest::Rule<Os::Test::Directory::Tester>("Open") {}
+
+bool Os::Test::Directory::Tester::Open::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state != Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::Open::action(Os::Test::Directory::Tester& state) {
+    Os::Directory::OpenMode mode =
+        STest::Pick::lowerUpper(0, 1) == 1 ? Os::Directory::READ : Os::Directory::CREATE_IF_MISSING;
+    printf("--> Rule: %s pathname %s mode %d\n", this->getName(), state.m_path.c_str(), mode);
+    Os::Directory::Status status = state.m_directory.open(state.m_path.c_str(), mode);
+    ASSERT_EQ(status, Os::Directory::Status::OP_OK);
+    state.m_state = Os::Test::Directory::Tester::DirectoryState::OPEN;
+    state.m_seek_position = 0;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  OpenAlreadyExistsError -> Open an already existing directory with CREATE_EXCLUSIVE and error
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Directory::Tester::OpenAlreadyExistsError::OpenAlreadyExistsError()
+    : STest::Rule<Os::Test::Directory::Tester>("OpenAlreadyExistsError") {}
+
+bool Os::Test::Directory::Tester::OpenAlreadyExistsError::precondition(const Os::Test::Directory::Tester& state) {
+    return true;
+}
+
+void Os::Test::Directory::Tester::OpenAlreadyExistsError::action(Os::Test::Directory::Tester& state) {
+    printf("--> Rule: %s pathname %s\n", this->getName(), state.m_path.c_str());
+    Os::Directory new_directory;
+    Os::Directory::Status status = new_directory.open(state.m_path.c_str(), Os::Directory::OpenMode::CREATE_EXCLUSIVE);
+    ASSERT_EQ(status, Os::Directory::Status::ALREADY_EXISTS);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Close -> Close a directory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::Close::Close() : STest::Rule<Os::Test::Directory::Tester>("Close") {}
+
+bool Os::Test::Directory::Tester::Close::precondition(const Os::Test::Directory::Tester& state) {
+    return true;
+}
+
+void Os::Test::Directory::Tester::Close::action(Os::Test::Directory::Tester& state) {
+    state.m_directory.close();
+    ASSERT_FALSE(state.m_directory.isOpen());
+    state.m_state = Os::Test::Directory::Tester::DirectoryState::CLOSED;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  IsOpen -> Check if a directory is open
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::IsOpen::IsOpen() : STest::Rule<Os::Test::Directory::Tester>("IsOpen") {}
+
+bool Os::Test::Directory::Tester::IsOpen::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state == Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::IsOpen::action(Os::Test::Directory::Tester& state) {
+    ASSERT_TRUE(state.m_directory.isOpen());
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  IsNotOpen -> Check if a directory is not open
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::IsNotOpen::IsNotOpen() : STest::Rule<Os::Test::Directory::Tester>("IsNotOpen") {}
+
+bool Os::Test::Directory::Tester::IsNotOpen::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state != Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::IsNotOpen::action(Os::Test::Directory::Tester& state) {
+    ASSERT_FALSE(state.m_directory.isOpen());
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadOneFile -> Read one file from a directory and assert name
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::ReadOneFile::ReadOneFile() : STest::Rule<Os::Test::Directory::Tester>("ReadOneFile") {}
+
+bool Os::Test::Directory::Tester::ReadOneFile::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state == Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::ReadOneFile::action(Os::Test::Directory::Tester& state) {
+    printf("--> Rule: %s\n", this->getName());
+    ASSERT_TRUE(state.m_directory.isOpen());
+    char filename[100] = {0};
+    Os::Directory::Status status = state.m_directory.read(filename, 100);
+    // If seek is at the end of the directory, expect NO_MORE_FILES - otherwise expect normal read and valid filename
+    if (state.m_seek_position < static_cast<FwIndexType>(state.m_filenames.size())) {
+        ASSERT_EQ(status, Os::Directory::Status::OP_OK);
+        ASSERT_TRUE(state.is_valid_filename(std::string(filename)));
+        state.m_seek_position++;
+    } else {
+        ASSERT_EQ(status, Os::Directory::Status::NO_MORE_FILES);
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadOneFileString -> Read one file from a directory and assert name
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::ReadOneFileString::ReadOneFileString()
+    : STest::Rule<Os::Test::Directory::Tester>("ReadOneFileString") {}
+
+bool Os::Test::Directory::Tester::ReadOneFileString::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state == Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::ReadOneFileString::action(Os::Test::Directory::Tester& state) {
+    ASSERT_TRUE(state.m_directory.isOpen());
+    Fw::String filename;
+    Os::Directory::Status status = state.m_directory.read(filename);
+    // If seek is at the end of the directory, expect NO_MORE_FILES - otherwise expect normal read and valid filename
+    if (state.m_seek_position < static_cast<FwIndexType>(state.m_filenames.size())) {
+        ASSERT_EQ(status, Os::Directory::Status::OP_OK);
+        ASSERT_TRUE(state.is_valid_filename(std::string(filename.toChar())));
+        state.m_seek_position++;
+    } else {
+        ASSERT_EQ(status, Os::Directory::Status::NO_MORE_FILES);
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Rewind -> Rewind a directory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::Rewind::Rewind() : STest::Rule<Os::Test::Directory::Tester>("Rewind") {}
+
+bool Os::Test::Directory::Tester::Rewind::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state == Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::Rewind::action(Os::Test::Directory::Tester& state) {
+    ASSERT_TRUE(state.m_directory.isOpen());
+    Os::Directory::Status status = state.m_directory.rewind();
+    ASSERT_EQ(status, Os::Directory::Status::OP_OK);
+    state.m_seek_position = 0;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFileCount -> Get the file count in a directory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::GetFileCount::GetFileCount() : STest::Rule<Os::Test::Directory::Tester>("GetFileCount") {}
+
+bool Os::Test::Directory::Tester::GetFileCount::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state == Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::GetFileCount::action(Os::Test::Directory::Tester& state) {
+    ASSERT_TRUE(state.m_directory.isOpen());
+    FwSizeType fileCount;
+    Os::Directory::Status status = state.m_directory.getFileCount(fileCount);
+    ASSERT_EQ(status, Os::Directory::Status::OP_OK);
+    ASSERT_EQ(fileCount, state.m_filenames.size());
+
+    // NOTE: getFileCount reads in order to count
+    // therefore it plays with seek_position. Should it be called out in interface? Or should Posix implementation
+    // change?
+    state.m_seek_position = 0;  // Reset seek position when getFileCount is called
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadAllFiles -> Read all files in a directory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::ReadAllFiles::ReadAllFiles() : STest::Rule<Os::Test::Directory::Tester>("ReadAllFiles") {}
+
+bool Os::Test::Directory::Tester::ReadAllFiles::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state == Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::ReadAllFiles::action(Os::Test::Directory::Tester& state) {
+    ASSERT_TRUE(state.m_directory.isOpen());
+    const FwSizeType arraySize =
+        FW_MAX(state.m_filenames.size(), 1);  // .size() can be 0 during testing so ensure at least 1
+    Fw::String outArray[arraySize];
+    FwSizeType outFileCount = 0;
+    Os::Directory::Status status = state.m_directory.readDirectory(outArray, arraySize, outFileCount);
+    ASSERT_EQ(status, Os::Directory::Status::OP_OK);
+    // Number of files read should be the number of files in the directory minus the original seek position
+    ASSERT_EQ(outFileCount, state.m_filenames.size());
+    for (FwSizeType i = 0; i < outFileCount; i++) {
+        ASSERT_TRUE(state.is_valid_filename(std::string(outArray[i].toChar())));
+    }
+    // readDirectory resets the seek position to the end
+    state.m_seek_position = 0;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReadWithoutOpen -> Read a closed directory and expect Status::NOT_OPENED
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::ReadWithoutOpen::ReadWithoutOpen()
+    : STest::Rule<Os::Test::Directory::Tester>("ReadWithoutOpen") {}
+
+bool Os::Test::Directory::Tester::ReadWithoutOpen::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state != Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::ReadWithoutOpen::action(Os::Test::Directory::Tester& state) {
+    ASSERT_FALSE(state.m_directory.isOpen());
+    char unused[4];
+    ASSERT_EQ(state.m_directory.read(unused, 4), Os::Directory::Status::NOT_OPENED);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RewindWithoutOpen -> Rewind a closed directory and expect Status::NOT_OPENED
+// ------------------------------------------------------------------------------------------------------
+Os::Test::Directory::Tester::RewindWithoutOpen::RewindWithoutOpen()
+    : STest::Rule<Os::Test::Directory::Tester>("RewindWithoutOpen") {}
+
+bool Os::Test::Directory::Tester::RewindWithoutOpen::precondition(const Os::Test::Directory::Tester& state) {
+    return state.m_state != Os::Test::Directory::Tester::DirectoryState::OPEN;
+}
+
+void Os::Test::Directory::Tester::RewindWithoutOpen::action(Os::Test::Directory::Tester& state) {
+    ASSERT_FALSE(state.m_directory.isOpen());
+    ASSERT_EQ(state.m_directory.rewind(), Os::Directory::Status::NOT_OPENED);
+}
+```
+
+### `DirectoryRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/DirectoryRules.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/directory/DirectoryRules.hpp
+// \brief rule definitions for common testing of directory
+// ======================================================================
+// Stripped when compiled, here for IDEs
+#include "RulesHeaders.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Open a directory
+// ------------------------------------------------------------------------------------------------------
+struct Open : public STest::Rule<Os::Test::Directory::Tester> {
+    //! Constructor
+    Open();
+
+    //! Precondition
+    bool precondition(const Os::Test::Directory::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Directory::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: OpenAlreadyExistsError
+// ------------------------------------------------------------------------------------------------------
+struct OpenAlreadyExistsError : public STest::Rule<Os::Test::Directory::Tester> {
+    OpenAlreadyExistsError();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Close a directory
+// ------------------------------------------------------------------------------------------------------
+struct Close : public STest::Rule<Os::Test::Directory::Tester> {
+    Close();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Check isOpen return true on an open directory
+// Note: maybe not needed if we assert
+// ------------------------------------------------------------------------------------------------------
+struct IsOpen : public STest::Rule<Os::Test::Directory::Tester> {
+    IsOpen();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Check isOpen return false on non-open directory
+// Note: maybe not needed if we assert
+// ------------------------------------------------------------------------------------------------------
+struct IsNotOpen : public STest::Rule<Os::Test::Directory::Tester> {
+    IsNotOpen();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Read the first file in a directory that has been opened
+// ------------------------------------------------------------------------------------------------------
+struct ReadOneFile : public STest::Rule<Os::Test::Directory::Tester> {
+    ReadOneFile();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Read the first file in a directory that has been opened, using read(StringBase&) implementation
+// ------------------------------------------------------------------------------------------------------
+struct ReadOneFileString : public STest::Rule<Os::Test::Directory::Tester> {
+    ReadOneFileString();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Rewind a directory
+// ------------------------------------------------------------------------------------------------------
+struct Rewind : public STest::Rule<Os::Test::Directory::Tester> {
+    Rewind();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: GetFileCount of a directory
+// ------------------------------------------------------------------------------------------------------
+struct GetFileCount : public STest::Rule<Os::Test::Directory::Tester> {
+    GetFileCount();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: ReadAllFiles from a directory
+// ------------------------------------------------------------------------------------------------------
+struct ReadAllFiles : public STest::Rule<Os::Test::Directory::Tester> {
+    ReadAllFiles();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Read a closed directory and expect an error
+// ------------------------------------------------------------------------------------------------------
+struct ReadWithoutOpen : public STest::Rule<Os::Test::Directory::Tester> {
+    ReadWithoutOpen();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule: Rewind a closed directory and expect an error
+// ------------------------------------------------------------------------------------------------------
+struct RewindWithoutOpen : public STest::Rule<Os::Test::Directory::Tester> {
+    RewindWithoutOpen();
+    bool precondition(const Os::Test::Directory::Tester& state);
+    void action(Os::Test::Directory::Tester& state);
+};
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/RulesHeaders.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/directory/RulesHeaders.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+
+#include <gtest/gtest.h>
+#include "Os/Directory.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+#include <algorithm>  // for std::find
+
+namespace Os {
+namespace Test {
+namespace Directory {
+
+struct Tester {
+    //! State representation of a Directory.
+    //!
+    enum DirectoryState {
+        UNINITIALIZED,  //!< Directory is uninitialized
+        OPEN,           //!< Directory is open
+        CLOSED          //!< Directory is closed
+    };
+
+    // Constructors that ensures the directory is always valid
+    Tester() = default;
+
+    // Destructor must be virtual
+    virtual ~Tester() = default;
+
+    //! Directory under test
+    Os::Directory m_directory;
+
+    //! Tracks the directory state, for testing purposes
+    DirectoryState m_state = UNINITIALIZED;
+    //! Tracks the currently opened path, for testing purposes
+    std::string m_path;
+    //! Tracks the list of filenames created for the tested directory, for testing purposes
+    std::vector<std::string> m_filenames;
+    //! Tracks the seek position of directory, for testing purposes
+    FwIndexType m_seek_position = 0;
+
+    //! \brief Check if filename is in the list of test m_filenames created for the tested directory
+    bool is_valid_filename(const std::string& filename) const {
+        return std::find(m_filenames.cbegin(), m_filenames.cend(), filename) != m_filenames.cend();
+    }
+
+// Do NOT alter, adds rules to Tester as inner classes
+#include "DirectoryRules.hpp"
+};
+
+}  // namespace Directory
+}  // namespace Test
+}  // namespace Os
+#endif  // __RULES_HEADERS__
+```

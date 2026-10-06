@@ -3,14 +3,21 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/targets/SYSTEM/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `meta_tlm.txt`
 
-file--meta_tlm.txt
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/SYSTEM/cmd_tlm/meta_tlm.txt`
+
+
+```text
+TELEMETRY SYSTEM META BIG_ENDIAN "System Meta Data Telemetry Packet"
+  APPEND_ID_ITEM PKTID 8 UINT 1 "Packet Id"
+  APPEND_ITEM CONFIG 256 STRING "Configuration Name"
+  APPEND_ITEM COSMOS_VERSION 240 STRING "COSMOS Version"
+    META READ_ONLY
+  APPEND_ITEM USER_VERSION 240 STRING "User Project Version"
+    META READ_ONLY
+  APPEND_ITEM RUBY_VERSION 240 STRING "Ruby Version"
+    META READ_ONLY
 ```
-
-## 항목
-
-- [`gsw/cosmos/outputs/tmp/config/targets/SYSTEM/cmd_tlm/meta_tlm.txt`](file--meta_tlm.txt) — UTF-8 텍스트 파일 본문 포함

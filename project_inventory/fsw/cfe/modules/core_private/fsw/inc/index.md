@@ -3,42 +3,1417 @@
 
 **경로:** `fsw/cfe/modules/core_private/fsw/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_config_core_internal.h`
 
-file--cfe_config_core_internal.h
-file--cfe_es_core_internal.h
-file--cfe_es_erlog_typedef.h
-file--cfe_es_perfdata_typedef.h
-file--cfe_es_resetdata_typedef.h
-file--cfe_evs_core_internal.h
-file--cfe_evs_log_typedef.h
-file--cfe_fs_core_internal.h
-file--cfe_sb_core_internal.h
-file--cfe_sb_destination_typedef.h
-file--cfe_sbr.h
-file--cfe_sbr_api_typedefs.h
-file--cfe_tbl_core_internal.h
-file--cfe_time_core_internal.h
-file--cfe_time_resetvars_typedef.h
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_config_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cFE Internal configuration APIs
+ *
+ * The internal APIs prototyped within this file are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+#ifndef CFE_CONFIG_CORE_INTERNAL_H
+#define CFE_CONFIG_CORE_INTERNAL_H
+
+#include "cfe_config_api_typedefs.h"
+
+#include "common_types.h"
+
+/** @defgroup CFEAPIConfigCoreInternal cFE Internal configuration APIs, internal to CFE core
+ * @{
+ */
+
+int32 CFE_Config_Init(void);
+
+/*
+ * The "Set" API is only used during init phase
+ */
+void CFE_Config_SetValue(CFE_ConfigId_t ConfigId, uint32 Value);
+void CFE_Config_SetString(CFE_ConfigId_t ConfigId, const char *Ptr);
+void CFE_Config_SetObjPointer(CFE_ConfigId_t ConfigId, const void *Ptr);
+
+/**@}*/
+
+#endif /* CFE_CONFIG_CORE_INTERNAL_H */
 ```
 
-## 항목
+### `cfe_es_core_internal.h`
 
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_config_core_internal.h`](file--cfe_config_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_es_core_internal.h`](file--cfe_es_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_es_erlog_typedef.h`](file--cfe_es_erlog_typedef.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_es_perfdata_typedef.h`](file--cfe_es_perfdata_typedef.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_es_resetdata_typedef.h`](file--cfe_es_resetdata_typedef.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_evs_core_internal.h`](file--cfe_evs_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_evs_log_typedef.h`](file--cfe_evs_log_typedef.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_fs_core_internal.h`](file--cfe_fs_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_sb_core_internal.h`](file--cfe_sb_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_sb_destination_typedef.h`](file--cfe_sb_destination_typedef.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_sbr.h`](file--cfe_sbr.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_sbr_api_typedefs.h`](file--cfe_sbr_api_typedefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_tbl_core_internal.h`](file--cfe_tbl_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_time_core_internal.h`](file--cfe_time_core_internal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_private/fsw/inc/cfe_time_resetvars_typedef.h`](file--cfe_time_resetvars_typedef.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_es_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *	Unit specification for Executive Services library functions and macros.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *	Notes:
+ *
+ */
+
+#ifndef CFE_ES_CORE_INTERNAL_H
+#define CFE_ES_CORE_INTERNAL_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+
+/*
+ * The internal APIs prototyped within this block are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+/** @defgroup CFEAPIESCoreInternal cFE Internal Executive Service APIs, internal to CFE core
+ * @{
+ */
+
+/*****************************************************************************/
+/**
+** \brief Entry Point for cFE Core Application
+**
+** \par Description
+**        This is the entry point to the cFE ES Core Application.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+******************************************************************************/
+void CFE_ES_TaskMain(void);
+
+/*****************************************************************************/
+/**
+** \brief Initializes the cFE core module API Library
+**
+** \par Description
+**        Initializes the cFE core module API Library
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function MUST be called before any module API's are called.
+**
+******************************************************************************/
+int32 CFE_ES_CDS_EarlyInit(void);
+
+/*****************************************************************************/
+/**
+** \brief Reserve space (or re-obtain previously reserved space) in the Critical Data Store (CDS)
+**
+** \par Description
+**        This routine is identical to #CFE_ES_RegisterCDS except it identifies the contents
+**        of the CDS as a critical table.  This is crucial because a critical table CDS must
+**        only be deleted by cFE Table Services, not via an ES delete CDS command.  Otherwise,
+**        Table Services may be out of sync with the contents of the CDS.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function assumes input parameters are error free and have met size/value restrictions.
+**        -# The calling function is responsible for issuing any event messages associated with errors.
+**
+** \param[in, out]   HandlePtr   Pointer Application's variable that will contain the CDS Memory Block Handle.
+**                               HandlePtr is the handle of the CDS block that can be used in #CFE_ES_CopyToCDS and
+**                               #CFE_ES_RestoreFromCDS.
+**
+** \param[in]   UserBlockSize   The number of bytes needed in the CDS.
+**
+** \param[in]   Name        Pointer to character string containing the Application's local name for
+**                          the CDS.
+**
+** \param[in]   CriticalTbl   Indicates whether the CDS is to be used as a Critical Table or not
+**
+** \return See return codes for #CFE_ES_RegisterCDS
+**
+******************************************************************************/
+int32 CFE_ES_RegisterCDSEx(CFE_ES_CDSHandle_t *HandlePtr, size_t UserBlockSize, const char *Name, bool CriticalTbl);
+
+/*****************************************************************************/
+/**
+** \brief Deletes the specified CDS from the CDS Registry and frees CDS Memory
+**
+** \par Description
+**        Removes the record of the specified CDS from the CDS Registry and
+**        frees the associated CDS memory for future use.
+**
+**        This operation invalidates the registry entry and returns
+**        the underlying data storage back to the CDS pool for re-use.
+**
+** \par Assumptions, External Events, and Notes:
+**        The actual data block is not modified by this call.  Specifically, this does not
+**        "wipe" or otherwise overwrite the data block.  If the application needs to ensure
+**        that the data is actually erased, it should explicitly do so (by e.g. writing all
+**        zeros or all ones) before deleting the block.
+**
+** \param[in]  CDSName - Pointer to character string containing complete
+**                       CDS Name (of the format "AppName.CDSName").
+**
+** \param[in]  CalledByTblServices - Flag that identifies whether the CDS is supposed to
+**                       be a Critical Table Image or not.
+**
+** \return #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \return #CFE_ES_CDS_WRONG_TYPE_ERR       \copydoc CFE_ES_CDS_WRONG_TYPE_ERR
+** \return #CFE_ES_CDS_OWNER_ACTIVE_ERR     \copydoc CFE_ES_CDS_OWNER_ACTIVE_ERR
+** \return #CFE_ES_ERR_NAME_NOT_FOUND       \copydoc CFE_ES_ERR_NAME_NOT_FOUND
+** \return Any of the return values from CFE_ES_UpdateCDSRegistry
+** \return Any of the return values from CFE_ES_GenPoolPutBlock
+**
+******************************************************************************/
+int32 CFE_ES_DeleteCDS(const char *CDSName, bool CalledByTblServices);
+
+/**@}*/
+
+#endif /* CFE_ES_CORE_INTERNAL_H */
+```
+
+### `cfe_es_erlog_typedef.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_es_erlog_typedef.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Definition of the CFE_ES_ERLog structure type.
+ * This was moved into its own header file since it is referenced by multiple CFE core apps.
+ */
+
+#ifndef CFE_ES_ERLOG_TYPEDEF_H
+#define CFE_ES_ERLOG_TYPEDEF_H
+
+#include "common_types.h"
+#include "cfe_platform_cfg.h"
+
+#include "cfe_time_extern_typedefs.h" /* Needed for CFE_TIME_SysTime_t */
+#include "cfe_es_extern_typedefs.h"   /* Needed for CFE_ES_AppId_t */
+
+#define CFE_ES_ERLOG_DESCRIPTION_MAX_LENGTH 80
+
+/*
+** Debug variables type
+*/
+typedef struct
+{
+    uint32 DebugFlag;
+    uint32 WatchdogWriteFlag;
+    uint32 PrintfEnabledFlag;
+    uint32 LastAppId;
+} CFE_ES_DebugVariables_t;
+
+/*
+** Exception and Reset Log Base Structure
+**
+** This is the common data structure that is stored in RAM and log files
+*/
+typedef struct
+{
+    uint32                  LogEntryType;                                     /* What type of log entry */
+    uint32                  ResetType;                                        /* Main cause for the reset */
+    uint32                  ResetSubtype;                                     /* The sub-type for the reset */
+    uint32                  BootSource;                                       /* The boot source  */
+    uint32                  ProcessorResetCount;                              /* The number of processor resets */
+    uint32                  MaxProcessorResetCount;                           /* The maximum number before a Power On */
+    CFE_ES_DebugVariables_t DebugVars;                                        /* ES Debug variables */
+    CFE_TIME_SysTime_t      TimeCode;                                         /* Time code */
+    char                    Description[CFE_ES_ERLOG_DESCRIPTION_MAX_LENGTH]; /* The ascii data for the event */
+} CFE_ES_ERLog_BaseInfo_t;
+
+/*
+** Exception and Reset Log File Structure
+**
+** This is the "export" data structure that gets written to a log file
+** It is intended to be binary-compatible with the historical definition of this
+** structure, to work with existing tools that may read log files.
+**
+** Note that "AppID" really belongs in the base info, but it is kept here
+** for backward compatibility.
+*/
+typedef struct
+{
+    CFE_ES_ERLog_BaseInfo_t BaseInfo;                                         /* basic info about the event */
+    uint32                  ContextSize;                                      /* Indicates the context data is valid */
+    uint32                  AppID;                                            /* The application ID */
+    uint8                   Context[CFE_PLATFORM_ES_ER_LOG_MAX_CONTEXT_SIZE]; /* cpu  context */
+} CFE_ES_ERLog_FileEntry_t;
+
+/*
+** Exception and Reset Log Metadata Structure
+** This is stored in ES RAM, not _directly_ written to ER log files.
+*/
+typedef struct
+{
+    CFE_ES_ERLog_BaseInfo_t BaseInfo;     /**< Core Log Data */
+    CFE_ES_AppId_t          AppID;        /* The application ID */
+    uint32                  PspContextId; /**< Reference to context information stored in PSP */
+} CFE_ES_ERLog_MetaData_t;
+
+#endif /* CFE_ES_ERLOG_TYPEDEF_H */
+```
+
+### `cfe_es_perfdata_typedef.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_es_perfdata_typedef.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Definition of CFE_ES_PerfData_t structure type
+ */
+
+#ifndef CFE_ES_PERFDATA_TYPEDEF_H
+#define CFE_ES_PERFDATA_TYPEDEF_H
+
+#include "common_types.h"
+#include "cfe_mission_cfg.h"  /* Required for CFE_MISSION_ES_PERF_MAX_IDS */
+#include "cfe_platform_cfg.h" /* Required for CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE */
+
+#define CFE_ES_PERF_32BIT_WORDS_IN_MASK ((CFE_MISSION_ES_PERF_MAX_IDS) / 32)
+
+typedef struct
+{
+    uint32 Data;
+    uint32 TimerUpper32; /* TBU - timebase register */
+    uint32 TimerLower32; /* TBL - timebase register */
+} CFE_ES_PerfDataEntry_t;
+
+typedef struct
+{
+    uint8  Version;
+    uint8  Endian;
+    uint8  Spare[2];
+    uint32 TimerTicksPerSecond;
+    uint32 TimerLow32Rollover;
+    /*
+     * The "State" member is marked volatile to help
+     * ensure that an optimizing compiler does not rearrange
+     * or eliminate reads/writes of this value.  It is read
+     * outside of any locking to determine whether or not
+     * the performance log function is enabled.
+     */
+    volatile uint32 State;
+    uint32          Mode;
+    uint32          TriggerCount;
+    uint32          DataStart;
+    uint32          DataEnd;
+    uint32          DataCount;
+    uint32          InvalidMarkerReported;
+    uint32          FilterTriggerMaskSize;
+    uint32          FilterMask[CFE_ES_PERF_32BIT_WORDS_IN_MASK];
+    uint32          TriggerMask[CFE_ES_PERF_32BIT_WORDS_IN_MASK];
+} CFE_ES_PerfMetaData_t;
+
+typedef struct
+{
+    CFE_ES_PerfMetaData_t  MetaData;
+    CFE_ES_PerfDataEntry_t DataBuffer[CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE];
+} CFE_ES_PerfData_t;
+
+#endif /* CFE_ES_PERFDATA_TYPEDEF_H */
+```
+
+### `cfe_es_resetdata_typedef.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_es_resetdata_typedef.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Definition of the CFE_ES_ResetData structure type.
+ * This was moved into its own header file since it is referenced by multiple CFE core apps.
+ */
+
+#ifndef CFE_ES_RESETDATA_TYPEDEF_H
+#define CFE_ES_RESETDATA_TYPEDEF_H
+
+#include "common_types.h"
+
+#include "cfe_time_resetvars_typedef.h" /* Required for CFE_TIME_ResetVars_t definition */
+#include "cfe_es_erlog_typedef.h"       /* Required for CFE_ES_ERLog_t definition */
+#include "cfe_es_perfdata_typedef.h"    /* Required for CFE_ES_PerfData_t definition */
+#include "cfe_evs_log_typedef.h"        /* Required for CFE_EVS_Log_t definition */
+#include "cfe_platform_cfg.h"           /* CFE_PLATFORM_ES_ER_LOG_ENTRIES, CFE_PLATFORM_ES_SYSTEM_LOG_SIZE */
+
+/*
+** Reset Variables type
+*/
+typedef struct
+{
+    uint32 ResetType;
+    uint32 ResetSubtype;
+    uint32 BootSource;
+    uint32 ES_CausedReset;
+    uint32 ProcessorResetCount;
+    uint32 MaxProcessorResetCount;
+} CFE_ES_ResetVariables_t;
+
+/*
+** Executive Services Global Reset Data type
+** This is the special memory area for ES that is preserved
+** on a processor reset.
+*/
+typedef struct
+{
+    /*
+    ** Exception and Reset log declaration
+    */
+    CFE_ES_ERLog_MetaData_t ERLog[CFE_PLATFORM_ES_ER_LOG_ENTRIES];
+    uint32                  ERLogIndex;
+    uint32                  ERLogEntries;
+    uint32                  LastAppId;
+
+    /*
+    ** System Log declaration
+    */
+    char   SystemLog[CFE_PLATFORM_ES_SYSTEM_LOG_SIZE];
+    size_t SystemLogWriteIdx;
+    size_t SystemLogEndIdx;
+    uint32 SystemLogMode;
+    uint32 SystemLogEntryNum;
+
+    /*
+    ** Performance Data
+    */
+    CFE_ES_PerfData_t Perf;
+
+    /*
+    ** Reset Variables
+    */
+    CFE_ES_ResetVariables_t ResetVars;
+
+    /*
+    ** Time variables that are
+    ** preserved on a processor reset
+    */
+    CFE_TIME_ResetVars_t TimeResetVars;
+
+    /*
+    ** EVS Log and associated variables. This needs to be preserved on a processor reset.
+    */
+    CFE_EVS_Log_t EVS_Log;
+} CFE_ES_ResetData_t;
+
+#endif /* CFE_ES_RESETDATA_TYPEDEF_H */
+```
+
+### `cfe_evs_core_internal.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_evs_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Title:    Event Services API Application Library Header File
+ *
+ *  Purpose:
+ *	           Unit specification for Event services library functions and macros.
+ *
+ *  Design Notes:
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ */
+
+#ifndef CFE_EVS_CORE_INTERNAL_H
+#define CFE_EVS_CORE_INTERNAL_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+
+/*
+ * The internal APIs prototyped within this block are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+/** @defgroup CFEAPIEVSCoreInternal cFE Internal Event Services APIs, internal to CFE core
+ * @{
+ */
+
+/*****************************************************************************/
+/**
+** \brief Entry Point for cFE Core Application
+**
+** \par Description
+**        This is the entry point to the cFE EVS Core Application.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+******************************************************************************/
+void CFE_EVS_TaskMain(void);
+
+/*****************************************************************************/
+/**
+** \brief Initializes the cFE core module API Library
+**
+** \par Description
+**        Initializes the cFE core module API Library
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function MUST be called before any module API's are called.
+**
+******************************************************************************/
+int32 CFE_EVS_EarlyInit(void);
+
+/*****************************************************************************/
+/**
+** \brief Removes EVS resources associated with specified Application
+**
+** \par Description
+**        This function is called by cFE Executive Services to cleanup after
+**        an Application has been terminated.  It frees resources
+**        that have been allocated to the specified Application.
+**
+******************************************************************************/
+int32 CFE_EVS_CleanUpApp(CFE_ES_AppId_t AppId);
+
+/**@}*/
+
+#endif /* CFE_EVS_CORE_INTERNAL_H */
+```
+
+### `cfe_evs_log_typedef.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_evs_log_typedef.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Definition of the CFE_EVS_Log structure type.
+ * This was moved into its own header file since it is referenced by multiple CFE core apps.
+ */
+
+#ifndef CFE_EVS_LOG_TYPEDEF_H
+#define CFE_EVS_LOG_TYPEDEF_H
+
+#include "common_types.h"
+#include "cfe_platform_cfg.h"
+
+#include "cfe_evs_msg.h" /* Required for CFE_EVS_LongEventTlm_t definition */
+
+/*
+** \brief  EVS Log type definition. This is declared here so ES can include it
+**  in the reset area structure
+*/
+typedef struct
+{
+    uint16                 Next;               /**< \brief Index of the next entry in the local event log */
+    uint16                 LogCount;           /**< \brief Local Event Log counter */
+    uint8                  LogFullFlag;        /**< \brief Local Event Log full flag */
+    uint8                  LogMode;            /**< \brief Local Event Logging mode (overwrite/discard) */
+    uint16                 LogOverflowCounter; /**< \brief Local Event Log overflow counter */
+    CFE_EVS_LongEventTlm_t LogEntry[CFE_PLATFORM_EVS_LOG_MAX]; /**< \brief The actual Local Event Log entry */
+} CFE_EVS_Log_t;
+
+#endif /* CFE_EVS_LOG_TYPEDEF_H */
+```
+
+### `cfe_fs_core_internal.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_fs_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:  cFE File Services (FS) library API header file
+ *
+ * Author:   S.Walling/Microtel
+ *
+ */
+
+#ifndef CFE_FS_CORE_INTERNAL_H
+#define CFE_FS_CORE_INTERNAL_H
+
+#include "common_types.h"
+
+/*
+ * The internal APIs prototyped within this block are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+/** @defgroup CFEAPIFSCoreInternal cFE Internal File Service APIs, internal to CFE core
+ * @{
+ */
+
+/*****************************************************************************/
+/**
+** \brief Initializes the cFE core module API Library
+**
+** \par Description
+**      Initialize the FS data structures before the cFE runs.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function MUST be called before any module API's are called.
+**
+******************************************************************************/
+int32 CFE_FS_EarlyInit(void);
+
+/*****************************************************************************/
+/**
+** \brief Execute the background file write job(s)
+**
+** \par Description
+**        Runs the state machine associated with background file write requests
+**
+** \par Assumptions, External Events, and Notes:
+**        This should only be invoked as a background job from the ES background task,
+**        it should not be invoked directly.
+**
+** \param[in] ElapsedTime       The amount of time passed since last invocation (ms)
+** \param[in] Arg               Not used/ignored
+**
+** \return true if jobs are pending, false if idle
+**
+******************************************************************************/
+bool CFE_FS_RunBackgroundFileDump(uint32 ElapsedTime, void *Arg);
+
+/**@}*/
+
+#endif /* CFE_FS_CORE_INTERNAL_H */
+```
+
+### `cfe_sb_core_internal.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_sb_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *      This header file contains all definitions for the cFE Software Bus
+ *      Application Programmer's Interface.
+ *
+ * Author:   R.McGraw/SSI
+ *
+ */
+
+#ifndef CFE_SB_CORE_INTERNAL_H
+#define CFE_SB_CORE_INTERNAL_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+
+/*
+ * The internal APIs prototyped within this block are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+/** @defgroup CFEAPISBCoreInternal cFE Internal Software Bus APIs, internal to CFE core
+ * @{
+ */
+
+/*****************************************************************************/
+/**
+** \brief Entry Point for cFE Core Application
+**
+** \par Description
+**        This is the entry point to the cFE SB Core Application.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+******************************************************************************/
+void CFE_SB_TaskMain(void);
+
+/*****************************************************************************/
+/**
+** \brief Initializes the cFE core module API Library
+**
+** \par Description
+**        Initializes the cFE core module API Library
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function MUST be called before any module API's are called.
+**
+******************************************************************************/
+int32 CFE_SB_EarlyInit(void);
+
+/*****************************************************************************/
+/**
+** \brief Removes SB resources associated with specified Application
+**
+** \par Description
+**        This function is called by cFE Executive Services to cleanup after
+**        an Application has been terminated.  It frees resources
+**        that have been allocated to the specified Application.
+**
+******************************************************************************/
+int32 CFE_SB_CleanUpApp(CFE_ES_AppId_t AppId);
+
+/**@}*/
+
+#endif /* CFE_SB_CORE_INTERNAL_H */
+```
+
+### `cfe_sb_destination_typedef.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_sb_destination_typedef.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Definition of the CFE_SB_DestinationD_t structure type
+ * This was moved into its own header file since it is referenced by multiple CFE modules.
+ */
+
+#ifndef CFE_SB_DESTINATION_TYPEDEF_H
+#define CFE_SB_DESTINATION_TYPEDEF_H
+
+#include "common_types.h"
+#include "cfe_sb_extern_typedefs.h" /* Required for CFE_SB_PipeId_t definition */
+
+/******************************************************************************
+ * This structure defines a DESTINATION DESCRIPTOR used to specify
+ * each destination pipe for a message.
+ *
+ * Note: Changing the size of this structure may require the memory pool
+ * block sizes to change.
+ */
+typedef struct CFE_SB_DestinationD
+{
+    CFE_SB_PipeId_t             PipeId;
+    uint8                       Active;
+    uint16                      MsgId2PipeLim;
+    uint16                      BuffCount;
+    uint16                      DestCnt;
+    uint8                       Scope;
+    uint8                       Spare[3];
+    struct CFE_SB_DestinationD *Prev;
+    struct CFE_SB_DestinationD *Next;
+} CFE_SB_DestinationD_t;
+
+#endif /* CFE_SB_DESTINATION_TYPEDEF_H */
+```
+
+### `cfe_sbr.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_sbr.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *      Prototypes for private functions and type definitions for SB
+ *      routing internal use.
+ */
+
+#ifndef CFE_SBR_H
+#define CFE_SBR_H
+
+/*
+ * Includes
+ */
+#include "common_types.h"
+#include "cfe_sbr_api_typedefs.h"
+#include "cfe_msg_api_typedefs.h"
+#include "cfe_sb_destination_typedef.h"
+#include "cfe_sb_api_typedefs.h"
+
+#include "cfe_platform_cfg.h"
+
+/******************************************************************************
+ * Function prototypes
+ */
+
+/**
+ *  \brief Initialize software bus routing module
+ */
+void CFE_SBR_Init(void);
+
+/**
+ *  \brief Add a route for the given message id
+ *
+ *  Called for the first subscription to a message ID, uses up one
+ *  element in the routing table.  Assumes check for existing
+ *  route was already performed or routes could leak
+ *
+ *  \param[in]  MsgId         Message ID of the route to add
+ *  \param[out] CollisionsPtr Number of collisions (if not null)
+ *
+ *  \returns Route ID, will be invalid if route can not be added
+ */
+CFE_SBR_RouteId_t CFE_SBR_AddRoute(CFE_SB_MsgId_t MsgId, uint32 *CollisionsPtr);
+
+/**
+ *  \brief Obtain the route id given a message id
+ *
+ *  \param[in] MsgId Message ID of the route to get
+ *
+ *  \returns Route ID, will be invalid if can't be returned
+ */
+CFE_SBR_RouteId_t CFE_SBR_GetRouteId(CFE_SB_MsgId_t MsgId);
+
+/**
+ *  \brief Obtain the message id given a route id
+ *
+ *  \param[in] RouteId Route ID of the message id to get
+ *
+ *  \returns Message ID, will be invalid if cant be returned
+ */
+CFE_SB_MsgId_t CFE_SBR_GetMsgId(CFE_SBR_RouteId_t RouteId);
+
+/**
+ *  \brief Obtain the destination list head pointer given a route id
+ *
+ *  \param[in] RouteId Route ID
+ *
+ *  \returns Destination list head pointer for the given route id.
+ *           Will be null if route doesn't exist or no subscribers.
+ */
+CFE_SB_DestinationD_t *CFE_SBR_GetDestListHeadPtr(CFE_SBR_RouteId_t RouteId);
+
+/**
+ * \brief Set the destination list head pointer for given route id
+ *
+ * \param[in] RouteId Route Id
+ * \param[in] DestPtr Destination list head pointer
+ */
+void CFE_SBR_SetDestListHeadPtr(CFE_SBR_RouteId_t RouteId, CFE_SB_DestinationD_t *DestPtr);
+
+/**
+ * \brief Increment the sequence counter associated with the supplied route ID
+ *
+ * \param[in] RouteId Route ID
+ */
+void CFE_SBR_IncrementSequenceCounter(CFE_SBR_RouteId_t RouteId);
+
+/**
+ * \brief Get the sequence counter associated with the supplied route ID
+ *
+ * \param[in] RouteId Route ID
+ *
+ * \returns the sequence counter
+ */
+CFE_MSG_SequenceCount_t CFE_SBR_GetSequenceCounter(CFE_SBR_RouteId_t RouteId);
+
+/**
+ * \brief Call the supplied callback function for all routes
+ *
+ * Invokes callback for each route in the table.  Message ID order
+ * depends on the routing table implementation.  Possibilities include
+ * in subscription order and in order if incrementing message ids.
+ *
+ * \param[in]     CallbackPtr Function to invoke for each matching ID
+ * \param[in]     ArgPtr      Opaque argument to pass to callback function
+ * \param[in,out] ThrottlePtr Throttling structure, NULL for no throttle
+ */
+void CFE_SBR_ForEachRouteId(CFE_SBR_CallbackPtr_t CallbackPtr, void *ArgPtr, CFE_SBR_Throttle_t *ThrottlePtr);
+
+/******************************************************************************
+** Inline functions
+*/
+
+/**
+ * \brief Identifies whether a given CFE_SBR_RouteId_t is valid
+ *
+ * Implements a basic sanity check on the value provided
+ *
+ * \returns true if sanity checks passed, false otherwise.
+ */
+static inline bool CFE_SBR_IsValidRouteId(CFE_SBR_RouteId_t RouteId)
+{
+    return (RouteId.RouteId != 0 && RouteId.RouteId <= CFE_PLATFORM_SB_MAX_MSG_IDS);
+}
+
+/**
+ * \brief Converts from raw value to CFE_SBR_RouteId_t
+ *
+ * Converts the supplied "bare number" into a type-safe CFE_SBR_RouteId_t value
+ *
+ * \returns A CFE_SBR_RouteId_t
+ */
+static inline CFE_SBR_RouteId_t CFE_SBR_ValueToRouteId(CFE_SB_RouteId_Atom_t Value)
+{
+    return ((CFE_SBR_RouteId_t) {.RouteId = 1 + Value});
+}
+
+/**
+ * \brief Converts from CFE_SBR_RouteId_t to raw value
+ *
+ * Converts the supplied route id into a "bare number" suitable for performing
+ * array lookups or other tasks for which the holding structure cannot be used directly.
+ *
+ * Use with caution, as this removes the type safety information from the value.
+ *
+ * \note It is assumed the value has already been validated using CFE_SB_IsValidRouteId()
+ *
+ * \returns The underlying value
+ */
+static inline CFE_SB_RouteId_Atom_t CFE_SBR_RouteIdToValue(CFE_SBR_RouteId_t RouteId)
+{
+    return (RouteId.RouteId - 1);
+}
+
+#endif /* CFE_SBR_H */
+```
+
+### `cfe_sbr_api_typedefs.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_sbr_api_typedefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *      Prototypes for private functions and type definitions for SB
+ *      routing internal use.
+ */
+
+#ifndef CFE_SBR_API_TYPEDEFS_H
+#define CFE_SBR_API_TYPEDEFS_H
+
+/*
+ * Includes
+ */
+#include "common_types.h"
+#include "cfe_sb_extern_typedefs.h"
+
+/*
+ * Macro Definitions
+ */
+
+/** \brief Invalid route id */
+#define CFE_SBR_INVALID_ROUTE_ID ((CFE_SBR_RouteId_t) {.RouteId = 0})
+
+/******************************************************************************
+ * Type Definitions
+ */
+
+/**
+ * \brief Routing table id
+ *
+ * This is intended as a form of "strong typedef" where direct assignments should
+ * be restricted.  Software bus uses numeric indexes into multiple tables to perform
+ * its duties, and it is important that these index values are distinct and separate
+ * and not mixed together.
+ *
+ * Using this holding structure prevents assignment directly into a different index
+ * or direct usage as numeric value.
+ */
+typedef struct
+{
+    CFE_SB_RouteId_Atom_t RouteId; /**< \brief Holding value, do not use directly in code */
+} CFE_SBR_RouteId_t;
+
+/** \brief Callback throttling structure */
+typedef struct
+{
+    uint32 StartIndex; /**< /brief 0 based index to start at */
+    uint32 MaxLoop;    /**< /brief Max number to process */
+    uint32 NextIndex;  /**< /brief Next start index (output), 0 if completed */
+} CFE_SBR_Throttle_t;
+
+/** \brief For each id callback function prototype */
+typedef void (*CFE_SBR_CallbackPtr_t)(CFE_SBR_RouteId_t RouteId, void *ArgPtr);
+
+#endif /* CFE_SBR_API_TYPEDEFS_H */
+```
+
+### `cfe_tbl_core_internal.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_tbl_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Title:   Table Services API Application Library Header File
+ *
+ *  Purpose:
+ *     Unit specification for Table services library functions and macros.
+ *
+ *  Design Notes:
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_TBL_CORE_INTERNAL_H
+#define CFE_TBL_CORE_INTERNAL_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+
+/*
+ * The internal APIs prototyped within this block are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+/** @defgroup CFEAPITBLCoreInternal cFE Internal Table Service APIs, internal to CFE core
+ * @{
+ */
+
+/*****************************************************************************/
+/**
+** \brief Entry Point for cFE Table Services Core Application
+**
+** \par Description
+**        This is the entry point to the cFE Table Services Core Application.
+**        This Application provides the ground interface to the cFE Table
+**        Services.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+******************************************************************************/
+void CFE_TBL_TaskMain(void);
+
+/*****************************************************************************/
+/**
+** \brief Initializes the Table Services API Library
+**
+** \par Description
+**        Initializes the Table Services API Library
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function MUST be called before any TBL API's are called.
+**
+******************************************************************************/
+int32 CFE_TBL_EarlyInit(void);
+
+/*****************************************************************************/
+/**
+** \brief Removes TBL resources associated with specified Application
+**
+** \par Description
+**        This function is called by cFE Executive Services to cleanup after
+**        an Application has been terminated.  It frees TBL services resources
+**        that have been allocated to the specified Application.
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function DOES NOT remove any critical tables associated with
+**           the specified application from the Critical Data Store.
+**
+******************************************************************************/
+int32 CFE_TBL_CleanUpApp(CFE_ES_AppId_t AppId);
+
+/**@}*/
+
+#endif /* CFE_TBL_CORE_INTERNAL_H */
+```
+
+### `cfe_time_core_internal.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_time_core_internal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:  cFE Time Services (TIME) library API header file
+ *
+ * Author:   S.Walling/Microtel
+ *
+ * Notes:
+ *
+ */
+
+#ifndef CFE_TIME_CORE_INTERNAL_H
+#define CFE_TIME_CORE_INTERNAL_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+
+/*
+ * The internal APIs prototyped within this block are only intended to be invoked from
+ * other CFE core apps.  They still need to be prototyped in the shared header such that
+ * they can be called from other core modules, but applications should not call these.
+ */
+
+/** @defgroup CFEAPITIMECoreInternal cFE Internal Time APIs, internal to CFE core
+ * @{
+ */
+
+/*****************************************************************************/
+/**
+** \brief Entry Point for cFE Core Application
+**
+** \par Description
+**        This is the entry point to the cFE TIME Core Application.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+******************************************************************************/
+void CFE_TIME_TaskMain(void);
+
+/*****************************************************************************/
+/**
+** \brief Initializes the cFE core module API Library
+**
+** \par Description
+**        Initializes the cFE core module API Library
+**
+** \par Assumptions, External Events, and Notes:
+**        -# This function MUST be called before any module API's are called.
+**
+******************************************************************************/
+int32 CFE_TIME_EarlyInit(void);
+
+/*****************************************************************************/
+/**
+** \brief Removes TIME resources associated with specified Application
+**
+** \par Description
+**        This function is called by cFE Executive Services to cleanup after
+**        an Application has been terminated.  It frees resources
+**        that have been allocated to the specified Application.
+**
+******************************************************************************/
+int32 CFE_TIME_CleanUpApp(CFE_ES_AppId_t AppId);
+
+/**@}*/
+
+#endif /* CFE_TIME_CORE_INTERNAL_H */
+```
+
+### `cfe_time_resetvars_typedef.h`
+
+**경로:** `fsw/cfe/modules/core_private/fsw/inc/cfe_time_resetvars_typedef.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Definition of the CFE_TIME_ResetVars_t structure type
+ */
+
+#ifndef CFE_TIME_RESETVARS_TYPEDEF_H
+#define CFE_TIME_RESETVARS_TYPEDEF_H
+
+/*
+** Includes
+*/
+#include "common_types.h"
+#include "cfe_time_extern_typedefs.h"
+
+#define CFE_TIME_RESET_SIGNATURE 0xA5A55A5A
+
+/**
+**  \brief Time related variables that are maintained through a Processor Reset
+**
+**  \par Description
+**       The #CFE_TIME_ResetVars_t data structure contains those variables that are maintained
+**       in an area of memory that is not cleared during a Processor Reset.  This allows the
+**       cFE Time Service to maintain time to the best of its ability after a Processor Reset.
+*/
+typedef struct CFE_TIME_ResetVars
+{
+    uint32             Signature;    /**< \brief Data validation signature used to verify data structure contents*/
+    int16              LeapSeconds;  /**< \brief Leap seconds value */
+    uint16             ClockSignal;  /**< \brief Current clock signal selection */
+    CFE_TIME_SysTime_t CurrentMET;   /**< \brief Current Mission Elapsed Time (MET) */
+    CFE_TIME_SysTime_t CurrentSTCF;  /**< \brief Current Spacecraft Time Correlation Factor (STCF) */
+    CFE_TIME_SysTime_t CurrentDelay; /**< \brief Current time client delay value */
+} CFE_TIME_ResetVars_t;
+
+#endif /* CFE_TIME_RESETVARS_TYPEDEF_H */
+```

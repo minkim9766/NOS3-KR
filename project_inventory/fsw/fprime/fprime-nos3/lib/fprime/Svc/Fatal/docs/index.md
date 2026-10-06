@@ -3,18 +3,57 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--.gitignore
-file--sdd.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/docs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/docs/.gitignore`
+
+
+```text
+*.html
+```
+
+### `sdd.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/docs/sdd.md`
+
+
+```markdown
+# Svc::Fatal Port
+
+## 1. Introduction
+
+The `Svc::Fatal` port is used to announce that a FATAL event has occurred.
+
+## 2. Design
+
+### 2.1 Context
+
+#### 2.1.1 Port Diagram
+
+The `Svc::Fatal` port has the following port diagram:
+
+![Svc::Fatal Diagram](img/FatalEvent.jpg "Svc::Fatal Port")
+
+#### 2.1.2 Serializables
+
+No serializables.
+
+## 3. Change Log
+
+Date | Description
+---- | -----------
+10/28/2015 |  Initial Version
+
+
+
+```

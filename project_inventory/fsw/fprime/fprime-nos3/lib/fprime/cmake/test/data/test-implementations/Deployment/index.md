@@ -3,20 +3,74 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 TestModule/index
-file--CMakeLists.txt
-file--Main.cpp
-file--settings.ini
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/`](TestModule/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/Main.cpp`](file--Main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/CMakeLists.txt`
+
+
+```cmake
+####
+# 'TestDeployment' Deployment:
+#
+# A deployment used to test extra functions of the CMake setup.
+####
+
+# Base settings
+cmake_minimum_required(VERSION 3.16)
+cmake_policy(SET CMP0048 NEW)
+project(TestImplementation VERSION 1.0.0 LANGUAGES C CXX)
+
+include("${CMAKE_CURRENT_LIST_DIR}/../../../../../cmake/FPrime.cmake")
+# NOTE: register custom targets between these two lines
+include("${FPRIME_FRAMEWORK_PATH}/cmake/FPrime-Code.cmake")
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TestModule")
+set(FPRIME_CURRENT_MODULE Deployment)
+register_fprime_executable(
+        Deployment
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/Main.cpp"
+    DEPENDS
+        Fw_Types Deployment_TestModule
+    CHOOSES_IMPLEMENTATIONS
+        Test_Override_Override
+        Os_File_Posix
+)
+```
+
+### `Main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/Main.cpp`
+
+
+```cpp
+bool good_implementation(); // Base implementation selection worked
+bool good_override(); // Override implementation selection worked
+
+// No operation executable
+int main(int argc, char** argv) {
+    return static_cast<int>(good_implementation() && good_override());
+}
+```
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/settings.ini`
+
+
+```text
+[fprime]
+framework_path: ../../../../..
+library_locations: ../test-platforms
+project_root: ..
+```

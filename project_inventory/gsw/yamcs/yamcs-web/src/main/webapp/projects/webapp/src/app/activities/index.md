@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,58 @@ activity-list/index
 activity-log-tab/index
 set-failed-dialog/index
 shared/index
-file--activities.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/`](activity/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-details-tab/`](activity-details-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-list/`](activity-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/`](activity-log-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/set-failed-dialog/`](set-failed-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/`](shared/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activities.routes.ts`](file--activities.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `activities.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activities.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { ActivityDetailsTabComponent } from './activity-details-tab/activity-details-tab.component';
+import { ActivityListComponent } from './activity-list/activity-list.component';
+import { ActivityLogTabComponent } from './activity-log-tab/activity-log-tab.component';
+import { ActivityComponent } from './activity/activity.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: ActivityListComponent,
+      },
+      {
+        path: ':activityId',
+        component: ActivityComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'log',
+          },
+          {
+            path: 'log',
+            component: ActivityLogTabComponent,
+          },
+          {
+            path: 'details',
+            component: ActivityDetailsTabComponent,
+          },
+        ],
+      },
+    ],
+  },
+];
+```

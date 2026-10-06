@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ mdb/index
 stacks/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/displays/`](displays/index) — 폴더
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/`](etc/index) — 폴더
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/stacks/`](stacks/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

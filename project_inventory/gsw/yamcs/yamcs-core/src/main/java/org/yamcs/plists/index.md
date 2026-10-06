@@ -3,18 +3,273 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ParameterList.java`
 
-file--ParameterList.java
-file--ParameterListDb.java
-file--ParameterListService.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/ParameterList.java`
+
+
+```java
+package org.yamcs.plists;
+
+import static org.yamcs.plists.ParameterListDb.CNAME_DESCRIPTION;
+import static org.yamcs.plists.ParameterListDb.CNAME_ID;
+import static org.yamcs.plists.ParameterListDb.CNAME_NAME;
+import static org.yamcs.plists.ParameterListDb.CNAME_PATTERNS;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class ParameterList implements Comparable<ParameterList> {
+
+    private final UUID id;
+    private String name;
+    private String description;
+    private List<String> patterns = new ArrayList<>();
+
+    public ParameterList(UUID id, String name) {
+        this.id = id;
+        this.name = Objects.requireNonNull(name);
+    }
+
+    public ParameterList(Tuple tuple) {
+        id = tuple.getColumn(CNAME_ID);
+        name = tuple.getColumn(CNAME_NAME);
+        description = tuple.getColumn(CNAME_DESCRIPTION);
+
+        if (tuple.getColumn(CNAME_PATTERNS) != null) {
+            patterns.addAll(tuple.getColumn(CNAME_PATTERNS));
+        }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getPatterns() {
+        return patterns;
+    }
+
+    public void setPatterns(List<String> patterns) {
+        this.patterns = patterns;
+    }
+
+    public Tuple toTuple() {
+        var tuple = new Tuple();
+        tuple.addColumn(CNAME_ID, DataType.UUID, id);
+        tuple.addColumn(CNAME_NAME, name);
+        tuple.addColumn(CNAME_DESCRIPTION, description);
+        if (!patterns.isEmpty()) {
+            tuple.addColumn(CNAME_PATTERNS, DataType.array(DataType.STRING), patterns);
+        }
+        return tuple;
+    }
+
+    @Override
+    public int compareTo(ParameterList other) {
+        return name.compareToIgnoreCase(other.name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
 ```
 
-## 항목
+### `ParameterListDb.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/ParameterList.java`](file--ParameterList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/ParameterListDb.java`](file--ParameterListDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/ParameterListService.java`](file--ParameterListService.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/ParameterListDb.java`
+
+
+```java
+package org.yamcs.plists;
+
+import static org.yamcs.yarch.query.Query.createStream;
+import static org.yamcs.yarch.query.Query.createTable;
+import static org.yamcs.yarch.query.Query.deleteFromTable;
+import static org.yamcs.yarch.query.Query.selectStream;
+import static org.yamcs.yarch.query.Query.selectTable;
+
+import java.util.UUID;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.query.Query;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class ParameterListDb {
+
+    public static final String TABLE_NAME = "parameter_list";
+    private static final TupleDefinition TDEF = new TupleDefinition();
+    public static final String CNAME_ID = "id";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_PATTERNS = "patterns";
+    static {
+        TDEF.addColumn(CNAME_ID, DataType.UUID);
+        TDEF.addColumn(CNAME_NAME, DataType.STRING);
+        TDEF.addColumn(CNAME_DESCRIPTION, DataType.STRING);
+        TDEF.addColumn(CNAME_PATTERNS, DataType.array(DataType.STRING));
+    }
+
+    private Log log;
+    private YarchDatabaseInstance ydb;
+    private Stream tableStream;
+    private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+
+    public ParameterListDb(String yamcsInstance) throws InitException {
+        log = new Log(AuditLog.class, yamcsInstance);
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            String streamName = TABLE_NAME + "_in";
+            if (ydb.getTable(TABLE_NAME) == null) {
+                var q = createTable(TABLE_NAME, TDEF)
+                        .primaryKey(CNAME_ID);
+                ydb.execute(q.toStatement());
+            }
+            if (ydb.getStream(streamName) == null) {
+                var q = createStream(streamName, TDEF);
+                ydb.execute(q.toStatement());
+            }
+
+            var q = Query.upsertIntoTable(TABLE_NAME)
+                    .query(selectStream(streamName).toSQL());
+            ydb.execute(q.toStatement());
+
+            tableStream = ydb.getStream(streamName);
+        } catch (StreamSqlException | ParseException e) {
+            throw new InitException(e);
+        }
+    }
+
+    public ParameterList getById(UUID id) {
+        rwlock.readLock().lock();
+        try {
+            var query = selectTable(TABLE_NAME).where(CNAME_ID, id);
+            var r = ydb.executeUnchecked(query.toStatement());
+            try {
+                if (r.hasNext()) {
+                    Tuple tuple = r.next();
+                    try {
+                        var plist = new ParameterList(tuple);
+                        log.trace("Read parameter list from db {}", plist);
+                        return plist;
+                    } catch (Exception e) {
+                        log.error("Cannot decode tuple {} into parameter list", tuple);
+                    }
+                }
+            } finally {
+                r.close();
+
+            }
+            return null;
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void insert(ParameterList parameterList) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = parameterList.toTuple();
+            log.trace("Adding parameter list: {}", tuple);
+            tableStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void update(ParameterList parameterList) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = parameterList.toTuple();
+            log.trace("Updating parameter list: {}", tuple);
+            tableStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void delete(UUID parameterListId) {
+        rwlock.writeLock().lock();
+        try {
+            var query = deleteFromTable(TABLE_NAME).where(CNAME_ID, parameterListId);
+            var result = ydb.executeUnchecked(query.toStatement());
+            result.close();
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+}
+```
+
+### `ParameterListService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/plists/ParameterListService.java`
+
+
+```java
+package org.yamcs.plists;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.YConfiguration;
+
+public class ParameterListService extends AbstractYamcsService {
+
+    private ParameterListDb parameterListDb;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        parameterListDb = new ParameterListDb(yamcsInstance);
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    public ParameterListDb getParameterListDb() {
+        return parameterListDb;
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+}
+```

@@ -3,14 +3,10 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/services/instance/_images/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfdp-class2.png`
 
-file--cfdp-class2.png
-```
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/_images/cfdp-class2.png`
 
-## 항목
-
-- [`gsw/yamcs/docs/server-manual/services/instance/_images/cfdp-class2.png`](file--cfdp-class2.png) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -30,31 +30,103 @@ session-expired-dialog/index
 significance-level/index
 start-replay-dialog/index
 timestamp-tracker/index
-file--dnd.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/`](activities-label/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/ago/`](ago/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-label/`](alarm-label/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/alarm-level/`](alarm-level/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/codemirror/`](codemirror/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/command-selector/`](command-selector/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/expression/`](expression/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/`](hex/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/`](instance-page/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/live-expression/`](live-expression/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/`](markdown/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown-input/`](markdown-input/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/`](object-selector/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-input/`](parameter-input/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/`](parameter-plot/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/pipes/`](pipes/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-instance-dialog/`](select-instance-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-parameter-dialog/`](select-parameter-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/session-expired-dialog/`](session-expired-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/significance-level/`](significance-level/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/start-replay-dialog/`](start-replay-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/timestamp-tracker/`](timestamp-tracker/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/dnd.ts`](file--dnd.ts) — UTF-8 텍스트 파일 본문 포함
+### `dnd.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/dnd.ts`
+
+
+```typescript
+export interface FileWithFullPath extends File {
+  _fullPath: string;
+}
+
+/**
+ * Returns a flat list of files. The DataTransfer object may contain
+ * both files and directories.
+ *
+ * The returned files have an extra property '_fullPath' which contains
+ * the full path starting from the top selected folder.
+ */
+export async function listDroppedFiles(
+  dataTransfer: DataTransfer,
+): Promise<FileWithFullPath[]> {
+  const droppedFiles: FileWithFullPath[] = [];
+  const items = dataTransfer.items;
+  if (items && items.length && (items[0] as any).webkitGetAsEntry) {
+    // Convert all items to entries
+    // (important to do this _before_ recursing on subtrees)
+    const entries: FileSystemEntry[] = [];
+    for (let i = 0; i < items.length; i++) {
+      const entry = items[i].webkitGetAsEntry();
+      if (entry) {
+        entries.push(entry);
+      }
+    }
+
+    for (const entry of entries) {
+      const moreFiles = await listFilesUnderEntry(entry);
+      droppedFiles.push(...moreFiles);
+    }
+  } else {
+    for (let i = 0; i < dataTransfer.files.length; i++) {
+      const item = dataTransfer.files.item(i);
+      droppedFiles.push(item as FileWithFullPath);
+    }
+  }
+  return droppedFiles;
+}
+
+export async function listFilesUnderEntry(entry: FileSystemEntry, path = '') {
+  const droppedFiles: FileWithFullPath[] = [];
+  const fullPath = path ? `${path}/${entry.name}` : entry.name;
+  if (entry.isFile) {
+    const fileEntry = entry as FileSystemFileEntry;
+    const droppedFile = (await getFile(fileEntry)) as FileWithFullPath;
+    droppedFile._fullPath = fullPath;
+    droppedFiles.push(droppedFile);
+  } else if (entry.isDirectory) {
+    const directoryEntry = entry as FileSystemDirectoryEntry;
+    const directoryEntries = [];
+
+    const directoryReader = directoryEntry.createReader();
+    let batch = await readEntries(directoryReader);
+    while (batch.length) {
+      // Empty array means no more batches (batch is about 100 entries)
+      directoryEntries.push(...batch);
+      batch = await readEntries(directoryReader);
+    }
+
+    for (const directoryEntry of directoryEntries) {
+      const moreFiles = await listFilesUnderEntry(directoryEntry, fullPath);
+      droppedFiles.push(...moreFiles);
+    }
+  }
+  return droppedFiles;
+}
+
+function getFile(entry: FileSystemFileEntry) {
+  return new Promise<File>((resolve, reject) => {
+    entry.file(
+      (file) => {
+        resolve(file);
+      },
+      (err) => reject(err),
+    );
+  });
+}
+
+function readEntries(reader: FileSystemDirectoryReader) {
+  return new Promise<FileSystemEntry[]>((resolve, reject) => {
+    reader.readEntries(
+      (results) => {
+        resolve(results);
+      },
+      (err) => reject(err),
+    );
+  });
+}
+```

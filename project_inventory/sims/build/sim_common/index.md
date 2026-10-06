@@ -3,26 +3,48 @@
 
 **경로:** `sims/build/sim_common/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--libsim_common.so
-file--Makefile
-file--nos3-all-simulators
-file--nos3-sim-cmdbus-bridge
-file--nos3-single-simulator
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/sim_common/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`sims/build/sim_common/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/libsim_common.so`](file--libsim_common.so) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/nos3-all-simulators`](file--nos3-all-simulators) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/nos3-sim-cmdbus-bridge`](file--nos3-sim-cmdbus-bridge) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/nos3-single-simulator`](file--nos3-single-simulator) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `sims/build/sim_common/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libsim_common.so`
+
+**경로:** `sims/build/sim_common/libsim_common.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `sims/build/sim_common/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-all-simulators`
+
+**경로:** `sims/build/sim_common/nos3-all-simulators`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-sim-cmdbus-bridge`
+
+**경로:** `sims/build/sim_common/nos3-sim-cmdbus-bridge`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-single-simulator`
+
+**경로:** `sims/build/sim_common/nos3-single-simulator`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

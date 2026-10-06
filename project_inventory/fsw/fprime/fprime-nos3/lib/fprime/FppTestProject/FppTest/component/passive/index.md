@@ -3,24 +3,382 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--passive.fpp
-file--PassiveTest.cpp
-file--PassiveTest.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/passive.fpp`](file--passive.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/PassiveTest.cpp`](file--PassiveTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/PassiveTest.hpp`](file--PassiveTest.hpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/.gitignore`
+
+
+```text
+FppTest_component_passive_ut_exe
+cached
+seed
+seed-history
+show-rules
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/CMakeLists.txt`
+
+
+```cmake
+# ======================================================================
+# CMakeLists.txt
+# ======================================================================
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/passive.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PassiveTest.cpp"
+)
+
+register_fprime_module()
+
+# Sets MODULE_NAME to unique name based on path
+get_module_name(${CMAKE_CURRENT_LIST_DIR})
+
+# Exclude test module from all build
+set_target_properties(
+  ${MODULE_NAME}
+  PROPERTIES
+  EXCLUDE_FROM_ALL TRUE
+)
+
+# Declare dependencies on test modules
+set(UT_MOD_DEPS
+  Fw/Test
+  STest
+)
+
+# Add unit test directory
+# UT_SOURCE_FILES: Sources for unit test
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/passive.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Tester.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/Tests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TesterHandlers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TesterHelpers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/PortTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/CmdTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/EventTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TlmTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/ParamTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/ExternalParamTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TimeTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../types/FormalParamTypes.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../../utils/Utils.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/PassiveTestTester.cpp"
+)
+# Needed for compiling files using Tester.hpp from outside the directory
+include_directories("${CMAKE_CURRENT_LIST_DIR}/test/ut")
+register_fprime_ut()
+```
+
+### `passive.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/passive.fpp`
+
+
+```fpp
+@ A passive component
+passive component PassiveTest {
+
+  import FppTest.SerialPorts
+  import FppTest.SpecialPorts
+  import FppTest.TypedPorts
+
+  include "../include/commands.fppi"
+  include "../include/events.fppi"
+  include "../include/telemetry.fppi"
+  include "../include/params.fppi"
+  include "../include/external_params.fppi"
+
+}
+```
+
+### `PassiveTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/PassiveTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PassiveTest.cpp
+// \author tiffany
+// \brief  cpp file for PassiveTest component implementation class
+// ======================================================================
+
+
+#include "PassiveTest.hpp"
+#include <Fw/FPrimeBasicTypes.hpp>
+
+
+  // ----------------------------------------------------------------------
+  // Construction, initialization, and destruction
+  // ----------------------------------------------------------------------
+
+  PassiveTest ::
+    PassiveTest(
+        const char *const compName
+    ) : PassiveTestComponentBase(compName)
+  {
+
+  }
+
+  PassiveTest ::
+    ~PassiveTest()
+  {
+
+  }
+
+  #define TestComponentName PassiveTest
+  #include "FppTest/component/common/typed.cpp"
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for user-defined serial input ports
+  // ----------------------------------------------------------------------
+
+  void PassiveTest ::
+    serialGuarded_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(portNum, Buffer);
+  }
+
+  void PassiveTest ::
+    serialSync_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(portNum, Buffer);
+  }
+
+  // ----------------------------------------------------------------------
+  // Command handler implementations
+  // ----------------------------------------------------------------------
+
+  void PassiveTest ::
+    CMD_NO_ARGS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq
+    )
+  {
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void PassiveTest ::
+    CMD_PRIMITIVE_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        U32 u32_1,
+        U32 u32_2,
+        F32 f32_1,
+        F32 f32_2,
+        bool b1,
+        bool b2
+    )
+  {
+    this->primitiveCmd.args.val1 = u32_1;
+    this->primitiveCmd.args.val2 = u32_2;
+    this->primitiveCmd.args.val3 = f32_1;
+    this->primitiveCmd.args.val4 = f32_2;
+    this->primitiveCmd.args.val5 = b1;
+    this->primitiveCmd.args.val6 = b2;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void PassiveTest ::
+    CMD_STRINGS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        const Fw::CmdStringArg& str1,
+        const Fw::CmdStringArg& str2
+    )
+  {
+    this->stringCmd.args.val1 = str1;
+    this->stringCmd.args.val2 = str2;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void PassiveTest ::
+    CMD_ENUM_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamEnum en
+    )
+  {
+    this->enumCmd.args.val = en;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void PassiveTest ::
+    CMD_ARRAY_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamArray arr
+    )
+  {
+    this->arrayCmd.args.val = arr;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void PassiveTest ::
+    CMD_STRUCT_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamStruct str
+    )
+  {
+    this->structCmd.args.val = str;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+```
+
+### `PassiveTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/PassiveTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PassiveTest.hpp
+// \author tiffany
+// \brief  hpp file for PassiveTest component implementation class
+// ======================================================================
+
+#ifndef PassiveTest_HPP
+#define PassiveTest_HPP
+
+#include "FppTest/component/passive/PassiveTestComponentAc.hpp"
+#include "FppTest/component/types/FormalParamTypes.hpp"
+
+
+class PassiveTest :
+  public PassiveTestComponentBase
+{
+
+  public:
+
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct PassiveTest object
+    PassiveTest(
+        const char* const compName //!< The component name
+    );
+
+    //! Destroy PassiveTest object
+    ~PassiveTest();
+
+  private:
+
+    #include "FppTest/component/common/typed.hpp"
+
+  private:
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined serial input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for serialGuarded
+    void serialGuarded_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+    //! Handler implementation for serialSync
+    void serialSync_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+  private:
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for command CMD_NO_ARGS
+    void CMD_NO_ARGS_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq //!< The command sequence number
+    ) override;
+
+    //! Handler implementation for command CMD_PRIMITIVE
+    void CMD_PRIMITIVE_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        U32 u32_1, //!< A U32
+        U32 u32_2, //!< A U32
+        F32 f32_1, //!< An F32
+        F32 f32_2, //!< An F32
+        bool b1, //!< A boolean
+        bool b2 //!< A boolean
+    ) override;
+
+    //! Handler implementation for command CMD_STRINGS
+    void CMD_STRINGS_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        const Fw::CmdStringArg& str1, //!< A string
+        const Fw::CmdStringArg& str2 //!< Another string
+    ) override;
+
+    //! Handler implementation for command CMD_ENUM
+    void CMD_ENUM_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamEnum en //!< An enum
+    ) override;
+
+    //! Handler implementation for command CMD_ARRAY
+    void CMD_ARRAY_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamArray arr //!< An array
+    ) override;
+
+    //! Handler implementation for command CMD_STRUCT
+    void CMD_STRUCT_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamStruct str //!< A struct
+    ) override;
+
+  public:
+
+    //! Enables checking the serialization status of serial port invocations
+    Fw::SerializeStatus serializeStatus;
+
+    // Command test values
+    FppTest::Types::PrimitiveParams primitiveCmd;
+    FppTest::Types::CmdStringParams stringCmd;
+    FppTest::Types::EnumParam enumCmd;
+    FppTest::Types::ArrayParam arrayCmd;
+    FppTest::Types::StructParam structCmd;
+
+};
+
+
+#endif
+```

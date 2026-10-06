@@ -3,52 +3,3220 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Acknowledgment.java`
 
-file--Acknowledgment.java
-file--ActiveCommand.java
-file--AlgorithmVerifier.java
-file--ArgumentValue.java
-file--CommandingManager.java
-file--CommandQueue.java
-file--CommandQueueListener.java
-file--CommandQueueManager.java
-file--CommandQueueMemento.java
-file--CommandQueueState.java
-file--CommandReleaser.java
-file--CommandVerificationHandler.java
-file--ContainerVerifier.java
-file--InvalidCommandId.java
-file--MatchCriteriaVerifier.java
-file--PartialArgumentValue.java
-file--PreparedCommand.java
-file--ValueChangeVerifier.java
-file--VerificationResult.java
-file--Verifier.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/Acknowledgment.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.Objects;
+
+/**
+ * Meta information for a globally available acknowledgment.
+ */
+public class Acknowledgment {
+
+    private final String name;
+    private final String description;
+
+    public Acknowledgment(String name) {
+        this(name, null);
+    }
+
+    public Acknowledgment(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Acknowledgment)) {
+            return false;
+        }
+        var other = (Acknowledgment) obj;
+        return Objects.equals(name, other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
 ```
 
-## 항목
+### `ActiveCommand.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/Acknowledgment.java`](file--Acknowledgment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ActiveCommand.java`](file--ActiveCommand.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/AlgorithmVerifier.java`](file--AlgorithmVerifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ArgumentValue.java`](file--ArgumentValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandingManager.java`](file--CommandingManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueue.java`](file--CommandQueue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueListener.java`](file--CommandQueueListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueManager.java`](file--CommandQueueManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueMemento.java`](file--CommandQueueMemento.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueState.java`](file--CommandQueueState.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandReleaser.java`](file--CommandReleaser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandVerificationHandler.java`](file--CommandVerificationHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ContainerVerifier.java`](file--ContainerVerifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/InvalidCommandId.java`](file--InvalidCommandId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/MatchCriteriaVerifier.java`](file--MatchCriteriaVerifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/PartialArgumentValue.java`](file--PartialArgumentValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/PreparedCommand.java`](file--PreparedCommand.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ValueChangeVerifier.java`](file--ValueChangeVerifier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/VerificationResult.java`](file--VerificationResult.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/Verifier.java`](file--Verifier.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ActiveCommand.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.Processor;
+import org.yamcs.cmdhistory.Attribute;
+import org.yamcs.cmdhistory.CommandHistoryConsumer;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.LastValueCache;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Commanding.VerifierConfig;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+
+/**
+ * A command which is just being sent (maybe in the queue) or that has been sent and command verifiers are pending.
+ *
+ */
+public class ActiveCommand implements CommandHistoryConsumer {
+    final PreparedCommand preparedCommand;
+    final Processor processor;
+    final static Log log = new Log(ActiveCommand.class);
+    // Initialised with the command attributes and updated with the command history events
+    LastValueCache cmdParamCache = new LastValueCache();
+
+    // used when a command has a transmissionConstraint with timeout
+    // when the command is ready to go, but is waiting for a transmission constraint, this is set to true
+    private boolean pendingTransmissionConstraint;
+
+    // this is the time when the clock starts ticking for fullfilling the transmission constraint
+    // -1 means it has not been set yet
+    private long transmissionConstraintCheckStart = -1;
+
+    CopyOnWriteArrayList<ParameterProcessor> cmdParamProcessors = new CopyOnWriteArrayList<>();
+
+    public ActiveCommand(Processor processor, PreparedCommand preparedCommand) {
+        this.preparedCommand = preparedCommand;
+        this.processor = processor;
+        initCmdParams();
+    }
+
+    void initCmdParams() {
+        Mdb mdb = processor.getMdb();
+        for (CommandHistoryAttribute cha : preparedCommand.getAttributes()) {
+            String fqn = Mdb.YAMCS_CMD_SPACESYSTEM_NAME + "/" + cha.getName();
+            if (mdb.getParameter(fqn) == null) {
+                // if it was required in the algorithm, it would be already in the system parameter db
+                continue;
+            }
+            Parameter p = mdb.getParameter(fqn);
+            ParameterValue pv = new ParameterValue(p);
+            pv.setEngValue(ValueUtility.fromGpb(cha.getValue()));
+            cmdParamCache.add(pv);
+        }
+    }
+
+    public CommandId getCommandId() {
+        return preparedCommand.getCommandId();
+    }
+
+    public boolean isPendingTransmissionConstraints() {
+        return pendingTransmissionConstraint;
+    }
+
+    public void setPendingTransmissionConstraints(boolean b) {
+        this.pendingTransmissionConstraint = b;
+    }
+
+    public long getTransmissionConstraintCheckStart() {
+        return transmissionConstraintCheckStart;
+    }
+
+    public void setTransmissionConstraintCheckStart(long transmissionConstraintCheckStart) {
+        this.transmissionConstraintCheckStart = transmissionConstraintCheckStart;
+    }
+
+    public MetaCommand getMetaCommand() {
+        return preparedCommand.getMetaCommand();
+    }
+
+    public Map<Argument, ArgumentValue> getArguments() {
+        return preparedCommand.getArgAssignment();
+    }
+
+    public LastValueCache getCmdParamCache() {
+        return cmdParamCache;
+    }
+
+    public PreparedCommand getPreparedCommand() {
+        return preparedCommand;
+    }
+
+    public String getCmdName() {
+        return preparedCommand.getCmdName();
+    }
+
+    /**
+     * 
+     * @return true if the transmission constraints have to be disabled for this command
+     */
+    public boolean disableTransmissionConstraints() {
+        return preparedCommand.disableTransmissionConstraints();
+    }
+
+    /**
+     * 
+     * @return true if the command verifiers have to be disabled for this command
+     */
+    public boolean disableCommandVerifiers() {
+        return preparedCommand.disableCommandVerifiers();
+    }
+
+    public Map<String, VerifierConfig> getVerifierOverride() {
+        return preparedCommand.getVerifierOverride();
+    }
+
+    void subscribeCmdParams(ParameterProcessor processor) {
+        cmdParamProcessors.add(processor);
+    }
+
+    void unsubscribeCmdParams(ParameterProcessor processor) {
+        cmdParamProcessors.remove(processor);
+    }
+
+    // called from the command history when things are added in the stream
+    @Override
+    public void updatedCommand(CommandId cmdId, long time, List<Attribute> attrs) {
+        if (!cmdId.equals(getCommandId())) {// sanity check
+            log.error("Got a command history update for a different command: {}", cmdId);
+            return;
+        }
+        Mdb mdb = processor.getMdb();
+        ProcessingContext pctx = ProcessingContext.createForCmdProcessing(processor.getLastValueCache(), getArguments(),
+                cmdParamCache, processor.getCurrentTime());
+
+        ParameterValueList cmdParams = pctx.getCmdParams();
+
+        for (Attribute attr : attrs) {
+            String fqn = Mdb.YAMCS_CMDHIST_SPACESYSTEM_NAME + "/" + attr.getKey();
+            Parameter p = mdb.getParameter(fqn);
+
+            if (p == null) {
+                // if it was required in the algorithm, it would be in the MDB
+                log.trace("Not adding {} to the context parameter list because it is not defined in the MDB", fqn);
+            } else {
+                ParameterValue pv = new ParameterValue(p);
+                pv.setEngValue(attr.getValue());
+                cmdParams.add(pv);
+            }
+        }
+
+        for (ParameterProcessor proc : cmdParamProcessors) {
+            proc.process(pctx);
+        }
+
+        cmdParamCache.addAll(cmdParams);
+        ParameterValueList tmParams = pctx.getTmParams();
+        if (!tmParams.isEmpty()) {
+            ProcessingContext tmData = ProcessingContext.cloneForTm(pctx);
+            processor.getParameterProcessorManager().process(tmData);
+        }
+    }
+
+    /**
+     * One line string id useful for logging
+     * 
+     * @return
+     */
+    public String getLoggingId() {
+        return preparedCommand.getLoggingId();
+    }
+
+    @Override
+    public void addedCommand(PreparedCommand pc) {
+        // this will never be called since we are subscribed to this command only
+    }
+}
+```
+
+### `AlgorithmVerifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/AlgorithmVerifier.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.List;
+
+import org.yamcs.Processor;
+import org.yamcs.algorithms.ActiveAlgorithm;
+import org.yamcs.algorithms.AlgorithmExecListener;
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.algorithms.AlgorithmManager;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.CommandVerifier;
+
+public class AlgorithmVerifier extends Verifier implements AlgorithmExecListener {
+
+    final Algorithm alg;
+    final AlgorithmExecutionContext algCtx;
+    final Mdb mdb;
+
+    final Processor processor;
+
+    AlgorithmVerifier(CommandVerificationHandler cvh, CommandVerifier cv) {
+        super(cvh, cv);
+        alg = cv.getAlgorithm();
+        algCtx = cvh.getAlgorithmExecutionContext();
+        processor = cvh.getProcessor();
+        mdb = processor.getMdb();
+    }
+
+    @Override
+    void doStart() {
+        activeCommand.subscribeCmdParams(data -> processCmdData(data));
+
+        log.debug("Starting verifier for command {} alg: {} stage: {} ",
+                StringConverter.toString(activeCommand.getCommandId()), alg.getName(), cv.getStage());
+        AlgorithmManager algMgr = cvh.getAlgorithmManager();
+        ActiveAlgorithm algo = algMgr.activateAlgorithm(alg, algCtx);
+        if (algo == null) {
+            log.warn("{}: failing verifier {} because algorithm could not be activated",
+                    activeCommand.getCommandId(), cv.getStage());
+            finished(false, "algorithm activation failed");
+        } else {
+            algo.addExecListener(this);
+        }
+
+        ProcessingContext ctx = ProcessingContext.createInitial(processor.getLastValueCache(),
+                activeCommand.getArguments(), activeCommand.getCmdParamCache(), processor.getCurrentTime());
+        // send initial values to algorithm
+        algCtx.process(processor.getCurrentTime(), ctx);
+    }
+
+    @Override
+    void doCancel() {
+        algCtx.removeAlgorithm(alg.getQualifiedName());
+    }
+
+    @Override
+    public void algorithmRun(List<RawEngValue> inputValues, Object result, List<ParameterValue> outputValues) {
+        if (log.isTraceEnabled()) {
+            CommandId cmdId = activeCommand.getCommandId();
+            log.trace("command: {} algorithm: {} stage: {} executed: returnValue: {} , outputValues: {}",
+                    StringConverter.toString(cmdId), alg.getName(), cv.getStage(), result, outputValues);
+        }
+        if (result == null) {
+            log.trace("Algorithm {} run but did not return a result.", alg.getName());
+            return;
+        }
+        algCtx.removeAlgorithm(alg.getQualifiedName());
+
+        if (result instanceof Boolean) {
+            finished((Boolean) result);
+        } else if (result instanceof VerificationResult) {
+            var verificationResult = (VerificationResult) result;
+            if (verificationResult.returnValue != null) {
+                var value = verificationResult.returnValue;
+                returnPv = new ParameterValue(YAMCS_PARAMETER_RETURN_VALUE);
+                var time = processor.getCurrentTime();
+                returnPv.setAcquisitionTime(time);
+                returnPv.setGenerationTime(time);
+                if (value instanceof Value) {
+                    returnPv.setEngValue((Value) value);
+                } else {
+                    var strValue = ValueUtility.getStringValue(value.toString());
+                    returnPv.setEngValue(strValue);
+                }
+            }
+            finished(verificationResult.success, verificationResult.message);
+        } else {
+            finished(false, result.toString());
+        }
+    }
+
+    public void processCmdData(ProcessingContext ctx) {
+        algCtx.process(processor.getCurrentTime(), ctx);
+    }
+}
+```
+
+### `ArgumentValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ArgumentValue.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Argument;
+
+public class ArgumentValue extends RawEngValue {
+    private final Argument argument;
+
+    public ArgumentValue(Argument argument) {
+        this.argument = argument;
+    }
+
+    public ArgumentValue(Argument argument, Value engValue) {
+        this.argument = argument;
+        this.engValue = engValue;
+    }
+
+    public Argument getArgument() {
+        return argument;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("name: ");
+        sb.append(argument.getName());
+
+        if (rawValue != null) {
+            sb.append(" rawValue: {").append(rawValue.toString()).append("}");
+        }
+        if (engValue != null) {
+            sb.append(" engValue: {").append(engValue.toString()).append("}");
+        }
+        return sb.toString();
+    }
+
+    public ParameterValue toGpb() {
+        ParameterValue.Builder gpvb = ParameterValue.newBuilder()
+                .setGenerationTime(TimeEncoding.toProtobufTimestamp(generationTime));
+        if (engValue != null) {
+            gpvb.setEngValue(ValueUtility.toGbp(engValue));
+        }
+        if (rawValue != null) {
+            gpvb.setEngValue(ValueUtility.toGbp(rawValue));
+        }
+
+        return gpvb.build();
+    }
+}
+```
+
+### `CommandingManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandingManager.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.Processor;
+import org.yamcs.ValidationException;
+import org.yamcs.YamcsException;
+import org.yamcs.cmdhistory.CommandHistoryRequestManager;
+import org.yamcs.management.ManagementService;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MetaCommandProcessor;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.security.User;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.TransmissionConstraint;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * Responsible for parsing and tc packet composition.
+ * <p>
+ * Also keeps track of the pending active commands
+ */
+public class CommandingManager extends AbstractService {
+    Logger log = LoggerFactory.getLogger(this.getClass().getName());
+    final private Processor processor;
+    final private CommandQueueManager commandQueueManager;
+    final MetaCommandProcessor metaCommandProcessor;
+    final private CommandHistoryRequestManager cmdHistoryManager;
+    final CommandReleaser commandReleaser;
+
+    /**
+     * Keeps a reference to the channel and creates the queue manager
+     * 
+     * @param proc
+     */
+    public CommandingManager(Processor proc) throws ValidationException {
+        this.processor = proc;
+        this.commandQueueManager = new CommandQueueManager(this);
+        ManagementService.getInstance().registerCommandQueueManager(proc.getInstance(), proc.getName(),
+                commandQueueManager);
+        metaCommandProcessor = new MetaCommandProcessor(proc.getProcessorData());
+        cmdHistoryManager = proc.getCommandHistoryManager();
+        this.commandReleaser = processor.getCommandReleaser();
+    }
+
+    public CommandQueueManager getCommandQueueManager() {
+        return commandQueueManager;
+    }
+
+    /**
+     * Creates a new {@link PreparedCommand} where the binary is created by processing the provided arguments and
+     * matching it against the MDB definition.
+     */
+    public PreparedCommand buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList, String origin,
+            int seq, User user) throws ErrorInCommand, YamcsException {
+        log.debug("Building command {} with arguments {}", mc.getName(), argAssignmentList);
+
+        CommandBuildResult cbr = metaCommandProcessor.buildCommand(mc, argAssignmentList, processor.getCurrentTime());
+
+        CommandId cmdId = CommandId.newBuilder().setCommandName(mc.getQualifiedName()).setOrigin(origin)
+                .setSequenceNumber(seq).setGenerationTime(processor.getCurrentTime()).build();
+        PreparedCommand pc = new PreparedCommand(cmdId);
+        pc.setMetaCommand(mc);
+        if (cbr.getCmdPacket() != null) {
+            pc.setUnprocessedBinary(cbr.getCmdPacket());
+            pc.setBinary(cbr.getCmdPacket());
+        }
+        pc.setUsername(user.getName());
+
+        Set<String> userAssignedArgumentNames = new HashSet<>(argAssignmentList.keySet());
+        pc.setArgAssignment(cbr.getArgs(), userAssignedArgumentNames);
+
+        return pc;
+    }
+
+    /**
+     * Creates a new {@link PreparedCommand} with raw provided binary.
+     */
+    public PreparedCommand buildRawCommand(MetaCommand mc, byte[] binary, String origin, int seq, User user) {
+        log.debug("Building raw command {} of length {}", mc.getName(), binary.length);
+
+        CommandId cmdId = CommandId.newBuilder().setCommandName(mc.getQualifiedName()).setOrigin(origin)
+                .setSequenceNumber(seq).setGenerationTime(processor.getCurrentTime()).build();
+        PreparedCommand pc = new PreparedCommand(cmdId);
+        pc.setMetaCommand(mc);
+        pc.setUnprocessedBinary(binary);
+        pc.setBinary(binary);
+        pc.setUsername(user.getName());
+        pc.setRaw(true);
+
+        return pc;
+    }
+
+    /**
+     * @return the queue that the command was sent to
+     */
+    public CommandQueue sendCommand(User user, PreparedCommand pc) {
+        log.debug("sendCommand command={}", StringConverter.toString(pc.getCommandId()));
+        ActiveCommand activeCommand = new ActiveCommand(processor, pc);
+        cmdHistoryManager.addCommand(pc);
+        cmdHistoryManager.subscribeCommand(pc.getCommandId(), activeCommand);
+        return commandQueueManager.addCommand(user, activeCommand);
+    }
+
+    public void setCommandAttribute(CommandId commandId, CommandHistoryAttribute attribute) {
+        commandQueueManager.addToCommandHistory(commandId, attribute);
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public MetaCommandProcessor getMetaCommandProcessor() {
+        return metaCommandProcessor;
+    }
+
+    @Override
+    protected void doStart() {
+        Mdb mdb = processor.getMdb();
+
+        Set<Parameter> paramsToSubscribe = new HashSet<>();
+        for (MetaCommand mc : mdb.getMetaCommands()) {
+            if (mc.hasTransmissionConstraints()) {
+                List<TransmissionConstraint> tcList = mc.getTransmissionConstraintList();
+                for (TransmissionConstraint tc : tcList) {
+                    paramsToSubscribe.addAll(tc.getMatchCriteria().getDependentParameters());
+                }
+            }
+
+            if (mc.hasCommandVerifiers()) {
+                List<CommandVerifier> cvList = mc.getCommandVerifiers();
+                for (CommandVerifier cv : cvList) {
+                    paramsToSubscribe.addAll(cv.getDependentParameters());
+                }
+            }
+        }
+        paramsToSubscribe.removeIf(p -> p.getDataSource() == DataSource.COMMAND
+                || p.getDataSource() == DataSource.COMMAND_HISTORY);
+
+        if (!paramsToSubscribe.isEmpty()) {
+            processor.getParameterProcessorManager().subscribeToProviders(paramsToSubscribe);
+        } else {
+            log.debug("No parameter required for post transmission constraint check");
+        }
+        commandQueueManager.startAsync();
+        commandQueueManager.awaitRunning();
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        ManagementService.getInstance().unregisterCommandQueueManager(processor.getInstance(), processor.getName(),
+                commandQueueManager);
+        commandQueueManager.stopAsync();
+        notifyStopped();
+    }
+
+    public void releaseCommand(ActiveCommand activeCommand) {
+        // start the verifiers
+        MetaCommand mc = activeCommand.getMetaCommand();
+        if (mc.hasCommandVerifiers()) {
+            log.debug("Starting command verification for {}", activeCommand);
+            CommandVerificationHandler cvh = new CommandVerificationHandler(this, activeCommand);
+            cvh.start();
+        } else {
+            commandFinished(activeCommand);
+        }
+
+        commandReleaser.releaseCommand(activeCommand.getPreparedCommand());
+    }
+
+    public void failedCommand(ActiveCommand activeCommand) {
+        commandFinished(activeCommand);
+    }
+
+    public void verificatonFinished(ActiveCommand activeCommand) {
+        commandFinished(activeCommand);
+    }
+
+    private void commandFinished(ActiveCommand activeCommand) {
+        cmdHistoryManager.unsubscribeCommand(activeCommand.getCommandId(), activeCommand);
+        cmdHistoryManager.commandFinished(activeCommand.getCommandId());
+    }
+}
+```
+
+### `CommandQueue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueue.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import static org.yamcs.parameter.SystemParametersService.getPV;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
+
+import org.yamcs.Processor;
+import org.yamcs.YamcsServer;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Commanding.QueueState;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.security.Directory;
+import org.yamcs.security.Group;
+import org.yamcs.security.User;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Significance.Levels;
+import org.yamcs.xtce.SystemParameter;
+
+public class CommandQueue {
+
+    private String name;
+    private Set<String> users = new HashSet<>();
+    private Set<String> groups = new HashSet<>();
+    private Set<Pattern> tcPatterns = new HashSet<>();
+    private Levels minLevel = Levels.NONE;
+
+    private ConcurrentLinkedQueue<ActiveCommand> commands = new ConcurrentLinkedQueue<>();
+    QueueState defaultState;
+    QueueState state;
+    Processor processor;
+
+    int nbSentCommands = 0;
+    int nbRejectedCommands = 0;
+
+    SystemParameter spQueueState, spNumSentCommands, spNumRejectedCommands, spNumCommands;
+
+    CommandQueue(Processor channel, String name, QueueState state) {
+        this.processor = channel;
+        this.name = name;
+        this.state = state;
+        this.defaultState = state;
+    }
+
+    void setupSysParameters() {
+        SystemParametersService sps = SystemParametersService.getInstance(processor.getInstance());
+        spQueueState = sps.createEnumeratedSystemParameter("cmdQueue/" + name + "/state", QueueState.class,
+                "The current state of this commanding queue");
+        EnumeratedParameterType spQueueStateType = (EnumeratedParameterType) spQueueState.getParameterType();
+        spQueueStateType.enumValue(QueueState.BLOCKED.name())
+                .setDescription("Commands are held in the queue until manually released or the queue is unblocked");
+        spQueueStateType.enumValue(QueueState.DISABLED.name())
+                .setDescription("Commands are rejected immediately");
+        spQueueStateType.enumValue(QueueState.ENABLED.name())
+                .setDescription("Commands pass through the queue immediately (subject to transmission constraints)");
+
+        spNumCommands = sps.createSystemParameter("cmdQueue/" + name + "/numCommands", Type.SINT32,
+                "Number of queued commands");
+        spNumSentCommands = sps.createSystemParameter("cmdQueue/" + name + "/numSentCommands", Type.UINT32,
+                "The total number of commands that have been sent through this queue since Yamcs has started execution");
+        spNumRejectedCommands = sps.createSystemParameter("cmdQueue/" + name + "/numRejectedCommands", Type.UINT32,
+                "The total number of commands that have been rejected by this queue since Yamcs has started execution");
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Set<String> getUsers() {
+        return users;
+    }
+
+    public Set<String> getGroups() {
+        return groups;
+    }
+
+    public Set<Pattern> getTcPatterns() {
+        return tcPatterns;
+    }
+
+    public Levels getMinLevel() {
+        return minLevel;
+    }
+
+    public void setMinLevel(Levels minLevel) {
+        this.minLevel = minLevel;
+    }
+
+    public void addUsers(Collection<String> users) {
+        this.users.addAll(users);
+    }
+
+    public void addGroups(Collection<String> groups) {
+        this.groups.addAll(groups);
+    }
+
+    public void addTcPatterns(Collection<Pattern> tcPatterns) {
+        this.tcPatterns.addAll(tcPatterns);
+    }
+
+    public boolean matches(User user, MetaCommand metaCmd) {
+        if (!isUserMatched(user)) {
+            return false;
+        }
+
+        Levels level = Levels.NONE;
+
+        if (metaCmd.getEffectiveDefaultSignificance() != null) {
+            level = metaCmd.getEffectiveDefaultSignificance().getConsequenceLevel();
+        }
+        if (!isLevelMatched(level)) {
+            return false;
+        }
+        if (!isCommandNameMatched(metaCmd.getQualifiedName())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean isUserMatched(User user) {
+        if (users.isEmpty() && groups.isEmpty()) {
+            return true;
+        }
+
+        if (users.contains(user.getName())) {
+            return true;
+        }
+
+        Directory directory = YamcsServer.getServer().getSecurityStore().getDirectory();
+        for (Group group : directory.getGroups(user)) {
+            if (groups.contains(group.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isLevelMatched(Levels level) {
+        return minLevel == level || level.isMoreSevere(minLevel);
+    }
+
+    private boolean isCommandNameMatched(String qname) {
+        if (tcPatterns.isEmpty()) {
+            return true; // No filter
+        }
+        for (var tcPattern : tcPatterns) {
+            if (tcPattern.matcher(qname).matches()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public QueueState getState() {
+        return state;
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public PreparedCommand[] getCommandArray() {
+        return commands.toArray(new PreparedCommand[0]);
+    }
+
+    public int getCommandCount() {
+        return commands.size();
+    }
+
+    public void add(ActiveCommand pc) {
+        commands.add(pc);
+    }
+
+    /**
+     * remove the command from the queue and return true if it has been removed
+     * 
+     * @param pc
+     * @param isSent:
+     *            true if the command has been sent, false if the command has been rejected
+     * @return
+     */
+    public boolean remove(ActiveCommand pc, boolean isSent) {
+        boolean removed = commands.remove(pc);
+        if (removed) {
+            if (isSent) {
+                nbSentCommands++;
+            } else {
+                nbRejectedCommands++;
+            }
+        }
+        return removed;
+    }
+
+    public void clear(boolean areSent) {
+        int nbCommands = commands.size();
+        commands.clear();
+        if (areSent) {
+            nbSentCommands += nbCommands;
+        } else {
+            nbRejectedCommands += nbCommands;
+        }
+    }
+
+    public int getNbRejectedCommands() {
+        return nbRejectedCommands;
+    }
+
+    public int getNbSentCommands() {
+        return nbSentCommands;
+    }
+
+    void fillInSystemParameters(List<ParameterValue> params, long time) {
+        params.add(getPV(spQueueState, time, state));
+        params.add(getPV(spNumCommands, time, commands.size()));
+        params.add(getPV(spNumSentCommands, time, nbSentCommands));
+        params.add(getPV(spNumRejectedCommands, time, nbRejectedCommands));
+    }
+
+    public ActiveCommand getcommand(CommandId commandId) {
+        for (ActiveCommand c : commands) {
+            if (c.getCommandId().equals(commandId)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public ActiveCommand getcommand(String id) {
+        for (ActiveCommand c : commands) {
+            if (c.preparedCommand.getId().equals(id)) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public ConcurrentLinkedQueue<ActiveCommand> getCommands() {
+        return commands;
+    }
+}
+```
+
+### `CommandQueueListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueListener.java`
+
+
+```java
+package org.yamcs.commanding;
+
+public interface CommandQueueListener {
+
+    default void commandQueueRegistered(String instance, String processorName, CommandQueue q) {
+    }
+
+    default void commandQueueUnregistered(String instance, String processorName, CommandQueue cq) {
+    }
+
+    default void updateQueue(CommandQueue q) {
+    }
+
+    default void commandAdded(CommandQueue q, ActiveCommand pc) {
+    }
+
+    default void commandUpdated(CommandQueue q, ActiveCommand pc) {
+    }
+
+    default void commandRejected(CommandQueue q, ActiveCommand pc) {
+    }
+
+    default void commandSent(CommandQueue q, ActiveCommand pc) {
+    }
+
+    default void commandUnhandled(ActiveCommand pc) {
+    }
+}
+```
+
+### `CommandQueueManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueManager.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.GuardedBy;
+import org.yamcs.Processor;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ThreadSafe;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.MatchCriteriaEvaluator;
+import org.yamcs.mdb.MatchCriteriaEvaluator.MatchResult;
+import org.yamcs.mdb.MatchCriteriaEvaluatorFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.memento.MementoDb;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Commanding.QueueState;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.security.User;
+import org.yamcs.time.TimeService;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.Significance.Levels;
+import org.yamcs.xtce.TransmissionConstraint;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * Implements the management of the control queues for one processor:
+ * <ul>
+ * <li>for each command that is sent, based on the sender it finds the queue where the command should go
+ * <li>depending on the queue state the command can be immediately sent, stored in the queue or rejected
+ * <li>when the command is immediately sent or rejected, the command queue monitor is not notified
+ * <li>if the command has transmissionConstraints with timeout &gt; 0, the command can sit in the queue even if the
+ * queue is not on hold
+ * </ul>
+ * Note: the update of the command monitors is done in the same thread. That means that if the connection to one of the
+ * monitors is lost, there may be a delay of a few seconds. As the monitoring clients will be priviledged users most
+ * likely connected in the same LAN, I don't consider this to be an issue.
+ */
+@ThreadSafe
+public class CommandQueueManager extends AbstractService implements ParameterProcessor, SystemParametersProducer {
+    private static final String MEMENTO_KEY = "yamcs.queues";
+
+    @GuardedBy("this")
+    private HashMap<String, CommandQueue> queues = new LinkedHashMap<>();
+
+    CommandHistoryPublisher commandHistoryPublisher;
+    CommandingManager commandingManager;
+    ConcurrentLinkedQueue<CommandQueueListener> monitoringClients = new ConcurrentLinkedQueue<>();
+    private final Log log;
+
+    private Set<TransmissionConstraintChecker> pendingTcCheckers = new HashSet<>();
+
+    private final String instance;
+    private final String processorName;
+
+    Processor processor;
+
+    private final ScheduledThreadPoolExecutor timer;
+
+    private TimeService timeService;
+
+    /**
+     * Constructs a Command Queue Manager.
+     * 
+     * @param commandingManager
+     *
+     * @throws ConfigurationException
+     *             When there is an error in the configuration file. Note: if the configuration file doesn't exist, this
+     *             exception is not thrown.
+     * @throws ValidationException
+     *             When configuration file is incorrect.
+     */
+    public CommandQueueManager(CommandingManager commandingManager) throws ConfigurationException, ValidationException {
+        this.commandingManager = commandingManager;
+
+        processor = commandingManager.getProcessor();
+        log = new Log(this.getClass(), processor.getInstance());
+        log.setContext(processor.getName());
+        this.commandHistoryPublisher = processor.getCommandHistoryPublisher();
+
+        this.instance = processor.getInstance();
+        this.processorName = processor.getName();
+        this.timer = processor.getTimer();
+        timeService = YamcsServer.getTimeService(processor.getInstance());
+
+        var mementoDb = MementoDb.getInstance(instance);
+        var memento = mementoDb.getObject(MEMENTO_KEY, CommandQueueMemento.class)
+                .orElse(new CommandQueueMemento());
+
+        if (YConfiguration.isDefined("command-queue")) {
+            Spec queueSpec = getQueueSpec();
+            YConfiguration config = YConfiguration.getConfiguration("command-queue");
+            for (String queueName : config.getKeys()) {
+                YConfiguration queueConfig = config.getConfigOrEmpty(queueName);
+                queueConfig = queueSpec.validate(queueConfig);
+
+                var state = computeInitialState(queueName, queueConfig, memento);
+                CommandQueue q = new CommandQueue(processor, queueName, state);
+
+                if (queueConfig.containsKey("users")) {
+                    q.addUsers(queueConfig.getList("users"));
+                }
+                if (queueConfig.containsKey("groups")) {
+                    q.addGroups(queueConfig.getList("groups"));
+                }
+                if (queueConfig.containsKey("minLevel")) {
+                    Levels minLevel = Levels.valueOf(queueConfig.getString("minLevel").toUpperCase());
+                    q.setMinLevel(minLevel);
+                }
+                if (queueConfig.containsKey("tcPatterns")) {
+                    var regexes = queueConfig.<String> getList("tcPatterns");
+                    var patterns = regexes.stream().map(Pattern::compile).collect(Collectors.toList());
+                    q.addTcPatterns(patterns);
+                }
+                queues.put(queueName, q);
+            }
+        } else {
+            var defaultQueueName = "default";
+            var state = computeInitialState(defaultQueueName, YConfiguration.emptyConfig(), memento);
+            var queue = new CommandQueue(processor, defaultQueueName, state);
+            queues.put(queue.getName(), queue);
+        }
+    }
+
+    /**
+     * Determines the initial state for a specific queue.
+     * 
+     * If an explicit state is configured, always use that. Else restore state from a previous run, defaulting to
+     * {@link QueueState#ENABLED}.
+     */
+    private QueueState computeInitialState(String queueName, YConfiguration queueConfig, CommandQueueMemento memento) {
+        // If an explicit state is configured, use that.
+        // Else restore state from a previous run, defaulting to ENABLED.
+        var state = QueueState.ENABLED;
+        if (queueConfig.containsKey("state")) {
+            var stateString = queueConfig.getString("state");
+            state = stringToQueueState(stateString);
+        } else {
+            var queueState = memento.getCommandQueueState(queueName);
+            if (queueState != null) {
+                state = queueState.getState();
+            }
+        }
+        return state;
+    }
+
+    private Spec getQueueSpec() {
+        Spec spec = new Spec();
+        spec.addOption("state", OptionType.STRING).withChoices("enabled", "blocked", "disabled");
+        spec.addOption("minLevel", OptionType.STRING);
+        spec.addOption("users", OptionType.LIST).withElementType(OptionType.STRING);
+        spec.addOption("groups", OptionType.LIST).withElementType(OptionType.STRING);
+        spec.addOption("tcPatterns", OptionType.LIST).withElementType(OptionType.STRING);
+        return spec;
+    }
+
+    /**
+     * called at processor startup
+     */
+    @Override
+    public void doStart() {
+        var sysParamCollector = SystemParametersService.getInstance(processor.getInstance());
+        if (sysParamCollector != null) {
+            for (CommandQueue cq : queues.values()) {
+                cq.setupSysParameters();
+            }
+            sysParamCollector.registerProducer(this);
+        }
+
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        var sysParamCollector = SystemParametersService.getInstance(processor.getInstance());
+        if (sysParamCollector != null) {
+            sysParamCollector.unregisterProducer(this);
+        }
+        notifyStopped();
+    }
+
+    private static QueueState stringToQueueState(String state) throws ConfigurationException {
+        if ("enabled".equalsIgnoreCase(state)) {
+            return QueueState.ENABLED;
+        }
+        if ("disabled".equalsIgnoreCase(state)) {
+            return QueueState.DISABLED;
+        }
+        if ("blocked".equalsIgnoreCase(state)) {
+            return QueueState.BLOCKED;
+        }
+        throw new ConfigurationException(
+                "'" + state + "' is not a valid queue state. Use one of enabled, disabled or blocked");
+    }
+
+    public List<CommandQueue> getQueues() {
+        return new ArrayList<>(queues.values());
+    }
+
+    public CommandQueue getQueue(String name) {
+        return queues.get(name);
+    }
+
+    /**
+     * Called from the CommandingImpl to add a command to the queue.
+     * <p>
+     * First the command is added to the command history. Depending on the status of the queue, the command is rejected
+     * by setting the CommandFailed in the command history added to the queue or directly sent using the command
+     * releaser.
+     * 
+     * @param user
+     * @param activeCommand
+     * @return the queue the command was added to
+     */
+    public synchronized CommandQueue addCommand(User user, ActiveCommand activeCommand) {
+        commandHistoryPublisher.addCommand(activeCommand.getPreparedCommand());
+
+        long missionTime = timeService.getMissionTime();
+
+        CommandQueue q = getQueue(user, activeCommand.getPreparedCommand());
+        if (q == null) {
+            log.warn("No queue available for command {}", activeCommand.getLoggingId());
+            commandHistoryPublisher.publishAck(activeCommand.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeQueued_KEY,
+                    missionTime, AckStatus.NOK, "No queue available");
+            unhandledCommand(activeCommand);
+            return null;
+        }
+        log.debug("Adding command {} to queue {}; queue state: {}", activeCommand.getLoggingId(), q.getName(),
+                q.getState());
+        q.add(activeCommand);
+        notifyAdded(q, activeCommand);
+
+        commandHistoryPublisher.publish(activeCommand.getCommandId(), CommandHistoryPublisher.Queue_KEY, q.getName());
+
+        if (q.state == QueueState.DISABLED) {
+            q.remove(activeCommand, false);
+            commandHistoryPublisher.publishAck(activeCommand.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeQueued_KEY,
+                    missionTime, AckStatus.NOK, "Queue disabled");
+            failedCommand(q, activeCommand, "Queue disabled", true);
+            notifyUpdateQueue(q);
+        } else if (q.state == QueueState.BLOCKED) {
+            commandHistoryPublisher.publishAck(activeCommand.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeQueued_KEY,
+                    missionTime, AckStatus.OK);
+            // notifyAdded(q, pc);
+        } else if (q.state == QueueState.ENABLED) {
+            commandHistoryPublisher.publishAck(activeCommand.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeQueued_KEY,
+                    missionTime, AckStatus.OK);
+            preReleaseCommand(q, activeCommand);
+
+        }
+
+        return q;
+    }
+
+    // if there are transmission constraints, start the checker;
+    // if not just release the command
+    private void preReleaseCommand(CommandQueue q, ActiveCommand pc) {
+        long missionTime = timeService.getMissionTime();
+        if (pc.getMetaCommand().hasTransmissionConstraints() && !pc.disableTransmissionConstraints()) {
+            startTransmissionConstraintChecker(q, pc);
+        } else {
+            commandHistoryPublisher.publishAck(pc.getCommandId(),
+                    CommandHistoryPublisher.TransmissionConstraints_KEY, missionTime, AckStatus.NA);
+            q.remove(pc, true);
+            releaseCommand(q, pc, true);
+            commandHistoryPublisher.publishAck(pc.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeReleased_KEY, missionTime, AckStatus.OK);
+        }
+    }
+
+    private void startTransmissionConstraintChecker(CommandQueue q, ActiveCommand pc) {
+        TransmissionConstraintChecker constraintChecker = new TransmissionConstraintChecker(q, pc);
+        pendingTcCheckers.add(constraintChecker);
+        constraintChecker.checkImmediate();
+    }
+
+    private void onTransmissionConstraintCheckPending(TransmissionConstraintChecker tcChecker) {
+        tcChecker.activeCommand.setPendingTransmissionConstraints(true);
+        notifyUpdated(tcChecker.queue, tcChecker.activeCommand);
+        commandHistoryPublisher.publishAck(tcChecker.activeCommand.getCommandId(),
+                CommandHistoryPublisher.TransmissionConstraints_KEY, timeService.getMissionTime(), AckStatus.PENDING);
+    }
+
+    private void onTransmissionConstraintCheckFinished(TransmissionConstraintChecker tcChecker) {
+        ActiveCommand pc = tcChecker.activeCommand;
+        pc.setPendingTransmissionConstraints(false);
+        CommandQueue q = tcChecker.queue;
+        TCStatus status = tcChecker.aggregateStatus;
+        log.info("transmission constraint finished for {} status: {}", pc.getCmdName(), status);
+        long missionTime = timeService.getMissionTime();
+        tcChecker.unsubscribe();
+
+        pendingTcCheckers.remove(tcChecker);
+
+        if (status == TCStatus.OK) {
+            q.remove(pc, true);
+            commandHistoryPublisher.publishAck(pc.getCommandId(), CommandHistoryPublisher.TransmissionConstraints_KEY,
+                    missionTime, AckStatus.OK);
+            releaseCommand(q, pc, true);
+            commandHistoryPublisher.publishAck(pc.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeReleased_KEY, missionTime, AckStatus.OK);
+        } else if (status == TCStatus.TIMED_OUT) {
+            q.remove(pc, false);
+            commandHistoryPublisher.publishAck(pc.getCommandId(), CommandHistoryPublisher.TransmissionConstraints_KEY,
+                    missionTime, AckStatus.NOK);
+            commandHistoryPublisher.publishAck(pc.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeReleased_KEY, missionTime, AckStatus.NOK,
+                    "Transmission constraints check failed");
+            failedCommand(q, pc, "Transmission constraints check failed", true);
+        }
+    }
+
+    // Notify the monitoring clients
+    private void notifyAdded(CommandQueue q, ActiveCommand activeCommand) {
+        for (CommandQueueListener m : monitoringClients) {
+            try {
+                m.commandAdded(q, activeCommand);
+            } catch (Exception e) {
+                log.warn("got exception when notifying a monitor, removing it from the list", e);
+                monitoringClients.remove(m);
+            }
+        }
+        notifyUpdateQueue(q);
+    }
+
+    private void notifyUpdated(CommandQueue q, ActiveCommand activeCommand) {
+        for (CommandQueueListener m : monitoringClients) {
+            try {
+                m.commandUpdated(q, activeCommand);
+            } catch (Exception e) {
+                log.warn("got exception when notifying a monitor, removing it from the list", e);
+                monitoringClients.remove(m);
+            }
+        }
+    }
+
+    // Notify the monitoring clients
+    private void notifySent(CommandQueue q, ActiveCommand activeCommand) {
+        for (CommandQueueListener m : monitoringClients) {
+            try {
+                m.commandSent(q, activeCommand);
+            } catch (Exception e) {
+                log.warn("got exception when notifying a monitor, removing it from the list", e);
+                monitoringClients.remove(m);
+            }
+        }
+        notifyUpdateQueue(q);
+    }
+
+    private void notifyUpdateQueue(CommandQueue q) {
+        for (CommandQueueListener m : monitoringClients) {
+            try {
+                m.updateQueue(q);
+            } catch (Exception e) {
+                log.warn("got exception when notifying a monitor, removing it from the list", e);
+                monitoringClients.remove(m);
+            }
+        }
+    }
+
+    public void addToCommandHistory(CommandId commandId, CommandHistoryAttribute attribute) {
+        Value value = attribute.getValue();
+        switch (value.getType()) {
+        case STRING:
+            commandHistoryPublisher.publish(commandId, attribute.getName(), value.getStringValue());
+            break;
+        default:
+            throw new IllegalStateException("Unexpected value type '" + value.getType() + "'");
+        }
+    }
+
+    /**
+     * send a negative ack for a command.
+     * 
+     * @param activeCommand
+     *            the prepared command for which the negative ack is sent
+     * @param notify
+     *            notify or not the monitoring clients.
+     */
+    private void failedCommand(CommandQueue cq, ActiveCommand activeCommand, String reason, boolean notify) {
+        commandHistoryPublisher.commandFailed(activeCommand.getCommandId(), timeService.getMissionTime(), reason);
+        commandingManager.failedCommand(activeCommand);
+        // Notify the monitoring clients
+        if (notify) {
+            for (CommandQueueListener m : monitoringClients) {
+                try {
+                    m.commandRejected(cq, activeCommand);
+                } catch (Exception e) {
+                    log.warn("got exception when notifying a monitor, removing it from the list", e);
+                    monitoringClients.remove(m);
+                }
+            }
+        }
+    }
+
+    private void releaseCommand(CommandQueue q, ActiveCommand activeCommand, boolean notify) {
+        commandingManager.releaseCommand(activeCommand);
+        // Notify the monitoring clients
+        if (notify) {
+            notifySent(q, activeCommand);
+        }
+    }
+
+    private void unhandledCommand(ActiveCommand activeCommand) {
+        commandHistoryPublisher.commandFailed(activeCommand.getCommandId(), timeService.getMissionTime(),
+                "No matching queue");
+        CommandHistoryAttribute attr = CommandHistoryAttribute.newBuilder()
+                .setName(CommandHistoryPublisher.CommandComplete_KEY)
+                .setValue(Value.newBuilder().setStringValue("NOK"))
+                .build();
+        addToCommandHistory(activeCommand.getCommandId(), attr);
+        for (CommandQueueListener m : monitoringClients) {
+            try {
+                m.commandUnhandled(activeCommand);
+            } catch (Exception e) {
+                log.warn("got exception when notifying a monitor, removing it from the list", e);
+                monitoringClients.remove(m);
+            }
+        }
+    }
+
+    /**
+     * @param user
+     * @param pc
+     * @return the queue where the command should be placed.
+     */
+    public CommandQueue getQueue(User user, PreparedCommand pc) {
+        for (CommandQueue cq : queues.values()) {
+            if (cq.matches(user, pc.getMetaCommand())) {
+                return cq;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Called by external clients to remove a command from the queue
+     * 
+     * @param commandId
+     * @param username
+     *            the username rejecting the command
+     * @return the command removed from the queeu
+     */
+    public synchronized PreparedCommand rejectCommand(CommandId commandId, String username) {
+        log.info("called to remove command: {}", commandId);
+        ActiveCommand activeCommand = null;
+        CommandQueue queue = null;
+        for (CommandQueue q : queues.values()) {
+            activeCommand = q.getcommand(commandId);
+            if (activeCommand != null) {
+                queue = q;
+                break;
+            }
+
+        }
+        if (activeCommand != null) {
+            queue.remove(activeCommand, false);
+            long missionTime = timeService.getMissionTime();
+            commandHistoryPublisher.publishAck(activeCommand.getCommandId(),
+                    CommandHistoryPublisher.AcknowledgeReleased_KEY, missionTime, AckStatus.NOK,
+                    "Rejected by " + username);
+            failedCommand(queue, activeCommand, "Rejected by " + username, true);
+            notifyUpdateQueue(queue);
+            return activeCommand.getPreparedCommand();
+        } else {
+            log.warn("command not found in any queue");
+            return null;
+        }
+    }
+
+    public synchronized PreparedCommand rejectCommand(String commandId, String username) {
+        for (CommandQueue q : queues.values()) {
+            ActiveCommand activeCommand = q.getcommand(commandId);
+            if (activeCommand != null) {
+                return rejectCommand(activeCommand.getCommandId(), username);
+            }
+        }
+        log.warn("no active command found for id {}", commandId);
+        return null;
+    }
+
+    /**
+     * Called from external client to release a command from the queue
+     * 
+     * @param commandId
+     *            - if to rebuild the command binary from the source
+     * @return the prepared command sent
+     */
+    public synchronized PreparedCommand sendCommand(CommandId commandId) {
+        ActiveCommand command = null;
+        CommandQueue queue = null;
+        for (CommandQueue q : queues.values()) {
+            command = q.getcommand(commandId);
+            if (command != null) {
+                queue = q;
+                break;
+            }
+        }
+        if (command != null) {
+            preReleaseCommand(queue, command);
+            return command.getPreparedCommand();
+        } else {
+            return null;
+        }
+
+    }
+
+    public synchronized PreparedCommand sendCommand(String commandId) {
+        for (CommandQueue q : queues.values()) {
+            ActiveCommand activeCommand = q.getcommand(commandId);
+            if (activeCommand != null) {
+                return sendCommand(activeCommand.getCommandId());
+            }
+        }
+        log.warn("no prepared command found for id {}", commandId);
+        return null;
+    }
+
+    /**
+     * Called from external clients to change the state of the queue
+     * 
+     * @param queueName
+     *            the queue whose state has to be set
+     * @param newState
+     *            the new state of the queue
+     * @return the queue whose state has been changed or null if no queue by the name exists
+     */
+    public synchronized CommandQueue setQueueState(String queueName, QueueState newState/* , boolean rebuild */) {
+        CommandQueue queue = null;
+        for (CommandQueue q : queues.values()) {
+            if (q.getName().equals(queueName)) {
+                queue = q;
+                break;
+            }
+        }
+        if (queue == null) {
+            return null;
+        }
+
+        if (queue.state == newState) {
+            return queue;
+        }
+
+        queue.state = newState;
+        if (queue.state == QueueState.ENABLED) {
+            for (ActiveCommand pc : queue.getCommands()) {
+                preReleaseCommand(queue, pc);
+            }
+        }
+        if (queue.state == QueueState.DISABLED) {
+            long missionTime = timeService.getMissionTime();
+            for (ActiveCommand pc : queue.getCommands()) {
+                commandHistoryPublisher.publishAck(pc.getCommandId(),
+                        CommandHistoryPublisher.AcknowledgeReleased_KEY, missionTime, AckStatus.NOK, "Queue disabled");
+                failedCommand(queue, pc, "Queue disabled", true);
+            }
+            queue.clear(false);
+        }
+
+        // Notify the monitoring clients
+        notifyUpdateQueue(queue);
+        saveMemento();
+        return queue;
+    }
+
+    private void saveMemento() {
+        var memento = new CommandQueueMemento();
+        for (var queue : queues.values()) {
+            var state = CommandQueueState.forQueue(queue);
+            memento.addCommandQueueState(queue.getName(), state);
+        }
+        var mementoDb = MementoDb.getInstance(instance);
+        mementoDb.putObject(MEMENTO_KEY, memento);
+    }
+
+    /**
+     * Called from a queue monitor to register itself in order to be notified when new commands are added/removed from
+     * the queue.
+     * 
+     * @param cqm
+     *            the callback which will be called with updates
+     */
+    public void registerListener(CommandQueueListener cqm) {
+        monitoringClients.add(cqm);
+    }
+
+    public boolean removeListener(CommandQueueListener cqm) {
+        return monitoringClients.remove(cqm);
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public String getChannelName() {
+        return processorName;
+    }
+
+    /**
+     * Called from PRM when new telemetry data is available
+     */
+    @Override
+    public void process(ProcessingContext ctx) {
+        for (TransmissionConstraintChecker tcc : pendingTcCheckers) {
+            tcc.checkWithTm(ctx);
+        }
+    }
+
+    private void scheduleCheck(final TransmissionConstraintChecker tcc, long millisec) {
+        timer.schedule(tcc::checkImmediate, millisec, TimeUnit.MILLISECONDS);
+    }
+
+    enum TCStatus {
+        INIT, PENDING, OK, TIMED_OUT
+    }
+
+    class TransmissionConstraintChecker {
+        volatile TCStatus aggregateStatus = TCStatus.INIT;
+        final List<TransmissionConstraintStatus> tcsList = new ArrayList<>();
+        final ActiveCommand activeCommand;
+        final CommandQueue queue;
+        int ppmSubscriptionId = -1;
+
+        public TransmissionConstraintChecker(CommandQueue queue, ActiveCommand activeCommand) {
+            this.activeCommand = activeCommand;
+            this.queue = queue;
+            List<TransmissionConstraint> constraints = activeCommand.getMetaCommand().getTransmissionConstraintList();
+            log.debug("Starting transmission constrant checker with {} checks for command {}, ", constraints.size(),
+                    activeCommand.getLoggingId());
+            for (TransmissionConstraint tc : constraints) {
+                TransmissionConstraintStatus tcs = new TransmissionConstraintStatus(tc);
+                tcsList.add(tcs);
+            }
+            Set<Parameter> pset = activeCommand.getMetaCommand().getTransmissionConstraintList()
+                    .stream()
+                    .flatMap(tcs -> tcs.getMatchCriteria().getDependentParameters().stream())
+                    .filter(p -> !p.isCommandParameter())
+                    .collect(Collectors.toSet());
+
+            if (!pset.isEmpty()) {
+                ParameterProcessorManager ppm = processor.getParameterProcessorManager();
+                ppmSubscriptionId = ppm.subscribe(pset, tmData -> checkWithTm(tmData));
+            }
+
+        }
+
+        /**
+         * This may be called on multiple threads in parallel.
+         * <p>
+         * We cannot move the processing context on a different thread, so we do the check here and use the result in the
+         * timer thread.
+         */
+        public void checkWithTm(ProcessingContext tmCtx) {
+            if (aggregateStatus != TCStatus.PENDING) {
+                return;
+            }
+            ProcessingContext cmdCtx = ProcessingContext.cloneForCommanding(tmCtx, activeCommand.getArguments(),
+                    activeCommand.getCmdParamCache(), processor.getCurrentTime());
+
+            check(System.currentTimeMillis(), cmdCtx);
+        }
+
+        public void checkImmediate() {
+            long now = System.currentTimeMillis();
+            if (aggregateStatus == TCStatus.INIT) {
+                // make sure that if timeout=0, the first check will not appear to be too late
+                for (TransmissionConstraintStatus tcs : tcsList) {
+                    tcs.expirationTime = now + tcs.constraint.getTimeout();
+                }
+                aggregateStatus = TCStatus.PENDING;
+            }
+
+            if (aggregateStatus != TCStatus.PENDING) {
+                return;
+            }
+            ProcessingContext cmdCtx = ProcessingContext.createInitial(processor.getLastValueCache(),
+                    activeCommand.getArguments(), activeCommand.getCmdParamCache(), processor.getCurrentTime());
+            check(now, cmdCtx);
+        }
+
+        private void check(long now, ProcessingContext ctx) {
+            TcsUpdate tcsUpdate = new TcsUpdate();
+            tcsUpdate.aggrStatus = TCStatus.OK;
+            tcsUpdate.scheduleNextCheck = Long.MAX_VALUE;
+
+            for (TransmissionConstraintStatus tcs : tcsList) {
+                if (tcs.status == TCStatus.PENDING) {
+                    long timeRemaining = tcs.expirationTime - now;
+                    if (timeRemaining < 0) {
+                        tcsUpdate.tcs = tcs;
+                        tcsUpdate.tcsStatus = TCStatus.TIMED_OUT;
+                        tcsUpdate.aggrStatus = TCStatus.TIMED_OUT;
+                        break;
+                    } else {
+                        if (tcs.evaluator.evaluate(ctx) != MatchResult.OK) {
+                            if (timeRemaining > 0) {
+                                tcsUpdate.aggrStatus = TCStatus.PENDING;
+                                if (timeRemaining < tcsUpdate.scheduleNextCheck) {
+                                    tcsUpdate.scheduleNextCheck = timeRemaining;
+                                }
+                            } else {
+                                tcsUpdate.aggrStatus = TCStatus.TIMED_OUT;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            timer.submit(() -> {
+                if (aggregateStatus != TCStatus.PENDING) {
+                    return;
+                }
+                aggregateStatus = tcsUpdate.aggrStatus;
+
+                if (aggregateStatus == TCStatus.PENDING) {
+                    onTransmissionConstraintCheckPending(this);
+                    scheduleCheck(this, tcsUpdate.scheduleNextCheck);
+                } else {
+                    onTransmissionConstraintCheckFinished(this);
+                }
+            });
+
+        }
+
+        void unsubscribe() {
+            if (ppmSubscriptionId != -1) {
+                processor.getParameterProcessorManager().unsubscribe(ppmSubscriptionId);
+            }
+        }
+    }
+
+    static class TcsUpdate {
+        TransmissionConstraintStatus tcs;
+        TCStatus tcsStatus;
+        TCStatus aggrStatus;
+        long scheduleNextCheck;
+    }
+
+    static class TransmissionConstraintStatus {
+        TransmissionConstraint constraint;
+        TCStatus status;
+        long expirationTime;
+        MatchCriteriaEvaluator evaluator;
+
+        public TransmissionConstraintStatus(TransmissionConstraint tc) {
+            this.constraint = tc;
+            status = TCStatus.PENDING;
+            evaluator = MatchCriteriaEvaluatorFactory.getEvaluator(tc.getMatchCriteria());
+        }
+    }
+
+    @Override
+    public Collection<ParameterValue> getSystemParameters(long time) {
+        List<ParameterValue> pvlist = new ArrayList<>();
+        for (CommandQueue cq : queues.values()) {
+            cq.fillInSystemParameters(pvlist, time);
+        }
+        return pvlist;
+    }
+}
+```
+
+### `CommandQueueMemento.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueMemento.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Object that is used to persist link state information across Yamcs restarts.
+ */
+public class CommandQueueMemento {
+
+    @SerializedName("queues")
+    private Map<String, CommandQueueState> queues = new HashMap<>();
+
+    public void addCommandQueueState(String queue, CommandQueueState state) {
+        queues.put(queue, state);
+    }
+
+    public CommandQueueState getCommandQueueState(String queue) {
+        return queues.get(queue);
+    }
+}
+```
+
+### `CommandQueueState.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandQueueState.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.protobuf.Commanding.QueueState;
+
+import com.google.gson.annotations.SerializedName;
+
+public class CommandQueueState {
+
+    @SerializedName("state")
+    private QueueState state;
+
+    /**
+     * The state of the queue.
+     */
+    public QueueState getState() {
+        return state;
+    }
+
+    /**
+     * Create state object for the given queue.
+     */
+    public static CommandQueueState forQueue(CommandQueue queue) {
+        var state = new CommandQueueState();
+        state.state = queue.getState();
+        return state;
+    }
+}
+```
+
+### `CommandReleaser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandReleaser.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.ProcessorService;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+
+/**
+ * This is responsible for "releasing" a command.
+ * 
+ */
+public interface CommandReleaser extends ProcessorService {
+    /**
+     * release a command.
+     * 
+     * @param preparedCommand
+     */
+    void releaseCommand(PreparedCommand preparedCommand);
+
+    /**
+     * the command releaser has to add the command to the history when it is released.
+     * 
+     * @param commandHistory
+     */
+    void setCommandHistory(CommandHistoryPublisher commandHistory);
+}
+```
+
+### `CommandVerificationHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/CommandVerificationHandler.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.algorithms.AlgorithmManager;
+import org.yamcs.cmdhistory.Attribute;
+import org.yamcs.cmdhistory.CommandHistoryConsumer;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.Verifier.State;
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Commanding.VerifierConfig;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.CheckWindow;
+import org.yamcs.xtce.CheckWindow.TimeWindowIsRelativeToType;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.CommandVerifier.TerminationAction;
+import org.yamcs.xtce.MetaCommand;
+
+/**
+ * This class implements the (post transmission) command verification.
+ * <p>
+ * There is one handler for all the verifiers of a command.
+ * <p>
+ * This handler collects all command attributes, command arguments and command history events and transforms them to
+ * parameters to be given to the verifiers when they run.
+ *
+ */
+public class CommandVerificationHandler implements CommandHistoryConsumer {
+    final Processor processor;
+    final ActiveCommand activeCommand;
+    final ScheduledThreadPoolExecutor timer;
+    final Map<Argument, ArgumentValue> cmdArguments;
+    final CommandingManager commandingManager;
+
+    private List<Verifier> verifiers = Collections.synchronizedList(new ArrayList<>());
+    private final Log log;
+    AlgorithmExecutionContext algorithmCtx;
+
+    public CommandVerificationHandler(CommandingManager commandingManager, ActiveCommand pc) {
+        this.commandingManager = commandingManager;
+        this.processor = commandingManager.getProcessor();
+        this.activeCommand = pc;
+        this.timer = processor.getTimer();
+        log = new Log(this.getClass(), processor.getInstance());
+        this.cmdArguments = activeCommand.getArguments();
+    }
+
+    public void start() {
+        MetaCommand cmd = activeCommand.getMetaCommand();
+        List<CommandVerifier> cmdVerifiers = new ArrayList<>();
+        collectCmdVerifiers(cmd, cmdVerifiers, activeCommand.getVerifierOverride());
+
+        if (activeCommand.disableCommandVerifiers()) {
+            log.debug("All verifiers are disabled");
+            CommandHistoryPublisher cmdHistPublisher = processor.getCommandHistoryPublisher();
+            cmdVerifiers.forEach(cv -> cmdHistPublisher.publishAck(activeCommand.getCommandId(), getHistKey(cv),
+                    processor.getCurrentTime(), AckStatus.DISABLED));
+            return;
+        }
+
+        Verifier prevVerifier = null;
+
+        try {
+            processor.getCommandHistoryManager().subscribeCommand(activeCommand.getCommandId(), this);
+        } catch (InvalidCommandId e) {
+            log.error("Got invalidCommand id while subscribing for command history", e);
+        }
+
+        for (CommandVerifier cv : cmdVerifiers) {
+            Verifier verifier;
+
+            switch (cv.getType()) {
+            case ALGORITHM:
+                if (algorithmCtx == null) {
+                    createAlgorithmContext();
+                }
+                verifier = new AlgorithmVerifier(this, cv);
+                break;
+            case CONTAINER:
+                verifier = new ContainerVerifier(this, cv, cv.getContainerRef());
+                break;
+            case MATCH_CRITERIA:
+                verifier = new MatchCriteriaVerifier(this, cv);
+                break;
+            case PARAMETER_VALUE_CHANGE:
+                verifier = new ValueChangeVerifier(this, cv);
+                break;
+            default:
+                throw new IllegalStateException("Command verifier of type " + cv.getType() + " not implemented");
+            }
+
+            CheckWindow checkWindow = cv.getCheckWindow();
+            boolean scheduleNow = true;
+
+            if (checkWindow.getTimeWindowIsRelativeTo() == TimeWindowIsRelativeToType.LAST_VERIFIER) {
+                if (prevVerifier != null) {
+                    prevVerifier.nextVerifier = verifier;
+                    scheduleNow = false;
+                }
+            }
+            verifiers.add(verifier);
+            if (scheduleNow) {
+                scheduleVerifier(verifier, checkWindow.getTimeToStartChecking(), checkWindow.getTimeToStopChecking());
+            } else {
+                log.debug("Not scheduling {} because it depends on the {}", cv, prevVerifier.getStage());
+            }
+            prevVerifier = verifier;
+        }
+    }
+
+    /**
+     * collects all the required command verifiers from this command and its parents, taking care not to add two
+     * verifiers for the same stage
+     */
+    private void collectCmdVerifiers(MetaCommand cmd, List<CommandVerifier> cmdVerifiers,
+            Map<String, VerifierConfig> verifierOverride) {
+        CommandHistoryPublisher cmdHistPublisher = processor.getCommandHistoryPublisher();
+        MetaCommand basecmd = cmd.getBaseMetaCommand();
+        if (basecmd != null) {
+            collectCmdVerifiers(basecmd, cmdVerifiers, verifierOverride);
+        }
+
+        for (CommandVerifier cv : cmd.getCommandVerifiers()) {
+            boolean found = false;
+            for (CommandVerifier existingv : cmdVerifiers) {
+                if (existingv.getStage().equals(cv.getStage())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                VerifierConfig extraOptions = verifierOverride.get(cv.getStage());
+                if (extraOptions == null) {
+                    cmdVerifiers.add(cv);
+                } else {
+                    if (extraOptions.getDisable()) {
+                        cmdHistPublisher.publishAck(activeCommand.getCommandId(), getHistKey(cv),
+                                processor.getCurrentTime(), AckStatus.DISABLED);
+                        log.debug("skipping verifier {}", cv.getStage());
+                        continue;
+                    }
+                    cmdVerifiers.add(overrideVerifier(cv, extraOptions));
+                }
+            }
+        }
+
+    }
+
+    private CommandVerifier overrideVerifier(CommandVerifier cv, VerifierConfig extraOptions) {
+        if (!extraOptions.hasCheckWindow()) { // maybe we should throw an exception here
+            return cv;
+        }
+        VerifierConfig.CheckWindow cw = extraOptions.getCheckWindow();
+        CheckWindow cw1 = new CheckWindow(cw.getTimeToStartChecking(), cw.getTimeToStopChecking(),
+                cv.getCheckWindow().getTimeWindowIsRelativeTo());
+        CommandVerifier cv1 = new CommandVerifier(cv);
+        cv1.setCheckWindow(cw1);
+        log.debug("Replacing verifier {} with {}", cv, cv1);
+        return cv1;
+    }
+
+    private void createAlgorithmContext() {
+        AlgorithmManager algMgr = processor.getParameterProcessorManager().getParameterProvider(AlgorithmManager.class);
+        if (algMgr == null) {
+            String msg = "Algorithm manager not configured for this processor, cannot run command verification based on algorithms";
+            log.error(msg);
+            throw new ConfigurationException(msg);
+        }
+
+        algorithmCtx = algMgr.createContext(activeCommand.getCmdName());
+    }
+
+    private void scheduleVerifier(final Verifier verifier, long windowStart, long windowStop) {
+        CommandHistoryPublisher cmdHistPublisher = processor.getCommandHistoryPublisher();
+        String histKey = getHistKey(verifier.cv);
+
+        if (windowStart > 0) {
+            timer.schedule(() -> {
+                if (verifier.state == State.NEW) {
+                    cmdHistPublisher.publishAck(activeCommand.getCommandId(), histKey, processor.getCurrentTime(),
+                            AckStatus.PENDING);
+                    startVerifier(verifier);
+                }
+            }, windowStart, TimeUnit.MILLISECONDS);
+
+            cmdHistPublisher.publishAck(activeCommand.getCommandId(), histKey, processor.getCurrentTime(),
+                    AckStatus.SCHEDULED);
+        } else {
+            cmdHistPublisher.publishAck(activeCommand.getCommandId(), histKey, processor.getCurrentTime(),
+                    AckStatus.PENDING);
+            verifier.start();
+        }
+
+        if (windowStop <= 0) {
+            throw new IllegalArgumentException("The window stop has to be greater than 0");
+        }
+
+        timer.schedule(() -> {
+            verifier.timeout();
+        }, windowStop, TimeUnit.MILLISECONDS);
+    }
+
+    private void startVerifier(Verifier verifier) {
+        log.debug("Command {} starting verifier: {}", StringConverter.toString(activeCommand.getCommandId()),
+                verifier.cv);
+        verifier.start();
+
+    }
+
+    String getHistKey(CommandVerifier cv) {
+        return CommandHistoryPublisher.Verifier_KEY_PREFIX + "_" + cv.getStage();
+    }
+
+    void onVerifierFinished(Verifier v) {
+        onVerifierFinished(v, null, null);
+    }
+
+    void onVerifierFinished(Verifier v, String failureReason, ParameterValue returnPv) {
+        Verifier.State state = v.getState();
+        log.debug("Command {} verifier finished: {} result: {}",
+                StringConverter.toString(activeCommand.getCommandId()), v.cv, state);
+        CommandVerifier cv = v.cv;
+        CommandHistoryPublisher cmdHistPublisher = processor.getCommandHistoryPublisher();
+        String histKey = CommandHistoryPublisher.Verifier_KEY_PREFIX + "_" + cv.getStage();
+        cmdHistPublisher.publishAck(activeCommand.getCommandId(), histKey, processor.getCurrentTime(),
+                getAckState(v.state), failureReason, returnPv);
+        TerminationAction ta = null;
+        switch (state) {
+        case OK:
+            ta = cv.getOnSuccess();
+            break;
+        case NOK:
+            ta = cv.getOnFail();
+            break;
+        case TIMEOUT:
+            ta = cv.getOnTimeout();
+            break;
+        case CANCELLED:
+            break;
+        default:
+            log.error("Illegal state onVerifierFinished called with state: {}", state);
+        }
+        if (ta == TerminationAction.SUCCESS) {
+            cmdHistPublisher.publishAck(activeCommand.getCommandId(), CommandHistoryPublisher.CommandComplete_KEY,
+                    processor.getCurrentTime(), AckStatus.OK, null, returnPv);
+            stop();
+        } else if (ta == TerminationAction.FAIL) {
+
+            if (failureReason == null && returnPv != null) {
+                Value engvalue = returnPv.getEngValue();
+                if (engvalue != null) {
+                    failureReason = "Verifier " + cv.getStage() + " return: " + engvalue;
+                }
+            }
+
+            if (failureReason == null) {
+                failureReason = "Verifier " + cv.getStage() + " result: " + state;
+            }
+            cmdHistPublisher.commandFailed(activeCommand.getCommandId(), processor.getCurrentTime(), failureReason);
+            stop();
+        }
+
+        if (v.nextVerifier != null && (state == State.OK)) {
+            CheckWindow cw = v.nextVerifier.cv.getCheckWindow();
+            scheduleVerifier(v.nextVerifier, cw.getTimeToStartChecking(), cw.getTimeToStopChecking());
+        }
+    }
+
+    private AckStatus getAckState(State state) {
+        switch (state) {
+        case NEW:
+        case RUNNING:
+            return AckStatus.PENDING;
+        case NOK:
+            return AckStatus.NOK;
+        case OK:
+            return AckStatus.OK;
+        case TIMEOUT:
+            return AckStatus.TIMEOUT;
+        case CANCELLED:
+            return AckStatus.CANCELLED;
+        case DISABLED:
+            return AckStatus.DISABLED;
+        default:
+            throw new IllegalArgumentException("Unknown state " + state);
+        }
+    }
+
+    private void stop() {
+        log.debug("{} command verification finished", activeCommand);
+        processor.getCommandHistoryManager().unsubscribeCommand(activeCommand.getCommandId(), this);
+        commandingManager.verificatonFinished(activeCommand);
+        if (algorithmCtx != null) {
+            AlgorithmManager algMgr = processor.getParameterProcessorManager()
+                    .getParameterProvider(AlgorithmManager.class);
+            algMgr.removeContext(algorithmCtx);
+        }
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public AlgorithmExecutionContext getAlgorithmExecutionContext() {
+        return algorithmCtx;
+    }
+
+    public ActiveCommand getActiveCommand() {
+        return activeCommand;
+    }
+
+    public AlgorithmManager getAlgorithmManager() {
+        return processor.getParameterProcessorManager().getParameterProvider(AlgorithmManager.class);
+    }
+
+    @Override
+    public void updatedCommand(CommandId cmdId, long time, List<Attribute> attrs) {
+        for (Attribute attr : attrs) {
+            if (attr.getKey().equals(CommandHistoryPublisher.CommandComplete_KEY + "_Status")) {
+                log.trace("Command completed, canceling all pending verifiers");
+                for (Verifier v : verifiers) {
+                    v.cancel();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void addedCommand(PreparedCommand pc) {
+        // this will not be called because we subscribe to only one command
+    }
+
+}
+```
+
+### `ContainerVerifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ContainerVerifier.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.ContainerExtractionResult;
+import org.yamcs.Processor;
+import org.yamcs.container.ContainerConsumer;
+import org.yamcs.container.ContainerRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.SequenceContainer;
+
+class ContainerVerifier extends Verifier implements ContainerConsumer {
+    SequenceContainer container;
+    Processor yproc;
+
+    ContainerVerifier(CommandVerificationHandler cvh, CommandVerifier cv, SequenceContainer c) {
+        super(cvh, cv);
+        this.container = c;
+        this.yproc = cvh.getProcessor();
+    }
+
+    @Override
+    public void processContainer(String link, ContainerExtractionResult cer) {
+        ContainerRequestManager crm = yproc.getContainerRequestManager();
+        crm.unsubscribe(this, container);
+
+        // Store container bytes to cmdhist as the verifier's return value
+        returnPv = new ParameterValue(YAMCS_PARAMETER_RETURN_VALUE);
+        returnPv.setGenerationTime(cer.getGenerationTime());
+        returnPv.setAcquisitionTime(cer.getAcquisitionTime());
+        returnPv.setEngValue(ValueUtility.getBinaryValue(cer.getContainerContent()));
+
+        finished(true, null);
+    }
+
+    @Override
+    void doStart() {
+        ContainerRequestManager crm = yproc.getContainerRequestManager();
+        crm.subscribe(this, container);
+    }
+
+    @Override
+    void doCancel() {
+        ContainerRequestManager crm = yproc.getContainerRequestManager();
+        crm.unsubscribe(this, container);
+    }
+}
+```
+
+### `InvalidCommandId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/InvalidCommandId.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.protobuf.Commanding.CommandId;
+
+@SuppressWarnings("serial")
+public class InvalidCommandId extends RuntimeException {
+
+    CommandId cmdId;
+
+    public InvalidCommandId(String msg, CommandId cmdId) {
+        super(msg);
+        this.cmdId = cmdId;
+    }
+
+    public InvalidCommandId(String msg) {
+        super(msg);
+    }
+}
+```
+
+### `MatchCriteriaVerifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/MatchCriteriaVerifier.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.yamcs.Processor;
+import org.yamcs.mdb.MatchCriteriaEvaluator;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.MatchCriteriaEvaluator.MatchResult;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.MatchCriteria;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Verifies commands by checking {@link MatchCriteria}. It implements the following XTCE verifier types:
+ * <ul>
+ * <li>ComparisonList</li>
+ * <li>BooleanExpression</li>
+ * <li>Comparison</li>
+ * </ul>
+ * 
+ * @author nm
+ *
+ */
+public class MatchCriteriaVerifier extends Verifier implements ParameterProcessor {
+    final Processor proc;
+    final MatchCriteria matchCriteria;
+
+    MatchCriteriaEvaluator evaluator;
+    int ppmSubscriptionId = -1;
+
+    MatchCriteriaVerifier(CommandVerificationHandler cvh, CommandVerifier cv) {
+        super(cvh, cv);
+
+        this.proc = cvh.getProcessor();
+        this.matchCriteria = cv.getMatchCriteria();
+
+        this.evaluator = proc.getProcessorData().getEvaluator(cv.getMatchCriteria());
+
+    }
+
+    @Override
+    void doStart() {
+        Set<Parameter> pset = matchCriteria.getDependentParameters().stream()
+                .filter(p -> !p.isCommandParameter()).collect(Collectors.toSet());
+        if (pset != null) {
+            ppmSubscriptionId = proc.getParameterProcessorManager().subscribe(pset, this);
+        }
+        ActiveCommand cmd = cvh.getActiveCommand();
+        check(ProcessingContext.createInitial(proc.getLastValueCache(), cmd.getArguments(), cmd.getCmdParamCache(),
+                proc.getCurrentTime()));
+    }
+
+    @Override
+    void doCancel() {
+        unsubscribe();
+    }
+
+    @Override
+    public void process(ProcessingContext tmData) {
+        ProcessingContext cmdData = ProcessingContext.cloneForCommanding(tmData, activeCommand.getArguments(),
+                activeCommand.getCmdParamCache(), proc.getCurrentTime());
+        check(cmdData);
+    }
+
+    private void check(ProcessingContext processingCtx) {
+        if (state != State.RUNNING) {
+            return;
+        }
+        MatchResult result = evaluator.evaluate(processingCtx);
+        log.debug("Condition check result: {}", result);
+
+        if (result == MatchResult.UNDEF ||
+                (result == MatchResult.NOK && !cv.failOnFirstFailedMatch())) {
+            return;
+        }
+
+        // if there is a value for the return parameter in the current evaluatorInput (the one from which the result
+        // has been computed), we want that one to be the returnValue
+        ParameterValue pv = getReturnValue(processingCtx);
+
+        timer.submit(() -> {
+            if (state != State.RUNNING) {// it was finished in a different thread
+                return;
+            }
+            returnPv = pv;
+            if (result == MatchResult.OK) {
+                unsubscribe();
+                finishOK();
+            } else if (result == MatchResult.NOK) {
+                unsubscribe();
+                finished(false, "Verifier condition does not match");
+            }
+        });
+    }
+
+    private ParameterValue getReturnValue(ProcessingContext processingCtx) {
+        Parameter returnParam = cv.getReturnParameter();
+        if (returnParam == null) {
+            return null;
+        }
+        ParameterValue retPv;
+        if (returnParam.getDataSource() == DataSource.COMMAND_HISTORY
+                || returnParam.getDataSource() == DataSource.COMMAND) {
+            retPv = processingCtx.getCmdParams().getLastInserted(returnParam);
+        } else {
+            retPv = processingCtx.getTmParams().getLastInserted(returnParam);
+        }
+        return retPv;
+    }
+
+    private synchronized void unsubscribe() {
+        if (ppmSubscriptionId != -1) {
+            proc.getParameterProcessorManager().unsubscribe(ppmSubscriptionId);
+        }
+    }
+
+}
+```
+
+### `PartialArgumentValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/PartialArgumentValue.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.PathElement;
+
+/**
+ * Holds values related to members of aggregates or arrays
+ * 
+ * @author nm
+ *
+ */
+public class PartialArgumentValue extends ArgumentValue {
+    final PathElement[] path;
+
+    public PartialArgumentValue(Argument def, PathElement[] path) {
+        super(def);
+        this.path = path;
+    }
+
+    /**
+     * The path to the element of the aggregate or array for which the value applies
+     * 
+     * @return
+     */
+    public PathElement[] getPath() {
+        return path;
+    }
+
+}
+```
+
+### `PreparedCommand.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/PreparedCommand.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.cmdhistory.protobuf.Cmdhistory.Assignment;
+import org.yamcs.cmdhistory.protobuf.Cmdhistory.AssignmentInfo;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Commanding.CommandAssignment;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Commanding.VerifierConfig;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.ValueHelper;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+/**
+ * Stores command information
+ */
+public class PreparedCommand {
+
+    private CommandId id;
+    private MetaCommand metaCommand;
+
+    // Target stream (may be null, for autoselection)
+    private Stream tcStream;
+
+    List<CommandHistoryAttribute> attributes = new ArrayList<>();
+    private Map<Argument, ArgumentValue> argAssignment; // Ordered from top entry to bottom entry
+    private Set<String> userAssignedArgumentNames;
+
+    // Verifier-specific configuration options (that override the MDB verifier settings)
+    private Map<String, VerifierConfig> verifierConfig = new HashMap<>();
+
+    // same as attributes but converted to parameters for usage in verifiers and transmission constraints
+    private volatile ParameterValueList cmdParams;
+
+    // column names to use when converting to tuple
+    public final static String CNAME_GENTIME = StandardTupleDefinitions.GENTIME_COLUMN;
+    public final static String CNAME_SEQNUM = StandardTupleDefinitions.SEQNUM_COLUMN;
+    public final static String CNAME_ORIGIN = StandardTupleDefinitions.TC_ORIGIN_COLUMN;
+    public final static String CNAME_USERNAME = "username";
+    public final static String CNAME_UNPROCESSED_BINARY = "unprocessedBinary";
+    public final static String CNAME_BINARY = "binary";
+    public final static String CNAME_CMDNAME = "cmdName";
+    public final static String CNAME_ASSIGNMENTS = "assignments";
+    public final static String CNAME_COMMENT = "comment";
+    public final static String CNAME_NO_POSTPROCESSING = "noPostprocessing";
+    public final static String CNAME_NO_TRANSMISSION_CONSTRAINTS = "noTransmissionConstraints";
+    public final static String CNAME_NO_VERIFIERS = "noVerifiers";
+    public final static String CNAME_RAW = "raw";
+
+    private static Set<String> reservedColumns = new HashSet<>();
+    static {
+        reservedColumns.add(CNAME_GENTIME);
+        reservedColumns.add(CNAME_SEQNUM);
+        reservedColumns.add(CNAME_ORIGIN);
+        reservedColumns.add(CNAME_USERNAME);
+        reservedColumns.add(CNAME_UNPROCESSED_BINARY);
+        reservedColumns.add(CNAME_BINARY);
+        reservedColumns.add(CNAME_CMDNAME);
+        reservedColumns.add(CNAME_ASSIGNMENTS);
+        reservedColumns.add(CNAME_COMMENT);
+        reservedColumns.add(CNAME_NO_POSTPROCESSING);
+        reservedColumns.add(CNAME_NO_TRANSMISSION_CONSTRAINTS);
+        reservedColumns.add(CNAME_NO_VERIFIERS);
+    }
+
+    /**
+     * Columns that can't be updated via cmdhist_realtime attributes.
+     */
+    public static Set<String> protectedColumns = new HashSet<>();
+    static {
+        protectedColumns.add(CNAME_GENTIME);
+        protectedColumns.add(CNAME_SEQNUM);
+        protectedColumns.add(CNAME_ORIGIN);
+        protectedColumns.add(CNAME_ASSIGNMENTS);
+    }
+
+    public PreparedCommand(CommandId id) {
+        this.id = id;
+    }
+
+    /**
+     * Used for testing the uplinkers
+     */
+    public PreparedCommand(byte[] binary) {
+        setBinary(binary);
+    }
+
+    public long getGenerationTime() {
+        return id.getGenerationTime();
+    }
+
+    public void setComment(String comment) {
+        setAttribute(CNAME_COMMENT, comment);
+    }
+
+    public String getComment() {
+        return getStringAttribute(CNAME_COMMENT);
+    }
+
+    /**
+     * Specify the target TC stream. If unset, a stream is automatically selected.
+     */
+    public void setTcStream(Stream tcStream) {
+        this.tcStream = tcStream;
+    }
+
+    public Stream getTcStream() {
+        return tcStream;
+    }
+
+    public String getCmdName() {
+        return id.getCommandName();
+    }
+
+    public Boolean getBooleanAttribute(String attrname) {
+        CommandHistoryAttribute a = getAttribute(attrname);
+        if (a != null) {
+            Value v = ValueUtility.fromGpb(a.getValue());
+            if (v.getType() == Type.BOOLEAN) {
+                return v.getBooleanValue();
+            }
+        }
+        return null;
+    }
+
+    public String getStringAttribute(String attrname) {
+        CommandHistoryAttribute a = getAttribute(attrname);
+        if (a != null) {
+            Value v = ValueUtility.fromGpb(a.getValue());
+            if (v.getType() == Type.STRING) {
+                return v.getStringValue();
+            }
+        }
+        return null;
+    }
+
+    public byte[] getBinaryAttribute(String attrname) {
+        CommandHistoryAttribute a = getAttribute(attrname);
+        if (a != null) {
+            Value v = ValueUtility.fromGpb(a.getValue());
+            if (v.getType() == Type.BINARY) {
+                return v.getBinaryValue();
+            }
+        }
+        return null;
+    }
+
+    public String getId() {
+        return id.getGenerationTime() + "-" + id.getOrigin() + "-" + id.getSequenceNumber();
+    }
+
+    /**
+     * String useful for logging. Contains command name and sequence number
+     */
+    public String getLoggingId() {
+        return id.getCommandName() + "-" + id.getSequenceNumber();
+    }
+
+    public String getOrigin() {
+        return id.getOrigin();
+    }
+
+    public int getSequenceNumber() {
+        return id.getSequenceNumber();
+    }
+
+    public String getCommandName() {
+        return id.getCommandName();
+    }
+
+    public CommandId getCommandId() {
+        return id;
+    }
+
+    static public CommandId getCommandId(Tuple t) {
+        CommandId cmdId = CommandId.newBuilder()
+                .setGenerationTime((Long) t.getColumn(CNAME_GENTIME))
+                .setOrigin((String) t.getColumn(CNAME_ORIGIN))
+                .setSequenceNumber((Integer) t.getColumn(CNAME_SEQNUM))
+                .setCommandName((String) t.getColumn(CNAME_CMDNAME))
+                .build();
+        return cmdId;
+    }
+
+    public Tuple toTuple() {
+        TupleDefinition td = StandardTupleDefinitions.TC.copy();
+        ArrayList<Object> al = new ArrayList<>();
+        al.add(id.getGenerationTime());
+        al.add(id.getOrigin());
+        al.add(id.getSequenceNumber());
+        al.add(id.getCommandName());
+
+        for (CommandHistoryAttribute a : attributes) {
+            td.addColumn(a.getName(), ValueUtility.getYarchType(a.getValue().getType()));
+            al.add(ValueUtility.getYarchValue(a.getValue()));
+        }
+
+        AssignmentInfo.Builder assignmentb = AssignmentInfo.newBuilder();
+        if (getArgAssignment() != null) {
+            for (Entry<Argument, ArgumentValue> entry : getArgAssignment().entrySet()) {
+                assignmentb.addAssignment(Assignment.newBuilder()
+                        .setName(entry.getKey().getName())
+                        .setValue(ValueUtility.toGbp(entry.getValue().getEngValue()))
+                        .setUserInput(userAssignedArgumentNames.contains(entry.getKey().getName()))
+                        .build());
+            }
+        }
+        td.addColumn(CNAME_ASSIGNMENTS, DataType.protobuf("org.yamcs.cmdhistory.protobuf.Cmdhistory$AssignmentInfo"));
+        al.add(assignmentb.build());
+
+        return new Tuple(td, al.toArray());
+    }
+
+    public List<CommandAssignment> getAssignments() {
+        List<CommandAssignment> assignments = new ArrayList<>();
+        if (getArgAssignment() != null) {
+            for (Entry<Argument, ArgumentValue> entry : getArgAssignment().entrySet()) {
+                assignments.add(CommandAssignment.newBuilder()
+                        .setName(entry.getKey().getName())
+                        .setValue(ValueUtility.toGbp(entry.getValue().getEngValue()))
+                        .setUserInput(userAssignedArgumentNames.contains(entry.getKey().getName()))
+                        .build());
+            }
+        }
+        return assignments;
+    }
+
+    public List<CommandHistoryAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public ParameterValueList getAttributesAsParameters(Mdb mdb) {
+        if (cmdParams != null) {
+            return cmdParams;
+        }
+        ParameterValueList pvlist = new ParameterValueList();
+
+        for (CommandHistoryAttribute cha : attributes) {
+            String fqn = Mdb.YAMCS_CMD_SPACESYSTEM_NAME + "/" + cha.getName();
+            Parameter p = mdb.getParameter(fqn);
+
+            if (p == null) {
+                // if it was required in the algorithm, it would be already in the system parameter db
+                continue;
+            }
+
+            ParameterValue pv = new ParameterValue(p);
+            pv.setEngValue(ValueUtility.fromGpb(cha.getValue()));
+            pvlist.add(pv);
+        }
+        cmdParams = pvlist;
+        return cmdParams;
+    }
+
+    public static PreparedCommand fromTuple(Tuple t, Mdb mdb) {
+        CommandId cmdId = getCommandId(t);
+        PreparedCommand pc = new PreparedCommand(cmdId);
+        pc.setMetaCommand(mdb.getMetaCommand(cmdId.getCommandName()));
+
+        for (int i = 0; i < t.size(); i++) {
+            ColumnDefinition cd = t.getColumnDefinition(i);
+            String name = cd.getName();
+            if (isProtectedColumn(name)) {
+                continue;
+            }
+            Value v = ValueUtility.getColumnValue(cd, t.getColumn(i));
+            CommandHistoryAttribute a = CommandHistoryAttribute.newBuilder().setName(name)
+                    .setValue(ValueUtility.toGbp(v)).build();
+            pc.attributes.add(a);
+        }
+
+        AssignmentInfo assignments = (AssignmentInfo) t.getColumn(CNAME_ASSIGNMENTS);
+        if (assignments != null) {
+            pc.argAssignment = new LinkedHashMap<>();
+            for (Assignment assignment : assignments.getAssignmentList()) {
+                Argument arg = findArgument(pc.getMetaCommand(), assignment.getName());
+                Value v = ValueUtility.fromGpb(assignment.getValue());
+                ArgumentValue argv = new ArgumentValue(arg);
+                argv.setEngValue(v);
+                pc.argAssignment.put(arg, argv);
+            }
+        }
+        return pc;
+    }
+
+    private static Argument findArgument(MetaCommand mc, String name) {
+        Argument arg = mc.getArgument(name);
+        if (arg == null && mc.getBaseMetaCommand() != null) {
+            arg = findArgument(mc.getBaseMetaCommand(), name);
+        }
+        return arg;
+    }
+
+    public static PreparedCommand fromCommandHistoryEntry(CommandHistoryEntry che) {
+        CommandId cmdId = che.getCommandId();
+        PreparedCommand pc = new PreparedCommand(cmdId);
+
+        pc.attributes = che.getAttrList();
+
+        return pc;
+    }
+
+    public void addStringAttribute(String name, String value) {
+        CommandHistoryAttribute a = CommandHistoryAttribute.newBuilder().setName(name)
+                .setValue(ValueHelper.newValue(value)).build();
+        attributes.add(a);
+    }
+
+    public void addAttribute(CommandHistoryAttribute cha) {
+        String name = cha.getName();
+        if (isProtectedColumn(name)) {
+            throw new IllegalArgumentException("Cannot use '" + name + "' as a command attribute");
+        }
+        attributes.add(cha);
+    }
+
+    public byte[] getBinary() {
+        return getBinaryAttribute(CNAME_BINARY);
+    }
+
+    public void setBinary(byte[] b) {
+        setAttribute(CNAME_BINARY, b);
+    }
+
+    public byte[] getUnprocessedBinary() {
+        return getBinaryAttribute(CNAME_UNPROCESSED_BINARY);
+    }
+
+    public void setUnprocessedBinary(byte[] b) {
+        setAttribute(CNAME_UNPROCESSED_BINARY, b);
+    }
+
+    public boolean isRaw() {
+        Boolean attr = getBooleanAttribute(CNAME_RAW);
+        return attr != null ? attr.booleanValue() : false;
+    }
+
+    public void setRaw(boolean raw) {
+        setAttribute(CNAME_RAW, raw);
+    }
+
+    public String getUsername() {
+        CommandHistoryAttribute cha = getAttribute(CNAME_USERNAME);
+        return cha != null ? cha.getValue().getStringValue() : null;
+    }
+
+    public void setUsername(String username) {
+        setAttribute(CNAME_USERNAME, username);
+    }
+
+    public MetaCommand getMetaCommand() {
+        return metaCommand;
+    }
+
+    public void setMetaCommand(MetaCommand cmd) {
+        this.metaCommand = cmd;
+    }
+
+    public void setArgAssignment(Map<Argument, ArgumentValue> argAssignment, Set<String> userAssignedArgumentNames) {
+        this.argAssignment = argAssignment;
+        this.userAssignedArgumentNames = userAssignedArgumentNames;
+    }
+
+    public ArgumentValue getArgAssignment(Argument arg) {
+        return argAssignment.get(arg);
+    }
+
+    public Map<Argument, ArgumentValue> getArgAssignment() {
+        return argAssignment;
+    }
+
+    public void disableTransmissionConstraints(boolean b) {
+        setAttribute(CNAME_NO_TRANSMISSION_CONSTRAINTS, b);
+    }
+
+    /**
+     * @return true if the transmission constraints have to be disabled for this command
+     */
+    public boolean disableTransmissionConstraints() {
+        Boolean attr = getBooleanAttribute(CNAME_NO_TRANSMISSION_CONSTRAINTS);
+        return attr != null ? attr.booleanValue() : false;
+    }
+
+    /**
+     * @return true if the command verifiers have to be disabled for this command
+     */
+    public boolean disableCommandVerifiers() {
+        Boolean attr = getBooleanAttribute(CNAME_NO_VERIFIERS);
+        return attr != null ? attr.booleanValue() : false;
+    }
+
+    public void disableCommandVerifiers(boolean b) {
+        setAttribute(CNAME_NO_VERIFIERS, b);
+    }
+
+    /**
+     * @return true if no post-processing should occur on this command
+     */
+    public boolean disablePostprocessing() {
+        Boolean attr = getBooleanAttribute(CNAME_NO_POSTPROCESSING);
+        return attr != null ? attr.booleanValue() : false;
+    }
+
+    public void disablePostprocessing(boolean b) {
+        setAttribute(CNAME_NO_POSTPROCESSING, b);
+    }
+
+    public void addVerifierConfig(String name, VerifierConfig verifierConfig) {
+        this.verifierConfig.put(name, verifierConfig);
+    }
+
+    /**
+     * @return a list of command verifiers options overriding MDB settings.
+     */
+    public Map<String, VerifierConfig> getVerifierOverride() {
+        return verifierConfig;
+    }
+
+    public CommandHistoryAttribute getAttribute(String name) {
+        for (CommandHistoryAttribute a : attributes) {
+            if (name.equals(a.getName())) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public void setAttribute(String name, Object value) {
+        int i;
+        for (i = 0; i < attributes.size(); i++) {
+            CommandHistoryAttribute attr = attributes.get(i);
+            if (name.equals(attr.getName())) {
+                break;
+            }
+        }
+        CommandHistoryAttribute.Builder attr = CommandHistoryAttribute.newBuilder()
+                .setName(name);
+        if (value instanceof String) {
+            attr.setValue(ValueHelper.newValue((String) value));
+        } else if (value instanceof Boolean) {
+            attr.setValue(ValueHelper.newValue((Boolean) value));
+        } else if (value instanceof byte[]) {
+            attr.setValue(ValueHelper.newValue((byte[]) value));
+        } else {
+            throw new IllegalArgumentException("Unexpected attribute type");
+        }
+        if (i < attributes.size()) {
+            attributes.set(i, attr.build());
+        } else {
+            attributes.add(attr.build());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "PreparedCommand(" + StringConverter.toString(id) + ")";
+    }
+
+    public static boolean isReservedColumn(String columnName) {
+        return reservedColumns.contains(columnName);
+    }
+
+    public static boolean isProtectedColumn(String columnName) {
+        return protectedColumns.contains(columnName);
+    }
+}
+```
+
+### `ValueChangeVerifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/ValueChangeVerifier.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.List;
+
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterValueChange;
+import org.yamcs.xtce.PathElement;
+
+/**
+ * Command verifier which succeeds when a parameter changes with a delta above a threshold.
+ * <p>
+ * The parameter is first sampled when the verifier starts and that value is compared with the new values when received.
+ * <p>
+ * This verifier never fails but it timeouts if the value does not change (enough)
+ * 
+ * @author nm
+ *
+ */
+public class ValueChangeVerifier  extends Verifier implements ParameterConsumer {
+    double firstValue;
+    boolean firstValueReceived = false;
+
+    ParameterValueChange pvc;
+    final ParameterRequestManager prm;
+    int subscriptionId = -1;
+
+
+    ValueChangeVerifier(CommandVerificationHandler cvh, CommandVerifier cv) {
+        super(cvh, cv);
+        this.pvc = cv.getParameterValueChange();
+        this.prm = cvh.getProcessor().getParameterRequestManager();
+    }
+
+
+    @Override
+    void doStart() {
+        try {
+            Parameter param = pvc.getParameterRef().getParameter();
+            subscriptionId = prm.addRequest(param, this);
+            if (cv.getReturnParameter() != null) {
+                prm.addItemsToRequest(subscriptionId, cv.getReturnParameter());
+            }
+            ParameterValue pv = prm.getLastValueFromCache(param);
+            if (pv != null) {
+                timer.submit(() -> process(pv, true));
+            }
+
+        } catch (Exception e) {
+            log.warn("Failed to subscribe to parameters", e);
+        }
+
+    }
+
+    @Override
+    public void updateItems(int subscriptionId, List<ParameterValue> params) {
+        timer.submit(() -> params.forEach(pv -> process(pv, false)));
+    }
+
+    private void process(ParameterValue pv, boolean fromCache) {
+        if (!pv.isNominal()) {
+            log.debug("Ignoring non-nominal value {}", pv);
+            return;
+        }
+
+        if (!fromCache && pv.getParameter() == cv.getReturnParameter()) {
+            returnPv = pv;
+        }
+
+        Value engValue = pv.getEngValue();
+        if (engValue == null) {
+            log.warn("Received parameter value without engineering value {}", pv);
+            return;
+        }
+
+        if ((engValue instanceof AggregateValue) || (engValue instanceof ArrayValue)) {
+            PathElement[] path = pvc.getParameterRef().getMemberPath();
+            if (path == null) {
+                log.warn("Received an {} for verifier but the referenced parameter {} is not of an that type",
+                        engValue.getClass(), pvc.getParameterRef().getParameter().getQualifiedName());
+                return;
+            }
+            engValue = AggregateUtil.getMemberValue(engValue, path);
+        }
+        log.trace("Processing {} ", engValue);
+        if (!firstValueReceived) {
+            firstValueReceived = ValueUtility.processAsDouble(engValue, d -> firstValue = d);
+        } else if (!fromCache) {
+            ValueUtility.processAsDouble(engValue, secondValue -> {
+                double delta = pvc.getDelta();
+                boolean ok = delta > 0 ? secondValue - firstValue >= delta : secondValue - firstValue <= delta;
+                if (ok) {
+                    unsubscribe();
+                    finished(true, null);
+                }
+            });
+        }
+    }
+
+    @Override
+    void doCancel() {
+        unsubscribe();
+    }
+
+    private synchronized void unsubscribe() {
+        if (subscriptionId != -1) {
+            prm.unsubscribeAll(subscriptionId);
+            subscriptionId = -1;
+        }
+    }
+}
+```
+
+### `VerificationResult.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/VerificationResult.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import org.yamcs.parameter.Value;
+
+/**
+ * Class that can be used to capture the outcome of a verifier execution.
+ */
+public class VerificationResult {
+
+    public static final VerificationResult SUCCESS = new VerificationResult(true, null, null);
+    public static final VerificationResult FAIL = new VerificationResult(false, null, null);
+
+    /**
+     * Overall result of this verifier (success/fail).
+     * <p>
+     * This impacts the acknowledgment status (green/red).
+     */
+    public boolean success;
+
+    /**
+     * Optional message explaining why the command is successful or not (like an error message).
+     */
+    public String message;
+
+    /**
+     * An optional return value. This may be given either on success or fail.
+     * <p>
+     * If a verifier is configured to complete the command, the return value of the verifier can become the return value
+     * of the command itself.
+     * <p>
+     * This value will be transformed into a {@link Value}, unless it already is of that type.
+     */
+    public Object returnValue;
+
+    public VerificationResult(boolean success) {
+        this(success, null, null);
+    }
+
+    public VerificationResult(boolean success, String message) {
+        this(success, message, null);
+    }
+
+    public VerificationResult(boolean success, String message, Object returnValue) {
+        this.success = success;
+        this.message = message;
+        this.returnValue = returnValue;
+    }
+
+    @Override
+    public String toString() {
+        return success ? "SUCCESS" : "FAILURE";
+    }
+}
+```
+
+### `Verifier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/commanding/Verifier.java`
+
+
+```java
+package org.yamcs.commanding;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.mdb.Mdb;
+
+abstract class Verifier {
+    /**
+     * Imaginary parameter for publishing an optional return value to cmdhist
+     */
+    public static final String YAMCS_PARAMETER_RETURN_VALUE = Mdb.YAMCS_CMD_SPACESYSTEM_NAME + "/returnValue";
+
+    final protected Log log;
+    final protected CommandVerifier cv;
+    final protected CommandVerificationHandler cvh;
+    final ActiveCommand activeCommand;
+    final ScheduledThreadPoolExecutor timer;
+    protected ParameterValue returnPv;
+
+    enum State {
+        NEW, RUNNING, OK, NOK, TIMEOUT, DISABLED, CANCELLED
+    };
+
+    volatile State state = State.NEW;
+
+    Verifier nextVerifier;
+
+    Verifier(CommandVerificationHandler cvh, CommandVerifier cv) {
+        this.cv = cv;
+        this.cvh = cvh;
+        this.timer = cvh.timer;
+        this.activeCommand = cvh.getActiveCommand();
+        this.log = new Log(this.getClass(), cvh.getProcessor().getInstance());
+    }
+
+    void start() {
+        state = State.RUNNING;
+        doStart();
+    }
+
+    void timeout() {
+        if (state != State.RUNNING) {
+            return;
+        }
+        state = State.TIMEOUT;
+        doCancel();
+        cvh.onVerifierFinished(this);
+    }
+
+    void cancel() {
+        if (state != State.RUNNING && state != State.NEW) {
+            return;
+        }
+        state = State.CANCELLED;
+        doCancel();
+        cvh.onVerifierFinished(this);
+    }
+
+    void finished(boolean success, String message) {
+        if (state != State.RUNNING) {
+            return;
+        }
+
+        // we set the returnPv from cache unless it has been set by one of the subclasses to a more relevant value
+        // for example if a specific packet triggered a verifier and that packet contained a sample for the
+        // returnParameter, we want that sample to be used as returnPv.
+        // We assume that the sub-classes do that, if not the code below will use whatever latest value is available.
+        if (cv.getReturnParameter() != null && returnPv == null) {
+            returnPv = cvh.getProcessor().getLastValueCache()
+                    .getValue(cv.getReturnParameter());
+        }
+        state = success ? State.OK : State.NOK;
+        cvh.onVerifierFinished(this, message, returnPv);
+    }
+
+    void finished(boolean success) {
+        finished(success, null);
+    }
+
+    void finishOK() {
+        finished(true, null);
+    }
+
+    void finishNOK() {
+        finished(false, null);
+    }
+
+    abstract void doStart();
+
+    /**
+     * Called to cancel the verification in case it didn't finish in the expected time.
+     */
+    abstract void doCancel();
+
+    public State getState() {
+        return state;
+    }
+
+    public String getStage() {
+        return cv.getStage();
+    }
+}
+```

@@ -3,14 +3,74 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/directives/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `data-table.directive.ts`
 
-file--data-table.directive.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/directives/data-table.directive.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ViewEncapsulation,
+} from '@angular/core';
+
+/**
+ * Applies styling to the attributed table host
+ */
+@Component({
+  selector: 'table[yaDataTable]',
+  template: '<ng-content />',
+  host: {
+    '[class.ya-data-table]': 'applyClass',
+  },
+  styles: `
+    table.ya-data-table {
+      border-spacing: 0;
+      border-collapse: collapse;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .ya-data-table th,
+    .ya-data-table td {
+      font-size: 12px;
+      line-height: 16px;
+      padding: 4px 8px 4px 0;
+    }
+
+    .ya-data-table th {
+      text-align: left;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.654902);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .ya-data-table th.lcolumn {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .ya-data-table td {
+      color: rgba(0, 0, 0, 0.654);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      background-color: #fff;
+    }
+
+    .ya-data-table td.wrap200 {
+      min-width: 200px;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .ya-data-table th.wrap200 {
+      min-width: 200px;
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class DataTableDirective {
+  applyClass = true;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/directives/data-table.directive.ts`](file--data-table.directive.ts) — UTF-8 텍스트 파일 본문 포함

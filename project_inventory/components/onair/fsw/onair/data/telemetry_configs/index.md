@@ -3,18 +3,278 @@
 
 **경로:** `components/onair/fsw/onair/data/telemetry_configs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `adapter_TLM_CONFIG.json`
 
-file--adapter_TLM_CONFIG.json
-file--data_physics_generation_CONFIG.json
-file--redis_example_CONFIG.json
+**경로:** `components/onair/fsw/onair/data/telemetry_configs/adapter_TLM_CONFIG.json`
+
+
+```json
+{
+  "subsystems": {
+    "NONE": {},
+    "CDH": {
+      "TIME": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      }
+    },
+    "GNC": {
+      "SAMPLE.sample_data_tlm_t.sample_data_counter": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-1.0, 0.0, 10.0, 15.0]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_tlm_t.sample_data_value": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_gps_t.sample_data_counter": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-1.0, 0.0, 10.0, 15.0]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_gps_t.sample_data_lat": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_gps_t.sample_data_lng": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_gps_t.sample_data_alt": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      }
+    },
+    "POWER": {
+      "SAMPLE.sample_data_power_t.sample_data_counter": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-1.0, 0.0, 10.0, 15.0]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_power_t.sample_data_voltage": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_power_t.sample_data_current": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      }
+    },
+    "THERMAL": {
+      "SAMPLE.sample_data_thermal_t.sample_data_counter": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-1.0, 0.0, 10.0, 15.0]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_thernal_t.sample_data_internal_temp": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      },
+      "SAMPLE.sample_data_thermal_t.sample_data_external_temp": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      }
+    }
+  },
+  "order": [
+    "TIME",
+    "SAMPLE.sample_data_tlm_t.sample_data_counter",
+    "SAMPLE.sample_data_tlm_t.sample_data_value",
+    "SAMPLE.sample_data_power_t.sample_data_counter",
+    "SAMPLE.sample_data_power_t.sample_data_voltage",
+    "SAMPLE.sample_data_power_t.sample_data_current",
+    "SAMPLE.sample_data_thermal_t.sample_data_counter",
+    "SAMPLE.sample_data_thernal_t.sample_data_internal_temp",
+    "SAMPLE.sample_data_thermal_t.sample_data_external_temp",
+    "SAMPLE.sample_data_gps_t.sample_data_counter",
+    "SAMPLE.sample_data_gps_t.sample_data_lat",
+    "SAMPLE.sample_data_gps_t.sample_data_lng",
+    "SAMPLE.sample_data_gps_t.sample_data_alt"
+  ],
+  "channels":
+    {
+     "0x0887": ["SAMPLE", "sample_data_power_t"],
+     "0x0889": ["SAMPLE", "sample_data_thermal_t"],
+     "0x088A": ["SAMPLE", "sample_data_gps_t"]
+    }
+}
 ```
 
-## 항목
+### `data_physics_generation_CONFIG.json`
 
-- [`components/onair/fsw/onair/data/telemetry_configs/adapter_TLM_CONFIG.json`](file--adapter_TLM_CONFIG.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data/telemetry_configs/data_physics_generation_CONFIG.json`](file--data_physics_generation_CONFIG.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data/telemetry_configs/redis_example_CONFIG.json`](file--redis_example_CONFIG.json) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/onair/data/telemetry_configs/data_physics_generation_CONFIG.json`
+
+
+```json
+{
+  "subsystems": {
+    "NONE": {
+      "Time": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      },
+      "THRUST": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-999999999999999, 999999999999999]"
+        },
+        "description": "No description"
+      },
+      "ALTITUDE": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-999999999999999, 999999999999999]"
+        },
+        "description": "No description"
+      },
+      "ACCELERATION": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-20.1111, 20.1111]"
+        },
+        "description": "No description"
+      },
+      "SCIENCE_COLLECTION": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[-0.9999, 1.1111]"
+        },
+        "description": "No description"
+      },
+      "LABEL_ERROR_STATE": {
+        "conversion": "",
+        "tests": {
+          "NOOP": "[]"
+        },
+        "description": "No description"
+      }
+    },
+    "POWER": {
+      "VOLTAGE": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[12.9999, 18.1111]"
+        },
+        "description": "No description"
+      },
+      "CURRENT": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[2.9999, 5.1111]"
+        },
+        "description": "No description"
+      }
+    },
+    "THERMAL": {
+      "TEMPERATURE": {
+        "conversion": "",
+        "tests": {
+          "FEASIBILITY": "[9.9999, 90.1111]"
+        },
+        "description": "No description"
+      }
+    }
+  },
+  "order": [
+    "Time",
+    "VOLTAGE",
+    "CURRENT",
+    "THRUST",
+    "ALTITUDE",
+    "ACCELERATION",
+    "TEMPERATURE",
+    "SCIENCE_COLLECTION",
+    "LABEL_ERROR_STATE"
+  ]
+}
+```
+
+### `redis_example_CONFIG.json`
+
+**경로:** `components/onair/fsw/onair/data/telemetry_configs/redis_example_CONFIG.json`
+
+
+```json
+{
+  "subsystems": {
+    "STATES": {
+      "time": {
+        "description": "Time of latest receipt of values"
+      },
+      "state_0.x": {
+        "description": "Vehicle 0's current state of x"
+      },
+      "state_0.y": {
+        "description": "Vehicle 0's current state of y"
+      },
+      "state_1.x": {
+        "description": "Vehicle 1's current state of x"
+      },
+      "state_1.y": {
+        "description": "Vehicle 1's current state of y"
+      },
+      "state_2.x": {
+        "description": "Vehicle 2's current state of x"
+      },
+      "state_2.y": {
+        "description": "Vehicle 2's current state of y"
+      }
+    }
+  },
+  "redis_subscriptions": [
+    "state_0",
+    "state_1",
+    "state_2"
+  ],
+  "order": [
+    "time",
+    "state_0.x",
+    "state_0.y",
+    "state_1.x",
+    "state_1.y",
+    "state_2.x",
+    "state_2.y"
+  ]
+}
+```

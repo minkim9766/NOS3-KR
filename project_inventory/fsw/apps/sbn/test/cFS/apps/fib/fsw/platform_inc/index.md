@@ -3,14 +3,20 @@
 
 **경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fib_app_msgids.h`
 
-file--fib_app_msgids.h
+**경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/platform_inc/fib_app_msgids.h`
+
+
+```c
+#ifndef _fib_app_msgids_h_
+#define _fib_app_msgids_h_
+
+#define FIB_CMD_MID       0x1882
+#define FIB_TLM_MID       0x0882
+#define FIB_TLM_REMAP_MID 0x0883
+
+#endif
 ```
-
-## 항목
-
-- [`fsw/apps/sbn/test/cFS/apps/fib/fsw/platform_inc/fib_app_msgids.h`](file--fib_app_msgids.h) — UTF-8 텍스트 파일 본문 포함

@@ -3,16 +3,27 @@
 
 **경로:** `fsw/fprime/fprime-nos3/Sequences/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `adcsstart.seq`
 
-file--adcsstart.seq
-file--nos3test.seq
+**경로:** `fsw/fprime/fprime-nos3/Sequences/adcsstart.seq`
+
+
+```text
+R00:00:05 deployment.generic_adcs.NOOP;
+R00:00:06 deployment.generic_adcs.SET_MODE, SUNSAFE;
 ```
 
-## 항목
+### `nos3test.seq`
 
-- [`fsw/fprime/fprime-nos3/Sequences/adcsstart.seq`](file--adcsstart.seq) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/Sequences/nos3test.seq`](file--nos3test.seq) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/Sequences/nos3test.seq`
+
+
+```text
+R00:00:01 deployment.sampleSim.NOOP;
+R00:00:01 deployment.generic_mag.NOOP;
+R00:00:01 deployment.generic_fss.NOOP;
+R00:00:01 deployment.generic_css.NOOP;
+R00:00:01 deployment.generic_adcs.NOOP;
+```

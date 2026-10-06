@@ -3,80 +3,5887 @@
 
 **경로:** `fsw/cfe/modules/cfe_testcase/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_test.c`
 
-file--cfe_test.c
-file--cfe_test.h
-file--cfe_test_table.c
-file--cfe_test_table.h
-file--es_application_control_test.c
-file--es_behavior_test.c
-file--es_cds_test.c
-file--es_counter_test.c
-file--es_error_test.c
-file--es_info_test.c
-file--es_mempool_test.c
-file--es_misc_test.c
-file--es_perf_test.c
-file--es_resource_id_test.c
-file--es_task_test.c
-file--evs_filters_test.c
-file--evs_send_test.c
-file--fs_header_test.c
-file--fs_util_test.c
-file--message_id_test.c
-file--msg_api_test.c
-file--resource_id_misc_test.c
-file--sb_pipe_mang_test.c
-file--sb_sendrecv_test.c
-file--sb_subscription_test.c
-file--tbl_content_access_test.c
-file--tbl_content_mang_test.c
-file--tbl_information_test.c
-file--tbl_registration_test.c
-file--time_arithmetic_test.c
-file--time_conversion_test.c
-file--time_current_test.c
-file--time_external_test.c
-file--time_misc_test.c
+**경로:** `fsw/cfe/modules/cfe_testcase/src/cfe_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Initialization routine for CFE functional test
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_assert.h"
+#include "cfe_test.h"
+
+CFE_FT_Global_t CFE_FT_Global;
+
+/*
+ * Test main function
+ * Register this test routine with CFE Assert
+ */
+void CFE_TestMain(void)
+{
+    /* Static local so data section is not zero when checking app info */
+    static char TestName[] = "CFE API";
+
+    /* Constant Table information used by all table tests */
+    CFE_FT_Global.TblName           = "TestTable";
+    CFE_FT_Global.RegisteredTblName = "CFE_TEST_APP.TestTable";
+    CFE_FT_Global.TblFilename       = "test_tbl.tbl";
+
+    /*
+     * Register this test app with CFE assert
+     *
+     * Note this also waits for the appropriate overall system
+     * state and gets ownership of the UtAssert subsystem
+     */
+    CFE_Assert_RegisterTest(TestName);
+    CFE_Assert_OpenLogFile(CFE_ASSERT_LOG_FILE_NAME);
+
+    /*
+     * Register test cases in UtAssert
+     */
+    ESApplicationControlTestSetup();
+    ESBehaviorestSetup();
+    ESCDSTestSetup();
+    ESCounterTestSetup();
+    ESErrorTestSetup();
+    ESInfoTestSetup();
+    ESMemPoolTestSetup();
+    ESMiscTestSetup();
+    ESPerfTestSetup();
+    ESResourceIDTestSetup();
+    ESTaskTestSetup();
+    EVSFiltersTestSetup();
+    EVSSendTestSetup();
+    FSHeaderTestSetup();
+    FSUtilTestSetup();
+    MessageIdTestSetup();
+    MsgApiTestSetup();
+    ResourceIdMiscTestSetup();
+    SBPipeMangSetup();
+    SBSendRecvTestSetup();
+    SBSubscriptionTestSetup();
+    TBLContentAccessTestSetup();
+    TBLContentMangTestSetup();
+    TBLInformationTestSetup();
+    TBLRegistrationTestSetup();
+    TimeArithmeticTestSetup();
+    TimeConversionTestSetup();
+    TimeCurrentTestSetup();
+    TimeExternalTestSetup();
+    TimeMiscTestSetup();
+
+    /*
+     * Execute the tests
+     *
+     * Note this also releases ownership of the UtAssert subsystem when complete
+     */
+    CFE_Assert_ExecuteTest();
+
+    /* Nothing more for this app to do */
+    CFE_ES_ExitApp(CFE_ES_RunStatus_APP_EXIT);
+}
 ```
 
-## 항목
+### `cfe_test.h`
 
-- [`fsw/cfe/modules/cfe_testcase/src/cfe_test.c`](file--cfe_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/cfe_test.h`](file--cfe_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/cfe_test_table.c`](file--cfe_test_table.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/cfe_test_table.h`](file--cfe_test_table.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_application_control_test.c`](file--es_application_control_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_behavior_test.c`](file--es_behavior_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_cds_test.c`](file--es_cds_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_counter_test.c`](file--es_counter_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_error_test.c`](file--es_error_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_info_test.c`](file--es_info_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_mempool_test.c`](file--es_mempool_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_misc_test.c`](file--es_misc_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_perf_test.c`](file--es_perf_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_resource_id_test.c`](file--es_resource_id_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/es_task_test.c`](file--es_task_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/evs_filters_test.c`](file--evs_filters_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/evs_send_test.c`](file--evs_send_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/fs_header_test.c`](file--fs_header_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/fs_util_test.c`](file--fs_util_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/message_id_test.c`](file--message_id_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/msg_api_test.c`](file--msg_api_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/resource_id_misc_test.c`](file--resource_id_misc_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/sb_pipe_mang_test.c`](file--sb_pipe_mang_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/sb_sendrecv_test.c`](file--sb_sendrecv_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/sb_subscription_test.c`](file--sb_subscription_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/tbl_content_access_test.c`](file--tbl_content_access_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/tbl_content_mang_test.c`](file--tbl_content_mang_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/tbl_information_test.c`](file--tbl_information_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/tbl_registration_test.c`](file--tbl_registration_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/time_arithmetic_test.c`](file--time_arithmetic_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/time_conversion_test.c`](file--time_conversion_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/time_current_test.c`](file--time_current_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/time_external_test.c`](file--time_external_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/src/time_misc_test.c`](file--time_misc_test.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/cfe_testcase/src/cfe_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_test module
+ */
+
+#ifndef CFE_TEST_H
+#define CFE_TEST_H
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "cfe_test_tbl.h"
+
+#include "uttest.h"
+#include "utassert.h"
+#include "cfe_assert.h"
+
+typedef struct
+{
+    CFE_FS_FileWriteMetaData_t FuncTestState;
+
+    /* Generic utility counter */
+    int32 Count;
+
+    /* Table information used by all table tests */
+    CFE_TBL_Handle_t TblHandle;
+    const char *     TblName;
+    const char *     RegisteredTblName;
+    const char *     TblFilename;
+} CFE_FT_Global_t;
+
+extern CFE_FT_Global_t CFE_FT_Global;
+
+/**
+ * Name of log file to write
+ *
+ * This file captures all of the test results, independently of the
+ * events generated during the test run.  The file can be used as part
+ * of scripted tests and/or capturing test artifacts.
+ */
+#define CFE_ASSERT_LOG_FILE_NAME "/cf/cfe_test.log"
+
+/**
+ * Name of the shared table used by CFE_TEST_APP for requirements verification
+ *
+ * This filename was made configurable such that projects can replace the
+ * sample app table with a project specific table for the purpose of CI/CD.
+ */
+#define CFE_ASSERT_SHARED_TBL_NAME "SAMPLE_APP.SampleAppTable"
+
+void TimeInRange(CFE_TIME_SysTime_t Start, CFE_TIME_SysTime_t Time, CFE_TIME_SysTime_t Range, const char *Str);
+
+void CFE_TestMain(void);
+void ESApplicationControlTestSetup(void);
+void ESBehaviorestSetup(void);
+void ESCDSTestSetup(void);
+void ESCounterTestSetup(void);
+void ESErrorTestSetup(void);
+void ESInfoTestSetup(void);
+void ESMemPoolTestSetup(void);
+void ESMiscTestSetup(void);
+void ESPerfTestSetup(void);
+void ESResourceIDTestSetup(void);
+void ESTaskTestSetup(void);
+void EVSFiltersTestSetup(void);
+void EVSSendTestSetup(void);
+void FSHeaderTestSetup(void);
+void FSUtilTestSetup(void);
+void MessageIdTestSetup(void);
+void MsgApiTestSetup(void);
+void ResourceIdMiscTestSetup(void);
+void SBPipeMangSetup(void);
+void SBSendRecvTestSetup(void);
+void SBSubscriptionTestSetup(void);
+void TBLContentAccessTestSetup(void);
+void TBLContentMangTestSetup(void);
+void TBLInformationTestSetup(void);
+void TBLRegistrationTestSetup(void);
+void TimeArithmeticTestSetup(void);
+void TimeConversionTestSetup(void);
+void TimeCurrentTestSetup(void);
+void TimeExternalTestSetup(void);
+void TimeMiscTestSetup(void);
+
+#endif /* CFE_TEST_H */
+```
+
+### `cfe_test_table.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/cfe_test_table.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Initialization of variables used by table functional tests and
+ *   function definitions for setup and teardown table functions
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include "cfe_test_table.h"
+
+/* Setup function to register a table */
+void RegisterTestTable(void)
+{
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_DEFAULT, NULL),
+                      CFE_SUCCESS);
+}
+
+/* Teardown function to unregister a table */
+void UnregisterTestTable(void)
+{
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+}
+```
+
+### `cfe_test_table.h`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/cfe_test_table.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_test module table tests
+ */
+
+#ifndef CFE_TEST_TABLE_H
+#define CFE_TEST_TABLE_H
+
+/*
+ * Includes
+ */
+#include "cfe_test.h"
+
+void RegisterTestTable(void);
+void UnregisterTestTable(void);
+
+#endif /* CFE_TEST_TABLE_H */
+```
+
+### `es_application_control_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_application_control_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of ES Application Control APIs
+ *
+ *   Tests only invalid calls to the application control functions.
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestApplicationControl(void)
+{
+    UtPrintf("Testing: CFE_ES_RestartApp, CFE_ES_ReloadApp, CFE_ES_DeleteApp");
+    CFE_ES_AppId_t TestAppId;
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&TestAppId), CFE_SUCCESS);
+
+    UtAssert_UINT32_EQ(CFE_ES_RestartApp(CFE_ES_APPID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    /*
+     * This seems a bit strange that it throws a file io error
+     * CFE_ES_ReloadApp calls OS_stat with the null filename
+     * OS_stat should return OS_INVALID_POINTER, but the exact
+     * error is ignored in CFE_ES_ReloadApp and file io error is returned
+     * most other functions return a CFE_ES_BAD_ARGUMENT in this situation
+     */
+    UtAssert_UINT32_EQ(CFE_ES_ReloadApp(TestAppId, NULL), CFE_ES_FILE_IO_ERR);
+    UtAssert_UINT32_EQ(CFE_ES_ReloadApp(TestAppId, "/cf/NOT_cfe_testcase.so"), CFE_ES_FILE_IO_ERR);
+    UtAssert_UINT32_EQ(CFE_ES_ReloadApp(CFE_ES_APPID_UNDEFINED, "/cf/cfe_testcase.so"),
+                       CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_UINT32_EQ(CFE_ES_DeleteApp(CFE_ES_APPID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void ESApplicationControlTestSetup(void)
+{
+    UtTest_Add(TestApplicationControl, NULL, NULL, "Test Application Control API");
+}
+```
+
+### `es_behavior_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_behavior_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic ES Application Behavior APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestRunCounter(void)
+{
+    CFE_ES_TaskId_t   TaskId;
+    CFE_ES_TaskInfo_t TaskInfo;
+    uint32            ExecutionCounter;
+    uint32            RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    UtPrintf("Testing: CFE_ES_RunLoop, CFE_ES_IncrementTaskCounter");
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskID(&TaskId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(&TaskInfo, TaskId), CFE_SUCCESS);
+    ExecutionCounter = TaskInfo.ExecutionCounter;
+
+    UtAssert_BOOL_TRUE(CFE_ES_RunLoop(&RunStatus));
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(&TaskInfo, TaskId), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(TaskInfo.ExecutionCounter, (ExecutionCounter + 1));
+
+    UtAssert_BOOL_TRUE(CFE_ES_RunLoop(NULL));
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(&TaskInfo, TaskId), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(TaskInfo.ExecutionCounter, (ExecutionCounter + 2));
+
+    UtAssert_VOIDCALL(CFE_ES_IncrementTaskCounter());
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(&TaskInfo, TaskId), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(TaskInfo.ExecutionCounter, (ExecutionCounter + 3));
+
+    RunStatus = CFE_ES_RunStatus_UNDEFINED;
+    UtAssert_BOOL_FALSE(CFE_ES_RunLoop(&RunStatus));
+}
+
+void TestWaitBehavior(void)
+{
+    CFE_TIME_SysTime_t start;
+    CFE_TIME_SysTime_t end;
+    CFE_TIME_SysTime_t TimePassed;
+    CFE_TIME_SysTime_t TimeExpected = {8, 0};
+
+    start = CFE_TIME_GetTime();
+
+    /* MinSystemStates of CFE_ES_SystemState_SHUTDOWN and higher not tested because they cause a shutdown */
+    UtAssert_INT32_EQ(CFE_ES_WaitForSystemState(CFE_ES_SystemState_UNDEFINED, 10000), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_WaitForSystemState(CFE_ES_SystemState_EARLY_INIT, 10000), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_WaitForSystemState(CFE_ES_SystemState_CORE_STARTUP, 10000), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_WaitForSystemState(CFE_ES_SystemState_CORE_READY, 10000), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_WaitForSystemState(CFE_ES_SystemState_APPS_INIT, 10000), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_WaitForSystemState(CFE_ES_SystemState_OPERATIONAL, 10000), CFE_SUCCESS);
+    UtAssert_VOIDCALL(CFE_ES_WaitForStartupSync(10000));
+
+    end        = CFE_TIME_GetTime();
+    TimePassed = CFE_TIME_Subtract(end, start);
+
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(TimePassed, TimeExpected), CFE_TIME_A_LT_B);
+}
+
+void ESBehaviorestSetup(void)
+{
+    UtTest_Add(TestRunCounter, NULL, NULL, "Test Run Counter");
+    UtTest_Add(TestWaitBehavior, NULL, NULL, "Test Wait Behavior");
+}
+```
+
+### `es_cds_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_cds_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic ES Critical Data Store APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestRegisterCDS(void)
+{
+    CFE_ES_CDSHandle_t CDSHandlePtr;
+    CFE_ES_CDSHandle_t CDSHandlePtr2;
+
+    size_t      BlockSize  = 10;
+    size_t      BlockSize2 = 15;
+    const char *Name       = "CDS_Test";
+    const char *LongName   = "VERY_LONG_NAME_CDS_Test";
+
+    UtPrintf("Testing: CFE_ES_RegisterCDS");
+
+    /*
+     * Since this test app may be executed multiple times, or the system may have
+     * been booted from a processor reset rather than a power-on reset, it is possible
+     * that the CDS already exists at the time this test is executed.  In this case
+     * the new CDS allocation path cannot be checked in functional test, but other CDS
+     * functions can still be called.
+     */
+
+    CFE_Assert_STATUS_STORE(CFE_ES_RegisterCDS(&CDSHandlePtr, BlockSize2, Name));
+
+    if (CFE_Assert_STATUS_MAY_BE(CFE_ES_CDS_ALREADY_EXISTS))
+    {
+        /*
+         * add an informational message that the functional test is incomplete here, due
+         * to preconditions beyond the control of this test app.  Need to clear the CDS
+         * memory and/or do a power-on reset to get full test.
+         */
+        UtAssert_WARN("CDS already exists. CFE_ES_RegisterCDS new allocation could not be properly tested");
+    }
+    else
+    {
+        /*
+         * If not CFE_ES_CDS_ALREADY_EXISTS, then the only other acceptable status is CFE_SUCCESS,
+         * which indicates that the CDS was created and initialized from a clean slate.
+         */
+        CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS);
+
+        /* In this case, calling CFE_ES_RegisterCDS() again should return the CFE_ES_CDS_ALREADY_EXISTS */
+        UtAssert_INT32_EQ(CFE_ES_RegisterCDS(&CDSHandlePtr2, BlockSize2, Name), CFE_ES_CDS_ALREADY_EXISTS);
+    }
+
+    UtAssert_INT32_EQ(CFE_ES_RegisterCDS(&CDSHandlePtr2, BlockSize, Name), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_ES_RegisterCDS(NULL, BlockSize, Name), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_RegisterCDS(&CDSHandlePtr, 0, Name), CFE_ES_CDS_INVALID_SIZE);
+    UtAssert_INT32_EQ(CFE_ES_RegisterCDS(&CDSHandlePtr, BlockSize, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_RegisterCDS(&CDSHandlePtr, BlockSize, LongName), CFE_ES_CDS_INVALID_NAME);
+}
+
+void TestCDSName(void)
+{
+    CFE_ES_CDSHandle_t CDSHandlePtr;
+    size_t             BlockSize    = 10;
+    const char *       Name         = "CDS_Test";
+    const char *       CDSName      = "CFE_TEST_APP.CDS_Test";
+    const char *       INVALID_NAME = "INVALID_NAME";
+
+    CFE_ES_CDSHandle_t IdByName;
+    char               CDSNameBuf[CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN];
+
+    memset(CDSNameBuf, 0, sizeof(CDSNameBuf));
+
+    UtPrintf("Testing: CFE_ES_GetCDSBlockIDByName, CFE_ES_GetCDSBlockName");
+
+    UtAssert_INT32_EQ(CFE_ES_RegisterCDS(&CDSHandlePtr, BlockSize, Name), CFE_ES_CDS_ALREADY_EXISTS);
+
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockName(CDSNameBuf, CDSHandlePtr, sizeof(CDSNameBuf)), CFE_SUCCESS);
+    UtAssert_StrCmp(CDSNameBuf, CDSName, "CFE_ES_GetCDSBlockName() = %s", CDSNameBuf);
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockIDByName(&IdByName, CDSNameBuf), CFE_SUCCESS);
+    CFE_Assert_RESOURCEID_EQ(CDSHandlePtr, IdByName);
+
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockName(NULL, CDSHandlePtr, sizeof(CDSNameBuf)), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockName(CDSNameBuf, CFE_ES_CDS_BAD_HANDLE, sizeof(CDSNameBuf)),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockName(CDSNameBuf, CDSHandlePtr, 0), CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockIDByName(NULL, CDSNameBuf), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockIDByName(&IdByName, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetCDSBlockIDByName(&IdByName, INVALID_NAME), CFE_ES_ERR_NAME_NOT_FOUND);
+}
+
+void TestCopyRestoreCDS(void)
+{
+    CFE_ES_CDSHandle_t CDSHandlePtr;
+    size_t             BlockSize = 10;
+    const char *       Name      = "CDS_Copy_Test";
+    CFE_Status_t       status;
+    char               Data[BlockSize];
+    char               DataBuff[BlockSize];
+
+    memset(DataBuff, 0, sizeof(DataBuff));
+
+    UtPrintf("Testing: CFE_ES_CopyToCDS, CFE_ES_RestoreFromCDS");
+
+    snprintf(Data, BlockSize, "Test Data");
+
+    status = CFE_ES_RegisterCDS(&CDSHandlePtr, BlockSize, Name);
+    UtAssert_True(status == CFE_SUCCESS || status == CFE_ES_CDS_ALREADY_EXISTS, "Register CDS status = %d",
+                  (int)status);
+
+    UtAssert_INT32_EQ(CFE_ES_CopyToCDS(CDSHandlePtr, Data), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_RestoreFromCDS(DataBuff, CDSHandlePtr), CFE_SUCCESS);
+    UtAssert_StrCmp(Data, DataBuff, "RestoreFromCDS = %s", DataBuff);
+
+    UtAssert_INT32_EQ(CFE_ES_CopyToCDS(CFE_ES_CDS_BAD_HANDLE, Data), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_CopyToCDS(CDSHandlePtr, NULL), CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_ES_RestoreFromCDS(DataBuff, CFE_ES_CDS_BAD_HANDLE), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_RestoreFromCDS(NULL, CDSHandlePtr), CFE_ES_BAD_ARGUMENT);
+}
+
+void ESCDSTestSetup(void)
+{
+    UtTest_Add(TestRegisterCDS, NULL, NULL, "Test Register CDS");
+    UtTest_Add(TestCDSName, NULL, NULL, "Test CDS Name");
+    UtTest_Add(TestCopyRestoreCDS, NULL, NULL, "Test Copy Restore CDS");
+}
+```
+
+### `es_counter_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_counter_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Functional test of ES Generic Counter APIs
+ */
+
+#include "cfe_test.h"
+
+void TestCounterCreateDelete(void)
+{
+    CFE_ES_CounterId_t Ids[CFE_PLATFORM_ES_MAX_GEN_COUNTERS + 1];
+    CFE_ES_CounterId_t TestId;
+    CFE_ES_CounterId_t CheckId;
+    char               CounterName[CFE_MISSION_MAX_API_LEN];
+    char               CheckName[CFE_MISSION_MAX_API_LEN];
+    CFE_Status_t       Status;
+    uint32             NumCounters;
+    uint32             Idx;
+
+    UtPrintf("Testing: CFE_ES_RegisterGenCounter");
+
+    snprintf(CounterName, sizeof(CounterName), "ut");
+
+    /* Confirm proper bad argument rejection */
+    UtAssert_INT32_EQ(CFE_ES_RegisterGenCounter(&Ids[0], NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_RegisterGenCounter(NULL, CounterName), CFE_ES_BAD_ARGUMENT);
+
+    /* Create up to CFE_PLATFORM_ES_MAX_GEN_COUNTERS and confirm success */
+    /* Note that this loop may execute fewer than CFE_PLATFORM_ES_MAX_GEN_COUNTERS times,
+     * if another unrelated app has already registered a counter.  Because this test
+     * cannot control for those pre-conditions, anything within range is acceptable */
+    for (NumCounters = 0; NumCounters <= CFE_PLATFORM_ES_MAX_GEN_COUNTERS; ++NumCounters)
+    {
+        snprintf(CounterName, sizeof(CounterName), "C%u", (unsigned int)NumCounters);
+        CFE_Assert_STATUS_STORE(CFE_ES_RegisterGenCounter(&Ids[NumCounters], CounterName));
+
+        /* When the max limit is reached, should return CFE_ES_NO_RESOURCE_IDS_AVAILABLE */
+        if (CFE_Assert_STATUS_MAY_BE(CFE_ES_NO_RESOURCE_IDS_AVAILABLE))
+        {
+            break;
+        }
+
+        /* If max limit not reached, should return CFE_SUCCESS, anything else is a test fail */
+        CFE_Assert_STATUS_MAY_BE(CFE_SUCCESS);
+    }
+
+    /* If no counters were available skip the rest of the test */
+    if (NumCounters == 0)
+    {
+        UtAssert_MIR("No ES generic counters available for testing, skipping");
+        return;
+    }
+
+    /* Confirm that the expected number of counters were created */
+    UtAssert_UINT32_LTEQ(NumCounters, CFE_PLATFORM_ES_MAX_GEN_COUNTERS);
+
+    /* pick a single counter ID from the middle of the set for more detail testing of support APIs */
+    TestId = Ids[NumCounters / 2];
+    snprintf(CounterName, sizeof(CounterName), "C%u", (unsigned int)NumCounters / 2);
+
+    UtPrintf("Testing: CFE_ES_CounterID_ToIndex");
+
+    /* Confirm CFE_ES_CounterID_ToIndex works (nominal) */
+    Idx = UINT32_MAX;
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(TestId, &Idx), CFE_SUCCESS);
+    UtAssert_UINT32_LT(Idx, CFE_PLATFORM_ES_MAX_GEN_COUNTERS);
+
+    /* Confirm proper rejection of bad args in CFE_ES_CounterID_ToIndex */
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(CFE_ES_COUNTERID_UNDEFINED, &Idx), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(TestId, NULL), CFE_ES_BAD_ARGUMENT);
+
+    UtPrintf("Testing: CFE_ES_GetGenCounterIDByName, CFE_ES_GetGenCounterName");
+
+    /* Confirm conversion To/From Name */
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterIDByName(&CheckId, CounterName), CFE_SUCCESS);
+    CFE_Assert_RESOURCEID_EQ(CheckId, TestId);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterName(CheckName, TestId, sizeof(CheckName)), CFE_SUCCESS);
+    UtAssert_STRINGBUF_EQ(CheckName, sizeof(CheckName), CounterName, sizeof(CounterName));
+
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterIDByName(&CheckId, "na"), CFE_ES_ERR_NAME_NOT_FOUND);
+
+    /* Confirm proper rejection of bad args in conversion To/From Name */
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterIDByName(NULL, CounterName), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterIDByName(&CheckId, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterName(CheckName, CFE_ES_COUNTERID_UNDEFINED, sizeof(CounterName)),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterName(CheckName, TestId, 0), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCounterName(NULL, TestId, sizeof(CounterName)), CFE_ES_BAD_ARGUMENT);
+
+    UtPrintf("Testing: CFE_ES_DeleteGenCounter");
+
+    /* Confirm proper rejection of bad args in CFE_ES_DeleteGenCounter (this returns CFE_ES_BAD_ARGUMENT instead) */
+    UtAssert_INT32_EQ(CFE_ES_DeleteGenCounter(CFE_ES_COUNTERID_UNDEFINED), CFE_ES_BAD_ARGUMENT);
+
+    /* Delete last counter to test duplicate name rejection (needs a free slot) */
+    --NumCounters;
+    UtAssert_INT32_EQ(CFE_ES_DeleteGenCounter(Ids[NumCounters]), CFE_SUCCESS);
+    snprintf(CounterName, sizeof(CounterName), "C%u", (unsigned int)0);
+    UtAssert_INT32_EQ(CFE_ES_RegisterGenCounter(&TestId, CounterName), CFE_ES_ERR_DUPLICATE_NAME);
+
+    /* Delete remainder of counters */
+    while (NumCounters > 0)
+    {
+        Status = CFE_ES_DeleteGenCounter(Ids[NumCounters - 1]);
+        if (Status != CFE_SUCCESS)
+        {
+            break;
+        }
+
+        --NumCounters;
+    }
+
+    UtAssert_ZERO(NumCounters);
+}
+
+void TestCounterGetSet(void)
+{
+    CFE_ES_CounterId_t TestId;
+    uint32             CountVal;
+
+    UtPrintf("Testing: CFE_ES_GetGenCount, CFE_ES_SetGenCount, CFE_ES_IncrementGenCounter");
+
+    /* Setup - create a single counter */
+    UtAssert_INT32_EQ(CFE_ES_RegisterGenCounter(&TestId, "ut"), CFE_SUCCESS);
+
+    /* Get and set its count - should be initially 0 */
+    CountVal = UINT32_MAX;
+    UtAssert_INT32_EQ(CFE_ES_GetGenCount(TestId, &CountVal), CFE_SUCCESS);
+    UtAssert_ZERO(CountVal);
+    UtAssert_INT32_EQ(CFE_ES_SetGenCount(TestId, 5), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCount(TestId, &CountVal), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(CountVal, 5);
+    UtAssert_INT32_EQ(CFE_ES_IncrementGenCounter(TestId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCount(TestId, &CountVal), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(CountVal, 6);
+
+    /*
+     * Confirm bad arg rejection in Get/Set/Increment
+     * Note these APIs return CFE_ES_BAD_ARGUMENT rather than
+     * CFE_ES_ERR_RESOURCEID_NOT_VALID on a bad ID (historical)
+     */
+    UtAssert_INT32_EQ(CFE_ES_GetGenCount(TestId, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetGenCount(CFE_ES_COUNTERID_UNDEFINED, &CountVal), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_IncrementGenCounter(CFE_ES_COUNTERID_UNDEFINED), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_SetGenCount(CFE_ES_COUNTERID_UNDEFINED, 0), CFE_ES_BAD_ARGUMENT);
+
+    /* Teardown - delete the counter */
+    UtAssert_INT32_EQ(CFE_ES_DeleteGenCounter(TestId), CFE_SUCCESS);
+}
+
+void ESCounterTestSetup(void)
+{
+    UtTest_Add(TestCounterCreateDelete, NULL, NULL, "Test Counter Create/Delete");
+    UtTest_Add(TestCounterGetSet, NULL, NULL, "Test Counter Get/Set");
+}
+```
+
+### `es_error_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_error_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic ES Error APIs
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestStatusToString_Helper(CFE_Status_t status)
+{
+    CFE_StatusString_t status_string;
+    char *             rtn_addr;
+    char               expected[CFE_STATUS_STRING_LENGTH + 1];
+
+    /* Used oversized string to test for truncation */
+    snprintf(expected, sizeof(expected), "0x%08x", (unsigned int)status);
+    rtn_addr = CFE_ES_StatusToString(status, &status_string);
+    UtAssert_ADDRESS_EQ(rtn_addr, status_string);
+    UtAssert_STRINGBUF_EQ(status_string, sizeof(status_string), expected, sizeof(expected));
+}
+
+void TestStatusToString(void)
+{
+    /* NULL test */
+    UtAssert_ADDRESS_EQ(CFE_ES_StatusToString(CFE_SUCCESS, NULL), NULL);
+
+    /* Status value tests */
+    TestStatusToString_Helper(CFE_SUCCESS);
+    TestStatusToString_Helper(CFE_SEVERITY_ERROR);
+    TestStatusToString_Helper(CFE_STATUS_C(INT32_MAX));
+    TestStatusToString_Helper(CFE_STATUS_C(INT32_MIN));
+}
+
+void ESErrorTestSetup(void)
+{
+    UtTest_Add(TestStatusToString, NULL, NULL, "TestStatusToString");
+}
+```
+
+### `es_info_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_info_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic ES Information APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+const char TEST_EXPECTED_ENTRYPOINT[] = "CFE_TestMain";
+const char TEST_EXPECTED_APP_NAME[]   = "CFE_TEST_APP";
+const char TEST_EXPECTED_FILE_NAME[]  = "cfe_testcase";
+const char ES_APP_EXPECTED_NAME[]     = "CFE_ES";
+const char INVALID_APP_NAME[]         = "INVALID_NAME";
+
+void TestGetAppInfo(void)
+{
+    CFE_ES_AppId_t   TestAppId;
+    CFE_ES_AppId_t   ESAppId;
+    CFE_ES_AppId_t   AppIdByName;
+    char             AppNameBuf[OS_MAX_API_NAME + 4];
+    CFE_ES_AppInfo_t TestAppInfo;
+    CFE_ES_AppInfo_t ESAppInfo;
+
+    UtPrintf("Testing: CFE_ES_GetAppID, CFE_ES_GetAppIDByName, CFE_ES_GetAppName, CFE_ES_GetAppInfo");
+
+    UtAssert_INT32_EQ(CFE_ES_GetAppIDByName(&AppIdByName, TEST_EXPECTED_APP_NAME), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&TestAppId), CFE_SUCCESS);
+    CFE_Assert_RESOURCEID_EQ(TestAppId, AppIdByName);
+    UtAssert_INT32_EQ(CFE_ES_GetAppName(AppNameBuf, TestAppId, sizeof(AppNameBuf)), CFE_SUCCESS);
+    UtAssert_StrCmp(AppNameBuf, TEST_EXPECTED_APP_NAME, "CFE_ES_GetAppName() = %s", AppNameBuf);
+
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(&TestAppInfo, TestAppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetAppIDByName(&ESAppId, ES_APP_EXPECTED_NAME), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(&ESAppInfo, ESAppId), CFE_SUCCESS);
+
+    UtAssert_True(TestAppInfo.Type == CFE_ES_AppType_EXTERNAL, "Test App Info -> Type = %d", (int)TestAppInfo.Type);
+    UtAssert_True(ESAppInfo.Type == CFE_ES_AppType_CORE, "ES App Info -> Type = %d", (int)ESAppInfo.Type);
+
+    UtAssert_StrCmp(TestAppInfo.Name, TEST_EXPECTED_APP_NAME, "Test App Info -> Name = %s", TestAppInfo.Name);
+    UtAssert_StrCmp(ESAppInfo.Name, ES_APP_EXPECTED_NAME, "ES App Info -> Name = %s", ESAppInfo.Name);
+
+    UtAssert_StrCmp(TestAppInfo.EntryPoint, TEST_EXPECTED_ENTRYPOINT, "Test App Info -> EntryPt  = %s",
+                    TestAppInfo.EntryPoint);
+    UtAssert_True(strlen(ESAppInfo.EntryPoint) == 0, "ES App Info -> EntryPt  = %s", ESAppInfo.EntryPoint);
+
+    UtAssert_True(strstr(TestAppInfo.FileName, TEST_EXPECTED_FILE_NAME) != NULL, "Test App Info -> FileName = %s",
+                  TestAppInfo.FileName);
+    UtAssert_True(strlen(ESAppInfo.FileName) == 0, "ES App Info -> FileName  = %s", ESAppInfo.FileName);
+
+    UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(TestAppInfo.StackSize));
+    UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(ESAppInfo.StackSize));
+
+    if (TestAppInfo.AddressesAreValid)
+    {
+        UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(TestAppInfo.CodeAddress));
+        UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(TestAppInfo.CodeSize));
+        UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(TestAppInfo.DataAddress));
+        UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(TestAppInfo.DataSize));
+        UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(TestAppInfo.BSSAddress));
+        UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(TestAppInfo.BSSSize));
+    }
+    else
+    {
+        UtAssert_NA("AddressesAreValid is false: Code Address test skipped");
+        UtAssert_NA("AddressesAreValid is false: Code Size test skipped");
+        UtAssert_NA("AddressesAreValid is false: Data Address test skipped");
+        UtAssert_NA("AddressesAreValid is false: Data Size test skipped");
+        UtAssert_NA("AddressesAreValid is false: BSS  Address test skipped");
+        UtAssert_NA("AddressesAreValid is false: BSS Size test skipped");
+    }
+
+    UtAssert_True(ESAppInfo.AddressesAreValid == 0, "ES App Info -> AddrsValid?  = %d",
+                  (int)ESAppInfo.AddressesAreValid);
+
+    UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(TestAppInfo.StartAddress));
+    UtAssert_NULL(CFE_ES_MEMADDRESS_TO_PTR(ESAppInfo.StartAddress));
+
+    UtAssert_INT32_EQ(TestAppInfo.ExceptionAction, 0);
+    UtAssert_INT32_EQ(ESAppInfo.ExceptionAction, 1);
+
+    UtAssert_True(TestAppInfo.Priority > 0, "Test App Info -> Priority  = %d", (int)TestAppInfo.Priority);
+    UtAssert_True(ESAppInfo.Priority > 0, "ES App Info -> Priority  = %d", (int)ESAppInfo.Priority);
+
+    UtAssert_True(TestAppInfo.NumOfChildTasks == 0, "Test App Info -> Child Tasks  = %d",
+                  (int)TestAppInfo.NumOfChildTasks);
+    UtAssert_True(ESAppInfo.NumOfChildTasks > 0, "ES App Info -> Child Tasks  = %d", (int)ESAppInfo.NumOfChildTasks);
+
+    UtAssert_INT32_EQ(CFE_ES_GetAppIDByName(&AppIdByName, INVALID_APP_NAME), CFE_ES_ERR_NAME_NOT_FOUND);
+    CFE_Assert_RESOURCEID_UNDEFINED(AppIdByName);
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetAppIDByName(NULL, TEST_EXPECTED_APP_NAME), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetAppIDByName(&AppIdByName, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetAppName(AppNameBuf, CFE_ES_APPID_UNDEFINED, sizeof(AppNameBuf)),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetAppName(NULL, TestAppId, sizeof(AppNameBuf)), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(&TestAppInfo, CFE_ES_APPID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(NULL, TestAppId), CFE_ES_BAD_ARGUMENT);
+}
+
+void TestGetTaskInfo(void)
+{
+    CFE_ES_AppId_t    AppId;
+    CFE_ES_AppInfo_t  AppInfo;
+    CFE_ES_TaskInfo_t TaskInfo;
+    CFE_ES_TaskId_t   TaskId;
+
+    UtPrintf("Testing: CFE_ES_GetTaskID, CFE_ES_GetTaskInfo");
+
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&AppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(&AppInfo, AppId), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(&TaskInfo, AppInfo.MainTaskId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskID(&TaskId), CFE_SUCCESS);
+    CFE_Assert_RESOURCEID_EQ(TaskId, AppInfo.MainTaskId);
+
+    UtAssert_StrCmp(TaskInfo.AppName, AppInfo.Name, "TaskInfo.AppName (%s) = AppInfo.name (%s)", TaskInfo.AppName,
+                    AppInfo.Name);
+    UtAssert_StrCmp(TaskInfo.TaskName, AppInfo.MainTaskName, "TaskInfo.TaskName (%s) = AppInfo.MainTaskName (%s)",
+                    TaskInfo.TaskName, AppInfo.MainTaskName);
+
+    CFE_Assert_RESOURCEID_EQ(TaskInfo.TaskId, AppInfo.MainTaskId);
+    CFE_Assert_RESOURCEID_EQ(TaskInfo.AppId, AppId);
+    UtAssert_INT32_EQ(TaskInfo.ExecutionCounter, AppInfo.ExecutionCounter);
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(&TaskInfo, CFE_ES_TASKID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskInfo(NULL, TaskId), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskID(NULL), CFE_ES_BAD_ARGUMENT);
+}
+
+void TestGetLibInfo(void)
+{
+    CFE_ES_LibId_t   LibId;
+    CFE_ES_LibId_t   CheckId;
+    CFE_ES_AppInfo_t LibInfo;
+    const char *     LibName     = "ASSERT_LIB";
+    const char *     FileName    = "cfe_assert";
+    const char *     InvalidName = "INVALID_NAME";
+    char             LibNameBuf[OS_MAX_API_NAME + 4];
+
+    UtPrintf("Testing: CFE_ES_GetLibIDByName, CFE_ES_GetLibName, CFE_ES_GetLibInfo");
+
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(&LibId, LibName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetLibInfo(&LibInfo, LibId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetLibName(LibNameBuf, LibId, sizeof(LibNameBuf)), CFE_SUCCESS);
+    UtAssert_StrCmp(LibNameBuf, LibName, "CFE_ES_GetLibName() = %s", LibNameBuf);
+    UtAssert_True(LibInfo.Type == CFE_ES_AppType_LIBRARY, "Lib Info -> Type = %d", (int)LibInfo.Type);
+    UtAssert_StrCmp(LibInfo.Name, LibName, "Lib Info -> Name = %s", LibInfo.Name);
+    UtAssert_StrCmp(LibInfo.EntryPoint, "CFE_Assert_LibInit", "Lib Info -> EntryPt  = %s", LibInfo.EntryPoint);
+    UtAssert_True(strstr(LibInfo.FileName, FileName) != NULL, "Lib Info -> FileName = %s contains %s", LibInfo.FileName,
+                  FileName);
+
+    UtAssert_ZERO(CFE_ES_MEMOFFSET_TO_SIZET(LibInfo.StackSize));
+
+    if (LibInfo.AddressesAreValid)
+    {
+        UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(LibInfo.CodeAddress));
+        UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(LibInfo.CodeSize));
+        UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(LibInfo.DataAddress));
+        UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(LibInfo.DataSize));
+        UtAssert_NOT_NULL(CFE_ES_MEMADDRESS_TO_PTR(LibInfo.BSSAddress));
+        UtAssert_NONZERO(CFE_ES_MEMOFFSET_TO_SIZET(LibInfo.BSSSize));
+    }
+    else
+    {
+        UtAssert_NA("AddressesAreValid is false: Code Address test skipped");
+        UtAssert_NA("AddressesAreValid is false: Code Size test skipped");
+        UtAssert_NA("AddressesAreValid is false: Data Address test skipped");
+        UtAssert_NA("AddressesAreValid is false: Data Size test skipped");
+        UtAssert_NA("AddressesAreValid is false: BSS  Address test skipped");
+        UtAssert_NA("AddressesAreValid is false: BSS Size test skipped");
+    }
+
+    UtAssert_INT32_EQ(LibInfo.ExceptionAction, 0);
+    UtAssert_True(LibInfo.Priority == 0, "Lib Info -> Priority  = %d", (int)LibInfo.Priority);
+    CFE_Assert_RESOURCEID_UNDEFINED(LibInfo.MainTaskId);
+    UtAssert_True(LibInfo.ExecutionCounter == 0, "Lib Info -> ExecutionCounter  = %d", (int)LibInfo.ExecutionCounter);
+    UtAssert_True(strlen(LibInfo.MainTaskName) == 0, "Lib Info -> Task Name  = %s", LibInfo.MainTaskName);
+    UtAssert_True(LibInfo.NumOfChildTasks == 0, "Lib Info -> Child Tasks  = %d", (int)LibInfo.NumOfChildTasks);
+
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(&CheckId, InvalidName), CFE_ES_ERR_NAME_NOT_FOUND);
+    CFE_Assert_RESOURCEID_UNDEFINED(CheckId);
+    UtAssert_INT32_EQ(CFE_ES_GetLibInfo(&LibInfo, CFE_ES_LIBID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetLibInfo(NULL, LibId), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(NULL, LibName), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(&CheckId, NULL), CFE_ES_BAD_ARGUMENT);
+    CFE_Assert_RESOURCEID_UNDEFINED(CheckId);
+    UtAssert_INT32_EQ(CFE_ES_GetLibName(LibNameBuf, CFE_ES_LIBID_UNDEFINED, sizeof(LibNameBuf)),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetLibName(LibNameBuf, LibId, 0), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetLibName(NULL, LibId, sizeof(LibNameBuf)), CFE_ES_BAD_ARGUMENT);
+}
+
+void TestResetType(void)
+{
+    int32  rType;
+    uint32 rSubType;
+
+    UtPrintf("Testing: CFE_ES_GetResetType");
+
+    rType = CFE_ES_GetResetType(NULL);
+    UtAssert_True((rType == CFE_PSP_RST_TYPE_POWERON) || (rType == CFE_PSP_RST_TYPE_PROCESSOR), "Reset Type = %d",
+                  (int)rType);
+
+    CFE_ES_GetResetType(&rSubType);
+    UtAssert_True((rSubType > 0) && (rSubType < 10), "Reset Sub-Type = %d", (int)rSubType);
+}
+
+void TestGetModuleInfo(void)
+{
+    CFE_ES_AppInfo_t ModuleInfo;
+    CFE_ES_LibId_t   LibIdByName;
+    CFE_ES_AppId_t   TestAppId;
+    CFE_ES_AppInfo_t LibInfo;
+    CFE_ES_AppInfo_t TestAppInfo;
+    const char *     LibName = "ASSERT_LIB";
+
+    memset(&ModuleInfo, 0, sizeof(ModuleInfo));
+    memset(&LibInfo, 0, sizeof(LibInfo));
+    memset(&TestAppInfo, 0, sizeof(TestAppInfo));
+
+    UtPrintf("Testing: CFE_ES_GetModuleInfo");
+
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&TestAppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(&TestAppInfo, TestAppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetModuleInfo(&ModuleInfo, CFE_RESOURCEID_UNWRAP(TestAppId)), CFE_SUCCESS);
+    UtAssert_StrCmp(TestAppInfo.Name, ModuleInfo.Name, "App Info Name (%s) = Module Info Name (%s) ", TestAppInfo.Name,
+                    ModuleInfo.Name);
+
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(&LibIdByName, LibName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetLibInfo(&LibInfo, LibIdByName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetModuleInfo(&ModuleInfo, CFE_RESOURCEID_UNWRAP(LibIdByName)), CFE_SUCCESS);
+    UtAssert_StrCmp(LibInfo.Name, ModuleInfo.Name, "Lib Info Name (%s) = Module Info Name (%s) ", LibInfo.Name,
+                    ModuleInfo.Name);
+
+    UtAssert_INT32_EQ(CFE_ES_GetModuleInfo(&ModuleInfo, CFE_RESOURCEID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetModuleInfo(NULL, CFE_RESOURCEID_UNWRAP(TestAppId)), CFE_ES_BAD_ARGUMENT);
+}
+
+void ESInfoTestSetup(void)
+{
+    UtTest_Add(TestGetAppInfo, NULL, NULL, "Test App Info");
+    UtTest_Add(TestGetTaskInfo, NULL, NULL, "Test Task Info");
+    UtTest_Add(TestGetLibInfo, NULL, NULL, "Test Lib Info");
+    UtTest_Add(TestResetType, NULL, NULL, "Test Reset Type");
+    UtTest_Add(TestGetModuleInfo, NULL, NULL, "Test Module Info");
+}
+```
+
+### `es_mempool_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_mempool_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic ES Mempool APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+typedef struct
+{
+    uint32 Mem[128];
+} CFE_FT_PoolMemBlock_t;
+
+static CFE_FT_PoolMemBlock_t CFE_FT_PoolMemBlock[CFE_PLATFORM_ES_MAX_MEMORY_POOLS + 1];
+
+void TestMemPoolCreate(void)
+{
+    CFE_ES_MemHandle_t PoolID = CFE_ES_MEMHANDLE_UNDEFINED;
+
+    UtPrintf("Testing: CFE_ES_PoolCreateNoSem, CFE_ES_PoolCreate, CFE_ES_PoolCreateEx");
+
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateNoSem(&PoolID, CFE_FT_PoolMemBlock, sizeof(CFE_FT_PoolMemBlock)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateNoSem(NULL, CFE_FT_PoolMemBlock, sizeof(CFE_FT_PoolMemBlock)),
+                      CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateNoSem(&PoolID, NULL, sizeof(CFE_FT_PoolMemBlock)), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateNoSem(&PoolID, CFE_FT_PoolMemBlock, 0), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolID, CFE_FT_PoolMemBlock, sizeof(CFE_FT_PoolMemBlock)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(NULL, CFE_FT_PoolMemBlock, sizeof(CFE_FT_PoolMemBlock)), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolID, NULL, sizeof(CFE_FT_PoolMemBlock)), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolID, CFE_FT_PoolMemBlock, 0), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(
+        CFE_ES_PoolCreateEx(&PoolID, CFE_FT_PoolMemBlock, sizeof(CFE_FT_PoolMemBlock), 0, NULL, CFE_ES_NO_MUTEX),
+        CFE_SUCCESS);
+    UtAssert_INT32_EQ(
+        CFE_ES_PoolCreateEx(NULL, CFE_FT_PoolMemBlock, sizeof(CFE_FT_PoolMemBlock), 0, NULL, CFE_ES_NO_MUTEX),
+        CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateEx(&PoolID, NULL, sizeof(CFE_FT_PoolMemBlock), 0, NULL, CFE_ES_NO_MUTEX),
+                      CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateEx(&PoolID, CFE_FT_PoolMemBlock, 0, 0, NULL, CFE_ES_NO_MUTEX),
+                      CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+}
+
+void TestMemPoolCreateMax(void)
+{
+    CFE_ES_MemHandle_t PoolID[CFE_PLATFORM_ES_MAX_MEMORY_POOLS + 1];
+    uint32             NumPools;
+
+    UtPrintf("Testing: CFE_ES_PoolCreate Max Limit");
+
+    NumPools = 0;
+    while (NumPools <= CFE_PLATFORM_ES_MAX_MEMORY_POOLS)
+    {
+        CFE_Assert_STATUS_STORE(CFE_ES_PoolCreateEx(&PoolID[NumPools], &CFE_FT_PoolMemBlock[NumPools],
+                                                    sizeof(CFE_FT_PoolMemBlock_t), 0, NULL, CFE_ES_NO_MUTEX));
+        if (CFE_Assert_STATUS_MAY_BE(CFE_ES_NO_RESOURCE_IDS_AVAILABLE))
+        {
+            /* limit reached */
+            break;
+        }
+        CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS);
+        ++NumPools;
+    }
+
+    UtAssert_UINT32_LTEQ(NumPools, CFE_PLATFORM_ES_MAX_MEMORY_POOLS);
+
+    /* Clean up */
+    while (NumPools > 0)
+    {
+        --NumPools;
+        UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID[NumPools]), CFE_SUCCESS);
+    }
+}
+
+void TestMemPoolGetBuf(void)
+{
+    CFE_ES_MemHandle_t  PoolID = CFE_ES_MEMHANDLE_UNDEFINED;
+    int8                Pool[1024];
+    size_t              BufferSize = 512;
+    size_t              BufferBig  = 2048;
+    CFE_ES_MemPoolBuf_t addressp   = CFE_ES_MEMPOOLBUF_C(0);
+
+    UtPrintf("Testing: TestMemPoolGetBuf");
+
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolID, Pool, sizeof(Pool)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, PoolID, BufferSize), BufferSize);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(NULL, PoolID, BufferSize), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, CFE_ES_MEMHANDLE_UNDEFINED, BufferSize),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, PoolID, BufferSize), CFE_ES_ERR_MEM_BLOCK_SIZE);
+    UtAssert_INT32_EQ(CFE_ES_PutPoolBuf(PoolID, addressp), BufferSize);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, PoolID, BufferBig), CFE_ES_ERR_MEM_BLOCK_SIZE);
+
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+}
+
+void TestMemPoolBufInfo(void)
+{
+    CFE_ES_MemHandle_t  PoolID = CFE_ES_MEMHANDLE_UNDEFINED;
+    int8                Pool[1024];
+    size_t              Buffer   = 512;
+    CFE_ES_MemPoolBuf_t addressp = CFE_ES_MEMPOOLBUF_C(0);
+
+    UtPrintf("Testing: CFE_ES_GetPoolBufInfo");
+
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolID, Pool, sizeof(Pool)), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBufInfo(PoolID, addressp), CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, PoolID, Buffer), Buffer);
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBufInfo(PoolID, addressp), Buffer);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBufInfo(CFE_ES_MEMHANDLE_UNDEFINED, addressp), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBufInfo(PoolID, NULL), CFE_ES_BAD_ARGUMENT);
+
+    /* Pass an address from some other memory which is not part of the pool */
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBufInfo(PoolID, &Buffer), CFE_ES_BUFFER_NOT_IN_POOL);
+
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+}
+
+void TestMemPoolPutBuf(void)
+{
+    CFE_ES_MemHandle_t  PoolID = CFE_ES_MEMHANDLE_UNDEFINED;
+    int8                Pool[1024];
+    size_t              Buffer   = 512;
+    CFE_ES_MemPoolBuf_t addressp = CFE_ES_MEMPOOLBUF_C(0);
+
+    UtPrintf("Testing: CFE_ES_PutPoolBuf");
+
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolID, Pool, sizeof(Pool)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, PoolID, Buffer), Buffer);
+    UtAssert_INT32_EQ(CFE_ES_PutPoolBuf(PoolID, addressp), Buffer);
+
+    UtAssert_INT32_EQ(CFE_ES_PutPoolBuf(PoolID, addressp), CFE_ES_POOL_BLOCK_INVALID);
+    UtAssert_INT32_EQ(CFE_ES_PutPoolBuf(CFE_ES_MEMHANDLE_UNDEFINED, addressp), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_PutPoolBuf(PoolID, NULL), CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_ES_GetPoolBuf(&addressp, PoolID, Buffer), Buffer);
+
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+}
+
+void TestMemPoolDelete(void)
+{
+    CFE_ES_MemHandle_t    PoolID = CFE_ES_MEMHANDLE_UNDEFINED; /* Poo1 1 handle, no mutex */
+    uint8                 Buffer[1024];
+    CFE_ES_MemPoolStats_t Stats;
+
+    memset(&Stats, 0, sizeof(Stats));
+
+    UtPrintf("Testing: CFE_ES_PoolDelete, CFE_ES_GetMemPoolStats, CFE_ES_PoolCreateEx");
+
+    UtAssert_INT32_EQ(CFE_ES_PoolCreateEx(&PoolID, Buffer, sizeof(Buffer), 0, NULL, CFE_ES_NO_MUTEX), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetMemPoolStats(&Stats, PoolID), CFE_SUCCESS);
+
+    UtAssert_EQ(size_t, CFE_ES_MEMOFFSET_TO_SIZET(Stats.PoolSize), sizeof(Buffer));
+    UtAssert_UINT32_EQ(Stats.NumBlocksRequested, 0);
+    UtAssert_UINT32_EQ(Stats.CheckErrCtr, 0);
+    UtAssert_EQ(size_t, CFE_ES_MEMOFFSET_TO_SIZET(Stats.NumFreeBytes), sizeof(Buffer));
+
+    UtAssert_INT32_EQ(CFE_ES_GetMemPoolStats(NULL, PoolID), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetMemPoolStats(&Stats, CFE_ES_MEMHANDLE_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetMemPoolStats(&Stats, PoolID), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolID), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(CFE_ES_MEMHANDLE_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void ESMemPoolTestSetup(void)
+{
+    UtTest_Add(TestMemPoolCreate, NULL, NULL, "Test Mem Pool Create");
+    UtTest_Add(TestMemPoolCreateMax, NULL, NULL, "Test Mem Pool Create Maximum");
+    UtTest_Add(TestMemPoolGetBuf, NULL, NULL, "Test Mem Pool Get Buf");
+    UtTest_Add(TestMemPoolBufInfo, NULL, NULL, "Test Mem Pool Buf Info");
+    UtTest_Add(TestMemPoolPutBuf, NULL, NULL, "Test Mem Pool Put Buf");
+    UtTest_Add(TestMemPoolDelete, NULL, NULL, "Test Mem Pool Delete");
+}
+```
+
+### `es_misc_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_misc_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic ES Miscellaneous APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestCalculateCRC(void)
+{
+    const char *Data     = "Random Stuff";
+    uint32      inputCrc = 345353;
+    uint32      Result;
+
+    UtPrintf("Testing: CFE_ES_CalculateCRC");
+
+    /* CRC is implementation specific, functional just checks that a result is produced and reports */
+    UtAssert_VOIDCALL(Result = CFE_ES_CalculateCRC(Data, sizeof(Data), 0, CFE_MISSION_ES_DEFAULT_CRC));
+    UtAssert_MIR("Confirm mission default CRC of \"%s\" is %lu", Data, (unsigned long)Result);
+
+    UtAssert_VOIDCALL(Result = CFE_ES_CalculateCRC(Data, sizeof(Data), inputCrc, CFE_ES_CrcType_CRC_16));
+    UtAssert_MIR("Confirm CRC16 of \"%s\" with input CRC of %lu is %lu", Data, (unsigned long)inputCrc,
+                 (unsigned long)Result);
+
+    UtAssert_VOIDCALL(Result = CFE_ES_CalculateCRC(Data, sizeof(Data), 0, CFE_ES_CrcType_CRC_8));
+    UtAssert_MIR("Confirm CRC8 of \"%s\" is %lu", Data, (unsigned long)Result);
+
+    UtAssert_VOIDCALL(Result = CFE_ES_CalculateCRC(Data, sizeof(Data), 0, CFE_ES_CrcType_CRC_32));
+    UtAssert_MIR("Confirm CRC32 of \"%s\" is %lu", Data, (unsigned long)Result);
+
+    /* NULL input or 0 size returns input crc */
+    UtAssert_UINT32_EQ(CFE_ES_CalculateCRC(NULL, sizeof(Data), inputCrc, CFE_ES_CrcType_CRC_16), inputCrc);
+    UtAssert_UINT32_EQ(CFE_ES_CalculateCRC(Data, 0, inputCrc, CFE_ES_CrcType_CRC_16), inputCrc);
+}
+
+void TestWriteToSysLog(void)
+{
+    const char *TestString = "Test String for CFE_ES_WriteToSysLog Functional Test";
+    uint32      Iterations = CFE_PLATFORM_ES_SYSTEM_LOG_SIZE / 50;
+
+    UtPrintf("Testing: CFE_ES_WriteToSysLog");
+
+    UtAssert_INT32_EQ(CFE_ES_WriteToSysLog(NULL), CFE_ES_BAD_ARGUMENT);
+
+    CFE_Assert_STATUS_STORE(CFE_ES_WriteToSysLog("MIR (Manual Inspection Required) for CFE_ES_WriteToSysLog"));
+    if (!CFE_Assert_STATUS_MAY_BE(CFE_ES_ERR_SYS_LOG_FULL))
+    {
+        CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS);
+    }
+
+    /* The test string is a little over 50 chars in length, so writing it repeatedly should fill it up. */
+    /* This does depend on whether the system is set to OVERWRITE or DISCARD mode, though -
+     * in OVERWRITE mode, the system log will never fill, and therefore CFE_ES_ERR_SYS_LOG_FULL cannot be tested */
+    Iterations = 1 + (CFE_PLATFORM_ES_SYSTEM_LOG_SIZE / strlen(TestString));
+
+    while (Iterations > 0)
+    {
+        --Iterations;
+        CFE_Assert_STATUS_STORE(CFE_ES_WriteToSysLog("%s", TestString));
+        if (CFE_Assert_STATUS_MAY_BE(CFE_ES_ERR_SYS_LOG_FULL))
+        {
+            break;
+        }
+        if (!CFE_Assert_STATUS_MAY_BE(CFE_ES_ERR_SYS_LOG_TRUNCATED))
+        {
+            CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS);
+        }
+    }
+
+    UtAssert_MIR("MIR (Manual Inspection Required) for CFE_ES_WriteToSysLog");
+}
+
+void TestProcessAsyncEvent(void)
+{
+    UtPrintf("Testing: CFE_ES_ProcessAsyncEvent");
+    UtAssert_VOIDCALL(CFE_ES_ProcessAsyncEvent());
+}
+
+void TestBackgroundWakeup(void)
+{
+    UtPrintf("Testing: CFE_ES_BackgroundWakeup");
+    UtAssert_VOIDCALL(CFE_ES_BackgroundWakeup());
+}
+
+void ESMiscTestSetup(void)
+{
+    UtTest_Add(TestCalculateCRC, NULL, NULL, "Test Calculate CRC");
+    UtTest_Add(TestWriteToSysLog, NULL, NULL, "Test Write To Sys Log");
+    UtTest_Add(TestProcessAsyncEvent, NULL, NULL, "Test Process Async Event");
+    UtTest_Add(TestBackgroundWakeup, NULL, NULL, "Test Background Wakeup");
+}
+```
+
+### `es_perf_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_perf_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of ES Performance APIs
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestPerfLogEntry(void)
+{
+    UtAssert_VOIDCALL(CFE_ES_PerfLogEntry(0));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogEntry(CFE_MISSION_ES_PERF_MAX_IDS - 1));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogEntry(CFE_MISSION_ES_PERF_MAX_IDS));
+}
+
+void TestPerfLogExit(void)
+{
+    UtAssert_VOIDCALL(CFE_ES_PerfLogExit(0));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogExit(CFE_MISSION_ES_PERF_MAX_IDS - 1));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogExit(CFE_MISSION_ES_PERF_MAX_IDS));
+}
+
+void TestPerfLogAdd(void)
+{
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(0, 0));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(0, 1));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(0, 0xFFFFFFFF));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(CFE_MISSION_ES_PERF_MAX_IDS - 1, 0));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(CFE_MISSION_ES_PERF_MAX_IDS - 1, 1));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(CFE_MISSION_ES_PERF_MAX_IDS - 1, 0xFFFFFFFF));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(CFE_MISSION_ES_PERF_MAX_IDS, 0));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(CFE_MISSION_ES_PERF_MAX_IDS, 1));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogAdd(CFE_MISSION_ES_PERF_MAX_IDS, 0xFFFFFFFF));
+}
+
+/* These commands should trigger and stop perf data (based on value commanded in functional test workflow) */
+void TestPerfLogTrigger(void)
+{
+    UtAssert_VOIDCALL(CFE_ES_PerfLogEntry(126));
+    UtAssert_VOIDCALL(CFE_ES_PerfLogExit(126));
+}
+
+void ESPerfTestSetup(void)
+{
+    UtTest_Add(TestPerfLogEntry, NULL, NULL, "Test PerfLogEntry");
+    UtTest_Add(TestPerfLogExit, NULL, NULL, "Test PerfLogExit");
+    UtTest_Add(TestPerfLogAdd, NULL, NULL, "Test PerfLogAdd");
+    UtTest_Add(TestPerfLogTrigger, NULL, NULL, "Test Perf Trigger");
+}
+```
+
+### `es_resource_id_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_resource_id_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of ES Resource ID APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestAppIDToIndex(void)
+{
+    UtPrintf("Testing: CFE_ES_AppID_ToIndex");
+    CFE_ES_AppId_t TestAppId;
+    uint32         TestAppIdx;
+    uint32         idx;
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&TestAppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_AppID_ToIndex(TestAppId, &TestAppIdx), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_AppID_ToIndex(TestAppId, &idx), CFE_SUCCESS);
+    UtAssert_INT32_LTEQ(TestAppIdx, CFE_PLATFORM_ES_MAX_APPLICATIONS);
+    UtAssert_UINT32_EQ(idx, TestAppIdx);
+
+    UtAssert_INT32_EQ(CFE_ES_AppID_ToIndex(TestAppId, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_AppID_ToIndex(CFE_ES_APPID_UNDEFINED, &TestAppIdx), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void TestLibIDToIndex(void)
+{
+    UtPrintf("Testing: CFE_ES_LibID_ToIndex");
+    const char *   LibName = "ASSERT_LIB";
+    CFE_ES_LibId_t LibId;
+    uint32         LibIdx = 0;
+    uint32         idx    = 0;
+
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(&LibId, LibName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_LibID_ToIndex(LibId, &LibIdx), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_LibID_ToIndex(LibId, &idx), CFE_SUCCESS);
+    UtAssert_INT32_LTEQ(LibIdx, CFE_PLATFORM_ES_MAX_LIBRARIES);
+    UtAssert_UINT32_EQ(idx, LibIdx);
+
+    UtAssert_INT32_EQ(CFE_ES_LibID_ToIndex(LibId, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_LibID_ToIndex(CFE_ES_LIBID_UNDEFINED, &LibIdx), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void TestTaskIDToIndex(void)
+{
+    CFE_ES_TaskId_t TaskId  = CFE_ES_TASKID_UNDEFINED;
+    uint32          TaskIdx = 0;
+    uint32          idx     = 0;
+
+    UtPrintf("Testing: CFE_ES_TaskID_ToIndex");
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskID(&TaskId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_TaskID_ToIndex(TaskId, &TaskIdx), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_TaskID_ToIndex(TaskId, &idx), CFE_SUCCESS);
+    UtAssert_INT32_LTEQ(TaskIdx, OS_MAX_TASKS);
+    UtAssert_UINT32_EQ(idx, TaskIdx);
+
+    UtAssert_INT32_EQ(CFE_ES_TaskID_ToIndex(TaskId, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_TaskID_ToIndex(CFE_ES_TASKID_UNDEFINED, &TaskIdx), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void TestCounterIDToIndex(void)
+{
+    UtPrintf("Testing: CFE_ES_CounterID_ToIndex");
+    const char *       CounterName = "TEST_COUNTER";
+    CFE_ES_CounterId_t CounterId;
+    uint32             CounterIdx;
+    uint32             idx;
+    UtAssert_UINT32_EQ(CFE_ES_RegisterGenCounter(&CounterId, CounterName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(CounterId, &CounterIdx), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(CounterId, &idx), CFE_SUCCESS);
+    UtAssert_INT32_LTEQ(CounterIdx, CFE_PLATFORM_ES_MAX_GEN_COUNTERS);
+    UtAssert_UINT32_EQ(idx, CounterIdx);
+
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(CounterId, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_CounterID_ToIndex(CFE_ES_COUNTERID_UNDEFINED, &CounterIdx),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    /* Unregister Counter */
+    UtAssert_INT32_EQ(CFE_ES_DeleteGenCounter(CounterId), CFE_SUCCESS);
+}
+
+void ESResourceIDTestSetup(void)
+{
+    UtTest_Add(TestAppIDToIndex, NULL, NULL, "Test Obtaining indices from App ID");
+    UtTest_Add(TestLibIDToIndex, NULL, NULL, "Test Obtaining indices from Lib ID");
+    UtTest_Add(TestTaskIDToIndex, NULL, NULL, "Test Obtaining indices from Task ID");
+    UtTest_Add(TestCounterIDToIndex, NULL, NULL, "Test Obtaining indices from Counter ID");
+}
+```
+
+### `es_task_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/es_task_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of ES Child Tasks APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TaskFunction(void)
+{
+    while (CFE_FT_Global.Count < 200)
+    {
+        CFE_FT_Global.Count += 1;
+        OS_TaskDelay(100);
+    }
+}
+
+/* A task function that verifies the behavior of other APIs when those are called from a child task */
+void TaskFunctionCheckChildTaskContext(void)
+{
+    CFE_ES_TaskId_t  TaskId;
+    CFE_ES_AppId_t   AppId;
+    CFE_ES_AppInfo_t AppInfo;
+
+    /* extra startup delay before first assert, to make sure parent task has reached its wait loop */
+    OS_TaskDelay(100);
+
+    /* If invoked from the context of a child task, this should return an error */
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, "Test", TaskFunction, OSAL_TASK_STACK_ALLOCATE, 4096, 150, 0),
+                      CFE_ES_ERR_CHILD_TASK_CREATE);
+
+    /* Likewise attempting to delete the main task of the app from a child task should fail */
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&AppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_GetAppInfo(&AppInfo, AppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ES_DeleteChildTask(AppInfo.MainTaskId), CFE_ES_ERR_CHILD_TASK_DELETE_MAIN_TASK);
+
+    UtAssert_True(true, "CFE_ES_ExitChildTask() called");
+    CFE_ES_ExitChildTask();
+}
+
+/* A task function that verifies the behavior of other APIs when those are called from a non-CFE app task */
+void TaskFunctionCheckNonAppContext(void)
+{
+    CFE_ES_TaskId_t TaskId;
+    CFE_ES_AppId_t  AppId;
+
+    /* extra startup delay before first assert, to make sure parent task has reached its wait loop */
+    OS_TaskDelay(100);
+
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&AppId), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskID(&TaskId), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    UtAssert_INT32_EQ(
+        CFE_ES_CreateChildTask(&TaskId, "TaskName", TaskFunction, CFE_ES_TASK_STACK_ALLOCATE, 4096, 200, 0),
+        CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    UtAssert_True(true, "OS_TaskExit() called");
+    OS_TaskExit();
+}
+
+void TaskExitFunction(void)
+{
+    while (CFE_FT_Global.Count < 200)
+    {
+        CFE_FT_Global.Count += 1;
+        CFE_ES_ExitChildTask();
+    }
+}
+
+void TestCreateChild(void)
+{
+    UtPrintf("Testing: CFE_ES_CreateChildTask");
+
+    CFE_ES_TaskId_t            TaskId        = CFE_ES_TASKID_UNDEFINED;
+    CFE_ES_TaskId_t            TaskId2       = CFE_ES_TASKID_UNDEFINED;
+    const char *               TaskName      = "CHILD_TASK_1";
+    CFE_ES_StackPointer_t      StackPointer  = CFE_ES_TASK_STACK_ALLOCATE;
+    size_t                     StackSize     = CFE_PLATFORM_ES_PERF_CHILD_STACK_SIZE;
+    CFE_ES_TaskPriority_Atom_t Priority      = CFE_PLATFORM_ES_PERF_CHILD_PRIORITY;
+    uint32                     Flags         = 0;
+    uint32                     Index         = 0;
+    int32                      ExpectedCount = 5;
+    int32                      RetryCount;
+    char                       TaskNameBuf[16];
+    osal_id_t                  OtherTaskId = OS_OBJECT_ID_UNDEFINED;
+    OS_task_prop_t             task_prop;
+
+    CFE_FT_Global.Count = 0;
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, TaskName, TaskFunction, StackPointer, StackSize, Priority, Flags),
+                      CFE_SUCCESS);
+    while (CFE_FT_Global.Count != ExpectedCount && Index < 100)
+    {
+        OS_TaskDelay(10);
+        Index ++;
+    }
+
+    UtAssert_INT32_GT(CFE_FT_Global.Count, ExpectedCount - 1);
+    UtAssert_INT32_LT(CFE_FT_Global.Count, ExpectedCount + 1);
+
+    /* Create task with same name - note the name conflict is detected by OSAL, not CFE here, and the error code is
+     * translated */
+    UtAssert_INT32_EQ(
+        CFE_ES_CreateChildTask(&TaskId2, TaskName, TaskFunction, StackPointer, StackSize, Priority, Flags),
+        CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_INT32_EQ(CFE_ES_DeleteChildTask(TaskId), CFE_SUCCESS);
+
+    /* Also Confirm behavior of child task create/delete when called from a child task */
+    CFE_FT_Global.Count = 0;
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, TaskName, TaskFunctionCheckChildTaskContext, StackPointer,
+                                             StackSize, Priority, Flags),
+                      CFE_SUCCESS);
+
+    /* wait for task to exit itself */
+    RetryCount = 0;
+    while (RetryCount < 10)
+    {
+        /*
+         * poll until CFE_ES_GetTaskName() returns an error, then the task has exited
+         *
+         * NOTE: this intentionally does not Assert the status here, because the child task is
+         * also doing asserts at the time this loop is running.  Once the child task finishes,
+         * it is OK to do asserts from this task again
+         */
+        if (CFE_Assert_STATUS_STORE(CFE_ES_GetTaskName(TaskNameBuf, TaskId, sizeof(TaskNameBuf))) != CFE_SUCCESS)
+        {
+            break;
+        }
+        OS_TaskDelay(100);
+        ++RetryCount;
+    }
+
+    /* Retroactively confirm that the previous call to CFE_ES_GetTaskName() returned RESOURCEID_NOT_VALID */
+    CFE_Assert_STATUS_MUST_BE(CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    /* Now do the same but instead of a CFE child task, make an OSAL task that is not associated with a CFE app */
+    UtAssert_INT32_EQ(OS_TaskCreate(&OtherTaskId, "NonCfe", TaskFunctionCheckNonAppContext, OSAL_TASK_STACK_ALLOCATE,
+                                    4096, OSAL_PRIORITY_C(200), 0),
+                      OS_SUCCESS);
+
+    /* wait for task to exit itself */
+    RetryCount = 0;
+    while (RetryCount < 10)
+    {
+        /*
+         * poll until OS_TaskGetInfo() returns an error, then the task has exited
+         */
+        if (OS_TaskGetInfo(OtherTaskId, &task_prop) != OS_SUCCESS)
+        {
+            break;
+        }
+
+        OS_TaskDelay(100);
+        ++RetryCount;
+    }
+
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(NULL, TaskName, TaskFunction, StackPointer, StackSize, Priority, Flags),
+                      CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, NULL, TaskFunction, StackPointer, StackSize, Priority, Flags),
+                      CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, TaskName, NULL, StackPointer, StackSize, Priority, Flags),
+                      CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, TaskName, TaskFunction, StackPointer, 0, Priority, Flags),
+                      CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+}
+
+void TestChildTaskName(void)
+{
+    UtPrintf("Testing: CFE_ES_GetTaskIDByName, CFE_ES_GetTaskName");
+
+    CFE_ES_TaskId_t            TaskId     = CFE_ES_TASKID_UNDEFINED;
+    const char                 TaskName[] = "CHILD_TASK_1";
+    CFE_ES_TaskId_t            TaskIdByName;
+    char                       TaskNameBuf[OS_MAX_API_NAME + 4];
+    CFE_ES_StackPointer_t      StackPointer = CFE_ES_TASK_STACK_ALLOCATE;
+    size_t                     StackSize    = CFE_PLATFORM_ES_PERF_CHILD_STACK_SIZE;
+    CFE_ES_TaskPriority_Atom_t Priority     = CFE_PLATFORM_ES_PERF_CHILD_PRIORITY;
+    uint32                     Flags        = 0;
+
+    memset(TaskNameBuf, 0, sizeof(TaskNameBuf));
+
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, TaskName, TaskFunction, StackPointer, StackSize, Priority, Flags),
+                      CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskIDByName(&TaskIdByName, TaskName), CFE_SUCCESS);
+    CFE_Assert_RESOURCEID_EQ(TaskIdByName, TaskId);
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskName(TaskNameBuf, TaskId, sizeof(TaskNameBuf)), CFE_SUCCESS);
+    UtAssert_StrCmp(TaskNameBuf, TaskName, "CFE_ES_GetTaskName() = %s", TaskNameBuf);
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskIDByName(NULL, TaskName), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskIDByName(&TaskIdByName, NULL), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskIDByName(&TaskIdByName, "INVALID_NAME"), CFE_ES_ERR_NAME_NOT_FOUND);
+    CFE_Assert_RESOURCEID_UNDEFINED(TaskIdByName);
+
+    UtAssert_INT32_EQ(CFE_ES_GetTaskName(NULL, TaskId, sizeof(TaskNameBuf)), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskName(TaskNameBuf, CFE_ES_TASKID_UNDEFINED, sizeof(TaskNameBuf)),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskName(TaskNameBuf, TaskId, 0), CFE_ES_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_ES_GetTaskName(TaskNameBuf, TaskId, sizeof(TaskName) - 1), CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_ES_DeleteChildTask(TaskId), CFE_SUCCESS);
+}
+
+void TestChildTaskDelete(void)
+{
+    UtPrintf("Testing: CFE_ES_DeleteChildTask");
+
+    CFE_ES_TaskId_t            TaskId        = CFE_ES_TASKID_UNDEFINED;
+    const char *               TaskName      = "CHILD_TASK_1";
+    CFE_ES_StackPointer_t      StackPointer  = CFE_ES_TASK_STACK_ALLOCATE;
+    size_t                     StackSize     = CFE_PLATFORM_ES_PERF_CHILD_STACK_SIZE;
+    CFE_ES_TaskPriority_Atom_t Priority      = CFE_PLATFORM_ES_PERF_CHILD_PRIORITY;
+    uint32                     Flags         = 0;
+    int                        ExpectedCount = 5;
+
+    CFE_FT_Global.Count = 0;
+
+    UtAssert_INT32_EQ(CFE_ES_CreateChildTask(&TaskId, TaskName, TaskFunction, StackPointer, StackSize, Priority, Flags),
+                      CFE_SUCCESS);
+    OS_TaskDelay(500);
+
+    UtAssert_True(ExpectedCount >= CFE_FT_Global.Count - 1 && ExpectedCount <= CFE_FT_Global.Count + 1,
+                  "countCopy (%d) == count (%d)", (int)ExpectedCount, (int)CFE_FT_Global.Count);
+
+    ExpectedCount = CFE_FT_Global.Count;
+
+    UtAssert_INT32_EQ(CFE_ES_DeleteChildTask(TaskId), CFE_SUCCESS);
+
+    OS_TaskDelay(500);
+
+    UtAssert_True(ExpectedCount == CFE_FT_Global.Count || ExpectedCount == CFE_FT_Global.Count + 1,
+                  "ExpectedCount (%d) == count (%d)", (int)ExpectedCount, (int)CFE_FT_Global.Count);
+
+    UtAssert_INT32_EQ(CFE_ES_DeleteChildTask(CFE_ES_TASKID_UNDEFINED), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void TestExitChild(void)
+{
+    UtPrintf("Testing: CFE_ES_ExitChildTask");
+
+    CFE_ES_TaskId_t            TaskId;
+    const char *               TaskName      = "CHILD_TASK_1";
+    CFE_ES_StackPointer_t      StackPointer  = CFE_ES_TASK_STACK_ALLOCATE;
+    size_t                     StackSize     = CFE_PLATFORM_ES_PERF_CHILD_STACK_SIZE;
+    CFE_ES_TaskPriority_Atom_t Priority      = CFE_PLATFORM_ES_PERF_CHILD_PRIORITY;
+    uint32                     Flags         = 0;
+    int                        ExpectedCount = 1;
+
+    UtAssert_INT32_EQ(
+        CFE_ES_CreateChildTask(&TaskId, TaskName, TaskExitFunction, StackPointer, StackSize, Priority, Flags),
+        CFE_SUCCESS);
+    OS_TaskDelay(500);
+    UtAssert_INT32_EQ(ExpectedCount, 1);
+
+    /*
+     * Invoking CFE_ES_ExitChildTask() from the context of a main task should _not_ actually exit.
+     * as this is a void function there is no return code to check here.  The fact that the test
+     * continues after this call is evidence that the test passed (i.e. it did not actually end the task).
+     */
+    UtAssert_VOIDCALL(CFE_ES_ExitChildTask());
+
+    /* If this message is printed, then the test passed.  If the test fails this will not be reached. */
+    UtAssert_True(true, "CFE_ES_ExitChildTask() called from main task (ignored; main task did not exit)");
+}
+
+void ESTaskTestSetup(void)
+{
+    UtTest_Add(TestCreateChild, NULL, NULL, "Test Create Child");
+    UtTest_Add(TestChildTaskName, NULL, NULL, "Test Child Task Name");
+    UtTest_Add(TestChildTaskDelete, NULL, NULL, "Test Child Tasks Delete");
+    UtTest_Add(TestExitChild, NULL, NULL, "Test Exit Child");
+}
+```
+
+### `evs_filters_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/evs_filters_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic EVS Reset Filters APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestResetFilters(void)
+{
+    UtPrintf("Testing: CFE_EVS_ResetFilter, CFE_EVS_ResetAllFilters");
+
+    /* Test logic below depends on the test case registering an EID of 1 and not registering 0, and the resets in theory
+     * could impact test behavior/management related to events. Although the expectation is either all or none of an EID
+     * would be filtered (no use case for a "counting" filter within the test app) so for normal use this is no impact.
+     */
+
+    UtAssert_INT32_EQ(CFE_EVS_ResetFilter(1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_ResetAllFilters(), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_EVS_ResetFilter(0), CFE_EVS_EVT_NOT_REGISTERED);
+}
+
+void EVSFiltersTestSetup(void)
+{
+    UtTest_Add(TestResetFilters, NULL, NULL, "Test Reset Filters");
+}
+```
+
+### `evs_send_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/evs_send_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic EVS Send Event APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestSendEvent(void)
+{
+    int status;
+    int i;
+
+    if (CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST)
+    {
+        /* Allow squelch credits to accumulate */
+        OS_TaskDelay((CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST / CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC) * 1000);
+    }
+
+    UtPrintf("Testing: CFE_EVS_SendEvent");
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_INFORMATION, "OK Send"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_INFORMATION, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_DEBUG, "OK (Debug) Send"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_DEBUG, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_ERROR, "OK (Error) Send"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_ERROR, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_CRITICAL, "OK (Critical) Send"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_CRITICAL, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    if (CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST)
+    {
+        /* Allow squelch credits to accumulate */
+        OS_TaskDelay((CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST / CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC) * 1000);
+
+        for (i = 0; i < CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST; i++)
+            UtAssert_INT32_EQ(CFE_EVS_SendEvent(0, CFE_EVS_EventType_INFORMATION, "OK Send"), CFE_SUCCESS);
+
+        status = CFE_EVS_SendEvent(0, CFE_EVS_EventType_INFORMATION, "OK Squelch");
+
+        /* Allow squelch credits to accumulate */
+        OS_TaskDelay((CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST / CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC) * 1000);
+
+        UtAssert_INT32_EQ(status, CFE_EVS_APP_SQUELCHED);
+    }
+}
+
+void TestSendEventAppID(void)
+{
+    CFE_ES_AppId_t AppId;
+
+    UtPrintf("Testing: CFE_EVS_SendEventWithAppID");
+
+    CFE_ES_GetAppID(&AppId);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_INFORMATION, AppId, "OK App ID"), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_INFORMATION, AppId, NULL),
+                      CFE_EVS_INVALID_PARAMETER);
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_INFORMATION, CFE_ES_APPID_UNDEFINED, "OK"),
+                      CFE_EVS_APP_ILLEGAL_APP_ID);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_DEBUG, AppId, " OK (Debug) App ID"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_DEBUG, AppId, NULL), CFE_EVS_INVALID_PARAMETER);
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_DEBUG, CFE_ES_APPID_UNDEFINED, "OK (Debug)"),
+                      CFE_EVS_APP_ILLEGAL_APP_ID);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_ERROR, AppId, "OK (Error) App ID"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_ERROR, AppId, NULL), CFE_EVS_INVALID_PARAMETER);
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_ERROR, CFE_ES_APPID_UNDEFINED, "OK (Error)"),
+                      CFE_EVS_APP_ILLEGAL_APP_ID);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_CRITICAL, AppId, "OK (Critical) App ID"),
+                      CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_CRITICAL, AppId, NULL),
+                      CFE_EVS_INVALID_PARAMETER);
+    UtAssert_INT32_EQ(
+        CFE_EVS_SendEventWithAppID(0, CFE_EVS_EventType_CRITICAL, CFE_ES_APPID_UNDEFINED, "OK (Critical)"),
+        CFE_EVS_APP_ILLEGAL_APP_ID);
+}
+
+void TestSendTimedEvent(void)
+{
+    CFE_TIME_SysTime_t Time = {1000, 1000};
+    UtPrintf("Testing: CFE_EVS_SendTimedEvent");
+
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_INFORMATION, "OK Time"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_INFORMATION, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_DEBUG, "Ok (Debug) Time"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_DEBUG, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_ERROR, "Ok (Error) Time"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_ERROR, NULL), CFE_EVS_INVALID_PARAMETER);
+
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_CRITICAL, "Ok (Critical) Time"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_EVS_SendTimedEvent(Time, 0, CFE_EVS_EventType_CRITICAL, NULL), CFE_EVS_INVALID_PARAMETER);
+}
+
+void EVSSendTestSetup(void)
+{
+    UtTest_Add(TestSendEvent, NULL, NULL, "Test Send Event");
+    UtTest_Add(TestSendEventAppID, NULL, NULL, "Test Send Event with App ID");
+    UtTest_Add(TestSendTimedEvent, NULL, NULL, "Test Send Timed Event");
+}
+```
+
+### `fs_header_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/fs_header_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic FS Header APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+#define OS_TEST_HEADER_FILENAME "/ram/header_test.txt"
+char *fsAddrPtr = NULL;
+
+static osal_id_t setup_file(void)
+{
+    osal_id_t id = OS_OBJECT_ID_UNDEFINED;
+
+    UtAssert_INT32_EQ(OS_OpenCreate(&id, OS_TEST_HEADER_FILENAME, OS_FILE_FLAG_CREATE, OS_READ_WRITE), OS_SUCCESS);
+
+    return id;
+}
+
+void TestCreateHeader(void)
+{
+    CFE_FS_Header_t Header;
+    CFE_FS_Header_t HeaderFail;
+    const char *    TestDescription = "TEST_HEADER";
+    osal_id_t       fd              = setup_file();
+
+    UtPrintf("Testing: CFE_FS_InitHeader, CFE_FS_WriteHeader");
+
+    UtAssert_VOIDCALL(CFE_FS_InitHeader(&Header, TestDescription, CFE_FS_SubType_ES_ERLOG));
+    UtAssert_INT32_EQ(CFE_FS_WriteHeader(fd, &Header), sizeof(CFE_FS_Header_t));
+    UtAssert_INT32_EQ(OS_lseek(fd, 0, OS_SEEK_CUR), sizeof(CFE_FS_Header_t));
+
+    UtAssert_INT32_EQ(CFE_FS_WriteHeader(fd, NULL), CFE_FS_BAD_ARGUMENT);
+    CFE_Assert_STATUS_ERROR(CFE_FS_WriteHeader(OS_OBJECT_ID_UNDEFINED, &Header));
+
+    UtAssert_VOIDCALL(CFE_FS_InitHeader(NULL, TestDescription, CFE_FS_SubType_ES_ERLOG));
+    UtAssert_VOIDCALL(CFE_FS_InitHeader(&HeaderFail, NULL, CFE_FS_SubType_ES_ERLOG));
+    UtAssert_VOIDCALL(CFE_FS_InitHeader(&HeaderFail, TestDescription, 256));
+
+    OS_close(fd);
+    OS_remove(OS_TEST_HEADER_FILENAME);
+}
+
+void TestReadHeader(void)
+{
+    CFE_FS_Header_t Header;
+    CFE_FS_Header_t ReadHeader;
+    const char *    TestDescription = "TEST_HEADER";
+    osal_id_t       fd              = setup_file();
+
+    memset(&ReadHeader, 0, sizeof(ReadHeader));
+
+    UtPrintf("Testing: CFE_FS_ReadHeader");
+
+    UtAssert_VOIDCALL(CFE_FS_InitHeader(&Header, TestDescription, CFE_FS_SubType_ES_ERLOG));
+    UtAssert_INT32_EQ(CFE_FS_WriteHeader(fd, &Header), sizeof(CFE_FS_Header_t));
+    UtAssert_INT32_EQ(CFE_FS_ReadHeader(&ReadHeader, fd), sizeof(CFE_FS_Header_t));
+    UtAssert_INT32_EQ(OS_lseek(fd, 0, OS_SEEK_CUR), sizeof(CFE_FS_Header_t));
+
+    UtAssert_INT32_EQ(Header.ContentType, ReadHeader.ContentType);
+    UtAssert_INT32_EQ(Header.SubType, ReadHeader.SubType);
+    UtAssert_StrCmp(TestDescription, ReadHeader.Description, "ReadHeader.Description = %s", ReadHeader.Description);
+
+    UtAssert_INT32_EQ(CFE_FS_ReadHeader(NULL, fd), CFE_FS_BAD_ARGUMENT);
+    CFE_Assert_STATUS_ERROR(CFE_FS_ReadHeader(&ReadHeader, OS_OBJECT_ID_UNDEFINED));
+
+    OS_close(fd);
+    OS_remove(OS_TEST_HEADER_FILENAME);
+}
+
+void TestTimeStamp(void)
+{
+    CFE_FS_Header_t    Header;
+    CFE_FS_Header_t    ReadHeader;
+    const char *       TestDescription = "TEST_HEADER";
+    CFE_TIME_SysTime_t NewTimestamp    = {0xFFFFFFFF, 0xFFFFFFFF};
+    osal_id_t          fd              = setup_file();
+
+    memset(&ReadHeader, 0, sizeof(ReadHeader));
+
+    UtPrintf("Testing: CFE_FS_SetTimestamp");
+
+    UtAssert_VOIDCALL(CFE_FS_InitHeader(&Header, TestDescription, CFE_FS_SubType_ES_ERLOG));
+    UtAssert_INT32_EQ(CFE_FS_WriteHeader(fd, &Header), sizeof(CFE_FS_Header_t));
+    UtAssert_INT32_EQ(CFE_FS_SetTimestamp(fd, NewTimestamp), CFE_SUCCESS);
+    UtAssert_INT32_EQ(OS_lseek(fd, 0, OS_SEEK_CUR), (offsetof(CFE_FS_Header_t, TimeSeconds) + sizeof(NewTimestamp)));
+
+    UtAssert_INT32_EQ(CFE_FS_ReadHeader(&ReadHeader, fd), sizeof(CFE_FS_Header_t));
+
+    UtAssert_UINT32_EQ(0xFFFFFFFF, ReadHeader.TimeSeconds);
+    UtAssert_UINT32_EQ(0xFFFFFFFF, ReadHeader.TimeSubSeconds);
+
+    CFE_Assert_STATUS_ERROR(CFE_FS_SetTimestamp(OS_OBJECT_ID_UNDEFINED, NewTimestamp));
+
+    OS_close(fd);
+    OS_remove(OS_TEST_HEADER_FILENAME);
+}
+
+void FSHeaderTestSetup(void)
+{
+    UtTest_Add(TestCreateHeader, NULL, NULL, "Test Create Header");
+    UtTest_Add(TestReadHeader, NULL, NULL, "Test Read Header");
+    UtTest_Add(TestTimeStamp, NULL, NULL, "Test Time Stamp");
+}
+```
+
+### `fs_util_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/fs_util_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of FS File Utility APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestFileCategory(void)
+{
+    UtPrintf("Testing: CFE_FS_GetDefaultMountPoint, CFE_FS_GetDefaultExtension");
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_UNKNOWN);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_UNKNOWN);
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_DYNAMIC_MODULE);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_DYNAMIC_MODULE);
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP);
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_TEXT_LOG);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_TEXT_LOG);
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_SCRIPT);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_SCRIPT);
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_TEMP);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_TEMP);
+
+    CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_MAX);
+    CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_MAX);
+}
+
+void TestInputFile(void)
+{
+    char       NameBuf[OS_MAX_PATH_LEN];
+    char       OutNameBuf[OS_MAX_PATH_LEN];
+    const char Name[]         = "FileName";
+    char       InNameBuf[]    = "BufferName";
+    const char Path[]         = "/func";
+    const char Ext[]          = ".test";
+    const char ExpectedName[] = "/func/FileName.test";
+    const char ExpectedBuf[]  = "/func/BufferName.test";
+
+    UtPrintf("Testing: CFE_FS_ParseInputFileName, CFE_FS_ParseInputFileNameEX");
+
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileName(NameBuf, Name, sizeof(NameBuf), CFE_FS_FileCategory_SCRIPT),
+                      CFE_SUCCESS);
+    UtAssert_NOT_NULL(strstr(NameBuf, Name));
+
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileName(NULL, Name, sizeof(NameBuf), CFE_FS_FileCategory_SCRIPT),
+                      CFE_FS_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileName(NameBuf, NULL, sizeof(NameBuf), CFE_FS_FileCategory_SCRIPT),
+                      CFE_FS_INVALID_PATH);
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileName(NameBuf, Name, 0, CFE_FS_FileCategory_SCRIPT), CFE_FS_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(
+        CFE_FS_ParseInputFileNameEx(OutNameBuf, InNameBuf, sizeof(OutNameBuf), sizeof(InNameBuf), Name, Path, Ext),
+        CFE_SUCCESS);
+    UtAssert_StrCmp(ExpectedBuf, OutNameBuf, "Parse Input EX: %s", OutNameBuf);
+    UtAssert_INT32_EQ(
+        CFE_FS_ParseInputFileNameEx(OutNameBuf, NULL, sizeof(OutNameBuf), sizeof(InNameBuf), Name, Path, Ext),
+        CFE_SUCCESS);
+    UtAssert_StrCmp(ExpectedName, OutNameBuf, "Parse Input EX: %s", OutNameBuf);
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileNameEx(OutNameBuf, InNameBuf, sizeof(OutNameBuf), 0, Name, Path, Ext),
+                      CFE_SUCCESS);
+    UtAssert_StrCmp(ExpectedName, OutNameBuf, "Parse Input EX: %s", OutNameBuf);
+    UtAssert_INT32_EQ(
+        CFE_FS_ParseInputFileNameEx(OutNameBuf, InNameBuf, sizeof(OutNameBuf), sizeof(InNameBuf), NULL, Path, Ext),
+        CFE_SUCCESS);
+    UtAssert_StrCmp(ExpectedBuf, OutNameBuf, "Parse Input EX: %s", OutNameBuf);
+
+    UtAssert_INT32_EQ(
+        CFE_FS_ParseInputFileNameEx(NULL, InNameBuf, sizeof(OutNameBuf), sizeof(InNameBuf), Name, Path, Ext),
+        CFE_FS_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileNameEx(OutNameBuf, InNameBuf, 0, sizeof(InNameBuf), Name, Path, Ext),
+                      CFE_FS_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(
+        CFE_FS_ParseInputFileNameEx(OutNameBuf, NULL, sizeof(OutNameBuf), sizeof(InNameBuf), NULL, Path, Ext),
+        CFE_FS_INVALID_PATH);
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileNameEx(OutNameBuf, InNameBuf, sizeof(OutNameBuf), 0, NULL, Path, Ext),
+                      CFE_FS_INVALID_PATH);
+
+    /* A short output buffer that is too small to fit the result */
+    UtAssert_INT32_EQ(CFE_FS_ParseInputFileNameEx(OutNameBuf, InNameBuf, 8, sizeof(InNameBuf), Name, Path, Ext),
+                      CFE_FS_FNAME_TOO_LONG);
+}
+
+void TestFileName(void)
+{
+    char       Path[OS_MAX_PATH_LEN + 4];
+    char       Name[OS_MAX_FILE_NAME];
+    const char ExpectedName[] = "FileName.test";
+
+    memset(Name, 0, sizeof(Name));
+
+    UtPrintf("Testing: CFE_FS_ExtractFilenameFromPath");
+
+    snprintf(Path, sizeof(Path), "/func/FileName.test");
+    UtAssert_INT32_EQ(CFE_FS_ExtractFilenameFromPath(Path, Name), CFE_SUCCESS);
+    UtAssert_StrCmp(Name, ExpectedName, "Extract Filename: %s", Name);
+
+    UtAssert_INT32_EQ(CFE_FS_ExtractFilenameFromPath(NULL, Name), CFE_FS_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_FS_ExtractFilenameFromPath(Path, NULL), CFE_FS_BAD_ARGUMENT);
+
+    memset(Path, 'x', sizeof(Path) - 1);
+    Path[sizeof(Path) - 1] = 0;
+    Path[0]                = '/';
+    UtAssert_INT32_EQ(CFE_FS_ExtractFilenameFromPath(Path, Name), CFE_FS_FNAME_TOO_LONG);
+
+    Path[0]                   = 'x';
+    Path[OS_MAX_PATH_LEN - 1] = 0;
+    UtAssert_INT32_EQ(CFE_FS_ExtractFilenameFromPath(Path, Name), CFE_FS_INVALID_PATH);
+}
+
+/* FT helper stub compatible with background file write DataGetter */
+bool FS_DataGetter(void *Meta, uint32 RecordNum, void **Buffer, size_t *BufSize)
+{
+    *Buffer  = NULL;
+    *BufSize = 0;
+    return true;
+}
+
+/* FT helper stub compatible with background file write OnEvent */
+void FS_OnEvent(void *Meta, CFE_FS_FileWriteEvent_t Event, int32 Status, uint32 RecordNum, size_t BlockSize,
+                size_t Position)
+{
+    OS_TaskDelay(100);
+}
+
+void TestFileDump(void)
+{
+    int32 count;
+    int32 MaxWait = 20;
+
+    memset(&CFE_FT_Global.FuncTestState, 0, sizeof(CFE_FT_Global.FuncTestState));
+    CFE_FT_Global.FuncTestState.FileSubType = 2;
+    strncpy(CFE_FT_Global.FuncTestState.Description, "FT", sizeof(CFE_FT_Global.FuncTestState.Description));
+
+    UtPrintf("Testing: CFE_FS_BackgroundFileDumpRequest, CFE_FS_BackgroundFileDumpIsPending");
+
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpIsPending(&CFE_FT_Global.FuncTestState), false);
+
+    /* With an empty "FileName" field, it should fail path validation */
+    CFE_FT_Global.FuncTestState.GetData = FS_DataGetter;
+    CFE_FT_Global.FuncTestState.OnEvent = FS_OnEvent;
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpRequest(&CFE_FT_Global.FuncTestState), CFE_FS_INVALID_PATH);
+    strncpy(CFE_FT_Global.FuncTestState.FileName, "/ram/FT.bin", sizeof(CFE_FT_Global.FuncTestState.FileName));
+
+    /* With an empty "GetData" field, it should fail validation */
+    CFE_FT_Global.FuncTestState.GetData = NULL;
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpRequest(&CFE_FT_Global.FuncTestState), CFE_FS_BAD_ARGUMENT);
+    CFE_FT_Global.FuncTestState.GetData = FS_DataGetter;
+
+    /* With an empty "OnEvent" field, it should fail validation */
+    CFE_FT_Global.FuncTestState.OnEvent = NULL;
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpRequest(&CFE_FT_Global.FuncTestState), CFE_FS_BAD_ARGUMENT);
+    CFE_FT_Global.FuncTestState.OnEvent = FS_OnEvent;
+
+    /* This should work */
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpRequest(&CFE_FT_Global.FuncTestState), CFE_SUCCESS);
+
+    /* Duplicate request should get rejected */
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpRequest(&CFE_FT_Global.FuncTestState),
+                      CFE_STATUS_REQUEST_ALREADY_PENDING);
+
+    /* Wait for background task to complete */
+    count = 0;
+    while (CFE_FS_BackgroundFileDumpIsPending(&CFE_FT_Global.FuncTestState) && count < MaxWait)
+    {
+        OS_TaskDelay(100);
+        count++;
+    }
+
+    UtAssert_INT32_LT(count, MaxWait);
+
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpRequest(NULL), CFE_FS_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_FS_BackgroundFileDumpIsPending(NULL), false);
+}
+
+void FSUtilTestSetup(void)
+{
+    UtTest_Add(TestFileCategory, NULL, NULL, "Test File Category");
+    UtTest_Add(TestInputFile, NULL, NULL, "Test Input File");
+    UtTest_Add(TestFileName, NULL, NULL, "Test File Name");
+    UtTest_Add(TestFileDump, NULL, NULL, "Test File Dump");
+}
+```
+
+### `message_id_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/message_id_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Message ID APIs
+ *
+ *   Demonstration....
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestMsgId(void)
+{
+    UtPrintf("Testing: CFE_MSG_SetMsgId, CFE_MSG_GetMsgId");
+    CFE_MSG_Message_t msg;
+    CFE_SB_MsgId_t    msgid;
+    CFE_SB_MsgId_t    expectedmsgid = CFE_SB_ValueToMsgId(1);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, expectedmsgid), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&msg, &msgid), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(msgid, expectedmsgid);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(NULL, msgid), CFE_MSG_BAD_ARGUMENT);
+
+    /*
+     * The purpose of this test is to attempt to set a MsgId beyond the set of values that can
+     * be stored in the MSG header. However the criteria for being "storable" depends on the
+     * actual MSG implementation, and may be different in other implementations.  Currently both
+     * "v1" and "v2" implementations do define a specific highest MsgId value, but another
+     * implementation might not have a highest number concept at all.
+     *
+     * By passing the value of -1, when converted to a an unsigned value (either 16 or 32 bit)
+     * it should translate to a MsgId value with all bits being set.  In theory, at least some of
+     * those bits will be not mappable to the packet header bits, and it should therefore elicit
+     * the CFE_MSG_BAD_ARGUMENT response.
+     */
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(-1)), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(NULL, &msgid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+}
+
+void TestGetTypeFromMsgId(void)
+{
+    UtPrintf("Testing: CFE_MSG_GetTypeFromMsgId");
+    CFE_SB_MsgId_t msgid = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_Type_t msgtype;
+    int32          status;
+
+    /*
+     * Response not verified because msgid 0 could be out of range based on implementation and
+     * the msg to type relationship is also implementation defined, black box test just calls the routine
+     * to confirm things don't "break" with full range values and the implementation exists.
+     */
+
+    status = CFE_MSG_GetTypeFromMsgId(msgid, &msgtype);
+    UtAssert_True(status == CFE_SUCCESS || status == CFE_MSG_BAD_ARGUMENT, "CFE_MSG_GetTypeFromMsgId() == (%ld)",
+                  (long)status);
+
+    memset(&msgid, 0xFF, sizeof(msgid));
+    status = CFE_MSG_GetTypeFromMsgId(msgid, &msgtype);
+    UtAssert_True(status == CFE_SUCCESS || status == CFE_MSG_BAD_ARGUMENT, "CFE_MSG_GetTypeFromMsgId() == (%ld)",
+                  (long)status);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetTypeFromMsgId(msgid, NULL), CFE_MSG_BAD_ARGUMENT);
+}
+
+void MessageIdTestSetup(void)
+{
+    UtTest_Add(TestMsgId, NULL, NULL, "Test Set/Get Message ID");
+    UtTest_Add(TestGetTypeFromMsgId, NULL, NULL, "Test Get Type From Message ID");
+}
+```
+
+### `msg_api_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/msg_api_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of cFE Message header APIs.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include <string.h>
+
+void TestMsgApiBasic(void)
+{
+    UtPrintf("Testing: CFE_MSG_Init, CFE_MSG_GetSize, CFE_MSG_SetSize, CFE_MSG_GetType, "
+             "CFE_MSG_SetType, CFE_MSG_GetHeaderVersion, CFE_MSG_SetHeaderVersion, "
+             "CFE_MSG_GetHasSecondaryHeader, CFE_MSG_SetHasSecondaryHeader, "
+             "CFE_MSG_GetApId, CFE_MSG_SetApId");
+
+    /* declare local vars */
+    CFE_MSG_CommandHeader_t cmd;
+    CFE_MSG_Size_t          size;
+    CFE_MSG_Type_t          type;
+    CFE_SB_MsgId_t          msgId;
+    CFE_MSG_HeaderVersion_t hdrVer;
+    CFE_MSG_ApId_t          appId;
+    bool                    _expected = true;
+    bool                    _returned = false;
+
+    memset(&cmd, 0xFF, sizeof(cmd));
+    msgId = CFE_SB_ValueToMsgId(1);
+
+    /* test msg-init */
+    UtAssert_INT32_EQ(CFE_MSG_Init(NULL, CFE_SB_INVALID_MSG_ID, sizeof(cmd)), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd), msgId, 0), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(
+        CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_ValueToMsgId(CFE_PLATFORM_SB_HIGHEST_VALID_MSGID + 1), sizeof(cmd)),
+        CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd), msgId, sizeof(cmd)), CFE_SUCCESS);
+
+    /* test set-msg-size */
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(NULL, 12), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(CFE_MSG_PTR(cmd), 0), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(CFE_MSG_PTR(cmd), UINT32_MAX), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(CFE_MSG_PTR(cmd), 12), CFE_SUCCESS);
+
+    /* test get-msg-size */
+    UtAssert_INT32_EQ(CFE_MSG_GetSize(NULL, &size), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetSize(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetSize(CFE_MSG_PTR(cmd), &size), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(size, 12);
+
+    /* test get-type */
+    UtAssert_INT32_EQ(CFE_MSG_SetType(NULL, CFE_MSG_Type_Cmd), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmd), CFE_MSG_Type_Invalid), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmd), CFE_MSG_Type_Cmd), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetType(NULL, &type), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetType(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetType(CFE_MSG_PTR(cmd), &type), CFE_SUCCESS);
+    UtAssert_INT32_EQ(type, CFE_MSG_Type_Cmd);
+
+    /* test msg set-type */
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmd), CFE_MSG_Type_Tlm), CFE_SUCCESS);
+    /* check if set-type works like expected */
+    UtAssert_INT32_EQ(CFE_MSG_GetType(CFE_MSG_PTR(cmd), &type), CFE_SUCCESS);
+    UtAssert_INT32_EQ(type, CFE_MSG_Type_Tlm);
+
+    /* test get header-version */
+    UtAssert_INT32_EQ(CFE_MSG_GetHeaderVersion(NULL, &hdrVer), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetHeaderVersion(CFE_MSG_PTR(cmd), &hdrVer), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetHeaderVersion(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+
+    /* test set header-version */
+    UtAssert_INT32_EQ(CFE_MSG_SetHeaderVersion(NULL, hdrVer), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetHeaderVersion(CFE_MSG_PTR(cmd), UINT16_MAX), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetHeaderVersion(CFE_MSG_PTR(cmd), 0), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetHeaderVersion(CFE_MSG_PTR(cmd), &hdrVer), CFE_SUCCESS);
+    UtAssert_True(hdrVer == 0, "hdrVer = 0");
+
+    /* test get-has-secondary-header and set-has-secondary-header*/
+    UtAssert_INT32_EQ(CFE_MSG_GetHasSecondaryHeader(NULL, &_expected), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetHasSecondaryHeader(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetHasSecondaryHeader(NULL, _expected), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetHasSecondaryHeader(CFE_MSG_PTR(cmd), _expected), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetHasSecondaryHeader(CFE_MSG_PTR(cmd), &_returned), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(_expected, _returned);
+
+    /* test get-apid */
+    UtAssert_INT32_EQ(CFE_MSG_GetApId(NULL, &appId), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetApId(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+
+    /* test set-apid */
+    UtAssert_INT32_EQ(CFE_MSG_SetApId(CFE_MSG_PTR(cmd), 0xFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetApId(NULL, 0), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetApId(CFE_MSG_PTR(cmd), 5), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetApId(CFE_MSG_PTR(cmd), &appId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(appId, 5);
+}
+
+void TestMsgApiAdvanced(void)
+{
+    UtPrintf("Testing: CFE_MSG_GetSegmentationFlag, CFE_MSG_SetSegmentationFlag, "
+             "CFE_MSG_GetSequenceCount, CFE_MSG_SetSequenceCount, CFE_MSG_GetNextSequenceCount");
+
+    /* declare local vars */
+    CFE_MSG_CommandHeader_t    cmd;
+    CFE_SB_MsgId_t             msgId;
+    CFE_MSG_SegmentationFlag_t segFlag;
+    CFE_MSG_SequenceCount_t    seqCnt;
+
+    memset(&cmd, 0xFF, sizeof(cmd));
+    msgId = CFE_SB_INVALID_MSG_ID;
+
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd), msgId, sizeof(cmd)), CFE_SUCCESS);
+
+    /* test get/set-segmentation-flag */
+    UtAssert_INT32_EQ(CFE_MSG_GetSegmentationFlag(NULL, &segFlag), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetSegmentationFlag(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(NULL, CFE_MSG_SegFlag_Continue), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(CFE_MSG_PTR(cmd), CFE_MSG_SegFlag_Invalid), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(CFE_MSG_PTR(cmd), CFE_MSG_SegFlag_Continue), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(CFE_MSG_PTR(cmd), CFE_MSG_SegFlag_First), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(CFE_MSG_PTR(cmd), CFE_MSG_SegFlag_Last), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(CFE_MSG_PTR(cmd), CFE_MSG_SegFlag_Unsegmented), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSegmentationFlag(CFE_MSG_PTR(cmd), &segFlag), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(segFlag, CFE_MSG_SegFlag_Unsegmented);
+
+    /* test set/get-sequence-count */
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(NULL, 2), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(CFE_MSG_PTR(cmd), UINT16_MAX), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(NULL, &seqCnt), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(CFE_MSG_PTR(cmd), 2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(CFE_MSG_PTR(cmd), &seqCnt), CFE_SUCCESS);
+    UtAssert_INT32_EQ(seqCnt, 2);
+
+    /* test get-next-sequence-count */
+    UtAssert_INT32_EQ(CFE_MSG_GetNextSequenceCount(seqCnt), 3);
+    UtAssert_INT32_EQ(CFE_MSG_GetNextSequenceCount(UINT16_MAX), 0);
+}
+
+void TestMsgHeaderSecondaryApi(void)
+{
+    UtPrintf("Testing: CFE_MSG_GenerateChecksum, CFE_MSG_ValidateChecksum, CFE_MSG_SetFcnCode, "
+             "CFE_MSG_GetFcnCode, CFE_MSG_GetMsgTime, CFE_MSG_SetMsgTime ");
+
+    /* declare local vars */
+    CFE_MSG_CommandHeader_t cmd;
+    CFE_MSG_CommandHeader_t cmdTlm;
+    CFE_MSG_CommandHeader_t cmd2;
+    CFE_MSG_FcnCode_t       fcnCode;
+    CFE_TIME_SysTime_t      msgTime;
+    bool                    isValid     = true;
+    CFE_TIME_SysTime_t      currentTime = {1000, 0xFFFF0000};
+    CFE_Status_t            status;
+
+    memset(&cmd, 0, sizeof(cmd));
+    memset(&cmdTlm, 0xFF, sizeof(cmdTlm));
+    memset(&cmd2, 0xFF, sizeof(cmd2));
+
+    /* msg-init */
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_ValueToMsgId(1), sizeof(cmd)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetHasSecondaryHeader(CFE_MSG_PTR(cmd), true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmd), CFE_MSG_Type_Cmd), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmdTlm), CFE_SB_ValueToMsgId(2), sizeof(cmdTlm)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetHasSecondaryHeader(CFE_MSG_PTR(cmdTlm), true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmdTlm), CFE_MSG_Type_Tlm), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd2), CFE_SB_ValueToMsgId(3), sizeof(cmd2)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetHasSecondaryHeader(CFE_MSG_PTR(cmd2), true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmd2), CFE_MSG_Type_Cmd), CFE_SUCCESS);
+
+    /* test generate-checksum */
+    status = CFE_MSG_GenerateChecksum(NULL);
+    if (status == CFE_MSG_NOT_IMPLEMENTED)
+    {
+        UtAssert_NA("CFE_MSG_GenerateChecksum not implemented");
+    }
+    else
+    {
+        UtAssert_INT32_EQ(CFE_MSG_GenerateChecksum(NULL), CFE_MSG_BAD_ARGUMENT);
+        UtAssert_INT32_EQ(CFE_MSG_GenerateChecksum(CFE_MSG_PTR(cmdTlm)), CFE_MSG_WRONG_MSG_TYPE);
+        UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(CFE_MSG_PTR(cmdTlm), &isValid), CFE_MSG_WRONG_MSG_TYPE);
+        UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(NULL, &isValid), CFE_MSG_BAD_ARGUMENT);
+        UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(CFE_MSG_PTR(cmdTlm), NULL), CFE_MSG_BAD_ARGUMENT);
+
+        UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(CFE_MSG_PTR(cmd), &isValid), CFE_SUCCESS);
+        UtAssert_True(!isValid, "Checksum isValid (%d) = false", isValid);
+        UtAssert_INT32_EQ(CFE_MSG_GenerateChecksum(CFE_MSG_PTR(cmd)), CFE_SUCCESS);
+        UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(CFE_MSG_PTR(cmd), &isValid), CFE_SUCCESS);
+        UtAssert_True(isValid, "Checksum isValid (%d) = true", isValid);
+    }
+
+    /* test get/set-fcn-code */
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(NULL, 4), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(CFE_MSG_PTR(cmdTlm), 4), CFE_MSG_WRONG_MSG_TYPE);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(NULL, &fcnCode), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(CFE_MSG_PTR(cmdTlm), &fcnCode), CFE_MSG_WRONG_MSG_TYPE);
+
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(CFE_MSG_PTR(cmd), 4), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(CFE_MSG_PTR(cmd), &fcnCode), CFE_SUCCESS);
+    UtAssert_INT32_EQ(fcnCode, 4);
+
+    /* test get/set-msg-time */
+    UtAssert_INT32_EQ(CFE_MSG_SetType(CFE_MSG_PTR(cmd), CFE_MSG_Type_Tlm), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(NULL, &msgTime), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(CFE_MSG_PTR(cmd), NULL), CFE_MSG_BAD_ARGUMENT);
+
+    CFE_Assert_STATUS_STORE(CFE_MSG_GetMsgTime(CFE_MSG_PTR(cmd2), &msgTime));
+    if (!CFE_Assert_STATUS_MAY_BE(CFE_SUCCESS))
+    {
+        CFE_Assert_STATUS_MUST_BE(CFE_MSG_WRONG_MSG_TYPE);
+    }
+
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgTime(NULL, currentTime), CFE_MSG_BAD_ARGUMENT);
+
+    CFE_Assert_STATUS_STORE(CFE_MSG_SetMsgTime(CFE_MSG_PTR(cmd2), currentTime));
+    if (!CFE_Assert_STATUS_MAY_BE(CFE_SUCCESS))
+    {
+        CFE_Assert_STATUS_MUST_BE(CFE_MSG_WRONG_MSG_TYPE);
+    }
+
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgTime(CFE_MSG_PTR(cmd), currentTime), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(CFE_MSG_PTR(cmd), &msgTime), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(msgTime, currentTime), CFE_TIME_EQUAL);
+}
+
+void MsgApiTestSetup(void)
+{
+    UtTest_Add(TestMsgApiBasic, NULL, NULL, "Test basic message header apis");
+    UtTest_Add(TestMsgApiAdvanced, NULL, NULL, "Test advanced message header apis");
+    UtTest_Add(TestMsgHeaderSecondaryApi, NULL, NULL, "Test message secondary header apis");
+}
+```
+
+### `resource_id_misc_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/resource_id_misc_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Miscellaneous Resource Id APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+/* Needed for CFE_RESOURCEID_MAKE_BASE macro */
+#include "cfe_resourceid_basevalue.h"
+
+bool TestReturnFalse(CFE_ResourceId_t CheckId)
+{
+    return false;
+}
+
+bool TestReturnTrue(CFE_ResourceId_t CheckId)
+{
+    return true;
+}
+
+void TestToFromInteger(void)
+{
+    UtPrintf("Testing: CFE_ResourceId_ToInteger, CFE_ResourceId_FromInteger, CFE_ResourceId_Equal");
+
+    /* Test integer -> resource ID -> integer */
+    uint32           Id1         = 1;
+    uint32           Id2         = 999;
+    CFE_ResourceId_t ResourceId1 = CFE_ResourceId_FromInteger(Id1);
+    CFE_ResourceId_t ResourceId2 = CFE_ResourceId_FromInteger(Id2);
+    UtAssert_UINT32_EQ(CFE_ResourceId_ToInteger(ResourceId1), Id1);
+    UtAssert_UINT32_EQ(CFE_ResourceId_ToInteger(ResourceId2), Id2);
+
+    /* Test resource ID -> integer -> resource ID */
+    Id1 = CFE_ResourceId_ToInteger(ResourceId1);
+    Id2 = CFE_ResourceId_ToInteger(ResourceId2);
+    CFE_Assert_RESOURCEID_EQ((CFE_RESOURCEID_BASE_TYPE)CFE_RESOURCEID_WRAP(CFE_ResourceId_FromInteger(Id1)),
+                             (CFE_RESOURCEID_BASE_TYPE)CFE_RESOURCEID_WRAP(ResourceId1));
+    CFE_Assert_RESOURCEID_EQ((CFE_RESOURCEID_BASE_TYPE)CFE_RESOURCEID_WRAP(CFE_ResourceId_FromInteger(Id2)),
+                             (CFE_RESOURCEID_BASE_TYPE)CFE_RESOURCEID_WRAP(ResourceId2));
+}
+
+void TestIsDefined(void)
+{
+    UtPrintf("Testing: CFE_ResourceId_IsDefined");
+    CFE_ResourceId_t ResourceId1 = CFE_ResourceId_FromInteger(1);
+    CFE_ResourceId_t ResourceId2 = CFE_ResourceId_FromInteger(999);
+    UtAssert_BOOL_TRUE(CFE_ResourceId_IsDefined(ResourceId1));
+    UtAssert_BOOL_TRUE(CFE_ResourceId_IsDefined(ResourceId2));
+    UtAssert_BOOL_FALSE(CFE_ResourceId_IsDefined(CFE_RESOURCEID_UNDEFINED));
+}
+
+void TestGetBaseSerial(void)
+{
+    UtPrintf("Testing: CFE_ResourceId_GetBase, CFE_ResourceId_GetSerial");
+    const char *LibName     = "ASSERT_LIB";
+    const char *CounterName = "TEST_COUNTER";
+    int8        Pool[1024];
+    size_t      CDSBlockSize = 10;
+    const char *CDSName      = "TEST_CDS";
+    union
+    {
+        CFE_ES_AppId_t   AppId;
+        CFE_ResourceId_t ResourceID;
+    } AppIdBuf;
+    union
+    {
+        CFE_ES_LibId_t   LibId;
+        CFE_ResourceId_t ResourceID;
+    } LibIdBuf;
+    union
+    {
+        CFE_ES_TaskId_t  TaskId;
+        CFE_ResourceId_t ResourceID;
+    } TaskIdBuf;
+    union
+    {
+        CFE_ES_CounterId_t CounterId;
+        CFE_ResourceId_t   ResourceID;
+    } CounterIdBuf;
+    union
+    {
+        CFE_ES_MemHandle_t PoolId;
+        CFE_ResourceId_t   ResourceID;
+    } PoolIdBuf;
+    union
+    {
+        CFE_ES_CDSHandle_t CDSHandleId;
+        CFE_ResourceId_t   ResourceID;
+    } CDSHandleIdBuf;
+
+    memset(&AppIdBuf, 0, sizeof(AppIdBuf));
+    memset(&LibIdBuf, 0, sizeof(LibIdBuf));
+    memset(&TaskIdBuf, 0, sizeof(TaskIdBuf));
+    memset(&CounterIdBuf, 0, sizeof(CounterIdBuf));
+    memset(&PoolIdBuf, 0, sizeof(PoolIdBuf));
+    memset(&CDSHandleIdBuf, 0, sizeof(CDSHandleIdBuf));
+
+    /* Referenced from cfe_core_resourceid_basevalues.h */
+    int TASKID_BASE     = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_OS_TASK);
+    int APPID_BASE      = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_USER + 1);
+    int LIBID_BASE      = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_USER + 2);
+    int COUNTID_BASE    = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_USER + 3);
+    int POOLID_BASE     = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_USER + 4);
+    int CDSBLOCKID_BASE = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_USER + 5);
+
+    /* App ID */
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&AppIdBuf.AppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetBase(AppIdBuf.ResourceID), APPID_BASE);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetSerial(AppIdBuf.ResourceID),
+                      CFE_RESOURCEID_UNWRAP(AppIdBuf.ResourceID) - APPID_BASE);
+    /* Lib ID */
+    UtAssert_INT32_EQ(CFE_ES_GetLibIDByName(&LibIdBuf.LibId, LibName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetBase(LibIdBuf.ResourceID), LIBID_BASE);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetSerial(LibIdBuf.ResourceID),
+                      CFE_RESOURCEID_UNWRAP(LibIdBuf.ResourceID) - LIBID_BASE);
+    /* Task ID */
+    UtAssert_INT32_EQ(CFE_ES_GetTaskID(&TaskIdBuf.TaskId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetBase(TaskIdBuf.ResourceID), TASKID_BASE);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetSerial(TaskIdBuf.ResourceID),
+                      CFE_RESOURCEID_UNWRAP(TaskIdBuf.ResourceID) - TASKID_BASE);
+    /* Counter ID */
+    UtAssert_UINT32_EQ(CFE_ES_RegisterGenCounter(&CounterIdBuf.CounterId, CounterName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetBase(CounterIdBuf.ResourceID), COUNTID_BASE);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetSerial(CounterIdBuf.ResourceID),
+                      CFE_RESOURCEID_UNWRAP(CounterIdBuf.ResourceID) - COUNTID_BASE);
+    UtAssert_INT32_EQ(CFE_ES_DeleteGenCounter(CounterIdBuf.CounterId), CFE_SUCCESS);
+    /* Pool ID */
+    UtAssert_INT32_EQ(CFE_ES_PoolCreate(&PoolIdBuf.PoolId, Pool, sizeof(Pool)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetBase(PoolIdBuf.ResourceID), POOLID_BASE);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetSerial(PoolIdBuf.ResourceID),
+                      CFE_RESOURCEID_UNWRAP(PoolIdBuf.ResourceID) - POOLID_BASE);
+    UtAssert_INT32_EQ(CFE_ES_PoolDelete(PoolIdBuf.PoolId), CFE_SUCCESS);
+    /* CDS Block Id */
+    CFE_Assert_STATUS_OK(CFE_ES_RegisterCDS(&CDSHandleIdBuf.CDSHandleId, CDSBlockSize, CDSName));
+    UtAssert_INT32_EQ(CFE_ResourceId_GetBase(CDSHandleIdBuf.ResourceID), CDSBLOCKID_BASE);
+    UtAssert_INT32_EQ(CFE_ResourceId_GetSerial(CDSHandleIdBuf.ResourceID),
+                      CFE_RESOURCEID_UNWRAP(CDSHandleIdBuf.ResourceID) - CDSBLOCKID_BASE);
+}
+
+void TestFindNext(void)
+{
+    UtPrintf("Testing: CFE_ResourceId_FindNext");
+    union
+    {
+        CFE_ES_AppId_t   AppId;
+        CFE_ResourceId_t ResourceID;
+    } AppIdBuf;
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&AppIdBuf.AppId), CFE_SUCCESS);
+    /*
+     * The FindNext API requires a callback function to determine if a resource id is already in use. This test provides
+     * two local callback functions TestReturnFalse and TestReturnTrue to test the basic functionality of this API.
+     */
+    UtAssert_INT32_EQ(CFE_ResourceId_ToInteger(CFE_ResourceId_FindNext(
+                          AppIdBuf.ResourceID, CFE_PLATFORM_ES_MAX_APPLICATIONS, TestReturnFalse)),
+                      CFE_RESOURCEID_UNWRAP(AppIdBuf.ResourceID) + 1);
+    /* Pretend every application id is used */
+    AppIdBuf.ResourceID =
+        CFE_ResourceId_FindNext(AppIdBuf.ResourceID, CFE_PLATFORM_ES_MAX_APPLICATIONS, TestReturnTrue);
+    /*
+     * Why does this macro not accept a resource ID
+     * The following line won't compile
+     * CFE_Assert_RESOURCEID_UNDEFINED(AppIdBuf.ResourceId);
+     */
+    CFE_Assert_RESOURCEID_UNDEFINED(AppIdBuf.AppId);
+
+    /* maximum number of applications is 0 */
+    AppIdBuf.ResourceID = CFE_ResourceId_FindNext(AppIdBuf.ResourceID, 0, TestReturnFalse);
+    CFE_Assert_RESOURCEID_UNDEFINED(AppIdBuf.AppId);
+}
+
+void TestToIndex(void)
+{
+    UtPrintf("Testing: CFE_ResourceId_ToIndex");
+    union
+    {
+        CFE_ES_AppId_t   AppId;
+        CFE_ResourceId_t ResourceID;
+    } AppIdBuf;
+    uint32 idx;
+    int    APPID_BASE = CFE_RESOURCEID_MAKE_BASE(OS_OBJECT_TYPE_USER + 1);
+    UtAssert_INT32_EQ(CFE_ES_GetAppID(&AppIdBuf.AppId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_ResourceId_ToIndex(AppIdBuf.ResourceID, APPID_BASE, CFE_PLATFORM_ES_MAX_APPLICATIONS, NULL),
+                      CFE_ES_BAD_ARGUMENT);
+    /* pretend maximum number of applications is 0 */
+    UtAssert_INT32_EQ(CFE_ResourceId_ToIndex(AppIdBuf.ResourceID, APPID_BASE, 0, &idx),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_ResourceId_ToIndex(AppIdBuf.ResourceID, APPID_BASE, CFE_PLATFORM_ES_MAX_APPLICATIONS, &idx),
+                      CFE_SUCCESS);
+    UtAssert_INT32_LTEQ(idx, CFE_PLATFORM_ES_MAX_APPLICATIONS);
+}
+
+void ResourceIdMiscTestSetup(void)
+{
+    UtTest_Add(TestToFromInteger, NULL, NULL, "Test Resource Id to Integer");
+    UtTest_Add(TestIsDefined, NULL, NULL, "Test Resource Id is Defined");
+    UtTest_Add(TestGetBaseSerial, NULL, NULL, "Test Resource Id Get Base");
+    UtTest_Add(TestFindNext, NULL, NULL, "Test Resource Id Find Next");
+    UtTest_Add(TestToIndex, NULL, NULL, "Test Resource Id to Index");
+}
+```
+
+### `sb_pipe_mang_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/sb_pipe_mang_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Sb Pipe Management APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestPipeCreate(void)
+{
+    CFE_SB_PipeId_t PipeId1    = CFE_SB_INVALID_PIPE;
+    uint16          PipeDepth  = 10;
+    const char      PipeName[] = "Test Pipe";
+
+    UtPrintf("Testing: CFE_SB_CreatePipe, CFE_SB_DeletePipe");
+
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, PipeDepth, PipeName), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(CFE_SB_INVALID_PIPE), CFE_SB_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(NULL, PipeDepth, PipeName), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, OS_QUEUE_MAX_DEPTH + 5, PipeName), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 0, PipeName), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, PipeDepth, NULL), CFE_SB_PIPE_CR_ERR);
+}
+
+void TestPipeCreateMax(void)
+{
+    CFE_SB_PipeId_t PipeId[CFE_PLATFORM_SB_MAX_PIPES + 1];
+    char            PipeName[12];
+    uint32          NumPipes;
+
+    UtPrintf("Testing: CFE_SB_CreatePipe, maximum pipe limit");
+
+    /*
+     * NOTE: because any other running apps (including core apps) will likely have
+     * created some pipes already, it is not known how many more pipes can be created
+     * at this point.  So this cannot assert directly on the return code of
+     * CFE_SB_CreatePipe because we do not know which iteration will return error,
+     * but it will be less than CFE_PLATFORM_SB_MAX_PIPES.
+     */
+    NumPipes = 0;
+    while (NumPipes <= CFE_PLATFORM_SB_MAX_PIPES)
+    {
+        snprintf(PipeName, sizeof(PipeName), "TestPipe%u", (unsigned int)NumPipes);
+        CFE_Assert_STATUS_STORE(CFE_SB_CreatePipe(&PipeId[NumPipes], 10, PipeName));
+        /*
+         * Normally, this will return CFE_SUCCESS, until the max number of pipes is reached.
+         * Confirm that the last creation attempt returned CFE_SB_MAX_PIPES_MET
+         *
+         * NOTE: this also mimics the same format as UtAssert_INT32_EQ so that any post-procesing
+         * test log analysis tools will see this call as well.
+         */
+        if (CFE_Assert_STATUS_MAY_BE(CFE_SB_MAX_PIPES_MET))
+        {
+            break;
+        }
+
+        /* If not CFE_SB_MAX_PIPES_MET, then the only acceptable response is SUCCESS */
+        CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS);
+
+        ++NumPipes;
+    }
+
+    /* should have gotten CFE_SB_MAX_PIPES_MET before CFE_PLATFORM_SB_MAX_PIPES reached */
+    UtAssert_UINT32_LT(NumPipes, CFE_PLATFORM_SB_MAX_PIPES);
+
+    /* Cleanup: delete all pipes created above */
+    while (NumPipes > 0)
+    {
+        --NumPipes;
+        UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId[NumPipes]), CFE_SUCCESS);
+    }
+}
+
+void TestPipeIndex(void)
+{
+    CFE_SB_PipeId_t PipeId     = CFE_SB_INVALID_PIPE;
+    uint16          PipeDepth  = 10;
+    const char      PipeName[] = "Test Pipe";
+    uint32          Idx;
+
+    UtPrintf("Testing: CFE_SB_PipeId_ToIndex");
+
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId, PipeDepth, PipeName), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_SB_PipeId_ToIndex(PipeId, &Idx), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_SB_PipeId_ToIndex(CFE_SB_INVALID_PIPE, &Idx), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_SB_PipeId_ToIndex(PipeId, NULL), CFE_ES_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId), CFE_SUCCESS);
+}
+
+void TestPipeOptions(void)
+{
+    CFE_SB_PipeId_t PipeId     = CFE_SB_INVALID_PIPE;
+    uint16          PipeDepth  = 10;
+    const char      PipeName[] = "Test Pipe";
+    uint8           Opts       = 2;
+    uint8           OptsBuff   = 0;
+
+    UtPrintf("Testing: CFE_SB_SetPipeOpts, CFE_SB_GetPipeOpts");
+
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId, PipeDepth, PipeName), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_SB_SetPipeOpts(PipeId, Opts), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_GetPipeOpts(PipeId, &OptsBuff), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(Opts, OptsBuff);
+
+    UtAssert_INT32_EQ(CFE_SB_SetPipeOpts(CFE_SB_INVALID_PIPE, Opts), CFE_SB_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_SB_GetPipeOpts(CFE_SB_INVALID_PIPE, &OptsBuff), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_GetPipeOpts(PipeId, NULL), CFE_SB_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId), CFE_SUCCESS);
+}
+
+void TestPipeName(void)
+{
+    CFE_SB_PipeId_t PipeId     = CFE_SB_INVALID_PIPE;
+    uint16          PipeDepth  = 10;
+    const char      PipeName[] = "Test Pipe";
+    char            PipeNameBuf[OS_MAX_API_NAME];
+    CFE_SB_PipeId_t PipeIdBuff        = CFE_SB_INVALID_PIPE;
+    const char      InvalidPipeName[] = "Invalid Pipe";
+
+    UtPrintf("Testing: CFE_SB_GetPipeName, CFE_SB_GetPipeIdByName");
+
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId, PipeDepth, PipeName), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_SB_GetPipeName(PipeNameBuf, sizeof(PipeNameBuf), PipeId), CFE_SUCCESS);
+    UtAssert_StrCmp(PipeNameBuf, PipeName, "CFE_SB_GetPipeName() = %s", PipeNameBuf);
+
+    UtAssert_INT32_EQ(CFE_SB_GetPipeIdByName(&PipeIdBuff, PipeName), CFE_SUCCESS);
+    CFE_Assert_RESOURCEID_EQ(PipeId, PipeIdBuff);
+
+    UtAssert_INT32_EQ(CFE_SB_GetPipeName(NULL, sizeof(PipeNameBuf), PipeId), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_GetPipeName(PipeNameBuf, 0, PipeId), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_GetPipeName(PipeNameBuf, sizeof(PipeNameBuf), CFE_SB_INVALID_PIPE), CFE_SB_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_SB_GetPipeIdByName(NULL, PipeName), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_GetPipeIdByName(&PipeIdBuff, NULL), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_GetPipeIdByName(&PipeIdBuff, InvalidPipeName), CFE_SB_BAD_ARGUMENT);
+
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId), CFE_SUCCESS);
+}
+
+void SBPipeMangSetup(void)
+{
+    UtTest_Add(TestPipeCreate, NULL, NULL, "Test Pipe Create");
+    UtTest_Add(TestPipeCreateMax, NULL, NULL, "Test Pipe Create Max Limit");
+    UtTest_Add(TestPipeIndex, NULL, NULL, "Test Pipe Index");
+    UtTest_Add(TestPipeOptions, NULL, NULL, "Test Pipe Options");
+    UtTest_Add(TestPipeName, NULL, NULL, "Test Pipe Name");
+}
+```
+
+### `sb_sendrecv_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/sb_sendrecv_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Functional test of SB transmit/receive APIs
+ * CFE_SB_TransmitMsg - Transmit a message.
+ * CFE_SB_ReceiveBuffer - Receive a message from a software bus pipe.
+ * CFE_SB_AllocateMessageBuffer - Get a buffer pointer to use for "zero copy" SB sends.
+ * CFE_SB_ReleaseMessageBuffer - Release an unused "zero copy" buffer pointer.
+ * CFE_SB_TransmitBuffer - Transmit a buffer.
+ */
+
+#include "cfe_test.h"
+#include "cfe_msgids.h"
+#include "cfe_test_msgids.h"
+
+#define CFE_FT_STRINGBUF_SIZE 12
+
+/* A simple command message */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader;
+    uint64                  CmdPayload;
+} CFE_FT_TestCmdMessage_t;
+
+/* A simple telemetry message */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TelemetryHeader;
+    uint64                    TlmPayload;
+} CFE_FT_TestTlmMessage_t;
+
+/* A message intended to be (overall) larger than the CFE_MISSION_SB_MAX_SB_MSG_SIZE */
+typedef union
+{
+    CFE_MSG_Message_t         Hdr;
+    CFE_MSG_CommandHeader_t   CmdHeader;
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     MaxSize[CFE_MISSION_SB_MAX_SB_MSG_SIZE + 16];
+    char                      StringBuffer[CFE_FT_STRINGBUF_SIZE];
+} CFE_FT_TestBigMessage_t;
+
+/*
+ * This test procedure should be agnostic to specific MID values, but it should
+ * not overlap/interfere with real MIDs used by other apps.
+ */
+static const CFE_SB_MsgId_t CFE_FT_CMD_MSGID = CFE_SB_MSGID_WRAP_VALUE(CFE_TEST_CMD_MID);
+static const CFE_SB_MsgId_t CFE_FT_TLM_MSGID = CFE_SB_MSGID_WRAP_VALUE(CFE_TEST_HK_TLM_MID);
+
+static CFE_FT_TestBigMessage_t CFE_FT_BigMsg;
+
+void TestBasicTransmitRecv(void)
+{
+    CFE_SB_PipeId_t                PipeId1 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t                PipeId2 = CFE_SB_INVALID_PIPE;
+    CFE_FT_TestCmdMessage_t        CmdMsg;
+    CFE_FT_TestTlmMessage_t        TlmMsg;
+    CFE_SB_MsgId_t                 MsgId;
+    CFE_MSG_SequenceCount_t        Seq1, Seq2;
+    CFE_SB_Buffer_t *              MsgBuf;
+    const CFE_FT_TestCmdMessage_t *CmdPtr;
+    const CFE_FT_TestTlmMessage_t *TlmPtr;
+
+    memset(&CmdMsg, 0, sizeof(CmdMsg));
+    memset(&TlmMsg, 0, sizeof(TlmMsg));
+
+    UtPrintf("Testing: CFE_SB_TransmitMsg");
+
+    /* Setup, create a pipe and subscribe (one cmd, one tlm) */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 5, "TestPipe1"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId2, 5, "TestPipe2"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId1, CFE_SB_DEFAULT_QOS, 3), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_TLM_MSGID, PipeId2, CFE_SB_DEFAULT_QOS, 3), CFE_SUCCESS);
+
+    /* Initialize the message content */
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(CmdMsg.CommandHeader), CFE_FT_CMD_MSGID, sizeof(CmdMsg)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(TlmMsg.TelemetryHeader), CFE_FT_TLM_MSGID, sizeof(TlmMsg)), CFE_SUCCESS);
+
+    CFE_MSG_SetSequenceCount(CFE_MSG_PTR(CmdMsg.CommandHeader), 11);
+    CFE_MSG_SetSequenceCount(CFE_MSG_PTR(TlmMsg.TelemetryHeader), 21);
+
+    /* Sending with sequence update should ignore the sequence in the msg struct */
+    CmdMsg.CmdPayload = 0x0c0ffee;
+    TlmMsg.TlmPayload = 0x0d00d1e;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(TlmMsg.TelemetryHeader), true), CFE_SUCCESS);
+
+    CmdMsg.CmdPayload = 0x1c0ffee;
+    TlmMsg.TlmPayload = 0x1d00d1e;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(TlmMsg.TelemetryHeader), true), CFE_SUCCESS);
+
+    /* Sending without sequence update should use the sequence in the msg struct */
+    CmdMsg.CmdPayload = 0x2c0ffee;
+    TlmMsg.TlmPayload = 0x2d00d1e;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), false), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(TlmMsg.TelemetryHeader), false), CFE_SUCCESS);
+
+    /* Sending again should trigger MsgLimit errors on the pipe, however the call still returns CFE_SUCCESS */
+    CmdMsg.CmdPayload = 0x3c0ffee;
+    TlmMsg.TlmPayload = 0x3d00d1e;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(TlmMsg.TelemetryHeader), true), CFE_SUCCESS);
+
+    /* Attempt to send a msg which does not have a valid msgid  */
+    memset(&CFE_FT_BigMsg, 0xFF, sizeof(CFE_FT_BigMsg));
+    CFE_MSG_SetSize(&CFE_FT_BigMsg.Hdr, sizeof(CFE_MSG_Message_t) + 4);
+
+    CFE_Assert_STATUS_STORE(CFE_SB_TransmitMsg(&CFE_FT_BigMsg.Hdr, true));
+    if (!CFE_Assert_STATUS_MAY_BE(CFE_SUCCESS))
+    {
+        CFE_Assert_STATUS_MUST_BE(CFE_SB_BAD_ARGUMENT);
+    }
+
+    /* Attempt to send a msg which is too big */
+    CFE_MSG_SetSize(&CFE_FT_BigMsg.Hdr, sizeof(CFE_FT_BigMsg));
+    CFE_MSG_SetMsgId(&CFE_FT_BigMsg.Hdr, CFE_FT_CMD_MSGID);
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(&CFE_FT_BigMsg.Hdr, true), CFE_SB_MSG_TOO_BIG);
+
+    /* Attempt to send a msg which is NULL */
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(NULL, true), CFE_SB_BAD_ARGUMENT);
+
+    UtPrintf("Testing: CFE_SB_ReceiveBuffer");
+
+    /* off nominal / bad arguments */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, CFE_SB_INVALID_PIPE, 100), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(NULL, PipeId1, 100), CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, -100), CFE_SB_BAD_ARGUMENT);
+
+    /*
+     * Note, the CFE_SB_TransmitMsg now adheres to the "UpdateHeader" flag.
+     * Thus, the sequence numbers should come back with the value from the Route (1-2)
+     * rather than the value the message was filled with initially.
+     *
+     * Note this also utilizes the CFE_SB_PEND_FOREVER flag - if working correctly,
+     * there should be a message in the queue, so it should not block.
+     */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_PEND_FOREVER), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &Seq1), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0x0c0ffee);
+    UtAssert_UINT32_EQ(Seq1, 1);
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_PEND_FOREVER), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &Seq1), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0x1c0ffee);
+    UtAssert_UINT32_EQ(Seq1, 2);
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_PEND_FOREVER), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &Seq1), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0x2c0ffee);
+    UtAssert_UINT32_EQ(Seq1, 11);
+
+    /* Final should not be in the pipe, should have been rejected due to MsgLim */
+    /* Must not use CFE_SB_PEND_FOREVER here, as this will cause the test to block */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, 100), CFE_SB_TIME_OUT);
+
+    /*
+     * For TLM, the CFE_SB_TransmitMsg obeys the "IncrementSequence" flag.
+     * Thus, first message gets the reference point, next message should be one more.
+     */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, 100), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &Seq1), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_TLM_MSGID);
+    TlmPtr = (const CFE_FT_TestTlmMessage_t *)MsgBuf;
+    UtAssert_UINT32_EQ(TlmPtr->TlmPayload, 0x0d00d1e);
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, 100), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &Seq2), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_TLM_MSGID);
+    TlmPtr = (const CFE_FT_TestTlmMessage_t *)MsgBuf;
+    UtAssert_UINT32_EQ(TlmPtr->TlmPayload, 0x1d00d1e);
+    UtAssert_UINT32_EQ(Seq2, CFE_MSG_GetNextSequenceCount(Seq1));
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, 100), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &Seq2), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_TLM_MSGID);
+    TlmPtr = (const CFE_FT_TestTlmMessage_t *)MsgBuf;
+    UtAssert_UINT32_EQ(TlmPtr->TlmPayload, 0x2d00d1e);
+    UtAssert_UINT32_EQ(Seq2, 21);
+
+    /* Final should not be in the pipe, should have been rejected due to MsgLim */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, 100), CFE_SB_TIME_OUT);
+
+    /* Cleanup */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId2), CFE_SUCCESS);
+}
+
+/*
+ * Test distribution/broadcasting features (MsgLimit/PipeDepth enforcement, etc)
+ *
+ * Important to verify that although some receive pipes may have errors/limits, it should not affect
+ * the transmit side nor should it affect delivery to pipes that do not have limit errors.
+ */
+void TestMsgBroadcast(void)
+{
+    CFE_SB_PipeId_t                PipeId1 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t                PipeId2 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t                PipeId3 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t                PipeId4 = CFE_SB_INVALID_PIPE;
+    CFE_FT_TestCmdMessage_t        CmdMsg;
+    CFE_SB_MsgId_t                 MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_SB_Buffer_t *              MsgBuf1;
+    CFE_SB_Buffer_t *              MsgBuf2;
+    CFE_SB_Buffer_t *              MsgBuf3;
+    CFE_SB_Buffer_t *              MsgBuf4;
+    const CFE_FT_TestCmdMessage_t *CmdPtr;
+
+    memset(&CmdMsg, 0, sizeof(CmdMsg));
+
+    UtPrintf("Testing: MsgLimit enforcement");
+
+    /* Setup - subscribe same MsgId to multiple different pipes with different limits */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 3, "TestPipe1"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId2, 3, "TestPipe2"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId3, 3, "TestPipe3"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId4, 5, "TestPipe4"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId1, CFE_SB_DEFAULT_QOS, 1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId2, CFE_SB_DEFAULT_QOS, 2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId3, CFE_SB_DEFAULT_QOS, 4), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId4, CFE_SB_DEFAULT_QOS, 6), CFE_SUCCESS);
+
+    /* Initialize the message content */
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(CmdMsg.CommandHeader), CFE_FT_CMD_MSGID, sizeof(CmdMsg)), CFE_SUCCESS);
+
+    /* Make unique content in each message. Sending should always be successful. */
+    CmdMsg.CmdPayload = 0xbabb1e00;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    CmdMsg.CmdPayload = 0xbabb1e01;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    CmdMsg.CmdPayload = 0xbabb1e02;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    CmdMsg.CmdPayload = 0xbabb1e03;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+
+    /* Now receive 1st message from Pipes, actual msg should appear on all (no limit violations here) */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SUCCESS);
+
+    /* All pipes should have gotten the same actual buffer */
+    UtAssert_ADDRESS_EQ(MsgBuf1, MsgBuf2);
+    UtAssert_ADDRESS_EQ(MsgBuf1, MsgBuf3);
+    UtAssert_ADDRESS_EQ(MsgBuf1, MsgBuf4);
+
+    /* Confirm content */
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf1->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf1;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0xbabb1e00);
+
+    /* Now receive 2nd message from Pipes, should not appear on PipeId 1 due to MsgLimit */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SUCCESS);
+
+    /* All pipes should have gotten the same actual buffer */
+    UtAssert_ADDRESS_EQ(MsgBuf2, MsgBuf3);
+    UtAssert_ADDRESS_EQ(MsgBuf2, MsgBuf4);
+
+    /* Confirm content */
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf2->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf2;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0xbabb1e01);
+
+    /* Now receive 3rd message from Pipes, should not appear on PipeId 1 or 2 due to MsgLimit */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SUCCESS);
+
+    /* All pipes should have gotten the same actual buffer */
+    UtAssert_ADDRESS_EQ(MsgBuf3, MsgBuf4);
+
+    /* Confirm content */
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf3->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf3;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0xbabb1e02);
+
+    /* Now receive 4th message from Pipes, should only appear on PipeId4 due PipeDepth limit on 3  */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SUCCESS);
+
+    /* Confirm content */
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf4->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf4;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0xbabb1e03);
+
+    UtPrintf("Testing: Unsubscribe single pipe");
+
+    /* Now unsubscribe only one of the pipes, and confirm no messages delivered to that pipe */
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_CMD_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Send two more messages */
+    CmdMsg.CmdPayload = 0xbabb1e04;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+    CmdMsg.CmdPayload = 0xbabb1e05;
+    UtAssert_INT32_EQ(CFE_SB_TransmitMsg(CFE_MSG_PTR(CmdMsg.CommandHeader), true), CFE_SUCCESS);
+
+    /* poll all pipes again, message should appear on all except PipeId2 (Unsubscribed) */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SUCCESS);
+
+    /* All pipes should have gotten the same actual buffer */
+    UtAssert_ADDRESS_EQ(MsgBuf1, MsgBuf3);
+    UtAssert_ADDRESS_EQ(MsgBuf1, MsgBuf4);
+
+    /* Confirm content */
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf1->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf1;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0xbabb1e04);
+
+    /* poll all pipes again, message should appear on all except PipeId1 (MsgLim) or PipeId2 (Unsubscribed) */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SUCCESS);
+
+    /* All pipes should have gotten the same actual buffer */
+    UtAssert_ADDRESS_EQ(MsgBuf3, MsgBuf4);
+
+    /* Confirm content */
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf3->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    CmdPtr = (const CFE_FT_TestCmdMessage_t *)MsgBuf3;
+    UtAssert_UINT32_EQ(CmdPtr->CmdPayload, 0xbabb1e05);
+
+    /* poll all pipes again, all should be empty now */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf1, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf2, PipeId2, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf3, PipeId3, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf4, PipeId4, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+
+    /* Cleanup */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId3), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId4), CFE_SUCCESS);
+}
+
+/* This is a variant of the message transmit API that does not copy */
+void TestZeroCopyTransmitRecv(void)
+{
+    CFE_SB_PipeId_t         PipeId1 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t         PipeId2 = CFE_SB_INVALID_PIPE;
+    CFE_SB_Buffer_t *       CmdBuf;
+    CFE_SB_Buffer_t *       TlmBuf;
+    CFE_SB_Buffer_t *       MsgBuf;
+    CFE_SB_MsgId_t          MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_SequenceCount_t SeqCmd1;
+    CFE_MSG_SequenceCount_t SeqTlm1;
+    CFE_MSG_SequenceCount_t SeqCmd2;
+    CFE_MSG_SequenceCount_t SeqTlm2;
+
+    /* Setup, create a pipe and subscribe (one cmd, one tlm) */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 5, "TestPipe1"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId2, 5, "TestPipe2"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId1, CFE_SB_DEFAULT_QOS, 3), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_TLM_MSGID, PipeId2, CFE_SB_DEFAULT_QOS, 3), CFE_SUCCESS);
+
+    UtPrintf("Testing: CFE_SB_AllocateMessageBuffer");
+
+    /* Confirm bad size rejection */
+    UtAssert_NULL(CFE_SB_AllocateMessageBuffer(CFE_MISSION_SB_MAX_SB_MSG_SIZE + 1));
+
+    /* Nominal */
+    UtAssert_NOT_NULL(CmdBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestCmdMessage_t)));
+    UtAssert_NOT_NULL(TlmBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestTlmMessage_t)));
+
+    UtPrintf("Testing: CFE_SB_ReleaseMessageBuffer");
+
+    /* allocate a buffer but then discard it without sending */
+    UtAssert_NOT_NULL(MsgBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_MSG_Message_t) + 4));
+    UtAssert_INT32_EQ(CFE_SB_ReleaseMessageBuffer(MsgBuf), CFE_SUCCESS);
+
+    /* Attempt to double-release, should fail validation */
+    UtAssert_INT32_EQ(CFE_SB_ReleaseMessageBuffer(MsgBuf), CFE_SB_BUFFER_INVALID);
+
+    /* Other bad input checking */
+    UtAssert_INT32_EQ(CFE_SB_ReleaseMessageBuffer(NULL), CFE_SB_BAD_ARGUMENT);
+
+    UtPrintf("Testing: CFE_SB_TransmitBuffer");
+
+    /* Initialize the message content */
+    UtAssert_INT32_EQ(CFE_MSG_Init(&CmdBuf->Msg, CFE_FT_CMD_MSGID, sizeof(CFE_FT_TestCmdMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_Init(&TlmBuf->Msg, CFE_FT_TLM_MSGID, sizeof(CFE_FT_TestTlmMessage_t)), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(CmdBuf, true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(TlmBuf, true), CFE_SUCCESS);
+
+    /* Attempt to send a buffer which has been released */
+    UtAssert_NOT_NULL(MsgBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_MSG_Message_t) + 4));
+    UtAssert_INT32_EQ(CFE_MSG_Init(&MsgBuf->Msg, CFE_FT_CMD_MSGID, sizeof(CFE_MSG_Message_t) + 4), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReleaseMessageBuffer(MsgBuf), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(MsgBuf, true), CFE_SB_BUFFER_INVALID);
+
+    /* Attempt to send a NULL buffer */
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(NULL, true), CFE_SB_BAD_ARGUMENT);
+
+    UtPrintf("Testing: CFE_SB_ReceiveBuffer");
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, 100), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_CMD_MSGID);
+    UtAssert_ADDRESS_EQ(MsgBuf, CmdBuf); /* should be the same actual buffer (not a copy) */
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, 100), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&MsgBuf->Msg, &MsgId), CFE_SUCCESS);
+    CFE_Assert_MSGID_EQ(MsgId, CFE_FT_TLM_MSGID);
+    UtAssert_ADDRESS_EQ(MsgBuf, TlmBuf); /* should be the same actual buffer (not a copy) */
+
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+
+    /* Attempt to send a msg of maximum size */
+    UtAssert_NOT_NULL(CmdBuf = CFE_SB_AllocateMessageBuffer(CFE_MISSION_SB_MAX_SB_MSG_SIZE));
+
+    /* First initialize to indicate its even bigger than the max (should fail to transmit) */
+    UtAssert_INT32_EQ(CFE_MSG_Init(&CmdBuf->Msg, CFE_FT_CMD_MSGID, sizeof(CFE_FT_BigMsg)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(CmdBuf, true), CFE_SB_MSG_TOO_BIG);
+
+    /* reducing size should make it work */
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(&CmdBuf->Msg, CFE_MISSION_SB_MAX_SB_MSG_SIZE), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(CmdBuf, true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_ADDRESS_EQ(MsgBuf, CmdBuf); /* should be the same actual buffer (not a copy) */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_POLL), CFE_SB_NO_MESSAGE);
+
+    UtPrintf("Testing: CFE_SB_TransmitBuffer sequence number updates");
+
+    /* Send a set of messages with and without sequence number update flag */
+    UtAssert_NOT_NULL(CmdBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestCmdMessage_t)));
+    UtAssert_NOT_NULL(TlmBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestTlmMessage_t)));
+    UtAssert_INT32_EQ(CFE_MSG_Init(&CmdBuf->Msg, CFE_FT_CMD_MSGID, sizeof(CFE_FT_TestCmdMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_Init(&TlmBuf->Msg, CFE_FT_TLM_MSGID, sizeof(CFE_FT_TestTlmMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&CmdBuf->Msg, 1234), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&TlmBuf->Msg, 5678), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(CmdBuf, true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(TlmBuf, true), CFE_SUCCESS);
+
+    /* Receive and get initial sequence count */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &SeqCmd1), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(SeqCmd1, 6); /* NOTE: commands now honor "Update" flag */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &SeqTlm1), CFE_SUCCESS);
+
+    /* Send a second message also with increment = true and confirm value */
+    UtAssert_NOT_NULL(CmdBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestCmdMessage_t)));
+    UtAssert_NOT_NULL(TlmBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestTlmMessage_t)));
+    UtAssert_INT32_EQ(CFE_MSG_Init(&CmdBuf->Msg, CFE_FT_CMD_MSGID, sizeof(CFE_FT_TestCmdMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_Init(&TlmBuf->Msg, CFE_FT_TLM_MSGID, sizeof(CFE_FT_TestTlmMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&CmdBuf->Msg, 1234), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&TlmBuf->Msg, 5678), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(CmdBuf, true), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(TlmBuf, true), CFE_SUCCESS);
+
+    /* Receive and get current sequence count */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &SeqCmd2), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(SeqCmd2, 7); /* NOTE: commands now honor "Update" flag */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &SeqTlm2), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(SeqTlm2, CFE_MSG_GetNextSequenceCount(SeqTlm1)); /* should be +1 from the previous */
+
+    /* Send a third message also with increment = false and confirm value */
+    UtAssert_NOT_NULL(CmdBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestCmdMessage_t)));
+    UtAssert_NOT_NULL(TlmBuf = CFE_SB_AllocateMessageBuffer(sizeof(CFE_FT_TestTlmMessage_t)));
+    UtAssert_INT32_EQ(CFE_MSG_Init(&CmdBuf->Msg, CFE_FT_CMD_MSGID, sizeof(CFE_FT_TestCmdMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_Init(&TlmBuf->Msg, CFE_FT_TLM_MSGID, sizeof(CFE_FT_TestTlmMessage_t)), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&CmdBuf->Msg, 1234), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&TlmBuf->Msg, 5678), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(CmdBuf, false), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_TransmitBuffer(TlmBuf, false), CFE_SUCCESS);
+
+    /* Receive and get sequence count, should NOT be incremented from previous */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId1, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &SeqCmd1), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(SeqCmd1, 1234); /* should match initialized value */
+    UtAssert_INT32_EQ(CFE_SB_ReceiveBuffer(&MsgBuf, PipeId2, CFE_SB_POLL), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&MsgBuf->Msg, &SeqTlm1), CFE_SUCCESS);
+    UtAssert_UINT32_EQ(SeqTlm1, 5678); /* should match initialized value */
+
+    /* Cleanup */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId2), CFE_SUCCESS);
+}
+
+void TestMiscMessageUtils(void)
+{
+    char       TestString[CFE_FT_STRINGBUF_SIZE + 4];
+    const char RefString1[] = "abc";
+    const char RefString2[] = "defg";
+
+    memset(&CFE_FT_BigMsg, 'x', sizeof(CFE_FT_BigMsg));
+    memset(TestString, 'y', sizeof(TestString));
+
+    /* nominal CFE_SB_MessageStringGet */
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(TestString, CFE_FT_BigMsg.StringBuffer, RefString1, sizeof(TestString),
+                                              sizeof(CFE_FT_BigMsg.StringBuffer)),
+                      CFE_FT_STRINGBUF_SIZE);
+
+    /* The result should be null terminated, even if the input was not */
+    UtAssert_ZERO(TestString[CFE_FT_STRINGBUF_SIZE]);
+    UtAssert_STRINGBUF_EQ(TestString, sizeof(TestString), CFE_FT_BigMsg.StringBuffer,
+                          sizeof(CFE_FT_BigMsg.StringBuffer));
+
+    /* No default */
+    memset(&CFE_FT_BigMsg, 'w', sizeof(CFE_FT_BigMsg));
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(TestString, CFE_FT_BigMsg.StringBuffer, NULL, sizeof(TestString),
+                                              sizeof(CFE_FT_BigMsg.StringBuffer)),
+                      CFE_FT_STRINGBUF_SIZE);
+    UtAssert_STRINGBUF_EQ(TestString, sizeof(TestString), CFE_FT_BigMsg.StringBuffer,
+                          sizeof(CFE_FT_BigMsg.StringBuffer));
+    UtAssert_ZERO(TestString[CFE_FT_STRINGBUF_SIZE]);
+    UtAssert_STRINGBUF_EQ(TestString, sizeof(TestString), CFE_FT_BigMsg.StringBuffer,
+                          sizeof(CFE_FT_BigMsg.StringBuffer));
+
+    /* Check if the input is empty */
+    memset(&CFE_FT_BigMsg, 0, sizeof(CFE_FT_BigMsg));
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(TestString, CFE_FT_BigMsg.StringBuffer, RefString1, sizeof(TestString),
+                                              sizeof(CFE_FT_BigMsg.StringBuffer)),
+                      sizeof(RefString1) - 1);
+    UtAssert_STRINGBUF_EQ(TestString, sizeof(TestString), RefString1, sizeof(RefString1));
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(TestString, NULL, RefString2, sizeof(TestString), 0),
+                      sizeof(RefString2) - 1);
+    UtAssert_STRINGBUF_EQ(TestString, sizeof(TestString), RefString2, sizeof(RefString2));
+
+    /* Neither source nor default */
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(TestString, NULL, NULL, sizeof(TestString), 0), CFE_SUCCESS);
+    UtAssert_STRINGBUF_EQ(TestString, sizeof(TestString), "", 1);
+
+    /* bad inputs */
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(NULL, CFE_FT_BigMsg.StringBuffer, RefString1, sizeof(TestString),
+                                              sizeof(CFE_FT_BigMsg.StringBuffer)),
+                      CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_MessageStringGet(TestString, CFE_FT_BigMsg.StringBuffer, RefString1, 0,
+                                              sizeof(CFE_FT_BigMsg.StringBuffer)),
+                      CFE_SB_BAD_ARGUMENT);
+
+    /* nominal CFE_SB_MessageStringSet */
+    memset(TestString, 'z', sizeof(TestString));
+    UtAssert_INT32_EQ(CFE_SB_MessageStringSet(CFE_FT_BigMsg.StringBuffer, TestString,
+                                              sizeof(CFE_FT_BigMsg.StringBuffer), sizeof(TestString)),
+                      CFE_FT_STRINGBUF_SIZE);
+    UtAssert_STRINGBUF_EQ(TestString, CFE_FT_STRINGBUF_SIZE, CFE_FT_BigMsg.StringBuffer, CFE_FT_STRINGBUF_SIZE);
+
+    /* The result should NOT be null terminated (fixed size msg string does not need it) */
+    UtAssert_INT32_EQ(CFE_FT_BigMsg.StringBuffer[sizeof(CFE_FT_BigMsg.StringBuffer) - 1], 'z');
+    /* Should not have overwritten anything beyond the fixed buffer */
+    UtAssert_ZERO(CFE_FT_BigMsg.MaxSize[sizeof(CFE_FT_BigMsg.StringBuffer)]);
+
+    /* bad inputs */
+    UtAssert_INT32_EQ(CFE_SB_MessageStringSet(NULL, TestString, sizeof(CFE_FT_BigMsg.StringBuffer), sizeof(TestString)),
+                      CFE_SB_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_MessageStringSet(CFE_FT_BigMsg.StringBuffer, NULL, sizeof(CFE_FT_BigMsg.StringBuffer),
+                                              sizeof(TestString)),
+                      CFE_SB_BAD_ARGUMENT);
+}
+
+void SBSendRecvTestSetup(void)
+{
+    UtTest_Add(TestBasicTransmitRecv, NULL, NULL, "Test Basic Transmit/Receive");
+    UtTest_Add(TestZeroCopyTransmitRecv, NULL, NULL, "Test Zero Copy Transmit/Receive");
+    UtTest_Add(TestMsgBroadcast, NULL, NULL, "Test Msg Broadcast");
+    UtTest_Add(TestMiscMessageUtils, NULL, NULL, "Test Miscellaneous Message Utility APIs");
+}
+```
+
+### `sb_subscription_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/sb_subscription_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Functional test of SB subscription APIs
+ * CFE_SB_Subscribe - Subscribe to a message on the software bus with default parameters.
+ * CFE_SB_SubscribeEx - Subscribe to a message on the software bus.
+ * CFE_SB_SubscribeLocal - Subscribe to a message while keeping the request local to a cpu.
+ * CFE_SB_Unsubscribe - Remove a subscription to a message on the software bus.
+ * CFE_SB_UnsubscribeLocal - Remove a subscription to a message on the software bus on the current CPU.
+ */
+
+#include "cfe_test.h"
+#include "cfe_msgids.h"
+#include "cfe_test_msgids.h"
+
+/*
+ * This test procedure should be agnostic to specific MID values, but it should
+ * not overlap/interfere with real MIDs used by other apps.
+ */
+static const CFE_SB_MsgId_t CFE_FT_CMD_MSGID = CFE_SB_MSGID_WRAP_VALUE(CFE_TEST_CMD_MID);
+static const CFE_SB_MsgId_t CFE_FT_TLM_MSGID = CFE_SB_MSGID_WRAP_VALUE(CFE_TEST_HK_TLM_MID);
+
+void TestSubscribeUnsubscribe(void)
+{
+    CFE_SB_PipeId_t PipeId1 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t PipeId2 = CFE_SB_INVALID_PIPE;
+
+    UtPrintf("Testing: CFE_SB_Subscribe, CFE_SB_Unsubscribe");
+
+    /* Setup, create some pipes */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 3, "TestPipe1"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId2, 3, "TestPipe2"), CFE_SUCCESS);
+
+    /* Subscribe - Confirm Bad MsgId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_SB_INVALID_MSG_ID, PipeId1), CFE_SB_BAD_ARGUMENT);
+
+    /* Subscribe - Confirm Bad PipeId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_CMD_MSGID, CFE_SB_INVALID_PIPE), CFE_SB_BAD_ARGUMENT);
+
+    /* Subscribe - Nominal */
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_CMD_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_TLM_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Subscribe - Duplicate */
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_CMD_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_TLM_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Subscribe - Nominal 2 */
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_TLM_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_CMD_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Unsubscribe - Confirm Bad MsgId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_SB_INVALID_MSG_ID, PipeId1), CFE_SB_BAD_ARGUMENT);
+
+    /* Unsubscribe - Confirm Bad PipeId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_CMD_MSGID, CFE_SB_INVALID_PIPE), CFE_SB_BAD_ARGUMENT);
+
+    /* Unsubscribe - Nominal */
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_CMD_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_TLM_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Unsubscribe - Already unsubscribed */
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_CMD_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_TLM_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Unsubscribe - Nominal 2 */
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_TLM_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_Unsubscribe(CFE_FT_CMD_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Teardown - delete the pipes. */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId2), CFE_SUCCESS);
+}
+
+void TestSubscribeUnsubscribeLocal(void)
+{
+    CFE_SB_PipeId_t PipeId1 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t PipeId2 = CFE_SB_INVALID_PIPE;
+
+    UtPrintf("Testing: CFE_SB_SubscribeLocal, CFE_SB_UnsubscribeLocal");
+
+    /* Setup, create some pipes */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 3, "TestPipe1"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId2, 3, "TestPipe2"), CFE_SUCCESS);
+
+    /* Subscribe - Confirm Bad MsgId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_SB_INVALID_MSG_ID, PipeId1, 2), CFE_SB_BAD_ARGUMENT);
+
+    /* Subscribe - Confirm Bad PipeId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_CMD_MSGID, CFE_SB_INVALID_PIPE, 2), CFE_SB_BAD_ARGUMENT);
+
+    /* Subscribe - Nominal */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_CMD_MSGID, PipeId1, 2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_TLM_MSGID, PipeId2, 2), CFE_SUCCESS);
+
+    /* Subscribe - Duplicate */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_CMD_MSGID, PipeId1, 2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_TLM_MSGID, PipeId2, 2), CFE_SUCCESS);
+
+    /* Subscribe - Nominal 2 */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_TLM_MSGID, PipeId1, 2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_CMD_MSGID, PipeId2, 2), CFE_SUCCESS);
+
+    /* Unsubscribe - Confirm Bad MsgId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_SB_INVALID_MSG_ID, PipeId1), CFE_SB_BAD_ARGUMENT);
+
+    /* Unsubscribe - Confirm Bad PipeId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_CMD_MSGID, CFE_SB_INVALID_PIPE), CFE_SB_BAD_ARGUMENT);
+
+    /* Unsubscribe - Nominal */
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_CMD_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_TLM_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Unsubscribe - Already unsubscribed */
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_CMD_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_TLM_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Unsubscribe - Nominal 2 */
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_TLM_MSGID, PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_UnsubscribeLocal(CFE_FT_CMD_MSGID, PipeId2), CFE_SUCCESS);
+
+    /* Teardown - delete the pipes. */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId2), CFE_SUCCESS);
+}
+
+void TestSubscribeEx(void)
+{
+    CFE_SB_PipeId_t PipeId1 = CFE_SB_INVALID_PIPE;
+    CFE_SB_PipeId_t PipeId2 = CFE_SB_INVALID_PIPE;
+
+    /*
+     * NOTE: CFE_SB_SubscribeEx adds a "Quality" parameter for Qos, which is
+     * not utilized in the current SB implementation (only "default" is available).
+     *
+     * Otherwise, it is basically the same as the regular "CFE_SB_Subscribe" call.
+     */
+    UtPrintf("Testing: CFE_SB_SubscribeEx");
+
+    /* Setup, create some pipes */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId1, 3, "TestPipe1"), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId2, 3, "TestPipe2"), CFE_SUCCESS);
+
+    /*
+     * For completeness, repeat the bad arg rejection tests, even though internally
+     * it is likely identical (all going through CFE_SB_SubscribeFull).  However
+     * this implementation detail should not be assumed in a black box test environment.
+     */
+
+    /* Subscribe - Confirm Bad MsgId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_SB_INVALID_MSG_ID, PipeId1, CFE_SB_DEFAULT_QOS, 2), CFE_SB_BAD_ARGUMENT);
+
+    /* Subscribe - Confirm Bad PipeId Arg Rejection */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, CFE_SB_INVALID_PIPE, CFE_SB_DEFAULT_QOS, 2),
+                      CFE_SB_BAD_ARGUMENT);
+
+    /* Subscribe - Nominal */
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId1, CFE_SB_DEFAULT_QOS, 2), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_TLM_MSGID, PipeId2, CFE_SB_DEFAULT_QOS, 2), CFE_SUCCESS);
+
+    /* Teardown - delete the pipes (this also unsubscribes automatically) */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId1), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId2), CFE_SUCCESS);
+}
+
+void TestSBMaxSubscriptions(void)
+{
+    CFE_Status_t    Status;
+    uint32          NumSubs;
+    CFE_SB_MsgId_t  TestMsgId;
+    CFE_SB_PipeId_t PipeId = CFE_SB_INVALID_PIPE;
+
+    UtPrintf("Testing: CFE_SB_Subscribe, max routing table limit");
+
+    /* Setup, create a pipe */
+    UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId, 2, "TestPipe"), CFE_SUCCESS);
+
+    /*
+     * Test max subscriptions - note this depends on the actual number of _other_ apps
+     * that are running and have made other subscriptions.  Therefore it is not predictable
+     * exactly how many iterations of this loop will succeed, but it should be fewer than
+     * CFE_PLATFORM_SB_MAX_MSG_IDS.
+     *
+     * NOTE: after this loop, it may not be possible to add any more routes at all, until
+     * a processor reset is done, because routes are never actually deleted for sequence number persistence.
+     */
+    NumSubs = 0;
+    while (NumSubs <= CFE_PLATFORM_SB_MAX_MSG_IDS)
+    {
+        /* fabricate a msgid to subscribe to (this may overlap real msgids) */
+        TestMsgId = CFE_SB_ValueToMsgId(CFE_PLATFORM_CMD_MID_BASE + NumSubs);
+
+        Status = CFE_SB_Subscribe(TestMsgId, PipeId);
+        if (Status != CFE_SUCCESS)
+        {
+            break;
+        }
+
+        ++NumSubs;
+    }
+
+    /* Check that the number of subscriptions was within range */
+    UtAssert_NONZERO(NumSubs);
+    UtAssert_UINT32_LTEQ(NumSubs, CFE_PLATFORM_SB_MAX_MSG_IDS);
+
+    /* The last pass should have returned CFE_SB_MAX_MSGS_MET */
+    UtAssert_True(Status == CFE_SB_MAX_MSGS_MET,
+                  "CFE_SB_Subscribe(TestMsgId, PipeId1) (%ld) == CFE_SB_MAX_MSGS_MET (%ld)", (long)Status,
+                  (long)CFE_SB_MAX_MSGS_MET);
+
+    /* Note this should also remove any subscriptions from the above loop */
+    UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId), CFE_SUCCESS);
+}
+
+/* This is a different flavor of the subscription limit - a single msgid can only
+ * have up to CFE_PLATFORM_SB_MAX_DEST_PER_PKT destinations */
+void TestSBMaxDestinations(void)
+{
+    CFE_SB_PipeId_t PipeId[CFE_PLATFORM_SB_MAX_DEST_PER_PKT + 1];
+    char            PipeName[CFE_MISSION_MAX_API_LEN];
+    uint32          NumDests;
+
+    UtPrintf("Testing: CFE_SB_Subscribe, max destination limit");
+
+    NumDests = 0;
+    while (NumDests <= CFE_PLATFORM_SB_MAX_DEST_PER_PKT)
+    {
+        snprintf(PipeName, sizeof(PipeName), "TestPipe%u", (unsigned int)NumDests);
+        if (!UtAssert_INT32_EQ(CFE_SB_CreatePipe(&PipeId[NumDests], 2, PipeName), CFE_SUCCESS))
+        {
+            break;
+        }
+
+        if (NumDests == CFE_PLATFORM_SB_MAX_DEST_PER_PKT)
+        {
+            /* All 3 variations of subscribe can be checked here, they should all fail identically */
+            UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_CMD_MSGID, PipeId[NumDests]), CFE_SB_MAX_DESTS_MET);
+            UtAssert_INT32_EQ(CFE_SB_SubscribeEx(CFE_FT_CMD_MSGID, PipeId[NumDests], CFE_SB_DEFAULT_QOS, 2),
+                              CFE_SB_MAX_DESTS_MET);
+            UtAssert_INT32_EQ(CFE_SB_SubscribeLocal(CFE_FT_CMD_MSGID, PipeId[NumDests], 2), CFE_SB_MAX_DESTS_MET);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(CFE_SB_Subscribe(CFE_FT_CMD_MSGID, PipeId[NumDests]), CFE_SUCCESS);
+        }
+
+        ++NumDests;
+    }
+
+    while (NumDests > 0)
+    {
+        --NumDests;
+
+        /* Note this should also remove any subscriptions from the above loop */
+        UtAssert_INT32_EQ(CFE_SB_DeletePipe(PipeId[NumDests]), CFE_SUCCESS);
+    }
+}
+
+void SBSubscriptionTestSetup(void)
+{
+    UtTest_Add(TestSubscribeUnsubscribe, NULL, NULL, "Test SB Subscribe/Unsubscribe");
+    UtTest_Add(TestSubscribeUnsubscribeLocal, NULL, NULL, "Test SB SubscribeLocal/UnsubscribeLocal");
+    UtTest_Add(TestSubscribeEx, NULL, NULL, "Test SB SubscribeEx");
+    UtTest_Add(TestSBMaxDestinations, NULL, NULL, "Test SB Max Destinations");
+
+    /*
+     * NOTE: The TestSBMaxSubscriptions() is not included/added by default, as it will fill the
+     * routing table and make it not possible to add new routes until the system is reset.
+     *
+     * The test can be optionally enabled by the user and should pass, if this is not a concern.
+     */
+}
+```
+
+### `tbl_content_access_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/tbl_content_access_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Table Access Content APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include "cfe_test_table.h"
+
+/*
+ * Helper function to attempt to load the test table with data and assert with the provided CFE_Status_t
+ */
+void LoadTable(TBL_TEST_Table_t *TestTable, CFE_Status_t ExpectedStatus)
+{
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_ADDRESS, TestTable), ExpectedStatus);
+}
+
+void TestGetAddress(void)
+{
+    void *            TblPtr;
+    TBL_TEST_Table_t *TestTblPtr;
+    TBL_TEST_Table_t  TestTable = {1, 2};
+
+    CFE_TBL_Handle_t SharedTblHandle = CFE_TBL_BAD_TABLE_HANDLE;
+    const char *     SharedTblName   = CFE_ASSERT_SHARED_TBL_NAME;
+
+    UtPrintf("Testing: CFE_TBL_GetAddress");
+
+    /* Never loaded */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_FT_Global.TblHandle), CFE_TBL_ERR_NEVER_LOADED);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(NULL, CFE_FT_Global.TblHandle), CFE_TBL_BAD_ARGUMENT);
+
+    /* Returns CFE_TBL_INFO_UPDATED since it was just loaded */
+    LoadTable(&TestTable, CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Check table contents */
+    TestTblPtr = (TBL_TEST_Table_t *)TblPtr;
+    UtAssert_INT32_EQ(TestTblPtr->Int1, TestTable.Int1);
+    UtAssert_INT32_EQ(TestTblPtr->Int2, TestTable.Int2);
+
+    /* Unregistered table */
+    UnregisterTestTable();
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_FT_Global.TblHandle), CFE_TBL_ERR_INVALID_HANDLE);
+
+    /* Access a shared table */
+    UtAssert_INT32_EQ(CFE_TBL_Share(&SharedTblHandle, SharedTblName), CFE_SUCCESS);
+    /* Returns CFE_TBL_INFO_UPDATED since it hasn't been touched since it was loaded */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, SharedTblHandle), CFE_TBL_INFO_UPDATED);
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(SharedTblHandle), CFE_SUCCESS);
+}
+
+void TestReleaseAddress(void)
+{
+    UtPrintf("Testing: CFE_TBL_GetAddress");
+    void *           TblPtr;
+    TBL_TEST_Table_t TestTable = {1, 2};
+    /* Never loaded */
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_TBL_ERR_NEVER_LOADED);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+    /* Successful load and release */
+    LoadTable(&TestTable, CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+
+    /* Attempt to load while address is locked */
+    LoadTable(&TestTable, CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    LoadTable(&TestTable, CFE_TBL_INFO_TABLE_LOCKED);
+
+    /* Release and try again */
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    /* It is necessary to call CFE_TBL_Manage because the table still thinks there is a load in progress from the failed
+    load while the table was locked. This call shouldn't be necessary. */
+    UtAssert_INT32_EQ(CFE_TBL_Manage(CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    LoadTable(&TestTable, CFE_SUCCESS);
+
+    /* Attempt to release an unregistered table */
+    UnregisterTestTable();
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+void TestGetReleaseAddresses(void)
+{
+    int              numValidTbls = 5;
+    char             TblName[10];
+    CFE_TBL_Handle_t TblHandles[numValidTbls + 1];
+    void *           TblPtrs[numValidTbls + 1];
+    TBL_TEST_Table_t TblPtrsList[numValidTbls + 1];
+    TBL_TEST_Table_t TestTable = {1, 2};
+
+    /* Put an invalid handle at the start*/
+    TblHandles[0] = CFE_TBL_BAD_TABLE_HANDLE;
+    TblPtrs[0]    = TblPtrsList;
+    for (int i = 1; i < numValidTbls + 1; i++)
+    {
+        sprintf(TblName, "%d", i);
+        UtAssert_INT32_EQ(
+            CFE_TBL_Register(&TblHandles[i], TblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, NULL),
+            CFE_SUCCESS);
+        TblPtrs[i] = TblPtrsList + i;
+    }
+
+    UtAssert_INT32_EQ(CFE_TBL_GetAddresses(NULL, numValidTbls, TblHandles), CFE_TBL_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddresses((void ***)&TblPtrs, numValidTbls, NULL), CFE_TBL_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddresses((void ***)&TblPtrs, numValidTbls, TblHandles), CFE_TBL_ERR_INVALID_HANDLE);
+    /* Skip the first table handle to only consider valid handles */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddresses((void ***)&TblPtrs, numValidTbls, TblHandles + 1), CFE_TBL_ERR_NEVER_LOADED);
+
+    /* Load data and then get addresses */
+    for (int i = 1; i < numValidTbls + 1; i++)
+    {
+        if (CFE_TBL_Load(TblHandles[i], CFE_TBL_SRC_ADDRESS, &TestTable) != CFE_SUCCESS)
+        {
+            UtAssert_Failed("Failed to load data for table number %d", i);
+        }
+    }
+    /* First time returns status message of CFE_TBL_INFO_UPDATED */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddresses((void ***)&TblPtrs, numValidTbls, TblHandles + 1), CFE_TBL_INFO_UPDATED);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddresses((void ***)&TblPtrs, numValidTbls, TblHandles + 1), CFE_SUCCESS);
+    /* Attempt to release the invalid handle at the start of the array */
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddresses(numValidTbls, TblHandles), CFE_TBL_ERR_INVALID_HANDLE);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddresses(numValidTbls, NULL), CFE_TBL_BAD_ARGUMENT);
+    /* Skip the invalid handle */
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddresses(numValidTbls, TblHandles + 1), CFE_SUCCESS);
+
+    /* Unregister all tables */
+    for (int i = 1; i < numValidTbls + 1; i++)
+    {
+        if (CFE_TBL_Unregister(TblHandles[i]) != CFE_SUCCESS)
+        {
+            UtAssert_Failed("Failed to unregister table number %d", i);
+        }
+    }
+}
+
+void TBLContentAccessTestSetup(void)
+{
+    UtTest_Add(TestGetAddress, RegisterTestTable, NULL, "Test Table Get Address");
+    UtTest_Add(TestReleaseAddress, RegisterTestTable, NULL, "Test Table Release Address");
+    UtTest_Add(TestGetReleaseAddresses, NULL, NULL, "Test Table Get and Release Addresses");
+}
+```
+
+### `tbl_content_mang_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/tbl_content_mang_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Table Manage Content APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include "cfe_test_table.h"
+
+static const char TESTTBL_OTHER_NAME[] = "OtherTbl";
+
+/* A set of additional (generated) table images to test permutations of CFE_TBL_Load() */
+static const char TESTTBL_NOMINAL_FILE[] =
+    "/cf/cfe_test_tbl.tbl"; /**< nominal image file, from table tool (elf2cfetbl or similar) */
+static const char TESTTBL_NOTEXIST_FILE[] =
+    "/ram/notexist.tbl"; /**< a valid filename, but file does not actually exist */
+static const char TESTTBL_BAD_STDHDR_FILE[]  = "/ram/testtbl_shdr.tbl"; /**< bad image without a complete FS header */
+static const char TESTTBL_BAD_TBLHDR_FILE[]  = "/ram/testtbl_thdr.tbl"; /**< bad image without a complete TBL header */
+static const char TESTTBL_BAD_CONTENT_FILE[] = "/ram/testtbl_cid.tbl";  /**< image with incorrect "content ID" field */
+static const char TESTTBL_BAD_SUBTYPE_FILE[] = "/ram/testtbl_st.tbl";   /**< image with incorrect "subtype" field */
+static const char TESTTBL_ALTERNATE_FILE[] = "/ram/testtbl_alt.tbl"; /**< good/complete image with different content */
+static const char TESTTBL_OTHERTBL_FILE[] =
+    "/ram/testtbl_other.tbl"; /**< good/complete image with different content for a different table */
+static const char TESTTBL_TRUNCATED_FILE[] =
+    "/ram/testtbl_trunc.tbl"; /**< truncated version (header info has more bytes than file) */
+static const char TESTTBL_LONG_FILE[] =
+    "/ram/testtbl_long.tbl"; /**< long version (file has more bytes than header info) */
+static const char TESTTBL_SHORT_FILE[] =
+    "/ram/testtbl_short.tbl"; /**< short version (header info matches file but smaller than tbl) */
+static const char TESTTBL_PARTIAL_FILE[] =
+    "/ram/testtbl_part.tbl"; /**< partial (offset nonzero, remainder of data from short file) */
+
+void TestLoad(void)
+{
+    CFE_TBL_Handle_t  BadTblHandle;
+    const char *      BadTblName = "BadTableName";
+    CFE_TBL_Handle_t  DumpTblHandle;
+    const char *      DumpTblName = "DumpOnlyTable";
+    CFE_TBL_Handle_t  SharedTblHandle;
+    const char *      SharedTblName = CFE_FT_Global.RegisteredTblName;
+    TBL_TEST_Table_t  TestTable     = {0xd00d, 0xdad};
+    TBL_TEST_Table_t *TablePtr;
+    CFE_TBL_Handle_t  OtherHandle;
+    void *            TempPtr;
+
+    UtPrintf("Testing: CFE_TBL_Load");
+
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(&BadTblHandle, BadTblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DBL_BUFFER, NULL),
+        CFE_SUCCESS);
+
+    /* Create a second table handle, to keep things interesting */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&OtherHandle, TESTTBL_OTHER_NAME, sizeof(TBL_TEST_Table_t), 0, NULL),
+                      CFE_SUCCESS);
+
+    /* Some basic failure checks */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_BAD_STDHDR_FILE),
+                      CFE_TBL_ERR_NO_STD_HEADER);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_BAD_TBLHDR_FILE),
+                      CFE_TBL_ERR_NO_TBL_HEADER);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_BAD_CONTENT_FILE),
+                      CFE_TBL_ERR_BAD_CONTENT_ID);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_BAD_SUBTYPE_FILE),
+                      CFE_TBL_ERR_BAD_SUBTYPE_ID);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, ~CFE_TBL_SRC_FILE, TESTTBL_NOMINAL_FILE),
+                      CFE_TBL_ERR_ILLEGAL_SRC_TYPE);
+
+    /* Load from partial file (offset nonzero, before any successful load) -
+     * This should be restricted and return an error  */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_PARTIAL_FILE),
+                      CFE_TBL_ERR_PARTIAL_LOAD);
+
+    /* Load from short file (offset 0, but incomplete, also before any successful load) */
+    /* In the current TBL implementation, this actually returns SUCCESS here (which is misleading) */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_SHORT_FILE), CFE_SUCCESS);
+
+    /* NOTE: _NOT_ checking content after above; although it returned a success code, it is not well defined
+     * as to what the content will be because the data was never fully loaded yet */
+
+    /* Load from file (nominal) - first full data load */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_NOMINAL_FILE), CFE_SUCCESS);
+
+    /* confirm content (football) */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0xf007);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0xba11);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Load from file too big */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_LONG_FILE),
+                      CFE_TBL_ERR_FILE_TOO_LARGE);
+
+    /* confirm content again (note content should not have been updated) */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0xf007);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0xba11);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Load again with alternate content */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_ALTERNATE_FILE), CFE_SUCCESS);
+
+    /* confirm content again (changed to alternate data) */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0xdead);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0xbeef);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Load from file truncated */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_TRUNCATED_FILE),
+                      CFE_TBL_ERR_LOAD_INCOMPLETE);
+
+    /* confirm content again (should not be changed) */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0xdead);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0xbeef);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Load the other table (nominal data) */
+    UtAssert_INT32_EQ(CFE_TBL_Load(OtherHandle, CFE_TBL_SRC_FILE, TESTTBL_OTHERTBL_FILE), CFE_SUCCESS);
+
+    /* confirm content of first table again (should not be changed) */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0xdead);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0xbeef);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* confirm content of other table (boatload) */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, OtherHandle), CFE_TBL_INFO_UPDATED);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0xb0a7);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0x10ad);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(OtherHandle), CFE_SUCCESS);
+
+    /* Load from short file again (different response after successful load) */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_SHORT_FILE), CFE_SUCCESS);
+
+    /* confirm content again (reported as updated from partial load) */
+    /* Should have updated the first word only */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0x5555);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0xbeef);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Load from short file again (different response after successful load) */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_PARTIAL_FILE), CFE_SUCCESS);
+
+    /* confirm content again (reported as updated from partial load) */
+    /* Should have updated the second word only */
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TempPtr, CFE_FT_Global.TblHandle), CFE_TBL_INFO_UPDATED);
+    TablePtr = TempPtr;
+    UtAssert_UINT32_EQ(TablePtr->Int1, 0x5555);
+    UtAssert_UINT32_EQ(TablePtr->Int2, 0x6666);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+
+    /* Table name mismatches */
+    UtAssert_INT32_EQ(CFE_TBL_Load(BadTblHandle, CFE_TBL_SRC_FILE, TESTTBL_NOMINAL_FILE),
+                      CFE_TBL_ERR_FILE_FOR_WRONG_TABLE);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_OTHERTBL_FILE),
+                      CFE_TBL_ERR_FILE_FOR_WRONG_TABLE);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, TESTTBL_NOTEXIST_FILE),
+                      CFE_TBL_ERR_ACCESS);
+
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_TBL_BAD_TABLE_HANDLE, CFE_TBL_SRC_FILE, TESTTBL_NOMINAL_FILE),
+                      CFE_TBL_ERR_INVALID_HANDLE);
+
+    /* Load from memory */
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_ADDRESS, &TestTable), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_ADDRESS, NULL), CFE_TBL_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_TBL_BAD_TABLE_HANDLE, CFE_TBL_SRC_ADDRESS, &TestTable),
+                      CFE_TBL_ERR_INVALID_HANDLE);
+
+    /* Attempt to load a dump only table */
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(&DumpTblHandle, DumpTblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DUMP_ONLY, NULL),
+        CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Load(DumpTblHandle, CFE_TBL_SRC_FILE, TESTTBL_NOMINAL_FILE), CFE_TBL_ERR_DUMP_ONLY);
+
+    /* Load a shared table */
+    UtAssert_INT32_EQ(CFE_TBL_Share(&SharedTblHandle, SharedTblName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Load(SharedTblHandle, CFE_TBL_SRC_FILE, TESTTBL_NOMINAL_FILE), CFE_SUCCESS);
+}
+
+void TestUpdate(void)
+{
+    UtPrintf("Testing: CFE_TBL_Update");
+    /* Haven't figured out how to get an update pending */
+    UtAssert_INT32_EQ(CFE_TBL_Update(CFE_FT_Global.TblHandle), CFE_TBL_INFO_NO_UPDATE_PENDING);
+    UtAssert_INT32_EQ(CFE_TBL_Update(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+void TestValidate(void)
+{
+    UtPrintf("Testing: CFE_TBL_Validate");
+    /* Haven't figured out how to get a validation pending */
+    UtAssert_INT32_EQ(CFE_TBL_Validate(CFE_FT_Global.TblHandle), CFE_TBL_INFO_NO_VALIDATION_PENDING);
+    UtAssert_INT32_EQ(CFE_TBL_Validate(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+void TestManage(void)
+{
+    UtPrintf("Testing: CFE_TBL_Manage");
+    UtAssert_INT32_EQ(CFE_TBL_Manage(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Manage(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+void TestDumpToBuffer(void)
+{
+    UtPrintf("Testing: CFE_TBL_DumpToBuffer");
+    /* This should at least return an info code such as CFE_TBL_INFO_NO_UPDATE_PENDING when CFE_TBL_Update is called
+     * with no pending update instead of returning CFE_SUCCESS whether or not it actually dumped*/
+    UtAssert_INT32_EQ(CFE_TBL_DumpToBuffer(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_DumpToBuffer(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+void TestModified(void)
+{
+    UtPrintf("Testing: CFE_TBL_Modified");
+    UtAssert_INT32_EQ(CFE_TBL_Modified(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Modified(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+/* Helper function to set a 32-bit table offset value (must be big-endian) */
+void TblTest_UpdateOffset(uint32 *TgtVal, size_t SetVal)
+{
+    size_t i;
+    union
+    {
+        uint32 offset;
+        uint8  bytes[sizeof(uint32)];
+    } offsetbuf;
+
+    i = sizeof(offsetbuf.bytes);
+    while (i > 0)
+    {
+        --i;
+        offsetbuf.bytes[i] = SetVal & 0xFF;
+        SetVal >>= 8;
+    }
+
+    *TgtVal = offsetbuf.offset;
+}
+
+/*
+ * A helper function that intentionally creates flawed table image files -
+ * This takes the good image file produced during the build, and creates
+ * variants with certain header fields modified and data truncated, to
+ * validate the error detection logic in CFE_TBL_Load().
+ */
+void TblTest_GenerateTblFiles(void)
+{
+    osal_id_t fh1 = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t fh2 = OS_OBJECT_ID_UNDEFINED;
+    uint32    PartialOffset;
+    uint32    PartialSize;
+    union
+    {
+        uint8              u8;
+        uint16             u16;
+        uint32             u32;
+        CFE_FS_Header_t    FsHdr;
+        CFE_TBL_File_Hdr_t TblHdr;
+        TBL_TEST_Table_t   Content;
+    } buf;
+
+    /* Open the original (correct) table image file for reference */
+    UtAssert_INT32_EQ(OS_OpenCreate(&fh1, TESTTBL_NOMINAL_FILE, 0, OS_READ_ONLY), OS_SUCCESS);
+
+    /* create a file which does not have a valid FS header */
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_BAD_STDHDR_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+    buf.u32 = 0x12345678;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.u32)), sizeof(buf.u32));
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* create a file which has an FS header but not a valid TBL header */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_BAD_TBLHDR_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    buf.u32 = 0x12345678;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.u32)), sizeof(buf.u32));
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Create a tbl image that has the wrong content ID field */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_BAD_CONTENT_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers and modify */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    buf.FsHdr.ContentType = 0x09abcdef;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* Identifiable content, different from original */
+    buf.Content.Int1 = 0x7777;
+    buf.Content.Int2 = 0x8888;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.Content)), sizeof(buf.Content));
+
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Create a tbl image that has the wrong content ID field */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_BAD_SUBTYPE_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers as-is */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    buf.FsHdr.SubType = 0x09abcdef;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* Identifiable content, different from original */
+    buf.Content.Int1 = 0x9999;
+    buf.Content.Int2 = 0xaaaa;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.Content)), sizeof(buf.Content));
+
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Create a tbl image that is complete but with different content */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_ALTERNATE_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers as-is */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* Identifiable content, different from original */
+    buf.Content.Int1 = 0xdead;
+    buf.Content.Int2 = 0xbeef;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.Content)), sizeof(buf.Content));
+
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Create a tbl image that is complete but for the OTHER table (also different content) */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_OTHERTBL_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers as-is */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    snprintf(buf.TblHdr.TableName, sizeof(buf.TblHdr.TableName), "%s.%s", "CFE_TEST_APP", TESTTBL_OTHER_NAME);
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* Identifiable content, different from original */
+    buf.Content.Int1 = 0xb0a7;
+    buf.Content.Int2 = 0x10ad;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.Content)), sizeof(buf.Content));
+
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+    /* Create a tbl image that is too big */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_LONG_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY), OS_SUCCESS);
+
+    /* copy headers as-is */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* write content, but make it identifiable/unique */
+    buf.Content.Int1 = 0x1111;
+    buf.Content.Int1 = 0x2222;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.Content)), sizeof(buf.Content));
+
+    /* Write extra byte at the end */
+    buf.u8 = 0x33;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.u8)), sizeof(buf.u8));
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Create a tbl image that is truncated; header byte count is larger than file */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_TRUNCATED_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers as-is */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* But write only one byte of data into the content part (so will be too small) */
+    buf.u8 = 0x44;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.u8)), sizeof(buf.u8));
+
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Make a file that is "short" (byte count is correct, just not enough bytes to fill table) */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_SHORT_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers, but modify TBL header */
+    /* NOTE: headers must be in big-endian/network byte order! */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    PartialOffset = 0;
+    PartialSize   = offsetof(TBL_TEST_Table_t, Int2);
+    TblTest_UpdateOffset(&buf.TblHdr.Offset, PartialOffset);
+    TblTest_UpdateOffset(&buf.TblHdr.NumBytes, PartialSize);
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* write partial content */
+    buf.Content.Int1 = 0x5555;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, PartialSize), PartialSize);
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Make a file that is "partial" (contains remainder of bytes from above) */
+    OS_lseek(fh1, 0, OS_SEEK_SET);
+    UtAssert_INT32_EQ(
+        OS_OpenCreate(&fh2, TESTTBL_PARTIAL_FILE, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY),
+        OS_SUCCESS);
+
+    /* copy headers, but modify TBL header */
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.FsHdr)), sizeof(buf.FsHdr));
+    UtAssert_INT32_EQ(OS_read(fh1, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+    PartialOffset = offsetof(TBL_TEST_Table_t, Int2);
+    PartialSize   = sizeof(buf.Content) - offsetof(TBL_TEST_Table_t, Int2);
+    TblTest_UpdateOffset(&buf.TblHdr.Offset, PartialOffset);
+    TblTest_UpdateOffset(&buf.TblHdr.NumBytes, PartialSize);
+    UtAssert_INT32_EQ(OS_write(fh2, &buf, sizeof(buf.TblHdr)), sizeof(buf.TblHdr));
+
+    /* Copy partial content */
+    buf.Content.Int2 = 0x6666;
+    UtAssert_INT32_EQ(OS_write(fh2, &buf.Content.Int2, PartialSize), PartialSize);
+    UtAssert_INT32_EQ(OS_close(fh2), OS_SUCCESS);
+
+    /* Close the source file */
+    UtAssert_INT32_EQ(OS_close(fh1), OS_SUCCESS);
+}
+
+void TBLContentMangTestSetup(void)
+{
+    TblTest_GenerateTblFiles();
+
+    UtTest_Add(TestLoad, RegisterTestTable, UnregisterTestTable, "Test Table Load");
+    UtTest_Add(TestUpdate, RegisterTestTable, UnregisterTestTable, "Test Table Update");
+    UtTest_Add(TestValidate, RegisterTestTable, UnregisterTestTable, "Test Table Validate");
+    UtTest_Add(TestManage, RegisterTestTable, UnregisterTestTable, "Test Table Manage");
+    UtTest_Add(TestDumpToBuffer, RegisterTestTable, UnregisterTestTable, "Test Table Dump to Buffer");
+    UtTest_Add(TestModified, RegisterTestTable, UnregisterTestTable, "Test Table Modified");
+}
+```
+
+### `tbl_information_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/tbl_information_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Table Information APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include "cfe_test_table.h"
+#include "cfe_msgids.h"
+#include "cfe_test_msgids.h"
+
+void TestGetStatus(void)
+{
+    UtPrintf("Testing: CFE_TBL_GetStatus");
+    /*
+     * This assert assumes there are no pending actions for this table
+     * Since manage has never been called, I think this is a safe assumption
+     */
+    UtAssert_INT32_EQ(CFE_TBL_GetStatus(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_GetStatus(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+}
+
+void TestGetInfo(void)
+{
+    CFE_TBL_Info_t TblInfo;
+    const char *   BadTblName = "BadTable";
+
+    memset(&TblInfo, 0, sizeof(TblInfo));
+
+    UtPrintf("Testing: CFE_TBL_GetInfo");
+
+    UtAssert_INT32_EQ(CFE_TBL_GetInfo(&TblInfo, CFE_FT_Global.RegisteredTblName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_GetInfo(NULL, CFE_FT_Global.TblName), CFE_TBL_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TBL_GetInfo(&TblInfo, BadTblName), CFE_TBL_ERR_INVALID_NAME);
+    UtAssert_INT32_EQ(CFE_TBL_GetInfo(&TblInfo, NULL), CFE_TBL_BAD_ARGUMENT);
+
+    /* This is only checking some parts of the TblInfo struct */
+    size_t expectedSize        = sizeof(TBL_TEST_Table_t);
+    uint32 expectedNumUsers    = 1;
+    bool   expectedTableLoaded = false;
+    bool   expectedDumpOnly    = false;
+    bool   expectedDoubleBuf   = false;
+    bool   expectedUserDefAddr = false;
+    bool   expectedCritical    = false;
+    UtAssert_UINT32_EQ(TblInfo.Size, expectedSize);
+    UtAssert_UINT32_EQ(TblInfo.NumUsers, expectedNumUsers);
+    UtAssert_INT32_EQ(TblInfo.TableLoadedOnce, expectedTableLoaded);
+    UtAssert_INT32_EQ(TblInfo.DumpOnly, expectedDumpOnly);
+    UtAssert_INT32_EQ(TblInfo.DoubleBuffered, expectedDoubleBuf);
+    UtAssert_INT32_EQ(TblInfo.UserDefAddr, expectedUserDefAddr);
+    UtAssert_INT32_EQ(TblInfo.Critical, expectedCritical);
+}
+
+void TestNotifyByMessage(void)
+{
+    CFE_TBL_Handle_t  SharedTblHandle = CFE_TBL_BAD_TABLE_HANDLE;
+    const char *      SharedTblName   = CFE_ASSERT_SHARED_TBL_NAME;
+    CFE_SB_MsgId_t    TestMsgId       = CFE_SB_ValueToMsgId(CFE_TEST_CMD_MID);
+    CFE_MSG_FcnCode_t TestCmdCode     = 0;
+    uint32            TestParameter   = 0;
+
+    UtPrintf("Testing: CFE_TBL_NotifyByMessage");
+
+    UtAssert_INT32_EQ(CFE_TBL_NotifyByMessage(CFE_TBL_BAD_TABLE_HANDLE, TestMsgId, TestCmdCode, TestParameter),
+                      CFE_TBL_ERR_INVALID_HANDLE);
+
+    UtAssert_INT32_EQ(CFE_TBL_NotifyByMessage(CFE_FT_Global.TblHandle, TestMsgId, TestCmdCode, TestParameter),
+                      CFE_SUCCESS);
+
+    /* Attempt on table not owned by this app */
+    UtAssert_INT32_EQ(CFE_TBL_Share(&SharedTblHandle, SharedTblName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_NotifyByMessage(SharedTblHandle, TestMsgId, TestCmdCode, TestParameter),
+                      CFE_TBL_ERR_NO_ACCESS);
+}
+
+void TBLInformationTestSetup(void)
+{
+    UtTest_Add(TestGetStatus, RegisterTestTable, UnregisterTestTable, "Test Table Get Status");
+    UtTest_Add(TestGetInfo, RegisterTestTable, UnregisterTestTable, "Test Table Get Info");
+    UtTest_Add(TestNotifyByMessage, RegisterTestTable, UnregisterTestTable, "Test Table Notify by Message");
+}
+```
+
+### `tbl_registration_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/tbl_registration_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of Table Registration APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include "cfe_test_table.h"
+#include "cfe_msgids.h"
+#include "cfe_test_msgids.h"
+
+int32 CallbackFunc(void *TblPtr)
+{
+    return 1;
+}
+
+void TestTableRegistration(void)
+{
+    char             BadTblName[CFE_TBL_MAX_FULL_NAME_LEN + 2];
+    CFE_TBL_Handle_t OtherHandle = CFE_TBL_BAD_TABLE_HANDLE;
+
+    UtPrintf("Testing: CFE_TBL_Register, CFE_TBL_Unregister");
+
+    BadTblName[CFE_TBL_MAX_FULL_NAME_LEN + 1] = '\0';
+    memset(BadTblName, 'a', sizeof(BadTblName) - 1);
+
+    /* invalid table handle arg */
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(NULL, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, &CallbackFunc),
+        CFE_TBL_BAD_ARGUMENT);
+
+    /* Successfully create table */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_DEFAULT, &CallbackFunc),
+                      CFE_SUCCESS);
+
+    /* Duplicate table (should return the same handle) */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&OtherHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_DEFAULT, &CallbackFunc),
+                      CFE_TBL_WARN_DUPLICATE);
+
+    UtAssert_INT32_EQ(OtherHandle, CFE_FT_Global.TblHandle);
+
+    /* Duplicate table with different size */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&OtherHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t) / 2,
+                                       CFE_TBL_OPT_DEFAULT, &CallbackFunc),
+                      CFE_TBL_ERR_DUPLICATE_DIFF_SIZE);
+
+    /* Unregister the table */
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(CFE_TBL_BAD_TABLE_HANDLE), CFE_TBL_ERR_INVALID_HANDLE);
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(CFE_FT_Global.TblHandle), CFE_TBL_ERR_INVALID_HANDLE);
+
+    /* Invalid Name */
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(&CFE_FT_Global.TblHandle, BadTblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, NULL),
+        CFE_TBL_ERR_INVALID_NAME);
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(&CFE_FT_Global.TblHandle, "", sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, NULL),
+        CFE_TBL_ERR_INVALID_NAME);
+
+    /* Invalid Table Size */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, 0, CFE_TBL_OPT_DEFAULT, NULL),
+                      CFE_TBL_ERR_INVALID_SIZE);
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName,
+                                       CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE + 1, CFE_TBL_OPT_SNGL_BUFFER, NULL),
+                      CFE_TBL_ERR_INVALID_SIZE);
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName,
+                                       CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE + 1, CFE_TBL_OPT_DBL_BUFFER, NULL),
+                      CFE_TBL_ERR_INVALID_SIZE);
+
+    /* Invalid Table Options */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_DBL_BUFFER | CFE_TBL_OPT_USR_DEF_ADDR, NULL),
+                      CFE_TBL_ERR_INVALID_OPTIONS);
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_CRITICAL | CFE_TBL_OPT_DUMP_ONLY, NULL),
+                      CFE_TBL_ERR_INVALID_OPTIONS);
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_CRITICAL | CFE_TBL_OPT_USR_DEF_ADDR, NULL),
+                      CFE_TBL_ERR_INVALID_OPTIONS);
+}
+
+void TestTableMaxLimits(void)
+{
+    CFE_TBL_Handle_t Handles[CFE_PLATFORM_TBL_MAX_NUM_HANDLES + 2];
+    char             TblName[CFE_TBL_MAX_FULL_NAME_LEN];
+    uint32           numTblsCreated = 0; /* Track num created to unregister them all */
+
+    /*
+     * Create the maximum number of tables
+     * There are already some tables in this system, so this will
+     * stop succeeding before it reaches the end of the loop
+     * Check that after the loop no more tables can be created
+     */
+    while (numTblsCreated <= CFE_PLATFORM_TBL_MAX_NUM_HANDLES)
+    {
+        snprintf(TblName, sizeof(TblName), "Tbl%u", (unsigned int)numTblsCreated);
+        CFE_Assert_STATUS_STORE(
+            CFE_TBL_Register(&Handles[numTblsCreated], TblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, NULL));
+        if (CFE_Assert_STATUS_MAY_BE(CFE_TBL_ERR_REGISTRY_FULL))
+        {
+            break;
+        }
+        if (!CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS))
+        {
+            break;
+        }
+        ++numTblsCreated;
+    }
+
+    if (!UtAssert_NONZERO(numTblsCreated))
+    {
+        UtAssert_WARN("Table test cannot create any tables");
+        return;
+    }
+
+    UtAssert_UINT32_LT(numTblsCreated, CFE_PLATFORM_TBL_MAX_NUM_TABLES);
+    UtAssert_UINT32_LT(numTblsCreated, CFE_PLATFORM_TBL_MAX_NUM_HANDLES);
+
+    /* Delete one table so the registry isn't full anymore */
+    --numTblsCreated;
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(Handles[numTblsCreated]), CFE_SUCCESS);
+
+    if (!UtAssert_NONZERO(numTblsCreated))
+    {
+        UtAssert_WARN("Table test cannot run CFE_TBL_Share max without at least one table");
+        return;
+    }
+
+    /*
+     * A shared table has a unique handle but not a unique entry in the registry.
+     * By calling CFE_TBL_Share it should consume handles but not registry entries
+     */
+    snprintf(TblName, sizeof(TblName), "CFE_TEST_APP.Tbl%u", (unsigned int)0);
+    while (numTblsCreated <= CFE_PLATFORM_TBL_MAX_NUM_HANDLES)
+    {
+        CFE_Assert_STATUS_STORE(CFE_TBL_Share(&Handles[numTblsCreated], TblName));
+        if (CFE_Assert_STATUS_MAY_BE(CFE_TBL_ERR_HANDLES_FULL))
+        {
+            break;
+        }
+        if (!CFE_Assert_STATUS_MUST_BE(CFE_SUCCESS))
+        {
+            break;
+        }
+        ++numTblsCreated;
+    }
+
+    UtAssert_UINT32_LT(numTblsCreated, CFE_PLATFORM_TBL_MAX_NUM_HANDLES);
+
+    /* also confirm not able to register a new table, either */
+    snprintf(TblName, sizeof(TblName), "Tbl%u", (unsigned int)numTblsCreated);
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(&Handles[numTblsCreated], TblName, sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, NULL),
+        CFE_TBL_ERR_HANDLES_FULL);
+
+    /* Unregister all table handles */
+    while (numTblsCreated > 0)
+    {
+        --numTblsCreated;
+        UtAssert_INT32_EQ(CFE_TBL_Unregister(Handles[numTblsCreated]), CFE_SUCCESS);
+    }
+}
+
+void TestTableShare(void)
+{
+    UtPrintf("Testing: CFE_TBL_Share");
+    CFE_TBL_Handle_t SharedTblHandle;
+    const char *     SharedTblName = CFE_ASSERT_SHARED_TBL_NAME;
+    const char *     BadTblName    = "SampleAppTable";
+
+    UtAssert_INT32_EQ(CFE_TBL_Share(NULL, SharedTblName), CFE_TBL_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TBL_Share(&SharedTblHandle, SharedTblName), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TBL_Share(&SharedTblHandle, NULL), CFE_TBL_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TBL_Share(&SharedTblHandle, BadTblName), CFE_TBL_ERR_INVALID_NAME);
+}
+
+void TestTblNonAppContext(void)
+{
+    CFE_TBL_Handle_t Handle;
+    void *           TblPtr;
+
+    /* Attempt to register another table */
+    UtAssert_INT32_EQ(
+        CFE_TBL_Register(&Handle, "OtherTable", sizeof(TBL_TEST_Table_t), CFE_TBL_OPT_DEFAULT, &CallbackFunc),
+        CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    /* Calling any other API (with a valid handle) should be rejected from this context */
+    UtAssert_INT32_EQ(CFE_TBL_DumpToBuffer(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_GetAddress(&TblPtr, CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_GetStatus(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_Load(CFE_FT_Global.TblHandle, CFE_TBL_SRC_FILE, "/cf/cfe_test_tbl.tbl"),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_Manage(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_Modified(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_NotifyByMessage(CFE_FT_Global.TblHandle, CFE_SB_ValueToMsgId(CFE_TEST_CMD_MID), 0, 0),
+                      CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_ReleaseAddress(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_Share(&Handle, CFE_FT_Global.TblName), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_Update(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+    UtAssert_INT32_EQ(CFE_TBL_Validate(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+
+    /* Attempt to unregister a table */
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(CFE_FT_Global.TblHandle), CFE_ES_ERR_RESOURCEID_NOT_VALID);
+}
+
+void TestTableBadContext(void)
+{
+    uint32         RetryCount;
+    osal_id_t      OtherTaskId = OS_OBJECT_ID_UNDEFINED;
+    OS_task_prop_t TaskProp;
+
+    /* Create one (good) handle first from this task */
+    UtAssert_INT32_EQ(CFE_TBL_Register(&CFE_FT_Global.TblHandle, CFE_FT_Global.TblName, sizeof(TBL_TEST_Table_t),
+                                       CFE_TBL_OPT_DEFAULT, &CallbackFunc),
+                      CFE_SUCCESS);
+
+    /* Create a separate task to run the tests, to confirm TBL context checks */
+    UtAssert_INT32_EQ(OS_TaskCreate(&OtherTaskId, "NonCfe", TestTblNonAppContext, OSAL_TASK_STACK_ALLOCATE, 16384,
+                                    OSAL_PRIORITY_C(200), 0),
+                      OS_SUCCESS);
+
+    /* wait for task to exit itself */
+    RetryCount = 0;
+    while (RetryCount < 20)
+    {
+        /*
+         * poll until OS_TaskGetInfo() returns an error, then the task has exited
+         */
+        if (OS_TaskGetInfo(OtherTaskId, &TaskProp) != OS_SUCCESS)
+        {
+            break;
+        }
+
+        OS_TaskDelay(100);
+        ++RetryCount;
+    }
+
+    UtAssert_UINT32_LT(RetryCount, 20);
+    UtAssert_INT32_EQ(CFE_TBL_Unregister(CFE_FT_Global.TblHandle), CFE_SUCCESS);
+}
+
+void TBLRegistrationTestSetup(void)
+{
+    UtTest_Add(TestTableRegistration, NULL, NULL, "Test Table Registration");
+    UtTest_Add(TestTableMaxLimits, NULL, NULL, "Table Max Limits");
+    UtTest_Add(TestTableShare, NULL, NULL, "Test Table Sharing");
+    UtTest_Add(TestTableBadContext, NULL, NULL, "Test Table Bad Context");
+}
+```
+
+### `time_arithmetic_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/time_arithmetic_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic Time Arithmetic APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestTimeAdd(void)
+{
+    UtPrintf("Testing: CFE_TIME_Add");
+    CFE_TIME_SysTime_t time1        = {1000, 0};
+    CFE_TIME_SysTime_t time2        = {0, 1000};
+    CFE_TIME_SysTime_t timeAdded    = CFE_TIME_Add(time1, time2);
+    CFE_TIME_SysTime_t timeExpected = {1000, 1000};
+
+    UtAssert_UINT32_EQ(timeAdded.Seconds, timeExpected.Seconds);
+    UtAssert_UINT32_EQ(timeAdded.Subseconds, timeExpected.Subseconds);
+
+    time1.Seconds           = UINT32_MAX;
+    time1.Subseconds        = UINT32_MAX;
+    time2.Seconds           = 0;
+    time2.Subseconds        = 1;
+    timeAdded               = CFE_TIME_Add(time1, time2);
+    timeExpected.Seconds    = 0;
+    timeExpected.Subseconds = 0;
+    UtAssert_UINT32_EQ(timeAdded.Seconds, timeExpected.Seconds);
+    UtAssert_UINT32_EQ(timeAdded.Subseconds, timeExpected.Subseconds);
+
+    time1.Seconds           = UINT32_MAX;
+    time1.Subseconds        = UINT32_MAX;
+    time2.Seconds           = UINT32_MAX;
+    time2.Subseconds        = UINT32_MAX;
+    timeAdded               = CFE_TIME_Add(time1, time2);
+    timeExpected.Seconds    = UINT32_MAX;
+    timeExpected.Subseconds = UINT32_MAX - 1;
+    UtAssert_UINT32_EQ(timeAdded.Seconds, timeExpected.Seconds);
+    UtAssert_UINT32_EQ(timeAdded.Subseconds, timeExpected.Subseconds);
+}
+
+void TestTimeSubtract(void)
+{
+    UtPrintf("Testing: CFE_TIME_Subtract");
+    CFE_TIME_SysTime_t time1          = {1000, 1000};
+    CFE_TIME_SysTime_t time2          = {999, 999};
+    CFE_TIME_SysTime_t timeSubtracted = CFE_TIME_Subtract(time1, time2);
+    CFE_TIME_SysTime_t timeExpected   = {1, 1};
+
+    UtAssert_UINT32_EQ(timeSubtracted.Seconds, timeExpected.Seconds);
+    UtAssert_UINT32_EQ(timeSubtracted.Subseconds, timeExpected.Subseconds);
+
+    time1.Seconds           = 0;
+    time1.Subseconds        = 0;
+    time2.Seconds           = UINT32_MAX;
+    time2.Subseconds        = UINT32_MAX;
+    timeSubtracted          = CFE_TIME_Subtract(time1, time2);
+    timeExpected.Seconds    = 0;
+    timeExpected.Subseconds = 1;
+    UtAssert_UINT32_EQ(timeSubtracted.Seconds, timeExpected.Seconds);
+    UtAssert_UINT32_EQ(timeSubtracted.Subseconds, timeExpected.Subseconds);
+
+    time1.Seconds           = 0;
+    time1.Subseconds        = 0;
+    time2.Seconds           = 0;
+    time2.Subseconds        = 1;
+    timeSubtracted          = CFE_TIME_Subtract(time1, time2);
+    timeExpected.Seconds    = UINT32_MAX;
+    timeExpected.Subseconds = UINT32_MAX;
+    UtAssert_UINT32_EQ(timeSubtracted.Seconds, timeExpected.Seconds);
+    UtAssert_UINT32_EQ(timeSubtracted.Subseconds, timeExpected.Subseconds);
+}
+
+void TestTimeCompare(void)
+{
+    UtPrintf("Testing: CFE_TIME_Compare");
+    CFE_TIME_SysTime_t time1 = {1000, 1000};
+    CFE_TIME_SysTime_t time2 = {999, 999};
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(time1, time2), CFE_TIME_A_GT_B);
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(time2, time1), CFE_TIME_A_LT_B);
+
+    time1.Seconds    = 500;
+    time1.Subseconds = 1;
+    time2.Seconds    = 500;
+    time2.Subseconds = 1;
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(time1, time2), CFE_TIME_EQUAL);
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(time2, time1), CFE_TIME_EQUAL);
+
+    /* time1 > time2 here due to the roll over handling of the comparison */
+    time1.Seconds    = 1;
+    time1.Subseconds = 1;
+    time2.Seconds    = UINT32_MAX;
+    time2.Subseconds = UINT32_MAX;
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(time1, time2), CFE_TIME_A_GT_B);
+    UtAssert_UINT32_EQ(CFE_TIME_Compare(time2, time1), CFE_TIME_A_LT_B);
+}
+
+void TimeArithmeticTestSetup(void)
+{
+    UtTest_Add(TestTimeAdd, NULL, NULL, "Test Time Addition");
+    UtTest_Add(TestTimeSubtract, NULL, NULL, "Test Time Subtraction");
+    UtTest_Add(TestTimeCompare, NULL, NULL, "Test Time Comparison");
+}
+```
+
+### `time_conversion_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/time_conversion_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic Time Conversion APIs
+ */
+
+/*
+ * Includes
+ */
+#include "cfe_test.h"
+
+void TestConvertMET2SCTime(void)
+{
+    UtPrintf("Testing: CFE_TIME_MET2SCTime");
+
+    CFE_TIME_SysTime_t METStart;
+    CFE_TIME_SysTime_t METEnd;
+    CFE_TIME_SysTime_t Time;
+    CFE_TIME_SysTime_t SCTime;
+
+    CFE_TIME_SysTime_t Range;
+
+    /* Get Times */
+    METStart = CFE_TIME_GetMET();
+    Time     = CFE_TIME_GetTime();
+    METEnd   = CFE_TIME_GetMET();
+
+    Range = CFE_TIME_Subtract(METEnd, METStart);
+
+    /* Convert - should produce a TAI or UTC at the moment of GetMET() */
+    SCTime = CFE_TIME_MET2SCTime(METStart);
+
+    /* Check conversion */
+    TimeInRange(SCTime, Time, Range, "MET to SC Time vs default time");
+}
+
+void TestConvertSubSeconds2MicroSeconds(void)
+{
+    UtPrintf("Testing: CFE_TIME_Sub2MicroSecs");
+
+    /* predefined amount of sub-seconds */
+    uint32 SUB = 31000;
+    /* correct micro-seconds equal to the predefined sub-seconds */
+    uint32 ExpectedMS = 7;
+    uint32 Sub2Micro;
+
+    /* run Sub2MicroSecs with predefined amount of sub-seconds and save result */
+    Sub2Micro = CFE_TIME_Sub2MicroSecs(SUB);
+
+    UtAssert_UINT32_EQ(ExpectedMS, Sub2Micro);
+}
+
+void TestConvertMicroSeconds2SubSeconds(void)
+{
+    UtPrintf("Testing: CFE_TIME_Micro2SubSecs");
+
+    /* predefined micro-seconds */
+    uint32 MS = 64512;
+    /* predefined sub-seconds equal to predefined ms above */
+    uint32 ExpectedSUB = 277076931;
+    uint32 Micro2Sub;
+
+    /* convert and assert */
+    Micro2Sub = CFE_TIME_Micro2SubSecs(MS);
+    UtAssert_UINT32_EQ(ExpectedSUB, Micro2Sub);
+
+    /* assert for ms > 999999 >= 1 second  */
+    Micro2Sub = CFE_TIME_Micro2SubSecs(999999 + 1);
+    UtAssert_UINT32_EQ(0xFFFFFFFF, Micro2Sub);
+}
+
+void TimeConversionTestSetup(void)
+{
+    UtTest_Add(TestConvertMET2SCTime, NULL, NULL, "Test convert MET into spacecraft time");
+    UtTest_Add(TestConvertSubSeconds2MicroSeconds, NULL, NULL, "Test Convert sub-seconds into micro-seconds");
+    UtTest_Add(TestConvertMicroSeconds2SubSeconds, NULL, NULL, "Test Convert micro-seconds into sub-seconds");
+}
+```
+
+### `time_current_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/time_current_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic Time Current APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+#include "cfe_time_msg.h"
+
+void TimeInRange(CFE_TIME_SysTime_t Start, CFE_TIME_SysTime_t Time, CFE_TIME_SysTime_t Range, const char *Str)
+{
+    char               StartStr[sizeof("yyyy-ddd-hh:mm:ss.xxxxx_")];
+    char               TimeStr[sizeof("yyyy-ddd-hh:mm:ss.xxxxx_")];
+    CFE_TIME_Compare_t Compare;
+    CFE_TIME_SysTime_t Delta;
+
+    CFE_TIME_Print(StartStr, Start);
+    CFE_TIME_Print(TimeStr, Time);
+
+    Compare = CFE_TIME_Compare(Start, Time);
+    UtAssert_True((Compare == CFE_TIME_EQUAL) || (Compare == CFE_TIME_A_LT_B), "%s: %lu %lu (%s) <= %lu %lu (%s)", Str,
+                  (long unsigned)Start.Seconds, (long unsigned)Start.Subseconds, StartStr, (long unsigned)Time.Seconds,
+                  (long unsigned)Time.Subseconds, TimeStr);
+
+    Delta   = CFE_TIME_Subtract(Time, Start);
+    Compare = CFE_TIME_Compare(Delta, Range);
+    UtAssert_True((Compare == CFE_TIME_EQUAL) || (Compare == CFE_TIME_A_LT_B), "%s: Delta %lu %lu <= Range %lu %lu",
+                  Str, (long unsigned)Delta.Seconds, (long unsigned)Delta.Subseconds, (long unsigned)Range.Seconds,
+                  (long unsigned)Range.Subseconds);
+}
+
+void TestGetTime(void)
+{
+    UtPrintf("Testing: CFE_TIME_GetTime, CFE_TIME_GetTAI, CFE_TIME_GetUTC, CFE_TIME_GetMET, CFE_TIME_GetSTCF, "
+             "CFE_TIME_GetLeapSeconds");
+    CFE_TIME_SysTime_t Start;
+    CFE_TIME_SysTime_t End;
+    CFE_TIME_SysTime_t TAI;
+    CFE_TIME_SysTime_t UTC;
+    CFE_TIME_SysTime_t MET;
+    CFE_TIME_SysTime_t STCF;
+    CFE_TIME_SysTime_t Range;
+    uint32             METSeconds;
+    uint32             METSubSeconds;
+    int16              LeapSeconds;
+    CFE_TIME_SysTime_t Buf;
+
+    Start         = CFE_TIME_GetTime();
+    TAI           = CFE_TIME_GetTAI();
+    UTC           = CFE_TIME_GetUTC();
+    MET           = CFE_TIME_GetMET();
+    METSeconds    = CFE_TIME_GetMETseconds();
+    METSubSeconds = CFE_TIME_GetMETsubsecs();
+    STCF          = CFE_TIME_GetSTCF();
+    LeapSeconds   = CFE_TIME_GetLeapSeconds();
+    End           = CFE_TIME_GetTime();
+
+    Range = CFE_TIME_Subtract(End, Start);
+
+#if (CFE_MISSION_TIME_CFG_DEFAULT_TAI == true)
+    TimeInRange(Start, TAI, Range, "default time vs TAI");
+#else
+    TimeInRange(Start, UTC, Range, "default time vs UTC");
+#endif
+
+    Buf = CFE_TIME_Add(MET, STCF);
+    TimeInRange(TAI, Buf, Range, "TAI vs MET + STCF");
+
+    Buf.Seconds = Buf.Seconds - LeapSeconds;
+    TimeInRange(UTC, Buf, Range, "UTC vs MET + STCF - Leap Seconds");
+
+    /* Handle rollover */
+    if (METSubSeconds < MET.Subseconds)
+    {
+        UtAssert_UINT32_EQ(MET.Seconds + 1, METSeconds);
+    }
+    else
+    {
+        UtAssert_UINT32_EQ(MET.Seconds, METSeconds);
+    }
+    UtAssert_UINT32_LTEQ(METSubSeconds - MET.Subseconds, Range.Subseconds);
+    UtPrintf("MET = %lu, %lu, METSeconds = %lu, METSubSeconds = %lu, Range.Subseconds = %lu",
+             (long unsigned)MET.Seconds, (long unsigned)MET.Subseconds, (long unsigned)METSeconds,
+             (long unsigned)METSubSeconds, (long unsigned)Range.Subseconds);
+}
+
+void TestClock(void)
+{
+    UtPrintf("Testing: CFE_TIME_GetClockState, CFE_TIME_GetClockInfo");
+
+    CFE_TIME_ClockState_Enum_t state = CFE_TIME_GetClockState();
+
+    if (state >= 0)
+    {
+        UtAssert_BITMASK_SET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_CLKSET);
+
+        if (state == 0)
+        {
+            UtAssert_BITMASK_UNSET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_FLYING);
+        }
+        else
+        {
+            UtAssert_BITMASK_SET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_FLYING);
+        }
+    }
+    else
+    {
+        UtAssert_BITMASK_UNSET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_CLKSET);
+    }
+
+    UtAssert_BITMASK_SET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_SRCINT);
+    UtAssert_BITMASK_SET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_SIGPRI);
+    UtAssert_BITMASK_UNSET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_REFERR);
+    UtAssert_BITMASK_UNSET(CFE_TIME_GetClockInfo(), CFE_TIME_FLAG_UNUSED);
+}
+
+void TimeCurrentTestSetup(void)
+{
+    UtTest_Add(TestGetTime, NULL, NULL, "Test Current Time");
+    UtTest_Add(TestClock, NULL, NULL, "Test Clock");
+}
+```
+
+### `time_external_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/time_external_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of basic External Time Source APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+int32 TestCallbackFunction(void)
+{
+    CFE_FT_Global.Count += 1;
+    return CFE_SUCCESS;
+}
+
+int32 TestCallbackFunction2(void)
+{
+    CFE_FT_Global.Count = 0;
+    return CFE_SUCCESS;
+}
+
+void TestCallback(void)
+{
+    CFE_FT_Global.Count = 1;
+
+    UtPrintf("Testing: CFE_TIME_RegisterSynchCallback, CFE_TIME_UnregisterSynchCallback");
+
+    UtAssert_INT32_EQ(CFE_TIME_RegisterSynchCallback(&TestCallbackFunction), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TIME_RegisterSynchCallback(&TestCallbackFunction2), CFE_TIME_TOO_MANY_SYNCH_CALLBACKS);
+
+    OS_TaskDelay(2500);
+    if (CFE_FT_Global.Count < 2)
+    {
+        UtAssert_MIR("CFE_TIME_RegisterSynchCallback requires manual inspection to determine if failure is with the "
+                     "API or due to an insufficient timing performance of this machine");
+    }
+
+    CFE_FT_Global.Count = 1;
+    UtAssert_INT32_EQ(CFE_TIME_UnregisterSynchCallback(&TestCallbackFunction), CFE_SUCCESS);
+    UtAssert_INT32_EQ(CFE_TIME_UnregisterSynchCallback(&TestCallbackFunction), CFE_TIME_CALLBACK_NOT_REGISTERED);
+
+    OS_TaskDelay(2500);
+    UtAssert_INT32_LTEQ(CFE_FT_Global.Count, 2);
+
+    UtAssert_INT32_EQ(CFE_TIME_UnregisterSynchCallback(NULL), CFE_TIME_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_TIME_RegisterSynchCallback(NULL), CFE_TIME_BAD_ARGUMENT);
+}
+
+void TestExternal(void)
+{
+#if ((CFE_PLATFORM_TIME_CFG_SRC_MET == true) || (CFE_PLATFORM_TIME_CFG_SRC_GPS == true) || \
+     (CFE_PLATFORM_TIME_CFG_SRC_TIME == true))
+    CFE_TIME_SysTime_t time = {1000, 0};
+#endif
+
+    UtPrintf("Testing: CFE_TIME_ExternalTone, CFE_TIME_ExternalMET, CFE_TIME_ExternalGPS, CFE_TIME_ExternalTime");
+    /* These time calls could impact the system timekeeping. Likely impact is incorrect time for one update cycle, a
+     * rejected external time update, multiple tone's or external updates detected, or similar. */
+    UtAssert_VOIDCALL(CFE_TIME_ExternalTone());
+
+#if (CFE_PLATFORM_TIME_CFG_SRC_MET == true)
+    UtAssert_VOIDCALL(CFE_TIME_ExternalMET(time));
+#endif
+
+#if (CFE_PLATFORM_TIME_CFG_SRC_GPS == true)
+    UtAssert_VOIDCALL(CFE_TIME_ExternalGPS(time, 5));
+#endif
+
+#if (CFE_PLATFORM_TIME_CFG_SRC_TIME == true)
+    UtAssert_VOIDCALL(CFE_TIME_ExternalTime(time));
+#endif
+}
+
+void TimeExternalTestSetup(void)
+{
+    UtTest_Add(TestCallback, NULL, NULL, "Test Time Synch Callbacks");
+    UtTest_Add(TestExternal, NULL, NULL, "Test External Sources");
+}
+```
+
+### `time_misc_test.c`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/src/time_misc_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Functional test of miscellaneous Time APIs
+ *
+ *   Demonstration of how to register and use the UT assert functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe_test.h"
+
+void TestTimePrint(void)
+{
+    UtPrintf("Testing: CFE_TIME_Print");
+    char               timeBuf1[sizeof("yyyy-ddd-hh:mm:ss.xxxxx_")];
+    CFE_TIME_SysTime_t time1 = {0, 0};
+    /* 365 days */
+    CFE_TIME_SysTime_t time2 = {31536000, 0};
+    /* 366 days */
+    CFE_TIME_SysTime_t time3 = {31622400, 0};
+
+    UtAssert_VOIDCALL(CFE_TIME_Print(NULL, time1));
+    UtAssert_VOIDCALL(CFE_TIME_Print(timeBuf1, time1));
+    UtPrintf("%s", timeBuf1);
+    UtAssert_VOIDCALL(CFE_TIME_Print(timeBuf1, time2));
+    UtPrintf("%s", timeBuf1);
+    UtAssert_VOIDCALL(CFE_TIME_Print(timeBuf1, time3));
+    UtPrintf("%s", timeBuf1);
+}
+
+void TimeMiscTestSetup(void)
+{
+    UtTest_Add(TestTimePrint, NULL, NULL, "Test Time Print");
+}
+```

@@ -3,24 +3,320 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ContainerConsumer.java`
 
-file--ContainerConsumer.java
-file--ContainerProvider.java
-file--ContainerRequestManager.java
-file--ContainerWithId.java
-file--ContainerWithIdConsumer.java
-file--ContainerWithIdRequestHelper.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerConsumer.java`
+
+
+```java
+package org.yamcs.container;
+
+
+import org.yamcs.ContainerExtractionResult;
+
+/**
+ * Interface for consuming extracted containers.
+ */
+public interface ContainerConsumer {
+    /**
+     * Processes the extracted container with additional context.
+     *
+     * @param link
+     *            the name of the link on which the container was received. The link name is preserved in the archive
+     *            and available during the replays as well.
+     * @param cer
+     *            the container extraction result
+     */
+    void processContainer(String link, ContainerExtractionResult cer);
+}
 ```
 
-## 항목
+### `ContainerProvider.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerConsumer.java`](file--ContainerConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerProvider.java`](file--ContainerProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerRequestManager.java`](file--ContainerRequestManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerWithId.java`](file--ContainerWithId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerWithIdConsumer.java`](file--ContainerWithIdConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerWithIdRequestHelper.java`](file--ContainerWithIdRequestHelper.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerProvider.java`
+
+
+```java
+package org.yamcs.container;
+
+import org.yamcs.InvalidIdentification;
+import org.yamcs.mdb.ContainerListener;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Container;
+import org.yamcs.xtce.SequenceContainer;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * Interface implemented by all the classes that can provide containers to a
+ * ContainerListener
+ */
+public interface ContainerProvider extends Service {
+
+    public abstract void setContainerListener(ContainerListener containerListener);
+    
+    public abstract void startProviding(SequenceContainer container);
+    
+    public abstract void stopProviding(SequenceContainer container);
+
+    /**
+     * Start providing all known containers
+     */
+    public abstract void startProvidingAllContainers();
+
+    /**
+     * Returns whether or not a given container can be provided by this provider
+     */
+    public abstract boolean canProvideContainer(NamedObjectId containerId);
+
+    /**
+     * Returns the containerDefinition corresponding to the itemId
+     * 
+     * @throws InvalidIdentification
+     */
+    public abstract Container getContainer(NamedObjectId containerId)
+                    throws InvalidIdentification;
+}
+```
+
+### `ContainerRequestManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerRequestManager.java`
+
+
+```java
+package org.yamcs.container;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.yamcs.ContainerExtractionResult;
+import org.yamcs.Processor;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ContainerListener;
+import org.yamcs.mdb.ContainerProcessingResult;
+import org.yamcs.mdb.XtceTmProcessor;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.mdb.Mdb;
+
+/**
+ * Keeps track of the subscribers to the containers of a processor.
+ */
+public class ContainerRequestManager implements ContainerListener {
+
+    private Log log;
+    // For each container, all the subscribers
+    private Map<SequenceContainer, Set<ContainerConsumer>> subscriptions = new ConcurrentHashMap<>();
+
+    private XtceTmProcessor tmProcessor;
+
+    /**
+     * Creates a new ContainerRequestManager, configured to listen to the specified XtceTmProcessor.
+     */
+    public ContainerRequestManager(Processor proc, XtceTmProcessor tmProcessor) {
+        this.tmProcessor = tmProcessor;
+        log = new Log(this.getClass(), proc.getInstance());
+        log.setContext(proc.getName());
+        tmProcessor.setContainerListener(this);
+    }
+
+    public synchronized void subscribe(ContainerConsumer subscriber, SequenceContainer container) {
+        if (container == null) {
+            throw new NullPointerException("Null container");
+        }
+        addSubscription(subscriber, container);
+    }
+
+    public synchronized void subscribeAll(ContainerConsumer subscriber) {
+        for (SequenceContainer c : tmProcessor.mdb.getSequenceContainers()) {
+            addSubscription(subscriber, c);
+        }
+    }
+
+    private void addSubscription(ContainerConsumer subscriber, SequenceContainer container) {
+        if (!subscriptions.containsKey(container)) {
+            subscriptions.put(container, new HashSet<ContainerConsumer>());
+            tmProcessor.startProviding(container);
+        }
+        subscriptions.get(container).add(subscriber);
+    }
+
+    public synchronized void unsubscribe(ContainerConsumer subscriber, SequenceContainer container) {
+        if (container == null) {
+            throw new NullPointerException("Null container");
+        }
+
+        if (subscriptions.containsKey(container)) {
+            Set<ContainerConsumer> subscribers = subscriptions.get(container);
+            if (subscribers.remove(subscriber)) {
+                if (subscribers.isEmpty()) {
+                    // The following call does not do anything (yet)
+                    tmProcessor.stopProviding(container);
+                }
+            } else {
+                log.warn("Container removal requested for {} but not subscribed", container);
+            }
+
+        } else {
+            log.warn("Container removal requested for {} but not subscribed", container);
+        }
+    }
+
+    public synchronized void unsubscribeAll(ContainerConsumer subscriber) {
+        for (Entry<SequenceContainer, Set<ContainerConsumer>> entry : subscriptions.entrySet()) {
+            Set<ContainerConsumer> subscribers = entry.getValue();
+            subscribers.remove(subscriber);
+            if (subscribers.isEmpty()) {
+                // The following call does not do anything (yet)
+                tmProcessor.stopProviding(entry.getKey());
+            }
+        }
+    }
+
+    @Override
+    public synchronized void update(ContainerProcessingResult cpr) {
+        var results = cpr.getContainerResult();
+
+        log.trace("Getting update of {} container(s)", results.size());
+        for (ContainerExtractionResult result : results) {
+            SequenceContainer def = result.getContainer();
+            if (!subscriptions.containsKey(def)) {
+                continue;
+            }
+            for (ContainerConsumer subscriber : subscriptions.get(def)) {
+                subscriber.processContainer(cpr.getLink(), result);
+            }
+        }
+    }
+
+    public XtceTmProcessor getTmProcessor() {
+        return tmProcessor;
+    }
+
+    public Mdb getMdb() {
+        return tmProcessor.getMdb();
+    }
+}
+```
+
+### `ContainerWithId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerWithId.java`
+
+
+```java
+package org.yamcs.container;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.SequenceContainer;
+
+public class ContainerWithId {
+    SequenceContainer def; // The definition of the container
+    NamedObjectId id; // The id used by the subscriber for referring to this container
+    public ContainerWithId(SequenceContainer def, NamedObjectId id) {
+        this.def = def;
+        this.id = id;
+    }
+    public Object getContainer() {      
+        return def;
+    }
+    public NamedObjectId getId() {
+        return id;
+    }
+}
+```
+
+### `ContainerWithIdConsumer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerWithIdConsumer.java`
+
+
+```java
+package org.yamcs.container;
+
+import org.yamcs.ContainerExtractionResult;
+
+public interface ContainerWithIdConsumer {
+
+    void processContainer(ContainerWithId cwi, ContainerExtractionResult cer);
+}
+```
+
+### `ContainerWithIdRequestHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/container/ContainerWithIdRequestHelper.java`
+
+
+```java
+package org.yamcs.container;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ContainerExtractionResult;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.mdb.Mdb;
+
+
+/**
+ * This sits in front of the ContainerRequestManager and implements subscriptions based on NamedObjectId 
+ * taking care to send to the consumers the containers with the requested id.
+ *
+ * 
+ * TODO: check privileges and subscription limits
+ * 
+ * @author nm
+ *
+ */
+public class ContainerWithIdRequestHelper implements ContainerConsumer {
+    ContainerRequestManager crm;
+    final ContainerWithIdConsumer listener;
+    Logger log=LoggerFactory.getLogger(this.getClass().getName());
+    List<ContainerWithId> subscription = new  ArrayList<ContainerWithId>();
+    
+
+    public ContainerWithIdRequestHelper(ContainerRequestManager crm, ContainerWithIdConsumer listener) {
+	this.crm = crm;
+	this.listener = listener;
+    }
+
+    public void subscribe(NamedObjectId id) throws InvalidIdentification {
+        Mdb mdb = crm.getMdb();
+        SequenceContainer sc = mdb.getSequenceContainer(id);
+        if(sc==null) {
+            throw new InvalidIdentification(id);
+        }
+        ContainerWithId cwi = new ContainerWithId(sc,  id);
+        subscription.add(cwi);
+        crm.subscribe(this, sc);
+    }
+
+    public synchronized void subscribeAll(ContainerWithIdConsumer subscriber) {
+        crm.subscribeAll(this);
+    }
+        
+    @Override
+    public void processContainer(String link, ContainerExtractionResult cer) {
+        SequenceContainer container = cer.getContainer();
+        boolean found = false;
+        for(ContainerWithId cwi: subscription) {
+            if(cwi.def==container) {
+                listener.processContainer(cwi, cer);
+                found = true;
+            }
+        }
+        if(!found) { //comes from subscribeAll
+            listener.processContainer(new ContainerWithId(container, null), cer);
+        }
+    }
+}
+
+```

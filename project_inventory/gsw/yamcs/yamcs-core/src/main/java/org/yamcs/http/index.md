@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,98 +11,5688 @@
 api/index
 audit/index
 auth/index
-file--AbstractHttpService.java
-file--ApiHandler.java
-file--BadRequestException.java
-file--Binding.java
-file--BodyHandler.java
-file--CallObserver.java
-file--Context.java
-file--ContextListener.java
-file--FaviconHandler.java
-file--ForbiddenException.java
-file--Handler.java
-file--HandlerContext.java
-file--HttpContentToByteBufDecoder.java
-file--HttpException.java
-file--HttpHandler.java
-file--HttpRequestHandler.java
-file--HttpServer.java
-file--HttpServerChannelInitializer.java
-file--HttpTranscodeException.java
-file--HttpTranscoder.java
-file--HttpUtils.java
-file--InternalServerErrorException.java
-file--MediaType.java
-file--MethodNotAllowedException.java
-file--NotFoundException.java
-file--ProtobufRegistry.java
-file--RobotsTxtHandler.java
-file--Route.java
-file--RouteContext.java
-file--RouteHandler.java
-file--RpcDescriptor.java
-file--ServerStreamingObserver.java
-file--ServiceUnavailableException.java
-file--StaticFileHandler.java
-file--StreamingClientHandler.java
-file--Topic.java
-file--TopicContext.java
-file--UnauthorizedException.java
-file--WebSocketFrameDropper.java
-file--WebSocketFrameHandler.java
-file--WebSocketFramePriority.java
-file--WebSocketObserver.java
-file--WebSocketServerMessageHandler.java
-file--WellKnownHandler.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/`](api/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/audit/`](audit/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/`](auth/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/AbstractHttpService.java`](file--AbstractHttpService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ApiHandler.java`](file--ApiHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/BadRequestException.java`](file--BadRequestException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Binding.java`](file--Binding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/BodyHandler.java`](file--BodyHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/CallObserver.java`](file--CallObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Context.java`](file--Context.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ContextListener.java`](file--ContextListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/FaviconHandler.java`](file--FaviconHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ForbiddenException.java`](file--ForbiddenException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Handler.java`](file--Handler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HandlerContext.java`](file--HandlerContext.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpContentToByteBufDecoder.java`](file--HttpContentToByteBufDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpException.java`](file--HttpException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpHandler.java`](file--HttpHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpRequestHandler.java`](file--HttpRequestHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpServer.java`](file--HttpServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpServerChannelInitializer.java`](file--HttpServerChannelInitializer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpTranscodeException.java`](file--HttpTranscodeException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpTranscoder.java`](file--HttpTranscoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpUtils.java`](file--HttpUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/InternalServerErrorException.java`](file--InternalServerErrorException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/MediaType.java`](file--MediaType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/MethodNotAllowedException.java`](file--MethodNotAllowedException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/NotFoundException.java`](file--NotFoundException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ProtobufRegistry.java`](file--ProtobufRegistry.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RobotsTxtHandler.java`](file--RobotsTxtHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Route.java`](file--Route.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RouteContext.java`](file--RouteContext.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RouteHandler.java`](file--RouteHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RpcDescriptor.java`](file--RpcDescriptor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ServerStreamingObserver.java`](file--ServerStreamingObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ServiceUnavailableException.java`](file--ServiceUnavailableException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/StaticFileHandler.java`](file--StaticFileHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/StreamingClientHandler.java`](file--StreamingClientHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Topic.java`](file--Topic.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/TopicContext.java`](file--TopicContext.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/UnauthorizedException.java`](file--UnauthorizedException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketFrameDropper.java`](file--WebSocketFrameDropper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketFrameHandler.java`](file--WebSocketFrameHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketFramePriority.java`](file--WebSocketFramePriority.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketObserver.java`](file--WebSocketObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketServerMessageHandler.java`](file--WebSocketServerMessageHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WellKnownHandler.java`](file--WellKnownHandler.java) — UTF-8 텍스트 파일 본문 포함
+### `AbstractHttpService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/AbstractHttpService.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * An HTTP-specific subservice whose lifecycle is managed by {@link HttpServer}.
+ * <p>
+ * HTTP services may participate in the start-stop phases of the {@link HttpServer}.
+ */
+public abstract class AbstractHttpService extends AbstractService {
+
+    protected Log log = new Log(getClass());
+
+    public abstract void init(HttpServer httpServer) throws InitException;
+}
+```
+
+### `ApiHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ApiHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static org.yamcs.http.HttpRequestHandler.CTX_CONTEXT;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.security.User;
+
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Message;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.WriteBufferWaterMark;
+import io.netty.handler.codec.http.HttpContentCompressor;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.timeout.IdleStateHandler;
+
+public class ApiHandler extends HttpHandler {
+
+    private HttpServer httpServer;
+    private RouteHandler routeHandler;
+    private YConfiguration wsConfig;
+
+    public ApiHandler(HttpServer httpServer) {
+        this.httpServer = httpServer;
+
+        var maxPageSize = httpServer.getConfig().getInt("maxPageSize");
+        routeHandler = new RouteHandler(maxPageSize);
+
+        wsConfig = httpServer.getConfig().getConfig("webSocket");
+    }
+
+    @Override
+    public boolean requireAuth() {
+        return true;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        /*
+         * At this point we do not have the full request (only the header) so we have to configure the pipeline either
+         * for receiving the full request or with route specific pipeline for receiving (large amounts of) data in case
+         * of dataLoad routes.
+         */
+
+        var nettyContext = ctx.getNettyChannelHandlerContext();
+        var nettyRequest = ctx.getNettyHttpRequest();
+        var uri = HttpUtils.getPathWithoutContext(nettyRequest, ctx.getContextPath());
+        if (uri.equals(HttpServer.WEBSOCKET_ROUTE.getGet())) {
+            if (nettyRequest.method() == HttpMethod.GET) {
+                prepareChannelForWebSocketUpgrade(nettyContext, nettyRequest, ctx.getUser());
+                return;
+            } else {
+                throw new MethodNotAllowedException(nettyRequest.method(), uri, Arrays.asList(HttpMethod.GET));
+            }
+        }
+
+        var match = matchRoute(nettyRequest.method(), uri);
+        if (match == null) {
+            throw new NotFoundException();
+        }
+
+        var routeContext = new RouteContext(httpServer, nettyContext, ctx.getUser(), nettyRequest, match.route,
+                match.regexMatch);
+        log.debug("{}: Routing {} {}", routeContext, nettyRequest.method(), nettyRequest.uri());
+
+        nettyContext.channel().attr(CTX_CONTEXT).set(routeContext);
+
+        var pipeline = nettyContext.pipeline();
+
+        if (routeContext.isClientStreaming()) {
+            pipeline.addLast(new HttpContentToByteBufDecoder());
+            pipeline.addLast(new ProtobufVarint32FrameDecoder());
+
+            String body = routeContext.getBodySpecifier();
+            Message bodyPrototype = routeContext.getRequestPrototype();
+            if (body != null && !"*".equals(body)) {
+                FieldDescriptor field = bodyPrototype.getDescriptorForType().findFieldByName(body);
+                bodyPrototype = bodyPrototype.newBuilderForType().getFieldBuilder(field)
+                        .getDefaultInstanceForType();
+            }
+            pipeline.addLast(new ProtobufDecoder(bodyPrototype));
+            pipeline.addLast(new StreamingClientHandler(routeContext));
+
+            if (HttpUtil.is100ContinueExpected(nettyRequest)) {
+                nettyContext.writeAndFlush(HttpUtils.CONTINUE_RESPONSE.retainedDuplicate());
+            }
+        } else {
+            pipeline.addLast(new HttpContentCompressor());
+
+            // this will cause the routeHandler read to be called as soon as the request is complete
+            // it will also reject requests whose body is greater than the MAX_BODY_SIZE)
+            pipeline.addLast(new HttpObjectAggregator(routeContext.getMaxBodySize()));
+            pipeline.addLast(routeHandler);
+            nettyContext.fireChannelRead(nettyRequest);
+        }
+    }
+
+    /**
+     * Adapts Netty's pipeline for allowing WebSocket upgrade
+     *
+     * @param ctx
+     *            context for this channel handler
+     */
+    private void prepareChannelForWebSocketUpgrade(ChannelHandlerContext nettyContext, HttpRequest req, User user) {
+        int maxFrameLength = wsConfig.getInt("maxFrameLength");
+        int lo = wsConfig.getConfig("writeBufferWaterMark").getInt("low");
+        int hi = wsConfig.getConfig("writeBufferWaterMark").getInt("high");
+        var waterMark = new WriteBufferWaterMark(lo, hi);
+
+        var pipeline = nettyContext.pipeline();
+        pipeline.addLast(new HttpObjectAggregator(65536));
+        pipeline.addLast(new WebSocketFrameDropper(waterMark.high()));
+        pipeline.addLast(new WebSocketServerCompressionHandler());
+
+        // Add websocket-specific handlers to channel pipeline
+        String webSocketPath = req.uri();
+        String subprotocols = "json, protobuf";
+        pipeline.addLast(new WebSocketServerProtocolHandler(webSocketPath, subprotocols, true, maxFrameLength));
+
+        // Emit idle events (interpreted by WebSocketFrameHandler).
+        // Useful for avoiding unexpected closes when there's no activity.
+        var pingWhenIdleFor = wsConfig.getInt("pingWhenIdleFor");
+        if (pingWhenIdleFor > 0) {
+            pipeline.addLast(new IdleStateHandler(0, 0, pingWhenIdleFor));
+        }
+
+        pipeline.addLast(new WebSocketFrameHandler(httpServer, req, user, waterMark));
+
+        // Effectively trigger websocket-handler (will attempt handshake)
+        nettyContext.fireChannelRead(req);
+    }
+
+    private RouteMatch matchRoute(HttpMethod method, String uri) throws MethodNotAllowedException {
+        for (Route route : httpServer.getRoutes()) {
+            if (route.getHttpMethod().equals(method)) {
+                Matcher matcher = route.matchURI(uri);
+                if (matcher.matches()) {
+                    if (route.isDeprecated()) {
+                        log.warn("A client used a deprecated route: {}", uri);
+                    }
+
+                    return new RouteMatch(matcher, route);
+                }
+            }
+        }
+
+        // Second pass, in case we did not find an exact match
+        Set<HttpMethod> allowedMethods = new HashSet<>(4);
+        for (Route route : httpServer.getRoutes()) {
+            Matcher matcher = route.matchURI(uri);
+            if (matcher.matches()) {
+                allowedMethods.add(method);
+            }
+        }
+        if (!allowedMethods.isEmpty()) {
+            throw new MethodNotAllowedException(method, uri, allowedMethods);
+        }
+
+        return null;
+    }
+
+    /**
+     * Represents a matched route pattern
+     */
+    private static final class RouteMatch {
+        final Matcher regexMatch;
+        final Route route;
+
+        RouteMatch(Matcher regexMatch, Route route) {
+            this.regexMatch = regexMatch;
+            this.route = route;
+        }
+    }
+}
+```
+
+### `BadRequestException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/BadRequestException.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * When there were errors in interpreting the request
+ */
+public class BadRequestException extends HttpException {
+    private static final long serialVersionUID = 1L;
+
+    public BadRequestException(String message) {
+        super(message);
+    }
+
+    public BadRequestException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public BadRequestException(Throwable t) {
+        super(t.getMessage(), t);
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.BAD_REQUEST;
+    }
+}
+```
+
+### `Binding.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Binding.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.YConfiguration;
+
+import com.google.common.io.ByteStreams;
+
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+
+public class Binding {
+
+    private InetAddress address;
+    private int port;
+    private List<String> tlsCerts;
+    private String tlsKey;
+
+    public Binding(int port) {
+        this(null, port);
+    }
+
+    public Binding(InetAddress address, int port) {
+        this.address = address;
+        this.port = port;
+    }
+
+    public boolean isTLS() {
+        return tlsKey != null;
+    }
+
+    public void setTLS(String tlsCert, String tlsKey) {
+        setTLS(Arrays.asList(tlsCert), tlsKey);
+    }
+
+    public void setTLS(List<String> tlsCerts, String tlsKey) {
+        this.tlsCerts = tlsCerts;
+        this.tlsKey = tlsKey;
+    }
+
+    public InetAddress getAddress() {
+        return address;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    SslContext createSslContext() throws SSLException, IOException {
+        ByteArrayOutputStream buf = new ByteArrayOutputStream();
+        for (String cert : tlsCerts) {
+            try (InputStream certIn = Files.newInputStream(Paths.get(cert))) {
+                ByteStreams.copy(certIn, buf);
+            }
+        }
+
+        try (InputStream chain = new ByteArrayInputStream(buf.toByteArray());
+                InputStream key = new FileInputStream(tlsKey)) {
+            return SslContextBuilder
+                    .forServer(chain, key)
+                    .build();
+        }
+    }
+
+    public static Binding fromConfig(YConfiguration config) throws UnknownHostException {
+        InetAddress address = null;
+        if (config.containsKey("address")) {
+            address = InetAddress.getByName(config.getString("address"));
+        }
+
+        int port = config.getInt("port");
+        Binding binding = new Binding(address, port);
+        if (config.containsKey("tlsCert")) {
+            List<String> tlsCerts = config.getList("tlsCert");
+            String tlsKey = config.getString("tlsKey");
+            binding.setTLS(tlsCerts, tlsKey);
+        }
+        return binding;
+    }
+
+    /**
+     * Returns a URL string in the format {@code PROTOCOL://ADDRESS} or {@code PROTOCOL://ADDRESS:PORT} if the PORT is
+     * unconventional for the PROTOCOL.
+     */
+    public String getURI() {
+        String host;
+        if (address != null && !address.isAnyLocalAddress()) {
+            host = address.getHostName();
+        } else {
+            host = "localhost";
+        }
+
+        var b = new StringBuilder();
+        if (isTLS()) {
+            b.append("https://").append(host);
+            if (port != 443) {
+                b.append(":").append(port);
+            }
+        } else {
+            b.append("http://").append(host);
+            if (port != 80) {
+                b.append(":").append(port);
+            }
+        }
+        return b.toString();
+    }
+
+    @Override
+    public String toString() {
+        return getURI();
+    }
+}
+```
+
+### `BodyHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/BodyHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.security.User;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpContentCompressor;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequest;
+
+/**
+ * A {@link HttpHandler} that allows request bodies.
+ */
+public abstract class BodyHandler extends HttpHandler {
+
+    @Override
+    public void doHandle(ChannelHandlerContext ctx, HttpRequest msg, User user) {
+        ctx.pipeline().addLast(new HttpContentCompressor());
+        ctx.pipeline().addLast(new HttpObjectAggregator(65536));
+        ctx.pipeline().addLast(new NettyBodyHandler(user));
+        ctx.fireChannelRead(msg);
+    }
+
+    private class NettyBodyHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+        private User user;
+
+        public NettyBodyHandler(User user) {
+            this.user = user;
+        }
+
+        @Override
+        protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
+            BodyHandler.super.doHandle(ctx, msg, user);
+        }
+    }
+}
+```
+
+### `CallObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/CallObserver.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import org.yamcs.NotThreadSafe;
+import org.yamcs.api.ExceptionMessage;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.ExceptionUtil;
+
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Empty;
+import com.google.protobuf.Message;
+import com.google.protobuf.Message.Builder;
+import com.google.protobuf.util.FieldMaskUtil;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * Observes the state of a single RPC call where both request and response are non-streaming.
+ */
+@NotThreadSafe
+public class CallObserver implements Observer<Message> {
+
+    private static final Log log = new Log(CallObserver.class);
+
+    private RouteContext ctx;
+
+    private boolean completed;
+
+    public CallObserver(RouteContext ctx) {
+        this.ctx = ctx;
+    }
+
+    @Override
+    public void next(Message message) {
+        if (message instanceof Empty) {
+            HttpResponse httpResponse = new DefaultFullHttpResponse(HTTP_1_1, OK);
+            httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, 0);
+            completeRequest(httpResponse);
+        } else if (message instanceof HttpBody) {
+            HttpBody responseBody = (HttpBody) message;
+            ByteBuf buf = Unpooled.wrappedBuffer(responseBody.getData().toByteArray());
+            HttpResponse httpResponse = new DefaultFullHttpResponse(HTTP_1_1, OK, buf);
+            httpResponse.headers().set(HttpHeaderNames.CONTENT_TYPE, responseBody.getContentType());
+            httpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH, buf.readableBytes());
+            if (responseBody.hasFilename()) {
+                httpResponse.headers().set(HttpHeaderNames.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + responseBody.getFilename() + "\"");
+            }
+            ctx.addTransferredSize(buf.readableBytes());
+            completeRequest(httpResponse);
+        } else {
+            sendMessageResponse(message).addListener(l -> {
+                ctx.requestFuture.complete(null);
+            });
+        }
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+        completed = true;
+
+        t = ExceptionUtil.unwind(t);
+        HttpException httpException;
+        if (t instanceof HttpException) {
+            httpException = (HttpException) t;
+        } else {
+            httpException = new InternalServerErrorException(t);
+        }
+
+        ChannelFuture cf = sendError(ctx, httpException);
+        cf.addListener(l -> {
+            ctx.requestFuture.completeExceptionally(httpException);
+            if (!l.isSuccess()) {
+                log.error("Network error", l.cause());
+            }
+        });
+    }
+
+    @Override
+    public void complete() {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+        completed = true;
+    }
+
+    private void completeRequest(HttpResponse httpResponse) {
+        ChannelFuture cf = HttpRequestHandler.sendResponse(ctx.nettyContext,
+                ctx.nettyRequest, httpResponse);
+        ctx.reportStatusCode(httpResponse.status().code());
+        cf.addListener(l -> {
+            ctx.requestFuture.complete(null);
+            if (!l.isSuccess()) {
+                log.error("Network error", l.cause());
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Message> ChannelFuture sendMessageResponse(T responseMsg) {
+        HttpRequest req = ctx.nettyRequest;
+
+        if (ctx.fieldMask != null) {
+            if (ctx.getFieldMaskRoots().isEmpty()) {
+                Builder builder = responseMsg.newBuilderForType();
+                FieldMaskUtil.merge(ctx.fieldMask, responseMsg, builder);
+                responseMsg = (T) builder.buildPartial();
+            } else {
+                for (var fieldName : ctx.getFieldMaskRoots()) {
+                    FieldDescriptor maskRoot = responseMsg.getDescriptorForType()
+                            .findFieldByName(fieldName);
+                    if (maskRoot != null) {
+                        Builder builder = responseMsg.toBuilder();
+                        builder.clearField(maskRoot);
+                        if (maskRoot.isRepeated()) {
+                            int n = responseMsg.getRepeatedFieldCount(maskRoot);
+                            for (int i = 0; i < n; i++) {
+                                Message repeatedMessage = (Message) responseMsg.getRepeatedField(maskRoot, i);
+                                Builder repeatedBuilder = repeatedMessage.newBuilderForType();
+                                FieldMaskUtil.merge(ctx.fieldMask, repeatedMessage, repeatedBuilder);
+                                builder.addRepeatedField(maskRoot, repeatedBuilder.buildPartial());
+                            }
+                            responseMsg = (T) builder.buildPartial();
+                        } else if (responseMsg.hasField(maskRoot)) {
+                            Message subMessage = (Message) responseMsg.getField(maskRoot);
+                            Builder subBuilder = responseMsg.newBuilderForType();
+                            FieldMaskUtil.merge(ctx.fieldMask, subMessage, subBuilder);
+                            builder.setField(maskRoot, subBuilder.buildPartial());
+                            responseMsg = (T) builder.buildPartial();
+                        }
+                    }
+                }
+            }
+        }
+
+        MediaType contentType = ctx.deriveTargetContentType();
+        if (contentType != MediaType.JSON) {
+            ctx.reportStatusCode(OK.code());
+            return sendMessageResponse(OK, responseMsg);
+        } else {
+            ByteBuf body = ctx.nettyContext.alloc().buffer();
+            try (ByteBufOutputStream channelOut = new ByteBufOutputStream(body)) {
+                contentType = MediaType.JSON;
+                String str = ctx.printJson(responseMsg);
+                body.writeCharSequence(str, StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                body.release();
+                HttpResponseStatus status = INTERNAL_SERVER_ERROR;
+                ctx.reportStatusCode(status.code());
+                return HttpRequestHandler.sendPlainTextError(ctx.nettyContext, req, status, e.toString());
+            }
+            HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK, body);
+            response.headers().set(HttpHeaderNames.CONTENT_TYPE, contentType.toString());
+            response.headers().set(HttpHeaderNames.CONTENT_LENGTH, body.readableBytes());
+            ctx.reportStatusCode(OK.code());
+            return HttpRequestHandler.sendResponse(ctx.nettyContext, req, response);
+        }
+    }
+
+    private ChannelFuture sendError(RouteContext ctx, HttpException t) {
+        if (t instanceof InternalServerErrorException) {
+            log.error("Internal server error while handling call", t);
+        } else if (log.isDebugEnabled()) {
+            log.debug("User error while handling call", t);
+        }
+        ExceptionMessage msg = t.toMessage();
+        ctx.reportStatusCode(t.getStatus().code());
+        return sendMessageResponse(t.getStatus(), msg);
+    }
+
+    private <T extends Message> ChannelFuture sendMessageResponse(HttpResponseStatus status, T responseMsg) {
+        ByteBuf body = ctx.nettyContext.alloc().buffer();
+        MediaType contentType = HttpRequestHandler.getAcceptType(ctx.nettyRequest);
+
+        try {
+            if (contentType == MediaType.PROTOBUF) {
+                try (ByteBufOutputStream channelOut = new ByteBufOutputStream(body)) {
+                    responseMsg.writeTo(channelOut);
+                }
+            } else if (contentType == MediaType.PLAIN_TEXT) {
+                body.writeCharSequence(responseMsg.toString(), StandardCharsets.UTF_8);
+            } else { // JSON by default
+                contentType = MediaType.JSON;
+                String str = ctx.printJson(responseMsg);
+                body.writeCharSequence(str, StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            return HttpRequestHandler.sendPlainTextError(ctx.nettyContext, ctx.nettyRequest, INTERNAL_SERVER_ERROR,
+                    e.toString());
+        }
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status, body);
+        response.headers().set(CONTENT_TYPE, contentType.toString());
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+
+        return HttpRequestHandler.sendResponse(ctx.nettyContext, ctx.nettyRequest, response);
+    }
+}
+```
+
+### `Context.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Context.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.net.InetSocketAddress;
+import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.yamcs.api.Api;
+import org.yamcs.api.Observer;
+import org.yamcs.logging.Log;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.security.User;
+import org.yamcs.xtce.Parameter;
+
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.FieldMask;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.Message.Builder;
+import com.google.protobuf.util.JsonFormat;
+
+import io.netty.channel.ChannelHandlerContext;
+
+/**
+ * Request context used in RPC-style endpoints.
+ */
+public abstract class Context {
+
+    private static AtomicInteger counter = new AtomicInteger();
+
+    protected final Log log;
+
+    /**
+     * Unique id for this call.
+     */
+    private final int id;
+
+    /**
+     * The Netty request context for an RPC call. In general RPC implementation should avoid using this object. It is
+     * exposed only because we need it for some HTTP-specific functionalities that are not covered by our RPC
+     * implementation (e.g. http chunking)
+     */
+    public final ChannelHandlerContext nettyContext;
+
+    protected final Api<Context> api;
+
+    private JsonFormat.Parser jsonParser;
+    private JsonFormat.Printer jsonPrinter;
+
+    protected FieldMask fieldMask;
+
+    /**
+     * The request user.
+     */
+    public final User user;
+
+    protected long txSize = 0;
+    protected int statusCode;
+    protected boolean reverseLookup;
+
+    /**
+     * A future that covers the full API call.
+     * <p>
+     * API implementations should use the passed {@link Observer} instead of this future.
+     */
+    final CompletableFuture<Void> requestFuture = new CompletableFuture<>();
+
+    Context(HttpServer httpServer, ChannelHandlerContext nettyContext, User user, Api<Context> api) {
+        this.id = counter.incrementAndGet();
+        this.nettyContext = nettyContext;
+        this.user = user;
+        this.api = api;
+        this.reverseLookup = httpServer.getReverseLookup();
+
+        log = new Log(Context.class);
+        log.setContext("c" + id);
+
+        jsonParser = httpServer.getJsonParser();
+        jsonPrinter = httpServer.getJsonPrinter();
+    }
+
+    boolean isDone() {
+        return requestFuture.isDone();
+    }
+
+    public Api<Context> getApi() {
+        return api;
+    }
+
+    public abstract MethodDescriptor getMethod();
+
+    public boolean isServerStreaming() {
+        return getMethod().toProto().getServerStreaming();
+    }
+
+    public boolean isClientStreaming() {
+        return getMethod().toProto().getClientStreaming();
+    }
+
+    public Message getRequestPrototype() {
+        MethodDescriptor method = getMethod();
+        return api.getRequestPrototype(method);
+    }
+
+    public Message getResponsePrototype() {
+        MethodDescriptor method = getMethod();
+        return api.getResponsePrototype(method);
+    }
+
+    public void parseJson(String json, Builder builder) throws InvalidProtocolBufferException {
+        jsonParser.merge(json, builder);
+    }
+
+    public String printJson(Message message) throws InvalidProtocolBufferException {
+        return jsonPrinter.print(message);
+    }
+
+    public FieldMask getFieldMask() {
+        return fieldMask;
+    }
+
+    /**
+     * Get the number of bytes transferred as the result of this call. It should not include the http headers. Note that
+     * the number might be increased before the data is sent so it will be wrong if there was an error sending data.
+     * 
+     * 
+     * @return number of bytes transferred as part of the request
+     */
+    public long getTransferredSize() {
+        return txSize;
+    }
+
+    public void addTransferredSize(long byteCount) {
+        txSize += byteCount;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void reportStatusCode(int statusCode) {
+        // TODO It should be possible to refactor this such that
+        // the HTTP status code becomes the result of the requestFuture.
+        if (this.statusCode != 0) {
+            throw new IllegalArgumentException("Status code already set to " + this.statusCode);
+        }
+        this.statusCode = statusCode;
+    }
+
+    public String getClientAddress() {
+        InetSocketAddress address = (InetSocketAddress) nettyContext.channel().remoteAddress();
+        return reverseLookup ? address.getHostName() : address.getAddress().getHostAddress();
+    }
+
+    public void checkSystemPrivilege(SystemPrivilege privilege) throws ForbiddenException {
+        if (!user.hasSystemPrivilege(privilege)) {
+            throw new ForbiddenException("Missing system privilege '" + privilege + "'");
+        }
+    }
+
+    public void checkAnyOfSystemPrivileges(SystemPrivilege... privileges) {
+        var match = false;
+        for (var privilege : privileges) {
+            if (user.hasSystemPrivilege(privilege)) {
+                match = true;
+            }
+        }
+        if (!match) {
+            var candidates = Stream.of(privileges).map(Object::toString).collect(Collectors.joining(", "));
+            throw new ForbiddenException("Missing system privilege (one of " + candidates + ")");
+        }
+    }
+
+    public void checkObjectPrivileges(ObjectPrivilegeType type, Collection<String> objects) throws ForbiddenException {
+        checkObjectPrivileges(type, objects.toArray(new String[objects.size()]));
+    }
+
+    public void checkObjectPrivileges(ObjectPrivilegeType type, String... objects) throws ForbiddenException {
+        for (String object : objects) {
+            if (!user.hasObjectPrivilege(type, object)) {
+                throw new ForbiddenException("No " + type + " authorization for '" + object + "'");
+            }
+        }
+    }
+
+    public void checkParameterPrivilege(ObjectPrivilegeType type, Collection<Parameter> objects) throws ForbiddenException {
+        checkParameterPrivilege(type, objects.toArray(new Parameter[objects.size()]));
+    }
+
+    public void checkParameterPrivilege(ObjectPrivilegeType type, Parameter... parameters) throws ForbiddenException  {
+        for (Parameter parameter : parameters) {
+            if (!user.hasParameterPrivilege(type, parameter)) {
+                throw new ForbiddenException("No " + type + " authorization for '" + parameter.getQualifiedName() + "'");
+            }
+        }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(id);
+    }
+}
+```
+
+### `ContextListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ContextListener.java`
+
+
+```java
+package org.yamcs.http;
+
+public interface ContextListener {
+
+    void onCancel(Throwable cause);
+}
+```
+
+### `FaviconHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/FaviconHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+/**
+ * Handles favicon requests. Some of these are automatically issued by browsers, others are referenced in header section
+ * of both the auth app and yamcs-web.
+ */
+public class FaviconHandler extends HttpHandler {
+
+    public static final String[] HANDLED_PATHS = new String[] {
+            "apple-touch-icon-precomposed.png", // Not in classpath, but should still respond 404.
+            "apple-touch-icon.png",
+            "favicon.ico",
+            "favicon-16x16.png",
+            "favicon-32x32.png",
+            "favicon-notification.ico",
+            "safari-pinned-tab.svg",
+    };
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        ctx.requireGET();
+        var filePath = ctx.getPathWithoutContext();
+        ctx.sendResource("/favicon" + filePath);
+    }
+}
+```
+
+### `ForbiddenException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ForbiddenException.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * When there was an authz exception
+ */
+public class ForbiddenException extends HttpException {
+    private static final long serialVersionUID = 1L;
+
+    public ForbiddenException(String message) {
+        super(message);
+    }
+
+    public ForbiddenException(Throwable t) {
+        super("Forbidden", t);
+    }
+
+    public ForbiddenException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.FORBIDDEN;
+    }
+}
+```
+
+### `Handler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Handler.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.logging.Log;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.FullHttpRequest;
+
+public abstract class Handler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+    private static final Log log = new Log(Handler.class);
+
+    public abstract void handle(HandlerContext ctx);
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
+        try {
+            String contextPath = ctx.channel().attr(HttpRequestHandler.CTX_CONTEXT_PATH).get();
+            handle(new HandlerContext(contextPath, ctx, msg, null));
+        } catch (Throwable t) {
+            if (!(t instanceof HttpException)) {
+                t = new InternalServerErrorException(t);
+            }
+
+            HttpException e = (HttpException) t;
+            if (e.isServerError()) {
+                log.error("Responding '{}': {}", e.getStatus(), e.getMessage(), e);
+            } else {
+                log.warn("Responding '{}': {}", e.getStatus(), e.getMessage());
+            }
+            HttpRequestHandler.sendPlainTextError(ctx, msg, e.getStatus());
+        }
+    }
+}
+```
+
+### `HandlerContext.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HandlerContext.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.ALLOW;
+import static io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION;
+import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.HOST;
+import static io.netty.handler.codec.http.HttpHeaderNames.LOCATION;
+import static io.netty.handler.codec.http.HttpHeaderValues.TEXT_HTML;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.URLDecoder;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.security.User;
+import org.yamcs.templating.ParseException;
+import org.yamcs.templating.TemplateProcessor;
+import org.yamcs.utils.Mimetypes;
+
+import com.google.common.io.ByteStreams;
+import com.google.common.io.CharStreams;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.protobuf.Message;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.multipart.Attribute;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData.HttpDataType;
+import io.netty.handler.ssl.SslHandler;
+
+public class HandlerContext {
+
+    private static final Mimetypes MIME = Mimetypes.getInstance();
+
+    private final String contextPath;
+    private final ChannelHandlerContext nettyContext;
+    private final HttpRequest nettyRequest;
+    private final QueryStringDecoder qsDecoder;
+    private final User user;
+
+    private Map<String, String> formParameters;
+
+    public HandlerContext(String contextPath, ChannelHandlerContext ctx, HttpRequest req, User user) {
+        this.contextPath = contextPath;
+        nettyContext = ctx;
+        nettyRequest = req;
+        this.user = user;
+        qsDecoder = new QueryStringDecoder(req.uri());
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Attempts to derive the externally used URL to Yamcs based on request information
+     * 
+     * @return a url of the form [protocol]://[host]:[port][context]
+     */
+    public String getRequestBaseURL() {
+        boolean tls = nettyContext.channel().pipeline().get(SslHandler.class) != null;
+        String forwardedProto = nettyRequest.headers().get("x-forwarded-proto");
+        if ("https".equals(forwardedProto)) {
+            tls = true;
+        }
+
+        String host;
+        int port = tls ? 443 : 80;
+
+        String hostURL = nettyRequest.headers().get("x-forwarded-host");
+        if (hostURL == null) {
+            hostURL = nettyRequest.headers().get(HOST);
+        }
+
+        if (hostURL != null) {
+            int idx = hostURL.lastIndexOf(':');
+            if (idx == -1) {
+                host = hostURL;
+            } else {
+                host = hostURL.substring(0, idx);
+                port = Integer.parseInt(hostURL.substring(idx + 1));
+            }
+        } else {
+            InetSocketAddress address = (InetSocketAddress) nettyContext.channel().remoteAddress();
+            host = address.getHostName();
+            port = address.getPort();
+        }
+
+        if (tls) {
+            return String.format("https://%s%s", port == 443 ? host : host + ":" + port, contextPath);
+        } else {
+            return String.format("http://%s%s", port == 80 ? host : host + ":" + port, contextPath);
+        }
+    }
+
+    public String getOriginalHostAddress() {
+        var forwardedFor = nettyRequest.headers().get("x-forwarded-for");
+        if (forwardedFor != null) {
+            return forwardedFor;
+        } else {
+            var address = (InetSocketAddress) nettyContext.channel().remoteAddress();
+            return address.getAddress().getHostAddress();
+        }
+    }
+
+    public String getOriginalHostName() {
+        var ipAddress = getOriginalHostAddress();
+        try {
+            var inetAddress = InetAddress.getByName(ipAddress);
+            return inetAddress.getHostName();
+        } catch (UnknownHostException e) {
+            return ipAddress;
+        }
+    }
+
+    public ChannelHandlerContext getNettyChannelHandlerContext() {
+        return nettyContext;
+    }
+
+    public HttpRequest getNettyHttpRequest() {
+        return nettyRequest;
+    }
+
+    /**
+     * @throws ClassCastException
+     *             if this context does not contain a "full" HTTP request.
+     */
+    public FullHttpRequest getNettyFullHttpRequest() {
+        return (FullHttpRequest) nettyRequest;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public String getPathWithoutContext() {
+        return HttpUtils.getPathWithoutContext(nettyRequest, contextPath);
+    }
+
+    public boolean isGET() {
+        return nettyRequest.method() == HttpMethod.GET;
+    }
+
+    public boolean isPOST() {
+        return nettyRequest.method() == HttpMethod.POST;
+    }
+
+    public void requireGET() {
+        requireMethod(HttpMethod.GET);
+    }
+
+    public void requirePOST() {
+        requireMethod(HttpMethod.POST);
+    }
+
+    public void requireMethod(HttpMethod... allowedMethods) {
+        for (HttpMethod allowedMethod : allowedMethods) {
+            if (nettyRequest.method() == allowedMethod) {
+                return;
+            }
+        }
+        throw new MethodNotAllowedException(nettyRequest.method(), nettyRequest.uri(),
+                Arrays.asList(allowedMethods));
+    }
+
+    public void requireFormEncoding() {
+        if (!isFormEncoded()) {
+            throw new BadRequestException("Request is not form-encoded");
+        }
+    }
+
+    public String requireFormParameter(String parameter) {
+        String value = getFormParameter(parameter);
+        if (value == null) {
+            throw new BadRequestException("Missing form parameter '" + parameter + "'");
+        }
+        return value;
+    }
+
+    public String requireQueryParameter(String parameter) {
+        String value = getQueryParameter(parameter);
+        if (value == null) {
+            throw new BadRequestException("Missing query parameter '" + parameter + "'");
+        }
+        return value;
+    }
+
+    public String requireParameter(String parameter) {
+        String value = getParameter(parameter);
+        if (value == null) {
+            throw new BadRequestException("Missing parameter '" + parameter + "'");
+        }
+        return value;
+    }
+
+    public String getHeader(CharSequence name) {
+        return nettyRequest.headers().get(name);
+    }
+
+    public boolean isFormEncoded() {
+        return "application/x-www-form-urlencoded".equals(nettyRequest.headers().get(CONTENT_TYPE));
+    }
+
+    public String getCredentials(String type) {
+        String authorizationHeader = getHeader(AUTHORIZATION);
+        if (authorizationHeader != null) {
+            String prefix = type + " ";
+            if (authorizationHeader.startsWith(prefix)) {
+                return authorizationHeader.substring(prefix.length());
+            }
+        }
+        return null;
+    }
+
+    public String[] getBasicCredentials() {
+        String userpassEncoded = getCredentials("Basic");
+        if (userpassEncoded != null) {
+            String userpassDecoded;
+            try {
+                userpassDecoded = new String(Base64.getDecoder().decode(userpassEncoded));
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Could not decode Base64-encoded credentials");
+            }
+            String[] parts = userpassDecoded.split(":", 2);
+            if (parts.length < 2) {
+                throw new BadRequestException("Malformed username/password (Not separated by colon?)");
+            }
+            try {
+                return new String[] { URLDecoder.decode(parts[0], "UTF-8"), URLDecoder.decode(parts[1], "UTF-8") };
+            } catch (UnsupportedEncodingException e) {
+                throw new InternalServerErrorException(e);
+            }
+        }
+        return null;
+    }
+
+    public String getFormParameter(String parameter) {
+        if (!isFormEncoded()) {
+            return null;
+        }
+
+        if (formParameters == null) {
+            formParameters = new HashMap<>();
+            HttpPostRequestDecoder formDecoder = new HttpPostRequestDecoder(nettyRequest);
+            try {
+                for (InterfaceHttpData d : formDecoder.getBodyHttpDatas()) {
+                    if (d.getHttpDataType() == HttpDataType.Attribute) {
+                        formParameters.put(d.getName(), ((Attribute) d).getValue());
+                    }
+                }
+            } catch (IOException e) {
+                throw new InternalServerErrorException(e);
+            } finally {
+                formDecoder.destroy();
+            }
+        }
+        return formParameters.get(parameter);
+    }
+
+    public String getQueryParameter(String parameter) {
+        List<String> matches = qsDecoder.parameters().get(parameter);
+        if (matches == null || matches.isEmpty()) {
+            return null;
+        } else {
+            return matches.get(0);
+        }
+    }
+
+    public String getParameter(String parameter) {
+        String match = getQueryParameter(parameter);
+        if (match == null && isFormEncoded()) {
+            return getFormParameter(parameter);
+        }
+        return match;
+    }
+
+    public ByteBuf createByteBuf() {
+        return nettyContext.alloc().buffer();
+    }
+
+    public void renderOK(String templateResource, Map<String, Object> vars) {
+        render(HttpResponseStatus.OK, templateResource, vars);
+    }
+
+    public void render(HttpResponseStatus status, String templateResource, Map<String, Object> vars) {
+        String processed = renderToString(templateResource, vars);
+
+        ByteBuf body = nettyContext.alloc().buffer();
+        body.writeCharSequence(processed, StandardCharsets.UTF_8);
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status, body);
+        response.headers().set(CONTENT_TYPE, TEXT_HTML);
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+        sendResponse(response);
+    }
+
+    public String renderToString(String templateResource, Map<String, Object> vars) {
+        try (InputStream resource = HandlerContext.class.getResourceAsStream(templateResource);
+                InputStreamReader reader = new InputStreamReader(resource, StandardCharsets.UTF_8)) {
+            String template = CharStreams.toString(reader);
+            return TemplateProcessor.process(template, vars);
+        } catch (IOException | ParseException e) {
+            throw new InternalServerErrorException(e);
+        }
+    }
+
+    public void sendOK() {
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK);
+        response.headers().set(CONTENT_LENGTH, 0);
+        sendResponse(response);
+    }
+
+    public void sendOK(Message message) {
+        HttpRequestHandler.sendMessageResponse(nettyContext, nettyRequest, HttpResponseStatus.OK, message);
+    }
+
+    public void sendOK(JsonObject jsonObject) {
+        ByteBuf body = nettyContext.alloc().buffer();
+        String json = new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject);
+        body.writeCharSequence(json, StandardCharsets.UTF_8);
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, body);
+        response.headers().set(CONTENT_TYPE, "application/json");
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+        HttpRequestHandler.sendResponse(nettyContext, nettyRequest, response);
+    }
+
+    public void sendAllow(HttpMethod... methods) {
+        var response = new DefaultFullHttpResponse(HTTP_1_1, OK);
+        response.headers().set(ALLOW, Arrays.asList(methods));
+        response.headers().set(CONTENT_LENGTH, 0);
+        sendResponse(response);
+    }
+
+    /**
+     * Send a classpath resource.
+     */
+    public void sendResource(String resource) {
+        var body = createByteBuf();
+        try (var in = getClass().getResourceAsStream(resource)) {
+            if (in == null) {
+                throw new NotFoundException();
+            }
+            try (var out = new ByteBufOutputStream(body)) {
+                ByteStreams.copy(in, out);
+            }
+        } catch (IOException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        var response = new DefaultFullHttpResponse(HTTP_1_1, OK, body);
+        response.headers().set(CONTENT_TYPE, MIME.getMimetype(resource));
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+        response.headers().set(CACHE_CONTROL, "private, max-age=86400");
+        HttpRequestHandler.sendResponse(nettyContext, nettyRequest, response);
+    }
+
+    public ChannelFuture sendResponse(HttpResponse response) {
+        return HttpRequestHandler.sendResponse(nettyContext, nettyRequest, response);
+    }
+
+    public void sendRedirect(String location) {
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.FOUND);
+        response.headers().set(CONTENT_LENGTH, 0);
+        response.headers().set(LOCATION, location);
+        HttpRequestHandler.sendResponse(nettyContext, nettyRequest, response);
+    }
+}
+```
+
+### `HttpContentToByteBufDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpContentToByteBufDecoder.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.util.List;
+
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.MessageToMessageDecoder;
+import io.netty.handler.codec.http.HttpContent;
+
+public class HttpContentToByteBufDecoder extends MessageToMessageDecoder<HttpContent>{
+    @Override
+    protected void decode(ChannelHandlerContext ctx, HttpContent msg, List<Object> out) throws Exception {
+        ByteBuf buf = msg.content();
+        out.add(buf.retain());
+    }
+}
+```
+
+### `HttpException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpException.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.api.ExceptionMessage;
+
+import com.google.protobuf.Any;
+import com.google.protobuf.Message;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * Default HTTP exception.
+ */
+public abstract class HttpException extends RuntimeException {
+
+    private static final long serialVersionUID = 1L;
+    private Message detail;
+
+    public HttpException() {
+        super();
+    }
+
+    public HttpException(Throwable t) {
+        super(t);
+    }
+
+    public HttpException(String message) {
+        super(message);
+    }
+
+    public HttpException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public abstract HttpResponseStatus getStatus();
+
+    public boolean isServerError() {
+        int code = getStatus().code();
+        return 500 <= code && code < 600;
+    }
+
+    public Message getDetail() {
+        return detail;
+    }
+
+    public void setDetail(Message detail) {
+        this.detail = detail;
+    }
+
+    public ExceptionMessage toMessage() {
+        ExceptionMessage.Builder msgb = ExceptionMessage.newBuilder();
+        msgb.setCode(getStatus().code());
+        msgb.setType(getClass().getSimpleName());
+
+        // Try to get a specific message. i.e. turn "Type1: Type2: Type3: Message" into "Message"
+        Throwable realCause = this;
+        while (realCause.getCause() != null) {
+            realCause = realCause.getCause();
+        }
+        if (realCause.getMessage() != null) {
+            msgb.setMsg(realCause.getMessage());
+        } else {
+            msgb.setMsg(realCause.getClass().getSimpleName());
+        }
+
+        if (detail != null) {
+            msgb.setDetail(Any.pack(detail, HttpServer.TYPE_URL_PREFIX));
+        }
+
+        return msgb.build();
+    }
+}
+```
+
+### `HttpHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.AUTHORIZATION;
+import static io.netty.handler.codec.http.HttpHeaderNames.COOKIE;
+
+import java.util.Base64;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.security.AbstractHttpRequestAuthModule;
+import org.yamcs.security.AbstractHttpRequestAuthModule.HttpRequestToken;
+import org.yamcs.security.AuthenticationException;
+import org.yamcs.security.AuthenticationInfo;
+import org.yamcs.security.AuthenticationToken;
+import org.yamcs.security.User;
+import org.yamcs.security.UsernamePasswordToken;
+import org.yamcs.utils.Mimetypes;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.cookie.ServerCookieDecoder;
+
+public abstract class HttpHandler {
+
+    protected static final Mimetypes MIME = Mimetypes.getInstance();
+    private static final String AUTH_TYPE_BASIC = "Basic ";
+    private static final String AUTH_TYPE_BEARER = "Bearer ";
+
+    protected final Log log = new Log(getClass());
+
+    public abstract boolean requireAuth();
+
+    public abstract void handle(HandlerContext ctx);
+
+    final void handle(ChannelHandlerContext ctx, HttpRequest msg) {
+        User user = null;
+        if (requireAuth()) {
+            user = authorizeUser(ctx, msg);
+            ctx.channel().attr(HttpRequestHandler.CTX_USERNAME).set(user.getName());
+        }
+
+        doHandle(ctx, msg, user);
+    }
+
+    protected void doHandle(ChannelHandlerContext ctx, HttpRequest msg, User user) {
+        var contextPath = ctx.channel().attr(HttpRequestHandler.CTX_CONTEXT_PATH).get();
+        try {
+            handle(new HandlerContext(contextPath, ctx, msg, user));
+        } catch (Throwable t) {
+            if (!(t instanceof HttpException)) {
+                t = new InternalServerErrorException(t);
+            }
+
+            var e = (HttpException) t;
+            if (e.isServerError()) {
+                log.error("Responding '{}': {}", e.getStatus(), e.getMessage(), e);
+            } else {
+                log.warn("Responding '{}': {}", e.getStatus(), e.getMessage());
+            }
+            HttpRequestHandler.sendPlainTextError(ctx, msg, e.getStatus());
+        }
+    }
+
+    private User authorizeUser(ChannelHandlerContext ctx, HttpRequest req) throws HttpException {
+        var securityStore = YamcsServer.getServer().getSecurityStore();
+        if (securityStore.isEnabled()) {
+            // Handle common case first: presence of an "Authorization" header
+            if (req.headers().contains(AUTHORIZATION)) {
+                String authorizationHeader = req.headers().get(AUTHORIZATION);
+                if (authorizationHeader.startsWith(AUTH_TYPE_BASIC)) { // Exact case only
+                    return handleBasicAuth(ctx, req);
+                } else if (authorizationHeader.startsWith(AUTH_TYPE_BEARER)) {
+                    return handleBearerAuth(ctx, req);
+                } else {
+                    throw new BadRequestException("Unsupported Authorization header '" + authorizationHeader + "'");
+                }
+            }
+
+            // Instances of AbstractHttpRequestAuthModule derive the user
+            // from custom HTTP request information, typically headers.
+            var isHttpRequestAuth = securityStore.getAuthModules().stream().anyMatch(module -> {
+                return module instanceof AbstractHttpRequestAuthModule
+                        && ((AbstractHttpRequestAuthModule) module).handles(ctx, req);
+            });
+            if (isHttpRequestAuth) {
+                try {
+                    var token = new HttpRequestToken(ctx, req);
+                    var authenticationInfo = securityStore.login(token).get();
+                    return securityStore.getUserFromCache(authenticationInfo.getUsername());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return null;
+                } catch (ExecutionException e) {
+                    if (e.getCause() instanceof AuthenticationException) {
+                        throw new UnauthorizedException(e.getCause().getMessage());
+                    } else {
+                        throw new InternalServerErrorException(e.getCause());
+                    }
+                }
+            }
+
+            // Last resort:
+            // There may be an access token in the cookie. This use case is added because
+            // of web socket requests coming from the browser where it is not possible to
+            // set custom authorization headers. It'd be interesting if we communicate the
+            // access token via the websocket subprotocol instead (e.g. via temp. route).
+            String accessToken = getAccessTokenFromCookie(req);
+            if (accessToken != null) {
+                return handleAccessToken(ctx, req, accessToken);
+            }
+        }
+
+        if (securityStore.getGuestUser().isActive()) {
+            return securityStore.getGuestUser();
+        }
+
+        throw new UnauthorizedException("Missing authentication");
+    }
+
+    public static String getAccessTokenFromCookie(HttpRequest req) {
+        HttpHeaders headers = req.headers();
+        if (headers.contains(COOKIE)) {
+            Set<Cookie> cookies = ServerCookieDecoder.STRICT.decode(headers.get(COOKIE));
+            for (Cookie c : cookies) {
+                if ("access_token".equalsIgnoreCase(c.name())) {
+                    return c.value();
+                }
+            }
+        }
+        return null;
+    }
+
+    private User handleBasicAuth(ChannelHandlerContext ctx, HttpRequest req) throws HttpException {
+        String header = req.headers().get(AUTHORIZATION);
+        String userpassEncoded = header.substring(AUTH_TYPE_BASIC.length());
+        String userpassDecoded;
+        try {
+            userpassDecoded = new String(Base64.getDecoder().decode(userpassEncoded));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Could not decode Base64-encoded credentials");
+        }
+
+        // Username is not allowed to contain ':', but passwords are
+        String[] parts = userpassDecoded.split(":", 2);
+        if (parts.length < 2) {
+            throw new BadRequestException("Malformed username/password (Not separated by colon?)");
+        }
+
+        try {
+            var securityStore = YamcsServer.getServer().getSecurityStore();
+            AuthenticationToken token = new UsernamePasswordToken(parts[0], parts[1].toCharArray());
+            AuthenticationInfo authenticationInfo = securityStore.login(token).get();
+            return securityStore.getUserFromCache(authenticationInfo.getUsername());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof AuthenticationException) {
+                throw new UnauthorizedException(e.getCause().getMessage());
+            } else {
+                throw new InternalServerErrorException(e.getCause());
+            }
+        }
+    }
+
+    private User handleBearerAuth(ChannelHandlerContext ctx, HttpRequest req) throws UnauthorizedException {
+        String header = req.headers().get(AUTHORIZATION);
+        String accessToken = header.substring(AUTH_TYPE_BEARER.length());
+        return handleAccessToken(ctx, req, accessToken);
+    }
+
+    private User handleAccessToken(ChannelHandlerContext ctx, HttpRequest req, String accessToken)
+            throws UnauthorizedException {
+        var httpServer = YamcsServer.getServer().getGlobalService(HttpServer.class);
+        var tokenStore = httpServer.getTokenStore();
+        var authenticationInfo = tokenStore.verifyAccessToken(accessToken);
+        var securityStore = YamcsServer.getServer().getSecurityStore();
+        if (!securityStore.verifyValidity(authenticationInfo)) {
+            tokenStore.revokeAccessToken(accessToken);
+            throw new UnauthorizedException("Could not verify token");
+        }
+
+        return securityStore.getUserFromCache(authenticationInfo.getUsername());
+    }
+}
+```
+
+### `HttpRequestHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpRequestHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.ACCEPT;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderValues.CLOSE;
+import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
+
+import javax.net.ssl.SSLHandshakeException;
+
+import org.yamcs.logging.Log;
+
+import com.google.protobuf.Message;
+import com.google.protobuf.util.JsonFormat;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.DecoderResult;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpContentCompressor;
+import io.netty.handler.codec.http.HttpMessage;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.ssl.NotSslRecordException;
+import io.netty.util.AttributeKey;
+import io.netty.util.CharsetUtil;
+import io.netty.util.ReferenceCountUtil;
+
+/**
+ * Handles handshakes and messages.
+ * 
+ * A new instance of this handler is created for every request.
+ *
+ * We have following different request types
+ * <ul>
+ * <li>static requests - sent to the fileRequestHandler - do no go higher in the netty pipeline</li>
+ * <li>websocket requests - the pipeline is modified to add the websocket handshaker.</li>
+ * <li>load data requests - the pipeline is modified by the respective route handler</li>
+ * <li>standard API calls (the vast majority) - the HttpObjectAgreggator is added upstream to collect (and limit) all
+ * data from the http request in one object.</li>
+ * </ul>
+ * Because we support multiple http requests on one connection (keep-alive), we have to clean the pipeline when the
+ * request type changes
+ */
+public class HttpRequestHandler extends ChannelInboundHandlerAdapter {
+
+    public static final String ANY_PATH = "*";
+
+    public static final AttributeKey<String> CTX_CONTEXT_PATH = AttributeKey.valueOf("contextPath");
+    public static final AttributeKey<HttpRequest> CTX_HTTP_REQUEST = AttributeKey.valueOf("httpRequest");
+    public static final AttributeKey<String> CTX_USERNAME = AttributeKey.valueOf("username");
+    public static final AttributeKey<RouteContext> CTX_CONTEXT = AttributeKey.valueOf("routeContext");
+
+    private static final Log log = new Log(HttpRequestHandler.class);
+
+    public static final Object CONTENT_FINISHED_EVENT = new Object();
+
+    private HttpServer httpServer;
+    private String contextPath;
+
+    public HttpRequestHandler(HttpServer httpServer) {
+        this.httpServer = httpServer;
+        contextPath = httpServer.getContextPath();
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        httpServer.trackClientChannel(ctx.channel());
+        super.channelActive(ctx);
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof HttpMessage) {
+            DecoderResult dr = ((HttpMessage) msg).decoderResult();
+            if (!dr.isSuccess()) {
+                log.warn("{} Exception while decoding HTTP message: {}", ctx.channel().id().asShortText(), dr.cause());
+                sendPlainTextError(ctx, null, HttpResponseStatus.BAD_REQUEST);
+                return;
+            }
+        }
+
+        if (msg instanceof HttpRequest) {
+            HttpRequest req = (HttpRequest) msg;
+
+            // We have this also on info level coupled with the HTTP response status
+            // code, but this is on debug for an earlier reporting while debugging issues
+            log.debug("{} {} {}", ctx.channel().id().asShortText(), req.method(), req.uri());
+
+            try {
+                handleRequest(ctx, req);
+            } catch (InternalServerErrorException e) {
+                log.error(req.uri(), e);
+                sendPlainTextError(ctx, req, e.getStatus(), e.getMessage());
+            } catch (HttpException e) {
+                log.warn("{}: {}", req.uri(), e.getMessage());
+                sendPlainTextError(ctx, req, e.getStatus(), e.getMessage());
+            } catch (Throwable t) {
+                log.error(req.uri(), t);
+                sendPlainTextError(ctx, req, HttpResponseStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            ReferenceCountUtil.release(msg);
+        } else if (msg instanceof HttpContent) {
+            ctx.fireChannelRead(msg);
+            if (msg instanceof LastHttpContent) {
+                ctx.fireUserEventTriggered(CONTENT_FINISHED_EVENT);
+            }
+        } else {
+            log.error("{} unexpected message received: {}", ctx.channel().id().asShortText(), msg);
+            ReferenceCountUtil.release(msg);
+        }
+    }
+
+    private void handleRequest(ChannelHandlerContext ctx, HttpRequest req) throws IOException {
+        cleanPipeline(ctx.pipeline());
+        ctx.channel().attr(CTX_CONTEXT_PATH).set(contextPath);
+        ctx.channel().attr(CTX_HTTP_REQUEST).set(req);
+        ctx.channel().attr(CTX_CONTEXT).set(null); // Cleanup in case of keep-alive
+        ctx.channel().attr(CTX_USERNAME).set(null); // Cleanup in case of keep-alive
+
+        if (!req.uri().startsWith(contextPath)) {
+            sendPlainTextError(ctx, req, NOT_FOUND);
+            return;
+        }
+
+        String pathString = HttpUtils.getPathWithoutContext(req, contextPath);
+
+        // Note: pathString starts with / so path[0] is always empty
+        String[] path = pathString.split("/", 3);
+        String pathComponent = path.length >= 2 ? path[1] : "";
+
+        var handler = httpServer.createHandler(pathComponent);
+        if (handler != null) {
+            ctx.pipeline().addLast(new HttpContentCompressor());
+            ctx.pipeline().addLast(new HttpObjectAggregator(65536));
+            ctx.pipeline().addLast(handler);
+            ctx.fireChannelRead(req);
+            return;
+        }
+
+        var httpHandler = httpServer.createHttpHandler(pathComponent);
+        if (httpHandler == null) {
+            httpHandler = httpServer.createHttpHandler(ANY_PATH);
+        }
+        if (httpHandler != null) {
+            httpHandler.handle(ctx, req);
+            return;
+        }
+
+        // Too bad.
+        sendPlainTextError(ctx, req, NOT_FOUND);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        String channelId = ctx.channel().id().asShortText();
+        if (cause instanceof NotSslRecordException) {
+            log.info("{} Closing channel: expected a TLS/SSL packet", channelId);
+        } else if (cause instanceof IOException && cause.getMessage().contains("reset by peer")) {
+            // Java 11: Unclean client close. Don't care about stack trace
+            log.trace("{} Closing channel: {}", channelId, cause.getMessage());
+        } else if (cause instanceof SocketException && cause.getMessage().equals("Connection reset")) {
+            // Java 17: Unclean client close. Don't care about stack trace
+            log.trace("{} Closing channel: {}", channelId, cause.getMessage());
+        } else if (cause instanceof DecoderException
+                && ((DecoderException) cause).getCause() instanceof SSLHandshakeException) {
+            // Very common when using Chrome and unknown certificates. Don't care about stack trace
+            log.debug("{} Closing channel: {}", channelId, cause.getMessage());
+        } else {
+            log.error("{} Closing channel: {}", channelId, cause.getMessage(), cause);
+        }
+        ctx.close();
+    }
+
+    public static <T extends Message> ChannelFuture sendMessageResponse(ChannelHandlerContext ctx, HttpRequest req,
+            HttpResponseStatus status, T responseMsg) {
+        // Note: don't use this method when there's a possibility of JSON/Any message serialization
+        // The used JSON printer does not have type definitions registered.
+
+        ByteBuf body = ctx.alloc().buffer();
+        MediaType contentType = getAcceptType(req);
+
+        try {
+            if (contentType == MediaType.PROTOBUF) {
+                try (ByteBufOutputStream channelOut = new ByteBufOutputStream(body)) {
+                    responseMsg.writeTo(channelOut);
+                }
+            } else if (contentType == MediaType.PLAIN_TEXT) {
+                body.writeCharSequence(responseMsg.toString(), StandardCharsets.UTF_8);
+            } else { // JSON by default
+                contentType = MediaType.JSON;
+                String str = JsonFormat.printer().preservingProtoFieldNames().print(responseMsg);
+                body.writeCharSequence(str, StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            return sendPlainTextError(ctx, req, HttpResponseStatus.INTERNAL_SERVER_ERROR, e.toString());
+        }
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status, body);
+        response.headers().set(CONTENT_TYPE, contentType.toString());
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+
+        return sendResponse(ctx, req, response);
+    }
+
+    public static ChannelFuture sendPlainTextError(ChannelHandlerContext ctx, HttpRequest req,
+            HttpResponseStatus status) {
+        return sendPlainTextError(ctx, req, status, status.toString());
+    }
+
+    public static ChannelFuture sendPlainTextError(ChannelHandlerContext ctx, HttpRequest req,
+            HttpResponseStatus status, String msg) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status,
+                Unpooled.copiedBuffer(msg + "\r\n", CharsetUtil.UTF_8));
+        response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
+        response.headers().set(CONTENT_LENGTH, response.content().readableBytes());
+        return sendResponse(ctx, req, response);
+    }
+
+    public static ChannelFuture sendResponse(ChannelHandlerContext ctx, HttpRequest req, HttpResponse response) {
+        int status = response.status().code();
+        boolean keepAlive = HttpUtil.isKeepAlive(req);
+
+        if (100 <= status && status < 400) { // Information, Success, or Redirection
+            log.info("{} {} {} {}", ctx.channel().id().asShortText(), req.method(), req.uri(), status);
+        } else { // Client error or server error
+            keepAlive = false;
+            if (req != null) {
+                log.warn("{} {} {} {}", ctx.channel().id().asShortText(), req.method(), req.uri(), status);
+            } else {
+                log.warn("{} malformed or illegal request. Sending back {}", ctx.channel().id().asShortText(), status);
+            }
+        }
+
+        if (keepAlive) {
+            response.headers().set(CONNECTION, KEEP_ALIVE);
+            return ctx.channel().writeAndFlush(response);
+        } else {
+            response.headers().set(CONNECTION, CLOSE);
+            ChannelFuture writeFuture = ctx.channel().writeAndFlush(response);
+            return writeFuture.addListener(ChannelFutureListener.CLOSE);
+        }
+    }
+
+    private void cleanPipeline(ChannelPipeline pipeline) {
+        while (pipeline.last() != this) {
+            pipeline.removeLast();
+        }
+    }
+
+    /**
+     * Returns the Accept header if present and not set to ANY or Content-Type header if present or JSON if none of the
+     * headers is present or the Accept is present and set to ANY.
+     */
+    static MediaType getAcceptType(HttpRequest req) {
+        String acceptType = req.headers().get(ACCEPT);
+        if (acceptType != null) {
+            MediaType r = MediaType.from(acceptType);
+            if (r == MediaType.ANY) {
+                return getContentType(req);
+            } else {
+                return r;
+            }
+        } else {
+            return getContentType(req);
+        }
+    }
+
+    /**
+     * @return The Content-Type header if present or else defaults to JSON.
+     */
+    public static MediaType getContentType(HttpRequest req) {
+        String declaredContentType = req.headers().get(CONTENT_TYPE);
+        if (declaredContentType != null) {
+            return MediaType.from(declaredContentType);
+        }
+        return MediaType.JSON;
+    }
+}
+```
+
+### `HttpServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpServer.java`
+
+
+```java
+package org.yamcs.http;
+
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.api.Api;
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.WebSocketTopic;
+import org.yamcs.http.api.ActivitiesApi;
+import org.yamcs.http.api.AlarmsApi;
+import org.yamcs.http.api.AuditApi;
+import org.yamcs.http.api.BucketsApi;
+import org.yamcs.http.api.ClearanceApi;
+import org.yamcs.http.api.CommandsApi;
+import org.yamcs.http.api.Cop1Api;
+import org.yamcs.http.api.DatabaseApi;
+import org.yamcs.http.api.EventsApi;
+import org.yamcs.http.api.FileTransferApi;
+import org.yamcs.http.api.IamApi;
+import org.yamcs.http.api.IndexesApi;
+import org.yamcs.http.api.InstancesApi;
+import org.yamcs.http.api.LinksApi;
+import org.yamcs.http.api.MdbApi;
+import org.yamcs.http.api.MdbOverrideApi;
+import org.yamcs.http.api.PacketsApi;
+import org.yamcs.http.api.ParameterArchiveApi;
+import org.yamcs.http.api.ParameterListsApi;
+import org.yamcs.http.api.ParameterValuesApi;
+import org.yamcs.http.api.ProcessingApi;
+import org.yamcs.http.api.QueuesApi;
+import org.yamcs.http.api.ReplicationApi;
+import org.yamcs.http.api.RocksDbApi;
+import org.yamcs.http.api.ServerApi;
+import org.yamcs.http.api.ServicesApi;
+import org.yamcs.http.api.SessionsApi;
+import org.yamcs.http.api.StreamArchiveApi;
+import org.yamcs.http.api.TableApi;
+import org.yamcs.http.api.TimeApi;
+import org.yamcs.http.api.TimeCorrelationApi;
+import org.yamcs.http.api.TimelineApi;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.http.auth.AuthHandler;
+import org.yamcs.http.auth.TokenStore;
+import org.yamcs.protobuf.CancelOptions;
+import org.yamcs.protobuf.Reply;
+import org.yamcs.utils.ExceptionUtil;
+
+import com.codahale.metrics.MetricRegistry;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.ServiceManager;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.util.JsonFormat.TypeRegistry;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.cors.CorsConfig;
+import io.netty.handler.codec.http.cors.CorsConfigBuilder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.traffic.GlobalTrafficShapingHandler;
+import io.netty.util.concurrent.DefaultThreadFactory;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import io.netty.util.concurrent.ThreadPerTaskExecutor;
+
+/**
+ * Server-wide HTTP server based on Netty that provides a number of Yamcs web services:
+ *
+ * <ul>
+ * <li>REST API
+ * <li>WebSocket API
+ * <li>Static file serving
+ * </ul>
+ */
+public class HttpServer extends AbstractYamcsService {
+
+    public static final HttpRoute WEBSOCKET_ROUTE = HttpRoute.newBuilder().setGet("/api/websocket").build();
+
+    // Protobuf weirdness. When unspecified it defaults to "type.googleapis.com" ...
+    public static final String TYPE_URL_PREFIX = "";
+
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
+    private ChannelGroup clientChannels;
+    private GlobalTrafficShapingHandler globalTrafficHandler;
+
+    private List<Api<Context>> apis = new ArrayList<>();
+    private List<Route> routes = new ArrayList<>();
+    private List<Topic> topics = new ArrayList<>();
+
+    private MetricRegistry metricRegistry = new MetricRegistry();
+
+    private List<Binding> bindings = new ArrayList<>(2);
+
+    private String contextPath;
+    private boolean reverseLookup;
+    private int nThreads;
+
+    // Cross-origin Resource Sharing (CORS) enables use of the HTTP API in non-official client web applications
+    private CorsConfig corsConfig;
+
+    private ProtobufRegistry protobufRegistry = new ProtobufRegistry();
+    private JsonFormat.Parser jsonParser;
+    private JsonFormat.Printer jsonPrinter;
+
+    // Services (may participate in start-stop events)
+    private TokenStore tokenStore;
+    private AuditLog auditLog;
+
+    // Guava manager for sub-services
+    private ServiceManager serviceManager;
+
+    // Handlers at root level. Wrapped in a Supplier because
+    // we want to give the possiblity to make request-scoped instances
+    private Map<String, Supplier<HttpHandler>> httpHandlers = new HashMap<>();
+
+    // Extra handlers at root level. Wrapped in a Supplier because
+    // we want to give the possiblity to make request-scoped instances
+    private Map<String, Supplier<Handler>> extraHandlers = new HashMap<>();
+
+    @Override
+    public Spec getSpec() {
+        Spec corsSpec = new Spec();
+        corsSpec.addOption("allowOrigin", OptionType.STRING).withRequired(true);
+        corsSpec.addOption("allowCredentials", OptionType.BOOLEAN).withRequired(true);
+
+        Spec websiteSpec = new Spec();
+        websiteSpec.addOption("tag", OptionType.STRING);
+
+        Spec lohiSpec = new Spec();
+        lohiSpec.addOption("low", OptionType.INTEGER).withDefault(32 * 1024);
+        lohiSpec.addOption("high", OptionType.INTEGER).withDefault(128 * 1024);
+
+        Spec websocketSpec = new Spec();
+        websocketSpec.addOption("writeBufferWaterMark", OptionType.MAP).withSpec(lohiSpec).withApplySpecDefaults(true);
+        websocketSpec.addOption("maxFrameLength", OptionType.INTEGER).withDefault(65536);
+
+        // Value in seconds. Both nginx and apache have a default timeout of 60 seconds before
+        // they will close an idle WebSocket connection, therefore we choose a value well below that.
+        websocketSpec.addOption("pingWhenIdleFor", OptionType.INTEGER).withDefault(40);
+
+        Spec bindingSpec = new Spec();
+        bindingSpec.addOption("address", OptionType.STRING);
+        bindingSpec.addOption("port", OptionType.INTEGER).withRequired(true);
+        bindingSpec.addOption("tlsCert", OptionType.LIST_OR_ELEMENT).withElementType(OptionType.STRING);
+        bindingSpec.addOption("tlsKey", OptionType.STRING);
+        bindingSpec.requireTogether("tlsCert", "tlsKey");
+
+        Spec spec = new Spec();
+        spec.addOption("address", OptionType.STRING);
+        spec.addOption("port", OptionType.INTEGER).withDefault(8090);
+        spec.addOption("tlsCert", OptionType.LIST_OR_ELEMENT).withElementType(OptionType.STRING);
+        spec.addOption("tlsKey", OptionType.STRING);
+        spec.addOption("contextPath", OptionType.STRING).withDefault("" /* NOT null */);
+        spec.addOption("zeroCopyEnabled", OptionType.BOOLEAN).withDefault(true)
+                .withDeprecationMessage("This optimization is automatically enabled where possible");
+        spec.addOption("maxInitialLineLength", OptionType.INTEGER).withDefault(8192);
+        spec.addOption("maxHeaderSize", OptionType.INTEGER).withDefault(8192);
+        spec.addOption("maxContentLength", OptionType.INTEGER).withDefault(65536);
+        spec.addOption("maxPageSize", OptionType.INTEGER).withDefault(1000);
+        spec.addOption("cors", OptionType.MAP).withSpec(corsSpec);
+        spec.addOption("webSocket", OptionType.MAP).withSpec(websocketSpec).withApplySpecDefaults(true);
+        spec.addOption("bindings", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(bindingSpec);
+        spec.addOption("nThreads", OptionType.INTEGER).withDefault(0);
+        spec.addOption("reverseLookup", OptionType.BOOLEAN).withDefault(false);
+
+        // When using multiple bindings, best to avoid confusion and disable the top-level properties
+        spec.mutuallyExclusive("address", "bindings");
+        spec.mutuallyExclusive("port", "bindings");
+        spec.mutuallyExclusive("tlsCert", "bindings");
+        spec.mutuallyExclusive("tlsKey", "bindings");
+
+        spec.requireTogether("tlsCert", "tlsKey");
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        tokenStore = new TokenStore();
+        auditLog = new AuditLog();
+
+        tokenStore.init(this);
+        auditLog.init(this);
+
+        clientChannels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+        if (config.containsKey("bindings")) {
+            for (YConfiguration bindingConfig : config.getConfigList("bindings")) {
+                try {
+                    Binding binding = Binding.fromConfig(bindingConfig);
+                    bindings.add(binding);
+                } catch (UnknownHostException e) {
+                    throw new InitException("Cannot determine IP address for binding " + bindingConfig, e);
+                }
+            }
+        } else {
+            try {
+                Binding binding = Binding.fromConfig(config);
+                bindings.add(binding);
+            } catch (UnknownHostException e) {
+                throw new InitException("Cannot determine IP address for binding " + config, e);
+            }
+        }
+
+        contextPath = config.getString("contextPath");
+        if (!contextPath.isEmpty()) {
+            if (!contextPath.startsWith("/")) {
+                throw new InitException("contextPath must start with a slash token");
+            }
+            if (contextPath.endsWith("/")) {
+                throw new InitException("contextPath may not end with a slash token");
+            }
+        }
+
+        reverseLookup = config.getBoolean("reverseLookup");
+
+        if (config.containsKey("cors")) {
+            YConfiguration ycors = config.getConfig("cors");
+            String[] origins = ycors.getString("allowOrigin").split(",");
+            CorsConfigBuilder corsb = null;
+            if (origins.length == 1) {
+                corsb = CorsConfigBuilder.forOrigin(origins[0]);
+            } else {
+                corsb = CorsConfigBuilder.forOrigins(origins);
+            }
+            if (ycors.getBoolean("allowCredentials")) {
+                corsb.allowCredentials();
+            }
+            corsb.allowedRequestMethods(
+                    HttpMethod.GET,
+                    HttpMethod.POST,
+                    HttpMethod.PATCH,
+                    HttpMethod.PUT,
+                    HttpMethod.DELETE);
+            corsb.allowedRequestHeaders(
+                    HttpHeaderNames.CONTENT_TYPE,
+                    HttpHeaderNames.ACCEPT,
+                    HttpHeaderNames.AUTHORIZATION,
+                    HttpHeaderNames.ORIGIN);
+            corsConfig = corsb.build();
+        }
+        nThreads = config.getInt("nThreads");
+
+        addApi(new ActivitiesApi());
+        addApi(new AlarmsApi(auditLog));
+        addApi(new AuditApi(auditLog));
+        addApi(new BucketsApi());
+        addApi(new FileTransferApi(auditLog));
+        addApi(new ClearanceApi(auditLog));
+        addApi(new CommandsApi());
+        addApi(new Cop1Api());
+        addApi(new DatabaseApi());
+        addApi(new EventsApi());
+        addApi(new IamApi(auditLog, tokenStore));
+        addApi(new IndexesApi());
+        addApi(new InstancesApi());
+        addApi(new LinksApi(auditLog));
+        addApi(new MdbApi());
+        addApi(new MdbOverrideApi());
+        addApi(new PacketsApi());
+        addApi(new ParameterArchiveApi());
+        addApi(new ParameterListsApi());
+        addApi(new ParameterValuesApi());
+        addApi(new ProcessingApi());
+        addApi(new QueuesApi(auditLog));
+        addApi(new ReplicationApi());
+        addApi(new RocksDbApi(auditLog));
+        addApi(new ServerApi(this));
+        addApi(new ServicesApi());
+        addApi(new SessionsApi());
+        addApi(new StreamArchiveApi());
+        addApi(new TableApi());
+        addApi(new TimeApi());
+        addApi(new TimeCorrelationApi());
+        addApi(new TimelineApi());
+
+        var wellKnownHandler = new WellKnownHandler();
+        addRoute(".well-known", () -> wellKnownHandler);
+
+        var authHandler = new AuthHandler(this);
+        addRoute("auth", () -> authHandler);
+
+        var faviconHandler = new FaviconHandler();
+        for (var path : FaviconHandler.HANDLED_PATHS) {
+            addRoute(path, () -> faviconHandler);
+        }
+
+        var robotsTxtHandler = new RobotsTxtHandler();
+        for (var path : RobotsTxtHandler.HANDLED_PATHS) {
+            addRoute(path, () -> robotsTxtHandler);
+        }
+
+        var apiHandler = new ApiHandler(this);
+        addRoute("api", () -> apiHandler);
+
+    }
+
+    public void addRoute(String pathSegment, Supplier<HttpHandler> handler) {
+        httpHandlers.put(pathSegment, handler);
+    }
+
+    public void addApi(Api<Context> api) {
+        apis.add(api);
+        for (MethodDescriptor method : api.getDescriptorForType().getMethods()) {
+            RpcDescriptor descriptor = protobufRegistry.getRpc(method.getFullName());
+            if (descriptor == null) {
+                throw new UnsupportedOperationException("Unable to find rpc definition: " + method.getFullName());
+            }
+
+            if (WEBSOCKET_ROUTE.equals(descriptor.getHttpRoute())) {
+                topics.add(new Topic(api, descriptor.getWebSocketTopic(), descriptor));
+                for (WebSocketTopic topic : descriptor.getAdditionalWebSocketTopics()) {
+                    topics.add(new Topic(api, topic, descriptor));
+                }
+            } else {
+                routes.add(new Route(api, descriptor.getHttpRoute(), descriptor, metricRegistry));
+                for (HttpRoute route : descriptor.getAdditionalHttpRoutes()) {
+                    routes.add(new Route(api, route, descriptor, metricRegistry));
+                }
+            }
+        }
+
+        // Regenerate JSON converters with type support (needed for the "Any" type)
+        TypeRegistry.Builder typeRegistryb = TypeRegistry.newBuilder();
+        typeRegistryb.add(CancelOptions.getDescriptor());
+        typeRegistryb.add(Reply.getDescriptor());
+        apis.forEach(a -> typeRegistryb.add(a.getDescriptorForType().getFile().getMessageTypes()));
+        TypeRegistry typeRegistry = typeRegistryb.build();
+
+        jsonParser = JsonFormat.parser().usingTypeRegistry(typeRegistry);
+        jsonPrinter = JsonFormat.printer().usingTypeRegistry(typeRegistry);
+
+        // Sort in a way that increases chances of a good URI match
+        Collections.sort(routes);
+    }
+
+    @Override
+    protected void doStart() {
+        try {
+            startServer();
+            notifyStarted();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            notifyFailed(e);
+        } catch (Exception e) {
+            notifyFailed(e);
+        }
+    }
+
+    public void startServer() throws Exception {
+        serviceManager = new ServiceManager(Arrays.asList(
+                tokenStore, auditLog));
+        serviceManager.startAsync().awaitHealthy(10, TimeUnit.SECONDS);
+
+        bossGroup = new NioEventLoopGroup(1);
+
+        // Note that by default (i.e. with nThreads = 0), Netty will limit the number
+        // of worker threads to 2*number of CPU cores
+        workerGroup = new NioEventLoopGroup(nThreads,
+                new ThreadPerTaskExecutor(new DefaultThreadFactory("YamcsHttpServer")));
+
+        // Measure global traffic, we also add a channel-specific measurer in channel-init.
+        globalTrafficHandler = new GlobalTrafficShapingHandler(workerGroup, 5000);
+
+        for (var binding : bindings) {
+            createAndBindBootstrap(workerGroup, binding, globalTrafficHandler);
+            log.debug("Serving from {}{}", binding, contextPath);
+        }
+    }
+
+    private void createAndBindBootstrap(EventLoopGroup workerGroup, Binding binding,
+            GlobalTrafficShapingHandler globalTrafficHandler)
+            throws InterruptedException, SSLException, IOException {
+        SslContext sslContext = null;
+        if (binding.isTLS()) {
+            sslContext = binding.createSslContext();
+        }
+
+        ServerBootstrap bootstrap = new ServerBootstrap();
+        bootstrap.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .handler(new LoggingHandler(HttpServer.class, LogLevel.DEBUG))
+                .childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .childHandler(new HttpServerChannelInitializer(this, sslContext, globalTrafficHandler));
+
+        // Bind and start to accept incoming connections.
+        InetAddress address = binding.getAddress();
+        int port = binding.getPort();
+        if (address == null) {
+            bootstrap.bind(new InetSocketAddress(port)).sync();
+        } else {
+            bootstrap.bind(new InetSocketAddress(address, port)).sync();
+        }
+    }
+
+    HttpHandler createHttpHandler(String pathSegment) {
+        Supplier<HttpHandler> supplier = httpHandlers.get(pathSegment);
+        return supplier != null ? supplier.get() : null;
+    }
+
+    Handler createHandler(String pathSegment) {
+        Supplier<Handler> supplier = extraHandlers.get(pathSegment);
+        return supplier != null ? supplier.get() : null;
+    }
+
+    public TokenStore getTokenStore() {
+        return tokenStore;
+    }
+
+    public AuditLog getAuditLog() {
+        return auditLog;
+    }
+
+    public List<Binding> getBindings() {
+        return bindings;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public List<Route> getRoutes() {
+        return routes;
+    }
+
+    public List<Topic> getTopics() {
+        return topics;
+    }
+
+    public ProtobufRegistry getProtobufRegistry() {
+        return protobufRegistry;
+    }
+
+    public GlobalTrafficShapingHandler getGlobalTrafficShapingHandler() {
+        return globalTrafficHandler;
+    }
+
+    public JsonFormat.Parser getJsonParser() {
+        return jsonParser;
+    }
+
+    public JsonFormat.Printer getJsonPrinter() {
+        return jsonPrinter;
+    }
+
+    public boolean getReverseLookup() {
+        return reverseLookup;
+    }
+
+    public CorsConfig getCorsConfig() {
+        return corsConfig;
+    }
+
+    public MetricRegistry getMetricRegistry() {
+        return metricRegistry;
+    }
+
+    void trackClientChannel(Channel channel) {
+        clientChannels.add(channel);
+    }
+
+    public List<Channel> getClientChannels() {
+        return new ArrayList<>(clientChannels);
+    }
+
+    public void closeChannel(String id) {
+        clientChannels.close(ch -> ch.id().asShortText().equals(id));
+    }
+
+    @Override
+    protected void doStop() {
+        globalTrafficHandler.release();
+        var closers = listeningDecorator(Executors.newCachedThreadPool());
+        var future1 = closers.submit(() -> {
+            return workerGroup.shutdownGracefully(0, 5, TimeUnit.SECONDS).get();
+        });
+        var future2 = closers.submit(() -> {
+            return bossGroup.shutdownGracefully(0, 5, TimeUnit.SECONDS).get();
+        });
+        var future3 = closers.submit(() -> {
+            serviceManager.stopAsync();
+            serviceManager.awaitStopped(5, TimeUnit.SECONDS);
+            return true; // Force use of Callable interface, instead of Runnable
+        });
+        closers.shutdown();
+        Futures.addCallback(Futures.allAsList(future1, future2, future3), new FutureCallback<>() {
+            @Override
+            public void onSuccess(List<Object> result) {
+                notifyStopped();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                notifyFailed(ExceptionUtil.unwind(t));
+            }
+        }, MoreExecutors.directExecutor());
+    }
+}
+```
+
+### `HttpServerChannelInitializer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpServerChannelInitializer.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpObjectDecoder.DEFAULT_MAX_CHUNK_SIZE;
+
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.cors.CorsConfig;
+import io.netty.handler.codec.http.cors.CorsHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.traffic.ChannelTrafficShapingHandler;
+import io.netty.handler.traffic.GlobalTrafficShapingHandler;
+
+public class HttpServerChannelInitializer extends ChannelInitializer<SocketChannel> {
+
+    private final HttpServer httpServer;
+    private final SslContext sslCtx;
+    private final GlobalTrafficShapingHandler globalTrafficHandler;
+    private final int maxInitialLineLength;
+    private final int maxHeaderSize;
+
+    public HttpServerChannelInitializer(HttpServer httpServer, SslContext sslCtx,
+            GlobalTrafficShapingHandler globalTrafficHandler) {
+        this.httpServer = httpServer;
+        this.sslCtx = sslCtx;
+        this.globalTrafficHandler = globalTrafficHandler;
+        maxInitialLineLength = httpServer.getConfig().getInt("maxInitialLineLength");
+        maxHeaderSize = httpServer.getConfig().getInt("maxHeaderSize");
+    }
+
+    @Override
+    public void initChannel(SocketChannel ch) {
+        ChannelPipeline pipeline = ch.pipeline();
+        pipeline.addLast(globalTrafficHandler);
+        if (sslCtx != null) {
+            pipeline.addLast(sslCtx.newHandler(ch.alloc()));
+        }
+
+        pipeline.addLast(new ChannelTrafficShapingHandler(5000));
+        pipeline.addLast(new HttpServerCodec(maxInitialLineLength, maxHeaderSize, DEFAULT_MAX_CHUNK_SIZE));
+
+        CorsConfig corsConfig = httpServer.getCorsConfig();
+        if (corsConfig != null) {
+            pipeline.addLast(new CorsHandler(corsConfig));
+        }
+
+        // this has to be the last handler in the pipeline
+        pipeline.addLast(new HttpRequestHandler(httpServer));
+    }
+}
+```
+
+### `HttpTranscodeException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpTranscodeException.java`
+
+
+```java
+package org.yamcs.http;
+
+@SuppressWarnings("serial")
+public class HttpTranscodeException extends Exception {
+
+    public HttpTranscodeException(String message) {
+        super(message);
+    }
+
+    public HttpTranscodeException(String message, Throwable t) {
+        super(message, t);
+    }
+}
+```
+
+### `HttpTranscoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpTranscoder.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.api.HttpBody;
+import org.yamcs.logging.Log;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Duration;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.Struct;
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Durations;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.util.Timestamps;
+
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.QueryStringDecoder;
+import io.netty.handler.codec.http.multipart.Attribute;
+import io.netty.handler.codec.http.multipart.FileUpload;
+import io.netty.handler.codec.http.multipart.HttpPostMultipartRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
+
+/**
+ * Converts HTTP requests to Protobuf messages used in API definitions.
+ * <p>
+ * This is largely inspired from how Google Cloud transcodes HTTP to gRPC. The advantage of transcoding is that the API
+ * implementation can be largely agnostic of HTTP and that it can profit from Protobuf generated code without needing to
+ * distinguish between route params, query params, request bodies and so on.
+ */
+public class HttpTranscoder {
+
+    private static final Log log = new Log(HttpTranscoder.class);
+    private static final int MAX_METADATA_SIZE = 16 * 1024;
+
+    public static Message transcode(RouteContext ctx) throws HttpTranscodeException {
+        QueryStringDecoder qsDecoder = new QueryStringDecoder(ctx.getURI());
+        Message requestPrototype = ctx.getRequestPrototype();
+        Message.Builder requestb = requestPrototype.newBuilderForType();
+
+        String body = ctx.getBodySpecifier();
+        if (body != null && !ctx.isClientStreaming()) {
+            if ("*".equals(body)) {
+                if (requestPrototype.getDescriptorForType().equals(HttpBody.getDescriptor())) {
+                    return toHttpBody(ctx);
+                } else {
+                    requestb = ctx.getBodyAsMessage(requestb);
+                }
+            } else {
+                FieldDescriptor field = requestPrototype.getDescriptorForType().findFieldByName(body);
+                if (field.getMessageType().equals(HttpBody.getDescriptor())) {
+                    HttpBody httpBody = toHttpBody(ctx);
+                    requestb.setField(field, httpBody);
+                } else {
+                    Message.Builder fieldValueb = requestb.getFieldBuilder(field);
+                    Message fieldValue = ctx.getBodyAsMessage(fieldValueb).build();
+                    requestb.setField(field, fieldValue);
+                }
+            }
+        } else if (!ctx.isClientStreaming() && ctx.hasBody()) {
+            log.warn("Received a request with a body, but the method {} does not support request bodies",
+                    ctx.getMethod().getFullName());
+        }
+
+        for (FieldDescriptor field : requestPrototype.getDescriptorForType().getFields()) {
+            if (ctx.hasRouteParam(field.getJsonName())) {
+                Object value = toFieldValue(field, ctx.getRouteParam(field.getJsonName()));
+                requestb.setField(field, value);
+            } else if (body == null) {
+                List<String> queryParameter = qsDecoder.parameters().get(field.getJsonName());
+                if (queryParameter != null) {
+                    Object value = toFieldValue(field, queryParameter);
+                    requestb.setField(field, value);
+                }
+            }
+        }
+
+        return requestb.build();
+    }
+
+    private static HttpBody toHttpBody(RouteContext ctx) throws HttpTranscodeException {
+        String contentType = ctx.nettyRequest.headers().get(HttpHeaderNames.CONTENT_TYPE);
+
+        if (contentType.startsWith("multipart/form-data")) {
+            return readMultipartFormData(ctx);
+        } else if (contentType.startsWith("multipart/related")) {
+            throw new HttpTranscodeException("Uploads of type multipart/related are not yet supported");
+        } else {
+            HttpBody.Builder bodyb = HttpBody.newBuilder();
+            if (ctx.hasBody()) {
+                try (InputStream bufOut = ctx.getBodyAsInputStream()) {
+                    ByteString data = ByteString.readFrom(bufOut);
+                    bodyb.setData(data);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+            return bodyb.build();
+        }
+    }
+
+    private static HttpBody readMultipartFormData(RouteContext ctx) throws HttpTranscodeException {
+        HttpPostMultipartRequestDecoder decoder = new HttpPostMultipartRequestDecoder(ctx.fullNettyRequest);
+
+        HttpBody.Builder bodyb = HttpBody.newBuilder();
+        FileUpload fup = null;
+
+        int metadataSize = 0;
+        try {
+            for (InterfaceHttpData data : decoder.getBodyHttpDatas()) {
+                if (data instanceof FileUpload) {
+                    if (fup != null) {
+                        throw new HttpTranscodeException("Only one file upload is allowed in multipart/form data");
+                    }
+                    fup = (FileUpload) data;
+                } else if (data instanceof Attribute) {
+                    Attribute att = (Attribute) data;
+                    try {
+                        String name = att.getName();
+                        String value = att.getValue();
+                        metadataSize += (name.length() + value.length());
+                        bodyb.putMetadata(name, value);
+                    } catch (IOException e) { // shouldn't happen for MemoryAttribute
+                        log.warn("Error while reading form/data attribute value", e);
+                        throw new HttpTranscodeException("error reading attribute value");
+                    }
+                }
+            }
+
+            if (metadataSize > MAX_METADATA_SIZE) {
+                throw new BadRequestException("Metadata size " + metadataSize
+                        + " bytes exceeds maximum allowed " + MAX_METADATA_SIZE);
+            }
+            if (fup == null) {
+                throw new HttpTranscodeException("No file upload was found in multipart/form data");
+            }
+
+            if (fup.getContentType() != null) {
+                bodyb.setContentType(fup.getContentType());
+            }
+            if (fup.getFilename() != null) {
+                bodyb.setFilename(fup.getFilename());
+            }
+            try (InputStream bufOut = new ByteBufInputStream(fup.content())) {
+                ByteString data = ByteString.readFrom(bufOut);
+                bodyb.setData(data);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            } finally {
+                fup.delete();
+            }
+        } finally {
+            decoder.destroy();
+            decoder = null;
+        }
+        return bodyb.build();
+    }
+
+    private static Object toFieldValue(FieldDescriptor field, List<String> parameters) throws HttpTranscodeException {
+        if (field.isRepeated()) {
+            List<Object> values = new ArrayList<>();
+            for (String value : parameters) {
+                for (String item : value.split(",")) { // Support both repeated query params and comma-separated
+                    values.add(toFieldValue(field, item));
+                }
+            }
+            return values;
+        } else {
+            return toFieldValue(field, parameters.get(0));
+        }
+    }
+
+    private static Object toFieldValue(FieldDescriptor field, String parameter) throws HttpTranscodeException {
+        String name = field.getJsonName();
+        switch (field.getJavaType()) {
+        case BOOLEAN:
+            return toBoolean(name, parameter);
+        case INT:
+            return toInt(name, parameter);
+        case LONG:
+            return toLong(name, parameter);
+        case STRING:
+            return parameter;
+        case ENUM:
+            return field.getEnumType().findValueByName(parameter);
+        case MESSAGE:
+            if (Timestamp.getDescriptor().equals(field.getMessageType())) {
+                try {
+                    return Timestamps.parse(parameter);
+                } catch (ParseException e) {
+                    throw new HttpTranscodeException("Provided date string does not conform to RFC 3339", e);
+                }
+            }
+            if (Duration.getDescriptor().equals(field.getMessageType())) {
+                try {
+                    return Durations.parse(parameter);
+                } catch (ParseException e) {
+                    throw new HttpTranscodeException(e.getMessage());
+                }
+            }
+            if (Struct.getDescriptor().equals(field.getMessageType())) {
+                try {
+                    Struct.Builder builder = Struct.newBuilder();
+                    JsonFormat.parser().merge(parameter, builder);
+                    return builder.build();
+                } catch (InvalidProtocolBufferException e) {
+                    throw new HttpTranscodeException(e.getMessage());
+                }
+
+            }
+            throw new UnsupportedOperationException(
+                    "No query parameter conversion for message type " + field.getMessageType().getFullName());
+        default:
+            throw new UnsupportedOperationException(
+                    "No query parameter conversion for type " + field.getJavaType());
+        }
+    }
+
+    private static boolean toBoolean(String name, String parameter) {
+        return (parameter == null || "".equals(parameter) || "true".equalsIgnoreCase(parameter)
+                || "yes".equalsIgnoreCase(parameter));
+    }
+
+    private static int toInt(String name, String parameter) throws HttpTranscodeException {
+        try {
+            return Integer.parseInt(parameter);
+        } catch (NumberFormatException e) {
+            throw new HttpTranscodeException(String.format(
+                    "Parameter '%s' is not a valid integer value", name));
+        }
+    }
+
+    private static long toLong(String name, String parameter) throws HttpTranscodeException {
+        try {
+            return Long.parseLong(parameter);
+        } catch (NumberFormatException e) {
+            throw new HttpTranscodeException(String.format(
+                    "Parameter '%s' is not a valid integer value", name));
+        }
+    }
+}
+```
+
+### `HttpUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/HttpUtils.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpVersion;
+
+public class HttpUtils {
+
+    public static final FullHttpResponse CONTINUE_RESPONSE = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1,
+            HttpResponseStatus.CONTINUE, Unpooled.EMPTY_BUFFER);
+
+    /**
+     * Returns the path for the given HTTP request. This path does not contain any query string information, and the
+     * leading context path is removed.
+     */
+    public static String getPathWithoutContext(HttpRequest req, String contextPath) {
+        String path = removeQueryString(req.uri());
+        if (contextPath.isEmpty()) {
+            return path;
+        } else {
+            if (path.startsWith(contextPath)) {
+                var stripped = path.substring(contextPath.length());
+                return stripped.length() == 0 ? "/" : stripped;
+            } else {
+                throw new IllegalArgumentException("URI does not start with context path");
+            }
+        }
+    }
+
+    /**
+     * Returns the uri for the given HTTP request, but with the context path removed. The query string (if any) remains
+     * intact.
+     */
+    public static String getUriWithoutContext(HttpRequest req, String contextPath) {
+        if (contextPath.isEmpty()) {
+            return req.uri();
+        } else {
+            String uriWithContextPath = req.uri();
+            if (uriWithContextPath.startsWith(contextPath)) {
+                return uriWithContextPath.substring(contextPath.length());
+            } else {
+                throw new IllegalArgumentException("URI does not start with context path");
+            }
+        }
+    }
+
+    private static String removeQueryString(String uri) {
+        int idx = uri.indexOf('?');
+        return (idx == -1) ? uri : uri.substring(0, idx);
+    }
+}
+```
+
+### `InternalServerErrorException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/InternalServerErrorException.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * Something really wrong and unexpected occurred on the server. A bug.
+ */
+public class InternalServerErrorException extends HttpException {
+    private static final long serialVersionUID = 1L;
+
+    public InternalServerErrorException(Throwable t) {
+        super(t);
+    }
+
+    public InternalServerErrorException(String message) {
+        super(message);
+    }
+
+    public InternalServerErrorException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.INTERNAL_SERVER_ERROR;
+    }
+}
+```
+
+### `MediaType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/MediaType.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Syntactic sugar around a media type string. Contains predefined ones, but is open-ended for when we support dynamic
+ * rest handlers better.
+ */
+public final class MediaType {
+
+    static final Map<String, MediaType> knownTypes = new HashMap<>();
+    public static final MediaType OCTET_STREAM = new MediaType("application/octet-stream");
+    public static final MediaType CSV = new MediaType("text/csv");
+    public static final MediaType JSON = new MediaType("application/json");
+    public static final MediaType PROTOBUF = new MediaType("application/protobuf");
+    public static final MediaType PLAIN_TEXT = new MediaType("plain/text");
+    public static final MediaType ANY = new MediaType("*/*");
+
+    private final String typeString;
+
+    private MediaType(String typeString) {
+        this.typeString = Objects.requireNonNull(typeString);
+        knownTypes.put(typeString, this);
+    }
+
+    public boolean is(String typeString) {
+        return typeString != null && this.typeString.equals(typeString);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MediaType)) {
+            return false;
+        }
+        return typeString.equals(((MediaType) obj).typeString);
+    }
+
+    @Override
+    public int hashCode() {
+        return typeString.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return typeString;
+    }
+
+    /**
+     * Returns one of the static members (OCTET_STREAM, CSV, etc) if this is a known type or a new object if the type is
+     * unknown.
+     * 
+     * @param typeString
+     * @return the MediaType object corresponding to the type string
+     */
+    public static MediaType from(String typeString) {
+        MediaType mt = knownTypes.get(typeString);
+        if (mt != null) {
+            return mt;
+        }
+        return new MediaType(typeString);
+    }
+}
+```
+
+### `MethodNotAllowedException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/MethodNotAllowedException.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * When an unsupported HTTP method was used for a specific path
+ */
+public class MethodNotAllowedException extends HttpException {
+
+    private static final long serialVersionUID = 1L;
+
+    private List<HttpMethod> allowedMethods;
+
+    public MethodNotAllowedException(HttpMethod method, String uri, Collection<HttpMethod> allowedMethods) {
+        super(String.format("Unsupported HTTP method '%s' for resource '%s'", method, uri));
+        this.allowedMethods = new ArrayList<>(allowedMethods);
+        Collections.sort(this.allowedMethods);
+    }
+
+    public MethodNotAllowedException(HttpMethod method, String uri, HttpMethod... allowedMethods) {
+        this(method, uri, Arrays.asList(allowedMethods));
+    }
+
+    public MethodNotAllowedException(HandlerContext ctx, HttpMethod... method) {
+        this(ctx.getNettyFullHttpRequest().method(), ctx.getNettyFullHttpRequest().uri(), Arrays.asList(method));
+    }
+
+    public List<HttpMethod> getAllowedMethods() {
+        return allowedMethods;
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.METHOD_NOT_ALLOWED;
+    }
+}
+```
+
+### `NotFoundException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/NotFoundException.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * When a resource (only the part identified by the request uri) could not be found.
+ * <p>
+ * Do *not* use this for anything else. For example if a query parameter refers to something that does not exist, use a
+ * BadRequestException instead.
+ */
+public class NotFoundException extends HttpException {
+    private static final long serialVersionUID = 1L;
+
+    public NotFoundException() {
+        super("Resource not found");
+    }
+
+    public NotFoundException(String message) {
+        super(message);
+    }
+
+    public NotFoundException(Throwable t) {
+        super(t.getMessage(), t);
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.NOT_FOUND;
+    }
+}
+```
+
+### `ProtobufRegistry.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ProtobufRegistry.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.api.AnnotationsProto;
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.WebSocketTopic;
+
+import com.google.protobuf.DescriptorProtos.DescriptorProto;
+import com.google.protobuf.DescriptorProtos.FileDescriptorProto;
+import com.google.protobuf.DescriptorProtos.FileDescriptorSet;
+import com.google.protobuf.DescriptorProtos.MethodDescriptorProto;
+import com.google.protobuf.DescriptorProtos.MethodOptions;
+import com.google.protobuf.DescriptorProtos.ServiceDescriptorProto;
+import com.google.protobuf.DescriptorProtos.SourceCodeInfo.Location;
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.ExtensionRegistry;
+import com.google.protobuf.ExtensionRegistry.ExtensionInfo;
+
+public class ProtobufRegistry {
+
+    // Indexes by fully-qualified protobuf name
+    private Map<String, RpcDescriptor> rpcs = new HashMap<>();
+    private Map<String, DescriptorProto> messageTypes = new HashMap<>();
+    private Map<String, String> javaPackages = new HashMap<>();
+
+    private Map<ServiceDescriptorProto, String> serviceComments = new HashMap<>();
+    private Map<MethodDescriptorProto, String> methodComments = new HashMap<>();
+
+    private ExtensionRegistry extensionRegistry = ExtensionRegistry.newInstance();
+
+    private Map<Descriptor, List<ExtensionInfo>> extensionsByMessage = new HashMap<>();
+
+    public ProtobufRegistry() {
+        extensionRegistry.add(AnnotationsProto.route);
+        extensionRegistry.add(AnnotationsProto.websocket);
+
+        try (InputStream in = getClass().getResourceAsStream("/yamcs-api.protobin")) {
+            if (in == null) {
+                throw new UnsupportedOperationException("Missing binary protobuf descriptions");
+            }
+            importDefinitions(in);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public void importDefinitions(InputStream in) throws IOException {
+        if (in == null) {
+            throw new NullPointerException("input stream cannot be null");
+        }
+        FileDescriptorSet proto = FileDescriptorSet.parseFrom(in, extensionRegistry);
+
+        // Index all messages by fully-qualified protobuf name
+        for (FileDescriptorProto file : proto.getFileList()) {
+            scanComments(file);
+            String javaPackage = file.getOptions().getJavaPackage();
+            javaPackages.put(file.getName(), javaPackage);
+
+            for (DescriptorProto messageType : file.getMessageTypeList()) {
+                String qname = file.getPackage() + "." + messageType.getName();
+                messageTypes.put(qname, messageType);
+            }
+        }
+
+        // Index RPCs
+        for (FileDescriptorProto file : proto.getFileList()) {
+            for (ServiceDescriptorProto service : file.getServiceList()) {
+                for (MethodDescriptorProto method : service.getMethodList()) {
+                    MethodOptions options = method.getOptions();
+                    String serviceName = service.getName();
+                    String methodName = method.getName();
+                    DescriptorProto inputType = messageTypes.get(method.getInputType().substring(1));
+                    DescriptorProto outputType = messageTypes.get(method.getOutputType().substring(1));
+                    if (options.hasExtension(AnnotationsProto.route)) {
+                        HttpRoute route = options.getExtension(AnnotationsProto.route);
+                        RpcDescriptor descriptor = new RpcDescriptor(serviceName, methodName, inputType, outputType,
+                                route);
+
+                        String qname = String.join(".", file.getPackage(), serviceName, methodName);
+                        rpcs.put(qname, descriptor);
+                    } else if (options.hasExtension(AnnotationsProto.websocket)) {
+                        WebSocketTopic topic = options.getExtension(AnnotationsProto.websocket);
+                        RpcDescriptor descriptor = new RpcDescriptor(serviceName, methodName, inputType, outputType,
+                                topic);
+
+                        String qname = String.join(".", file.getPackage(), serviceName, methodName);
+                        rpcs.put(qname, descriptor);
+                    }
+                }
+            }
+        }
+    }
+
+    private void scanComments(FileDescriptorProto file) {
+        List<ServiceDescriptorProto> services = file.getServiceList();
+
+        for (Location location : file.getSourceCodeInfo().getLocationList()) {
+            if (location.hasLeadingComments()) {
+                if (location.getPath(0) == FileDescriptorProto.SERVICE_FIELD_NUMBER) {
+                    ServiceDescriptorProto service = services.get(location.getPath(1));
+                    if (location.getPathCount() == 2) {
+                        serviceComments.put(service, location.getLeadingComments());
+                    } else if (location.getPathCount() == 4) {
+                        if (location.getPath(2) == ServiceDescriptorProto.METHOD_FIELD_NUMBER) {
+                            MethodDescriptorProto method = service.getMethod(location.getPath(3));
+                            methodComments.put(method, location.getLeadingComments());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public ExtensionRegistry getExtensionRegistry() {
+        return extensionRegistry;
+    }
+
+    public RpcDescriptor getRpc(String id) {
+        return rpcs.get(id);
+    }
+
+    /**
+     * Returns extensions for a specific Message type in the order as they have been defined
+     */
+    public List<ExtensionInfo> getExtensions(Descriptor messageType) {
+        List<ExtensionInfo> extensions = extensionsByMessage.get(messageType);
+        return (extensions == null) ? Collections.emptyList() : extensions;
+    }
+}
+```
+
+### `RobotsTxtHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RobotsTxtHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.nio.charset.StandardCharsets;
+
+import io.netty.buffer.Unpooled;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderValues;
+
+/**
+ * Handles robots.txt requests, to advise against web crawling.
+ */
+public class RobotsTxtHandler extends HttpHandler {
+
+    public static final String[] HANDLED_PATHS = new String[] { "robots.txt" };
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        ctx.requireGET();
+
+        var body = Unpooled.copiedBuffer("User-agent: *\nDisallow: /\n", StandardCharsets.UTF_8);
+        var response = new DefaultFullHttpResponse(HTTP_1_1, OK, body);
+        response.headers().set(CONTENT_TYPE, HttpHeaderValues.TEXT_PLAIN);
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+        response.headers().set(CACHE_CONTROL, "private, max-age=0");
+        ctx.sendResponse(response);
+    }
+}
+```
+
+### `Route.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Route.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.api.Api;
+import org.yamcs.api.HttpRoute;
+
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.MetricRegistry;
+
+import io.netty.handler.codec.http.HttpMethod;
+
+public class Route implements Comparable<Route> {
+
+    private static final Pattern ROUTE_PATTERN = Pattern.compile("(\\/)?\\{(\\w+)(\\?|\\*|\\*\\*)?\\}");
+
+    private final Pattern pattern;
+
+    private final Api<Context> api;
+    private final String uriTemplate;
+    private final HttpMethod httpMethod;
+    private final boolean offloaded;
+    private final boolean deprecated;
+    private final String body;
+    private final String fieldMaskRoot;
+    private final String logFormat;
+    private final RpcDescriptor descriptor;
+
+    // May be unspecified
+    private int maxBodySize;
+
+    private Counter requestCounter;
+    private Counter errorCounter;
+
+    Route(Api<Context> api, HttpRoute httpOptions, RpcDescriptor descriptor, MetricRegistry metricRegistry) {
+        this.api = api;
+        this.descriptor = descriptor;
+
+        requestCounter = metricRegistry.counter(String.format(
+                "yamcs.api.requests.total.%s.%s", descriptor.getService(), descriptor.getMethod()));
+        errorCounter = metricRegistry.counter(String.format(
+                "yamcs.api.errors.total.%s.%s", descriptor.getService(), descriptor.getMethod()));
+
+        offloaded = httpOptions.getOffloaded();
+        deprecated = httpOptions.getDeprecated();
+        logFormat = httpOptions.hasLog() ? httpOptions.getLog() : null;
+
+        switch (httpOptions.getPatternCase()) {
+        case GET:
+            httpMethod = HttpMethod.GET;
+            uriTemplate = httpOptions.getGet();
+            break;
+        case POST:
+            httpMethod = HttpMethod.POST;
+            uriTemplate = httpOptions.getPost();
+            break;
+        case PATCH:
+            httpMethod = HttpMethod.PATCH;
+            uriTemplate = httpOptions.getPatch();
+            break;
+        case PUT:
+            httpMethod = HttpMethod.PUT;
+            uriTemplate = httpOptions.getPut();
+            break;
+        case DELETE:
+            httpMethod = HttpMethod.DELETE;
+            uriTemplate = httpOptions.getDelete();
+            break;
+        default:
+            throw new IllegalStateException("Unexpected pattern '" + httpOptions.getPatternCase() + "'");
+        }
+
+        pattern = toPattern(uriTemplate);
+
+        body = httpOptions.hasBody() ? httpOptions.getBody() : null;
+        fieldMaskRoot = httpOptions.hasFieldMaskRoot() ? httpOptions.getFieldMaskRoot() : null;
+        if (httpOptions.hasMaxBodySize()) {
+            maxBodySize = httpOptions.getMaxBodySize();
+        }
+    }
+
+    private Pattern toPattern(String route) {
+        Matcher matcher = ROUTE_PATTERN.matcher(route);
+        StringBuffer buf = new StringBuffer("^");
+        while (matcher.find()) {
+            boolean star = ("*".equals(matcher.group(3)));
+            boolean optional = ("?".equals(matcher.group(3)));
+            if ("**".equals(matcher.group(3))) {
+                star = true;
+                optional = true;
+            }
+            String slash = (matcher.group(1) != null) ? matcher.group(1) : "";
+            StringBuilder replacement = new StringBuilder();
+            if (optional) {
+                replacement.append("(?:");
+                replacement.append(slash);
+                replacement.append("(?<").append(matcher.group(2)).append(">");
+                replacement.append(star ? ".+?" : "[^/]+");
+                replacement.append(")?)?");
+            } else {
+                replacement.append(slash);
+                replacement.append("(?<").append(matcher.group(2)).append(">");
+                replacement.append(star ? ".+?" : "[^/]+");
+                replacement.append(")");
+            }
+
+            matcher.appendReplacement(buf, replacement.toString());
+        }
+        matcher.appendTail(buf);
+        return Pattern.compile(buf.append("/?$").toString());
+    }
+
+    public RpcDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    public Api<Context> getApi() {
+        return api;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public String getFieldMaskRoot() {
+        return fieldMaskRoot;
+    }
+
+    public int getMaxBodySize() {
+        return maxBodySize;
+    }
+
+    public String getLogFormat() {
+        return logFormat;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public boolean isOffloaded() {
+        return offloaded;
+    }
+
+    public String getUriTemplate() {
+        return uriTemplate;
+    }
+
+    public Matcher matchURI(String uri) {
+        return pattern.matcher(uri);
+    }
+
+    public HttpMethod getHttpMethod() {
+        return httpMethod;
+    }
+
+    public long getRequestCount() {
+        return requestCounter.getCount();
+    }
+
+    public void incrementRequestCount() {
+        requestCounter.inc();
+    }
+
+    public Counter getRequestCounter() {
+        return requestCounter;
+    }
+
+    public long getErrorCount() {
+        return errorCounter.getCount();
+    }
+
+    public void incrementErrorCount() {
+        errorCounter.inc();
+    }
+
+    public Counter getErrorCounter() {
+        return errorCounter;
+    }
+
+    @Override
+    public int compareTo(Route o) {
+        int pathLengthCompare = Integer.compare(uriTemplate.length(), o.uriTemplate.length());
+        if (pathLengthCompare != 0) {
+            return -pathLengthCompare;
+        } else {
+            return uriTemplate.compareTo(o.uriTemplate);
+        }
+    }
+}
+```
+
+### `RouteContext.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RouteContext.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+
+import org.yamcs.security.User;
+
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.util.FieldMaskUtil;
+import com.google.protobuf.util.JsonFormat;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.QueryStringDecoder;
+
+public class RouteContext extends Context {
+
+    /**
+     * The Netty HTTP request for an RPC call. In general RPC implementations should avoid using this object. It is
+     * exposed only because we need it for some HTTP-specific functionalities that are not covered by our RPC
+     * implementation (e.g. multipart uploading)
+     */
+    public final HttpRequest nettyRequest;
+    public FullHttpRequest fullNettyRequest;
+
+    private Route route;
+    private Matcher regexMatch;
+
+    private int maxBodySize;
+    private Set<String> fieldMaskRoots = new HashSet<>(1);
+
+    RouteContext(HttpServer httpServer, ChannelHandlerContext nettyContext, User user, HttpRequest nettyRequest,
+            Route route, Matcher regexMatch) {
+        super(httpServer, nettyContext, user, route.getApi());
+        this.nettyRequest = nettyRequest;
+        this.route = route;
+        this.regexMatch = regexMatch;
+        maxBodySize = Math.max(httpServer.getConfig().getInt("maxContentLength"), route.getMaxBodySize());
+
+        route.incrementRequestCount();
+
+        var fieldMaskRoot = route.getFieldMaskRoot();
+        if (fieldMaskRoot != null) {
+            fieldMaskRoots.add(fieldMaskRoot);
+        } else {
+            // If the response message looks like a list response, use the convention
+            // that the fieldmask applies to each repeated resource message.
+            Descriptor responseDescriptor = getResponsePrototype().getDescriptorForType();
+            if (responseDescriptor.getName().startsWith("List")) {
+                List<FieldDescriptor> repeatedFields = responseDescriptor.getFields().stream()
+                        .filter(f -> f.isRepeated())
+                        .collect(Collectors.toList());
+                if (repeatedFields.size() == 1) {
+                    fieldMaskRoots.add(repeatedFields.get(0).getName());
+                } else if (repeatedFields.size() == 2
+                        && (repeatedFields.get(0).getOptions().getDeprecated()
+                                || repeatedFields.get(1).getOptions().getDeprecated())) {
+                    // Exceptionally, detect an ongoing field-rename migration
+                    fieldMaskRoots.add(repeatedFields.get(0).getName());
+                    fieldMaskRoots.add(repeatedFields.get(1).getName());
+                }
+            }
+        }
+
+        // Consider FieldMask, for response filtering
+        QueryStringDecoder qsDecoder = new QueryStringDecoder(nettyRequest.uri());
+        List<String> fieldsParameter = qsDecoder.parameters().get("fields");
+        if (fieldsParameter != null && !fieldsParameter.isEmpty()) {
+            fieldMask = FieldMaskUtil.fromString(fieldsParameter.get(0));
+        } else {
+            String fieldsHeader = nettyRequest.headers().get("x-yamcs-fields");
+            if (fieldsHeader != null) {
+                fieldMask = FieldMaskUtil.fromString(fieldsHeader);
+            }
+        }
+
+        requestFuture.whenComplete((channelFuture, e) -> {
+            if (e != null) {
+                log.debug("API call finished with error: {}, transferred bytes: {}", e.getMessage(), txSize);
+            } else {
+                log.debug("API call finished successfully, transferred bytes: {}", txSize);
+            }
+
+            if (statusCode == 0) {
+                log.warn("{}: Status code not reported", this);
+            } else if (statusCode < 200 || statusCode >= 300) {
+                route.incrementErrorCount();
+            }
+        });
+    }
+
+    void setFullNettyRequest(FullHttpRequest fullNettyRequest) {
+        this.fullNettyRequest = fullNettyRequest;
+    }
+
+    @Override
+    public String getClientAddress() {
+        String forwardedFor = nettyRequest.headers().get("x-forwarded-for");
+        if (forwardedFor != null) {
+            return forwardedFor;
+        } else {
+            return super.getClientAddress();
+        }
+    }
+
+    @Override
+    public MethodDescriptor getMethod() {
+        String methodName = route.getDescriptor().getMethod();
+        return api.getDescriptorForType().findMethodByName(methodName);
+    }
+
+    public String getBodySpecifier() {
+        return route.getBody();
+    }
+
+    public Set<String> getFieldMaskRoots() {
+        return fieldMaskRoots;
+    }
+
+    public int getMaxBodySize() {
+        return maxBodySize;
+    }
+
+    public String getURI() {
+        return nettyRequest.uri();
+    }
+
+    public boolean hasRouteParam(String name) {
+        try {
+            return regexMatch.group(name) != null;
+        } catch (IllegalArgumentException e) {
+            // Could likely be improved, we need this catch in case of multiple bindings
+            // for the same method. Because then above call could throw an error if the
+            // requested group is not present in one of the patterns
+            return false;
+        }
+    }
+
+    public String getRouteParam(String name) {
+        String routeParam = regexMatch.group(name);
+        if (routeParam == null) {
+            return null;
+        }
+        try {
+            return URLDecoder.decode(routeParam, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public boolean hasBody() {
+        return HttpUtil.getContentLength(nettyRequest) > 0;
+    }
+
+    public boolean isOffloaded() {
+        return route.isOffloaded();
+    }
+
+    public String getLogFormat() {
+        return route.getLogFormat();
+    }
+
+    /**
+     * Deserializes the incoming message extracted from the body. This does not care about what the HTTP method is. Any
+     * required checks should be done elsewhere.
+     * <p>
+     * This method is only able to read JSON or Protobuf, the two auto-supported serialization mechanisms. If a certain
+     * operation needs to read anything else, it should check for that itself, and then use
+     * {@link #getBodyAsInputStream()}.
+     */
+    public <T extends Message.Builder> T getBodyAsMessage(T builder) throws BadRequestException {
+        MediaType sourceContentType = HttpRequestHandler.getContentType(nettyRequest);
+        // Allow for empty body, otherwise user has to specify '{}'
+        if (HttpUtil.getContentLength(nettyRequest) > 0) {
+            if (MediaType.PROTOBUF.equals(sourceContentType)) {
+                try (InputStream cin = getBodyAsInputStream()) {
+                    builder.mergeFrom(cin);
+                } catch (IOException e) {
+                    throw new BadRequestException(e);
+                }
+            } else {
+                try {
+                    String json = getBody().toString(StandardCharsets.UTF_8);
+                    JsonFormat.parser().merge(json, builder);
+                } catch (InvalidProtocolBufferException e) {
+                    throw new BadRequestException(e);
+                }
+            }
+        }
+        return builder;
+    }
+
+    public InputStream getBodyAsInputStream() {
+        return new ByteBufInputStream(getBody());
+    }
+
+    /**
+     * returns the body of the http request
+     * 
+     */
+    public ByteBuf getBody() {
+        if (fullNettyRequest != null) {
+            return fullNettyRequest.content();
+        } else {
+            throw new IllegalArgumentException("Can only provide body of a FullHttpRequest");
+        }
+    }
+
+    public MediaType deriveTargetContentType() {
+        return deriveTargetContentType(nettyRequest);
+    }
+
+    /**
+     * Derives an applicable content type for the output. This tries to match JSON or BINARY media types with the ACCEPT
+     * header, else it will revert to the (derived) source content type.
+     *
+     * @return the content type that will be used for the response message
+     */
+    public static MediaType deriveTargetContentType(HttpRequest httpRequest) {
+        MediaType mt = MediaType.JSON;
+        if (httpRequest.headers().contains(HttpHeaderNames.ACCEPT)) {
+            String acceptedContentType = httpRequest.headers().get(HttpHeaderNames.ACCEPT);
+            mt = MediaType.from(acceptedContentType);
+        } else if (httpRequest.headers().contains(HttpHeaderNames.CONTENT_TYPE)) {
+            String declaredContentType = httpRequest.headers().get(HttpHeaderNames.CONTENT_TYPE);
+            mt = MediaType.from(declaredContentType);
+        }
+
+        // we only support one of these two for the output, so just force JSON by default
+        if (mt != MediaType.JSON && mt != MediaType.PROTOBUF) {
+            mt = MediaType.JSON;
+        }
+        return mt;
+    }
+}
+```
+
+### `RouteHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RouteHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.ExceptionMessage;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.logging.Log;
+
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Message;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler.Sharable;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.FullHttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+@Sharable
+public class RouteHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+
+    private static final Log log = new Log(RouteHandler.class);
+    private static final Pattern LOG_PARAM_PATTERN = Pattern.compile("\\{(\\w+)\\}");
+
+    private int maxPageSize;
+    private boolean logSlowRequests = true;
+    private ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+
+    // Execute routes marked as offloaded
+    private final ExecutorService workerPool;
+
+    public RouteHandler(int maxPageSize) {
+        this.maxPageSize = maxPageSize;
+
+        ThreadFactory tf = new ThreadFactoryBuilder().setNameFormat("YamcsHttpExecutor-%d").setDaemon(false).build();
+        workerPool = new ThreadPoolExecutor(0, 2 * Runtime.getRuntime().availableProcessors(), 60, TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(), tf);
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
+        try {
+            String contextPath = ctx.channel().attr(HttpRequestHandler.CTX_CONTEXT_PATH).get();
+            handle(new HandlerContext(contextPath, ctx, msg, null));
+        } catch (Throwable t) {
+            if (!(t instanceof HttpException)) {
+                t = new InternalServerErrorException(t);
+            }
+
+            HttpException e = (HttpException) t;
+            if (e.isServerError()) {
+                log.error("Responding '{}': {}", e.getStatus(), e.getMessage(), e);
+            } else {
+                log.warn("Responding '{}': {}", e.getStatus(), e.getMessage());
+            }
+            HttpRequestHandler.sendPlainTextError(ctx, msg, e.getStatus());
+        }
+    }
+
+    private void handle(HandlerContext handlerContext) {
+        ChannelHandlerContext nettyContext = handlerContext.getNettyChannelHandlerContext();
+        RouteContext ctx = nettyContext.channel().attr(HttpRequestHandler.CTX_CONTEXT).get();
+        ctx.setFullNettyRequest(handlerContext.getNettyFullHttpRequest());
+
+        if (ctx.isOffloaded()) {
+            ctx.getBody().retain();
+            workerPool.execute(() -> {
+                dispatch(ctx);
+                ctx.getBody().release();
+            });
+        } else {
+            dispatch(ctx);
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext nettyContext, Throwable cause) throws Exception {
+        log.error("Closing channel due to exception", cause);
+        nettyContext.close();
+    }
+
+    private void dispatch(RouteContext ctx) {
+        ScheduledFuture<?> blockWarning = null;
+        if (!ctx.isOffloaded()) {
+            blockWarning = timer.schedule(() -> {
+                log.error("{}: Blocking the netty thread for 2 seconds. uri: {}", ctx, ctx.getURI());
+            }, 2, TimeUnit.SECONDS);
+        }
+
+        // the handlers will send themselves the response unless they throw an exception, case which is handled in the
+        // catch below.
+        Message requestMessage = null;
+        try {
+            try {
+                requestMessage = HttpTranscoder.transcode(ctx);
+            } catch (HttpTranscodeException e) {
+                throw new BadRequestException(e.getMessage());
+            }
+            assertSafe(requestMessage);
+
+            MethodDescriptor method = ctx.getMethod();
+            if (ctx.isServerStreaming()) {
+                ctx.getApi().callMethod(method, ctx, requestMessage, new ServerStreamingObserver(ctx));
+            } else {
+                ctx.getApi().callMethod(method, ctx, requestMessage, new CallObserver(ctx));
+            }
+        } catch (Throwable t) {
+            handleException(ctx, t);
+            ctx.requestFuture.completeExceptionally(t);
+        } finally {
+            if (blockWarning != null) {
+                blockWarning.cancel(true);
+            }
+        }
+
+        // Log an audit record, if this call is auditable
+        if (!ctx.isServerStreaming() && ctx.getLogFormat() != null) {
+            Message finalRequestMessage = requestMessage;
+            ctx.requestFuture.whenComplete((channelFuture, e) -> {
+                if (e == null) {
+                    createAuditRecord(ctx, finalRequestMessage);
+                }
+            });
+        }
+
+        if (logSlowRequests) {
+            int numSec = ctx.isOffloaded() ? 120 : 20;
+            timer.schedule(() -> {
+                if (!ctx.isDone()) {
+                    log.warn("{}: Executing for more than {} seconds. uri: {}", ctx, numSec, ctx.getURI());
+                }
+            }, numSec, TimeUnit.SECONDS);
+        }
+    }
+
+    // Protect paged calls against excessive memory allocation
+    private void assertSafe(Message message) {
+        FieldDescriptor limitField = message.getDescriptorForType().findFieldByName("limit");
+        if (limitField != null && message.hasField(limitField)) {
+            Number limit = (Number) message.getField(limitField);
+            if (limit.intValue() > maxPageSize) {
+                throw new BadRequestException("Limit parameter is too large");
+            }
+        }
+    }
+
+    private void handleException(RouteContext ctx, Throwable t) {
+        if (!(t instanceof HttpException)) {
+            t = new InternalServerErrorException(t);
+        }
+
+        HttpException e = (HttpException) t;
+        if (e.isServerError()) {
+            log.error("{}: Responding '{}': {}", ctx, e.getStatus(), e.getMessage(), e);
+        } else {
+            log.warn("{}: Responding '{}': {}", ctx, e.getStatus(), e.getMessage());
+        }
+
+        if (t instanceof InternalServerErrorException) {
+            log.error("Internal server error while handling call", t);
+        } else if (log.isDebugEnabled()) {
+            log.debug("User error while handling call", t);
+        }
+        ExceptionMessage msg = e.toMessage();
+        ctx.reportStatusCode(e.getStatus().code());
+        sendMessageResponse(ctx, e.getStatus(), msg);
+    }
+
+    private <T extends Message> ChannelFuture sendMessageResponse(RouteContext ctx, HttpResponseStatus status,
+            T responseMsg) {
+        ByteBuf body = ctx.nettyContext.alloc().buffer();
+        MediaType contentType = HttpRequestHandler.getAcceptType(ctx.nettyRequest);
+
+        try {
+            if (contentType == MediaType.PROTOBUF) {
+                try (ByteBufOutputStream channelOut = new ByteBufOutputStream(body)) {
+                    responseMsg.writeTo(channelOut);
+                }
+            } else if (contentType == MediaType.PLAIN_TEXT) {
+                body.writeCharSequence(responseMsg.toString(), StandardCharsets.UTF_8);
+            } else { // JSON by default
+                contentType = MediaType.JSON;
+                String str = ctx.printJson(responseMsg);
+                body.writeCharSequence(str, StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            return HttpRequestHandler.sendPlainTextError(ctx.nettyContext, ctx.nettyRequest, INTERNAL_SERVER_ERROR,
+                    e.toString());
+        }
+        HttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, status, body);
+        response.headers().set(CONTENT_TYPE, contentType.toString());
+        response.headers().set(CONTENT_LENGTH, body.readableBytes());
+
+        return HttpRequestHandler.sendResponse(ctx.nettyContext, ctx.nettyRequest, response);
+    }
+
+    private void createAuditRecord(RouteContext ctx, Message message) {
+        HttpServer httpServer = YamcsServer.getServer().getGlobalService(HttpServer.class);
+
+        String format = ctx.getLogFormat();
+        Matcher matcher = LOG_PARAM_PATTERN.matcher(format);
+        StringBuffer buf = new StringBuffer();
+        while (matcher.find()) {
+            String param = matcher.group(1);
+            FieldDescriptor field = message.getDescriptorForType().findFieldByName(param);
+            if (field != null && message.hasField(field)) {
+                String replacement = message.getField(field).toString();
+                matcher.appendReplacement(buf, replacement);
+            } else {
+                log.warn("Cannot resolve parameter {} in audit message format '{}'", param, format);
+            }
+        }
+        matcher.appendTail(buf);
+
+        AuditLog auditLog = httpServer.getAuditLog();
+        auditLog.addRecord(ctx, message, buf.toString());
+    }
+}
+```
+
+### `RpcDescriptor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/RpcDescriptor.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.WebSocketTopic;
+
+import com.google.protobuf.DescriptorProtos.DescriptorProto;
+
+public class RpcDescriptor {
+
+    private final String service;
+    private final String method;
+    private final DescriptorProto inputType;
+    private final DescriptorProto outputType;
+    private final String description;
+    private final HttpRoute httpRoute;
+    private final List<HttpRoute> additionalHttpRoutes = new ArrayList<>(1);
+
+    private WebSocketTopic websocketTopic;
+    private final List<WebSocketTopic> additionalWebSocketTopics = new ArrayList<>(1);
+
+    public RpcDescriptor(String service, String method, DescriptorProto inputType, DescriptorProto outputType,
+            HttpRoute httpOptions) {
+        this.service = service;
+        this.method = method;
+        this.inputType = inputType;
+        this.outputType = outputType;
+        this.description = service + "." + method;
+
+        httpRoute = httpOptions;
+        additionalHttpRoutes.addAll(httpOptions.getAdditionalBindingsList());
+    }
+
+    public RpcDescriptor(String service, String method, DescriptorProto inputType, DescriptorProto outputType,
+            WebSocketTopic websocketTopic) {
+        this(service, method, inputType, outputType, HttpServer.WEBSOCKET_ROUTE);
+        this.websocketTopic = websocketTopic;
+        additionalWebSocketTopics.addAll(websocketTopic.getAdditionalBindingsList());
+    }
+
+    public String getService() {
+        return service;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public DescriptorProto getInputType() {
+        return inputType;
+    }
+
+    public DescriptorProto getOutputType() {
+        return outputType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public HttpRoute getHttpRoute() {
+        return httpRoute;
+    }
+
+    public List<HttpRoute> getAdditionalHttpRoutes() {
+        return additionalHttpRoutes;
+    }
+
+    public WebSocketTopic getWebSocketTopic() {
+        return websocketTopic;
+    }
+
+    public List<WebSocketTopic> getAdditionalWebSocketTopics() {
+        return additionalWebSocketTopics;
+    }
+}
+```
+
+### `ServerStreamingObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ServerStreamingObserver.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_DISPOSITION;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.TRANSFER_ENCODING;
+import static io.netty.handler.codec.http.HttpHeaderValues.CHUNKED;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.channels.ClosedChannelException;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.NotThreadSafe;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.logging.Log;
+
+import com.google.protobuf.Message;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.LastHttpContent;
+
+/**
+ * A message observer that implements a streaming response over HTTP using chunked transfer encoding.
+ */
+@NotThreadSafe
+public class ServerStreamingObserver implements Observer<Message> {
+
+    private static final int CHUNK_SIZE = 8096;
+    private static final Log log = new Log(ServerStreamingObserver.class);
+
+    private RouteContext ctx;
+
+    private MediaType mediaType;
+
+    private ByteBuf buf;
+    protected ByteBufOutputStream bufOut;
+
+    private int messageCount = 0;
+    private boolean cancelled;
+    private boolean completed;
+    private Runnable cancelHandler;
+
+    public ServerStreamingObserver(RouteContext ctx) {
+        this.ctx = ctx;
+    }
+
+    @Override
+    public void next(Message message) {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+
+        if (messageCount == 0) {
+            initializeHttpResponse(message);
+        }
+
+        try {
+            if (message instanceof HttpBody) {
+                HttpBody body = (HttpBody) message;
+                if (body.hasData()) {
+                    body.getData().writeTo(bufOut);
+                }
+            } else {
+                if (MediaType.PROTOBUF.equals(mediaType)) {
+                    message.writeDelimitedTo(bufOut);
+                } else {
+                    String json = ctx.printJson(message);
+                    bufOut.write(json.getBytes(StandardCharsets.UTF_8));
+                }
+            }
+
+            if (buf.readableBytes() >= CHUNK_SIZE) {
+                bufOut.close();
+                ctx.addTransferredSize(buf.readableBytes());
+                writeChunk(buf);
+                resetBuffer();
+            }
+        } catch (ClosedChannelException e) {
+            cancelCall("closed channel");
+            // No rethrow. Client disconnect is a normal condition
+        } catch (IOException e) {
+            cancelCall(e.toString());
+            throw new UncheckedIOException(e);
+        }
+
+        messageCount++;
+    }
+
+    private void cancelCall(String reason) {
+        if (!cancelled) {
+            log.info("Cancelling call ({})", reason);
+            cancelled = true;
+            if (cancelHandler != null) {
+                cancelHandler.run();
+            }
+        }
+    }
+
+    private void initializeHttpResponse(Message firstMessage) {
+        resetBuffer();
+
+        String filename = null;
+
+        if (firstMessage instanceof HttpBody) {
+            HttpBody body = (HttpBody) firstMessage;
+            mediaType = MediaType.from(body.getContentType());
+            if (body.hasFilename()) {
+                filename = body.getFilename();
+            }
+        } else {
+            mediaType = RouteContext.deriveTargetContentType(ctx.nettyRequest);
+        }
+
+        startChunkedTransfer(mediaType, filename);
+        ctx.reportStatusCode(200);
+    }
+
+    private void resetBuffer() {
+        buf = ctx.nettyContext.alloc().buffer();
+        bufOut = new ByteBufOutputStream(buf);
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+        completed = true;
+
+        Channel ch = ctx.nettyContext.channel();
+        if (ch.isOpen()) {
+            log.warn("Closing channel because transfer failed");
+            ch.close();
+        }
+    }
+
+    @Override
+    public void complete() {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+        completed = true;
+
+        if (cancelled) {
+            ctx.requestFuture.complete(null);
+            return;
+        }
+
+        if (messageCount == 0) {
+            initializeHttpResponse(null);
+        } else {
+            try {
+                bufOut.close();
+                if (buf.readableBytes() > 0) {
+                    ctx.addTransferredSize(buf.readableBytes());
+                    writeChunk(buf);
+                }
+            } catch (IOException e) {
+                log.error("Could not write final chunk of data", e);
+            }
+        }
+
+        ctx.nettyContext.channel().writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT)
+                .addListener(l -> {
+                    if (l.isSuccess()) {
+                        ctx.requestFuture.complete(null);
+                    } else {
+                        ctx.requestFuture.completeExceptionally(l.cause());
+                    }
+                });
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelHandler(Runnable cancelHandler) {
+        this.cancelHandler = cancelHandler;
+    }
+
+    private void startChunkedTransfer(MediaType contentType, String filename) {
+        log.info("{}: {} {} 200 starting chunked transfer", ctx, ctx.nettyRequest.method(), ctx.nettyRequest.uri());
+        HttpResponse response = new DefaultHttpResponse(HTTP_1_1, HttpResponseStatus.OK);
+        response.headers().set(TRANSFER_ENCODING, CHUNKED);
+        response.headers().set(CONTENT_TYPE, contentType);
+
+        // Set Content-Disposition header so that supporting clients will treat
+        // response as a downloadable file
+        if (filename != null) {
+            response.headers().set(CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+        }
+        ctx.nettyContext.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
+    }
+
+    private void writeChunk(ByteBuf buf) throws IOException {
+        Channel ch = ctx.nettyContext.channel();
+        if (!ch.isOpen()) {
+            throw new ClosedChannelException();
+        }
+        ChannelFuture writeFuture = ctx.nettyContext.channel().writeAndFlush(new DefaultHttpContent(buf));
+        try {
+            if (!ch.isWritable()) {
+                boolean writeCompleted = writeFuture.await(10, TimeUnit.SECONDS);
+                if (!writeCompleted) {
+                    throw new IOException("Channel did not become writable in 10 seconds");
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+```
+
+### `ServiceUnavailableException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/ServiceUnavailableException.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * Something really wrong and unexpected occurred on the server. A bug.
+ */
+public class ServiceUnavailableException extends HttpException {
+    private static final long serialVersionUID = 1L;
+
+    public ServiceUnavailableException(Throwable t) {
+        super(t);
+    }
+
+    public ServiceUnavailableException(String message) {
+        super(message);
+    }
+
+    public ServiceUnavailableException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.SERVICE_UNAVAILABLE;
+    }
+}
+```
+
+### `StaticFileHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/StaticFileHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
+import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
+import static io.netty.handler.codec.http.HttpHeaderNames.DATE;
+import static io.netty.handler.codec.http.HttpHeaderNames.EXPIRES;
+import static io.netty.handler.codec.http.HttpHeaderNames.IF_MODIFIED_SINCE;
+import static io.netty.handler.codec.http.HttpHeaderNames.LAST_MODIFIED;
+import static io.netty.handler.codec.http.HttpHeaderValues.CLOSE;
+import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
+import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
+import static io.netty.handler.codec.http.HttpResponseStatus.NOT_FOUND;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
+
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelProgressiveFuture;
+import io.netty.channel.ChannelProgressiveFutureListener;
+import io.netty.channel.DefaultFileRegion;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.DefaultHttpResponse;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpChunkedInput;
+import io.netty.handler.codec.http.HttpContentCompressor;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.stream.ChunkedFile;
+import io.netty.handler.stream.ChunkedWriteHandler;
+
+public class StaticFileHandler extends HttpHandler {
+
+    public static final int HTTP_CACHE_SECONDS = 60;
+    public static final String HTTP_DATE_FORMAT = "EEE, dd MMM yyyy HH:mm:ss zzz";
+    public static final String HTTP_DATE_GMT_TIMEZONE = "GMT";
+
+    protected String route;
+    protected List<Path> staticRoots;
+    private boolean zeroCopyEnabled = true;
+
+    public StaticFileHandler(String route, Path staticRoot) {
+        this(route, Arrays.asList(staticRoot));
+    }
+
+    public StaticFileHandler(String route, List<Path> staticRoots) {
+        this.route = Objects.requireNonNull(route);
+        this.staticRoots = staticRoots;
+    }
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    public void setZeroCopyEnabled(boolean zeroCopyEnabled) {
+        this.zeroCopyEnabled = zeroCopyEnabled;
+    }
+
+    public void setStaticRoots(List<Path> staticRoots) {
+        this.staticRoots = staticRoots;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        // Avoid warnings for *.map requests with browser devtools
+        if (ctx.getNettyHttpRequest().method() == HttpMethod.OPTIONS) {
+            ctx.sendAllow(HttpMethod.GET);
+            return;
+        }
+
+        ctx.requireGET();
+        var filePath = getFilePath(ctx);
+        handleStaticFileRequest(ctx.getNettyChannelHandlerContext(),
+                ctx.getNettyHttpRequest(), filePath);
+    }
+
+    protected String getFilePath(HandlerContext ctx) {
+        var uri = ctx.getPathWithoutContext();
+
+        // Chop off a prefix such as /static/
+        return uri.substring(route.length() + 1);
+    }
+
+    protected File locateFile(String pathString) {
+        for (var staticRoot : staticRoots) { // Stop on first match
+            var path = staticRoot.resolve(pathString);
+
+            if (path.normalize().toAbsolutePath().startsWith(staticRoot.normalize().toAbsolutePath())) {
+                var file = path.toFile();
+                if (!file.isHidden() && file.exists()) {
+                    return file;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void handleStaticFileRequest(ChannelHandlerContext ctx, HttpRequest req, String rawPath) {
+        log.debug("Handling static file request for {}", rawPath);
+        String path = sanitizePath(rawPath);
+        if (path == null) {
+            HttpRequestHandler.sendPlainTextError(ctx, req, FORBIDDEN);
+            return;
+        }
+
+        File file = locateFile(path);
+
+        if (file == null) {
+            log.warn("File {} does not exist or is hidden. Searched under {}", path, staticRoots);
+            HttpRequestHandler.sendPlainTextError(ctx, req, NOT_FOUND);
+            return;
+        }
+        if (!file.isFile()) {
+            HttpRequestHandler.sendPlainTextError(ctx, req, FORBIDDEN);
+            return;
+        }
+
+        // Cache Validation
+        String ifModifiedSince = req.headers().get(IF_MODIFIED_SINCE);
+        if (ifModifiedSince != null && !ifModifiedSince.equals("")) {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT);
+            Date ifModifiedSinceDate;
+            try {
+                ifModifiedSinceDate = dateFormatter.parse(ifModifiedSince);
+                // Only compare up to the second because the datetime format we send to the client does not have
+                // milliseconds
+                long ifModifiedSinceDateSeconds = ifModifiedSinceDate.getTime() / 1000;
+                long fileLastModifiedSeconds = file.lastModified() / 1000;
+                if (ifModifiedSinceDateSeconds == fileLastModifiedSeconds) {
+                    sendNotModified(ctx, req);
+                    return;
+                }
+            } catch (ParseException e) {
+                log.debug("Cannot parse {} header'{}'", IF_MODIFIED_SINCE, ifModifiedSince);
+            }
+        }
+
+        boolean zeroCopy = zeroCopyEnabled && ctx.pipeline().get(SslHandler.class) == null;
+
+        long fileLength = file.length();
+
+        HttpResponse response = new DefaultHttpResponse(HTTP_1_1, OK);
+        setContentTypeHeader(response, file);
+        setDateAndCacheHeaders(response, file);
+
+        if (HttpUtil.isKeepAlive(req)) {
+            response.headers().set(CONNECTION, KEEP_ALIVE);
+        } else {
+            response.headers().set(CONNECTION, CLOSE);
+        }
+
+        if (zeroCopy) {
+            HttpUtil.setContentLength(response, fileLength);
+        } else {
+            // chunked HTTP is required for compression to work because we don't know the size of the compressed file.
+            HttpUtil.setTransferEncodingChunked(response, true);
+            ctx.pipeline().addLast(new HttpContentCompressor());
+            // Note that the ChunkedWriteHandler here will just read the file chunk by chunk.
+            // The real HTTP chunk encoding is performed by the HttpServerCodec/HttpContentEncoder which sits first in
+            // the pipeline
+            ctx.pipeline().addLast(new ChunkedWriteHandler());
+            // propagate the request to the new handlers in the pipeline that need to configure themselves
+            ctx.fireChannelRead(req);
+        }
+
+        // Write the initial line and the header.
+        ctx.channel().writeAndFlush(response);
+
+        // Write the content.
+        ChannelFuture sendFileFuture;
+        ChannelFuture lastContentFuture;
+        if (zeroCopy) {
+            sendFileFuture = ctx.writeAndFlush(new DefaultFileRegion(file, 0, fileLength), ctx.newProgressivePromise());
+            // Write the end marker.
+            lastContentFuture = ctx.writeAndFlush(LastHttpContent.EMPTY_LAST_CONTENT);
+        } else {
+            try {
+                var chunkedFile = new ChunkedFile(file, 8192);
+                sendFileFuture = ctx.channel().writeAndFlush(new HttpChunkedInput(chunkedFile),
+                        ctx.newProgressivePromise());
+                lastContentFuture = sendFileFuture;
+            } catch (IOException e) {
+                throw new InternalServerErrorException(e);
+            }
+        }
+
+        final File finalFile = file;
+        sendFileFuture.addListener(new ChannelProgressiveFutureListener() {
+            @Override
+            public void operationProgressed(ChannelProgressiveFuture future, long progress, long total) {
+                if (log.isTraceEnabled()) {
+                    if (total < 0) { // total unknown
+                        log.trace(future.channel() + " Transfer progress: " + progress);
+                    } else {
+                        log.trace(future.channel() + " Transfer progress: " + progress + " / " + total);
+                    }
+                }
+            }
+
+            @Override
+            public void operationComplete(ChannelProgressiveFuture future) {
+                if (log.isDebugEnabled()) {
+                    log.debug(future.channel() + " Transfer complete: " + finalFile);
+                }
+            }
+        });
+
+        log.debug("{} {} 200", req.method(), req.uri());
+        if (!HttpUtil.isKeepAlive(req)) {
+            lastContentFuture.addListener(ChannelFutureListener.CLOSE);
+        }
+    }
+
+    /**
+     * Sets the content type header for the HTTP Response
+     *
+     * @param file
+     *            file to extract content type
+     */
+    protected void setContentTypeHeader(HttpResponse response, File file) {
+        response.headers().set(CONTENT_TYPE, MIME.getMimetype(file));
+    }
+
+    /**
+     * Sets the Date and Cache headers for the HTTP Response
+     *
+     * @param fileToCache
+     *            file to extract content type
+     */
+    private void setDateAndCacheHeaders(HttpResponse response, File fileToCache) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT, Locale.US);
+        dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
+
+        // Date header
+        Calendar time = new GregorianCalendar();
+        response.headers().set(DATE, dateFormatter.format(time.getTime()));
+
+        // Add cache headers
+        time.add(Calendar.SECOND, HTTP_CACHE_SECONDS);
+        response.headers().set(EXPIRES, dateFormatter.format(time.getTime()));
+        response.headers().set(CACHE_CONTROL, "private, max-age=" + HTTP_CACHE_SECONDS);
+        response.headers().set(LAST_MODIFIED,
+                dateFormatter.format(new Date(fileToCache.lastModified())));
+    }
+
+    /**
+     * When file timestamp is the same as what the browser is sending up, send a "304 Not Modified"
+     */
+    private void sendNotModified(ChannelHandlerContext ctx, HttpRequest req) {
+        log.debug("{} {} 304", req.method(), req.uri());
+        FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.NOT_MODIFIED);
+        response.headers().set(CONTENT_LENGTH, 0);
+        setDateHeader(response);
+
+        if (HttpUtil.isKeepAlive(req)) {
+            response.headers().set(CONNECTION, KEEP_ALIVE);
+            ctx.channel().writeAndFlush(response);
+        } else {
+            response.headers().set(CONNECTION, CLOSE);
+            ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+        }
+    }
+
+    private static String sanitizePath(String path) {
+        path = path.replace('/', File.separatorChar);
+        if (path.contains(File.separator + ".") ||
+                path.contains("." + File.separator) ||
+                path.startsWith(".") || path.endsWith(".")) {
+            return null;
+        }
+        return path;
+    }
+
+    /**
+     * Sets the Date header for the HTTP response
+     */
+    protected static void setDateHeader(HttpResponse response) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(HTTP_DATE_FORMAT);
+        dateFormatter.setTimeZone(TimeZone.getTimeZone(HTTP_DATE_GMT_TIMEZONE));
+
+        Calendar time = new GregorianCalendar();
+        response.headers().set(DATE, dateFormatter.format(time.getTime()));
+    }
+}
+```
+
+### `StreamingClientHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/StreamingClientHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.api.Observer;
+
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Message;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.DecoderException;
+
+public class StreamingClientHandler extends SimpleChannelInboundHandler<Message> {
+
+    private RouteContext ctx;
+    private Message requestPrototype;
+    private Observer<Message> clientObserver;
+
+    private boolean errorState = false;
+
+    public StreamingClientHandler(RouteContext ctx) {
+        this.ctx = ctx;
+
+        MethodDescriptor method = ctx.getMethod();
+        if (ctx.isServerStreaming()) {
+            Observer<Message> responseObserver = new ServerStreamingObserver(ctx);
+            clientObserver = ctx.getApi().callMethod(method, ctx, responseObserver);
+        } else {
+            Observer<Message> responseObserver = new CallObserver(ctx);
+            clientObserver = ctx.getApi().callMethod(method, ctx, responseObserver);
+        }
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext nettyContext, Message msg) throws Exception {
+        if (errorState) {
+            return;
+        }
+
+        if (requestPrototype == null) {
+            requestPrototype = HttpTranscoder.transcode(ctx);
+        }
+
+        Message.Builder b = requestPrototype.toBuilder();
+
+        String body = ctx.getBodySpecifier();
+        if (body == null || "*".equals(body)) {
+            b.mergeFrom(msg);
+        } else {
+            FieldDescriptor field = ctx.getRequestPrototype().getDescriptorForType().findFieldByName(body);
+            b.setField(field, msg);
+        }
+
+        clientObserver.next(b.build());
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        if (errorState) {
+            return;
+        }
+
+        errorState = true;
+        if (cause instanceof DecoderException) {
+            cause = cause.getCause();
+            clientObserver.completeExceptionally(new BadRequestException(cause));
+        } else {
+            clientObserver.completeExceptionally(cause);
+        }
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object obj) throws Exception {
+        if (obj == HttpRequestHandler.CONTENT_FINISHED_EVENT) {
+            clientObserver.complete();
+        }
+    }
+}
+```
+
+### `Topic.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/Topic.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.api.Api;
+import org.yamcs.api.Observer;
+import org.yamcs.api.WebSocketTopic;
+
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Message;
+
+public class Topic {
+
+    private final Api<Context> api;
+    private final String name;
+    private final RpcDescriptor descriptor;
+
+    private final boolean deprecated;
+
+    Topic(Api<Context> api, WebSocketTopic topic, RpcDescriptor descriptor) {
+        this.api = api;
+        this.name = topic.getTopic();
+        this.descriptor = descriptor;
+
+        deprecated = topic.getDeprecated();
+    }
+
+    public RpcDescriptor getDescriptor() {
+        return descriptor;
+    }
+
+    public Api<Context> getApi() {
+        return api;
+    }
+
+    public boolean isDeprecated() {
+        return deprecated;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public MethodDescriptor getMethodDescriptor() {
+        String methodName = descriptor.getMethod();
+        return api.getDescriptorForType().findMethodByName(methodName);
+    }
+
+    public Message getRequestPrototype() {
+        return api.getRequestPrototype(getMethodDescriptor());
+    }
+
+    public Message getResponsePrototype() {
+        return api.getResponsePrototype(getMethodDescriptor());
+    }
+
+    public void callMethod(Context ctx, Message request, Observer<Message> observer) {
+        MethodDescriptor method = getMethodDescriptor();
+        api.callMethod(method, ctx, request, observer);
+    }
+
+    public Observer<Message> callMethod(Context ctx, Observer<Message> observer) {
+        MethodDescriptor method = getMethodDescriptor();
+        return api.callMethod(method, ctx, observer);
+    }
+}
+```
+
+### `TopicContext.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/TopicContext.java`
+
+
+```java
+package org.yamcs.http;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.yamcs.protobuf.ClientMessage;
+import org.yamcs.protobuf.State.CallInfo;
+import org.yamcs.security.User;
+
+import com.google.protobuf.Descriptors.MethodDescriptor;
+
+import io.netty.channel.ChannelHandlerContext;
+
+/**
+ * Context for a specific RPC call over a (shared) WebSocket connection.
+ */
+public class TopicContext extends Context {
+
+    private final ClientMessage clientMessage;
+    private final Topic topic;
+
+    private boolean cancelled;
+    private Throwable cancellationCause;
+
+    private Set<ContextListener> listeners = new HashSet<>();
+
+    TopicContext(HttpServer httpServer, ChannelHandlerContext nettyContext, User user, ClientMessage clientMessage,
+            Topic topic) {
+        super(httpServer, nettyContext, user, topic.getApi());
+        this.clientMessage = clientMessage;
+        this.topic = topic;
+    }
+
+    @Override
+    public MethodDescriptor getMethod() {
+        String methodName = topic.getDescriptor().getMethod();
+        return api.getDescriptorForType().findMethodByName(methodName);
+    }
+
+    public void addListener(ContextListener listener) {
+        listeners.add(listener);
+    }
+
+    public synchronized boolean cancel(Throwable cause) {
+        if (!cancelled) {
+            cancelled = true;
+            cancellationCause = cause;
+            listeners.forEach(l -> l.onCancel(cause));
+            return true;
+        }
+
+        return false;
+    }
+
+    public Throwable getCancellationCause() {
+        return cancellationCause;
+    }
+
+    public synchronized boolean isCancelled() {
+        return cancelled;
+    }
+
+    public Topic getTopic() {
+        return topic;
+    }
+
+    public boolean isLowPriority() {
+        return clientMessage.getLowPriority();
+    }
+
+    public void close() {
+        cancel(null);
+    }
+
+    public CallInfo dumpState() {
+        CallInfo.Builder callb = CallInfo.newBuilder()
+                .setType(clientMessage.getType())
+                .setCall(getId());
+        if (clientMessage.hasOptions()) {
+            callb.setOptions(clientMessage.getOptions());
+        }
+        return callb.build();
+    }
+}
+```
+
+### `UnauthorizedException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/UnauthorizedException.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * When the request was valid, but did not pass authentication.
+ * (only covers auth, not authz! Use something like 403 or 404 for authz)
+ */
+public class UnauthorizedException extends HttpException {
+    private static final long serialVersionUID = 1L;
+    
+    public UnauthorizedException() {
+        super();
+    }
+
+    public UnauthorizedException(String message) {
+        super(message);
+    }
+
+    @Override
+    public HttpResponseStatus getStatus() {
+        return HttpResponseStatus.UNAUTHORIZED;
+    }
+}
+```
+
+### `WebSocketFrameDropper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketFrameDropper.java`
+
+
+```java
+package org.yamcs.http;
+
+import static org.yamcs.http.WebSocketFramePriority.HIGH;
+import static org.yamcs.http.WebSocketFramePriority.LOW;
+import static org.yamcs.http.WebSocketFramePriority.NORMAL;
+
+import org.yamcs.logging.Log;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+
+/**
+ * Receives (potentially compressed) websocket frames (each containing a message), and handles message priorities, to
+ * drop low priority messages, if they would otherwise exceed the high write watermark.
+ */
+public class WebSocketFrameDropper extends ChannelOutboundHandlerAdapter {
+
+    private static final Log log = new Log(WebSocketFrameDropper.class);
+
+    private final long highWaterMark;
+
+    // avoid flooding the log with messsages about dropped frames
+    private boolean logDroppedFrames = true;
+
+    public WebSocketFrameDropper(long highWriteBufferWaterMark) {
+        this.highWaterMark = highWriteBufferWaterMark;
+    }
+
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        if (msg instanceof WebSocketFrame) {
+            var frame = ((WebSocketFrame) msg);
+            var prioAttr = ctx.channel().attr(WebSocketFramePriority.ATTR);
+            var priority = prioAttr.get();
+            if (priority == null) { // Could be a ping frame
+                priority = NORMAL;
+            }
+
+            Channel nettyChannel = ctx.channel();
+            long frameLength = frame.content().readableBytes();
+            long bytesBeforeUnwritable = nettyChannel.bytesBeforeUnwritable();
+
+            boolean send = priority == HIGH ||
+                    (priority == NORMAL && bytesBeforeUnwritable > 0) ||
+                    (priority == LOW && bytesBeforeUnwritable > frameLength);
+
+            if (send) {
+                ctx.write(frame, promise);
+                logDroppedFrames = true;
+            } else {
+                if (priority == LOW) {
+                    if (logDroppedFrames) {
+                        log.warn("Frame skipped because writing the frame would make the channel not writable "
+                                + "(frameLength: {}, bytesBeforeUnwritable: {})", frameLength, bytesBeforeUnwritable);
+                        if (frameLength > highWaterMark) {
+                            log.warn("This frame size exceeds the high water mark (currently set to {}) "
+                                    + "so it will always be dropped. Consider increasing the high water mark",
+                                    highWaterMark);
+                        }
+                        logDroppedFrames = false;
+                    }
+                } else {
+                    log.warn("Channel full, cannot write message with priority=" + priority
+                            + " (slow network?). Closing connection.");
+                    ctx.close();
+                }
+                promise.setFailure(new MessageDroppedException(bytesBeforeUnwritable));
+            }
+        } else {
+            super.write(ctx, msg, promise);
+        }
+    }
+
+    @SuppressWarnings("serial")
+    public static class MessageDroppedException extends Exception {
+        final long bytesBeforeUnwritable;
+
+        public MessageDroppedException(long bytesBeforeUnwritable) {
+            this.bytesBeforeUnwritable = bytesBeforeUnwritable;
+        }
+    }
+}
+```
+
+### `WebSocketFrameHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketFrameHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import static org.yamcs.http.WebSocketFramePriority.HIGH;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.api.Observer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.CancelOptions;
+import org.yamcs.protobuf.ClientMessage;
+import org.yamcs.protobuf.Reply;
+import org.yamcs.protobuf.ServerMessage;
+import org.yamcs.protobuf.State;
+import org.yamcs.security.User;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.protobuf.Any;
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.WriteBufferWaterMark;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler.HandshakeComplete;
+import io.netty.handler.timeout.IdleStateEvent;
+
+public class WebSocketFrameHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
+
+    private static final Log log = new Log(WebSocketFrameHandler.class);
+
+    private HttpServer httpServer;
+
+    private HttpRequest nettyRequest;
+    private boolean protobuf;
+    private User user;
+
+    private WriteBufferWaterMark writeBufferWaterMark;
+
+    private List<TopicContext> contexts = new ArrayList<>();
+    private Map<Integer, Observer<Message>> clientObserversByCall = new HashMap<>();
+
+    public WebSocketFrameHandler(HttpServer httpServer, HttpRequest req, User user,
+            WriteBufferWaterMark writeBufferWaterMark) {
+        this.httpServer = httpServer;
+        this.nettyRequest = req;
+        this.user = user;
+        this.writeBufferWaterMark = writeBufferWaterMark;
+    }
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext nettyContext) throws Exception {
+        nettyContext.channel().config().setWriteBufferWaterMark(writeBufferWaterMark);
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext nettyContext, Object evt) throws Exception {
+        if (evt instanceof HandshakeComplete) {
+            HandshakeComplete handshakeEvt = (HandshakeComplete) evt;
+            String subprotocol = handshakeEvt.selectedSubprotocol();
+            protobuf = "protobuf".equals(subprotocol);
+            String channelId = nettyContext.channel().id().asShortText();
+
+            if (protobuf) {
+                log.info("{} {} {} {} [subprotocol: protobuf]", channelId, nettyRequest.method(), nettyRequest.uri(),
+                        HttpResponseStatus.SWITCHING_PROTOCOLS.code());
+            } else {
+                log.info("{} {} {} {} [subprotocol: json]", channelId, nettyRequest.method(), nettyRequest.uri(),
+                        HttpResponseStatus.SWITCHING_PROTOCOLS.code());
+            }
+
+            // After upgrade, no further HTTP messages will be received
+            nettyContext.pipeline().remove(HttpRequestHandler.class);
+
+            nettyContext.pipeline().addLast(new WebSocketServerMessageHandler(httpServer, protobuf));
+        } else if (evt instanceof IdleStateEvent) {
+            nettyContext.writeAndFlush(new PingWebSocketFrame());
+        } else {
+            super.userEventTriggered(nettyContext, evt);
+        }
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext nettyContext, WebSocketFrame frame) throws Exception {
+        ClientMessage message;
+        if (protobuf) {
+            try (InputStream in = new ByteBufInputStream(frame.content())) {
+                message = ClientMessage.newBuilder().mergeFrom(in).build();
+            }
+        } else {
+            String json = frame.content().toString(StandardCharsets.UTF_8);
+            JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
+
+            String messageType = obj.get("type").getAsString();
+            switch (messageType) {
+            case "state":
+                message = jsonToClientMessage(obj, null);
+                break;
+            case "cancel":
+                message = jsonToClientMessage(obj, CancelOptions.getDescriptor());
+                break;
+            default:
+                Topic topic = matchTopic(messageType);
+                if (topic == null) {
+                    message = jsonToClientMessage(obj, null);
+                    break;
+                }
+
+                message = jsonToClientMessage(obj, topic.getRequestPrototype().getDescriptorForType());
+            }
+        }
+
+        try {
+            switch (message.getType()) {
+            case "state":
+                dumpState(nettyContext);
+                break;
+            case "cancel":
+                cancelCall(nettyContext, message);
+                break;
+            default:
+                Topic topic = matchTopic(message.getType());
+                if (topic == null) {
+                    throw new NotFoundException("No topic '" + message.getType() + "'");
+                }
+                if (message.getCall() > 0) {
+                    streamToExistingCall(nettyContext, message, topic);
+                } else {
+                    startNewContext(nettyContext, message, topic);
+                }
+            }
+        } catch (HttpException e) {
+            Reply reply = Reply.newBuilder()
+                    .setReplyTo(message.getId())
+                    .setException(e.toMessage())
+                    .build();
+            writeMessage(nettyContext, "reply", reply);
+        }
+    }
+
+    private ClientMessage jsonToClientMessage(JsonObject obj, Descriptor optionsDescriptor)
+            throws InvalidProtocolBufferException {
+        if (obj.has("options")) {
+            if (optionsDescriptor == null) {
+                // We don't know what type the options are. Remove it so we can parse the JSON
+                // and handle the exception.
+                // This typically happens because the client specifies an unknown "type" field.
+                obj.remove("options");
+            } else {
+                // Inject @type property, as required by JsonFormat when parsing Any fields.
+                // We prefer to inject it on the server, because there we have no need to
+                // enforce it on the client (each topic has a unique message).
+                JsonObject dataObject = obj.get("options").getAsJsonObject();
+                String fullName = optionsDescriptor.getFullName();
+                dataObject.addProperty("@type", HttpServer.TYPE_URL_PREFIX + "/" + fullName);
+            }
+        }
+
+        ClientMessage.Builder msgb = ClientMessage.newBuilder();
+        httpServer.getJsonParser().merge(obj.toString(), msgb);
+        return msgb.build();
+    }
+
+    private void dumpState(ChannelHandlerContext nettyContext) throws IOException {
+        State.Builder stateb = State.newBuilder();
+        for (TopicContext ctx : contexts) {
+            stateb.addCalls(ctx.dumpState());
+        }
+        writeMessage(nettyContext, "state", stateb.build());
+    }
+
+    private void cancelCall(ChannelHandlerContext nettyContext, ClientMessage clientMessage)
+            throws InvalidProtocolBufferException {
+        if (clientMessage.hasOptions()) {
+            CancelOptions options = clientMessage.getOptions().unpack(CancelOptions.class);
+            cancelCall(nettyContext, options.getCall());
+        }
+    }
+
+    private void cancelCall(ChannelHandlerContext nettyContext, int callId) {
+        for (TopicContext ctx : new ArrayList<>(contexts)) {
+            if (ctx.getId() == callId) {
+                ctx.close();
+                clientObserversByCall.remove(callId);
+            }
+        }
+    }
+
+    private void startNewContext(ChannelHandlerContext nettyContext, ClientMessage clientMessage, Topic topic)
+            throws InvalidProtocolBufferException {
+        TopicContext ctx = new TopicContext(httpServer, nettyContext, user, clientMessage, topic);
+
+        Message requestPrototype = topic.getRequestPrototype();
+
+        Message apiRequest = requestPrototype.getDefaultInstanceForType();
+        if (clientMessage.hasOptions()) {
+            apiRequest = clientMessage.getOptions().unpack(requestPrototype.getClass());
+        }
+
+        WebSocketObserver observer = new WebSocketObserver(ctx);
+        ctx.addListener(cancellationCause -> {
+            observer.cancelCall(cancellationCause != null ? cancellationCause.getMessage() : null);
+        });
+
+        contexts.add(ctx);
+
+        if (ctx.isClientStreaming()) {
+            Observer<Message> clientObserver = topic.callMethod(ctx, observer);
+            clientObserversByCall.put(ctx.getId(), clientObserver);
+            clientObserver.next(apiRequest);
+        } else {
+            topic.callMethod(ctx, apiRequest, observer);
+        }
+
+        observer.sendReply(Reply.newBuilder().setReplyTo(clientMessage.getId()).build());
+    }
+
+    private void streamToExistingCall(ChannelHandlerContext nettyContext, ClientMessage clientMessage, Topic topic)
+            throws InvalidProtocolBufferException {
+        Observer<Message> clientObserver = clientObserversByCall.get(clientMessage.getCall());
+        if (clientObserver == null) {
+            throw new BadRequestException("Cannot find matching call");
+        }
+
+        Message requestPrototype = topic.getRequestPrototype();
+
+        Message apiRequest = requestPrototype.getDefaultInstanceForType();
+        if (clientMessage.hasOptions()) {
+            apiRequest = clientMessage.getOptions().unpack(requestPrototype.getClass());
+        }
+        clientObserver.next(apiRequest);
+    }
+
+    /**
+     * Sends the message to the netty channel.
+     */
+    private void writeMessage(ChannelHandlerContext nettyContext, String type, Message data) {
+        ServerMessage serverMessage = ServerMessage.newBuilder()
+                .setType(type)
+                .setCall(0)
+                .setSeq(0)
+                .setData(Any.pack(data, HttpServer.TYPE_URL_PREFIX))
+                .build();
+        nettyContext.channel().attr(WebSocketFramePriority.ATTR).set(HIGH);
+        nettyContext.channel().writeAndFlush(serverMessage);
+    }
+
+    /**
+     * Called when the client abruptly closes the connection
+     */
+    @Override
+    public void exceptionCaught(ChannelHandlerContext nettyContext, Throwable cause) throws Exception {
+        log.warn("{} Closing channel due to error", nettyContext.channel().id().asShortText(), cause);
+        nettyContext.close();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext nettyContext) throws Exception {
+        log.info("{} Channel closed", nettyContext.channel().id().asShortText());
+        contexts.forEach(TopicContext::close);
+        contexts.clear();
+    }
+
+    private Topic matchTopic(String topicName) {
+        for (Topic topic : httpServer.getTopics()) {
+            if (topicName.equals(topic.getName())) {
+                return topic;
+            }
+        }
+        return null;
+    }
+}
+```
+
+### `WebSocketFramePriority.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketFramePriority.java`
+
+
+```java
+package org.yamcs.http;
+
+import io.netty.util.AttributeKey;
+
+public enum WebSocketFramePriority {
+
+    /**
+     * Messages are dropped if causing the channel to become not writable
+     */
+    LOW,
+
+    /**
+     * Messages are dropped if the channel is not writable
+     */
+    NORMAL,
+
+    /**
+     * Messages are written (in fact queued by netty) even if the channel is not writable. Too many of these will cause
+     * OOM
+     */
+    HIGH;
+
+    /**
+     * Channel attribute key for get/set of current message priority
+     */
+    public static final AttributeKey<WebSocketFramePriority> ATTR = AttributeKey.valueOf("wsPriority");
+}
+```
+
+### `WebSocketObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketObserver.java`
+
+
+```java
+package org.yamcs.http;
+
+import static org.yamcs.http.WebSocketFramePriority.HIGH;
+import static org.yamcs.http.WebSocketFramePriority.LOW;
+import static org.yamcs.http.WebSocketFramePriority.NORMAL;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.api.Observer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Reply;
+import org.yamcs.protobuf.ServerMessage;
+
+import com.google.protobuf.Any;
+import com.google.protobuf.Message;
+
+public class WebSocketObserver implements Observer<Message> {
+
+    private Log log;
+
+    private final TopicContext ctx;
+
+    private int messageCount = 0;
+    private final boolean lowPriority;
+    private boolean cancelled;
+    private boolean completed;
+    private Runnable cancelHandler;
+
+    private boolean replied;
+    private List<Message> pendingMessages = new ArrayList<>(); // Messages received while not yet replied
+
+    public WebSocketObserver(TopicContext ctx) {
+        this.ctx = ctx;
+        this.lowPriority = ctx.isLowPriority();
+        log = new Log(WebSocketObserver.class);
+        log.setContext(ctx.toString());
+
+        log.debug("Subscribe {}", ctx.getTopic().getName());
+    }
+
+    void sendReply(Reply reply) {
+        synchronized (this) { // Guard 'replied' and 'pendingMessages'
+            try {
+                sendMessage("reply", reply, HIGH);
+            } finally {
+                replied = true;
+            }
+
+            pendingMessages.forEach(message -> next(message));
+            pendingMessages.clear();
+        }
+    }
+
+    /*
+     * Synchronize because we may get called from different threads and messages
+     * should be passed in-order to netty, matching messageCount.
+     */
+    @Override
+    public synchronized void next(Message message) {
+        if (!replied) {
+            pendingMessages.add(message);
+            return;
+        }
+
+        messageCount++;
+
+        if (!ctx.nettyContext.channel().isOpen()) {
+            ctx.cancel(null);
+            return;
+        }
+
+        sendMessage(ctx.getTopic().getName(), message, lowPriority ? LOW : NORMAL);
+    }
+
+    private void sendMessage(String type, Message data, WebSocketFramePriority priority) {
+        ServerMessage serverMessage = ServerMessage.newBuilder()
+                .setType(type)
+                .setCall(ctx.getId())
+                .setSeq(messageCount)
+                .setData(Any.pack(data, HttpServer.TYPE_URL_PREFIX))
+                .build();
+
+        ctx.nettyContext.channel().attr(WebSocketFramePriority.ATTR).set(priority);
+        ctx.nettyContext.channel().writeAndFlush(serverMessage);
+    }
+
+    void cancelCall(String reason) {
+        if (!cancelled) {
+            if (reason != null) {
+                log.debug("Cancelling {} call ({})", ctx.getTopic().getName(), reason);
+            } else {
+                log.debug("Cancelling {} call", ctx.getTopic().getName());
+            }
+            cancelled = true;
+            if (cancelHandler != null) {
+                cancelHandler.run();
+            }
+        }
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+        completed = true;
+    }
+
+    @Override
+    public void complete() {
+        if (completed) {
+            throw new IllegalStateException("Observer already completed");
+        }
+        completed = true;
+
+        if (cancelled) {
+            ctx.requestFuture.complete(null);
+            return;
+        }
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return cancelled;
+    }
+
+    @Override
+    public void setCancelHandler(Runnable cancelHandler) {
+        this.cancelHandler = cancelHandler;
+    }
+}
+```
+
+### `WebSocketServerMessageHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WebSocketServerMessageHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import org.yamcs.protobuf.ServerMessage;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.ChannelPromise;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+
+/**
+ * Encodes {@link ServerMessage} to either {@link BinaryWebSocketFrame} or {@link TextWebSocketFrame} depending if the
+ * protobuf or json has to be sent.
+ */
+public class WebSocketServerMessageHandler extends ChannelOutboundHandlerAdapter {
+
+    final boolean protobuf;
+    final HttpServer httpServer;
+
+    public WebSocketServerMessageHandler(HttpServer httpServer, boolean protobuf) {
+        this.httpServer = httpServer;
+        this.protobuf = protobuf;
+    }
+
+    @Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        ServerMessage serverMessage = (ServerMessage) msg;
+        WebSocketFrame frame;
+
+        if (protobuf) {
+            ByteBuf buf = ctx.alloc().buffer();
+            try (ByteBufOutputStream bufOut = new ByteBufOutputStream(buf)) {
+                serverMessage.writeTo(bufOut);
+            }
+            frame = new BinaryWebSocketFrame(buf);
+        } else {
+            String json = httpServer.getJsonPrinter().print(serverMessage);
+            frame = new TextWebSocketFrame(json);
+        }
+
+        ctx.write(frame, promise);
+    }
+}
+```
+
+### `WellKnownHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/WellKnownHandler.java`
+
+
+```java
+package org.yamcs.http;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+/**
+ * RFC 8615 endpoint used by various protocols.
+ */
+public class WellKnownHandler extends HttpHandler {
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        String path = ctx.getPathWithoutContext();
+        if (path.equals("/.well-known/oauth-authorization-server")) {
+            handleOAuthMetadata(ctx);
+            return;
+        }
+
+        throw new NotFoundException();
+    }
+
+    /**
+     * Outputs metadata for OAuth 2.0 clients, including endpoints and capabalities.
+     * 
+     * @see RFC 8414 - OAuth 2.0 Authorization Server Metadata
+     */
+    private void handleOAuthMetadata(HandlerContext ctx) {
+        ctx.requireGET();
+
+        String issuerURL = ctx.getRequestBaseURL() + "/auth";
+        JsonObject response = new JsonObject();
+        response.addProperty("issuer", issuerURL);
+        response.addProperty("authorization_endpoint", issuerURL + "/authorize");
+        response.addProperty("token_endpoint", issuerURL + "/token");
+        // response.addProperty("scopes_supported", new JsonArray());
+        // response.addProperty("spnego_endpoint", issuerURL + "/spnego");
+
+        JsonArray responseTypes = new JsonArray();
+        // responseTypes.add("none");
+        // responseTypes.add("code");
+        responseTypes.add("token");
+        // responseTypes.add("id_token");
+        response.add("response_types_supported", responseTypes);
+
+        JsonArray responseModes = new JsonArray();
+        responseModes.add("query");
+        response.add("response_modes_supported", responseModes);
+
+        JsonArray grantTypes = new JsonArray();
+        grantTypes.add("authorization_code");
+        grantTypes.add("refresh_token");
+        grantTypes.add("password");
+        grantTypes.add("client_credentials");
+        response.add("grant_types_supported", grantTypes);
+
+        ctx.sendOK(response);
+    }
+}
+```

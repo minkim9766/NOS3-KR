@@ -3,16 +3,86 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-list.component.html`
 
-file--table-list.component.html
-file--table-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-list/table-list.component.html`
+
+
+```html
+<ya-panel>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    matSortDisableClear>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let table">
+        <a [routerLink]="table.name">
+          {{ table.name }}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</ya-panel>
 ```
 
-## 항목
+### `table-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-list/table-list.component.html`](file--table-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-list/table-list.component.ts`](file--table-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-list/table-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import { Table, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './table-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TableListComponent implements AfterViewInit {
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = ['name', 'actions'];
+
+  dataSource = new MatTableDataSource<Table>();
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+  ) {
+    const parent = route.snapshot.parent!;
+    const name = parent.paramMap.get('database')!;
+    yamcs.yamcsClient.getTables(name).then((tables) => {
+      this.dataSource.data = tables;
+    });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+}
+```

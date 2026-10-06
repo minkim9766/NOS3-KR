@@ -3,18 +3,107 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bug-report.md`
 
-file--bug-report.md
-file--feature-request.md
-file--roses-pattern.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/bug-report.md`
+
+
+````markdown
+---
+name: Bug Report
+about: Report a problem using F´
+title: ''
+labels: bug
+assignees: ''
+
+---
+
+| | |
+|:---|:---|
+|**_F´ Version_**| |
+|**_Affected Component_**|   |
+---
+## Problem Description
+
+A description of the problem with sufficient detail to understand the issue.
+
+## Context / Environment
+
+Execute `fprime-util version-check` and share the output.
+
+```
+--INSERT HERE--
 ```
 
-## 항목
+## How to Reproduce
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/bug-report.md`](file--bug-report.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/feature-request.md`](file--feature-request.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/roses-pattern.md`](file--roses-pattern.md) — UTF-8 텍스트 파일 본문 포함
+1. 
+2.
+3.
+
+## Expected Behavior
+
+A description of the expected behavior.
+````
+
+### `feature-request.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/feature-request.md`
+
+
+```markdown
+---
+name: Feature Request
+about: Suggest improvements to F´
+title: ''
+labels: enhancement
+assignees: ''
+
+---
+
+| | |
+|:---|:---|
+|**_F´ Version_**| |
+|**_Affected Component_**|  |
+---
+## Feature Description
+
+A quick description of the requested feature.
+
+## Rationale
+
+A rationale for why the feature should be implemented in F´.
+```
+
+### `roses-pattern.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/roses-pattern.md`
+
+
+```markdown
+---
+name: ROSES Pattern
+about: A standard pattern funded for documentation via ROSES.
+title: ROSES - [Pattern]
+labels: ROSES
+assignees: ''
+
+---
+
+### Description
+[Describe pattern here].
+
+### Deliverables (completed before closing issue):
+- [ ] Select deliverable type
+  - [ ] Reference
+  - [ ] User Guide
+  - [ ] How-To
+  - [ ] Tutorial
+  - [ ] Other (tool, fill-in, etc)
+- [ ] Create documentation
+- [ ] Create example in examples repository
+- [ ] Pass expert review
+- [ ] Pass user review
+```

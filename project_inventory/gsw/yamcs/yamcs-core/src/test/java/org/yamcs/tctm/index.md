@@ -3,30 +3,637 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ccsds/index
 csp/index
-file--CcsdsPacketTest.java
-file--CucTimeDecoderTest.java
-file--CucTimeEncoderTest.java
-file--FilePollingTmDataLinkTest.java
-file--Iso16CrcCalculatorTest.java
-file--TcpTcDataLinkTest.java
-file--UdpTmDataLinkTest.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/`](ccsds/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/csp/`](csp/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/CcsdsPacketTest.java`](file--CcsdsPacketTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/CucTimeDecoderTest.java`](file--CucTimeDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/CucTimeEncoderTest.java`](file--CucTimeEncoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/FilePollingTmDataLinkTest.java`](file--FilePollingTmDataLinkTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/Iso16CrcCalculatorTest.java`](file--Iso16CrcCalculatorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/TcpTcDataLinkTest.java`](file--TcpTcDataLinkTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/UdpTmDataLinkTest.java`](file--UdpTmDataLinkTest.java) — UTF-8 텍스트 파일 본문 포함
+### `CcsdsPacketTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/CcsdsPacketTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+
+public class CcsdsPacketTest {
+
+    // Non multiple of 16 bytes
+    byte[] testPacketOf34Bytes = new byte[] {
+            (byte) 0x1b, (byte) 0x8a, (byte) 0xe1, (byte) 0x54, (byte) 0x00, (byte) 0x5b, (byte) 0x46, (byte) 0x7f,
+            (byte) 0xb3, (byte) 0x56, (byte) 0x72, (byte) 0x45, (byte) 0x13, (byte) 0x00, (byte) 0xe2, (byte) 0x2b,
+            (byte) 0xa1, (byte) 0x92, (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x26, (byte) 0x00, (byte) 0x01,
+            (byte) 0x00, (byte) 0x90, (byte) 0x00, (byte) 0x30, (byte) 0x07, (byte) 0xe1, (byte) 0x01, (byte) 0x33,
+            (byte) 0x00, (byte) 0xec
+    };
+
+    // Multiple of 16 bytes
+    byte[] testPacketOf32Bytes = new byte[] {
+            (byte) 0x1b, (byte) 0x8a, (byte) 0xe1, (byte) 0x54, (byte) 0x00, (byte) 0x5b, (byte) 0x46, (byte) 0x7f,
+            (byte) 0xb3, (byte) 0x56, (byte) 0x72, (byte) 0x45, (byte) 0x13, (byte) 0x00, (byte) 0xe2, (byte) 0x2b,
+            (byte) 0xa1, (byte) 0x92, (byte) 0x03, (byte) 0x00, (byte) 0x00, (byte) 0x26, (byte) 0x00, (byte) 0x01,
+            (byte) 0x00, (byte) 0x90, (byte) 0x00, (byte) 0x30, (byte) 0x07, (byte) 0xe1, (byte) 0x01, (byte) 0x33,
+    };
+
+    @Test
+    public void testToString() {
+        CcsdsPacket ccsdsPacket = new CcsdsPacket(ByteBuffer.wrap(testPacketOf34Bytes));
+        // Initialize TimeEncoding to be able to call CcsdsPacket.toString()
+        TimeEncoding.setUp();
+
+        String packetString = ccsdsPacket.toString();
+        assertEquals("apid: 906\n" +
+                "0000: 1b8a e154 005b 467f b356 7245 1300 e22b ...T.[F\u007F.VrE...+\n" +
+                "0010: a192 0300 0026 0001 0090 0030 07e1 0133 .....&.....0...3\n" +
+                "0020: 00ec                                    ..              \n", packetString);
+    }
+
+    @Test
+    public void testToString16() {
+        CcsdsPacket ccsdsPacket = new CcsdsPacket(ByteBuffer.wrap(testPacketOf32Bytes));
+        // Initialize TimeEncoding to be able to call CcsdsPacket.toString()
+        TimeEncoding.setUp();
+
+        String packetString = ccsdsPacket.toString();
+        assertEquals("apid: 906\n" +
+                "0000: 1b8a e154 005b 467f b356 7245 1300 e22b ...T.[F\u007F.VrE...+\n" +
+                "0010: a192 0300 0026 0001 0090 0030 07e1 0133 .....&.....0...3\n", packetString);
+    }
+}
+```
+
+### `CucTimeDecoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/CucTimeDecoderTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Instant;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.tctm.ccsds.time.CucTimeDecoder;
+import org.yamcs.utils.StringConverter;
+
+public class CucTimeDecoderTest {
+
+    @Test
+    public void testImplicit() {
+        CucTimeDecoder ctd = new CucTimeDecoder(0x2E);
+        // byte[] b = StringConverter.hexStringToArray("5B3F555E48B4");
+        byte[] b = StringConverter.hexStringToArray("5B3F555E48B4");
+        long t = ctd.decode(b, 0);
+        assertEquals("2018-07-06T11:41:18.284Z", Instant.ofEpochMilli(t).toString());
+    }
+
+    @Test
+    public void testExplicit() {
+        CucTimeDecoder ctd = new CucTimeDecoder(-1);
+        // byte[] b = StringConverter.hexStringToArray("5B3F555E48B4");
+        byte[] b = StringConverter.hexStringToArray("2E5B3F555E48B4");
+        long t = ctd.decode(b, 0);
+        assertEquals("2018-07-06T11:41:18.284Z", Instant.ofEpochMilli(t).toString());
+
+        long rt = ctd.decodeRaw(b, 0);
+        assertEquals(0x5B3F555E48B4l, rt);
+    }
+}
+```
+
+### `CucTimeEncoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/CucTimeEncoderTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Instant;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.tctm.ccsds.time.CucTimeEncoder;
+import org.yamcs.utils.StringConverter;
+
+public class CucTimeEncoderTest {
+
+    @Test
+    public void testImplicit() {
+        CucTimeEncoder cte = new CucTimeEncoder(0x2E, true);
+        byte[] b = new byte[6];
+        long expectedTimeMillis = Instant.parse("2018-07-06T11:41:18.284Z").toEpochMilli();
+        cte.encode(expectedTimeMillis, b, 0);
+
+        assertEquals("5B3F555E48B4", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testExplicit() {
+        CucTimeEncoder cte = new CucTimeEncoder(0x2E, false);
+        byte[] b = new byte[7];
+        long expectedTimeMillis = Instant.parse("2018-07-06T11:41:18.284Z").toEpochMilli();
+
+        cte.encode(expectedTimeMillis, b, 0);
+
+        assertEquals("2E5B3F555E48B4", StringConverter.arrayToHexString(b));
+
+        long rawTime = 0x5B3F555E48B4L;
+        byte[] bRaw = new byte[7];
+        cte.encodeRaw(rawTime, bRaw, 0);
+
+        assertEquals("2E5B3F555E48B4", StringConverter.arrayToHexString(bRaw));
+    }
+}
+```
+
+### `FilePollingTmDataLinkTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/FilePollingTmDataLinkTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPOutputStream;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.utils.TimeEncoding;
+
+public class FilePollingTmDataLinkTest {
+    int headerSize = 103;
+
+    @BeforeAll
+    static public void beforeClass() {
+        TimeEncoding.setUp();
+        EventProducerFactory.setMockup(false);
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    public void test1(boolean gzipped) throws Exception {
+        File incomingDir = Files.createTempDirectory("FilePollingTmDataLinkTest").toFile();
+        File f1 = new File(incomingDir, "f1");
+
+        CcsdsPacket p1 = new CcsdsPacket(new byte[50]);
+        p1.setHeader(100, 1, 0, 3, 1000);
+        CcsdsPacket p2 = new CcsdsPacket(new byte[50]);
+        p2.setHeader(100, 1, 0, 3, 1001);
+
+        try (OutputStream out = gzipped ? new BufferedOutputStream(new FileOutputStream(f1))
+                : new GZIPOutputStream(new FileOutputStream(f1))) {
+            out.write(new byte[headerSize]);
+            out.write(p1.getBytes());
+            out.write(p2.getBytes());
+        }
+        Map<String, Object> conf = new HashMap<>();
+        conf.put("incomingDir", incomingDir.getAbsolutePath());
+        conf.put("headerSize", headerSize);
+        conf.put("deleteAfterImport", true);
+        conf.put("packetInputStreamClassName", CcsdsPacketInputStream.class.getName());
+        FilePollingTmDataLink fileLink = new FilePollingTmDataLink();
+
+        fileLink.init("test", "test", YConfiguration.wrap(conf));
+        Semaphore semaphore = new Semaphore(0);
+        List<TmPacket> tmPackets = new ArrayList<>();
+        fileLink.setTmSink(new TmSink() {
+            int count = 0;
+
+            @Override
+            public void processPacket(TmPacket tmPacket) {
+                tmPackets.add(tmPacket);
+                count++;
+                if (count == 2) {
+                    semaphore.release();
+                }
+            }
+        });
+        fileLink.startAsync().awaitRunning();
+        assertTrue(semaphore.tryAcquire(10, TimeUnit.SECONDS));
+
+        fileLink.stopAsync().awaitTerminated();
+        assertEquals(2, tmPackets.size());
+        assertArrayEquals(p1.getBytes(), tmPackets.get(0).getPacket());
+        assertArrayEquals(p2.getBytes(), tmPackets.get(1).getPacket());
+        assertFalse(f1.exists());
+        assertTrue(incomingDir.delete());
+    }
+}
+```
+
+### `Iso16CrcCalculatorTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/Iso16CrcCalculatorTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.StringConverter;
+
+public class Iso16CrcCalculatorTest {
+    Iso16CrcCalculator crcCalculator = new Iso16CrcCalculator();
+
+    @Test
+    public void test1() {
+        byte[] b1 = StringConverter.hexStringToArray("0000");
+        assertEquals(0xFFFF, crcCalculator.compute(b1, 0, b1.length));
+
+        byte[] b2 = StringConverter.hexStringToArray("000000");
+        assertEquals(0xFFFF, crcCalculator.compute(b2, 0, b2.length));
+    }
+
+    @Test
+    public void test2() {
+        byte[] b1 = StringConverter.hexStringToArray("FFFF");
+        assertEquals(0xFFFF, crcCalculator.compute(b1, 0, b1.length));
+
+        byte[] b2 = StringConverter.hexStringToArray("FFFFFF");
+        assertEquals(0xFFFF, crcCalculator.compute(b2, 0, b2.length));
+    }
+
+    @Test
+    public void test3() {
+        byte[] b3 = StringConverter.hexStringToArray("ABCDEF01");
+        assertEquals(0x9CF8, crcCalculator.compute(b3, 0, b3.length));
+
+        byte[] b4 = StringConverter.hexStringToArray("1456F89A0001");
+        assertEquals(0x24DC, crcCalculator.compute(b4, 0, b4.length));
+    }
+}
+```
+
+### `TcpTcDataLinkTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/TcpTcDataLinkTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.utils.TimeEncoding;
+
+public class TcpTcDataLinkTest {
+    MyTcpServer mtc;
+
+    @BeforeAll
+    public static void beforeClass() throws IOException {
+        TimeEncoding.setUp();
+        EventProducerFactory.setMockup(false);
+    }
+
+    @BeforeEach
+    public void setupTcpServer() throws IOException {
+        mtc = new MyTcpServer();
+        mtc.start();
+    }
+
+    @AfterEach
+    public void shutdownTcpServer() throws IOException {
+        mtc = new MyTcpServer();
+        mtc.quit();
+    }
+
+    static public class MyTcpServer extends Thread {
+        int port;
+        ServerSocket serverSocket;
+        volatile boolean quitting = false;
+
+        public MyTcpServer() throws IOException {
+            serverSocket = new ServerSocket();
+            serverSocket.bind(null);
+            port = serverSocket.getLocalPort();
+            serverSocket.setSoTimeout(100000);
+        }
+
+        @Override
+        public void run() {
+            Socket server = null;
+            try {
+                server = serverSocket.accept();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                return;
+            }
+            int maxLength = 65542;
+            while (!quitting) {
+                try {
+                    DataInputStream in = new DataInputStream(server.getInputStream());
+                    // while(in.available() <= 0) {}
+                    byte hdr[] = new byte[6];
+                    in.readFully(hdr);
+                    int remaining = ((hdr[4] & 0xFF) << 8) + (hdr[5] & 0xFF) + 1;
+                    if (remaining > maxLength - 6) {
+                        throw new IOException("Remaining packet length too big: " + remaining + " maximum allowed is "
+                                + (maxLength - 6));
+                    }
+                    byte[] b = new byte[6 + remaining];
+                    System.arraycopy(hdr, 0, b, 0, 6);
+                    in.readFully(b, 6, remaining);
+
+                } catch (SocketTimeoutException s) {
+                    break;
+                } catch (IOException e) {
+                    break;
+                }
+            }
+            try {
+                server.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void quit() throws IOException {
+            this.quitting = true;
+            serverSocket.close();
+        }
+    }
+
+    @Test
+    public void testTcpTcMaxRate() throws ConfigurationException, InterruptedException, IOException {
+        int ncommands = 20;
+        int tcMaxRate = 2;
+
+        Map<String, Object> config = new HashMap<>();
+        config.put("tcMaxRate", tcMaxRate);
+        config.put("tcQueueSize", ncommands);
+        config.put("host", "localhost");
+        config.put("port", mtc.port);
+        config.put("commandPostprocessorClassName", GenericCommandPostprocessor.class.getName());
+
+        TcpTcDataLink dataLink = new TcpTcDataLink();
+        dataLink.init("testinst", "test1", YConfiguration.wrap(config));
+        Semaphore semaphore = new Semaphore(0);
+        MyCmdHistPublisher mypub = new MyCmdHistPublisher(semaphore);
+        dataLink.setCommandHistoryPublisher(mypub);
+
+        dataLink.startAsync();
+        dataLink.awaitRunning();
+
+        for (int i = 1; i <= ncommands; i++) {
+            dataLink.sendCommand(getCommand(i));
+        }
+
+        assertTrue(semaphore.tryAcquire(ncommands, 10, TimeUnit.SECONDS));
+        assertTrue(mypub.successful.size() >= ncommands, "Number of commands sent is smaller than queue size");
+        for (int i = 5; i < mypub.successful.size() - tcMaxRate; i++) {
+            int seq1 = mypub.successful.get(i);
+            int seq2 = mypub.successful.get(i + tcMaxRate);
+            long gap = mypub.sentTime.get(seq2) - mypub.sentTime.get(seq1);
+            assertTrue(gap >= 850 && gap < 1150, "gap is not right: " + gap);
+        }
+        dataLink.stopAsync();
+    }
+
+    @Test
+    public void testTcpTcDefault() throws ConfigurationException, InterruptedException, IOException {
+        Map<String, Object> config = new HashMap<>();
+        config.put("host", "localhost");
+        config.put("port", mtc.port);
+        config.put("commandPostprocessorClassName", GenericCommandPostprocessor.class.getName());
+
+        TcpTcDataLink dataLink = new TcpTcDataLink();
+        dataLink.init("testinst", "test1", YConfiguration.wrap(config));
+        Semaphore semaphore = new Semaphore(0);
+        MyCmdHistPublisher mypub = new MyCmdHistPublisher(semaphore);
+        dataLink.setCommandHistoryPublisher(mypub);
+
+        dataLink.startAsync();
+        dataLink.awaitRunning();
+
+        for (int i = 1; i <= 1000; i++) {
+            dataLink.sendCommand(getCommand(i));
+        }
+        assertTrue(semaphore.tryAcquire(1000, 300, TimeUnit.SECONDS));
+        assertEquals(1000, mypub.successful.size());
+        dataLink.stopAsync();
+    }
+
+    private PreparedCommand getCommand(int seq) {
+
+        CommandId cmdId = CommandId.newBuilder().setCommandName("/YSS/SIMULATOR/SWITCH_VOLTAGE_ON").setOrigin("Test")
+                .setSequenceNumber(seq).setGenerationTime(System.currentTimeMillis()).build();
+        PreparedCommand pc = new PreparedCommand(cmdId);
+
+        byte[] b = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6,
+                7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        pc.setBinary(b);
+        return pc;
+    }
+
+    public static class MyCmdHistPublisher extends AbstractProcessorService implements CommandHistoryPublisher {
+        Map<Integer, Long> sentTime = new HashMap<>();
+        List<Integer> successful = new ArrayList<>();
+        List<Integer> failed = new ArrayList<>();
+        Semaphore semaphore;
+
+        public MyCmdHistPublisher(Semaphore semaphore) {
+            this.semaphore = semaphore;
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, long value) {
+            sentTime.put(cmdId.getSequenceNumber(), value);
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, String value) {
+            if (key.equals("Acknowledge_Sent_Status")) {
+                if (value.equals("OK")) {
+                    successful.add(cmdId.getSequenceNumber());
+                } else if (value.equals("NOK")) {
+                    failed.add(cmdId.getSequenceNumber());
+                } else {
+                    fail("Unexpected ack '" + value + "'");
+                }
+                semaphore.release();
+            }
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, int value) {
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, byte[] binary) {
+        }
+
+        @Override
+        public void addCommand(PreparedCommand pc) {
+        }
+
+        @Override
+        protected void doStart() {
+
+        }
+
+        @Override
+        protected void doStop() {
+        }
+    }
+}
+```
+
+### `UdpTmDataLinkTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/UdpTmDataLinkTest.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.LoggingUtils;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.tctm.Link.Status;
+import org.yamcs.utils.TimeEncoding;
+
+public class UdpTmDataLinkTest {
+    @BeforeAll
+    public static void beforeClass() {
+        EventProducerFactory.setMockup(false);
+        TimeEncoding.setUp();
+        LoggingUtils.configureLogging(Level.SEVERE);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        ArrayBlockingQueue<TmPacket> pktQueue = new ArrayBlockingQueue<>(10);
+
+        UdpTmDataLink link = new UdpTmDataLink();
+        Map<String, Object> config = new HashMap<>();
+        Random rand = new Random();
+        int port = 20000 + rand.nextInt(10000);
+        InetAddress addr = InetAddress.getByName("localhost");
+
+        config.put("initialBytesToStrip", 3);
+        config.put("port", port);
+        config.put("checksum", port);
+        link.init("test", "test", YConfiguration.wrap(config));
+        link.setTmSink(p -> pktQueue.add(p));
+
+        link.startAsync();
+        link.awaitRunning();
+
+        assertEquals(Status.OK, link.connectionStatus());
+
+        DatagramSocket socket = new DatagramSocket();
+        byte[] b1 = new byte[1003];
+        rand.nextBytes(b1);
+        DatagramPacket dp1 = new DatagramPacket(b1, b1.length, addr, port);
+        socket.send(dp1);
+
+        TmPacket pkt1 = pktQueue.poll(5, TimeUnit.SECONDS);
+        assertNotNull(pkt1);
+
+        assertEquals(1000, pkt1.length());
+        for (int i = 0; i < pkt1.length(); i++) {
+            assertEquals(b1[i + 3], pkt1.getPacket()[i]);
+        }
+
+        link.disable();
+        Thread.sleep(1000);
+        assertTrue(link.getDetailedStatus().contains("DISABLED"));
+
+        link.enable();
+        DatagramPacket dp2 = new DatagramPacket(b1, 2, addr, port);
+        socket.send(dp2);
+        TmPacket pkt2 = pktQueue.poll(1, TimeUnit.SECONDS);
+        assertNull(pkt2);
+
+        var extra = link.getExtraInfo();
+        assertEquals(extra.get("Valid datagrams"), 1L);
+        assertEquals(extra.get("Invalid datagrams"), 1L);
+
+        socket.close();
+        link.stopAsync();
+        link.awaitTerminated();
+    }
+}
+```

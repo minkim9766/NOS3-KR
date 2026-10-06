@@ -3,34 +3,955 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Accumulate.cpp`
 
-file--Accumulate.cpp
-file--Accumulate.hpp
-file--BufferAccumulatorMain.cpp
-file--BufferAccumulatorTester.cpp
-file--BufferAccumulatorTester.hpp
-file--Drain.cpp
-file--Drain.hpp
-file--Errors.cpp
-file--Errors.hpp
-file--Health.cpp
-file--Health.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Accumulate.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Accumulate.hpp
+// \author bocchino, mereweth
+// \brief  Test drain mode
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Accumulate.hpp"
+
+namespace Svc {
+
+namespace Accumulate {
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BufferAccumulatorTester ::OK() {
+    ASSERT_EQ(BufferAccumulator_OpState::DRAIN, this->component.m_mode.e);
+    this->sendCmd_BA_SetMode(0, 0, BufferAccumulator_OpState::ACCUMULATE);
+    this->doDispatch();
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+
+    Fw::Buffer buffers[MAX_NUM_BUFFERS];
+    U8* data = new U8[10];
+    const U32 size = 10;
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+        this->invoke_to_bufferSendInFill(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    }
+
+    this->sendCmd_BA_SetMode(0, 0, BufferAccumulator_OpState::DRAIN);
+    this->doDispatch();
+    ASSERT_EQ(BufferAccumulator_OpState::DRAIN, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(1);
+    ASSERT_from_bufferSendOutDrain_SIZE(1);
+    ASSERT_from_bufferSendOutDrain(0, buffers[0]);
+
+    U32 expectedNumBuffers = 1;
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        this->invoke_to_bufferSendInReturn(0, buffers[i]);
+        this->doDispatch();
+        ++expectedNumBuffers;
+        if (i + 1 < MAX_NUM_BUFFERS) {
+            ++expectedNumBuffers;
+            ASSERT_from_bufferSendOutDrain_SIZE(i + 2);
+            ASSERT_from_bufferSendOutDrain(i + 1, buffers[i + 1]);
+        }
+        ASSERT_FROM_PORT_HISTORY_SIZE(expectedNumBuffers);
+        ASSERT_from_bufferSendOutReturn_SIZE(i + 1);
+        ASSERT_from_bufferSendOutReturn(i, buffers[i]);
+    }
+
+    ASSERT_EQ(2U * MAX_NUM_BUFFERS, expectedNumBuffers);
+    ASSERT_FROM_PORT_HISTORY_SIZE(expectedNumBuffers);
+    ASSERT_from_bufferSendOutDrain_SIZE(MAX_NUM_BUFFERS);
+    ASSERT_from_bufferSendOutReturn_SIZE(MAX_NUM_BUFFERS);
+
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+        ASSERT_from_bufferSendOutReturn(i, buffers[i]);
+    }
+
+    delete[] data;
+}
+
+}  // namespace Accumulate
+
+}  // namespace Svc
 ```
 
-## 항목
+### `Accumulate.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Accumulate.cpp`](file--Accumulate.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Accumulate.hpp`](file--Accumulate.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/BufferAccumulatorMain.cpp`](file--BufferAccumulatorMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/BufferAccumulatorTester.cpp`](file--BufferAccumulatorTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/BufferAccumulatorTester.hpp`](file--BufferAccumulatorTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Drain.cpp`](file--Drain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Drain.hpp`](file--Drain.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Errors.cpp`](file--Errors.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Errors.hpp`](file--Errors.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Health.cpp`](file--Health.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Health.hpp`](file--Health.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Accumulate.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Accumulate.hpp
+// \author bocchino, mereweth
+// \brief  Test accumulate mode
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Accumulate_HPP
+#define Svc_Accumulate_HPP
+
+#include "BufferAccumulatorTester.hpp"
+
+namespace Svc {
+
+namespace Accumulate {
+
+class BufferAccumulatorTester : public Svc::BufferAccumulatorTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Send some buffers
+    void OK(void);
+};
+
+}  // namespace Accumulate
+
+}  // namespace Svc
+
+#endif
+```
+
+### `BufferAccumulatorMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/BufferAccumulatorMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Main.cpp
+// \author bocchino, mereweth
+// \brief  Test drain mode
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Accumulate.hpp"
+#include "BufferAccumulatorTester.hpp"
+#include "Drain.hpp"
+#include "Errors.hpp"
+#include "Health.hpp"
+
+// ----------------------------------------------------------------------
+// Test Errors
+// ----------------------------------------------------------------------
+
+TEST(TestErrors, QueueFull) {
+    Svc::Errors::BufferAccumulatorTester tester;
+    tester.QueueFull();
+}
+
+TEST(TestErrors, PartialDrain) {
+    Svc::Errors::BufferAccumulatorTester tester;
+    tester.PartialDrain();
+}
+
+// ----------------------------------------------------------------------
+// Test Accumulate
+// ----------------------------------------------------------------------
+
+TEST(TestAccumulate, OK) {
+    Svc::Accumulate::BufferAccumulatorTester tester;
+    tester.OK();
+}
+
+// ----------------------------------------------------------------------
+// Test Drain
+// ----------------------------------------------------------------------
+
+TEST(TestDrain, OK) {
+    Svc::Drain::BufferAccumulatorTester tester;
+    tester.OK();
+}
+
+TEST(TestPartialDrain, OK) {
+    Svc::Drain::BufferAccumulatorTester tester;
+    tester.PartialDrainOK();
+}
+
+// ----------------------------------------------------------------------
+// Test Health
+// ----------------------------------------------------------------------
+
+TEST(TestHealth, Ping) {
+    Svc::Health::BufferAccumulatorTester tester;
+    tester.Ping();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `BufferAccumulatorTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/BufferAccumulatorTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferAccumulatorTester.hpp
+// \author bocchino, mereweth
+// \brief  BufferAccumulator test harness implementation
+//
+// \copyright
+// Copyright 2009-2017, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "BufferAccumulatorTester.hpp"
+
+#include "Fw/Types/BasicTypes.hpp"
+
+#include "Fw/Types/MallocAllocator.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 30
+#define QUEUE_DEPTH 30
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+BufferAccumulatorTester ::BufferAccumulatorTester(bool a_doAllocateQueue)
+    :
+#if FW_OBJECT_NAMES == 1
+      BufferAccumulatorGTestBase("Tester", MAX_HISTORY_SIZE),
+      component("BufferAccumulator"),
+#else
+      BufferAccumulatorGTestBase(MAX_HISTORY_SIZE),
+      component(),
+#endif
+      doAllocateQueue(a_doAllocateQueue) {
+    this->initComponents();
+    this->connectPorts();
+
+    // Witch to BufferAccumulator_OpState::DRAIN at start so we don't have to
+    // change ut
+    component.m_mode = BufferAccumulator_OpState::DRAIN;
+    component.m_send = true;
+
+    if (this->doAllocateQueue) {
+        Fw::MallocAllocator buffAccumMallocator;
+        this->component.allocateQueue(0, buffAccumMallocator, MAX_NUM_BUFFERS);
+    }
+}
+
+BufferAccumulatorTester ::~BufferAccumulatorTester() {
+    if (this->doAllocateQueue) {
+        Fw::MallocAllocator buffAccumMallocator;
+        this->component.deallocateQueue(buffAccumMallocator);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void BufferAccumulatorTester ::from_bufferSendOutDrain_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->pushFromPortEntry_bufferSendOutDrain(fwBuffer);
+}
+
+void BufferAccumulatorTester ::from_bufferSendOutReturn_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->pushFromPortEntry_bufferSendOutReturn(fwBuffer);
+}
+
+void BufferAccumulatorTester ::from_pingOut_handler(const FwIndexType portNum, U32 key) {
+    this->pushFromPortEntry_pingOut(key);
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void BufferAccumulatorTester ::connectPorts() {
+    // bufferSendInFill
+    this->connect_to_bufferSendInFill(0, this->component.get_bufferSendInFill_InputPort(0));
+
+    // bufferSendInReturn
+    this->connect_to_bufferSendInReturn(0, this->component.get_bufferSendInReturn_InputPort(0));
+
+    // cmdIn
+    this->connect_to_cmdIn(0, this->component.get_cmdIn_InputPort(0));
+
+    // pingIn
+    this->connect_to_pingIn(0, this->component.get_pingIn_InputPort(0));
+
+    // bufferSendOutDrain
+    this->component.set_bufferSendOutDrain_OutputPort(0, this->get_from_bufferSendOutDrain(0));
+
+    // bufferSendOutReturn
+    this->component.set_bufferSendOutReturn_OutputPort(0, this->get_from_bufferSendOutReturn(0));
+
+    // cmdRegOut
+    this->component.set_cmdRegOut_OutputPort(0, this->get_from_cmdRegOut(0));
+
+    // cmdResponseOut
+    this->component.set_cmdResponseOut_OutputPort(0, this->get_from_cmdResponseOut(0));
+
+    // eventOut
+    this->component.set_eventOut_OutputPort(0, this->get_from_eventOut(0));
+
+    // eventOutText
+    this->component.set_eventOutText_OutputPort(0, this->get_from_eventOutText(0));
+    // pingOut
+    this->component.set_pingOut_OutputPort(0, this->get_from_pingOut(0));
+
+    // timeCaller
+    this->component.set_timeCaller_OutputPort(0, this->get_from_timeCaller(0));
+
+    // tlmOut
+    this->component.set_tlmOut_OutputPort(0, this->get_from_tlmOut(0));
+}
+
+void BufferAccumulatorTester ::initComponents() {
+    this->init();
+    this->component.init(QUEUE_DEPTH, INSTANCE);
+}
+
+void BufferAccumulatorTester ::doDispatch() {
+    this->component.doDispatch();
+}
+
+}  // end namespace Svc
+```
+
+### `BufferAccumulatorTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/BufferAccumulatorTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferAccumulatorTester.hpp
+// \author bocchino, mereweth
+// \brief  BufferAccumulator test harness interface
+//
+// \copyright
+// Copyright 2009-2017, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "BufferAccumulatorGTestBase.hpp"
+#include "Svc/BufferAccumulator/BufferAccumulator.hpp"
+
+#define MAX_NUM_BUFFERS 10
+
+namespace Svc {
+
+class BufferAccumulatorTester : public BufferAccumulatorGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object BufferAccumulatorTester
+    //!
+    explicit BufferAccumulatorTester(bool doAllocateQueue = true);
+
+    //! Destroy object BufferAccumulatorTester
+    //!
+    ~BufferAccumulatorTester(void);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_bufferSendOutDrain
+    //!
+    void from_bufferSendOutDrain_handler(const FwIndexType portNum,  //!< The port number
+                                         Fw::Buffer& fwBuffer);
+
+    //! Handler for from_bufferSendOutReturn
+    //!
+    void from_bufferSendOutReturn_handler(const FwIndexType portNum,  //!< The port number
+                                          Fw::Buffer& fwBuffer);
+
+    //! Handler for from_pingOut
+    //!
+    void from_pingOut_handler(const FwIndexType portNum,  //!< The port number
+                              U32 key                     //!< Value to return to pinger
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts(void);
+
+    //! Initialize components
+    //!
+    void initComponents(void);
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    BufferAccumulator component;
+
+    //! Whether to allocate/deallocate a queue for the user
+    bool doAllocateQueue;
+
+    // ----------------------------------------------------------------------
+    //  Methods
+    // ----------------------------------------------------------------------
+
+    //! Helper method to call doDispatch
+    void doDispatch(void);
+};
+
+}  // end namespace Svc
+
+#endif  // #ifndef TESTER_HPP
+```
+
+### `Drain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Drain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Drain.hpp
+// \author bocchino, mereweth
+// \brief  Test drain mode
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Drain.hpp"
+
+#include <sys/time.h>
+#include <cstring>
+
+namespace Svc {
+
+namespace Drain {
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BufferAccumulatorTester ::OK() {
+    ASSERT_EQ(BufferAccumulator_OpState::DRAIN, this->component.m_mode.e);
+    Fw::Buffer buffers[MAX_NUM_BUFFERS];
+    // Buffer needs a valid pointer
+    U8* data = new U8[10];
+    const U32 size = 10;
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        ASSERT_from_bufferSendOutDrain_SIZE(i);
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+        this->invoke_to_bufferSendInFill(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_from_bufferSendOutDrain_SIZE(i + 1);
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+        this->invoke_to_bufferSendInReturn(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_from_bufferSendOutReturn(i, buffers[i]);
+    }
+
+    delete[] data;
+}
+
+void BufferAccumulatorTester ::PartialDrainOK() {
+    this->sendCmd_BA_SetMode(0, 0, BufferAccumulator_OpState::ACCUMULATE);
+    this->doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, BufferAccumulator::OPCODE_BA_SETMODE, 0, Fw::CmdResponse::OK);
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+
+    Fw::Buffer buffers[MAX_NUM_BUFFERS];
+    U8* data = new U8[10];
+    const U32 size = 10;
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+        this->invoke_to_bufferSendInFill(0, buffers[i]);
+        this->doDispatch();
+
+        this->sendCmd_BA_DrainBuffers(0, 0, 1, BufferAccumulator_BlockMode::BLOCK);
+        this->doDispatch();
+        ASSERT_EVENTS_BA_PartialDrainDone_SIZE(i + 1);
+        ASSERT_EVENTS_BA_PartialDrainDone(i, 1u);
+        // + 1 for first BufferAccumulator_OpState::ACCUMULATE command; + 1 for
+        // buffer drained immediately
+        ASSERT_CMD_RESPONSE_SIZE(i + 2);
+        ASSERT_CMD_RESPONSE(i + 1, BufferAccumulator::OPCODE_BA_DRAINBUFFERS, 0, Fw::CmdResponse::OK);
+        // check that one buffer drained
+        ASSERT_from_bufferSendOutDrain_SIZE(i + 1);
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+
+        this->invoke_to_bufferSendInReturn(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_from_bufferSendOutReturn(i, buffers[i]);
+
+        ASSERT_EVENTS_BA_PartialDrainDone_SIZE(i + 1);
+        ASSERT_EVENTS_BA_PartialDrainDone(i, 1u);
+        // + 1 for first BufferAccumulator_OpState::ACCUMULATE command; + 1 for
+        // buffer drained immediately
+        ASSERT_CMD_RESPONSE_SIZE(i + 2);
+        // check that ONLY one buffer drained
+        ASSERT_from_bufferSendOutDrain_SIZE(i + 1);
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+    }
+
+    this->clearHistory();
+    // refill buffers
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+        this->invoke_to_bufferSendInFill(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    }
+
+    ASSERT_CMD_RESPONSE_SIZE(0);
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        ASSERT_from_bufferSendOutDrain_SIZE(i);
+
+        this->sendCmd_BA_DrainBuffers(0, 0, 1, BufferAccumulator_BlockMode::BLOCK);
+        this->doDispatch();
+        ASSERT_CMD_RESPONSE_SIZE(i + 1);
+        ASSERT_CMD_RESPONSE(i, BufferAccumulator::OPCODE_BA_DRAINBUFFERS, 0, Fw::CmdResponse::OK);
+
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+
+        // check that one buffer drained
+        ASSERT_from_bufferSendOutDrain_SIZE(i + 1);
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+        this->invoke_to_bufferSendInReturn(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_from_bufferSendOutReturn(i, buffers[i]);
+
+        ASSERT_EVENTS_BA_PartialDrainDone_SIZE(i + 1);
+        ASSERT_EVENTS_BA_PartialDrainDone(i, 1u);
+
+        // check that ONLY one buffer drained
+        ASSERT_from_bufferSendOutDrain_SIZE(i + 1);
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+        ASSERT_CMD_RESPONSE_SIZE(i + 1);
+    }
+
+    this->clearHistory();
+    // refill buffers
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+        this->invoke_to_bufferSendInFill(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    }
+
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    ASSERT_EQ(0u, this->component.m_numDrained);
+    ASSERT_EQ(0u, this->component.m_numToDrain);
+
+    ASSERT_EVENTS_BA_PartialDrainDone_SIZE(0);
+    this->sendCmd_BA_DrainBuffers(0, 0, MAX_NUM_BUFFERS, BufferAccumulator_BlockMode::BLOCK);
+    this->doDispatch();
+    ASSERT_CMD_RESPONSE_SIZE(0);
+
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        const U32 bufferID = i;
+        Fw::Buffer b(data, size, bufferID);
+        buffers[i] = b;
+
+        if (i + 1 < MAX_NUM_BUFFERS) {
+            ASSERT_EQ(i + 1, this->component.m_numDrained);
+            ASSERT_EQ(MAX_NUM_BUFFERS, this->component.m_numToDrain);
+            ASSERT_EVENTS_BA_PartialDrainDone_SIZE(0);
+        }
+
+        // check that one buffer drained
+        ASSERT_from_bufferSendOutDrain_SIZE(i + 1);
+        ASSERT_from_bufferSendOutDrain(i, buffers[i]);
+        this->invoke_to_bufferSendInReturn(0, buffers[i]);
+        this->doDispatch();
+        ASSERT_from_bufferSendOutReturn(i, buffers[i]);
+    }
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, BufferAccumulator::OPCODE_BA_DRAINBUFFERS, 0, Fw::CmdResponse::OK);
+    ASSERT_EVENTS_BA_PartialDrainDone_SIZE(1);
+    ASSERT_EVENTS_BA_PartialDrainDone(0, MAX_NUM_BUFFERS);
+
+    delete[] data;
+}
+
+}  // namespace Drain
+
+}  // namespace Svc
+```
+
+### `Drain.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Drain.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Drain.hpp
+// \author bocchino, mereweth
+// \brief  Test drain mode
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Drain_HPP
+#define Svc_Drain_HPP
+
+#include "BufferAccumulatorTester.hpp"
+
+namespace Svc {
+
+namespace Drain {
+
+class BufferAccumulatorTester : public Svc::BufferAccumulatorTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Send some buffers
+    void OK(void);
+
+    //! Run PartialDrain command in nominal way
+    void PartialDrainOK(void);
+};
+
+}  // namespace Drain
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Errors.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Errors.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Errors.hpp
+// \author bocchino, mereweth
+// \brief  Test errors
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Errors.hpp"
+
+namespace Svc {
+
+namespace Errors {
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BufferAccumulatorTester ::PartialDrain() {
+    ASSERT_EQ(BufferAccumulator_OpState::DRAIN, this->component.m_mode.e);
+    this->sendCmd_BA_DrainBuffers(0, 0, 1, BufferAccumulator_BlockMode::BLOCK);
+    this->doDispatch();  // will fail - we are still in
+                         // BufferAccumulator_OpState::DRAIN mode
+    ASSERT_EQ(BufferAccumulator_OpState::DRAIN, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    ASSERT_EVENTS_BA_AlreadyDraining_SIZE(1);
+    ASSERT_EQ(0u, this->component.m_numDrained);
+    ASSERT_EQ(0u, this->component.m_numToDrain);
+
+    this->sendCmd_BA_SetMode(0, 0, BufferAccumulator_OpState::ACCUMULATE);
+    this->doDispatch();
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+
+    this->sendCmd_BA_DrainBuffers(0, 0, 10, BufferAccumulator_BlockMode::BLOCK);
+    this->doDispatch();  // will succeed - now we are in ACCUMULATE
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);  // would be first buffer out, but we are empty
+    ASSERT_EVENTS_BA_DrainStalled_SIZE(1);
+    ASSERT_EVENTS_BA_DrainStalled(0, 0u, 10u);
+    ASSERT_EVENTS_BA_PartialDrainDone_SIZE(0);  // partial drain not done
+    ASSERT_EQ(true, this->component.m_send);
+    ASSERT_EQ(0u, this->component.m_numDrained);
+    ASSERT_EQ(10u, this->component.m_numToDrain);
+
+    this->sendCmd_BA_DrainBuffers(0, 0, 1, BufferAccumulator_BlockMode::BLOCK);
+    this->doDispatch();  // will fail - we are still doing a partial drain
+    ASSERT_EVENTS_BA_StillDraining_SIZE(1);
+    ASSERT_EVENTS_BA_StillDraining(0, 0u, 10u);
+    ASSERT_EVENTS_BA_PartialDrainDone_SIZE(0);  // partial drain not done
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    ASSERT_EQ(true, this->component.m_send);
+    ASSERT_EQ(0u, this->component.m_numDrained);
+    ASSERT_EQ(10u, this->component.m_numToDrain);
+}
+
+void BufferAccumulatorTester ::QueueFull() {
+    U8* data = new U8[10];
+    const U32 size = 10;
+    Fw::Buffer buffer(data, size);
+
+    // Go to Accumulate mode
+    ASSERT_EQ(BufferAccumulator_OpState::DRAIN, this->component.m_mode.e);
+    this->sendCmd_BA_SetMode(0, 0, BufferAccumulator_OpState::ACCUMULATE);
+    this->doDispatch();
+    ASSERT_EQ(BufferAccumulator_OpState::ACCUMULATE, this->component.m_mode.e);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+
+    // Fill up the buffer queue
+    for (U32 i = 0; i < MAX_NUM_BUFFERS; ++i) {
+        this->invoke_to_bufferSendInFill(0, buffer);
+        this->doDispatch();
+        ASSERT_FROM_PORT_HISTORY_SIZE(0);
+    }
+
+    // Send another buffer and expect an event
+    this->invoke_to_bufferSendInFill(0, buffer);
+    this->doDispatch();
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_BA_QueueFull_SIZE(1);
+
+    // Send another buffer and expect no new event
+    this->invoke_to_bufferSendInFill(0, buffer);
+    this->doDispatch();
+    ASSERT_EVENTS_SIZE(1);
+
+    // Drain one buffer
+    this->sendCmd_BA_SetMode(0, 0, BufferAccumulator_OpState::DRAIN);
+    this->doDispatch();
+    ASSERT_FROM_PORT_HISTORY_SIZE(1);
+    ASSERT_from_bufferSendOutDrain_SIZE(1);
+    ASSERT_from_bufferSendOutDrain(0, buffer);
+
+    // Send another buffer and expect an event
+    this->invoke_to_bufferSendInFill(0, buffer);
+    this->doDispatch();
+    ASSERT_EVENTS_SIZE(2);
+    ASSERT_EVENTS_BA_BufferAccepted_SIZE(1);
+
+    // Return the original buffer in order to drain one buffer
+    this->invoke_to_bufferSendInReturn(0, buffer);
+    this->doDispatch();
+    ASSERT_FROM_PORT_HISTORY_SIZE(3);
+    ASSERT_from_bufferSendOutDrain_SIZE(2);
+    ASSERT_from_bufferSendOutDrain(1, buffer);
+
+    // Send another buffer and expect no new event
+    this->invoke_to_bufferSendInFill(0, buffer);
+    this->doDispatch();
+    ASSERT_EVENTS_SIZE(2);
+    ASSERT_EVENTS_BA_BufferAccepted_SIZE(1);
+
+    // Send another buffer and expect an event
+    this->invoke_to_bufferSendInFill(0, buffer);
+    this->doDispatch();
+    ASSERT_EVENTS_SIZE(3);
+    ASSERT_EVENTS_BA_QueueFull_SIZE(2);
+
+    delete[] data;
+}
+
+}  // namespace Errors
+
+}  // namespace Svc
+```
+
+### `Errors.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Errors.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Errors.hpp
+// \author bocchino, mereweth
+// \brief  Test errors
+//
+// \copyright
+// Copyright (c) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Errors_HPP
+#define Svc_Errors_HPP
+
+#include "BufferAccumulatorTester.hpp"
+
+namespace Svc {
+
+namespace Errors {
+
+class BufferAccumulatorTester : public Svc::BufferAccumulatorTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Queue full
+    void QueueFull(void);
+
+    //! Run PartialDrain command in off-nominal ways
+    void PartialDrain(void);
+};
+
+}  // namespace Errors
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Health.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Health.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.cpp
+// \author bocchino, mereweth
+// \brief  Implementation for Buffer Accumulator health tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Health.hpp"
+
+namespace Svc {
+
+namespace Health {
+
+void BufferAccumulatorTester ::Ping() {
+    U32 key = 42;
+
+    this->invoke_to_pingIn(0, key);
+    this->doDispatch();
+
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_from_pingOut_SIZE(1);
+    ASSERT_from_pingOut(0, key);
+}
+
+}  // namespace Health
+
+}  // namespace Svc
+```
+
+### `Health.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/ut/Health.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.hpp
+// \author bocchino, mereweth
+// \brief  Interface for Buffer Accumulator health tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Health_HPP
+#define Svc_Health_HPP
+
+#include "BufferAccumulatorTester.hpp"
+
+namespace Svc {
+
+namespace Health {
+
+class BufferAccumulatorTester : public Svc::BufferAccumulatorTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Health ping test
+    void Ping(void);
+};
+
+}  // namespace Health
+
+}  // namespace Svc
+
+#endif
+```

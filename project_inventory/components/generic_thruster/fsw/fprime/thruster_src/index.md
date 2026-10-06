@@ -3,22 +3,584 @@
 
 **경로:** `components/generic_thruster/fsw/fprime/thruster_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_thruster.cpp
-file--Generic_thruster.fpp
-file--Generic_thruster.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_thruster/fsw/fprime/thruster_src/docs/`](docs/index) — 폴더
-- [`components/generic_thruster/fsw/fprime/thruster_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_thruster/fsw/fprime/thruster_src/Generic_thruster.cpp`](file--Generic_thruster.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_thruster/fsw/fprime/thruster_src/Generic_thruster.fpp`](file--Generic_thruster.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_thruster/fsw/fprime/thruster_src/Generic_thruster.hpp`](file--Generic_thruster.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_thruster/fsw/fprime/thruster_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+# include_directories("../../shared")
+# include_directories("../../standalone") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_thruster.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_thruster.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_thruster_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+set(MOD_DEPS
+  Fw_Types
+  ${ITC_Common_LIBRARIES}
+  ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_thruster_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+
+```
+
+### `Generic_thruster.cpp`
+
+**경로:** `components/generic_thruster/fsw/fprime/thruster_src/Generic_thruster.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_thruster.cpp
+// \author jstar
+// \brief  cpp file for Generic_thruster component implementation class
+// ======================================================================
+
+#include "thruster_src/Generic_thruster.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_thruster ::
+    Generic_thruster(const char* const compName) : Generic_thrusterComponentBase(compName)
+  {
+
+    int status = OS_SUCCESS;
+
+
+    /* Initialize HWLIB */
+    nos_init_link();
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_THRUSTER_DEVICE_DISABLED;
+
+    for(int i = 0; i < THRUSTER_NUM; i++) HkTelemetryPkt.Percentage[i] = 0;
+
+    /* Open device specific protocols */
+    ThrusterUart.deviceString = GENERIC_THRUSTER_CFG_STRING;
+    ThrusterUart.handle = GENERIC_THRUSTER_CFG_HANDLE;
+    ThrusterUart.isOpen = PORT_CLOSED;
+    ThrusterUart.baud = GENERIC_THRUSTER_CFG_BAUDRATE_HZ;
+    status = uart_init_port(&ThrusterUart);
+    if (status == OS_SUCCESS)
+    {
+        printf("UART device %s configured with baudrate %d \n", ThrusterUart.deviceString, ThrusterUart.baud);
+    }
+    else
+    {
+        printf("UART device %s failed to initialize! \n", ThrusterUart.deviceString);
+    }
+
+    status = uart_close_port(&ThrusterUart);
+  }
+
+  Generic_thruster ::
+    ~Generic_thruster()
+  {
+    uart_close_port(&ThrusterUart);
+
+    nos_destroy_link();
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_thruster :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_thruster :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_THRUSTER_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      ThrusterUart.deviceString = GENERIC_THRUSTER_CFG_STRING;
+      ThrusterUart.handle = GENERIC_THRUSTER_CFG_HANDLE;
+      ThrusterUart.isOpen = PORT_CLOSED;
+      ThrusterUart.baud = GENERIC_THRUSTER_CFG_BAUDRATE_HZ;
+      status = uart_init_port(&ThrusterUart);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        HkTelemetryPkt.DeviceEnabled = GENERIC_THRUSTER_DEVICE_ENABLED;
+        Fw::LogStringArg log_msg("Enable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Enable command failed to init UART!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Enable failed, already Enabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_thruster :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_THRUSTER_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = uart_close_port(&ThrusterUart);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        HkTelemetryPkt.DeviceEnabled = GENERIC_THRUSTER_DEVICE_DISABLED;
+        Fw::LogStringArg log_msg("Disable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Disable command failed to close UART!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Disable failed, already Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_thruster :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_thruster :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_THRUSTER_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+      this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+      this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+      this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+      this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+      this->tlmWrite_Percentage_0(HkTelemetryPkt.Percentage[0]);
+      this->tlmWrite_Percentage_1(HkTelemetryPkt.Percentage[1]);
+      this->tlmWrite_Percentage_2(HkTelemetryPkt.Percentage[2]);
+      this->tlmWrite_Percentage_3(HkTelemetryPkt.Percentage[3]);
+
+      Fw::LogStringArg log_msg("Requested Housekeeping!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      Fw::LogStringArg log_msg("HK Failed, Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }   
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_thruster :: SET_PERCENTAGE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const U8 percent, const Generic_thruster_thrusterNums thruster_number){
+    
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_THRUSTER_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = GENERIC_THRUSTER_SetPercentage(&ThrusterUart, thruster_number.e, percent, GENERIC_THRUSTER_DEVICE_CMD_SIZE);
+      if (status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        HkTelemetryPkt.Percentage[thruster_number.e] = percent;
+
+        char configMsg[40];
+        sprintf(configMsg, "Thruster %d set to %d%% successfully!", thruster_number.e, percent);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        char configMsg[40];
+        sprintf(configMsg, "Failed to set Thruster %d to %d%%!", thruster_number.e, percent);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+
+      Fw::LogStringArg log_msg("Command failed, device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_Percentage_0(HkTelemetryPkt.Percentage[0]);
+    this->tlmWrite_Percentage_1(HkTelemetryPkt.Percentage[1]);
+    this->tlmWrite_Percentage_2(HkTelemetryPkt.Percentage[2]);
+    this->tlmWrite_Percentage_3(HkTelemetryPkt.Percentage[3]);
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+        
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  inline Generic_thruster_ActiveState Generic_thruster :: get_active_state(uint8_t DeviceEnabled)
+  {
+    Generic_thruster_ActiveState state;
+
+    if(DeviceEnabled == GENERIC_THRUSTER_DEVICE_ENABLED)
+    {
+      state.e = Generic_thruster_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_thruster_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+}
+```
+
+### `Generic_thruster.fpp`
+
+**경로:** `components/generic_thruster/fsw/fprime/thruster_src/Generic_thruster.fpp`
+
+
+```fpp
+module Components {
+    @ Satellite Thruster
+    active component Generic_thruster {
+
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+        #@ TODO
+        #async command TODO opcode 0
+
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        enum thrusterNums {
+            thruster0 @< thruster 0
+            thruster1 @< thruster 1
+            thruster2 @< thruster 2
+            thruster3 @< thruster 3
+        }
+
+        @ NOOP Command
+        async command NOOP()
+
+        @ Enable Cmd
+        async command ENABLE()
+
+        @ Disable Cmd
+        async command DISABLE()
+
+        @ Reset Counters Cmd
+        async command RESET_COUNTERS()
+
+        @ Command to Request Housekeeping
+        async command REQUEST_HOUSEKEEPING()
+
+        @ Command to issue greeting with maximum length of 20 characters
+        async command SET_PERCENTAGE(
+            percent: U8 @< Percent speed of rotation, 0 to 100
+            thruster_number: thrusterNums @< Direction of rotation
+        )
+
+        @ Greeting event with maximum greeting length of 60 characters
+        event TELEM(
+            log_info: string size 60 @< 
+        ) severity activity high format "Generic_thruster: {}"
+
+        @ Percentage thruster is being set to
+        telemetry Percentage_0: U8
+
+        @ Percentage thruster is being set to
+        telemetry Percentage_1: U8
+
+        @ Percentage thruster is being set to
+        telemetry Percentage_2: U8
+
+        @ Percentage thruster is being set to
+        telemetry Percentage_3: U8
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabled: ActiveState
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_thruster.hpp`
+
+**경로:** `components/generic_thruster/fsw/fprime/thruster_src/Generic_thruster.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_thruster.hpp
+// \author jstar
+// \brief  hpp file for Generic_thruster component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_thruster_HPP
+#define Components_Generic_thruster_HPP
+
+#include "thruster_src/Generic_thrusterComponentAc.hpp"
+#include "thruster_src/Generic_thruster_ActiveStateEnumAc.hpp"
+#include "thruster_src/Generic_thruster_thrusterNumsEnumAc.hpp"
+
+
+extern "C"{
+#include "generic_thruster_device.h"
+#include "libuart.h"
+}
+
+#include "nos_link.h"
+
+#define THRUSTER_NUM 4
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+    uint8_t                         Percentage[THRUSTER_NUM];
+} THRUSTER_Hk_tlm_t;
+#define THRUSTER_HK_TLM_LNGTH sizeof(THRUSTER_Hk_tlm_t)
+
+#define GENERIC_THRUSTER_DEVICE_DISABLED 0
+#define GENERIC_THRUSTER_DEVICE_ENABLED  1
+
+
+namespace Components {
+  
+  class Generic_thruster :
+  public Generic_thrusterComponentBase
+  {
+    
+    public:
+    
+    uart_info_t ThrusterUart;
+    THRUSTER_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_thruster object
+      Generic_thruster(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_thruster object
+      ~Generic_thruster();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void ENABLE_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler (
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void SET_PERCENTAGE_cmdHandler(
+          FwOpcodeType opCode, //!< The opcode
+          U32 cmdSeq, //!< The command sequence number
+          const U8 percent, //!< Percentage to set Thruster
+          const Generic_thruster_thrusterNums thruster_number //!< Thruster Number to set
+      ) override;
+
+      inline Generic_thruster_ActiveState get_active_state(uint8_t DeviceEnabled); 
+
+  };
+
+}
+
+#endif
+```

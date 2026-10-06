@@ -3,16 +3,131 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-parameter-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `select-parameter-dialog.component.html`
 
-file--select-parameter-dialog.component.html
-file--select-parameter-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-parameter-dialog/select-parameter-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>{{ label }}</h2>
+
+<mat-dialog-content class="ya-form">
+  <ya-field [label]="label">
+    <input type="text" [formControl]="parameter" [matAutocomplete]="auto" />
+    <mat-autocomplete class="ya-autocomplete" #auto>
+      @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option | memberPath">
+          {{ option | memberPath }}
+        </mat-option>
+      }
+    </mat-autocomplete>
+    @if (hint) {
+      <span class="hint">{{ hint }}</span>
+    }
+  </ya-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="select()" [disabled]="!parameter.valid">
+    {{ okLabel }}
+  </ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `select-parameter-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-parameter-dialog/select-parameter-dialog.component.html`](file--select-parameter-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-parameter-dialog/select-parameter-dialog.component.ts`](file--select-parameter-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/select-parameter-dialog/select-parameter-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+} from '@angular/core';
+import { UntypedFormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  Parameter,
+  WebappSdkModule,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { Observable } from 'rxjs';
+import { debounceTime, map, switchMap } from 'rxjs/operators';
+
+export interface SelectParameterOptions {
+  label?: string;
+  okLabel?: string;
+  exclude?: string[];
+  hint?: string;
+  limit?: number;
+}
+
+/**
+ * Reusable dialog for selecting a single parameter via its qualified name.
+ * Allows also manual parameter entry for parameters that do not (yet) exist on the server.
+ */
+
+@Component({
+  selector: 'app-select-parameter-dialog',
+  templateUrl: './select-parameter-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SelectParameterDialogComponent implements OnInit {
+  parameter = new UntypedFormControl(null, [Validators.required]);
+
+  filteredOptions: Observable<Parameter[]>;
+
+  label: string;
+  okLabel: string;
+  limit: number;
+  hint?: string;
+
+  constructor(
+    private dialogRef: MatDialogRef<SelectParameterDialogComponent>,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: SelectParameterOptions,
+  ) {
+    this.label = data.label || 'Search parameter';
+    this.okLabel = data.okLabel || 'SELECT';
+    this.limit = data.limit || 10;
+    this.hint = data.hint;
+  }
+
+  ngOnInit() {
+    const excludedParameters = this.data.exclude || [];
+    this.filteredOptions = this.parameter.valueChanges.pipe(
+      debounceTime(300),
+      switchMap((val) =>
+        this.yamcs.yamcsClient.getParameters(this.yamcs.instance!, {
+          q: val,
+          limit: this.limit,
+          searchMembers: true,
+        }),
+      ),
+      map((page) => page.parameters || []),
+      map((candidates) => {
+        return candidates.filter((candidate) => {
+          for (const excludedParameter of excludedParameters) {
+            const qualifiedName = utils.getMemberPath(candidate);
+            if (excludedParameter === qualifiedName) {
+              return false;
+            }
+          }
+          return true;
+        });
+      }),
+    );
+  }
+
+  select() {
+    this.dialogRef.close(this.parameter.value);
+  }
+}
+```

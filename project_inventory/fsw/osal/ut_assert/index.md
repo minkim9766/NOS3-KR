@@ -3,7 +3,7 @@
 
 **경로:** `fsw/osal/ut_assert/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,14 +11,203 @@
 inc/index
 scripts/index
 src/index
-file--CMakeLists.txt
-file--README.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/osal/ut_assert/inc/`](inc/index) — 폴더
-- [`fsw/osal/ut_assert/scripts/`](scripts/index) — 폴더
-- [`fsw/osal/ut_assert/src/`](src/index) — 폴더
-- [`fsw/osal/ut_assert/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/ut_assert/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/osal/ut_assert/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE recipe for the UT assert library
+#
+######################################################################
+
+#
+# The "ut_assert" library is the core GSFC-provided unit test library
+#
+project(UT_ASSERT C)
+
+set(UT_ASSERT_SOURCE_LIST
+    src/utassert.c
+    src/utlist.c
+    src/utstubs.c
+    src/uttest.c
+    src/uttools.c
+)
+
+# The "ut_assert" library is usable by ANY and ALL subsystem(s) that need
+# to do unit testing of any kind.  This library implements an OSAL application
+# that contains APIs to aid in unit testing.  It provides the OS_Application_Startup
+# and OS_Application_Run functions that a normal standalone OSAL application would.
+
+# It uses the same OSAL BSP as a normal application would use to provide the basic
+# startup procedure and text message output abstractions.
+
+# NOTE: This library does NOT include any stub functions here, as the configuration
+# of stubs vs. real implementations are specific to the unit being tested.  All
+# stub functions are compiled as separate libraries.
+
+add_library(ut_assert STATIC
+    ${UT_ASSERT_SOURCE_LIST}
+    src/utbsp.c
+)
+
+target_include_directories(ut_assert PRIVATE
+    ${OSAL_SOURCE_DIR}/src/bsp/shared/inc
+)
+	
+target_include_directories(ut_assert PUBLIC
+    $<BUILD_INTERFACE:${UT_ASSERT_SOURCE_DIR}/inc>
+    $<INSTALL_INTERFACE:include/ut_assert>
+)
+target_compile_definitions(ut_assert PUBLIC
+    "_UNIT_TEST_"
+)
+target_link_libraries(ut_assert PUBLIC
+    osal_bsp
+)
+
+
+# The "pic" variant of ut_assert is compiled as an
+# object library to be included in another object,
+# such as a loadable test app for CFE.
+# It is compiled as position independent code (PIC)
+# to support dynamic loading.
+add_library(ut_assert_pic OBJECT EXCLUDE_FROM_ALL
+    ${UT_ASSERT_SOURCE_LIST}
+)
+set_target_properties(ut_assert_pic PROPERTIES
+    POSITION_INDEPENDENT_CODE TRUE
+)
+target_include_directories(ut_assert_pic PUBLIC
+    $<BUILD_INTERFACE:${UT_ASSERT_SOURCE_DIR}/inc>
+    $<TARGET_PROPERTY:osal_public_api,INTERFACE_INCLUDE_DIRECTORIES>
+)
+target_compile_definitions(ut_assert_pic PUBLIC
+    $<TARGET_PROPERTY:osal_public_api,INTERFACE_COMPILE_DEFINITIONS>
+)
+
+# The "ut_coverage_compile" is an interface target that contains the
+# compiler options/definitions to enable coverage instrumentation in the
+# generated objects.  It should be specified on files compiled for coverage
+# analysis.
+add_library(ut_coverage_compile INTERFACE)
+target_link_libraries(ut_coverage_compile INTERFACE ut_assert)
+
+# The "ut_coverage_link" is an interface target that contains options/definitions
+# and any link libraries to enable coverage instrumentation in the final executable.
+# It should be specified on coverage test executable targets.
+add_library(ut_coverage_link INTERFACE)
+target_link_libraries(ut_coverage_link INTERFACE ut_assert)
+
+if (OSAL_INSTALL_LIBRARIES)
+
+    install(
+        TARGETS ut_assert ut_coverage_compile ut_coverage_link
+        EXPORT nasa-osal-export
+        RUNTIME DESTINATION bin
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        PUBLIC_HEADER DESTINATION include/ut_assert
+        INCLUDES DESTINATION include/ut_assert
+    )
+    install(DIRECTORY
+        ${UT_ASSERT_SOURCE_DIR}/inc/
+        DESTINATION include/ut_assert
+    )
+    install(
+        PROGRAMS scripts/generate_stubs.pl
+        DESTINATION bin
+        RENAME utassert_generate_stubs.pl
+    )
+
+endif()
+```
+
+### `README.txt`
+
+**경로:** `fsw/osal/ut_assert/README.txt`
+
+
+```text
+core Flight System (cFS) Unit Test (UT) Assert Library
+
+Introduction
+
+The Unit Test (UT) Assert library provides a unit test framework and a collection 
+of utilities that are designed to facilitate unit testing of applications and
+components build via the core Flight System (cFS) OSAL/cFE development and 
+runtime environment.  
+
+The cFS is a platform and project independent reusable software framework and
+set of reusable applications developed by NASA Goddard Space Flight Center.  
+This framework is used as the basis for the flight software for satellite data 
+systems and instruments, but can be used on other embedded systems.  More 
+information on the cFS can be found at http://cfs.gsfc.nasa.gov
+
+Assert-Based Unit Test Tools (UT-Assert) Goals
+
+These tools implement an assertion-based testing philosophy that requires the 
+developer to explicitly write verification statements that assert whether a condition 
+is true or false. This approach is much different than the Flight Software Branch's 
+historical approach to unit testing that creates a log file that requires developer 
+analysis in order to determine whether a test passed or failed. In order to use the 
+tools a developer populates the framework with their unit tests and links with the 
+ut-assert library to create an executable.
+
+Project Goals
+
+The establishment of the FSW Reuse Library (FSRL) has made it obvious that the 
+development and maintenance of unit tests is critical to the success of the FSRL. 
+Unit tests are an essential part of the FSRL and they must be developed and 
+maintained in a cost effective manner. The unit test framework relieves developers 
+from repeatedly implementing common unit testing functions and they enforce a common 
+look-and-feel that helps test maintenance. These tools implement an assertion-based 
+testing philosophy that requires the developer to explicitly write verification 
+statements that assert whether a condition is true or false. This approach is much 
+different than the NASG Goddard Space Flight Center Flight Software Branch's 
+historical approach to unit testing that creates a log file that requires a developer 
+analysis in order to determine whether a test passed or failed.
+
+Functional Goals
+
+This approach allows developers to write self-verifying unit tests and the tools 
+provide a framework that allow unit tests to be bundled into single executable 
+units. This aggregation allows comprehensive automated unit testing so as FSRL 
+components are added and/or modified automated regression unit testing can be 
+performed.
+
+Evolvability Goals
+
+Since the core Flight System (cFS) suite is open source another motivation is to 
+provide a test facility that can be used by the open source community. 
+
+The use of a third party (including open source) unit test tool such as CUnit was 
+considered. However, this option was rejected because it added unnecessary complexity 
+to the FSRL unit testing. A tool such as cunit is written to accommodate many different
+users which increases its complexity and obscures the basic functionality required by 
+the FSRL unit tests. For example, cunit supports the generation of XML reports which 
+is not seen as a valuable feature for the FSRL. In addition, little effort is required 
+to implement and maintain the unit test framework. Therefore by developing our own 
+unit test framework we have complete control over the framework's features, complexity,
+and growth path. We also do not rely on an outside party to implement enhancements 
+and/or bug fixes.
+
+Usability Goals
+
+There are multiple aspects to the usability of these tools:
+
+Simplify and 'standardize' the process of creating unit test for CFS software 
+components.  Allow developers to create self-documented unit test that ease the 
+maintenance of unit tests. Unit test maintenance has proven to be a difficult task.
+
+Allow unit tests to be aggregated into unit test suites so CFS unit test suites can be 
+created to allow automated unit level regression testing.
+
+EOF
+```

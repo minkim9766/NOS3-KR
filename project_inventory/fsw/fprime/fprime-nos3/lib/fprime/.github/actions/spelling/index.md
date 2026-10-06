@@ -3,30 +3,2143 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `advice.md`
 
-file--advice.md
-file--allow.txt
-file--candidate.patterns
-file--excludes.txt
-file--expect.txt
-file--line_forbidden.patterns
-file--patterns.txt
-file--README.md
-file--reject.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/advice.md`
+
+
+```markdown
+<!-- See https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples%3A-advice --> <!-- markdownlint-disable MD033 MD041 -->
+<details><summary>If the flagged items are :exploding_head: false positives</summary>
+
+If items relate to a ...
+* binary file (or some other file you wouldn't want to check at all).
+
+  Please add a file path to the `excludes.txt` file matching the containing file.
+
+  File paths are Perl 5 Regular Expressions - you can [test](
+https://www.regexplanet.com/advanced/perl/) yours before committing to verify it will match your files.
+
+  `^` refers to the file's path from the root of the repository, so `^README\.md$` would exclude [README.md](
+../tree/HEAD/README.md) (on whichever branch you're using).
+
+* well-formed pattern.
+
+  If you can write a [pattern](
+https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples:-patterns
+) that would match it,
+  try adding it to the `patterns.txt` file.
+
+  Patterns are Perl 5 Regular Expressions - you can [test](
+https://www.regexplanet.com/advanced/perl/) yours before committing to verify it will match your lines.
+
+  Note that patterns can't match multiline strings.
+
+</details>
 ```
 
-## 항목
+### `allow.txt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/advice.md`](file--advice.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/allow.txt`](file--allow.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/candidate.patterns`](file--candidate.patterns) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/excludes.txt`](file--excludes.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/expect.txt`](file--expect.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/line_forbidden.patterns`](file--line_forbidden.patterns) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/patterns.txt`](file--patterns.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/reject.txt`](file--reject.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/allow.txt`
+
+
+```text
+AUTOGEN
+atype
+github
+https
+ssh
+ubuntu
+workarounds
+```
+
+### `candidate.patterns`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/candidate.patterns`
+
+
+```text
+# marker to ignore all code on line
+^.*/\* #no-spell-check-line \*/.*$
+# marker to ignore all code on line
+^.*\bno-spell-check(?:-line|)(?:\s.*|)$
+
+# https://cspell.org/configuration/document-settings/
+# cspell inline
+^.*\b[Cc][Ss][Pp][Ee][Ll]{2}:\s*[Dd][Ii][Ss][Aa][Bb][Ll][Ee]-[Ll][Ii][Nn][Ee]\b
+
+# patch hunk comments
+^@@ -\d+(?:,\d+|) \+\d+(?:,\d+|) @@ .*
+# git index header
+index (?:[0-9a-z]{7,40},|)[0-9a-z]{7,40}\.\.[0-9a-z]{7,40}
+
+# file permissions
+['"`\s][-bcdLlpsw](?:[-r][-w][-Ssx]){2}[-r][-w][-SsTtx]\+?['"`\s]
+
+# css url wrappings
+\burl\([^)]+\)
+
+# cid urls
+(['"])cid:.*?\g{-1}
+
+# data url in parens
+\(data:(?:[^) ][^)]*?|)(?:[A-Z]{3,}|[A-Z][a-z]{2,}|[a-z]{3,})[^)]*\)
+# data url in quotes
+([`'"])data:(?:[^ `'"].*?|)(?:[A-Z]{3,}|[A-Z][a-z]{2,}|[a-z]{3,}).*\g{-1}
+# data url
+\bdata:[-a-zA-Z=;:/0-9+]*,\S*
+
+# https/http/file urls
+#(?:\b(?:https?|ftp|file)://)[-A-Za-z0-9+&@#/*%?=~_|!:,.;]+[-A-Za-z0-9+&@#/*%=~_|]
+
+# mailto urls
+mailto:[-a-zA-Z=;:/?%&0-9+@._]{3,}
+
+# magnet urls
+magnet:[?=:\w]+
+
+# magnet urls
+"magnet:[^"]+"
+
+# obs:
+"obs:[^"]*"
+
+# The `\b` here means a break, it's the fancy way to handle urls, but it makes things harder to read
+# In this examples content, I'm using a number of different ways to match things to show various approaches
+# asciinema
+\basciinema\.org/a/[0-9a-zA-Z]+
+
+# asciinema v2
+^\[\d+\.\d+, "[io]", ".*"\]$
+
+# apple
+\bdeveloper\.apple\.com/[-\w?=/]+
+# Apple music
+\bembed\.music\.apple\.com/fr/playlist/usr-share/[-\w.]+
+
+# appveyor api
+\bci\.appveyor\.com/api/projects/status/[0-9a-z]+
+# appveyor project
+\bci\.appveyor\.com/project/(?:[^/\s"]*/){2}builds?/\d+/job/[0-9a-z]+
+
+# Amazon
+
+# Amazon
+\bamazon\.com/[-\w]+/(?:dp/[0-9A-Z]+|)
+# AWS S3
+\b\w*\.s3[^.]*\.amazonaws\.com/[-\w/&#%_?:=]*
+# AWS execute-api
+\b[0-9a-z]{10}\.execute-api\.[-0-9a-z]+\.amazonaws\.com\b
+# AWS ELB
+\b\w+\.[-0-9a-z]+\.elb\.amazonaws\.com\b
+# AWS SNS
+\bsns\.[-0-9a-z]+.amazonaws\.com/[-\w/&#%_?:=]*
+# AWS VPC
+vpc-\w+
+
+# While you could try to match `http://` and `https://` by using `s?` in `https?://`, sometimes there
+# YouTube url
+\b(?:(?:www\.|)youtube\.com|youtu.be)/(?:channel/|embed/|user/|playlist\?list=|watch\?v=|v/|)[-a-zA-Z0-9?&=_%]*
+# YouTube music
+\bmusic\.youtube\.com/youtubei/v1/browse(?:[?&]\w+=[-a-zA-Z0-9?&=_]*)
+# YouTube tag
+<\s*youtube\s+id=['"][-a-zA-Z0-9?_]*['"]
+# YouTube image
+\bimg\.youtube\.com/vi/[-a-zA-Z0-9?&=_]*
+# Google Accounts
+\baccounts.google.com/[-_/?=.:;+%&0-9a-zA-Z]*
+# Google Analytics
+\bgoogle-analytics\.com/collect.[-0-9a-zA-Z?%=&_.~]*
+# Google APIs
+\bgoogleapis\.(?:com|dev)/[a-z]+/(?:v\d+/|)[a-z]+/[-@:./?=\w+|&]+
+# Google Storage
+\b[-a-zA-Z0-9.]*\bstorage\d*\.googleapis\.com(?:/\S*|)
+# Google Calendar
+\bcalendar\.google\.com/calendar(?:/u/\d+|)/embed\?src=[@./?=\w&%]+
+\w+\@group\.calendar\.google\.com\b
+# Google DataStudio
+\bdatastudio\.google\.com/(?:(?:c/|)u/\d+/|)(?:embed/|)(?:open|reporting|datasources|s)/[-0-9a-zA-Z]+(?:/page/[-0-9a-zA-Z]+|)
+# The leading `/` here is as opposed to the `\b` above
+# ... a short way to match `https://` or `http://` since most urls have one of those prefixes
+# Google Docs
+/docs\.google\.com/[a-z]+/(?:ccc\?key=\w+|(?:u/\d+|d/(?:e/|)[0-9a-zA-Z_-]+/)?(?:edit\?[-\w=#.]*|/\?[\w=&]*|))
+# Google Drive
+\bdrive\.google\.com/(?:file/d/|open)[-0-9a-zA-Z_?=]*
+# Google Groups
+\bgroups\.google\.com(?:/[a-z]+/(?:#!|)[^/\s"]+)*
+# Google Maps
+\bmaps\.google\.com/maps\?[\w&;=]*
+# Google themes
+themes\.googleusercontent\.com/static/fonts/[^/\s"]+/v\d+/[^.]+.
+# Google CDN
+\bclients2\.google(?:usercontent|)\.com[-0-9a-zA-Z/.]*
+# Goo.gl
+/goo\.gl/[a-zA-Z0-9]+
+# Google Chrome Store
+\bchrome\.google\.com/webstore/detail/[-\w]*(?:/\w*|)
+# Google Books
+\bgoogle\.(?:\w{2,4})/books(?:/\w+)*\?[-\w\d=&#.]*
+# Google Fonts
+\bfonts\.(?:googleapis|gstatic)\.com/[-/?=:;+&0-9a-zA-Z]*
+# Google Forms
+\bforms\.gle/\w+
+# Google Scholar
+\bscholar\.google\.com/citations\?user=[A-Za-z0-9_]+
+# Google Colab Research Drive
+\bcolab\.research\.google\.com/drive/[-0-9a-zA-Z_?=]*
+
+# GitHub SHAs (api)
+\bapi.github\.com/repos(?:/[^/\s"]+){3}/[0-9a-f]+\b
+# GitHub SHAs (markdown)
+(?:\[`?[0-9a-f]+`?\]\(https:/|)/(?:www\.|)github\.com(?:/[^/\s"]+){2,}(?:/[^/\s")]+)(?:[0-9a-f]+(?:[-0-9a-zA-Z/#.]*|)\b|)
+# GitHub SHAs
+\bgithub\.com(?:/[^/\s"]+){2}[@#][0-9a-f]+\b
+# GitHub SHA refs
+\[([0-9a-f]+)\]\(https://(?:www\.|)github.com/[-\w]+/[-\w]+/commit/\g{-1}[0-9a-f]*
+# GitHub wiki
+\bgithub\.com/(?:[^/]+/){2}wiki/(?:(?:[^/]+/|)_history|[^/]+(?:/_compare|)/[0-9a-f.]{40,})\b
+# githubusercontent
+/[-a-z0-9]+\.githubusercontent\.com/[-a-zA-Z0-9?&=_\/.]*
+# githubassets
+\bgithubassets.com/[0-9a-f]+(?:[-/\w.]+)
+# gist github
+\bgist\.github\.com/[^/\s"]+/[0-9a-f]+
+# git.io
+\bgit\.io/[0-9a-zA-Z]+
+# GitHub JSON
+"node_id": "[-a-zA-Z=;:/0-9+_]*"
+# Contributor
+#\[[^\]]+\]\(https://github\.com/[^/\s"]+/?\)
+# GHSA
+GHSA(?:-[0-9a-z]{4}){3}
+
+# GitHub actions
+\buses:\s+[-\w.]+/[-\w./]+@[-\w.]+
+
+# GitLab commit
+\bgitlab\.[^/\s"]*/\S+/\S+/commit/[0-9a-f]{7,16}#[0-9a-f]{40}\b
+# GitLab merge requests
+\bgitlab\.[^/\s"]*/\S+/\S+/-/merge_requests/\d+/diffs#[0-9a-f]{40}\b
+# GitLab uploads
+\bgitlab\.[^/\s"]*/uploads/[-a-zA-Z=;:/0-9+]*
+# GitLab commits
+\bgitlab\.[^/\s"]*/(?:[^/\s"]+/){2}commits?/[0-9a-f]+\b
+
+# binance
+accounts\.binance\.com/[a-z/]*oauth/authorize\?[-0-9a-zA-Z&%]*
+
+# bitbucket diff
+\bapi\.bitbucket\.org/\d+\.\d+/repositories/(?:[^/\s"]+/){2}diff(?:stat|)(?:/[^/\s"]+){2}:[0-9a-f]+
+# bitbucket repositories commits
+\bapi\.bitbucket\.org/\d+\.\d+/repositories/(?:[^/\s"]+/){2}commits?/[0-9a-f]+
+# bitbucket commits
+\bbitbucket\.org/(?:[^/\s"]+/){2}commits?/[0-9a-f]+
+
+# bit.ly
+\bbit\.ly/\w+
+
+# bitrise
+\bapp\.bitrise\.io/app/[0-9a-f]*/[\w.?=&]*
+
+# bootstrapcdn.com
+\bbootstrapcdn\.com/[-./\w]+
+
+# cdn.cloudflare.com
+\bcdnjs\.cloudflare\.com/[./\w]+
+
+# circleci
+\bcircleci\.com/gh(?:/[^/\s"]+){1,5}.[a-z]+\?[-0-9a-zA-Z=&]+
+
+# gitter
+\bgitter\.im(?:/[^/\s"]+){2}\?at=[0-9a-f]+
+
+# gravatar
+\bgravatar\.com/avatar/[0-9a-f]+
+
+# ibm
+[a-z.]*ibm\.com/[-_#=:%!?~.\\/\d\w]*
+
+# imgur
+\bimgur\.com/[^.]+
+
+# Internet Archive
+\barchive\.org/web/\d+/(?:[-\w.?,'/\\+&%$#_:]*)
+
+# discord
+/discord(?:app\.com|\.gg)/(?:invite/)?[a-zA-Z0-9]{7,}
+
+# Disqus
+\bdisqus\.com/[-\w/%.()!?&=_]*
+
+# medium link
+\blink\.medium\.com/[a-zA-Z0-9]+
+# medium
+\bmedium\.com/@?[^/\s"]+/[-\w]+
+
+# microsoft
+\b(?:https?://|)(?:(?:download\.visualstudio|docs|msdn2?|research)\.microsoft|blogs\.msdn)\.com/[-_a-zA-Z0-9()=./%]*
+# powerbi
+\bapp\.powerbi\.com/reportEmbed/[^"' ]*
+# vs devops
+\bvisualstudio.com(?::443|)/[-\w/?=%&.]*
+# microsoft store
+\bmicrosoft\.com/store/apps/\w+
+
+# mvnrepository.com
+\bmvnrepository\.com/[-0-9a-z./]+
+
+# now.sh
+/[0-9a-z-.]+\.now\.sh\b
+
+# oracle
+\bdocs\.oracle\.com/[-0-9a-zA-Z./_?#&=]*
+
+# chromatic.com
+/\S+.chromatic.com\S*[")]
+
+# codacy
+\bapi\.codacy\.com/project/badge/Grade/[0-9a-f]+
+
+# compai
+\bcompai\.pub/v1/png/[0-9a-f]+
+
+# mailgun api
+\.api\.mailgun\.net/v3/domains/[0-9a-z]+\.mailgun.org/messages/[0-9a-zA-Z=@]*
+# mailgun
+\b[0-9a-z]+.mailgun.org
+
+# /message-id/
+/message-id/[-\w@./%]+
+
+# Reddit
+\breddit\.com/r/[/\w_]*
+
+# requestb.in
+\brequestb\.in/[0-9a-z]+
+
+# sched
+\b[a-z0-9]+\.sched\.com\b
+
+# Slack url
+slack://[a-zA-Z0-9?&=]+
+# Slack
+\bslack\.com/[-0-9a-zA-Z/_~?&=.]*
+# Slack edge
+\bslack-edge\.com/[-a-zA-Z0-9?&=%./]+
+# Slack images
+\bslack-imgs\.com/[-a-zA-Z0-9?&=%.]+
+
+# shields.io
+\bshields\.io/[-\w/%?=&.:+;,]*
+
+# stackexchange -- https://stackexchange.com/feeds/sites
+\b(?:askubuntu|serverfault|stack(?:exchange|overflow)|superuser).com/(?:questions/\w+/[-\w]+|a/)
+
+# Sentry
+[0-9a-f]{32}\@o\d+\.ingest\.sentry\.io\b
+
+# Twitter markdown
+\[@[^[/\]:]*?\]\(https://twitter.com/[^/\s"')]*(?:/status/\d+(?:\?[-_0-9a-zA-Z&=]*|)|)\)
+# Twitter hashtag
+\btwitter\.com/hashtag/[\w?_=&]*
+# Twitter status
+\btwitter\.com/[^/\s"')]*(?:/status/\d+(?:\?[-_0-9a-zA-Z&=]*|)|)
+# Twitter profile images
+\btwimg\.com/profile_images/[_\w./]*
+# Twitter media
+\btwimg\.com/media/[-_\w./?=]*
+# Twitter link shortened
+\bt\.co/\w+
+
+# facebook
+\bfburl\.com/[0-9a-z_]+
+# facebook CDN
+\bfbcdn\.net/[\w/.,]*
+# facebook watch
+\bfb\.watch/[0-9A-Za-z]+
+
+# dropbox
+\bdropbox\.com/sh?/[^/\s"]+/[-0-9A-Za-z_.%?=&;]+
+
+# ipfs protocol
+ipfs://[0-9a-zA-Z]{3,}
+# ipfs url
+/ipfs/[0-9a-zA-Z]{3,}
+
+# w3
+\bw3\.org/[-0-9a-zA-Z/#.]+
+
+# loom
+\bloom\.com/embed/[0-9a-f]+
+
+# regex101
+\bregex101\.com/r/[^/\s"]+/\d+
+
+# figma
+\bfigma\.com/file(?:/[0-9a-zA-Z]+/)+
+
+# freecodecamp.org
+\bfreecodecamp\.org/[-\w/.]+
+
+# image.tmdb.org
+\bimage\.tmdb\.org/[/\w.]+
+
+# mermaid
+\bmermaid\.ink/img/[-\w]+|\bmermaid-js\.github\.io/mermaid-live-editor/#/edit/[-\w]+
+
+# Wikipedia
+\ben\.wikipedia\.org/wiki/[-\w%.#]+
+
+# gitweb
+[^"\s]+/gitweb/\S+;h=[0-9a-f]+
+
+# HyperKitty lists
+/archives/list/[^@/]+@[^/\s"]*/message/[^/\s"]*/
+
+# lists
+/thread\.html/[^"\s]+
+
+# list-management
+\blist-manage\.com/subscribe(?:[?&](?:u|id)=[0-9a-f]+)+
+
+# kubectl.kubernetes.io/last-applied-configuration
+"kubectl.kubernetes.io/last-applied-configuration": ".*"
+
+# pgp
+\bgnupg\.net/pks/lookup[?&=0-9a-zA-Z]*
+
+# Spotify
+\bopen\.spotify\.com/embed/playlist/\w+
+
+# Mastodon
+\bmastodon\.[-a-z.]*/(?:media/|@)[?&=0-9a-zA-Z_]*
+
+# scastie
+\bscastie\.scala-lang\.org/[^/]+/\w+
+
+# images.unsplash.com
+\bimages\.unsplash\.com/(?:(?:flagged|reserve)/|)[-\w./%?=%&.;]+
+
+# pastebin
+\bpastebin\.com/[\w/]+
+
+# heroku
+\b\w+\.heroku\.com/source/archive/\w+
+
+# quip
+\b\w+\.quip\.com/\w+(?:(?:#|/issues/)\w+)?
+
+# badgen.net
+\bbadgen\.net/badge/[^")\]'\s]+
+
+# statuspage.io
+\w+\.statuspage\.io\b
+
+# media.giphy.com
+\bmedia\.giphy\.com/media/[^/]+/[\w.?&=]+
+
+# tinyurl
+\btinyurl\.com/\w+
+
+# codepen
+\bcodepen\.io/[\w/]+
+
+# registry.npmjs.org
+\bregistry\.npmjs\.org/(?:@[^/"']+/|)[^/"']+/-/[-\w@.]+
+
+# getopts
+\bgetopts\s+(?:"[^"]+"|'[^']+')
+
+# ANSI color codes
+(?:\\(?:u00|x)1[Bb]|\x1b|\\u\{1[Bb]\})\[\d+(?:;\d+|)m
+
+# URL escaped characters
+%[0-9A-F][A-F](?=[A-Za-z])
+# lower URL escaped characters
+%[0-9a-f][a-f](?=[a-z]{2,})
+# IPv6
+\b(?:[0-9a-fA-F]{0,4}:){3,7}[0-9a-fA-F]{0,4}\b
+# c99 hex digits (not the full format, just one I've seen)
+0x[0-9a-fA-F](?:\.[0-9a-fA-F]*|)[pP]
+# Punycode
+\bxn--[-0-9a-z]+
+# sha
+sha\d+:[0-9a-f]*?[a-f]{3,}[0-9a-f]*
+# sha-... -- uses a fancy capture
+(\\?['"]|&quot;)[0-9a-f]{40,}\g{-1}
+# hex runs
+#\b[0-9a-fA-F]{16,}\b
+# hex in url queries
+=[0-9a-fA-F]*?(?:[A-F]{3,}|[a-f]{3,})[0-9a-fA-F]*?&
+# ssh
+(?:ssh-\S+|-nistp256) [-a-zA-Z=;:/0-9+]{12,}
+
+# PGP
+\b(?:[0-9A-F]{4} ){9}[0-9A-F]{4}\b
+# GPG keys
+\b(?:[0-9A-F]{4} ){5}(?: [0-9A-F]{4}){5}\b
+# Well known gpg keys
+.well-known/openpgpkey/[\w./]+
+
+# pki
+-----BEGIN.*-----END
+
+# pki (base64)
+LS0tLS1CRUdJT.*
+
+# uuid:
+\b[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}\b
+# hex digits including css/html color classes:
+(?:[\\0][xX]|\\u|[uU]\+|#x?|%23)[0-9_a-fA-FgGrR]*?[a-fA-FgGrR]{2,}[0-9_a-fA-FgGrR]*(?:[uUlL]{0,3}|[iu]\d+)\b
+# integrity
+integrity=(['"])(?:\s*sha\d+-[-a-zA-Z=;:/0-9+]{40,})+\g{-1}
+
+# https://www.gnu.org/software/groff/manual/groff.html
+# man troff content
+\\f[BCIPR]
+# '/"
+\\\([ad]q
+
+# .desktop mime types
+^MimeTypes?=.*$
+# .desktop localized entries
+^[A-Z][a-z]+\[[a-z]+\]=.*$
+# Localized .desktop content
+Name\[[^\]]+\]=.*
+
+# IServiceProvider / isAThing
+(?:\b|_)(?:(?:ns|)I|isA)(?=(?:[A-Z][a-z]{2,})+(?:[A-Z\d]|\b))
+
+# crypt
+(['"])\$2[ayb]\$.{56}\g{-1}
+
+# apache/old crypt
+(['"]|)\$+(?:apr|)1\$+.{8}\$+.{22}\g{-1}
+
+# sha1 hash
+\{SHA\}[-a-zA-Z=;:/0-9+]{3,}
+
+# machine learning (?)
+\b(?i)ml(?=[a-z]{2,})
+
+# python
+\b(?i)py(?!gments|gmy|lon|ramid|ro|th)(?=[a-z]{2,})
+
+# scrypt / argon
+\$(?:scrypt|argon\d+[di]*)\$\S+
+
+# go.sum
+\bh1:\S+
+
+# scala imports
+^import (?:[\w.]|\{\w*?(?:,\s*(?:\w*|\*))+\})+
+
+# scala modules
+("[^"]+"\s*%%?\s*){2,3}"[^"]+"
+
+# container images
+image: [-\w./:@]+
+
+# Docker images
+^\s*FROM\s+\S+:\S+(?:\s+AS\s+\S+|)
+
+# `docker images` REPOSITORY TAG IMAGE ID CREATED SIZE
+\s*\S+/\S+\s+\S+\s+[0-9a-f]{8,}\s+\d+\s+(?:hour|day|week)s ago\s+[\d.]+[KMGT]B
+
+# Intel intrinsics
+_mm_(?!dd)\w+
+
+# Input to GitHub JSON
+content: (['"])[-a-zA-Z=;:/0-9+]*=\g{-1}
+
+# This does not cover multiline strings, if your repository has them,
+# you'll want to remove the `(?=.*?")` suffix.
+# The `(?=.*?")` suffix should limit the false positives rate
+# printf
+%(?:(?:(?:hh?|ll?|[jzt])?[diuoxn]|l?[cs]|L?[fega]|p)(?=[a-z]{2,})|(?:X|L?[FEGA])(?=[a-zA-Z]{2,}))(?!%)(?=[_a-zA-Z]+(?!%)\b)(?=.*?['"])
+
+# Alternative printf
+# %s
+%(?:s(?=[a-z]{2,}))(?!%)(?=[_a-zA-Z]+(?!%[^s])\b)(?=.*?['"])
+
+# Python string prefix / binary prefix
+# Note that there's a high false positive rate, remove the `?=` and search for the regex to see if the matches seem like reasonable strings
+(?<!['"])\b(?:B|BR|Br|F|FR|Fr|R|RB|RF|Rb|Rf|U|UR|Ur|b|bR|br|f|fR|fr|r|rB|rF|rb|rf|u|uR|ur)['"](?=[A-Z]{3,}|[A-Z][a-z]{2,}|[a-z]{3,})
+
+# Regular expressions for (P|p)assword
+\([A-Z]\|[a-z]\)[a-z]+
+
+# JavaScript regular expressions
+# javascript test regex
+/.{3,}/[gim]*\.test\(
+# javascript match regex
+\.match\(/[^/\s"]{3,}/[gim]*\s*
+# javascript match regex
+\.match\(/\\[b].{3,}?/[gim]*\s*\)(?:;|$)
+# javascript regex
+^\s*/\\[b].{3,}?/[gim]*\s*(?:\)(?:;|$)|,$)
+# javascript replace regex
+\.replace\(/[^/\s"]{3,}/[gim]*\s*,
+# assign regex
+= /[^*].*?(?:[a-z]{3,}|[A-Z]{3,}|[A-Z][a-z]{2,}).*/[gi]?(?=\W|$)
+# perl regex test
+[!=]~ (?:/.*/|m\{.*?\}|m<.*?>|m([|!/@#,;']).*?\g{-1})
+
+# perl qr regex
+(?<!\$)\bqr(?:\{.*?\}|<.*?>|\(.*?\)|([|!/@#,;']).*?\g{-1})
+
+# perl run
+perl(?:\s+-[a-zA-Z]\w*)+
+
+# C network byte conversions
+#(?:\d|\bh)to(?!ken)(?=[a-z])|to(?=[adhiklpun]\()
+
+# Go regular expressions
+regexp?\.MustCompile\(`[^`]*`\)
+
+# regex choice
+#\(\?:[^)]+\|[^)]+\)
+
+# proto
+^\s*(\w+)\s\g{-1} =
+
+# sed regular expressions
+sed 's/(?:[^/]*?[a-zA-Z]{3,}[^/]*?/){2}
+
+# node packages
+(["'])@[^/'" ]+/[^/'" ]+\g{-1}
+
+# go install
+go install(?:\s+[a-z]+\.[-@\w/.]+)+
+
+# pom.xml
+<(?:group|artifact)Id>.*?<
+
+# jetbrains schema https://youtrack.jetbrains.com/issue/RSRP-489571
+urn:shemas-jetbrains-com
+
+# Debian changelog severity
+[-\w]+ \(.*\) (?:\w+|baseline|unstable|experimental); urgency=(?:low|medium|high|emergency|critical)\b
+
+# kubernetes pod status lists
+# https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase
+\w+(?:-\w+)+\s+\d+/\d+\s+(?:Running|Pending|Succeeded|Failed|Unknown)\s+
+
+# kubectl - pods in CrashLoopBackOff
+\w+-[0-9a-f]+-\w+\s+\d+/\d+\s+CrashLoopBackOff\s+
+
+# kubernetes applications
+\.apps/[-\w]+
+
+# kubernetes object suffix
+-[0-9a-f]{10}-\w{5}\s
+
+# kubernetes crd patterns
+^\s*pattern: .*$
+
+# posthog secrets
+([`'"])phc_[^"',]+\g{-1}
+
+# xcode
+
+# xcodeproject scenes
+(?:Controller|destination|ID|id)="\w{3}-\w{2}-\w{3}"
+
+# xcode api botches
+customObjectInstantitationMethod
+
+# msvc api botches
+PrependWithABINamepsace
+
+# configure flags
+.* \| --\w{2,}.*?(?=\w+\s\w+)
+
+# font awesome classes
+\.fa-[-a-z0-9]+
+
+# bearer auth
+(['"])[Bb]ear[e][r] .*?\g{-1}
+
+# bearer auth
+\b[Bb]ear[e][r]:? [-a-zA-Z=;:/0-9+.]+
+
+# basic auth
+(['"])[Bb]asic [-a-zA-Z=;:/0-9+]{3,}\g{-1}
+
+# base64 encoded content
+([`'"])[-a-zA-Z=;:/0-9+]{3,}=\g{-1}
+# base64 encoded content in xml/sgml
+# Commented out because of false positives
+#>[-a-zA-Z=;:/0-9+]{3,}=</
+# base64 encoded content, possibly wrapped in mime
+#(?:^|[\s=;:?])[-a-zA-Z=;:/0-9+]{50,}(?:[\s=;:?]|$)
+# base64 encoded json
+\beyJ[-a-zA-Z=;:/0-9+]+
+# base64 encoded pkcs
+\bMII[-a-zA-Z=;:/0-9+]+
+
+# DNS rr data
+#(?:\d+\s+){3}(?:[-+/=.\w]{2,}\s*){1,2}
+
+# encoded-word
+=\?[-a-zA-Z0-9"*%]+\?[BQ]\?[^?]{0,75}\?=
+
+# numerator
+\bnumer\b(?=.*denom)
+
+# Time Zones
+\b(?:Africa|Atlantic|America|Antarctica|Asia|Australia|Europe|Indian|Pacific)(?:/\w+)+
+
+# linux kernel info
+^(?:bugs|flags|Features)\s+:.*
+
+# systemd mode
+systemd.*?running in system mode \([-+].*\)$
+
+# Lorem
+# Update Lorem based on your content (requires `ge` and `w` from https://github.com/jsoref/spelling; and `review` from https://github.com/check-spelling/check-spelling/wiki/Looking-for-items-locally )
+# grep '^[^#].*lorem' .github/actions/spelling/patterns.txt|perl -pne 's/.*i..\?://;s/\).*//' |tr '|' "\n"|sort -f |xargs -n1 ge|perl -pne 's/^[^:]*://'|sort -u|w|sed -e 's/ .*//'|w|review -
+# Warning, while `(?i)` is very neat and fancy, if you have some binary files that aren't proper unicode, you might run into:
+# ... Operation "substitution (s///)" returns its argument for non-Unicode code point 0x1C19AE (the code point will vary).
+# ... You could manually change `(?i)X...` to use `[Xx]...`
+# ... or you could add the files to your `excludes` file (a version after 0.0.19 should identify the file path)
+(?:(?:\w|\s|[,.])*\b(?i)(?:amet|consectetur|cursus|dolor|eros|ipsum|lacus|libero|ligula|lorem|magna|neque|nulla|suscipit|tempus)\b(?:\w|\s|[,.])*)
+
+# Non-English
+# Even repositories expecting pure English content can unintentionally have Non-English content... People will occasionally mistakenly enter [homoglyphs](https://en.wikipedia.org/wiki/Homoglyph) which are essentially typos, and using this pattern will mean check-spelling will not complain about them.
+#
+# If the content to be checked should be written in English and the only Non-English items will be people's names, then you can consider adding this.
+#
+# Alternatively, if you're using check-spelling v0.0.25+, and you would like to _check_ the Non-English content for spelling errors, you can. For information on how to do so, see:
+# https://docs.check-spelling.dev/Feature:-Configurable-word-characters.html#unicode
+[a-zA-Z]*[ÀÁÂÃÄÅÆČÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæčçèéêëìíîïðñòóôõöøùúûüýÿĀāŁłŃńŅņŒœŚśŠšŜŝŸŽžź][a-zA-Z]{3}[a-zA-ZÀÁÂÃÄÅÆČÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæčçèéêëìíîïðñòóôõöøùúûüýÿĀāŁłŃńŅņŒœŚśŠšŜŝŸŽžź]*|[a-zA-Z]{3,}[ÀÁÂÃÄÅÆČÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæčçèéêëìíîïðñòóôõöøùúûüýÿĀāŁłŃńŅņŒœŚśŠšŜŝŸŽžź]|[ÀÁÂÃÄÅÆČÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝßàáâãäåæčçèéêëìíîïðñòóôõöøùúûüýÿĀāŁłŃńŅņŒœŚśŠšŜŝŸŽžź][a-zA-Z]{3,}
+
+# highlighted letters
+\[[A-Z]\][a-z]+
+
+# French
+# This corpus only had capital letters, but you probably want lowercase ones as well.
+\b[LN]'+[a-z]{2,}\b
+
+# latex (check-spelling >= 0.0.22)
+\\\w{2,}\{
+
+# American Mathematical Society (AMS) / Doxygen
+TeX/AMS
+
+# File extensions
+\*\.[+\w]+,
+
+# eslint
+"varsIgnorePattern": ".+"
+
+# nolint
+nolint:\w+
+
+# Windows short paths
+[/\\][^/\\]{5,6}~\d{1,2}(?=[/\\])
+
+# cygwin paths
+/cygdrive/[a-zA-Z]/(?:Program Files(?: \(.*?\)| ?)(?:/[-+.~\\/()\w ]+)*|[-+.~\\/()\w])+
+
+# in check-spelling@v0.0.22+, printf markers aren't automatically consumed
+# printf markers
+#(?<!\\)\\[nrt](?=[a-z]{2,})
+# alternate printf markers if you run into latex and friends
+#(?<!\\)\\[nrt](?=[a-z]{2,})(?=.*['"`])
+
+# Markdown anchor links
+\(#\S*?[a-zA-Z]\S*?\)
+
+# apache
+a2(?:en|dis)
+
+# weak e-tag
+W/"[^"]+"
+
+# authors/credits
+^\*(?: [A-Z](?:\w+|\.)){2,} (?=\[|$)
+
+# the negative lookahead here is to allow catching 'templatesz' as a misspelling
+# but to otherwise recognize a Windows path with \templates\foo.template or similar:
+\\(?:necessary|r(?:elease|eport|esolve[dr]?|esult)|t(?:arget|emplates?))(?![a-z])
+# ignore long runs of a single character:
+\b([A-Za-z])\g{-1}{3,}\b
+
+# version suffix <word>v#
+(?:(?<=[A-Z]{2})V|(?<=[a-z]{2}|[A-Z]{2})v)\d+(?:\b|(?=[a-zA-Z_]))
+
+# Compiler flags (Unix, Java/Scala)
+# Use if you have things like `-Pdocker` and want to treat them as `docker`
+(?:^|[\t ,>"'`=(])-(?:(?:J-|)[DPWXY]|[Llf])(?=[A-Z]{2,}|[A-Z][a-z]|[a-z]{2,})
+
+# Compiler flags (Windows / PowerShell)
+# This is a subset of the more general compiler flags pattern.
+# It avoids matching `-Path` to prevent it from being treated as `ath`
+(?:^|[\t ,"'`=(])-(?:[DPL](?=[A-Z]{2,})|[WXYlf](?=[A-Z]{2,}|[A-Z][a-z]|[a-z]{2,}))
+
+# Compiler flags (linker)
+,-B
+
+# libraries
+(?:\b|_)lib(?:re(?=office)|)(?!era[lt]|ero|erty|rar(?:i(?:an|es)|y))(?=[a-z])
+
+# WWNN/WWPN (NAA identifiers)
+\b(?:0x)?10[0-9a-f]{14}\b|\b(?:0x|3)?[25][0-9a-f]{15}\b|\b(?:0x|3)?6[0-9a-f]{31}\b
+
+# iSCSI iqn (approximate regex)
+\biqn\.[0-9]{4}-[0-9]{2}(?:[\.-][a-z][a-z0-9]*)*\b
+
+# curl arguments
+\b(?:\\n|)curl(?:\.exe|)(?:\s+-[a-zA-Z]{1,2}\b)*(?:\s+-[a-zA-Z]{3,})(?:\s+-[a-zA-Z]+)*
+# set arguments
+\b(?:bash|sh|set)(?:\s+-[abefimouxE]{1,2})*\s+-[abefimouxE]{3,}(?:\s+-[abefimouxE]+)*
+# tar arguments
+\b(?:\\n|)g?tar(?:\.exe|)(?:(?:\s+--[-a-zA-Z]+|\s+-[a-zA-Z]+|\s[ABGJMOPRSUWZacdfh-pr-xz]+\b)(?:=[^ ]*|))+
+# tput arguments -- https://man7.org/linux/man-pages/man5/terminfo.5.html -- technically they can be more than 5 chars long...
+\btput\s+(?:(?:-[SV]|-T\s*\w+)\s+)*\w{3,5}\b
+# macOS temp folders
+/var/folders/\w\w/[+\w]+/(?:T|-Caches-)/
+# github runner temp folders
+/home/runner/work/_temp/[-_/a-z0-9]+
+```
+
+### `excludes.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/excludes.txt`
+
+
+```text
+# See https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples:-excludes
+(?:^|/)(?i)COPYRIGHT
+(?:^|/)(?i)LICEN[CS]E
+(?:^|/)(?i)third[-_]?party/
+(?:^|/)3rdparty/
+(?:^|/)__init__\.py$
+(?:^|/)check\.xml$
+(?:^|/)generated/
+(?:^|/)go\.sum$
+(?:^|/)package(?:-lock|)\.json$
+(?:^|/)Pipfile$
+(?:^|/)PrmDb\.dat$
+(?:^|/)pyproject.toml
+(?:^|/)vendor/
+(?:^|/|\b)requirements(?:-dev|-doc|-test|)\.txt$
+(?:^|/)launch\.json$
+/doc/xml/
+/html/
+\.a$
+\.ai$
+\.all-contributorsrc$
+\.avi$
+\.bmp$
+\.bz2$
+\.cert?$|\.crt$
+\.class$
+\.coveragerc$
+\.crl$
+\.csr$
+\.dll$
+\.docx?$
+\.drawio$
+\.DS_Store$
+\.eot$
+\.eps$
+\.exe$
+\.gif$
+\.git-blame-ignore-revs$
+\.gitattributes$
+\.gitkeep$
+\.graffle$
+\.gz$
+\.icns$
+\.ico$
+\.ipynb$
+\.jar$
+\.jks$
+\.jpe?g$
+\.key$
+\.lib$
+\.lock$
+\.map$
+\.min\..
+\.mo$
+\.mod$
+\.mp[34]$
+\.o$
+\.ocf$
+\.otf$
+\.p12$
+\.parquet$
+\.pdf$
+\.pem$
+\.pfx$
+\.png$
+\.psd$
+\.pyc$
+\.pylintrc$
+\.qm$
+\.s$
+\.ser$
+\.sig$
+\.so$
+\.svgz?$
+\.sys$
+\.tar$
+\.tgz$
+\.tiff?$
+\.ttf$
+\.wav$
+\.webm$
+\.webp$
+\.woff2?$
+\.xcf$
+\.xlsx?$
+\.xpm$
+\.xz$
+\.zip$
+/mkdocs\.yml$
+^\.github/actions/spelling/
+^\Q.github/workflows/spelling.yml\E$
+^\QAutocoders/Python/test/command_multi_inst/docs/Test1.md\E$
+^\QAutocoders/Python/test/event_multi_inst/docs/TestLog.md\E$
+^\QAutocoders/Python/test/tlm_multi_inst/docs/TestTlm.md\E$
+^\Qcmake/platform/README.md\E$
+^\Qcmake/test/data/test-implementations/Deployment/TestModule/Empty.cpp\E$
+^\Qcmake/test/data/test-implementations/test-platforms/library.cmake\E$
+^\QCONTRIBUTORS.md\E$
+^\Qdocs/doxygen/mainpage.md\E$
+^\Qdocs/Tutorials/FullSystemTutorial/Tutorial.md\E$
+^\QSvc/FileUplink/test/ut/dest.bin\E$
+ignore$
+mlc-config.json
+Autocoders/
+```
+
+### `expect.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/expect.txt`
+
+
+```text
+Aadil
+AClass
+ACTIVERATEGROUP
+ACTIVERATEGROUPCFG
+ACTIVERATEGROUPTESTER
+ACTIVETEXTLOGGERIMPL
+ADDRSTRLEN
+adminlist
+aleem
+ALLEXTERNALS
+alphanums
+ampcs
+ANamespace
+apid
+APIDOCS
+APPENDFILE
+arduino
+ARef
+argcomplete
+ARGN
+ARINC
+arpa
+ASize
+ATL
+AUTOBRIEF
+autocode
+autocoded
+autocoders
+autocoding
+AYYYY
+baremetal
+batchmode
+BDV
+bfree
+bibtex
+Bies
+BINDIR
+bitmaps
+bocchino
+boolt
+bsd
+BUFFERALLOCATE
+BUFFERALLOCATIONFAILED
+BUFFERGETOUT
+BUFFERMANAGERCOMPONENTIMPLCFG
+BUFFERMGR
+BUFFERQUEUEIN
+BUFFERTOOSMALLFORDATA
+BUFFERTOOSMALLFORPACKET
+BUGLIST
+bugprone
+buildstep
+BYTEDRV
+calcu
+callergraph
+callgraph
+Campuzano
+carg
+CBF
+CBLOCK
+CCB
+CComponent
+ccsds
+ccsparc
+cdh
+CDHCORE
+CDHCORESUBTOPOLOGY
+cerrno
+CFDP
+cff
+cflag
+cfsetispeed
+cfsetospeed
+CHANS
+Chieu
+CHIPINFO
+CHK
+CHNG
+CIRCULARSTATE
+CLOSEFILE
+cloudbees
+CMDDISP
+CMDDISPATCHER
+CMDPACKET
+cmdresponse
+cmdseq
+cmdsequencer
+cntx
+CODEFILE
+COLORSTYLE
+colorwheel
+COMBUFFER
+COMCCSDS
+COMCCSDSSUBTOPOLOGY
+COMFPRIME
+COMFPRIMESUBTOPOLOGY
+comlogger
+COMLOGGERTEE
+COMMANDDISPATCHERIMPL
+COMMANDDISPATCHERIMPLCFG
+COMPACKET
+COMPACKETQUEUEIN
+COMQUEUE
+COMSPLITTER
+COMSTUB
+constexpr
+cookiecutter
+cooldown
+coravy
+coreutils
+Coverity
+CPHA
+cplusplus
+CPOL
+cppcheck
+cppcheckxml
+cpplint
+CRCAMPCS
+crcccitt
+crcdnp
+crckermit
+CRCs
+crcstat
+CREATEDIRECTORY
+crsmith
+crt
+CRTSCTS
+cryptsoft
+csum
+ctest
+ctu
+culates
+cuz
+Cxxx
+CYCLEOUT
+DATAPRODUCTS
+DATAPRODUCTSSUBTOPOLOGY
+DATAROOTDIR
+DDDTHH
+Debian
+deconstructor
+deframe
+deframed
+deframer
+deframing
+deployables
+DEPRECATEDLIST
+deser
+Deserial
+DEVICESM
+DHTML
+diafile
+diles
+dinkel
+dnf
+dnp
+docbook
+docset
+dontinclude
+doodie
+DOTFONTPATH
+downcall
+doxyfile
+doxygenversion
+doxyindexer
+doxyrules
+doxysearch
+Doxywizard
+DOY
+DOYTHH
+DPCAT
+DPCATALOG
+DPCFG
+DPMANAGER
+dps
+DPWRITER
+DRAINBUFFERS
+drv
+drvtcpserversocket
+dspal
+DSSC
+Dstate
+DVI
+DWN
+eabi
+eabihf
+eay
+ECLIPSEHELP
+EHAs
+eip
+Elts
+endcond
+endfunction
+endmacro
+endraw
+enduml
+ERRORCHECK
+errornum
+ert
+esb
+etl
+EVENTARRAY
+EVENTBOOL
+eventflags
+EVENTPRIMITIVE
+evr
+evt
+externalproject
+FAKELOGGER
+fbuild
+fdp
+fecf
+FEEDNAME
+feq
+fetchcontent
+ffff
+Ffs
+fge
+fgt
+FILEDOWNLINK
+FILEDOWNLINKCFG
+FILEHANDLING
+FILEHANDLINGSUBTOPOLOGY
+FILEID
+FILEOPENERROR
+FILEWRITEERROR
+fio
+fle
+FNDELAY
+fne
+FONTPATH
+foodoodie
+foodoodiehoo
+FPCONFIG
+fpext
+fpp
+fppi
+fpptest
+fprime
+fptosi
+fptoui
+fptr
+fptrunc
+fputil
+fpy
+FPYSEQUENCER
+freeram
+Fregoso
+fres
+frsize
+fsblkcnt
+fsrc
+fsw
+FWCASSERT
+gcda
+gcgandhi
+gcov
+gdiplus
+GENHUB
+gettime
+getty
+ghprb
+gitmodules
+gmock
+Gnd
+gnueabihf
+googletest
+Gorang
+gpiochip
+gpioevent
+gpiohandle
+gpioline
+Graphviz
+grayscales
+GROUNDINTERFACERULES
+GSE
+gtags
+gtest
+gtimeout
+Guire
+GVCID
+GPT
+HACKSM
+Handcoded
+handleflags
+hardtoaccess
+hashvalue
+hdr
+HEADERSIZE
+headlessly
+heapifying
+hhc
+hhk
+hhp
+hidecallergraph
+hidecallgraph
+hideinitializer
+hlp
+HLTH
+HPSC
+htags
+HTH
+HTMLHELP
+ibd
+ieeetr
+ieq
+iext
+iflag
+ifstr
+ilhs
+imple
+inbool
+INCLUDEDIR
+ine
+initstate
+inkscape
+installable
+intlimits
+inttypes
+INVALIDBUFFER
+INVALIDHEADER
+INVALIDHEADERHASH
+invisi
+ioc
+ioctl
+ipas
+IPCFG
+IPHELPER
+irhs
+isf
+isgreater
+isless
+isr
+isrc
+isunordered
+itimerspec
+itr
+itrunc
+itval
+janamian
+jawest
+Jax
+jdk
+jdperez
+jenkins
+jenkinsci
+Joaquim
+jobrestrictions
+jpl
+jplffs
+jre
+kermit
+kubiak
+Lammert
+lammertbies
+LASTLOG
+LBLOCK
+LCHILD
+leisher
+lestarch
+lflag
+lhash
+LIBCRYPTO
+LIBDIR
+LIBEXECDIR
+LIBLOC
+lic
+LINEEVENT
+LINEHANDLE
+linelength
+lineoffset
+lld
+llu
+LOCALSTATEDIR
+LOGGERRULES
+LOGPACKET
+lseek
+LVL
+lxml
+MACROFILE
+makefiles
+MAKEFLAGS
+makeindex
+MAKEVAR
+MALLOCALLOCATOR
+mallocator
+mathjax
+MCT
+MDFILE
+MEMALLOCATOR
+MEMB
+memcheck
+MEMTEST
+mentations
+mereweth
+Merewether
+microcontrollers
+mkdocs
+mlc
+mman
+MMAPALLOCATOR
+MML
+modbus
+MOVEFILE
+msc
+mscfile
+mseconds
+mstarch
+mstat
+MState
+multiarch
+multitool
+mutexattr
+Mutexed
+mycompany
+nasafprime
+nbits
+ncsl
+newtio
+nmsgs
+NOBLOCK
+NOLINT
+NOLINTNEXTLINE
+noparent
+norecords
+NOSPEC
+nostdlib
+nosubgrouping
+notask
+NPROCESSORS
+NSHUFF
+NSPACES
+ntohs
+objcopy
+OCF
+ODR
+oflag
+okidocki
+OLDINCLUDEDIR
+OMG
+ONLN
+openmct
+openpyxl
+openssldir
+optarg
+optin
+optind
+orgslist
+ortega
+OSAL
+ostate
+OSTIME
+otherside
+outbool
+outdir
+ovr
+packetization
+packetize
+packetized
+packetizer
+PARAMARRAY
+PARAMARRAYEXTERNAL
+PARAMBOOL
+PARAMBOOLEXTERNAL
+PARAMDOC
+PARAMENUM
+PARAMENUMEXTERNAL
+PARAMI
+PARAMSTRING
+PARAMSTRINGEXTERNAL
+PARAMSTRUCT
+PARAMSTRUCTEXTERNAL
+PARAMU
+PASSIVERATEGROUP
+PASSIVERATEGROUPIMPLTESTER
+patsubst
+pdflatex
+penv
+PERLMOD
+PINGENTRIES
+PINGSEND
+pkill
+PKTS
+plainnat
+plantuml
+PNGs
+pollfd
+POLLIN
+POLYDB
+PORTOUT
+PORTSELECTOR
+ppandian
+pregen
+prioritization
+PRIORITYQUEUE
+prm
+PRMDB
+PRMDBIMPL
+PRMDBIMPLTESTERCFG
+PRMDBLIMPLCFG
+PRMDBTESTER
+PROCBUFFERSENDOUT
+PRODUCTGETIN
+PRODUCTREQUESTIN
+PRODUCTRESPONSEOUT
+PRODUCTSENDIN
+PRODUCTSENDOUT
+PROGRAMLISTING
+projectbrief
+projectlogo
+projectname
+projectnumber
+propget
+propput
+protothreading
+ptbool
+ptf
+pthread
+ptrt
+Pvn
+qch
+qhelpgenerator
+QHG
+qhp
+qsf
+RAII
+randtbl
+raspberrypi
+raspi
+RATEGROUPDRIVER
+RATEGROUPDRIVERIMPLTESTER
+RATEGROUPMEMBEROUT
+RATELIMITERTESTER
+rawtime
+RAWTIMETESTER
+RBF
+RCHILD
+rcvd
+rdwr
+Readback
+Recvd
+redhat
+refspec
+REFTOPOLOGY
+REFTOPOLOGYDEFS
+regexs
+REMOVEDIRECTORY
+REMOVEFILE
+reprioritize
+RGD
+rhel
+RHH
+Rizvi
+ROOTDIR
+rpi
+rptr
+SAlias
+sanitizers
+sats
+SBF
+SBINDIR
+sbom
+scid
+scm
+sdd
+searchdata
+SENDPARTIAL
+seqgen
+serializables
+setaffinity
+setinheritsched
+SETLOGGING
+setprotocol
+setschedparam
+setschedpolicy
+setser
+setstacksize
+settime
+sev
+sfregoso
+sge
+SGN
+sgt
+SHAREDSTATEDIR
+SHELLCOMMAND
+showinitializer
+sideeffect
+Signedness
+Silveira
+sitofp
+sle
+sloc
+socio
+SOCKETHELPER
+SOCKETIPDRIVER
+socklen
+sometask
+somevalue
+sourced
+sourcing
+spdx
+spi
+spidev
+spsc
+srandom
+SRCS
+sreddy
+sss
+STAMEM
+startuml
+stdbool
+stddef
+stdint
+stest
+Stl
+stmtidx
+STREQ
+STREQUAL
+STRINGUTILS
+STRNE
+strnlen
+subgrouping
+subhist
+subhistory
+subseconds
+subtopology
+suppr
+suseconds
+SVCLOGFILE
+SVCLOGFILEL
+swcaegitadmin
+syft
+synopsys
+sysconf
+SYSCONFDIR
+tabccitt
+tabdnp
+tabkermit
+tagfile
+tbase
+tcanham
+tcflush
+tcgetattr
+TCPCLIENT
+TCPHELPER
+TCPSERVER
+TCSANOW
+Telecommand
+telem
+TELEMCHANIMPL
+testerbase
+TESTLIST
+testmark
+TESTUTILS
+thisdirdoesnotexist
+thisfiledoesnotexist
+Thu
+timebase
+timerfd
+timetag
+timeval
+Tinternal
+tions
+tjh
+TKC
+tlc
+tlm
+TLMCHAN
+TLMCHANIMPLCFG
+TLMCHANIMPLTESTER
+TLMPACKET
+TLMPACKETIZER
+TLMPACKETIZERCOMPONENTIMPLCFG
+TLMPACKETIZERTYPES
+TODOLIST
+TOKENBUCKETTESTER
+topologydefs
+totalram
+tparam
+TPP
+trinomials
+tts
+typedef'ed
+typedef
+uart
+UDPSOCKET
+uge
+uitofp
+UML
+UNEXP
+unistd
+UNITTESTASSERT
+unittests
+useconds
+usecs
+valgrind
+vbai
+VCA
+vcid
+VCP
+VFILE
+VID
+vla
+VOXL
+vwong
+vxworks
+watney
+Wdog
+whitebox
+WLE
+WORKDIR
+wrs
+wxgui
+wxy
+Xapian
+xdf
+xdffe
+xsltproc
+xxxx
+XXYY
+zimri
+```
+
+### `line_forbidden.patterns`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/line_forbidden.patterns`
+
+
+```text
+# reject `m_data` as VxWorks defined it and that breaks things if it's used elsewhere
+# see [fprime](https://github.com/nasa/fprime/commit/d589f0a25c59ea9a800d851ea84c2f5df02fb529)
+# and [Qt](https://github.com/qtproject/qt-solutions/blame/fb7bc42bfcc578ff3fa3b9ca21a41e96eb37c1c7/qtscriptclassic/src/qscriptbuffer_p.h#L46)
+#\bm_data\b
+
+# Were you debugging using a framework with `fit()`?
+# If you have a framework that uses `it()` for testing and `fit()` for debugging a specific test,
+# you might not want to check in code where you skip all the other tests.
+#\bfit\(
+
+# Should be `HH:MM:SS`
+\bHH:SS:MM\b
+
+# Should be `86400` (seconds in a standard day)
+\b84600\b(?:.*\bday\b)
+
+# Should probably be `2006-01-02` (yyyy-mm-dd)
+# Assuming that the time is being passed to https://go.dev/src/time/format.go
+\b2006-02-01\b
+
+# Should probably be `YYYYMMDD`
+\b[Yy]{4}[Dd]{2}[Mm]{2}(?!.*[Yy]{4}[Dd]{2}[Mm]{2}).*$
+
+# Should be `a priori` or `and prior`
+(?i)(?<!posteriori)\sand priori\s
+
+# Should only be one of `a`, `an`, or `the`
+\b(?:(?:an?|the)\s+){2,}\b
+
+# Should be `anymore`
+\bany more[,.]
+
+# Should be `'`
+(?i)\b(?:(?:i|s?he|they|what|who|you)"ll|(?:are|ca|did|do|does|ha[ds]|have|is|should|were|wo|would)n"t|(?:s?he|let|that|there|what|where|who)"s|(?:i|they|we|what|who|you)"ve)\b
+
+# Should be `briefcase`
+\bbrief-case\b
+
+# Should be `can, not only ..., ... also...`
+\bcan not only.*can also\b
+
+# Should be `cannot` (or `can't`)
+# See https://www.grammarly.com/blog/cannot-or-can-not/
+# > Don't use `can not` when you mean `cannot`. The only time you're likely to see `can not` written as separate words is when the word `can` happens to precede some other phrase that happens to start with `not`.
+# > `Can't` is a contraction of `cannot`, and it's best suited for informal writing.
+# > In formal writing and where contractions are frowned upon, use `cannot`.
+# > It is possible to write `can not`, but you generally find it only as part of some other construction, such as `not only . . . but also.`
+# - if you encounter such a case, add a pattern for that case to patterns.txt.
+\b[Cc]an not\b
+
+# Do not use `(click) here` links
+# For more information, see:
+# * https://www.w3.org/QA/Tips/noClickHere
+# * https://webaim.org/techniques/hypertext/link_text
+# * https://granicus.com/blog/why-click-here-links-are-bad/
+# * https://heyoka.medium.com/dont-use-click-here-f32f445d1021
+(?i)(?:>|\[)(?:(?:click |)here|link|(?:read |)more)(?:</|\]\()
+
+# Should be `equals` to `is equal to`
+\bequals to\b
+
+# Should be `GitHub`
+(?<![&*.]|// |\b(?:from|import|type) )\bGithub\b(?![{()])
+
+# Should be `GitLab`
+(?<![&*.]|// |\b(?:from|import|type) )\bGitlab\b(?![{()])
+
+# Should probably be `https://`...
+# Markdown generally doesn't assume that links are to urls
+\]\(www\.\w
+
+# Should be `JavaScript`
+\bJavascript\b
+
+# Should be `macOS` or `Mac OS X` or ...
+\bMacOS\b
+
+# Should be `Microsoft`
+\bMicroSoft\b
+
+# Should be `OAuth`
+(?:^|[^-/*$])[ '"]oAuth(?: [a-z]|\d+ |[^ a-zA-Z0-9:;_.()])
+
+# Should be `RabbitMQ`
+\bRabbitmq\b
+
+# Should be `TypeScript`
+\bTypescript\b
+
+# Should be `another`
+\ban[- ]other\b
+
+# Should be `case-(in)sensitive`
+\bcase (?:in|)sensitive\b
+
+# Should be `coinciding`
+\bco-inciding\b
+
+# Should be `deprecation warning(s)`
+\b[Dd]epreciation [Ww]arnings?\b
+
+# Should be `greater than`
+\bgreater then\b
+
+# Should be `has`
+\b[Ii]t only have\b
+
+# Should be `here-in`, `the`, `them`, `this`, `these` or reworded in some other way
+\bthe here(?:\.|,| (?!and|defined))
+
+# Should be `greater than`
+#\bhigher than\b
+
+# Should be `ID`
+#\bId\b
+
+# Should be `in front of`
+\bin from of\b
+
+# Should be `into`
+# when not phrasal and when `in order to` would be wrong:
+# https://thewritepractice.com/into-vs-in-to/
+#\sin to\s(?!if\b)
+
+# Should be `use`
+\sin used by\b
+
+# Should be `is obsolete`
+\bis obsolescent\b
+
+# Should be `it's` or `its`
+\bits['’]
+
+# Should be `its`
+\bit's(?= own\b)
+
+# Should be `log in`
+\blogin to the
+
+# Should be `long-standing`
+\blong standing\b
+
+# Should probably be a person named `Nick` or the abbreviation `NIC`
+\bNic\b
+
+# Should be `not supposed`
+\bsupposed not\b
+
+# Should probably be `much more`
+\bmore much\b
+
+# Should be `perform its`
+\bperform it's\b
+
+# Should be `opt-in`
+(?<!\scan|for)(?<!\sif)\sopt in\s
+
+# Should be `less than`
+\bless then\b
+
+# Should be `load balancer`
+\b[Ll]oud balancer
+
+# Should be `moot`
+\bmute point\b
+
+# Should be `one of`
+(?<!-)\bon of\b
+
+# Should be `on the other hand`
+\b(?i)on another hand\b
+
+# Most people only have two hands. Reword.
+\b(?i)on the third hand\b
+
+# Should be `otherwise`
+\bother[- ]wise\b
+
+# Should be `or (more|less)`
+\bore (?:more|less)\b
+
+# Should be `rather than`
+\brather then\b
+
+# Should be `regardless, ...` or `regardless of (whether)`
+\b[Rr]egardless if you\b
+
+# Should be `no longer needed`
+\bno more needed\b(?! than\b)
+
+# Should be `did not exist`
+\bwere not existent\b
+
+# Should be `nonexistent`
+\bnon existing\b
+
+# Should be `nonexistent`
+\b[Nn]o[nt][- ]existent\b
+
+# Should be `@brief` / `@details` / `@param` / `@return` / `@retval`
+(?:^\s*|(?:\*|//|/*)\s+`)[\\@](?:breif|(?:detail|detials)|(?:params(?!\.)|prama?)|ret(?:uns?)|retvl)\b
+
+# Should be `preexisting`
+[Pp]re[- ]existing
+
+# Should be `preempt`
+[Pp]re[- ]empt\b
+
+# Should be `preemptively`
+[Pp]re[- ]emptively
+
+# Should be `prepopulate`
+[Pp]re[- ]populate
+
+# Should be `prerequisite`
+[Pp]re[- ]requisite
+
+# Should be `recently changed` or `recent changes`
+[Rr]ecent changed
+
+# Should be `reentrancy`
+[Rr]e[- ]entrancy
+
+# Should be `reentrant`
+[Rr]e[- ]entrant
+
+# Should be `strong suit`
+\b(?:my|his|her|their) strong suite\b
+
+# Should be `understand`
+\bunder stand\b
+
+# Should be `URI` or `uri` unless it refers to a person named `Uri`
+(?<!\.)\bUri\b(?![(])
+
+# Should be `it uses is`
+/\bis uses is\b/
+
+# Should be `uses it as`
+(?:^|\. |and )uses is as (?!an?\b|follows|livestock|[^.]+\s+as\b)
+
+# Should be `was`
+\bhas been(?= removed in v?\d)
+
+# Should be `where`
+\bwere they are\b
+
+# should be `vCenter`
+\bV[Cc]enter\b
+
+# Should be `VM`
+\bVm\b
+
+# Should be `workarounds`
+\bwork[- ]arounds\b
+
+# Should be `workaround`
+(?:(?:[Aa]|[Tt]he|ugly)\swork[- ]around\b|\swork[- ]around\s+for)
+
+# Should be `worst`
+(?i)worse-case
+
+# Should be `you are not` or reworded
+\byour not\b
+
+# Should be `(coarse|fine)-grained`
+\b(?:coarse|fine) grained\b
+
+# Homoglyph (Cyrillic) should be `A`/`B`/`C`/`E`/`H`/`I`/`I`/`J`/`K`/`M`/`O`/`P`/`S`/`T`/`Y`
+# It's possible that your content is intentionally mixing Cyrllic and Latin scripts, but if it isn't, you definitely want to correct this.
+(?<=[A-Z]{2})[АВСЕНІӀЈКМОРЅТУ]|[АВСЕНІӀЈКМОРЅТУ](?=[A-Z]+(?:\b|[a-z]+)|[a-z]+(?:[^a-z]|$))
+
+# Homoglyph (Cyrillic) should be `a`/`b`/`e`
+# It's possible that your content is intentionally mixing Cyrllic and Latin scripts, but if it isn't, you definitely want to correct this.
+[аве](?=[A-Za-z]{2,})|(?<=[A-Za-z]{2})[аве]|(?<=[A-Za-z])[аве](?=[A-Za-z])
+
+# Should be `neither/nor` -- or reword
+#(?!<do )\bnot\b([^.?!"/(](?!neither|,.*?,))+\bnor\b
+
+# Should be `neither/nor` (plus rewording the beginning)
+# This is probably a double negative...
+#\bnot\b[^.?!"/(]*\bneither\b[^.?!"/(]*\bnor\b
+
+# In English, duplicated words are generally mistakes
+# There are a few exceptions (e.g. "that that").
+# If the highlighted doubled word pair is in:
+# * code, write a pattern to mask it.
+# * prose, have someone read the English before you dismiss this error.
+\s([A-Z]{3,}|[A-Z][a-z]{2,}|[a-z]{3,})\s\g{-1}\s
+```
+
+### `patterns.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/patterns.txt`
+
+
+```text
+# See https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples:-patterns
+
+# phrases with -in and infinitive verbs
+\b(?:add|pass)ed in to\b|\bin to make\b
+
+# Automatically suggested patterns
+
+# hit-count: 357 file-count: 120
+# https/http/file urls
+(?:\b(?:https?|ftp|file)://)[-A-Za-z0-9+&@#/*%?=~_|!:,.;]+[-A-Za-z0-9+&@#/*%=~_|]
+
+# hit-count: 155 file-count: 30
+# python
+\b(?i)py(?!gments|gmy|lon|ramid|ro|th)(?=[a-z]{2,})
+
+# hit-count: 154 file-count: 39
+# hex digits including css/html color classes:
+(?:[\\0][xX]|\\u|[uU]\+|#x?|%23)[0-9_a-fA-FgGrR]*?[a-fA-FgGrR]{2,}[0-9_a-fA-FgGrR]*(?:[uUlL]{0,3}|[iu]\d+)\b
+
+# hit-count: 129 file-count: 34
+# Compiler flags (Unix, Java/Scala)
+# Use if you have things like `-Pdocker` and want to treat them as `docker`
+(?:^|[\t ,>"'`=(])-(?:(?:J-|)[DPWXY]|[Llf])(?=[A-Z]{2,}|[A-Z][a-z]|[a-z]{2,})
+
+# hit-count: 75 file-count: 29
+# GitHub SHAs (markdown)
+(?:\[`?[0-9a-f]+`?\]\(https:/|)/(?:www\.|)github\.com(?:/[^/\s"]+){2,}(?:/[^/\s")]+)(?:[0-9a-f]+(?:[-0-9a-zA-Z/#.]*|)\b|)
+
+# hit-count: 42 file-count: 1
+# File extensions
+\*\.[+\w]+,
+
+# hit-count: 38 file-count: 18
+# Markdown anchor links
+\(#\S*?[a-zA-Z]\S*?\)
+
+# hit-count: 28 file-count: 21
+# scala imports
+^import (?:[\w.]|\{\w*?(?:,\s*(?:\w*|\*))+\})+
+
+# hit-count: 26 file-count: 11
+# libraries
+(?:\b|_)lib(?:re(?=office)|)(?!era[lt]|ero|erty|rar(?:i(?:an|es)|y))(?=[a-z])
+
+# hit-count: 25 file-count: 15
+# C network byte conversions
+(?:\d|\bh)to(?!ken)(?=[a-z])|(?<=[^a-zA-Z][a-z])to(?=[adhiklpun]\()
+
+# hit-count: 20 file-count: 7
+# alternate printf markers if you run into latex and friends
+(?<!\\)\\(?:n(?!ote)|t)(?=[a-z]{2,})(?=.*['"`])
+
+# hit-count: 19 file-count: 8
+# version suffix <word>v#
+(?:(?<=[A-Z]{2})V|(?<=[a-z]{2}|[A-Z]{2})v)\d+(?:\b|(?=[a-zA-Z_]))
+
+# hit-count: 15 file-count: 7
+# Python string prefix / binary prefix
+# Note that there's a high false positive rate, remove the `?=` and search for the regex to see if the matches seem like reasonable strings
+(?<!['"])\b(?:B|BR|Br|F|FR|Fr|R|RB|RF|Rb|Rf|U|UR|Ur|b|bR|br|f|fR|fr|r|rB|rF|rb|rf|u|uR|ur)['"](?=[A-Z]{3,}|[A-Z][a-z]{2,}|[a-z]{3,})
+
+# hit-count: 7 file-count: 4
+# mailto urls
+mailto:[-a-zA-Z=;:/?%&0-9+@._]{3,}
+
+# hit-count: 6 file-count: 2
+# Wikipedia
+\ben\.wikipedia\.org/wiki/[-\w%.#]+
+
+# hit-count: 5 file-count: 5
+# stackexchange -- https://stackexchange.com/feeds/sites
+\b(?:askubuntu|serverfault|stack(?:exchange|overflow)|superuser).com/(?:questions/\w+/[-\w]+|a/)
+
+# hit-count: 3 file-count: 3
+# GitHub actions
+\buses:\s+[-\w.]+/[-\w./]+@[-\w.]+
+
+# hit-count: 3 file-count: 2
+# tar arguments
+\b(?:\\n|)g?tar(?:\.exe|)(?:(?:\s+--[-a-zA-Z]+|\s+-[a-zA-Z]+|\s[ABGJMOPRSUWZacdfh-pr-xz]+\b)(?:=[^ ]*|))+
+
+# hit-count: 2 file-count: 2
+# node packages
+(["'])@[^/'" ]+/[^/'" ]+\g{-1}
+
+# hit-count: 2 file-count: 1
+# American Mathematical Society (AMS) / Doxygen
+TeX/AMS
+
+# hit-count: 1 file-count: 1
+# apple
+\bdeveloper\.apple\.com/[-\w?=/]+
+
+# hit-count: 1 file-count: 1
+# Google Forms
+\bforms\.gle/\w+
+
+# Questionably acceptable forms of `in to`
+# Personally, I prefer `log into`, but people object
+# https://www.tprteaching.com/log-into-log-in-to-login/
+\b(?:(?:[Ll]og(?:g(?=[a-z])|)|[Ss]ign)(?:ed|ing)?) in to\b
+
+# to opt in
+\bto opt in\b
+
+# acceptable duplicates
+# ls directory listings
+[-bcdlpsw](?:[-r][-w][-SsTtx]){3}[\.+*]?\s+\d+\s+\S+\s+\S+\s+[.\d]+(?:[KMGT]|)\s+
+# mount
+\bmount\s+-t\s+(\w+)\s+\g{-1}\b
+# C types and repeated CSS values
+\s(auto|buffalo|center|div|expr|inherit|long|LONG|none|normal|Prime|solid|Time|thin|transparent|very)(?: \g{-1})+\s
+# C enum and struct
+\b(?:enum|struct)\s+(\w+)\s+\g{-1}\b
+# go templates
+\s(\w+)\s+\g{-1}\s+\`(?:graphql|inject|json|yaml):
+# doxygen / javadoc / .net
+(?:[\\@](?:brief|defgroup|groupname|link|page|t?param|return|retval)|(?:public|private|\[Parameter(?:\(.+\)|)\])(?:\s+(?:static|override|readonly|required|virtual))*)(?:\s+\{\w+\}|)\s+(\w+)\s+\g{-1}\s
+
+# macOS file path
+(?:Contents\W+|(?!iOS)/)MacOS\b
+
+# Python package registry has incorrect spelling for macOS / Mac OS X
+"Operating System :: MacOS :: MacOS X"
+
+# "company" in Germany
+\bGmbH\b
+
+# IntelliJ
+\bIntelliJ\b
+
+# Commit message -- Signed-off-by and friends
+^\s*(?:(?:Based-on-patch|Co-authored|Helped|Mentored|Reported|Reviewed|Signed-off)-by|Thanks-to): (?:[^<]*<[^>]*>|[^<]*)\s*$
+
+# Autogenerated revert commit message
+^This reverts commit [0-9a-f]{40}\.$
+
+# ignore long runs of a single character:
+\b([A-Za-z])\g{-1}{3,}\b
+
+
+##########################################
+###### F Prime specific patterns    ######
+##########################################
+
+# .get...() .set...() autocoded functions
+\.get\w+\(
+\.set\w+\(
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/README.md`
+
+
+```markdown
+# check-spelling/check-spelling configuration
+
+File | Purpose | Format | Info
+-|-|-|-
+[allow.txt](allow.txt) | Add words to the dictionary | one word per line (only letters and `'`s allowed) | [allow](https://github.com/check-spelling/check-spelling/wiki/Configuration#allow)
+[reject.txt](reject.txt) | Remove words from the dictionary (after allow) | grep pattern matching whole dictionary words | [reject](https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples%3A-reject)
+[excludes.txt](excludes.txt) | Files to ignore entirely | perl regular expression | [excludes](https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples%3A-excludes)
+[patterns.txt](patterns.txt) | Patterns to ignore from checked lines | perl regular expression (order matters, first match wins) | [patterns](https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples%3A-patterns)
+[candidate.patterns](candidate.patterns) | Patterns that might be worth adding to [patterns.txt](patterns.txt) | perl regular expression with optional comment block introductions (all matches will be suggested) | [candidates](https://github.com/check-spelling/check-spelling/wiki/Feature:-Suggest-patterns)
+[line_forbidden.patterns](line_forbidden.patterns) | Patterns to flag in checked lines | perl regular expression (order matters, first match wins) | [patterns](https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples%3A-patterns)
+[expect.txt](expect.txt) | Expected words that aren't in the dictionary | one word per line (sorted, alphabetically) | [expect](https://github.com/check-spelling/check-spelling/wiki/Configuration#expect)
+[advice.md](advice.md) | Supplement for GitHub comment when unrecognized words are found | GitHub Markdown | [advice](https://github.com/check-spelling/check-spelling/wiki/Configuration-Examples%3A-advice)
+
+Note: you can replace any of these files with a directory by the same name (minus the suffix)
+and then include multiple files inside that directory (with that suffix) to merge multiple files together.
+```
+
+### `reject.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/spelling/reject.txt`
+
+
+```text
+^attache$
+^bellow$
+benefitting
+occurences?
+^dependan.*
+^diables?$
+^oer$
+Sorce
+^[Ss]pae.*
+^Teh$
+^untill$
+^untilling$
+^wether.*
+```

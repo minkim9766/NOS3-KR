@@ -3,18 +3,223 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack-file-settings.component.css`
 
-file--stack-file-settings.component.css
-file--stack-file-settings.component.html
-file--stack-file-settings.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/stack-file-settings.component.css`
+
+
+```css
+.main-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+}
+
+.tab-content {
+  position: absolute;
+  top: calc(24px + 36px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  padding: 24px;
+}
 ```
 
-## 항목
+### `stack-file-settings.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/stack-file-settings.component.css`](file--stack-file-settings.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/stack-file-settings.component.html`](file--stack-file-settings.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/stack-file-settings.component.ts`](file--stack-file-settings.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/stack-file-settings.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button
+        [routerLink]="folderLink()"
+        [queryParams]="{ c: yamcs.context }"
+        icon="arrow_back" />
+      {{ objectName() | basename }}
+    </ng-template>
+
+    <ya-page-button
+      matTooltip="Save stack"
+      (clicked)="stackFileService.saveStack()"
+      [disabled]="!(stackFileService.dirty$ | async)"
+      icon="save">
+      Save
+    </ya-page-button>
+  </ya-instance-toolbar>
+
+  <div class="main-pane">
+    <app-stack-file-page-tabs [objectName]="objectName()" />
+
+    <div class="tab-content">
+      <form [formGroup]="stackOptionsForm" class="ya-form">
+        <h3>Commanding</h3>
+        <ya-field>
+          <ng-template ya-field-label>
+            Advance when
+            <app-advance-ack-help [extra]="extraAcknowledgments" />
+          </ng-template>
+
+          <div style="display: flex; align-items: flex-start">
+            <ya-select
+              #ackSelect
+              [options]="ackOptions"
+              icon="check_circle_outline"
+              formControlName="advancementAckDropDown" />
+            @if (stackOptionsForm.get("advancementAckDropDown")?.value === "custom") {
+              <input
+                type="text"
+                formControlName="advancementAckCustom"
+                style="width: 200px; margin-left: -1px" />
+            }
+          </div>
+        </ya-field>
+
+        <ya-field label="Wait (ms)">
+          <ya-help dialogTitle="Wait time">
+            <p>Wait time before advancing to the next command in the stack.</p>
+            <p>This triggers after successful acknowledgment.</p>
+          </ya-help>
+          <input
+            type="number"
+            formControlName="advancementWait"
+            placeholder="0"
+            step="1000"
+            min="0"
+            style="width: 120px" />
+        </ya-field>
+      </form>
+    </div>
+  </div>
+</ya-instance-page>
+```
+
+### `stack-file-settings.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/stack-file-settings.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import {
+  AcknowledgmentInfo,
+  WebappSdkModule,
+  YamcsService,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { AdvanceAckHelpComponent } from '../advance-ack-help/advance-ack-help.component';
+import { StackFilePageTabsComponent } from '../stack-file-page-tabs/stack-file-page-tabs.component';
+import { StackFileService } from '../stack-file/StackFileService';
+
+@Component({
+  selector: 'app-stack-file-settings',
+  templateUrl: './stack-file-settings.component.html',
+  styleUrl: './stack-file-settings.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdvanceAckHelpComponent,
+    StackFilePageTabsComponent,
+    WebappSdkModule,
+  ],
+})
+export class StackFileSettingsComponent {
+  objectName = input.required<string>();
+
+  folderLink = computed(() => {
+    const objectName = this.objectName();
+    const idx = objectName.lastIndexOf('/');
+    if (idx === -1) {
+      return '/procedures/stacks/browse/';
+    } else {
+      const folderName = objectName.substring(0, idx);
+      return '/procedures/stacks/browse/' + folderName;
+    }
+  });
+
+  stackOptionsForm: FormGroup;
+
+  ackOptions: YaSelectOption[] = [
+    { id: 'Acknowledge_Queued', label: 'Queued' },
+    { id: 'Acknowledge_Released', label: 'Released' },
+    { id: 'Acknowledge_Sent', label: 'Sent' },
+    { id: 'CommandComplete', label: 'Completed' },
+  ];
+
+  extraAcknowledgments: AcknowledgmentInfo[];
+
+  constructor(
+    readonly yamcs: YamcsService,
+    readonly stackFileService: StackFileService,
+  ) {
+    this.stackOptionsForm = new FormGroup({
+      advancementAckDropDown: new FormControl('', []),
+      advancementAckCustom: new FormControl('', []),
+      advancementWait: new FormControl('', []),
+    });
+
+    this.extraAcknowledgments = yamcs.getProcessor()?.acknowledgments ?? [];
+    let first = true;
+    for (const ack of this.extraAcknowledgments) {
+      this.ackOptions.push({
+        id: ack.name,
+        label: ack.name.replace('Acknowledge_', ''),
+        group: first,
+      });
+      first = false;
+    }
+
+    this.ackOptions.push({
+      id: 'custom',
+      label: 'Custom',
+      group: true,
+    });
+
+    const { advancement } = this.stackFileService;
+    const match = this.ackOptions.find(
+      (el) => el.id === advancement.acknowledgment,
+    );
+    const ackDefault = match ? match.id : 'custom';
+    this.stackOptionsForm.setValue({
+      advancementAckDropDown: ackDefault,
+      advancementAckCustom:
+        ackDefault === 'custom' ? advancement.acknowledgment : '',
+      advancementWait: advancement.wait,
+    });
+
+    this.stackOptionsForm.valueChanges.subscribe((result: any) => {
+      this.stackFileService.advancement = {
+        acknowledgment:
+          result.advancementAckDropDown !== 'custom'
+            ? result.advancementAckDropDown
+            : result.advancementAckCustom,
+        wait: result.advancementWait ?? 0,
+      };
+
+      if (result.advancementAckDropDown !== 'custom') {
+        this.stackOptionsForm.patchValue(
+          {
+            advancementAckCustom: undefined,
+          },
+          { emitEvent: false },
+        );
+      }
+
+      this.stackFileService.markDirty();
+    });
+  }
+}
+```

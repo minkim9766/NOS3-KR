@@ -3,22 +3,524 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `main.cpp`
 
-file--main.cpp
-file--RateLimiterTester.cpp
-file--RateLimiterTester.hpp
-file--TokenBucketTester.cpp
-file--TokenBucketTester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Main.cpp
+// ----------------------------------------------------------------------
+
+#include "RateLimiterTester.hpp"
+#include "TokenBucketTester.hpp"
+
+TEST(RateLimiterTest, TestCounterTriggering) {
+    Utils::RateLimiterTester tester;
+    tester.testCounterTriggering();
+}
+
+TEST(RateLimiterTest, TestTimeTriggering) {
+    Utils::RateLimiterTester tester;
+    tester.testTimeTriggering();
+}
+
+TEST(RateLimiterTest, TestCounterAndTimeTriggering) {
+    Utils::RateLimiterTester tester;
+    tester.testCounterAndTimeTriggering();
+}
+
+TEST(TokenBucketTest, TestTriggering) {
+    Utils::TokenBucketTester tester;
+    tester.testTriggering();
+}
+
+TEST(TokenBucketTest, TestReconfiguring) {
+    Utils::TokenBucketTester tester;
+    tester.testReconfiguring();
+}
+
+TEST(TokenBucketTest, TestInitialSettings) {
+    Utils::TokenBucketTester tester;
+    tester.testInitialSettings();
+}
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `RateLimiterTester.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/RateLimiterTester.cpp`](file--RateLimiterTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/RateLimiterTester.hpp`](file--RateLimiterTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/TokenBucketTester.cpp`](file--TokenBucketTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/TokenBucketTester.hpp`](file--TokenBucketTester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/RateLimiterTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  RateLimiterTester.hpp
+// \author vwong
+// \brief  cpp file for RateLimiter test harness implementation class
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "RateLimiterTester.hpp"
+
+
+namespace Utils {
+
+  // ----------------------------------------------------------------------
+  // Construction and destruction
+  // ----------------------------------------------------------------------
+
+  RateLimiterTester ::
+    RateLimiterTester()
+  {
+  }
+
+  RateLimiterTester ::
+    ~RateLimiterTester()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Tests
+  // ----------------------------------------------------------------------
+
+  void RateLimiterTester ::
+    testCounterTriggering()
+  {
+    U32 testCycles[] = {0, 5, 50, 832};
+    for (U32 i = 0; i < FW_NUM_ARRAY_ELEMENTS(testCycles); i++) {
+      const U32 cycles = testCycles[i];
+
+      // triggers at the beginning
+      RateLimiter limiter(cycles, 0);
+      ASSERT_TRUE(limiter.trigger());
+      limiter.reset();
+
+      // does not trigger if skipped
+      if (cycles > 0) {
+        limiter.setCounter(1);
+        ASSERT_FALSE(limiter.trigger());
+        limiter.reset();
+      }
+
+      // test number of times triggered
+      const U32 numIter = 10000;
+      U32 triggerCount = 0;
+      for (U32 iter = 0; iter < numIter; iter++) {
+        bool shouldTrigger = (cycles == 0) || (iter % cycles == 0);
+        bool triggered = limiter.trigger();
+        ASSERT_EQ(shouldTrigger, triggered) << " for cycles " << cycles << " at " << iter;
+        triggerCount += triggered;
+      }
+      if (cycles > 0) {
+        U32 expectedCount = (numIter / cycles) + (numIter % cycles > 0);
+        ASSERT_EQ(triggerCount, expectedCount);
+      }
+    }
+  }
+
+  void RateLimiterTester ::
+    testTimeTriggering()
+  {
+    U32 testCycles[] = {0, 5, 50, 832};
+    for (U32 i = 0; i < FW_NUM_ARRAY_ELEMENTS(testCycles); i++) {
+      const U32 cycles = testCycles[i];
+      Fw::Time timeCyclesTime(cycles, 0);
+
+      // triggers at the beginning
+      RateLimiter limiter(0, cycles);
+      ASSERT_TRUE(limiter.trigger(Fw::Time::zero()));
+      limiter.reset();
+
+      // does not trigger if skipped
+      if (cycles > 0) {
+        limiter.setTime(Fw::Time(1,0));
+        ASSERT_FALSE(limiter.trigger(Fw::Time::zero()));
+        limiter.reset();
+      }
+
+      // test number of times triggered
+      const U32 numIter = 100000;
+      Fw::Time curTime(0, 0);
+      Fw::Time nextTriggerTime(0, 0);
+      for (U32 iter = 0; iter < numIter; iter++) {
+        curTime.add(0, STest::Pick::lowerUpper(1, 5) * 100000);
+        bool shouldTrigger = (cycles == 0) || (curTime >= nextTriggerTime);
+        bool triggered = limiter.trigger(curTime);
+        ASSERT_EQ(shouldTrigger, triggered) << " for cycles " << cycles << " at " << curTime.getSeconds() << "." << curTime.getUSeconds();
+        if (triggered) {
+          nextTriggerTime = Fw::Time::add(curTime, timeCyclesTime);
+        }
+      }
+    }
+  }
+
+  void RateLimiterTester ::
+    testCounterAndTimeTriggering()
+  {
+    U32 testCounterCycles[] = {37, 981, 4110};
+    U32 testTimeCycles[] = {12, 294, 1250};
+    for (U32 i = 0; i < (FW_NUM_ARRAY_ELEMENTS(testCounterCycles) * FW_NUM_ARRAY_ELEMENTS(testTimeCycles)); i++) {
+      const U32 counterCycles = testCounterCycles[i % FW_NUM_ARRAY_ELEMENTS(testCounterCycles)];
+      const U32 timeCycles = testTimeCycles[i / FW_NUM_ARRAY_ELEMENTS(testCounterCycles)];
+      Fw::Time timeCyclesTime(timeCycles, 0);
+
+      // triggers at the beginning
+      RateLimiter limiter(counterCycles, timeCycles);
+      ASSERT_TRUE(limiter.trigger(Fw::Time::zero()));
+      limiter.reset();
+
+      // test trigger locations
+      const U32 numIter = 100000; // each iter is 0.1 seconds
+      Fw::Time curTime(0, 0);
+      U32 lastTriggerIter = 0;
+      Fw::Time nextTriggerTime(0, 0);
+      for (U32 iter = 0; iter < numIter; iter++) {
+        curTime.add(0, STest::Pick::lowerUpper(1, 5) * 100000);
+        bool shouldTrigger = ((iter-lastTriggerIter) % counterCycles == 0) || (curTime >= nextTriggerTime);
+        bool triggered = limiter.trigger(curTime);
+        ASSERT_EQ(shouldTrigger, triggered) << " for cycles " << counterCycles << "/" << timeCycles << " at " << iter << "/" << curTime.getSeconds() << "." << curTime.getUSeconds();
+        if (triggered) {
+          nextTriggerTime = Fw::Time::add(curTime, timeCyclesTime);
+          lastTriggerIter = iter;
+        }
+      }
+    }
+  }
+
+
+  // ----------------------------------------------------------------------
+  // Helper methods
+  // ----------------------------------------------------------------------
+
+  void RateLimiterTester ::
+    initComponents()
+  {
+  }
+
+} // end namespace Utils
+```
+
+### `RateLimiterTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/RateLimiterTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Util/test/ut/RateLimiterTester.hpp
+// \author vwong
+// \brief  hpp file for RateLimiter test harness implementation class
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef RATELIMITERTESTER_HPP
+#define RATELIMITERTESTER_HPP
+
+#include "Utils/RateLimiter.hpp"
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "gtest/gtest.h"
+#include <STest/Pick/Pick.hpp>
+
+namespace Utils {
+
+  class RateLimiterTester
+  {
+
+      // ----------------------------------------------------------------------
+      // Construction and destruction
+      // ----------------------------------------------------------------------
+
+    public:
+
+      //! Construct object RateLimiterTester
+      //!
+      RateLimiterTester();
+
+      //! Destroy object RateLimiterTester
+      //!
+      ~RateLimiterTester();
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Tests
+      // ----------------------------------------------------------------------
+
+      void testCounterTriggering();
+      void testTimeTriggering();
+      void testCounterAndTimeTriggering();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Helper methods
+      // ----------------------------------------------------------------------
+
+      //! Initialize components
+      //!
+      void initComponents();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Variables
+      // ----------------------------------------------------------------------
+
+
+
+  };
+
+} // end namespace Utils
+
+#endif
+```
+
+### `TokenBucketTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/TokenBucketTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TokenBucketTester.hpp
+// \author vwong
+// \brief  cpp file for TokenBucket test harness implementation class
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "TokenBucketTester.hpp"
+#include <ctime>
+
+namespace Utils {
+
+  // ----------------------------------------------------------------------
+  // Construction and destruction
+  // ----------------------------------------------------------------------
+
+  TokenBucketTester ::
+    TokenBucketTester()
+  {
+  }
+
+  TokenBucketTester ::
+    ~TokenBucketTester()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Tests
+  // ----------------------------------------------------------------------
+
+  void TokenBucketTester ::
+    testTriggering()
+  {
+    const U32 interval = 1000000;
+    U32 testMaxTokens[] = {1, 5, 50, 832};
+    for (U32 i = 0; i < FW_NUM_ARRAY_ELEMENTS(testMaxTokens); i++) {
+      const U32 maxTokens = testMaxTokens[i];
+      TokenBucket bucket(interval, maxTokens);
+
+      // can activate maxTokens times in a row
+      for (U32 j = 0; j < maxTokens; j++) {
+        bool triggered = bucket.trigger(Fw::Time(0, 0));
+        ASSERT_TRUE(triggered);
+        ASSERT_EQ(bucket.getTokens(), maxTokens - j - 1);
+      }
+
+      // replenish
+      bucket.replenish();
+
+      Fw::Time time(0, 0);
+      const U32 attempts = maxTokens * 5;
+      Fw::Time attemptInterval(0, interval / 4);
+      U32 triggerCount = 0;
+      for (U32 attempt = 0; attempt < attempts; attempt++) {
+        triggerCount += bucket.trigger(time);
+        time = Fw::Time::add(time, attemptInterval);
+      }
+      U32 expected = maxTokens + (attempts - 1) / 4;
+      ASSERT_EQ(expected, triggerCount);
+    }
+  }
+
+  void TokenBucketTester ::
+    testReconfiguring()
+  {
+    U32 initialInterval = 1000000;
+    U32 initialMaxTokens = 5;
+
+    TokenBucket bucket(initialInterval, initialMaxTokens);
+    ASSERT_EQ(bucket.getReplenishInterval(), initialInterval);
+    ASSERT_EQ(bucket.getMaxTokens(), initialMaxTokens);
+    ASSERT_EQ(bucket.getTokens(), initialMaxTokens);
+
+    // trigger
+    bucket.trigger(Fw::Time(0, 0));
+    ASSERT_EQ(bucket.getTokens(), initialMaxTokens-1);
+
+    // replenished, then triggered
+    bucket.trigger(Fw::Time(1, 0));
+    ASSERT_EQ(bucket.getTokens(), initialMaxTokens-1);
+
+    // set new interval, can't replenish using old interval
+    U32 newInterval = 2000000;
+    bucket.setReplenishInterval(newInterval);
+    ASSERT_EQ(bucket.getReplenishInterval(), newInterval);
+    ASSERT_TRUE(bucket.trigger(Fw::Time(2, 0)));
+    ASSERT_EQ(bucket.getTokens(), initialMaxTokens-2);
+
+    // set new max tokens, replenish up to new max
+    U32 newMaxTokens = 10;
+    bucket.setMaxTokens(newMaxTokens);
+    ASSERT_EQ(bucket.getMaxTokens(), newMaxTokens);
+    ASSERT_TRUE(bucket.trigger(Fw::Time(20, 0)));
+    ASSERT_EQ(bucket.getTokens(), newMaxTokens-1);
+
+    // set new rate, replenish quickly
+    while (bucket.trigger(Fw::Time(0,0)));
+    bucket.setReplenishInterval(1000000);
+    U32 newRate = 2;
+    bucket.setReplenishRate(newRate);
+    ASSERT_EQ(bucket.getReplenishRate(), newRate);
+    ASSERT_TRUE(bucket.trigger(Fw::Time(21, 0)));
+    ASSERT_EQ(bucket.getTokens(), 1);
+  }
+
+  void TokenBucketTester ::
+    testInitialSettings()
+  {
+    U32 interval = 1000000;
+    U32 maxTokens = 5;
+    U32 rate = 2;
+    U32 startTokens = 2;
+    Fw::Time startTime(5,0);
+
+    TokenBucket bucket(interval, maxTokens, rate, startTokens, startTime);
+    ASSERT_NE(bucket.getTokens(), maxTokens);
+    ASSERT_EQ(bucket.getTokens(), startTokens);
+    ASSERT_EQ(bucket.getReplenishRate(), rate);
+
+    for (U32 i = 0; i < startTokens; i++) {
+      bool triggered = bucket.trigger(Fw::Time(0,0));
+      ASSERT_TRUE(triggered);
+    }
+    ASSERT_FALSE(bucket.trigger(Fw::Time(0,0)));
+  }
+
+
+  // ----------------------------------------------------------------------
+  // Helper methods
+  // ----------------------------------------------------------------------
+
+  void TokenBucketTester ::
+    initComponents()
+  {
+  }
+
+} // end namespace Utils
+```
+
+### `TokenBucketTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/test/ut/TokenBucketTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Util/test/ut/TokenBucketTester.hpp
+// \author vwong
+// \brief  hpp file for TokenBucket test harness implementation class
+//
+// \copyright
+//
+// Copyright (C) 2009-2020 California Institute of Technology.
+//
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef TOKENBUCKETTESTER_HPP
+#define TOKENBUCKETTESTER_HPP
+
+#include "Utils/TokenBucket.hpp"
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "gtest/gtest.h"
+
+namespace Utils {
+
+  class TokenBucketTester
+  {
+
+      // ----------------------------------------------------------------------
+      // Construction and destruction
+      // ----------------------------------------------------------------------
+
+    public:
+
+      //! Construct object TokenBucketTester
+      //!
+      TokenBucketTester();
+
+      //! Destroy object TokenBucketTester
+      //!
+      ~TokenBucketTester();
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Tests
+      // ----------------------------------------------------------------------
+
+      void testTriggering();
+      void testReconfiguring();
+      void testInitialSettings();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Helper methods
+      // ----------------------------------------------------------------------
+
+      //! Initialize components
+      //!
+      void initComponents();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Variables
+      // ----------------------------------------------------------------------
+
+  };
+
+} // end namespace Utils
+
+#endif
+```

@@ -3,60 +3,3276 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AsyncCmdTests.cpp`
 
-file--AsyncCmdTests.cpp
-file--AsyncPortTests.cpp
-file--AsyncTesterHelpers.cpp
-file--AsyncTests.cpp
-file--CmdTests.cpp
-file--CmdTests.hpp
-file--EventTests.cpp
-file--EventTests.hpp
-file--ExternalParamTests.cpp
-file--ExternalParamTests.hpp
-file--InternalInterfaceTests.cpp
-file--InternalInterfaceTests.hpp
-file--OverflowTests.cpp
-file--ParamTests.cpp
-file--ParamTests.hpp
-file--PortTests.cpp
-file--PortTests.hpp
-file--TesterHandlers.cpp
-file--TesterHelpers.cpp
-file--TestMain.cpp
-file--Tests.cpp
-file--TimeTests.cpp
-file--TlmTests.cpp
-file--TlmTests.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncCmdTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AsyncCmdTests.cpp
+// \author T. Chieu
+// \brief  cpp file for async command tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "CmdTests.hpp"
+
+#include "Fw/Cmd/CmdArgBuffer.hpp"
+
+CMD_TEST_INVOKE_DEFS_ASYNC
+CMD_TEST_DEFS(Async, _ASYNC)
 ```
 
-## 항목
+### `AsyncPortTests.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncCmdTests.cpp`](file--AsyncCmdTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncPortTests.cpp`](file--AsyncPortTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncTesterHelpers.cpp`](file--AsyncTesterHelpers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncTests.cpp`](file--AsyncTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/CmdTests.cpp`](file--CmdTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/CmdTests.hpp`](file--CmdTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/EventTests.cpp`](file--EventTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/EventTests.hpp`](file--EventTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ExternalParamTests.cpp`](file--ExternalParamTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ExternalParamTests.hpp`](file--ExternalParamTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/InternalInterfaceTests.cpp`](file--InternalInterfaceTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/InternalInterfaceTests.hpp`](file--InternalInterfaceTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/OverflowTests.cpp`](file--OverflowTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ParamTests.cpp`](file--ParamTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ParamTests.hpp`](file--ParamTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/PortTests.cpp`](file--PortTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/PortTests.hpp`](file--PortTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TesterHandlers.cpp`](file--TesterHandlers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TesterHelpers.cpp`](file--TesterHelpers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TestMain.cpp`](file--TestMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/Tests.cpp`](file--Tests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TimeTests.cpp`](file--TimeTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TlmTests.cpp`](file--TlmTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TlmTests.hpp`](file--TlmTests.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncPortTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AsyncPortTests.cpp
+// \author T. Chieu
+// \brief  cpp file for async port tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "PortTests.hpp"
+#include "Tester.hpp"
+
+PORT_TEST_DEFS_ASYNC
+```
+
+### `AsyncTesterHelpers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncTesterHelpers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AsyncTesterHelpers.cpp
+// \author T. Chieu
+// \brief  cpp file for async tester helper functions
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+void Tester ::connectAsyncPorts() {
+    // arrayArgsAsync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_arrayArgsAsync(i, this->component.get_arrayArgsAsync_InputPort(i));
+    }
+
+    // enumArgsAsync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_enumArgsAsync(i, this->component.get_enumArgsAsync_InputPort(i));
+    }
+
+    // enumArgsHook
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_enumArgsHook(i, this->component.get_enumArgsHook_InputPort(i));
+    }
+
+    // noArgsAsync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_noArgsAsync(i, this->component.get_noArgsAsync_InputPort(i));
+    }
+
+    // primitiveArgsAsync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_primitiveArgsAsync(i, this->component.get_primitiveArgsAsync_InputPort(i));
+    }
+
+    // stringArgsAsync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_stringArgsAsync(i, this->component.get_stringArgsAsync_InputPort(i));
+    }
+
+    // structArgsAsync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_structArgsAsync(i, this->component.get_structArgsAsync_InputPort(i));
+    }
+
+    // serialAsync
+    for (FwIndexType i = 0; i < 3; ++i) {
+        this->connect_to_serialAsync(i, this->component.get_serialAsync_InputPort(i));
+    }
+
+    // serialAsyncAssert
+    this->connect_to_serialAsyncAssert(0, this->component.get_serialAsyncAssert_InputPort(0));
+
+    // serialAsyncBlockPriority
+    this->connect_to_serialAsyncBlockPriority(0, this->component.get_serialAsyncBlockPriority_InputPort(0));
+
+    // serialAsyncDropPriority
+    this->connect_to_serialAsyncDropPriority(0, this->component.get_serialAsyncDropPriority_InputPort(0));
+
+    // enumArgsHookOverflowed
+    for (FwIndexType i = 0; i < 2; i++) {
+        this->component.set_enumArgsHookOverflowed_OutputPort(i, this->get_from_enumArgsHookOverflowed(i));
+    }
+}
+
+Fw::QueuedComponentBase::MsgDispatchStatus Tester ::doDispatch() {
+    return component.doDispatch();
+}
+```
+
+### `AsyncTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/AsyncTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AsyncTests.cpp
+// \author T. Chieu
+// \brief  cpp file for async component tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/component/types/FormalParamTypes.hpp"
+#include "FppTest/typed_tests/ComponentTest.hpp"
+#include "FppTest/typed_tests/PortTest.hpp"
+
+// Typed async port tests
+using TypedAsyncPortTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                           FppTest::Types::PrimitiveParams,
+                                                           FppTest::Types::PortStringParams,
+                                                           FppTest::Types::EnumParams,
+                                                           FppTest::Types::ArrayParams,
+                                                           FppTest::Types::StructParams>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, TypedAsyncPortTest, TypedAsyncPortTestImplementations);
+
+// Serial async port tests
+using SerialAsyncPortTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                            FppTest::Types::PrimitiveParams,
+                                                            FppTest::Types::PortStringParams,
+                                                            FppTest::Types::EnumParams,
+                                                            FppTest::Types::ArrayParams,
+                                                            FppTest::Types::StructParams>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, SerialAsyncPortTest, SerialAsyncPortTestImplementations);
+
+// Async command tests
+using AsyncCommandTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                         FppTest::Types::PrimitiveParams,
+                                                         FppTest::Types::CmdStringParams,
+                                                         FppTest::Types::EnumParam,
+                                                         FppTest::Types::ArrayParam,
+                                                         FppTest::Types::StructParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentAsyncCommandTest, AsyncCommandTestImplementations);
+
+// Internal interface tests
+using InternalInterfaceTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                              FppTest::Types::PrimitiveParams,
+                                                              FppTest::Types::InternalInterfaceStringParams,
+                                                              FppTest::Types::EnumParam,
+                                                              FppTest::Types::ArrayParam,
+                                                              FppTest::Types::StructParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentInternalInterfaceTest, InternalInterfaceTestImplementations);
+
+TEST(ComponentOverflow, OverflowHook) {
+    Tester tester;
+    tester.testOverflowHook();
+}
+
+TEST(ComponentOverflow, OverflowDrop) {
+    Tester tester;
+    tester.testOverflowDrop();
+}
+
+TEST(ComponentOverflow, OverflowAssert) {
+    Tester tester;
+    tester.testOverflowAssert();
+}
+
+```
+
+### `CmdTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/CmdTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdTests.cpp
+// \author T. Chieu
+// \brief  cpp file for command tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "CmdTests.hpp"
+
+#include "Fw/Cmd/CmdArgBuffer.hpp"
+
+CMD_TEST_INVOKE_DEFS
+CMD_TEST_DEFS(, )
+```
+
+### `CmdTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/CmdTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdTests.hpp
+// \author T. Chieu
+// \brief  hpp file for command tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Command test declarations
+// ----------------------------------------------------------------------
+
+#define CMD_TEST_INVOKE_DECL(TYPE, ASYNC) void invoke##ASYNC##Command(FppTest::Types::TYPE& data);
+
+#define CMD_TEST_INVOKE_DECLS                                       \
+    void invokeCommand(FwOpcodeType opcode, Fw::CmdArgBuffer& buf); \
+    CMD_TEST_INVOKE_DECL(NoParams, )                                \
+    CMD_TEST_INVOKE_DECL(PrimitiveParams, )                         \
+    CMD_TEST_INVOKE_DECL(CmdStringParams, )                         \
+    CMD_TEST_INVOKE_DECL(EnumParam, )                               \
+    CMD_TEST_INVOKE_DECL(ArrayParam, )                              \
+    CMD_TEST_INVOKE_DECL(StructParam, )
+
+#define CMD_TEST_INVOKE_DECLS_ASYNC                                      \
+    void invokeAsyncCommand(FwOpcodeType opcode, Fw::CmdArgBuffer& buf); \
+    CMD_TEST_INVOKE_DECL(NoParams, Async)                                \
+    CMD_TEST_INVOKE_DECL(PrimitiveParams, Async)                         \
+    CMD_TEST_INVOKE_DECL(CmdStringParams, Async)                         \
+    CMD_TEST_INVOKE_DECL(EnumParam, Async)                               \
+    CMD_TEST_INVOKE_DECL(ArrayParam, Async)                              \
+    CMD_TEST_INVOKE_DECL(StructParam, Async)
+
+#define CMD_TEST_DECL(TYPE, ASYNC) void test##ASYNC##Command(FwIndexType portNum, FppTest::Types::TYPE& data);
+
+#define CMD_TEST_DECLS               \
+    CMD_TEST_INVOKE_DECLS            \
+    CMD_TEST_DECL(NoParams, )        \
+    CMD_TEST_DECL(PrimitiveParams, ) \
+    CMD_TEST_DECL(CmdStringParams, ) \
+    CMD_TEST_DECL(EnumParam, )       \
+    CMD_TEST_DECL(ArrayParam, )      \
+    CMD_TEST_DECL(StructParam, )
+
+#define CMD_TEST_DECLS_ASYNC              \
+    CMD_TEST_INVOKE_DECLS_ASYNC           \
+    CMD_TEST_DECL(NoParams, Async)        \
+    CMD_TEST_DECL(PrimitiveParams, Async) \
+    CMD_TEST_DECL(CmdStringParams, Async) \
+    CMD_TEST_DECL(EnumParam, Async)       \
+    CMD_TEST_DECL(ArrayParam, Async)      \
+    CMD_TEST_DECL(StructParam, Async)
+
+// ----------------------------------------------------------------------
+// Command test definitions
+// ----------------------------------------------------------------------
+
+#define CMD_TEST_INVOKE_DEFS                                                                              \
+    void Tester ::invokeCommand(FwOpcodeType opcode, Fw::CmdArgBuffer& buf) {                             \
+        this->sendRawCmd(opcode, 1, buf);                                                                 \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::invokeCommand(FppTest::Types::NoParams& data) {                                         \
+        this->sendCmd_CMD_NO_ARGS(0, 1);                                                                  \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::invokeCommand(FppTest::Types::PrimitiveParams& data) {                                  \
+        this->sendCmd_CMD_PRIMITIVE(0, 1, data.args.val1, data.args.val2, data.args.val3, data.args.val4, \
+                                    data.args.val5, data.args.val6);                                      \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::invokeCommand(FppTest::Types::CmdStringParams& data) {                                  \
+        this->sendCmd_CMD_STRINGS(0, 1, data.args.val1, data.args.val2);                                  \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::invokeCommand(FppTest::Types::EnumParam& data) {                                        \
+        this->sendCmd_CMD_ENUM(0, 1, data.args.val);                                                      \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::invokeCommand(FppTest::Types::ArrayParam& data) {                                       \
+        this->sendCmd_CMD_ARRAY(0, 1, data.args.val);                                                     \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::invokeCommand(FppTest::Types::StructParam& data) {                                      \
+        this->sendCmd_CMD_STRUCT(0, 1, data.args.val);                                                    \
+    }
+
+#define CMD_TEST_INVOKE_DEFS_ASYNC                                                                              \
+    void Tester ::invokeAsyncCommand(FwOpcodeType opcode, Fw::CmdArgBuffer& buf) {                              \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendRawCmd(opcode, 1, buf);                                                                       \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }                                                                                                           \
+                                                                                                                \
+    void Tester ::invokeAsyncCommand(FppTest::Types::NoParams& data) {                                          \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendCmd_CMD_ASYNC_NO_ARGS(0, 1);                                                                  \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }                                                                                                           \
+                                                                                                                \
+    void Tester ::invokeAsyncCommand(FppTest::Types::PrimitiveParams& data) {                                   \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendCmd_CMD_ASYNC_PRIMITIVE(0, 1, data.args.val1, data.args.val2, data.args.val3, data.args.val4, \
+                                          data.args.val5, data.args.val6);                                      \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }                                                                                                           \
+                                                                                                                \
+    void Tester ::invokeAsyncCommand(FppTest::Types::CmdStringParams& data) {                                   \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendCmd_CMD_ASYNC_STRINGS(0, 1, data.args.val1, data.args.val2);                                  \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }                                                                                                           \
+                                                                                                                \
+    void Tester ::invokeAsyncCommand(FppTest::Types::EnumParam& data) {                                         \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendCmd_CMD_ASYNC_ENUM(0, 1, data.args.val);                                                      \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }                                                                                                           \
+                                                                                                                \
+    void Tester ::invokeAsyncCommand(FppTest::Types::ArrayParam& data) {                                        \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendCmd_CMD_ASYNC_ARRAY(0, 1, data.args.val);                                                     \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }                                                                                                           \
+                                                                                                                \
+    void Tester ::invokeAsyncCommand(FppTest::Types::StructParam& data) {                                       \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                                      \
+                                                                                                                \
+        this->sendCmd_CMD_ASYNC_STRUCT(0, 1, data.args.val);                                                    \
+        status = this->doDispatch();                                                                            \
+                                                                                                                \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);                         \
+    }
+
+#define CMD_TEST_DEFS(ASYNC, _ASYNC)                                                                        \
+    void Tester ::test##ASYNC##Command(FwIndexType portNum, FppTest::Types::NoParams& data) {           \
+        ASSERT_TRUE(this->isConnected_to_cmdIn(portNum));                                                   \
+        ASSERT_TRUE(component.isConnected_cmdRegOut_OutputPort(portNum));                                   \
+        ASSERT_TRUE(component.isConnected_cmdResponseOut_OutputPort(portNum));                              \
+                                                                                                            \
+        component.regCommands();                                                                            \
+                                                                                                            \
+        Fw::CmdArgBuffer buf;                                                                               \
+                                                                                                            \
+        /* Test success */                                                                                  \
+        this->invoke##ASYNC##Command(data);                                                                 \
+        ASSERT_CMD_RESPONSE_SIZE(1);                                                                        \
+        ASSERT_CMD_RESPONSE(0, component.OPCODE_CMD##_ASYNC##_NO_ARGS, 1, Fw::CmdResponse::OK);             \
+                                                                                                            \
+        /* Test too many arguments */                                                                       \
+        buf.serialize(0);                                                                                   \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_NO_ARGS, buf);                          \
+        ASSERT_CMD_RESPONSE_SIZE(2);                                                                        \
+        ASSERT_CMD_RESPONSE(1, component.OPCODE_CMD##_ASYNC##_NO_ARGS, 1, Fw::CmdResponse::FORMAT_ERROR);   \
+    }                                                                                                       \
+                                                                                                            \
+    void Tester ::test##ASYNC##Command(FwIndexType portNum, FppTest::Types::PrimitiveParams& data) {    \
+        ASSERT_TRUE(this->isConnected_to_cmdIn(portNum));                                                   \
+        ASSERT_TRUE(component.isConnected_cmdRegOut_OutputPort(portNum));                                   \
+        ASSERT_TRUE(component.isConnected_cmdResponseOut_OutputPort(portNum));                              \
+                                                                                                            \
+        component.regCommands();                                                                            \
+                                                                                                            \
+        Fw::CmdArgBuffer buf;                                                                               \
+                                                                                                            \
+        /* Test incorrect deserialization of first argument */                                              \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(1);                                                                        \
+        ASSERT_CMD_RESPONSE(0, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+                                                                                                            \
+        /* Test incorrect deserialization of second argument */                                             \
+        buf.serialize(data.args.val1);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(2);                                                                        \
+        ASSERT_CMD_RESPONSE(1, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+                                                                                                            \
+        /* Test incorrect deserialization of third argument */                                              \
+        buf.serialize(data.args.val2);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(3);                                                                        \
+        ASSERT_CMD_RESPONSE(2, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+                                                                                                            \
+        /* Test incorrect deserialization of fourth argument */                                             \
+        buf.serialize(data.args.val3);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(4);                                                                        \
+        ASSERT_CMD_RESPONSE(3, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+                                                                                                            \
+        /* Test incorrect deserialization of fifth argument */                                              \
+        buf.serialize(data.args.val4);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(5);                                                                        \
+        ASSERT_CMD_RESPONSE(4, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+                                                                                                            \
+        /* Test incorrect deserialization of sixth argument */                                              \
+        buf.serialize(data.args.val5);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(6);                                                                        \
+        ASSERT_CMD_RESPONSE(5, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+                                                                                                            \
+        /* Test success */                                                                                  \
+        buf.serialize(data.args.val6);                                                                      \
+        this->invoke##ASYNC##Command(data);                                                                 \
+                                                                                                            \
+        ASSERT_CMD_RESPONSE_SIZE(7);                                                                        \
+        ASSERT_CMD_RESPONSE(6, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::OK);           \
+        ASSERT_EQ(component.primitiveCmd.args.val1, data.args.val1);                                        \
+        ASSERT_EQ(component.primitiveCmd.args.val2, data.args.val2);                                        \
+        ASSERT_EQ(component.primitiveCmd.args.val3, data.args.val3);                                        \
+        ASSERT_EQ(component.primitiveCmd.args.val4, data.args.val4);                                        \
+        ASSERT_EQ(component.primitiveCmd.args.val5, data.args.val5);                                        \
+        ASSERT_EQ(component.primitiveCmd.args.val6, data.args.val6);                                        \
+                                                                                                            \
+        /* Test too many arguments */                                                                       \
+        buf.serialize(data.args.val5);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_PRIMITIVE, buf);                        \
+        ASSERT_CMD_RESPONSE_SIZE(8);                                                                        \
+        ASSERT_CMD_RESPONSE(7, component.OPCODE_CMD##_ASYNC##_PRIMITIVE, 1, Fw::CmdResponse::FORMAT_ERROR); \
+    }                                                                                                       \
+                                                                                                            \
+    void Tester ::test##ASYNC##Command(FwIndexType portNum, FppTest::Types::CmdStringParams& data) {    \
+        ASSERT_TRUE(this->isConnected_to_cmdIn(portNum));                                                   \
+        ASSERT_TRUE(component.isConnected_cmdRegOut_OutputPort(portNum));                                   \
+        ASSERT_TRUE(component.isConnected_cmdResponseOut_OutputPort(portNum));                              \
+                                                                                                            \
+        component.regCommands();                                                                            \
+                                                                                                            \
+        Fw::CmdArgBuffer buf;                                                                               \
+                                                                                                            \
+        /* Test incorrect serialization of first argument */                                                \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_STRINGS, buf);                          \
+        ASSERT_CMD_RESPONSE_SIZE(1);                                                                        \
+        ASSERT_CMD_RESPONSE(0, component.OPCODE_CMD##_ASYNC##_STRINGS, 1, Fw::CmdResponse::FORMAT_ERROR);   \
+                                                                                                            \
+        /* Test incorrect serialization of second argument */                                               \
+        buf.serialize(data.args.val1);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_STRINGS, buf);                          \
+        ASSERT_CMD_RESPONSE_SIZE(2);                                                                        \
+        ASSERT_CMD_RESPONSE(1, component.OPCODE_CMD##_ASYNC##_STRINGS, 1, Fw::CmdResponse::FORMAT_ERROR);   \
+                                                                                                            \
+        /* Test success */                                                                                  \
+        buf.serialize(data.args.val2);                                                                      \
+        this->invoke##ASYNC##Command(data);                                                                 \
+                                                                                                            \
+        ASSERT_CMD_RESPONSE_SIZE(3);                                                                        \
+        ASSERT_CMD_RESPONSE(2, component.OPCODE_CMD##_ASYNC##_STRINGS, 1, Fw::CmdResponse::OK);             \
+        ASSERT_EQ(component.stringCmd.args.val1, data.args.val1);                                           \
+        ASSERT_EQ(component.stringCmd.args.val2, data.args.val2);                                           \
+                                                                                                            \
+        /* Test too many arguments */                                                                       \
+        buf.serialize(data.args.val1);                                                                      \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_STRINGS, buf);                          \
+        ASSERT_CMD_RESPONSE_SIZE(4);                                                                        \
+        ASSERT_CMD_RESPONSE(3, component.OPCODE_CMD##_ASYNC##_STRINGS, 1, Fw::CmdResponse::FORMAT_ERROR);   \
+    }                                                                                                       \
+                                                                                                            \
+    void Tester ::test##ASYNC##Command(FwIndexType portNum, FppTest::Types::EnumParam& data) {          \
+        ASSERT_TRUE(this->isConnected_to_cmdIn(portNum));                                                   \
+        ASSERT_TRUE(component.isConnected_cmdRegOut_OutputPort(portNum));                                   \
+        ASSERT_TRUE(component.isConnected_cmdResponseOut_OutputPort(portNum));                              \
+                                                                                                            \
+        component.regCommands();                                                                            \
+                                                                                                            \
+        Fw::CmdArgBuffer buf;                                                                               \
+                                                                                                            \
+        /* Test incorrect serialization of first argument */                                                \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_ENUM, buf);                             \
+        ASSERT_CMD_RESPONSE_SIZE(1);                                                                        \
+        ASSERT_CMD_RESPONSE(0, component.OPCODE_CMD##_ASYNC##_ENUM, 1, Fw::CmdResponse::FORMAT_ERROR);      \
+                                                                                                            \
+        /* Test success */                                                                                  \
+        buf.serialize(data.args.val);                                                                       \
+        this->invoke##ASYNC##Command(data);                                                                 \
+                                                                                                            \
+        ASSERT_CMD_RESPONSE_SIZE(2);                                                                        \
+        ASSERT_CMD_RESPONSE(1, component.OPCODE_CMD##_ASYNC##_ENUM, 1, Fw::CmdResponse::OK);                \
+        ASSERT_EQ(component.enumCmd.args.val, data.args.val);                                               \
+                                                                                                            \
+        /* Test too many arguments */                                                                       \
+        buf.serialize(data.args.val);                                                                       \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_ENUM, buf);                             \
+        ASSERT_CMD_RESPONSE_SIZE(3);                                                                        \
+        ASSERT_CMD_RESPONSE(2, component.OPCODE_CMD##_ASYNC##_ENUM, 1, Fw::CmdResponse::FORMAT_ERROR);      \
+    }                                                                                                       \
+                                                                                                            \
+    void Tester ::test##ASYNC##Command(FwIndexType portNum, FppTest::Types::ArrayParam& data) {         \
+        ASSERT_TRUE(this->isConnected_to_cmdIn(portNum));                                                   \
+        ASSERT_TRUE(component.isConnected_cmdRegOut_OutputPort(portNum));                                   \
+        ASSERT_TRUE(component.isConnected_cmdResponseOut_OutputPort(portNum));                              \
+                                                                                                            \
+        component.regCommands();                                                                            \
+                                                                                                            \
+        Fw::CmdArgBuffer buf;                                                                               \
+                                                                                                            \
+        /* Test incorrect serialization of first argument */                                                \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_ARRAY, buf);                            \
+        ASSERT_CMD_RESPONSE_SIZE(1);                                                                        \
+        ASSERT_CMD_RESPONSE(0, component.OPCODE_CMD##_ASYNC##_ARRAY, 1, Fw::CmdResponse::FORMAT_ERROR);     \
+                                                                                                            \
+        /* Test success */                                                                                  \
+        buf.serialize(data.args.val);                                                                       \
+        this->invoke##ASYNC##Command(data);                                                                 \
+                                                                                                            \
+        ASSERT_CMD_RESPONSE_SIZE(2);                                                                        \
+        ASSERT_CMD_RESPONSE(1, component.OPCODE_CMD##_ASYNC##_ARRAY, 1, Fw::CmdResponse::OK);               \
+        ASSERT_EQ(component.arrayCmd.args.val, data.args.val);                                              \
+                                                                                                            \
+        /* Test too many arguments */                                                                       \
+        buf.serialize(data.args.val);                                                                       \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_ARRAY, buf);                            \
+        ASSERT_CMD_RESPONSE_SIZE(3);                                                                        \
+        ASSERT_CMD_RESPONSE(2, component.OPCODE_CMD##_ASYNC##_ARRAY, 1, Fw::CmdResponse::FORMAT_ERROR);     \
+    }                                                                                                       \
+                                                                                                            \
+    void Tester ::test##ASYNC##Command(FwIndexType portNum, FppTest::Types::StructParam& data) {        \
+        ASSERT_TRUE(this->isConnected_to_cmdIn(portNum));                                                   \
+        ASSERT_TRUE(component.isConnected_cmdRegOut_OutputPort(portNum));                                   \
+        ASSERT_TRUE(component.isConnected_cmdResponseOut_OutputPort(portNum));                              \
+                                                                                                            \
+        component.regCommands();                                                                            \
+                                                                                                            \
+        Fw::CmdArgBuffer buf;                                                                               \
+                                                                                                            \
+        /* Test incorrect serialization of first argument */                                                \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_STRUCT, buf);                           \
+        ASSERT_CMD_RESPONSE_SIZE(1);                                                                        \
+        ASSERT_CMD_RESPONSE(0, component.OPCODE_CMD##_ASYNC##_STRUCT, 1, Fw::CmdResponse::FORMAT_ERROR);    \
+                                                                                                            \
+        /* Test success */                                                                                  \
+        buf.serialize(data.args.val);                                                                       \
+        this->invoke##ASYNC##Command(data);                                                                 \
+                                                                                                            \
+        ASSERT_CMD_RESPONSE_SIZE(2);                                                                        \
+        ASSERT_CMD_RESPONSE(1, component.OPCODE_CMD##_ASYNC##_STRUCT, 1, Fw::CmdResponse::OK);              \
+        ASSERT_EQ(component.structCmd.args.val, data.args.val);                                             \
+                                                                                                            \
+        /* Test too many arguments */                                                                       \
+        buf.serialize(data.args.val);                                                                       \
+        this->invoke##ASYNC##Command(component.OPCODE_CMD##_ASYNC##_STRUCT, buf);                           \
+        ASSERT_CMD_RESPONSE_SIZE(3);                                                                        \
+        ASSERT_CMD_RESPONSE(2, component.OPCODE_CMD##_ASYNC##_STRUCT, 1, Fw::CmdResponse::FORMAT_ERROR);    \
+    }
+```
+
+### `EventTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/EventTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  EventTests.cpp
+// \author T. Chieu
+// \brief  cpp file for event tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Event tests
+// ----------------------------------------------------------------------
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::NoParams& data) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    component.log_ACTIVITY_HI_EventNoArgs();
+
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_EventNoArgs_SIZE(1);
+
+    this->printTextLogHistory(stdout);
+}
+
+void Tester ::testEventHelper(FwIndexType portNum, FppTest::Types::PrimitiveParams& data, FwSizeType size) {
+    component.log_ACTIVITY_LO_EventPrimitive(data.args.val1, data.args.val2, data.args.val3, data.args.val4,
+                                             data.args.val5, data.args.val6);
+
+    ASSERT_EVENTS_SIZE(static_cast<U32>(size));
+    ASSERT_EVENTS_EventPrimitive_SIZE(static_cast<U32>(size));
+    ASSERT_EVENTS_EventPrimitive(static_cast<U32>(portNum), data.args.val1, data.args.val2, data.args.val3, data.args.val4,
+                                 data.args.val5, data.args.val6);
+}
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::PrimitiveParams& data) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    for (U32 i = 0; i < component.EVENTID_EVENTPRIMITIVE_THROTTLE; i++) {
+        testEventHelper(portNum, data, i + 1);
+    }
+
+    // Test that throttling works
+    testEventHelper(portNum, data, component.EVENTID_EVENTPRIMITIVE_THROTTLE);
+
+    // Test throttle reset
+    component.log_ACTIVITY_LO_EventPrimitive_ThrottleClear();
+    testEventHelper(portNum, data, component.EVENTID_EVENTPRIMITIVE_THROTTLE + 1);
+
+    this->printTextLogHistory(stdout);
+}
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::LogStringParams& data) {
+    component.log_COMMAND_EventString(data.args.val1, data.args.val2);
+
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_EventString_SIZE(1);
+    Fw::StringTemplate<80> arg1(data.args.val1);
+    Fw::StringTemplate<100> arg2(data.args.val2);
+    ASSERT_EVENTS_EventString(static_cast<U32>(portNum), arg1.toChar(), arg2.toChar());
+
+    this->printTextLogHistory(stdout);
+}
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::EnumParam& data) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    component.log_DIAGNOSTIC_EventEnum(data.args.val);
+
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_EventEnum_SIZE(1);
+    ASSERT_EVENTS_EventEnum(static_cast<U32>(portNum), data.args.val);
+
+    this->printTextLogHistory(stdout);
+}
+
+void Tester ::testEventHelper(FwIndexType portNum, FppTest::Types::ArrayParam& data, FwSizeType size) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    component.log_FATAL_EventArray(data.args.val);
+
+    ASSERT_EVENTS_SIZE(static_cast<U32>(size));
+    ASSERT_EVENTS_EventArray_SIZE(static_cast<U32>(size));
+    ASSERT_EVENTS_EventArray(static_cast<U32>(portNum), data.args.val);
+}
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::ArrayParam& data) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    for (U32 i = 0; i < component.EVENTID_EVENTARRAY_THROTTLE; i++) {
+        testEventHelper(portNum, data, i + 1);
+    }
+
+    // Test that throttling works
+    testEventHelper(portNum, data, component.EVENTID_EVENTARRAY_THROTTLE);
+
+    // Test throttle reset
+    component.log_FATAL_EventArray_ThrottleClear();
+    testEventHelper(portNum, data, component.EVENTID_EVENTARRAY_THROTTLE + 1);
+
+    this->printTextLogHistory(stdout);
+}
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::StructParam& data) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    component.log_WARNING_HI_EventStruct(data.args.val);
+
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_EventStruct_SIZE(1);
+    ASSERT_EVENTS_EventStruct(static_cast<U32>(portNum), data.args.val);
+
+    this->printTextLogHistory(stdout);
+}
+
+void Tester ::testEventHelper(FwIndexType portNum, FppTest::Types::BoolParam& data, FwSizeType size) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    component.log_WARNING_LO_EventBool(data.args.val);
+
+    ASSERT_EVENTS_SIZE(static_cast<U32>(size));
+    ASSERT_EVENTS_EventBool_SIZE(static_cast<U32>(size));
+    ASSERT_EVENTS_EventBool(static_cast<U32>(portNum), data.args.val);
+}
+
+void Tester ::testEvent(FwIndexType portNum, FppTest::Types::BoolParam& data) {
+    ASSERT_TRUE(component.isConnected_eventOut_OutputPort(portNum));
+    ASSERT_TRUE(component.isConnected_textEventOut_OutputPort(portNum));
+
+    for (U32 i = 0; i < component.EVENTID_EVENTBOOL_THROTTLE; i++) {
+        testEventHelper(portNum, data, i + 1);
+    }
+
+    // Test that throttling works
+    testEventHelper(portNum, data, component.EVENTID_EVENTBOOL_THROTTLE);
+
+    // Test throttle reset
+    component.log_WARNING_LO_EventBool_ThrottleClear();
+    testEventHelper(portNum, data, component.EVENTID_EVENTBOOL_THROTTLE + 1);
+
+    this->printTextLogHistory(stdout);
+}
+```
+
+### `EventTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/EventTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  EventTests.hpp
+// \author T. Chieu
+// \brief  hpp file for event tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+// ----------------------------------------------------------------------
+// Event test declarations
+// ----------------------------------------------------------------------
+
+#define EVENT_TEST_DECL(TYPE) void testEvent(FwIndexType portNum, FppTest::Types::TYPE& data);
+
+#define EVENT_TEST_HELPER_DECL(TYPE) \
+    void testEventHelper(FwIndexType portNum, FppTest::Types::TYPE& data, FwSizeType size);
+
+#define EVENT_TEST_DECLS                    \
+    EVENT_TEST_DECL(NoParams)               \
+    EVENT_TEST_HELPER_DECL(PrimitiveParams) \
+    EVENT_TEST_DECL(PrimitiveParams)        \
+    EVENT_TEST_DECL(LogStringParams)        \
+    EVENT_TEST_DECL(EnumParam)              \
+    EVENT_TEST_HELPER_DECL(ArrayParam)      \
+    EVENT_TEST_DECL(ArrayParam)             \
+    EVENT_TEST_DECL(StructParam)            \
+    EVENT_TEST_HELPER_DECL(BoolParam)       \
+    EVENT_TEST_DECL(BoolParam)
+```
+
+### `ExternalParamTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ExternalParamTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ExternalParamTests.cpp
+// \author B. Campuzano
+// \brief  cpp file for external parameter tests
+//
+// \copyright
+// Copyright (C) 2009-2025 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// External Parameter tests
+// ----------------------------------------------------------------------
+
+void Tester ::testExternalParam() {
+    ASSERT_TRUE(component.isConnected_prmGetOut_OutputPort(0));
+    component.loadParameters();
+
+    Fw::ParamValid valid;
+
+    bool extBoolVal = component.paramGet_ParamBoolExternal(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(extBoolVal, this->paramTesterDelegate.m_param_ParamBoolExternal);
+    }
+
+    I32 i32Val = component.paramGet_ParamI32External(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(i32Val, this->paramTesterDelegate.m_param_ParamI32External);
+    }
+
+    Fw::ParamString stringVal = component.paramGet_ParamStringExternal(valid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(stringVal, this->paramTesterDelegate.m_param_ParamStringExternal);
+    } else {
+        ASSERT_EQ(valid, Fw::ParamValid::DEFAULT);
+    }
+
+    FormalParamEnum enumVal = component.paramGet_ParamEnumExternal(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(enumVal, this->paramTesterDelegate.m_param_ParamEnumExternal);
+    }
+
+    FormalParamArray arrayVal = component.paramGet_ParamArrayExternal(valid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(arrayVal, this->paramTesterDelegate.m_param_ParamArrayExternal);
+    } else {
+        ASSERT_EQ(valid, Fw::ParamValid::DEFAULT);
+    }
+
+    FormalParamStruct structVal = component.paramGet_ParamStructExternal(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(structVal, this->paramTesterDelegate.m_param_ParamStructExternal);
+    }
+}
+
+void Tester ::testExternalParamCommand(FwIndexType portNum, FppTest::Types::BoolParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMBOOLEXTERNAL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMBOOLEXTERNAL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMBOOLEXTERNAL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMBOOLEXTERNAL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamBoolExternal(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamBoolExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMBOOLEXTERNAL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamBoolExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMBOOLEXTERNAL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(this->paramTesterDelegate.m_param_ParamBoolExternal, data.args.val);
+}
+
+void Tester ::testExternalParamCommand(FwIndexType portNum, FppTest::Types::I32Param& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMI32EXTERNAL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMI32EXTERNAL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMI32EXTERNAL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMI32EXTERNAL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamI32External(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamI32External(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMI32EXTERNAL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamI32External(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMI32EXTERNAL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(this->paramTesterDelegate.m_param_ParamI32External, data.args.val);
+}
+
+void Tester ::testExternalParamCommand(FwIndexType portNum, FppTest::Types::PrmStringParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMSTRINGEXTERNAL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMSTRINGEXTERNAL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMSTRINGEXTERNAL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMSTRINGEXTERNAL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamStringExternal(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamStringExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMSTRINGEXTERNAL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamStringExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMSTRINGEXTERNAL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(this->paramTesterDelegate.m_param_ParamStringExternal, data.args.val);
+}
+
+void Tester ::testExternalParamCommand(FwIndexType portNum, FppTest::Types::EnumParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMENUMEXTERNAL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMENUMEXTERNAL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMENUMEXTERNAL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMENUMEXTERNAL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamEnumExternal(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamEnumExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMENUMEXTERNAL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamEnumExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMENUMEXTERNAL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(this->paramTesterDelegate.m_param_ParamEnumExternal, data.args.val);
+}
+
+void Tester ::testExternalParamCommand(FwIndexType portNum, FppTest::Types::ArrayParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMARRAYEXTERNAL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMARRAYEXTERNAL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMARRAYEXTERNAL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMARRAYEXTERNAL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamArrayExternal(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamArrayExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMARRAYEXTERNAL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamArrayExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMARRAYEXTERNAL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(this->paramTesterDelegate.m_param_ParamArrayExternal, data.args.val);
+}
+
+void Tester ::testExternalParamCommand(FwIndexType portNum, FppTest::Types::StructParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMSTRUCTEXTERNAL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMSTRUCTEXTERNAL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMSTRUCTEXTERNAL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMSTRUCTEXTERNAL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamStructExternal(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamStructExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMSTRUCTEXTERNAL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamStructExternal(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMSTRUCTEXTERNAL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(this->paramTesterDelegate.m_param_ParamStructExternal, data.args.val);
+}
+```
+
+### `ExternalParamTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ExternalParamTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ExternalParamTests.hpp
+// \author B. Campuzano
+// \brief  hpp file for external parameter tests
+//
+// \copyright
+// Copyright (C) 2009-2025 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+// ----------------------------------------------------------------------
+// Parameter test declarations
+// ----------------------------------------------------------------------
+
+#define EXTERNAL_PARAM_CMD_TEST_DECL(TYPE) void testExternalParamCommand(FwIndexType portNum, FppTest::Types::TYPE& data);
+
+#define EXTERNAL_PARAM_CMD_TEST_DECLS              \
+    EXTERNAL_PARAM_CMD_TEST_DECL(BoolParam)        \
+    EXTERNAL_PARAM_CMD_TEST_DECL(I32Param)         \
+    EXTERNAL_PARAM_CMD_TEST_DECL(PrmStringParam)   \
+    EXTERNAL_PARAM_CMD_TEST_DECL(EnumParam)        \
+    EXTERNAL_PARAM_CMD_TEST_DECL(ArrayParam)       \
+    EXTERNAL_PARAM_CMD_TEST_DECL(StructParam)
+```
+
+### `InternalInterfaceTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/InternalInterfaceTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  InternalInterfaceTests.cpp
+// \author T. Chieu
+// \brief  cpp file for internal interface tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+#include "Fw/Comp/QueuedComponentBase.hpp"
+
+void Tester ::testInternalInterface(FppTest::Types::NoParams& data) {
+    Fw::QueuedComponentBase::MsgDispatchStatus status;
+
+    this->component.internalNoArgs_internalInterfaceInvoke();
+    status = this->doDispatch();
+
+    ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);
+}
+
+void Tester ::testInternalInterface(FppTest::Types::PrimitiveParams& data) {
+    Fw::QueuedComponentBase::MsgDispatchStatus status;
+
+    this->component.internalPrimitive_internalInterfaceInvoke(data.args.val1, data.args.val2, data.args.val3,
+                                                              data.args.val4, data.args.val5, data.args.val6);
+    status = this->doDispatch();
+
+    ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);
+    ASSERT_EQ(this->component.primitiveInterface.args.val1, data.args.val1);
+    ASSERT_EQ(this->component.primitiveInterface.args.val2, data.args.val2);
+    ASSERT_EQ(this->component.primitiveInterface.args.val3, data.args.val3);
+    ASSERT_EQ(this->component.primitiveInterface.args.val4, data.args.val4);
+    ASSERT_EQ(this->component.primitiveInterface.args.val5, data.args.val5);
+    ASSERT_EQ(this->component.primitiveInterface.args.val6, data.args.val6);
+}
+
+void Tester ::testInternalInterface(FppTest::Types::InternalInterfaceStringParams& data) {
+    Fw::QueuedComponentBase::MsgDispatchStatus status;
+
+    this->component.internalString_internalInterfaceInvoke(data.args.val1, data.args.val2);
+    status = this->doDispatch();
+
+    ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);
+    ASSERT_EQ(this->component.stringInterface.args.val1, data.args.val1);
+    ASSERT_EQ(this->component.stringInterface.args.val2, data.args.val2);
+}
+
+void Tester ::testInternalInterface(FppTest::Types::EnumParam& data) {
+    Fw::QueuedComponentBase::MsgDispatchStatus status;
+
+    this->component.internalEnum_internalInterfaceInvoke(data.args.val);
+    status = this->doDispatch();
+
+    ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);
+    ASSERT_EQ(this->component.enumInterface.args.val, data.args.val);
+}
+
+void Tester ::testInternalInterface(FppTest::Types::ArrayParam& data) {
+    Fw::QueuedComponentBase::MsgDispatchStatus status;
+
+    this->component.internalArray_internalInterfaceInvoke(data.args.val);
+    status = this->doDispatch();
+
+    ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);
+    ASSERT_EQ(this->component.arrayInterface.args.val, data.args.val);
+}
+
+void Tester ::testInternalInterface(FppTest::Types::StructParam& data) {
+    Fw::QueuedComponentBase::MsgDispatchStatus status;
+
+    this->component.internalStruct_internalInterfaceInvoke(data.args.val);
+    status = this->doDispatch();
+
+    ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);
+    ASSERT_EQ(this->component.structInterface.args.val, data.args.val);
+}
+```
+
+### `InternalInterfaceTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/InternalInterfaceTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  InternalInterfaceTests.hpp
+// \author T. Chieu
+// \brief  hpp file for internal interface tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Internal interface test declarations
+// ----------------------------------------------------------------------
+
+#define INTERNAL_INT_TEST_DECL(TYPE) void testInternalInterface(FppTest::Types::TYPE& data);
+
+#define INTERNAL_INT_TEST_DECLS                           \
+    INTERNAL_INT_TEST_DECL(NoParams)                      \
+    INTERNAL_INT_TEST_DECL(PrimitiveParams)               \
+    INTERNAL_INT_TEST_DECL(InternalInterfaceStringParams) \
+    INTERNAL_INT_TEST_DECL(EnumParam)                     \
+    INTERNAL_INT_TEST_DECL(ArrayParam)                    \
+    INTERNAL_INT_TEST_DECL(StructParam)
+```
+
+### `OverflowTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/OverflowTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  OverflowTests.cpp
+// \author mstarch
+// \brief  cpp file for overflow tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Fw/Time/Time.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Overflow assert test
+// ----------------------------------------------------------------------
+
+void Tester ::testOverflowAssert() {
+    FormalParamEnum x = FormalParamEnum::T::X;
+    FormalParamEnum y = FormalParamEnum::T::Y;
+    FormalParamEnum z = FormalParamEnum::T::Z;
+
+    for (FwSizeType i = 0; i < Tester::TEST_INSTANCE_QUEUE_DEPTH; i++) {
+        this->invoke_to_enumArgsAsync(i % 2, x, y, x, y);
+    }
+    ASSERT_DEATH_IF_SUPPORTED(this->invoke_to_enumArgsAsync(0, y, z, y, z), "");
+}
+
+// ----------------------------------------------------------------------
+// Overflow drop test
+// ----------------------------------------------------------------------
+
+void Tester ::testOverflowDrop() {
+    FormalParamStruct x;
+    FormalParamStruct y;
+    FormalParamStruct z;
+    for (FwSizeType i = 0; i < Tester::TEST_INSTANCE_QUEUE_DEPTH; i++) {
+        this->invoke_to_structArgsAsync(i % 2, x, y);
+    }
+    // This will overflow and should not crash
+    this->invoke_to_structArgsAsync(0, y, z);
+}
+
+// ----------------------------------------------------------------------
+// Overflow hook test
+// ----------------------------------------------------------------------
+
+void Tester ::testOverflowHook() {
+    FormalParamEnum x = FormalParamEnum::T::X;
+    FormalParamEnum y = FormalParamEnum::T::Y;
+    FormalParamEnum z = FormalParamEnum::T::Z;
+
+    for (FwSizeType i = 0; i < Tester::TEST_INSTANCE_QUEUE_DEPTH; i++) {
+        this->invoke_to_enumArgsHook(i % 2, x, y, x, y);
+    }
+    this->invoke_to_enumArgsHook(0, y, z, y, z);
+    this->invoke_to_enumArgsHook(1, z, x, z, x);
+    ASSERT_from_enumArgsHookOverflowed_SIZE(2);
+    ASSERT_from_enumArgsHookOverflowed(0, y, z, y, z);
+    ASSERT_from_enumArgsHookOverflowed(1, z, x, z, x);
+
+}
+
+// ----------------------------------------------------------------------
+// Handler to support overflow hook test
+// ----------------------------------------------------------------------
+
+void Tester ::from_enumArgsHookOverflowed_handler(const FwIndexType portNum,
+                                                  const FormalParamEnum& en,
+                                                  FormalParamEnum& enRef,
+                                                  const FormalAliasEnum& enA,
+                                                  FormalAliasEnum& enARef) {
+    this->pushFromPortEntry_enumArgsHookOverflowed(en, enRef, enA, enARef);
+}
+```
+
+### `ParamTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ParamTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ParamTests.cpp
+// \author T. Chieu
+// \brief  cpp file for parameter tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Parameter tests
+// ----------------------------------------------------------------------
+
+void Tester ::testParam() {
+    ASSERT_TRUE(component.isConnected_prmGetOut_OutputPort(0));
+    component.loadParameters();
+
+    Fw::ParamValid valid;
+
+    bool boolVal = component.paramGet_ParamBool(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(boolVal, boolPrm.args.val);
+    }
+
+    U32 u32Val = component.paramGet_ParamU32(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(u32Val, u32Prm.args.val);
+    }
+
+    Fw::ParamString stringVal = component.paramGet_ParamString(valid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(stringVal, stringPrm.args.val);
+    } else {
+        ASSERT_EQ(valid, Fw::ParamValid::DEFAULT);
+    }
+
+    FormalParamEnum enumVal = component.paramGet_ParamEnum(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(enumVal, enumPrm.args.val);
+    }
+
+    FormalParamArray arrayVal = component.paramGet_ParamArray(valid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(arrayVal, arrayPrm.args.val);
+    } else {
+        ASSERT_EQ(valid, Fw::ParamValid::DEFAULT);
+    }
+
+    FormalParamStruct structVal = component.paramGet_ParamStruct(valid);
+    ASSERT_EQ(valid, prmValid);
+    if (valid == Fw::ParamValid::VALID) {
+        ASSERT_EQ(structVal, structPrm.args.val);
+    }
+}
+
+void Tester ::testParamCommand(FwIndexType portNum, FppTest::Types::BoolParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMBOOL_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMBOOL_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMBOOL_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMBOOL_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamBool(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamBool(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMBOOL_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamBool(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMBOOL_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(boolPrm.args.val, data.args.val);
+}
+
+void Tester ::testParamCommand(FwIndexType portNum, FppTest::Types::U32Param& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMU32_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMU32_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMU32_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMU32_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamU32(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamU32(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMU32_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamU32(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMU32_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(u32Prm.args.val, data.args.val);
+}
+
+void Tester ::testParamCommand(FwIndexType portNum, FppTest::Types::PrmStringParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMSTRING_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMSTRING_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMSTRING_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMSTRING_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamString(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamString(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMSTRING_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamString(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMSTRING_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(stringPrm.args.val, data.args.val);
+}
+
+void Tester ::testParamCommand(FwIndexType portNum, FppTest::Types::EnumParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMENUM_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMENUM_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMENUM_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMENUM_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamEnum(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamEnum(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMENUM_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamEnum(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMENUM_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(enumPrm.args.val, data.args.val);
+}
+
+void Tester ::testParamCommand(FwIndexType portNum, FppTest::Types::ArrayParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMARRAY_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMARRAY_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMARRAY_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMARRAY_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamArray(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamArray(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMARRAY_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamArray(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMARRAY_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(arrayPrm.args.val, data.args.val);
+}
+
+void Tester ::testParamCommand(FwIndexType portNum, FppTest::Types::StructParam& data) {
+    Fw::CmdArgBuffer buf;
+
+    // Test unsuccessful saving of param
+    this->sendRawCmd(component.OPCODE_PARAMSTRUCT_SAVE, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, component.OPCODE_PARAMSTRUCT_SAVE, 1, Fw::CmdResponse::EXECUTION_ERROR);
+
+    this->connectPrmSetIn();
+    ASSERT_TRUE(component.isConnected_prmSetOut_OutputPort(portNum));
+
+    // Test incorrect deserialization when setting param
+    this->sendRawCmd(component.OPCODE_PARAMSTRUCT_SET, 1, buf);
+
+    ASSERT_CMD_RESPONSE_SIZE(2);
+    ASSERT_CMD_RESPONSE(1, component.OPCODE_PARAMSTRUCT_SET, 1, Fw::CmdResponse::VALIDATION_ERROR);
+
+    // Test successful setting of param
+    this->paramSet_ParamStruct(data.args.val, Fw::ParamValid::VALID);
+    this->paramSend_ParamStruct(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(3);
+    ASSERT_CMD_RESPONSE(2, component.OPCODE_PARAMSTRUCT_SET, 1, Fw::CmdResponse::OK);
+
+    // Test successful saving of param
+    this->paramSave_ParamStruct(0, 1);
+
+    ASSERT_CMD_RESPONSE_SIZE(4);
+    ASSERT_CMD_RESPONSE(3, component.OPCODE_PARAMSTRUCT_SAVE, 1, Fw::CmdResponse::OK);
+    ASSERT_EQ(structPrm.args.val, data.args.val);
+}
+```
+
+### `ParamTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/ParamTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ParamTests.hpp
+// \author T. Chieu
+// \brief  hpp file for parameter tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+// ----------------------------------------------------------------------
+// Parameter test declarations
+// ----------------------------------------------------------------------
+
+#define PARAM_CMD_TEST_DECL(TYPE) void testParamCommand(FwIndexType portNum, FppTest::Types::TYPE& data);
+
+#define PARAM_CMD_TEST_DECLS            \
+    PARAM_CMD_TEST_DECL(BoolParam)      \
+    PARAM_CMD_TEST_DECL(U32Param)       \
+    PARAM_CMD_TEST_DECL(PrmStringParam) \
+    PARAM_CMD_TEST_DECL(EnumParam)      \
+    PARAM_CMD_TEST_DECL(ArrayParam)     \
+    PARAM_CMD_TEST_DECL(StructParam)
+```
+
+### `PortTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/PortTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PortTests.cpp
+// \author T. Chieu
+// \brief  cpp file for port tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "PortTests.hpp"
+#include "Tester.hpp"
+
+PORT_TEST_DEFS(Sync)
+PORT_TEST_DEFS(Guarded)
+```
+
+### `PortTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/PortTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PortTests.hpp
+// \author T. Chieu
+// \brief  hpp file for port tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/component/active/SerialPortIndexEnumAc.hpp"
+#include "FppTest/component/active/TypedPortIndexEnumAc.hpp"
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Port test declarations
+// ----------------------------------------------------------------------
+
+#define PORT_TEST_INVOKE_DECL(PORT_KIND, TYPE) \
+    void test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::TYPE& port);
+
+#define PORT_TEST_INVOKE_DECLS(PORT_KIND)              \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, NoParams)         \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, PrimitiveParams)  \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, PortStringParams) \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, EnumParams)       \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, ArrayParams)      \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, StructParams)     \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, NoParamReturn)    \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, PrimitiveReturn)  \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, EnumReturn)       \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, StringReturn)     \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, StringAliasReturn) \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, ArrayReturn)      \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, ArrayStringAliasReturn) \
+    PORT_TEST_INVOKE_DECL(PORT_KIND, StructReturn)
+
+#define PORT_TEST_INVOKE_SERIAL_HELPER_DECL(PORT_KIND) \
+    void invoke##PORT_KIND##SerialPort(FwIndexType portNum, Fw::SerialBuffer& buf);
+
+#define PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, TYPE) \
+    void test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::TYPE& port);
+
+#define PORT_TEST_INVOKE_SERIAL_DECLS(PORT_KIND)              \
+    PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, NoParams)         \
+    PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, PrimitiveParams)  \
+    PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, PortStringParams) \
+    PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, EnumParams)       \
+    PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, ArrayParams)      \
+    PORT_TEST_INVOKE_SERIAL_DECL(PORT_KIND, StructParams)
+
+#define PORT_TEST_CHECK_DECL(PORT_KIND, TYPE) void test##PORT_KIND##PortCheck(FppTest::Types::TYPE& port);
+
+#define PORT_TEST_CHECK_DECLS(PORT_KIND)              \
+    PORT_TEST_CHECK_DECL(PORT_KIND, NoParams)         \
+    PORT_TEST_CHECK_DECL(PORT_KIND, PrimitiveParams)  \
+    PORT_TEST_CHECK_DECL(PORT_KIND, PortStringParams) \
+    PORT_TEST_CHECK_DECL(PORT_KIND, EnumParams)       \
+    PORT_TEST_CHECK_DECL(PORT_KIND, ArrayParams)      \
+    PORT_TEST_CHECK_DECL(PORT_KIND, StructParams)     \
+    PORT_TEST_CHECK_DECL(PORT_KIND, NoParamReturn)    \
+    PORT_TEST_CHECK_DECL(PORT_KIND, PrimitiveReturn)  \
+    PORT_TEST_CHECK_DECL(PORT_KIND, EnumReturn)       \
+    PORT_TEST_CHECK_DECL(PORT_KIND, StringReturn)     \
+    PORT_TEST_CHECK_DECL(PORT_KIND, StringAliasReturn) \
+    PORT_TEST_CHECK_DECL(PORT_KIND, ArrayReturn)      \
+    PORT_TEST_CHECK_DECL(PORT_KIND, ArrayStringAliasReturn) \
+    PORT_TEST_CHECK_DECL(PORT_KIND, StructReturn)
+
+#define PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, TYPE) void test##PORT_KIND##PortCheckSerial(FppTest::Types::TYPE& port);
+
+#define PORT_TEST_CHECK_SERIAL_DECLS(PORT_KIND)              \
+    PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, NoParams)         \
+    PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, PrimitiveParams)  \
+    PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, PortStringParams) \
+    PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, EnumParams)       \
+    PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, ArrayParams)      \
+    PORT_TEST_CHECK_SERIAL_DECL(PORT_KIND, StructParams)
+
+#define PORT_TEST_DECLS_KIND(PORT_KIND)            \
+    PORT_TEST_INVOKE_DECLS(PORT_KIND)              \
+    PORT_TEST_INVOKE_SERIAL_HELPER_DECL(PORT_KIND) \
+    PORT_TEST_INVOKE_SERIAL_DECLS(PORT_KIND)       \
+    PORT_TEST_CHECK_DECLS(PORT_KIND)               \
+    PORT_TEST_CHECK_SERIAL_DECLS(PORT_KIND)
+
+#define PORT_TEST_DECLS        \
+    PORT_TEST_DECLS_KIND(Sync) \
+    PORT_TEST_DECLS_KIND(Guarded)
+
+#define PORT_TEST_DECLS_ASYNC PORT_TEST_DECLS_KIND(Async)
+
+// ----------------------------------------------------------------------
+// Invoke typed input ports
+// ----------------------------------------------------------------------
+
+#define PORT_TEST_INVOKE_DEFS(PORT_KIND)                                                                         \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::NoParams& port) {         \
+        ASSERT_TRUE(component.isConnected_noArgsOut_OutputPort(portNum));                                        \
+        ASSERT_TRUE(this->isConnected_to_noArgs##PORT_KIND(portNum));                                            \
+                                                                                                                 \
+        this->invoke_to_noArgs##PORT_KIND(portNum);                                                              \
+    }                                                                                                            \
+                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::PrimitiveParams& port) {  \
+        ASSERT_TRUE(component.isConnected_primitiveArgsOut_OutputPort(portNum));                                 \
+        ASSERT_TRUE(this->isConnected_to_primitiveArgs##PORT_KIND(portNum));                                     \
+                                                                                                                 \
+        this->invoke_to_primitiveArgs##PORT_KIND(portNum, port.args.val1, port.args.val2, port.args.val3,        \
+                                                 port.args.val4, port.args.val5, port.args.val6);                \
+    }                                                                                                            \
+                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::PortStringParams& port) { \
+        ASSERT_TRUE(component.isConnected_stringArgsOut_OutputPort(portNum));                                    \
+        ASSERT_TRUE(this->isConnected_to_stringArgs##PORT_KIND(portNum));                                        \
+                                                                                                                 \
+        this->invoke_to_stringArgs##PORT_KIND(portNum, port.args.val1, port.args.val2, port.args.val3,           \
+                                              port.args.val4);                                                   \
+    }                                                                                                            \
+                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::EnumParams& port) {       \
+        ASSERT_TRUE(component.isConnected_enumArgsOut_OutputPort(portNum));                                      \
+        ASSERT_TRUE(this->isConnected_to_enumArgs##PORT_KIND(portNum));                                          \
+                                                                                                                 \
+        this->invoke_to_enumArgs##PORT_KIND(portNum, port.args.val1, port.args.val2,                             \
+                                            port.args.val3, port.args.val4);                                     \
+    }                                                                                                            \
+                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::ArrayParams& port) {      \
+        ASSERT_TRUE(component.isConnected_arrayArgsOut_OutputPort(portNum));                                     \
+        ASSERT_TRUE(this->isConnected_to_arrayArgs##PORT_KIND(portNum));                                         \
+                                                                                                                 \
+        this->invoke_to_arrayArgs##PORT_KIND(portNum, port.args.val1, port.args.val2, port.args.val3,            \
+                                             port.args.val4, port.args.val5, port.args.val6);                    \
+    }                                                                                                            \
+                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::StructParams& port) {     \
+        ASSERT_TRUE(component.isConnected_structArgsOut_OutputPort(portNum));                                    \
+        ASSERT_TRUE(this->isConnected_to_structArgs##PORT_KIND(portNum));                                        \
+                                                                                                                 \
+        this->invoke_to_structArgs##PORT_KIND(portNum, port.args.val1, port.args.val2);                          \
+    }
+
+#define PORT_TEST_INVOKE_RETURN_DEFS(PORT_KIND)                                                                       \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::NoParamReturn& port) {         \
+        ASSERT_TRUE(component.isConnected_noArgsReturnOut_OutputPort(portNum));                                       \
+        ASSERT_TRUE(this->isConnected_to_noArgsReturn##PORT_KIND(portNum));                                           \
+                                                                                                                      \
+        bool returnVal = this->invoke_to_noArgsReturn##PORT_KIND(portNum);                                            \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->noParamReturnVal.val);                                                             \
+    }                                                                                                                 \
+                                                                                                                      \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::PrimitiveReturn& port) {       \
+        ASSERT_TRUE(component.isConnected_primitiveReturnOut_OutputPort(portNum));                                    \
+        ASSERT_TRUE(this->isConnected_to_primitiveReturn##PORT_KIND(portNum));                                        \
+                                                                                                                      \
+        U32 returnVal = this->invoke_to_primitiveReturn##PORT_KIND(                                                   \
+            portNum, port.args.val1, port.args.val2, port.args.val3, port.args.val4, port.args.val5, port.args.val6); \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->primitiveReturnVal.val);                                                           \
+    }                                                                                                                 \
+                                                                                                                      \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::EnumReturn& port) {            \
+        ASSERT_TRUE(component.isConnected_enumReturnOut_OutputPort(portNum));                                         \
+        ASSERT_TRUE(this->isConnected_to_enumReturn##PORT_KIND(portNum));                                             \
+                                                                                                                      \
+        FormalParamEnum returnVal = this->invoke_to_enumReturn##PORT_KIND(portNum, port.args.val1, port.args.val2);   \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->enumReturnVal.val);                                                                \
+    }                                                                                                                 \
+                                                                                                                      \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::StringReturn& port) {          \
+        ASSERT_TRUE(component.isConnected_stringReturnOut_OutputPort(portNum));                                       \
+        ASSERT_TRUE(this->isConnected_to_stringReturn##PORT_KIND(portNum));                                           \
+                                                                                                                      \
+        decltype(this->stringReturnVal.val) returnVal =                                                               \
+            this->invoke_to_stringReturn##PORT_KIND(portNum, port.args.val1, port.args.val2);                         \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->stringReturnVal.val);                                                              \
+    }                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::StringAliasReturn& port) {         \
+            ASSERT_TRUE(component.isConnected_stringAliasReturnOut_OutputPort(portNum));                              \
+            ASSERT_TRUE(this->isConnected_to_stringAliasReturn##PORT_KIND(portNum));                                  \
+                                                                                                                      \
+            decltype(this->stringReturnVal.val) returnVal =                                                      \
+                this->invoke_to_stringAliasReturn##PORT_KIND(portNum, port.args.val1, port.args.val2);                \
+                                                                                                                      \
+            ASSERT_EQ(returnVal, this->stringReturnVal.val);                                                          \
+    }                                                                                                                 \
+                                                                                                                      \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::ArrayReturn& port) {           \
+        ASSERT_TRUE(component.isConnected_arrayReturnOut_OutputPort(portNum));                                        \
+        ASSERT_TRUE(this->isConnected_to_arrayReturn##PORT_KIND(portNum));                                            \
+                                                                                                                      \
+        FormalParamArray returnVal = this->invoke_to_arrayReturn##PORT_KIND(portNum, port.args.val1, port.args.val2); \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->arrayReturnVal.val);                                                               \
+    }                                                                                                                 \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::ArrayStringAliasReturn& port) {    \
+        ASSERT_TRUE(component.isConnected_arrayStringAliasReturnOut_OutputPort(portNum));                             \
+        ASSERT_TRUE(this->isConnected_to_arrayStringAliasReturn##PORT_KIND(portNum));                                 \
+                                                                                                                      \
+        FormalAliasStringArray returnVal = this->invoke_to_arrayStringAliasReturn##PORT_KIND(                         \
+            portNum, port.args.val1, port.args.val2);                                                                 \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->arrayStringAliasReturnVal.val);                                                    \
+    }                                                                                                                 \
+                                                                                                                      \
+    void Tester ::test##PORT_KIND##PortInvoke(FwIndexType portNum, FppTest::Types::StructReturn& port) {          \
+        ASSERT_TRUE(component.isConnected_structReturnOut_OutputPort(portNum));                                       \
+        ASSERT_TRUE(this->isConnected_to_structReturn##PORT_KIND(portNum));                                           \
+                                                                                                                      \
+        FormalParamStruct returnVal =                                                                                 \
+            this->invoke_to_structReturn##PORT_KIND(portNum, port.args.val1, port.args.val2);                         \
+                                                                                                                      \
+        ASSERT_EQ(returnVal, this->structReturnVal.val);                                                              \
+    }
+
+// ----------------------------------------------------------------------
+// Invoke serial input ports
+// ----------------------------------------------------------------------
+
+#define PORT_TEST_INVOKE_SERIAL_HELPER_DEF(PORT_KIND)                                             \
+    void Tester ::invoke##PORT_KIND##SerialPort(FwIndexType portNum, Fw::SerialBuffer& buf) { \
+        ASSERT_TRUE(this->isConnected_to_serial##PORT_KIND(portNum));                             \
+        this->invoke_to_serial##PORT_KIND(portNum, buf);                                          \
+    }
+
+#define PORT_TEST_INVOKE_SERIAL_HELPER_DEF_ASYNC                                          \
+    void Tester ::invokeAsyncSerialPort(FwIndexType portNum, Fw::SerialBuffer& buf) { \
+        Fw::QueuedComponentBase::MsgDispatchStatus status;                                \
+                                                                                          \
+        switch (portNum) {                                                                \
+            case SerialPortIndex::NO_ARGS:                                                \
+            case SerialPortIndex::PRIMITIVE:                                              \
+            case SerialPortIndex::STRING:                                                 \
+                ASSERT_TRUE(this->isConnected_to_serialAsync(portNum));                   \
+                this->invoke_to_serialAsync(portNum, buf);                                \
+                break;                                                                    \
+                                                                                          \
+            case SerialPortIndex::ENUM:                                                   \
+                ASSERT_TRUE(this->isConnected_to_serialAsyncAssert(0));                   \
+                this->invoke_to_serialAsyncAssert(0, buf);                                \
+                break;                                                                    \
+                                                                                          \
+            case SerialPortIndex::ARRAY:                                                  \
+                ASSERT_TRUE(this->isConnected_to_serialAsyncBlockPriority(0));            \
+                this->invoke_to_serialAsyncBlockPriority(0, buf);                         \
+                break;                                                                    \
+                                                                                          \
+            case SerialPortIndex::STRUCT:                                                 \
+                ASSERT_TRUE(this->isConnected_to_serialAsyncDropPriority(0));             \
+                this->invoke_to_serialAsyncDropPriority(0, buf);                          \
+                break;                                                                    \
+        }                                                                                 \
+                                                                                          \
+        status = this->doDispatch();                                                      \
+                                                                                          \
+        ASSERT_EQ(status, Fw::QueuedComponentBase::MsgDispatchStatus::MSG_DISPATCH_OK);   \
+    }
+
+#define PORT_TEST_INVOKE_SERIAL_DEFS(PORT_KIND)                                                                        \
+    void Tester ::test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::NoParams& port) {         \
+        ASSERT_TRUE(component.isConnected_serialOut_OutputPort(portNum));                                              \
+                                                                                                                       \
+        U8 data[1];                                                                                                    \
+        Fw::SerialBuffer buf(data, sizeof(data));                                                                      \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::NO_ARGS, buf);                                            \
+    }                                                                                                                  \
+                                                                                                                       \
+    void Tester ::test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::PrimitiveParams& port) {  \
+        ASSERT_TRUE(component.isConnected_serialOut_OutputPort(portNum));                                              \
+                                                                                                                       \
+        Fw::SerializeStatus status;                                                                                    \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of first parameter */                                                    \
+        U8 invalidData1[1];                                                                                            \
+        Fw::SerialBuffer invalidBuf1(invalidData1, sizeof(invalidData1));                                              \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, invalidBuf1);                                  \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of second parameter */                                                   \
+        U8 invalidData2[sizeof(U32)];                                                                                  \
+        Fw::SerialBuffer invalidBuf2(invalidData2, sizeof(invalidData2));                                              \
+                                                                                                                       \
+        status = invalidBuf2.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, invalidBuf2);                                  \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of third parameter */                                                    \
+        U8 invalidData3[sizeof(U32) * 2];                                                                              \
+        Fw::SerialBuffer invalidBuf3(invalidData3, sizeof(invalidData3));                                              \
+                                                                                                                       \
+        status = invalidBuf3.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf3.serialize(port.args.val2);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, invalidBuf3);                                  \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of fourth parameter */                                                   \
+        U8 invalidData4[(sizeof(U32) * 2) + sizeof(F32)];                                                              \
+        Fw::SerialBuffer invalidBuf4(invalidData4, sizeof(invalidData4));                                              \
+                                                                                                                       \
+        status = invalidBuf4.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf4.serialize(port.args.val2);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf4.serialize(port.args.val3);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, invalidBuf4);                                  \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of fifth parameter */                                                    \
+        U8 invalidData5[(sizeof(U32) * 2) + (sizeof(F32) * 2)];                                                        \
+        Fw::SerialBuffer invalidBuf5(invalidData5, sizeof(invalidData5));                                              \
+                                                                                                                       \
+        status = invalidBuf5.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf5.serialize(port.args.val2);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf5.serialize(port.args.val3);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf5.serialize(port.args.val4);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, invalidBuf5);                                  \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of sixth parameter */                                                    \
+        U8 invalidData6[(sizeof(U32) * 2) + (sizeof(F32) * 2) + sizeof(U8)];                                           \
+        Fw::SerialBuffer invalidBuf6(invalidData6, sizeof(invalidData6));                                              \
+                                                                                                                       \
+        status = invalidBuf6.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf6.serialize(port.args.val2);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf6.serialize(port.args.val3);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf6.serialize(port.args.val4);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf6.serialize(port.args.val5);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, invalidBuf6);                                  \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check successful serialization */                                                                           \
+        U8 data[InputPrimitiveArgsPort::SERIALIZED_SIZE];                                                              \
+        Fw::SerialBuffer buf(data, sizeof(data));                                                                      \
+                                                                                                                       \
+        status = buf.serialize(port.args.val1);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val2);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val3);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val4);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val5);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val6);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::PRIMITIVE, buf);                                          \
+                                                                                                                       \
+        this->checkSerializeStatusSuccess();                                                                           \
+    }                                                                                                                  \
+                                                                                                                       \
+    void Tester ::test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::PortStringParams& port) { \
+        ASSERT_TRUE(component.isConnected_serialOut_OutputPort(portNum));                                              \
+                                                                                                                       \
+        Fw::SerializeStatus status;                                                                                    \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of first parameter */                                                    \
+        U8 invalidData1[1];                                                                                            \
+        Fw::SerialBuffer invalidBuf1(invalidData1, sizeof(invalidData1));                                              \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRING, invalidBuf1);                                     \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of second parameter */                                                   \
+        U8 invalidData2[FppTest::Types::String1::SERIALIZED_SIZE];                                                     \
+        Fw::SerialBuffer invalidBuf2(invalidData2, sizeof(invalidData2));                                              \
+                                                                                                                       \
+        status = invalidBuf2.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRING, invalidBuf2);                                     \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of third parameter */                                                    \
+        U8 invalidData3[FppTest::Types::String1::SERIALIZED_SIZE * 2];                                                 \
+        Fw::SerialBuffer invalidBuf3(invalidData3, sizeof(invalidData3));                                              \
+                                                                                                                       \
+        status = invalidBuf3.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf3.serialize(port.args.val2);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRING, invalidBuf3);                                     \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of fourth parameter */                                                   \
+        U8 invalidData4[(FppTest::Types::String1::SERIALIZED_SIZE * 2) + FppTest::Types::String2::SERIALIZED_SIZE];    \
+        Fw::SerialBuffer invalidBuf4(invalidData4, sizeof(invalidData4));                                              \
+                                                                                                                       \
+        status = invalidBuf4.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf4.serialize(port.args.val2);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = invalidBuf4.serialize(port.args.val3);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRING, invalidBuf4);                                     \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check successful serialization */                                                                           \
+        U8 data[InputStringArgsPort::SERIALIZED_SIZE];                                                                 \
+        Fw::SerialBuffer buf(data, sizeof(data));                                                                      \
+                                                                                                                       \
+        status = buf.serialize(port.args.val1);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val2);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val3);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val4);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRING, buf);                                             \
+                                                                                                                       \
+        this->checkSerializeStatusSuccess();                                                                           \
+    }                                                                                                                  \
+                                                                                                                       \
+    void Tester ::test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::EnumParams& port) {       \
+        ASSERT_TRUE(component.isConnected_serialOut_OutputPort(portNum));                                              \
+                                                                                                                       \
+        Fw::SerializeStatus status;                                                                                    \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of first parameter */                                                    \
+        U8 invalidData1[1];                                                                                            \
+        Fw::SerialBuffer invalidBuf1(invalidData1, sizeof(invalidData1));                                              \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::ENUM, invalidBuf1);                                       \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of second parameter */                                                   \
+        U8 invalidData2[FormalParamEnum::SERIALIZED_SIZE];                                                             \
+        Fw::SerialBuffer invalidBuf2(invalidData2, sizeof(invalidData2));                                              \
+                                                                                                                       \
+        status = invalidBuf2.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::ENUM, invalidBuf2);                                       \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check successful serialization */                                                                           \
+        U8 data[InputEnumArgsPort::SERIALIZED_SIZE];                                                                   \
+        Fw::SerialBuffer buf(data, sizeof(data));                                                                      \
+                                                                                                                       \
+        status = buf.serialize(port.args.val1);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val2);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val3);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val4);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::ENUM, buf);                                               \
+                                                                                                                       \
+        this->checkSerializeStatusSuccess();                                                                           \
+    }                                                                                                                  \
+                                                                                                                       \
+    void Tester ::test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::ArrayParams& port) {      \
+        ASSERT_TRUE(component.isConnected_serialOut_OutputPort(portNum));                                              \
+                                                                                                                       \
+        Fw::SerializeStatus status;                                                                                    \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of first parameter */                                                    \
+        U8 invalidData1[1];                                                                                            \
+        Fw::SerialBuffer invalidBuf1(invalidData1, sizeof(invalidData1));                                              \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::ARRAY, invalidBuf1);                                      \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of second parameter */                                                   \
+        U8 invalidData2[FormalParamArray::SERIALIZED_SIZE];                                                            \
+        Fw::SerialBuffer invalidBuf2(invalidData2, sizeof(invalidData2));                                              \
+                                                                                                                       \
+        status = invalidBuf2.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::ARRAY, invalidBuf2);                                      \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        U8 data[InputArrayArgsPort::SERIALIZED_SIZE];                                                                  \
+        Fw::SerialBuffer buf(data, sizeof(data));                                                                      \
+                                                                                                                       \
+        status = buf.serialize(port.args.val1);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val2);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val3);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val4);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val5);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val6);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::ARRAY, buf);                                              \
+                                                                                                                       \
+        this->checkSerializeStatusSuccess();                                                                           \
+    }                                                                                                                  \
+                                                                                                                       \
+    void Tester ::test##PORT_KIND##PortInvokeSerial(FwIndexType portNum, FppTest::Types::StructParams& port) {     \
+        ASSERT_TRUE(component.isConnected_serialOut_OutputPort(portNum));                                              \
+                                                                                                                       \
+        Fw::SerializeStatus status;                                                                                    \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of first parameter */                                                    \
+        U8 invalidData1[1];                                                                                            \
+        Fw::SerialBuffer invalidBuf1(invalidData1, sizeof(invalidData1));                                              \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRUCT, invalidBuf1);                                     \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        /* Check unsuccessful deserialization of second parameter */                                                   \
+        U8 invalidData2[FormalParamStruct::SERIALIZED_SIZE];                                                           \
+        Fw::SerialBuffer invalidBuf2(invalidData2, sizeof(invalidData2));                                              \
+                                                                                                                       \
+        status = invalidBuf2.serialize(port.args.val1);                                                                \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRUCT, invalidBuf2);                                     \
+                                                                                                                       \
+        this->checkSerializeStatusBufferEmpty();                                                                       \
+                                                                                                                       \
+        U8 data[InputStructArgsPort::SERIALIZED_SIZE];                                                                 \
+        Fw::SerialBuffer buf(data, sizeof(data));                                                                      \
+                                                                                                                       \
+        status = buf.serialize(port.args.val1);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        status = buf.serialize(port.args.val2);                                                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                                                        \
+                                                                                                                       \
+        this->invoke##PORT_KIND##SerialPort(SerialPortIndex::STRUCT, buf);                                             \
+                                                                                                                       \
+        this->checkSerializeStatusSuccess();                                                                           \
+    }
+
+// ----------------------------------------------------------------------
+// Check history of typed output ports
+// ----------------------------------------------------------------------
+
+#define PORT_TEST_CHECK_DEFS(PORT_KIND)                                                                 \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::NoParams& port) {                          \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                               \
+        ASSERT_from_noArgsOut_SIZE(1);                                                                  \
+    }                                                                                                   \
+                                                                                                        \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::PrimitiveParams& port) {                   \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                               \
+        ASSERT_from_primitiveArgsOut_SIZE(1);                                                           \
+        ASSERT_from_primitiveArgsOut(0, port.args.val1, port.args.val2, port.args.val3, port.args.val4, \
+                                     port.args.val5, port.args.val6);                                   \
+    }                                                                                                   \
+                                                                                                        \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::PortStringParams& port) {                  \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                               \
+        ASSERT_from_stringArgsOut_SIZE(1);                                                              \
+        ASSERT_from_stringArgsOut(0, port.args.val1, port.args.val2, port.args.val3, port.args.val4);   \
+    }                                                                                                   \
+                                                                                                        \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::EnumParams& port) {                        \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                               \
+        ASSERT_from_enumArgsOut_SIZE(1);                                                                \
+        ASSERT_from_enumArgsOut(0, port.args.val1, port.args.val2, port.args.val3, port.args.val4);     \
+    }                                                                                                   \
+                                                                                                        \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::ArrayParams& port) {                       \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                               \
+        ASSERT_from_arrayArgsOut_SIZE(1);                                                               \
+        ASSERT_from_arrayArgsOut(0, port.args.val1, port.args.val2, port.args.val3, port.args.val4,     \
+                                 port.args.val5, port.args.val6);                                       \
+    }                                                                                                   \
+                                                                                                        \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::StructParams& port) {                      \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                               \
+        ASSERT_from_structArgsOut_SIZE(1);                                                              \
+        ASSERT_from_structArgsOut(0, port.args.val1, port.args.val2);                                   \
+    }
+
+#define PORT_TEST_CHECK_RETURN_DEFS(PORT_KIND)                                                            \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::NoParamReturn& port) {                       \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_noArgsReturnOut_SIZE(1);                                                              \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::PrimitiveReturn& port) {                     \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_primitiveReturnOut_SIZE(1);                                                           \
+        ASSERT_from_primitiveReturnOut(0, port.args.val1, port.args.val2, port.args.val3, port.args.val4, \
+                                       port.args.val5, port.args.val6);                                   \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::EnumReturn& port) {                          \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_enumReturnOut_SIZE(1);                                                                \
+        ASSERT_from_enumReturnOut(0, port.args.val1, port.args.val2);                                     \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::StringReturn& port) {                        \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_stringReturnOut_SIZE(1);                                                              \
+        ASSERT_from_stringReturnOut(0, port.args.val1, port.args.val2);                                   \
+    }                                                                                                     \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::StringAliasReturn& port) {                   \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_stringAliasReturnOut_SIZE(1);                                                         \
+        ASSERT_from_stringAliasReturnOut(0, port.args.val1, port.args.val2);                              \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::ArrayReturn& port) {                         \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_arrayReturnOut_SIZE(1);                                                               \
+        ASSERT_from_arrayReturnOut(0, port.args.val1, port.args.val2);                                    \
+    }                                                                                                     \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::ArrayStringAliasReturn& port) {              \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_arrayStringAliasReturnOut_SIZE(1);                                                    \
+        ASSERT_from_arrayStringAliasReturnOut(0, port.args.val1, port.args.val2);                         \
+    }                                                                                                     \
+                                                                                                          \
+    void Tester ::test##PORT_KIND##PortCheck(FppTest::Types::StructReturn& port) {                        \
+        ASSERT_FROM_PORT_HISTORY_SIZE(1);                                                                 \
+        ASSERT_from_structReturnOut_SIZE(1);                                                              \
+        ASSERT_from_structReturnOut(0, port.args.val1, port.args.val2);                                   \
+    }
+
+// ----------------------------------------------------------------------
+// Check serial output ports
+// ----------------------------------------------------------------------
+
+#define PORT_TEST_CHECK_SERIAL_DEFS(PORT_KIND)                                               \
+    void Tester ::test##PORT_KIND##PortCheckSerial(FppTest::Types::NoParams& port) {}        \
+                                                                                             \
+    void Tester ::test##PORT_KIND##PortCheckSerial(FppTest::Types::PrimitiveParams& port) {  \
+        Fw::SerializeStatus status;                                                          \
+        U32 u32, u32Ref;                                                                     \
+        F32 f32, f32Ref;                                                                     \
+        bool b, bRef;                                                                        \
+                                                                                             \
+        status = this->primitiveBuf.deserialize(u32);                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->primitiveBuf.deserialize(u32Ref);                                     \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->primitiveBuf.deserialize(f32);                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->primitiveBuf.deserialize(f32Ref);                                     \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->primitiveBuf.deserialize(b);                                          \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->primitiveBuf.deserialize(bRef);                                       \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        ASSERT_EQ(u32, port.args.val1);                                                      \
+        ASSERT_EQ(u32Ref, port.args.val2);                                                   \
+        ASSERT_EQ(f32, port.args.val3);                                                      \
+        ASSERT_EQ(f32Ref, port.args.val4);                                                   \
+        ASSERT_EQ(b, port.args.val5);                                                        \
+        ASSERT_EQ(bRef, port.args.val6);                                                     \
+    }                                                                                        \
+                                                                                             \
+    void Tester ::test##PORT_KIND##PortCheckSerial(FppTest::Types::PortStringParams& port) { \
+        Fw::SerializeStatus status;                                                          \
+        FppTest::Types::String1 str80, str80Ref;                                             \
+        FppTest::Types::String2 str100, str100Ref;                                           \
+                                                                                             \
+        status = this->stringBuf.deserialize(str80);                                         \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->stringBuf.deserialize(str80Ref);                                      \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->stringBuf.deserialize(str100);                                        \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->stringBuf.deserialize(str100Ref);                                     \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        ASSERT_EQ(str80, port.args.val1);                                                    \
+        ASSERT_EQ(str80Ref, port.args.val2);                                                 \
+        ASSERT_EQ(str100, port.args.val3);                                                   \
+        ASSERT_EQ(str100Ref, port.args.val4);                                                \
+    }                                                                                        \
+                                                                                             \
+    void Tester ::test##PORT_KIND##PortCheckSerial(FppTest::Types::EnumParams& port) {       \
+        Fw::SerializeStatus status;                                                          \
+        FormalParamEnum en, enRef;                                                           \
+                                                                                             \
+        status = this->enumBuf.deserialize(en);                                              \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->enumBuf.deserialize(enRef);                                           \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        ASSERT_EQ(en, port.args.val1);                                                       \
+        ASSERT_EQ(enRef, port.args.val2);                                                    \
+    }                                                                                        \
+                                                                                             \
+    void Tester ::test##PORT_KIND##PortCheckSerial(FppTest::Types::ArrayParams& port) {      \
+        Fw::SerializeStatus status;                                                          \
+        FormalParamArray a, aRef;                                                            \
+                                                                                             \
+        status = this->arrayBuf.deserialize(a);                                              \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->arrayBuf.deserialize(aRef);                                           \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        ASSERT_EQ(a, port.args.val1);                                                        \
+        ASSERT_EQ(aRef, port.args.val2);                                                     \
+    }                                                                                        \
+                                                                                             \
+    void Tester ::test##PORT_KIND##PortCheckSerial(FppTest::Types::StructParams& port) {     \
+        Fw::SerializeStatus status;                                                          \
+        FormalParamStruct s, sRef;                                                           \
+                                                                                             \
+        status = this->structBuf.deserialize(s);                                             \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        status = this->structBuf.deserialize(sRef);                                          \
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);                                              \
+                                                                                             \
+        ASSERT_EQ(s, port.args.val1);                                                        \
+        ASSERT_EQ(sRef, port.args.val2);                                                     \
+    }
+
+#define PORT_TEST_DEFS(PORT_KIND)                 \
+    PORT_TEST_INVOKE_DEFS(PORT_KIND)              \
+    PORT_TEST_INVOKE_RETURN_DEFS(PORT_KIND)       \
+    PORT_TEST_INVOKE_SERIAL_HELPER_DEF(PORT_KIND) \
+    PORT_TEST_INVOKE_SERIAL_DEFS(PORT_KIND)       \
+    PORT_TEST_CHECK_DEFS(PORT_KIND)               \
+    PORT_TEST_CHECK_RETURN_DEFS(PORT_KIND)        \
+    PORT_TEST_CHECK_SERIAL_DEFS(PORT_KIND)
+
+#define PORT_TEST_DEFS_ASYNC                 \
+    PORT_TEST_INVOKE_DEFS(Async)             \
+    PORT_TEST_INVOKE_SERIAL_HELPER_DEF_ASYNC \
+    PORT_TEST_INVOKE_SERIAL_DEFS(Async)      \
+    PORT_TEST_CHECK_DEFS(Async)              \
+    PORT_TEST_CHECK_SERIAL_DEFS(Async)
+```
+
+### `TesterHandlers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TesterHandlers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TesterHandlers.cpp
+// \author T. Chieu
+// \brief  cpp file for tester handler functions
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void Tester ::from_arrayArgsOut_handler(const FwIndexType portNum,
+                                        const FormalParamArray& a,
+                                        FormalParamArray& aRef,
+                                        const FormalAliasArray& b,
+                                        FormalAliasArray& bRef,
+                                        const FormalAliasStringArray& c,
+                                        FormalAliasStringArray& cRef) {
+    this->pushFromPortEntry_arrayArgsOut(a, aRef, b, bRef, c, cRef);
+}
+
+FormalParamArray Tester ::from_arrayReturnOut_handler(const FwIndexType portNum,
+                                                      const FormalParamArray& a,
+                                                      FormalParamArray& aRef) {
+    this->pushFromPortEntry_arrayReturnOut(a, aRef);
+    return arrayReturnVal.val;
+}
+
+void Tester ::from_enumArgsOut_handler(const FwIndexType portNum,
+                                       const FormalParamEnum& en,
+                                       FormalParamEnum& enRef,
+                                       const FormalAliasEnum& enA,
+                                       FormalAliasEnum& enARef) {
+    this->pushFromPortEntry_enumArgsOut(en, enRef, enA, enARef);
+}
+
+FormalParamEnum Tester ::from_enumReturnOut_handler(const FwIndexType portNum,
+                                                    const FormalParamEnum& en,
+                                                    FormalParamEnum& enRef) {
+    this->pushFromPortEntry_enumReturnOut(en, enRef);
+    return enumReturnVal.val;
+}
+
+void Tester ::from_stringArgsOut_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str80,
+    Fw::StringBase &str80Ref,
+    const Fw::StringBase &str100,
+    Fw::StringBase &str100Ref) {
+    this->pushFromPortEntry_stringArgsOut(str80, str80Ref, str100, str100Ref);
+}
+
+Fw::String Tester ::from_stringReturnOut_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str,
+    Fw::StringBase &strRef
+) {
+    this->pushFromPortEntry_stringReturnOut(str, strRef);
+    return stringReturnVal.val;
+}
+
+//! Handler base-class function for from_arrayStringAliasReturnOut
+FormalAliasStringArray Tester::from_arrayStringAliasReturnOut_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef //!< An array ref
+) {
+    this->pushFromPortEntry_arrayStringAliasReturnOut(a, aRef);
+    return arrayStringAliasReturnVal.val;
+}
+
+//! Handler base-class function for from_arrayStringAliasReturnOut
+FormalAliasString Tester::from_stringAliasReturnOut_handler(
+    FwIndexType portNum, //!< The port number
+    const Fw::StringBase& str, //!< A string
+    Fw::StringBase& strRef //!< A string ref
+) {
+    this->pushFromPortEntry_stringAliasReturnOut(str, strRef);
+    return stringAliasReturnVal.val;
+}
+
+void Tester ::from_noArgsOut_handler(const FwIndexType portNum) {
+    this->pushFromPortEntry_noArgsOut();
+}
+
+bool Tester ::from_noArgsReturnOut_handler(const FwIndexType portNum) {
+    this->pushFromPortEntry_noArgsReturnOut();
+    return noParamReturnVal.val;
+}
+
+void Tester ::from_primitiveArgsOut_handler(const FwIndexType portNum,
+                                            U32 u32,
+                                            U32& u32Ref,
+                                            F32 f32,
+                                            F32& f32Ref,
+                                            bool b,
+                                            bool& bRef) {
+    this->pushFromPortEntry_primitiveArgsOut(u32, u32Ref, f32, f32Ref, b, bRef);
+}
+
+U32 Tester ::from_primitiveReturnOut_handler(const FwIndexType portNum,
+                                             U32 u32,
+                                             U32& u32Ref,
+                                             F32 f32,
+                                             F32& f32Ref,
+                                             bool b,
+                                             bool& bRef) {
+    this->pushFromPortEntry_primitiveReturnOut(u32, u32Ref, f32, f32Ref, b, bRef);
+    return primitiveReturnVal.val;
+}
+
+void Tester ::from_structArgsOut_handler(const FwIndexType portNum,
+                                         const FormalParamStruct& s,
+                                         FormalParamStruct& sRef) {
+    this->pushFromPortEntry_structArgsOut(s, sRef);
+}
+
+FormalParamStruct Tester ::from_structReturnOut_handler(const FwIndexType portNum,
+                                                        const FormalParamStruct& s,
+                                                        FormalParamStruct& sRef) {
+    this->pushFromPortEntry_structReturnOut(s, sRef);
+    return structReturnVal.val;
+}
+
+// ----------------------------------------------------------------------
+// Handlers for serial from ports
+// ----------------------------------------------------------------------
+
+void Tester ::from_serialOut_handler(FwIndexType portNum,        //!< The port number
+                                     Fw::SerializeBufferBase& Buffer //!< The serialization buffer
+) {
+    Fw::SerializeStatus status;
+
+    switch (portNum) {
+        case SerialPortIndex::NO_ARGS:
+            status = Fw::FW_SERIALIZE_OK;
+            break;
+
+        case SerialPortIndex::PRIMITIVE:
+            status = Buffer.copyRaw(this->primitiveBuf, Buffer.getBuffCapacity());
+            break;
+
+        case SerialPortIndex::STRING:
+            status = Buffer.copyRaw(this->stringBuf, Buffer.getBuffCapacity());
+            break;
+
+        case SerialPortIndex::ENUM:
+            status = Buffer.copyRaw(this->enumBuf, Buffer.getBuffCapacity());
+            break;
+
+        case SerialPortIndex::ARRAY:
+            status = Buffer.copyRaw(this->arrayBuf, Buffer.getBuffCapacity());
+            break;
+
+        case SerialPortIndex::STRUCT:
+            status = Buffer.copyRaw(this->structBuf, Buffer.getBuffCapacity());
+            break;
+    }
+
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+}
+```
+
+### `TesterHelpers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TesterHelpers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TesterHelpers.cpp
+// \author T. Chieu
+// \brief  cpp file for tester helper functions
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void Tester ::connectPorts() {
+    // arrayArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_arrayArgsGuarded(i, this->component.get_arrayArgsGuarded_InputPort(i));
+    }
+
+    // arrayArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_arrayArgsSync(i, this->component.get_arrayArgsSync_InputPort(i));
+    }
+
+    // arrayReturnGuarded
+    this->connect_to_arrayReturnGuarded(0, this->component.get_arrayReturnGuarded_InputPort(0));
+
+    // arrayReturnSync
+    this->connect_to_arrayReturnSync(0, this->component.get_arrayReturnSync_InputPort(0));
+
+    // arrayStringAliasReturnGuarded
+    this->connect_to_arrayStringAliasReturnGuarded(0, this->component.get_arrayStringAliasReturnGuarded_InputPort(0));
+
+    // arrayStringAliasReturnSync
+    this->connect_to_arrayStringAliasReturnSync(0, this->component.get_arrayStringAliasReturnSync_InputPort(0));
+
+    // cmdIn
+    this->connect_to_cmdIn(0, this->component.get_cmdIn_InputPort(0));
+
+    // enumArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_enumArgsGuarded(i, this->component.get_enumArgsGuarded_InputPort(i));
+    }
+
+    // enumArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_enumArgsSync(i, this->component.get_enumArgsSync_InputPort(i));
+    }
+
+    // enumReturnGuarded
+    this->connect_to_enumReturnGuarded(0, this->component.get_enumReturnGuarded_InputPort(0));
+
+    // enumReturnSync
+    this->connect_to_enumReturnSync(0, this->component.get_enumReturnSync_InputPort(0));
+
+    // stringReturnGuarded
+    this->connect_to_stringReturnGuarded(0, this->component.get_stringReturnGuarded_InputPort(0));
+
+    // stringAliasReturnSync
+    this->connect_to_stringAliasReturnSync(0, this->component.get_stringAliasReturnSync_InputPort(0));
+
+    // stringAliasReturnGuarded
+    this->connect_to_stringAliasReturnGuarded(0, this->component.get_stringAliasReturnGuarded_InputPort(0));
+
+    // stringReturnSync
+    this->connect_to_stringReturnSync(0, this->component.get_stringReturnSync_InputPort(0));
+
+    // noArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_noArgsGuarded(i, this->component.get_noArgsGuarded_InputPort(i));
+    }
+
+    // noArgsReturnGuarded
+    this->connect_to_noArgsReturnGuarded(0, this->component.get_noArgsReturnGuarded_InputPort(0));
+
+    // noArgsReturnSync
+    this->connect_to_noArgsReturnSync(0, this->component.get_noArgsReturnSync_InputPort(0));
+
+    // noArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_noArgsSync(i, this->component.get_noArgsSync_InputPort(i));
+    }
+
+    // primitiveArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_primitiveArgsGuarded(i, this->component.get_primitiveArgsGuarded_InputPort(i));
+    }
+
+    // primitiveArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_primitiveArgsSync(i, this->component.get_primitiveArgsSync_InputPort(i));
+    }
+
+    // primitiveReturnGuarded
+    this->connect_to_primitiveReturnGuarded(0, this->component.get_primitiveReturnGuarded_InputPort(0));
+
+    // primitiveReturnSync
+    this->connect_to_primitiveReturnSync(0, this->component.get_primitiveReturnSync_InputPort(0));
+
+    // stringArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_stringArgsGuarded(i, this->component.get_stringArgsGuarded_InputPort(i));
+    }
+
+    // stringArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_stringArgsSync(i, this->component.get_stringArgsSync_InputPort(i));
+    }
+
+    // structArgsGuarded
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_structArgsGuarded(i, this->component.get_structArgsGuarded_InputPort(i));
+    }
+
+    // structArgsSync
+    for (FwIndexType i = 0; i < 2; ++i) {
+        this->connect_to_structArgsSync(i, this->component.get_structArgsSync_InputPort(i));
+    }
+
+    // structReturnGuarded
+    this->connect_to_structReturnGuarded(0, this->component.get_structReturnGuarded_InputPort(0));
+
+    // structReturnSync
+    this->connect_to_structReturnSync(0, this->component.get_structReturnSync_InputPort(0));
+
+    // arrayArgsOut
+    this->component.set_arrayArgsOut_OutputPort(TypedPortIndex::TYPED,
+                                                this->get_from_arrayArgsOut(TypedPortIndex::TYPED));
+
+    // arrayReturnOut
+    this->component.set_arrayReturnOut_OutputPort(0, this->get_from_arrayReturnOut(0));
+
+    // arrayStringAliasReturnOut
+    this->component.set_arrayStringAliasReturnOut_OutputPort(0, this->get_from_arrayStringAliasReturnOut(0));
+
+    // cmdRegOut
+    this->component.set_cmdRegOut_OutputPort(0, this->get_from_cmdRegOut(0));
+
+    // cmdResponseOut
+    this->component.set_cmdResponseOut_OutputPort(0, this->get_from_cmdResponseOut(0));
+
+    // enumArgsOut
+    this->component.set_enumArgsOut_OutputPort(TypedPortIndex::TYPED,
+                                               this->get_from_enumArgsOut(TypedPortIndex::TYPED));
+
+    // enumReturnOut
+    this->component.set_enumReturnOut_OutputPort(0, this->get_from_enumReturnOut(0));
+
+    // stringReturnOut
+    this->component.set_stringReturnOut_OutputPort(0, this->get_from_stringReturnOut(0));
+
+    // stringAliasReturnOut
+    this->component.set_stringAliasReturnOut_OutputPort(0, this->get_from_stringAliasReturnOut(0));
+
+    // eventOut
+    this->component.set_eventOut_OutputPort(0, this->get_from_eventOut(0));
+
+    // noArgsOut
+    this->component.set_noArgsOut_OutputPort(TypedPortIndex::TYPED, this->get_from_noArgsOut(TypedPortIndex::TYPED));
+
+    // noArgsReturnOut
+    this->component.set_noArgsReturnOut_OutputPort(0, this->get_from_noArgsReturnOut(0));
+
+    // primitiveArgsOut
+    this->component.set_primitiveArgsOut_OutputPort(TypedPortIndex::TYPED,
+                                                    this->get_from_primitiveArgsOut(TypedPortIndex::TYPED));
+
+    // primitiveReturnOut
+    this->component.set_primitiveReturnOut_OutputPort(0, this->get_from_primitiveReturnOut(0));
+
+    // stringArgsOut
+    this->component.set_stringArgsOut_OutputPort(TypedPortIndex::TYPED,
+                                                 this->get_from_stringArgsOut(TypedPortIndex::TYPED));
+
+    // structArgsOut
+    this->component.set_structArgsOut_OutputPort(TypedPortIndex::TYPED,
+                                                 this->get_from_structArgsOut(TypedPortIndex::TYPED));
+
+    // structReturnOut
+    this->component.set_structReturnOut_OutputPort(0, this->get_from_structReturnOut(0));
+
+    // textEventOut
+    this->component.set_textEventOut_OutputPort(0, this->get_from_textEventOut(0));
+
+    // tlmOut
+    this->component.set_tlmOut_OutputPort(0, this->get_from_tlmOut(0));
+
+    // ----------------------------------------------------------------------
+    // Connect special ports
+    // ----------------------------------------------------------------------
+
+    // prmGetOut
+    this->component.set_prmGetOut_OutputPort(0, this->get_from_prmGetIn(0));
+
+    // ----------------------------------------------------------------------
+    // Connect serial output ports
+    // ----------------------------------------------------------------------
+
+    this->component.set_noArgsOut_OutputPort(TypedPortIndex::SERIAL,
+                                             this->get_from_serialOut(SerialPortIndex::NO_ARGS));
+
+    this->component.set_primitiveArgsOut_OutputPort(TypedPortIndex::SERIAL,
+                                                    this->get_from_serialOut(SerialPortIndex::PRIMITIVE));
+
+    this->component.set_stringArgsOut_OutputPort(TypedPortIndex::SERIAL,
+                                                 this->get_from_serialOut(SerialPortIndex::STRING));
+
+    this->component.set_enumArgsOut_OutputPort(TypedPortIndex::SERIAL, this->get_from_serialOut(SerialPortIndex::ENUM));
+
+    this->component.set_arrayArgsOut_OutputPort(TypedPortIndex::SERIAL,
+                                                this->get_from_serialOut(SerialPortIndex::ARRAY));
+
+    this->component.set_structArgsOut_OutputPort(TypedPortIndex::SERIAL,
+                                                 this->get_from_serialOut(SerialPortIndex::STRUCT));
+
+    this->component.set_serialOut_OutputPort(SerialPortIndex::NO_ARGS,
+                                             this->get_from_noArgsOut(TypedPortIndex::SERIAL));
+
+    this->component.set_serialOut_OutputPort(SerialPortIndex::PRIMITIVE,
+                                             this->get_from_primitiveArgsOut(TypedPortIndex::SERIAL));
+
+    this->component.set_serialOut_OutputPort(SerialPortIndex::STRING,
+                                             this->get_from_stringArgsOut(TypedPortIndex::SERIAL));
+
+    this->component.set_serialOut_OutputPort(SerialPortIndex::ENUM, this->get_from_enumArgsOut(TypedPortIndex::SERIAL));
+
+    this->component.set_serialOut_OutputPort(SerialPortIndex::ARRAY,
+                                             this->get_from_arrayArgsOut(TypedPortIndex::SERIAL));
+
+    this->component.set_serialOut_OutputPort(SerialPortIndex::STRUCT,
+                                             this->get_from_structArgsOut(TypedPortIndex::SERIAL));
+
+    // ----------------------------------------------------------------------
+    // Connect serial input ports
+    // ----------------------------------------------------------------------
+
+    // serialGuarded
+    for (FwIndexType i = 0; i < 6; ++i) {
+        this->connect_to_serialGuarded(i, this->component.get_serialGuarded_InputPort(i));
+    }
+
+    // serialSync
+    for (FwIndexType i = 0; i < 6; ++i) {
+        this->connect_to_serialSync(i, this->component.get_serialSync_InputPort(i));
+    }
+}
+
+void Tester ::connectPrmSetIn() {
+    // prmSetOut
+    this->component.set_prmSetOut_OutputPort(0, this->get_from_prmSetIn(0));
+}
+
+void Tester ::connectTimeGetOut() {
+    // timeGetOut
+    this->component.set_timeGetOut_OutputPort(0, this->get_from_timeGetOut(0));
+}
+
+void Tester ::connectSpecialPortsSerial() {
+    // cmdResponseOut
+    this->component.set_cmdResponseOut_OutputPort(0, this->get_from_serialOut(0));
+
+    // cmdRegOut
+    this->component.set_cmdRegOut_OutputPort(0, this->get_from_serialOut(0));
+
+    // eventOut
+    this->component.set_eventOut_OutputPort(0, this->get_from_serialOut(0));
+
+    // textEventOut
+    this->component.set_textEventOut_OutputPort(0, this->get_from_serialOut(0));
+
+    // tlmOut
+    this->component.set_tlmOut_OutputPort(0, this->get_from_serialOut(0));
+
+    // prmSetOut
+    this->component.set_prmSetOut_OutputPort(0, this->get_from_serialOut(0));
+
+    // timeGetOut
+    this->component.set_timeGetOut_OutputPort(0, this->get_from_serialOut(0));
+}
+
+void Tester ::setPrmValid(Fw::ParamValid valid) {
+    this->prmValid = valid;
+}
+
+void Tester ::checkSerializeStatusSuccess() {
+    ASSERT_EQ(component.serializeStatus, Fw::FW_SERIALIZE_OK);
+}
+
+void Tester ::checkSerializeStatusBufferEmpty() {
+    ASSERT_EQ(component.serializeStatus, Fw::FW_DESERIALIZE_BUFFER_EMPTY);
+}
+```
+
+### `TestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TestMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// TestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "STest/Random/Random.hpp"
+#include "gtest/gtest.h"
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Tests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/Tests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Tests.cpp
+// \author T. Chieu
+// \brief  cpp file for component tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FppTest/component/active/StringArgsPortAc.hpp"
+#include "FppTest/component/types/FormalParamTypes.hpp"
+#include "FppTest/typed_tests/ComponentTest.hpp"
+#include "FppTest/typed_tests/PortTest.hpp"
+#include "FppTest/typed_tests/StringTest.hpp"
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TypedAsyncPortTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(SerialAsyncPortTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComponentAsyncCommandTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ComponentInternalInterfaceTest);
+
+// Typed port tests
+using TypedPortTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                      FppTest::Types::PrimitiveParams,
+                                                      FppTest::Types::PortStringParams,
+                                                      FppTest::Types::EnumParams,
+                                                      FppTest::Types::ArrayParams,
+                                                      FppTest::Types::StructParams,
+                                                      FppTest::Types::NoParamReturn,
+                                                      FppTest::Types::PrimitiveReturn,
+                                                      FppTest::Types::EnumReturn,
+                                                      FppTest::Types::StringReturn,
+                                                      FppTest::Types::ArrayReturn,
+                                                      FppTest::Types::StructReturn>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, TypedPortTest, TypedPortTestImplementations);
+
+// Serial port tests
+using SerialPortTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                       FppTest::Types::PrimitiveParams,
+                                                       FppTest::Types::PortStringParams,
+                                                       FppTest::Types::EnumParams,
+                                                       FppTest::Types::ArrayParams,
+                                                       FppTest::Types::StructParams>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, SerialPortTest, SerialPortTestImplementations);
+
+// String tests
+using StringTestImplementations =
+    ::testing::Types<FppTest::Types::String1, FppTest::Types::String2>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(Array, StringTest, StringTestImplementations);
+
+// Command tests
+using CommandTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                    FppTest::Types::PrimitiveParams,
+                                                    FppTest::Types::CmdStringParams,
+                                                    FppTest::Types::EnumParam,
+                                                    FppTest::Types::ArrayParam,
+                                                    FppTest::Types::StructParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentCommandTest, CommandTestImplementations);
+// Event tests
+using EventTestImplementations = ::testing::Types<FppTest::Types::NoParams,
+                                                  FppTest::Types::PrimitiveParams,
+                                                  FppTest::Types::LogStringParams,
+                                                  FppTest::Types::EnumParam,
+                                                  FppTest::Types::ArrayParam,
+                                                  FppTest::Types::StructParam,
+                                                  FppTest::Types::BoolParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentEventTest, EventTestImplementations);
+
+// Telemetry tests
+using TelemetryTestImplementations = ::testing::Types<FppTest::Types::U32Param,
+                                                      FppTest::Types::F32Param,
+                                                      FppTest::Types::TlmStringParam,
+                                                      FppTest::Types::EnumParam,
+                                                      FppTest::Types::ArrayParam,
+                                                      FppTest::Types::StructParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentTelemetryTest, TelemetryTestImplementations);
+
+// Parameter tests
+TEST(ComponentParameterTest, ParameterTest) {
+    Tester tester;
+
+    tester.setPrmValid(Fw::ParamValid::VALID);
+    tester.testParam();
+
+    tester.setPrmValid(Fw::ParamValid::INVALID);
+    tester.testParam();
+}
+
+// Parameter tests
+using ParamCommandTestImplementations = ::testing::Types<FppTest::Types::BoolParam,
+                                                         FppTest::Types::U32Param,
+                                                         FppTest::Types::PrmStringParam,
+                                                         FppTest::Types::EnumParam,
+                                                         FppTest::Types::ArrayParam,
+                                                         FppTest::Types::StructParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentParamCommandTest, ParamCommandTestImplementations);
+
+// External Parameter tests
+TEST(ComponentExternalParameterTest, ParameterExternalTest) {
+    Tester tester;
+
+    tester.setPrmValid(Fw::ParamValid::VALID);
+    tester.testExternalParam();
+}
+
+// External Parameter tests
+using ExternalParamCommandTestImplementations = ::testing::Types<FppTest::Types::BoolParam,
+                                                                 FppTest::Types::I32Param,
+                                                                 FppTest::Types::PrmStringParam,
+                                                                 FppTest::Types::EnumParam,
+                                                                 FppTest::Types::ArrayParam,
+                                                                 FppTest::Types::StructParam>;
+
+INSTANTIATE_TYPED_TEST_SUITE_P(FppTest, ComponentExternalParamCommandTest,
+                               ExternalParamCommandTestImplementations);
+
+// Time tests
+TEST(ComponentTimeTest, TimeTest) {
+    Tester tester;
+    tester.testTime();
+}
+```
+
+### `TimeTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TimeTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TimeTests.cpp
+// \author T. Chieu
+// \brief  cpp file for time tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Fw/Time/Time.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Time test
+// ----------------------------------------------------------------------
+
+void Tester ::testTime() {
+    Fw::Time random_time(STest::Pick::any(), STest::Pick::any());
+    Fw::Time zero_time(TimeBase::TB_NONE, 0, 0);
+    Fw::Time result;
+
+    this->setTestTime(random_time);
+
+    result = component.getTime();
+    ASSERT_EQ(result, zero_time);
+
+    this->connectTimeGetOut();
+    ASSERT_TRUE(component.isConnected_timeGetOut_OutputPort(0));
+
+    result = component.getTime();
+    ASSERT_EQ(result, random_time);
+
+    this->connectSpecialPortsSerial();
+    ASSERT_TRUE(component.isConnected_timeGetOut_OutputPort(0));
+
+    result = component.getTime();
+    ASSERT_EQ(result, random_time);
+}
+```
+
+### `TlmTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TlmTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TlmTests.cpp
+// \author T. Chieu
+// \brief  cpp file for telemetry tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "TlmTests.hpp"
+#include "Tester.hpp"
+
+TLM_TEST_DEFS
+```
+
+### `TlmTests.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/TlmTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TlmTests.hpp
+// \author T. Chieu
+// \brief  hpp file for telemetry tests
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+// ----------------------------------------------------------------------
+// Telemetry test declarations
+// ----------------------------------------------------------------------
+
+#define TLM_TEST_DECL(TYPE) void testTelemetry(FwIndexType portNum, FppTest::Types::TYPE##Param& data);
+
+#define TLM_TEST_DECLS       \
+    TLM_TEST_DECL(U32)       \
+    TLM_TEST_DECL(F32)       \
+    TLM_TEST_DECL(TlmString) \
+    TLM_TEST_DECL(Enum)      \
+    TLM_TEST_DECL(Array)     \
+    TLM_TEST_DECL(Struct)
+
+// ----------------------------------------------------------------------
+// Telemetry test definitions
+// ----------------------------------------------------------------------
+
+#define TLM_TEST_DEF(TYPE)                                                                    \
+    void Tester ::testTelemetry(FwIndexType portNum, FppTest::Types::TYPE##Param& data) { \
+        ASSERT_TRUE(component.isConnected_tlmOut_OutputPort(portNum));                        \
+                                                                                              \
+        component.tlmWrite_Channel##TYPE(data.args.val);                                      \
+                                                                                              \
+        ASSERT_TLM_SIZE(1);                                                                   \
+        ASSERT_TLM_Channel##TYPE##_SIZE(1);                                                   \
+        ASSERT_TLM_Channel##TYPE(0, data.args.val);                                           \
+                                                                                              \
+        component.tlmWrite_Channel##TYPE(data.args.val, Fw::ZERO_TIME);                       \
+                                                                                              \
+        ASSERT_TLM_SIZE(2);                                                                   \
+        ASSERT_TLM_Channel##TYPE##_SIZE(2);                                                   \
+        ASSERT_TLM_Channel##TYPE(0, data.args.val);                                           \
+    }
+
+#define TLM_TEST_DEFS                                                                            \
+    TLM_TEST_DEF(U32)                                                                            \
+    TLM_TEST_DEF(F32)                                                                            \
+                                                                                                 \
+    void Tester ::testTelemetry(FwIndexType portNum, FppTest::Types::TlmStringParam& data) { \
+        ASSERT_TRUE(component.isConnected_tlmOut_OutputPort(portNum));                           \
+                                                                                                 \
+        component.tlmWrite_ChannelString(data.args.val);                                         \
+                                                                                                 \
+        ASSERT_TLM_SIZE(1);                                                                      \
+        ASSERT_TLM_ChannelString_SIZE(1);                                                        \
+        ASSERT_TLM_ChannelString(0, data.args.val.toChar());                                     \
+                                                                                                 \
+        /* Test unchanged value */                                                               \
+        component.tlmWrite_ChannelString(data.args.val);                                         \
+                                                                                                 \
+        ASSERT_TLM_SIZE(1);                                                                      \
+        ASSERT_TLM_ChannelString_SIZE(1);                                                        \
+                                                                                                 \
+        FppTest::Types::TlmStringParam data2;                                                    \
+        while (data2.args.val == data.args.val) {                                                \
+            data2 = FppTest::Types::TlmStringParam();                                            \
+        }                                                                                        \
+                                                                                                 \
+        component.tlmWrite_ChannelString(data2.args.val, Fw::ZERO_TIME);                         \
+                                                                                                 \
+        ASSERT_TLM_SIZE(2);                                                                      \
+        ASSERT_TLM_ChannelString_SIZE(2);                                                        \
+        ASSERT_TLM_ChannelString(1, data2.args.val.toChar());                                    \
+    }                                                                                            \
+                                                                                                 \
+    TLM_TEST_DEF(Enum)                                                                           \
+    TLM_TEST_DEF(Array)                                                                          \
+    TLM_TEST_DEF(Struct)
+```

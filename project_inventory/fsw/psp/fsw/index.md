@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ pc-rtems/index
 shared/index
 ```
 
-## 항목
-
-- [`fsw/psp/fsw/inc/`](inc/index) — 폴더
-- [`fsw/psp/fsw/mcp750-vxworks/`](mcp750-vxworks/index) — 폴더
-- [`fsw/psp/fsw/modules/`](modules/index) — 폴더
-- [`fsw/psp/fsw/nos-linux/`](nos-linux/index) — 폴더
-- [`fsw/psp/fsw/pc-linux/`](pc-linux/index) — 폴더
-- [`fsw/psp/fsw/pc-rtems/`](pc-rtems/index) — 폴더
-- [`fsw/psp/fsw/shared/`](shared/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

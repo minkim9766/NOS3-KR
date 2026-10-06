@@ -3,30 +3,557 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--BufferManager.fpp
-file--BufferManager.hpp
-file--BufferManagerComponentImpl.cpp
-file--BufferManagerComponentImpl.hpp
-file--CMakeLists.txt
-file--Events.fppi
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManager.fpp`](file--BufferManager.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManager.hpp`](file--BufferManager.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManagerComponentImpl.cpp`](file--BufferManagerComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManagerComponentImpl.hpp`](file--BufferManagerComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `BufferManager.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManager.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for managing memory buffers
+  passive component BufferManager {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Mutex locked Buffer send in input port
+    guarded input port bufferSendIn: Fw.BufferSend
+
+    @ Mutex locked Buffer callee input port
+    guarded input port bufferGetCallee: Fw.BufferGet
+
+    @ Schedule input port
+    sync input port schedIn: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Port for getting the time
+    time get port timeCaller
+
+    @ Port for emitting events
+    event port eventOut
+
+    @ Port for emitting text events
+    text event port textEventOut
+
+    @ Port for emitting Telemetry
+    telemetry port tlmOut
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+  }
+
+}
+```
+
+### `BufferManager.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManager.hpp`
+
+
+```cpp
+// ======================================================================
+// BufferManager.hpp
+// Standardization header for BufferManager
+// ======================================================================
+
+#ifndef Svc_BufferManager_HPP
+#define Svc_BufferManager_HPP
+
+#include "Svc/BufferManager/BufferManagerComponentImpl.hpp"
+
+namespace Svc {
+
+typedef BufferManagerComponentImpl BufferManager;
+
+}
+
+#endif
+```
+
+### `BufferManagerComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManagerComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferManagerComponentImpl.cpp
+// \author tcanham
+// \brief  cpp file for BufferManager component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/Buffer/Buffer.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/BufferManager/BufferManagerComponentImpl.hpp>
+#include <new>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+BufferManagerComponentImpl ::BufferManagerComponentImpl(const char* const compName)
+    : BufferManagerComponentBase(compName),
+      m_setup(false),
+      m_cleaned(false),
+      m_mgrId(0),
+      m_buffers(nullptr),
+      m_allocator(nullptr),
+      m_memId(0),
+      m_numStructs(0),
+      m_highWater(0),
+      m_currBuffs(0),
+      m_noBuffs(0),
+      m_emptyBuffs(0) {}
+
+BufferManagerComponentImpl ::~BufferManagerComponentImpl() {
+    if (m_setup) {
+        this->cleanup();
+    }
+}
+
+void BufferManagerComponentImpl ::cleanup() {
+    FW_ASSERT(this->m_buffers);
+    FW_ASSERT(this->m_allocator);
+
+    if (not this->m_cleaned) {
+        // walk through Fw::Buffer instances and delete them
+        for (U16 entry = 0; entry < this->m_numStructs; entry++) {
+            this->m_buffers[entry].buff.~Buffer();
+        }
+        this->m_cleaned = true;
+        // release memory
+        this->m_allocator->deallocate(this->m_memId, this->m_buffers);
+        this->m_setup = false;
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void BufferManagerComponentImpl ::bufferSendIn_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    // make sure component has been set up
+    FW_ASSERT(this->m_setup);
+    FW_ASSERT(m_buffers);
+    // check for null, empty buffers - this is a warning because this component returns
+    // null, empty buffers if it can't allocate one.
+    // however, empty non-null buffers could potentially be previously allocated
+    // buffers with their size reduced. the user is allowed to make buffers smaller.
+    if (fwBuffer.getData() == nullptr && fwBuffer.getSize() == 0) {
+        this->log_WARNING_HI_NullEmptyBuffer();
+        this->m_emptyBuffs++;
+        return;
+    }
+    // use the bufferID member field to find the original slot
+    U32 context = fwBuffer.getContext();
+    U32 id = context & 0xFFFF;
+    U32 mgrId = context >> 16;
+    // check some things
+    FW_ASSERT(id < this->m_numStructs, static_cast<FwAssertArgType>(id),
+              static_cast<FwAssertArgType>(this->m_numStructs));
+    FW_ASSERT(mgrId == this->m_mgrId, static_cast<FwAssertArgType>(mgrId), static_cast<FwAssertArgType>(id),
+              static_cast<FwAssertArgType>(this->m_mgrId));
+    FW_ASSERT(true == this->m_buffers[id].allocated, static_cast<FwAssertArgType>(id),
+              static_cast<FwAssertArgType>(this->m_mgrId));
+    FW_ASSERT(reinterpret_cast<U8*>(fwBuffer.getData()) >= this->m_buffers[id].memory, static_cast<FwAssertArgType>(id),
+              static_cast<FwAssertArgType>(this->m_mgrId));
+    FW_ASSERT(reinterpret_cast<U8*>(fwBuffer.getData()) < (this->m_buffers[id].memory + this->m_buffers[id].size),
+              static_cast<FwAssertArgType>(id), static_cast<FwAssertArgType>(this->m_mgrId));
+    // user can make smaller for their own purposes, but it shouldn't be bigger
+    FW_ASSERT(fwBuffer.getSize() <= this->m_buffers[id].size, static_cast<FwAssertArgType>(id),
+              static_cast<FwAssertArgType>(this->m_mgrId));
+    // clear the allocated flag
+    this->m_buffers[id].allocated = false;
+    this->m_currBuffs--;
+}
+
+Fw::Buffer BufferManagerComponentImpl ::bufferGetCallee_handler(const FwIndexType portNum, Fw::Buffer::SizeType size) {
+    // make sure component has been set up
+    FW_ASSERT(this->m_setup);
+    FW_ASSERT(m_buffers);
+    // find smallest buffer based on size.
+    for (U16 buff = 0; buff < this->m_numStructs; buff++) {
+        if ((not this->m_buffers[buff].allocated) and (size <= this->m_buffers[buff].size)) {
+            this->m_buffers[buff].allocated = true;
+            this->m_currBuffs++;
+            if (this->m_currBuffs > this->m_highWater) {
+                this->m_highWater = this->m_currBuffs;
+            }
+            Fw::Buffer copy = this->m_buffers[buff].buff;
+            // change size to match request
+            copy.setSize(size);
+            return copy;
+        }
+    }
+
+    // if no buffers found, return empty buffer
+    this->log_WARNING_HI_NoBuffsAvailable(size);
+    this->m_noBuffs++;
+    return Fw::Buffer();
+}
+
+void BufferManagerComponentImpl::setup(U16 mgrId,                    //!< manager ID
+                                       FwEnumStoreType memId,        //!< Memory segment identifier
+                                       Fw::MemAllocator& allocator,  //!< memory allocator
+                                       const BufferBins& bins        //!< Set of user bins
+) {
+    this->m_mgrId = mgrId;
+    this->m_memId = memId;
+    this->m_allocator = &allocator;
+    // clear bins
+    memset(&this->m_bufferBins, 0, sizeof(this->m_bufferBins));
+
+    this->m_bufferBins = bins;
+
+    // compute the amount of memory needed
+    FwSizeType memorySize = 0;  // track needed memory
+    this->m_numStructs = 0;     // size the number of tracking structs
+    // walk through bins and add up the sizes
+    for (U16 bin = 0; bin < BUFFERMGR_MAX_NUM_BINS; bin++) {
+        if (this->m_bufferBins.bins[bin].numBuffers) {
+            memorySize += (this->m_bufferBins.bins[bin].bufferSize *
+                           this->m_bufferBins.bins[bin].numBuffers) +  // allocate each set of buffer memory
+                          (static_cast<FwSizeType>(sizeof(AllocatedBuffer)) *
+                           this->m_bufferBins.bins[bin].numBuffers);  // allocate the structs to track the buffers
+            // Total structures is bounded by U16 maximum value to fit in half of context (U32)
+            FW_ASSERT((std::numeric_limits<U16>::max() - this->m_numStructs) >=
+                      this->m_bufferBins.bins[bin].numBuffers);
+            this->m_numStructs = static_cast<U16>(this->m_numStructs + this->m_bufferBins.bins[bin].numBuffers);
+        }
+    }
+
+    FwSizeType allocatedSize = memorySize;
+    bool recoverable = false;  //!< don't care if it is recoverable since they are a pool of user buffers
+
+    // allocate memory
+    void* memory = allocator.allocate(memId, allocatedSize, recoverable);
+    // make sure the memory returns was non-zero and the size requested
+    FW_ASSERT(memory != nullptr && memorySize == allocatedSize, static_cast<FwAssertArgType>(mgrId),
+              static_cast<FwAssertArgType>(memId),
+              static_cast<FwAssertArgType>(reinterpret_cast<PlatformPointerCastType>(memory)),
+              static_cast<FwAssertArgType>(memorySize), static_cast<FwAssertArgType>(allocatedSize));
+    // structs will be at beginning of memory
+    this->m_buffers = static_cast<AllocatedBuffer*>(memory);
+    // memory buffers will be at end of structs in memory, so compute that memory as the beginning of the
+    // struct past the number of structs
+    U8* bufferMem = reinterpret_cast<U8*>(&this->m_buffers[this->m_numStructs]);
+
+    // walk through entries and initialize them
+    U16 currStruct = 0;
+    for (U16 bin = 0; bin < BUFFERMGR_MAX_NUM_BINS; bin++) {
+        if (this->m_bufferBins.bins[bin].numBuffers) {
+            for (U16 binEntry = 0; binEntry < this->m_bufferBins.bins[bin].numBuffers; binEntry++) {
+                // placement new for Fw::Buffer instance. We don't need the new() return value,
+                // because we know where the Fw::Buffer instance is
+                U32 context = (static_cast<U32>(this->m_mgrId) << 16) | static_cast<U32>(currStruct);
+                (void)new (&this->m_buffers[currStruct].buff)
+                    Fw::Buffer(bufferMem, this->m_bufferBins.bins[bin].bufferSize, context);
+                this->m_buffers[currStruct].allocated = false;
+                this->m_buffers[currStruct].memory = bufferMem;
+                this->m_buffers[currStruct].size = this->m_bufferBins.bins[bin].bufferSize;
+                bufferMem += this->m_bufferBins.bins[bin].bufferSize;
+                currStruct++;
+            }
+        }
+    }
+
+    // check that the initiation pointer made it to the end of allocated space
+    U8* const CURR_PTR = bufferMem;
+    U8* const END_PTR = static_cast<U8*>(memory) + memorySize;
+    FW_ASSERT(CURR_PTR == END_PTR, static_cast<FwAssertArgType>(mgrId), static_cast<FwAssertArgType>(memId),
+              static_cast<FwAssertArgType>(reinterpret_cast<PlatformPointerCastType>(CURR_PTR)),
+              static_cast<FwAssertArgType>(reinterpret_cast<PlatformPointerCastType>(END_PTR)));
+    // secondary init verification
+    FW_ASSERT(currStruct == this->m_numStructs, static_cast<FwAssertArgType>(mgrId),
+              static_cast<FwAssertArgType>(memId), static_cast<FwAssertArgType>(currStruct),
+              static_cast<FwAssertArgType>(this->m_numStructs));
+    // indicate setup is done
+    this->m_setup = true;
+}
+
+void BufferManagerComponentImpl ::schedIn_handler(const FwIndexType portNum, U32 context) {
+    // write telemetry values
+    this->tlmWrite_HiBuffs(this->m_highWater);
+    this->tlmWrite_CurrBuffs(this->m_currBuffs);
+    this->tlmWrite_TotalBuffs(this->m_numStructs);
+    this->tlmWrite_NoBuffs(this->m_noBuffs);
+    this->tlmWrite_EmptyBuffs(this->m_emptyBuffs);
+}
+
+}  // end namespace Svc
+```
+
+### `BufferManagerComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/BufferManagerComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferManagerComponentImpl.hpp
+// \author tcanham
+// \brief  hpp file for BufferManager component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef BufferManager_HPP
+#define BufferManager_HPP
+
+#include <Fw/Types/MemAllocator.hpp>
+#include "Svc/BufferManager/BufferManagerComponentAc.hpp"
+#include "config/BufferManagerComponentImplCfg.hpp"
+
+namespace Svc {
+
+// To use the class, instantiate an instance of the BufferBins struct below. This
+// table specifies N buffers of M size per bin. Up to MAX_NUM_BINS bins can be specified.
+// The table is copied when setup() is called, so it does not need to be retained after
+// the call.
+//
+// The rules for specifying bins:
+// 1. For each bin (BufferBins.bins[n]), specify the size of the buffers (bufferSize) in the
+//    bin and how many buffers for that bin (numBuffers).
+// 2. The bins should be ordered based on an increasing bufferSize to allow BufferManager to
+//    search for available buffers. When receiving a request for a buffer, the component will
+//    search for the first buffer from the bins that is equal to or greater
+//    than the requested size, starting at the beginning of the table.
+// 3. Any unused bins should have numBuffers set to 0.
+// 4. A single bin can be specified if a single size is needed.
+//
+// If a buffer is requested that can't be found among available buffers, the call will
+//    return an Fw::Buffer with a size of zero. It is expected that the user will notice
+//    and have the appropriate response for the design. If an empty buffer is returned to
+//    the BufferManager instance, a warning event will be issued but no other action will
+//    be taken.
+//
+// Buffer manager will assert under the following conditions:
+// 1. A returned buffer has the incorrect manager ID.
+// 2. A returned buffer has an incorrect buffer ID.
+// 3. A returned buffer is returned with a correct buffer ID, but it isn't already allocated.
+// 4. A returned buffer has an indicated size larger than originally allocated.
+// 5. A returned buffer has a pointer different than the one originally allocated.
+//
+// Note that a pointer to the Fw::MemAllocator used in setup() is stored for later memory cleanup.
+// The instance of the allocator must persist beyond calling the cleanup() function or the
+// destructor of BufferManager if cleanup() is not called. If a project-specific manual memory
+// allocator is not needed, Fw::MallocAllocator can be used.
+
+class BufferManagerComponentImpl final : public BufferManagerComponentBase {
+    friend class BufferManagerTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object BufferManager
+    //!
+    BufferManagerComponentImpl(const char* const compName /*!< The component name*/
+    );
+
+    // Defines a buffer bin
+    struct BufferBin {
+        Fw::Buffer::SizeType bufferSize;  //!< size of the buffers in this bin. Set to zero for unused bins.
+        U16 numBuffers;                   //!< number of buffers in this bin. Set to zero for unused bins.
+    };
+
+    // Set of bins for the BufferManager
+    struct BufferBins {
+        BufferBin bins[BUFFERMGR_MAX_NUM_BINS];  //!< set of bins to define buffers
+    };
+
+    //! set up configuration
+
+    void setup(U16 mgrID,                    //!< ID of manager for buffer checking
+               FwEnumStoreType memID,        //!< Memory segment identifier
+               Fw::MemAllocator& allocator,  //!< memory allocator. MUST be persistent for later deallocation.
+                                             //!  MUST persist past destructor if cleanup() not called explicitly.
+               const BufferBins& bins        //!< Set of user bins
+    );
+
+    void cleanup();  // Free memory prior to end of program if desired. Otherwise,
+                     // will be deleted in destructor
+
+    //! Destroy object BufferManager
+    //!
+    ~BufferManagerComponentImpl();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for bufferSendIn
+    //!
+    void bufferSendIn_handler(const FwIndexType portNum, /*!< The port number*/
+                              Fw::Buffer& fwBuffer);
+
+    //! Handler implementation for bufferGetCallee
+    //!
+    Fw::Buffer bufferGetCallee_handler(const FwIndexType portNum, /*!< The port number*/
+                                       Fw::Buffer::SizeType size);
+
+    //! Handler implementation for schedIn
+    //!
+    void schedIn_handler(const FwIndexType portNum, /*!< The port number*/
+                         U32 context                /*!< The call order*/
+    );
+
+    bool m_setup;    //!< flag to indicate component has been setup
+    bool m_cleaned;  //!< flag to indicate memory has been cleaned up
+    U16 m_mgrId;     //!< stored manager ID for buffer checking
+
+    BufferBins m_bufferBins;  //!< copy of bins supplied by user
+
+    struct AllocatedBuffer {
+        Fw::Buffer buff;            //!< Buffer class to give to user
+        U8* memory;                 //!< pointer to memory buffer
+        Fw::Buffer::SizeType size;  //!< size of the buffer
+        bool allocated;             //!< this buffer has been allocated
+    };
+
+    AllocatedBuffer* m_buffers;     //!< pointer to allocated buffer space
+    Fw::MemAllocator* m_allocator;  //!< allocator for memory
+    FwEnumStoreType m_memId;        //!< identifier for allocator
+    U16 m_numStructs;               //!< number of allocated structs
+
+    // stats
+    U32 m_highWater;   //!< high watermark for allocations
+    U32 m_currBuffs;   //!< number of currently allocated buffers
+    U32 m_noBuffs;     //!< number of failures to allocate a buffer
+    U32 m_emptyBuffs;  //!< number of empty buffers returned
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BufferManager.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BufferManagerComponentImpl.cpp"
+)
+
+register_fprime_module()
+
+### UTS ###
+set(UT_MOD_DEPS
+    STest
+)
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/BufferManager/BufferManager.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferManagerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferManagerTestMain.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/Events.fppi`
+
+
+```text
+@ The BufferManager was unable to allocate a requested buffer
+event NoBuffsAvailable(
+                        $size: FwSizeType @< The requested size
+                      ) \
+  severity warning high \
+  id 0x00 \
+  format "No available buffers of size {}" \
+  throttle 10
+
+@ The buffer manager received a null pointer and zero-sized buffer as a return. Probably undetected failed buffer allocation
+event NullEmptyBuffer \
+  severity warning high \
+  id 0x01 \
+  format "Received null pointer and zero size buffer" \
+  throttle 10
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/Telemetry.fppi`
+
+
+```text
+@ The total buffers allocated
+telemetry TotalBuffs: U32 id 0x00 update on change
+
+@ The current number of allocated buffers
+telemetry CurrBuffs: U32 id 0x01 update on change
+
+@ The high water mark of allocated buffers
+telemetry HiBuffs: U32 id 0x02 update on change
+
+@ The number of requests that couldn't return a buffer
+telemetry NoBuffs: U32 id 0x03 update on change \
+  high {
+    red 1
+  }
+
+@ The number of empty buffers returned
+telemetry EmptyBuffs: U32 id 0x04 update on change \
+  high {
+    red 1
+  }
+```

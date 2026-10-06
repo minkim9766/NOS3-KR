@@ -3,18 +3,75 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-toggle.component.css`
 
-file--table-toggle.component.css
-file--table-toggle.component.html
-file--table-toggle.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/table-toggle.component.css`
+
+
+```css
+::ng-deep .ya-table-toggle.mat-mdc-slide-toggle .mdc-label {
+  font-size: 12px !important;
+}
 ```
 
-## 항목
+### `table-toggle.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/table-toggle.component.css`](file--table-toggle.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/table-toggle.component.html`](file--table-toggle.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/table-toggle.component.ts`](file--table-toggle.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/table-toggle.component.html`
+
+
+```html
+<mat-slide-toggle class="ya-table-toggle" [formControl]="formControl" [disableRipple]="true">
+  <ng-content />
+</mat-slide-toggle>
+```
+
+### `table-toggle.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/table-toggle/table-toggle.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  inject,
+} from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { PreferenceStore } from '../../services/preference-store.service';
+
+@Component({
+  selector: 'ya-table-toggle',
+  templateUrl: './table-toggle.component.html',
+  styleUrl: './table-toggle.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatSlideToggle, ReactiveFormsModule],
+})
+export class YaTableToggle implements OnInit {
+  @Input()
+  preferenceKey: string;
+
+  formControl = new FormControl<boolean>(false);
+
+  private preferenceStore = inject(PreferenceStore);
+
+  ngOnInit() {
+    if (this.preferenceKey) {
+      this.preferenceStore.addPreference$(this.preferenceKey, false);
+      const checked = this.preferenceStore.getValue(this.preferenceKey);
+      this.formControl.setValue(checked);
+      this.formControl.valueChanges.subscribe((checked) => {
+        this.preferenceStore.setValue(this.preferenceKey, checked);
+      });
+    }
+  }
+
+  get checked() {
+    return this.formControl.value ?? false;
+  }
+}
+```

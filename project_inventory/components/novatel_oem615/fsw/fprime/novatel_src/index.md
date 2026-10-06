@@ -3,22 +3,526 @@
 
 **경로:** `components/novatel_oem615/fsw/fprime/novatel_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--novatel_oem615.cpp
-file--novatel_oem615.fpp
-file--novatel_oem615.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/novatel_oem615/fsw/fprime/novatel_src/docs/`](docs/index) — 폴더
-- [`components/novatel_oem615/fsw/fprime/novatel_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/fprime/novatel_src/novatel_oem615.cpp`](file--novatel_oem615.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/fprime/novatel_src/novatel_oem615.fpp`](file--novatel_oem615.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/fprime/novatel_src/novatel_oem615.hpp`](file--novatel_oem615.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/novatel_oem615/fsw/fprime/novatel_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+
+# include_directories("../../shared")
+# include_directories("../../standalone") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/novatel_oem615.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/novatel_oem615.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/novatel_oem615_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/novatel_oem615_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+"../../shared"
+"../../standalone" 
+"../../../../../fsw/apps/hwlib/fsw/public_inc"
+"../platform_inc"
+"../../../../../fsw/apps/hwlib/sim/inc"
+)
+```
+
+### `novatel_oem615.cpp`
+
+**경로:** `components/novatel_oem615/fsw/fprime/novatel_src/novatel_oem615.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  novatel_oem615.cpp
+// \author jstar
+// \brief  cpp file for novatel_oem615 component implementation class
+// ======================================================================
+
+#include "novatel_src/novatel_oem615.hpp"
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Log/LogString.hpp>
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  novatel_oem615 ::
+    novatel_oem615(const char* const compName) :
+      novatel_oem615ComponentBase(compName)
+  {
+    /* Initialize HWLIB */
+    //#ifdef _NOS_ENGINE_LINK_
+    nos_init_link();
+    //#endif
+
+    /* Open device specific protocols */
+    Novatel_oem615Uart.deviceString = NOVATEL_OEM615_CFG_STRING;
+    Novatel_oem615Uart.handle = NOVATEL_OEM615_CFG_HANDLE;
+    Novatel_oem615Uart.isOpen = PORT_CLOSED;
+    Novatel_oem615Uart.baud = NOVATEL_OEM615_CFG_BAUDRATE_HZ;
+    Novatel_oem615Uart.access_option = uart_access_flag_RDWR;
+
+    // Novatel_oem615HK.DeviceCounter = 0;
+    // Novatel_oem615HK.DeviceConfig = 0;
+    // Novatel_oem615HK.DeviceStatus = 0;
+
+    int status = uart_init_port(&Novatel_oem615Uart);
+    if (status == OS_SUCCESS)
+    {
+      OS_printf("UART device %s configured with baudrate %d \n", Novatel_oem615Uart.deviceString, Novatel_oem615Uart.baud);
+    }
+    else
+    {
+      OS_printf("UART device %s failed to initialize! \n", Novatel_oem615Uart.deviceString);
+    }
+  }
+
+  novatel_oem615 ::
+    ~novatel_oem615()
+  {
+    // Close the device 
+    uart_close_port(&Novatel_oem615Uart);
+
+    nos_destroy_link();
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+  
+  void novatel_oem615 :: updateData_handler(const FwIndexType portNum, U32 context)
+  {
+    int32_t status = OS_SUCCESS;
+
+    status = NOVATEL_OEM615_ChildProcessReadData(&Novatel_oem615Uart, &Novatel_oem615Data);
+    if (status == OS_SUCCESS)
+    {
+      this->GPSout_out(0, 
+                      Novatel_oem615Data.Weeks, 
+                      Novatel_oem615Data.SecondsIntoWeek, 
+                      Novatel_oem615Data.Fractions,
+                      Novatel_oem615Data.ECEFX, 
+                      Novatel_oem615Data.ECEFY, 
+                      Novatel_oem615Data.ECEFZ, 
+                      Novatel_oem615Data.VelX, 
+                      Novatel_oem615Data.VelY, 
+                      Novatel_oem615Data.VelZ, 
+                      Novatel_oem615Data.lat, 
+                      Novatel_oem615Data.lon, 
+                      Novatel_oem615Data.alt);
+    }
+  }
+
+  void novatel_oem615 :: updateTlm_handler(const FwIndexType portNum, U32 context)
+  {
+    this->tlmWrite_Weeks(Novatel_oem615Data.Weeks);
+    this->tlmWrite_SecondsIntoWeek(Novatel_oem615Data.SecondsIntoWeek);
+    this->tlmWrite_Fractions(Novatel_oem615Data.Fractions);
+    this->tlmWrite_ECEFX(Novatel_oem615Data.ECEFX);
+    this->tlmWrite_ECEFY(Novatel_oem615Data.ECEFY);
+    this->tlmWrite_ECEFZ(Novatel_oem615Data.ECEFZ);
+    this->tlmWrite_VelX(Novatel_oem615Data.VelX);
+    this->tlmWrite_VelY(Novatel_oem615Data.VelY);
+    this->tlmWrite_VelZ(Novatel_oem615Data.VelZ);
+    this->tlmWrite_lat(Novatel_oem615Data.lat);
+    this->tlmWrite_lon(Novatel_oem615Data.lon);
+    this->tlmWrite_alt(Novatel_oem615Data.alt);
+  }
+
+  void novatel_oem615 :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    
+    int32_t status = OS_SUCCESS;
+    status = NOVATEL_OEM615_ChildProcessReadData(&Novatel_oem615Uart, &Novatel_oem615Data);
+    if (status == OS_SUCCESS)
+      {
+        Fw::LogStringArg log_msg("RequestData command success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        this->tlmWrite_Weeks(Novatel_oem615Data.Weeks);
+        this->tlmWrite_SecondsIntoWeek(Novatel_oem615Data.SecondsIntoWeek);
+        this->tlmWrite_Fractions(Novatel_oem615Data.Fractions);
+        this->tlmWrite_ECEFX(Novatel_oem615Data.ECEFX);
+        this->tlmWrite_ECEFY(Novatel_oem615Data.ECEFY);
+        this->tlmWrite_ECEFZ(Novatel_oem615Data.ECEFZ);
+        this->tlmWrite_VelX(Novatel_oem615Data.VelX);
+        this->tlmWrite_VelY(Novatel_oem615Data.VelY);
+        this->tlmWrite_VelZ(Novatel_oem615Data.VelZ);
+        this->tlmWrite_lat(Novatel_oem615Data.lat);
+        this->tlmWrite_lon(Novatel_oem615Data.lon);
+        this->tlmWrite_alt(Novatel_oem615Data.alt);
+      }
+    else
+      {
+        Fw::LogStringArg log_msg("RequestData command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void novatel_oem615 :: SERIAL_CONFIG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const I8 log_type) {
+    
+    int status = OS_SUCCESS;
+    status = NOVATEL_OEM615_CommandDevice(&Novatel_oem615Uart, 7, log_type, 0);
+    if (status == OS_SUCCESS)
+      {
+        Fw::LogStringArg log_msg("Configuration command success");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        Fw::LogStringArg log_msg("Configuration command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+ 
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+
+  void novatel_oem615 :: LOG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const I8 log_type2, const I8 period) { 
+
+    int status = OS_SUCCESS;
+    status = NOVATEL_OEM615_CommandDevice(&Novatel_oem615Uart, 4, log_type2, period);
+
+    if (status == OS_SUCCESS)
+      {
+        Fw::LogStringArg log_msg("Configuration command success");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        Fw::LogStringArg log_msg("Configuration command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+ 
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void novatel_oem615 :: UNLOG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const I8 log_type3) {
+    
+    int status = OS_SUCCESS;
+    status = NOVATEL_OEM615_CommandDevice(&Novatel_oem615Uart, 5, log_type3, 0);
+
+    if (status == OS_SUCCESS)
+      {
+        Fw::LogStringArg log_msg("Configuration command success");
+        this->log_ACTIVITY_HI_TELEM(log_msg); 
+      }
+      else
+      {
+        Fw::LogStringArg log_msg("Configuration command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+ 
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+    void novatel_oem615 ::
+    UNLOG_ALL_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+    )
+  {
+    int32_t status = OS_SUCCESS;
+
+    status =  NOVATEL_OEM615_CommandDevice(&Novatel_oem615Uart, 6, 0, 0);
+
+    if (status == OS_SUCCESS)        
+      {
+        Fw::LogStringArg log_msg("UNLOG_ALL command success!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    else
+      {
+        Fw::LogStringArg log_msg("UNLOG_ALL command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+ }
+}
+```
+
+### `novatel_oem615.fpp`
+
+**경로:** `components/novatel_oem615/fsw/fprime/novatel_src/novatel_oem615.fpp`
+
+
+```fpp
+module Components {
+    @ GPS
+    active component novatel_oem615 {
+
+        @ GPS output port
+        output port GPSout: GPSDataPort
+
+        @ Periodic Data PGS
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm GPS
+        async input port updateTlm: Svc.Sched
+
+        @ Request Data Cmd
+        async command REQUEST_DATA(
+        )
+
+        @ Greeting event with maximum greeting length of 40 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "novatel_oem615: {}"
+
+
+        @ Serial Config Cmd
+        async command SERIAL_CONFIG(
+            log_type: I8 @< Log Type
+        )
+
+        @ Log Cmd
+        async command LOG(
+            log_type2: I8 @< Log Type
+            period: I8 @< Period between logs
+        )
+
+        @ Unlog Cmd
+        async command UNLOG(
+            log_type3: I8 @< Greeting to repeat in the Hello event
+        )
+
+        @ UNLOG_ALL Cmd
+        async command UNLOG_ALL(
+        )
+
+        @ Weeks
+        telemetry Weeks: U16
+
+        @ SecondsIntoWeek
+        telemetry SecondsIntoWeek: U32
+
+        @ Fractions
+        telemetry Fractions: F64
+
+        @ ECEFX
+        telemetry ECEFX: F64
+
+        @ ECEFY
+        telemetry ECEFY: F64
+
+        @ ECEFZ
+        telemetry ECEFZ: F64
+
+        @ VelX
+        telemetry VelX: F64
+
+        @ VelY
+        telemetry VelY: F64
+
+        @ VelZ
+        telemetry VelZ: F64
+
+        @ lat
+        telemetry lat: F32
+        
+        @ lon
+        telemetry lon: F32
+
+        @ alt
+        telemetry alt: F32
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `novatel_oem615.hpp`
+
+**경로:** `components/novatel_oem615/fsw/fprime/novatel_src/novatel_oem615.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  novatel_oem615.hpp
+// \author jstar
+// \brief  hpp file for novatel_oem615 component implementation class
+// ======================================================================
+
+#ifndef Components_novatel_oem615_HPP
+#define Components_novatel_oem615_HPP
+
+#include "novatel_src/novatel_oem615ComponentAc.hpp"
+
+extern "C"{
+  #include "novatel_oem615_device.h"
+  #include "libuart.h"
+}
+#include "nos_link.h"
+
+namespace Components {
+
+  class novatel_oem615 :
+    public novatel_oem615ComponentBase
+  {
+
+    public:
+
+    uart_info_t Novatel_oem615Uart;                         /* Hardware protocol definition */
+    NOVATEL_OEM615_Device_Data_tlm_t Novatel_oem615Data; 
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct novatel_oem615 object
+      novatel_oem615(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy novatel_oem615 object
+      ~novatel_oem615();
+
+    private:
+
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      void REQUEST_DATA_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void SERIAL_CONFIG_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        const I8 log_type
+      ) override;
+
+      void LOG_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        const I8 log_type2,
+        const I8 period
+      ) override;
+
+      void UNLOG_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        const I8 log_type3
+      ) override;
+
+      void UNLOG_ALL_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void updateData_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+      
+
+  };
+
+}
+
+#endif
+```

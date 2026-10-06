@@ -3,54 +3,4620 @@
 
 **경로:** `fsw/apps/cf/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cf_app_global.c`
 
-file--cf_app_global.c
-file--cf_app_stubs.c
-file--cf_cfdp_dispatch_stubs.c
-file--cf_cfdp_handlers.c
-file--cf_cfdp_r_stubs.c
-file--cf_cfdp_s_stubs.c
-file--cf_cfdp_sbintf_handlers.c
-file--cf_cfdp_sbintf_stubs.c
-file--cf_cfdp_stubs.c
-file--cf_chunk_handlers.c
-file--cf_chunk_stubs.c
-file--cf_clist_handlers.c
-file--cf_clist_stubs.c
-file--cf_cmd_handlers.c
-file--cf_cmd_stubs.c
-file--cf_codec_handlers.c
-file--cf_codec_stubs.c
-file--cf_crc_stubs.c
-file--cf_timer_stubs.c
-file--cf_utils_handlers.c
-file--cf_utils_stubs.c
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_app_global.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief The CF Application main application stubs file for unit tests
+ *
+ *  This file contains the stubs for the functions that initialize the
+ *  application and link all logic and functionality to the CFS.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+
+#include <string.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "uttools.h"
+
+CF_AppData_t CF_AppData;
 ```
 
-## 항목
+### `cf_app_stubs.c`
 
-- [`fsw/apps/cf/unit-test/stubs/cf_app_global.c`](file--cf_app_global.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_app_stubs.c`](file--cf_app_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_dispatch_stubs.c`](file--cf_cfdp_dispatch_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_handlers.c`](file--cf_cfdp_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_r_stubs.c`](file--cf_cfdp_r_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_s_stubs.c`](file--cf_cfdp_s_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_sbintf_handlers.c`](file--cf_cfdp_sbintf_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_sbintf_stubs.c`](file--cf_cfdp_sbintf_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cfdp_stubs.c`](file--cf_cfdp_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_chunk_handlers.c`](file--cf_chunk_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_chunk_stubs.c`](file--cf_chunk_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_clist_handlers.c`](file--cf_clist_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_clist_stubs.c`](file--cf_clist_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cmd_handlers.c`](file--cf_cmd_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_cmd_stubs.c`](file--cf_cmd_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_codec_handlers.c`](file--cf_codec_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_codec_stubs.c`](file--cf_codec_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_crc_stubs.c`](file--cf_crc_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_timer_stubs.c`](file--cf_timer_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_utils_handlers.c`](file--cf_utils_handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/stubs/cf_utils_stubs.c`](file--cf_utils_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_app_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_app header
+ */
+
+#include "cf_app.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_AppMain()
+ * ----------------------------------------------------
+ */
+void CF_AppMain(void)
+{
+    UT_GenStub_Execute(CF_AppMain, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CheckTables()
+ * ----------------------------------------------------
+ */
+void CF_CheckTables(void)
+{
+    UT_GenStub_Execute(CF_CheckTables, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_HkCmd()
+ * ----------------------------------------------------
+ */
+void CF_HkCmd(void)
+{
+    UT_GenStub_Execute(CF_HkCmd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Init()
+ * ----------------------------------------------------
+ */
+int32 CF_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Init, int32);
+
+    UT_GenStub_Execute(CF_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Init, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ProcessMsg()
+ * ----------------------------------------------------
+ */
+void CF_ProcessMsg(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_ProcessMsg, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_ProcessMsg, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TableInit()
+ * ----------------------------------------------------
+ */
+int32 CF_TableInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TableInit, int32);
+
+    UT_GenStub_Execute(CF_TableInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_TableInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ValidateConfigTable()
+ * ----------------------------------------------------
+ */
+int32 CF_ValidateConfigTable(void *tbl_ptr)
+{
+    UT_GenStub_SetupReturnBuffer(CF_ValidateConfigTable, int32);
+
+    UT_GenStub_AddParam(CF_ValidateConfigTable, void *, tbl_ptr);
+
+    UT_GenStub_Execute(CF_ValidateConfigTable, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_ValidateConfigTable, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WakeUp()
+ * ----------------------------------------------------
+ */
+void CF_WakeUp(void)
+{
+    UT_GenStub_Execute(CF_WakeUp, Basic, NULL);
+}
+```
+
+### `cf_cfdp_dispatch_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_dispatch_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_cfdp_dispatch header
+ */
+
+#include "cf_cfdp_dispatch.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_DispatchRecv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                            const CF_CFDP_R_SubstateDispatchTable_t *dispatch, CF_CFDP_StateRecvFunc_t fd_fn)
+{
+    UT_GenStub_AddParam(CF_CFDP_R_DispatchRecv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R_DispatchRecv, CF_Logical_PduBuffer_t *, ph);
+    UT_GenStub_AddParam(CF_CFDP_R_DispatchRecv, const CF_CFDP_R_SubstateDispatchTable_t *, dispatch);
+    UT_GenStub_AddParam(CF_CFDP_R_DispatchRecv, CF_CFDP_StateRecvFunc_t, fd_fn);
+
+    UT_GenStub_Execute(CF_CFDP_R_DispatchRecv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RxStateDispatch()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_RxStateDispatch(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                             const CF_CFDP_TxnRecvDispatchTable_t *dispatch)
+{
+    UT_GenStub_AddParam(CF_CFDP_RxStateDispatch, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RxStateDispatch, CF_Logical_PduBuffer_t *, ph);
+    UT_GenStub_AddParam(CF_CFDP_RxStateDispatch, const CF_CFDP_TxnRecvDispatchTable_t *, dispatch);
+
+    UT_GenStub_Execute(CF_CFDP_RxStateDispatch, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_DispatchRecv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                            const CF_CFDP_S_SubstateRecvDispatchTable_t *dispatch)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_DispatchRecv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S_DispatchRecv, CF_Logical_PduBuffer_t *, ph);
+    UT_GenStub_AddParam(CF_CFDP_S_DispatchRecv, const CF_CFDP_S_SubstateRecvDispatchTable_t *, dispatch);
+
+    UT_GenStub_Execute(CF_CFDP_S_DispatchRecv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_DispatchTransmit()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_DispatchTransmit(CF_Transaction_t *t, const CF_CFDP_S_SubstateSendDispatchTable_t *dispatch)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_DispatchTransmit, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S_DispatchTransmit, const CF_CFDP_S_SubstateSendDispatchTable_t *, dispatch);
+
+    UT_GenStub_Execute(CF_CFDP_S_DispatchTransmit, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_TxStateDispatch()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_TxStateDispatch(CF_Transaction_t *t, const CF_CFDP_TxnSendDispatchTable_t *dispatch)
+{
+    UT_GenStub_AddParam(CF_CFDP_TxStateDispatch, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_TxStateDispatch, const CF_CFDP_TxnSendDispatchTable_t *, dispatch);
+
+    UT_GenStub_Execute(CF_CFDP_TxStateDispatch, Basic, NULL);
+}
+```
+
+### `cf_cfdp_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief Stubs file for the CF Application main cfdp engine and pdu parsing file
+ *
+ *  This file contains two sets of functions. The first is what is needed
+ *  to deal with CFDP PDUs. Specifically validating them for correctness
+ *  and ensuring the byte-order is correct for the target. The second
+ *  is incoming and outgoing CFDP PDUs pass through here. All receive
+ *  CFDP PDU logic is performed here and the data is passed to the
+ *  R (rx) and S (tx) logic.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+
+#include <string.h>
+#include "cf_assert.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "utgenstub.h"
+
+#include "cf_test_utils.h"
+
+/*----------------------------------------------------------------
+ *
+ * Default always returns NULL, an alt handler can be registered for other pointer returns
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_ConstructPduHeader(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_Logical_PduBuffer_t *retval;
+
+    retval = NULL;
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_TxFile(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CFDP_TxFile_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CFDP_TxFile_context_t);
+    const char *              ptr;
+
+    if (ctxt)
+    {
+        ptr = UT_Hook_GetArgValueByName(Context, "src_filename", const char *);
+        strncpy(ctxt->src_filename, ptr, sizeof(ctxt->src_filename));
+        ptr = UT_Hook_GetArgValueByName(Context, "dst_filename", const char *);
+        strncpy(ctxt->dst_filename, ptr, sizeof(ctxt->dst_filename));
+        ctxt->cfdp_class = UT_Hook_GetArgValueByName(Context, "cfdp_class", CF_CFDP_Class_t);
+        ctxt->keep       = UT_Hook_GetArgValueByName(Context, "keep", uint8);
+        ctxt->chan       = UT_Hook_GetArgValueByName(Context, "chan", uint8);
+        ctxt->priority   = UT_Hook_GetArgValueByName(Context, "priority", uint8);
+        ctxt->dest_id    = UT_Hook_GetArgValueByName(Context, "dest_id", CF_EntityId_t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_PlaybackDir(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CFDP_PlaybackDir_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CFDP_PlaybackDir_context_t);
+    const char *                   ptr;
+
+    if (ctxt)
+    {
+        ptr = UT_Hook_GetArgValueByName(Context, "src_filename", const char *);
+        strncpy(ctxt->src_filename, ptr, sizeof(ctxt->src_filename));
+        ptr = UT_Hook_GetArgValueByName(Context, "dst_filename", const char *);
+        strncpy(ctxt->dst_filename, ptr, sizeof(ctxt->dst_filename));
+        ctxt->cfdp_class = UT_Hook_GetArgValueByName(Context, "cfdp_class", CF_CFDP_Class_t);
+        ctxt->keep       = UT_Hook_GetArgValueByName(Context, "keep", uint8);
+        ctxt->chan       = UT_Hook_GetArgValueByName(Context, "chan", uint8);
+        ctxt->priority   = UT_Hook_GetArgValueByName(Context, "priority", uint8);
+        ctxt->dest_id    = UT_Hook_GetArgValueByName(Context, "dest_id", uint16);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_ResetTransaction(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CFDP_ResetTransaction_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CFDP_ResetTransaction_context_t);
+
+    if (ctxt)
+    {
+        ctxt->t            = UT_Hook_GetArgValueByName(Context, "t", CF_Transaction_t *);
+        ctxt->keep_history = UT_Hook_GetArgValueByName(Context, "keep_history", int);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_CancelTransaction(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_Transaction_t **ctxt = UT_CF_GetContextBuffer(FuncKey, CF_Transaction_t *);
+
+    if (ctxt)
+    {
+        *ctxt = UT_Hook_GetArgValueByName(Context, "t", CF_Transaction_t *);
+    }
+}
+```
+
+### `cf_cfdp_r_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_r_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_cfdp_r header
+ */
+
+#include "cf_cfdp_r.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R1_Recv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R1_Recv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R1_Recv, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R1_Recv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R1_Reset()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R1_Reset(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_R1_Reset, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R1_Reset, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R1_SubstateRecvEof()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R1_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R1_SubstateRecvEof, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R1_SubstateRecvEof, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R1_SubstateRecvEof, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R1_SubstateRecvFileData()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R1_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R1_SubstateRecvFileData, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R1_SubstateRecvFileData, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R1_SubstateRecvFileData, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_CalcCrcChunk()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_R2_CalcCrcChunk(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_R2_CalcCrcChunk, int);
+
+    UT_GenStub_AddParam(CF_CFDP_R2_CalcCrcChunk, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R2_CalcCrcChunk, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_R2_CalcCrcChunk, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_Complete()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_Complete(CF_Transaction_t *t, int ok_to_send_nak)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_Complete, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_Complete, int, ok_to_send_nak);
+
+    UT_GenStub_Execute(CF_CFDP_R2_Complete, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_GapCompute()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_GapCompute(const CF_ChunkList_t *chunks, const CF_Chunk_t *c, void *opaque)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_GapCompute, const CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_CFDP_R2_GapCompute, const CF_Chunk_t *, c);
+    UT_GenStub_AddParam(CF_CFDP_R2_GapCompute, void *, opaque);
+
+    UT_GenStub_Execute(CF_CFDP_R2_GapCompute, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_Recv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_Recv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_Recv, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R2_Recv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_RecvMd()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_RecvMd, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_RecvMd, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R2_RecvMd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_Recv_fin_ack()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_Recv_fin_ack(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_Recv_fin_ack, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_Recv_fin_ack, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R2_Recv_fin_ack, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_Reset()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_Reset(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_Reset, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R2_Reset, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_SetFinTxnStatus()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_SetFinTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_SetFinTxnStatus, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_SetFinTxnStatus, CF_TxnStatus_t, txn_stat);
+
+    UT_GenStub_Execute(CF_CFDP_R2_SetFinTxnStatus, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_SubstateRecvEof()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_SubstateRecvEof, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_SubstateRecvEof, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R2_SubstateRecvEof, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_SubstateRecvFileData()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R2_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_R2_SubstateRecvFileData, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R2_SubstateRecvFileData, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R2_SubstateRecvFileData, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R2_SubstateSendFin()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_R2_SubstateSendFin(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_R2_SubstateSendFin, int);
+
+    UT_GenStub_AddParam(CF_CFDP_R2_SubstateSendFin, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R2_SubstateSendFin, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_R2_SubstateSendFin, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_Cancel()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R_Cancel(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_R_Cancel, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R_Cancel, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_CheckCrc()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_R_CheckCrc(CF_Transaction_t *t, uint32 expected_crc)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_R_CheckCrc, int);
+
+    UT_GenStub_AddParam(CF_CFDP_R_CheckCrc, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R_CheckCrc, uint32, expected_crc);
+
+    UT_GenStub_Execute(CF_CFDP_R_CheckCrc, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_R_CheckCrc, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_Init()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R_Init(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_R_Init, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R_Init, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_ProcessFd()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_R_ProcessFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_R_ProcessFd, int);
+
+    UT_GenStub_AddParam(CF_CFDP_R_ProcessFd, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R_ProcessFd, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R_ProcessFd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_R_ProcessFd, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_SendInactivityEvent()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R_SendInactivityEvent(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_R_SendInactivityEvent, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R_SendInactivityEvent, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_SubstateRecvEof()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_R_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_R_SubstateRecvEof, int);
+
+    UT_GenStub_AddParam(CF_CFDP_R_SubstateRecvEof, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R_SubstateRecvEof, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_R_SubstateRecvEof, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_R_SubstateRecvEof, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_SubstateSendNak()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_R_SubstateSendNak(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_R_SubstateSendNak, int);
+
+    UT_GenStub_AddParam(CF_CFDP_R_SubstateSendNak, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_R_SubstateSendNak, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_R_SubstateSendNak, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_R_Tick()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_R_Tick(CF_Transaction_t *t, int *cont)
+{
+    UT_GenStub_AddParam(CF_CFDP_R_Tick, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_R_Tick, int *, cont);
+
+    UT_GenStub_Execute(CF_CFDP_R_Tick, Basic, NULL);
+}
+```
+
+### `cf_cfdp_s_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_s_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_cfdp_s header
+ */
+
+#include "cf_cfdp_s.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S1_Recv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S1_Recv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S1_Recv, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S1_Recv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S1_SubstateSendEof()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S1_SubstateSendEof(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S1_SubstateSendEof, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S1_SubstateSendEof, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S1_Tx()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S1_Tx(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S1_Tx, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S1_Tx, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_EarlyFin()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_EarlyFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_EarlyFin, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S2_EarlyFin, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S2_EarlyFin, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_Fin()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_Fin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_Fin, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S2_Fin, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S2_Fin, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_Nak()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_Nak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_Nak, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S2_Nak, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S2_Nak, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_Nak_Arm()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_Nak_Arm(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_Nak_Arm, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S2_Nak_Arm, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S2_Nak_Arm, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_Recv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_Recv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S2_Recv, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S2_Recv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_SubstateSendEof()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_SubstateSendEof(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_SubstateSendEof, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S2_SubstateSendEof, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_SubstateSendFileData()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_SubstateSendFileData(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_SubstateSendFileData, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S2_SubstateSendFileData, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_Tx()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_Tx(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_Tx, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S2_Tx, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S2_WaitForEofAck()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S2_WaitForEofAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_S2_WaitForEofAck, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S2_WaitForEofAck, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_S2_WaitForEofAck, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_Cancel()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_Cancel(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_Cancel, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S_Cancel, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_CheckAndRespondNak()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_S_CheckAndRespondNak(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_S_CheckAndRespondNak, int);
+
+    UT_GenStub_AddParam(CF_CFDP_S_CheckAndRespondNak, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S_CheckAndRespondNak, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_S_CheckAndRespondNak, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_SendEof()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_S_SendEof(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_S_SendEof, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_S_SendEof, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S_SendEof, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_S_SendEof, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_SendFileData()
+ * ----------------------------------------------------
+ */
+int32 CF_CFDP_S_SendFileData(CF_Transaction_t *t, uint32 foffs, uint32 bytes_to_read, uint8 calc_crc)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_S_SendFileData, int32);
+
+    UT_GenStub_AddParam(CF_CFDP_S_SendFileData, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S_SendFileData, uint32, foffs);
+    UT_GenStub_AddParam(CF_CFDP_S_SendFileData, uint32, bytes_to_read);
+    UT_GenStub_AddParam(CF_CFDP_S_SendFileData, uint8, calc_crc);
+
+    UT_GenStub_Execute(CF_CFDP_S_SendFileData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_S_SendFileData, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_SubstateSendFileData()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_SubstateSendFileData(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_SubstateSendFileData, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S_SubstateSendFileData, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_SubstateSendFinAck()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_SubstateSendFinAck(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_SubstateSendFinAck, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S_SubstateSendFinAck, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_SubstateSendMetadata()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_SubstateSendMetadata(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_SubstateSendMetadata, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_S_SubstateSendMetadata, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_Tick()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_Tick(CF_Transaction_t *t, int *cont)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_Tick, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S_Tick, int *, cont);
+
+    UT_GenStub_Execute(CF_CFDP_S_Tick, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_S_Tick_Nak()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_S_Tick_Nak(CF_Transaction_t *t, int *cont)
+{
+    UT_GenStub_AddParam(CF_CFDP_S_Tick_Nak, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_S_Tick_Nak, int *, cont);
+
+    UT_GenStub_Execute(CF_CFDP_S_Tick_Nak, Basic, NULL);
+}
+```
+
+### `cf_cfdp_sbintf_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_sbintf_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief Stubs file for the CF Application main cfdp engine and pdu parsing file
+ *
+ *  This file contains two sets of functions. The first is what is needed
+ *  to deal with CFDP PDUs. Specifically validating them for correctness
+ *  and ensuring the byte-order is correct for the target. The second
+ *  is incoming and outgoing CFDP PDUs pass through here. All receive
+ *  CFDP PDU logic is performed here and the data is passed to the
+ *  R (rx) and S (tx) logic.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp_sbintf.h"
+#include "cf_utils.h"
+
+#include <string.h>
+#include "cf_assert.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "utgenstub.h"
+
+#include "cf_test_utils.h"
+
+/*----------------------------------------------------------------
+ *
+ * Default always returns NULL, an alt handler can be registered for other pointer returns
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_MsgOutGet(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_Logical_PduBuffer_t *retval;
+
+    retval = NULL;
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+```
+
+### `cf_cfdp_sbintf_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_sbintf_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_cfdp_sbintf header
+ */
+
+#include "cf_cfdp_sbintf.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_CFDP_MsgOutGet(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_MsgOutGet()
+ * ----------------------------------------------------
+ */
+CF_Logical_PduBuffer_t *CF_CFDP_MsgOutGet(const CF_Transaction_t *t, bool silent)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_MsgOutGet, CF_Logical_PduBuffer_t *);
+
+    UT_GenStub_AddParam(CF_CFDP_MsgOutGet, const CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_MsgOutGet, bool, silent);
+
+    UT_GenStub_Execute(CF_CFDP_MsgOutGet, Basic, UT_DefaultHandler_CF_CFDP_MsgOutGet);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_MsgOutGet, CF_Logical_PduBuffer_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_ReceiveMessage()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_ReceiveMessage(CF_Channel_t *c)
+{
+    UT_GenStub_AddParam(CF_CFDP_ReceiveMessage, CF_Channel_t *, c);
+
+    UT_GenStub_Execute(CF_CFDP_ReceiveMessage, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_Send()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_Send(uint8 chan_num, const CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_Send, uint8, chan_num);
+    UT_GenStub_AddParam(CF_CFDP_Send, const CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_Send, Basic, NULL);
+}
+```
+
+### `cf_cfdp_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cfdp_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_cfdp header
+ */
+
+#include "cf_cfdp.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_CFDP_CancelTransaction(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_ConstructPduHeader(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_PlaybackDir(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_ResetTransaction(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_TxFile(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_AppendTlv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_AppendTlv(CF_Logical_TlvList_t *ptlv_list, CF_CFDP_TlvType_t tlv_type)
+{
+    UT_GenStub_AddParam(CF_CFDP_AppendTlv, CF_Logical_TlvList_t *, ptlv_list);
+    UT_GenStub_AddParam(CF_CFDP_AppendTlv, CF_CFDP_TlvType_t, tlv_type);
+
+    UT_GenStub_Execute(CF_CFDP_AppendTlv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_ArmAckTimer()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_ArmAckTimer(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_ArmAckTimer, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_ArmAckTimer, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CancelTransaction()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_CancelTransaction(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_CancelTransaction, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_CancelTransaction, Basic, UT_DefaultHandler_CF_CFDP_CancelTransaction);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CloseFiles()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_CloseFiles(CF_CListNode_t *n, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_CloseFiles, int);
+
+    UT_GenStub_AddParam(CF_CFDP_CloseFiles, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_CFDP_CloseFiles, void *, context);
+
+    UT_GenStub_Execute(CF_CFDP_CloseFiles, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_CloseFiles, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_ConstructPduHeader()
+ * ----------------------------------------------------
+ */
+CF_Logical_PduBuffer_t *CF_CFDP_ConstructPduHeader(const CF_Transaction_t *t, CF_CFDP_FileDirective_t directive_code,
+                                                   CF_EntityId_t src_eid, CF_EntityId_t dst_eid, bool towards_sender,
+                                                   CF_TransactionSeq_t tsn, bool silent)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_ConstructPduHeader, CF_Logical_PduBuffer_t *);
+
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, const CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, CF_CFDP_FileDirective_t, directive_code);
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, CF_EntityId_t, src_eid);
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, CF_EntityId_t, dst_eid);
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, bool, towards_sender);
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, CF_TransactionSeq_t, tsn);
+    UT_GenStub_AddParam(CF_CFDP_ConstructPduHeader, bool, silent);
+
+    UT_GenStub_Execute(CF_CFDP_ConstructPduHeader, Basic, UT_DefaultHandler_CF_CFDP_ConstructPduHeader);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_ConstructPduHeader, CF_Logical_PduBuffer_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CopyStringFromLV()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_CopyStringFromLV(char *buf, size_t buf_maxsz, const CF_Logical_Lv_t *src_lv)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_CopyStringFromLV, int);
+
+    UT_GenStub_AddParam(CF_CFDP_CopyStringFromLV, char *, buf);
+    UT_GenStub_AddParam(CF_CFDP_CopyStringFromLV, size_t, buf_maxsz);
+    UT_GenStub_AddParam(CF_CFDP_CopyStringFromLV, const CF_Logical_Lv_t *, src_lv);
+
+    UT_GenStub_Execute(CF_CFDP_CopyStringFromLV, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_CopyStringFromLV, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CycleEngine()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_CycleEngine(void)
+{
+    UT_GenStub_Execute(CF_CFDP_CycleEngine, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CycleTx()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_CycleTx(CF_Channel_t *c)
+{
+    UT_GenStub_AddParam(CF_CFDP_CycleTx, CF_Channel_t *, c);
+
+    UT_GenStub_Execute(CF_CFDP_CycleTx, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CycleTxFirstActive()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_CycleTxFirstActive(CF_CListNode_t *node, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_CycleTxFirstActive, int);
+
+    UT_GenStub_AddParam(CF_CFDP_CycleTxFirstActive, CF_CListNode_t *, node);
+    UT_GenStub_AddParam(CF_CFDP_CycleTxFirstActive, void *, context);
+
+    UT_GenStub_Execute(CF_CFDP_CycleTxFirstActive, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_CycleTxFirstActive, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeStart()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeStart(CF_DecoderState_t *pdec, const void *msgbuf, CF_Logical_PduBuffer_t *ph, size_t encap_hdr_size,
+                         size_t total_size)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeStart, CF_DecoderState_t *, pdec);
+    UT_GenStub_AddParam(CF_CFDP_DecodeStart, const void *, msgbuf);
+    UT_GenStub_AddParam(CF_CFDP_DecodeStart, CF_Logical_PduBuffer_t *, ph);
+    UT_GenStub_AddParam(CF_CFDP_DecodeStart, size_t, encap_hdr_size);
+    UT_GenStub_AddParam(CF_CFDP_DecodeStart, size_t, total_size);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeStart, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DisableEngine()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DisableEngine(void)
+{
+    UT_GenStub_Execute(CF_CFDP_DisableEngine, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DispatchRecv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_DispatchRecv, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_DispatchRecv, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_DispatchRecv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DoTick()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_DoTick(CF_CListNode_t *node, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_DoTick, int);
+
+    UT_GenStub_AddParam(CF_CFDP_DoTick, CF_CListNode_t *, node);
+    UT_GenStub_AddParam(CF_CFDP_DoTick, void *, context);
+
+    UT_GenStub_Execute(CF_CFDP_DoTick, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_DoTick, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeStart()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeStart(CF_EncoderState_t *penc, void *msgbuf, CF_Logical_PduBuffer_t *ph, size_t encap_hdr_size,
+                         size_t total_size)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeStart, CF_EncoderState_t *, penc);
+    UT_GenStub_AddParam(CF_CFDP_EncodeStart, void *, msgbuf);
+    UT_GenStub_AddParam(CF_CFDP_EncodeStart, CF_Logical_PduBuffer_t *, ph);
+    UT_GenStub_AddParam(CF_CFDP_EncodeStart, size_t, encap_hdr_size);
+    UT_GenStub_AddParam(CF_CFDP_EncodeStart, size_t, total_size);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeStart, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_InitEngine()
+ * ----------------------------------------------------
+ */
+int32 CF_CFDP_InitEngine(void)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_InitEngine, int32);
+
+    UT_GenStub_Execute(CF_CFDP_InitEngine, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_InitEngine, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_InitTxnTxFile()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_InitTxnTxFile(CF_Transaction_t *t, CF_CFDP_Class_t cfdp_class, uint8 keep, uint8 chan, uint8 priority)
+{
+    UT_GenStub_AddParam(CF_CFDP_InitTxnTxFile, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_InitTxnTxFile, CF_CFDP_Class_t, cfdp_class);
+    UT_GenStub_AddParam(CF_CFDP_InitTxnTxFile, uint8, keep);
+    UT_GenStub_AddParam(CF_CFDP_InitTxnTxFile, uint8, chan);
+    UT_GenStub_AddParam(CF_CFDP_InitTxnTxFile, uint8, priority);
+
+    UT_GenStub_Execute(CF_CFDP_InitTxnTxFile, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_PlaybackDir()
+ * ----------------------------------------------------
+ */
+int32 CF_CFDP_PlaybackDir(const char *src_filename, const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                          uint8 chan, uint8 priority, uint16 dest_id)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_PlaybackDir, int32);
+
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, const char *, src_filename);
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, const char *, dst_filename);
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, CF_CFDP_Class_t, cfdp_class);
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, uint8, keep);
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, uint8, chan);
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, uint8, priority);
+    UT_GenStub_AddParam(CF_CFDP_PlaybackDir, uint16, dest_id);
+
+    UT_GenStub_Execute(CF_CFDP_PlaybackDir, Basic, UT_DefaultHandler_CF_CFDP_PlaybackDir);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_PlaybackDir, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_ProcessPlaybackDirectory()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_ProcessPlaybackDirectory(CF_Channel_t *c, CF_Playback_t *p)
+{
+    UT_GenStub_AddParam(CF_CFDP_ProcessPlaybackDirectory, CF_Channel_t *, c);
+    UT_GenStub_AddParam(CF_CFDP_ProcessPlaybackDirectory, CF_Playback_t *, p);
+
+    UT_GenStub_Execute(CF_CFDP_ProcessPlaybackDirectory, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_ProcessPollingDirectories()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_ProcessPollingDirectories(CF_Channel_t *c)
+{
+    UT_GenStub_AddParam(CF_CFDP_ProcessPollingDirectories, CF_Channel_t *, c);
+
+    UT_GenStub_Execute(CF_CFDP_ProcessPollingDirectories, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvAck()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvAck, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvAck, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvAck, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvAck, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvAck, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvDrop()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_RecvDrop(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_RecvDrop, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvDrop, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvDrop, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvEof()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvEof, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvEof, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvEof, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvEof, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvEof, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvFd()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvFd, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvFd, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvFd, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvFd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvFd, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvFin()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvFin, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvFin, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvFin, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvFin, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvFin, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvIdle()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_RecvIdle(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_AddParam(CF_CFDP_RecvIdle, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvIdle, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvIdle, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvMd()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvMd, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvMd, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvMd, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvMd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvMd, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvNak()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvNak, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvNak, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_RecvNak, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvNak, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvNak, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_RecvPh()
+ * ----------------------------------------------------
+ */
+int CF_CFDP_RecvPh(uint8 chan_num, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_RecvPh, int);
+
+    UT_GenStub_AddParam(CF_CFDP_RecvPh, uint8, chan_num);
+    UT_GenStub_AddParam(CF_CFDP_RecvPh, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_RecvPh, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_RecvPh, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_ResetTransaction()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_ResetTransaction(CF_Transaction_t *t, int keep_history)
+{
+    UT_GenStub_AddParam(CF_CFDP_ResetTransaction, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_ResetTransaction, int, keep_history);
+
+    UT_GenStub_Execute(CF_CFDP_ResetTransaction, Basic, UT_DefaultHandler_CF_CFDP_ResetTransaction);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendAck()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_SendAck(CF_Transaction_t *t, CF_CFDP_AckTxnStatus_t ts, CF_CFDP_FileDirective_t dir_code,
+                             CF_CFDP_ConditionCode_t cc, CF_EntityId_t peer_eid, CF_TransactionSeq_t tsn)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_SendAck, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_SendAck, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_SendAck, CF_CFDP_AckTxnStatus_t, ts);
+    UT_GenStub_AddParam(CF_CFDP_SendAck, CF_CFDP_FileDirective_t, dir_code);
+    UT_GenStub_AddParam(CF_CFDP_SendAck, CF_CFDP_ConditionCode_t, cc);
+    UT_GenStub_AddParam(CF_CFDP_SendAck, CF_EntityId_t, peer_eid);
+    UT_GenStub_AddParam(CF_CFDP_SendAck, CF_TransactionSeq_t, tsn);
+
+    UT_GenStub_Execute(CF_CFDP_SendAck, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_SendAck, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendEof()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_SendEof(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_SendEof, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_SendEof, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_SendEof, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_SendEof, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendEotPkt()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_SendEotPkt(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_CFDP_SendEotPkt, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_SendEotPkt, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendFd()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_SendFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_SendFd, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_SendFd, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_SendFd, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_SendFd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_SendFd, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendFin()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_SendFin(CF_Transaction_t *t, CF_CFDP_FinDeliveryCode_t dc, CF_CFDP_FinFileStatus_t fs,
+                             CF_CFDP_ConditionCode_t cc)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_SendFin, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_SendFin, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_SendFin, CF_CFDP_FinDeliveryCode_t, dc);
+    UT_GenStub_AddParam(CF_CFDP_SendFin, CF_CFDP_FinFileStatus_t, fs);
+    UT_GenStub_AddParam(CF_CFDP_SendFin, CF_CFDP_ConditionCode_t, cc);
+
+    UT_GenStub_Execute(CF_CFDP_SendFin, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_SendFin, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendMd()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_SendMd(CF_Transaction_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_SendMd, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_SendMd, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_CFDP_SendMd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_SendMd, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SendNak()
+ * ----------------------------------------------------
+ */
+CF_SendRet_t CF_CFDP_SendNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_SendNak, CF_SendRet_t);
+
+    UT_GenStub_AddParam(CF_CFDP_SendNak, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_SendNak, CF_Logical_PduBuffer_t *, ph);
+
+    UT_GenStub_Execute(CF_CFDP_SendNak, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_SendNak, CF_SendRet_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_SetTxnStatus()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_SetTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat)
+{
+    UT_GenStub_AddParam(CF_CFDP_SetTxnStatus, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CFDP_SetTxnStatus, CF_TxnStatus_t, txn_stat);
+
+    UT_GenStub_Execute(CF_CFDP_SetTxnStatus, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_TickTransactions()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_TickTransactions(CF_Channel_t *c)
+{
+    UT_GenStub_AddParam(CF_CFDP_TickTransactions, CF_Channel_t *, c);
+
+    UT_GenStub_Execute(CF_CFDP_TickTransactions, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_TxFile()
+ * ----------------------------------------------------
+ */
+int32 CF_CFDP_TxFile(const char *src_filename, const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                     uint8 chan, uint8 priority, CF_EntityId_t dest_id)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_TxFile, int32);
+
+    UT_GenStub_AddParam(CF_CFDP_TxFile, const char *, src_filename);
+    UT_GenStub_AddParam(CF_CFDP_TxFile, const char *, dst_filename);
+    UT_GenStub_AddParam(CF_CFDP_TxFile, CF_CFDP_Class_t, cfdp_class);
+    UT_GenStub_AddParam(CF_CFDP_TxFile, uint8, keep);
+    UT_GenStub_AddParam(CF_CFDP_TxFile, uint8, chan);
+    UT_GenStub_AddParam(CF_CFDP_TxFile, uint8, priority);
+    UT_GenStub_AddParam(CF_CFDP_TxFile, CF_EntityId_t, dest_id);
+
+    UT_GenStub_Execute(CF_CFDP_TxFile, Basic, UT_DefaultHandler_CF_CFDP_TxFile);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_TxFile, int32);
+}
+```
+
+### `cf_chunk_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_chunk_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief Stubs file for the CF Application main cfdp engine and pdu parsing file
+ *
+ *  This file contains two sets of functions. The first is what is needed
+ *  to deal with CFDP PDUs. Specifically validating them for correctness
+ *  and ensuring the byte-order is correct for the target. The second
+ *  is incoming and outgoing CFDP PDUs pass through here. All receive
+ *  CFDP PDU logic is performed here and the data is passed to the
+ *  R (rx) and S (tx) logic.
+ */
+
+#include "cf_chunk.h"
+
+#include <string.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "utgenstub.h"
+
+#include "cf_test_utils.h"
+
+/*----------------------------------------------------------------
+ *
+ * Default always returns NULL, an alt handler can be registered for other pointer returns
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_ChunkList_GetFirstChunk(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_Chunk_t *c = NULL;
+    UT_Stub_SetReturnValue(FuncKey, c);
+}
+```
+
+### `cf_chunk_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_chunk_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_chunk header
+ */
+
+#include "cf_chunk.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_ChunkList_GetFirstChunk(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ChunkListAdd()
+ * ----------------------------------------------------
+ */
+void CF_ChunkListAdd(CF_ChunkList_t *chunks, CF_ChunkOffset_t offset, CF_ChunkSize_t size)
+{
+    UT_GenStub_AddParam(CF_ChunkListAdd, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_ChunkListAdd, CF_ChunkOffset_t, offset);
+    UT_GenStub_AddParam(CF_ChunkListAdd, CF_ChunkSize_t, size);
+
+    UT_GenStub_Execute(CF_ChunkListAdd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ChunkListInit()
+ * ----------------------------------------------------
+ */
+void CF_ChunkListInit(CF_ChunkList_t *chunks, CF_ChunkIdx_t max_chunks, CF_Chunk_t *chunks_mem)
+{
+    UT_GenStub_AddParam(CF_ChunkListInit, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_ChunkListInit, CF_ChunkIdx_t, max_chunks);
+    UT_GenStub_AddParam(CF_ChunkListInit, CF_Chunk_t *, chunks_mem);
+
+    UT_GenStub_Execute(CF_ChunkListInit, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ChunkListReset()
+ * ----------------------------------------------------
+ */
+void CF_ChunkListReset(CF_ChunkList_t *chunks)
+{
+    UT_GenStub_AddParam(CF_ChunkListReset, CF_ChunkList_t *, chunks);
+
+    UT_GenStub_Execute(CF_ChunkListReset, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ChunkList_ComputeGaps()
+ * ----------------------------------------------------
+ */
+uint32 CF_ChunkList_ComputeGaps(const CF_ChunkList_t *chunks, CF_ChunkIdx_t max_gaps, CF_ChunkSize_t total,
+                                CF_ChunkOffset_t start, CF_ChunkList_ComputeGapFn_t compute_gap_fn, void *opaque)
+{
+    UT_GenStub_SetupReturnBuffer(CF_ChunkList_ComputeGaps, uint32);
+
+    UT_GenStub_AddParam(CF_ChunkList_ComputeGaps, const CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_ChunkList_ComputeGaps, CF_ChunkIdx_t, max_gaps);
+    UT_GenStub_AddParam(CF_ChunkList_ComputeGaps, CF_ChunkSize_t, total);
+    UT_GenStub_AddParam(CF_ChunkList_ComputeGaps, CF_ChunkOffset_t, start);
+    UT_GenStub_AddParam(CF_ChunkList_ComputeGaps, CF_ChunkList_ComputeGapFn_t, compute_gap_fn);
+    UT_GenStub_AddParam(CF_ChunkList_ComputeGaps, void *, opaque);
+
+    UT_GenStub_Execute(CF_ChunkList_ComputeGaps, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_ChunkList_ComputeGaps, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ChunkList_GetFirstChunk()
+ * ----------------------------------------------------
+ */
+const CF_Chunk_t *CF_ChunkList_GetFirstChunk(const CF_ChunkList_t *chunks)
+{
+    UT_GenStub_SetupReturnBuffer(CF_ChunkList_GetFirstChunk, const CF_Chunk_t *);
+
+    UT_GenStub_AddParam(CF_ChunkList_GetFirstChunk, const CF_ChunkList_t *, chunks);
+
+    UT_GenStub_Execute(CF_ChunkList_GetFirstChunk, Basic, UT_DefaultHandler_CF_ChunkList_GetFirstChunk);
+
+    return UT_GenStub_GetReturnValue(CF_ChunkList_GetFirstChunk, const CF_Chunk_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ChunkList_RemoveFromFirst()
+ * ----------------------------------------------------
+ */
+void CF_ChunkList_RemoveFromFirst(CF_ChunkList_t *chunks, CF_ChunkSize_t size)
+{
+    UT_GenStub_AddParam(CF_ChunkList_RemoveFromFirst, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_ChunkList_RemoveFromFirst, CF_ChunkSize_t, size);
+
+    UT_GenStub_Execute(CF_ChunkList_RemoveFromFirst, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_CombineNext()
+ * ----------------------------------------------------
+ */
+int CF_Chunks_CombineNext(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Chunks_CombineNext, int);
+
+    UT_GenStub_AddParam(CF_Chunks_CombineNext, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_CombineNext, CF_ChunkIdx_t, i);
+    UT_GenStub_AddParam(CF_Chunks_CombineNext, const CF_Chunk_t *, chunk);
+
+    UT_GenStub_Execute(CF_Chunks_CombineNext, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Chunks_CombineNext, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_CombinePrevious()
+ * ----------------------------------------------------
+ */
+int CF_Chunks_CombinePrevious(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Chunks_CombinePrevious, int);
+
+    UT_GenStub_AddParam(CF_Chunks_CombinePrevious, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_CombinePrevious, CF_ChunkIdx_t, i);
+    UT_GenStub_AddParam(CF_Chunks_CombinePrevious, const CF_Chunk_t *, chunk);
+
+    UT_GenStub_Execute(CF_Chunks_CombinePrevious, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Chunks_CombinePrevious, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_EraseChunk()
+ * ----------------------------------------------------
+ */
+void CF_Chunks_EraseChunk(CF_ChunkList_t *chunks, CF_ChunkIdx_t erase_index)
+{
+    UT_GenStub_AddParam(CF_Chunks_EraseChunk, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_EraseChunk, CF_ChunkIdx_t, erase_index);
+
+    UT_GenStub_Execute(CF_Chunks_EraseChunk, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_EraseRange()
+ * ----------------------------------------------------
+ */
+void CF_Chunks_EraseRange(CF_ChunkList_t *chunks, CF_ChunkIdx_t start, CF_ChunkIdx_t end)
+{
+    UT_GenStub_AddParam(CF_Chunks_EraseRange, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_EraseRange, CF_ChunkIdx_t, start);
+    UT_GenStub_AddParam(CF_Chunks_EraseRange, CF_ChunkIdx_t, end);
+
+    UT_GenStub_Execute(CF_Chunks_EraseRange, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_FindInsertPosition()
+ * ----------------------------------------------------
+ */
+CF_ChunkIdx_t CF_Chunks_FindInsertPosition(CF_ChunkList_t *chunks, const CF_Chunk_t *chunk)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Chunks_FindInsertPosition, CF_ChunkIdx_t);
+
+    UT_GenStub_AddParam(CF_Chunks_FindInsertPosition, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_FindInsertPosition, const CF_Chunk_t *, chunk);
+
+    UT_GenStub_Execute(CF_Chunks_FindInsertPosition, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Chunks_FindInsertPosition, CF_ChunkIdx_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_FindSmallestSize()
+ * ----------------------------------------------------
+ */
+CF_ChunkIdx_t CF_Chunks_FindSmallestSize(const CF_ChunkList_t *chunks)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Chunks_FindSmallestSize, CF_ChunkIdx_t);
+
+    UT_GenStub_AddParam(CF_Chunks_FindSmallestSize, const CF_ChunkList_t *, chunks);
+
+    UT_GenStub_Execute(CF_Chunks_FindSmallestSize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Chunks_FindSmallestSize, CF_ChunkIdx_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_Insert()
+ * ----------------------------------------------------
+ */
+void CF_Chunks_Insert(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk)
+{
+    UT_GenStub_AddParam(CF_Chunks_Insert, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_Insert, CF_ChunkIdx_t, i);
+    UT_GenStub_AddParam(CF_Chunks_Insert, const CF_Chunk_t *, chunk);
+
+    UT_GenStub_Execute(CF_Chunks_Insert, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Chunks_InsertChunk()
+ * ----------------------------------------------------
+ */
+void CF_Chunks_InsertChunk(CF_ChunkList_t *chunks, CF_ChunkIdx_t index_before, const CF_Chunk_t *chunk)
+{
+    UT_GenStub_AddParam(CF_Chunks_InsertChunk, CF_ChunkList_t *, chunks);
+    UT_GenStub_AddParam(CF_Chunks_InsertChunk, CF_ChunkIdx_t, index_before);
+    UT_GenStub_AddParam(CF_Chunks_InsertChunk, const CF_Chunk_t *, chunk);
+
+    UT_GenStub_Execute(CF_Chunks_InsertChunk, Basic, NULL);
+}
+```
+
+### `cf_clist_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_clist_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief The CF Application circular list definition stubs file
+ *
+ *  This is a circular doubly-linked list implementation. It is used for
+ *  all data structures in CF.
+ *
+ *  This file is intended to be a generic class that can be used in other apps.
+ */
+
+#include "cf_verify.h"
+#include "cf_clist.h"
+#include "cf_assert.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "utgenstub.h"
+
+#include "cf_test_utils.h"
+#include "cf_cfdp.h"
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_InitNode(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CListNode_t **ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CListNode_t *);
+
+    if (ctxt)
+    {
+        *ctxt = UT_Hook_GetArgValueByName(Context, "node", CF_CListNode_t *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_InsertBack(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CList_InsertBack_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CList_InsertBack_context_t);
+
+    if (ctxt)
+    {
+        ctxt->head = UT_Hook_GetArgValueByName(Context, "head", CF_CListNode_t **);
+        ctxt->node = UT_Hook_GetArgValueByName(Context, "node", CF_CListNode_t *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_CF_CList_Pop(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CList_Pop_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CList_Pop_context_t);
+
+    if (ctxt)
+    {
+        ctxt->head = UT_Hook_GetArgValueByName(Context, "head", CF_CListNode_t **);
+        UT_Stub_SetReturnValue(FuncKey, ctxt->forced_return);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_Remove(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CList_Remove_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CList_Remove_context_t);
+
+    if (ctxt)
+    {
+        ctxt->head = UT_Hook_GetArgValueByName(Context, "head", CF_CListNode_t **);
+        ctxt->node = UT_Hook_GetArgValueByName(Context, "node", CF_CListNode_t *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_InsertAfter(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CList_InsertAfter_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CList_InsertAfter_context_t);
+
+    if (ctxt)
+    {
+        ctxt->head  = UT_Hook_GetArgValueByName(Context, "head", CF_CListNode_t **);
+        ctxt->start = UT_Hook_GetArgValueByName(Context, "start", CF_CListNode_t *);
+        ctxt->after = UT_Hook_GetArgValueByName(Context, "after", CF_CListNode_t *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_Traverse(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void **ctxt = UT_CF_GetContextBuffer(FuncKey, void *);
+    if (ctxt)
+    {
+        *ctxt = UT_Hook_GetArgValueByName(Context, "context", void *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CList_Traverse_R(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CList_Traverse_R_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CList_Traverse_R_context_t);
+
+    if (ctxt)
+    {
+        ctxt->end       = UT_Hook_GetArgValueByName(Context, "end", CF_CListNode_t *);
+        ctxt->fn        = UT_Hook_GetArgValueByName(Context, "fn", CF_CListFn_t);
+        ctxt->context_t = UT_Hook_GetArgValueByName(Context, "context", CF_Transaction_t *);
+    }
+}
+```
+
+### `cf_clist_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_clist_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_clist header
+ */
+
+#include "cf_clist.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_CList_InitNode(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CList_InsertAfter(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CList_InsertBack(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CList_Remove(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CList_Traverse(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CList_Traverse_R(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_InitNode()
+ * ----------------------------------------------------
+ */
+void CF_CList_InitNode(CF_CListNode_t *node)
+{
+    UT_GenStub_AddParam(CF_CList_InitNode, CF_CListNode_t *, node);
+
+    UT_GenStub_Execute(CF_CList_InitNode, Basic, UT_DefaultHandler_CF_CList_InitNode);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_InsertAfter()
+ * ----------------------------------------------------
+ */
+void CF_CList_InsertAfter(CF_CListNode_t **head, CF_CListNode_t *start, CF_CListNode_t *after)
+{
+    UT_GenStub_AddParam(CF_CList_InsertAfter, CF_CListNode_t **, head);
+    UT_GenStub_AddParam(CF_CList_InsertAfter, CF_CListNode_t *, start);
+    UT_GenStub_AddParam(CF_CList_InsertAfter, CF_CListNode_t *, after);
+
+    UT_GenStub_Execute(CF_CList_InsertAfter, Basic, UT_DefaultHandler_CF_CList_InsertAfter);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_InsertBack()
+ * ----------------------------------------------------
+ */
+void CF_CList_InsertBack(CF_CListNode_t **head, CF_CListNode_t *node)
+{
+    UT_GenStub_AddParam(CF_CList_InsertBack, CF_CListNode_t **, head);
+    UT_GenStub_AddParam(CF_CList_InsertBack, CF_CListNode_t *, node);
+
+    UT_GenStub_Execute(CF_CList_InsertBack, Basic, UT_DefaultHandler_CF_CList_InsertBack);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_InsertFront()
+ * ----------------------------------------------------
+ */
+void CF_CList_InsertFront(CF_CListNode_t **head, CF_CListNode_t *node)
+{
+    UT_GenStub_AddParam(CF_CList_InsertFront, CF_CListNode_t **, head);
+    UT_GenStub_AddParam(CF_CList_InsertFront, CF_CListNode_t *, node);
+
+    UT_GenStub_Execute(CF_CList_InsertFront, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_Pop()
+ * ----------------------------------------------------
+ */
+CF_CListNode_t *CF_CList_Pop(CF_CListNode_t **head)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CList_Pop, CF_CListNode_t *);
+
+    UT_GenStub_AddParam(CF_CList_Pop, CF_CListNode_t **, head);
+
+    UT_GenStub_Execute(CF_CList_Pop, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CList_Pop, CF_CListNode_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_Remove()
+ * ----------------------------------------------------
+ */
+void CF_CList_Remove(CF_CListNode_t **head, CF_CListNode_t *node)
+{
+    UT_GenStub_AddParam(CF_CList_Remove, CF_CListNode_t **, head);
+    UT_GenStub_AddParam(CF_CList_Remove, CF_CListNode_t *, node);
+
+    UT_GenStub_Execute(CF_CList_Remove, Basic, UT_DefaultHandler_CF_CList_Remove);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_Traverse()
+ * ----------------------------------------------------
+ */
+void CF_CList_Traverse(CF_CListNode_t *start, CF_CListFn_t fn, void *context)
+{
+    UT_GenStub_AddParam(CF_CList_Traverse, CF_CListNode_t *, start);
+    UT_GenStub_AddParam(CF_CList_Traverse, CF_CListFn_t, fn);
+    UT_GenStub_AddParam(CF_CList_Traverse, void *, context);
+
+    UT_GenStub_Execute(CF_CList_Traverse, Basic, UT_DefaultHandler_CF_CList_Traverse);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CList_Traverse_R()
+ * ----------------------------------------------------
+ */
+void CF_CList_Traverse_R(CF_CListNode_t *end, CF_CListFn_t fn, void *context)
+{
+    UT_GenStub_AddParam(CF_CList_Traverse_R, CF_CListNode_t *, end);
+    UT_GenStub_AddParam(CF_CList_Traverse_R, CF_CListFn_t, fn);
+    UT_GenStub_AddParam(CF_CList_Traverse_R, void *, context);
+
+    UT_GenStub_Execute(CF_CList_Traverse_R, Basic, UT_DefaultHandler_CF_CList_Traverse_R);
+}
+```
+
+### `cf_cmd_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cmd_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief The CF Application command handling stubs file
+ *
+ *  All ground commands are processed in this file. All supporting functions
+ *  necessary to process the commands are also here.
+ */
+
+#include "cf_test_utils.h"
+#include "cf_app.h"
+
+#include <string.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_ProcessGroundCommand(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CFE_SB_Buffer_t **ctxt = UT_CF_GetContextBuffer(FuncKey, CFE_SB_Buffer_t *);
+
+    if (ctxt)
+    {
+        *ctxt = UT_Hook_GetArgValueByName(Context, "msg", CFE_SB_Buffer_t *);
+    }
+}
+```
+
+### `cf_cmd_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_cmd_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_cmd header
+ */
+
+#include "cf_cmd.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_ProcessGroundCommand(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdAbandon()
+ * ----------------------------------------------------
+ */
+void CF_CmdAbandon(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdAbandon, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdAbandon, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdAbandon_Txn()
+ * ----------------------------------------------------
+ */
+void CF_CmdAbandon_Txn(CF_Transaction_t *t, void *ignored)
+{
+    UT_GenStub_AddParam(CF_CmdAbandon_Txn, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CmdAbandon_Txn, void *, ignored);
+
+    UT_GenStub_Execute(CF_CmdAbandon_Txn, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdCancel()
+ * ----------------------------------------------------
+ */
+void CF_CmdCancel(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdCancel, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdCancel, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdCancel_Txn()
+ * ----------------------------------------------------
+ */
+void CF_CmdCancel_Txn(CF_Transaction_t *t, void *ignored)
+{
+    UT_GenStub_AddParam(CF_CmdCancel_Txn, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_CmdCancel_Txn, void *, ignored);
+
+    UT_GenStub_Execute(CF_CmdCancel_Txn, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdDisableDequeue()
+ * ----------------------------------------------------
+ */
+void CF_CmdDisableDequeue(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdDisableDequeue, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdDisableDequeue, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdDisableEngine()
+ * ----------------------------------------------------
+ */
+void CF_CmdDisableEngine(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdDisableEngine, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdDisableEngine, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdDisablePolldir()
+ * ----------------------------------------------------
+ */
+void CF_CmdDisablePolldir(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdDisablePolldir, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdDisablePolldir, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdEnableDequeue()
+ * ----------------------------------------------------
+ */
+void CF_CmdEnableDequeue(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdEnableDequeue, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdEnableDequeue, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdEnableEngine()
+ * ----------------------------------------------------
+ */
+void CF_CmdEnableEngine(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdEnableEngine, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdEnableEngine, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdEnablePolldir()
+ * ----------------------------------------------------
+ */
+void CF_CmdEnablePolldir(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdEnablePolldir, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdEnablePolldir, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdFreeze()
+ * ----------------------------------------------------
+ */
+void CF_CmdFreeze(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdFreeze, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdFreeze, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdGetParam()
+ * ----------------------------------------------------
+ */
+void CF_CmdGetParam(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdGetParam, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdGetParam, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdGetSetParam()
+ * ----------------------------------------------------
+ */
+void CF_CmdGetSetParam(uint8 is_set, CF_GetSet_ValueID_t param_id, uint32 value, uint8 chan_num)
+{
+    UT_GenStub_AddParam(CF_CmdGetSetParam, uint8, is_set);
+    UT_GenStub_AddParam(CF_CmdGetSetParam, CF_GetSet_ValueID_t, param_id);
+    UT_GenStub_AddParam(CF_CmdGetSetParam, uint32, value);
+    UT_GenStub_AddParam(CF_CmdGetSetParam, uint8, chan_num);
+
+    UT_GenStub_Execute(CF_CmdGetSetParam, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdNoop()
+ * ----------------------------------------------------
+ */
+void CF_CmdNoop(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdNoop, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdNoop, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdPlaybackDir()
+ * ----------------------------------------------------
+ */
+void CF_CmdPlaybackDir(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdPlaybackDir, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdPlaybackDir, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdPurgeQueue()
+ * ----------------------------------------------------
+ */
+void CF_CmdPurgeQueue(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdPurgeQueue, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdPurgeQueue, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdReset()
+ * ----------------------------------------------------
+ */
+void CF_CmdReset(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdReset, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdReset, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdResume()
+ * ----------------------------------------------------
+ */
+void CF_CmdResume(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdResume, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdResume, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdSetParam()
+ * ----------------------------------------------------
+ */
+void CF_CmdSetParam(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdSetParam, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdSetParam, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdSuspend()
+ * ----------------------------------------------------
+ */
+void CF_CmdSuspend(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdSuspend, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdSuspend, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdThaw()
+ * ----------------------------------------------------
+ */
+void CF_CmdThaw(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdThaw, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdThaw, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdTxFile()
+ * ----------------------------------------------------
+ */
+void CF_CmdTxFile(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdTxFile, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdTxFile, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdValidateChunkSize()
+ * ----------------------------------------------------
+ */
+int CF_CmdValidateChunkSize(uint32 val, uint8 chan_num)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CmdValidateChunkSize, int);
+
+    UT_GenStub_AddParam(CF_CmdValidateChunkSize, uint32, val);
+    UT_GenStub_AddParam(CF_CmdValidateChunkSize, uint8, chan_num);
+
+    UT_GenStub_Execute(CF_CmdValidateChunkSize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CmdValidateChunkSize, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdValidateMaxOutgoing()
+ * ----------------------------------------------------
+ */
+int CF_CmdValidateMaxOutgoing(uint32 val, uint8 chan_num)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CmdValidateMaxOutgoing, int);
+
+    UT_GenStub_AddParam(CF_CmdValidateMaxOutgoing, uint32, val);
+    UT_GenStub_AddParam(CF_CmdValidateMaxOutgoing, uint8, chan_num);
+
+    UT_GenStub_Execute(CF_CmdValidateMaxOutgoing, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CmdValidateMaxOutgoing, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CmdWriteQueue()
+ * ----------------------------------------------------
+ */
+void CF_CmdWriteQueue(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_CmdWriteQueue, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_CmdWriteQueue, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoChanAction()
+ * ----------------------------------------------------
+ */
+int CF_DoChanAction(CF_UnionArgsCmd_t *cmd, const char *errstr, CF_ChanActionFn_t fn, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_DoChanAction, int);
+
+    UT_GenStub_AddParam(CF_DoChanAction, CF_UnionArgsCmd_t *, cmd);
+    UT_GenStub_AddParam(CF_DoChanAction, const char *, errstr);
+    UT_GenStub_AddParam(CF_DoChanAction, CF_ChanActionFn_t, fn);
+    UT_GenStub_AddParam(CF_DoChanAction, void *, context);
+
+    UT_GenStub_Execute(CF_DoChanAction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_DoChanAction, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoEnableDisableDequeue()
+ * ----------------------------------------------------
+ */
+int CF_DoEnableDisableDequeue(uint8 chan_num, const CF_ChanAction_BoolArg_t *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_DoEnableDisableDequeue, int);
+
+    UT_GenStub_AddParam(CF_DoEnableDisableDequeue, uint8, chan_num);
+    UT_GenStub_AddParam(CF_DoEnableDisableDequeue, const CF_ChanAction_BoolArg_t *, context);
+
+    UT_GenStub_Execute(CF_DoEnableDisableDequeue, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_DoEnableDisableDequeue, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoEnableDisablePolldir()
+ * ----------------------------------------------------
+ */
+int CF_DoEnableDisablePolldir(uint8 chan_num, const CF_ChanAction_BoolMsgArg_t *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_DoEnableDisablePolldir, int);
+
+    UT_GenStub_AddParam(CF_DoEnableDisablePolldir, uint8, chan_num);
+    UT_GenStub_AddParam(CF_DoEnableDisablePolldir, const CF_ChanAction_BoolMsgArg_t *, context);
+
+    UT_GenStub_Execute(CF_DoEnableDisablePolldir, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_DoEnableDisablePolldir, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoFreezeThaw()
+ * ----------------------------------------------------
+ */
+int CF_DoFreezeThaw(uint8 chan_num, const CF_ChanAction_BoolArg_t *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_DoFreezeThaw, int);
+
+    UT_GenStub_AddParam(CF_DoFreezeThaw, uint8, chan_num);
+    UT_GenStub_AddParam(CF_DoFreezeThaw, const CF_ChanAction_BoolArg_t *, context);
+
+    UT_GenStub_Execute(CF_DoFreezeThaw, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_DoFreezeThaw, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoPurgeQueue()
+ * ----------------------------------------------------
+ */
+int CF_DoPurgeQueue(uint8 chan_num, CF_UnionArgsCmd_t *cmd)
+{
+    UT_GenStub_SetupReturnBuffer(CF_DoPurgeQueue, int);
+
+    UT_GenStub_AddParam(CF_DoPurgeQueue, uint8, chan_num);
+    UT_GenStub_AddParam(CF_DoPurgeQueue, CF_UnionArgsCmd_t *, cmd);
+
+    UT_GenStub_Execute(CF_DoPurgeQueue, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_DoPurgeQueue, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoSuspRes()
+ * ----------------------------------------------------
+ */
+void CF_DoSuspRes(CF_TransactionCmd_t *cmd, uint8 action)
+{
+    UT_GenStub_AddParam(CF_DoSuspRes, CF_TransactionCmd_t *, cmd);
+    UT_GenStub_AddParam(CF_DoSuspRes, uint8, action);
+
+    UT_GenStub_Execute(CF_DoSuspRes, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DoSuspRes_Txn()
+ * ----------------------------------------------------
+ */
+void CF_DoSuspRes_Txn(CF_Transaction_t *t, CF_ChanAction_SuspResArg_t *context)
+{
+    UT_GenStub_AddParam(CF_DoSuspRes_Txn, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_DoSuspRes_Txn, CF_ChanAction_SuspResArg_t *, context);
+
+    UT_GenStub_Execute(CF_DoSuspRes_Txn, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_FindTransactionBySequenceNumberAllChannels()
+ * ----------------------------------------------------
+ */
+CF_Transaction_t *CF_FindTransactionBySequenceNumberAllChannels(CF_TransactionSeq_t ts, CF_EntityId_t eid)
+{
+    UT_GenStub_SetupReturnBuffer(CF_FindTransactionBySequenceNumberAllChannels, CF_Transaction_t *);
+
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumberAllChannels, CF_TransactionSeq_t, ts);
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumberAllChannels, CF_EntityId_t, eid);
+
+    UT_GenStub_Execute(CF_FindTransactionBySequenceNumberAllChannels, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_FindTransactionBySequenceNumberAllChannels, CF_Transaction_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ProcessGroundCommand()
+ * ----------------------------------------------------
+ */
+void CF_ProcessGroundCommand(CFE_SB_Buffer_t *msg)
+{
+    UT_GenStub_AddParam(CF_ProcessGroundCommand, CFE_SB_Buffer_t *, msg);
+
+    UT_GenStub_Execute(CF_ProcessGroundCommand, Basic, UT_DefaultHandler_CF_ProcessGroundCommand);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_PurgeHistory()
+ * ----------------------------------------------------
+ */
+int CF_PurgeHistory(CF_CListNode_t *n, CF_Channel_t *c)
+{
+    UT_GenStub_SetupReturnBuffer(CF_PurgeHistory, int);
+
+    UT_GenStub_AddParam(CF_PurgeHistory, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_PurgeHistory, CF_Channel_t *, c);
+
+    UT_GenStub_Execute(CF_PurgeHistory, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_PurgeHistory, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_PurgeTransaction()
+ * ----------------------------------------------------
+ */
+int CF_PurgeTransaction(CF_CListNode_t *n, void *ignored)
+{
+    UT_GenStub_SetupReturnBuffer(CF_PurgeTransaction, int);
+
+    UT_GenStub_AddParam(CF_PurgeTransaction, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_PurgeTransaction, void *, ignored);
+
+    UT_GenStub_Execute(CF_PurgeTransaction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_PurgeTransaction, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TsnChanAction()
+ * ----------------------------------------------------
+ */
+int CF_TsnChanAction(CF_TransactionCmd_t *cmd, const char *cmdstr, CF_TsnChanAction_fn_t fn, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TsnChanAction, int);
+
+    UT_GenStub_AddParam(CF_TsnChanAction, CF_TransactionCmd_t *, cmd);
+    UT_GenStub_AddParam(CF_TsnChanAction, const char *, cmdstr);
+    UT_GenStub_AddParam(CF_TsnChanAction, CF_TsnChanAction_fn_t, fn);
+    UT_GenStub_AddParam(CF_TsnChanAction, void *, context);
+
+    UT_GenStub_Execute(CF_TsnChanAction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_TsnChanAction, int);
+}
+```
+
+### `cf_codec_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_codec_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/************************************************************************
+*************************************************************************/
+
+#include "cf_test_utils.h"
+#include "cf_app.h"
+
+#include <string.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+
+/*----------------------------------------------------------------
+ *
+ * Translates return value into the correct size for returning
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_CodecCheckSize(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    bool  retval;
+    int32 status_code;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status_code))
+    {
+        retval = status_code;
+    }
+    else
+    {
+        retval = false;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Default always returns NULL, an alt handler can be registered for other pointer returns
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_DoEncodeChunk(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void *retval;
+
+    /* This may not need to do anything else, it shouldn't be called outside of this module */
+    retval = NULL;
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Default always returns NULL, an alt handler can be registered for other pointer returns
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_DoDecodeChunk(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const void *retval;
+
+    /* This may not need to do anything else, it shouldn't be called outside of this module */
+    retval = NULL;
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Translates return value into the correct size for returning
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_CFDP_GetValueEncodedSize(void *UserObj, UT_EntryKey_t FuncKey,
+                                                   const UT_StubContext_t *Context)
+{
+    uint8 retval;
+    int32 status_code;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status_code))
+    {
+        retval = status_code;
+    }
+    else
+    {
+        /* this defaults to 1 since nothing can get encoded in a size of 0.
+         * test case can still set a different value, of course. */
+        retval = 1;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Translates return value into the correct size for returning
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_DecodeIntegerInSize(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint64 retval;
+    int32  status_code;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status_code))
+    {
+        retval = status_code;
+    }
+    else
+    {
+        retval = 0;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, retval);
+}
+```
+
+### `cf_codec_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_codec_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_codec header
+ */
+
+#include "cf_codec.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_CFDP_CodecCheckSize(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_DoDecodeChunk(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_DoEncodeChunk(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_CFDP_GetValueEncodedSize(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_DecodeIntegerInSize(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_CodecCheckSize()
+ * ----------------------------------------------------
+ */
+bool CF_CFDP_CodecCheckSize(CF_CodecState_t *state, size_t chunksize)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_CodecCheckSize, bool);
+
+    UT_GenStub_AddParam(CF_CFDP_CodecCheckSize, CF_CodecState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_CodecCheckSize, size_t, chunksize);
+
+    UT_GenStub_Execute(CF_CFDP_CodecCheckSize, Basic, UT_DefaultHandler_CF_CFDP_CodecCheckSize);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_CodecCheckSize, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeAck()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeAck(CF_DecoderState_t *state, CF_Logical_PduAck_t *plack)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeAck, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeAck, CF_Logical_PduAck_t *, plack);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeAck, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeAllSegments()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeAllSegments(CF_DecoderState_t *state, CF_Logical_SegmentList_t *plseg, uint8 limit)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeAllSegments, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeAllSegments, CF_Logical_SegmentList_t *, plseg);
+    UT_GenStub_AddParam(CF_CFDP_DecodeAllSegments, uint8, limit);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeAllSegments, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeAllTlv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeAllTlv(CF_DecoderState_t *state, CF_Logical_TlvList_t *pltlv, uint8 limit)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeAllTlv, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeAllTlv, CF_Logical_TlvList_t *, pltlv);
+    UT_GenStub_AddParam(CF_CFDP_DecodeAllTlv, uint8, limit);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeAllTlv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeCrc()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeCrc(CF_DecoderState_t *state, uint32 *plcrc)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeCrc, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeCrc, uint32 *, plcrc);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeCrc, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeEof()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeEof(CF_DecoderState_t *state, CF_Logical_PduEof_t *pleof)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeEof, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeEof, CF_Logical_PduEof_t *, pleof);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeEof, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeFileDataHeader()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeFileDataHeader(CF_DecoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t *plfd)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeFileDataHeader, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeFileDataHeader, bool, with_meta);
+    UT_GenStub_AddParam(CF_CFDP_DecodeFileDataHeader, CF_Logical_PduFileDataHeader_t *, plfd);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeFileDataHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeFileDirectiveHeader()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeFileDirectiveHeader(CF_DecoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeFileDirectiveHeader, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeFileDirectiveHeader, CF_Logical_PduFileDirectiveHeader_t *, pfdir);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeFileDirectiveHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeFin()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeFin(CF_DecoderState_t *state, CF_Logical_PduFin_t *plfin)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeFin, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeFin, CF_Logical_PduFin_t *, plfin);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeFin, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeHeader()
+ * ----------------------------------------------------
+ */
+int32 CF_CFDP_DecodeHeader(CF_DecoderState_t *state, CF_Logical_PduHeader_t *plh)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_DecodeHeader, int32);
+
+    UT_GenStub_AddParam(CF_CFDP_DecodeHeader, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeHeader, CF_Logical_PduHeader_t *, plh);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeHeader, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_DecodeHeader, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeLV()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeLV(CF_DecoderState_t *state, CF_Logical_Lv_t *pllv)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeLV, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeLV, CF_Logical_Lv_t *, pllv);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeLV, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeMd()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeMd(CF_DecoderState_t *state, CF_Logical_PduMd_t *plmd)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeMd, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeMd, CF_Logical_PduMd_t *, plmd);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeMd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeNak()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeNak(CF_DecoderState_t *state, CF_Logical_PduNak_t *plnak)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeNak, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeNak, CF_Logical_PduNak_t *, plnak);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeNak, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeSegmentRequest()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeSegmentRequest(CF_DecoderState_t *state, CF_Logical_SegmentRequest_t *plseg)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeSegmentRequest, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeSegmentRequest, CF_Logical_SegmentRequest_t *, plseg);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeSegmentRequest, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DecodeTLV()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_DecodeTLV(CF_DecoderState_t *state, CF_Logical_Tlv_t *pltlv)
+{
+    UT_GenStub_AddParam(CF_CFDP_DecodeTLV, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DecodeTLV, CF_Logical_Tlv_t *, pltlv);
+
+    UT_GenStub_Execute(CF_CFDP_DecodeTLV, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DoDecodeChunk()
+ * ----------------------------------------------------
+ */
+const void *CF_CFDP_DoDecodeChunk(CF_DecoderState_t *state, size_t chunksize)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_DoDecodeChunk, const void *);
+
+    UT_GenStub_AddParam(CF_CFDP_DoDecodeChunk, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DoDecodeChunk, size_t, chunksize);
+
+    UT_GenStub_Execute(CF_CFDP_DoDecodeChunk, Basic, UT_DefaultHandler_CF_CFDP_DoDecodeChunk);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_DoDecodeChunk, const void *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_DoEncodeChunk()
+ * ----------------------------------------------------
+ */
+void *CF_CFDP_DoEncodeChunk(CF_EncoderState_t *state, size_t chunksize)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_DoEncodeChunk, void *);
+
+    UT_GenStub_AddParam(CF_CFDP_DoEncodeChunk, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_DoEncodeChunk, size_t, chunksize);
+
+    UT_GenStub_Execute(CF_CFDP_DoEncodeChunk, Basic, UT_DefaultHandler_CF_CFDP_DoEncodeChunk);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_DoEncodeChunk, void *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeAck()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeAck(CF_EncoderState_t *state, CF_Logical_PduAck_t *plack)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeAck, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeAck, CF_Logical_PduAck_t *, plack);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeAck, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeAllSegments()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeAllSegments(CF_EncoderState_t *state, CF_Logical_SegmentList_t *plseg)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeAllSegments, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeAllSegments, CF_Logical_SegmentList_t *, plseg);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeAllSegments, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeAllTlv()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeAllTlv(CF_EncoderState_t *state, CF_Logical_TlvList_t *pltlv)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeAllTlv, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeAllTlv, CF_Logical_TlvList_t *, pltlv);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeAllTlv, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeCrc()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeCrc(CF_EncoderState_t *state, uint32 *plcrc)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeCrc, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeCrc, uint32 *, plcrc);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeCrc, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeEof()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeEof(CF_EncoderState_t *state, CF_Logical_PduEof_t *pleof)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeEof, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeEof, CF_Logical_PduEof_t *, pleof);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeEof, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeFileDataHeader()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeFileDataHeader(CF_EncoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t *plfd)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeFileDataHeader, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeFileDataHeader, bool, with_meta);
+    UT_GenStub_AddParam(CF_CFDP_EncodeFileDataHeader, CF_Logical_PduFileDataHeader_t *, plfd);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeFileDataHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeFileDirectiveHeader()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeFileDirectiveHeader(CF_EncoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeFileDirectiveHeader, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeFileDirectiveHeader, CF_Logical_PduFileDirectiveHeader_t *, pfdir);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeFileDirectiveHeader, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeFin()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeFin(CF_EncoderState_t *state, CF_Logical_PduFin_t *plfin)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeFin, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeFin, CF_Logical_PduFin_t *, plfin);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeFin, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeHeaderFinalSize()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeHeaderFinalSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeHeaderFinalSize, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeHeaderFinalSize, CF_Logical_PduHeader_t *, plh);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeHeaderFinalSize, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeHeaderWithoutSize()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeHeaderWithoutSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeHeaderWithoutSize, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeHeaderWithoutSize, CF_Logical_PduHeader_t *, plh);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeHeaderWithoutSize, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeLV()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeLV(CF_EncoderState_t *state, CF_Logical_Lv_t *pllv)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeLV, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeLV, CF_Logical_Lv_t *, pllv);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeLV, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeMd()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeMd(CF_EncoderState_t *state, CF_Logical_PduMd_t *plmd)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeMd, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeMd, CF_Logical_PduMd_t *, plmd);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeMd, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeNak()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeNak(CF_EncoderState_t *state, CF_Logical_PduNak_t *plnak)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeNak, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeNak, CF_Logical_PduNak_t *, plnak);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeNak, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeSegmentRequest()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeSegmentRequest(CF_EncoderState_t *state, CF_Logical_SegmentRequest_t *plseg)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeSegmentRequest, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeSegmentRequest, CF_Logical_SegmentRequest_t *, plseg);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeSegmentRequest, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_EncodeTLV()
+ * ----------------------------------------------------
+ */
+void CF_CFDP_EncodeTLV(CF_EncoderState_t *state, CF_Logical_Tlv_t *pltlv)
+{
+    UT_GenStub_AddParam(CF_CFDP_EncodeTLV, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_CFDP_EncodeTLV, CF_Logical_Tlv_t *, pltlv);
+
+    UT_GenStub_Execute(CF_CFDP_EncodeTLV, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CFDP_GetValueEncodedSize()
+ * ----------------------------------------------------
+ */
+uint8 CF_CFDP_GetValueEncodedSize(uint64 Value)
+{
+    UT_GenStub_SetupReturnBuffer(CF_CFDP_GetValueEncodedSize, uint8);
+
+    UT_GenStub_AddParam(CF_CFDP_GetValueEncodedSize, uint64, Value);
+
+    UT_GenStub_Execute(CF_CFDP_GetValueEncodedSize, Basic, UT_DefaultHandler_CF_CFDP_GetValueEncodedSize);
+
+    return UT_GenStub_GetReturnValue(CF_CFDP_GetValueEncodedSize, uint8);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_DecodeIntegerInSize()
+ * ----------------------------------------------------
+ */
+uint64 CF_DecodeIntegerInSize(CF_DecoderState_t *state, uint8 decode_size)
+{
+    UT_GenStub_SetupReturnBuffer(CF_DecodeIntegerInSize, uint64);
+
+    UT_GenStub_AddParam(CF_DecodeIntegerInSize, CF_DecoderState_t *, state);
+    UT_GenStub_AddParam(CF_DecodeIntegerInSize, uint8, decode_size);
+
+    UT_GenStub_Execute(CF_DecodeIntegerInSize, Basic, UT_DefaultHandler_CF_DecodeIntegerInSize);
+
+    return UT_GenStub_GetReturnValue(CF_DecodeIntegerInSize, uint64);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_EncodeIntegerInSize()
+ * ----------------------------------------------------
+ */
+void CF_EncodeIntegerInSize(CF_EncoderState_t *state, uint64 value, uint8 encode_size)
+{
+    UT_GenStub_AddParam(CF_EncodeIntegerInSize, CF_EncoderState_t *, state);
+    UT_GenStub_AddParam(CF_EncodeIntegerInSize, uint64, value);
+    UT_GenStub_AddParam(CF_EncodeIntegerInSize, uint8, encode_size);
+
+    UT_GenStub_Execute(CF_EncodeIntegerInSize, Basic, NULL);
+}
+```
+
+### `cf_crc_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_crc_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_crc header
+ */
+
+#include "cf_crc.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CRC_Digest()
+ * ----------------------------------------------------
+ */
+void CF_CRC_Digest(CF_Crc_t *c, const uint8 *data, int len)
+{
+    UT_GenStub_AddParam(CF_CRC_Digest, CF_Crc_t *, c);
+    UT_GenStub_AddParam(CF_CRC_Digest, const uint8 *, data);
+    UT_GenStub_AddParam(CF_CRC_Digest, int, len);
+
+    UT_GenStub_Execute(CF_CRC_Digest, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CRC_Finalize()
+ * ----------------------------------------------------
+ */
+void CF_CRC_Finalize(CF_Crc_t *c)
+{
+    UT_GenStub_AddParam(CF_CRC_Finalize, CF_Crc_t *, c);
+
+    UT_GenStub_Execute(CF_CRC_Finalize, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_CRC_Start()
+ * ----------------------------------------------------
+ */
+void CF_CRC_Start(CF_Crc_t *c)
+{
+    UT_GenStub_AddParam(CF_CRC_Start, CF_Crc_t *, c);
+
+    UT_GenStub_Execute(CF_CRC_Start, Basic, NULL);
+}
+```
+
+### `cf_timer_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_timer_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_timer header
+ */
+
+#include "cf_timer.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Timer_Expired()
+ * ----------------------------------------------------
+ */
+int CF_Timer_Expired(const CF_Timer_t *t)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Timer_Expired, int);
+
+    UT_GenStub_AddParam(CF_Timer_Expired, const CF_Timer_t *, t);
+
+    UT_GenStub_Execute(CF_Timer_Expired, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Timer_Expired, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Timer_InitRelSec()
+ * ----------------------------------------------------
+ */
+void CF_Timer_InitRelSec(CF_Timer_t *t, CF_Timer_Seconds_t rel_sec)
+{
+    UT_GenStub_AddParam(CF_Timer_InitRelSec, CF_Timer_t *, t);
+    UT_GenStub_AddParam(CF_Timer_InitRelSec, CF_Timer_Seconds_t, rel_sec);
+
+    UT_GenStub_Execute(CF_Timer_InitRelSec, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Timer_Sec2Ticks()
+ * ----------------------------------------------------
+ */
+uint32 CF_Timer_Sec2Ticks(CF_Timer_Seconds_t sec)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Timer_Sec2Ticks, uint32);
+
+    UT_GenStub_AddParam(CF_Timer_Sec2Ticks, CF_Timer_Seconds_t, sec);
+
+    UT_GenStub_Execute(CF_Timer_Sec2Ticks, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Timer_Sec2Ticks, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Timer_Tick()
+ * ----------------------------------------------------
+ */
+void CF_Timer_Tick(CF_Timer_t *t)
+{
+    UT_GenStub_AddParam(CF_Timer_Tick, CF_Timer_t *, t);
+
+    UT_GenStub_Execute(CF_Timer_Tick, Basic, NULL);
+}
+```
+
+### `cf_utils_handlers.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_utils_handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  @brief The CF Application general utility functions stubs file
+ *
+ *  Various odds and ends are put here.
+ */
+
+#include "cf_app.h"
+#include "cf_verify.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+
+#include "cf_assert.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utstubs.h"
+#include "utgenstub.h"
+
+#include "cf_test_utils.h"
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_ResetHistory(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_CFDP_ResetHistory_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_CFDP_ResetHistory_context_t);
+
+    if (ctxt)
+    {
+        ctxt->c = UT_Hook_GetArgValueByName(Context, "c", CF_Channel_t *);
+        ctxt->h = UT_Hook_GetArgValueByName(Context, "h", CF_History_t *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_FindTransactionBySequenceNumber(void *UserObj, UT_EntryKey_t FuncKey,
+                                                          const UT_StubContext_t *Context)
+{
+    CF_FindTransactionBySequenceNumber_context_t *ctxt =
+        UT_CF_GetContextBuffer(FuncKey, CF_FindTransactionBySequenceNumber_context_t);
+    CF_Transaction_t *forced_return;
+
+    if (ctxt)
+    {
+        ctxt->c = UT_Hook_GetArgValueByName(Context, "c", CF_Channel_t *);
+        ctxt->transaction_sequence_number =
+            UT_Hook_GetArgValueByName(Context, "transaction_sequence_number", CF_TransactionSeq_t);
+        ctxt->src_eid = UT_Hook_GetArgValueByName(Context, "src_eid", CF_EntityId_t);
+
+        forced_return = ctxt->forced_return;
+    }
+    else
+    {
+        forced_return = NULL;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, forced_return);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Default always returns NULL, an alt handler can be registered for other pointer returns
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_FindUnusedTransaction(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_Transaction_t *forced_return;
+
+    forced_return = NULL;
+
+    UT_Stub_SetReturnValue(FuncKey, forced_return);
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_WriteTxnQueueDataToFile(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_WriteTxnQueueDataToFile_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_WriteTxnQueueDataToFile_context_t);
+
+    if (ctxt)
+    {
+        ctxt->fd = UT_Hook_GetArgValueByName(Context, "fd", int32);
+        ctxt->c  = UT_Hook_GetArgValueByName(Context, "c", CF_Channel_t *);
+        ctxt->q  = UT_Hook_GetArgValueByName(Context, "q", CF_QueueIdx_t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_WriteHistoryQueueDataToFile(void *UserObj, UT_EntryKey_t FuncKey,
+                                                      const UT_StubContext_t *Context)
+{
+    CF_WriteHistoryQueueDataToFile_context_t *ctxt =
+        UT_CF_GetContextBuffer(FuncKey, CF_WriteHistoryQueueDataToFile_context_t);
+
+    if (ctxt)
+    {
+        ctxt->fd  = UT_Hook_GetArgValueByName(Context, "fd", int32);
+        ctxt->c   = UT_Hook_GetArgValueByName(Context, "c", CF_Channel_t *);
+        ctxt->dir = UT_Hook_GetArgValueByName(Context, "dir", CF_Direction_t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_TraverseAllTransactions(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_TraverseAllTransactions_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_TraverseAllTransactions_context_t);
+
+    if (ctxt)
+    {
+        ctxt->c       = UT_Hook_GetArgValueByName(Context, "c", CF_Channel_t *);
+        ctxt->fn      = UT_Hook_GetArgValueByName(Context, "fn", CF_TraverseAllTransactions_fn_t);
+        ctxt->context = UT_Hook_GetArgValueByName(Context, "context", void *);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_TraverseAllTransactions_All_Channels(void *UserObj, UT_EntryKey_t FuncKey,
+                                                               const UT_StubContext_t *Context)
+{
+    CF_TraverseAllTransactions_All_Channels_context_t *ctxt =
+        UT_CF_GetContextBuffer(FuncKey, CF_TraverseAllTransactions_All_Channels_context_t);
+
+    if (ctxt)
+    {
+        ctxt->fn      = UT_Hook_GetArgValueByName(Context, "fn", CF_TraverseAllTransactions_fn_t);
+        ctxt->context = UT_Hook_GetArgValueByName(Context, "context", void *);
+
+        UT_Stub_SetReturnValue(FuncKey, ctxt->forced_return);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * For compatibility with other tests, this has a mechanism to save its
+ * arguments to a test-provided context capture buffer.
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_WrappedOpenCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    CF_WrappedOpenCreate_context_t *ctxt = UT_CF_GetContextBuffer(FuncKey, CF_WrappedOpenCreate_context_t);
+
+    if (ctxt)
+    {
+        ctxt->fd     = UT_Hook_GetArgValueByName(Context, "fd", osal_id_t *);
+        ctxt->fname  = UT_Hook_GetArgValueByName(Context, "fname", const char *);
+        ctxt->flags  = UT_Hook_GetArgValueByName(Context, "flags", int32);
+        ctxt->access = UT_Hook_GetArgValueByName(Context, "access", int32);
+
+        UT_Stub_SetReturnValue(FuncKey, ctxt->forced_return);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Function: UT_DefaultHandler_CF_TxnStatus_IsError
+ *
+ * Translate the return value to a "bool"
+ *
+ *-----------------------------------------------------------------*/
+void UT_DefaultHandler_CF_TxnStatus_IsError(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    bool result;
+
+    result = (bool)Context->Int32StatusCode;
+
+    UT_Stub_SetReturnValue(FuncKey, result);
+}
+```
+
+### `cf_utils_stubs.c`
+
+**경로:** `fsw/apps/cf/unit-test/stubs/cf_utils_stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in cf_utils header
+ */
+
+#include "cf_utils.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_CF_FindTransactionBySequenceNumber(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_FindUnusedTransaction(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_ResetHistory(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_TraverseAllTransactions(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_TraverseAllTransactions_All_Channels(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_TxnStatus_IsError(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_WrappedOpenCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_WriteHistoryQueueDataToFile(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_CF_WriteTxnQueueDataToFile(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_FindTransactionBySequenceNumber()
+ * ----------------------------------------------------
+ */
+CF_Transaction_t *CF_FindTransactionBySequenceNumber(CF_Channel_t *c, CF_TransactionSeq_t transaction_sequence_number,
+                                                     CF_EntityId_t src_eid)
+{
+    UT_GenStub_SetupReturnBuffer(CF_FindTransactionBySequenceNumber, CF_Transaction_t *);
+
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumber, CF_Channel_t *, c);
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumber, CF_TransactionSeq_t, transaction_sequence_number);
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumber, CF_EntityId_t, src_eid);
+
+    UT_GenStub_Execute(CF_FindTransactionBySequenceNumber, Basic, UT_DefaultHandler_CF_FindTransactionBySequenceNumber);
+
+    return UT_GenStub_GetReturnValue(CF_FindTransactionBySequenceNumber, CF_Transaction_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_FindTransactionBySequenceNumber_Impl()
+ * ----------------------------------------------------
+ */
+int CF_FindTransactionBySequenceNumber_Impl(CF_CListNode_t *n, CF_Traverse_TransSeqArg_t *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_FindTransactionBySequenceNumber_Impl, int);
+
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumber_Impl, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_FindTransactionBySequenceNumber_Impl, CF_Traverse_TransSeqArg_t *, context);
+
+    UT_GenStub_Execute(CF_FindTransactionBySequenceNumber_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_FindTransactionBySequenceNumber_Impl, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_FindUnusedTransaction()
+ * ----------------------------------------------------
+ */
+CF_Transaction_t *CF_FindUnusedTransaction(CF_Channel_t *c)
+{
+    UT_GenStub_SetupReturnBuffer(CF_FindUnusedTransaction, CF_Transaction_t *);
+
+    UT_GenStub_AddParam(CF_FindUnusedTransaction, CF_Channel_t *, c);
+
+    UT_GenStub_Execute(CF_FindUnusedTransaction, Basic, UT_DefaultHandler_CF_FindUnusedTransaction);
+
+    return UT_GenStub_GetReturnValue(CF_FindUnusedTransaction, CF_Transaction_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_FreeTransaction()
+ * ----------------------------------------------------
+ */
+void CF_FreeTransaction(CF_Transaction_t *t)
+{
+    UT_GenStub_AddParam(CF_FreeTransaction, CF_Transaction_t *, t);
+
+    UT_GenStub_Execute(CF_FreeTransaction, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_InsertSortPrio()
+ * ----------------------------------------------------
+ */
+void CF_InsertSortPrio(CF_Transaction_t *t, CF_QueueIdx_t q)
+{
+    UT_GenStub_AddParam(CF_InsertSortPrio, CF_Transaction_t *, t);
+    UT_GenStub_AddParam(CF_InsertSortPrio, CF_QueueIdx_t, q);
+
+    UT_GenStub_Execute(CF_InsertSortPrio, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_PrioSearch()
+ * ----------------------------------------------------
+ */
+int CF_PrioSearch(CF_CListNode_t *node, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_PrioSearch, int);
+
+    UT_GenStub_AddParam(CF_PrioSearch, CF_CListNode_t *, node);
+    UT_GenStub_AddParam(CF_PrioSearch, void *, context);
+
+    UT_GenStub_Execute(CF_PrioSearch, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_PrioSearch, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_ResetHistory()
+ * ----------------------------------------------------
+ */
+void CF_ResetHistory(CF_Channel_t *c, CF_History_t *h)
+{
+    UT_GenStub_AddParam(CF_ResetHistory, CF_Channel_t *, c);
+    UT_GenStub_AddParam(CF_ResetHistory, CF_History_t *, h);
+
+    UT_GenStub_Execute(CF_ResetHistory, Basic, UT_DefaultHandler_CF_ResetHistory);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TraverseAllTransactions()
+ * ----------------------------------------------------
+ */
+int CF_TraverseAllTransactions(CF_Channel_t *c, CF_TraverseAllTransactions_fn_t fn, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TraverseAllTransactions, int);
+
+    UT_GenStub_AddParam(CF_TraverseAllTransactions, CF_Channel_t *, c);
+    UT_GenStub_AddParam(CF_TraverseAllTransactions, CF_TraverseAllTransactions_fn_t, fn);
+    UT_GenStub_AddParam(CF_TraverseAllTransactions, void *, context);
+
+    UT_GenStub_Execute(CF_TraverseAllTransactions, Basic, UT_DefaultHandler_CF_TraverseAllTransactions);
+
+    return UT_GenStub_GetReturnValue(CF_TraverseAllTransactions, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TraverseAllTransactions_All_Channels()
+ * ----------------------------------------------------
+ */
+int CF_TraverseAllTransactions_All_Channels(CF_TraverseAllTransactions_fn_t fn, void *context)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TraverseAllTransactions_All_Channels, int);
+
+    UT_GenStub_AddParam(CF_TraverseAllTransactions_All_Channels, CF_TraverseAllTransactions_fn_t, fn);
+    UT_GenStub_AddParam(CF_TraverseAllTransactions_All_Channels, void *, context);
+
+    UT_GenStub_Execute(CF_TraverseAllTransactions_All_Channels, Basic,
+                       UT_DefaultHandler_CF_TraverseAllTransactions_All_Channels);
+
+    return UT_GenStub_GetReturnValue(CF_TraverseAllTransactions_All_Channels, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TraverseAllTransactions_Impl()
+ * ----------------------------------------------------
+ */
+int CF_TraverseAllTransactions_Impl(CF_CListNode_t *n, CF_TraverseAll_Arg_t *args)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TraverseAllTransactions_Impl, int);
+
+    UT_GenStub_AddParam(CF_TraverseAllTransactions_Impl, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_TraverseAllTransactions_Impl, CF_TraverseAll_Arg_t *, args);
+
+    UT_GenStub_Execute(CF_TraverseAllTransactions_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_TraverseAllTransactions_Impl, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Traverse_WriteHistoryQueueEntryToFile()
+ * ----------------------------------------------------
+ */
+int CF_Traverse_WriteHistoryQueueEntryToFile(CF_CListNode_t *n, void *arg)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Traverse_WriteHistoryQueueEntryToFile, int);
+
+    UT_GenStub_AddParam(CF_Traverse_WriteHistoryQueueEntryToFile, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_Traverse_WriteHistoryQueueEntryToFile, void *, arg);
+
+    UT_GenStub_Execute(CF_Traverse_WriteHistoryQueueEntryToFile, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Traverse_WriteHistoryQueueEntryToFile, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_Traverse_WriteTxnQueueEntryToFile()
+ * ----------------------------------------------------
+ */
+int CF_Traverse_WriteTxnQueueEntryToFile(CF_CListNode_t *n, void *arg)
+{
+    UT_GenStub_SetupReturnBuffer(CF_Traverse_WriteTxnQueueEntryToFile, int);
+
+    UT_GenStub_AddParam(CF_Traverse_WriteTxnQueueEntryToFile, CF_CListNode_t *, n);
+    UT_GenStub_AddParam(CF_Traverse_WriteTxnQueueEntryToFile, void *, arg);
+
+    UT_GenStub_Execute(CF_Traverse_WriteTxnQueueEntryToFile, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_Traverse_WriteTxnQueueEntryToFile, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TxnStatus_From_ConditionCode()
+ * ----------------------------------------------------
+ */
+CF_TxnStatus_t CF_TxnStatus_From_ConditionCode(CF_CFDP_ConditionCode_t cc)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TxnStatus_From_ConditionCode, CF_TxnStatus_t);
+
+    UT_GenStub_AddParam(CF_TxnStatus_From_ConditionCode, CF_CFDP_ConditionCode_t, cc);
+
+    UT_GenStub_Execute(CF_TxnStatus_From_ConditionCode, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_TxnStatus_From_ConditionCode, CF_TxnStatus_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TxnStatus_IsError()
+ * ----------------------------------------------------
+ */
+bool CF_TxnStatus_IsError(CF_TxnStatus_t txn_stat)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TxnStatus_IsError, bool);
+
+    UT_GenStub_AddParam(CF_TxnStatus_IsError, CF_TxnStatus_t, txn_stat);
+
+    UT_GenStub_Execute(CF_TxnStatus_IsError, Basic, UT_DefaultHandler_CF_TxnStatus_IsError);
+
+    return UT_GenStub_GetReturnValue(CF_TxnStatus_IsError, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_TxnStatus_To_ConditionCode()
+ * ----------------------------------------------------
+ */
+CF_CFDP_ConditionCode_t CF_TxnStatus_To_ConditionCode(CF_TxnStatus_t txn_stat)
+{
+    UT_GenStub_SetupReturnBuffer(CF_TxnStatus_To_ConditionCode, CF_CFDP_ConditionCode_t);
+
+    UT_GenStub_AddParam(CF_TxnStatus_To_ConditionCode, CF_TxnStatus_t, txn_stat);
+
+    UT_GenStub_Execute(CF_TxnStatus_To_ConditionCode, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_TxnStatus_To_ConditionCode, CF_CFDP_ConditionCode_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WrappedClose()
+ * ----------------------------------------------------
+ */
+void CF_WrappedClose(osal_id_t fd)
+{
+    UT_GenStub_AddParam(CF_WrappedClose, osal_id_t, fd);
+
+    UT_GenStub_Execute(CF_WrappedClose, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WrappedLseek()
+ * ----------------------------------------------------
+ */
+int32 CF_WrappedLseek(osal_id_t fd, off_t offset, int mode)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WrappedLseek, int32);
+
+    UT_GenStub_AddParam(CF_WrappedLseek, osal_id_t, fd);
+    UT_GenStub_AddParam(CF_WrappedLseek, off_t, offset);
+    UT_GenStub_AddParam(CF_WrappedLseek, int, mode);
+
+    UT_GenStub_Execute(CF_WrappedLseek, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_WrappedLseek, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WrappedOpenCreate()
+ * ----------------------------------------------------
+ */
+int32 CF_WrappedOpenCreate(osal_id_t *fd, const char *fname, int32 flags, int32 access)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WrappedOpenCreate, int32);
+
+    UT_GenStub_AddParam(CF_WrappedOpenCreate, osal_id_t *, fd);
+    UT_GenStub_AddParam(CF_WrappedOpenCreate, const char *, fname);
+    UT_GenStub_AddParam(CF_WrappedOpenCreate, int32, flags);
+    UT_GenStub_AddParam(CF_WrappedOpenCreate, int32, access);
+
+    UT_GenStub_Execute(CF_WrappedOpenCreate, Basic, UT_DefaultHandler_CF_WrappedOpenCreate);
+
+    return UT_GenStub_GetReturnValue(CF_WrappedOpenCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WrappedRead()
+ * ----------------------------------------------------
+ */
+int32 CF_WrappedRead(osal_id_t fd, void *buf, size_t read_size)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WrappedRead, int32);
+
+    UT_GenStub_AddParam(CF_WrappedRead, osal_id_t, fd);
+    UT_GenStub_AddParam(CF_WrappedRead, void *, buf);
+    UT_GenStub_AddParam(CF_WrappedRead, size_t, read_size);
+
+    UT_GenStub_Execute(CF_WrappedRead, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_WrappedRead, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WrappedWrite()
+ * ----------------------------------------------------
+ */
+int32 CF_WrappedWrite(osal_id_t fd, const void *buf, size_t write_size)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WrappedWrite, int32);
+
+    UT_GenStub_AddParam(CF_WrappedWrite, osal_id_t, fd);
+    UT_GenStub_AddParam(CF_WrappedWrite, const void *, buf);
+    UT_GenStub_AddParam(CF_WrappedWrite, size_t, write_size);
+
+    UT_GenStub_Execute(CF_WrappedWrite, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_WrappedWrite, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WriteHistoryEntryToFile()
+ * ----------------------------------------------------
+ */
+int CF_WriteHistoryEntryToFile(osal_id_t fd, const CF_History_t *h)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WriteHistoryEntryToFile, int);
+
+    UT_GenStub_AddParam(CF_WriteHistoryEntryToFile, osal_id_t, fd);
+    UT_GenStub_AddParam(CF_WriteHistoryEntryToFile, const CF_History_t *, h);
+
+    UT_GenStub_Execute(CF_WriteHistoryEntryToFile, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(CF_WriteHistoryEntryToFile, int);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WriteHistoryQueueDataToFile()
+ * ----------------------------------------------------
+ */
+int32 CF_WriteHistoryQueueDataToFile(osal_id_t fd, CF_Channel_t *c, CF_Direction_t dir)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WriteHistoryQueueDataToFile, int32);
+
+    UT_GenStub_AddParam(CF_WriteHistoryQueueDataToFile, osal_id_t, fd);
+    UT_GenStub_AddParam(CF_WriteHistoryQueueDataToFile, CF_Channel_t *, c);
+    UT_GenStub_AddParam(CF_WriteHistoryQueueDataToFile, CF_Direction_t, dir);
+
+    UT_GenStub_Execute(CF_WriteHistoryQueueDataToFile, Basic, UT_DefaultHandler_CF_WriteHistoryQueueDataToFile);
+
+    return UT_GenStub_GetReturnValue(CF_WriteHistoryQueueDataToFile, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for CF_WriteTxnQueueDataToFile()
+ * ----------------------------------------------------
+ */
+int32 CF_WriteTxnQueueDataToFile(osal_id_t fd, CF_Channel_t *c, CF_QueueIdx_t q)
+{
+    UT_GenStub_SetupReturnBuffer(CF_WriteTxnQueueDataToFile, int32);
+
+    UT_GenStub_AddParam(CF_WriteTxnQueueDataToFile, osal_id_t, fd);
+    UT_GenStub_AddParam(CF_WriteTxnQueueDataToFile, CF_Channel_t *, c);
+    UT_GenStub_AddParam(CF_WriteTxnQueueDataToFile, CF_QueueIdx_t, q);
+
+    UT_GenStub_Execute(CF_WriteTxnQueueDataToFile, Basic, UT_DefaultHandler_CF_WriteTxnQueueDataToFile);
+
+    return UT_GenStub_GetReturnValue(CF_WriteTxnQueueDataToFile, int32);
+}
+```

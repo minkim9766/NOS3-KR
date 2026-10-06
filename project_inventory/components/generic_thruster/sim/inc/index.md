@@ -3,16 +3,111 @@
 
 **경로:** `components/generic_thruster/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_thruster_42_data_provider.hpp`
 
-file--generic_thruster_42_data_provider.hpp
-file--generic_thruster_hardware_model.hpp
+**경로:** `components/generic_thruster/sim/inc/generic_thruster_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_THRUSTER42DATAPROVIDER_HPP
+#define NOS3_GENERIC_THRUSTER42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_thruster42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_thruster42DataProvider(const boost::property_tree::ptree& config);
+
+        /** \brief Method to command the thruster
+         * 
+         *  @param thr_num  Thruster to command
+         *  @param thr_pct  Percentage of full thrust, 0-100
+         */
+        void cmd_thrust(int thr_num, double thr_pct);
+
+    private:
+        /* Disallow these */
+        ~Generic_thruster42DataProvider(void) {};
+        Generic_thruster42DataProvider& operator=(const Generic_thruster42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_thruster_hardware_model.hpp`
 
-- [`components/generic_thruster/sim/inc/generic_thruster_42_data_provider.hpp`](file--generic_thruster_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_thruster/sim/inc/generic_thruster_hardware_model.hpp`](file--generic_thruster_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_thruster/sim/inc/generic_thruster_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_THRUSTERHARDWAREMODEL_HPP
+#define NOS3_GENERIC_THRUSTERHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Uart/Client/Uart.hpp> /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+
+#include <sim_i_data_provider.hpp>
+#include <sim_i_hardware_model.hpp>
+#include <generic_thruster_42_data_provider.hpp>
+
+
+/*
+** Defines
+*/
+#define GENERIC_THRUSTER_SIM_SUCCESS 0
+#define GENERIC_THRUSTER_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_thrusterHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_thrusterHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_thrusterHardwareModel(void);
+
+    private:
+        /* Private helper methods */
+        void uart_read_callback(const uint8_t *buf, size_t len); /* Handle data the hardware receives from its protocol bus */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        /* Private data members */
+        std::unique_ptr<NosEngine::Uart::Uart>              _uart_connection; /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_thruster_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::uint32_t                                       _count;
+        std::uint32_t                                       _status;
+    };
+}
+
+#endif
+```

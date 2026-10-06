@@ -3,16 +3,156 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-band-styles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `item-band-styles.component.html`
 
-file--item-band-styles.component.html
-file--item-band-styles.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-band-styles/item-band-styles.component.html`
+
+
+```html
+<form [formGroup]="form">
+  <table class="style-table" formGroupName="properties">
+    <tr>
+      <td class="property">
+        Frozen
+        <ya-help dialogTitle="Frozen">
+          Fix this line to the top of the view. Frozen bands are always rendered above other bands.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <mat-slide-toggle formControlName="frozen" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">
+        Multiline
+        <ya-help dialogTitle="Multiline">
+          Draw items on multiple lines if otherwise there would be collisions.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <mat-slide-toggle formControlName="multiline" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">
+        Space Between Lines
+        <ya-help dialogTitle="Space Between Lines">
+          In case of multilining, this indicates the vertical space between lines.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="spaceBetweenLines" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">
+        Space Between Items
+        <ya-help dialogTitle="Space Between Items">
+          In case of multilining, this indicates the minimum horizontal space between items. If an
+          item does not meet this treshold, it gets rendered on a different line.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="spaceBetweenItems" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Margin Top</td>
+      <td class="widget">
+        <input type="number" formControlName="marginTop" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Margin Bottom</td>
+      <td class="widget">
+        <input type="number" formControlName="marginBottom" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Height</td>
+      <td class="widget">
+        <input type="number" formControlName="itemHeight" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Background Color</td>
+      <td class="widget">
+        <input type="color" formControlName="itemBackgroundColor" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Text Color</td>
+      <td class="widget">
+        <input type="color" formControlName="itemTextColor" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Text Overflow</td>
+      <td class="widget">
+        <ya-select [options]="itemTextOverflowOptions" formControlName="itemTextOverflow" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Text Size</td>
+      <td class="widget">
+        <input type="number" formControlName="itemTextSize" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Margin Left</td>
+      <td class="widget">
+        <input type="number" formControlName="itemMarginLeft" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Border Color</td>
+      <td class="widget">
+        <input type="color" formControlName="itemBorderColor" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Border Width</td>
+      <td class="widget">
+        <input type="number" formControlName="itemBorderWidth" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Item Corner Radius</td>
+      <td class="widget">
+        <input type="number" formControlName="itemCornerRadius" style="width: 100px" min="0" />
+      </td>
+    </tr>
+  </table>
+</form>
 ```
 
-## 항목
+### `item-band-styles.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-band-styles/item-band-styles.component.html`](file--item-band-styles.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-band-styles/item-band-styles.component.ts`](file--item-band-styles.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-band-styles/item-band-styles.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { WebappSdkModule, YaSelectOption } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-item-band-styles',
+  templateUrl: './item-band-styles.component.html',
+  styleUrl: '../../shared/StyleTable.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ItemBandStylesComponent {
+  itemTextOverflowOptions: YaSelectOption[] = [
+    { id: 'show', label: 'Show' },
+    { id: 'clip', label: 'Clip' },
+    { id: 'hide', label: 'Hide' },
+  ];
+
+  @Input()
+  form: UntypedFormGroup;
+}
+```

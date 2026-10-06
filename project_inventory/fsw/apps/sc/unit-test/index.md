@@ -3,32 +3,13114 @@
 
 **경로:** `fsw/apps/sc/unit-test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 stubs/index
 utilities/index
-file--CMakeLists.txt
-file--sc_app_tests.c
-file--sc_atsrq_tests.c
-file--sc_cmds_tests.c
-file--sc_loads_tests.c
-file--sc_rtsrq_tests.c
-file--sc_state_tests.c
-file--sc_utils_tests.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sc/unit-test/stubs/`](stubs/index) — 폴더
-- [`fsw/apps/sc/unit-test/utilities/`](utilities/index) — 폴더
-- [`fsw/apps/sc/unit-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_app_tests.c`](file--sc_app_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_atsrq_tests.c`](file--sc_atsrq_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_cmds_tests.c`](file--sc_cmds_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_loads_tests.c`](file--sc_loads_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_rtsrq_tests.c`](file--sc_rtsrq_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_state_tests.c`](file--sc_state_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/unit-test/sc_utils_tests.c`](file--sc_utils_tests.c) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sc/unit-test/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# Unit Test build recipe
+#
+# This CMake file contains the recipe for building cFS app unit tests.
+# It is invoked from the parent directory when unit tests are enabled.
+#
+##################################################################
+
+add_cfe_coverage_stubs("sc_internal"
+  utilities/sc_test_utils.c
+  stubs/sc_loads_stubs.c
+  stubs/sc_cmds_stubs.c
+  stubs/sc_atsrq_stubs.c
+  stubs/sc_state_stubs.c
+  stubs/sc_app_stubs.c
+  stubs/sc_utils_stubs.c
+  stubs/sc_rtsrq_stubs.c
+)
+
+# Link with the cfe core stubs and unit test assert libs
+target_link_libraries(coverage-sc_internal-stubs ut_core_api_stubs ut_assert)
+
+# Include and expose unit test utilities, fsw/inc, and fsw/src includes
+target_include_directories(coverage-sc_internal-stubs PUBLIC utilities)
+target_include_directories(coverage-sc_internal-stubs PUBLIC ../fsw/inc)
+target_include_directories(coverage-sc_internal-stubs PUBLIC ../fsw/src)
+
+# Generate a dedicated "testrunner" executable for each test file
+# Accomplish this by cycling through all the app's source files, there must be
+# a *_tests file for each
+foreach(SRCFILE ${APP_SRC_FILES})
+
+    # Get the base sourcefile name as a module name without path or the  
+    # extension, this will be used as the base name of the unit test file.
+    get_filename_component(UNIT_NAME "${SRCFILE}" NAME_WE)
+
+    # Use the module name to make the test name by adding _tests to the end
+    set(TESTS_NAME "${UNIT_NAME}_tests")
+    
+    # Make the test sourcefile name with unit test path and extension
+    set(TESTS_SOURCE_FILE "${PROJECT_SOURCE_DIR}/unit-test/${TESTS_NAME}.c")
+
+    # Create the coverage test executable
+    add_cfe_coverage_test(sc "${UNIT_NAME}" "${TESTS_SOURCE_FILE}" "${CFS_SC_SOURCE_DIR}/${SRCFILE}")
+
+    # Add dependency to utilities and internal stubs
+    add_cfe_coverage_dependency(sc "${UNIT_NAME}" sc_internal)
+
+endforeach()
+```
+
+### `sc_app_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_app_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_rts.h"
+#include "sc_app.h"
+#include "sc_cmds.h"
+#include "sc_state.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_utils.h"
+#include "sc_loads.h"
+#include "sc_msgids.h"
+#include "sc_events.h"
+#include "sc_test_utils.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_app_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+uint16 SC_APP_TEST_CFE_TBL_RegisterHookCount;
+
+uint16 SC_APP_TEST_CFE_TBL_GetAddressHookCount;
+
+uint32 SC_APP_TEST_DummyTableBuffer[10][SC_NUMBER_OF_RTS];
+
+SC_AtpControlBlock_t SC_APP_TEST_GlobalAtsCtrlBlck;
+
+uint32 SC_APP_TEST_GlobalAtsCmdStatusTbl[2048];
+
+SC_RtpControlBlock_t SC_APP_TEST_GlobalRtsCtrlBlck;
+
+SC_RtsInfoEntry_t SC_APP_TEST_GlobalRtsInfoTbl;
+
+/*
+ * Function Definitions
+ */
+
+CFE_Status_t CFE_TBL_RegisterHook1(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    CFE_TBL_Handle_t *TblHandle = (CFE_TBL_Handle_t *)Context->ArgPtr[0];
+
+    *TblHandle = (CFE_TBL_Handle_t)SC_APP_TEST_CFE_TBL_RegisterHookCount++;
+
+    return CFE_SUCCESS;
+}
+
+CFE_Status_t CFE_TBL_GetAddressHookNominal(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                           const UT_StubContext_t *Context)
+{
+    void **TblPtr = (void **)Context->ArgPtr[0];
+
+    *TblPtr = &SC_APP_TEST_DummyTableBuffer[SC_APP_TEST_CFE_TBL_GetAddressHookCount];
+
+    SC_OperData.AtsCtrlBlckAddr        = &SC_APP_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[1024];
+    SC_OperData.RtsCtrlBlckAddr        = &SC_APP_TEST_GlobalRtsCtrlBlck;
+    SC_OperData.RtsInfoTblAddr         = &SC_APP_TEST_GlobalRtsInfoTbl;
+
+    if (++SC_APP_TEST_CFE_TBL_GetAddressHookCount > 6)
+        return CFE_TBL_INFO_UPDATED;
+    else
+        return CFE_SUCCESS;
+}
+
+CFE_Status_t CFE_TBL_GetAddressHookNominal2(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                            const UT_StubContext_t *Context)
+{
+    return CFE_TBL_ERR_NEVER_LOADED;
+}
+
+int32 CFE_TBL_GetAddressHookError1(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    void **TblPtr = (void **)Context->ArgPtr[0];
+
+    *TblPtr = &SC_APP_TEST_DummyTableBuffer[SC_APP_TEST_CFE_TBL_GetAddressHookCount];
+
+    SC_OperData.AtsCtrlBlckAddr        = &SC_APP_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[1024];
+    SC_OperData.RtsCtrlBlckAddr        = &SC_APP_TEST_GlobalRtsCtrlBlck;
+    SC_OperData.RtsInfoTblAddr         = &SC_APP_TEST_GlobalRtsInfoTbl;
+
+    if (++SC_APP_TEST_CFE_TBL_GetAddressHookCount > 6)
+        return -1;
+    else
+        return CFE_SUCCESS;
+}
+
+void SC_AppMain_Test_Nominal(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    size_t         MsgSize   = sizeof(SC_NoArgsCmd_t);
+
+    /* Called in a subfunction.  Set here to prevent segmentation fault. */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Load return buffer to make loop execute twice */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+
+    /* Return timeout first time through, will default to success on second */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, CFE_SB_TIME_OUT);
+
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookNominal, NULL);
+
+    /* Execute the function being tested */
+    SC_AppMain();
+
+    /* Verify results */
+    /* Generates 2 event messages we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppMain_Test_AppInitError(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "App terminating, Result = 0x%%08X");
+    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "SC App terminating, Result = 0x%%08X\n");
+
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookNominal, NULL);
+
+    /* Set CFE_EVS_Register to return -1 in order to make SC_AppInit return -1, in order to reach "RunStatus =
+     * CFE_ES_APP_ERROR" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
+
+    /* Execute the function being tested */
+    SC_AppMain();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APP_EXIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+
+    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
+}
+
+void SC_AppMain_Test_RcvMsgError(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "App terminating, Result = 0x%%08X");
+
+    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "SC App terminating, Result = 0x%%08X\n");
+
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookNominal, NULL);
+
+    /* Set to make loop execute exactly once */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+
+    /* Set CFE_SB_RcvMsg to return -1 in order to reach "RunStatus = CFE_ES_APP_ERROR" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, -1);
+
+    /* Execute the function being tested */
+    SC_AppMain();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, SC_APP_EXIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[2].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[2].Spec);
+
+    /* Generates 3 event messages we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+                  call_count_CFE_EVS_SendEvent);
+
+    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
+}
+
+void SC_AppInit_Test_NominalPowerOnReset(void)
+{
+    CFE_Status_t   ReturnValue;
+    SC_OperData_t  Expected_SC_OperData;
+    SC_AppData_t   Expected_SC_AppData;
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_HK_TLM_MID);
+    size_t         MsgSize   = sizeof(SC_HkTlm_t);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "SC Initialized. Version %%d.%%d.%%d.%%d");
+
+    /* Set CFE_ES_GetResetType to return CFE_ES_POWERON_RESET in order to reach "SC_AppData.AutoStartRTS =
+     * RTS_ID_AUTO_POWER_ON" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_GetResetType), 1, CFE_PSP_RST_TYPE_POWERON);
+
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookNominal, NULL);
+
+    /* Sets table handles */
+    SC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), CFE_TBL_RegisterHook1, NULL);
+
+    /* Set global data structures to non-zero values, to verify that SC_AppInit sets values to 0 (with some exceptions)
+     */
+    memset(&SC_OperData, 1, sizeof(SC_OperData));
+    memset(&SC_AppData, 1, sizeof(SC_AppData));
+
+    memset(&Expected_SC_OperData, 0, sizeof(Expected_SC_OperData));
+    memset(&Expected_SC_AppData, 0, sizeof(Expected_SC_AppData));
+
+    Expected_SC_AppData.NextProcNumber      = SC_NONE;
+    Expected_SC_AppData.NextCmdTime[SC_ATP] = SC_MAX_TIME;
+    Expected_SC_AppData.NextCmdTime[SC_RTP] = SC_MAX_TIME;
+    Expected_SC_AppData.AutoStartRTS        = RTS_ID_AUTO_POWER_ON;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+
+    Expected_SC_OperData.AtsInfoHandle         = 0;
+    Expected_SC_OperData.RtsCtrlBlckHandle     = 0;
+    Expected_SC_OperData.AtsCtrlBlckHandle     = 0;
+    Expected_SC_OperData.AtsCmdStatusHandle[0] = 0;
+    Expected_SC_OperData.AtsCmdStatusHandle[1] = 0;
+
+    Expected_SC_OperData.HkPacket.ContinueAtsOnFailureFlag = 1;
+
+    UtAssert_MemCmp(&SC_OperData.CmdPipe, &Expected_SC_OperData.CmdPipe, sizeof(Expected_SC_OperData.CmdPipe), "2");
+    UtAssert_MemCmp(&SC_OperData.AtsInfoHandle, &Expected_SC_OperData.AtsInfoHandle,
+                    sizeof(Expected_SC_OperData.AtsInfoHandle), "AtsInfoHandle");
+    UtAssert_MemCmp(&SC_OperData.RtsInfoHandle, &Expected_SC_OperData.RtsInfoHandle,
+                    sizeof(Expected_SC_OperData.RtsInfoHandle), "13");
+    UtAssert_MemCmp(&SC_OperData.RtsCtrlBlckHandle, &Expected_SC_OperData.RtsCtrlBlckHandle,
+                    sizeof(Expected_SC_OperData.RtsCtrlBlckHandle), "RtsCtrlBlckHandle");
+    UtAssert_MemCmp(&SC_OperData.AtsCtrlBlckHandle, &Expected_SC_OperData.AtsCtrlBlckHandle,
+                    sizeof(Expected_SC_OperData.AtsCtrlBlckHandle), "AtsCtrlBlckHandle");
+    UtAssert_MemCmp(&SC_OperData.AtsCmdStatusHandle, &Expected_SC_OperData.AtsCmdStatusHandle,
+                    sizeof(Expected_SC_OperData.AtsCmdStatusHandle), "AtsCmdStatusHandle");
+    UtAssert_MemCmp(&SC_OperData.AtsDupTestArray, &Expected_SC_OperData.AtsDupTestArray,
+                    sizeof(Expected_SC_OperData.AtsDupTestArray), "21");
+    UtAssert_MemCmp(&SC_OperData.NumCmdsSec, &Expected_SC_OperData.NumCmdsSec, sizeof(Expected_SC_OperData.NumCmdsSec),
+                    "22");
+    UtAssert_MemCmp(&SC_OperData.HkPacket, &Expected_SC_OperData.HkPacket, sizeof(Expected_SC_OperData.HkPacket), "23");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_INIT_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    /* Generates 1 event messages we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppInit_Test_Nominal(void)
+{
+    CFE_Status_t   ReturnValue;
+    SC_OperData_t  Expected_SC_OperData;
+    SC_AppData_t   Expected_SC_AppData;
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_HK_TLM_MID);
+    size_t         MsgSize   = sizeof(SC_HkTlm_t);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "SC Initialized. Version %%d.%%d.%%d.%%d");
+
+    /* Set CFE_ES_GetResetType to return something other than CFE_ES_POWERON_RESET in order to reach
+     * "SC_AppData.AutoStartRTS = RTS_ID_AUTO_PROCESSOR" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_GetResetType), 1, -1);
+
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookNominal, NULL);
+
+    /* Sets table handles */
+    SC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), CFE_TBL_RegisterHook1, NULL);
+
+    /* Set global data structures to non-zero values, to verify that SC_AppInit sets values to 0 (with some exceptions)
+     */
+    memset(&SC_OperData, 1, sizeof(SC_OperData));
+    memset(&SC_AppData, 1, sizeof(SC_AppData));
+
+    memset(&Expected_SC_OperData, 0, sizeof(Expected_SC_OperData));
+    memset(&Expected_SC_AppData, 0, sizeof(Expected_SC_AppData));
+
+    Expected_SC_AppData.NextProcNumber      = SC_NONE;
+    Expected_SC_AppData.NextCmdTime[SC_ATP] = SC_MAX_TIME;
+    Expected_SC_AppData.NextCmdTime[SC_RTP] = SC_MAX_TIME;
+    Expected_SC_AppData.AutoStartRTS        = RTS_ID_AUTO_PROCESSOR;
+
+    Expected_SC_OperData.HkPacket.ContinueAtsOnFailureFlag = 1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+
+    Expected_SC_OperData.AtsInfoHandle         = 0;
+    Expected_SC_OperData.RtsCtrlBlckHandle     = 0;
+    Expected_SC_OperData.AtsCtrlBlckHandle     = 0;
+    Expected_SC_OperData.AtsCmdStatusHandle[0] = 0;
+    Expected_SC_OperData.AtsCmdStatusHandle[1] = 0;
+
+    UtAssert_MemCmp(&SC_OperData.CmdPipe, &Expected_SC_OperData.CmdPipe, sizeof(Expected_SC_OperData.CmdPipe), "2");
+    UtAssert_MemCmp(&SC_OperData.AtsInfoHandle, &Expected_SC_OperData.AtsInfoHandle,
+                    sizeof(Expected_SC_OperData.AtsInfoHandle), "AtsInfoHandle");
+    UtAssert_MemCmp(&SC_OperData.RtsInfoHandle, &Expected_SC_OperData.RtsInfoHandle,
+                    sizeof(Expected_SC_OperData.RtsInfoHandle), "13");
+    UtAssert_MemCmp(&SC_OperData.RtsCtrlBlckHandle, &Expected_SC_OperData.RtsCtrlBlckHandle,
+                    sizeof(Expected_SC_OperData.RtsCtrlBlckHandle), "RtsCtrlBlckHandle");
+    UtAssert_MemCmp(&SC_OperData.AtsCtrlBlckHandle, &Expected_SC_OperData.AtsCtrlBlckHandle,
+                    sizeof(Expected_SC_OperData.AtsCtrlBlckHandle), "AtsCtrlBlckHandle");
+    UtAssert_MemCmp(&SC_OperData.AtsCmdStatusHandle, &Expected_SC_OperData.AtsCmdStatusHandle,
+                    sizeof(Expected_SC_OperData.AtsCmdStatusHandle), "AtsCmdStatusHandle");
+    UtAssert_MemCmp(&SC_OperData.AtsDupTestArray, &Expected_SC_OperData.AtsDupTestArray,
+                    sizeof(Expected_SC_OperData.AtsDupTestArray), "21");
+    UtAssert_MemCmp(&SC_OperData.NumCmdsSec, &Expected_SC_OperData.NumCmdsSec, sizeof(Expected_SC_OperData.NumCmdsSec),
+                    "22");
+    UtAssert_MemCmp(&SC_OperData.HkPacket, &Expected_SC_OperData.HkPacket, sizeof(Expected_SC_OperData.HkPacket), "23");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_INIT_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    /* Generates 1 event messages we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppInit_Test_EVSRegisterError(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedSysLogString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedSysLogString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Event Services Register returned: 0x%%08X\n");
+
+    /* Set CFE_EVS_Register to return -1 in order to reach "CFE_ES_WriteToSysLog("Event Services Register returned:
+     * 0x%08X\n", Result)" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_EVS_Register), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+
+    strCmpResult = strncmp(ExpectedSysLogString, context_CFE_ES_WriteToSysLog.Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Sys Log string matched expected result, '%s'", context_CFE_ES_WriteToSysLog.Spec);
+}
+
+void SC_AppInit_Test_SBCreatePipeError(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Software Bus Create Pipe returned: 0x%%08X");
+
+    /* Set CFE_SB_CreatePipe to return -1 in order to generate error message SC_INIT_SB_CREATE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_CreatePipe), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INIT_SB_CREATE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppInit_Test_SBSubscribeHKError(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Software Bus subscribe to housekeeping returned: 0x%%08X");
+
+    /* Set CFE_SB_Subscribe to return -1 on the first call in order to generate error message
+     * SC_INIT_SB_SUBSCRIBE_HK_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INIT_SB_SUBSCRIBE_HK_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppInit_Test_SubscribeTo1HzError(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Software Bus subscribe to 1 Hz cycle returned: 0x%%08X");
+
+    /* Set CFE_SB_Subscribe to return -1 on the 2nd call in order to generate error message
+     * SC_INIT_SB_SUBSCRIBE_1HZ_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INIT_SB_SUBSCRIBE_1HZ_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppInit_Test_SBSubscribeToCmdError(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Software Bus subscribe to command returned: 0x%%08X");
+
+    /* Set CFE_SB_Subscribe to return -1 on the 3rd call in order to generate error message
+     * SC_INIT_SB_SUBSCRIBE_CMD_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 3, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INIT_SB_SUBSCRIBE_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppInit_Test_InitTablesError(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s table register failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 in order to reach return statement immediately after
+     * comment "Must be able to create and initialize tables" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_RTS_INFO_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InitTables_Test_Nominal(void)
+{
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookNominal, NULL);
+
+    /* Sets table handles */
+    SC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), CFE_TBL_RegisterHook1, NULL);
+
+    /* Execute the function being tested */
+    UtAssert_INT32_EQ(SC_AppInit(), CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LOAD_FAIL_COUNT_INFO_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_INIT_INF_EID);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+}
+
+void SC_InitTables_Test_ErrorRegisterAllTables(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s table register failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 in order to reach return statement immediately after
+     * comment "Must be able to create and initialize tables" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_InitTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_RTS_INFO_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InitTables_Test_ErrorGetDumpTablePointers(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table failed Getting Address, returned: 0x%%08X");
+
+    /* Set CFE_TBL_GetAddress to return -1 in order to cause SC_GetDumpTablePointers to return -1, in order to reach
+     * "return(Result)" after SC_GetDumpTablePointers */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_InitTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_RTS_INFO_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InitTables_Test_ErrorGetLoadTablePointers(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS table %%d failed Getting Address, returned: 0x%%08X");
+
+    /* Prevents error messages in call to SC_GetLoadTablePointers */
+    SC_APP_TEST_CFE_TBL_GetAddressHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_GetAddressHookError1, NULL);
+
+    /* Sets table handles */
+    SC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), CFE_TBL_RegisterHook1, NULL);
+
+    /* Causes SC_GetLoadTablePointers to return -1 in order to cause SC_GetLoadTablePointers to return -1, in order to
+     * reach "Return(Result)" after SC_GetLoadTablePointers */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 7, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_InitTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_GET_ADDRESS_ATS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    /* Generates 1 event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_Nominal(void)
+{
+    CFE_Status_t ReturnValue;
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterRTSInformation(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s table register failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the 1st call in order to generate error message
+     * SC_REGISTER_RTS_INFO_TABLE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_RTS_INFO_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterRTPControl(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s table register failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the 2nd call in order to generate error message
+     * SC_REGISTER_RTS_CTRL_BLK_TABLE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 2, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_RTS_CTRL_BLK_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterATSInformation(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s table register failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the 3rd call in order to generate error message
+     * SC_REGISTER_ATS_INFO_TABLE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 3, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_ATS_INFO_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterATPControl(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%%s table register failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the 4th call in order to generate error message
+     * SC_REGISTER_ATS_CTRL_BLK_TABLE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 4, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_ATS_CTRL_BLK_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterATSCommandStatus(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS command status table register failed for ATS %%d, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the 5th call in order to generate error message
+     * SC_REGISTER_ATS_CMD_STATUS_TABLE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 5, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_ATS_CMD_STATUS_TABLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterLoadableRTS(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table Registration Failed for %%s %%d, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the last call when registering loadable RTS tables in order to generate
+     * error message SC_REGISTER_RTS_TBL_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 5 + SC_NUMBER_OF_ATS, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_RTS_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterLoadableATS(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table Registration Failed for %%s %%d, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the last call when registering loadable ATS tables in order to generate
+     * error message SC_REGISTER_ATS_TBL_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 6 + SC_NUMBER_OF_ATS + SC_NUMBER_OF_RTS, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_ATS_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterAllTables_Test_ErrorRegisterLoadableAppendATS(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Append ATS Table Registration Failed, returned: 0x%%08X");
+
+    /* Set CFE_TBL_Register to return -1 on the last call when registering loadable Append ATS tables in order to
+     * generate error message SC_REGISTER_APPEND_TBL_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 5 + 2 * SC_NUMBER_OF_ATS + SC_NUMBER_OF_RTS, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterAllTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_REGISTER_APPEND_TBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_RegisterDumpOnlyTables_Test_Nominal(void)
+{
+    CFE_Status_t ReturnValue;
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterDumpOnlyTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+    UtAssert_STUB_COUNT(CFE_TBL_Register, 6);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_RegisterLoadableTables_Test_Nominal(void)
+{
+    CFE_Status_t ReturnValue;
+
+    /* Execute the function being tested */
+    ReturnValue = SC_RegisterLoadableTables();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+    UtAssert_STUB_COUNT(CFE_TBL_Register, 67);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_GetDumpTablePointers_Test_Nominal(void)
+{
+    CFE_Status_t ReturnValue;
+
+    /* Same return value as default, but bypasses default hook function to simplify test */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetDumpTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetDumpTablePointers_Test_ErrorGetAddressRTSInformation(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on 1st call (to generate error message
+     * SC_GET_ADDRESS_RTS_INFO_ERR_EID) and CFE_SUCCESS on all other calls.  This could have been done using just a hook
+     * function and a global variable, but it was simpler to set a hook function that just returns CFE_SUCCESS and then
+     * also set a return code for the particular call number.  Because of the order of handling of return values and
+     * hook functions in the stub function, this results in the return code being used if it's the right call number,
+     * while otherwise using the hook function. */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetDumpTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_RTS_INFO_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetDumpTablePointers_Test_ErrorGetAddressRTPControl(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on 2nd call (to generate error message
+     * SC_GET_ADDRESS_RTS_CTRL_BLCK_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 2, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetDumpTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_RTS_CTRL_BLCK_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetDumpTablePointers_Test_ErrorGetAddressATSInformation(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on 3rd call (to generate error message
+     * SC_GET_ADDRESS_ATS_INFO_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 3, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetDumpTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_ATS_INFO_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetDumpTablePointers_Test_ErrorGetAddressATPControl(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on 5th call (to generate error message
+     * SC_GET_ADDRESS_ATS_CTRL_BLCK_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 4, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetDumpTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_ATS_CTRL_BLCK_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetDumpTablePointers_Test_ErrorGetAddressATSCommandStatus(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS Cmd Status table for ATS %%d failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on 6th call (to generate error message
+     * SC_GET_ADDRESS_ATS_CMD_STAT_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 5, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetDumpTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_ATS_CMD_STAT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetLoadTablePointers_Test_Nominal(void)
+{
+    CFE_Status_t ReturnValue;
+
+    /* Prevents all error messages */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_ERR_NEVER_LOADED);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetLoadTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == CFE_SUCCESS, "ReturnValue == CFE_SUCCESS");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableATS(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS table %%d failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on 1st call (to generate error message SC_GET_ADDRESS_ATS_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetLoadTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_ATS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableATSAppend(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Append ATS table failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on call (SC_NUMBER_OF_ATS + 1) (to generate error message
+     * SC_GET_ADDRESS_APPEND_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetLoadTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_APPEND_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableRTS(void)
+{
+    CFE_Status_t ReturnValue;
+    int32        strCmpResult;
+    char         ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "RTS table %%d failed Getting Address, returned: 0x%%08X");
+
+    /* Need to set CFE_TBL_GetAddress to return -1 on call (SC_NUMBER_OF_ATS + 2) (to generate error message
+     * SC_GET_ADDRESS_RTS_ERR_EID) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    ReturnValue = SC_GetLoadTablePointers();
+
+    /* Verify results */
+    UtAssert_True(ReturnValue == -1, "ReturnValue == -1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_GET_ADDRESS_RTS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadDefaultTables_Test(void)
+{
+    /* Set OS_open to return 1, in order to enter if-block "if (FileDesc >= 0)" */
+    UT_SetDeferredRetcode(UT_KEY(OS_OpenCreate), 1, OS_SUCCESS);
+
+    /* Cover branch for - Only try to load table files that can be opened */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Load), 1, -1);
+
+    /* Cover branch for - send an event for each failed open */
+    UT_SetDeferredRetcode(UT_KEY(OS_OpenCreate), 1, -1);
+
+    /* Execute the function being tested */
+    UtAssert_VOIDCALL(SC_LoadDefaultTables());
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LOAD_FAIL_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_RTS_OPEN_FAIL_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, SC_RTS_LOAD_FAIL_COUNT_INFO_EID);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 3);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_AppMain_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_AppMain_Test_Nominal");
+    UtTest_Add(SC_AppMain_Test_AppInitError, SC_Test_Setup, SC_Test_TearDown, "SC_AppMain_Test_AppInitError");
+    UtTest_Add(SC_AppMain_Test_RcvMsgError, SC_Test_Setup, SC_Test_TearDown, "SC_AppMain_Test_RcvMsgError");
+    UtTest_Add(SC_AppInit_Test_NominalPowerOnReset, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppInit_Test_NominalPowerOnReset");
+    UtTest_Add(SC_AppInit_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_AppInit_Test_Nominal");
+    UtTest_Add(SC_AppInit_Test_EVSRegisterError, SC_Test_Setup, SC_Test_TearDown, "SC_AppInit_Test_EVSRegisterError");
+    UtTest_Add(SC_AppInit_Test_SBCreatePipeError, SC_Test_Setup, SC_Test_TearDown, "SC_AppInit_Test_SBCreatePipeError");
+    UtTest_Add(SC_AppInit_Test_SBSubscribeHKError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppInit_Test_SBSubscribeHKError");
+    UtTest_Add(SC_AppInit_Test_SBSubscribeToCmdError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppInit_Test_SBSubscribeToCmdError");
+    UtTest_Add(SC_AppInit_Test_SubscribeTo1HzError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppInit_Test_SubscribeTo1HzError");
+    UtTest_Add(SC_AppInit_Test_InitTablesError, SC_Test_Setup, SC_Test_TearDown, "SC_AppInit_Test_InitTablesError");
+    UtTest_Add(SC_InitTables_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_InitTables_Test_Nominal");
+    UtTest_Add(SC_InitTables_Test_ErrorRegisterAllTables, SC_Test_Setup, SC_Test_TearDown,
+               "SC_InitTables_Test_ErrorRegisterAllTables");
+    UtTest_Add(SC_InitTables_Test_ErrorGetDumpTablePointers, SC_Test_Setup, SC_Test_TearDown,
+               "SC_InitTables_Test_ErrorGetDumpTablePointers");
+    UtTest_Add(SC_InitTables_Test_ErrorGetLoadTablePointers, SC_Test_Setup, SC_Test_TearDown,
+               "SC_InitTables_Test_ErrorGetLoadTablePointers");
+    UtTest_Add(SC_RegisterAllTables_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_RegisterAllTables_Test_Nominal");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterRTSInformation, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterRTSInformation");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterRTPControl, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterRTPControl");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterATSInformation, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterATSInformation");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterATPControl, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterATPControl");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterATSCommandStatus, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterATSCommandStatus");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterLoadableRTS, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterLoadableRTS");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterLoadableATS, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterLoadableATS");
+    UtTest_Add(SC_RegisterAllTables_Test_ErrorRegisterLoadableAppendATS, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterAllTables_Test_ErrorRegisterLoadableAppendATS");
+    UtTest_Add(SC_RegisterDumpOnlyTables_Test_Nominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterDumpOnlyTables_Test_Nominal");
+    UtTest_Add(SC_RegisterLoadableTables_Test_Nominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_RegisterLoadableTables_Test_Nominal");
+    UtTest_Add(SC_GetDumpTablePointers_Test_Nominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetDumpTablePointers_Test_Nominal");
+    UtTest_Add(SC_GetDumpTablePointers_Test_ErrorGetAddressRTSInformation, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetDumpTablePointers_Test_ErrorGetAddressRTSInformation");
+    UtTest_Add(SC_GetDumpTablePointers_Test_ErrorGetAddressRTPControl, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetDumpTablePointers_Test_ErrorGetAddressRTPControl");
+    UtTest_Add(SC_GetDumpTablePointers_Test_ErrorGetAddressATSInformation, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetDumpTablePointers_Test_ErrorGetAddressATSInformation");
+    UtTest_Add(SC_GetDumpTablePointers_Test_ErrorGetAddressATPControl, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetDumpTablePointers_Test_ErrorGetAddressATPControl");
+    UtTest_Add(SC_GetDumpTablePointers_Test_ErrorGetAddressATSCommandStatus, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetDumpTablePointers_Test_ErrorGetAddressATSCommandStatus");
+    UtTest_Add(SC_GetLoadTablePointers_Test_Nominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetLoadTablePointers_Test_Nominal");
+    UtTest_Add(SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableATS, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableATS");
+    UtTest_Add(SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableATSAppend, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableATSAppend");
+    UtTest_Add(SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableRTS, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetLoadTablePointers_Test_ErrorGetAddressLoadableRTS");
+    UtTest_Add(SC_LoadDefaultTables_Test, SC_Test_Setup, SC_Test_TearDown, "SC_LoadDefaultTables_Test");
+}
+```
+
+### `sc_atsrq_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_atsrq_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_rts.h"
+#include "sc_app.h"
+#include "sc_cmds.h"
+#include "sc_state.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_utils.h"
+#include "sc_loads.h"
+#include "sc_msgids.h"
+#include "sc_events.h"
+#include "sc_test_utils.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_atsrq_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+SC_AtsInfoTable_t SC_ATSRQ_TEST_GlobalAtsInfoTable[2];
+
+SC_AtpControlBlock_t SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+uint32 SC_ATSRQ_TEST_GlobalAtsCmdStatus[SC_NUMBER_OF_ATS];
+
+/*
+ * Function Definitions
+ */
+
+CFE_TIME_Compare_t UT_SC_StartAtsRq_CompareHookAgreaterthanB(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                             const UT_StubContext_t *Context)
+{
+    return CFE_TIME_A_GT_B;
+}
+
+uint8              UT_SC_StartAtsRq_CompareHookRunCount;
+CFE_TIME_Compare_t UT_SC_StartAtsRq_CompareHook3(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                 const UT_StubContext_t *Context)
+{
+    if (UT_SC_StartAtsRq_CompareHookRunCount == 0)
+    {
+        UT_SC_StartAtsRq_CompareHookRunCount++;
+        return CFE_TIME_A_GT_B;
+    }
+    else
+    {
+        return CFE_TIME_A_LT_B;
+    }
+}
+
+void SC_StartAtsCmd_Test_NominalA(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Execution Started");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId                    = 1;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_IDLE;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_STARTATS_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_NominalB(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Execution Started");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId                    = 2;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_IDLE;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_STARTATS_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_CouldNotStart(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "All ATS commands were skipped, ATS stopped");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId                    = 1;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_IDLE;
+
+    /* Set to cause SC_BeginAts to return false, in order to reach block starting with "could not start the ats" */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHookAgreaterthanB, NULL);
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_SKP_ALL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_NoCommandsA(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start ATS Rejected: ATS %%c Not Loaded");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId                    = 1;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTATS_CMD_NOT_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_NoCommandsB(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start ATS Rejected: ATS %%c Not Loaded");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId                    = 2;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTATS_CMD_NOT_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_InUse(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start ATS Rejected: ATP is not Idle");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId           = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTATS_CMD_NOT_IDLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_InvalidAtsId(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start ATS %%d Rejected: Invalid ATS ID");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId           = 99;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTATS_CMD_INVLD_ID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_InvalidAtsIdZero(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start ATS %%d Rejected: Invalid ATS ID");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId           = 0;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTATS_CMD_INVLD_ID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartAtsCmd_Test_InvalidCmdLength(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, false);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_StartAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopAtsCmd_Test_NominalA(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c stopped");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+
+    /* Execute the function being tested */
+    SC_StopAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPATS_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopAtsCmd_Test_NominalB(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c stopped");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSB;
+
+    /* Execute the function being tested */
+    SC_StopAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPATS_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopAtsCmd_Test_NoRunningAts(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "There is no ATS running to stop");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 99;
+
+    /* Execute the function being tested */
+    SC_StopAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPATS_NO_ATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopAtsCmd_Test_InvalidCmdLength(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, false);
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 99;
+
+    /* Execute the function being tested */
+    SC_StopAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_BeginAts_Test_Nominal(void)
+{
+    bool   Result;
+    uint16 AtsIndex   = 0;
+    uint16 TimeOffset = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS started, skipped %%d commands");
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+
+    /* Execute the function being tested */
+    Result = SC_BeginAts(AtsIndex, TimeOffset);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtsNumber == 1, "SC_OperData.AtsCtrlBlckAddr->AtsNumber == 1");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->CmdNumber == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0],
+                  "SC_OperData.AtsCtrlBlckAddr->CmdNumber == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr == 0, "SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr == 0");
+    UtAssert_True(SC_AppData.NextCmdTime[SC_ATP] == 0, "SC_AppData.NextCmdTime[SC_ATP] == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_ERR_SKP_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_BeginAts_Test_AllCommandsSkipped(void)
+{
+    bool   Result;
+    uint16 AtsIndex   = 0;
+    uint16 TimeOffset = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "All ATS commands were skipped, ATS stopped");
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_OperData.AtsInfoTblAddr          = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr         = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0]  = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_AppData.AtsTimeIndexBuffer[0][0] = 1;
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+
+    /* Set to cause all commnds to be skipped, to generate error message SC_ATS_SKP_ALL_ERR_EID */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHookAgreaterthanB, NULL);
+
+    /* Execute the function being tested */
+    Result = SC_BeginAts(AtsIndex, TimeOffset);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_SKIPPED,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_SKIPPED");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_SKP_ALL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_BeginAts_Test_InvalidAtsIndex(void)
+{
+    bool   Result;
+    uint16 AtsIndex   = SC_NUMBER_OF_ATS;
+    uint16 TimeOffset = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Begin ATS error: invalid ATS index %%d");
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_OperData.AtsInfoTblAddr          = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr         = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0]  = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_AppData.AtsTimeIndexBuffer[0][0] = 1;
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+
+    /* Set to cause all commnds to be skipped, to generate error message SC_ATS_SKP_ALL_ERR_EID */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHookAgreaterthanB, NULL);
+
+    /* Execute the function being tested */
+    Result = SC_BeginAts(AtsIndex, TimeOffset);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_BEGINATS_INVLD_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_KillAts_Test(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsInfoTable));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState  = 99;
+
+    /* Execute the function being tested */
+    SC_KillAts();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[0].AtsUseCtr == 1, "SC_OperData.AtsInfoTblAddr[0].AtsUseCtr == 1");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE, "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE");
+    UtAssert_True(SC_AppData.NextCmdTime[SC_ATP] == SC_MAX_TIME, "SC_AppData.NextCmdTime[SC_ATP] == SC_MAX_TIME");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GroundSwitchCmd_Test_Nominal(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Switch ATS is Pending");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 1);
+
+    /* Execute the function being tested */
+    SC_GroundSwitchCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == true,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == true");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_SWITCH_ATS_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GroundSwitchCmd_Test_DestinationAtsNotLoaded(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Switch ATS Failure: Destination ATS Not Loaded");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_GroundSwitchCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_SWITCH_ATS_CMD_NOT_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GroundSwitchCmd_Test_AtpIdle(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Switch ATS Rejected: ATP is idle");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState  = 99;
+
+    /* Execute the function being tested */
+    SC_GroundSwitchCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_SWITCH_ATS_CMD_IDLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GroundSwitchCmd_Test_InvalidCmdLength(void)
+{
+    CFE_SB_MsgId_t TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, false);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Execute the function being tested */
+    SC_GroundSwitchCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ServiceSwitchPend_Test_NominalA(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS Switched from %%c to %%c");
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 1);
+
+    /* Execute the function being tested */
+    SC_ServiceSwitchPend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_SERVICE_SWTCH_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ServiceSwitchPend_Test_NominalB(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS Switched from %%c to %%c");
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 2;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 0);
+
+    /* Execute the function being tested */
+    SC_ServiceSwitchPend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_SERVICE_SWTCH_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ServiceSwitchPend_Test_AtsEmpty(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Switch ATS Failure: Destination ATS is empty");
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 0;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_ServiceSwitchPend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_SERVICE_SWITCH_ATS_CMD_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ServiceSwitchPend_Test_AtpIdle(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Switch ATS Rejected: ATP is idle");
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState = 99;
+
+    /* Execute the function being tested */
+    SC_ServiceSwitchPend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_SERVICE_SWITCH_IDLE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ServiceSwitchPend_Test_NoSwitch(void)
+{
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, false);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    /* Execute the function being tested */
+    SC_ServiceSwitchPend();
+
+    /* Verify results */
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ServiceSwitchPend_Test_AtsNotStarted(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "All ATS commands were skipped, ATS stopped");
+
+    /* Set to cause SC_BeginAts to return false, in order to reach block starting with "could not start the ats" */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHookAgreaterthanB, NULL);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+    SC_OperData.AtsCmdStatusTblAddr[0]             = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1]             = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    /* Execute the function being tested */
+    SC_ServiceSwitchPend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE, "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_SKP_ALL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InlineSwitch_Test_NominalA(void)
+{
+    bool  Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS Switched from %%c to %%c");
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 1);
+
+    /* Execute the function being tested */
+    Result = SC_InlineSwitch();
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_STARTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_STARTING");
+
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_INLINE_SWTCH_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    /* Generates 1 event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InlineSwitch_Test_NominalB(void)
+{
+    bool  Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS Switched from %%c to %%c");
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 2;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 0);
+
+    /* Execute the function being tested */
+    Result = SC_InlineSwitch();
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_STARTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState == SC_STARTING");
+
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_INLINE_SWTCH_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    /* Generates 1 event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InlineSwitch_Test_AllCommandsSkipped(void)
+{
+    bool Result;
+
+    SC_InitTables();
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    /* Set to cause all commnds to be skipped, to reach block starting with comment "all of the commands in the new ats
+     * were skipped" */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHookAgreaterthanB, NULL);
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    /* Execute the function being tested */
+    Result = SC_InlineSwitch();
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InlineSwitch_Test_DestinationAtsNotLoaded(void)
+{
+    bool  Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Switch ATS Failure: Destination ATS Not Loaded");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 0;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 0;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 0);
+    UT_SetDeferredRetcode(UT_KEY(SC_ToggleAtsIndex), 1, 1);
+
+    /* Execute the function being tested */
+    Result = SC_InlineSwitch();
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false,
+                  "SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_INLINE_SWTCH_NOT_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_JumpAtsCmd_Test_SkipOneCmd(void)
+{
+    uint8             AtsIndex  = 0;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_JUMP_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Next ATS command time in the ATP was set to %%s");
+
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Jump Cmd: Skipped %%d ATS commands");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_JumpAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0]   = SC_LOADED;
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1]   = SC_LOADED;
+    SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]     = 1;
+    SC_AppData.AtsTimeIndexBuffer[AtsIndex][1]     = 2;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber         = 2;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 2;
+
+    /* Execute the function being tested */
+    SC_JumpAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_SKIPPED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_SKIPPED");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1] == SC_LOADED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1] == SC_LOADED");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->CmdNumber == SC_AppData.AtsTimeIndexBuffer[AtsIndex][1],
+                  "SC_OperData.AtsCtrlBlckAddr->CmdNumber == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr == 1, "SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr == 1");
+    UtAssert_True(SC_AppData.NextCmdTime[0] == 0, "SC_AppData.NextCmdTime[0] == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_JUMP_ATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, SC_JUMP_ATS_SKIPPED_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[2].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[2].Spec);
+
+    /* Generates 1 event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 3, "CFE_EVS_SendEvent was called %u time(s), expected 3",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_JumpAtsCmd_Test_AllCommandsSkipped(void)
+{
+    uint8             AtsIndex  = 0;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_JUMP_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Jump Cmd: All ATS commands were skipped, ATS stopped");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_JumpAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0]   = SC_LOADED;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 1;
+
+    /* Execute the function being tested */
+    SC_JumpAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_JUMPATS_CMD_STOPPED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_JumpAtsCmd_Test_NoRunningAts(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_JUMP_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS Jump Failed: No active ATS");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_JumpAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_IDLE;
+
+    /* Execute the function being tested */
+    SC_JumpAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_JUMPATS_CMD_NOT_ACT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_JumpAtsCmd_Test_AtsNotLoaded(void)
+{
+    uint8             AtsIndex  = 0;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_JUMP_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Next ATS command time in the ATP was set to %%s");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_JumpAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    /* Set to satisfy first if-statement, while not affecting later calls to CFE_TIME_Compare */
+    UT_SC_StartAtsRq_CompareHookRunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), UT_SC_StartAtsRq_CompareHook3, NULL);
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0]   = SC_SKIPPED;
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1]   = SC_SKIPPED;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber         = 1;
+    SC_OperData.AtsCtrlBlckAddr->AtpState          = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[0].NumberOfCommands = 2;
+
+    /* Execute the function being tested */
+    SC_JumpAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_SKIPPED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_SKIPPED");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1] == SC_SKIPPED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1] == SC_SKIPPED");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->CmdNumber == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0],
+                  "SC_OperData.AtsCtrlBlckAddr->CmdNumber == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr == 1, "SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr == 1");
+    UtAssert_True(SC_AppData.NextCmdTime[0] == 0, "SC_AppData.NextCmdTime[0] == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_JUMP_ATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_JumpAtsCmd_Test_InvalidCmdLength(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_JUMP_ATS_CC;
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_JumpAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, false);
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_IDLE;
+
+    /* Execute the function being tested */
+    SC_JumpAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void ContinueAtsOnFailureCmd_Test_Nominal(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_CONTINUE_ATS_ON_FAILURE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Continue-ATS-On-Failure command, State: %%d");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_SetContinueAtsOnFailureCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.SetContinueAtsOnFailureCmd.ContinueState = true;
+
+    /* Execute the function being tested */
+    SC_ContinueAtsOnFailureCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.ContinueAtsOnFailureFlag == true,
+                  "SC_OperData.HkPacket.ContinueAtsOnFailureFlag == true");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_CONT_CMD_DEB_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void ContinueAtsOnFailureCmd_Test_FalseState(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_CONTINUE_ATS_ON_FAILURE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Continue-ATS-On-Failure command, State: %%d");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_SetContinueAtsOnFailureCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.SetContinueAtsOnFailureCmd.ContinueState = false;
+
+    /* Execute the function being tested */
+    SC_ContinueAtsOnFailureCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.ContinueAtsOnFailureFlag == false,
+                  "SC_OperData.HkPacket.ContinueAtsOnFailureFlag == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_CONT_CMD_DEB_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void ContinueAtsOnFailureCmd_Test_InvalidState(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_CONTINUE_ATS_ON_FAILURE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Continue ATS On Failure command  failed, invalid state: %%d");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_SetContinueAtsOnFailureCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.SetContinueAtsOnFailureCmd.ContinueState = 99;
+
+    /* Execute the function being tested */
+    SC_ContinueAtsOnFailureCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_CONT_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void ContinueAtsOnFailureCmd_Test_InvalidCmdLength(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_CONTINUE_ATS_ON_FAILURE_CC;
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_SetContinueAtsOnFailureCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, false);
+
+    /* Execute the function being tested */
+    SC_ContinueAtsOnFailureCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_Nominal(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_APPEND_ATS_CC;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Append ATS %%c command: %%d ATS entries appended");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    UT_CmdBuf.AppendAtsCmd.AtsId                          = 1;
+    SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands = 1;
+    SC_OperData.HkPacket.AppendEntryCount                 = 1;
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendCmdArg == 1, "SC_OperData.HkPacket.AppendCmdArg == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APPEND_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_InvalidAtsId(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Append ATS error: invalid ATS ID = %%d");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.AppendAtsCmd.AtsId          = 99;
+    SC_OperData.HkPacket.AppendEntryCount = 1;
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APPEND_CMD_ARG_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_InvalidAtsIdZero(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Append ATS error: invalid ATS ID = %%d");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.AppendAtsCmd.AtsId          = 0;
+    SC_OperData.HkPacket.AppendEntryCount = 1;
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APPEND_CMD_ARG_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_AtsTableEmpty(void)
+{
+    uint8             AtsIndex  = 0;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Append ATS %%c error: ATS table is empty");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.AppendAtsCmd.AtsId                          = 1;
+    SC_OperData.HkPacket.AppendEntryCount                 = 1;
+    SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APPEND_CMD_TGT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_AppendTableEmpty(void)
+{
+    uint8             AtsIndex  = 0;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Append ATS %%c error: Append table is empty");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.AppendAtsCmd.AtsId                          = 1;
+    SC_OperData.HkPacket.AppendEntryCount                 = 0;
+    SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands = 1;
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APPEND_CMD_SRC_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_NoRoomForAppendInAts(void)
+{
+    uint8             AtsIndex  = 0;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Append ATS %%c error: ATS size = %%d, Append size = %%d, ATS buffer = %%d");
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    UT_CmdBuf.AppendAtsCmd.AtsId                          = 1;
+    SC_OperData.HkPacket.AppendEntryCount                 = 1;
+    SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands = 1;
+    SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize          = SC_ATS_BUFF_SIZE;
+    SC_AppData.AppendWordCount                            = SC_ATS_BUFF_SIZE;
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_APPEND_CMD_FIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AppendAtsCmd_Test_InvalidCmdLength(void)
+{
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+
+    SC_OperData.AtsInfoTblAddr         = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, false);
+
+    /* Execute the function being tested */
+    SC_AppendAtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_StartAtsCmd_Test_NominalA, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_NominalA");
+    UtTest_Add(SC_StartAtsCmd_Test_NominalB, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_NominalB");
+    UtTest_Add(SC_StartAtsCmd_Test_CouldNotStart, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_CouldNotStart");
+    UtTest_Add(SC_StartAtsCmd_Test_NoCommandsA, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_NoCommandsA");
+    UtTest_Add(SC_StartAtsCmd_Test_NoCommandsB, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_NoCommandsB");
+    UtTest_Add(SC_StartAtsCmd_Test_InUse, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_InUse");
+    UtTest_Add(SC_StartAtsCmd_Test_InvalidAtsId, SC_Test_Setup, SC_Test_TearDown, "SC_StartAtsCmd_Test_InvalidAtsId");
+    UtTest_Add(SC_StartAtsCmd_Test_InvalidAtsIdZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartAtsCmd_Test_InvalidAtsIdZero");
+    UtTest_Add(SC_StartAtsCmd_Test_InvalidCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartAtsCmd_Test_InvalidCmdLength");
+    UtTest_Add(SC_StopAtsCmd_Test_NominalA, SC_Test_Setup, SC_Test_TearDown, "SC_StopAtsCmd_Test_NominalA");
+    UtTest_Add(SC_StopAtsCmd_Test_NominalB, SC_Test_Setup, SC_Test_TearDown, "SC_StopAtsCmd_Test_NominalB");
+    UtTest_Add(SC_StopAtsCmd_Test_NoRunningAts, SC_Test_Setup, SC_Test_TearDown, "SC_StopAtsCmd_Test_NoRunningAts");
+    UtTest_Add(SC_StopAtsCmd_Test_InvalidCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopAtsCmd_Test_InvalidCmdLength");
+    UtTest_Add(SC_BeginAts_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_BeginAts_Test_Nominal");
+    UtTest_Add(SC_BeginAts_Test_AllCommandsSkipped, SC_Test_Setup, SC_Test_TearDown,
+               "SC_BeginAts_Test_AllCommandsSkipped");
+    UtTest_Add(SC_BeginAts_Test_InvalidAtsIndex, SC_Test_Setup, SC_Test_TearDown, "SC_BeginAts_Test_InvalidAtsIndex");
+    UtTest_Add(SC_KillAts_Test, SC_Test_Setup, SC_Test_TearDown, "SC_KillAts_Test");
+    UtTest_Add(SC_GroundSwitchCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_GroundSwitchCmd_Test_Nominal");
+    UtTest_Add(SC_GroundSwitchCmd_Test_DestinationAtsNotLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GroundSwitchCmd_Test_DestinationAtsNotLoaded");
+    UtTest_Add(SC_GroundSwitchCmd_Test_AtpIdle, SC_Test_Setup, SC_Test_TearDown, "SC_GroundSwitchCmd_Test_AtpIdle");
+    UtTest_Add(SC_GroundSwitchCmd_Test_InvalidCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GroundSwitchCmd_Test_InvalidCmdLength");
+    UtTest_Add(SC_ServiceSwitchPend_Test_NominalA, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ServiceSwitchPend_Test_NominalA");
+    UtTest_Add(SC_ServiceSwitchPend_Test_NominalB, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ServiceSwitchPend_Test_NominalB");
+    UtTest_Add(SC_ServiceSwitchPend_Test_AtsEmpty, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ServiceSwitchPend_Test_AtsEmpty");
+    UtTest_Add(SC_ServiceSwitchPend_Test_AtpIdle, SC_Test_Setup, SC_Test_TearDown, "SC_ServiceSwitchPend_Test_AtpIdle");
+    UtTest_Add(SC_ServiceSwitchPend_Test_NoSwitch, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ServiceSwitchPend_Test_NoSwitch");
+    UtTest_Add(SC_ServiceSwitchPend_Test_AtsNotStarted, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ServiceSwitchPend_Test_AtsNotStarted");
+    UtTest_Add(SC_InlineSwitch_Test_NominalA, SC_Test_Setup, SC_Test_TearDown, "SC_InlineSwitch_Test_NominalA");
+    UtTest_Add(SC_InlineSwitch_Test_NominalB, SC_Test_Setup, SC_Test_TearDown, "SC_InlineSwitch_Test_NominalB");
+    UtTest_Add(SC_InlineSwitch_Test_AllCommandsSkipped, SC_Test_Setup, SC_Test_TearDown,
+               "SC_InlineSwitch_Test_AllCommandsSkipped");
+    UtTest_Add(SC_InlineSwitch_Test_DestinationAtsNotLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_InlineSwitch_Test_DestinationAtsNotLoaded");
+    UtTest_Add(SC_JumpAtsCmd_Test_SkipOneCmd, SC_Test_Setup, SC_Test_TearDown, "SC_JumpAtsCmd_Test_SkipOneCmd");
+    UtTest_Add(SC_JumpAtsCmd_Test_AllCommandsSkipped, SC_Test_Setup, SC_Test_TearDown,
+               "SC_JumpAtsCmd_Test_AllCommandsSkipped");
+    UtTest_Add(SC_JumpAtsCmd_Test_NoRunningAts, SC_Test_Setup, SC_Test_TearDown, "SC_JumpAtsCmd_Test_NoRunningAts");
+    UtTest_Add(SC_JumpAtsCmd_Test_AtsNotLoaded, SC_Test_Setup, SC_Test_TearDown, "SC_JumpAtsCmd_Test_AtsNotLoaded");
+    UtTest_Add(SC_JumpAtsCmd_Test_InvalidCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_JumpAtsCmd_Test_InvalidCmdLength");
+    UtTest_Add(ContinueAtsOnFailureCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown,
+               "ContinueAtsOnFailureCmd_Test_Nominal");
+    UtTest_Add(ContinueAtsOnFailureCmd_Test_FalseState, SC_Test_Setup, SC_Test_TearDown,
+               "ContinueAtsOnFailureCmd_Test_FalseState");
+    UtTest_Add(ContinueAtsOnFailureCmd_Test_InvalidState, SC_Test_Setup, SC_Test_TearDown,
+               "ContinueAtsOnFailureCmd_Test_InvalidState");
+    UtTest_Add(ContinueAtsOnFailureCmd_Test_InvalidCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "ContinueAtsOnFailureCmd_Test_InvalidCmdLength");
+    UtTest_Add(SC_AppendAtsCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_AppendAtsCmd_Test_Nominal");
+    UtTest_Add(SC_AppendAtsCmd_Test_InvalidAtsId, SC_Test_Setup, SC_Test_TearDown, "SC_AppendAtsCmd_Test_InvalidAtsId");
+    UtTest_Add(SC_AppendAtsCmd_Test_InvalidAtsIdZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppendAtsCmd_Test_InvalidAtsIdZero");
+    UtTest_Add(SC_AppendAtsCmd_Test_AtsTableEmpty, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppendAtsCmd_Test_AtsTableEmpty");
+    UtTest_Add(SC_AppendAtsCmd_Test_AppendTableEmpty, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppendAtsCmd_Test_AppendTableEmpty");
+    UtTest_Add(SC_AppendAtsCmd_Test_NoRoomForAppendInAts, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppendAtsCmd_Test_NoRoomForAppendInAts");
+    UtTest_Add(SC_AppendAtsCmd_Test_InvalidCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AppendAtsCmd_Test_InvalidCmdLength");
+}
+```
+
+### `sc_cmds_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_cmds_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_cmds.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_state.h"
+#include "sc_events.h"
+#include "sc_msgids.h"
+#include "sc_test_utils.h"
+#include "sc_utils.h"
+#include "sc_version.h"
+#include "cfe_tbl_msg.h"
+#include <time.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_cmds_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+/*
+ * Function Definitions
+ */
+
+CFE_TIME_Compare_t Ut_CFE_TIME_CompareHookAlessthanB(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                     const UT_StubContext_t *Context)
+{
+    return CFE_TIME_A_LT_B;
+}
+
+uint8 SC_CMDS_TEST_SC_UpdateNextTimeHook_RunCount;
+int32 Ut_SC_UpdateNextTimeHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    if (SC_CMDS_TEST_SC_UpdateNextTimeHook_RunCount++)
+        SC_AppData.NextProcNumber = SC_NONE;
+
+    return 0;
+}
+
+void SC_ProcessAtpCmd_Test_SwitchCmd(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_SWITCH_ATS_CC;
+    bool                 ChecksumValid;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Set return value for CFE_TIME_Compare to make SC_CompareAbsTime return false, to satisfy first if-statement of
+     * SC_ProcessAtpCmd, and for all other calls to CFE_TIME_Compare called from subfunctions reached by this test */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), Ut_CFE_TIME_CompareHookAlessthanB, NULL);
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+     * called */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 1, "SC_OperData.HkPacket.AtsCmdCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 0, "SC_OperData.HkPacket.AtsCmdErrCtr == 0");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_EXECUTED,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_EXECUTED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_NonSwitchCmd(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_NOOP_CC;
+    bool                 ChecksumValid;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Set return value for CFE_TIME_Compare to make SC_CompareAbsTime return false, to satisfy first if-statement of
+     * SC_ProcessAtpCmd, and for all other calls to CFE_TIME_Compare called from subfunctions reached by this test */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), Ut_CFE_TIME_CompareHookAlessthanB, NULL);
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+     * called */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 1, "SC_OperData.HkPacket.AtsCmdCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 0, "SC_OperData.HkPacket.AtsCmdErrCtr == 0");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_EXECUTED,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_EXECUTED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_InlineSwitchError(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_SWITCH_ATS_CC;
+    bool                 ChecksumValid;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Set return value for CFE_TIME_Compare to make SC_CompareAbsTime return false, to satisfy first if-statement of
+     * SC_ProcessAtpCmd, and for all other calls to CFE_TIME_Compare called from subfunctions reached by this test */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), Ut_CFE_TIME_CompareHookAlessthanB, NULL);
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+     * called */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, false);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_DISTRIB,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_DISTRIB");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == 1, "SC_OperData.HkPacket.LastAtsErrSeq == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_SBErrorAtsA(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_NOOP_CC;
+    bool                 ChecksumValid;
+    int32                strCmpResult;
+    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS Command Distribution Failed, Cmd Number: %%d, SB returned: 0x%%08X");
+
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Aborted");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+     * called */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    /* Set to return -1 in order to generate error message SC_ATS_DIST_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_TransmitMsg), 1, -1);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_DISTRIB,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_DISTRIB");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_DIST_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_ABT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_SBErrorAtsB(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_NOOP_CC;
+    bool                 ChecksumValid;
+    int32                strCmpResult;
+    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS Command Distribution Failed, Cmd Number: %%d, SB returned: 0x%%08X");
+
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Aborted");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[1]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[1][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSB;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[1][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[1][0]    = 0;
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+     * called */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    /* Set to return -1 in order to generate error message SC_ATS_DIST_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_TransmitMsg), 1, -1);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_FAILED_DISTRIB,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_DISTRIB");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSB, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSB");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_DIST_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_ABT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+//void SC_ProcessAtpCmd_Test_ChecksumFailedAtsA(void)
+//{
+//    SC_AtsEntryHeader_t *Entry;
+//    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+//    SC_AtpControlBlock_t AtsCtrlBlck;
+//    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+//    SC_AtsInfoTable_t    AtsInfoTbl;
+//    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+//    CFE_MSG_FcnCode_t    FcnCode   = SC_SWITCH_ATS_CC;
+//    bool                 ChecksumValid;
+//    int32                strCmpResult;
+//    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+//
+//    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+//             "ATS Command Failed Checksum: Command #%%d Skipped");
+//
+//    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Aborted");
+//
+//    memset(&AtsCmdStatusTbl, 0, sizeof(AtsCmdStatusTbl));
+//
+//    SC_InitTables();
+//
+//    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+//    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+//    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+//    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+//    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+//
+//    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+//    Entry->CmdNumber = 1;
+//
+//    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+//    SC_AppData.CurrentTime                = 1;
+//    SC_AppData.NextProcNumber             = SC_ATP;
+//    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+//
+//    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+//    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+//
+//    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+//    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+//
+//    SC_OperData.HkPacket.ContinueAtsOnFailureFlag = false;
+//
+//    /* Set to return false in order to generate error message SC_ATS_CHKSUM_ERR_EID */
+//    ChecksumValid = false;
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+//
+//    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+//     * called */
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+//
+//    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, true);
+//
+//    /* Execute the function being tested */
+//    SC_ProcessAtpCmd();
+//
+//    /* Verify results */
+//    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+//    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+//    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA");
+//    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+//    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_CHECKSUM,
+//                  "SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_FAILED_CHECKSUM");
+//
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_CHKSUM_ERR_EID);
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+//
+//    strCmpResult =
+//        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+//
+//    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+//
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_ABT_ERR_EID);
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+//
+//    strCmpResult =
+//        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+//
+//    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+//
+//    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+//
+//    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+//                  call_count_CFE_EVS_SendEvent);
+//}
+
+//void SC_ProcessAtpCmd_Test_ChecksumFailedAtsB(void)
+//{
+//    SC_AtsEntryHeader_t *Entry;
+//    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+//    SC_AtpControlBlock_t AtsCtrlBlck;
+//    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+//    SC_AtsInfoTable_t    AtsInfoTbl;
+//    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+//    CFE_MSG_FcnCode_t    FcnCode   = SC_SWITCH_ATS_CC;
+//    bool                 ChecksumValid;
+//    int32                strCmpResult;
+//    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+//
+//    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+//             "ATS Command Failed Checksum: Command #%%d Skipped");
+//
+//    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Aborted");
+//
+//    SC_InitTables();
+//
+//    SC_OperData.AtsTblAddr[1]          = &AtsTable[0];
+//    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+//    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+//    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+//    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+//
+//    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[1][0];
+//    Entry->CmdNumber = 1;
+//
+//    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+//    SC_AppData.CurrentTime                = 1;
+//    SC_AppData.NextProcNumber             = SC_ATP;
+//    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+//
+//    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSB;
+//    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+//
+//    SC_OperData.AtsCmdStatusTblAddr[1][0] = SC_LOADED;
+//    SC_AppData.AtsCmdIndexBuffer[1][0]    = 0;
+//
+//    SC_OperData.HkPacket.ContinueAtsOnFailureFlag = false;
+//
+//    /* Set to return false in order to generate error message SC_ATS_CHKSUM_ERR_EID */
+//    ChecksumValid = false;
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+//
+//    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+//     * called */
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+//
+//    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, true);
+//
+//    /* Execute the function being tested */
+//    SC_ProcessAtpCmd();
+//
+//    /* Verify results */
+//    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+//    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+//    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSB, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSB");
+//    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+//    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_FAILED_CHECKSUM,
+//                  "SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_FAILED_CHECKSUM");
+//
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_CHKSUM_ERR_EID);
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+//
+//    strCmpResult =
+//        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+//
+//    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+//
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_ABT_ERR_EID);
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+//
+//    strCmpResult =
+//        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+//
+//    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+//
+//    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+//
+//    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+//                  call_count_CFE_EVS_SendEvent);
+//}
+
+//void SC_ProcessAtpCmd_Test_ChecksumFailedAtsAContinue(void)
+//{
+//    SC_AtsEntryHeader_t *Entry;
+//    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+//    SC_AtpControlBlock_t AtsCtrlBlck;
+//    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+//    SC_AtsInfoTable_t    AtsInfoTbl;
+//    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+//    CFE_MSG_FcnCode_t    FcnCode   = SC_SWITCH_ATS_CC;
+//    bool                 ChecksumValid;
+//    int32                strCmpResult;
+//    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+//
+//    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+//             "ATS Command Failed Checksum: Command #%%d Skipped");
+//
+//    memset(&AtsCmdStatusTbl, 0, sizeof(AtsCmdStatusTbl));
+//
+//    SC_InitTables();
+//
+//    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+//    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+//    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+//    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+//    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+//
+//    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+//    Entry->CmdNumber = 1;
+//
+//    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+//    SC_AppData.CurrentTime                = 1;
+//    SC_AppData.NextProcNumber             = SC_ATP;
+//    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+//
+//    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+//    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+//
+//    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+//    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+//
+//    SC_OperData.HkPacket.ContinueAtsOnFailureFlag = true;
+//
+//    /* Set to return false in order to generate error message SC_ATS_CHKSUM_ERR_EID */
+//    ChecksumValid = false;
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+//
+//    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+//     * called */
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+//
+//    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, true);
+//
+//    /* Execute the function being tested */
+//    SC_ProcessAtpCmd();
+//
+//    /* Verify results */
+//    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+//    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+//    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA");
+//    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+//    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_FAILED_CHECKSUM,
+//                  "SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_FAILED_CHECKSUM");
+//
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_CHKSUM_ERR_EID);
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+//
+//    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+//
+//    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+//
+//    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+//
+//    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+//                  call_count_CFE_EVS_SendEvent);
+//}
+
+void SC_ProcessAtpCmd_Test_CmdNumberMismatchAtsA(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    int32                strCmpResult;
+    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS Command Number Mismatch: Command Skipped, expected: %%d received: %%d");
+
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Aborted");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 3;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_SKIPPED,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_SKIPPED");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_MSMTCH_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_ABT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_CmdNumberMismatchAtsB(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    int32                strCmpResult;
+    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS Command Number Mismatch: Command Skipped, expected: %%d received: %%d");
+
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Aborted");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[1]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[1][0];
+    Entry->CmdNumber = 3;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSB;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[1][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[1][0]    = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSB, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSB");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_SKIPPED,
+                  "SC_OperData.AtsCmdStatusTblAddr[1][0] == SC_SKIPPED");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_MSMTCH_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_ATS_ABT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_CmdNotLoaded(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(AtsCmdStatusTbl, 0, sizeof(AtsCmdStatusTbl));
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid ATS Command Status: Command Skipped, Status: %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 1, "SC_OperData.HkPacket.AtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA, "SC_OperData.HkPacket.LastAtsErrSeq == SC_ATSA");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 1, "SC_OperData.HkPacket.LastAtsErrCmd == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_SKP_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_CompareAbsTime(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_NextProcNumber(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_NONE;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_AtpState(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EMPTY;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_ATSA;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "SC_OperData.HkPacket.AtsCmdCtr == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAtpCmd_Test_CmdMid(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t    FcnCode   = SC_SWITCH_ATS_CC;
+    bool                 ChecksumValid;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Set return value for CFE_TIME_Compare to make SC_CompareAbsTime return false, to satisfy first if-statement of
+     * SC_ProcessAtpCmd, and for all other calls to CFE_TIME_Compare called from subfunctions reached by this test */
+    UT_SetHookFunction(UT_KEY(CFE_TIME_Compare), Ut_CFE_TIME_CompareHookAlessthanB, NULL);
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Set these two functions to return these values in order to statisfy the if-statement from which they are both
+     * called */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_InlineSwitch), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessAtpCmd();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 1, "SC_OperData.HkPacket.AtsCmdCtr == 1");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_EXECUTED,
+                  "SC_OperData.AtsCmdStatusTblAddr[0][0] == SC_EXECUTED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRtpCommand_Test_Nominal(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    bool                 ChecksumValid;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Execute the function being tested */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdCtr == 1, "SC_OperData.HkPacket.RtsCmdCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 0, "SC_OperData.HkPacket.RtsCmdErrCtr == 0");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdCtr == 1, "SC_OperData.RtsInfoTblAddr[0].CmdCtr == 1");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 0, "SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRtpCommand_Test_BadSoftwareBusReturn(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    bool                 ChecksumValid;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "RTS %%03d Command Distribution Failed: RTS Stopped. SB returned 0x%%08X");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    /* Set to return true in order to satisfy the if-statement from which the function is called */
+    ChecksumValid = true;
+
+    /* Set to return -1 in order to generate error message SC_RTS_DIST_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_TransmitMsg), 1, -1);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    /* Execute the function being tested */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdCtr == 0, "SC_OperData.HkPacket.RtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 1, "SC_OperData.HkPacket.RtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[0].CmdCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1, "SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrSeq == 1, "SC_OperData.HkPacket.LastRtsErrSeq == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrCmd == 0, "SC_OperData.HkPacket.LastRtsErrCmd == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_DIST_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+//void SC_ProcessRtpCommand_Test_BadChecksum(void)
+//{
+//    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+//    SC_RtpControlBlock_t RtsCtrlBlck;
+//    bool                 ChecksumValid;
+//    int32                strCmpResult;
+//    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+//
+//    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS %%03d Command Failed Checksum: RTS Stopped");
+//
+//    SC_InitTables();
+//
+//    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+//
+//    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+//    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+//
+//    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+//    SC_AppData.CurrentTime                                                           = 1;
+//    SC_AppData.NextProcNumber                                                        = SC_RTP;
+//    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+//    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+//
+//    /* Set to return false in order to generate error message SC_RTS_CHKSUM_ERR_EID */
+//    ChecksumValid = false;
+//    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+//
+//    /* Execute the function being tested */
+//    SC_ProcessRtpCommand();
+//
+//    /* Verify results */
+//    UtAssert_True(SC_OperData.HkPacket.RtsCmdCtr == 0, "SC_OperData.HkPacket.RtsCmdCtr == 0");
+//    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 1, "SC_OperData.HkPacket.RtsCmdErrCtr == 1");
+//    UtAssert_True(SC_OperData.NumCmdsSec == 1, "SC_OperData.NumCmdsSec == 1");
+//    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[0].CmdCtr == 0");
+//    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1, "SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1");
+//    UtAssert_True(SC_OperData.HkPacket.LastRtsErrSeq == 1, "SC_OperData.HkPacket.LastRtsErrSeq == 1");
+//    UtAssert_True(SC_OperData.HkPacket.LastRtsErrCmd == 0, "SC_OperData.HkPacket.LastRtsErrCmd == 0");
+//
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_CHKSUM_ERR_EID);
+//    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+//
+//    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+//
+//    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+//
+//    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+//
+//    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+//                  call_count_CFE_EVS_SendEvent);
+//}
+
+void SC_ProcessRtpCommand_Test_NextCmdTime(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 1;
+    SC_AppData.CurrentTime                                                           = 0;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRtpCommand_Test_ProcNumber(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_NONE;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRtpCommand_Test_RtsNumberZero(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]         = 0;
+    SC_AppData.CurrentTime                 = 1;
+    SC_AppData.NextProcNumber              = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber = 0;
+
+    /* RtsNumber > 0 will be false so nothing should happen, branch coverage */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRtpCommand_Test_RtsNumberHigh(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = SC_NUMBER_OF_RTS + 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRtpCommand_Test_RtsStatus(void)
+{
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EMPTY;
+
+    /* Execute the function being tested */
+    SC_ProcessRtpCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_SendHkPacket_Test(void)
+{
+    uint8                i;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                LastRtsHkIndex = 0;
+
+    memset(&AtsCmdStatusTbl, 0, sizeof(AtsCmdStatusTbl));
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_InitTables();
+
+    SC_OperData.HkPacket.CmdErrCtr                = 1;
+    SC_OperData.HkPacket.CmdCtr                   = 2;
+    SC_OperData.HkPacket.RtsActiveErrCtr          = 3;
+    SC_OperData.HkPacket.RtsActiveCtr             = 4;
+    SC_OperData.HkPacket.AtsCmdCtr                = 5;
+    SC_OperData.HkPacket.AtsCmdErrCtr             = 6;
+    SC_OperData.HkPacket.RtsCmdCtr                = 7;
+    SC_OperData.HkPacket.RtsCmdErrCtr             = 8;
+    SC_OperData.HkPacket.LastAtsErrSeq            = 9;
+    SC_OperData.HkPacket.LastAtsErrCmd            = 10;
+    SC_OperData.HkPacket.LastRtsErrSeq            = 11;
+    SC_OperData.HkPacket.LastRtsErrCmd            = 12;
+    SC_OperData.HkPacket.AppendCmdArg             = 13;
+    SC_OperData.HkPacket.AppendEntryCount         = 14;
+    SC_AppData.AppendWordCount                    = 15;
+    SC_OperData.HkPacket.AppendLoadCount          = 16;
+    SC_OperData.AtsInfoTblAddr[0].AtsSize         = 0;
+    SC_OperData.AtsInfoTblAddr[1].AtsSize         = 0;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber        = 17;
+    SC_OperData.AtsCtrlBlckAddr->AtpState         = 18;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber        = 19;
+    SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag   = 0;
+    SC_AppData.NextCmdTime[0]                     = 0;
+    SC_AppData.NextCmdTime[1]                     = 0;
+    SC_OperData.RtsCtrlBlckAddr->NumRtsActive     = 20;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber        = 21;
+    SC_OperData.HkPacket.ContinueAtsOnFailureFlag = 1;
+
+    for (i = 0; i < SC_NUMBER_OF_RTS - 1; i++)
+    {
+        SC_OperData.RtsInfoTblAddr[i].DisabledFlag = true;
+        SC_OperData.RtsInfoTblAddr[i].RtsStatus    = SC_EXECUTING;
+    }
+
+    SC_OperData.RtsInfoTblAddr[SC_NUMBER_OF_RTS - 1].DisabledFlag = 0;
+    SC_OperData.RtsInfoTblAddr[SC_NUMBER_OF_RTS - 1].RtsStatus    = 0;
+
+    LastRtsHkIndex =
+        sizeof(SC_OperData.HkPacket.RtsExecutingStatus) / sizeof(SC_OperData.HkPacket.RtsExecutingStatus[0]) - 1;
+
+    /* Execute the function being tested */
+    SC_SendHkPacket();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 2, "SC_OperData.HkPacket.CmdCtr == 2");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveErrCtr == 3, "SC_OperData.HkPacket.RtsActiveErrCtr == 3");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 4, "SC_OperData.HkPacket.RtsActiveCtr == 4");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 5, "SCSC_OperData.HkPacket.AtsCmdCtr == 5");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 6, "SC_OperData.HkPacket.AtsCmdErrCtr == 6");
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdCtr == 7, "SC_OperData.HkPacket.RtsCmdCtr == 7");
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 8, "SC_OperData.HkPacket.RtsCmdErrCtr == 8");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrSeq == 9, "SC_OperData.HkPacket.LastAtsErrSeq == 9");
+    UtAssert_True(SC_OperData.HkPacket.LastAtsErrCmd == 10, "SC_OperData.HkPacket.LastAtsErrCmd == 10");
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrSeq == 11, "SC_OperData.HkPacket.LastRtsErrSeq == 11");
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrCmd == 12, "SC_OperData.HkPacket.LastRtsErrCmd == 12");
+    UtAssert_True(SC_OperData.HkPacket.AppendCmdArg == 13, "SC_OperData.HkPacket.AppendCmdArg == 13");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 14, "SC_OperData.HkPacket.AppendEntryCount == 14");
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 16, "SC_OperData.HkPacket.AppendLoadCount == 16");
+    UtAssert_True(SC_OperData.HkPacket.AtpFreeBytes[0] ==
+                      (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD) -
+                          (SC_OperData.AtsInfoTblAddr[0].AtsSize * SC_BYTES_IN_WORD),
+                  "SC_OperData.HkPacket.AtpFreeBytes[0] == (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD)");
+    UtAssert_True(SC_OperData.HkPacket.AtpFreeBytes[1] ==
+                      (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD) -
+                          (SC_OperData.AtsInfoTblAddr[1].AtsSize * SC_BYTES_IN_WORD),
+                  "SC_OperData.HkPacket.AtpFreeBytes[1] == (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD)");
+    UtAssert_True(SC_OperData.HkPacket.AtsNumber == 17, "SC_OperData.HkPacket.AtsNumber == 17");
+    UtAssert_True(SC_OperData.HkPacket.AtpState == 18, "SC_OperData.HkPacket.AtpState == 18");
+    UtAssert_True(SC_OperData.HkPacket.AtpCmdNumber == 19, "SC_OperData.HkPacket.AtpCmdNumber == 19");
+    UtAssert_True(SC_OperData.HkPacket.SwitchPendFlag == 0, "SC_OperData.HkPacket.SwitchPendFlag == 0");
+    UtAssert_True(SC_OperData.HkPacket.NextAtsTime == 0, "SC_OperData.HkPacket.NextAtsTime == 0");
+    UtAssert_True(SC_OperData.HkPacket.NumRtsActive == 20, "SC_OperData.HkPacket.NumRtsActive == 20");
+    UtAssert_True(SC_OperData.HkPacket.RtsNumber == 21, "SC_OperData.HkPacket.RtsNumber == 21");
+    UtAssert_True(SC_OperData.HkPacket.NextRtsTime == 0, "SC_OperData.HkPacket.NextRtsTime == 0");
+    UtAssert_True(SC_OperData.HkPacket.ContinueAtsOnFailureFlag == 1,
+                  "SC_OperData.HkPacket.ContinueAtsOnFailureFlag == 1");
+
+    /* Check first element */
+    UtAssert_True(SC_OperData.HkPacket.RtsExecutingStatus[0] == 65535,
+                  "SC_OperData.HkPacket.RtsExecutingStatus[0] == 65535");
+    UtAssert_True(SC_OperData.HkPacket.RtsDisabledStatus[0] == 65535,
+                  "SC_OperData.HkPacket.RtsDisabledStatus[0] == 65535");
+
+    /* Check middle element */
+    UtAssert_True(SC_OperData.HkPacket.RtsExecutingStatus[2] == 65535,
+                  "SC_OperData.HkPacket.RtsExecutingStatus[2] == 65535");
+    UtAssert_True(SC_OperData.HkPacket.RtsDisabledStatus[2] == 65535,
+                  "SC_OperData.HkPacket.RtsDisabledStatus[2] == 65535");
+
+    /* Check last element */
+    UtAssert_INT32_EQ(SC_OperData.HkPacket.RtsExecutingStatus[LastRtsHkIndex], 32767);
+    UtAssert_INT32_EQ(SC_OperData.HkPacket.RtsDisabledStatus[LastRtsHkIndex], 32767);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_CmdMID(void)
+{
+    /**
+     **  Test case: SC_CMD_MID
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_NOOP_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "No-op command. Version %%d.%%d.%%d.%%d");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 0, "SC_OperData.HkPacket.CmdErrCtr == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_NOOP_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_HkMID(void)
+{
+    /**
+     **  Test case: SC_SEND_HK_MID
+     **/
+
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_SEND_HK_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_HkMIDNoVerifyCmdLength(void)
+{
+    /**
+     **  Test case: SC_SEND_HK_MID
+     **/
+
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_SEND_HK_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_HkMIDAutoStartRts(void)
+{
+    /**
+     **  Test case: SC_SEND_HK_MID
+     **/
+
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_SEND_HK_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.AutoStartRTS = 1;
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AutoStartRTS == 0, "SC_AppData.AutoStartRTS == 0");
+    UtAssert_BOOL_FALSE(SC_OperData.RtsInfoTblAddr[SC_AppData.AutoStartRTS].DisabledFlag);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_HkMIDAutoStartRtsLoaded(void)
+{
+    /**
+     **  Test case: SC_SEND_HK_MID
+     **/
+
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_SEND_HK_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    SC_AppData.AutoStartRTS                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_AppData.AutoStartRTS - 1].RtsStatus = SC_LOADED;
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AutoStartRTS == 0, "SC_AppData.AutoStartRTS == 0");
+    UtAssert_BOOL_FALSE(SC_OperData.RtsInfoTblAddr[SC_AppData.AutoStartRTS].DisabledFlag);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_1HzWakeupNONE(void)
+{
+    /**
+     **  Test case: SC_1HZ_WAKEUP_MID with SC_AppData.NextProcNumber == SC_NONE
+     **/
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = true;
+    SC_AppData.NextProcNumber                   = SC_NONE;
+    SC_AppData.NextCmdTime[SC_ATP]              = 0;
+    SC_AppData.CurrentTime                      = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.NumCmdsSec == 0, "SC_OperData.NumCmdsSec == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_1HzWakeupNoSwitchPending(void)
+{
+    /**
+     **  Test case: SC_1HZ_WAKEUP_MID with SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == false
+     **/
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+    SC_AppData.NextProcNumber                   = SC_NONE;
+    SC_AppData.NextCmdTime[SC_ATP]              = 0;
+    SC_AppData.CurrentTime                      = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.NumCmdsSec == 0, "SC_OperData.NumCmdsSec == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_1HzWakeupAtpNotExecutionTime(void)
+{
+    /**
+     **  Test case: SC_1HZ_WAKEUP_MID with a pending ATP command that should not execute yet
+     **/
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    memset(&AtsCtrlBlck, 0, sizeof(AtsCtrlBlck));
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = true;
+    SC_AppData.NextProcNumber                   = SC_ATP;
+    SC_AppData.NextCmdTime[SC_ATP]              = 1000;
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.NumCmdsSec == 0, "SC_OperData.NumCmdsSec == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_1HzWakeupRtpExecutionTime(void)
+{
+    /**
+     **  Test case: SC_1HZ_WAKEUP_MID with a pending RTP command that needs to execute immediately
+     **/
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    memset(&AtsCtrlBlck, 0, sizeof(AtsCtrlBlck));
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* required to exit processing loop after 2 iterations */
+    /* second iteration tests "IsThereAnotherCommandToExecute" */
+
+    SC_CMDS_TEST_SC_UpdateNextTimeHook_RunCount = 0;
+    UT_SetHookFunction(UT_KEY(SC_UpdateNextTime), Ut_SC_UpdateNextTimeHook, NULL);
+
+    SC_AtsEntryHeader_t *Entry;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+    Entry                     = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber          = 1;
+
+    SC_AppData.NextProcNumber             = SC_RTP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING; /* Causes switch to ATP */
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_OperData.NumCmdsSec                = 3;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_1HzWakeupRtpExecutionTimeTooManyCmds(void)
+{
+    bool ChecksumValid;
+
+    /**
+     **  Test case: SC_1HZ_WAKEUP_MID with a pending RTP command that needs to execute immediately, but too many
+     *commands are being sent at once
+     **/
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID);
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtpControlBlock_t AtsCtrlBlck;
+    uint32               AtsCmdStatusTbl[SC_NUMBER_OF_ATS];
+    SC_AtsInfoTable_t    AtsInfoTbl[SC_NUMBER_OF_ATS];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    memset(&AtsCtrlBlck, 0, sizeof(AtsCtrlBlck));
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.AtsTblAddr[0]          = &AtsTable[0];
+    SC_OperData.AtsCtrlBlckAddr        = &AtsCtrlBlck;
+    SC_OperData.AtsCmdStatusTblAddr[0] = &AtsCmdStatusTbl[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &AtsCmdStatusTbl[1];
+    SC_OperData.AtsInfoTblAddr         = &AtsInfoTbl[0];
+
+    SC_OperData.RtsTblAddr[0]   = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr = &RtsCtrlBlck;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    ChecksumValid = true;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_ValidateChecksum), &ChecksumValid, sizeof(ChecksumValid), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    SC_InitTables();
+
+    SC_AppData.NextProcNumber             = SC_RTP;
+    SC_AppData.NextCmdTime[SC_RTP]        = 0;
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_OperData.NumCmdsSec                = 1000;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.NumCmdsSec == 0, "SC_OperData.NumCmdsSec == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessRequest_Test_MIDError(void)
+{
+    /**
+     **  Test case: SC_MID_ERR_EID
+     **/
+
+    CFE_SB_MsgId_t TestMsgId = SC_UT_MID_1;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Invalid command pipe message ID: 0x%%08lX");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    /* Execute the function being tested */
+    SC_ProcessRequest(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 0, "CmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_MID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_NoOp(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_NOOP_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "No-op command. Version %%d.%%d.%%d.%%d");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 0, "SC_OperData.HkPacket.CmdErrCtr == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_NOOP_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_NoOpNoVerifyCmdLength(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_NOOP_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 0, "SC_OperData.HkPacket.CmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 0, "SC_OperData.HkPacket.CmdErrCtr == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_ResetCounters(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_RESET_COUNTERS_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset counters command");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 0, "CmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 0, "CmdErrCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdCtr == 0, "AtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.AtsCmdErrCtr == 0, "AtsCmdErrCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdCtr == 0, "RtsCmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 0, "RtsCmdErrCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 0, "RtsActiveCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveErrCtr == 0, "RtsActiveErrCtr == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RESET_DEB_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_ResetCountersNoVerifyCmdLength(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_RESET_COUNTERS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_StartAts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.StartAtsCmd.AtsId = 1;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_StopAts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_STOP_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_StartRts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_RTS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_StopRts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_STOP_RTS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_DisableRts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_DISABLE_RTS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_EnableRts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_ENABLE_RTS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_SwitchAts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_SWITCH_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_JumpAts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_JUMP_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_ContinueAtsOnFailure(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_CONTINUE_ATS_ON_FAILURE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_AppendAts(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_APPEND_ATS_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtsTableNominal(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 0;
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATS_0;
+
+    /* Set to reach "SC_LoadAts(ArrayIndex)" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtsTableGetAddressError(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS table manage process error: ATS = %%d, Result = 0x%%X");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATS_0;
+
+    /* Set to generate error message SC_TABLE_MANAGE_ATS_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_TABLE_MANAGE_ATS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_TableManageAtsTableID(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 0;
+
+    /* test TableID >= SC_TBL_ID_ATS_0 */
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = 0;
+
+    /* Set to reach "SC_LoadAts(ArrayIndex)" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtsTable_InvalidIndex(void)
+{
+    uint8 AtsIndex = SC_NUMBER_OF_ATS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS table manage error: invalid ATS index %%d");
+
+    /* Execute the function being tested */
+    SC_ManageAtsTable(AtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_TABLE_MANAGE_ATS_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_TableManageAtsTableGetAddressNeverLoaded(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 0;
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATS_0;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_ERR_NEVER_LOADED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtsTableGetAddressSuccess(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 0;
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATS_0;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAppendTableNominal(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr;
+    Entry->CmdNumber = 0;
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_APPEND;
+
+    /* Set to reach "SC_UpdateAppend()" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAppendTableGetAddressError(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS Append table manage process error: Result = 0x%%X");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_APPEND;
+
+    /* Set to generate error message SC_TABLE_MANAGE_APPEND_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_TABLE_MANAGE_APPEND_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_TableManageAppendTableGetAddressNeverLoaded(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr;
+    Entry->CmdNumber = 0;
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_APPEND;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_ERR_NEVER_LOADED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAppendTableGetAddressSuccess(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t    FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr;
+    Entry->CmdNumber = 0;
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_APPEND;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageRtsTableNominal(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    uint32            RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_RTS_0;
+
+    /* Set to reach "SC_LoadRts(ArrayIndex)" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageRtsTableGetAddressError(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "RTS table manage process error: RTS = %%d, Result = 0x%%X");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_RTS_0;
+
+    /* Set to generate error message SC_TABLE_MANAGE_RTS_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, -1);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_TABLE_MANAGE_RTS_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_TableManageRtsTableID(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    uint32            RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    /* test TableID >= SC_TBL_ID_RTS_0 */
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = 0;
+
+    /* Set to reach "SC_LoadRts(ArrayIndex)" */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageRtsTable_InvalidIndex(void)
+{
+    uint8 RtsIndex = SC_NUMBER_OF_RTS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS table manage error: invalid RTS index %%d");
+
+    /* Execute the function being tested */
+    SC_ManageRtsTable(RtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_TABLE_MANAGE_RTS_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_TableManageRtsTableGetAddressNeverLoaded(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    uint32            RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_RTS_0;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_TBL_ERR_NEVER_LOADED);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageRtsTableGetAddressSuccess(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    uint32            RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_RTS_0;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 1, CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageRtsInfo(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_RTS_INFO;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageRtpCtrl(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_RTP_CTRL;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtsInfo(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATS_INFO;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtpCtrl(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATP_CTRL;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageAtsCmdStatus(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = SC_TBL_ID_ATS_CMD_0;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_TableManageInvalidTableID(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_MANAGE_TABLE_CC;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Table manage command packet error: table ID = %%d");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    UT_CmdBuf.NotifyCmd.Payload.Parameter = 999;
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_TABLE_MANAGE_ID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessCommand_Test_StartRtsGrp(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_START_RTS_GRP_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_StopRtsGrp(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_STOP_RTS_GRP_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_DisableRtsGrp(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_DISABLE_RTS_GRP_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_EnableRtsGrp(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_ENABLE_RTS_GRP_CC;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* This function is already verified to work correctly in another file, so no verifications here. */
+}
+
+void SC_ProcessCommand_Test_InvalidCmdError(void)
+{
+    /**
+     **  Note: This test does not follow the standard test guideline to only test what's directly in the
+     *function-under-test.
+     **  Since the code for reaching each branch in SC_ProcessCommand is so trivial and non-verifiable, it was decided
+     *to
+     **  combine the tests for each command with the tests for reaching the command from SC_ProcessCommand.
+     **/
+
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = 99;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid Command Code: MID =  0x%%08lX CC =  %%d");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_ProcessCommand(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 0, "CmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INVLD_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+/* Unreachable branches in sc_cmds.c SC_ProcessAtpCmd:236, 274, 310.
+   There are only 2 ATS IDs defined, invalid IDs are already handled. */
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_ProcessAtpCmd_Test_SwitchCmd, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAtpCmd_Test_SwitchCmd");
+    UtTest_Add(SC_ProcessAtpCmd_Test_NonSwitchCmd, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_NonSwitchCmd");
+    UtTest_Add(SC_ProcessAtpCmd_Test_InlineSwitchError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_InlineSwitchError");
+    UtTest_Add(SC_ProcessAtpCmd_Test_SBErrorAtsA, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAtpCmd_Test_SBErrorAtsA");
+    UtTest_Add(SC_ProcessAtpCmd_Test_SBErrorAtsB, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAtpCmd_Test_SBErrorAtsB");
+    //UtTest_Add(SC_ProcessAtpCmd_Test_ChecksumFailedAtsA, SC_Test_Setup, SC_Test_TearDown,
+    //           "SC_ProcessAtpCmd_Test_ChecksumFailedAtsA");
+    //UtTest_Add(SC_ProcessAtpCmd_Test_ChecksumFailedAtsB, SC_Test_Setup, SC_Test_TearDown,
+    //           "SC_ProcessAtpCmd_Test_ChecksumFailedAtsB");
+    //UtTest_Add(SC_ProcessAtpCmd_Test_ChecksumFailedAtsAContinue, SC_Test_Setup, SC_Test_TearDown,
+    //           "SC_ProcessAtpCmd_Test_ChecksumFailedAtsAContinue");
+    UtTest_Add(SC_ProcessAtpCmd_Test_CmdNumberMismatchAtsA, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_CmdNumberMismatchAtsA");
+    UtTest_Add(SC_ProcessAtpCmd_Test_CmdNumberMismatchAtsB, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_CmdNumberMismatchAtsB");
+    UtTest_Add(SC_ProcessAtpCmd_Test_CmdNotLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_CmdNotLoaded");
+    UtTest_Add(SC_ProcessAtpCmd_Test_CompareAbsTime, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_CompareAbsTime");
+    UtTest_Add(SC_ProcessAtpCmd_Test_NextProcNumber, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAtpCmd_Test_NextProcNumber");
+    UtTest_Add(SC_ProcessAtpCmd_Test_AtpState, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAtpCmd_Test_AtpState");
+    UtTest_Add(SC_ProcessAtpCmd_Test_CmdMid, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAtpCmd_Test_CmdMid");
+    UtTest_Add(SC_ProcessRtpCommand_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessRtpCommand_Test_Nominal");
+    UtTest_Add(SC_ProcessRtpCommand_Test_BadSoftwareBusReturn, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRtpCommand_Test_BadSoftwareBusReturn");
+    //UtTest_Add(SC_ProcessRtpCommand_Test_BadChecksum, SC_Test_Setup, SC_Test_TearDown,
+    //           "SC_ProcessRtpCommand_Test_BadChecksum");
+    UtTest_Add(SC_ProcessRtpCommand_Test_NextCmdTime, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRtpCommand_Test_NextCmdTime");
+    UtTest_Add(SC_ProcessRtpCommand_Test_ProcNumber, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRtpCommand_Test_ProcNumber");
+    UtTest_Add(SC_ProcessRtpCommand_Test_RtsNumberZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRtpCommand_Test_RtsNumberZero");
+    UtTest_Add(SC_ProcessRtpCommand_Test_RtsNumberHigh, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRtpCommand_Test_RtsNumberHigh");
+    UtTest_Add(SC_ProcessRtpCommand_Test_RtsStatus, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRtpCommand_Test_RtsStatus");
+    UtTest_Add(SC_SendHkPacket_Test, SC_Test_Setup, SC_Test_TearDown, "SC_SendHkPacket_Test");
+    UtTest_Add(SC_ProcessRequest_Test_CmdMID, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessRequest_Test_CmdMID");
+    UtTest_Add(SC_ProcessRequest_Test_HkMID, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessRequest_Test_HkMID");
+    UtTest_Add(SC_ProcessRequest_Test_HkMIDNoVerifyCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_HkMIDNoVerifyCmdLength");
+    UtTest_Add(SC_ProcessRequest_Test_HkMIDAutoStartRts, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_HkMIDAutoStartRts");
+    UtTest_Add(SC_ProcessRequest_Test_HkMIDAutoStartRtsLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_HkMIDAutoStartRtsLoaded");
+    UtTest_Add(SC_ProcessRequest_Test_1HzWakeupNONE, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_1HzWakeupNONE");
+    UtTest_Add(SC_ProcessRequest_Test_1HzWakeupNoSwitchPending, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_1HzWakeupNoSwitchPending");
+    UtTest_Add(SC_ProcessRequest_Test_1HzWakeupAtpNotExecutionTime, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_1HzWakeupAtpNotExecutionTime");
+    UtTest_Add(SC_ProcessRequest_Test_1HzWakeupRtpExecutionTime, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_1HzWakeupRtpExecutionTime");
+    UtTest_Add(SC_ProcessRequest_Test_1HzWakeupRtpExecutionTimeTooManyCmds, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessRequest_Test_1HzWakeupRtpExecutionTimeTooManyCmds");
+    UtTest_Add(SC_ProcessRequest_Test_MIDError, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessRequest_Test_MIDError");
+    UtTest_Add(SC_ProcessCommand_Test_NoOp, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_NoOp");
+    UtTest_Add(SC_ProcessCommand_Test_NoOpNoVerifyCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_NoOpNoVerifyCmdLength");
+    UtTest_Add(SC_ProcessCommand_Test_ResetCounters, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_ResetCounters");
+    UtTest_Add(SC_ProcessCommand_Test_ResetCountersNoVerifyCmdLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_ResetCountersNoVerifyCmdLength");
+    UtTest_Add(SC_ProcessCommand_Test_StartAts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_StartAts");
+    UtTest_Add(SC_ProcessCommand_Test_StopAts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_StopAts");
+    UtTest_Add(SC_ProcessCommand_Test_StartRts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_StartRts");
+    UtTest_Add(SC_ProcessCommand_Test_StopRts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_StopRts");
+    UtTest_Add(SC_ProcessCommand_Test_DisableRts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_DisableRts");
+    UtTest_Add(SC_ProcessCommand_Test_EnableRts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_EnableRts");
+    UtTest_Add(SC_ProcessCommand_Test_SwitchAts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_SwitchAts");
+    UtTest_Add(SC_ProcessCommand_Test_JumpAts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_JumpAts");
+    UtTest_Add(SC_ProcessCommand_Test_ContinueAtsOnFailure, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_ContinueAtsOnFailure");
+    UtTest_Add(SC_ProcessCommand_Test_AppendAts, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_AppendAts");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsTableNominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsTableNominal");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsTableGetAddressError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsTableGetAddressError");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsTableID, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsTableID");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsTable_InvalidIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsTable_InvalidIndex");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsTableGetAddressNeverLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsTableGetAddressNeverLoaded");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsTableGetAddressSuccess, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsTableGetAddressSuccess");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAppendTableNominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAppendTableNominal");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAppendTableGetAddressError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAppendTableGetAddressError");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAppendTableGetAddressNeverLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAppendTableGetAddressNeverLoaded");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAppendTableGetAddressSuccess, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAppendTableGetAddressSuccess");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsTableNominal, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsTableNominal");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsTableGetAddressError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsTableGetAddressError");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsTableID, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsTableID");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsTable_InvalidIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsTable_InvalidIndex");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsTableGetAddressNeverLoaded, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsTableGetAddressNeverLoaded");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsTableGetAddressSuccess, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsTableGetAddressSuccess");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtsInfo, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtsInfo");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageRtpCtrl, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageRtpCtrl");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsInfo, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsInfo");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtpCtrl, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtpCtrl");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageAtsCmdStatus, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageAtsCmdStatus");
+    UtTest_Add(SC_ProcessCommand_Test_TableManageInvalidTableID, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_TableManageInvalidTableID");
+    UtTest_Add(SC_ProcessCommand_Test_StartRtsGrp, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_StartRtsGrp");
+    UtTest_Add(SC_ProcessCommand_Test_StopRtsGrp, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessCommand_Test_StopRtsGrp");
+    UtTest_Add(SC_ProcessCommand_Test_DisableRtsGrp, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_DisableRtsGrp");
+    UtTest_Add(SC_ProcessCommand_Test_EnableRtsGrp, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_EnableRtsGrp");
+    UtTest_Add(SC_ProcessCommand_Test_InvalidCmdError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessCommand_Test_InvalidCmdError");
+}
+```
+
+### `sc_loads_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_loads_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_rts.h"
+#include "sc_app.h"
+#include "sc_cmds.h"
+#include "sc_state.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_utils.h"
+#include "sc_loads.h"
+#include "sc_msgids.h"
+#include "sc_events.h"
+#include "sc_test_utils.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_loads_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+uint32 SC_APP_TEST_GlobalAtsCmdStatusTbl[SC_NUMBER_OF_ATS * SC_MAX_ATS_CMDS];
+
+SC_AtpControlBlock_t SC_APP_TEST_GlobalAtsCtrlBlck;
+
+/*
+ * Function Definitions
+ */
+
+uint8 SC_LOADS_TEST_GetTotalMsgLengthHook_RunCount;
+int32 SC_LOADS_TEST_CFE_MSG_GetSizeHook1(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                         const UT_StubContext_t *Context)
+{
+    SC_LOADS_TEST_GetTotalMsgLengthHook_RunCount += 1;
+
+    if (SC_LOADS_TEST_GetTotalMsgLengthHook_RunCount == 1)
+        SC_OperData.AtsCmdStatusTblAddr[0][1] = SC_LOADED;
+
+    return CFE_SUCCESS;
+}
+
+CFE_TIME_Compare_t UT_SC_Insert_CompareHookAgreaterthanB(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                         const UT_StubContext_t *Context)
+{
+    return CFE_TIME_A_GT_B;
+}
+
+void SC_LoadAts_Test_Nominal(void)
+{
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    size_t               MsgSize   = sizeof(SC_NoArgsCmd_t);
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+    memset(&AtsTable, 0, sizeof(AtsTable));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+
+    /* Set to satisfy the conditions of if-statement below comment "if the length of the command is valid", along
+     * with the if-statement immediately after */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0], 0);
+    UtAssert_UINT32_EQ(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0], SC_LOADED);
+    UtAssert_UINT32_EQ(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_LoadAts_Test_CmdRunOffEndOfBuffer(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+    size_t               MsgSize;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  i;
+    int                  j;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    /* Causes CFE_MSG_GetSize to satisfy the conditions of if-statement below comment "if the length of the command is
+     * valid", but NOT the if-statement immediately after */
+    MsgSize       = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = (MsgSize + SC_ROUND_UP_BYTES + SC_ATS_HEADER_SIZE) / SC_BYTES_IN_WORD;
+    MaxBufEntries = SC_ATS_BUFF_SIZE32 / BufEntrySize + 1;
+
+    for (i = 0, j = 0; i < MaxBufEntries; i++, j += BufEntrySize)
+    {
+        Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+        Entry->CmdNumber = i + 1;
+
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    }
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR,
+                  "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_CmdLengthInvalid(void)
+{
+    size_t               MsgSize;
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+
+    /* Set to make the if-statement below comment "if the length of the command is valid" fail */
+    MsgSize = SC_PACKET_MAX_SIZE + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR,
+                  "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_CmdLengthZero(void)
+{
+    size_t               MsgSize;
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+
+    /* Set to make the if-statement below comment "if the length of the command is valid" fail */
+    MsgSize = 0;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR,
+                  "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_CmdNumberInvalid(void)
+{
+    size_t               MsgSize;
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = SC_MAX_ATS_CMDS * 2;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+
+    /* Set to make the if-statement below comment "if the length of the command is valid" fail */
+    MsgSize = SC_PACKET_MAX_SIZE + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR,
+                  "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_EndOfLoadReached(void)
+{
+    size_t               MsgSize;
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+
+    /* Set to make the if-statement below comment "if the length of the command is valid" fail */
+    MsgSize = SC_PACKET_MAX_SIZE + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR,
+                  "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_AtsBufferTooSmall(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  i;
+    int                  j;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    /* Set to reach block of code starting with comment "even the smallest command will not fit in the buffer" */
+    MsgSize1      = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = ((MsgSize1 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_NOPKT_WORDS;
+    MaxBufEntries = SC_ATS_BUFF_SIZE32 / BufEntrySize;
+
+    for (i = 0, j = 0; i < MaxBufEntries; i++, j += BufEntrySize)
+    {
+        Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+        Entry->CmdNumber                             = i + 1;
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    }
+
+    /* Next entry should not leave enough buffer space for an ATS command header */
+    Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber                             = i++ + 1;
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Use the remaining buffer space to calculate the final message size */
+    MsgSize2 = (SC_ATS_BUFF_SIZE32 - SC_ATS_HDR_WORDS - j) * SC_BYTES_IN_WORD;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set up final entry that will create error condition */
+    j += ((MsgSize2 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_NOPKT_WORDS;
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber = i + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR,
+                  "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == SC_ERROR");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_EMPTY");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_AtsEntryOverflow(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  i;
+    int                  j;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+    memset(&AtsTable, 0, sizeof(AtsTable));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    MsgSize1      = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = ((MsgSize1 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_NOPKT_WORDS;
+    MaxBufEntries = SC_ATS_BUFF_SIZE32 / BufEntrySize;
+
+    for (i = 0, j = 0; i < MaxBufEntries; i++, j += BufEntrySize)
+    {
+        Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+        Entry->CmdNumber                             = i + 1;
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    }
+
+    /* Next entry should not leave enough buffer space for an ATS command header */
+    Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber                             = i++ + 1;
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Use the remaining buffer space to calculate the final message size */
+    MsgSize2 = (SC_ATS_BUFF_SIZE32 - SC_ATS_HDR_WORDS + 4 - j) * SC_BYTES_IN_WORD;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set up final entry that will create condition */
+    j += ((MsgSize2 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_WORDS;
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber = i + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_LoadExactlyBufferLength(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  i;
+    int                  j;
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    /* Set to reach block of code starting with comment "we encountered a load exactly as long as the buffer" */
+    MsgSize1      = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = (MsgSize1 + SC_ROUND_UP_BYTES + SC_ATS_HEADER_SIZE) / SC_BYTES_IN_WORD;
+    MaxBufEntries = SC_ATS_BUFF_SIZE32 / BufEntrySize;
+
+    for (i = 0, j = 0; i < MaxBufEntries; i++, j += BufEntrySize)
+    {
+        Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+        Entry->CmdNumber                             = i + 1;
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    }
+
+    /* Next entry should not leave enough buffer space for an ATS command header */
+    Entry                                        = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][j];
+    Entry->CmdNumber                             = i++ + 1;
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][j] = SC_EMPTY;
+
+    /* Use the remaining buffer space to calculate the final message size */
+    MsgSize2 = ((SC_ATS_BUFF_SIZE32 - SC_ATS_HDR_NOPKT_WORDS - j) * SC_BYTES_IN_WORD);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadAts_Test_CmdNotEmpty(void)
+{
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    size_t               MsgSize   = sizeof(SC_NoArgsCmd_t);
+    SC_AtsEntryHeader_t *Entry;
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    uint8                AtsIndex = 0;
+    uint8                EntryLoc;
+
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+    memset(&AtsTable, 0, sizeof(AtsTable));
+
+    SC_InitTables();
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    EntryLoc         = ((MsgSize + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_NOPKT_WORDS;
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryLoc];
+    Entry->CmdNumber = 2;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* This hook will set CmdNumber 2 SC_OperData.AtsCmdStatusTblAddr[AtsIndex][1] from SC_EMPTY to SC_LOADED */
+    SC_LOADS_TEST_GetTotalMsgLengthHook_RunCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_MSG_GetSize), SC_LOADS_TEST_CFE_MSG_GetSizeHook1, NULL);
+
+    /* Execute the function being tested */
+    SC_LoadAts(AtsIndex);
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0], SC_ERROR);
+    UtAssert_UINT32_EQ(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0], SC_EMPTY);
+    UtAssert_UINT32_EQ(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands, 0);
+    UtAssert_UINT32_EQ(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize, 0);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_LoadAts_Test_InvalidIndex(void)
+{
+    /* Pass in invalid index */
+    SC_LoadAts(SC_NUMBER_OF_ATS);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_LOADATS_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void SC_BuildTimeIndexTable_Test_InvalidIndex(void)
+{
+    uint8 AtsIndex = SC_NUMBER_OF_ATS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Build time index table error: invalid ATS index %%d");
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_BuildTimeIndexTable(AtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_BUILD_TIME_IDXTBL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_Insert_Test(void)
+{
+    uint8 AtsIndex    = 0;
+    uint8 ListLength  = 1;
+    uint8 NewCmdIndex = 0;
+
+    SC_InitTables();
+
+    SC_AppData.AtsTimeIndexBuffer[AtsIndex][0] = 1;
+
+    /* Execute the function being tested */
+    SC_Insert(AtsIndex, NewCmdIndex, ListLength);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0],
+                  "SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]");
+    UtAssert_True(SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == NewCmdIndex + 1,
+                  "SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == NewCmdIndex");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_Insert_Test_MiddleOfList(void)
+{
+    uint8 AtsIndex    = 0;
+    uint8 ListLength  = 1;
+    uint8 NewCmdIndex = 0;
+
+    /* Set to cause SC_CompareAbsTime to return false, in order to reach block starting with
+      "new cmd will execute at same time or after this list entry" */
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, false);
+
+    SC_InitTables();
+
+    SC_AppData.AtsTimeIndexBuffer[AtsIndex][0] = 1;
+
+    /* Execute the function being tested */
+    SC_Insert(AtsIndex, NewCmdIndex, ListLength);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0],
+                  "SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]");
+    UtAssert_True(SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == NewCmdIndex + 1,
+                  "SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == NewCmdIndex+1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_Insert_Test_MiddleOfListCompareAbsTimeTrue(void)
+{
+    uint8 AtsIndex    = 0;
+    uint8 ListLength  = 1;
+    uint8 NewCmdIndex = 0;
+
+    /* Set to cause SC_CompareAbsTime to return false, in order to reach block starting with
+      "new cmd will execute at same time or after this list entry" */
+    UT_SetDeferredRetcode(UT_KEY(SC_CompareAbsTime), 1, true);
+
+    SC_InitTables();
+
+    SC_AppData.AtsTimeIndexBuffer[AtsIndex][0] = 1;
+
+    /* Execute the function being tested */
+    SC_Insert(AtsIndex, NewCmdIndex, ListLength);
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0],
+                  "SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == SC_AppData.AtsTimeIndexBuffer[AtsIndex][0]");
+    UtAssert_True(SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == NewCmdIndex + 1,
+                  "SC_AppData.AtsTimeIndexBuffer[AtsIndex][1] == NewCmdIndex+1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_Insert_Test_InvalidIndex(void)
+{
+    uint8 AtsIndex    = SC_NUMBER_OF_ATS;
+    uint8 ListLength  = 1;
+    uint8 NewCmdIndex = 0;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS insert error: invalid ATS index %%d");
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_Insert(AtsIndex, NewCmdIndex, ListLength);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INSERTATS_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_InitAtsTables_Test_InvalidIndex(void)
+{
+    uint8 AtsIndex = SC_NUMBER_OF_ATS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS table init error: invalid ATS index %%d");
+
+    /* Execute the function being tested */
+    SC_InitAtsTables(AtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_INIT_ATSTBL_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ValidateAts_Test(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 0;
+
+    /* Execute the function being tested */
+    Result = SC_ValidateAts((uint16 *)(SC_OperData.AtsTblAddr[AtsIndex]));
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ValidateAppend_Test(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 0;
+
+    /* Execute the function being tested */
+    Result = SC_ValidateAppend((SC_OperData.AtsTblAddr[AtsIndex]));
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ValidateRts_Test(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_INVALID_MSG_ID;
+    size_t               MsgSize   = SC_PACKET_MIN_SIZE;
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 1;
+
+    /* The MsgId and MsgSize are here to satisfy TSF */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_ValidateRts((uint16 *)(SC_OperData.RtsTblAddr[RtsIndex]));
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ValidateRts_Test_ParseRts(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_INVALID_MSG_ID;
+    size_t               MsgSize   = SC_PACKET_MIN_SIZE;
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 0;
+
+    /* The MsgId and MsgSize are here to satisfy TSF */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_ValidateRts((uint16 *)(SC_OperData.RtsTblAddr[RtsIndex]));
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadRts_Test_Nominal(void)
+{
+    uint8 AtsIndex = 0;
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    SC_LoadRts(AtsIndex);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_LoadRts_Test_InvalidIndex(void)
+{
+    uint8 RtsIndex = SC_NUMBER_OF_RTS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS table init error: invalid RTS index %%d");
+
+    /* Execute the function being tested */
+    SC_LoadRts(RtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_LOADRTS_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_EndOfFile(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_INVALID_MSG_ID;
+    size_t               MsgSize   = SC_PACKET_MIN_SIZE;
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 0;
+
+    /* Set these to satisfy if-statement to reach line with comment "assumed end of file" */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_InvalidMsgId(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = CFE_SB_INVALID_MSG_ID;
+    size_t               MsgSize   = SC_PACKET_MIN_SIZE;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS cmd loaded with invalid MID at %%d");
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 1;
+
+    /* Set to generate error message SC_RTS_INVLD_MID_ERR_EID */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_INVLD_MID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_LengthErrorTooShort(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = SC_UT_MID_1;
+    size_t               MsgSize   = 0;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "RTS cmd loaded with invalid length at %%d, len: %%d");
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 1;
+
+    /* Set to generate error message SC_RTS_INVLD_MID_ERR_EID */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_LengthErrorTooLong(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = SC_UT_MID_1;
+    size_t               MsgSize   = SC_PACKET_MAX_SIZE + 1;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "RTS cmd loaded with invalid length at %%d, len: %%d");
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 1;
+
+    /* Set to generate error message SC_RTS_LEN_ERR_EID as a result of length being too long */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_CmdRunsOffEndOfBuffer(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = SC_UT_MID_1;
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    int32                BufUnused = sizeof(RtsTable);
+
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS cmd at %%d runs off end of buffer");
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 1;
+
+    while (BufUnused > 0)
+    {
+
+        /* Need to avoid exact fit and not having enough room for a command */
+        if (BufUnused < SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE)
+        {
+            /* Use up more than what's left */
+            MsgSize = SC_PACKET_MAX_SIZE;
+        }
+        else if (BufUnused < SC_PACKET_MIN_SIZE + SC_PACKET_MAX_SIZE + (2 * SC_RTS_HEADER_SIZE))
+        {
+            /* Just set to min entry, use up next round */
+            MsgSize = SC_PACKET_MIN_SIZE;
+        }
+        else
+        {
+            MsgSize = SC_PACKET_MAX_SIZE;
+        }
+
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), true);
+        BufUnused -= MsgSize;
+    }
+
+    /* Execute the function being tested */
+    Result = SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LEN_BUFFER_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_CmdLengthEqualsBufferLength(void)
+{
+    /* Also tests the case where CmdLength is less than the buffer length */
+
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    int16                Result;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t       TestMsgId = SC_UT_MID_1;
+    size_t               MsgSize;
+    size_t               BufUnused = sizeof(RtsTable);
+
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    Entry                            = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag                   = 1;
+
+    /* Fill buffer with packets */
+    while (BufUnused != 0)
+    {
+
+        /* Need to consume data but leave room for a valid packet */
+        if (BufUnused <= SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE)
+        {
+            /* Just use up what's left */
+            MsgSize = BufUnused - SC_RTS_HEADER_SIZE;
+        }
+        else if (BufUnused < SC_PACKET_MIN_SIZE + SC_PACKET_MAX_SIZE + (2 * SC_RTS_HEADER_SIZE))
+        {
+            /* Just set to min entry, use up next round */
+            MsgSize = SC_PACKET_MIN_SIZE;
+        }
+        else
+        {
+            MsgSize = SC_PACKET_MAX_SIZE;
+        }
+
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), true);
+        BufUnused -= MsgSize + SC_RTS_HEADER_SIZE;
+    }
+
+    /* Execute the function being tested */
+    Result = SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ParseRts_Test_CmdDoesNotFitBufferEmpty(void)
+{
+    uint8          RtsIndex = 0;
+    uint32         RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t TestMsgId = SC_UT_MID_1;
+    size_t         MsgSize;
+    size_t         BufUnused = sizeof(RtsTable);
+
+    SC_InitTables();
+
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+
+    /* Fill buffer with packets */
+    while (BufUnused > SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE)
+    {
+        /* Need to consume data but leave room for a valid packet */
+        if (BufUnused <= SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE)
+        {
+            /* Leave only room for another header */
+            MsgSize = BufUnused - (2 * SC_RTS_HEADER_SIZE);
+        }
+        else if (BufUnused < SC_PACKET_MIN_SIZE + SC_PACKET_MAX_SIZE + (2 * SC_RTS_HEADER_SIZE))
+        {
+            /* Just set to min entry, use up next round */
+            MsgSize = SC_PACKET_MIN_SIZE;
+        }
+        else
+        {
+            MsgSize = SC_PACKET_MAX_SIZE;
+        }
+
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), true);
+        BufUnused -= MsgSize + SC_RTS_HEADER_SIZE;
+    }
+
+    /* Execute the function being tested */
+    UtAssert_BOOL_TRUE(SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]));
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_ParseRts_Test_CmdDoesNotFitBufferNotEmpty(void)
+{
+    uint8          RtsIndex = 0;
+    uint32         RtsTable[SC_RTS_BUFF_SIZE32];
+    CFE_SB_MsgId_t TestMsgId = SC_UT_MID_1;
+    size_t         MsgSize;
+    size_t         BufUnused = sizeof(RtsTable);
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    /* Filling the table so it is considered used wherever checked */
+    memset(&RtsTable, 0xff, sizeof(RtsTable));
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS cmd loaded won't fit in buffer at %%d");
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+
+    /* Fill buffer with packets */
+    while (BufUnused > SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE)
+    {
+        /* Need to consume data but leave room for a valid packet */
+        if (BufUnused <= SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE)
+        {
+            /* Leave only room for another header */
+            MsgSize = BufUnused - (2 * SC_RTS_HEADER_SIZE);
+        }
+        else if (BufUnused < SC_PACKET_MIN_SIZE + SC_PACKET_MAX_SIZE + (2 * SC_RTS_HEADER_SIZE))
+        {
+            /* Just set to min entry, use up next round */
+            MsgSize = SC_PACKET_MIN_SIZE;
+        }
+        else
+        {
+            MsgSize = SC_PACKET_MAX_SIZE;
+        }
+
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), true);
+        BufUnused -= MsgSize + SC_RTS_HEADER_SIZE;
+    }
+
+    /* Execute the function being tested */
+    UtAssert_BOOL_FALSE(SC_ParseRts(SC_OperData.RtsTblAddr[RtsIndex]));
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LEN_TOO_LONG_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void SC_UpdateAppend_Test_Nominal(void)
+{
+    /* Also tests the case where CmdLength is less than the buffer length */
+
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+    Entry                     = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[EntryIndex];
+    Entry->CmdNumber          = 1;
+
+    /* Set to reach code block starting with comment "Compute buffer index for next Append ATS table entry" */
+    MsgSize = 50;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 1, "SC_OperData.HkPacket.AppendEntryCount == 1");
+    UtAssert_True(SC_AppData.AppendWordCount == 15, "SC_AppData.AppendWordCount == 15");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateAppend_Test_CmdDoesNotFitBuffer(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  j;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+
+    /* Set to reach code block starting with comment "Compute buffer index for next Append ATS table entry" */
+    MsgSize       = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = (MsgSize + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD + SC_ATS_HDR_NOPKT_WORDS;
+    MaxBufEntries = SC_APPEND_BUFF_SIZE32 / BufEntrySize;
+
+    for (EntryIndex = 0, j = 0; EntryIndex <= MaxBufEntries; EntryIndex++, j += BufEntrySize)
+    {
+        Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[j];
+        Entry->CmdNumber = EntryIndex + 1;
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    }
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 30, "SC_OperData.HkPacket.AppendEntryCount == 30");
+    UtAssert_True(SC_AppData.AppendWordCount == 1980, "SC_AppData.AppendWordCount == 1980");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateAppend_Test_InvalidCmdLengthTooLow(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+    Entry                     = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[EntryIndex];
+    Entry->CmdNumber          = 1;
+
+    /* Set to satisfy condition "(CommandBytes < SC_PACKET_MIN_SIZE)" */
+    MsgSize = SC_PACKET_MIN_SIZE - 1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 0, "SC_OperData.HkPacket.AppendEntryCount == 0");
+    UtAssert_True(SC_AppData.AppendWordCount == 0, "SC_AppData.AppendWordCount == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateAppend_Test_InvalidCmdLengthTooHigh(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+    Entry                     = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[EntryIndex];
+    Entry->CmdNumber          = 1;
+
+    /* Set to satisfy condition "(CommandBytes > SC_PACKET_MAX_SIZE)" */
+    MsgSize = SC_PACKET_MAX_SIZE * 2;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 0, "SC_OperData.HkPacket.AppendEntryCount == 0");
+    UtAssert_True(SC_AppData.AppendWordCount == 0, "SC_AppData.AppendWordCount == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateAppend_Test_EndOfBuffer(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int                  BufEntrySize;
+    int                  MaxBufEntries;
+    int                  j;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+
+    /* Cause condition to be met: "(EntryIndex >= SC_APPEND_BUFF_SIZE)" */
+    MsgSize1      = SC_PACKET_MAX_SIZE;
+    BufEntrySize  = (MsgSize1 + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD + SC_ATS_HDR_NOPKT_WORDS;
+    MaxBufEntries = SC_APPEND_BUFF_SIZE32 / BufEntrySize;
+
+    for (EntryIndex = 0, j = 0; EntryIndex <= MaxBufEntries; EntryIndex++, j += BufEntrySize)
+    {
+        Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[j];
+        Entry->CmdNumber = EntryIndex + 1;
+        UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+        if (EntryIndex == (MaxBufEntries - 1))
+        {
+            MsgSize2 = 72;
+            UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+        }
+    }
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 31, "SC_OperData.HkPacket.AppendEntryCount == 31");
+    UtAssert_True(SC_AppData.AppendWordCount == 2000, "SC_AppData.AppendWordCount == 2000");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateAppend_Test_CmdNumberZero(void)
+{
+    /* Also tests the case where CmdLength is less than the buffer length */
+
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+    Entry                     = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[EntryIndex];
+    Entry->CmdNumber          = 0;
+
+    /* Cause condition to be met: "(Entry->CmdNumber == 0)" */
+    MsgSize = 50;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 0, "SC_OperData.HkPacket.AppendEntryCount == 0");
+    UtAssert_True(SC_AppData.AppendWordCount == 0, "SC_AppData.AppendWordCount == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateAppend_Test_CmdNumberTooHigh(void)
+{
+    /* Also tests the case where CmdLength is less than the buffer length */
+
+    SC_AtsEntryHeader_t *Entry;
+    uint8                EntryIndex = 0;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Update Append ATS Table: load count = %%d, command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    SC_OperData.AppendTblAddr = &AtsAppendTable[0];
+    Entry                     = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[EntryIndex];
+    Entry->CmdNumber          = SC_MAX_ATS_CMDS + 1;
+
+    /* Cause condition to be met: "(Entry->CmdNumber > SC_MAX_ATS_CMDS)" */
+    MsgSize = 50;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_UpdateAppend();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.AppendLoadCount == 1, "SC_OperData.HkPacket.AppendLoadCount == 1");
+    UtAssert_True(SC_OperData.HkPacket.AppendEntryCount == 0, "SC_OperData.HkPacket.AppendEntryCount == 0");
+    UtAssert_True(SC_AppData.AppendWordCount == 0, "SC_AppData.AppendWordCount == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_UPDATE_APPEND_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAppend_Test(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&AtsTable, 0, sizeof(AtsTable));
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+    SC_OperData.AtsCtrlBlckAddr               = &SC_APP_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AppendTblAddr                 = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[AtsIndex];
+    Entry->CmdNumber = 1;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.AppendWordCount            = 1;
+    SC_OperData.HkPacket.AppendEntryCount = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+    SC_OperData.AtsCtrlBlckAddr->AtpState        = SC_EXECUTING;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber       = 1;
+
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* restart ATS */
+    UT_SetDeferredRetcode(UT_KEY(SC_BeginAts), 1, true);
+
+    /* Execute the function being tested */
+    SC_ProcessAppend(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 1");
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0, "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAppend_Test_CmdLoaded(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&AtsTable, 0, sizeof(AtsTable));
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+    SC_OperData.AtsCtrlBlckAddr               = &SC_APP_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AppendTblAddr                 = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[AtsIndex];
+    Entry->CmdNumber = 1;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.AppendWordCount            = 1;
+    SC_OperData.HkPacket.AppendEntryCount = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_LOADED;
+    SC_OperData.AtsCtrlBlckAddr->AtpState        = SC_EXECUTING;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber       = 1;
+
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_ProcessAppend(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0");
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0, "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAppend_Test_NotExecuting(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&AtsTable, 0, sizeof(AtsTable));
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+    SC_OperData.AtsCtrlBlckAddr               = &SC_APP_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AppendTblAddr                 = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[AtsIndex];
+    Entry->CmdNumber = 1;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.AppendWordCount            = 1;
+    SC_OperData.HkPacket.AppendEntryCount = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+    SC_OperData.AtsCtrlBlckAddr->AtpState        = SC_IDLE;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber       = 1;
+
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_ProcessAppend(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 1");
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0, "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE, "SC_OperData.AtsCtrlBlckAddr->AtpState = SC_IDLE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAppend_Test_AtsNumber(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    SC_AtsInfoTable_t    AtsInfoTbl;
+    uint32               AtsAppendTable[SC_APPEND_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&AtsTable, 0, sizeof(AtsTable));
+    memset(&AtsAppendTable, 0, sizeof(AtsAppendTable));
+    memset(&AtsInfoTbl, 0, sizeof(AtsInfoTbl));
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex] = &SC_APP_TEST_GlobalAtsCmdStatusTbl[0];
+    SC_OperData.AtsInfoTblAddr                = &AtsInfoTbl;
+    SC_OperData.AtsCtrlBlckAddr               = &SC_APP_TEST_GlobalAtsCtrlBlck;
+    SC_OperData.AtsTblAddr[AtsIndex]          = &AtsTable[0];
+    SC_OperData.AppendTblAddr                 = &AtsAppendTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AppendTblAddr[AtsIndex];
+    Entry->CmdNumber = 1;
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.AppendWordCount            = 1;
+    SC_OperData.HkPacket.AppendEntryCount = 1;
+
+    SC_AppData.AtsCmdIndexBuffer[0][0] = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] = SC_EMPTY;
+    SC_OperData.AtsCtrlBlckAddr->AtpState        = SC_EXECUTING;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber       = 0;
+
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    SC_ProcessAppend(AtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize == 1");
+    UtAssert_True(SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 1,
+                  "SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 1");
+    UtAssert_True(SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0, "SC_AppData.AtsCmdIndexBuffer[AtsIndex][0] == 0");
+    UtAssert_True(SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED,
+                  "SC_OperData.AtsCmdStatusTblAddr[AtsIndex][0] == SC_LOADED");
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ProcessAppend_Test_InvalidIndex(void)
+{
+    uint8 AtsIndex = SC_NUMBER_OF_ATS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ATS process append error: invalid ATS index %%d");
+
+    /* Execute the function being tested */
+    SC_ProcessAppend(AtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_PROCESS_APPEND_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsTable_Test_Nominal(void)
+{
+    SC_AtsEntryHeader_t *Entry1;
+    SC_AtsEntryHeader_t *Entry2;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    memset(&AtsTable, 0, sizeof(AtsTable));
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table: command count = %%d, byte count = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+
+    Entry1            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry1->CmdNumber = 1;
+
+    Entry2            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][128];
+    Entry2->CmdNumber = 0;
+
+    /* Set to call to SC_VerifyAtsEntry will return SC_PACKET_MAX_SIZE, which will cause execution of
+     * code block starting with comment "Result is size (in words) of this entry" */
+    MsgSize = SC_PACKET_MAX_SIZE;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsTable((SC_OperData.AtsTblAddr[AtsIndex]), SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+
+    /* Test element 1.  Note: element 0 is modified in call to SC_VerifyAtsEntry and so it does not need to be verified
+     * in this test */
+    UtAssert_True(SC_OperData.AtsDupTestArray[1] == SC_DUP_TEST_UNUSED,
+                  "SC_OperData.AtsDupTestArray[1] == SC_DUP_TEST_UNUSED");
+
+    /* Test middle element.  Note: element 0 is modified in call to SC_VerifyAtsEntry */
+    UtAssert_True(SC_OperData.AtsDupTestArray[SC_MAX_ATS_CMDS / 2] == SC_DUP_TEST_UNUSED,
+                  "SC_OperData.AtsDupTestArray[SC_MAX_ATS_CMDS / 2] == SC_DUP_TEST_UNUSED");
+
+    /* Test last element */
+    UtAssert_True(SC_OperData.AtsDupTestArray[SC_MAX_ATS_CMDS - 1] == SC_DUP_TEST_UNUSED,
+                  "SC_OperData.AtsDupTestArray[SC_MAX_ATS_CMDS - 1] == SC_DUP_TEST_UNUSED");
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsTable_Test_InvalidEntry(void)
+{
+    SC_AtsEntryHeader_t *Entry1;
+    SC_AtsEntryHeader_t *Entry2;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+
+    Entry1            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry1->CmdNumber = 5000;
+
+    Entry2            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][128];
+    Entry2->CmdNumber = 0;
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsTable((SC_OperData.AtsTblAddr[AtsIndex]), SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsTable_Test_EmptyTable(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Verify ATS Table error: table is empty");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 0;
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsTable((SC_OperData.AtsTblAddr[AtsIndex]), SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_MPT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_Nominal(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    SC_OperData.AtsDupTestArray[0] = SC_DUP_TEST_UNUSED;
+
+    /* Set to reach code block starting with comment "Compute length (in words) for this ATS table entry" */
+    MsgSize = SC_PACKET_MAX_SIZE;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ATS_HDR_NOPKT_WORDS + ((SC_PACKET_MAX_SIZE + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD),
+                  "Result == SC_ATS_HDR_NOPKT_WORDS + (SC_PACKET_MAX_SIZE + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD");
+    UtAssert_True(SC_OperData.AtsDupTestArray[0] == 0, "SC_OperData.AtsDupTestArray[0] == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_EndOfBuffer(void)
+{
+    uint16 AtsIndex = 10000;
+    int16  Result;
+
+    SC_InitTables();
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[0]), AtsIndex, SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_InvalidCmdNumber(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table error: invalid command number: buf index = %%d, cmd num = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 5000;
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_NUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_BufferFull(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table error: buffer full: buf index = %%d, cmd num = %%d, buf words = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, 2);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_END_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_InvalidCmdLengthTooLow(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table error: invalid length: buf index = %%d, cmd num = %%d, pkt len = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    /* Set to generate error message SC_VERIFY_ATS_PKT_ERR_EID by satisfying condition "(CommandBytes <
+     * SC_PACKET_MIN_SIZE)" */
+    MsgSize = SC_PACKET_MIN_SIZE - 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_PKT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_InvalidCmdLengthTooHigh(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table error: invalid length: buf index = %%d, cmd num = %%d, pkt len = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    /* Set to generate error message SC_VERIFY_ATS_PKT_ERR_EID by satisfying condition "(CommandBytes <
+     * SC_PACKET_MIN_SIZE)" */
+    MsgSize = SC_PACKET_MAX_SIZE * 2;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_PKT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_BufferOverflow(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table error: buffer overflow: buf index = %%d, cmd num = %%d, pkt len = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    /* Set to generate error message SC_VERIFY_ATS_BUF_ERR_EID */
+    MsgSize = SC_PACKET_MAX_SIZE;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, 20);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_BUF_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyAtsEntry_Test_DuplicateCmdNumber(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint8                AtsIndex = 0;
+    int16                Result;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Verify ATS Table error: dup cmd number: buf index = %%d, cmd num = %%d, dup index = %%d");
+
+    SC_InitTables();
+
+    SC_OperData.AtsTblAddr[AtsIndex] = &AtsTable[0];
+    Entry                            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][0];
+    Entry->CmdNumber                 = 1;
+
+    /* Set to generate error message SC_VERIFY_ATS_DUP_ERR_EID */
+    MsgSize = SC_PACKET_MAX_SIZE;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    SC_OperData.AtsDupTestArray[0] = 99;
+
+    /* Execute the function being tested */
+    Result = SC_VerifyAtsEntry((SC_OperData.AtsTblAddr[AtsIndex]), AtsIndex, SC_ATS_BUFF_SIZE);
+
+    /* Verify results */
+    UtAssert_True(Result == SC_ERROR, "Result == SC_ERROR");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_VERIFY_ATS_DUP_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_LoadAts_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_Nominal");
+    /*
+    UtTest_Add(SC_LoadAts_Test_CmdRunOffEndOfBuffer, SC_Test_Setup, SC_Test_TearDown,
+               "SC_LoadAts_Test_CmdRunOffEndOfBuffer");
+    UtTest_Add(SC_LoadAts_Test_CmdLengthInvalid, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_CmdLengthInvalid");
+    UtTest_Add(SC_LoadAts_Test_CmdLengthZero, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_CmdLengthZero");
+    UtTest_Add(SC_LoadAts_Test_CmdNumberInvalid, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_CmdNumberInvalid");
+    UtTest_Add(SC_LoadAts_Test_EndOfLoadReached, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_EndOfLoadReached");
+    UtTest_Add(SC_LoadAts_Test_AtsBufferTooSmall, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_AtsBufferTooSmall");
+    UtTest_Add(SC_LoadAts_Test_AtsEntryOverflow, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_AtsEntryOverflow");
+    UtTest_Add(SC_LoadAts_Test_LoadExactlyBufferLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_LoadAts_Test_LoadExactlyBufferLength");
+    UtTest_Add(SC_LoadAts_Test_CmdNotEmpty, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_CmdNotEmpty");
+    UtTest_Add(SC_LoadAts_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown, "SC_LoadAts_Test_InvalidIndex");
+
+    UtTest_Add(SC_BuildTimeIndexTable_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_BuildTimeIndexTable_Test_InvalidIndex");
+    UtTest_Add(SC_Insert_Test, SC_Test_Setup, SC_Test_TearDown, "SC_Insert_Test");
+    UtTest_Add(SC_Insert_Test_MiddleOfList, SC_Test_Setup, SC_Test_TearDown, "SC_Insert_Test_MiddleOfList");
+    UtTest_Add(SC_Insert_Test_MiddleOfListCompareAbsTimeTrue, SC_Test_Setup, SC_Test_TearDown,
+               "SC_Insert_Test_MiddleOfListCompareAbsTimeTrue");
+    UtTest_Add(SC_Insert_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown, "SC_Insert_Test_InvalidIndex");
+    UtTest_Add(SC_InitAtsTables_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_InitAtsTables_Test_InvalidIndex");
+    UtTest_Add(SC_ValidateAts_Test, SC_Test_Setup, SC_Test_TearDown, "SC_ValidateAts_Test");
+    UtTest_Add(SC_ValidateAppend_Test, SC_Test_Setup, SC_Test_TearDown, "SC_ValidateAppend_Test");
+    UtTest_Add(SC_ValidateRts_Test, SC_Test_Setup, SC_Test_TearDown, "SC_ValidateRts_Test");
+    UtTest_Add(SC_ValidateRts_Test_ParseRts, SC_Test_Setup, SC_Test_TearDown, "SC_ValidateRts_Test_ParseRts");
+    UtTest_Add(SC_LoadRts_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_LoadRts_Test_Nominal");
+    UtTest_Add(SC_LoadRts_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown, "SC_LoadRts_Test_InvalidIndex");
+    UtTest_Add(SC_ParseRts_Test_EndOfFile, SC_Test_Setup, SC_Test_TearDown, "SC_ParseRts_Test_EndOfFile");
+    UtTest_Add(SC_ParseRts_Test_InvalidMsgId, SC_Test_Setup, SC_Test_TearDown, "SC_ParseRts_Test_InvalidMsgId");
+    UtTest_Add(SC_ParseRts_Test_LengthErrorTooShort, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ParseRts_Test_LengthErrorTooShort");
+    UtTest_Add(SC_ParseRts_Test_LengthErrorTooLong, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ParseRts_Test_LengthErrorTooLong");
+    UtTest_Add(SC_ParseRts_Test_CmdRunsOffEndOfBuffer, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ParseRts_Test_CmdRunsOffEndOfBuffer");
+    UtTest_Add(SC_ParseRts_Test_CmdLengthEqualsBufferLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ParseRts_Test_CmdLengthEqualsBufferLength");
+    UtTest_Add(SC_ParseRts_Test_CmdDoesNotFitBufferEmpty, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ParseRts_Test_CmdDoesNotFitBufferEmpty");
+    UtTest_Add(SC_ParseRts_Test_CmdDoesNotFitBufferNotEmpty, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ParseRts_Test_CmdDoesNotFitBufferNotEmpty");
+    UtTest_Add(SC_UpdateAppend_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_UpdateAppend_Test_Nominal");
+    UtTest_Add(SC_UpdateAppend_Test_CmdDoesNotFitBuffer, SC_Test_Setup, SC_Test_TearDown,
+               "SC_UpdateAppend_Test_CmdDoesNotFitBuffer");
+    UtTest_Add(SC_UpdateAppend_Test_InvalidCmdLengthTooLow, SC_Test_Setup, SC_Test_TearDown,
+               "SC_UpdateAppend_Test_InvalidCmdLengthTooLow");
+    UtTest_Add(SC_UpdateAppend_Test_InvalidCmdLengthTooHigh, SC_Test_Setup, SC_Test_TearDown,
+               "SC_UpdateAppend_Test_InvalidCmdLengthTooHigh");
+    UtTest_Add(SC_UpdateAppend_Test_EndOfBuffer, SC_Test_Setup, SC_Test_TearDown, "SC_UpdateAppend_Test_EndOfBuffer");
+    UtTest_Add(SC_UpdateAppend_Test_CmdNumberZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_UpdateAppend_Test_CmdNumberZero");
+    UtTest_Add(SC_UpdateAppend_Test_CmdNumberTooHigh, SC_Test_Setup, SC_Test_TearDown,
+               "SC_UpdateAppend_Test_CmdNumberTooHigh");
+    UtTest_Add(SC_ProcessAppend_Test, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAppend_Test");
+    UtTest_Add(SC_ProcessAppend_Test_CmdLoaded, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAppend_Test_CmdLoaded");
+    UtTest_Add(SC_ProcessAppend_Test_NotExecuting, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAppend_Test_NotExecuting");
+    UtTest_Add(SC_ProcessAppend_Test_AtsNumber, SC_Test_Setup, SC_Test_TearDown, "SC_ProcessAppend_Test_AtsNumber");
+    UtTest_Add(SC_ProcessAppend_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_ProcessAppend_Test_InvalidIndex");
+    UtTest_Add(SC_VerifyAtsTable_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_VerifyAtsTable_Test_Nominal");
+    UtTest_Add(SC_VerifyAtsTable_Test_InvalidEntry, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsTable_Test_InvalidEntry");
+    UtTest_Add(SC_VerifyAtsTable_Test_EmptyTable, SC_Test_Setup, SC_Test_TearDown, "SC_VerifyAtsTable_Test_EmptyTable");
+    UtTest_Add(SC_VerifyAtsEntry_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_VerifyAtsEntry_Test_Nominal");
+    UtTest_Add(SC_VerifyAtsEntry_Test_EndOfBuffer, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsEntry_Test_EndOfBuffer");
+    UtTest_Add(SC_VerifyAtsEntry_Test_InvalidCmdNumber, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsEntry_Test_InvalidCmdNumber");
+    UtTest_Add(SC_VerifyAtsEntry_Test_BufferFull, SC_Test_Setup, SC_Test_TearDown, "SC_VerifyAtsEntry_Test_BufferFull");
+    UtTest_Add(SC_VerifyAtsEntry_Test_InvalidCmdLengthTooLow, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsEntry_Test_InvalidCmdLengthTooLow");
+    UtTest_Add(SC_VerifyAtsEntry_Test_InvalidCmdLengthTooHigh, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsEntry_Test_InvalidCmdLengthTooHigh");
+    UtTest_Add(SC_VerifyAtsEntry_Test_BufferOverflow, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsEntry_Test_BufferOverflow");
+    UtTest_Add(SC_VerifyAtsEntry_Test_DuplicateCmdNumber, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyAtsEntry_Test_DuplicateCmdNumber");
+    */
+}
+```
+
+### `sc_rtsrq_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_rtsrq_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_rts.h"
+#include "sc_app.h"
+#include "sc_cmds.h"
+#include "sc_state.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_utils.h"
+#include "sc_loads.h"
+#include "sc_msgids.h"
+#include "sc_events.h"
+#include "sc_test_utils.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_rtsrq_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+/*
+ * Function Definitions
+ */
+
+void SC_StartRtsCmd_Test_Nominal(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS Number %%03d Started");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    Entry          = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag = 0;
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus    = SC_LOADED;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    MsgSize = sizeof(SC_RtsCmd_t);
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1, "SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1");
+
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 1, "SC_OperData.HkPacket.RtsActiveCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_START_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_StartRtsNoEvents(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = SC_NUMBER_OF_RTS;
+
+    RtsIndex = UT_CmdBuf.RtsCmd.RtsId - 1;
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    Entry          = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag = 0;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus    = SC_LOADED;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr       = 0;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    MsgSize = sizeof(SC_RtsCmd_t);
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1, "SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1");
+
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 1, "SC_OperData.HkPacket.RtsActiveCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    /* Handle if SC_LAST_RTS_WITH_EVENTS is the same as SC_NUM_OF_RTS */
+    if (UT_CmdBuf.RtsCmd.RtsId > SC_LAST_RTS_WITH_EVENTS)
+    {
+        UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_DBG_EID);
+        UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+    }
+    else
+    {
+        UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_START_INF_EID);
+        UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+    }
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void SC_StartRtsCmd_Test_InvalidCommandLength1(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS %%03d Rejected: Invld Len Field for 1st Cmd in Sequence. Invld Cmd Length = %%d");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    Entry          = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag = 0;
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus    = SC_LOADED;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    MsgSize = 0;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_INVLD_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_InvalidCommandLength2(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS %%03d Rejected: Invld Len Field for 1st Cmd in Sequence. Invld Cmd Length = %%d");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    Entry          = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag = 0;
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus    = SC_LOADED;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    MsgSize = SC_PACKET_MAX_SIZE + 1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_INVLD_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_RtsNotLoadedOrInUse(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS %%03d Rejected: RTS Not Loaded or In Use, Status: %%d");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    Entry          = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag = 0;
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus    = SC_IDLE;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_NOT_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_RtsDisabled(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS %%03d Rejected: RTS Disabled");
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    Entry          = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[RtsIndex][0];
+    Entry->TimeTag = 0;
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = true;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus    = SC_LOADED;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_DISABLED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_InvalidRtsId(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS %%03d Rejected: Invalid RTS ID");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_INVALID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_InvalidRtsIdZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS %%03d Rejected: Invalid RTS ID");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = 0;
+
+    /* Set message size in order to satisfy if-statement after comment "Make sure the command is big enough, but not too
+     * big" */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTS_CMD_INVALID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_StartRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveErrCtr == 1, "SC_OperData.HkPacket.RtsActiveErrCtr == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_Nominal(void)
+{
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    SC_OperData.RtsTblAddr[RtsIndex]               = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr                    = &RtsCtrlBlck;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus = SC_LOADED;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr    = 0;
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1, "SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 1");
+
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 1");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 1, "SC_OperData.HkPacket.RtsActiveCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_StartRtsGroupError(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS * 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_FirstRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS + 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_FirstRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 0;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_LastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS + 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_LastRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 0;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_FirstLastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Start RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_DisabledFlag(void)
+{
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                strCmpResult;
+    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS group error: rejected RTS ID %%03d, RTS Disabled");
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag   = true;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus      = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr         = 0;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr         = 0;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr = 0;
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 0");
+
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 0, "SC_OperData.HkPacket.RtsActiveCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveErrCtr == 1, "SC_OperData.HkPacket.RtsActiveErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_DISABLED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_STARTRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StartRtsGrpCmd_Test_RtsStatus(void)
+{
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                strCmpResult;
+    char                 ExpectedEventString[2][CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString[0], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS group error: rejected RTS ID %%03d, RTS Not Loaded or In Use, Status: %%d");
+    snprintf(ExpectedEventString[1], CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Start RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+    memset(&RtsTable, 0, sizeof(RtsTable));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus      = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr         = 0;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr         = 0;
+    SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr = 0;
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StartRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr == 0");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 0, "SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr == 0");
+
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveCtr == 0, "SC_OperData.HkPacket.RtsActiveCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.RtsActiveErrCtr == 1, "SC_OperData.HkPacket.RtsActiveErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STARTRTSGRP_CMD_NOT_LDED_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[0], context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, SC_STARTRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult =
+        strncmp(ExpectedEventString[1], context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 2, "CFE_EVS_SendEvent was called %u time(s), expected 2",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsCmd_Test_Nominal(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS %%03d Aborted");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTS_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsCmd_Test_InvalidRts(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS %%03d rejected: Invalid RTS ID");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_StopRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_Nominal(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Stop RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_Error(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS * 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_NotExecuting(void)
+{
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Stop RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    memset(&RtsTable, 0, sizeof(RtsTable));
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_InitTables();
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus = SC_EXECUTING;
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_FirstRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS + 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_FirstRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 0;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_LastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS + 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_LastRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 0;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_StopRtsGrpCmd_Test_FirstLastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Stop RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_StopRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_STOPRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsCmd_Test_Nominal(void)
+{
+    uint8 RtsIndex = 0;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Disabled RTS %%03d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISABLE_RTS_DEB_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsCmd_Test_InvalidRtsID(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Disable RTS %%03d Rejected: Invalid RTS ID");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_DisableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_Nominal(void)
+{
+    uint8 RtsIndex = 0; /* RtsId - 1 */
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_Error(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS * 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_FirstRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS + 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_FirstRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 0;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_LastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS + 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_LastRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 0;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_FirstLastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_DisableRtsGrpCmd_Test_DisabledFlag(void)
+{
+    uint8 RtsIndex = 0; /* RtsId - 1 */
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Disable RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = true;
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_DisableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_DISRTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsCmd_Test_Nominal(void)
+{
+    uint8 RtsIndex = 0;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Enabled RTS %%03d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENABLE_RTS_DEB_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsCmd_Test_InvalidRtsID(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Enable RTS %%03d Rejected: Invalid RTS ID");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsCmd_Test_InvalidRtsIDZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Enable RTS %%03d Rejected: Invalid RTS ID");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsCmd.RtsId = 0;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTS_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_EnableRtsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_Nominal(void)
+{
+    uint8 RtsIndex = 0; /* RtsId - 1 */
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_Error(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS * 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS * 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_NoVerifyLength(void)
+{
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_FirstRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = SC_NUMBER_OF_RTS + 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_FirstRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 0;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_LastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = SC_NUMBER_OF_RTS + 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_LastRtsIndexZero(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 0;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_FirstLastRtsIndex(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group error: FirstID=%%d, LastID=%%d");
+
+    SC_InitTables();
+
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId = 2;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId  = 1;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_EnableRtsGrpCmd_Test_DisabledFlag(void)
+{
+    uint8 RtsIndex = 0; /* RtsId - 1 */
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Enable RTS group: FirstID=%%d, LastID=%%d, Modified=%%d");
+
+    SC_InitTables();
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+    SC_OperData.RtsInfoTblAddr[1].DisabledFlag        = true;
+    UT_CmdBuf.RtsGrpCmd.FirstRtsId                    = 1;
+    UT_CmdBuf.RtsGrpCmd.LastRtsId                     = 2;
+
+    /* Set message size so SC_VerifyCmdLength will return true, to satisfy first if-statement */
+    UT_SetDeferredRetcode(UT_KEY(SC_VerifyCmdLength), 1, true);
+
+    /* Execute the function being tested */
+    SC_EnableRtsGrpCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 1, "SC_OperData.HkPacket.CmdCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ENARTSGRP_CMD_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_KillRts_Test(void)
+{
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus = SC_EXECUTING;
+    SC_OperData.RtsCtrlBlckAddr->NumRtsActive      = 1;
+
+    /* Execute the function being tested */
+    SC_KillRts(RtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_LOADED,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_LOADED");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime == SC_MAX_TIME,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime == SC_MAX_TIME");
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_KillRts_Test_NoActiveRts(void)
+{
+    uint8                RtsIndex = 0;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    SC_RtpControlBlock_t RtsCtrlBlck;
+
+    SC_InitTables();
+
+    memset(&RtsCtrlBlck, 0, sizeof(RtsCtrlBlck));
+
+    SC_OperData.RtsTblAddr[RtsIndex] = &RtsTable[0];
+    SC_OperData.RtsCtrlBlckAddr      = &RtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus = SC_EXECUTING;
+    SC_OperData.RtsCtrlBlckAddr->NumRtsActive      = 0;
+
+    /* Execute the function being tested */
+    SC_KillRts(RtsIndex);
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_LOADED,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_LOADED");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime == SC_MAX_TIME,
+                  "SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime == SC_MAX_TIME");
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0, "SC_OperData.RtsCtrlBlckAddr->NumRtsActive == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_KillRts_Test_InvalidIndex(void)
+{
+    uint8 RtsIndex = SC_NUMBER_OF_RTS;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS kill error: invalid RTS index %%d");
+
+    /* Execute the function being tested */
+    SC_KillRts(RtsIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_KILLRTS_INV_INDEX_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AutoStartRts_Test_Nominal(void)
+{
+    uint8 RtsId = 1;
+
+    /* Execute the function being tested */
+    SC_AutoStartRts(RtsId);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AutoStartRts_Test_InvalidId(void)
+{
+    uint8 RtsId = SC_NUMBER_OF_RTS + 1;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS autostart error: invalid RTS ID %%d");
+
+    /* Execute the function being tested */
+    SC_AutoStartRts(RtsId);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_AUTOSTART_RTS_INV_ID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_AutoStartRts_Test_InvalidIdZero(void)
+{
+    uint8 RtsId = 0;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS autostart error: invalid RTS ID %%d");
+
+    /* Execute the function being tested */
+    SC_AutoStartRts(RtsId);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_AUTOSTART_RTS_INV_ID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_StartRtsCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_StartRtsCmd_Test_Nominal");
+    UtTest_Add(SC_StartRtsCmd_Test_StartRtsNoEvents, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsCmd_Test_StartRtsNoEvents");
+    UtTest_Add(SC_StartRtsCmd_Test_InvalidCommandLength1, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsCmd_Test_InvalidCommandLength1");
+    UtTest_Add(SC_StartRtsCmd_Test_InvalidCommandLength2, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsCmd_Test_InvalidCommandLength2");
+    UtTest_Add(SC_StartRtsCmd_Test_RtsNotLoadedOrInUse, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsCmd_Test_RtsNotLoadedOrInUse");
+    UtTest_Add(SC_StartRtsCmd_Test_RtsDisabled, SC_Test_Setup, SC_Test_TearDown, "SC_StartRtsCmd_Test_RtsDisabled");
+    UtTest_Add(SC_StartRtsCmd_Test_InvalidRtsId, SC_Test_Setup, SC_Test_TearDown, "SC_StartRtsCmd_Test_InvalidRtsId");
+
+    UtTest_Add(SC_StartRtsCmd_Test_InvalidRtsIdZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsCmd_Test_InvalidRtsIdZero");
+    UtTest_Add(SC_StartRtsCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_StartRtsGrpCmd_Test_Nominal");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_StartRtsGroupError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_StartRtsGroupError");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_FirstRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_FirstRtsIndex");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_FirstRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_FirstRtsIndexZero");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_LastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_LastRtsIndex");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_LastRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_LastRtsIndexZero");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_FirstLastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_FirstLastRtsIndex");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_DisabledFlag, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StartRtsGrpCmd_Test_DisabledFlag");
+    UtTest_Add(SC_StartRtsGrpCmd_Test_RtsStatus, SC_Test_Setup, SC_Test_TearDown, "SC_StartRtsGrpCmd_Test_RtsStatus");
+    UtTest_Add(SC_StopRtsCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_StopRtsCmd_Test_Nominal");
+    UtTest_Add(SC_StopRtsCmd_Test_InvalidRts, SC_Test_Setup, SC_Test_TearDown, "SC_StopRtsCmd_Test_InvalidRts");
+    UtTest_Add(SC_StopRtsCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown, "SC_StopRtsCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_StopRtsGrpCmd_Test_Nominal");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_Error, SC_Test_Setup, SC_Test_TearDown, "SC_StopRtsGrpCmd_Test_Error");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_NotExecuting, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_NotExecuting");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_FirstRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_FirstRtsIndex");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_FirstRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_FirstRtsIndexZero");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_LastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_LastRtsIndex");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_LastRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_LastRtsIndexZero");
+    UtTest_Add(SC_StopRtsGrpCmd_Test_FirstLastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_StopRtsGrpCmd_Test_FirstLastRtsIndex");
+    UtTest_Add(SC_DisableRtsCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_DisableRtsCmd_Test_Nominal");
+    UtTest_Add(SC_DisableRtsCmd_Test_InvalidRtsID, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsCmd_Test_InvalidRtsID");
+    UtTest_Add(SC_DisableRtsCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_DisableRtsGrpCmd_Test_Nominal");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_Error, SC_Test_Setup, SC_Test_TearDown, "SC_DisableRtsGrpCmd_Test_Error");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_FirstRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_FirstRtsIndex");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_FirstRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_FirstRtsIndexZero");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_LastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_LastRtsIndex");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_LastRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_LastRtsIndexZero");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_FirstLastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_FirstLastRtsIndex");
+    UtTest_Add(SC_DisableRtsGrpCmd_Test_DisabledFlag, SC_Test_Setup, SC_Test_TearDown,
+               "SC_DisableRtsGrpCmd_Test_DisabledFlag");
+    UtTest_Add(SC_EnableRtsCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_EnableRtsCmd_Test_Nominal");
+    UtTest_Add(SC_EnableRtsCmd_Test_InvalidRtsID, SC_Test_Setup, SC_Test_TearDown, "SC_EnableRtsCmd_Test_InvalidRtsID");
+    UtTest_Add(SC_EnableRtsCmd_Test_InvalidRtsIDZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsCmd_Test_InvalidRtsIDZero");
+    UtTest_Add(SC_EnableRtsCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_EnableRtsGrpCmd_Test_Nominal");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_Error, SC_Test_Setup, SC_Test_TearDown, "SC_EnableRtsGrpCmd_Test_Error");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_NoVerifyLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_NoVerifyLength");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_FirstRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_FirstRtsIndex");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_FirstRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_FirstRtsIndexZero");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_LastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_LastRtsIndex");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_LastRtsIndexZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_LastRtsIndexZero");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_FirstLastRtsIndex, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_FirstLastRtsIndex");
+    UtTest_Add(SC_EnableRtsGrpCmd_Test_DisabledFlag, SC_Test_Setup, SC_Test_TearDown,
+               "SC_EnableRtsGrpCmd_Test_DisabledFlag");
+    UtTest_Add(SC_KillRts_Test, SC_Test_Setup, SC_Test_TearDown, "SC_KillRts_Test");
+    UtTest_Add(SC_KillRts_Test_NoActiveRts, SC_Test_Setup, SC_Test_TearDown, "SC_KillRts_Test_NoActiveRts");
+    UtTest_Add(SC_KillRts_Test_InvalidIndex, SC_Test_Setup, SC_Test_TearDown, "SC_KillRts_Test_InvalidIndex");
+    UtTest_Add(SC_AutoStartRts_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_AutoStartRts_Test_Nominal");
+    UtTest_Add(SC_AutoStartRts_Test_InvalidId, SC_Test_Setup, SC_Test_TearDown, "SC_AutoStartRts_Test_InvalidId");
+    UtTest_Add(SC_AutoStartRts_Test_InvalidIdZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_AutoStartRts_Test_InvalidIdZero");
+}
+```
+
+### `sc_state_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_state_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Includes
+ */
+
+#include "sc_rts.h"
+#include "sc_app.h"
+#include "sc_cmds.h"
+#include "sc_state.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_utils.h"
+#include "sc_loads.h"
+#include "sc_msgids.h"
+#include "sc_events.h"
+#include "sc_test_utils.h"
+#include <unistd.h>
+#include <stdlib.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_state_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+uint32 SC_ATSRQ_TEST_GlobalAtsCmdStatus[SC_NUMBER_OF_ATS];
+
+SC_AtsInfoTable_t SC_ATSRQ_TEST_GlobalAtsInfoTable[2];
+
+SC_AtpControlBlock_t SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+SC_RtsInfoEntry_t SC_STATE_TEST_GlobalRtsInfoTbl[SC_NUMBER_OF_RTS];
+
+SC_RtpControlBlock_t SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+/*
+ * Function Definitions
+ */
+uint8 SC_STATE_TEST_GetTotalMsgLengthHook_RunCount;
+int32 SC_STATE_TEST_CFE_SB_GetTotalMsgLengthHook(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                 const UT_StubContext_t *Context)
+{
+    SC_STATE_TEST_GetTotalMsgLengthHook_RunCount += 1;
+
+    if (SC_STATE_TEST_GetTotalMsgLengthHook_RunCount == 1)
+        return SC_PACKET_MAX_SIZE;
+    else
+        return SC_PACKET_MAX_SIZE + 100;
+}
+
+void SC_GetNextRtsTime_Test_Nominal(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[0].RtsStatus       = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[0].NextCommandTime = SC_MAX_TIME;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsTime();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->RtsNumber == 1, "SC_OperData.RtsCtrlBlckAddr->RtsNumber == 1");
+    UtAssert_True(SC_AppData.NextCmdTime[1] == SC_MAX_TIME, "SC_AppData.NextCmdTime[1] == SC_MAX_TIME");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsTime_Test_InvalidRtsNumber(void)
+{
+    uint8 i;
+
+    SC_InitTables();
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    for (i = 0; i < SC_NUMBER_OF_RTS; i++)
+    {
+        SC_OperData.RtsInfoTblAddr[i].RtsStatus = -1;
+    }
+
+    /* Execute the function being tested */
+    SC_GetNextRtsTime();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->RtsNumber == SC_INVALID_RTS_NUMBER,
+                  "SC_OperData.RtsCtrlBlckAddr->RtsNumber == SC_INVALID_RTS_NUMBER");
+    UtAssert_True(SC_AppData.NextCmdTime[SC_RTP] == SC_MAX_TIME, "SC_AppData.NextCmdTime[SC_RTP] == SC_MAX_TIME");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsTime_Test_RtsPriority(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr[0].RtsStatus       = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[0].NextCommandTime = SC_MAX_TIME;
+
+    SC_OperData.RtsInfoTblAddr[1].RtsStatus       = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[1].NextCommandTime = SC_MAX_TIME - 1;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsTime();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsCtrlBlckAddr->RtsNumber == 2, "SC_OperData.RtsCtrlBlckAddr->RtsNumber == 2 ");
+    UtAssert_True(SC_AppData.NextCmdTime[1] == SC_MAX_TIME - 1, "SC_AppData.NextCmdTime[1] == SC_MAX_TIME - 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateNextTime_Test_Atp(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    /* Execute the function being tested */
+    SC_UpdateNextTime();
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.NextProcNumber == SC_ATP, "SC_AppData.NextProcNumber == SC_ATP");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateNextTime_Test_Atp2(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState  = SC_EXECUTING;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber = SC_NUMBER_OF_RTS + 1;
+    SC_AppData.NextCmdTime[SC_RTP]         = 0;
+    SC_AppData.NextCmdTime[SC_ATP]         = 10;
+
+    /* Execute the function being tested */
+    SC_UpdateNextTime();
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.NextProcNumber == SC_ATP, "SC_AppData.NextProcNumber == SC_ATP");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateNextTime_Test_Rtp(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber = 10;
+    SC_AppData.NextCmdTime[SC_RTP]         = 0;
+    SC_AppData.NextCmdTime[SC_ATP]         = 10;
+
+    SC_OperData.RtsInfoTblAddr[0].RtsStatus       = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[0].NextCommandTime = 1;
+
+    /* Execute the function being tested */
+    SC_UpdateNextTime();
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.NextProcNumber == SC_RTP, "SC_AppData.NextProcNumber == SC_RTP");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_UpdateNextTime_Test_RtpAtpPriority(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber = 0;
+    SC_AppData.NextCmdTime[SC_RTP]         = 0;
+    SC_AppData.NextCmdTime[SC_ATP]         = 0;
+
+    SC_OperData.RtsInfoTblAddr[SC_NUMBER_OF_RTS - 1].RtsStatus       = SC_EXECUTING;
+    SC_OperData.RtsInfoTblAddr[SC_NUMBER_OF_RTS - 1].NextCommandTime = 1;
+
+    /* Execute the function being tested */
+    SC_UpdateNextTime();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_GetNextCommand(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands                                   = 1;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[0][0];
+
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), sizeof(SC_NoArgsCmd_t));
+
+    /* Give the packet the minimum possible size, to ensure that (CmdOffset < SC_RTS_HDR_WORDS) is met */
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].NextCommandPtr ==
+                      (SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 1) / SC_BYTES_IN_WORD,
+                  "SC_OperData.RtsInfoTblAddr[0].NextCommandPtr == (SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 1) / "
+                  "SC_BYTES_IN_WORD");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_RtsNumberZero(void)
+{
+    /* Sets SC_OperData.RtsCtrlBlckAddr->RtsNumber to zero */
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_GetNextRtsCommand_Test_RtsNumberMax(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[SC_NUMBER_OF_RTS - 1] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = SC_NUMBER_OF_RTS;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands                                   = 1;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[SC_NUMBER_OF_RTS - 1][0];
+
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), sizeof(SC_NoArgsCmd_t));
+
+    /* Give the packet the minimum possible size, to ensure that (CmdOffset < SC_RTS_HDR_WORDS) is met */
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_RtsNumberOverMax(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[SC_NUMBER_OF_RTS - 1] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                 = 0;
+    SC_AppData.CurrentTime                         = 1;
+    SC_AppData.NextProcNumber                      = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber         = SC_NUMBER_OF_RTS + 1;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[SC_NUMBER_OF_RTS - 1][0];
+
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), sizeof(SC_NoArgsCmd_t));
+
+    /* Give the packet the minimum possible size, to ensure that (CmdOffset < SC_RTS_HDR_WORDS) is met */
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_RtsNotExecuting(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[SC_NUMBER_OF_RTS - 1] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = SC_NUMBER_OF_RTS;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_IDLE;
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands                                   = 1;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[SC_NUMBER_OF_RTS - 1][0];
+
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), sizeof(SC_NoArgsCmd_t));
+
+    /* Give the packet the minimum possible size, to ensure that (CmdOffset < SC_RTS_HDR_WORDS) is met */
+    MsgSize = SC_PACKET_MIN_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_RtsLengthError(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Cmd Runs passed end of table, RTS %%03d Aborted");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[0][0];
+
+    /* Set to generate error message SC_RTS_LNGTH_ERR_EID */
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), SC_PACKET_MAX_SIZE);
+    MsgSize1 = SC_PACKET_MIN_SIZE;
+    MsgSize2 = SC_PACKET_MAX_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    SC_OperData.RtsInfoTblAddr[0].NextCommandPtr =
+        (SC_RTS_BUFF_SIZE32 - (SC_RTS_HDR_WORDS)) - ((SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 3) / SC_BYTES_IN_WORD);
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 1, "SC_OperData.HkPacket.RtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1, "SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrSeq == SC_OperData.RtsCtrlBlckAddr->RtsNumber,
+                  "SC_OperData.HkPacket.LastRtsErrSeq == SC_OperData.RtsCtrlBlckAddr->RtsNumber");
+
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrCmd ==
+                      SC_OperData.RtsInfoTblAddr[0].NextCommandPtr +
+                          ((SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 3) / SC_BYTES_IN_WORD),
+                  "SC_OperData.HkPacket.LastRtsErrCmd == SC_OperData.RtsInfoTblAddr[0].NextCommandPtr + "
+                  "((SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 3) / SC_BYTES_IN_WORD)");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_LNGTH_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_CommandLengthError(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid Length Field in RTS Command, RTS %%03d Aborted. Length: %%u, Max: %%d");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[0][0];
+
+    /* Set to generate error message SC_RTS_LNGTH_ERR_EID */
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), SC_PACKET_MAX_SIZE);
+    MsgSize1 = SC_PACKET_MIN_SIZE;
+    MsgSize2 = SC_PACKET_MAX_SIZE + 1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    SC_OperData.RtsInfoTblAddr[0].NextCommandPtr =
+        (SC_RTS_BUFF_SIZE32 - (SC_RTS_HDR_WORDS)) - ((SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 3) / SC_BYTES_IN_WORD);
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.HkPacket.RtsCmdErrCtr == 1, "SC_OperData.HkPacket.RtsCmdErrCtr == 1");
+    UtAssert_True(SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1, "SC_OperData.RtsInfoTblAddr[0].CmdErrCtr == 1");
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrSeq == SC_OperData.RtsCtrlBlckAddr->RtsNumber,
+                  "SC_OperData.HkPacket.LastRtsErrSeq == SC_OperData.RtsCtrlBlckAddr->RtsNumber");
+
+    UtAssert_True(SC_OperData.HkPacket.LastRtsErrCmd ==
+                      SC_OperData.RtsInfoTblAddr[0].NextCommandPtr +
+                          ((SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 3) / SC_BYTES_IN_WORD),
+                  "SC_OperData.HkPacket.LastRtsErrCmd == SC_OperData.RtsInfoTblAddr[0].NextCommandPtr + "
+                  "((SC_PACKET_MIN_SIZE + SC_RTS_HEADER_SIZE + 3) / SC_BYTES_IN_WORD)");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_CMD_LNGTH_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_ZeroCommandLength(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS %%03d Execution Completed");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[SC_LAST_RTS_WITH_EVENTS - 1] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = SC_LAST_RTS_WITH_EVENTS;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[SC_LAST_RTS_WITH_EVENTS - 1][0];
+
+    /* Set to generate error message SC_RTS_LNGTH_ERR_EID */
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), SC_LAST_RTS_WITH_EVENTS - 1);
+    MsgSize1 = SC_PACKET_MIN_SIZE - 1;
+    MsgSize2 = SC_PACKET_MIN_SIZE - 1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    SC_OperData.RtsInfoTblAddr[0].NextCommandPtr = (SC_RTS_BUFF_SIZE - (SC_RTS_HDR_WORDS)) -
+                                                   ((SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE + 1) / SC_BYTES_IN_WORD) -
+                                                   1;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_COMPL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_ZeroCommandLengthLastRts(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize1;
+    size_t               MsgSize2;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS %%03d Execution Completed");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[SC_LAST_RTS_WITH_EVENTS] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = SC_LAST_RTS_WITH_EVENTS + 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[SC_LAST_RTS_WITH_EVENTS][0];
+
+    /* Set to generate error message SC_RTS_LNGTH_ERR_EID */
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), SC_PACKET_MIN_SIZE - 1);
+    MsgSize1 = SC_PACKET_MIN_SIZE - 1;
+    MsgSize2 = SC_PACKET_MIN_SIZE - 1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize1, sizeof(MsgSize1), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize2, sizeof(MsgSize2), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    SC_OperData.RtsInfoTblAddr[0].NextCommandPtr = (SC_RTS_BUFF_SIZE - (SC_RTS_HDR_WORDS)) -
+                                                   ((SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE + 1) / SC_BYTES_IN_WORD) -
+                                                   1;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_EndOfBuffer(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize;
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "RTS %%03d Execution Completed");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[0] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[0][0];
+
+    /* Set to generate error message SC_RTS_LNGTH_ERR_EID */
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), 2 * SC_RTS_BUFF_SIZE);
+    MsgSize = 2 * SC_RTS_BUFF_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    SC_OperData.RtsInfoTblAddr[0].NextCommandPtr = (SC_RTS_BUFF_SIZE - (SC_RTS_HDR_WORDS)) -
+                                                   ((SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE + 1) / SC_BYTES_IN_WORD) -
+                                                   1;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_RTS_COMPL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextRtsCommand_Test_EndOfBufferLastRts(void)
+{
+    SC_RtsEntryHeader_t *Entry;
+    uint32               RtsTable[SC_RTS_BUFF_SIZE32];
+    size_t               MsgSize;
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.RtsTblAddr[SC_LAST_RTS_WITH_EVENTS] = &RtsTable[0];
+
+    SC_AppData.NextCmdTime[SC_RTP]                                                   = 0;
+    SC_AppData.CurrentTime                                                           = 1;
+    SC_AppData.NextProcNumber                                                        = SC_RTP;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber                                           = SC_LAST_RTS_WITH_EVENTS + 1;
+    SC_OperData.RtsInfoTblAddr[SC_OperData.RtsCtrlBlckAddr->RtsNumber - 1].RtsStatus = SC_EXECUTING;
+
+    Entry = (SC_RtsEntryHeader_t *)&SC_OperData.RtsTblAddr[SC_LAST_RTS_WITH_EVENTS][0];
+
+    /* Set to generate error message SC_RTS_LNGTH_ERR_EID */
+    CFE_MSG_Init((CFE_MSG_Message_t *)Entry, CFE_SB_ValueToMsgId(SC_CMD_MID), 2 * SC_RTS_BUFF_SIZE);
+    MsgSize = 2 * SC_RTS_BUFF_SIZE;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Set so checksum will pass in SC_ProcessRtpCommand */
+    UT_SetDeferredRetcode(UT_KEY(CFE_MSG_ValidateChecksum), 1, true);
+
+    SC_OperData.AtsInfoTblAddr[1].NumberOfCommands = 1;
+
+    SC_OperData.RtsInfoTblAddr[0].NextCommandPtr = (SC_RTS_BUFF_SIZE - (SC_RTS_HDR_WORDS)) -
+                                                   ((SC_PACKET_MAX_SIZE + SC_RTS_HEADER_SIZE + 1) / SC_BYTES_IN_WORD) -
+                                                   1;
+
+    /* Execute the function being tested */
+    SC_GetNextRtsCommand();
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextAtsCommand_Test_Starting(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_STARTING;
+
+    /* Execute the function being tested */
+    /* NOTE: Calling SC_ProcessRtpCommand instead of SC_GetNextRtsCommand - SC_ProcessRtpCommand calls
+     * SC_GetNextRtsCommand, and it's much easier to test this way. */
+    SC_GetNextAtsCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING,
+                  "SC_OperData.AtsCtrlBlckAddr -> AtpState == SC_EXECUTING");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextAtsCommand_Test_Idle(void)
+{
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_IDLE;
+
+    /* Execute the function being tested */
+    /* NOTE: Calling SC_ProcessRtpCommand instead of SC_GetNextRtsCommand - SC_ProcessRtpCommand calls
+     * SC_GetNextRtsCommand, and it's much easier to test this way. */
+    SC_GetNextAtsCommand();
+
+    /* Verify results */
+    UtAssert_True(SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE,
+                  "SC_OperData.AtsCtrlBlckAddr -> AtpState == SC_IDLE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextAtsCommand_Test_GetNextCommand(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_AppData.AtsTimeIndexBuffer[0][0]    = 1;
+    SC_AppData.AtsTimeIndexBuffer[0][1]    = 2;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    SC_OperData.AtsInfoTblAddr[SC_ATP].NumberOfCommands = 100;
+
+    /* Execute the function being tested */
+    SC_GetNextAtsCommand();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr, 1);
+    UtAssert_INT32_EQ(SC_OperData.AtsCtrlBlckAddr->CmdNumber, SC_AppData.AtsTimeIndexBuffer[0][1]);
+    UtAssert_INT32_EQ(SC_AppData.NextCmdTime[SC_ATP], 0);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void SC_GetNextAtsCommand_Test_ExecutionACompleted(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Execution Completed");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 2;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[0][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[0][0]    = 0;
+
+    SC_OperData.AtsInfoTblAddr[SC_ATP].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_GetNextAtsCommand();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_COMPL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_GetNextAtsCommand_Test_ExecutionBCompleted(void)
+{
+    SC_AtsEntryHeader_t *Entry;
+    uint32               AtsTable[SC_ATS_BUFF_SIZE32];
+    int32                strCmpResult;
+    char                 ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "ATS %%c Execution Completed");
+
+    SC_InitTables();
+
+    memset(&SC_ATSRQ_TEST_GlobalAtsInfoTable, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+    memset(&SC_ATSRQ_TEST_GlobalAtsCtrlBlck, 0, sizeof(SC_ATSRQ_TEST_GlobalAtsCtrlBlck));
+
+    memset(&SC_STATE_TEST_GlobalRtsInfoTbl, 0, sizeof(SC_STATE_TEST_GlobalRtsInfoTbl));
+    memset(&SC_STATE_TEST_GlobalRtsCtrlBlck, 0, sizeof(SC_STATE_TEST_GlobalRtsCtrlBlck));
+
+    SC_OperData.AtsInfoTblAddr  = &SC_ATSRQ_TEST_GlobalAtsInfoTable[0];
+    SC_OperData.AtsCtrlBlckAddr = &SC_ATSRQ_TEST_GlobalAtsCtrlBlck;
+
+    SC_OperData.RtsInfoTblAddr  = &SC_STATE_TEST_GlobalRtsInfoTbl[0];
+    SC_OperData.RtsCtrlBlckAddr = &SC_STATE_TEST_GlobalRtsCtrlBlck;
+
+    SC_OperData.AtsCmdStatusTblAddr[0] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[0];
+    SC_OperData.AtsCmdStatusTblAddr[1] = &SC_ATSRQ_TEST_GlobalAtsCmdStatus[1];
+
+    SC_OperData.AtsTblAddr[0] = &AtsTable[0];
+
+    Entry            = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[0][0];
+    Entry->CmdNumber = 1;
+
+    SC_AppData.NextCmdTime[SC_ATP]        = 0;
+    SC_AppData.CurrentTime                = 1;
+    SC_AppData.NextProcNumber             = SC_ATP;
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = 0;
+
+    SC_OperData.AtsCmdStatusTblAddr[1][0] = SC_LOADED;
+    SC_AppData.AtsCmdIndexBuffer[1][0]    = 0;
+
+    SC_OperData.AtsInfoTblAddr[SC_ATP].NumberOfCommands = 0;
+
+    /* Execute the function being tested */
+    SC_GetNextAtsCommand();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_ATS_COMPL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+/* Unreachable branch in sc_state.c SC_UpdateNextTime:140.
+   RtsNumber can never be assigned a value > SC_NUMBER_RTS
+   due to processing logic in SC_GetNextRtsTime. */
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_GetNextRtsTime_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_GetNextRtsTime_Test_Nominal");
+    UtTest_Add(SC_GetNextRtsTime_Test_InvalidRtsNumber, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsTime_Test_InvalidRtsNumber");
+    UtTest_Add(SC_GetNextRtsTime_Test_RtsPriority, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsTime_Test_RtsPriority");
+    UtTest_Add(SC_UpdateNextTime_Test_Atp, SC_Test_Setup, SC_Test_TearDown, "SC_UpdateNextTime_Test_Atp");
+    UtTest_Add(SC_UpdateNextTime_Test_Atp2, SC_Test_Setup, SC_Test_TearDown, "SC_UpdateNextTime_Test_Atp2");
+    UtTest_Add(SC_UpdateNextTime_Test_Rtp, SC_Test_Setup, SC_Test_TearDown, "SC_UpdateNextTime_Test_Rtp");
+    UtTest_Add(SC_UpdateNextTime_Test_RtpAtpPriority, SC_Test_Setup, SC_Test_TearDown,
+               "SC_UpdateNextTime_Test_RtpAtpPriority");
+    UtTest_Add(SC_GetNextRtsCommand_Test_GetNextCommand, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_GetNextCommand");
+    UtTest_Add(SC_GetNextRtsCommand_Test_RtsNumberZero, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_RtsNumberZero");
+    UtTest_Add(SC_GetNextRtsCommand_Test_RtsNumberMax, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_RtsNumberMax");
+    UtTest_Add(SC_GetNextRtsCommand_Test_RtsNumberOverMax, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_RtsNumberOverMax");
+    UtTest_Add(SC_GetNextRtsCommand_Test_RtsNotExecuting, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_RtsNotExecuting");
+    UtTest_Add(SC_GetNextRtsCommand_Test_RtsLengthError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_RtsLengthError");
+    UtTest_Add(SC_GetNextRtsCommand_Test_CommandLengthError, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_CommandLengthError");
+    UtTest_Add(SC_GetNextRtsCommand_Test_ZeroCommandLength, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_ZeroCommandLength");
+
+    /* Only run if SC_LAST_RTS_WITH_EVENTS < SC_NUMBER_OF_RTS */
+    if (SC_LAST_RTS_WITH_EVENTS < SC_NUMBER_OF_RTS)
+    {
+        UtTest_Add(SC_GetNextRtsCommand_Test_ZeroCommandLengthLastRts, SC_Test_Setup, SC_Test_TearDown,
+                   "SC_GetNextRtsCommand_Test_ZeroCommandLengthLastRts");
+        UtTest_Add(SC_GetNextRtsCommand_Test_EndOfBufferLastRts, SC_Test_Setup, SC_Test_TearDown,
+                   "SC_GetNextRtsCommand_Test_EndOfBufferLastRts");
+    }
+
+    UtTest_Add(SC_GetNextRtsCommand_Test_EndOfBuffer, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextRtsCommand_Test_EndOfBuffer");
+    UtTest_Add(SC_GetNextAtsCommand_Test_Starting, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextAtsCommand_Test_Starting");
+    UtTest_Add(SC_GetNextAtsCommand_Test_Idle, SC_Test_Setup, SC_Test_TearDown, "SC_GetNextAtsCommand_Test_Idle");
+    UtTest_Add(SC_GetNextAtsCommand_Test_GetNextCommand, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextAtsCommand_Test_GetNextCommand");
+    UtTest_Add(SC_GetNextAtsCommand_Test_ExecutionACompleted, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextAtsCommand_Test_ExecutionACompleted");
+    UtTest_Add(SC_GetNextAtsCommand_Test_ExecutionBCompleted, SC_Test_Setup, SC_Test_TearDown,
+               "SC_GetNextAtsCommand_Test_ExecutionBCompleted");
+}
+```
+
+### `sc_utils_tests.c`
+
+**경로:** `fsw/apps/sc/unit-test/sc_utils_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+#include "cfe.h"
+#include "sc_utils.h"
+#include "sc_events.h"
+#include "sc_msgids.h"
+#include "sc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* sc_utils_tests globals */
+uint8 call_count_CFE_EVS_SendEvent;
+
+void SC_GetCurrentTime_Test(void)
+{
+    SC_AppData.CurrentTime = 0;
+
+    /* Execute the function being tested */
+    SC_GetCurrentTime();
+
+    /* Verify results */
+    UtAssert_True(SC_AppData.CurrentTime != 0, "SC_AppData.CurrentTime != 0");
+}
+
+void SC_GetAtsEntryTime_Test(void)
+{
+    SC_AbsTimeTag_t AbsTimeTag;
+
+    SC_AtsEntryHeader_t Entry;
+    Entry.TimeTag_MS = 0;
+    Entry.TimeTag_LS = 10;
+
+    /* Execute the function being tested */
+    AbsTimeTag = SC_GetAtsEntryTime(&Entry);
+
+    /* Verify results */
+    UtAssert_True(AbsTimeTag == 10, "AbsTimeTag == 10");
+}
+
+void SC_ComputeAbsTime_Test(void)
+{
+    SC_AbsTimeTag_t AbsTimeTag;
+
+    SC_AppData.CurrentTime = 0;
+
+    /* Execute the function being tested */
+    AbsTimeTag = SC_ComputeAbsTime(0);
+
+    /* Verify results */
+
+    /* The CFE_TIME_Add stub increments when status >= 0 */
+    UtAssert_True(AbsTimeTag == 1, "AbsTimeTag == 1");
+}
+
+void SC_CompareAbsTime_Test_True(void)
+{
+    bool Result;
+
+    SC_AbsTimeTag_t AbsTimeTag1 = {0};
+    SC_AbsTimeTag_t AbsTimeTag2 = {0};
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TIME_Compare), 1, CFE_TIME_A_GT_B);
+
+    /* Execute the function being tested */
+    Result = SC_CompareAbsTime(AbsTimeTag1, AbsTimeTag2);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+}
+
+void SC_CompareAbsTime_Test_False(void)
+{
+    bool Result;
+
+    SC_AbsTimeTag_t AbsTimeTag1 = {0};
+    SC_AbsTimeTag_t AbsTimeTag2 = {0};
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TIME_Compare), 1, -1);
+
+    /* Execute the function being tested */
+    Result = SC_CompareAbsTime(AbsTimeTag1, AbsTimeTag2);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+}
+
+void SC_VerifyCmdLength_Test_Nominal(void)
+{
+    SC_NoArgsCmd_t    CmdPacket;
+    bool              Result;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_NOOP_CC;
+    size_t            MsgSize   = sizeof(CmdPacket);
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyCmdLength(&CmdPacket.CmdHeader.Msg, sizeof(CmdPacket));
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 0, "SC_OperData.HkPacket.CmdErrCtr == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 0, "CFE_EVS_SendEvent was called %u time(s), expected 0",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyCmdLength_Test_LenError(void)
+{
+    SC_NoArgsCmd_t    CmdPacket;
+    bool              Result;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_CMD_MID);
+    CFE_MSG_FcnCode_t FcnCode   = SC_NOOP_CC;
+    size_t            MsgSize   = sizeof(CmdPacket);
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid msg length: ID = 0x%%08lX, CC = %%d, Len = %%d, Expected = %%d");
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyCmdLength(&CmdPacket.CmdHeader.Msg, 999);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 0, "SC_OperData.HkPacket.CmdCtr == 0");
+    UtAssert_True(SC_OperData.HkPacket.CmdErrCtr == 1, "SC_OperData.HkPacket.CmdErrCtr == 1");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_VerifyCmdLength_Test_LenErrorNotMID(void)
+{
+    SC_NoArgsCmd_t    CmdPacket;
+    bool              Result;
+    CFE_SB_MsgId_t    TestMsgId = CFE_SB_ValueToMsgId(SC_SEND_HK_MID);
+    CFE_MSG_FcnCode_t FcnCode   = 0;
+    size_t            MsgSize   = sizeof(CmdPacket);
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid msg length: ID = 0x%%08lX, CC = %%d, Len = %%d, Expected = %%d");
+
+    SC_InitTables();
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(SC_AppendAtsCmd_t), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = SC_VerifyCmdLength(&CmdPacket.CmdHeader.Msg, 999);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+    UtAssert_True(SC_OperData.HkPacket.CmdCtr == 0, "SC_OperData.HkPacket.CmdCtr == 0");
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, SC_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    UtAssert_True(call_count_CFE_EVS_SendEvent == 1, "CFE_EVS_SendEvent was called %u time(s), expected 1",
+                  call_count_CFE_EVS_SendEvent);
+}
+
+void SC_ToggleAtsIndex_Test(void)
+{
+    uint16 Result;
+
+    SC_AtpControlBlock_t AtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr = &AtsCtrlBlck;
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 1;
+
+    Result = SC_ToggleAtsIndex();
+
+    UtAssert_True(Result == 1, "Result == 1");
+
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = 2;
+
+    Result = SC_ToggleAtsIndex();
+
+    UtAssert_True(Result == 0, "Result == 0");
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(SC_GetCurrentTime_Test, SC_Test_Setup, SC_Test_TearDown, "SC_GetCurrentTime_Test");
+    UtTest_Add(SC_GetAtsEntryTime_Test, SC_Test_Setup, SC_Test_TearDown, "SC_GetAtsEntryTime_Test");
+    UtTest_Add(SC_ComputeAbsTime_Test, SC_Test_Setup, SC_Test_TearDown, "SC_ComputeAbsTime_Test");
+    UtTest_Add(SC_CompareAbsTime_Test_True, SC_Test_Setup, SC_Test_TearDown, "SC_CompareAbsTime_Test_True");
+    UtTest_Add(SC_CompareAbsTime_Test_False, SC_Test_Setup, SC_Test_TearDown, "SC_CompareAbsTime_Test_False");
+    UtTest_Add(SC_VerifyCmdLength_Test_Nominal, SC_Test_Setup, SC_Test_TearDown, "SC_VerifyCmdLength_Test_Nominal");
+    UtTest_Add(SC_VerifyCmdLength_Test_LenError, SC_Test_Setup, SC_Test_TearDown, "SC_VerifyCmdLength_Test_LenError");
+    UtTest_Add(SC_VerifyCmdLength_Test_LenErrorNotMID, SC_Test_Setup, SC_Test_TearDown,
+               "SC_VerifyCmdLength_Test_LenErrorNotMID");
+    UtTest_Add(SC_ToggleAtsIndex_Test, SC_Test_Setup, SC_Test_TearDown, "SC_ToggleAtsIndex_Test");
+}
+```

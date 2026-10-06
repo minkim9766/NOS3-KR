@@ -3,18 +3,37 @@
 
 **경로:** `components/cryptolib/.github/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ISSUE_TEMPLATE/index
 workflows/index
-file--pull_request_template.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/cryptolib/.github/ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/index) — 폴더
-- [`components/cryptolib/.github/workflows/`](workflows/index) — 폴더
-- [`components/cryptolib/.github/pull_request_template.md`](file--pull_request_template.md) — UTF-8 텍스트 파일 본문 포함
+### `pull_request_template.md`
+
+**경로:** `components/cryptolib/.github/pull_request_template.md`
+
+
+```markdown
+### All Submissions:
+
+* [ ] Have you followed the guidelines in our [Contributing](https://github.com/nasa/CryptoLib/blob/main/doc/CryptoLib_Indv_CLA.pdf) document?
+* [ ] Have you checked to ensure there aren't other open [Pull Requests](https://github.com/nasa/cryptolib/pulls) for the same update/change?
+
+### New Feature Submissions:
+
+* [ ] Does your submission pass tests?
+
+### Changes to Core Features:
+
+* [ ] Have you added an explanation of what your changes do and why you'd like us to include them?
+
+### How do you test these changes?
+
+<input type="text" id="explain" name="explain"/>
+```

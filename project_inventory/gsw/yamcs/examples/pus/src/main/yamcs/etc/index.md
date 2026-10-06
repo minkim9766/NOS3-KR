@@ -3,26 +3,319 @@
 
 **경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-queue.yaml`
 
-file--command-queue.yaml
-file--events.json
-file--extra_streams.sql
-file--logging.properties
-file--processor.yaml
-file--yamcs.pus.yaml
-file--yamcs.yaml
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/command-queue.yaml`
+
+
+```yaml
+# Definition of command queues. Each queue has a name,
+# and optionally a preferred startup state.
+#
+# There are three possible states: 
+#   - enabled means the commands are sent immediately
+#   - blocked means the commands are accepted into the queue but need to be 
+#     manually sent 
+#   - disabled means the commands are rejected
+
+supervised:
+  state: blocked
+  minLevel: critical
+
+# If no state is configured, the queue will start with the same state that
+# it had on a previous run, defaulting to enabled.
+default:
+  #state: enabled
 ```
 
-## 항목
+### `events.json`
 
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/command-queue.yaml`](file--command-queue.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/events.json`](file--events.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/extra_streams.sql`](file--extra_streams.sql) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/yamcs.pus.yaml`](file--yamcs.pus.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/pus/src/main/yamcs/etc/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/events.json`
+
+
+```json
+[ 
+  {
+    "eventId"  : "EVENT_1",
+    "template" : "Event 1: para1={event1_para1} and para2={event1_para2; %3.3f}"
+  },
+  {
+    "eventId"  : "EVENT_2",
+    "template" : "Event 2: msg={event2_msg}"
+  }
+]
+```
+
+### `extra_streams.sql`
+
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/extra_streams.sql`
+
+
+```text
+create stream cfdp_in as select substring(packet, 16) as pdu from tm_realtime where extract_short(packet, 0) = 6141
+create stream cfdp_out (gentime TIMESTAMP, entityId long, seqNum int, pdu  binary)
+insert into tc_realtime select gentime, 'cfdp-service' as origin, seqNum, '/yamcs/cfdp/upload' as cmdName, unhex('17FDC000000000000000000000000000') + pdu as binary from cfdp_out
+
+create table if not exists parameter_list(id uuid, name string, description string, patterns string[], primary key(id))
+insert into parameter_list (id, name, patterns) values('ecfa3681-1c6c-48b8-ab2f-86a96f3b1ab4', 'PUS11 Detail Report', array['/PUS11/DETAIL_REPORT/*'])
+insert into parameter_list (id, name, patterns) values('ecfa3681-1c6c-48b8-ab2f-86a96f3b1ab5', 'PUS11 Summary Report', array['/PUS11/SUMMARY_REPORT/*'])
+```
+
+### `logging.properties`
+
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/logging.properties`
+
+
+```text
+#rename this file to logging.properties in order to debug the SLE functionality
+
+
+handlers = java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = ALL
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.ConsoleFormatter
+
+org.yamcs.level = INFO
+
+
+org.yamcs.tctm.level = INFO
+
+#this will cause the events to be also logged
+org.yamcs.events.EventProducer.level = ALL
+
+org.yamcs.pus.level = DEBUG
+```
+
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/processor.yaml`
+
+
+```yaml
+# this file defines the different processors
+# A processor is where TM/TC processing happens inside Yamcs.
+#
+# Each processor uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+
+realtime:
+  services:
+    - class: org.yamcs.StreamTmPacketProvider
+    - class: org.yamcs.StreamTcCommandReleaser
+    - class: org.yamcs.tctm.StreamParameterProvider
+    - class: org.yamcs.algorithms.AlgorithmManager
+    # implements provider of parameters from sys_param stream (these are collected and sent on this stream by SystemParametersService)
+    - class: org.yamcs.parameter.LocalParameterManager
+  config:
+    generateEvents: true #generate events for errors in TM decoding and running algorithms
+    subscribeAll: true
+    #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+    alarm:
+      parameterCheck: true
+      parameterServer: enabled
+      eventServer: enabled
+    tmProcessor:
+      #if container entries fit outside the binary packet, setting this to true will cause the error to be ignored, otherwise an exception will be printed in the yamcs logs
+      ignoreOutOfContainerEntries: false
+    #record all the parameters that have initial values at the start of the processor
+    recordInitialValues: true
+    #record the local values
+    recordLocalValues: true
+
+
+#used to perform step by step archive replays to displays,etc
+# initiated via web interface or Yamcs Studio.
+# should be renamed to ArchiveReplay
+Archive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+
+#used by the ParameterArchive when rebuilding the parameter archive
+# no need for parameter cache
+ParameterArchive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+#used for performing archive retrievals via replays (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+  config:
+    subscribeContainerArchivePartitions: false
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+```
+
+### `yamcs.pus.yaml`
+
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/yamcs.pus.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers: ['jvm', 'fs']
+  - class: org.yamcs.time.TimeCorrelationService
+    name: tco0
+    args:
+       onboardDelay: 0.02
+       accuracy: 0.5
+       validity: 1.0
+       defaultTof: 0.001
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime" 
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+  - class: org.yamcs.simulator.SimulatorCommander
+    args:
+      type: pus
+      tctm:
+        tmPort: 10015
+        tcPort: 10025
+  - class: org.yamcs.cfdp.CfdpService
+    name: cfdp0
+    args:
+     sequenceNrLength: 4
+     maxPduSize: 512
+     incomingBucket: "cfdpDown"
+     eofAckTimeout: 3000
+     eofAckLimit: 5
+     #Note that the simulator does not process commands faster than 1/second.
+     # Decreasign this number will make the packets queue up in the TCP queue
+     # and the CFDP sender will timeout waiting for the EOF ACK
+     sleepBetweenPdus: 1000
+     localEntities:
+       - name: default
+         id: 11
+         bucket: bucket1
+       - name: id2
+         id: 12
+         bucket: bucket2
+     remoteEntities:
+       - name: default
+         id: 5
+       - name: target2
+         id: 7
+     senderFaultHandlers:
+       AckLimitReached: suspend
+  - class: org.yamcs.pus.PusEventDecoder
+    args: 
+        eventIdParameter: /PUS5/event_id
+        eventTemplateFile: etc/events.json
+
+dataLinks:
+  - name: tm_realtime
+    class: org.yamcs.tctm.TcpTmDataLink
+    stream: tm_realtime
+    host: localhost
+    port: 10015
+    # Give the embedded simulator some time to start up
+    initialDelay: 2000
+    packetPreprocessorClassName: org.yamcs.pus.PusPacketPreprocessor
+    packetPreprocessorArgs:
+        errorDetection:
+           type: CRC-16-CCIIT
+        timeEncoding:
+           type: CUC
+           epoch: NONE           
+        tcoService: tco0
+    
+  - name: tc_realtime
+    class: org.yamcs.tctm.TcpTcDataLink
+    stream: tc_realtime
+    host: localhost
+    port: 10025
+    # Give the embedded simulator some time to start up
+    initialDelay: 2000
+    commandPostprocessorClassName: org.yamcs.pus.PusCommandPostprocessor
+    commandPostprocessorArgs:
+        errorDetection:
+            type: CRC-16-CCIIT
+        timeEncoding:
+            implicitPfield: false
+            pfield: 0x2f
+        tcoService: tco0
+        
+mdb:
+  # Configuration of the active loaders
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: "xtce"
+    spec: "mdb/dt.xml"
+  - type: "xtce"
+    spec: "mdb/pus.xml"
+  - type: "xtce"
+    spec: "mdb/pus5.xml"
+  - type: "xtce"
+    spec: "mdb/pus11.xml"
+  - type: "xtce"
+    spec: "mdb/pus17.xml"
+  - type: "xtce"
+    spec: "mdb/landing.xml"
+
+#Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+  invalidTm: "invalid_tm_stream"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc: 
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/examples/pus/src/main/yamcs/etc/yamcs.yaml`
+
+
+```yaml
+# System-wide services
+services:
+  - class: org.yamcs.http.HttpServer
+
+#instances (or domains). One yarch database will be created for each of them
+# instance specific properties go into the file yamcs.{instance}.yaml
+instances:
+  - pus
+
+dataDir: /storage/yamcs-data
+
+#set the serverId if you want something else than hostname to be used in system parameters generated by yamcs
+#serverId: yamcs1
+
+# Secret key unique to a particular Yamcs installation.
+# This is used to provide cryptographic signing.
+secretKey: "changeme"
+
+yamcs-web:
+  tag: "Example: pus"
+
+buckets:
+  - name: cfdpUp
+    # the path here is relative to the current directory as set by maven
+    # and it maps to examples/cfdp/target/yamcs
+    path: ../../cfdpUp
+```

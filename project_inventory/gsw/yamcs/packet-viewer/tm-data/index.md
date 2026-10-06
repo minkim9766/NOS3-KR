@@ -3,14 +3,10 @@
 
 **경로:** `gsw/yamcs/packet-viewer/tm-data/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `testdata.ccsds`
 
-file--testdata.ccsds
-```
+**경로:** `gsw/yamcs/packet-viewer/tm-data/testdata.ccsds`
 
-## 항목
-
-- [`gsw/yamcs/packet-viewer/tm-data/testdata.ccsds`](file--testdata.ccsds) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

@@ -3,20 +3,104 @@
 
 **경로:** `components/onair/fsw/onair/src/ai_components/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ai_plugin_abstract/index
-file--__init__.py
-file--learners_interface.py
-file--planners_interface.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/onair/fsw/onair/src/ai_components/ai_plugin_abstract/`](ai_plugin_abstract/index) — 폴더
-- [`components/onair/fsw/onair/src/ai_components/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/ai_components/learners_interface.py`](file--learners_interface.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/ai_components/planners_interface.py`](file--planners_interface.py) — UTF-8 텍스트 파일 본문 포함
+### `__init__.py`
+
+**경로:** `components/onair/fsw/onair/src/ai_components/__init__.py`
+
+
+```python
+```
+
+### `learners_interface.py`
+
+**경로:** `components/onair/fsw/onair/src/ai_components/learners_interface.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+Data driven learning class for managing all data driven AI components
+"""
+from ..util.plugin_import import import_plugins
+from ..util.data_conversion import *
+
+class LearnersInterface:
+    def __init__(self, headers, _learner_plugins={}):
+        assert(len(headers)>0), 'Headers are required'
+        self.headers = headers
+        self.learner_constructs = import_plugins(self.headers, _learner_plugins)
+
+    def update(self, low_level_data, high_level_data):
+        for plugin in self.learner_constructs:
+            plugin.update(low_level_data, high_level_data)
+
+    def check_for_salient_event(self):
+        pass
+
+    def render_reasoning(self):
+        diagnoses = {}
+        for plugin in self.learner_constructs:
+            diagnoses[plugin.component_name] = plugin.render_reasoning()
+        return diagnoses
+```
+
+### `planners_interface.py`
+
+**경로:** `components/onair/fsw/onair/src/ai_components/planners_interface.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+Planners interface class for managing all planning-based AI components
+"""
+from ..util.plugin_import import import_plugins
+from ..util.data_conversion import *
+
+class PlannersInterface:
+    def __init__(self, headers, _planner_plugins={}):
+        assert(len(headers)>0), 'Headers are required'
+        self.headers = headers
+        self.planner_constructs = import_plugins(self.headers,_planner_plugins)
+
+    def update(self, high_level_data):
+        # Raw TLM should be transformed into high-leve state representation here
+        # Can store something as stale unless a planning thread is launched
+        for plugin in self.planner_constructs:
+            plugin.update(high_level_data=high_level_data)
+
+    def check_for_salient_event(self):
+        pass
+
+    def render_reasoning(self):
+        diagnoses = {}
+        for plugin in self.planner_constructs:
+            diagnoses[plugin.component_name] = plugin.render_reasoning()
+        return diagnoses
+```

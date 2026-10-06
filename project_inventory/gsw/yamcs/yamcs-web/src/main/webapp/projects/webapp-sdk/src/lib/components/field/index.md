@@ -3,20 +3,170 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `field-label.directive.ts`
 
-file--field-label.directive.ts
-file--field.component.css
-file--field.component.html
-file--field.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field-label.directive.ts`
+
+
+```typescript
+import { CdkPortal } from '@angular/cdk/portal';
+import { Directive, InjectionToken, inject } from '@angular/core';
+
+/**
+ * Provide a field label to a field without causing a circular dependency
+ */
+export const YA_FIELD = new InjectionToken<any>('YA_FIELD');
+
+/** Flag field labels for use with the portal directive */
+@Directive({
+  selector: '[ya-field-label]',
+})
+export class YaFieldLabel extends CdkPortal {
+  _closestField = inject(YA_FIELD, { optional: true });
+}
 ```
 
-## 항목
+### `field.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field-label.directive.ts`](file--field-label.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field.component.css`](file--field.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field.component.html`](file--field.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field.component.ts`](file--field.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field.component.css`
+
+
+```css
+:host {
+  display: block;
+  margin: 0;
+  cursor: default;
+  position: relative;
+}
+
+:host.invalid {
+  color: var(--y-error-color);
+}
+
+.field-label {
+  color: black;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.field-hint {
+  color: grey;
+  font-weight: 400;
+}
+
+.field-label,
+.field-hint {
+  font-size: 11px;
+  line-height: 12px;
+  text-transform: inherit;
+  font-family: Roboto, sans-serif;
+}
+
+:host ::ng-deep input[type="text"],
+:host ::ng-deep input[type="number"],
+:host ::ng-deep input[type="password"],
+:host ::ng-deep textarea,
+:host ::ng-deep select,
+:host ::ng-deep .date-time-input,
+:host ::ng-deep ya-filter-input,
+:host ::ng-deep ya-filter-textarea {
+  margin: 0;
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep ya-button {
+  margin: 0;
+  display: inline-block;
+}
+
+:host:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+.ya-field-meta {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  column-gap: 5px;
+}
+```
+
+### `field.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field.component.html`
+
+
+```html
+<div class="field-label">
+  @if (templateLabel) {
+    <ng-template [cdkPortalOutlet]="templateLabel" />
+  } @else {
+    {{ textLabel() }}
+  }
+
+  @if (hint(); as hint) {
+    <span class="field-hint">{{ hint }}</span>
+  }
+  <ng-content select="ya-help" />
+  <ng-content select="ya-errors" />
+</div>
+<div class="ya-field-meta">
+  <ng-content select="ya-meta" />
+</div>
+<ng-content />
+```
+
+### `field.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/field/field.component.ts`
+
+
+```typescript
+import { CdkPortalOutlet } from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  input,
+} from '@angular/core';
+import { YA_FIELD, YaFieldLabel } from './field-label.directive';
+
+@Component({
+  selector: 'ya-field',
+  templateUrl: './field.component.html',
+  styleUrl: './field.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: YA_FIELD,
+      useExisting: YaField,
+    },
+  ],
+  host: {
+    class: 'ya-field',
+  },
+  imports: [CdkPortalOutlet],
+})
+export class YaField {
+  // Plain text label, used when there is no template label
+  textLabel = input<string | undefined>(undefined, { alias: 'label' });
+  hint = input<string>();
+
+  private _templateLabel: YaFieldLabel;
+
+  // Content for the field label given by `<ng-template ya-field-label>`
+  @ContentChild(YaFieldLabel)
+  get templateLabel(): YaFieldLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: YaFieldLabel | undefined) {
+    if (value && value._closestField === this) {
+      this._templateLabel = value;
+    }
+  }
+}
+```

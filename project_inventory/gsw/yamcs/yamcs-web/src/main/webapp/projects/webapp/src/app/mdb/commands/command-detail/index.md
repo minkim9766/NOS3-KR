@@ -3,18 +3,377 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-detail.component.css`
 
-file--command-detail.component.css
-file--command-detail.component.html
-file--command-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/command-detail.component.css`
+
+
+```css
+.enum {
+  border-bottom: 1px dotted #888;
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `command-detail.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/command-detail.component.css`](file--command-detail.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/command-detail.component.html`](file--command-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/command-detail.component.ts`](file--command-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/command-detail.component.html`
+
+
+```html
+<dl class="dl-horizontal no-lead">
+  <dt>Command</dt>
+  <dd>{{ command.qualifiedName | shortName }}</dd>
+
+  <dt>System</dt>
+  <dd>
+    @if (command.qualifiedName | spaceSystemName; as spaceSystemName) {
+      <a
+        routerLink="/mdb/commands"
+        [queryParams]="{ c: yamcs.context, filter: spaceSystemName }"
+        class="ya-link">
+        {{ spaceSystemName }}
+      </a>
+    }
+  </dd>
+
+  @for (alias of command.alias; track alias) {
+    <dt>{{ alias.namespace }}</dt>
+    <dd>{{ alias.name }}</dd>
+  }
+
+  <dt>Short description</dt>
+  <dd>{{ command.shortDescription || "-" }}</dd>
+
+  <dt>Long description</dt>
+  <dd>
+    @if (command.longDescription) {
+      <app-markdown [text]="command.longDescription" />
+    } @else {
+      -
+    }
+  </dd>
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Base command</dt>
+  @if (command.baseCommand) {
+    <dd>
+      <a
+        [routerLink]="['/mdb/commands/', command.baseCommand.qualifiedName]"
+        [queryParams]="{ c: yamcs.context }"
+        class="ya-link">
+        {{
+          command.baseCommand.qualifiedName | relativize: (command.qualifiedName | spaceSystemName)
+        }}
+      </a>
+    </dd>
+  } @else {
+    <dd>-</dd>
+  }
+
+  <dt>Abstract</dt>
+  <dd>{{ command.abstract ? "Yes" : "No" }}</dd>
+
+  <dt>Significance</dt>
+  @if (command.significance) {
+    <dd>
+      <app-significance-level [level]="command.significance.consequenceLevel" />
+      {{ command.significance.reasonForWarning }}
+    </dd>
+  } @else {
+    <dd>-</dd>
+  }
+
+  <dt>Argument assignments</dt>
+  @if (command.argumentAssignment) {
+    <dd>
+      @for (assignment of command.argumentAssignment; track assignment) {
+        {{ assignment.name }} = {{ assignment.value }}
+        <br />
+      }
+    </dd>
+  } @else {
+    <dd>-</dd>
+  }
+
+  <dt>Arguments</dt>
+  @if (command.argument) {
+    <dd>
+      <table yaDataTable>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Signed</th>
+          <th>Encoding</th>
+          <th>Size in bits</th>
+          <th>Byte order</th>
+          <th>Range</th>
+          <th>Initial value</th>
+        </tr>
+        @for (argument of command.argument; track argument) {
+          <tr>
+            <td>{{ argument.name || "-" }}</td>
+            <td>{{ argument.description || "-" }}</td>
+            <td>
+              @if (argument.type.engType === "enumeration") {
+                <span (click)="showEnum(argument)" matTooltip="Show enum states" class="enum">
+                  {{ argument.type.engType }}
+                </span>
+              }
+              @if (argument.type.engType !== "enumeration") {
+                {{ argument.type.engType || "-" }}
+              }
+            </td>
+            <td>{{ argument.type.signed ?? "-" }}</td>
+            <td>{{ argument.type.dataEncoding?.encoding || "-" }}</td>
+            <td>{{ argument.type.dataEncoding?.sizeInBits | nvl: "-" }}</td>
+            <td>
+              {{ argument.type.dataEncoding?.littleEndian ? "Little endian" : "Big endian" }}
+            </td>
+            <td>
+              @if (argument.type.rangeMin || argument.type.rangeMax) {
+                <ya-interval [left]="argument.type.rangeMin" [right]="argument.type.rangeMax" />
+              } @else {
+                -
+              }
+            </td>
+            <td>{{ argument.initialValue || "-" }}</td>
+          </tr>
+        }
+      </table>
+    </dd>
+  } @else {
+    <dd>-</dd>
+  }
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Constraints</dt>
+  @if (command.constraint) {
+    <dd>
+      <table yaDataTable>
+        <tr>
+          <th>Constraint</th>
+          <th>Timeout</th>
+        </tr>
+        @for (constraint of command.constraint; track constraint) {
+          <tr>
+            <td>
+              <app-expression
+                [expression]="constraint.expression"
+                [relto]="command.qualifiedName | spaceSystemName" />
+            </td>
+            <td>{{ (constraint.timeout | millisDuration) || "-" }}</td>
+          </tr>
+        }
+      </table>
+    </dd>
+  } @else {
+    <dd>-</dd>
+  }
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Verifiers</dt>
+  <dd>
+    @if (command.verifier?.length) {
+      <table yaDataTable>
+        <tr>
+          <th>Stage</th>
+          <th>Type</th>
+          <th>Ref</th>
+          <th>Check window</th>
+          <th>Relative to</th>
+          <th>On success</th>
+          <th>On fail</th>
+          <th>On timeout</th>
+        </tr>
+        @for (verifier of command.verifier; track verifier) {
+          <tr>
+            <td>{{ verifier.stage }}</td>
+            <td>
+              @if (verifier.algorithm) {
+                Algorithm
+              }
+              @if (verifier.container) {
+                Container
+              }
+              @if (verifier.expression) {
+                Expression
+              }
+            </td>
+            <td>
+              @if (verifier.algorithm) {
+                <a
+                  [routerLink]="['/mdb/algorithms/', verifier.algorithm.qualifiedName]"
+                  [queryParams]="{ c: yamcs.context }">
+                  {{
+                    verifier.algorithm.qualifiedName
+                      | relativize: (command.qualifiedName | spaceSystemName)
+                  }}
+                </a>
+              }
+              @if (verifier.container) {
+                <a
+                  [routerLink]="['/mdb/containers/', verifier.container.qualifiedName]"
+                  [queryParams]="{ c: yamcs.context }">
+                  {{
+                    verifier.container.qualifiedName
+                      | relativize: (command.qualifiedName | spaceSystemName)
+                  }}
+                </a>
+              }
+              @if (verifier.expression) {
+                {{ verifier.expression }}
+              }
+            </td>
+            <td>
+              <ya-interval
+                [left]="verifier.checkWindow.timeToStartChecking | millisDuration"
+                [right]="verifier.checkWindow.timeToStopChecking | millisDuration" />
+            </td>
+            <td>{{ verifier.checkWindow.relativeTo }}</td>
+            <td>{{ verifier.onSuccess || "-" }}</td>
+            <td>{{ verifier.onFail || "-" }}</td>
+            <td>{{ verifier.onTimeout || "-" }}</td>
+          </tr>
+        }
+      </table>
+    } @else {
+      -
+    }
+  </dd>
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Sequence entries</dt>
+  <dd>
+    @if (command.commandContainer?.entry) {
+      <table yaDataTable>
+        <tr>
+          <th>Loc ref</th>
+          <th>Loc</th>
+          <th>Bits</th>
+          <th>Type</th>
+          <th>Ref</th>
+          <th class="wrap200">Description</th>
+        </tr>
+        @for (entry of command.commandContainer?.entry; track entry) {
+          <tr>
+            <td>{{ entry.referenceLocation }}</td>
+            <td>{{ entry.locationInBits }}</td>
+            @if (entry.argument) {
+              <td>{{ entry.argument.type.dataEncoding?.sizeInBits ?? "-" }}</td>
+              <td>Argument</td>
+              <td>{{ entry.argument.name }}</td>
+              <td class="wrap200">{{ entry.argument.description || "-" }}</td>
+            } @else if (entry.parameter) {
+              <td>{{ entry.parameter.type?.dataEncoding?.sizeInBits ?? "-" }}</td>
+              <td>Parameter</td>
+              <td>
+                <a
+                  [routerLink]="['/mdb/parameters/', entry.parameter.qualifiedName]"
+                  [queryParams]="{ c: yamcs.context }"
+                  class="ya-link">
+                  {{ entry.parameter.qualifiedName }}
+                </a>
+              </td>
+              <td class="wrap200">
+                {{ entry.parameter.shortDescription || "-" }}
+              </td>
+            } @else if (entry.fixedValue) {
+              <td>{{ entry.fixedValue.sizeInBits }}</td>
+              <td>Fixed value</td>
+              <td>{{ entry.fixedValue.name }}: 0x{{ entry.fixedValue.hexValue }}</td>
+              <td class="wrap200">-</td>
+            } @else if (entry.indirectParameterRef) {
+              <td>-</td>
+              <td>Indirect parameter</td>
+              <td>
+                <a
+                  [routerLink]="[
+                    '/mdb/parameters/',
+                    entry.indirectParameterRef.parameter.qualifiedName,
+                  ]"
+                  [queryParams]="{ c: yamcs.context }"
+                  class="ya-link">
+                  {{ entry.indirectParameterRef.parameter.qualifiedName }}
+                  @if (entry.indirectParameterRef.aliasNamespace; as namespace) {
+                    ({{ namespace }})
+                  }
+                </a>
+              </td>
+              <td class="wrap200">
+                {{ entry.indirectParameterRef.parameter.shortDescription || "-" }}
+              </td>
+            }
+          </tr>
+        }
+      </table>
+    } @else {
+      <span>-</span>
+    }
+  </dd>
+</dl>
+```
+
+### `command-detail.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/command-detail/command-detail.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  Argument,
+  Command,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { ExpressionComponent } from '../../../shared/expression/expression.component';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+import { ArgumentEnumDialogComponent } from '../argument-enum-dialog/argument-enum-dialog.component';
+
+@Component({
+  selector: 'app-command-detail',
+  templateUrl: './command-detail.component.html',
+  styleUrl: './command-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ExpressionComponent,
+    MarkdownComponent,
+    SignificanceLevelComponent,
+    WebappSdkModule,
+  ],
+})
+export class CommandDetailComponent {
+  @Input()
+  command: Command;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private dialog: MatDialog,
+  ) {}
+
+  showEnum(argument: Argument) {
+    this.dialog.open(ArgumentEnumDialogComponent, {
+      width: '400px',
+      data: { argument },
+    });
+  }
+}
+```

@@ -3,14 +3,47 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/net/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `if.h`
 
-file--if.h
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/net/if.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for net/if.h
+ */
+
+#ifndef OVERRIDE_NET_IF_H
+#define OVERRIDE_NET_IF_H
+
+#include "OCS_net_if.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in net/if.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_NET_IF_H */
 ```
-
-## 항목
-
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/net/if.h`](file--if.h) — UTF-8 텍스트 파일 본문 포함

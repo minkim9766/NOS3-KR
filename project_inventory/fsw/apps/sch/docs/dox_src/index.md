@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sch/docs/dox_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ mnem_maps/index
 users_guide/index
 ```
 
-## 항목
-
-- [`fsw/apps/sch/docs/dox_src/detailed_design/`](detailed_design/index) — 폴더
-- [`fsw/apps/sch/docs/dox_src/mnem_maps/`](mnem_maps/index) — 폴더
-- [`fsw/apps/sch/docs/dox_src/users_guide/`](users_guide/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

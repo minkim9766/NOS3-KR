@@ -3,26 +3,882 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CircularBufferTester.cpp`
 
-file--CircularBufferTester.cpp
-file--CircularBufferTester.hpp
-file--CircularRules.cpp
-file--CircularRules.hpp
-file--CircularState.cpp
-file--CircularState.hpp
-file--Main.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularBufferTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CircularBufferTester.hpp
+// \author m-aleem
+// \brief  cpp file for CircularBufferTester
+// ======================================================================
+
+#include "CircularBufferTester.hpp"
+
+
+namespace Types {
+
+}
 ```
 
-## 항목
+### `CircularBufferTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularBufferTester.cpp`](file--CircularBufferTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularBufferTester.hpp`](file--CircularBufferTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularRules.cpp`](file--CircularRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularRules.hpp`](file--CircularRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularState.cpp`](file--CircularState.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularState.hpp`](file--CircularState.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/Main.cpp`](file--Main.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularBufferTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CircularBufferTester.hpp
+// \author m-aleem
+// \brief  hpp file for CircularBufferTester
+// ======================================================================
+
+#ifndef Svc_CircularBufferTester_HPP
+#define Svc_CircularBufferTester_HPP
+
+#include "Utils/Types/CircularBuffer.hpp"
+
+namespace Types {
+
+    class CircularBufferTester{
+
+        public:
+
+            static void tester_m_allocated_size_decrement(Types::CircularBuffer &circular_buffer){
+                circular_buffer.m_allocated_size--;
+            }
+
+            static FwSizeType tester_get_m_head_idx(Types::CircularBuffer &circular_buffer){
+                return circular_buffer.m_head_idx;
+            }
+
+    };
+
+}
+
+#endif
+```
+
+### `CircularRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularRules.cpp`
+
+
+```cpp
+/**
+ * CircularRules.cpp:
+ *
+ * This file specifies Rule classes for testing of the Types::CircularRules. These rules can then be used by the main
+ * testing program to test the code.
+ *
+ *
+ * @author mstarch
+ */
+#include "CircularRules.hpp"
+
+#include <cstdlib>
+#include <cmath>
+
+namespace Types {
+
+
+    RandomizeRule::RandomizeRule(const char *const name)
+        : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool RandomizeRule::precondition(const MockTypes::CircularState& state) {
+        return true;
+    }
+
+
+    void RandomizeRule::action(MockTypes::CircularState& truth) {
+        (void) truth.generateRandomBuffer();
+    }
+
+
+
+    SerializeOkRule::SerializeOkRule(const char *const name)
+        : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool SerializeOkRule::precondition(const MockTypes::CircularState& state) {
+        return state.getRemainingSize() >= state.getRandomSize();
+    }
+
+
+    void SerializeOkRule::action(MockTypes::CircularState& state) {
+        state.checkSizes();
+        Fw::SerializeStatus status = state.getTestBuffer().serialize(state.getBuffer(), state.getRandomSize());
+        state.setRemainingSize(state.getRemainingSize() - state.getRandomSize());
+        ASSERT_TRUE(state.addInfinite(state.getBuffer(), state.getRandomSize()));
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+        state.checkSizes();
+    }
+
+
+
+    SerializeOverflowRule::SerializeOverflowRule(const char *const name)
+            : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool SerializeOverflowRule::precondition(const MockTypes::CircularState& state) {
+        return state.getRemainingSize() < state.getRandomSize();
+    }
+
+
+    void SerializeOverflowRule::action(MockTypes::CircularState& state) {
+        Fw::SerializeStatus status = state.getTestBuffer().serialize(state.getBuffer(), state.getRandomSize());
+        ASSERT_EQ(status, Fw::FW_SERIALIZE_NO_ROOM_LEFT);
+    }
+
+
+    PeekOkRule::PeekOkRule(const char *const name)
+            : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool PeekOkRule::precondition(const MockTypes::CircularState& state) {
+        FwSizeType peek_available = (MAX_BUFFER_SIZE - state.getRemainingSize());
+        if (state.getPeekType() == 0 ) {
+            return peek_available >= sizeof(I8) + state.getPeekOffset();
+        }
+        else if (state.getPeekType() == 1) {
+            return peek_available >= sizeof(U8) + state.getPeekOffset();
+        }
+        else if (state.getPeekType() == 2) {
+            return peek_available >= sizeof(U32) + state.getPeekOffset();
+        }
+        else if (state.getPeekType() == 3) {
+            return peek_available >= state.getRandomSize() + state.getPeekOffset();
+        }
+        return false;
+    }
+
+    void PeekOkRule::action(MockTypes::CircularState& state) {
+        U8* buffer = nullptr;
+        char peek_char = 0;
+        U8 peek_u8 = 0;
+        U32 peek_u32 = 0;
+        U8 peek_buffer[MAX_BUFFER_SIZE];
+        // Handle all cases for deserialization
+        if (state.getPeekType() == 0) {
+            ASSERT_TRUE(state.peek(buffer, sizeof(I8), state.getPeekOffset()));
+            peek_char = static_cast<char>(buffer[0]);
+            ASSERT_EQ(state.getTestBuffer().peek(peek_char, state.getPeekOffset()), Fw::FW_SERIALIZE_OK);
+            ASSERT_EQ(static_cast<char>(buffer[0]), peek_char);
+        }
+        else if (state.getPeekType() == 1) {
+            ASSERT_TRUE(state.peek(buffer, sizeof(U8), state.getPeekOffset()));
+            peek_u8 = static_cast<U8>(buffer[0]);
+            ASSERT_EQ(state.getTestBuffer().peek(peek_u8, state.getPeekOffset()), Fw::FW_SERIALIZE_OK);
+            ASSERT_EQ(buffer[0], peek_u8);
+        }
+        else if (state.getPeekType() == 2) {
+            ASSERT_TRUE(state.peek(buffer, sizeof(U32), state.getPeekOffset()));
+            ASSERT_EQ(state.getTestBuffer().peek(peek_u32, state.getPeekOffset()), Fw::FW_SERIALIZE_OK);
+            // Big-endian U32
+            U32 value = 0;
+            value |= (buffer[0] << 24);
+            value |= (buffer[1] << 16);
+            value |= (buffer[2] << 8);
+            value |= (buffer[3] << 0);
+            ASSERT_EQ(value, peek_u32);
+        }
+        else if (state.getPeekType() == 3) {
+            ASSERT_TRUE(state.peek(buffer, state.getRandomSize(), state.getPeekOffset()));
+            ASSERT_EQ(state.getTestBuffer().peek(peek_buffer, state.getRandomSize(), state.getPeekOffset()),
+                    Fw::FW_SERIALIZE_OK);
+            for (FwSizeType i = 0; i < state.getRandomSize(); i++) {
+                ASSERT_EQ(buffer[i], peek_buffer[i]);
+            }
+        }
+        else {
+            ASSERT_TRUE(false); // Fail the test, bad type
+        }
+    }
+
+
+    PeekBadRule::PeekBadRule(const char *const name)
+            : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool PeekBadRule::precondition(const MockTypes::CircularState& state) {
+        FwSizeType peek_available = (MAX_BUFFER_SIZE - state.getRemainingSize());
+        if (state.getPeekType() == 0 ) {
+            return peek_available < sizeof(I8) + state.getPeekOffset();
+        }
+        else if (state.getPeekType() == 1) {
+            return peek_available < sizeof(U8) + state.getPeekOffset();
+        }
+        else if (state.getPeekType() == 2) {
+            return peek_available < sizeof(U32) + state.getPeekOffset();
+        }
+        else if (state.getPeekType() == 3) {
+            return peek_available < state.getRandomSize() + state.getPeekOffset();
+        }
+        return false;
+    }
+
+    void PeekBadRule::action(MockTypes::CircularState& state) {
+        char peek_char = 0;
+        U8 peek_u8 = 0;
+        U32 peek_u32 = 0;
+        U8 peek_buffer[MAX_BUFFER_SIZE];
+        // Handle all cases for deserialization
+        if (state.getPeekType() == 0) {
+            ASSERT_EQ(state.getTestBuffer().peek(peek_char, state.getPeekOffset()), Fw::FW_DESERIALIZE_BUFFER_EMPTY);
+        }
+        else if (state.getPeekType() == 1) {
+            ASSERT_EQ(state.getTestBuffer().peek(peek_u8, state.getPeekOffset()), Fw::FW_DESERIALIZE_BUFFER_EMPTY);
+        }
+        else if (state.getPeekType() == 2) {
+            ASSERT_EQ(state.getTestBuffer().peek(peek_u32, state.getPeekOffset()), Fw::FW_DESERIALIZE_BUFFER_EMPTY);
+        }
+        else if (state.getPeekType() == 3) {
+            ASSERT_EQ(state.getTestBuffer().peek(peek_buffer, state.getRandomSize(), state.getPeekOffset()),
+                      Fw::FW_DESERIALIZE_BUFFER_EMPTY);
+        }
+        else {
+            ASSERT_TRUE(false); // Fail the test, bad type
+        }
+    }
+
+
+    RotateOkRule::RotateOkRule(const char *const name)
+            : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool RotateOkRule::precondition(const MockTypes::CircularState& state) {
+        FwSizeType rotate_available = (MAX_BUFFER_SIZE - state.getRemainingSize());
+        return rotate_available >= state.getRandomSize();
+    }
+
+    void RotateOkRule::action(MockTypes::CircularState& state) {
+        state.checkSizes();
+        ASSERT_EQ(state.getTestBuffer().rotate(state.getRandomSize()), Fw::FW_SERIALIZE_OK);
+        ASSERT_TRUE(state.rotate(state.getRandomSize()));
+        state.setRemainingSize(state.getRemainingSize() + state.getRandomSize());
+        state.checkSizes();
+    }
+
+
+    RotateBadRule::RotateBadRule(const char *const name)
+            : STest::Rule<MockTypes::CircularState>(name) {}
+
+
+    bool RotateBadRule::precondition(const MockTypes::CircularState& state) {
+        FwSizeType rotate_available = (MAX_BUFFER_SIZE - state.getRemainingSize());
+        return rotate_available < state.getRandomSize();
+    }
+
+    void RotateBadRule::action(MockTypes::CircularState& state) {
+        ASSERT_EQ(state.getTestBuffer().rotate(state.getRandomSize()), Fw::FW_DESERIALIZE_BUFFER_EMPTY);
+    }
+}
+```
+
+### `CircularRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularRules.hpp`
+
+
+```cpp
+/**
+ * CircularRules.hpp:
+ *
+ * This file specifies Rule classes for testing of the Types::CircularBuffer. These rules can then be used by the main
+ * testing program to test the code. These rules support rule-based random testing.
+ *
+ * Circular rules:
+ *
+ * 1. Serialize into CircularBuffer with sufficient space should work.
+ * 2. Serialize into CircularBuffer without sufficient space should error.
+ * 3. Peeking into CircularBuffer with data should work (all variants).
+ * 4. Peeking into CircularBuffer without data should error (all variants).
+ * 5. Rotations should increase space when there is enough data.
+ * 6. Rotations should error when there is not enough data.
+ * 7. A rule exists to help randomize items.
+ *
+ * @author mstarch
+ */
+#ifndef FPRIME_GROUNDINTERFACERULES_HPP
+#define FPRIME_GROUNDINTERFACERULES_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/String.hpp>
+#include <Utils/Types/test/ut/CircularBuffer/CircularState.hpp>
+#include <STest/STest/Rule/Rule.hpp>
+#include <STest/STest/Pick/Pick.hpp>
+
+
+namespace Types {
+
+    /**
+     * SetupRandomBufferRule:
+     *
+     * This rule sets up a random buffer, and other random state.
+     */
+    struct RandomizeRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        RandomizeRule(const char *const name);
+
+        // Always valid
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Will randomize the test state
+        void action(MockTypes::CircularState& truth);
+    };
+
+    /**
+     * SerializeOkRule:
+     *
+     * This rule tests that the circular buffer can accept data when it is valid for the buffer to accept data.
+     */
+    struct SerializeOkRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        SerializeOkRule(const char *const name);
+
+        // Valid precondition for when the buffer should accept data
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Action that tests the buffer accepting data
+        void action(MockTypes::CircularState& state);
+    };
+
+    /**
+     * SerializeOverflowRule:
+     *
+     * This rule tests that the circular buffer cannot accept data when it is full.
+     */
+    struct SerializeOverflowRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        SerializeOverflowRule(const char *const name);
+
+        // Valid precondition for when the buffer should reject data
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Action that tests the buffer overflowing with an error
+        void action(MockTypes::CircularState& state);
+    };
+
+    /**
+     * PeekOkRule:
+     *
+     * This rule tests that the circular buffer can peek correctly.
+     */
+    struct PeekOkRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        PeekOkRule(const char *const name);
+
+        // Peek ok available for when buffer size - remaining size <= peek size
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Action that tests the buffer's ability to peek
+        void action(MockTypes::CircularState& state);
+    };
+
+    /**
+     * PeekOkRule:
+     *
+     * This rule tests that the circular buffer cannot peek when it should not peek.
+     */
+    struct PeekBadRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        PeekBadRule(const char *const name);
+
+        // Peek bad available for when buffer size - remaining size > peek size
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Action that tests the buffer's ability to peek with a fail
+        void action(MockTypes::CircularState& state);
+    };
+
+    /**
+     * RotateOkRule:
+     *
+     * This rule tests that the circular buffer can rotate correctly.
+     */
+    struct RotateOkRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        RotateOkRule(const char *const name);
+
+        // Rotate is ok when there is more data then rotational size
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Action that tests the buffer's ability to rotate
+        void action(MockTypes::CircularState& state);
+    };
+
+    /**
+     * RotateOkRule:
+     *
+     * This rule tests that the circular buffer cannot rotate when it should not rotate.
+     */
+    struct RotateBadRule : public STest::Rule<MockTypes::CircularState> {
+        // Constructor
+        RotateBadRule(const char *const name);
+
+        // Rotate is bad when there is less data then rotational size
+        bool precondition(const MockTypes::CircularState& state);
+
+        // Action that tests the buffer's ability to rotate
+        void action(MockTypes::CircularState& state);
+    };
+}
+#endif //FPRIME_GROUNDINTERFACERULES_HPP
+```
+
+### `CircularState.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularState.cpp`
+
+
+```cpp
+/**
+ * FakeLogger.cpp:
+ *
+ * Setup a fake logger for use with the testing. This allows for the capture of messages from the system and ensure that
+ * the proper log messages are coming through as expected.
+ *
+ * @author mstarch
+ */
+#include <STest/Pick/Pick.hpp>
+#include <Utils/Types/test/ut/CircularBuffer/CircularState.hpp>
+
+#include <cstdlib>
+#include <cstring>
+#include <gtest/gtest.h>
+
+U8 CIRCULAR_BUFFER_MEMORY[MAX_BUFFER_SIZE];
+namespace MockTypes {
+
+    CircularState::CircularState() :
+        m_remaining_size(static_cast<FwSizeType>(sizeof(CIRCULAR_BUFFER_MEMORY))),
+        m_random_size(MAX_BUFFER_SIZE),
+        m_peek_offset(0),
+        m_peek_type(0),
+        m_infinite_store(nullptr),
+        m_infinite_read(0),
+        m_infinite_write(0),
+        m_infinite_size(0),
+        m_test_buffer(CIRCULAR_BUFFER_MEMORY, static_cast<FwSizeType>(sizeof(CIRCULAR_BUFFER_MEMORY)))
+    {
+        memset(m_buffer, 0, sizeof m_buffer);
+    }
+
+    CircularState::~CircularState() {
+        if (m_infinite_size != 0) {
+            std::free(m_infinite_store);
+        }
+    }
+
+    // Generates a random buffer
+    FwSizeType CircularState::generateRandomBuffer() {
+        m_peek_offset = static_cast<FwSizeType>(STest::Pick::lowerUpper(0, sizeof(m_buffer)));
+        m_peek_type = static_cast<FwSizeType>(STest::Pick::lowerUpper(0, 4));
+        FwSizeType random_size = static_cast<FwSizeType>(STest::Pick::lowerUpper(0, sizeof(m_buffer)));
+        for (U32 i = 0; i < random_size; i++) {
+            m_buffer[i] = static_cast<U8>(STest::Pick::lowerUpper(0, 256));
+        }
+        this->m_random_size = random_size;
+        return random_size;
+    }
+
+    void CircularState::setRandom(FwSizeType random, FwSizeType peek_type, FwSizeType peek_offset) {
+        m_random_size = random;
+        m_peek_type = peek_type;
+        m_peek_offset = peek_offset;
+    }
+
+    FwSizeType CircularState::getPeekOffset() const {
+        return m_peek_offset;
+    }
+
+    FwSizeType CircularState::getPeekType() const {
+        return m_peek_type;
+    }
+
+    bool CircularState::addInfinite(const U8* buffer, FwSizeType size) {
+        // If we are out of "infinite space" add another MB, and check allocation
+        if ((m_infinite_write + size) > m_infinite_size) {
+            void* new_pointer = std::realloc(m_infinite_store, m_infinite_size + 1048576);
+            if (new_pointer == nullptr) {
+                return false;
+            }
+            m_infinite_store = static_cast<U8*>(new_pointer);
+            m_infinite_size += 1048576;
+        }
+        std::memcpy(m_infinite_store + m_infinite_write, buffer, size);
+        m_infinite_write += size;
+        return true;
+    }
+
+    bool CircularState::peek(U8*& buffer, FwSizeType size, FwSizeType offset) {
+        FwSizeType final_offset = m_infinite_read + offset;
+        if ((final_offset + size) > m_infinite_write) {
+            return false;
+        }
+        buffer = m_infinite_store + final_offset;
+        return true;
+    }
+
+    bool CircularState::rotate(FwSizeType size) {
+        // Fail if we try to rotate too far
+        if ((m_infinite_read + size) > m_infinite_write) {
+            return false;
+        }
+        m_infinite_read += size;
+        return true;
+    }
+
+    FwSizeType CircularState::getRandomSize() const {
+        return m_random_size;
+    }
+
+    const U8 *CircularState::getBuffer() const {
+        return m_buffer;
+    }
+
+    FwSizeType CircularState::getRemainingSize() const {
+        return m_remaining_size;
+    }
+
+    void CircularState::setRemainingSize(FwSizeType mRemainingSize) {
+        m_remaining_size = mRemainingSize;
+    }
+
+    Types::CircularBuffer& CircularState::getTestBuffer() {
+        return m_test_buffer;
+    }
+
+    void CircularState::checkSizes() const {
+        const FwSizeType allocated_size = (MAX_BUFFER_SIZE - m_remaining_size);
+        ASSERT_EQ(m_test_buffer.get_free_size(), m_remaining_size);
+        ASSERT_EQ(m_test_buffer.get_allocated_size(), allocated_size);
+    }
+}
+```
+
+### `CircularState.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/CircularState.hpp`
+
+
+```cpp
+/**
+ * CircularState.hpp:
+ *
+ * Setup a fake logger for use with the testing. This allows for the capture of messages from the system and ensure that
+ * the proper log messages are coming through as expected.
+ *
+ * @author mstarch
+ */
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Utils/Types/CircularBuffer.hpp>
+
+#ifndef FPRIME_CIRCULARSTATE_HPP
+#define FPRIME_CIRCULARSTATE_HPP
+
+#define MAX_BUFFER_SIZE 10240
+
+namespace MockTypes {
+
+    class CircularState {
+        public:
+            // Constructor
+            CircularState();
+            // Destructor
+            ~CircularState();
+            /**
+             * Generates a random buffer for input to various calls to the CircularBuffer.
+             * @return size of this buffer
+             */
+            FwSizeType generateRandomBuffer();
+            /**
+             * Sets the random settings
+             * @param random: random size
+             * @param peek_type: peek type (0-3)
+             * @param peek_offset: offset size
+             */
+            void setRandom(FwSizeType random, FwSizeType peek_type, FwSizeType peek_offset);
+            /**
+             * Add to the infinite pool of data.
+             * @return true if successful, false otherwise
+             */
+            bool addInfinite(const U8* buffer, FwSizeType size);
+            /**
+             * Grab a peek buffer for given size and offset.
+             * @return true if successful, false if cannot.
+             */
+            bool peek(U8*& buffer, FwSizeType size, FwSizeType offset = 0);
+            /**
+             * Rotate the circular buffer.
+             * @param size: size to rotate
+             * @return true if successful, false otherwise
+             */
+            bool rotate(FwSizeType size);
+            /**
+             * Get the size of the random buffer data.
+             * @return size of the buffer
+             */
+            FwSizeType getRandomSize() const;
+            /**
+             * Get the size of the random buffer data.
+             * @return size of the buffer
+             */
+            FwSizeType getPeekOffset() const;
+            /**
+             * Get the size of the random buffer data.
+             * @return size of the buffer
+             */
+            FwSizeType getPeekType() const;
+            /**
+             * Gets a pointer to the random buffer.
+             * @return random buffer storing data
+             */
+            const U8 *getBuffer() const;
+            /**
+             * Get the remaining size of the circular buffer. This is a shadow field.
+             * @return shadow field for circular buffer.
+             */
+            FwSizeType getRemainingSize() const;
+            /**
+             * Set the remaining size shadow field input.
+             * @param mRemainingSize: remaining size shadow field
+             */
+            void setRemainingSize(FwSizeType mRemainingSize);
+            /**
+             * Get the in-test circular buffer.
+             * @return in-test circular buffer
+             */
+            Types::CircularBuffer& getTestBuffer();
+
+            /**
+             * Check allocated and free sizes
+             */
+            void checkSizes() const;
+
+        private:
+            FwSizeType m_remaining_size;
+            FwSizeType m_random_size;
+            FwSizeType m_peek_offset;
+            FwSizeType m_peek_type;
+
+            U8 m_buffer[MAX_BUFFER_SIZE];
+            // May use just under 100MB of space
+            U8* m_infinite_store;
+            FwSizeType m_infinite_read;
+            FwSizeType m_infinite_write;
+            FwSizeType m_infinite_size;
+
+            Types::CircularBuffer m_test_buffer;
+    };
+
+}
+#endif //FPRIME_CIRCULARSTATE_HPP
+```
+
+### `Main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Types/test/ut/CircularBuffer/Main.cpp`
+
+
+```cpp
+/**
+ * Main.cpp:
+ *
+ * Setup the GTests for rules-based testing runs these tests.
+ *
+ *  Created on: May 23, 2019
+ *      Author: mstarch
+ */
+#include <STest/Scenario/Scenario.hpp>
+#include <STest/Scenario/RandomScenario.hpp>
+#include <STest/Scenario/BoundedScenario.hpp>
+
+#include <Fw/Test/UnitTest.hpp>
+#include <Utils/Types/test/ut/CircularBuffer/CircularRules.hpp>
+#include <gtest/gtest.h>
+
+#include <cstdio>
+#include <cmath>
+
+#define STEP_COUNT 1000
+
+/**
+ * A random hopper for rules. Apply STEP_COUNT times.
+ */
+TEST(CircularBufferTests, RandomCircularTests) {
+    F64 max_addr_mem = sizeof(FwSizeType) * 8.0;
+    max_addr_mem = pow(2.0, max_addr_mem);
+    // Ensure the maximum memory use is less that the max addressable memory
+    F64 max_used_mem = static_cast<double>(STEP_COUNT) * static_cast<double>(MAX_BUFFER_SIZE);
+    ASSERT_LT(max_used_mem, max_addr_mem);
+
+    MockTypes::CircularState state;
+
+    // Create rules, and assign them into the array
+    Types::RandomizeRule randomize("Randomize");
+    Types::SerializeOkRule serializeOk("SerializeOk");
+    Types::SerializeOverflowRule serializeOverflow("serializeOverflow");
+    Types::PeekOkRule peekOk("peekOk");
+    Types::PeekBadRule peekBad("peekBad");
+    Types::PeekOkRule rotateOk("rotateOk");
+    Types::PeekBadRule rotateBad("rotateBad");
+
+    // Setup a list of rules to choose from
+    STest::Rule<MockTypes::CircularState>* rules[] = {
+            &randomize,
+            &serializeOk,
+            &serializeOverflow,
+            &peekOk,
+            &peekBad,
+            &rotateOk,
+            &rotateBad
+    };
+    // Construct the random scenario and run it with the defined bounds
+    STest::RandomScenario<MockTypes::CircularState> random("Random Rules", rules,
+                                                      FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Setup a bounded scenario to run rules a set number of times
+    STest::BoundedScenario<MockTypes::CircularState> bounded("Bounded Random Rules Scenario",
+                                                        random, STEP_COUNT);
+    // Run!
+    const U32 numSteps = bounded.run(state);
+    printf("Ran %u steps.\n", numSteps);
+}
+
+/**
+ * Test that the most basic logging function works.
+ */
+TEST(CircularBufferTests, BasicSerializeTest) {
+    // Setup and register state
+    MockTypes::CircularState state;
+
+    // Create rules, and assign them into the array
+    Types::RandomizeRule randomGo("randomGo");
+    Types::SerializeOkRule serializeOk("SerializeOk");
+    randomGo.apply(state);
+    serializeOk.apply(state);
+}
+
+/**
+ * Test that the most basic circular overflow.
+ */
+TEST(CircularBufferTests, BasicOverflowTest) {
+    // Setup state and fill it with garbage
+    MockTypes::CircularState state;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK , state.getTestBuffer().serialize(state.getBuffer(), state.getRandomSize()));
+    state.setRemainingSize(0);
+
+    // Create rules, and assign them into the array
+    Types::RandomizeRule randomGo("randomGo");
+    Types::SerializeOverflowRule serializeOverflow("serializeOverflow");
+
+    randomGo.apply(state);
+    serializeOverflow.apply(state);
+}
+
+/**
+ * Test that the most basic peeks work.
+ */
+TEST(CircularBufferTests, BasicPeekTest) {
+    char peek_char = static_cast<char>(0x85);
+    U8 peek_u8 = 0x95;
+    U32 peek_u32 = 0xdeadc0de;
+    U8 buffer[1024] = {};   // Clear out memory to appease valgrind
+    // Setup all circular state
+    MockTypes::CircularState state;
+    state.addInfinite(reinterpret_cast<U8*>(&peek_char), sizeof(peek_char));
+    state.getTestBuffer().serialize(reinterpret_cast<U8*>(&peek_char), sizeof(peek_char));
+    state.addInfinite(&peek_u8, sizeof(peek_u8));
+    state.getTestBuffer().serialize(&peek_u8, sizeof(peek_u8));
+    for (FwSizeType i = sizeof(U32); i > 0; i--) {
+        U8 byte = peek_u32 >> ((i - 1) * 8);
+        state.addInfinite(&byte, sizeof(byte));
+        state.getTestBuffer().serialize(&byte, sizeof(byte));
+    }
+    state.addInfinite(buffer, sizeof(buffer));
+    state.getTestBuffer().serialize(buffer, sizeof(buffer));
+    state.setRemainingSize(MAX_BUFFER_SIZE - 1030);
+    // Run all peek variants
+    Types::PeekOkRule peekOk("peekOk");
+    state.setRandom(0, 0, 0);
+    peekOk.apply(state);
+    state.setRandom(0, 1, 1);
+    peekOk.apply(state);
+    state.setRandom(0, 2, 2);
+    peekOk.apply(state);
+    state.setRandom(sizeof(buffer), 3, 6);
+    peekOk.apply(state);
+}
+
+/**
+ * Test that the most basic bad-peeks work.
+ */
+TEST(CircularBufferTests, BasicPeekBadTest) {
+    // Setup all circular state
+    MockTypes::CircularState state;
+    // Run all peek variants
+    Types::PeekBadRule peekBad("peekBad");
+    state.setRandom(0, 0, 0);
+    peekBad.apply(state);
+    state.setRandom(0, 1, 1);
+    peekBad.apply(state);
+    state.setRandom(0, 2, 2);
+    peekBad.apply(state);
+    state.setRandom(1024, 3, 6);
+    peekBad.apply(state);
+}
+
+/**
+ * Test that the most basic rotate work.
+ */
+TEST(CircularBufferTests, BasicRotateTest) {
+    // Setup and register state
+    MockTypes::CircularState state;
+
+    // Create rules, and assign them into the array
+    Types::RandomizeRule randomGo("randomGo");
+    Types::SerializeOkRule serializeOk("SerializeOk");
+    Types::RotateOkRule rotateOk("rotateOk");
+    randomGo.apply(state);
+    serializeOk.apply(state);
+    rotateOk.apply(state);
+}
+
+/**
+ * Test that the most basic bad-rotate work.
+ */
+TEST(CircularBufferTests, BasicRotateBadTest) {
+    // Setup all circular state
+    MockTypes::CircularState state;
+    // Run all peek variants
+    Types::RotateBadRule rotateBad("rotateBad");
+    rotateBad.apply(state);
+}
+
+/**
+ * Test boundary cases
+ */
+TEST(CircularBufferTests, BoundaryCases) {
+    MockTypes::CircularState state;
+    // Serialize an empty buffer
+    state.setRandom(0, 0, 0);
+    Types::SerializeOkRule serializeOk("serializeOk");
+    serializeOk.apply(state);
+    // Serialize a max size buffer
+    state.setRandom(MAX_BUFFER_SIZE, 0, 0);
+    serializeOk.apply(state);
+}
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```

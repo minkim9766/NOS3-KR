@@ -3,20 +3,356 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-list-summary-tab.component.css`
 
-file--parameter-list-summary-tab.component.css
-file--parameter-list-summary-tab.component.html
-file--parameter-list-summary-tab.component.ts
-file--streaming-parameters.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/parameter-list-summary-tab.component.css`
+
+
+```css
+.alert {
+  color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `parameter-list-summary-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/parameter-list-summary-tab.component.css`](file--parameter-list-summary-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/parameter-list-summary-tab.component.html`](file--parameter-list-summary-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/parameter-list-summary-tab.component.ts`](file--parameter-list-summary-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/streaming-parameters.datasource.ts`](file--streaming-parameters.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/parameter-list-summary-tab.component.html`
+
+
+```html
+<ya-panel>
+  @if (plist$ | async; as plist) {
+    <ya-filter-bar>
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="tmParameters" />
+      @if (dataSource.loading$ | async) {
+        <ya-dots />
+      }
+    </ya-filter-bar>
+
+    <table
+      mat-table
+      class="ya-data-table expand"
+      [dataSource]="dataSource"
+      [trackBy]="tableTrackerFn">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let item">
+          <a
+            [routerLink]="'/telemetry/parameters' + item.parameter.qualifiedName"
+            [queryParams]="{ c: yamcs.context }">
+            {{ item.name }}
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rawValue">
+        <th mat-header-cell *matHeaderCellDef class="wrap200">Raw value</th>
+        <td mat-cell *cdkCellDef="let item">
+          {{ (item.pval?.rawValue | value: { maxBytes: dataSource.binaryPreview }) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="engValue">
+        <th mat-header-cell *matHeaderCellDef class="wrap200">Value</th>
+        <td
+          mat-cell
+          *matCellDef="let item"
+          [class.alert]="
+            item.pval?.monitoringResult && item.pval?.monitoringResult !== 'IN_LIMITS'
+          ">
+          @if (item.pval) {
+            <ya-expirable [pval]="item.pval">
+              {{ (item.pval?.engValue | value: { maxBytes: dataSource.binaryPreview }) || "-" }}
+              @if (item.parameter?.type?.unitSet) {
+                <span>
+                  {{ (item.parameter | parameterTypeForPath)?.unitSet | units }}
+                </span>
+              }
+              @if (item.pval?.rangeCondition === "LOW") {
+                <span>&#8595;</span>
+              }
+              @if (item.pval?.rangeCondition === "HIGH") {
+                <span>&#8593;</span>
+              }
+            </ya-expirable>
+          } @else {
+            <span>-</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="gentime">
+        <th mat-header-cell *matHeaderCellDef>Generation time</th>
+        <td mat-cell *matCellDef="let item">
+          {{ (item.pval?.generationTime | datetime) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rectime">
+        <th mat-header-cell *matHeaderCellDef>Reception time</th>
+        <td mat-cell *matCellDef="let item">
+          {{ (item.pval?.acquisitionTime | datetime) || "-" }}
+          @if (item.pval?.generationTime && item.pval?.acquisitionTime) {
+            ({{ item.pval.acquisitionTime | deltaWith: item.pval.generationTime }})
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let item">
+          @if ((item.parameter | parameterTypeForPath)?.engType; as engType) {
+            <span class="mono">
+              {{ engType }}
+            </span>
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dataSource">
+        <th mat-header-cell *matHeaderCellDef>Data source</th>
+        <td mat-cell *matCellDef="let item">
+          {{ (item.parameter?.dataSource | titlecase) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="shortDescription">
+        <th mat-header-cell *matHeaderCellDef class="wrap200">Description</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.parameter.shortDescription || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+      <tr mat-row *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"></tr>
+    </table>
+  }
+</ya-panel>
+```
+
+### `parameter-list-summary-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/parameter-list-summary-tab.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ParameterList,
+  Synchronizer,
+  WebappSdkModule,
+  YaColumnChooser,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { PLIST_COLUMNS } from '../../parameters/parameters/parameters.component';
+import {
+  ListItem,
+  StreamingParametersDataSource,
+} from './streaming-parameters.datasource';
+
+@Component({
+  templateUrl: './parameter-list-summary-tab.component.html',
+  styleUrl: './parameter-list-summary-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterListSummaryTabComponent implements OnDestroy {
+  plist$ = new BehaviorSubject<ParameterList | null>(null);
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  dataSource: StreamingParametersDataSource;
+
+  columns = PLIST_COLUMNS;
+
+  tableTrackerFn = (index: number, item: ListItem) => item.name;
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private synchronizer: Synchronizer,
+    changeDetection: ChangeDetectorRef,
+  ) {
+    this.dataSource = new StreamingParametersDataSource(
+      this.yamcs,
+      this.synchronizer,
+      changeDetection,
+    );
+
+    route.paramMap.subscribe((params) => {
+      const plistId = params.get('list')!;
+      this.changeList(plistId);
+    });
+  }
+
+  private changeList(id: string) {
+    this.yamcs.yamcsClient
+      .getParameterList(this.yamcs.instance!, id)
+      .then((plist) => {
+        this.plist$.next(plist);
+        this.dataSource.loadParameters(plist.match || []);
+      });
+  }
+
+  ngOnDestroy() {
+    this.dataSource?.disconnect();
+  }
+}
+```
+
+### `streaming-parameters.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-summary-tab/streaming-parameters.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import { ChangeDetectorRef } from '@angular/core';
+import {
+  NamedObjectId,
+  Parameter,
+  ParameterSubscription,
+  ParameterValue,
+  Synchronizer,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+export class ListItem {
+  name: string;
+  parameter?: Parameter;
+  pval?: ParameterValue;
+}
+
+export class StreamingParametersDataSource extends DataSource<ListItem> {
+  // Max bytes to fetch and show
+  readonly binaryPreview = 16;
+
+  items$ = new BehaviorSubject<ListItem[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  private dataSubscription?: ParameterSubscription;
+  private idMapping: { [key: number]: NamedObjectId } = {};
+  private latestValues = new Map<string, ParameterValue>();
+
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    private synchronizer: Synchronizer,
+    private changeDetection: ChangeDetectorRef,
+  ) {
+    super();
+  }
+
+  connect() {
+    this.syncSubscription = this.synchronizer.syncFast(() => {
+      this.refreshTable();
+    });
+    return this.items$;
+  }
+
+  async loadParameters(parameters: Parameter[]) {
+    this.loading$.next(true);
+
+    if (this.dataSubscription) {
+      this.dataSubscription.cancel();
+      this.dataSubscription = undefined;
+    }
+
+    const items: ListItem[] = [];
+    for (const parameter of parameters) {
+      items.push({
+        name: parameter.qualifiedName,
+        parameter,
+      });
+    }
+    this.items$.next(items);
+    this.startSubscription(parameters || []);
+  }
+
+  private refreshTable() {
+    const items = this.items$.value;
+    for (const item of items) {
+      item.pval = this.latestValues.get(item.name);
+    }
+
+    this.items$.next([...items]);
+
+    // Needed to show table updates in combination with trackBy
+    this.changeDetection.detectChanges();
+  }
+
+  private startSubscription(parameters: Parameter[]) {
+    const ids = parameters.map((p) => {
+      return { name: p.qualifiedName };
+    });
+    if (ids.length) {
+      this.dataSubscription =
+        this.yamcs.yamcsClient.createParameterSubscription(
+          {
+            instance: this.yamcs.instance!,
+            processor: this.yamcs.processor!,
+            id: ids,
+            abortOnInvalid: false,
+            sendFromCache: true,
+            updateOnExpiration: true,
+            maxBytes: this.binaryPreview + 1, // 1 more, so we know when to show ellipsis
+            action: 'REPLACE',
+          },
+          (data) => {
+            if (data.mapping) {
+              this.idMapping = data.mapping;
+              this.latestValues.clear();
+            }
+            this.processDelivery(data.values || []);
+            this.loading$.next(false);
+
+            // Quick emit, don't wait on sync tick
+            if (data.mapping) {
+              this.refreshTable();
+            }
+          },
+        );
+    }
+  }
+
+  private processDelivery(delivery: ParameterValue[]) {
+    for (const pval of delivery) {
+      const id = this.idMapping[pval.numericId];
+      if (id) {
+        // Can be unset, in case we get an old update, following a changed subscription
+        this.latestValues.set(id.name, pval);
+      }
+    }
+  }
+
+  disconnect() {
+    this.syncSubscription?.unsubscribe();
+    this.dataSubscription?.cancel();
+
+    this.items$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

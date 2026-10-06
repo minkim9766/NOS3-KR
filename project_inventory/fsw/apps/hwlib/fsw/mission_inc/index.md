@@ -3,14 +3,30 @@
 
 **경로:** `fsw/apps/hwlib/fsw/mission_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `hwlib_perfids.h`
 
-file--hwlib_perfids.h
+**경로:** `fsw/apps/hwlib/fsw/mission_inc/hwlib_perfids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: hwlib_perfids.h  $
+**
+** Purpose: 
+**   HW LIB Performance IDs
+**
+** Notes:
+**
+*************************************************************************/
+
+#ifndef _hwlib_perfids_h_
+#define _hwlib_perfids_h_
+
+#define HWLIB_APP_PERF_ID  50
+
+#endif
+
 ```
-
-## 항목
-
-- [`fsw/apps/hwlib/fsw/mission_inc/hwlib_perfids.h`](file--hwlib_perfids.h) — UTF-8 텍스트 파일 본문 포함

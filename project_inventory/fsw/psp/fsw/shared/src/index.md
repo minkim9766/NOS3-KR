@@ -3,24 +3,1026 @@
 
 **경로:** `fsw/psp/fsw/shared/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_psp_error.c`
 
-file--cfe_psp_error.c
-file--cfe_psp_exceptionstorage.c
-file--cfe_psp_memrange.c
-file--cfe_psp_memutils.c
-file--cfe_psp_module.c
-file--cfe_psp_version.c
+**경로:** `fsw/psp/fsw/shared/src/cfe_psp_error.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Implements error APIs
+ */
+#include <stdio.h>
+
+#include "cfe_psp_error.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public PSP API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+char *CFE_PSP_StatusToString(CFE_PSP_Status_t status, CFE_PSP_StatusString_t *status_string)
+{
+    char *string = NULL;
+
+    if (status_string != NULL)
+    {
+        snprintf(*status_string, sizeof(*status_string), "%ld", (long)status);
+        string = *status_string;
+    }
+    return string;
+}
 ```
 
-## 항목
+### `cfe_psp_exceptionstorage.c`
 
-- [`fsw/psp/fsw/shared/src/cfe_psp_error.c`](file--cfe_psp_error.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/src/cfe_psp_exceptionstorage.c`](file--cfe_psp_exceptionstorage.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/src/cfe_psp_memrange.c`](file--cfe_psp_memrange.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/src/cfe_psp_memutils.c`](file--cfe_psp_memutils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/src/cfe_psp_module.c`](file--cfe_psp_module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/src/cfe_psp_version.c`](file--cfe_psp_version.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/fsw/shared/src/cfe_psp_exceptionstorage.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+**
+** File:  cfe_psp_exception.c
+**
+**      MCP750 vxWorks 6.2 Version
+**
+** Purpose:
+**   cFE PSP Exception related functions.
+**
+** History:
+**   2007/05/29  A. Cudmore      | vxWorks 6.2 MCP750 version
+**   2016/04/07  M.Grubb         | Updated for PSP version 1.3
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+#include "cfe_psp_exceptionstorage_types.h"
+#include "cfe_psp_exceptionstorage_api.h"
+#include "cfe_psp_memory.h"
+
+#include "target_config.h"
+
+/*
+**  Constants
+*/
+#define CFE_PSP_MAX_EXCEPTION_ENTRY_MASK (CFE_PSP_MAX_EXCEPTION_ENTRIES - 1)
+#define CFE_PSP_EXCEPTION_ID_BASE        ((OS_OBJECT_TYPE_USER + 0x101) << OS_OBJECT_TYPE_SHIFT)
+
+/***************************************************************************
+ **                    INTERNAL FUNCTION DEFINITIONS
+ **                 (Functions used only within the PSP itself)
+ ***************************************************************************/
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_Reset
+ * Internal function - see description in prototype
+ *---------------------------------------------------------------------------*/
+void CFE_PSP_Exception_Reset(void)
+{
+    /* just reset the counter */
+    CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumRead = CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumWritten;
+}
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_GetBuffer
+ * Internal function - see description in prototype
+ *---------------------------------------------------------------------------*/
+CFE_PSP_Exception_LogData_t *CFE_PSP_Exception_GetBuffer(uint32 seq)
+{
+    return &CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->Entries[seq & CFE_PSP_MAX_EXCEPTION_ENTRY_MASK];
+}
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_GetNextContextBuffer
+ * Internal function - see description in prototype
+ *---------------------------------------------------------------------------*/
+CFE_PSP_Exception_LogData_t *CFE_PSP_Exception_GetNextContextBuffer(void)
+{
+    CFE_PSP_Exception_LogData_t *Buffer;
+    uint32                       NextWrite;
+
+    NextWrite = CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumWritten;
+    if ((NextWrite - CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumRead) >= CFE_PSP_MAX_EXCEPTION_ENTRIES)
+    {
+        /* no space to store another context */
+        return NULL;
+    }
+
+    Buffer = CFE_PSP_Exception_GetBuffer(NextWrite);
+
+    memset(Buffer, 0, sizeof(*Buffer));
+    Buffer->context_id = CFE_PSP_EXCEPTION_ID_BASE + (NextWrite & OS_OBJECT_INDEX_MASK);
+
+    return Buffer;
+}
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_WriteComplete
+ * Internal function - see description in prototype
+ *---------------------------------------------------------------------------*/
+void CFE_PSP_Exception_WriteComplete(void)
+{
+    CFE_PSP_Exception_LogData_t *Buffer;
+
+    /*
+     * Incrementing the "NumWritten" field allows the application to receive this data
+     */
+    ++CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumWritten;
+
+    /*
+     * preemptively zero-out the "id" field of the _next_ entry -
+     * this expires the buffer, which prevents it from being read.
+     *
+     * This is just in case another exception occurs while a log
+     * file write is in progress.  It's not 100% foolproof, but
+     * it does reduce the chance of data corruption (because it
+     * is not possible to "lock out" exceptions, they can occur at
+     * any time code is running)
+     */
+    Buffer             = CFE_PSP_Exception_GetBuffer(CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumWritten);
+    Buffer->context_id = 0;
+}
+
+/***************************************************************************
+ **                    EXTERNAL FUNCTION DEFINITIONS
+ **                   (Functions used by CFE or PSP)
+ ***************************************************************************/
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_GetCount
+ * See description in PSP API
+ *---------------------------------------------------------------------------*/
+uint32 CFE_PSP_Exception_GetCount(void)
+{
+    return (CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumWritten -
+            CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumRead);
+}
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_GetSummary
+ * See description in PSP API
+ *---------------------------------------------------------------------------*/
+int32 CFE_PSP_Exception_GetSummary(uint32 *ContextLogId, osal_id_t *TaskId, char *ReasonBuf, uint32 ReasonSize)
+{
+    const CFE_PSP_Exception_LogData_t *Buffer;
+    uint32                             NumStored;
+    int32                              Status;
+
+    NumStored = CFE_PSP_Exception_GetCount();
+    if (NumStored == 0)
+    {
+        /* no context available for reading */
+        return CFE_PSP_NO_EXCEPTION_DATA;
+    }
+
+    Buffer = CFE_PSP_Exception_GetBuffer(CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumRead);
+
+    /*
+     * Store the abstract entry ID for future retrieval (e.g. log to file)
+     */
+    if (ContextLogId != NULL)
+    {
+        *ContextLogId = Buffer->context_id;
+    }
+
+    /*
+     * If caller supplied a TaskID buffer, then call OSAL to reverse-lookup
+     * the abstract ID from the underlying system thread ID.
+     */
+    if (TaskId != NULL)
+    {
+        Status = OS_TaskFindIdBySystemData(TaskId, &Buffer->sys_task_id, sizeof(Buffer->sys_task_id));
+        if (Status != OS_SUCCESS)
+        {
+            *TaskId = OS_OBJECT_ID_UNDEFINED; /* failed to find a corresponding OSAL ID, so set to zero. */
+        }
+    }
+
+    /*
+     * If caller supplied a reason buffer, then call the implementation to fill it.
+     */
+    if (ReasonBuf != NULL && ReasonSize > 0)
+    {
+        Status = CFE_PSP_ExceptionGetSummary_Impl(Buffer, ReasonBuf, ReasonSize);
+        if (Status != CFE_PSP_SUCCESS)
+        {
+            ReasonBuf[0] = 0; /* failed to get a reason, so return empty string */
+        }
+    }
+
+    ++CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr->NumRead;
+
+    /*
+     * returning SUCCESS to indicate an entry was popped from the queue
+     *
+     * this doesn't necessarily mean that the output fields have valid data,
+     * but it does mean they are initialized to something.
+     */
+    return CFE_PSP_SUCCESS;
+}
+
+/*---------------------------------------------------------------------------
+ * CFE_PSP_Exception_CopyContext
+ * See description in PSP API
+ *---------------------------------------------------------------------------*/
+int32 CFE_PSP_Exception_CopyContext(uint32 ContextLogId, void *ContextBuf, uint32 ContextSize)
+{
+    const CFE_PSP_Exception_LogData_t *Buffer;
+    uint32                             SeqId;
+    uint32                             ActualSize;
+
+    SeqId = ContextLogId - CFE_PSP_EXCEPTION_ID_BASE;
+    if (SeqId > OS_OBJECT_INDEX_MASK)
+    {
+        /* supplied ID is not valid at all */
+        return CFE_PSP_NO_EXCEPTION_DATA;
+    }
+
+    Buffer = CFE_PSP_Exception_GetBuffer(SeqId);
+    if (Buffer->context_id != ContextLogId)
+    {
+        /* data has expired from the memory log */
+        return CFE_PSP_NO_EXCEPTION_DATA;
+    }
+
+    /* Copy the "context info" out to the buffer.
+     * But do not copy more than the output buffer. */
+    if (ContextSize >= Buffer->context_size)
+    {
+        ActualSize = Buffer->context_size;
+    }
+    else
+    {
+        /* this will truncate, not ideal, but no alternative.
+         * If this happens it generally indicates a misconfiguration between CFE and PSP,
+         * where the CFE platform configuration has not allocated enough space for context logs.
+         * Generate a warning message to raise awareness. */
+        OS_printf("CFE_PSP: Insufficient buffer for exception context, total=%lu bytes, saved=%lu\n",
+                  (unsigned long)Buffer->context_size, (unsigned long)ContextSize);
+        ActualSize = ContextSize;
+    }
+
+    memcpy(ContextBuf, &Buffer->context_info, ActualSize);
+
+    /*
+     * The return value is the actual size of copied data.
+     */
+    return (int32)ActualSize;
+}
+```
+
+### `cfe_psp_memrange.c`
+
+**경로:** `fsw/psp/fsw/shared/src/cfe_psp_memrange.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File   :	cfe_psp_memrange.c
+**
+** Author :	Alan Cudmore
+**
+** Purpose:
+**		   This file contains the memory range functions for the cFE Platform Support Package.
+**       The memory range is a table of valid memory address ranges maintained by the cFE.
+**
+**
+*/
+
+/*
+** Include section
+*/
+
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+/*
+**
+** Purpose:
+**		Validate the memory range and type using the global CFE_PSP_MemoryTable
+**
+** Assumptions and Notes:
+**
+** Parameters:
+**    Address -- A 32 bit starting address of the memory range
+**    Size    -- A 32 bit size of the memory range ( Address + Size = End Address )
+**    MemoryType -- The memory type to validate, including but not limited to:
+**              CFE_PSP_MEM_RAM, CFE_PSP_MEM_EEPROM, or CFE_PSP_MEM_ANY
+**              Any defined CFE_PSP_MEM_* enumeration can be specified
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+** Return Values:
+**   CFE_PSP_SUCCESS -- Memory range and type information is valid and can be used.
+**   CFE_PSP_INVALID_MEM_ADDR -- Starting address is not valid
+**   CFE_PSP_INVALID_MEM_TYPE -- Memory type associated with the range does not match the passed in type.
+**   CFE_PSP_INVALID_MEM_RANGE -- The Memory range associated with the address is not large enough to contain
+**                            Address + Size.
+*/
+int32 CFE_PSP_MemValidateRange(cpuaddr Address, size_t Size, uint32 MemoryType)
+{
+    cpuaddr             StartAddressToTest = Address;
+    cpuaddr             EndAddressToTest   = Address + Size - 1;
+    cpuaddr             StartAddressInTable;
+    cpuaddr             EndAddressInTable;
+    uint32              TypeInTable;
+    int32               ReturnCode = CFE_PSP_INVALID_MEM_ADDR;
+    size_t              i;
+    CFE_PSP_MemTable_t *SysMemPtr;
+
+    /*
+    ** Before searching table, do a preliminary parameter validation
+    */
+    if (MemoryType != CFE_PSP_MEM_ANY && MemoryType != CFE_PSP_MEM_RAM && MemoryType != CFE_PSP_MEM_EEPROM)
+    {
+        return CFE_PSP_INVALID_MEM_TYPE;
+    }
+
+    if (EndAddressToTest < StartAddressToTest)
+    {
+        return CFE_PSP_INVALID_MEM_RANGE;
+    }
+
+    SysMemPtr = CFE_PSP_ReservedMemoryMap.SysMemoryTable;
+    for (i = 0; i < CFE_PSP_MEM_TABLE_SIZE; i++)
+    {
+        /*
+        ** Only look at valid memory table entries
+        */
+        if (SysMemPtr->MemoryType != CFE_PSP_MEM_INVALID)
+        {
+            StartAddressInTable = SysMemPtr->StartAddr;
+            EndAddressInTable   = SysMemPtr->StartAddr + SysMemPtr->Size - 1;
+            TypeInTable         = SysMemPtr->MemoryType;
+
+            /*
+            ** Step 1: Get the Address to Fit within the range
+            */
+            if ((StartAddressToTest >= StartAddressInTable) && (StartAddressToTest <= EndAddressInTable))
+            {
+                /*
+                ** Step 2: Does the End Address Fit within the Range?
+                **         should not have to test the lower address,
+                **         since the StartAddressToTest is already in the range.
+                **         Can it be fooled by overflowing the 32 bit int?
+                */
+                if (EndAddressToTest <= EndAddressInTable)
+                {
+                    /*
+                    ** Step 3: Is the type OK?
+                    */
+                    if (MemoryType == CFE_PSP_MEM_ANY)
+                    {
+                        ReturnCode = CFE_PSP_SUCCESS;
+                        break; /* The range is valid, break out of the loop */
+                    }
+                    else if (MemoryType == CFE_PSP_MEM_RAM && TypeInTable == CFE_PSP_MEM_RAM)
+                    {
+                        ReturnCode = CFE_PSP_SUCCESS;
+                        break; /* The range is valid, break out of the loop */
+                    }
+                    else if (MemoryType == CFE_PSP_MEM_EEPROM && TypeInTable == CFE_PSP_MEM_EEPROM)
+                    {
+                        ReturnCode = CFE_PSP_SUCCESS;
+                        break; /* The range is valid, break out of the loop */
+                    }
+                    else
+                    {
+                        ReturnCode = CFE_PSP_INVALID_MEM_TYPE;
+                        /* The range is not valid, move to the next entry */
+                    }
+                }
+                else
+                {
+                    ReturnCode = CFE_PSP_INVALID_MEM_RANGE;
+                    /* The range is not valid, move to the next entry */
+                }
+            }
+            else
+            {
+                ReturnCode = CFE_PSP_INVALID_MEM_ADDR;
+                /* The range is not valid, move to the next entry */
+            }
+        } /* End if MemoryType != CFE_PSP_MEM_INVALID */
+
+        ++SysMemPtr;
+
+    } /* End for */
+    return ReturnCode;
+}
+
+/*
+**
+** Purpose:
+**		Return the number of memory ranges in the CFE_PSP_MemoryTable
+**
+** Assumptions and Notes:
+**
+** Parameters:
+**    None
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+** Return Values:
+**   Positive integer number of entries in the memory range table
+*/
+uint32 CFE_PSP_MemRanges(void)
+{
+    return CFE_PSP_MEM_TABLE_SIZE;
+}
+
+/*
+**
+** Purpose:
+**		This function populates one of the records in the CFE_PSP_MemoryTable.
+**
+** Assumptions and Notes:
+**    Because the table is fixed size, the entries are set by using the integer index.
+**    No validation is done with the address or size.
+**
+** Parameters:
+**    RangeNum --   A 32 bit integer ( starting with 0 ) specifying the MemoryTable entry.
+**    MemoryType -- The memory type to validate, including but not limited to:
+**              CFE_PSP_MEM_RAM, CFE_PSP_MEM_EEPROM, or CFE_PSP_MEM_ANY
+**              Any defined CFE_PSP_MEM_* enumeration can be specified
+**    Address --    A 32 bit starting address of the memory range
+**    Size    --    A 32 bit size of the memory range ( Address + Size = End Address )
+**    WordSize --   The minimum addressable size of the range:
+**                     ( CFE_PSP_MEM_SIZE_BYTE, CFE_PSP_MEM_SIZE_WORD, CFE_PSP_MEM_SIZE_DWORD )
+**    Attributes -- The attributes of the Memory Range:
+**                     (CFE_PSP_MEM_ATTR_WRITE, CFE_PSP_MEM_ATTR_READ, CFE_PSP_MEM_ATTR_READWRITE)
+**
+** Global Inputs: Reads CFE_PSP_MemoryTable
+**
+** Global Outputs: Changes CFE_PSP_MemoryTable
+**
+** Return Values:
+**   CFE_PSP_SUCCESS -- Memory range set successfully.
+**   CFE_PSP_INVALID_MEM_RANGE -- The index into the table is invalid
+**   CFE_PSP_INVALID_MEM_ADDR -- Starting address is not valid
+**   CFE_PSP_INVALID_MEM_TYPE -- Memory type associated with the range does not match the passed in type.
+**   OP_INVALID_MEM_SIZE -- The Memory range associated with the address is not large enough to contain
+**                            Address + Size.
+**   CFE_PSP_INVALID_MEM_WORDSIZE -- The WordSIze parameter is not one of the predefined types.
+**   CFE_PSP_INVALID_MEM_ATTR -- The Attributes parameter is not one of the predefined types.
+*/
+int32 CFE_PSP_MemRangeSet(uint32 RangeNum, uint32 MemoryType, cpuaddr StartAddr, size_t Size, size_t WordSize,
+                          uint32 Attributes)
+{
+    CFE_PSP_MemTable_t *SysMemPtr;
+
+    if (RangeNum >= CFE_PSP_MEM_TABLE_SIZE)
+    {
+        return CFE_PSP_INVALID_MEM_RANGE;
+    }
+
+    if ((MemoryType != CFE_PSP_MEM_RAM) && (MemoryType != CFE_PSP_MEM_EEPROM))
+    {
+        return CFE_PSP_INVALID_MEM_TYPE;
+    }
+
+    if ((WordSize != CFE_PSP_MEM_SIZE_BYTE) && (WordSize != CFE_PSP_MEM_SIZE_WORD) &&
+        (WordSize != CFE_PSP_MEM_SIZE_DWORD))
+    {
+        return CFE_PSP_INVALID_MEM_WORDSIZE;
+    }
+
+    if ((Attributes != CFE_PSP_MEM_ATTR_READ) && (Attributes != CFE_PSP_MEM_ATTR_WRITE) &&
+        (Attributes != CFE_PSP_MEM_ATTR_READWRITE))
+    {
+        return CFE_PSP_INVALID_MEM_ATTR;
+    }
+
+    /*
+    ** Parameters check out, add the range
+    */
+    SysMemPtr = &CFE_PSP_ReservedMemoryMap.SysMemoryTable[RangeNum];
+
+    SysMemPtr->MemoryType = MemoryType;
+    SysMemPtr->StartAddr  = StartAddr;
+    SysMemPtr->Size       = Size;
+    SysMemPtr->WordSize   = WordSize;
+    SysMemPtr->Attributes = Attributes;
+
+    return CFE_PSP_SUCCESS;
+}
+
+/*
+**
+** Purpose:
+**		This function retrieves one of the records in the CFE_PSP_MemoryTable.
+**
+** Assumptions and Notes:
+**    Because the table is fixed size, the entries are accessed by using the integer index.
+**
+** Parameters:
+**    RangeNum --   A 32 bit integer ( starting with 0 ) specifying the MemoryTable entry.
+**    *MemoryType -- A pointer to the 32 bit integer where the Memory Type is stored.
+**                   Any defined CFE_PSP_MEM_* enumeration can be specified
+**    *Address --    A pointer to the 32 bit integer where the 32 bit starting address of the memory range
+**                   is stored.
+**    *Size    --    A pointer to the 32 bit integer where the 32 bit size of the memory range
+**                   is stored.
+**    *WordSize --   A pointer to the 32 bit integer where the minimum addressable size of the range:
+**                     ( CFE_PSP_MEM_SIZE_BYTE, CFE_PSP_MEM_SIZE_WORD, CFE_PSP_MEM_SIZE_DWORD )
+**    Attributes -- The attributes of the Memory Range:
+**                     (CFE_PSP_MEM_ATTR_WRITE, CFE_PSP_MEM_ATTR_READ, CFE_PSP_MEM_ATTR_READWRITE)
+**
+** Global Inputs: Reads CFE_PSP_MemoryTable
+**
+** Global Outputs: Changes CFE_PSP_MemoryTable
+**
+** Return Values:
+**   CFE_PSP_SUCCESS -- Memory range returned successfully.
+**   CFE_PSP_INVALID_POINTER   -- Parameter error
+**   CFE_PSP_INVALID_MEM_RANGE -- The index into the table is invalid
+*/
+int32 CFE_PSP_MemRangeGet(uint32 RangeNum, uint32 *MemoryType, cpuaddr *StartAddr, size_t *Size, size_t *WordSize,
+                          uint32 *Attributes)
+{
+    CFE_PSP_MemTable_t *SysMemPtr;
+
+    if (MemoryType == NULL || StartAddr == NULL || Size == NULL || WordSize == NULL || Attributes == NULL)
+    {
+        return CFE_PSP_INVALID_POINTER;
+    }
+
+    if (RangeNum >= CFE_PSP_MEM_TABLE_SIZE)
+    {
+        return CFE_PSP_INVALID_MEM_RANGE;
+    }
+
+    SysMemPtr = &CFE_PSP_ReservedMemoryMap.SysMemoryTable[RangeNum];
+
+    *MemoryType = SysMemPtr->MemoryType;
+    *StartAddr  = SysMemPtr->StartAddr;
+    *Size       = SysMemPtr->Size;
+    *WordSize   = SysMemPtr->WordSize;
+    *Attributes = SysMemPtr->Attributes;
+
+    return CFE_PSP_SUCCESS;
+}
+```
+
+### `cfe_psp_memutils.c`
+
+**경로:** `fsw/psp/fsw/shared/src/cfe_psp_memutils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File   :	cfe_psp_memutils.c
+**
+** Author :	Ezra Yeheskeli
+**
+** Purpose:
+**		   This file  contains some of the cFE Platform Support Layer.
+**        It contains the processor architecture specific calls.
+**
+**
+*/
+
+/*
+** Include section
+*/
+
+#include <sys/types.h>
+#include <unistd.h>
+#include <string.h>
+
+/*
+** User defined include files
+*/
+
+#include "cfe_psp.h"
+/*
+** global memory
+*/
+
+/*
+**
+** Purpose:
+**	Copies 'size' byte from memory address pointed by 'src' to memory
+**  address pointed by ' dst' For now we are using the standard c library
+**  call 'memcpy' but if we find we need to make it more efficient then
+**  we'll implement it in assembly.
+**
+** Assumptions and Notes:
+**
+** Parameters:
+**	dst : pointer to an address to copy to
+**  src : pointer address to copy from
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+** Return Values: CFE_PSP_SUCCESS
+*/
+int32 CFE_PSP_MemCpy(void *dst, const void *src, uint32 size)
+{
+    memcpy(dst, src, size);
+    return CFE_PSP_SUCCESS;
+}
+
+/*
+**
+** Purpose:
+**	Copies 'size' number of byte of value 'value' to memory address pointed
+**  by 'dst' .For now we are using the standard c library call 'memset'
+**  but if we find we need to make it more efficient then we'll implement
+**  it in assembly.
+**
+**
+** Assumptions and Notes:
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+** Return Values: CFE_PSP_SUCCESS
+*/
+/*
+** CFE_PSP_MemSet
+*/
+int32 CFE_PSP_MemSet(void *dst, uint8 value, uint32 size)
+{
+    memset(dst, (int)value, (size_t)size);
+    return CFE_PSP_SUCCESS;
+}
+```
+
+### `cfe_psp_module.c`
+
+**경로:** `fsw/psp/fsw/shared/src/cfe_psp_module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *  Created on: Jul 25, 2014
+ *      Author: jphickey
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include "osapi.h"
+
+#include "cfe_psp_module.h"
+
+/*
+ * When using an OSAL that also supports "opaque object ids", choose values here
+ * that will fit in with the OSAL object ID values and not overlap anything.
+ */
+#ifdef OS_OBJECT_TYPE_USER
+#define CFE_PSP_MODULE_BASE       ((OS_OBJECT_TYPE_USER + 0x100) << OS_OBJECT_TYPE_SHIFT)
+#define CFE_PSP_MODULE_INDEX_MASK OS_OBJECT_INDEX_MASK
+#else
+#define CFE_PSP_MODULE_BASE       0x01100000
+#define CFE_PSP_MODULE_INDEX_MASK 0xFFFF
+#endif
+
+/*
+ * Internal/base modules typically should not be the subject
+ * of a call to CFE_PSP_Module_FindByName or GetAPI,
+ * so they are assigned IDs at the END of the space,
+ * this makes them unique but they are otherwise not used
+ *
+ * Reserve the last 256 entries for base modules
+ */
+#define CFE_PSP_INTERNAL_MODULE_BASE ((CFE_PSP_MODULE_BASE | CFE_PSP_MODULE_INDEX_MASK) & ~0xFF)
+
+static uint32 CFE_PSP_ConfigPspModuleListLength = 0;
+static uint32 CFE_PSP_StandardPspModuleListLength = 0;
+
+/***************************************************
+ *
+ * Helper function to initialize a list of modules (not externally called)
+ * Returns the number of modules initialized
+ */
+uint32_t CFE_PSP_ModuleInitList(uint32 BaseId, CFE_StaticModuleLoadEntry_t *ListPtr)
+{
+    CFE_StaticModuleLoadEntry_t *Entry;
+    CFE_PSP_ModuleApi_t *        ApiPtr;
+    uint32                       ModuleCount;
+    uint32                       ModuleId;
+
+    /*
+     * Call the init function for all statically linked modules
+     */
+    Entry       = ListPtr;
+    ModuleCount = 0;
+    if (Entry != NULL)
+    {
+        while (Entry->Name != NULL)
+        {
+            ApiPtr   = (CFE_PSP_ModuleApi_t *)Entry->Api;
+            ModuleId = BaseId + ModuleCount;
+            if ((uint32)ApiPtr->ModuleType != CFE_PSP_MODULE_TYPE_INVALID && ApiPtr->Init != NULL)
+            {
+                printf("CFE_PSP: initializing module \'%s\' with ID %08lx\n", Entry->Name, (unsigned long)ModuleId);
+                (*ApiPtr->Init)(ModuleId);
+            }
+            ++Entry;
+            ++ModuleCount;
+        }
+    }
+
+    return ModuleCount;
+}
+
+/***************************************************
+ *
+ * See prototype for full description
+ */
+void CFE_PSP_ModuleInit(void)
+{
+    /* First initialize the fixed set of modules for this PSP */
+    CFE_PSP_StandardPspModuleListLength = CFE_PSP_ModuleInitList(CFE_PSP_INTERNAL_MODULE_BASE, CFE_PSP_BASE_MODULE_LIST);
+
+    /* Then initialize any user-selected extension modules */
+    CFE_PSP_ConfigPspModuleListLength = CFE_PSP_ModuleInitList(CFE_PSP_MODULE_BASE, GLOBAL_CONFIGDATA.PspModuleList);
+}
+
+/***************************************************
+ *
+ * See prototype for full description
+ */
+int32 CFE_PSP_Module_GetAPIEntry(uint32 PspModuleId, CFE_PSP_ModuleApi_t **API)
+{
+    int32  Result;
+    uint32 LocalId;
+
+    Result = CFE_PSP_INVALID_MODULE_ID;
+    if ((PspModuleId & ~CFE_PSP_MODULE_INDEX_MASK) == CFE_PSP_MODULE_BASE)
+    {
+        /* Last 256 enteries are for internal modules */
+        if((PspModuleId & CFE_PSP_MODULE_INDEX_MASK) >= 0xFF00 )
+        {
+            LocalId = PspModuleId & 0xFF;
+            if (LocalId < CFE_PSP_StandardPspModuleListLength)
+            {
+                *API   = (CFE_PSP_ModuleApi_t *)CFE_PSP_BASE_MODULE_LIST[LocalId].Api;
+                Result = CFE_PSP_SUCCESS;
+            }
+        }
+        else
+        {
+            LocalId = PspModuleId & CFE_PSP_MODULE_INDEX_MASK;
+            if (LocalId < CFE_PSP_ConfigPspModuleListLength)
+            {
+                *API   = (CFE_PSP_ModuleApi_t *)GLOBAL_CONFIGDATA.PspModuleList[LocalId].Api;
+                Result = CFE_PSP_SUCCESS;
+            }
+        }
+    }
+
+    return Result;
+}
+
+/***************************************************
+ *
+ * See prototype for full description
+ */
+int32 CFE_PSP_Module_FindByName(const char *ModuleName, uint32 *PspModuleId)
+{
+    uint32                       i;
+    int32                        Result;
+    CFE_StaticModuleLoadEntry_t *Entry;
+
+    Entry  = GLOBAL_CONFIGDATA.PspModuleList;
+    Result = CFE_PSP_INVALID_MODULE_NAME;
+    i      = 0;
+
+    /* Check global list */
+    while (i < CFE_PSP_ConfigPspModuleListLength)
+    {
+        if (strcmp(Entry->Name, ModuleName) == 0)
+        {
+            *PspModuleId = CFE_PSP_MODULE_BASE | (i & CFE_PSP_MODULE_INDEX_MASK);
+            Result       = CFE_PSP_SUCCESS;
+            break;
+        }
+        ++Entry;
+        ++i;
+    }
+
+    /* Check internal list */
+    if (Result != CFE_PSP_SUCCESS)
+    {
+        Entry = CFE_PSP_BASE_MODULE_LIST;
+        i     = 0;
+        while (i < CFE_PSP_StandardPspModuleListLength)
+        {
+            if (strcmp(Entry->Name, ModuleName) == 0)
+            {
+                *PspModuleId = CFE_PSP_INTERNAL_MODULE_BASE | (i & CFE_PSP_MODULE_INDEX_MASK);
+                Result       = CFE_PSP_SUCCESS;
+                break;
+            }
+            ++Entry;
+            ++i;
+        }
+    }
+
+    return Result;
+}
+```
+
+### `cfe_psp_version.c`
+
+**경로:** `fsw/psp/fsw/shared/src/cfe_psp_version.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Defines API that obtains the values of the various version identifiers
+ */
+
+#include "cfe_psp.h"
+#include "psp_version.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+const char *CFE_PSP_GetVersionString(void)
+{
+    return CFE_PSP_IMPL_VERSION;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+const char *CFE_PSP_GetVersionCodeName(void)
+{
+    return CFE_PSP_IMPL_CODENAME;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_PSP_GetVersionNumber(uint8 VersionNumbers[4])
+{
+    VersionNumbers[0] = CFE_PSP_IMPL_MAJOR_VERSION;
+    VersionNumbers[1] = CFE_PSP_IMPL_MINOR_VERSION;
+    VersionNumbers[2] = CFE_PSP_IMPL_REVISION;
+    VersionNumbers[3] = CFE_PSP_IMPL_MISSION_REV;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 CFE_PSP_GetBuildNumber(void)
+{
+    return CFE_PSP_IMPL_BUILD_NUMBER;
+}
+```

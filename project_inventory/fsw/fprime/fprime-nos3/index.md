@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,30 +13,203 @@ deployment/index
 lib/index
 Ports/index
 Sequences/index
-file--.clang-format
-file--.git
-file--.gitignore
-file--.gitmodules
-file--CMakeLists.txt
-file--CMakePresets.json
-file--project.cmake
-file--README.md
-file--settings.ini
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/Components/`](Components/index) — 폴더
-- [`fsw/fprime/fprime-nos3/deployment/`](deployment/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/`](lib/index) — 폴더
-- [`fsw/fprime/fprime-nos3/Ports/`](Ports/index) — 폴더
-- [`fsw/fprime/fprime-nos3/Sequences/`](Sequences/index) — 폴더
-- [`fsw/fprime/fprime-nos3/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/.gitmodules`](file--.gitmodules) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/CMakePresets.json`](file--CMakePresets.json) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/project.cmake`](file--project.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `fsw/fprime/fprime-nos3/.clang-format`
+
+
+```text
+---
+BasedOnStyle: Chromium
+IndentWidth: 4
+ColumnLimit: 120
+AccessModifierOffset: -2
+```
+
+### `.git`
+
+**경로:** `fsw/fprime/fprime-nos3/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/fprime/fprime-nos3
+```
+
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/.gitignore`
+
+
+```text
+# fprime items
+logs/
+cmake-build-*
+build-artifacts/
+build-fprime-*
+*-template
+*.template.cpp
+*.template.hpp
+
+# Misc
+/venv/
+/fprime-venv/
+/.idea/
+/.vscode/
+.DS_Store
+*.gcov
+pic.jpg
+```
+
+### `.gitmodules`
+
+**경로:** `fsw/fprime/fprime-nos3/.gitmodules`
+
+
+```text
+[submodule "lib/fprime"]
+	path = lib/fprime
+	url = https://github.com/nasa-itc/fprime.git
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/CMakeLists.txt`
+
+
+```cmake
+####
+# This sets up the build system for the 'fprime-nos3' project, including
+# components and deployments from project.cmake. In addition, it imports the core F Prime components.
+####
+
+cmake_minimum_required(VERSION 3.13)
+project(fprime-nos3 C CXX)
+
+###
+# F' Core Setup
+# This includes all of the F prime core components, and imports the make-system.
+###
+include("${CMAKE_CURRENT_LIST_DIR}/lib/fprime/cmake/FPrime.cmake")
+# NOTE: register custom targets between these two lines
+fprime_setup_included_code()
+
+
+# This includes project-wide objects
+include("${CMAKE_CURRENT_LIST_DIR}/project.cmake")
+```
+
+### `CMakePresets.json`
+
+**경로:** `fsw/fprime/fprime-nos3/CMakePresets.json`
+
+
+```json
+{
+    "version": 4,
+    "configurePresets": [
+    {
+      "name": "fprime",
+      "displayName": "F´ Release Preset",
+      "description": "F´ release build using local fprime-venv",
+      "binaryDir": "${sourceDir}/build-fprime-automatic-native",
+      "environment": {
+        "VIRTUAL_ENV": "${fileDir}/fprime-venv",
+        "PATH": "$env{VIRTUAL_ENV}/bin:$penv{PATH}"
+      },
+      "cacheVariables": {
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+          "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "fprime-debug",
+      "inherits": "fprime",
+      "displayName": "F´ Debug Preset",
+      "description": "F´ debug build using local fprime-venv",
+      "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "fprime-ut",
+      "inherits": "fprime-debug",
+      "displayName": "F´ Unit Test Preset",
+      "description": "F´ debug build including unit tests using local fprime-venv",
+      "binaryDir": "${sourceDir}/build-fprime-automatic-native-ut",
+      "cacheVariables": {
+          "BUILD_TESTING": "ON"
+      }
+    },
+      {
+        "name": "fprime-ninja",
+        "inherits": "fprime",
+        "displayName": "F´ Release (Ninja) Preset",
+        "description": "F´ release build using ninja and local fprime-venv",
+        "generator": "Ninja"
+      },
+      {
+        "name": "fprime-debug-ninja",
+        "inherits": "fprime-debug",
+        "displayName": "F´ Debug (Ninja) Preset",
+        "description": "F´ debug build using ninja and local fprime-venv",
+        "generator": "Ninja"
+      },
+      {
+        "name": "fprime-ut-ninja",
+        "inherits": "fprime-ut",
+        "displayName": "F´ Unit Test (Ninja) Preset",
+        "description": "F´ debug build including unit tests using ninja and local fprime-venv",
+        "binaryDir": "${sourceDir}/build-fprime-automatic-native-ut",
+        "generator": "Ninja"
+      }
+    ]
+}
+```
+
+### `project.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/project.cmake`
+
+
+```cmake
+# This CMake file is intended to register project-wide objects.
+# This allows for reuse between deployments, or other projects.
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Components")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/deployment/")
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/README.md`
+
+
+```markdown
+# fprime-nos3 F' project
+
+This project was auto-generated by the F' utility tool. 
+
+F´ (F Prime) is a component-driven framework that enables rapid development and deployment of spaceflight and other embedded software applications.
+**Please Visit the F´ Website:** https://fprime.jpl.nasa.gov.
+```
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/settings.ini`
+
+
+```text
+[fprime]
+project_root: .
+framework_path: ./lib/fprime
+
+library_locations: ../../../components/sample/fsw/fprime:../../../components/arducam/fsw/fprime:../../../components/generic_css/fsw/fprime:../../../components/generic_eps/fsw/fprime:../../../components/generic_fss/fsw/fprime:../../../components/generic_imu/fsw/fprime:../../../components/generic_mag/fsw/fprime:../../../components/generic_reaction_wheel/fsw/fprime:../../../components/generic_star_tracker/fsw/fprime:../../../components/generic_thruster/fsw/fprime:../../../components/generic_torquer/fsw/fprime:../../../components/generic_radio/fsw/fprime:../../../components/novatel_oem615/fsw/fprime:../../../components/generic_adcs/fsw/fprime
+
+default_cmake_options:  FPRIME_ENABLE_FRAMEWORK_UTS=OFF
+                        FPRIME_ENABLE_AUTOCODER_UTS=OFF
+```

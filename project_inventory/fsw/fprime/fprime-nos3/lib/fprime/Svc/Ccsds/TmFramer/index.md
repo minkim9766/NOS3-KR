@@ -3,24 +3,348 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--TmFramer.cpp
-file--TmFramer.fpp
-file--TmFramer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/TmFramer.cpp`](file--TmFramer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/TmFramer.fpp`](file--TmFramer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/TmFramer.hpp`](file--TmFramer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/CMakeLists.txt`
+
+
+```cmake
+####
+# F Prime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/devel/docs/reference/api/cmake/API/
+#
+####
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/TmFramer.cpp"
+  AUTOCODER_INPUTS  
+    "${CMAKE_CURRENT_LIST_DIR}/TmFramer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+)
+
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TmFramerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TmFramerTester.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/TmFramer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+    STest
+  UT_AUTO_HELPERS
+)
+```
+
+### `TmFramer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/TmFramer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TmFramer.cpp
+// \author thomas-bc
+// \brief  cpp file for TmFramer component implementation class
+// ======================================================================
+
+#include "Svc/Ccsds/TmFramer/TmFramer.hpp"
+#include "Svc/Ccsds/Utils/CRC16.hpp"
+#include "config/FppConstantsAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+TmFramer ::TmFramer(const char* const compName)
+    : TmFramerComponentBase(compName), m_masterFrameCount(0), m_virtualFrameCount(0) {}
+
+TmFramer ::~TmFramer() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void TmFramer ::dataIn_handler(FwIndexType portNum, Fw::Buffer& data, const ComCfg::FrameContext& context) {
+    FW_ASSERT(data.getSize() <= ComCfg::TmFrameFixedSize - TMHeader::SERIALIZED_SIZE - TMTrailer::SERIALIZED_SIZE,
+              static_cast<FwAssertArgType>(data.getSize()));
+    FW_ASSERT(this->m_bufferState == BufferOwnershipState::OWNED, static_cast<FwAssertArgType>(this->m_bufferState));
+
+    // -----------------------------------------------
+    // Header
+    // -----------------------------------------------
+    TMHeader header;
+
+    // GVCID (Global Virtual Channel ID) (Standard 4.1.2.2 and 4.1.2.3)
+    U16 globalVcId = static_cast<U16>(context.get_vcId() << TMSubfields::virtualChannelIdOffset);
+    globalVcId |= static_cast<U16>(ComCfg::SpacecraftId << TMSubfields::spacecraftIdOffset);
+    globalVcId |= 0x0;  // Operational Control Field: Flag set to 0 (Standard 4.1.2.4)
+
+    // Data Field Status (Standard 4.1.2.7):
+    // - all flags to 0 except segment length id 0b11 per standard (4.1.2.7)
+    // - First Header Pointer is always 0 since we are always wrapping a single entire packet at offset 0
+    U16 dataFieldStatus = 0;
+    dataFieldStatus |= 0x3 << TMSubfields::segLengthOffset;  // Seg Length Id '11' (0x3) per Standard (4.1.2.7.5)
+
+    header.set_globalVcId(globalVcId);
+    header.set_masterFrameCount(this->m_masterFrameCount);
+    header.set_virtualFrameCount(this->m_virtualFrameCount);
+    header.set_dataFieldStatus(dataFieldStatus);
+
+    // We use only a single Virtual Channel for now, so master and virtual frame counts are the same
+    this->m_masterFrameCount++;   // U8 intended to wrap around (modulo 256)
+    this->m_virtualFrameCount++;  // U8 intended to wrap around (modulo 256)
+
+    // -------------------------------------------------
+    // Data field
+    // -------------------------------------------------
+    // Payload packet
+    Fw::SerializeStatus status;
+    // Create frame Fw::Buffer using member data field
+    Fw::Buffer frameBuffer = Fw::Buffer(this->m_frameBuffer, sizeof(this->m_frameBuffer));
+    auto frameSerializer = frameBuffer.getSerializer();
+    status = frameSerializer.serialize(header);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    status = frameSerializer.serialize(data.getData(), data.getSize(), Fw::Serialization::OMIT_LENGTH);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // As per TM Standard 4.2.2.5, fill the rest of the data field with an Idle Packet
+    this->fill_with_idle_packet(frameSerializer);
+
+    // -------------------------------------------------
+    // Trailer (CRC)
+    // -------------------------------------------------
+    TMTrailer trailer;
+    // Compute CRC over the entire frame buffer minus the FECF trailer (Standard 4.1.6)
+    U16 crc =
+        Ccsds::Utils::CRC16::compute(frameBuffer.getData(), sizeof(this->m_frameBuffer) - TMTrailer::SERIALIZED_SIZE);
+    // Set the Frame Error Control Field (FECF)
+    trailer.set_fecf(crc);
+    // Move the serializer pointer to the end of the location where the trailer will be serialized
+    frameSerializer.moveSerToOffset(ComCfg::TmFrameFixedSize - TMTrailer::SERIALIZED_SIZE);
+    status = frameSerializer.serialize(trailer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    this->m_bufferState = BufferOwnershipState::NOT_OWNED;
+    this->dataOut_out(0, frameBuffer, context);
+    this->dataReturnOut_out(0, data, context);  // return ownership of the original data buffer
+}
+
+void TmFramer ::comStatusIn_handler(FwIndexType portNum, Fw::Success& condition) {
+    if (this->isConnected_comStatusOut_OutputPort(portNum)) {
+        this->comStatusOut_out(portNum, condition);
+    }
+}
+
+void TmFramer ::dataReturnIn_handler(FwIndexType portNum,
+                                     Fw::Buffer& frameBuffer,
+                                     const ComCfg::FrameContext& context) {
+    // Assert that the returned buffer is the member, and set ownership state
+    FW_ASSERT(frameBuffer.getData() >= &this->m_frameBuffer[0]);
+    FW_ASSERT(frameBuffer.getData() < &this->m_frameBuffer[0] + sizeof(this->m_frameBuffer));
+    this->m_bufferState = BufferOwnershipState::OWNED;
+}
+
+void TmFramer ::fill_with_idle_packet(Fw::SerializeBufferBase& serializer) {
+    constexpr U16 endIndex = ComCfg::TmFrameFixedSize - TMTrailer::SERIALIZED_SIZE;
+    constexpr U16 idleApid = static_cast<U16>(ComCfg::APID::SPP_IDLE_PACKET);
+    const U16 startIndex = static_cast<U16>(serializer.getBuffLength());
+    const U16 idlePacketSize = static_cast<U16>(endIndex - startIndex);
+    // Length token is defined as the number of bytes of payload data minus 1
+    const U16 lengthToken = static_cast<U16>(idlePacketSize - SpacePacketHeader::SERIALIZED_SIZE - 1);
+
+    FW_ASSERT(idlePacketSize >= 7, static_cast<FwAssertArgType>(idlePacketSize));  // 7 bytes minimum for idle packet
+    FW_ASSERT(idlePacketSize <= ComCfg::TmFrameFixedSize, static_cast<FwAssertArgType>(idlePacketSize));
+
+    SpacePacketHeader header;
+    header.set_packetIdentification(idleApid);
+    header.set_packetSequenceControl(
+        0x3 << SpacePacketSubfields::SeqFlagsOffset);  // Sequence Flags = 0b11 (unsegmented) & unused Seq count
+    header.set_packetDataLength(lengthToken);
+    // Serialize header and idle data into the frame
+    serializer.serialize(header);
+    for (U16 i = static_cast<U16>(startIndex + SpacePacketHeader::SERIALIZED_SIZE); i < endIndex; i++) {
+        serializer.serialize(IDLE_DATA_PATTERN);  // Idle data
+    }
+}
+}  // namespace Ccsds
+}  // namespace Svc
+```
+
+### `TmFramer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/TmFramer.fpp`
+
+
+```fpp
+module Svc {
+module Ccsds {
+    @ Deframer for the TM Space Data Link Protocol (CCSDS Standard)
+    passive component TmFramer {
+
+        import Framer
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+}
+```
+
+### `TmFramer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TmFramer/TmFramer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TmFramer.hpp
+// \author thomas-bc
+// \brief  hpp file for TmFramer component implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_TmFramer_HPP
+#define Svc_Ccsds_TmFramer_HPP
+
+#include "Svc/Ccsds/TmFramer/TmFramerComponentAc.hpp"
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+#include "Svc/Ccsds/Types/SpacePacketHeaderSerializableAc.hpp"
+#include "Svc/Ccsds/Types/TMHeaderSerializableAc.hpp"
+#include "Svc/Ccsds/Types/TMTrailerSerializableAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+class TmFramer final : public TmFramerComponentBase {
+    friend class TmFramerTester;
+
+    static_assert(ComCfg::TmFrameFixedSize > TMHeader::SERIALIZED_SIZE + TMTrailer::SERIALIZED_SIZE,
+                  "TM Frame Fixed Size must be at least large enough to hold header, trailer and data");
+    // These are to ensure the frame can hold the packet buffer, its SP header and an idle packet of 1 byte
+    // This is because TM specifies a frame to be padded with an idle packet of at least 1 byte of idle data
+    static_assert(
+        ComCfg::TmFrameFixedSize >= FW_COM_BUFFER_MAX_SIZE + (2 * SpacePacketHeader::SERIALIZED_SIZE) + 1,
+        "TM Frame Fixed Size must be at least large enough to hold a full com buffer, 2 SP headers and 1 byte");
+    static_assert(
+        ComCfg::TmFrameFixedSize >= FW_FILE_BUFFER_MAX_SIZE + (2 * SpacePacketHeader::SERIALIZED_SIZE) + 1,
+        "TM Frame Fixed Size must be at least large enough to hold a full com buffer, 2 SP headers and 1 byte");
+
+    static constexpr U8 IDLE_DATA_PATTERN = 0x44;
+
+    enum class BufferOwnershipState {
+        NOT_OWNED,  //!< The buffer is currently not owned by the TmFramer
+        OWNED,      //!< The buffer is currently owned by the TmFramer
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct TmFramer object
+    TmFramer(const char* const compName  //!< The component name
+    );
+
+    //! Destroy TmFramer object
+    ~TmFramer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for comStatusIn
+    //!
+    //! Port receiving the general status from the downstream component
+    //! indicating it is ready or not-ready for more input
+    void comStatusIn_handler(FwIndexType portNum,    //!< The port number
+                             Fw::Success& condition  //!< Condition success/failure
+                             ) override;
+
+    //! Handler implementation for dataIn
+    //!
+    //! Port to receive data to frame, in a Fw::Buffer with optional context.
+    //! This is essentially the CCSDS TM VCP.request Service Primitive, with
+    //! Packet=data and GVCID implicitly passed in context (TM Protocol 3.3.3.2)
+    //!
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& data,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Buffer coming from a deallocate call in a ComDriver component
+    void dataReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& data,
+                              const ComCfg::FrameContext& context) override;
+
+    // ----------------------------------------------------------------------
+    // Helpers
+    // ----------------------------------------------------------------------
+  private:
+    //! Fill the frame buffer with an Idle Packet to complete the frame data field
+    //! as per CCSDS TM Protocol paragraph 4.2.2.5. Idle packet is inserted at the
+    //! start_index index of the frame buffer, and fills it up to the end minus CRC
+    void fill_with_idle_packet(Fw::SerializeBufferBase& serializer);
+
+    // ----------------------------------------------------------------------
+    // Members
+    // ----------------------------------------------------------------------
+  private:
+    // Because the TM protocol use fixed width frames, and only one frame is in transit between ComQueue and
+    // ComInterface at a time, we can use a member fixed-size buffer to hold the frame data
+    U8 m_frameBuffer[ComCfg::TmFrameFixedSize];                        //!< Buffer to hold the frame data
+    BufferOwnershipState m_bufferState = BufferOwnershipState::OWNED;  //!< whether m_frameBuffer is owned by TmFramer
+
+    // Current implementation uses a single virtual channel, so we can use a single virtual frame count
+    U8 m_masterFrameCount;   //!< Master Frame Count - 8 bits - wraps around at 255
+    U8 m_virtualFrameCount;  //!< Virtual Frame Count - 8 bits - wraps around at 255
+};
+
+}  // namespace Ccsds
+}  // namespace Svc
+
+#endif
+```

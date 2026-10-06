@@ -3,26 +3,708 @@
 
 **경로:** `components/onair/fsw/onair/data_handling/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.py`
 
-file--__init__.py
-file--csv_parser.py
-file--on_air_data_source.py
-file--parser_util.py
-file--redis_adapter.py
-file--sbn_adapter.py
-file--tlm_json_parser.py
+**경로:** `components/onair/fsw/onair/data_handling/__init__.py`
+
+
+```python
 ```
 
-## 항목
+### `csv_parser.py`
 
-- [`components/onair/fsw/onair/data_handling/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data_handling/csv_parser.py`](file--csv_parser.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data_handling/on_air_data_source.py`](file--on_air_data_source.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data_handling/parser_util.py`](file--parser_util.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data_handling/redis_adapter.py`](file--redis_adapter.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data_handling/sbn_adapter.py`](file--sbn_adapter.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/data_handling/tlm_json_parser.py`](file--tlm_json_parser.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/onair/data_handling/csv_parser.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+CSV Parser
+"""
+
+import csv
+
+from onair.data_handling.on_air_data_source import OnAirDataSource
+from onair.src.util.print_io import *
+from onair.data_handling.parser_util import *
+
+class DataSource(OnAirDataSource):
+
+    def process_data_file(self, data_file):
+        self.sim_data = self.parse_csv_data(data_file)
+        self.frame_index = 0
+
+##### INITIAL PROCESSING ####
+    def parse_csv_data(self, data_file):
+        #Read in the data set
+
+        all_data = []
+
+        with open(data_file, 'r', newline='') as csv_file:
+            dataset = csv.reader(csv_file, delimiter=',')
+
+            #Initialize the entire data dictionary
+            index = 0
+            for row in dataset:
+                if index == 0:
+                    # Skip first row (headers)
+                    pass
+                else:
+                    rowVals = floatify_input(list(row))
+                    all_data.append(rowVals)
+                index = index + 1
+
+        return all_data
+
+    def parse_meta_data_file(self, meta_data_file, ss_breakdown):
+        return extract_meta_data_handle_ss_breakdown(meta_data_file, ss_breakdown)
+
+##### GETTERS ##################################
+
+    def get_vehicle_metadata(self):
+        return self.all_headers, self.binning_configs['test_assignments']
+
+    # Get the data at self.index and increment the index
+    def get_next(self):
+        self.frame_index = self.frame_index + 1
+        return self.sim_data[self.frame_index - 1]
+
+    # Return whether or not the index has finished traveling through the data
+    def has_more(self):
+        return self.frame_index < len(self.sim_data)
+```
+
+### `on_air_data_source.py`
+
+**경로:** `components/onair/fsw/onair/data_handling/on_air_data_source.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+from abc import ABC, abstractmethod
+from .parser_util import *
+
+class ConfigKeyError(KeyError):
+    pass
+
+class OnAirDataSource(ABC):
+    def __init__(self, data_file, meta_file, ss_breakdown = False):
+        """An initial parsing needs to happen in order to use the parser classes
+            This means that, if you want to use this class to parse in real time,
+            it needs to at least have seen one sample of the anticipated format """
+
+        self.raw_data_file = data_file
+        self.meta_data_file = meta_file
+
+        self.all_headers = []
+        self.sim_data = {}
+        self.binning_configs = {}
+
+        configs = self.parse_meta_data_file(self.meta_data_file, ss_breakdown)
+        self.binning_configs['subsystem_assignments'] = configs['subsystem_assignments']
+        self.binning_configs['test_assignments'] = configs['test_assignments']
+        self.binning_configs['description_assignments'] = configs['description_assignments']
+        self.all_headers = configs['data_labels']
+
+        self.process_data_file(self.raw_data_file)
+
+    @abstractmethod
+    def parse_meta_data_file(self, meta_data_file, ss_breakdown):
+        """
+        Create the configs that will be used to populate the binning_configs for the data files
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def process_data_file(self, data_file):
+        """
+        Read data frames from the specified file.
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_next(self):
+        """
+        Return a frame of data
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    def has_more(self):
+        """
+        Used by file-based data to indicate if there are more frames (True) or if the end of the file has been reached (False)
+        """
+        raise NotImplementedError
+```
+
+### `parser_util.py`
+
+**경로:** `components/onair/fsw/onair/data_handling/parser_util.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+from .tlm_json_parser import parseTlmConfJson, str2lst
+import datetime
+
+def extract_meta_data_handle_ss_breakdown(meta_data_file, ss_breakdown):
+    parsed_meta_data = extract_meta_data(meta_data_file)
+    if ss_breakdown == False:
+        num_elements = len(parsed_meta_data['subsystem_assignments'])
+        parsed_meta_data['subsystem_assignments'] = [['MISSION'] for elem in range(num_elements)]
+    return parsed_meta_data
+
+## Method to extract configuration data and return 3 dictionaries
+def extract_meta_data(meta_data_file):
+    assert meta_data_file != ''
+
+    configs = parseTlmConfJson(meta_data_file)
+
+    configs_len = len(configs['subsystem_assignments'])
+
+    for i in range(configs_len):
+        if configs['subsystem_assignments'][i] != 'NONE':
+            configs['subsystem_assignments'][i] = [configs['subsystem_assignments'][i]]
+        else:
+            configs['subsystem_assignments'][i] = []
+
+        test_assign = configs['test_assignments'][i]
+
+        for j in range(len(test_assign)):
+            if len(test_assign[j]) > 1:
+                test = [test_assign[j][0]]
+                limits = str2lst(test_assign[j][1])
+                test_assign[j] = test + limits
+
+    return configs
+
+def floatify_input(_input, remove_str=False):
+    floatified = []
+    for i in _input:
+        try:
+            x = float(i)
+            floatified.append(x)
+        except ValueError:
+            try:
+                x = convert_str_to_timestamp(i)
+                floatified.append(x)
+            except:
+                if remove_str == False:
+                    floatified.append(0.0)
+                else:
+                    continue
+                continue
+    return floatified
+
+def convert_str_to_timestamp(time_str):
+    try:
+        t = datetime.datetime.strptime(time_str, '%Y-%j-%H:%M:%S.%f')
+        return t.timestamp()
+    except:
+        min_sec = time_str.split(':')
+        # Use 1 am on Jan 1st, 2000 as the date if only minutes and seconds are specified
+        t = datetime.datetime(2000, 1, 1, 1, int(min_sec[0]), int(min_sec[1]), 0)
+        return t.timestamp()
+```
+
+### `redis_adapter.py`
+
+**경로:** `components/onair/fsw/onair/data_handling/redis_adapter.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# No copyright is claimed in the United States under Title 17, U.S. Code.
+# All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+redis_adapter AdapterDataSource class
+
+Receives messages from REDIS server, serves as a data source for sim.py
+"""
+
+import threading
+import time
+import redis
+import json
+
+from onair.data_handling.on_air_data_source import OnAirDataSource
+from onair.data_handling.on_air_data_source import ConfigKeyError
+from onair.data_handling.tlm_json_parser import parseJson
+from onair.src.util.print_io import *
+from onair.data_handling.parser_util import *
+
+class DataSource(OnAirDataSource):
+
+    def __init__(self, data_file, meta_file, ss_breakdown = False):
+        super().__init__(data_file, meta_file, ss_breakdown)
+        self.address = 'localhost'
+        self.port = 6379
+        self.db = 0
+        self.server = None
+        self.new_data_lock = threading.Lock()
+        self.new_data = False
+        self.currentData = []
+        self.currentData.append({'headers':self.order,
+                                 'data':list('-' * len(self.order))})
+        self.currentData.append({'headers':self.order,
+                                 'data':list('-' * len(self.order))})
+        self.double_buffer_read_index = 0
+        self.connect()
+        self.subscribe(self.subscriptions)
+
+    def connect(self):
+        """Establish connection to REDIS server."""
+        print_msg('Redis adapter connecting to server...')
+        self.server = redis.Redis(self.address, self.port, self.db)
+
+        if self.server.ping():
+            print_msg('... connected!')
+
+    def subscribe(self, subscriptions):
+        """Subscribe to REDIS message channel(s) and launch listener thread."""
+        if len(subscriptions) != 0 and self.server.ping():
+            self.pubsub = self.server.pubsub()
+
+            for s in subscriptions:
+                self.pubsub.subscribe(s)
+                print_msg(f"Subscribing to channel: {s}")
+
+            listen_thread = threading.Thread(target=self.message_listener)
+            listen_thread.start()
+        else:
+            print_msg(f"No subscriptions given!")
+
+    def parse_meta_data_file(self, meta_data_file, ss_breakdown):
+        configs = extract_meta_data_handle_ss_breakdown(
+            meta_data_file, ss_breakdown)
+        meta = parseJson(meta_data_file)
+        keys = meta.keys()
+
+        if 'order' in keys:
+            self.order = meta['order']
+        else:
+            raise ConfigKeyError(f'Config file: \'{meta_data_file}\' ' \
+                                  'missing required key \'order\'')
+
+        if 'redis_subscriptions' in meta.keys():
+            self.subscriptions = meta['redis_subscriptions']
+        else:
+            self.subscriptions = []
+
+        return configs
+
+    def process_data_file(self, data_file):
+        print("Redis Adapter ignoring file")
+
+    def get_vehicle_metadata(self):
+        return self.all_headers, self.binning_configs['test_assignments']
+
+    def get_next(self):
+        """Provides the latest data from REDIS channel"""
+        data_available = False
+
+        while not data_available:
+            with self.new_data_lock:
+                data_available = self.has_data()
+
+            if not data_available:
+                time.sleep(0.01)
+
+        read_index = 0
+        with self.new_data_lock:
+            self.new_data = False
+            self.double_buffer_read_index = (
+                self.double_buffer_read_index + 1) % 2
+            read_index = self.double_buffer_read_index
+
+        return self.currentData[read_index]['data']
+
+    def has_more(self):
+        """Live connection should always return True"""
+        return True
+
+    def message_listener(self):
+        """Loop for listening for messages on channels"""
+        for message in self.pubsub.listen():
+            if message['type'] == 'message':
+                channel_name = f"{message['channel'].decode()}"
+                # Attempt to load message as json
+                try:
+                    data = json.loads(message['data'])
+                except ValueError:
+                    # Warn of non-json conforming channel data received
+                    non_json_msg = f'Subscribed channel `{channel_name}\' ' \
+                                    'message received but is not in json ' \
+                                   f'format.\nMessage:\n{message["data"]}'
+                    print_msg(non_json_msg, ['WARNING'])
+                    continue
+                # Select the current data
+                currentData = self.currentData[
+                    (self.double_buffer_read_index + 1) % 2]
+                # turn all data points to unknown
+                currentData['data'] = ['-' for _ in currentData['data']]
+                # Find expected keys for received channel
+                expected_message_keys = \
+                    [k for k in currentData['headers'] if channel_name in k]
+                # Time is an expected key for all channels
+                expected_message_keys.append("time")
+                # Parse through the message keys for data points
+                for key in list(data.keys()):
+                    if key.lower() == 'time':
+                        header_string = key.lower()
+                    else:
+                        header_string = f"{channel_name}.{key}"
+                    # Look for channel specific values
+                    try:
+                        index = currentData['headers'].index(header_string)
+                        currentData['data'][index] = data[key]
+                        expected_message_keys.remove(header_string)
+                    # Unexpected key in data
+                    except ValueError:
+                        # warn user about key in data that is not in header
+                        print_msg(f"Unused key `{key}' in message " \
+                                  f'from channel `{channel_name}.\'',
+                                  ['WARNING'])
+                with self.new_data_lock:
+                    self.new_data = True
+                # Warn user about expected keys missing from received data
+                for k in expected_message_keys:
+                    print_msg(f'Message from channel `{channel_name}\' ' \
+                              f'did not contain `{k}\' key\nMessage:\n' \
+                              f'{data}', ['WARNING'])
+            else:
+                # Warn user about non message receipts
+                print_msg(f"Redis adapter: channel " \
+                          f"'{message['channel'].decode()}' received " \
+                          f"message type: {message['type']}.", ['WARNING'])
+        # When listener loop exits warn user
+        print_msg("Redis subscription listener exited.", ['WARNING'])
+
+    def has_data(self):
+        return self.new_data
+```
+
+### `sbn_adapter.py`
+
+**경로:** `components/onair/fsw/onair/data_handling/sbn_adapter.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+SBN_Adapter class
+
+Receives messages from SBN, serves as a data source for sim.py
+"""
+
+import threading
+import time
+import datetime
+import os
+import json
+
+from onair.data_handling.on_air_data_source import OnAirDataSource
+from onair.data_handling.on_air_data_source import ConfigKeyError
+from ctypes import *
+import sbn_python_client as sbn
+import message_headers as msg_hdr
+
+from onair.data_handling.parser_util import *
+
+# Note: The double buffer does not clear between switching. If fresh data doesn't come in, stale data is returned (delayed by 1 frame)
+
+class DataSource(OnAirDataSource):
+
+    def __init__(self, data_file, meta_file, ss_breakdown = False):
+        super().__init__(data_file, meta_file, ss_breakdown);
+
+        self.new_data_lock = threading.Lock()
+        self.new_data = False
+        self.double_buffer_read_index = 0
+        self.connect()
+
+    def connect(self):
+        """Establish connection to SBN and launch listener thread."""
+        time.sleep(2)
+        os.chdir("cf")
+        sbn.sbn_load_and_init()
+        os.chdir("../")
+        print("SBN_Adapter Running")
+
+        # Launch thread to listen for messages
+        self.listener_thread = threading.Thread(target=self.message_listener_thread)
+        self.listener_thread.start()
+
+        # subscribe to message IDs
+        for msgID in self.msgID_lookup_table.keys():
+            sbn.subscribe(msgID)
+
+    def gather_field_names(self, field_name, field_type):
+
+        # recursively find field names in DFS manner
+        def gather_field_names_helper(field_name:str, field_type, field_names:list):
+            if "message_headers" in str(field_type) and hasattr(field_type, "_fields_"):
+                for sub_field_name, sub_field_type in field_type._fields_:
+                    gather_field_names_helper(field_name + "." + sub_field_name, sub_field_type,field_names)
+            else:
+                field_names.append(field_name)
+
+        field_names = []
+        gather_field_names_helper(field_name, field_type, field_names)
+        return field_names
+
+    def parse_meta_data_file(self, meta_data_file, ss_breakdown):
+        self.msgID_lookup_table = {}
+        self.currentData = []
+
+        # pull out message ids
+        file = open(meta_data_file, 'rb')
+        file_str = file.read()
+
+        meta_config = json.loads(file_str)
+        file.close()
+
+        if 'channels' not in meta_config.keys():
+            raise ConfigKeyError(f'Config file: \'{meta_data_file}\' ' \
+                                  'missing required key \'channels\'')
+
+        # Copy message ID table from .json, convert string hex to ints for ID
+        for key in meta_config['channels']:
+            self.msgID_lookup_table[int(key, 16)] = meta_config['channels'][key]
+
+        # Use eval() to convert class name from .json to match with message_headers.py
+        for key in self.msgID_lookup_table:
+            msg_struct_name = self.msgID_lookup_table[key][1]
+            self.msgID_lookup_table[key][1] = eval("msg_hdr." + msg_struct_name)
+
+        # populate headers and reserve space for data
+        for x in range(0,2):
+            self.currentData.append({'headers':[], 'data':[]})
+
+            for msgID in self.msgID_lookup_table.keys():
+                app_name, data_struct = self.msgID_lookup_table[msgID]
+                struct_name = data_struct.__name__
+                # Skip the header, walk through the stuct
+                for field_name, field_type in data_struct._fields_[1:]:
+                    field_names = self.gather_field_names(app_name + "." + field_name, field_type)
+                    for field_name in field_names:
+                        self.currentData[x]['headers'].append(field_name)
+                        self.currentData[x]['data'].append([0]) #initialize all the data arrays with zero
+        print("Current Data Headers: {}.".format(self.currentData[0]["headers"]))
+        return extract_meta_data_handle_ss_breakdown(meta_data_file, ss_breakdown)
+
+    def process_data_file(self, data_file):
+        print("SBN Adapter ignoring data file (telemetry should be live)")
+
+    def get_vehicle_metadata(self):
+        return self.all_headers, self.binning_configs['test_assignments']
+
+    def get_next(self):
+        """Provides the latest data from SBN in a dictionary of lists structure.
+        Returned data is safe to use until the next get_next call.
+        Blocks until new data is available."""
+
+        data_available = False
+
+        while not data_available:
+            with self.new_data_lock:
+                data_available = self.has_data()
+
+            if not data_available:
+                time.sleep(0.01)
+
+        read_index = 0
+        with self.new_data_lock:
+            self.new_data = False
+            self.double_buffer_read_index = (self.double_buffer_read_index + 1) % 2
+            read_index = self.double_buffer_read_index
+
+        return self.currentData[read_index]['data']
+
+    def has_more(self):
+        """Returns true if the adapter has more data.
+           For now always true: connection should be live as long as cFS is running.
+           TODO: allow to detect if cFS/the connection has died"""
+        return True
+
+    def message_listener_thread(self):
+        """Thread to listen for incoming messages from SBN"""
+
+        while(True):
+            generic_recv_msg_p = POINTER(sbn.sbn_data_generic_t)()
+            sbn.recv_msg(generic_recv_msg_p)
+
+            msgID = generic_recv_msg_p.contents.TlmHeader.Primary.StreamId
+            app_name, data_struct = self.msgID_lookup_table[msgID]
+
+            recv_msg_p = POINTER(data_struct)()
+            recv_msg_p.contents = generic_recv_msg_p.contents
+            recv_msg = recv_msg_p.contents
+
+            # prints out the data from the message to the terminal
+            print(", ".join([field_name + ": " + str(getattr(recv_msg, field_name)) for field_name, field_type in recv_msg._fields_[1:]]))
+
+            # TODO: Lock needed here?
+            self.get_current_data(recv_msg, data_struct, app_name)
+
+    def get_current_data(self, recv_msg, data_struct, app_name):
+        # TODO: Lock needed here?
+        current_buffer = self.currentData[(self.double_buffer_read_index + 1) %2]
+
+        # Skip the header, walk through the stuct
+        for field_name, field_type in recv_msg._fields_[1:]:
+            field_names = self.gather_field_names(field_name, field_type)
+
+            for name in field_names:
+                idx = current_buffer['headers'].index(app_name + "." + name)
+                # Pull the data out of the message buy walking down the nested types
+                data = ""
+                current_object = recv_msg
+                for sub_type in name.split('.'):
+                    current_object = getattr(current_object, sub_type)
+                    data = str(current_object) # note does not work for arrays?
+                current_buffer['data'][idx] = data
+
+        with self.new_data_lock:
+            self.new_data = True
+
+    def has_data(self):
+        return self.new_data
+```
+
+### `tlm_json_parser.py`
+
+**경로:** `components/onair/fsw/onair/data_handling/tlm_json_parser.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+import ast
+import json
+
+# parse tlm config json file
+def parseTlmConfJson(file_path):
+    data = parseJson(file_path)
+    reorg_data = reorganizeTlmDict(data)
+
+    labels = []
+    subsys_assignments = []
+    mnemonic_tests = []
+    descriptions = []
+    
+    for label in reorg_data:
+        curr_datapt = reorg_data[label]
+        subsys = curr_datapt['subsystem']
+
+        tests = curr_datapt['tests'] if 'tests' in curr_datapt else {}
+        if tests == {}:
+            mnemonics = [['NOOP']]
+        else:
+            mnemonics = []
+            for key in tests:
+                mnemonics.append([key, curr_datapt['tests'][key]])
+        desc = curr_datapt['description'] if 'description' in curr_datapt else ['No description']
+        
+        labels.append(label)
+        subsys_assignments.append(subsys)
+        mnemonic_tests.append(mnemonics)
+        descriptions.append(desc)
+
+    # if given an order, reorder data to match
+    if 'order' in data and data['order'] != []:
+        original_order = {}
+        for i in range(len(data['order'])):
+            original_order[data['order'][i]] = i
+
+        ordering_list = []
+        for label in labels:
+            ordering_list.append(original_order[label])
+
+        labels = [y for x, y in sorted(zip(ordering_list, labels))]
+        subsys_assignments = [y for x, y in sorted(zip(ordering_list, subsys_assignments))]
+        mnemonic_tests = [y for x, y in sorted(zip(ordering_list, mnemonic_tests))]
+        descriptions = [y for x, y in sorted(zip(ordering_list, descriptions))]
+
+    configs = {}
+    configs['subsystem_assignments'] = subsys_assignments
+    configs['test_assignments'] = mnemonic_tests
+    configs['description_assignments'] = descriptions
+    configs['data_labels'] = labels
+    
+    return configs
+
+# process tlm dict into dict of labels and their attributes
+def reorganizeTlmDict(data):
+    processed_data = {}
+    
+    for s in data['subsystems']:
+        for label in data['subsystems'][s]:
+            processed_data[label] = data['subsystems'][s][label]
+            processed_data[label]['subsystem'] = s
+    
+    return processed_data
+
+def str2lst(string):
+    try:
+        return ast.literal_eval(string)
+    except:
+        print("Unable to process string representation of list")
+        # return string
+
+def parseJson(path):
+    file = open(path, 'rb')
+    file_str = file.read()
+
+    data = json.loads(file_str)
+    file.close()
+    return data
+```

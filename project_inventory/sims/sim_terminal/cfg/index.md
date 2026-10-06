@@ -3,14 +3,64 @@
 
 **경로:** `sims/sim_terminal/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `nos3-terminal-simulator.xml`
 
-file--nos3-terminal-simulator.xml
+**경로:** `sims/sim_terminal/cfg/nos3-terminal-simulator.xml`
+
+
+```xml
+        <simulator>
+            <name>stdio-terminal</name>
+            <active>true</active>
+            <library>libsim_terminal.so</library>
+            <hardware-model>
+                <type>SimTerminal</type>
+                <terminal>
+                    <type>STDIO</type> <!-- type = STDIO, UDP -->
+                    <udp-port>5555</udp-port>
+                    <suppress-output>false</suppress-output> <!-- should output from bus be sent back to STDOUT/UDP client? -->
+                </terminal>
+                <other-nos-connections>
+                    <nos-connection><name>spacecraft1</name><connection-string>tcp://192.168.42.101:12001</connection-string></nos-connection>
+                </other-nos-connections>
+                <bus><name>command</name><type>command</type><!-- type = COMMAND, I2C, SPI, UART, CAN --></bus>
+                <terminal-node-name>stdio-terminal</terminal-node-name>
+                <other-node-name>sample-sim-command-node</other-node-name>
+                <input-mode>ASCII</input-mode> <!-- HEX or ASCII -->
+                <output-mode>ASCII</output-mode> <!-- HEX or ASCII -->
+                <startup-commands>
+                <!--    <command>SET SIMBUS can_0</command>
+                    <command>SET SIMBUSTYPE CAN</command>
+                    <command>SET SIMNODE 20</command> -->
+                </startup-commands>
+            </hardware-model>
+        </simulator>
+        <simulator>
+            <name>udp-terminal</name>
+            <active>true</active>
+            <library>libsim_terminal.so</library>
+            <hardware-model>
+                <type>SimTerminal</type>
+                <terminal>
+                    <type>UDP</type> <!-- type = STDIO, UDP -->
+                    <udp-port>5556</udp-port>
+                    <suppress-output>false</suppress-output> <!-- should output from bus be sent back to STDOUT/UDP client? -->
+                </terminal>
+                <other-nos-connections>
+                    <nos-connection><name>spacecraft1</name><connection-string>tcp://192.168.42.101:12001</connection-string></nos-connection>
+                </other-nos-connections>
+                <bus><name>command</name><type>command</type><!-- type = COMMAND, I2C, SPI, UART, CAN --></bus>
+                <terminal-node-name>udp-terminal</terminal-node-name>
+                <other-node-name>sample-sim-command-node</other-node-name>
+                <input-mode>ASCII</input-mode> <!-- HEX or ASCII -->
+                <output-mode>ASCII</output-mode> <!-- HEX or ASCII -->
+                <startup-commands>
+                <!--    <command>SET SIMBUS can_0</command>
+                    <command>SET SIMBUSTYPE CAN</command>
+                    <command>SET SIMNODE 20</command> -->
+                </startup-commands>
+            </hardware-model>
+        </simulator>
 ```
-
-## 항목
-
-- [`sims/sim_terminal/cfg/nos3-terminal-simulator.xml`](file--nos3-terminal-simulator.xml) — UTF-8 텍스트 파일 본문 포함

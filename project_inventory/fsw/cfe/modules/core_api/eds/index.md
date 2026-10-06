@@ -3,20 +3,615 @@
 
 **경로:** `fsw/cfe/modules/core_api/eds/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `base_types.xml`
 
-file--base_types.xml
-file--ccsds_spacepacket.xml
-file--cfe_fs.xml
-file--config.xml
+**경로:** `fsw/cfe/modules/core_api/eds/base_types.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    This document adheres to the Electronic Data Sheet (EDS) XML schema
+    as prescribed in CCSDS book 876.0.
+
+    Purpose:
+      This describes standard data types used throughout the Core Flight System
+
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+<Package name="BASE_TYPES" shortDescription="Standard type definitions for Core Flight System">
+
+   <!-- Define "base" data types for which all other containers/interfaces/etc will use -->
+   <DataTypeSet>
+
+      <BooleanDataType name="StatusBit" shortDescription="Single true/false status bit">
+        <BooleanDataEncoding sizeInBits="1"/>
+      </BooleanDataType>
+
+      <!-- Fixed width integer types -->
+      <IntegerDataType name="int8" shortDescription="Signed 8 bit integer">
+        <IntegerDataEncoding sizeInBits="8" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}"  byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="127" min="-128" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint8" shortDescription="Unsigned 8 bit integer">
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned"  byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="255" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="int16" shortDescription="Signed 16 bit integer">
+        <IntegerDataEncoding sizeInBits="16" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="32767" min="-32768" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint16" shortDescription="Unsigned 16 bit integer">
+        <IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="65535" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="int32" shortDescription="Signed 32 bit integer">
+        <IntegerDataEncoding sizeInBits="32" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="2147483647" min="-2147483648" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint32" shortDescription="Unsigned 32 bit integer">
+        <IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="4294967295" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="int64" shortDescription="Signed 64 bit integer">
+        <IntegerDataEncoding sizeInBits="64" encoding="${CFE_MISSION/SIGNED_INTEGER_ENCODING}" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="9223372036854775807" min="-9223372036854775808" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+      <IntegerDataType name="uint64" shortDescription="Unsigned 64 bit integer">
+        <IntegerDataEncoding sizeInBits="64" encoding="unsigned" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" />
+        <Range>
+          <MinMaxRange max="18446744073709551615" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <!-- Floating point types -->
+      <FloatDataType name="float" shortDescription="Single precision (32 bit) floating point value">
+        <FloatDataEncoding encodingAndPrecision="IEEE754_2008_single" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" sizeInBits="32" />
+        <Range>
+          <PrecisionRange>single</PrecisionRange>
+        </Range>
+      </FloatDataType>
+      <FloatDataType name="double" shortDescription="Double precision (64 bit) floating point value">
+        <FloatDataEncoding encodingAndPrecision="IEEE754_2008_double" byteOrder="${CFE_MISSION/DATA_BYTE_ORDER}" sizeInBits="64" />
+        <Range>
+          <PrecisionRange>double</PrecisionRange>
+        </Range>
+      </FloatDataType>
+
+      <!-- Commonly used string types in all CFE/CFS messages -->
+      <StringDataType name="ApiName" length="${CFE_MISSION/MAX_API_LEN}" />
+      <StringDataType name="PathName" length="${CFE_MISSION/MAX_PATH_LEN}" />
+
+      <!--
+          Memory addresses in CMD/TLM: These are integer types based on the
+          CFE_MISSION/MEM_ADDR_SIZE_BITS configuration setting.  This allows
+          the user to select 32-bit (traditional) or 64-bit (modern) integer
+          values to be used in CMD/TLM fields that store a memory address.
+
+          Note that changing from 32 to 64 will extend all containers that
+          use/reference this type by a proportional amount, so traditional
+          non-EDS 32-bit CMD/TLM definitions will NOT match when this is 64 bits.
+       -->
+      <IntegerDataType name="MemReference" shortDescription="Integer type used for CPU memory addresses, sizes and offsets">
+        <LongDescription>
+          For backward compatibility with existing CFS code this should be uint32,
+          but all telemetry information will be limited to 4GB in size as a result.
+
+          On 64-bit platforms this can be expanded to 64 bits which will allow larger
+          memory objects, but this will break compatibility with existing control
+          systems, and may also change the alignment/padding of some messages.
+
+          In either case this must be an unsigned type, and should be large enough
+          to represent the largest memory address/size in use in the CFS system.
+        </LongDescription>
+        <IntegerDataEncoding sizeInBits="${CFE_MISSION/MEM_REFERENCE_SIZE_BITS}" encoding="unsigned" />
+        <Range>
+          <MinMaxRange max="2 ^ ${CFE_MISSION/MEM_REFERENCE_SIZE_BITS}" min="0" rangeType="inclusiveMinExclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+   </DataTypeSet>
+
+</Package>
+</PackageFile>
 ```
 
-## 항목
+### `ccsds_spacepacket.xml`
 
-- [`fsw/cfe/modules/core_api/eds/base_types.xml`](file--base_types.xml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/eds/ccsds_spacepacket.xml`](file--ccsds_spacepacket.xml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/eds/cfe_fs.xml`](file--cfe_fs.xml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/core_api/eds/config.xml`](file--config.xml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/core_api/eds/ccsds_spacepacket.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    Purpose:
+      This describes objects as defined by CCSDS book 133 Space Packet Protocol
+      and utilized by the Core Flight System (cFS)
+
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+<Package name="CCSDS" shortDescription="CCSDS Space Packet Protocol definitions">
+
+   <DataTypeSet>
+      <IntegerDataType name="VersionId" shortDescription="The first 16 bits of a CCSDS Space Packet Header">
+        <IntegerDataEncoding sizeInBits="3" encoding="unsigned" />
+        <Range>
+          <MinMaxRange max="7" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <BooleanDataType name="SingleBitFlag" shortDescription="A single bit indicating true/false" />
+
+      <IntegerDataType name="SecHdrFlags" shortDescription="The first 16 bits of a CCSDS Space Packet Header">
+        <IntegerDataEncoding sizeInBits="2" encoding="unsigned" />
+        <Range>
+          <MinMaxRange max="3" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="AppId" shortDescription="The first 16 bits of a CCSDS Space Packet Header">
+        <IntegerDataEncoding sizeInBits="11" encoding="unsigned" byteOrder="bigEndian"/>
+        <Range>
+          <MinMaxRange max="2047" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="SeqFlag" shortDescription="The first 16 bits of a CCSDS Space Packet Header">
+        <IntegerDataEncoding sizeInBits="2" encoding="unsigned" />
+        <Range>
+          <MinMaxRange max="3" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="SeqCount" shortDescription="The first 16 bits of a CCSDS Space Packet Header">
+        <IntegerDataEncoding sizeInBits="14" encoding="unsigned" byteOrder="bigEndian"/>
+        <Range>
+          <MinMaxRange max="16383" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="LengthType" shortDescription="The length of a CCSDS Space Packet">
+        <IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="bigEndian"/>
+        <Range>
+          <MinMaxRange max="65535" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="CommandCode" shortDescription="The command ID contained within a command secondary header">
+        <LongDescription>
+          Command codes in CFE range are 7 bits (0-127).  The most significant bit (codes 128-255) are reserved.
+        </LongDescription>
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+        <Range>
+          <MinMaxRange rangeType="atMost" max="127" />
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="ChecksumType" shortDescription="The checksum of a command packet">
+        <IntegerDataEncoding sizeInBits="8" encoding="unsigned" byteOrder="bigEndian"/>
+        <Range>
+          <MinMaxRange max="255" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <!--
+      The Real Primary Header (version 1):
+         This is the proper definition of the CCSDS primary header, with each field broken out into
+         its proper length rather than being BASE_TYPES/uint16.  However this will not be "drop-in" compatible
+         with existing CFE/CFS application source code that expects 3 uint16 values.  However the differences
+         should be addressable by changing the accessor macros in the CFE source code.
+      -->
+      <ContainerDataType name="BaseHdr" shortDescription="Space packet protocol header">
+         <LongDescription>
+            The Primary message header that is present in all CCSDS Space Protocol packets
+         </LongDescription>
+         <EntryList>
+            <Entry name="VersionId" type="VersionId" shortDescription="CCSDS Version number" />
+            <Entry name="SecHdrFlags" type="SecHdrFlags" shortDescription="Secondary Header Presence and Type Flags" />
+            <Entry name="AppId" type="AppId" shortDescription="Packet identifier word (stream ID)" />
+            <Entry name="SeqFlag" type="SeqFlag" shortDescription="packet sequence word" />
+            <Entry name="Sequence" type="SeqCount" shortDescription="packet sequence word" />
+            <LengthEntry name="Length" type="LengthType" shortDescription="packet length word">
+                <PolynomialCalibrator>
+                    <Term coefficient="1" exponent="1" />
+                    <Term coefficient="7" exponent="0" />
+                </PolynomialCalibrator>
+            </LengthEntry>
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="PriHdr" baseType="BaseHdr" shortDescription="Space packet protocol header version 1">
+         <ConstraintSet>
+           <ValueConstraint entry="VersionId" value="0" />
+         </ConstraintSet>
+      </ContainerDataType>
+
+      <IntegerDataType name="SubsystemId" shortDescription="Subsystem ID value">
+        <IntegerDataEncoding sizeInBits="9" encoding="unsigned"  byteOrder="bigEndian"/>
+        <Range>
+          <MinMaxRange max="511" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="SystemId" shortDescription="System ID value">
+        <IntegerDataEncoding sizeInBits="16" encoding="unsigned"  byteOrder="bigEndian"/>
+        <Range>
+          <MinMaxRange max="65535" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <IntegerDataType name="EdsVersionId" shortDescription="EDS data type identification data">
+        <IntegerDataEncoding sizeInBits="5" encoding="unsigned" />
+        <Range>
+          <MinMaxRange max="31" min="0" rangeType="inclusiveMinInclusiveMax"/>
+        </Range>
+      </IntegerDataType>
+
+      <ContainerDataType name="APIDqualifiers" shortDescription="Space packet APID qualifier header">
+        <LongDescription>
+           The APID qualifier header extension that is present in CCSDS version 2
+        </LongDescription>
+        <EntryList>
+          <Entry name="EdsVersionId" type="EdsVersionId" shortDescription="EDS-specific datatype identifier" />
+          <Entry name="Endian" type="SingleBitFlag" shortDescription="Reserved, always set FALSE" />
+          <Entry name="Playback" type="SingleBitFlag" shortDescription="Set to TRUE if data is playback, FALSE for realtime" />
+          <Entry name="SubsystemId" type="SubsystemId" shortDescription="Mission-defined usage" />
+          <Entry name="SystemId" type="SystemId" shortDescription="Mission-defined usage" />
+        </EntryList>
+      </ContainerDataType>
+
+      <!--
+      The APID qualifier (aka Version 2) Primary Header:
+         This is the same as the version 1 primary header but extended with APID qualifier data
+      -->
+      <ContainerDataType name="APIDQHdr" baseType="BaseHdr" shortDescription="Space packet protocol v2 header">
+         <LongDescription>
+            The APID qualified primary header that is present in all CCSDS Space Protocol version 2 packets
+         </LongDescription>
+         <ConstraintSet>
+           <ValueConstraint entry="VersionId" value="1" />
+         </ConstraintSet>
+         <EntryList>
+           <Entry name="ApidQ" type="APIDqualifiers" shortDescription="APID qualifiers" />
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="CmdSecHdr" shortDescription="Secondary header for commands">
+         <LongDescription>
+            The secondary message header that is present in all cFE command messages
+         </LongDescription>
+         <EntryList>
+            <Entry name="Command" type="CommandCode" shortDescription="Command Identifier Word" />
+            <ErrorControlEntry name="Checksum" type="ChecksumType" shortDescription="Checksum, calculated by ground system" errorControlType="CHECKSUM_LONGITUDINAL"/>
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="TlmSecHdr" shortDescription="Secondary header for telemetry">
+         <LongDescription>
+            The secondary message header that is present in all cFE telemetry messages
+         </LongDescription>
+         <EntryList>
+            <Entry name="Seconds" type="BASE_TYPES/uint32" shortDescription="Time since epoch, in seconds" />
+            <Entry name="Subseconds" type="${CFE_MISSION/TELEMETRY_SUBSECONDS_TYPE}" shortDescription="Time since epoch, in subseconds" />
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="SpacePacket">
+         <EntryList>
+            <Entry name="Hdr" type="${CCSDS_SPACEPACKET/HEADER_TYPE}" shortDescription="Primary Header" />
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType baseType="SpacePacket" name="CommandPacket" shortDescription="Complete Command Packet Header">
+         <ConstraintSet>
+           <ValueConstraint entry="Hdr.SecHdrFlags" value="3" />
+         </ConstraintSet>
+         <EntryList>
+            <Entry name="Sec" type="CmdSecHdr" shortDescription="Command Secondary Header" />
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType baseType="SpacePacket" name="TelemetryPacket" shortDescription="Complete Telemetry Packet Header">
+         <ConstraintSet>
+           <ValueConstraint entry="Hdr.SecHdrFlags" value="1" />
+         </ConstraintSet>
+         <EntryList>
+            <Entry name="Sec" type="TlmSecHdr" shortDescription="Telemetry Secondary Header" />
+         </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="PacketContainer" shortDescription="A buffer capable of storing any Space Packet" >
+         <EntryList>
+            <Entry name="Data" type="SpacePacket" shortDescription="Packet Content" />
+         </EntryList>
+      </ContainerDataType>
+
+
+   </DataTypeSet>
+
+</Package>
+</PackageFile>
+```
+
+### `cfe_fs.xml`
+
+**경로:** `fsw/cfe/modules/core_api/eds/cfe_fs.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    Purpose:
+      This describes all interface objects for the File Services (CFE_FS)
+      core application
+
+-->
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+  <Package name="CFE_FS" shortDescription="NASA Core Flight System File Services">
+    <DataTypeSet>
+      <EnumeratedDataType name="SubType" shortDescription="Content descriptor for File Headers">
+        <IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+        <EnumerationList>
+            <Enumeration label="ES_ERLOG" value="1" shortDescription="Executive Services Exception/Reset Log Type">
+              <LongDescription>
+                Executive Services Exception/Reset Log File which is generated in response to a
+                \link #CFE_ES_WRITE_ERLOG_CC \ES_WRITEERLOG2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="ES_SYSLOG" value="2" shortDescription="Executive Services System Log Type">
+              <LongDescription>
+                Executive Services System Log File which is generated in response to a
+                \link #CFE_ES_WRITE_SYSLOG_CC \ES_WRITESYSLOG2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="ES_QUERYALL" value="3" shortDescription="Executive Services Information on All Applications File">
+              <LongDescription>
+                Executive Services Information on All Applications File which is generated in response to a
+                \link #CFE_ES_QUERY_ALL_CC \ES_WRITEAPPINFO2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="ES_PERFDATA" value="4" shortDescription="Executive Services Performance Data File">
+              <LongDescription>
+                Executive Services Performance Analyzer Data File which is generated in response to a
+                \link #CFE_ES_PERF_STOPDATA_CC \ES_STOPLADATA \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="ES_SHELL" value="5" shortDescription="Executive Services Shell Response File">
+              <LongDescription>
+                Executive Services Shell Response Data File which is generated in response to a
+                \link #CFE_ES_SHELL_CMD_CC \ES_SHELL \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="ES_CDS_REG" value="6" shortDescription="Executive Services Critical Data Store Registry Dump File">
+              <LongDescription>
+                Executive Services Critical Data Store Registry Dump File which is generated in response to a
+                \link #CFE_ES_DUMP_CDS_REG_CC \ES_DUMPCDSREG \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="TBL_REG" value="9" shortDescription="Table Services Registry Dump File">
+              <LongDescription>
+                Table Services Registry Dump File which is generated in response to a
+                \link #CFE_TBL_DUMP_REG_CC \TBL_WRITEREG2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="TBL_IMG" value="8" shortDescription="Table Services Table Image File">
+              <LongDescription>
+                Table Services Table Image File which is generated either on the ground or in response to a
+                \link #CFE_TBL_DUMP_CC \TBL_DUMP \endlink command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="EVS_APPDATA" value="15" shortDescription="Event Services Application Data Dump File">
+              <LongDescription>
+                Event Services Application Data Dump File which is generated in response to a
+                \link #CFE_EVS_FILE_WRITE_APP_DATA_CC \EVS_WRITEAPPDATA2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="EVS_EVENTLOG" value="16" shortDescription="Event Services Local Event Log Dump File">
+              <LongDescription>
+                Event Services Local Event Log Dump File which is generated in response to a
+                \link  #CFE_EVS_FILE_WRITE_LOG_DATA_CC \EVS_WRITELOG2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="SB_PIPEDATA" value="20" shortDescription="Software Bus Pipe Data Dump File">
+              <LongDescription>
+                Software Bus Pipe Data Dump File which is generated in response to a
+                \link #CFE_SB_SEND_PIPE_INFO_CC \SB_WRITEPIPE2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="SB_ROUTEDATA" value="21" shortDescription="Software Bus Message Routing Data Dump File">
+              <LongDescription>
+                Software Bus Message Routing Data Dump File which is generated in response to a
+                \link #CFE_SB_SEND_ROUTING_INFO_CC \SB_WRITEROUTING2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="SB_MAPDATA" value="22" shortDescription="Software Bus Message Mapping Data Dump File">
+              <LongDescription>
+                Software Bus Message Mapping Data Dump File which is generated in response to a
+                \link #CFE_SB_SEND_MAP_INFO_CC \SB_WRITEMAP2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+            <Enumeration label="ES_QUERYALLTASKS" value="23" shortDescription="Executive Services Query All Tasks Data File">
+              <LongDescription>
+                Executive Services Query All Tasks Data File which is generated in response to a
+                \link #CFE_ES_QUERY_ALL_TASKS_CC \ES_WRITETASKINFO2FILE \endlink
+                command.
+              </LongDescription>
+            </Enumeration>
+        </EnumerationList>
+      </EnumeratedDataType>
+
+      <StringDataType name="FileDescription" length="${CFE_MISSION/FS_HDR_DESC_MAX_LEN}" shortDescription="File Description String" />
+
+      <ContainerDataType name="Header" shortDescription="Standard cFE File header structure definition">
+        <EntryList>
+          <Entry name="ContentType" type="BASE_TYPES/uint32" shortDescription="Identifies the content type" />
+          <Entry name="SubType" type="SubType" shortDescription="Type of ContentType, if necessary" />
+          <LengthEntry name="Length" type="BASE_TYPES/uint32" shortDescription="Length of object">
+                <PolynomialCalibrator>
+                    <Term coefficient="1" exponent="1" />
+                    <Term coefficient="0" exponent="0" />
+                </PolynomialCalibrator>
+          </LengthEntry>
+          <FixedValueEntry name="SpacecraftID" type="BASE_TYPES/uint32" shortDescription="Spacecraft that generated the file" fixedValue="${CFE_MISSION/SPACECRAFT_ID}" />
+          <Entry name="ProcessorID" type="BASE_TYPES/uint32" shortDescription="Processor that generated the file" />
+          <Entry name="ApplicationID" type="BASE_TYPES/uint32" shortDescription="Application that generated the file" />
+          <Entry name="TimeSeconds" type="BASE_TYPES/uint32" shortDescription="File creation timestamp (seconds)" />
+          <Entry name="TimeSubSeconds" type="BASE_TYPES/uint32" shortDescription="File creation timestamp (sub-seconds)" />
+          <Entry name="Description" type="FileDescription" shortDescription="File description" />
+        </EntryList>
+      </ContainerDataType>
+
+      <ContainerDataType name="FileObject" baseType="Header" shortDescription="Encapsulates a CFE file header and data">
+        <ConstraintSet>
+          <ValueConstraint entry="ContentType" value="${CFE_FS/FILE_CONTENT_ID}" />
+        </ConstraintSet>
+      </ContainerDataType>
+
+    </DataTypeSet>
+  </Package>
+</PackageFile>
+```
+
+### `config.xml`
+
+**경로:** `fsw/cfe/modules/core_api/eds/config.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+
+   Copyright (c) 2020 United States Government as represented by the
+   Administrator of the National Aeronautics and Space Administration.
+   All Rights Reserved.
+
+   Licensed under the Apache License, Version 2.0 (the "License"); you may
+   not use this file except in compliance with the License. You may obtain
+   a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+    Purpose:
+      Assign values to basic configuration parameters of the Core Flight
+      System (cFS).  The CFS EDS toolchain uses values defined here to
+      as substitutions for the ${} syntax in EDS files.
+
+-->
+<DesignParameters>
+
+  <Package name="CFE_EVS" shortDescription="Event Services Configuration">
+     <!-- The bitmasks do not yet have a way to directly associate with the data structure yet -->
+     <Define name="DEBUG_BIT" value="0x0001" />
+     <Define name="INFORMATION_BIT" value="0x0002" />
+     <Define name="ERROR_BIT" value="0x0004" />
+     <Define name="CRITICAL_BIT" value="0x0008" />
+
+     <Define name="PORT1_BIT" value="0x0001" />
+     <Define name="PORT2_BIT" value="0x0002" />
+     <Define name="PORT3_BIT" value="0x0004" />
+     <Define name="PORT4_BIT" value="0x0008" />
+  </Package>
+
+  <Package name="CFE_FS" shortDescription="File Services Configuration">
+     <Define name="FILE_CONTENT_ID" value="0x63464531" shortDescription="Magic Number for cFE compliant files (= cFE1)" />
+  </Package>
+
+  <Package name="CFE_SB" shortDescription="Software Bus Configuration">
+     <Define name="SUB_ENTRIES_PER_PKT" value="20" />
+     <Define name="MSGID_BIT_SIZE" value="32" />
+  </Package>
+
+  <Package name="CCSDS_SPACEPACKET" shortDescription="CCSDS Configuration">
+     <!-- Select CCSDS v1 headers only (no APID qualifiers) -->
+     <!-- <Define name="HEADER_TYPE" value="PriHdr" /> -->
+     <!-- Select CCSDS v2 headers (with APID qualifiers) -->
+     <Define name="HEADER_TYPE" value="APIDQHdr" />
+  </Package>
+
+</DesignParameters>
+```

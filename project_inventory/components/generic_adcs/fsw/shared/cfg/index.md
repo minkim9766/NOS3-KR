@@ -3,18 +3,91 @@
 
 **경로:** `components/generic_adcs/fsw/shared/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Inp_ADAC.txt`
 
-file--Inp_ADAC.txt
-file--Inp_DI.txt
-file--Inp_DO.txt
+**경로:** `components/generic_adcs/fsw/shared/cfg/Inp_ADAC.txt`
+
+
+```text
+!!!!!!!!!!!!!!! EPH  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+2451545.0                                 ! Inputs for Solar Ephemeris = date_epoch = Reference Julian Day
+357.5291092     0.9856002831              ! Inputs for Solar Ephemeris = G_coeff
+280.46          0.9856473922              ! Inputs for Solar Ephemeris = L_coeff
+1.914666471     0.019994643               ! Inputs for Solar Ephemeris = coeff_long
+0.91748                                   ! Inputs for Solar Ephemeris = cos_obliq_eclp = cos(23.4)
+0.39779                                   ! Inputs for Solar Ephemeris = sin_obliq_eclp = sin(23.4)
+8                                         ! Input for IGRF = nmax = max order/degree
+!!!!!!!!!!!!!!! AD  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.0                                       ! Low Pass Filter = Filter coefficient for IMU wbn data
+1                                         ! Inputs for Rate Estimator = enable_filter - 1 = apply moving average filter, 0 = do not apply moving average filter)
+40                                        ! Inputs for Rate Estimator = sample_size - Number of Samples to be used in moving average filter (MAX = 100)
+4.59934839e-8                             ! Inputs for Mur-AKF = sig_u = variance associated to gyro drift, from datasheet
+6.571167e-5                               ! Inputs for Mur-AKF = sig_v = variance associated with random drift, from datasheet
+0.5                                       ! Inputs for Mur-AKF = ek_ST_bound = ST residual bound in degrees
+1.0e-1                                    ! Inputs for Mur-AKF = ek_FSS_bound = FSS residual bound
+1.0e-4                                    ! Inputs for Mur-AKF = ek_MG_bound = Mag residual bound in Tesla
+1.0e-12                                   ! Inputs for Mur-AKF = Mag_range = Mag Validity in Tesla
+1.0e-4                                    ! Inputs for Mur-AKF = Dvg_tol = Mag Validity in Tesla
+1.0e-6   1.0e-12                          ! Inputs for Mur-AKF = cov_init = Elements of top half and bottom right diagonals
+1.0e-2    0.005   0.000581776             ! Inputs for Mur-AKF = sensor_noise_init = (sig-mag, sig-sun, sig-star) Initial diagonal terms of covariance matrix
+0.0   0.0  0.0                            ! Inputs for Mur-AKF = bias_init = Initial bias associated with gyro drift
+!!!!!!!!!!!!!!! GNC !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.1                                       ! DT (seconds)
+1.42                                      ! Magtorquer saturation (A-m^2)
+!!!!!!!!!!!!!!! AC B-dot !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+4.096E-6  200.0                           ! Magnetic Field Range (Teslas), Bdot Algorithm Gain
+!!!!!!!!!!!!!!! AC Sunsafe !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.0047 0.0047 0.0047 0.1329 0.1329 0.1329 ! Kp, Kr gains
+1.0 0.0 0.0 0.1 0.0 0.0 0.0               ! sside, vmax, cmd_wbn
+!!!!!!!!!!!!!!! AC Inertial !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.5   0.5   0.5   0.5   10.0              ! qbn, max euler angle
+0.04  0.04  0.04  0.28  0.28  0.28        ! scaled proportional gain, scaled derivative gain
+0.0   0.0   0.0                           ! scaled integral gain
+!!!!!!!!!!!!!!! AC Momentum Management !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+1.0 4.096E-6 0.1 0.5                      ! Kb, Bfield range, wheel capacity fraction below which MM disabled, fraction above which enabled
 ```
 
-## 항목
+### `Inp_DI.txt`
 
-- [`components/generic_adcs/fsw/shared/cfg/Inp_ADAC.txt`](file--Inp_ADAC.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/shared/cfg/Inp_DI.txt`](file--Inp_DI.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/shared/cfg/Inp_DO.txt`](file--Inp_DO.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_adcs/fsw/shared/cfg/Inp_DI.txt`
+
+
+```text
+!!!!!!!!!!!!!!! Magnetometer !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 0.0     0.0     0.0     1.0         ! Quaternion from sensor to body frame
+!!!!!!!!!!!!!!! Fine Sun Sensor !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 0.0    -0.7071  0.0     0.7071      ! Quaternion from sensor to body frame
+!!!!!!!!!!!!!!! Coarse Sun Sensors !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 1.0     0.0     0.0     0.001       ! Axis in body, scale factor
+-1.0     0.0     0.0     0.001       ! Axis in body, scale factor
+ 0.0     1.0     0.0     0.001       ! Axis in body, scale factor
+ 0.0    -1.0     0.0     0.001       ! Axis in body, scale factor
+ 0.0     0.0     1.0     0.001       ! Axis in body, scale factor
+ 0.0     0.0    -1.0     0.001       ! Axis in body, scale factor
+!!!!!!!!!!!!!!! Inertial Measurement Unit !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.0      0.0     0.0     1.0         ! Quaternion from sensor to body frame
+0.5      1.0     1.5                 ! Position of sensor in body
+!!!!!!!!!!!!!!! Reaction Wheels !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 1.0     0.0     0.0   0.01082       ! Axis in body, Maximum momentum
+ 0.0     1.0     0.0   0.01082       ! Axis in body, Maximum momentum
+ 0.0     0.0     1.0   0.01082       ! Axis in body, Maximum momentum
+!!!!!!!!!!!!!!! Star Tracker !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.0 0.0 0.0 1.0 ! Quaternion from sensor to body frame
+
+```
+
+### `Inp_DO.txt`
+
+**경로:** `components/generic_adcs/fsw/shared/cfg/Inp_DO.txt`
+
+
+```text
+!!!!!!!!!!!!!!! Magnetorqer !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+0.0     0.0     0.0     1.0         ! Quaternion from actuator to body frame
+!!!!!!!!!!!!!!! Reaction Wheels !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+1.0     0.0     0.0                 ! Axis for RW 0
+0.0     1.0     0.0                 ! Axis for RW 1
+0.0     0.0     1.0                 ! Axis for RW 2
+```

@@ -3,84 +3,3460 @@
 
 **경로:** `cfg/InOut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Flex_Simple.txt`
 
-file--Flex_Simple.txt
-file--Inp_AcOutput.txt
-file--Inp_Cmd.txt
-file--Inp_CommLink.txt
-file--Inp_FOV.txt
-file--Inp_Graphics.txt
-file--Inp_Graphics_DeepSpace.txt
-file--Inp_Graphics_Gateway.txt
-file--Inp_Graphics_STF1.txt
-file--Inp_IPC.shmem.txt
-file--Inp_IPC.sockets.txt
-file--Inp_IPC.txt
-file--Inp_IPC_MultipleSC.txt
-file--Inp_NOS3.txt
-file--Inp_Region.txt
-file--Inp_ScOutput.txt
-file--Inp_Sim.txt
-file--Inp_Sim_DeepSpace.txt
-file--Inp_Sim_Gateway.txt
-file--Inp_Sim_STF1.txt
-file--Inp_TDRS.txt
-file--Nodes_Simple.txt
-file--Optics_Simple.txt
-file--Orb_Ellipse.txt
-file--Orb_L3.txt
-file--Orb_LEO.txt
-file--Orb_LLO.txt
-file--Orb_NRHO.txt
-file--SC_DeepSpaceComm.txt
-file--SC_Gateway.txt
-file--SC_NOS3.txt
-file--SC_SensorFOV.txt
-file--SC_Simple.txt
-file--Shaker_Simple.txt
-file--TRV.txt
-file--Whl_Simple.txt
+**경로:** `cfg/InOut/Flex_Simple.txt`
+
+
+```text
+<<<<<<<<<<<<<<  Flexible Body Inputs for 42  >>>>>>>>>>>>>>>>>>>
+Simple Flex Model                    ! Description
+2                                    ! Number of Flex Modes
+****************** Initial Modal States x, u  ******************
+1.0E-6  0.0                             ! Mode 0  x, u
+1.0E-6  0.0                             ! Mode 1  x, u
+****************** Joint Node Mode Shapes *********************
+*******  Non-zero Translation Mode Shape (PSI) Elements ********
+0                                  ! Number of non-zero elements
+*******  Non-zero Rotation Mode Shape (THETA) Elements ********
+0                                  ! Number of non-zero elements
+**************** Analysis Node Mode Shapes *********************
+*******  Non-zero Translation Mode Shape (PSI) Elements ********
+12                                 ! Number of non-zero elements
+  0  0  0  0.1                     ! [Mode] [Node] [Axis] Value
+  0  0  1  0.1                     ! [Mode] [Node] [Axis] Value
+  0  0  2  0.1                     ! [Mode] [Node] [Axis] Value
+  0  1  0  -0.1                    ! [Mode] [Node] [Axis] Value
+  0  1  1  -0.1                    ! [Mode] [Node] [Axis] Value
+  0  1  2  -0.1                    ! [Mode] [Node] [Axis] Value
+  1  0  0  0.1                     ! [Mode] [Node] [Axis] Value
+  1  0  1  0.1                     ! [Mode] [Node] [Axis] Value
+  1  0  2  0.1                     ! [Mode] [Node] [Axis] Value
+  1  1  0  0.1                     ! [Mode] [Node] [Axis] Value
+  1  1  1  0.1                     ! [Mode] [Node] [Axis] Value
+  1  1  2  0.1                     ! [Mode] [Node] [Axis] Value
+*******  Non-zero Rotation Mode Shape (THETA) Elements ********
+12                                 ! Number of non-zero elements
+  0  0  0  0.1                     ! [Mode] [Node] [Axis] Value
+  0  0  1  0.0707                  ! [Mode] [Node] [Axis] Value
+  0  0  2  0.057735                ! [Mode] [Node] [Axis] Value
+  0  1  0  -0.1                    ! [Mode] [Node] [Axis] Value
+  0  1  1  -0.0707                 ! [Mode] [Node] [Axis] Value
+  0  1  2  -0.057735               ! [Mode] [Node] [Axis] Value
+  1  0  0  0.1                     ! [Mode] [Node] [Axis] Value
+  1  0  1  0.0707                  ! [Mode] [Node] [Axis] Value
+  1  0  2  0.057735                ! [Mode] [Node] [Axis] Value
+  1  1  0  0.1                     ! [Mode] [Node] [Axis] Value
+  1  1  1  0.0707                  ! [Mode] [Node] [Axis] Value
+  1  1  2  0.057735                ! [Mode] [Node] [Axis] Value
+****************  Non-zero Mass Matrix Elements ******************
+2                                  ! Number of non-zero elements
+0 0    1.0                         ! [Row] [Col] Value
+1 1    1.0                         ! [Row] [Col] Value
+*************  Non-zero Stiffness Matrix Elements ****************
+2                                  ! Number of non-zero elements
+0 0    39.478                      ! [Row] [Col] Value (1 Hz)
+1 1    3947.8                      ! [Row] [Col] Value (10 Hz)
+*************  Non-zero Damping Matrix Elements ****************
+2                                  ! Number of non-zero elements
+0 0    0.012566                    ! [Row] [Col] Value (0.1%)
+1 1    0.12566                     ! [Row] [Col] Value (0.1%)
+*********  Linear Momentum Modal Integral, Pf, 3 x Nf  *********
+0.0 0.0 0.0                        ! Mode 0, [x y z]
+0.0 0.0 0.0                        ! Mode 1, [x y z]
+********  Angular Momentum Modal Integral, Hf, 3 x Nf  *********
+0.0 0.0 0.0                        ! Mode 0, [x y z]
+0.0 0.0 0.0                        ! Mode 1, [x y z]
+**********  Linear Modal Integral, L, 3 x 3 x Nf  **************
+0                                  ! Number of non-zero elements
+*********  Angular Modal Integral, N, 3 x 3 x Nf x Nf  *********
+0                                  ! Number of non-zero elements
+[EOF]
+     
 ```
 
-## 항목
+### `Inp_AcOutput.txt`
 
-- [`cfg/InOut/Flex_Simple.txt`](file--Flex_Simple.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_AcOutput.txt`](file--Inp_AcOutput.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Cmd.txt`](file--Inp_Cmd.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_CommLink.txt`](file--Inp_CommLink.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_FOV.txt`](file--Inp_FOV.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Graphics.txt`](file--Inp_Graphics.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Graphics_DeepSpace.txt`](file--Inp_Graphics_DeepSpace.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Graphics_Gateway.txt`](file--Inp_Graphics_Gateway.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Graphics_STF1.txt`](file--Inp_Graphics_STF1.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_IPC.shmem.txt`](file--Inp_IPC.shmem.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_IPC.sockets.txt`](file--Inp_IPC.sockets.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_IPC.txt`](file--Inp_IPC.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_IPC_MultipleSC.txt`](file--Inp_IPC_MultipleSC.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_NOS3.txt`](file--Inp_NOS3.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Region.txt`](file--Inp_Region.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_ScOutput.txt`](file--Inp_ScOutput.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Sim.txt`](file--Inp_Sim.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Sim_DeepSpace.txt`](file--Inp_Sim_DeepSpace.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Sim_Gateway.txt`](file--Inp_Sim_Gateway.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_Sim_STF1.txt`](file--Inp_Sim_STF1.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Inp_TDRS.txt`](file--Inp_TDRS.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Nodes_Simple.txt`](file--Nodes_Simple.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Optics_Simple.txt`](file--Optics_Simple.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Orb_Ellipse.txt`](file--Orb_Ellipse.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Orb_L3.txt`](file--Orb_L3.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Orb_LEO.txt`](file--Orb_LEO.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Orb_LLO.txt`](file--Orb_LLO.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Orb_NRHO.txt`](file--Orb_NRHO.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/SC_DeepSpaceComm.txt`](file--SC_DeepSpaceComm.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/SC_Gateway.txt`](file--SC_Gateway.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/SC_NOS3.txt`](file--SC_NOS3.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/SC_SensorFOV.txt`](file--SC_SensorFOV.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/SC_Simple.txt`](file--SC_Simple.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Shaker_Simple.txt`](file--Shaker_Simple.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/TRV.txt`](file--TRV.txt) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/InOut/Whl_Simple.txt`](file--Whl_Simple.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `cfg/InOut/Inp_AcOutput.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<<  AC Outputs for 42  >>>>>>>>>>>>>>>>>>>
+FALSE   1.0   ! Ac Tlm Enabled, Interval
+FALSE  5.0   ! AcG Tlm Enabled, Interval
+FALSE  5.0   ! Ac_GCmd Tlm Enabled, Interval
+FALSE  5.0   ! AcGyro Tlm Enabled, Interval
+FALSE  5.0   ! AcMAG Tlm Enabled, Interval
+FALSE  5.0   ! AcCSS Tlm Enabled, Interval
+FALSE  5.0   ! AcFSS Tlm Enabled, Interval
+FALSE  5.0   ! AcST Tlm Enabled, Interval
+FALSE  5.0   ! AcGPS Tlm Enabled, Interval
+FALSE  5.0   ! AcAccel Tlm Enabled, Interval
+FALSE  5.0   ! AcWhl Tlm Enabled, Interval
+FALSE  5.0   ! AcMTB Tlm Enabled, Interval
+FALSE  5.0   ! AcThr Tlm Enabled, Interval
+FALSE  1.0   ! AcCmd Tlm Enabled, Interval
+
+```
+
+### `Inp_Cmd.txt`
+
+**경로:** `cfg/InOut/Inp_Cmd.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42:  Command Script File  >>>>>>>>>>>>>>>>>
+EOF
+
+0.0 SC[0] qrl = [0.0  0.0  0.0  1.0]
+1000.0 SC[0] qrl = [0.0  1.0  0.0  0.0]
+2000.0 Point SC[0].B[0] Primary Vector [0.0 0.0 1.0] at VELOCITY
+2000.0 Point SC[0].B[0] Secondary Vector [1.0 0.0 0.0] at SUN
+
+##############################################################
+# All lines after EOF are ignored
+# Comment lines begin with #, %, or //
+# Blank lines are permitted
+
+# Here are recognized command formats.
+#  %lf means that a floating-point number is expected
+#  %ld means that an integer is expected
+#  %s means that a string is expected
+#  %c means that a character is expected
+#  Look in functions SimCmdInterpreter, GuiCmdInterpreter, 
+#     and FswCmdInterpreter for strings and characters that 
+#     are meaningful in a particular context
+#  The first %lf is always the SimTime of command execution.
+
+# Sim-related commands
+%lf DTSIM = %lf
+%lf SC[%ld].DynMethod %s
+%lf SC[%ld].G[%ld].RotLocked[%ld] %s
+%lf SC[%ld].G[%ld].TrnLocked[%ld] %s
+%lf Impart Impulsive Delta-V of [%lf %lf %lf] m/s in Frame %c to Orb[%ld]
+   %c can be N or L
+%lf SC[%ld].LoopGain = %lf
+%lf SC[%ld].LoopDelay = %lf
+%lf SC[%ld].GainAndDelayActive = %s
+
+# GUI-related commands
+%lf POV.Host.SC %ld
+%lf CaptureCam %s
+%lf CamSnap %s
+%lf MapSnap %s
+%lf Banner = "Banner in Quotes"
+%lf GL Output Step = %lf
+%lf POV CmdRange = %lf
+%lf POV CmdSeq = %ld
+%lf POV CmdAngle = [%lf %lf %lf] deg
+%lf POV CmdPermute = [%lf %lf %lf; %lf %lf %lf; %lf %lf %lf]
+%lf POV TimeToGo = %lf
+%lf POV Frame = %c
+%lf ShowHUD %s
+%lf ShowWatermark %s
+%lf ShowShadows %s
+%lf ShowProxOps %s
+%lf ShowFOV %s
+%lf FOV[%ld].NearExists =  %s
+%lf FOV[%ld].FarExists =  %s
+
+# FSW-related commands
+%lf SC[%ld] FswTag = %s
+   # %s is PASSIVE_FSW, PROTOTYPE_FSW, etc.
+%lf SC[%ld] qrn = [%lf %lf %lf %lf]
+%lf SC[%ld] qrl = [%lf %lf %lf %lf]
+%lf SC[%ld] Cmd Angles = [%lf %lf %lf] deg, Seq = %ld wrt %c Frame
+   # %c is either N or L
+%lf SC[%ld].G[%ld] Cmd Angles = [%lf %lf %lf] deg
+#  In the following, the (first) %s is either "Primary" or "Secondary"
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at RA = %lf deg, Dec = %lf deg
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at World[%ld] Lng = %lf deg, Lat = %lf deg, Alt = %lf km
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at World[%ld]
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at GroundStation[%ld]
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at %s
+   # Last %s is SUN, MOON, any planet, VELOCITY, or MAGFIELD
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at SC[%ld]
+%lf Point SC[%ld].B[%ld] %s Vector [%lf %lf %lf] at SC[%ld].B[%ld] point [%lf %lf %lf]
+%lf Align SC[%ld].B[%ld] %s Vector [%lf %lf %lf] with %c-frame Vector [%lf %lf %lf]
+   # %c-frame can be H, N, or L
+%lf Align SC[%ld].B[%ld] %s Vector [%lf %lf %lf] with SC[%ld].B[%ld] vector [%lf %lf %lf]
+Event Eclipse Entry SC[%ld] qrl = [%lf %lf %lf %lf]
+Event Eclipse Exit SC[%ld] qrl = [%lf %lf %lf %lf]
+Event Eclipse Entry SC[%ld] Cmd Angles = [%lf %lf %lf] deg, Seq = %ld wrt %c Frame
+   # %c is either N or L
+Event Eclipse Exit SC[%ld] Cmd Angles = [%lf %lf %lf] deg, Seq = %ld wrt %c Frame
+   # %c is either N or L
+%lf Set SC[%ld] RampCoastGlide wc = %lf Hz, amax = %lf, vmax = %lf
+%lf Spin SC[%ld] about Primary Vector at %lf deg/sec
+```
+
+### `Inp_CommLink.txt`
+
+**경로:** `cfg/InOut/Inp_CommLink.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<<<  42: Comm Link Description File   >>>>>>>>>>>>>>>>>>>
+2                    ! Number of Links
+===============================  Link 0  ================================
+S-Band Uplink        ! Description
+TRUE                 ! Comm Link Exists
+TRUE  10.0           ! Output Enabled, Interval (sec)
+FALSE 1.0E-3         ! Adjust Positions for Delay, Delay Accuracy (sec)
+UPLINK               ! Link Type (UPLINK, DOWNLINK, or CROSSLINK)
+3.0E9                ! Frequency (Hz)
+-200.0               ! Link Noise Floor (dBw)
+0  0                 ! Tx Terminal ID, Body
+0.0 0.0 0.0 123      ! Tx Mounting Angles (deg), Euler Sequence
+100.0                ! Tx Power (dBw)
+40.0  -50.0          ! Tx Antenna Peak Gain, Floor Gain (dB)
+"Ant_Gnd.obj"        ! Tx Antenna Pattern Mesh File
+0  0                 ! Rx Terminal ID, Body
+0.0 0.0 0.0 123      ! Rx Mounting Angles (deg), Euler Sequence
+10.0  -50.0          ! Rx Antenna Peak Gain, Floor Gain (dB)
+"Ant_SBand.obj"      ! Rx Antenna Pattern Mesh File
+-130.0               ! Rx System Noise Power (dBw)
+1.0                  ! Atmo Loss Mean (dB)
+0.1  10.0   100      ! Atmo Loss Ran Walk std (dB), Corr Time (sec), Seed
+===============================  Link 1  ================================
+X-Band Downlink      ! Description
+TRUE                 ! Comm Link Exists
+TRUE  20.0           ! Output Enabled, Interval (sec)
+TRUE 1.0E-6          ! Adjust Positions for Delay, Delay Accuracy (sec)
+DOWNLINK             ! Link Type (UPLINK, DOWNLINK, or CROSSLINK)
+10.0E9               ! Frequency (Hz)
+-200.0               ! Link Noise Floor (dBw)
+0  0                 ! Tx Terminal ID, Body
+0.0 90.0 0.0 123     ! Tx Mounting Angles (deg), Euler Sequence
+17.0                 ! Tx Power, (dBw)
+35.0  -50.0          ! Tx Antenna Peak Gain, Floor Gain (dB)
+"Ant_XBand.obj"      ! Tx Antenna Pattern File
+0  0                 ! Rx Terminal ID, Body
+0.0 0.0 0.0 123      ! Rx Mounting Angles (deg), Euler Sequence
+70.0  -50.0          ! Rx Antenna Peak Gain, Floor Gain (dB)
+"Ant_Gnd.obj"        ! Rx Antenna Pattern File
+-130.0               ! Rx System Noise Power (dBw)
+1.0                  ! Atmo Loss Mean (dB)
+0.1  10.0   101      ! Atmo Loss Ran Walk std (dB), Corr Time (sec), Seed
+```
+
+### `Inp_FOV.txt`
+
+**경로:** `cfg/InOut/Inp_FOV.txt`
+
+
+```text
+************************* Fields of View ***************************
+4                                 !  Number of FOVs
+--------------------------------------------------------------------
+"SOLID"                           !  Label
+4   4.0                           !  Number of Sides, Length [m]
+8.0  4.0                          !  H Width, V Height [deg]
+0.0 1.0 0.0 0.5                   !  Color RGB+Alpha
+SOLID                             !  WIREFRAME, SOLID, VECTOR, or PLANE 
+TRUE  TRUE                        !  Draw Near Field, Draw Far Field
+0  0                              !  SC, Body 
+0.0  0.0  1.0                     !  Position in Body [m]
+0.0  0.0  0.0  321                !  Euler Angles [deg], Sequence
+Z_AXIS                            !  Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+--------------------------------------------------------------------
+"WIRE"                            !  Label
+24   4.0                          !  Number of Sides, Length [m]
+10.0  5.0                         !  H Width, V Height [deg]
+0.7 0.7 0.0 1.0                   !  Color RGB+Alpha
+WIREFRAME                         !  WIREFRAME, SOLID, VECTOR, or PLANE 
+TRUE  TRUE                        !  Draw Near Field, Draw Far Field
+0  0                              !  SC, Body 
+1.0  0.0  0.0                     !  Position in Body [m]
+0.0  0.0  0.0  213                !  Euler Angles [deg], Sequence
+X_AXIS                            !  Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+--------------------------------------------------------------------
+"VECTOR"                          !  Label
+0   4.0                           !  Number of Sides, Length [m]
+0.0  0.0                          !  H Width, V Height [deg]
+0.0 1.0 1.0 1.0                   !  Color RGB+Alpha
+VECTOR                            !  WIREFRAME, SOLID, VECTOR, or PLANE 
+TRUE  TRUE                        !  Draw Near Field, Draw Far Field
+0  0                              !  SC, Body 
+1.0  0.0  0.0                     !  Position in Body [m]
+135.0  0.0  0.0  213              !  Euler Angles [deg], Sequence
+Z_AXIS                            !  Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+--------------------------------------------------------------------
+"PLANE"                           !  Label
+24    8.0                         !  Number of Sides, Length [m]
+0.0  0.0                          !  H Width, V Height [deg]
+1.0 1.0 1.0 0.3                   !  Color RGB+Alpha
+PLANE                             !  WIREFRAME, SOLID, VECTOR, or PLANE 
+TRUE  TRUE                        !  Draw Near Field, Draw Far Field
+0  0                              !  SC, Body 
+0.0  0.0  0.0                     !  Position in Body [m]
+-45.0  0.0  0.0  213              !  Euler Angles [deg], Sequence
+Z_AXIS                            !  Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+```
+
+### `Inp_Graphics.txt`
+
+**경로:** `cfg/InOut/Inp_Graphics.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<  42 Graphics Configuration File  >>>>>>>>>>>>>>>>>>>
+1.0                                !  GL Output Interval [sec]
+Skymap09.txt                       !  Star Catalog File Name
+TRUE                               !  Map Window Exists
+FALSE                              !  Orrery Window Exists
+TRUE                               !  Unit Sphere Window Exists
+******************************* POV *********************************
+FALSE                              !  Pause at Startup
+TRACK_HOST                         !  POV Mode (TRACK_HOST, TRACK_TARGET, FIXED_IN_HOST)
+SC                                 !  Host Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  L                            !  Initial Host SC, Body, POV Frame
+SC                                 !  Target Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  N                            !  Initial Target SC, Body, POV Frame
+NEG_Y                              !  Boresight Axis
+POS_Z                              !  Up Axis
+3.2                                !  Initial POV Range from Target [m]
+30.0                               !  POV Angle (Vertical) [deg]
+0.0  0.0  0.0                      !  POV Position in Host [m]
+FRONT                              !  Initial POV View (FRONT, FRONT_RIGHT, etc)
+******************************* CAM *********************************
+"42 Cam"                           !  Cam Title [delimited by "]
+600  600                           !  Width, Height [pixels]
+5.0E-5                             !  Mouse Scale Factor
+1.8                                !  Display's Gamma Exponent (1.8-4.0)
+************************** CAM Show Menu ****************************
+FALSE "N Axes"                     !  Show N Axes
+FALSE "L Axes"                     !  Show L Axes
+FALSE "F Axes"                     !  Show F Axes
+TRUE  "B Axes"                     !  Show B Axes
+FALSE "N Grid"                     !  Show N Grid
+FALSE "L Grid"                     !  Show L Grid
+FALSE "F Grid"                     !  Show F Grid
+FALSE "B Grid"                     !  Show B Grid
+FALSE "Gal Grid"                   !  Show B Grid
+FALSE "FOVs"                       !  Show Fields of View
+FALSE "Prox Ops"                   !  Show Prox Ops
+FALSE "TDRS"                       !  Show TDRS Satellites
+TRUE  "Shadows"                    !  Show Shadows
+FALSE "Astro Labels"               !  Show Astro Labels
+TRUE  "Truth Vectors"              !  Show Truth Vectors
+FALSE "FSW Vectors"                !  Show FSW Vectors
+TRUE  "Milky Way"                  !  Show Milky Way
+FALSE "Fermi Sky"                  !  Show Fermi Sky
+******************************* MAP *********************************
+"42 Map"                           ! Map Title [delimited by "]
+512  256                           !  Width, Height [pixels]
+************************** MAP Show Menu ****************************
+TRUE  "Clock"                      !  Show Clock
+TRUE  "Tlm Clock"                  !  Show Clock
+FALSE "Credits"                    !  Show Credits
+TRUE  "Night"                      !  Show Night
+********************* Unit Sphere Show Menu *************************
+TRUE                               !  Show Major Constellations
+TRUE                               !  Show Zodiac Constellations
+FALSE                              !  Show Minor Constellations
+```
+
+### `Inp_Graphics_DeepSpace.txt`
+
+**경로:** `cfg/InOut/Inp_Graphics_DeepSpace.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<  42 Graphics Configuration File  >>>>>>>>>>>>>>>>>>>
+1.0                                !  GL Output Interval [sec]
+Skymap09.txt                       !  Star Catalog File Name
+TRUE                               !  Map Window Exists
+TRUE                               !  Orrery Window Exists
+TRUE                               !  Unit Sphere Window Exists
+******************************* POV *********************************
+FALSE                              !  Pause at Startup
+TRACK_HOST                         !  POV Mode (TRACK_HOST, TRACK_TARGET, FIXED_IN_HOST)
+SC                                 !  Host Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  L                            !  Initial Host SC, Body, POV Frame
+SC                                 !  Target Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  N                            !  Initial Target SC, Body, POV Frame
+NEG_Y                              !  Boresight Axis
+POS_Z                              !  Up Axis
+15.0                               !  Initial POV Range from Target [m]
+30.0                               !  POV Angle (Vertical) [deg]
+0.0  0.0  0.0                      !  POV Position in Host [m]
+FRONT                              !  Initial POV View (FRONT, FRONT_RIGHT, etc)
+******************************* CAM *********************************
+"42 Cam"                           !  Cam Title [delimited by "]
+600  600                           !  Width, Height [pixels]
+5.0E-5                             !  Mouse Scale Factor
+1.8                                !  Display's Gamma Exponent (1.8-4.0)
+************************** CAM Show Menu ****************************
+FALSE "N Axes"                     !  Show N Axes
+FALSE "L Axes"                     !  Show L Axes
+FALSE "F Axes"                     !  Show F Axes
+TRUE  "B Axes"                     !  Show B Axes
+FALSE "N Grid"                     !  Show N Grid
+FALSE "L Grid"                     !  Show L Grid
+FALSE "F Grid"                     !  Show F Grid
+FALSE "B Grid"                     !  Show B Grid
+FALSE "Gal Grid"                   !  Show B Grid
+FALSE "FOVs"                       !  Show Fields of View
+FALSE "Prox Ops"                   !  Show Prox Ops
+FALSE "TDRS"                       !  Show TDRS Satellites
+TRUE  "Shadows"                    !  Show Shadows
+FALSE "Astro Labels"               !  Show Astro Labels
+TRUE  "Truth Vectors"              !  Show Truth Vectors
+FALSE "FSW Vectors"                !  Show FSW Vectors
+TRUE  "Milky Way"                  !  Show Milky Way
+FALSE "Fermi Sky"                  !  Show Fermi Sky
+******************************* MAP *********************************
+"42 Map"                           ! Map Title [delimited by "]
+512  256                           !  Width, Height [pixels]
+************************** MAP Show Menu ****************************
+TRUE  "Clock"                      !  Show Clock
+TRUE  "Tlm Clock"                  !  Show Clock
+FALSE "Credits"                    !  Show Credits
+TRUE  "Night"                      !  Show Night
+********************* Unit Sphere Show Menu *************************
+TRUE                               !  Show Major Constellations
+TRUE                               !  Show Zodiac Constellations
+FALSE                              !  Show Minor Constellations
+```
+
+### `Inp_Graphics_Gateway.txt`
+
+**경로:** `cfg/InOut/Inp_Graphics_Gateway.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<  42 Graphics Configuration File  >>>>>>>>>>>>>>>>>>>
+1.0                                !  GL Output Interval [sec]
+Skymap09.txt                       !  Star Catalog File Name
+TRUE                               !  Map Window Exists
+TRUE                               !  Orrery Window Exists
+TRUE                               !  Unit Sphere Window Exists
+******************************* POV *********************************
+FALSE                              !  Pause at Startup
+TRACK_HOST                         !  POV Mode (TRACK_HOST, TRACK_TARGET, FIXED_IN_HOST)
+SC                                 !  Host Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  L                            !  Initial Host SC, Body, POV Frame
+SC                                 !  Target Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  N                            !  Initial Target SC, Body, POV Frame
+NEG_Y                              !  Boresight Axis
+POS_Z                              !  Up Axis
+32                                 !  Initial POV Range from Target [m]
+30.0                               !  POV Angle (Vertical) [deg]
+0.0  0.0  0.0                      !  POV Position in Host [m]
+FRONT                              !  Initial POV View (FRONT, FRONT_RIGHT, etc)
+******************************* CAM *********************************
+"42 Cam"                           !  Cam Title [delimited by "]
+600  600                           !  Width, Height [pixels]
+5.0E-5                             !  Mouse Scale Factor
+1.8                                !  Display's Gamma Exponent (1.8-4.0)
+************************** CAM Show Menu ****************************
+FALSE "N Axes"                     !  Show N Axes
+FALSE "L Axes"                     !  Show L Axes
+FALSE "F Axes"                     !  Show F Axes
+TRUE  "B Axes"                     !  Show B Axes
+FALSE "N Grid"                     !  Show N Grid
+FALSE "L Grid"                     !  Show L Grid
+FALSE "F Grid"                     !  Show F Grid
+FALSE "B Grid"                     !  Show B Grid
+FALSE "Gal Grid"                   !  Show B Grid
+FALSE "FOVs"                       !  Show Fields of View
+FALSE "Prox Ops"                   !  Show Prox Ops
+FALSE "TDRS"                       !  Show TDRS Satellites
+TRUE  "Shadows"                    !  Show Shadows
+FALSE "Astro Labels"               !  Show Astro Labels
+TRUE  "Truth Vectors"              !  Show Truth Vectors
+FALSE "FSW Vectors"                !  Show FSW Vectors
+TRUE  "Milky Way"                  !  Show Milky Way
+FALSE "Fermi Sky"                  !  Show Fermi Sky
+******************************* MAP *********************************
+"42 Map"                           ! Map Title [delimited by "]
+512  256                           !  Width, Height [pixels]
+************************** MAP Show Menu ****************************
+TRUE  "Clock"                      !  Show Clock
+TRUE  "Tlm Clock"                  !  Show Clock
+FALSE "Credits"                    !  Show Credits
+TRUE  "Night"                      !  Show Night
+********************* Unit Sphere Show Menu *************************
+TRUE                               !  Show Major Constellations
+TRUE                               !  Show Zodiac Constellations
+FALSE                              !  Show Minor Constellations
+```
+
+### `Inp_Graphics_STF1.txt`
+
+**경로:** `cfg/InOut/Inp_Graphics_STF1.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<  42 Graphics Configuration File  >>>>>>>>>>>>>>>>>>>
+1.0                                !  GL Output Interval [sec]
+Skymap09.txt                       !  Star Catalog File Name
+TRUE                               !  Map Window Exists
+FALSE                              !  Orrery Window Exists
+TRUE                               !  Unit Sphere Window Exists
+******************************* POV *********************************
+FALSE                              !  Pause at Startup
+TRACK_HOST                         !  POV Mode (TRACK_HOST, TRACK_TARGET, FIXED_IN_HOST)
+SC                                 !  Host Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  L                            !  Initial Host SC, Body, POV Frame
+SC                                 !  Target Type (WORLD, REFORB, FRM, SC, BODY)
+0  0  N                            !  Initial Target SC, Body, POV Frame
+NEG_Y                              !  Boresight Axis
+POS_Z                              !  Up Axis
+3.2                                !  Initial POV Range from Target [m]
+30.0                               !  POV Angle (Vertical) [deg]
+0.0  0.0  0.0                      !  POV Position in Host [m]
+FRONT                              !  Initial POV View (FRONT, FRONT_RIGHT, etc)
+******************************* CAM *********************************
+"42 Cam"                           !  Cam Title [delimited by "]
+600  600                           !  Width, Height [pixels]
+5.0E-5                             !  Mouse Scale Factor
+1.8                                !  Display's Gamma Exponent (1.8-4.0)
+************************** CAM Show Menu ****************************
+FALSE "N Axes"                     !  Show N Axes
+FALSE "L Axes"                     !  Show L Axes
+FALSE "F Axes"                     !  Show F Axes
+TRUE  "B Axes"                     !  Show B Axes
+FALSE "N Grid"                     !  Show N Grid
+FALSE "L Grid"                     !  Show L Grid
+FALSE "F Grid"                     !  Show F Grid
+FALSE "B Grid"                     !  Show B Grid
+FALSE "Gal Grid"                   !  Show B Grid
+FALSE "FOVs"                       !  Show Fields of View
+FALSE "Prox Ops"                   !  Show Prox Ops
+FALSE "TDRS"                       !  Show TDRS Satellites
+TRUE  "Shadows"                    !  Show Shadows
+FALSE "Astro Labels"               !  Show Astro Labels
+TRUE  "Truth Vectors"              !  Show Truth Vectors
+FALSE "FSW Vectors"                !  Show FSW Vectors
+TRUE  "Milky Way"                  !  Show Milky Way
+FALSE "Fermi Sky"                  !  Show Fermi Sky
+******************************* MAP *********************************
+"42 Map"                           ! Map Title [delimited by "]
+512  256                           !  Width, Height [pixels]
+************************** MAP Show Menu ****************************
+TRUE  "Clock"                      !  Show Clock
+TRUE  "Tlm Clock"                  !  Show Clock
+FALSE "Credits"                    !  Show Credits
+TRUE  "Night"                      !  Show Night
+********************* Unit Sphere Show Menu *************************
+TRUE                               !  Show Major Constellations
+TRUE                               !  Show Zodiac Constellations
+FALSE                              !  Show Minor Constellations
+```
+
+### `Inp_IPC.shmem.txt`
+
+**경로:** `cfg/InOut/Inp_IPC.shmem.txt`
+
+
+```text
+<<<<<<<<<<<<<<< 42: InterProcess Comm Configuration File >>>>>>>>>>>>>>>>
+8                                      ! Number of Sockets
+**********************************  RW 0 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4278                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 1 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4378                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 2 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4478                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Torquer IPC  *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Thruster IPC  ****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Thruster.Rx"                           ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4280                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Truth data to sim to pass to COSMOS ********************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       9999                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  Write to file for analysis *****************************
+WRITEFILE                               ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6008                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  Blackboard IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"EPS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4285                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+TRUE                                    ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0]"                                 ! Prefix 0
+```
+
+### `Inp_IPC.sockets.txt`
+
+**경로:** `cfg/InOut/Inp_IPC.sockets.txt`
+
+
+```text
+<<<<<<<<<<<<<<< 42: InterProcess Comm Configuration File >>>>>>>>>>>>>>>>
+17                                      ! Number of Sockets
+**********************************  RW 0 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4278                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 0 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4277                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[0].H"                        ! Prefix 0
+**********************************  RW 1 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4378                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 1 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4377                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[1].H"                        ! Prefix 0
+**********************************  RW 2 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4478                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 2 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4477                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[2].H"                        ! Prefix 0
+**********************************  Torquer IPC  *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Thruster IPC  ****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Thruster.Rx"                           ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4280                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  GPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State03.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4245                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].GPS[0]"                          ! Prefix 0
+**********************************  CSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State04.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4227                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].CSS"                             ! Prefix 0
+**********************************  MAG IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State05.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4234                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].MAG"                             ! Prefix 0
+**********************************  Truth data to sim to pass to COSMOS ********************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       9999                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  Write to file for analysis *****************************
+WRITEFILE                               ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6008                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  FSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"FSS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4284                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].FSS[0]"                          ! Prefix 0
+**********************************  IMU IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"IMU.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4281                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC[0].Accel"                           ! Prefix 0
+"SC[0].Gyro"                            ! Prefix 1
+**********************************  Star Tracker IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"ST.42"                                 ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4282                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].ST"                              ! Prefix 0
+**********************************  EPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"EPS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4283                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+4                                       ! Number of TX prefixes
+"SC[0].svb"                             ! Prefix 0
+"SC[0].PosR"                            ! Prefix 1
+"SC[0].qn"                              ! Prefix 2
+"Orb[0].PosN"                           ! Prefix 3
+```
+
+### `Inp_IPC.txt`
+
+**경로:** `cfg/InOut/Inp_IPC.txt`
+
+
+```text
+<<<<<<<<<<<<<<< 42: InterProcess Comm Configuration File >>>>>>>>>>>>>>>>
+18                                      ! Number of Sockets
+**********************************  RW 0 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4278                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 0 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4277                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[0].H"                        ! Prefix 0
+**********************************  RW 1 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4378                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 1 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4377                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[1].H"                        ! Prefix 0
+**********************************  RW 2 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4478                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 2 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4477                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[2].H"                        ! Prefix 0
+**********************************  Torquer IPC  *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Thruster IPC  ****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Thruster.Rx"                           ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4280                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  GPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State03.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4245                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].GPS[0]"                          ! Prefix 0
+**********************************  CSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State04.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4227                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].CSS"                             ! Prefix 0
+**********************************  MAG IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State05.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4234                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].MAG"                             ! Prefix 0
+**********************************  Truth data to sim to pass to COSMOS ********************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       9999                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  Write to file for analysis *****************************
+WRITEFILE                               ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6008                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  FSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"FSS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4284                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].FSS[0]"                          ! Prefix 0
+**********************************  IMU IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"IMU.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4281                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC[0].Accel"                           ! Prefix 0
+"SC[0].Gyro"                            ! Prefix 1
+**********************************  Star Tracker IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"ST.42"                                 ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4282                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].ST"                              ! Prefix 0
+**********************************  EPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"EPS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4283                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+4                                       ! Number of TX prefixes
+"SC[0].svb"                             ! Prefix 0
+"SC[0].PosR"                            ! Prefix 1
+"SC[0].qn"                              ! Prefix 2
+"Orb[0].PosN"                           ! Prefix 3
+**********************************  Radio IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Radio.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4286                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"CommLink"                              ! Prefix 0
+```
+
+### `Inp_IPC_MultipleSC.txt`
+
+**경로:** `cfg/InOut/Inp_IPC_MultipleSC.txt`
+
+
+```text
+<<<<<<<<<<<<<<< 42: InterProcess Comm Configuration File >>>>>>>>>>>>>>>>
+47                                      ! Number of Sockets
+**********************************  RW 0 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4278                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 0 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4277                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[0].H"                        ! Prefix 0
+**********************************  RW 1 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4378                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 1 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4377                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[1].H"                        ! Prefix 0
+**********************************  RW 2 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4478                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 2 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4477                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].Whl[2].H"                        ! Prefix 0
+**********************************  Torquer IPC  *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Thruster IPC  ****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Thruster.Rx"                           ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4280                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  GPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State03.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4245                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].GPS[0]"                          ! Prefix 0
+**********************************  CSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State04.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4227                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].CSS"                             ! Prefix 0
+**********************************  MAG IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State05.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4234                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].MAG"                             ! Prefix 0
+**********************************  Truth data to sim to pass to COSMOS ********************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       9999                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  Write to file for analysis *****************************
+WRITEFILE                               ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State.42"                              ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6008                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+"Orb"                                   ! Prefix 1
+**********************************  FSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"FSS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4284                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].FSS[0]"                          ! Prefix 0
+**********************************  IMU IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"IMU.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4281                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC[0].Accel"                           ! Prefix 0
+"SC[0].Gyro"                            ! Prefix 1
+**********************************  Star Tracker IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"ST.42"                                 ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4282                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[0].ST"                              ! Prefix 0
+**********************************  EPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"EPS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       4283                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+4                                       ! Number of TX prefixes
+"SC[0].svb"                             ! Prefix 0
+"SC[0].PosR"                            ! Prefix 1
+"SC[0].qn"                              ! Prefix 2
+"Orb[0].PosN"                           ! Prefix 3
+**********************************  RW 0 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5278                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 0 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5277                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].Whl[0].H"                        ! Prefix 0
+**********************************  RW 1 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5378                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 1 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5377                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].Whl[1].H"                        ! Prefix 0
+**********************************  RW 2 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5478                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 2 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5477                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].Whl[2].H"                        ! Prefix 0
+**********************************  Torquer IPC  *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Thruster IPC  ****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Thruster.Rx"                           ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5280                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  GPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State03.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5245                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].GPS[0]"                          ! Prefix 0
+**********************************  CSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State04.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5227                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].CSS"                             ! Prefix 0
+**********************************  MAG IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State05.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5234                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].MAG"                             ! Prefix 0
+**********************************  FSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"FSS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5284                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].FSS[0]"                          ! Prefix 0
+**********************************  IMU IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"IMU.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5281                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC[1].Accel"                           ! Prefix 0
+"SC[1].Gyro"                            ! Prefix 1
+**********************************  Star Tracker IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"ST.42"                                 ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5282                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[1].ST"                              ! Prefix 0
+**********************************  EPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"EPS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       5283                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+4                                       ! Number of TX prefixes
+"SC[1].svb"                             ! Prefix 0
+"SC[1].PosR"                            ! Prefix 1
+"SC[1].qn"                              ! Prefix 2
+"Orb[1].PosN"                           ! Prefix 3
+**********************************  RW 0 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6278                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 0 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6277                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].Whl[0].H"                        ! Prefix 0
+**********************************  RW 1 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6378                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 1 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6377                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].Whl[1].H"                        ! Prefix 0
+**********************************  RW 2 to 42   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State01.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6478                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  RW 2 from 42   *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State02.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6477                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].Whl[2].H"                        ! Prefix 0
+**********************************  Torquer IPC  *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  Thruster IPC  ****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"Thruster.Rx"                           ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6280                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
+**********************************  GPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State03.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6245                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].GPS[0]"                          ! Prefix 0
+**********************************  CSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State04.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6227                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].CSS"                             ! Prefix 0
+**********************************  MAG IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"State05.42"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6234                     ! Server Host Name, Port
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].MAG"                             ! Prefix 0
+**********************************  FSS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"FSS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6284                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].FSS[0]"                          ! Prefix 0
+**********************************  IMU IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"IMU.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6281                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+2                                       ! Number of TX prefixes
+"SC[2].Accel"                           ! Prefix 0
+"SC[2].Gyro"                            ! Prefix 1
+**********************************  Star Tracker IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"ST.42"                                 ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6282                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC[2].ST"                              ! Prefix 0
+**********************************  EPS IPC  *****************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+"EPS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+fortytwo       6283                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+4                                       ! Number of TX prefixes
+"SC[2].svb"                             ! Prefix 0
+"SC[2].PosR"                            ! Prefix 1
+"SC[2].qn"                              ! Prefix 2
+"Orb[2].PosN"                           ! Prefix 3
+```
+
+### `Inp_NOS3.txt`
+
+**경로:** `cfg/InOut/Inp_NOS3.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<  42 NOS3 Time Configuration File  >>>>>>>>>>>>>>>>>>>
+command                         !  NOS3 Time Bus
+tcp://nos-engine-server:12001   !  NOS3 Time Connection String
+```
+
+### `Inp_Region.txt`
+
+**경로:** `cfg/InOut/Inp_Region.txt`
+
+
+```text
+********************  Regions for 42  *******************
+2                            !  Number of Regions
+---------------------------------------------------------
+TRUE                         ! Exists
+"TAG"                        ! Name
+MINORBODY_2                  ! World
+POSW                         ! POSW or LLA
+2400.9966  -1074.41895  439.1271   ! Position in W, m
+-24.120375966731  9.48979662  27.7155      ! Lng, Lat (deg), Alt (m)
+1.0E6  1.0E4  0.1            ! Elasticity, Damping, Friction Coef
+Rgn_TAG.obj                  ! Geometry File Name
+---------------------------------------------------------
+TRUE                         ! Exists
+"LZ"                         ! Name
+EARTH                        ! World
+LLA                          ! POSW or LLA
+0.0   0.0  0.0               ! Position in W, m
+-80.53  28.46 1000.0               ! Lng, Lat (deg), Alt (m)
+1.0E6  1.0E4  0.1            ! Elasticity, Damping, Friction Coef
+Rgn_Terrain.obj              ! Geometry File Name
+```
+
+### `Inp_ScOutput.txt`
+
+**경로:** `cfg/InOut/Inp_ScOutput.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<<  SC Outputs for 42  >>>>>>>>>>>>>>>>>>>
+TRUE  1.0   ! Sc Tlm Enabled, Interval
+FALSE  5.0   ! ScB Tlm Enabled, Interval
+FALSE  5.0   ! ScG Tlm Enabled, Interval
+FALSE  5.0   ! ScGN Tlm Enabled, Interval
+FALSE  5.0   ! ScWhl Tlm Enabled, Interval
+FALSE  5.0   ! ScGyro Tlm Enabled, Interval
+FALSE  5.0   ! ScShaker Tlm Enabled, Interval
+
+```
+
+### `Inp_Sim.txt`
+
+**경로:** `cfg/InOut/Inp_Sim.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: The Mostly Harmless Simulator  >>>>>>>>>>>>>>>>>
+************************** Simulation Control **************************
+NOS3                            !  Time Mode (FAST, REAL, EXTERNAL, or NOS3)
+604800.0   0.01                 !  Sim Duration, Step Size [sec]
+1.0                             !  File Output Interval [sec]
+0                               !  RNG Seed
+TRUE                            !  Graphics Front End?
+Inp_Cmd.txt                     !  Command Script File Name
+**************************  Reference Orbits  **************************
+1                               !  Number of Reference Orbits
+TRUE   Orb_LEO.txt              !  Input file name for Orb 0
+*****************************  Spacecraft  *****************************
+1                               !  Number of Spacecraft
+TRUE  0 SC_NOS3.txt             !  Existence, RefOrb, Input file for SC 0
+***************************** Environment  *****************************
+10 20 2025                      !  Date (UTC) (Month, Day, Year)
+17 43 20.00                     !  Time (UTC) (Hr,Min,Sec)
+37.0                            !  Leap Seconds (sec)
+USER                            !  F10.7, Ap (USER, NOMINAL or TWOSIGMA)
+230.0                           !  USER-provided F10.7
+100.0                           !  USER-provided Ap 
+IGRF                            !  Magfield (NONE,DIPOLE,IGRF)
+8   8                           !  IGRF Degree and Order (<=10)
+8   8                           !  Earth Gravity Model N and M (<=18)
+2   0                           !  Mars Gravity Model N and M (<=18)
+2   0                           !  Luna Gravity Model N and M (<=18)
+FALSE   FALSE                   !  Aerodynamic Forces & Torques (Shadows)
+FALSE                           !  Gravity Gradient Torques
+FALSE   FALSE                   !  Solar Pressure Forces & Torques (Shadows)
+FALSE                           !  Residual Magnetic Moment Torques
+FALSE                           !  Gravity Perturbation Forces
+FALSE                           !  Thruster Plume Forces & Torques
+FALSE                           !  Contact Forces and Torques
+FALSE                           !  CFD Slosh Forces and Torques
+FALSE                           !  Albedo Effect on CSS Measurements
+FALSE                           !  Output Environmental Torques to Files
+********************* Celestial Bodies of Interest *********************
+MEAN                            !  Ephem Option (MEAN, DE430, DE440)
+FALSE                           !  Mercury
+FALSE                           !  Venus
+TRUE                            !  Earth and Luna
+FALSE                           !  Mars and its moons
+FALSE                           !  Jupiter and its moons
+FALSE                           !  Saturn and its moons
+FALSE                           !  Uranus and its moons
+FALSE                           !  Neptune and its moons
+FALSE                           !  Pluto and its moons
+FALSE                           !  Asteroids and Comets
+***************** Lagrange Point Systems of Interest ******************
+TRUE                            !  Earth-Moon
+FALSE                           !  Sun-Earth
+FALSE                           !  Sun-Jupiter
+************************* Ground Stations ***************************
+6                                            ! Number of Ground Stations
+TRUE  EARTH  -77.0  37.0  "GSFC"             ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -155.6 19.0  "South Point"      ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  115.4 -29.0  "Dongara"          ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -71.0 -33.0  "Santiago"         ! Exists, World, Lng, Lat, Label
+TRUE  LUNA   45.0  45.0   "Moon Base Alpha"  ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -116.9 35.4  "Goldstone"        ! Exists, World, Lng, Lat, Label
+```
+
+### `Inp_Sim_DeepSpace.txt`
+
+**경로:** `cfg/InOut/Inp_Sim_DeepSpace.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: The Mostly Harmless Simulator  >>>>>>>>>>>>>>>>>
+************************** Simulation Control **************************
+NOS3                            !  Time Mode (FAST, REAL, EXTERNAL, or NOS3)
+604800.0   0.01                 !  Sim Duration, Step Size [sec]
+1.0                             !  File Output Interval [sec]
+0                               !  RNG Seed
+TRUE                            !  Graphics Front End?
+Inp_Cmd.txt                     !  Command Script File Name
+**************************  Reference Orbits  **************************
+1                               !  Number of Reference Orbits
+TRUE   Orb_LLO.txt              !  Input file name for Orb 1
+*****************************  Spacecraft  *****************************
+1                               !  Number of Spacecraft
+TRUE  0 SC_DeepSpaceComm.txt    !  Existence, RefOrb, Input file for SC 1
+***************************** Environment  *****************************
+10 20 2025                      !  Date (UTC) (Month, Day, Year)
+17 43 20.00                     !  Time (UTC) (Hr,Min,Sec)
+37.0                            !  Leap Seconds (sec)
+USER                            !  F10.7, Ap (USER, NOMINAL or TWOSIGMA)
+230.0                           !  USER-provided F10.7
+100.0                           !  USER-provided Ap 
+IGRF                            !  Magfield (NONE,DIPOLE,IGRF)
+8   8                           !  IGRF Degree and Order (<=10)
+8   8                           !  Earth Gravity Model N and M (<=18)
+2   0                           !  Mars Gravity Model N and M (<=18)
+2   0                           !  Luna Gravity Model N and M (<=18)
+FALSE   FALSE                   !  Aerodynamic Forces & Torques (Shadows)
+FALSE                           !  Gravity Gradient Torques
+FALSE   FALSE                   !  Solar Pressure Forces & Torques (Shadows)
+FALSE                           !  Residual Magnetic Moment Torques
+FALSE                           !  Gravity Perturbation Forces
+FALSE                           !  Thruster Plume Forces & Torques
+FALSE                           !  Contact Forces and Torques
+FALSE                           !  CFD Slosh Forces and Torques
+FALSE                           !  Albedo Effect on CSS Measurements
+FALSE                           !  Output Environmental Torques to Files
+********************* Celestial Bodies of Interest *********************
+MEAN                            !  Ephem Option (MEAN, DE430, DE440)
+FALSE                           !  Mercury
+FALSE                           !  Venus
+TRUE                            !  Earth and Luna
+TRUE                            !  Mars and its moons
+FALSE                           !  Jupiter and its moons
+FALSE                           !  Saturn and its moons
+FALSE                           !  Uranus and its moons
+FALSE                           !  Neptune and its moons
+FALSE                           !  Pluto and its moons
+FALSE                           !  Asteroids and Comets
+***************** Lagrange Point Systems of Interest ******************
+TRUE                            !  Earth-Moon
+FALSE                           !  Sun-Earth
+FALSE                           !  Sun-Jupiter
+************************* Ground Stations ***************************
+3                                            ! Number of Ground Stations
+TRUE  EARTH  -116.8900 35.4267  "Goldstone"  ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -4.2497  40.4292  "Madrid"      ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  148.9817 -35.4014  "Canberra"   ! Exists, World, Lng, Lat, Label
+```
+
+### `Inp_Sim_Gateway.txt`
+
+**경로:** `cfg/InOut/Inp_Sim_Gateway.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: The Mostly Harmless Simulator  >>>>>>>>>>>>>>>>>
+************************** Simulation Control **************************
+NOS3                            !  Time Mode (FAST, REAL, EXTERNAL, or NOS3)
+604800.0   0.01                 !  Sim Duration, Step Size [sec]
+1.0                             !  File Output Interval [sec]
+0                               !  RNG Seed
+TRUE                            !  Graphics Front End?
+Inp_Cmd.txt                     !  Command Script File Name
+**************************  Reference Orbits  **************************
+1                               !  Number of Reference Orbits
+TRUE   Orb_NRHO.txt             !  Input file name for Orb 0
+*****************************  Spacecraft  *****************************
+1                               !  Number of Spacecraft
+TRUE  0 SC_Gateway.txt          !  Existence, RefOrb, Input file for SC 0
+***************************** Environment  *****************************
+10 20 2025                      !  Date (UTC) (Month, Day, Year)
+17 43 20.00                     !  Time (UTC) (Hr,Min,Sec)
+37.0                            !  Leap Seconds (sec)
+USER                            !  F10.7, Ap (USER, NOMINAL or TWOSIGMA)
+230.0                           !  USER-provided F10.7
+100.0                           !  USER-provided Ap 
+IGRF                            !  Magfield (NONE,DIPOLE,IGRF)
+8   8                           !  IGRF Degree and Order (<=10)
+8   8                           !  Earth Gravity Model N and M (<=18)
+2   0                           !  Mars Gravity Model N and M (<=18)
+2   0                           !  Luna Gravity Model N and M (<=18)
+FALSE   FALSE                   !  Aerodynamic Forces & Torques (Shadows)
+FALSE                           !  Gravity Gradient Torques
+FALSE   FALSE                   !  Solar Pressure Forces & Torques (Shadows)
+FALSE                           !  Residual Magnetic Moment Torques
+FALSE                           !  Gravity Perturbation Forces
+FALSE                           !  Thruster Plume Forces & Torques
+FALSE                           !  Contact Forces and Torques
+FALSE                           !  CFD Slosh Forces and Torques
+FALSE                           !  Albedo Effect on CSS Measurements
+FALSE                           !  Output Environmental Torques to Files
+********************* Celestial Bodies of Interest *********************
+MEAN                            !  Ephem Option (MEAN, DE430, DE440)
+FALSE                           !  Mercury
+FALSE                           !  Venus
+TRUE                            !  Earth and Luna
+FALSE                           !  Mars and its moons
+FALSE                           !  Jupiter and its moons
+FALSE                           !  Saturn and its moons
+FALSE                           !  Uranus and its moons
+FALSE                           !  Neptune and its moons
+FALSE                           !  Pluto and its moons
+FALSE                           !  Asteroids and Comets
+***************** Lagrange Point Systems of Interest ******************
+TRUE                            !  Earth-Moon
+FALSE                           !  Sun-Earth
+FALSE                           !  Sun-Jupiter
+************************* Ground Stations ***************************
+5                                            ! Number of Ground Stations
+TRUE  EARTH  -77.0  37.0  "GSFC"             ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -155.6 19.0  "South Point"      ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  115.4 -29.0  "Dongara"          ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -71.0 -33.0  "Santiago"         ! Exists, World, Lng, Lat, Label
+TRUE  LUNA   45.0  45.0   "Moon Base Alpha"  ! Exists, World, Lng, Lat, Label
+```
+
+### `Inp_Sim_STF1.txt`
+
+**경로:** `cfg/InOut/Inp_Sim_STF1.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: The Mostly Harmless Simulator  >>>>>>>>>>>>>>>>>
+************************** Simulation Control **************************
+NOS3                            !  Time Mode (FAST, REAL, EXTERNAL, or NOS3)
+604800.0   0.01                 !  Sim Duration, Step Size [sec]
+1.0                             !  File Output Interval [sec]
+0                               !  RNG Seed
+TRUE                            !  Graphics Front End?
+Inp_Cmd.txt                     !  Command Script File Name
+**************************  Reference Orbits  **************************
+1                               !  Number of Reference Orbits
+TRUE   Orb_LEO.txt              !  Input file name for Orb 0
+*****************************  Spacecraft  *****************************
+1                               !  Number of Spacecraft
+TRUE  0 SC_NOS3.txt             !  Existence, RefOrb, Input file for SC 0
+***************************** Environment  *****************************
+10 20 2025                      !  Date (UTC) (Month, Day, Year)
+17 43 20.00                     !  Time (UTC) (Hr,Min,Sec)
+37.0                            !  Leap Seconds (sec)
+USER                            !  F10.7, Ap (USER, NOMINAL or TWOSIGMA)
+230.0                           !  USER-provided F10.7
+100.0                           !  USER-provided Ap 
+IGRF                            !  Magfield (NONE,DIPOLE,IGRF)
+8   8                           !  IGRF Degree and Order (<=10)
+8   8                           !  Earth Gravity Model N and M (<=18)
+2   0                           !  Mars Gravity Model N and M (<=18)
+2   0                           !  Luna Gravity Model N and M (<=18)
+FALSE   FALSE                   !  Aerodynamic Forces & Torques (Shadows)
+FALSE                           !  Gravity Gradient Torques
+FALSE   FALSE                   !  Solar Pressure Forces & Torques (Shadows)
+FALSE                           !  Residual Magnetic Moment Torques
+FALSE                           !  Gravity Perturbation Forces
+FALSE                           !  Thruster Plume Forces & Torques
+FALSE                           !  Contact Forces and Torques
+FALSE                           !  CFD Slosh Forces and Torques
+FALSE                           !  Albedo Effect on CSS Measurements
+FALSE                           !  Output Environmental Torques to Files
+********************* Celestial Bodies of Interest *********************
+MEAN                            !  Ephem Option (MEAN, DE430, DE440)
+FALSE                           !  Mercury
+FALSE                           !  Venus
+TRUE                            !  Earth and Luna
+FALSE                           !  Mars and its moons
+FALSE                           !  Jupiter and its moons
+FALSE                           !  Saturn and its moons
+FALSE                           !  Uranus and its moons
+FALSE                           !  Neptune and its moons
+FALSE                           !  Pluto and its moons
+FALSE                           !  Asteroids and Comets
+***************** Lagrange Point Systems of Interest ******************
+TRUE                            !  Earth-Moon
+FALSE                           !  Sun-Earth
+FALSE                           !  Sun-Jupiter
+************************* Ground Stations ***************************
+6                                            ! Number of Ground Stations
+TRUE  EARTH  -77.0  37.0  "GSFC"             ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -155.6 19.0  "South Point"      ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  115.4 -29.0  "Dongara"          ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -71.0 -33.0  "Santiago"         ! Exists, World, Lng, Lat, Label
+TRUE  LUNA   45.0  45.0   "Moon Base Alpha"  ! Exists, World, Lng, Lat, Label
+TRUE  EARTH  -116.9 35.4  "Goldstone"        ! Exists, World, Lng, Lat, Label
+```
+
+### `Inp_TDRS.txt`
+
+**경로:** `cfg/InOut/Inp_TDRS.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<<<  42 TDRS Configuration File  >>>>>>>>>>>>>>>>>>>>>>
+FALSE  "TDRS-1"             ! TDRS-1 Exists, Designation
+FALSE  "In Memorium"        ! TDRS-2 was lost along with Challenger
+TRUE   "TDZ"                ! TDRS-3 Exists, Designation
+FALSE  "TDS"                ! TDRS-4 Exists, Designation
+FALSE  "TD171"              ! TDRS-5 Exists, Designation
+TRUE   "TDW"                ! TDRS-6 Exists, Designation
+FALSE  "TDRS-7"             ! TDRS-7 Exists, Designation
+FALSE  "TD271"              ! TDRS-8 Exists, Designation
+FALSE  "TDRS-9"             ! TDRS-9 Exists, Designation
+TRUE   "TDE"                ! TDRS-10 Exists, Designation
+
+
+```
+
+### `Nodes_Simple.txt`
+
+**경로:** `cfg/InOut/Nodes_Simple.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<  Body Node Inputs for 42  >>>>>>>>>>>>>>>>>>>>>
+Simple Nodes                    ! Description
+4                               ! Number of Nodes
+******************* Node Location, Comment *********************
+-1.0  0.0  2.5        "Wheels"
+ 1.0 -1.0  1.5        "Gyro"
+0.0  0.0  1.0         "Fwd Thrusters"
+0.0  0.0 -1.0         "Aft Thrusters"
+```
+
+### `Optics_Simple.txt`
+
+**경로:** `cfg/InOut/Optics_Simple.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<<  Optics Inputs for 42  >>>>>>>>>>>>>>>>>>>>>>
+Minimal Optical System          ! Description
+2                               ! Number of Elements
+******************* Element 0 *********************
+0  0  0             ! S/C, Body, Node
+APERTURE            ! Element Type (APERTURE, DETECTOR, PLANAR, PARABOLIC, SPHERICAL, THINLENS)
+0.0 0.0 1.0         ! Axis
+0.1                 ! Aperture Diameter, m
+1.0                 ! Focal Length (ignored for DETECTOR, PLANAR)
+2.0  CONCAVE        ! Radius of Curvature, CONCAVE or CONVEX (SPHERICAL only)
+******************* Element 1 *********************
+0  0  1             ! S/C, Body, Node
+DETECTOR            ! Element Type (APERTURE, DETECTOR, PLANAR, PARABOLIC, SPHERICAL, THINLENS)
+0.0 0.0 1.0         ! Axis
+0.01                ! Aperture Diameter, m
+0.01                ! Focal Length (ignored for DETECTOR, PLANAR)
+2.0  CONCAVE        ! Radius of Curvature, CONCAVE or CONVEX (SPHERICAL only)
+```
+
+### `Orb_Ellipse.txt`
+
+**경로:** `cfg/InOut/Orb_Ellipse.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Orbit Description File   >>>>>>>>>>>>>>>>>
+Eccentric Earth Orbit               !  Description
+CENTRAL                       !  Orbit Type (ZERO, FLIGHT, CENTRAL, THREE_BODY)
+::::::::::::::  Use these lines if ZERO           :::::::::::::::::
+MINORBODY_2                   !  World
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if FLIGHT         :::::::::::::::::
+0                             !  Region Number
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if CENTRAL        :::::::::::::::::
+EARTH                         !  Orbit Center
+FALSE                         !  Secular Orbit Drift Due to J2
+KEP                           !  Use Keplerian elements (KEP) or (RV) or FILE
+PA                            !  Use Peri/Apoapsis (PA) or min alt/ecc (AE)
+185.0      2000.0              !  Periapsis & Apoapsis Altitude, km
+400.0  2.0                    !  Min Altitude (km), Eccentricity
+52.0                          !  Inclination (deg)
+180.0                         !  Right Ascension of Ascending Node (deg)
+0.0                           !  Argument of Periapsis (deg)
+0.0                           !  True Anomaly (deg)
+0.0  0.0  0.0                 !  RV Initial Position (km)
+0.0  0.0  0.0                 !  RV Initial Velocity (km/sec)
+TRV  "ORB_ID"                 !  TLE or TRV format, Label to find in file
+"TRV.txt"                     !  File name
+:::::::::::::  Use these lines if THREE_BODY      ::::::::::::::::
+SUNEARTH                      !  Lagrange system
+LAGDOF_MODES                  !  Propagate using LAGDOF_MODES or LAGDOF_COWELL or LAGDOF_SPLINE
+MODES                         !  Initialize with MODES or XYZ or FILE
+L2                            !  Libration point (L1, L2, L3, L4, L5)
+800000.0                      !  XY Semi-major axis, km
+45.0                          !  Initial XY Phase, deg  (CCW from -Y)
+CW                            !  Sense (CW, CCW), viewed from +Z
+0.0                           !  Second XY Mode Semi-major Axis, km (L4, L5 only)
+0.0                           !  Second XY Mode Initial Phase, deg (L4, L5 only)
+CW                            !  Sense (CW, CCW), viewed from +Z (L4, L5 only)
+400000.0                      !  Z Semi-axis, km
+60.0                          !  Initial Z Phase, deg
+1.05  0.5  0.0                !  Initial X, Y, Z (Non-dimensional)
+0.0   0.0  0.0                !  Initial Xdot, Ydot, Zdot (Non-dimensional)
+TRV  "ORB_ID"                 !  TLE, TRV or SPLINE format, Label to find in file
+"TRV.txt"                     !  File name
+******************* Formation Frame Parameters ************************
+L                             !  Formation Frame Fixed in [NL]
+0.0  0.0  0.0  123            !  Euler Angles (deg) and Sequence
+L                             !  Formation Origin expressed in [NL]
+0.0  0.0  0.0                 !  Formation Origin wrt Ref Orbit (m)
+```
+
+### `Orb_L3.txt`
+
+**경로:** `cfg/InOut/Orb_L3.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Orbit Description File   >>>>>>>>>>>>>>>>>
+Earth-Moon L3                 !  Description
+THREE_BODY                    !  Orbit Type (ZERO, FLIGHT, CENTRAL, THREE_BODY)
+::::::::::::::  Use these lines if ZERO           :::::::::::::::::
+MINORBODY_2                   !  World
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if FLIGHT         :::::::::::::::::
+0                             !  Region Number
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if CENTRAL        :::::::::::::::::
+EARTH                         !  Orbit Center
+FALSE                         !  Secular Orbit Drift Due to J2
+KEP                           !  Use Keplerian elements (KEP) or (RV) or FILE
+PA                            !  Use Peri/Apoapsis (PA) or min alt/ecc (AE)
+400.0      400.0              !  Periapsis & Apoapsis Altitude, km
+400.0  2.0                    !  Min Altitude (km), Eccentricity
+52.0                          !  Inclination (deg)
+180.0                         !  Right Ascension of Ascending Node (deg)
+0.0                           !  Argument of Periapsis (deg)
+0.0                           !  True Anomaly (deg)
+6678.0  0.0  0.0              !  RV Initial Position (km)
+0.0  8.5  0.0                 !  RV Initial Velocity (km/sec)
+TRV                           !  TLE, TRV, or SPLINE file format
+"TRV.txt"                     !  File name
+"EXAMPLE 1"                   !  Label to find in TLE or TRV file
+:::::::::::::  Use these lines if THREE_BODY      ::::::::::::::::
+EARTHMOON                     !  Lagrange system
+LAGDOF_MODES                  !  Propagate using LAGDOF_MODES or LAGDOF_COWELL or LAGDOF_SPLINE
+MODES                         !  Initialize with MODES or XYZ or FILE
+L3                            !  Libration point (L1, L2, L3, L4, L5)
+80000.0                       !  XY Semi-major axis, km
+45.0                          !  Initial XY Phase, deg  (CCW from -Y)
+CW                            !  Sense (CW, CCW), viewed from +Z
+0.0                           !  Second XY Mode Semi-major Axis, km (L4, L5 only)
+0.0                           !  Second XY Mode Initial Phase, deg (L4, L5 only)
+CW                            !  Sense (CW, CCW), viewed from +Z (L4, L5 only)
+00.0                          !  Z Semi-axis, km
+00.0                          !  Initial Z Phase, deg
+1.05  0.5  0.0                !  Initial X, Y, Z (Non-dimensional)
+0.0   0.0  0.0                !  Initial Xdot, Ydot, Zdot (Non-dimensional)
+TRV  "ORB_ID"                 !  TLE, TRV or SPLINE format, Label to find in file
+"TRV.txt"                     !  File name
+******************* Formation Frame Parameters ************************
+L                             !  Formation Frame Fixed in [NL]
+0.0  0.0  0.0  123            !  Euler Angles (deg) and Sequence
+L                             !  Formation Origin expressed in [NL]
+0.0  0.0  0.0                 !  Formation Origin wrt Ref Orbit (m)
+```
+
+### `Orb_LEO.txt`
+
+**경로:** `cfg/InOut/Orb_LEO.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Orbit Description File   >>>>>>>>>>>>>>>>>
+Low Earth Orbit               !  Description
+CENTRAL                       !  Orbit Type (ZERO, FLIGHT, CENTRAL, THREE_BODY)
+::::::::::::::  Use these lines if ZERO           :::::::::::::::::
+MINORBODY_2                   !  World
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if FLIGHT         :::::::::::::::::
+0                             !  Region Number
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if CENTRAL        :::::::::::::::::
+EARTH                         !  Orbit Center
+FALSE                         !  Secular Orbit Drift Due to J2
+KEP                           !  Use Keplerian elements (KEP) or (RV) or FILE
+PA                            !  Use Peri/Apoapsis (PA) or min alt/ecc (AE)
+-100.0      400.0              !  Periapsis & Apoapsis Altitude, km
+400.0  2.0                    !  Min Altitude (km), Eccentricity
+52.0                          !  Inclination (deg)
+180.0                         !  Right Ascension of Ascending Node (deg)
+0.0                           !  Argument of Periapsis (deg)
+27.0                          !  True Anomaly (deg)
+6678.0  0.0  0.0              !  RV Initial Position (km)
+0.0  8.5  0.0                 !  RV Initial Velocity (km/sec)
+TRV                           !  TLE, TRV, or SPLINE file format
+"TRV.txt"                     !  File name
+"EXAMPLE 1"                   !  Label to find in TLE or TRV file
+:::::::::::::  Use these lines if THREE_BODY      ::::::::::::::::
+SUNEARTH                      !  Lagrange system
+LAGDOF_MODES                  !  Propagate using LAGDOF_MODES or LAGDOF_COWELL or LAGDOF_SPLINE
+MODES                         !  Initialize with MODES or XYZ or FILE
+L2                            !  Libration point (L1, L2, L3, L4, L5)
+800000.0                      !  XY Semi-major axis, km
+45.0                          !  Initial XY Phase, deg  (CCW from -Y)
+CW                            !  Sense (CW, CCW), viewed from +Z
+0.0                           !  Second XY Mode Semi-major Axis, km (L4, L5 only)
+0.0                           !  Second XY Mode Initial Phase, deg (L4, L5 only)
+CW                            !  Sense (CW, CCW), viewed from +Z (L4, L5 only)
+400000.0                      !  Z Semi-axis, km
+60.0                          !  Initial Z Phase, deg
+1.05  0.5  0.0                !  Initial X, Y, Z (Non-dimensional)
+0.0   0.0  0.0                !  Initial Xdot, Ydot, Zdot (Non-dimensional)
+TRV  "ORB_ID"                 !  TLE, TRV or SPLINE format, Label to find in file
+"TRV.txt"                     !  File name
+******************* Formation Frame Parameters ************************
+L                             !  Formation Frame Fixed in [NL]
+0.0  0.0  0.0  123            !  Euler Angles (deg) and Sequence
+L                             !  Formation Origin expressed in [NL]
+0.0  0.0  0.0                 !  Formation Origin wrt Ref Orbit (m)
+```
+
+### `Orb_LLO.txt`
+
+**경로:** `cfg/InOut/Orb_LLO.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Orbit Description File   >>>>>>>>>>>>>>>>>
+Low Lunar Orbit               !  Description
+CENTRAL                       !  Orbit Type (ZERO, FLIGHT, CENTRAL, THREE_BODY)
+::::::::::::::  Use these lines if ZERO           :::::::::::::::::
+MINORBODY_2                   !  World
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if FLIGHT         :::::::::::::::::
+0                             !  Region Number
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if CENTRAL        :::::::::::::::::
+LUNA                          !  Orbit Center
+FALSE                         !  Secular Orbit Drift Due to J2
+KEP                           !  Use Keplerian elements (KEP) or (RV) or FILE
+PA                            !  Use Peri/Apoapsis (PA) or min alt/ecc (AE)
+100.0      400.0              !  Periapsis & Apoapsis Altitude, km
+400.0  2.0                    !  Min Altitude (km), Eccentricity
+52.0                          !  Inclination (deg)
+120.0                         !  Right Ascension of Ascending Node (deg)
+0.0                           !  Argument of Periapsis (deg)
+0.0                           !  True Anomaly (deg)
+6678.0  0.0  0.0              !  RV Initial Position (km)
+0.0  8.5  0.0                 !  RV Initial Velocity (km/sec)
+TRV                           !  TLE, TRV, or SPLINE file format
+"TRV.txt"                     !  File name
+"EXAMPLE 1"                   !  Label to find in TLE or TRV file
+:::::::::::::  Use these lines if THREE_BODY      ::::::::::::::::
+SUNEARTH                      !  Lagrange system
+LAGDOF_MODES                  !  Propagate using LAGDOF_MODES or LAGDOF_COWELL or LAGDOF_SPLINE
+MODES                         !  Initialize with MODES or XYZ or FILE
+L2                            !  Libration point (L1, L2, L3, L4, L5)
+800000.0                      !  XY Semi-major axis, km
+45.0                          !  Initial XY Phase, deg  (CCW from -Y)
+CW                            !  Sense (CW, CCW), viewed from +Z
+0.0                           !  Second XY Mode Semi-major Axis, km (L4, L5 only)
+0.0                           !  Second XY Mode Initial Phase, deg (L4, L5 only)
+CW                            !  Sense (CW, CCW), viewed from +Z (L4, L5 only)
+400000.0                      !  Z Semi-axis, km
+60.0                          !  Initial Z Phase, deg
+1.05  0.5  0.0                !  Initial X, Y, Z (Non-dimensional)
+0.0   0.0  0.0                !  Initial Xdot, Ydot, Zdot (Non-dimensional)
+TRV  "ORB_ID"                 !  TLE, TRV or SPLINE format, Label to find in file
+"TRV.txt"                     !  File name
+******************* Formation Frame Parameters ************************
+L                             !  Formation Frame Fixed in [NL]
+0.0  0.0  0.0  123            !  Euler Angles (deg) and Sequence
+L                             !  Formation Origin expressed in [NL]
+0.0  0.0  0.0                 !  Formation Origin wrt Ref Orbit (m)
+```
+
+### `Orb_NRHO.txt`
+
+**경로:** `cfg/InOut/Orb_NRHO.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Orbit Description File   >>>>>>>>>>>>>>>>>
+Low Earth Orbit               !  Description
+THREE_BODY                    !  Orbit Type (ZERO, FLIGHT, CENTRAL, THREE_BODY)
+::::::::::::::  Use these lines if ZERO           :::::::::::::::::
+MINORBODY_2                   !  World
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if FLIGHT         :::::::::::::::::
+0                             !  Region Number
+FALSE                         ! Use Polyhedron Gravity
+::::::::::::::  Use these lines if CENTRAL        :::::::::::::::::
+EARTH                         !  Orbit Center
+FALSE                         !  Secular Orbit Drift Due to J2
+KEP                           !  Use Keplerian elements (KEP) or (RV) or FILE
+PA                            !  Use Peri/Apoapsis (PA) or min alt/ecc (AE)
+400.0      400.0              !  Periapsis & Apoapsis Altitude, km
+400.0  2.0                    !  Min Altitude (km), Eccentricity
+52.0                          !  Inclination (deg)
+180.0                         !  Right Ascension of Ascending Node (deg)
+0.0                           !  Argument of Periapsis (deg)
+0.0                           !  True Anomaly (deg)
+6678.0  0.0  0.0              !  RV Initial Position (km)
+0.0  8.5  0.0                 !  RV Initial Velocity (km/sec)
+TRV                           !  TLE, TRV, or SPLINE file format
+"TRV.txt"                     !  File name
+"EXAMPLE 1"                   !  Label to find in TLE or TRV file
+:::::::::::::  Use these lines if THREE_BODY      ::::::::::::::::
+EARTHMOON                     !  Lagrange system
+LAGDOF_MODES                  !  Propagate using LAGDOF_MODES or LAGDOF_COWELL or LAGDOF_SPLINE
+MODES                         !  Initialize with MODES or XYZ or FILE
+L2                            !  Libration point (L1, L2, L3, L4, L5)
+38250.0                       !  XY Semi-major axis, km
+45.0                          !  Initial XY Phase, deg  (CCW from -Y)
+CW                            !  Sense (CW, CCW), viewed from +Z
+0.0                           !  Second XY Mode Semi-major Axis, km (L4, L5 only)
+0.0                           !  Second XY Mode Initial Phase, deg (L4, L5 only)
+CW                            !  Sense (CW, CCW), viewed from +Z (L4, L5 only)
+19125.0                       !  Z Semi-axis, km
+60.0                          !  Initial Z Phase, deg
+1.05  0.5  0.0                !  Initial X, Y, Z (Non-dimensional)
+0.0   0.0  0.0                !  Initial Xdot, Ydot, Zdot (Non-dimensional)
+TRV  "ORB_ID"                 !  TLE, TRV or SPLINE format, Label to find in file
+"TRV.txt"                     !  File name
+******************* Formation Frame Parameters ************************
+L                             !  Formation Frame Fixed in [NL]
+0.0  0.0  0.0  123            !  Euler Angles (deg) and Sequence
+L                             !  Formation Origin expressed in [NL]
+0.0  0.0  0.0                 !  Formation Origin wrt Ref Orbit (m)
+```
+
+### `SC_DeepSpaceComm.txt`
+
+**경로:** `cfg/InOut/SC_DeepSpaceComm.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Spacecraft Description File   >>>>>>>>>>>>>>>>>
+Simple generic S/C          !  Description
+"S/C"                       !  Label
+GenScSpriteAlpha.ppm        !  Sprite File Name
+PASSIVE_FSW                 !  Flight Software Identifier
+0.2                         !  FSW Sample Time, sec
+************************* Orbit Parameters ****************************
+FIXED                       !  Orbit Prop FIXED, EULER_HILL, ENCKE, or COWELL
+CM                          !  Pos of CM or ORIGIN, wrt F
+0.0  0.0  0.0               !  Pos wrt Formation (m), expressed in F
+0.0  0.0  0.0               !  Vel wrt Formation (m/s), expressed in F
+*************************** Initial Attitude ***************************
+NAN                         ! Ang Vel wrt [NL], Att [QA] wrt [NLEF]
+0.3    0.4    0.5           ! Ang Vel (deg/sec)
+0.0    0.0    0.0    1.0    ! Quaternion
+20.0    30.0    40.0    213    ! Angles (deg) & Euler Sequence
+***************************  Dynamics Flags  ***************************
+GAUSS_ELIM                  ! Solve Dynamics by GAUSS_ELIM or ORDER_N
+FALSE                       ! Compute Constraint Forces and Torques
+REFPT_CM                    ! Mass Props referenced to REFPT_CM or REFPT_JOINT
+FALSE                       ! Flex Active
+FALSE                       ! Include 2nd Order Flex Terms
+NONE                        ! Shaker File Name
+2.0                         ! Drag Coefficient
+************************************************************************
+************************* Body Parameters ******************************
+************************************************************************
+1                           ! Number of Bodies
+================================ Body 0 ================================
+100.0                       ! Mass
+200.0  200.0  300.0         ! Moments of Inertia (kg-m^2)
+0.0  0.0  0.0               ! Products of Inertia (xy,xz,yz)
+0.0  0.0  0.0               ! Location of mass center, m
+0.0  0.0  0.0               ! Constant Embedded Momentum (Nms)
+0.0  0.0  0.0               ! Constant Embedded Magnetic Dipole (A-m^2)
+IonCruiser.obj         ! Geometry Input File Name
+NONE                        ! Node File Name
+NONE                        ! Flex File Name
+************************************************************************
+*************************** Joint Parameters ***************************
+************************************************************************
+         (Number of Joints is Number of Bodies minus one)
+============================== Joint 0 ================================
+ACTUATED                    ! Type of joint (PASSIVE, ACTUATED, others)
+0 1                         ! Inner, outer body indices
+2   123   GIMBAL            ! RotDOF, Seq, GIMBAL or SPHERICAL
+0   123                     ! TrnDOF, Seq
+FALSE  FALSE  FALSE         ! RotDOF Locked
+FALSE  FALSE  FALSE         ! TrnDOF Locked
+0.0    0.0    0.0           ! Initial Angles [deg]
+0.0    0.0    0.0           ! Initial Rates, deg/sec
+0.0    0.0    0.0           ! Initial Displacements [m]
+0.0    0.0    0.0           ! Initial Displacement Rates, m/sec
+180.0   0.0  0.0  213         ! Bi to Gi Static Angles [deg] & Seq
+0.0   0.0  0.0  312         ! Go to Bo Static Angles [deg] & Seq
+0.0   0.0  -1.0             ! Position wrt inner body origin, m
+0.0   0.0  0.0              ! Position wrt outer body origin, m
+NONE                        ! Parameter File Name
+*************************** Wheel Parameters ***************************
+FALSE                       ! Wheel Drag Active
+FALSE                       ! Wheel Jitter Active
+0                           ! Number of wheels
+=============================  Wheel 0  ================================
+0.0                         ! Initial Momentum, N-m-sec
+1.0   0.0   0.0             ! Wheel Axis Components, [X, Y, Z]
+0.14   50.0                 ! Max Torque (N-m), Momentum (N-m-sec)
+0.012                       ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+**************************** MTB Parameters ****************************
+0                           ! Number of MTBs
+==============================  MTB 0  =================================
+180.0                       ! Saturation (A-m^2)
+1.0   0.0   0.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Node
+************************* Thruster Parameters **************************
+0                           ! Number of Thrusters
+==============================  Thr 0  =================================
+PULSED                      ! Mode (PULSED or PROPORTIONAL)
+ 1.0                        ! Thrust Force (N)
+-1.0  0.0  0.0              ! Thrust Axis 
+0                           ! Body
+0                           ! Node
+******************************* Gyro ************************************
+0                           ! Number of Gyro Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+*************************** Magnetometer ********************************
+0                           ! Number of Magnetometer Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+60.0E-6                     ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+1.0E-6                      ! Quantization, Tesla 
+1.0E-6                      ! Noise, Tesla RMS
+0                           ! Node
+*********************** Coarse Sun Sensor *******************************
+0                           ! Number of Coarse Sun Sensors
+============================== CSS 0 ====================================
+0.1                         ! Sample Time,sec
+1.0  1.0  1.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+************************* Fine Sun Sensor *******************************
+0                           ! Number of Fine Sun Sensors
+=============================== FSS 0 ===================================
+0.2                         ! Sample Time,sec
+70.0  0.0  0.0  231         ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+32.0   32.0                 ! H, V FOV Size, deg
+0.1                         ! Noise Equivalent Angle, deg RMS
+0.5                         ! Quantization, deg
+0                           ! Node
+************************** Star Tracker *********************************
+0                           ! Number of Star Trackers
+=============================== ST 0 ====================================
+0.25                        ! Sample Time,sec
+-90.0  90.0  00.0  321      ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+28.0   28.0                   ! H, V FOV Size, deg
+30.0  10.0  10.0            ! Sun, Earth, Moon Exclusion Angles, deg
+2.0  2.0  20.0              ! Noise Equivalent Angle, arcsec RMS
+0                           ! Node
+****************************** GPS **************************************
+0                           ! Number of GPS Receivers
+============================= GPSR 0 ====================================
+0.25                        ! Sample Time,sec
+4.0                         ! Position Noise, m RMS
+0.02                        ! Velocity Noise, m/sec RMS
+20.0E-9                     ! Time Noise, sec RMS
+0                           ! Node
+*************************** Accelerometer *******************************
+0                           ! Number of Accel Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+1.0                         ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.05                        ! Initial Bias (m/s^2)
+0                           ! Node
+************************ Fine Guidance Sensor ****************************
+0                           ! Number of Fine Guidance Sensors
+========================= Fine Guidance Sensor 0 =========================
+0.1                         ! Sample Time,sec
+0.0  0.0  0.0  321          ! Nominal Mounting Angles (deg), Seq in Body
+X_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+3600.0   3600.0             ! H, V FOV Size, arcsec
+2.0                         ! Noise Equivalent Angle, arcsec RMS
+60.0                        ! Detector Scale, arcsec/pixel
+0  0                        ! Body, Node
+0.0  0.0  0.0  321          ! FOV Frame (Fr) Angles (deg), Seq wrt R frame
+0.00  0.0                   ! Guide Star H, V (deg) in FOV Frame
+NONE                        ! Optics Input File Name
+NONE                        ! PSF Image File Name
+
+```
+
+### `SC_Gateway.txt`
+
+**경로:** `cfg/InOut/SC_Gateway.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Spacecraft Description File   >>>>>>>>>>>>>>>>>
+NOS3 S/C                    !  Description
+"NOS3"                      !  Label
+GenScSpriteAlpha.ppm        !  Sprite File Name
+PASSIVE_FSW                 !  Flight Software Identifier
+0.2                         !  FSW Sample Time, sec
+************************* Orbit Parameters ****************************
+FIXED                       !  Orbit Prop FIXED, EULER_HILL, ENCKE, or COWELL
+CM                          !  Pos of CM or ORIGIN, wrt F
+0.0  0.0  0.0               !  Pos wrt Formation (m), expressed in F
+0.0  0.0  0.0               !  Vel wrt Formation (m/s), expressed in F
+*************************** Initial Attitude ***************************
+NAN                         ! Ang Vel wrt [NL], Att [QA] wrt [NLF]
+0.0    0.0    0.0           ! Ang Vel (deg/sec)
+0.0    0.0    0.0    1.0    ! Quaternion
+90.0   90.0   90.0   213    ! Angles (deg) & Euler Sequence
+***************************  Dynamics Flags  ***************************
+GAUSS_ELIM                  ! Solve Dynamics by GAUSS_ELIM or ORDER_N
+FALSE                       ! Compute Constraint Forces and Torques
+REFPT_CM                    ! Mass Props referenced to REFPT_CM or REFPT_JOINT
+FALSE                       ! Flex Active
+FALSE                       ! Include 2nd Order Flex Terms
+NONE                        ! Shaker File Name
+2.0                         ! Drag Coefficient
+************************************************************************
+************************* Body Parameters ******************************
+************************************************************************
+1                           ! Number of Bodies
+================================ Body 0 ================================
+4.0                         ! Mass
+0.0067  0.033  0.033        ! Moments of Inertia (kg-m^2)
+0.0  0.0  0.0               ! Products of Inertia (xy,xz,yz)
+0.12  -0.25  0.2            ! Location of mass center, m
+0.0  0.0  0.0               ! Constant Embedded Momentum (Nms)
+0.0  0.0  0.0               ! Constant Embedded Magnetic Dipole (A-m^2)
+IonCruiser.obj              ! Geometry Input File Name
+Nodes_Simple.txt            ! Node File Name
+NONE                        ! Flex File Name
+************************************************************************
+*************************** Joint Parameters ***************************
+************************************************************************
+         (Number of Joints is Number of Bodies minus one)
+============================== Joint 0 ================================
+PASSIVE                     ! Type of joint (PASSIVE, ACTUATED, others)
+0 1                         ! Inner, outer body indices
+1   213   GIMBAL            ! RotDOF, Seq, GIMBAL or SPHERICAL
+0   123                     ! TrnDOF, Seq
+FALSE  FALSE  FALSE         ! RotDOF Locked
+FALSE  FALSE  FALSE         ! TrnDOF Locked
+0.0    0.0    0.0           ! Initial Angles [deg]
+0.0    0.0    0.0           ! Initial Rates, deg/sec
+0.0    0.0    0.0           ! Initial Displacements [m]
+0.0    0.0    0.0           ! Initial Displacement Rates, m/sec
+0.0   0.0  0.0  312         ! Bi to Gi Static Angles [deg] & Seq
+0.0   0.0  0.0  312         ! Go to Bo Static Angles [deg] & Seq
+0.0   0.0  0.0              ! Position wrt inner body origin, m
+0.0   0.0  0.0              ! Position wrt outer body origin, m
+NONE                        ! Parameter File Name
+*************************** Wheel Parameters ***************************
+FALSE                       ! Wheel Drag Active
+FALSE                       ! Wheel Jitter Active
+3                           ! Number of wheels
+=============================  Wheel X  ================================
+0.0                         ! Initial Momentum, N-m-sec
+1.0   0.0   0.0             ! Wheel Axis Components, [X, Y, Z]
+0.001   0.01082             ! Max Torque (N-m), Momentum (N-m-sec)
+1.72e-5                     ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+=============================  Wheel Y  ================================
+0.0                         ! Initial Momentum, N-m-sec
+0.0   1.0   0.0             ! Wheel Axis Components, [X, Y, Z]
+0.001   0.01082             ! Max Torque (N-m), Momentum (N-m-sec)
+1.72e-5                     ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+=============================  Wheel Z  ================================
+0.0                         ! Initial Momentum, N-m-sec
+0.0   0.0   1.0             ! Wheel Axis Components, [X, Y, Z]
+0.001   0.01082             ! Max Torque (N-m), Momentum (N-m-sec)
+1.72e-5                     ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+**************************** MTB Parameters ****************************
+3                           ! Number of MTBs
+==============================  MTB 0  =================================
+1.42                        ! Saturation (A-m^2)
+1.0   0.0   0.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Flex Node Index
+==============================  MTB 1  =================================
+1.42                        ! Saturation (A-m^2)
+0.0   1.0   0.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Flex Node Index
+==============================  MTB 2  =================================
+1.42                        ! Saturation (A-m^2)
+0.0   0.0   1.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Flex Node Index
+************************* Thruster Parameters **************************
+4                           ! Number of Thrusters
+==============================  Thr 0  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+0                           ! Node
+==============================  Thr 1  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+1                           ! Node
+==============================  Thr 2  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+2                           ! Node
+==============================  Thr 3  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+3                           ! Node
+******************************* Gyro ************************************
+3                           ! Number of Gyro Axes
+============================== Axis 0 ===================================
+0.01                        ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+============================== Axis 1 ===================================
+0.01                        ! Sample Time,sec
+0.0  1.0  0.0              ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+============================== Axis 2 ===================================
+0.01                        ! Sample Time,sec
+0.0  0.0  1.0              ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+*************************** Magnetometer ********************************
+3                           ! Number of Magnetometer Axes
+============================== Axis 0 ===================================
+0.03125                     ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+65536E-9                    ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+2.0E-9                      ! Quantization, Tesla
+0.1E-9                      ! Noise, Tesla RMS
+0                           ! Node
+============================== Axis 1 ===================================
+0.03125                     ! Sample Time,sec
+0.0  1.0  0.0               ! Axis expressed in Body Frame
+65536E-9                    ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+2.0E-9                      ! Quantization, Tesla
+0.1E-9                      ! Noise, Tesla RMS
+0                           ! Node
+============================== Axis 2 ===================================
+0.03125                     ! Sample Time,sec
+0.0  0.0  1.0               ! Axis expressed in Body Frame
+65536E-9                    ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+2.0E-9                      ! Quantization, Tesla
+0.1E-9                      ! Noise, Tesla RMS
+0                           ! Node
+*********************** Coarse Sun Sensor *******************************
+6                           ! Number of Coarse Sun Sensors
+============================== CSS 0 ====================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 1 ====================================
+0.1                         ! Sample Time,sec
+-1.0  0.0  0.0              ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 2 ====================================
+0.1                         ! Sample Time,sec
+0.0  1.0  0.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 3 ====================================
+0.1                         ! Sample Time,sec
+0.0  -1.0  0.0              ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 4 ====================================
+0.1                         ! Sample Time,sec
+0.0  0.0  1.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 5 ====================================
+0.1                         ! Sample Time,sec
+0.0  0.0  -1.0              ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+************************* Fine Sun Sensor *******************************
+1                           ! Number of Fine Sun Sensors
+=============================== FSS 0 ===================================
+0.2                         ! Sample Time,sec
+90.0  0.0  0.0  231         ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+60.0   60.0                 ! X, Y FOV Size, deg
+0.1                         ! Noise Equivalent Angle, deg RMS
+0.5                         ! Quantization, deg
+0                           ! Node
+************************** Star Tracker *********************************
+1                           ! Number of Star Trackers
+=============================== ST 0 ====================================
+0.25                        ! Sample Time,sec
+0.0  0.0  0.0  213          ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+8.0   8.0                   ! H, V FOV Size, deg
+30.0  10.0  10.0            ! Sun, Earth, Moon Exclusion Angles, deg
+2.0  2.0  20.0              ! Noise Equivalent Angle, arcsec RMS
+0                           ! Node
+****************************** GPS **************************************
+1                           ! Number of GPS Receivers
+============================= GPSR 0 ====================================
+0.25                        ! Sample Time,sec
+4.0                         ! Position Noise, m RMS
+0.02                        ! Velocity Noise, m/sec RMS
+20.0E-9                     ! Time Noise, sec RMS
+0                           ! Node
+*************************** Accelerometer *******************************
+3                           ! Number of Accel Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+0.0  0.0  1.0               ! Axis expressed in Body Frame
+100.0                       ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.5                         ! Initial Bias (m/s^2)
+0                           ! Node
+============================== Axis 1 ===================================
+0.1                         ! Sample Time,sec
+-1.0 0.0  0.0               ! Axis expressed in Body Frame
+100.0                       ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.5                         ! Initial Bias (m/s^2)
+0                           ! Node
+============================== Axis 2 ===================================
+0.1                         ! Sample Time,sec
+0.0 -1.0  0.0               ! Axis expressed in Body Frame
+100.0                       ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.5                         ! Initial Bias (m/s^2)
+0                           ! Node
+************************ Fine Guidance Sensor ****************************
+0                           ! Number of Fine Guidance Sensors
+========================= Fine Guidance Sensor 0 =========================
+0.1                         ! Sample Time,sec
+0.0  0.0  0.0  321          ! Nominal Mounting Angles (deg), Seq in Body
+X_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+3600.0   3600.0             ! H, V FOV Size, arcsec
+2.0                         ! Noise Equivalent Angle, arcsec RMS
+60.0                        ! Detector Scale, arcsec/pixel
+0  0                        ! Body, Node
+0.0  0.0  0.0  321          ! FOV Frame (Fr) Angles (deg), Seq wrt R frame
+0.00  0.0                   ! Guide Star H, V (deg) in FOV Frame
+NONE                        ! Optics Input File Name
+NONE                        ! PSF Image File Name
+
+```
+
+### `SC_NOS3.txt`
+
+**경로:** `cfg/InOut/SC_NOS3.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Spacecraft Description File   >>>>>>>>>>>>>>>>>
+NOS3 S/C                    !  Description
+"NOS3"                      !  Label
+GenScSpriteAlpha.ppm        !  Sprite File Name
+PASSIVE_FSW                 !  Flight Software Identifier
+0.2                         !  FSW Sample Time, sec
+************************* Orbit Parameters ****************************
+FIXED                       !  Orbit Prop FIXED, EULER_HILL, ENCKE, or COWELL
+CM                          !  Pos of CM or ORIGIN, wrt F
+0.0  0.0  0.0               !  Pos wrt Formation (m), expressed in F
+0.0  0.0  0.0               !  Vel wrt Formation (m/s), expressed in F
+*************************** Initial Attitude ***************************
+NAN                         ! Ang Vel wrt [NL], Att [QA] wrt [NLF]
+0.0    0.0    0.0           ! Ang Vel (deg/sec)
+0.0    0.0    0.0    1.0    ! Quaternion
+90.0   90.0   90.0   213    ! Angles (deg) & Euler Sequence
+***************************  Dynamics Flags  ***************************
+GAUSS_ELIM                  ! Solve Dynamics by GAUSS_ELIM or ORDER_N
+FALSE                       ! Compute Constraint Forces and Torques
+REFPT_CM                    ! Mass Props referenced to REFPT_CM or REFPT_JOINT
+FALSE                       ! Flex Active
+FALSE                       ! Include 2nd Order Flex Terms
+NONE                        ! Shaker File Name
+2.0                         ! Drag Coefficient
+************************************************************************
+************************* Body Parameters ******************************
+************************************************************************
+1                           ! Number of Bodies
+================================ Body 0 ================================
+4.0                         ! Mass
+0.0067  0.033  0.033        ! Moments of Inertia (kg-m^2)
+0.0  0.0  0.0               ! Products of Inertia (xy,xz,yz)
+0.12  -0.25  0.2            ! Location of mass center, m
+0.0  0.0  0.0               ! Constant Embedded Momentum (Nms)
+0.0  0.0  0.0               ! Constant Embedded Magnetic Dipole (A-m^2)
+stf1_red.obj                ! Geometry Input File Name
+Nodes_Simple.txt            ! Node File Name
+NONE                        ! Flex File Name
+************************************************************************
+*************************** Joint Parameters ***************************
+************************************************************************
+         (Number of Joints is Number of Bodies minus one)
+============================== Joint 0 ================================
+PASSIVE                     ! Type of joint (PASSIVE, ACTUATED, others)
+0 1                         ! Inner, outer body indices
+1   213   GIMBAL            ! RotDOF, Seq, GIMBAL or SPHERICAL
+0   123                     ! TrnDOF, Seq
+FALSE  FALSE  FALSE         ! RotDOF Locked
+FALSE  FALSE  FALSE         ! TrnDOF Locked
+0.0    0.0    0.0           ! Initial Angles [deg]
+0.0    0.0    0.0           ! Initial Rates, deg/sec
+0.0    0.0    0.0           ! Initial Displacements [m]
+0.0    0.0    0.0           ! Initial Displacement Rates, m/sec
+0.0   0.0  0.0  312         ! Bi to Gi Static Angles [deg] & Seq
+0.0   0.0  0.0  312         ! Go to Bo Static Angles [deg] & Seq
+0.0   0.0  0.0              ! Position wrt inner body origin, m
+0.0   0.0  0.0              ! Position wrt outer body origin, m
+NONE                        ! Parameter File Name
+*************************** Wheel Parameters ***************************
+FALSE                       ! Wheel Drag Active
+FALSE                       ! Wheel Jitter Active
+3                           ! Number of wheels
+=============================  Wheel X  ================================
+0.0                         ! Initial Momentum, N-m-sec
+1.0   0.0   0.0             ! Wheel Axis Components, [X, Y, Z]
+0.001   0.01082             ! Max Torque (N-m), Momentum (N-m-sec)
+1.72e-5                     ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+=============================  Wheel Y  ================================
+0.0                         ! Initial Momentum, N-m-sec
+0.0   1.0   0.0             ! Wheel Axis Components, [X, Y, Z]
+0.001   0.01082             ! Max Torque (N-m), Momentum (N-m-sec)
+1.72e-5                     ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+=============================  Wheel Z  ================================
+0.0                         ! Initial Momentum, N-m-sec
+0.0   0.0   1.0             ! Wheel Axis Components, [X, Y, Z]
+0.001   0.01082             ! Max Torque (N-m), Momentum (N-m-sec)
+1.72e-5                     ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+**************************** MTB Parameters ****************************
+3                           ! Number of MTBs
+==============================  MTB 0  =================================
+1.42                        ! Saturation (A-m^2)
+1.0   0.0   0.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Flex Node Index
+==============================  MTB 1  =================================
+1.42                        ! Saturation (A-m^2)
+0.0   1.0   0.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Flex Node Index
+==============================  MTB 2  =================================
+1.42                        ! Saturation (A-m^2)
+0.0   0.0   1.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Flex Node Index
+************************* Thruster Parameters **************************
+4                           ! Number of Thrusters
+==============================  Thr 0  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+0                           ! Node
+==============================  Thr 1  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+1                           ! Node
+==============================  Thr 2  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+2                           ! Node
+==============================  Thr 3  =================================
+PROPORTIONAL                ! Mode (PULSED or PROPORTIONAL)
+1.00                        ! Thrust Force (N)
+1.0  0.0  0.0               ! Thrust Axis 
+0                           ! Body
+3                           ! Node
+******************************* Gyro ************************************
+3                           ! Number of Gyro Axes
+============================== Axis 0 ===================================
+0.01                        ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+============================== Axis 1 ===================================
+0.01                        ! Sample Time,sec
+0.0  1.0  0.0              ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+============================== Axis 2 ===================================
+0.01                        ! Sample Time,sec
+0.0  0.0  1.0              ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+*************************** Magnetometer ********************************
+3                           ! Number of Magnetometer Axes
+============================== Axis 0 ===================================
+0.03125                     ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+65536E-9                    ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+2.0E-9                      ! Quantization, Tesla
+0.1E-9                      ! Noise, Tesla RMS
+0                           ! Node
+============================== Axis 1 ===================================
+0.03125                     ! Sample Time,sec
+0.0  1.0  0.0               ! Axis expressed in Body Frame
+65536E-9                    ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+2.0E-9                      ! Quantization, Tesla
+0.1E-9                      ! Noise, Tesla RMS
+0                           ! Node
+============================== Axis 2 ===================================
+0.03125                     ! Sample Time,sec
+0.0  0.0  1.0               ! Axis expressed in Body Frame
+65536E-9                    ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+2.0E-9                      ! Quantization, Tesla
+0.1E-9                      ! Noise, Tesla RMS
+0                           ! Node
+*********************** Coarse Sun Sensor *******************************
+6                           ! Number of Coarse Sun Sensors
+============================== CSS 0 ====================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 1 ====================================
+0.1                         ! Sample Time,sec
+-1.0  0.0  0.0              ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 2 ====================================
+0.1                         ! Sample Time,sec
+0.0  1.0  0.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 3 ====================================
+0.1                         ! Sample Time,sec
+0.0  -1.0  0.0              ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 4 ====================================
+0.1                         ! Sample Time,sec
+0.0  0.0  1.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+============================== CSS 5 ====================================
+0.1                         ! Sample Time,sec
+0.0  0.0  -1.0              ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+************************* Fine Sun Sensor *******************************
+1                           ! Number of Fine Sun Sensors
+=============================== FSS 0 ===================================
+0.2                         ! Sample Time,sec
+90.0  0.0  0.0  231         ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+60.0   60.0                 ! X, Y FOV Size, deg
+0.1                         ! Noise Equivalent Angle, deg RMS
+0.5                         ! Quantization, deg
+0                           ! Node
+************************** Star Tracker *********************************
+1                           ! Number of Star Trackers
+=============================== ST 0 ====================================
+0.25                        ! Sample Time,sec
+0.0  0.0  0.0  213          ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+8.0   8.0                   ! H, V FOV Size, deg
+30.0  10.0  10.0            ! Sun, Earth, Moon Exclusion Angles, deg
+2.0  2.0  20.0              ! Noise Equivalent Angle, arcsec RMS
+0                           ! Node
+****************************** GPS **************************************
+1                           ! Number of GPS Receivers
+============================= GPSR 0 ====================================
+0.25                        ! Sample Time,sec
+4.0                         ! Position Noise, m RMS
+0.02                        ! Velocity Noise, m/sec RMS
+20.0E-9                     ! Time Noise, sec RMS
+0                           ! Node
+*************************** Accelerometer *******************************
+3                           ! Number of Accel Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+0.0  0.0  1.0               ! Axis expressed in Body Frame
+100.0                       ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.5                         ! Initial Bias (m/s^2)
+0                           ! Node
+============================== Axis 1 ===================================
+0.1                         ! Sample Time,sec
+-1.0 0.0  0.0               ! Axis expressed in Body Frame
+100.0                       ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.5                         ! Initial Bias (m/s^2)
+0                           ! Node
+============================== Axis 2 ===================================
+0.1                         ! Sample Time,sec
+0.0 -1.0  0.0               ! Axis expressed in Body Frame
+100.0                       ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.5                         ! Initial Bias (m/s^2)
+0                           ! Node
+************************ Fine Guidance Sensor ****************************
+0                           ! Number of Fine Guidance Sensors
+========================= Fine Guidance Sensor 0 =========================
+0.1                         ! Sample Time,sec
+0.0  0.0  0.0  321          ! Nominal Mounting Angles (deg), Seq in Body
+X_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+3600.0   3600.0             ! H, V FOV Size, arcsec
+2.0                         ! Noise Equivalent Angle, arcsec RMS
+60.0                        ! Detector Scale, arcsec/pixel
+0  0                        ! Body, Node
+0.0  0.0  0.0  321          ! FOV Frame (Fr) Angles (deg), Seq wrt R frame
+0.00  0.0                   ! Guide Star H, V (deg) in FOV Frame
+NONE                        ! Optics Input File Name
+NONE                        ! PSF Image File Name
+
+```
+
+### `SC_SensorFOV.txt`
+
+**경로:** `cfg/InOut/SC_SensorFOV.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Spacecraft Description File   >>>>>>>>>>>>>>>>>
+Simple generic S/C            !  Description
+"S/C"                         !  Label
+GenScSpriteAlpha.ppm          !  Sprite File Name
+PASSIVE_FSW                 !  Flight Software Identifier
+0.2                           !  FSW Sample Time, sec
+************************* Orbit Parameters ****************************
+FIXED                         !  Orbit Prop FIXED, EULER_HILL, ENCKE, or COWELL
+CM                            !  Pos of CM or ORIGIN, wrt F
+0.0  0.0  0.0                 !  Pos wrt Formation (m), expressed in F
+0.0  0.0  0.0                 !  Vel wrt Formation (m/s), expressed in F
+*************************** Initial Attitude ***************************
+NAN                           ! Ang Vel wrt [NL], Att [QA] wrt [NLF]
+0.6    0.5    1.0             ! Ang Vel (deg/sec)
+0.0    0.0    0.0    1.0      ! Quaternion
+60.0  50.0   40.0    213      ! Angles (deg) & Euler Sequence
+***************************  Dynamics Flags  ***************************
+GAUSS_ELIM                    ! Solve Dynamics by GAUSS_ELIM or ORDER_N
+FALSE                         ! Compute Constraint Forces and Torques
+REFPT_CM                      ! Mass Props referenced to REFPT_CM or REFPT_JOINT
+FALSE                         ! Flex Active
+FALSE                         ! Include 2nd Order Flex Terms
+NONE                        ! Shaker File Name
+2.0                           ! Drag Coefficient
+************************************************************************
+************************* Body Parameters ******************************
+************************************************************************
+1                             ! Number of Bodies
+================================ Body 0 ================================
+100.0                         ! Mass
+100.0  200.0  300.0           ! Moments of Inertia (kg-m^2)
+0.0  0.0  0.0                 ! Products of Inertia (xy,xz,yz)
+0.0  0.0  0.0                 ! Location of mass center, m
+0.0  0.0  0.0                 ! Constant Embedded Momentum (Nms)
+0.0  0.0  0.0                 ! Constant Embedded Magnetic Dipole (A-m^2)
+IonCruiser.obj                ! Geometry Input File Name
+NONE                        ! Node File Name
+NONE                          ! Flex File Name
+************************************************************************
+*************************** Joint Parameters ***************************
+************************************************************************
+         (Number of Joints is Number of Bodies minus one)
+============================== Joint 0 ================================
+PASSIVE                       ! Type of joint (PASSIVE, ACTUATED, others)
+0 1                           ! Inner, outer body indices
+1   213   GIMBAL              ! RotDOF, Seq, GIMBAL or SPHERICAL
+0   123                       ! TrnDOF, Seq
+FALSE  FALSE  FALSE           ! RotDOF Locked
+FALSE  FALSE  FALSE           ! TrnDOF Locked
+0.0    0.0    0.0             ! Initial Angles [deg]
+0.0    0.0    0.0             ! Initial Rates, deg/sec
+0.0    0.0    0.0             ! Initial Displacements [m]
+0.0    0.0    0.0             ! Initial Displacement Rates, m/sec
+0.0   0.0  0.0  312           ! Bi to Gi Static Angles [deg] & Seq
+0.0   0.0  0.0  312           ! Go to Bo Static Angles [deg] & Seq
+0.0   0.0  0.0                ! Position wrt inner body origin, m
+0.0   0.0  0.0                ! Position wrt outer body origin, m
+NONE                          ! Parameter File Name
+*************************** Wheel Parameters ***************************
+FALSE                       ! Wheel Drag Active
+FALSE                       ! Wheel Jitter Active
+0                             ! Number of wheels
+=============================  Wheel 0  ================================
+0.0                           ! Initial Momentum, N-m-sec
+1.0   0.0   0.0               ! Wheel Axis Components, [X, Y, Z]
+0.14   50.0                   ! Max Torque (N-m), Momentum (N-m-sec)
+0.012                         ! Wheel Rotor Inertia, kg-m^2
+0                             ! Body
+0                             ! Node
+NONE                          ! Jitter Input File Name
+**************************** MTB Parameters ****************************
+0                             ! Number of MTBs
+==============================  MTB 0  =================================
+180.0                         ! Saturation (A-m^2)
+1.0   0.0   0.0               ! MTB Axis Components, [X, Y, Z]
+0                             ! Node
+************************* Thruster Parameters **************************
+0                             ! Number of Thrusters
+==============================  Thr 0  =================================
+PULSED                        ! Mode (PULSED or PROPORTIONAL)
+ 1.0                          ! Thrust Force (N)
+-1.0  0.0  0.0                ! Thrust Axis 
+0                             ! Body
+0                             ! Node
+******************************* Gyro ************************************
+0                                ! Number of Gyro Axes
+============================== Axis 0 ===================================
+0.1                           ! Sample Time,sec
+1.0  0.0  0.0                 ! Axis expressed in Body Frame
+1000.0                        ! Max Rate, deg/sec
+100.0                         ! Scale Factor Error, ppm
+1.0                           ! Quantization, arcsec 
+0.07                          ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                      ! Bias Stability (deg/hr) over timespan (hr)
+0.1                           ! Angle Noise, arcsec RMS
+0.1                           ! Initial Bias (deg/hr)
+1                             ! Node
+*************************** Magnetometer ********************************
+0                             ! Number of Magnetometer Axes
+============================== Axis 0 ===================================
+0.1                           ! Sample Time,sec
+1.0  0.0  0.0                 ! Axis expressed in Body Frame
+60.0E-6                       ! Saturation, Tesla
+0.0                           ! Scale Factor Error, ppm
+1.0E-6                        ! Quantization, Tesla 
+1.0E-6                        ! Noise, Tesla RMS
+1                             ! Node
+*********************** Coarse Sun Sensor *******************************
+8                             ! Number of Coarse Sun Sensors
+============================== CSS 0 ====================================
+0.1                           ! Sample Time,sec
+1.0  1.0  1.0                 ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 1 ====================================
+0.1                           ! Sample Time,sec
+-1.0  1.0  1.0                ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 2 ====================================
+0.1                           ! Sample Time,sec
+1.0 -1.0  1.0                 ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 3 ====================================
+0.1                           ! Sample Time,sec
+-1.0 -1.0  1.0                ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 4 ====================================
+0.1                           ! Sample Time,sec
+1.0  1.0 -1.0                 ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 5 ====================================
+0.1                           ! Sample Time,sec
+-1.0  1.0 -1.0                ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 6 ====================================
+0.1                           ! Sample Time,sec
+1.0 -1.0 -1.0                 ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+============================== CSS 7 ====================================
+0.1                           ! Sample Time,sec
+-1.0 -1.0 -1.0                ! Axis expressed in Body Frame
+90.0                          ! Half-cone Angle, deg
+1.0                           ! Scale Factor
+0.001                         ! Quantization
+0                             ! Body
+0                             ! Node
+************************* Fine Sun Sensor *******************************
+1                             ! Number of Fine Sun Sensors
+=============================== FSS 0 ===================================
+0.2                           ! Sample Time,sec
+120.0  0.0  0.0  132           ! Mounting Angles (deg), Seq in Body
+Z_AXIS                        ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+32.0   32.0                   ! X, Y FOV Size, deg
+0.1                           ! Noise Equivalent Angle, deg RMS
+0.5                           ! Quantization, deg
+0                             ! Node
+************************** Star Tracker *********************************
+1                             ! Number of Star Trackers
+=============================== ST 0 ====================================
+0.25                          ! Sample Time,sec
+45.0  0.0  00.0  321        ! Mounting Angles (deg), Seq in Body
+X_AXIS                        ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+8.0   8.0                     ! X, Y FOV Size, deg
+30.0  10.0  10.0              ! Sun, Earth, Moon Exclusion Angles, deg
+2.0  2.0  20.0                ! Noise Equivalent Angle, arcsec RMS
+0                             ! Node
+****************************** GPS **************************************
+0                             ! Number of GPS Receivers
+============================= GPSR 0 ====================================
+0.25                          ! Sample Time,sec
+4.0                           ! Position Noise, m RMS
+0.02                          ! Velocity Noise, m/sec RMS
+20.0E-9                       ! Time Noise, sec RMS
+0                             ! Node
+*************************** Accelerometer *******************************
+0                             ! Number of Accel Axes
+============================== Axis 0 ===================================
+0.1                           ! Sample Time,sec
+1.0  0.0  0.0                 ! Axis expressed in Body Frame
+1.0                           ! Max Acceleration (m/s^2)
+0.0                           ! Scale Factor Error, ppm
+0.05                          ! Quantization, m/s^2
+0.0                           ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                       ! Bias Stability (m/s^2) over timespan (hr)
+0.0                           ! DV Noise, m/s
+0.5                           ! Initial Bias (m/s^2)
+0                             ! Node
+************************ Fine Guidance Sensor ****************************
+0                           ! Number of Fine Guidance Sensors
+========================= Fine Guidance Sensor 0 =========================
+0.1                         ! Sample Time,sec
+0.0  0.0  0.0  321          ! Nominal Mounting Angles (deg), Seq in Body
+X_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+3600.0   3600.0             ! H, V FOV Size, arcsec
+2.0                         ! Noise Equivalent Angle, arcsec RMS
+60.0                        ! Detector Scale, arcsec/pixel
+0  0                        ! Body, Node
+0.0  0.0  0.0  321          ! FOV Frame (Fr) Angles (deg), Seq wrt R frame
+0.00  0.0                   ! Guide Star H, V (deg) in FOV Frame
+NONE                        ! Optics Input File Name
+NONE                        ! PSF Image File Name
+
+
+```
+
+### `SC_Simple.txt`
+
+**경로:** `cfg/InOut/SC_Simple.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Spacecraft Description File   >>>>>>>>>>>>>>>>>
+Simple generic S/C          !  Description
+"S/C"                       !  Label
+GenScSpriteAlpha.ppm        !  Sprite File Name
+INSTANT_FSW                 !  Flight Software Identifier
+0.2                         !  FSW Sample Time, sec
+************************* Orbit Parameters ****************************
+FIXED                       !  Orbit Prop FIXED, EULER_HILL, ENCKE, or COWELL
+CM                          !  Pos of CM or ORIGIN, wrt F
+0.0  0.0  0.0               !  Pos wrt Formation (m), expressed in F
+0.0  0.0  0.0               !  Vel wrt Formation (m/s), expressed in F
+*************************** Initial Attitude ***************************
+NAN                         ! Ang Vel wrt [NL], Att [QA] wrt [NLEF]
+0.3    0.4    0.5           ! Ang Vel (deg/sec)
+0.0    0.0    0.0    1.0    ! Quaternion
+20.0    30.0    40.0    213    ! Angles (deg) & Euler Sequence
+***************************  Dynamics Flags  ***************************
+GAUSS_ELIM                  ! Solve Dynamics by GAUSS_ELIM or ORDER_N
+FALSE                       ! Compute Constraint Forces and Torques
+REFPT_CM                    ! Mass Props referenced to REFPT_CM or REFPT_JOINT
+FALSE                       ! Flex Active
+FALSE                       ! Include 2nd Order Flex Terms
+NONE                        ! Shaker File Name
+2.0                         ! Drag Coefficient
+************************************************************************
+************************* Body Parameters ******************************
+************************************************************************
+1                           ! Number of Bodies
+================================ Body 0 ================================
+100.0                       ! Mass
+100.0  200.0  300.0         ! Moments of Inertia (kg-m^2)
+0.0  0.0  0.0               ! Products of Inertia (xy,xz,yz)
+0.0  0.0  0.0               ! Location of mass center, m
+0.0  0.0  0.0               ! Constant Embedded Momentum (Nms)
+0.0  0.0  0.0               ! Constant Embedded Magnetic Dipole (A-m^2)
+IonCruiser.obj              ! Geometry Input File Name
+NONE                        ! Node File Name
+NONE                        ! Flex File Name
+************************************************************************
+*************************** Joint Parameters ***************************
+************************************************************************
+         (Number of Joints is Number of Bodies minus one)
+============================== Joint 0 ================================
+PASSIVE                     ! Type of joint (PASSIVE, ACTUATED, others)
+0 1                         ! Inner, outer body indices
+1   213   GIMBAL            ! RotDOF, Seq, GIMBAL or SPHERICAL
+0   123                     ! TrnDOF, Seq
+FALSE  FALSE  FALSE         ! RotDOF Locked
+FALSE  FALSE  FALSE         ! TrnDOF Locked
+0.0    0.0    0.0           ! Initial Angles [deg]
+0.0    0.0    0.0           ! Initial Rates, deg/sec
+0.0    0.0    0.0           ! Initial Displacements [m]
+0.0    0.0    0.0           ! Initial Displacement Rates, m/sec
+0.0   0.0  0.0  312         ! Bi to Gi Static Angles [deg] & Seq
+0.0   0.0  0.0  312         ! Go to Bo Static Angles [deg] & Seq
+0.0   0.0  0.0              ! Position wrt inner body origin, m
+0.0   0.0  0.0              ! Position wrt outer body origin, m
+NONE                        ! Parameter File Name
+*************************** Wheel Parameters ***************************
+FALSE                       ! Wheel Drag Active
+FALSE                       ! Wheel Jitter Active
+0                           ! Number of wheels
+=============================  Wheel 0  ================================
+0.0                         ! Initial Momentum, N-m-sec
+1.0   0.0   0.0             ! Wheel Axis Components, [X, Y, Z]
+0.14   50.0                 ! Max Torque (N-m), Momentum (N-m-sec)
+0.012                       ! Wheel Rotor Inertia, kg-m^2
+0                           ! Body
+0                           ! Node
+NONE                        ! Drag/Jitter Input File Name
+**************************** MTB Parameters ****************************
+0                           ! Number of MTBs
+==============================  MTB 0  =================================
+180.0                       ! Saturation (A-m^2)
+1.0   0.0   0.0             ! MTB Axis Components, [X, Y, Z]
+0                           ! Node
+************************* Thruster Parameters **************************
+0                           ! Number of Thrusters
+==============================  Thr 0  =================================
+PULSED                      ! Mode (PULSED or PROPORTIONAL)
+ 1.0                        ! Thrust Force (N)
+-1.0  0.0  0.0              ! Thrust Axis 
+0                           ! Body
+0                           ! Node
+******************************* Gyro ************************************
+0                           ! Number of Gyro Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+1000.0                      ! Max Rate, deg/sec
+100.0                       ! Scale Factor Error, ppm
+1.0                         ! Quantization, arcsec 
+0.07                        ! Angle Random Walk (deg/rt-hr)
+0.1  1.0                    ! Bias Stability (deg/hr) over timespan (hr)
+0.1                         ! Angle Noise, arcsec RMS
+0.1                         ! Initial Bias (deg/hr)
+0                           ! Node
+*************************** Magnetometer ********************************
+0                           ! Number of Magnetometer Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+60.0E-6                     ! Saturation, Tesla
+0.0                         ! Scale Factor Error, ppm
+1.0E-6                      ! Quantization, Tesla 
+1.0E-6                      ! Noise, Tesla RMS
+0                           ! Node
+*********************** Coarse Sun Sensor *******************************
+0                           ! Number of Coarse Sun Sensors
+============================== CSS 0 ====================================
+0.1                         ! Sample Time,sec
+1.0  1.0  1.0               ! Axis expressed in Body Frame
+90.0                        ! Half-cone Angle, deg
+1.0                         ! Scale Factor
+0.001                       ! Quantization
+0                           ! Body
+0                           ! Node
+************************* Fine Sun Sensor *******************************
+0                           ! Number of Fine Sun Sensors
+=============================== FSS 0 ===================================
+0.2                         ! Sample Time,sec
+70.0  0.0  0.0  231         ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+32.0   32.0                 ! H, V FOV Size, deg
+0.1                         ! Noise Equivalent Angle, deg RMS
+0.5                         ! Quantization, deg
+0                           ! Node
+************************** Star Tracker *********************************
+0                           ! Number of Star Trackers
+=============================== ST 0 ====================================
+0.25                        ! Sample Time,sec
+-90.0  90.0  00.0  321      ! Mounting Angles (deg), Seq in Body
+Z_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+28.0   28.0                   ! H, V FOV Size, deg
+30.0  10.0  10.0            ! Sun, Earth, Moon Exclusion Angles, deg
+2.0  2.0  20.0              ! Noise Equivalent Angle, arcsec RMS
+0                           ! Node
+****************************** GPS **************************************
+0                           ! Number of GPS Receivers
+============================= GPSR 0 ====================================
+0.25                        ! Sample Time,sec
+4.0                         ! Position Noise, m RMS
+0.02                        ! Velocity Noise, m/sec RMS
+20.0E-9                     ! Time Noise, sec RMS
+0                           ! Node
+*************************** Accelerometer *******************************
+0                           ! Number of Accel Axes
+============================== Axis 0 ===================================
+0.1                         ! Sample Time,sec
+1.0  0.0  0.0               ! Axis expressed in Body Frame
+1.0                         ! Max Acceleration (m/s^2)
+0.0                         ! Scale Factor Error, ppm
+0.05                        ! Quantization, m/s^2
+0.0                         ! DV Random Walk (m/s/rt-hr)
+0.0 1.0                     ! Bias Stability (m/s^2) over timespan (hr)
+0.0                         ! DV Noise, m/s
+0.05                        ! Initial Bias (m/s^2)
+0                           ! Node
+************************ Fine Guidance Sensor ****************************
+0                           ! Number of Fine Guidance Sensors
+========================= Fine Guidance Sensor 0 =========================
+0.1                         ! Sample Time,sec
+0.0  0.0  0.0  321          ! Nominal Mounting Angles (deg), Seq in Body
+X_AXIS                      ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+3600.0   3600.0             ! H, V FOV Size, arcsec
+2.0                         ! Noise Equivalent Angle, arcsec RMS
+60.0                        ! Detector Scale, arcsec/pixel
+0  0                        ! Body, Node
+0.0  0.0  0.0  321          ! FOV Frame (Fr) Angles (deg), Seq wrt R frame
+0.00  0.0                   ! Guide Star H, V (deg) in FOV Frame
+NONE                        ! Optics Input File Name
+NONE                        ! PSF Image File Name
+
+```
+
+### `Shaker_Simple.txt`
+
+**경로:** `cfg/InOut/Shaker_Simple.txt`
+
+
+```text
+<<<<<<<<<<<<<<<<<  42: Jitter Source Description File   >>>>>>>>>>>>>>>>>
+0                ! Number of Shakers
+==============================  Shaker 0  ===============================
+Cryocooler X     ! Description
+0  0             ! Body, Node
+FORCE            ! Type (TORQUE or FORCE)
+1.0  0.0  0.0    ! Axis Vector
+2                ! Number of Tonic Components
+2.0              ! Tone Amplitude (N or Nm)
+10.0             ! Tone Frequency (Hz)
+0.0              ! Tone Phase Angle (deg)
+1.0              ! Tone Amplitude (N or Nm)
+11.0             ! Tone Frequency (Hz)
+0.0              ! Tone Phase Angle (deg)
+TRUE             ! Random Component Active
+0.0  1.0         ! Random input band limits (Hz)
+0.05             ! RMS of random input over band
+==============================  Shaker 1  ===============================
+Cryocooler Y     ! Description
+0  0             ! Body, Node
+FORCE            ! Type (TORQUE or FORCE)
+0.0  1.0  0.0    ! Axis Vector
+2                ! Number of Tonic Components
+2.0              ! Tone Amplitude (N or Nm)
+10.0             ! Tone Frequency (Hz)
+90.0             ! Tone Phase Angle (deg)
+1.0              ! Tone Amplitude (N or Nm)
+12.0             ! Tone Frequency (Hz)
+90.0             ! Tone Phase Angle (deg)
+TRUE             ! Random Component Active
+0.0  1.0         ! Random input band limits (Hz)
+0.5              ! RMS of random input over band
+==============================  Shaker 2  ===============================
+Instrument Rotor ! Description
+0  0             ! Body, Node
+TORQUE  0        ! Type (TORQUE or FORCE)
+0.0  0.0  1.0    ! Axis Vector
+0                ! Number of Tonic Components
+2.0              ! Tone Amplitude (N or Nm)
+10.0             ! Tone Frequency (Hz)
+0.0              ! Tone Phase Angle (deg)
+FALSE            ! Random Component Active
+0.1  2.0         ! Random input band limits (Hz)
+0.05             ! RMS of random input over band
+```
+
+### `TRV.txt`
+
+**경로:** `cfg/InOut/TRV.txt`
+
+
+```text
+# Example of TRV format
+
+"EXAMPLE 1"                           
+CENTRAL  EARTH 2019-5-7 12:0:0.000
+6678000.0  0.0  0.0
+0.0 8500.0 0.0 
+
+"EXAMPLE 2"                           
+CENTRAL  EARTH 2019-5-7 12:0:0.000
+6678000.0  0.0  0.0
+0.0 6000.0 6000.0 
+```
+
+### `Whl_Simple.txt`
+
+**경로:** `cfg/InOut/Whl_Simple.txt`
+
+
+```text
+<<<<<<<<<<<<<<  Wheel Drag and Jitter Inputs for 42  >>>>>>>>>>>>>>
+*************************************************
+***************  Drag Parameters  ***************
+*************************************************
+0.01            ! Coulomb Friction, Nm
+0.015           ! Stiction, Nm
+1.6E-5          ! Viscous Coefficient, Nm/(r/s)
+6.28            ! Stribeck Zone, rad/sec
+10.0            ! Lugre Time Constant, sec
+31.4            ! Lugre Damping Zone, rad/sec
+*************************************************
+**************  Jitter Parameters  **************
+*************************************************
+0.9             ! 2*Jt/Jr Ratio (<1.0)
+0.0             ! Phase of Static vs. Dyn Imbalance, deg
+280.0  0.2      ! Lateral Mode Freq, Hz, Damping Ratio
+80.0   0.2      ! Rocking Mode Freq, Hz, Damping Ratio
+*******************  Harmonics *******************
+6               ! Number of Harmonics
+===================  Harmonic 0  =================
+1.0             ! Harmonic Number
+0.48            ! Static Imbalance, g-cm
+13.7            ! Dynamic Imbalance, g-cm^2
+0.0             ! Harmonic Phase Angle, deg
+===================  Harmonic 1  =================
+0.34            ! Harmonic Number
+0.1             ! Static Imbalance, g-cm
+1.0             ! Dynamic Imbalance, g-cm^2
+10.0            ! Harmonic Phase Angle, deg
+===================  Harmonic 2  =================
+2.0             ! Harmonic Number
+0.08            ! Static Imbalance, g-cm
+0.8             ! Dynamic Imbalance, g-cm^2
+20.0            ! Harmonic Phase Angle, deg
+===================  Harmonic 3  =================
+2.74            ! Harmonic Number
+0.06            ! Static Imbalance, g-cm
+0.6             ! Dynamic Imbalance, g-cm^2
+30.0            ! Harmonic Phase Angle, deg
+===================  Harmonic 4  =================
+4.26            ! Harmonic Number
+0.04            ! Static Imbalance, g-cm
+0.4             ! Dynamic Imbalance, g-cm^2
+40.0            ! Harmonic Phase Angle, deg
+===================  Harmonic 5  =================
+6.04            ! Harmonic Number
+0.02            ! Static Imbalance, g-cm
+0.2             ! Dynamic Imbalance, g-cm^2
+50.0            ! Harmonic Phase Angle, deg
+
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,28 +11,876 @@
 sub-build/index
 tools/index
 version/index
-file--build.cmake
-file--default.cmake
-file--dictionary.cmake
-file--install.cmake
-file--refresh_cache.cmake
-file--sbom.cmake
-file--target.cmake
-file--ut.cmake
-file--version.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/`](sub-build/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/tools/`](tools/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/version/`](version/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/build.cmake`](file--build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/default.cmake`](file--default.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/dictionary.cmake`](file--dictionary.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/install.cmake`](file--install.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/refresh_cache.cmake`](file--refresh_cache.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sbom.cmake`](file--sbom.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/target.cmake`](file--target.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/ut.cmake`](file--ut.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/version.cmake`](file--version.cmake) — UTF-8 텍스트 파일 본문 포함
+### `build.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/build.cmake`
+
+
+```cmake
+####
+# build.cmake:
+#
+# This target sets up the build for every module in the system. WARNING: it registers a target set to the module name,
+# not including _build. This is for historical reasons.
+####
+include_guard()
+include(autocoder/autocoder)
+include(utilities)
+include(implementation)
+
+# Flags used when BUILD_TESTING is enabled
+set(FPRIME_TESTING_REQUIRED_COMPILE_FLAGS)
+set(FPRIME_TESTING_REQUIRED_LINK_FLAGS)
+
+# Special coverage for unit tests
+if (FPRIME_ENABLE_UT_COVERAGE)
+    list(APPEND FPRIME_TESTING_REQUIRED_COMPILE_FLAGS -fprofile-arcs -ftest-coverage)
+    list(APPEND FPRIME_TESTING_REQUIRED_LINK_FLAGS --coverage)
+endif()
+
+####
+# Function `fprime__internal_TECH_DEBT_module_setup`:
+#
+# A function containing all the steps necessary to maintain build-system technical debt within the build target.
+#
+####
+function(fprime__internal_TECH_DEBT_module_setup BUILD_MODULE_NAME MODULE_NAME_HELPER)
+    #### Load target properties ####
+    # This switches the following code to use new properties.
+    foreach(PROPERTY IN ITEMS FPRIME_TYPE SOURCES SUPPLIED_SOURCES AC_GENERATED LINK_LIBRARIES SUPPLIED_HEADERS AC_FILE_DEPENDENCIES)
+        get_target_property("MODULE_${PROPERTY}" "${BUILD_MODULE_NAME}" "${PROPERTY}")
+        if (NOT MODULE_${PROPERTY})
+            set("MODULE_${PROPERTY}")
+        endif()
+    endforeach()
+
+    #### Remove empty.cpp ####
+    # This section removes empty.cpp "fake source" from the various modules. This source is added to make
+    # sub-builds work correctly (targets need at least one source, even if they are there just to be a name).
+    # A better approach would be to add fprime_modules as "INTERFACE" targets during sub-builds thus making them
+    # not require sources while still providing the name. 
+    list(REMOVE_ITEM MODULE_SOURCES "${FPRIME__INTERNAL_EMPTY_CPP}")
+    set_target_properties(
+        ${BUILD_MODULE_NAME}
+        PROPERTIES
+        SOURCES "${MODULE_SOURCES}"
+    )
+    #### End Remove empty.cpp ####
+endfunction()
+
+
+function(fprime__internal_check_restrictions MODULE_NAME DEPENDENCIES)
+    get_property(RESTRICTED_TARGETS GLOBAL PROPERTY "RESTRICTED_TARGETS")
+    foreach(DEPENDENCY IN LISTS DEPENDENCIES)
+        if (DEPENDENCY IN_LIST RESTRICTED_TARGETS)
+            fprime_cmake_fatal_error("${DEPENDENCY} is not available on platform '${FPRIME_PLATFORM}' nor toolchain '${FPRIME_TOOLCHAIN}'")
+        endif()
+    endforeach()
+endfunction()
+
+function(fprime__internal_standard_build_target_setup BUILD_TARGET_NAME MODULE_NAME_HELPER)
+    fprime__internal_TECH_DEBT_module_setup("${BUILD_TARGET_NAME}" "${MODULE_NAME_HELPER}")
+
+    # **Must** come after the TECH_DEBT section above
+    # Adds in assertion compile flags (U32 for CRC, file paths for files)
+    get_target_property(BUILDABLE_SOURCES "${BUILD_TARGET_NAME}" SOURCES)
+    foreach(SRC_FILE IN LISTS BUILDABLE_SOURCES)
+        set_assert_flags("${SRC_FILE}")
+    endforeach()
+
+    # Check for restricted dependencies in the module's linked list
+    get_target_property(TARGET_LINK_DEPENDENCIES "${BUILD_TARGET_NAME}" LINK_LIBRARIES)
+    get_target_property(TARGET_INTERFACE_DEPENDENCIES "${BUILD_TARGET_NAME}" INTERFACE_LINK_LIBRARIES)
+    fprime__internal_check_restrictions("${BUILD_TARGET_NAME}" "${TARGET_LINK_DEPENDENCIES};${TARGET_INTERFACE_DEPENDENCIES}")
+
+    # Special flags applied to modules when compiling with testing enabled
+    get_target_property(TARGET_TYPE "${BUILD_TARGET_NAME}" TYPE)
+    if (BUILD_TESTING AND NOT TARGET_TYPE STREQUAL "INTERFACE_LIBRARY")
+        target_compile_options("${BUILD_TARGET_NAME}" PRIVATE ${FPRIME_TESTING_REQUIRED_COMPILE_FLAGS})
+        target_link_libraries("${BUILD_TARGET_NAME}" PRIVATE ${FPRIME_TESTING_REQUIRED_LINK_FLAGS})
+    endif()
+endfunction()
+
+####
+# Build function `add_global_target`:
+#
+# Specifically does nothing.  The "all" target of a normal cmake build will cover this case.
+####
+function(build_add_global_target TARGET)
+endfunction(build_add_global_target)
+
+####
+# Function `add_deployment_target`:
+#
+# Adds in a deployment target, which for build, is just a normal module target. See: add_module_target for a description
+# of arguments. FULL_DEPENDENCY_LIST is unused (these are already known to CMake).
+####
+function(build_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+    build_add_module_target("${MODULE}" "${TARGET}" "${SOURCES}" "${FULL_DEPENDENCY_LIST}")
+endfunction()
+
+####
+# Function `build_add_module_target`:
+#
+# Adds a module-by-module target for building fprime.
+#
+# - **MODULE:** name of the module
+# - **TARGET:** name of the top-target (e.g. dict). Use ${MODULE_NAME}_${TARGET_NAME} for a module specific target
+# - **SOURCES:** list of source file inputs from the CMakeLists.txt setup
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(build_add_module_target BUILD_TARGET_NAME TARGET SOURCES DEPENDENCIES)
+    get_property(BUILD_AUTOCODERS GLOBAL PROPERTY FPRIME_AUTOCODER_TARGET_LIST)
+    run_ac_set("${MODULE}" ${BUILD_AUTOCODERS})
+
+    fprime__internal_standard_build_target_setup("${BUILD_TARGET_NAME}" "")
+
+    # Introspection prints
+    if (CMAKE_DEBUG_OUTPUT)
+        introspect("${MODULE}")
+    endif()
+endfunction(build_add_module_target)
+```
+
+### `default.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/default.cmake`
+
+
+```cmake
+####
+# default.cmake:
+#
+# Defaults for target implementations. This effectively "clears" the definitions, and thus allows a default behavior
+# after another target was invoked.
+####
+
+####
+# `add_global_target`:
+#
+# The default implementation defines the target using `add_custom_target` and nothing more.
+####
+function(add_global_target TARGET)
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "[target] Adding default global target: ${TARGET}")
+    endif()
+    add_custom_target(${TARGET})
+endfunction(add_global_target)
+
+####
+# `add_deployment_target`:
+#
+# The default deployment target is a target which rolls-up all dependent targets through recursion.
+# - **MODULE:** name of the deployment module. This is usually equivalent to $PROJECT_NAME.
+# - **TARGET:** name of the top-target (e.g. dict). Use ${MODULE_NAME}_${TARGET_NAME} for a module specific target
+# - **SOURCE:** list of source file inputs from the CMakeList.txt setup
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "Adding default deployment target: ${MODULE}_${TARGET}")
+    endif()
+    add_custom_target("${MODULE}_${TARGET}")
+    foreach(DEPENDENCY IN LISTS RESULTS)
+        if (TARGET "${DEPENDENCY}_${TARGET}")
+            add_dependencies("${MODULE}_${TARGET}" "${DEPENDENCY}_${TARGET}")
+        endif()
+    endforeach()
+endfunction(add_deployment_target)
+
+####
+# `add_module_target`:
+#
+# Forces a fatal to ensure that every given target defines the add module target functionality. Implementors may supply
+# a blank function, but not leave it undefined.
+#
+# - **MODULE:** name of the module
+# - **TARGET:** name of the top-target (e.g. dict). Use ${MODULE_NAME}_${TARGET_NAME} for a module specific target
+# - **SOURCE:** list of source file inputs from the CMakeList.txt setup
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "Skipping module target: ${MODULE}_${TARGET}, default performs no action.")
+    endif()
+endfunction(add_module_target)
+```
+
+### `dictionary.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/dictionary.cmake`
+
+
+```cmake
+####
+# dictionary.cmake:
+#
+# Dictionary target that calls the FPP autocoder as part of the module function.
+# The rest of the implementation is empty as requested.
+####
+include_guard()
+include(autocoder/autocoder)
+
+####
+# Function `dictionary_add_global_target`:
+#
+# Adds a global dictionary target that depends on all module dictionary targets.
+#
+# - **TARGET_NAME:** target name to be generated
+####
+function(dictionary_add_global_target TARGET_NAME)
+    add_custom_target(${TARGET_NAME})
+endfunction(dictionary_add_global_target)
+
+####
+# Function `dictionary_add_deployment_target`:
+#
+# Creates a deployment-level dictionary target. Currently empty implementation.
+#
+# - **MODULE:** name of the module
+# - **TARGET:** name of target to produce
+# - **SOURCES:** list of source file inputs
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+# - **FULL_DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(dictionary_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    run_ac_set("${MODULE}" "autocoder/fpp")
+
+    # Create deployment level target and remove the module from the list of dependencies
+    add_custom_target("${MODULE}_${TARGET}" DEPENDS ${AUTOCODER_GENERATED_OTHER})
+    list(REMOVE_ITEM DEPENDENCIES "${MODULE}")
+
+    # Create a custom target with _dictionary suffix that depends on the generated files
+    if(AUTOCODER_GENERATED_OTHER)
+        # Install the files as a component. This is done here so it is output to the deployment directory
+        install(FILES ${AUTOCODER_GENERATED_OTHER} DESTINATION ${TOOLCHAIN_NAME}/${MODULE}/dict COMPONENT "${MODULE}_${TARGET}")
+        add_custom_command(TARGET "${MODULE}_${TARGET}" POST_BUILD COMMAND "${CMAKE_COMMAND}"
+            -DCMAKE_INSTALL_COMPONENT=${MODULE}_${TARGET} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake)
+    endif()
+
+    # Loop through all recursive dependencies and find dictionary targets
+    foreach(DEPENDENCY IN LISTS DEPENDENCIES)
+        if (TARGET "${DEPENDENCY}_${TARGET}")
+            get_target_property(DICTIONARY_FILES "${DEPENDENCY}" FPRIME_DICTIONARIES)
+            fprime_cmake_ASSERT("No dictionary files defined for ${DEPENDENCY}" DICTIONARY_FILES)
+            # Install the files as a component. This is done here so it is output to the deployment directory
+            install(FILES ${DICTIONARY_FILES} DESTINATION ${TOOLCHAIN_NAME}/${MODULE}/dict COMPONENT "${MODULE}_${DEPENDENCY}_${TARGET}")
+            add_custom_command(TARGET "${MODULE}_${TARGET}" POST_BUILD COMMAND "${CMAKE_COMMAND}"
+                -DCMAKE_INSTALL_COMPONENT=${MODULE}_${DEPENDENCY}_${TARGET} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake)
+            # Make deployment depend on the module dictionary target
+            add_dependencies("${MODULE}_${TARGET}" "${DEPENDENCY}_${TARGET}")
+        endif()
+    endforeach()
+
+    # Make the deployment and dictionary targets depend on the deployment dictionary target
+    add_dependencies("${MODULE}" "${MODULE}_${TARGET}")
+    add_dependencies(dictionary "${MODULE}_${TARGET}")
+endfunction(dictionary_add_deployment_target)
+
+####
+# Function `dictionary_add_module_target`:
+#
+# Creates a module-level dictionary target that calls the FPP autocoder.
+# The rest of the implementation is empty as requested.
+#
+# - **MODULE_NAME:** name of the module
+# - **TARGET_NAME:** name of target to produce
+# - **SOURCE_FILES:** list of source file inputs
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(dictionary_add_module_target MODULE_NAME TARGET_NAME SOURCE_FILES DEPENDENCIES)
+    run_ac_set("${MODULE_NAME}" "autocoder/fpp")
+    
+    # Create a custom target with _dictionary suffix that depends on the generated files
+    if(AUTOCODER_GENERATED_OTHER)
+        append_list_property("${AUTOCODER_GENERATED_OTHER}" TARGET "${MODULE_NAME}" PROPERTY FPRIME_DICTIONARIES)
+        add_custom_target("${MODULE_NAME}_${TARGET_NAME}" DEPENDS ${AUTOCODER_GENERATED_OTHER})
+    endif()
+endfunction(dictionary_add_module_target)
+```
+
+### `install.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/install.cmake`
+
+
+```cmake
+####
+# target/install.cmake:
+#
+# Installs fprime into the build-artifacts folder. This is done using CMake's install command. Requires CMake 3.13+.
+####
+include(utilities)
+
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE CACHE BOOL "Install all dependency" FORCE)
+
+####
+# Function `_install_real_helper`:
+#
+# Ensures targets are real before installing them. Real targets are executables, libraries, and other compile artifacts.
+# - **OUTPUT**: output variable set with list of real dependencies
+# - **FULL_DEPENDENCIES**: full list of (recursive) dependencies
+####
+function(_install_real_helper OUTPUT FULL_DEPENDENCIES)
+    set(OUTPUT_LIST)
+    foreach(DEPENDENCY IN LISTS FULL_DEPENDENCIES)
+        is_target_real(IS_REAL "${DEPENDENCY}")
+        get_target_property(ALIASED_TARGET "${DEPENDENCY}" ALIASED_TARGET)
+        if (IS_REAL)
+            list(APPEND OUTPUT_LIST "${DEPENDENCY}")
+        elseif (ALIASED_TARGET)
+            list(APPEND OUTPUT_LIST "${ALIASED_TARGET}")
+        endif()
+    endforeach()
+    set("${OUTPUT}" "${OUTPUT_LIST}" PARENT_SCOPE)
+endfunction()
+
+# Dictionaries are per-deployment, a global variant does not make sense
+function(install_add_global_target)
+endfunction()
+
+# Function `add_deployment_target`:
+#
+# Creates a target for UTs per-deployment.
+#
+# - **MODULE:** name of the module
+# - **TARGET:** name of target to produce
+# - **SOURCES:** list of source file inputs
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+# - **FULL_DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(install_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE)
+    _install_real_helper(INSTALL_DEPENDENCIES "${FULL_DEPENDENCIES}")
+    install(TARGETS ${MODULE} ${INSTALL_DEPENDENCIES}
+            RUNTIME DESTINATION ${TOOLCHAIN_NAME}/${MODULE}/bin
+            COMPONENT ${MODULE}
+            LIBRARY DESTINATION ${TOOLCHAIN_NAME}/${MODULE}/lib
+            COMPONENT ${MODULE}
+            ARCHIVE DESTINATION ${TOOLCHAIN_NAME}/${MODULE}/lib/static
+            COMPONENT ${MODULE}
+    )
+    install(FILES ${CMAKE_BINARY_DIR}/hashes.txt DESTINATION ${CMAKE_INSTALL_PREFIX} COMPONENT ${MODULE})
+
+    # Set up installation
+    add_custom_command(TARGET "${MODULE}" POST_BUILD COMMAND "${CMAKE_COMMAND}"
+            -DCMAKE_INSTALL_COMPONENT=${MODULE} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake)
+endfunction()
+
+# Install is per-deployment, a module-by-module variant does not make sense
+function(install_add_module_target MODULE_NAME TARGET_NAME SOURCE_FILES DEPENDENCIES)
+endfunction(install_add_module_target)
+```
+
+### `refresh_cache.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/refresh_cache.cmake`
+
+
+```cmake
+####
+# cmake/target/refresh_cache.cmake:
+#
+# A target that does nothing, or a quick way to refresh cache only when necessary.
+####
+
+function(refresh_cache_add_global_target)
+    add_custom_target("refresh_cache")
+endfunction()
+
+function(refresh_cache_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+endfunction()
+
+function(refresh_cache_add_module_target MODULE_NAME TARGET_NAME SOURCE_FILES DEPENDENCIES)
+endfunction(refresh_cache_add_module_target)
+```
+
+### `sbom.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sbom.cmake`
+
+
+```cmake
+####
+# cmake/target/sbom.cmake:
+#
+# A target used to add SBOM generation to the build. Will be invoked when running the "all" target
+# and installed into the build_artifacts directory underneath the platform folder.
+####
+set(FPRIME__INTERNAL_SBOM_REDIRECTOR "${CMAKE_CURRENT_LIST_DIR}/tools/redirector.py")
+
+####
+# sbom_add_global_target:
+# 
+# Used to register a global target that will build with "all" and generates the SBOM.
+#
+#####
+function(sbom_add_global_target TARGET)
+    find_program(SYFT NAMES syft)
+    # Check if syft is available before running
+    if (SYFT)
+        add_custom_target("${TARGET}" ALL
+            COMMAND
+            # Redirect to cleanly capture standard out
+            ${PYTHON} ${FPRIME__INTERNAL_SBOM_REDIRECTOR} "${CMAKE_BINARY_DIR}/${PROJECT_NAME}_sbom.json"
+            # syft arguments
+            "${SYFT}" "dir:${FPRIME_PROJECT_ROOT}" -o spdx-json
+            # Excludes .github paths not in the root of the project as those should not be activated by the project
+            --exclude '*/**/.github'
+            DEPENDS $<TARGET_PROPERTY:${TARGET},SBOM_DEPENDENCIES>
+        )
+        # Install the SBOM file
+        install(FILES "${CMAKE_BINARY_DIR}/${PROJECT_NAME}_sbom.json" DESTINATION ${TOOLCHAIN_NAME} COMPONENT ${TARGET})
+        add_custom_command(TARGET "${TARGET}" POST_BUILD COMMAND "${CMAKE_COMMAND}"
+                          -DCMAKE_INSTALL_COMPONENT=${TARGET} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake)
+    else()
+        message(STATUS "[INFO] to find 'syft' on PATH, please install to generate software bill-of-materials")
+    endif()
+endfunction()
+
+# For deployments
+function(sbom_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    if (TARGET "${TARGET}")
+        append_list_property("${MODULE}" TARGET "${TARGET}" PROPERTY SBOM_DEPENDENCIES)
+    endif()
+endfunction()
+
+# Used to register all modules
+function(sbom_add_module_target MODULE TARGET SOURCE_FILES DEPENDENCIES)
+    if (TARGET "${TARGET}")
+        append_list_property("${MODULE}" TARGET "${TARGET}" PROPERTY SBOM_DEPENDENCIES)
+    endif()
+endfunction()
+```
+
+### `target.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/target.cmake`
+
+
+```cmake
+####
+# Target.cmake:
+#
+# Functions supporting the F prime target additions. These targets allow building against modules
+# and top-level targets. This allows for multi-part builds like `sloc` or `dict` where some part
+# applies to the module and is rolled up into some global command. 
+#
+####
+include_guard()
+
+####
+# Function `get_target_name`:
+#
+# Gets the target name from the path to the target file. Two variants of this name will be
+# generated and placed in parent scope: TARGET_NAME, and TARGET_MOD_NAME.
+#
+# - **MODULE_NAME:** module name for TARGET_MOD_NAME variant
+# - **Return: TARGET_NAME** (set in parent scope), global target name i.e. `dict`.
+# - **Return: TARGET_MOD_NAME** (set in parent scope), module target name. i.e. `Fw_Cfg_dict`
+#
+# **Note:** TARGET_MOD_NAME not set if optional argument `MODULE_NAME` not supplied
+####
+function(get_target_name TARGET_FILE_PATH)
+    get_filename_component(BASE_VAR ${TARGET_FILE_PATH} NAME_WE)
+    set(TARGET_NAME ${BASE_VAR} PARENT_SCOPE)
+    if (${ARGC} GREATER 1)
+        set(TARGET_MOD_NAME "${ARGV1}_${BASE_VAR}" PARENT_SCOPE)
+    endif()
+endfunction(get_target_name)
+
+####
+# Function `setup_global_targets`:
+#
+# Loops through all targets registered and sets up the global target.
+####
+function(setup_global_targets)
+    # Get both normal and ut target lists
+    get_property(TARGETS GLOBAL PROPERTY FPRIME_TARGET_LIST)
+    get_property(UT_TARGETS GLOBAL PROPERTY FPRIME_UT_TARGET_LIST)
+
+    # Register targets
+    foreach(TARGET IN LISTS TARGETS)
+        setup_global_target("${TARGET}")
+    endforeach()
+    # Register targets specific to UT build
+    if (BUILD_TESTING)
+        foreach(TARGET IN LISTS UT_TARGETS)
+            setup_global_target("${TARGET}")
+        endforeach()
+    endif ()
+endfunction(setup_global_targets)
+
+####
+# Function `check_unknown_links`:
+#
+# Checks all ARGN supplied arguments to determine if they **should have** existed for deployment recursion to work
+# properly. If an argument is a file (i.e. a library or other file), a linker flag (-*), a generator expression
+# ($*) then these are passed. Anything else results in an error.
+#
+# - **DEPLOYMENT_NAME:** name of deployment being recursed for cleaner error messages
+# - **ARGN:** list of unknown targets to check
+####
+function(check_unknown_links DEPLOYMENT_NAME)
+    # Check all links that they exist or are valid
+    foreach(LINK IN LISTS ARGN)
+        # When a link is not a file, not a link flag, and not a generator expression then the target must already exist
+        # as a target in the CMake system to be used as part of recursive dependency lists.
+        if (EXISTS "${LINK}" AND NOT IS_DIRECTORY "${LINK}")
+            # File detected, skip dependency
+        elseif("${LINK}" MATCHES "^[-$].*")
+            # Link library of some form detected
+        else()
+            # Internal dependency name, must exist thus a failure
+            fprime_cmake_fatal_error(
+                "F Prime/CMake target '${LINK}' not available to deployment '${DEPLOYMENT_NAME}'. '${LINK}' must:\n"
+                "    1. Must be defined somewhere in the F Prime project\n"
+                "    2. Must be defined before '${DEPLOYMENT_NAME}' deployment (register_fprime_deployment)\n"
+                "'${LINK}' is undefined, or included via `add_fprime_subdirectory` after `register_fprime_deployment`."
+            )
+        endif()
+    endforeach()
+endfunction()
+
+
+####
+# Function `setup_global_target`:
+#
+# Setup a given target file in global scope. This also includes the target file once and thus must be called regardless
+# of the actual existence of a global entry point for a given target. All targets **must** define a function of the form
+# ${TARGET_NAME}_add_global_target though it may be empty.
+#
+# TARGET_FILE: target file to include
+####
+function(setup_global_target TARGET_FILE)
+    plugin_include_helper(TARGET_NAME "${TARGET_FILE}" add_global_target add_module_target add_deployment_target)
+    cmake_language(CALL "${TARGET_NAME}_add_global_target" "${TARGET_NAME}")
+endfunction(setup_global_target)
+
+####
+# Function `setup_single_target`:
+#
+# Setup a given target file's module-specific targets. There are two module-specific target options. The first is a
+# normal module target called through ${TARGET_NAME}_add_module_target. This is for setting up items registered through
+# register_fprime_module calls. The second is called through ${TARGET_NAME}_add_deployment_target and responds to calls
+# of register_fprime_deployment. Both add_*_target functions must be defined, may be empty implementations. Only one of
+# the two functions will be called for a given module.
+#
+# TARGET_FILE: target file to include
+# MODULE: module being processed
+# SOURCES: sources specified with `set(SOURCE_FILES ...)` in module's CMakeLists.txt
+# DEPENDENCIES: dependencies and link libraries specified with `set(MOD_DEPS ...)` in module's CMakeLists.txt
+####
+function(setup_single_target TARGET_FILE MODULE SOURCES DEPENDENCIES)
+    # Announce for the debug log
+    get_target_name("${TARGET_FILE}")
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "[target] Setting up '${TARGET_NAME}' on all module ${MODULE}")
+    endif()
+    get_target_property(MODULE_TYPE "${MODULE}" FPRIME_TYPE)
+
+    if (NOT MODULE_TYPE STREQUAL "Deployment")
+        cmake_language(CALL "${TARGET_NAME}_add_module_target" "${MODULE}" "${TARGET_NAME}" "${SOURCES}" "${DEPENDENCIES}")
+    else()
+        get_target_property(TRANSITIVE_DEPENDENCIES "${MODULE}" TRANSITIVE_DEPENDENCIES)
+        # Recalculate recursive dependencies
+        if (NOT TRANSITIVE_DEPENDENCIES)
+            set(RECURSED_PROPERTY_NAMES FPRIME_DEPENDENCIES)
+            recurse_target_properties("${MODULE}" "${RECURSED_PROPERTY_NAMES}" KNOWN_TRANSITIVE_LINKS EXTERNAL_LINKS UNKNOWN_LINKS)
+            
+            # Report all detected recursive dependencies
+            if (CMAKE_DEBUG_OUTPUT)
+                foreach(LIST_PRINT IN ITEMS EXTERNAL_LINKS KNOWN_TRANSITIVE_LINKS UNKNOWN_LINKS)
+                    message(STATUS "[target] '${MODULE}' Recursive Links: ${LIST_PRINT}")
+                    foreach(ITEM_PRINT IN LISTS ${LIST_PRINT})
+                        message(STATUS "[target]    ${ITEM_PRINT}")
+                    endforeach()
+                endforeach()
+            endif()
+            check_unknown_links("${MODULE}" ${UNKNOWN_LINKS})
+            set_target_properties("${MODULE}" PROPERTIES TRANSITIVE_DEPENDENCIES "${KNOWN_TRANSITIVE_LINKS}")
+            set(TRANSITIVE_DEPENDENCIES "${KNOWN_TRANSITIVE_LINKS}")
+        endif()
+        cmake_language(CALL "${TARGET_NAME}_add_deployment_target" "${MODULE}" "${TARGET_NAME}" "${SOURCES}" "${DEPENDENCIES}" "${TRANSITIVE_DEPENDENCIES}")
+    endif()
+endfunction(setup_single_target)
+
+####
+# Function `setup_module_targets`:
+#
+# Takes all registered targets and sets up the module specific targets from them. The list of targets  is read from the
+# global property FPRIME_TARGET_LIST.
+#
+# - MODULE: name of the module being processed
+# - SOURCES: sources specified with `set(SOURCE_FILES ...)` in module's CMakeLists.txt
+# - DEPENDENCIES: dependencies and link libraries specified with `set(MOD_DEPS ...)` in module's CMakeLists.txt
+####
+function(setup_module_targets BUILD_TARGET)
+    # Grab the list of targets
+    set(LIST_NAME FPRIME_TARGET_LIST)
+
+    # Read target properties
+    foreach(PROPERTY IN ITEMS FPRIME_TYPE SOURCES LINK_LIBRARIES INTERFACE_LINK_LIBRARIES)
+        get_target_property("MODULE_${PROPERTY}" "${BUILD_TARGET}" "${PROPERTY}")
+        if (NOT MODULE_${PROPERTY})
+            set("MODULE_${PROPERTY}")
+        endif()
+    endforeach()
+
+
+    # Get both normal and ut target lists
+    get_property(TARGETS GLOBAL PROPERTY FPRIME_TARGET_LIST)
+    get_property(UT_TARGETS GLOBAL PROPERTY FPRIME_UT_TARGET_LIST)
+    # UT targets are the only targets run on unit tests, and are included in deployments
+    if (MODULE_FPRIME_TYPE STREQUAL "Deployment")
+        list(APPEND TARGETS ${UT_TARGETS})
+    elseif (MODULE_FPRIME_TYPE STREQUAL "Unit Test")
+        set(TARGETS "${UT_TARGETS}")
+    endif()
+
+    # Now run through each of the determined targets
+    set(DEPENDENCIES ${MODULE_LINK_LIBRARIES} ${MODULE_INTERFACE_LINK_LIBRARIES})
+    list(REMOVE_DUPLICATES DEPENDENCIES)
+    foreach(FPRIME_TARGET IN LISTS TARGETS)
+        setup_single_target("${FPRIME_TARGET}" "${BUILD_TARGET}" "${MODULE_SOURCES}" "${DEPENDENCIES}")
+    endforeach()
+endfunction(setup_module_targets)
+#### Documentation links
+# See Also:
+#  - API: [API](../API.md) describes the `register_fprime_target` function
+####
+```
+
+### `ut.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/ut.cmake`
+
+
+```cmake
+####
+# target/ut.cmake:
+#
+# UTs target implementation.
+####
+include(target/build) # Borrows some implementation
+include(fprime-util)
+set(FPRIME__INTERNAL_UT_TARGET "ut_exe") # For historical reasons
+set(FPRIME__INTERNAL_UT_CLEAN_SCRIPT "${CMAKE_BINARY_DIR}/clean.cmake")
+
+
+####
+# Function `_ut_setup_clean_file`:
+#
+# Setup a file that cleans out *.gcda files before running tests. This is run before testing as registered through
+# TEST_INCLUDE_FILES.
+####
+function(_ut_setup_clean_file)
+    set(REMOVAL_GLOB "*.gcda")
+    file(WRITE "${FPRIME__INTERNAL_UT_CLEAN_SCRIPT}" "
+        message(STATUS \"Cleaning up gcda files\")
+        file(GLOB_RECURSE GCDA_FILES \"${CMAKE_BINARY_DIR}/**/${REMOVAL_GLOB}\")
+        if (GCDA_FILES)
+            file(REMOVE \${GCDA_FILES})
+        endif()
+    ")
+    set_property(DIRECTORY APPEND PROPERTY
+        TEST_INCLUDE_FILES "${FPRIME__INTERNAL_UT_CLEAN_SCRIPT}"
+    )
+endfunction(_ut_setup_clean_file)
+
+####
+# `ut_add_global_target`:
+#
+# Implementation defines the target using `add_custom_target` and nothing more.
+####
+function(ut_add_global_target TARGET)
+    _ut_setup_clean_file()
+endfunction(ut_add_global_target)
+
+
+# Function `ut_add_deployment_target`:
+#
+# Creates a target for UTs per-deployment.
+#
+# - **MODULE:** name of the module
+# - **TARGET:** name of target to produce
+# - **SOURCES:** list of source file inputs
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+# - **FULL_DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(ut_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    # For the deployment augment the tests in this directory to include the recursive set tests and write to the test files
+    set(DEPLOYMENT_TESTS)
+    foreach(DEPENDENCY IN LISTS FULL_DEPENDENCIES)
+        get_property(DEPENDENCY_UNIT_TESTS TARGET ${DEPENDENCY} PROPERTY FPRIME_UNIT_TESTS)
+        if(DEPENDENCY_UNIT_TESTS)
+            foreach(UNIT_TEST IN LISTS DEPENDENCY_UNIT_TESTS)
+                fprime_util_metadata_add_test("${UNIT_TEST}")
+                list(APPEND DEPLOYMENT_TESTS "${UNIT_TEST}")
+            endforeach()
+        endif()
+    endforeach()
+    add_custom_target("${MODULE}_${FPRIME__INTERNAL_UT_TARGET}")
+    # Add dependencies if tests have been defined
+    if (DEPLOYMENT_TESTS)
+        add_dependencies("${MODULE}_${FPRIME__INTERNAL_UT_TARGET}" ${DEPLOYMENT_TESTS})
+    endif()
+    fprime_util_metadata_add_build_target("${MODULE}_${FPRIME__INTERNAL_UT_TARGET}")
+endfunction(ut_add_deployment_target)
+
+####
+# Function `ut_setup_unit_test_include_directories`:
+#
+# Adds the include directories needed to make a unit test executable compile correctly. These directories are:
+#   1. Current CMake binary directory for autogenerated headers
+#   2. (If UT_AUTO_HELPERS) Containing folder for each .hpp for includes of the for '#include "Tester.hpp"'
+#
+# - **UT_EXE_NAME:** unit test executable name
+# - **SOURCE_FILES:** list of source file inputs
+####
+function(ut_setup_unit_test_include_directories UT_EXE_NAME SOURCE_FILES)
+    set(UT_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}")
+    # When running with auto-helpers, we need to include the .hpp directories as things are imported without path
+    # e.g. "#include <Tester.hpp>" and there is no guarantee for the location of these files
+    get_target_property(UT_AUTO_HELPERS "${UT_EXE_NAME}" FPRIME_UT_AUTO_HELPERS)
+    if (DEFINED UT_AUTO_HELPERS AND UT_AUTO_HELPERS)
+        foreach(SOURCE_FILE IN LISTS SOURCE_FILES)
+            get_filename_component(SOURCE_EXT "${SOURCE_FILE}" LAST_EXT)
+            get_filename_component(SOURCE_DIR "${SOURCE_FILE}" DIRECTORY)
+            if (SOURCE_EXT STREQUAL ".cpp" AND NOT SOURCE_DIR IN_LIST UT_INCLUDE_DIRECTORIES)
+                list(APPEND UT_INCLUDE_DIRECTORIES "${SOURCE_DIR}")
+            endif()
+        endforeach()
+    endif()
+    target_include_directories("${UT_EXE_NAME}" PRIVATE ${UT_INCLUDE_DIRECTORIES})
+endfunction(ut_setup_unit_test_include_directories)
+
+####
+# Function `ut_executable_build`:
+#
+# Sets up the build steps needed to build a unit test executable.
+#
+# - **UT_EXECUTABLE_TARGET:** name of target to produce
+####
+function(ut_executable_build UT_EXECUTABLE_TARGET)
+    # Run the autocoders and set up the standard build properties on the executable target
+    run_ac_set("${UT_EXECUTABLE_TARGET}" autocoder/fpp autocoder/fpp_ut)
+    fprime__internal_standard_build_target_setup("${UT_EXECUTABLE_TARGET}" "-ut")
+    target_link_libraries("${UT_EXECUTABLE_TARGET}" PUBLIC gtest_main)
+
+    # Automatic dependency if possible
+    is_target_library(IS_LIBRARY "${FPRIME_CURRENT_MODULE}")
+    if (IS_LIBRARY)
+        target_link_libraries("${UT_EXECUTABLE_TARGET}" PUBLIC "${FPRIME_CURRENT_MODULE}")
+    endif()
+    # Automatic include directories
+    ut_setup_unit_test_include_directories("${UT_EXECUTABLE_TARGET}" "${SOURCE_FILES}")
+endfunction(ut_executable_build)
+
+####
+# Function `ut_add_ctest`:
+#
+# Adds a CTEST which will run the clean script, and the test within the current source directory.
+#
+# - **UT_EXECUTABLE_TARGET:** name of target to produce
+####
+function(ut_add_ctest UT_EXECUTABLE_TARGET)
+    # Add a CTEST which will run the clean script, and the test within the current source directory
+    set_property(DIRECTORY APPEND PROPERTY
+        TEST_INCLUDE_FILES "${FPRIME__INTERNAL_UT_CLEAN_SCRIPT}"
+    )
+    add_test(NAME ${UT_EXECUTABLE_TARGET} COMMAND ${UT_EXECUTABLE_TARGET} WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
+    fprime_util_metadata_add_test("${UT_EXECUTABLE_TARGET}")
+endfunction(ut_add_ctest)
+
+####
+# Function `ut_add_module_target`:
+#
+# Creates each module's coverage targets. Note: only run for "BUILD_TESTING=ON" builds.
+#
+# - **MODULE_NAME:** name of the module
+# - **TARGET_NAME:** name of target to produce
+# - **SOURCE_FILES:** list of source file inputs
+# - **DEPENDENCIES:** MOD_DEPS input from CMakeLists.txt
+####
+function(ut_add_module_target UT_EXECUTABLE_TARGET TARGET_NAME SOURCE_FILES DEPENDENCIES)
+    get_target_property(FPRIME_TYPE "${UT_EXECUTABLE_TARGET}" FPRIME_TYPE)
+    # Protects against multiple calls to fprime_register_ut()
+    if (NOT BUILD_TESTING OR NOT FPRIME_TYPE STREQUAL "Unit Test")
+        return()
+    endif()
+
+    # Set up the executable
+    ut_executable_build("${UT_EXECUTABLE_TARGET}")
+
+    # Add the CTEST
+    ut_add_ctest("${UT_EXECUTABLE_TARGET}")
+
+    # Register the test to the tested module, assuming "current module" unless previously specified
+    get_target_property(FPRIME_TESTED_MODULE "${UT_EXECUTABLE_TARGET}" FPRIME_TESTED_MODULE)
+    if (NOT FPRIME_TESTED_MODULE)
+        set(FPRIME_TESTED_MODULE "${FPRIME_CURRENT_MODULE}")
+    endif()
+    if (TARGET "${FPRIME_TESTED_MODULE}")
+        append_list_property("${UT_EXECUTABLE_TARGET}" TARGET "${FPRIME_TESTED_MODULE}" PROPERTY FPRIME_UNIT_TESTS)
+    endif()
+
+    # Module introspection when in debug mode
+    if (CMAKE_DEBUG_OUTPUT)
+        introspect("${UT_EXECUTABLE_TARGET}")
+    endif()
+endfunction(ut_add_module_target)
+```
+
+### `version.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/version.cmake`
+
+
+```cmake
+####
+# cmake/target/version.cmake:
+#
+# A basic versioning target which will produce the version files.
+####
+set(FPRIME__INTERNAL_VERSION_INFO_SCRIPT "${CMAKE_CURRENT_LIST_DIR}/version/generate_version_info.py")
+
+function(version_add_global_target TARGET)
+    set(OUTPUT_DIR "${CMAKE_BINARY_DIR}/versions")
+    set(OUTPUT_HPP "${OUTPUT_DIR}/version.hpp")
+    set(OUTPUT_CPP "${OUTPUT_DIR}/version.cpp")
+    set(OUTPUT_JSON "${OUTPUT_DIR}/version.json")
+    file(MAKE_DIRECTORY ${OUTPUT_DIR})
+    # Add check argument when requested
+    set(OPTIONAL_CHECK_ARG)
+    string(REGEX REPLACE ";" ":"  FPRIME_LIBRARY_LOCATIONS_CSV "${FPRIME_LIBRARY_LOCATIONS}")
+    if (FPRIME_CHECK_FRAMEWORK_VERSION)
+        set(OPTIONAL_CHECK_ARG "--check")
+    endif()
+    add_custom_command(OUTPUT "${OUTPUT_HPP}" "${OUTPUT_CPP}" "${OUTPUT_JSON}"
+        COMMAND "${CMAKE_COMMAND}" 
+            -E env "PYTHONPATH=${PYTHONPATH}:${CMAKE_CURRENT_LIST_DIR}/version"
+                    "FPRIME_PROJECT_ROOT=${FPRIME_PROJECT_ROOT}"
+                    "FPRIME_FRAMEWORK_PATH=${FPRIME_FRAMEWORK_PATH}"
+                    "FPRIME_LIBRARY_LOCATIONS=${FPRIME_LIBRARY_LOCATIONS_CSV}"
+            "${FPRIME__INTERNAL_VERSION_INFO_SCRIPT}" "${OUTPUT_DIR}" "${OPTIONAL_CHECK_ARG}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OUTPUT_HPP}.tmp" "${OUTPUT_HPP}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OUTPUT_CPP}.tmp" "${OUTPUT_CPP}"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${OUTPUT_JSON}.tmp" "${OUTPUT_JSON}"
+        WORKING_DIRECTORY "${FPRIME_PROJECT_ROOT}"
+    ) 
+    add_custom_target("${TARGET}_generate" DEPENDS ${OUTPUT_JSON})
+    add_library("${TARGET}" "${OUTPUT_CPP}")
+    target_link_libraries("${TARGET}" PUBLIC "Fw_Types")
+endfunction()
+
+function(version_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+endfunction()
+
+function(version_add_module_target MODULE_NAME TARGET_NAME SOURCE_FILES DEPENDENCIES)
+endfunction(version_add_module_target)
+```

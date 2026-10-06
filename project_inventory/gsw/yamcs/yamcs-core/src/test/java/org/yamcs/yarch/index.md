@@ -3,96 +3,4977 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 rocksdb/index
-file--ArrayTest.java
-file--AutoincrementTest.java
-file--ColumnSerializerTest.java
-file--ConcurrencyTest.java
-file--CreateStreamAsSelectTest.java
-file--DynamicSchemaTableTest.java
-file--Enum2Test.java
-file--Enum3Test.java
-file--Enum4Test.java
-file--EnumTest.java
-file--EnumWithPartitionTest.java
-file--FileSystemBucketTest.java
-file--HistogramSegmentTest.java
-file--HistogramStreamTest.java
-file--InsertTest.java
-file--NegativeValuesPKTest.java
-file--NullTest.java
-file--SecondaryIndex2Test.java
-file--SecondaryIndex3Test.java
-file--SecondaryIndexTest.java
-file--StandaloneStreamTest.java
-file--StarSelectTest.java
-file--StreamMergeTest.java
-file--StreamSelect1Test.java
-file--StreamSelect2Test.java
-file--StreamSelectBinaryFunctionTest.java
-file--StreamSelectCoalesceTest.java
-file--StreamSelectNullTest.java
-file--StreamSelectParameterValueTest.java
-file--StreamSelectPerfTest.java
-file--StreamSelectProtobufTest.java
-file--StreamSelectTest.java
-file--StreamSqlParserTest.java
-file--TableRowDeleteTest.java
-file--TableRowDeleteTest2.java
-file--TableUpdateTest.java
-file--TestRenameTable.java
-file--TimePartitionSchemaTest.java
-file--UUIDTest.java
-file--WriterTest.java
-file--YarchTestCase.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/rocksdb/`](rocksdb/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/ArrayTest.java`](file--ArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/AutoincrementTest.java`](file--AutoincrementTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/ColumnSerializerTest.java`](file--ColumnSerializerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/ConcurrencyTest.java`](file--ConcurrencyTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/CreateStreamAsSelectTest.java`](file--CreateStreamAsSelectTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/DynamicSchemaTableTest.java`](file--DynamicSchemaTableTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/Enum2Test.java`](file--Enum2Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/Enum3Test.java`](file--Enum3Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/Enum4Test.java`](file--Enum4Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/EnumTest.java`](file--EnumTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/EnumWithPartitionTest.java`](file--EnumWithPartitionTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/FileSystemBucketTest.java`](file--FileSystemBucketTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/HistogramSegmentTest.java`](file--HistogramSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/HistogramStreamTest.java`](file--HistogramStreamTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/InsertTest.java`](file--InsertTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/NegativeValuesPKTest.java`](file--NegativeValuesPKTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/NullTest.java`](file--NullTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/SecondaryIndex2Test.java`](file--SecondaryIndex2Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/SecondaryIndex3Test.java`](file--SecondaryIndex3Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/SecondaryIndexTest.java`](file--SecondaryIndexTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StandaloneStreamTest.java`](file--StandaloneStreamTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StarSelectTest.java`](file--StarSelectTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamMergeTest.java`](file--StreamMergeTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelect1Test.java`](file--StreamSelect1Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelect2Test.java`](file--StreamSelect2Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectBinaryFunctionTest.java`](file--StreamSelectBinaryFunctionTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectCoalesceTest.java`](file--StreamSelectCoalesceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectNullTest.java`](file--StreamSelectNullTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectParameterValueTest.java`](file--StreamSelectParameterValueTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectPerfTest.java`](file--StreamSelectPerfTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectProtobufTest.java`](file--StreamSelectProtobufTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectTest.java`](file--StreamSelectTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSqlParserTest.java`](file--StreamSqlParserTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TableRowDeleteTest.java`](file--TableRowDeleteTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TableRowDeleteTest2.java`](file--TableRowDeleteTest2.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TableUpdateTest.java`](file--TableUpdateTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TestRenameTable.java`](file--TestRenameTable.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TimePartitionSchemaTest.java`](file--TimePartitionSchemaTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/UUIDTest.java`](file--UUIDTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/WriterTest.java`](file--WriterTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/YarchTestCase.java`](file--YarchTestCase.java) — UTF-8 텍스트 파일 본문 포함
+### `ArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/ArrayTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+/**
+ * Tests columns of type array
+ */
+public class ArrayTest extends YarchTestCase {
+    int n = 10;
+
+    private void populate(String tblName) throws Exception {
+        execute("create table " + tblName
+                + "(id int, tag string[], primary key(id))");
+        execute("create stream " + tblName + "_in(id long, tag string[])");
+        execute("upsert into " + tblName + " select * from " + tblName + "_in");
+        Stream s = ydb.getStream(tblName + "_in");
+        for (int i = 0; i < n; i++) {
+            s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(i, Arrays.asList("tag" + i, "tag" + (i + 1)))));
+        }
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("test1");
+        List<Tuple> tlist = fetchAllFromTable("test1");
+        assertEquals(n, tlist.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = tlist.get(i);
+            assertEquals(i, t.getIntColumn("id"));
+
+            List<String> tags = t.getColumn("tag");
+            assertEquals(Arrays.asList("tag" + i, "tag" + (i + 1)), tags);
+        }
+    }
+
+    @Test
+    public void testAcrossShutdown() throws Exception {
+        execute("create table testAcrossShutdown(id int, tag enum[], primary key(id))");
+        execute("create stream testAcrossShutdown_in(id long, tag enum[])");
+        execute("upsert into testAcrossShutdown select * from testAcrossShutdown_in");
+        Stream s = ydb.getStream("testAcrossShutdown_in");
+        s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(10, Arrays.asList("aa", "bb", "cc"))));
+
+        List<Tuple> tlist = fetchAllFromTable("testAcrossShutdown");
+        assertEquals(1, tlist.size());
+        Tuple t = tlist.get(0);
+        assertEquals(10, t.getIntColumn("id"));
+
+        List<String> tags = t.getColumn("tag");
+        assertEquals(Arrays.asList("aa", "bb", "cc"), tags);
+
+        reloadDb();
+
+        List<Tuple> tlist1 = fetchAllFromTable("testAcrossShutdown");
+        assertEquals(1, tlist1.size());
+
+        Tuple t1 = tlist1.get(0);
+        assertEquals(10, t1.getIntColumn("id"));
+
+        List<String> tags1 = t1.getColumn("tag");
+        assertEquals(Arrays.asList("aa", "bb", "cc"), tags1);
+    }
+
+    @Test
+    public void testArrayIntersect() throws Exception {
+        populate("test2");
+        StreamSqlResult r = ydb.execute("select * from test2 where tag && array['tag1', 'tag10']");
+
+        Tuple t = r.next();
+        assertEquals(Arrays.asList("tag0", "tag1"), t.getColumn("tag"));
+
+        t = r.next();
+        assertEquals(Arrays.asList("tag1", "tag2"), t.getColumn("tag"));
+
+        t = r.next();
+        assertEquals(Arrays.asList("tag9", "tag10"), t.getColumn("tag"));
+
+        assertFalse(r.hasNext());
+    }
+
+    @Test
+    public void testArrayIntersect2() throws Exception {
+        populate("test3");
+        StreamSqlResult r = ydb.execute("select * from test3 where tag && array['tag'+id, 'tag10']");
+
+        for (int i = 0; i < n; i++) {
+            assertTrue(r.hasNext());
+            r.next();
+        }
+        assertFalse(r.hasNext());
+    }
+
+    @Test
+    public void testArrayIntersect3() throws Exception {
+        populate("test4");
+        StreamSqlResult r = ydb.execute("select * from test4 where tag && ?", Arrays.asList("tag1", "tag10"));
+
+        Tuple t = r.next();
+        assertEquals(Arrays.asList("tag0", "tag1"), t.getColumn("tag"));
+
+        t = r.next();
+        assertEquals(Arrays.asList("tag1", "tag2"), t.getColumn("tag"));
+
+        t = r.next();
+        assertEquals(Arrays.asList("tag9", "tag10"), t.getColumn("tag"));
+
+        assertFalse(r.hasNext());
+    }
+}
+```
+
+### `AutoincrementTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/AutoincrementTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class AutoincrementTest extends YarchTestCase {
+
+    @Test
+    public void testInvalid1() {
+        assertThrows(StreamSqlException.class, () -> {
+            ydb.execute("create table test1 (a int, b int, c int, d string auto_increment, primary key(a,b,c))");
+        });
+    }
+
+    @Test
+    public void testInvalid2() {
+        assertThrows(StreamSqlException.class, () -> {
+            ydb.execute("create table test1 (a int, b int, c int auto_increment, d string, primary key(a,b,c))");
+        });
+    }
+
+    void populate(String tblName, int start, int n) throws Exception {
+        ydb.execute("create table if not exists " + tblName
+                + "  (a int, b long auto_increment, c long auto_increment , primary key(a,b))");
+        ydb.execute("create stream abcd_in(a int)");
+        ydb.execute("insert into " + tblName + " select * from abcd_in");
+        Stream s = ydb.getStream("abcd_in");
+        for (int i = start; i < start + n; i++) {
+            s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(i)));
+        }
+        ydb.execute("close stream abcd_in");
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("test1", 5, 5);
+
+        ydb.execute("create stream abcd_out as select * from test1");
+        List<Tuple> tlist = fetchAll("abcd_out");
+        assertEquals(5, tlist.size());
+
+        for (int i = 0; i < 5; i++) {
+            Tuple tuple = tlist.get(i);
+            int a = (Integer) tuple.getColumn("a");
+            long b = (Long) tuple.getColumn("b");
+            long c = (Long) tuple.getColumn("c");
+
+            assertEquals(i, a - 5);
+            assertEquals((long) i, b);
+            assertEquals((long) i, c);
+        }
+    }
+
+    @Test
+    public void testPersistence() throws Exception {
+        populate("test1", 5, 5);
+        YarchDatabase.removeInstance(instance);
+        ydb = YarchDatabase.getInstance(instance);
+
+        populate("test1", 50, 5);
+
+        ydb.execute("create stream abcd_out as select * from test1");
+        List<Tuple> tlist = fetchAll("abcd_out");
+        assertEquals(10, tlist.size());
+
+        for (int i = 0; i < 10; i++) {
+            Tuple tuple = tlist.get(i);
+            long b = (Long) tuple.getColumn("b");
+            long c = (Long) tuple.getColumn("c");
+
+            assertEquals((long) i, b);
+            assertEquals((long) i, c);
+        }
+    }
+}
+```
+
+### `ColumnSerializerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/ColumnSerializerTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class ColumnSerializerTest {
+    @BeforeAll
+    public static void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void test1() {
+        ColumnDefinition cd = new ColumnDefinition("test", DataType.protobuf(Event.class.getName()));
+        ColumnSerializer<Event> cs = ColumnSerializerFactory.getProtobufSerializer(cd);
+        Event ev = Event.newBuilder().setSource("test1").setGenerationTime(1000).setType("evtype").setMessage("msg")
+                .build();
+
+        ByteBuffer bb = ByteBuffer.allocate(1000);
+        bb.mark();
+
+        cs.serialize(bb, ev);
+        bb.reset();
+        Event ev1 = cs.deserialize(bb, cd);
+
+        assertEquals(ev, ev1);
+
+        ColumnDefinition cd1 = new ColumnDefinition("/test/abc", DataType.PARAMETER_VALUE);
+        ColumnSerializer<ParameterValue> cs1 = ColumnSerializerFactory.getBasicColumnSerializerV3(cd1.type);
+        ParameterValue pv = new ParameterValue("/test/abc");
+        pv.setRawValue(ValueUtility.getUint32Value(1));
+        pv.setEngineeringValue(ValueUtility.getDoubleValue(3.14));
+        pv.setGenerationTime(1000);
+
+        bb.mark();
+        cs1.serialize(bb, pv);
+
+        bb.reset();
+        ParameterValue pv1 = cs1.deserialize(bb, cd1);
+        verify(pv, pv1);
+
+        bb.position(0);
+        cs.serialize(bb, ev);
+        cs1.serialize(bb, pv);
+
+        bb.position(0);
+        ev1 = cs.deserialize(bb, cd);
+        assertEquals(ev, ev1);
+
+        pv1 = cs1.deserialize(bb, cd1);
+        verify(pv, pv1);
+    }
+
+    void verify(ParameterValue expected, ParameterValue actual) {
+        assertEquals(expected.getParameterQualifiedName(), actual.getParameterQualifiedName());
+        assertEquals(expected.getGenerationTime(), actual.getGenerationTime());
+        assertEquals(expected.getEngValue(), actual.getEngValue());
+
+    }
+
+    @Test
+    public void testArrays() {
+        DataType arrayDt = DataType.array(DataType.STRING);
+
+        ColumnDefinition cd = new ColumnDefinition("test", arrayDt);
+
+        ColumnSerializer<List> cs = new ColumnSerializerV3.ArrayColumnSerializer(
+                ColumnSerializerFactory.getBasicColumnSerializerV3(DataType.STRING));
+
+        List<String> l1 = Arrays.asList("a", "ab", "abcd");
+        ByteArray array = new ByteArray();
+        cs.serialize(array, l1);
+
+        List<String> l2 = cs.deserialize(array, cd);
+        assertEquals(array.size(), array.position());
+        assertEquals(l1, l2);
+
+        ByteBuffer byteBuf = ByteBuffer.allocate(array.size());
+        cs.serialize(byteBuf, l1);
+        byteBuf.position(0);
+        List<String> l3 = cs.deserialize(byteBuf, cd);
+        assertFalse(byteBuf.hasRemaining());
+        assertEquals(l1, l3);
+    }
+}
+```
+
+### `ConcurrencyTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/ConcurrencyTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.ByteBuffer;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * This test case creates one table, three input streams which push data starting from a time0 but two of them going in
+ * the future and interleaving packets while the other one going in the past.
+ * 
+ * After a while a reader stream is created and reads the whole table in parallel with the writing streams. we want to
+ * check that the reader will get all the data from some point on and doesn't get past data
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class ConcurrencyTest extends YarchTestCase {
+    String cmd;
+    int n = 100 * 24 * 60; // x days with one packet per minute
+    // int n=10;
+
+    class InputStreamFeeder implements Runnable {
+        volatile int psent;
+        volatile boolean finished;
+        volatile boolean quitting = false;
+        Stream stream1, stream2, stream3;
+
+        InputStreamFeeder() throws Exception {
+            ydb.execute(
+                    "create table testcrw (gentime timestamp, apidSeqCount int, packet binary, primary key(gentime,apidSeqCount)) partition by time(gentime('YYYY/MM'))");
+
+            ydb.execute("create stream testcrw_in1(gentime timestamp, apidSeqCount int, packet binary)");
+            ydb.execute("insert into testcrw select * from testcrw_in1");
+            stream1 = ydb.getStream("testcrw_in1");
+
+            ydb.execute("create stream testcrw_in2(gentime timestamp, apidSeqCount int, packet binary)");
+            ydb.execute("insert into testcrw select * from testcrw_in2");
+            stream2 = ydb.getStream("testcrw_in2");
+
+            ydb.execute("create stream testcrw_in3(gentime timestamp, apidSeqCount int, packet binary)");
+            ydb.execute("insert into testcrw select * from testcrw_in3");
+            stream3 = ydb.getStream("testcrw_in3");
+        }
+
+        void send(Stream s, long time, int apidSeqCount, byte[] packet) {
+            Tuple t = new Tuple(s.getDefinition(), new Object[] { time, apidSeqCount, packet });
+            s.emitTuple(t);
+        }
+
+        @Override
+        public void run() {
+            try {
+                Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                cal.set(2003, 11, 25, 0, 0, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                long time0 = cal.getTimeInMillis();
+
+                for (psent = 0; psent < n; psent++) {
+                    // if(psent%1000==0) System.out.println("ConcurrencyTest write tuples: "+psent*2+" out of "+n*2);
+                    cal.add(Calendar.MINUTE, 1);
+                    int apidSeqCount = psent;
+                    long time = time0 + psent * 60L * 1000;
+                    // System.err.println(i+" writing time "+new Date(time));
+                    ByteBuffer bb = ByteBuffer.allocate(2000);
+                    while (bb.remaining() > 0) {
+                        bb.putInt(psent);
+                    }
+
+                    if ((psent & 1) == 0) {
+                        send(stream1, time, apidSeqCount, bb.array());
+                    } else {
+                        send(stream2, time, apidSeqCount, bb.array());
+                    }
+
+                    time = time0 - psent * 60L * 1000;
+                    bb = ByteBuffer.allocate(2000);
+                    while (bb.remaining() > 0) {
+                        bb.putInt(-psent);
+                    }
+                    send(stream3, time, -psent, bb.array());
+
+                    if (quitting) {
+                        break;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.err.println("got exception in the InputStreamFeeder: " + e);
+            }
+            finished = true;
+        }
+    }
+
+    @Test
+    public void testConcurrentReadAndWrite() throws Exception {
+        InputStreamFeeder isf = new InputStreamFeeder();
+        (new Thread(isf)).start();
+        Thread.sleep(10000);// give some lead time to the writer streams
+
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.set(2003, 11, 25, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        final long time0 = cal.getTimeInMillis();
+
+        ydb.execute("create stream testcwr_out as select * from testcrw");
+
+        Stream s = ydb.getStream("testcwr_out");
+        final Semaphore semaphore = new Semaphore(0);
+        s.addSubscriber(new StreamSubscriber() {
+            int i = 0;
+            long starttime;
+
+            @Override
+            public void streamClosed(Stream stream) {
+                assertTrue(i > 10);
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                // if(i%1000==0) System.out.println("ConcurrencyTest read tuples: "+i);
+
+                long time = (Long) tuple.getColumn(0);
+                int apidSeqCount = (Integer) tuple.getColumn(1);
+                byte[] b = (byte[]) tuple.getColumn(2);
+                if (i == 0) {
+                    starttime = time;
+                } else {
+                    assertEquals(starttime + i * 60L * 1000L, time);
+                    assertEquals((time - time0) / (60L * 1000L), apidSeqCount);
+                    assertEquals(2000, b.length);
+                    ByteBuffer bb = ByteBuffer.wrap(b);
+                    while (bb.remaining() > 0) {
+                        int k = bb.getInt();
+                        assertEquals((time - time0) / (60L * 1000L), k);
+                    }
+                }
+                i++;
+            }
+        });
+        s.start();
+        assertTrue(semaphore.tryAcquire(10, TimeUnit.SECONDS));
+
+        isf.quitting = true;
+        Thread.sleep(1000);
+        // assertEquals(time0+(n-1)*60L*1000L,time);
+        execute("close stream testcrw_in1");
+        execute("close stream testcrw_in2");
+        execute("close stream testcrw_in3");
+        execute("drop table testcrw");
+    }
+}
+```
+
+### `CreateStreamAsSelectTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/CreateStreamAsSelectTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+
+public class CreateStreamAsSelectTest extends YarchTestCase {
+
+    int n = 10;
+
+    void createFeeder() throws Exception {
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("time", DataType.TIMESTAMP);
+        tpdef.addColumn("id", DataType.INT);
+        tpdef.addColumn("id1", DataType.UUID);
+
+        Stream s = (new Stream(ydb, "tm_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Long time = (long) (i * 1000);
+                    Tuple t = new Tuple(tpdef, new Object[] { time, i, UUID.randomUUID() });
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testStar1() throws Exception {
+        createFeeder();
+        execute("create stream tm_out1 as select 3, \'cucu\' as bau, * from tm_in");
+        List<Tuple> tlist = fetchAll("tm_out1");
+        assertEquals(n, tlist.size());
+        for (int k = 0; k < n; k++) {
+            Tuple tuple = tlist.get(k);
+            int const_three = (Integer) tuple.getColumn(0);
+            assertEquals(const_three, 3);
+            assertEquals("cucu", tuple.getColumn("bau"));
+
+            long time = (Long) tuple.getColumn(2);
+            assertEquals(1000 * k, time);
+
+            int i = (Integer) tuple.getColumn(3);
+            assertEquals(k, i);
+
+            UUID uuid = (UUID) tuple.getColumn(4);
+            assertNotNull(uuid);
+        }
+    }
+}
+```
+
+### `DynamicSchemaTableTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/DynamicSchemaTableTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
+import org.junit.jupiter.api.Test;
+
+/**
+ * test for insert modes in a table with a dynamic schema
+ * 
+ * @author nm
+ *
+ */
+public class DynamicSchemaTableTest extends YarchTestCase {
+
+    private void emit(Stream s, long key, String colName, int colValue) {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn("t", DataType.TIMESTAMP);
+        tdef.addColumn(colName, DataType.INT);
+        Tuple t = new Tuple(tdef, new Object[] { key, colValue });
+        s.emitTuple(t);
+    }
+
+    private void emit(Stream s, long key, String colName, boolean colValue) {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn("t", DataType.TIMESTAMP);
+        tdef.addColumn(colName, DataType.BOOLEAN);
+        Tuple t = new Tuple(tdef, new Object[] { key, colValue });
+        s.emitTuple(t);
+    }
+
+    private void emit(Stream s, long key, String colName, byte colValue) {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn("t", DataType.TIMESTAMP);
+        tdef.addColumn(colName, DataType.BYTE);
+        Tuple t = new Tuple(tdef, new Object[] { key, colValue });
+        s.emitTuple(t);
+    }
+
+    private void emit(Stream s, long key, String colName, short colValue) {
+        TupleDefinition tdef = new TupleDefinition();
+        tdef.addColumn("t", DataType.TIMESTAMP);
+        tdef.addColumn(colName, DataType.SHORT);
+        Tuple t = new Tuple(tdef, new Object[] { key, colValue });
+        s.emitTuple(t);
+    }
+
+    @Test
+    public void testInsert() throws Exception {
+        ydb.execute("create table test_insert (t timestamp, v1 int, v2 int, primary key(t))");
+        ydb.execute("create stream test_insert_in (t timestamp)");
+        ydb.execute("insert_append into test_insert select * from test_insert_in");
+
+        TableDefinition tblDef = ydb.getTable("test_insert");
+
+        List<TableColumnDefinition> keyCols = tblDef.getKeyDefinition();
+        assertEquals(1, keyCols.size());
+
+        List<TableColumnDefinition> valueCols = tblDef.getValueDefinition();
+        assertEquals(2, valueCols.size());
+
+        Stream s = ydb.getStream("test_insert_in");
+        emit(s, 1, "v1", 1);
+        emit(s, 1, "v2", 2);
+        emit(s, 1, "v3", 3);
+        emit(s, 2, "v3", 3);
+
+        emit(s, 2, "v4", true);
+        emit(s, 2, "v5", (byte) 5);
+        emit(s, 2, "v6", (short) 6);
+
+        valueCols = tblDef.getValueDefinition();
+        assertEquals(6, valueCols.size());
+        assertEquals("v3", valueCols.get(2).getName());
+        assertEquals("v6", valueCols.get(5).getName());
+
+        ydb.execute("create stream test_insert_out as select * from test_insert");
+        Stream sout = ydb.getStream("test_insert_out");
+        final Semaphore semaphore = new Semaphore(0);
+        final ArrayList<Tuple> tuples = new ArrayList<>();
+        sout.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+        });
+        sout.start();
+        semaphore.acquire();
+        assertEquals(2, tuples.size());
+
+        Tuple t = tuples.get(0);
+        assertEquals(4, t.getColumns().size());
+        assertEquals(1L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(1, ((Integer) t.getColumn("v1")).intValue());
+
+        t = tuples.get(1);
+        assertEquals(5, t.getColumns().size());
+        assertEquals(2L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(3, ((Integer) t.getColumn("v3")).intValue());
+
+        assertEquals(true, ((Boolean) t.getColumn("v4")).booleanValue());
+        assertEquals(5, ((Byte) t.getColumn("v5")).byteValue());
+        assertEquals(6, ((Short) t.getColumn("v6")).shortValue());
+
+        execute("drop table test_insert");
+    }
+
+    @Test
+    public void testInsertAppend() throws Exception {
+        ydb.execute("create table test_inserta (t timestamp, v1 int, v2 int, primary key(t))");
+        ydb.execute("create stream test_inserta_in (t timestamp)");
+        ydb.execute("insert_append into test_inserta select * from test_inserta_in");
+
+        TableDefinition tblDef = ydb.getTable("test_inserta");
+
+        List<TableColumnDefinition> keyCols = tblDef.getKeyDefinition();
+        assertEquals(1, keyCols.size());
+
+        List<TableColumnDefinition> valueCols = tblDef.getValueDefinition();
+        assertEquals(2, valueCols.size());
+
+        Stream s = ydb.getStream("test_inserta_in");
+        emit(s, 1, "v1", 1);
+        emit(s, 1, "v2", 2);
+        emit(s, 1, "v3", 3);
+        emit(s, 1, "v3", 4);
+        emit(s, 2, "v3", 30);
+
+        valueCols = tblDef.getValueDefinition();
+        assertEquals(3, valueCols.size());
+        assertEquals("v3", valueCols.get(2).getName());
+
+        execute("create stream test_inserta_out as select * from test_inserta");
+        Stream sout = ydb.getStream("test_inserta_out");
+        final Semaphore semaphore = new Semaphore(0);
+        final ArrayList<Tuple> tuples = new ArrayList<>();
+        sout.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+        });
+        sout.start();
+        semaphore.acquire();
+        assertEquals(2, tuples.size());
+        Tuple t = tuples.get(0);
+        assertEquals(4, t.getColumns().size());
+        assertEquals(1L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(1, ((Integer) t.getColumn("v1")).intValue());
+        assertEquals(2, ((Integer) t.getColumn("v2")).intValue());
+        assertEquals(3, ((Integer) t.getColumn("v3")).intValue());
+
+        t = tuples.get(1);
+        assertEquals(2, t.getColumns().size());
+        assertEquals(2L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(30, ((Integer) t.getColumn("v3")).intValue());
+        execute("drop table test_inserta");
+    }
+
+    @Test
+    public void testUpsert() throws Exception {
+
+        ydb.execute("create table test_upsert (t timestamp, v1 int, v2 int, primary key(t))");
+
+        ydb.execute("create stream test_upsert_in (t timestamp)");
+        ydb.execute("upsert into test_upsert select * from test_upsert_in");
+
+        TableDefinition tblDef = ydb.getTable("test_upsert");
+
+        List<TableColumnDefinition> keyCols = tblDef.getKeyDefinition();
+        assertEquals(1, keyCols.size());
+
+        List<TableColumnDefinition> valueCols = tblDef.getValueDefinition();
+        assertEquals(2, valueCols.size());
+
+        Stream s = ydb.getStream("test_upsert_in");
+        emit(s, 1, "v1", 1);
+        emit(s, 1, "v2", 2);
+        emit(s, 1, "v3", 3);
+        emit(s, 2, "v3", 3);
+
+        valueCols = tblDef.getValueDefinition();
+        assertEquals(3, valueCols.size());
+        assertEquals("v3", valueCols.get(2).getName());
+
+        ydb.execute("create stream test_upsert_out as select * from test_upsert");
+        Stream sout = ydb.getStream("test_upsert_out");
+        final Semaphore semaphore = new Semaphore(0);
+        final ArrayList<Tuple> tuples = new ArrayList<>();
+        sout.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+        });
+        sout.start();
+        semaphore.acquire();
+        assertEquals(2, tuples.size());
+        Tuple t = tuples.get(0);
+        assertEquals(2, t.getColumns().size());
+        assertEquals(1L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(3, ((Integer) t.getColumn("v3")).intValue());
+
+        t = tuples.get(1);
+        assertEquals(2, t.getColumns().size());
+        assertEquals(2L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(3, ((Integer) t.getColumn("v3")).intValue());
+
+        execute("drop table test_upsert");
+    }
+
+    @Test
+    public void testUpsertAppend() throws Exception {
+
+        ydb.execute("create table test_upserta (t timestamp, v1 int, v2 int, primary key(t))");
+
+        ydb.execute("create stream test_upserta_in (t timestamp)");
+        ydb.execute("upsert_append into test_upserta select * from test_upserta_in");
+
+        TableDefinition tblDef = ydb.getTable("test_upserta");
+
+        List<TableColumnDefinition> keyCols = tblDef.getKeyDefinition();
+        assertEquals(1, keyCols.size());
+
+        List<TableColumnDefinition> valueCols = tblDef.getValueDefinition();
+        assertEquals(2, valueCols.size());
+
+        Stream s = ydb.getStream("test_upserta_in");
+        emit(s, 1, "v1", 1);
+        emit(s, 1, "v2", 2);
+        emit(s, 1, "v3", 3);
+        emit(s, 1, "v3", 4);
+        emit(s, 2, "v3", 3);
+
+        valueCols = tblDef.getValueDefinition();
+        assertEquals(3, valueCols.size());
+        assertEquals("v3", valueCols.get(2).getName());
+
+        ydb.execute("create stream test_upserta_out as select * from test_upserta");
+        Stream sout = ydb.getStream("test_upserta_out");
+        final Semaphore semaphore = new Semaphore(0);
+        final ArrayList<Tuple> tuples = new ArrayList<>();
+        sout.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+        });
+        sout.start();
+        semaphore.acquire();
+        assertEquals(2, tuples.size());
+        Tuple t = tuples.get(0);
+        assertEquals(4, t.getColumns().size());
+        assertEquals(1L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(1, ((Integer) t.getColumn("v1")).intValue());
+        assertEquals(2, ((Integer) t.getColumn("v2")).intValue());
+        assertEquals(4, ((Integer) t.getColumn("v3")).intValue());
+
+        t = tuples.get(1);
+        assertEquals(2, t.getColumns().size());
+        assertEquals(2L, ((Long) t.getColumn("t")).longValue());
+        assertEquals(3, ((Integer) t.getColumn("v3")).intValue());
+
+        ydb.execute("drop table test_upserta");
+    }
+}
+```
+
+### `Enum2Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/Enum2Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class Enum2Test extends YarchTestCase {
+    int n = 20;
+
+    private void populate(String tblname) throws Exception {
+        execute("create table " + tblname
+                + "(packetName enum, gentime timestamp, packet binary, primary key(packetName, gentime))");
+        execute("create stream " + tblname + "_in(gentime timestamp, packetName enum, packet binary)");
+        execute("insert into " + tblname + " select * from " + tblname + "_in");
+
+        Stream s = ydb.getStream(tblname + "_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("packetName", DataType.ENUM));
+        td.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+
+        for (int i = 0; i < n; i++) {
+            ByteBuffer bb = ByteBuffer.allocate(2000);
+            while (bb.remaining() > 0) {
+                bb.putInt(i);
+            }
+            Tuple t = new Tuple(td, new Object[] {
+                    1000L * i, "pn" + (i % 10), bb.array()
+            });
+            s.emitTuple(t);
+        }
+        execute("close stream " + tblname + "_in");
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("testenum1");
+        execute("create stream testenum_out as select * from testenum1");
+        final List<Tuple> tuples = fetchAll("testenum_out");
+        int k = 0;
+        for (int j = 0; j < 10; j++) {
+            for (int i = 0; i < n / 10; i++) {
+                Tuple t = tuples.get(k);
+                assertEquals((j + 10 * i) * 1000l, (long) (Long) t.getColumn(1));
+                assertEquals("pn" + j, (String) t.getColumn(0));
+                k++;
+            }
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        populate("testenum2");
+        execute("create stream testenum2_out as select * from testenum2 where packetName in ('pn1', 'invalid')");
+
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        int i = 1;
+        for (Tuple t : tuples) {
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(1));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(0));
+            i += 10;
+        }
+    }
+
+    @Test
+    public void test2Desc() throws Exception {
+        populate("testenum2");
+        execute("create stream testenum2_out as select * from testenum2 where  packetName in ('pn1', 'invalid')");
+
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        int i = 1;
+        for (Tuple t : tuples) {
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(1));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(0));
+            i += 10;
+        }
+    }
+
+    @Test
+    public void test3() throws Exception {
+        populate("testenum3");
+        execute("create stream testenum3_out as select * from testenum3 where packetName in ('invalid')");
+        final List<Tuple> tuples = fetchAll("testenum3_out");
+        assertEquals(0, tuples.size());
+    }
+
+    @Test
+    public void test3Desc() throws Exception {
+        populate("testenum3");
+        execute(
+                "create stream testenum3_out as select * from testenum3 where packetName in ('invalid') order desc");
+        final List<Tuple> tuples = fetchAll("testenum3_out");
+        assertEquals(0, tuples.size());
+    }
+
+    @Test
+    public void test4() throws Exception {
+        populate("testenum4");
+        execute("create stream testenum2_out as select * from testenum4 where packetName='pn1'");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(0));
+        }
+    }
+
+    @Test
+    public void test4Desc() throws Exception {
+        populate("testenum4");
+        execute("create stream testenum2_out as select * from testenum4 where packetName='pn1' order desc");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(0));
+        }
+    }
+}
+```
+
+### `Enum3Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/Enum3Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class Enum3Test extends YarchTestCase {
+    int n = 10;
+
+    private void populate(String tblname) throws Exception {
+        execute("create table " + tblname
+                + "(gentime timestamp, packetName enum, packet binary, primary key(gentime,packetName)) partition by value(packetName)");
+        execute("create stream " + tblname + "_in(gentime timestamp, packetName enum, packet binary)");
+        execute("insert into " + tblname + " select * from " + tblname + "_in");
+
+        Stream s = ydb.getStream(tblname + "_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("packetName", DataType.ENUM));
+        td.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+
+        for (int i = 0; i < n; i++) {
+            ByteBuffer bb = ByteBuffer.allocate(2000);
+            while (bb.remaining() > 0) {
+                bb.putInt(i);
+            }
+            Tuple t = new Tuple(td, new Object[] {
+                    1000L * i, "pn" + (i % 10), bb.array()
+            });
+            s.emitTuple(t);
+        }
+        execute("close stream " + tblname + "_in");
+
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("testenum");
+        ydb.execute("create stream testenum_out as select * from testenum");
+        final List<Tuple> tuples = fetchAll("testenum_out");
+
+        for (int i = 0; i < n; i++) {
+            Tuple t = tuples.get(i);
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        populate("testenum2");
+        ydb.execute("create stream testenum2_out as select * from testenum2 where packetName in ('pn1', 'invalid')");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        int i = 1;
+        for (Tuple t : tuples) {
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+            i += 10;
+        }
+    }
+
+    @Test
+    public void test2Desc() throws Exception {
+        populate("testenum2");
+        ydb.execute(
+                "create stream testenum2_out as select * from testenum2 where packetName in ('pn1', 'invalid') order desc");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test3() throws Exception {
+        populate("testenum3");
+        ydb.execute("create stream testenum3_out as select * from testenum3 where packetName in ('invalid')");
+        final List<Tuple> tuples = fetchAll("testenum3_out");
+        assertEquals(0, tuples.size());
+    }
+
+    @Test
+    public void test4() throws Exception {
+        populate("testenum2");
+        ydb.execute("create stream testenum2_out as select * from testenum2 where packetName='pn1'");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test4Desc() throws Exception {
+        populate("testenum2");
+        ydb.execute("create stream testenum2_out as select * from testenum2 where packetName='pn1' order desc");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test5() throws Exception {
+        populate("testenum5");
+        ydb.execute("create stream testenum_out as select * from testenum5 limit 3");
+        final List<Tuple> tuples = fetchAll("testenum_out");
+
+        assertEquals(3, tuples.size());
+        for (int i = 0; i < 3; i++) {
+            Tuple t = tuples.get(i);
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+        }
+    }
+}
+```
+
+### `Enum4Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/Enum4Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+import com.google.common.collect.BiMap;
+
+public class Enum4Test extends YarchTestCase {
+    int n = 10;
+
+    private void populate(String tblname) throws Exception {
+        execute("create table " + tblname
+                + "(id int, tags enum[], primary key(id))");
+        execute("create stream " + tblname + "_in(id int, tags enum[])");
+        execute("insert into " + tblname + " select * from " + tblname + "_in");
+
+        Stream s = ydb.getStream(tblname + "_in");
+        TupleDefinition td = s.getDefinition();
+
+        for (int i = 0; i < n; i++) {
+            List<String> l = new ArrayList<>(i);
+            for (int j = 0; j < i; j++) {
+                l.add("tag" + j);
+            }
+            Tuple t = new Tuple(td, new Object[] { i, l });
+            s.emitTuple(t);
+        }
+        execute("close stream " + tblname + "_in");
+
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("test1");
+
+        StreamSqlResult r = ydb.execute("select * from test1");
+        for (int i = 0; i < n; i++) {
+            assertTrue(r.hasNext());
+            Tuple t = r.next();
+            assertEquals(i, t.getIntColumn("id"));
+            List<String> l = t.getColumn("tags");
+            assertEquals(i, l.size());
+            for (int j = 0; j < i; j++) {
+                assertEquals("tag" + j, l.get(j));
+            }
+        }
+
+        assertFalse(r.hasNext());
+
+        BiMap<String, Short> x = ydb.getTable("test1").getEnumValues("tags");
+        assertEquals(n - 1, x.size());
+    }
+}
+```
+
+### `EnumTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/EnumTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class EnumTest extends YarchTestCase {
+    int n = 100;
+
+    private void populate(String tblname) throws Exception {
+        execute("create table " + tblname
+                + "(gentime timestamp, packetName enum, packet binary, primary key(gentime,packetName))");
+        execute("create stream " + tblname + "_in(gentime timestamp, packetName enum, packet binary)");
+        execute("insert into " + tblname + " select * from " + tblname + "_in");
+
+        Stream s = ydb.getStream(tblname + "_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("packetName", DataType.ENUM));
+        td.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+
+        for (int i = 0; i < n; i++) {
+            ByteBuffer bb = ByteBuffer.allocate(2000);
+            while (bb.remaining() > 0) {
+                bb.putInt(i);
+            }
+            Tuple t = new Tuple(td, new Object[] {
+                    1000L * i, "pn" + (i % 10), bb.array()
+            });
+            s.emitTuple(t);
+        }
+        execute("close stream " + tblname + "_in");
+
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("testenum");
+        ydb.execute("create stream testenum_out as select * from testenum");
+        final List<Tuple> tuples = fetchAll("testenum_out");
+
+        for (int i = 0; i < n; i++) {
+            Tuple t = tuples.get(i);
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        populate("testenum2");
+        ydb.execute("create stream testenum2_out as select * from testenum2 where packetName in ('pn1', 'invalid')");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        int i = 1;
+        for (Tuple t : tuples) {
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+            i += 10;
+        }
+    }
+
+    @Test
+    public void test2Desc() throws Exception {
+        populate("testenum2");
+        ydb.execute(
+                "create stream testenum2_out as select * from testenum2 where packetName in ('pn1', 'invalid') order desc");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test3() throws Exception {
+        populate("testenum3");
+        ydb.execute("create stream testenum3_out as select * from testenum3 where packetName in ('invalid')");
+        final List<Tuple> tuples = fetchAll("testenum3_out");
+        assertEquals(0, tuples.size());
+    }
+
+    @Test
+    public void test4() throws Exception {
+        populate("testenum2");
+        ydb.execute("create stream testenum2_out as select * from testenum2 where packetName='pn1'");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test4Desc() throws Exception {
+        populate("testenum2");
+        ydb.execute("create stream testenum2_out as select * from testenum2 where packetName='pn1' order desc");
+        final List<Tuple> tuples = fetchAll("testenum2_out");
+        assertEquals((n + 9) / 10, tuples.size());
+
+        for (Tuple t : tuples) {
+            assertEquals("pn1", (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test5() throws Exception {
+        populate("testenum5");
+        ydb.execute("create stream testenum_out as select * from testenum5 limit 3");
+        final List<Tuple> tuples = fetchAll("testenum_out");
+
+        assertEquals(3, tuples.size());
+        for (int i = 0; i < 3; i++) {
+            Tuple t = tuples.get(i);
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+        }
+    }
+}
+```
+
+### `EnumWithPartitionTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/EnumWithPartitionTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class EnumWithPartitionTest extends YarchTestCase {
+    int n = 10;
+
+    private void populate(String tblname) throws Exception {
+        execute("create table " + tblname
+                + "(gentime timestamp, packetName enum, packet binary, primary key(gentime,packetName)) partition by time_and_value(gentime, packetName)");
+        execute("create stream " + tblname + "_in(gentime timestamp, packetName enum, packet binary)");
+        execute("insert into " + tblname + " select * from " + tblname + "_in");
+
+        Stream s = ydb.getStream(tblname + "_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("packetName", DataType.ENUM));
+        td.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+
+        for (int i = 0; i < n; i++) {
+            ByteBuffer bb = ByteBuffer.allocate(2000);
+            while (bb.remaining() > 0) {
+                bb.putInt(i);
+            }
+            Tuple t = new Tuple(td, new Object[] {
+                    1000L * i, "pn" + (i % 10), bb.array()
+            });
+            s.emitTuple(t);
+        }
+        execute("close stream " + tblname + "_in");
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("testenum");
+        execute("create stream testenum_out as select * from testenum");
+        final List<Tuple> tuples = fetchAll("testenum_out");
+
+        for (int i = 0; i < n; i++) {
+            Tuple t = tuples.get(i);
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        populate("testenum2");
+        execute("create stream testenum2_out as select * from testenum2 where packetName in ('pn1', 'invalid')");
+        List<Tuple> tuples = fetchAll("testenum2_out");
+        int i = 1;
+        for (Tuple t : tuples) {
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+            i += 10;
+        }
+        assertEquals(n + 1, i);
+
+        execute("create stream testenum2_out2 as select * from testenum2 where packetName = 'pn1'");
+        tuples = fetchAll("testenum2_out2");
+        i = 1;
+        for (Tuple t : tuples) {
+            assertEquals(i * 1000l, (long) (Long) t.getColumn(0));
+            assertEquals("pn" + (i % 10), (String) t.getColumn(1));
+            i += 10;
+        }
+        assertEquals(n + 1, i);
+    }
+
+    @Test
+    public void test3() throws Exception {
+        populate("testenum3");
+        execute("create stream testenum3_out as select * from testenum3 where packetName in ('invalid')");
+        List<Tuple> tuples = fetchAll("testenum3_out");
+        assertTrue(tuples.isEmpty());
+
+        execute("create stream testenum3_out2 as select * from testenum3 where packetName = 'invalid'");
+        tuples = fetchAll("testenum3_out2");
+        assertTrue(tuples.isEmpty());
+    }
+
+    @Test
+    public void test4() throws Exception {
+        execute("create table testenum4(gentime timestamp, packetName enum, packet binary, primary key(gentime,packetName)) partition by time_and_value(gentime, packetName)");
+        execute("create stream testenum4_out as select * from testenum4 where packetName in ('invalid')");
+        List<Tuple> tuples = fetchAll("testenum4_out");
+        assertTrue(tuples.isEmpty());
+
+        execute("create stream testenum4_out2 as select * from testenum4 where packetName = 'invalid'");
+        tuples = fetchAll("testenum4_out2");
+        assertTrue(tuples.isEmpty());
+    }
+}
+```
+
+### `FileSystemBucketTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/FileSystemBucketTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.buckets.FileSystemBucket;
+import org.yamcs.utils.FileUtils;
+
+public class FileSystemBucketTest {
+
+    private static final Path testDir = Path.of("/tmp/yamcs-filesystembuckettest");
+
+    @BeforeEach
+    public void beforeEach() throws IOException {
+        FileUtils.deleteRecursivelyIfExists(testDir);
+        Files.createDirectories(testDir);
+    }
+
+    @Test
+    public void testDirectoryTraversal() throws IOException {
+        var bucket = new FileSystemBucket("bucket", testDir.resolve("bucket"));
+        Files.createDirectory(bucket.getBucketRoot());
+
+        IOException exception1 = assertThrows(IOException.class,
+                () -> bucket.putObject("../traversed", null, new HashMap<>(), new byte[100]));
+        assertTrue(exception1.getMessage().contains("Directory traversal"));
+
+        IOException exception2 = assertThrows(IOException.class,
+                () -> bucket.putObject("test/../../traversed", null, new HashMap<>(), new byte[100]));
+        assertTrue(exception2.getMessage().contains("Directory traversal"));
+
+        IOException exception3 = assertThrows(IOException.class,
+                () -> bucket.putObject("/traversed", null, new HashMap<>(), new byte[100]));
+        assertTrue(exception3.getMessage().contains("Directory traversal"));
+
+        assertDoesNotThrow(() -> bucket.putObject("not-traversed", null, new HashMap<>(), new byte[100]));
+
+        Files.createDirectories(bucket.getBucketRoot().resolve("test"));
+        assertDoesNotThrow(() -> bucket.putObject("test/../not-traversed", null, new HashMap<>(), new byte[100]));
+    }
+
+    @Test
+    public void testSymlinkTraversal() throws IOException {
+        var bucket = new FileSystemBucket("bucket", testDir.resolve("bucket"));
+        Files.createDirectory(bucket.getBucketRoot());
+
+        var target = testDir.resolve("symtarget"); // Sibling to bucket root
+        Files.createDirectory(target);
+
+        try {
+            Files.createSymbolicLink(bucket.getBucketRoot().resolve("linked"), target);
+            assertDoesNotThrow(() -> {
+                bucket.putObject("linked/file.txt", null, Map.of(), new byte[100]);
+            });
+        } catch (UnsupportedOperationException e) {
+            // Ignore, only test where symlinks are supported
+        }
+    }
+
+    @AfterEach
+    public void afterEach() throws IOException {
+        FileUtils.deleteRecursivelyIfExists(testDir);
+    }
+}
+```
+
+### `HistogramSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/HistogramSegmentTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.HistogramSegment.SegRecord;
+
+public class HistogramSegmentTest {
+    byte[] grp1 = "aaaaaaa".getBytes();
+    byte[] grp2 = "b".getBytes();
+
+    @BeforeEach
+    public void setUp() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testUnordered() {
+        HistogramSegment segment = new HistogramSegment("g1".getBytes(), 0);
+        segment.merge(1000);
+        segment.merge(2000);
+        assertEquals(1, segment.size());
+
+        segment.merge(1);
+
+        assertEquals(1, segment.size());
+        assertSegEquals(1, 2000, 3, segment.pps.get(0));
+
+    }
+
+    @Test
+    public void testInside1() {
+        HistogramSegment segment = new HistogramSegment("g1".getBytes(), 0);
+        segment.add(1, 10, (short) 10);
+
+        segment.merge((short) 10);
+        assertEquals(1, segment.size());
+        assertSegEquals(1, 10, 11, segment.pps.get(0));
+    }
+
+    @Test
+    public void testInside2() {
+        HistogramSegment segment = new HistogramSegment("g2".getBytes(), 0);
+        segment.add((short) 1, (short) 10, (short) 10);
+        segment.merge((short) 1);
+
+        assertEquals(1, segment.size());
+        assertSegEquals(1, 10, 11, segment.pps.get(0));
+    }
+
+    @Test
+    public void testInside3() {
+        HistogramSegment segment = new HistogramSegment("g3".getBytes(), 0);
+        segment.add((short) 1, (short) 10, (short) 2);
+
+        segment.merge((short) 9);
+
+        assertEquals(1, segment.size());
+        assertSegEquals(1, 10, 3, segment.pps.get(0));
+    }
+
+    @Test
+    public void testMergeLeft1() {
+        HistogramSegment segment = new HistogramSegment("g4".getBytes(), 0);
+        segment.add((short) 1, (short) 1, (short) 1);
+        segment.merge((short) 2);
+
+        assertEquals(1, segment.size());
+        assertSegEquals(1, 2, 2, segment.pps.get(0));
+    }
+
+    @Test
+    public void testMergeLeft2() {
+        HistogramSegment segment = new HistogramSegment("g5".getBytes(), 0);
+        segment.add((short) 1, (short) 10, (short) 10);
+        segment.merge((short) 11);
+
+        assertEquals(1, segment.size());
+        assertSegEquals((short) 1, (short) 11, (short) 11, segment.pps.get(0));
+    }
+
+    @Test
+    public void testMergeRight() {
+        HistogramSegment segment = new HistogramSegment("g6".getBytes(), 0);
+        segment.add((short) 7, (short) 8, (short) 2);
+
+        segment.merge((short) 6);
+
+        assertEquals(1, segment.size());
+        assertSegEquals((short) 6, (short) 8, (short) 3, segment.pps.get(0));
+    }
+
+    @Test
+    public void testMergeBoth() {
+        HistogramSegment segment = new HistogramSegment("g7".getBytes(), 0);
+        segment.add((short) 1, (short) 5, (short) 2);
+        segment.add((short) 7, (short) 8, (short) 2);
+
+        segment.merge((short) 6);
+
+        assertEquals(1, segment.size());
+        assertSegEquals((short) 1, (short) 8, (short) 5, segment.pps.get(0));
+    }
+
+    @Test
+    public void testCheckStandalone1() {
+        HistogramSegment segment = new HistogramSegment("g8".getBytes(), 0);
+        segment.merge((short) 11);
+
+        assertEquals(1, segment.size());
+        assertSegEquals((short) 11, (short) 11, (short) 1, segment.pps.get(0));
+    }
+
+    @Test
+    public void testCheckStandalone2() {
+        HistogramSegment segment = new HistogramSegment("g9".getBytes(), 0);
+
+        segment.add(1000, 5000, (short) 2);
+        segment.add(17000, 18000, (short) 2);
+
+        segment.merge(11000);
+
+        assertEquals(3, segment.size());
+
+        assertSegEquals(1000, 5000, (short) 2, segment.pps.get(0));
+        assertSegEquals(11000, 11000, (short) 1, segment.pps.get(1));
+        assertSegEquals(17000, 18000, (short) 2, segment.pps.get(2));
+    }
+
+    @Test
+    public void testSelectBestMerge() {
+        HistogramSegment segment = new HistogramSegment("g10".getBytes(), 0);
+
+        segment.add(1000, 4000, (short) 4);
+        segment.add(7000, 8000, (short) 2);
+
+        segment.merge(6000);
+
+        assertEquals(2, segment.size());
+
+        assertSegEquals(1000, 4000, (short) 4, segment.pps.get(0));
+        assertSegEquals(6000, 8000, (short) 3, segment.pps.get(1));
+    }
+
+    @Test
+    public void testSelectBestMerge1() {
+        HistogramSegment segment = new HistogramSegment("g10".getBytes(), 0);
+
+        segment.add(1000, 4000, (short) 4);
+        segment.add(7000, 8000, (short) 2);
+
+        segment.merge(4000);
+
+        assertEquals(2, segment.size());
+
+        assertSegEquals(1000, 4000, (short) 5, segment.pps.get(0));
+        assertSegEquals(7000, 8000, (short) 2, segment.pps.get(1));
+    }
+
+    private void assertSegEquals(int dstart, int dstop, int num, SegRecord p) {
+        assertEquals(dstart, p.dstart);
+        assertEquals(dstop, p.dstop);
+        assertEquals(num, p.num);
+    }
+}
+```
+
+### `HistogramStreamTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/HistogramStreamTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+public class HistogramStreamTest extends YarchTestCase {
+    StreamSqlStatement statement;
+    String cmd;
+
+    private void populate(String tblName, int numDistinctiveValues, int numSamplesPerValue, boolean partitioned)
+            throws Exception {
+        int n = numSamplesPerValue;
+        int m = numDistinctiveValues;
+        String query = "create table " + tblName
+                + "(gentime timestamp, seqNum int, name string, primary key(gentime, seqNum)) histogram(name)"
+                + (partitioned ? "partition by time(gentime)" : "");
+        execute(query);
+
+        execute("create stream " + tblName + "_in(gentime timestamp, seqNum int, name string)");
+        execute("insert into " + tblName + " select * from " + tblName + "_in");
+
+        Stream s = ydb.getStream(tblName + "_in");
+        TupleDefinition td = s.getDefinition();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                Tuple t = new Tuple(td, new Object[] { 1000L * i + j, j, "histotest" + j });
+                s.emitTuple(t);
+            }
+        }
+
+        for (int i = 2 * n; i < 3 * n; i++) {
+            for (int j = 0; j < m; j++) {
+                Tuple t = new Tuple(td, new Object[] { 1000L * i + j, j, "histotest" + j });
+                s.emitTuple(t);
+            }
+        }
+
+        Tuple t = new Tuple(td, new Object[] { 1000 * 100000L, 1, "histotest1m" });
+        s.emitTuple(t);
+        execute("close stream " + tblName + "_in");
+    }
+
+    @Test
+    public void test0() throws Exception {
+        populate("test0", 1, 20, false);
+        String query = "create stream test_out as select * from test0 histogram(name)";
+        execute(query);
+        final List<Tuple> tuples = fetchAll("test_out");
+        assertEquals(3, tuples.size());
+
+        verifyEquals("histotest0", 0, 19000, 20, tuples.get(0));
+        verifyEquals("histotest0", 40000, 59000, 20, tuples.get(1));
+        verifyEquals("histotest1m", 100000000, 100000000, 1, tuples.get(2));
+        execute("drop table test0");
+        var tblsp = RdbStorageEngine.getInstance().getTablespace(instance);
+        var l = tblsp.getTableHistograms(instance, "test0");
+        assertEquals(0, l.size());
+    }
+
+    @Test
+    public void test0Part() throws Exception {
+        populate("test0", 1, 20, true);
+        String query = "create stream test_out as select * from test0 histogram(name)";
+        execute(query);
+        final List<Tuple> tuples = fetchAll("test_out");
+        assertEquals(3, tuples.size());
+
+        verifyEquals("histotest0", 0, 19000, 20, tuples.get(0));
+        verifyEquals("histotest0", 40000, 59000, 20, tuples.get(1));
+        verifyEquals("histotest1m", 100000000, 100000000, 1, tuples.get(2));
+        execute("drop table test0");
+    }
+
+    @Test
+    public void test1() throws Exception {
+        int n = 10;
+        int m = 2;
+        populate("test1", m, n, false);
+        String query = "create stream test1_out as select * from test1 histogram(name) where last>" + (n * 1000)
+                + " and first<90000000";
+        execute(query);
+        final List<Tuple> tuples = fetchAll("test1_out");
+        assertEquals(m, tuples.size());
+        Tuple t = tuples.get(0);
+        // tuples should contain
+        // (name String, start TIMESTAMP, stop TIMESTAMP, num int)
+        assertEquals(4, t.size());
+        assertEquals("histotest0", (String) t.getColumn(0));
+        assertEquals(2 * n * 1000L, (long) (Long) t.getColumn(1));
+        assertEquals((3 * n - 1) * 1000L, (long) (Long) t.getColumn(2));
+        assertEquals(n, (int) (Integer) t.getColumn(3));
+
+        execute("drop table test1");
+    }
+
+    @Test
+    public void testEmpyStream() throws Exception {
+        int m = 2;
+        int n = 1;
+        populate("testEmptyStream", m, n, true);
+        String query = "create stream testEmptyStream_out as select * from testEmptyStream histogram(name) where last>0 and first<-1";
+        execute(query);
+        final List<Tuple> tuples = fetchAll("testEmptyStream_out");
+        assertEquals(0, tuples.size());
+
+        String query1 = "create stream testEmptyStream_out1 as select * from testEmptyStream histogram(name) where last>76797379324836000";
+        execute(query1);
+        final List<Tuple> tuples1 = fetchAll("testEmptyStream_out1");
+        assertEquals(0, tuples1.size());
+
+        String query2 = "create stream testEmptyStream_out2 as select * from testEmptyStream histogram(name) where first>76797379324836000";
+        execute(query2);
+        final List<Tuple> tuples2 = fetchAll("testEmptyStream_out2");
+        assertEquals(0, tuples2.size());
+
+        execute("drop table testEmptyStream");
+    }
+
+    @Test
+    public void test4() throws Exception {
+        int m = 2;
+        int n = 1;
+        populate("test1", m, n, true);
+        String query = "create stream test1_out as select * from test1 histogram(name) where first>" + (n * 3000)
+                + " and last<=100000000";
+        execute(query);
+        final List<Tuple> tuples = fetchAll("test1_out");
+        assertEquals(1, tuples.size());
+        Tuple t = tuples.get(0);
+
+        t = tuples.get(0);
+        assertEquals("histotest1m", (String) t.getColumn(0));
+        execute("drop table test1");
+    }
+
+    void verifyEquals(String value, long start, long stop, int num, Tuple t) {
+        assertEquals(4, t.size());
+        assertEquals(value, (String) t.getColumn(0));
+        assertEquals(start, (long) (Long) t.getColumn(1));
+        assertEquals(stop, (long) (Long) t.getColumn(2));
+        assertEquals(num, (int) (Integer) t.getColumn(3));
+    }
+}
+```
+
+### `InsertTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/InsertTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class InsertTest extends YarchTestCase {
+    @Test
+    public void test1() throws Exception {
+        ydb.execute("create table tbl1(x int, v string, primary key(x))");
+        // ydb.execute("insert into tbl1(x, v) values(1, 'test1')");
+        ydb.execute("insert into tbl1(x, v) values(100, 'test1')");
+
+        List<Tuple> tlist = fetchAllFromTable("tbl1");
+        assertEquals(1, tlist.size());
+        checkEquals(tlist.get(0), 100, "test1");
+
+        ydb.execute("create table tbl2(x int, v string, primary key(x))");
+
+        StreamSqlResult res = ydb.execute("insert into tbl2 select * from tbl1");
+        Tuple t = res.next();
+        assertEquals(1, t.getLongColumn("inserted"));
+
+        tlist = fetchAllFromTable("tbl2");
+        assertEquals(1, tlist.size());
+        checkEquals(tlist.get(0), 100, "test1");
+
+    }
+
+    void checkEquals(Tuple t, int x, String v) {
+        assertEquals(x, t.getIntColumn("x"));
+        assertEquals(v, t.getColumn("v"));
+    }
+}
+```
+
+### `NegativeValuesPKTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/NegativeValuesPKTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.time.Instant;
+
+public class NegativeValuesPKTest extends YarchTestCase {
+    int idFirst = -5;
+    int idLast = 10;
+
+    private void populate(String tblname, String type) throws Exception {
+        ydb.execute("create table " + tblname + "(id " + type + ", name string, primary key(id))");
+        ydb.execute("create stream " + tblname + "_in(id int, name string)");
+        ydb.execute("insert into " + tblname + " select * from " + tblname + "_in");
+
+        Stream s = ydb.getStream(tblname + "_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("id", DataType.INT));
+        td.addColumn(new ColumnDefinition("name", DataType.STRING));
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = new Tuple(td, new Object[] {
+                    i, "id" + i
+            });
+            s.emitTuple(t);
+        }
+        execute("close stream " + tblname + "_in");
+    }
+
+    @Test
+    public void testInt() throws Exception {
+        populate("testint", "int");
+        ydb.execute("create stream test_out as select * from testint");
+        final List<Tuple> tuples = fetchAll("test_out");
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = tuples.get(i - idFirst);
+            assertEquals(i, (int) t.getColumn(0));
+            assertEquals("id" + i, (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void testShort() throws Exception {
+        populate("testshort", "short");
+        ydb.execute("create stream test_out as select * from testshort");
+        final List<Tuple> tuples = fetchAll("test_out");
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = tuples.get(i - idFirst);
+            assertEquals(i, (short) t.getColumn(0));
+            assertEquals("id" + i, (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void testLong() throws Exception {
+        populate("testlong", "long");
+        ydb.execute("create stream test_out as select * from testlong");
+        final List<Tuple> tuples = fetchAll("test_out");
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = tuples.get(i - idFirst);
+            assertEquals(i, (long) t.getColumn(0));
+            assertEquals("id" + i, (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void testDouble() throws Exception {
+        populate("testdouble", "double");
+        ydb.execute("create stream test_out as select * from testdouble");
+        final List<Tuple> tuples = fetchAll("test_out");
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = tuples.get(i - idFirst);
+            assertEquals(i, (double) t.getColumn(0), 1e-10);
+            assertEquals("id" + i, (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void testTimestamp() throws Exception {
+        populate("testtimestamp", "timestamp");
+        ydb.execute("create stream test_out as select * from testtimestamp");
+        final List<Tuple> tuples = fetchAll("test_out");
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = tuples.get(i - idFirst);
+            assertEquals(i, (long) t.getColumn(0));
+            assertEquals("id" + i, (String) t.getColumn(1));
+        }
+    }
+
+    @Test
+    public void testHrTimestamp() throws Exception {
+        populate("testhrtimestamp", "hres_timestamp");
+        ydb.execute("create stream test_out as select * from testhrtimestamp");
+        final List<Tuple> tuples = fetchAll("test_out");
+
+        for (int i = idFirst; i <= idLast; i++) {
+            Tuple t = tuples.get(i - idFirst);
+            assertEquals(i, ((Instant) t.getColumn(0)).getMillis());
+            assertEquals("id" + i, (String) t.getColumn(1));
+        }
+    }
+}
+```
+
+### `NullTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/NullTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class NullTest extends YarchTestCase {
+
+    @Test
+    public void testInsert() throws Exception {
+        execute("create table tbl1(k int, u string, v string, w string, primary key(k))");
+
+        // Do not specify 'v'
+        execute("insert into tbl1(k, u, w) values(100, 'uval', 'wval')");
+
+        List<Tuple> tuples = fetchAllFromTable("tbl1");
+        assertEquals(1, tuples.size());
+
+        Tuple tuple = tuples.get(0);
+        assertEquals(100, tuple.getIntColumn("k"));
+        assertEquals("uval", tuple.getColumn("u"));
+        assertNull(tuple.getColumn("v"));
+        assertEquals("wval", tuple.getColumn("w"));
+
+        // Explicit null-insert of 'v'
+        execute("delete from tbl1");
+        execute("insert into tbl1(k, u, v, w) values(100, 'uval2', null, 'wval2')");
+
+        tuples = fetchAllFromTable("tbl1");
+        assertEquals(1, tuples.size());
+
+        tuple = tuples.get(0);
+        assertEquals(100, tuple.getIntColumn("k"));
+        assertEquals("uval2", tuple.getColumn("u"));
+        assertNull(tuple.getColumn("v"));
+        assertEquals("wval2", tuple.getColumn("w"));
+
+        // Update 'w' to null
+        execute("update tbl1 set w = null");
+
+        tuples = fetchAllFromTable("tbl1");
+        assertEquals(1, tuples.size());
+
+        tuple = tuples.get(0);
+        assertEquals(100, tuple.getIntColumn("k"));
+        assertEquals("uval2", tuple.getColumn("u"));
+        assertNull(tuple.getColumn("v"));
+        assertNull(tuple.getColumn("w"));
+
+        // No change
+        execute("delete from tbl1 where w is not null");
+        tuples = fetchAllFromTable("tbl1");
+        assertEquals(1, tuples.size());
+
+        // Remove the only record
+        execute("delete from tbl1 where w is null");
+        tuples = fetchAllFromTable("tbl1");
+        assertEquals(0, tuples.size());
+    }
+
+    @Test
+    public void testSelect() throws Exception {
+        execute("create table tbl2(k int, u string, v string, primary key(k))");
+        execute("insert into tbl2(k, u, w) values(100, 'uval', 'wval')");
+        execute("insert into tbl2(k, u, w) values(200, 'uval2', 'wval2')");
+
+        var result = ydb.execute("select k, null from tbl2");
+
+        List<Tuple> tuples = new ArrayList<>();
+        result.forEachRemaining(tuples::add);
+        result.close();
+
+        assertEquals(2, tuples.size());
+
+        Tuple tuple = tuples.get(0);
+        assertEquals(2, tuple.size());
+        assertEquals(100, tuple.getColumn(0));
+        assertNull(tuple.getColumn(1));
+
+        tuple = tuples.get(1);
+        assertEquals(2, tuple.size());
+        assertEquals(200, tuple.getColumn(0));
+        assertNull(tuple.getColumn(1));
+    }
+}
+```
+
+### `SecondaryIndex2Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/SecondaryIndex2Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class SecondaryIndex2Test extends YarchTestCase {
+
+    void populate(String tblName) throws Exception {
+        int n = 10;
+        ydb.execute("create table " + tblName
+                + "(a long auto_increment, b string, "
+                + "primary key(a), index(b))");
+
+        ydb.execute("create stream abcd_in(b string)");
+        ydb.execute("insert into " + tblName + " select * from abcd_in");
+        Stream s = ydb.getStream("abcd_in");
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < 3; j++) {
+                Tuple t = new Tuple(s.getDefinition(), Arrays.asList("row " + i));
+                s.emitTuple(t);
+            }
+        }
+        execute("close stream abcd_in");
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("test1");
+        StreamSqlResult res = ydb.execute("select * from test1 where b=?", "row 0");
+
+        for (int i = 0; i < 3; i++) {
+            assertTrue(res.hasNext());
+            Tuple t = res.next();
+            long a = (Long) t.getColumn("a");
+            assertEquals(i, a);
+            assertEquals("row 0", (String) t.getColumn("b"));
+        }
+        assertFalse(res.hasNext());
+    }
+}
+```
+
+### `SecondaryIndex3Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/SecondaryIndex3Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class SecondaryIndex3Test extends YarchTestCase {
+    int n = 2;
+
+    void populate(String tblName) throws Exception {
+        ydb.execute("create table " + tblName
+                + "(a long, b int, c string, "
+                + "primary key(a, b), index(b))");
+
+        ydb.execute("create stream test_in(a long, b int, c string)");
+        ydb.execute("insert into " + tblName + " select * from test_in");
+        Stream s = ydb.getStream("test_in");
+
+        for (int i = 0; i < n; i++) {
+            s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(1l, i, "test")));
+        }
+        execute("close stream test_in");
+    }
+
+    @Test
+    public void testUpdatePk() throws Exception {
+        populate("test1");
+
+        ydb.execute("update test1 set b=b+2 where b = 0");
+        StreamSqlResult r = ydb.execute("select * from test1");
+        Tuple t = r.next();
+        assertEquals(1, t.getIntColumn("b"));
+        t = r.next();
+        assertEquals(2, t.getIntColumn("b"));
+        assertFalse(r.hasNext());
+    }
+
+    @Test
+    public void testUpdatePkDuplicate() throws Exception {
+        populate("test2");
+        Exception e = null;
+        try {
+            ydb.execute("update test2 set b=b+1 where b = 0");
+        } catch (Exception e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertTrue(e.getMessage().contains("duplicate key"));
+    }
+}
+```
+
+### `SecondaryIndexTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/SecondaryIndexTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class SecondaryIndexTest extends YarchTestCase {
+
+    void populate(String tblName) throws Exception {
+        int n = 10;
+        ydb.execute("create table " + tblName
+                + "(a int, b int, c int, d string, "
+                + "primary key(a,b), index(c))");
+
+        ydb.execute("create stream abcd_in(a int, b int, c int, d int)");
+        ydb.execute("insert into " + tblName + " select * from abcd_in");
+        Stream s = ydb.getStream("abcd_in");
+
+        for (int a = 0; a < n; a++) {
+            for (int b = 0; b < n; b++) {
+                Tuple t = new Tuple(s.getDefinition(), Arrays.asList(a, b, a + b, "r" + a + b));
+                s.emitTuple(t);
+            }
+        }
+        execute("close stream abcd_in");
+    }
+
+    @Test
+    public void testInvalid1() {
+        assertThrows(StreamSqlException.class, () -> {
+            ydb.execute("create table invalid1 (a int, b string, primary key(a), index(b,a))");
+        });
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("test1");
+        StreamSqlResult res = ydb.execute("select * from test1 where c=3");
+        for (int i = 0; i < 4; i++) {
+            assertTrue(res.hasNext());
+            Tuple t = res.next();
+            assertEquals(3, (int) t.getColumn("c"));
+        }
+        assertFalse(res.hasNext());
+    }
+
+    @Test
+    public void testDbReload() throws Exception {
+        ydb.execute("create table test_reload(a int, b int, primary key(a), index(b))");
+
+        TableDefinition tbldef = ydb.getTable("test_reload");
+        List<String> idx = tbldef.getSecondaryIndex();
+        assertEquals(1, idx.size());
+        assertEquals("b", idx.get(0));
+
+        YarchDatabase.removeInstance(instance);
+
+        ydb = YarchDatabase.getInstance(instance);
+
+        TableDefinition tbldef1 = ydb.getTable("test_reload");
+        List<String> idx1 = tbldef1.getSecondaryIndex();
+        assertEquals(1, idx1.size());
+        assertEquals("b", idx1.get(0));
+    }
+
+    @Test
+    public void testDropTable() throws Exception {
+        ydb.execute("create table test_drop(a int, b int, primary key(a), index(b))");
+        ydb.execute("drop table test_drop");
+        ydb.execute("create table test_drop(a int, b int, primary key(a), index(b))");
+    }
+
+}
+```
+
+### `StandaloneStreamTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StandaloneStreamTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.GenericStreamSqlException;
+
+public class StandaloneStreamTest extends YarchTestCase {
+
+    @Test
+    public void createStreamTest() throws Exception {
+        execute("create stream test1 (packetId int, packet binary)");
+        Stream s = ydb.getStream("test1");
+        assertNotNull(s);
+    }
+
+    @Test
+    public void testBogusWhere() throws Exception {
+        assertThrows(GenericStreamSqlException.class, () -> {
+            execute("create stream tm_in(gentime timestamp, id int)");
+            execute("create stream testbogus as select * from tm_in where id+3");
+        });
+    }
+}
+```
+
+### `StarSelectTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StarSelectTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class StarSelectTest extends YarchTestCase {
+
+    int n = 10;
+
+    void createFeeder() throws Exception {
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("gentime", DataType.TIMESTAMP);
+        tpdef.addColumn("id", DataType.INT);
+
+        Stream s = (new Stream(ydb, "tm_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Long time = (long) (i * 1000);
+                    Tuple t = new Tuple(tpdef, new Object[] { time, i });
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testStar1() throws Exception {
+        createFeeder();
+        ydb.execute("create stream tm_out as select 'cucu' as bau,* from tm_in");
+
+        List<Tuple> tlist = fetchAll("tm_out");
+        assertEquals(n, tlist.size());
+        for (int k = 0; k < n; k++) {
+            Tuple tuple = tlist.get(k);
+            assertEquals("cucu", tuple.getColumn("bau"));
+            long time = (Long) tuple.getColumn(1);
+            assertEquals(1000 * k, time);
+            int i = (Integer) tuple.getColumn(2);
+            assertEquals(k, i);
+        }
+    }
+}
+```
+
+### `StreamMergeTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamMergeTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+public class StreamMergeTest extends YarchTestCase {
+    StreamSqlStatement statement;
+    String cmd;
+
+    private void populate(String tblName, int start, int stop, int step, int apidSeqCount) throws Exception {
+        ydb.execute("create table " + tblName
+                + "(\"time\" timestamp, apidSeqCount int, packet binary, primary key(\"time\", apidSeqCount))");
+        ydb.execute("create stream tm_in(\"time\" timestamp, apidSeqCount int, packet binary)");
+        ydb.execute("insert into " + tblName + " select * from tm_in");
+        Stream s = ydb.getStream("tm_in");
+
+        ByteBuffer bb = ByteBuffer.allocate(2000);
+
+        for (int i = start; i < stop; i += step) {
+            bb.position(0);
+            long time = 1000 * i;
+            while (bb.remaining() > 0) {
+                bb.putInt(i);
+            }
+            Tuple t = new Tuple(s.getDefinition(), new Object[] { time, apidSeqCount, bb.array() });
+            s.emitTuple(t);
+        }
+        execute("close stream tm_in");
+    }
+
+    private void verify(String streamQuery, final Checker c) throws Exception {
+        StreamSqlResult r = ydb.execute("create stream tm_out as " + streamQuery);
+
+        final AtomicInteger ai = new AtomicInteger(0);
+        final Semaphore semaphore = new Semaphore(0);
+
+        Stream s = ydb.getStream("tm_out");
+        s.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                // System.out.println("got tuple: "+tuple);
+                int i = ai.getAndIncrement();
+                long time = (Long) tuple.getColumn(0);
+                int apidSeqCount = (Integer) tuple.getColumn(1);
+                byte[] b = (byte[]) tuple.getColumn(2);
+
+                c.check(i, time, apidSeqCount);
+
+                assertEquals(b.length, 2000);
+                ByteBuffer bb = ByteBuffer.wrap(b);
+                while (bb.remaining() > 0) {
+                    int k = bb.getInt();
+                    assertEquals(k, i);
+                }
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(30, TimeUnit.SECONDS);
+        assertEquals(1000, ai.get());
+        r.close();
+    }
+
+    @AfterAll
+    static public void afterAll() {
+        System.gc();
+    }
+
+    @Test
+    public void testTableMerge0() throws Exception {
+        populate("tm1", 0, 1000, 1, 1000);
+
+        verify("merge tm1 using \"time\"",
+                (i, time, apidSeqCount) -> {
+                    assertEquals(1000 * i, time);
+                    assertEquals(1000, apidSeqCount);
+                });
+        execute("drop table tm1");
+    }
+
+    @Test
+    public void testTableMerge1() throws Exception {
+        populate("tm1", 0, 1000, 2, 1000);
+        populate("tm2", 1, 1000, 4, 2000);
+        populate("tm3", 3, 1000, 4, 3000);
+
+        verify("merge tm1,tm2,tm3 using \"time\"",
+                (i, time, apidSeqCount) -> {
+                    assertEquals(1000 * i, time);
+                    if (i % 2 == 0) {
+                        assertEquals(1000, apidSeqCount);
+                    } else if (i % 4 == 1) {
+                        assertEquals(2000, apidSeqCount);
+                    } else {
+                        assertEquals(3000, apidSeqCount);
+                    }
+                });
+        execute("drop table tm1");
+        execute("drop table tm2");
+        execute("drop table tm3");
+    }
+
+    @Test
+    public void testTableMerge2() throws Exception {
+        populate("tm1", 0, 200, 1, 1000);
+        populate("tm2", 200, 500, 1, 2000);
+        populate("tm3", 500, 1000, 1, 3000);
+
+        verify("merge tm1,tm2,tm3 using \"time\"",
+                (i, time, apidSeqCount) -> {
+                    assertEquals(1000 * i, time);
+                    if (i < 200) {
+                        assertEquals(1000, apidSeqCount);
+                    } else if (i < 500) {
+                        assertEquals(2000, apidSeqCount);
+                    } else {
+                        assertEquals(3000, apidSeqCount);
+                    }
+                });
+        execute("drop table tm1");
+        execute("drop table tm2");
+        execute("drop table tm3");
+    }
+
+    @Test
+    public void testTableMerge3() throws Exception {
+        populate("tm1", 0, 1000, 1, 1000);
+        populate("tm2", 0, 1000, 1, 2000);
+        populate("tm3", 0, 1000, 1, 3000);
+
+        verify("merge (select * from tm1 where \"time\"<199999+1), (select * from tm2 where \"time\">=200000 and \"time\"<500000), (select * from tm3 where \"time\">=500000) using \"time\"",
+                (i, time, apidSeqCount) -> {
+                    assertEquals(1000 * i, time);
+                    if (i < 200) {
+                        assertEquals(1000, apidSeqCount);
+                    } else if (i < 500) {
+                        assertEquals(2000, apidSeqCount);
+                    } else {
+                        assertEquals(3000, apidSeqCount);
+                    }
+                });
+        execute("drop table tm1");
+        execute("drop table tm2");
+        execute("drop table tm3");
+    }
+
+    interface Checker {
+        public void check(int i, long time, int apidSeqCount);
+    }
+}
+```
+
+### `StreamSelect1Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelect1Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
+
+public class StreamSelect1Test extends YarchTestCase {
+
+    final int n = 200;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("x", DataType.INT);
+        tpdef.addColumn("y", DataType.STRING);
+
+        s = (new Stream(ydb, "stream_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Integer x = i;
+                    String y = "s" + i;
+
+                    Tuple t = new Tuple(tpdef, new Object[] { x, y });
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testLike() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where y like \'s1%\'");
+        Stream s = ydb.getStream("stream_out1");
+        final Semaphore finished = new Semaphore(0);
+        final AtomicInteger counter = new AtomicInteger(0);
+        s.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                finished.release();
+            }
+
+            int k = 1;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                int x = (Integer) tuple.getColumn(0);
+                String y = (String) tuple.getColumn(1);
+                assertEquals(k, x);
+                assertEquals("s" + k, y);
+                counter.incrementAndGet();
+                do {
+                    k += 1;
+                } while (!("s" + k).startsWith("s1"));
+            }
+        });
+        s.start();
+        assertTrue(finished.tryAcquire(5, TimeUnit.SECONDS));
+        assertEquals(111, counter.get());
+    }
+
+    @Test
+    public void testNotLike() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where y NOT LIKE \'s1%\'");
+        Stream s = ydb.getStream("stream_out1");
+        final Semaphore finished = new Semaphore(0);
+        final AtomicInteger counter = new AtomicInteger(0);
+        s.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                finished.release();
+            }
+
+            int k = 0;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                int x = (Integer) tuple.getColumn(0);
+                String y = (String) tuple.getColumn(1);
+                assertEquals(k, x);
+                assertEquals("s" + k, y);
+                counter.incrementAndGet();
+                do {
+                    k++;
+                } while (("s" + k).startsWith("s1"));
+            }
+        });
+        s.start();
+        assertTrue(finished.tryAcquire(5, TimeUnit.SECONDS));
+        assertEquals(89, counter.get());
+    }
+
+    @Test
+    public void testDoubleParanthesis() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select * from stream_in where (x>3 and (x<5 or y = 's5'))");
+        List<Tuple> tlist = fetchAll("stream_out1");
+        assertEquals(2, tlist.size());
+        assertEquals(4, tlist.get(0).getIntColumn("x"));
+        assertEquals(5, tlist.get(1).getIntColumn("x"));
+    }
+
+    @Test
+    public void testArgCols() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select ?,? from stream_in", "x", "y");
+        assertEquals(n, fetchAll("stream_out1").size());
+    }
+}
+```
+
+### `StreamSelect2Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelect2Test.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class StreamSelect2Test extends YarchTestCase {
+    final int n = 51;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        YarchDatabaseInstance ydb = context.getDb();
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("x", DataType.INT);
+        tpdef.addColumn("y", DataType.INT);
+
+        s = (new Stream(ydb, "stream_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Integer x = i;
+                    Integer y = i * 2;
+
+                    Tuple t = new Tuple(tpdef, new Object[] { x, y });
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testAdd() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select x+y from stream_in");
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(n, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int xpy = (Integer) tuple.getColumn(0);
+            assertEquals(3 * k, xpy);
+            k++;
+        }
+    }
+
+    @Test
+    public void testParanthesis() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select (x+y) from stream_in");
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(n, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int xpy = (Integer) tuple.getColumn(0);
+            assertEquals(3 * k, xpy);
+            k++;
+        }
+    }
+
+    @Test
+    public void testHexNumbers() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where x>40 and x<0x2A");
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(1, tlist.size());
+        Tuple t = tlist.get(0);
+        assertEquals(41, t.getIntColumn("x"));
+    }
+
+    @Test
+    public void testBitwiseAnd() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select x, y<<1, y>>1, y^x, y|x from stream_in where x & 0x1 = 0");
+        List<Tuple> tlist = fetchAll("stream_out1");
+        assertEquals((n + 1) / 2, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int x = (Integer) tuple.getColumn(0);
+            int y = 2 * x;
+            int yshiftLeft = (Integer) tuple.getColumn(1);
+            int yshiftRight = (Integer) tuple.getColumn(2);
+            int yxorx = (Integer) tuple.getColumn(3);
+            int yorx = (Integer) tuple.getColumn(4);
+            assertEquals(0, x & 1);
+            assertEquals(2 * k, x);
+            assertEquals(y << 1, yshiftLeft);
+            assertEquals(y >> 1, yshiftRight);
+            assertEquals(y ^ x, yxorx);
+            assertEquals(y | x, yorx);
+            k++;
+        }
+    }
+
+    @Test
+    public void testAnd() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where (x+3) >= y and x>2");
+        List<Tuple> tlist = fetchAll("stream_out1");
+        assertEquals(1, tlist.size());
+        Tuple t = tlist.get(0);
+        assertEquals(3, t.getIntColumn("x"));
+    }
+
+    @Test
+    public void testWindow1() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT SUM(y) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int sumy = (Integer) tuple.getColumn(0);
+            assertEquals(2 * (5 * k + 10), sumy);
+            k += 5;
+        }
+    }
+
+    @Test
+    public void testWindow2() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT SUM(y+3) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int sumy = (Integer) tuple.getColumn(0);
+            assertEquals(2 * (5 * k + 10) + 15, sumy);
+            k += 5;
+        }
+    }
+
+    @Test
+    public void testWindow3() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT 2+SUM(x+y+1) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int sumy = (Integer) tuple.getColumn(0);
+            assertEquals(3 * (5 * k + 10) + 5 + 2, sumy);
+            k += 5;
+        }
+    }
+
+    @Test
+    public void testWindow4() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT aggregatelist(*) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            // System.out.println("tuple: "+tuple);
+            List<Tuple> ret = (List<Tuple>) tuple.getColumn(0);
+            for (Tuple t : ret) {
+                assertEquals(k, ((Integer) t.getColumn(0)).intValue());
+                assertEquals(2 * k, ((Integer) t.getColumn(1)).intValue());
+                k++;
+            }
+        }
+    }
+
+    @Test
+    public void testWindow5() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT firstval(x) AS fvx from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            int firstvalx = (Integer) tuple.getColumn(0);
+            assertEquals(k, firstvalx);
+            k += 5;
+        }
+    }
+
+    @Test
+    public void testWindow6() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT firstval(x+y) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            // System.out.println("tuple: "+tuple);
+            int fvxpy = (Integer) tuple.getColumn(0);
+            assertEquals(3 * k, fvxpy);
+            k += 5;
+        }
+    }
+
+    @Test
+    public void testWindow7() throws Exception {
+        createFeeder1();
+        execute(
+                "CREATE STREAM stream_out1 AS SELECT firstval(x),firstval(y),aggregatelist(*) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        int k = 0;
+        for (Tuple tuple : tlist) {
+            // System.out.println("tuple: "+tuple);
+            int fvx = (Integer) tuple.getColumn(0);
+            int fvy = (Integer) tuple.getColumn(1);
+
+            assertEquals(k, fvx);
+            assertEquals(2 * k, fvy);
+            List<Tuple> ret = (List<Tuple>) tuple.getColumn(2);
+            for (Tuple t : ret) {
+                assertEquals(k, ((Integer) t.getColumn(0)).intValue());
+                assertEquals(2 * k, ((Integer) t.getColumn(1)).intValue());
+                k++;
+            }
+        }
+    }
+
+    @Test
+    public void testCount1() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT count(*) from stream_in");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+        assertEquals(1, tlist.size());
+        long count = (Long) tlist.get(0).getColumn(0);
+        assertEquals(n, count);
+    }
+
+    @Test
+    public void testCount2() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT count(*) from stream_in where x < 3");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+        assertEquals(1, tlist.size());
+        long count = (Long) tlist.get(0).getColumn(0);
+        assertEquals(3, count);
+    }
+
+    @Test
+    public void testWindowCount() throws Exception {
+        createFeeder1();
+        execute("CREATE STREAM stream_out1 AS SELECT count(*) from stream_in[SIZE 5 ADVANCE 5 ON x]");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals((n - 1) / 5, tlist.size());
+        for (Tuple tuple : tlist) {
+            long count = (Long) tuple.getColumn(0);
+            assertEquals(5, count);
+        }
+    }
+}
+```
+
+### `StreamSelectBinaryFunctionTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectBinaryFunctionTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.StringConverter;
+
+public class StreamSelectBinaryFunctionTest extends YarchTestCase {
+
+    final int n = 10;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("x", DataType.BINARY);
+        tpdef.addColumn("y", DataType.INT);
+        byte[] x = new byte[300];
+        s = (new Stream(ydb, "stream_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    ByteArrayUtils.encodeInt(i, x, 0);
+                    Tuple t = new Tuple(tpdef, new Object[] { x, 2 });
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testSubstring() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select substring(x, y) from stream_in");
+        List<Tuple> l = fetchAll("stream_out1");
+        assertEquals(n, l.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = l.get(i);
+            byte[] x = (byte[]) t.getColumn(0);
+            assertEquals(i, ByteArrayUtils.decodeShort(x, 0));
+        }
+    }
+
+    @Test
+    public void testExtract_short() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select extract_short(x, 2) from stream_in");
+        List<Tuple> l = fetchAll("stream_out1");
+        assertEquals(n, l.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = l.get(i);
+            int x = (Short) t.getColumn(0);
+            assertEquals(i, x);
+        }
+    }
+
+    @Test
+    public void testExtractShortWithCondition() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select substring(x, 2) as name_subs from stream_in where extract_int(x, 0) = 2");
+        List<Tuple> l = fetchAll("stream_out1");
+        assertEquals(1, l.size());
+        Tuple t0 = l.get(0);
+        assertEquals("name_subs", t0.getColumnDefinition(0).getName());
+        byte[] x = (byte[]) t0.getColumn(0);
+        assertEquals(2, ByteArrayUtils.decodeShort(x, 0));
+    }
+
+    @Test
+    public void testUnhex() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select unhex('010203') + x as c_x from stream_in");
+        List<Tuple> l = fetchAll("stream_out1");
+        byte[] ic = new byte[4];
+        assertEquals(n, l.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = l.get(i);
+            ByteArrayUtils.encodeInt(i, ic, 0);
+            byte[] cx = (byte[]) t.getColumn("c_x");
+            assertEquals(303, cx.length);
+            assertEquals("010203" + StringConverter.arrayToHexString(ic),
+                    StringConverter.arrayToHexString(cx).substring(0, 14));
+        }
+    }
+
+    @Test
+    public void testExtractUnhex() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select extract_short(unhex('010203'), 1) + y as c_y from stream_in");
+        List<Tuple> l = fetchAll("stream_out1");
+        byte[] ic = new byte[4];
+        assertEquals(n, l.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = l.get(i);
+            ByteArrayUtils.encodeInt(i, ic, 0);
+            int cy = t.getIntColumn("c_y");
+            assertEquals(0x0203 + 2, cy);
+        }
+    }
+
+    @Test
+    public void testBinaryColName() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select x as binary from stream_in");
+        List<Tuple> l = fetchAll("stream_out1");
+        assertEquals(n, l.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = l.get(i);
+            byte[] cx = (byte[]) t.getColumn("binary");
+            assertEquals(300, cx.length);
+        }
+    }
+}
+```
+
+### `StreamSelectCoalesceTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectCoalesceTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class StreamSelectCoalesceTest extends YarchTestCase {
+
+    final int n = 3;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        final TupleDefinition tpdef1 = new TupleDefinition();
+        final TupleDefinition tpdef2 = new TupleDefinition();
+        final TupleDefinition tpdef3 = new TupleDefinition();
+        tpdef1.addColumn("x", DataType.INT);
+        tpdef1.addColumn("y", DataType.STRING);
+        tpdef2.addColumn("y", DataType.INT);
+
+        s = (new Stream(ydb, "stream_in", tpdef1) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Tuple t;
+                    String y = "s" + i;
+                    if (i % 3 == 0) {
+                        t = new Tuple(tpdef1, new Object[] { i, y });
+                    } else if (i % 3 == 1) {
+                        t = new Tuple(tpdef2, new Object[] { y });
+                    } else {
+                        t = new Tuple(tpdef3, new Object[] {});
+                    }
+
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select coalesce(x,y) from stream_in");
+        final List<Tuple> tuples = fetchAll("stream_out1");
+        assertEquals(n, tuples.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = tuples.get(i);
+            if (i % 3 == 0) {
+                Integer x = (Integer) t.getColumn(0);
+                assertEquals(i, x.intValue());
+            } else if (i % 3 == 1) {
+                String y = (String) t.getColumn(0);
+                assertEquals("s" + i, y);
+            } else {
+                Object o = t.getColumn(0);
+                assertNull(o);
+            }
+        }
+    }
+
+    @Test
+    public void test2() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where coalesce(x, y) is NULL");
+        final List<Tuple> tuples = fetchAll("stream_out1");
+        assertEquals(n / 3, tuples.size());
+        for (int i = 0; i < n / 2; i++) {
+            Integer x = tuples.get(i).getColumn("x");
+            String y = tuples.get(i).getColumn("y");
+            assertNull(x);
+            assertNull(y);
+        }
+
+    }
+}
+```
+
+### `StreamSelectNullTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectNullTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+
+public class StreamSelectNullTest extends YarchTestCase {
+
+    final int n = 200;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        final TupleDefinition tpdef1 = new TupleDefinition();
+        final TupleDefinition tpdef2 = new TupleDefinition();
+        tpdef1.addColumn("x", DataType.INT);
+        tpdef1.addColumn("y", DataType.STRING);
+        tpdef2.addColumn("x", DataType.INT);
+
+        s = (new Stream(ydb, "stream_in", tpdef1) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Tuple t;
+                    if (i % 2 == 0) {
+                        String y = "s" + i;
+                        t = new Tuple(tpdef1, new Object[] { i, y });
+                    } else {
+                        t = new Tuple(tpdef2, new Object[] { i });
+                    }
+
+                    emitTuple(t);
+                }
+                close();
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testNotNull() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where y is not NULL");
+        final List<Tuple> tuples = fetchAll("stream_out1");
+        assertEquals(n / 2, tuples.size());
+        for (int i = 0; i < n / 2; i++) {
+            int x = (Integer) tuples.get(i).getColumn("x");
+            assertEquals(2 * i, x);
+        }
+
+    }
+
+    @Test
+    public void testNull() throws Exception {
+        createFeeder1();
+
+        execute("create stream stream_out1 as select * from stream_in where y is NULL");
+        final List<Tuple> tuples = fetchAll("stream_out1");
+        assertEquals(n / 2, tuples.size());
+        for (int i = 0; i < n / 2; i++) {
+
+            int x = (Integer) tuples.get(i).getColumn("x");
+            assertEquals(2 * i + 1, x);
+        }
+
+    }
+}
+```
+
+### `StreamSelectParameterValueTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectParameterValueTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.utils.ValueUtility;
+
+public class StreamSelectParameterValueTest extends YarchTestCase {
+
+    final int n = 20;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        YarchDatabaseInstance ydb = context.getDb();
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("pv", DataType.PARAMETER_VALUE);
+        tpdef.addColumn("count", DataType.INT);
+
+        s = (new Stream(ydb, "stream_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int count = 0; count < n; count++) {
+                    ParameterValue pv = new ParameterValue("/test/StreamSelectParameterValueTest");
+                    pv.setEngineeringValue(ValueUtility.getDoubleValue(3.14));
+                    Tuple t = new Tuple(tpdef, new Object[] { pv, count });
+                    emitTuple(t);
+                    close();
+                }
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select pv from stream_in where count >= ?", 3);
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(n - 3, tlist.size());
+        Tuple t0 = tlist.get(0);
+        ParameterValue pv = (ParameterValue) t0.getColumn("pv");
+        assertEquals(3.14, pv.getEngValue().getDoubleValue(), 1e-6);
+        assertEquals("/test/StreamSelectParameterValueTest", pv.getParameterQualifiedName());
+    }
+}
+```
+
+### `StreamSelectPerfTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectPerfTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.concurrent.Semaphore;
+
+import org.junit.jupiter.api.Test;
+
+/* Results with compiled expression:
+ *    Read 100000000 tuples in 27733 ms
+ *
+ */
+public class StreamSelectPerfTest extends YarchTestCase {
+
+    int n = 10000000;
+
+    class InputStreamFeeder implements Runnable {
+        int isport;
+        Stream s;
+
+        InputStreamFeeder() throws Exception {
+            final TupleDefinition tpdef = new TupleDefinition();
+            tpdef.addColumn("time", DataType.TIMESTAMP);
+            tpdef.addColumn("id", DataType.INT);
+
+            s = (new Stream(ydb, "tm_in", tpdef) {
+                @Override
+                public void doStart() {
+                    for (int i = 0; i < n; i++) {
+                        Long time = (long) (i * 1000);
+                        Integer id = i % 10;
+                        Tuple t = new Tuple(tpdef, new Object[] { time, id });
+                        emitTuple(t);
+                    }
+                }
+
+                @Override
+                protected void doClose() {
+                }
+            });
+            ydb.addStream(s);
+        }
+
+        @Override
+        public void run() {
+            try {
+                s.start();
+            } catch (Exception e) {
+                System.err.println("got exception in the InputStreamFeeder: " + e);
+            }
+        }
+    }
+
+    @Test
+    public void testFilter1() throws Exception {
+        Thread t = new Thread(new InputStreamFeeder());
+        execute("create stream tm_out1 as select * from tm_in where id>4 or id=3");
+        // res=execute("create output stream tm_out1 as select * from tm_in where id=3");
+        Stream s = ydb.getStream("tm_out1");
+        final Semaphore finished = new Semaphore(0);
+        s.addSubscriber(new StreamSubscriber() {
+            long t0;
+
+            @Override
+            public void streamClosed(Stream stream) {
+
+            }
+
+            int k = 3;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (k == 3) {
+                    t0 = System.currentTimeMillis();
+                }
+                long time = (Long) tuple.getColumn("time");
+                assertEquals(1000 * k, time);
+                int id = (Integer) tuple.getColumn("id");
+
+                // System.out.println("id: "+id+", time: "+time);
+                assertEquals(k % 10, id);
+                do {
+                    k++;
+                } while (!((k % 10 > 4) || (k % 10 == 3)));
+                if (k >= n) {
+                    // System.out.println("Read "+n+" tuples in "+(System.currentTimeMillis()-t0)+" ms");
+                    finished.release();
+                }
+            }
+        });
+        s.start();
+        // t.start();
+
+        finished.acquire();
+        execute("close stream tm_in");
+    }
+}
+```
+
+### `StreamSelectProtobufTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectProtobufTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.yarch.streamsql.GenericStreamSqlException;
+
+public class StreamSelectProtobufTest extends YarchTestCase {
+
+    final int n = 20;
+
+    public void createFeeder1() throws YarchException {
+        Stream s;
+        YarchDatabaseInstance ydb = context.getDb();
+        final TupleDefinition tpdef = new TupleDefinition();
+        tpdef.addColumn("event", DataType.protobuf(Event.class.getName()));
+        tpdef.addColumn("y", DataType.INT);
+
+        s = (new Stream(ydb, "stream_in", tpdef) {
+            @Override
+            public void doStart() {
+                for (int i = 0; i < n; i++) {
+                    Event event = Event.newBuilder().setSource("test" + i).setSeqNumber(i)
+                            .setGenerationTime(TimeEncoding.getWallclockTime())
+                            .setReceptionTime(TimeEncoding.getWallclockTime())
+                            .setMessage("msg" + i)
+                            .setSeverity(i == 5 ? EventSeverity.INFO : EventSeverity.WARNING).build();
+                    Integer y = i * 2;
+                    Tuple t = new Tuple(tpdef, new Object[] { event, y });
+                    emitTuple(t);
+                    close();
+                }
+            }
+
+            @Override
+            protected void doClose() {
+            }
+        });
+        ydb.addStream(s);
+    }
+
+    @Test
+    public void testSelectInvalidField() throws Exception {
+        createFeeder1();
+        GenericStreamSqlException ge = null;
+        try {
+            execute("create stream stream_out1 as select event from stream_in where event.invalidFieldName > 3");
+        } catch (GenericStreamSqlException e) {
+            ge = e;
+        }
+
+        assertNotNull(ge);
+        assertTrue(ge.getMessage().contains("'event.invalidFieldName' is not an input column"));
+    }
+
+    @Test
+    public void test1() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select event from stream_in where event.seqNumber >= ?", 3);
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(n - 3, tlist.size());
+        Tuple t0 = tlist.get(0);
+        assertEquals(3, ((Event) t0.getColumn("event")).getSeqNumber());
+    }
+
+    @Test
+    public void test2() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select event from stream_in where event.message like '%15%'");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(1, tlist.size());
+        Tuple t0 = tlist.get(0);
+        assertEquals(15, ((Event) t0.getColumn("event")).getSeqNumber());
+    }
+
+    @Test
+    public void test3() throws Exception {
+        createFeeder1();
+        execute("create stream stream_out1 as select event from stream_in where event.severity in ('INFO')");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(1, tlist.size());
+        Tuple t0 = tlist.get(0);
+        assertEquals(5, ((Event) t0.getColumn("event")).getSeqNumber());
+    }
+
+    @Test
+    public void test4() throws Exception {
+        createFeeder1();
+        execute(
+                "create stream stream_out1 as select event from stream_in where event.severity in (?) and event.message LIKE ? ",
+                "WARNING", "%7%");
+
+        List<Tuple> tlist = fetchAll("stream_out1");
+
+        assertEquals(2, tlist.size());
+        Tuple t0 = tlist.get(0);
+        assertEquals(7, ((Event) t0.getColumn("event")).getSeqNumber());
+        Tuple t1 = tlist.get(1);
+        assertEquals(17, ((Event) t1.getColumn("event")).getSeqNumber());
+    }
+}
+```
+
+### `StreamSelectTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSelectTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class StreamSelectTest extends YarchTestCase {
+    int blength = 100;
+    int n = 1000;
+
+    void feed(Stream s, long start) throws StreamSqlException, ParseException {
+        long m = start / 1000;
+        for (long i = m; i < m + n; i++) {
+            int x = (int) (i % 10);
+            Tuple t = new Tuple(s.getDefinition(), new Object[] { i * 1000L, x });
+            s.emitTuple(t);
+        }
+    }
+
+    @Test
+    public void testFilter1() throws Exception {
+        execute("create stream tm_in(gentime timestamp, id int)");
+
+        new StreamChecker("tm_out1", "select * from tm_in where id=5 or id=3",
+                new TupleChecker() {
+                    int x = 3;
+
+                    @Override
+                    public void check(int count, long time, int id) {
+                        assertEquals(1000l * x, time);
+                        assertEquals(x % 10, id);
+                        do {
+                            x++;
+                        } while (!((x % 10 == 5) || (x % 10 == 3)));
+                    }
+                });
+        Stream s = ydb.getStream("tm_in");
+        feed(s, 0);
+        s.close();
+    }
+
+    @Test
+    public void testFilter2() throws Exception {
+        execute("create stream tm_in(gentime timestamp, id int)");
+        StreamChecker sc1 = new StreamChecker("tm_out1", "select * from tm_in where id=5 or id=3",
+                new TupleChecker() {
+                    int x = 3;
+
+                    @Override
+                    public void check(int count, long time, int id) {
+                        assertEquals(1000l * x, time);
+                        assertEquals(x % 10, id);
+                        do {
+                            x++;
+                        } while (!((x % 10 == 5) || (x % 10 == 3)));
+                    }
+                });
+
+        StreamChecker sc2 = new StreamChecker("tm_out2", "select * from tm_in where id>5 and id<9",
+                new TupleChecker() {
+                    int x = 6;
+
+                    @Override
+                    public void check(int count, long time, int id) {
+                        assertEquals(1000l * x, time);
+                        assertEquals(x % 10, id);
+                        do {
+                            x++;
+                        } while (!((x % 10 > 5) && (x % 10 < 9)));
+                    }
+                });
+
+        Stream s = ydb.getStream("tm_in");
+        feed(s, 0);
+        s.close();
+        assertEquals(n * 2 / 10, sc1.count);
+        assertEquals(n * 3 / 10, sc2.count);
+    }
+
+    @Test
+    public void testFilter3() throws Exception {
+        long t0 = TimeEncoding.parse("2020-07-10T00:00:00");
+        execute("create stream tm_in(gentime timestamp, id int)");
+        StreamChecker sc1 = new StreamChecker("tm_out1",
+                "select * from tm_in where gentime > '2020-07-10T00:00:02' and '2020-07-10T00:00:05' >= gentime",
+                new TupleChecker() {
+                    int x = 3;
+
+                    @Override
+                    public void check(int count, long time, int id) {
+                        assertEquals(t0 + 1000l * x, time);
+                        x++;
+                    }
+                });
+
+        Stream s = ydb.getStream("tm_in");
+        feed(s, t0);
+        s.close();
+
+        assertEquals(3, sc1.count);
+    }
+
+    @Test
+    public void testNegative() throws Exception {
+        execute("create stream tm_negative_in(gentime timestamp, id int)");
+
+        new StreamChecker("tm_negative_out", "select * from tm_negative_in where id=-5 or id > -3",
+                new TupleChecker() {
+                    int[] x = new int[] { -5, -2, -1 };
+
+                    @Override
+                    public void check(int count, long time, int id) {
+                        assertEquals(1000l * x[count], time);
+                        assertEquals(x[count], id);
+                    }
+                });
+        Stream s = ydb.getStream("tm_negative_in");
+        for (int i = -10; i < 0; i++) {
+            Tuple t = new Tuple(s.getDefinition(), new Object[] { i * 1000L, i });
+            s.emitTuple(t);
+        }
+        s.close();
+    }
+
+    class StreamChecker implements StreamSubscriber {
+        TupleChecker tc;
+        int count = 0;
+
+        StreamChecker(String name, String query, TupleChecker tc) throws StreamSqlException, ParseException {
+            this.tc = tc;
+            execute("create stream " + name + " as " + query);
+            ydb.getStream(name).addSubscriber(this);
+        }
+
+        @Override
+        public void onTuple(Stream stream, Tuple tuple) {
+            long time = (Long) tuple.getColumn(0);
+            int id = (Integer) tuple.getColumn(1);
+            tc.check(count, time, id);
+            count++;
+        }
+
+        @Override
+        public void streamClosed(Stream stream) {
+        }
+    }
+
+    interface TupleChecker {
+        public void check(int count, long time, int id);
+    }
+}
+```
+
+### `StreamSqlParserTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/StreamSqlParserTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class StreamSqlParserTest extends YarchTestCase {
+
+    @Test
+    public void testCreateDropTable() throws ParseException, StreamSqlException {
+        execute(
+                "create table droptabletest_test1(\"time\" timestamp, apidSeqCount int, packet binary, primary key(\"time\",apidSeqCount))");
+        TableDefinition tbl = ydb.getTable("droptabletest_test1");
+        assertNotNull(tbl);
+        assertEquals(tbl.getName(), "droptabletest_test1");
+        ColumnDefinition ctime = tbl.getColumnDefinition("time");
+        assertEquals(ctime.getType(), DataType.TIMESTAMP);
+
+        ColumnDefinition capidSeqCount = tbl.getColumnDefinition("apidSeqCount");
+        assertEquals(capidSeqCount.getType(), DataType.INT);
+
+        ColumnDefinition cpacket = tbl.getColumnDefinition("packet");
+        assertEquals(cpacket.getType(), DataType.BINARY);
+
+        execute("drop table droptabletest_test1");
+        tbl = ydb.getTable("droptabletest_test1");
+
+        assertNull(tbl);
+    }
+
+    @Test
+    public void testExists() throws ParseException, StreamSqlException {
+        execute("create table if not exists existstest_test1(col1 int, primary key(col1))");
+        TableDefinition tbl = ydb.getTable("existstest_test1");
+        assertNotNull(tbl);
+        assertEquals(tbl.getName(), "existstest_test1");
+        assertNotNull(tbl.getColumnDefinition("col1"));
+
+        execute("create table if not exists existstest_test1(col1 int, col2 int, primary key(col1))");
+        tbl = ydb.getTable("existstest_test1");
+        assertNotNull(tbl);
+        assertEquals(tbl.getName(), "existstest_test1");
+        assertNotNull(tbl.getColumnDefinition("col1"));
+        assertNull(tbl.getColumnDefinition("col2"));
+
+        execute("drop table if exists existstest_test1");
+        tbl = ydb.getTable("existstest_test1");
+
+        assertNull(tbl);
+
+        execute("drop table if exists sometablethatreallydoesntexist");
+    }
+
+    @Test
+    public void testErrors() throws Exception {
+        StreamSqlException e = null;
+        try {
+            execute("close stream testerr_stream");
+        } catch (StreamSqlException e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertEquals("RESOURCE_NOT_FOUND Stream or table 'testerr_stream' not found", e.getMessage());
+
+        e = null;
+        try {
+            execute("show stream unexistent_stream");
+        } catch (StreamSqlException e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertEquals("RESOURCE_NOT_FOUND Stream or table 'unexistent_stream' not found", e.getMessage());
+    }
+
+    @Test
+    public void testArrayColumn() throws ParseException, StreamSqlException {
+        execute(
+                "create table arraycol_test1(id long, tag string[], primary key(id))");
+        TableDefinition tbl = ydb.getTable("arraycol_test1");
+        assertNotNull(tbl);
+        ColumnDefinition ctime = tbl.getColumnDefinition("tag");
+        ArrayDataType dt = (ArrayDataType) ctime.getType();
+        assertEquals(dt.getElementType(), DataType.STRING);
+
+        execute("drop table arraycol_test1");
+        tbl = ydb.getTable("arraycol_test1");
+
+        assertNull(tbl);
+    }
+    /* @Test
+    public void testShowStreams() throws Exception {
+        ydb.execute("create input stream testshow_is1(a int, b timestamp)");
+    
+        execute("create input stream testshow_is2(c binary, d int)");
+        int iport2 = (Integer) res.getParam("port");
+    
+        execute("create output stream testshow_os as select * from testshow_is1");
+        int oport = (Integer) res.getParam("port");
+    
+        execute("show streams");
+        assertEquals(
+                "INPUT STREAM testshow_is1(a INT, b TIMESTAMP)\nOUTPUT STREAM testshow_os(a INT, b TIMESTAMP)\nINPUT STREAM testshow_is2(c BINARY, d INT)\n",
+                res.toString());
+    
+        execute("show stream testshow_is1");
+        assertEquals("INPUT STREAM testshow_is1(a INT, b TIMESTAMP)", res.toString());
+    
+        execute("show stream testshow_is2 port");
+        assertEquals("port=" + iport2, res.toString());
+        
+        execute("show stream testshow_os port");
+        assertEquals("port=" + oport, res.toString());
+    }*/
+}
+```
+
+### `TableRowDeleteTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TableRowDeleteTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.nio.ByteBuffer;
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class TableRowDeleteTest extends YarchTestCase {
+    Random random = new Random();
+
+    private void populate(String tblName, int start, int stop, int step, int apidSeqCount) throws Exception {
+        execute("create table " + tblName
+                + "(\"time\" timestamp, apidSeqCount int, pname enum, packet binary, primary key(\"time\", apidSeqCount))");
+        execute("create stream tm_in(\"time\" timestamp, apidSeqCount int, pname enum, packet binary)");
+        execute("insert into " + tblName + " select * from tm_in");
+        Stream s = ydb.getStream("tm_in");
+
+        ByteBuffer bb = ByteBuffer.allocate(2000);
+
+        for (int i = start; i < stop; i += step) {
+            bb.position(0);
+            long time = 1000 * i;
+            random.nextBytes(bb.array());
+            Tuple t = new Tuple(s.getDefinition(),
+                    new Object[] { time, apidSeqCount, "packet" + (i % 10), bb.array() });
+            s.emitTuple(t);
+        }
+        execute("close stream tm_in");
+    }
+
+    private void verify(String streamQuery, final Checker c, int numRows) throws Exception {
+        execute("create stream tm_out as " + streamQuery);
+
+        final AtomicInteger ai = new AtomicInteger(0);
+        final Semaphore semaphore = new Semaphore(0);
+
+        Stream s = ydb.getStream("tm_out");
+        s.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                // System.out.println("got tuple: "+tuple);
+                int i = ai.getAndIncrement();
+                long time = (Long) tuple.getColumn(0);
+                int apidSeqCount = (Integer) tuple.getColumn(1);
+                String pname = (String) tuple.getColumn(2);
+                byte[] b = (byte[]) tuple.getColumn(3);
+
+                c.check(i, time, apidSeqCount, pname);
+                assertEquals(b.length, 2000);
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(30, TimeUnit.SECONDS);
+        assertEquals(numRows, ai.get());
+    }
+
+    @Test
+    public void testDeleteAll() throws Exception {
+        populate("tm1", 0, 1000, 1, 1000);
+        execute("delete from tm1");
+
+        verify("select * from tm1",
+                (i, time, apidSeqCount, pname) -> {
+                    fail();
+                }, 0);
+        execute("drop table tm1");
+    }
+
+    @Test
+    public void testDeleteWithIndexCondition1() throws Exception {
+        populate("tm2", 0, 1000, 1, 1000);
+
+        execute("delete from tm2 where \"time\" < 100000");
+        // Thread.sleep(1000);
+
+        verify("select * from tm2",
+                (i, time, apidSeqCount, pname) -> {
+                    assertTrue(time >= 100000);
+                }, 900);
+        execute("drop table tm2");
+    }
+
+    @Test
+    public void testDeleteWithIndexCondition2() throws Exception {
+        populate("tm3", 0, 1000, 1, 1000);
+        StreamSqlResult result = ydb.execute("delete from tm3 where \"time\" >= 100000");
+        Tuple t = result.next();
+        assertEquals(900l, t.getLongColumn("deleted"));
+
+        verify("select * from tm3",
+                (i, time, apidSeqCount, pname) -> {
+                    assertTrue(time <= 100000);
+                }, 100);
+        execute("drop table tm3");
+    }
+
+    @Test
+    public void testDeleteWithIndexCondition3() throws Exception {
+        populate("tm4", 0, 1000, 1, 1000);
+        execute("delete from tm4 where \"time\" = 1000");
+
+        verify("select * from tm4",
+                (i, time, apidSeqCount, pname) -> {
+                    assertTrue(time != 1000);
+                }, 999);
+        execute("drop table tm4");
+    }
+
+    @Test
+    public void testDeleteWithFilter() throws Exception {
+        populate("tmf1", 0, 1000, 1, 1000);
+        execute("delete from tmf1 where pname = 'packet1'");
+
+        verify("select * from tmf1",
+                (i, time, apidSeqCount, pname) -> {
+                    assertTrue(!pname.equals("packet1"));
+                }, 900);
+
+        execute("drop table tmf1");
+    }
+
+    @Test
+    public void testDeleteWithFilter2() throws Exception {
+        populate("tmf2", 0, 1000, 1, 1000);
+        execute("delete from tmf2 where pname = 'packet1' limit 3");
+        AtomicInteger pkt1count = new AtomicInteger();
+
+        verify("select * from tmf2",
+                (i, time, apidSeqCount, pname) -> {
+                    if (pname.equals("packet1")) {
+                        pkt1count.incrementAndGet();
+                    }
+                }, 997);
+        assertEquals(97, pkt1count.get());
+
+        execute("drop table tmf2");
+    }
+
+    interface Checker {
+        public void check(int i, long time, int apidSeqCount, String pname);
+    }
+}
+```
+
+### `TableRowDeleteTest2.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TableRowDeleteTest2.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class TableRowDeleteTest2 extends YarchTestCase {
+    private void populate(String tblName) throws Exception {
+        ydb.execute("create table " + tblName
+                + "(a int, b int, c int, d string, primary key(a,b,c))");
+        ydb.execute("create stream abcd_in(a int, b int, c int, d int)");
+        ydb.execute("insert into " + tblName + " select * from abcd_in");
+        Stream s = ydb.getStream("abcd_in");
+
+        for (int a = 0; a < 10; a++) {
+            for (int b = 9; b >= 0; b--) {
+                for (int c = 0; c < 10; c++) {
+                    s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(a, b, c, "r" + a + b + c)));
+                }
+            }
+        }
+        execute("close stream abcd_in");
+    }
+
+    private void verify(String streamQuery, final Checker checker, int numRows) throws Exception {
+        ydb.execute("create stream abcd_out as " + streamQuery);
+
+        final AtomicInteger ai = new AtomicInteger(0);
+        final Semaphore semaphore = new Semaphore(0);
+
+        Stream s = ydb.getStream("abcd_out");
+        s.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                int a = (Integer) tuple.getColumn(0);
+                int b = (Integer) tuple.getColumn(1);
+                int c = (Integer) tuple.getColumn(2);
+                String d = (String) tuple.getColumn(3);
+
+                checker.check(a, b, c, d);
+                ai.getAndIncrement();
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(30, TimeUnit.SECONDS);
+        assertEquals(numRows, ai.get());
+    }
+
+    @Test
+    public void testDeleteAll() throws Exception {
+        populate("abcd1");
+        execute("delete from abcd1");
+
+        verify("select * from abcd1",
+                (a, b, c, d) -> {
+                    fail();
+                }, 0);
+        execute("drop table abcd1");
+    }
+
+    @Test
+    public void testDeleteWithIndexCondition1() throws Exception {
+        populate("abcd2");
+        execute("delete from abcd2 where a < 10");
+
+        verify("select * from abcd2",
+                (a, b, c, d) -> {
+                    fail();
+                }, 0);
+        execute("drop table abcd2");
+    }
+
+    @Test
+    public void testDeleteWithInCondition() throws Exception {
+        populate("abcd3");
+        StreamSqlResult res = ydb.execute("delete from abcd3 where a in (2,3)");
+
+        assertTrue(res.hasNext());
+        Tuple t = res.next();
+        assertEquals(200l, t.getLongColumn("deleted"));
+
+        verify("select * from abcd3",
+                (a, b, c, d) -> {
+                    assertTrue(a != 2 && a != 3);
+                }, 800);
+        execute("drop table abcd3");
+    }
+
+    @Test
+    public void testDeleteWithIndexAndFilter() throws Exception {
+        populate("tdf4");
+
+        // this query could be entirely executed based on ranges on combined a,b keys but
+        // currently the RdbTableWalker is not able to perform ranges on combined primary key
+        // that is why it limits the search using "a=3" condition but then it filters the results using "b<2" condition
+        StreamSqlResult res = ydb.execute("delete from tdf4 where a = 3 and b < 2");
+
+        Tuple t = res.next();
+        assertEquals(100l, t.getLongColumn("inspected"));
+        assertEquals(20l, t.getLongColumn("deleted"));
+
+        verify("select * from tdf4",
+                (a, b, c, d) -> {
+                    assertTrue(a != 3 || b >= 2);
+                }, 980);
+        execute("drop table tdf4");
+    }
+
+    @Test
+    public void testDeleteWithFilter1() throws Exception {
+        populate("f1");
+
+        execute("delete from f1 where b < 10");
+
+        verify("select * from f1",
+                (a, b, c, d) -> {
+                    fail();
+                }, 0);
+        execute("drop table f1");
+    }
+
+    interface Checker {
+        public void check(int a, int b, int c, String d);
+    }
+}
+```
+
+### `TableUpdateTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TableUpdateTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class TableUpdateTest extends YarchTestCase {
+
+    @Test
+    public void testInvalidTable() {
+        assertThrows(StreamSqlException.class, () -> {
+            execute("update invalid_table set d =\"new value\"");
+        });
+    }
+
+    @Test
+    public void testInvalidValue() {
+        assertThrows(StreamSqlException.class, () -> {
+            createTable("invl2");
+            execute("update invl2 set d = x");
+        });
+    }
+
+    @Test
+    public void testInvalidConversion() {
+        assertThrows(StreamSqlException.class, () -> {
+            createTable("invl3");
+            execute("update invl3 set d = a");
+        });
+    }
+
+    @Test
+    public void testInvalidWhere() {
+        assertThrows(StreamSqlException.class, () -> {
+            createTable("invl4");
+            execute("update invl4 set d = 'bla' where a");
+        });
+    }
+
+    @Test
+    public void testPKupdateDuplicate() {
+        assertThrows(StreamSqlException.class, () -> {
+            populate("invl4");
+            execute("update invl4 set b = 3");
+            StreamSqlResult r = ydb.execute("select * from invl4");
+            System.out.println("r.hasnext: " + r.hasNext());
+            while (r.hasNext()) {
+                System.out.println("r: " + r.next());
+            }
+        });
+    }
+
+    @Test
+    public void testUpdatePk() throws Exception {
+        populate("tbl1");
+        StreamSqlResult r = ydb.execute("update tbl1 set b =b + 100");
+        assertTrue(r.hasNext());
+        Tuple t = r.next();
+        assertEquals(1000l, t.getLongColumn("inspected"));
+        assertEquals(1000l, t.getLongColumn("updated"));
+
+        verify("select * from tbl1",
+                (a, b, c, d, e) -> {
+                    assertTrue(b >= 100);
+                }, 1000);
+        execute("drop table tbl1");
+    }
+
+    @Test
+    public void testUpdateAll() throws Exception {
+        populate("tbl1");
+        StreamSqlResult r = ydb.execute("update tbl1 set d ='new value'");
+        assertTrue(r.hasNext());
+        Tuple t = r.next();
+        assertEquals(1000l, t.getLongColumn("inspected"));
+        assertEquals(1000l, t.getLongColumn("updated"));
+
+        verify("select * from tbl1",
+                (a, b, c, d, e) -> {
+                    assertEquals("new value", d);
+                }, 1000);
+        execute("drop table tbl1");
+    }
+
+    @Test
+    public void testUpdateIdx() throws Exception {
+        populate("tbl12");
+        StreamSqlResult r = ydb.execute("update tbl12 set d ='new value' where a=1");
+        assertTrue(r.hasNext());
+        Tuple t = r.next();
+        assertEquals(100l, t.getLongColumn("inspected"));
+        assertEquals(100l, t.getLongColumn("updated"));
+
+        verify("select * from tbl12",
+                (a, b, c, d, e) -> {
+                    if (a == 1) {
+                        assertEquals("new value", d);
+                    } else {
+                        assertEquals("r" + a + b + c, d);
+                    }
+                }, 1000);
+        execute("drop table tbl12");
+    }
+
+    @Test
+    public void testUpdateExpr() throws Exception {
+        populate("tbl12");
+        StreamSqlResult r = ydb.execute("update tbl12 set d = 'bubu'+b where a>1");
+        assertTrue(r.hasNext());
+        Tuple t = r.next();
+        assertEquals(900l, t.getLongColumn("inspected"));
+        assertEquals(800l, t.getLongColumn("updated"));
+
+        verify("select * from tbl12",
+                (a, b, c, d, e) -> {
+                    if (a > 1) {
+                        assertEquals("bubu" + b, d);
+                    } else {
+                        assertEquals("r" + a + b + c, d);
+                    }
+                }, 1000);
+        execute("drop table tbl12");
+    }
+
+    @Test
+    public void testUpdateIdxLimit() throws Exception {
+        populate("tbl12");
+        StreamSqlResult r = ydb.execute("update tbl12 set d ='new value' where a=1 limit 2");
+        assertTrue(r.hasNext());
+        Tuple t = r.next();
+        assertEquals(2l, t.getLongColumn("inspected"));
+        assertEquals(2l, t.getLongColumn("updated"));
+
+        verify("select * from tbl12",
+                (a, b, c, d, e) -> {
+                    if (a == 1 && b == 0 & c < 2) {
+                        assertEquals("new value", d);
+                    } else {
+                        assertEquals("r" + a + b + c, d);
+                    }
+                }, 1000);
+        execute("drop table tbl12");
+    }
+
+    @Test
+    public void testUpdateExtraColumn() throws Exception {
+        populate("tbl13");
+        StreamSqlResult r = ydb.execute("update tbl13 set e ='new value' where a=1 limit 2");
+        assertTrue(r.hasNext());
+        Tuple t = r.next();
+        assertEquals(2l, t.getLongColumn("inspected"));
+        assertEquals(2l, t.getLongColumn("updated"));
+
+        verify("select * from tbl13",
+                (a, b, c, d, e) -> {
+                    if (a == 1 && b == 0 & c < 2) {
+                        assertEquals("new value", e);
+                    } else {
+                        assertNull(e);
+                    }
+                }, 1000);
+        execute("drop table tbl13");
+    }
+
+    private void createTable(String tblName) throws StreamSqlException, ParseException {
+        ydb.execute("create table " + tblName
+                + "(a int, b int, c int, d string, primary key(a,b,c))");
+    }
+
+    private void populate(String tblName) throws Exception {
+        int n = 10;
+        createTable(tblName);
+        ydb.execute("create stream abcd_in(a int, b int, c int, d int)");
+        ydb.execute("insert into " + tblName + " select * from abcd_in");
+        Stream s = ydb.getStream("abcd_in");
+
+        for (int a = 0; a < n; a++) {
+            for (int b = n - 1; b >= 0; b--) {
+                for (int c = 0; c < n; c++) {
+                    s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(a, b, c, "r" + a + b + c)));
+                }
+            }
+        }
+        execute("close stream abcd_in");
+    }
+
+    private void verify(String streamQuery, final Checker checker, int numRows) throws Exception {
+        ydb.execute("create stream abcd_out as " + streamQuery);
+
+        final AtomicInteger ai = new AtomicInteger(0);
+        final Semaphore semaphore = new Semaphore(0);
+
+        Stream s = ydb.getStream("abcd_out");
+        s.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                int a = (Integer) tuple.getColumn(0);
+                int b = (Integer) tuple.getColumn(1);
+                int c = (Integer) tuple.getColumn(2);
+                String d = (String) tuple.getColumn(3);
+                String e = tuple.size() > 4 ? (String) tuple.getColumn(4) : null;
+
+                checker.check(a, b, c, d, e);
+                ai.getAndIncrement();
+            }
+        });
+        s.start();
+        semaphore.tryAcquire(30, TimeUnit.SECONDS);
+        assertEquals(numRows, ai.get());
+    }
+
+    interface Checker {
+        public void check(int a, int b, int c, String d, String e);
+    }
+}
+```
+
+### `TestRenameTable.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TestRenameTable.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+public class TestRenameTable extends YarchTestCase {
+
+    TupleDefinition tdef;
+
+    @BeforeEach
+    public void before() {
+        tdef = new TupleDefinition();
+        tdef.addColumn("t", DataType.TIMESTAMP);
+        tdef.addColumn("v", DataType.INT);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        ydb.execute("create table test1 (t timestamp, v int, primary key(t))");
+
+        ydb.execute("create stream in_stream (t timestamp)");
+        ydb.execute("insert_append into test1 select * from in_stream");
+
+        Stream s = ydb.getStream("in_stream");
+
+        emit(s, 1, 100);
+        Tuple t = ydb.execute("alter table test1 rename to test2").next();
+        assertEquals("test1", t.getColumn("oldName"));
+        assertEquals("test2", t.getColumn("newName"));
+
+        emit(s, 2, 200);
+
+        List<Tuple> tlist = fetchAllFromTable("test2");
+        assertEquals(2, tlist.size());
+        assertEquals(100, tlist.get(0).getIntColumn("v"));
+        assertEquals(200, tlist.get(1).getIntColumn("v"));
+    }
+
+    private void emit(Stream s, long t, int v) {
+        s.emitTuple(new Tuple(tdef, Arrays.asList(t, v)));
+    }
+}
+```
+
+### `TimePartitionSchemaTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/TimePartitionSchemaTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+
+public class TimePartitionSchemaTest {
+
+    @BeforeAll
+    public static void setup() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testYYYWithFuture() {
+        long instant = TimeEncoding.parse("10000-02-03T04:05:06Z");
+
+        TimePartitionSchema yyyy = TimePartitionSchema.getInstance("YYYY");
+        TimePartitionInfo tpi = yyyy.getPartitionInfo(instant);
+        assertEquals("10000", tpi.getDir());
+        assertEquals(TimeEncoding.parse("10000-01-01T00:00:00Z"), tpi.getStart());
+
+        tpi = yyyy.parseDir("99993");
+        assertEquals(TimeEncoding.parse("99993-01-01T00:00:00Z"), tpi.getStart());
+
+    }
+
+    @Test
+    public void testYYYWithPast() {
+        long instant = TimeEncoding.parse("0001-02-03T04:05:06Z");
+
+        TimePartitionSchema yyyy = TimePartitionSchema.getInstance("YYYY");
+        TimePartitionInfo tpi = yyyy.getPartitionInfo(instant);
+        assertEquals("0001", tpi.getDir());
+        assertEquals(TimeEncoding.parse("0001-01-01T00:00:00Z"), tpi.getStart());
+        assertEquals(TimeEncoding.parse("0002-01-01T00:00:00Z"), tpi.getEnd());
+    }
+
+    @Test
+    public void testYYYMMDDWithPast() {
+        long instant = TimeEncoding.parse("0001-02-03T04:05:06Z");
+
+        TimePartitionSchema yyyy = TimePartitionSchema.getInstance("YYYY/MM");
+        TimePartitionInfo tpi = yyyy.getPartitionInfo(instant);
+        assertEquals("0001/02", tpi.getDir());
+        assertEquals(TimeEncoding.parse("0001-02-01T00:00:00Z"), tpi.getStart());
+        assertEquals(TimeEncoding.parse("0001-03-01T00:00:00Z"), tpi.getEnd());
+    }
+
+    @Test
+    public void testYYYDOYWithPast() {
+        long instant = TimeEncoding.parse("0001-02-03T04:05:06Z");
+
+        TimePartitionSchema yyyydoy = TimePartitionSchema.getInstance("YYYY/DOY");
+        TimePartitionInfo tpi = yyyydoy.getPartitionInfo(instant);
+        assertEquals("0001/034", tpi.getDir());
+
+        assertEquals(TimeEncoding.parse("0001-02-03T00:00:00Z"), tpi.getStart());
+
+        long instant1 = TimeEncoding.parse("0001-12-31T04:05:06Z");
+        TimePartitionInfo tpi1 = yyyydoy.getPartitionInfo(instant1);
+        assertEquals("0001/365", tpi1.getDir());
+        assertEquals(TimeEncoding.parse("0001-12-31T00:00:00Z"), tpi1.getStart());
+        assertEquals(TimeEncoding.parse("0002-01-01T00:00:00Z"), tpi1.getEnd());
+    }
+
+    @Test
+    public void testYYYMM() {
+        long instant = TimeEncoding.parse("2003-11-03T04:05:06Z");
+
+        TimePartitionSchema yyyymm = TimePartitionSchema.getInstance("YYYY/MM");
+        TimePartitionInfo tpi = yyyymm.getPartitionInfo(instant);
+        assertEquals("2003/11", tpi.getDir());
+        assertEquals("2003-11-01T00:00:00.000Z", TimeEncoding.toString(tpi.getStart()));
+        assertEquals("2003-12-01T00:00:00.000Z", TimeEncoding.toString(tpi.getEnd()));
+
+        TimePartitionInfo tpi1 = yyyymm.getPartitionInfo(TimeEncoding.parse("2003-12-31T23:59:59.999Z"));
+        assertEquals("2003/12", tpi1.getDir());
+        assertEquals("2003-12-01T00:00:00.000Z", TimeEncoding.toString(tpi1.getStart()));
+        assertEquals("2004-01-01T00:00:00.000Z", TimeEncoding.toString(tpi1.getEnd()));
+    }
+}
+```
+
+### `UUIDTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/UUIDTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class UUIDTest extends YarchTestCase {
+
+    int n = 10;
+
+    private void populate(String tblName) throws Exception {
+        execute("create table " + tblName
+                + "(start timestamp, stop timestamp, id UUID, data string, primary key(stop, start, id))");
+        execute("create stream " + tblName + "_in(start timestamp, stop timestamp, id UUID, data string)");
+        execute("upsert into " + tblName + " select * from " + tblName + "_in");
+        Stream s = ydb.getStream(tblName + "_in");
+        for (int i = 0; i < n; i++) {
+            UUID id = UUID.randomUUID();
+            s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(i + 0l, i + 5l, id, id.toString())));
+        }
+    }
+
+    @Test
+    public void test1() throws Exception {
+        populate("test1");
+        List<Tuple> tlist = fetchAllFromTable("test1");
+        assertEquals(n, tlist.size());
+        for (int i = 0; i < n; i++) {
+            Tuple t = tlist.get(i);
+            long start = (Long) t.getColumn("start");
+            assertEquals(i, start);
+
+            UUID id = (UUID) t.getColumn("id");
+            String data = (String) t.getColumn("data");
+            assertEquals(data, id.toString());
+        }
+    }
+
+    @Test
+    public void testUuidArray() throws Exception {
+        String tblName = "test2";
+        execute("create table " + tblName
+                + "(id int, uuidarray uuid[], primary key(id))");
+        execute("create stream " + tblName + "_in(id int, uuidarray uuid[])");
+        execute("upsert into " + tblName + " select * from " + tblName + "_in");
+        Stream s = ydb.getStream(tblName + "_in");
+        List<UUID> idlist = Arrays.asList(UUID.randomUUID(), UUID.randomUUID());
+
+        s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(1, idlist)));
+
+        StreamSqlResult res = ydb.execute("select * from test2");
+        assertTrue(res.hasNext());
+        Tuple t = res.next();
+        assertEquals(1, t.getIntColumn("id"));
+        assertEquals(idlist, t.getColumn("uuidarray"));
+        res.close();
+    }
+
+    @Test
+    public void testSelectWithNull() throws Exception {
+        execute("create table test3 (id1 int, id2 uuid, primary key(id1))");
+        execute("create stream test3_in(id1 int, id2 uuid)");
+        execute("upsert into test3 select * from test3_in");
+        Stream s = ydb.getStream("test3_in");
+        UUID uuid = UUID.randomUUID();
+
+        s.emitTuple(new Tuple(s.getDefinition(), Arrays.asList(1, uuid)));
+        Tuple twithoutid2 = new Tuple();
+        twithoutid2.addColumn("id1", 2);
+        s.emitTuple(twithoutid2);
+
+        StreamSqlResult res = ydb.execute("select * from test3 where id2 = ?", uuid);
+        assertTrue(res.hasNext());
+        Tuple t1 = res.next();
+        assertEquals(uuid, t1.getColumn("id2"));
+        assertFalse(res.hasNext());
+        res.close();
+    }
+}
+```
+
+### `WriterTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/WriterTest.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+
+public class WriterTest extends YarchTestCase {
+    int n = 10;
+
+    @Test
+    public void TestUpsert() throws Exception {
+        execute("create table tbl_upsert"
+                + "(gentime timestamp, packetName enum, packet binary, primary key(gentime,packetName))");
+        execute("create stream tbl_upsert_in(gentime timestamp, packetName enum, packet binary)");
+        execute("upsert into tbl_upsert select * from tbl_upsert_in");
+
+        Stream s = ydb.getStream("tbl_upsert_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("packetName", DataType.ENUM));
+        td.addColumn(new ColumnDefinition("packet", DataType.BINARY));
+
+        Random random = new Random();
+        byte[] b1 = new byte[1000];
+        random.nextBytes(b1);
+        s.emitTuple(new Tuple(td, new Object[] { 1000l, "pn1", b1 }));
+        s.emitTuple(new Tuple(td, new Object[] { 1000l, "pn2", b1 }));
+
+        byte[] b2 = new byte[500];
+        random.nextBytes(b2);
+        s.emitTuple(new Tuple(td, new Object[] { 1000l, "pn1", b2 }));
+
+        execute("close stream tbl_upsert_in");
+
+        execute("create stream tbl_upsert_out as select * from tbl_upsert");
+        final List<Tuple> tuples = fetchAll("tbl_upsert_out");
+        assertEquals(2, tuples.size());
+
+        Tuple t1 = tuples.get(0);
+        assertEquals("pn1", t1.getColumn("packetName"));
+        assertTrue(Arrays.equals(b2, (byte[]) t1.getColumn("packet")));
+
+        Tuple t2 = tuples.get(1);
+        assertEquals("pn2", t2.getColumn("packetName"));
+        assertTrue(Arrays.equals(b1, (byte[]) t2.getColumn("packet")));
+
+        execute("drop table tbl_upsert");
+    }
+
+    @Test
+    public void TestUpsertAppend() throws Exception {
+        long t = TimeEncoding.parse("2017-11-17T13:48:33.323");
+        execute("create table tbl_upsert_append "
+                + "(gentime timestamp, name string, seq int, primary key(gentime,name, seq))");
+        execute("create stream tbl_upsert_append_in(gentime timestamp)");
+        execute("upsert_append into tbl_upsert_append select * from tbl_upsert_append_in");
+
+        Stream s = ydb.getStream("tbl_upsert_append_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("name", DataType.STRING));
+        td.addColumn(new ColumnDefinition("seq", DataType.INT));
+
+        TupleDefinition td1 = td.copy();
+        td1.addColumn(new ColumnDefinition("p1", DataType.STRING));
+        s.emitTuple(new Tuple(td1, new Object[] { t, "pn1", 1, "v1" }));
+        s.emitTuple(new Tuple(td1, new Object[] { t, "pn2", 1, "v2" }));
+
+        TupleDefinition td2 = td.copy();
+        td2.addColumn(new ColumnDefinition("p2", DataType.STRING));
+        s.emitTuple(new Tuple(td2, new Object[] { t, "pn1", 1, "v3" }));
+
+        s.emitTuple(new Tuple(td1, new Object[] { t + 1000, "pn1", 2, "v4" }));
+        execute("close stream tbl_upsert_append_in");
+
+        execute("create stream tbl_upsert_append_out as select * from tbl_upsert_append");
+        final List<Tuple> tuples = fetchAll("tbl_upsert_append_out");
+        assertEquals(3, tuples.size());
+
+        Tuple t1 = tuples.get(0);
+        assertEquals("pn1", t1.getColumn("name"));
+        assertEquals("v1", (String) t1.getColumn("p1"));
+        assertEquals("v3", (String) t1.getColumn("p2"));
+
+        Tuple t2 = tuples.get(1);
+        assertEquals("pn2", t2.getColumn("name"));
+        assertEquals("v2", (String) t2.getColumn("p1"));
+
+        execute("drop table tbl_upsert_append");
+    }
+
+    @Test
+    public void TestUpsertAppendParralel() throws Exception {
+        long t = TimeEncoding.parse("2019-11-17T13:48:33.323");
+        execute("create table tbl_upsert_append "
+                + "(gentime timestamp, name string, seq int, primary key(gentime,name, seq))");
+        execute("create stream tbl_upsert_append_in(gentime timestamp)");
+        execute("upsert_append into tbl_upsert_append select * from tbl_upsert_append_in");
+
+        Stream s = ydb.getStream("tbl_upsert_append_in");
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn(new ColumnDefinition("gentime", DataType.TIMESTAMP));
+        td.addColumn(new ColumnDefinition("name", DataType.STRING));
+        td.addColumn(new ColumnDefinition("seq", DataType.INT));
+
+        Thread[] threads = new Thread[10];
+        for (int i = 0; i < 10; i++) {
+            int x = i;
+            threads[i] = new Thread() {
+                @Override
+                public void run() {
+                    TupleDefinition td1 = td.copy();
+                    td1.addColumn(new ColumnDefinition("p" + x, DataType.STRING));
+                    s.emitTuple(new Tuple(td1, new Object[] { t, "pn1", 1, "v" + x }));
+                }
+            };
+            threads[i].start();
+        }
+        for (int i = 0; i < 10; i++) {
+            threads[i].join();
+        }
+        execute("close stream tbl_upsert_append_in");
+
+        execute("create stream tbl_upsert_append_out as select * from tbl_upsert_append");
+        final List<Tuple> tuples = fetchAll("tbl_upsert_append_out");
+        assertEquals(1, tuples.size());
+
+        Tuple t1 = tuples.get(0);
+        assertEquals("pn1", t1.getColumn("name"));
+        for (int i = 0; i < 10; i++) {
+            assertEquals("v" + i, (String) t1.getColumn("p" + i));
+        }
+
+        execute("drop table tbl_upsert_append");
+    }
+}
+```
+
+### `YarchTestCase.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/yarch/YarchTestCase.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.Semaphore;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+
+public abstract class YarchTestCase {
+    protected StreamSqlParser parser;
+    protected YarchDatabaseInstance ydb;
+    static boolean littleEndian;
+    protected String instance;
+    Random random = new Random();
+    ExecutionContext context;
+
+    @BeforeAll
+    public static void setUpYarch() throws Exception {
+        YConfiguration.setupTest(null); // reset the prefix if maven runs multiple tests
+        // in the same java
+        YConfiguration config = YConfiguration.getConfiguration("yamcs");
+        if (config.containsKey("littleEndian")) {
+            littleEndian = config.getBoolean("littleEndian");
+        } else {
+            littleEndian = false;
+        }
+    }
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        YConfiguration config = YConfiguration.getConfiguration("yamcs");
+        Path dir = Paths.get(config.getString("dataDir"));
+        instance = "yarchtest_" + this.getClass().getSimpleName();
+
+        if (YarchDatabase.hasInstance(instance)) {
+            YarchDatabase.removeInstance(instance);
+            RdbStorageEngine rse = RdbStorageEngine.getInstance();
+            if (rse.getTablespace(instance) != null) {
+                rse.dropTablespace(instance);
+            }
+        }
+
+        Path ytdir = dir.resolve(instance);
+        Path rdbdir = dir.resolve(instance + ".rdb");
+
+        FileUtils.deleteRecursivelyIfExists(ytdir);
+        FileUtils.deleteRecursivelyIfExists(rdbdir);
+
+        if (!ytdir.toFile().mkdirs()) {
+            throw new IOException("Cannot create directory " + ytdir);
+        }
+
+        ydb = YarchDatabase.getInstance(instance);
+        context = new ExecutionContext(ydb);
+    }
+
+    @AfterEach
+    public void setDown() {
+        context.close();
+    }
+
+    /**
+     * Reloads the database from disk (without removing the data)
+     */
+    protected void reloadDb() {
+        YarchDatabase.removeInstance(instance);
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        rse.dropTablespace(instance);
+        rse.createTablespace(instance);
+
+        ydb = YarchDatabase.getInstance(instance);
+        context = new ExecutionContext(ydb);
+
+    }
+
+    protected void execute(String cmd, Object... args) throws StreamSqlException, ParseException {
+        ydb.executeDiscardingResult(cmd, args);
+    }
+
+    protected List<Tuple> fetchAllFromTable(String tableName) throws Exception {
+        String sname = tableName + "_out_" + random.nextInt(10000);
+        ydb.execute("create stream " + sname + " as select * from " + tableName);
+        return fetchAll(sname);
+    }
+
+    /**
+     * fetch all tuples from outStream.
+     * 
+     */
+    protected List<Tuple> fetchAll(String streamName) throws InterruptedException {
+
+        final List<Tuple> tuples = new ArrayList<>();
+        final Semaphore semaphore = new Semaphore(0);
+        Stream out = ydb.getStream(streamName);
+        if (out == null) {
+            throw new IllegalArgumentException("No stream named '" + streamName + "' in instance " + instance);
+        }
+        out.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                semaphore.release();
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                tuples.add(tuple);
+            }
+        });
+
+        out.start();
+        semaphore.acquire();
+        return tuples;
+    }
+
+    protected void assertNumElementsEqual(Iterator<?> iter, int k) {
+        int num = 0;
+        while (iter.hasNext()) {
+            num++;
+            iter.next();
+        }
+        assertEquals(k, num);
+    }
+}
+```

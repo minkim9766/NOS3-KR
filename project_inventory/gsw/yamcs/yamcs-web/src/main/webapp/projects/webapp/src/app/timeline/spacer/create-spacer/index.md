@@ -3,16 +3,98 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/create-spacer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-spacer.component.html`
 
-file--create-spacer.component.html
-file--create-spacer.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/create-spacer/create-spacer.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Create band" />
+
+  <app-create-band-wizard-step step="2" />
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-field label="Label" hint="(optional)">
+        <input type="text" formControlName="name" style="width: 100%" />
+      </ya-field>
+
+      <ya-field label="Description" hint="(optional)">
+        <textarea formControlName="description" rows="3"></textarea>
+      </ya-field>
+
+      <ya-field-divider />
+
+      <h4>Styles</h4>
+      <app-spacer-styles [form]="form" />
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="../.." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `create-spacer.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/create-spacer/create-spacer.component.html`](file--create-spacer.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/create-spacer/create-spacer.component.ts`](file--create-spacer.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/create-spacer/create-spacer.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { BaseComponent, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { CreateBandWizardStepComponent } from '../../create-band-wizard-step/create-band-wizard-step.component';
+import { propertyInfo } from '../Spacer';
+import { SpacerStylesComponent } from '../spacer-styles/spacer-styles.component';
+
+@Component({
+  templateUrl: './create-spacer.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CreateBandWizardStepComponent,
+    WebappSdkModule,
+    SpacerStylesComponent,
+  ],
+})
+export class CreateSpacerComponent extends BaseComponent {
+  form: FormGroup;
+
+  constructor(formBuilder: FormBuilder) {
+    super();
+    this.setTitle('Configure Spacer');
+    this.form = formBuilder.group({
+      name: '',
+      description: '',
+      properties: formBuilder.group({
+        height: [propertyInfo.height.defaultValue, [Validators.required]],
+      }),
+    });
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    this.yamcs.yamcsClient
+      .createTimelineBand(this.yamcs.instance!, {
+        name: formValue.name,
+        description: formValue.description,
+        type: 'SPACER',
+        shared: true,
+        properties: formValue.properties,
+      })
+      .then(() =>
+        this.router.navigateByUrl(`/timeline/bands?c=${this.yamcs.context}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

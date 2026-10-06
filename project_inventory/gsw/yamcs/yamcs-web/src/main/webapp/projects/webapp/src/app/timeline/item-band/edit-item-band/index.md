@@ -3,16 +3,112 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/edit-item-band/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-item-band.component.html`
 
-file--edit-item-band.component.html
-file--edit-item-band.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/edit-item-band/edit-item-band.component.html`
+
+
+```html
+@if (formConfigured$ | async) {
+  <form [formGroup]="form">
+    <ya-field label="Label" hint="(required)">
+      <input type="text" formControlName="name" />
+    </ya-field>
+
+    <ya-field label="Description" hint="(optional)">
+      <textarea formControlName="description" rows="3"></textarea>
+    </ya-field>
+
+    <ya-field label="Tags">
+      <ya-tag-select formControlName="tags" />
+    </ya-field>
+
+    <ya-field-divider />
+
+    <h4>Styles</h4>
+    <app-item-band-styles [form]="form" />
+  </form>
+}
 ```
 
-## 항목
+### `edit-item-band.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/edit-item-band/edit-item-band.component.html`](file--edit-item-band.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/edit-item-band/edit-item-band.component.ts`](file--edit-item-band.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/edit-item-band/edit-item-band.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TimelineBand, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { resolveProperties } from '../../shared/properties';
+import { propertyInfo } from '../ItemBand';
+import { ItemBandStylesComponent } from '../item-band-styles/item-band-styles.component';
+
+@Component({
+  selector: 'app-edit-item-band',
+  templateUrl: './edit-item-band.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ItemBandStylesComponent, WebappSdkModule],
+})
+export class EditItemBandComponent implements AfterViewInit {
+  @Input()
+  form: FormGroup;
+
+  @Input()
+  band: TimelineBand;
+
+  formConfigured$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetection: ChangeDetectorRef,
+  ) {}
+
+  ngAfterViewInit() {
+    const props = resolveProperties(propertyInfo, this.band.properties || {});
+
+    // Angular does not seem to have form.addGroup. So we get creative.
+    // The properties sub-group is set in the parent component, and here
+    // we append to it in a roundabout way.
+
+    const propConfig: any = {
+      frozen: [props.frozen, [Validators.required]],
+      itemBackgroundColor: [props.itemBackgroundColor, [Validators.required]],
+      itemBorderColor: [props.itemBorderColor, [Validators.required]],
+      itemBorderWidth: [props.itemBorderWidth, [Validators.required]],
+      itemCornerRadius: [props.itemCornerRadius, [Validators.required]],
+      itemHeight: [props.itemHeight, [Validators.required]],
+      itemMarginLeft: [props.itemMarginLeft, [Validators.required]],
+      itemTextColor: [props.itemTextColor, [Validators.required]],
+      itemTextOverflow: [props.itemTextOverflow, [Validators.required]],
+      itemTextSize: [props.itemTextSize, [Validators.required]],
+      marginBottom: [props.marginBottom, [Validators.required]],
+      marginTop: [props.marginTop, [Validators.required]],
+      multiline: [props.multiline, [Validators.required]],
+      spaceBetweenItems: [props.spaceBetweenItems, [Validators.required]],
+      spaceBetweenLines: [props.spaceBetweenLines, [Validators.required]],
+    };
+
+    const propertiesGroup = this.form.get('properties') as FormGroup;
+    for (const controlName in propConfig) {
+      const config = propConfig[controlName];
+      propertiesGroup.addControl(
+        controlName,
+        new FormControl(config[0], config[1]),
+      );
+    }
+
+    this.formConfigured$.next(true);
+    this.changeDetection.detectChanges();
+  }
+}
+```

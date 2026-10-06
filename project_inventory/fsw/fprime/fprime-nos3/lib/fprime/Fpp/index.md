@@ -3,16 +3,51 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fpp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--ToCpp.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fpp/CMakeLists.txt`
+
+
+```cmake
+####
+# Sets a list of source files for cmake to process as part of autocoding.
+####
+register_fprime_config(
+       FppToCppSettings
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/ToCpp.fpp"
+    INTERFACE
+)
 ```
 
-## 항목
+### `ToCpp.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fpp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fpp/ToCpp.fpp`](file--ToCpp.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fpp/ToCpp.fpp`
+
+
+```fpp
+module Fpp {
+
+  module ToCpp {
+
+    enum Phases {
+      configConstants
+      configObjects
+      instances
+      initComponents
+      configComponents
+      regCommands
+      readParameters
+      loadParameters
+      startTasks
+      stopTasks
+      freeThreads
+      tearDownComponents
+    }
+
+  }
+
+}
+```

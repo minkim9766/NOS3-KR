@@ -3,14 +3,30 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/option/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `option.component.ts`
 
-file--option.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/option/option.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
+
+@Component({
+  selector: 'ya-option',
+  template: '',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaOption {
+  id = input.required<string>();
+  label = input.required<string>();
+  icon = input<string>();
+  group = input(false, { transform: booleanAttribute });
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/option/option.component.ts`](file--option.component.ts) — UTF-8 텍스트 파일 본문 포함

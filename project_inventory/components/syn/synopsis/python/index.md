@@ -3,16 +3,21 @@
 
 **경로:** `components/syn/synopsis/python/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 synopsis/index
-file--.gitignore
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/synopsis/python/synopsis/`](synopsis/index) — 폴더
-- [`components/syn/synopsis/python/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `components/syn/synopsis/python/.gitignore`
+
+
+```text
+__pycache__
+```

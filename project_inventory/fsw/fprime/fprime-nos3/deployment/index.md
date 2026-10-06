@@ -3,20 +3,413 @@
 
 **경로:** `fsw/fprime/fprime-nos3/deployment/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 Top/index
-file--CMakeLists.txt
-file--Main.cpp
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/deployment/Top/`](Top/index) — 폴더
-- [`fsw/fprime/fprime-nos3/deployment/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Main.cpp`](file--Main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/CMakeLists.txt`
+
+
+```cmake
+#####
+# 'deployment' Deployment:
+#
+# This registers the 'deployment' deployment to the build system. 
+# Custom components that have not been added at the project-level should be added to 
+# the list below.
+#
+#####
+
+###
+# Topology and Components
+###
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
+
+#ITC SFTUFF:
+find_path(_ITC_CMAKE_MODULES_
+NAMES FindITC_Common.cmake
+PATHS ${ITC_CMAKE_MODULES}
+        ${ITC_DEV_ROOT}/cmake/modules
+        $ENV{ITC_DEV_ROOT}/cmake/modules
+        /usr/local/cmake/modules
+        /usr/cmake/modules)
+if(NOT _ITC_CMAKE_MODULES_)
+message(WARNING "Unable to find ITC CMake Modules")
+endif()
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart can i2c spi)
+
+# include_directories("../../../../components/sample/fsw/shared")#sample_device.h
+# include_directories("../../../../components/sample/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/sample/fsw/fprime/platform_inc")
+
+# include_directories("../../../../fsw/apps/hwlib/fsw/public_inc")
+
+# include_directories("../../../../fsw/apps/hwlib/sim/inc")
+
+# include_directories("../../../../components/generic_star_tracker/fsw/shared")
+# include_directories("../../../../components/generic_star_tracker/fsw/standalone/") #device_cfg.
+# include_directories("../../../../components/generic_star_tracker/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_radio/fsw/shared")
+# include_directories("../../../../components/generic_radio/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_radio/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_torquer/fsw/shared")
+# include_directories("../../../../components/generic_torquer/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_torquer/fsw/fprime/platform_inc")
+# include_directories("../../../../components/generic_css/fsw/shared")
+# include_directories("../../../../components/generic_css/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_css/fsw/fprime/platform_inc")
+# include_directories("../../../../components/generic_fss/fsw/shared/src")
+# include_directories("../../../../components/generic_fss/fsw/standalone/") #device_cfg.h
+# include_directories("../../../../components/generic_fss/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_eps/fsw/shared")
+# include_directories("../../../../components/generic_eps/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_eps/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/arducam/fsw/shared/") #device.h
+# include_directories("../../../../components/arducam/fsw/standalone/") #device_cfg.h
+# include_directories("../../../../components/arducam/fsw/fprime/platform_inc") #platform_cfg.h
+# include_directories("../../../../components/generic_thruster/fsw/shared")
+# include_directories("../../../../components/generic_thruster/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_thruster/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_imu/fsw/shared")
+# include_directories("../../../../components/generic_imu/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_imu/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_mag/fsw/shared")
+# include_directories("../../../../components/generic_mag/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_mag/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_reaction_wheel/fsw/shared")
+# include_directories("../../../../components/generic_reaction_wheel/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/generic_reaction_wheel/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/novatel_oem615/fsw/shared")
+# include_directories("../../../../components/novatel_oem615/fsw/standalone") #device_cfg.h
+# include_directories("../../../../components/novatel_oem615/fsw/fprime/platform_inc")
+
+# include_directories("../../../../components/generic_adcs/fsw/fprime/src")
+# include_directories("../../../../components/generic_adcs/fsw/shared")
+
+
+set(SOURCE_FILES 
+"${CMAKE_CURRENT_LIST_DIR}/Main.cpp"
+
+#ITC STUFF
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/arducam/fsw/shared/cam_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/arducam/fsw/shared/cam_registers.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_torquer/fsw/shared/generic_torquer_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_fss/fsw/shared/generic_fss_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/sample/fsw/shared/sample_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_css/fsw/shared/generic_css_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_star_tracker/fsw/shared/generic_star_tracker_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_radio/fsw/shared/generic_radio_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_eps/fsw/shared/generic_eps_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_thruster/fsw/shared/generic_thruster_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/novatel_oem615/fsw/shared/novatel_oem615_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_adcs/fsw/shared/generic_adcs_utilities.c"
+
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_imu/fsw/shared/generic_imu_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c"
+
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libuart.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libcan.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libi2c.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libspi.c"
+# "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/nos_link.c" 
+)
+
+
+
+set(MOD_DEPS 
+    ${FPRIME_CURRENT_MODULE}/Top
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_deployment(
+    # SOURCES
+    #     "${CMAKE_CURRENT_LIST_DIR}/Main.cpp"
+    # DEPENDS
+    #     ${FPRIME_CURRENT_MODULE}_Top
+)
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/arducam/fsw/shared/cam_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/arducam/fsw/shared/cam_registers.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_torquer/fsw/shared/generic_torquer_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_fss/fsw/shared/generic_fss_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/sample/fsw/shared/sample_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_css/fsw/shared/generic_css_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_star_tracker/fsw/shared/generic_star_tracker_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_radio/fsw/shared/generic_radio_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_eps/fsw/shared/generic_eps_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_thruster/fsw/shared/generic_thruster_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/novatel_oem615/fsw/shared/novatel_oem615_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_adcs/fsw/shared/generic_adcs_utilities.c"
+    
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_imu/fsw/shared/generic_imu_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c"
+    
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libuart.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libcan.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libi2c.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/libspi.c"
+    "${CMAKE_CURRENT_LIST_DIR}/../../../../fsw/apps/hwlib/sim/src/nos_link.c" 
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+    "../../../../components/sample/fsw/shared"
+    "../../../../components/sample/fsw/standalone"
+    "../../../../components/sample/fsw/fprime/platform_inc"
+    
+    "../../../../fsw/apps/hwlib/fsw/public_inc"
+    
+    "../../../../fsw/apps/hwlib/sim/inc"
+    
+    "../../../../components/generic_star_tracker/fsw/shared"
+    "../../../../components/generic_star_tracker/fsw/standalone/"
+    "../../../../components/generic_star_tracker/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_radio/fsw/shared"
+    "../../../../components/generic_radio/fsw/standalone" 
+    "../../../../components/generic_radio/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_torquer/fsw/shared"
+    "../../../../components/generic_torquer/fsw/standalone"
+    "../../../../components/generic_torquer/fsw/fprime/platform_inc"
+    "../../../../components/generic_css/fsw/shared"
+    "../../../../components/generic_css/fsw/standalone"
+    "../../../../components/generic_css/fsw/fprime/platform_inc"
+    "../../../../components/generic_fss/fsw/shared/src"
+    "../../../../components/generic_fss/fsw/standalone/"
+    "../../../../components/generic_fss/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_eps/fsw/shared"
+    "../../../../components/generic_eps/fsw/standalone"
+    "../../../../components/generic_eps/fsw/fprime/platform_inc"
+    
+    "../../../../components/arducam/fsw/shared/"
+    "../../../../components/arducam/fsw/standalone/"
+    "../../../../components/arducam/fsw/fprime/platform_inc"
+    "../../../../components/generic_thruster/fsw/shared"
+    "../../../../components/generic_thruster/fsw/standalone"
+    "../../../../components/generic_thruster/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_imu/fsw/shared"
+    "../../../../components/generic_imu/fsw/standalone"
+    "../../../../components/generic_imu/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_mag/fsw/shared"
+    "../../../../components/generic_mag/fsw/standalone"
+    "../../../../components/generic_mag/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_reaction_wheel/fsw/shared"
+    "../../../../components/generic_reaction_wheel/fsw/standalone"
+    "../../../../components/generic_reaction_wheel/fsw/fprime/platform_inc"
+
+    "../../../../components/novatel_oem615/fsw/shared"
+    "../../../../components/novatel_oem615/fsw/standalone"
+    "../../../../components/novatel_oem615/fsw/fprime/platform_inc"
+    
+    "../../../../components/generic_adcs/fsw/fprime/src"
+    "../../../../components/generic_adcs/fsw/shared"
+
+
+)
+```
+
+### `Main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/Main.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Main.cpp
+// \brief main program for the F' application. Intended for CLI-based systems (Linux, macOS)
+//
+// ======================================================================
+// Used to access topology functions
+#include <deployment/Top/deploymentTopology.hpp>
+// OSAL initialization
+#include <Os/Os.hpp>
+// Used for signal handling shutdown
+#include <signal.h>
+// Used for command line argument processing
+#include <getopt.h>
+// Used for printf functions
+#include <cstdlib>
+
+/**
+ * \brief print command line help message
+ *
+ * This will print a command line help message including the available command line arguments.
+ *
+ * @param app: name of application
+ */
+void print_usage(const char* app) {
+    (void)printf("Usage: ./%s [options]\n-a\thostname/IP address\n-p\tport_number\n", app);
+}
+
+/**
+ * \brief shutdown topology cycling on signal
+ *
+ * The reference topology allows for a simulated cycling of the rate groups. This simulated cycling needs to be stopped
+ * in order for the program to shutdown. This is done via handling signals such that it is performed via Ctrl-C
+ *
+ * @param signum
+ */
+static void signalHandler(int signum) {
+    deployment::stopRateGroups();
+}
+
+/**
+ * \brief execute the program
+ *
+ * This F´ program is designed to run in standard environments (e.g. Linux/macOs running on a laptop). Thus it uses
+ * command line inputs to specify how to connect.
+ *
+ * @param argc: argument count supplied to program
+ * @param argv: argument values supplied to program
+ * @return: 0 on success, something else on failure
+ */
+int main(int argc, char* argv[]) {
+    I32 option = 0;
+    CHAR* hostname = nullptr;
+    U16 port_number = 0;
+
+    Os::init();
+
+    // Loop while reading the getopt supplied options
+    while ((option = getopt(argc, argv, "hp:a:")) != -1) {
+        switch (option) {
+            // Handle the -a argument for address/hostname
+            case 'a':
+                hostname = optarg;
+                break;
+            // Handle the -p port number argument
+            case 'p':
+                port_number = static_cast<U16>(atoi(optarg));
+                break;
+            // Cascade intended: help output
+            case 'h':
+            // Cascade intended: help output
+            case '?':
+            // Default case: output help and exit
+            default:
+                print_usage(argv[0]);
+                return (option == 'h') ? 0 : 1;
+        }
+    }
+    // Object for communicating state to the topology
+    deployment::TopologyState inputs;
+    inputs.hostname = hostname;
+    inputs.port = port_number;
+
+    // Setup program shutdown via Ctrl-C
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+    (void)printf("Hit Ctrl-C to quit\n");
+
+    // Setup, cycle, and teardown topology
+    deployment::setupTopology(inputs);
+    deployment::startRateGroups(Fw::TimeInterval(0,100000));  // Program loop cycling rate groups at 10Hz
+    deployment::teardownTopology(inputs);
+    (void)printf("Exiting...\n");
+    return 0;
+}
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/README.md`
+
+
+````markdown
+# deployment Application
+
+This deployment was auto-generated by the F' utility tool.
+
+## Building and Running the deployment Application
+
+In order to build the deployment application, or any other F´ application, we first need to generate a build directory. This can be done with the following commands:
+
+```
+cd deployment
+fprime-util generate
+```
+
+The next step is to build the deployment application's code.
+```
+fprime-util build
+```
+
+## Running the application and F' GDS
+
+The following command will spin up the F' GDS as well as run the application binary and the components necessary for the GDS and application to communicate.
+
+```
+cd deployment
+fprime-gds
+```
+
+
+To run the ground system without starting the deployment app:
+```
+
+cd deployment
+fprime-gds --no-app
+```
+
+The application binary may then be run independently from the created 'bin' directory.
+
+```
+cd deployment/build-artifacts/<platform>/bin/
+./deployment -a 127.0.0.1 -p 50000
+```
+
+
+## This deployment uses F' **core subtopologies** for a modular, reusable architecture:
+
+- **CdhCore**: Command & Data Handling
+  - Command dispatching and event management
+  - Event logging and telemetry collection  
+  - Health monitoring system
+  - Fatal error handling
+
+- **ComCcsds**: CCSDS Communication Subsystem
+  - CCSDS protocol implementation
+  - Uplink/downlink data handling
+  - Frame processing and routing
+
+- **FileHandling**: File Transfer & Command Sequencing
+  - File upload and download services
+  - Parameter database management
+  - File system operations
+
+- **DataProducts**: Data Product Management
+  - Data product cataloging
+  - Storage and retrieval capabilities
+  - Product metadata management
+````

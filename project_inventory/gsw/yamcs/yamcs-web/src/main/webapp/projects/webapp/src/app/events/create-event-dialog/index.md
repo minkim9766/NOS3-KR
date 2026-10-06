@@ -3,16 +3,97 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-event-dialog.component.html`
 
-file--create-event-dialog.component.html
-file--create-event-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-dialog/create-event-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Create event</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Message">
+      <textarea formControlName="message" rows="3"></textarea>
+    </ya-field>
+
+    <ya-field label="Severity">
+      <ya-select formControlName="severity" [options]="severityOptions" />
+    </ya-field>
+
+    <ya-field label="Event time">
+      <ya-date-time-input formControlName="time" step="1" [showNow]="true" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">SAVE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-event-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-dialog/create-event-dialog.component.html`](file--create-event-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-dialog/create-event-dialog.component.ts`](file--create-event-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-dialog/create-event-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-create-event-dialog',
+  templateUrl: './create-event-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CreateEventDialogComponent {
+  form: UntypedFormGroup;
+
+  severityOptions: YaSelectOption[] = [
+    { id: 'INFO', label: 'INFO' },
+    { id: 'WATCH', label: 'WATCH' },
+    { id: 'WARNING', label: 'WARNING' },
+    { id: 'DISTRESS', label: 'DISTRESS' },
+    { id: 'CRITICAL', label: 'CRITICAL' },
+    { id: 'SEVERE', label: 'SEVERE' },
+  ];
+
+  constructor(
+    private dialogRef: MatDialogRef<CreateEventDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.form = formBuilder.group({
+      message: ['', Validators.required],
+      severity: 'INFO',
+      time: [utils.toISOString(yamcs.getMissionTime()), Validators.required],
+    });
+  }
+
+  save() {
+    this.yamcs.yamcsClient
+      .createEvent(this.yamcs.instance!, {
+        message: this.form.value['message'],
+        severity: this.form.value['severity'],
+        time: utils.toISOString(this.form.value['time']),
+      })
+      .then((event) => this.dialogRef.close(event));
+  }
+}
+```

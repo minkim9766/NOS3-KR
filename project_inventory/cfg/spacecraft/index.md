@@ -3,20 +3,384 @@
 
 **경로:** `cfg/spacecraft/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sc-fprime-config.xml`
 
-file--sc-fprime-config.xml
-file--sc-minimal-config.xml
-file--sc-mission-config.xml
-file--sc-research-config.xml
+**경로:** `cfg/spacecraft/sc-fprime-config.xml`
+
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<sc-1-config>
+    <applications>
+        <cf>
+            <enable>false</enable>
+        </cf>
+        <ds>
+            <enable>false</enable>
+        </ds>
+        <fm>
+            <enable>false</enable>
+        </fm>
+        <lc>
+            <enable>false</enable>
+        </lc>
+        <sbn>
+            <enable>false</enable>
+        </sbn>
+        <sc>
+            <enable>false</enable>
+        </sc>
+    </applications>
+    <components>
+        <adcs>
+            <enable>true</enable>
+        </adcs>
+        <cam>
+            <enable>true</enable>
+        </cam>
+        <css>
+            <enable>true</enable>
+        </css>
+        <eps>
+            <enable>true</enable>
+        </eps>
+        <fss>
+            <enable>true</enable>
+        </fss>
+        <gps>
+            <enable>true</enable>
+        </gps>
+        <imu>
+            <enable>true</enable>
+        </imu>
+        <mag>
+            <enable>true</enable>
+        </mag>
+        <mgr>
+            <enable>false</enable>
+        </mgr>
+        <onair>
+            <enable>false</enable>
+        </onair>
+        <radio>
+            <enable>true</enable>
+        </radio>
+        <rw>
+            <enable>true</enable>
+        </rw>
+        <sample>
+            <enable>true</enable>
+        </sample>
+        <st>
+            <enable>true</enable>
+        </st>
+        <syn>
+            <enable>false</enable>
+        </syn>
+        <torquer>
+            <enable>true</enable>
+        </torquer>
+        <thruster>
+            <enable>true</enable>
+        </thruster>
+    </components>
+    <gui>
+        <enable>true</enable>
+    </gui>
+    <orbit>
+        <tipoff_x>-5.0</tipoff_x>
+        <tipoff_y>-5.0</tipoff_y>
+        <tipoff_z>5.0</tipoff_z>
+    </orbit>
+    <sim>
+        <sim_truth_interface>false</sim_truth_interface>
+    </sim>
+</sc-1-config>
 ```
 
-## 항목
+### `sc-minimal-config.xml`
 
-- [`cfg/spacecraft/sc-fprime-config.xml`](file--sc-fprime-config.xml) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/spacecraft/sc-minimal-config.xml`](file--sc-minimal-config.xml) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/spacecraft/sc-mission-config.xml`](file--sc-mission-config.xml) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/spacecraft/sc-research-config.xml`](file--sc-research-config.xml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `cfg/spacecraft/sc-minimal-config.xml`
+
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<sc-1-config>
+    <applications>
+        <cf>
+            <enable>true</enable>
+        </cf>
+        <ds>
+            <enable>true</enable>
+        </ds>
+        <fm>
+            <enable>true</enable>
+        </fm>
+        <lc>
+            <enable>true</enable>
+        </lc>
+        <sbn>
+            <enable>false</enable>
+        </sbn>
+        <sc>
+            <enable>true</enable>
+        </sc>
+    </applications>
+    <components>
+        <adcs>
+            <enable>false</enable>
+        </adcs>
+        <cam>
+            <enable>false</enable>
+        </cam>
+        <css>
+            <enable>false</enable>
+        </css>
+        <eps>
+            <enable>false</enable>
+        </eps>
+        <fss>
+            <enable>false</enable>
+        </fss>
+        <gps>
+            <enable>false</enable>
+        </gps>
+        <imu>
+            <enable>false</enable>
+        </imu>
+        <mag>
+            <enable>false</enable>
+        </mag>
+        <mgr>
+            <enable>false</enable>
+        </mgr>
+        <onair>
+            <enable>false</enable>
+        </onair>
+        <radio>
+            <enable>false</enable>
+        </radio>
+        <rw>
+            <enable>false</enable>
+        </rw>
+        <sample>
+            <enable>true</enable>
+        </sample>
+        <st>
+            <enable>false</enable>
+        </st>
+        <syn>
+            <enable>false</enable>
+        </syn>
+        <torquer>
+            <enable>false</enable>
+        </torquer>
+        <thruster>
+            <enable>false</enable>
+        </thruster>
+    </components>
+    <gui>
+        <enable>false</enable>
+    </gui>
+    <orbit>
+        <tipoff_x>-5.0</tipoff_x>
+        <tipoff_y>-5.0</tipoff_y>
+        <tipoff_z>5.0</tipoff_z>
+    </orbit>
+    <sim>
+        <sim_truth_interface>false</sim_truth_interface>
+    </sim>
+</sc-1-config>
+```
+
+### `sc-mission-config.xml`
+
+**경로:** `cfg/spacecraft/sc-mission-config.xml`
+
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<sc-1-config>
+	<applications>
+		<cf>
+			<enable>true</enable>
+		</cf>
+		<ds>
+			<enable>true</enable>
+		</ds>
+		<fm>
+			<enable>true</enable>
+		</fm>
+		<lc>
+			<enable>true</enable>
+		</lc>
+		<sbn>
+			<enable>false</enable>
+		</sbn>
+		<sc>
+			<enable>true</enable>
+		</sc>
+	</applications>
+	<components>
+		<adcs>
+			<enable>true</enable>
+		</adcs>
+		<cam>
+			<enable>false</enable>
+		</cam>
+		<css>
+			<enable>true</enable>
+		</css>
+		<eps>
+			<enable>true</enable>
+		</eps>
+		<fss>
+			<enable>true</enable>
+		</fss>
+		<gps>
+			<enable>true</enable>
+		</gps>
+		<imu>
+			<enable>true</enable>
+		</imu>
+		<mag>
+			<enable>true</enable>
+		</mag>
+		<mgr>
+			<enable>true</enable>
+		</mgr>
+		<onair>
+			<enable>false</enable>
+		</onair>
+		<radio>
+			<enable>true</enable>
+		</radio>
+		<rw>
+			<enable>true</enable>
+		</rw>
+		<sample>
+			<enable>true</enable>
+		</sample>
+		<st>
+			<enable>true</enable>
+		</st>
+		<syn>
+			<enable>false</enable>
+		</syn>
+		<torquer>
+			<enable>true</enable>
+		</torquer>
+		<thruster>
+			<enable>true</enable>
+		</thruster>
+	</components>
+	<gui>
+		<enable>true</enable>
+	</gui>
+	<orbit>
+		<tipoff_x>0.2</tipoff_x>
+		<tipoff_y>2.0</tipoff_y>
+		<tipoff_z>-2.0</tipoff_z>
+	</orbit>
+	<sim>
+		<sim_truth_interface>true</sim_truth_interface>
+	</sim>
+</sc-1-config>
+```
+
+### `sc-research-config.xml`
+
+**경로:** `cfg/spacecraft/sc-research-config.xml`
+
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<sc-1-config>
+    <applications>
+        <cf>
+            <enable>true</enable>
+        </cf>
+        <ds>
+            <enable>true</enable>
+        </ds>
+        <fm>
+            <enable>true</enable>
+        </fm>
+        <lc>
+            <enable>true</enable>
+        </lc>
+        <sbn>
+            <enable>true</enable>
+        </sbn>
+        <sc>
+            <enable>true</enable>
+        </sc>
+    </applications>
+    <components>
+        <adcs>
+            <enable>true</enable>
+        </adcs>
+        <cam>
+            <enable>true</enable>
+        </cam>
+        <css>
+            <enable>true</enable>
+        </css>
+        <eps>
+            <enable>true</enable>
+        </eps>
+        <fss>
+            <enable>true</enable>
+        </fss>
+        <gps>
+            <enable>true</enable>
+        </gps>
+        <imu>
+            <enable>true</enable>
+        </imu>
+        <mag>
+            <enable>true</enable>
+        </mag>
+        <mgr>
+            <enable>true</enable>
+        </mgr>
+        <onair>
+            <enable>true</enable>
+        </onair>
+        <radio>
+            <enable>true</enable>
+        </radio>
+        <rw>
+            <enable>true</enable>
+        </rw>
+        <sample>
+            <enable>true</enable>
+        </sample>
+        <st>
+            <enable>true</enable>
+        </st>
+        <syn>
+            <enable>true</enable>
+        </syn>
+        <torquer>
+            <enable>true</enable>
+        </torquer>
+        <thruster>
+            <enable>true</enable>
+        </thruster>
+    </components>
+    <gui>
+        <enable>true</enable>
+    </gui>
+    <orbit>
+        <tipoff_x>0.1</tipoff_x>
+        <tipoff_y>1.0</tipoff_y>
+        <tipoff_z>-1.0</tipoff_z>
+    </orbit>
+    <sim>
+        <sim_truth_interface>true</sim_truth_interface>
+    </sim>
+</sc-1-config>
+```

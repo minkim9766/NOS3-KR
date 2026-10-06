@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_imu/fsw/fprime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,17 @@
 imu_src/index
 mission_inc/index
 platform_inc/index
-file--library.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_imu/fsw/fprime/imu_src/`](imu_src/index) — 폴더
-- [`components/generic_imu/fsw/fprime/mission_inc/`](mission_inc/index) — 폴더
-- [`components/generic_imu/fsw/fprime/platform_inc/`](platform_inc/index) — 폴더
-- [`components/generic_imu/fsw/fprime/library.cmake`](file--library.cmake) — UTF-8 텍스트 파일 본문 포함
+### `library.cmake`
+
+**경로:** `components/generic_imu/fsw/fprime/library.cmake`
+
+
+```cmake
+add_fprime_subdirectory(
+    "${CMAKE_CURRENT_LIST_DIR}/imu_src"
+)
+```

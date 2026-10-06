@@ -3,24 +3,170 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--ConsoleTextLoggerImpl.hpp
-file--ConsoleTextLoggerImplCommon.cpp
-file--PassiveConsoleTextLogger.fpp
-file--PassiveTextLogger.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/ConsoleTextLoggerImpl.hpp`](file--ConsoleTextLoggerImpl.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/ConsoleTextLoggerImplCommon.cpp`](file--ConsoleTextLoggerImplCommon.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/PassiveConsoleTextLogger.fpp`](file--PassiveConsoleTextLogger.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/PassiveTextLogger.hpp`](file--PassiveTextLogger.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PassiveConsoleTextLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ConsoleTextLoggerImplCommon.cpp"
+)
+set(MOD_DEPS
+  Fw/Logger
+)
+
+register_fprime_module()
+```
+
+### `ConsoleTextLoggerImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/ConsoleTextLoggerImpl.hpp`
+
+
+```cpp
+#ifndef SVC_TEXT_LOGGER_IMPL_HPP
+#define SVC_TEXT_LOGGER_IMPL_HPP
+
+#include <Svc/PassiveConsoleTextLogger/PassiveTextLoggerComponentAc.hpp>
+
+namespace Svc {
+
+class ConsoleTextLoggerImpl final : public PassiveTextLoggerComponentBase {
+  public:
+    // Only called by derived class
+    ConsoleTextLoggerImpl(const char* compName);
+    ~ConsoleTextLoggerImpl();
+
+  private:
+    // downcalls for input ports
+    void TextLogger_handler(FwIndexType portNum,
+                            FwEventIdType id,
+                            Fw::Time& timeTag,
+                            const Fw::LogSeverity& severity,
+                            Fw::TextLogString& text);
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `ConsoleTextLoggerImplCommon.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/ConsoleTextLoggerImplCommon.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/PassiveConsoleTextLogger/ConsoleTextLoggerImpl.hpp>
+
+namespace Svc {
+
+ConsoleTextLoggerImpl::ConsoleTextLoggerImpl(const char* compName) : PassiveTextLoggerComponentBase(compName) {}
+
+ConsoleTextLoggerImpl::~ConsoleTextLoggerImpl() {}
+
+void ConsoleTextLoggerImpl::TextLogger_handler(FwIndexType portNum,
+                                               FwEventIdType id,
+                                               Fw::Time& timeTag,
+                                               const Fw::LogSeverity& severity,
+                                               Fw::TextLogString& text) {
+    const char* severityString = nullptr;
+    switch (severity.e) {
+        case Fw::LogSeverity::FATAL:
+            severityString = "FATAL";
+            break;
+        case Fw::LogSeverity::WARNING_HI:
+            severityString = "WARNING_HI";
+            break;
+        case Fw::LogSeverity::WARNING_LO:
+            severityString = "WARNING_LO";
+            break;
+        case Fw::LogSeverity::COMMAND:
+            severityString = "COMMAND";
+            break;
+        case Fw::LogSeverity::ACTIVITY_HI:
+            severityString = "ACTIVITY_HI";
+            break;
+        case Fw::LogSeverity::ACTIVITY_LO:
+            severityString = "ACTIVITY_LO";
+            break;
+        case Fw::LogSeverity::DIAGNOSTIC:
+            severityString = "DIAGNOSTIC";
+            break;
+        default:
+            severityString = "SEVERITY ERROR";
+            break;
+    }
+    Fw::Logger::log("EVENT: (%" PRI_FwEventIdType ") (%" PRI_FwTimeBaseStoreType ":%" PRIu32 ",%" PRIu32 ") %s: %s\n",
+                    id, static_cast<FwTimeBaseStoreType>(timeTag.getTimeBase()), timeTag.getSeconds(),
+                    timeTag.getUSeconds(), severityString, text.toChar());
+}
+}  // namespace Svc
+```
+
+### `PassiveConsoleTextLogger.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/PassiveConsoleTextLogger.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component to implement log messages with a print to the console
+  passive component PassiveTextLogger {
+
+    @ Logging port
+    sync input port TextLogger: Fw.LogText
+
+  }
+
+}
+```
+
+### `PassiveTextLogger.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/PassiveTextLogger.hpp`
+
+
+```cpp
+// ======================================================================
+// PassiveTextLogger.hpp
+// Standardization header for PassiveTextLogger
+// ======================================================================
+
+#ifndef Svc_PassiveTextLogger_HPP
+#define Svc_PassiveTextLogger_HPP
+
+#include "Svc/PassiveConsoleTextLogger/ConsoleTextLoggerImpl.hpp"
+
+namespace Svc {
+
+typedef ConsoleTextLoggerImpl PassiveTextLogger;
+
+}
+
+#endif
+```

@@ -3,20 +3,482 @@
 
 **경로:** `sims/truth_42_sim/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `README.md`
 
-file--README.md
-file--truth_42_data_point.cpp
-file--truth_42_data_provider.cpp
-file--truth_42_hardware_model.cpp
+**경로:** `sims/truth_42_sim/src/README.md`
+
+
+```markdown
+# TRUTH_42_SIM - Simulator to Provide 42 Truth Data
+
+Simple simulator to connect to 42 and provide packed telemetry to COSMOS.  This is not a NOS3 simulator in the traditional sense, since it does not simulate hardware connected to the CPU.  It is provided as a convenience to be able to stream and read 42 data in COSMOS.
+
 ```
 
-## 항목
+### `truth_42_data_point.cpp`
 
-- [`sims/truth_42_sim/src/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`sims/truth_42_sim/src/truth_42_data_point.cpp`](file--truth_42_data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/truth_42_sim/src/truth_42_data_provider.cpp`](file--truth_42_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/truth_42_sim/src/truth_42_hardware_model.cpp`](file--truth_42_hardware_model.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `sims/truth_42_sim/src/truth_42_data_point.cpp`
+
+
+```cpp
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_coordinate_transformations.hpp>
+#include <truth_42_data_point.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+    Truth42DataPoint::Truth42DataPoint(int16_t orbit, int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp) : 
+        _dp(*dp), _orb(orbit), _sc(spacecraft), _not_parsed(true) 
+    {
+        sim_logger->trace("Truth42DataPoint::Truth42DataPoint:  Created instance using _orb=%d, _sc=%d, _dp=%s", 
+            _orb, _sc, _dp.to_string().c_str());
+    }
+    
+   /*************************************************************************
+     * Mutators
+     *************************************************************************/
+
+    void Truth42DataPoint::do_parsing(void) const
+    {
+        std::ostringstream OrbMatchString;
+        OrbMatchString << "Orb[" << _orb << "].";
+        size_t OrbMSsize = OrbMatchString.str().size();
+        std::ostringstream SCMatchString;
+        SCMatchString << "SC[" << _sc << "].";
+        size_t SCMSsize = SCMatchString.str().size();
+        size_t position;
+
+        _not_parsed = false;
+        
+        std::vector<std::string> lines = _dp.get_lines();
+
+        try {
+            // force the vectors to be initialized to the correct length in case there is no line data for them
+            _pos.resize(3);
+            _vel.resize(3);
+            _svb.resize(3);
+            _bvb.resize(3);
+            _Hvb.resize(3);
+            _wn.resize(3);
+            _qn.resize(4);
+            _pos_ecef.resize(3);
+            _vel_ecef.resize(3);
+            std::vector<double> posr(3), posn(3), velr(3), veln(3);
+            for (unsigned int i = 0; i < lines.size(); i++) {
+                if (lines[i].compare(0, 4, "TIME") == 0) { // e.g. TIME 2017-181-16:00:16.333600000
+                    sim_logger->trace("Truth42DataPoint::do_parsing:  Found a string with the correct prefix = TIME.  String:  %s", lines[i].c_str());
+                    sim_logger->trace("FOUND TIME STRING: %s",lines[i].c_str());
+                    position = lines[i].find_first_of(" ");
+                    _year = std::stoi(lines[i].substr(position+1, 4));
+                    position = lines[i].find_first_of("-");
+                    _doy =std::stoi(lines[i].substr(position+1, 3));
+                    SimCoordinateTransformations::DOY2MD(_year, _doy, _month, _day);
+                    position = lines[i].find_last_of("-"); 
+                    _utc_hh = std::stoi(lines[i].substr(position+1, 2));
+                    position = lines[i].find_first_of(":");
+                    _utc_mm = std::stoi(lines[i].substr(position+1, 2));
+                    position = lines[i].find_last_of(":");
+                    _utc_ss = std::stod(lines[i].substr(position+1, std::string::npos));
+                } else if (lines[i].compare(0, OrbMSsize, OrbMatchString.str()) == 0) {
+                    if (lines[i].compare(OrbMSsize, 7, "PosN = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(OrbMSsize+7, std::string::npos), posn);
+                    } else if (lines[i].compare(OrbMSsize, 7, "VelN = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(OrbMSsize+7, std::string::npos), veln);
+                    }
+                } else if (lines[i].compare(0, SCMSsize, SCMatchString.str()) == 0) {
+                    if (lines[i].compare(SCMSsize, 7, "PosR = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+7, std::string::npos), posr);
+                    } else if (lines[i].compare(SCMSsize, 7, "VelR = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+7, std::string::npos), velr);
+                    } else if (lines[i].compare(SCMSsize, 6, "svb = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+6, std::string::npos), _svb);
+                    } else if (lines[i].compare(SCMSsize, 6, "bvb = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+6, std::string::npos), _bvb);
+                    } else if (lines[i].compare(SCMSsize, 6, "Hvb = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+6, std::string::npos), _Hvb);
+                    } else if (lines[i].compare(SCMSsize, 10, "B[0].wn = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+10, std::string::npos), _wn);
+                    } else if (lines[i].compare(SCMSsize, 10, "B[0].qn = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+10, std::string::npos), _qn);
+                    } else if (lines[i].compare(SCMSsize, 14, "GPS[0].PosW = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+14, std::string::npos), _pos_ecef);
+                    } else if (lines[i].compare(SCMSsize, 14, "GPS[0].VelW = ") == 0) {
+                        _dp.parse_double_vector(lines[i].substr(SCMSsize+14, std::string::npos), _vel_ecef);
+                    } else if (lines[i].compare(SCMSsize, 19, "Accel[0].TrueAcc = ") == 0) {
+                        _acc_b_x = std::stod(lines[i].substr(SCMSsize+19, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 19, "Accel[1].TrueAcc = ") == 0) {
+                        _acc_b_y = std::stod(lines[i].substr(SCMSsize+19, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 19, "Accel[2].TrueAcc = ") == 0) {
+                        _acc_b_z = std::stod(lines[i].substr(SCMSsize+19, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 19, "Gyro[0].TrueRate = ") == 0) {
+                        _gyro_b_x = std::stod(lines[i].substr(SCMSsize+19, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 19, "Gyro[1].TrueRate = ") == 0) {
+                        _gyro_b_y = std::stod(lines[i].substr(SCMSsize+19, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 19, "Gyro[2].TrueRate = ") == 0) {
+                        _gyro_b_z = std::stod(lines[i].substr(SCMSsize+19, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 11, "Whl[0].H = ") == 0) {
+                        _rw_momentum_0 = std::stod(lines[i].substr(SCMSsize+11, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 11, "Whl[1].H = ") == 0) {
+                        _rw_momentum_1 = std::stod(lines[i].substr(SCMSsize+11, std::string::npos));
+                    } else if (lines[i].compare(SCMSsize, 11, "Whl[2].H = ") == 0) {
+                        _rw_momentum_2 = std::stod(lines[i].substr(SCMSsize+11, std::string::npos));
+                    } 
+                }
+            }
+            for (int i = 0; i < 3; i++) {
+                _pos[i] = posn[i] + posr[i];
+                _vel[i] = veln[i] + velr[i];
+            }
+        } catch(const std::exception& e) {
+            sim_logger->error("GNSS200DataPoint::do_parsing:  Parsing exception:  %s", e.what());
+        }
+
+        sim_logger->trace("GNSS200DataPoint::do_parsing:  Parsed data point:\n%s", to_string().c_str());
+    }
+
+    /*************************************************************************
+     * Accessors
+     *************************************************************************/
+
+    std::string Truth42DataPoint::to_string(void) const
+    {
+        parse_data_point();
+        
+        std::stringstream ss;
+
+        ss << std::fixed << std::setfill('0');
+        ss << "Truth 42 Data Point:";
+        ss << " UTC Year-DayOfYear-Time: " << std::setw(4) << _year << "-" << std::setw(3) << _doy << "(" << std::setw(2) << _month << "/" << std::setw(2) << _day << ")";
+        ss << "T" << std::setw(2) << _utc_hh << ":" << std::setw(2) << _utc_mm << ":" << std::setw(9) << std::setprecision(6) << _utc_ss;
+        ss << std::setprecision(0) << " Pos:  "    << _pos[0]      << ", " << _pos[1]      << ", " << _pos[2];
+        ss << std::setprecision(0) << " Vel:  "    << _vel[0]      << ", " << _vel[1]      << ", " << _vel[2];
+        ss << std::setprecision(3) << " svb:  "    << _svb[0]      << ", " << _svb[1]      << ", " << _svb[2];
+        ss << std::setprecision(9) << " bvb:  "    << _bvb[0]      << ", " << _bvb[1]      << ", " << _bvb[2];
+        ss << std::setprecision(3) << " Hvb:  "    << _Hvb[0]      << ", " << _Hvb[1]      << ", " << _Hvb[2];
+        ss << std::setprecision(3) << " wn :  "    << _wn[0]       << ", " << _wn[1]       << ", " << _wn[2];
+        ss << std::setprecision(3) << " qn :  "    << _qn[0]       << ", " << _qn[1]       << ", " << _qn[2]       << ", " << _qn[3];
+        ss << std::setprecision(0) << " PosW: "    << _pos_ecef[0] << ", " << _pos_ecef[1] << ", " << _pos_ecef[2];
+        ss << std::setprecision(0) << " VelW: "    << _vel_ecef[0] << ", " << _vel_ecef[1] << ", " << _vel_ecef[2];
+        ss << std::setprecision(3) << " LinAccB: " << _acc_b_x     << ", " << _acc_b_y     << ", " << _acc_b_z;
+        ss << std::setprecision(5) << " GyroB: "   << _gyro_b_x    << ", " << _gyro_b_y    << ", " << _gyro_b_z;
+        ss << std::setprecision(6) << " rwH: "     << _rw_momentum_0 << ", " << _rw_momentum_1 << ", " << _rw_momentum_2;
+
+        return ss.str();
+    }
+    
+}
+```
+
+### `truth_42_data_provider.cpp`
+
+**경로:** `sims/truth_42_sim/src/truth_42_data_provider.cpp`
+
+
+```cpp
+#include <ItcLogger/Logger.hpp>
+
+#include <truth_42_data_point.hpp>
+
+#include <truth_42_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Truth42DataProvider,"TRUTH42PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Truth42DataProvider::Truth42DataProvider(const boost::property_tree::ptree& config) : SimData42SocketProvider(config)
+    {
+        sim_logger->trace("Truth42DataProvider::Truth42DataProvider:  Constructor executed");
+
+        connect_reader_thread_as_42_socket_client(
+            config.get("simulator.hardware-model.data-provider.hostname", "localhost"),
+            config.get("simulator.hardware-model.data-provider.port", 4242) );
+
+        _orb = config.get("simulator.hardware-model.data-provider.orbit", 0);
+        _sc  = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Truth42DataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Truth42DataProvider::get_data_point:  Executed");
+
+        // Get the 42 data
+        const boost::shared_ptr<Sim42DataPoint> dp42 =
+            boost::dynamic_pointer_cast<Sim42DataPoint>(SimData42SocketProvider::get_data_point());
+
+        // vvv Prepare the specific data... this may need changed in your use case
+        SimIDataPoint *dp = new Truth42DataPoint(_orb, _sc, dp42);
+
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
+```
+
+### `truth_42_hardware_model.cpp`
+
+**경로:** `sims/truth_42_sim/src/truth_42_hardware_model.cpp`
+
+
+```cpp
+#include <truth_42_hardware_model.hpp>
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(Truth42HardwareModel,"TRUTH42");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Truth42HardwareModel::Truth42HardwareModel(const boost::property_tree::ptree& config) : SimIHardwareModel(config)
+    {
+        std::string connection_string = config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"); // Get the NOS engine connection string, needed for the busses
+        sim_logger->info("SampleHardwareModel::SampleHardwareModel:  NOS Engine connection string: %s.", connection_string.c_str());
+        sleep(10); // Start delay
+
+        /* vvv 1. Get a data provider */
+        /* !!! If your sim does not *need* a data provider, delete this block. */
+        std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "TRUTH_42_PROVIDER");
+        _truth_42_dp = SimDataProviderFactory::Instance().Create(dp_name, config);
+        sim_logger->info("Truth42HardwareModel::Truth42HardwareModel:  Data provider %s created.", dp_name.c_str());
+        /* ^^^ 1. Get a data provider */
+
+        /* vvv 2. Get on the computer bus... in this case it is actually the COSMOS socket, since this is truth data and so it bypasses the flight software computer */
+        boost::asio::io_service io_service;
+        _socket = new boost::asio::ip::udp::socket(io_service);
+        _remote = boost::asio::ip::udp::endpoint(boost::asio::ip::address::from_string(HostToIp(config.get("simulator.hardware-model.cosmos-hostname", "127.0.0.1"))), config.get("simulator.hardware-model.cosmos-port", 5111));
+        _socket->open(boost::asio::ip::udp::v4());
+
+        /* vvv 3. Streaming data */
+        _initial_stream_time = config.get("simulator.hardware-model.initial-stream-time", 1.0); // Delta from start time to begin streaming
+        _prev_time = _absolute_start_time + _initial_stream_time;
+        _stream_period_ms = config.get<uint32_t>("simulator.hardware-model.stream-period-ms", 1000); // Time in milliseconds between streamed messages
+        _use_nos_time = (config.get("simulator.hardware-model.nos-or-wall-time", "NOS").compare("WALL") != 0); // "NOS" to use NOS engine time ticks to drive streamed messages; "WALL" to use wall time to drive streamed messages
+
+        std::string time_bus_name = "command"; // Initialize to default in case value not found in config file
+        if (config.get_child_optional("simulator.hardware-model.connections")) 
+        {
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("simulator.hardware-model.connections")) // Loop through the connections for *this* hw model
+            {
+                if (v.second.get("type", "").compare("time") == 0) // v.second is the child tree (v.first is the name of the child)
+                {
+                    time_bus_name = v.second.get("bus-name", "command");
+                    break; // Found it... don't need to go through any more items
+                }
+            }
+        }
+        _time_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, time_bus_name));
+        if (_use_nos_time) {
+            _time_bus->add_time_tick_callback(std::bind(&Truth42HardwareModel::send_streaming_data, this, std::placeholders::_1));
+            sim_logger->info("Truth42HardwareModel::Truth42HardwareModel:  Now on time bus %s, executing callback to stream data.", time_bus_name.c_str());
+        } // else we are going to stream messages based on wall time in the run method
+        /* ^^^ 3. Streaming data */
+    }
+
+    Truth42HardwareModel::~Truth42HardwareModel(void)
+    {        
+        // 1. Close the COSMOS connection
+        _socket->close(); 
+        delete _socket;
+
+        // 2. Clean up the data provider we got
+        delete _truth_42_dp;
+        _truth_42_dp = nullptr;
+
+        // 3. Don't need to clean up the time node, the bus will do it
+    }
+
+    void Truth42HardwareModel::run(void)
+    {
+        if (_use_nos_time) {
+            SimIHardwareModel::run();
+        } else {
+            std::this_thread::sleep_for(std::chrono::microseconds((uint64_t)(_initial_stream_time * 1000000.0)));
+            NosEngine::Common::SimTime time = 0;
+            while(_keep_running)
+            {
+                std::this_thread::sleep_for(std::chrono::milliseconds(_stream_period_ms));
+                send_streaming_data(time);
+                time++;
+            }
+        }
+    }
+
+
+    std::string Truth42HardwareModel::HostToIp(const std::string& host) 
+    {
+        struct addrinfo hints, *res, *p;
+        void *addr;
+        char ipstr[INET_ADDRSTRLEN] = "";
+
+        memset(&hints, 0, sizeof hints);
+        hints.ai_family = AF_INET; // Use AF_UNSPEC for IPv6 support if needed
+        hints.ai_socktype = SOCK_STREAM;
+
+        if (getaddrinfo(host.c_str(), NULL, &hints, &res) == 0) 
+        {
+            for (p = res; p != NULL; p = p->ai_next) 
+            {
+                struct sockaddr_in *ipv4 = (struct sockaddr_in *)p->ai_addr;
+                addr = &(ipv4->sin_addr);
+
+                // Convert to string
+                if (inet_ntop(p->ai_family, addr, ipstr, sizeof(ipstr)) != NULL)
+                {
+                    freeaddrinfo(res);
+                    return std::string(ipstr);
+                }
+            }
+            freeaddrinfo(res);
+        }
+
+        return {};
+    }
+
+    void Truth42HardwareModel::send_streaming_data(NosEngine::Common::SimTime time)
+    {
+        const boost::shared_ptr<Truth42DataPoint> data_point =
+            boost::dynamic_pointer_cast<Truth42DataPoint>(_truth_42_dp->get_data_point());
+
+        double abs_time = _absolute_start_time + (double(time * _sim_microseconds_per_tick)) / 1000000.0;
+        double next_time = _prev_time + _stream_period_ms/1000.0 - (_sim_microseconds_per_tick / 1000000.0) / 2; // within half a tick time period
+        if (next_time < abs_time) { // Time to send more data
+            std::vector<uint8_t> data = create_data(*data_point);
+            sim_logger->debug("send_streaming_data:  Data point:  %s", data_point->to_string().c_str());
+            sim_logger->debug("send_streaming_data:  Writing data:  %s\n", uint8_vector_to_hex_string(data).c_str());
+
+            char s[317];
+            for (unsigned int i=0; i < data.size(); i++) {
+                s[i] = data[i];
+            }
+            s[316] = 0;
+            _socket->send_to(boost::asio::buffer(s), _remote);
+            _prev_time = abs_time;
+        }
+    }
+
+    std::vector<uint8_t> Truth42HardwareModel::create_data(const Truth42DataPoint& data_point)
+    {
+        std::vector<uint8_t> out_data, append;
+        std::vector<double> v;
+        out_data.clear();
+        append = int16_to_uint8_vector(data_point.get_year());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = int16_to_uint8_vector(data_point.get_doy());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = int16_to_uint8_vector(data_point.get_month());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = int16_to_uint8_vector(data_point.get_day());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = int16_to_uint8_vector(data_point.get_utc_hh());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = int16_to_uint8_vector(data_point.get_utc_mm());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_utc_ss());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_pos();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_vel();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_svb();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_bvb();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_Hvb();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_wn();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_qn();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[3]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_pos_ecef();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        v = data_point.get_vel_ecef();
+        append = double_to_uint8_vector(v[0]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[1]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(v[2]);
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+        append = double_to_uint8_vector(data_point.get_acc_x());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_acc_y());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_acc_z());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_gyro_x());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_gyro_y());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_gyro_z());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_rwh_0());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_rwh_1());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+        append = double_to_uint8_vector(data_point.get_rwh_2());
+        out_data.insert(out_data.end(), append.begin(), append.end());
+
+
+        return out_data;
+    }
+}
+```

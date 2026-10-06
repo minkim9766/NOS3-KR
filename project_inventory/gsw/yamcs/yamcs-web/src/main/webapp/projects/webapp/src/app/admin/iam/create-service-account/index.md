@@ -3,16 +3,126 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-service-account/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-service-account.component.html`
 
-file--create-service-account.component.html
-file--create-service-account.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-service-account/create-service-account.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar>
+    <ng-template app-admin-toolbar-label>
+      <ya-page-icon-button routerLink=".." icon="arrow_back" />
+      Create service account
+    </ng-template>
+  </app-admin-toolbar>
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate>
+      <ya-field label="Service account name" hint="(required)">
+        <input formControlName="name" type="text" />
+      </ya-field>
+
+      <h2 style="margin-top: 32px">Scopes</h2>
+      <ya-field label="Impersonation">
+        <label style="color: gray; font-weight: 400">
+          <input type="checkbox" [disabled]="true" [checked]="true" />
+          Grant permission to access the API on behalf of any user in the system.
+        </label>
+      </ya-field>
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button (click)="location.back()">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</app-admin-page>
 ```
 
-## 항목
+### `create-service-account.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-service-account/create-service-account.component.html`](file--create-service-account.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-service-account/create-service-account.component.ts`](file--create-service-account.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-service-account/create-service-account.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  CreateServiceAccountRequest,
+  CreateServiceAccountResponse,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { ApplicationCredentialsDialogComponent } from '../application-credentials-dialog/application-credentials-dialog.component';
+
+@Component({
+  templateUrl: './create-service-account.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+  ],
+})
+export class CreateServiceAccountComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    title: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    readonly location: Location,
+    private dialog: MatDialog,
+  ) {
+    title.setTitle('Create service account');
+    this.form = formBuilder.group({
+      name: new UntypedFormControl('', [Validators.required]),
+    });
+  }
+
+  onConfirm() {
+    const options: CreateServiceAccountRequest = {
+      name: this.form.value.name,
+    };
+    this.yamcs.yamcsClient
+      .createServiceAccount(options)
+      .then((response) => this.onServerConfirm(response))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private onServerConfirm(response: CreateServiceAccountResponse) {
+    const dialogRef = this.dialog.open(ApplicationCredentialsDialogComponent, {
+      disableClose: true,
+      closeOnNavigation: false,
+      data: response,
+      width: '550px',
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.router.navigate(['..'], { relativeTo: this.route });
+    });
+  }
+}
+```

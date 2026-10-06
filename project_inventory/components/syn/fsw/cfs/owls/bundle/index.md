@@ -3,68 +3,389 @@
 
 **경로:** `components/syn/fsw/cfs/owls/bundle/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.goutputstream-2Z2791`
 
-file--.goutputstream-2Z2791
-file--.goutputstream-3YXHA2
-file--.goutputstream-M5TDA2
-file--.goutputstream-PDW691
-file--asdp000000000.tgz
-file--asdp000000000_dpmsg.json
-file--asdp000000000_meta.json
-file--asdp000000001.tgz
-file--asdp000000001_dpmsg.json
-file--asdp000000001_meta.json
-file--asdp000000002.tgz
-file--asdp000000002_dpmsg.json
-file--asdp000000002_meta.json
-file--asdp000000003.tgz
-file--asdp000000003_dpmsg.json
-file--asdp000000003_meta.json
-file--asdp000000004.tgz
-file--asdp000000004_dpmsg.json
-file--asdp000000004_meta.json
-file--asdp000000005.tgz
-file--asdp000000005_dpmsg.json
-file--asdp000000005_meta.json
-file--asdp000000006.tgz
-file--asdp000000006_dpmsg.json
-file--asdp000000006_meta.json
-file--asdp000000007.tgz
-file--asdp000000007_dpmsg.json
-file--asdp000000007_meta.json
+**경로:** `components/syn/fsw/cfs/owls/bundle/.goutputstream-2Z2791`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `.goutputstream-3YXHA2`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/.goutputstream-3YXHA2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `.goutputstream-M5TDA2`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/.goutputstream-M5TDA2`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `.goutputstream-PDW691`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/.goutputstream-PDW691`
+
+
+```text
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000002.tgz",
+  "meta_uri": "asdp000000002_meta.json",
+  "meta_usage": true
+}
 ```
 
-## 항목
+### `asdp000000000.tgz`
 
-- [`components/syn/fsw/cfs/owls/bundle/.goutputstream-2Z2791`](file--.goutputstream-2Z2791) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/.goutputstream-3YXHA2`](file--.goutputstream-3YXHA2) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/.goutputstream-M5TDA2`](file--.goutputstream-M5TDA2) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/.goutputstream-PDW691`](file--.goutputstream-PDW691) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000000.tgz`](file--asdp000000000.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000000_dpmsg.json`](file--asdp000000000_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000000_meta.json`](file--asdp000000000_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000001.tgz`](file--asdp000000001.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000001_dpmsg.json`](file--asdp000000001_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000001_meta.json`](file--asdp000000001_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000002.tgz`](file--asdp000000002.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000002_dpmsg.json`](file--asdp000000002_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000002_meta.json`](file--asdp000000002_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000003.tgz`](file--asdp000000003.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000003_dpmsg.json`](file--asdp000000003_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000003_meta.json`](file--asdp000000003_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000004.tgz`](file--asdp000000004.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000004_dpmsg.json`](file--asdp000000004_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000004_meta.json`](file--asdp000000004_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000005.tgz`](file--asdp000000005.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000005_dpmsg.json`](file--asdp000000005_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000005_meta.json`](file--asdp000000005_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000006.tgz`](file--asdp000000006.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000006_dpmsg.json`](file--asdp000000006_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000006_meta.json`](file--asdp000000006_meta.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000007.tgz`](file--asdp000000007.tgz) — 바이너리 (경로만)
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000007_dpmsg.json`](file--asdp000000007_dpmsg.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/bundle/asdp000000007_meta.json`](file--asdp000000007_meta.json) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000000.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000000_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000000_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000000.tgz",
+  "meta_uri": "asdp000000000_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000000_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000000_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.14227810087647624,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.07886666666666667,
+    "bbox_area_min_pc50.0": 0.1111111111111111,
+    "bbox_area_min_pc90.0": 0.1111111111111111,
+    "disp_e2e_norm_pc10.0": 0.001436325965583461,
+    "disp_e2e_norm_pc50.0": 0.007030396384051943,
+    "disp_e2e_norm_pc90.0": 0.03710894689341319,
+    "speed_mean_pc10.0": 0.02807966286652037,
+    "speed_mean_pc50.0": 0.051721862980167836,
+    "speed_mean_pc90.0": 0.09503929215686009
+  }
+}
+```
+
+### `asdp000000001.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000001.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000001_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000001_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000001.tgz",
+  "meta_uri": "asdp000000001_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000001_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000001_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.35809868003320877,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.0016666666666666666,
+    "bbox_area_min_pc50.0": 0.007999999999999998,
+    "bbox_area_min_pc90.0": 0.03,
+    "disp_e2e_norm_pc10.0": 0.00038063316244500917,
+    "disp_e2e_norm_pc50.0": 0.0014615228472662004,
+    "disp_e2e_norm_pc90.0": 0.01079410106274881,
+    "speed_mean_pc10.0": 0.005226148280311975,
+    "speed_mean_pc50.0": 0.012600706396953735,
+    "speed_mean_pc90.0": 0.032217968033540344
+  }
+}
+```
+
+### `asdp000000002.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000002.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000002_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000002_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000002.tgz",
+  "meta_uri": "asdp000000002_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000002_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000002_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.1880404299773629,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.0004444444444444444,
+    "bbox_area_min_pc50.0": 0.0029999999999999996,
+    "bbox_area_min_pc90.0": 0.05520000000000003,
+    "disp_e2e_norm_pc10.0": 0.013150891366613722,
+    "disp_e2e_norm_pc50.0": 0.03932530621599812,
+    "disp_e2e_norm_pc90.0": 0.08746970589153812,
+    "speed_mean_pc10.0": 0.03818533464827983,
+    "speed_mean_pc50.0": 0.05636555733457167,
+    "speed_mean_pc90.0": 0.0796965182997564
+  }
+}
+```
+
+### `asdp000000003.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000003.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000003_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000003_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000003.tgz",
+  "meta_uri": "asdp000000003_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000003_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000003_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.43095984260018483,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.0008888888888888888,
+    "bbox_area_min_pc50.0": 0.005333333333333333,
+    "bbox_area_min_pc90.0": 0.026000000000000037,
+    "disp_e2e_norm_pc10.0": 0.00035048231544996503,
+    "disp_e2e_norm_pc50.0": 0.0015622426493100956,
+    "disp_e2e_norm_pc90.0": 0.056604695448484454,
+    "speed_mean_pc10.0": 0.005392061745000075,
+    "speed_mean_pc50.0": 0.021025700023112163,
+    "speed_mean_pc90.0": 0.05330514316400805
+  }
+}
+```
+
+### `asdp000000004.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000004.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000004_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000004_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000004.tgz",
+  "meta_uri": "asdp000000004_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000004_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000004_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.12739922803776443,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.009733333333333332,
+    "bbox_area_min_pc50.0": 0.031999999999999994,
+    "bbox_area_min_pc90.0": 0.1111111111111111,
+    "disp_e2e_norm_pc10.0": 0.002453017752187065,
+    "disp_e2e_norm_pc50.0": 0.02011597240202452,
+    "disp_e2e_norm_pc90.0": 0.07558867559062409,
+    "speed_mean_pc10.0": 0.028075508896454424,
+    "speed_mean_pc50.0": 0.04117736324937072,
+    "speed_mean_pc90.0": 0.05489212588052019
+  }
+}
+```
+
+### `asdp000000005.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000005.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000005_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000005_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000005.tgz",
+  "meta_uri": "asdp000000005_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000005_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000005_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.39075343872374446,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.0008888888888888888,
+    "bbox_area_min_pc50.0": 0.011111111111111112,
+    "bbox_area_min_pc90.0": 0.07333333333333333,
+    "disp_e2e_norm_pc10.0": 0.0007790465841314711,
+    "disp_e2e_norm_pc50.0": 0.004575835618216441,
+    "disp_e2e_norm_pc90.0": 0.04940591257664273,
+    "speed_mean_pc10.0": 0.011610750552912196,
+    "speed_mean_pc50.0": 0.01935174523721325,
+    "speed_mean_pc90.0": 0.06463665369936003
+  }
+}
+```
+
+### `asdp000000006.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000006.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000006_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000006_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000006.tgz",
+  "meta_uri": "asdp000000006_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000006_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000006_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.4979835987128774,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.0006666666666666666,
+    "bbox_area_min_pc50.0": 0.004333333333333333,
+    "bbox_area_min_pc90.0": 0.026533333333333332,
+    "disp_e2e_norm_pc10.0": 0.00040610124221509045,
+    "disp_e2e_norm_pc50.0": 0.0050190747265916515,
+    "disp_e2e_norm_pc90.0": 0.051151284536331595,
+    "speed_mean_pc10.0": 0.006904159503382919,
+    "speed_mean_pc50.0": 0.026050325407879615,
+    "speed_mean_pc90.0": 0.0569850270315855
+  }
+}
+```
+
+### `asdp000000007.tgz`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000007.tgz`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `asdp000000007_dpmsg.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000007_dpmsg.json`
+
+
+```json
+{
+  "instrument_name": "owls",
+  "dp_type": "helm",
+  "dp_uri": "asdp000000007.tgz",
+  "meta_uri": "asdp000000007_meta.json",
+  "meta_usage": true
+}
+```
+
+### `asdp000000007_meta.json`
+
+**경로:** `components/syn/fsw/cfs/owls/bundle/asdp000000007_meta.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.20619716368939348,
+  "priority_bin": 2,
+  "metadata": {
+    "bbox_area_min_pc10.0": 0.0020666666666666667,
+    "bbox_area_min_pc50.0": 0.01944444444444444,
+    "bbox_area_min_pc90.0": 0.1111111111111111,
+    "disp_e2e_norm_pc10.0": 0.0016796562579265617,
+    "disp_e2e_norm_pc50.0": 0.024577097042296586,
+    "disp_e2e_norm_pc90.0": 0.1111111111111111,
+    "speed_mean_pc10.0": 0.020117173258259367,
+    "speed_mean_pc50.0": 0.039868638411298556,
+    "speed_mean_pc90.0": 0.06526860304642995
+  }
+}
+```

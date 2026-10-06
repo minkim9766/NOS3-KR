@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,30 @@ choice/index
 harness/index
 initial/index
 state/index
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/`](choice/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/harness/`](harness/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/`](initial/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/`](state/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/choice/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/harness/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/initial/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/state/")
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/README.md`
+
+
+```markdown
+# state_machine/internal
+
+Tests for internal FPP state machines, i.e., state machines whose behavior
+is expressed in FPP.
+```

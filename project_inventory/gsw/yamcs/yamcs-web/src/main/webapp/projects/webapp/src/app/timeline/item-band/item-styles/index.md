@@ -3,16 +3,105 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-styles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `item-styles.component.html`
 
-file--item-styles.component.html
-file--item-styles.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-styles/item-styles.component.html`
+
+
+```html
+<p class="hint">When unset, items inherit the styling of the band they are displayed on.</p>
+<form [formGroup]="form">
+  <table class="style-table" formGroupName="properties">
+    <tr [class.disabled]="!backgroundColor_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle
+          #backgroundColor_overrideBand
+          formControlName="backgroundColor_overrideBand" />
+        Background Color
+      </td>
+      <td class="widget">
+        <input type="color" formControlName="backgroundColor" />
+      </td>
+    </tr>
+    <tr [class.disabled]="!textColor_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle #textColor_overrideBand formControlName="textColor_overrideBand" />
+        Text Color
+      </td>
+      <td class="widget">
+        <input type="color" formControlName="textColor" />
+      </td>
+    </tr>
+    <tr [class.disabled]="!textSize_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle #textSize_overrideBand formControlName="textSize_overrideBand" />
+        Text Size
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="textSize" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr [class.disabled]="!marginLeft_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle #marginLeft_overrideBand formControlName="marginLeft_overrideBand" />
+        Margin Left
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="marginLeft" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr [class.disabled]="!borderColor_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle #borderColor_overrideBand formControlName="borderColor_overrideBand" />
+        Border Color
+      </td>
+      <td class="widget">
+        <input type="color" formControlName="borderColor" />
+      </td>
+    </tr>
+    <tr [class.disabled]="!borderWidth_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle #borderWidth_overrideBand formControlName="borderWidth_overrideBand" />
+        Border Width
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="borderWidth" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr [class.disabled]="!cornerRadius_overrideBand.checked">
+      <td class="property">
+        <mat-slide-toggle #cornerRadius_overrideBand formControlName="cornerRadius_overrideBand" />
+        Corner Radius
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="cornerRadius" style="width: 100px" min="0" />
+      </td>
+    </tr>
+  </table>
+</form>
 ```
 
-## 항목
+### `item-styles.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-styles/item-styles.component.html`](file--item-styles.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-styles/item-styles.component.ts`](file--item-styles.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/item-styles/item-styles.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-item-styles',
+  templateUrl: './item-styles.component.html',
+  styleUrl: '../../shared/StyleTable.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ItemStylesComponent {
+  @Input()
+  form: UntypedFormGroup;
+}
+```

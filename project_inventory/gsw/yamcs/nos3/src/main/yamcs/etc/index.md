@@ -3,22 +3,342 @@
 
 **경로:** `gsw/yamcs/nos3/src/main/yamcs/etc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `extra_streams.sql`
 
-file--extra_streams.sql
-file--logging.properties
-file--processor.yaml
-file--yamcs.nos3.yaml
-file--yamcs.yaml
+**경로:** `gsw/yamcs/nos3/src/main/yamcs/etc/extra_streams.sql`
+
+
+```text
+create stream cfdp_in as select substring(packet, 16) as pdu from tm_realtime where extract_short(packet, 0) = 4093
+create stream cfdp_out (gentime TIMESTAMP, entityId long, seqNum int, pdu  binary)
+insert into tc_realtime select gentime, 'cfdp-service' as origin, seqNum, '/yamcs/cfdp/upload' as cmdName, unhex('1FFDC00000000000') + pdu as binary from cfdp_out
 ```
 
-## 항목
+### `logging.properties`
 
-- [`gsw/yamcs/nos3/src/main/yamcs/etc/extra_streams.sql`](file--extra_streams.sql) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/nos3/src/main/yamcs/etc/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/nos3/src/main/yamcs/etc/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.nos3.yaml`](file--yamcs.nos3.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/nos3/src/main/yamcs/etc/logging.properties`
+
+
+```text
+#rename this file to logging.properties in order to debug the SLE functionality
+
+
+handlers = java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = ALL
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.ConsoleFormatter
+
+
+org.yamcs.cfdp.level = FINE
+
+#this will cause the events to be also logged
+org.yamcs.events.EventProducer.level = ALL
+
+```
+
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/nos3/src/main/yamcs/etc/processor.yaml`
+
+
+```yaml
+realtime:
+  services:
+    - class: org.yamcs.StreamTmPacketProvider
+    - class: org.yamcs.StreamTcCommandReleaser
+    - class: org.yamcs.tctm.StreamParameterProvider
+      args:
+        streams: ["pp_realtime", "sys_param"]
+    - class: org.yamcs.algorithms.AlgorithmManager
+    - class: org.yamcs.parameter.LocalParameterManager
+  config:
+    subscribeAll: true
+    persistParameters: true
+    # Check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+    alarm:
+      parameterCheck: true
+      parameterServer: enabled
+    parameterCache:
+      enabled: false
+    tmProcessor:
+      # If container entries fit outside the binary packet, setting this to true causes the error
+      # to be ignored, otherwise an exception will be printed in Yamcs log output
+      ignoreOutOfContainerEntries: false
+    # Record all the parameters that have initial values at the start of the processor
+    recordInitialValues: true
+    # Record the local values
+    recordLocalValues: true
+
+
+# Used to perform step-by-step archive replays to displays, etc
+Archive:
+  services:
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+  config:
+    # Keep a small cache in case new displays are open while the replay is paused, to have the parameters readily available
+    parameterCache:
+      enabled: true
+      cacheAll: true
+      maxNumEntries: 8
+
+
+# Used by the ParameterArchive when rebuilding the parameter archive
+# no need for parameter cache
+ParameterArchive:
+  services:
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+  config:
+    parameterCache:
+      enabled: false
+
+
+# Used for performing archive retrievals via replays (e.g. GET /api/archive/{instance}/parameters/{name*}?source=replay)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+  services:
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+  config:
+    parameterCache:
+      enabled: false
+    subscribeContainerArchivePartitions: false
+```
+
+### `yamcs.nos3.yaml`
+
+**경로:** `gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.nos3.yaml`
+
+
+```yaml
+timeService:
+   class: org.yamcs.time.SimulationTimeService
+ 
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers:
+        - fs
+        - jvm
+  - class: org.yamcs.ProcessorCreatorService
+    args:
+      name: realtime
+      type: realtime
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+      realtimeFiller:
+        enabled: true
+      backFiller:
+        enabled: false
+        warmupTime: 60
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.cfdp.CfdpService
+    name: cfdp
+    args:
+     inactivityTimeout: 30000
+     sequenceNrLength: 4
+     maxPduSize: 484
+     inStream: cfdp_in
+     outStream: cfdp_out
+     incomingBucket: "ground"
+     allowRemoteProvidedBucket: false
+     allowRemoteProvidedSubdirectory: true
+     allowDownloadOverwrites: false
+     maxExistingFileRenames: 1000
+     eofAckTimeout: 5000
+     eofAckLimit: 5
+     sleepBetweenPdus: 250
+     maxNumPendingUploads: 1
+     pendingAfterCompletion: 10000
+     localEntities:
+       - name: ground
+         id: 21
+         bucket: ground
+     remoteEntities:
+       - name: spacecraft
+         id: 24
+         bucket: spacecraft
+     entityIdLength: 4
+     hasFileListingCapability: false
+     senderFaultHandlers:
+       AckLimitReached: suspend
+     fileListingParserClassName: org.yamcs.filetransfer.CsvListingParser
+     fileListingParserArgs:
+       timestampMultiplier: 1
+
+dataLinks:
+  - name: radio-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 6011
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+
+  - name: radio-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: cryptolib
+    port: 6010
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: debug-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: tm_realtime
+    port: 5013
+    packetPreprocessorClassName: org.yamcs.tctm.cfs.CfsPacketPreprocessor
+    packetPreprocessorArgs:
+      useLocalGenerationTime: true
+      
+  - name: debug-out
+    class: org.yamcs.tctm.UdpTcDataLink
+    stream: tc_realtime
+    host: nos-fsw
+    port: 5012
+    commandPostprocessorClassName: org.yamcs.tctm.cfs.CfsCommandPostprocessor
+
+  - name: truth42-in
+    class: org.yamcs.tctm.UdpTmDataLink
+    stream: truth42_data
+    port: 5111
+    updateSimulationTime: true
+    packetPreprocessorClassName: org.yamcs.nos3.Truth42PacketPreprocessor    
+
+mdb:
+  - type: xtce
+    args:
+      file: mdb/ccsds.xtce
+  - type: xtce
+    args:
+      file: mdb/cfs.xtce
+  - type: xtce
+    args:
+      file: mdb/ci_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/cmd_util.xtce
+  - type: xtce
+    args:
+      file: mdb/sim_42_truth.xtce
+  - type: xtce
+    args:
+      file: mdb/system.xtce
+  - type: xtce
+    args:
+      file: mdb/to_debug.xtce
+  - type: xtce
+    args:
+      file: mdb/pdu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/arducam/gsw/arducam.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_adcs/gsw/generic_adcs.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_css/gsw/generic_css.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_eps/gsw/generic_eps.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_fss/gsw/generic_fss.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_imu/gsw/generic_imu.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_mag/gsw/generic_mag.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_radio/gsw/generic_radio.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_reaction_wheel/gsw/generic_reaction_wheel.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_star_tracker/gsw/generic_star_tracker.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_thruster/gsw/generic_thruster.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/generic_torquer/gsw/generic_torquer.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/novatel_oem615/gsw/novatel_oem615.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/sample/gsw/sample.xtce
+  - type: xtce
+    args:
+      file: ${env.COMPONENT_DIR}/mgr/gsw/mgr.xtce
+#  - type: xtce
+#    args:
+#      file: mdb/syn.xtce
+
+# Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+      rootContainer: "/CCSDS/CCSDS_TM"
+    - name: "truth42_data"
+      processor: "realtime"
+      rootContainer: "/SIM_42_TRUTH/SIM_42_TRUTH_DATA/SIM_42_TRUTH_DATA"
+    - name: "tm_dump"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_dump", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  tc:
+    # - name: "tc_debug"
+    #  processor: "realtime"
+    #  tcPatterns: ["/TO_DEBUG/CMD/.*"]
+    - name: "tc_realtime"
+      processor: "realtime"
+  sqlFile: "etc/extra_streams.sql"
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/nos3/src/main/yamcs/etc/yamcs.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.http.HttpServer
+    args:
+      port: 8090
+      address: "0.0.0.0"
+      cors:
+        allowOrigin: "*"
+        allowCredentials: false
+
+# This is where Yamcs will persist its data. Paths are resolved relative to where Yamcs is running
+# from (by default: target/yamcs). This means that `mvn clean` will remove also persisted data.
+# Change this property to an absolute path in case you want to persist your data.
+dataDir: yamcs-data
+
+instances:
+  - nos3
+
+# Secret key unique to a particular Yamcs installation.
+# This is used to provide cryptographic signing.
+secretKey: changeme
+
+buckets:
+  - name: ground
+    path: ../../ground
+```

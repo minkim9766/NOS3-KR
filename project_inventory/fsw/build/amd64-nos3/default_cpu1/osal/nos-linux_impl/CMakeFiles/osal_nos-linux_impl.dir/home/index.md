@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/osal/nos-linux_impl/CMakeFiles/osal_nos-linux_impl.dir/home/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 minseo/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/osal/nos-linux_impl/CMakeFiles/osal_nos-linux_impl.dir/home/minseo/`](minseo/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

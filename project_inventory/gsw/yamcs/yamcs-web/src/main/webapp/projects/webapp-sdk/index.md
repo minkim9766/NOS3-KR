@@ -3,22 +3,106 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--ng-package.json
-file--package.json
-file--tsconfig.lib.json
-file--tsconfig.lib.prod.json
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/`](src/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/ng-package.json`](file--ng-package.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/package.json`](file--package.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/tsconfig.lib.json`](file--tsconfig.lib.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/tsconfig.lib.prod.json`](file--tsconfig.lib.prod.json) — UTF-8 텍스트 파일 본문 포함
+### `ng-package.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/ng-package.json`
+
+
+```json
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/webapp-sdk",
+  "assets": [
+    {
+      "input": "src/styles",
+      "glob": "**/*",
+      "output": "styles"
+    }
+  ],
+  "allowedNonPeerDependencies": ["."],
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  }
+}
+```
+
+### `package.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/package.json`
+
+
+```json
+{
+  "name": "@yamcs/webapp-sdk",
+  "version": "1.3.2",
+  "description": "SDK for Yamcs Web Components",
+  "author": "Yamcs Team <yamcs@spaceapplications.com>",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yamcs/yamcs.git",
+    "directory": "yamcs-web/src/main/webapp"
+  },
+  "peerDependencies": {
+    "@angular/common": "^19.1.5",
+    "@angular/core": "^19.1.5"
+  },
+  "dependencies": {
+    "@codemirror/lang-java": "^6.0.1",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-markdown": "^6.2.5",
+    "@codemirror/lang-python": "^6.1.5",
+    "@codemirror/state": "^6.5.2",
+    "codemirror": "^6.0.1",
+    "date-fns-tz": "^3.1.3",
+    "tslib": "^2.4.0"
+  },
+  "sideEffects": false
+}
+```
+
+### `tsconfig.lib.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/tsconfig.lib.json`
+
+
+```json
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/lib",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "types": []
+  },
+  "exclude": ["**/*.spec.ts"]
+}
+```
+
+### `tsconfig.lib.prod.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/tsconfig.lib.prod.json`
+
+
+```json
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "declarationMap": false
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
+}
+```

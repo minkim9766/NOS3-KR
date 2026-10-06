@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/data/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,16 +13,18 @@ evs/index
 hk/index
 inst/index
 owls/index
-file--dummy.txt
-file--mgr.bin
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/data/cam/`](cam/index) — 폴더
-- [`fsw/build/exe/cpu1/data/evs/`](evs/index) — 폴더
-- [`fsw/build/exe/cpu1/data/hk/`](hk/index) — 폴더
-- [`fsw/build/exe/cpu1/data/inst/`](inst/index) — 폴더
-- [`fsw/build/exe/cpu1/data/owls/`](owls/index) — 폴더
-- [`fsw/build/exe/cpu1/data/dummy.txt`](file--dummy.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/data/mgr.bin`](file--mgr.bin) — 빌드 산출물 (경로만)
+### `dummy.txt`
+
+**경로:** `fsw/build/exe/cpu1/data/dummy.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `mgr.bin`
+
+**경로:** `fsw/build/exe/cpu1/data/mgr.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

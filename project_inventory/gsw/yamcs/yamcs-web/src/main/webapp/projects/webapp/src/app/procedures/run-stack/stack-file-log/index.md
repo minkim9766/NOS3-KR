@@ -3,18 +3,137 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack-file-log.component.css`
 
-file--stack-file-log.component.css
-file--stack-file-log.component.html
-file--stack-file-log.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/stack-file-log.component.css`
+
+
+```css
+.main-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+}
+
+.tab-content {
+  position: absolute;
+  top: calc(24px + 36px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  padding: 24px;
+}
+
+table {
+  line-height: 12px;
+}
+
+table td {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+  vertical-align: top;
+}
+
+table td.time {
+  opacity: 0.8;
+}
+
+table td.message {
+  white-space: pre-wrap;
+}
 ```
 
-## 항목
+### `stack-file-log.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/stack-file-log.component.css`](file--stack-file-log.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/stack-file-log.component.html`](file--stack-file-log.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/stack-file-log.component.ts`](file--stack-file-log.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/stack-file-log.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button
+        [routerLink]="folderLink()"
+        [queryParams]="{ c: yamcs.context }"
+        icon="arrow_back" />
+      {{ objectName() | basename }}
+    </ng-template>
+
+    <ya-page-button
+      matTooltip="Save stack"
+      (clicked)="stackFileService.saveStack()"
+      [disabled]="!(stackFileService.dirty$ | async)"
+      icon="save">
+      Save
+    </ya-page-button>
+  </ya-instance-toolbar>
+
+  <div class="main-pane">
+    <app-stack-file-page-tabs [objectName]="objectName()" />
+
+    <div class="tab-content">
+      <table class="mono" style="width: 100%">
+        @for (log of stackFileService.logs$ | async; track log) {
+          <tr>
+            <td style="text-align: right" width="1">[{{ log.executionNumber }}]</td>
+            <td class="time" style="white-space: nowrap" width="1">
+              [{{ log.time | datetime: false }}]
+            </td>
+            <td class="message">{{ log.text }}</td>
+          </tr>
+        }
+      </table>
+    </div>
+  </div>
+</ya-instance-page>
+```
+
+### `stack-file-log.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/stack-file-log.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { StackFilePageTabsComponent } from '../stack-file-page-tabs/stack-file-page-tabs.component';
+import { StackFileService } from '../stack-file/StackFileService';
+
+@Component({
+  selector: 'app-stack-file-log',
+  templateUrl: './stack-file-log.component.html',
+  styleUrl: './stack-file-log.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [StackFilePageTabsComponent, WebappSdkModule],
+})
+export class StackFileLogComponent {
+  objectName = input.required<string>();
+
+  folderLink = computed(() => {
+    const objectName = this.objectName();
+    const idx = objectName.lastIndexOf('/');
+    if (idx === -1) {
+      return '/procedures/stacks/browse/';
+    } else {
+      const folderName = objectName.substring(0, idx);
+      return '/procedures/stacks/browse/' + folderName;
+    }
+  });
+
+  constructor(
+    readonly yamcs: YamcsService,
+    readonly stackFileService: StackFileService,
+  ) {}
+}
+```

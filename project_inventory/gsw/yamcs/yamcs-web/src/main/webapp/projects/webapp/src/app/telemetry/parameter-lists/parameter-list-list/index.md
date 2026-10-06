@@ -3,16 +3,163 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-list-list.component.html`
 
-file--parameter-list-list.component.html
-file--parameter-list-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-list/parameter-list-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Parameter lists">
+    @if (mayManageParameterLists()) {
+      <ya-page-button routerLink="create" [queryParams]="{ c: yamcs.context }" icon="add_box">
+        Create list
+      </ya-page-button>
+    }
+  </ya-instance-toolbar>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter [formControl]="filterControl" placeholder="Filter lists" />
+    </ya-filter-bar>
+
+    <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let item" style="vertical-align: top">
+          <a [routerLink]="item.id" [queryParams]="{ c: yamcs.context }">{{ item.name }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let item" class="wrap400" style="white-space: pre-wrap">
+          {{ item.description || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let item" style="vertical-align: top">
+          <ya-more>
+            <a mat-menu-item [routerLink]="[item.id, 'edit']" [queryParams]="{ c: yamcs.context }">
+              Edit list
+            </a>
+            <button mat-menu-item (click)="deleteList(item)">Delete list</button>
+          </ya-more>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    @if (!dataSource.data.length) {
+      <ya-empty-message>No rows to display</ya-empty-message>
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `parameter-list-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-list/parameter-list-list.component.html`](file--parameter-list-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-list/parameter-list-list.component.ts`](file--parameter-list-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-list/parameter-list-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuthService,
+  MessageService,
+  ParameterList,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './parameter-list-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterListListComponent implements AfterViewInit {
+  filterControl = new UntypedFormControl();
+
+  displayedColumns = ['name', 'description', 'actions'];
+  dataSource = new MatTableDataSource<ParameterList>();
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Parameter lists');
+    this.dataSource.filterPredicate = (plist, filter) => {
+      return plist.name.toLowerCase().indexOf(filter) >= 0;
+    };
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.dataSource.filter = queryParams.get('filter')!.toLowerCase();
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+    });
+
+    this.refresh();
+  }
+
+  mayManageParameterLists() {
+    return this.authService
+      .getUser()!
+      .hasSystemPrivilege('ManageParameterLists');
+  }
+
+  private refresh() {
+    this.yamcs.yamcsClient
+      .getParameterLists(this.yamcs.instance!)
+      .then((plists) => {
+        this.dataSource.data = plists;
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  deleteList(list: ParameterList) {
+    if (confirm(`Are you sure you want to delete the list '${list.name}'`)) {
+      this.yamcs.yamcsClient
+        .deleteParameterList(this.yamcs.instance!, list.id)
+        .then(() => this.refresh())
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+}
+```

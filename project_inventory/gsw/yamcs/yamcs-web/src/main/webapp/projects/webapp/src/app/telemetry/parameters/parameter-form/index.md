@@ -3,18 +3,182 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-form.component.css`
 
-file--parameter-form.component.css
-file--parameter-form.component.html
-file--parameter-form.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/parameter-form.component.css`
+
+
+```css
+.members {
+  margin-top: 5px;
+  padding-left: 10px;
+}
 ```
 
-## 항목
+### `parameter-form.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/parameter-form.component.css`](file--parameter-form.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/parameter-form.component.html`](file--parameter-form.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/parameter-form.component.ts`](file--parameter-form.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/parameter-form.component.html`
+
+
+```html
+@if (controlName$ | async; as controlName) {
+  <ng-container [formGroup]="formGroup">
+    @switch (parameter.type?.engType) {
+      @case ("enumeration") {
+        <ya-field [label]="parameter.name" [class.error]="err.invalid$ | async">
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <ya-errors #err [controlName]="controlName" />
+          <ya-select [formControlName]="controlName">
+            @for (enumValue of parameter.type?.enumValues; track enumValue) {
+              <ya-option [id]="enumValue.label" [label]="enumValue.label" />
+            }
+          </ya-select>
+        </ya-field>
+      }
+      @case ("boolean") {
+        <ya-field [label]="parameter.name" [class.error]="err.invalid$ | async">
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <ya-errors #err [controlName]="controlName" />
+          <div class="radio-group">
+            <label class="radio" [class.checked]="formGroup.controls[controlName].value === 'true'">
+              <input type="radio" [formControlName]="controlName" value="true" />
+              true
+            </label>
+            <label
+              class="radio"
+              [class.checked]="formGroup.controls[controlName].value === 'false'">
+              <input type="radio" [formControlName]="controlName" value="false" />
+              false
+            </label>
+          </div>
+        </ya-field>
+      }
+      @case ("time") {
+        <ya-field [label]="parameter.name" [class.error]="err.invalid$ | async">
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <ya-errors #err [controlName]="controlName" />
+          <ya-date-time-input [formControlName]="controlName" />
+        </ya-field>
+      }
+      @case ("binary") {
+        <ya-field [label]="parameter.name" [class.error]="err.invalid$ | async">
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <ya-errors #err [controlName]="controlName" />
+          <ya-binary-input [formControlName]="controlName" />
+        </ya-field>
+      }
+      @case ("aggregate") {
+        <ya-field [label]="parameter.name">
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <div class="members">
+            @for (member of parameter.type?.member; track member) {
+              <app-parameter-form
+                [parameter]="member"
+                [formGroup]="formGroup"
+                [parent]="parent ? parent + '.' + parameter.name : parameter.name" />
+              <br />
+            }
+          </div>
+        </ya-field>
+      }
+      @case ("integer") {
+        <ya-field [label]="parameter.name" [class.error]="err.invalid$ | async">
+          @if (parameter.type?.unitSet) {
+            <ya-meta>{{ parameter.type?.unitSet | units }}</ya-meta>
+          }
+          @if (parameter.type?.signed === false) {
+            <ya-meta>unsigned</ya-meta>
+          }
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <ya-errors #err [controlName]="controlName" />
+          <input type="text" [formControlName]="controlName" />
+        </ya-field>
+      }
+      @case ("float[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("double[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("integer[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("enumeration[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("string[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("boolean[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("time[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("binary[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @case ("aggregate[]") {
+        Setting array values via this website is not currently supported.
+      }
+      @default {
+        <ya-field [label]="parameter.name" [class.error]="err.invalid$ | async">
+          @if (parameter.type?.unitSet; as unitSet) {
+            <ya-meta>{{ unitSet | units }}</ya-meta>
+          }
+          <ya-meta>{{ parameter.type?.engType }}</ya-meta>
+          <ya-errors #err [controlName]="controlName" />
+          <input type="text" [formControlName]="controlName" />
+        </ya-field>
+      }
+    }
+  </ng-container>
+}
+```
+
+### `parameter-form.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-form/parameter-form.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { Parameter, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'app-parameter-form',
+  templateUrl: './parameter-form.component.html',
+  styleUrl: './parameter-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterFormComponent implements OnInit {
+  @Input()
+  formGroup: UntypedFormGroup;
+
+  @Input()
+  parameter: Parameter;
+
+  @Input()
+  parent: string;
+
+  controlName$ = new BehaviorSubject<string | null>(null);
+
+  ngOnInit() {
+    if (this.parent) {
+      this.controlName$.next(this.parent + '.' + this.parameter.name);
+    } else {
+      this.controlName$.next(this.parameter.name);
+    }
+  }
+}
+```

@@ -3,18 +3,64 @@
 
 **경로:** `fsw/tools/elf2cfetbl/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `codeql-build.yml`
 
-file--codeql-build.yml
-file--format-check.yml
-file--static-analysis.yml
+**경로:** `fsw/tools/elf2cfetbl/.github/workflows/codeql-build.yml`
+
+
+```yaml
+name: "CodeQL Analysis"
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  codeql:
+    name: Codeql
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with: 
+      component-path: tools/elf2cfetbl
+      make: 'make -C build/tools/elf2cfetbl'
 ```
 
-## 항목
+### `format-check.yml`
 
-- [`fsw/tools/elf2cfetbl/.github/workflows/codeql-build.yml`](file--codeql-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/tools/elf2cfetbl/.github/workflows/static-analysis.yml`](file--static-analysis.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/tools/elf2cfetbl/.github/workflows/format-check.yml`
+
+
+```yaml
+name: Format Check
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  format-check:
+    name: Run format check
+    uses: nasa/cFS/.github/workflows/format-check.yml@main
+```
+
+### `static-analysis.yml`
+
+**경로:** `fsw/tools/elf2cfetbl/.github/workflows/static-analysis.yml`
+
+
+```yaml
+name: Static Analysis
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+
+  static-analysis:
+    name: Run cppcheck
+    uses: nasa/cFS/.github/workflows/static-analysis.yml@main
+```

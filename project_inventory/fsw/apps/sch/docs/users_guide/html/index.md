@@ -3,232 +3,11407 @@
 
 **경로:** `fsw/apps/sch/docs/users_guide/html/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `annotated.html`
 
-file--annotated.html
-file--cfeevents.html
-file--cfs__sch_8dox.html
-file--CFS_SCH_Context.jpg
-file--cfsschcfg.html
-file--cfsschcmdmnems.html
-file--cfsschcmds.html
-file--cfsschcons.html
-file--cfsschdg.html
-file--cfsschfaqs.html
-file--cfsschintro.html
-file--cfsschopr.html
-file--cfsschovr.html
-file--cfsschreq.html
-file--cfsschrevhist.html
-file--cfsschtbl.html
-file--cfsschtlm.html
-file--cfsschtlmmnems.html
-file--classes.html
-file--dir_000001_000003.html
-file--dir_000002_000003.html
-file--dir_022912094a537929a0bde0dab891b546.html
-file--dir_022912094a537929a0bde0dab891b546_dep.dot
-file--dir_06b4137da42c477289d1d8772b2fc1ef.html
-file--dir_06b4137da42c477289d1d8772b2fc1ef_dep.dot
-file--dir_271b10dbb81786a3023752dae73f29cf.html
-file--dir_271b10dbb81786a3023752dae73f29cf_dep.dot
-file--dir_35def2882668f95914f1fd60fe8204e3.html
-file--dir_35def2882668f95914f1fd60fe8204e3_dep.dot
-file--dir_59f73f396cabe1b60606d7893817518c.html
-file--dir_59f73f396cabe1b60606d7893817518c_dep.dot
-file--dir_5b47e9dc76266c8a2322068895bf2d86.html
-file--dir_5b47e9dc76266c8a2322068895bf2d86_dep.dot
-file--dir_5db1b34cd30e1ff1f45f16025c27c361.html
-file--dir_5db1b34cd30e1ff1f45f16025c27c361_dep.dot
-file--dir_66bf159e40c144e71169039073992ebf.html
-file--dir_66bf159e40c144e71169039073992ebf_dep.dot
-file--dir_b8d1739202f65d59e58cdec119e32197.html
-file--dir_b8d1739202f65d59e58cdec119e32197_dep.dot
-file--dir_bb40d815f0f8c1946ec840a2dd86aa68.html
-file--dir_bb40d815f0f8c1946ec840a2dd86aa68_dep.dot
-file--dir_c5109755cf8c98315050f2a34aab358c.html
-file--dir_c5109755cf8c98315050f2a34aab358c_dep.dot
-file--dirs.html
-file--doxygen.css
-file--doxygen.png
-file--files.html
-file--functions.html
-file--functions_vars.html
-file--globals.html
-file--globals_defs.html
-file--globals_func.html
-file--graph_legend.dot
-file--graph_legend.html
-file--index.html
-file--installdox
-file--pages.html
-file--sch__custom_8c.html
-file--sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot
-file--sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5
-file--sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot
-file--sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5
-file--sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.dot
-file--sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.md5
-file--sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot
-file--sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5
-file--sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot
-file--sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5
-file--sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot
-file--sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5
-file--sch__custom_8c_source.html
-file--sch__custom_8h.html
-file--sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot
-file--sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5
-file--sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot
-file--sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5
-file--sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.dot
-file--sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.md5
-file--sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot
-file--sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5
-file--sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot
-file--sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5
-file--sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot
-file--sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5
-file--sch__custom_8h_source.html
-file--sch__events_8h.html
-file--sch__events_8h_source.html
-file--sch__msg_8h.html
-file--sch__msg_8h_source.html
-file--sch__msgdefs_8h.html
-file--sch__msgdefs_8h_source.html
-file--sch__msgids_8h.html
-file--sch__msgids_8h_source.html
-file--sch__perfids_8h.html
-file--sch__perfids_8h_source.html
-file--sch__platform__cfg_8h.html
-file--sch__platform__cfg_8h_source.html
-file--sch__tbldefs_8h.html
-file--sch__tbldefs_8h_source.html
-file--struct_s_c_h___diag_packet__t.html
-file--struct_s_c_h___entry_cmd__t.html
-file--struct_s_c_h___group_cmd__t.html
-file--struct_s_c_h___hk_packet__t.html
-file--struct_s_c_h___message_entry__t.html
-file--struct_s_c_h___no_args_cmd__t.html
-file--struct_s_c_h___schedule_entry__t.html
-file--tab_b.gif
-file--tab_l.gif
-file--tab_r.gif
-file--tabs.css
+**경로:** `fsw/apps/sch/docs/users_guide/html/annotated.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Data Structures</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Data Structures</h1>Here are the data structures with brief descriptions:<table>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___diag_packet__t.html">SCH_DiagPacket_t</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___entry_cmd__t.html">SCH_EntryCmd_t</a></td><td class="indexvalue">Entry Enable/Disable Commands </td></tr>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___group_cmd__t.html">SCH_GroupCmd_t</a></td><td class="indexvalue">Entry Enable/Disable Commands </td></tr>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___hk_packet__t.html">SCH_HkPacket_t</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___message_entry__t.html">SCH_MessageEntry_t</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___no_args_cmd__t.html">SCH_NoArgsCmd_t</a></td><td class="indexvalue">No Arguments Command </td></tr>
+  <tr><td class="indexkey"><a class="el" href="struct_s_c_h___schedule_entry__t.html">SCH_ScheduleEntry_t</a></td><td class="indexvalue"></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
 ```
 
-## 항목
+### `cfeevents.html`
 
-- [`fsw/apps/sch/docs/users_guide/html/annotated.html`](file--annotated.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfeevents.html`](file--cfeevents.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfs__sch_8dox.html`](file--cfs__sch_8dox.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/CFS_SCH_Context.jpg`](file--CFS_SCH_Context.jpg) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/users_guide/html/cfsschcfg.html`](file--cfsschcfg.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschcmdmnems.html`](file--cfsschcmdmnems.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschcmds.html`](file--cfsschcmds.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschcons.html`](file--cfsschcons.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschdg.html`](file--cfsschdg.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschfaqs.html`](file--cfsschfaqs.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschintro.html`](file--cfsschintro.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschopr.html`](file--cfsschopr.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschovr.html`](file--cfsschovr.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschreq.html`](file--cfsschreq.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschrevhist.html`](file--cfsschrevhist.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschtbl.html`](file--cfsschtbl.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschtlm.html`](file--cfsschtlm.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/cfsschtlmmnems.html`](file--cfsschtlmmnems.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/classes.html`](file--classes.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_000001_000003.html`](file--dir_000001_000003.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_000002_000003.html`](file--dir_000002_000003.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_022912094a537929a0bde0dab891b546.html`](file--dir_022912094a537929a0bde0dab891b546.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_022912094a537929a0bde0dab891b546_dep.dot`](file--dir_022912094a537929a0bde0dab891b546_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_06b4137da42c477289d1d8772b2fc1ef.html`](file--dir_06b4137da42c477289d1d8772b2fc1ef.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_06b4137da42c477289d1d8772b2fc1ef_dep.dot`](file--dir_06b4137da42c477289d1d8772b2fc1ef_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_271b10dbb81786a3023752dae73f29cf.html`](file--dir_271b10dbb81786a3023752dae73f29cf.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_271b10dbb81786a3023752dae73f29cf_dep.dot`](file--dir_271b10dbb81786a3023752dae73f29cf_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_35def2882668f95914f1fd60fe8204e3.html`](file--dir_35def2882668f95914f1fd60fe8204e3.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_35def2882668f95914f1fd60fe8204e3_dep.dot`](file--dir_35def2882668f95914f1fd60fe8204e3_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_59f73f396cabe1b60606d7893817518c.html`](file--dir_59f73f396cabe1b60606d7893817518c.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_59f73f396cabe1b60606d7893817518c_dep.dot`](file--dir_59f73f396cabe1b60606d7893817518c_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_5b47e9dc76266c8a2322068895bf2d86.html`](file--dir_5b47e9dc76266c8a2322068895bf2d86.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_5b47e9dc76266c8a2322068895bf2d86_dep.dot`](file--dir_5b47e9dc76266c8a2322068895bf2d86_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_5db1b34cd30e1ff1f45f16025c27c361.html`](file--dir_5db1b34cd30e1ff1f45f16025c27c361.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_5db1b34cd30e1ff1f45f16025c27c361_dep.dot`](file--dir_5db1b34cd30e1ff1f45f16025c27c361_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_66bf159e40c144e71169039073992ebf.html`](file--dir_66bf159e40c144e71169039073992ebf.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_66bf159e40c144e71169039073992ebf_dep.dot`](file--dir_66bf159e40c144e71169039073992ebf_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_b8d1739202f65d59e58cdec119e32197.html`](file--dir_b8d1739202f65d59e58cdec119e32197.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_b8d1739202f65d59e58cdec119e32197_dep.dot`](file--dir_b8d1739202f65d59e58cdec119e32197_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_bb40d815f0f8c1946ec840a2dd86aa68.html`](file--dir_bb40d815f0f8c1946ec840a2dd86aa68.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_bb40d815f0f8c1946ec840a2dd86aa68_dep.dot`](file--dir_bb40d815f0f8c1946ec840a2dd86aa68_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_c5109755cf8c98315050f2a34aab358c.html`](file--dir_c5109755cf8c98315050f2a34aab358c.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dir_c5109755cf8c98315050f2a34aab358c_dep.dot`](file--dir_c5109755cf8c98315050f2a34aab358c_dep.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/dirs.html`](file--dirs.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/doxygen.css`](file--doxygen.css) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/doxygen.png`](file--doxygen.png) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/users_guide/html/files.html`](file--files.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/functions.html`](file--functions.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/functions_vars.html`](file--functions_vars.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/globals.html`](file--globals.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/globals_defs.html`](file--globals_defs.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/globals_func.html`](file--globals_func.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/graph_legend.dot`](file--graph_legend.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/graph_legend.html`](file--graph_legend.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/index.html`](file--index.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/installdox`](file--installdox) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/pages.html`](file--pages.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c.html`](file--sch__custom_8c.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot`](file--sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5`](file--sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot`](file--sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5`](file--sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.dot`](file--sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.md5`](file--sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot`](file--sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5`](file--sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot`](file--sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5`](file--sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot`](file--sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5`](file--sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8c_source.html`](file--sch__custom_8c_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h.html`](file--sch__custom_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot`](file--sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5`](file--sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot`](file--sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5`](file--sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.dot`](file--sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.md5`](file--sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot`](file--sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5`](file--sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot`](file--sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5`](file--sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot`](file--sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5`](file--sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__custom_8h_source.html`](file--sch__custom_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__events_8h.html`](file--sch__events_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__events_8h_source.html`](file--sch__events_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__msg_8h.html`](file--sch__msg_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__msg_8h_source.html`](file--sch__msg_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__msgdefs_8h.html`](file--sch__msgdefs_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__msgdefs_8h_source.html`](file--sch__msgdefs_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__msgids_8h.html`](file--sch__msgids_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__msgids_8h_source.html`](file--sch__msgids_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__perfids_8h.html`](file--sch__perfids_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__perfids_8h_source.html`](file--sch__perfids_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__platform__cfg_8h.html`](file--sch__platform__cfg_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__platform__cfg_8h_source.html`](file--sch__platform__cfg_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__tbldefs_8h.html`](file--sch__tbldefs_8h.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/sch__tbldefs_8h_source.html`](file--sch__tbldefs_8h_source.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___diag_packet__t.html`](file--struct_s_c_h___diag_packet__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___entry_cmd__t.html`](file--struct_s_c_h___entry_cmd__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___group_cmd__t.html`](file--struct_s_c_h___group_cmd__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___hk_packet__t.html`](file--struct_s_c_h___hk_packet__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___message_entry__t.html`](file--struct_s_c_h___message_entry__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___no_args_cmd__t.html`](file--struct_s_c_h___no_args_cmd__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/struct_s_c_h___schedule_entry__t.html`](file--struct_s_c_h___schedule_entry__t.html) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/users_guide/html/tab_b.gif`](file--tab_b.gif) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/users_guide/html/tab_l.gif`](file--tab_l.gif) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/users_guide/html/tab_r.gif`](file--tab_r.gif) — 바이너리 (경로만)
-- [`fsw/apps/sch/docs/users_guide/html/tabs.css`](file--tabs.css) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfeevents.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: cFE Event Message Cross Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfeevents">cFE Event Message Cross Reference </a></h1><p><a class="anchor" id="_cfeevents000010"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a9ca4152086ae41a90e6965e646b82208">SCH_ACQ_PTR_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error Acquiring Tbl Ptrs (RC=0x08X)' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000002"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a256a037e3b606b512b11a07fc9ebcf92">SCH_APP_EXIT_EID</a>  </dt>
+<dd><p class="startdd"><code> 'SCH App: terminating, err = 0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000041"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#ae31e105060e10bea7f771a275990d6fb">SCH_CC_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Invalid command code: ID = 0x04X, CC = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000043"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#af4a0a7f8d400a0613ebbbd0994ef1b17">SCH_CMD_LEN_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Cmd Msg with Bad length Rcvd: ID = 0x04X, CC = d, Exp Len = d, Len = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000018"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a7106064c2a3fc6047b96df11eb32b6ba">SCH_CORRUPTION_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Corrupt data error (1): slot = d, entry = d' </code> </p>
+<p><code> 'Corrupt data error (2): msg = d, freq = d, type = d, rem = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000003"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a81c7648731fb8579658ee3ad64f6a6e6">SCH_CR_PIPE_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error Creating SB Pipe, RC=0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000030"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a093d7419db5a9c6b9c6e5577a7b9a0cb">SCH_DIS_GRP_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'DISABLE GROUP command: match count = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000039"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a7b3262d4162697944408caca0d77e53c">SCH_DIS_GRP_CMD_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'DISABLE GROUP command: invalid argument, no groups selected' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000040"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#afc9ac9162862cc253aa6752f9144d97d">SCH_DIS_GRP_NOT_FOUND_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'DISABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000035"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#abbbdffaf3a9a53153aba67f76b346839">SCH_DISABLE_CMD_ARG_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'DISABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000028"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#ab121f57cb66e52bf03ee5aebbd7b54c2">SCH_DISABLE_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'DISABLE command: slot = d, entry = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000036"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a16f497f25d045c5e801b50cfaeea8ab1">SCH_DISABLE_CMD_ENTRY_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'DISABLE command: invalid state = d, slot = d, entry = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000029"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a10d7bdb94ef40f5f820e7665b67a0eac">SCH_ENA_GRP_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'ENABLE GROUP command: match count = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000037"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#af4161cac1856709b11fe34d4e4f30271">SCH_ENA_GRP_CMD_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'ENABLE GROUP command: invalid argument, no groups selected' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000038"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a1693b293344b191bda7ef84366eb67b8">SCH_ENA_GRP_NOT_FOUND_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'ENABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000031"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a16e0b6b024dea3ae0e43803b80506239">SCH_ENA_SYNC_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Major Frame Synchronization Enabled' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000033"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a3c2b9df457018122b51e02c4a64ce08d">SCH_ENABLE_CMD_ARG_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'ENABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000027"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#ad4bc902a2dbfa52aac0f26b8016937fb">SCH_ENABLE_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'ENABLE command: slot = d, entry = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000034"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#ab25b9e84f06d75ae7644b19a5ccc9c86">SCH_ENABLE_CMD_ENTRY_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'ENABLE command: invalid state = d, slot = d, entry = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000001"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a2143003d800956b0a42acb189559dc97">SCH_INITSTATS_INF_EID</a>  </dt>
+<dd><p class="startdd"><code> 'SCH Initialized. Version d.d.d.d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000013"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#affe219cf221b8d99d6f3d16c64e69113">SCH_MAJOR_FRAME_SUB_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error initializing Timers (RC=0x08X)' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000042"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a1b0be4d0a46e6c95e635156fbd702e81">SCH_MD_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Msg with Invalid message ID Rcvd -- ID = 0x04X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000009"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a75646ae6d481e98d542a494e3c820d2e">SCH_MDT_LOAD_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error (RC=0x08X) Loading MDT with s' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000007"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a60d28cfacc16c1d0e899df00d9af99ca">SCH_MDT_REG_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error Registering MDT, RC=0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000024"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a3a3ae4906a52675ab0f10b23605b28b2">SCH_MESSAGE_TABLE_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Message tbl verify results - good[d] bad[d] unused[d]' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000023"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a60de1571f084de6c9bde8353674f8b9a">SCH_MESSAGE_TBL_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Message tbl verify err - idx[d] mid[0xX] len[d] buf[d]' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000012"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a681ef7909a2bf197cdc1455f20b75a41">SCH_MINOR_FRAME_TIMER_ACC_WARN_EID</a>  </dt>
+<dd><p class="startdd"><code> 'OS Timer Accuracy (d &gt; reqd d usec) requires Minor Frame MET sync' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000011"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a44d4138566976dff1e1cd1b3ba600f82">SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error creating Timer (RC=0x08X)' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000017"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a09da55d4b05f10b67a494237cbf79bfe">SCH_MULTI_SLOTS_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Multiple slots processed: slot = d, count = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000020"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#af8eb00478531ff0f7b5b871387367869">SCH_NOISY_MAJOR_FRAME_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Major Frame Sync too noisy (Slot d). Disabling synchronization.' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000025"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f">SCH_NOOP_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'NO-op command. Version d.d.d.d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000019"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a5cc7d962d11700c662adc8f339b7e593">SCH_PACKET_SEND_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Activity error: slot = d, entry = d, err = 0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000026"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a413a36e0a66d1471334fc7566d4f8aab">SCH_RESET_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'RESET command' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000015"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a6782d568df5b282bce3d5a11e8e76bc5">SCH_SAME_SLOT_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Slot did not increment: slot = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000022"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#aaf1c92d4e949026b4f85c2f79210b47a">SCH_SCHEDULE_TABLE_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Schedule table verify results -- good[d] bad[d] unused[d]' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000021"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a7d5634d49287b21e94b50cef2b02172d">SCH_SCHEDULE_TBL_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Schedule tbl verify error - idx[d] ena[d] typ[d] fre[d] rem[d] msg[d] grp[0x08X]' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000008"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a00b148cce3c683c09b56029c416ea387">SCH_SDT_LOAD_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error (RC=0x08X) Loading SDT with s' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000006"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#afdb83b5dd5111305728c15e192ba6bb7">SCH_SDT_REG_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error Registering SDT, RC=0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000014"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#ad6719efdf25d2fd4d049cc76540a59f2">SCH_SEM_CREATE_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error creating Main Loop Timing Semaphore (RC=0x08X)' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000032"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#aafd0af9dff5ed932aefd1a94cf6ee4b9">SCH_SEND_DIAG_CMD_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Transmitting Diagnostic Message' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000016"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a3d22029ece03daab899155c861a90db3">SCH_SKIPPED_SLOTS_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Slots skipped: slot = d, count = d' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000005"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#a1935c5e4374cf3af5c7bcf0473a9e4a1">SCH_SUB_GND_CMD_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error Subscribing to GND CMD(MID=0x04X), RC=0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfeevents000004"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__events_8h.html#ae3f383a940a0199ce06958cb1d422314">SCH_SUB_HK_REQ_ERR_EID</a>  </dt>
+<dd><p class="startdd"><code> 'Error Subscribing to HK Request(MID=0x04X), RC=0x08X' </code></p>
+<p class="enddd"></p>
+</dd>
+</dl>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfs__sch_8dox.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfs__sch_8dox.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/docs/dox_src/users_guide/cfs_sch.dox File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>sch/docs/dox_src/users_guide/cfs_sch.dox File Reference</h1><table border="0" cellpadding="0" cellspacing="0">
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `CFS_SCH_Context.jpg`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/CFS_SCH_Context.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `cfsschcfg.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschcfg.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Configuration Parameters</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschcfg">CFS Scheduler Configuration Parameters </a></h1><table border="1" cellpadding="2" width="60%" align="CENTER" cellspacing="3">
+<tr>
+<td width="20%" align="CENTER"><p><b><a class="el" href="cfsschcmds.html">CFS Scheduler Commands</a></b> </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschtlm.html">CFS Scheduler Telemetry</a></b>  </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschtbl.html">CFS Scheduler Table Definitions</a></b> </p>
+</td></tr>
+</table>
+<p>The following are configuration parameters used to configure the CFS Scheduler Application either for each platform or for a mission as a whole.</p>
+<p><a class="anchor" id="_cfsschcfg000003"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">SCH_ENTRIES_PER_SLOT</a>  </dt>
+<dd><p class="startdd">Maximum number of Activities per Minor Frame</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000016"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a52bf5079eb88fd0172002e0e51f98968">SCH_LIB_DIS_CTR</a>  </dt>
+<dd><p class="startdd">Scheduler API Library Initial Inhibition Count</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000015"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a3e60196dcee964e40ea2fa02432ce9f1">SCH_LIB_PRESENCE</a>  </dt>
+<dd><p class="startdd">Scheduler API Library Usage Status</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000008"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a3c0b63876d747b502eca1d357db4811b">SCH_MAX_LAG_COUNT</a>  </dt>
+<dd><p class="startdd">Maximum Number of slots allowed for catch-up before skipping</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000004"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">SCH_MAX_MESSAGES</a>  </dt>
+<dd><p class="startdd">Maximum Number of Message Definitions in Message Definition Table</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000007"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">SCH_MAX_MSG_WORDS</a>  </dt>
+<dd><p class="startdd">Maximum Length, in Words, of a Message</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000014"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a73f474fd107fc1572d7c19747f088cff">SCH_MAX_NOISY_MAJORF</a>  </dt>
+<dd><p class="startdd">Maximum Number of consecutive Noisy Major Frame signals before they are ignored</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000009"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#af171824906a7a855149ef5f2a6864f3c">SCH_MAX_SLOTS_PER_WAKEUP</a>  </dt>
+<dd><p class="startdd">Maximum Number of Slots to be processed when in "Catch Up" mode</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000006"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a2bd1b9c1ac55dfa973315131d4da9262">SCH_MDT_MAX_MSG_ID</a>  </dt>
+<dd><p class="startdd">Maximum Message ID allowed in Message Definition Table</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000005"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a9548b3ea10b92bc3ff1940d4a93d41dc">SCH_MDT_MIN_MSG_ID</a>  </dt>
+<dd><p class="startdd">Minimum Message ID allowed in Message Definition Table</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000018"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">SCH_MESSAGE_FILENAME</a>  </dt>
+<dd><p class="startdd">Default SCH Message Definition Table Filename</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000010"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a713f29f56d23240c78fc018a571723d3">SCH_MICROS_PER_MAJOR_FRAME</a>  </dt>
+<dd><p class="startdd">Major Frame Period (in microseconds)</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000019"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a780b944ab488ad7a4c4e4e81161d23f5">SCH_MISSION_REV</a>  </dt>
+<dd><p class="startdd">Mission specific version number for SCH application</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000001"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a0efb7feeef71f7d97bbca9bae5dd7c36">SCH_PIPE_DEPTH</a>  </dt>
+<dd><p class="startdd">Software Bus Command Pipe Depth</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000017"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">SCH_SCHEDULE_FILENAME</a>  </dt>
+<dd><p class="startdd">Default SCH Schedule Definition Table Filename</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000013"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">SCH_STARTUP_PERIOD</a>  </dt>
+<dd><p class="startdd">Time, in microseconds, to wait for first Major Frame Sync to arrive</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000012"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">SCH_STARTUP_SYNC_TIMEOUT</a>  </dt>
+<dd><p class="startdd">Time, in milliseconds, to wait for all applications to be started and ready to run</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000011"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#afa493b73d6d26f4171bce55904f7989e">SCH_SYNC_SLOT_DRIFT_WINDOW</a>  </dt>
+<dd><p class="startdd">Additional time allowed in Sync Slot to wait for Major Frame Sync (in microseconds)</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcfg000002"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>  </dt>
+<dd><p class="startdd">Minor Frame Frequency (in Hz)</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschcmdmnems.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschcmdmnems.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH Command Mnemonic Cross Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschcmdmnems">SCH Command Mnemonic Cross Reference </a></h1><p><a class="anchor" id="_cfsschcmdmnems000004"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_DisableEntry</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000006"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_DisableGroup</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000003"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_EnableEntry</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000005"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_EnableGroup</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000007"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">SCH_ENABLE_SYNC_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_EnableSync</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000001"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">SCH_NOOP_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_NOOP</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000002"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">SCH_RESET_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_ResetCtrs</code>  </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmdmnems000008"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">SCH_SEND_DIAG_TLM_CC</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_SendDiagnostic</code>  </b> </dd>
+</dl>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschcmds.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschcmds.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Commands</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschcmds">CFS Scheduler Commands </a></h1><table border="1" cellpadding="2" width="60%" align="CENTER" cellspacing="3">
+<tr>
+<td width="20%" align="CENTER"><p><b><a class="el" href="cfsschtlm.html">CFS Scheduler Telemetry</a></b>  </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschtbl.html">CFS Scheduler Table Definitions</a></b> </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschcfg.html">CFS Scheduler Configuration Parameters</a></b> </p>
+</td></tr>
+</table>
+<p>The following is a list of Commands that are processed by the CFS Scheduler Application.</p>
+<p><a class="anchor" id="_cfsschcmds000004"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a>  </dt>
+<dd><p class="startdd">Disable Schedule Entry</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000006"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a>  </dt>
+<dd><p class="startdd">Disable Group and/or Multi-Groups of Schedule Activities</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000003"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>  </dt>
+<dd><p class="startdd">Enable Schedule Table Entry</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000005"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a>  </dt>
+<dd><p class="startdd">Enable Group and/or Multi-Groups of Schedule Activities</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000007"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">SCH_ENABLE_SYNC_CC</a>  </dt>
+<dd><p class="startdd">Enable Major Frame Synchronization</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000001"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">SCH_NOOP_CC</a>  </dt>
+<dd><p class="startdd">Scheduler No-Op</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000002"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">SCH_RESET_CC</a>  </dt>
+<dd><p class="startdd">Scheduler Reset Counters</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+<p><a class="anchor" id="_cfsschcmds000008"></a> </p>
+<dl>
+<dt>Global <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">SCH_SEND_DIAG_TLM_CC</a>  </dt>
+<dd><p class="startdd">Telemeter Scheduler Diagnostic Packet</p>
+<p class="enddd"></p>
+</dd>
+</dl>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschcons.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschcons.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Constraints</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschcons">CFS Scheduler Constraints </a></h1><p>The Scheduler Application will fail on startup if the following conditions are not met: <br/>
+</p>
+<ul>
+<li>
+Unable to create a Software Bus Pipe <br/>
+ </li>
+<li>
+Unable to subscribe to the SCH Command Message <br/>
+ </li>
+<li>
+Unable to subscribe to the SCH Housekeeping Request Message <br/>
+ </li>
+<li>
+Unable to register for cFE Event Services <br/>
+ </li>
+<li>
+Unable to register the Schedule Definition Table with cFE Table Services <br/>
+ </li>
+<li>
+Unable to register the Message Definition Table with cFE Table Services <br/>
+ </li>
+<li>
+Unable to load the Schedule Definition Table with a defaut table file <br/>
+ </li>
+<li>
+Unable to load the Message Definition Table with a defaut table file <br/>
+ </li>
+<li>
+Unable to acquire pointers to the Schedule and Message Definition Tables <br/>
+ </li>
+<li>
+Unable to create a Minor Frame Timer via OSAL <br/>
+ </li>
+<li>
+Unable to create a Semaphore via OSAL <br/>
+ </li>
+<li>
+Unable to register for the Major Frame signal via cFE TIME Services <br/>
+ </li>
+</ul>
+<p>Each one of these conditions will generate a unique event message and will cause the SCH Application to terminate before processing any of the Schedule Definition Table.</p>
+<p>Next: <a class="el" href="cfsschfaqs.html">CFS Scheduler Frequently Asked Questions</a> <br/>
+ Prev: <a class="el" href="cfsschcfg.html">CFS Scheduler Configuration Parameters</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschdg.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschdg.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Deployment Guide</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschdg">CFS Scheduler Deployment Guide </a></h1><p>In order to successfully integrate the Scheduler Application into a system, the cFE must first be configured to allow for the following: <br/>
+</p>
+<ul>
+<li>
+The  CFE Software Bus must be configured to have sufficient Pipe resources to allocate one pipe to SCH (see CFE_SB_MAX_PIPES) with a pipe depth as specified by <a class="el" href="sch__platform__cfg_8h.html#a0efb7feeef71f7d97bbca9bae5dd7c36" title="SCH Command Pipe Depth.">SCH_PIPE_DEPTH</a> <br/>
+ </li>
+<li>
+The  CFE Table Services must be configured to allow SCH to have two single buffered tables (see CFE_TBL_MAX_NUM_TABLES) <br/>
+ </li>
+<li>
+The  CFE Table Services must be configured to allow for Single Buffered Tables as large as the largest of the SCH Schedule Definition Table and the Message Definition Table. The Schedule Definition Table's size can be determined with the following equation: <br/>
+<br/>
+ SDT Size (in bytes) = <a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a> * <a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">SCH_ENTRIES_PER_SLOT</a> * 12 (sizeof one SDT record)<br/>
+<br/>
+ The size of the Message Definition Table can be determined with the following equation:<br/>
+<br/>
+ MDT Size (in bytes) = <a class="el" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">SCH_MAX_MSG_WORDS</a> * <a class="el" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">SCH_MAX_MESSAGES</a> <br/>
+<br/>
+ </li>
+<li>
+The <a class="el" href="sch__msgids_8h.html#a6b68abc81890d0891f1562df904fca7d">SCH Housekeeping Request Message </a> needs to be put into the SCH Schedule Definition Table and the SCH Message Definition Table in order to notify SCH when the SCH Housekeeping message should be generated <br/>
+ </li>
+<li>
+The default SCH Schedule Definition Table (location specified by the <a class="el" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">SCH_SCHEDULE_FILENAME</a> configuration parameter) must be available before the SCH is started <br/>
+ </li>
+<li>
+The default SCH Message Definition Table (location specified by the <a class="el" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">SCH_MESSAGE_FILENAME</a> configuration parameter) must be available before the SCH is started <br/>
+ </li>
+</ul>
+<h3>Scheduler Timing Customization</h3>
+<p>The Scheduler application contains the file <code><a class="el" href="sch__custom_8c.html">sch_custom.c</a></code> which can be adapted to take advantage of platform specific functionality concerning Major Frame timing, Minor Frame timing, and current slot determiniation. While no changes are required to this file for SCH to be functional, it may be possible to obtain better accuracy or increase processing efficiency by modifying the contents. <br/>
+</p>
+<p>This customizable section of code includes four required functions for interface purposes: </p>
+<ul>
+<li>
+<a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a> </li>
+<li>
+<a class="el" href="sch__custom_8c.html#a769b51f7ffc7c7711cc7bf0856702a77" title="Custom Late Initialization.">SCH_CustomLateInit</a> </li>
+<li>
+<a class="el" href="sch__custom_8c.html#a0f0feaac769ebba7a790a5575edfa482" title="Obtains the Current Slot (Minor Frame) number.">SCH_CustomGetCurrentSlotNumber</a> </li>
+<li>
+<a class="el" href="sch__custom_8c.html#a521f028b851995a3755ed7e4294f3b9e" title="Custom Cleanup.">SCH_CustomCleanup</a> </li>
+</ul>
+<p>It also contains two important local functions that act as interrupt handlers: </p>
+<ul>
+<li>
+<a class="el" href="sch__custom_8c.html#a18afe2a56ba0bfdd348e88f0d8a9d55b" title="Performs Major Frame Synchronization.">SCH_MajorFrameCallback</a> </li>
+<li>
+<a class="el" href="sch__custom_8c.html#af2799afed4a19fadc0a75dc7419a93ca" title="Performs Minor Frame time step.">SCH_MinorFrameCallback</a> </li>
+</ul>
+<p>These Callback functions should not require significant modification if just changing the timing source. It is very important to note, however, that SCH_MinorFrameCallback currently assumes that it is using a timing function similar to OS_TimerSet that allows both a first and a subsequent repeated time setting. If a time setting function that only allows a single time to be set is used, a further case must be added that will allow the SCH_SHORT_SLOT_PERIOD to be set back to SCH_NORMAL_SLOT_PERIOD on the next minor frame call if the major frame is no longer being used. <br/>
+</p>
+<h3>Stopping/Starting Scheduler During Critical Activities</h3>
+<p>The Scheduler application has an associated Scheduler Library that can be used to enable and disable schedule processing if <a class="el" href="sch__platform__cfg_8h.html#a3e60196dcee964e40ea2fa02432ce9f1">SCH_LIB_PRESENCE</a> is set to 1 (if it is set to 0, the library is not used, and does not even need to exist). The library consists of three APIs: </p>
+<ul>
+<li>
+SCH_EnableProcessing </li>
+<li>
+SCH_DisableProcessing </li>
+<li>
+SCH_GetProcessingState </li>
+</ul>
+<p>SCH_EnableProcessing must be called as many times as SCH_DisableProcessing has previously been called to re-enable processing. Note that while processing is disabled, SCH will not respond to ground commands.</p>
+<p>Next: <a class="el" href="cfsschcmds.html">CFS Scheduler Commands</a> <br/>
+ Prev: <a class="el" href="cfsschreq.html">CFS Scheduler Requirements</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschfaqs.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschfaqs.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Frequently Asked Questions</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschfaqs">CFS Scheduler Frequently Asked Questions </a></h1><h1>Timing Concerns </h1>
+<p><b> (Q) What does the 'OS Timer Accuracy (d &gt; reqd d usec) requires Minor Frame MET sync' event message mean when I see it on startup? </b> <br/>
+ <br/>
+ <em> The Scheduler Application determines what kind of accuracy it requires from a Minor Frame timer based on the number of slots in a Major Frame and the length of a Major Frame. When it attempts to create a Minor Frame timer via the OSAL, it requests a timer with this required accuracy. If the OSAL is unable to provide a timer with the appropriate accuracy, SCH will generate this event message identifying what accuracy it requested and what accuracy was provided. SCH will attempt to run as best as it can with the degraded performance of its Minor Frame timer. SCH will compensate by using the MET timer from TIME services to determine which Minor Frames it needs to process on each wake-up. It will inevitably be required to process multiple Minor Frames during a single Minor Frame wake-up due to drift caused by the poor Minor Frame accuracy. This may produce a certain level of inconsistency to tests run and re-run on the same processor.</em></p>
+<p><em> To solve the problem, the board or board support package must be enhanced to provide a Minor Frame timer with the necessary accuracy. OR, the user must reduce the number of Minor Frames in a Major Frame so that Minor Frames can be consistently performed on a Minor Frame wake-up. </em></p>
+<p><b> (Q) Why does it take an inordinate amount of time for SCH to begin processing following a reboot? </b> <br/>
+ <br/>
+ <em> There are two possible causes for this. First, the SCH Application does not begin processing the Schedule Definition Table until all Applications specified in the startup script have been loaded, started and have completed their initialization. By waiting for all other Applications to reach a starting point where they are capable of processing messages, a variety of error messages caused by messages being issued by the SCH Application before the associated Application is ready to receive them. If there is an Application in the startup script that fails to start correctly, the SCH Application will wait for the configuration specified <a class="el" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">SCH_STARTUP_SYNC_TIMEOUT</a> period before it assumes as many startup Applications have started that are going to start.</em></p>
+<p><em> Another possibility is the time spent waiting for the first Major Frame signal from the cFE. The SCH Application is configured via the <a class="el" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">SCH_STARTUP_PERIOD</a> parameter to wait a certain amount of time following the successful startup of the Applications specified in the startup script to wait for the first Major Frame signal. If the signal does not manage to appear within the specified timeout, the SCH Application will use the Minor Frame timer to generate an appropriate Major Frame signal. </em></p>
+<p>Prev: <a class="el" href="cfsschcons.html">CFS Scheduler Constraints</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschintro.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschintro.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Introduction</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschintro">CFS Scheduler Introduction </a></h1><h2>Scope </h2>
+<p>This document provides a complete specification for the commands and telemetry associated with the CFS Scheduler (SCH) application software. The document is intended primarily for users of the software (operations personal, test engineers, and maintenance personnel). The last section of the document, the deployment guide section, is intended for mission developers when deploying and configuring the SCH application software for a mission flight software build environment.</p>
+<h2>Applicable Documents </h2>
+<table border="1" cellpadding="2" width="60%" cellspacing="3">
+<tr>
+<td width="20%"><p><b>Document ID</b>  </p>
+</td><td width="40%"><p><b>Document Title</b>  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TBD  </p>
+</td><td width="40%"><p>CFS Scheduler Application Requirements Document  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TBD  </p>
+</td><td width="40%"><p>CFS Scheduler Heritage Analysis Document  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TBD  </p>
+</td><td width="40%"><p>CFS Scheduler Design Document  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TBD  </p>
+</td><td width="40%"><p><em>Need Reference to OSAL Document</em>  </p>
+</td></tr>
+</table>
+<h2>Acronyms </h2>
+<table border="1" cellpadding="2" width="60%" cellspacing="3">
+<tr>
+<td width="20%"><p><b>Acronym</b>  </p>
+</td><td width="40%"><p><b>Description</b>  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>API  </p>
+</td><td width="40%"><p>Application Programming Interface  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>ATP  </p>
+</td><td width="40%"><p>Absolute Time Processor  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>ATS  </p>
+</td><td width="40%"><p>Absolute Time tagged command Sequence  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>CCSDS  </p>
+</td><td width="40%"><p>Consultative Committee for Space Data Systems  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>C&amp;DH  </p>
+</td><td width="40%"><p>Command and Data Handling  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>CFE  </p>
+</td><td width="40%"><p>Core Flight Executive  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>CFS  </p>
+</td><td width="40%"><p>Core Flight System  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>CI  </p>
+</td><td width="40%"><p>Command Ingest  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>Cmd  </p>
+</td><td width="40%"><p>Command  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>CPU  </p>
+</td><td width="40%"><p>Central Processing Unit  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>EDAC  </p>
+</td><td width="40%"><p>Error Detection and Correction  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>FDS  </p>
+</td><td width="40%"><p>Flight Data System  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>FM  </p>
+</td><td width="40%"><p>File Manager  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>FSW  </p>
+</td><td width="40%"><p>Flight Software  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>GN&amp;C  </p>
+</td><td width="40%"><p>Guidance Navigation &amp; Control  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>GSFC  </p>
+</td><td width="40%"><p>Goddard Space Flight Center  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>HK  </p>
+</td><td width="40%"><p>Housekeeping  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>HW, H/W  </p>
+</td><td width="40%"><p>Hardware  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>ICD  </p>
+</td><td width="40%"><p>Interface Control Document  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>ISR  </p>
+</td><td width="40%"><p>Interrupt Service Routine  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>OS  </p>
+</td><td width="40%"><p>Operating System  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>OSAL  </p>
+</td><td width="40%"><p>Operating System Abstraction Layer  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>Pkts  </p>
+</td><td width="40%"><p>Packets  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>RAM  </p>
+</td><td width="40%"><p>Random-Access Memory  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>RTOS  </p>
+</td><td width="40%"><p>Real Time Operating System  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>RTP  </p>
+</td><td width="40%"><p>Relative Time Processor  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>RTS  </p>
+</td><td width="40%"><p>Relative Time tagged command Sequence  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>SB  </p>
+</td><td width="40%"><p>Software Bus Service  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>SBC  </p>
+</td><td width="40%"><p>Single Board Computer  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>SC  </p>
+</td><td width="40%"><p>Stored Commands task  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>SW, S/W  </p>
+</td><td width="40%"><p>Software  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TBD  </p>
+</td><td width="40%"><p>To Be Determined  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TBL  </p>
+</td><td width="40%"><p>Table  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TDM  </p>
+</td><td width="40%"><p>Time Data Multiplex  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>TLM  </p>
+</td><td width="40%"><p>Telemetry  </p>
+</td></tr>
+<tr>
+<td width="20%"><p>UTC  </p>
+</td><td width="40%"><p>Universal time code  </p>
+</td></tr>
+</table>
+<p>Prev: <a class="el" href="cfsschrevhist.html">CFS Scheduler User's Guide Revision History</a> <br/>
+ Next: <a class="el" href="cfsschovr.html">CFS Scheduler Overview</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschopr.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschopr.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Operation</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschopr">CFS Scheduler Operation </a></h1><p>The SCH Application has an operational interface consisting of eight commands, two tables and two different telemetry messages.</p>
+<h2><a class="anchor" id="cfsschoprtbls">
+SCH Tables</a></h2>
+<p>The two tables are the Schedule Definition Table (SDT) and the Message Definition Table (MDT).</p>
+<p>The tables, combined, define the behavior of the SCH Application while it is running. The SDT contains information identifying which messages are to be sent and when and the MDT contains definitions of the messages that are to be sent. Since the SDT references the contents of the MDT, it is imperative that the operator update these tables carefully to prevent unexpected and potentially disruptive behavior from the SCH Application. The simplest method to prevent these problems is to replace the default table images for these tables (the filenames are specified using the SCH platform configuration parameters <a class="el" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">SCH_SCHEDULE_FILENAME</a> and <a class="el" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">SCH_MESSAGE_FILENAME</a>) and to restart the SCH Application.</p>
+<p>The contents and structure of the tables can be found at <a class="el" href="cfsschtbl.html">CFS Scheduler Table Definitions</a>.</p>
+<h2><a class="anchor" id="cfsschoprenadis">
+Enable/Disable SCH Activities</a></h2>
+<p>The command interface for the SCH Application provides Enable/Disable commands for either Enabling/Disabling individual activities in the SDT or for Enabling/Disabling entire groups of activities. When the activities are defined in the SDT, they can be assigned both a Group Number and/or a Multi-Group Identifier. A group number typically identifies a single set of activities that are very closely related, if not identical. An example of a single group could be the messages used to notify Memory Dwell when to examine and log the contents of the memory addresses. A Multi-Group Identifier can be used to combine individual activities and groups of activities into a larger group. For example, one could assign individual groups to activities associated with each experiment and then combine all the experiment groups into a single Multi-Group. This allows all experiment message traffic to be suspended/restarted with a single command.</p>
+<h2><a class="anchor" id="cfsschoprdiag">
+SCH Diagnostic Packet</a></h2>
+<p>If the operator wishes to know the current configuration of the activities defined by the SDT and the MDT without dumping the tables and analyzing their contents, they have the <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">Send Diagnostic Packet </a> command at their disposal. This command forces the generation of an SCH Diagnostic Packet that contains the current state (Enabled/Disabled) of each activity in the SDT and also indicates the Message IDs associated with each activity in the table.</p>
+<h2><a class="anchor" id="cfsschoprnoop">
+Command Interface Verification and SCH Application Version Information</a></h2>
+<p>The command interface also includes a <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">SCH No-op command </a>. This command is useful for verifying that the command interface to the SCH Application is working. It also causes an <a class="el" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f">Event Message </a> to be generated that contains the SCH Application's version information. It should also be noted that the version information can also be obtained when the Application starts up. After SCH has successfully initialized itself, an <a class="el" href="sch__events_8h.html#a2143003d800956b0a42acb189559dc97">Event Message </a> is generated that indicates successful initialization and also includes the Application's version information. Both of these event messages are 'Informational' and are NOT filtered by default.</p>
+<h2><a class="anchor" id="cfsschoprmfsync">
+Major Frame Synchronization</a></h2>
+<p>The SCH Application requires a stable Major Frame Synchronization signal (typically a 1Hz signal) to maintain a reliable performance of the activities defined in the SDT. If the Major Frame Synchronization signal is determined to be too noisy (i.e. - Occurs outside the expected window, see <a class="el" href="sch__platform__cfg_8h.html#afa493b73d6d26f4171bce55904f7989e">SCH_SYNC_SLOT_DRIFT_WINDOW</a>, for two consecutive major frames), then the signal is automatically ignored and the SCH Application continues to run off of the Minor Frame Synchronization signal. Once an operator has determined that the Major Frame Synchronization signal is stable, the operator can use the <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">Enable Sync Command </a> to re-enable the SCH Application's alignment to the Major Frame signal.</p>
+<h2><a class="anchor" id="cfsschoprhk">
+SCH Housekeeping Telemetry</a></h2>
+<p>The SCH Application generates a <a class="el" href="struct_s_c_h___hk_packet__t.html">Housekeeping Telemetry Message </a> whenever scheduled to do so by the SDT. The message contains command counters (both successful and unsuccessful) that indicate whether outside commands have been received. The operator can use these telemetry points to verify the receipt and processing of commands. The operator can reset these counters using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Command </a>.</p>
+<p>The SCH Housekeeping telemetry also contains statistics that are useful for monitoring the execution of the SCH Application. These statistics indicate the number of Activities performed, number of times problems have been encountered, number of times the SCH Application has detected synchronization issues, etc. Each telemetry point is discussed in detail below:</p>
+<table border="1" cellspacing="3" cellpadding="3">
+<tr>
+<td><p>Command Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_CmdCounter"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">Command Counter </a> is incremented upon receipt of any valid command message. A command message is considered valid when it meets the following criteria: <br/>
+ </p>
+<ul>
+<li>
+The Message ID in the Message Header is <a class="el" href="sch__msgids_8h.html#a074c7822b6c9bd33b492dce99e9457dd" title="SCH Ground Commands Message ID.">SCH_CMD_MID</a> <br/>
+ </li>
+<li>
+The Length of the Message is the correct length for the command <br/>
+ </li>
+<li>
+Each command has specific criteria for validation relating to the command parameters for that particular command <br/>
+ </li>
+</ul>
+<p><b>NOTE:</b> The <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">Command Counter </a> is NOT incremented upon receipt of a <a class="el" href="sch__msgids_8h.html#a6b68abc81890d0891f1562df904fca7d">SCH Housekeeping Request </a> message.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Command Error Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_ErrCounter"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">Command Error Counter </a> is incremented whenever any of the conditions specified above for the <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">Command Counter </a> are not met.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Activity Success Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_ScheduleActivitySuccessCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">Activity Success Counter </a> is incremented each time an Activity in the Schedule Definition Table is successfully performed.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Activity Failure Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_ScheduleActivityFailureCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">Activity Failure Counter </a> is incremented whenever an error occurs while processing an Activity defined in the Schedule Definition Table. Currently, the only possible Activity type is sending a message. Therefore, the only possible causes of errors are those that are reported by the cFE Software Bus when processing an CFE_SB_SendMsg API call.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Processed Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_SlotsProcessedCount"></a> Slots The <a class="el" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">Slots Processed Counter </a> is incremented each time a slot (i.e. Minor Frame) in the Schedule Definition Table is processed.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Skipped Slots Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_SkippedSlotsCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">Skipped Slots Counter </a> is incremented by one whenever one or more slots in the Schedule Definition Table are skipped in an attempt by the Scheduler Application to stay synchronized with the Major Frame signal.</p>
+<p><b>NOTE:</b> The counter does not represent the number of slots skipped, but rather, the number of times one or more slots are skipped.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Multiple Slots Executed Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_MultipleSlotsCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">Multiple Slots Executed Counter </a> is incremented by one whenever two or more slots are executed during a single Minor Frame wake-up. This is an indication that the Scheduler Application has fallen behind a little bit and is attempting to catch up rather than skipping Activities in the Schedule Definition Table.</p>
+<p><b>NOTE:</b> This counter does not represent the number of slots executed, but rather, the number of times two or more slots have been executed in one Minor Frame wake-up.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Same Slot Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_SameSlotCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">Same Slot Counter </a> is incremented whenever the Scheduler Application is woken up by the Minor Frame signal and it finds itself in the same slot as the previous Minor Frame. This only happens when the Scheduler Application is being run on a platform that does not have an accurate timer for driving the Minor Frame signals. During initialization, the Scheduler Application attempts to allocate a hardware timer to drive the Minor Frame Signal. If the board does not have a timer with sufficient accuracy, the Scheduler Application then also uses the subseconds of the Mission Elapsed Time to help maintain timing as well as it can. This can lead to the same slot being processed more than once in a row. The Scheduler Application will try its best to compensate for this situation.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Bad Table Data Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_BadTableDataCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">Bad Table Data Counter </a> is incremented whenever the Scheduler Application detects a malformed Activity definition in the Schedule Definition Table. This can only happen if the Schedule Definition Table has become corrupted in memory since the same validation checks are performed before the table is accepted on a load.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Table Verify Success Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_TableVerifySuccessCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">Table Verify Success Counter </a> is incremented whenever the Scheduler Application is requested to verify the contents of a potential table load (for either the Scheduler Definition Table or the Message Definition Table) and the contents are found to meet all the requirements.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Table Verify Failure Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_TableVerifyFailureCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">Table Verify Failure Counter </a> is incremented whenever the Scheduler Application is requested to verify the contents of a potential table load (for either the Schedule Definition Table or the Message Definition Table) and at least one error is detected in the specified table image.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Table Pass Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_TablePassCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">Table Pass Counter </a> is incremented whenever the Scheduler Application has either processed the last slot in the Schedule Definition Table or has skipped the end of the table during a Major Frame Synchronization. This counter is used, internally, by the Scheduler Application to determine the Major Frame cycle number that is used by Activities that run at a frequency less than 1 Hz. For example, any Activity that is defined to run every 2 seconds, would only be performed when this counter is an even number. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Valid Major Frame Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_ValidMajorFrameCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">Valid Major Frame Counter </a> is incremented whenever the Scheduler Application receives a Major Frame Signal during the window that the Scheduler Application is expecting to receive such a signal.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Missed Major Frame Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_MissedMajorFrameCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">Missed Major Frame Counter </a> is incremented whenever the Scheduler Application does not receive a Major Frame Signal during the window that it expects to see the signal.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Unexpected Major Frame Counter </p>
+</td><td><p><a class="anchor" id="SCHHK_UnexpectedMajorFrameCount"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">Unexpected Major Frame Counter </a> is incremented whenever the Scheduler Application receives a Major Frame Signal outside the window when it expects to receive the signal.</p>
+<p><b>NOTE:</b> This counter can be reset to zero using the <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters Command </a>. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Minor Frames Since Tone </p>
+</td><td><p><a class="anchor" id="SCHHK_MinorFramesSinceTone"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">Minor Frames Since Tone </a> identifies how many Minor Frame signals have been received since the last Major Frame signal. Typically, this number should remain static in telemetry since the Scheduler Application Housekeeping will always happen during the same Minor Frame. However, if the Scheduler Application becomes out of sync with the Major Frame and ignores the Major Frame, this value could indicate the amount of drift that has occurred. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Next Slot Number </p>
+</td><td><p><a class="anchor" id="SCHHK_NextSlotNumber"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">Next Slot Number </a> identifies what Slot (i.e. - Minor Frame) is to be executed on the next Minor Frame signal. Typically, this number should remain static in telemetry since the Scheduler Application's housekeeping is generated by a message coming from the schedule. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Last Sync MET Slot </p>
+</td><td><p><a class="anchor" id="SCHHK_LastSyncMETSlot"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">Last Sync MET Slot </a> indicates which MET slot the most recent Major Frame signal occurred. If the Scheduler Application is synchronized to MET, then this value should always be zero. Otherwise, it can help identify how much of a shift there is from the MET subseconds to the Major Frame signal. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Ignore Major Frame Flag </p>
+</td><td><p><a class="anchor" id="SCHHK_IgnoreMajorFrame"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">Ignore Major Frame Flag </a> is set to TRUE whenever the Scheduler Application has determined that the Major Frame signal is noisy and cannot be trusted. To reset this flag, the operator will need to have a stable Major Frame signal and issue the <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">Enable Major Frame Synchronization </a> command. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Unexpected Major Frame Flag </p>
+</td><td><p><a class="anchor" id="SCHHK_UnexpectedMajorFrame"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">Unexpected Major Frame Flag </a> is set to TRUE whenever the Scheduler Application receives a Major Frame signal outside the expected Major Frame signal window. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Sync To MET Flag </p>
+</td><td><p><a class="anchor" id="SCHHK_SyncToMET"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">Sync To MET Flag </a> is set to TRUE when the Scheduler Application has determined, during initialization, that the accuracy of the Minor Frame timer is inadequate to maintain an accurate Minor Frame signal. The Scheduler Application will use the MET to determine which slots in the Schedule Definition Table are to be executed whenever it does receive the Minor Frame signal. </p>
+<p></p>
+</td></tr>
+<tr>
+<td><p>Major Frame Source </p>
+</td><td><p><a class="anchor" id="SCHHK_MajorFrameSource"></a> The <a class="el" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">Major Frame Source </a> can have one of three possible values. When equal to SCH_MF_SOURCE_NONE, the Scheduler Application is still initializing. When equal to SCH_MF_SOURCE_CFE_TIME, then the Major Frame is being obtained from the cFE TIME service. When equal to SCH_MF_SOURCE_MINOR_FRAME_TIMER, the Major Frame signal from cFE TIME service has not been received and the Major Frame is being deduced by counting the number of consecutive Minor Frame signals. </p>
+</td></tr>
+</table>
+<p>Next: <a class="el" href="cfsschreq.html">CFS Scheduler Requirements</a> <br/>
+ Prev: <a class="el" href="cfsschovr.html">CFS Scheduler Overview</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschovr.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschovr.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Overview</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschovr">CFS Scheduler Overview </a></h1><p>The Scheduler (SCH) Application provides an operator with a method of generating messages on board the spacecraft at pre-determined timing intervals. This provides the operator and/or flight software systems engineer with a mechanism to configure the flight software to operate in a Time Division Multiplexed (TDM) fashion with deterministic behavior. The TDM major frame is defined by the Major Time Synchronization Signal used by the cFE TIME Services (typically 1 Hz) and the Minor Frame timing is defined using an <a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH Configuration Parameter </a> that identifies the number of Minor Frame Slots that are executed within each Major Frame.</p>
+<p>In each Minor Frame, SCH creates up to <a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">SCH_ENTRIES_PER_SLOT</a> messages, as they are defined by the operator, and sends them to any Applications that have requested the messages via a subscription with the <a href="../cfe/cfesbovr.html">cFE Software Bus (SB)</a>.</p>
+<p>SCH is typically used to drive the generation of CFS Application's Housekeeping packets and the collection/generation of other telemetry data.</p>
+<h2><a class="anchor" id="SCH">
+Design Overview</a></h2>
+<p>SCH is a time driven, single threaded application. A context diagram for the SCH Application is shown below:</p>
+<div align="center">
+<img src="CFS_SCH_Context.jpg" alt="CFS_SCH_Context.jpg"/>
+<p><strong>SCH Context Diagram</strong></p></div>
+<p>In the default design, it automatically associates itself with the <a href="../cfe/cfe__time_8h.html#e13a973062a2174417e4a30465a12146">Major Frame Synchronization Signal</a> tied to the <a href="../cfe/cfetimeovr.html">cFE TIME Service (TIME)</a>. It also creates an OSAL timer that it uses for doing Minor Frame Timing. Once all applications have successfully started or a user defined timeout has expired, SCH will begin to process the Schedule Definition Table (SDT). Each entry in the table identifies the Major/Minor Frame that a message, as defined in the Message Definition Table (MDT), will be generated and placed on the cFE Software Bus.</p>
+<p>Prev: <a class="el" href="cfsschintro.html">CFS Scheduler Introduction</a> <br/>
+ Next: <a class="el" href="cfsschopr.html">CFS Scheduler Operation</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschreq.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschreq.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Requirements</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschreq">CFS Scheduler Requirements </a></h1><p>The following is the main SCH subsystem requirement. Detailed requirements can be found in the Scheduler Application Requirements Document.</p>
+<p>CFS-400: The FSW shall support a table driven Time Division Multiplexed (TDM) Input/Output Scheme for scheduling system activities.<br/>
+</p>
+<p>Next: <a class="el" href="cfsschdg.html">CFS Scheduler Deployment Guide</a> <br/>
+ Prev: <a class="el" href="cfsschopr.html">CFS Scheduler Operation</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschrevhist.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschrevhist.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler User&#39;s Guide Revision History</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschrevhist">CFS Scheduler User's Guide Revision History </a></h1><div class="fragment"><pre class="fragment">
+  $Log: cfsschrevhist.html  $
+  Revision 1.1 2017/07/01 20:19:42EDT sstrege 
+  Initial revision
+  Member added to project /CFS-APPs-PROJECT/sch/docs/users_guide/html/project.pj
+  Revision 1.1 2015/08/04 04:54:04EDT rperera 
+  Initial revision
+  Member added to project /CFS-APPs-PROJECT/sch/docs/dox_src/users_guide/project.pj
+  Revision 1.4 2011/07/01 18:07:26EDT aschoeni 
+  Added information on schedule disable and enable, and customization, moving table information from deployment to tables section
+  Revision 1.3 2011/07/01 15:01:22EDT aschoeni 
+  Fixed requirements section, and changed FM to SCH in the introduction.
+  Revision 1.2 2009/03/27 00:33:59EDT dkobe 
+  Updated User's Guide
+  Revision 1.1 2009/03/03 14:35:32EST dkobe 
+  Initial revision
+  Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/sch/docs/dox_src/users_guide/project.pj
+  </pre></div><p>Prev: <a class="el" href="index.html">SCH Table of Contents</a> <br/>
+ Next: <a class="el" href="cfsschintro.html">CFS Scheduler Introduction</a> </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschtbl.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschtbl.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Table Definitions</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschtbl">CFS Scheduler Table Definitions </a></h1><table border="1" cellpadding="2" width="60%" align="CENTER" cellspacing="3">
+<tr>
+<td width="20%" align="CENTER"><p><b><a class="el" href="cfsschcmds.html">CFS Scheduler Commands</a></b> </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschtlm.html">CFS Scheduler Telemetry</a></b>  </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschcfg.html">CFS Scheduler Configuration Parameters</a></b> </p>
+</td></tr>
+</table>
+<p>The following are the tables that are used by the CFS Scheduler Application.</p>
+<h3>Schedule Definition Table (SDT)</h3>
+<p>Each entry in the Schedule Definition Table has the following structure:<br/>
+</p>
+<div class="fragment"><pre class="fragment">
+  typedef struct
+  {
+    uint8    EnableState;          /* State may be SCH_UNUSED, SCH_ENABLED, SCH_DISABLED */
+    uint8    Type;                 /* Activity Type may be SCH_ACTIVITY_NONE or SCH_ACTIVITY_SEND_MSG */
+    uint16   Frequency;            /* Number of seconds between Activity execution */
+    uint16   Remainder;            /* Seconds offset to perform Activity */
+    uint16   MessageIndex;         /* Byte index into Message Definition Table */
+    uint32   GroupData;            /* Group and Multi-Group membership definitions */
+  } SCH_ScheduleEntry_t;
+  </pre></div><p>The first element, <code>EnableState</code>, identifies whether the specified Activity is currently <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">unspecified </a> (i.e. - unused), <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">Enabled </a> (i.e. - the Activity will be acted upon once SCH has loaded the table), or <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">Disabled </a> (i.e. - the Activity will NOT be acted upon once SCH has loaded the table).</p>
+<p>The second element, <code>Type</code>, specifies whether the Activity is to <a class="el" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">send a message </a> or to do <a class="el" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">nothing </a>. This parameter can be used for future expansion of Activity types that may be added at a later date.</p>
+<p>The third element, <code>Frequency</code>, specifies the number of Major Frames that need to occur between Activity processing. For example, if set equal to one (1), the specified Activity will occur each time SCH processes the table. If set equal to two (2), the specified Activity will occur every other time SCH processes the table, etc.</p>
+<p>The fourth element, <code>Remainder</code>, specifies how many Major Frames need to occur BEFORE the first time the Activity will be processed. This value must be less than the <code>Frequency</code> term specified above. This term allows the user to stagger events that occur on a common frequency to spread the CPU load over time. For example, if there are two activities whose <code>Frequency</code> element is two, one of the activity's <code>Remainder</code> is a zero (0) and the other is a one (1), then each Activity would occur on the second the other does not.</p>
+<p>The fifth element, <code>MessageIndex</code>, indicates which message entry in the Message Definition Table (see below) is to be transmitted when this Activity is processed.</p>
+<p>The last element, <code>GroupData</code>, allows the user to assign the Activity a Group identifier and to also designate the item as belonging to one or more groups of groups. The <code>GroupData</code> element has two bit-fields that are of interest. The bit structure is shown below: <br/>
+<br/>
+</p>
+<table border="1" width="100%" cellspacing="3" cellpadding="3">
+<tr>
+<td><p><b>MSB</b> </p>
+</td><td colspan="30"><p>&nbsp; </p>
+</td><td><p><b>LSB</b>  </p>
+</td></tr>
+<tr>
+<td width="20"><p><b>31</b> </p>
+</td><td><p><b>30</b> </p>
+</td><td><p><b>29</b> </p>
+</td><td><p><b>28</b> </p>
+</td><td><p><b>27</b> </p>
+</td><td><p><b>26</b> </p>
+</td><td><p><b>25</b> </p>
+</td><td><p><b>24</b> </p>
+</td><td><p><b>23</b> </p>
+</td><td><p><b>22</b> </p>
+</td><td><p><b>21</b> </p>
+</td><td><p><b>20</b> </p>
+</td><td><p><b>19</b> </p>
+</td><td><p><b>18</b> </p>
+</td><td><p><b>17</b> </p>
+</td><td><p><b>16</b> </p>
+</td><td><p><b>15</b> </p>
+</td><td><p><b>14</b> </p>
+</td><td><p><b>13</b> </p>
+</td><td><p><b>12</b> </p>
+</td><td><p><b>11</b> </p>
+</td><td><p><b>10</b> </p>
+</td><td><p><b>09</b> </p>
+</td><td><p><b>08</b> </p>
+</td><td><p><b>07</b> </p>
+</td><td><p><b>06</b> </p>
+</td><td><p><b>05</b> </p>
+</td><td><p><b>04</b> </p>
+</td><td><p><b>03</b> </p>
+</td><td><p><b>02</b> </p>
+</td><td><p><b>01</b> </p>
+</td><td><p><b>00</b>  </p>
+</td></tr>
+<tr>
+<td colspan="8"><p><b>Group # (1-255)</b> </p>
+</td><td colspan="24"><p><b>Multi-Group Bit Mask</b>  </p>
+</td></tr>
+</table>
+<p>A Group Number, ranging from 1-255 (zero if no group ID is wanted), can be assigned to any number of Activities. When that group number is used in a <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">Group Enable/Disable Command </a>, all the Activities with that group number will have their enable/disable status changed simultaneously.</p>
+<p>Similarly, individual bits in the Multi-Group Bit Mask can be set to one. A bit mask setting one or more of these bits used in an <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">Group Enable/Disable Command </a> will cause all Activities with a similar bit set to have their enable/disable status changed simultaneously. This essentially allows the user to make a group of groups and to treat them as a single group in a command.</p>
+<p>If the user wishes to leave a spot empty in the table, ALL fields must be set to zero. Any values in any field will cause the table to be rejected as corrupt.</p>
+<p>A sample Schedule Definition Table can be found in the <code>tables</code> sub-directory for the SCH App. This sample Schedule Definition Table defines a default configuration for a complete CFS system. The user will be required to uncomment out those CFS Applications they wish to include in their configuration.</p>
+<h3>Message Definition Table (MDT)</h3>
+<div class="fragment"><pre class="fragment">
+  typedef struct
+  {
+    uint16   MessageBuffer[SCH_MAX_MSG_WORDS]; /* Packed Messages */
+
+  } SCH_MessageEntry_t;
+  </pre></div><p>The Message Definition Table is simply an array of fixed length byte arrays (i.e. - a two dimensional byte array). The number of rows in the array is defined by the configuration parameter <a class="el" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">SCH_MAX_MESSAGES</a>. The size of each row is defined by the configuration parameter <a class="el" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">SCH_MAX_MSG_WORDS</a>. Each row can contain the binary definition of a single message the user wishes SCH to output on the Software Bus. The first row cannot be used because it would map to the "Unused" parameter of zero in the Schedule Definition Table. The index for each following row is what needs to be specified in the Schedule Definition Table as the <code>MessageIndex</code> to assign the message to the appropriate Activity.</p>
+<p>A sample Message Definition Table can be found in the <code>tables</code> sub-directory for the SCH App. This sample Message Definition Table contains default messages used for a complete CFS system. In order to use the sample Message Definition Table for a full up CFS system, the message definitions must be uncommented out. </p>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschtlm.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschtlm.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: CFS Scheduler Telemetry</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="index.html">index</a>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschtlm">CFS Scheduler Telemetry </a></h1><table border="1" cellpadding="2" width="60%" align="CENTER" cellspacing="3">
+<tr>
+<td width="20%" align="CENTER"><p><b><a class="el" href="cfsschcmds.html">CFS Scheduler Commands</a></b>  </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschtbl.html">CFS Scheduler Table Definitions</a></b> </p>
+</td><td width="20%" align="CENTER"><p><b><a class="el" href="cfsschcfg.html">CFS Scheduler Configuration Parameters</a></b> </p>
+</td></tr>
+</table>
+<p>The following are telemetry packets generated by the CFS Scheduler Application.</p>
+<p><a class="anchor" id="_cfsschtlm000002"></a> </p>
+<dl>
+<dt>Class <a class="el" href="struct_s_c_h___diag_packet__t.html">SCH_DiagPacket_t</a>  </dt>
+<dd>Scheduler Diagnostic Telemetry format </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlm000001"></a> </p>
+<dl>
+<dt>Class <a class="el" href="struct_s_c_h___hk_packet__t.html">SCH_HkPacket_t</a>  </dt>
+<dd>Scheduler HK Telemetry format </dd>
+</dl>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `cfsschtlmmnems.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/cfsschtlmmnems.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH Telemetry Mnemonic Cross Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+
+
+<h1><a class="anchor" id="cfsschtlmmnems">SCH Telemetry Mnemonic Cross Reference </a></h1><p><a class="anchor" id="_cfsschtlmmnems000023"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___diag_packet__t.html#ae6df456ff6d74eb60796f022e14a8272">SCH_DiagPacket_t::EntryStates</a> [SCH_NUM_STATUS_BYTES_REQD/2] </dt>
+<dd><b><code>$sc_$cpu_SCH_EntryStates</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000024"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___diag_packet__t.html#a93cb215dbeda7d00db3cc4871dd28621">SCH_DiagPacket_t::MsgIDs</a> [SCH_TABLE_ENTRIES] </dt>
+<dd><b><code>$sc_$cpu_SCH_MsgIDs</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000011"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">SCH_HkPacket_t::BadTableDataCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_BadTblDataCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000001"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">SCH_HkPacket_t::CmdCounter</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_CMDPC</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000002"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">SCH_HkPacket_t::ErrCounter</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_CMDEC</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000021"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">SCH_HkPacket_t::IgnoreMajorFrame</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_IgnoreMajorFrame</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000020"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">SCH_HkPacket_t::LastSyncMETSlot</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_LastSyncMETSlot</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000004"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">SCH_HkPacket_t::MajorFrameSource</a>  </dt>
+<dd><b><code>$sc_$cpu_MajorFrameSource</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000018"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">SCH_HkPacket_t::MinorFramesSinceTone</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_MinorFrameSinceTone</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000016"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">SCH_HkPacket_t::MissedMajorFrameCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_MissedMajorFrameCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000009"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">SCH_HkPacket_t::MultipleSlotsCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_MultSlotCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000019"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">SCH_HkPacket_t::NextSlotNumber</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_NextSlot</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000010"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">SCH_HkPacket_t::SameSlotCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_SameSlotCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000006"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">SCH_HkPacket_t::ScheduleActivityFailureCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_ActFailCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000005"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">SCH_HkPacket_t::ScheduleActivitySuccessCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_ActSuccessCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000008"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">SCH_HkPacket_t::SkippedSlotsCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_SlotSkipCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000007"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">SCH_HkPacket_t::SlotsProcessedCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_SlotProcCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000003"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">SCH_HkPacket_t::SyncToMET</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_SyncToMET</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000014"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">SCH_HkPacket_t::TablePassCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_TblProcCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000013"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">SCH_HkPacket_t::TableVerifyFailureCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_TblFailVerifyCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000012"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">SCH_HkPacket_t::TableVerifySuccessCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_TblPassVerifyCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000022"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">SCH_HkPacket_t::UnexpectedMajorFrame</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_UnexpectedMajorFrame</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000017"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">SCH_HkPacket_t::UnexpectedMajorFrameCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_UnexpectedMajorFrameCtr</code> </b> </dd>
+</dl>
+<p><a class="anchor" id="_cfsschtlmmnems000015"></a> </p>
+<dl>
+<dt>Global <a class="el" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">SCH_HkPacket_t::ValidMajorFrameCount</a>  </dt>
+<dd><b><code>$sc_$cpu_SCH_ValidMajorFrameCtr</code> </b> </dd>
+</dl>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `classes.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/classes.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Alphabetical List</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Data Structure Index</h1><div class="qindex"><a class="qindex" href="#letter_S">S</a></div>
+<table align="center" width="95%" border="0" cellspacing="0" cellpadding="0">
+<tr><td><a name="letter_S"></a><table border="0" cellspacing="0" cellpadding="0"><tr><td><div class="ah">&nbsp;&nbsp;S&nbsp;&nbsp;</div></td></tr></table>
+</td><td><a class="el" href="struct_s_c_h___entry_cmd__t.html">SCH_EntryCmd_t</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="struct_s_c_h___hk_packet__t.html">SCH_HkPacket_t</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="struct_s_c_h___no_args_cmd__t.html">SCH_NoArgsCmd_t</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="struct_s_c_h___schedule_entry__t.html">SCH_ScheduleEntry_t</a>&nbsp;&nbsp;&nbsp;</td></tr><tr><td><a class="el" href="struct_s_c_h___diag_packet__t.html">SCH_DiagPacket_t</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="struct_s_c_h___group_cmd__t.html">SCH_GroupCmd_t</a>&nbsp;&nbsp;&nbsp;</td><td><a class="el" href="struct_s_c_h___message_entry__t.html">SCH_MessageEntry_t</a>&nbsp;&nbsp;&nbsp;</td></tr></table><div class="qindex"><a class="qindex" href="#letter_S">S</a></div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_000001_000003.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_000001_000003.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/ -&gt; mnt Relation</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>
+  </div>
+<h3>fsw &rarr; mnt Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in <a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a></th><th class="dirtab">Includes file in <a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a></th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>&nbsp;/&nbsp;<a class="el" href="sch__custom_8c.html">sch_custom.c</a></td><td class="dirtab"><a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;/&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;/&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;/&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;/&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;/&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>&nbsp;/&nbsp;<a class="el" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>&nbsp;/&nbsp;<a class="el" href="sch__msgdefs_8h.html">sch_msgdefs.h</a></td><td class="dirtab"><a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;/&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;/&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;/&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;/&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;/&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>&nbsp;/&nbsp;<a class="el" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a></td></tr></table></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_000002_000003.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_000002_000003.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/ -&gt; mnt Relation</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+<h3>src &rarr; mnt Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in <a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a></th><th class="dirtab">Includes file in <a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a></th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="sch__custom_8c.html">sch_custom.c</a></td><td class="dirtab"><a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;/&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;/&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;/&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;/&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;/&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>&nbsp;/&nbsp;<a class="el" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="sch__msgdefs_8h.html">sch_msgdefs.h</a></td><td class="dirtab"><a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;/&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;/&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;/&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;/&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;/&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>&nbsp;/&nbsp;<a class="el" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a></td></tr></table></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_022912094a537929a0bde0dab891b546.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_022912094a537929a0bde0dab891b546.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/mission_inc/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_022912094a537929a0bde0dab891b546.html">mission_inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>mission_inc Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Files</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__perfids_8h.html">sch_perfids.h</a> <a href="sch__perfids_8h_source.html">[code]</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_022912094a537929a0bde0dab891b546_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_022912094a537929a0bde0dab891b546_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_bb40d815f0f8c1946ec840a2dd86aa68 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="build" fontname="FreeSans", fontsize="10", URL="dir_bb40d815f0f8c1946ec840a2dd86aa68.html"]
+  dir_022912094a537929a0bde0dab891b546 [shape=box, label="mission_inc", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_022912094a537929a0bde0dab891b546.html"];
+  }
+}
+```
+
+### `dir_06b4137da42c477289d1d8772b2fc1ef.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_06b4137da42c477289d1d8772b2fc1ef.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>
+  </div>
+</div>
+<div class="contents">
+<h1>cFE650_Testing Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_06b4137da42c477289d1d8772b2fc1ef_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_06b4137da42c477289d1d8772b2fc1ef_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_5b47e9dc76266c8a2322068895bf2d86 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="sstrege" fontname="FreeSans", fontsize="10", URL="dir_5b47e9dc76266c8a2322068895bf2d86.html"]
+  subgraph clusterdir_06b4137da42c477289d1d8772b2fc1ef {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_06b4137da42c477289d1d8772b2fc1ef.html"];
+    dir_06b4137da42c477289d1d8772b2fc1ef [shape=plaintext label="cFE650_Testing"];
+    dir_bb40d815f0f8c1946ec840a2dd86aa68 [shape=box label="build" color="red" fillcolor="white" style="filled" URL="dir_bb40d815f0f8c1946ec840a2dd86aa68.html"];
+  }
+  }
+}
+```
+
+### `dir_271b10dbb81786a3023752dae73f29cf.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_271b10dbb81786a3023752dae73f29cf.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/cpu1/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>
+  </div>
+</div>
+<div class="contents">
+<h1>cpu1 Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_271b10dbb81786a3023752dae73f29cf_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_271b10dbb81786a3023752dae73f29cf_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_bb40d815f0f8c1946ec840a2dd86aa68 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="build" fontname="FreeSans", fontsize="10", URL="dir_bb40d815f0f8c1946ec840a2dd86aa68.html"]
+  subgraph clusterdir_271b10dbb81786a3023752dae73f29cf {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_271b10dbb81786a3023752dae73f29cf.html"];
+    dir_271b10dbb81786a3023752dae73f29cf [shape=plaintext label="cpu1"];
+    dir_c5109755cf8c98315050f2a34aab358c [shape=box label="inc" color="black" fillcolor="white" style="filled" URL="dir_c5109755cf8c98315050f2a34aab358c.html"];
+  }
+  }
+}
+```
+
+### `dir_35def2882668f95914f1fd60fe8204e3.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_35def2882668f95914f1fd60fe8204e3.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>
+  </div>
+</div>
+<div class="contents">
+<h1>disk2 Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_35def2882668f95914f1fd60fe8204e3_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_35def2882668f95914f1fd60fe8204e3_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_b8d1739202f65d59e58cdec119e32197 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="mnt" fontname="FreeSans", fontsize="10", URL="dir_b8d1739202f65d59e58cdec119e32197.html"]
+  subgraph clusterdir_35def2882668f95914f1fd60fe8204e3 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_35def2882668f95914f1fd60fe8204e3.html"];
+    dir_35def2882668f95914f1fd60fe8204e3 [shape=plaintext label="disk2"];
+    dir_5b47e9dc76266c8a2322068895bf2d86 [shape=box label="sstrege" color="red" fillcolor="white" style="filled" URL="dir_5b47e9dc76266c8a2322068895bf2d86.html"];
+  }
+  }
+}
+```
+
+### `dir_59f73f396cabe1b60606d7893817518c.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_59f73f396cabe1b60606d7893817518c.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>
+  </div>
+</div>
+<div class="contents">
+<h1>fsw Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_59f73f396cabe1b60606d7893817518c_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_59f73f396cabe1b60606d7893817518c_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_66bf159e40c144e71169039073992ebf {
+    graph [ bgcolor="#ddddee", pencolor="black", label="sch" fontname="FreeSans", fontsize="10", URL="dir_66bf159e40c144e71169039073992ebf.html"]
+  subgraph clusterdir_59f73f396cabe1b60606d7893817518c {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_59f73f396cabe1b60606d7893817518c.html"];
+    dir_59f73f396cabe1b60606d7893817518c [shape=plaintext label="fsw"];
+    dir_5db1b34cd30e1ff1f45f16025c27c361 [shape=box label="src" color="black" fillcolor="white" style="filled" URL="dir_5db1b34cd30e1ff1f45f16025c27c361.html"];
+  }
+  }
+  dir_b8d1739202f65d59e58cdec119e32197 [shape=box label="mnt" fillcolor="white" style="filled" color="red" URL="dir_b8d1739202f65d59e58cdec119e32197.html"];
+  dir_5db1b34cd30e1ff1f45f16025c27c361->dir_b8d1739202f65d59e58cdec119e32197 [headlabel="2", labeldistance=1.5 headhref="dir_000002_000003.html"];
+}
+```
+
+### `dir_5b47e9dc76266c8a2322068895bf2d86.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_5b47e9dc76266c8a2322068895bf2d86.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sstrege Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_5b47e9dc76266c8a2322068895bf2d86_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_5b47e9dc76266c8a2322068895bf2d86_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_35def2882668f95914f1fd60fe8204e3 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="disk2" fontname="FreeSans", fontsize="10", URL="dir_35def2882668f95914f1fd60fe8204e3.html"]
+  subgraph clusterdir_5b47e9dc76266c8a2322068895bf2d86 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_5b47e9dc76266c8a2322068895bf2d86.html"];
+    dir_5b47e9dc76266c8a2322068895bf2d86 [shape=plaintext label="sstrege"];
+    dir_06b4137da42c477289d1d8772b2fc1ef [shape=box label="cFE650_Testing" color="red" fillcolor="white" style="filled" URL="dir_06b4137da42c477289d1d8772b2fc1ef.html"];
+  }
+  }
+}
+```
+
+### `dir_5db1b34cd30e1ff1f45f16025c27c361.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_5db1b34cd30e1ff1f45f16025c27c361.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>src Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Files</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html">sch_custom.c</a> <a href="sch__custom_8c_source.html">[code]</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html">sch_custom.h</a> <a href="sch__custom_8h_source.html">[code]</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html">sch_events.h</a> <a href="sch__events_8h_source.html">[code]</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msg_8h.html">sch_msg.h</a> <a href="sch__msg_8h_source.html">[code]</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html">sch_msgdefs.h</a> <a href="sch__msgdefs_8h_source.html">[code]</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__tbldefs_8h.html">sch_tbldefs.h</a> <a href="sch__tbldefs_8h_source.html">[code]</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_5db1b34cd30e1ff1f45f16025c27c361_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_5db1b34cd30e1ff1f45f16025c27c361_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_59f73f396cabe1b60606d7893817518c {
+    graph [ bgcolor="#ddddee", pencolor="black", label="fsw" fontname="FreeSans", fontsize="10", URL="dir_59f73f396cabe1b60606d7893817518c.html"]
+  dir_5db1b34cd30e1ff1f45f16025c27c361 [shape=box, label="src", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_5db1b34cd30e1ff1f45f16025c27c361.html"];
+  }
+  dir_b8d1739202f65d59e58cdec119e32197 [shape=box label="mnt" fillcolor="white" style="filled" color="red" URL="dir_b8d1739202f65d59e58cdec119e32197.html"];
+  dir_5db1b34cd30e1ff1f45f16025c27c361->dir_b8d1739202f65d59e58cdec119e32197 [headlabel="2", labeldistance=1.5 headhref="dir_000002_000003.html"];
+}
+```
+
+### `dir_66bf159e40c144e71169039073992ebf.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_66bf159e40c144e71169039073992ebf.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_66bf159e40c144e71169039073992ebf_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_66bf159e40c144e71169039073992ebf_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_66bf159e40c144e71169039073992ebf {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_66bf159e40c144e71169039073992ebf.html"];
+    dir_66bf159e40c144e71169039073992ebf [shape=plaintext label="sch"];
+    dir_59f73f396cabe1b60606d7893817518c [shape=box label="fsw" color="red" fillcolor="white" style="filled" URL="dir_59f73f396cabe1b60606d7893817518c.html"];
+  }
+  dir_b8d1739202f65d59e58cdec119e32197 [shape=box label="mnt" fillcolor="white" style="filled" color="red" URL="dir_b8d1739202f65d59e58cdec119e32197.html"];
+  dir_59f73f396cabe1b60606d7893817518c->dir_b8d1739202f65d59e58cdec119e32197 [headlabel="2", labeldistance=1.5 headhref="dir_000001_000003.html"];
+}
+```
+
+### `dir_b8d1739202f65d59e58cdec119e32197.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_b8d1739202f65d59e58cdec119e32197.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>
+  </div>
+</div>
+<div class="contents">
+<h1>mnt Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_b8d1739202f65d59e58cdec119e32197_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_b8d1739202f65d59e58cdec119e32197_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_b8d1739202f65d59e58cdec119e32197 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_b8d1739202f65d59e58cdec119e32197.html"];
+    dir_b8d1739202f65d59e58cdec119e32197 [shape=plaintext label="mnt"];
+    dir_35def2882668f95914f1fd60fe8204e3 [shape=box label="disk2" color="red" fillcolor="white" style="filled" URL="dir_35def2882668f95914f1fd60fe8204e3.html"];
+  }
+}
+```
+
+### `dir_bb40d815f0f8c1946ec840a2dd86aa68.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_bb40d815f0f8c1946ec840a2dd86aa68.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>
+  </div>
+</div>
+<div class="contents">
+<h1>build Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Directories</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">directory &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="dir_022912094a537929a0bde0dab891b546.html">mission_inc</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_bb40d815f0f8c1946ec840a2dd86aa68_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_bb40d815f0f8c1946ec840a2dd86aa68_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_06b4137da42c477289d1d8772b2fc1ef {
+    graph [ bgcolor="#ddddee", pencolor="black", label="cFE650_Testing" fontname="FreeSans", fontsize="10", URL="dir_06b4137da42c477289d1d8772b2fc1ef.html"]
+  subgraph clusterdir_bb40d815f0f8c1946ec840a2dd86aa68 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_bb40d815f0f8c1946ec840a2dd86aa68.html"];
+    dir_bb40d815f0f8c1946ec840a2dd86aa68 [shape=plaintext label="build"];
+    dir_271b10dbb81786a3023752dae73f29cf [shape=box label="cpu1" color="red" fillcolor="white" style="filled" URL="dir_271b10dbb81786a3023752dae73f29cf.html"];
+    dir_022912094a537929a0bde0dab891b546 [shape=box label="mission_inc" color="black" fillcolor="white" style="filled" URL="dir_022912094a537929a0bde0dab891b546.html"];
+  }
+  }
+}
+```
+
+### `dir_c5109755cf8c98315050f2a34aab358c.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_c5109755cf8c98315050f2a34aab358c.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/ Directory Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>inc Directory Reference</h1>
+<p><div class="dynheader">
+</div>
+<div class="dynsection">
+</div>
+</p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Files</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgids_8h.html">sch_msgids.h</a> <a href="sch__msgids_8h_source.html">[code]</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">file &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a> <a href="sch__platform__cfg_8h_source.html">[code]</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `dir_c5109755cf8c98315050f2a34aab358c_dep.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dir_c5109755cf8c98315050f2a34aab358c_dep.dot`
+
+
+```text
+digraph G {
+  compound=true
+  node [ fontsize="10", fontname="FreeSans"];
+  edge [ labelfontsize="10", labelfontname="FreeSans"];
+  subgraph clusterdir_271b10dbb81786a3023752dae73f29cf {
+    graph [ bgcolor="#ddddee", pencolor="black", label="cpu1" fontname="FreeSans", fontsize="10", URL="dir_271b10dbb81786a3023752dae73f29cf.html"]
+  dir_c5109755cf8c98315050f2a34aab358c [shape=box, label="inc", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_c5109755cf8c98315050f2a34aab358c.html"];
+  }
+}
+```
+
+### `dirs.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/dirs.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Directory Hierarchy</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Directories</h1>This directory hierarchy is sorted roughly, but not completely, alphabetically:<ul>
+<li><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a><ul>
+<li><a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a><ul>
+<li><a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a><ul>
+<li><a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a><ul>
+<li><a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a><ul>
+<li><a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a><ul>
+<li><a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a></li>
+</ul>
+</li>
+<li><a class="el" href="dir_022912094a537929a0bde0dab891b546.html">mission_inc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a><ul>
+<li><a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a><ul>
+<li><a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `doxygen.css`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/doxygen.css`
+
+
+```css
+/* The standard CSS for doxygen */
+
+body, table, div, p, dl {
+	font-family: Lucida Grande, Verdana, Geneva, Arial, sans-serif;
+	font-size: 12px;
+}
+
+/* @group Heading Levels */
+
+h1 {
+	text-align: center;
+	font-size: 150%;
+}
+
+h2 {
+	font-size: 120%;
+}
+
+h3 {
+	font-size: 100%;
+}
+
+dt {
+	font-weight: bold;
+}
+
+div.multicol {
+	-moz-column-gap: 1em;
+	-webkit-column-gap: 1em;
+	-moz-column-count: 3;
+	-webkit-column-count: 3;
+}
+
+p.startli, p.startdd {
+	margin-top: 2px;
+}
+
+p.endli {
+	margin-bottom: 0px;
+}
+
+p.enddd {
+	margin-bottom: 4px;
+}
+
+/* @end */
+
+caption {
+	font-weight: bold;
+}
+
+span.legend {
+        font-size: 70%;
+        text-align: center;
+}
+
+div.qindex, div.navtab{
+	background-color: #e8eef2;
+	border: 1px solid #84b0c7;
+	text-align: center;
+	margin: 2px;
+	padding: 2px;
+}
+
+div.qindex, div.navpath {
+	width: 100%;
+	line-height: 140%;
+}
+
+div.navtab {
+	margin-right: 15px;
+}
+
+/* @group Link Styling */
+
+a {
+	color: #153788;
+	font-weight: normal;
+	text-decoration: none;
+}
+
+.contents a:visited {
+	color: #1b77c5;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a.qindex {
+	font-weight: bold;
+}
+
+a.qindexHL {
+	font-weight: bold;
+	background-color: #6666cc;
+	color: #ffffff;
+	border: 1px double #9295C2;
+}
+
+.contents a.qindexHL:visited {
+        color: #ffffff;
+}
+
+a.el {
+	font-weight: bold;
+}
+
+a.elRef {
+}
+
+a.code {
+}
+
+a.codeRef {
+}
+
+/* @end */
+
+dl.el {
+	margin-left: -1cm;
+}
+
+.fragment {
+	font-family: monospace, fixed;
+	font-size: 105%;
+}
+
+pre.fragment {
+	border: 1px solid #CCCCCC;
+	background-color: #f5f5f5;
+	padding: 4px 6px;
+	margin: 4px 8px 4px 2px;
+}
+
+div.ah {
+	background-color: black;
+	font-weight: bold;
+	color: #ffffff;
+	margin-bottom: 3px;
+	margin-top: 3px
+}
+
+div.groupHeader {
+	margin-left: 16px;
+	margin-top: 12px;
+	margin-bottom: 6px;
+	font-weight: bold;
+}
+
+div.groupText {
+	margin-left: 16px;
+	font-style: italic;
+}
+
+body {
+	background: white;
+	color: black;
+	margin-right: 20px;
+	margin-left: 20px;
+}
+
+td.indexkey {
+	background-color: #e8eef2;
+	font-weight: bold;
+	border: 1px solid #CCCCCC;
+	margin: 2px 0px 2px 0;
+	padding: 2px 10px;
+}
+
+td.indexvalue {
+	background-color: #e8eef2;
+	border: 1px solid #CCCCCC;
+	padding: 2px 10px;
+	margin: 2px 0px;
+}
+
+tr.memlist {
+	background-color: #f0f0f0;
+}
+
+p.formulaDsp {
+	text-align: center;
+}
+
+img.formulaDsp {
+	
+}
+
+img.formulaInl {
+	vertical-align: middle;
+}
+
+div.center {
+	text-align: center;
+        margin-top: 0px;
+        margin-bottom: 0px;
+        padding: 0px;
+}
+
+div.center img {
+	border: 0px;
+}
+
+img.footer {
+	border: 0px;
+	vertical-align: middle;
+}
+
+/* @group Code Colorization */
+
+span.keyword {
+	color: #008000
+}
+
+span.keywordtype {
+	color: #604020
+}
+
+span.keywordflow {
+	color: #e08000
+}
+
+span.comment {
+	color: #800000
+}
+
+span.preprocessor {
+	color: #806020
+}
+
+span.stringliteral {
+	color: #002080
+}
+
+span.charliteral {
+	color: #008080
+}
+
+span.vhdldigit { 
+	color: #ff00ff 
+}
+
+span.vhdlchar { 
+	color: #000000 
+}
+
+span.vhdlkeyword { 
+	color: #700070 
+}
+
+span.vhdllogic { 
+	color: #ff0000 
+}
+
+/* @end */
+
+.search {
+	color: #003399;
+	font-weight: bold;
+}
+
+form.search {
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+
+input.search {
+	font-size: 75%;
+	color: #000080;
+	font-weight: normal;
+	background-color: #e8eef2;
+}
+
+td.tiny {
+	font-size: 75%;
+}
+
+.dirtab {
+	padding: 4px;
+	border-collapse: collapse;
+	border: 1px solid #84b0c7;
+}
+
+th.dirtab {
+	background: #e8eef2;
+	font-weight: bold;
+}
+
+hr {
+	height: 0;
+	border: none;
+	border-top: 1px solid #666;
+}
+
+/* @group Member Descriptions */
+
+.mdescLeft, .mdescRight,
+.memItemLeft, .memItemRight,
+.memTemplItemLeft, .memTemplItemRight, .memTemplParams {
+	background-color: #FAFAFA;
+	border: none;
+	margin: 4px;
+	padding: 1px 0 0 8px;
+}
+
+.mdescLeft, .mdescRight {
+	padding: 0px 8px 4px 8px;
+	color: #555;
+}
+
+.memItemLeft, .memItemRight, .memTemplParams {
+	border-top: 1px solid #ccc;
+}
+
+.memItemLeft, .memTemplItemLeft {
+        white-space: nowrap;
+}
+
+.memTemplParams {
+	color: #606060;
+        white-space: nowrap;
+}
+
+/* @end */
+
+/* @group Member Details */
+
+/* Styles for detailed member documentation */
+
+.memtemplate {
+	font-size: 80%;
+	color: #606060;
+	font-weight: normal;
+	margin-left: 3px;
+}
+
+.memnav {
+	background-color: #e8eef2;
+	border: 1px solid #84b0c7;
+	text-align: center;
+	margin: 2px;
+	margin-right: 15px;
+	padding: 2px;
+}
+
+.memitem {
+	padding: 0;
+	margin-bottom: 10px;
+}
+
+.memname {
+	white-space: nowrap;
+	font-weight: bold;
+}
+
+.memproto, .memdoc {
+	border: 1px solid #84b0c7;	
+}
+
+.memproto {
+	padding: 0;
+	background-color: #d5e1e8;
+	font-weight: bold;
+	-webkit-border-top-left-radius: 8px;
+	-webkit-border-top-right-radius: 8px;
+        -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+	-moz-border-radius-topleft: 8px;
+	-moz-border-radius-topright: 8px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+
+}
+
+.memdoc {
+	padding: 2px 5px;
+	background-color: #eef3f5;
+	border-top-width: 0;
+	-webkit-border-bottom-left-radius: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+        -webkit-box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.15);
+	-moz-border-radius-bottomleft: 8px;
+	-moz-border-radius-bottomright: 8px;
+        -moz-box-shadow: rgba(0, 0, 0, 0.15) 5px 5px 5px;
+}
+
+.paramkey {
+	text-align: right;
+}
+
+.paramtype {
+	white-space: nowrap;
+}
+
+.paramname {
+	color: #602020;
+	white-space: nowrap;
+}
+.paramname em {
+	font-style: normal;
+}
+
+/* @end */
+
+/* @group Directory (tree) */
+
+/* for the tree view */
+
+.ftvtree {
+	font-family: sans-serif;
+	margin: 0.5em;
+}
+
+/* these are for tree view when used as main index */
+
+.directory {
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+.directory h3 {
+	margin: 0px;
+	margin-top: 1em;
+	font-size: 11pt;
+}
+
+/*
+The following two styles can be used to replace the root node title
+with an image of your choice.  Simply uncomment the next two styles,
+specify the name of your image and be sure to set 'height' to the
+proper pixel height of your image.
+*/
+
+/*
+.directory h3.swap {
+	height: 61px;
+	background-repeat: no-repeat;
+	background-image: url("yourimage.gif");
+}
+.directory h3.swap span {
+	display: none;
+}
+*/
+
+.directory > h3 {
+	margin-top: 0;
+}
+
+.directory p {
+	margin: 0px;
+	white-space: nowrap;
+}
+
+.directory div {
+	display: none;
+	margin: 0px;
+}
+
+.directory img {
+	vertical-align: -30%;
+}
+
+/* these are for tree view when not used as main index */
+
+.directory-alt {
+	font-size: 100%;
+	font-weight: bold;
+}
+
+.directory-alt h3 {
+	margin: 0px;
+	margin-top: 1em;
+	font-size: 11pt;
+}
+
+.directory-alt > h3 {
+	margin-top: 0;
+}
+
+.directory-alt p {
+	margin: 0px;
+	white-space: nowrap;
+}
+
+.directory-alt div {
+	display: none;
+	margin: 0px;
+}
+
+.directory-alt img {
+	vertical-align: -30%;
+}
+
+/* @end */
+
+address {
+	font-style: normal;
+	color: #333;
+}
+```
+
+### `doxygen.png`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/doxygen.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `files.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/files.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: File Index</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li class="current"><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>File List</h1>Here is a list of all files with brief descriptions:<table>
+  <tr><td class="indexkey">sch/fsw/src/<a class="el" href="sch__custom_8c.html">sch_custom.c</a> <a href="sch__custom_8c_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">sch/fsw/src/<a class="el" href="sch__custom_8h.html">sch_custom.h</a> <a href="sch__custom_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">sch/fsw/src/<a class="el" href="sch__events_8h.html">sch_events.h</a> <a href="sch__events_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">sch/fsw/src/<a class="el" href="sch__msg_8h.html">sch_msg.h</a> <a href="sch__msg_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">sch/fsw/src/<a class="el" href="sch__msgdefs_8h.html">sch_msgdefs.h</a> <a href="sch__msgdefs_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">sch/fsw/src/<a class="el" href="sch__tbldefs_8h.html">sch_tbldefs.h</a> <a href="sch__tbldefs_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">/mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/<a class="el" href="sch__msgids_8h.html">sch_msgids.h</a> <a href="sch__msgids_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">/mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/<a class="el" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a> <a href="sch__platform__cfg_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+  <tr><td class="indexkey">/mnt/disk2/sstrege/cFE650_Testing/build/mission_inc/<a class="el" href="sch__perfids_8h.html">sch_perfids.h</a> <a href="sch__perfids_8h_source.html">[code]</a></td><td class="indexvalue"></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `functions.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/functions.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Data Fields</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li class="current"><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li class="current"><a href="functions.html"><span>All</span></a></li>
+      <li><a href="functions_vars.html"><span>Variables</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="#index_b"><span>b</span></a></li>
+      <li><a href="#index_c"><span>c</span></a></li>
+      <li><a href="#index_e"><span>e</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
+      <li><a href="#index_g"><span>g</span></a></li>
+      <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_l"><span>l</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
+      <li><a href="#index_s"><span>s</span></a></li>
+      <li><a href="#index_t"><span>t</span></a></li>
+      <li><a href="#index_u"><span>u</span></a></li>
+      <li><a href="#index_v"><span>v</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+Here is a list of all struct and union fields with links to the structures/unions they belong to:
+
+<h3><a class="anchor" id="index_b">- b -</a></h3><ul>
+<li>BadTableDataCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_c">- c -</a></h3><ul>
+<li>CmdCounter
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">SCH_HkPacket_t</a>
+</li>
+<li>CmdHeader
+: <a class="el" href="struct_s_c_h___group_cmd__t.html#ae7c5ee3a201522ec58dfe3de3d6beb76">SCH_GroupCmd_t</a>
+, <a class="el" href="struct_s_c_h___entry_cmd__t.html#a43feadfb6b45a5183b751fbb2d9dc504">SCH_EntryCmd_t</a>
+, <a class="el" href="struct_s_c_h___no_args_cmd__t.html#ad088543b6b40dda5b9bda20a2ea68365">SCH_NoArgsCmd_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_e">- e -</a></h3><ul>
+<li>EnableState
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#a9b2c423933436be2fd6d9abed47d327f">SCH_ScheduleEntry_t</a>
+</li>
+<li>EntryNumber
+: <a class="el" href="struct_s_c_h___entry_cmd__t.html#aa81b9c8fe12cf77493abffab77193e25">SCH_EntryCmd_t</a>
+</li>
+<li>EntryStates
+: <a class="el" href="struct_s_c_h___diag_packet__t.html#ae6df456ff6d74eb60796f022e14a8272">SCH_DiagPacket_t</a>
+</li>
+<li>ErrCounter
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f">- f -</a></h3><ul>
+<li>Frequency
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#ac9e04865964c229207be4b4b08e3b3c5">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_g">- g -</a></h3><ul>
+<li>GroupData
+: <a class="el" href="struct_s_c_h___group_cmd__t.html#a7b3bc39e9f4e01e8dad54dea3e7da611">SCH_GroupCmd_t</a>
+, <a class="el" href="struct_s_c_h___schedule_entry__t.html#aad89647f606b4a34a3a91e233c1e4dcf">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_i">- i -</a></h3><ul>
+<li>IgnoreMajorFrame
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_l">- l -</a></h3><ul>
+<li>LastSyncMETSlot
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_m">- m -</a></h3><ul>
+<li>MajorFrameSource
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">SCH_HkPacket_t</a>
+</li>
+<li>MessageBuffer
+: <a class="el" href="struct_s_c_h___message_entry__t.html#acabf07c295a2f53d2bbac2af8822d903">SCH_MessageEntry_t</a>
+</li>
+<li>MessageIndex
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#a0e98dbe9de02959165d823371b14cf0b">SCH_ScheduleEntry_t</a>
+</li>
+<li>MinorFramesSinceTone
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">SCH_HkPacket_t</a>
+</li>
+<li>MissedMajorFrameCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">SCH_HkPacket_t</a>
+</li>
+<li>MsgIDs
+: <a class="el" href="struct_s_c_h___diag_packet__t.html#a93cb215dbeda7d00db3cc4871dd28621">SCH_DiagPacket_t</a>
+</li>
+<li>MultipleSlotsCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_n">- n -</a></h3><ul>
+<li>NextSlotNumber
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_r">- r -</a></h3><ul>
+<li>Remainder
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#afed927177469e682cd7ac1f0fb18c4d9">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_s">- s -</a></h3><ul>
+<li>SameSlotCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">SCH_HkPacket_t</a>
+</li>
+<li>ScheduleActivityFailureCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">SCH_HkPacket_t</a>
+</li>
+<li>ScheduleActivitySuccessCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">SCH_HkPacket_t</a>
+</li>
+<li>SkippedSlotsCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">SCH_HkPacket_t</a>
+</li>
+<li>SlotNumber
+: <a class="el" href="struct_s_c_h___entry_cmd__t.html#ab2c4beb6673659795bb1afa5681699e0">SCH_EntryCmd_t</a>
+</li>
+<li>SlotsProcessedCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">SCH_HkPacket_t</a>
+</li>
+<li>SyncToMET
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_t">- t -</a></h3><ul>
+<li>TablePassCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">SCH_HkPacket_t</a>
+</li>
+<li>TableVerifyFailureCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">SCH_HkPacket_t</a>
+</li>
+<li>TableVerifySuccessCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">SCH_HkPacket_t</a>
+</li>
+<li>TlmHeader
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ad95ba5317fccfe3fe1e084e8187faa01">SCH_HkPacket_t</a>
+, <a class="el" href="struct_s_c_h___diag_packet__t.html#a3a2bacfee662c8d52108e0c77f20bb12">SCH_DiagPacket_t</a>
+</li>
+<li>Type
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#a0d8fe221038749a9195738d49ff6316b">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_u">- u -</a></h3><ul>
+<li>UnexpectedMajorFrame
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">SCH_HkPacket_t</a>
+</li>
+<li>UnexpectedMajorFrameCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_v">- v -</a></h3><ul>
+<li>ValidMajorFrameCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">SCH_HkPacket_t</a>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `functions_vars.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/functions_vars.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Data Fields - Variables</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li class="current"><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="functions.html"><span>All</span></a></li>
+      <li class="current"><a href="functions_vars.html"><span>Variables</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="#index_b"><span>b</span></a></li>
+      <li><a href="#index_c"><span>c</span></a></li>
+      <li><a href="#index_e"><span>e</span></a></li>
+      <li><a href="#index_f"><span>f</span></a></li>
+      <li><a href="#index_g"><span>g</span></a></li>
+      <li><a href="#index_i"><span>i</span></a></li>
+      <li><a href="#index_l"><span>l</span></a></li>
+      <li><a href="#index_m"><span>m</span></a></li>
+      <li><a href="#index_n"><span>n</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
+      <li><a href="#index_s"><span>s</span></a></li>
+      <li><a href="#index_t"><span>t</span></a></li>
+      <li><a href="#index_u"><span>u</span></a></li>
+      <li><a href="#index_v"><span>v</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+&nbsp;
+
+<h3><a class="anchor" id="index_b">- b -</a></h3><ul>
+<li>BadTableDataCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_c">- c -</a></h3><ul>
+<li>CmdCounter
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">SCH_HkPacket_t</a>
+</li>
+<li>CmdHeader
+: <a class="el" href="struct_s_c_h___group_cmd__t.html#ae7c5ee3a201522ec58dfe3de3d6beb76">SCH_GroupCmd_t</a>
+, <a class="el" href="struct_s_c_h___entry_cmd__t.html#a43feadfb6b45a5183b751fbb2d9dc504">SCH_EntryCmd_t</a>
+, <a class="el" href="struct_s_c_h___no_args_cmd__t.html#ad088543b6b40dda5b9bda20a2ea68365">SCH_NoArgsCmd_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_e">- e -</a></h3><ul>
+<li>EnableState
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#a9b2c423933436be2fd6d9abed47d327f">SCH_ScheduleEntry_t</a>
+</li>
+<li>EntryNumber
+: <a class="el" href="struct_s_c_h___entry_cmd__t.html#aa81b9c8fe12cf77493abffab77193e25">SCH_EntryCmd_t</a>
+</li>
+<li>EntryStates
+: <a class="el" href="struct_s_c_h___diag_packet__t.html#ae6df456ff6d74eb60796f022e14a8272">SCH_DiagPacket_t</a>
+</li>
+<li>ErrCounter
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_f">- f -</a></h3><ul>
+<li>Frequency
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#ac9e04865964c229207be4b4b08e3b3c5">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_g">- g -</a></h3><ul>
+<li>GroupData
+: <a class="el" href="struct_s_c_h___group_cmd__t.html#a7b3bc39e9f4e01e8dad54dea3e7da611">SCH_GroupCmd_t</a>
+, <a class="el" href="struct_s_c_h___schedule_entry__t.html#aad89647f606b4a34a3a91e233c1e4dcf">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_i">- i -</a></h3><ul>
+<li>IgnoreMajorFrame
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_l">- l -</a></h3><ul>
+<li>LastSyncMETSlot
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_m">- m -</a></h3><ul>
+<li>MajorFrameSource
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">SCH_HkPacket_t</a>
+</li>
+<li>MessageBuffer
+: <a class="el" href="struct_s_c_h___message_entry__t.html#acabf07c295a2f53d2bbac2af8822d903">SCH_MessageEntry_t</a>
+</li>
+<li>MessageIndex
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#a0e98dbe9de02959165d823371b14cf0b">SCH_ScheduleEntry_t</a>
+</li>
+<li>MinorFramesSinceTone
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">SCH_HkPacket_t</a>
+</li>
+<li>MissedMajorFrameCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">SCH_HkPacket_t</a>
+</li>
+<li>MsgIDs
+: <a class="el" href="struct_s_c_h___diag_packet__t.html#a93cb215dbeda7d00db3cc4871dd28621">SCH_DiagPacket_t</a>
+</li>
+<li>MultipleSlotsCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_n">- n -</a></h3><ul>
+<li>NextSlotNumber
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_r">- r -</a></h3><ul>
+<li>Remainder
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#afed927177469e682cd7ac1f0fb18c4d9">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_s">- s -</a></h3><ul>
+<li>SameSlotCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">SCH_HkPacket_t</a>
+</li>
+<li>ScheduleActivityFailureCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">SCH_HkPacket_t</a>
+</li>
+<li>ScheduleActivitySuccessCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">SCH_HkPacket_t</a>
+</li>
+<li>SkippedSlotsCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">SCH_HkPacket_t</a>
+</li>
+<li>SlotNumber
+: <a class="el" href="struct_s_c_h___entry_cmd__t.html#ab2c4beb6673659795bb1afa5681699e0">SCH_EntryCmd_t</a>
+</li>
+<li>SlotsProcessedCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">SCH_HkPacket_t</a>
+</li>
+<li>SyncToMET
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_t">- t -</a></h3><ul>
+<li>TablePassCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">SCH_HkPacket_t</a>
+</li>
+<li>TableVerifyFailureCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">SCH_HkPacket_t</a>
+</li>
+<li>TableVerifySuccessCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">SCH_HkPacket_t</a>
+</li>
+<li>TlmHeader
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#ad95ba5317fccfe3fe1e084e8187faa01">SCH_HkPacket_t</a>
+, <a class="el" href="struct_s_c_h___diag_packet__t.html#a3a2bacfee662c8d52108e0c77f20bb12">SCH_DiagPacket_t</a>
+</li>
+<li>Type
+: <a class="el" href="struct_s_c_h___schedule_entry__t.html#a0d8fe221038749a9195738d49ff6316b">SCH_ScheduleEntry_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_u">- u -</a></h3><ul>
+<li>UnexpectedMajorFrame
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">SCH_HkPacket_t</a>
+</li>
+<li>UnexpectedMajorFrameCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">SCH_HkPacket_t</a>
+</li>
+</ul>
+
+
+<h3><a class="anchor" id="index_v">- v -</a></h3><ul>
+<li>ValidMajorFrameCount
+: <a class="el" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">SCH_HkPacket_t</a>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `globals.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/globals.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Data Fields</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li class="current"><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li class="current"><a href="globals.html"><span>All</span></a></li>
+      <li><a href="globals_func.html"><span>Functions</span></a></li>
+      <li><a href="globals_defs.html"><span>Defines</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="#index_s"><span>s</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+Here is a list of all functions, variables, defines, enums, and typedefs with links to the files they belong to:
+
+<h3><a class="anchor" id="index_s">- s -</a></h3><ul>
+<li>SCH_ACQ_PTR_ERR_EID
+: <a class="el" href="sch__events_8h.html#a9ca4152086ae41a90e6965e646b82208">sch_events.h</a>
+</li>
+<li>SCH_ACTIVITY_NONE
+: <a class="el" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">sch_msgdefs.h</a>
+</li>
+<li>SCH_ACTIVITY_SEND_MSG
+: <a class="el" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">sch_msgdefs.h</a>
+</li>
+<li>SCH_APP_EXIT_EID
+: <a class="el" href="sch__events_8h.html#a256a037e3b606b512b11a07fc9ebcf92">sch_events.h</a>
+</li>
+<li>SCH_APPMAIN_PERF_ID
+: <a class="el" href="sch__perfids_8h.html#a4520b74606d3a105b6a79649f0aaf396">sch_perfids.h</a>
+</li>
+<li>SCH_CC_ERR_EID
+: <a class="el" href="sch__events_8h.html#ae31e105060e10bea7f771a275990d6fb">sch_events.h</a>
+</li>
+<li>SCH_CMD_LEN_ERR_EID
+: <a class="el" href="sch__events_8h.html#af4a0a7f8d400a0613ebbbd0994ef1b17">sch_events.h</a>
+</li>
+<li>SCH_CMD_MID
+: <a class="el" href="sch__msgids_8h.html#a074c7822b6c9bd33b492dce99e9457dd">sch_msgids.h</a>
+</li>
+<li>SCH_CORRUPTION_EID
+: <a class="el" href="sch__events_8h.html#a7106064c2a3fc6047b96df11eb32b6ba">sch_events.h</a>
+</li>
+<li>SCH_CR_PIPE_ERR_EID
+: <a class="el" href="sch__events_8h.html#a81c7648731fb8579658ee3ad64f6a6e6">sch_events.h</a>
+</li>
+<li>SCH_CustomCleanup()
+: <a class="el" href="sch__custom_8h.html#a521f028b851995a3755ed7e4294f3b9e">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a521f028b851995a3755ed7e4294f3b9e">sch_custom.c</a>
+</li>
+<li>SCH_CustomEarlyInit()
+: <a class="el" href="sch__custom_8h.html#a460799de20a37103670e068ec0cd3854">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854">sch_custom.c</a>
+</li>
+<li>SCH_CustomGetCurrentSlotNumber()
+: <a class="el" href="sch__custom_8c.html#a0f0feaac769ebba7a790a5575edfa482">sch_custom.c</a>
+, <a class="el" href="sch__custom_8h.html#a0f0feaac769ebba7a790a5575edfa482">sch_custom.h</a>
+</li>
+<li>SCH_CustomLateInit()
+: <a class="el" href="sch__custom_8h.html#a769b51f7ffc7c7711cc7bf0856702a77">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a769b51f7ffc7c7711cc7bf0856702a77">sch_custom.c</a>
+</li>
+<li>SCH_DIAG_TLM_MID
+: <a class="el" href="sch__msgids_8h.html#a988982bcdad03c8616a963f1ead6516c">sch_msgids.h</a>
+</li>
+<li>SCH_DIS_GRP_CMD_EID
+: <a class="el" href="sch__events_8h.html#a093d7419db5a9c6b9c6e5577a7b9a0cb">sch_events.h</a>
+</li>
+<li>SCH_DIS_GRP_CMD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a7b3262d4162697944408caca0d77e53c">sch_events.h</a>
+</li>
+<li>SCH_DIS_GRP_NOT_FOUND_ERR_EID
+: <a class="el" href="sch__events_8h.html#afc9ac9162862cc253aa6752f9144d97d">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_CC
+: <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">sch_msgdefs.h</a>
+</li>
+<li>SCH_DISABLE_CMD_ARG_ERR_EID
+: <a class="el" href="sch__events_8h.html#abbbdffaf3a9a53153aba67f76b346839">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_CMD_EID
+: <a class="el" href="sch__events_8h.html#ab121f57cb66e52bf03ee5aebbd7b54c2">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_CMD_ENTRY_ERR_EID
+: <a class="el" href="sch__events_8h.html#a16f497f25d045c5e801b50cfaeea8ab1">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_GROUP_CC
+: <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">sch_msgdefs.h</a>
+</li>
+<li>SCH_DISABLED
+: <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENA_GRP_CMD_EID
+: <a class="el" href="sch__events_8h.html#a10d7bdb94ef40f5f820e7665b67a0eac">sch_events.h</a>
+</li>
+<li>SCH_ENA_GRP_CMD_ERR_EID
+: <a class="el" href="sch__events_8h.html#af4161cac1856709b11fe34d4e4f30271">sch_events.h</a>
+</li>
+<li>SCH_ENA_GRP_NOT_FOUND_ERR_EID
+: <a class="el" href="sch__events_8h.html#a1693b293344b191bda7ef84366eb67b8">sch_events.h</a>
+</li>
+<li>SCH_ENA_SYNC_CMD_EID
+: <a class="el" href="sch__events_8h.html#a16e0b6b024dea3ae0e43803b80506239">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_CC
+: <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENABLE_CMD_ARG_ERR_EID
+: <a class="el" href="sch__events_8h.html#a3c2b9df457018122b51e02c4a64ce08d">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_CMD_EID
+: <a class="el" href="sch__events_8h.html#ad4bc902a2dbfa52aac0f26b8016937fb">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_CMD_ENTRY_ERR_EID
+: <a class="el" href="sch__events_8h.html#ab25b9e84f06d75ae7644b19a5ccc9c86">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_GROUP_CC
+: <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENABLE_SYNC_CC
+: <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENABLED
+: <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENTRIES_PER_SLOT
+: <a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">sch_platform_cfg.h</a>
+</li>
+<li>SCH_GetMETSlotNumber()
+: <a class="el" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#abbb6d913166c6579b57f48ca542b7ad9">sch_custom.c</a>
+</li>
+<li>SCH_GROUP_NUMBER_BIT_MASK
+: <a class="el" href="sch__msgdefs_8h.html#a4d11ce8a3451dede239ac5968c79674c">sch_msgdefs.h</a>
+</li>
+<li>SCH_HK_TLM_MID
+: <a class="el" href="sch__msgids_8h.html#a7b32291e4a3a9cadb92e7133a7c203a6">sch_msgids.h</a>
+</li>
+<li>SCH_INITSTATS_INF_EID
+: <a class="el" href="sch__events_8h.html#a2143003d800956b0a42acb189559dc97">sch_events.h</a>
+</li>
+<li>SCH_LIB_DIS_CTR
+: <a class="el" href="sch__platform__cfg_8h.html#a52bf5079eb88fd0172002e0e51f98968">sch_platform_cfg.h</a>
+</li>
+<li>SCH_LIB_PRESENCE
+: <a class="el" href="sch__platform__cfg_8h.html#a3e60196dcee964e40ea2fa02432ce9f1">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAJOR_FRAME_SUB_ERR_EID
+: <a class="el" href="sch__events_8h.html#affe219cf221b8d99d6f3d16c64e69113">sch_events.h</a>
+</li>
+<li>SCH_MAJOR_FS_CFE_TIME
+: <a class="el" href="sch__msgdefs_8h.html#a3b5381649512b5aa65e1969d19f82383">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAJOR_FS_MINOR_FRAME_TIMER
+: <a class="el" href="sch__msgdefs_8h.html#a9b3b0460a88c4ab7d88b77036db14af3">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAJOR_FS_NONE
+: <a class="el" href="sch__msgdefs_8h.html#acf7d4e3206e5b49309b98e923f02e703">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAJOR_SYNCHRONIZED
+: <a class="el" href="sch__msgdefs_8h.html#ab92002b3160afcce40146f32b1ebba7f">sch_msgdefs.h</a>
+</li>
+<li>SCH_MajorFrameCallback()
+: <a class="el" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">sch_custom.c</a>
+</li>
+<li>SCH_MAX_LAG_COUNT
+: <a class="el" href="sch__platform__cfg_8h.html#a3c0b63876d747b502eca1d357db4811b">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_MESSAGES
+: <a class="el" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_MSG_WORDS
+: <a class="el" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_NOISY_MAJORF
+: <a class="el" href="sch__platform__cfg_8h.html#a73f474fd107fc1572d7c19747f088cff">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_SLOTS_PER_WAKEUP
+: <a class="el" href="sch__platform__cfg_8h.html#af171824906a7a855149ef5f2a6864f3c">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a1b0be4d0a46e6c95e635156fbd702e81">sch_events.h</a>
+</li>
+<li>SCH_MDT_LOAD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a75646ae6d481e98d542a494e3c820d2e">sch_events.h</a>
+</li>
+<li>SCH_MDT_MAX_MSG_ID
+: <a class="el" href="sch__platform__cfg_8h.html#a2bd1b9c1ac55dfa973315131d4da9262">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MDT_MIN_MSG_ID
+: <a class="el" href="sch__platform__cfg_8h.html#a9548b3ea10b92bc3ff1940d4a93d41dc">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MDT_REG_ERR_EID
+: <a class="el" href="sch__events_8h.html#a60d28cfacc16c1d0e899df00d9af99ca">sch_events.h</a>
+</li>
+<li>SCH_MESSAGE_FILENAME
+: <a class="el" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MESSAGE_TABLE_EID
+: <a class="el" href="sch__events_8h.html#a3a3ae4906a52675ab0f10b23605b28b2">sch_events.h</a>
+</li>
+<li>SCH_MESSAGE_TBL_ERR_EID
+: <a class="el" href="sch__events_8h.html#a60de1571f084de6c9bde8353674f8b9a">sch_events.h</a>
+</li>
+<li>SCH_MICROS_PER_MAJOR_FRAME
+: <a class="el" href="sch__platform__cfg_8h.html#a713f29f56d23240c78fc018a571723d3">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MIN_MSG_WORDS
+: <a class="el" href="sch__msgdefs_8h.html#a86546660af92be9970111a31a68238f4">sch_msgdefs.h</a>
+</li>
+<li>SCH_MINOR_FRAME_TIMER_ACC_WARN_EID
+: <a class="el" href="sch__events_8h.html#a681ef7909a2bf197cdc1455f20b75a41">sch_events.h</a>
+</li>
+<li>SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID
+: <a class="el" href="sch__events_8h.html#a44d4138566976dff1e1cd1b3ba600f82">sch_events.h</a>
+</li>
+<li>SCH_MINOR_SYNCHRONIZED
+: <a class="el" href="sch__msgdefs_8h.html#a8487279452fc187714c3e3ee70915331">sch_msgdefs.h</a>
+</li>
+<li>SCH_MinorFrameCallback()
+: <a class="el" href="sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#af2799afed4a19fadc0a75dc7419a93ca">sch_custom.c</a>
+</li>
+<li>SCH_MISSION_REV
+: <a class="el" href="sch__platform__cfg_8h.html#a780b944ab488ad7a4c4e4e81161d23f5">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MULTI_GROUP_BIT_MASK
+: <a class="el" href="sch__msgdefs_8h.html#af2caad7434b5b411a03ce68d78134d04">sch_msgdefs.h</a>
+</li>
+<li>SCH_MULTI_SLOTS_EID
+: <a class="el" href="sch__events_8h.html#a09da55d4b05f10b67a494237cbf79bfe">sch_events.h</a>
+</li>
+<li>SCH_NOISY_MAJOR_FRAME_ERR_EID
+: <a class="el" href="sch__events_8h.html#af8eb00478531ff0f7b5b871387367869">sch_events.h</a>
+</li>
+<li>SCH_NOOP_CC
+: <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">sch_msgdefs.h</a>
+</li>
+<li>SCH_NOOP_CMD_EID
+: <a class="el" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f">sch_events.h</a>
+</li>
+<li>SCH_NOT_SYNCHRONIZED
+: <a class="el" href="sch__msgdefs_8h.html#a8b3e88ea3d976c81fd091f6f70e24184">sch_msgdefs.h</a>
+</li>
+<li>SCH_NUM_STATUS_BYTES_REQD
+: <a class="el" href="sch__msgdefs_8h.html#a40c88a844e110e233af9a5232a0e34d8">sch_msgdefs.h</a>
+</li>
+<li>SCH_PACKET_SEND_EID
+: <a class="el" href="sch__events_8h.html#a5cc7d962d11700c662adc8f339b7e593">sch_events.h</a>
+</li>
+<li>SCH_PENDING_MAJOR_SYNCH
+: <a class="el" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">sch_msgdefs.h</a>
+</li>
+<li>SCH_PIPE_DEPTH
+: <a class="el" href="sch__platform__cfg_8h.html#a0efb7feeef71f7d97bbca9bae5dd7c36">sch_platform_cfg.h</a>
+</li>
+<li>SCH_RESET_CC
+: <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">sch_msgdefs.h</a>
+</li>
+<li>SCH_RESET_CMD_EID
+: <a class="el" href="sch__events_8h.html#a413a36e0a66d1471334fc7566d4f8aab">sch_events.h</a>
+</li>
+<li>SCH_SAME_SLOT_EID
+: <a class="el" href="sch__events_8h.html#a6782d568df5b282bce3d5a11e8e76bc5">sch_events.h</a>
+</li>
+<li>SCH_SCHEDULE_FILENAME
+: <a class="el" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">sch_platform_cfg.h</a>
+</li>
+<li>SCH_SCHEDULE_TABLE_EID
+: <a class="el" href="sch__events_8h.html#aaf1c92d4e949026b4f85c2f79210b47a">sch_events.h</a>
+</li>
+<li>SCH_SCHEDULE_TBL_ERR_EID
+: <a class="el" href="sch__events_8h.html#a7d5634d49287b21e94b50cef2b02172d">sch_events.h</a>
+</li>
+<li>SCH_SDT_LOAD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a00b148cce3c683c09b56029c416ea387">sch_events.h</a>
+</li>
+<li>SCH_SDT_REG_ERR_EID
+: <a class="el" href="sch__events_8h.html#afdb83b5dd5111305728c15e192ba6bb7">sch_events.h</a>
+</li>
+<li>SCH_SEM_CREATE_ERR_EID
+: <a class="el" href="sch__events_8h.html#ad6719efdf25d2fd4d049cc76540a59f2">sch_events.h</a>
+</li>
+<li>SCH_SEND_DIAG_CMD_EID
+: <a class="el" href="sch__events_8h.html#aafd0af9dff5ed932aefd1a94cf6ee4b9">sch_events.h</a>
+</li>
+<li>SCH_SEND_DIAG_TLM_CC
+: <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">sch_msgdefs.h</a>
+</li>
+<li>SCH_SEND_HK_MID
+: <a class="el" href="sch__msgids_8h.html#a6b68abc81890d0891f1562df904fca7d">sch_msgids.h</a>
+</li>
+<li>SCH_SKIPPED_SLOTS_EID
+: <a class="el" href="sch__events_8h.html#a3d22029ece03daab899155c861a90db3">sch_events.h</a>
+</li>
+<li>SCH_STARTUP_PERIOD
+: <a class="el" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">sch_platform_cfg.h</a>
+</li>
+<li>SCH_STARTUP_SYNC_TIMEOUT
+: <a class="el" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">sch_platform_cfg.h</a>
+</li>
+<li>SCH_SUB_GND_CMD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a1935c5e4374cf3af5c7bcf0473a9e4a1">sch_events.h</a>
+</li>
+<li>SCH_SUB_HK_REQ_ERR_EID
+: <a class="el" href="sch__events_8h.html#ae3f383a940a0199ce06958cb1d422314">sch_events.h</a>
+</li>
+<li>SCH_SYNC_SLOT_DRIFT_WINDOW
+: <a class="el" href="sch__platform__cfg_8h.html#afa493b73d6d26f4171bce55904f7989e">sch_platform_cfg.h</a>
+</li>
+<li>SCH_TABLE_ENTRIES
+: <a class="el" href="sch__msgdefs_8h.html#a8d4957dff253e544275b614cace1ca72">sch_msgdefs.h</a>
+</li>
+<li>SCH_TIMER_NAME
+: <a class="el" href="sch__custom_8h.html#a7ac9e2cf550e5dcbaf89b65bdc872427">sch_custom.h</a>
+</li>
+<li>SCH_TOTAL_SLOTS
+: <a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">sch_platform_cfg.h</a>
+</li>
+<li>SCH_UNUSED
+: <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">sch_msgdefs.h</a>
+</li>
+<li>SCH_UNUSED_MID
+: <a class="el" href="sch__msgids_8h.html#a2a53f6e7c459112e99857efce7749c57">sch_msgids.h</a>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `globals_defs.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/globals_defs.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Data Fields</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li class="current"><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="globals.html"><span>All</span></a></li>
+      <li><a href="globals_func.html"><span>Functions</span></a></li>
+      <li class="current"><a href="globals_defs.html"><span>Defines</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="#index_s"><span>s</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+&nbsp;
+
+<h3><a class="anchor" id="index_s">- s -</a></h3><ul>
+<li>SCH_ACQ_PTR_ERR_EID
+: <a class="el" href="sch__events_8h.html#a9ca4152086ae41a90e6965e646b82208">sch_events.h</a>
+</li>
+<li>SCH_ACTIVITY_NONE
+: <a class="el" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">sch_msgdefs.h</a>
+</li>
+<li>SCH_ACTIVITY_SEND_MSG
+: <a class="el" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">sch_msgdefs.h</a>
+</li>
+<li>SCH_APP_EXIT_EID
+: <a class="el" href="sch__events_8h.html#a256a037e3b606b512b11a07fc9ebcf92">sch_events.h</a>
+</li>
+<li>SCH_APPMAIN_PERF_ID
+: <a class="el" href="sch__perfids_8h.html#a4520b74606d3a105b6a79649f0aaf396">sch_perfids.h</a>
+</li>
+<li>SCH_CC_ERR_EID
+: <a class="el" href="sch__events_8h.html#ae31e105060e10bea7f771a275990d6fb">sch_events.h</a>
+</li>
+<li>SCH_CMD_LEN_ERR_EID
+: <a class="el" href="sch__events_8h.html#af4a0a7f8d400a0613ebbbd0994ef1b17">sch_events.h</a>
+</li>
+<li>SCH_CMD_MID
+: <a class="el" href="sch__msgids_8h.html#a074c7822b6c9bd33b492dce99e9457dd">sch_msgids.h</a>
+</li>
+<li>SCH_CORRUPTION_EID
+: <a class="el" href="sch__events_8h.html#a7106064c2a3fc6047b96df11eb32b6ba">sch_events.h</a>
+</li>
+<li>SCH_CR_PIPE_ERR_EID
+: <a class="el" href="sch__events_8h.html#a81c7648731fb8579658ee3ad64f6a6e6">sch_events.h</a>
+</li>
+<li>SCH_DIAG_TLM_MID
+: <a class="el" href="sch__msgids_8h.html#a988982bcdad03c8616a963f1ead6516c">sch_msgids.h</a>
+</li>
+<li>SCH_DIS_GRP_CMD_EID
+: <a class="el" href="sch__events_8h.html#a093d7419db5a9c6b9c6e5577a7b9a0cb">sch_events.h</a>
+</li>
+<li>SCH_DIS_GRP_CMD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a7b3262d4162697944408caca0d77e53c">sch_events.h</a>
+</li>
+<li>SCH_DIS_GRP_NOT_FOUND_ERR_EID
+: <a class="el" href="sch__events_8h.html#afc9ac9162862cc253aa6752f9144d97d">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_CC
+: <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">sch_msgdefs.h</a>
+</li>
+<li>SCH_DISABLE_CMD_ARG_ERR_EID
+: <a class="el" href="sch__events_8h.html#abbbdffaf3a9a53153aba67f76b346839">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_CMD_EID
+: <a class="el" href="sch__events_8h.html#ab121f57cb66e52bf03ee5aebbd7b54c2">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_CMD_ENTRY_ERR_EID
+: <a class="el" href="sch__events_8h.html#a16f497f25d045c5e801b50cfaeea8ab1">sch_events.h</a>
+</li>
+<li>SCH_DISABLE_GROUP_CC
+: <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">sch_msgdefs.h</a>
+</li>
+<li>SCH_DISABLED
+: <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENA_GRP_CMD_EID
+: <a class="el" href="sch__events_8h.html#a10d7bdb94ef40f5f820e7665b67a0eac">sch_events.h</a>
+</li>
+<li>SCH_ENA_GRP_CMD_ERR_EID
+: <a class="el" href="sch__events_8h.html#af4161cac1856709b11fe34d4e4f30271">sch_events.h</a>
+</li>
+<li>SCH_ENA_GRP_NOT_FOUND_ERR_EID
+: <a class="el" href="sch__events_8h.html#a1693b293344b191bda7ef84366eb67b8">sch_events.h</a>
+</li>
+<li>SCH_ENA_SYNC_CMD_EID
+: <a class="el" href="sch__events_8h.html#a16e0b6b024dea3ae0e43803b80506239">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_CC
+: <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENABLE_CMD_ARG_ERR_EID
+: <a class="el" href="sch__events_8h.html#a3c2b9df457018122b51e02c4a64ce08d">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_CMD_EID
+: <a class="el" href="sch__events_8h.html#ad4bc902a2dbfa52aac0f26b8016937fb">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_CMD_ENTRY_ERR_EID
+: <a class="el" href="sch__events_8h.html#ab25b9e84f06d75ae7644b19a5ccc9c86">sch_events.h</a>
+</li>
+<li>SCH_ENABLE_GROUP_CC
+: <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENABLE_SYNC_CC
+: <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENABLED
+: <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">sch_msgdefs.h</a>
+</li>
+<li>SCH_ENTRIES_PER_SLOT
+: <a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">sch_platform_cfg.h</a>
+</li>
+<li>SCH_GROUP_NUMBER_BIT_MASK
+: <a class="el" href="sch__msgdefs_8h.html#a4d11ce8a3451dede239ac5968c79674c">sch_msgdefs.h</a>
+</li>
+<li>SCH_HK_TLM_MID
+: <a class="el" href="sch__msgids_8h.html#a7b32291e4a3a9cadb92e7133a7c203a6">sch_msgids.h</a>
+</li>
+<li>SCH_INITSTATS_INF_EID
+: <a class="el" href="sch__events_8h.html#a2143003d800956b0a42acb189559dc97">sch_events.h</a>
+</li>
+<li>SCH_LIB_DIS_CTR
+: <a class="el" href="sch__platform__cfg_8h.html#a52bf5079eb88fd0172002e0e51f98968">sch_platform_cfg.h</a>
+</li>
+<li>SCH_LIB_PRESENCE
+: <a class="el" href="sch__platform__cfg_8h.html#a3e60196dcee964e40ea2fa02432ce9f1">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAJOR_FRAME_SUB_ERR_EID
+: <a class="el" href="sch__events_8h.html#affe219cf221b8d99d6f3d16c64e69113">sch_events.h</a>
+</li>
+<li>SCH_MAJOR_FS_CFE_TIME
+: <a class="el" href="sch__msgdefs_8h.html#a3b5381649512b5aa65e1969d19f82383">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAJOR_FS_MINOR_FRAME_TIMER
+: <a class="el" href="sch__msgdefs_8h.html#a9b3b0460a88c4ab7d88b77036db14af3">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAJOR_FS_NONE
+: <a class="el" href="sch__msgdefs_8h.html#acf7d4e3206e5b49309b98e923f02e703">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAJOR_SYNCHRONIZED
+: <a class="el" href="sch__msgdefs_8h.html#ab92002b3160afcce40146f32b1ebba7f">sch_msgdefs.h</a>
+</li>
+<li>SCH_MAX_LAG_COUNT
+: <a class="el" href="sch__platform__cfg_8h.html#a3c0b63876d747b502eca1d357db4811b">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_MESSAGES
+: <a class="el" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_MSG_WORDS
+: <a class="el" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_NOISY_MAJORF
+: <a class="el" href="sch__platform__cfg_8h.html#a73f474fd107fc1572d7c19747f088cff">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MAX_SLOTS_PER_WAKEUP
+: <a class="el" href="sch__platform__cfg_8h.html#af171824906a7a855149ef5f2a6864f3c">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a1b0be4d0a46e6c95e635156fbd702e81">sch_events.h</a>
+</li>
+<li>SCH_MDT_LOAD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a75646ae6d481e98d542a494e3c820d2e">sch_events.h</a>
+</li>
+<li>SCH_MDT_MAX_MSG_ID
+: <a class="el" href="sch__platform__cfg_8h.html#a2bd1b9c1ac55dfa973315131d4da9262">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MDT_MIN_MSG_ID
+: <a class="el" href="sch__platform__cfg_8h.html#a9548b3ea10b92bc3ff1940d4a93d41dc">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MDT_REG_ERR_EID
+: <a class="el" href="sch__events_8h.html#a60d28cfacc16c1d0e899df00d9af99ca">sch_events.h</a>
+</li>
+<li>SCH_MESSAGE_FILENAME
+: <a class="el" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MESSAGE_TABLE_EID
+: <a class="el" href="sch__events_8h.html#a3a3ae4906a52675ab0f10b23605b28b2">sch_events.h</a>
+</li>
+<li>SCH_MESSAGE_TBL_ERR_EID
+: <a class="el" href="sch__events_8h.html#a60de1571f084de6c9bde8353674f8b9a">sch_events.h</a>
+</li>
+<li>SCH_MICROS_PER_MAJOR_FRAME
+: <a class="el" href="sch__platform__cfg_8h.html#a713f29f56d23240c78fc018a571723d3">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MIN_MSG_WORDS
+: <a class="el" href="sch__msgdefs_8h.html#a86546660af92be9970111a31a68238f4">sch_msgdefs.h</a>
+</li>
+<li>SCH_MINOR_FRAME_TIMER_ACC_WARN_EID
+: <a class="el" href="sch__events_8h.html#a681ef7909a2bf197cdc1455f20b75a41">sch_events.h</a>
+</li>
+<li>SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID
+: <a class="el" href="sch__events_8h.html#a44d4138566976dff1e1cd1b3ba600f82">sch_events.h</a>
+</li>
+<li>SCH_MINOR_SYNCHRONIZED
+: <a class="el" href="sch__msgdefs_8h.html#a8487279452fc187714c3e3ee70915331">sch_msgdefs.h</a>
+</li>
+<li>SCH_MISSION_REV
+: <a class="el" href="sch__platform__cfg_8h.html#a780b944ab488ad7a4c4e4e81161d23f5">sch_platform_cfg.h</a>
+</li>
+<li>SCH_MULTI_GROUP_BIT_MASK
+: <a class="el" href="sch__msgdefs_8h.html#af2caad7434b5b411a03ce68d78134d04">sch_msgdefs.h</a>
+</li>
+<li>SCH_MULTI_SLOTS_EID
+: <a class="el" href="sch__events_8h.html#a09da55d4b05f10b67a494237cbf79bfe">sch_events.h</a>
+</li>
+<li>SCH_NOISY_MAJOR_FRAME_ERR_EID
+: <a class="el" href="sch__events_8h.html#af8eb00478531ff0f7b5b871387367869">sch_events.h</a>
+</li>
+<li>SCH_NOOP_CC
+: <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">sch_msgdefs.h</a>
+</li>
+<li>SCH_NOOP_CMD_EID
+: <a class="el" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f">sch_events.h</a>
+</li>
+<li>SCH_NOT_SYNCHRONIZED
+: <a class="el" href="sch__msgdefs_8h.html#a8b3e88ea3d976c81fd091f6f70e24184">sch_msgdefs.h</a>
+</li>
+<li>SCH_NUM_STATUS_BYTES_REQD
+: <a class="el" href="sch__msgdefs_8h.html#a40c88a844e110e233af9a5232a0e34d8">sch_msgdefs.h</a>
+</li>
+<li>SCH_PACKET_SEND_EID
+: <a class="el" href="sch__events_8h.html#a5cc7d962d11700c662adc8f339b7e593">sch_events.h</a>
+</li>
+<li>SCH_PENDING_MAJOR_SYNCH
+: <a class="el" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">sch_msgdefs.h</a>
+</li>
+<li>SCH_PIPE_DEPTH
+: <a class="el" href="sch__platform__cfg_8h.html#a0efb7feeef71f7d97bbca9bae5dd7c36">sch_platform_cfg.h</a>
+</li>
+<li>SCH_RESET_CC
+: <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">sch_msgdefs.h</a>
+</li>
+<li>SCH_RESET_CMD_EID
+: <a class="el" href="sch__events_8h.html#a413a36e0a66d1471334fc7566d4f8aab">sch_events.h</a>
+</li>
+<li>SCH_SAME_SLOT_EID
+: <a class="el" href="sch__events_8h.html#a6782d568df5b282bce3d5a11e8e76bc5">sch_events.h</a>
+</li>
+<li>SCH_SCHEDULE_FILENAME
+: <a class="el" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">sch_platform_cfg.h</a>
+</li>
+<li>SCH_SCHEDULE_TABLE_EID
+: <a class="el" href="sch__events_8h.html#aaf1c92d4e949026b4f85c2f79210b47a">sch_events.h</a>
+</li>
+<li>SCH_SCHEDULE_TBL_ERR_EID
+: <a class="el" href="sch__events_8h.html#a7d5634d49287b21e94b50cef2b02172d">sch_events.h</a>
+</li>
+<li>SCH_SDT_LOAD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a00b148cce3c683c09b56029c416ea387">sch_events.h</a>
+</li>
+<li>SCH_SDT_REG_ERR_EID
+: <a class="el" href="sch__events_8h.html#afdb83b5dd5111305728c15e192ba6bb7">sch_events.h</a>
+</li>
+<li>SCH_SEM_CREATE_ERR_EID
+: <a class="el" href="sch__events_8h.html#ad6719efdf25d2fd4d049cc76540a59f2">sch_events.h</a>
+</li>
+<li>SCH_SEND_DIAG_CMD_EID
+: <a class="el" href="sch__events_8h.html#aafd0af9dff5ed932aefd1a94cf6ee4b9">sch_events.h</a>
+</li>
+<li>SCH_SEND_DIAG_TLM_CC
+: <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">sch_msgdefs.h</a>
+</li>
+<li>SCH_SEND_HK_MID
+: <a class="el" href="sch__msgids_8h.html#a6b68abc81890d0891f1562df904fca7d">sch_msgids.h</a>
+</li>
+<li>SCH_SKIPPED_SLOTS_EID
+: <a class="el" href="sch__events_8h.html#a3d22029ece03daab899155c861a90db3">sch_events.h</a>
+</li>
+<li>SCH_STARTUP_PERIOD
+: <a class="el" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">sch_platform_cfg.h</a>
+</li>
+<li>SCH_STARTUP_SYNC_TIMEOUT
+: <a class="el" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">sch_platform_cfg.h</a>
+</li>
+<li>SCH_SUB_GND_CMD_ERR_EID
+: <a class="el" href="sch__events_8h.html#a1935c5e4374cf3af5c7bcf0473a9e4a1">sch_events.h</a>
+</li>
+<li>SCH_SUB_HK_REQ_ERR_EID
+: <a class="el" href="sch__events_8h.html#ae3f383a940a0199ce06958cb1d422314">sch_events.h</a>
+</li>
+<li>SCH_SYNC_SLOT_DRIFT_WINDOW
+: <a class="el" href="sch__platform__cfg_8h.html#afa493b73d6d26f4171bce55904f7989e">sch_platform_cfg.h</a>
+</li>
+<li>SCH_TABLE_ENTRIES
+: <a class="el" href="sch__msgdefs_8h.html#a8d4957dff253e544275b614cace1ca72">sch_msgdefs.h</a>
+</li>
+<li>SCH_TIMER_NAME
+: <a class="el" href="sch__custom_8h.html#a7ac9e2cf550e5dcbaf89b65bdc872427">sch_custom.h</a>
+</li>
+<li>SCH_TOTAL_SLOTS
+: <a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">sch_platform_cfg.h</a>
+</li>
+<li>SCH_UNUSED
+: <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">sch_msgdefs.h</a>
+</li>
+<li>SCH_UNUSED_MID
+: <a class="el" href="sch__msgids_8h.html#a2a53f6e7c459112e99857efce7749c57">sch_msgids.h</a>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `globals_func.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/globals_func.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Data Fields</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li class="current"><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="globals.html"><span>All</span></a></li>
+      <li class="current"><a href="globals_func.html"><span>Functions</span></a></li>
+      <li><a href="globals_defs.html"><span>Defines</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+&nbsp;<ul>
+<li>SCH_CustomCleanup()
+: <a class="el" href="sch__custom_8h.html#a521f028b851995a3755ed7e4294f3b9e">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a521f028b851995a3755ed7e4294f3b9e">sch_custom.c</a>
+</li>
+<li>SCH_CustomEarlyInit()
+: <a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854">sch_custom.c</a>
+, <a class="el" href="sch__custom_8h.html#a460799de20a37103670e068ec0cd3854">sch_custom.h</a>
+</li>
+<li>SCH_CustomGetCurrentSlotNumber()
+: <a class="el" href="sch__custom_8h.html#a0f0feaac769ebba7a790a5575edfa482">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a0f0feaac769ebba7a790a5575edfa482">sch_custom.c</a>
+</li>
+<li>SCH_CustomLateInit()
+: <a class="el" href="sch__custom_8c.html#a769b51f7ffc7c7711cc7bf0856702a77">sch_custom.c</a>
+, <a class="el" href="sch__custom_8h.html#a769b51f7ffc7c7711cc7bf0856702a77">sch_custom.h</a>
+</li>
+<li>SCH_GetMETSlotNumber()
+: <a class="el" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#abbb6d913166c6579b57f48ca542b7ad9">sch_custom.c</a>
+</li>
+<li>SCH_MajorFrameCallback()
+: <a class="el" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">sch_custom.h</a>
+, <a class="el" href="sch__custom_8c.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">sch_custom.c</a>
+</li>
+<li>SCH_MinorFrameCallback()
+: <a class="el" href="sch__custom_8c.html#af2799afed4a19fadc0a75dc7419a93ca">sch_custom.c</a>
+, <a class="el" href="sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca">sch_custom.h</a>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `graph_legend.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/graph_legend.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  Node9 [shape="box",label="Inherited",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",fillcolor="grey75",style="filled" fontcolor="black"];
+  Node10 -> Node9 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node10 [shape="box",label="PublicBase",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="black",URL="$classPublicBase.html"];
+  Node11 -> Node10 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node11 [shape="box",label="Truncated",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="red",URL="$classTruncated.html"];
+  Node13 -> Node9 [dir=back,color="darkgreen",fontsize="10",style="solid",fontname="FreeSans"];
+  Node13 [shape="box",label="ProtectedBase",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="black",URL="$classProtectedBase.html"];
+  Node14 -> Node9 [dir=back,color="firebrick4",fontsize="10",style="solid",fontname="FreeSans"];
+  Node14 [shape="box",label="PrivateBase",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="black",URL="$classPrivateBase.html"];
+  Node15 -> Node9 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node15 [shape="box",label="Undocumented",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="grey75"];
+  Node16 -> Node9 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node16 [shape="box",label="Templ< int >",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="black",URL="$classTempl.html"];
+  Node17 -> Node16 [dir=back,color="orange",fontsize="10",style="dashed",label="< int >",fontname="FreeSans"];
+  Node17 [shape="box",label="Templ< T >",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="black",URL="$classTempl.html"];
+  Node18 -> Node9 [dir=back,color="darkorchid3",fontsize="10",style="dashed",label="m_usedClass",fontname="FreeSans"];
+  Node18 [shape="box",label="Used",fontsize="10",height=0.2,width=0.4,fontname="FreeSans",color="black",URL="$classUsed.html"];
+}
+```
+
+### `graph_legend.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/graph_legend.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Graph Legend</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Graph Legend</h1><p>This page explains how to interpret the graphs that are generated by doxygen.</p>
+<p>Consider the following example: </p>
+<div class="fragment"><pre class="fragment"><span class="comment">/*! Invisible class because of truncation */</span>
+<span class="keyword">class </span>Invisible { };
+<span class="comment"></span>
+<span class="comment">/*! Truncated class, inheritance relation is hidden */</span>
+<span class="keyword">class </span>Truncated : <span class="keyword">public</span> Invisible { };
+
+<span class="comment">/* Class not documented with doxygen comments */</span>
+<span class="keyword">class </span>Undocumented { };
+<span class="comment"></span>
+<span class="comment">/*! Class that is inherited using public inheritance */</span>
+<span class="keyword">class </span>PublicBase : <span class="keyword">public</span> Truncated { };
+<span class="comment"></span>
+<span class="comment">/*! A template class */</span>
+<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class </span>Templ { };
+<span class="comment"></span>
+<span class="comment">/*! Class that is inherited using protected inheritance */</span>
+<span class="keyword">class </span>ProtectedBase { };
+<span class="comment"></span>
+<span class="comment">/*! Class that is inherited using private inheritance */</span>
+<span class="keyword">class </span>PrivateBase { };
+<span class="comment"></span>
+<span class="comment">/*! Class that is used by the Inherited class */</span>
+<span class="keyword">class </span>Used { };
+<span class="comment"></span>
+<span class="comment">/*! Super class that inherits a number of other classes */</span>
+<span class="keyword">class </span>Inherited : <span class="keyword">public</span> PublicBase,
+                  <span class="keyword">protected</span> ProtectedBase,
+                  <span class="keyword">private</span> PrivateBase,
+                  <span class="keyword">public</span> Undocumented,
+                  <span class="keyword">public</span> Templ&lt;int&gt;
+{
+  <span class="keyword">private</span>:
+    Used *m_usedClass;
+};
+</pre></div><p> This will result in the following graph:</p>
+<center><div align="center">
+<img src="graph_legend.png" alt="graph_legend.png"/>
+</div>
+</center> <p>The boxes in the above graph have the following meaning:  </p>
+<ul>
+<li>
+A filled gray box represents the struct or class for which the graph is generated. </li>
+<li>
+A box with a black border denotes a documented struct or class. </li>
+<li>
+A box with a grey border denotes an undocumented struct or class. </li>
+<li>
+A box with a red border denotes a documented struct or class forwhich not all inheritance/containment relations are shown. A graph is truncated if it does not fit within the specified boundaries. </li>
+</ul>
+<p>The arrows have the following meaning:  </p>
+<ul>
+<li>
+A dark blue arrow is used to visualize a public inheritance relation between two classes. </li>
+<li>
+A dark green arrow is used for protected inheritance. </li>
+<li>
+A dark red arrow is used for private inheritance. </li>
+<li>
+A purple dashed arrow is used if a class is contained or used by another class. The arrow is labeled with the variable(s) through which the pointed class or struct is accessible. </li>
+<li>
+A yellow dashed arrow denotes a relation between a template instance and the template class it was instantiated from. The arrow is labeled with the template parameters of the instance. </li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `index.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/index.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Main Page</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li class="current"><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>CFS Scheduler (SCH) Application on User's Guide Documentation</h1><ul>
+<li>
+<a class="el" href="cfsschrevhist.html">CFS Scheduler User's Guide Revision History</a> </li>
+<li>
+<a class="el" href="cfsschintro.html">CFS Scheduler Introduction</a> </li>
+<li>
+<a class="el" href="cfsschovr.html">CFS Scheduler Overview</a> </li>
+<li>
+<a class="el" href="cfsschopr.html">CFS Scheduler Operation</a> </li>
+<li>
+<a class="el" href="cfsschreq.html">CFS Scheduler Requirements</a> </li>
+<li>
+<a class="el" href="cfsschdg.html">CFS Scheduler Deployment Guide</a> </li>
+<li>
+<a class="el" href="cfsschcmds.html">CFS Scheduler Commands</a> </li>
+<li>
+<a class="el" href="cfsschtlm.html">CFS Scheduler Telemetry</a> </li>
+<li>
+<a class="el" href="cfsschtbl.html">CFS Scheduler Table Definitions</a> </li>
+<li>
+<a class="el" href="cfsschcfg.html">CFS Scheduler Configuration Parameters</a> </li>
+<li>
+<a class="el" href="cfsschcons.html">CFS Scheduler Constraints</a> </li>
+<li>
+<a class="el" href="cfsschfaqs.html">CFS Scheduler Frequently Asked Questions</a> </li>
+<li>
+<a class="el" href="sch__events_8h.html">CFS Scheduler Event Message Reference</a> <br/>
+ </li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `installdox`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/installdox`
+
+
+```text
+#!/usr/bin/perl
+
+%subst = ( "cfe.tag", "");
+$quiet   = 0;
+
+if (open(F,"search.cfg"))
+{
+  $_=<F> ; s/[ \t\n]*$//g ; $subst{"_doc"} = $_;
+  $_=<F> ; s/[ \t\n]*$//g ; $subst{"_cgi"} = $_;
+}
+
+while ( @ARGV ) {
+  $_ = shift @ARGV;
+  if ( s/^-// ) {
+    if ( /^l(.*)/ ) {
+      $v = ($1 eq "") ? shift @ARGV : $1;
+      ($v =~ /\/$/) || ($v .= "/");
+      $_ = $v;
+      if ( /(.+)\@(.+)/ ) {
+        if ( exists $subst{$1} ) {
+          $subst{$1} = $2;
+        } else {
+          print STDERR "Unknown tag file $1 given with option -l\n";
+          &usage();
+        }
+      } else {
+        print STDERR "Argument $_ is invalid for option -l\n";
+        &usage();
+      }
+    }
+    elsif ( /^q/ ) {
+      $quiet = 1;
+    }
+    elsif ( /^\?|^h/ ) {
+      &usage();
+    }
+    else {
+      print STDERR "Illegal option -$_\n";
+      &usage();
+    }
+  }
+  else {
+    push (@files, $_ );
+  }
+}
+
+foreach $sub (keys %subst)
+{
+  if ( $subst{$sub} eq "" ) 
+  {
+    print STDERR "No substitute given for tag file `$sub'\n";
+    &usage();
+  }
+  elsif ( ! $quiet && $sub ne "_doc" && $sub ne "_cgi" )
+  {
+    print "Substituting $subst{$sub} for each occurence of tag file $sub\n"; 
+  }
+}
+
+if ( ! @files ) {
+  if (opendir(D,".")) {
+    foreach $file ( readdir(D) ) {
+      $match = ".html";
+      next if ( $file =~ /^\.\.?$/ );
+      ($file =~ /$match/) && (push @files, $file);
+      ($file =~ "tree.js") && (push @files, $file);
+    }
+    closedir(D);
+  }
+}
+
+if ( ! @files ) {
+  print STDERR "Warning: No input files given and none found!\n";
+}
+
+foreach $f (@files)
+{
+  if ( ! $quiet ) {
+    print "Editing: $f...\n";
+  }
+  $oldf = $f;
+  $f   .= ".bak";
+  unless (rename $oldf,$f) {
+    print STDERR "Error: cannot rename file $oldf\n";
+    exit 1;
+  }
+  if (open(F,"<$f")) {
+    unless (open(G,">$oldf")) {
+      print STDERR "Error: opening file $oldf for writing\n";
+      exit 1;
+    }
+    if ($oldf ne "tree.js") {
+      while (<F>) {
+        s/doxygen\=\"([^ \"\:\t\>\<]*)\:([^ \"\t\>\<]*)\" (href|src)=\"\2/doxygen\=\"$1:$subst{$1}\" \3=\"$subst{$1}/g;
+        print G "$_";
+      }
+    }
+    else {
+      while (<F>) {
+        s/\"([^ \"\:\t\>\<]*)\:([^ \"\t\>\<]*)\", \"\2/\"$1:$subst{$1}\" ,\"$subst{$1}/g;
+        print G "$_";
+      }
+    }
+  } 
+  else {
+    print STDERR "Warning file $f does not exist\n";
+  }
+  unlink $f;
+}
+
+sub usage {
+  print STDERR "Usage: installdox [options] [html-file [html-file ...]]\n";
+  print STDERR "Options:\n";
+  print STDERR "     -l tagfile\@linkName   tag file + URL or directory \n";
+  print STDERR "     -q                    Quiet mode\n\n";
+  exit 1;
+}
+```
+
+### `pages.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/pages.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: Page Index</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>Related Pages</h1>Here is a list of all related documentation pages:<ul>
+<li><a class="el" href="cfeevents.html">cFE Event Message Cross Reference</a>
+</li>
+<li><a class="el" href="cfsschtlmmnems.html">SCH Telemetry Mnemonic Cross Reference</a>
+</li>
+<li><a class="el" href="cfsschcmdmnems.html">SCH Command Mnemonic Cross Reference</a>
+</li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__custom_8c.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_custom.c File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_custom.c File Reference</h1><code>#include &quot;cfe.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>&quot;</code><br/>
+<code>#include &quot;sch_app.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="sch__custom_8h_source.html">sch_custom.h</a>&quot;</code><br/>
+<code>#include &quot;cfe_time_msg.h&quot;</code><br/>
+
+<p><a href="sch__custom_8c_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854">SCH_CustomEarlyInit</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Custom Early Initialization.  <a href="#a460799de20a37103670e068ec0cd3854"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#a769b51f7ffc7c7711cc7bf0856702a77">SCH_CustomLateInit</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Custom Late Initialization.  <a href="#a769b51f7ffc7c7711cc7bf0856702a77"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#a0f0feaac769ebba7a790a5575edfa482">SCH_CustomGetCurrentSlotNumber</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtains the Current Slot (Minor Frame) number.  <a href="#a0f0feaac769ebba7a790a5575edfa482"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#a521f028b851995a3755ed7e4294f3b9e">SCH_CustomCleanup</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Custom Cleanup.  <a href="#a521f028b851995a3755ed7e4294f3b9e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#abbb6d913166c6579b57f48ca542b7ad9">SCH_GetMETSlotNumber</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Computes a minor slot number from a MET subseconds zero point.  <a href="#abbb6d913166c6579b57f48ca542b7ad9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">SCH_MajorFrameCallback</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Performs Major Frame Synchronization.  <a href="#a18afe2a56ba0bfdd348e88f0d8a9d55b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8c.html#af2799afed4a19fadc0a75dc7419a93ca">SCH_MinorFrameCallback</a> (uint32 TimerId)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Performs Minor Frame time step.  <a href="#af2799afed4a19fadc0a75dc7419a93ca"></a><br/></td></tr>
+</table>
+<hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a521f028b851995a3755ed7e4294f3b9e"></a><!-- doxytag: member="sch_custom.c::SCH_CustomCleanup" ref="a521f028b851995a3755ed7e4294f3b9e" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SCH_CustomCleanup </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Custom Cleanup. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is intended to perform any clean up of custom initialization that would be necessary on an application exit</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>Any resources that will not be cleaned up automatically be CFE need to be cleaned up in this function. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00162">162</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a460799de20a37103670e068ec0cd3854"></a><!-- doxytag: member="sch_custom.c::SCH_CustomEarlyInit" ref="a460799de20a37103670e068ec0cd3854" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32 SCH_CustomEarlyInit </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Custom Early Initialization. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is intended to perform the creation of the minor frame timer. It is called during SCH_TimerInit It may be updated to include other initializations, or modifications to already set scheduler parameters.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>SCH_AppData.ClockAccuracy will be set to the clock resolution in microseconds. CFE_SUCCESS will be returned if all creation was performed properly.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td width="20%" valign="TOP"><p>CFE_SUCCESS </p>
+</td><td width="80%"><p>  </p>
+</td></tr>
+<tr>
+<td colspan="2" width="100%"><p>Return codes from CFE_PSP_TimerInit  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00066">66</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>, and <a class="el" href="sch__custom_8h_source.html#l00036">SCH_TIMER_NAME</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a0f0feaac769ebba7a790a5575edfa482"></a><!-- doxytag: member="sch_custom.c::SCH_CustomGetCurrentSlotNumber" ref="a0f0feaac769ebba7a790a5575edfa482" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 SCH_CustomGetCurrentSlotNumber </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Obtains the Current Slot (Minor Frame) number. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function determines the current slot (minor frame) number. It corrects for any minor frame overlap caused by poor minor frame timing, if necessary. This function and associated subfunction was added to the customizable section as on slower platforms this function can have noticible overhead, and several simplifying assumptions can be made on a platform specific basis.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td colspan="2" width="100%"><p>Returns slot index from zero to (<a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>-1)  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00123">123</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00070">SCH_NOT_SYNCHRONIZED</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a769b51f7ffc7c7711cc7bf0856702a77"></a><!-- doxytag: member="sch_custom.c::SCH_CustomLateInit" ref="a769b51f7ffc7c7711cc7bf0856702a77" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32 SCH_CustomLateInit </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Custom Late Initialization. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is intended to perform a wait for startup sync followed by the initialization and starting of the major frame timer, and the starting of the minor frame timer. It may be updated to include other initializations, or modifications to already set scheduler parameters, or remove actions previously performed in <a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a> . This function is called following the completion of SCH_AppInit</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>Any startup synchronization is included in this function CFE_SUCCESS will be returned if all initialization was performed properly.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td width="20%" valign="TOP"><p>CFE_SUCCESS </p>
+</td><td width="80%"><p>  </p>
+</td></tr>
+<tr>
+<td colspan="2" width="100%"><p>Return codes from CFE_PSP_TimerInit  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00090">90</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>, <a class="el" href="sch__platform__cfg_8h_source.html#l00199">SCH_STARTUP_PERIOD</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00185">SCH_STARTUP_SYNC_TIMEOUT</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="abbb6d913166c6579b57f48ca542b7ad9"></a><!-- doxytag: member="sch_custom.c::SCH_GetMETSlotNumber" ref="abbb6d913166c6579b57f48ca542b7ad9" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 SCH_GetMETSlotNumber </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Computes a minor slot number from a MET subseconds zero point. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function determines the current slot (minor frame) number if one were to assume that slot zero started when the MET microseconds are equal to zero.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td colspan="2" width="100%"><p>Returns slot index from zero to (<a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>-1)  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00177">177</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00123">SCH_CustomGetCurrentSlotNumber()</a>, <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>, and <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a18afe2a56ba0bfdd348e88f0d8a9d55b"></a><!-- doxytag: member="sch_custom.c::SCH_MajorFrameCallback" ref="a18afe2a56ba0bfdd348e88f0d8a9d55b" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SCH_MajorFrameCallback </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Performs Major Frame Synchronization. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is called by cFE TIME services when a Major Frame synchronization signal is received. It then synchronizes the minor frame (slot) processing of the Schedule Definition Table.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00230">230</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00082">SCH_MAJOR_FS_CFE_TIME</a>, <a class="el" href="sch__platform__cfg_8h_source.html#l00218">SCH_MAX_NOISY_MAJORF</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00071">SCH_MINOR_SYNCHRONIZED</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00070">SCH_NOT_SYNCHRONIZED</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00162">SCH_CustomCleanup()</a>, and <a class="el" href="sch__custom_8c_source.html#l00090">SCH_CustomLateInit()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="af2799afed4a19fadc0a75dc7419a93ca"></a><!-- doxytag: member="sch_custom.c::SCH_MinorFrameCallback" ref="af2799afed4a19fadc0a75dc7419a93ca" args="(uint32 TimerId)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SCH_MinorFrameCallback </td>
+          <td>(</td>
+          <td class="paramtype">uint32&nbsp;</td>
+          <td class="paramname"> <em>TimerId</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Performs Minor Frame time step. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is called by an OSAL timer when the minor frame timing reference sends a signal. The Scheduler Application uses this to drive the Application's processing of each minor frame.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00349">349</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00083">SCH_MAJOR_FS_MINOR_FRAME_TIMER</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00081">SCH_MAJOR_FS_NONE</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00073">SCH_MAJOR_SYNCHRONIZED</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00072">SCH_PENDING_MAJOR_SYNCH</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00066">SCH_CustomEarlyInit()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomGetCurrentSlotNumber",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5`
+
+
+```text
+3f8998b761bf3dd281d2d7de111859c0
+```
+
+### `sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_MajorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5`
+
+
+```text
+a00036c4f7ba00236176ac5aecad7b4d
+```
+
+### `sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomEarlyInit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_MinorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca",tooltip="Performs Minor Frame time step."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a460799de20a37103670e068ec0cd3854_cgraph.md5`
+
+
+```text
+59fe8ee4f8361720f9de964cecf3724c
+```
+
+### `sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomCleanup",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_MajorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b",tooltip="Performs Major Frame Synchronization."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5`
+
+
+```text
+ffccf2eaf5e91576083b9c77ebe8b344
+```
+
+### `sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomLateInit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_MajorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b",tooltip="Performs Major Frame Synchronization."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5`
+
+
+```text
+e08bf23f7cd6a32c3c1cfc9e7b9a416f
+```
+
+### `sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_MinorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5`
+
+
+```text
+2c72c0bf953c7a44459cbda374bd01c2
+```
+
+### `sch__custom_8c_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8c_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_custom.c Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_custom.c</h1><a href="sch__custom_8c.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">** $Id: sch__custom_8c_source.html 1.1 2017/07/01 20:20:36EDT sstrege Exp  $</span>
+<a name="l00003"></a>00003 <span class="comment">**</span>
+<a name="l00004"></a>00004 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00005"></a>00005 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00006"></a>00006 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00007"></a>00007 <span class="comment">**</span>
+<a name="l00008"></a>00008 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00010"></a>00010 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00011"></a>00011 <span class="comment">**  agreement.</span>
+<a name="l00012"></a>00012 <span class="comment">**</span>
+<a name="l00013"></a>00013 <span class="comment">** Purpose: Scheduler (SCH) application custom component</span>
+<a name="l00014"></a>00014 <span class="comment">**</span>
+<a name="l00015"></a>00015 <span class="comment">** Author:</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**</span>
+<a name="l00019"></a>00019 <span class="comment">*/</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="comment">/*************************************************************************</span>
+<a name="l00022"></a>00022 <span class="comment">**</span>
+<a name="l00023"></a>00023 <span class="comment">** Include section</span>
+<a name="l00024"></a>00024 <span class="comment">**</span>
+<a name="l00025"></a>00025 <span class="comment">**************************************************************************/</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="preprocessor">#include &quot;cfe.h&quot;</span>
+<a name="l00028"></a>00028 <span class="preprocessor">#include &quot;<a class="code" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a>&quot;</span>
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="preprocessor">#include &quot;sch_app.h&quot;</span>
+<a name="l00031"></a>00031 <span class="preprocessor">#include &quot;<a class="code" href="sch__custom_8h.html">sch_custom.h</a>&quot;</span>
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 <span class="preprocessor">#include &quot;cfe_time_msg.h&quot;</span>
+<a name="l00034"></a>00034 
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="comment">/*************************************************************************</span>
+<a name="l00037"></a>00037 <span class="comment">**</span>
+<a name="l00038"></a>00038 <span class="comment">** Macro definitions</span>
+<a name="l00039"></a>00039 <span class="comment">**</span>
+<a name="l00040"></a>00040 <span class="comment">**************************************************************************/</span>
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042 <span class="comment">/*************************************************************************</span>
+<a name="l00043"></a>00043 <span class="comment">** Local function prototypes</span>
+<a name="l00044"></a>00044 <span class="comment">**************************************************************************/</span>
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 
+<a name="l00047"></a>00047 <span class="comment">/*************************************************************************</span>
+<a name="l00048"></a>00048 <span class="comment">**</span>
+<a name="l00049"></a>00049 <span class="comment">** Function definitions</span>
+<a name="l00050"></a>00050 <span class="comment">**</span>
+<a name="l00051"></a>00051 <span class="comment">**************************************************************************/</span>
+<a name="l00052"></a>00052 
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 
+<a name="l00056"></a>00056 <span class="comment">/*******************************************************************</span>
+<a name="l00057"></a>00057 <span class="comment">**</span>
+<a name="l00058"></a>00058 <span class="comment">** SCH_CustomEarlyInit</span>
+<a name="l00059"></a>00059 <span class="comment">**</span>
+<a name="l00060"></a>00060 <span class="comment">** NOTE: For complete prolog information, see &apos;sch_custom.h&apos;</span>
+<a name="l00061"></a>00061 <span class="comment">**</span>
+<a name="l00062"></a>00062 <span class="comment">** This function MUST update SCH_AppData.ClockAccuracy to the</span>
+<a name="l00063"></a>00063 <span class="comment">** resolution of the minor frame timer.</span>
+<a name="l00064"></a>00064 <span class="comment">********************************************************************/</span>
+<a name="l00065"></a>00065 
+<a name="l00066"></a><a class="code" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854">00066</a> int32 <a class="code" href="sch__custom_8h.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a>(<span class="keywordtype">void</span>)
+<a name="l00067"></a>00067 {
+<a name="l00068"></a>00068     int32             Status = CFE_SUCCESS;
+<a name="l00069"></a>00069     
+<a name="l00070"></a>00070     Status = OS_TimerCreate(&amp;SCH_AppData.TimerId,
+<a name="l00071"></a>00071                              <a class="code" href="sch__custom_8h.html#a7ac9e2cf550e5dcbaf89b65bdc872427">SCH_TIMER_NAME</a>,
+<a name="l00072"></a>00072                             &amp;SCH_AppData.ClockAccuracy,
+<a name="l00073"></a>00073                              <a class="code" href="sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca" title="Performs Minor Frame time step.">SCH_MinorFrameCallback</a>);
+<a name="l00074"></a>00074     
+<a name="l00075"></a>00075     <span class="keywordflow">return</span> Status;
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077 } <span class="comment">/* End of CustomEarlyInit() */</span>
+<a name="l00078"></a>00078 
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 <span class="comment">/*******************************************************************</span>
+<a name="l00081"></a>00081 <span class="comment">**</span>
+<a name="l00082"></a>00082 <span class="comment">** SCH_CustomLateInit</span>
+<a name="l00083"></a>00083 <span class="comment">**</span>
+<a name="l00084"></a>00084 <span class="comment">** NOTE: For complete prolog information, see &apos;sch_custom.h&apos;</span>
+<a name="l00085"></a>00085 <span class="comment">**</span>
+<a name="l00086"></a>00086 <span class="comment">** This function MUST perform any startup synchronization required,</span>
+<a name="l00087"></a>00087 <span class="comment">** and MUST finish setting up the major and minor frame timers. </span>
+<a name="l00088"></a>00088 <span class="comment">********************************************************************/</span>
+<a name="l00089"></a>00089 
+<a name="l00090"></a><a class="code" href="sch__custom_8c.html#a769b51f7ffc7c7711cc7bf0856702a77">00090</a> int32 <a class="code" href="sch__custom_8h.html#a769b51f7ffc7c7711cc7bf0856702a77" title="Custom Late Initialization.">SCH_CustomLateInit</a>(<span class="keywordtype">void</span>)
+<a name="l00091"></a>00091 {
+<a name="l00092"></a>00092     int32  Status    = CFE_SUCCESS;
+<a name="l00093"></a>00093     
+<a name="l00094"></a>00094     CFE_ES_WaitForStartupSync(<a class="code" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">SCH_STARTUP_SYNC_TIMEOUT</a>);
+<a name="l00095"></a>00095 
+<a name="l00096"></a>00096     <span class="comment">/*</span>
+<a name="l00097"></a>00097 <span class="comment">    ** Connect to cFE TIME&apos;s time reference marker (typically 1 Hz)</span>
+<a name="l00098"></a>00098 <span class="comment">    ** to use it as the Major Frame synchronization source</span>
+<a name="l00099"></a>00099 <span class="comment">    */</span>
+<a name="l00100"></a>00100     Status = CFE_TIME_RegisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&amp;<a class="code" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b" title="Performs Major Frame Synchronization.">SCH_MajorFrameCallback</a>);
+<a name="l00101"></a>00101     <span class="keywordflow">if</span> (Status == CFE_SUCCESS)
+<a name="l00102"></a>00102     {
+<a name="l00103"></a>00103         <span class="comment">/*</span>
+<a name="l00104"></a>00104 <span class="comment">        ** Start the Minor Frame Timer with an extended delay to allow a Major Frame Sync</span>
+<a name="l00105"></a>00105 <span class="comment">        ** to start processing.  If the Major Frame Sync fails to arrive, then we will</span>
+<a name="l00106"></a>00106 <span class="comment">        ** start when this timer expires and synch ourselves to the MET clock.</span>
+<a name="l00107"></a>00107 <span class="comment">        */</span>
+<a name="l00108"></a>00108         Status = OS_TimerSet(SCH_AppData.TimerId, <a class="code" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">SCH_STARTUP_PERIOD</a>, 0);
+<a name="l00109"></a>00109     }
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111     <span class="keywordflow">return</span> Status;
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113 } <span class="comment">/* End of SH_CustomLateInit() */</span>
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116 <span class="comment">/*******************************************************************</span>
+<a name="l00117"></a>00117 <span class="comment">**</span>
+<a name="l00118"></a>00118 <span class="comment">** SCH_CustomGetCurrentSlotNumber</span>
+<a name="l00119"></a>00119 <span class="comment">**</span>
+<a name="l00120"></a>00120 <span class="comment">** NOTE: For complete prolog information, see &apos;sch_custom.h&apos;</span>
+<a name="l00121"></a>00121 <span class="comment">********************************************************************/</span>
+<a name="l00122"></a>00122 
+<a name="l00123"></a><a class="code" href="sch__custom_8c.html#a0f0feaac769ebba7a790a5575edfa482">00123</a> uint32 <a class="code" href="sch__custom_8h.html#a0f0feaac769ebba7a790a5575edfa482" title="Obtains the Current Slot (Minor Frame) number.">SCH_CustomGetCurrentSlotNumber</a>(<span class="keywordtype">void</span>)
+<a name="l00124"></a>00124 {
+<a name="l00125"></a>00125     uint32  CurrentSlot;
+<a name="l00126"></a>00126     
+<a name="l00127"></a>00127     <span class="keywordflow">if</span> (SCH_AppData.SyncToMET != <a class="code" href="sch__msgdefs_8h.html#a8b3e88ea3d976c81fd091f6f70e24184">SCH_NOT_SYNCHRONIZED</a>)
+<a name="l00128"></a>00128     {
+<a name="l00129"></a>00129         CurrentSlot = <a class="code" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9" title="Computes a minor slot number from a MET subseconds zero point.">SCH_GetMETSlotNumber</a>();
+<a name="l00130"></a>00130         
+<a name="l00131"></a>00131         <span class="comment">/* </span>
+<a name="l00132"></a>00132 <span class="comment">        ** If we are only concerned with synchronizing the minor frames to an MET,</span>
+<a name="l00133"></a>00133 <span class="comment">        ** then we need to adjust the current slot by whatever MET time is prevalent</span>
+<a name="l00134"></a>00134 <span class="comment">        ** when the Major Frame Signal is received.</span>
+<a name="l00135"></a>00135 <span class="comment">        ** If we are synchronizing the Major Frame, then, by definition, LastSyncMETSlot</span>
+<a name="l00136"></a>00136 <span class="comment">        ** would be a zero and the current slot would be appropriate.</span>
+<a name="l00137"></a>00137 <span class="comment">        */</span>
+<a name="l00138"></a>00138         <span class="keywordflow">if</span> (CurrentSlot &lt; SCH_AppData.LastSyncMETSlot)
+<a name="l00139"></a>00139         {
+<a name="l00140"></a>00140             CurrentSlot = CurrentSlot + <a class="code" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a> - SCH_AppData.LastSyncMETSlot;
+<a name="l00141"></a>00141         }
+<a name="l00142"></a>00142         <span class="keywordflow">else</span>
+<a name="l00143"></a>00143         {
+<a name="l00144"></a>00144             CurrentSlot = CurrentSlot - SCH_AppData.LastSyncMETSlot;
+<a name="l00145"></a>00145         }
+<a name="l00146"></a>00146     }
+<a name="l00147"></a>00147     <span class="keywordflow">else</span>
+<a name="l00148"></a>00148     {
+<a name="l00149"></a>00149         CurrentSlot = SCH_AppData.MinorFramesSinceTone;
+<a name="l00150"></a>00150     }
+<a name="l00151"></a>00151     
+<a name="l00152"></a>00152     <span class="keywordflow">return</span> CurrentSlot;
+<a name="l00153"></a>00153 } <span class="comment">/* End of SH_CustomGetCurrentSlotNumber() */</span>
+<a name="l00154"></a>00154 
+<a name="l00155"></a>00155 <span class="comment">/*******************************************************************</span>
+<a name="l00156"></a>00156 <span class="comment">**</span>
+<a name="l00157"></a>00157 <span class="comment">** SCH_CustomCleanup</span>
+<a name="l00158"></a>00158 <span class="comment">**</span>
+<a name="l00159"></a>00159 <span class="comment">** NOTE: For complete prolog information, see &apos;sch_custom.h&apos;</span>
+<a name="l00160"></a>00160 <span class="comment">********************************************************************/</span>
+<a name="l00161"></a>00161 
+<a name="l00162"></a><a class="code" href="sch__custom_8c.html#a521f028b851995a3755ed7e4294f3b9e">00162</a> <span class="keywordtype">void</span> <a class="code" href="sch__custom_8h.html#a521f028b851995a3755ed7e4294f3b9e" title="Custom Cleanup.">SCH_CustomCleanup</a>(<span class="keywordtype">void</span>)
+<a name="l00163"></a>00163 {
+<a name="l00164"></a>00164     <span class="comment">/* unregister the TIME callback for the major frame */</span>
+<a name="l00165"></a>00165     CFE_TIME_UnregisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&amp;<a class="code" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b" title="Performs Major Frame Synchronization.">SCH_MajorFrameCallback</a>);
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 } <span class="comment">/* End of SH_CustomCleanup() */</span>
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 
+<a name="l00170"></a>00170 <span class="comment">/*******************************************************************</span>
+<a name="l00171"></a>00171 <span class="comment">**</span>
+<a name="l00172"></a>00172 <span class="comment">** SCH_GetMETSlotNumber</span>
+<a name="l00173"></a>00173 <span class="comment">**</span>
+<a name="l00174"></a>00174 <span class="comment">** NOTE: For complete prolog information, see above</span>
+<a name="l00175"></a>00175 <span class="comment">********************************************************************/</span>
+<a name="l00176"></a>00176 
+<a name="l00177"></a><a class="code" href="sch__custom_8c.html#abbb6d913166c6579b57f48ca542b7ad9">00177</a> uint32 <a class="code" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9" title="Computes a minor slot number from a MET subseconds zero point.">SCH_GetMETSlotNumber</a>(<span class="keywordtype">void</span>)
+<a name="l00178"></a>00178 {
+<a name="l00179"></a>00179     uint32 SubSeconds = 0;
+<a name="l00180"></a>00180     uint32 MicroSeconds;
+<a name="l00181"></a>00181     uint32 Remainder;
+<a name="l00182"></a>00182     uint32 METSlot;
+<a name="l00183"></a>00183     
+<a name="l00184"></a>00184     <span class="comment">/*</span>
+<a name="l00185"></a>00185 <span class="comment">    ** Use MET rather than current time to avoid time changes</span>
+<a name="l00186"></a>00186 <span class="comment">    */</span>
+<a name="l00187"></a>00187     SubSeconds = CFE_TIME_GetMETsubsecs();
+<a name="l00188"></a>00188 
+<a name="l00189"></a>00189     <span class="comment">/*</span>
+<a name="l00190"></a>00190 <span class="comment">    ** Convert sub-seconds to micro-seconds</span>
+<a name="l00191"></a>00191 <span class="comment">    */</span>
+<a name="l00192"></a>00192     MicroSeconds = CFE_TIME_Sub2MicroSecs(SubSeconds);
+<a name="l00193"></a>00193 
+<a name="l00194"></a>00194     <span class="comment">/*</span>
+<a name="l00195"></a>00195 <span class="comment">    ** Calculate schedule table slot number</span>
+<a name="l00196"></a>00196 <span class="comment">    */</span>
+<a name="l00197"></a>00197     METSlot = (MicroSeconds / SCH_NORMAL_SLOT_PERIOD);
+<a name="l00198"></a>00198 
+<a name="l00199"></a>00199     <span class="comment">/*</span>
+<a name="l00200"></a>00200 <span class="comment">    ** Check to see if close enough to round up to next slot</span>
+<a name="l00201"></a>00201 <span class="comment">    */</span>
+<a name="l00202"></a>00202     Remainder = MicroSeconds - (METSlot * SCH_NORMAL_SLOT_PERIOD);
+<a name="l00203"></a>00203     
+<a name="l00204"></a>00204     <span class="comment">/*</span>
+<a name="l00205"></a>00205 <span class="comment">    ** Add one more microsecond and see if it is sufficient to add another slot</span>
+<a name="l00206"></a>00206 <span class="comment">    */</span>
+<a name="l00207"></a>00207     Remainder += 1;
+<a name="l00208"></a>00208     METSlot += (Remainder / SCH_NORMAL_SLOT_PERIOD);
+<a name="l00209"></a>00209     
+<a name="l00210"></a>00210     <span class="comment">/*</span>
+<a name="l00211"></a>00211 <span class="comment">    ** Check to see if the Current Slot number needs to roll over</span>
+<a name="l00212"></a>00212 <span class="comment">    */</span>
+<a name="l00213"></a>00213     <span class="keywordflow">if</span> (METSlot == <a class="code" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>)
+<a name="l00214"></a>00214     {
+<a name="l00215"></a>00215         METSlot = 0;
+<a name="l00216"></a>00216     }
+<a name="l00217"></a>00217     
+<a name="l00218"></a>00218     <span class="keywordflow">return</span> METSlot;
+<a name="l00219"></a>00219     
+<a name="l00220"></a>00220 }
+<a name="l00221"></a>00221 
+<a name="l00222"></a>00222 
+<a name="l00223"></a>00223 <span class="comment">/*******************************************************************</span>
+<a name="l00224"></a>00224 <span class="comment">**</span>
+<a name="l00225"></a>00225 <span class="comment">** SCH_MajorFrameCallback</span>
+<a name="l00226"></a>00226 <span class="comment">**</span>
+<a name="l00227"></a>00227 <span class="comment">** NOTE: For complete prolog information, see above</span>
+<a name="l00228"></a>00228 <span class="comment">********************************************************************/</span>
+<a name="l00229"></a>00229 
+<a name="l00230"></a><a class="code" href="sch__custom_8c.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">00230</a> <span class="keywordtype">void</span> <a class="code" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b" title="Performs Major Frame Synchronization.">SCH_MajorFrameCallback</a>(<span class="keywordtype">void</span>)
+<a name="l00231"></a>00231 {
+<a name="l00232"></a>00232     <span class="comment">/*</span>
+<a name="l00233"></a>00233 <span class="comment">    ** Synchronize slot zero to the external tone signal</span>
+<a name="l00234"></a>00234 <span class="comment">    */</span>
+<a name="l00235"></a>00235     uint16 StateFlags;
+<a name="l00236"></a>00236 
+<a name="l00237"></a>00237     <span class="comment">/*</span>
+<a name="l00238"></a>00238 <span class="comment">    ** If cFE TIME is in FLYWHEEL mode, then ignore all synchronization signals</span>
+<a name="l00239"></a>00239 <span class="comment">    */</span>
+<a name="l00240"></a>00240     StateFlags = CFE_TIME_GetClockInfo();
+<a name="l00241"></a>00241     
+<a name="l00242"></a>00242     <span class="keywordflow">if</span> ((StateFlags &amp; CFE_TIME_FLAG_FLYING) == 0)
+<a name="l00243"></a>00243     {
+<a name="l00244"></a>00244         <span class="comment">/*</span>
+<a name="l00245"></a>00245 <span class="comment">        ** Determine whether the major frame is noisy or not</span>
+<a name="l00246"></a>00246 <span class="comment">        **</span>
+<a name="l00247"></a>00247 <span class="comment">        ** Conditions below are as follows:</span>
+<a name="l00248"></a>00248 <span class="comment">        **    If we are NOT synchronized to the MET (i.e. - the Minor Frame timer</span>
+<a name="l00249"></a>00249 <span class="comment">        **    has an acceptable resolution), then the Major Frame signal should</span>
+<a name="l00250"></a>00250 <span class="comment">        **    only occur in the last slot of the schedule table.</span>
+<a name="l00251"></a>00251 <span class="comment">        **</span>
+<a name="l00252"></a>00252 <span class="comment">        **    If we ARE synchronized to the MET (i.e. - the Minor Frame timer is</span>
+<a name="l00253"></a>00253 <span class="comment">        **    not as good as we would like), then the Major Frame signal should</span>
+<a name="l00254"></a>00254 <span class="comment">        **    occur within a window of slots at the end of the table.</span>
+<a name="l00255"></a>00255 <span class="comment">        */</span>
+<a name="l00256"></a>00256         <span class="keywordflow">if</span> (((SCH_AppData.SyncToMET == <a class="code" href="sch__msgdefs_8h.html#a8b3e88ea3d976c81fd091f6f70e24184">SCH_NOT_SYNCHRONIZED</a>) &amp;&amp; 
+<a name="l00257"></a>00257              (SCH_AppData.MinorFramesSinceTone != SCH_TIME_SYNC_SLOT)) ||
+<a name="l00258"></a>00258             ((SCH_AppData.SyncToMET == <a class="code" href="sch__msgdefs_8h.html#a8487279452fc187714c3e3ee70915331">SCH_MINOR_SYNCHRONIZED</a>) &amp;&amp; 
+<a name="l00259"></a>00259              (SCH_AppData.NextSlotNumber != 0) &amp;&amp; 
+<a name="l00260"></a>00260              (SCH_AppData.NextSlotNumber &lt; 
+<a name="l00261"></a>00261               (<a class="code" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a> - SCH_AppData.WorstCaseSlotsPerMinorFrame - 1))))
+<a name="l00262"></a>00262         {
+<a name="l00263"></a>00263             <span class="comment">/*</span>
+<a name="l00264"></a>00264 <span class="comment">            ** Count the number of consecutive noisy major frames and the Total number</span>
+<a name="l00265"></a>00265 <span class="comment">            ** of noisy major frames.  Also, indicate in telemetry that this particular</span>
+<a name="l00266"></a>00266 <span class="comment">            ** Major Frame signal is considered noisy.</span>
+<a name="l00267"></a>00267 <span class="comment">            */</span>
+<a name="l00268"></a>00268             SCH_AppData.UnexpectedMajorFrame = TRUE;
+<a name="l00269"></a>00269             SCH_AppData.UnexpectedMajorFrameCount++;
+<a name="l00270"></a>00270 
+<a name="l00271"></a>00271             <span class="comment">/*</span>
+<a name="l00272"></a>00272 <span class="comment">            ** If the Major Frame is not being ignored yet, then increment the consecutive noisy</span>
+<a name="l00273"></a>00273 <span class="comment">            ** Major Frame counter.</span>
+<a name="l00274"></a>00274 <span class="comment">            */</span>
+<a name="l00275"></a>00275             <span class="keywordflow">if</span> (!SCH_AppData.IgnoreMajorFrame)
+<a name="l00276"></a>00276             {
+<a name="l00277"></a>00277                 SCH_AppData.ConsecutiveNoisyFrameCounter++;
+<a name="l00278"></a>00278                 
+<a name="l00279"></a>00279                 <span class="comment">/*</span>
+<a name="l00280"></a>00280 <span class="comment">                ** If the major frame is too &quot;noisy&quot;, then send event message and ignore future signals</span>
+<a name="l00281"></a>00281 <span class="comment">                */</span>
+<a name="l00282"></a>00282                 <span class="keywordflow">if</span> (SCH_AppData.ConsecutiveNoisyFrameCounter &gt;= <a class="code" href="sch__platform__cfg_8h.html#a73f474fd107fc1572d7c19747f088cff">SCH_MAX_NOISY_MAJORF</a>)
+<a name="l00283"></a>00283                 {
+<a name="l00284"></a>00284                     SCH_AppData.IgnoreMajorFrame = TRUE;
+<a name="l00285"></a>00285                 }
+<a name="l00286"></a>00286             }
+<a name="l00287"></a>00287         }
+<a name="l00288"></a>00288         <span class="keywordflow">else</span> <span class="comment">/* Major Frame occurred when expected */</span>
+<a name="l00289"></a>00289         {
+<a name="l00290"></a>00290             SCH_AppData.UnexpectedMajorFrame = FALSE;
+<a name="l00291"></a>00291             SCH_AppData.ConsecutiveNoisyFrameCounter = 0;
+<a name="l00292"></a>00292         }
+<a name="l00293"></a>00293         
+<a name="l00294"></a>00294         <span class="comment">/*</span>
+<a name="l00295"></a>00295 <span class="comment">        ** Ignore this callback if SCH has detected a noisy Major Frame Synch signal</span>
+<a name="l00296"></a>00296 <span class="comment">        */</span>
+<a name="l00297"></a>00297         <span class="keywordflow">if</span> (SCH_AppData.IgnoreMajorFrame == FALSE)
+<a name="l00298"></a>00298         {
+<a name="l00299"></a>00299             <span class="comment">/*</span>
+<a name="l00300"></a>00300 <span class="comment">            ** Stop Minor Frame Timer (which should be waiting for an unusually long</span>
+<a name="l00301"></a>00301 <span class="comment">            ** time to allow the Major Frame source to resynchronize timing) and start</span>
+<a name="l00302"></a>00302 <span class="comment">            ** it again with nominal Minor Frame timing</span>
+<a name="l00303"></a>00303 <span class="comment">            */</span>
+<a name="l00304"></a>00304             OS_TimerSet(SCH_AppData.TimerId, SCH_NORMAL_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+<a name="l00305"></a>00305     
+<a name="l00306"></a>00306             <span class="comment">/*</span>
+<a name="l00307"></a>00307 <span class="comment">            ** Increment Major Frame process counter</span>
+<a name="l00308"></a>00308 <span class="comment">            */</span>
+<a name="l00309"></a>00309             SCH_AppData.ValidMajorFrameCount++;
+<a name="l00310"></a>00310     
+<a name="l00311"></a>00311             <span class="comment">/*</span>
+<a name="l00312"></a>00312 <span class="comment">            ** Set current slot = zero to synchronize activities</span>
+<a name="l00313"></a>00313 <span class="comment">            */</span>
+<a name="l00314"></a>00314             SCH_AppData.MinorFramesSinceTone = 0;
+<a name="l00315"></a>00315             
+<a name="l00316"></a>00316             <span class="comment">/*</span>
+<a name="l00317"></a>00317 <span class="comment">            ** Major Frame Source is now from CFE TIME</span>
+<a name="l00318"></a>00318 <span class="comment">            */</span>
+<a name="l00319"></a>00319             SCH_AppData.MajorFrameSource = <a class="code" href="sch__msgdefs_8h.html#a3b5381649512b5aa65e1969d19f82383">SCH_MAJOR_FS_CFE_TIME</a>;
+<a name="l00320"></a>00320             
+<a name="l00321"></a>00321             <span class="comment">/* Clear any Major Frame In Sync with MET flags */</span>
+<a name="l00322"></a>00322             <span class="comment">/* But keep the Minor Frame In Sync with MET flag if it is set */</span>
+<a name="l00323"></a>00323             SCH_AppData.SyncToMET &amp;= <a class="code" href="sch__msgdefs_8h.html#a8487279452fc187714c3e3ee70915331">SCH_MINOR_SYNCHRONIZED</a>;
+<a name="l00324"></a>00324             
+<a name="l00325"></a>00325             <span class="comment">/*</span>
+<a name="l00326"></a>00326 <span class="comment">            ** Give &quot;wakeup SCH&quot; semaphore</span>
+<a name="l00327"></a>00327 <span class="comment">            */</span>
+<a name="l00328"></a>00328             OS_BinSemGive(SCH_AppData.TimeSemaphore);
+<a name="l00329"></a>00329         }
+<a name="l00330"></a>00330     }
+<a name="l00331"></a>00331 
+<a name="l00332"></a>00332     <span class="comment">/*</span>
+<a name="l00333"></a>00333 <span class="comment">    ** We should assume that the next Major Frame will be in the same MET slot as this </span>
+<a name="l00334"></a>00334 <span class="comment">    */</span>
+<a name="l00335"></a>00335     SCH_AppData.LastSyncMETSlot = <a class="code" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9" title="Computes a minor slot number from a MET subseconds zero point.">SCH_GetMETSlotNumber</a>();
+<a name="l00336"></a>00336 
+<a name="l00337"></a>00337     <span class="keywordflow">return</span>;
+<a name="l00338"></a>00338 
+<a name="l00339"></a>00339 } <span class="comment">/* End of SCH_MajorFrameCallback() */</span>
+<a name="l00340"></a>00340 
+<a name="l00341"></a>00341 
+<a name="l00342"></a>00342 <span class="comment">/*******************************************************************</span>
+<a name="l00343"></a>00343 <span class="comment">**</span>
+<a name="l00344"></a>00344 <span class="comment">** SCH_MinorFrameCallback</span>
+<a name="l00345"></a>00345 <span class="comment">**</span>
+<a name="l00346"></a>00346 <span class="comment">** NOTE: For complete prolog information, see above</span>
+<a name="l00347"></a>00347 <span class="comment">********************************************************************/</span>
+<a name="l00348"></a>00348 
+<a name="l00349"></a><a class="code" href="sch__custom_8c.html#af2799afed4a19fadc0a75dc7419a93ca">00349</a> <span class="keywordtype">void</span> <a class="code" href="sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca" title="Performs Minor Frame time step.">SCH_MinorFrameCallback</a>(uint32 TimerId)
+<a name="l00350"></a>00350 {
+<a name="l00351"></a>00351     uint32  CurrentSlot;
+<a name="l00352"></a>00352     
+<a name="l00353"></a>00353     <span class="comment">/*</span>
+<a name="l00354"></a>00354 <span class="comment">    ** If this is the very first timer interrupt, then the initial </span>
+<a name="l00355"></a>00355 <span class="comment">    ** Major Frame Synchronization timed out.  This can occur when</span>
+<a name="l00356"></a>00356 <span class="comment">    ** either the signal is not arriving or the clock has gone into</span>
+<a name="l00357"></a>00357 <span class="comment">    ** FLYWHEEL mode.  We should synchronize to the MET time instead.</span>
+<a name="l00358"></a>00358 <span class="comment">    */</span>
+<a name="l00359"></a>00359     <span class="keywordflow">if</span> (SCH_AppData.MajorFrameSource == <a class="code" href="sch__msgdefs_8h.html#acf7d4e3206e5b49309b98e923f02e703">SCH_MAJOR_FS_NONE</a>)
+<a name="l00360"></a>00360     {
+<a name="l00361"></a>00361         SCH_AppData.MajorFrameSource = <a class="code" href="sch__msgdefs_8h.html#a9b3b0460a88c4ab7d88b77036db14af3">SCH_MAJOR_FS_MINOR_FRAME_TIMER</a>;
+<a name="l00362"></a>00362         
+<a name="l00363"></a>00363         <span class="comment">/* Synchronize timing to MET */</span>
+<a name="l00364"></a>00364         SCH_AppData.SyncToMET |= <a class="code" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">SCH_PENDING_MAJOR_SYNCH</a>;
+<a name="l00365"></a>00365         SCH_AppData.SyncAttemptsLeft = SCH_MAX_SYNC_ATTEMPTS;
+<a name="l00366"></a>00366         SCH_AppData.LastSyncMETSlot = 0;
+<a name="l00367"></a>00367     }
+<a name="l00368"></a>00368     
+<a name="l00369"></a>00369     <span class="comment">/* If attempting to synchronize the Major Frame with MET, then wait for zero subsecs before starting */</span>
+<a name="l00370"></a>00370     <span class="keywordflow">if</span> (((SCH_AppData.SyncToMET &amp; <a class="code" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">SCH_PENDING_MAJOR_SYNCH</a>) != 0) &amp;&amp;
+<a name="l00371"></a>00371         (SCH_AppData.MajorFrameSource == <a class="code" href="sch__msgdefs_8h.html#a9b3b0460a88c4ab7d88b77036db14af3">SCH_MAJOR_FS_MINOR_FRAME_TIMER</a>))
+<a name="l00372"></a>00372     {
+<a name="l00373"></a>00373         <span class="comment">/* Whether we have found the Major Frame Start or not, wait another slot */</span>
+<a name="l00374"></a>00374         OS_TimerSet(SCH_AppData.TimerId, SCH_NORMAL_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+<a name="l00375"></a>00375 
+<a name="l00376"></a>00376         <span class="comment">/* Determine if this was the last attempt */</span>
+<a name="l00377"></a>00377         SCH_AppData.SyncAttemptsLeft--;
+<a name="l00378"></a>00378 
+<a name="l00379"></a>00379         CurrentSlot = <a class="code" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9" title="Computes a minor slot number from a MET subseconds zero point.">SCH_GetMETSlotNumber</a>();
+<a name="l00380"></a>00380         <span class="keywordflow">if</span> ((CurrentSlot != 0) &amp;&amp; (SCH_AppData.SyncAttemptsLeft &gt; 0))
+<a name="l00381"></a>00381         {
+<a name="l00382"></a>00382             <span class="keywordflow">return</span>;
+<a name="l00383"></a>00383         }
+<a name="l00384"></a>00384         <span class="keywordflow">else</span>  <span class="comment">/* Synchronization achieved (or at least, aborted) */</span>
+<a name="l00385"></a>00385         {
+<a name="l00386"></a>00386             <span class="comment">/* Clear the pending synchronization flag and set the &quot;Major In Sync&quot; flag */</span>
+<a name="l00387"></a>00387             SCH_AppData.SyncToMET &amp;= ~<a class="code" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">SCH_PENDING_MAJOR_SYNCH</a>;
+<a name="l00388"></a>00388             SCH_AppData.SyncToMET |= <a class="code" href="sch__msgdefs_8h.html#ab92002b3160afcce40146f32b1ebba7f">SCH_MAJOR_SYNCHRONIZED</a>;
+<a name="l00389"></a>00389             
+<a name="l00390"></a>00390             <span class="comment">/* CurrentSlot should be equal to zero.  If not, this is the best estimate we can use */</span>
+<a name="l00391"></a>00391             SCH_AppData.MinorFramesSinceTone = CurrentSlot;
+<a name="l00392"></a>00392             SCH_AppData.LastSyncMETSlot = 0;
+<a name="l00393"></a>00393         }
+<a name="l00394"></a>00394     }
+<a name="l00395"></a>00395     <span class="keywordflow">else</span>
+<a name="l00396"></a>00396     {
+<a name="l00397"></a>00397         <span class="comment">/*</span>
+<a name="l00398"></a>00398 <span class="comment">        ** If we are already synchronized with MET or don&apos;t care to be, increment current slot</span>
+<a name="l00399"></a>00399 <span class="comment">        */</span>
+<a name="l00400"></a>00400         SCH_AppData.MinorFramesSinceTone++;
+<a name="l00401"></a>00401     }
+<a name="l00402"></a>00402 
+<a name="l00403"></a>00403     <span class="keywordflow">if</span> (SCH_AppData.MinorFramesSinceTone &gt;= <a class="code" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>)
+<a name="l00404"></a>00404     {
+<a name="l00405"></a>00405         <span class="comment">/*</span>
+<a name="l00406"></a>00406 <span class="comment">        ** If we just rolled over from the last slot to slot zero,</span>
+<a name="l00407"></a>00407 <span class="comment">        ** It means that the Major Frame Callback did not cancel the</span>
+<a name="l00408"></a>00408 <span class="comment">        ** &quot;long slot&quot; timer that was started in the last slot</span>
+<a name="l00409"></a>00409 <span class="comment">        **</span>
+<a name="l00410"></a>00410 <span class="comment">        ** It also means that we may now need a &quot;short slot&quot;</span>
+<a name="l00411"></a>00411 <span class="comment">        ** timer to make up for the previous long one</span>
+<a name="l00412"></a>00412 <span class="comment">        */</span>
+<a name="l00413"></a>00413         OS_TimerSet(SCH_AppData.TimerId, SCH_SHORT_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+<a name="l00414"></a>00414         
+<a name="l00415"></a>00415         SCH_AppData.MinorFramesSinceTone = 0;
+<a name="l00416"></a>00416         
+<a name="l00417"></a>00417         SCH_AppData.MissedMajorFrameCount++;
+<a name="l00418"></a>00418     }
+<a name="l00419"></a>00419 
+<a name="l00420"></a>00420     <span class="comment">/*</span>
+<a name="l00421"></a>00421 <span class="comment">    ** Determine the timer delay value for the next slot</span>
+<a name="l00422"></a>00422 <span class="comment">    */</span>
+<a name="l00423"></a>00423     <span class="keywordflow">if</span> (SCH_AppData.MinorFramesSinceTone == SCH_TIME_SYNC_SLOT)
+<a name="l00424"></a>00424     {
+<a name="l00425"></a>00425         <span class="comment">/*</span>
+<a name="l00426"></a>00426 <span class="comment">        ** Start &quot;long slot&quot; timer (should be stopped by Major Frame Callback)</span>
+<a name="l00427"></a>00427 <span class="comment">        */</span>
+<a name="l00428"></a>00428         OS_TimerSet(SCH_AppData.TimerId, SCH_SYNC_SLOT_PERIOD, 0);
+<a name="l00429"></a>00429     }
+<a name="l00430"></a>00430     
+<a name="l00431"></a>00431     <span class="comment">/*</span>
+<a name="l00432"></a>00432 <span class="comment">    ** Note that if this is neither the first &quot;short&quot; minor frame nor the</span>
+<a name="l00433"></a>00433 <span class="comment">    ** last &quot;long&quot; minor frame, the timer is not modified.  This should</span>
+<a name="l00434"></a>00434 <span class="comment">    ** provide more stable timing than introducing the dither associated</span>
+<a name="l00435"></a>00435 <span class="comment">    ** with software response times to timer interrupts.</span>
+<a name="l00436"></a>00436 <span class="comment">    */</span>
+<a name="l00437"></a>00437 
+<a name="l00438"></a>00438     <span class="comment">/*</span>
+<a name="l00439"></a>00439 <span class="comment">    ** Give &quot;wakeup SCH&quot; semaphore</span>
+<a name="l00440"></a>00440 <span class="comment">    */</span>
+<a name="l00441"></a>00441     OS_BinSemGive(SCH_AppData.TimeSemaphore);
+<a name="l00442"></a>00442 
+<a name="l00443"></a>00443     <span class="keywordflow">return</span>;
+<a name="l00444"></a>00444 
+<a name="l00445"></a>00445 } <span class="comment">/* End of SCH_MinorFrameCallback() */</span>
+<a name="l00446"></a>00446 
+<a name="l00447"></a>00447 
+<a name="l00448"></a>00448 <span class="comment">/************************/</span>
+<a name="l00449"></a>00449 <span class="comment">/*  End of File Comment */</span>
+<a name="l00450"></a>00450 <span class="comment">/************************/</span>
+<a name="l00451"></a>00451 
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__custom_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_custom.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_custom.h File Reference</h1><code>#include &quot;cfe.h&quot;</code><br/>
+
+<p><a href="sch__custom_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#a7ac9e2cf550e5dcbaf89b65bdc872427">SCH_TIMER_NAME</a>&nbsp;&nbsp;&nbsp;&quot;SCH_MINOR_TIMER&quot;</td></tr>
+<tr><td colspan="2"><h2>Functions</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#a460799de20a37103670e068ec0cd3854">SCH_CustomEarlyInit</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Custom Early Initialization.  <a href="#a460799de20a37103670e068ec0cd3854"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">int32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#a769b51f7ffc7c7711cc7bf0856702a77">SCH_CustomLateInit</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Custom Late Initialization.  <a href="#a769b51f7ffc7c7711cc7bf0856702a77"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#a0f0feaac769ebba7a790a5575edfa482">SCH_CustomGetCurrentSlotNumber</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Obtains the Current Slot (Minor Frame) number.  <a href="#a0f0feaac769ebba7a790a5575edfa482"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#a521f028b851995a3755ed7e4294f3b9e">SCH_CustomCleanup</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Custom Cleanup.  <a href="#a521f028b851995a3755ed7e4294f3b9e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9">SCH_GetMETSlotNumber</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Computes a minor slot number from a MET subseconds zero point.  <a href="#abbb6d913166c6579b57f48ca542b7ad9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b">SCH_MajorFrameCallback</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Performs Major Frame Synchronization.  <a href="#a18afe2a56ba0bfdd348e88f0d8a9d55b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca">SCH_MinorFrameCallback</a> (uint32 TimerId)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Performs Minor Frame time step.  <a href="#af2799afed4a19fadc0a75dc7419a93ca"></a><br/></td></tr>
+</table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a7ac9e2cf550e5dcbaf89b65bdc872427"></a><!-- doxytag: member="sch_custom.h::SCH_TIMER_NAME" ref="a7ac9e2cf550e5dcbaf89b65bdc872427" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_TIMER_NAME&nbsp;&nbsp;&nbsp;&quot;SCH_MINOR_TIMER&quot;</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__custom_8h_source.html#l00036">36</a> of file <a class="el" href="sch__custom_8h_source.html">sch_custom.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00066">SCH_CustomEarlyInit()</a>.</p>
+
+</div>
+</div>
+<hr/><h2>Function Documentation</h2>
+<a class="anchor" id="a521f028b851995a3755ed7e4294f3b9e"></a><!-- doxytag: member="sch_custom.h::SCH_CustomCleanup" ref="a521f028b851995a3755ed7e4294f3b9e" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SCH_CustomCleanup </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Custom Cleanup. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is intended to perform any clean up of custom initialization that would be necessary on an application exit</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>Any resources that will not be cleaned up automatically be CFE need to be cleaned up in this function. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00162">162</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a460799de20a37103670e068ec0cd3854"></a><!-- doxytag: member="sch_custom.h::SCH_CustomEarlyInit" ref="a460799de20a37103670e068ec0cd3854" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32 SCH_CustomEarlyInit </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Custom Early Initialization. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is intended to perform the creation of the minor frame timer. It is called during SCH_TimerInit It may be updated to include other initializations, or modifications to already set scheduler parameters.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>SCH_AppData.ClockAccuracy will be set to the clock resolution in microseconds. CFE_SUCCESS will be returned if all creation was performed properly.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td width="20%" valign="TOP"><p>CFE_SUCCESS </p>
+</td><td width="80%"><p>  </p>
+</td></tr>
+<tr>
+<td colspan="2" width="100%"><p>Return codes from CFE_PSP_TimerInit  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00066">66</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>, and <a class="el" href="sch__custom_8h_source.html#l00036">SCH_TIMER_NAME</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a0f0feaac769ebba7a790a5575edfa482"></a><!-- doxytag: member="sch_custom.h::SCH_CustomGetCurrentSlotNumber" ref="a0f0feaac769ebba7a790a5575edfa482" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 SCH_CustomGetCurrentSlotNumber </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Obtains the Current Slot (Minor Frame) number. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function determines the current slot (minor frame) number. It corrects for any minor frame overlap caused by poor minor frame timing, if necessary. This function and associated subfunction was added to the customizable section as on slower platforms this function can have noticible overhead, and several simplifying assumptions can be made on a platform specific basis.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td colspan="2" width="100%"><p>Returns slot index from zero to (<a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>-1)  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00123">123</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00070">SCH_NOT_SYNCHRONIZED</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="a769b51f7ffc7c7711cc7bf0856702a77"></a><!-- doxytag: member="sch_custom.h::SCH_CustomLateInit" ref="a769b51f7ffc7c7711cc7bf0856702a77" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int32 SCH_CustomLateInit </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Custom Late Initialization. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is intended to perform a wait for startup sync followed by the initialization and starting of the major frame timer, and the starting of the minor frame timer. It may be updated to include other initializations, or modifications to already set scheduler parameters, or remove actions previously performed in <a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a> . This function is called following the completion of SCH_AppInit</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>Any startup synchronization is included in this function CFE_SUCCESS will be returned if all initialization was performed properly.</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td width="20%" valign="TOP"><p>CFE_SUCCESS </p>
+</td><td width="80%"><p>  </p>
+</td></tr>
+<tr>
+<td colspan="2" width="100%"><p>Return codes from CFE_PSP_TimerInit  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00090">90</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>, <a class="el" href="sch__platform__cfg_8h_source.html#l00199">SCH_STARTUP_PERIOD</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00185">SCH_STARTUP_SYNC_TIMEOUT</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="abbb6d913166c6579b57f48ca542b7ad9"></a><!-- doxytag: member="sch_custom.h::SCH_GetMETSlotNumber" ref="abbb6d913166c6579b57f48ca542b7ad9" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 SCH_GetMETSlotNumber </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Computes a minor slot number from a MET subseconds zero point. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function determines the current slot (minor frame) number if one were to assume that slot zero started when the MET microseconds are equal to zero.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None</dd></dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd><table border="0" cellpadding="2" width="100%" cellspacing="3">
+<tr>
+<td colspan="2" width="100%"><p>Returns slot index from zero to (<a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>-1)  </p>
+</td></tr>
+</table>
+</dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00177">177</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00123">SCH_CustomGetCurrentSlotNumber()</a>, <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>, and <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a18afe2a56ba0bfdd348e88f0d8a9d55b"></a><!-- doxytag: member="sch_custom.h::SCH_MajorFrameCallback" ref="a18afe2a56ba0bfdd348e88f0d8a9d55b" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SCH_MajorFrameCallback </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname"></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Performs Major Frame Synchronization. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is called by cFE TIME services when a Major Frame synchronization signal is received. It then synchronizes the minor frame (slot) processing of the Schedule Definition Table.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00230">230</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00082">SCH_MAJOR_FS_CFE_TIME</a>, <a class="el" href="sch__platform__cfg_8h_source.html#l00218">SCH_MAX_NOISY_MAJORF</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00071">SCH_MINOR_SYNCHRONIZED</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00070">SCH_NOT_SYNCHRONIZED</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00162">SCH_CustomCleanup()</a>, and <a class="el" href="sch__custom_8c_source.html#l00090">SCH_CustomLateInit()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+<a class="anchor" id="af2799afed4a19fadc0a75dc7419a93ca"></a><!-- doxytag: member="sch_custom.h::SCH_MinorFrameCallback" ref="af2799afed4a19fadc0a75dc7419a93ca" args="(uint32 TimerId)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SCH_MinorFrameCallback </td>
+          <td>(</td>
+          <td class="paramtype">uint32&nbsp;</td>
+          <td class="paramname"> <em>TimerId</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Performs Minor Frame time step. </p>
+<dl class="user"><dt><b>Description</b></dt><dd>This function is called by an OSAL timer when the minor frame timing reference sends a signal. The Scheduler Application uses this to drive the Application's processing of each minor frame.</dd></dl>
+<dl class="user"><dt><b>Assumptions, External Events, and Notes:</b></dt><dd>None </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__custom_8c_source.html#l00349">349</a> of file <a class="el" href="sch__custom_8c_source.html">sch_custom.c</a>.</p>
+
+<p>References <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00083">SCH_MAJOR_FS_MINOR_FRAME_TIMER</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00081">SCH_MAJOR_FS_NONE</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00073">SCH_MAJOR_SYNCHRONIZED</a>, <a class="el" href="sch__msgdefs_8h_source.html#l00072">SCH_PENDING_MAJOR_SYNCH</a>, and <a class="el" href="sch__platform__cfg_8h_source.html#l00053">SCH_TOTAL_SLOTS</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00066">SCH_CustomEarlyInit()</a>.</p>
+
+<p><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+</div>
+</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomGetCurrentSlotNumber",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a0f0feaac769ebba7a790a5575edfa482_cgraph.md5`
+
+
+```text
+3f8998b761bf3dd281d2d7de111859c0
+```
+
+### `sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_MajorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a18afe2a56ba0bfdd348e88f0d8a9d55b_cgraph.md5`
+
+
+```text
+a00036c4f7ba00236176ac5aecad7b4d
+```
+
+### `sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomEarlyInit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_MinorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca",tooltip="Performs Minor Frame time step."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a460799de20a37103670e068ec0cd3854_cgraph.md5`
+
+
+```text
+59fe8ee4f8361720f9de964cecf3724c
+```
+
+### `sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomCleanup",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_MajorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b",tooltip="Performs Major Frame Synchronization."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a521f028b851995a3755ed7e4294f3b9e_cgraph.md5`
+
+
+```text
+ffccf2eaf5e91576083b9c77ebe8b344
+```
+
+### `sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_CustomLateInit",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_MajorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b",tooltip="Performs Major Frame Synchronization."];
+  Node2 -> Node3 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node3 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_a769b51f7ffc7c7711cc7bf0856702a77_cgraph.md5`
+
+
+```text
+e08bf23f7cd6a32c3c1cfc9e7b9a416f
+```
+
+### `sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.dot`
+
+
+```text
+digraph G
+{
+  edge [fontname="FreeSans",fontsize="10",labelfontname="FreeSans",labelfontsize="10"];
+  node [fontname="FreeSans",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="SCH_MinorFrameCallback",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [color="midnightblue",fontsize="10",style="solid",fontname="FreeSans"];
+  Node2 [label="SCH_GetMETSlotNumber",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9",tooltip="Computes a minor slot number from a MET subseconds zero point."];
+}
+```
+
+### `sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_af2799afed4a19fadc0a75dc7419a93ca_cgraph.md5`
+
+
+```text
+2c72c0bf953c7a44459cbda374bd01c2
+```
+
+### `sch__custom_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__custom_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_custom.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_custom.h</h1><a href="sch__custom_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*************************************************************************</span>
+<a name="l00002"></a>00002 <span class="comment">** File:</span>
+<a name="l00003"></a>00003 <span class="comment">**   $Id: sch__custom_8h_source.html 1.1 2017/07/01 20:20:50EDT sstrege Exp  $</span>
+<a name="l00004"></a>00004 <span class="comment">**</span>
+<a name="l00005"></a>00005 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00006"></a>00006 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00007"></a>00007 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00008"></a>00008 <span class="comment">**</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00010"></a>00010 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00011"></a>00011 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00012"></a>00012 <span class="comment">**  agreement.</span>
+<a name="l00013"></a>00013 <span class="comment">**</span>
+<a name="l00014"></a>00014 <span class="comment">** Purpose: </span>
+<a name="l00015"></a>00015 <span class="comment">**   Specification for the CFS Scheduler (SCH) mission specific</span>
+<a name="l00016"></a>00016 <span class="comment">**   custom function interface</span>
+<a name="l00017"></a>00017 <span class="comment">**</span>
+<a name="l00018"></a>00018 <span class="comment">** Notes:</span>
+<a name="l00019"></a>00019 <span class="comment">** </span>
+<a name="l00020"></a>00020 <span class="comment">**************************************************************************/</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#ifndef _sch_custom_</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#define _sch_custom_</span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span>
+<a name="l00024"></a>00024 <span class="comment">/*************************************************************************</span>
+<a name="l00025"></a>00025 <span class="comment">** Includes</span>
+<a name="l00026"></a>00026 <span class="comment">*************************************************************************/</span>
+<a name="l00027"></a>00027 <span class="preprocessor">#include &quot;cfe.h&quot;</span>
+<a name="l00028"></a>00028 
+<a name="l00029"></a>00029 <span class="comment">/*************************************************************************</span>
+<a name="l00030"></a>00030 <span class="comment">** Macro definitions</span>
+<a name="l00031"></a>00031 <span class="comment">**************************************************************************/</span>
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 <span class="comment">/*</span>
+<a name="l00034"></a>00034 <span class="comment">** Timer Characteristics</span>
+<a name="l00035"></a>00035 <span class="comment">*/</span>
+<a name="l00036"></a><a class="code" href="sch__custom_8h.html#a7ac9e2cf550e5dcbaf89b65bdc872427">00036</a> <span class="preprocessor">#define SCH_TIMER_NAME   &quot;SCH_MINOR_TIMER&quot;</span>
+<a name="l00037"></a>00037 <span class="preprocessor"></span>
+<a name="l00038"></a>00038 <span class="comment">/*************************************************************************</span>
+<a name="l00039"></a>00039 <span class="comment">** Exported Functions</span>
+<a name="l00040"></a>00040 <span class="comment">*************************************************************************/</span>
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042 <span class="comment">/************************************************************************/</span>
+<a name="l00063"></a>00063 int32 <a class="code" href="sch__custom_8h.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a>(<span class="keywordtype">void</span>);
+<a name="l00064"></a>00064 
+<a name="l00065"></a>00065 <span class="comment">/************************************************************************/</span>
+<a name="l00088"></a>00088 int32 <a class="code" href="sch__custom_8h.html#a769b51f7ffc7c7711cc7bf0856702a77" title="Custom Late Initialization.">SCH_CustomLateInit</a>(<span class="keywordtype">void</span>);
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090 <span class="comment">/************************************************************************/</span>
+<a name="l00109"></a>00109 uint32 <a class="code" href="sch__custom_8h.html#a0f0feaac769ebba7a790a5575edfa482" title="Obtains the Current Slot (Minor Frame) number.">SCH_CustomGetCurrentSlotNumber</a>(<span class="keywordtype">void</span>);
+<a name="l00110"></a>00110 
+<a name="l00111"></a>00111 <span class="comment">/************************************************************************/</span>
+<a name="l00123"></a>00123 <span class="keywordtype">void</span> <a class="code" href="sch__custom_8h.html#a521f028b851995a3755ed7e4294f3b9e" title="Custom Cleanup.">SCH_CustomCleanup</a>(<span class="keywordtype">void</span>);
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125 <span class="comment">/************************************************************************/</span>
+<a name="l00141"></a>00141 uint32 <a class="code" href="sch__custom_8h.html#abbb6d913166c6579b57f48ca542b7ad9" title="Computes a minor slot number from a MET subseconds zero point.">SCH_GetMETSlotNumber</a>(<span class="keywordtype">void</span>);
+<a name="l00142"></a>00142 
+<a name="l00143"></a>00143 <span class="comment">/************************************************************************/</span>
+<a name="l00155"></a>00155 <span class="keywordtype">void</span>  <a class="code" href="sch__custom_8h.html#a18afe2a56ba0bfdd348e88f0d8a9d55b" title="Performs Major Frame Synchronization.">SCH_MajorFrameCallback</a>(<span class="keywordtype">void</span>);
+<a name="l00156"></a>00156 
+<a name="l00157"></a>00157 <span class="comment">/************************************************************************/</span>
+<a name="l00169"></a>00169 <span class="keywordtype">void</span>  <a class="code" href="sch__custom_8h.html#af2799afed4a19fadc0a75dc7419a93ca" title="Performs Minor Frame time step.">SCH_MinorFrameCallback</a>(uint32 TimerId);
+<a name="l00170"></a>00170 
+<a name="l00171"></a>00171 <span class="preprocessor">#endif </span><span class="comment">/* _sch_custom_ */</span>
+<a name="l00172"></a>00172 <span class="comment">/************************/</span>
+<a name="l00173"></a>00173 <span class="comment">/*  End of File Comment */</span>
+<a name="l00174"></a>00174 <span class="comment">/************************/</span>
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__events_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__events_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_events.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_events.h File Reference</h1>
+<p><a href="sch__events_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a2143003d800956b0a42acb189559dc97">SCH_INITSTATS_INF_EID</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'SCH Initialized. Version d.d.d.d' </code>  <a href="#a2143003d800956b0a42acb189559dc97"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a256a037e3b606b512b11a07fc9ebcf92">SCH_APP_EXIT_EID</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'SCH App: terminating, err = 0x08X' </code>  <a href="#a256a037e3b606b512b11a07fc9ebcf92"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a81c7648731fb8579658ee3ad64f6a6e6">SCH_CR_PIPE_ERR_EID</a>&nbsp;&nbsp;&nbsp;3</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error Creating SB Pipe, RC=0x08X' </code>  <a href="#a81c7648731fb8579658ee3ad64f6a6e6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#ae3f383a940a0199ce06958cb1d422314">SCH_SUB_HK_REQ_ERR_EID</a>&nbsp;&nbsp;&nbsp;4</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error Subscribing to HK Request(MID=0x04X), RC=0x08X' </code>  <a href="#ae3f383a940a0199ce06958cb1d422314"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a1935c5e4374cf3af5c7bcf0473a9e4a1">SCH_SUB_GND_CMD_ERR_EID</a>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error Subscribing to GND CMD(MID=0x04X), RC=0x08X' </code>  <a href="#a1935c5e4374cf3af5c7bcf0473a9e4a1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#afdb83b5dd5111305728c15e192ba6bb7">SCH_SDT_REG_ERR_EID</a>&nbsp;&nbsp;&nbsp;7</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error Registering SDT, RC=0x08X' </code>  <a href="#afdb83b5dd5111305728c15e192ba6bb7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a60d28cfacc16c1d0e899df00d9af99ca">SCH_MDT_REG_ERR_EID</a>&nbsp;&nbsp;&nbsp;8</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error Registering MDT, RC=0x08X' </code>  <a href="#a60d28cfacc16c1d0e899df00d9af99ca"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a00b148cce3c683c09b56029c416ea387">SCH_SDT_LOAD_ERR_EID</a>&nbsp;&nbsp;&nbsp;9</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error (RC=0x08X) Loading SDT with s' </code>  <a href="#a00b148cce3c683c09b56029c416ea387"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a75646ae6d481e98d542a494e3c820d2e">SCH_MDT_LOAD_ERR_EID</a>&nbsp;&nbsp;&nbsp;10</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error (RC=0x08X) Loading MDT with s' </code>  <a href="#a75646ae6d481e98d542a494e3c820d2e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a9ca4152086ae41a90e6965e646b82208">SCH_ACQ_PTR_ERR_EID</a>&nbsp;&nbsp;&nbsp;11</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error Acquiring Tbl Ptrs (RC=0x08X)' </code>  <a href="#a9ca4152086ae41a90e6965e646b82208"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a44d4138566976dff1e1cd1b3ba600f82">SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID</a>&nbsp;&nbsp;&nbsp;12</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error creating Timer (RC=0x08X)' </code>  <a href="#a44d4138566976dff1e1cd1b3ba600f82"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a681ef7909a2bf197cdc1455f20b75a41">SCH_MINOR_FRAME_TIMER_ACC_WARN_EID</a>&nbsp;&nbsp;&nbsp;13</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'OS Timer Accuracy (d &gt; reqd d usec) requires Minor Frame MET sync' </code>  <a href="#a681ef7909a2bf197cdc1455f20b75a41"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#affe219cf221b8d99d6f3d16c64e69113">SCH_MAJOR_FRAME_SUB_ERR_EID</a>&nbsp;&nbsp;&nbsp;14</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error initializing Timers (RC=0x08X)' </code>  <a href="#affe219cf221b8d99d6f3d16c64e69113"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#ad6719efdf25d2fd4d049cc76540a59f2">SCH_SEM_CREATE_ERR_EID</a>&nbsp;&nbsp;&nbsp;15</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Error creating Main Loop Timing Semaphore (RC=0x08X)' </code>  <a href="#ad6719efdf25d2fd4d049cc76540a59f2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a6782d568df5b282bce3d5a11e8e76bc5">SCH_SAME_SLOT_EID</a>&nbsp;&nbsp;&nbsp;16</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Slot did not increment: slot = d' </code>  <a href="#a6782d568df5b282bce3d5a11e8e76bc5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a3d22029ece03daab899155c861a90db3">SCH_SKIPPED_SLOTS_EID</a>&nbsp;&nbsp;&nbsp;17</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Slots skipped: slot = d, count = d' </code>  <a href="#a3d22029ece03daab899155c861a90db3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a09da55d4b05f10b67a494237cbf79bfe">SCH_MULTI_SLOTS_EID</a>&nbsp;&nbsp;&nbsp;18</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Multiple slots processed: slot = d, count = d' </code>  <a href="#a09da55d4b05f10b67a494237cbf79bfe"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a7106064c2a3fc6047b96df11eb32b6ba">SCH_CORRUPTION_EID</a>&nbsp;&nbsp;&nbsp;19</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Corrupt data error (1): slot = d, entry = d' </code>  <a href="#a7106064c2a3fc6047b96df11eb32b6ba"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a5cc7d962d11700c662adc8f339b7e593">SCH_PACKET_SEND_EID</a>&nbsp;&nbsp;&nbsp;20</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Activity error: slot = d, entry = d, err = 0x08X' </code>  <a href="#a5cc7d962d11700c662adc8f339b7e593"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#af8eb00478531ff0f7b5b871387367869">SCH_NOISY_MAJOR_FRAME_ERR_EID</a>&nbsp;&nbsp;&nbsp;21</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Major Frame Sync too noisy (Slot d). Disabling synchronization.' </code>  <a href="#af8eb00478531ff0f7b5b871387367869"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a7d5634d49287b21e94b50cef2b02172d">SCH_SCHEDULE_TBL_ERR_EID</a>&nbsp;&nbsp;&nbsp;30</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Schedule tbl verify error - idx[d] ena[d] typ[d] fre[d] rem[d] msg[d] grp[0x08X]' </code>  <a href="#a7d5634d49287b21e94b50cef2b02172d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#aaf1c92d4e949026b4f85c2f79210b47a">SCH_SCHEDULE_TABLE_EID</a>&nbsp;&nbsp;&nbsp;31</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Schedule table verify results -- good[d] bad[d] unused[d]' </code>  <a href="#aaf1c92d4e949026b4f85c2f79210b47a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a60de1571f084de6c9bde8353674f8b9a">SCH_MESSAGE_TBL_ERR_EID</a>&nbsp;&nbsp;&nbsp;32</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Message tbl verify err - idx[d] mid[0xX] len[d] buf[d]' </code>  <a href="#a60de1571f084de6c9bde8353674f8b9a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a3a3ae4906a52675ab0f10b23605b28b2">SCH_MESSAGE_TABLE_EID</a>&nbsp;&nbsp;&nbsp;33</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Message tbl verify results - good[d] bad[d] unused[d]' </code>  <a href="#a3a3ae4906a52675ab0f10b23605b28b2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f">SCH_NOOP_CMD_EID</a>&nbsp;&nbsp;&nbsp;40</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'NO-op command. Version d.d.d.d' </code>  <a href="#a333ecd3c41dbc9990b080c681cc4466f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a413a36e0a66d1471334fc7566d4f8aab">SCH_RESET_CMD_EID</a>&nbsp;&nbsp;&nbsp;41</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'RESET command' </code>  <a href="#a413a36e0a66d1471334fc7566d4f8aab"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#ad4bc902a2dbfa52aac0f26b8016937fb">SCH_ENABLE_CMD_EID</a>&nbsp;&nbsp;&nbsp;42</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'ENABLE command: slot = d, entry = d' </code>  <a href="#ad4bc902a2dbfa52aac0f26b8016937fb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#ab121f57cb66e52bf03ee5aebbd7b54c2">SCH_DISABLE_CMD_EID</a>&nbsp;&nbsp;&nbsp;43</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'DISABLE command: slot = d, entry = d' </code>  <a href="#ab121f57cb66e52bf03ee5aebbd7b54c2"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a10d7bdb94ef40f5f820e7665b67a0eac">SCH_ENA_GRP_CMD_EID</a>&nbsp;&nbsp;&nbsp;44</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'ENABLE GROUP command: match count = d' </code>  <a href="#a10d7bdb94ef40f5f820e7665b67a0eac"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a093d7419db5a9c6b9c6e5577a7b9a0cb">SCH_DIS_GRP_CMD_EID</a>&nbsp;&nbsp;&nbsp;45</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'DISABLE GROUP command: match count = d' </code>  <a href="#a093d7419db5a9c6b9c6e5577a7b9a0cb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a16e0b6b024dea3ae0e43803b80506239">SCH_ENA_SYNC_CMD_EID</a>&nbsp;&nbsp;&nbsp;46</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Major Frame Synchronization Enabled' </code>  <a href="#a16e0b6b024dea3ae0e43803b80506239"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#aafd0af9dff5ed932aefd1a94cf6ee4b9">SCH_SEND_DIAG_CMD_EID</a>&nbsp;&nbsp;&nbsp;47</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Transmitting Diagnostic Message' </code>  <a href="#aafd0af9dff5ed932aefd1a94cf6ee4b9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a3c2b9df457018122b51e02c4a64ce08d">SCH_ENABLE_CMD_ARG_ERR_EID</a>&nbsp;&nbsp;&nbsp;50</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'ENABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code>  <a href="#a3c2b9df457018122b51e02c4a64ce08d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#ab25b9e84f06d75ae7644b19a5ccc9c86">SCH_ENABLE_CMD_ENTRY_ERR_EID</a>&nbsp;&nbsp;&nbsp;51</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'ENABLE command: invalid state = d, slot = d, entry = d' </code>  <a href="#ab25b9e84f06d75ae7644b19a5ccc9c86"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#abbbdffaf3a9a53153aba67f76b346839">SCH_DISABLE_CMD_ARG_ERR_EID</a>&nbsp;&nbsp;&nbsp;52</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'DISABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code>  <a href="#abbbdffaf3a9a53153aba67f76b346839"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a16f497f25d045c5e801b50cfaeea8ab1">SCH_DISABLE_CMD_ENTRY_ERR_EID</a>&nbsp;&nbsp;&nbsp;53</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'DISABLE command: invalid state = d, slot = d, entry = d' </code>  <a href="#a16f497f25d045c5e801b50cfaeea8ab1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#af4161cac1856709b11fe34d4e4f30271">SCH_ENA_GRP_CMD_ERR_EID</a>&nbsp;&nbsp;&nbsp;54</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'ENABLE GROUP command: invalid argument, no groups selected' </code>  <a href="#af4161cac1856709b11fe34d4e4f30271"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a1693b293344b191bda7ef84366eb67b8">SCH_ENA_GRP_NOT_FOUND_ERR_EID</a>&nbsp;&nbsp;&nbsp;55</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'ENABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code>  <a href="#a1693b293344b191bda7ef84366eb67b8"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a7b3262d4162697944408caca0d77e53c">SCH_DIS_GRP_CMD_ERR_EID</a>&nbsp;&nbsp;&nbsp;56</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'DISABLE GROUP command: invalid argument, no groups selected' </code>  <a href="#a7b3262d4162697944408caca0d77e53c"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#afc9ac9162862cc253aa6752f9144d97d">SCH_DIS_GRP_NOT_FOUND_ERR_EID</a>&nbsp;&nbsp;&nbsp;57</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'DISABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code>  <a href="#afc9ac9162862cc253aa6752f9144d97d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#ae31e105060e10bea7f771a275990d6fb">SCH_CC_ERR_EID</a>&nbsp;&nbsp;&nbsp;58</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Invalid command code: ID = 0x04X, CC = d' </code>  <a href="#ae31e105060e10bea7f771a275990d6fb"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#a1b0be4d0a46e6c95e635156fbd702e81">SCH_MD_ERR_EID</a>&nbsp;&nbsp;&nbsp;59</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Msg with Invalid message ID Rcvd -- ID = 0x04X' </code>  <a href="#a1b0be4d0a46e6c95e635156fbd702e81"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__events_8h.html#af4a0a7f8d400a0613ebbbd0994ef1b17">SCH_CMD_LEN_ERR_EID</a>&nbsp;&nbsp;&nbsp;60</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><code> 'Cmd Msg with Bad length Rcvd: ID = 0x04X, CC = d, Exp Len = d, Len = d' </code>  <a href="#af4a0a7f8d400a0613ebbbd0994ef1b17"></a><br/></td></tr>
+</table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a9ca4152086ae41a90e6965e646b82208"></a><!-- doxytag: member="sch_events.h::SCH_ACQ_PTR_ERR_EID" ref="a9ca4152086ae41a90e6965e646b82208" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ACQ_PTR_ERR_EID&nbsp;&nbsp;&nbsp;11</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error Acquiring Tbl Ptrs (RC=0x08X)' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000010">Event Message:</a></b></dt><dd><code> 'Error Acquiring Tbl Ptrs (RC=0x08X)' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to obtain pointers to the contents of either the Schedule Definition Table or the Message Definition Table with cFE Table Services via the CFE_TBL_GetAddress API.</p>
+<p>The <code>RC</code> value is the return code from the CFE_TBL_GetAddress API. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00187">187</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a256a037e3b606b512b11a07fc9ebcf92"></a><!-- doxytag: member="sch_events.h::SCH_APP_EXIT_EID" ref="a256a037e3b606b512b11a07fc9ebcf92" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_APP_EXIT_EID&nbsp;&nbsp;&nbsp;2</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'SCH App: terminating, err = 0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000002">Event Message:</a></b></dt><dd><code> 'SCH App: terminating, err = 0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: CRITICAL</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is always issued whenever the Scheduler Application exits. Exiting can be caused by an error during initialization, while loading a table or on command via the ES. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00068">68</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae31e105060e10bea7f771a275990d6fb"></a><!-- doxytag: member="sch_events.h::SCH_CC_ERR_EID" ref="ae31e105060e10bea7f771a275990d6fb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_CC_ERR_EID&nbsp;&nbsp;&nbsp;58</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Invalid command code: ID = 0x04X, CC = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000041">Event Message:</a></b></dt><dd><code> 'Invalid command code: ID = 0x04X, CC = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when Scheduler obtains a message from its command pipe that does not have a valid command code for either the Ground Message ID or the Flight Message ID.</p>
+<p>The <code>ID</code> field identifies the Message ID of the message with the inappropriate command code. The <code>CC</code> field identifies the Command Code found in the message. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00676">676</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af4a0a7f8d400a0613ebbbd0994ef1b17"></a><!-- doxytag: member="sch_events.h::SCH_CMD_LEN_ERR_EID" ref="af4a0a7f8d400a0613ebbbd0994ef1b17" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_CMD_LEN_ERR_EID&nbsp;&nbsp;&nbsp;60</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Cmd Msg with Bad length Rcvd: ID = 0x04X, CC = d, Exp Len = d, Len = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000043">Event Message:</a></b></dt><dd><code> 'Cmd Msg with Bad length Rcvd: ID = 0x04X, CC = d, Exp Len = d, Len = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated whenever the Scheduler receives a command message whose length does not correctly correspond to the length expected for a message with its command code.</p>
+<p>The <code>ID</code> field specifies the Message ID of the message in error. The <code>CC</code> field specifies the Command Code. The <b> Exp Len </b> field specifies the Expected Length for a command with this command code. The <code>Len</code> field specifies the actual length of the command received. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00707">707</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7106064c2a3fc6047b96df11eb32b6ba"></a><!-- doxytag: member="sch_events.h::SCH_CORRUPTION_EID" ref="a7106064c2a3fc6047b96df11eb32b6ba" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_CORRUPTION_EID&nbsp;&nbsp;&nbsp;19</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Corrupt data error (1): slot = d, entry = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000018">Event Message:</a></b></dt><dd><p class="startdd"><code> 'Corrupt data error (1): slot = d, entry = d' </code> </p>
+<p class="enddd"><code> 'Corrupt data error (2): msg = d, freq = d, type = d, rem = d' </code></p>
+</dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when an Activity is found in the Schedule Definition Table that has inappropriate values. The table must have become corrupt since being loaded since the value(s) that are incorrect were verified before the table was loaded.</p>
+<p>The <code>slot</code> value identifies the minor frame containing the error. The <code>entry</code> value identifies which entry for the specified minor frame is in error. The <code>msg</code> value specifies the index into the Message Definition Table. The <code>freq</code> value specifies the activity's frequency (in seconds) The <code>type</code> value specifies the activity's type The <code>rem</code> value specifies the activity's remainder (used to stagger items with the same frequency value. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00319">319</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a81c7648731fb8579658ee3ad64f6a6e6"></a><!-- doxytag: member="sch_events.h::SCH_CR_PIPE_ERR_EID" ref="a81c7648731fb8579658ee3ad64f6a6e6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_CR_PIPE_ERR_EID&nbsp;&nbsp;&nbsp;3</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error Creating SB Pipe, RC=0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000003">Event Message:</a></b></dt><dd><code> 'Error Creating SB Pipe, RC=0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to create its command pipe via the CFE_SB_CreatePipe API.</p>
+<p>The <code>RC</code> field contains the return code from the CFE_SB_CreatePipe API. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00082">82</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a093d7419db5a9c6b9c6e5577a7b9a0cb"></a><!-- doxytag: member="sch_events.h::SCH_DIS_GRP_CMD_EID" ref="a093d7419db5a9c6b9c6e5577a7b9a0cb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DIS_GRP_CMD_EID&nbsp;&nbsp;&nbsp;45</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'DISABLE GROUP command: match count = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000030">Event Message:</a></b></dt><dd><code> 'DISABLE GROUP command: match count = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">Disable Group Command </a> is received and successfully processed.</p>
+<p>The <code>count</code> field specifies the number of Activities in the Schedule Definition Table that were Disabled due to this command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00511">511</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7b3262d4162697944408caca0d77e53c"></a><!-- doxytag: member="sch_events.h::SCH_DIS_GRP_CMD_ERR_EID" ref="a7b3262d4162697944408caca0d77e53c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DIS_GRP_CMD_ERR_EID&nbsp;&nbsp;&nbsp;56</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'DISABLE GROUP command: invalid argument, no groups selected' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000039">Event Message:</a></b></dt><dd><code> 'DISABLE GROUP command: invalid argument, no groups selected' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">Disable Group Command </a> is received that does not specify either a group or a multi-group. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00643">643</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afc9ac9162862cc253aa6752f9144d97d"></a><!-- doxytag: member="sch_events.h::SCH_DIS_GRP_NOT_FOUND_ERR_EID" ref="afc9ac9162862cc253aa6752f9144d97d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DIS_GRP_NOT_FOUND_ERR_EID&nbsp;&nbsp;&nbsp;57</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'DISABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000040">Event Message:</a></b></dt><dd><code> 'DISABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">Disable Group Command </a> is received that specifies either a group and/or multi-group that cannot be located as being associated with any Activities defined in the Schedule Definition Table.</p>
+<p>The <code>Group</code> field identifies the Group ID number that was in the received Disable Group command. The <code>Multi-Group</code> field identifies the Multi-Group bit mask that was in the received Disable Group command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00659">659</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abbbdffaf3a9a53153aba67f76b346839"></a><!-- doxytag: member="sch_events.h::SCH_DISABLE_CMD_ARG_ERR_EID" ref="abbbdffaf3a9a53153aba67f76b346839" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DISABLE_CMD_ARG_ERR_EID&nbsp;&nbsp;&nbsp;52</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'DISABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000035">Event Message:</a></b></dt><dd><code> 'DISABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">Disable Entry Command </a> is received that contains either a slot or entry index that is out of the acceptable range.</p>
+<p>The <code>slot</code> parameters identify first-the slot in the command, second-the maximum allowed slot The <code>entry</code> parameters identify first-the entry index in the command, second-the maximum allowed entry index. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00585">585</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab121f57cb66e52bf03ee5aebbd7b54c2"></a><!-- doxytag: member="sch_events.h::SCH_DISABLE_CMD_EID" ref="ab121f57cb66e52bf03ee5aebbd7b54c2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DISABLE_CMD_EID&nbsp;&nbsp;&nbsp;43</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'DISABLE command: slot = d, entry = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000028">Event Message:</a></b></dt><dd><code> 'DISABLE command: slot = d, entry = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">Disable Entry Command </a> is received and successfully processed.</p>
+<p>The <code>slot</code> field specifies the slot index from the Disable command. The <code>entry</code> field specifies the entry index from the Disable command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00481">481</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a16f497f25d045c5e801b50cfaeea8ab1"></a><!-- doxytag: member="sch_events.h::SCH_DISABLE_CMD_ENTRY_ERR_EID" ref="a16f497f25d045c5e801b50cfaeea8ab1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DISABLE_CMD_ENTRY_ERR_EID&nbsp;&nbsp;&nbsp;53</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'DISABLE command: invalid state = d, slot = d, entry = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000036">Event Message:</a></b></dt><dd><code> 'DISABLE command: invalid state = d, slot = d, entry = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">Disable Entry Command </a> is received that specifies a slot that does not have an appropriate State.</p>
+<p>The <code>state</code> parameter identifies the current state of the specified table entry. The state should be either <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">SCH_ENABLED</a>, or <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">SCH_DISABLED</a>. If it is <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">SCH_UNUSED</a>, the operator is not allowed to disable it. Any other value represents a corrupted table. The <code>slot</code> parameter identifies the slot specified in the Disable command. The <code>entry</code> parameter identifies the entry index specified in the Disable command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00603">603</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a10d7bdb94ef40f5f820e7665b67a0eac"></a><!-- doxytag: member="sch_events.h::SCH_ENA_GRP_CMD_EID" ref="a10d7bdb94ef40f5f820e7665b67a0eac" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENA_GRP_CMD_EID&nbsp;&nbsp;&nbsp;44</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'ENABLE GROUP command: match count = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000029">Event Message:</a></b></dt><dd><code> 'ENABLE GROUP command: match count = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">Enable Group Command </a> is received and successfully processed.</p>
+<p>The <code>count</code> field specifies the number of Activities in the Schedule Definition Table that were Enabled due to this command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00496">496</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af4161cac1856709b11fe34d4e4f30271"></a><!-- doxytag: member="sch_events.h::SCH_ENA_GRP_CMD_ERR_EID" ref="af4161cac1856709b11fe34d4e4f30271" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENA_GRP_CMD_ERR_EID&nbsp;&nbsp;&nbsp;54</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'ENABLE GROUP command: invalid argument, no groups selected' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000037">Event Message:</a></b></dt><dd><code> 'ENABLE GROUP command: invalid argument, no groups selected' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">Enable Group Command </a> is received that does not specify either a group or a multi-group. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00615">615</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1693b293344b191bda7ef84366eb67b8"></a><!-- doxytag: member="sch_events.h::SCH_ENA_GRP_NOT_FOUND_ERR_EID" ref="a1693b293344b191bda7ef84366eb67b8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENA_GRP_NOT_FOUND_ERR_EID&nbsp;&nbsp;&nbsp;55</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'ENABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000038">Event Message:</a></b></dt><dd><code> 'ENABLE GROUP command: Neither Group d nor Multi-Group 0x06X found' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">Enable Group Command </a> is received that specifies either a group and/or multi-group that cannot be located as being associated with any Activities defined in the Schedule Definition Table.</p>
+<p>The <code>Group</code> field identifies the Group ID number that was in the received Enable Group command. The <code>Multi-Group</code> field identifies the Multi-Group bit mask that was in the received Enable Group command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00631">631</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a16e0b6b024dea3ae0e43803b80506239"></a><!-- doxytag: member="sch_events.h::SCH_ENA_SYNC_CMD_EID" ref="a16e0b6b024dea3ae0e43803b80506239" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENA_SYNC_CMD_EID&nbsp;&nbsp;&nbsp;46</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Major Frame Synchronization Enabled' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000031">Event Message:</a></b></dt><dd><code> 'Major Frame Synchronization Enabled' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is always automatically issued when the Scheduler receives a <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">Enable Sync Command </a>. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00523">523</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3c2b9df457018122b51e02c4a64ce08d"></a><!-- doxytag: member="sch_events.h::SCH_ENABLE_CMD_ARG_ERR_EID" ref="a3c2b9df457018122b51e02c4a64ce08d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLE_CMD_ARG_ERR_EID&nbsp;&nbsp;&nbsp;50</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'ENABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000033">Event Message:</a></b></dt><dd><code> 'ENABLE cmd: invalid argument, slot=d (&lt;d), entry=d (&lt;d)' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">Enable Entry Command </a> is received that contains either a slot or entry index that is out of the acceptable range.</p>
+<p>The <code>slot</code> parameters identify first-the slot in the command, second-the maximum allowed slot The <code>entry</code> parameters identify first-the entry index in the command, second-the maximum allowed entry index. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00551">551</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad4bc902a2dbfa52aac0f26b8016937fb"></a><!-- doxytag: member="sch_events.h::SCH_ENABLE_CMD_EID" ref="ad4bc902a2dbfa52aac0f26b8016937fb" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLE_CMD_EID&nbsp;&nbsp;&nbsp;42</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'ENABLE command: slot = d, entry = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000027">Event Message:</a></b></dt><dd><code> 'ENABLE command: slot = d, entry = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">Enable Entry Command </a> is received and successfully processed.</p>
+<p>The <code>slot</code> field specifies the slot index from the Enable command. The <code>entry</code> field specifies the entry index from the Enable command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00466">466</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab25b9e84f06d75ae7644b19a5ccc9c86"></a><!-- doxytag: member="sch_events.h::SCH_ENABLE_CMD_ENTRY_ERR_EID" ref="ab25b9e84f06d75ae7644b19a5ccc9c86" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLE_CMD_ENTRY_ERR_EID&nbsp;&nbsp;&nbsp;51</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'ENABLE command: invalid state = d, slot = d, entry = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000034">Event Message:</a></b></dt><dd><code> 'ENABLE command: invalid state = d, slot = d, entry = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">Enable Entry Command </a> is received that specifies a slot that does not have an appropriate State.</p>
+<p>The <code>state</code> parameter identifies the current state of the specified table entry. The state should be either <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">SCH_ENABLED</a>, or <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">SCH_DISABLED</a>. If it is <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">SCH_UNUSED</a>, the operator is not allowed to enable it. Any other value represents a corrupted table. The <code>slot</code> parameter identifies the slot specified in the Enable command. The <code>entry</code> parameter identifies the entry index specified in the Enable command. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00569">569</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2143003d800956b0a42acb189559dc97"></a><!-- doxytag: member="sch_events.h::SCH_INITSTATS_INF_EID" ref="a2143003d800956b0a42acb189559dc97" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_INITSTATS_INF_EID&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'SCH Initialized. Version d.d.d.d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000001">Event Message:</a></b></dt><dd><code> 'SCH Initialized. Version d.d.d.d' </code></dd></dl>
+<dl class="user"><dt><b>Type: INFORMATION</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when the Scheduler App completes its initialization.</p>
+<p>The first <code>d</code> field contains the Application's Major Version Number The second <code>d</code> field contains the Application's Minor Version Number The third <code>d</code> field contains the Application's Revision Number The fourth <code>d</code> field contains the Application's Mission Revision Number </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00055">55</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="affe219cf221b8d99d6f3d16c64e69113"></a><!-- doxytag: member="sch_events.h::SCH_MAJOR_FRAME_SUB_ERR_EID" ref="affe219cf221b8d99d6f3d16c64e69113" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAJOR_FRAME_SUB_ERR_EID&nbsp;&nbsp;&nbsp;14</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error initializing Timers (RC=0x08X)' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000013">Event Message:</a></b></dt><dd><code> 'Error initializing Timers (RC=0x08X)' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated during initialization when the Scheduler Application is attempting to attach to the cFE TIME Services Time Synchronization Signal and start the minor frame timer.</p>
+<p>The <code>RC</code> field identifies the return code from the <a class="el" href="sch__custom_8c.html#a769b51f7ffc7c7711cc7bf0856702a77" title="Custom Late Initialization.">SCH_CustomLateInit</a> function. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00236">236</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1b0be4d0a46e6c95e635156fbd702e81"></a><!-- doxytag: member="sch_events.h::SCH_MD_ERR_EID" ref="a1b0be4d0a46e6c95e635156fbd702e81" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MD_ERR_EID&nbsp;&nbsp;&nbsp;59</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Msg with Invalid message ID Rcvd -- ID = 0x04X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000042">Event Message:</a></b></dt><dd><code> 'Msg with Invalid message ID Rcvd -- ID = 0x04X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when Scheduler obtains a message from its command pipe with a message ID that it did not subscribe to.</p>
+<p>The <code>ID</code> field identifies the Message ID of the obtained message. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00690">690</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a75646ae6d481e98d542a494e3c820d2e"></a><!-- doxytag: member="sch_events.h::SCH_MDT_LOAD_ERR_EID" ref="a75646ae6d481e98d542a494e3c820d2e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MDT_LOAD_ERR_EID&nbsp;&nbsp;&nbsp;10</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error (RC=0x08X) Loading MDT with s' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000009">Event Message:</a></b></dt><dd><code> 'Error (RC=0x08X) Loading MDT with s' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to load its Message Definition Table with cFE Table Services via the CFE_TBL_Load API.</p>
+<p>The <code>RC</code> value is the return code from the CFE_TBL_Load API call and <code>s</code> is the filename that was used for the load attempt. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00172">172</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a60d28cfacc16c1d0e899df00d9af99ca"></a><!-- doxytag: member="sch_events.h::SCH_MDT_REG_ERR_EID" ref="a60d28cfacc16c1d0e899df00d9af99ca" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MDT_REG_ERR_EID&nbsp;&nbsp;&nbsp;8</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error Registering MDT, RC=0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000007">Event Message:</a></b></dt><dd><code> 'Error Registering MDT, RC=0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to register its Message Definition Table with cFE Table Services via the CFE_TBL_Register API.</p>
+<p>The <code>RC</code> value is the return code from the CFE_TBL_Register API call. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00142">142</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3a3ae4906a52675ab0f10b23605b28b2"></a><!-- doxytag: member="sch_events.h::SCH_MESSAGE_TABLE_EID" ref="a3a3ae4906a52675ab0f10b23605b28b2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MESSAGE_TABLE_EID&nbsp;&nbsp;&nbsp;33</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Message tbl verify results - good[d] bad[d] unused[d]' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000024">Event Message:</a></b></dt><dd><code> 'Message tbl verify results - good[d] bad[d] unused[d]' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message provides a statistics summary of the results of validating the contents of a new Message Definition Table.</p>
+<p>The <code>good</code> field specifies the number of entries that were deemed correct. The <code>bad</code> field specifies the number of entries that contained an error. The <code>unused</code> field specifies the number of entries that are empty. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00422">422</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a60de1571f084de6c9bde8353674f8b9a"></a><!-- doxytag: member="sch_events.h::SCH_MESSAGE_TBL_ERR_EID" ref="a60de1571f084de6c9bde8353674f8b9a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MESSAGE_TBL_ERR_EID&nbsp;&nbsp;&nbsp;32</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Message tbl verify err - idx[d] mid[0xX] len[d] buf[d]' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000023">Event Message:</a></b></dt><dd><code> 'Message tbl verify err - idx[d] mid[0xX] len[d] buf[d]' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when the operator has requested validation of a new Message Definition Table and it contains an error.</p>
+<p>The <code>idx</code> field specifies the index into the Message Definition Table containing the error. The index is a linear count with the first entry in the table being index zero. The <code>mid</code> field specifies the contents of the Message ID field for the entry in error. The <code>len</code> field specifies the contents of the Message Length field for the entry in error. The <code>buf</code> field specifies the index into an empty message that contains data. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00406">406</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a681ef7909a2bf197cdc1455f20b75a41"></a><!-- doxytag: member="sch_events.h::SCH_MINOR_FRAME_TIMER_ACC_WARN_EID" ref="a681ef7909a2bf197cdc1455f20b75a41" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MINOR_FRAME_TIMER_ACC_WARN_EID&nbsp;&nbsp;&nbsp;13</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'OS Timer Accuracy (d &gt; reqd d usec) requires Minor Frame MET sync' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000012">Event Message:</a></b></dt><dd><code> 'OS Timer Accuracy (d &gt; reqd d usec) requires Minor Frame MET sync' </code></dd></dl>
+<dl class="user"><dt><b>Type: INFORMATION</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when the minor frame timer obtained from OSAL has a specified clock accuracy that is not adequate enough for the Scheduler to maintain precise enough timing. The Scheduler will try to maintain conistent timing by implementing an additional minor frame synchronization to the MET clock. This means the Scheduler may end up needing to process more than one minor frame at a time if the minor frame timer does not stay close enough to required time.</p>
+<p>The first <code>d</code> field specifies the clock accuracy (in microseconds) obtained for the minor frame timer and the second <code>d</code> field specifies the clock accuracy (in microseconds) that Scheduler has determined is necessary to maintain adequate timing. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00221">221</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a44d4138566976dff1e1cd1b3ba600f82"></a><!-- doxytag: member="sch_events.h::SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID" ref="a44d4138566976dff1e1cd1b3ba600f82" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID&nbsp;&nbsp;&nbsp;12</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error creating Timer (RC=0x08X)' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000011">Event Message:</a></b></dt><dd><code> 'Error creating Timer (RC=0x08X)' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when an error is detected while creating the Timer via the <a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a> call.</p>
+<p>The <code>RC</code> value is the return code from the <a class="el" href="sch__custom_8c.html#a460799de20a37103670e068ec0cd3854" title="Custom Early Initialization.">SCH_CustomEarlyInit</a> call. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00201">201</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a09da55d4b05f10b67a494237cbf79bfe"></a><!-- doxytag: member="sch_events.h::SCH_MULTI_SLOTS_EID" ref="a09da55d4b05f10b67a494237cbf79bfe" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MULTI_SLOTS_EID&nbsp;&nbsp;&nbsp;18</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Multiple slots processed: slot = d, count = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000017">Event Message:</a></b></dt><dd><code> 'Multiple slots processed: slot = d, count = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: INFORMATION</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when the Scheduler determines that more than one minor frame needs to be processed in order to keep up with the current time.</p>
+<p>The <code>slot</code> value identifies the current minor frame. The <code>count</code> field specifies the number of minor frames processed on this cycle. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00297">297</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af8eb00478531ff0f7b5b871387367869"></a><!-- doxytag: member="sch_events.h::SCH_NOISY_MAJOR_FRAME_ERR_EID" ref="af8eb00478531ff0f7b5b871387367869" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_NOISY_MAJOR_FRAME_ERR_EID&nbsp;&nbsp;&nbsp;21</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Major Frame Sync too noisy (Slot d). Disabling synchronization.' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000020">Event Message:</a></b></dt><dd><code> 'Major Frame Sync too noisy (Slot d). Disabling synchronization.' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when two consecutive Major Frame Signals are received significantly earlier than expected.</p>
+<p>The <code>Slot</code> field identifies the current slot when the Major Frame Signal arrived. It should have been the last slot in the schedule. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00351">351</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a333ecd3c41dbc9990b080c681cc4466f"></a><!-- doxytag: member="sch_events.h::SCH_NOOP_CMD_EID" ref="a333ecd3c41dbc9990b080c681cc4466f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_NOOP_CMD_EID&nbsp;&nbsp;&nbsp;40</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'NO-op command. Version d.d.d.d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000025">Event Message:</a></b></dt><dd><code> 'NO-op command. Version d.d.d.d' </code></dd></dl>
+<dl class="user"><dt><b>Type: INFORMATION</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is always automatically issued when Scheduler receives the <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">Scheduler NO-OP Command </a>.</p>
+<p>The first <code>d</code> field contains the Application's Major Version Number The second <code>d</code> field contains the Application's Minor Version Number The third <code>d</code> field contains the Application's Revision Number The fourth <code>d</code> field contains the Application's Mission Revision Number </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00439">439</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5cc7d962d11700c662adc8f339b7e593"></a><!-- doxytag: member="sch_events.h::SCH_PACKET_SEND_EID" ref="a5cc7d962d11700c662adc8f339b7e593" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_PACKET_SEND_EID&nbsp;&nbsp;&nbsp;20</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Activity error: slot = d, entry = d, err = 0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000019">Event Message:</a></b></dt><dd><code> 'Activity error: slot = d, entry = d, err = 0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when an Send Message Activity fails to send the message via the CFE_SB_SendMsg API.</p>
+<p>The <code>slot</code> field identifies the minor frame in the Schedule Definition Table containing the activity that failed. The <code>entry</code> field identifies the entry in the minor frame that failed. The <code>err</code> field specifies the return code from the CFE_SB_SendMsg API. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00336">336</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a413a36e0a66d1471334fc7566d4f8aab"></a><!-- doxytag: member="sch_events.h::SCH_RESET_CMD_EID" ref="a413a36e0a66d1471334fc7566d4f8aab" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_RESET_CMD_EID&nbsp;&nbsp;&nbsp;41</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'RESET command' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000026">Event Message:</a></b></dt><dd><code> 'RESET command' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is always automatically issued in response to a Scheduler <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">Reset Counters command </a> </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00451">451</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6782d568df5b282bce3d5a11e8e76bc5"></a><!-- doxytag: member="sch_events.h::SCH_SAME_SLOT_EID" ref="a6782d568df5b282bce3d5a11e8e76bc5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SAME_SLOT_EID&nbsp;&nbsp;&nbsp;16</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Slot did not increment: slot = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000015">Event Message:</a></b></dt><dd><code> 'Slot did not increment: slot = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when the Scheduler has determined that it has awoken in the same minor frame slot as the last cycle. It will not perform any activities this cycle and may need to perform two sets of activities next cycle to make up for the lost time.</p>
+<p>The <code>d</code> field identifies the Minor Frame (slot) since the last Major Frame Signal. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00266">266</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aaf1c92d4e949026b4f85c2f79210b47a"></a><!-- doxytag: member="sch_events.h::SCH_SCHEDULE_TABLE_EID" ref="aaf1c92d4e949026b4f85c2f79210b47a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SCHEDULE_TABLE_EID&nbsp;&nbsp;&nbsp;31</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Schedule table verify results -- good[d] bad[d] unused[d]' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000022">Event Message:</a></b></dt><dd><code> 'Schedule table verify results -- good[d] bad[d] unused[d]' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message provides a statistics summary of the results of validating the contents of a new Schedule Definition Table.</p>
+<p>The <code>good</code> field specifies the number of entries that were deemed correct. The <code>bad</code> field specifies the number of entries that contained an error. The <code>unused</code> field specifies the number of entries that are empty. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00388">388</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7d5634d49287b21e94b50cef2b02172d"></a><!-- doxytag: member="sch_events.h::SCH_SCHEDULE_TBL_ERR_EID" ref="a7d5634d49287b21e94b50cef2b02172d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SCHEDULE_TBL_ERR_EID&nbsp;&nbsp;&nbsp;30</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Schedule tbl verify error - idx[d] ena[d] typ[d] fre[d] rem[d] msg[d] grp[0x08X]' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000021">Event Message:</a></b></dt><dd><code> 'Schedule tbl verify error - idx[d] ena[d] typ[d] fre[d] rem[d] msg[d] grp[0x08X]' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when the operator has requested validation of a new Schedule Definition Table and it contains an error.</p>
+<p>The <code>idx</code> field specifies the index into the Schedule Definition Table containing the error. The index is a linear count with the first entry in the table being index zero. The <code>ena</code> field specifies the contents of the Enable/Disable field for the entry in error. The <code>typ</code> field specifies the contents of the Activity Type field for the entry in error. The <code>fre</code> field specifies the contents of the Frequency field for the entry in error. The <code>rem</code> field specifies the contents of the Remainder field for the entry in error. The <code>msg</code> field specifies the contents of the Message Index for the entry in error. The <code>grp</code> field specifies the contents of the Group/Multi-Group field for the entry in error. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00372">372</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a00b148cce3c683c09b56029c416ea387"></a><!-- doxytag: member="sch_events.h::SCH_SDT_LOAD_ERR_EID" ref="a00b148cce3c683c09b56029c416ea387" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SDT_LOAD_ERR_EID&nbsp;&nbsp;&nbsp;9</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error (RC=0x08X) Loading SDT with s' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000008">Event Message:</a></b></dt><dd><code> 'Error (RC=0x08X) Loading SDT with s' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to load its Schedule Definition Table with cFE Table Services via the CFE_TBL_Load API.</p>
+<p>The <code>RC</code> value is the return code from the CFE_TBL_Load API call and <code>s</code> is the filename that was used for the load attempt. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00157">157</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afdb83b5dd5111305728c15e192ba6bb7"></a><!-- doxytag: member="sch_events.h::SCH_SDT_REG_ERR_EID" ref="afdb83b5dd5111305728c15e192ba6bb7" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SDT_REG_ERR_EID&nbsp;&nbsp;&nbsp;7</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error Registering SDT, RC=0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000006">Event Message:</a></b></dt><dd><code> 'Error Registering SDT, RC=0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to register its Schedule Definition Table with cFE Table Services via the CFE_TBL_Register API.</p>
+<p>The <code>RC</code> value is the return code from the CFE_TBL_Register API call. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00128">128</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad6719efdf25d2fd4d049cc76540a59f2"></a><!-- doxytag: member="sch_events.h::SCH_SEM_CREATE_ERR_EID" ref="ad6719efdf25d2fd4d049cc76540a59f2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SEM_CREATE_ERR_EID&nbsp;&nbsp;&nbsp;15</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error creating Main Loop Timing Semaphore (RC=0x08X)' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000014">Event Message:</a></b></dt><dd><code> 'Error creating Main Loop Timing Semaphore (RC=0x08X)' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when Scheduler is unable to create the necessary semaphore used to synchronize itself with the Major and Minor Frame timing sources.</p>
+<p>The <code>RC</code> value is the return code obtained from the OS_BinSemCreate API. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00250">250</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aafd0af9dff5ed932aefd1a94cf6ee4b9"></a><!-- doxytag: member="sch_events.h::SCH_SEND_DIAG_CMD_EID" ref="aafd0af9dff5ed932aefd1a94cf6ee4b9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SEND_DIAG_CMD_EID&nbsp;&nbsp;&nbsp;47</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Transmitting Diagnostic Message' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000032">Event Message:</a></b></dt><dd><code> 'Transmitting Diagnostic Message' </code></dd></dl>
+<dl class="user"><dt><b>Type: DEBUG</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is always automatically issued when the Scheduler receives a <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">Send Diagnostic Telemetry Command </a>. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00535">535</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3d22029ece03daab899155c861a90db3"></a><!-- doxytag: member="sch_events.h::SCH_SKIPPED_SLOTS_EID" ref="a3d22029ece03daab899155c861a90db3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SKIPPED_SLOTS_EID&nbsp;&nbsp;&nbsp;17</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Slots skipped: slot = d, count = d' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000016">Event Message:</a></b></dt><dd><code> 'Slots skipped: slot = d, count = d' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is generated when a significant jump in minor frame timing has occurred and the Scheduler has determined that catching up is not feasible.</p>
+<p>The <code>slot</code> value identifies what the minor frame to be executed is. The <code>count</code> field identifies the number of minor frames that were skipped in order to get to the current minor frame. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00282">282</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1935c5e4374cf3af5c7bcf0473a9e4a1"></a><!-- doxytag: member="sch_events.h::SCH_SUB_GND_CMD_ERR_EID" ref="a1935c5e4374cf3af5c7bcf0473a9e4a1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SUB_GND_CMD_ERR_EID&nbsp;&nbsp;&nbsp;5</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error Subscribing to GND CMD(MID=0x04X), RC=0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000005">Event Message:</a></b></dt><dd><code> 'Error Subscribing to GND CMD(MID=0x04X), RC=0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to subscribe to its Ground commands via the CFE_SB_Subscribe API.</p>
+<p>The <code>MID</code> value identifies the Message ID that Scheduler was attempting to subscribe to. The <code>RC</code> value contains the return code that was obtained from the CFE_SB_Subscribe API. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00114">114</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae3f383a940a0199ce06958cb1d422314"></a><!-- doxytag: member="sch_events.h::SCH_SUB_HK_REQ_ERR_EID" ref="ae3f383a940a0199ce06958cb1d422314" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SUB_HK_REQ_ERR_EID&nbsp;&nbsp;&nbsp;4</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p><code> 'Error Subscribing to HK Request(MID=0x04X), RC=0x08X' </code> </p>
+<dl class="cfeevents"><dt><b><a class="el" href="cfeevents.html#_cfeevents000004">Event Message:</a></b></dt><dd><code> 'Error Subscribing to HK Request(MID=0x04X), RC=0x08X' </code></dd></dl>
+<dl class="user"><dt><b>Type: ERROR</b></dt><dd></dd></dl>
+<dl class="user"><dt><b>Cause:</b></dt><dd></dd></dl>
+<p>This event message is issued when Scheduler is unable to subscribe to its Housekeeping Request message via the CFE_SB_Subscribe API.</p>
+<p>The <code>MID</code> value identifies the Message ID that Scheduler was attempting to subscribe to. The <code>RC</code> value contains the return code that was obtained from the CFE_SB_Subscribe API. </p>
+
+<p>Definition at line <a class="el" href="sch__events_8h_source.html#l00098">98</a> of file <a class="el" href="sch__events_8h_source.html">sch_events.h</a>.</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__events_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__events_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_events.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_events.h</h1><a href="sch__events_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">** $Id: sch__events_8h_source.html 1.1 2017/07/01 20:20:56EDT sstrege Exp  $</span>
+<a name="l00003"></a>00003 <span class="comment">**</span>
+<a name="l00004"></a>00004 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00005"></a>00005 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00006"></a>00006 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00007"></a>00007 <span class="comment">**</span>
+<a name="l00008"></a>00008 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00010"></a>00010 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00011"></a>00011 <span class="comment">**  agreement.</span>
+<a name="l00012"></a>00012 <span class="comment">**</span>
+<a name="l00013"></a>00013 <span class="comment">** Subsystem: Scheduler (SCH) event message ID&apos;s</span>
+<a name="l00014"></a>00014 <span class="comment">**</span>
+<a name="l00015"></a>00015 <span class="comment">** Author:</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**</span>
+<a name="l00019"></a>00019 <span class="comment">*/</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="preprocessor">#ifndef _sch_events_</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span><span class="preprocessor">#define _sch_events_</span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span>
+<a name="l00024"></a>00024 <span class="comment">/*************************************************************************</span>
+<a name="l00025"></a>00025 <span class="comment">**</span>
+<a name="l00026"></a>00026 <span class="comment">** Include section</span>
+<a name="l00027"></a>00027 <span class="comment">**</span>
+<a name="l00028"></a>00028 <span class="comment">**************************************************************************/</span>
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="comment">/*</span>
+<a name="l00031"></a>00031 <span class="comment">** (none)</span>
+<a name="l00032"></a>00032 <span class="comment">*/</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="comment">/*************************************************************************</span>
+<a name="l00035"></a>00035 <span class="comment">**</span>
+<a name="l00036"></a>00036 <span class="comment">** Macro definitions</span>
+<a name="l00037"></a>00037 <span class="comment">**</span>
+<a name="l00038"></a>00038 <span class="comment">**************************************************************************/</span>
+<a name="l00039"></a>00039 
+<a name="l00055"></a><a class="code" href="sch__events_8h.html#a2143003d800956b0a42acb189559dc97">00055</a> <span class="preprocessor">#define SCH_INITSTATS_INF_EID                      1</span>
+<a name="l00056"></a>00056 <span class="preprocessor"></span>
+<a name="l00068"></a><a class="code" href="sch__events_8h.html#a256a037e3b606b512b11a07fc9ebcf92">00068</a> <span class="preprocessor">#define SCH_APP_EXIT_EID                     2</span>
+<a name="l00069"></a>00069 <span class="preprocessor"></span>
+<a name="l00082"></a><a class="code" href="sch__events_8h.html#a81c7648731fb8579658ee3ad64f6a6e6">00082</a> <span class="preprocessor">#define SCH_CR_PIPE_ERR_EID                   3</span>
+<a name="l00083"></a>00083 <span class="preprocessor"></span>
+<a name="l00098"></a><a class="code" href="sch__events_8h.html#ae3f383a940a0199ce06958cb1d422314">00098</a> <span class="preprocessor">#define SCH_SUB_HK_REQ_ERR_EID                4</span>
+<a name="l00099"></a>00099 <span class="preprocessor"></span>
+<a name="l00114"></a><a class="code" href="sch__events_8h.html#a1935c5e4374cf3af5c7bcf0473a9e4a1">00114</a> <span class="preprocessor">#define SCH_SUB_GND_CMD_ERR_EID               5</span>
+<a name="l00115"></a>00115 <span class="preprocessor"></span>
+<a name="l00128"></a><a class="code" href="sch__events_8h.html#afdb83b5dd5111305728c15e192ba6bb7">00128</a> <span class="preprocessor">#define SCH_SDT_REG_ERR_EID                   7</span>
+<a name="l00129"></a>00129 <span class="preprocessor"></span>
+<a name="l00142"></a><a class="code" href="sch__events_8h.html#a60d28cfacc16c1d0e899df00d9af99ca">00142</a> <span class="preprocessor">#define SCH_MDT_REG_ERR_EID                   8</span>
+<a name="l00143"></a>00143 <span class="preprocessor"></span>
+<a name="l00157"></a><a class="code" href="sch__events_8h.html#a00b148cce3c683c09b56029c416ea387">00157</a> <span class="preprocessor">#define SCH_SDT_LOAD_ERR_EID                  9</span>
+<a name="l00158"></a>00158 <span class="preprocessor"></span>
+<a name="l00172"></a><a class="code" href="sch__events_8h.html#a75646ae6d481e98d542a494e3c820d2e">00172</a> <span class="preprocessor">#define SCH_MDT_LOAD_ERR_EID                 10</span>
+<a name="l00173"></a>00173 <span class="preprocessor"></span>
+<a name="l00187"></a><a class="code" href="sch__events_8h.html#a9ca4152086ae41a90e6965e646b82208">00187</a> <span class="preprocessor">#define SCH_ACQ_PTR_ERR_EID                  11</span>
+<a name="l00188"></a>00188 <span class="preprocessor"></span>
+<a name="l00201"></a><a class="code" href="sch__events_8h.html#a44d4138566976dff1e1cd1b3ba600f82">00201</a> <span class="preprocessor">#define SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID 12</span>
+<a name="l00202"></a>00202 <span class="preprocessor"></span>
+<a name="l00221"></a><a class="code" href="sch__events_8h.html#a681ef7909a2bf197cdc1455f20b75a41">00221</a> <span class="preprocessor">#define SCH_MINOR_FRAME_TIMER_ACC_WARN_EID   13</span>
+<a name="l00222"></a>00222 <span class="preprocessor"></span>
+<a name="l00236"></a><a class="code" href="sch__events_8h.html#affe219cf221b8d99d6f3d16c64e69113">00236</a> <span class="preprocessor">#define SCH_MAJOR_FRAME_SUB_ERR_EID          14</span>
+<a name="l00237"></a>00237 <span class="preprocessor"></span>
+<a name="l00250"></a><a class="code" href="sch__events_8h.html#ad6719efdf25d2fd4d049cc76540a59f2">00250</a> <span class="preprocessor">#define SCH_SEM_CREATE_ERR_EID               15</span>
+<a name="l00251"></a>00251 <span class="preprocessor"></span>
+<a name="l00266"></a><a class="code" href="sch__events_8h.html#a6782d568df5b282bce3d5a11e8e76bc5">00266</a> <span class="preprocessor">#define SCH_SAME_SLOT_EID                    16</span>
+<a name="l00267"></a>00267 <span class="preprocessor"></span>
+<a name="l00282"></a><a class="code" href="sch__events_8h.html#a3d22029ece03daab899155c861a90db3">00282</a> <span class="preprocessor">#define SCH_SKIPPED_SLOTS_EID                17</span>
+<a name="l00283"></a>00283 <span class="preprocessor"></span>
+<a name="l00297"></a><a class="code" href="sch__events_8h.html#a09da55d4b05f10b67a494237cbf79bfe">00297</a> <span class="preprocessor">#define SCH_MULTI_SLOTS_EID                  18</span>
+<a name="l00298"></a>00298 <span class="preprocessor"></span>
+<a name="l00319"></a><a class="code" href="sch__events_8h.html#a7106064c2a3fc6047b96df11eb32b6ba">00319</a> <span class="preprocessor">#define SCH_CORRUPTION_EID                   19</span>
+<a name="l00320"></a>00320 <span class="preprocessor"></span>
+<a name="l00336"></a><a class="code" href="sch__events_8h.html#a5cc7d962d11700c662adc8f339b7e593">00336</a> <span class="preprocessor">#define SCH_PACKET_SEND_EID                  20</span>
+<a name="l00337"></a>00337 <span class="preprocessor"></span>
+<a name="l00351"></a><a class="code" href="sch__events_8h.html#af8eb00478531ff0f7b5b871387367869">00351</a> <span class="preprocessor">#define SCH_NOISY_MAJOR_FRAME_ERR_EID        21</span>
+<a name="l00352"></a>00352 <span class="preprocessor"></span>
+<a name="l00372"></a><a class="code" href="sch__events_8h.html#a7d5634d49287b21e94b50cef2b02172d">00372</a> <span class="preprocessor">#define SCH_SCHEDULE_TBL_ERR_EID             30</span>
+<a name="l00373"></a>00373 <span class="preprocessor"></span>
+<a name="l00388"></a><a class="code" href="sch__events_8h.html#aaf1c92d4e949026b4f85c2f79210b47a">00388</a> <span class="preprocessor">#define SCH_SCHEDULE_TABLE_EID               31</span>
+<a name="l00389"></a>00389 <span class="preprocessor"></span>
+<a name="l00406"></a><a class="code" href="sch__events_8h.html#a60de1571f084de6c9bde8353674f8b9a">00406</a> <span class="preprocessor">#define SCH_MESSAGE_TBL_ERR_EID              32</span>
+<a name="l00407"></a>00407 <span class="preprocessor"></span>
+<a name="l00422"></a><a class="code" href="sch__events_8h.html#a3a3ae4906a52675ab0f10b23605b28b2">00422</a> <span class="preprocessor">#define SCH_MESSAGE_TABLE_EID                33</span>
+<a name="l00423"></a>00423 <span class="preprocessor"></span>
+<a name="l00439"></a><a class="code" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f">00439</a> <span class="preprocessor">#define SCH_NOOP_CMD_EID                     40</span>
+<a name="l00440"></a>00440 <span class="preprocessor"></span>
+<a name="l00451"></a><a class="code" href="sch__events_8h.html#a413a36e0a66d1471334fc7566d4f8aab">00451</a> <span class="preprocessor">#define SCH_RESET_CMD_EID                    41</span>
+<a name="l00452"></a>00452 <span class="preprocessor"></span>
+<a name="l00466"></a><a class="code" href="sch__events_8h.html#ad4bc902a2dbfa52aac0f26b8016937fb">00466</a> <span class="preprocessor">#define SCH_ENABLE_CMD_EID                   42</span>
+<a name="l00467"></a>00467 <span class="preprocessor"></span>
+<a name="l00481"></a><a class="code" href="sch__events_8h.html#ab121f57cb66e52bf03ee5aebbd7b54c2">00481</a> <span class="preprocessor">#define SCH_DISABLE_CMD_EID                  43</span>
+<a name="l00482"></a>00482 <span class="preprocessor"></span>
+<a name="l00496"></a><a class="code" href="sch__events_8h.html#a10d7bdb94ef40f5f820e7665b67a0eac">00496</a> <span class="preprocessor">#define SCH_ENA_GRP_CMD_EID                  44</span>
+<a name="l00497"></a>00497 <span class="preprocessor"></span>
+<a name="l00511"></a><a class="code" href="sch__events_8h.html#a093d7419db5a9c6b9c6e5577a7b9a0cb">00511</a> <span class="preprocessor">#define SCH_DIS_GRP_CMD_EID                  45</span>
+<a name="l00512"></a>00512 <span class="preprocessor"></span>
+<a name="l00523"></a><a class="code" href="sch__events_8h.html#a16e0b6b024dea3ae0e43803b80506239">00523</a> <span class="preprocessor">#define SCH_ENA_SYNC_CMD_EID                 46</span>
+<a name="l00524"></a>00524 <span class="preprocessor"></span>
+<a name="l00535"></a><a class="code" href="sch__events_8h.html#aafd0af9dff5ed932aefd1a94cf6ee4b9">00535</a> <span class="preprocessor">#define SCH_SEND_DIAG_CMD_EID                47</span>
+<a name="l00536"></a>00536 <span class="preprocessor"></span>
+<a name="l00551"></a><a class="code" href="sch__events_8h.html#a3c2b9df457018122b51e02c4a64ce08d">00551</a> <span class="preprocessor">#define SCH_ENABLE_CMD_ARG_ERR_EID           50</span>
+<a name="l00552"></a>00552 <span class="preprocessor"></span>
+<a name="l00569"></a><a class="code" href="sch__events_8h.html#ab25b9e84f06d75ae7644b19a5ccc9c86">00569</a> <span class="preprocessor">#define SCH_ENABLE_CMD_ENTRY_ERR_EID         51</span>
+<a name="l00570"></a>00570 <span class="preprocessor"></span>
+<a name="l00585"></a><a class="code" href="sch__events_8h.html#abbbdffaf3a9a53153aba67f76b346839">00585</a> <span class="preprocessor">#define SCH_DISABLE_CMD_ARG_ERR_EID          52</span>
+<a name="l00586"></a>00586 <span class="preprocessor"></span>
+<a name="l00603"></a><a class="code" href="sch__events_8h.html#a16f497f25d045c5e801b50cfaeea8ab1">00603</a> <span class="preprocessor">#define SCH_DISABLE_CMD_ENTRY_ERR_EID        53</span>
+<a name="l00604"></a>00604 <span class="preprocessor"></span>
+<a name="l00615"></a><a class="code" href="sch__events_8h.html#af4161cac1856709b11fe34d4e4f30271">00615</a> <span class="preprocessor">#define SCH_ENA_GRP_CMD_ERR_EID              54</span>
+<a name="l00616"></a>00616 <span class="preprocessor"></span>
+<a name="l00631"></a><a class="code" href="sch__events_8h.html#a1693b293344b191bda7ef84366eb67b8">00631</a> <span class="preprocessor">#define SCH_ENA_GRP_NOT_FOUND_ERR_EID        55</span>
+<a name="l00632"></a>00632 <span class="preprocessor"></span>
+<a name="l00643"></a><a class="code" href="sch__events_8h.html#a7b3262d4162697944408caca0d77e53c">00643</a> <span class="preprocessor">#define SCH_DIS_GRP_CMD_ERR_EID              56</span>
+<a name="l00644"></a>00644 <span class="preprocessor"></span>
+<a name="l00659"></a><a class="code" href="sch__events_8h.html#afc9ac9162862cc253aa6752f9144d97d">00659</a> <span class="preprocessor">#define SCH_DIS_GRP_NOT_FOUND_ERR_EID        57</span>
+<a name="l00660"></a>00660 <span class="preprocessor"></span>
+<a name="l00676"></a><a class="code" href="sch__events_8h.html#ae31e105060e10bea7f771a275990d6fb">00676</a> <span class="preprocessor">#define SCH_CC_ERR_EID                       58</span>
+<a name="l00677"></a>00677 <span class="preprocessor"></span>
+<a name="l00690"></a><a class="code" href="sch__events_8h.html#a1b0be4d0a46e6c95e635156fbd702e81">00690</a> <span class="preprocessor">#define SCH_MD_ERR_EID                       59</span>
+<a name="l00691"></a>00691 <span class="preprocessor"></span>
+<a name="l00707"></a><a class="code" href="sch__events_8h.html#af4a0a7f8d400a0613ebbbd0994ef1b17">00707</a> <span class="preprocessor">#define SCH_CMD_LEN_ERR_EID                  60</span>
+<a name="l00708"></a>00708 <span class="preprocessor"></span>
+<a name="l00709"></a>00709 <span class="preprocessor">#endif </span><span class="comment">/* _sch_events_ */</span>
+<a name="l00710"></a>00710 
+<a name="l00711"></a>00711 <span class="comment">/************************/</span>
+<a name="l00712"></a>00712 <span class="comment">/*  End of File Comment */</span>
+<a name="l00713"></a>00713 <span class="comment">/************************/</span>
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__msg_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__msg_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_msg.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_msg.h File Reference</h1><code>#include &quot;common_types.h&quot;</code><br/>
+<code>#include &quot;<a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>&quot;</code><br/>
+
+<p><a href="sch__msg_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Structures</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___no_args_cmd__t.html">SCH_NoArgsCmd_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">No Arguments Command.  <a href="struct_s_c_h___no_args_cmd__t.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___entry_cmd__t.html">SCH_EntryCmd_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Entry Enable/Disable Commands.  <a href="struct_s_c_h___entry_cmd__t.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___group_cmd__t.html">SCH_GroupCmd_t</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Entry Enable/Disable Commands.  <a href="struct_s_c_h___group_cmd__t.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html">SCH_HkPacket_t</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___diag_packet__t.html">SCH_DiagPacket_t</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__msg_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__msg_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_msg.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_msg.h</h1><a href="sch__msg_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">** $Id: sch__msg_8h_source.html 1.1 2017/07/01 20:21:00EDT sstrege Exp  $</span>
+<a name="l00003"></a>00003 <span class="comment">**</span>
+<a name="l00004"></a>00004 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00005"></a>00005 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00006"></a>00006 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00007"></a>00007 <span class="comment">**</span>
+<a name="l00008"></a>00008 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00010"></a>00010 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00011"></a>00011 <span class="comment">**  agreement.</span>
+<a name="l00012"></a>00012 <span class="comment">**</span>
+<a name="l00013"></a>00013 <span class="comment">** Subsystem: Scheduler (SCH) packet definitions</span>
+<a name="l00014"></a>00014 <span class="comment">**</span>
+<a name="l00015"></a>00015 <span class="comment">** Author:</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**</span>
+<a name="l00019"></a>00019 <span class="comment">*/</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="comment">/*************************************************************************</span>
+<a name="l00022"></a>00022 <span class="comment">**</span>
+<a name="l00023"></a>00023 <span class="comment">** Ensure that &quot;this&quot; header is included only once</span>
+<a name="l00024"></a>00024 <span class="comment">**</span>
+<a name="l00025"></a>00025 <span class="comment">**************************************************************************/</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="preprocessor">#ifndef _sch_msg_</span>
+<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">#define _sch_msg_</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span>
+<a name="l00030"></a>00030 <span class="comment">/*************************************************************************</span>
+<a name="l00031"></a>00031 <span class="comment">**</span>
+<a name="l00032"></a>00032 <span class="comment">** Include section</span>
+<a name="l00033"></a>00033 <span class="comment">**</span>
+<a name="l00034"></a>00034 <span class="comment">**************************************************************************/</span>
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="preprocessor">#include &quot;common_types.h&quot;</span>
+<a name="l00037"></a>00037 <span class="preprocessor">#include &quot;<a class="code" href="sch__msgdefs_8h.html">sch_msgdefs.h</a>&quot;</span>
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 <span class="comment">/*************************************************************************</span>
+<a name="l00040"></a>00040 <span class="comment">**</span>
+<a name="l00041"></a>00041 <span class="comment">** SCH command packet structure definitions</span>
+<a name="l00042"></a>00042 <span class="comment">**</span>
+<a name="l00043"></a>00043 <span class="comment">**************************************************************************/</span>
+<a name="l00044"></a>00044 
+<a name="l00045"></a>00045 <span class="comment">/*</span>
+<a name="l00046"></a>00046 <span class="comment">** SCH_SEND_HK_MID, SCH_NOOP_CC, SCH_RESET_CC, </span>
+<a name="l00047"></a>00047 <span class="comment">** SCH_ENABLE_SYNC_CC, SCH_SEND_DIAG_TLM_CC</span>
+<a name="l00048"></a>00048 <span class="comment">*/</span>
+<a name="l00055"></a><a class="code" href="struct_s_c_h___no_args_cmd__t.html">00055</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00056"></a>00056 {
+<a name="l00057"></a><a class="code" href="struct_s_c_h___no_args_cmd__t.html#ad088543b6b40dda5b9bda20a2ea68365">00057</a>     uint8             CmdHeader[CFE_SB_CMD_HDR_SIZE];  
+<a name="l00059"></a>00059 } <a class="code" href="struct_s_c_h___no_args_cmd__t.html" title="No Arguments Command.">SCH_NoArgsCmd_t</a>;
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="comment">/*</span>
+<a name="l00062"></a>00062 <span class="comment">** SCH_ENABLE_CC, SCH_DISABLE_CC</span>
+<a name="l00063"></a>00063 <span class="comment">*/</span>
+<a name="l00069"></a><a class="code" href="struct_s_c_h___entry_cmd__t.html">00069</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00070"></a>00070 {
+<a name="l00071"></a><a class="code" href="struct_s_c_h___entry_cmd__t.html#a43feadfb6b45a5183b751fbb2d9dc504">00071</a>     uint8    CmdHeader[CFE_SB_CMD_HDR_SIZE];          
+<a name="l00073"></a><a class="code" href="struct_s_c_h___entry_cmd__t.html#ab2c4beb6673659795bb1afa5681699e0">00073</a>     uint16   SlotNumber;                              
+<a name="l00075"></a><a class="code" href="struct_s_c_h___entry_cmd__t.html#aa81b9c8fe12cf77493abffab77193e25">00075</a>     uint16   EntryNumber;                             
+<a name="l00078"></a>00078 } <a class="code" href="struct_s_c_h___entry_cmd__t.html" title="Entry Enable/Disable Commands.">SCH_EntryCmd_t</a>;
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080 <span class="comment">/*</span>
+<a name="l00081"></a>00081 <span class="comment">** SCH_ENABLE_GROUP_CC, SCH_DISABLE_GROUP_CC</span>
+<a name="l00082"></a>00082 <span class="comment">*/</span>
+<a name="l00088"></a><a class="code" href="struct_s_c_h___group_cmd__t.html">00088</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00089"></a>00089 {
+<a name="l00090"></a><a class="code" href="struct_s_c_h___group_cmd__t.html#ae7c5ee3a201522ec58dfe3de3d6beb76">00090</a>     uint8    CmdHeader[CFE_SB_CMD_HDR_SIZE];          
+<a name="l00092"></a><a class="code" href="struct_s_c_h___group_cmd__t.html#a7b3bc39e9f4e01e8dad54dea3e7da611">00092</a>     uint32   GroupData;                               
+<a name="l00095"></a>00095 } <a class="code" href="struct_s_c_h___group_cmd__t.html" title="Entry Enable/Disable Commands.">SCH_GroupCmd_t</a>;
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097 
+<a name="l00098"></a>00098 <span class="comment">/*************************************************************************</span>
+<a name="l00099"></a>00099 <span class="comment">**</span>
+<a name="l00100"></a>00100 <span class="comment">** SCH housekeeping telemetry packet definition</span>
+<a name="l00101"></a>00101 <span class="comment">**</span>
+<a name="l00102"></a>00102 <span class="comment">**************************************************************************/</span>
+<a name="l00103"></a>00103 
+<a name="l00108"></a><a class="code" href="struct_s_c_h___hk_packet__t.html">00108</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00109"></a>00109 {
+<a name="l00110"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#ad95ba5317fccfe3fe1e084e8187faa01">00110</a>     uint8    TlmHeader[CFE_SB_TLM_HDR_SIZE];          
+<a name="l00112"></a>00112     <span class="comment">/*</span>
+<a name="l00113"></a>00113 <span class="comment">    ** Command execution counters (ground commands)</span>
+<a name="l00114"></a>00114 <span class="comment">    */</span>
+<a name="l00115"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">00115</a>     uint8    CmdCounter;                              
+<a name="l00118"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">00118</a>     uint8    ErrCounter;                              
+<a name="l00121"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">00121</a>     uint8    SyncToMET;                               
+<a name="l00124"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">00124</a>     uint8    MajorFrameSource;                        
+<a name="l00128"></a>00128     <span class="comment">/*</span>
+<a name="l00129"></a>00129 <span class="comment">    ** Messages sent by schedule table processor</span>
+<a name="l00130"></a>00130 <span class="comment">    */</span>
+<a name="l00131"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">00131</a>     uint32   ScheduleActivitySuccessCount;            
+<a name="l00134"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">00134</a>     uint32   ScheduleActivityFailureCount;            
+<a name="l00138"></a>00138     <span class="comment">/*</span>
+<a name="l00139"></a>00139 <span class="comment">    ** Total schedule table slots processed</span>
+<a name="l00140"></a>00140 <span class="comment">    */</span>
+<a name="l00141"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">00141</a>     uint32   SlotsProcessedCount;                     
+<a name="l00145"></a>00145     <span class="comment">/*</span>
+<a name="l00146"></a>00146 <span class="comment">    ** The number of times that slots were skipped</span>
+<a name="l00147"></a>00147 <span class="comment">    ** (not the number of slots that were skipped)</span>
+<a name="l00148"></a>00148 <span class="comment">    */</span>
+<a name="l00149"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">00149</a>     uint16   SkippedSlotsCount;                       
+<a name="l00155"></a>00155     <span class="comment">/*</span>
+<a name="l00156"></a>00156 <span class="comment">    ** The number of times that multiple slots were processed</span>
+<a name="l00157"></a>00157 <span class="comment">    ** (not the number of slots that were processed)</span>
+<a name="l00158"></a>00158 <span class="comment">    */</span>
+<a name="l00159"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">00159</a>     uint16   MultipleSlotsCount;                      
+<a name="l00166"></a>00166     <span class="comment">/*</span>
+<a name="l00167"></a>00167 <span class="comment">    ** The number of times that SH woke up in the same slot as last time</span>
+<a name="l00168"></a>00168 <span class="comment">    */</span>
+<a name="l00169"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">00169</a>     uint16   SameSlotCount;                           
+<a name="l00173"></a>00173     <span class="comment">/*</span>
+<a name="l00174"></a>00174 <span class="comment">    ** The number of times that a table entry with bad data was processed</span>
+<a name="l00175"></a>00175 <span class="comment">    ** (the entry previously passed validation but then somehow went bad)</span>
+<a name="l00176"></a>00176 <span class="comment">    */</span>
+<a name="l00177"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">00177</a>     uint16   BadTableDataCount;                       
+<a name="l00181"></a>00181     <span class="comment">/*</span>
+<a name="l00182"></a>00182 <span class="comment">    ** The number of tables verified prior to table load</span>
+<a name="l00183"></a>00183 <span class="comment">    */</span>
+<a name="l00184"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">00184</a>     uint16   TableVerifySuccessCount;                 
+<a name="l00187"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">00187</a>     uint16   TableVerifyFailureCount;                 
+<a name="l00190"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">00190</a>     uint32   TablePassCount;                          
+<a name="l00193"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">00193</a>     uint32   ValidMajorFrameCount;                    
+<a name="l00196"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">00196</a>     uint32   MissedMajorFrameCount;                   
+<a name="l00199"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">00199</a>     uint32   UnexpectedMajorFrameCount;               
+<a name="l00202"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">00202</a>     uint16   MinorFramesSinceTone;                    
+<a name="l00205"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">00205</a>     uint16   NextSlotNumber;                          
+<a name="l00208"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">00208</a>     uint16   LastSyncMETSlot;                         
+<a name="l00211"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">00211</a>     <span class="keywordtype">boolean</span>  IgnoreMajorFrame;                        
+<a name="l00214"></a><a class="code" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">00214</a>     <span class="keywordtype">boolean</span>  UnexpectedMajorFrame;                    
+<a name="l00217"></a>00217 } <a class="code" href="struct_s_c_h___hk_packet__t.html">SCH_HkPacket_t</a>;
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219 
+<a name="l00220"></a>00220 <span class="comment">/*************************************************************************</span>
+<a name="l00221"></a>00221 <span class="comment">**</span>
+<a name="l00222"></a>00222 <span class="comment">** SCH diagnostic telemetry packet definition</span>
+<a name="l00223"></a>00223 <span class="comment">**</span>
+<a name="l00224"></a>00224 <span class="comment">**************************************************************************/</span>
+<a name="l00225"></a>00225 
+<a name="l00230"></a><a class="code" href="struct_s_c_h___diag_packet__t.html">00230</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00231"></a>00231 {
+<a name="l00232"></a><a class="code" href="struct_s_c_h___diag_packet__t.html#a3a2bacfee662c8d52108e0c77f20bb12">00232</a>     uint8           TlmHeader[CFE_SB_TLM_HDR_SIZE];   
+<a name="l00234"></a>00234     uint16          EntryStates[<a class="code" href="sch__msgdefs_8h.html#a40c88a844e110e233af9a5232a0e34d8" title="Num Bytes req&amp;#39;d to store entry states in diag pkt (2-bits per entry rounded up...">SCH_NUM_STATUS_BYTES_REQD</a>/2]; 
+<a name="l00241"></a>00241     CFE_SB_MsgId_t   MsgIDs[<a class="code" href="sch__msgdefs_8h.html#a8d4957dff253e544275b614cace1ca72">SCH_TABLE_ENTRIES</a>]; 
+<a name="l00244"></a>00244 } <a class="code" href="struct_s_c_h___diag_packet__t.html">SCH_DiagPacket_t</a>;
+<a name="l00245"></a>00245 
+<a name="l00246"></a>00246 <span class="preprocessor">#endif </span><span class="comment">/* _sch_msg_ */</span>
+<a name="l00247"></a>00247 
+<a name="l00248"></a>00248 <span class="comment">/************************/</span>
+<a name="l00249"></a>00249 <span class="comment">/*  End of File Comment */</span>
+<a name="l00250"></a>00250 <span class="comment">/************************/</span>
+<a name="l00251"></a>00251 
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__msgdefs_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__msgdefs_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_msgdefs.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_msgdefs.h File Reference</h1><code>#include &quot;<a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>&quot;</code><br/>
+
+<p><a href="sch__msgdefs_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a40c88a844e110e233af9a5232a0e34d8">SCH_NUM_STATUS_BYTES_REQD</a>&nbsp;&nbsp;&nbsp;(((SCH_TABLE_ENTRIES+7)/8)*2)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Num Bytes req'd to store entry states in diag pkt (2-bits per entry rounded up to nearest 16-bit word).  <a href="#a40c88a844e110e233af9a5232a0e34d8"></a><br/></td></tr>
+<tr><td colspan="2"><div class="groupHeader">Scheduler App Entry States</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp71609b1db93cc4f352ca8b9953c6c8fa"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">SCH_UNUSED</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">SCH_ENABLED</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">SCH_DISABLED</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Scheduler App Entry Types</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp1d6151dbe381794780569afe905bb6ff"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">SCH_ACTIVITY_NONE</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">SCH_ACTIVITY_SEND_MSG</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Synchronized to MET States</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpec973e11d196c188a0dda59847a95799"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a8b3e88ea3d976c81fd091f6f70e24184">SCH_NOT_SYNCHRONIZED</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a8487279452fc187714c3e3ee70915331">SCH_MINOR_SYNCHRONIZED</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">SCH_PENDING_MAJOR_SYNCH</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#ab92002b3160afcce40146f32b1ebba7f">SCH_MAJOR_SYNCHRONIZED</a>&nbsp;&nbsp;&nbsp;4</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Major Frame Signal Source Identifiers</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp374265a70c205ed4c8d9e42b7b228bc1"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#acf7d4e3206e5b49309b98e923f02e703">SCH_MAJOR_FS_NONE</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a3b5381649512b5aa65e1969d19f82383">SCH_MAJOR_FS_CFE_TIME</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a9b3b0460a88c4ab7d88b77036db14af3">SCH_MAJOR_FS_MINOR_FRAME_TIMER</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Scheduler App Entry Group Bit Masks</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp9d7bbbd07abc0049fac98c68c3ab0c8b"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a4d11ce8a3451dede239ac5968c79674c">SCH_GROUP_NUMBER_BIT_MASK</a>&nbsp;&nbsp;&nbsp;0xFF000000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#af2caad7434b5b411a03ce68d78134d04">SCH_MULTI_GROUP_BIT_MASK</a>&nbsp;&nbsp;&nbsp;0x00FFFFFF</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Scheduler App Miscellaneous Limits</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp67f75376534f56913e353491578207d8"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a86546660af92be9970111a31a68238f4">SCH_MIN_MSG_WORDS</a>&nbsp;&nbsp;&nbsp;(CFE_SB_CMD_HDR_SIZE / 2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a8d4957dff253e544275b614cace1ca72">SCH_TABLE_ENTRIES</a>&nbsp;&nbsp;&nbsp;(SCH_TOTAL_SLOTS * SCH_ENTRIES_PER_SLOT)</td></tr>
+<tr><td colspan="2"><div class="groupHeader">CFS Scheduler Command Codes</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrp2d65390ad6fff5427f65397265cb8002"></a> </p>
+<br/><br/></div></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">SCH_NOOP_CC</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">SCH_RESET_CC</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a>&nbsp;&nbsp;&nbsp;3</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a>&nbsp;&nbsp;&nbsp;4</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">SCH_ENABLE_SYNC_CC</a>&nbsp;&nbsp;&nbsp;6</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">SCH_SEND_DIAG_TLM_CC</a>&nbsp;&nbsp;&nbsp;7</td></tr>
+</table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a72d6c6d22c9c99a7646f57c547afb722"></a><!-- doxytag: member="sch_msgdefs.h::SCH_ACTIVITY_NONE" ref="a72d6c6d22c9c99a7646f57c547afb722" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ACTIVITY_NONE&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00061">61</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a343748e9d5952c672ff8bd29df1759d2"></a><!-- doxytag: member="sch_msgdefs.h::SCH_ACTIVITY_SEND_MSG" ref="a343748e9d5952c672ff8bd29df1759d2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ACTIVITY_SEND_MSG&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00062">62</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a98467babd59a6152a3ffc2b6fcf94a1a"></a><!-- doxytag: member="sch_msgdefs.h::SCH_DISABLE_CC" ref="a98467babd59a6152a3ffc2b6fcf94a1a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DISABLE_CC&nbsp;&nbsp;&nbsp;3</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000004">Name:</a></b></dt><dd>Disable Schedule Entry</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command disables a single activity in the Schedule Definition Table.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000004">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_DisableEntry</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___entry_cmd__t.html" title="Entry Enable/Disable Commands.">SCH_EntryCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#ab121f57cb66e52bf03ee5aebbd7b54c2" title=" &#39;DISABLE command: slot = d, entry = d&#39; ">SCH_DISABLE_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>This command can fail for the following reasons:<ul>
+<li>Invalid Slot (Minor Frame) specified in the command</li>
+<li>Invalid Entry ID specified in the command</li>
+<li>Current state is neither Enabled or Disabled (i.e. - it is corrupted or empty)</li>
+</ul>
+</dd></dl>
+<p>Evidence of failure may be found in the following telemetry:</p>
+<ul>
+<li><b><code>$sc_$cpu_SCH_CMDEC</code> -</b> command error counter will increment</li>
+<li>Command specific error event messages are issued for all error cases</li>
+</ul>
+<dl class="user"><dt><b>Criticality</b></dt><dd>Criticality is dependent entirely on the contents of the Schedule Definition Table entry being disabled</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00267">267</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1eac1a749ee38366ab99cbc899c6fd41"></a><!-- doxytag: member="sch_msgdefs.h::SCH_DISABLE_GROUP_CC" ref="a1eac1a749ee38366ab99cbc899c6fd41" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DISABLE_GROUP_CC&nbsp;&nbsp;&nbsp;5</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000006">Name:</a></b></dt><dd>Disable Group and/or Multi-Groups of Schedule Activities</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command disables a single group and/or a collection of Multi-Group Activities in the Schedule Definition Table.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000006">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_DisableGroup</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___group_cmd__t.html" title="Entry Enable/Disable Commands.">SCH_GroupCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#a093d7419db5a9c6b9c6e5577a7b9a0cb" title=" &#39;DISABLE GROUP command: match count = d&#39; ">SCH_DIS_GRP_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>This command can fail for the following reasons:<ul>
+<li>No Group nor any Multi-Group was specified in the command</li>
+<li>No activities with the specified Group and Multi-Group was located</li>
+</ul>
+</dd></dl>
+<p>Evidence of failure may be found in the following telemetry:</p>
+<ul>
+<li><b><code>$sc_$cpu_SCH_CMDEC</code> -</b> command error counter will increment</li>
+<li>Command specific error event messages are issued for all error cases</li>
+</ul>
+<dl class="user"><dt><b>Criticality</b></dt><dd>Criticality is dependent entirely on the contents of the Schedule Definition Table entries being disabled</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00339">339</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1bb9b6a778c72103f9c48c673496f7ef"></a><!-- doxytag: member="sch_msgdefs.h::SCH_DISABLED" ref="a1bb9b6a778c72103f9c48c673496f7ef" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DISABLED&nbsp;&nbsp;&nbsp;2</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00053">53</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a97454d5cfb6b63441c4464f8dab99098"></a><!-- doxytag: member="sch_msgdefs.h::SCH_ENABLE_CC" ref="a97454d5cfb6b63441c4464f8dab99098" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLE_CC&nbsp;&nbsp;&nbsp;2</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000003">Name:</a></b></dt><dd>Enable Schedule Table Entry</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command enables a single activity in the Schedule Definition Table.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000003">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_EnableEntry</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___entry_cmd__t.html" title="Entry Enable/Disable Commands.">SCH_EntryCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#ad4bc902a2dbfa52aac0f26b8016937fb" title=" &#39;ENABLE command: slot = d, entry = d&#39; ">SCH_ENABLE_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>This command can fail for the following reasons:<ul>
+<li>Invalid Slot (Minor Frame) specified in the command</li>
+<li>Invalid Entry ID specified in the command</li>
+<li>Current state is neither Enabled or Disabled (i.e. - it is corrupted or empty)</li>
+</ul>
+</dd></dl>
+<p>Evidence of failure may be found in the following telemetry:</p>
+<ul>
+<li><b><code>$sc_$cpu_SCH_CMDEC</code> -</b> command error counter will increment</li>
+<li>Command specific error event messages are issued for all error cases</li>
+</ul>
+<dl class="user"><dt><b>Criticality</b></dt><dd>Criticality is dependent entirely on the contents of the Schedule Definition Table entry being enabled</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00231">231</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a35a6fd9478cc7dbb5936bcc4b5e54a8d"></a><!-- doxytag: member="sch_msgdefs.h::SCH_ENABLE_GROUP_CC" ref="a35a6fd9478cc7dbb5936bcc4b5e54a8d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLE_GROUP_CC&nbsp;&nbsp;&nbsp;4</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000005">Name:</a></b></dt><dd>Enable Group and/or Multi-Groups of Schedule Activities</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command enables a single group and/or a collection of Multi-Group Activities in the Schedule Definition Table.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000005">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_EnableGroup</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___group_cmd__t.html" title="Entry Enable/Disable Commands.">SCH_GroupCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#a10d7bdb94ef40f5f820e7665b67a0eac" title=" &#39;ENABLE GROUP command: match count = d&#39; ">SCH_ENA_GRP_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>This command can fail for the following reasons:<ul>
+<li>No Group nor any Multi-Group was specified in the command</li>
+<li>No activities with the specified Group and Multi-Group was located</li>
+</ul>
+</dd></dl>
+<p>Evidence of failure may be found in the following telemetry:</p>
+<ul>
+<li><b><code>$sc_$cpu_SCH_CMDEC</code> -</b> command error counter will increment</li>
+<li>Command specific error event messages are issued for all error cases</li>
+</ul>
+<dl class="user"><dt><b>Criticality</b></dt><dd>Criticality is dependent entirely on the contents of the Schedule Definition Table entries being enabled</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00303">303</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a988bd1a3fd08823654b2bdf4f695c6b3"></a><!-- doxytag: member="sch_msgdefs.h::SCH_ENABLE_SYNC_CC" ref="a988bd1a3fd08823654b2bdf4f695c6b3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLE_SYNC_CC&nbsp;&nbsp;&nbsp;6</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000007">Name:</a></b></dt><dd>Enable Major Frame Synchronization</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command allows the operator to enable processing and synchronization of the Major Frame Signal to the processing of the Schedule Definition Table.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000007">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_EnableSync</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___no_args_cmd__t.html" title="No Arguments Command.">SCH_NoArgsCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#a16e0b6b024dea3ae0e43803b80506239" title=" &#39;Major Frame Synchronization Enabled&#39; ">SCH_ENA_SYNC_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>There are no error conditions for this command. If the Scheduler receives the command, the event is sent (although it may be filtered by EVS) and the counter is incremented unconditionally.</dd></dl>
+<dl class="user"><dt><b>Criticality</b></dt><dd>May cause a number of minor frames to be skipped when the major frame synchronization signal is received and acted upon.</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd></dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00373">373</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4863bca80e851a3a246e36b1b298db73"></a><!-- doxytag: member="sch_msgdefs.h::SCH_ENABLED" ref="a4863bca80e851a3a246e36b1b298db73" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENABLED&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00052">52</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4d11ce8a3451dede239ac5968c79674c"></a><!-- doxytag: member="sch_msgdefs.h::SCH_GROUP_NUMBER_BIT_MASK" ref="a4d11ce8a3451dede239ac5968c79674c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_GROUP_NUMBER_BIT_MASK&nbsp;&nbsp;&nbsp;0xFF000000</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00091">91</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3b5381649512b5aa65e1969d19f82383"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MAJOR_FS_CFE_TIME" ref="a3b5381649512b5aa65e1969d19f82383" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAJOR_FS_CFE_TIME&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00082">82</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9b3b0460a88c4ab7d88b77036db14af3"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MAJOR_FS_MINOR_FRAME_TIMER" ref="a9b3b0460a88c4ab7d88b77036db14af3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAJOR_FS_MINOR_FRAME_TIMER&nbsp;&nbsp;&nbsp;2</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00083">83</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="acf7d4e3206e5b49309b98e923f02e703"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MAJOR_FS_NONE" ref="acf7d4e3206e5b49309b98e923f02e703" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAJOR_FS_NONE&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00081">81</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab92002b3160afcce40146f32b1ebba7f"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MAJOR_SYNCHRONIZED" ref="ab92002b3160afcce40146f32b1ebba7f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAJOR_SYNCHRONIZED&nbsp;&nbsp;&nbsp;4</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00073">73</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a86546660af92be9970111a31a68238f4"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MIN_MSG_WORDS" ref="a86546660af92be9970111a31a68238f4" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MIN_MSG_WORDS&nbsp;&nbsp;&nbsp;(CFE_SB_CMD_HDR_SIZE / 2)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00100">100</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8487279452fc187714c3e3ee70915331"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MINOR_SYNCHRONIZED" ref="a8487279452fc187714c3e3ee70915331" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MINOR_SYNCHRONIZED&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00071">71</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af2caad7434b5b411a03ce68d78134d04"></a><!-- doxytag: member="sch_msgdefs.h::SCH_MULTI_GROUP_BIT_MASK" ref="af2caad7434b5b411a03ce68d78134d04" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MULTI_GROUP_BIT_MASK&nbsp;&nbsp;&nbsp;0x00FFFFFF</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00092">92</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aff13c67ad0852d59ca4ef44879566f57"></a><!-- doxytag: member="sch_msgdefs.h::SCH_NOOP_CC" ref="aff13c67ad0852d59ca4ef44879566f57" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_NOOP_CC&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000001">Name:</a></b></dt><dd>Scheduler No-Op</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command performs no other function than to increment the command execution counter. The command may be used to verify general aliveness of the Scheduler Application.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000001">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_NOOP</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___no_args_cmd__t.html" title="No Arguments Command.">SCH_NoArgsCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#a333ecd3c41dbc9990b080c681cc4466f" title=" &#39;NO-op command. Version d.d.d.d&#39; ">SCH_NOOP_CMD_EID</a> informational event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>There are no error conditions for this command. If the Scheduler receives the command, the event is sent (although it may be filtered by EVS) and the counter is incremented unconditionally.</dd></dl>
+<dl class="user"><dt><b>Criticality</b></dt><dd>None</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd></dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00146">146</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8b3e88ea3d976c81fd091f6f70e24184"></a><!-- doxytag: member="sch_msgdefs.h::SCH_NOT_SYNCHRONIZED" ref="a8b3e88ea3d976c81fd091f6f70e24184" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_NOT_SYNCHRONIZED&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00070">70</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00123">SCH_CustomGetCurrentSlotNumber()</a>, and <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a40c88a844e110e233af9a5232a0e34d8"></a><!-- doxytag: member="sch_msgdefs.h::SCH_NUM_STATUS_BYTES_REQD" ref="a40c88a844e110e233af9a5232a0e34d8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_NUM_STATUS_BYTES_REQD&nbsp;&nbsp;&nbsp;(((SCH_TABLE_ENTRIES+7)/8)*2)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Num Bytes req'd to store entry states in diag pkt (2-bits per entry rounded up to nearest 16-bit word). </p>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00104">104</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3c44f4540cf5de8d07368e21311432ee"></a><!-- doxytag: member="sch_msgdefs.h::SCH_PENDING_MAJOR_SYNCH" ref="a3c44f4540cf5de8d07368e21311432ee" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_PENDING_MAJOR_SYNCH&nbsp;&nbsp;&nbsp;2</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00072">72</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="adebe9b4ed9ccc1528c1198cb1acd4ac8"></a><!-- doxytag: member="sch_msgdefs.h::SCH_RESET_CC" ref="adebe9b4ed9ccc1528c1198cb1acd4ac8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_RESET_CC&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000002">Name:</a></b></dt><dd>Scheduler Reset Counters</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command resets the following counters within the Scheduler housekeeping telemetry:<ul>
+<li>Command Execution Counter ($sc_$cpu_SCH_CMDPC)</li>
+<li>Command Error Counter ($sc_$cpu_SCH_CMDEC)</li>
+<li>Schedule Activities Success Counter ($sc_$cpu_SCH_ActSuccessCtr)</li>
+<li>Schedule Activities Failure Counter ($sc_$cpu_SCH_ActFailCtr)</li>
+<li>Schedule Slots Processed Counter ($sc_$cpu_SCH_SlotProcCtr)</li>
+<li>Schedule Skipping Slots Counter ($sc_$cpu_SCH_SlotSkipCtr)</li>
+<li>Multiple Schedule Slots Processed Counter ($sc_$cpu_SCH_MultSlotCtr)</li>
+<li>Awoke in Same Slot Counter ($sc_$cpu_SCH_SameSlotCtr)</li>
+<li>Corrupted Table Data Counter ($sc_$cpu_SCH_BadTblDataCtr)</li>
+<li>Table Loads Successfully Verified Counter ($sc_$cpu_SCH_TblPassVerifyCtr)</li>
+<li>Table Loads Unsuccessfully Verified Counter ($sc_$cpu_SCH_TblFailVerifyCtr)</li>
+<li>Valid Major Frames Received Counter ($sc_$cpu_SCH_ValidMajorFrameCtr)</li>
+<li>Missed Major Frames Received Counter ($sc_$cpu_SCH_MissedMajorFrameCtr)</li>
+<li>Unexpected Major Frames Received Counter ($sc_$cpu_SCH_UnexpectedMajorFrameCtr)</li>
+</ul>
+</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000002">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_ResetCtrs</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___no_args_cmd__t.html" title="No Arguments Command.">SCH_NoArgsCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#a413a36e0a66d1471334fc7566d4f8aab" title=" &#39;RESET command&#39; ">SCH_RESET_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>There are no error conditions for this command. If the Scheduler receives the command, the event is sent (although it may be filtered by EVS) and the counter is incremented unconditionally.</dd></dl>
+<dl class="user"><dt><b>Criticality</b></dt><dd>This command is not inherently dangerous. However, it is possible for ground systems and on-board safing procedures to be designed such that they react to changes in the counter values that are reset by this command.</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd></dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00195">195</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a88063e9eba628a369ecfeafb22867287"></a><!-- doxytag: member="sch_msgdefs.h::SCH_SEND_DIAG_TLM_CC" ref="a88063e9eba628a369ecfeafb22867287" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SEND_DIAG_TLM_CC&nbsp;&nbsp;&nbsp;7</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcmds"><dt><b><a class="el" href="cfsschcmds.html#_cfsschcmds000008">Name:</a></b></dt><dd>Telemeter Scheduler Diagnostic Packet</dd></dl>
+<dl class="user"><dt><b>Description</b></dt><dd>This command generates and sends the Scheduler Application's Diagnostic Telemetry packet.</dd></dl>
+<dl class="cfsschcmdmnems"><dt><b><a class="el" href="cfsschcmdmnems.html#_cfsschcmdmnems000008">Command Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_SendDiagnostic</code>  </b> </dd></dl>
+<dl class="user"><dt><b>Command Structure</b></dt><dd><a class="el" href="struct_s_c_h___no_args_cmd__t.html" title="No Arguments Command.">SCH_NoArgsCmd_t</a></dd></dl>
+<dl class="user"><dt><b>Command Verification</b></dt><dd>Successful execution of this command may be verified with the following telemetry:<ul>
+<li><b><code>$sc_$cpu_SCH_CMDPC</code> -</b> command execution counter will increment</li>
+<li>The <a class="el" href="sch__events_8h.html#aafd0af9dff5ed932aefd1a94cf6ee4b9" title=" &#39;Transmitting Diagnostic Message&#39; ">SCH_SEND_DIAG_CMD_EID</a> debug event message will be generated</li>
+</ul>
+</dd></dl>
+<dl class="user"><dt><b>Error Conditions</b></dt><dd>There are no error conditions for this command. If the Scheduler receives the command, the event is sent (although it may be filtered by EVS) and the counter is incremented unconditionally.</dd></dl>
+<dl class="user"><dt><b>Criticality</b></dt><dd>None</dd></dl>
+<dl class="see"><dt><b>See also:</b></dt><dd></dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00405">405</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a8d4957dff253e544275b614cace1ca72"></a><!-- doxytag: member="sch_msgdefs.h::SCH_TABLE_ENTRIES" ref="a8d4957dff253e544275b614cace1ca72" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_TABLE_ENTRIES&nbsp;&nbsp;&nbsp;(SCH_TOTAL_SLOTS * SCH_ENTRIES_PER_SLOT)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00101">101</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3c3c3058724b68ff42107cff3fbeeeaa"></a><!-- doxytag: member="sch_msgdefs.h::SCH_UNUSED" ref="a3c3c3058724b68ff42107cff3fbeeeaa" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_UNUSED&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__msgdefs_8h_source.html#l00051">51</a> of file <a class="el" href="sch__msgdefs_8h_source.html">sch_msgdefs.h</a>.</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__msgdefs_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__msgdefs_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_msgdefs.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_msgdefs.h</h1><a href="sch__msgdefs_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">** $Id: sch__msgdefs_8h_source.html 1.1 2017/07/01 20:21:05EDT sstrege Exp  $</span>
+<a name="l00003"></a>00003 <span class="comment">**</span>
+<a name="l00004"></a>00004 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00005"></a>00005 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00006"></a>00006 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00007"></a>00007 <span class="comment">**</span>
+<a name="l00008"></a>00008 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00010"></a>00010 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00011"></a>00011 <span class="comment">**  agreement.</span>
+<a name="l00012"></a>00012 <span class="comment">**</span>
+<a name="l00013"></a>00013 <span class="comment">** Subsystem: Scheduler (SCH) packet macro definitions</span>
+<a name="l00014"></a>00014 <span class="comment">**</span>
+<a name="l00015"></a>00015 <span class="comment">** Author: David Kobe</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**   These Macro definitions have been put in this file (instead of </span>
+<a name="l00019"></a>00019 <span class="comment">**   sch_msg.h) so this file can be included directly into ASIST build </span>
+<a name="l00020"></a>00020 <span class="comment">**   test scripts. ASIST RDL files can accept C language #defines but </span>
+<a name="l00021"></a>00021 <span class="comment">**   can&apos;t handle type definitions. As a result: DO NOT PUT ANY</span>
+<a name="l00022"></a>00022 <span class="comment">**   TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE! </span>
+<a name="l00023"></a>00023 <span class="comment">**   ADD THEM TO sch_msg.h IF NEEDED! </span>
+<a name="l00024"></a>00024 <span class="comment">**</span>
+<a name="l00025"></a>00025 <span class="comment">**</span>
+<a name="l00026"></a>00026 <span class="comment">*/</span>
+<a name="l00027"></a>00027 
+<a name="l00028"></a>00028 <span class="preprocessor">#ifndef _sch_msgdefs_</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="preprocessor">#define _sch_msgdefs_</span>
+<a name="l00030"></a>00030 <span class="preprocessor"></span>
+<a name="l00031"></a>00031 <span class="comment">/*************************************************************************</span>
+<a name="l00032"></a>00032 <span class="comment">**</span>
+<a name="l00033"></a>00033 <span class="comment">** Include section</span>
+<a name="l00034"></a>00034 <span class="comment">**</span>
+<a name="l00035"></a>00035 <span class="comment">**************************************************************************/</span>
+<a name="l00036"></a>00036 
+<a name="l00037"></a>00037 <span class="preprocessor">#include &quot;<a class="code" href="sch__platform__cfg_8h.html">sch_platform_cfg.h</a>&quot;</span>
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040 <span class="comment">/*************************************************************************</span>
+<a name="l00041"></a>00041 <span class="comment">**</span>
+<a name="l00042"></a>00042 <span class="comment">** SCH application definitions</span>
+<a name="l00043"></a>00043 <span class="comment">**</span>
+<a name="l00044"></a>00044 <span class="comment">**************************************************************************/</span>
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 <span class="comment">/*</span>
+<a name="l00047"></a>00047 <span class="comment">** Table value definitions</span>
+<a name="l00048"></a>00048 <span class="comment">*/</span>
+<a name="l00051"></a><a class="code" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">00051</a> <span class="preprocessor">#define SCH_UNUSED              0</span>
+<a name="l00052"></a><a class="code" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">00052</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_ENABLED             1</span>
+<a name="l00053"></a><a class="code" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">00053</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_DISABLED            2</span>
+<a name="l00054"></a>00054 <span class="preprocessor"></span>
+<a name="l00056"></a>00056 <span class="comment">/*</span>
+<a name="l00057"></a>00057 <span class="comment">** Table Entry Activity Types</span>
+<a name="l00058"></a>00058 <span class="comment">*/</span>
+<a name="l00061"></a><a class="code" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">00061</a> <span class="preprocessor">#define SCH_ACTIVITY_NONE       0</span>
+<a name="l00062"></a><a class="code" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">00062</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_ACTIVITY_SEND_MSG   1</span>
+<a name="l00063"></a>00063 <span class="preprocessor"></span>
+<a name="l00065"></a>00065 <span class="comment">/*</span>
+<a name="l00066"></a>00066 <span class="comment">** Synchronized to Mission Elapsed Time States</span>
+<a name="l00067"></a>00067 <span class="comment">*/</span>
+<a name="l00070"></a><a class="code" href="sch__msgdefs_8h.html#a8b3e88ea3d976c81fd091f6f70e24184">00070</a> <span class="preprocessor">#define SCH_NOT_SYNCHRONIZED          0</span>
+<a name="l00071"></a><a class="code" href="sch__msgdefs_8h.html#a8487279452fc187714c3e3ee70915331">00071</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_MINOR_SYNCHRONIZED        1</span>
+<a name="l00072"></a><a class="code" href="sch__msgdefs_8h.html#a3c44f4540cf5de8d07368e21311432ee">00072</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_PENDING_MAJOR_SYNCH       2</span>
+<a name="l00073"></a><a class="code" href="sch__msgdefs_8h.html#ab92002b3160afcce40146f32b1ebba7f">00073</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_MAJOR_SYNCHRONIZED        4</span>
+<a name="l00074"></a>00074 <span class="preprocessor"></span>
+<a name="l00076"></a>00076 <span class="comment">/*</span>
+<a name="l00077"></a>00077 <span class="comment">** Major Frame Signal Source Identifiers</span>
+<a name="l00078"></a>00078 <span class="comment">*/</span>
+<a name="l00081"></a><a class="code" href="sch__msgdefs_8h.html#acf7d4e3206e5b49309b98e923f02e703">00081</a> <span class="preprocessor">#define SCH_MAJOR_FS_NONE               0</span>
+<a name="l00082"></a><a class="code" href="sch__msgdefs_8h.html#a3b5381649512b5aa65e1969d19f82383">00082</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_MAJOR_FS_CFE_TIME           1</span>
+<a name="l00083"></a><a class="code" href="sch__msgdefs_8h.html#a9b3b0460a88c4ab7d88b77036db14af3">00083</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_MAJOR_FS_MINOR_FRAME_TIMER  2</span>
+<a name="l00084"></a>00084 <span class="preprocessor"></span>
+<a name="l00086"></a>00086 <span class="comment">/*</span>
+<a name="l00087"></a>00087 <span class="comment">** Schedule table group data field masks</span>
+<a name="l00088"></a>00088 <span class="comment">*/</span>
+<a name="l00091"></a><a class="code" href="sch__msgdefs_8h.html#a4d11ce8a3451dede239ac5968c79674c">00091</a> <span class="preprocessor">#define SCH_GROUP_NUMBER_BIT_MASK  0xFF000000</span>
+<a name="l00092"></a><a class="code" href="sch__msgdefs_8h.html#af2caad7434b5b411a03ce68d78134d04">00092</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_MULTI_GROUP_BIT_MASK   0x00FFFFFF</span>
+<a name="l00093"></a>00093 <span class="preprocessor"></span>
+<a name="l00095"></a>00095 <span class="comment">/*</span>
+<a name="l00096"></a>00096 <span class="comment">** Message table definitions</span>
+<a name="l00097"></a>00097 <span class="comment">*/</span>
+<a name="l00100"></a><a class="code" href="sch__msgdefs_8h.html#a86546660af92be9970111a31a68238f4">00100</a> <span class="preprocessor">#define SCH_MIN_MSG_WORDS       (CFE_SB_CMD_HDR_SIZE / 2)</span>
+<a name="l00101"></a><a class="code" href="sch__msgdefs_8h.html#a8d4957dff253e544275b614cace1ca72">00101</a> <span class="preprocessor"></span><span class="preprocessor">#define SCH_TABLE_ENTRIES       (SCH_TOTAL_SLOTS * SCH_ENTRIES_PER_SLOT)</span>
+<a name="l00102"></a>00102 <span class="preprocessor"></span>
+<a name="l00104"></a><a class="code" href="sch__msgdefs_8h.html#a40c88a844e110e233af9a5232a0e34d8">00104</a> <span class="preprocessor">#define SCH_NUM_STATUS_BYTES_REQD    (((SCH_TABLE_ENTRIES+7)/8)*2)</span>
+<a name="l00105"></a>00105 <span class="preprocessor"></span>
+<a name="l00108"></a>00108 <span class="comment">/*</span>
+<a name="l00109"></a>00109 <span class="comment">**  SCH command packet command codes </span>
+<a name="l00110"></a>00110 <span class="comment">** (SCH_GND_CMD_MID and SCH_SC_CMD_MID)</span>
+<a name="l00111"></a>00111 <span class="comment">*/</span>
+<a name="l00146"></a><a class="code" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">00146</a> <span class="preprocessor">#define SCH_NOOP_CC             0   </span><span class="comment">/* no-op command */</span>
+<a name="l00147"></a>00147 
+<a name="l00195"></a><a class="code" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">00195</a> <span class="preprocessor">#define SCH_RESET_CC            1   </span><span class="comment">/* Reset HK counters */</span>
+<a name="l00196"></a>00196 
+<a name="l00231"></a><a class="code" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">00231</a> <span class="preprocessor">#define SCH_ENABLE_CC           2   </span><span class="comment">/* Enable Schedule Table Entry */</span>
+<a name="l00232"></a>00232 
+<a name="l00267"></a><a class="code" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">00267</a> <span class="preprocessor">#define SCH_DISABLE_CC          3   </span><span class="comment">/* disable schedule table entry */</span>
+<a name="l00268"></a>00268 
+<a name="l00303"></a><a class="code" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">00303</a> <span class="preprocessor">#define SCH_ENABLE_GROUP_CC     4   </span><span class="comment">/* enable group of entries */</span>
+<a name="l00304"></a>00304 
+<a name="l00339"></a><a class="code" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">00339</a> <span class="preprocessor">#define SCH_DISABLE_GROUP_CC    5   </span><span class="comment">/* disable group of entries */</span>
+<a name="l00340"></a>00340 
+<a name="l00373"></a><a class="code" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">00373</a> <span class="preprocessor">#define SCH_ENABLE_SYNC_CC      6   </span><span class="comment">/* enable major frame synchronization */</span>
+<a name="l00374"></a>00374 
+<a name="l00405"></a><a class="code" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">00405</a> <span class="preprocessor">#define SCH_SEND_DIAG_TLM_CC    7   </span><span class="comment">/* sends diagnostic message packet */</span>
+<a name="l00406"></a>00406 
+<a name="l00409"></a>00409 <span class="preprocessor">#endif </span><span class="comment">/* _sch_msgdefs_ */</span>
+<a name="l00410"></a>00410 
+<a name="l00411"></a>00411 <span class="comment">/************************/</span>
+<a name="l00412"></a>00412 <span class="comment">/*  End of File Comment */</span>
+<a name="l00413"></a>00413 <span class="comment">/************************/</span>
+<a name="l00414"></a>00414 
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__msgids_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__msgids_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/sch_msgids.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_msgids.h File Reference</h1>
+<p><a href="sch__msgids_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgids_8h.html#a074c7822b6c9bd33b492dce99e9457dd">SCH_CMD_MID</a>&nbsp;&nbsp;&nbsp;0x1895</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">SCH Ground Commands Message ID.  <a href="#a074c7822b6c9bd33b492dce99e9457dd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgids_8h.html#a6b68abc81890d0891f1562df904fca7d">SCH_SEND_HK_MID</a>&nbsp;&nbsp;&nbsp;0x1896</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">SCH Send Housekeeping Message ID.  <a href="#a6b68abc81890d0891f1562df904fca7d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgids_8h.html#a2a53f6e7c459112e99857efce7749c57">SCH_UNUSED_MID</a>&nbsp;&nbsp;&nbsp;0x1897</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">SCH MDT Unused Message Message ID.  <a href="#a2a53f6e7c459112e99857efce7749c57"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgids_8h.html#a7b32291e4a3a9cadb92e7133a7c203a6">SCH_HK_TLM_MID</a>&nbsp;&nbsp;&nbsp;0x0897</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">SCH Housekeeping Telemetry Message ID.  <a href="#a7b32291e4a3a9cadb92e7133a7c203a6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__msgids_8h.html#a988982bcdad03c8616a963f1ead6516c">SCH_DIAG_TLM_MID</a>&nbsp;&nbsp;&nbsp;0x0898</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">SCH Diagnostic Telemetry Message ID.  <a href="#a988982bcdad03c8616a963f1ead6516c"></a><br/></td></tr>
+</table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a074c7822b6c9bd33b492dce99e9457dd"></a><!-- doxytag: member="sch_msgids.h::SCH_CMD_MID" ref="a074c7822b6c9bd33b492dce99e9457dd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_CMD_MID&nbsp;&nbsp;&nbsp;0x1895</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>SCH Ground Commands Message ID. </p>
+
+<p>Definition at line <a class="el" href="sch__msgids_8h_source.html#l00026">26</a> of file <a class="el" href="sch__msgids_8h_source.html">sch_msgids.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a988982bcdad03c8616a963f1ead6516c"></a><!-- doxytag: member="sch_msgids.h::SCH_DIAG_TLM_MID" ref="a988982bcdad03c8616a963f1ead6516c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_DIAG_TLM_MID&nbsp;&nbsp;&nbsp;0x0898</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>SCH Diagnostic Telemetry Message ID. </p>
+
+<p>Definition at line <a class="el" href="sch__msgids_8h_source.html#l00038">38</a> of file <a class="el" href="sch__msgids_8h_source.html">sch_msgids.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7b32291e4a3a9cadb92e7133a7c203a6"></a><!-- doxytag: member="sch_msgids.h::SCH_HK_TLM_MID" ref="a7b32291e4a3a9cadb92e7133a7c203a6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_HK_TLM_MID&nbsp;&nbsp;&nbsp;0x0897</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>SCH Housekeeping Telemetry Message ID. </p>
+
+<p>Definition at line <a class="el" href="sch__msgids_8h_source.html#l00037">37</a> of file <a class="el" href="sch__msgids_8h_source.html">sch_msgids.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a6b68abc81890d0891f1562df904fca7d"></a><!-- doxytag: member="sch_msgids.h::SCH_SEND_HK_MID" ref="a6b68abc81890d0891f1562df904fca7d" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SEND_HK_MID&nbsp;&nbsp;&nbsp;0x1896</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>SCH Send Housekeeping Message ID. </p>
+
+<p>Definition at line <a class="el" href="sch__msgids_8h_source.html#l00027">27</a> of file <a class="el" href="sch__msgids_8h_source.html">sch_msgids.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2a53f6e7c459112e99857efce7749c57"></a><!-- doxytag: member="sch_msgids.h::SCH_UNUSED_MID" ref="a2a53f6e7c459112e99857efce7749c57" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_UNUSED_MID&nbsp;&nbsp;&nbsp;0x1897</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>SCH MDT Unused Message Message ID. </p>
+
+<p>Definition at line <a class="el" href="sch__msgids_8h_source.html#l00028">28</a> of file <a class="el" href="sch__msgids_8h_source.html">sch_msgids.h</a>.</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__msgids_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__msgids_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/sch_msgids.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_msgids.h</h1><a href="sch__msgids_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/************************************************************************</span>
+<a name="l00002"></a>00002 <span class="comment">** File:</span>
+<a name="l00003"></a>00003 <span class="comment">**   $Id: sch__msgids_8h_source.html 1.1 2017/07/01 20:21:07EDT sstrege Exp  $</span>
+<a name="l00004"></a>00004 <span class="comment">**</span>
+<a name="l00005"></a>00005 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00006"></a>00006 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00007"></a>00007 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00008"></a>00008 <span class="comment">**</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00010"></a>00010 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00011"></a>00011 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00012"></a>00012 <span class="comment">**  agreement.</span>
+<a name="l00013"></a>00013 <span class="comment">**</span>
+<a name="l00014"></a>00014 <span class="comment">** Purpose: </span>
+<a name="l00015"></a>00015 <span class="comment">**  The CFS Scheduler (SCH) Application Message IDs header file</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**</span>
+<a name="l00019"></a>00019 <span class="comment">*************************************************************************/</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#ifndef _sch_msgids_h_</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span><span class="preprocessor">#define _sch_msgids_h_</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span>
+<a name="l00023"></a>00023 <span class="comment">/**************************</span>
+<a name="l00024"></a>00024 <span class="comment">** SCH Command Message IDs</span>
+<a name="l00025"></a>00025 <span class="comment">***************************/</span>
+<a name="l00026"></a><a class="code" href="sch__msgids_8h.html#a074c7822b6c9bd33b492dce99e9457dd">00026</a> <span class="preprocessor">#define SCH_CMD_MID                    0x1895 </span>
+<a name="l00027"></a><a class="code" href="sch__msgids_8h.html#a6b68abc81890d0891f1562df904fca7d">00027</a> <span class="preprocessor">#define SCH_SEND_HK_MID                0x1896 </span>
+<a name="l00028"></a><a class="code" href="sch__msgids_8h.html#a2a53f6e7c459112e99857efce7749c57">00028</a> <span class="preprocessor">#define SCH_UNUSED_MID                 0x1897 </span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span><span class="comment">/*</span>
+<a name="l00030"></a>00030 <span class="comment">#define SCH_SPARE1                     0x1898</span>
+<a name="l00031"></a>00031 <span class="comment">#define SCH_SPARE2                     0x1899</span>
+<a name="l00032"></a>00032 <span class="comment">*/</span>
+<a name="l00033"></a>00033 
+<a name="l00034"></a>00034 <span class="comment">/***************************</span>
+<a name="l00035"></a>00035 <span class="comment">** SCH Telemetry Message IDs</span>
+<a name="l00036"></a>00036 <span class="comment">****************************/</span>
+<a name="l00037"></a><a class="code" href="sch__msgids_8h.html#a7b32291e4a3a9cadb92e7133a7c203a6">00037</a> <span class="preprocessor">#define SCH_HK_TLM_MID                 0x0897 </span>
+<a name="l00038"></a><a class="code" href="sch__msgids_8h.html#a988982bcdad03c8616a963f1ead6516c">00038</a> <span class="preprocessor">#define SCH_DIAG_TLM_MID               0x0898 </span>
+<a name="l00039"></a>00039 <span class="preprocessor"></span><span class="comment">/* </span>
+<a name="l00040"></a>00040 <span class="comment">#define SCH_TLM_SPARE1                 0x0899</span>
+<a name="l00041"></a>00041 <span class="comment">#define SCH_TLM_SPARE2                 0x089A</span>
+<a name="l00042"></a>00042 <span class="comment">*/</span>
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044 <span class="preprocessor">#endif </span><span class="comment">/* _sch_msgids_h_ */</span>
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046 <span class="comment">/************************/</span>
+<a name="l00047"></a>00047 <span class="comment">/*  End of File Comment */</span>
+<a name="l00048"></a>00048 <span class="comment">/************************/</span>
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__perfids_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__perfids_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/mission_inc/sch_perfids.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_022912094a537929a0bde0dab891b546.html">mission_inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_perfids.h File Reference</h1>
+<p><a href="sch__perfids_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__perfids_8h.html#a4520b74606d3a105b6a79649f0aaf396">SCH_APPMAIN_PERF_ID</a>&nbsp;&nbsp;&nbsp;36</td></tr>
+</table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a4520b74606d3a105b6a79649f0aaf396"></a><!-- doxytag: member="sch_perfids.h::SCH_APPMAIN_PERF_ID" ref="a4520b74606d3a105b6a79649f0aaf396" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_APPMAIN_PERF_ID&nbsp;&nbsp;&nbsp;36</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Definition at line <a class="el" href="sch__perfids_8h_source.html#l00022">22</a> of file <a class="el" href="sch__perfids_8h_source.html">sch_perfids.h</a>.</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__perfids_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__perfids_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/mission_inc/sch_perfids.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_022912094a537929a0bde0dab891b546.html">mission_inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_perfids.h</h1><a href="sch__perfids_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/************************************************************************</span>
+<a name="l00002"></a>00002 <span class="comment">** File: sch_perfids.h</span>
+<a name="l00003"></a>00003 <span class="comment">**</span>
+<a name="l00004"></a>00004 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00005"></a>00005 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00006"></a>00006 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00007"></a>00007 <span class="comment">**</span>
+<a name="l00008"></a>00008 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00010"></a>00010 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00011"></a>00011 <span class="comment">**  agreement.</span>
+<a name="l00012"></a>00012 <span class="comment">**</span>
+<a name="l00013"></a>00013 <span class="comment">** Purpose: </span>
+<a name="l00014"></a>00014 <span class="comment">**  Define SCH Performance IDs</span>
+<a name="l00015"></a>00015 <span class="comment">**</span>
+<a name="l00016"></a>00016 <span class="comment">** Notes:</span>
+<a name="l00017"></a>00017 <span class="comment">**</span>
+<a name="l00018"></a>00018 <span class="comment">*************************************************************************/</span>
+<a name="l00019"></a>00019 <span class="preprocessor">#ifndef _sch_perfids_h_</span>
+<a name="l00020"></a>00020 <span class="preprocessor"></span><span class="preprocessor">#define _sch_perfids_h_</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span>
+<a name="l00022"></a><a class="code" href="sch__perfids_8h.html#a4520b74606d3a105b6a79649f0aaf396">00022</a> <span class="preprocessor">#define SCH_APPMAIN_PERF_ID    36 </span>
+<a name="l00023"></a>00023 <span class="preprocessor"></span>
+<a name="l00024"></a>00024 <span class="preprocessor">#endif </span><span class="comment">/* _sch_perfids_h_ */</span>
+<a name="l00025"></a>00025 
+<a name="l00026"></a>00026 <span class="comment">/************************/</span>
+<a name="l00027"></a>00027 <span class="comment">/*  End of File Comment */</span>
+<a name="l00028"></a>00028 <span class="comment">/************************/</span>
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__platform__cfg_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__platform__cfg_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/sch_platform_cfg.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_platform_cfg.h File Reference</h1>
+<p><a href="sch__platform__cfg_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Defines</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a0efb7feeef71f7d97bbca9bae5dd7c36">SCH_PIPE_DEPTH</a>&nbsp;&nbsp;&nbsp;12</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">SCH Command Pipe Depth.  <a href="#a0efb7feeef71f7d97bbca9bae5dd7c36"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a>&nbsp;&nbsp;&nbsp;100</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">SCH_ENTRIES_PER_SLOT</a>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">SCH_MAX_MESSAGES</a>&nbsp;&nbsp;&nbsp;128</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a9548b3ea10b92bc3ff1940d4a93d41dc">SCH_MDT_MIN_MSG_ID</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a2bd1b9c1ac55dfa973315131d4da9262">SCH_MDT_MAX_MSG_ID</a>&nbsp;&nbsp;&nbsp;CFE_SB_HIGHEST_VALID_MSGID</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">SCH_MAX_MSG_WORDS</a>&nbsp;&nbsp;&nbsp;64</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a3c0b63876d747b502eca1d357db4811b">SCH_MAX_LAG_COUNT</a>&nbsp;&nbsp;&nbsp;(SCH_TOTAL_SLOTS / 2)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#af171824906a7a855149ef5f2a6864f3c">SCH_MAX_SLOTS_PER_WAKEUP</a>&nbsp;&nbsp;&nbsp;5</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a713f29f56d23240c78fc018a571723d3">SCH_MICROS_PER_MAJOR_FRAME</a>&nbsp;&nbsp;&nbsp;1000000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#afa493b73d6d26f4171bce55904f7989e">SCH_SYNC_SLOT_DRIFT_WINDOW</a>&nbsp;&nbsp;&nbsp;5000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">SCH_STARTUP_SYNC_TIMEOUT</a>&nbsp;&nbsp;&nbsp;50000</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">SCH_STARTUP_PERIOD</a>&nbsp;&nbsp;&nbsp;(5*SCH_MICROS_PER_MAJOR_FRAME)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a73f474fd107fc1572d7c19747f088cff">SCH_MAX_NOISY_MAJORF</a>&nbsp;&nbsp;&nbsp;2</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a3e60196dcee964e40ea2fa02432ce9f1">SCH_LIB_PRESENCE</a>&nbsp;&nbsp;&nbsp;1</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a52bf5079eb88fd0172002e0e51f98968">SCH_LIB_DIS_CTR</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">SCH_SCHEDULE_FILENAME</a>&nbsp;&nbsp;&nbsp;&quot;/cf/apps/sch_def_schtbl.tbl&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">SCH_MESSAGE_FILENAME</a>&nbsp;&nbsp;&nbsp;&quot;/cf/apps/sch_def_msgtbl.tbl&quot;</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="sch__platform__cfg_8h.html#a780b944ab488ad7a4c4e4e81161d23f5">SCH_MISSION_REV</a>&nbsp;&nbsp;&nbsp;0</td></tr>
+</table>
+<hr/><h2>Define Documentation</h2>
+<a class="anchor" id="a191125a78975e2a0c581969c7d678b4e"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_ENTRIES_PER_SLOT" ref="a191125a78975e2a0c581969c7d678b4e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_ENTRIES_PER_SLOT&nbsp;&nbsp;&nbsp;5</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000003">Purpose:</a></b></dt><dd>Maximum number of Activities per Minor Frame</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number of activities that can be defined for each Minor Frame.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be at least one </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00065">65</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a52bf5079eb88fd0172002e0e51f98968"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_LIB_DIS_CTR" ref="a52bf5079eb88fd0172002e0e51f98968" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_LIB_DIS_CTR&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000016">Purpose:</a></b></dt><dd>Scheduler API Library Initial Inhibition Count</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Sets the number of times the scheduler must be enabled following library initialization. This allows the scheduler to come up either enabled (set to 0) or disabled (set to a value greater than or equal to 1)</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>This value must be an unsigned 32 bit integer. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00248">248</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3e60196dcee964e40ea2fa02432ce9f1"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_LIB_PRESENCE" ref="a3e60196dcee964e40ea2fa02432ce9f1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_LIB_PRESENCE&nbsp;&nbsp;&nbsp;1</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000015">Purpose:</a></b></dt><dd>Scheduler API Library Usage Status</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Determines whether or not the Scheduler application is using the API library allowing for external tasks to disable and enable schedule processing. Note that if the library is to be used it must be generated as a separate object, and loaded prior to the appplication.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>This value must either be 0 when not using or including the library, or 1 if the library is going to be used. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00234">234</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3c0b63876d747b502eca1d357db4811b"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MAX_LAG_COUNT" ref="a3c0b63876d747b502eca1d357db4811b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAX_LAG_COUNT&nbsp;&nbsp;&nbsp;(SCH_TOTAL_SLOTS / 2)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000008">Purpose:</a></b></dt><dd>Maximum Number of slots allowed for catch-up before skipping</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number of Minor Frames that will be processed in "Catch Up" mode before giving up and skipping ahead.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd></dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00129">129</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a02550ee5880be5061544001811deecec"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MAX_MESSAGES" ref="a02550ee5880be5061544001811deecec" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAX_MESSAGES&nbsp;&nbsp;&nbsp;128</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000004">Purpose:</a></b></dt><dd>Maximum Number of Message Definitions in Message Definition Table</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number of messages that can be defined in Message Definition Table.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be at least one </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00077">77</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abae40b96462eac577fb95363ee030a38"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MAX_MSG_WORDS" ref="abae40b96462eac577fb95363ee030a38" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAX_MSG_WORDS&nbsp;&nbsp;&nbsp;64</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000007">Purpose:</a></b></dt><dd>Maximum Length, in Words, of a Message</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the maximum number of words that can be assigned to a particular message in the Message Definition Table.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be at least large enough to hold the smallest possible message header ** (see CFE_SB_TLM_HDR_SIZE and CFE_SB_CMD_HDR_SIZE) </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00113">113</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a73f474fd107fc1572d7c19747f088cff"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MAX_NOISY_MAJORF" ref="a73f474fd107fc1572d7c19747f088cff" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAX_NOISY_MAJORF&nbsp;&nbsp;&nbsp;2</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000014">Purpose:</a></b></dt><dd>Maximum Number of consecutive Noisy Major Frame signals before they are ignored</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number of consecutive "Noisy" Major Frame Signals (i.e. - signals that occur outside the expected window of their occurence) until the Major Frame signal is automatically ignored and the Minor Frame Timer is used instead.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>This value should never be set to less than two because a single "noisy" Major Frame signal is likely when turning on or switching the 1 Hz signal on the spacecraft. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00218">218</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af171824906a7a855149ef5f2a6864f3c"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MAX_SLOTS_PER_WAKEUP" ref="af171824906a7a855149ef5f2a6864f3c" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MAX_SLOTS_PER_WAKEUP&nbsp;&nbsp;&nbsp;5</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000009">Purpose:</a></b></dt><dd>Maximum Number of Slots to be processed when in "Catch Up" mode</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the maximum number of slots SCH will process when trying to "Catch Up" to the correct slot for the current time.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be at least one </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00142">142</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2bd1b9c1ac55dfa973315131d4da9262"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MDT_MAX_MSG_ID" ref="a2bd1b9c1ac55dfa973315131d4da9262" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MDT_MAX_MSG_ID&nbsp;&nbsp;&nbsp;CFE_SB_HIGHEST_VALID_MSGID</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000006">Purpose:</a></b></dt><dd>Maximum Message ID allowed in Message Definition Table</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the maximum message ID that can be used in the Message Definition Table.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be less than or equal to CFE_SB_HIGHEST_VALID_MSGID and greater than SCH_MDT_MIN_MSG_ID </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00099">99</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a9548b3ea10b92bc3ff1940d4a93d41dc"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MDT_MIN_MSG_ID" ref="a9548b3ea10b92bc3ff1940d4a93d41dc" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MDT_MIN_MSG_ID&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000005">Purpose:</a></b></dt><dd>Minimum Message ID allowed in Message Definition Table</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the minimum message ID that can be used in the Message Definition Table.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be less than or equal to SCH_MDT_MAX_MSG_ID and greater than or equal to 0 </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00088">88</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a052acaa8ebd6c01b4fcc35636ea3b265"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MESSAGE_FILENAME" ref="a052acaa8ebd6c01b4fcc35636ea3b265" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MESSAGE_FILENAME&nbsp;&nbsp;&nbsp;&quot;/cf/apps/sch_def_msgtbl.tbl&quot;</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000018">Purpose:</a></b></dt><dd>Default SCH Message Definition Table Filename</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>The value of this constant defines the default filename of the SCH Message Definition Table</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>The length of each string, including the NULL terminator cannot exceed the OS_MAX_PATH_LEN value. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00278">278</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a713f29f56d23240c78fc018a571723d3"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MICROS_PER_MAJOR_FRAME" ref="a713f29f56d23240c78fc018a571723d3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MICROS_PER_MAJOR_FRAME&nbsp;&nbsp;&nbsp;1000000</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000010">Purpose:</a></b></dt><dd>Major Frame Period (in microseconds)</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number microseconds in a Major Frame.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be greater than zero </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00156">156</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a780b944ab488ad7a4c4e4e81161d23f5"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_MISSION_REV" ref="a780b944ab488ad7a4c4e4e81161d23f5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_MISSION_REV&nbsp;&nbsp;&nbsp;0</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000019">Purpose:</a></b></dt><dd>Mission specific version number for SCH application</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>An application version number consists of four parts: major version number, minor version number, revision number and mission specific revision number. The mission specific revision number is defined here and the other parts are defined in "sch_version.h".</dd></dl>
+<dl class="user"><dt><b>Limits:</b></dt><dd>Must be defined as a numeric value that is greater than or equal to zero. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00295">295</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0efb7feeef71f7d97bbca9bae5dd7c36"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_PIPE_DEPTH" ref="a0efb7feeef71f7d97bbca9bae5dd7c36" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_PIPE_DEPTH&nbsp;&nbsp;&nbsp;12</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>SCH Command Pipe Depth. </p>
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000001">Purpose:</a></b></dt><dd>Software Bus Command Pipe Depth</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number of messages to SCH that can be queued while awaiting processing by the SCH Application.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be greater than zero </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00039">39</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa0a00e5974aa67bfe91ce39d1f2db1d3"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_SCHEDULE_FILENAME" ref="aa0a00e5974aa67bfe91ce39d1f2db1d3" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SCHEDULE_FILENAME&nbsp;&nbsp;&nbsp;&quot;/cf/apps/sch_def_schtbl.tbl&quot;</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000017">Purpose:</a></b></dt><dd>Default SCH Schedule Definition Table Filename</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>The value of this constant defines the default filename of the SCH Schedule Definition Table</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>The length of each string, including the NULL terminator cannot exceed the OS_MAX_PATH_LEN value. </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00263">263</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5cb6fe864442bd1e6a1a0f1050a14680"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_STARTUP_PERIOD" ref="a5cb6fe864442bd1e6a1a0f1050a14680" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_STARTUP_PERIOD&nbsp;&nbsp;&nbsp;(5*SCH_MICROS_PER_MAJOR_FRAME)</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000013">Purpose:</a></b></dt><dd>Time, in microseconds, to wait for first Major Frame Sync to arrive</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the time allowed for the first Major Frame sync signal to arrive before assuming it is not going to occur and switching to a freewheeling mode.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be greater than or equal to the Major Frame Period </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00199">199</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00090">SCH_CustomLateInit()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a539ebcc2074bc1b010ab6127c63ccdb8"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_STARTUP_SYNC_TIMEOUT" ref="a539ebcc2074bc1b010ab6127c63ccdb8" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_STARTUP_SYNC_TIMEOUT&nbsp;&nbsp;&nbsp;50000</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000012">Purpose:</a></b></dt><dd>Time, in milliseconds, to wait for all applications to be started and ready to run</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the timeout for the CFE_ES_WaitForStartupSync call that SCH uses to wait for all of the Applications specified in the startup script to finish initialization. SCH will wait this amount of time before assuming all startup script applications have been started and will then begin nominal schedule processing.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>None </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00185">185</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00090">SCH_CustomLateInit()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afa493b73d6d26f4171bce55904f7989e"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_SYNC_SLOT_DRIFT_WINDOW" ref="afa493b73d6d26f4171bce55904f7989e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_SYNC_SLOT_DRIFT_WINDOW&nbsp;&nbsp;&nbsp;5000</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000011">Purpose:</a></b></dt><dd>Additional time allowed in Sync Slot to wait for Major Frame Sync (in microseconds)</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the additional time allowed in the Syncronization Slot to allow the Major Frame Sync signal to be received and re-synchronize processing.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be less than the normal slot period </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00170">170</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a640d7089f602476608c00d5d9b613315"></a><!-- doxytag: member="sch_platform_cfg.h::SCH_TOTAL_SLOTS" ref="a640d7089f602476608c00d5d9b613315" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define SCH_TOTAL_SLOTS&nbsp;&nbsp;&nbsp;100</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<dl class="cfsschcfg"><dt><b><a class="el" href="cfsschcfg.html#_cfsschcfg000002">Purpose:</a></b></dt><dd>Minor Frame Frequency (in Hz)</dd></dl>
+<dl class="user"><dt><b>Description:</b></dt><dd>Dictates the number of minor frame slots within each Major Frame.</dd></dl>
+<dl class="user"><dt><b>Limits</b></dt><dd>Must be 2 or more and less than 65536 </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__platform__cfg_8h_source.html#l00053">53</a> of file <a class="el" href="sch__platform__cfg_8h_source.html">sch_platform_cfg.h</a>.</p>
+
+<p>Referenced by <a class="el" href="sch__custom_8c_source.html#l00123">SCH_CustomGetCurrentSlotNumber()</a>, <a class="el" href="sch__custom_8c_source.html#l00177">SCH_GetMETSlotNumber()</a>, <a class="el" href="sch__custom_8c_source.html#l00230">SCH_MajorFrameCallback()</a>, and <a class="el" href="sch__custom_8c_source.html#l00349">SCH_MinorFrameCallback()</a>.</p>
+
+</div>
+</div>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__platform__cfg_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__platform__cfg_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: /mnt/disk2/sstrege/cFE650_Testing/build/cpu1/inc/sch_platform_cfg.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_b8d1739202f65d59e58cdec119e32197.html">mnt</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_35def2882668f95914f1fd60fe8204e3.html">disk2</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5b47e9dc76266c8a2322068895bf2d86.html">sstrege</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_06b4137da42c477289d1d8772b2fc1ef.html">cFE650_Testing</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_bb40d815f0f8c1946ec840a2dd86aa68.html">build</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_271b10dbb81786a3023752dae73f29cf.html">cpu1</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_c5109755cf8c98315050f2a34aab358c.html">inc</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_platform_cfg.h</h1><a href="sch__platform__cfg_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/************************************************************************</span>
+<a name="l00002"></a>00002 <span class="comment">** File:</span>
+<a name="l00003"></a>00003 <span class="comment">**   $Id: sch__platform__cfg_8h_source.html 1.1 2017/07/01 20:21:12EDT sstrege Exp  $</span>
+<a name="l00004"></a>00004 <span class="comment">**</span>
+<a name="l00005"></a>00005 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00006"></a>00006 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00007"></a>00007 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00008"></a>00008 <span class="comment">**</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00010"></a>00010 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00011"></a>00011 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00012"></a>00012 <span class="comment">**  agreement.</span>
+<a name="l00013"></a>00013 <span class="comment">**</span>
+<a name="l00014"></a>00014 <span class="comment">** Purpose: </span>
+<a name="l00015"></a>00015 <span class="comment">**  The CFS Scheduler (SCH) Application platform configuration header file</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**</span>
+<a name="l00019"></a>00019 <span class="comment">*************************************************************************/</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#ifndef _sch_platform_cfg_h_</span>
+<a name="l00021"></a>00021 <span class="preprocessor"></span><span class="preprocessor">#define _sch_platform_cfg_h_</span>
+<a name="l00022"></a>00022 <span class="preprocessor"></span>
+<a name="l00023"></a>00023 
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 <span class="comment">/*************************************************************************</span>
+<a name="l00026"></a>00026 <span class="comment">** Macro definitions</span>
+<a name="l00027"></a>00027 <span class="comment">**************************************************************************/</span>
+<a name="l00028"></a>00028 
+<a name="l00039"></a><a class="code" href="sch__platform__cfg_8h.html#a0efb7feeef71f7d97bbca9bae5dd7c36">00039</a> <span class="preprocessor">#define SCH_PIPE_DEPTH      12              </span>
+<a name="l00041"></a>00041 <span class="preprocessor"></span><span class="comment">/*</span>
+<a name="l00042"></a>00042 <span class="comment">** Schedule table definitions...</span>
+<a name="l00043"></a>00043 <span class="comment">*/</span>
+<a name="l00044"></a>00044 
+<a name="l00053"></a><a class="code" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">00053</a> <span class="preprocessor">#define SCH_TOTAL_SLOTS         100    </span><span class="comment">/* SCH wake-up rate (Hz) */</span>
+<a name="l00054"></a>00054 
+<a name="l00055"></a>00055 
+<a name="l00065"></a><a class="code" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">00065</a> <span class="preprocessor">#define SCH_ENTRIES_PER_SLOT    5</span>
+<a name="l00066"></a>00066 <span class="preprocessor"></span>
+<a name="l00067"></a>00067 
+<a name="l00077"></a><a class="code" href="sch__platform__cfg_8h.html#a02550ee5880be5061544001811deecec">00077</a> <span class="preprocessor">#define SCH_MAX_MESSAGES      128</span>
+<a name="l00078"></a>00078 <span class="preprocessor"></span>
+<a name="l00088"></a><a class="code" href="sch__platform__cfg_8h.html#a9548b3ea10b92bc3ff1940d4a93d41dc">00088</a> <span class="preprocessor">#define SCH_MDT_MIN_MSG_ID    0</span>
+<a name="l00089"></a>00089 <span class="preprocessor"></span>
+<a name="l00099"></a><a class="code" href="sch__platform__cfg_8h.html#a2bd1b9c1ac55dfa973315131d4da9262">00099</a> <span class="preprocessor">#define SCH_MDT_MAX_MSG_ID    CFE_SB_HIGHEST_VALID_MSGID</span>
+<a name="l00100"></a>00100 <span class="preprocessor"></span>
+<a name="l00101"></a>00101 
+<a name="l00113"></a><a class="code" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">00113</a> <span class="preprocessor">#define SCH_MAX_MSG_WORDS      64   </span><span class="comment">/* max message length (in words) */</span>
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115 
+<a name="l00116"></a>00116 <span class="comment">/*</span>
+<a name="l00117"></a>00117 <span class="comment">** Limits for how far we can get behind and how much we can do at once...</span>
+<a name="l00118"></a>00118 <span class="comment">*/</span>
+<a name="l00129"></a><a class="code" href="sch__platform__cfg_8h.html#a3c0b63876d747b502eca1d357db4811b">00129</a> <span class="preprocessor">#define SCH_MAX_LAG_COUNT             (SCH_TOTAL_SLOTS / 2)</span>
+<a name="l00130"></a>00130 <span class="preprocessor"></span>
+<a name="l00131"></a>00131 
+<a name="l00142"></a><a class="code" href="sch__platform__cfg_8h.html#af171824906a7a855149ef5f2a6864f3c">00142</a> <span class="preprocessor">#define SCH_MAX_SLOTS_PER_WAKEUP      5</span>
+<a name="l00143"></a>00143 <span class="preprocessor"></span>
+<a name="l00144"></a>00144 <span class="comment">/*</span>
+<a name="l00145"></a>00145 <span class="comment">** Conversion factor for how many microseconds in a wake-up period...</span>
+<a name="l00146"></a>00146 <span class="comment">*/</span>
+<a name="l00156"></a><a class="code" href="sch__platform__cfg_8h.html#a713f29f56d23240c78fc018a571723d3">00156</a> <span class="preprocessor">#define SCH_MICROS_PER_MAJOR_FRAME    1000000</span>
+<a name="l00157"></a>00157 <span class="preprocessor"></span>
+<a name="l00158"></a>00158 
+<a name="l00170"></a><a class="code" href="sch__platform__cfg_8h.html#afa493b73d6d26f4171bce55904f7989e">00170</a> <span class="preprocessor">#define SCH_SYNC_SLOT_DRIFT_WINDOW   5000 </span>
+<a name="l00171"></a>00171 <span class="preprocessor"></span>
+<a name="l00172"></a>00172 
+<a name="l00185"></a><a class="code" href="sch__platform__cfg_8h.html#a539ebcc2074bc1b010ab6127c63ccdb8">00185</a> <span class="preprocessor">#define SCH_STARTUP_SYNC_TIMEOUT   50000 </span>
+<a name="l00186"></a>00186 <span class="preprocessor"></span>
+<a name="l00187"></a>00187 
+<a name="l00199"></a><a class="code" href="sch__platform__cfg_8h.html#a5cb6fe864442bd1e6a1a0f1050a14680">00199</a> <span class="preprocessor">#define SCH_STARTUP_PERIOD   (5*SCH_MICROS_PER_MAJOR_FRAME) </span>
+<a name="l00200"></a>00200 <span class="preprocessor"></span>
+<a name="l00201"></a>00201 
+<a name="l00202"></a>00202 <span class="comment">/*</span>
+<a name="l00203"></a>00203 <span class="comment">** Specifies the limit on the number of consecutive noisy Major Frame signals</span>
+<a name="l00204"></a>00204 <span class="comment">** before we begin to ignore them.</span>
+<a name="l00205"></a>00205 <span class="comment">*/</span>
+<a name="l00218"></a><a class="code" href="sch__platform__cfg_8h.html#a73f474fd107fc1572d7c19747f088cff">00218</a> <span class="preprocessor">#define SCH_MAX_NOISY_MAJORF             2</span>
+<a name="l00219"></a>00219 <span class="preprocessor"></span>
+<a name="l00220"></a>00220 
+<a name="l00234"></a><a class="code" href="sch__platform__cfg_8h.html#a3e60196dcee964e40ea2fa02432ce9f1">00234</a> <span class="preprocessor">#define SCH_LIB_PRESENCE            1</span>
+<a name="l00235"></a>00235 <span class="preprocessor"></span>
+<a name="l00236"></a>00236 
+<a name="l00248"></a><a class="code" href="sch__platform__cfg_8h.html#a52bf5079eb88fd0172002e0e51f98968">00248</a> <span class="preprocessor">#define SCH_LIB_DIS_CTR             0</span>
+<a name="l00249"></a>00249 <span class="preprocessor"></span>
+<a name="l00250"></a>00250 
+<a name="l00263"></a><a class="code" href="sch__platform__cfg_8h.html#aa0a00e5974aa67bfe91ce39d1f2db1d3">00263</a> <span class="preprocessor">#define SCH_SCHEDULE_FILENAME  &quot;/cf/apps/sch_def_schtbl.tbl&quot;</span>
+<a name="l00264"></a>00264 <span class="preprocessor"></span>
+<a name="l00265"></a>00265 
+<a name="l00278"></a><a class="code" href="sch__platform__cfg_8h.html#a052acaa8ebd6c01b4fcc35636ea3b265">00278</a> <span class="preprocessor">#define SCH_MESSAGE_FILENAME   &quot;/cf/apps/sch_def_msgtbl.tbl&quot;</span>
+<a name="l00279"></a>00279 <span class="preprocessor"></span>
+<a name="l00280"></a>00280 
+<a name="l00295"></a><a class="code" href="sch__platform__cfg_8h.html#a780b944ab488ad7a4c4e4e81161d23f5">00295</a> <span class="preprocessor">#define SCH_MISSION_REV            0</span>
+<a name="l00296"></a>00296 <span class="preprocessor"></span>
+<a name="l00297"></a>00297 
+<a name="l00298"></a>00298 <span class="preprocessor">#endif </span><span class="comment">/* _sch_platform_cfg_h_ */</span>
+<a name="l00299"></a>00299 
+<a name="l00300"></a>00300 <span class="comment">/************************/</span>
+<a name="l00301"></a>00301 <span class="comment">/*  End of File Comment */</span>
+<a name="l00302"></a>00302 <span class="comment">/************************/</span>
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__tbldefs_8h.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__tbldefs_8h.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_tbldefs.h File Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_tbldefs.h File Reference</h1>
+<p><a href="sch__tbldefs_8h_source.html">Go to the source code of this file.</a></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Structures</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html">SCH_ScheduleEntry_t</a></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___message_entry__t.html">SCH_MessageEntry_t</a></td></tr>
+</table>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `sch__tbldefs_8h_source.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/sch__tbldefs_8h_source.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: sch/fsw/src/sch_tbldefs.h Source File</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="files.html"><span>File&nbsp;List</span></a></li>
+      <li><a href="globals.html"><span>Globals</span></a></li>
+    </ul>
+  </div>
+  <div class="navpath"><a class="el" href="dir_66bf159e40c144e71169039073992ebf.html">sch</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_59f73f396cabe1b60606d7893817518c.html">fsw</a>&nbsp;&raquo&nbsp;<a class="el" href="dir_5db1b34cd30e1ff1f45f16025c27c361.html">src</a>
+  </div>
+</div>
+<div class="contents">
+<h1>sch_tbldefs.h</h1><a href="sch__tbldefs_8h.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
+<a name="l00002"></a>00002 <span class="comment">** $Id: sch__tbldefs_8h_source.html 1.1 2017/07/01 20:21:15EDT sstrege Exp  $</span>
+<a name="l00003"></a>00003 <span class="comment">**</span>
+<a name="l00004"></a>00004 <span class="comment">**  Copyright (c) 2007-2014 United States Government as represented by the </span>
+<a name="l00005"></a>00005 <span class="comment">**  Administrator of the National Aeronautics and Space Administration. </span>
+<a name="l00006"></a>00006 <span class="comment">**  All Other Rights Reserved.  </span>
+<a name="l00007"></a>00007 <span class="comment">**</span>
+<a name="l00008"></a>00008 <span class="comment">**  This software was created at NASA&apos;s Goddard Space Flight Center.</span>
+<a name="l00009"></a>00009 <span class="comment">**  This software is governed by the NASA Open Source Agreement and may be </span>
+<a name="l00010"></a>00010 <span class="comment">**  used, distributed and modified only pursuant to the terms of that </span>
+<a name="l00011"></a>00011 <span class="comment">**  agreement.</span>
+<a name="l00012"></a>00012 <span class="comment">**</span>
+<a name="l00013"></a>00013 <span class="comment">** Subsystem: Scheduler (SCH) table definitions</span>
+<a name="l00014"></a>00014 <span class="comment">**</span>
+<a name="l00015"></a>00015 <span class="comment">** Author:</span>
+<a name="l00016"></a>00016 <span class="comment">**</span>
+<a name="l00017"></a>00017 <span class="comment">** Notes:</span>
+<a name="l00018"></a>00018 <span class="comment">**</span>
+<a name="l00019"></a>00019 <span class="comment">*/</span>
+<a name="l00020"></a>00020 
+<a name="l00021"></a>00021 <span class="comment">/*************************************************************************</span>
+<a name="l00022"></a>00022 <span class="comment">**</span>
+<a name="l00023"></a>00023 <span class="comment">** Ensure that &quot;this&quot; header is included only once</span>
+<a name="l00024"></a>00024 <span class="comment">**</span>
+<a name="l00025"></a>00025 <span class="comment">**************************************************************************/</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a>00027 <span class="preprocessor">#ifndef _sch_tbldefs_</span>
+<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">#define _sch_tbldefs_</span>
+<a name="l00029"></a>00029 <span class="preprocessor"></span>
+<a name="l00030"></a>00030 <span class="comment">/*************************************************************************</span>
+<a name="l00031"></a>00031 <span class="comment">**</span>
+<a name="l00032"></a>00032 <span class="comment">** SCH table structure definitions</span>
+<a name="l00033"></a>00033 <span class="comment">**</span>
+<a name="l00034"></a>00034 <span class="comment">**************************************************************************/</span>
+<a name="l00035"></a>00035 
+<a name="l00036"></a>00036 <span class="comment">/*</span>
+<a name="l00037"></a>00037 <span class="comment">** Schedule definition table entry</span>
+<a name="l00038"></a>00038 <span class="comment">*/</span>
+<a name="l00039"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html">00039</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00040"></a>00040 {
+<a name="l00041"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html#a9b2c423933436be2fd6d9abed47d327f">00041</a>     uint8    EnableState;          
+<a name="l00042"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html#a0d8fe221038749a9195738d49ff6316b">00042</a>     uint8    Type;                 
+<a name="l00043"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html#ac9e04865964c229207be4b4b08e3b3c5">00043</a>     uint16   Frequency;            
+<a name="l00044"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html#afed927177469e682cd7ac1f0fb18c4d9">00044</a>     uint16   Remainder;            
+<a name="l00045"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html#a0e98dbe9de02959165d823371b14cf0b">00045</a>     uint16   MessageIndex;         
+<a name="l00047"></a><a class="code" href="struct_s_c_h___schedule_entry__t.html#aad89647f606b4a34a3a91e233c1e4dcf">00047</a>     uint32   GroupData;            
+<a name="l00049"></a>00049 } <a class="code" href="struct_s_c_h___schedule_entry__t.html">SCH_ScheduleEntry_t</a>;
+<a name="l00050"></a>00050 
+<a name="l00051"></a>00051 <span class="comment">/*</span>
+<a name="l00052"></a>00052 <span class="comment">** Message definition table entry</span>
+<a name="l00053"></a>00053 <span class="comment">*/</span>
+<a name="l00054"></a><a class="code" href="struct_s_c_h___message_entry__t.html">00054</a> <span class="keyword">typedef</span> <span class="keyword">struct</span>
+<a name="l00055"></a>00055 {
+<a name="l00056"></a><a class="code" href="struct_s_c_h___message_entry__t.html#acabf07c295a2f53d2bbac2af8822d903">00056</a>     uint16   MessageBuffer[<a class="code" href="sch__platform__cfg_8h.html#abae40b96462eac577fb95363ee030a38">SCH_MAX_MSG_WORDS</a>]; 
+<a name="l00058"></a>00058 } <a class="code" href="struct_s_c_h___message_entry__t.html">SCH_MessageEntry_t</a>;
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061 <span class="preprocessor">#endif </span><span class="comment">/* _sch_tbldefs_ */</span>
+</pre></div></div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___diag_packet__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___diag_packet__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_DiagPacket_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_DiagPacket_t Struct Reference</h1><!-- doxytag: class="SCH_DiagPacket_t" -->
+<p><code>#include &lt;<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___diag_packet__t.html#a3a2bacfee662c8d52108e0c77f20bb12">TlmHeader</a> [CFE_SB_TLM_HDR_SIZE]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">cFE Software Bus Telemetry Message Header  <a href="#a3a2bacfee662c8d52108e0c77f20bb12"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___diag_packet__t.html#ae6df456ff6d74eb60796f022e14a8272">EntryStates</a> [SCH_NUM_STATUS_BYTES_REQD/2]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">States of each Schedule Entry.  <a href="#ae6df456ff6d74eb60796f022e14a8272"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">CFE_SB_MsgId_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___diag_packet__t.html#a93cb215dbeda7d00db3cc4871dd28621">MsgIDs</a> [SCH_TABLE_ENTRIES]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Message ID of msg associated with each entry.  <a href="#a93cb215dbeda7d00db3cc4871dd28621"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<dl class="cfsschtlm"><dt><b><a class="el" href="cfsschtlm.html#_cfsschtlm000002">Name:</a></b></dt><dd>Scheduler Diagnostic Telemetry format </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00230">230</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="ae6df456ff6d74eb60796f022e14a8272"></a><!-- doxytag: member="SCH_DiagPacket_t::EntryStates" ref="ae6df456ff6d74eb60796f022e14a8272" args="[SCH_NUM_STATUS_BYTES_REQD/2]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___diag_packet__t.html#ae6df456ff6d74eb60796f022e14a8272">SCH_DiagPacket_t::EntryStates</a>[SCH_NUM_STATUS_BYTES_REQD/2]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>States of each Schedule Entry. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000023">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_EntryStates</code> </b> </dd></dl>
+<p>Each two bits represents the state for a single entry in Schedule Definition Table. Unused=0, Enabled=1, Disabled=2 MSBs are the lowest numbered entry </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00235">235</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a93cb215dbeda7d00db3cc4871dd28621"></a><!-- doxytag: member="SCH_DiagPacket_t::MsgIDs" ref="a93cb215dbeda7d00db3cc4871dd28621" args="[SCH_TABLE_ENTRIES]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">CFE_SB_MsgId_t <a class="el" href="struct_s_c_h___diag_packet__t.html#a93cb215dbeda7d00db3cc4871dd28621">SCH_DiagPacket_t::MsgIDs</a>[SCH_TABLE_ENTRIES]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Message ID of msg associated with each entry. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000024">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_MsgIDs</code> </b> </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00242">242</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a3a2bacfee662c8d52108e0c77f20bb12"></a><!-- doxytag: member="SCH_DiagPacket_t::TlmHeader" ref="a3a2bacfee662c8d52108e0c77f20bb12" args="[CFE_SB_TLM_HDR_SIZE]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___diag_packet__t.html#a3a2bacfee662c8d52108e0c77f20bb12">SCH_DiagPacket_t::TlmHeader</a>[CFE_SB_TLM_HDR_SIZE]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>cFE Software Bus Telemetry Message Header </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00232">232</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___entry_cmd__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___entry_cmd__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_EntryCmd_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_EntryCmd_t Struct Reference</h1><!-- doxytag: class="SCH_EntryCmd_t" -->
+<p>Entry Enable/Disable Commands.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___entry_cmd__t.html#a43feadfb6b45a5183b751fbb2d9dc504">CmdHeader</a> [CFE_SB_CMD_HDR_SIZE]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">cFE Software Bus Command Message Header  <a href="#a43feadfb6b45a5183b751fbb2d9dc504"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___entry_cmd__t.html#ab2c4beb6673659795bb1afa5681699e0">SlotNumber</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Slot Number of Activity whose state is to change.  <a href="#ab2c4beb6673659795bb1afa5681699e0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___entry_cmd__t.html#aa81b9c8fe12cf77493abffab77193e25">EntryNumber</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Entry Number of Activity whose state is to change.  <a href="#aa81b9c8fe12cf77493abffab77193e25"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>Entry Enable/Disable Commands. </p>
+<p>For command details see <a class="el" href="sch__msgdefs_8h.html#a97454d5cfb6b63441c4464f8dab99098">SCH_ENABLE_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a98467babd59a6152a3ffc2b6fcf94a1a">SCH_DISABLE_CC</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00069">69</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="a43feadfb6b45a5183b751fbb2d9dc504"></a><!-- doxytag: member="SCH_EntryCmd_t::CmdHeader" ref="a43feadfb6b45a5183b751fbb2d9dc504" args="[CFE_SB_CMD_HDR_SIZE]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___entry_cmd__t.html#a43feadfb6b45a5183b751fbb2d9dc504">SCH_EntryCmd_t::CmdHeader</a>[CFE_SB_CMD_HDR_SIZE]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>cFE Software Bus Command Message Header </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00071">71</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa81b9c8fe12cf77493abffab77193e25"></a><!-- doxytag: member="SCH_EntryCmd_t::EntryNumber" ref="aa81b9c8fe12cf77493abffab77193e25" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___entry_cmd__t.html#aa81b9c8fe12cf77493abffab77193e25">SCH_EntryCmd_t::EntryNumber</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Entry Number of Activity whose state is to change. </p>
+<p>Valid Range is zero to (<a class="el" href="sch__platform__cfg_8h.html#a191125a78975e2a0c581969c7d678b4e">SCH_ENTRIES_PER_SLOT</a> - 1) </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00075">75</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ab2c4beb6673659795bb1afa5681699e0"></a><!-- doxytag: member="SCH_EntryCmd_t::SlotNumber" ref="ab2c4beb6673659795bb1afa5681699e0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___entry_cmd__t.html#ab2c4beb6673659795bb1afa5681699e0">SCH_EntryCmd_t::SlotNumber</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Slot Number of Activity whose state is to change. </p>
+<p>Valid Range is zero to (<a class="el" href="sch__platform__cfg_8h.html#a640d7089f602476608c00d5d9b613315">SCH_TOTAL_SLOTS</a> - 1) </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00073">73</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___group_cmd__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___group_cmd__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_GroupCmd_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_GroupCmd_t Struct Reference</h1><!-- doxytag: class="SCH_GroupCmd_t" -->
+<p>Entry Enable/Disable Commands.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___group_cmd__t.html#ae7c5ee3a201522ec58dfe3de3d6beb76">CmdHeader</a> [CFE_SB_CMD_HDR_SIZE]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">cFE Software Bus Command Message Header  <a href="#ae7c5ee3a201522ec58dfe3de3d6beb76"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___group_cmd__t.html#a7b3bc39e9f4e01e8dad54dea3e7da611">GroupData</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Group and Multi-Group Identifiers.  <a href="#a7b3bc39e9f4e01e8dad54dea3e7da611"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>Entry Enable/Disable Commands. </p>
+<p>For command details see <a class="el" href="sch__msgdefs_8h.html#a35a6fd9478cc7dbb5936bcc4b5e54a8d">SCH_ENABLE_GROUP_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a1eac1a749ee38366ab99cbc899c6fd41">SCH_DISABLE_GROUP_CC</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00088">88</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="ae7c5ee3a201522ec58dfe3de3d6beb76"></a><!-- doxytag: member="SCH_GroupCmd_t::CmdHeader" ref="ae7c5ee3a201522ec58dfe3de3d6beb76" args="[CFE_SB_CMD_HDR_SIZE]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___group_cmd__t.html#ae7c5ee3a201522ec58dfe3de3d6beb76">SCH_GroupCmd_t::CmdHeader</a>[CFE_SB_CMD_HDR_SIZE]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>cFE Software Bus Command Message Header </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00090">90</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a7b3bc39e9f4e01e8dad54dea3e7da611"></a><!-- doxytag: member="SCH_GroupCmd_t::GroupData" ref="a7b3bc39e9f4e01e8dad54dea3e7da611" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___group_cmd__t.html#a7b3bc39e9f4e01e8dad54dea3e7da611">SCH_GroupCmd_t::GroupData</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Group and Multi-Group Identifiers. </p>
+<p>Most Significant Byte contains a Group ID of 1 to 255, remaining 24 bits identify 24 Multi-Group Identifiers </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00092">92</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___hk_packet__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___hk_packet__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_HkPacket_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_HkPacket_t Struct Reference</h1><!-- doxytag: class="SCH_HkPacket_t" -->
+<p><code>#include &lt;<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#ad95ba5317fccfe3fe1e084e8187faa01">TlmHeader</a> [CFE_SB_TLM_HDR_SIZE]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">cFE Software Bus Telemetry Message Header  <a href="#ad95ba5317fccfe3fe1e084e8187faa01"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">CmdCounter</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Command Counter.  <a href="#af8901da757eaf6f3e35b641f553c4c13"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">ErrCounter</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Command Error Counter.  <a href="#abf0292ba71a3c8c7bb3e13d4de936103"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">SyncToMET</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Status indicating whether slots are synched to MET.  <a href="#ac8936e4ac0482d7f26806bb4cf40b178"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">MajorFrameSource</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Major Frame Signal source identifier.  <a href="#a4ced3d9fa1ab9f5266f697ae96d0f120"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">ScheduleActivitySuccessCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Number of successfully performed activities.  <a href="#aab70a9dbdda2f80b31d12fbfd0da2289"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">ScheduleActivityFailureCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Number of unsuccessful activities attempted.  <a href="#ad60184fa8adc5e7d813e21a5821163ad"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">SlotsProcessedCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Total # of Schedule Slots (Minor Frames) Processed.  <a href="#a44390eb7a92bbd1a9250db505ee55ee1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">SkippedSlotsCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Number of times that slots were skipped.  <a href="#a459d3cd3c53c6a67acdcbf0ba0f1a012"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">MultipleSlotsCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Number of times that multiple slots processed.  <a href="#a695c7b6a3104ab7a6785d893d4160791"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">SameSlotCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of times SCH woke up in the same slot as last time  <a href="#a1561fff6ce46cfd10199ac0fc75bcd8a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">BadTableDataCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of times corrupted table entries were processed  <a href="#a5624d597e340833d8b9722a8574b3d82"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">TableVerifySuccessCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of times table loads successfully verified  <a href="#a126130a80d7a65fb71f6230e97dd135a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">TableVerifyFailureCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of times table loads unsuccessfully verified  <a href="#a901e3dc103b43255e939381c0a0c5bf1"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">TablePassCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of times Schedule Table has been processed  <a href="#a2594e01e5967e7990f894f3d55ce5c5b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">ValidMajorFrameCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of valid Major Frame tones received  <a href="#a5abac9e231383a6b638fc023e9f6b97a"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">MissedMajorFrameCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of missing Major Frame tones  <a href="#a43370c7f9351b5988f71062e91123dca"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">UnexpectedMajorFrameCount</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of unexpected Major Frame tones  <a href="#a54b85845fcacca5e84abd815d25c17f6"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">MinorFramesSinceTone</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"># of Minor Frames since last Major Frame tone  <a href="#a06ae5537a6a8e5977ba9fcb900e6eacd"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">NextSlotNumber</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Next Minor Frame to be processed.  <a href="#aba5afc7b546e7d0015ceed38f75d9443"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">LastSyncMETSlot</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Slot number where Time Sync last occurred.  <a href="#ae4154048d2aadc9ac87fb057d580d996"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">IgnoreMajorFrame</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Major Frame too noisy to trust.  <a href="#a812b8cebfc9f6e0df40429b830d8a46b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">boolean&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">UnexpectedMajorFrame</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Most Recent Major Frame signal was unexpected.  <a href="#a215410bd2db5050ec6ce13f40d51d789"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<dl class="cfsschtlm"><dt><b><a class="el" href="cfsschtlm.html#_cfsschtlm000001">Name:</a></b></dt><dd>Scheduler HK Telemetry format </dd></dl>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00108">108</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="a5624d597e340833d8b9722a8574b3d82"></a><!-- doxytag: member="SCH_HkPacket_t::BadTableDataCount" ref="a5624d597e340833d8b9722a8574b3d82" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a5624d597e340833d8b9722a8574b3d82">SCH_HkPacket_t::BadTableDataCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of times corrupted table entries were processed </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000011">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_BadTblDataCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_BadTableDataCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00177">177</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af8901da757eaf6f3e35b641f553c4c13"></a><!-- doxytag: member="SCH_HkPacket_t::CmdCounter" ref="af8901da757eaf6f3e35b641f553c4c13" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___hk_packet__t.html#af8901da757eaf6f3e35b641f553c4c13">SCH_HkPacket_t::CmdCounter</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Command Counter. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000001">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_CMDPC</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_CmdCounter">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00115">115</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="abf0292ba71a3c8c7bb3e13d4de936103"></a><!-- doxytag: member="SCH_HkPacket_t::ErrCounter" ref="abf0292ba71a3c8c7bb3e13d4de936103" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___hk_packet__t.html#abf0292ba71a3c8c7bb3e13d4de936103">SCH_HkPacket_t::ErrCounter</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Command Error Counter. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000002">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_CMDEC</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_ErrCounter">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00118">118</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a812b8cebfc9f6e0df40429b830d8a46b"></a><!-- doxytag: member="SCH_HkPacket_t::IgnoreMajorFrame" ref="a812b8cebfc9f6e0df40429b830d8a46b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean <a class="el" href="struct_s_c_h___hk_packet__t.html#a812b8cebfc9f6e0df40429b830d8a46b">SCH_HkPacket_t::IgnoreMajorFrame</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Major Frame too noisy to trust. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000021">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_IgnoreMajorFrame</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_IgnoreMajorFrame">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00211">211</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ae4154048d2aadc9ac87fb057d580d996"></a><!-- doxytag: member="SCH_HkPacket_t::LastSyncMETSlot" ref="ae4154048d2aadc9ac87fb057d580d996" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#ae4154048d2aadc9ac87fb057d580d996">SCH_HkPacket_t::LastSyncMETSlot</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Slot number where Time Sync last occurred. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000020">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_LastSyncMETSlot</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_LastSyncMETSlot">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00208">208</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4ced3d9fa1ab9f5266f697ae96d0f120"></a><!-- doxytag: member="SCH_HkPacket_t::MajorFrameSource" ref="a4ced3d9fa1ab9f5266f697ae96d0f120" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___hk_packet__t.html#a4ced3d9fa1ab9f5266f697ae96d0f120">SCH_HkPacket_t::MajorFrameSource</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Major Frame Signal source identifier. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000004">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_MajorFrameSource</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_MajorFrameSource">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00124">124</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a06ae5537a6a8e5977ba9fcb900e6eacd"></a><!-- doxytag: member="SCH_HkPacket_t::MinorFramesSinceTone" ref="a06ae5537a6a8e5977ba9fcb900e6eacd" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a06ae5537a6a8e5977ba9fcb900e6eacd">SCH_HkPacket_t::MinorFramesSinceTone</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of Minor Frames since last Major Frame tone </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000018">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_MinorFrameSinceTone</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_MinorFramesSinceTone">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00202">202</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a43370c7f9351b5988f71062e91123dca"></a><!-- doxytag: member="SCH_HkPacket_t::MissedMajorFrameCount" ref="a43370c7f9351b5988f71062e91123dca" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#a43370c7f9351b5988f71062e91123dca">SCH_HkPacket_t::MissedMajorFrameCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of missing Major Frame tones </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000016">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_MissedMajorFrameCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_MissedMajorFrameCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00196">196</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a695c7b6a3104ab7a6785d893d4160791"></a><!-- doxytag: member="SCH_HkPacket_t::MultipleSlotsCount" ref="a695c7b6a3104ab7a6785d893d4160791" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a695c7b6a3104ab7a6785d893d4160791">SCH_HkPacket_t::MultipleSlotsCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of times that multiple slots processed. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000009">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_MultSlotCtr</code> </b> </dd></dl>
+<p>The number of times that multiple slots (minor frames) were processed in the same minor frame. <a class="el" href="cfsschopr.html#SCHHK_MultipleSlotsCount">Click for more</a> <b>Note:</b> This is NOT the number of slots that were processed </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00159">159</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aba5afc7b546e7d0015ceed38f75d9443"></a><!-- doxytag: member="SCH_HkPacket_t::NextSlotNumber" ref="aba5afc7b546e7d0015ceed38f75d9443" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#aba5afc7b546e7d0015ceed38f75d9443">SCH_HkPacket_t::NextSlotNumber</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Next Minor Frame to be processed. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000019">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_NextSlot</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_NextSlotNumber">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00205">205</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a1561fff6ce46cfd10199ac0fc75bcd8a"></a><!-- doxytag: member="SCH_HkPacket_t::SameSlotCount" ref="a1561fff6ce46cfd10199ac0fc75bcd8a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a1561fff6ce46cfd10199ac0fc75bcd8a">SCH_HkPacket_t::SameSlotCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of times SCH woke up in the same slot as last time </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000010">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_SameSlotCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_SameSlotCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00169">169</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad60184fa8adc5e7d813e21a5821163ad"></a><!-- doxytag: member="SCH_HkPacket_t::ScheduleActivityFailureCount" ref="ad60184fa8adc5e7d813e21a5821163ad" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#ad60184fa8adc5e7d813e21a5821163ad">SCH_HkPacket_t::ScheduleActivityFailureCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of unsuccessful activities attempted. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000006">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_ActFailCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_ScheduleActivityFailureCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00134">134</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aab70a9dbdda2f80b31d12fbfd0da2289"></a><!-- doxytag: member="SCH_HkPacket_t::ScheduleActivitySuccessCount" ref="aab70a9dbdda2f80b31d12fbfd0da2289" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#aab70a9dbdda2f80b31d12fbfd0da2289">SCH_HkPacket_t::ScheduleActivitySuccessCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of successfully performed activities. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000005">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_ActSuccessCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_ScheduleActivitySuccessCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00131">131</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a459d3cd3c53c6a67acdcbf0ba0f1a012"></a><!-- doxytag: member="SCH_HkPacket_t::SkippedSlotsCount" ref="a459d3cd3c53c6a67acdcbf0ba0f1a012" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a459d3cd3c53c6a67acdcbf0ba0f1a012">SCH_HkPacket_t::SkippedSlotsCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of times that slots were skipped. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000008">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_SlotSkipCtr</code> </b> </dd></dl>
+<p>The number of times that a slot (minor frame) was skipped. <a class="el" href="cfsschopr.html#SCHHK_SkippedSlotsCount">Click for more</a> <b>Note:</b> This is NOT the number of slots that were skipped </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00149">149</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a44390eb7a92bbd1a9250db505ee55ee1"></a><!-- doxytag: member="SCH_HkPacket_t::SlotsProcessedCount" ref="a44390eb7a92bbd1a9250db505ee55ee1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#a44390eb7a92bbd1a9250db505ee55ee1">SCH_HkPacket_t::SlotsProcessedCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Total # of Schedule Slots (Minor Frames) Processed. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000007">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_SlotProcCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_SlotsProcessedCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00141">141</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac8936e4ac0482d7f26806bb4cf40b178"></a><!-- doxytag: member="SCH_HkPacket_t::SyncToMET" ref="ac8936e4ac0482d7f26806bb4cf40b178" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___hk_packet__t.html#ac8936e4ac0482d7f26806bb4cf40b178">SCH_HkPacket_t::SyncToMET</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Status indicating whether slots are synched to MET. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000003">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_SyncToMET</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_SyncToMET">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00121">121</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a2594e01e5967e7990f894f3d55ce5c5b"></a><!-- doxytag: member="SCH_HkPacket_t::TablePassCount" ref="a2594e01e5967e7990f894f3d55ce5c5b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#a2594e01e5967e7990f894f3d55ce5c5b">SCH_HkPacket_t::TablePassCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of times Schedule Table has been processed </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000014">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_TblProcCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_TablePassCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00190">190</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a901e3dc103b43255e939381c0a0c5bf1"></a><!-- doxytag: member="SCH_HkPacket_t::TableVerifyFailureCount" ref="a901e3dc103b43255e939381c0a0c5bf1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a901e3dc103b43255e939381c0a0c5bf1">SCH_HkPacket_t::TableVerifyFailureCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of times table loads unsuccessfully verified </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000013">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_TblFailVerifyCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_TableVerifyFailureCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00187">187</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a126130a80d7a65fb71f6230e97dd135a"></a><!-- doxytag: member="SCH_HkPacket_t::TableVerifySuccessCount" ref="a126130a80d7a65fb71f6230e97dd135a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___hk_packet__t.html#a126130a80d7a65fb71f6230e97dd135a">SCH_HkPacket_t::TableVerifySuccessCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of times table loads successfully verified </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000012">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_TblPassVerifyCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_TableVerifySuccessCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00184">184</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad95ba5317fccfe3fe1e084e8187faa01"></a><!-- doxytag: member="SCH_HkPacket_t::TlmHeader" ref="ad95ba5317fccfe3fe1e084e8187faa01" args="[CFE_SB_TLM_HDR_SIZE]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___hk_packet__t.html#ad95ba5317fccfe3fe1e084e8187faa01">SCH_HkPacket_t::TlmHeader</a>[CFE_SB_TLM_HDR_SIZE]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>cFE Software Bus Telemetry Message Header </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00110">110</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a215410bd2db5050ec6ce13f40d51d789"></a><!-- doxytag: member="SCH_HkPacket_t::UnexpectedMajorFrame" ref="a215410bd2db5050ec6ce13f40d51d789" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">boolean <a class="el" href="struct_s_c_h___hk_packet__t.html#a215410bd2db5050ec6ce13f40d51d789">SCH_HkPacket_t::UnexpectedMajorFrame</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Most Recent Major Frame signal was unexpected. </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000022">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_UnexpectedMajorFrame</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_UnexpectedMajorFrame">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00214">214</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a54b85845fcacca5e84abd815d25c17f6"></a><!-- doxytag: member="SCH_HkPacket_t::UnexpectedMajorFrameCount" ref="a54b85845fcacca5e84abd815d25c17f6" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#a54b85845fcacca5e84abd815d25c17f6">SCH_HkPacket_t::UnexpectedMajorFrameCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of unexpected Major Frame tones </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000017">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_UnexpectedMajorFrameCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_UnexpectedMajorFrameCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00199">199</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a5abac9e231383a6b638fc023e9f6b97a"></a><!-- doxytag: member="SCH_HkPacket_t::ValidMajorFrameCount" ref="a5abac9e231383a6b638fc023e9f6b97a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___hk_packet__t.html#a5abac9e231383a6b638fc023e9f6b97a">SCH_HkPacket_t::ValidMajorFrameCount</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p># of valid Major Frame tones received </p>
+<dl class="cfsschtlmmnems"><dt><b><a class="el" href="cfsschtlmmnems.html#_cfsschtlmmnems000015">Telemetry Mnemonic(s):</a></b></dt><dd><b><code>$sc_$cpu_SCH_ValidMajorFrameCtr</code> </b> </dd></dl>
+<p><a class="el" href="cfsschopr.html#SCHHK_ValidMajorFrameCount">Click for more</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00193">193</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___message_entry__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___message_entry__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_MessageEntry_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_MessageEntry_t Struct Reference</h1><!-- doxytag: class="SCH_MessageEntry_t" -->
+<p><code>#include &lt;<a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___message_entry__t.html#acabf07c295a2f53d2bbac2af8822d903">MessageBuffer</a> [SCH_MAX_MSG_WORDS]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Packed Messages.  <a href="#acabf07c295a2f53d2bbac2af8822d903"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00054">54</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="acabf07c295a2f53d2bbac2af8822d903"></a><!-- doxytag: member="SCH_MessageEntry_t::MessageBuffer" ref="acabf07c295a2f53d2bbac2af8822d903" args="[SCH_MAX_MSG_WORDS]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___message_entry__t.html#acabf07c295a2f53d2bbac2af8822d903">SCH_MessageEntry_t::MessageBuffer</a>[SCH_MAX_MSG_WORDS]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Packed Messages. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00056">56</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___no_args_cmd__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___no_args_cmd__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_NoArgsCmd_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_NoArgsCmd_t Struct Reference</h1><!-- doxytag: class="SCH_NoArgsCmd_t" -->
+<p>No Arguments Command.  
+<a href="#_details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___no_args_cmd__t.html#ad088543b6b40dda5b9bda20a2ea68365">CmdHeader</a> [CFE_SB_CMD_HDR_SIZE]</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">cFE Software Bus Command Message Header  <a href="#ad088543b6b40dda5b9bda20a2ea68365"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+<p>No Arguments Command. </p>
+<p>For command details see <a class="el" href="sch__msgdefs_8h.html#aff13c67ad0852d59ca4ef44879566f57">SCH_NOOP_CC</a>, <a class="el" href="sch__msgdefs_8h.html#adebe9b4ed9ccc1528c1198cb1acd4ac8">SCH_RESET_CC</a>, <a class="el" href="sch__msgdefs_8h.html#a988bd1a3fd08823654b2bdf4f695c6b3">SCH_ENABLE_SYNC_CC</a> or <a class="el" href="sch__msgdefs_8h.html#a88063e9eba628a369ecfeafb22867287">SCH_SEND_DIAG_TLM_CC</a> </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00055">55</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="ad088543b6b40dda5b9bda20a2ea68365"></a><!-- doxytag: member="SCH_NoArgsCmd_t::CmdHeader" ref="ad088543b6b40dda5b9bda20a2ea68365" args="[CFE_SB_CMD_HDR_SIZE]" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___no_args_cmd__t.html#ad088543b6b40dda5b9bda20a2ea68365">SCH_NoArgsCmd_t::CmdHeader</a>[CFE_SB_CMD_HDR_SIZE]</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>cFE Software Bus Command Message Header </p>
+
+<p>Definition at line <a class="el" href="sch__msg_8h_source.html#l00057">57</a> of file <a class="el" href="sch__msg_8h_source.html">sch_msg.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__msg_8h_source.html">sch_msg.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `struct_s_c_h___schedule_entry__t.html`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/struct_s_c_h___schedule_entry__t.html`
+
+
+```html
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<title>CFS Scheduler (SCH) Application on  User&#39;s Guide: SCH_ScheduleEntry_t Struct Reference</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<link href="doxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<!-- Generated by Doxygen 1.6.1 -->
+<div class="navigation" id="top">
+  <div class="tabs">
+    <ul>
+      <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="files.html"><span>Files</span></a></li>
+      <li><a href="dirs.html"><span>Directories</span></a></li>
+    </ul>
+  </div>
+  <div class="tabs">
+    <ul>
+      <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
+      <li><a href="classes.html"><span>Data&nbsp;Structure&nbsp;Index</span></a></li>
+      <li><a href="functions.html"><span>Data&nbsp;Fields</span></a></li>
+    </ul>
+  </div>
+</div>
+<div class="contents">
+<h1>SCH_ScheduleEntry_t Struct Reference</h1><!-- doxytag: class="SCH_ScheduleEntry_t" -->
+<p><code>#include &lt;<a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>&gt;</code></p>
+<table border="0" cellpadding="0" cellspacing="0">
+<tr><td colspan="2"><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html#a9b2c423933436be2fd6d9abed47d327f">EnableState</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">State may be <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">SCH_UNUSED</a>, <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">SCH_ENABLED</a>, <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">SCH_DISABLED</a>.  <a href="#a9b2c423933436be2fd6d9abed47d327f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint8&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html#a0d8fe221038749a9195738d49ff6316b">Type</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Activity Type may be <a class="el" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">SCH_ACTIVITY_NONE</a> or <a class="el" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">SCH_ACTIVITY_SEND_MSG</a>.  <a href="#a0d8fe221038749a9195738d49ff6316b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html#ac9e04865964c229207be4b4b08e3b3c5">Frequency</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Number of seconds between Activity execution.  <a href="#ac9e04865964c229207be4b4b08e3b3c5"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html#afed927177469e682cd7ac1f0fb18c4d9">Remainder</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Seconds offset to perform Activity.  <a href="#afed927177469e682cd7ac1f0fb18c4d9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint16&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html#a0e98dbe9de02959165d823371b14cf0b">MessageIndex</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Byte index into Message Definition Table.  <a href="#a0e98dbe9de02959165d823371b14cf0b"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">uint32&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct_s_c_h___schedule_entry__t.html#aad89647f606b4a34a3a91e233c1e4dcf">GroupData</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Group and Multi-Group membership definitions.  <a href="#aad89647f606b4a34a3a91e233c1e4dcf"></a><br/></td></tr>
+</table>
+<hr/><a name="_details"></a><h2>Detailed Description</h2>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00039">39</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+<hr/><h2>Field Documentation</h2>
+<a class="anchor" id="a9b2c423933436be2fd6d9abed47d327f"></a><!-- doxytag: member="SCH_ScheduleEntry_t::EnableState" ref="a9b2c423933436be2fd6d9abed47d327f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___schedule_entry__t.html#a9b2c423933436be2fd6d9abed47d327f">SCH_ScheduleEntry_t::EnableState</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>State may be <a class="el" href="sch__msgdefs_8h.html#a3c3c3058724b68ff42107cff3fbeeeaa">SCH_UNUSED</a>, <a class="el" href="sch__msgdefs_8h.html#a4863bca80e851a3a246e36b1b298db73">SCH_ENABLED</a>, <a class="el" href="sch__msgdefs_8h.html#a1bb9b6a778c72103f9c48c673496f7ef">SCH_DISABLED</a>. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00041">41</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac9e04865964c229207be4b4b08e3b3c5"></a><!-- doxytag: member="SCH_ScheduleEntry_t::Frequency" ref="ac9e04865964c229207be4b4b08e3b3c5" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___schedule_entry__t.html#ac9e04865964c229207be4b4b08e3b3c5">SCH_ScheduleEntry_t::Frequency</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Number of seconds between Activity execution. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00043">43</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aad89647f606b4a34a3a91e233c1e4dcf"></a><!-- doxytag: member="SCH_ScheduleEntry_t::GroupData" ref="aad89647f606b4a34a3a91e233c1e4dcf" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32 <a class="el" href="struct_s_c_h___schedule_entry__t.html#aad89647f606b4a34a3a91e233c1e4dcf">SCH_ScheduleEntry_t::GroupData</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Group and Multi-Group membership definitions. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00047">47</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0e98dbe9de02959165d823371b14cf0b"></a><!-- doxytag: member="SCH_ScheduleEntry_t::MessageIndex" ref="a0e98dbe9de02959165d823371b14cf0b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___schedule_entry__t.html#a0e98dbe9de02959165d823371b14cf0b">SCH_ScheduleEntry_t::MessageIndex</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Byte index into Message Definition Table. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00045">45</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afed927177469e682cd7ac1f0fb18c4d9"></a><!-- doxytag: member="SCH_ScheduleEntry_t::Remainder" ref="afed927177469e682cd7ac1f0fb18c4d9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16 <a class="el" href="struct_s_c_h___schedule_entry__t.html#afed927177469e682cd7ac1f0fb18c4d9">SCH_ScheduleEntry_t::Remainder</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Seconds offset to perform Activity. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00044">44</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a0d8fe221038749a9195738d49ff6316b"></a><!-- doxytag: member="SCH_ScheduleEntry_t::Type" ref="a0d8fe221038749a9195738d49ff6316b" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8 <a class="el" href="struct_s_c_h___schedule_entry__t.html#a0d8fe221038749a9195738d49ff6316b">SCH_ScheduleEntry_t::Type</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Activity Type may be <a class="el" href="sch__msgdefs_8h.html#a72d6c6d22c9c99a7646f57c547afb722">SCH_ACTIVITY_NONE</a> or <a class="el" href="sch__msgdefs_8h.html#a343748e9d5952c672ff8bd29df1759d2">SCH_ACTIVITY_SEND_MSG</a>. </p>
+
+<p>Definition at line <a class="el" href="sch__tbldefs_8h_source.html#l00042">42</a> of file <a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a>.</p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>sch/fsw/src/<a class="el" href="sch__tbldefs_8h_source.html">sch_tbldefs.h</a></li>
+</ul>
+</div>
+<hr size="1"/><address style="text-align: right;"><small>Generated on 1 Jul 2017 for CFS Scheduler (SCH) Application on  User's Guide by&nbsp;
+<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
+</body>
+</html>
+```
+
+### `tab_b.gif`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/tab_b.gif`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `tab_l.gif`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/tab_l.gif`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `tab_r.gif`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/tab_r.gif`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `tabs.css`
+
+**경로:** `fsw/apps/sch/docs/users_guide/html/tabs.css`
+
+
+```css
+/* tabs styles, based on http://www.alistapart.com/articles/slidingdoors */
+
+DIV.tabs
+{
+   float            : left;
+   width            : 100%;
+   background       : url("tab_b.gif") repeat-x bottom;
+   margin-bottom    : 4px;
+}
+
+DIV.tabs UL
+{
+   margin           : 0px;
+   padding-left     : 10px;
+   list-style       : none;
+}
+
+DIV.tabs LI, DIV.tabs FORM
+{
+   display          : inline;
+   margin           : 0px;
+   padding          : 0px;
+}
+
+DIV.tabs FORM
+{
+   float            : right;
+}
+
+DIV.tabs A
+{
+   float            : left;
+   background       : url("tab_r.gif") no-repeat right top;
+   border-bottom    : 1px solid #84B0C7;
+   font-size        : 80%;
+   font-weight      : bold;
+   text-decoration  : none;
+}
+
+DIV.tabs A:hover
+{
+   background-position: 100% -150px;
+}
+
+DIV.tabs A:link, DIV.tabs A:visited,
+DIV.tabs A:active, DIV.tabs A:hover
+{
+       color: #1A419D;
+}
+
+DIV.tabs SPAN
+{
+   float            : left;
+   display          : block;
+   background       : url("tab_l.gif") no-repeat left top;
+   padding          : 5px 9px;
+   white-space      : nowrap;
+}
+
+DIV.tabs #MSearchBox
+{
+   float            : right;
+   display          : inline;
+   font-size        : 1em;
+}
+
+DIV.tabs TD
+{
+   font-size        : 80%;
+   font-weight      : bold;
+   text-decoration  : none;
+}
+
+
+
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+DIV.tabs SPAN {float : none;}
+/* End IE5-Mac hack */
+
+DIV.tabs A:hover SPAN
+{
+   background-position: 0% -150px;
+}
+
+DIV.tabs LI.current A
+{
+   background-position: 100% -150px;
+   border-width     : 0px;
+}
+
+DIV.tabs LI.current SPAN
+{
+   background-position: 0% -150px;
+   padding-bottom   : 6px;
+}
+
+DIV.navpath
+{
+   background       : none;
+   border           : none;
+   border-bottom    : 1px solid #84B0C7;
+   text-align       : center;
+   margin           : 2px;
+   padding          : 2px;
+}
+```

@@ -3,18 +3,24 @@
 
 **경로:** `gsw/yamcs/examples/cfdp-udp/src/main/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 etc/index
-file--cfdp-pdu.xls
-file--mdb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/cfdp-udp/src/main/yamcs/etc/`](etc/index) — 폴더
-- [`gsw/yamcs/examples/cfdp-udp/src/main/yamcs/cfdp-pdu.xls`](file--cfdp-pdu.xls) — 바이너리 (경로만)
-- [`gsw/yamcs/examples/cfdp-udp/src/main/yamcs/mdb`](file--mdb) — 심볼릭 링크 → `../../../../simulation/src/main/yamcs/mdb` (대상 미포함)
+### `cfdp-pdu.xls`
+
+**경로:** `gsw/yamcs/examples/cfdp-udp/src/main/yamcs/cfdp-pdu.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `mdb`
+
+**경로:** `gsw/yamcs/examples/cfdp-udp/src/main/yamcs/mdb`
+
+심볼릭 링크 대상: `../../../../simulation/src/main/yamcs/mdb` (대상 미포함)

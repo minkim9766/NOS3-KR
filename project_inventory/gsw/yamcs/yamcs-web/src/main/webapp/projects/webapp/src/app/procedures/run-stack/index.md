@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -31,32 +31,35 @@ stacked-verify-entry/index
 stacks-page/index
 verify-icon/index
 verify-table/index
-file--acknowledgment-name.pipe.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/advance-ack-help/`](advance-ack-help/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-dialog/`](create-stack-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-folder-dialog/`](create-stack-folder-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-check-entry-dialog/`](edit-check-entry-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/`](edit-command-entry-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/`](edit-text-entry-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-verify-entry-dialog/`](edit-verify-entry-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/entry-label/`](entry-label/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/rename-stack-dialog/`](rename-stack-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/schedule-stack-dialog/`](schedule-stack-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/`](stack-file/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-dirty-guard/`](stack-file-dirty-guard/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-log/`](stack-file-log/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/`](stack-file-page-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-settings/`](stack-file-settings/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-folder/`](stack-folder/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-check-entry/`](stacked-check-entry/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/`](stacked-command-entry/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-text-entry/`](stacked-text-entry/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-verify-entry/`](stacked-verify-entry/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacks-page/`](stacks-page/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-icon/`](verify-icon/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/verify-table/`](verify-table/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/acknowledgment-name.pipe.ts`](file--acknowledgment-name.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+### `acknowledgment-name.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/acknowledgment-name.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+/**
+ * Outputs the extension of a filename.
+ */
+@Pipe({
+  name: 'acknowledgmentName',
+})
+export class AcknowledgmentNamePipe implements PipeTransform {
+  transform(acknowledgmentName: string | null): string | null {
+    if (!acknowledgmentName) {
+      return null;
+    }
+
+    if (acknowledgmentName === 'CommandComplete') {
+      return 'Completed';
+    } else {
+      return acknowledgmentName.replace('Acknowledge_', '');
+    }
+  }
+}
+```

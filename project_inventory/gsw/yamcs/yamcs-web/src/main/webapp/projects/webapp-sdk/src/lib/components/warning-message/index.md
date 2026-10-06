@@ -3,18 +3,62 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `warning-message.component.css`
 
-file--warning-message.component.css
-file--warning-message.component.html
-file--warning-message.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/warning-message.component.css`
+
+
+```css
+.panel {
+  background-color: #fcc;
+  color: var(--y-error-color);
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.panel .icon {
+  padding: 10px;
+}
+
+.panel .icon .material-symbols {
+  vertical-align: middle;
+}
 ```
 
-## 항목
+### `warning-message.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/warning-message.component.css`](file--warning-message.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/warning-message.component.html`](file--warning-message.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/warning-message.component.ts`](file--warning-message.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/warning-message.component.html`
+
+
+```html
+<div class="panel">
+  <div class="icon">
+    <mat-icon>warning</mat-icon>
+  </div>
+  <div>
+    <ng-content />
+  </div>
+</div>
+```
+
+### `warning-message.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/warning-message/warning-message.component.ts`
+
+
+```typescript
+import { Component } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-warning-message',
+  templateUrl: './warning-message.component.html',
+  styleUrl: './warning-message.component.css',
+  imports: [MatIcon],
+})
+export class YaWarningMessage {}
+```

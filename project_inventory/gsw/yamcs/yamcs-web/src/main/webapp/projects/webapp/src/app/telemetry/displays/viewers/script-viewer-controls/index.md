@@ -3,16 +3,81 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer-controls/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `script-viewer-controls.component.html`
 
-file--script-viewer-controls.component.html
-file--script-viewer-controls.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer-controls/script-viewer-controls.component.html`
+
+
+```html
+@if (initialized$ | async) {
+  @if (mayManageDisplays()) {
+    <ya-page-button
+      [disabled]="!(viewer.hasUnsavedChanges$ | async)"
+      (clicked)="save()"
+      icon="save">
+      SAVE
+    </ya-page-button>
+  }
+}
 ```
 
-## 항목
+### `script-viewer-controls.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer-controls/script-viewer-controls.component.html`](file--script-viewer-controls.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer-controls/script-viewer-controls.component.ts`](file--script-viewer-controls.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer-controls/script-viewer-controls.component.ts`
+
+
+```typescript
+import { Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService, ConfigService, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ScriptViewerComponent } from '../script-viewer/script-viewer.component';
+
+@Component({
+  templateUrl: './script-viewer-controls.component.html',
+  imports: [WebappSdkModule],
+})
+export class ScriptViewerControlsComponent {
+  private bucket: string;
+
+  initialized$ = new BehaviorSubject<boolean>(false);
+
+  viewer: ScriptViewerComponent;
+
+  constructor(
+    private snackbar: MatSnackBar,
+    private authService: AuthService,
+    configService: ConfigService,
+  ) {
+    this.bucket = configService.getDisplayBucket();
+  }
+
+  public init(viewer: ScriptViewerComponent) {
+    this.viewer = viewer;
+    this.initialized$.next(true);
+  }
+
+  mayManageDisplays() {
+    const user = this.authService.getUser()!;
+    return (
+      user.hasObjectPrivilege('ManageBucket', this.bucket) ||
+      user.hasSystemPrivilege('ManageAnyBucket')
+    );
+  }
+
+  save() {
+    this.viewer
+      .save()
+      .then(() => {
+        this.snackbar.open('Changes saved', undefined, {
+          duration: 1000,
+        });
+      })
+      .catch((err) => {
+        this.snackbar.open('Failed to save changes: ' + err);
+      });
+  }
+}
+```

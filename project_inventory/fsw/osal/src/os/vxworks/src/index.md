@@ -3,52 +3,3953 @@
 
 **경로:** `fsw/osal/src/os/vxworks/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-impl-binsem.c`
 
-file--os-impl-binsem.c
-file--os-impl-common.c
-file--os-impl-console.c
-file--os-impl-countsem.c
-file--os-impl-dirs-globals.c
-file--os-impl-errors.c
-file--os-impl-files.c
-file--os-impl-filesys.c
-file--os-impl-heap.c
-file--os-impl-idmap.c
-file--os-impl-loader.c
-file--os-impl-mutex.c
-file--os-impl-network.c
-file--os-impl-no-module.c
-file--os-impl-queues.c
-file--os-impl-shell.c
-file--os-impl-sockets.c
-file--os-impl-symtab.c
-file--os-impl-tasks.c
-file--os-impl-timebase.c
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-binsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+
+#include "os-impl-binsem.h"
+#include "os-shared-binsem.h"
+#include "os-shared-timebase.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+/* Tables where the OS object information is stored */
+OS_impl_binsem_internal_record_t OS_impl_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+/****************************************************************************************
+                             BINARY SEMAPHORE API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_BinSemAPI_Impl_Init(void)
+{
+    memset(OS_impl_bin_sem_table, 0, sizeof(OS_impl_bin_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    SEM_ID                            tmp_sem_id;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* Initialize VxWorks Semaphore.
+     * The memory for this sem is statically allocated. */
+    tmp_sem_id = semBInitialize(impl->bmem, SEM_Q_PRIORITY, sem_initial_value);
+
+    /* check if semBInitialize failed */
+    if (tmp_sem_id == (SEM_ID)0)
+    {
+        OS_DEBUG("semBInitialize() - vxWorks errno %d\n", errno);
+        return OS_SEM_FAILURE;
+    }
+
+    impl->vxid = tmp_sem_id;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /*
+     * As the memory for the sem is statically allocated, delete is a no-op.
+     */
+    impl->vxid = 0;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGive_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* Use common routine */
+    return OS_VxWorks_GenericSemGive(impl->vxid);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemFlush_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* Flush VxWorks Semaphore */
+    if (semFlush(impl->vxid) != OK)
+    {
+        OS_DEBUG("semFlush() - vxWorks errno %d\n", errno);
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTake_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* Use common routine */
+    return OS_VxWorks_GenericSemTake(impl->vxid, WAIT_FOREVER);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    int                               ticks;
+    int32                             status;
+    OS_impl_binsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    status = OS_Milli2Ticks(msecs, &ticks);
+
+    if (status == OS_SUCCESS)
+    {
+        status = OS_VxWorks_GenericSemTake(impl->vxid, ticks);
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGetInfo_Impl(const OS_object_token_t *token, OS_bin_sem_prop_t *bin_prop)
+{
+    /* VxWorks has no API for obtaining the current value of a semaphore */
+    return OS_SUCCESS;
+}
 ```
 
-## 항목
+### `os-impl-common.c`
 
-- [`fsw/osal/src/os/vxworks/src/os-impl-binsem.c`](file--os-impl-binsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-common.c`](file--os-impl-common.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-console.c`](file--os-impl-console.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-countsem.c`](file--os-impl-countsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-dirs-globals.c`](file--os-impl-dirs-globals.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-errors.c`](file--os-impl-errors.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-files.c`](file--os-impl-files.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-filesys.c`](file--os-impl-filesys.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-heap.c`](file--os-impl-heap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-idmap.c`](file--os-impl-idmap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-loader.c`](file--os-impl-loader.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-mutex.c`](file--os-impl-mutex.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-network.c`](file--os-impl-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-no-module.c`](file--os-impl-no-module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-queues.c`](file--os-impl-queues.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-shell.c`](file--os-impl-shell.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-sockets.c`](file--os-impl-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-symtab.c`](file--os-impl-symtab.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-tasks.c`](file--os-impl-tasks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/src/os-impl-timebase.c`](file--os-impl-timebase.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-common.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+
+#include <errnoLib.h>
+#include <objLib.h>
+#include <semLib.h>
+#include <sysLib.h>
+#include <taskLib.h>
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+static TASK_ID OS_idle_task_id;
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Initialize the tables that the OS API uses to keep track of information
+ *           about objects
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_API_Impl_Init(osal_objtype_t idtype)
+{
+    int32 return_code;
+
+    return_code = OS_VxWorks_TableMutex_Init(idtype);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    switch (idtype)
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            return_code = OS_VxWorks_TaskAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            return_code = OS_VxWorks_QueueAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            return_code = OS_VxWorks_BinSemAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            return_code = OS_VxWorks_CountSemAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            return_code = OS_VxWorks_MutexAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            return_code = OS_VxWorks_ModuleAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_TIMEBASE:
+            return_code = OS_VxWorks_TimeBaseAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            return_code = OS_VxWorks_StreamAPI_Impl_Init();
+            break;
+        case OS_OBJECT_TYPE_OS_DIR:
+            return_code = OS_VxWorks_DirAPI_Impl_Init();
+            break;
+        default:
+            break;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_IdleLoop_Impl(void)
+{
+    TASK_ID tid     = taskIdSelf();
+    OS_idle_task_id = tid;
+    taskSuspend(tid);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ApplicationShutdown_Impl(void)
+{
+    taskResume(OS_idle_task_id);
+}
+
+/****************************************************************************************
+                              GENERIC SEMAPHORE API
+****************************************************************************************/
+
+/*
+ * ----------------------------------
+ * generic semaphore give/take -
+ * VxWorks uses the sem semTake()/semGive() API for all types of semaphores.
+ * Only the initialization is different between them.
+ * Therefore all semaphore actions can just invoke these generic actions
+ * -----------------------------------
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_GenericSemGive(SEM_ID vxid)
+{
+    /* Give VxWorks Semaphore */
+    if (semGive(vxid) != OK)
+    {
+        OS_DEBUG("semGive() - vxWorks errno %d\n", errno);
+        return OS_SEM_FAILURE;
+    }
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_GenericSemTake(SEM_ID vxid, int sys_ticks)
+{
+    int vx_status;
+
+    /* Take VxWorks Semaphore */
+    vx_status = semTake(vxid, sys_ticks);
+    if (vx_status != OK)
+    {
+        /*
+         * check for the timeout condition,
+         * which has a different return code and
+         * not necessarily an error of concern.
+         *
+         * vxworks7: if sys_ticks == 0, then if the semaphore can
+         * not be taken S_objLib_OBJ_UNAVAILABLE will be returned
+         */
+        if ((errno == S_objLib_OBJ_TIMEOUT) || (!sys_ticks && (errno == S_objLib_OBJ_UNAVAILABLE)))
+        {
+            return OS_SEM_TIMEOUT;
+        }
+
+        OS_DEBUG("semTake() - vxWorks errno %d\n", errno);
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-console.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-console.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-console.h"
+
+#include "os-shared-printf.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+/*
+ * By default the console output is always asynchronous
+ * (equivalent to "OS_UTILITY_TASK_ON" being set)
+ *
+ * This option was removed from osconfig.h and now is
+ * assumed to always be on.
+ */
+#define OS_CONSOLE_ASYNC          true
+#define OS_CONSOLE_TASK_PRIORITY  OS_UTILITYTASK_PRIORITY
+#define OS_CONSOLE_TASK_STACKSIZE OS_UTILITYTASK_STACK_SIZE
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+/* Tables where the OS object information is stored */
+OS_impl_console_internal_record_t OS_impl_console_table[OS_MAX_CONSOLES];
+
+/********************************************************************/
+/*                 CONSOLE OUTPUT                                   */
+/********************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ConsoleWakeup_Impl(const OS_object_token_t *token)
+{
+    OS_impl_console_internal_record_t *local;
+
+    local = OS_OBJECT_TABLE_GET(OS_impl_console_table, *token);
+
+    /* post the sem for the utility task to run */
+    if (semGive(local->datasem) == ERROR)
+    {
+        OS_DEBUG("semGive() - vxWorks errno %d\n", errno);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int OS_VxWorks_ConsoleTask_Entry(int arg)
+{
+    OS_impl_console_internal_record_t *local;
+    OS_object_token_t                  token;
+
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_CONSOLE, OS_ObjectIdFromInteger(arg), &token) ==
+        OS_SUCCESS)
+    {
+        local = OS_OBJECT_TABLE_GET(OS_impl_console_table, token);
+
+        /* Loop forever (unless shutdown is set) */
+        while (OS_SharedGlobalVars.GlobalState != OS_SHUTDOWN_MAGIC_NUMBER)
+        {
+            OS_ConsoleOutput_Impl(&token);
+            if (semTake(local->datasem, WAIT_FOREVER) == ERROR)
+            {
+                OS_DEBUG("semTake() - vxWorks errno %d\n", errno);
+                break;
+            }
+        }
+        OS_ObjectIdRelease(&token);
+    }
+
+    /* Return OK since called from taskSpawn, error is reported in debug message */
+    return OK;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ConsoleCreate_Impl(const OS_object_token_t *token)
+{
+    OS_impl_console_internal_record_t *local;
+    int32                              return_code;
+    OS_console_internal_record_t *     console;
+
+    local   = OS_OBJECT_TABLE_GET(OS_impl_console_table, *token);
+    console = OS_OBJECT_TABLE_GET(OS_console_table, *token);
+
+    if (OS_ObjectIndexFromToken(token) == 0)
+    {
+        return_code = OS_SUCCESS;
+
+        if (console->IsAsync)
+        {
+            OS_DEBUG("%s(): Starting Async Console Handler\n", __func__);
+
+            /* Initialize VxWorks Semaphore.
+             * The memory for this sem is statically allocated. */
+            local->datasem = semCInitialize(local->cmem, SEM_Q_PRIORITY, 0);
+
+            /* check if semCInitialize failed */
+            if (local->datasem == (SEM_ID)0)
+            {
+                OS_DEBUG("semCInitialize() - vxWorks errno %d\n", errno);
+                return OS_SEM_FAILURE;
+            }
+
+            /* spawn the async output helper task */
+            local->taskid = taskSpawn(console->device_name, OS_CONSOLE_TASK_PRIORITY, 0, OS_CONSOLE_TASK_STACKSIZE,
+                                      (FUNCPTR)OS_VxWorks_ConsoleTask_Entry,
+                                      OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+            if (local->taskid == (TASK_ID)ERROR)
+            {
+                OS_DEBUG("taskSpawn() - vxWorks errno %d\n", errno);
+                return_code = OS_ERROR;
+            }
+        }
+    }
+    else
+    {
+        /* only one physical console device is implemented */
+        return_code = OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-countsem.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-countsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-countsem.h"
+#include "os-shared-countsem.h"
+#include "os-shared-timebase.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+/* Tables where the OS object information is stored */
+OS_impl_countsem_internal_record_t OS_impl_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+/****************************************************************************************
+                             COUNTING SEMAPHORE API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_CountSemAPI_Impl_Init(void)
+{
+    memset(OS_impl_count_sem_table, 0, sizeof(OS_impl_count_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    SEM_ID                              tmp_sem_id;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    /* Initialize VxWorks Semaphore.
+     * The memory for this sem is statically allocated. */
+    tmp_sem_id = semCInitialize(impl->cmem, SEM_Q_PRIORITY, sem_initial_value);
+
+    /* check if semCInitialize failed */
+    if (tmp_sem_id == (SEM_ID)0)
+    {
+        OS_DEBUG("semCInitialize() - vxWorks errno %d\n", errno);
+        return OS_SEM_FAILURE;
+    }
+
+    impl->vxid = tmp_sem_id;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    /*
+     * As the memory for the sem is statically allocated, delete is a no-op.
+     */
+    impl->vxid = 0;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGive_Impl(const OS_object_token_t *token)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    /* Give VxWorks Semaphore */
+    return OS_VxWorks_GenericSemGive(impl->vxid);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTake_Impl(const OS_object_token_t *token)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    return OS_VxWorks_GenericSemTake(impl->vxid, WAIT_FOREVER);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    int                                 ticks;
+    int32                               status;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    status = OS_Milli2Ticks(msecs, &ticks);
+
+    if (status == OS_SUCCESS)
+    {
+        status = OS_VxWorks_GenericSemTake(impl->vxid, ticks);
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGetInfo_Impl(const OS_object_token_t *token, OS_count_sem_prop_t *count_prop)
+{
+    /* VxWorks does not provide an API to get the value */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-dirs-globals.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-dirs-globals.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-dirs.h"
+#include "os-shared-dir.h"
+
+/*
+ * The directory handle table.
+ */
+OS_impl_dir_internal_record_t OS_impl_dir_table[OS_MAX_NUM_OPEN_DIRS];
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_DirAPI_Impl_Init(void)
+{
+    memset(OS_impl_dir_table, 0, sizeof(OS_impl_dir_table));
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-errors.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-errors.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-shared-errors.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+const OS_ErrorTable_Entry_t OS_IMPL_ERROR_NAME_TABLE[] = {{0, NULL}};
+```
+
+### `os-impl-files.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-files.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-files.h"
+#include "os-shared-file.h"
+
+/*
+ * The global file handle table.
+ *
+ * This is shared by all OSAL entities that perform low-level I/O.
+ */
+OS_impl_file_internal_record_t OS_impl_filehandle_table[OS_MAX_NUM_OPEN_FILES];
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_StreamAPI_Impl_Init(void)
+{
+    osal_index_t local_id;
+
+    /*
+     * init all filehandles to -1, which is always invalid.
+     * this isn't strictly necessary but helps when debugging.
+     */
+    for (local_id = 0; local_id < OS_MAX_NUM_OPEN_FILES; ++local_id)
+    {
+        OS_impl_filehandle_table[local_id].fd         = -1;
+        OS_impl_filehandle_table[local_id].selectable = false;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-filesys.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-filesys.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+
+#include "os-impl-filesys.h"
+#include "os-impl-dirs.h"
+#include "os-shared-filesys.h"
+#include "os-shared-idmap.h"
+
+#include <fcntl.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <stat.h>
+#include <ioLib.h>
+#include <errnoLib.h>
+#include <ramDrv.h>
+#include <xbdBlkDev.h>
+#include <xbdRamDisk.h>
+#include <dosFsLib.h>
+
+#ifdef USE_VXWORKS_ATA_DRIVER
+#include "drv/hdisk/ataDrv.h"
+#endif
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                   Data Types
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+OS_impl_filesys_internal_record_t OS_impl_filesys_table[OS_MAX_FILE_SYSTEMS];
+
+/****************************************************************************************
+                                    Filesys API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStartVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *     local;
+    OS_impl_filesys_internal_record_t *impl;
+    int32                              return_code;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_filesys_table, *token);
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    memset(impl, 0, sizeof(*impl));
+    return_code = OS_ERR_NOT_IMPLEMENTED;
+    switch (local->fstype)
+    {
+        case OS_FILESYS_TYPE_FS_BASED:
+        {
+            /* pass through for FS_BASED volumes, assume already mounted */
+            OS_DEBUG("OSAL: Mapping an FS_BASED disk at: %s\n", (unsigned long)local->system_mountpt);
+            return_code = OS_SUCCESS;
+            break;
+        }
+
+        case OS_FILESYS_TYPE_VOLATILE_DISK:
+        {
+            OS_DEBUG("OSAL: Starting a RAM disk at: 0x%08lX\n", (unsigned long)local->address);
+
+            /*
+            ** Create the ram disk device
+            ** The 32 is the number of blocks per track.
+            **  Other values don't seem to work here
+            */
+            impl->blkDev           = ramDevCreate(local->address, local->blocksize, 32, local->numblocks, 0);
+            impl->xbdMaxPartitions = 1;
+            break;
+        }
+
+#ifdef USE_VXWORKS_ATA_DRIVER
+        case OS_FILESYS_TYPE_NORMAL_DISK:
+        {
+            /*
+            ** Create the Flash disk device
+            ** This code requires an ATA driver in the BSP, so it must be
+            ** left out of the compilation BSPs without.
+            */
+            OS_DEBUG("OSAL: Starting an ATA DISK: %s\n", local->volume_name);
+            impl->xbdMaxPartitions = 4;
+            impl->blkDev           = ataDevCreate(0, 0, 0, 0);
+            break;
+        }
+#endif
+
+        default:
+            break;
+    }
+
+    if (impl->xbdMaxPartitions > 0)
+    {
+        /*
+         * This code is common to RAM disks and ATA disks
+         * (and anything else that relies on the xbd layer)
+         */
+
+        if (impl->blkDev == NULL)
+        {
+            /* there was an error calling the "DevCreate" function */
+            OS_DEBUG("OSAL: Error creating low level block device\n");
+            return_code = OS_FS_ERR_DRIVE_NOT_CREATED;
+        }
+        else
+        {
+            /*
+             * Connect the low level block device to the xbd device
+             */
+            impl->xbd = xbdBlkDevCreateSync(impl->blkDev, local->volume_name);
+            if (impl->xbd == NULLDEV)
+            {
+                return_code = OS_FS_ERR_DRIVE_NOT_CREATED;
+            }
+            else
+            {
+                /*
+                 * Always using partition ":0"
+                 *
+                 * For ATA disks, this is different than the previous implementation
+                 * which would try to open() all possible partitions in order until
+                 * one was successful.
+                 *
+                 * From the original OS_GetPhysDeviceName() implementation comments:
+                 *
+                 *  The disk XBD code will add ":X" to the volume name you give to a disk, where
+                 *  X is the partition number. While RAM disks are always 0 ( "RAM:0" ),
+                 *  a physical disk such as a compact flash disk can be ":0", or ":1" etc,
+                 *  depending on how the disk was partitioned.
+                 *
+                 * But there are two issues with trying all possible devices like that:
+                 *  - Trying with open() actually mounts the filesystem, meaning it must
+                 *    have a pre-existing dosFs on it
+                 *  - It might not be consistent between devices/cards or even run-to-run.
+                 *    (i.e. if a partition was formatted manually and then the software
+                 *    restarted, a different block device might get mounted the second time)
+                 */
+                snprintf(local->system_mountpt, sizeof(local->system_mountpt), "%s:0", local->volume_name);
+
+                return_code = OS_SUCCESS;
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStopVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *     local;
+    OS_impl_filesys_internal_record_t *impl;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_filesys_table, *token);
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    switch (local->fstype)
+    {
+        case OS_FILESYS_TYPE_VOLATILE_DISK:
+        case OS_FILESYS_TYPE_NORMAL_DISK:
+        {
+            if (impl->xbdMaxPartitions > 0 && impl->xbd != NULLDEV)
+            {
+                xbdBlkDevDelete(impl->xbd, NULL);
+                impl->xbd              = NULLDEV;
+                impl->xbdMaxPartitions = 0;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    /*
+     * TBD: The VxWorks documentation does not seem to indicate any
+     * "DevDelete" operation as the complement to ramDevCreate/ataDevCreate.
+     */
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysFormatVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *local;
+    int32                         return_code = OS_ERR_NOT_IMPLEMENTED;
+    int                           status;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    switch (local->fstype)
+    {
+        case OS_FILESYS_TYPE_FS_BASED:
+        {
+            /*
+             * The "format" operation is a no-op on FS_BASED types.
+             * Return success to allow the operation to continue.
+             */
+            return_code = OS_SUCCESS;
+            break;
+        }
+        case OS_FILESYS_TYPE_VOLATILE_DISK:
+        case OS_FILESYS_TYPE_NORMAL_DISK:
+        {
+            /*
+            ** Call the dos format routine
+            */
+            status = dosFsVolFormat(local->system_mountpt, DOS_OPT_BLANK, NULL);
+            if (status == -1)
+            {
+                OS_DEBUG("OSAL: dosFsVolFormat failed. Errno = %d\n", errnoGet());
+                return_code = OS_FS_ERR_DRIVE_NOT_CREATED;
+            }
+            else
+            {
+                return_code = OS_SUCCESS;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysMountVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *local;
+    int32                         status;
+    int                           fd;
+    struct stat                   stat_buf;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    /*
+     * For FS-based mounts, these are just a map to a some other
+     * directory in the filesystem.
+     *
+     * If it does exist then make sure it is actually a directory.
+     * If it does not exist then attempt to create it.
+     */
+    if (local->fstype == OS_FILESYS_TYPE_FS_BASED)
+    {
+        if (stat(local->system_mountpt, &stat_buf) == 0)
+        {
+            if (S_ISDIR(stat_buf.st_mode))
+            {
+                /* mount point exists */
+                status = OS_SUCCESS;
+            }
+            else
+            {
+                OS_DEBUG("%s is not a directory\n", local->system_mountpt);
+                status = OS_FS_ERR_PATH_INVALID;
+            }
+        }
+        else
+        {
+            if (mkdir(local->system_mountpt, 0775) == 0)
+            {
+                /* directory created OK */
+                status = OS_SUCCESS;
+            }
+            else
+            {
+                OS_DEBUG("mkdir(%s): errno=%d\n", local->system_mountpt, errnoGet());
+                status = OS_FS_ERR_DRIVE_NOT_CREATED;
+            }
+        }
+    }
+    else
+    {
+        /*
+         * For all other (non-FS_BASED) filesystem types,
+         * Calling open() on the physical device path mounts the device.
+         */
+        fd = open(local->system_mountpt, O_RDONLY, 0644);
+        if (fd < 0)
+        {
+            status = OS_ERROR;
+        }
+        else
+        {
+            status = OS_SUCCESS;
+            close(fd);
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysUnmountVolume_Impl(const OS_object_token_t *token)
+{
+    OS_filesys_internal_record_t *local;
+    int32                         status;
+    int                           fd;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    if (local->fstype == OS_FILESYS_TYPE_FS_BASED)
+    {
+        /* unmount is a no-op on FS-based mounts - it is just a directory map */
+        status = OS_SUCCESS;
+    }
+    else
+    {
+        /*
+        ** vxWorks uses an ioctl to unmount
+        */
+        fd = open(local->system_mountpt, O_RDONLY, 0644);
+        if (fd < 0)
+        {
+            status = OS_ERROR;
+        }
+        else
+        {
+            if (ioctl(fd, FIOUNMOUNT, 0) < 0)
+            {
+                status = OS_ERROR;
+            }
+            else
+            {
+                status = OS_SUCCESS;
+            }
+
+            close(fd);
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStatVolume_Impl(const OS_object_token_t *token, OS_statvfs_t *result)
+{
+    OS_filesys_internal_record_t *local;
+    struct statfs                 stat_buf;
+    int                           return_code;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    if (statfs(local->system_mountpt, &stat_buf) != 0)
+    {
+        return_code = OS_ERROR;
+        memset(result, 0, sizeof(*result));
+    }
+    else
+    {
+        result->block_size   = OSAL_SIZE_C(stat_buf.f_bsize);
+        result->blocks_free  = OSAL_BLOCKCOUNT_C(stat_buf.f_bfree);
+        result->total_blocks = OSAL_BLOCKCOUNT_C(stat_buf.f_blocks);
+        return_code          = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysCheckVolume_Impl(const OS_object_token_t *token, bool repair)
+{
+    OS_filesys_internal_record_t *local;
+    STATUS                        chk_status;
+    int                           flags;
+    int                           fd;
+
+    local = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    fd = open(local->system_mountpt, O_RDONLY, 0);
+    if (fd < 0)
+    {
+        return OS_ERROR;
+    }
+
+    /* Fix the disk if there are errors */
+    if (repair)
+    {
+        flags = DOS_CHK_REPAIR;
+    }
+    else
+    {
+        flags = DOS_CHK_ONLY;
+    }
+
+    flags |= DOS_CHK_VERB_SILENT;
+
+    chk_status = ioctl(fd, FIOCHKDSK, flags);
+
+    close(fd);
+
+    if (chk_status != OK)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-heap.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-heap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-shared-heap.h"
+
+#include <memPartLib.h>
+
+/****************************************************************************************
+                                     HEAP API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_HeapGetInfo_Impl(OS_heap_prop_t *heap_prop)
+{
+    MEM_PART_STATS stats;
+    STATUS         status;
+
+    status = memPartInfoGet(memSysPartId, &stats);
+
+    if (status != OK)
+    {
+        return OS_ERROR;
+    }
+
+    heap_prop->free_bytes         = OSAL_SIZE_C(stats.numBytesFree);
+    heap_prop->free_blocks        = OSAL_BLOCKCOUNT_C(stats.numBlocksFree);
+    heap_prop->largest_free_block = OSAL_SIZE_C(stats.maxBlockSizeFree);
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-idmap.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-idmap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-idmap.h"
+#include "os-shared-idmap.h"
+
+#include <taskLib.h>
+#include <errnoLib.h>
+#include <objLib.h>
+#include <semLib.h>
+#include <sysLib.h>
+#include <taskLib.h>
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+VX_MUTEX_SEMAPHORE(OS_task_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_queue_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_bin_sem_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_mutex_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_count_sem_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_stream_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_dir_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_timebase_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_timecb_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_module_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_filesys_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_console_table_mut_mem);
+VX_MUTEX_SEMAPHORE(OS_condvar_table_mut_mem);
+
+static OS_impl_objtype_lock_t OS_task_table_lock      = {.mem = OS_task_table_mut_mem};
+static OS_impl_objtype_lock_t OS_queue_table_lock     = {.mem = OS_queue_table_mut_mem};
+static OS_impl_objtype_lock_t OS_bin_sem_table_lock   = {.mem = OS_bin_sem_table_mut_mem};
+static OS_impl_objtype_lock_t OS_mutex_table_lock     = {.mem = OS_mutex_table_mut_mem};
+static OS_impl_objtype_lock_t OS_count_sem_table_lock = {.mem = OS_count_sem_table_mut_mem};
+static OS_impl_objtype_lock_t OS_stream_table_lock    = {.mem = OS_stream_table_mut_mem};
+static OS_impl_objtype_lock_t OS_dir_table_lock       = {.mem = OS_dir_table_mut_mem};
+static OS_impl_objtype_lock_t OS_timebase_table_lock  = {.mem = OS_timebase_table_mut_mem};
+static OS_impl_objtype_lock_t OS_timecb_table_lock    = {.mem = OS_timecb_table_mut_mem};
+static OS_impl_objtype_lock_t OS_module_table_lock    = {.mem = OS_module_table_mut_mem};
+static OS_impl_objtype_lock_t OS_filesys_table_lock   = {.mem = OS_filesys_table_mut_mem};
+static OS_impl_objtype_lock_t OS_console_table_lock   = {.mem = OS_console_table_mut_mem};
+static OS_impl_objtype_lock_t OS_condvar_table_lock   = {.mem = OS_condvar_table_mut_mem};
+
+OS_impl_objtype_lock_t *const OS_impl_objtype_lock_table[OS_OBJECT_TYPE_USER] = {
+    [OS_OBJECT_TYPE_UNDEFINED]   = NULL,
+    [OS_OBJECT_TYPE_OS_TASK]     = &OS_task_table_lock,
+    [OS_OBJECT_TYPE_OS_QUEUE]    = &OS_queue_table_lock,
+    [OS_OBJECT_TYPE_OS_COUNTSEM] = &OS_count_sem_table_lock,
+    [OS_OBJECT_TYPE_OS_BINSEM]   = &OS_bin_sem_table_lock,
+    [OS_OBJECT_TYPE_OS_MUTEX]    = &OS_mutex_table_lock,
+    [OS_OBJECT_TYPE_OS_STREAM]   = &OS_stream_table_lock,
+    [OS_OBJECT_TYPE_OS_DIR]      = &OS_dir_table_lock,
+    [OS_OBJECT_TYPE_OS_TIMEBASE] = &OS_timebase_table_lock,
+    [OS_OBJECT_TYPE_OS_TIMECB]   = &OS_timecb_table_lock,
+    [OS_OBJECT_TYPE_OS_MODULE]   = &OS_module_table_lock,
+    [OS_OBJECT_TYPE_OS_FILESYS]  = &OS_filesys_table_lock,
+    [OS_OBJECT_TYPE_OS_CONSOLE]  = &OS_console_table_lock,
+    [OS_OBJECT_TYPE_OS_CONDVAR]  = &OS_condvar_table_lock};
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_Lock_Global_Impl(osal_objtype_t idtype)
+{
+    OS_impl_objtype_lock_t *impl;
+
+    impl = OS_impl_objtype_lock_table[idtype];
+
+    if (impl != NULL)
+    {
+        if (semTake(impl->vxid, WAIT_FOREVER) != OK)
+        {
+            OS_DEBUG("semTake() - vxWorks errno %d\n", errno);
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_Unlock_Global_Impl(osal_objtype_t idtype)
+{
+    OS_impl_objtype_lock_t *impl;
+
+    impl = OS_impl_objtype_lock_table[idtype];
+
+    if (impl != NULL)
+    {
+        if (semGive(impl->vxid) != OK)
+        {
+            OS_DEBUG("semGive() - vxWorks errno %d\n", errno);
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_WaitForStateChange_Impl(osal_objtype_t idtype, uint32 attempts)
+{
+    int wait_ticks;
+
+    if (attempts <= 10)
+    {
+        wait_ticks = attempts * attempts;
+    }
+    else
+    {
+        wait_ticks = 100;
+    }
+
+    OS_Unlock_Global_Impl(idtype);
+    taskDelay(wait_ticks);
+    OS_Lock_Global_Impl(idtype);
+}
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Initialize the tables that the OS API uses to keep track of information
+ *           about objects
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_TableMutex_Init(osal_objtype_t idtype)
+{
+    OS_impl_objtype_lock_t *impl;
+    SEM_ID                  semid;
+
+    impl = OS_impl_objtype_lock_table[idtype];
+    if (impl == NULL)
+    {
+        return OS_SUCCESS;
+    }
+
+    /* Initialize the table mutex for the given idtype */
+    semid = semMInitialize(impl->mem, SEM_Q_PRIORITY | SEM_INVERSION_SAFE);
+
+    if (semid == (SEM_ID)0)
+    {
+        OS_DEBUG("Error: semMInitialize() failed - vxWorks errno %d\n", errno);
+        return OS_ERROR;
+    }
+
+    impl->vxid = semid;
+
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-loader.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-loader.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-loader.h"
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+
+#include <errnoLib.h>
+#include <loadLib.h>
+#include <symLib.h>
+#include <unldLib.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+OS_impl_module_internal_record_t OS_impl_module_table[OS_MAX_MODULES];
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_ModuleAPI_Impl_Init(void)
+{
+    memset(&OS_impl_module_table, 0, sizeof(OS_impl_module_table));
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                    Module Loader API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    int32                             return_code;
+    int                               fd;
+    MODULE_ID                         vxModuleId;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    /*
+    ** File is ready to load
+    */
+
+    /*
+    ** Open the file
+    */
+    fd = open(translated_path, O_RDONLY, 0);
+    if (fd < 0)
+    {
+        OS_DEBUG("OSAL: Error, cannot open application file: %s\n", translated_path);
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        /*
+        ** Load the module
+        */
+        vxModuleId = loadModule(fd, LOAD_ALL_SYMBOLS);
+
+        if (vxModuleId == (MODULE_ID)0)
+        {
+            OS_DEBUG("OSAL: Error, cannot load module: %s\n", translated_path);
+            return_code = OS_ERROR;
+        }
+        else
+        {
+            impl->moduleID = vxModuleId;
+            return_code    = OS_SUCCESS;
+        }
+
+        /*
+        ** Close the file
+        */
+        close(fd);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    STATUS                            vxStatus;
+    OS_impl_module_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    /*
+    ** Attempt to close/unload the module
+    */
+    vxStatus = unldByModuleId(impl->moduleID, 0);
+    if (vxStatus == ERROR)
+    {
+        OS_DEBUG("OSAL: Error, Cannot Close/Unload application file: %d\n", vxStatus);
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    MODULE_INFO                       vxModuleInfo;
+    STATUS                            vxStatus;
+    OS_impl_module_internal_record_t *impl;
+    int32                             return_code;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_module_table, *token);
+
+    module_prop->host_module_id = (cpuaddr)impl->moduleID;
+
+    /*
+    ** Get the module info from vxWorks
+    */
+    vxStatus = moduleInfoGet(impl->moduleID, &vxModuleInfo);
+    if (vxStatus == ERROR)
+    {
+        OS_DEBUG("OSAL: OS_ModuleInfoGet Error from vxWorks: %d\n", vxStatus);
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        module_prop->addr.valid        = true;
+        module_prop->addr.code_address = (cpuaddr)vxModuleInfo.segInfo.textAddr;
+        module_prop->addr.code_size    = vxModuleInfo.segInfo.textSize;
+        module_prop->addr.data_address = (cpuaddr)vxModuleInfo.segInfo.dataAddr;
+        module_prop->addr.data_size    = vxModuleInfo.segInfo.dataSize;
+        module_prop->addr.bss_address  = (cpuaddr)vxModuleInfo.segInfo.bssAddr;
+        module_prop->addr.bss_size     = vxModuleInfo.segInfo.bssSize;
+
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-mutex.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-mutex.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+
+#include "os-impl-mutex.h"
+#include "os-shared-mutex.h"
+#include "os-shared-idmap.h"
+
+#include <errnoLib.h>
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+/* Console device */
+OS_impl_mutsem_internal_record_t OS_impl_mutex_table[OS_MAX_MUTEXES];
+
+/****************************************************************************************
+                                  MUTEX API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_MutexAPI_Impl_Init(void)
+{
+    memset(OS_impl_mutex_table, 0, sizeof(OS_impl_mutex_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    SEM_ID                            tmp_sem_id;
+    OS_impl_mutsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    /* Initialize VxWorks Semaphore.
+     * The memory for this sem is statically allocated. */
+    tmp_sem_id = semMInitialize(impl->mmem, SEM_Q_PRIORITY | SEM_INVERSION_SAFE);
+
+    if (tmp_sem_id == (SEM_ID)0)
+    {
+        OS_DEBUG("semMInitialize() - vxWorks errno %d\n", errno);
+        return OS_SEM_FAILURE;
+    }
+
+    impl->vxid = tmp_sem_id;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_mutsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    /*
+     * As the memory for the sem is statically allocated, delete is a no-op.
+     */
+    impl->vxid = 0;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGive_Impl(const OS_object_token_t *token)
+{
+    OS_impl_mutsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    /* Give VxWorks Semaphore */
+    return OS_VxWorks_GenericSemGive(impl->vxid);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemTake_Impl(const OS_object_token_t *token)
+{
+    OS_impl_mutsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_mutex_table, *token);
+
+    /* Take VxWorks Semaphore */
+    return OS_VxWorks_GenericSemTake(impl->vxid, WAIT_FOREVER);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGetInfo_Impl(const OS_object_token_t *token, OS_mut_sem_prop_t *mut_prop)
+{
+    /* VxWorks provides no additional info */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-network.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-network.h"
+#include "os-shared-network.h"
+
+#define OS_HOST_NAME_LEN 48
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    int32 return_code;
+
+    if (gethostname(host_name, name_len) < 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        host_name[name_len - 1] = 0;
+        return_code             = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    int   host_id;
+    int32 status;
+    char  host_name[OS_HOST_NAME_LEN];
+
+    status = OS_NetworkGetHostName_Impl(host_name, sizeof(host_name));
+    if (status == OS_SUCCESS)
+    {
+        host_id = hostGetByName(host_name);
+        if (host_id == ERROR)
+        {
+            status = OS_ERROR;
+        }
+        else
+        {
+            *IdBuf = (int32)host_id;
+        }
+    }
+
+    return status;
+}
+```
+
+### `os-impl-no-module.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-no-module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-vxworks.h"
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_ModuleAPI_Impl_Init(void)
+{
+    /* nothing to init, but needs to return SUCCESS to allow the rest of OSAL to work */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-queues.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-queues.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-queues.h"
+#include "os-shared-queue.h"
+#include "os-shared-timebase.h"
+#include "os-shared-idmap.h"
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+OS_impl_queue_internal_record_t OS_impl_queue_table[OS_MAX_QUEUES];
+
+/****************************************************************************************
+                                MESSAGE QUEUE API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_QueueAPI_Impl_Init(void)
+{
+    memset(OS_impl_queue_table, 0, sizeof(OS_impl_queue_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    MSG_Q_ID                         tmp_msgq_id;
+    int                              queue_depth;
+    int                              data_size;
+    OS_impl_queue_internal_record_t *impl;
+    OS_queue_internal_record_t *     queue;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+    queue = OS_OBJECT_TABLE_GET(OS_queue_table, *token);
+
+    queue_depth = queue->max_depth; /* maximum number of messages in queue (queue depth) */
+    data_size   = queue->max_size;  /* maximum size in bytes of a message */
+
+    /* Create VxWorks Message Queue */
+    tmp_msgq_id = msgQCreate(queue_depth, data_size, MSG_Q_FIFO);
+
+    /* check if message Q create failed */
+    if (tmp_msgq_id == 0)
+    {
+        OS_DEBUG("msgQCreate() - vxWorks errno %d\n", errno);
+        return OS_ERROR;
+    }
+
+    impl->vxid = tmp_msgq_id;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    /* Try to delete the queue */
+    if (msgQDelete(impl->vxid) != OK)
+    {
+        OS_DEBUG("msgQDelete() - vxWorks errno %d\n", errno);
+        return OS_ERROR;
+    }
+
+    impl->vxid = 0;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGet_Impl(const OS_object_token_t *token, void *data, size_t size, size_t *size_copied, int32 timeout)
+{
+    int32                            return_code;
+    STATUS                           status;
+    int                              ticks;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    /* Get Message From Message Queue */
+    if (timeout == OS_PEND)
+    {
+        ticks = WAIT_FOREVER;
+    }
+    else if (timeout == OS_CHECK)
+    {
+        ticks = NO_WAIT;
+    }
+    else
+    {
+        /* msecs rounded to the closest system tick count if possible */
+        if (OS_Milli2Ticks(timeout, &ticks) != OS_SUCCESS)
+        {
+            return OS_ERROR;
+        }
+    }
+
+    status = msgQReceive(impl->vxid, data, size, ticks);
+
+    if (status == ERROR)
+    {
+        *size_copied = 0;
+        if (errno == S_objLib_OBJ_TIMEOUT)
+        {
+            return_code = OS_QUEUE_TIMEOUT;
+        }
+        else if (errno == S_objLib_OBJ_UNAVAILABLE)
+        {
+            return_code = OS_QUEUE_EMPTY;
+        }
+        else
+        {
+            OS_DEBUG("msgQReceive() - vxWorks errno %d\n", errno);
+            return_code = OS_ERROR;
+        }
+    }
+    else
+    {
+        *size_copied = OSAL_SIZE_C(status);
+        return_code  = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueuePut_Impl(const OS_object_token_t *token, const void *data, size_t size, uint32 flags)
+{
+    int32                            return_code;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    if (msgQSend(impl->vxid, (void *)data, size, NO_WAIT, MSG_PRI_NORMAL) == OK)
+    {
+        return_code = OS_SUCCESS;
+    }
+    else if (errno == S_objLib_OBJ_UNAVAILABLE)
+    {
+        return_code = OS_QUEUE_FULL;
+    }
+    else
+    {
+        OS_DEBUG("msgQSend() - vxWorks errno %d\n", errno);
+        return_code = OS_ERROR;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGetInfo_Impl(const OS_object_token_t *token, OS_queue_prop_t *queue_prop)
+{
+    /* No extra info for queues in the OS implementation */
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-shell.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-shell.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-io.h"
+#include "os-shared-shell.h"
+#include "os-shared-file.h"
+#include "os-shared-task.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+
+#include <shellLib.h>
+#include <taskLib.h>
+#include <sysLib.h>
+
+#define OS_REDIRECTSTRSIZE           15
+#define OS_SHELL_TMP_FILE_EXT        ".out"
+#define OS_SHELL_TMP_FILE_EXT_LEN    4
+#define OS_SHELL_CMD_TASK_STACK_SIZE 16384
+#define OS_SHELL_CMD_TASK_PRIORITY   250
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd)
+{
+    int32                           ReturnCode = OS_ERROR;
+    int32                           Result;
+    osal_id_t                       fdCmd;
+    OS_impl_file_internal_record_t *out_impl;
+    OS_impl_file_internal_record_t *cmd_impl;
+    OS_object_token_t               cmd_token;
+    char                            localShellName[OS_MAX_API_NAME];
+
+    snprintf(localShellName, sizeof(localShellName), "shll_%08lx", OS_ObjectIdToInteger(OS_TaskGetId()));
+
+    /* Create a file to write the command to (or write over the old one) */
+    Result =
+        OS_OpenCreate(&fdCmd, OS_SHELL_CMD_INPUT_FILE_NAME, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_READ_WRITE);
+
+    if (Result < OS_SUCCESS)
+    {
+        return Result;
+    }
+
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_STREAM, fdCmd, &cmd_token) == OS_SUCCESS)
+    {
+        out_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+        cmd_impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, cmd_token);
+
+        /* copy the command to the file, and then seek back to the beginning of the file */
+        OS_write(fdCmd, Cmd, OS_strnlen(Cmd, OS_MAX_CMD_LEN));
+        OS_lseek(fdCmd, 0, OS_SEEK_SET);
+
+        /* Create a shell task the will run the command in the file, push output to OS_fd */
+        Result = shellGenericInit("INTERPRETER=Cmd", 0, localShellName, NULL, false, false, cmd_impl->fd, out_impl->fd,
+                                  out_impl->fd);
+    }
+
+    if (Result == OK)
+    {
+        /* Wait for the command to terminate */
+        do
+        {
+            taskDelay(sysClkRateGet());
+        } while (taskNameToId(localShellName) != ((TASK_ID)ERROR));
+
+        ReturnCode = OS_SUCCESS;
+    }
+
+    /* Close the file descriptor */
+    OS_close(fdCmd);
+
+    return ReturnCode;
+}
+```
+
+### `os-impl-sockets.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-shared-idmap.h"
+#include "os-impl-io.h"
+#include "os-impl-sockets.h"
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+void OS_VxWorks_SetSocketFlags_Impl(const OS_object_token_t *token)
+{
+    OS_impl_file_internal_record_t *impl;
+    int                             os_flags;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /* Use ioctl/FIONBIO on this platform, rather than standard fcntl() */
+    os_flags = 1;
+    if (ioctl(impl->fd, FIONBIO, &os_flags) == -1)
+    {
+        /* No recourse if ioctl fails - just report the error and move on. */
+        OS_DEBUG("ioctl(FIONBIO): %s\n", strerror(errno));
+    }
+
+    impl->selectable = true;
+}
+```
+
+### `os-impl-symtab.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-symtab.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-symtab.h"
+#include "os-shared-module.h"
+
+#include <stdio.h>
+#include <string.h> /* memset() */
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#include <errnoLib.h>
+#include <sysLib.h>
+#include <moduleLib.h>
+#include <symLib.h>
+#include <loadLib.h>
+#include <unldLib.h>
+
+typedef struct
+{
+    char    SymbolName[OS_MAX_SYM_LEN];
+    cpuaddr SymbolAddress;
+} SymbolRecord_t;
+
+/* A global for storing the state in a SymbolDump call */
+SymbolDumpState_t OS_VxWorks_SymbolDumpState;
+
+/* the system symbol table */
+extern SYMTAB_ID sysSymTbl;
+
+/****************************************************************************************
+                                SYMBOL TABLE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GenericSymbolLookup_Impl(SYMTAB_ID SymTab, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    STATUS      vxStatus;
+    SYMBOL_DESC SymDesc;
+
+    /*
+    ** Check parameters
+    */
+    if ((SymbolAddress == NULL) || (SymbolName == NULL))
+    {
+        return OS_INVALID_POINTER;
+    }
+
+    /*
+    ** Lookup the entry point
+    **
+    ** VxWorks 6.9 has deprecated the "symFindByName" API and it is replaced
+    ** with a "symFind" API instead.
+    */
+
+    memset(&SymDesc, 0, sizeof(SYMBOL_DESC));
+    SymDesc.mask = SYM_FIND_BY_NAME;
+    SymDesc.name = (char *)SymbolName;
+
+    vxStatus       = symFind(SymTab, &SymDesc);
+    *SymbolAddress = (cpuaddr)SymDesc.value;
+
+    if (vxStatus == ERROR)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    return OS_GenericSymbolLookup_Impl(sysSymTbl, SymbolAddress, SymbolName);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    /*
+     * NOTE: this is currently exactly the same as OS_SymbolLookup_Impl().
+     *
+     * Ideally this should get a SYMTAB_ID from the MODULE_ID and search only
+     * for the symbols provided by that module - but it is not clear if vxWorks
+     * offers this capability.
+     */
+    return OS_GenericSymbolLookup_Impl(sysSymTbl, SymbolAddress, SymbolName);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Function called by vxWorks to iterate the vxworks symbol table
+ *
+ * Parameters:
+ *           name - The symbol name
+ *           val  - The symbol address value
+ *           type - The vxWorks symbol type ( not used )
+ *           max_size - The maximum size of the file that is written to.
+ *           group - The vxWorks symbol group ( not used )
+ *
+ *  Returns: true to tell vxWorks to continue to iterate the symbol table
+ *           false to tell vxWorks to stop iterating the symbol table
+ *
+ *           The address of the symbol will be stored in the pointer that is passed in.
+ *
+ *-----------------------------------------------------------------*/
+BOOL OS_SymTableIterator_Impl(char *name, SYM_VALUE val, SYM_TYPE type, _Vx_usr_arg_t arg, SYM_GROUP group)
+{
+    SymbolRecord_t     symRecord;
+    size_t             NextSize;
+    int                status;
+    SymbolDumpState_t *state;
+
+    /*
+     * Rather than passing the state pointer through the generic "int" arg,
+     * use a global.  This is OK because dumps are serialized externally.
+     */
+    state = &OS_VxWorks_SymbolDumpState;
+
+    /*
+    ** Copy symbol name
+    */
+    strncpy(symRecord.SymbolName, name, sizeof(symRecord.SymbolName) - 1);
+    symRecord.SymbolName[sizeof(symRecord.SymbolName) - 1] = '\0';
+
+    /*
+    ** Check to see if the max length of each symbol name has been reached
+    */
+    if (memchr(name, 0, OS_MAX_SYM_LEN) == NULL)
+    {
+        symRecord.SymbolName[sizeof(symRecord.SymbolName) - 2] = '*';
+        OS_DEBUG("%s(): symbol name too long\n", __func__);
+        state->StatusCode = OS_ERR_NAME_TOO_LONG;
+    }
+
+    /*
+    ** Check to see if the maximum size of the file has been reached
+    */
+    NextSize = state->CurrSize + sizeof(symRecord);
+    if (NextSize > state->Sizelimit)
+    {
+        /*
+        ** We exceeded the maximum size, so tell vxWorks to stop
+        ** However this is not considered an error, just a stop condition.
+        */
+        OS_DEBUG("%s(): symbol table size exceeded\n", __func__);
+        state->StatusCode = OS_ERR_OUTPUT_TOO_LARGE;
+        return false;
+    }
+
+    /*
+    ** Save symbol address
+    */
+    symRecord.SymbolAddress = (cpuaddr)val;
+
+    /*
+    ** Write entry in file
+    */
+    status = write(state->fd, (char *)&symRecord, sizeof(symRecord));
+    /* There is a problem if not all bytes were written OR if we get an error
+     * value, < 0. */
+    if (status < (int)sizeof(symRecord))
+    {
+        state->StatusCode = OS_ERROR;
+        return false;
+    }
+
+    state->CurrSize = NextSize;
+
+    /*
+    ** It's OK to continue
+    */
+    return true;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t size_limit)
+{
+    SymbolDumpState_t *state;
+
+    /*
+     * Rather than passing the state pointer through the generic "int" arg,
+     * use a global.  This is OK because dumps are serialized externally.
+     */
+    state = &OS_VxWorks_SymbolDumpState;
+
+    memset(state, 0, sizeof(*state));
+    state->Sizelimit = size_limit;
+
+    /*
+    ** Open file
+    */
+    state->fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    if (state->fd < 0)
+    {
+        OS_DEBUG("open(%s): error: %s\n", filename, strerror(errno));
+        state->StatusCode = OS_ERROR;
+    }
+    else
+    {
+        /*
+        ** Iterate the symbol table
+        */
+        (void)symEach(sysSymTbl, OS_SymTableIterator_Impl, 0);
+
+        close(state->fd);
+    }
+
+    /*
+     * If output size was zero this means a failure of the symEach call,
+     * in that it didn't iterate over anything at all.
+     */
+    if (state->StatusCode == OS_SUCCESS && state->CurrSize == 0)
+    {
+        OS_DEBUG("%s(): No symbols found!\n", __func__);
+        state->StatusCode = OS_ERROR;
+    }
+
+    return state->StatusCode;
+}
+```
+
+### `os-impl-tasks.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-tasks.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-tasks.h"
+
+#include "os-shared-task.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+#include "osapi-bsp.h"
+
+#include <errnoLib.h>
+#include <taskLib.h>
+#include <sysLib.h>
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/*
+ * macros for stack size manipulation.
+ * These are normally provided by vxWorks.h if relevant for the platform.
+ * If they are not defined, use a reasonable default/substitute.
+ */
+#if defined(_STACK_ALIGN_SIZE)
+#define VX_IMPL_STACK_ALIGN_SIZE _STACK_ALIGN_SIZE
+#else
+#define VX_IMPL_STACK_ALIGN_SIZE ((size_t)16)
+#endif
+
+#if defined(STACK_ROUND_DOWN)
+#define VX_IMPL_STACK_ROUND_DOWN(x) STACK_ROUND_DOWN(x)
+#else
+#define VX_IMPL_STACK_ROUND_DOWN(x) ((x) & ~(VX_IMPL_STACK_ALIGN_SIZE - 1))
+#endif
+
+#if defined(STACK_ROUND_UP)
+#define VX_IMPL_STACK_ROUND_UP(x) STACK_ROUND_UP(x)
+#else
+#define VX_IMPL_STACK_ROUND_UP(x) (((x) + (VX_IMPL_STACK_ALIGN_SIZE - 1)) & ~(VX_IMPL_STACK_ALIGN_SIZE - 1))
+#endif
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+/* Tables where the OS object information is stored */
+OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_VxWorksEntry
+
+   Purpose: A Simple VxWorks-compatible entry point that calls the common task entry function
+
+   NOTES: This wrapper function is only used locally by OS_TaskCreate below
+
+---------------------------------------------------------------------------------------*/
+int OS_VxWorks_TaskEntry(int arg)
+{
+    OS_TaskEntryPoint(OS_ObjectIdFromInteger(arg));
+
+    return 0;
+}
+
+/****************************************************************************************
+                                    TASK API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_TaskAPI_Impl_Init(void)
+{
+    memset(OS_impl_task_table, 0, sizeof(OS_impl_task_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    STATUS                          status;
+    int                             vxflags;
+    int                             vxpri;
+    size_t                          actualsz;
+    unsigned long                   userstackbase;
+    unsigned long                   actualstackbase;
+    OS_impl_task_internal_record_t *lrec;
+    OS_task_internal_record_t *     task;
+
+    lrec = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+    task = OS_OBJECT_TABLE_GET(OS_task_table, *token);
+
+    /* Create VxWorks Task */
+
+    /* see if the user wants floating point enabled. If
+     * so, then se the correct option.
+     */
+    vxflags = OS_BSP_GetResourceTypeConfig(OS_OBJECT_TYPE_OS_TASK);
+    if (flags & OS_FP_ENABLED)
+    {
+        vxflags |= VX_FP_TASK;
+    }
+
+    /*
+     * Get priority/stack specs from main struct
+     * priority should be a direct passthru
+     */
+    vxpri         = task->priority;
+    actualsz      = task->stack_size;
+    userstackbase = (unsigned long)task->stack_pointer;
+
+    /*
+     * NOTE: Using taskInit() here rather than taskSpawn() allows us
+     * to specify a specific statically-allocated WIND_TCB instance.
+     *
+     * This is very important as it allows for efficient reverse-lookup;
+     * a call to taskTcb() will get the WIND_TCB pointer back, which
+     * in turn provides an index into OSAL local data structures.  With
+     * this we can have the equivalent of a taskVar that works on both
+     * UMP and SMP deployments.
+     *
+     * The difficulty with taskInit() is that we must also manually
+     * allocate the stack as well (there is no API that allows
+     * a specific WIND_TCB but automatically allocates the stack).
+     * Furthermore, VxWorks uses this pointer directly as the CPU
+     * stack pointer register, so we need to manually adjust it for
+     * downward-growing stacks.
+     *
+     * NOTE: Allocation of the stack requires a malloc() of some form.
+     * This is what taskSpawn() effectively does internally to create
+     * stack.  If the system malloc() is unacceptable here then this
+     * could be replaced with a locally scoped statically allocated buffer.
+     *
+     * ALSO NOTE: The stack-rounding macros are normally supplied from
+     * vxWorks.h on relevant platforms.  If not provided then it is
+     * assumed that no specific alignment is needed on this platform.
+     */
+
+    if (userstackbase == 0)
+    {
+        /* add a little extra in case the base address needs alignment too.
+         * this helps ensure that the final aligned stack is not less
+         * than what was originally requested (but might be a bit more)  */
+        actualsz += VX_IMPL_STACK_ALIGN_SIZE;
+        actualsz = VX_IMPL_STACK_ROUND_UP(actualsz);
+
+        /*
+         * VxWorks does not provide a way to deallocate
+         * a taskInit-provided stack when a task exits.
+         *
+         * So in this case we will find the leftover heap
+         * buffer when OSAL reuses this local record block.
+         *
+         * If that leftover heap buffer is big enough it
+         * can be used directly.  Otherwise it needs to be
+         * re-created.
+         */
+        if (lrec->heap_block_size < actualsz)
+        {
+            if (lrec->heap_block != NULL)
+            {
+                /* release the old block */
+                free(lrec->heap_block);
+                lrec->heap_block_size = 0;
+            }
+
+            /* allocate a new heap block to use for a stack */
+            lrec->heap_block = malloc(actualsz);
+
+            if (lrec->heap_block != NULL)
+            {
+                lrec->heap_block_size = actualsz;
+            }
+        }
+
+        userstackbase = (unsigned long)lrec->heap_block;
+    }
+
+    if (userstackbase == 0)
+    {
+        /* no stack - cannot create task */
+        return OS_ERROR;
+    }
+
+    actualstackbase = userstackbase;
+
+    /* also round the base address */
+    actualstackbase = VX_IMPL_STACK_ROUND_UP(actualstackbase);
+    actualsz -= (actualstackbase - userstackbase);
+    actualsz = VX_IMPL_STACK_ROUND_DOWN(actualsz);
+
+    /*
+     * On most CPUs the stack grows downward, so assume that to be
+     * the case in the event that _STACK_DIR is not defined/known
+     */
+#if !defined(_STACK_DIR) || (_STACK_DIR != _STACK_GROWS_UP)
+    actualstackbase += actualsz; /* move to last byte of stack block */
+#endif
+
+    status = taskInit((WIND_TCB *)&lrec->tcb,                            /* address of new task's TCB */
+                      (char *)task->task_name, vxpri,                    /* priority of new task */
+                      vxflags,                                           /* task option word */
+                      (char *)actualstackbase,                           /* base of new task's stack */
+                      actualsz,                                          /* size (bytes) of stack needed */
+                      (FUNCPTR)OS_VxWorks_TaskEntry,                     /* entry point of new task */
+                      OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), /* 1st arg is ID */
+                      0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    if (status != OK)
+    {
+        return OS_ERROR;
+    }
+
+    lrec->vxid = (TASK_ID)&lrec->tcb;
+
+    taskActivate(lrec->vxid);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /*
+    ** Try to delete the task
+    ** If this fails, not much recourse - the only potential cause of failure
+    ** to cancel here is that the thread ID is invalid because it already exited itself,
+    ** and if that is true there is nothing wrong - everything is OK to continue normally.
+    */
+    if (taskDelete(impl->vxid) != OK)
+    {
+        OS_DEBUG("taskDelete() - vxWorks errno %d\n", errno);
+        return OS_ERROR;
+    }
+
+    impl->vxid = 0;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDetach_Impl(const OS_object_token_t *token)
+{
+    /* No-op on VxWorks */
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TaskExit_Impl()
+{
+    taskExit(0);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelay_Impl(uint32 milli_second)
+{
+    /* msecs rounded to the closest system tick count */
+    int sys_ticks;
+
+    /* Convert to ticks if possible */
+    if (OS_Milli2Ticks(milli_second, &sys_ticks) != OS_SUCCESS)
+    {
+        return OS_ERROR;
+    }
+
+    /* if successful, the execution of task will pend here until delay finishes */
+    if (taskDelay(sys_ticks) != OK)
+    {
+        return OS_ERROR;
+    }
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskSetPriority_Impl(const OS_object_token_t *token, osal_priority_t new_priority)
+{
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /* Set VxWorks Task Priority */
+    if (taskPrioritySet(impl->vxid, new_priority) != OK)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskMatch_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /*
+    ** Get VxWorks Task Id
+    */
+    if (taskIdSelf() != impl->vxid)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskRegister_Impl(osal_id_t global_task_id)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+osal_id_t OS_TaskGetId_Impl(void)
+{
+    void *    lrec;
+    size_t    idx;
+    osal_id_t id;
+
+    id   = OS_OBJECT_ID_UNDEFINED;
+    lrec = taskTcb(taskIdSelf());
+
+    if (lrec != NULL)
+    {
+        idx = (OS_impl_task_internal_record_t *)lrec - &OS_impl_task_table[0];
+        if (idx < OS_MAX_TASKS)
+        {
+            id = OS_global_task_table[idx].active_id;
+        }
+    }
+
+    return id;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskGetInfo_Impl(const OS_object_token_t *token, OS_task_prop_t *task_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskValidateSystemData_Impl(const void *sysdata, size_t sysdata_size)
+{
+    if (sysdata == NULL || sysdata_size != sizeof(TASK_ID))
+    {
+        return OS_INVALID_POINTER;
+    }
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool OS_TaskIdMatchSystemData_Impl(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    const TASK_ID *                 target = (const TASK_ID *)ref;
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    return (*target == impl->vxid);
+}
+```
+
+### `os-impl-timebase.c`
+
+**경로:** `fsw/osal/src/os/vxworks/src/os-impl-timebase.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  vxworks
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+****************************************************************************************/
+
+#include "os-vxworks.h"
+#include "os-impl-timebase.h"
+
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+
+#include <signal.h>
+#include <taskLib.h>
+#include <semLib.h>
+#include <sysLib.h>
+#include <errnoLib.h>
+
+#include "osapi-task.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/* Each "timebase" resource spawns a dedicated servicing task-
+ * this task (not the timer ISR) is the context that calls back to
+ * the user application.
+ *
+ * This should run at the highest priority to reduce latency.
+ */
+#define OSAL_TIMEBASE_TASK_STACK_SIZE  4096
+#define OSAL_TIMEBASE_TASK_PRIORITY    0
+#define OSAL_TIMEBASE_TASK_OPTION_WORD 0
+
+#define OSAL_TIMEBASE_REG_WAIT_LIMIT 100
+/*
+ * Prefer to use the MONOTONIC clock if available, as it will not get disrupted by setting
+ * the time like the REALTIME clock will.
+ */
+#ifndef OS_PREFERRED_CLOCK
+#ifdef _POSIX_MONOTONIC_CLOCK
+#define OS_PREFERRED_CLOCK CLOCK_MONOTONIC
+#else
+#define OS_PREFERRED_CLOCK CLOCK_REALTIME
+#endif
+#endif
+
+/****************************************************************************************
+                                    LOCAL TYPEDEFS
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+OS_impl_timebase_internal_record_t OS_impl_timebase_table[OS_MAX_TIMEBASES];
+
+static uint32 OS_ClockAccuracyNsec;
+
+/****************************************************************************************
+                                INTERNAL FUNCTIONS
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBaseLock_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    semTake(impl->handler_mutex, WAIT_FOREVER);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBaseUnlock_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    semGive(impl->handler_mutex);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+void OS_VxWorks_UsecToTimespec(uint32 usecs, struct timespec *time_spec)
+{
+    if (usecs < 1000000)
+    {
+        time_spec->tv_nsec = (usecs * 1000);
+        time_spec->tv_sec  = 0;
+    }
+    else
+    {
+        time_spec->tv_sec  = usecs / 1000000;
+        time_spec->tv_nsec = (usecs % 1000000) * 1000;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Blocks the calling task until the timer tick arrives
+ *
+ *-----------------------------------------------------------------*/
+uint32 OS_VxWorks_SigWait(osal_id_t timebase_id)
+{
+    OS_object_token_t                   token;
+    OS_impl_timebase_internal_record_t *impl;
+    uint32                              tick_time;
+    int                                 signo;
+    int                                 ret;
+
+    tick_time = 0;
+
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMEBASE, timebase_id, &token) == OS_SUCCESS)
+    {
+        impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, token);
+
+        /*
+         * Pend for the tick arrival
+         */
+        ret = sigwait(&impl->timer_sigset, &signo);
+
+        /*
+         * The sigwait() can be interrupted....
+         * Only return nonzero interval time if it is an actual timer signal.
+         * This value will get added to the free-run counter.
+         *
+         * NOTE: This always returns the nominal interval time.
+         *
+         * This value will likely be wrong on the first tick
+         * after starting a new timebase or reconfiguring an
+         * existing one.  This is because interval times
+         * are relative, and the exact instant that the reconfig
+         * takes effect is not knowable.
+         *
+         * This is OK because free-run counter values
+         * are only expected to be valid in steady-state
+         * conditions.  Samples from before/after a reconfig
+         * are generally not comparable.
+         */
+        if (ret == OK && signo == impl->assigned_signal)
+        {
+            if (impl->reset_flag)
+            {
+                /* first interval after reset, use start time */
+                tick_time        = impl->configured_start_time;
+                impl->reset_flag = false;
+            }
+            else
+            {
+                tick_time = impl->configured_interval_time;
+            }
+        }
+    }
+
+    return tick_time;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+void OS_VxWorks_RegisterTimer(osal_id_t obj_id)
+{
+    OS_impl_timebase_internal_record_t *local;
+    OS_object_token_t                   token;
+    struct sigevent                     evp;
+    int                                 status;
+    int32                               retcode;
+
+    retcode = OS_ObjectIdGetById(OS_LOCK_MODE_RESERVED, OS_OBJECT_TYPE_OS_TIMEBASE, obj_id, &token);
+    if (retcode == OS_SUCCESS)
+    {
+        local = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, token);
+
+        if (local->assigned_signal == 0)
+        {
+            /* nothing to register in RTOS */
+            status = 0;
+        }
+        else
+        {
+            memset(&evp, 0, sizeof(evp));
+            evp.sigev_notify = SIGEV_SIGNAL;
+            evp.sigev_signo  = local->assigned_signal;
+
+            /*
+            ** Create the timer
+            **
+            ** The result is not returned from this function, because
+            ** this is a different task context from the original creator.
+            **
+            ** The registration status is returned through the OS_impl_timebase_table entry,
+            ** which is checked by the creator before returning.
+            **
+            ** If set to ERROR, then this task will be subsequently deleted.
+            */
+            status = timer_create(OS_PREFERRED_CLOCK, &evp, &local->host_timerid);
+        }
+
+        if (status < 0)
+        {
+            OS_DEBUG("timer_create() failed: errno=%d\n", errno);
+            local->timer_state = OS_TimerRegState_ERROR;
+        }
+        else
+        {
+            local->timer_state = OS_TimerRegState_SUCCESS;
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+    else
+    {
+        OS_DEBUG("OS_VxWorks_RegisterTimer() bad ID, code=%d\n", (int)retcode);
+    }
+}
+
+/****************************************************************************************
+                      Entry point for helper thread
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int OS_VxWorks_TimeBaseTask(int arg)
+{
+    osal_id_t obj_id;
+
+    obj_id = OS_ObjectIdFromInteger(arg);
+    OS_VxWorks_RegisterTimer(obj_id);
+    OS_TimeBase_CallbackThread(obj_id);
+
+    return 0;
+}
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_VxWorks_TimeBaseAPI_Impl_Init(void)
+{
+    int clockRate;
+
+    /*
+    ** sysClkRateGet returns ticks/second.
+    */
+    clockRate = sysClkRateGet();
+
+    if (clockRate <= 0)
+    {
+        return OS_ERROR;
+    }
+
+    OS_SharedGlobalVars.TicksPerSecond = clockRate;
+
+    /*
+     * Store the clock accuracy for 1 tick.
+     *
+     * Compute the clock accuracy in Nanoseconds (ns per tick)
+     * This really should be an exact/whole number result; otherwise this
+     * will round to the nearest nanosecond.
+     */
+    OS_ClockAccuracyNsec = (1000000000 + (OS_SharedGlobalVars.TicksPerSecond / 2)) / OS_SharedGlobalVars.TicksPerSecond;
+
+    /*
+     * Finally compute the Microseconds per tick
+     * This must further round again to the nearest microsecond (using the + 500 / 1000),
+     * so it is undesirable to use this for time computations if the result is not exact.
+     */
+    OS_SharedGlobalVars.MicroSecPerTick = (OS_ClockAccuracyNsec + 500) / 1000;
+
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                   Time Base API
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseCreate_Impl(const OS_object_token_t *token)
+{
+    /*
+     * The tick_sem is a simple semaphore posted by the ISR and taken by the
+     * timebase helper task (created later).
+     */
+    int32                               return_code;
+    OS_impl_timebase_internal_record_t *local;
+    OS_timebase_internal_record_t *     timebase;
+    int                                 signo;
+    sigset_t                            inuse;
+    osal_index_t                        idx;
+    uint32                              i;
+
+    return_code = OS_SUCCESS;
+
+    local    = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, *token);
+
+    sigemptyset(&local->timer_sigset);
+    local->assigned_signal = 0;
+    local->handler_task    = 0;
+    local->handler_mutex   = (SEM_ID)0;
+    local->host_timerid    = 0;
+    local->timer_state     = OS_TimerRegState_INIT;
+    local->reset_flag      = false;
+
+    /*
+     * Set up the necessary OS constructs
+     *
+     * If an external sync function is used then there is nothing to do here -
+     * we simply call that function and it should synchronize to the time source.
+     *
+     * If no external sync function is provided then this will set up a VxWorks
+     * timer to locally simulate the timer tick using the CPU clock.
+     */
+    if (timebase->external_sync == NULL)
+    {
+        /*
+         * find an RT signal that is not used by another time base object.
+         * This the global lock is held here so there is no chance of
+         * the underlying tables changing.
+         */
+        sigemptyset(&inuse);
+
+        for (idx = 0; idx < OS_MAX_TIMEBASES; ++idx)
+        {
+            if (OS_ObjectIdIsValid(OS_global_timebase_table[idx].active_id) &&
+                OS_impl_timebase_table[idx].assigned_signal > 0)
+            {
+                /* mark signal as in-use */
+                sigaddset(&inuse, OS_impl_timebase_table[idx].assigned_signal);
+            }
+        }
+
+        for (signo = SIGRTMIN; signo <= SIGRTMAX; ++signo)
+        {
+            if (!sigismember(&inuse, signo))
+            {
+                /* signal is available, stop search */
+                local->assigned_signal = signo;
+                break;
+            }
+        }
+
+        if (local->assigned_signal == 0)
+        {
+            /* no available signal for timer */
+            OS_DEBUG("No free RT signals to use for simulated time base\n");
+            return_code = OS_TIMER_ERR_UNAVAILABLE;
+        }
+        else
+        {
+            /*
+             * Note that VxWorks appears to always send the timer signal
+             * to the task that called timer_create().  This is different
+             * than e.g. POSIX where the signal is sent to the process
+             * and masks can be modified to direct the signal to the
+             * correct task.
+             *
+             * Therefore, we choose the signal now, but defer calling
+             * timer_create to the internal helper task.
+             */
+            sigaddset(&local->timer_sigset, signo);
+
+            /*
+             * Use local sigwait() wrapper as a sync function for the local task.
+             */
+            timebase->external_sync = OS_VxWorks_SigWait;
+        }
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        /*
+         * Create the handler_mutex.
+         * This controls access to the callback list for this timebase
+         *
+         * Note memory for this sem is statically allocated, so if a failure
+         * occurs there is no need to free the memory later.
+         */
+        local->handler_mutex = semMInitialize(local->mmem, SEM_Q_PRIORITY | SEM_INVERSION_SAFE);
+        if (local->handler_mutex == (SEM_ID)0)
+        {
+            OS_DEBUG("Error: Handler Mutex could not be initialized: errno=%d\n", errno);
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+    }
+
+    /*
+     * Spawn a dedicated time base handler thread
+     *
+     * This alleviates the need to handle expiration in the context of a signal handler -
+     * The handler thread can call a BSP synchronized delay implementation as well as the
+     * application callback function.  It should run with elevated priority to reduce latency.
+     *
+     * Note the thread will not actually start running until this function exits and releases
+     * the global table lock.
+     */
+    if (return_code == OS_SUCCESS)
+    {
+        local->handler_task = taskSpawn(timebase->timebase_name, OSAL_TIMEBASE_TASK_PRIORITY, /* priority */
+                                        OSAL_TIMEBASE_TASK_OPTION_WORD,                       /* task option word */
+                                        OSAL_TIMEBASE_TASK_STACK_SIZE,    /* size (bytes) of stack needed */
+                                        (FUNCPTR)OS_VxWorks_TimeBaseTask, /* Timebase helper task entry point */
+                                        OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), /* 1st arg is ID */
+                                        0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+        /* check if taskSpawn failed */
+        if (local->handler_task == ((TASK_ID)ERROR))
+        {
+            OS_DEBUG("taskSpawn() - vxWorks errno: %d\n", errno);
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+        else
+        {
+            /*
+             * Wait for the newly-spawned task to call timer_create().
+             * If this is successful, then return success, otherwise
+             * return failure.
+             *
+             * As the task runs with a high priority, it should preempt
+             * this task and therefore it should probably already be
+             * complete by the time execution gets here.  But for
+             * multi-core machines it is possible that an extra delay
+             * is necessary.
+             */
+            i = OSAL_TIMEBASE_REG_WAIT_LIMIT;
+            while (local->timer_state == OS_TimerRegState_INIT && i > 0)
+            {
+                OS_TaskDelay(1);
+                --i;
+            }
+
+            /*
+             * If the timer wasn't fully created successfully,
+             * then delete the task.
+             */
+            if (local->timer_state != OS_TimerRegState_SUCCESS)
+            {
+                OS_DEBUG("Error during timer registration\n");
+                taskDelete(local->handler_task);
+                return_code = OS_TIMER_ERR_INTERNAL;
+            }
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseSet_Impl(const OS_object_token_t *token, uint32 start_time, uint32 interval_time)
+{
+    OS_impl_timebase_internal_record_t *local;
+    struct itimerspec                   timeout;
+    int32                               return_code;
+    int                                 status;
+
+    local = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    /* There is only something to do here if we are generating a simulated tick */
+    if (local->assigned_signal <= 0)
+    {
+        /* An externally synced timebase does not need to be set (noop) */
+        return_code = OS_SUCCESS;
+    }
+    else
+    {
+        OS_VxWorks_UsecToTimespec(start_time, &timeout.it_value);
+        OS_VxWorks_UsecToTimespec(interval_time, &timeout.it_interval);
+
+        /*
+        ** Program the real timer
+        */
+        status = timer_settime(local->host_timerid, 0, /* Flags field can be zero */
+                               &timeout,               /* struct itimerspec */
+                               NULL);                  /* Oldvalue */
+
+        if (status == OK)
+        {
+            /*
+             * VxWorks will round the interval up to the next higher
+             * system tick interval.  Sometimes this can make a substantial
+             * difference in the actual time, particularly as the error
+             * accumulates over time.
+             *
+             * timer_gettime() will reveal the actual interval programmed,
+             * after all rounding/adjustments, which can be used to determine
+             * the actual start_time/interval_time that will be realized.
+             *
+             * If this actual interval is different than the intended value,
+             * it may indicate the need for better tuning on the app/config/bsp
+             * side, and so a DEBUG message is generated.
+             */
+            status = timer_gettime(local->host_timerid, &timeout);
+            if (status == OK)
+            {
+                return_code = OS_SUCCESS;
+
+                local->configured_start_time = (timeout.it_value.tv_sec * 1000000) + (timeout.it_value.tv_nsec / 1000);
+                local->configured_interval_time =
+                    (timeout.it_interval.tv_sec * 1000000) + (timeout.it_interval.tv_nsec / 1000);
+
+                if (local->configured_start_time != start_time)
+                {
+                    OS_DEBUG("WARNING: timer %lu start_time requested=%luus, configured=%luus\n",
+                             OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), (unsigned long)start_time,
+                             (unsigned long)local->configured_start_time);
+                }
+                if (local->configured_interval_time != interval_time)
+                {
+                    OS_DEBUG("WARNING: timer %lu interval_time requested=%luus, configured=%luus\n",
+                             OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), (unsigned long)interval_time,
+                             (unsigned long)local->configured_interval_time);
+                }
+            }
+            else
+            {
+                return_code = OS_ERROR;
+
+                OS_DEBUG("WARNING: timer %lu timer_gettime() failed - timer not configured properly?\n",
+                         OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)));
+            }
+        }
+        else
+        {
+            return_code = OS_TIMER_ERR_INVALID_ARGS;
+        }
+    }
+
+    if (!local->reset_flag && return_code == OS_SUCCESS)
+    {
+        local->reset_flag = true;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *local;
+    int32                               return_code;
+
+    local       = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    return_code = OS_SUCCESS;
+
+    /* An assigned_signal value indicates the OS timer needs deletion too */
+    if (local->assigned_signal > 0)
+    {
+        /* this also implies the sync sem needs delete too */
+        timer_delete(local->host_timerid);
+        local->host_timerid    = 0;
+        local->assigned_signal = 0;
+    }
+
+    /*
+    ** Delete the task associated with this timebase
+    */
+    taskDelete(local->handler_task);
+    local->handler_task = 0;
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseGetInfo_Impl(const OS_object_token_t *token, OS_timebase_prop_t *timer_prop)
+{
+    return OS_SUCCESS;
+}
+```

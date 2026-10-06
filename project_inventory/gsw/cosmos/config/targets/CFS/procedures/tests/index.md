@@ -3,14 +3,18 @@
 
 **경로:** `gsw/cosmos/config/targets/CFS/procedures/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `enable_udp.rb`
 
-file--enable_udp.rb
+**경로:** `gsw/cosmos/config/targets/CFS/procedures/tests/enable_udp.rb`
+
+
+```ruby
+# Enable telemetry streaming over UDP
+require 'cosmos'
+require 'cosmos/script'
+
+cmd("CFS TO_ENABLE_OUTPUT with DEST_IP '127.0.0.1', DEST_PORT 5011")
+wait_check_packet("CFS", "CFE_ES_HKPACKET", 1 , 10)
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/targets/CFS/procedures/tests/enable_udp.rb`](file--enable_udp.rb) — UTF-8 텍스트 파일 본문 포함

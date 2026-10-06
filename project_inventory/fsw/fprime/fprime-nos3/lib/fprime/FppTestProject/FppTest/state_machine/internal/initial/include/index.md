@@ -3,18 +3,90 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Basic.fppi`
 
-file--Basic.fppi
-file--Choice.fppi
-file--Nested.fppi
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/Basic.fppi`
+
+
+```text
+@ A basic state machine
+state machine Basic {
+
+  @ Action a
+  action a
+
+  initial do { a } enter S
+
+  @ State S
+  state S {
+    entry do { a, a }
+  }
+
+}
 ```
 
-## 항목
+### `Choice.fppi`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/Basic.fppi`](file--Basic.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/Choice.fppi`](file--Choice.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/Nested.fppi`](file--Nested.fppi) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/Choice.fppi`
+
+
+```text
+@ A state machine with an initial choice
+state machine Choice {
+
+  @ Action a
+  action a
+
+  @ Guard g
+  guard g
+
+  initial do { a } enter C
+
+  @ Choice C
+  choice C { if g do { a } enter S else do { a, a } enter T }
+
+  @ State S
+  state S {
+    entry do { a }
+  }
+
+  @ State T
+  state T {
+    entry do { a, a }
+  }
+
+}
+```
+
+### `Nested.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/Nested.fppi`
+
+
+```text
+@ A state machine with nested initial transitions
+state machine Nested {
+
+  @ Action a
+  action a
+
+  initial do { a } enter S
+
+  @ State S
+  state S {
+
+    entry do { a, a }
+
+    initial enter T
+
+    @ State S.T
+    state T {
+      entry do { a, a, a }
+    }
+
+  }
+
+}
+```

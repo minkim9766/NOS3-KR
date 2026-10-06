@@ -3,22 +3,36 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--cryptolib.so
-file--CTestTestfile.cmake
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/cryptolib.so`](file--cryptolib.so) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cryptolib.so`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/cryptolib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/src/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

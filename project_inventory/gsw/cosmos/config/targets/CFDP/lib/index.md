@@ -3,26 +3,1748 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP/lib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 interfaces/index
-file--cfdp_defines.rb
-file--cfdp_engine.rb
-file--cfdp_engine_hkpacket.rb
-file--cfdp_engine_task.rb
-file--cfdp_transaction.rb
-file--cfdp_vars.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/CFDP/lib/interfaces/`](interfaces/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP/lib/cfdp_defines.rb`](file--cfdp_defines.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/cfdp_engine.rb`](file--cfdp_engine.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_hkpacket.rb`](file--cfdp_engine_hkpacket.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_task.rb`](file--cfdp_engine_task.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/cfdp_transaction.rb`](file--cfdp_transaction.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/cfdp_vars.rb`](file--cfdp_vars.rb) — UTF-8 텍스트 파일 본문 포함
+### `cfdp_defines.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/cfdp_defines.rb`
+
+
+```ruby
+```
+
+### `cfdp_engine.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/cfdp_engine.rb`
+
+
+```ruby
+##################################################################################################
+#######                                 File Description                                 #########
+##################################################################################################
+#
+# filename:      cfdp_engine.rb
+# created:       21/05/2017
+# version:       1.1.5
+# company:       Visiona Tecnologia Espacial S.A.
+# developer:     Nickollas Aranha
+# reviewer:      Edipo Crispim
+# utility:       Provide engine mechanism for ground station to accomplish
+#                 correct file transfer protocol, based on CCSDS 727.0-B-4 File Delivery Protocol
+#
+##################################################################################################
+#######                               End File Description                               #########
+##################################################################################################
+#
+#
+#
+#############################################################################################
+#######                                 LOG HISTORY                                 #########
+#############################################################################################
+#
+# Everything developed before the first date is the "version 0" of the software
+#
+=begin LOG DESCRIPTION
+
+    02/06/2017: Implementing ACK timer for EOF Uplink Class 2.
+    02/06/2017: Implementation change for processing activeTransactions upon sending PDU, not on processing. (function managePDUSent)
+    02/06/2017: Created functions to better manifest verbal operation from the other methods' designed purpose.
+    02/06/2017: Implemented function to handle time on reaching timeout for any timeout on sequence. (function handleTimeout)
+    05/06/2017: Finished handleTimeout function
+    06/06/2017: Added description to functions for better understanding of code
+    07/06/2017: Uplink EOF Timer validated.
+    07/06/2017: [Corretion] Verify if transaction already has a timer before adding a new one.
+    08/06/2017: Updated downlink pduHandler
+    08/06/2017: Started implementation of generateNak function to process missing file data in downlink class 2 situation
+    08/06/2017: Updated generatePDU function
+    09/06/2017: Many improvements on verifyMissingPDU function.
+    09/06/2017: Improvements on handlePDUReceived function. Looking forward upon downlink class 2.
+    09/06/2017: Updated Utils_visiona.writeFile function. Enhancements done.
+    12/06/2017: [Feature] Added timer for FINISHED_PDU
+    12/06/2017: [Corretion] Fixed downlink class 1
+    13/06/2017: [Corretion] Changed implementation for sequenceNumber to consider SourceID
+    13/06/2017: Added many functions input verification
+    22/06/2017: Improved modularity, refactoring done. Created new function <update_transaction>.
+    23/06/2017: Function descriptions updated, added input verificators
+    23/06/2017: [Feature] Added EOF condition code 4 for class 1 downlink
+    23/06/2017: [Corretion] Inserted multiple timers for different conditions on same sequenceNumber (still not fully completed, must test)
+    26/06/2017: [Modification] Modified logic to handle events upon sending PDU's, not right after generating them.
+    26/06/2017: Done timing events.
+    26/06/2017: [Feature] Started writing Log.
+    27/06/2017: [Corretion] NakHandler function was missbehaving, changed logic on update_transaction function to keep original FileData PDU (not only data)
+    27/06/2017: Many improvements made to Log for errors, pduReceived and events.
+    27/06/2017: [Corretion] VerifyMissingPDU function correction.
+    27/06/2017: [Corretion] Fixed writeFile function from utils.
+    28/06/2017: [Feature] Added timer for NAK_PDU
+    28/06/2017: [Corretion] Fixed verifyMissing pdu and nak handler functions for downlink
+    29/06/2017: [Feature] User indication
+    29/06/2017: Created function to validate inputs (better unified method).
+    29/06/2017: Modified insert Timer for FINISHED UP upon generating, not on sending (that avoids sending errors).
+    30/06/2017: [Feature] Class 1 downlink now verifies checksum and file size.
+    03/07/2017: [Corretion] Change NAK only after receiving an EOF
+    03/07/2017: [Corretion] Changed verifyMissingPDU to calculate all missing pdus, not only 1.
+    04/07/2017: [Feature] Implemented clean_buffer function when calling finish_transaction
+    04/07/2017: [Corretion] File verification must be done upon nak limit (so obdh will have time to send pdus)
+    05/07/2017: [Corretion] Permission error upon deleting a file checksum error in downlink class 1.
+    20/07/2017: [Modification] CFDP Engine introduced as background task of CTS.
+    20/07/2017: [Modification] Removed fileManager tab from CTS
+    20/07/2017: [Feature] Added COSMOS Send_file command
+    20/07/2017: [Corretion] Small bug fixes upon generating PDU
+    04/08/2017: [Feature] Transaction log files are now zipped using GZIP
+    24/08/2017: [Corretion] CFDP was generating NAKPDUS bigger than MAX_PDU_SIZE. Fixed.
+    29/08/2017: [Corretion] clean_buffer function should not clean ACKS pdus from buffer.
+    29/08/2017: [Corretion] NAKPDU verification for NAK_LIMIT fixed.
+    05/09/2017: [Corretion] Small fix upon calling ack respond (missing direction)
+    05/09/2017: [Corretion] nakHandler function was not generating multiple FD PDUS upon receiving an extended request
+    19/09/2017: [Modification] Vars are now in a separated file
+    18/10/2017: [Modification] Added mutex
+    18/10/2017: [Modification] Remade checksum
+    18/10/2017: [Corretion] Now verified errors when received finished PDU
+    18/10/2017: [Modification][v1.0.0] Review entire source code
+    18/10/2017: [Corretion][v1.0.1] CFDP User Indication on finished uplink class 1 transaction
+    19/10/2017: [Corretion][v1.0.2] Transaction now keeps a FILE pointer inside it's transaction for better I/O write @ writeLog
+    23/10/2017: [Modification][v1.1.2] Transactions are now a separated class for better understanding and handling
+    24/10/2017: [Modification][v1.1.3] Logfiles are now closed and zipped only after FINISH_LOG_TIMEOUT seconds (defined in vars)
+    26/10/2017: [Corretion][v1.1.4] Fixed iterating over hash during handleTimeout
+    26/10/2017: [Corretion][v1.1.4] Finished PDU must be send after EOF PDU (of same transaction)
+    30/10/2017: [Feature][v1.1.5] HKPacket implemented.
+    01/11/2017: [Modification][v1.1.6] Transaction has now a replyAck function
+    01/11/2017: [Modification][v1.1.6] Engine (only) write logs upon receiving it, in a separated Thread
+=end
+
+require_relative 'cfdp_vars'
+require_relative 'cfdp_transaction'
+require_relative 'cfdp_engine_hkpacket'
+
+require 'thread'
+require 'singleton'
+require 'cfdp/cfdp'
+require 'interfaces/cosmos_cfdp_interface'
+
+module CFDP
+
+  class CFDPEngine
+
+    include Singleton
+
+    attr_reader :pduBuffer
+    attr_reader :transactions
+    attr_reader :sequenceNumber
+    attr_reader :pduReceivedLogFile
+    attr_reader :errorLogFile
+    attr_reader :hkpacket
+
+    # this function should be executed once only
+    def initialize
+
+      # This ensures the function to be executed once only
+      return unless @pduBuffer.is_a?(NilClass)
+      initialize_vars
+    end
+
+    def initialize_vars
+
+      # ENGINE VARS INITIALIZER
+      @pduBuffer = Array.new
+      @transactions = Array.new
+      @sequenceNumber = 0
+      @pduBufferMutex = Mutex.new
+      @transactionsMutex = Mutex.new
+      @sequenceNumberMutex = Mutex.new
+
+      @hkpacket = CFDP::HKPacket.instance
+      startedTime = Time.now
+      @errorLogFile = LOG_DIRECTORY+ERRORLOG+startedTime.strftime("%Y%m%d_%H%M%S")+".txt"
+      @pduReceivedLogFile = LOG_DIRECTORY+PDULOG+startedTime.strftime("%Y%m%d_%H%M%S")+".txt"
+    end
+
+    # finalize description
+      # UTILITY:
+      #   This function will always be executed (unless computer explodes)
+      #   It will close all open files (if any)
+      # INPUT:
+      #   No inputs
+      # RETURNS:
+      #   No returns.
+      # EXCEPTIONS:
+      #   No Exceptions.
+    # end function description
+    def finalize
+
+      @transactions.each {|transaction| transaction.finalize}
+    end
+
+    # writeLog description
+      # UTILITY:
+      #    Function will write log events to specific files.
+      # INPUT:
+      #    A Integer sequenceNumber, a String text
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if wrong input.
+    # end function description
+    def writeLog(errorNumber, text)
+
+      Utils_visiona.verifyInput(Integer, errorNumber.class)
+      Utils_visiona.verifyInput(String, text.class)
+
+      @hkpacket.eng_totalerrors+=1 unless errorNumber==1
+
+      Thread.new do
+
+        file = errorNumber==1 ? @pduReceivedLogFile : @errorLogFile
+        File.open(file, "a+") {|file| file.puts "#{Time.now} #{text}"}
+      end
+    end
+
+    # Useful simple and verbal function definitions here.
+    def packet_is_downlink(pdu); return (pdu.pduHeader.direction==0) end
+    def packet_is_uplink(pdu); return (pdu.pduHeader.direction==1) end
+    def packet_is_class1(pdu); return (pdu.pduHeader.transmissionMode==1) end
+    def packet_is_class2(pdu); return (pdu.pduHeader.transmissionMode==0) end
+    def packet_class(pdu); return (pdu.pduHeader.transmissionMode) end
+
+
+    # generateSequenceNumber description
+      # UTILITY:
+      #    Function will generate a sequenceNumber (4 bytes max)
+      # INPUT:
+      #    No inputs
+      # RETURNS:
+      #    Return a Integer from ground's next sequenceNumber to be used
+      # EXCEPTIONS:
+      #    No exceptions
+    # end function description
+    def generateSequenceNumber
+
+      @sequenceNumber = ((@sequenceNumber + 1) & 0xFFFFFFFF)
+    end
+
+    # transaction_id description
+      # UTILITY:
+      #    Function will receive a CFDP::PDUPacket and check it's header sequence number
+      #    with the @activeTransactions hash.
+      # INPUT:
+      #    A CFDP::PDUPacket
+      # RETURNS:
+      #    Return a Hash with {SourceID=>SequenceNumber} from the PDU Packet.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def transaction_id(pdu)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, pdu.class)
+      Utils_visiona.verifyInput(CFDP::PDUHeader, pdu.pduHeader.class)
+
+      return {pdu.pduHeader.sourceID=>pdu.pduHeader.sequenceNumber}
+    end
+
+    # get_transaction description
+      # UTILITY:
+      #    Function will receive a CFDP::PDUPacket or ID Hash and return the transaction that has it,
+      #    or nil if none.
+      # INPUT:
+      #    A CFDP::PDUPacket or Hash
+      # RETURNS:
+      #    Return a Transaction class or nil if none found.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def get_transaction(arg)
+
+      Utils_visiona.verifyInput([CFDP::PDUPacket, Hash], arg.class)
+
+      id = arg.is_a?(Hash) ? arg : transaction_id(arg)
+      @transactions.each {|transaction| return transaction if transaction.ID == id}
+      return nil
+    end
+
+    # transaction_status description
+      # UTILITY:
+      #    Function will return status from an transaction.
+      # INPUT:
+      #    A Hash sequenceNumber
+      # RETURNS:
+      #   Returns nil if transaction doesn't exist,
+      #   Returns Transaction object otherwise
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def transaction_status(id)
+
+        Utils_visiona.verifyInput(Hash, id.class)
+        return get_transaction(id)
+    end
+
+    # has_transaction? description
+      # UTILITY:
+      #    Function will receive a Hash ID and check if it's already
+      #     a started transacion
+      # INPUT:
+      #    A Hash ID
+      # RETURNS:
+      #    Returns true if @transactions has this transaction's id
+      #     returns false otherwise.
+      # EXCEPTIONS:
+      #    Can raise exception if input error.
+    # end function description
+    def has_transaction?(id)
+
+      @transactions.each {|trans| return true if (trans.ID == id)}
+      return false
+    end
+
+    # insert_transaction description
+      # UTILITY:
+      #    Function will receive a String and a Sequence number,
+      #     create a new transaction and insert into @transactions.
+      # INPUT:
+      #    A String type and a Hash id
+      # RETURNS:
+      #    No returns
+      # EXCEPTIONS:
+      #    Can raise exception if type is not "UPLINK" nor "DOWNLINK"
+    # end function description
+    def insert_transaction(type, id, classe)
+
+      Utils_visiona.verifyInput(String, type.class)
+      Utils_visiona.verifyInput(Hash, id.class)
+      Utils_visiona.verifyInput(["UPLINK", "DOWNLINK"], type.upcase)
+      Utils_visiona.verifyInput(Integer, classe.class)
+
+      # Check if transaction ID already exists.
+      if has_transaction?(id)
+
+        CFDP::CFDP_Indication("Cannot insert new transaction #{id} because it is in CFDP history.")
+        return
+      end
+
+      @transactions << CFDP::Transaction.new(type.upcase, id, classe)
+      @hkpacket.eng_inprogresstrans+=1
+      CFDP::CFDP_Indication("#{type.upcase} Class ##{((classe+1)%2)+1} transaction #{id} has started.")
+    end
+
+    # clean_buffer description
+      # UTILITY:
+      #    Function will erase all pdus from the @pduBuffer of a given transactions id (except ACKS).
+      # INPUT:
+      #    A Hash id
+      # RETURNS:
+      #    No returns
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def clean_buffer(id)
+
+      Utils_visiona.verifyInput(Hash, id.class)
+      @pduBufferMutex.synchronize {
+        @pduBuffer.delete_if do |packet|
+          (transaction_id(packet) == id) && (!packet.pduPayload.is_a?(CFDP::PDUACK))
+        end
+      }
+    end
+
+    # pdu2beSent description
+      # UTILITY:
+      #    Function will pop the first element from @pdubuffer and return it, using thread sync.
+      #    This function also call handlePDUSent, so it should be only called when sending pdus
+      # INPUT:
+      #    No input
+      # RETURNS:
+      #    Return the first element from @pduBuffer
+      # EXCEPTIONS:
+      #    No exceptions
+    # end function description
+    def pdu2beSent
+
+      pdu = Array.new
+      @pduBufferMutex.synchronize {pdu = @pduBuffer.shift}
+
+      handlePDUSent(pdu) unless pdu.nil?
+      return pdu
+    end
+
+    # insertIntoBuffer description
+      # UTILITY:
+      #    Function will receive a CFDP::PDUPacket and insert into @pduBuffer according to a given type.
+      # INPUT:
+      #    A String and a CFDP::PDUPacket
+      #   String should be "append" or "prepend"
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def insertIntoBuffer(pdu)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, pdu.class)
+
+      @pduBufferMutex.synchronize {
+
+        @hkpacket.updateVar("SENT", pdu.pduPayload)
+        pdu.pduPayload.is_a?(CFDP::PDUACK)? @pduBuffer.unshift(pdu) : @pduBuffer << pdu
+      }
+
+      transaction = get_transaction(pdu)
+      transaction.writeLog("Inserted #{pdu.pduPayload.class} #{pdu.pack} into @pduBuffer")
+    end
+
+    # cycleTimeout description
+      # UTILITY:
+      #    Function will iterate over all active transactions and verify if any timer has reached limit.
+      #   If so, it will call handleTimeout function for that transaction.
+      # INPUT:
+      #    No inputs.
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    No exceptions can be risen.
+    # end function description
+    def cycleTimeout
+
+      @transactionsMutex.synchronize {
+        @transactions.each {|transaction| transaction.handleTimeout}
+      }
+    end
+
+    # handlePDUSent description
+      # UTILITY:
+      #    Function will handle PDU Sent cases.
+      # INPUT:
+      #    A byte array
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+      #   or if it can't build a PDUPacket
+    # end function description
+    def handlePDUSent(pduPacket)
+
+      @transactionsMutex.synchronize {
+
+        Utils_visiona.verifyInput(CFDP::PDUPacket, pduPacket.class)
+
+        transaction = get_transaction(pduPacket)
+
+        unless transaction.nil?
+
+          transaction.handlePDUSent(pduPacket)
+          return
+        end
+      }
+    end
+
+    # handlePDUReceived description
+      # UTILITY:
+      #    Function will handle PDU Received cases.
+      # INPUT:
+      #    a Byte array pdu
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+      #   or if it can't build a PDUPacket
+    # end function description
+    def handlePDUReceived(pdu_queue)
+
+      @transactionsMutex.synchronize {
+
+        pdu = pdu_queue.pop #dcm
+
+        Utils_visiona.verifyInput(Array, pdu.class)
+
+        begin
+
+          pduPacket = CFDP::PDUPacket.new(pdu)
+          writeLog(1, "Received PDU: #{pdu}")
+          @hkpacket.eng_pdusreceived+=1
+          hkpacket.updateVar("RECEIVED", pduPacket.pduPayload)
+        rescue
+
+          @hkpacket.eng_pdusrejected+=1
+          return
+        end
+
+        # check if transaction is active
+        transaction = get_transaction(pduPacket)
+
+        if transaction.nil?
+
+          # transaction is not active
+          if pduPacket.pduPayload.is_a?(CFDP::PDUMetadata)
+
+            if packet_is_downlink(pduPacket)
+
+              # this means it's a starting downlink, so i must start a new transaction
+              insert_transaction("DOWNLINK", transaction_id(pduPacket), packet_class(pduPacket))
+              transaction = get_transaction(pduPacket)
+              transaction.update(pduPacket)
+
+            end
+          elsif packet_is_class2(pduPacket)
+
+            case pduPacket.pduPayload
+            when CFDP::PDUEOF, CFDP::PDUFileData
+
+              # I have no metadata of a class 2 transaction, must create new transaction and update it.
+              insert_transaction("DOWNLINK", transaction_id(pduPacket), packet_class(pduPacket))
+              transaction = get_transaction(pduPacket)
+              transaction.update(pduPacket)
+            else
+              writeLog(0, "Received #{pduPacket.pduPayload.class} of a non active transaction.")
+            end
+          else
+
+            writeLog(0, "Received #{pduPacket.pduPayload.class} of a non active class #{pduPacket.pduHeader.transmissionMode == 0 ? "2" : "1"} transaction.")
+          end
+        else
+
+          transaction.handlePDUReceived(pduPacket)
+        end
+      }
+    end
+
+    # uplinkRequest description
+      # UTILITY:
+      #    This function will start a uplink transaction.
+      # INPUT:
+      #    a Integer classType (1 or 2),
+      #    a Integer destinationID,
+      #    a String sourceFileName,
+      #    a String destFileName
+      # RETURNS:
+      #    Returns a Hash indicating the sequenceNumber.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+      #    Can raise exception if I/O error with %sourceFileName%
+    # end function description
+    def uplinkRequest(classType, destID, sourceFileName, destFileName)
+
+      Utils_visiona.verifyInput(Integer, classType.class)
+      Utils_visiona.verifyInput([1,2], classType)
+      Utils_visiona.verifyInput(Integer, destID.class)
+      Utils_visiona.verifyInput(String, sourceFileName.class)
+      Utils_visiona.verifyInput(String, destFileName.class)
+
+      @sequenceNumberMutex.synchronize {@transaction_id = {MYID=>generateSequenceNumber}}
+
+      beginTimer = Time.now
+      insert_transaction("uplink", @transaction_id, classType%2)
+      transaction = get_transaction(@transaction_id)
+
+      begin
+
+        fileSize = File.size(sourceFileName)
+        checksum = Utils_visiona.calculateFileChecksum(sourceFileName)
+        CFDP::CFDP_Indication("Started processing file \"#{sourceFileName}\"")
+        transaction.writeLog("Started processing file \"#{sourceFileName}\"")
+      rescue Exception => err
+
+        error = "Error in uplink request. Error is #{err}.\n Backtrace is #{err.backtrace}"
+        CFDP::CFDP_Indication(error)
+        writeLog(0, error)
+      end
+
+      # generate a PDUHeader (will use for kinda all pdus, missing 'length' and 'pduType')
+      pduHeader = CFDP::PDUHeader.new(version:0, direction:0, transmissionMode:classType%2,
+        crcFlag:USE_CRC, sequenceLength:3, idLength:1, sequenceNumber:@transaction_id[MYID], sourceID:MYID,
+        destinationID:DESTINATIONID)
+
+      # generate a MetadataPDU
+      metadataPDU = CFDP::PDUPacket.new
+      metadataPDU.pduPayload = CFDP::PDUMetadata.new(segmentationControl:1, fileSize:fileSize,
+        sourceFileName:sourceFileName, destinationFileName:destFileName)
+
+      # now update header and generate full ccsds packet
+      pduHeader.pduType = 0 # for file directive
+      pduHeader.pduDataLength = metadataPDU.pduPayload.length + (2*USE_CRC)
+      metadataPDU.pduHeader = pduHeader.dup
+
+      # insert into transactions
+      transaction.update(metadataPDU)
+      insertIntoBuffer(metadataPDU)
+
+      # Set vars and start reading file
+      currentOffset = 0
+      payloadLength = MAX_PDU_SIZE-12
+
+      begin
+
+        File.open(sourceFileName, 'rb') do |file|
+
+          # Read MAX_PDU_SIZE-12 chunks of data
+          # Buffer can be nil if file is empty.
+          until file.eof?
+
+            buffer = file.read(payloadLength)
+            next if buffer.nil?
+
+            # mount pduFileData
+            pduFileData = CFDP::PDUPacket.new
+            pduFileData.pduPayload = CFDP::PDUFileData.new(offset:currentOffset, data:buffer.bytes)
+
+            # must change pdu Type to data
+            pduHeader.pduType = 1
+            pduHeader.pduDataLength = pduFileData.pduPayload.length + (2*USE_CRC)
+            pduFileData.pduHeader = pduHeader.dup
+
+            transaction.update(pduFileData)
+            insertIntoBuffer(pduFileData)
+            currentOffset += payloadLength
+          end
+        end
+      rescue Exception => err
+
+        error = "Error while reading from file. Error is #{err}.\n Backtrace #{err.backtrace}"
+        CFDP::CFDP_Indication(error)
+        writeLog(0, error)
+      end
+
+      # now generate EOFPDU
+      eofPDU = CFDP::PDUPacket.new
+      eofPDU.pduPayload = CFDP::PDUEOF.new(conditionCode:0, fileChecksum:checksum, fileSize:fileSize)
+      pduHeader.pduType = 0
+      pduHeader.pduDataLength = eofPDU.pduPayload.length + (2*USE_CRC)
+      eofPDU.pduHeader = pduHeader.dup
+      insertIntoBuffer(eofPDU)
+      CFDP::CFDP_Indication ("Done processing file \"#{sourceFileName}\". Time elapsed: #{Time.now-beginTimer} seconds.")
+      transaction.writeLog("Done processing file \"#{sourceFileName}\". Time elapsed: #{Time.now-beginTimer} seconds.")
+    end
+  end
+end
+```
+
+### `cfdp_engine_hkpacket.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_hkpacket.rb`
+
+
+```ruby
+require "singleton"
+require "utils_visiona/utils"
+
+module CFDP
+
+  class HKPacket
+
+    include Singleton
+
+    VARS = ["eng_totalerrors", "eng_pdusreceived", "eng_pdusrejected", "eng_inprogresstrans", "eng_totalsuccesstrans",
+      "eng_totalfailedtrans", "cond_posacknum", "cond_filestorerejnum", "cond_filechecksumnum", "cond_filesizenum",
+      "cond_naklimitnum", "cond_inactivenum", "eng_totalfilessent", "eng_totalfilesrcvd", "eng_rcvd_metadata",
+      "eng_rcvd_filedata", "eng_rcvd_eof", "eng_rcvd_finished", "eng_rcvd_nak", "eng_rcvd_ack", "eng_sent_metadata",
+      "eng_sent_filedata", "eng_sent_eof", "eng_sent_finished", "eng_sent_nak", "eng_sent_ack", "eng_up_successcounter",
+      "eng_up_failedcounter", "eng_down_successdownlinks", "eng_down_faileddownlinks"
+    ]
+
+    # vars
+    attr_reader :pktID
+    attr_reader :eng_sourceid
+    attr_accessor :eng_lastfailedtrans
+    attr_accessor :eng_up_lastfileuplinked
+    attr_accessor :eng_down_lastfiledownlinked
+    VARS.each {|var| eval "attr_accessor :#{var}"}
+
+    def initialize
+
+      @pktID = 0x43464450484b
+      @eng_sourceid = MYID
+      @eng_lastfailedtrans = "None"
+      @eng_up_lastfileuplinked = "None"
+      @eng_down_lastfiledownlinked = "None"
+      VARS.each {|var| eval "@#{var} = 0"}
+    end
+
+    def updateVar(type, *pdu)
+
+      if type.is_a?(String)
+
+        case pdu[0]
+          when CFDP::PDUMetadata  then type.upcase.eql?("SENT") ? @eng_sent_metadata+=1 : @eng_rcvd_metadata+=1
+          when CFDP::PDUFileData  then type.upcase.eql?("SENT") ? @eng_sent_filedata+=1 : @eng_rcvd_filedata+=1
+          when CFDP::PDUEOF       then type.upcase.eql?("SENT") ? @eng_sent_eof+=1      : @eng_rcvd_eof+=1
+          when CFDP::PDUFinished  then type.upcase.eql?("SENT") ? @eng_sent_finished+=1 : @eng_rcvd_finished+=1
+          when CFDP::PDUNAK       then type.upcase.eql?("SENT") ? @eng_sent_nak+=1      : @eng_rcvd_nak+=1
+          when CFDP::PDUACK       then type.upcase.eql?("SENT") ? @eng_sent_ack+=1      : @eng_rcvd_ack+=1
+        end
+      elsif type.is_a?(Integer)
+
+        case type
+        when 1 then @cond_posacknum+=1
+        when 4 then @cond_filestorerejnum+=1
+        when 5 then @cond_filechecksumnum+=1
+        when 6 then @cond_filesizenum+=1
+        when 7 then @cond_naklimitnum+=1
+        when 8 then @cond_inactivenum+=1
+        end
+      end
+    end
+
+    def pack
+
+      binArray = Array.new
+      array64 = 64.downto(8).to_a
+      (0..array64.length-1).step(8).each {|i| binArray << Utils_visiona.getBits(@pktID, array64[i]-7, array64[i])}
+      (0..array64.length-1).step(8).each {|i| binArray << Utils_visiona.getBits(@eng_sourceid, array64[i]-7, array64[i])}
+      binArray << Utils_visiona.completeBytes(Utils_visiona.strToDecArray(@eng_lastfailedtrans), 64, "BIG_ENDIAN")
+      binArray << Utils_visiona.completeBytes(Utils_visiona.strToDecArray(@eng_up_lastfileuplinked), 64, "BIG_ENDIAN")
+      binArray << Utils_visiona.completeBytes(Utils_visiona.strToDecArray(@eng_down_lastfiledownlinked), 64, "BIG_ENDIAN")
+      VARS.each {|var| (0..array64.length-1).step(8).each {|i| binArray << Utils_visiona.getBits((eval "@#{var}").to_i, array64[i]-7, array64[i])}}
+
+      return binArray.flatten
+    end
+  end
+end
+```
+
+### `cfdp_engine_task.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_task.rb`
+
+
+```ruby
+require "cosmos"
+require "cosmos/tools/cmd_tlm_server/background_task"
+require "cfdp_engine"
+require "cfdp_vars"
+
+module Cosmos
+
+	class CfdpEngineTask < BackgroundTask
+
+		CFDP_ENGINE_TASK_NAME = "CFDP Engine Task"
+		attr_reader :pdu_received_counter
+		attr_reader :pdu_sent_counter
+		attr_reader :break
+
+		def initialize_vars
+
+			@pdu_received_counter = Hash.new
+			@pdu_sent_counter = Hash.new
+
+			CFDP::PDUCLASSES.each do |classe|
+				@pdu_received_counter[classe] = 0
+				@pdu_sent_counter[classe] = 0
+			end			
+		end
+
+		def update_received_counter(pduClass)
+
+			return unless CFDP::PDUCLASSES.include?(pduClass)
+			@mutex.synchronize {@pdu_received_counter[pduClass]+=1}
+		end
+
+		def update_sent_counter(pduClass)
+
+			return unless CFDP::PDUCLASSES.include?(pduClass)
+			@mutex.synchronize {@pdu_sent_counter[pduClass]+=1}			
+		end
+
+		def call
+
+			@break = false
+			@name = CFDP_ENGINE_TASK_NAME
+			@status = "Initializing"
+			@mutex = Mutex.new
+
+			begin
+
+				@cfdp_engine = CFDP::CFDPEngine.instance
+				initialize_vars
+			rescue Exception => err
+
+				Logger.error "Failed to initialize CFDP Engine.\n Error is #{err}. Backtrace is #{err.backtrace}"
+				@status = "Failed to initialize"
+				return
+			ensure
+
+				raise unless @cfdp_engine.is_a?(CFDP::CFDPEngine)
+				raise if @pdu_received_counter.nil?
+				raise if @pdu_sent_counter.nil?
+			end
+
+			@status = "Running"
+			Logger.info "CFDP Engine has started."
+
+			until @break
+
+				CFDP::CFDPEngine.instance.cycleTimeout
+				sleep(SLEEP_TIME_BTW_PDUS)
+
+				begin
+
+					pdu = CFDP::CFDPEngine.instance.pdu2beSent
+
+					next if pdu.nil?
+					pdu = pdu.pack
+
+					# Transmissions errors are handled by the protocol itself
+					cmd("#{PDU_TARGET_NAME_TX} #{PDU_SEND_TARGET_PACKET} with CCSDS_LENGTH #{pdu.length+1}, PAYLOAD #{"0x"+pdu.pack('c*').unpack('H*')[0]}")
+				rescue Exception => err
+
+					Logger.error "Error while sending PDU. Error is #{err}.\n Backtrace is #{err.backtrace}"
+					next
+				end
+			end
+
+			ensure CFDP::CFDPEngine.instance.finalize
+		end
+
+		def stop
+
+			@break = true
+			Logger.info "CFDP Engine has ended."
+			@status = "Stopped"
+		end
+	end
+end
+```
+
+### `cfdp_transaction.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/cfdp_transaction.rb`
+
+
+```ruby
+##################################################################################################
+#######                                 File Description                                 #########
+##################################################################################################
+#
+# filename:      cfdp_transaction.rb
+# created:       23/10/2017
+# company:       Visiona Tecnologia Espacial S.A.
+# developer:     Nickollas Aranha
+# reviewer:      Edipo Crispim
+# utility:       This is a specific class to be used with cfdp_engine.rb
+#
+##################################################################################################
+#######                               End File Description                               #########
+##################################################################################################
+
+require_relative "cfdp_vars"
+require_relative "cfdp_engine_hkpacket"
+require 'zlib'
+require 'cosmos'
+require 'thread'
+require 'fileutils'
+require "utils_visiona/utils"
+require "interfaces/cosmos_cfdp_interface"
+
+module CFDP
+
+	class Transaction
+
+		# Transaction CFDP vars
+		attr_reader :type # "DOWNLINK" or "UPLINK"
+		attr_reader :cfdpClass
+		attr_reader :ID
+		attr_reader :pdus # Hash that can have keys "METADATA", "FILEDATA", "EOF", "FINISHED", "NAK".
+		attr_reader :timeStarted
+    attr_reader :finishType # "SUCCESS" or "FAILED"
+
+		# Transaction useful vars
+		attr_reader :status #Can be either ["Active", "Finished"]
+    attr_reader :timer
+		attr_reader :logFile
+
+    # Action var
+    ACTIONS = {
+
+      "EOF" =>        {LIMIT:EOF_LIMIT,         TIMEOUT:EOF_TIMEOUT,        CONDITION:1},
+      "INACTIVITY" => {LIMIT:INACTIVITY_LIMIT,  TIMEOUT:INACTIVITY_TIMEOUT, CONDITION:8},
+      "FINISHED" =>   {LIMIT:FINISHED_LIMIT,    TIMEOUT:FINISHED_TIMEOUT,   CONDITION:1},
+      "NAK" =>        {LIMIT:NAK_LIMIT,         TIMEOUT:NAK_TIMEOUT,        CONDITION:7},
+      "FINISH_LOG" => {LIMIT:FINISH_LOG_LIMIT,  TIMEOUT:FINISH_LOG_TIMEOUT}
+    }
+
+		def initialize(type, sequenceNumberHash, classe)
+
+      Utils_visiona.verifyInput(String, type.class)
+      Utils_visiona.verifyInput(Hash, sequenceNumberHash.class)
+
+      @type = type
+			@ID = sequenceNumberHash
+      @cfdpClass = classe
+      initialize_vars
+
+      startLogFile
+      writeLog("#{@type.upcase} transaction #{@ID} has started.")
+		end
+
+    def initialize_vars
+
+      @timeStarted = Time.now
+      @pdus = Hash.new
+      @pdus["FILEDATA"] = Hash.new
+      @timer = Hash.new
+      @status = "ACTIVE"
+    end
+
+    def finalize
+
+      finishLogFile
+    end
+
+    # Useful simple and verbal function definitions here.
+    def haspdueof?; return !@pdus["EOF"].nil? end
+    def haspdumetadata?; return !@pdus["METADATA"].nil? end
+    def haspdufinished?; return !@pdus["FINISHED"].nil? end
+    def haspdufiledata?(offset); return !@pdus["FILEDATA"][offset].nil? end
+    def isdownlink?; return @type.eql?("DOWNLINK") end
+    def isuplink?; return !isdownlink? end
+    def isclass1?; return @cfdpClass==1 end
+    def isclass2?; return @cfdpClass==0 end
+    def isactive?; return @status.eql?("ACTIVE") end
+    def isfinished?; return @status.eql?("FINISHED") end
+    def hastimer?(*type); return type.empty? ? !@timer.empty? : !@timer[type[0]].nil? end
+
+    # startLogFile description
+      # UTILITY:
+      #    Function will start a logFile based on started time and set it to @logFile variable.
+      # INPUT:
+      #    No inputs.
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    No exceptions.
+    # end function description
+		def startLogFile
+
+      return unless @logFile.nil?
+      @logFile = LOG_DIRECTORY + "#{@timeStarted.strftime('%Y%m%d_%H%M%S')}_#{@ID.keys[0]}-#{@ID.values[0]}.txt"
+		end
+
+    # finishLogFile description
+      # UTILITY:
+      #    Function will zip a logfile to .gzip and remove existing logFile
+      # INPUT:
+      #    No inputs
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if something wrong with file I/O
+    # end function description
+    def finishLogFile
+
+      Thread.new do
+
+        begin
+
+          # Zips file
+          Zlib::GzipWriter.open(@logFile + ".gz") do |gzip|
+            File.open(@logFile) do |fp|
+              while chunk = fp.read(16 * 1024) do
+                gzip.write chunk
+              end
+            end
+          end
+
+          # Remove original
+          FileUtils.rm_f(@logFile) until !File.exist?(@logFile)
+        rescue Exception => err
+
+          CFDP::CFDP_Indication("Error finishing log file for transaction #{@ID}. Error is #{err}")
+          CFDP::CFDPEngine.instance.writeLog(1, "Error finishing log file for transaction #{@ID}. Error is #{err}")
+        end
+      end
+    end
+
+    # writeLog description
+      # UTILITY:
+      #    Function will write log events to specific log file.
+      # INPUT:
+      #    A String text
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if wrong input.
+    # end function description
+		def writeLog(text)
+
+      Utils_visiona.verifyInput(String, text.class)
+
+      return if @logFile.nil?
+
+      Thread.new do
+
+        File.open(@logFile, 'a+') {|file| file.puts "#{Time.now} #{text}"}
+      end
+		end
+
+    # create_file description
+      # UTILITY:
+      #    Function will handle create file cases.
+      # INPUT:
+      #    No inputs.
+      # RETURNS:
+      #    Returns the condition code.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def create_file
+
+      conditionCode = 0
+
+      # Verify if we have a metadata
+      if haspdumetadata? && haspdueof?
+
+        # Write file
+        writeLog("Checking to write file \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+        CFDP::CFDP_Indication("Checking to write file \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+
+        begin
+
+          Utils_visiona.writeFile(@pdus["METADATA"].pduPayload.destinationFileName, @pdus["FILEDATA"].dup)
+
+          if File.size(@pdus["METADATA"].pduPayload.destinationFileName) != @pdus["EOF"].pduPayload.fileSize
+
+            conditionCode = 6
+            File.delete(@pdus["METADATA"].pduPayload.destinationFileName) unless SAVE_FILE_UPON_ERROR
+          elsif Utils_visiona.calculateFileChecksum(@pdus["METADATA"].pduPayload.destinationFileName) != @pdus["EOF"].pduPayload.fileChecksum
+
+            conditionCode = 5
+            File.delete(@pdus["METADATA"].pduPayload.destinationFileName) unless SAVE_FILE_UPON_ERROR
+          end
+        rescue Exception => err
+
+          conditionCode = 4
+          CFDP::CFDP_Indication("Error while creating file. Error is #{err}.\n Backtrace: #{err.backtrace}")
+        end
+
+        if (conditionCode==0)
+
+          CFDP::HKPacket.instance.eng_totalfilesrcvd+=1
+          writeLog("Done writing file \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+          CFDP::CFDP_Indication("Done writing file \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+        elsif SAVE_FILE_UPON_ERROR
+
+          CFDP::HKPacket.instance.eng_totalfilesrcvd+=1
+          writeLog("Done writing file with error #{CFDP.conditionCodeToStr(conditionCode)} \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+          CFDP::CFDP_Indication("Done writing file with error #{CFDP.conditionCodeToStr(conditionCode)} \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+        else
+
+          CFDP::HKPacket.instance.updateVar(conditionCode)
+          writeLog("Error #{CFDP.conditionCodeToStr(conditionCode)} in writing file \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+          CFDP::CFDP_Indication("Error #{CFDP.conditionCodeToStr(conditionCode)} in writing file \"#{@pdus["METADATA"].pduPayload.destinationFileName}\".")
+        end
+
+        return conditionCode
+      end
+    end
+
+    # insertTimer description
+      # UTILITY:
+      #    Function will insert a "interval" Timer, according to type
+      # INPUT:
+      #    A String type. Can be ["EOF", "FINISHED", "INACTIVITY", "NAK", "FINISH_LOG"]
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error.
+    # end function description
+    def insertTimer(type)
+
+      Utils_visiona.verifyInput(String, type.class)
+
+      if hastimer?(type)
+
+        writeLog("Timer of type: #{type} already exists. Overriding")
+        disableTimer(type)
+      end
+
+      @timer[type] = Hash.new
+      @timer[type]["Started"] = Time.now
+      @timer[type]["Tries"] = 0
+      writeLog("Timer of type:#{type} inserted.")
+    end
+
+    # resetTimer description
+      # UTILITY:
+      #    Function will reset a Timer "interval" type to be reseted
+      # INPUT:
+      #    A String type
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def resetTimer(type)
+
+      Utils_visiona.verifyInput(String, type.class)
+
+      unless hastimer?(type)
+
+        writeLog("Timer of type: #{type} does not exist. Inserting new timer.")
+        insertTimer(type)
+        return
+      end
+
+      @timer[type].store "Started", Time.now
+      writeLog("Timer of type:#{type} reseted.")
+    end
+
+    # disableTimer description
+      # UTILITY:
+      #    Function will disable timer on a given transaction.
+      # INPUT:
+      #    A string type
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #   Can raise exceptions if input error
+    # end function description
+    def disableTimer(type)
+
+      Utils_visiona.verifyInput(String, type.class)
+
+      return unless hastimer?(type)
+      @timer.delete(type)
+      writeLog("Timer of type #{type} disabled")
+    end
+
+    # handleTimeout description
+      # UTILITY:
+      #    Function will verify what action to take based on "TimerAction".
+      # INPUT:
+      #    No inputs
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #   Can raise exceptions if input error.
+    # end function description
+    def handleTimeout
+
+      return unless hastimer?
+
+      @timer.keys.each do |timerType|
+
+        # This is because @timer can be modified during an iteration
+        next if (@timer[timerType].nil? || @timer[timerType].empty?)
+
+        if Time.now > (@timer[timerType]["Started"] + ACTIONS[timerType][:TIMEOUT])
+
+          writeLog("Reached timeout of type #{timerType}")
+
+          # close log File.
+          if timerType.eql?("FINISH_LOG")
+
+            disableTimer(timerType)
+            writeLog("Zipping log file.")
+            finishLogFile
+            next
+          end
+
+          # we reached a timeout here. Must choose what to do
+          # verify if limit has been exceeded
+          if @timer[timerType]["Tries"] >= ACTIONS[timerType][:LIMIT]
+
+            # Limit reached, finish transaction and generate an error. Insert this into LOG
+            CFDP::CFDP_Indication("Transaction #{@ID} has detected an error. Error is: #{timerType}_LIMIT. Finishing transaction.")
+            writeLog("Transaction #{@ID} has detected an error. Error is: #{timerType}_LIMIT. Finishing transaction.")
+            CFDP::HKPacket.instance.updateVar(ACTIONS[timerType][:CONDITION])
+            finish("FAILED")
+          else
+
+            # Limit not reached, reset Timer, re-send things and update transaction
+            resetTimer(timerType)
+
+            # Verify action
+            case timerType
+            when "EOF", "FINISHED"
+
+              # Must re-send PDU from that transaction and update limit counter.
+              writeLog("#{timerType}_LIMIT reached, re-sending PDU")
+              CFDPEngine.instance.insertIntoBuffer(@pdus[timerType])
+              @timer[timerType]["Tries"]+=1
+            when "NAK"
+
+              # check if my NAK has been responded
+              nakPdu = verifyMissingPDU
+
+              if nakPdu.nil?
+
+                writeLog("NAK has been fully responded.")
+                disableTimer("NAK")
+                finish_downlink_transaction if haspdueof?
+                next
+                
+              elsif nakPdu.pack == @pdus["NAK"]
+
+                writeLog("NAK_LIMIT reached, re-sending PDU")
+                @timer[timerType]["Tries"]+=1
+              else
+
+                writeLog("NAK partially responded. Generated new NAK #{nakPdu.pack.to_s}.")
+                writeLog("Overriding tries of type #{timerType} to 0.")
+                @pdus["NAK"] = nakPdu
+                @timer[timerType]["Tries"]=0
+              end
+
+              CFDPEngine.instance.insertIntoBuffer(nakPdu)
+            end
+          end
+        end
+      end
+    end
+
+    # getNextOffset description
+      # UTILITY:
+      #    Function will receive a offset (could be nearest offset) and calculate
+      #     the next offset if transaction is active.
+      # INPUT:
+      #    A Integer offset
+      # RETURNS:
+      #    Returns a Integer or nil if offset is the last from the array
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def getNextOffset(offset)
+
+      Utils_visiona.verifyInput(Integer, offset.class)
+
+      if isactive?
+
+        actualOffset = @pdus["FILEDATA"].keys.select{|currentOffset| currentOffset<=offset}.max
+        currentIndex = @pdus["FILEDATA"].keys.sort.index(actualOffset)
+
+        return nil if currentIndex==@pdus.length-1
+        return @pdus["FILEDATA"].keys.sort[currentIndex+1]
+      end
+    end
+
+    # verifyMissingPDU description
+      # UTILITY:
+      #    Function will check for missing PDUs
+      # INPUT:
+      #    No inputs
+      # RETURNS:
+      #    Returns nil if no missing PDUS,
+      #   returns CFDP::PDUNAK otherwise.
+      # EXCEPTIONS:
+      #    Can raise exception if transaction is not active.
+    # end function description
+    def verifyMissingPDU
+
+      startOffset = 0; endOffset = 0; scopeEnd = 0
+      requestArray = Array.new
+
+      raise unless isactive?
+
+      writeLog("Verifying file completude")
+
+      # first verify if we have metadata
+      if @pdus["METADATA"].nil?
+
+        requestArray << {startOffset:0, endOffset:0}
+      else
+
+        fileSize = @pdus["METADATA"].pduPayload.fileSize
+        scopeEnd = @pdus["METADATA"].pduPayload.fileSize
+
+        dataArray = @pdus["FILEDATA"].keys.sort
+        # verify for offset 0
+        requestArray << {startOffset:0, endOffset:dataArray[0]} unless dataArray[0] == 0
+
+        for i in 0..(dataArray.length-1)
+
+          startOffset = dataArray[i]
+
+          # non error cases
+          if (i == (dataArray.length-1))
+
+            break if (startOffset + @pdus["FILEDATA"][startOffset].pduPayload.data.length) == fileSize
+
+            # we didn't reach total file size, verify if we have EOF
+            if haspdueof?
+              # we lost pdus between last pdu and eof
+              startOffset += @pdus["FILEDATA"][startOffset].pduPayload.data.length
+              endOffset = fileSize
+              requestArray << {startOffset:startOffset, endOffset:endOffset}
+            end
+            break
+          end
+
+          # verify for miss pdus between pdus
+          if (startOffset + @pdus["FILEDATA"][startOffset].pduPayload.data.length) != dataArray[i+1]
+
+            startOffset += @pdus["FILEDATA"][startOffset].pduPayload.data.length
+            endOffset = dataArray[i+1]
+            requestArray << {startOffset:startOffset, endOffset:endOffset}
+            break if (8+(8*(requestArray.length+1))) >= MAX_PDU_SIZE
+          end
+        end
+      end
+
+      return nil if requestArray.empty?
+      return CFDP.generatePDU("NAK", {sourceID:DESTINATIONID, destinationID:MYID, sequenceNumber:@ID[DESTINATIONID], direction:1, transmissionMode:0,
+          scopeStart:0, scopeEnd:scopeEnd, segmentRequests:requestArray})
+    end
+
+    # finish_downlink_transaction description
+      # UTILITY:
+      #    Function will send a FINISHED pdu and write data to a file (finish procedure from downlink).
+      # INPUT:
+      #    No inputs
+      # RETURNS:
+      #   No returns
+      # EXCEPTIONS:
+      #    No exceptions.
+    # end function description
+    def finish_downlink_transaction
+
+      conditionCode = create_file
+
+      writeLog("Cleaning buffer from transaction #{@ID}")
+      CFDP::CFDPEngine.instance.clean_buffer(@ID)
+
+      # transaction is complete, send FINISHED Pdu
+      finishedPdu = CFDP.generatePDU("FINISHED", {sourceID:DESTINATIONID, destinationID:MYID, conditionCode:conditionCode, endSystemStatus:1,
+        deliveryCode:(conditionCode == 0 ? 0 : 1), fileStatus:(conditionCode == 4 ? 1 : 2), direction:1, transmissionMode:0, sequenceNumber:@ID[DESTINATIONID]})
+      writeLog("Generated FINISHED PDU: #{finishedPdu.pack.to_s}")
+      update(finishedPdu)
+
+      CFDP::CFDPEngine.instance.insertIntoBuffer(finishedPdu)
+
+      CFDP::CFDP_Indication("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(conditionCode)}> condition.")
+      writeLog("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(conditionCode)}> condition.")
+    end
+
+    # nakHandler description
+      # UTILITY:
+      #    Function will receive a NAK Pdu and process it by verifying how many requests it has received
+      #   and which offsets it needs. The function them update the buffer with desired FileDatas or metadata
+      # INPUT:
+      #    A CFDP::PDUPacket
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def nakHandler(nakPdu)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, nakPdu.class)
+      Utils_visiona.verifyInput(CFDP::PDUNAK, nakPdu.pduPayload.class)
+
+      writeLog("Entered NAKHandler function.")
+
+      # check if transaction is active
+      if isactive?
+
+        # re-send missed pdu
+        requests = nakPdu.pduPayload.segmentRequests.length
+        for i in 0..(requests-1)
+
+          startOffset = nakPdu.pduPayload.segmentRequests[i][:startOffset]
+          endOffset = nakPdu.pduPayload.segmentRequests[i][:endOffset]
+
+          if (startOffset == 0) && (endOffset == 0)
+
+            # this means that I have to send a metadata PDU
+            writeLog("NAKHandler: ")
+            CFDP::CFDPEngine.instance.insertIntoBuffer(@pdus["METADATA"])
+          else
+
+            until startOffset.nil? || (startOffset >= endOffset)
+              writeLog("NAKHandler: ")
+              CFDP::CFDPEngine.instance.insertIntoBuffer(@pdus["FILEDATA"][startOffset])
+              startOffset = getNextOffset(startOffset)
+            end
+          end
+        end
+      end
+    end
+
+    # update description
+      # UTILITY:
+      #    Function will receive a PDU and update transaction.
+      #    This function will handle timer events, but won't finish transactions.
+      # INPUT:
+      #    A CFDP::PDUPacket
+      # RETURNS:
+      #    No returns
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def update(pdu)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, pdu.class)
+
+      pdu = pdu.dup
+
+      case pdu.pduPayload
+      when CFDP::PDUMetadata
+
+        if haspdumetadata?
+          writeLog("Received duplicated pdu #{pdu.pduPayload.class}. Ignoring.") unless isuplink?
+        else
+          @pdus.store "METADATA", pdu
+          writeLog("Updated transaction with #{pdu.pduPayload.class} and buffer: #{pdu.pack.to_s}")
+          CFDP::CFDP_Indication("Metadata #{isuplink? ? "sent" : "received"} for transaction #{@ID}")
+          (hastimer?("INACTIVITY") ? resetTimer("INACTIVITY") : insertTimer("INACTIVITY")) if isdownlink?
+        end
+      when CFDP::PDUFileData
+
+        if haspdufiledata?(pdu.pduPayload.offset)
+          writeLog("Received duplicated pdu #{pdu.pduPayload.class} with offset #{pdu.pduPayload.offset}. Ignoring.") unless isuplink?
+        else
+          @pdus["FILEDATA"].store pdu.pduPayload.offset, pdu
+          writeLog("Updated transaction with #{pdu.pduPayload.class} and buffer: #{pdu.pack.to_s}")
+          resetTimer("INACTIVITY") unless isuplink?
+        end
+      when CFDP::PDUEOF
+
+        if haspdueof?
+          writeLog("Received duplicated pdu #{pdu.pduPayload.class}. Ignoring.") unless isuplink?
+        else
+          @pdus.store "EOF", pdu
+          writeLog("Updated transaction with #{pdu.pduPayload.class} and buffer: #{pdu.pack.to_s}")
+          CFDP::CFDP_Indication("EOF #{isuplink? ? "sent" : "received"} for transaction #{@ID}")
+          insertTimer("EOF") unless ((isclass1? && isuplink?) || isdownlink? || hastimer?("EOF"))
+        end
+      when CFDP::PDUFinished
+
+        if haspdufinished?
+          writeLog("#{isuplink? ? "Received" : "Sent"} duplicated pdu #{pdu.pduPayload.class}. Ignoring.") unless isuplink?
+        else
+          @pdus.store "FINISHED", pdu
+          writeLog("Updated transaction with #{pdu.pduPayload.class} and buffer: #{pdu.pack.to_s}")
+          insertTimer("FINISHED") unless (isuplink? || hastimer?("FINISHED"))
+        end
+      when CFDP::PDUNAK
+
+        if @pdus["NAK"] == pdu
+          writeLog("Received duplicated pdu #{pdu.pduPayload.class}. Ignoring.") unless isdownlink?
+        else
+          if isdownlink?
+            @pdus.store "NAK", pdu
+            writeLog("Updated transaction with #{pdu.pduPayload.class} and buffer: #{pdu.pack.to_s}")
+            insertTimer("NAK") unless hastimer?("NAK")
+          else
+            nakHandler(pdu)
+          end
+        end
+      else
+        writeLog("Invalid PDU Class #{pdu.pduPayload.class} with buffer #{pdu.pack.to_s} in update method.")
+      end
+    end
+
+    # finish description
+      # UTILITY:
+      #    Function will make a transaction FINISHED and do finished procedures.
+      # INPUT:
+      #    No inputs
+      # RETURNS:
+      #    No returns
+      # EXCEPTIONS:
+      #    No exceptions.
+    # end function description
+    def finish(finishtype)
+
+      return unless isactive?
+
+      @finishType = finishtype
+
+      # HK Packet update
+      CFDP::HKPacket.instance.eng_inprogresstrans-=1
+      if @finishType.eql?("FAILED")
+        CFDP::HKPacket.instance.eng_totalfailedtrans+=1
+        CFDP::HKPacket.instance.eng_lastfailedtrans = @ID.to_s
+      else
+        CFDP::HKPacket.instance.eng_totalsuccesstrans+=1
+      end
+
+      if @type.eql?("DOWNLINK")
+
+        (@finishType.eql?("SUCCESS") ? CFDP::HKPacket.instance.eng_down_successdownlinks+=1 : CFDP::HKPacket.instance.eng_down_faileddownlinks+=1)
+        CFDP::HKPacket.instance.eng_down_lastfiledownlinked = @pdus["METADATA"].pduPayload.destinationFileName unless @finishType.eql?("FAILED")
+      else
+
+        (@finishType.eql?("SUCCESS") ? CFDP::HKPacket.instance.eng_up_successcounter+=1 : CFDP::HKPacket.instance.eng_up_failedcounter+=1)
+        unless @finishType.eql?("FAILED")
+
+          CFDP::HKPacket.instance.eng_up_lastfileuplinked = @pdus["METADATA"].pduPayload.destinationFileName
+          CFDP::HKPacket.instance.eng_totalfilessent+=1
+        end
+      end
+
+      # Other procedures
+      str = "Finishing transaction #{@ID}. Time elapsed: #{Time.now-@timeStarted} seconds"
+      CFDP::CFDP_Indication(str)
+      writeLog(str)
+
+      ACTIONS.each {|timerType, values| disableTimer(timerType)}
+
+      @status = "FINISHED"
+      insertTimer("FINISH_LOG")
+    end
+
+    # replyWithAck description
+      # UTILITY:
+      #    Function will handle Finished and EOF PDU's to reply with ack.
+      #    It does automatically insert into CFDP Engine's pduBuffer
+      # INPUT:
+      #    A CFDP::PDUPacket pdu
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+      #   or if it can't build a PDUPacket
+    # end function description
+    def replyWithAck?(pduPacket)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, pduPacket.class)
+      return unless isclass2?
+
+      status = (@finishType.nil? ? 1 : 2)
+      sourceID = MYID
+      destinationID = DESTINATIONID
+      direction = 0
+
+      # This is a received PDU.
+      case pduPacket.pduPayload
+      when CFDP::PDUEOF
+        
+        # I only receive EOF packets in DOWNLINK events
+        return unless @type.eql?("DOWNLINK")
+        direction = 1
+        sourceID = destinationID
+        destinationID = MYID
+      when CFDP::PDUFinished
+
+        # I only receive FINISHED packets in UPLINK events
+        return unless @type.eql?("UPLINK")
+        # use default values from function start
+      else
+        return
+      end
+
+      ackPdu = CFDP.generatePDU("ACK", directiveCode:pduPacket.pduPayload.class.class_variable_get(:@@fdCode),
+        directiveSubtypeCode:0, conditionCode:pduPacket.pduPayload.conditionCode, transactionStatus:status,
+        direction:direction, transmissionMode:0, sourceID:sourceID, destinationID:destinationID,
+        sequenceNumber:pduPacket.pduHeader.sequenceNumber)
+
+      writeLog("Generated ACK PDU: #{ackPdu.pack.to_s}")
+      CFDP::CFDPEngine.instance.insertIntoBuffer(ackPdu)
+    end
+
+    # handlePDUSent description
+      # UTILITY:
+      #    Function will handle PDU Sent cases.
+      # INPUT:
+      #    A CFDP::PDUPacket pduPacket
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+    # end function description
+    def handlePDUSent(pduPacket)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, pduPacket.class)
+
+      writeLog("Sent #{pduPacket.pduPayload.class}: #{pduPacket.pack.to_s}")
+
+      if isactive?
+
+        if pduPacket.pduPayload.is_a?(CFDP::PDUACK)
+
+          if pduPacket.pduPayload.directiveCode == 5
+
+            writeLog("Sending FINISHED Ack, must finish transaction")
+            writeLog("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(pduPacket.pduPayload.conditionCode)}> condition")
+            CFDP::CFDP_Indication("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(pduPacket.pduPayload.conditionCode)}> condition")
+            CFDP::HKPacket.instance.updateVar(pduPacket.pduPayload.conditionCode)
+            finish(pduPacket.pduPayload.conditionCode == 0 ? "SUCCESS" : "FAILED")
+          end
+        else
+
+          update(pduPacket)
+
+          if (pduPacket.pduPayload.is_a?(CFDP::PDUEOF) && isclass1?)
+
+            CFDP::CFDP_Indication("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(pduPacket.pduPayload.conditionCode)}> condition.")
+            writeLog("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(pduPacket.pduPayload.conditionCode)}> condition.")
+            CFDP::HKPacket.instance.updateVar(pduPacket.pduPayload.conditionCode)
+            finish(pduPacket.pduPayload.conditionCode == 0 ? "SUCCESS" : "FAILED")
+          end
+        end
+      end
+    end
+
+    # handlePDUReceived description
+      # UTILITY:
+      #    Function will handle PDU Received cases.
+      # INPUT:
+      #    A CFDP::PDUPacket pdu
+      # RETURNS:
+      #    No returns.
+      # EXCEPTIONS:
+      #    Can raise exception if input error
+      #   or if it can't build a PDUPacket
+    # end function description
+    def handlePDUReceived(pduPacket)
+
+      Utils_visiona.verifyInput(CFDP::PDUPacket, pduPacket.class)
+      writeLog("Received #{pduPacket.pduPayload.class}: #{pduPacket.pack.to_s}")
+
+      replyWithAck?(pduPacket)
+
+      if @status.eql?("FINISHED")
+        CFDP::CFDP_Indication("Transaction #{@ID} already finished. Ignoring.")
+        return
+      end
+
+      if isclass2?
+
+        # this is a class 2 active transaction, verify pdu class
+        case pduPacket.pduPayload
+        when CFDP::PDUEOF
+
+          unless haspdueof?
+
+            # downlink situation:
+            if isdownlink?
+
+              # Store EOF
+              update(pduPacket)
+
+              # downlink situation. (class 2 transaction active, received EOF. must check for condition codes
+              # first, and take action based on them.
+              case pduPacket.pduPayload.conditionCode
+              when 0
+
+                # no error condition, verify file completude
+                nakPdu = verifyMissingPDU
+                if nakPdu.nil?
+                  finish_downlink_transaction
+                else
+                  CFDP::CFDPEngine.instance.insertIntoBuffer(nakPdu)
+                  CFDP::CFDP_Indication("File incomplete. Generated NAKPDU and waiting for response.")
+                  writeLog("File incomplete. Generated NAKPDU #{nakPdu.pack.to_s}. Waiting for response.")
+                  insertTimer("NAK")
+                end
+              else
+                # it's an error, cancel transaction and indicate the user
+                CFDP::CFDP_Indication("Transaction #{@ID} cancelled due to <#{CFDP.conditionCodeToStr(pduPacket.pduPayload.conditionCode)}>.")
+                writeLog("Transaction #{@ID} cancelled due to <#{CFDP.conditionCodeToStr(pduPacket.pduPayload.conditionCode)}>.")
+                CFDP::HKPacket.instance.updateVar(pduPacket.pduPayload.conditionCode)
+                finish("FAILED")
+              end
+            end
+          end
+        when CFDP::PDUMetadata, CFDP::PDUFileData, CFDP::PDUNAK
+
+          update(pduPacket)
+        when CFDP::PDUFinished
+
+          # uplink situation:
+          if isuplink?
+
+            # Clean buffer
+            writeLog("Cleaning buffer from transaction #{@ID}")
+            CFDP::CFDPEngine.instance.clean_buffer(@ID)
+          else
+            # downlink situation (should not receive a FINISHED pdu, error event maybe?)
+            CFDP::CFDPEngine.instance.writeLog(0, "Received FINISHED PDU in downlink event.")
+          end
+        when CFDP::PDUACK
+          # check for directive code of PDUAck
+          case pduPacket.pduPayload.directiveCode
+          when 4
+            # received an ACK EOF, so disable timer.
+            disableTimer("EOF")
+          when 5
+            # received an ACK FINISHED. Disable timers
+            disableTimer("FINISHED")
+            finish("SUCCESS")
+          else
+            CFDP::CFDPEngine.instance.writeLog(0, "ACK's directive code #{pduPacket.pduPayload.directiveCode} error.")
+          end
+        else
+
+          CFDP::CFDPEngine.instance.writeLog(0, "Class #{pduPacket.pduPayload.class} not implemented")
+        end
+      elsif isclass1?
+
+        # this is a class 1 transaction
+        case pduPacket.pduPayload
+        when CFDP::PDUEOF, CFDP::PDUFileData
+
+          update(pduPacket)
+
+          unless pduPacket.pduPayload.is_a?(CFDP::PDUFileData)
+
+            # received a class 1 EOF downlink. Must check condition code
+            # and finish transactions
+            (conditionCode = create_file) if pduPacket.pduPayload.conditionCode == 0
+
+            # remove transaction anyway because we received EOF class 1.
+            CFDP::CFDP_Indication ("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(conditionCode)}> condition.")
+            writeLog("Transaction #{@ID} finished with <#{CFDP.conditionCodeToStr(conditionCode)}> condition.")
+            CFDP::HKPacket.instance.updateVar(conditionCode)
+            finish(conditionCode==0 ? "SUCCESS" : "FAILED")
+          end
+        else
+
+          CFDP::CFDPEngine.instance.writeLog(0, "Received #{pduPacket.pduPayload.class} on a class 1 transaction. Don't know how to handle it.")
+        end
+      end
+    end
+	end
+end
+```
+
+### `cfdp_vars.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/cfdp_vars.rb`
+
+
+```ruby
+# CFDP TASK VARS
+PDU_TARGET_NAME_TX = "PDU_TX"
+PDU_TARGET_NAME_RX = "PDU_RX"
+PDU_SEND_TARGET_PACKET = "CF_GND_TO_SPACE_PDU"
+PDU_RECV_TARGET_PACKET = "CF_SPACE_TO_GND_PDU"
+
+# CFDP ENGINE VARS
+# How many seconds before receiving a response
+EOF_TIMEOUT = 5
+INACTIVITY_TIMEOUT = 5
+FINISHED_TIMEOUT = 30
+NAK_TIMEOUT = 5
+FINISH_LOG_TIMEOUT = 5 # seconds before closing the logFile
+
+# How many times before performing an error
+EOF_LIMIT = 25
+INACTIVITY_LIMIT = 25
+FINISHED_LIMIT = 25
+NAK_LIMIT = 100
+FINISH_LOG_LIMIT = 25
+
+# CONSTRAINTS
+MYID = 21
+DESTINATIONID = 24
+USE_CRC = 0						# (0 - false, 1 - true). CRC is not supported @ CFS CF
+MAX_PDU_SIZE = 480				# Bytes
+MAX_STRING_SIZE = 64			# Used for destination and source file names
+SAVE_FILE_UPON_ERROR = true 	# Choose whether to save file or not if error
+
+# FILE VARS
+LOG_DIRECTORY = "#{Cosmos::USERPATH}/outputs/logs/"
+PDULOG = "CFDP_PDU_Received"
+ERRORLOG = "CFDP_Error_Log"
+
+# ENGINE TASK VARS
+SLEEP_TIME_BTW_PDUS = 0.25	    # time sleeping between sending pdus
+
+# OTHERS
+DEBUG = 0
+```

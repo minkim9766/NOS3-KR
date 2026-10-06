@@ -3,16 +3,68 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlinkPorts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--FileDownlinkPorts.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlinkPorts/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FileDownlinkPorts.fpp"
+)
+
+set(MOD_DEPS
+    Fw/Types
+    Fw/Port
+)
+
+register_fprime_module()
 ```
 
-## 항목
+### `FileDownlinkPorts.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlinkPorts/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlinkPorts/FileDownlinkPorts.fpp`](file--FileDownlinkPorts.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlinkPorts/FileDownlinkPorts.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Send file status enum
+  enum SendFileStatus {
+    STATUS_OK
+    STATUS_ERROR
+    STATUS_INVALID
+    STATUS_BUSY
+  }
+
+  @ Send file response struct
+  struct SendFileResponse {
+    status: Svc.SendFileStatus
+    context: U32
+  }
+
+  @ FileDownlink response to send file request
+  port SendFileComplete(
+                         $resp: Svc.SendFileResponse
+                       )
+
+  @ Request that FileDownlink downlink a file
+  port SendFileRequest(
+                        sourceFileName: string size 100 @< Path of file to downlink
+                        destFileName: string size 100 @< Path to store downlinked file at
+                        offset: U32 @< Amount of data in bytes to downlink from file. 0 to read until end of file
+                        length: U32 @< Amount of data in bytes to downlink from file. 0 to read until end of file
+                      ) -> Svc.SendFileResponse
+
+}
+```

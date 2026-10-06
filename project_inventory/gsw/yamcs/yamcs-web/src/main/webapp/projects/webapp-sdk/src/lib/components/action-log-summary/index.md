@@ -3,16 +3,55 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/action-log-summary/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `action-log-summary.component.html`
 
-file--action-log-summary.component.html
-file--action-log-summary.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/action-log-summary/action-log-summary.component.html`
+
+
+```html
+<span [innerHTML]="html() || '-'"></span>
 ```
 
-## 항목
+### `action-log-summary.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/action-log-summary/action-log-summary.component.html`](file--action-log-summary.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/action-log-summary/action-log-summary.component.ts`](file--action-log-summary.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/action-log-summary/action-log-summary.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  SecurityContext,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
+/**
+ * Highlights action log entries.
+ */
+@Component({
+  selector: './ya-action-log-summary',
+  templateUrl: './action-log-summary.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaActionLogSummary {
+  sanitizer = inject(DomSanitizer);
+
+  text = input<string>();
+
+  html = computed(() => {
+    const text = this.text();
+
+    if (!text) {
+      return null;
+    }
+
+    const html = text.replace(/(\'[^\']+\')/g, '<strong>\$1</strong>');
+    return this.sanitizer.sanitize(SecurityContext.HTML, html);
+  });
+}
+```

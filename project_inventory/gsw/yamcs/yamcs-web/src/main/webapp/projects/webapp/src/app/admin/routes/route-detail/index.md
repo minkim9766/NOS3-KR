@@ -3,16 +3,46 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `route-detail.component.html`
 
-file--route-detail.component.html
-file--route-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-detail/route-detail.component.html`
+
+
+```html
+<ya-attr-list>
+  <ya-attr label="Input type">
+    {{ route.inputType }}
+  </ya-attr>
+
+  <ya-attr label="Output type">
+    {{ route.outputType }}
+  </ya-attr>
+
+  <ya-attr label="Log format">
+    {{ route.logFormat || "-" }}
+  </ya-attr>
+</ya-attr-list>
 ```
 
-## 항목
+### `route-detail.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-detail/route-detail.component.html`](file--route-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-detail/route-detail.component.ts`](file--route-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-detail/route-detail.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Route, YaAttr, YaAttrList } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-route-detail',
+  templateUrl: './route-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [YaAttr, YaAttrList],
+})
+export class RouteDetailComponent {
+  @Input()
+  route: Route;
+}
+```

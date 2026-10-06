@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,121 +12,6277 @@ ccsds/index
 cfs/index
 csp/index
 pus/index
-file--AbstractCommandPostProcessor.java
-file--AbstractLink.java
-file--AbstractPacketPreprocessor.java
-file--AbstractParameterDataLink.java
-file--AbstractTcDataLink.java
-file--AbstractTcTmParamLink.java
-file--AbstractThreadedTcDataLink.java
-file--AbstractTmDataLink.java
-file--AggregatedDataLink.java
-file--ArchiveTmPacketProvider.java
-file--CcsdsPacket.java
-file--CcsdsPacketInputStream.java
-file--CcsdsPacketPreprocessor.java
-file--CcsdsSeqCountFiller.java
-file--CfdpPacketInputStream.java
-file--CommandPostprocessor.java
-file--ErrorDetectionWordCalculator.java
-file--FilePollingTmDataLink.java
-file--FixedPacketInputStream.java
-file--GenericCommandPostprocessor.java
-file--GenericPacketInputStream.java
-file--GenericPacketPreprocessor.java
-file--Iso16CrcCalculator.java
-file--IssCommandPostprocessor.java
-file--IssPacketPreprocessor.java
-file--Link.java
-file--LinkAction.java
-file--LinkActionProvider.java
-file--LinkMemento.java
-file--LinkState.java
-file--NoPacketSelectedException.java
-file--Packet.java
-file--PacketInputStream.java
-file--PacketPreprocessor.java
-file--PacketTooLongException.java
-file--ParameterDataLink.java
-file--ParameterSink.java
-file--RawFrameDecoder.java
-file--ReplayService.java
-file--Running16BitChecksumCalculator.java
-file--StreamParameterProvider.java
-file--StreamParameterSender.java
-file--StreamPbParameterSender.java
-file--TcDataLink.java
-file--TcpTcDataLink.java
-file--TcpTcTmDataLink.java
-file--TcpTmDataLink.java
-file--TcTmException.java
-file--TmPacketDataLink.java
-file--TmSink.java
-file--UdpParameterDataLink.java
-file--UdpTcDataLink.java
-file--UdpTcTmDataLink.java
-file--UdpTcTmDataLinkHandler.java
-file--UdpTmDataLink.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/`](ccsds/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/cfs/`](cfs/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/`](csp/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/pus/`](pus/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractCommandPostProcessor.java`](file--AbstractCommandPostProcessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractLink.java`](file--AbstractLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractPacketPreprocessor.java`](file--AbstractPacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractParameterDataLink.java`](file--AbstractParameterDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractTcDataLink.java`](file--AbstractTcDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractTcTmParamLink.java`](file--AbstractTcTmParamLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractThreadedTcDataLink.java`](file--AbstractThreadedTcDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractTmDataLink.java`](file--AbstractTmDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AggregatedDataLink.java`](file--AggregatedDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ArchiveTmPacketProvider.java`](file--ArchiveTmPacketProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsPacket.java`](file--CcsdsPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsPacketInputStream.java`](file--CcsdsPacketInputStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsPacketPreprocessor.java`](file--CcsdsPacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsSeqCountFiller.java`](file--CcsdsSeqCountFiller.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CfdpPacketInputStream.java`](file--CfdpPacketInputStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CommandPostprocessor.java`](file--CommandPostprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ErrorDetectionWordCalculator.java`](file--ErrorDetectionWordCalculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/FilePollingTmDataLink.java`](file--FilePollingTmDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/FixedPacketInputStream.java`](file--FixedPacketInputStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/GenericCommandPostprocessor.java`](file--GenericCommandPostprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/GenericPacketInputStream.java`](file--GenericPacketInputStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/GenericPacketPreprocessor.java`](file--GenericPacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Iso16CrcCalculator.java`](file--Iso16CrcCalculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/IssCommandPostprocessor.java`](file--IssCommandPostprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/IssPacketPreprocessor.java`](file--IssPacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Link.java`](file--Link.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkAction.java`](file--LinkAction.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkActionProvider.java`](file--LinkActionProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkMemento.java`](file--LinkMemento.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkState.java`](file--LinkState.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/NoPacketSelectedException.java`](file--NoPacketSelectedException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Packet.java`](file--Packet.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/PacketInputStream.java`](file--PacketInputStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/PacketPreprocessor.java`](file--PacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/PacketTooLongException.java`](file--PacketTooLongException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ParameterDataLink.java`](file--ParameterDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ParameterSink.java`](file--ParameterSink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/RawFrameDecoder.java`](file--RawFrameDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ReplayService.java`](file--ReplayService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Running16BitChecksumCalculator.java`](file--Running16BitChecksumCalculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/StreamParameterProvider.java`](file--StreamParameterProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/StreamParameterSender.java`](file--StreamParameterSender.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/StreamPbParameterSender.java`](file--StreamPbParameterSender.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcDataLink.java`](file--TcDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcpTcDataLink.java`](file--TcpTcDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcpTcTmDataLink.java`](file--TcpTcTmDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcpTmDataLink.java`](file--TcpTmDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcTmException.java`](file--TcTmException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TmPacketDataLink.java`](file--TmPacketDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TmSink.java`](file--TmSink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpParameterDataLink.java`](file--UdpParameterDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTcDataLink.java`](file--UdpTcDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTcTmDataLink.java`](file--UdpTcTmDataLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTcTmDataLinkHandler.java`](file--UdpTcTmDataLinkHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTmDataLink.java`](file--UdpTmDataLink.java) — UTF-8 텍스트 파일 본문 포함
+### `AbstractCommandPostProcessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractCommandPostProcessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.time.TimeService;
+
+public abstract class AbstractCommandPostProcessor implements CommandPostprocessor {
+    protected CommandHistoryPublisher commandHistoryPublisher;
+    protected TimeService timeService;
+
+    protected Logger log = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    public void init(String yamcsInstance, YConfiguration config) {
+        this.timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryPublisher) {
+        this.commandHistoryPublisher = commandHistoryPublisher;
+    }
+
+    /** Send to command history the failed command */
+    protected void failCommand(CommandId commandId, String reason) {
+        log.debug("Failing command {}: {}", commandId, reason);
+        long currentTime = timeService.getMissionTime();
+        commandHistoryPublisher.publishAck(commandId, AcknowledgeSent_KEY,
+                currentTime, AckStatus.NOK, reason);
+        commandHistoryPublisher.commandFailed(commandId, currentTime, reason);
+    }
+
+
+}
+```
+
+### `AbstractLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.yamcs.parameter.SystemParametersService.getPV;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.DataRateMeter;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.UnitType;
+
+import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.Service;
+
+import io.netty.channel.nio.NioEventLoopGroup;
+
+/**
+ * Abstract link implementation as a {@link Service} handling the basic enable/disable getConfig operations and data
+ * in/out counts
+ * 
+ *
+ */
+public abstract class AbstractLink extends AbstractService
+        implements Link, SystemParametersProducer, LinkActionProvider {
+    public static String LINK_NAMESPACE = "links/";
+
+    protected String yamcsInstance;
+    protected String linkName;
+    protected Log log;
+    protected EventProducer eventProducer;
+    protected YConfiguration config;
+    protected AtomicBoolean disabled = new AtomicBoolean(false);
+    private Parameter spLinkStatus, spDataOutCount, spDataInCount, spDataInRate, spDataOutRate;
+    protected TimeService timeService;
+    private Map<String, LinkAction> actions = new LinkedHashMap<>(); // Keep them in order of registration
+    private AggregatedDataLink parent = null;
+    protected AtomicLong dataOutCount = new AtomicLong();
+    protected AtomicLong dataInCount = new AtomicLong();
+    DataRateMeter dataInRateMeter = new DataRateMeter();
+    DataRateMeter dataOutRateMeter = new DataRateMeter();
+
+    /**
+     * singleton for netty worker group. In the future we may have an option to create different worker groups for
+     * different links but for now we stick to one.
+     */
+    static NioEventLoopGroup nelg = new NioEventLoopGroup();
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        this.yamcsInstance = instance;
+        this.linkName = name;
+        this.config = config;
+        log = new Log(getClass(), instance);
+        log.setContext(name);
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, name, 10000);
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    @Override
+    public YConfiguration getConfig() {
+        return config;
+    }
+
+    @Override
+    public String getName() {
+        return linkName;
+    }
+
+    @Override
+    public Status getLinkStatus() {
+        if (isDisabled()) {
+            return Status.DISABLED;
+        }
+        if (state() == State.FAILED) {
+            return Status.FAILED;
+        }
+
+        return connectionStatus();
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        return "";
+    }
+
+    protected static NioEventLoopGroup getEventLoop() {
+        return nelg;
+    }
+
+    /**
+     * Sets the disabled to false such that getNextPacket does not ignore the received datagrams
+     */
+    @Override
+    public void enable() {
+        boolean b = disabled.getAndSet(false);
+        if (b) {
+            try {
+                doEnable();
+            } catch (Exception e) {
+                disabled.set(true);
+                log.warn("Failed to enable link", e);
+            }
+        }
+    }
+
+    @Override
+    public void disable() {
+        boolean b = disabled.getAndSet(true);
+        if (!b) {
+            try {
+                doDisable();
+            } catch (Exception e) {
+                disabled.set(false);
+                log.warn("Failed to disable link", e);
+            }
+        }
+    }
+
+    @Override
+    public boolean isDisabled() {
+        return disabled.get();
+    }
+
+    public boolean isRunningAndEnabled() {
+        State state = state();
+        return (state == State.RUNNING || state == State.STARTING) && !disabled.get();
+    }
+
+    protected void doDisable() throws Exception {
+    }
+
+    protected void doEnable() throws Exception {
+    }
+
+    /**
+     * In case the link should be connected (i.e. is running and enabled) this method is called to return the actual
+     * connection status
+     */
+    protected abstract Status connectionStatus();
+
+    protected long getCurrentTime() {
+        return timeService.getMissionTime();
+    }
+
+    @Override
+    public void setupSystemParameters(SystemParametersService sysParamService) {
+        spLinkStatus = sysParamService.createEnumeratedSystemParameter(LINK_NAMESPACE + linkName + "/linkStatus",
+                Status.class, "The current status of this link");
+        EnumeratedParameterType spLinkStatusType = (EnumeratedParameterType) spLinkStatus.getParameterType();
+        spLinkStatusType.enumValue(Status.OK.name())
+                .setDescription("This link is up and ready to receive (or send) data");
+        spLinkStatusType.enumValue(Status.UNAVAIL.name()).setDescription("This link is down unexpectedly");
+        spLinkStatusType.enumValue(Status.DISABLED.name()).setDescription("This link was disabled by a user");
+        spLinkStatusType.enumValue(Status.FAILED.name())
+                .setDescription("An internal error occurred while processing data");
+
+        UnitType bps = new UnitType("Bps");
+        spDataOutCount = sysParamService.createSystemParameter(LINK_NAMESPACE + linkName + "/dataOutCount", Type.UINT64,
+                "The total number of items (e.g. telecommand packets) that have been sent through this link");
+        spDataInCount = sysParamService.createSystemParameter(LINK_NAMESPACE + linkName + "/dataInCount", Type.UINT64,
+                "The total number of items (e.g. telemetry packets) that have been received through this link");
+
+        spDataInRate = sysParamService.createSystemParameter(LINK_NAMESPACE + linkName + "/dataInRate", Type.DOUBLE,
+                bps, "The number of incoming bytes per second computed over a five second interval");
+
+        spDataOutRate = sysParamService.createSystemParameter(LINK_NAMESPACE + linkName + "/dataOutRate", Type.DOUBLE,
+                bps, "The number of outgoing bytes per second computed over a five second interval");
+
+    }
+
+    @Override
+    public List<ParameterValue> getSystemParameters(long time) {
+
+        ArrayList<ParameterValue> list = new ArrayList<>();
+        try {
+            collectSystemParameters(time, list);
+        } catch (Exception e) {
+            log.error("Exception caught when collecting link system parameters", e);
+        }
+        return list;
+    }
+
+    /**
+     * adds system parameters link status and data in/out to the list.
+     * <p>
+     * The inheriting classes should call super.collectSystemParameters and then add their own parameters to the list
+     * 
+     * @param time
+     * @param list
+     */
+    protected void collectSystemParameters(long time, List<ParameterValue> list) {
+        list.add(getPV(spLinkStatus, time, getLinkStatus()));
+        list.add(getPV(spDataOutCount, time, getDataOutCount()));
+        list.add(getPV(spDataInCount, time, getDataInCount()));
+        list.add(getPV(spDataOutRate, time, dataOutRateMeter.getFiveSecondsRate()));
+        list.add(getPV(spDataInRate, time, dataInRateMeter.getFiveSecondsRate()));
+    }
+
+    protected void addAction(LinkAction action) {
+        if (actions.containsKey(action.getId())) {
+            throw new IllegalArgumentException("Action '" + action.getId() + "' already registered");
+        }
+        actions.put(action.getId(), action);
+    }
+
+    @Override
+    public List<LinkAction> getActions() {
+        return new ArrayList<>(actions.values());
+    }
+
+    @Override
+    public LinkAction getAction(String actionId) {
+        return actions.get(actionId);
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(AggregatedDataLink parent) {
+        this.parent = parent;
+    }
+
+    public String getYamcsInstance() {
+        return yamcsInstance;
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return dataOutCount.get();
+    }
+
+    @Override
+    public long getDataInCount() {
+        return dataInCount.get();
+    }
+
+    @Override
+    public void resetCounters() {
+        dataInCount.set(0);
+        dataOutCount.set(0);
+    }
+
+    /**
+     * Update the dataOutCount with the given number of items sent
+     * <p>
+     * Should be called by the inheriting classes each time data is sent out
+     */
+    protected void dataOut(long outCount, long size) {
+        dataOutCount.addAndGet(outCount);
+        dataOutRateMeter.mark(size);
+    }
+
+    /**
+     * Update the dataInCount with the given number of items received
+     * <p>
+     * Should be called by the inheriting classes each time data is received
+     * 
+     */
+    protected void dataIn(long inCount, long size) {
+        dataInCount.addAndGet(inCount);
+        dataInRateMeter.mark(size);
+    }
+}
+```
+
+### `AbstractPacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractPacketPreprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.nio.ByteOrder;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.logging.Log;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.tctm.ccsds.time.CucTimeDecoder;
+import org.yamcs.time.FixedSizeTimeDecoder;
+import org.yamcs.time.Float64TimeDecoder;
+import org.yamcs.time.TimeCorrelationService;
+import org.yamcs.time.TimeDecoder;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * This class provides some common facilities for the packet preprocessors. Options:
+ * 
+ * <pre>
+ *   dataLinks:
+ *   ...
+ *      packetPreprocessor: org.yamcs.tctm.concrete_classname
+ *      packetPreprocessorArgs:
+ *          byteOrder: LITTLE_ENDIAN
+ *          checkSequence: true
+ *          timeEncoding:
+ *              epoch: CUSTOM
+ *              epochUTC: 1970-01-01T00:00:00Z
+ *              timeIncludesLeapSeconds: false
+ * 
+ * </pre>
+ * 
+ * The {@code byteOrder} option (default is {@code BIG_ENDIAN}) is used by some implementing classes to decode parts of
+ * the header.
+ * <p>
+ * The {@code checkSequence} option (default is true) can configure the implementing classes to raise an event if the
+ * sequence count is not continuous (this indicates packet loss).
+ * <p>
+ * The {@code timeEncoding} is used to convert the extracted time to Yamcs time.
+ * 
+ * {@code epoch} can be one of TAI, J2000, UNIX, GPS, CUSTOM.
+ * <p>
+ * If CUSTOM is specified, the {@code epochUTC} has to be used to specify the UTC time which is used as an epoch (UTC is
+ * used here loosely because strictly speaking UTC has been only introduced in 1972 so it does not make sense for the
+ * times before).
+ * <p>
+ * The time read from the packet is interpreted as delta from {@code epochUTC}.
+ * <p>
+ * If {@code timeIncludesLeapSeconds} is {@code true} (default), the delta time is considered as having the leap seconds
+ * included (practically it is the real time that passed).
+ * <p>
+ * TAI, J2000 and GPS have the leap seconds included, UNIX does not.
+ * <p>
+ * The example above is equivalent with:
+ * 
+ * <pre>
+ * timeEncoding:
+ *    epoch: UNIX
+ * </pre>
+ * 
+ * If this option is not configured, the default will be different for each pre-processor.
+ * 
+ * @author nm
+ *
+ */
+public abstract class AbstractPacketPreprocessor implements PacketPreprocessor {
+
+    public static enum TimeEpochs {
+        TAI, J2000, UNIX, GPS, CUSTOM, NONE
+    };
+
+    public static enum TimeDecoderType {
+        CUC, FIXED, FLOAT64
+    }
+
+    protected static final String CONFIG_KEY_ERROR_DETECTION = "errorDetection";
+    protected static final String CONFIG_KEY_TIME_ENCODING = "timeEncoding";
+    public static final String CONFIG_KEY_TCO_SERVICE = "tcoService";
+    protected static final String CONFIG_KEY_BYTE_ORDER = "byteOrder";
+    protected static final String CONFIG_KEY_CHECK_SEQUENCE = "checkSequence";
+
+    protected static final String ETYPE_CORRUPTED_PACKET = "CORRUPTED_PACKET";
+
+    // which error detection algorithm to use (null = no checksum)
+    protected ErrorDetectionWordCalculator errorDetectionCalculator;
+    protected EventProducer eventProducer;
+    protected TimeService timeService;
+
+    protected boolean checkForSequenceDiscontinuity = true;
+
+    // used by some preprocessors to convert the generation time in the packet to yamcs time
+    protected TimeEpochs timeEpoch;
+
+    // if timeEpoch is CUSTOM, the following two are used
+    // customEpoch is a Yamcs instant if customEpochIncludeLeapSecond = true
+    // and is a unix time if customEpochIncludeLeapSecond=false
+    protected long customEpoch;
+    protected boolean customEpochIncludeLeapSecond;
+
+    protected TimeDecoder timeDecoder = null;
+    protected ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
+
+    protected TimeCorrelationService tcoService;
+    /**
+     * If true, do not extract time from packets but use the local generation time.
+     * <p>
+     * It is a good idea to set the {@link TmPacket#setLocalGenTimeFlag()} flag to indicate it.
+     * <p>
+     * The flag has to be set by the pre-processor!
+     */
+    protected boolean useLocalGenerationTime;
+    final protected Log log;
+
+    protected AbstractPacketPreprocessor(String yamcsInstance, YConfiguration config) {
+        log = new Log(this.getClass(), yamcsInstance);
+
+        // Before anything else
+        byteOrder = getByteOrder(config);
+
+        errorDetectionCalculator = getErrorDetectionWordCalculator(config);
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, this.getClass().getSimpleName(), 10000);
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+        this.checkForSequenceDiscontinuity = config.getBoolean(CONFIG_KEY_CHECK_SEQUENCE, true);
+
+        configureTimeDecoder(config);
+
+        if (config.containsKey(CONFIG_KEY_TCO_SERVICE)) {
+            String tcoServiceName = config.getString(CONFIG_KEY_TCO_SERVICE);
+            tcoService = YamcsServer.getServer().getInstance(yamcsInstance).getService(TimeCorrelationService.class,
+                    tcoServiceName);
+            if (tcoService == null) {
+                throw new ConfigurationException(
+                        "Cannot find a time correlation service with name " + tcoServiceName);
+            }
+        }
+    }
+
+    private void configureTimeDecoder(YConfiguration config) {
+        if (config != null) {
+            useLocalGenerationTime = config.getBoolean("useLocalGenerationTime", false);
+        }
+
+        if (!useLocalGenerationTime && config != null && config.containsKey(CONFIG_KEY_TIME_ENCODING)) {
+            YConfiguration c = config.getConfig(CONFIG_KEY_TIME_ENCODING);
+            timeDecoder = getDecoder(c);
+            timeEpoch = c.getEnum("epoch", TimeEpochs.class, TimeEpochs.GPS);
+            if (timeEpoch == TimeEpochs.CUSTOM) {
+                customEpochIncludeLeapSecond = c.getBoolean("timeIncludesLeapSeconds", true);
+                String epochs = c.getString("epochUTC");
+                customEpoch = TimeEncoding.parse(epochs);
+                if (!customEpochIncludeLeapSecond) {
+                    customEpoch = TimeEncoding.toUnixMillisec(customEpoch);
+                }
+            }
+            log.debug("Using time decoder {}", timeDecoder);
+        }
+
+    }
+
+    private TimeDecoder getDecoder(YConfiguration c) {
+        TimeDecoderType type = c.getEnum("type", TimeDecoderType.class, getDefaultDecoderType());
+
+        TimeDecoder timeDecoder;
+
+        switch (type) {
+        case CUC:
+            int implicitPField = c.getInt("implicitPField", -1);
+            int implicitPFieldCont = c.getInt("implicitPFieldCont", -1);
+            timeDecoder = new CucTimeDecoder(implicitPField, implicitPFieldCont);
+            break;
+        case FIXED:
+            int size = c.getInt("size", 8);
+            if (size != 4 && size != 8) {
+                throw new ConfigurationException(
+                        "Unsupported size " + size + " for fixed decoder. Only 4 and 8 bytes supported");
+            }
+            double multiplier = c.getDouble("multiplier", 1);
+            timeDecoder = new FixedSizeTimeDecoder(byteOrder, size, multiplier);
+            break;
+        case FLOAT64:
+            timeDecoder = new Float64TimeDecoder(byteOrder);
+            break;
+        default:
+            throw new UnsupportedOperationException("unknown time decoder type " + type);
+        }
+
+        return timeDecoder;
+    }
+
+    public void verifyCrc(TmPacket tmPacket) {
+        if (errorDetectionCalculator == null) {
+            return;
+        }
+
+        boolean corrupted = false;
+        byte[] packet = tmPacket.getPacket();
+
+        int n = packet.length;
+        int computedCheckword;
+        try {
+            computedCheckword = errorDetectionCalculator.compute(packet, 0, n - 2);
+            int packetCheckword = ByteArrayUtils.decodeUnsignedShort(packet, n - 2);
+            if (packetCheckword != computedCheckword) {
+                eventProducer.sendWarning("Corrupted packet received, computed checkword: " + computedCheckword
+                        + "; packet checkword: " + packetCheckword);
+                corrupted = true;
+            }
+        } catch (IllegalArgumentException e) {
+            eventProducer.sendWarning("Error when computing checkword: " + e);
+            corrupted = true;
+        }
+        if (corrupted) {
+            tmPacket.setInvalid(true);
+        }
+    }
+
+    public static ErrorDetectionWordCalculator getErrorDetectionWordCalculator(YConfiguration config) {
+        if ((config == null) || !config.containsKey(CONFIG_KEY_ERROR_DETECTION)) {
+            return null;
+        }
+        String type;
+        YConfiguration crcConf = null;
+        if (config.get(CONFIG_KEY_ERROR_DETECTION) instanceof Map<?, ?>) {
+            crcConf = config.getConfig(CONFIG_KEY_ERROR_DETECTION);
+            type = crcConf.getString("type");
+        } else {
+            type = config.getString(CONFIG_KEY_ERROR_DETECTION);
+        }
+
+        if ("16-SUM".equalsIgnoreCase(type)) {
+            return new Running16BitChecksumCalculator();
+        } else if ("CRC-16-CCIIT".equalsIgnoreCase(type)) {
+            if (crcConf == null) {
+                return new CrcCciitCalculator();
+            } else {
+                return new CrcCciitCalculator(crcConf);
+            }
+        } else if ("ISO-16".equalsIgnoreCase(type)) {
+            return new Iso16CrcCalculator();
+        } else if ("NONE".equalsIgnoreCase(type)) {
+            return null;
+        } else {
+            throw new ConfigurationException(
+                    "Unknown errorDetectionWord type '" + type
+                            + "': supported types are 16-SUM, CRC-16-CCIIT and ISO-16 (or NONE)");
+        }
+    }
+
+    /**
+     * Decodes the time at the offset using the time decoder, sets and verifies the generation time depending on the
+     * timeEpoch and the tcoService.
+     * <p>
+     * If there is any exception when decoding the time, the packet is marked as invalid.
+     * <p>
+     * It is important this is called only for realtime packets.
+     *
+     * @param tmPacket
+     * @param offset
+     */
+    protected void setRealtimePacketTime(TmPacket tmPacket, int offset) {
+        if (useLocalGenerationTime) {
+            tmPacket.setGenerationTime(tmPacket.getReceptionTime());
+            tmPacket.setLocalGenTimeFlag();
+            return;
+        }
+
+        byte[] packet = tmPacket.getPacket();
+        try {
+            if (timeEpoch == null || timeEpoch == TimeEpochs.NONE) {
+                long obt = timeDecoder.decodeRaw(packet, offset);
+                tmPacket.setObt(obt);
+                tcoService.timestamp(obt, tmPacket);
+            } else {
+                long t = timeDecoder.decode(packet, offset);
+                long gentime = shiftFromEpoch(t);
+                tmPacket.setGenerationTime(gentime);
+                if (tcoService != null) {
+                    tcoService.verify(tmPacket);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("Failed to extract time from the packet", e);
+            eventProducer.sendWarning("Failed to extract time from packet: " + e);
+            tmPacket.setInvalid(true);
+        }
+    }
+
+    protected long shiftFromEpoch(long t) {
+        switch (timeEpoch) {
+        case GPS:
+            return TimeEncoding.fromGpsMillisec(t);
+        case J2000:
+            return TimeEncoding.fromJ2000Millisec(t);
+        case TAI:
+            return TimeEncoding.fromTaiMillisec(t);
+        case UNIX:
+            return TimeEncoding.fromUnixMillisec(t);
+        case CUSTOM:
+            if (customEpochIncludeLeapSecond) {
+                return customEpoch + t;
+            } else {
+                return TimeEncoding.fromUnixMillisec(customEpoch + t);
+            }
+        default:
+            throw new IllegalStateException("Unknown epoch " + timeEpoch);
+        }
+    }
+
+    public static ByteOrder getByteOrder(YConfiguration config) {
+        String order = config.getString(CONFIG_KEY_BYTE_ORDER, ByteOrder.BIG_ENDIAN.toString());
+        if ("BIG_ENDIAN".equalsIgnoreCase(order)) {
+            return ByteOrder.BIG_ENDIAN;
+        } else if ("LITTLE_ENDIAN".equalsIgnoreCase(order)) {
+            return ByteOrder.LITTLE_ENDIAN;
+        } else {
+            throw new ConfigurationException(
+                    "Invalid '" + order + "' byte order specified. Use one of BIG_ENDIAN or LITTLE_ENDIAN");
+        }
+    }
+
+    /**
+     * return the default decoder type. The subclasses may override this for compatibility with old Yamcs releases
+     */
+    protected TimeDecoderType getDefaultDecoderType() {
+        return TimeDecoderType.CUC;
+    }
+
+    public boolean checkForSequenceDiscontinuity() {
+        return checkForSequenceDiscontinuity;
+    }
+
+    @Override
+    public void checkForSequenceDiscontinuity(boolean checkForSequenceDiscontinuity) {
+        this.checkForSequenceDiscontinuity = checkForSequenceDiscontinuity;
+    }
+
+}
+```
+
+### `AbstractParameterDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractParameterDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.DataRateMeter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.UnitType;
+
+public abstract class AbstractParameterDataLink extends AbstractLink implements ParameterDataLink {
+
+    protected AtomicLong parameterCount = new AtomicLong(0);
+    private DataRateMeter parameterRateMeter = new DataRateMeter();
+
+    private Parameter parameterRateParameter;
+    private ParameterSink parameterSink;
+
+    protected void updateParameters(long gentime, String group, int seqNum, Collection<ParameterValue> params) {
+        parameterCount.addAndGet(params.size());
+        parameterRateMeter.mark(params.size());
+
+        parameterSink.updateParameters(gentime, group, seqNum, params);
+    }
+
+    @Override
+    public void setupSystemParameters(SystemParametersService sysParamService) {
+        super.setupSystemParameters(sysParamService);
+        parameterRateParameter = sysParamService.createSystemParameter(LINK_NAMESPACE + linkName + "/parameterRate",
+                Type.DOUBLE, new UnitType("p/s"),
+                "Number of parameters per second computed over a five second interval");
+    }
+
+    @Override
+    protected void collectSystemParameters(long time, List<ParameterValue> list) {
+        super.collectSystemParameters(time, list);
+        list.add(SystemParametersService.getPV(parameterRateParameter, time, parameterRateMeter.getFiveSecondsRate()));
+    }
+
+    @Override
+    public long getDataInCount() {
+        return parameterCount.get();
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void resetCounters() {
+        parameterCount.set(0);
+    }
+
+    @Override
+    public void setParameterSink(ParameterSink parameterSink) {
+        this.parameterSink = parameterSink;
+    }
+}
+```
+
+### `AbstractTcDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractTcDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Base implementation for a TC data link that initialises a post processor and implements basic methods.
+ * 
+ */
+public abstract class AbstractTcDataLink extends AbstractLink implements TcDataLink {
+
+    protected CommandHistoryPublisher commandHistoryPublisher;
+
+    protected CommandPostprocessor cmdPostProcessor;
+    static final PreparedCommand SIGNAL_QUIT = new PreparedCommand(new byte[0]);
+
+    protected long housekeepingInterval = 10000;
+    
+
+    @Override
+    public Spec getDefaultSpec() {
+        var spec = super.getDefaultSpec();
+        spec.addOption("commandPostprocessorClassName", OptionType.STRING);
+        spec.addOption("commandPostprocessorArgs", OptionType.MAP).withSpec(Spec.ANY);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String linkName, YConfiguration config) throws ConfigurationException {
+        super.init(yamcsInstance, linkName, config);
+
+        initPostprocessor(yamcsInstance, config);
+    }
+
+    protected void initPostprocessor(String instance, YConfiguration config) {
+        String commandPostprocessorClassName = GenericCommandPostprocessor.class.getName();
+        YConfiguration commandPostprocessorArgs = null;
+
+        if (config != null) {
+            commandPostprocessorClassName = config.getString("commandPostprocessorClassName",
+                    GenericCommandPostprocessor.class.getName());
+            if (config.containsKey("commandPostprocessorArgs")) {
+                commandPostprocessorArgs = config.getConfig("commandPostprocessorArgs");
+            }
+        }
+
+        try {
+            boolean initRequired = false;
+            try {
+                cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName);
+                initRequired = true;
+            } catch (ConfigurationException e) {
+                // Fallback to the current behaviour if no default constructor is found.
+                // TODO: remove after all postprocessors have been migrated to the init method
+                if (commandPostprocessorArgs != null) {
+                    cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance,
+                            commandPostprocessorArgs);
+                } else {
+                    cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance);
+                }
+            }
+
+            if (initRequired) {
+                if (commandPostprocessorArgs == null) {
+                    commandPostprocessorArgs = YConfiguration.emptyConfig();
+                }
+                cmdPostProcessor.init(instance, commandPostprocessorArgs);
+            }
+        } catch (Exception e) {
+            log.error("Cannot instantiate the command postprocessor", e);
+            throw new ConfigurationException("Failed to initialize postprocessor", e);
+        }
+    }
+
+    protected void initPostprocessor2(String instance, YConfiguration config) {
+        String commandPostprocessorClassName = GenericCommandPostprocessor.class.getName();
+        YConfiguration commandPostprocessorArgs = null;
+
+        if (config != null) {
+            commandPostprocessorClassName = config.getString("commandPostprocessorClassName",
+                    GenericCommandPostprocessor.class.getName());
+            if (config.containsKey("commandPostprocessorArgs")) {
+                commandPostprocessorArgs = config.getConfig("commandPostprocessorArgs");
+            }
+        }
+
+        try {
+            if (commandPostprocessorArgs != null) {
+                cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance,
+                        commandPostprocessorArgs);
+            } else {
+                cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance);
+            }
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the command postprocessor", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryListener) {
+        this.commandHistoryPublisher = commandHistoryListener;
+        cmdPostProcessor.setCommandHistoryPublisher(commandHistoryListener);
+    }
+
+    /**
+     * Postprocesses the command, unless postprocessing is disabled.
+     * 
+     * @return potentially modified binary, or {@code null} to indicate that the command should not be handled further.
+     */
+    protected byte[] postprocess(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        if (!pc.disablePostprocessing()) {
+            binary = cmdPostProcessor.process(pc);
+            if (binary == null) {
+                log.warn("command postprocessor did not process the command");
+            }
+        }
+        return binary;
+    }
+
+    @Override
+    public long getDataInCount() {
+        return 0;
+    }
+
+    /** Send to command history the failed command */
+    protected void failedCommand(CommandId commandId, String reason) {
+        log.debug("Failing command {}: {}", commandId, reason);
+        long currentTime = getCurrentTime();
+        commandHistoryPublisher.publishAck(commandId, AcknowledgeSent_KEY,
+                currentTime, AckStatus.NOK, reason);
+        commandHistoryPublisher.commandFailed(commandId, currentTime, reason);
+    }
+
+    /**
+     * send an ack in the command history that the command has been sent out of the link
+     * 
+     * @param commandId
+     */
+    protected void ackCommand(CommandId commandId) {
+        commandHistoryPublisher.publishAck(commandId, AcknowledgeSent_KEY, getCurrentTime(),
+                AckStatus.OK);
+    }
+}
+```
+
+### `AbstractTcTmParamLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractTcTmParamLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import java.io.OutputStream;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.TmPacket;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.time.SimulationTimeService;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Base class for TM/TC/parameter links.
+ */
+public abstract class AbstractTcTmParamLink extends AbstractLink
+        implements TmPacketDataLink, TcDataLink, ParameterDataLink {
+
+    // TC related fields
+    protected CommandPostprocessor cmdPostProcessor;
+    protected CommandHistoryPublisher commandHistoryPublisher;
+
+    // TM packet related fields
+    protected AtomicLong packetCount = new AtomicLong(0);
+    private TmSink tmSink;
+    protected boolean updateSimulationTime;
+    String packetPreprocessorClassName;
+    YConfiguration packetPreprocessorArgs;
+    protected PacketPreprocessor packetPreprocessor;
+    final static String CFG_PREPRO_CLASS = "packetPreprocessorClassName";
+
+    // Parameter related fields
+    protected ParameterSink parameterSink;
+    protected AtomicLong parameterCount = new AtomicLong(0);
+
+    String packetInputStreamClassName;
+    YConfiguration packetInputStreamArgs;
+    PacketInputStream packetInputStream;
+    OutputStream outputStream;
+
+    @Override
+    public Spec getDefaultSpec() {
+        var spec = super.getDefaultSpec();        
+        spec.addOption("commandPostprocessorClassName", OptionType.STRING);
+        spec.addOption("commandPostprocessorArgs", OptionType.MAP).withSpec(Spec.ANY);
+
+        spec.addOption("packetPreprocessorClassName", OptionType.STRING);
+        spec.addOption("packetPreprocessorArgs", OptionType.MAP).withSpec(Spec.ANY);
+        spec.addOption("updateSimulationTime", OptionType.BOOLEAN).withDefault(false);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(instance, name, config);
+
+        initTc(yamcsInstance, config);
+        initTm(yamcsInstance, config);
+
+    }
+
+    protected void initTc(String instance, YConfiguration config) throws ConfigurationException {
+        String commandPostprocessorClassName = GenericCommandPostprocessor.class.getName();
+        YConfiguration commandPostprocessorArgs = null;
+
+        // The GenericCommandPostprocessor class does nothing if there are no arguments, which is what we want.
+        if (config != null) {
+            commandPostprocessorClassName = config.getString("commandPostprocessorClassName",
+                    GenericCommandPostprocessor.class.getName());
+            if (config.containsKey("commandPostprocessorArgs")) {
+                commandPostprocessorArgs = config.getConfig("commandPostprocessorArgs");
+            }
+        }
+
+        // Instantiate
+        try {
+            boolean initRequired = false;
+            try {
+                cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName);
+                initRequired = true;
+            } catch (ConfigurationException e) {
+                // Fallback to the current behaviour if no default constructor is found.
+                // TODO: remove after all postprocessors have been migrated to the init method
+                if (commandPostprocessorArgs != null) {
+                    cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance,
+                            commandPostprocessorArgs);
+                } else {
+                    cmdPostProcessor = YObjectLoader.loadObject(commandPostprocessorClassName, instance);
+                }
+            }
+
+            if (initRequired) {
+                if (commandPostprocessorArgs == null) {
+                    commandPostprocessorArgs = YConfiguration.emptyConfig();
+                }
+                cmdPostProcessor.init(instance, commandPostprocessorArgs);
+            }
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the command postprocessor", e);
+            throw e;
+        }
+    }
+
+    protected void initTm(String instance, YConfiguration config) {
+        if (config.containsKey(CFG_PREPRO_CLASS)) {
+            this.packetPreprocessorClassName = config.getString(CFG_PREPRO_CLASS);
+        } else {
+            this.packetPreprocessorClassName = IssPacketPreprocessor.class.getName();
+        }
+        if (config.containsKey("packetPreprocessorArgs")) {
+            this.packetPreprocessorArgs = config.getConfig("packetPreprocessorArgs");
+        }
+
+        try {
+            if (packetPreprocessorArgs != null) {
+                packetPreprocessor = YObjectLoader.loadObject(packetPreprocessorClassName, instance,
+                        packetPreprocessorArgs);
+            } else {
+                packetPreprocessor = YObjectLoader.loadObject(packetPreprocessorClassName, instance);
+            }
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packet preprocessor", e);
+            throw e;
+        }
+
+        updateSimulationTime = config.getBoolean("updateSimulationTime", false);
+        if (updateSimulationTime) {
+            if (timeService instanceof SimulationTimeService) {
+                SimulationTimeService sts = (SimulationTimeService) timeService;
+                sts.setTime0(0);
+            } else {
+                throw new ConfigurationException(
+                        "updateSimulationTime can only be used together with SimulationTimeService "
+                                + "(add 'timeService: org.yamcs.time.SimulationTimeService' in yamcs.<instance>.yaml)");
+            }
+        }
+
+    }
+    /**
+     * Postprocesses the command, unless postprocessing is disabled.
+     * 
+     * @return potentially modified binary, or {@code null} to indicate that the command should not be handled further.
+     */
+    protected byte[] postprocess(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        if (!pc.disablePostprocessing()) {
+            binary = cmdPostProcessor.process(pc);
+            if (binary == null) {
+                log.warn("command postprocessor did not process the command");
+            }
+        }
+        return binary;
+    }
+    
+    /**
+     * Sends the packet downstream for processing.
+     * <p>
+     * Starting in Yamcs 5.2, if the updateSimulationTime option is set on the link configuration,
+     * <ul>
+     * <li>the timeService is expected to be SimulationTimeService</li>
+     * <li>at initialization, the time0 is set to 0</li>
+     * <li>upon each packet received, the generationTime (as set by the pre-processor) is used to update the simulation
+     * elapsed time</li>
+     * </ul>
+     * <p>
+     * Should be called by all sub-classes (instead of directly calling {@link TmSink#processPacket(TmPacket)}
+     * 
+     * @param tmpkt
+     */
+    protected void processPacket(TmPacket tmpkt) {
+        tmSink.processPacket(tmpkt);
+        if (updateSimulationTime) {
+            SimulationTimeService sts = (SimulationTimeService) timeService;
+            if (!tmpkt.isInvalid()) {
+                sts.setSimElapsedTime(tmpkt.getGenerationTime());
+            }
+        }
+    }
+
+    /** Send to command history the failed command */
+    protected void failedCommand(CommandId commandId, String reason) {
+        log.debug("Failing command {}: {}", commandId, reason);
+        long currentTime = getCurrentTime();
+        commandHistoryPublisher.publishAck(commandId, AcknowledgeSent_KEY, currentTime, AckStatus.NOK, reason);
+        commandHistoryPublisher.commandFailed(commandId, currentTime, reason);
+    }
+
+    /**
+     * send an ack in the command history that the command has been sent out of the link
+     * 
+     * @param commandId
+     */
+    protected void ackCommand(CommandId commandId) {
+        commandHistoryPublisher.publishAck(commandId, AcknowledgeSent_KEY, getCurrentTime(), AckStatus.OK);
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryListener) {
+        this.commandHistoryPublisher = commandHistoryListener;
+        cmdPostProcessor.setCommandHistoryPublisher(commandHistoryListener);
+    }
+
+    @Override
+    public void setParameterSink(ParameterSink parameterSink) {
+        this.parameterSink = parameterSink;
+    }
+
+    @Override
+    public void setTmSink(TmSink tmSink) {
+        this.tmSink = tmSink;
+    }
+}
+```
+
+### `AbstractThreadedTcDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractThreadedTcDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.commanding.PreparedCommand;
+
+import com.google.common.util.concurrent.RateLimiter;
+
+/**
+ * Abstract link that starts a thread when it's enabled and stops it when it's disabled.
+ * <p>
+ * The {@link #startUp()} and {@link #shutDown()} methods are called at startup/enable and shutdown/disable times on the
+ * working thread.
+ * 
+ * <p>
+ * This class provides queueing and rate limiting function.
+ * <p>
+ * args:
+ * <ul>
+ * <li>tcQueueSize: maximum size of the queue. If the queue is full, the commands will be rejected. If the argument is
+ * not specified, the queue will be unlimited in size.</li>
+ * <li>tcMaxRate: maximum number of commands to send per second.</li>
+ * </ul>
+ * 
+ */
+public abstract class AbstractThreadedTcDataLink extends AbstractTcDataLink implements Runnable {
+    Thread thread;
+    RateLimiter rateLimiter;
+    protected BlockingQueue<PreparedCommand> commandQueue;
+
+    // the initial delay applies only if the link is enabled at startup
+    long initialDelay;
+
+    @Override
+    public Spec getDefaultSpec() {
+        var spec = super.getDefaultSpec();
+        spec.addOption("tcQueueSize", OptionType.INTEGER);
+        spec.addOption("tcMaxRate", OptionType.INTEGER);
+        spec.addOption("initialDelay", OptionType.INTEGER);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String linkName, YConfiguration config) throws ConfigurationException {
+        super.init(yamcsInstance, linkName, config);
+        if (config.containsKey("tcQueueSize")) {
+            commandQueue = new LinkedBlockingQueue<>(config.getInt("tcQueueSize"));
+        } else {
+            commandQueue = new LinkedBlockingQueue<>();
+        }
+
+        initialDelay = config.getLong("initialDelay", 0);
+
+        if (config.containsKey("tcMaxRate")) {
+            rateLimiter = RateLimiter.create(config.getInt("tcMaxRate"));
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isDisabled()) {
+            doEnable();
+        } else {
+            initialDelay = 0;
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        if (!isDisabled()) {
+            try {
+                shutDown();
+                commandQueue.clear();
+                commandQueue.offer(SIGNAL_QUIT);
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    log.warn("Interrupted while waiting for thread shutdown");
+                    Thread.currentThread().interrupt();
+                }
+                notifyStopped();
+            } catch (Exception e) {
+                notifyFailed(e);
+            }
+        } else {
+            notifyStopped();
+        }
+    }
+
+    /**
+     * Sends
+     */
+    @Override
+    public boolean sendCommand(PreparedCommand pc) {
+        if (!commandQueue.offer(pc)) {
+            log.warn("Cannot put command {} in the queue, because it's full; sending NACK", pc);
+            commandHistoryPublisher.commandFailed(pc.getCommandId(), getCurrentTime(),
+                    "Link " + linkName + ": queue full");
+        }
+        return true;
+    }
+
+    @Override
+    public void run() {
+        if (initialDelay > 0) {
+            try {
+                Thread.sleep(initialDelay);
+                initialDelay = 0;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+        try {
+            startUp();
+        } catch (Exception e) {
+            log.error("Failed to startUp", e);
+        }
+
+        while (isRunningAndEnabled()) {
+            doHousekeeping();
+            try {
+                PreparedCommand pc = commandQueue.poll(housekeepingInterval, TimeUnit.MILLISECONDS);
+                if (pc == null) {
+                    continue;
+                }
+                if (pc == SIGNAL_QUIT) {
+                    return;
+                }
+
+                if (rateLimiter != null) {
+                    rateLimiter.acquire();
+                }
+                uplinkCommand(pc);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                break;
+            } catch (Exception e) {
+                log.error("Error when sending command: ", e);
+                throw new RuntimeException(e);
+            }
+        }
+
+        try {
+            shutDown();
+        } catch (Exception e) {
+            log.error("Failed to shutDown", e);
+            // TODO we should effectively fail the service here but we cannot because we already notified started
+            // so we disable it instead
+            disable();
+        }
+    }
+
+    @Override
+    protected void doEnable() {
+        thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    protected void doDisable() {
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
+    /**
+     * Called each {@link #housekeepingInterval} milliseconds, can be used to establish tcp connections or similar
+     * things
+     */
+    protected void doHousekeeping() {
+    }
+
+    /**
+     * Called
+     * 
+     * @param pc
+     * @throws IOException
+     */
+    protected abstract void uplinkCommand(PreparedCommand pc) throws IOException;
+
+    /**
+     * Called at start up (if the link is enabled) or when the link is enabled
+     * 
+     * @throws Exception
+     */
+    protected abstract void startUp() throws Exception;
+
+    /**
+     * Called at shutdown (if the link is enabled) or when the link is disabled
+     * 
+     * @throws Exception
+     */
+    protected abstract void shutDown() throws Exception;
+}
+```
+
+### `AbstractTmDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AbstractTmDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.time.SimulationTimeService;
+import org.yamcs.utils.DataRateMeter;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.UnitType;
+
+public abstract class AbstractTmDataLink extends AbstractLink implements TmPacketDataLink, SystemParametersProducer {
+    protected AtomicLong packetCount = new AtomicLong(0);
+    DataRateMeter packetRateMeter = new DataRateMeter();
+
+    String packetPreprocessorClassName;
+    YConfiguration packetPreprocessorArgs;
+    protected PacketPreprocessor packetPreprocessor;
+
+    private Parameter spPacketRate;
+
+    final static String CFG_PREPRO_CLASS = "packetPreprocessorClassName";
+    private TmSink tmSink;
+    protected boolean updateSimulationTime;
+
+    @Override
+    public Spec getDefaultSpec() {
+        var spec = super.getDefaultSpec();
+        spec.addOption("packetPreprocessorClassName", OptionType.STRING);
+        spec.addOption("packetPreprocessorArgs", OptionType.MAP).withSpec(Spec.ANY);
+        spec.addOption("updateSimulationTime", OptionType.BOOLEAN).withDefault(false);
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        if (config.containsKey(CFG_PREPRO_CLASS)) {
+            this.packetPreprocessorClassName = config.getString(CFG_PREPRO_CLASS);
+        } else {
+            this.packetPreprocessorClassName = IssPacketPreprocessor.class.getName();
+        }
+        if (config.containsKey("packetPreprocessorArgs")) {
+            this.packetPreprocessorArgs = config.getConfig("packetPreprocessorArgs");
+        }
+
+        try {
+            if (packetPreprocessorArgs != null) {
+                packetPreprocessor = YObjectLoader.loadObject(packetPreprocessorClassName, instance,
+                        packetPreprocessorArgs);
+            } else {
+                packetPreprocessor = YObjectLoader.loadObject(packetPreprocessorClassName, instance);
+            }
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packet preprocessor", e);
+            throw e;
+        }
+
+        updateSimulationTime = config.getBoolean("updateSimulationTime", false);
+        if (updateSimulationTime) {
+            if (timeService instanceof SimulationTimeService) {
+                SimulationTimeService sts = (SimulationTimeService) timeService;
+                sts.setTime0(0);
+            } else {
+                throw new ConfigurationException(
+                        "updateSimulationTime can only be used together with SimulationTimeService "
+                                + "(add 'timeService: org.yamcs.time.SimulationTimeService' in yamcs.<instance>.yaml)");
+            }
+        }
+
+    }
+
+    @Override
+    public void setupSystemParameters(SystemParametersService sysParamService) {
+        super.setupSystemParameters(sysParamService);
+        spPacketRate = sysParamService.createSystemParameter(LINK_NAMESPACE + linkName + "/packetRate", Type.DOUBLE,
+                new UnitType("p/s"), "Number of packets per second computed over a five second interval");
+    }
+
+    @Override
+    protected void collectSystemParameters(long time, List<ParameterValue> list) {
+        super.collectSystemParameters(time, list);
+        list.add(SystemParametersService.getPV(spPacketRate, time, packetRateMeter.getFiveSecondsRate()));
+    }
+
+    @Override
+    public long getDataInCount() {
+        return packetCount.get();
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void setTmSink(TmSink tmSink) {
+        this.tmSink = tmSink;
+    }
+
+    /**
+     * Sends the packet downstream for processing.
+     * <p>
+     * Starting in Yamcs 5.2, if the updateSimulationTime option is set on the link configuration,
+     * <ul>
+     * <li>the timeService is expected to be SimulationTimeService</li>
+     * <li>at initialization, the time0 is set to 0</li>
+     * <li>upon each packet received, the generationTime (as set by the pre-processor) is used to update the simulation
+     * elapsed time</li>
+     * </ul>
+     * <p>
+     * Should be called by all sub-classes (instead of directly calling {@link TmSink#processPacket(TmPacket)}
+     * 
+     * @param tmpkt
+     */
+    protected void processPacket(TmPacket tmpkt) {
+        tmSink.processPacket(tmpkt);
+        if (updateSimulationTime) {
+            SimulationTimeService sts = (SimulationTimeService) timeService;
+            if (!tmpkt.isInvalid()) {
+                sts.setSimElapsedTime(tmpkt.getGenerationTime());
+            }
+        }
+    }
+
+    /**
+     * called when a new packet is received to update the statistics
+     * 
+     * @param packetSize
+     */
+    protected void updateStats(int packetSize) {
+        super.dataIn(1, packetSize);
+        packetCount.getAndIncrement();
+        packetRateMeter.mark(1);
+    }
+
+    @Override
+    public void resetCounters() {
+        packetCount.set(0);
+    }
+}
+```
+
+### `AggregatedDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/AggregatedDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.List;
+
+/**
+ * A data link that has multiple sub-links
+ * @author nm
+ *
+ */
+public interface AggregatedDataLink extends Link {
+    List<Link> getSubLinks();
+}
+```
+
+### `ArchiveTmPacketProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ArchiveTmPacketProvider.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.TmPacketProvider;
+import org.yamcs.protobuf.Yamcs.EndAction;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed;
+import org.yamcs.protobuf.Yamcs.ReplayStatus.ReplayState;
+
+public interface ArchiveTmPacketProvider extends TmPacketProvider {
+
+    public void seek(long time, boolean autostart);
+
+    public void pause();
+
+    public void resume();
+
+    public void changeSpeed(ReplaySpeed speed);
+
+    public void changeEndAction(EndAction endAction);
+
+    public void changeRange(long start, long stop);
+
+    public ReplayState getReplayState();
+
+    public ReplaySpeed getSpeed();
+
+    public ReplayRequest getCurrentReplayRequest();
+
+    public ReplayRequest getReplayRequest();
+
+    public long getReplayTime();
+}
+```
+
+### `CcsdsPacket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsPacket.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * CCSDS Packet as per CCSDS 133.0-B-2 https://public.ccsds.org/Pubs/133x0b2e1.pdf
+ *
+ * <pre>
+ * primary header (6 bytes):
+ *  3 bit = version - 0
+ *  1 bit = type (0 = TM, 1= TC)
+ *  1 bit = 2nd header present
+ *  11 bit = apid
+ *
+ *  2 bit = grouping, 01 = first, 00 = cont, 10 = last packet of group, 11 = unsegmented data
+ *  14 bit = seq
+ *
+ *  16 bit = packet length (excluding primary header) minus 1
+ * </pre>
+ *
+ */
+public class CcsdsPacket {
+    protected ByteBuffer bb;
+
+    public CcsdsPacket(byte[] packet) {
+        bb = ByteBuffer.wrap(packet);
+    }
+
+    public CcsdsPacket(ByteBuffer bb) {
+        this.bb = bb;
+    }
+
+    public static CcsdsPacket wrap(byte[] pkt) {
+        return new CcsdsPacket(pkt);
+    }
+
+    public int getSecondaryHeaderFlag() {
+        return (bb.getShort(0) >> 11) & 1;
+    }
+
+    static public boolean getSecondaryHeaderFlag(byte[] packet) {
+        return (packet[0] & 0x8) == 0x8;
+    }
+
+    public int getSequenceCount() {
+        return bb.getShort(2) & 0x3FFF;
+    }
+
+    public static int getSequenceCount(byte[] packet) {
+        return ByteArrayUtils.decodeUnsignedShort(packet, 2) & 0x3FFF;
+    }
+
+    public void setSequenceCount(short seqCount) {
+        short oldSeqField = bb.getShort(2);
+        short seqInd = (short) (oldSeqField & (~0x3FFF));
+        bb.putShort(2, (short) ((seqCount & 0x3FFF) + seqInd));
+    }
+
+    public static short getSequenceCount(ByteBuffer bb) {
+        return (short) (bb.getShort(2) & 0x3FFF);
+    }
+
+    public int getAPID() {
+        return bb.getShort(0) & 0x07FF;
+    }
+
+    /**
+     * Write the header. The grouping is set to 10b = last packet in the group and the length to the capacity of the
+     * buffer (minus 7)
+     *
+     * @param apid
+     * @param secHeaderPresent
+     *            1 = present, 0 = absent
+     * @param tmtc
+     *            0 = tm, 1 = tc
+     * @param seqFlags
+     *            grouping: 01 = first packet, 00 = continuation packet, 10 = last packet of group, 11 = unsegmented
+     *            data
+     * @param seq
+     */
+    public void setHeader(int apid, int tmtc, int secHeaderPresent, int seqFlags, int seq) {
+        secHeaderPresent &= 1;
+        tmtc &= 1;
+        seq &= 0x3FFF;
+        seqFlags &= 3;
+
+        short w = (short) ((tmtc << 12) | (secHeaderPresent << 11) | apid);
+        bb.putShort(0, w);
+        w = (short) ((seqFlags << 14) | seq);
+        bb.putShort(2, w);
+        bb.putShort(4, (short) (bb.capacity() - 7));
+    }
+
+    public void setAPID(int apid) {
+        int tmp = bb.getShort(0) & (~0x07FF);
+        tmp = tmp | apid;
+        bb.putShort(0, (short) tmp);
+    }
+
+    public static short getAPID(ByteBuffer bb) {
+        return (short) (bb.getShort(0) & 0x07FF);
+    }
+
+
+    /* returns the length written in the ccsds header */
+    public static int getCcsdsPacketLength(ByteBuffer bb) {
+        return bb.getShort(4) & 0xFFFF;
+    }
+
+
+    /* returns the length written in the ccsds header */
+    public int getCcsdsPacketLength() {
+        return getCcsdsPacketLength(bb);
+    }
+
+
+    public void setCcsdsPacketLength(short length) {
+        // return bb.getShort(4)&0xFFFF;
+        bb.putShort(4, length);
+    }
+
+    /** returns the length of the packet, normally equals ccsdslength+7 */
+    public int getLength() {
+        return bb.capacity();
+    }
+
+    /**
+     * @return time in seconds since 6 Jan 1980
+     */
+    public long getCoarseTime() {
+        return bb.getInt(6) & 0xFFFFFFFFL;
+    }
+
+    public int getTimeId() {
+        return (bb.get(11) & 0xFF) >> 6;
+    }
+
+    public boolean getChecksumIndicator() {
+        return (bb.get(11) & 0x20) == 0x20;
+    }
+
+    static public boolean getChecksumIndicator(byte[] packet) {
+        return (packet[11] & 0x20) == 0x20;
+    }
+
+    public byte[] getBytes() {
+        if (bb.hasArray() && bb.array().length == bb.capacity() && !bb.isReadOnly()) {
+            return bb.array();
+        }
+        byte[] b = new byte[bb.capacity()];
+        int pos = bb.position();
+        bb.get(b);
+        bb.position(0);
+        bb.position(pos);
+
+        return b;
+    }
+
+    public ByteBuffer getByteBuffer() {
+        return bb;
+    }
+
+    public static short getAPID(byte[] packet) {
+        return (short) (ByteArrayUtils.decodeUnsignedShort(packet, 0) & 0x07FF);
+    }
+
+    public static int getCcsdsPacketLength(byte[] buf) {
+        return getCcsdsPacketLength(ByteBuffer.wrap(buf));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("apid: ").append(getAPID()).append("\n");
+        appendBinaryData(sb);
+        return sb.toString();
+    }
+
+    protected void appendBinaryData(StringBuilder sb) {
+        StringBuilder text = new StringBuilder();
+        int len = bb.limit();
+        int lengthRoundedUpToNextMultipleOf16 = (int) Math.ceil(len / 16.0) * 16;
+        byte c;
+        for (int i = 0; i < lengthRoundedUpToNextMultipleOf16; ++i) {
+            // If we are at the beginning of a 16 byte multiple
+            if (i % 16 == 0) {
+                sb.append(String.format("%04x:", i));
+                text.setLength(0);
+            }
+
+            // For every 2 bytes, insert an extra space
+            if ((i & 1) == 0) {
+                sb.append(" ");
+            }
+
+            // If we did not reach the end of the buffer
+            if (i < len) {
+                c = bb.get(i);
+                // Add 2 byte hexadecimal translation of the byte
+                sb.append(String.format("%02x", 0xFF & c));
+                // Add printable characters or a dot to the ASCII buffer of the line being parsed
+                text.append(((c >= ' ') && (c <= 127)) ? String.format("%c", c) : ".");
+            } else { // If we reached the end of the buffer
+                // Pad with spaces
+                sb.append("  ");
+                text.append(" ");
+            }
+
+            // If we reached the end of a 16 byte multiple
+            if ((i + 1) % 16 == 0) {
+                // Append the ASCII buffer of the parsed line
+                sb.append(" ");
+                sb.append(text);
+                sb.append("\n");
+            }
+        }
+    }
+
+
+
+}
+```
+
+### `CcsdsPacketInputStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsPacketInputStream.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.yamcs.YConfiguration;
+
+/**
+ * Reads CCSDS packets from an input stream: first it reads 6 bytes primary header, it derives the length from the last
+ * two bytes and reads the remaining of the data.
+ * 
+ * It also support a maxLength property to limit the size of the packet that is being read.
+ * 
+ * @author nm
+ *
+ */
+public class CcsdsPacketInputStream implements PacketInputStream {
+    protected DataInputStream dataInputStream;
+    protected int maxPacketLength = 1500;
+
+    @Override
+    public void init(InputStream inputStream, YConfiguration args) {
+        this.dataInputStream = new DataInputStream(inputStream);
+        this.maxPacketLength = args.getInt("maxPacketLength", maxPacketLength);
+    }
+
+    @Override
+    public byte[] readPacket() throws IOException {
+        byte[] hdr = new byte[6];
+        dataInputStream.readFully(hdr);
+        int remaining = ((hdr[4] & 0xFF) << 8) + (hdr[5] & 0xFF) + 1;
+        int pktLength = remaining + hdr.length;
+        if (pktLength > maxPacketLength) {
+            throw new IOException("Invalid packet read: "
+                    + "packetLength (" + pktLength + ") > maxPacketLength(" + maxPacketLength + ")");
+        }
+        byte[] packet = new byte[pktLength];
+        System.arraycopy(hdr, 0, packet, 0, hdr.length);
+        dataInputStream.readFully(packet, hdr.length, remaining);
+        return packet;
+    }
+
+    @Override
+    public void close() throws IOException {
+        dataInputStream.close();
+    }
+}
+```
+
+### `CcsdsPacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsPacketPreprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.YConfiguration;
+
+/**
+ * Contains some helper methods for all the pre-processors for CCSDS packets
+ */
+public abstract class CcsdsPacketPreprocessor extends AbstractPacketPreprocessor {
+
+    private Map<Integer, AtomicInteger> seqCounts = new HashMap<>();
+
+    protected CcsdsPacketPreprocessor(String yamcsInstance, YConfiguration config) {
+        super(yamcsInstance, config);
+    }
+
+    protected void checkSequence(int apid, int newseq) {
+        AtomicInteger ai = seqCounts.computeIfAbsent(apid, k -> new AtomicInteger(-1));
+        int oldseq = ai.getAndSet(newseq);
+
+        if (checkForSequenceDiscontinuity && oldseq != -1 && ((newseq - oldseq) & 0x3FFF) != 1) {
+            eventProducer.sendWarning("SEQ_COUNT_JUMP",
+                    "Sequence count jump for apid: " + apid + " old seq: " + oldseq + " newseq: " + newseq);
+        }
+    }
+}
+```
+
+### `CcsdsSeqCountFiller.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CcsdsSeqCountFiller.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Fills in the time, seq and checksum
+ * 
+ * @author nm
+ *
+ */
+public class CcsdsSeqCountFiller {
+    static Map<Integer, Integer> seqCounts = new HashMap<Integer, Integer>();
+
+    /**
+     * generate a new ccsds primary header sequence count for the given apid
+     * 
+     * @param apid
+     * @return
+     */
+    private synchronized int getSeqCount(int apid) {
+        int seqCount = 0;
+        if (seqCounts.containsKey(apid)) {
+            seqCount = seqCounts.get(apid);
+        }
+        seqCount = (seqCount + 1) % (1 << 14);
+        seqCounts.put(apid, seqCount);
+        return seqCount;
+    }
+
+    /**
+     * generates a sequence count and fills it in
+     * 
+     * @param packet
+     * @return  returns the generated sequence count
+     */
+    public int fill(byte[] packet) {
+        int apidseqcount = ByteArrayUtils.decodeInt(packet, 0);
+        
+        int apid = (apidseqcount >> 16) & 0x07FF;
+        int seqFlags = apidseqcount >>> 14;
+        
+        int seqCount = getSeqCount(apid);
+
+        ByteArrayUtils.encodeUnsignedShort((short) ((seqFlags << 14) | seqCount), packet, 2);
+
+        return seqCount;
+    }
+}
+```
+
+### `CfdpPacketInputStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CfdpPacketInputStream.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.ByteArrayUtils;
+
+import com.google.common.primitives.Bytes;
+
+/**
+ * CFDP packet reader that splits the stream into packets based on the length of the packet
+ * 
+ * @author ddw
+ *
+ */
+public class CfdpPacketInputStream implements PacketInputStream {
+    DataInputStream dataInputStream;
+
+    @Override
+    public void init(InputStream inputStream, YConfiguration config) {
+        this.dataInputStream = new DataInputStream(inputStream);
+    }
+
+    @Override
+    public byte[] readPacket() throws IOException {
+        // The size of the full packet depends on:
+        // - the PDU Data field length (length specified at offset 1, 2 bytes long)
+        // - the source entity ID field of the header; this field has a length of x bytes plus 1, where x is specified
+        // by bits
+        // 25-27 of the packet
+        // - the destination entity ID field of the header; this field has a length of x bytes plus 1, where x is
+        // specified by
+        // bits 25-27 of the packet
+        // - the transaction sequence number field of the header; this field has a length of x bytes plus 1, where x is
+        // specified by bits 29-31 of the packet
+        byte[] b = new byte[4];
+        dataInputStream.readFully(b);
+        int PDUDataFieldLength = ByteArrayUtils.decodeUnsignedShort(b, 1);
+        int entityIdLength = ((b[3] >> 4) & 0x07) + 1;
+        int sequenceNumberLength = (b[3] & 0x07) + 1;
+        int fixedPacketHeaderLength = 4;
+        int totalLength = fixedPacketHeaderLength + PDUDataFieldLength + 2 * entityIdLength + sequenceNumberLength;
+
+        byte[] packet = new byte[totalLength - b.length];
+        dataInputStream.readFully(packet);
+        return Bytes.concat(b, packet);
+    }
+
+    @Override
+    public void close() throws IOException {
+        dataInputStream.close();
+    }
+}
+```
+
+### `CommandPostprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/CommandPostprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.commanding.PreparedCommand;
+
+/**
+ * The command post processor is responsible to provide the binary packet that will be send out for a PreparedCommand.
+ * 
+ * It is used to add sequence counts, compute checkwords, etc
+ *
+ */
+public interface CommandPostprocessor {
+
+    /**
+     * Called to initialise the postprocessor and set the cmd hist publisher (used to publish command acknowledgments),
+     * the timeService (required to timestamp acks) and the configuration
+     */
+    default public void init(String yamcsInstance, YConfiguration config) {
+    }
+
+    /**
+     * processes the command and returns the binary buffer.
+     * 
+     * Returns null if the command cannot be processed (e.g. its size does not correspond to what this processor
+     * expects). In this case, the post-processor is expected to fail the command in the command history (also filling
+     * in an appropriate reason)
+     * 
+     * @param pc
+     * @return the processed command or null if the command cannot be processed
+     */
+    public byte[] process(PreparedCommand pc);
+
+    /**
+     * sets the command history listener which can be used by the preprocessor to provide command history entries
+     * related to the command processed
+     * 
+     */
+    default void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryPublisher) {
+    }
+
+    /**
+     * Return the size of the binary packet for this command.
+     * <p>
+     * This is required in the frame links which bundle multiple commands together to know if the command will fit into
+     * the frame before post-processing it.
+     * 
+     * @param pc
+     * @return the size of the binary packet which the method {@link #process(PreparedCommand)} will return.
+     */
+    default int getBinaryLength(PreparedCommand pc) {
+        return pc.getBinary().length;
+    }
+
+}
+```
+
+### `ErrorDetectionWordCalculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ErrorDetectionWordCalculator.java`
+
+
+```java
+package org.yamcs.tctm;
+
+/**
+ * Computes the checksum inside the CCSDS packet
+ * @author nm
+ *
+ */
+public interface ErrorDetectionWordCalculator {
+    /**
+     * Compute the checksum on the data buffer starting at offset and taking into account length bytes
+     * @param data
+     * @param offset
+     * @param length
+     * @return
+     */
+    public int compute(byte[] data, int offset, int length);
+    /**
+     * 
+     * @return size in bits of the calculated checksum (max 32)
+     */
+    public int sizeInBits();
+}
+```
+
+### `FilePollingTmDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/FilePollingTmDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.BufferedInputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.zip.GZIPInputStream;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+
+/**
+ * TM packet data link which reads telemetry files from a specified directory. The files are split into packets
+ * according to the configure {@code packetInputStream}, run through the configured preprocessor and then sent on the
+ * stream.
+ * <p>
+ * The data link scans continuously the incoming directory for new files. If multiple files are found, it processes them
+ * in alphabetical order.
+ * <p>
+ * If the file is gzip-compressed, the {@link GZIPInputStream} is used to decompress it. To check if the file is
+ * gzip-compressed, the first two bytes of the file are read and compared with 0x1F8B (gzip magic number).
+ * <p>
+ * Options:
+ * <ul>
+ * <li>{@code incomingDir} - the directory where the files are read from.</li>
+ * <li>{@code deleteAfterImport} - if true (default), the files will be removed after being read.</li>
+ * <li>{@code delayBetweenPackets} - if configured, it is the number of milliseconds to wait in between sending two
+ * packets. By default it is -1 meaning the packets are sent as fast as possible.</li>
+ * <li>{@code lastPacketStream} - If specified, emit the last packet to this stream. This is intended for batch imports,
+ * where the content of the last packet should also be observable by realtime clients</li>
+ * <li>{@code headerSize} - if configured, the input files have a header which will be skipped before reading the first
+ * packet.</li>
+ * </ul>
+ *
+ */
+public class FilePollingTmDataLink extends AbstractTmDataLink implements Runnable {
+
+    Path incomingDir;
+    boolean deleteAfterImport;
+    long delayBetweenPackets = -1;
+    long headerSize = -1l;
+    Stream lastPacketStream;
+    Thread thread;
+
+    String packetInputStreamClassName;
+    YConfiguration packetInputStreamArgs;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("incomingDir", OptionType.STRING);
+        spec.addOption("deleteAfterImport", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("delayBetweenPackets", OptionType.INTEGER);
+        spec.addOption("lastPacketStream", OptionType.STRING);
+        spec.addOption("headerSize", OptionType.INTEGER);
+        spec.addOption("packetInputStreamClassName", OptionType.STRING);
+        spec.addOption("packetInputStreamArgs", OptionType.MAP).withSpec(Spec.ANY);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String name, YConfiguration config) {
+        super.init(yamcsInstance, name, config);
+
+        if (config.containsKey("incomingDir")) {
+            incomingDir = Path.of(config.getString("incomingDir"));
+        } else {
+            log.warn("Deprecation warning: specify the incomingDir argument on the link " + name
+                    + ". This will become required in a later version");
+            Path parent = YamcsServer.getServer().getIncomingDirectory();
+            incomingDir = parent.resolve(yamcsInstance).resolve("tm");
+        }
+
+        try {
+            Files.createDirectories(incomingDir);
+        } catch (IOException e) {
+            log.warn("Failed to create directory: " + incomingDir);
+        }
+
+        deleteAfterImport = config.getBoolean("deleteAfterImport");
+        delayBetweenPackets = config.getLong("delayBetweenPackets", -1);
+        headerSize = config.getLong("headerSize", -1);
+        packetInputStreamArgs = YConfiguration.emptyConfig();
+
+        if (config.containsKey("lastPacketStream")) {
+            var ydb = YarchDatabase.getInstance(yamcsInstance);
+            var streamName = config.getString("lastPacketStream");
+            lastPacketStream = ydb.getStream(streamName);
+            if (lastPacketStream == null) {
+                throw new ConfigurationException("Cannot find stream '" + streamName + "'");
+            }
+        }
+
+        if (config.containsKey("packetInputStreamClassName")) {
+            packetInputStreamClassName = config.getString("packetInputStreamClassName");
+            packetInputStreamArgs = config.getConfigOrEmpty("packetInputStreamArgs");
+        } else {
+            packetInputStreamClassName = GenericPacketInputStream.class.getName();
+            HashMap<String, Object> m = new HashMap<>();
+            m.put("maxPacketLength", 1000);
+            m.put("lengthFieldOffset", 4);
+            m.put("lengthFieldLength", 2);
+            m.put("lengthAdjustment", 7);
+            m.put("initialBytesToStrip", 0);
+            packetInputStreamArgs = YConfiguration.wrap(m);
+        }
+    }
+
+    @Override
+    public void run() {
+        File fdir = incomingDir.toFile();
+        try {
+            while (isRunningAndEnabled()) {
+                if (fdir.exists()) {
+                    play(fdir);
+                }
+                if (delayBetweenPackets < 0) {
+                    Thread.sleep(10000);
+                }
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void play(File fdir) throws InterruptedException {
+        Instant erp = timeService.getHresMissionTime();
+        File[] files = fdir.listFiles();
+        Arrays.sort(files);
+        for (File f : files) {
+            if (!isRunningAndEnabled()) {
+                return;
+            }
+            if (f.isHidden() || !f.isFile()) {
+                continue;
+            }
+            log.info("Injecting the content of {}", f);
+            long count = 0;
+            long minTime = TimeEncoding.POSITIVE_INFINITY;
+            long maxTime = TimeEncoding.NEGATIVE_INFINITY;
+            TmPacket tmPacket = null;
+            try (PacketInputStream packetInputStream = getPacketInputStream(f.getAbsolutePath())) {
+                byte[] packet;
+                while ((packet = packetInputStream.readPacket()) != null) {
+                    updateStats(packet.length);
+                    tmPacket = new TmPacket(timeService.getMissionTime(), packet);
+                    tmPacket.setEarthReceptionTime(erp);
+                    tmPacket = packetPreprocessor.process(tmPacket);
+                    if (tmPacket != null) {
+                        minTime = Math.min(minTime, tmPacket.getGenerationTime());
+                        maxTime = Math.max(maxTime, tmPacket.getGenerationTime());
+                        count++;
+                        processPacket(tmPacket);
+                    }
+                    if (delayBetweenPackets > 0) {
+                        Thread.sleep(delayBetweenPackets);
+                    }
+                }
+            } catch (EOFException e) {
+                log.debug("{} finished", f);
+            } catch (IOException | PacketTooLongException e) {
+                log.warn("Exception while reading " + f, e);
+            }
+
+            if (tmPacket != null && lastPacketStream != null) {
+                emitLastPacket(tmPacket);
+            }
+
+            String msg = String.format("Ingested %s; pkt count: %d, time range: [%s, %s]", f, count,
+                    TimeEncoding.toString(minTime), TimeEncoding.toString(maxTime));
+            eventProducer.sendInfo("FILE_INGESTION", msg);
+            if (deleteAfterImport) {
+                if (!f.delete()) {
+                    log.warn("Could not remove {}", f);
+                }
+            }
+        }
+    }
+
+    private void emitLastPacket(TmPacket tmPacket) {
+        if (tmPacket.isInvalid()) {
+            return;
+        }
+
+        Instant ertime = tmPacket.getEarthReceptionTime();
+        Tuple t = null;
+        if (ertime == Instant.INVALID_INSTANT) {
+            ertime = null;
+        }
+        Long obt = tmPacket.getObt() == Long.MIN_VALUE ? null : tmPacket.getObt();
+        String rootContainer = tmPacket.getRootContainer() != null
+                ? tmPacket.getRootContainer().getQualifiedName()
+                : null;
+        t = new Tuple(StandardTupleDefinitions.TM, new Object[] {
+                tmPacket.getGenerationTime(),
+                tmPacket.getSeqCount(),
+                tmPacket.getReceptionTime(),
+                tmPacket.getStatus(),
+                tmPacket.getPacket(),
+                ertime,
+                obt,
+                getName(),
+                rootContainer,
+        });
+        lastPacketStream.emitTuple(t);
+    }
+
+    private PacketInputStream getPacketInputStream(String fileName) throws IOException {
+        boolean gzip = false;
+        try (InputStream inputStream = new FileInputStream(fileName)) {
+            // read the first two bytes to check if it's gzip
+            byte[] b = new byte[2];
+            int x = inputStream.read(b);
+            if ((x == 2) && (b[0] == 0x1F) && ((b[1] & 0xFF) == 0x8B)) {
+                gzip = true;
+            }
+        }
+
+        InputStream inputStream = gzip ? new BufferedInputStream(new GZIPInputStream(new FileInputStream(fileName)))
+                : new BufferedInputStream(new FileInputStream(fileName));
+        if (headerSize > 0) {
+            long n = inputStream.skip(headerSize);
+            if (n != headerSize) {
+                inputStream.close();
+                throw new IOException(
+                        "Short read: only" + n + " out of " + headerSize + "header bytes could be skipped");
+            }
+        }
+        PacketInputStream packetInputStream;
+        try {
+            packetInputStream = YObjectLoader.loadObject(packetInputStreamClassName);
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packetInput stream", e);
+            inputStream.close();
+            throw e;
+        }
+        packetInputStream.init(inputStream, packetInputStreamArgs);
+        return packetInputStream;
+    }
+
+    public static InputStream getInputStream(String fileName) throws IOException {
+        boolean gzip = false;
+        try (InputStream inputStream = new FileInputStream(fileName)) {
+            // read the first two bytes to check if it's gzip
+            byte[] b = new byte[2];
+            int x = inputStream.read(b);
+            if ((x == 2) && (b[0] == 0x1F) && ((b[1] & 0xFF) == 0x8B)) {
+                gzip = true;
+            }
+        }
+
+        InputStream inputStream;
+        if (gzip) {
+            inputStream = new BufferedInputStream(new GZIPInputStream(new FileInputStream(fileName)));
+        } else {
+            inputStream = new BufferedInputStream(new FileInputStream(fileName));
+        }
+        return inputStream;
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        return "Reading files from " + incomingDir;
+    }
+
+    @Override
+    public void doDisable() {
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        doDisable();
+        if (thread != null) {
+            thread.interrupt();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                notifyFailed(e);
+                return;
+            }
+        }
+        notifyStopped();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+}
+```
+
+### `FixedPacketInputStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/FixedPacketInputStream.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+
+/**
+ * This input stream reads packets of a configurable fixed packet size.
+ *
+ * @author st
+ *
+ */
+public class FixedPacketInputStream implements PacketInputStream {
+    private int packetSize;
+    protected DataInputStream dataInputStream;
+    static Log log = new Log(FixedPacketInputStream.class);
+
+    @Override
+    public void init(InputStream inputStream, YConfiguration args) {
+        this.dataInputStream = new DataInputStream(inputStream);
+        this.packetSize = args.getInt("packetSize");
+    }
+
+    @Override
+    public byte[] readPacket() throws IOException, PacketTooLongException {
+        log.trace("Reading packet length of fixed size {}", packetSize);
+        byte[] data = new byte[packetSize];
+        dataInputStream.readFully(data);
+        return data;
+    }
+
+    @Override
+    public void close() throws IOException {
+        dataInputStream.close();
+    }
+}
+```
+
+### `GenericCommandPostprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/GenericCommandPostprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.yamcs.tctm.AbstractPacketPreprocessor.CONFIG_KEY_ERROR_DETECTION;
+
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.utils.ByteArrayUtils;
+
+public class GenericCommandPostprocessor implements CommandPostprocessor {
+    static Logger log = LoggerFactory.getLogger(GenericCommandPostprocessor.class);
+
+    ErrorDetectionWordCalculator errorDetectionCalculator;
+
+    protected CommandHistoryPublisher commandHistoryListener;
+
+    public void init(String yamcsInstance, YConfiguration config) {
+        if (config != null && config.containsKey(CONFIG_KEY_ERROR_DETECTION)) {
+            errorDetectionCalculator = AbstractPacketPreprocessor.getErrorDetectionWordCalculator(config);
+        } else {
+            errorDetectionCalculator = null;
+        }
+    }
+
+    @Override
+    public byte[] process(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        if (errorDetectionCalculator != null) {
+            int length = binary.length;
+            int crc = errorDetectionCalculator.compute(binary, 0, length);
+            int crcSizeInBits = errorDetectionCalculator.sizeInBits();
+            if (crcSizeInBits == 16) {
+                binary = Arrays.copyOf(binary, length + 2);
+                ByteArrayUtils.encodeUnsignedShort(crc, binary, length);
+            } else if (crcSizeInBits == 32) {
+                binary = Arrays.copyOf(binary, length + 4);
+                ByteArrayUtils.encodeInt(crc, binary, length);
+            } else {
+                throw new IllegalArgumentException("Cannot process CRC bitsize " + crcSizeInBits);
+            }
+        }
+        return binary;
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryListener) {
+        this.commandHistoryListener = commandHistoryListener;
+    }
+
+    @Override
+    public int getBinaryLength(PreparedCommand pc) {
+        return pc.getBinary().length
+                + (errorDetectionCalculator == null ? 0 : errorDetectionCalculator.sizeInBits() >> 3);
+    }
+}
+```
+
+### `GenericPacketInputStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/GenericPacketInputStream.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteOrder;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Generic packet reader that splits the stream into packets based on the length of the packet
+ * <p>
+ * Inspired from Netty's LengthFieldBasedFrameDecoder
+ * 
+ * <p>
+ * The following configuration variables are used
+ * <ul>
+ * <li>maxPacketLength - the maximum packet length; if a packet with the length greater than this would be received, the
+ * input stream is closed and an exception is raised. The length of the packet considered here is the number of data
+ * bytes read from the
+ * stream - that is including the length field itself and the bytes to strip at the beginning if set (see below)</li>
+ * <li>lengthFieldOffset - the offset in the packet where the length is read from</li>
+ * <li>lengthFieldLength - the size in bytes of the length field</li>
+ * <li>lengthAdjustment - after reading the length from the configured offset, this variable is added to it to determine
+ * the real length</li>
+ * <li>initialBytesToStrip - after reading the packet, strip this number of bytes from the beginning</li>
+ * </ul>
+ * 
+ * <p>
+ * All the above configuration parameters have to be set, otherwise a ConfigurationException will be thrown.
+ * 
+ * @author nm
+ *
+ */
+public class GenericPacketInputStream implements PacketInputStream {
+    private int maxPacketLength;
+    private int lengthFieldOffset;
+    private int lengthFieldLength;
+    private int lengthFieldEndOffset;
+    private int lengthAdjustment;
+    private int initialBytesToStrip;
+    DataInputStream dataInputStream;
+    static Log log = new Log(GenericPacketInputStream.class);
+
+    long streamOffset = 0;
+    ByteOrder byteOrder;
+
+    @Override
+    public void init(InputStream inputStream, YConfiguration args) { // TODO: should have defaults (spec?)
+        this.dataInputStream = new DataInputStream(inputStream);
+        this.maxPacketLength = args.getInt("maxPacketLength");
+        this.lengthFieldOffset = args.getInt("lengthFieldOffset");
+        this.lengthFieldLength = args.getInt("lengthFieldLength");
+        this.lengthAdjustment = args.getInt("lengthAdjustment");
+        this.initialBytesToStrip = args.getInt("initialBytesToStrip");
+        this.byteOrder = AbstractPacketPreprocessor.getByteOrder(args);
+        lengthFieldEndOffset = lengthFieldOffset + lengthFieldLength;
+
+        if (lengthFieldLength != 1 && lengthFieldLength != 2 && lengthFieldLength != 3 && lengthFieldLength != 4) {
+            throw new ConfigurationException("Unsupported legnthFieldLength, supported values are 1,2,3 or 4");
+        }
+    }
+
+    @Override
+    public byte[] readPacket() throws IOException, PacketTooLongException {
+        log.trace("Reading packet length of size {} at offset {}", lengthFieldEndOffset, streamOffset);
+
+        byte[] b = new byte[lengthFieldEndOffset];
+        dataInputStream.readFully(b);
+        int length;
+        switch (lengthFieldLength) {
+        case 1:
+            length = 0xFF & b[lengthFieldOffset];
+            break;
+        case 2:
+            length = byteOrder == ByteOrder.LITTLE_ENDIAN
+                    ? ByteArrayUtils.decodeUnsignedShortLE(b, lengthFieldOffset)
+                    : ByteArrayUtils.decodeUnsignedShort(b, lengthFieldOffset);
+            break;
+        case 3:
+            length = byteOrder == ByteOrder.LITTLE_ENDIAN
+                    ? ByteArrayUtils.decodeUnsigned3BytesLE(b, lengthFieldOffset)
+                    : ByteArrayUtils.decodeUnsigned3Bytes(b, lengthFieldOffset);
+            break;
+        case 4:
+            length = byteOrder == ByteOrder.LITTLE_ENDIAN
+                    ? ByteArrayUtils.decodeIntLE(b, lengthFieldOffset)
+                    : ByteArrayUtils.decodeInt(b, lengthFieldOffset);
+            break;
+        default:
+            throw new IllegalStateException();
+        }
+        length += lengthAdjustment;
+        log.trace("packet length after adjustment: {}", length);
+
+        if (length > maxPacketLength) {
+            throw new IOException(
+                    "Error reading packet at offset " + streamOffset + ": length " + length
+                            + " greater than maximum allowed " + maxPacketLength,
+                    new PacketTooLongException(maxPacketLength, length));
+        }
+        streamOffset += lengthFieldEndOffset;
+        byte[] packet = new byte[length - initialBytesToStrip];
+        int offset;
+        if (initialBytesToStrip <= lengthFieldEndOffset) {
+            offset = lengthFieldEndOffset - initialBytesToStrip;
+            System.arraycopy(b, initialBytesToStrip, packet, 0, offset);
+        } else {
+            offset = 0;
+            int skip = initialBytesToStrip - lengthFieldEndOffset;
+            skipFully(dataInputStream, skip);
+            streamOffset += skip;
+        }
+        dataInputStream.readFully(packet, offset, packet.length - offset);
+        streamOffset += (packet.length - offset);
+
+        return packet;
+    }
+
+    static void skipFully(InputStream in, int n) throws IOException {
+        while (n > 0) {
+            long skipped = in.skip(n);
+            if (skipped == 0)
+                throw new EOFException("Tried to skip " + n + " but reached EOF");
+            n -= skipped;
+
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        dataInputStream.close();
+    }
+}
+```
+
+### `GenericPacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/GenericPacketPreprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.nio.ByteOrder;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.time.FixedSizeTimeDecoder;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.SequenceContainer;
+
+/**
+ * Generic packet preprocessor.
+ * <p>
+ * Reads the timestamp (8 bytes) and the sequence count (4 bytes) from a user defined offset.
+ * <p>
+ * Optionally allows to specify also a checksum algorithm to be used. The checksum is at the end of the packet.
+ * 
+ * <table>
+ * <tr>
+ * <td>timestampOffset</td>
+ * <td>Offset in the packet where to read the 8 bytes timestamp from. If negative, do not read the timestmap from within
+ * the packet but use the local wallclock time instead. The way to translate the timestamp to Yamcs time is configured
+ * by the {@code timeEncoding} property.</td>
+ * </tr>
+ * <tr>
+ * <td>seqCountOffset</td>
+ * <td>Offset in the packet where to read the sequence count from. If negative, do not read the sequence count from
+ * within the packet and set it to 0 instead.
+ * <p>
+ * Note: this class does not check for sequence count continuity.</td>
+ * </tr>
+ * <tr>
+ * <td>errorDetection</td>
+ * <td>If present, specify which error detection to use. Example: errorDetection: <br>
+ * &nbsp;&nbsp;-type: "CRC-16-CCIIT"</td>
+ * </tr>
+ * <tr>
+ * <td>byteOrder</td>
+ * <td>Can be BIG_ENDIAN (default) or LITTLE_ENDIAN. Configures the byte order used for reading the timestamp, sequence
+ * count and crc</td>
+ * </tr>
+ * <tr>
+ * <td>timeEncoding</td>
+ * <td>Can be used to configure the way the timestamp is translated to Yamcs time. See the
+ * {@link AbstractPacketPreprocessor} for details. If this option is not specified, the default epoch used is UNIX.
+ * </table>
+ */
+public class GenericPacketPreprocessor extends AbstractPacketPreprocessor {
+
+    // where from the packet to read the 8 bytes timestamp
+    final int timestampOffset;
+
+    // where from the packet to read the 4 bytes sequence count
+    final int seqCountOffset;
+
+    // Optional. If unset Yamcs will attempt to determine it in other ways
+    SequenceContainer rootContainer;
+
+    public GenericPacketPreprocessor(String yamcsInstance, YConfiguration config) {
+        super(yamcsInstance, config);
+        timestampOffset = config.getInt("timestampOffset");
+        seqCountOffset = config.getInt("seqCountOffset");
+
+        if (timeDecoder == null) {
+            this.timeDecoder = new FixedSizeTimeDecoder(byteOrder, 8, 1);
+            this.timeEpoch = TimeEpochs.UNIX;
+        }
+
+        var rootContainerName = config.getString("rootContainer", null);
+        if (rootContainerName != null) {
+            var mdb = MdbFactory.getInstance(yamcsInstance);
+            rootContainer = mdb.getSequenceContainer(rootContainerName);
+            if (rootContainer == null) {
+                throw new ConfigurationException(
+                        "MDB does not have a sequence container named '" + rootContainerName + "'");
+            }
+        }
+    }
+
+    @Override
+    public TmPacket process(TmPacket tmPacket) {
+        byte[] packet = tmPacket.getPacket();
+
+        boolean corrupted = false;
+        if (errorDetectionCalculator != null) {
+            int computedCheckword;
+            try {
+                int n = packet.length;
+                computedCheckword = errorDetectionCalculator.compute(packet, 0, n - 2);
+                int packetCheckword = (byteOrder == ByteOrder.BIG_ENDIAN)
+                        ? ByteArrayUtils.decodeUnsignedShort(packet, n - 2)
+                        : ByteArrayUtils.decodeUnsignedShortLE(packet, n - 2);
+
+                if (packetCheckword != computedCheckword) {
+                    eventProducer.sendWarning(ETYPE_CORRUPTED_PACKET,
+                            "Corrupted packet received, computed checkword: " + computedCheckword
+                                    + "; packet checkword: " + packetCheckword);
+                    corrupted = true;
+                }
+            } catch (IllegalArgumentException e) {
+                eventProducer.sendWarning(ETYPE_CORRUPTED_PACKET,
+                        "Error when computing checkword: " + e.getMessage());
+                corrupted = true;
+            }
+        }
+        if (timestampOffset < 0) {
+            tmPacket.setGenerationTime(TimeEncoding.getWallclockTime());
+        } else {
+            setRealtimePacketTime(tmPacket, timestampOffset);
+        }
+
+        int seqCount = 0;
+        if (seqCountOffset >= 0) {
+            if (packet.length < seqCountOffset + 4) {
+                eventProducer.sendWarning(ETYPE_CORRUPTED_PACKET, "Packet too short to extract sequence count");
+                seqCount = -1;
+                corrupted = true;
+            } else {
+                seqCount = (byteOrder == ByteOrder.BIG_ENDIAN)
+                        ? ByteArrayUtils.decodeInt(packet, seqCountOffset)
+                        : ByteArrayUtils.decodeIntLE(packet, seqCountOffset);
+            }
+        }
+
+        tmPacket.setSequenceCount(seqCount);
+        tmPacket.setInvalid(corrupted);
+        tmPacket.setRootContainer(rootContainer);
+        return tmPacket;
+    }
+
+    @Override
+    protected TimeDecoderType getDefaultDecoderType() {
+        return TimeDecoderType.FIXED;
+    }
+}
+```
+
+### `Iso16CrcCalculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Iso16CrcCalculator.java`
+
+
+```java
+package org.yamcs.tctm;
+
+/**
+ * ISO CRC calculator as described in ECSS-E-ST-70-41C 15 April 2016, appendix B.2
+ * <p>
+ * It has been devised by <a href="https://en.wikipedia.org/wiki/Fletcher%27s_checksum">John G. Fletcher</a>. 
+ *
+ * @author nm
+ *
+ */
+public class Iso16CrcCalculator implements ErrorDetectionWordCalculator {
+
+    @Override
+    public int compute(byte[] data, int offset, int length) {
+        long c0 = 0;
+        long c1 = 0;
+        int i = offset;
+        while (i < length) {
+            //compute in blocks to not overflow c1
+            int n = length;
+            if (n - i > 268961283) {
+                n -= 268961283;
+            }
+
+            for (; i < n; i++) {
+                c0 = c0 + (data[i] & 0xFF);
+                c1 = c1 + c0;
+            }
+            c0 = c0 % 255;
+            c1 = c1 % 255;
+        }
+
+        long ck1 = ~((c0 + c1) % 255);
+        long ck2 = c1;
+        if (ck1 == 0) {
+            ck1 = 255;
+        }
+        if (ck2 == 0) {
+            ck2 = 255;
+        }
+        return (int) (((ck1 & 0xFF) << 8) + (ck2 & 0xFF));
+    }
+
+
+    @Override
+    public int sizeInBits() {
+        return 16;
+    }
+
+}
+```
+
+### `IssCommandPostprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/IssCommandPostprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+import static org.yamcs.tctm.AbstractPacketPreprocessor.CONFIG_KEY_ERROR_DETECTION;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.utils.GpsCcsdsTime;
+import org.yamcs.utils.TimeEncoding;
+
+public class IssCommandPostprocessor implements CommandPostprocessor {
+    static Logger log = LoggerFactory.getLogger(IssCommandPostprocessor.class);
+
+    protected int minimumTcPacketLength = -1; // the minimum size of the CCSDS packets uplinked
+    protected int maximumTcPacketLength = -1; // the maximum size of the CCSDS packets uplinked
+    ErrorDetectionWordCalculator errorDetectionCalculator;
+    protected CcsdsSeqCountFiller seqFiller = new CcsdsSeqCountFiller();
+
+    protected CommandHistoryPublisher commandHistory;
+    boolean enforceEvenNumberOfBytes;
+
+    public void init(String yamcsInstance, YConfiguration config) {
+        minimumTcPacketLength = config.getInt("minimumTcPacketLength", -1);
+        maximumTcPacketLength = config.getInt("maximumTcPacketLength", -1);
+        enforceEvenNumberOfBytes = config.getBoolean("enforceEvenNumberOfBytes", false);
+        if (config.containsKey(CONFIG_KEY_ERROR_DETECTION)) {
+            errorDetectionCalculator = AbstractPacketPreprocessor.getErrorDetectionWordCalculator(config);
+        } else {
+            errorDetectionCalculator = new Running16BitChecksumCalculator();
+        }
+    }
+
+    @Override
+    public byte[] process(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        boolean secHeaderFlag = CcsdsPacket.getSecondaryHeaderFlag(binary);
+        boolean checksumIndicator = false;
+        if (secHeaderFlag) {
+            checksumIndicator = CcsdsPacket.getChecksumIndicator(binary);
+        }
+        int newLength = getBinaryLength(pc);
+        if (maximumTcPacketLength != -1 && newLength > maximumTcPacketLength) {
+            String msg = "Command too long, length:" + newLength + ", expected maximum length: "
+                    + maximumTcPacketLength;
+            log.warn(msg);
+            long t = TimeEncoding.getWallclockTime();
+            commandHistory.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, t, AckStatus.NOK, msg);
+            commandHistory.commandFailed(pc.getCommandId(), t, msg);
+            return null;
+        }
+        if (newLength > binary.length) {
+            binary = Arrays.copyOf(binary, newLength);
+        }
+        ByteBuffer bb = ByteBuffer.wrap(binary);
+        bb.putShort(4, (short) (binary.length - 7)); // fix packet length
+        int seqCount = seqFiller.fill(binary);
+
+        if (secHeaderFlag) {
+            GpsCcsdsTime gpsTime = TimeEncoding.toGpsTime(pc.getCommandId().getGenerationTime());
+            bb.putInt(6, gpsTime.coarseTime);
+            bb.put(10, gpsTime.fineTime);
+        }
+
+        commandHistory.publish(pc.getCommandId(), CommandHistoryPublisher.CcsdsSeq_KEY, seqCount);
+        if (checksumIndicator) {
+            int pos = binary.length - 2;
+            try {
+                int checkword = errorDetectionCalculator.compute(binary, 0, pos);
+                log.debug("Appending checkword on position {}: {}", pos, Integer.toHexString(checkword));
+                bb.putShort(pos, (short) checkword);
+            } catch (IllegalArgumentException e) {
+                log.warn("Error when computing checkword: " + e.getMessage());
+            }
+        } else {
+            if (!secHeaderFlag) {
+                log.debug(
+                        "Not appending a checkword since there is no secondary header to configure a checksum indicator");
+            } else {
+                log.debug("Not appending a checkword since checksumIndicator is false");
+            }
+        }
+
+        commandHistory.publish(pc.getCommandId(), PreparedCommand.CNAME_BINARY, binary);
+        return binary;
+    }
+
+    @Override
+    public int getBinaryLength(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+        int length = binary.length;
+        boolean secHeaderFlag = CcsdsPacket.getSecondaryHeaderFlag(binary);
+        boolean checksumIndicator = false;
+        if (secHeaderFlag) {
+            checksumIndicator = CcsdsPacket.getChecksumIndicator(binary);
+        }
+
+        if (checksumIndicator) { // 2 extra bytes for the checkword
+            length += 2;
+        }
+
+        if (length < minimumTcPacketLength) { // enforce the minimum packet length
+            length = minimumTcPacketLength;
+        }
+        if (enforceEvenNumberOfBytes && (length & 1) == 1) {
+            length += 1;
+        }
+        return length;
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryListener) {
+        this.commandHistory = commandHistoryListener;
+    }
+
+    public int getMinimumTcPacketLength() {
+        return minimumTcPacketLength;
+    }
+
+    public int getMaximumTcPacketLength() {
+        return maximumTcPacketLength;
+    }
+}
+```
+
+### `IssPacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/IssPacketPreprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * This implements CCSDS packets as used in ISS (International Space Station). <br>
+ * Primary header (specified by CCSDS 133.0-B-1):
+ * <ul>
+ * <li>packet version number (3 bits)</li>
+ * <li>packet type (1 bit)</li>
+ * <li>secondary header flag (1 bit)</li>
+ * <li>application process ID (11 bits)</li>
+ * <li>sequence flags (2 bits)</li>
+ * <li>packet sequence count (14 bits)</li>
+ * </ul>
+ * <br>
+ * Secondary header (specific to ISS):
+ * <ul>
+ * <li>coarse time (32 bits)</li>
+ * <li>fine time (8 bits)</li>
+ * <li>time id(2 bits)</li>
+ * <li>checksum indicator (1 bit)</li>
+ * <li>spare (1 bit)</li>
+ * <li>packet type (4 bits)</li>
+ * <li>packet ID(32 bits)</li>
+ * </ul>
+ *
+ * If the checksum indicator is 1, the packet is terminated by a two bytes checksum. <br>
+ * This class is effectively making use of the following fields (all the other ones are ignored):
+ * <ul>
+ * <li>application process ID(APID) and packet sequence count: used to detect the discontinuity in packets as well as to
+ * form the unique key (used to not store duplicates)</li>
+ * <li>coarse time and fine time: used to derive the timestamp of the packet</li>
+ * <li>checksum indicator: used to know to compute and verify or not the checksum</li>
+ * </ul>
+ * The checksum used can be one of
+ * <ul>
+ * <li>16-SUM (default): running sum on each two bytes - the packet has to contain an even number of bytes</li>
+ * <li>CRC-16-CCIIT: CRC with the generator polynomial x^16 + x^12 + x^5 + 1</li>
+ * </ul>
+ *
+ * @author nm
+ *
+ */
+public class IssPacketPreprocessor extends CcsdsPacketPreprocessor {
+
+    public IssPacketPreprocessor(String yamcsInstance) {
+        this(yamcsInstance, YConfiguration.emptyConfig());
+    }
+
+    public IssPacketPreprocessor(String yamcsInstance, YConfiguration config) {
+        super(yamcsInstance, config);
+
+        if (errorDetectionCalculator == null) {
+            errorDetectionCalculator = new Running16BitChecksumCalculator();
+        }
+    }
+
+    @Override
+    public TmPacket process(TmPacket tmPacket) {
+        byte[] packet = tmPacket.getPacket();
+
+        if (packet.length < 16) {
+            eventProducer.sendWarning("SHORT_PACKET",
+                    "Short packet received, length: " + packet.length + "; minimum required length is 16 bytes.");
+            return null;
+        }
+        int apidseqcount = ByteBuffer.wrap(packet).getInt(0);
+        int apid = (apidseqcount >> 16) & 0x07FF;
+        int seq = (apidseqcount) & 0x3FFF;
+
+        if (log.isTraceEnabled()) {
+            log.trace("processing packet apid: {}, seqCount:{}, length: {}", apid, seq, packet.length);
+        }
+
+        boolean checksumIndicator = CcsdsPacket.getChecksumIndicator(packet);
+        boolean corrupted = false;
+
+        if (checksumIndicator) {
+            int n = packet.length;
+            int computedCheckword;
+            try {
+                computedCheckword = errorDetectionCalculator.compute(packet, 0, n - 2);
+                int packetCheckword = ByteArrayUtils.decodeUnsignedShort(packet, n - 2);
+                if (packetCheckword != computedCheckword) {
+                    String message = "Corrupted packet received, computed checkword: " + computedCheckword
+                            + "; packet checkword: " + packetCheckword;
+                    log.warn(message);
+                    eventProducer.sendWarning(ETYPE_CORRUPTED_PACKET, message);
+                    corrupted = true;
+                }
+            } catch (IllegalArgumentException e) {
+                eventProducer.sendWarning(ETYPE_CORRUPTED_PACKET,
+                        "Error when computing checkword: " + e.getMessage());
+                corrupted = true;
+            }
+        }
+
+        checkSequence(apid, seq);
+
+        long genTime = TimeEncoding.fromGpsCcsdsTime(ByteArrayUtils.decodeInt(packet, 6), packet[10]);
+        tmPacket.setGenerationTime(genTime);
+        tmPacket.setSequenceCount(apidseqcount);
+        tmPacket.setInvalid(corrupted);
+        return tmPacket;
+    }
+
+}
+```
+
+### `Link.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Link.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.Map;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.parameter.SystemParametersService;
+
+/**
+ * A source of data into yamcs; Currently TM, TC and Parameter
+ * 
+ * @author nm
+ *
+ */
+public interface Link {
+    public enum Status {
+        /**
+         * the link is up ready to receive data.
+         */
+        OK,
+        /**
+         * the link is down although it should be up; for instance a TCP client that cannot connect to the remote
+         * server.
+         */
+        UNAVAIL,
+        /**
+         * the link has been disabled by the user (so it's implicitly unavailable)
+         */
+        DISABLED,
+        /**
+         * the link has failed (like an internal crash while processing the data)
+         */
+        FAILED;
+    }
+
+    /**
+     * Returns the current link status.
+     */
+    public Status getLinkStatus();
+
+    /**
+     * Returns a short detail status (one-line)
+     */
+    default String getDetailedStatus() {
+        return null;
+    }
+
+    /**
+     * Returns structured information, specific to the link.
+     */
+    default Map<String, Object> getExtraInfo() {
+        return null;
+    }
+
+    /**
+     * Reenable the data transit if disabled by the disable() method.
+     */
+    public void enable();
+
+    /**
+     * Disable any data I/O through this link. Any connection to a server is closed. Can be reenabled using the enable
+     * method. Note that this method can be called before starting the service if it's configured as such in the
+     * configuration file
+     */
+    public void disable();
+
+    /**
+     * return true if the link has been disabled by the user.
+     * <p>
+     * See also {@link #isEffectivelyDisabled()}
+     */
+    public boolean isDisabled();
+
+    /**
+     * return true if this link or its parent (in case of a sub-link part of an aggregated link) is disabled
+     */
+    public default boolean isEffectivelyDisabled() {
+        if (isDisabled()) {
+            return true;
+        } else if (getParent() != null) {
+            return getParent().isEffectivelyDisabled();
+        } else {
+            return false;
+        }
+    }
+
+    public long getDataInCount();
+
+    public long getDataOutCount();
+
+    public void resetCounters();
+
+    /**
+     * Return the name of the link
+     */
+    public String getName();
+
+    /**
+     * 
+     * @return the config (args) used when creating the link
+     */
+    public YConfiguration getConfig();
+
+    /**
+     * If this link is a sublink of an aggregated link, get the parent link.
+     */
+    default AggregatedDataLink getParent() {
+        return null;
+    }
+
+    /**
+     * Set the parent link if this is a sublink of an aggregated link.
+     */
+    default void setParent(AggregatedDataLink parent) {
+    }
+
+    /**
+     * Called by the LinkManager before startup if the {@link SystemParametersService} service is enabled, to setup
+     * necessary things for later parameter collection.
+     * <p>
+     * The method is called only on the links that implement the {@link SystemParametersProducer} interface; they are
+     * also registered with the {@link SystemParametersService} to be called regularly after the start.
+     */
+    default void setupSystemParameters(SystemParametersService sysParamCollector) {
+    }
+
+    /**
+     * Called at startup to initialize the link.
+     * <p>
+     * The config corresponds to the map that is under the link definition in yamcs.instance.yaml.
+     * 
+     * @param yamcsInstance
+     * @param linkName
+     * @param config
+     *            - the configuration - cannot be null (but can be empty)
+     */
+    default void init(String yamcsInstance, String linkName, YConfiguration config) {
+    }
+
+    /**
+     * Returns the valid configuration of the input args of this link.
+     * 
+     * @return the argument specification, or {@code null} if the args should not be validated.
+     */
+    public default Spec getSpec() {
+        return null;
+    }
+
+    /**
+     * Returns a default link {@link Spec}. This can be used in an implementation of {{@link #getSpec()}.
+     * 
+     * Eventually (after a few years), it is expected to migrate this logic directly into {Link{@link #getSpec()},
+     * rather than returning null from there. But we want to give sufficient time for links everywhere to start defining
+     * their arguments.
+     */
+    public default Spec getDefaultSpec() {
+        Spec spec = new Spec();
+        spec.addOption("name", OptionType.STRING).withRequired(true);
+        spec.addOption("class", OptionType.STRING).withRequired(true);
+        spec.addOption("stream", OptionType.STRING);
+        spec.addOption("tcStream", OptionType.STRING);
+        spec.addOption("tmStream", OptionType.STRING);
+        spec.addOption("ppStream", OptionType.STRING);
+        spec.addOption("enabledAtStartup", OptionType.BOOLEAN);
+        spec.addOption("invalidPackets", OptionType.STRING).withChoices("DROP", "PROCESS", "DIVERT")
+                .withDefault("DROP");
+        spec.addOption("invalidPacketsStream", OptionType.STRING).withDefault("invalid_tm");
+
+        spec.mutuallyExclusive("stream", "tcStream");
+        spec.mutuallyExclusive("stream", "tmStream");
+        spec.mutuallyExclusive("stream", "ppStream");
+        return spec;
+    }
+}
+```
+
+### `LinkAction.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkAction.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.actions.Action;
+import org.yamcs.actions.ActionResult;
+
+import com.google.gson.JsonObject;
+
+public abstract class LinkAction extends Action<Link> {
+
+    public LinkAction(String id, String label) {
+        super(id, label);
+    }
+
+    public LinkAction(String id, String label, ActionStyle style) {
+        super(id, label, style);
+    }
+
+    @Override
+    public void execute(Link target, JsonObject request, ActionResult result) {
+        var responseMessage = execute(target, request);
+        result.complete(responseMessage);
+    }
+
+    /**
+     * @deprecated Implement {@link #execute(Link, JsonObject, ActionResult)} instead
+     */
+    @Deprecated
+    public JsonObject execute(Link target, JsonObject request) {
+        return null;
+    }
+}
+```
+
+### `LinkActionProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkActionProvider.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.List;
+
+public interface LinkActionProvider {
+
+    List<LinkAction> getActions();
+
+    LinkAction getAction(String actionId);
+}
+```
+
+### `LinkMemento.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkMemento.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * Object that is used to persist link state information across Yamcs restarts.
+ */
+public class LinkMemento {
+
+    @SerializedName("links")
+    private Map<String, LinkState> links = new HashMap<>();
+
+    public void addLinkState(String link, LinkState state) {
+        links.put(link, state);
+    }
+
+    public LinkState getLinkState(String link) {
+        return links.get(link);
+    }
+}
+```
+
+### `LinkState.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/LinkState.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import com.google.gson.annotations.SerializedName;
+
+public class LinkState {
+
+    @SerializedName("enabled")
+    private boolean enabled;
+
+    /**
+     * Whether the link was enabled.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Create state object for the given link.
+     */
+    public static LinkState forLink(Link link) {
+        var state = new LinkState();
+        state.enabled = !link.isDisabled();
+        return state;
+    }
+}
+```
+
+### `NoPacketSelectedException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/NoPacketSelectedException.java`
+
+
+```java
+package org.yamcs.tctm;
+
+public class NoPacketSelectedException extends Exception {
+
+	public NoPacketSelectedException(String s) {
+		super(s);
+	}
+	
+}
+```
+
+### `Packet.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Packet.java`
+
+
+```java
+package org.yamcs.tctm;
+
+public interface Packet {
+
+    byte[] toByteArray();
+
+}
+```
+
+### `PacketInputStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/PacketInputStream.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.Closeable;
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.yamcs.YConfiguration;
+
+/**
+ * Interface implemented by the classes that read packets from an input stream.
+ * <p>
+ * It is used by TM data links which work with streams, such as {@link TcpTmDataLink}
+ * <p>
+ * An object of this class will be instantiated each time a stream (e.g. socket or file) will be open.
+ * 
+ * <p>
+ * Each implementing class has to have a constructor taking a {@link InputStream} and {@link YConfiguration} as
+ * arguments.
+ * 
+ * @author nm
+ *
+ */
+public interface PacketInputStream extends Closeable {
+    /**
+     * Called each time an input stream is opened to initialize the object
+     * 
+     * @param stream
+     * @param config
+     */
+    void init(InputStream stream, YConfiguration config);
+
+    /**
+     * read the next packet - blocking if necessary until all the data is available.
+     * 
+     * @return the next packet read from the input stream.
+     * 
+     * @exception EOFException
+     *                if this input stream reaches the end.
+     * @exception IOException
+     *                an I/O error has occurred
+     * @exception PacketTooLongException
+     *                if a packet read is longer than a defined limit
+     */
+    public byte[] readPacket() throws IOException, PacketTooLongException;
+}
+```
+
+### `PacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/PacketPreprocessor.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.TmPacket;
+
+/**
+ * The packet preprocessor is responsible for extracting basic information required for yamcs packet processing:
+ * <ul>
+ * <li>packet generation time</li>
+ * <li>packet acquisition time</li>
+ * <li>sequence count</li>
+ * </ul>
+ * <br>
+ * 
+ * It is assumed that the (generation time, sequence count) uniquely identify the packet.
+ * <br>
+ * <br>
+ * The implementing classes need to have a constructor with one or two arguments:
+ * <ul>
+ * <li>MyPackerPreprocessor (String yamcsInstance), or</li>
+ * <li>MyPackerPreprocessor (String yamcsInstance, Map&lt;String, Object&gt; args)</li>
+ * </ul>
+ * <br>
+ * 
+ * The second one will be called if the preprocessor is declared with "args".
+ *
+ */
+public interface PacketPreprocessor {
+
+    /**
+     * transforms a binary packet into a {@link TmPacket}
+     * 
+     * Can return null if the packet is corrupt
+     * 
+     * @deprecated please use {@link #process(TmPacket)} instead as it preserves packet properties such as earth
+     *             reception time set by the frame link
+     * @param packet
+     * @return
+     */
+    @Deprecated
+    default TmPacket process(byte[] packet) {
+        throw new RuntimeException("Please implement or use the process(TmPacket) method instead");
+    }
+
+    /**
+     * Processes the packet and returns it.
+     * <p>
+     * What this function does is project depended. However, we expect that the generation time and sequence count are
+     * filled in.
+     * <p>
+     * Can return null if the packet is to be ignored.
+     * 
+     * @param pwt
+     *            - the packet that has to be processed
+     * @return the processed packet
+     */
+    default TmPacket process(TmPacket pwt) {
+        return process(pwt.getPacket());
+    }
+
+    /**
+     * The packet preprocessor processes multiple packets that should be in sequence. This flag can be used to check
+     * that indeed the packets are in sequence and produce a warning otherwise.
+     * 
+     * @param checkForSequenceDiscontinuity
+     */
+    default void checkForSequenceDiscontinuity(boolean checkForSequenceDiscontinuity) {
+    }
+}
+```
+
+### `PacketTooLongException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/PacketTooLongException.java`
+
+
+```java
+package org.yamcs.tctm;
+
+/**
+ * Exception thrown when a packet is longer than a defined limit
+ * @author nm
+ *
+ */
+public class PacketTooLongException extends TcTmException {
+    final int maxSize;
+    final int actualSize;
+    public PacketTooLongException(int maxSize, int actualSize) {
+        this.maxSize = maxSize;
+        this.actualSize = actualSize;
+    }
+    
+    public String toString() {
+        return "PacketTooLongException: packetLength (" + actualSize + ") > maxPacketLength(" + maxSize + ")";
+    }
+}
+```
+
+### `ParameterDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ParameterDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.management.LinkManager;
+
+/**
+ * Interface for components providing parameters aquired from external systems.
+ *
+ */
+public interface ParameterDataLink extends Link {
+    public void setParameterSink(ParameterSink parameterSink);
+
+    /**
+     * This method has been introduced to allow classes that implement multiple links (e.g. TM and TC) to not
+     * effectively support one ore more of them (depending on configuration)
+     * <p>
+     * If this method returns false, the {@link LinkManager} skips the link configuration for TM purposes
+     */
+    default boolean isParameterDataLinkImplemented() {
+        return true;
+    }
+}
+```
+
+### `ParameterSink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ParameterSink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.Collection;
+
+import org.yamcs.parameter.ParameterValue;
+
+/**
+ * Used by the ParameterDataLink to propagate processed parameters inside Yamcs.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public interface ParameterSink {
+    /**
+     * Update a collection of Parameters. The parameters are provided in {@link ParameterValue} format - that means they
+     * need to have associated a MDB Parameter.
+     * 
+     * <p>
+     * The group is used as partition key in the recording (and can be used for retrieval as well).
+     * 
+     * <p>
+     * The (gentime,group,seqNum) has to be unique for one parameter and will be used to detect and not save duplicates.
+     * 
+     * @param gentime
+     *            - the generation time of the parameters
+     * @param group
+     * @param seqNum
+     * @param params
+     */
+    public abstract void updateParameters(long gentime, String group, int seqNum, Collection<ParameterValue> params);
+
+    /**
+     * Update the parameters. Alternative method to provide ProtoBuf parameter values instead of POJO versions. The
+     * parameters do not need an associated MDB Parameter but just a FullyQualifiedName.
+     * <p>
+     * The ParameterRecorder will use the FQN to record them. If they are sent to a processor (e.g. on a pp_realtime
+     * stream), they have to be found in the MDB for clients to be able subscribe to them. Also for triggering alarms.
+     * 
+     * @param gentime
+     * @param group
+     * @param seqNum
+     * @param params
+     */
+    void updateParams(long gentime, String group, int seqNum,
+            Collection<org.yamcs.protobuf.Pvalue.ParameterValue> params);
+}
+```
+
+### `RawFrameDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/RawFrameDecoder.java`
+
+
+```java
+package org.yamcs.tctm;
+
+/**
+ * 
+ * Decodes raw frames performing derandomization and error correction.
+ * <p>
+ * We assume the all frames are of pre-configured fixed length.
+ */
+public interface RawFrameDecoder {
+    /**
+     * Decodes frame in the buffer at offset. The decoded frame is stored in the same buffer.
+     * <p>
+     * Returns the length of the decoded and corrected frame or -1 if the frame could not be decoded
+     */
+    int decodeFrame(byte[] data, int offset, int length);
+
+    /**
+     * Returns the length of the encoded (input) frame or -1 if it can be variable
+     * 
+     * @return
+     */
+    int encodedFrameLength();
+
+    /**
+     * Returns the length of the decoded frame or -1 if it can be variable
+     * 
+     * @return
+     */
+    int decodedFrameLength();
+
+}
+```
+
+### `ReplayService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ReplayService.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.NoPermissionException;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorException;
+import org.yamcs.TmPacket;
+import org.yamcs.TmProcessor;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.archive.ReplayListener;
+import org.yamcs.archive.ReplayOptions;
+import org.yamcs.archive.ReplayServer;
+import org.yamcs.archive.SpeedSpec;
+import org.yamcs.archive.XtceTmReplayHandler.ReplayPacket;
+import org.yamcs.archive.YarchReplay;
+import org.yamcs.cmdhistory.CommandHistoryProvider;
+import org.yamcs.cmdhistory.CommandHistoryRequestManager;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.mdb.ParameterTypeProcessor;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.Subscription;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.XtceTmProcessor;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterProvider;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterWithIdRequestHelper;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
+import org.yamcs.protobuf.Yamcs.EndAction;
+import org.yamcs.protobuf.Yamcs.EventReplayRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
+import org.yamcs.protobuf.Yamcs.PpReplayRequest;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
+import org.yamcs.protobuf.Yamcs.ReplayStatus;
+import org.yamcs.protobuf.Yamcs.ReplayStatus.ReplayState;
+import org.yamcs.security.SecurityStore;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+import com.google.protobuf.util.JsonFormat;
+
+/**
+ * Provides telemetry packets and processed parameters from the yamcs archive.
+ * 
+ */
+public class ReplayService extends AbstractProcessorService
+        implements ReplayListener, ArchiveTmPacketProvider, ParameterProvider, CommandHistoryProvider {
+    static final long TIMEOUT = 10000;
+
+    EndAction endAction;
+
+    ReplayOptions originalReplayRequest;
+    private HashSet<Parameter> subscribedParameters = new HashSet<>();
+    private ParameterProcessorManager parameterProcessorManager;
+    TmProcessor tmProcessor;
+    Mdb mdb;
+
+    YarchReplay yarchReplay;
+    // the originalReplayRequest contains possibly only parameters.
+    // the modified one sent to the ReplayServer contains the raw data required for extracting/processing those
+    // parameters
+    ReplayOptions rawDataRequest;
+    CommandHistoryRequestManager commandHistoryRequestManager;
+
+    private SecurityStore securityStore;
+
+    // this can be set in the config (in processor.yaml) to exclude certain parameter groups from replay
+    List<String> excludeParameterGroups = null;
+
+    @Override
+    public void init(Processor proc, YConfiguration args, Object spec) {
+        super.init(proc, args, spec);
+        mdb = MdbFactory.getInstance(getYamcsInstance());
+        securityStore = YamcsServer.getServer().getSecurityStore();
+        if (args.containsKey("excludeParameterGroups")) {
+            excludeParameterGroups = args.getList("excludeParameterGroups");
+        }
+        this.tmProcessor = proc.getTmProcessor();
+        parameterProcessorManager = proc.getParameterProcessorManager();
+        proc.setPacketProvider(this);
+        parameterProcessorManager.addParameterProvider(this);
+
+        if (spec instanceof ReplayOptions) {
+            originalReplayRequest = (ReplayOptions) spec;
+        } else if (spec instanceof String) {
+            ReplayRequest.Builder rrb = ReplayRequest.newBuilder();
+            try {
+                JsonFormat.parser().merge((String) spec, rrb);
+            } catch (IOException e) {
+                throw new ConfigurationException("Cannot parse config into a replay request: " + e.getMessage(), e);
+            }
+            if (!rrb.hasSpeed()) {
+                rrb.setSpeed(ReplaySpeed.newBuilder().setType(ReplaySpeedType.REALTIME).setParam(1));
+            }
+            originalReplayRequest = new ReplayOptions(rrb.build());
+        } else if (spec == null) { // For example, created by ProcessorCreatorService
+            originalReplayRequest = new ReplayOptions();
+            originalReplayRequest.setSpeed(new SpeedSpec(SpeedSpec.Type.ORIGINAL, 1));
+            originalReplayRequest.setEndAction(EndAction.STOP);
+            originalReplayRequest.setAutostart(false);
+        } else {
+            throw new IllegalArgumentException("Unknown spec of type " + spec.getClass());
+        }
+    }
+
+    @Override
+    public boolean isArchiveReplay() {
+        return true;
+    }
+
+    @Override
+    public void newData(ProtoDataType type, Object data) {
+        switch (type) {
+        case TM_PACKET:
+            ReplayPacket rp = (ReplayPacket) data;
+            String qn = rp.getQualifiedName();
+            SequenceContainer container = mdb.getSequenceContainer(qn);
+            if (container == null) {
+                log.warn("Unknown sequence container '" + qn + "' found when replaying", qn);
+            } else {
+                SequenceContainer parent;
+                while ((parent = container.getBaseContainer()) != null) {
+                    container = parent;
+                }
+
+                tmProcessor.processPacket(new TmPacket(rp.getReceptionTime(), rp.getGenerationTime(),
+                        rp.getSequenceNumber(), rp.getPacket()), container);
+            }
+            break;
+        case PP:
+            @SuppressWarnings("unchecked")
+            List<ParameterValue> pvals = (List<ParameterValue>) data;
+            if (!pvals.isEmpty()) {
+                ProcessingContext processingCtx = ProcessingContext.createForTmProcessing(processor.getLastValueCache(),
+                        processor.getCurrentTime());
+                calibrate(pvals, processingCtx);
+                parameterProcessorManager.process(processingCtx);
+            }
+            break;
+        case CMD_HISTORY:
+            CommandHistoryEntry che = (CommandHistoryEntry) data;
+            commandHistoryRequestManager.addCommand(PreparedCommand.fromCommandHistoryEntry(che));
+            break;
+        case EVENT:
+            Event evt = (Event) data;
+            break;
+        default:
+            log.error("Unexpected data type {} received", type);
+        }
+    }
+
+    private void calibrate(List<ParameterValue> pvlist, ProcessingContext processingData) {
+        ParameterTypeProcessor ptypeProcessor = processor.getProcessorData().getParameterTypeProcessor();
+
+        for (ParameterValue pv : pvlist) {
+            if (pv.getEngValue() == null && pv.getRawValue() != null) {
+                ptypeProcessor.calibrate(processingData, pv);
+            }
+            processingData.addTmParam(pv);
+        }
+    }
+
+    @Override
+    public void stateChanged(ReplayStatus rs) {
+        if (rs.getState() == ReplayState.CLOSED) {
+            log.debug("End signal received");
+            notifyStopped();
+            processor.stopAsync();
+        } else {
+            processor.notifyStateChange();
+        }
+    }
+
+    @Override
+    public void doStop() {
+        if (yarchReplay != null) {
+            yarchReplay.quit();
+        }
+        notifyStopped();
+    }
+
+    // Create rawDataRequest from originalReplayRequest by finding out all raw data (TM and PP) required to provide the
+    // needed parameters. The raw request must not contain parameters but only TM or PP.
+    //
+    // in order to do this, the method addPacketsRequiredForParams will subscribe to all parameters part of the original
+    // request, then check in the tmProcessor subscription which containers are needed and in the subscribedParameters
+    // which PPs may be required
+    private void createRawSubscription() throws YamcsException {
+
+        boolean replayAll = originalReplayRequest.isReplayAll();
+
+        Set<String> ppRecFilter = new HashSet<>();
+        if (replayAll) {
+            rawDataRequest = new ReplayOptions(originalReplayRequest);
+            rawDataRequest.setPacketRequest(PacketReplayRequest.newBuilder().build());
+            rawDataRequest.setEventRequest(EventReplayRequest.newBuilder().build());
+            rawDataRequest.setPpRequest(PpReplayRequest.newBuilder().build());
+            rawDataRequest.setCommandHistoryRequest(CommandHistoryReplayRequest.newBuilder().build());
+        } else {
+            rawDataRequest = new ReplayOptions(originalReplayRequest);
+            rawDataRequest.clearParameterRequest();
+            addPacketsRequiredForParams();
+
+            // addPacketsRequiredForParams above has caused the parameter request manager to populate the
+            // subscribedParameters set; in case we do not have to retrieve all parameters, create a pp filter such that
+            // only the required pps are replayed
+            if (!originalReplayRequest.isReplayAllParameters()) {
+                for (Parameter p : subscribedParameters) {
+                    ppRecFilter.add(p.getRecordingGroup());
+                }
+            }
+        }
+
+        if (ppRecFilter.isEmpty() && excludeParameterGroups == null) {
+            log.debug("No additional pp group added or removed to/from the subscription");
+        } else {
+            PpReplayRequest ppreq = originalReplayRequest.getPpRequest();
+            PpReplayRequest.Builder pprr = ppreq.toBuilder();
+            pprr.addAllGroupNameFilter(ppRecFilter);
+            if (excludeParameterGroups != null) {
+                pprr.addAllGroupNameExclude(excludeParameterGroups);
+            }
+            rawDataRequest.setPpRequest(pprr.build());
+
+        }
+        if (!rawDataRequest.hasPacketRequest() && !rawDataRequest.hasPpRequest()) {
+            if (originalReplayRequest.hasParameterRequest()) {
+                throw new YamcsException("Cannot find a replay source for any parmeters from request: "
+                        + originalReplayRequest.getParameterRequest().toString());
+            } else {
+                throw new YamcsException("Refusing to create an empty replay request");
+            }
+        }
+    }
+
+    private void addPacketsRequiredForParams() throws YamcsException {
+        List<NamedObjectId> plist = originalReplayRequest.getParameterRequest().getNameFilterList();
+        if (plist.isEmpty()) {
+            return;
+        }
+        ParameterWithIdRequestHelper pidrm = new ParameterWithIdRequestHelper(
+                parameterProcessorManager.getParameterRequestManager(),
+                (subscriptionId, params) -> {
+                    // ignore data, we create this subscription just to get the list of
+                    // dependent containers and PPs
+                });
+        int subscriptionId;
+        try {
+            subscriptionId = pidrm.addRequest(plist, securityStore.getSystemUser());
+        } catch (InvalidIdentification e) {
+            NamedObjectList nol = NamedObjectList.newBuilder().addAllList(e.getInvalidParameters()).build();
+            throw new YamcsException("InvalidIdentification", "Invalid identification", nol);
+        } catch (NoPermissionException e) {
+            throw new IllegalStateException("Unexpected No permission");
+        }
+
+        XtceTmProcessor tmproc = processor.getTmProcessor();
+        Subscription subscription = tmproc.getSubscription();
+        Collection<SequenceContainer> containers = subscription.getContainers();
+
+        if ((containers == null) || (containers.isEmpty())) {
+            log.debug("No container required for the parameter subscription");
+        } else {
+            PacketReplayRequest.Builder rawPacketRequest = originalReplayRequest.getPacketRequest().toBuilder();
+
+            for (SequenceContainer sc : containers) {
+                rawPacketRequest.addNameFilter(NamedObjectId.newBuilder().setName(sc.getQualifiedName()).build());
+            }
+            log.debug("after TM subscription, the request contains the following packets: "
+                    + rawPacketRequest.getNameFilterList());
+            rawDataRequest.setPacketRequest(rawPacketRequest.build());
+        }
+        pidrm.removeRequest(subscriptionId);
+    }
+
+    private void createReplay() throws ProcessorException {
+        ReplayServer replayServer = YamcsServer.getServer().getService(getYamcsInstance(), ReplayServer.class);
+        if (replayServer == null) {
+            throw new ProcessorException("ReplayServer not configured for this instance");
+        }
+        try {
+            yarchReplay = replayServer.createReplay(rawDataRequest, this);
+        } catch (YamcsException e) {
+            log.error("Exception creating the replay", e);
+            throw new ProcessorException("Exception creating the replay: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void doStart() {
+        try {
+            createRawSubscription();
+            createReplay();
+        } catch (YamcsException e) {
+            notifyFailed(e);
+            return;
+        }
+
+        if (originalReplayRequest.isAutostart()) {
+            yarchReplay.start();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void pause() {
+        yarchReplay.pause();
+    }
+
+    @Override
+    public void resume() {
+        yarchReplay.start();
+    }
+
+    @Override
+    public void seek(long time, boolean autostart) {
+        try {
+            yarchReplay.seek(time, autostart);
+        } catch (YamcsException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setParameterProcessor(ParameterProcessor ppm) {
+        this.parameterProcessorManager = (ParameterProcessorManager) ppm;
+    }
+
+    @Override
+    public void startProviding(Parameter paramDef) {
+        // the subscribedParameters is used at the beginning to select the PP parameters which have to be subscribed
+        synchronized (subscribedParameters) {
+            subscribedParameters.add(paramDef);
+        }
+    }
+
+    @Override
+    public void startProvidingAll() {
+        // ignore as we always provide all parameters
+    }
+
+    @Override
+    public void stopProviding(Parameter paramDef) {
+        synchronized (subscribedParameters) {
+            subscribedParameters.remove(paramDef);
+        }
+    }
+
+    @Override
+    public boolean canProvide(NamedObjectId id) {
+        boolean result = false;
+        Parameter p = mdb.getParameter(id);
+        if (p != null) {
+            result = canProvide(p);
+        } else { // check if it's system parameter
+            if (Mdb.isSystemParameter(id)) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public boolean canProvide(Parameter p) {
+        boolean result;
+        if (mdb.getParameterEntries(p) != null) {
+            result = false;
+        } else {
+            result = true;
+        }
+        return result;
+    }
+
+    @Override
+    public Parameter getParameter(NamedObjectId id) throws InvalidIdentification {
+        Parameter p = mdb.getParameter(id);
+        if (p == null) {
+            throw new InvalidIdentification();
+        } else {
+            return p;
+        }
+    }
+
+    @Override
+    public ReplaySpeed getSpeed() {
+        return originalReplayRequest.getSpeed().toProtobuf();
+    }
+
+    @Override
+    public ReplayRequest getReplayRequest() {
+        return originalReplayRequest.toProtobuf();
+    }
+
+    @Override
+    public ReplayRequest getCurrentReplayRequest() {
+        return yarchReplay != null ? yarchReplay.getCurrentReplayRequest().toProtobuf() : getReplayRequest();
+    }
+
+    @Override
+    public ReplayState getReplayState() {
+        if (state() == State.NEW) {
+            return ReplayState.INITIALIZATION;
+        } else if (state() == State.FAILED) {
+            return ReplayState.ERROR;
+        } else {
+            return yarchReplay.getState();
+        }
+    }
+
+    @Override
+    public long getReplayTime() {
+        if (yarchReplay != null) {
+            return yarchReplay.getReplayTime();
+        } else {
+            long t = originalReplayRequest.getRangeStart();
+            if (t < TimeEncoding.MIN_INSTANT) {
+                t = TimeEncoding.MIN_INSTANT;
+            }
+            return t;
+        }
+    }
+
+    @Override
+    public void changeSpeed(ReplaySpeed speed) {
+        yarchReplay.changeSpeed(SpeedSpec.fromProtobuf(speed));
+    }
+
+    @Override
+    public void changeEndAction(EndAction endAction) {
+        yarchReplay.changeEndAction(endAction);
+    }
+
+    @Override
+    public void changeRange(long start, long stop) {
+        try {
+            yarchReplay.changeRange(start, stop);
+        } catch (YamcsException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setCommandHistoryRequestManager(CommandHistoryRequestManager chrm) {
+        this.commandHistoryRequestManager = chrm;
+    }
+}
+```
+
+### `Running16BitChecksumCalculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/Running16BitChecksumCalculator.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.nio.ByteBuffer;
+
+public class Running16BitChecksumCalculator implements ErrorDetectionWordCalculator {
+
+    @Override
+    public int compute(byte[] data, int offset, int length) {
+        if((length&1) != 0) {
+            throw new IllegalArgumentException("Cannot compute checksum on a odd number of bytes");
+        }
+        ByteBuffer bb = ByteBuffer.wrap(data, offset, length);
+        int checksum = 0;
+        while(bb.hasRemaining()) {
+            checksum+=bb.getShort();
+        }
+        return checksum & 0xFFFF;
+    }
+
+    @Override
+    public int sizeInBits() {
+        return 16;
+    }
+}
+```
+
+### `StreamParameterProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/StreamParameterProvider.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.mdb.ParameterTypeProcessor;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterProvider;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import static org.yamcs.StandardTupleDefinitions.PARAMETER_COL_GENTIME;
+
+/**
+ * Provides parameters from yarch streams (pp_realtime) to {@link ParameterProcessorManager}
+ *
+ */
+public class StreamParameterProvider extends AbstractProcessorService implements StreamSubscriber, ParameterProvider {
+    List<Stream> streams = new ArrayList<>();
+    ParameterProcessor ppm;
+    Mdb mdb;
+
+    ParameterTypeProcessor ptypeProcessor;
+
+    public void init(Processor processor, YConfiguration config, Object spec) {
+        super.init(processor, config, spec);
+        String yamcsInstance = processor.getInstance();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        mdb = MdbFactory.getInstance(yamcsInstance);
+
+        List<String> streamNames;
+        if (config.containsKey("stream")) {
+            streamNames = Arrays.asList(config.getString("stream"));
+        } else if (config.containsKey("streams")) {
+            streamNames = config.getList("streams");
+        } else {
+            streamNames = StreamConfig.getInstance(yamcsInstance).getEntries(StandardStreamType.PARAM).stream()
+                    .map(sce -> sce.getName())
+                    .filter(s -> !Processor.PROC_PARAMETERS_STREAM.equals(s))
+                    .collect(Collectors.toList());
+        }
+
+        log.debug("Subscribing to streams {} ", streamNames);
+
+        for (String streamName : streamNames) {
+            Stream stream = ydb.getStream(streamName);
+            if (stream == null) {
+                throw new ConfigurationException("Cannot find a stream named " + streamName);
+            }
+            streams.add(stream);
+        }
+
+        ptypeProcessor = processor.getProcessorData().getParameterTypeProcessor();
+        processor.getParameterProcessorManager().addParameterProvider(this);
+        streams.forEach(s -> s.addSubscriber(this));
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        streams.forEach(s -> s.removeSubscriber(this));
+        notifyStopped();
+    }
+
+    /**
+     * Make sure all parameters are defined in the MDB, otherwise the PRM will choke
+     */
+    @Override
+    public void onTuple(Stream s, Tuple tuple) {// the definition of the tuple is in PpProviderAdapter
+        var genTime = tuple.getTimestampColumn(PARAMETER_COL_GENTIME);
+        ProcessingContext data = ProcessingContext.createForTmProcessing(processor.getLastValueCache(), genTime);
+
+        for (int i = 4; i < tuple.size(); i++) {
+            Object o = tuple.getColumn(i);
+            ParameterValue pv;
+            if (o instanceof org.yamcs.protobuf.Pvalue.ParameterValue) {
+                org.yamcs.protobuf.Pvalue.ParameterValue gpv = (org.yamcs.protobuf.Pvalue.ParameterValue) tuple
+                        .getColumn(i);
+                String name = tuple.getColumnDefinition(i).getName();
+                Parameter ppdef = mdb.getParameter(name);
+                if (ppdef == null) {
+                    continue;
+                }
+                pv = BasicParameterValue.fromGpb(ppdef, gpv);
+            } else if (o instanceof ParameterValue) {
+                pv = (ParameterValue) o;
+                if (pv.getParameter() == null) {
+                    String fqn = pv.getParameterQualifiedName();
+                    Parameter ppdef = mdb.getParameter(fqn);
+                    if (ppdef == null) {
+                        if (Mdb.isSystemParameter(fqn)) {
+                            Value engValue = pv.getEngValue();
+                            ppdef = SystemParametersService.createSystemParameter(mdb, fqn, engValue);
+                        } else {
+                            log.trace("Ignoring unknown parameter {}", fqn);
+                            continue;
+                        }
+                    }
+                    pv.setParameter(ppdef);
+                }
+            } else {
+                log.warn("Received data that is not parameter value but {}", o.getClass());
+                continue;
+            }
+
+            if (pv.getEngValue() == null && pv.getRawValue() != null) {
+                ptypeProcessor.calibrate(pv);
+            }
+            data.addTmParam(pv);
+        }
+        ppm.process(data);
+    }
+
+    @Override
+    public void streamClosed(Stream s) {
+        stopAsync();
+    }
+
+    @Override
+    public void setParameterProcessor(ParameterProcessor paraListener) {
+        this.ppm = paraListener;
+    }
+
+    @Override
+    public void stopProviding(Parameter paramDef) {
+        // not implemented, this always provides all parameters
+    }
+
+    @Override
+    public boolean canProvide(NamedObjectId id) {
+        if (mdb.getParameter(id) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean canProvide(Parameter p) {
+        return mdb.getParameter(p.getQualifiedName()) != null;
+    }
+
+    @Override
+    public Parameter getParameter(NamedObjectId id) throws InvalidIdentification {
+        Parameter p = mdb.getParameter(id);
+        if (p == null) {
+            throw new InvalidIdentification();
+        } else {
+            return p;
+        }
+    }
+
+    @Override
+    public void startProviding(Parameter paramDef) {
+        // not implemented, this always provides all parameters
+    }
+
+    @Override
+    public void startProvidingAll() {
+        // not implemented, this always provides all parameters
+    }
+}
+```
+
+### `StreamParameterSender.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/StreamParameterSender.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.time.TimeService;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+/**
+ * Sends collection of parameters to stream by
+ * 
+ * @author nm
+ *
+ */
+public class StreamParameterSender {
+    final Stream stream;
+    final DataType paraDataType = DataType.PARAMETER_VALUE;
+    TimeService timeService;
+    protected final Log log;
+    Map<String, AtomicInteger> groupSeq = new HashMap<>();
+
+    public StreamParameterSender(String yamcsInstance, Stream stream) {
+        this.stream = stream;
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+        log = new Log(getClass(), yamcsInstance);
+    }
+
+    /**
+     * Send the parameters to the stream grouping by group and time
+     * 
+     * @param params
+     */
+    public void sendParameters(Collection<ParameterValue> params) {
+        params.stream().collect(Collectors.groupingBy(ParameterValue::getGenerationTime))
+                .forEach((t, l) -> sendParameters(t, l));
+    }
+
+    // Send the parameters to the stream grouping by group
+    private void sendParameters(long genTime, Collection<ParameterValue> params) {
+        params.stream().collect(Collectors.groupingBy(pv -> pv.getParameter().getRecordingGroup()))
+                .forEach((g, l) -> sendParameters(genTime, g, l));
+    }
+
+    private void sendParameters(long genTime, String group, Collection<ParameterValue> params) {
+        int seqNum = groupSeq.computeIfAbsent(group, g -> new AtomicInteger()).getAndIncrement();
+        updateParameters(genTime, group, seqNum, params);
+    }
+
+    public void updateParameters(long gentime, String group, int seqNum, Collection<ParameterValue> params) {
+        TupleDefinition tdef = StandardTupleDefinitions.PARAMETER.copy();
+        List<Object> cols = new ArrayList<>(4 + params.size());
+        cols.add(gentime);
+        cols.add(group);
+        cols.add(seqNum);
+        cols.add(timeService.getMissionTime());
+        for (ParameterValue pv : params) {
+            String qualifiedName = pv.getParameterQualifiedName();
+            int idx = tdef.getColumnIndex(qualifiedName);
+            if (idx != -1) {
+                log.warn("duplicate value for {} \nfirst: {}" + "\n second: {} ", pv.getParameter(), cols.get(idx),
+                        pv);
+                continue;
+            }
+            tdef.addColumn(qualifiedName, DataType.PARAMETER_VALUE);
+            cols.add(pv);
+        }
+        Tuple t = new Tuple(tdef, cols);
+        stream.emitTuple(t);
+    }
+
+}
+```
+
+### `StreamPbParameterSender.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/StreamPbParameterSender.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.yarch.Stream;
+
+public class StreamPbParameterSender extends StreamParameterSender implements ParameterSink {
+
+    public StreamPbParameterSender(String yamcsInstance, Stream stream) {
+        super(yamcsInstance, stream);
+    }
+
+    @Override
+    public void updateParams(long gentime, String group, int seqNum,
+            Collection<org.yamcs.protobuf.Pvalue.ParameterValue> params) {
+        List<ParameterValue> plist = new ArrayList<>(params.size());
+        for (org.yamcs.protobuf.Pvalue.ParameterValue pbv : params) {
+            NamedObjectId id = pbv.getId();
+            String qualifiedName = id.getName();
+            if (id.hasNamespace()) {
+                log.trace("Using namespaced name for parameter {} because fully qualified name not available.", id);
+            }
+            ParameterValue pv = BasicParameterValue.fromGpb(qualifiedName, pbv);
+            plist.add(pv);
+        }
+        updateParameters(gentime, group, seqNum, plist);
+    }
+    
+}
+```
+
+### `TcDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.management.LinkManager;
+
+/**
+ * Interface implemented by components that send commands to the outer universe
+ * 
+ * @author nm
+ *
+ */
+public interface TcDataLink extends Link {
+    /**
+     * Attempt to send the command and return true if the command has been sent or its processing has finished.
+     * <p>
+     * If false is returned, the {@link LinkManager} will attempt to send the command via the next TC link (if any).
+     * <p>
+     * The link is expected to update the {@link CommandHistoryPublisher#AcknowledgeSent_KEY} ack in the command history
+     * if the method returned true. If it returned false, the ack should not be updated (it will be updated by the next
+     * link or by the Link Manager if there is other no link).
+     * <p>
+     * The link can update the {@link CommandHistoryPublisher#AcknowledgeSent_KEY} ack with a negative ack and return
+     * true (i.e. the command has not been really sent but it has finished processing).
+     * <p>
+     * The return true/false has been introduced in Yamcs 5.6.0. Before that version, the old method sendTc was
+     * implicitly returning true. As of Yamcs 5.6.0 most links return true even when they cannot send the command
+     * (setting the negative Sent ack).
+     * <p>
+     * Throwing an exception is equivalent with returning false, except a error log will be printed (this is considered
+     * a bug)
+     * 
+     * @param preparedCommand
+     * @return
+     */
+    boolean sendCommand(PreparedCommand preparedCommand);
+
+    void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryPublisher);
+
+    default boolean isCommandingAvailable() {
+        return !isEffectivelyDisabled();
+    }
+
+    /**
+     * This method has been introduced to allow classes that implement multiple links (e.g. TM and TC) to not
+     * effectively support one ore more of them (depending on configuration)
+     * <p>
+     * If this method returns false, the {@link LinkManager} skips the link configuration for TC purposes
+     */
+    default boolean isTcDataLinkImplemented() {
+        return true;
+    }
+}
+```
+
+### `TcpTcDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcpTcDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.CancelledKeyException;
+import java.nio.channels.ClosedSelectorException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.SocketChannel;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.commanding.PreparedCommand;
+
+/**
+ * Sends raw command packets on TCP socket.
+ * 
+ * @author nm
+ *
+ */
+public class TcpTcDataLink extends AbstractThreadedTcDataLink {
+    protected SocketChannel socketChannel;
+    protected String host;
+    protected int port;
+    protected Selector selector;
+    SelectionKey selectionKey;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(yamcsInstance, name, config);
+        configure(yamcsInstance, config);
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    private void configure(String yamcsInstance, YConfiguration config) {
+        host = config.getString("host");
+        port = config.getInt("port");
+    }
+
+    /**
+     * attempts to open the socket if not already open and returns true if its open at the end of the call
+     * 
+     * @return
+     */
+    protected synchronized boolean openSocket() {
+        if (isSocketOpen()) {
+            return true;
+        }
+        try {
+            InetAddress address = InetAddress.getByName(host);
+            selector = Selector.open();
+            socketChannel = SocketChannel.open(new InetSocketAddress(address, port));
+            socketChannel.configureBlocking(false);
+            socketChannel.socket().setKeepAlive(true);
+            selectionKey = socketChannel.register(selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ);
+            log.info("Link established to {}:{}", host, port);
+            return true;
+        } catch (IOException e) {
+            String exc = (e instanceof ConnectException) ? ((ConnectException) e).getMessage() : e.toString();
+            log.info("Cannot connect to {}:{} '{}'. Retrying in 10s", host, port, exc.toString());
+            try {
+                socketChannel.close();
+            } catch (Exception e1) {
+            }
+            try {
+                selector.close();
+            } catch (Exception e1) {
+            }
+            socketChannel = null;
+        }
+        return false;
+    }
+
+    protected void disconnect() {
+        if (socketChannel == null) {
+            return;
+        }
+        try {
+            socketChannel.close();
+            selector.close();
+            socketChannel = null;
+        } catch (IOException e) {
+            log.warn("Exception caught when checking if the socket to {}:{} is open", host, port, e);
+        }
+    }
+
+    /**
+     * we check if the socket is open by trying a select on the read part of it
+     * 
+     * @return
+     */
+    private synchronized boolean isSocketOpen() {
+        if (socketChannel == null) {
+            return false;
+        }
+        final ByteBuffer bb = ByteBuffer.allocate(16);
+        boolean connected = false;
+        try {
+            selector.select();
+            if (selectionKey.isReadable()) {
+                int read = socketChannel.read(bb);
+                if (read > 0) {
+                    log.info("Data read on the TC socket to {}:{}!! : {}", host, port, bb);
+                    connected = true;
+                } else if (read < 0) {
+                    log.warn("TC socket to {}:{} has been closed", host, port);
+                    socketChannel.close();
+                    selector.close();
+                    socketChannel = null;
+                    connected = false;
+                }
+            } else if (selectionKey.isWritable()) {
+                connected = true;
+            } else {
+                log.warn("The TC socket to {}:{} is neither writable nor readable", host, port);
+                connected = false;
+            }
+        } catch (IOException e) {
+            log.warn("Exception caught when checking if the socket to {}:{} is open:", host, port, e);
+            connected = false;
+        } catch (CancelledKeyException | ClosedSelectorException e) {
+            // May happen during shutdown, don't be too verbose about it
+            log.debug(e.getMessage());
+            connected = false;
+        }
+        return connected;
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return String.format("DISABLED (should connect to %s:%d)", host, port);
+        }
+        if (isSocketOpen()) {
+            return String.format("OK, connected to %s:%d", host, port);
+        } else {
+            return String.format("Not connected to %s:%d", host, port);
+        }
+    }
+
+    @Override
+    protected void startUp() {
+        if (!isDisabled()) {
+            openSocket();
+        }
+    }
+
+    @Override
+    public void shutDown() throws Exception {
+        disconnect();
+    }
+
+    @Override
+    public void uplinkCommand(PreparedCommand pc) {
+        byte[] binary = postprocess(pc);
+        if (binary == null) {
+            return;
+        }
+
+        int retries = 5;
+        boolean sent = false;
+
+        ByteBuffer bb = ByteBuffer.wrap(binary);
+        bb.rewind();
+        String reason = null;
+        while (!sent && (retries > 0)) {
+            if (openSocket()) {
+                try {
+                    socketChannel.write(bb);
+                    dataOut(1, binary.length);
+                    sent = true;
+                } catch (IOException e) {
+                    reason = String.format("Error writing to TC socket to %s:%d : %s", host, port, e.toString());
+                    log.warn(reason);
+                    try {
+                        if (socketChannel.isOpen()) {
+                            socketChannel.close();
+                        }
+                        selector.close();
+                        socketChannel = null;
+                    } catch (IOException e1) {
+                        // ignore any close exception
+                    }
+                }
+            } else {
+                reason = String.format("Cannot connect to %s:%d", host, port);
+            }
+            retries--;
+            if (!sent && (retries > 0)) {
+                try {
+                    log.warn("Command not sent, retrying in 2 seconds");
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    log.warn("exception {} thrown when sleeping 2 sec", e.toString());
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+        if (sent) {
+            ackCommand(pc.getCommandId());
+        } else {
+            failedCommand(pc.getCommandId(), reason);
+        }
+    }
+
+    @Override
+    protected void doHousekeeping() {
+        if (!isRunningAndEnabled()) {
+            return;
+        }
+        openSocket();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        if (isSocketOpen()) {
+            return Status.OK;
+        } else {
+            return Status.UNAVAIL;
+        }
+    }
+}
+```
+
+### `TcpTcTmDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcpTcTmDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.HashMap;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.utils.YObjectLoader;
+
+public class TcpTcTmDataLink extends AbstractTcTmParamLink implements Runnable {
+    protected Socket tmSocket;
+    protected String host;
+    protected int port;
+    protected long initialDelay;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("initialDelay", OptionType.INTEGER);
+        spec.addOption("packetInputStreamClassName", OptionType.STRING);
+        spec.addOption("packetInputStreamArgs", OptionType.MAP).withSpec(Spec.ANY);
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(instance, name, config);
+        host = config.getString("host");
+        port = config.getInt("port");
+
+        initialDelay = config.getLong("initialDelay", -1);
+        // Input stream defaults to GenericPacketInputStream
+        if (config.containsKey("packetInputStreamClassName")) {
+            packetInputStreamClassName = config.getString("packetInputStreamClassName");
+            packetInputStreamArgs = config.getConfigOrEmpty("packetInputStreamArgs");
+        } else {
+            packetInputStreamClassName = GenericPacketInputStream.class.getName();
+            HashMap<String, Object> m = new HashMap<>();
+            m.put("maxPacketLength", 1000);
+            m.put("lengthFieldOffset", 4);
+            m.put("lengthFieldLength", 2);
+            m.put("lengthAdjustment", 7);
+            m.put("initialBytesToStrip", 0);
+            packetInputStreamArgs = YConfiguration.wrap(m);
+        }      
+    }
+
+    protected synchronized void checkAndOpenSocket() throws IOException {
+        if (tmSocket != null) {
+            return;
+        }
+        InetAddress address = InetAddress.getByName(host);
+        tmSocket = new Socket();
+        tmSocket.setKeepAlive(true);
+        tmSocket.connect(new InetSocketAddress(address, port), 1000);
+        try {
+            packetInputStream = YObjectLoader.loadObject(packetInputStreamClassName);
+            outputStream = tmSocket.getOutputStream();
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packetInput: " + e);
+            try {
+                tmSocket.close();
+            } catch (IOException e2) {
+            }
+            tmSocket = null;
+            outputStream = null;
+            packetInputStream = null;
+            throw e;
+        }
+        packetInputStream.init(tmSocket.getInputStream(), packetInputStreamArgs);
+        log.info("Link established to {}:{}", host, port);
+    }
+
+    protected synchronized boolean isSocketOpen() {
+        return tmSocket != null;
+    }
+
+    protected synchronized void sendBuffer(byte[] data) throws IOException {
+        if (outputStream == null) {
+            throw new IOException(String.format("No connection to %s:%d", host, port));
+        }
+        outputStream.write(data);
+    }
+
+    protected synchronized void closeSocket() {
+        if (tmSocket != null) {
+            try {
+                tmSocket.close();
+            } catch (IOException e) {
+            }
+            tmSocket = null;
+            outputStream = null;
+            packetInputStream = null;
+        }
+    }
+
+    @Override
+    public void run() {
+        if (initialDelay > 0) {
+            try {
+                Thread.sleep(initialDelay);
+                initialDelay = -1;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        while (isRunningAndEnabled()) {
+            TmPacket tmpkt = getNextPacket();
+            if (tmpkt == null) {
+                break;
+            }
+            processPacket(tmpkt);
+        }
+    }
+
+    public TmPacket getNextPacket() {
+        TmPacket pwt = null;
+        while (isRunningAndEnabled()) {
+            try {
+                checkAndOpenSocket();
+                byte[] packet = packetInputStream.readPacket();
+                dataIn(1, packet.length);
+                TmPacket pkt = new TmPacket(timeService.getMissionTime(), packet);
+                pkt.setEarthReceptionTime(timeService.getHresMissionTime());
+                pwt = packetPreprocessor.process(pkt);
+                if (pwt != null) {
+                    break;
+                }
+            } catch (EOFException e) {
+                log.warn("TM Connection closed");
+                closeSocket();
+            } catch (IOException e) {
+                if (isRunningAndEnabled()) {
+                    String exc = (e instanceof ConnectException) ? ((ConnectException) e).getMessage() : e.toString();
+                    log.info("Cannot open or read TM socket {}:{} {}'. Retrying in 10s", host, port, exc);
+                }
+                closeSocket();
+                for (int i = 0; i < 10; i++) {
+                    if (!isRunningAndEnabled()) {
+                        break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e1) {
+                        Thread.currentThread().interrupt();
+                        return null;
+                    }
+                }
+            } catch (PacketTooLongException e) {
+                log.warn(e.toString());
+                closeSocket();
+            }
+        }
+        return pwt;
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand pc) {
+        byte[] binary = postprocess(pc);
+
+        try {
+            sendBuffer(binary);
+            dataOutCount.getAndIncrement();
+            ackCommand(pc.getCommandId());
+            return true;
+        } catch (IOException e) {
+            String reason = String.format("Error writing to TC socket to %s:%d; %s", host, port, e.toString());
+            log.warn(reason);
+            failedCommand(pc.getCommandId(), reason);
+            return true;
+        }
+    }
+
+    @Override
+    public void doStart() {
+        if (!isDisabled()) {
+            Thread thread = new Thread(this);
+            thread.setName(getClass().getSimpleName() + "-" + linkName);
+            thread.start();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        closeSocket();
+        notifyStopped();
+    }
+
+    @Override
+    public void doDisable() {
+        closeSocket();
+    }
+
+    @Override
+    public void doEnable() {
+        Thread thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return String.format("DISABLED (should connect to %s:%d)", host, port);
+        }
+        if (isSocketOpen()) {
+            return String.format("OK, connected to %s:%d", host, port);
+        } else {
+            return String.format("Not connected to %s:%d", host, port);
+        }
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return !isSocketOpen() ? Status.UNAVAIL : Status.OK;
+    }
+}
+```
+
+### `TcpTmDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcpTmDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.YObjectLoader;
+
+public class TcpTmDataLink extends AbstractTmDataLink implements Runnable {
+
+    protected Socket tmSocket;
+    protected String host;
+    protected int port;
+    protected long initialDelay;
+
+    String packetInputStreamClassName;
+    YConfiguration packetInputStreamArgs;
+    PacketInputStream packetInputStream;
+    Thread thread;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("initialDelay", OptionType.INTEGER);
+        spec.addOption("packetInputStreamClassName", OptionType.STRING)
+                .withDefault(CcsdsPacketInputStream.class.getName());
+        spec.addOption("packetInputStreamArgs", OptionType.MAP).withSpec(Spec.ANY);
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(instance, name, config);
+        host = config.getString("host");
+        port = config.getInt("port");
+        initialDelay = config.getLong("initialDelay", -1);
+
+        if (config.containsKey("packetInputStreamClassName")) {
+            packetInputStreamClassName = config.getString("packetInputStreamClassName");
+            packetInputStreamArgs = config.getConfigOrEmpty("packetInputStreamArgs");
+        } else {
+            packetInputStreamClassName = CcsdsPacketInputStream.class.getName();
+            packetInputStreamArgs = YConfiguration.emptyConfig();
+        }
+
+    }
+
+    protected void openSocket() throws IOException {
+        InetAddress address = InetAddress.getByName(host);
+        tmSocket = new Socket();
+        tmSocket.setKeepAlive(true);
+        tmSocket.connect(new InetSocketAddress(address, port), 1000);
+        try {
+            packetInputStream = YObjectLoader.loadObject(packetInputStreamClassName);
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packetInput stream", e);
+            throw e;
+        }
+        packetInputStream.init(tmSocket.getInputStream(), packetInputStreamArgs);
+    }
+
+    @Override
+    public void doStart() {
+        if (!isDisabled()) {
+            doEnable();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        if (thread != null) {
+            thread.interrupt();
+        }
+        if (tmSocket != null) {
+            try {
+                tmSocket.close();
+            } catch (IOException e) {
+                log.warn("Exception got when closing the tm socket:", e);
+            }
+            tmSocket = null;
+        }
+        notifyStopped();
+    }
+
+    @Override
+    public void run() {
+        if (initialDelay > 0) {
+            try {
+                Thread.sleep(initialDelay);
+                initialDelay = -1;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        while (isRunningAndEnabled()) {
+            TmPacket tmpkt = getNextPacket();
+            if (tmpkt == null) {
+                break;
+            }
+            processPacket(tmpkt);
+        }
+    }
+
+    public TmPacket getNextPacket() {
+        TmPacket pwt = null;
+        while (isRunningAndEnabled()) {
+            try {
+                if (tmSocket == null) {
+                    openSocket();
+                    log.info("Link established to {}:{}", host, port);
+                }
+                byte[] packet = packetInputStream.readPacket();
+                updateStats(packet.length);
+                TmPacket pkt = new TmPacket(timeService.getMissionTime(), packet);
+                pkt.setEarthReceptionTime(timeService.getHresMissionTime());
+                pwt = packetPreprocessor.process(pkt);
+                if (pwt != null) {
+                    break;
+                }
+            } catch (IOException e) {
+                if (isRunningAndEnabled()) {
+                    String msg;
+                    if (e instanceof EOFException) {
+                        msg = "TM socket connection to " + host + ":" + port + " closed. Reconnecting in 10s.";
+                    } else {
+                        msg = "Cannot open or read TM socket " + host + ": " + port + ": "
+                                + ((e instanceof ConnectException) ? e.getMessage() : e.toString())
+                                + ". Retrying in 10 seconds.";
+                    }
+                    log.warn(msg);
+                }
+                forceClosedSocket();
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e1) {
+                    Thread.currentThread().interrupt();
+                    return null;
+                }
+            } catch (PacketTooLongException e) {
+                log.warn(e.toString());
+                forceClosedSocket();
+            }
+        }
+        return pwt;
+    }
+
+    private void forceClosedSocket() {
+        if (tmSocket != null) {
+            try {
+                tmSocket.close();
+            } catch (Exception e2) {
+            }
+        }
+        tmSocket = null;
+    }
+
+    @Override
+    public void doDisable() {
+        if (tmSocket != null) {
+            try {
+                tmSocket.close();
+            } catch (IOException e) {
+                log.warn("Exception got when closing the tm socket:", e);
+            }
+            tmSocket = null;
+        }
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
+
+    @Override
+    public void doEnable() {
+        thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return String.format("DISABLED (should connect to %s:%d)", host, port);
+        }
+        if (tmSocket == null) {
+            return String.format("Not connected to %s:%d", host, port);
+        } else {
+            return String.format("OK, connected to %s:%d", host, port);
+        }
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return (tmSocket == null) ? Status.UNAVAIL : Status.OK;
+    }
+}
+```
+
+### `TcTmException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TcTmException.java`
+
+
+```java
+package org.yamcs.tctm;
+
+/**
+ * Generic exception to throw for problems encountered during TC or TM processing
+ * 
+ * @author nm
+ *
+ */
+public class TcTmException extends Exception {
+    public TcTmException() {
+        super();
+    }
+
+    public TcTmException(String message) {
+        super(message);
+    }
+
+    public TcTmException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+```
+
+### `TmPacketDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TmPacketDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.TmPacket;
+import org.yamcs.management.LinkManager;
+
+/**
+ * 
+ * Interface for components reading packets from external parties.
+ * <p>
+ * 
+ * The tm link should push {@link TmPacket} objects to the passed {@link TmSink}. The TmSink is implemented usually by
+ * the {@link LinkManager}; it takes care of putting these packets on the configured stream.
+ * 
+ */
+public interface TmPacketDataLink extends Link {
+    /**
+     * sets the tm sink that should get all the tm packets
+     * 
+     */
+    public void setTmSink(TmSink tmSink);
+
+    /**
+     * This method has been introduced to allow classes that implement multiple links (e.g. TM and TC) to not
+     * effectively support one ore more of them (depending on configuration)
+     * <p>
+     * If this method returns false, the {@link LinkManager} skips the link configuration for TM purposes
+     */
+    default boolean isTmPacketDataLinkImplemented() {
+        return true;
+    }
+}
+```
+
+### `TmSink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/TmSink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import org.yamcs.TmPacket;
+
+/**
+ * Used by the {@link TmPacketDataLink} to propagate packets inside Yamcs.
+ *  
+ * @author nm
+ *
+ */
+public interface TmSink {
+    public void processPacket(TmPacket tmPacket);
+}
+
+```
+
+### `UdpParameterDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpParameterDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Pvalue;
+import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+import com.google.protobuf.util.JsonFormat;
+
+/**
+ * Receives PP data via UDP.
+ * 
+ * The UDP packets are protobuf encoded ParameterData. We don't use any checksum, assume it's done by UDP.
+ * 
+ * @author nm
+ *
+ */
+public class UdpParameterDataLink extends AbstractParameterDataLink implements Runnable {
+
+    private volatile int validDatagramCount = 0;
+    private volatile int invalidDatagramCount = 0;
+
+    private int sequenceCount = 0;
+
+    private DatagramSocket udpSocket;
+    private int port = 31002;
+    private String defaultRecordingGroup;
+    private Format format;
+
+    int MAX_LENGTH = 10 * 1024;
+
+    DatagramPacket datagram = new DatagramPacket(new byte[MAX_LENGTH], MAX_LENGTH);
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("recordingGroup", OptionType.STRING).withDefault("DEFAULT");
+        spec.addOption("json", OptionType.BOOLEAN).withDefault(false);
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        port = config.getInt("port");
+        defaultRecordingGroup = config.getString("recordingGroup", "DEFAULT");
+        format = config.getBoolean("json", false) ? Format.JSON : Format.PROTOBUF;
+    }
+
+    @Override
+    protected void doStart() {
+        if (!isDisabled()) {
+            try {
+                udpSocket = new DatagramSocket(port);
+                Thread thread = new Thread(this);
+                thread.setName(getClass().getSimpleName() + "-" + linkName);
+                thread.start();
+            } catch (SocketException e) {
+                notifyFailed(e);
+                return;
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        if (udpSocket != null) {
+            udpSocket.close();
+        }
+        notifyStopped();
+    }
+
+    @Override
+    public void run() {
+        while (isRunningAndEnabled()) {
+            ParameterData pdata = getNextData();
+            if (pdata == null) {
+                continue;
+            }
+
+            if (pdata.hasGenerationTime()) {
+                log.error("Generation time must be specified for each parameter separately");
+                continue;
+            }
+
+            long now = timeService.getMissionTime();
+            String recgroup = pdata.hasGroup() ? pdata.getGroup() : defaultRecordingGroup;
+            int sequenceNumber = pdata.hasSeqNum() ? pdata.getSeqNum() : sequenceCount++;
+
+            // Regroup by gentime, just in case multiple parameters are submitted with different times.
+            Map<Long, List<ParameterValue>> valuesByTime = new LinkedHashMap<>();
+
+            for (Pvalue.ParameterValue gpv : pdata.getParameterList()) {
+                NamedObjectId id = gpv.getId();
+                if (id == null) {
+                    log.warn("parameter without id, skipping");
+                    continue;
+                }
+                String fqn = id.getName();
+                if (id.hasNamespace()) {
+                    log.trace("Using namespaced name for parameter {} because fully qualified name not available.", id);
+                }
+                ParameterValue pv = BasicParameterValue.fromGpb(fqn, gpv);
+                long gentime = gpv.hasGenerationTime() ? pv.getGenerationTime() : now;
+                pv.setGenerationTime(gentime);
+
+                List<ParameterValue> pvals = valuesByTime.computeIfAbsent(gentime, x -> new ArrayList<>());
+                pvals.add(pv);
+            }
+
+            for (Entry<Long, List<ParameterValue>> group : valuesByTime.entrySet()) {
+                updateParameters((long) group.getKey(), recgroup, sequenceNumber, group.getValue());
+            }
+        }
+    }
+
+    /**
+     * 
+     * Called to retrieve the next packet. It blocks in reading on the UDP socket.
+     * 
+     * @return anything that looks as a valid packet, just the size is taken into account to decide if it's valid or not
+     */
+    public ParameterData getNextData() {
+        while (isRunning()) {
+            try {
+                udpSocket.receive(datagram);
+                ParameterData pd = decodeDatagram(datagram.getData(), datagram.getOffset(), datagram.getLength());
+                dataIn(pd.getParameterCount(), datagram.getLength());
+                validDatagramCount++;
+
+                return pd;
+            } catch (IOException e) {
+                // Shutdown or disable will close the socket. That generates an exception
+                // which we ignore here.
+                if (!isRunning() || isDisabled()) {
+                    return null;
+                }
+                log.warn("Exception when receiving parameter data: {}'", e.toString());
+                dataIn(0, datagram.getLength());
+                invalidDatagramCount++;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Decode {@link ParameterData} from the content of a single received UDP Datagram.
+     * <p>
+     * {@link UdpParameterDataLink} has configurable support for either Protobuf or JSON-encoded data. Extending links
+     * may provide a custom decoder by overriding this method.
+     * 
+     * @param data
+     *            data buffer. The data received starts from {@code offset} and runs for {@code length} long.
+     * @param offset
+     *            offset of the data received
+     * @param length
+     *            length of the data received
+     */
+    public ParameterData decodeDatagram(byte[] data, int offset, int length) throws IOException {
+        switch (format) {
+        case JSON:
+            try (Reader reader = new InputStreamReader(new ByteArrayInputStream(data, offset, length))) {
+                ParameterData.Builder builder = ParameterData.newBuilder();
+                JsonFormat.parser().merge(reader, builder);
+                return builder.build();
+            }
+        case PROTOBUF:
+            return ParameterData.newBuilder()
+                    .mergeFrom(data, offset, length)
+                    .build();
+        default:
+            throw new IllegalStateException("Unexpected format " + format);
+        }
+    }
+
+    @Override
+    public Status connectionStatus() {
+        return Status.OK;
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return "DISABLED (should receive on " + port + ")";
+        } else {
+            return "OK, receiving on " + port;
+        }
+    }
+
+    @Override
+    public Map<String, Object> getExtraInfo() {
+        var extra = new LinkedHashMap<String, Object>();
+        extra.put("Valid datagrams", validDatagramCount);
+        extra.put("Invalid datagrams", invalidDatagramCount);
+        return extra;
+    }
+
+    @Override
+    protected void doEnable() throws Exception {
+        udpSocket = new DatagramSocket(port);
+        Thread thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    protected void doDisable() throws Exception {
+        if (udpSocket != null) {
+            udpSocket.close();
+            udpSocket = null;
+        }
+    }
+
+    @Override
+    public void resetCounters() {
+        super.resetCounters();
+        validDatagramCount = 0;
+        invalidDatagramCount = 0;
+    }
+
+    /**
+     * Default supported data formats
+     */
+    private static enum Format {
+        JSON,
+        PROTOBUF;
+    }
+}
+```
+
+### `UdpTcDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTcDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.commanding.PreparedCommand;
+
+/**
+ * Sends raw packets on UDP socket.
+ * 
+ * @author nm
+ *
+ */
+public class UdpTcDataLink extends AbstractThreadedTcDataLink {
+
+    protected DatagramSocket socket;
+    protected String host;
+    protected int port;
+    InetAddress address;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String name, YConfiguration config) {
+        super.init(yamcsInstance, name, config);
+        host = config.getString("host");
+        port = config.getInt("port");
+    }
+
+    @Override
+    protected void startUp() throws SocketException, UnknownHostException {
+        address = InetAddress.getByName(host);
+        socket = new DatagramSocket();
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return String.format("DISABLED (should send to %s:%d)", host, port);
+        } else {
+            return String.format("OK, sending to %s:%d", host, port);
+        }
+    }
+
+    @Override
+    public void shutDown() {
+        socket.close();
+    }
+
+    @Override
+    public void uplinkCommand(PreparedCommand pc) throws IOException {
+        byte[] binary = postprocess(pc);
+        if (binary == null) {
+            return;
+        }
+
+        DatagramPacket packet = new DatagramPacket(binary, binary.length, address, port);
+        socket.send(packet);
+        dataOut(1, binary.length);
+        ackCommand(pc.getCommandId());
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+}
+```
+
+### `UdpTcTmDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTcTmDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.actions.ActionResult;
+import org.yamcs.commanding.PreparedCommand;
+
+import com.google.gson.JsonObject;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.DatagramPacket;
+import io.netty.channel.socket.nio.NioDatagramChannel;
+
+/**
+ * A UDP-based link that acts as a client: sending TC and receiving TM on the same socket pair.
+ */
+public class UdpTcTmDataLink extends AbstractTcTmParamLink {
+
+    protected String host;
+    protected int port;
+    protected long initialDelay;
+
+    private Channel channel;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("initialDelay", OptionType.INTEGER);
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+        host = config.getString("host");
+        port = config.getInt("port");
+        initialDelay = config.getLong("initialDelay", -1);
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand preparedCommand) {
+        var binary = postprocess(preparedCommand);
+        if (binary != null) {
+            var address = (InetSocketAddress) channel.remoteAddress();
+            var dgram = new DatagramPacket(Unpooled.wrappedBuffer(binary), address);
+            channel.writeAndFlush(dgram);
+            dataOut(1, binary.length);
+            ackCommand(preparedCommand.getCommandId());
+        }
+
+        return true;
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        if (channel == null || !channel.isActive()) {
+            return Status.UNAVAIL;
+        }
+        return Status.OK;
+    }
+
+    @Override
+    protected void doStart() {
+        var eventLoopGroup = getEventLoop();
+        eventLoopGroup.schedule(() -> createBootstrap(), initialDelay, TimeUnit.MILLISECONDS);
+        addAction(new ChangeDestinationAction());
+        notifyStarted();
+    }
+
+    @Override
+    protected void doEnable() throws Exception {
+        createBootstrap();
+    }
+
+    @Override
+    protected void doDisable() throws Exception {
+        if (channel != null) {
+            channel.close();
+        }
+    }
+
+    private void createBootstrap() {
+        if (disabled.get()) {
+            return;
+        }
+        if (channel != null && channel.isActive()) {
+            return;
+        }
+        var eventLoopGroup = getEventLoop();
+        var b = new Bootstrap()
+                .group(eventLoopGroup)
+                .channel(NioDatagramChannel.class)
+                .handler(new ChannelInitializer<NioDatagramChannel>() {
+
+                    @Override
+                    protected void initChannel(NioDatagramChannel ch) throws Exception {
+                        var pipeline = ch.pipeline();
+                        pipeline.addLast(new UdpTcTmDataLinkHandler(UdpTcTmDataLink.this));
+                    }
+                });
+        var future = b.connect(host, port);
+        future.addListener((ChannelFuture f) -> {
+            if (f.isSuccess()) {
+                log.info("Link established to {}:{}", host, port);
+                channel = f.channel();
+                channel.closeFuture().addListener(closeFuture -> {
+                    if (isRunningAndEnabled()) {
+                        log.warn("Link to {}:{} closed. Retrying in 10s", host, port);
+                        eventLoopGroup.schedule(() -> createBootstrap(), 10, TimeUnit.SECONDS);
+                    }
+                });
+            } else if (isRunningAndEnabled()) {
+                log.info("Cannot establish link to {}:{}: {}. Retrying in 10s",
+                        host, port, f.cause().getMessage());
+                eventLoopGroup.schedule(() -> createBootstrap(), 10, TimeUnit.SECONDS);
+            }
+        });
+    }
+
+    @Override
+    protected void doStop() {
+        if (channel == null) {
+            notifyStopped();
+            return;
+        }
+
+        channel.close().addListener(f -> {
+            if (f.isSuccess()) {
+                notifyStopped();
+            } else {
+                notifyFailed(f.cause());
+            }
+        });
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return String.format("DISABLED (client to %s:%d)", host, port);
+        } else {
+            return String.format("OK, client to %s:%d", host, port);
+        }
+    }
+
+    public void handleIncomingPacket(byte[] packet) {
+        if (isRunningAndEnabled()) {
+            var tmPacket = new TmPacket(timeService.getMissionTime(), packet);
+            tmPacket.setEarthReceptionTime(timeService.getHresMissionTime());
+            tmPacket = packetPreprocessor.process(tmPacket);
+            if (tmPacket != null) {
+                processPacket(tmPacket);
+            }
+            dataIn(1, packet.length);
+        }
+    }
+
+    private class ChangeDestinationAction extends LinkAction {
+
+        ChangeDestinationAction() {
+            super("change-destination", "Change destination");
+        }
+
+        @Override
+        public Spec getSpec() {
+            var spec = new Spec();
+            spec.addOption("host", OptionType.STRING)
+                    .withRequired(true)
+                    .withDefault(host);
+            spec.addOption("port", OptionType.INTEGER)
+                    .withRequired(true)
+                    .withDefault(port);
+            return spec;
+        }
+
+        @Override
+        public void execute(Link link, JsonObject request, ActionResult result) {
+            host = request.get("host").getAsString();
+            port = request.get("port").getAsInt();
+            log.info("Changing destination to {}:{}", host, port);
+
+            if (isRunningAndEnabled()) {
+                var ch = UdpTcTmDataLink.this.channel;
+                disable();
+                ch.close().addListener(f -> {
+                    if (f.isSuccess()) {
+                        enable();
+                        result.complete();
+                    } else {
+                        result.completeExceptionally(f.cause());
+                    }
+                });
+            } else {
+                result.complete();
+            }
+        }
+    }
+}
+```
+
+### `UdpTcTmDataLinkHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTcTmDataLinkHandler.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.socket.DatagramPacket;
+
+public class UdpTcTmDataLinkHandler extends SimpleChannelInboundHandler<DatagramPacket> {
+
+    private UdpTcTmDataLink link;
+
+    public UdpTcTmDataLinkHandler(UdpTcTmDataLink link) {
+        this.link = link;
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket msg) throws Exception {
+        var buf = msg.content();
+        var packet = new byte[buf.readableBytes()];
+        buf.readBytes(packet);
+        link.handleIncomingPacket(packet);
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        super.channelInactive(ctx);
+    }
+}
+```
+
+### `UdpTmDataLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/UdpTmDataLink.java`
+
+
+```java
+package org.yamcs.tctm;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+
+/**
+ * Receives telemetry packets via UDP. One UDP datagram = one TM packet.
+ * <p>
+ * Options:
+ * <ul>
+ * <li>{@code port} - the UDP port to listen to</li>
+ * <li>{@code maxLength} - the maximum length of the datagram (and thus the TM packet length + initialBytesToStrip). If
+ * a datagram longer than this size will be received, it will be truncated. Default: 1500 (bytes)</li>
+ * <li>{@code initialBytesToStrip} - if configured, skip that number of bytes from the beginning of the datagram.
+ * Default: 0</li>
+ * 
+ * </ul>
+ */
+public class UdpTmDataLink extends AbstractTmDataLink implements Runnable {
+    protected volatile long invalidDatagramCount = 0;
+
+    protected DatagramSocket tmSocket;
+    protected int port;
+
+    static final int MAX_LENGTH = 1500;
+    protected int maxLength;
+    protected int initialBytesToStrip;
+    protected DatagramPacket datagram;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("maxLength", OptionType.INTEGER).withDefault(MAX_LENGTH);
+        spec.addOption("initialBytesToStrip", OptionType.INTEGER).withDefault(0);
+        return spec;
+    }
+
+    /**
+     * Creates a new UDP TM Data Link
+     * 
+     * @throws ConfigurationException
+     *             if port is not defined in the configuration
+     */
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(instance, name, config);
+        port = config.getInt("port");
+        maxLength = config.getInt("maxLength", MAX_LENGTH);
+        initialBytesToStrip = config.getInt("initialBytesToStrip", 0);
+        datagram = new DatagramPacket(new byte[maxLength], maxLength);
+    }
+
+    @Override
+    public void doStart() {
+        if (!isDisabled()) {
+            try {
+                doEnable();
+            } catch (SocketException e) {
+                notifyFailed(e);
+                return;
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        doDisable();
+        notifyStopped();
+    }
+
+    @Override
+    public void run() {
+        while (isRunningAndEnabled()) {
+            TmPacket tmpkt = getNextPacket();
+            if (tmpkt != null) {
+                processPacket(tmpkt);
+            }
+        }
+    }
+
+    /**
+     * 
+     * Called to retrieve the next packet. It blocks in readining on the multicast socket
+     * 
+     * @return anything that looks as a valid packet, just the size is taken into account to decide if it's valid or not
+     */
+    public TmPacket getNextPacket() {
+        byte[] packet = null;
+
+        while (isRunning()) {
+            try {
+
+                tmSocket.receive(datagram);
+                int pktLength = datagram.getLength() - initialBytesToStrip;
+
+                if (pktLength <= 0) {
+                    log.warn("received datagram of size {} <= {} (initialBytesToStrip); ignored.",
+                            datagram.getLength(), initialBytesToStrip);
+                    invalidDatagramCount++;
+                    continue;
+                }
+
+                updateStats(datagram.getLength());
+                packet = new byte[pktLength];
+                System.arraycopy(datagram.getData(), datagram.getOffset() + initialBytesToStrip, packet, 0, pktLength);
+                break;
+            } catch (IOException e) {
+                if (!isRunning() || isDisabled()) {// the shutdown or disable will close the socket and that will
+                                                   // generate an exception
+                    // which we ignore here
+                    return null;
+                }
+                log.warn("exception thrown when reading from the UDP socket at port {}", port, e);
+            }
+        }
+
+        if (packet != null) {
+            TmPacket tmPacket = new TmPacket(timeService.getMissionTime(), packet);
+            tmPacket.setEarthReceptionTime(timeService.getHresMissionTime());
+            return packetPreprocessor.process(tmPacket);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return "DISABLED (should receive on " + port + ")";
+        } else {
+            return "OK, receiving on " + port;
+        }
+    }
+
+    @Override
+    public Map<String, Object> getExtraInfo() {
+        var extra = new LinkedHashMap<String, Object>();
+        extra.put("Valid datagrams", packetCount.get());
+        extra.put("Invalid datagrams", invalidDatagramCount);
+        return extra;
+    }
+
+    @Override
+    public void resetCounters() {
+        super.resetCounters();
+        invalidDatagramCount = 0;
+    }
+
+    /**
+     * Sets the disabled to true such that getNextPacket ignores the received datagrams
+     */
+    @Override
+    public void doDisable() {
+        if (tmSocket != null) {
+            tmSocket.close();
+            tmSocket = null;
+        }
+    }
+
+    /**
+     * Sets the disabled to false such that getNextPacket does not ignore the received datagrams
+     * 
+     * @throws SocketException
+     */
+    @Override
+    public void doEnable() throws SocketException {
+        tmSocket = new DatagramSocket(port);
+        Thread thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+}
+```

@@ -3,124 +3,18916 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractPaginatedParameterRetrievalConsumer.java`
 
-file--AbstractPaginatedParameterRetrievalConsumer.java
-file--ActivitiesApi.java
-file--AlarmsApi.java
-file--ArchivedParameterFilter.java
-file--ArchivedParameterFilterFactory.java
-file--AuditApi.java
-file--BucketsApi.java
-file--ClearanceApi.java
-file--CommandsApi.java
-file--ConfigApi.java
-file--Cop1Api.java
-file--DatabaseApi.java
-file--Downsampler.java
-file--EventFilter.java
-file--EventFilterFactory.java
-file--EventsApi.java
-file--FileTransferApi.java
-file--GbpToXtceAssembler.java
-file--GpbWellKnownHelper.java
-file--IamApi.java
-file--IndexesApi.java
-file--InstancesApi.java
-file--LinksApi.java
-file--ManagementApi.java
-file--MdbApi.java
-file--MdbOverrideApi.java
-file--MdbPageBuilder.java
-file--MdbSearchHelpers.java
-file--NameDescriptionSearchMatcher.java
-file--NamedObjectPageToken.java
-file--PacketFilter.java
-file--PacketFilterFactory.java
-file--PacketsApi.java
-file--ParameterArchiveApi.java
-file--ParameterListsApi.java
-file--ParameterRanger.java
-file--ParameterValuesApi.java
-file--ProcessingApi.java
-file--QueuesApi.java
-file--ReplayFactory.java
-file--ReplicationApi.java
-file--RocksDbApi.java
-file--ServerApi.java
-file--ServicesApi.java
-file--SessionsApi.java
-file--SingleParameterRetriever.java
-file--StreamArchiveApi.java
-file--StreamFactory.java
-file--SubscribeEventsObserver.java
-file--SubscribeParameterObserver.java
-file--TableApi.java
-file--TimeApi.java
-file--TimeCorrelationApi.java
-file--TimelineApi.java
-file--TimeSortedPageToken.java
-file--XtceToGpbAssembler.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/AbstractPaginatedParameterRetrievalConsumer.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameterarchive.ConsumerAbortException;
+import org.yamcs.utils.ValueUtility;
+
+/**
+ * Expected class type for use with {@link org.yamcs.http.api.ReplayFactory} Adds functionality for stopping a replay,
+ * and has support for pagination
+ */
+public abstract class AbstractPaginatedParameterRetrievalConsumer {
+
+    protected final boolean paginate;
+    protected final long pos;
+    protected final int limit;
+
+    protected int rowNr = 0; // zero-based
+    protected int emitted = 0;
+
+    protected boolean noRepeat = false;
+    protected Value lastValue;
+
+    public AbstractPaginatedParameterRetrievalConsumer() {
+        this(-1, -1);
+    }
+
+    public AbstractPaginatedParameterRetrievalConsumer(long pos, int limit) {
+        if (pos == -1 && limit == -1) {
+            paginate = false;
+            this.pos = pos;
+            this.limit = limit;
+        } else {
+            paginate = true;
+            this.pos = Math.max(pos, 0);
+            this.limit = Math.max(limit, 0);
+        }
+    }
+
+    public void setNoRepeat(boolean noRepeat) {
+        this.noRepeat = noRepeat;
+    }
+
+    static abstract class PaginatedSingleParameterRetrievalConsumer extends AbstractPaginatedParameterRetrievalConsumer
+            implements Consumer<ParameterValueWithId> {
+        public PaginatedSingleParameterRetrievalConsumer(long pos, int limit) {
+            super(pos, limit);
+        }
+
+        public PaginatedSingleParameterRetrievalConsumer() {
+            this(-1, -1);
+        }
+
+        @Override
+        public void accept(ParameterValueWithId pvwid) {
+            pvwid = prefilter(pvwid);
+            if (pvwid == null) {
+                return;
+            }
+
+            pvwid = filter(pvwid);
+            if (pvwid == null) {
+                return;
+            }
+
+            if (paginate) {
+                if (rowNr >= pos) {
+                    if (emitted < limit) {
+                        emitted++;
+                        onParameterData(pvwid);
+                    } else {
+                        throw new ConsumerAbortException();
+                    }
+                }
+                rowNr++;
+            } else {
+                onParameterData(pvwid);
+            }
+        }
+
+
+        public ParameterValueWithId filter(ParameterValueWithId pvwid) {
+            return pvwid;
+        }
+
+        // Default filtering. Not overridable by implementations
+        private ParameterValueWithId prefilter(ParameterValueWithId pvwid) {
+            if (noRepeat) {
+                ParameterValue pval = pvwid.getParameterValue();
+                if (!ValueUtility.equals(lastValue, pval.getEngValue())) {
+                    lastValue = pval.getEngValue();
+                    return pvwid;
+                } else {
+                    return null;
+                }
+            } else {
+                return pvwid;
+            }
+        }
+
+        protected void onParameterData(ParameterValueWithId pvwid) {
+        }
+
+    }
+
+    static abstract class PaginatedMultiParameterRetrievalConsumer extends AbstractPaginatedParameterRetrievalConsumer
+            implements Consumer<List<ParameterValueWithId>> {
+        public PaginatedMultiParameterRetrievalConsumer(long pos, int limit) {
+            super(pos, limit);
+        }
+
+        public PaginatedMultiParameterRetrievalConsumer() {
+            this(-1, -1);
+        }
+        @Override
+        public void accept(List<ParameterValueWithId> params) {
+            params = prefilter(params);
+            if (params == null) {
+                return;
+            }
+
+            params = filter(params);
+            if (params == null) {
+                return;
+            }
+
+            if (paginate) {
+                if (rowNr >= pos) {
+                    if (emitted < limit) {
+                        emitted++;
+                        onParameterData(params);
+                    } else {
+                        throw new ConsumerAbortException();
+                    }
+                }
+                rowNr++;
+            } else {
+                onParameterData(params);
+            }
+        }
+
+        // Default filtering. Not overridable by implementations
+        private List<ParameterValueWithId> prefilter(List<ParameterValueWithId> params) {
+            if (noRepeat) {
+                List<ParameterValueWithId> plist = new ArrayList<>();
+
+                for (ParameterValueWithId pvalid : params) {
+                    ParameterValue pval = pvalid.getParameterValue();
+                    if (!ValueUtility.equals(lastValue, pval.getEngValue())) {
+                        plist.add(pvalid);
+                    }
+                    lastValue = pval.getEngValue();
+                }
+                return (plist.size() > 0) ? plist : null;
+            } else {
+                return params;
+            }
+        }
+
+        /**
+         * Override to filter out some replay data. Null means excluded. (which also means it will not be counted
+         * towards the pagination).
+         * 
+         * @return filtered data
+         */
+        public List<ParameterValueWithId> filter(List<ParameterValueWithId> params) {
+            return params;
+        }
+
+        protected void onParameterData(List<ParameterValueWithId> params) {
+        }
+    }
+}
 ```
 
-## 항목
+### `ActivitiesApi.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/AbstractPaginatedParameterRetrievalConsumer.java`](file--AbstractPaginatedParameterRetrievalConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ActivitiesApi.java`](file--ActivitiesApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/AlarmsApi.java`](file--AlarmsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ArchivedParameterFilter.java`](file--ArchivedParameterFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ArchivedParameterFilterFactory.java`](file--ArchivedParameterFilterFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/AuditApi.java`](file--AuditApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/BucketsApi.java`](file--BucketsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ClearanceApi.java`](file--ClearanceApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/CommandsApi.java`](file--CommandsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ConfigApi.java`](file--ConfigApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/Cop1Api.java`](file--Cop1Api.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/DatabaseApi.java`](file--DatabaseApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/Downsampler.java`](file--Downsampler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/EventFilter.java`](file--EventFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/EventFilterFactory.java`](file--EventFilterFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/EventsApi.java`](file--EventsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/FileTransferApi.java`](file--FileTransferApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/GbpToXtceAssembler.java`](file--GbpToXtceAssembler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/GpbWellKnownHelper.java`](file--GpbWellKnownHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/IamApi.java`](file--IamApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/IndexesApi.java`](file--IndexesApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/InstancesApi.java`](file--InstancesApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/LinksApi.java`](file--LinksApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ManagementApi.java`](file--ManagementApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbApi.java`](file--MdbApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbOverrideApi.java`](file--MdbOverrideApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbPageBuilder.java`](file--MdbPageBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbSearchHelpers.java`](file--MdbSearchHelpers.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/NameDescriptionSearchMatcher.java`](file--NameDescriptionSearchMatcher.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/NamedObjectPageToken.java`](file--NamedObjectPageToken.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/PacketFilter.java`](file--PacketFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/PacketFilterFactory.java`](file--PacketFilterFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/PacketsApi.java`](file--PacketsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterArchiveApi.java`](file--ParameterArchiveApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterListsApi.java`](file--ParameterListsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterRanger.java`](file--ParameterRanger.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterValuesApi.java`](file--ParameterValuesApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ProcessingApi.java`](file--ProcessingApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/QueuesApi.java`](file--QueuesApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ReplayFactory.java`](file--ReplayFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ReplicationApi.java`](file--ReplicationApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/RocksDbApi.java`](file--RocksDbApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ServerApi.java`](file--ServerApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ServicesApi.java`](file--ServicesApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SessionsApi.java`](file--SessionsApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SingleParameterRetriever.java`](file--SingleParameterRetriever.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/StreamArchiveApi.java`](file--StreamArchiveApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/StreamFactory.java`](file--StreamFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SubscribeEventsObserver.java`](file--SubscribeEventsObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SubscribeParameterObserver.java`](file--SubscribeParameterObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TableApi.java`](file--TableApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimeApi.java`](file--TimeApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimeCorrelationApi.java`](file--TimeCorrelationApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimelineApi.java`](file--TimelineApi.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimeSortedPageToken.java`](file--TimeSortedPageToken.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/XtceToGpbAssembler.java`](file--XtceToGpbAssembler.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ActivitiesApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.activities.Activity;
+import org.yamcs.activities.ActivityDb;
+import org.yamcs.activities.ActivityListener;
+import org.yamcs.activities.ActivityLog;
+import org.yamcs.activities.ActivityLogListener;
+import org.yamcs.activities.ActivityService;
+import org.yamcs.activities.ScriptExecutor;
+import org.yamcs.api.Observer;
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.activities.AbstractActivitiesApi;
+import org.yamcs.protobuf.activities.ActivityInfo;
+import org.yamcs.protobuf.activities.ActivityLogInfo;
+import org.yamcs.protobuf.activities.CancelActivityRequest;
+import org.yamcs.protobuf.activities.CompleteManualActivityRequest;
+import org.yamcs.protobuf.activities.ExecutorInfo;
+import org.yamcs.protobuf.activities.GetActivityLogRequest;
+import org.yamcs.protobuf.activities.GetActivityLogResponse;
+import org.yamcs.protobuf.activities.GetActivityRequest;
+import org.yamcs.protobuf.activities.GlobalActivityStatus;
+import org.yamcs.protobuf.activities.ListActivitiesRequest;
+import org.yamcs.protobuf.activities.ListActivitiesResponse;
+import org.yamcs.protobuf.activities.ListExecutorsRequest;
+import org.yamcs.protobuf.activities.ListExecutorsResponse;
+import org.yamcs.protobuf.activities.ListScriptsRequest;
+import org.yamcs.protobuf.activities.ListScriptsResponse;
+import org.yamcs.protobuf.activities.StartActivityRequest;
+import org.yamcs.protobuf.activities.SubscribeActivitiesRequest;
+import org.yamcs.protobuf.activities.SubscribeActivityLogRequest;
+import org.yamcs.protobuf.activities.SubscribeGlobalStatusRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.timeline.TimelineService;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+
+import com.google.gson.Gson;
+import com.google.protobuf.Struct;
+
+public class ActivitiesApi extends AbstractActivitiesApi<Context> {
+
+    private Log log = new Log(ActivitiesApi.class);
+
+    @Override
+    public void listExecutors(Context ctx, ListExecutorsRequest request, Observer<ListExecutorsResponse> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ReadActivities, SystemPrivilege.ControlActivities);
+        var activityService = verifyService(request.getInstance());
+
+        var responseb = ListExecutorsResponse.newBuilder();
+
+        var sortedExecutors = new ArrayList<>(activityService.getExecutors());
+        Collections.sort(sortedExecutors, (a, b) -> a.getActivityType().compareTo(b.getActivityType()));
+
+        for (var executor : sortedExecutors) {
+            var executorb = ExecutorInfo.newBuilder()
+                    .setType(executor.getActivityType())
+                    .setDisplayName(executor.getDisplayName());
+            if (executor.getIcon() != null) {
+                executorb.setIcon(executor.getIcon());
+            }
+            if (executor.getDescription() != null) {
+                executorb.setDescription(executor.getDescription());
+            }
+            responseb.addExecutors(executorb);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listActivities(Context ctx, ListActivitiesRequest request, Observer<ListActivitiesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadActivities);
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+
+        var limit = request.hasLimit() ? request.getLimit() : 200;
+        boolean desc = !request.getOrder().equals("asc");
+
+        ActivityPageToken nextToken = null;
+        if (request.hasNext()) {
+            var next = request.getNext();
+            nextToken = ActivityPageToken.decode(next);
+        }
+
+        var sqlb = new SqlBuilder(ActivityDb.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual("start", request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore("start", request.getStop());
+        }
+        if (request.getStatusCount() > 0) {
+            sqlb.whereColIn("status", request.getStatusList());
+        }
+        if (request.getTypeCount() > 0) {
+            sqlb.whereColIn("type", request.getTypeList());
+        }
+        if (request.hasQ()) {
+            sqlb.where("detail like ?", "%" + request.getQ() + "%");
+        }
+        if (nextToken != null) {
+            if (desc) {
+                sqlb.where("(start < ? or (start = ? and seq < ?))",
+                        nextToken.start, nextToken.start, nextToken.seq);
+            } else {
+                sqlb.where("(start > ? or (start = ? and seq > ?))",
+                        nextToken.start, nextToken.start, nextToken.seq);
+            }
+        }
+        sqlb.descend(desc);
+
+        var responseb = ListActivitiesResponse.newBuilder();
+
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+            Activity last;
+            int count;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                var activity = new Activity(tuple);
+                count++;
+                if (count <= limit) {
+                    responseb.addActivities(toActivityInfo(activity));
+                    last = activity;
+                } else {
+                    stream.close();
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (count > limit) {
+                    var token = new ActivityPageToken(last.getStart(), last.getSeq());
+                    responseb.setContinuationToken(token.encodeAsString());
+                }
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    @Override
+    public void getActivity(Context ctx, GetActivityRequest request, Observer<ActivityInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadActivities);
+        var activityService = verifyService(request.getInstance());
+        var activityId = verifyActivityId(request.getActivity());
+        var activity = activityService.getActivity(activityId);
+        if (activity == null) {
+            throw new BadRequestException("Unknown activity");
+        } else {
+            observer.next(toActivityInfo(activity));
+        }
+    }
+
+    @Override
+    public void getActivityLog(Context ctx, GetActivityLogRequest request, Observer<GetActivityLogResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadActivities);
+        var activityService = verifyService(request.getInstance());
+        var activityId = verifyActivityId(request.getActivity());
+        var logEntries = activityService.getActivityLogDb().getLogEntries(activityId);
+
+        var responseb = GetActivityLogResponse.newBuilder();
+        logEntries.forEach(log -> responseb.addLogs(toActivityLogInfo(log)));
+        observer.next(responseb.build());
+    }
+
+    @Override
+    public void startActivity(Context ctx, StartActivityRequest request, Observer<ActivityInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlActivities);
+        var activityService = verifyService(request.getInstance());
+
+        var def = request.getActivityDefinition();
+        var type = def.getType();
+        var args = GpbWellKnownHelper.toJava(def.getArgs());
+        var comment = def.hasComment() ? def.getComment() : null;
+
+        var activity = activityService.prepareActivity(type, args, ctx.user, comment);
+        activityService.startActivity(activity, ctx.user);
+        observer.next(toActivityInfo(activity));
+    }
+
+    @Override
+    public void cancelActivity(Context ctx, CancelActivityRequest request, Observer<ActivityInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlActivities);
+        var activityService = verifyService(request.getInstance());
+        var activityId = verifyActivityId(request.getActivity());
+
+        var activity = activityService.cancelActivity(activityId, ctx.user);
+        if (activity == null) {
+            throw new BadRequestException("Unknown activity '" + activityId + "'");
+        } else {
+            observer.next(toActivityInfo(activity));
+        }
+    }
+
+    @Override
+    public void completeManualActivity(Context ctx, CompleteManualActivityRequest request,
+            Observer<ActivityInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlActivities);
+        var activityService = verifyService(request.getInstance());
+        var activityId = verifyActivityId(request.getActivity());
+        var failureReason = request.hasFailureReason() ? request.getFailureReason() : null;
+
+        Activity activity;
+        try {
+            activity = activityService.completeManualActivity(activityId, failureReason, ctx.user);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
+        if (activity == null) {
+            throw new BadRequestException("Unknown activity '" + activityId + "'");
+        } else {
+            observer.next(toActivityInfo(activity));
+        }
+    }
+
+    @Override
+    public void subscribeGlobalStatus(Context ctx, SubscribeGlobalStatusRequest request,
+            Observer<GlobalActivityStatus> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadActivities);
+        var activityService = verifyService(request.getInstance());
+
+        var oldStatusRef = new AtomicReference<GlobalActivityStatus>();
+        var future = YamcsServer.getServer().getThreadPoolExecutor().scheduleAtFixedRate(() -> {
+            var ongoingCount = activityService.getOngoingActivities().size();
+
+            var status = GlobalActivityStatus.newBuilder()
+                    .setOngoingCount(ongoingCount)
+                    .build();
+
+            var oldStatus = oldStatusRef.get();
+            if (!status.equals(oldStatus)) {
+                observer.next(status);
+                oldStatusRef.set(status);
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    @Override
+    public void subscribeActivities(Context ctx, SubscribeActivitiesRequest request,
+            Observer<ActivityInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadActivities);
+        var activityService = verifyService(request.getInstance());
+        var activityListener = (ActivityListener) activity -> observer.next(toActivityInfo(activity));
+        observer.setCancelHandler(() -> activityService.removeActivityListener(activityListener));
+        activityService.addActivityListener(activityListener);
+    }
+
+    @Override
+    public void subscribeActivityLog(Context ctx, SubscribeActivityLogRequest request,
+            Observer<ActivityLogInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadActivities);
+        var activityService = verifyService(request.getInstance());
+        var logListener = (ActivityLogListener) (activity, log) -> {
+            if (!request.hasActivity() || request.getActivity().equals(log.getActivityId().toString())) {
+                observer.next(toActivityLogInfo(log));
+            }
+        };
+        observer.setCancelHandler(() -> activityService.removeActivityLogListener(logListener));
+        activityService.addActivityLogListener(logListener);
+    }
+
+    @Override
+    public void listScripts(Context ctx, ListScriptsRequest request, Observer<ListScriptsResponse> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ReadActivities, SystemPrivilege.ControlActivities);
+        var activityService = verifyService(request.getInstance());
+        var scriptExecutor = (ScriptExecutor) activityService.getExecutor("SCRIPT");
+        try {
+            var responseb = ListScriptsResponse.newBuilder()
+                    .addAllScripts(scriptExecutor.getScripts());
+            observer.next(responseb.build());
+        } catch (IOException e) {
+            observer.completeExceptionally(e);
+        }
+    }
+
+    private static ActivityInfo toActivityInfo(Activity activity) {
+        var activityb = ActivityInfo.newBuilder()
+                .setStart(TimeEncoding.toProtobufTimestamp(activity.getStart()))
+                .setSeq(activity.getSeq())
+                .setId(activity.getId().toString())
+                .setType(activity.getType())
+                .setStartedBy(activity.getStartedBy());
+
+        var args = activity.getArgs();
+        if (args != null) {
+            activityb.setArgs(WellKnownTypes.toStruct(args));
+        } else {
+            activityb.setArgs(Struct.getDefaultInstance());
+        }
+
+        activityb.setStatus(org.yamcs.protobuf.activities.ActivityStatus.valueOf(
+                activity.getStatus().name()));
+
+        if (activity.getDetail() != null) {
+            activityb.setDetail(activity.getDetail());
+        }
+        if (activity.getStop() != TimeEncoding.INVALID_INSTANT) {
+            activityb.setStop(TimeEncoding.toProtobufTimestamp(activity.getStop()));
+        }
+        if (activity.getFailureReason() != null) {
+            activityb.setFailureReason(activity.getFailureReason());
+        }
+        if (activity.getStoppedBy() != null) {
+            activityb.setStoppedBy(activity.getStoppedBy());
+        }
+
+        return activityb.build();
+    }
+
+    private static ActivityLogInfo toActivityLogInfo(ActivityLog log) {
+        var logb = ActivityLogInfo.newBuilder()
+                .setTime(TimeEncoding.toProtobufTimestamp(log.getTime()))
+                .setSource(log.getSource())
+                .setLevel(org.yamcs.protobuf.activities.ActivityLogLevel.valueOf(
+                        log.getLevel().name()))
+                .setMessage(log.getMessage());
+        return logb.build();
+    }
+
+    private ActivityService verifyService(String yamcsInstance) {
+        String instance = InstancesApi.verifyInstance(yamcsInstance);
+
+        var services = YamcsServer.getServer().getInstance(instance)
+                .getServices(TimelineService.class);
+        if (services.isEmpty()) {
+            throw new NotFoundException("No activity service found");
+        } else {
+            if (services.size() > 1) {
+                log.warn("Multiple activity services found but only one supported");
+            }
+            return services.get(0).getActivityService();
+        }
+    }
+
+    private static UUID verifyActivityId(String id) {
+        try {
+            return UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid activity identifier '" + id + "'");
+        }
+    }
+
+    /**
+     * Stateless continuation token for paged requests on the activities table
+     */
+    private static class ActivityPageToken {
+
+        long start;
+        int seq;
+
+        ActivityPageToken(long start, int seq) {
+            this.start = start;
+            this.seq = seq;
+        }
+
+        static ActivityPageToken decode(String encoded) {
+            String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+            return new Gson().fromJson(decoded, ActivityPageToken.class);
+        }
+
+        String encodeAsString() {
+            String json = new Gson().toJson(this);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+        }
+    }
+}
+```
+
+### `AlarmsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/AlarmsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_CLEARED_BY;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_CLEARED_TIME;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_CLEAR_MSG;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_BY;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_MSG;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_TIME;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_TRIGGER_TIME;
+
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import org.yamcs.Processor;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.alarms.AbstractAlarmServer;
+import org.yamcs.alarms.ActiveAlarm;
+import org.yamcs.alarms.AlarmListener;
+import org.yamcs.alarms.AlarmMirrorService;
+import org.yamcs.alarms.AlarmSequenceException;
+import org.yamcs.alarms.AlarmServer;
+import org.yamcs.alarms.AlarmStreamer;
+import org.yamcs.alarms.EventAlarmServer;
+import org.yamcs.alarms.EventAlarmStreamer;
+import org.yamcs.alarms.EventId;
+import org.yamcs.alarms.ParameterAlarmStreamer;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.api.XtceToGpbAssembler.DetailLevel;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.AcknowledgeInfo;
+import org.yamcs.protobuf.AlarmData;
+import org.yamcs.protobuf.AlarmNotificationType;
+import org.yamcs.protobuf.AlarmSeverity;
+import org.yamcs.protobuf.AlarmType;
+import org.yamcs.protobuf.ClearInfo;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.EventAlarmData;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.ParameterAlarmData;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.ShelveInfo;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.alarms.AbstractAlarmsApi;
+import org.yamcs.protobuf.alarms.AcknowledgeAlarmRequest;
+import org.yamcs.protobuf.alarms.ClearAlarmRequest;
+import org.yamcs.protobuf.alarms.EditAlarmRequest;
+import org.yamcs.protobuf.alarms.GlobalAlarmStatus;
+import org.yamcs.protobuf.alarms.ListAlarmsRequest;
+import org.yamcs.protobuf.alarms.ListAlarmsResponse;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsRequest;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsResponse;
+import org.yamcs.protobuf.alarms.ShelveAlarmRequest;
+import org.yamcs.protobuf.alarms.SubscribeAlarmsRequest;
+import org.yamcs.protobuf.alarms.SubscribeGlobalStatusRequest;
+import org.yamcs.protobuf.alarms.UnshelveAlarmRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db;
+
+import com.google.gson.Gson;
+import com.google.protobuf.Empty;
+import com.google.protobuf.Message;
+import com.google.protobuf.Timestamp;
+
+public class AlarmsApi extends AbstractAlarmsApi<Context> {
+
+    private static ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+
+    private static final AlarmSeverity[] PARAM_ALARM_SEVERITY = new AlarmSeverity[20];
+    private static final AlarmSeverity[] EVENT_ALARM_SEVERITY = new AlarmSeverity[8];
+    public static Map<org.yamcs.alarms.AlarmNotificationType, AlarmNotificationType> protoNotificationType = new EnumMap<>(
+            org.yamcs.alarms.AlarmNotificationType.class);
+
+    static {
+        PARAM_ALARM_SEVERITY[MonitoringResult.WATCH_VALUE] = AlarmSeverity.WATCH;
+        PARAM_ALARM_SEVERITY[MonitoringResult.WARNING_VALUE] = AlarmSeverity.WARNING;
+        PARAM_ALARM_SEVERITY[MonitoringResult.DISTRESS_VALUE] = AlarmSeverity.DISTRESS;
+        PARAM_ALARM_SEVERITY[MonitoringResult.CRITICAL_VALUE] = AlarmSeverity.CRITICAL;
+        PARAM_ALARM_SEVERITY[MonitoringResult.SEVERE_VALUE] = AlarmSeverity.SEVERE;
+
+        EVENT_ALARM_SEVERITY[EventSeverity.WATCH_VALUE] = AlarmSeverity.WATCH;
+        EVENT_ALARM_SEVERITY[EventSeverity.WARNING_VALUE] = AlarmSeverity.WARNING;
+        EVENT_ALARM_SEVERITY[EventSeverity.WARNING_NEW_VALUE] = AlarmSeverity.WARNING;
+        EVENT_ALARM_SEVERITY[EventSeverity.DISTRESS_VALUE] = AlarmSeverity.DISTRESS;
+        EVENT_ALARM_SEVERITY[EventSeverity.CRITICAL_VALUE] = AlarmSeverity.CRITICAL;
+        EVENT_ALARM_SEVERITY[EventSeverity.SEVERE_VALUE] = AlarmSeverity.SEVERE;
+        EVENT_ALARM_SEVERITY[EventSeverity.ERROR_VALUE] = AlarmSeverity.CRITICAL;
+
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.ACKNOWLEDGED,
+                AlarmNotificationType.ACKNOWLEDGED);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.CLEARED, AlarmNotificationType.CLEARED);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.RESET, AlarmNotificationType.RESET);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.RTN, AlarmNotificationType.RTN);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.SHELVED, AlarmNotificationType.SHELVED);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.TRIGGERED, AlarmNotificationType.TRIGGERED);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.UNSHELVED, AlarmNotificationType.UNSHELVED);
+        protoNotificationType.put(org.yamcs.alarms.AlarmNotificationType.TRIGGERED_PENDING,
+                AlarmNotificationType.TRIGGERED_PENDING);
+    }
+
+    private AuditLog auditLog;
+
+    public AlarmsApi(AuditLog auditLog) {
+        this.auditLog = auditLog;
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ReadAlarms);
+        });
+    }
+
+    /**
+     * List the alarms including the old ones not active anymore
+     */
+    @Override
+    public void listAlarms(Context ctx, ListAlarmsRequest request, Observer<ListAlarmsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadAlarms);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        long pos = request.hasPos() ? request.getPos() : 0;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        boolean desc = !request.getOrder().equals("asc");
+
+        AlarmsPageToken nextToken = null;
+        if (request.hasNext()) {
+            nextToken = AlarmsPageToken.decode(request.getNext());
+        }
+
+        SqlBuilder sqlbParam = new SqlBuilder(AlarmRecorder.PARAMETER_ALARM_TABLE_NAME);
+        SqlBuilder sqlbEvent = new SqlBuilder(AlarmRecorder.EVENT_ALARM_TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlbParam.whereColAfterOrEqual(CNAME_TRIGGER_TIME, request.getStart());
+            sqlbEvent.whereColAfterOrEqual(CNAME_TRIGGER_TIME, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlbParam.whereColBefore(CNAME_TRIGGER_TIME, request.getStop());
+            sqlbEvent.whereColBefore(CNAME_TRIGGER_TIME, request.getStop());
+        }
+        if (nextToken != null) {
+            // TODO this currently ignores the parameter/eventSource column (also part of the key)
+            if (desc) {
+                sqlbParam.where("(triggerTime < ? or (triggerTime = ? and seqNum < ?))",
+                        nextToken.triggerTime, nextToken.triggerTime, nextToken.seqNum);
+                sqlbEvent.where("(triggerTime < ? or (triggerTime = ? and seqNum < ?))",
+                        nextToken.triggerTime, nextToken.triggerTime, nextToken.seqNum);
+            } else {
+                sqlbParam.where("(triggerTime > ? or (triggerTime = ? and seqNum > ?))",
+                        nextToken.triggerTime, nextToken.triggerTime, nextToken.seqNum);
+                sqlbEvent.where("(triggerTime > ? or (triggerTime = ? and seqNum > ?))",
+                        nextToken.triggerTime, nextToken.triggerTime, nextToken.seqNum);
+            }
+        }
+
+        if (request.hasName()) {
+            String alarmName = request.getName();
+            if (!alarmName.startsWith("/")) {
+                alarmName = "/" + alarmName;
+            }
+            sqlbParam.where("parameter = ?", alarmName);
+            sqlbEvent.where("eventSource = ?", alarmName);
+        }
+
+        sqlbParam.descend(desc);
+        sqlbEvent.descend(desc);
+
+        var responseb = ListAlarmsResponse.newBuilder();
+        // Add 1 to the limit, to detect need for continuation token
+        String q = "MERGE (" + sqlbParam.toString() + "), (" + sqlbEvent.toString() + ") USING " + CNAME_TRIGGER_TIME
+                + " ORDER DESC LIMIT " + pos + "," + (limit + 1L);
+
+        List<Object> sqlArgs = new ArrayList<>(sqlbParam.getQueryArguments());
+        sqlArgs.addAll(sqlbEvent.getQueryArguments());
+        StreamFactory.stream(instance, q, sqlArgs, new StreamSubscriber() {
+
+            Tuple last;
+            int count;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (++count <= limit) {
+                    AlarmData alarm = tupleToAlarmData(tuple);
+                    responseb.addAlarms(alarm);
+                    last = tuple;
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (count > limit) {
+                    var triggerTime = last.getTimestampColumn(AlarmStreamer.CNAME_TRIGGER_TIME);
+                    var seqNum = last.getIntColumn(AlarmStreamer.CNAME_SEQ_NUM);
+                    var token = new AlarmsPageToken(triggerTime, seqNum);
+                    responseb.setContinuationToken(token.encodeAsString());
+                }
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    /**
+     * List the active alarms
+     */
+    @Override
+    public void listProcessorAlarms(Context ctx, ListProcessorAlarmsRequest request,
+            Observer<ListProcessorAlarmsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadAlarms);
+        boolean includePending = request.hasIncludePending() && request.getIncludePending();
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        ListProcessorAlarmsResponse.Builder responseb = ListProcessorAlarmsResponse.newBuilder();
+        if (processor.hasAlarmServer()) {
+            AlarmServer<Parameter, org.yamcs.parameter.ParameterValue> alarmServer = processor
+                    .getParameterProcessorManager()
+                    .getAlarmServer();
+            for (ActiveAlarm<org.yamcs.parameter.ParameterValue> alarm : alarmServer.getActiveAlarms().values()) {
+                if (includePending || !alarm.isPending()) {
+                    responseb.addAlarms(toAlarmData(AlarmNotificationType.ACTIVE, alarm, false, true));
+                }
+            }
+        }
+        EventAlarmServer eventAlarmServer = processor.getEventAlarmServer();
+        if (eventAlarmServer != null) {
+            for (ActiveAlarm<Db.Event> alarm : eventAlarmServer.getActiveAlarms().values()) {
+                if (includePending || !alarm.isPending()) {
+                    responseb.addAlarms(toAlarmData(AlarmNotificationType.ACTIVE, alarm, false, true));
+                }
+            }
+        }
+
+        AlarmMirrorService alarmMirrorService = getMirrorService(request.getInstance());
+        if (alarmMirrorService != null) {
+            for (var alarm : alarmMirrorService.getParameterServer().getActiveAlarms().values()) {
+                if (includePending || !alarm.isPending()) {
+                    responseb.addAlarms(toAlarmData(AlarmNotificationType.ACTIVE, alarm, true /* readonly */, true));
+                }
+            }
+
+            for (var alarm : alarmMirrorService.getEventServer().getActiveAlarms().values()) {
+                if (includePending || !alarm.isPending()) {
+                    responseb.addAlarms(toAlarmData(AlarmNotificationType.ACTIVE, alarm, true /* readonly */, true));
+                }
+            }
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void editAlarm(Context ctx, EditAlarmRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAlarms);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        String alarmName = request.getName();
+        if (!alarmName.startsWith("/")) {
+            alarmName = "/" + alarmName;
+        }
+        int seqNum = request.getSeqnum();
+
+        ActiveAlarm<?> activeAlarm = verifyAlarm(processor, alarmName, seqNum);
+
+        if (!request.hasState()) {
+            throw new BadRequestException("No state specified");
+        }
+
+        String state = request.getState();
+        String comment = request.hasComment() ? request.getComment() : null;
+
+        // TODO permissions on AlarmServer
+        String username = ctx.user.getName();
+
+        AlarmServer alarmServer;
+
+        try {
+            if (activeAlarm.getTriggerValue() instanceof ParameterValue) {
+                alarmServer = verifyParameterAlarmServer(processor);
+            } else if (activeAlarm.getTriggerValue() instanceof Db.Event) {
+                alarmServer = verifyEventAlarmServer(processor);
+            } else {
+                throw new InternalServerErrorException("Can't find alarm server for alarm instance");
+            }
+            switch (state.toLowerCase()) {
+            case "acknowledged":
+                alarmServer.acknowledge(activeAlarm, username, processor.getCurrentTime(), comment);
+                break;
+            case "shelved":
+                long shelveDuration = request.hasShelveDuration() ? request.getShelveDuration() : -1;
+                alarmServer.shelve(activeAlarm, username, comment, shelveDuration);
+                break;
+            case "unshelved":
+                alarmServer.unshelve(activeAlarm, username);
+                break;
+            case "cleared":
+                alarmServer.clear(activeAlarm, username, processor.getCurrentTime(), comment);
+                break;
+            default:
+                throw new BadRequestException("Unsupported state '" + state + "'");
+            }
+            observer.complete(Empty.getDefaultInstance());
+
+        } catch (IllegalStateException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void acknowledgeAlarm(Context ctx, AcknowledgeAlarmRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAlarms);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        String alarmName = request.getAlarm();
+        if (!alarmName.startsWith("/")) {
+            alarmName = "/" + alarmName;
+        }
+        int seqNum = request.getSeqnum();
+
+        ActiveAlarm<?> activeAlarm = verifyAlarm(processor, alarmName, seqNum);
+        String comment = request.hasComment() ? request.getComment() : null;
+        String username = ctx.user.getName();
+        try {
+            AlarmServer alarmServer;
+            if (activeAlarm.getTriggerValue() instanceof ParameterValue) {
+                alarmServer = verifyParameterAlarmServer(processor);
+            } else if (activeAlarm.getTriggerValue() instanceof Db.Event) {
+                alarmServer = verifyEventAlarmServer(processor);
+            } else {
+                throw new InternalServerErrorException("Can't find alarm server for alarm instance");
+            }
+
+            alarmServer.acknowledge(activeAlarm, username, processor.getCurrentTime(), comment);
+            logAlarmAction(ctx, request, processor, activeAlarm, "acknowledged");
+            observer.complete(Empty.getDefaultInstance());
+        } catch (IllegalStateException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void shelveAlarm(Context ctx, ShelveAlarmRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAlarms);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        String alarmName = request.getAlarm();
+        if (!alarmName.startsWith("/")) {
+            alarmName = "/" + alarmName;
+        }
+        int seqNum = request.getSeqnum();
+
+        ActiveAlarm<?> activeAlarm = verifyAlarm(processor, alarmName, seqNum);
+        String comment = request.hasComment() ? request.getComment() : null;
+        String username = ctx.user.getName();
+        try {
+            AlarmServer alarmServer;
+            if (activeAlarm.getTriggerValue() instanceof ParameterValue) {
+                alarmServer = verifyParameterAlarmServer(processor);
+            } else if (activeAlarm.getTriggerValue() instanceof Db.Event) {
+                alarmServer = verifyEventAlarmServer(processor);
+            } else {
+                throw new InternalServerErrorException("Can't find alarm server for alarm instance");
+            }
+
+            long shelveDuration = request.hasShelveDuration() ? request.getShelveDuration() : -1;
+            alarmServer.shelve(activeAlarm, username, comment, shelveDuration);
+            logAlarmAction(ctx, request, processor, activeAlarm, "shelved");
+            observer.complete(Empty.getDefaultInstance());
+        } catch (IllegalStateException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void unshelveAlarm(Context ctx, UnshelveAlarmRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAlarms);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        String alarmName = request.getAlarm();
+        if (!alarmName.startsWith("/")) {
+            alarmName = "/" + alarmName;
+        }
+        int seqNum = request.getSeqnum();
+
+        ActiveAlarm<?> activeAlarm = verifyAlarm(processor, alarmName, seqNum);
+        String username = ctx.user.getName();
+        try {
+            AlarmServer alarmServer;
+            if (activeAlarm.getTriggerValue() instanceof ParameterValue) {
+                alarmServer = verifyParameterAlarmServer(processor);
+            } else if (activeAlarm.getTriggerValue() instanceof Db.Event) {
+                alarmServer = verifyEventAlarmServer(processor);
+            } else {
+                throw new InternalServerErrorException("Can't find alarm server for alarm instance");
+            }
+
+            alarmServer.unshelve(activeAlarm, username);
+            logAlarmAction(ctx, request, processor, activeAlarm, "unshelved");
+            observer.complete(Empty.getDefaultInstance());
+        } catch (IllegalStateException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    private void logAlarmAction(Context ctx, Message request, Processor processor, ActiveAlarm<?> alarm,
+            String action) {
+        if (alarm.getTriggerValue() instanceof ParameterValue) {
+            String parameter = ((ParameterValue) alarm.getTriggerValue()).getParameterQualifiedName();
+            auditLog.addRecord(ctx, request, String.format(
+                    "Alarm for parameter '%s' %s for processor '%s'",
+                    parameter, action, processor.getName()));
+        } else if (alarm.getTriggerValue() instanceof Db.Event) {
+            Db.Event event = (Db.Event) alarm.getTriggerValue();
+            String alarmName = event.getSource();
+            if (event.hasType()) {
+                alarmName += "/" + event.getType();
+            }
+            auditLog.addRecord(ctx, request, String.format(
+                    "Alarm for event '%s' %s for processor '%s'",
+                    alarmName, action, processor.getName()));
+        } else {
+            throw new IllegalStateException("Unexpected alarm type");
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void clearAlarm(Context ctx, ClearAlarmRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAlarms);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        String alarmName = request.getAlarm();
+        if (!alarmName.startsWith("/")) {
+            alarmName = "/" + alarmName;
+        }
+        int seqNum = request.getSeqnum();
+
+        ActiveAlarm<?> activeAlarm = verifyAlarm(processor, alarmName, seqNum);
+        String comment = request.hasComment() ? request.getComment() : null;
+        String username = ctx.user.getName();
+        try {
+            AlarmServer alarmServer;
+            if (activeAlarm.getTriggerValue() instanceof ParameterValue) {
+                alarmServer = verifyParameterAlarmServer(processor);
+            } else if (activeAlarm.getTriggerValue() instanceof Db.Event) {
+                alarmServer = verifyEventAlarmServer(processor);
+            } else {
+                throw new InternalServerErrorException("Can't find alarm server for alarm instance");
+            }
+
+            alarmServer.clear(activeAlarm, username, processor.getCurrentTime(), comment);
+            logAlarmAction(ctx, request, processor, activeAlarm, "cleared");
+            observer.complete(Empty.getDefaultInstance());
+        } catch (IllegalStateException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void subscribeAlarms(Context ctx, SubscribeAlarmsRequest request, Observer<AlarmData> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadAlarms);
+        boolean includePending = request.hasIncludePending() && request.getIncludePending();
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+
+        List<AbstractAlarmServer<?, ?>> alarmServers = new ArrayList<>();
+        if (processor.hasAlarmServer()) {
+            alarmServers.add(processor.getParameterProcessorManager().getAlarmServer());
+        }
+        if (processor.getEventAlarmServer() != null) {
+            alarmServers.add(processor.getEventAlarmServer());
+        }
+
+        AlarmMirrorService alarmMirrorService = getMirrorService(request.getInstance());
+        if (alarmMirrorService != null) {
+            alarmServers.add(alarmMirrorService.getParameterServer());
+            alarmServers.add(alarmMirrorService.getEventServer());
+        }
+        boolean sendDetail = true;
+
+        AlarmListener listener = new AlarmListener() {
+
+            @Override
+            public void notifyUpdate(org.yamcs.alarms.AlarmNotificationType notificationType, ActiveAlarm activeAlarm) {
+                if (includePending || !activeAlarm.isPending()) {
+                    AlarmNotificationType type = protoNotificationType.get(notificationType);
+                    AlarmData alarmData = toAlarmData(type, activeAlarm, false, sendDetail);
+                    observer.next(alarmData);
+                }
+            }
+
+            @Override
+            public void notifySeverityIncrease(ActiveAlarm activeAlarm) {
+                if (includePending || !activeAlarm.isPending()) {
+                    AlarmData alarmData = toAlarmData(AlarmNotificationType.SEVERITY_INCREASED, activeAlarm, false,
+                            sendDetail);
+                    observer.next(alarmData);
+                }
+            }
+
+            @Override
+            public void notifyValueUpdate(ActiveAlarm activeAlarm) {
+                if (includePending || !activeAlarm.isPending()) {
+                    AlarmData alarmData = toAlarmData(AlarmNotificationType.VALUE_UPDATED, activeAlarm, false,
+                            sendDetail);
+                    observer.next(alarmData);
+                }
+            }
+        };
+
+        observer.setCancelHandler(() -> {
+            alarmServers.forEach(alarmServer -> alarmServer.removeAlarmListener(listener));
+        });
+        for (AbstractAlarmServer<?, ?> alarmServer : alarmServers) {
+            for (ActiveAlarm<?> activeAlarm : alarmServer.getActiveAlarms().values()) {
+                AlarmData alarmData = toAlarmData(AlarmNotificationType.ACTIVE, activeAlarm, false, sendDetail);
+                observer.next(alarmData);
+            }
+            alarmServer.addAlarmListener(listener);
+        }
+    }
+
+    @Override
+    public void subscribeGlobalStatus(Context ctx, SubscribeGlobalStatusRequest request,
+            Observer<GlobalAlarmStatus> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadAlarms);
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+
+        List<AbstractAlarmServer<?, ?>> alarmServers = new ArrayList<>();
+        if (processor.hasAlarmServer()) {
+            alarmServers.add(processor.getParameterProcessorManager().getAlarmServer());
+        }
+        if (processor.getEventAlarmServer() != null) {
+            alarmServers.add(processor.getEventAlarmServer());
+        }
+
+        var alarmMirrorService = getMirrorService(request.getInstance());
+        if (alarmMirrorService != null) {
+            alarmServers.add(alarmMirrorService.getParameterServer());
+            alarmServers.add(alarmMirrorService.getEventServer());
+        }
+
+        AtomicReference<GlobalAlarmStatus> oldStatusRef = new AtomicReference<>();
+        ScheduledFuture<?> future = timer.scheduleAtFixedRate(() -> {
+            int unacknowledgedCount = 0;
+            boolean unacknowledgedActive = false;
+            AlarmSeverity unacknowledgedSeverity = null;
+            int acknowledgedCount = 0;
+            boolean acknowledgedActive = false;
+            AlarmSeverity acknowledgedSeverity = null;
+            int shelvedCount = 0;
+            boolean shelvedActive = false;
+            AlarmSeverity shelvedSeverity = null;
+
+            for (var alarmServer : alarmServers) {
+                for (var alarm : alarmServer.getActiveAlarms().values()) {
+                    if (alarm.isTriggered() || !alarm.isAcknowledged()) {
+                        var severity = getAlarmSeverity(alarm);
+                        if (alarm.isShelved()) {
+                            shelvedCount++;
+                            shelvedActive |= !alarm.isProcessOK();
+                            shelvedSeverity = getMostSevere(shelvedSeverity, severity);
+                        } else if (alarm.isAcknowledged()) {
+                            acknowledgedCount++;
+                            acknowledgedActive |= !alarm.isProcessOK();
+                            acknowledgedSeverity = getMostSevere(acknowledgedSeverity, severity);
+                        } else {
+                            unacknowledgedCount++;
+                            unacknowledgedActive |= !alarm.isProcessOK();
+                            unacknowledgedSeverity = getMostSevere(unacknowledgedSeverity, severity);
+                        }
+                    }
+                }
+            }
+
+            var statusb = GlobalAlarmStatus.newBuilder()
+                    .setUnacknowledgedCount(unacknowledgedCount)
+                    .setUnacknowledgedActive(unacknowledgedActive)
+                    .setAcknowledgedCount(acknowledgedCount)
+                    .setAcknowledgedActive(acknowledgedActive)
+                    .setShelvedCount(shelvedCount)
+                    .setShelvedActive(shelvedActive);
+            if (unacknowledgedSeverity != null) {
+                statusb.setUnacknowledgedSeverity(unacknowledgedSeverity);
+            }
+            if (acknowledgedSeverity != null) {
+                statusb.setAcknowledgedSeverity(acknowledgedSeverity);
+            }
+            if (shelvedSeverity != null) {
+                statusb.setShelvedSeverity(shelvedSeverity);
+            }
+
+            var status = statusb.build();
+
+            GlobalAlarmStatus oldStatus = oldStatusRef.get();
+            if (!status.equals(oldStatus)) {
+                observer.next(status);
+                oldStatusRef.set(status);
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    /**
+     * Finds the appropriate alarm server for the alarm.
+     * <p>
+     * FIXME why not one namespace and a single server?
+     */
+    public static ActiveAlarm<?> verifyAlarm(Processor processor, String alarmName, int id)
+            throws HttpException {
+        try {
+            if (processor.hasAlarmServer()) {
+                AlarmServer<Parameter, ParameterValue> parameterAlarmServer = processor.getParameterProcessorManager()
+                        .getAlarmServer();
+                Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+                Parameter parameter = mdb.getParameter(alarmName);
+                if (parameter != null) {
+                    ActiveAlarm<ParameterValue> activeAlarm = parameterAlarmServer.getActiveAlarm(parameter, id);
+                    if (activeAlarm != null) {
+                        return activeAlarm;
+                    }
+                }
+            }
+            EventAlarmServer eventAlarmServer = processor.getEventAlarmServer();
+            if (eventAlarmServer != null) {
+                try {
+                    EventId eventId = new EventId(alarmName);
+                    ActiveAlarm<Db.Event> activeAlarm = eventAlarmServer.getActiveAlarm(eventId, id);
+                    if (activeAlarm != null) {
+                        return activeAlarm;
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Ignore
+                }
+            }
+        } catch (AlarmSequenceException e) {
+            throw new NotFoundException("Subject is in state of alarm, but alarm id does not match");
+        }
+
+        throw new NotFoundException("No active alarm named '" + alarmName + "'");
+    }
+
+    static AlarmServer<Parameter, ParameterValue> verifyParameterAlarmServer(Processor processor)
+            throws BadRequestException {
+        if (!processor.hasAlarmServer()) {
+            String instance = processor.getInstance();
+            String processorName = processor.getName();
+            throw new BadRequestException(
+                    "Alarms are not enabled for processor '" + instance + "/" + processorName + "'");
+        } else {
+            return processor.getParameterProcessorManager().getAlarmServer();
+        }
+    }
+
+    static EventAlarmServer verifyEventAlarmServer(Processor processor) throws BadRequestException {
+        if (!processor.hasAlarmServer()) {
+            String instance = processor.getInstance();
+            String processorName = processor.getName();
+            throw new BadRequestException(
+                    "Alarms are not enabled for processor '" + instance + "/" + processorName + "'");
+        } else {
+            return processor.getEventAlarmServer();
+        }
+    }
+
+    private static final ParameterAlarmData toParameterAlarmData(ActiveAlarm<ParameterValue> activeAlarm) {
+        Parameter parameter = activeAlarm.getTriggerValue().getParameter();
+        NamedObjectId parameterId = NamedObjectId.newBuilder()
+                .setName(parameter.getQualifiedName())
+                .build();
+        ParameterAlarmData.Builder alarmb = ParameterAlarmData.newBuilder();
+        alarmb.setTriggerValue(activeAlarm.getTriggerValue().toGpb(parameterId));
+        alarmb.setMostSevereValue(activeAlarm.getMostSevereValue().toGpb(parameterId));
+        alarmb.setCurrentValue(activeAlarm.getCurrentValue().toGpb(parameterId));
+
+        ParameterInfo pinfo = XtceToGpbAssembler.toParameterInfo(parameter, DetailLevel.SUMMARY);
+        alarmb.setParameter(pinfo);
+
+        return alarmb.build();
+    }
+
+    private static final EventAlarmData toEventAlarmData(ActiveAlarm<Db.Event> activeAlarm) {
+        EventAlarmData.Builder alarmb = EventAlarmData.newBuilder();
+        alarmb.setTriggerEvent(EventsApi.fromDbEvent(activeAlarm.getTriggerValue()));
+        alarmb.setMostSevereEvent(EventsApi.fromDbEvent(activeAlarm.getMostSevereValue()));
+        alarmb.setCurrentEvent(EventsApi.fromDbEvent(activeAlarm.getCurrentValue()));
+
+        return alarmb.build();
+    }
+
+    public static final <T> AlarmData toAlarmData(AlarmNotificationType notificationType,
+            ActiveAlarm<T> activeAlarm, boolean readonly, boolean detail) {
+        AlarmData.Builder alarmb = AlarmData.newBuilder();
+
+        alarmb.setNotificationType(notificationType);
+        alarmb.setSeqNum(activeAlarm.getId());
+        alarmb.setReadonly(readonly);
+
+        alarmb.setAcknowledged(activeAlarm.isAcknowledged());
+        alarmb.setProcessOK(activeAlarm.isProcessOK());
+        alarmb.setTriggered(activeAlarm.isTriggered());
+
+        alarmb.setViolations(activeAlarm.getViolations());
+        alarmb.setCount(activeAlarm.getValueCount());
+        alarmb.setSeverity(getAlarmSeverity(activeAlarm));
+        if (activeAlarm.isPending()) {
+            alarmb.setPending(true);
+        }
+
+        if (activeAlarm.getMostSevereValue() instanceof ParameterValue) {
+            alarmb.setType(AlarmType.PARAMETER);
+            ParameterValue pv = (ParameterValue) activeAlarm.getMostSevereValue();
+            alarmb.setId(getAlarmId(pv));
+            ParameterValue triggerPv = (ParameterValue) activeAlarm.getTriggerValue();
+            Timestamp triggerTime = TimeEncoding.toProtobufTimestamp(triggerPv.getGenerationTime());
+            alarmb.setTriggerTime(triggerTime);
+            if (detail) {
+                @SuppressWarnings("unchecked")
+                ParameterAlarmData parameterDetail = toParameterAlarmData(
+                        (ActiveAlarm<ParameterValue>) activeAlarm);
+                alarmb.setParameterDetail(parameterDetail);
+            }
+        } else if (activeAlarm.getMostSevereValue() instanceof Db.Event) {
+            alarmb.setType(AlarmType.EVENT);
+            Db.Event ev = (Db.Event) activeAlarm.getMostSevereValue();
+            alarmb.setId(getAlarmId(ev));
+            Timestamp triggerTime = TimeEncoding.toProtobufTimestamp(ev.getGenerationTime());
+            alarmb.setTriggerTime(triggerTime);
+            if (detail) {
+                @SuppressWarnings("unchecked")
+                EventAlarmData eventDetail = toEventAlarmData(
+                        (ActiveAlarm<Db.Event>) activeAlarm);
+                alarmb.setEventDetail(eventDetail);
+            }
+        }
+
+        if (activeAlarm.isNormal()) {
+            long ct = activeAlarm.getClearTime();
+            if (ct != TimeEncoding.INVALID_INSTANT) {
+                ClearInfo.Builder cib = ClearInfo.newBuilder();
+                cib.setClearTime(TimeEncoding.toProtobufTimestamp(ct));
+                if (activeAlarm.getUsernameThatCleared() != null) {
+                    cib.setClearedBy(activeAlarm.getUsernameThatCleared());
+                }
+                if (activeAlarm.getClearMessage() != null) {
+                    cib.setClearMessage(activeAlarm.getClearMessage());
+                }
+                alarmb.setClearInfo(cib.build());
+            }
+        } else {
+            if (activeAlarm.isAcknowledged()) {
+                AcknowledgeInfo.Builder acknowledgeb = AcknowledgeInfo.newBuilder();
+                String username = activeAlarm.getUsernameThatAcknowledged();
+                if (activeAlarm.isAutoAcknowledge()) {
+                    username = "autoAcknowledged";
+                }
+
+                acknowledgeb.setAcknowledgedBy(username);
+                if (activeAlarm.getAckMessage() != null) {
+                    acknowledgeb.setAcknowledgeMessage(activeAlarm.getAckMessage());
+                }
+                acknowledgeb.setAcknowledgeTime(TimeEncoding.toProtobufTimestamp(activeAlarm.getAcknowledgeTime()));
+                alarmb.setAcknowledgeInfo(acknowledgeb.build());
+            }
+
+            if (activeAlarm.isShelved()) {
+                ShelveInfo.Builder sib = ShelveInfo.newBuilder();
+                long exp = activeAlarm.getShelveExpiration();
+                if (exp != -1) {
+                    sib.setShelveExpiration(TimeEncoding.toProtobufTimestamp(exp));
+                }
+                sib.setShelvedBy(activeAlarm.getShelveUsername());
+                sib.setShelveTime(TimeEncoding.toProtobufTimestamp(activeAlarm.getShelveTime()));
+                if (activeAlarm.getShelveMessage() != null) {
+                    sib.setShelveMessage(activeAlarm.getShelveMessage());
+                }
+                alarmb.setShelveInfo(sib.build());
+            }
+        }
+        return alarmb.build();
+
+    }
+
+    private static AlarmSeverity getAlarmSeverity(ActiveAlarm<?> activeAlarm) {
+        if (activeAlarm.getMostSevereValue() instanceof ParameterValue) {
+            ParameterValue pv = (ParameterValue) activeAlarm.getMostSevereValue();
+            return getParameterAlarmSeverity(pv.getMonitoringResult());
+        } else if (activeAlarm.getMostSevereValue() instanceof Db.Event) {
+            Db.Event ev = (Db.Event) activeAlarm.getMostSevereValue();
+            return getEventAlarmSeverity(ev.getSeverity());
+        } else {
+            throw new IllegalArgumentException("Unexpected alarm type");
+        }
+    }
+
+    private static AlarmSeverity getMostSevere(AlarmSeverity a, AlarmSeverity b) {
+        if (a == null) {
+            return b;
+        } else if (b == null) {
+            return a;
+        }
+
+        return (a.getNumber() > b.getNumber()) ? a : b;
+    }
+
+    public static AlarmSeverity getParameterAlarmSeverity(MonitoringResult mr) {
+        return PARAM_ALARM_SEVERITY[mr.getNumber()];
+    }
+
+    public static AlarmSeverity getEventAlarmSeverity(EventSeverity evSeverity) {
+        return EVENT_ALARM_SEVERITY[evSeverity.getNumber()];
+    }
+
+    static NamedObjectId getAlarmId(ParameterValue pv) {
+        return NamedObjectId.newBuilder().setNamespace(pv.getParameter().getSubsystemName())
+                .setName(pv.getParameter().getName()).build();
+    }
+
+    public static NamedObjectId getAlarmId(Db.Event ev) {
+        String source = ev.getSource();
+        if (source.startsWith("/")) {
+            return NamedObjectId.newBuilder()
+                    .setNamespace(source)
+                    .setName(ev.getType())
+                    .build();
+        } else {
+            return NamedObjectId.newBuilder()
+                    .setNamespace(EventId.DEFAULT_NAMESPACE + source)
+                    .setName(ev.getType())
+                    .build();
+        }
+    }
+
+    private static ParameterAlarmData tupleToParameterAlarmData(Tuple tuple) {
+        ParameterAlarmData.Builder alarmb = ParameterAlarmData.newBuilder();
+
+        ParameterValue pval = (ParameterValue) tuple.getColumn(ParameterAlarmStreamer.CNAME_TRIGGER);
+        String paraFqn = (String) tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+
+        NamedObjectId id = NamedObjectId.newBuilder().setName(paraFqn).build();
+        alarmb.setTriggerValue(pval.toGpb(id));
+
+        if (tuple.hasColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED)) {
+            pval = (ParameterValue) tuple.getColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED);
+            alarmb.setMostSevereValue(pval.toGpb(id));
+        }
+
+        return alarmb.build();
+    }
+
+    private static EventAlarmData tupleToEventAlarmData(Tuple tuple) {
+        EventAlarmData.Builder eventb = EventAlarmData.newBuilder();
+
+        Db.Event event = (Db.Event) tuple.getColumn(EventAlarmStreamer.CNAME_TRIGGER);
+        eventb.setTriggerEvent(EventsApi.fromDbEvent(event));
+
+        if (tuple.hasColumn(EventAlarmStreamer.CNAME_SEVERITY_INCREASED)) {
+            event = (Db.Event) tuple.getColumn(EventAlarmStreamer.CNAME_SEVERITY_INCREASED);
+            eventb.setMostSevereEvent(EventsApi.fromDbEvent(event));
+        }
+
+        return eventb.build();
+    }
+
+    private static AlarmData tupleToAlarmData(Tuple tuple) {
+        AlarmData.Builder alarmb = AlarmData.newBuilder();
+        alarmb.setSeqNum((int) tuple.getColumn(AlarmStreamer.CNAME_SEQ_NUM));
+        setAckInfo(alarmb, tuple);
+        setClearInfo(alarmb, tuple);
+        setShelveInfo(alarmb, tuple);
+
+        if (tuple.hasColumn(AlarmStreamer.CNAME_UPDATE_TIME)) {
+            long updateTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_UPDATE_TIME);
+            alarmb.setUpdateTime(TimeEncoding.toProtobufTimestamp(updateTime));
+        }
+        if (tuple.hasColumn(AlarmStreamer.CNAME_VALUE_COUNT)) {
+            int valueCount = tuple.getIntColumn(AlarmStreamer.CNAME_VALUE_COUNT);
+            alarmb.setCount(valueCount);
+        }
+        if (tuple.hasColumn(AlarmStreamer.CNAME_VIOLATION_COUNT)) {
+            int violationCount = tuple.getIntColumn(AlarmStreamer.CNAME_VIOLATION_COUNT);
+            alarmb.setViolations(violationCount);
+        }
+
+        if (tuple.hasColumn(StandardTupleDefinitions.PARAMETER_COLUMN)) {
+            String paraFqn = (String) tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+
+            alarmb.setType(AlarmType.PARAMETER);
+            ParameterValue pval = (ParameterValue) tuple.getColumn(ParameterAlarmStreamer.CNAME_TRIGGER);
+            alarmb.setId(NamedObjectId.newBuilder().setName(paraFqn).build());
+            alarmb.setTriggerTime(TimeEncoding.toProtobufTimestamp(pval.getGenerationTime()));
+
+            if (tuple.hasColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED)) {
+                pval = (ParameterValue) tuple.getColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED);
+            }
+            alarmb.setSeverity(AlarmsApi.getParameterAlarmSeverity(pval.getMonitoringResult()));
+
+            ParameterAlarmData parameterAlarmData = tupleToParameterAlarmData(tuple);
+            alarmb.setParameterDetail(parameterAlarmData);
+        } else {
+            alarmb.setType(AlarmType.EVENT);
+            Db.Event ev = (Db.Event) tuple.getColumn(EventAlarmStreamer.CNAME_TRIGGER);
+            alarmb.setTriggerTime(TimeEncoding.toProtobufTimestamp(ev.getGenerationTime()));
+            alarmb.setId(AlarmsApi.getAlarmId(ev));
+
+            if (tuple.hasColumn(EventAlarmStreamer.CNAME_SEVERITY_INCREASED)) {
+                ev = (Db.Event) tuple.getColumn(EventAlarmStreamer.CNAME_SEVERITY_INCREASED);
+            }
+            alarmb.setSeverity(AlarmsApi.getEventAlarmSeverity(ev.getSeverity()));
+
+            EventAlarmData eventAlarmData = tupleToEventAlarmData(tuple);
+            alarmb.setEventDetail(eventAlarmData);
+        }
+
+        return alarmb.build();
+    }
+
+    private static void setAckInfo(AlarmData.Builder alarmb, Tuple tuple) {
+        if (tuple.hasColumn("acknowledgedBy")) {
+            AcknowledgeInfo.Builder ackb = AcknowledgeInfo.newBuilder();
+            ackb.setAcknowledgedBy((String) tuple.getColumn("acknowledgedBy"));
+            if (tuple.hasColumn("acknowledgeMessage")) {
+                ackb.setAcknowledgeMessage((String) tuple.getColumn("acknowledgeMessage"));
+            }
+            long acknowledgeTime = (Long) tuple.getColumn("acknowledgeTime");
+            ackb.setAcknowledgeTime(TimeEncoding.toProtobufTimestamp(acknowledgeTime));
+            alarmb.setAcknowledgeInfo(ackb);
+        }
+    }
+
+    private static void setClearInfo(AlarmData.Builder alarmb, Tuple tuple) {
+        if (!tuple.hasColumn(CNAME_CLEARED_TIME)) {
+            return;
+        }
+        ClearInfo.Builder clib = ClearInfo.newBuilder();
+        clib.setClearTime(TimeEncoding.toProtobufTimestamp((Long) tuple.getColumn(CNAME_CLEARED_TIME)));
+
+        if (tuple.hasColumn(CNAME_CLEARED_BY)) {
+            clib.setClearedBy((String) tuple.getColumn(CNAME_CLEARED_BY));
+        }
+
+        if (tuple.hasColumn(CNAME_CLEAR_MSG)) {
+            clib.setClearMessage((String) tuple.getColumn(CNAME_CLEAR_MSG));
+        }
+        alarmb.setClearInfo(clib.build());
+    }
+
+    private static void setShelveInfo(AlarmData.Builder alarmb, Tuple tuple) {
+        if (!tuple.hasColumn(CNAME_SHELVED_TIME)) {
+            return;
+        }
+        ShelveInfo.Builder clib = ShelveInfo.newBuilder();
+        clib.setShelveTime(TimeEncoding.toProtobufTimestamp((Long) tuple.getColumn(CNAME_SHELVED_TIME)));
+
+        if (tuple.hasColumn(CNAME_SHELVED_BY)) {
+            clib.setShelvedBy((String) tuple.getColumn(CNAME_SHELVED_BY));
+        }
+
+        if (tuple.hasColumn(CNAME_SHELVED_MSG)) {
+            clib.setShelveMessage((String) tuple.getColumn(CNAME_SHELVED_MSG));
+        }
+
+        alarmb.setShelveInfo(clib.build());
+    }
+
+    /**
+     * Stateless continuation token for paged requests on the alarms table
+     */
+    private static class AlarmsPageToken {
+
+        long triggerTime;
+        int seqNum;
+
+        AlarmsPageToken(long triggerTime, int seqNum) {
+            this.triggerTime = triggerTime;
+            this.seqNum = seqNum;
+        }
+
+        static AlarmsPageToken decode(String encoded) {
+            String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+            return new Gson().fromJson(decoded, AlarmsPageToken.class);
+        }
+
+        String encodeAsString() {
+            String json = new Gson().toJson(this);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+        }
+    }
+
+    public static AlarmMirrorService getMirrorService(String instance) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(instance);
+        List<AlarmMirrorService> l = ysi.getServices(AlarmMirrorService.class);
+        if (l.size() == 0) {
+            return null;
+        }
+        return l.get(0);
+    }
+
+}
+```
+
+### `ArchivedParameterFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ArchivedParameterFilter.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.List;
+
+import org.yamcs.protobuf.ArchivedParameterInfo;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.utils.parser.Filter;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.UnknownFieldException;
+
+public class ArchivedParameterFilter extends Filter<ArchivedParameterInfo> {
+
+    private static final String FIELD_PID = "pid";
+    private static final String FIELD_PARAMETER = "parameter";
+    private static final String FIELD_RAW_TYPE = "rawType";
+    private static final String FIELD_ENG_TYPE = "engType";
+    private static final String FIELD_GID = "gid";
+
+    private String lcParameter;
+
+    public ArchivedParameterFilter(String query) throws ParseException, UnknownFieldException {
+        super(query);
+        addNumberField(FIELD_PID, this::getPid);
+        addStringField(FIELD_PARAMETER, this::getParameter);
+        addEnumField(FIELD_RAW_TYPE, Value.Type.class, this::getRawType);
+        addEnumField(FIELD_ENG_TYPE, Value.Type.class, this::getEngType);
+        addNumberCollectionField(FIELD_GID, this::getGids);
+        parse();
+    }
+
+    @Override
+    public void beforeItem(ArchivedParameterInfo info) {
+        // Preload lowercase variants to boost non-field text search
+        // with multiple terms
+
+        // Reset previous state
+        lcParameter = null;
+
+        if (includesTextSearch()) {
+            lcParameter = info.getParameter().toLowerCase();
+        }
+    }
+
+    private Number getPid(ArchivedParameterInfo info) {
+        return info.getPid();
+    }
+
+    private String getParameter(ArchivedParameterInfo info) {
+        return info.getParameter();
+    }
+
+    private Value.Type getRawType(ArchivedParameterInfo info) {
+        return info.hasRawType() ? info.getRawType() : null;
+    }
+
+    private Value.Type getEngType(ArchivedParameterInfo info) {
+        return info.hasEngType() ? info.getEngType() : null;
+    }
+
+    private List<? extends Number> getGids(ArchivedParameterInfo info) {
+        return info.getGidsList();
+    }
+
+    @Override
+    protected boolean matchesLiteral(ArchivedParameterInfo info, String lowercaseLiteral) {
+        return (lcParameter != null && lcParameter.contains(lowercaseLiteral));
+    }
+}
+```
+
+### `ArchivedParameterFilterFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ArchivedParameterFilterFactory.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.api.FilterSyntaxException;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.utils.parser.IncorrectTypeException;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.TokenMgrError;
+import org.yamcs.utils.parser.UnknownFieldException;
+
+public class ArchivedParameterFilterFactory {
+
+    public static ArchivedParameterFilter create(String query) {
+        try {
+            return new ArchivedParameterFilter(query);
+        } catch (UnknownFieldException | IncorrectTypeException e) {
+            throw mapCustomParseException(e);
+        } catch (ParseException e) {
+            throw mapParseException(e);
+        } catch (TokenMgrError e) {
+            throw mapTokenMgrError(e);
+        }
+    }
+
+    private static BadRequestException mapCustomParseException(ParseException e) {
+        var exc = new BadRequestException(e.getMessage());
+        if (e.currentToken != null) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.currentToken.beginLine)
+                    .setBeginColumn(e.currentToken.beginColumn)
+                    .setEndLine(e.currentToken.endLine)
+                    .setEndColumn(e.currentToken.endColumn)
+                    .build());
+        }
+        throw exc;
+    }
+
+    private static BadRequestException mapParseException(ParseException e) {
+        var exc = new BadRequestException("Syntax error in filter");
+        if (e.currentToken != null) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.currentToken.beginLine)
+                    .setBeginColumn(e.currentToken.beginColumn)
+                    .setEndLine(e.currentToken.endLine)
+                    .setEndColumn(e.currentToken.endColumn)
+                    .build());
+        }
+        throw exc;
+    }
+
+    private static BadRequestException mapTokenMgrError(TokenMgrError e) {
+        var exc = new BadRequestException("Syntax error in filter");
+        if (e.errorLine >= 0 && e.errorColumn >= 0) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.errorLine)
+                    .setBeginColumn(e.errorColumn)
+                    .setEndLine(e.errorLine)
+                    .setEndColumn(e.errorColumn)
+                    .build());
+        }
+        throw exc;
+    }
+}
+```
+
+### `AuditApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/AuditApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.http.ForbiddenException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.http.audit.AuditRecordFilter;
+import org.yamcs.http.audit.AuditRecordListener;
+import org.yamcs.protobuf.audit.AbstractAuditApi;
+import org.yamcs.protobuf.audit.AuditRecord;
+import org.yamcs.protobuf.audit.ListAuditRecordsRequest;
+import org.yamcs.protobuf.audit.ListAuditRecordsResponse;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+
+public class AuditApi extends AbstractAuditApi<Context> {
+
+    private AuditLog auditLog;
+
+    public AuditApi(AuditLog auditLog) {
+        this.auditLog = auditLog;
+    }
+
+    @Override
+    public void listAuditRecords(Context ctx, ListAuditRecordsRequest request,
+            Observer<ListAuditRecordsResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance(), true);
+
+        String next = request.hasNext() ? request.getNext() : null;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        TimeInterval interval = new TimeInterval();
+        if (request.hasStart()) {
+            interval.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            interval.setEnd(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+        AuditRecordFilter filter = new AuditRecordFilter(interval);
+        if (request.hasQ()) {
+            filter.setSearch(request.getQ());
+        }
+        if (request.hasService()) {
+            filter.addService(request.getService());
+        }
+
+        if (YamcsServer.GLOBAL_INSTANCE.equals(instance)) {
+            listGlobalActivity(ctx, limit, next, filter, observer);
+        } else {
+            listInstanceActivity(ctx, instance, limit, next, filter, observer);
+        }
+    }
+
+    private void listGlobalActivity(Context ctx, int limit, String next, AuditRecordFilter filter,
+            Observer<ListAuditRecordsResponse> observer) {
+
+        if (filter.getServices().isEmpty()) {
+            if (!ctx.user.isSuperuser()) {
+                // If unspecified, try to return results for any otherwise authorised content
+                var allowedServices = auditLog.getServices(ctx.user);
+                if (allowedServices.isEmpty()) {
+                    // Quick response, otherwise auditLog would send unfiltered data.
+                    observer.complete(ListAuditRecordsResponse.getDefaultInstance());
+                    return;
+                } else {
+                    filter.setServices(allowedServices);
+                }
+            }
+        } else {
+            for (String service : filter.getServices()) {
+                if (!ctx.user.isSuperuser() && !auditLog.validateAccess(service, ctx.user)) {
+                    throw new ForbiddenException("Insufficient privileges");
+                }
+            }
+        }
+
+        List<AuditRecord> records = new ArrayList<>();
+        auditLog.listRecords(YamcsServer.GLOBAL_INSTANCE, limit, next, filter, new AuditRecordListener() {
+            @Override
+            public void next(org.yamcs.http.audit.AuditRecord record) {
+                records.add(record.toProtobuf());
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete(String token) {
+                ListAuditRecordsResponse response = ListAuditRecordsResponse.newBuilder()
+                        .addAllRecords(records)
+                        .build();
+                observer.complete(response);
+            }
+        });
+    }
+
+    private void listInstanceActivity(Context ctx, String instance, int limit, String next, AuditRecordFilter filter,
+            Observer<ListAuditRecordsResponse> observer) {
+
+        if (filter.getServices().isEmpty()) {
+            throw new ForbiddenException("Can only query specific instance activity");
+        }
+
+        for (String service : filter.getServices()) {
+            if (!auditLog.validateAccess(service, ctx.user)) {
+                throw new ForbiddenException("Insufficient privileges");
+            }
+        }
+
+        List<AuditRecord> records = new ArrayList<>();
+        auditLog.listRecords(instance, limit, next, filter, new AuditRecordListener() {
+            @Override
+            public void next(org.yamcs.http.audit.AuditRecord record) {
+                records.add(record.toProtobuf());
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete(String token) {
+                ListAuditRecordsResponse response = ListAuditRecordsResponse.newBuilder()
+                        .addAllRecords(records)
+                        .build();
+                observer.complete(response);
+            }
+        });
+    }
+}
+```
+
+### `BucketsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/BucketsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.buckets.BucketProperties;
+import org.yamcs.buckets.FileSystemBucket;
+import org.yamcs.buckets.ObjectProperties;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.ForbiddenException;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.protobuf.AbstractBucketsApi;
+import org.yamcs.protobuf.BucketInfo;
+import org.yamcs.protobuf.BucketLocation;
+import org.yamcs.protobuf.CreateBucketRequest;
+import org.yamcs.protobuf.DeleteBucketRequest;
+import org.yamcs.protobuf.DeleteObjectRequest;
+import org.yamcs.protobuf.GetBucketRequest;
+import org.yamcs.protobuf.GetObjectInfoRequest;
+import org.yamcs.protobuf.GetObjectRequest;
+import org.yamcs.protobuf.ListBucketsRequest;
+import org.yamcs.protobuf.ListBucketsResponse;
+import org.yamcs.protobuf.ListObjectsRequest;
+import org.yamcs.protobuf.ListObjectsResponse;
+import org.yamcs.protobuf.ObjectInfo;
+import org.yamcs.protobuf.UploadObjectRequest;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.security.User;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+
+public class BucketsApi extends AbstractBucketsApi<Context> {
+
+    static final Pattern BUCKET_NAME_REGEXP = Pattern.compile("\\w[\\w\\-]+");
+    static final Pattern OBJ_NAME_REGEXP = Pattern.compile("[ \\w\\s\\-\\./]+");
+
+    @Override
+    public void listBuckets(Context ctx, ListBucketsRequest request, Observer<ListBucketsResponse> observer) {
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        try {
+            List<Bucket> buckets = bucketManager.listBuckets().stream()
+                    .filter(bucket -> mayReadBucket(bucket.getName(), ctx.user))
+                    .collect(Collectors.toList());
+
+            var futures = new ArrayList<CompletableFuture<BucketInfo>>();
+            for (Bucket bucket : buckets) {
+                futures.add(bucket.getPropertiesAsync().thenApply(props -> {
+                    return toBucketInfo(bucket, props);
+                }));
+            }
+
+            CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).whenComplete((res, err) -> {
+                if (err == null) {
+                    var responseb = ListBucketsResponse.newBuilder();
+                    for (var future : futures) {
+                        responseb.addBuckets(future.join());
+                    }
+                    observer.complete(responseb.build());
+                } else {
+                    observer.completeExceptionally(err.getCause());
+                }
+            });
+        } catch (IOException e) {
+            observer.completeExceptionally(e);
+        }
+    }
+
+    @Override
+    public void getBucket(Context ctx, GetBucketRequest request, Observer<BucketInfo> observer) {
+        String bucketName = request.getBucketName();
+
+        checkReadBucketPrivilege(bucketName, ctx.user);
+        Bucket b = verifyAndGetBucket(bucketName, ctx.user);
+        b.getPropertiesAsync().whenComplete((props, err) -> {
+            if (err == null) {
+                observer.complete(toBucketInfo(b, props));
+            } else {
+                observer.completeExceptionally(err.getCause());
+            }
+        });
+    }
+
+    @Override
+    public void createBucket(Context ctx, CreateBucketRequest request, Observer<BucketInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ManageAnyBucket);
+
+        verifyBucketName(request.getName());
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        try {
+            if (bucketManager.getBucket(request.getName()) != null) {
+                throw new BadRequestException("A bucket with the name '" + request.getName() + "' already exist");
+            }
+            var b = bucketManager.createBucket(request.getName());
+            b.getPropertiesAsync().whenComplete((props, err) -> {
+                if (err == null) {
+                    observer.complete(toBucketInfo(b, props));
+                } else {
+                    observer.completeExceptionally(err.getCause());
+                }
+            });
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error when creating bucket: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteBucket(Context ctx, DeleteBucketRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ManageAnyBucket);
+
+        String bucketName = request.getBucketName();
+
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        Bucket b = verifyAndGetBucket(bucketName, ctx.user);
+        try {
+            bucketManager.deleteBucket(b.getName());
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error when deleting bucket: " + e.getMessage(), e);
+        }
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void getObjectInfo(Context ctx, GetObjectInfoRequest request, Observer<ObjectInfo> observer) {
+        String bucketName = request.getBucketName();
+        checkReadBucketPrivilege(bucketName, ctx.user);
+
+        String objName = request.getObjectName();
+        Bucket bucket = verifyAndGetBucket(bucketName, ctx.user);
+        bucket.findObjectAsync(objName).whenComplete((props, err) -> {
+            if (err == null) {
+                if (props == null) {
+                    observer.completeExceptionally(new NotFoundException());
+                } else {
+                    observer.complete(toObjectInfo(props));
+                }
+            } else {
+                observer.completeExceptionally(new InternalServerErrorException(
+                        "Error when retrieving object: " + err.getMessage(), err));
+            }
+        });
+    }
+
+    @Override
+    public void getObject(Context ctx, GetObjectRequest request, Observer<HttpBody> observer) {
+        String bucketName = request.getBucketName();
+        checkReadBucketPrivilege(bucketName, ctx.user);
+
+        String objName = request.getObjectName();
+        Bucket bucket = verifyAndGetBucket(bucketName, ctx.user);
+
+        bucket.findObjectAsync(objName).whenComplete((props, err) -> {
+            if (err == null) {
+                if (props == null) {
+                    observer.completeExceptionally(new NotFoundException());
+                } else {
+                    bucket.getObjectAsync(objName).whenComplete((objData, err2) -> {
+                        if (err2 == null) {
+                            String contentType = props.contentType() != null
+                                    ? props.contentType()
+                                    : "application/octet-stream";
+
+                            HttpBody body = HttpBody.newBuilder()
+                                    .setContentType(contentType)
+                                    .setData(ByteString.copyFrom(objData))
+                                    .build();
+
+                            observer.complete(body);
+                        } else {
+                            observer.completeExceptionally(err2);
+                        }
+                    });
+                }
+            } else {
+                observer.completeExceptionally(new InternalServerErrorException(
+                        "Error when retrieving object: " + err.getMessage(), err));
+            }
+        });
+    }
+
+    @Override
+    public void uploadObject(Context ctx, UploadObjectRequest request, Observer<Empty> observer) {
+        String bucketName = request.getBucketName();
+
+        checkManageBucketPrivilege(bucketName, ctx.user);
+        Bucket bucket = verifyAndGetBucket(bucketName, ctx.user);
+        HttpBody body = request.getData();
+
+        String objectName;
+        if (request.hasObjectName()) {
+            objectName = request.getObjectName();
+        } else if (body.hasFilename()) {
+            objectName = body.getFilename();
+        } else {
+            throw new BadRequestException("Unknown target object name");
+        }
+        verifyObjectName(objectName);
+
+        String contentType = body.hasContentType() ? body.getContentType() : null;
+        byte[] objectData = body.getData().toByteArray();
+
+        bucket.putObjectAsync(objectName, contentType, body.getMetadataMap(), objectData).whenComplete((res, err) -> {
+            if (err == null) {
+                observer.complete(Empty.getDefaultInstance());
+            } else {
+                observer.completeExceptionally(new InternalServerErrorException(
+                        "Error while uploading object to bucket: " + err.getMessage(), err));
+            }
+        });
+    }
+
+    @Override
+    public void listObjects(Context ctx, ListObjectsRequest request, Observer<ListObjectsResponse> observer) {
+        String bucketName = request.getBucketName();
+
+        checkReadBucketPrivilege(bucketName, ctx.user);
+        Bucket b = verifyAndGetBucket(bucketName, ctx.user);
+
+        String delimiter = request.hasDelimiter() ? request.getDelimiter() : null;
+        String prefix = request.hasPrefix() ? request.getPrefix() : null;
+
+        CompletableFuture<List<ObjectProperties>> objectsFuture;
+        List<String> prefixes = new ArrayList<>();
+        if (delimiter == null) {
+            objectsFuture = b.listObjectsAsync(prefix);
+        } else {
+            int prefixLength = prefix != null ? prefix.length() : 0;
+            objectsFuture = b.listObjectsAsync(prefix, props -> {
+                String name = props.name();
+                int idx = name.indexOf(delimiter, prefixLength);
+                if (idx != -1) {
+                    String pref = name.substring(0, idx + 1);
+                    if (prefixes.isEmpty() || !prefixes.get(prefixes.size() - 1).equals(pref)) {
+                        prefixes.add(pref);
+                    }
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        }
+
+        objectsFuture.whenComplete((objects, err) -> {
+            if (err == null) {
+                Collections.sort(prefixes);
+                var responseb = ListObjectsResponse.newBuilder()
+                        .addAllPrefixes(prefixes);
+                for (var props : objects) {
+                    responseb.addObjects(toObjectInfo(props));
+                }
+                observer.complete(responseb.build());
+            } else {
+                observer.completeExceptionally(err);
+            }
+        });
+    }
+
+    @Override
+    public void deleteObject(Context ctx, DeleteObjectRequest request, Observer<Empty> observer) {
+        String bucketName = request.getBucketName();
+        checkManageBucketPrivilege(bucketName, ctx.user);
+
+        String objName = request.getObjectName();
+        Bucket bucket = verifyAndGetBucket(bucketName, ctx.user);
+
+        bucket.findObjectAsync(objName).whenComplete((props, err) -> {
+            if (err == null) {
+                if (props == null) {
+                    observer.completeExceptionally(new NotFoundException());
+                } else {
+                    bucket.deleteObjectAsync(objName).whenComplete((res, err2) -> {
+                        if (err2 == null) {
+                            observer.complete(Empty.getDefaultInstance());
+                        } else {
+                            observer.completeExceptionally(new InternalServerErrorException(err2));
+                        }
+                    });
+                }
+            } else {
+                observer.completeExceptionally(err);
+            }
+        });
+    }
+
+    private static BucketInfo toBucketInfo(Bucket bucket, BucketProperties props) {
+        BucketInfo.Builder bucketb = BucketInfo.newBuilder()
+                .setName(bucket.getName())
+                .setLocation(BucketLocation.newBuilder()
+                        .setName(bucket.getLocation().name())
+                        .setDescription(bucket.getLocation().description())
+                        .build())
+                .setMaxSize(props.maxSize())
+                .setMaxObjects(props.maxNumObjects())
+                .setCreated(TimeEncoding.toProtobufTimestamp(props.created()))
+                .setNumObjects(props.numObjects())
+                .setSize(props.size());
+        if (bucket instanceof FileSystemBucket) {
+            FileSystemBucket fsBucket = (FileSystemBucket) bucket;
+            bucketb.setDirectory(fsBucket.getBucketRoot().toAbsolutePath().normalize().toString());
+        }
+        return bucketb.build();
+    }
+
+    private static ObjectInfo toObjectInfo(ObjectProperties props) {
+        var infob = ObjectInfo.newBuilder()
+                .setCreated(TimeEncoding.toProtobufTimestamp(props.created()))
+                .setName(props.name())
+                .setSize(props.size())
+                .putAllMetadata(props.metadata());
+
+        var contentType = props.contentType();
+        if (contentType != null) {
+            infob.setContentType(contentType);
+        }
+
+        return infob.build();
+    }
+
+    public static void checkReadBucketPrivilege(String bucketName, User user) throws HttpException {
+        if (!mayReadBucket(bucketName, user)) {
+            throw new ForbiddenException("Insufficient privileges to read bucket '" + bucketName + "'");
+        }
+    }
+
+    private static boolean mayReadBucket(String bucketName, User user) {
+        if (bucketName.equals(getUserBucketName(user))) {
+            return true; // user can do whatever to its own bucket (but not to increase quota!! currently not possible
+            // anyway)
+        }
+
+        return user.hasObjectPrivilege(ObjectPrivilegeType.ReadBucket, bucketName)
+                || user.hasObjectPrivilege(ObjectPrivilegeType.ManageBucket, bucketName)
+                || user.hasSystemPrivilege(SystemPrivilege.ManageAnyBucket);
+    }
+
+    public static void checkManageBucketPrivilege(String bucketName, User user) throws HttpException {
+        if (bucketName.equals(getUserBucketName(user))) {
+            return; // user can do whatever to its own bucket (but not to increase quota!! currently not possible
+                    // anyway)
+        }
+
+        if (!user.hasObjectPrivilege(ObjectPrivilegeType.ManageBucket, bucketName)
+                && !user.hasSystemPrivilege(SystemPrivilege.ManageAnyBucket)) {
+            throw new ForbiddenException("Insufficient privileges to manage bucket '" + bucketName + "'");
+        }
+    }
+
+    static String getUserBucketName(User user) {
+        return "user." + user.getName();
+    }
+
+    static Bucket verifyAndGetBucket(String bucketName, User user) throws HttpException {
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        try {
+            Bucket bucket = bucketManager.getBucket(bucketName);
+            if (bucket == null) {
+                if (bucketName.equals(getUserBucketName(user))) {
+                    try {
+                        bucket = bucketManager.createBucket(bucketName);
+                    } catch (IOException e) {
+                        throw new InternalServerErrorException("Error creating user bucket", e);
+                    }
+                } else {
+                    throw new NotFoundException();
+                }
+            }
+
+            return bucket;
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error while resolving bucket", e);
+        }
+    }
+
+    static void verifyObjectName(String objName) throws BadRequestException {
+        if (objName == null) {
+            throw new BadRequestException("No object name specified");
+        }
+        if (!OBJ_NAME_REGEXP.matcher(objName).matches()) {
+            throw new BadRequestException("Invalid object name specified");
+        }
+    }
+
+    static void verifyBucketName(String bucketName) throws BadRequestException {
+        if (bucketName == null) {
+            throw new BadRequestException("No bucketName specified");
+        }
+        if (!BUCKET_NAME_REGEXP.matcher(bucketName).matches()) {
+            throw new BadRequestException("Invalid bucket name specified");
+        }
+    }
+}
+```
+
+### `ClearanceApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ClearanceApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.Collections;
+import java.util.List;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.protobuf.AbstractClearanceApi;
+import org.yamcs.protobuf.ClearanceInfo;
+import org.yamcs.protobuf.DeleteClearanceRequest;
+import org.yamcs.protobuf.ListClearancesResponse;
+import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
+import org.yamcs.protobuf.UpdateClearanceRequest;
+import org.yamcs.security.ClearanceListener;
+import org.yamcs.security.Directory;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SecurityStore;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.security.User;
+import org.yamcs.security.protobuf.Clearance;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Empty;
+
+public class ClearanceApi extends AbstractClearanceApi<Context> {
+
+    public ClearanceApi(AuditLog auditLog) {
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ControlCommandClearances);
+        });
+    }
+
+    @Override
+    public void listClearances(Context ctx, Empty request, Observer<ListClearancesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandClearances);
+
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        List<User> users = securityStore.getDirectory().getUsers();
+        Collections.sort(users, (u1, u2) -> u1.getName().compareToIgnoreCase(u2.getName()));
+
+        ListClearancesResponse.Builder responseb = ListClearancesResponse.newBuilder();
+        for (User user : users) {
+            responseb.addClearances(toClearanceInfo(user));
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void updateClearance(Context ctx, UpdateClearanceRequest request, Observer<ClearanceInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandClearances);
+
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        String username = request.getUsername();
+        Directory directory = securityStore.getDirectory();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+
+        user.setClearance(Clearance.newBuilder()
+                .setLevel(request.getLevel().toString())
+                .setIssuedBy((int) ctx.user.getId())
+                .setIssueTime(TimeEncoding.toProtobufTimestamp(TimeEncoding.getWallclockTime()))
+                .build());
+
+        directory.updateUserProperties(user);
+        observer.complete(toClearanceInfo(user));
+    }
+
+    @Override
+    public void deleteClearance(Context ctx, DeleteClearanceRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandClearances);
+
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        String username = request.getUsername();
+        Directory directory = securityStore.getDirectory();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+
+        user.setClearance(null);
+        directory.updateUserProperties(user);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void subscribeClearance(Context ctx, Empty request, Observer<ClearanceInfo> observer) {
+        ClearanceListener listener = clearance -> observer.next(toClearanceInfo(ctx.user));
+        ctx.user.addClearanceListener(listener);
+        observer.setCancelHandler(() -> ctx.user.removeClearanceListener(listener));
+        observer.next(toClearanceInfo(ctx.user));
+    }
+
+    private ClearanceInfo toClearanceInfo(User user) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+
+        ClearanceInfo.Builder clearanceb = ClearanceInfo.newBuilder()
+                .setUsername(user.getName())
+                .setHasCommandPrivileges(user.isSuperuser()
+                        || !user.getObjectPrivileges(ObjectPrivilegeType.Command).isEmpty());
+
+        Clearance clearance = user.getClearance();
+        if (clearance != null) {
+            clearanceb.setLevel(SignificanceLevelType.valueOf(clearance.getLevel()));
+            clearanceb.setIssueTime(clearance.getIssueTime());
+
+            Directory directory = securityStore.getDirectory();
+            User issuedBy = directory.getUser(clearance.getIssuedBy());
+            if (issuedBy != null) {
+                clearanceb.setIssuedBy(issuedBy.getName());
+            } else if (clearance.getIssuedBy() == securityStore.getGuestUser().getId()) {
+                clearanceb.setIssuedBy(securityStore.getGuestUser().getName());
+            } else if (clearance.getIssuedBy() == securityStore.getSystemUser().getId()) {
+                clearanceb.setIssuedBy(securityStore.getSystemUser().getName());
+            }
+        }
+        return clearanceb.build();
+    }
+}
+```
+
+### `CommandsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/CommandsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.SUFFIX_RETURN;
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.SUFFIX_STATUS;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.yamcs.ErrorInCommand;
+import org.yamcs.NoPermissionException;
+import org.yamcs.Processor;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.CommandHistoryRecorder;
+import org.yamcs.archive.GPBHelper;
+import org.yamcs.cmdhistory.Attribute;
+import org.yamcs.cmdhistory.CommandHistoryConsumer;
+import org.yamcs.cmdhistory.CommandHistoryFilter;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryRequestManager;
+import org.yamcs.cmdhistory.protobuf.Cmdhistory.AssignmentInfo;
+import org.yamcs.commanding.CommandQueue;
+import org.yamcs.commanding.CommandQueueManager;
+import org.yamcs.commanding.CommandingManager;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.ForbiddenException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.MediaType;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.AbstractCommandsApi;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.ExportCommandRequest;
+import org.yamcs.protobuf.ExportCommandsRequest;
+import org.yamcs.protobuf.GetCommandRequest;
+import org.yamcs.protobuf.IssueCommandRequest;
+import org.yamcs.protobuf.IssueCommandResponse;
+import org.yamcs.protobuf.ListCommandsRequest;
+import org.yamcs.protobuf.ListCommandsResponse;
+import org.yamcs.protobuf.StreamCommandsRequest;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+import org.yamcs.protobuf.UpdateCommandHistoryRequest;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Significance.Levels;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yaml.snakeyaml.util.UriEncoder;
+
+import com.csvreader.CsvWriter;
+import com.google.gson.Gson;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+import com.google.protobuf.util.Timestamps;
+
+public class CommandsApi extends AbstractCommandsApi<Context> {
+
+    private static final Pattern PATTERN_COMMAND_ID = Pattern.compile("([0-9]+)(-(.*))?-([0-9]+)");
+    private static final Log log = new Log(CommandsApi.class);
+
+    @Override
+    public void issueCommand(Context ctx, IssueCommandRequest request, Observer<IssueCommandResponse> observer) {
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        if (!processor.hasCommanding()) {
+            throw new BadRequestException("Commanding not activated for this processor");
+        }
+
+        String requestCommandName = UriEncoder.decode(request.getName());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        MetaCommand cmd = MdbApi.verifyCommand(mdb, requestCommandName);
+
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.Command, cmd.getQualifiedName());
+
+        String origin = ctx.getClientAddress();
+        int sequenceNumber = 0;
+        boolean dryRun = false;
+        String comment = null;
+
+        if (request.hasOrigin()) { // TODO remove this override?
+            origin = request.getOrigin();
+        }
+        if (request.hasDryRun()) {
+            dryRun = request.getDryRun();
+        }
+        if (request.hasSequenceNumber()) {
+            sequenceNumber = request.getSequenceNumber();
+        }
+        if (request.hasComment()) {
+            comment = request.getComment();
+        }
+
+        var args = GpbWellKnownHelper.toJava(request.getArgs());
+
+        PreparedCommand preparedCommand;
+        try {
+            preparedCommand = processor.getCommandingManager().buildCommand(cmd, args, origin, sequenceNumber,
+                    ctx.user);
+            if (comment != null && !comment.trim().isEmpty()) {
+                preparedCommand.setComment(comment);
+            }
+
+            if (request.getExtraCount() > 0) {
+                ctx.checkSystemPrivilege(SystemPrivilege.CommandOptions);
+                request.getExtraMap().forEach((k, v) -> {
+                    var commandOption = YamcsServer.getServer().getCommandOption(k);
+                    if (commandOption == null) {
+                        throw new BadRequestException("Unknown command option '" + k + "'");
+                    }
+                    preparedCommand.addAttribute(CommandHistoryAttribute.newBuilder()
+                            .setName(k)
+                            .setValue(commandOption.coerceValue(v))
+                            .build());
+                });
+            }
+
+            if (request.hasDisableVerifiers()) {
+                ctx.checkSystemPrivilege(SystemPrivilege.CommandOptions);
+                preparedCommand.disableCommandVerifiers(request.getDisableVerifiers());
+            }
+
+            if (request.hasStream()) {
+                ctx.checkSystemPrivilege(SystemPrivilege.CommandOptions);
+                var ydb = YarchDatabase.getInstance(request.getInstance());
+                var tcStream = TableApi.verifyStream(ctx, ydb, request.getStream());
+                preparedCommand.setTcStream(tcStream);
+            }
+
+            if (request.hasDisableTransmissionConstraints()) {
+                ctx.checkSystemPrivilege(SystemPrivilege.CommandOptions);
+                preparedCommand.disableTransmissionConstraints(request.getDisableTransmissionConstraints());
+            } else if (request.getVerifierConfigCount() > 0) {
+                ctx.checkSystemPrivilege(SystemPrivilege.CommandOptions);
+                List<String> invalidVerifiers = new ArrayList<>();
+                for (String stage : request.getVerifierConfigMap().keySet()) {
+                    if (!hasVerifier(cmd, stage)) {
+                        invalidVerifiers.add(stage);
+                    }
+                }
+                if (!invalidVerifiers.isEmpty()) {
+                    throw new BadRequestException(
+                            "The command does not have the following verifiers: " + invalidVerifiers.toString());
+                }
+
+                request.getVerifierConfigMap().forEach((k, v) -> {
+                    preparedCommand.addVerifierConfig(k, v);
+                });
+            }
+        } catch (NoPermissionException e) {
+            throw new ForbiddenException(e);
+        } catch (ErrorInCommand e) {
+            throw new BadRequestException(e);
+        } catch (YamcsException e) { // could be anything, consider as internal server error
+            throw new InternalServerErrorException(e);
+        }
+
+        if (!dryRun && processor.getConfig().checkCommandClearance()) {
+            if (ctx.user.getClearance() == null) {
+                throw new ForbiddenException("Not cleared for commanding");
+            }
+            Levels clearance = Levels.valueOf(ctx.user.getClearance().getLevel().toUpperCase());
+            Levels level = null;
+            if (preparedCommand.getMetaCommand().getEffectiveDefaultSignificance() != null) {
+                level = preparedCommand.getMetaCommand().getEffectiveDefaultSignificance().getConsequenceLevel();
+            }
+            if (level != null && level.isMoreSevere(clearance)) {
+                throw new ForbiddenException("Not cleared for this level of commands");
+            }
+        }
+
+        // Good, now send
+        CommandQueue queue;
+        if (dryRun) {
+            CommandQueueManager mgr = processor.getCommandingManager().getCommandQueueManager();
+            queue = mgr.getQueue(ctx.user, preparedCommand);
+        } else {
+            queue = processor.getCommandingManager().sendCommand(ctx.user, preparedCommand);
+        }
+
+        var commandName = preparedCommand.getMetaCommand().getQualifiedName();
+
+        var responseb = IssueCommandResponse.newBuilder()
+                .setId(toStringIdentifier(preparedCommand.getCommandId()))
+                .setGenerationTime(TimeEncoding.toProtobufTimestamp(preparedCommand.getGenerationTime()))
+                .setOrigin(preparedCommand.getCommandId().getOrigin())
+                .setSequenceNumber(preparedCommand.getCommandId().getSequenceNumber())
+                .setCommandName(commandName)
+                .setUsername(preparedCommand.getUsername())
+                .addAllAssignments(preparedCommand.getAssignments());
+
+        // Best effort, not a problem if the command no longer exists
+        var command = mdb.getMetaCommand(commandName);
+        if (command != null && command.getAliasSet() != null) {
+            var aliasSet = command.getAliasSet();
+            responseb.putAllAliases(aliasSet.getAliases());
+        }
+
+        byte[] unprocessedBinary = preparedCommand.getUnprocessedBinary();
+        if (unprocessedBinary != null) {
+            responseb.setUnprocessedBinary(ByteString.copyFrom(unprocessedBinary));
+        }
+
+        byte[] binary = preparedCommand.getBinary();
+        if (binary != null) {
+            responseb.setBinary(ByteString.copyFrom(binary));
+        }
+
+        if (queue != null) {
+            responseb.setQueue(queue.getName());
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    private boolean hasVerifier(MetaCommand cmd, String stage) {
+        boolean hasVerifier = cmd.getCommandVerifiers().stream().anyMatch(cv -> cv.getStage().equals(stage));
+        if (hasVerifier) {
+            return true;
+        } else {
+            MetaCommand parent = cmd.getBaseMetaCommand();
+            if (parent == null) {
+                return false;
+            } else {
+                return hasVerifier(parent, stage);
+            }
+        }
+    }
+
+    @Override
+    public void updateCommandHistory(Context ctx, UpdateCommandHistoryRequest request, Observer<Empty> observer) {
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        if (!processor.hasCommanding()) {
+            throw new BadRequestException("Commanding not activated for this processor");
+        }
+        if (!ctx.user.hasSystemPrivilege(SystemPrivilege.ModifyCommandHistory)) {
+            throw new ForbiddenException("User has no privilege to update command history");
+        }
+
+        CommandId cmdId = fromStringIdentifier(request.getName(), request.getId());
+        CommandingManager manager = processor.getCommandingManager();
+        for (CommandHistoryAttribute attr : request.getAttributesList()) {
+            manager.setCommandAttribute(cmdId, attr);
+        }
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void listCommands(Context ctx, ListCommandsRequest request, Observer<ListCommandsResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+        if (ydb.getTable(CommandHistoryRecorder.TABLE_NAME) == null) {
+            observer.complete(ListCommandsResponse.getDefaultInstance());
+            return;
+        }
+
+        Long pos = request.hasPos() ? request.getPos() : null;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        boolean desc = !request.getOrder().equals("asc");
+
+        if (pos != null) {
+            log.warn("DEPRECATION WARNING: Do not use pos, use continuationToken instead");
+        }
+
+        CommandPageToken nextToken = null;
+        if (request.hasNext()) {
+            String next = request.getNext();
+            nextToken = CommandPageToken.decode(next);
+        }
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual("gentime", request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore("gentime", request.getStop());
+        }
+        if (request.hasQueue()) {
+            sqlb.where("queue = ?", request.getQueue());
+        }
+        NameDescriptionSearchMatcher matcher = null;
+        if (request.hasQ()) {
+            matcher = new NameDescriptionSearchMatcher(request.getQ());
+            matcher.setSearchDescription(false);
+        }
+        if (nextToken != null) {
+            // TODO this currently ignores the origin column (also part of the key)
+            // Requires string comparison in StreamSQL, and an even more complicated query condition...
+            if (desc) {
+                sqlb.where("(gentime < ? or (gentime = ? and seqNum < ?))",
+                        nextToken.gentime, nextToken.gentime, nextToken.seqNum);
+            } else {
+                sqlb.where("(gentime > ? or (gentime = ? and seqNum > ?))",
+                        nextToken.gentime, nextToken.gentime, nextToken.seqNum);
+            }
+        }
+
+        sqlb.descend(desc);
+
+        if (pos != null) {
+            sqlb.limit(pos, limit + 1l); // one more to detect hasMore
+        }
+
+        var finalMatcher = matcher;
+        ListCommandsResponse.Builder responseb = ListCommandsResponse.newBuilder();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            CommandHistoryEntry last;
+            int count;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                CommandHistoryEntry entry = GPBHelper.tupleToCommandHistoryEntry(tuple, mdb);
+                if (finalMatcher != null) {
+                    var command = mdb.getMetaCommand(entry.getCommandName());
+                    if (command != null && !finalMatcher.matches(command)) {
+                        return;
+                    } else if (command == null && !finalMatcher.matches(entry.getCommandName())) {
+                        // Command could have been renamed, match only on the stored name.
+                        return;
+                    }
+                }
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.CommandHistory,
+                        entry.getCommandName())) {
+                    count++;
+                    if (count <= limit) {
+                        responseb.addCommands(entry);
+                        responseb.addEntry(entry);
+                        last = entry;
+                    } else {
+                        stream.close();
+                    }
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (count > limit) {
+                    CommandId cmdId = last.getCommandId();
+                    CommandPageToken token = new CommandPageToken(
+                            cmdId.getGenerationTime(), last.getOrigin(),
+                            last.getSequenceNumber());
+                    responseb.setContinuationToken(token.encodeAsString());
+                }
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    @Override
+    public void getCommand(Context ctx, GetCommandRequest request, Observer<CommandHistoryEntry> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        Matcher matcher = PATTERN_COMMAND_ID.matcher(request.getId());
+        if (!matcher.matches()) {
+            throw new BadRequestException("Invalid command id");
+        }
+
+        long gentime = Long.parseLong(matcher.group(1));
+        String origin = matcher.group(3) != null ? matcher.group(3) : "";
+        int seqNum = Integer.parseInt(matcher.group(4));
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME)
+                .where("gentime = ?", gentime)
+                .where("seqNum = ?", seqNum)
+                .where("origin = ?", origin);
+        List<CommandHistoryEntry> commands = new ArrayList<>();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                CommandHistoryEntry command = GPBHelper.tupleToCommandHistoryEntry(tuple, mdb);
+                commands.add(command);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (commands.isEmpty()) {
+                    observer.completeExceptionally(new NotFoundException());
+                } else if (commands.size() > 1) {
+                    observer.completeExceptionally(new InternalServerErrorException("Too many results"));
+                } else {
+                    CommandHistoryEntry command = commands.get(0);
+                    ctx.checkObjectPrivileges(ObjectPrivilegeType.CommandHistory, command.getCommandName());
+                    observer.complete(command);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void exportCommand(Context ctx, ExportCommandRequest request, Observer<HttpBody> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        Matcher matcher = PATTERN_COMMAND_ID.matcher(request.getId());
+        if (!matcher.matches()) {
+            throw new BadRequestException("Invalid command id");
+        }
+
+        long gentime = Long.parseLong(matcher.group(1));
+        String origin = matcher.group(3) != null ? matcher.group(3) : "";
+        int seqNum = Integer.parseInt(matcher.group(4));
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME)
+                .where("gentime = ?", gentime)
+                .where("seqNum = ?", seqNum)
+                .where("origin = ?", origin);
+
+        List<CommandHistoryEntry> commands = new ArrayList<>();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                CommandHistoryEntry command = GPBHelper.tupleToCommandHistoryEntry(tuple, mdb);
+                commands.add(command);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (commands.isEmpty()) {
+                    observer.completeExceptionally(new NotFoundException());
+                } else if (commands.size() > 1) {
+                    observer.completeExceptionally(new InternalServerErrorException("Too many results"));
+                } else {
+                    CommandHistoryEntry command = commands.get(0);
+                    ctx.checkObjectPrivileges(ObjectPrivilegeType.CommandHistory, command.getCommandName());
+
+                    String timestamp = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now()
+                            .truncatedTo(ChronoUnit.MILLIS))
+                            .replace("-", "")
+                            .replace(":", "")
+                            .replace(".", "");
+                    HttpBody.Builder responseb = HttpBody.newBuilder()
+                            .setFilename("command-" + timestamp + "-" + seqNum + ".raw")
+                            .setContentType(MediaType.OCTET_STREAM.toString());
+                    for (CommandHistoryAttribute attr : command.getAttrList()) {
+                        if (attr.getName().equals(PreparedCommand.CNAME_BINARY)) {
+                            responseb.setData(attr.getValue().getBinaryValue());
+                        }
+                    }
+                    observer.complete(responseb.build());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void subscribeCommands(Context ctx, SubscribeCommandsRequest request,
+            Observer<CommandHistoryEntry> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Processor processor = ProcessingApi.verifyProcessor(instance, request.getProcessor());
+        if (!processor.hasCommanding() || processor.getCommandHistoryManager() == null) {
+            return; // No Error, just send no data
+        }
+
+        CommandHistoryRequestManager requestManager = processor.getCommandHistoryManager();
+        boolean ignorePastCommands = true;
+        if (request.hasIgnorePastCommands()) {
+            ignorePastCommands = request.getIgnorePastCommands();
+        }
+
+        long since = ignorePastCommands ? processor.getCurrentTime() : 0;
+        CommandHistoryConsumer listener = new CommandHistoryConsumer() {
+
+            @Override
+            public void addedCommand(PreparedCommand pc) {
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.CommandHistory, pc.getCommandName())) {
+                    var entryb = CommandHistoryEntry.newBuilder()
+                            .setId(pc.getId())
+                            .setOrigin(pc.getOrigin())
+                            .setCommandName(pc.getCommandName())
+                            .setSequenceNumber(pc.getSequenceNumber())
+                            .setCommandId(pc.getCommandId())
+                            .setGenerationTime(TimeEncoding.toProtobufTimestamp(pc.getCommandId().getGenerationTime()))
+                            .addAllAssignments(pc.getAssignments());
+
+                    // add a string value for the timestamps
+                    // external clients (python, web) cannot work with Yamcs times
+                    pc.getAttributes().forEach(a -> {
+                        var v = a.getValue();
+                        if (v.getType() == Value.Type.TIMESTAMP) {
+                            var v1 = v.toBuilder().setStringValue(TimeEncoding.toString(v.getTimestampValue()));
+                            a = a.toBuilder().setValue(v1).build();
+                        }
+                        entryb.addAttr(a);
+                    });
+                    var aliasSet = pc.getMetaCommand().getAliasSet();
+                    if (aliasSet != null) {
+                        for (var alias : aliasSet.getAliases().entrySet()) {
+                            entryb.putAliases(alias.getKey(), alias.getValue());
+                        }
+                    }
+                    observer.next(entryb.build());
+                }
+            }
+
+            @Override
+            public void updatedCommand(CommandId cmdId, long changeDate, List<Attribute> attrs) {
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.CommandHistory, cmdId.getCommandName())) {
+                    CommandHistoryEntry.Builder entry = CommandHistoryEntry.newBuilder()
+                            .setId(cmdId.getGenerationTime() + "-" + cmdId.getOrigin() + "-"
+                                    + cmdId.getSequenceNumber())
+                            .setOrigin(cmdId.getOrigin())
+                            .setCommandName(cmdId.getCommandName())
+                            .setGenerationTime(TimeEncoding.toProtobufTimestamp(cmdId.getGenerationTime()))
+                            .setCommandId(cmdId);
+                    for (Attribute a : attrs) {
+                        CommandHistoryAttribute cha = CommandHistoryAttribute.newBuilder()
+                                .setName(a.getKey())
+                                .setValue(ValueUtility.toGbp(a.getValue()))
+                                .build();
+                        entry.addAttr(cha);
+                    }
+                    observer.next(entry.build());
+                }
+            }
+        };
+        CommandHistoryFilter subscription = requestManager.subscribeCommandHistory(null, since, listener);
+        observer.setCancelHandler(() -> requestManager.unsubscribeCommandHistory(subscription.subscriptionId));
+    }
+
+    @Override
+    public void streamCommands(Context ctx, StreamCommandsRequest request, Observer<CommandHistoryEntry> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        // Quick-check in case the user is specific
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.CommandHistory, request.getNameList());
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual("gentime", request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore("gentime", request.getStop());
+        }
+
+        if (request.getNameCount() > 0) {
+            sqlb.whereColIn("cmdName", request.getNameList());
+        }
+
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                CommandHistoryEntry entry = GPBHelper.tupleToCommandHistoryEntry(tuple, mdb);
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.CommandHistory, entry.getCommandName())) {
+                    observer.next(entry);
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                observer.complete();
+            }
+        });
+    }
+
+    @Override
+    public void exportCommands(Context ctx, ExportCommandsRequest request, Observer<HttpBody> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        // Quick-check in case the user is specific
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.CommandHistory, request.getNameList());
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual("gentime", request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore("gentime", request.getStop());
+        }
+
+        if (request.getNameCount() > 0) {
+            sqlb.whereColIn("cmdName", request.getNameList());
+        }
+
+        String sql = sqlb.toString();
+
+        char delimiter = '\t';
+        if (request.hasDelimiter()) {
+            switch (request.getDelimiter()) {
+            case "TAB":
+                delimiter = '\t';
+                break;
+            case "SEMICOLON":
+                delimiter = ';';
+                break;
+            case "COMMA":
+                delimiter = ',';
+                break;
+            default:
+                throw new BadRequestException("Unexpected column delimiter");
+            }
+        }
+
+        CsvCommandStreamer streamer = new CsvCommandStreamer(ctx, observer, delimiter, mdb);
+        StreamFactory.stream(instance, sql, sqlb.getQueryArguments(), streamer);
+    }
+
+    private static CommandId fromStringIdentifier(String commandName, String id) {
+        CommandId.Builder b = CommandId.newBuilder();
+        b.setCommandName(commandName);
+        int firstDash = id.indexOf('-');
+        long generationTime = Long.parseLong(id.substring(0, firstDash));
+        b.setGenerationTime(generationTime);
+        int lastDash = id.lastIndexOf('-');
+        int sequenceNumber = Integer.parseInt(id.substring(lastDash + 1));
+        b.setSequenceNumber(sequenceNumber);
+        if (firstDash != lastDash) {
+            String origin = id.substring(firstDash + 1, lastDash);
+            b.setOrigin(origin);
+        } else {
+            b.setOrigin("");
+        }
+
+        return b.build();
+    }
+
+    private static String toStringIdentifier(CommandId commandId) {
+        String id = commandId.getGenerationTime() + "-";
+        if (commandId.hasOrigin() && !"".equals(commandId.getOrigin())) {
+            id += commandId.getOrigin() + "-";
+        }
+        return id + commandId.getSequenceNumber();
+    }
+
+    /**
+     * Stateless continuation token for paged requests on the cmdhist table
+     */
+    private static class CommandPageToken {
+
+        long gentime;
+        String origin;
+        int seqNum;
+
+        CommandPageToken(long gentime, String origin, int seqNum) {
+            this.gentime = gentime;
+            this.origin = origin;
+            this.seqNum = seqNum;
+        }
+
+        static CommandPageToken decode(String encoded) {
+            String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+            return new Gson().fromJson(decoded, CommandPageToken.class);
+        }
+
+        String encodeAsString() {
+            String json = new Gson().toJson(this);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+        }
+    }
+
+    private static class CsvCommandStreamer implements StreamSubscriber {
+
+        Context ctx;
+        Observer<HttpBody> observer;
+        char columnDelimiter;
+        Mdb mdb;
+
+        CsvCommandStreamer(Context ctx, Observer<HttpBody> observer, char columnDelimiter, Mdb mdb) {
+            this.ctx = ctx;
+            this.observer = observer;
+            this.columnDelimiter = columnDelimiter;
+            this.mdb = mdb;
+
+            String[] rec = new String[13];
+            int i = 0;
+            rec[i++] = "Generation Time";
+            rec[i++] = "Command Name";
+            rec[i++] = "Arguments";
+            rec[i++] = "Origin";
+            rec[i++] = "Sequence Number";
+            rec[i++] = "Username";
+            rec[i++] = "Queue";
+            rec[i++] = "Binary";
+            rec[i++] = CommandHistoryPublisher.AcknowledgeQueued_KEY;
+            rec[i++] = CommandHistoryPublisher.AcknowledgeReleased_KEY;
+            rec[i++] = CommandHistoryPublisher.AcknowledgeSent_KEY;
+            rec[i++] = "Completion";
+            rec[i++] = "Return Value";
+
+            String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+            String filename = "command_export_" + dateString + ".csv";
+
+            HttpBody metadata = HttpBody.newBuilder()
+                    .setContentType(MediaType.CSV.toString())
+                    .setFilename(filename)
+                    .setData(toByteString(rec))
+                    .build();
+
+            observer.next(metadata);
+        }
+
+        @Override
+        public void onTuple(Stream stream, Tuple tuple) {
+            if (observer.isCancelled()) {
+                stream.close();
+                return;
+            }
+
+            var command = GPBHelper.tupleToCommandHistoryEntry(tuple, mdb);
+            if (!ctx.user.hasObjectPrivilege(ObjectPrivilegeType.CommandHistory, command.getCommandName())) {
+                return;
+            }
+
+            String[] rec = new String[13];
+            int i = 0;
+            rec[i++] = Timestamps.toString(command.getGenerationTime());
+            rec[i++] = printAttribute(tuple, PreparedCommand.CNAME_CMDNAME);
+            rec[i++] = printArguments(tuple);
+            rec[i++] = printAttribute(tuple, PreparedCommand.CNAME_ORIGIN);
+            rec[i++] = printAttribute(tuple, PreparedCommand.CNAME_SEQNUM);
+            rec[i++] = printAttribute(tuple, PreparedCommand.CNAME_USERNAME);
+            rec[i++] = printAttribute(tuple, "queue");
+            rec[i++] = printAttribute(tuple, PreparedCommand.CNAME_BINARY);
+            rec[i++] = printAttribute(tuple, CommandHistoryPublisher.AcknowledgeQueued_KEY + SUFFIX_STATUS);
+            rec[i++] = printAttribute(tuple, CommandHistoryPublisher.AcknowledgeReleased_KEY + SUFFIX_STATUS);
+            rec[i++] = printAttribute(tuple, CommandHistoryPublisher.AcknowledgeSent_KEY + SUFFIX_STATUS);
+            rec[i++] = printAttribute(tuple, CommandHistoryPublisher.CommandComplete_KEY + SUFFIX_STATUS);
+            rec[i++] = printAttribute(tuple, CommandHistoryPublisher.CommandComplete_KEY + SUFFIX_RETURN);
+
+            HttpBody body = HttpBody.newBuilder()
+                    .setData(toByteString(rec))
+                    .build();
+            observer.next(body);
+        }
+
+        private String printAttribute(Tuple tuple, String attributeName) {
+            if (tuple.hasColumn(attributeName)) {
+                var value = tuple.getColumn(attributeName);
+                if (value instanceof byte[]) {
+                    return StringConverter.arrayToHexString((byte[]) value);
+                } else {
+                    return "" + value;
+                }
+            } else {
+                return "";
+            }
+        }
+
+        private String printArguments(Tuple tuple) {
+            if (tuple.hasColumn(PreparedCommand.CNAME_ASSIGNMENTS)) {
+                AssignmentInfo assignmentProto = tuple.getColumn(PreparedCommand.CNAME_ASSIGNMENTS);
+                return assignmentProto.getAssignmentList().stream()
+                        .filter(assignment -> assignment.getUserInput())
+                        .map(assignment -> assignment.getName() + ": "
+                                + StringConverter.toString(assignment.getValue()))
+                        .collect(Collectors.joining(", "));
+            } else {
+                return "";
+            }
+        }
+
+        private ByteString toByteString(String[] rec) {
+            ByteString.Output bout = ByteString.newOutput();
+            CsvWriter writer = new CsvWriter(bout, columnDelimiter, StandardCharsets.UTF_8);
+            try {
+                writer.writeRecord(rec);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            } finally {
+                writer.close();
+            }
+
+            return bout.toByteString();
+        }
+
+        @Override
+        public void streamClosed(Stream stream) {
+            observer.complete();
+        }
+    }
+}
+```
+
+### `ConfigApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ConfigApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.Option;
+import org.yamcs.Spec.WhenCondition;
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.protobuf.config.OptionGroupInfo;
+import org.yamcs.protobuf.config.OptionInfo;
+import org.yamcs.protobuf.config.OptionType;
+import org.yamcs.protobuf.config.SpecInfo;
+import org.yamcs.protobuf.config.WhenConditionInfo;
+
+public class ConfigApi {
+
+    public static SpecInfo toSpecInfo(Spec spec) {
+        var specb = SpecInfo.newBuilder()
+                .setAllowUnknownKeys(spec.isAllowUnknownKeys());
+        for (var option : spec.getOptions()) {
+            specb.addOptions(toOptionInfo(option, spec));
+        }
+        for (var group : spec.getRequiredOneOfGroups()) {
+            specb.addRequiredOneOf(OptionGroupInfo.newBuilder()
+                    .addAllKeys(group));
+        }
+        for (var group : spec.getRequireTogetherGroups()) {
+            specb.addRequireTogether(OptionGroupInfo.newBuilder()
+                    .addAllKeys(group));
+        }
+        for (var condition : spec.getWhenConditions()) {
+            specb.addWhenConditions(toWhenConditionInfo(condition));
+        }
+        return specb.build();
+    }
+
+    private static WhenConditionInfo toWhenConditionInfo(WhenCondition condition) {
+        var conditionb = WhenConditionInfo.newBuilder()
+                .setKey(condition.getKey())
+                .setValue(WellKnownTypes.toValue(condition.getValue()))
+                .addAllRequiredKeys(condition.getRequiredKeys());
+        return conditionb.build();
+    }
+
+    private static OptionInfo toOptionInfo(Option option, Spec spec) {
+        var optionb = OptionInfo.newBuilder()
+                .setName(option.getName())
+                .setType(OptionType.valueOf(option.getType().name()))
+                .setRequired(option.isRequired())
+                .setHidden(option.isHidden())
+                .setSecret(option.isSecret());
+
+        if (option.getTitle() != null) {
+            optionb.setTitle(option.getTitle());
+        }
+        if (option.getDescription() != null) {
+            optionb.addAllDescription(option.getDescription());
+        }
+        if (option.getDefaultValue() != null) {
+            var defaultValue = WellKnownTypes.toValue(option.getDefaultValue());
+            optionb.setDefault(defaultValue);
+        }
+        if (option.getElementType() != null) {
+            optionb.setElementType(OptionType.valueOf(option.getElementType().name()));
+        }
+        if (option.getVersionAdded() != null) {
+            optionb.setVersionAdded(option.getVersionAdded());
+        }
+        if (option.getDeprecationMessage() != null) {
+            optionb.setDeprecationMessage(option.getDeprecationMessage());
+        }
+        if (option.getChoices() != null) {
+            for (var choice : option.getChoices()) {
+                optionb.addChoices(WellKnownTypes.toValue(choice));
+            }
+        }
+        if (option.getSpec() != null) {
+            optionb.setSpec(toSpecInfo(option.getSpec()));
+            optionb.setApplySpecDefaults(option.isApplySpecDefaults());
+        }
+        optionb.addAllAliases(spec.getAliases(option));
+
+        return optionb.build();
+    }
+}
+```
+
+### `Cop1Api.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/Cop1Api.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.logging.Log;
+import org.yamcs.management.LinkManager;
+import org.yamcs.protobuf.AbstractCop1Api;
+import org.yamcs.protobuf.Cop1Config;
+import org.yamcs.protobuf.Cop1Status;
+import org.yamcs.protobuf.DisableRequest;
+import org.yamcs.protobuf.GetConfigRequest;
+import org.yamcs.protobuf.GetStatusRequest;
+import org.yamcs.protobuf.InitializeRequest;
+import org.yamcs.protobuf.ResumeRequest;
+import org.yamcs.protobuf.SubscribeStatusRequest;
+import org.yamcs.protobuf.UpdateConfigRequest;
+import org.yamcs.tctm.Link;
+import org.yamcs.tctm.ccsds.Cop1Monitor;
+import org.yamcs.tctm.ccsds.Cop1TcPacketHandler;
+
+import com.google.protobuf.Empty;
+
+public class Cop1Api extends AbstractCop1Api<Context> {
+
+    private static ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+
+    @Override
+    public void initialize(Context ctx, InitializeRequest request, Observer<Empty> observer) {
+        Cop1TcPacketHandler cop1Link = verifyCop1Link(request.getInstance(), request.getLink());
+
+        if (!request.hasType()) {
+            throw new BadRequestException("No initialization type specified");
+        }
+        CompletableFuture<Void> cf;
+
+        switch (request.getType()) {
+        case SET_VR:
+            if (!request.hasVR()) {
+                throw new BadRequestException("No vR specified for the SET_VR initialization request");
+            }
+            cf = cop1Link.initiateADWithVR(request.getVR());
+            break;
+        case UNLOCK:
+            cf = cop1Link.initiateADWithUnlock();
+            break;
+        case WITH_CLCW_CHECK:
+
+            if (request.hasClcwCheckInitializeTimeout()) {
+                cf = cop1Link.initiateAD(true, request.getClcwCheckInitializeTimeout());
+            } else {
+                cf = cop1Link.initiateAD(true);
+            }
+            break;
+        case WITHOUT_CLCW_CHECK:
+            cf = cop1Link.initiateAD(false);
+            break;
+        default:
+            throw new IllegalStateException("Unknown request type " + request.getType());
+        }
+
+        cf.whenComplete((v, error) -> {
+            if (error == null) {
+                observer.complete(Empty.getDefaultInstance());
+            } else {
+                observer.completeExceptionally(error);
+            }
+        });
+    }
+
+    @Override
+    public void resume(Context ctx, ResumeRequest request, Observer<Empty> observer) {
+        Cop1TcPacketHandler cop1Link = verifyCop1Link(request.getInstance(), request.getLink());
+        cop1Link.resume().whenComplete((v, error) -> {
+            if (error == null) {
+                observer.complete(Empty.getDefaultInstance());
+            } else {
+                observer.completeExceptionally(error);
+            }
+        });
+    }
+
+    @Override
+    public void disable(Context ctx, DisableRequest request, Observer<Empty> observer) {
+        Cop1TcPacketHandler cop1Link = verifyCop1Link(request.getInstance(), request.getLink());
+        boolean bypassAll = request.hasSetBypassAll() ? request.getSetBypassAll() : true;
+        cop1Link.disableCop1(bypassAll);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void updateConfig(Context ctx, UpdateConfigRequest request, Observer<Cop1Config> observer) {
+        Cop1TcPacketHandler link = verifyCop1Link(request.getInstance(), request.getLink());
+        link.setConfig(request.getCop1Config()).whenComplete((v, err) -> {
+            if (err == null) {
+                link.getCop1Config().whenComplete((config, err2) -> {
+                    if (err2 == null) {
+                        observer.complete(config);
+                    } else {
+                        observer.completeExceptionally(err);
+                    }
+                });
+            } else {
+                observer.completeExceptionally(err);
+            }
+        });
+    }
+
+    @Override
+    public void getConfig(Context ctx, GetConfigRequest request, Observer<Cop1Config> observer) {
+        Cop1TcPacketHandler cop1Link = verifyCop1Link(request.getInstance(), request.getLink());
+        CompletableFuture<Cop1Config> cf = cop1Link.getCop1Config();
+        cf.whenComplete((v, error) -> {
+            if (error == null) {
+                observer.complete(v);
+            } else {
+                observer.completeExceptionally(error);
+            }
+        });
+    }
+
+    @Override
+    public void getStatus(Context ctx, GetStatusRequest request, Observer<Cop1Status> observer) {
+        Cop1TcPacketHandler cop1Link = verifyCop1Link(request.getInstance(), request.getLink());
+        CompletableFuture<Cop1Status> cf = cop1Link.getCop1Status();
+        cf.whenComplete((v, error) -> {
+            if (error == null) {
+                observer.complete(v);
+            } else {
+                observer.completeExceptionally(error);
+            }
+        });
+    }
+
+    @Override
+    public void subscribeStatus(Context ctx, SubscribeStatusRequest request, Observer<Cop1Status> observer) {
+        Cop1TcPacketHandler cop1Link = verifyCop1Link(request.getInstance(), request.getLink());
+
+        MyCop1Monitor monitor = new MyCop1Monitor(cop1Link, observer);
+        cop1Link.addMonitor(monitor);
+
+        ScheduledFuture<?> future = timer.scheduleAtFixedRate(
+                () -> monitor.sendStatus(), 0, 1, TimeUnit.SECONDS);
+
+        observer.setCancelHandler(() -> {
+            cop1Link.removeMonitor(monitor);
+            future.cancel(false);
+        });
+    }
+
+    private Cop1TcPacketHandler verifyCop1Link(String instance, String linkName) {
+        LinksApi.verifyLink(instance, linkName);
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(instance);
+        LinkManager lmgr = ysi.getLinkManager();
+        Link link = lmgr.getLink(linkName);
+        if (link == null) {
+            throw new BadRequestException("There is no link named '" + linkName + "' in instance " + instance);
+        }
+        if (link instanceof Cop1TcPacketHandler) {
+            return (Cop1TcPacketHandler) link;
+        }
+        throw new BadRequestException(String.format(
+                "Link '%s' for instance '%s' does not support COP-1",
+                linkName, instance));
+    }
+
+    private static class MyCop1Monitor implements Cop1Monitor {
+
+        private static final Log log = new Log(MyCop1Monitor.class);
+
+        private final Cop1TcPacketHandler cop1Link;
+        private Cop1Status lastStatus;
+        private Observer<Cop1Status> observer;
+
+        MyCop1Monitor(Cop1TcPacketHandler cop1Link, Observer<Cop1Status> observer) {
+            this.cop1Link = cop1Link;
+            this.observer = observer;
+        }
+
+        @Override
+        public void suspended(int suspendState) {
+            // the stateChanged will be called with the new state
+        }
+
+        @Override
+        public void alert(AlertType alert) {
+            // TODO add a subscription for alerts
+        }
+
+        @Override
+        public void stateChanged(int oldState, int newState) {
+            sendStatus();
+        }
+
+        void sendStatus() {
+            if (!cop1Link.isRunning()) {
+                log.debug("Unsubscribing from COP1 link {}/{} because it is not running",
+                        cop1Link.getYamcsInstance(), cop1Link.getName());
+                cop1Link.removeMonitor(this);
+                return;
+            }
+            CompletableFuture<Cop1Status> cf = cop1Link.getCop1Status();
+            cf.whenComplete((status, error) -> {
+                if (error == null) {
+                    if (lastStatus == null || !lastStatus.equals(status)) {
+                        observer.next(status);
+                        lastStatus = status;
+                    }
+                } else {
+                    log.warn("Failed to get Cop1Status", error);
+                    cop1Link.removeMonitor(this);
+                }
+            });
+        }
+
+        @Override
+        public void disabled() {
+            sendStatus();
+        }
+    }
+}
+```
+
+### `DatabaseApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/DatabaseApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.protobuf.AbstractDatabaseApi;
+import org.yamcs.protobuf.DatabaseInfo;
+import org.yamcs.protobuf.GetDatabaseRequest;
+import org.yamcs.protobuf.ListDatabasesResponse;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.protobuf.Empty;
+
+public class DatabaseApi extends AbstractDatabaseApi<Context> {
+
+    @Override
+    public void listDatabases(Context ctx, Empty request, Observer<ListDatabasesResponse> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ControlArchiving, SystemPrivilege.ReadTables);
+        List<String> databases = new ArrayList<>(YarchDatabase.getDatabases());
+        Collections.sort(databases);
+        ListDatabasesResponse.Builder responseb = ListDatabasesResponse.newBuilder();
+        for (String database : databases) {
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(database);
+            responseb.addDatabases(toDatabaseInfo(ydb));
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getDatabase(Context ctx, GetDatabaseRequest request, Observer<DatabaseInfo> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ControlArchiving, SystemPrivilege.ReadTables);
+        YarchDatabaseInstance ydb = verifyDatabase(request.getName());
+        observer.complete(toDatabaseInfo(ydb));
+    }
+
+    private static DatabaseInfo toDatabaseInfo(YarchDatabaseInstance ydb) {
+        DatabaseInfo.Builder b = DatabaseInfo.newBuilder()
+                .setName(ydb.getName())
+                .setTablespace(ydb.getTablespaceName())
+                .setPath(ydb.getRoot());
+
+        ydb.getTableDefinitions().stream()
+                .map(tdef -> tdef.getName())
+                .sorted()
+                .forEach(b::addTables);
+
+        ydb.getStreams().stream()
+                .map(stream -> stream.getName())
+                .sorted()
+                .forEach(b::addStreams);
+
+        return b.build();
+    }
+
+    public static YarchDatabaseInstance verifyDatabase(String name) {
+        String instance = InstancesApi.verifyInstance(name, true);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+        if (ydb == null) {
+            throw new NotFoundException("No database named '" + instance + "'");
+        }
+        return ydb;
+    }
+}
+```
+
+### `Downsampler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/Downsampler.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.function.Consumer;
+
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.parameterarchive.ParameterValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.UnsignedLong;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+/**
+ * One-pass downsampler for time-series data (i.e. numeric archived parameters), where the number of recorded data
+ * points are not known upfront.
+ * <p>
+ * The output is not a bunch of parameter values, but instead a range of values limited to n, which should be fit for
+ * inclusion in plots.
+ */
+public class Downsampler implements Consumer<ParameterValueArray> {
+
+    private static final Log log = new Log(Downsampler.class);
+    private static final int DEFAULT_SAMPLE_COUNT = 500;
+    private static final long DEFAULT_GAP_TIME = 120000;
+
+    private TreeMap<Long, Sample> samplesByTime = new TreeMap<>();
+    private long start;
+    private long stop;
+    private boolean useRawValue;
+    private long lastSampleTime;
+    private long gapTime;
+
+    public Downsampler(long start, long stop) {
+        this(start, stop, DEFAULT_SAMPLE_COUNT);
+    }
+
+    public Downsampler(long start, long stop, int sampleCount) {
+        if (start > stop) {
+            throw new IllegalArgumentException("start (" + start + ") should be smaller than stop (" + stop + ")");
+        }
+        this.start = start;
+        this.stop = stop;
+        this.useRawValue = false;
+        this.gapTime = DEFAULT_GAP_TIME;
+
+        // Initialize intervals
+        long step = (stop - start) / sampleCount;
+        if (step == 0) {
+            step = 1;
+        }
+        for (long i = start; i < stop; i += step) {
+            samplesByTime.put(i, null);
+        }
+    }
+
+    public void setUseRawValue(boolean useRawValue) {
+        this.useRawValue = useRawValue;
+    }
+
+    public void setGapTime(long gapTime) {
+        this.gapTime = gapTime;
+    }
+
+    public void process(org.yamcs.parameter.ParameterValue pval) {
+        Value value = useRawValue ? pval.getRawValue() : pval.getEngValue();
+        if (value == null) {
+            return;
+        }
+
+        var gentime = pval.getGenerationTime();
+        var expireMillis = pval.getExpireMillis();
+        switch (value.getType()) {
+        case DOUBLE:
+            process(gentime, value.getDoubleValue(), expireMillis);
+            break;
+        case FLOAT:
+            process(gentime, value.getFloatValue(), expireMillis);
+            break;
+        case SINT32:
+            process(gentime, value.getSint32Value(), expireMillis);
+            break;
+        case SINT64:
+            process(gentime, value.getSint64Value(), expireMillis);
+            break;
+        case UINT32:
+            process(gentime, value.getUint32Value() & 0xFFFFFFFFL, expireMillis);
+            break;
+        case UINT64:
+            process(gentime, value.getUint64Value(), expireMillis);
+            break;
+        case ENUMERATED:
+            process(gentime, value.getSint64Value(), expireMillis);
+            break;
+        default:
+            process(gentime, Double.NaN, expireMillis);
+        }
+    }
+
+    @Override
+    public void accept(ParameterValueArray t) {
+        ValueArray va = useRawValue ? t.getRawValues() : t.getEngValues();
+        long[] timestamps = t.getTimestamps();
+        ParameterStatus[] statuses = t.getStatuses();
+
+        // Consider expireMillis, but only from the last value
+        long expireMillis = -1;
+        if (statuses != null && statuses.length > 0) {
+            ParameterStatus lastStatus = statuses[statuses.length - 1];
+            if (lastStatus != null && lastStatus.hasExpireMillis()) {
+                expireMillis = lastStatus.getExpireMillis();
+            }
+        }
+
+        int n = timestamps.length;
+        Type type = useRawValue ? t.getRawType() : t.getEngType();
+
+        switch (type) {
+        case FLOAT:
+            float[] fv = va.getFloatArray();
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], fv[i], expireMillis);
+            }
+            break;
+        case DOUBLE:
+            double[] dv = va.getDoubleArray();
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], dv[i], expireMillis);
+            }
+            break;
+        case UINT32:
+            int[] iv = va.getIntArray();
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], iv[i] & 0xFFFFFFFFL, expireMillis);
+            }
+            break;
+        case SINT32:
+            iv = va.getIntArray();
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], iv[i], expireMillis);
+            }
+            break;
+        case UINT64:
+            long[] lv = va.getLongArray();
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], UnsignedLong.toDouble(lv[i]), expireMillis);
+            }
+            break;
+        case SINT64:
+            lv = va.getLongArray();
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], lv[i], expireMillis);
+            }
+            break;
+        case NONE:
+            // No value (for example: pval without raw). Do nothing.
+            break;
+        default:
+            for (int i = 0; i < n; i++) {
+                process(timestamps[i], Double.NaN, expireMillis);
+            }
+        }
+    }
+
+    public void process(long time, double value, long expireMillis) {
+        if (time > stop || time < start) {
+            return;
+        }
+
+        Entry<Long, Sample> entry = samplesByTime.floorEntry(time);
+        if (entry == null) {
+            log.warn("No interval for value {}", value);
+            return;
+        }
+
+        lastSampleTime = entry.getKey();
+        Sample sample = entry.getValue();
+        if (sample == null) {
+            var newSample = new Sample(entry.getKey(), time, value, expireMillis);
+            samplesByTime.put(entry.getKey(), newSample);
+        } else {
+            sample.process(time, value, expireMillis);
+        }
+    }
+
+    public List<Sample> collect() {
+        if (samplesByTime == null) {
+            return Collections.emptyList();
+        }
+        List<Sample> r = new ArrayList<>(DEFAULT_SAMPLE_COUNT);
+        Sample prev = null;
+        for (Entry<Long, Sample> e : samplesByTime.entrySet()) {
+            Sample s = e.getValue();
+            if (s == null) {
+                long t = e.getKey();
+                if (prev != null) { // Maybe generate a gap
+                    long gapTime = (prev.expireMillis != -1) ? prev.expireMillis : this.gapTime;
+                    if (t - prev.t > gapTime) {
+                        r.add(new Sample(t));
+                    }
+                }
+            } else {
+                r.add(s);
+                prev = s;
+            }
+        }
+
+        return r;
+    }
+
+    public long lastSampleTime() {
+        return lastSampleTime;
+    }
+
+    /**
+     * A cumulative sample that keeps track of a rolling average among others.
+     */
+    public static class Sample {
+        final long t;
+        double min;
+        double max;
+        double avg;
+        int n;
+        long minTime;
+        long maxTime;
+        long firstTime;
+        long lastTime;
+
+        long expireMillis; // Matching the 'last' value for this sample.
+
+        // construct a gap
+        Sample(long t) {
+            this.t = t;
+            min = avg = max = Double.NaN;
+            minTime = maxTime = firstTime = lastTime = TimeEncoding.INVALID_INSTANT;
+            n = 0;
+            expireMillis = -1;
+        }
+
+        // sample with one value
+        public Sample(long t, long valueTime, double value, long expireMillis) {
+            this.t = t;
+            this.expireMillis = expireMillis;
+            min = avg = max = value;
+            minTime = maxTime = firstTime = lastTime = valueTime;
+            n = 1;
+        }
+
+        public void process(long valueTime, double value, long expireMillis) {
+            this.expireMillis = expireMillis;
+            lastTime = valueTime;
+            if (value < min) {
+                min = value;
+                minTime = valueTime;
+            }
+            if (value > max) {
+                max = value;
+                maxTime = valueTime;
+            }
+            n++;
+            avg -= (avg / n);
+            avg += (value / n);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s (min=%s, max=%s, n=%s)", avg, min, max, n);
+        }
+    }
+}
+```
+
+### `EventFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/EventFilter.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.StandardTupleDefinitions.BODY_COLUMN;
+import static org.yamcs.StandardTupleDefinitions.SEQNUM_COLUMN;
+import static org.yamcs.StandardTupleDefinitions.SOURCE_COLUMN;
+
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.utils.parser.Filter;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.UnknownFieldException;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db;
+
+public class EventFilter extends Filter<Tuple> {
+
+    private static final String FIELD_SEVERITY = "severity";
+    private static final String FIELD_MESSAGE = "message";
+    private static final String FIELD_SOURCE = "source";
+    private static final String FIELD_TYPE = "type";
+    private static final String FIELD_SEQ_NUMBER = "seqNumber";
+
+    private String lcMessage;
+    private String lcSource;
+    private String lcType;
+
+    public EventFilter(String query) throws ParseException, UnknownFieldException {
+        super(query);
+        addEnumField(FIELD_SEVERITY, EventSeverity.class, this::getSeverity);
+        addStringField(FIELD_MESSAGE, this::getMessage);
+        addStringField(FIELD_SOURCE, this::getSource);
+        addStringField(FIELD_TYPE, this::getType);
+        addNumberField(FIELD_SEQ_NUMBER, this::getSequenceNumber);
+        parse();
+    }
+
+    @Override
+    public void beforeItem(Tuple tuple) {
+        // Preload lowercase variants to boost non-field text search
+        // with multiple terms
+
+        // Reset previous state
+        lcMessage = null;
+        lcSource = null;
+        lcType = null;
+
+        if (includesTextSearch()) {
+            var event = (Db.Event) tuple.getColumn(BODY_COLUMN);
+            if (event.hasMessage()) {
+                lcMessage = event.getMessage().toLowerCase();
+            }
+            if (event.hasSource()) {
+                lcSource = event.getSource().toLowerCase();
+            }
+            if (event.hasType()) {
+                lcType = event.getType().toLowerCase();
+            }
+        }
+    }
+
+    private String getMessage(Tuple tuple) {
+        var event = (Db.Event) tuple.getColumn(BODY_COLUMN);
+        return event.hasMessage() ? event.getMessage() : null;
+    }
+
+    private String getSource(Tuple tuple) {
+        return tuple.getColumn(SOURCE_COLUMN);
+    }
+
+    private String getType(Tuple tuple) {
+        var event = (Db.Event) tuple.getColumn(BODY_COLUMN);
+        return event.hasType() ? event.getType() : null;
+    }
+
+    private Number getSequenceNumber(Tuple tuple) {
+        return tuple.getColumn(SEQNUM_COLUMN);
+    }
+
+    private EventSeverity getSeverity(Tuple tuple) {
+        var event = (Db.Event) tuple.getColumn(BODY_COLUMN);
+        return event.hasSeverity() ? event.getSeverity() : null;
+    }
+
+    @Override
+    protected boolean matchesLiteral(Tuple tuple, String lowercaseLiteral) {
+        return (lcMessage != null && lcMessage.contains(lowercaseLiteral))
+                || (lcSource != null && lcSource.contains(lowercaseLiteral))
+                || (lcType != null && lcType.contains(lowercaseLiteral));
+    }
+}
+```
+
+### `EventFilterFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/EventFilterFactory.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.api.FilterSyntaxException;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.utils.parser.IncorrectTypeException;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.TokenMgrError;
+import org.yamcs.utils.parser.UnknownFieldException;
+
+public class EventFilterFactory {
+
+    public static EventFilter create(String query) {
+        try {
+            return new EventFilter(query);
+        } catch (UnknownFieldException | IncorrectTypeException e) {
+            throw mapCustomParseException(e);
+        } catch (ParseException e) {
+            throw mapParseException(e);
+        } catch (TokenMgrError e) {
+            throw mapTokenMgrError(e);
+        }
+    }
+
+    private static BadRequestException mapCustomParseException(ParseException e) {
+        var exc = new BadRequestException(e.getMessage());
+        if (e.currentToken != null) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.currentToken.beginLine)
+                    .setBeginColumn(e.currentToken.beginColumn)
+                    .setEndLine(e.currentToken.endLine)
+                    .setEndColumn(e.currentToken.endColumn)
+                    .build());
+        }
+        throw exc;
+    }
+
+    private static BadRequestException mapParseException(ParseException e) {
+        var exc = new BadRequestException("Syntax error in filter");
+        if (e.currentToken != null) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.currentToken.beginLine)
+                    .setBeginColumn(e.currentToken.beginColumn)
+                    .setEndLine(e.currentToken.endLine)
+                    .setEndColumn(e.currentToken.endColumn)
+                    .build());
+        }
+        throw exc;
+    }
+
+    private static BadRequestException mapTokenMgrError(TokenMgrError e) {
+        var exc = new BadRequestException("Syntax error in filter");
+        if (e.errorLine >= 0 && e.errorColumn >= 0) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.errorLine)
+                    .setBeginColumn(e.errorColumn)
+                    .setEndLine(e.errorLine)
+                    .setEndColumn(e.errorColumn)
+                    .build());
+        }
+        throw exc;
+    }
+}
+```
+
+### `EventsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/EventsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.StandardTupleDefinitions.GENTIME_COLUMN;
+import static org.yamcs.StandardTupleDefinitions.SOURCE_COLUMN;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.MediaType;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.AbstractEventsApi;
+import org.yamcs.protobuf.CreateEventRequest;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.ExportEventsRequest;
+import org.yamcs.protobuf.ListEventSourcesRequest;
+import org.yamcs.protobuf.ListEventSourcesResponse;
+import org.yamcs.protobuf.ListEventsRequest;
+import org.yamcs.protobuf.ListEventsResponse;
+import org.yamcs.protobuf.StreamEventsRequest;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db;
+
+import com.csvreader.CsvWriter;
+import com.google.common.collect.BiMap;
+import com.google.gson.Gson;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.util.Timestamps;
+
+public class EventsApi extends AbstractEventsApi<Context> {
+
+    static final String INFO = "INFO";
+    static final String WATCH = "WATCH";
+    static final String WARNING = "WARNING";
+    static final String DISTRESS = "DISTRESS";
+    static final String CRITICAL = "CRITICAL";
+    static final String SEVERE = "SEVERE";
+    static final String ERROR = "ERROR";
+
+    private static final Log log = new Log(EventsApi.class);
+
+    private ConcurrentMap<String, EventProducer> eventProducerMap = new ConcurrentHashMap<>();
+    private AtomicInteger eventSequenceNumber = new AtomicInteger();
+
+    @Override
+    public void listEvents(Context ctx, ListEventsRequest request, Observer<ListEventsResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        verifyEventArchiveSupport(instance);
+
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadEvents);
+
+        Long pos = request.hasPos() ? request.getPos() : null;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        boolean desc = !request.getOrder().equals("asc");
+        String severity = request.hasSeverity() ? request.getSeverity().toUpperCase() : INFO;
+
+        if (pos != null) {
+            log.warn("DEPRECATION WARNING: Do not use pos, use continuationToken instead");
+        }
+
+        EventPageToken nextToken = null;
+        if (request.hasNext()) {
+            nextToken = EventPageToken.decode(request.getNext());
+        }
+
+        SqlBuilder sqlb = new SqlBuilder(EventRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual(GENTIME_COLUMN, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore(GENTIME_COLUMN, request.getStop());
+        }
+
+        if (request.getSourceCount() > 0) {
+            sqlb.whereColIn(SOURCE_COLUMN, request.getSourceList());
+        }
+
+        if (request.hasQ()) {
+            sqlb.where("body.message like ?", "%" + request.getQ() + "%");
+        }
+        if (nextToken != null) {
+            // TODO this currently ignores the source column (also part of the key)
+            if (desc) {
+                sqlb.where("(gentime < ? or (gentime = ? and seqNum < ?))",
+                        nextToken.gentime, nextToken.gentime, nextToken.seqNum);
+            } else {
+                sqlb.where("(gentime > ? or (gentime = ? and seqNum > ?))",
+                        nextToken.gentime, nextToken.gentime, nextToken.seqNum);
+            }
+        }
+        addSeverityFilter(sqlb, severity);
+
+        sqlb.descend(desc);
+
+        if (pos != null) {
+            sqlb.limit(pos, limit + 1l); // one more to detect hasMore
+        }
+
+        var filter = request.hasFilter()
+                ? EventFilterFactory.create(request.getFilter())
+                : null;
+
+        var responseb = ListEventsResponse.newBuilder();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            Db.Event last;
+            int count;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (filter != null && !filter.matches(tuple)) {
+                    return;
+                }
+
+                if (++count <= limit) {
+                    Db.Event incoming = (Db.Event) tuple.getColumn("body");
+                    var event = fromDbEvent(incoming);
+                    responseb.addEvents(event);
+                    responseb.addEvent(event);
+                    last = incoming;
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (count > limit) {
+                    var token = new EventPageToken(last.getGenerationTime(), last.getSource(),
+                            last.getSeqNumber());
+                    responseb.setContinuationToken(token.encodeAsString());
+                }
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    @Override
+    public void createEvent(Context ctx, CreateEventRequest request, Observer<Event> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.WriteEvents);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        if (!request.hasMessage()) {
+            throw new BadRequestException("Message is required");
+        }
+
+        Db.Event.Builder eventb = Db.Event.newBuilder();
+        eventb.setCreatedBy(ctx.user.getName());
+        eventb.setMessage(request.getMessage());
+        eventb.putAllExtra(request.getExtraMap());
+
+        if (request.hasType()) {
+            eventb.setType(request.getType());
+        }
+
+        if (request.hasSource()) {
+            eventb.setSource(request.getSource());
+            if (request.hasSequenceNumber()) { // 'should' be linked to source
+                eventb.setSeqNumber(request.getSequenceNumber());
+            } else {
+                eventb.setSeqNumber(eventSequenceNumber.getAndIncrement());
+            }
+        } else {
+            eventb.setSource("User");
+            eventb.setSeqNumber(eventSequenceNumber.getAndIncrement());
+        }
+
+        long missionTime = YamcsServer.getTimeService(instance).getMissionTime();
+        if (request.hasTime()) {
+            long eventTime = TimeEncoding.fromProtobufTimestamp(request.getTime());
+            eventb.setGenerationTime(eventTime);
+            eventb.setReceptionTime(missionTime);
+        } else {
+            eventb.setGenerationTime(missionTime);
+            eventb.setReceptionTime(missionTime);
+        }
+
+        if (request.hasSeverity()) {
+            EventSeverity severity = EventSeverity.valueOf(request.getSeverity().toUpperCase());
+            if (severity == null) {
+                throw new BadRequestException("Unsupported severity: " + request.getSeverity());
+            }
+            if (severity == EventSeverity.ERROR) {
+                log.warn("DEPRECATION WARNING: Do not create events with ERROR level, "
+                        + "this will be removed in a future release.");
+            }
+            eventb.setSeverity(severity);
+        } else {
+            eventb.setSeverity(EventSeverity.INFO);
+        }
+
+        EventProducer eventProducer = eventProducerMap.computeIfAbsent(instance, x -> {
+            return EventProducerFactory.getEventProducer(x);
+        });
+
+        // Distribute event (without augmented fields, or they'll get stored)
+        Db.Event event = eventb.build();
+        log.debug("Adding event: {}", event);
+        eventProducer.sendEvent(event);
+
+        // Send back the event in response
+        observer.complete(fromDbEvent(event));
+    }
+
+    @Override
+    public void listEventSources(Context ctx, ListEventSourcesRequest request,
+            Observer<ListEventSourcesResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        verifyEventArchiveSupport(instance);
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadEvents);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+
+        ListEventSourcesResponse.Builder responseb = ListEventSourcesResponse.newBuilder();
+        TableDefinition tableDefinition = ydb.getTable(EventRecorder.TABLE_NAME);
+        BiMap<String, Short> enumValues = tableDefinition.getEnumValues(SOURCE_COLUMN);
+        if (enumValues != null) {
+            List<String> unsortedSources = new ArrayList<>();
+            for (Entry<String, Short> entry : enumValues.entrySet()) {
+                unsortedSources.add(entry.getKey());
+            }
+            Collections.sort(unsortedSources, String.CASE_INSENSITIVE_ORDER);
+            responseb.addAllSources(unsortedSources);
+            responseb.addAllSource(unsortedSources);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public Observer<SubscribeEventsRequest> subscribeEvents(Context ctx, Observer<Event> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadEvents);
+        var clientObserver = new SubscribeEventsObserver(observer);
+        observer.setCancelHandler(() -> clientObserver.complete());
+        return clientObserver;
+    }
+
+    @Override
+    public void streamEvents(Context ctx, StreamEventsRequest request, Observer<Event> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        verifyEventArchiveSupport(instance);
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadEvents);
+
+        SqlBuilder sqlb = new SqlBuilder(EventRecorder.TABLE_NAME);
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual(GENTIME_COLUMN, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore(GENTIME_COLUMN, request.getStop());
+        }
+
+        if (request.getSourceCount() > 0) {
+            sqlb.whereColIn(SOURCE_COLUMN, request.getSourceList());
+        }
+
+        String severity = request.hasSeverity() ? request.getSeverity().toUpperCase() : INFO;
+        addSeverityFilter(sqlb, severity);
+
+        if (request.hasQ()) {
+            sqlb.where("body.message like ?", "%" + request.getQ() + "%");
+        }
+
+        var filter = request.hasFilter()
+                ? EventFilterFactory.create(request.getFilter())
+                : null;
+
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (filter != null && !filter.matches(tuple)) {
+                    return;
+                }
+
+                Db.Event incoming = (Db.Event) tuple.getColumn("body");
+                Event event = fromDbEvent(incoming);
+                observer.next(event);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                observer.complete();
+            }
+        });
+    }
+
+    @Override
+    public void exportEvents(Context ctx, ExportEventsRequest request, Observer<HttpBody> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        EventsApi.verifyEventArchiveSupport(instance);
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadEvents);
+
+        SqlBuilder sqlb = new SqlBuilder(EventRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual(GENTIME_COLUMN, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore(GENTIME_COLUMN, request.getStop());
+        }
+
+        if (request.getSourceCount() > 0) {
+            sqlb.whereColIn(SOURCE_COLUMN, request.getSourceList());
+        }
+
+        String severity = INFO;
+        if (request.hasSeverity()) {
+            severity = request.getSeverity().toUpperCase();
+        }
+
+        addSeverityFilter(sqlb, severity);
+
+        if (request.hasQ()) {
+            sqlb.where("body.message like ?", "%" + request.getQ() + "%");
+        }
+
+        String sql = sqlb.toString();
+
+        var filter = request.hasFilter()
+                ? EventFilterFactory.create(request.getFilter())
+                : null;
+
+        char delimiter = '\t';
+        if (request.hasDelimiter()) {
+            switch (request.getDelimiter()) {
+            case "TAB":
+                delimiter = '\t';
+                break;
+            case "SEMICOLON":
+                delimiter = ';';
+                break;
+            case "COMMA":
+                delimiter = ',';
+                break;
+            default:
+                throw new BadRequestException("Unexpected column delimiter");
+            }
+        }
+
+        CsvEventStreamer streamer = new CsvEventStreamer(observer, filter, delimiter);
+        StreamFactory.stream(instance, sql, sqlb.getQueryArguments(), streamer);
+    }
+
+    /**
+     * Checks if events are supported for the specified instance. This will succeed in two cases:
+     * <ol>
+     * <li>EventRecorder is currently enabled
+     * <li>EventRecorder has been enabled in the past, but may not be any longer
+     * </ol>
+     */
+    private static void verifyEventArchiveSupport(String instance) throws BadRequestException {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+        TableDefinition table = ydb.getTable(EventRecorder.TABLE_NAME);
+        if (table == null) {
+            throw new BadRequestException("No event archive support for instance '" + instance + "'");
+        }
+    }
+
+    /**
+     * Stateless continuation token for paged requests on the event table
+     */
+    private static class EventPageToken {
+
+        long gentime;
+        String source;
+        int seqNum;
+
+        EventPageToken(long gentime, String source, int seqNum) {
+            this.gentime = gentime;
+            this.source = source;
+            this.seqNum = seqNum;
+        }
+
+        static EventPageToken decode(String encoded) {
+            String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+            return new Gson().fromJson(decoded, EventPageToken.class);
+        }
+
+        String encodeAsString() {
+            String json = new Gson().toJson(this);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+        }
+    }
+
+    private static class CsvEventStreamer implements StreamSubscriber {
+
+        Observer<HttpBody> observer;
+        EventFilter filter;
+        char columnDelimiter;
+
+        CsvEventStreamer(Observer<HttpBody> observer, EventFilter filter, char columnDelimiter) {
+            this.observer = observer;
+            this.filter = filter;
+            this.columnDelimiter = columnDelimiter;
+
+            String[] rec = new String[5];
+            int i = 0;
+            rec[i++] = "Source";
+            rec[i++] = "Generation Time";
+            rec[i++] = "Reception Time";
+            rec[i++] = "Event Type";
+            rec[i++] = "Event Text";
+
+            String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+            String filename = "event_export_" + dateString + ".csv";
+
+            HttpBody metadata = HttpBody.newBuilder()
+                    .setContentType(MediaType.CSV.toString())
+                    .setFilename(filename)
+                    .setData(toByteString(rec))
+                    .build();
+
+            observer.next(metadata);
+        }
+
+        @Override
+        public void onTuple(Stream stream, Tuple tuple) {
+            if (observer.isCancelled()) {
+                stream.close();
+                return;
+            }
+
+            if (filter != null && !filter.matches(tuple)) {
+                return;
+            }
+
+            Db.Event incoming = (Db.Event) tuple.getColumn("body");
+            Event event = fromDbEvent(incoming);
+
+            String[] rec = new String[5];
+            int i = 0;
+            rec[i++] = event.getSource();
+            rec[i++] = Timestamps.toString(event.getGenerationTime());
+            rec[i++] = Timestamps.toString(event.getReceptionTime());
+            rec[i++] = event.getType();
+            rec[i++] = event.getMessage();
+
+            HttpBody body = HttpBody.newBuilder()
+                    .setData(toByteString(rec))
+                    .build();
+            observer.next(body);
+        }
+
+        private ByteString toByteString(String[] rec) {
+            ByteString.Output bout = ByteString.newOutput();
+            CsvWriter writer = new CsvWriter(bout, columnDelimiter, StandardCharsets.UTF_8);
+            try {
+                writer.writeRecord(rec);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            } finally {
+                writer.close();
+            }
+
+            return bout.toByteString();
+        }
+
+        @Override
+        public void streamClosed(Stream stream) {
+            observer.complete();
+        }
+    }
+
+    private void addSeverityFilter(SqlBuilder sqlb, String severity) {
+        switch (severity) {
+        case INFO:
+            break;
+        case WATCH:
+            sqlb.where("body.severity != 'INFO'");
+            break;
+        case WARNING:
+            sqlb.whereColIn("body.severity", Arrays.asList(WARNING, DISTRESS, CRITICAL, SEVERE, ERROR));
+            break;
+        case DISTRESS:
+            sqlb.whereColIn("body.severity", Arrays.asList(DISTRESS, CRITICAL, SEVERE, ERROR));
+            break;
+        case CRITICAL:
+            sqlb.whereColIn("body.severity", Arrays.asList(CRITICAL, SEVERE, ERROR));
+            break;
+        case SEVERE:
+            sqlb.whereColIn("body.severity", Arrays.asList(SEVERE, ERROR));
+            break;
+        default:
+            sqlb.whereColIn("body.severity", Arrays.asList(severity));
+        }
+    }
+
+    public static Event fromDbEvent(Db.Event other) {
+        Event.Builder evb = Event.newBuilder()
+                .putAllExtra(other.getExtraMap());
+        if (other.hasSource()) {
+            evb.setSource(other.getSource());
+        }
+        if (other.hasGenerationTime()) {
+            evb.setGenerationTime(TimeEncoding.toProtobufTimestamp(other.getGenerationTime()));
+        }
+        if (other.hasReceptionTime()) {
+            evb.setReceptionTime(TimeEncoding.toProtobufTimestamp(other.getReceptionTime()));
+        }
+        if (other.hasSeqNumber()) {
+            evb.setSeqNumber(other.getSeqNumber());
+        }
+        if (other.hasType()) {
+            evb.setType(other.getType());
+        }
+        if (other.hasMessage()) {
+            evb.setMessage(other.getMessage());
+        }
+        if (other.hasSeverity()) {
+            if (other.getSeverity() == EventSeverity.ERROR) {
+                evb.setSeverity(EventSeverity.SEVERE);
+            } else if (other.getSeverity() == EventSeverity.WARNING_NEW) {
+                // Temporary during WARNING -> WARNING_NEW migration
+                evb.setSeverity(EventSeverity.WARNING);
+            } else {
+                evb.setSeverity(other.getSeverity());
+            }
+        }
+        if (other.hasCreatedBy()) {
+            evb.setCreatedBy(other.getCreatedBy());
+        }
+        return evb.build();
+    }
+}
+```
+
+### `FileTransferApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/FileTransferApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ServiceWithConfig;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.actions.Action;
+import org.yamcs.actions.ActionHelper;
+import org.yamcs.api.Observer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.CfdpFileTransfer;
+import org.yamcs.cfdp.CfdpTransactionId;
+import org.yamcs.client.storage.ObjectId;
+import org.yamcs.filetransfer.FileActionIdentifier;
+import org.yamcs.filetransfer.FileActionProvider;
+import org.yamcs.filetransfer.FileTransfer;
+import org.yamcs.filetransfer.FileTransferFilter;
+import org.yamcs.filetransfer.FileTransferService;
+import org.yamcs.filetransfer.InvalidRequestException;
+import org.yamcs.filetransfer.RemoteFileListMonitor;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.filetransfer.TransferOptions;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.protobuf.AbstractFileTransferApi;
+import org.yamcs.protobuf.CancelTransferRequest;
+import org.yamcs.protobuf.CreateTransferRequest;
+import org.yamcs.protobuf.EntityInfo;
+import org.yamcs.protobuf.FileTransferServiceInfo;
+import org.yamcs.protobuf.GetFileTransferServiceRequest;
+import org.yamcs.protobuf.GetTransferRequest;
+import org.yamcs.protobuf.ListFileTransferServicesRequest;
+import org.yamcs.protobuf.ListFileTransferServicesResponse;
+import org.yamcs.protobuf.ListFilesRequest;
+import org.yamcs.protobuf.ListFilesResponse;
+import org.yamcs.protobuf.ListTransfersRequest;
+import org.yamcs.protobuf.ListTransfersResponse;
+import org.yamcs.protobuf.PauseTransferRequest;
+import org.yamcs.protobuf.ResumeTransferRequest;
+import org.yamcs.protobuf.RunFileActionRequest;
+import org.yamcs.protobuf.SubscribeTransfersRequest;
+import org.yamcs.protobuf.TransactionId;
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferInfo;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Empty;
+import com.google.protobuf.Struct;
+
+public class FileTransferApi extends AbstractFileTransferApi<Context> {
+
+    private static final Logger log = LoggerFactory.getLogger(FileTransferApi.class);
+
+    private AuditLog auditLog;
+
+    public FileTransferApi(AuditLog auditLog) {
+        this.auditLog = auditLog;
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        });
+    }
+
+    @Override
+    public void listFileTransferServices(Context ctx, ListFileTransferServicesRequest request,
+            Observer<ListFileTransferServicesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        YamcsServer yamcs = YamcsServer.getServer();
+        ListFileTransferServicesResponse.Builder responseb = ListFileTransferServicesResponse.newBuilder();
+        YamcsServerInstance ysi = yamcs.getInstance(instance);
+        for (ServiceWithConfig service : ysi.getServicesWithConfig(FileTransferService.class)) {
+            if (service.getService().isRunning()) {
+                responseb.addServices(
+                        toFileTransferServiceInfo(service.getName(), (FileTransferService) service.getService()));
+            }
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getFileTransferService(Context ctx, GetFileTransferServiceRequest request,
+            Observer<FileTransferServiceInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        var ftService = verifyService(request.getInstance(), request.getServiceName());
+        observer.complete(toFileTransferServiceInfo(request.getServiceName(), ftService));
+    }
+
+    @Override
+    public void listTransfers(Context ctx, ListTransfersRequest request, Observer<ListTransfersResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+
+        var ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+
+        var filter = new FileTransferFilter();
+        filter.limit = request.hasLimit() ? request.getLimit() : 100;
+        filter.descending = !request.getOrder().equals("asc");
+        filter.states.addAll(request.getStateList());
+
+        if (request.hasStart()) {
+            filter.start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        if (request.hasStop()) {
+            filter.stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+        if (request.hasDirection()) {
+            filter.direction = request.getDirection();
+        }
+        if (request.hasLocalEntityId()) {
+            filter.localEntityId = request.getLocalEntityId();
+        }
+        if (request.hasRemoteEntityId()) {
+            filter.remoteEntityId = request.getRemoteEntityId();
+        }
+
+        var responseb = ListTransfersResponse.newBuilder();
+        for (var transfer : ftService.getTransfers(filter)) {
+            responseb.addTransfers(toTransferInfo(ftService, transfer));
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getTransfer(Context ctx, GetTransferRequest request, Observer<TransferInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+        FileTransfer transaction = verifyTransaction(ftService, request.getId());
+        observer.complete(toTransferInfo(ftService, transaction));
+    }
+
+    @Override
+    public void createTransfer(Context ctx, CreateTransferRequest request, Observer<TransferInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+
+        if (!request.hasDirection()) {
+            throw new BadRequestException("Direction not specified");
+        }
+
+        String bucketName = request.getBucket();
+        BucketsApi.checkReadBucketPrivilege(bucketName, ctx.user);
+
+        String objectName = request.getObjectName();
+
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+
+        Bucket bucket;
+        try {
+            bucket = bucketManager.getBucket(bucketName);
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Error while resolving bucket", e);
+        }
+        if (bucket == null) {
+            throw new BadRequestException("No bucket by name '" + bucketName + "'");
+        }
+
+        if (request.getDirection() == TransferDirection.UPLOAD) {
+            TransferOptions transferOptions = new TransferOptions();
+            transferOptions.setOverwrite(true);
+            transferOptions.setCreatePath(true);
+            transferOptions.putExtraOptions(GpbWellKnownHelper.toJava(request.getOptions()));
+
+            if (transferOptions.isReliable() && transferOptions.isClosureRequested()) {
+                throw new BadRequestException("Cannot set both reliable and closureRequested options");
+            }
+            String destinationPath = request.hasRemotePath() ? request.getRemotePath() : null;
+            String source = request.hasSource() ? request.getSource() : null;
+            String destination = request.hasDestination() ? request.getDestination() : null;
+
+            try {
+                FileTransfer transfer = ftService.startUpload(source, bucket, objectName, destination,
+                        destinationPath, transferOptions);
+
+                var auditMessage = new StringBuilder("Upload ")
+                        .append(ObjectId.of(bucket.getName(), objectName));
+                if (destinationPath != null) {
+                    auditMessage.append(" to '").append(destinationPath).append("'");
+                }
+                if (request.hasServiceName()) {
+                    auditMessage.append(String.format(" (%s, %s → %s)", request.getServiceName(), source, destination));
+                } else {
+                    auditMessage.append(String.format(" (%s → %s)", source, destination));
+                }
+                auditLog.addRecord(ctx, request, auditMessage.toString());
+
+                observer.complete(toTransferInfo(ftService, transfer));
+
+            } catch (InvalidRequestException e) {
+                throw new BadRequestException(e.getMessage());
+            } catch (IOException e) {
+                log.error("Error when retrieving object {} from bucket {}", objectName, bucketName, e);
+                throw new InternalServerErrorException("Error when retrieving object: " + e.getMessage());
+            }
+        } else if (request.getDirection() == TransferDirection.DOWNLOAD) {
+            TransferOptions transferOptions = new TransferOptions();
+            transferOptions.setOverwrite(true);
+            transferOptions.setCreatePath(true);
+            transferOptions.putExtraOptions(GpbWellKnownHelper.toJava(request.getOptions()));
+
+            String sourcePath = request.getRemotePath();
+            String source = request.hasSource() ? request.getSource() : null;
+            String destination = request.hasDestination() ? request.getDestination() : null;
+
+            try {
+                FileTransfer transfer = ftService.startDownload(source, sourcePath, destination, bucket, objectName,
+                        transferOptions);
+
+                var auditMessage = new StringBuilder("Download '")
+                        .append(sourcePath)
+                        .append("' to ")
+                        .append(ObjectId.of(bucket.getName(), objectName));
+
+                if (request.hasServiceName()) {
+                    auditMessage.append(String.format(" (%s, %s ← %s)", request.getServiceName(), destination, source));
+                } else {
+                    auditMessage.append(String.format(" (%s ← %s)", destination, source));
+                }
+                auditLog.addRecord(ctx, request, auditMessage.toString());
+
+                observer.complete(toTransferInfo(ftService, transfer));
+            } catch (InvalidRequestException e) {
+                throw new BadRequestException(e.getMessage());
+            } catch (IOException e) {
+                log.error("Error when retrieving object {} from bucket {}", objectName, bucketName, e);
+                throw new InternalServerErrorException("Error when retrieving object: " + e.getMessage());
+            }
+        } else {
+            throw new BadRequestException("Unexpected direction '" + request.getDirection() + "'");
+        }
+    }
+
+    @Override
+    public void pauseTransfer(Context ctx, PauseTransferRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+
+        FileTransfer transaction = verifyTransaction(ftService, request.getId());
+        if (transaction.pausable()) {
+            ftService.pause(transaction);
+        } else {
+            throw new BadRequestException("Transaction '" + transaction.getId() + "' cannot be paused");
+        }
+        observer.complete(Empty.getDefaultInstance());
+
+        if (transaction.getDirection() == TransferDirection.UPLOAD) {
+            var auditMessage = new StringBuilder("Pausing upload of ")
+                    .append(ObjectId.of(transaction.getBucketName(), transaction.getObjectName()))
+                    .append(" to '")
+                    .append(transaction.getRemotePath())
+                    .append("'");
+            auditLog.addRecord(ctx, request, auditMessage.toString());
+        } else if (transaction.getDirection() == TransferDirection.DOWNLOAD) {
+            var auditMessage = new StringBuilder("Pausing download of '")
+                    .append(transaction.getRemotePath())
+                    .append("' to ")
+                    .append(ObjectId.of(transaction.getBucketName(), transaction.getObjectName()));
+            auditLog.addRecord(ctx, request, auditMessage.toString());
+        }
+    }
+
+    @Override
+    public void cancelTransfer(Context ctx, CancelTransferRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+
+        FileTransfer transaction = verifyTransaction(ftService, request.getId());
+        if (transaction.cancellable()) {
+            ftService.cancel(transaction);
+        } else {
+            throw new BadRequestException("Transaction '" + transaction.getId() + "' cannot be cancelled");
+        }
+        observer.complete(Empty.getDefaultInstance());
+
+        if (transaction.getDirection() == TransferDirection.UPLOAD) {
+            var auditMessage = new StringBuilder("Cancelling upload of ")
+                    .append(ObjectId.of(transaction.getBucketName(), transaction.getObjectName()))
+                    .append(" to '")
+                    .append(transaction.getRemotePath())
+                    .append("'");
+            auditLog.addRecord(ctx, request, auditMessage.toString());
+        } else if (transaction.getDirection() == TransferDirection.DOWNLOAD) {
+            var auditMessage = new StringBuilder("Cancelling download of '")
+                    .append(transaction.getRemotePath())
+                    .append("' to ")
+                    .append(ObjectId.of(transaction.getBucketName(), transaction.getObjectName()));
+            auditLog.addRecord(ctx, request, auditMessage.toString());
+        }
+    }
+
+    @Override
+    public void resumeTransfer(Context ctx, ResumeTransferRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+        FileTransfer transaction = verifyTransaction(ftService, request.getId());
+
+        if (transaction.pausable()) {
+            ftService.resume(transaction);
+        } else {
+            throw new BadRequestException("Transaction '" + transaction.getId() + "' cannot be resumed");
+        }
+        observer.complete(Empty.getDefaultInstance());
+
+        if (transaction.getDirection() == TransferDirection.UPLOAD) {
+            var auditMessage = new StringBuilder("Resuming upload of ")
+                    .append(ObjectId.of(transaction.getBucketName(), transaction.getObjectName()))
+                    .append(" to '")
+                    .append(transaction.getRemotePath())
+                    .append("'");
+            auditLog.addRecord(ctx, request, auditMessage.toString());
+        } else if (transaction.getDirection() == TransferDirection.DOWNLOAD) {
+            var auditMessage = new StringBuilder("Resuming download of '")
+                    .append(transaction.getRemotePath())
+                    .append("' to ")
+                    .append(ObjectId.of(transaction.getBucketName(), transaction.getObjectName()));
+            auditLog.addRecord(ctx, request, auditMessage.toString());
+        }
+    }
+
+    @Override
+    public void subscribeTransfers(Context ctx, SubscribeTransfersRequest request, Observer<TransferInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+        TransferMonitor listener = transfer -> {
+            observer.next(toTransferInfo(ftService, transfer));
+        };
+        observer.setCancelHandler(() -> ftService.unregisterTransferMonitor(listener));
+
+        var filter = new FileTransferFilter();
+        if (request.getOngoingOnly()) {
+            filter.states = Arrays.asList(TransferState.CANCELLING, TransferState.PAUSED, TransferState.QUEUED,
+                    TransferState.RUNNING);
+        } else {
+            // Legacy initial dump. Capability to be removed after switching known clients
+            // to "ongoingOnly: true".
+            filter.states = Arrays.asList(TransferState.values());
+        }
+
+        for (var transfer : ftService.getTransfers(filter)) {
+            observer.next(toTransferInfo(ftService, transfer));
+        }
+
+        ftService.registerTransferMonitor(listener);
+    }
+
+    @Override
+    public void subscribeRemoteFileList(Context ctx, SubscribeTransfersRequest request,
+            Observer<ListFilesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+        RemoteFileListMonitor listener = fileList -> {
+            observer.next(fileList);
+        };
+        observer.setCancelHandler(() -> ftService.unregisterRemoteFileListMonitor(listener));
+        ftService.registerRemoteFileListMonitor(listener);
+    }
+
+    /**
+     * Request file list from remote
+     */
+    @Override
+    public void fetchFileList(Context ctx, ListFilesRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+        var source = request.getSource();
+        var destination = request.getDestination();
+        ftService.fetchFileList(source, destination, request.getRemotePath(),
+                GpbWellKnownHelper.toJava(request.getOptions()));
+        observer.complete(Empty.getDefaultInstance());
+
+        var auditMessage = new StringBuilder("File list requested");
+        if (request.hasServiceName()) {
+            auditMessage.append(String.format(" (%s, %s ← %s)", request.getServiceName(), destination, source));
+        } else {
+            auditMessage.append(String.format(" (%s ← %s)", destination, source));
+        }
+        auditLog.addRecord(ctx, request, auditMessage.toString());
+    }
+
+    /**
+     * Get latest file list from service
+     */
+    @Override
+    public void getFileList(Context ctx, ListFilesRequest request, Observer<ListFilesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+        ListFilesResponse response = ftService.getFileList(request.getSource(), request.getDestination(),
+                request.getRemotePath(), GpbWellKnownHelper.toJava(request.getOptions()));
+        if (response == null) {
+            response = ListFilesResponse.newBuilder().build();
+        }
+        observer.complete(response);
+    }
+
+    @Override
+    public void runFileAction(Context ctx, RunFileActionRequest request, Observer<Struct> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlFileTransfers);
+        FileTransferService ftService = verifyService(request.getInstance(),
+                request.hasServiceName() ? request.getServiceName() : null);
+
+        Action<FileActionIdentifier> action = null;
+        if (ftService instanceof FileActionProvider fileActionProvider) {
+            action = fileActionProvider.getFileAction(request.getAction());
+        }
+        if (action == null) {
+            throw new BadRequestException("Unknown action '" + request.getAction() + "'");
+        }
+
+        ActionHelper.runAction(new FileActionIdentifier(request.getRemoteEntity(), request.getFile()), action,
+                request.getMessage(), observer);
+
+        var auditMessage = new StringBuilder("Action '")
+                .append(request.getAction())
+                .append("' performed on file '")
+                .append(request.getFile())
+                .append("'");
+        if (request.hasServiceName()) {
+            auditMessage.append(String.format(" (%s, %s)", request.getServiceName(), request.getRemoteEntity()));
+        } else {
+            auditMessage.append(String.format(" (%s)", request.getRemoteEntity()));
+        }
+        auditLog.addRecord(ctx, request, auditMessage.toString());
+    }
+
+    private static FileTransferServiceInfo toFileTransferServiceInfo(String name, FileTransferService service) {
+        FileTransferServiceInfo.Builder infob = FileTransferServiceInfo.newBuilder()
+                .setInstance(service.getYamcsInstance())
+                .setName(name);
+        infob.addAllLocalEntities(service.getLocalEntities());
+        infob.addAllRemoteEntities(service.getRemoteEntities());
+        infob.setCapabilities(service.getCapabilities());
+        infob.addAllTransferOptions(service.getFileTransferOptions());
+        return infob.build();
+    }
+
+    private FileTransfer verifyTransaction(FileTransferService ftService, long id) throws NotFoundException {
+        FileTransfer transaction = ftService.getFileTransfer(id);
+        if (transaction == null) {
+            throw new NotFoundException("No such transaction");
+        } else {
+            return transaction;
+        }
+    }
+
+    private static TransferInfo toTransferInfo(FileTransferService service, FileTransfer transfer) {
+        TransferInfo.Builder tib = TransferInfo.newBuilder()
+                .setId(transfer.getId())
+                .setState(transfer.getTransferState())
+                .setDirection(transfer.getDirection())
+                .setSizeTransferred(transfer.getTransferredSize())
+                .setReliable(transfer.isReliable());
+
+        if (transfer.getTotalSize() >= 0) {
+            tib.setTotalSize(transfer.getTotalSize());
+        }
+        if (transfer.getBucketName() != null) {
+            tib.setBucket(transfer.getBucketName());
+        }
+        if (transfer.getObjectName() != null) {
+            tib.setObjectName(transfer.getObjectName());
+        }
+        if (transfer.getRemotePath() != null) {
+            tib.setRemotePath(transfer.getRemotePath());
+        }
+
+        // Best effort, the entity may no longer be configured, in which case
+        // we can only return the ID.
+        if (transfer.getLocalEntityId() != null) {
+            tib.setLocalEntity(findLocalEntityInfo(service, transfer.getLocalEntityId()));
+        }
+        if (transfer.getRemoteEntityId() != null) {
+            tib.setRemoteEntity(findRemoteEntityInfo(service, transfer.getRemoteEntityId()));
+        }
+
+        if (transfer instanceof CfdpFileTransfer cfdpTransfer) {
+            CfdpTransactionId txid = cfdpTransfer.getTransactionId();
+            if (txid != null) {// queued transfers do not have a transaction id
+                tib.setTransactionId(toTransactionId(txid));
+            }
+        }
+
+        if (transfer.getStartTime() != TimeEncoding.INVALID_INSTANT) {
+            tib.setStartTime(TimeEncoding.toProtobufTimestamp(transfer.getStartTime()));
+        }
+
+        // creation time should always be there in the current code but in older versions this didn't exist
+        if (transfer.getCreationTime() != TimeEncoding.INVALID_INSTANT) {
+            tib.setCreationTime(TimeEncoding.toProtobufTimestamp(transfer.getCreationTime()));
+        }
+
+        String failureReason = transfer.getFailuredReason();
+        if (failureReason != null) {
+            tib.setFailureReason(failureReason);
+        }
+
+        if (transfer.getTransferType() != null) {
+            tib.setTransferType(transfer.getTransferType());
+        }
+
+        return tib.build();
+    }
+
+    private static EntityInfo findLocalEntityInfo(FileTransferService service, long entityId) {
+        for (var entityInfo : service.getLocalEntities()) {
+            if (entityId == entityInfo.getId()) {
+                return entityInfo;
+            }
+        }
+        return EntityInfo.newBuilder().setId(entityId).build();
+    }
+
+    private static EntityInfo findRemoteEntityInfo(FileTransferService service, long entityId) {
+        for (var entityInfo : service.getRemoteEntities()) {
+            if (entityId == entityInfo.getId()) {
+                return entityInfo;
+            }
+        }
+        return EntityInfo.newBuilder().setId(entityId).build();
+    }
+
+    private static TransactionId toTransactionId(CfdpTransactionId id) {
+        return TransactionId.newBuilder().setInitiatorEntity(id.getInitiatorEntity())
+                .setSequenceNumber(id.getSequenceNumber()).build();
+    }
+
+    private FileTransferService verifyService(String yamcsInstance, String serviceName) throws NotFoundException {
+        String instance = InstancesApi.verifyInstance(yamcsInstance);
+        FileTransferService ftServ = null;
+        if (serviceName != null) {
+            ftServ = YamcsServer.getServer().getInstance(instance)
+                    .getService(FileTransferService.class, serviceName);
+        } else {
+            List<FileTransferService> cl = YamcsServer.getServer().getInstance(instance)
+                    .getServices(FileTransferService.class);
+            if (cl.size() > 0) {
+                ftServ = cl.get(0);
+            }
+        }
+        if (ftServ == null) {
+            if (serviceName == null) {
+                throw new NotFoundException("No file transfer service found");
+            } else {
+                throw new NotFoundException("File transfer service '" + serviceName + "' not found");
+            }
+        }
+        return ftServ;
+    }
+}
+```
+
+### `GbpToXtceAssembler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/GbpToXtceAssembler.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.http.BadRequestException;
+import org.yamcs.mdb.ConditionParser;
+import org.yamcs.protobuf.Mdb.AlarmInfo;
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Mdb.AlarmRange;
+import org.yamcs.protobuf.Mdb.CalibratorInfo;
+import org.yamcs.protobuf.Mdb.CalibratorInfo.Type;
+import org.yamcs.protobuf.Mdb.ComparisonInfo;
+import org.yamcs.protobuf.Mdb.ContextAlarmInfo;
+import org.yamcs.protobuf.Mdb.ContextCalibratorInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.PolynomialCalibratorInfo;
+import org.yamcs.protobuf.Mdb.SplineCalibratorInfo;
+import org.yamcs.protobuf.Mdb.SplineCalibratorInfo.SplinePointInfo;
+import org.yamcs.xtce.AlarmLevels;
+import org.yamcs.xtce.AlarmRanges;
+import org.yamcs.xtce.Calibrator;
+import org.yamcs.xtce.Comparison;
+import org.yamcs.xtce.ComparisonList;
+import org.yamcs.xtce.ContextCalibrator;
+import org.yamcs.xtce.EnumerationAlarm;
+import org.yamcs.xtce.EnumerationAlarm.EnumerationAlarmItem;
+import org.yamcs.xtce.EnumerationContextAlarm;
+import org.yamcs.xtce.MatchCriteria;
+import org.yamcs.xtce.NumericAlarm;
+import org.yamcs.xtce.NumericContextAlarm;
+import org.yamcs.xtce.OperatorType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterInstanceRef;
+import org.yamcs.xtce.PolynomialCalibrator;
+import org.yamcs.xtce.SplineCalibrator;
+import org.yamcs.xtce.SplinePoint;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.xtce.util.NameReference;
+
+public class GbpToXtceAssembler {
+
+    public static Calibrator toCalibrator(CalibratorInfo ci) throws BadRequestException {
+
+        if (ci.getType() == Type.POLYNOMIAL) {
+            if (!ci.hasPolynomialCalibrator()) {
+                throw new BadRequestException("PolynomialCalibrator field not set");
+            }
+            return toPolynomialCalibrator(ci.getPolynomialCalibrator());
+        } else if (ci.getType() == Type.SPLINE) {
+            if (!ci.hasSplineCalibrator()) {
+                throw new BadRequestException("SplineCalibrator field not set");
+            }
+            return toSplineCalibrator(ci.getSplineCalibrator());
+        } else {
+            throw new BadRequestException("Unsupported calibrator type '" + ci.getType() + "'");
+        }
+    }
+
+    public static PolynomialCalibrator toPolynomialCalibrator(PolynomialCalibratorInfo pci) {
+        double[] c = new double[pci.getCoefficientCount()];
+        for (int i = 0; i < c.length; i++) {
+            c[i] = pci.getCoefficient(i);
+        }
+        return new PolynomialCalibrator(c);
+    }
+
+    public static SplineCalibrator toSplineCalibrator(SplineCalibratorInfo sci) {
+        List<SplinePoint> c = new ArrayList<>(sci.getPointCount());
+        for (int i = 0; i < sci.getPointCount(); i++) {
+            SplinePointInfo spi = sci.getPoint(i);
+            c.add(new SplinePoint(spi.getRaw(), spi.getCalibrated()));
+        }
+        return new SplineCalibrator(c);
+    }
+
+    // spaceSystemName is the name of the space system used to lookup parameters which may be part of context
+    // specification in string format
+    public static List<ContextCalibrator> toContextCalibratorList(Mdb mdb, String spaceSystemName,
+            List<ContextCalibratorInfo> ccl) throws BadRequestException {
+        List<ContextCalibrator> l = new ArrayList<>(ccl.size());
+        for (ContextCalibratorInfo cci : ccl) {
+            l.add(toContextCalibrator(mdb, spaceSystemName, cci));
+        }
+        return l;
+    }
+
+    public static ContextCalibrator toContextCalibrator(Mdb mdb, String spaceSystemName,
+            ContextCalibratorInfo cci) throws BadRequestException {
+        MatchCriteria mc = null;
+        if (cci.hasContext()) {
+            mc = toMatchCriteria(mdb, spaceSystemName, cci.getContext());
+        } else if (cci.getComparisonCount() > 0) {
+            mc = toMatchCriteria(mdb, cci.getComparisonList());
+        } else {
+            throw new BadRequestException("No context provided in the ContextAlarmInfo");
+        }
+        return new ContextCalibrator(mc, toCalibrator(cci.getCalibrator()));
+    }
+
+    private static MatchCriteria toMatchCriteria(Mdb mdb, List<ComparisonInfo> comparisonList)
+            throws BadRequestException {
+        int n = comparisonList.size();
+        if (n == 1) {
+            return toComparison(mdb, comparisonList.get(0));
+        } else {
+            ComparisonList cl = new ComparisonList();
+            for (ComparisonInfo ci : comparisonList) {
+                cl.addComparison(toComparison(mdb, ci));
+            }
+            return cl;
+        }
+    }
+
+    private static Comparison toComparison(Mdb mdb, ComparisonInfo ci) throws BadRequestException {
+        if (!ci.hasParameter()) {
+            throw new BadRequestException("ComparisonInfo has no parameter set");
+        }
+        ParameterInfo pi = ci.getParameter();
+        if (!pi.hasQualifiedName()) {
+            throw new BadRequestException("ComparisonInfo.ParameterInfo has no qualified name");
+        }
+        Parameter p = mdb.getParameter(pi.getQualifiedName());
+        if (p == null) {
+            throw new BadRequestException("Unknown parameter by name '" + pi.getQualifiedName());
+        }
+
+        ParameterInstanceRef pir = new ParameterInstanceRef(p);
+        Comparison c = new Comparison(pir, ci.getValue(), toOperatorType(ci.getOperator()));
+        c.validateValueType();
+        return c;
+    }
+
+    private static OperatorType toOperatorType(ComparisonInfo.OperatorType ot) {
+        switch (ot) {
+        case EQUAL_TO:
+            return OperatorType.EQUALITY;
+        case NOT_EQUAL_TO:
+            return OperatorType.INEQUALITY;
+        case GREATER_THAN_OR_EQUAL_TO:
+            return OperatorType.LARGEROREQUALTHAN;
+        case GREATER_THAN:
+            return OperatorType.LARGERTHAN;
+        case SMALLER_THAN_OR_EQUAL_TO:
+            return OperatorType.SMALLEROREQUALTHAN;
+        case SMALLER_THAN:
+            return OperatorType.SMALLERTHAN;
+        default:
+            throw new IllegalStateException("Unexpected operator " + ot);
+        }
+    }
+
+    public static EnumerationAlarm toEnumerationAlarm(AlarmInfo ai) throws BadRequestException {
+        if (ai.getStaticAlarmRangeCount() > 0) {
+            throw new BadRequestException("Cannot set numeric alarm ranges for an enumerated parameter");
+        }
+        EnumerationAlarm ea = new EnumerationAlarm();
+
+        ea.setAlarmList(toEnumerationAlarmList(ai.getEnumerationAlarmList()));
+        if (ai.hasMinViolations()) {
+            ea.setMinViolations(ai.getMinViolations());
+        }
+        return ea;
+    }
+
+    private static List<EnumerationAlarmItem> toEnumerationAlarmList(
+            List<org.yamcs.protobuf.Mdb.EnumerationAlarm> enumerationAlarmList) throws BadRequestException {
+        List<EnumerationAlarmItem> r = new ArrayList<>(enumerationAlarmList.size());
+        for (org.yamcs.protobuf.Mdb.EnumerationAlarm ea : enumerationAlarmList) {
+            r.add(new EnumerationAlarmItem(ea.getLabel(), toAlarmsLevel(ea.getLevel())));
+        }
+        return r;
+    }
+
+    private static AlarmLevels toAlarmsLevel(AlarmLevelType level) throws BadRequestException {
+        switch (level) {
+        case CRITICAL:
+            return AlarmLevels.CRITICAL;
+        case DISTRESS:
+            return AlarmLevels.DISTRESS;
+        case SEVERE:
+            return AlarmLevels.SEVERE;
+        case WARNING:
+            return AlarmLevels.WARNING;
+        case WATCH:
+            return AlarmLevels.WATCH;
+        case NORMAL:
+            throw new BadRequestException("Normal alarm range does not need to be specified");
+        default:
+            throw new IllegalStateException("unknown alarm level " + level);
+        }
+    }
+
+    public static NumericAlarm toNumericAlarm(AlarmInfo ai) throws BadRequestException {
+        if (ai.getEnumerationAlarmCount() > 0) {
+            throw new BadRequestException("Cannot set enumeration alarms for an numeric parameter");
+        }
+        NumericAlarm na = new NumericAlarm();
+        if (ai.hasMinViolations()) {
+            na.setMinViolations(ai.getMinViolations());
+        }
+        na.setStaticAlarmRanges(toStaticAlarmRanges(ai.getStaticAlarmRangeList()));
+        return na;
+    }
+
+    public static AlarmRanges toStaticAlarmRanges(List<AlarmRange> alarmRangeList) throws BadRequestException {
+        AlarmRanges ar = new AlarmRanges();
+        for (AlarmRange a : alarmRangeList) {
+            if (!a.hasLevel()) {
+                throw new BadRequestException("no level specified for alarm");
+            }
+            switch (a.getLevel()) {
+            case CRITICAL:
+                ar.addCriticalRange(toDoubleRange(a));
+                break;
+            case DISTRESS:
+                ar.addDistressRange(toDoubleRange(a));
+                break;
+            case SEVERE:
+                ar.addSevereRange(toDoubleRange(a));
+                break;
+            case WARNING:
+                ar.addWarningRange(toDoubleRange(a));
+                break;
+            case WATCH:
+                ar.addWatchRange(toDoubleRange(a));
+                break;
+            case NORMAL:
+                throw new BadRequestException("Normal alarm range does not need to be specified");
+            default:
+                break;
+            }
+        }
+        return ar;
+    }
+
+    private static DoubleRange toDoubleRange(AlarmRange a) {
+        boolean minIncl = false;
+        boolean maxIncl = false;
+        double min = Double.NEGATIVE_INFINITY;
+        double max = Double.POSITIVE_INFINITY;
+        if (a.hasMinInclusive()) {
+            minIncl = true;
+            min = a.getMinInclusive();
+        } else if (a.hasMinExclusive()) {
+            min = a.getMinExclusive();
+        }
+        if (a.hasMaxInclusive()) {
+            maxIncl = true;
+            max = a.getMaxInclusive();
+        } else if (a.hasMaxExclusive()) {
+            max = a.getMaxExclusive();
+        }
+
+        return new DoubleRange(min, max, minIncl, maxIncl);
+    }
+
+    public static List<EnumerationContextAlarm> toEnumerationContextAlarm(Mdb mdb,
+            String spaceSystemName, List<ContextAlarmInfo> contextAlarmList) throws BadRequestException {
+        List<EnumerationContextAlarm> l = new ArrayList<>(contextAlarmList.size());
+        for (ContextAlarmInfo cai : contextAlarmList) {
+            if (cai.hasContext()) {
+                l.add(toEnumerationContextAlarm(mdb, spaceSystemName, cai));
+            }
+        }
+        return l;
+    }
+
+    /**
+     * 
+     * @param mdb
+     * @param spaceSystemName
+     *            - the name of the space system used to lookup parameters reference by relative name in the context
+     *            specification
+     * @param cai
+     * @return
+     * @throws BadRequestException
+     */
+    public static EnumerationContextAlarm toEnumerationContextAlarm(Mdb mdb, String spaceSystemName,
+            ContextAlarmInfo cai)
+            throws BadRequestException {
+        EnumerationContextAlarm eca = new EnumerationContextAlarm();
+        if (cai.hasContext()) {
+            eca.setContextMatch(toMatchCriteria(mdb, spaceSystemName, cai.getContext()));
+        } else if (cai.getComparisonCount() > 0) {
+            eca.setContextMatch(toMatchCriteria(mdb, cai.getComparisonList()));
+        } else {
+            throw new BadRequestException("No context provided in the ContextAlarmInfo");
+        }
+
+        if (!cai.hasAlarm()) {
+            throw new BadRequestException("No alarm specified for the context");
+        }
+        AlarmInfo ai = cai.getAlarm();
+        if (ai.getStaticAlarmRangeCount() > 0) {
+            throw new BadRequestException("Cannot set numeric alarm ranges for an enumerated parameter");
+        }
+        eca.setAlarmList(toEnumerationAlarmList(ai.getEnumerationAlarmList()));
+        return eca;
+    }
+
+    public static List<NumericContextAlarm> toNumericContextAlarm(Mdb mdb,
+            String spaceSystemName, List<ContextAlarmInfo> contextAlarmList) throws BadRequestException {
+        List<NumericContextAlarm> l = new ArrayList<>(contextAlarmList.size());
+        for (ContextAlarmInfo cai : contextAlarmList) {
+            l.add(toNumericContextAlarm(mdb, spaceSystemName, cai));
+        }
+        return l;
+    }
+
+    public static NumericContextAlarm toNumericContextAlarm(Mdb mdb, String spaceSystemName, ContextAlarmInfo cai)
+            throws BadRequestException {
+        NumericContextAlarm nca = new NumericContextAlarm();
+        if (cai.hasContext()) {
+            nca.setContextMatch(toMatchCriteria(mdb, spaceSystemName, cai.getContext()));
+        } else if (cai.getComparisonCount() > 0) {
+            nca.setContextMatch(toMatchCriteria(mdb, cai.getComparisonList()));
+        } else {
+            throw new BadRequestException("No context provided in the ContextAlarmInfo");
+        }
+
+        if (!cai.hasAlarm()) {
+            throw new BadRequestException("No alarm specified for the context");
+        }
+        AlarmInfo ai = cai.getAlarm();
+        if (ai.getEnumerationAlarmCount() > 0) {
+            throw new BadRequestException("Cannot set enumeration alarms for an numeric parameter");
+        }
+        nca.setStaticAlarmRanges(toStaticAlarmRanges(ai.getStaticAlarmRangeList()));
+        return nca;
+    }
+
+    private static MatchCriteria toMatchCriteria(Mdb mdb, String spaceSystemName, String context)
+            throws BadRequestException {
+        List<NameReference> unresolvedRefs = new ArrayList<>();
+
+        ConditionParser condParser = new ConditionParser(pname -> {
+            Parameter p = null;
+            if (pname.startsWith("/")) {
+                p = mdb.getParameter(pname);
+            } else {
+                p = mdb.getParameter(spaceSystemName + "/" + pname);
+            }
+            NameReference nr = new NameReference(pname, NameReference.Type.PARAMETER);
+            if (p != null) {
+                nr.resolved(p);
+            } else {
+                unresolvedRefs.add(nr);
+            }
+            return nr;
+        });
+
+        try {
+            MatchCriteria mc = condParser.parseMatchCriteria(context);
+            if (!unresolvedRefs.isEmpty()) {
+                throw new BadRequestException("Unknown references in context expression: "
+                        + unresolvedRefs.stream().map(unr -> unr.getReference()).collect(Collectors.joining(",")));
+            }
+            return mc;
+        } catch (ParseException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+}
+```
+
+### `GpbWellKnownHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/GpbWellKnownHelper.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import com.google.protobuf.ListValue;
+import com.google.protobuf.Struct;
+import com.google.protobuf.Value;
+
+/**
+ * Helper methods for dealing with Protobuf "well-known types".
+ */
+public class GpbWellKnownHelper {
+
+    /**
+     * Converts a Protobuf struct to Java Map where all elements are converted to equivalent Java types.
+     */
+    public static Map<String, Object> toJava(Struct struct) {
+        var map = new LinkedHashMap<String, Object>(struct.getFieldsCount());
+        struct.getFieldsMap().forEach((k, v) -> map.put(k, toJava(v)));
+        return map;
+    }
+
+    public static List<Object> toJava(ListValue value) {
+        return value.getValuesList().stream()
+                .map(GpbWellKnownHelper::toJava)
+                .collect(Collectors.toList());
+    }
+
+    public static Object toJava(Value value) {
+        switch (value.getKindCase()) {
+        case NULL_VALUE:
+            return null;
+        case BOOL_VALUE:
+            return value.getBoolValue();
+        case NUMBER_VALUE:
+            return value.getNumberValue();
+        case STRING_VALUE:
+            return value.getStringValue();
+        case STRUCT_VALUE:
+            return toJava(value.getStructValue());
+        case LIST_VALUE:
+            return toJava(value.getListValue());
+        default:
+            throw new IllegalStateException("Unexpected value kind '" + value.getKindCase() + "'");
+        }
+    }
+}
+```
+
+### `IamApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/IamApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.http.auth.TokenStore;
+import org.yamcs.protobuf.AbstractIamApi;
+import org.yamcs.protobuf.CreateGroupRequest;
+import org.yamcs.protobuf.CreateServiceAccountRequest;
+import org.yamcs.protobuf.CreateServiceAccountResponse;
+import org.yamcs.protobuf.CreateUserRequest;
+import org.yamcs.protobuf.DeleteGroupRequest;
+import org.yamcs.protobuf.DeleteIdentityRequest;
+import org.yamcs.protobuf.DeleteRoleAssignmentRequest;
+import org.yamcs.protobuf.DeleteServiceAccountRequest;
+import org.yamcs.protobuf.DeleteUserRequest;
+import org.yamcs.protobuf.ExternalIdentityInfo;
+import org.yamcs.protobuf.GetGroupRequest;
+import org.yamcs.protobuf.GetRoleRequest;
+import org.yamcs.protobuf.GetServiceAccountRequest;
+import org.yamcs.protobuf.GetUserRequest;
+import org.yamcs.protobuf.GroupInfo;
+import org.yamcs.protobuf.ListGroupsResponse;
+import org.yamcs.protobuf.ListPrivilegesResponse;
+import org.yamcs.protobuf.ListRolesResponse;
+import org.yamcs.protobuf.ListServiceAccountsResponse;
+import org.yamcs.protobuf.ListUsersResponse;
+import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
+import org.yamcs.protobuf.ObjectPrivilegeInfo;
+import org.yamcs.protobuf.RoleInfo;
+import org.yamcs.protobuf.ServiceAccountInfo;
+import org.yamcs.protobuf.UpdateGroupRequest;
+import org.yamcs.protobuf.UpdateUserRequest;
+import org.yamcs.protobuf.UserInfo;
+import org.yamcs.security.ApplicationCredentials;
+import org.yamcs.security.Directory;
+import org.yamcs.security.Group;
+import org.yamcs.security.ObjectPrivilege;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.Role;
+import org.yamcs.security.SecurityStore;
+import org.yamcs.security.ServiceAccount;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.security.User;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Empty;
+
+public class IamApi extends AbstractIamApi<Context> {
+
+    private TokenStore tokenStore;
+
+    public IamApi(AuditLog auditLog, TokenStore tokenStore) {
+        this.tokenStore = tokenStore;
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ControlAccess);
+        });
+    }
+
+    @Override
+    public void listRoles(Context ctx, Empty request, Observer<ListRolesResponse> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        List<Role> roles = securityStore.getDirectory().getRoles();
+        Collections.sort(roles, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+
+        ListRolesResponse.Builder responseb = ListRolesResponse.newBuilder();
+        for (Role role : roles) {
+            RoleInfo roleInfo = toRoleInfo(role);
+            responseb.addRoles(roleInfo);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getRole(Context ctx, GetRoleRequest request, Observer<RoleInfo> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Role role = securityStore.getDirectory().getRole(request.getName());
+        if (role == null) {
+            throw new NotFoundException();
+        }
+        observer.complete(toRoleInfo(role));
+    }
+
+    @Override
+    public void deleteRoleAssignment(Context ctx, DeleteRoleAssignmentRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        String username = request.getName();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+        user.deleteRole(request.getRole());
+        directory.updateUserProperties(user);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void listPrivileges(Context ctx, Empty request, Observer<ListPrivilegesResponse> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        List<SystemPrivilege> privileges = new ArrayList<>(securityStore.getSystemPrivileges());
+        Collections.sort(privileges, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+
+        ListPrivilegesResponse.Builder responseb = ListPrivilegesResponse.newBuilder();
+        for (SystemPrivilege privilege : privileges) {
+            responseb.addSystemPrivileges(privilege.getName());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listUsers(Context ctx, Empty request, Observer<ListUsersResponse> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        List<User> users = directory.getUsers();
+        Collections.sort(users, (u1, u2) -> u1.getName().compareToIgnoreCase(u2.getName()));
+
+        var sensitiveDetails = ctx.user.hasSystemPrivilege(SystemPrivilege.ControlAccess);
+        ListUsersResponse.Builder responseb = ListUsersResponse.newBuilder();
+        for (User user : users) {
+            UserInfo userb = toUserInfo(user, sensitiveDetails, directory);
+            responseb.addUsers(userb);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void createUser(Context ctx, CreateUserRequest request, Observer<UserInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+
+        if (!request.hasName()) {
+            throw new BadRequestException("Name is required");
+        }
+        String name = request.getName().trim();
+        if (name.isEmpty()) {
+            throw new BadRequestException("Name is required");
+        }
+        if (directory.getUser(name) != null) {
+            throw new BadRequestException("A user named '" + name + "' already exists");
+        }
+
+        User user = new User(name, ctx.user);
+        if (request.hasDisplayName()) {
+            user.setDisplayName(request.getDisplayName());
+        }
+        if (request.hasEmail()) {
+            user.setEmail(request.getEmail());
+        }
+        user.confirm();
+
+        try {
+            directory.addUser(user);
+
+            if (request.hasPassword()) {
+                directory.changePassword(user, request.getPassword().toCharArray());
+            }
+        } catch (IOException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        observer.complete(toUserInfo(user, true, directory));
+    }
+
+    @Override
+    public void getUser(Context ctx, GetUserRequest request, Observer<UserInfo> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        String username = request.getName();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+        var sensitiveDetails = ctx.user.hasSystemPrivilege(SystemPrivilege.ControlAccess);
+        observer.complete(toUserInfo(user, sensitiveDetails, directory));
+    }
+
+    @Override
+    public void updateUser(Context ctx, UpdateUserRequest request, Observer<UserInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+
+        String username = request.getName();
+        Directory directory = securityStore.getDirectory();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+
+        if (request.hasPassword() && user.isExternallyManaged()) {
+            throw new BadRequestException("Cannot set the password of an externally managed user");
+        }
+        if (user.equals(ctx.user)) {
+            if (request.hasActive()) {
+                throw new BadRequestException("You cannot change your own active attribute");
+            }
+            if (request.hasSuperuser()) {
+                throw new BadRequestException("You cannot change your own superuser attribute");
+            }
+        }
+
+        if (request.hasDisplayName()) {
+            user.setDisplayName(request.getDisplayName());
+        }
+        if (request.hasEmail()) {
+            user.setEmail(request.getEmail());
+        }
+        if (request.hasActive()) {
+            user.setActive(request.getActive());
+        }
+        if (request.hasSuperuser()) {
+            user.setSuperuser(request.getSuperuser());
+        }
+        if (request.hasRoleAssignment()) {
+            user.setRoles(request.getRoleAssignment().getRolesList());
+        }
+        directory.updateUserProperties(user);
+
+        if (request.hasPassword()) {
+            directory.changePassword(user, request.getPassword().toCharArray());
+        }
+
+        var sensitiveDetails = ctx.user.hasSystemPrivilege(SystemPrivilege.ControlAccess);
+        observer.complete(toUserInfo(user, sensitiveDetails, directory));
+    }
+
+    @Override
+    public void deleteIdentity(Context ctx, DeleteIdentityRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        String username = request.getName();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+        user.deleteIdentity(request.getProvider());
+        directory.updateUserProperties(user);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void getOwnUser(Context ctx, Empty request, Observer<UserInfo> observer) {
+        User user = ctx.user;
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        observer.complete(toUserInfo(user, true, directory));
+    }
+
+    @Override
+    public void listServiceAccounts(Context ctx, Empty request, Observer<ListServiceAccountsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        List<ServiceAccount> serviceAccounts = directory.getServiceAccounts();
+        Collections.sort(serviceAccounts, (r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
+
+        ListServiceAccountsResponse.Builder responseb = ListServiceAccountsResponse.newBuilder();
+        for (ServiceAccount serviceAccount : serviceAccounts) {
+            ServiceAccountInfo serviceAccountInfo = toServiceAccountInfo(serviceAccount, false, directory);
+            responseb.addServiceAccounts(serviceAccountInfo);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getServiceAccount(Context ctx, GetServiceAccountRequest request,
+            Observer<ServiceAccountInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        String name = request.getName();
+        ServiceAccount serviceAccount = directory.getServiceAccount(name);
+        if (serviceAccount == null) {
+            throw new NotFoundException();
+        }
+        observer.complete(toServiceAccountInfo(serviceAccount, true, directory));
+    }
+
+    @Override
+    public void deleteServiceAccount(Context ctx, DeleteServiceAccountRequest request,
+            Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        ServiceAccount serviceAccount = directory.getServiceAccount(request.getName());
+        if (serviceAccount == null) {
+            throw new NotFoundException();
+        }
+        directory.deleteServiceAccount(serviceAccount);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void deleteUser(Context ctx, DeleteUserRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        String username = request.getName();
+        User user = directory.getUser(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+        try {
+            tokenStore.forgetUser(user.getName());
+            directory.deleteUser(user);
+            observer.complete(Empty.getDefaultInstance());
+        } catch (IOException e) {
+            observer.completeExceptionally(e);
+        }
+    }
+
+    @Override
+    public void createServiceAccount(Context ctx, CreateServiceAccountRequest request,
+            Observer<CreateServiceAccountResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+
+        if (!request.hasName()) {
+            throw new BadRequestException("No name was specified");
+        }
+        Directory directory = securityStore.getDirectory();
+        if (directory.getServiceAccount(request.getName()) != null) {
+            throw new BadRequestException("An account named '" + request.getName() + "' already exists");
+        }
+
+        ServiceAccount serviceAccount = new ServiceAccount(request.getName(), ctx.user);
+        ApplicationCredentials credentials;
+        try {
+            credentials = directory.addServiceAccount(serviceAccount);
+        } catch (IOException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        CreateServiceAccountResponse.Builder responseb = CreateServiceAccountResponse.newBuilder();
+        responseb.setName(serviceAccount.getName());
+        responseb.setApplicationId(credentials.getApplicationId());
+        responseb.setApplicationSecret(credentials.getApplicationSecret());
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listGroups(Context ctx, Empty request, Observer<ListGroupsResponse> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        List<Group> groups = directory.getGroups();
+        Collections.sort(groups, (r1, r2) -> r1.getName().compareToIgnoreCase(r2.getName()));
+
+        ListGroupsResponse.Builder responseb = ListGroupsResponse.newBuilder();
+        for (Group group : groups) {
+            GroupInfo groupInfo = toGroupInfo(group, true, directory);
+            responseb.addGroups(groupInfo);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getGroup(Context ctx, GetGroupRequest request, Observer<GroupInfo> observer) {
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        Directory directory = securityStore.getDirectory();
+        String name = request.getName();
+        Group group = directory.getGroup(name);
+        if (group == null) {
+            throw new NotFoundException();
+        }
+        observer.complete(toGroupInfo(group, true, directory));
+    }
+
+    @Override
+    public void createGroup(Context ctx, CreateGroupRequest request, Observer<GroupInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+
+        if (!request.hasName()) {
+            throw new BadRequestException("No group name was specified");
+        }
+        Directory directory = securityStore.getDirectory();
+        if (directory.getGroup(request.getName()) != null) {
+            throw new BadRequestException("A group named '" + request.getName() + "' already exists");
+        }
+        Group group = new Group(request.getName());
+        if (request.hasDescription()) {
+            group.setDescription(request.getDescription());
+        }
+        for (String username : request.getUsersList()) {
+            long memberId = directory.getUser(username).getId();
+            group.addMember(memberId);
+        }
+        for (String serviceAccountName : request.getServiceAccountsList()) {
+            long memberId = directory.getServiceAccount(serviceAccountName).getId();
+            group.addMember(memberId);
+        }
+
+        directory.addGroup(group);
+        observer.complete(toGroupInfo(group, true, directory));
+    }
+
+    @Override
+    public void updateGroup(Context ctx, UpdateGroupRequest request, Observer<GroupInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+
+        String name = request.getName();
+        Directory directory = securityStore.getDirectory();
+        Group group = directory.getGroup(name);
+        if (group == null) {
+            throw new NotFoundException();
+        }
+
+        if (request.hasNewName() && !request.getNewName().equals(group.getName())) {
+            String newName = request.getNewName().trim();
+            if (newName.isEmpty()) {
+                throw new BadRequestException("Name must not be empty");
+            } else if (directory.getGroup(newName) != null) {
+                throw new BadRequestException("Group '" + newName + "' already exists");
+            }
+            directory.renameGroup(group.getName(), newName);
+            group.setName(newName);
+        }
+        if (request.hasDescription()) {
+            group.setDescription(request.getDescription());
+        }
+        if (request.hasMemberInfo()) {
+            Set<Long> memberIds = new HashSet<>();
+            for (String username : request.getMemberInfo().getUsersList()) {
+                User user = directory.getUser(username);
+                memberIds.add(user.getId());
+            }
+            for (String serviceAccountName : request.getMemberInfo().getServiceAccountsList()) {
+                ServiceAccount serviceAccount = directory.getServiceAccount(serviceAccountName);
+                memberIds.add(serviceAccount.getId());
+            }
+            group.setMembers(memberIds);
+        }
+        directory.updateGroupProperties(group);
+
+        observer.complete(toGroupInfo(group, true, directory));
+    }
+
+    @Override
+    public void deleteGroup(Context ctx, DeleteGroupRequest request, Observer<GroupInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        String name = request.getName();
+        Directory directory = securityStore.getDirectory();
+        Group group = directory.getGroup(name);
+        if (group == null) {
+            throw new NotFoundException();
+        }
+        directory.deleteGroup(group);
+        observer.complete(toGroupInfo(group, true, directory));
+    }
+
+    public static UserInfo toUserInfo(User user, boolean sensitiveDetails, Directory directory) {
+        UserInfo.Builder userb;
+        userb = UserInfo.newBuilder();
+        userb.setName(user.getName());
+        userb.setActive(user.isActive());
+        userb.setSuperuser(user.isSuperuser());
+        if (user.getDisplayName() != null) {
+            userb.setDisplayName(user.getDisplayName());
+        }
+        if (user.getEmail() != null) {
+            userb.setEmail(user.getEmail());
+        }
+        if (sensitiveDetails) {
+            User createdBy = directory.getUser(user.getCreatedBy());
+            if (createdBy != null) {
+                userb.setCreatedBy(toUserInfo(createdBy, false, directory));
+            }
+            userb.setCreationTime(TimeEncoding.toProtobufTimestamp(user.getCreationTime()));
+            if (user.getConfirmationTime() != TimeEncoding.INVALID_INSTANT) {
+                userb.setConfirmationTime(TimeEncoding.toProtobufTimestamp(user.getConfirmationTime()));
+            }
+            if (user.getLastLoginTime() != TimeEncoding.INVALID_INSTANT) {
+                userb.setLastLoginTime(TimeEncoding.toProtobufTimestamp(user.getLastLoginTime()));
+            }
+
+            if (user.getClearance() != null) {
+                SignificanceLevelType level = SignificanceLevelType.valueOf(user.getClearance().getLevel());
+                userb.setClearance(level);
+            }
+
+            List<String> unsortedSystemPrivileges = new ArrayList<>();
+            for (SystemPrivilege privilege : user.getSystemPrivileges()) {
+                unsortedSystemPrivileges.add(privilege.getName());
+            }
+            Collections.sort(unsortedSystemPrivileges);
+            userb.addAllSystemPrivileges(unsortedSystemPrivileges);
+
+            List<ObjectPrivilegeInfo> unsortedObjectPrivileges = new ArrayList<>();
+            for (Entry<ObjectPrivilegeType, Set<ObjectPrivilege>> privilege : user.getObjectPrivileges().entrySet()) {
+                ObjectPrivilegeInfo.Builder infob = ObjectPrivilegeInfo.newBuilder();
+                infob.setType(privilege.getKey().toString());
+                for (ObjectPrivilege objectPrivilege : privilege.getValue()) {
+                    infob.addObjects(objectPrivilege.getObject());
+                }
+                unsortedObjectPrivileges.add(infob.build());
+            }
+            Collections.sort(unsortedObjectPrivileges, (p1, p2) -> p1.getType().compareTo(p2.getType()));
+            userb.addAllObjectPrivileges(unsortedObjectPrivileges);
+
+            user.getIdentityEntrySet().forEach(entry -> {
+                userb.addIdentities(ExternalIdentityInfo.newBuilder()
+                        .setProvider(entry.getKey())
+                        .setIdentity(entry.getValue()));
+            });
+
+            List<String> unsortedRoles = new ArrayList<>();
+            unsortedRoles.addAll(user.getRoles());
+            Collections.sort(unsortedRoles);
+            for (String roleName : unsortedRoles) {
+                Role role = directory.getRole(roleName);
+                if (role != null) {
+                    RoleInfo.Builder roleb = RoleInfo.newBuilder();
+                    roleb.setName(roleName);
+                    if (role.getDescription() != null) {
+                        roleb.setDescription(role.getDescription());
+                    }
+                    userb.addRoles(roleb);
+                }
+            }
+
+            for (Group group : directory.getGroups(user)) {
+                GroupInfo groupInfo = toGroupInfo(group, false, directory);
+                userb.addGroups(groupInfo);
+            }
+        }
+
+        return userb.build();
+    }
+
+    private static GroupInfo toGroupInfo(Group group, boolean addMembers, Directory directory) {
+        GroupInfo.Builder groupInfob = GroupInfo.newBuilder();
+        groupInfob.setName(group.getName());
+        if (group.getDescription() != null) {
+            groupInfob.setDescription(group.getDescription());
+        }
+        if (addMembers) {
+            for (long memberId : group.getMembers()) {
+                User user = directory.getUser(memberId);
+                UserInfo userInfo = toUserInfo(user, false, directory);
+                groupInfob.addUsers(userInfo);
+            }
+        }
+        return groupInfob.build();
+    }
+
+    private static ServiceAccountInfo toServiceAccountInfo(ServiceAccount serviceAccount, boolean details,
+            Directory directory) {
+        ServiceAccountInfo.Builder b = ServiceAccountInfo.newBuilder();
+        b.setName(serviceAccount.getName());
+        b.setActive(serviceAccount.isActive());
+        if (serviceAccount.getDisplayName() != null) {
+            b.setDisplayName(serviceAccount.getDisplayName());
+        }
+        if (details) {
+            User createdBy = directory.getUser(serviceAccount.getCreatedBy());
+            if (createdBy != null) {
+                b.setCreatedBy(toUserInfo(createdBy, false, directory));
+                b.setCreationTime(TimeEncoding.toProtobufTimestamp(createdBy.getCreationTime()));
+            }
+        }
+        return b.build();
+    }
+
+    private static RoleInfo toRoleInfo(Role role) {
+        RoleInfo.Builder b = RoleInfo.newBuilder();
+        b.setName(role.getName());
+        b.setDefault(role.isDefaultRole());
+        if (role.getDescription() != null) {
+            b.setDescription(role.getDescription());
+        }
+
+        List<SystemPrivilege> systemPrivileges = new ArrayList<>(role.getSystemPrivileges());
+        Collections.sort(systemPrivileges, (p1, p2) -> p1.getName().compareTo(p2.getName()));
+        for (SystemPrivilege privilege : systemPrivileges) {
+            b.addSystemPrivileges(privilege.getName());
+        }
+
+        List<ObjectPrivilege> objectPrivileges = new ArrayList<>(role.getObjectPrivileges());
+        Collections.sort(objectPrivileges, (p1, p2) -> {
+            int rc = p1.getType().toString().compareTo(p2.getType().toString());
+            return rc != 0 ? rc : p1.getObject().compareTo(p2.getObject());
+        });
+        for (ObjectPrivilege privilege : objectPrivileges) {
+            b.addObjectPrivileges(ObjectPrivilegeInfo.newBuilder()
+                    .setType(privilege.getType().toString())
+                    .addObjects(privilege.getObject()));
+        }
+        return b.build();
+    }
+}
+```
+
+### `IndexesApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/IndexesApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.CcsdsTmIndex;
+import org.yamcs.archive.IndexRequest;
+import org.yamcs.archive.IndexRequestListener;
+import org.yamcs.archive.IndexRequestProcessor;
+import org.yamcs.archive.IndexRequestProcessor.InvalidTokenException;
+import org.yamcs.archive.TmIndexService;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.protobuf.AbstractIndexesApi;
+import org.yamcs.protobuf.IndexEntry;
+import org.yamcs.protobuf.IndexGroup;
+import org.yamcs.protobuf.IndexResponse;
+import org.yamcs.protobuf.ListCommandHistoryIndexRequest;
+import org.yamcs.protobuf.ListCompletenessIndexRequest;
+import org.yamcs.protobuf.ListEventIndexRequest;
+import org.yamcs.protobuf.ListPacketIndexRequest;
+import org.yamcs.protobuf.ListParameterIndexRequest;
+import org.yamcs.protobuf.RebuildCcsdsIndexRequest;
+import org.yamcs.protobuf.StreamCommandIndexRequest;
+import org.yamcs.protobuf.StreamCompletenessIndexRequest;
+import org.yamcs.protobuf.StreamEventIndexRequest;
+import org.yamcs.protobuf.StreamPacketIndexRequest;
+import org.yamcs.protobuf.StreamParameterIndexRequest;
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.YarchException;
+
+import com.google.protobuf.Empty;
+
+public class IndexesApi extends AbstractIndexesApi<Context> {
+
+    @Override
+    public void listCommandHistoryIndex(Context ctx, ListCommandHistoryIndexRequest request,
+            Observer<IndexResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService tmIndex = getIndexService(instance);
+
+        int mergeTime = request.hasMergeTime() ? request.getMergeTime() : 2000;
+        int limit = request.hasLimit() ? request.getLimit() : 500;
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setMergeTime(mergeTime);
+
+        if (request.hasStart()) {
+            long start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            indexRequest.setStart(start);
+        }
+        if (request.hasStop()) {
+            long stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+            indexRequest.setStop(stop);
+        }
+        String next = request.hasNext() ? request.getNext() : null;
+
+        if (request.getNameCount() > 0) {
+            for (String name : request.getNameList()) {
+                indexRequest.getCommandNames().add(NamedObjectId.newBuilder().setName(name.trim()).build());
+            }
+        } else {
+            indexRequest.setSendAllCmd(true);
+        }
+
+        handleOneIndexResult(tmIndex, indexRequest, observer, limit, next);
+    }
+
+    @Override
+    public void listEventIndex(Context ctx, ListEventIndexRequest request, Observer<IndexResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService indexServer = getIndexService(instance);
+
+        int mergeTime = request.hasMergeTime() ? request.getMergeTime() : 2000;
+        int limit = request.hasLimit() ? request.getLimit() : 500;
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setMergeTime(mergeTime);
+
+        if (request.hasStart()) {
+            long start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            indexRequest.setStart(start);
+        }
+        if (request.hasStop()) {
+            long stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+            indexRequest.setStop(stop);
+        }
+        String next = request.hasNext() ? request.getNext() : null;
+
+        if (request.getSourceCount() > 0) {
+            for (String source : request.getSourceList()) {
+                indexRequest.getEventSources().add(NamedObjectId.newBuilder().setName(source.trim()).build());
+            }
+        } else {
+            indexRequest.setSendAllEvent(true);
+        }
+
+        handleOneIndexResult(indexServer, indexRequest, observer, limit, next);
+    }
+
+    @Override
+    public void listPacketIndex(Context ctx, ListPacketIndexRequest request, Observer<IndexResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService indexServer = getIndexService(instance);
+
+        int mergeTime = request.hasMergeTime() ? request.getMergeTime() : 2000;
+        int limit = request.hasLimit() ? request.getLimit() : 500;
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setMergeTime(mergeTime);
+
+        if (request.hasStart()) {
+            long start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            indexRequest.setStart(start);
+        }
+        if (request.hasStop()) {
+            long stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+            indexRequest.setStop(stop);
+        }
+        String next = request.hasNext() ? request.getNext() : null;
+
+        if (request.getNameCount() > 0) {
+            for (String name : request.getNameList()) {
+                indexRequest.getTmPackets().add(NamedObjectId.newBuilder().setName(name.trim()).build());
+            }
+        } else {
+            indexRequest.setSendAllTm(true);
+        }
+
+        handleOneIndexResult(indexServer, indexRequest, observer, limit, next);
+    }
+
+    @Override
+    public void listParameterIndex(Context ctx, ListParameterIndexRequest request,
+            Observer<IndexResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService indexServer = getIndexService(instance);
+
+        int mergeTime = request.hasMergeTime() ? request.getMergeTime() : 20000;
+        int limit = request.hasLimit() ? request.getLimit() : 500;
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setMergeTime(mergeTime);
+
+        if (request.hasStart()) {
+            long start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            indexRequest.setStart(start);
+        }
+        if (request.hasStop()) {
+            long stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+            indexRequest.setStop(stop);
+        }
+        String next = request.hasNext() ? request.getNext() : null;
+
+        if (request.getGroupCount() > 0) {
+            for (String group : request.getGroupList()) {
+                indexRequest.getPpGroups().add(NamedObjectId.newBuilder().setName(group.trim()).build());
+            }
+        } else {
+            indexRequest.setSendAllPp(true);
+        }
+
+        handleOneIndexResult(indexServer, indexRequest, observer, limit, next);
+    }
+
+    @Override
+    public void listCompletenessIndex(Context ctx, ListCompletenessIndexRequest request,
+            Observer<IndexResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService indexServer = getIndexService(instance);
+        if (indexServer == null) {
+            throw new BadRequestException("CCSDS Tm Index not enabled for instance '" + instance + "'");
+        }
+
+        int limit = request.hasLimit() ? request.getLimit() : 500;
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setSendCompletenessIndex(true);
+        if (request.hasMergeTime()) {
+            indexRequest.setMergeTime(request.getMergeTime());
+        }
+
+        if (request.hasStart()) {
+            long start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            indexRequest.setStart(start);
+        }
+        if (request.hasStop()) {
+            long stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+            indexRequest.setStop(stop);
+        }
+        String next = request.hasNext() ? request.getNext() : null;
+
+        handleOneIndexResult(indexServer, indexRequest, observer, limit, next);
+    }
+
+    @Override
+    public void streamPacketIndex(Context ctx, StreamPacketIndexRequest request, Observer<ArchiveRecord> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+
+        if (request.hasStart()) {
+            indexRequest.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            indexRequest.setStop(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        for (String name : request.getNamesList()) {
+            indexRequest.getTmPackets().add(NamedObjectId.newBuilder().setName(name).build());
+        }
+        indexRequest.setSendAllTm(request.getNamesCount() == 0);
+        if (request.hasMergeTime()) {
+            indexRequest.setMergeTime(request.getMergeTime());
+        }
+        streamArchiveRecords(null, indexRequest, observer);
+    }
+
+    @Override
+    public void streamParameterIndex(Context ctx, StreamParameterIndexRequest request,
+            Observer<ArchiveRecord> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setSendAllPp(true);
+        if (request.hasMergeTime()) {
+            indexRequest.setMergeTime(request.getMergeTime());
+        }
+
+        if (request.hasStart()) {
+            indexRequest.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            indexRequest.setStop(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        streamArchiveRecords(null, indexRequest, observer);
+    }
+
+    @Override
+    public void streamCommandIndex(Context ctx, StreamCommandIndexRequest request, Observer<ArchiveRecord> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setSendAllCmd(true);
+        if (request.hasMergeTime()) {
+            indexRequest.setMergeTime(request.getMergeTime());
+        }
+
+        if (request.hasStart()) {
+            indexRequest.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            indexRequest.setStop(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        streamArchiveRecords(null, indexRequest, observer);
+    }
+
+    @Override
+    public void streamEventIndex(Context ctx, StreamEventIndexRequest request, Observer<ArchiveRecord> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setSendAllEvent(true);
+        if (request.hasMergeTime()) {
+            indexRequest.setMergeTime(request.getMergeTime());
+        }
+
+        if (request.hasStart()) {
+            indexRequest.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            indexRequest.setStop(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        streamArchiveRecords(null, indexRequest, observer);
+    }
+
+    @Override
+    public void streamCompletenessIndex(Context ctx, StreamCompletenessIndexRequest request,
+            Observer<ArchiveRecord> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService indexServer = getIndexService(instance);
+        if (indexServer == null) {
+            throw new BadRequestException("Index service not enabled for instance '" + instance + "'");
+        }
+
+        IndexRequest indexRequest = new IndexRequest(instance);
+        indexRequest.setSendCompletenessIndex(true);
+        if (request.hasMergeTime()) {
+            indexRequest.setMergeTime(request.getMergeTime());
+        }
+
+        if (request.hasStart()) {
+            indexRequest.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            indexRequest.setStop(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        streamArchiveRecords(indexServer, indexRequest, observer);
+    }
+
+    @Override
+    public void rebuildCcsdsIndex(Context ctx, RebuildCcsdsIndexRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TmIndexService indexer = getIndexService(instance);
+
+        if (indexer instanceof CcsdsTmIndex) {
+            CcsdsTmIndex ccsdsTmIndex = (CcsdsTmIndex) indexer;
+            TimeInterval interval = new TimeInterval();
+            if (request.hasStart()) {
+                interval.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+            }
+            if (request.hasStop()) {
+                interval.setEnd(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+            }
+
+            try {
+                ccsdsTmIndex.rebuild(interval).whenComplete((r, t) -> {
+                    if (t != null) {
+                        observer.completeExceptionally(t);
+                    } else {
+                        observer.complete(Empty.getDefaultInstance());
+                    }
+                });
+            } catch (YarchException e) {
+                observer.completeExceptionally(e);
+            }
+        } else {
+            observer.completeExceptionally(new BadRequestException("Not a CCSDS TM Index"));
+        }
+    }
+
+    private TmIndexService getIndexService(String instance) throws HttpException {
+        InstancesApi.verifyInstance(instance);
+        YamcsServer yamcs = YamcsServer.getServer();
+        return yamcs.getService(instance, TmIndexService.class);
+    }
+
+    /**
+     * Submits an index request but returns only the first batch of results combined with a pagination token if the user
+     * wishes to retrieve the next batch.
+     * 
+     * The batch size is determined by the IndexServer and is set to 500 (shared between all requested groups).
+     */
+    private void handleOneIndexResult(TmIndexService tmIndex, IndexRequest request, Observer<IndexResponse> observer,
+            int limit, String token) throws HttpException {
+        try {
+            IndexResponse.Builder responseb = IndexResponse.newBuilder();
+            Map<NamedObjectId, IndexGroup.Builder> groupBuilders = new HashMap<>();
+            IndexRequestProcessor p = new IndexRequestProcessor(tmIndex, request, limit, token,
+                    new IndexRequestListener() {
+
+                        long last;
+
+                        @Override
+                        public void processData(ArchiveRecord rec) {
+                            IndexGroup.Builder groupb = groupBuilders.get(rec.getId());
+                            if (groupb == null) {
+                                groupb = IndexGroup.newBuilder().setId(rec.getId());
+                                groupBuilders.put(rec.getId(), groupb);
+                            }
+                            long first = TimeEncoding.fromProtobufTimestamp(rec.getFirst());
+                            long last1 = TimeEncoding.fromProtobufTimestamp(rec.getLast());
+
+                            IndexEntry.Builder ieb = IndexEntry.newBuilder()
+                                    .setStart(TimeEncoding.toString(first))
+                                    .setStop(TimeEncoding.toString(last1))
+                                    .setCount(rec.getNum());
+                            if (rec.hasSeqFirst()) {
+                                ieb.setSeqStart(rec.getSeqFirst());
+                            }
+                            if (rec.hasSeqLast()) {
+                                ieb.setSeqStop(rec.getSeqLast());
+                            }
+                            groupb.addEntry(ieb);
+                            last = Math.max(last, last1);
+                        }
+
+                        @Override
+                        public void finished(String token, boolean success) {
+                            if (success) {
+                                if (token != null) {
+                                    responseb.setContinuationToken(token);
+                                }
+                                List<IndexGroup.Builder> sortedGroups = new ArrayList<>(groupBuilders.values());
+                                Collections.sort(sortedGroups, (g1, g2) -> {
+                                    return g1.getId().getName().compareTo(g2.getId().getName());
+                                });
+                                sortedGroups.forEach(groupb -> responseb.addGroup(groupb));
+                                observer.complete(responseb.build());
+                            } else {
+                                observer.completeExceptionally(
+                                        new InternalServerErrorException("Failure while streaming index"));
+                            }
+                        }
+                    });
+            p.run();
+        } catch (InvalidTokenException e) {
+            observer.completeExceptionally(new BadRequestException("Invalid token specified"));
+        }
+    }
+
+    private static void streamArchiveRecords(TmIndexService tmIndex, IndexRequest request,
+            Observer<ArchiveRecord> observer) {
+        IndexRequestProcessor p = new IndexRequestProcessor(tmIndex, request, -1, null,
+                new IndexRequestListener() {
+                    @Override
+                    public void processData(ArchiveRecord record) {
+                        observer.next(record);
+                    }
+
+                    @Override
+                    public void finished(String token, boolean success) {
+                        if (success) {
+                            observer.complete();
+                        } else {
+                            observer.completeExceptionally(
+                                    new InternalServerErrorException("Failure while streaming index"));
+                        }
+                    }
+                });
+        p.run();
+    }
+}
+```
+
+### `InstancesApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/InstancesApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
+import org.yamcs.InstanceMetadata;
+import org.yamcs.Processor;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.alarms.AlarmMirrorService;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.CcsdsTmIndex;
+import org.yamcs.filetransfer.FileTransferService;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.logging.Log;
+import org.yamcs.management.ManagementListener;
+import org.yamcs.management.ManagementService;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.plists.ParameterListService;
+import org.yamcs.protobuf.AbstractInstancesApi;
+import org.yamcs.protobuf.CreateInstanceRequest;
+import org.yamcs.protobuf.GetInstanceRequest;
+import org.yamcs.protobuf.GetInstanceTemplateRequest;
+import org.yamcs.protobuf.InstanceTemplate;
+import org.yamcs.protobuf.ListInstanceTemplatesResponse;
+import org.yamcs.protobuf.ListInstancesRequest;
+import org.yamcs.protobuf.ListInstancesResponse;
+import org.yamcs.protobuf.ReconfigureInstanceRequest;
+import org.yamcs.protobuf.RestartInstanceRequest;
+import org.yamcs.protobuf.StartInstanceRequest;
+import org.yamcs.protobuf.StopInstanceRequest;
+import org.yamcs.protobuf.TemplateVariable;
+import org.yamcs.protobuf.YamcsInstance;
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.templating.Template;
+import org.yamcs.templating.Variable;
+import org.yamcs.time.TimeService;
+import org.yamcs.timeline.TimelineService;
+import org.yamcs.utils.ExceptionUtil;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.FilterParser;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.TokenMgrError;
+import org.yamcs.utils.parser.ast.Comparison;
+
+import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.google.protobuf.Empty;
+
+public class InstancesApi extends AbstractInstancesApi<Context> {
+
+    private static final Log log = new Log(InstancesApi.class);
+
+    public static final Pattern ALLOWED_INSTANCE_NAMES = Pattern.compile("\\w[\\w\\.-]*");
+
+    @Override
+    public void listInstanceTemplates(Context ctx, Empty request,
+            Observer<ListInstanceTemplatesResponse> observer) {
+        var templatesb = ListInstanceTemplatesResponse.newBuilder();
+
+        YamcsServer yamcs = YamcsServer.getServer();
+        List<Template> templates = new ArrayList<>(yamcs.getInstanceTemplates());
+        templates.sort((t1, t2) -> t1.getName().compareToIgnoreCase(t2.getName()));
+
+        for (Template template : templates) {
+            templatesb.addTemplates(toInstanceTemplate(template));
+        }
+        observer.complete(templatesb.build());
+    }
+
+    @Override
+    public void getInstanceTemplate(Context ctx, GetInstanceTemplateRequest request,
+            Observer<InstanceTemplate> observer) {
+        YamcsServer yamcs = YamcsServer.getServer();
+        String name = request.getTemplate();
+        if (!yamcs.hasInstanceTemplate(name)) {
+            throw new NotFoundException("No template named '" + name + "'");
+        }
+
+        InstanceTemplate template = toInstanceTemplate(yamcs.getInstanceTemplate(name));
+        observer.complete(template);
+    }
+
+    @Override
+    public void listInstances(Context ctx, ListInstancesRequest request, Observer<ListInstancesResponse> observer) {
+        var filter = getFilter(request.getFilterList());
+        var instancesb = ListInstancesResponse.newBuilder();
+        for (YamcsServerInstance instance : YamcsServer.getInstances()) {
+            if (filter.test(instance)) {
+                YamcsInstance enriched = enrichYamcsInstance(instance.getInstanceInfo());
+                instancesb.addInstances(enriched);
+            }
+        }
+        observer.complete(instancesb.build());
+    }
+
+    @Override
+    public void subscribeInstances(Context ctx, Empty request, Observer<YamcsInstance> observer) {
+        ManagementListener listener = new ManagementListener() {
+            @Override
+            public void instanceStateChanged(YamcsServerInstance ysi) {
+                YamcsInstance enriched = enrichYamcsInstance(ysi.getInstanceInfo());
+                observer.next(enriched);
+            }
+        };
+
+        observer.setCancelHandler(() -> ManagementService.getInstance().removeManagementListener(listener));
+        ManagementService.getInstance().addManagementListener(listener);
+    }
+
+    @Override
+    public void getInstance(Context ctx, GetInstanceRequest request, Observer<YamcsInstance> observer) {
+        String instanceName = verifyInstance(request.getInstance());
+        YamcsServerInstance instance = YamcsServer.getServer().getInstance(instanceName);
+        YamcsInstance instanceInfo = instance.getInstanceInfo();
+        YamcsInstance enriched = enrichYamcsInstance(instanceInfo);
+        observer.complete(enriched);
+    }
+
+    @Override
+    public void reconfigureInstance(Context ctx, ReconfigureInstanceRequest request, Observer<YamcsInstance> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.CreateInstances);
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        String instanceName = verifyInstance(request.getInstance());
+        YamcsServerInstance instance = YamcsServer.getServer().getInstance(instanceName);
+        String templateName = instance.getTemplate();
+        if (templateName == null) {
+            throw new BadRequestException("This instance is not templated");
+        }
+
+        var templateArgs = new HashMap<String, Object>(request.getTemplateArgsMap());
+        var labels = new HashMap<>(request.getLabelsMap());
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                yamcs.reconfigureInstance(instanceName, templateArgs, labels);
+                return yamcs.restartInstance(instanceName);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }).whenComplete((v, error) -> {
+            YamcsServerInstance ysi = yamcs.getInstance(instanceName);
+            if (error == null) {
+                YamcsInstance enriched = enrichYamcsInstance(ysi.getInstanceInfo());
+                observer.complete(enriched);
+            } else {
+                Throwable t = ExceptionUtil.unwind(error);
+                observer.completeExceptionally(t);
+            }
+        });
+    }
+
+    @Override
+    public void createInstance(Context ctx, CreateInstanceRequest request, Observer<YamcsInstance> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.CreateInstances);
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        if (!request.hasName()) {
+            throw new BadRequestException("No instance name was specified");
+        }
+        String instanceName = request.getName();
+        if (!ALLOWED_INSTANCE_NAMES.matcher(instanceName).matches()) {
+            throw new BadRequestException("Invalid instance name");
+        }
+        if (!request.hasTemplate()) {
+            throw new BadRequestException("No template was specified");
+        }
+        if (yamcs.getInstance(instanceName) != null) {
+            throw new BadRequestException("An instance named '" + instanceName + "' already exists");
+        }
+
+        String template = request.getTemplate();
+        var templateArgs = new HashMap<String, Object>(request.getTemplateArgsMap());
+        var labels = request.getLabelsMap();
+        // Not (yet) supported via HTTP. If we do, should probably use JSON
+        Map<String, Object> customMetadata = Collections.emptyMap();
+        InstanceMetadata metadata = new InstanceMetadata();
+        request.getLabelsMap().forEach((k, v) -> metadata.putLabel(k, v));
+
+        var cf = CompletableFuture.supplyAsync(() -> {
+            try {
+                yamcs.createInstance(instanceName, template, templateArgs, labels, customMetadata);
+                return yamcs.startInstance(instanceName);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+
+        cf.whenComplete((v, error) -> {
+            if (error == null) {
+                YamcsInstance instanceInfo = v.getInstanceInfo();
+                YamcsInstance enriched = enrichYamcsInstance(instanceInfo);
+                observer.complete(enriched);
+            } else {
+                Throwable t = ExceptionUtil.unwind(error);
+                log.error("Error when creating instance {}", instanceName, t);
+                observer.completeExceptionally(new InternalServerErrorException(t));
+            }
+        });
+    }
+
+    @Override
+    public void startInstance(Context ctx, StartInstanceRequest request, Observer<YamcsInstance> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        String instance = verifyInstance(request.getInstance());
+
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                YamcsServer.getServer().startInstance(instance);
+                return null;
+            } catch (IOException e) {
+                throw new UncheckedExecutionException(e);
+            }
+        }).whenComplete((v, error) -> {
+            YamcsServerInstance ysi = YamcsServer.getServer().getInstance(instance);
+            if (error == null) {
+                YamcsInstance enriched = enrichYamcsInstance(ysi.getInstanceInfo());
+                observer.complete(enriched);
+            } else {
+                Throwable t = ExceptionUtil.unwind(error);
+                observer.completeExceptionally(t);
+            }
+        });
+    }
+
+    @Override
+    public void stopInstance(Context ctx, StopInstanceRequest request, Observer<YamcsInstance> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        String instance = verifyInstance(request.getInstance());
+        YamcsServer yamcs = YamcsServer.getServer();
+        if (yamcs.getInstance(instance) == null) {
+            throw new BadRequestException("No instance named '" + instance + "'");
+        }
+
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                yamcs.stopInstance(instance);
+                return null;
+            } catch (IOException e) {
+                throw new UncheckedExecutionException(e);
+            }
+        }).whenComplete((v, error) -> {
+            YamcsServerInstance ysi = YamcsServer.getServer().getInstance(instance);
+            if (error == null) {
+                YamcsInstance enriched = enrichYamcsInstance(ysi.getInstanceInfo());
+                observer.complete(enriched);
+            } else {
+                Throwable t = ExceptionUtil.unwind(error);
+                observer.completeExceptionally(t);
+            }
+        });
+    }
+
+    @Override
+    public void restartInstance(Context ctx, RestartInstanceRequest request, Observer<YamcsInstance> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        String instance = verifyInstance(request.getInstance());
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                yamcs.restartInstance(instance);
+                return null;
+            } catch (IOException e) {
+                throw new UncheckedExecutionException(e);
+            }
+        }).whenComplete((v, error) -> {
+            YamcsServerInstance ysi = YamcsServer.getServer().getInstance(instance);
+            if (error == null) {
+                YamcsInstance enriched = enrichYamcsInstance(ysi.getInstanceInfo());
+                observer.complete(enriched);
+            } else {
+                Throwable t = ExceptionUtil.unwind(error);
+                observer.completeExceptionally(t);
+            }
+        });
+    }
+
+    private Predicate<YamcsServerInstance> getFilter(List<String> flist) throws HttpException {
+        if (flist == null) {
+            return ysi -> true;
+        }
+
+        var fp = new FilterParser<YamcsServerInstance>((StringReader) null);
+        fp.addEnumField("state", InstanceState.class, ysi -> ysi.state());
+        fp.addPrefixField("label.", (ysi, field) -> {
+            var label = field.substring("label.".length());
+            return ysi.getLabels().get(label);
+        });
+
+        Predicate<YamcsServerInstance> pred = ysi -> true;
+        for (String filter : flist) {
+            // Temporary backwards support for an (undocumented) API change.
+            // Can be removed in a few months.
+            if (filter.startsWith("label:")) {
+                filter = filter.replace("label:", "label.");
+            }
+            fp.ReInit(new StringReader(filter));
+            Comparison pr;
+            try {
+                pr = fp.comparison();
+                pred = pred.and(getPredicate(pr));
+            } catch (ParseException | TokenMgrError e) {
+                throw new BadRequestException("Cannot parse the filter '" + filter + "': " + e.getMessage());
+            }
+
+        }
+        return pred;
+    }
+
+    private Predicate<YamcsServerInstance> getPredicate(Comparison pr) throws HttpException {
+        if ("state".equals(pr.comparable)) {
+            try {
+                InstanceState state = InstanceState.valueOf(pr.value.toUpperCase());
+                switch (pr.comparator) {
+                case EQUAL_TO:
+                    return ysi -> ysi.state() == state;
+                case NOT_EQUAL_TO:
+                    return ysi -> ysi.state() != state;
+                default:
+                    throw new IllegalStateException("Unknown operator " + pr.comparator);
+                }
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException(
+                        "Unknown state '" + pr.value + "'. Valid values are: " + Arrays.asList(InstanceState.values()));
+            }
+        } else if (pr.comparable.startsWith("label.")) {
+            String labelKey = pr.comparable.substring(6);
+            return ysi -> {
+                var labels = ysi.getLabels();
+                if (labels == null) {
+                    return false;
+                }
+                var v = labels.get(labelKey);
+                if (v == null) {
+                    return false;
+                }
+                switch (pr.comparator) {
+                case EQUAL_TO:
+                    return pr.value.equalsIgnoreCase(v);
+                case NOT_EQUAL_TO:
+                    return !pr.value.equalsIgnoreCase(v);
+                default:
+                    throw new IllegalStateException("Unknown operator " + pr.comparator);
+                }
+            };
+        } else {
+            throw new BadRequestException("Unknown filter key '" + pr.comparable + "'");
+        }
+    }
+
+    private static InstanceTemplate toInstanceTemplate(Template template) {
+        InstanceTemplate.Builder templateb = InstanceTemplate.newBuilder()
+                .setName(template.getName());
+
+        if (template.getDescription() != null) {
+            templateb.setDescription(template.getDescription());
+        }
+
+        for (Variable variable : template.getVariables()) {
+            var varb = TemplateVariable.newBuilder()
+                    .setName(variable.getName())
+                    .setRequired(variable.isRequired())
+                    .setType(variable.getClass().getName());
+            if (variable.getLabel() != null) {
+                varb.setLabel(variable.getLabel());
+            }
+            if (variable.getHelp() != null) {
+                varb.setHelp(variable.getHelp());
+            }
+            if (variable.getInitial() != null) {
+                varb.setInitial(variable.getInitial());
+            }
+
+            // getChoices() may be dynamically calculated. Best call it once only.
+            List<String> choices = variable.getChoices();
+            if (choices != null) {
+                for (String choice : choices) {
+                    varb.addChoices(choice);
+                }
+            }
+
+            templateb.addVariables(varb);
+        }
+
+        return templateb.build();
+    }
+
+    public static String verifyInstance(String instance, boolean allowGlobal) {
+        if (allowGlobal && YamcsServer.GLOBAL_INSTANCE.equals(instance)) {
+            return instance;
+        }
+        if (!YamcsServer.hasInstance(instance)) {
+            throw new NotFoundException("No instance named '" + instance + "'");
+        }
+        return instance;
+    }
+
+    public static String verifyInstance(String instance) {
+        return verifyInstance(instance, false);
+    }
+
+    public static YamcsServerInstance verifyInstanceObj(String instance) {
+        YamcsServerInstance ysi = YamcsServer.getServer().getInstance(instance);
+        if (ysi == null) {
+            throw new NotFoundException("No instance named '" + instance + "'");
+        }
+        return ysi;
+    }
+
+    private static YamcsInstance enrichYamcsInstance(YamcsInstance yamcsInstance) {
+        YamcsServer yamcs = YamcsServer.getServer();
+        YamcsInstance.Builder instanceb = YamcsInstance.newBuilder(yamcsInstance);
+        YamcsServerInstance ysi = yamcs.getInstance(yamcsInstance.getName());
+
+        if (ysi == null) {
+            throw new BadRequestException("Invalid Yamcs instance " + yamcsInstance.getName());
+        }
+
+        if (yamcsInstance.hasMissionDatabase()) {
+            Mdb mdb = yamcs.getInstance(yamcsInstance.getName()).getMdb();
+            if (mdb != null) {
+                instanceb.setMissionDatabase(MdbApi.toMissionDatabase(yamcsInstance.getName(), mdb));
+            }
+        }
+
+        String template = ysi.getTemplate();
+        if (template != null) {
+            instanceb.setTemplate(template);
+            for (var arg : ysi.getTemplateArgs().entrySet()) {
+                if (arg.getValue() instanceof String) {
+                    instanceb.putTemplateArgs(arg.getKey(), (String) arg.getValue());
+                }
+            }
+
+            Template latestTemplate = yamcs.getInstanceTemplate(template);
+            instanceb.setTemplateAvailable(latestTemplate != null);
+            if (latestTemplate != null) {
+                boolean eq = Objects.equals(ysi.getTemplateSource(), latestTemplate.getSource());
+                instanceb.setTemplateChanged(!eq);
+            }
+        }
+
+        List<Processor> processors = new ArrayList<>(ysi.getProcessors());
+        Collections.sort(processors, (a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        for (Processor processor : processors) {
+            instanceb.addProcessors(ProcessingApi.toProcessorInfo(processor));
+        }
+
+        TimeService timeService = ysi.getTimeService();
+        if (timeService != null) {
+            instanceb.setMissionTime(TimeEncoding.toProtobufTimestamp(timeService.getMissionTime()));
+        }
+
+        if (!ysi.getServicesWithConfig(CcsdsTmIndex.class).isEmpty()) {
+            instanceb.addCapabilities("ccsds-completeness");
+        }
+        if (!ysi.getServicesWithConfig(FileTransferService.class).isEmpty()) {
+            instanceb.addCapabilities("file-transfer");
+        }
+        if (!ysi.getServicesWithConfig(TimelineService.class).isEmpty()) {
+            instanceb.addCapabilities("timeline");
+            instanceb.addCapabilities("activities");
+        }
+        if (!ysi.getServicesWithConfig(ParameterListService.class).isEmpty()) {
+            instanceb.addCapabilities("parameter-lists");
+        }
+        if (!ysi.getServicesWithConfig(AlarmMirrorService.class).isEmpty()) {
+            instanceb.addCapabilities("alarm-mirror");
+        }
+        return instanceb.build();
+    }
+}
+```
+
+### `LinksApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/LinksApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.actions.Action;
+import org.yamcs.actions.ActionHelper;
+import org.yamcs.api.Observer;
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.management.LinkManager;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.links.AbstractLinksApi;
+import org.yamcs.protobuf.links.DisableLinkRequest;
+import org.yamcs.protobuf.links.EnableLinkRequest;
+import org.yamcs.protobuf.links.GetLinkRequest;
+import org.yamcs.protobuf.links.LinkEvent;
+import org.yamcs.protobuf.links.LinkInfo;
+import org.yamcs.protobuf.links.ListLinksRequest;
+import org.yamcs.protobuf.links.ListLinksResponse;
+import org.yamcs.protobuf.links.ResetLinkCountersRequest;
+import org.yamcs.protobuf.links.RunActionRequest;
+import org.yamcs.protobuf.links.SubscribeLinksRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.tctm.Link;
+import org.yamcs.tctm.LinkActionProvider;
+import org.yamcs.xtce.Parameter;
+
+import com.google.protobuf.Struct;
+
+public class LinksApi extends AbstractLinksApi<Context> {
+
+    public LinksApi(AuditLog auditLog) {
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ReadLinks);
+        });
+    }
+
+    @Override
+    public void listLinks(Context ctx, ListLinksRequest request, Observer<ListLinksResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadLinks);
+
+        var responseb = ListLinksResponse.newBuilder();
+
+        if (request.hasInstance()) {
+            var linkManager = InstancesApi.verifyInstanceObj(request.getInstance()).getLinkManager();
+            for (var link : linkManager.getLinks()) {
+                responseb.addLinks(toLink(request.getInstance(), link));
+            }
+        } else {
+            for (YamcsServerInstance ysi : YamcsServer.getInstances()) {
+                var linkManager = ysi.getLinkManager();
+                for (var link : linkManager.getLinks()) {
+                    responseb.addLinks(toLink(request.getInstance(), link));
+                }
+            }
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void subscribeLinks(Context ctx, SubscribeLinksRequest request, Observer<LinkEvent> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadLinks);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(instance);
+
+        LinkManager linkManager = ysi.getLinkManager();
+
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+        var future = exec.scheduleAtFixedRate(() -> {
+            var b = LinkEvent.newBuilder();
+            for (var link : linkManager.getLinks()) {
+                b.addLinks(toLink(instance, link));
+            }
+            observer.next(b.build());
+        }, 0, 1, TimeUnit.SECONDS);
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    @Override
+    public void getLink(Context ctx, GetLinkRequest request, Observer<LinkInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadLinks);
+
+        Link link = verifyLink(request.getInstance(), request.getLink());
+        observer.complete(toLink(request.getInstance(), link));
+    }
+
+    @Override
+    public void enableLink(Context ctx, EnableLinkRequest request, Observer<LinkInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlLinks);
+        Link link = verifyLink(request.getInstance(), request.getLink());
+        LinkManager lmgr = InstancesApi.verifyInstanceObj(request.getInstance()).getLinkManager();
+        try {
+            lmgr.enableLink(link.getName());
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException(e);
+        }
+
+        observer.complete(toLink(request.getInstance(), link));
+    }
+
+    @Override
+    public void disableLink(Context ctx, DisableLinkRequest request, Observer<LinkInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlLinks);
+        Link link = verifyLink(request.getInstance(), request.getLink());
+        LinkManager lmgr = InstancesApi.verifyInstanceObj(request.getInstance()).getLinkManager();
+        try {
+            lmgr.disableLink(link.getName());
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException(e);
+        }
+
+        observer.complete(toLink(request.getInstance(), link));
+    }
+
+    @Override
+    public void resetLinkCounters(Context ctx, ResetLinkCountersRequest request, Observer<LinkInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlLinks);
+        Link link = verifyLink(request.getInstance(), request.getLink());
+        LinkManager lmgr = InstancesApi.verifyInstanceObj(request.getInstance()).getLinkManager();
+        try {
+            lmgr.resetCounters(link.getName());
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException(e);
+        }
+
+        observer.complete(toLink(request.getInstance(), link));
+    }
+
+    @Override
+    public void runAction(Context ctx, RunActionRequest request, Observer<Struct> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlLinks);
+        verifyLink(request.getInstance(), request.getLink());
+
+        var linkManager = InstancesApi.verifyInstanceObj(request.getInstance()).getLinkManager();
+        var link = linkManager.getLink(request.getLink());
+
+        Action<Link> action = null;
+        if (link instanceof LinkActionProvider) {
+            action = ((LinkActionProvider) link).getAction(request.getAction());
+        }
+        if (action == null) {
+            throw new BadRequestException("Unknown action '" + request.getAction() + "'");
+        }
+
+        ActionHelper.runAction(link, action, request.getMessage(), observer);
+    }
+
+    public static Link verifyLink(String instance, String linkName) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(instance);
+        LinkManager lmgr = ysi.getLinkManager();
+        Link link = lmgr.getLink(linkName);
+        if (link == null) {
+            throw new NotFoundException("No link named '" + linkName + "' within instance '" + instance + "'");
+        }
+        return link;
+    }
+
+    private static LinkInfo toLink(String yamcsInstance, Link link) {
+        var b = LinkInfo.newBuilder()
+                .setInstance(yamcsInstance)
+                .setName(link.getName())
+                .setDisabled(link.isDisabled())
+                .setStatus(link.getLinkStatus().name())
+                .setType(link.getClass().getName())
+                .setDataInCount(link.getDataInCount())
+                .setDataOutCount(link.getDataOutCount());
+        var detailedStatus = link.getDetailedStatus();
+        if (detailedStatus != null) {
+            b.setDetailedStatus(detailedStatus);
+        }
+        var extra = link.getExtraInfo();
+        if (extra != null) {
+            b.setExtra(WellKnownTypes.toStruct(extra));
+        }
+        var parent = link.getParent();
+        if (parent != null) {
+            b.setParentName(parent.getName());
+        }
+        if (link instanceof LinkActionProvider) {
+            b.clearActions();
+            for (var action : ((LinkActionProvider) link).getActions()) {
+                b.addActions(ActionHelper.toActionInfo(action));
+            }
+        }
+        if (link instanceof SystemParametersProducer) {
+            var systemParametersService = SystemParametersService.getInstance(yamcsInstance);
+            if (systemParametersService != null) {
+                var mdb = MdbFactory.getInstance(yamcsInstance);
+                var spaceSystemName = systemParametersService.getNamespace() + "/links/" + link.getName();
+                var spaceSystem = mdb.getSpaceSystem(spaceSystemName);
+                if (spaceSystem != null) {
+                    spaceSystem.getParameters(true).stream()
+                            .map(Parameter::getQualifiedName)
+                            .sorted(String.CASE_INSENSITIVE_ORDER)
+                            .forEach(b::addParameters);
+                }
+            }
+        }
+
+        return b.build();
+    }
+}
+```
+
+### `ManagementApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ManagementApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.YamcsServerInstance;
+
+public class ManagementApi {
+
+    /**
+     * Deprecated, use {@link InstancesApi#verifyInstance(String, boolean) instead
+     */
+    @Deprecated
+    public static String verifyInstance(String yamcsInstance, boolean allowGlobal) {
+        return InstancesApi.verifyInstance(yamcsInstance, allowGlobal);
+    }
+
+    /**
+     * Deprecated, use {@link InstancesApi#verifyInstance(String) instead
+     */
+    @Deprecated
+    public static String verifyInstance(String yamcsInstance) {
+        return InstancesApi.verifyInstance(yamcsInstance);
+    }
+
+    /**
+     * Deprecated, use {@link InstancesApi#verifyInstanceObj(String) instead
+     */
+    @Deprecated
+    public static YamcsServerInstance verifyInstanceObj(String yamcsInstance) {
+        return InstancesApi.verifyInstanceObj(yamcsInstance);
+    }
+}
+```
+
+### `MdbApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.http.api.GbpToXtceAssembler.toEnumerationAlarm;
+import static org.yamcs.http.api.GbpToXtceAssembler.toEnumerationContextAlarm;
+import static org.yamcs.http.api.GbpToXtceAssembler.toNumericAlarm;
+import static org.yamcs.http.api.GbpToXtceAssembler.toNumericContextAlarm;
+
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.ForbiddenException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.api.MdbPageBuilder.MdbPage;
+import org.yamcs.http.api.MdbSearchHelpers.EntryMatch;
+import org.yamcs.http.api.XtceToGpbAssembler.DetailLevel;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.XtceAssembler;
+import org.yamcs.parameter.ParameterWithId;
+import org.yamcs.protobuf.AbstractMdbApi;
+import org.yamcs.protobuf.Mdb.AlgorithmInfo;
+import org.yamcs.protobuf.Mdb.BatchGetParametersRequest;
+import org.yamcs.protobuf.Mdb.BatchGetParametersResponse;
+import org.yamcs.protobuf.Mdb.BatchGetParametersResponse.GetParameterResponse;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Mdb.ContainerInfo;
+import org.yamcs.protobuf.Mdb.CreateParameterRequest;
+import org.yamcs.protobuf.Mdb.CreateParameterTypeRequest;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.Mdb.ExportJavaMissionDatabaseRequest;
+import org.yamcs.protobuf.Mdb.ExportXtceRequest;
+import org.yamcs.protobuf.Mdb.GetAlgorithmRequest;
+import org.yamcs.protobuf.Mdb.GetCommandRequest;
+import org.yamcs.protobuf.Mdb.GetContainerRequest;
+import org.yamcs.protobuf.Mdb.GetMissionDatabaseRequest;
+import org.yamcs.protobuf.Mdb.GetParameterRequest;
+import org.yamcs.protobuf.Mdb.GetParameterTypeRequest;
+import org.yamcs.protobuf.Mdb.GetSpaceSystemRequest;
+import org.yamcs.protobuf.Mdb.ListAlgorithmsRequest;
+import org.yamcs.protobuf.Mdb.ListAlgorithmsResponse;
+import org.yamcs.protobuf.Mdb.ListCommandsRequest;
+import org.yamcs.protobuf.Mdb.ListCommandsResponse;
+import org.yamcs.protobuf.Mdb.ListContainersRequest;
+import org.yamcs.protobuf.Mdb.ListContainersResponse;
+import org.yamcs.protobuf.Mdb.ListParameterTypesRequest;
+import org.yamcs.protobuf.Mdb.ListParameterTypesResponse;
+import org.yamcs.protobuf.Mdb.ListParametersRequest;
+import org.yamcs.protobuf.Mdb.ListParametersResponse;
+import org.yamcs.protobuf.Mdb.ListSpaceSystemsRequest;
+import org.yamcs.protobuf.Mdb.ListSpaceSystemsResponse;
+import org.yamcs.protobuf.Mdb.MissionDatabase;
+import org.yamcs.protobuf.Mdb.MissionDatabaseItem;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
+import org.yamcs.protobuf.Mdb.SpaceSystemInfo;
+import org.yamcs.protobuf.Mdb.StreamMissionDatabaseRequest;
+import org.yamcs.protobuf.Mdb.UsedByInfo;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.YamcsInstance;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Algorithm.Scope;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.BaseDataType;
+import org.yamcs.xtce.BinaryParameterType;
+import org.yamcs.xtce.BooleanParameterType;
+import org.yamcs.xtce.Container;
+import org.yamcs.xtce.ContainerEntry;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.FloatParameterType;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterEntry;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.StringParameterType;
+import org.yamcs.xtce.UnitType;
+import org.yamcs.xtce.ValueEnumeration;
+
+import com.google.protobuf.ByteString;
+
+public class MdbApi extends AbstractMdbApi<Context> {
+
+    private static final String JAVA_SERIALIZED_OBJECT = "application/x-java-serialized-object";
+    private static final String TEXT_XML = "text/xml";
+    private static final Log log = new Log(MdbApi.class);
+
+    @Override
+    public void getMissionDatabase(Context ctx, GetMissionDatabaseRequest request,
+            Observer<MissionDatabase> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+        MissionDatabase converted = toMissionDatabase(instance, mdb);
+        observer.complete(converted);
+    }
+
+    @Override
+    public void exportJavaMissionDatabase(Context ctx, ExportJavaMissionDatabaseRequest request,
+            Observer<HttpBody> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        try (ByteString.Output output = ByteString.newOutput()) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(output)) {
+                oos.writeObject(mdb);
+            } catch (IOException e) {
+                throw new InternalServerErrorException("Could not serialize MDB", e);
+            }
+
+            HttpBody httpBody = HttpBody.newBuilder()
+                    .setContentType(JAVA_SERIALIZED_OBJECT)
+                    .setData(output.toByteString())
+                    .build();
+
+            observer.complete(httpBody);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public void streamMissionDatabase(Context ctx, StreamMissionDatabaseRequest request,
+            Observer<MissionDatabaseItem> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        if (!request.hasIncludeSpaceSystems() || request.getIncludeSpaceSystems()) {
+            for (var spaceSystem : mdb.getSpaceSystems()) {
+                var item = MissionDatabaseItem.newBuilder()
+                        .setSpaceSystem(XtceToGpbAssembler.toSpaceSystemInfo(spaceSystem, DetailLevel.FULL))
+                        .build();
+                observer.next(item);
+            }
+        }
+        if (!request.hasIncludeContainers() || request.getIncludeContainers()) {
+            for (var container : mdb.getSequenceContainers()) {
+                var item = MissionDatabaseItem.newBuilder()
+                        .setContainer(XtceToGpbAssembler.toContainerInfo(container, DetailLevel.FULL))
+                        .build();
+                observer.next(item);
+            }
+        }
+        if (!request.hasIncludeParameters() || request.getIncludeParameters()) {
+            for (var parameter : mdb.getParameters()) {
+                var item = MissionDatabaseItem.newBuilder()
+                        .setParameter(XtceToGpbAssembler.toParameterInfo(parameter, DetailLevel.FULL))
+                        .build();
+                observer.next(item);
+            }
+        }
+        if (!request.hasIncludeParameterTypes() || request.getIncludeParameterTypes()) {
+            for (var parameterType : mdb.getParameterTypes()) {
+                var item = MissionDatabaseItem.newBuilder()
+                        .setParameterType(XtceToGpbAssembler.toParameterTypeInfo(parameterType, DetailLevel.FULL))
+                        .build();
+                observer.next(item);
+            }
+        }
+        if (!request.hasIncludeCommands() || request.getIncludeCommands()) {
+            for (var command : mdb.getMetaCommands()) {
+                var item = MissionDatabaseItem.newBuilder()
+                        .setCommand(XtceToGpbAssembler.toCommandInfo(command, DetailLevel.FULL))
+                        .build();
+                observer.next(item);
+            }
+        }
+        if (!request.hasIncludeAlgorithms() || request.getIncludeAlgorithms()) {
+            for (var algorithm : mdb.getAlgorithms()) {
+                var item = MissionDatabaseItem.newBuilder()
+                        .setAlgorithm(XtceToGpbAssembler.toAlgorithmInfo(algorithm, DetailLevel.FULL))
+                        .build();
+                observer.next(item);
+            }
+        }
+
+        observer.complete();
+    }
+
+    @Override
+    public void listSpaceSystems(Context ctx, ListSpaceSystemsRequest request,
+            Observer<ListSpaceSystemsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        // Should eventually be replaced in a generic mdb search operation
+        NameDescriptionSearchMatcher matcher = null;
+        if (request.hasQ()) {
+            matcher = new NameDescriptionSearchMatcher(request.getQ());
+        }
+
+        List<SpaceSystem> matchedSpaceSystems = new ArrayList<>();
+        for (SpaceSystem spaceSystem : mdb.getSpaceSystems()) {
+            if (matcher != null && !matcher.matches(spaceSystem)) {
+                continue;
+            }
+            matchedSpaceSystems.add(spaceSystem);
+        }
+
+        Collections.sort(matchedSpaceSystems, (p1, p2) -> {
+            return p1.getQualifiedName().compareTo(p2.getQualifiedName());
+        });
+
+        int totalSize = matchedSpaceSystems.size();
+
+        String next = request.hasNext() ? request.getNext() : null;
+        int pos = request.hasPos() ? request.getPos() : 0;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        if (next != null) {
+            NamedObjectPageToken pageToken = NamedObjectPageToken.decode(next);
+            matchedSpaceSystems = matchedSpaceSystems.stream().filter(p -> {
+                return p.getQualifiedName().compareTo(pageToken.name) > 0;
+            }).collect(Collectors.toList());
+        } else if (pos > 0) {
+            matchedSpaceSystems = matchedSpaceSystems.subList(pos, matchedSpaceSystems.size());
+        }
+
+        NamedObjectPageToken continuationToken = null;
+        if (limit < matchedSpaceSystems.size()) {
+            matchedSpaceSystems = matchedSpaceSystems.subList(0, limit);
+            SpaceSystem lastSpaceSystem = matchedSpaceSystems.get(limit - 1);
+            continuationToken = new NamedObjectPageToken(lastSpaceSystem.getQualifiedName(), false);
+        }
+
+        ListSpaceSystemsResponse.Builder responseb = ListSpaceSystemsResponse.newBuilder();
+        responseb.setTotalSize(totalSize);
+        for (SpaceSystem s : matchedSpaceSystems) {
+            responseb.addSpaceSystems(XtceToGpbAssembler.toSpaceSystemInfo(s, DetailLevel.FULL));
+        }
+        if (continuationToken != null) {
+            responseb.setContinuationToken(continuationToken.encodeAsString());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void exportXtce(Context ctx, ExportXtceRequest request, Observer<HttpBody> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        var mdb = MdbFactory.getInstance(instance);
+        var spaceSystem = verifySpaceSystem(mdb, request.getName());
+        var xtce = new XtceAssembler().toXtce(mdb, spaceSystem.getQualifiedName(), fqn -> true);
+        var httpBody = HttpBody.newBuilder()
+                .setContentType(TEXT_XML)
+                .setFilename(spaceSystem.getName() + ".xtce.xml")
+                .setData(ByteString.copyFromUtf8(xtce))
+                .build();
+        observer.complete(httpBody);
+    }
+
+    @Override
+    public void getSpaceSystem(Context ctx, GetSpaceSystemRequest request, Observer<SpaceSystemInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+        SpaceSystem spaceSystem = verifySpaceSystem(mdb, request.getName());
+
+        SpaceSystemInfo info = XtceToGpbAssembler.toSpaceSystemInfo(spaceSystem, DetailLevel.FULL);
+        observer.complete(info);
+    }
+
+    @Override
+    public void listParameters(Context ctx, ListParametersRequest request, Observer<ListParametersResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        Predicate<Parameter> hasPrivilege = p -> {
+            return ctx.user.hasSystemPrivilege(SystemPrivilege.GetMissionDatabase)
+                    || ctx.user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, p);
+        };
+
+        // Establish only the parameters and space-systems that the user is authorised for
+        Set<String> allSpaceSystemNames = new HashSet<>();
+        List<Parameter> allParameters = new ArrayList<>();
+        mdb.getParameters().stream().filter(hasPrivilege).forEach(parameter -> {
+            allSpaceSystemNames.add(parameter.getSubsystemName());
+            allParameters.add(parameter);
+        });
+        Set<SpaceSystem> allSpaceSystems = new HashSet<>();
+        for (String spaceSystemName : allSpaceSystemNames) {
+            SpaceSystem spaceSystem = mdb.getSpaceSystem(spaceSystemName);
+            while (!spaceSystem.getName().isEmpty()) {
+                allSpaceSystems.add(spaceSystem);
+                spaceSystem = spaceSystem.getParent();
+            }
+        }
+
+        // Determine search scope within the tree
+        List<SpaceSystem> spaceSystems = new ArrayList<>();
+        final List<Parameter> candidates = new ArrayList<>();
+        if (request.hasSystem()) {
+            // Add trailing slash, to ignore siblings with similar name
+            var systemPrefix = request.getSystem().endsWith("/")
+                    ? request.getSystem()
+                    : request.getSystem() + "/";
+
+            if (request.hasQ()) { // get candidates for deep search starting from the system
+                allParameters.forEach(parameter -> {
+                    if (parameter.getQualifiedName().startsWith(systemPrefix)) {
+                        candidates.add(parameter);
+                    }
+                });
+            } else { // get direct children of the system
+                for (SpaceSystem spaceSystem : mdb.getSpaceSystems()) {
+                    if (!allSpaceSystems.contains(spaceSystem)) {
+                        continue;
+                    }
+                    if (spaceSystem.getQualifiedName().equals(request.getSystem())) {
+                        spaceSystem.getParameters().stream().filter(hasPrivilege).forEach(candidates::add);
+                    } else if (spaceSystem.getQualifiedName().startsWith(systemPrefix)) {
+                        if (spaceSystem.getQualifiedName().indexOf('/', request.getSystem().length() + 1) == -1) {
+                            spaceSystems.add(spaceSystem);
+                        }
+                    }
+                }
+            }
+        } else {
+            candidates.addAll(allParameters);
+        }
+
+        // Match parameters
+        NameDescriptionSearchMatcher matcher = request.hasQ() ? new NameDescriptionSearchMatcher(request.getQ()) : null;
+        List<NameDescription> matches = candidates.stream()
+                .filter(p -> !request.hasSource() || parameterSourceMatches((Parameter) p, request.getSource()))
+                .filter(item -> parameterTypeMatches(item.getParameterType(), request.getTypeList()))
+                .filter(item -> matcher == null || matcher.matches(item))
+                .collect(Collectors.toList());
+
+        // If requested, match also member paths inside parameters
+        if (request.getSearchMembers() && request.hasQ()) {
+            List<NameDescription> memberMatches = new ArrayList<>();
+            for (Parameter parameter : candidates) {
+                if (!request.hasSource() || parameterSourceMatches(parameter, request.getSource())) {
+                    MdbSearchHelpers.searchEntries(parameter, request.getQ()).stream()
+                            .filter(entry -> parameterTypeMatches(entry.entryType, request.getTypeList()))
+                            .forEach(memberMatches::add);
+                }
+            }
+            matches.addAll(memberMatches);
+        }
+
+        // We got the results now, only response formatting remaining
+        MdbPageBuilder<NameDescription> pageBuilder = new MdbPageBuilder<>(spaceSystems, matches);
+        pageBuilder.setNext(request.hasNext() ? request.getNext() : null);
+        pageBuilder.setPos(request.hasPos() ? request.getPos() : 0);
+        pageBuilder.setLimit(request.hasLimit() ? request.getLimit() : 100);
+        MdbPage<NameDescription> page = pageBuilder.buildPage();
+
+        ListParametersResponse.Builder responseb = ListParametersResponse.newBuilder()
+                .setTotalSize(page.getTotalSize());
+        for (SpaceSystem s : page.getSpaceSystems()) {
+            responseb.addSpaceSystems(s.getQualifiedName());
+            responseb.addSystems(XtceToGpbAssembler.toSpaceSystemInfo(s, DetailLevel.SUMMARY));
+        }
+        DetailLevel detail = request.getDetails() ? DetailLevel.FULL : DetailLevel.SUMMARY;
+        for (NameDescription item : page.getItems()) {
+            if (item instanceof Parameter) {
+                responseb.addParameters(XtceToGpbAssembler.toParameterInfo((Parameter) item, detail));
+            } else if (item instanceof EntryMatch) {
+                EntryMatch match = (EntryMatch) item;
+                Parameter parameter = match.parameter;
+                ParameterInfo.Builder entryb = ParameterInfo
+                        .newBuilder(XtceToGpbAssembler.toParameterInfo(parameter, detail));
+                for (PathElement el : match.entryPath) {
+                    if (el.getName() != null || el.getIndex() != null) {
+                        entryb.addPath(el.toString());
+                    }
+                }
+                responseb.addParameters(entryb);
+            }
+        }
+        if (page.getContinuationToken() != null) {
+            responseb.setContinuationToken(page.getContinuationToken());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getParameter(Context ctx, GetParameterRequest request, Observer<ParameterInfo> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+        ParameterWithId match = verifyParameterWithId(ctx, mdb, request.getName());
+
+        ParameterInfo pinfo = XtceToGpbAssembler.toParameterInfo(match, DetailLevel.FULL);
+
+        List<ParameterEntry> parameterEntries = mdb.getParameterEntries(match.getParameter());
+        if (parameterEntries != null) {
+            ParameterInfo.Builder pinfob = ParameterInfo.newBuilder(pinfo);
+            Set<SequenceContainer> usingContainers = new HashSet<>();
+            for (ParameterEntry entry : parameterEntries) {
+                Container containingContainer = entry.getContainer();
+                if (containingContainer instanceof SequenceContainer) {
+                    usingContainers.add((SequenceContainer) containingContainer);
+                }
+            }
+
+            UsedByInfo.Builder usedByb = UsedByInfo.newBuilder();
+            List<SequenceContainer> unsortedContainers = new ArrayList<>(usingContainers);
+            Collections.sort(unsortedContainers, (c1, c2) -> c1.getQualifiedName().compareTo(c2.getQualifiedName()));
+            for (SequenceContainer seqContainer : unsortedContainers) {
+                ContainerInfo usingContainer = XtceToGpbAssembler.toContainerInfo(seqContainer, DetailLevel.SUMMARY);
+                usedByb.addContainer(usingContainer);
+            }
+            pinfob.setUsedBy(usedByb);
+            pinfo = pinfob.build();
+        }
+
+        observer.complete(pinfo);
+    }
+
+    @Override
+    public void createParameterType(Context ctx, CreateParameterTypeRequest request,
+            Observer<ParameterTypeInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ChangeMissionDatabase);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        BaseDataType.Builder<?> ptypeb;
+        if ("float".equals(request.getEngType())) {
+            var floatb = new FloatParameterType.Builder();
+            if (request.hasDefaultAlarm()) {
+                var alarm = toNumericAlarm(request.getDefaultAlarm());
+                floatb.setDefaultAlarm(alarm);
+            }
+            for (var contextAlarm : request.getContextAlarmsList()) {
+                var alarm = toNumericContextAlarm(mdb, instance, contextAlarm);
+                floatb.addContextAlarm(alarm);
+            }
+            ptypeb = floatb;
+        } else if ("integer".equals(request.getEngType())) {
+            var integerb = new IntegerParameterType.Builder();
+            if (request.hasSigned()) {
+                integerb.setSigned(request.getSigned());
+            }
+            if (request.hasDefaultAlarm()) {
+                var alarm = toNumericAlarm(request.getDefaultAlarm());
+                integerb.setDefaultAlarm(alarm);
+            }
+            for (var contextAlarm : request.getContextAlarmsList()) {
+                var alarm = toNumericContextAlarm(mdb, instance, contextAlarm);
+                integerb.addContextAlarm(alarm);
+            }
+            ptypeb = integerb;
+        } else if ("enumeration".equals(request.getEngType())) {
+            var enumb = new EnumeratedParameterType.Builder();
+            for (var enumerationValue : request.getEnumerationValuesList()) {
+                var valueEnumeration = new ValueEnumeration(enumerationValue.getValue(), enumerationValue.getLabel());
+                if (enumerationValue.hasDescription()) {
+                    valueEnumeration.setDescription(enumerationValue.getDescription());
+                }
+            }
+            if (request.hasDefaultAlarm()) {
+                var alarm = toEnumerationAlarm(request.getDefaultAlarm());
+                enumb.setDefaultAlarm(alarm);
+            }
+            for (var contextAlarm : request.getContextAlarmsList()) {
+                var alarm = toEnumerationContextAlarm(mdb, instance, contextAlarm);
+                enumb.addContextAlarm(alarm);
+            }
+            ptypeb = enumb;
+        } else if ("binary".equals(request.getEngType())) {
+            var binaryb = new BinaryParameterType.Builder();
+            ptypeb = binaryb;
+        } else if ("boolean".equals(request.getEngType())) {
+            var booleanb = new BooleanParameterType.Builder();
+            if (request.hasOneStringValue()) {
+                booleanb.setOneStringValue(request.getOneStringValue());
+            }
+            if (request.hasZeroStringValue()) {
+                booleanb.setZeroStringValue(request.getZeroStringValue());
+            }
+            ptypeb = booleanb;
+        } else if ("string".equals(request.getEngType())) {
+            var stringb = new StringParameterType.Builder();
+            ptypeb = stringb;
+        } else {
+            throw new BadRequestException(
+                    "Cannot create parameters of type '" + request.getEngType() + "'");
+        }
+
+        var fqn = request.getName();
+        if (!fqn.startsWith("/")) {
+            throw new BadRequestException("Parameter type name is not fully qualified");
+        }
+        var idx = fqn.lastIndexOf('/');
+        var name = fqn.substring(idx + 1);
+
+        ptypeb.setName(name);
+        ptypeb.setQualifiedName(fqn);
+        request.getAliasesMap().forEach(ptypeb::addAlias);
+
+        if (request.hasShortDescription()) {
+            ptypeb.setShortDescription(request.getShortDescription());
+        }
+        if (request.hasLongDescription()) {
+            ptypeb.setLongDescription(request.getLongDescription());
+        }
+        if (request.hasUnit()) {
+            ptypeb.addUnit(new UnitType(request.getUnit()));
+        }
+
+        var ptype = (ParameterType) ptypeb.build();
+        try {
+            mdb.addParameterType(ptype, true);
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Could not save parameter type", e);
+        }
+        observer.complete(XtceToGpbAssembler.toParameterTypeInfo(ptype, DetailLevel.FULL));
+    }
+
+    @Override
+    public void createParameter(Context ctx, CreateParameterRequest request, Observer<ParameterInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ChangeMissionDatabase);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        var fqn = request.getName();
+        if (!fqn.startsWith("/")) {
+            throw new BadRequestException("Parameter name is not fully qualified");
+        }
+        var idx = fqn.lastIndexOf('/');
+        var name = fqn.substring(idx + 1);
+
+        var parameter = new Parameter(name);
+        parameter.setDataSource(DataSource.valueOf(request.getDataSource().name()));
+        parameter.setQualifiedName(fqn);
+        request.getAliasesMap().forEach(parameter::addAlias);
+
+        if (request.hasShortDescription()) {
+            parameter.setShortDescription(request.getShortDescription());
+        }
+        if (request.hasLongDescription()) {
+            parameter.setLongDescription(request.getLongDescription());
+        }
+
+        if (request.hasParameterType()) {
+            var ptype = mdb.getParameterType(request.getParameterType());
+            if (ptype == null) {
+                throw new BadRequestException("Unknown parameter type '" + request.getParameterType() + "'");
+            }
+            parameter.setParameterType(ptype);
+        }
+
+        try {
+            mdb.addParameter(parameter, true, true);
+        } catch (IOException e) {
+            throw new InternalServerErrorException("Could not save parameter", e);
+        }
+
+        observer.complete(XtceToGpbAssembler.toParameterInfo(parameter, DetailLevel.FULL));
+    }
+
+    @Override
+    public void batchGetParameters(Context ctx, BatchGetParametersRequest request,
+            Observer<BatchGetParametersResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        BatchGetParametersResponse.Builder responseb = BatchGetParametersResponse.newBuilder();
+        for (NamedObjectId id : request.getIdList()) {
+            Parameter p = mdb.getParameter(id);
+            if (p == null) {
+                throw new BadRequestException("Invalid parameter name specified " + id);
+            }
+            if (!ctx.user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, p)) {
+                log.warn("Not providing information about parameter {} because no privileges exists",
+                        p.getQualifiedName());
+                continue;
+            }
+
+            GetParameterResponse.Builder response = GetParameterResponse.newBuilder();
+            response.setId(id);
+            response.setParameter(XtceToGpbAssembler.toParameterInfo(p, DetailLevel.SUMMARY));
+            responseb.addResponse(response);
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listParameterTypes(Context ctx, ListParameterTypesRequest request,
+            Observer<ListParameterTypesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        List<SpaceSystem> spaceSystems = new ArrayList<>();
+        List<ParameterType> ptypes = new ArrayList<>();
+        if (request.hasSystem()) {
+            // Add trailing slash, to ignore siblings with similar name
+            var systemPrefix = request.getSystem().endsWith("/")
+                    ? request.getSystem()
+                    : request.getSystem() + "/";
+
+            if (request.hasQ()) { // get candidates for deep search starting from the system
+                for (ParameterType ptype : mdb.getParameterTypes()) {
+                    if (ptype.getQualifiedName().startsWith(systemPrefix)) {
+                        ptypes.add(ptype);
+                    }
+                }
+            } else { // get direct children of the system
+                List<SpaceSystem> filteredSpaceSystems = mdb.getSpaceSystems().stream()
+                        .filter(spaceSystem -> spaceSystem.getParameterTypeCount(true) > 0)
+                        .collect(Collectors.toList());
+                for (SpaceSystem spaceSystem : filteredSpaceSystems) {
+                    if (spaceSystem.getQualifiedName().equals(request.getSystem())) {
+                        ptypes.addAll(spaceSystem.getParameterTypes());
+                    } else if (spaceSystem.getQualifiedName().startsWith(systemPrefix)) {
+                        if (spaceSystem.getQualifiedName().indexOf('/', request.getSystem().length() + 1) == -1) {
+                            spaceSystems.add(spaceSystem);
+                        }
+                    }
+                }
+            }
+        } else {
+            ptypes = new ArrayList<>(mdb.getParameterTypes());
+        }
+
+        NameDescriptionSearchMatcher matcher = request.hasQ() ? new NameDescriptionSearchMatcher(request.getQ()) : null;
+
+        ptypes = ptypes.stream().filter(c -> {
+            if (matcher != null && !matcher.matches((NameDescription) c)) {
+                return false;
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        @SuppressWarnings("unchecked")
+        var nameDescriptionItems = (List<NameDescription>) (Object) ptypes;
+        var pageBuilder = new MdbPageBuilder<>(spaceSystems, nameDescriptionItems);
+        pageBuilder.setNext(request.hasNext() ? request.getNext() : null);
+        pageBuilder.setPos(request.hasPos() ? request.getPos() : 0);
+        pageBuilder.setLimit(request.hasLimit() ? request.getLimit() : 100);
+        var page = pageBuilder.buildPage();
+
+        var responseb = ListParameterTypesResponse.newBuilder()
+                .setTotalSize(page.getTotalSize());
+        for (SpaceSystem s : page.getSpaceSystems()) {
+            responseb.addSpaceSystems(s.getQualifiedName());
+            responseb.addSystems(XtceToGpbAssembler.toSpaceSystemInfo(s, DetailLevel.SUMMARY));
+        }
+        for (NameDescription c : page.getItems()) {
+            var ptype = (ParameterType) c;
+            responseb.addParameterTypes(XtceToGpbAssembler.toParameterTypeInfo(ptype, DetailLevel.SUMMARY));
+        }
+        if (page.getContinuationToken() != null) {
+            responseb.setContinuationToken(page.getContinuationToken());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getParameterType(Context ctx, GetParameterTypeRequest request, Observer<ParameterTypeInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+        ParameterType ptype = verifyParameterType(mdb, request.getName());
+
+        var pinfo = XtceToGpbAssembler.toParameterTypeInfo(ptype, DetailLevel.FULL);
+
+        // Add extra information about which parameters are using this type
+        // This is not efficient, but we don't expect this to get called often.
+        var pinfob = ParameterTypeInfo.newBuilder(pinfo);
+        mdb.getParameters().stream()
+                .filter(parameter -> parameter.getParameterType() == ptype)
+                .sorted((a, b) -> a.getQualifiedName().compareTo(b.getQualifiedName()))
+                .forEach(parameter -> {
+                    pinfob.addUsedBy(XtceToGpbAssembler.toParameterInfo(parameter, DetailLevel.LINK));
+                });
+        pinfo = pinfob.build();
+
+        observer.complete(pinfo);
+    }
+
+    @Override
+    public void listContainers(Context ctx, ListContainersRequest request,
+            Observer<ListContainersResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        List<SpaceSystem> spaceSystems = new ArrayList<>();
+        List<SequenceContainer> containers = new ArrayList<>();
+        if (request.hasSystem()) {
+            // Add trailing slash, to ignore siblings with similar name
+            var systemPrefix = request.getSystem().endsWith("/")
+                    ? request.getSystem()
+                    : request.getSystem() + "/";
+
+            if (request.hasQ()) { // get candidates for deep search starting from the system
+                for (SequenceContainer container : mdb.getSequenceContainers()) {
+                    if (container.getQualifiedName().startsWith(systemPrefix)) {
+                        containers.add(container);
+                    }
+                }
+            } else { // get direct children of the system
+                List<SpaceSystem> filteredSpaceSystems = mdb.getSpaceSystems().stream()
+                        .filter(spaceSystem -> spaceSystem.getSequenceContainerCount(true) > 0)
+                        .collect(Collectors.toList());
+                for (SpaceSystem spaceSystem : filteredSpaceSystems) {
+                    if (spaceSystem.getQualifiedName().equals(request.getSystem())) {
+                        containers.addAll(spaceSystem.getSequenceContainers());
+                    } else if (spaceSystem.getQualifiedName().startsWith(systemPrefix)) {
+                        if (spaceSystem.getQualifiedName().indexOf('/', request.getSystem().length() + 1) == -1) {
+                            spaceSystems.add(spaceSystem);
+                        }
+                    }
+                }
+            }
+        } else {
+            containers = new ArrayList<>(mdb.getSequenceContainers());
+        }
+
+        NameDescriptionSearchMatcher matcher = request.hasQ() ? new NameDescriptionSearchMatcher(request.getQ()) : null;
+
+        containers = containers.stream().filter(c -> {
+            if (matcher != null && !matcher.matches(c)) {
+                return false;
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        MdbPageBuilder<SequenceContainer> pageBuilder = new MdbPageBuilder<>(spaceSystems, containers);
+        pageBuilder.setNext(request.hasNext() ? request.getNext() : null);
+        pageBuilder.setPos(request.hasPos() ? request.getPos() : 0);
+        pageBuilder.setLimit(request.hasLimit() ? request.getLimit() : 100);
+        MdbPage<SequenceContainer> page = pageBuilder.buildPage();
+
+        ListContainersResponse.Builder responseb = ListContainersResponse.newBuilder()
+                .setTotalSize(page.getTotalSize());
+        for (SpaceSystem s : page.getSpaceSystems()) {
+            responseb.addSpaceSystems(s.getQualifiedName());
+            responseb.addSystems(XtceToGpbAssembler.toSpaceSystemInfo(s, DetailLevel.SUMMARY));
+        }
+        for (SequenceContainer c : page.getItems()) {
+            responseb.addContainers(XtceToGpbAssembler.toContainerInfo(c, DetailLevel.SUMMARY));
+        }
+        if (page.getContinuationToken() != null) {
+            responseb.setContinuationToken(page.getContinuationToken());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getContainer(Context ctx, GetContainerRequest request, Observer<ContainerInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.GetMissionDatabase);
+
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+        SequenceContainer c = verifyContainer(mdb, request.getName());
+
+        ContainerInfo cinfo = XtceToGpbAssembler.toContainerInfo(c, DetailLevel.FULL);
+        List<ContainerEntry> containerEntries = mdb.getContainerEntries(c);
+        if (containerEntries != null) {
+            ContainerInfo.Builder cinfob = ContainerInfo.newBuilder(cinfo);
+            Set<SequenceContainer> usingContainers = new HashSet<>();
+            for (ContainerEntry entry : containerEntries) {
+                Container containingContainer = entry.getContainer();
+                if (containingContainer instanceof SequenceContainer) {
+                    usingContainers.add((SequenceContainer) containingContainer);
+                }
+            }
+
+            UsedByInfo.Builder usedByb = UsedByInfo.newBuilder();
+            List<SequenceContainer> unsortedContainers = new ArrayList<>(usingContainers);
+            Collections.sort(unsortedContainers, (c1, c2) -> c1.getQualifiedName().compareTo(c2.getQualifiedName()));
+            for (SequenceContainer seqContainer : unsortedContainers) {
+                ContainerInfo usingContainer = XtceToGpbAssembler.toContainerInfo(seqContainer, DetailLevel.SUMMARY);
+                usedByb.addContainer(usingContainer);
+            }
+            cinfob.setUsedBy(usedByb);
+            cinfo = cinfob.build();
+        }
+
+        observer.complete(cinfo);
+    }
+
+    @Override
+    public void listCommands(Context ctx, ListCommandsRequest request, Observer<ListCommandsResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        Predicate<MetaCommand> hasPrivilege = c -> {
+            return ctx.user.hasSystemPrivilege(SystemPrivilege.GetMissionDatabase)
+                    || ctx.user.hasObjectPrivilege(ObjectPrivilegeType.Command, c.getQualifiedName());
+        };
+
+        // Establish only the commands and space-systems that the user is authorised for
+        Set<String> allSpaceSystemNames = new HashSet<>();
+        List<MetaCommand> allCommands = new ArrayList<>();
+        mdb.getMetaCommands().stream().filter(hasPrivilege).forEach(command -> {
+            allSpaceSystemNames.add(command.getSubsystemName());
+            allCommands.add(command);
+        });
+        Set<SpaceSystem> allSpaceSystems = new HashSet<>();
+        for (String spaceSystemName : allSpaceSystemNames) {
+            SpaceSystem spaceSystem = mdb.getSpaceSystem(spaceSystemName);
+            while (!spaceSystem.getName().isEmpty()) {
+                allSpaceSystems.add(spaceSystem);
+                spaceSystem = spaceSystem.getParent();
+            }
+        }
+
+        List<SpaceSystem> spaceSystems = new ArrayList<>();
+        final List<MetaCommand> candidates = new ArrayList<>();
+        if (request.hasSystem()) {
+            // Add trailing slash, to ignore siblings with similar name
+            var systemPrefix = request.getSystem().endsWith("/")
+                    ? request.getSystem()
+                    : request.getSystem() + "/";
+
+            if (request.hasQ()) { // get candidates for deep search starting from the system
+                allCommands.forEach(command -> {
+                    if (command.getQualifiedName().startsWith(systemPrefix)) {
+                        candidates.add(command);
+                    }
+                });
+            } else { // get direct children of the system
+                for (SpaceSystem spaceSystem : mdb.getSpaceSystems()) {
+                    if (!allSpaceSystems.contains(spaceSystem)) {
+                        continue;
+                    }
+                    if (spaceSystem.getQualifiedName().equals(request.getSystem())) {
+                        spaceSystem.getMetaCommands().stream().filter(hasPrivilege).forEach(candidates::add);
+                    } else if (spaceSystem.getQualifiedName().startsWith(systemPrefix)) {
+                        if (spaceSystem.getQualifiedName().indexOf('/', request.getSystem().length() + 1) == -1) {
+                            spaceSystems.add(spaceSystem);
+                        }
+                    }
+                }
+            }
+        } else {
+            candidates.addAll(allCommands);
+        }
+
+        NameDescriptionSearchMatcher matcher = request.hasQ() ? new NameDescriptionSearchMatcher(request.getQ()) : null;
+
+        List<MetaCommand> commands = candidates.stream().filter(c -> {
+            if (matcher != null && !matcher.matches(c)) {
+                return false;
+            }
+            if (c.isAbstract() && request.getNoAbstract()) {
+                return false;
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        MdbPageBuilder<MetaCommand> pageBuilder = new MdbPageBuilder<>(spaceSystems, commands);
+        pageBuilder.setNext(request.hasNext() ? request.getNext() : null);
+        pageBuilder.setPos(request.hasPos() ? request.getPos() : 0);
+        pageBuilder.setLimit(request.hasLimit() ? request.getLimit() : 100);
+        MdbPage<MetaCommand> page = pageBuilder.buildPage();
+
+        ListCommandsResponse.Builder responseb = ListCommandsResponse.newBuilder()
+                .setTotalSize(page.getTotalSize());
+        for (SpaceSystem s : page.getSpaceSystems()) {
+            responseb.addSpaceSystems(s.getQualifiedName());
+            responseb.addSystems(XtceToGpbAssembler.toSpaceSystemInfo(s, DetailLevel.SUMMARY));
+        }
+        DetailLevel detail = request.getDetails() ? DetailLevel.FULL : DetailLevel.SUMMARY;
+        for (MetaCommand c : page.getItems()) {
+            responseb.addCommands(XtceToGpbAssembler.toCommandInfo(c, detail));
+        }
+        if (page.getContinuationToken() != null) {
+            responseb.setContinuationToken(page.getContinuationToken());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getCommand(Context ctx, GetCommandRequest request, Observer<CommandInfo> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+        MetaCommand cmd = verifyCommand(mdb, request.getName());
+
+        if (!ctx.user.hasSystemPrivilege(SystemPrivilege.GetMissionDatabase) &&
+                !ctx.user.hasObjectPrivilege(ObjectPrivilegeType.Command, cmd.getQualifiedName())) {
+            throw new ForbiddenException("Insufficient privileges");
+        }
+
+        CommandInfo cinfo = XtceToGpbAssembler.toCommandInfo(cmd, DetailLevel.FULL);
+        observer.complete(cinfo);
+    }
+
+    @Override
+    public void listAlgorithms(Context ctx, ListAlgorithmsRequest request,
+            Observer<ListAlgorithmsResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        Predicate<Algorithm> hasPrivilege = a -> {
+            return ctx.user.hasSystemPrivilege(SystemPrivilege.GetMissionDatabase)
+                    || ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadAlgorithm, a.getQualifiedName());
+        };
+
+        // Establish only the algorithms and space-systems that the user is authorised for
+        Set<String> allSpaceSystemNames = new HashSet<>();
+        List<Algorithm> allAlgorithms = new ArrayList<>();
+        mdb.getAlgorithms().stream().filter(hasPrivilege).forEach(algorithm -> {
+            allSpaceSystemNames.add(algorithm.getSubsystemName());
+            allAlgorithms.add(algorithm);
+        });
+        Set<SpaceSystem> allSpaceSystems = new HashSet<>();
+        for (String spaceSystemName : allSpaceSystemNames) {
+            SpaceSystem spaceSystem = mdb.getSpaceSystem(spaceSystemName);
+            while (!spaceSystem.getName().isEmpty()) {
+                allSpaceSystems.add(spaceSystem);
+                spaceSystem = spaceSystem.getParent();
+            }
+        }
+
+        List<SpaceSystem> spaceSystems = new ArrayList<>();
+        final List<Algorithm> candidates = new ArrayList<>();
+        if (request.hasSystem()) {
+            // Add trailing slash, to ignore siblings with similar name
+            var systemPrefix = request.getSystem().endsWith("/")
+                    ? request.getSystem()
+                    : request.getSystem() + "/";
+
+            if (request.hasQ()) { // get candidates for deep search starting from the system
+                allAlgorithms.forEach(algorithm -> {
+                    if (algorithm.getQualifiedName().startsWith(systemPrefix)) {
+                        candidates.add(algorithm);
+                    }
+                });
+            } else { // get direct children of the system
+                for (SpaceSystem spaceSystem : mdb.getSpaceSystems()) {
+                    if (!allSpaceSystems.contains(spaceSystem)) {
+                        continue;
+                    }
+                    if (spaceSystem.getQualifiedName().equals(request.getSystem())) {
+                        spaceSystem.getAlgorithms().stream().filter(hasPrivilege).forEach(candidates::add);
+                    } else if (spaceSystem.getQualifiedName().startsWith(systemPrefix)) {
+                        if (spaceSystem.getQualifiedName().indexOf('/', request.getSystem().length() + 1) == -1) {
+                            spaceSystems.add(spaceSystem);
+                        }
+                    }
+                }
+            }
+        } else {
+            candidates.addAll(allAlgorithms);
+        }
+
+        NameDescriptionSearchMatcher matcher = request.hasQ() ? new NameDescriptionSearchMatcher(request.getQ()) : null;
+
+        List<Algorithm> algorithms = candidates.stream().filter(a -> {
+            if (matcher != null && !matcher.matches(a)) {
+                return false;
+            }
+            if (request.hasScope()) {
+                Scope requestScope = Scope.valueOf(request.getScope().name());
+                if (requestScope != a.getScope()) {
+                    return false;
+                }
+            }
+            return true;
+        }).collect(Collectors.toList());
+
+        MdbPageBuilder<Algorithm> pageBuilder = new MdbPageBuilder<>(spaceSystems, algorithms);
+        pageBuilder.setNext(request.hasNext() ? request.getNext() : null);
+        pageBuilder.setPos(request.hasPos() ? request.getPos() : 0);
+        pageBuilder.setLimit(request.hasLimit() ? request.getLimit() : 100);
+        MdbPage<Algorithm> page = pageBuilder.buildPage();
+
+        ListAlgorithmsResponse.Builder responseb = ListAlgorithmsResponse.newBuilder()
+                .setTotalSize(page.getTotalSize());
+        for (SpaceSystem s : page.getSpaceSystems()) {
+            responseb.addSpaceSystems(s.getQualifiedName());
+            responseb.addSystems(XtceToGpbAssembler.toSpaceSystemInfo(s, DetailLevel.SUMMARY));
+        }
+        for (Algorithm a : page.getItems()) {
+            responseb.addAlgorithms(XtceToGpbAssembler.toAlgorithmInfo(a, DetailLevel.SUMMARY));
+        }
+        if (page.getContinuationToken() != null) {
+            responseb.setContinuationToken(page.getContinuationToken());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getAlgorithm(Context ctx, GetAlgorithmRequest request, Observer<AlgorithmInfo> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+        Algorithm algo = verifyAlgorithm(mdb, request.getName());
+
+        if (!ctx.user.hasSystemPrivilege(SystemPrivilege.GetMissionDatabase) &&
+                !ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadAlgorithm, algo.getQualifiedName())) {
+            throw new ForbiddenException("Insufficient privileges");
+        }
+
+        AlgorithmInfo cinfo = XtceToGpbAssembler.toAlgorithmInfo(algo, DetailLevel.FULL);
+        observer.complete(cinfo);
+    }
+
+    private boolean parameterTypeMatches(ParameterType ptype, List<String> types) {
+        if (types.isEmpty()) {
+            return true;
+        }
+        if (ptype instanceof ArrayParameterType) {
+            return types.contains("array");
+        }
+        return ptype != null && types.contains(ptype.getTypeAsString());
+    }
+
+    private boolean parameterSourceMatches(Parameter p, DataSourceType source) {
+        DataSource xtceSource = p.getDataSource();
+        return xtceSource != null && xtceSource.toString().equals(source.toString());
+    }
+
+    private static SpaceSystem verifySpaceSystem(Mdb mdb, String pathName) {
+        String namespace;
+        String name;
+        int lastSlash = pathName.lastIndexOf('/');
+        if ("/".equals(pathName)) {
+            namespace = "";
+            name = "";
+        } else if (lastSlash == -1 || lastSlash == pathName.length() - 1) {
+            namespace = "";
+            name = pathName;
+        } else {
+            namespace = pathName.substring(0, lastSlash);
+            name = pathName.substring(lastSlash + 1);
+        }
+
+        // First try with a prefixed slash (should be the common case)
+        NamedObjectId id = NamedObjectId.newBuilder().setNamespace("/" + namespace).setName(name).build();
+        SpaceSystem spaceSystem = mdb.getSpaceSystem(id);
+        if (spaceSystem != null) {
+            return spaceSystem;
+        }
+
+        // Maybe some non-xtce namespace like MDB:OPS Name
+        id = NamedObjectId.newBuilder().setNamespace(namespace).setName(name).build();
+        spaceSystem = mdb.getSpaceSystem(id);
+        if (spaceSystem != null) {
+            return spaceSystem;
+        }
+
+        throw new NotFoundException("No such space system");
+    }
+
+    static Algorithm verifyAlgorithm(Mdb mdb, String pathName) {
+        int lastSlash = pathName.lastIndexOf('/');
+        if (lastSlash == -1 || lastSlash == pathName.length() - 1) {
+            throw new NotFoundException("No such algorithm (missing namespace?)");
+        }
+
+        String namespace = pathName.substring(0, lastSlash);
+        String name = pathName.substring(lastSlash + 1);
+
+        // First try with a prefixed slash (should be the common case)
+        NamedObjectId id = NamedObjectId.newBuilder().setNamespace("/" + namespace).setName(name).build();
+        Algorithm algorithm = mdb.getAlgorithm(id);
+        if (algorithm != null) {
+            return algorithm;
+        }
+
+        // Maybe some non-xtce namespace like MDB:OPS Name
+        id = NamedObjectId.newBuilder().setNamespace(namespace).setName(name).build();
+        algorithm = mdb.getAlgorithm(id);
+        if (algorithm != null) {
+            return algorithm;
+        }
+
+        throw new NotFoundException("No such algorithm");
+    }
+
+    static ParameterType verifyParameterType(Mdb mdb, String pathName) {
+        int lastSlash = pathName.lastIndexOf('/');
+        if (lastSlash == -1 || lastSlash == pathName.length() - 1) {
+            throw new NotFoundException("No such parameter type (missing namespace?)");
+        }
+
+        String namespace = pathName.substring(0, lastSlash);
+        String name = pathName.substring(lastSlash + 1);
+
+        // First try with a prefixed slash (should be the common case)
+        NamedObjectId id = NamedObjectId.newBuilder().setNamespace("/" + namespace).setName(name).build();
+        ParameterType type = mdb.getParameterType(id);
+        if (type != null) {
+            return type;
+        }
+
+        // Maybe some non-xtce namespace like MDB:OPS Name
+        id = NamedObjectId.newBuilder().setNamespace(namespace).setName(name).build();
+        type = mdb.getParameterType(id);
+        if (type != null) {
+            return type;
+        }
+
+        throw new NotFoundException("No such parameter type");
+    }
+
+    static SequenceContainer verifyContainer(Mdb mdb, String pathName) {
+        int lastSlash = pathName.lastIndexOf('/');
+        if (lastSlash == -1 || lastSlash == pathName.length() - 1) {
+            throw new NotFoundException("No such container (missing namespace?)");
+        }
+
+        String namespace = pathName.substring(0, lastSlash);
+        String name = pathName.substring(lastSlash + 1);
+
+        // First try with a prefixed slash (should be the common case)
+        NamedObjectId id = NamedObjectId.newBuilder().setNamespace("/" + namespace).setName(name).build();
+        SequenceContainer container = mdb.getSequenceContainer(id);
+        if (container != null) {
+            return container;
+        }
+
+        // Maybe some non-xtce namespace like MDB:OPS Name
+        id = NamedObjectId.newBuilder().setNamespace(namespace).setName(name).build();
+        container = mdb.getSequenceContainer(id);
+        if (container != null) {
+            return container;
+        }
+
+        throw new NotFoundException("No such container");
+    }
+
+    static MetaCommand verifyCommand(Mdb mdb, String pathName) {
+        int lastSlash = pathName.lastIndexOf('/');
+        if (lastSlash == -1 || lastSlash == pathName.length() - 1) {
+            throw new NotFoundException("No such command (missing namespace?)");
+        }
+
+        String namespace = pathName.substring(0, lastSlash);
+        String name = pathName.substring(lastSlash + 1);
+
+        // First try with a prefixed slash (should be the common case)
+        NamedObjectId id = NamedObjectId.newBuilder().setNamespace("/" + namespace).setName(name).build();
+        MetaCommand cmd = mdb.getMetaCommand(id);
+        if (cmd == null) {
+            // Maybe some non-xtce namespace like MDB:OPS Name
+            id = NamedObjectId.newBuilder().setNamespace(namespace).setName(name).build();
+            cmd = mdb.getMetaCommand(id);
+        }
+
+        if (cmd == null) {
+            throw new NotFoundException("No such command");
+        } else {
+            return cmd;
+        }
+    }
+
+    static NamedObjectId verifyParameterId(Context ctx, Mdb mdb, String pathName) {
+        return verifyParameterWithId(ctx, mdb, pathName).getId();
+    }
+
+    public static Parameter verifyParameter(Context ctx, Mdb mdb, String pathName) {
+        return verifyParameterWithId(ctx, mdb, pathName).getParameter();
+    }
+
+    static ParameterWithId verifyParameterWithId(Context ctx, Mdb mdb, NamedObjectId id) {
+        if (id.hasNamespace()) {
+            Parameter p = mdb.getParameter(id);
+            if (p == null) {
+                throw new BadRequestException("Invalid parameter name specified " + id);
+            }
+            ctx.checkParameterPrivilege(ObjectPrivilegeType.ReadParameter, p);
+            return new ParameterWithId(p, id, null);
+        } else {
+            return verifyParameterWithId(ctx, mdb, id.getName());
+        }
+    }
+
+    static ParameterWithId verifyParameterWithId(Context ctx, Mdb mdb, String pathName) {
+        int aggSep = AggregateUtil.findSeparator(pathName);
+
+        PathElement[] aggPath = null;
+        String nwa = pathName; // name without the aggregate part
+        if (aggSep >= 0) {
+            nwa = pathName.substring(0, aggSep);
+            try {
+                aggPath = AggregateUtil.parseReference(pathName.substring(aggSep));
+            } catch (IllegalArgumentException e) {
+                throw new NotFoundException("Invalid array/aggregate path in name " + pathName);
+            }
+        }
+
+        //
+        // }
+        int lastSlash = nwa.lastIndexOf('/');
+        if (lastSlash == -1 || lastSlash == nwa.length() - 1) {
+            throw new NotFoundException("No such parameter (missing namespace?)");
+        }
+
+        String _namespace = nwa.substring(0, lastSlash);
+        String name = nwa.substring(lastSlash + 1);
+
+        // First try with a prefixed slash (should be the common case)
+        String namespace = "/" + _namespace;
+        Parameter p = mdb.getParameter(namespace, name);
+        if (p == null) {
+            namespace = _namespace;
+            // Maybe some non-xtce namespace like MDB:OPS Name
+            p = mdb.getParameter(namespace, name);
+        }
+
+        if (p == null) {
+            throw new NotFoundException("No parameter named " + pathName);
+        }
+
+        ctx.checkParameterPrivilege(ObjectPrivilegeType.ReadParameter, p);
+
+        if (aggPath != null) {
+            if (!AggregateUtil.verifyPath(p.getParameterType(), aggPath)) {
+                throw new NotFoundException("Nonexistent array/aggregate path in name " + pathName);
+            }
+            name += AggregateUtil.toString(aggPath);
+        }
+
+        NamedObjectId id = NamedObjectId.newBuilder().setNamespace(namespace).setName(name).build();
+        return new ParameterWithId(p, id, aggPath);
+    }
+
+    public static MissionDatabase toMissionDatabase(String instanceName, Mdb mdb) {
+        YamcsServerInstance instance = YamcsServer.getServer().getInstance(instanceName);
+        YamcsInstance instanceInfo = instance.getInstanceInfo();
+        MissionDatabase.Builder b = MissionDatabase.newBuilder(instanceInfo.getMissionDatabase());
+        b.setParameterCount(mdb.getParameters().size());
+        b.setContainerCount(mdb.getSequenceContainers().size());
+        b.setCommandCount(mdb.getMetaCommands().size());
+        b.setAlgorithmCount(mdb.getAlgorithms().size());
+        b.setParameterTypeCount(mdb.getParameterTypes().size());
+        SpaceSystem ss = mdb.getRootSpaceSystem();
+        for (SpaceSystem sub : ss.getSubSystems()) {
+            b.addSpaceSystems(XtceToGpbAssembler.toSpaceSystemInfo(sub, DetailLevel.FULL));
+            b.addSpaceSystem(XtceToGpbAssembler.toSpaceSystemInfo(sub, DetailLevel.FULL));
+        }
+        return b.build();
+    }
+}
+```
+
+### `MdbOverrideApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbOverrideApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.http.api.GbpToXtceAssembler.toCalibrator;
+import static org.yamcs.http.api.GbpToXtceAssembler.toContextCalibratorList;
+import static org.yamcs.http.api.GbpToXtceAssembler.toEnumerationAlarm;
+import static org.yamcs.http.api.GbpToXtceAssembler.toEnumerationContextAlarm;
+import static org.yamcs.http.api.GbpToXtceAssembler.toNumericAlarm;
+import static org.yamcs.http.api.GbpToXtceAssembler.toNumericContextAlarm;
+
+import java.util.List;
+
+import org.yamcs.Processor;
+import org.yamcs.algorithms.AlgorithmManager;
+import org.yamcs.algorithms.AlgorithmTextListener;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.api.XtceToGpbAssembler.DetailLevel;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ParameterTypeListener;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.AbstractMdbOverrideApi;
+import org.yamcs.protobuf.AlgorithmTextOverride;
+import org.yamcs.protobuf.GetAlgorithmOverridesRequest;
+import org.yamcs.protobuf.GetAlgorithmOverridesResponse;
+import org.yamcs.protobuf.GetParameterOverrideRequest;
+import org.yamcs.protobuf.ListMdbOverridesRequest;
+import org.yamcs.protobuf.ListMdbOverridesResponse;
+import org.yamcs.protobuf.Mdb.AlgorithmInfo;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
+import org.yamcs.protobuf.MdbOverrideInfo;
+import org.yamcs.protobuf.MdbOverrideInfo.OverrideType;
+import org.yamcs.protobuf.ParameterOverride;
+import org.yamcs.protobuf.SubscribeMdbChangesRequest;
+import org.yamcs.protobuf.UpdateAlgorithmRequest;
+import org.yamcs.protobuf.UpdateParameterRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.NumericParameterType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.mdb.Mdb;
+
+import com.google.protobuf.Empty;
+
+public class MdbOverrideApi extends AbstractMdbOverrideApi<Context> {
+
+    private static final Log log = new Log(MdbOverrideApi.class);
+
+    @Override
+    public void listMdbOverrides(Context ctx, ListMdbOverridesRequest request,
+            Observer<ListMdbOverridesResponse> observer) {
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+
+        ListMdbOverridesResponse.Builder responseb = ListMdbOverridesResponse.newBuilder();
+
+        List<AlgorithmManager> l = processor.getServices(AlgorithmManager.class);
+        if (l.size() == 1) {
+            AlgorithmManager algorithmManager = l.get(0);
+            for (CustomAlgorithm algorithm : algorithmManager.getAlgorithmOverrides()) {
+                var overrideb = MdbOverrideInfo.newBuilder()
+                        .setType(OverrideType.ALGORITHM_TEXT)
+                        .setAlgorithmTextOverride(toAlgorithmTextOverride(algorithm, algorithm.getAlgorithmText()));
+                responseb.addOverrides(overrideb);
+            }
+        }
+
+        ProcessorData pdata = processor.getProcessorData();
+        for (var entry : pdata.getParameterTypeOverrides().entrySet()) {
+            var overrideb = MdbOverrideInfo.newBuilder()
+                    .setType(OverrideType.PARAMETER)
+                    .setParameterOverride(toParameterOverride(entry.getKey(), entry.getValue()));
+            responseb.addOverrides(overrideb);
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getParameterOverride(Context ctx, GetParameterOverrideRequest request,
+            Observer<ParameterOverride> observer) {
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Parameter parameter = MdbApi.verifyParameter(ctx, mdb, request.getName());
+
+        ProcessorData pdata = processor.getProcessorData();
+
+        var ptype = pdata.getParameterTypeOverride(parameter);
+        if (ptype != null) {
+            observer.complete(toParameterOverride(parameter, ptype));
+        } else {
+            observer.complete(ParameterOverride.getDefaultInstance());
+        }
+    }
+
+    private static ParameterOverride toParameterOverride(Parameter parameter, ParameterType ptype) {
+        var b = ParameterOverride.newBuilder()
+                .setParameter(parameter.getQualifiedName());
+        var info = XtceToGpbAssembler.toParameterTypeInfo(ptype, DetailLevel.FULL);
+
+        if (info.getDataEncoding().hasDefaultCalibrator()) {
+            b.setDefaultCalibrator(info.getDataEncoding().getDefaultCalibrator());
+        }
+        b.addAllContextCalibrators(info.getDataEncoding().getContextCalibratorList());
+
+        if (info.hasDefaultAlarm()) {
+            b.setDefaultAlarm(info.getDefaultAlarm());
+        }
+        b.addAllContextAlarms(info.getContextAlarmList());
+        return b.build();
+    }
+
+    @Override
+    public void getAlgorithmOverrides(Context ctx, GetAlgorithmOverridesRequest request,
+            Observer<GetAlgorithmOverridesResponse> observer) {
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Algorithm algorithm = MdbApi.verifyAlgorithm(mdb, request.getName());
+
+        GetAlgorithmOverridesResponse.Builder responseb = GetAlgorithmOverridesResponse.newBuilder();
+
+        List<AlgorithmManager> l = processor.getServices(AlgorithmManager.class);
+        if (l.size() == 1) {
+            AlgorithmManager algorithmManager = l.get(0);
+            CustomAlgorithm override = algorithmManager.getAlgorithmOverride(algorithm);
+            if (override != null) {
+                responseb.setTextOverride(toAlgorithmTextOverride(override, override.getAlgorithmText()));
+            }
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    private AlgorithmTextOverride toAlgorithmTextOverride(CustomAlgorithm algorithm, String algorithmText) {
+        AlgorithmTextOverride.Builder b = AlgorithmTextOverride.newBuilder()
+                .setAlgorithm(algorithm.getQualifiedName())
+                .setText(algorithmText);
+        return b.build();
+    }
+
+    @Override
+    public void updateAlgorithm(Context ctx, UpdateAlgorithmRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ChangeMissionDatabase);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        List<AlgorithmManager> l = processor.getServices(AlgorithmManager.class);
+        if (l.size() == 0) {
+            throw new BadRequestException("No AlgorithmManager available for this processor");
+        }
+        if (l.size() > 1) {
+            throw new BadRequestException(
+                    "Cannot patch algorithm when a processor has more than 1 AlgorithmManager services");
+        }
+        AlgorithmManager algMng = l.get(0);
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Algorithm a = MdbApi.verifyAlgorithm(mdb, request.getName());
+        if (!(a instanceof CustomAlgorithm)) {
+            throw new BadRequestException("Can only patch CustomAlgorithm instances");
+        }
+        CustomAlgorithm calg = (CustomAlgorithm) a;
+
+        switch (request.getAction()) {
+        case RESET:
+            algMng.clearAlgorithmOverride(calg);
+            break;
+        case SET:
+            if (!request.hasAlgorithm()) {
+                throw new BadRequestException("No algorithm info provided");
+            }
+            AlgorithmInfo ai = request.getAlgorithm();
+            if (!ai.hasText()) {
+                throw new BadRequestException("No algorithm text provided");
+            }
+            try {
+                log.debug("Setting text for algorithm {} to {}", calg.getQualifiedName(), ai.getText());
+                algMng.overrideAlgorithm(calg, ai.getText());
+            } catch (Exception e) {
+                throw new BadRequestException(e.getMessage());
+            }
+            break;
+        default:
+            throw new BadRequestException("Unknown action " + request.getAction());
+        }
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void updateParameter(Context ctx, UpdateParameterRequest request, Observer<ParameterTypeInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ChangeMissionDatabase);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Parameter p = MdbApi.verifyParameter(ctx, mdb, request.getName());
+
+        ProcessorData pdata = processor.getProcessorData();
+        ParameterType origParamType = p.getParameterType();
+
+        switch (request.getAction()) {
+        case RESET:
+            pdata.clearParameterOverrides(p);
+            break;
+        case RESET_CALIBRATORS:
+            pdata.clearParameterCalibratorOverrides(p);
+            break;
+        case SET_CALIBRATORS:
+            verifyNumericParameter(p);
+            if (request.hasDefaultCalibrator()) {
+                pdata.setDefaultCalibrator(p, toCalibrator(request.getDefaultCalibrator()));
+            }
+            pdata.setContextCalibratorList(p,
+                    toContextCalibratorList(mdb, p.getSubsystemName(), request.getContextCalibratorList()));
+            break;
+        case SET_DEFAULT_CALIBRATOR:
+            verifyNumericParameter(p);
+            if (request.hasDefaultCalibrator()) {
+                pdata.setDefaultCalibrator(p, toCalibrator(request.getDefaultCalibrator()));
+            } else {
+                pdata.removeDefaultCalibrator(p);
+            }
+            break;
+        case RESET_ALARMS:
+            pdata.clearParameterAlarmOverrides(p);
+            break;
+        case SET_DEFAULT_ALARMS:
+            if (!request.hasDefaultAlarm()) {
+                pdata.removeDefaultAlarm(p);
+            } else {
+                if (origParamType instanceof NumericParameterType) {
+                    pdata.setDefaultNumericAlarm(p, toNumericAlarm(request.getDefaultAlarm()));
+                } else if (origParamType instanceof EnumeratedParameterType) {
+                    pdata.setDefaultEnumerationAlarm(p, toEnumerationAlarm(request.getDefaultAlarm()));
+                } else {
+                    throw new BadRequestException("Can only set alarms on numeric or enumerated parameters");
+                }
+            }
+            break;
+        case SET_ALARMS:
+            if (origParamType instanceof NumericParameterType) {
+                if (request.hasDefaultAlarm()) {
+                    pdata.setDefaultNumericAlarm(p, toNumericAlarm(request.getDefaultAlarm()));
+                }
+                pdata.setNumericContextAlarm(p,
+                        toNumericContextAlarm(mdb, p.getSubsystemName(), request.getContextAlarmList()));
+            } else if (origParamType instanceof EnumeratedParameterType) {
+                if (request.hasDefaultAlarm()) {
+                    pdata.setDefaultEnumerationAlarm(p, toEnumerationAlarm(request.getDefaultAlarm()));
+                }
+                pdata.setEnumerationContextAlarm(p,
+                        toEnumerationContextAlarm(mdb, p.getSubsystemName(), request.getContextAlarmList()));
+            } else {
+                throw new BadRequestException("Can only set alarms on numeric or enumerated parameters");
+            }
+            break;
+        default:
+            throw new BadRequestException("Unknown action " + request.getAction());
+
+        }
+        ParameterType ptype = pdata.getParameterType(p);
+        ParameterTypeInfo pinfo = XtceToGpbAssembler.toParameterTypeInfo(ptype, DetailLevel.FULL);
+        observer.complete(pinfo);
+    }
+
+    @Override
+    public void subscribeMdbChanges(Context ctx, SubscribeMdbChangesRequest request,
+            Observer<MdbOverrideInfo> observer) {
+        var processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        var pdata = processor.getProcessorData();
+
+        List<AlgorithmManager> l = processor.getServices(AlgorithmManager.class);
+        AlgorithmManager algorithmManager = l.size() == 1 ? l.get(0) : null;
+
+        var parameterTypeListener = (ParameterTypeListener) (parameter, ptype) -> {
+            observer.next(MdbOverrideInfo.newBuilder()
+                    .setType(OverrideType.PARAMETER)
+                    .setParameterOverride(toParameterOverride(parameter, ptype))
+                    .build());
+        };
+
+        var algorithmTextListener = (AlgorithmTextListener) (algorithm, text) -> {
+            observer.next(MdbOverrideInfo.newBuilder()
+                    .setType(OverrideType.ALGORITHM_TEXT)
+                    .setAlgorithmTextOverride(toAlgorithmTextOverride(algorithm, text))
+                    .build());
+        };
+
+        observer.setCancelHandler(() -> {
+            pdata.removeParameterTypeListener(parameterTypeListener);
+            if (algorithmManager != null) {
+                algorithmManager.removeAlgorithmTextListener(algorithmTextListener);
+            }
+        });
+        pdata.addParameterTypeListener(parameterTypeListener);
+        if (algorithmManager != null) {
+            algorithmManager.addAlgorithmTextListener(algorithmTextListener);
+        }
+    }
+
+    private static void verifyNumericParameter(Parameter p) throws BadRequestException {
+        ParameterType ptype = p.getParameterType();
+        if (!(ptype instanceof NumericParameterType)) {
+            throw new BadRequestException(
+                    "Cannot set a calibrator on a non numeric parameter type (" + ptype.getTypeAsString() + ")");
+        }
+    }
+}
+```
+
+### `MdbPageBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbPageBuilder.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.SpaceSystem;
+
+/**
+ * Builds a page result for a collection of matching space systems and other items.
+ * <p>
+ * Results are sorted in lexicographical order, with space systems on top.
+ */
+public class MdbPageBuilder<T extends NameDescription> {
+
+    private List<SpaceSystem> spaceSystems;
+    private List<T> items;
+
+    private String next;
+    private int pos;
+    private int limit;
+
+    public MdbPageBuilder(List<SpaceSystem> spaceSystems, List<T> items) {
+        this.spaceSystems = spaceSystems;
+        this.items = items;
+
+        Collections.sort(spaceSystems, (s1, s2) -> {
+            return s1.getQualifiedName().compareToIgnoreCase(s2.getQualifiedName());
+        });
+        Collections.sort(items, (i1, i2) -> {
+            return i1.getQualifiedName().compareToIgnoreCase(i2.getQualifiedName());
+        });
+    }
+
+    public void setNext(String next) {
+        this.next = next;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
+    }
+
+    public MdbPage<T> buildPage() {
+        int totalSize = spaceSystems.size() + items.size();
+        MdbPage<T> page = new MdbPage<>(totalSize);
+
+        if (next != null) {
+            NamedObjectPageToken pageToken = NamedObjectPageToken.decode(next);
+            if (pageToken.spaceSystem) {
+                for (SpaceSystem spaceSystem : spaceSystems) {
+                    if (spaceSystem.getQualifiedName().compareToIgnoreCase(pageToken.name) > 0) {
+                        page.addSpaceSystem(spaceSystem);
+                    }
+                }
+                page.addItems(items);
+            } else {
+                for (T item : items) {
+                    if (item.getQualifiedName().compareToIgnoreCase(pageToken.name) > 0) {
+                        page.addItem(item);
+                    }
+                }
+            }
+        } else if (pos > 0) {
+            if (pos < spaceSystems.size()) {
+                page.addSpaceSystems(spaceSystems.subList(pos, spaceSystems.size()));
+            }
+            int itemPos = Math.max(0, pos - spaceSystems.size());
+            if (itemPos < items.size()) {
+                page.addItems(items.subList(itemPos, items.size()));
+            }
+        } else {
+            page.addSpaceSystems(spaceSystems);
+            page.addItems(items);
+        }
+
+        page.applyLimit(limit);
+        return page;
+    }
+
+    public static class MdbPage<T extends NameDescription> {
+        private List<SpaceSystem> spaceSystems = new ArrayList<>();
+        private List<T> items = new ArrayList<>();
+        private int totalSize;
+        private String continuationToken;
+
+        MdbPage(int totalSize) {
+            this.totalSize = totalSize;
+        }
+
+        void addSpaceSystems(List<SpaceSystem> spaceSystems) {
+            this.spaceSystems.addAll(spaceSystems);
+        }
+
+        void addSpaceSystem(SpaceSystem spaceSystem) {
+            spaceSystems.add(spaceSystem);
+        }
+
+        void addItems(List<T> items) {
+            this.items.addAll(items);
+        }
+
+        void addItem(T item) {
+            items.add(item);
+        }
+
+        public List<SpaceSystem> getSpaceSystems() {
+            return spaceSystems;
+        }
+
+        public List<T> getItems() {
+            return items;
+        }
+
+        public int getTotalSize() {
+            return totalSize;
+        }
+
+        public String getContinuationToken() {
+            return continuationToken;
+        }
+
+        void applyLimit(int limit) {
+            if (limit < spaceSystems.size()) {
+                spaceSystems = spaceSystems.subList(0, limit);
+                SpaceSystem lastMatch = spaceSystems.get(limit - 1);
+                continuationToken = new NamedObjectPageToken(lastMatch.getQualifiedName(), true).encodeAsString();
+
+                items.clear();
+                return;
+            }
+
+            int itemLimit = limit - spaceSystems.size();
+            if (itemLimit < items.size()) {
+                items = items.subList(0, itemLimit);
+                T lastMatch = items.get(itemLimit - 1);
+                continuationToken = new NamedObjectPageToken(lastMatch.getQualifiedName(), false).encodeAsString();
+            }
+        }
+    }
+}
+```
+
+### `MdbSearchHelpers.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/MdbSearchHelpers.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PathElement;
+
+public class MdbSearchHelpers {
+
+    /**
+     * Searches for entry matches inside a parameter.
+     * <p>
+     * The actual parameter is not included in the result. Only array entries (in case the searchTerm contains indexes),
+     * and/or aggregate members.
+     */
+    public static List<EntryMatch> searchEntries(Parameter parameter, String searchTerm) {
+        ParameterType ptype = parameter.getParameterType();
+        if (ptype == null || (!(ptype instanceof AggregateParameterType) && !(ptype instanceof ArrayParameterType))) {
+            return Collections.emptyList();
+        }
+        SearchTerm term = new SearchTerm(searchTerm);
+        if (term.searchPath == null) {
+            return Collections.emptyList();
+        }
+
+        return new Entry(parameter).findSubEntries().stream()
+                .filter(entry -> entry.fillIndexes(term))
+                .map(entry -> new EntryMatch(entry)).collect(Collectors.toList());
+    }
+
+    private static class SearchTerm {
+        String term;
+        PathElement[] searchPath;
+
+        private SearchTerm(String term) {
+            this.term = term.toLowerCase();
+
+            var aggSep = AggregateUtil.findSeparator(this.term);
+            if (aggSep >= 0) {
+                var pname = this.term.substring(0, aggSep);
+                try {
+                    var memberSegments = AggregateUtil.parseReference(this.term.substring(aggSep));
+                    this.searchPath = new PathElement[1 + memberSegments.length];
+                    this.searchPath[0] = new PathElement(pname, null);
+                    for (int i = 0; i < memberSegments.length; i++) {
+                        this.searchPath[i + 1] = memberSegments[i];
+                    }
+                } catch (IllegalArgumentException e) {
+                    // Ignore
+                }
+            } else {
+                this.searchPath = new PathElement[] { new PathElement(this.term, null) };
+            }
+        }
+    }
+
+    private static class Entry {
+        final Parameter parameter;
+        final ParameterType ptype; // Type at the path offset
+        PathElement[] path;
+
+        Entry(Parameter parameter) {
+            this(parameter, new PathElement[] { new PathElement(parameter.getQualifiedName(), null) },
+                    parameter.getParameterType());
+        }
+
+        Entry(Parameter parameter, PathElement[] path, ParameterType ptype) {
+            this.parameter = parameter;
+            this.path = path;
+            this.ptype = ptype;
+        }
+
+        Entry createSubEntry(String member, int[] index, ParameterType ptype) {
+            PathElement[] subPath = Arrays.copyOf(path, path.length + 1);
+            subPath[subPath.length - 1] = new PathElement(member, index);
+            return new Entry(parameter, subPath, ptype);
+        }
+
+        /**
+         * Finds entries beneath this entry in case the entry is an aggregate or an array. The returned entries contain
+         * [] placeholders for array indexes.
+         */
+        private List<Entry> findSubEntries() {
+            if (ptype instanceof AggregateParameterType) {
+                List<Entry> entries = new ArrayList<>();
+                for (Member member : ((AggregateParameterType) ptype).getMemberList()) {
+                    Entry subEntry = createSubEntry(member.getName(), null, (ParameterType) member.getType());
+                    entries.add(subEntry);
+                    if (subEntry.ptype instanceof AggregateParameterType) {
+                        entries.addAll(subEntry.findSubEntries());
+                    }
+                }
+                return entries;
+            } else if (ptype instanceof ArrayParameterType) {
+                List<Entry> entries = new ArrayList<>();
+                ParameterType elementType = (ParameterType) ((ArrayParameterType) ptype).getElementType();
+                Entry subEntry = createSubEntry(null, new int[] { -1 } /* placeholder */, elementType);
+                entries.add(subEntry);
+                if (subEntry.ptype instanceof AggregateParameterType) {
+                    entries.addAll(subEntry.findSubEntries());
+                }
+                return entries;
+            } else {
+                return Collections.emptyList();
+            }
+        }
+
+        /**
+         * Matches the search term while filling indexes with the ones from the request. Returns false if this did not
+         * work (meaning: this entry is not matching)
+         */
+        boolean fillIndexes(SearchTerm term) {
+            StringBuilder buf = new StringBuilder();
+            boolean match = true;
+            try (Scanner scanner = new Scanner(getQualifiedName())) {
+                for (PathElement el : term.searchPath) {
+                    String name = el.getName() != null ? el.getName() : "";
+                    String needleRegex = "(.*" + Pattern.quote(name) + ")";
+                    if (el.getIndex() != null) {
+                        needleRegex += "\\[-1\\]";
+                    }
+                    String text = scanner.findInLine(Pattern.compile(needleRegex, Pattern.CASE_INSENSITIVE));
+                    if (text == null) {
+                        match = false;
+                        break;
+                    } else {
+                        MatchResult result = scanner.match();
+                        buf.append(result.group(1));
+                        if (el.getIndex() != null) {
+                            int[] index = el.getIndex();
+                            for (int i = 0; i < index.length; i++) {
+                                buf.append("[" + index[i] + "]");
+                            }
+                        }
+                    }
+                }
+                if (match && scanner.hasNext()) {
+                    buf.append(scanner.nextLine());
+                }
+            }
+
+            if (match) {
+                String result = buf.toString();
+                if (!result.contains("[-1]")) { // Ignore deeper array offsets if the term did not pin them
+                    var aggSep = AggregateUtil.findSeparator(result);
+                    if (aggSep >= 0) {
+                        var pname = result.substring(0, aggSep);
+                        try {
+                            var memberSegments = AggregateUtil.parseReference(result.substring(aggSep));
+                            path = new PathElement[1 + memberSegments.length];
+                            path[0] = new PathElement(pname, null);
+                            for (int i = 0; i < memberSegments.length; i++) {
+                                path[i + 1] = memberSegments[i];
+                            }
+                        } catch (IllegalArgumentException e) {
+                            // Ignore
+                        }
+                    } else {
+                        path = new PathElement[] { new PathElement(result, null) };
+                    }
+
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        String getQualifiedName() {
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i < path.length; i++) {
+                PathElement segment = path[i];
+                if (i != 0 && segment.getName() != null) {
+                    buf.append(".");
+                }
+                buf.append(segment);
+            }
+            return buf.toString();
+        }
+    }
+
+    private static class Builder extends NameDescription.Builder<Builder> {
+    }
+
+    @SuppressWarnings("serial")
+    static class EntryMatch extends NameDescription {
+        public Parameter parameter;
+        public PathElement[] entryPath;
+        public ParameterType entryType;
+
+        private EntryMatch(Entry entry) {
+            super(new MdbSearchHelpers.Builder()
+                    .setQualifiedName(entry.parameter.getQualifiedName()));
+            this.entryPath = entry.path;
+            this.parameter = entry.parameter;
+            this.entryType = entry.ptype;
+            String name = entryPath[0].getName().substring(entry.parameter.getQualifiedName().length());
+            entryPath[0] = new PathElement(name.isEmpty() ? null : name, entryPath[0].getIndex());
+        }
+    }
+}
+```
+
+### `NameDescriptionSearchMatcher.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/NameDescriptionSearchMatcher.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.xtce.NameDescription;
+
+/**
+ * Matches a search term with an XTCE name or any of the aliases
+ */
+public class NameDescriptionSearchMatcher {
+
+    private String[] terms;
+    private boolean searchDescription = true;
+
+    public NameDescriptionSearchMatcher(String searchTerm) {
+        terms = searchTerm.toLowerCase().split("\\s+");
+    }
+
+    public void setSearchDescription(boolean searchDescription) {
+        this.searchDescription = searchDescription;
+    }
+
+    public boolean matches(String name) {
+        for (String term : terms) {
+            if (!name.toLowerCase().contains(term)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean matches(NameDescription nameDescription) {
+        for (String term : terms) {
+            boolean match = false;
+            if (nameDescription.getQualifiedName().toLowerCase().contains(term)) {
+                match = true;
+            } else if (searchDescription && nameDescription.getShortDescription() != null
+                    && nameDescription.getShortDescription().toLowerCase().contains(term)) {
+                match = true;
+            } else if (nameDescription.getAliasSet() != null) {
+                for (String alias : nameDescription.getAliasSet().getAliases().values()) {
+                    if (alias.toLowerCase().contains(term)) {
+                        match = true;
+                        break;
+                    }
+                }
+            }
+            if (!match) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+### `NamedObjectPageToken.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/NamedObjectPageToken.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.Base64;
+
+import com.google.gson.Gson;
+
+/**
+ * Stateless continuation token for paged MDB requests.
+ */
+public class NamedObjectPageToken {
+
+    /**
+     * Qualified name of the last object that was emitted.
+     * <p>
+     * Consuming routes should not assume that this name still exists, and rather do an alphabetic comparison (this also
+     * implies that the endpoint should return results in alphabetic order.
+     */
+    public String name;
+
+    /**
+     * Whether this represents a space system. Pagination is based on an ordering where space systems are returned
+     * before the actual items.
+     */
+    public boolean spaceSystem;
+
+    public NamedObjectPageToken(String name, boolean spaceSystem) {
+        this.name = name;
+        this.spaceSystem = spaceSystem;
+    }
+
+    public static NamedObjectPageToken decode(String encoded) {
+        String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+        return new Gson().fromJson(decoded, NamedObjectPageToken.class);
+    }
+
+    public String encodeAsString() {
+        String json = new Gson().toJson(this);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+    }
+}
+```
+
+### `PacketFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/PacketFilter.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.XtceTmRecorder;
+import org.yamcs.utils.parser.Filter;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.UnknownFieldException;
+import org.yamcs.yarch.Tuple;
+
+public class PacketFilter extends Filter<Tuple> {
+
+    private static final String FIELD_NAME = "name";
+    private static final String FIELD_LINK = "link";
+    private static final String FIELD_SIZE = "size";
+    private static final String FIELD_SEQ_NUMBER = "seqNumber";
+    private static final String FIELD_BINARY = "binary";
+
+    private String lcName;
+    private String lcLink;
+
+    public PacketFilter(String query) throws ParseException, UnknownFieldException {
+        super(query);
+        addStringField(FIELD_NAME, this::getName);
+        addStringField(FIELD_LINK, this::getLink);
+        addNumberField(FIELD_SIZE, this::getSize);
+        addNumberField(FIELD_SEQ_NUMBER, this::getSequenceNumber);
+        addBinaryField(FIELD_BINARY, this::getBinary);
+        parse();
+    }
+
+    @Override
+    public void beforeItem(Tuple tuple) {
+        // Preload lowercase variants to boost non-field text search
+        // with multiple terms
+
+        // Reset previous state
+        lcName = null;
+        lcLink = null;
+
+        if (includesTextSearch()) {
+            if (tuple.hasColumn(XtceTmRecorder.PNAME_COLUMN)) {
+                lcName = getName(tuple).toLowerCase();
+            }
+            if (tuple.hasColumn(StandardTupleDefinitions.TM_LINK_COLUMN)) {
+                lcLink = getLink(tuple).toLowerCase();
+            }
+        }
+    }
+
+    private String getName(Tuple tuple) {
+        return tuple.getColumn(XtceTmRecorder.PNAME_COLUMN);
+    }
+
+    private String getLink(Tuple tuple) {
+        return tuple.getColumn(StandardTupleDefinitions.TM_LINK_COLUMN);
+    }
+
+    private int getSize(Tuple tuple) {
+        var data = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+        return data.length;
+    }
+
+    private Number getSequenceNumber(Tuple tuple) {
+        return tuple.getColumn(StandardTupleDefinitions.SEQNUM_COLUMN);
+    }
+
+    private byte[] getBinary(Tuple tuple) {
+        return (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+    }
+
+    @Override
+    protected boolean matchesLiteral(Tuple item, String lowercaseLiteral) {
+        return (lcName != null && lcName.contains(lowercaseLiteral))
+                || (lcLink != null && lcLink.contains(lowercaseLiteral));
+    }
+}
+```
+
+### `PacketFilterFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/PacketFilterFactory.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.api.FilterSyntaxException;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.utils.parser.IncorrectTypeException;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.TokenMgrError;
+import org.yamcs.utils.parser.UnknownFieldException;
+
+public class PacketFilterFactory {
+
+    public static PacketFilter create(String query) {
+        try {
+            return new PacketFilter(query);
+        } catch (UnknownFieldException | IncorrectTypeException e) {
+            throw mapCustomParseException(e);
+        } catch (ParseException e) {
+            throw mapParseException(e);
+        } catch (TokenMgrError e) {
+            throw mapTokenMgrError(e);
+        }
+    }
+
+    private static BadRequestException mapCustomParseException(ParseException e) {
+        var exc = new BadRequestException(e.getMessage());
+        if (e.currentToken != null) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.currentToken.beginLine)
+                    .setBeginColumn(e.currentToken.beginColumn)
+                    .setEndLine(e.currentToken.endLine)
+                    .setEndColumn(e.currentToken.endColumn)
+                    .build());
+        }
+        throw exc;
+    }
+
+    private static BadRequestException mapParseException(ParseException e) {
+        var exc = new BadRequestException("Syntax error in filter");
+        if (e.currentToken != null) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.currentToken.beginLine)
+                    .setBeginColumn(e.currentToken.beginColumn)
+                    .setEndLine(e.currentToken.endLine)
+                    .setEndColumn(e.currentToken.endColumn)
+                    .build());
+        }
+        throw exc;
+    }
+
+    private static BadRequestException mapTokenMgrError(TokenMgrError e) {
+        var exc = new BadRequestException("Syntax error in filter");
+        if (e.errorLine >= 0 && e.errorColumn >= 0) {
+            exc.setDetail(FilterSyntaxException.newBuilder()
+                    .setBeginLine(e.errorLine)
+                    .setBeginColumn(e.errorColumn)
+                    .setEndLine(e.errorLine)
+                    .setEndColumn(e.errorColumn)
+                    .build());
+        }
+        throw exc;
+    }
+}
+```
+
+### `PacketsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/PacketsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.StandardTupleDefinitions.GENTIME_COLUMN;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.Processor;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.GPBHelper;
+import org.yamcs.archive.XtceTmRecorder;
+import org.yamcs.container.ContainerConsumer;
+import org.yamcs.container.ContainerRequestManager;
+import org.yamcs.events.AbstractEventProducer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.MediaType;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.api.XtceToGpbAssembler.DetailLevel;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.mdb.XtceTmExtractor;
+import org.yamcs.parameter.ContainerParameterValue;
+import org.yamcs.protobuf.AbstractPacketsApi;
+import org.yamcs.protobuf.ContainerData;
+import org.yamcs.protobuf.ExportPacketRequest;
+import org.yamcs.protobuf.ExportPacketsRequest;
+import org.yamcs.protobuf.ExtractPacketRequest;
+import org.yamcs.protobuf.ExtractPacketResponse;
+import org.yamcs.protobuf.ExtractedParameterValue;
+import org.yamcs.protobuf.GetPacketRequest;
+import org.yamcs.protobuf.ListPacketNamesRequest;
+import org.yamcs.protobuf.ListPacketNamesResponse;
+import org.yamcs.protobuf.ListPacketsRequest;
+import org.yamcs.protobuf.ListPacketsResponse;
+import org.yamcs.protobuf.StreamPacketsRequest;
+import org.yamcs.protobuf.SubscribeContainersRequest;
+import org.yamcs.protobuf.SubscribePacketsRequest;
+import org.yamcs.protobuf.TmPacketData;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.User;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+import com.google.common.collect.BiMap;
+import com.google.gson.Gson;
+import com.google.protobuf.ByteString;
+
+public class PacketsApi extends AbstractPacketsApi<Context> {
+
+    private static final Log log = new Log(PacketsApi.class);
+
+    @Override
+    public void listPacketNames(Context ctx, ListPacketNamesRequest request,
+            Observer<ListPacketNamesResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+
+        ListPacketNamesResponse.Builder responseb = ListPacketNamesResponse.newBuilder();
+        TableDefinition tableDefinition = ydb.getTable(XtceTmRecorder.TABLE_NAME);
+        if (tableDefinition == null) {
+            observer.complete(responseb.build());
+            return;
+        }
+
+        BiMap<String, Short> enumValues = tableDefinition.getEnumValues(XtceTmRecorder.PNAME_COLUMN);
+        if (enumValues != null) {
+            List<String> unsortedPackets = new ArrayList<>();
+            for (var entry : enumValues.entrySet()) {
+                String packetName = entry.getKey();
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadPacket, packetName)) {
+                    unsortedPackets.add(packetName);
+                }
+            }
+            Collections.sort(unsortedPackets);
+            responseb.addAllName(unsortedPackets);
+            responseb.addAllPackets(unsortedPackets);
+        }
+
+        enumValues = tableDefinition.getEnumValues(StandardTupleDefinitions.TM_LINK_COLUMN);
+        if (enumValues != null) {
+            List<String> unsortedLinks = new ArrayList<>();
+            for (var entry : enumValues.entrySet()) {
+                String link = entry.getKey();
+                unsortedLinks.add(link);
+            }
+            Collections.sort(unsortedLinks);
+            responseb.addAllLinks(unsortedLinks);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listPackets(Context ctx, ListPacketsRequest request, Observer<ListPacketsResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        Long pos = request.hasPos() ? request.getPos() : null;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        boolean desc = !request.getOrder().equals("asc");
+
+        if (pos != null) {
+            log.warn("DEPRECATION WARNING: Do not use pos, use continuationToken instead");
+        }
+
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.ReadPacket, request.getNameList());
+        Set<String> nameSet = new HashSet<>(request.getNameList());
+        if (nameSet.isEmpty()) {
+            nameSet.addAll(getTmPacketNames(instance, ctx.user));
+        }
+        if (nameSet.isEmpty()) {
+            // No permissions for any packet
+            observer.complete(ListPacketsResponse.getDefaultInstance());
+            return;
+        }
+
+        PacketPageToken nextToken = null;
+        if (request.hasNext()) {
+            String next = request.getNext();
+            nextToken = PacketPageToken.decode(next);
+        }
+
+        SqlBuilder sqlb = new SqlBuilder(XtceTmRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual(GENTIME_COLUMN, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore(GENTIME_COLUMN, request.getStop());
+        }
+
+        if (!nameSet.isEmpty()) {
+            sqlb.whereColIn("pname", nameSet);
+        }
+        if (request.hasLink()) {
+            sqlb.where("link = ?", request.getLink());
+        }
+        if (nextToken != null) {
+            if (desc) {
+                sqlb.where("(gentime <= ? and (gentime < ? or seqNum < ?))",
+                        nextToken.gentime, nextToken.gentime, nextToken.seqNum);
+            } else {
+                sqlb.where("(gentime >= ? and (gentime > ? or seqNum > ?))",
+                        nextToken.gentime, nextToken.gentime, nextToken.seqNum);
+            }
+        }
+
+        sqlb.descend(desc);
+
+        if (pos != null) {
+            sqlb.limit(pos, limit + 1l); // one more to detect hasMore
+        }
+
+        var filter = request.hasFilter()
+                ? PacketFilterFactory.create(request.getFilter())
+                : null;
+
+        var responseb = ListPacketsResponse.newBuilder();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            TmPacketData last;
+            int count;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (filter != null && !filter.matches(tuple)) {
+                    return;
+                }
+
+                if (++count <= limit) {
+                    TmPacketData pdata = GPBHelper.tupleToTmPacketData(tuple);
+                    responseb.addPackets(pdata);
+                    responseb.addPacket(pdata);
+                    last = pdata;
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (count > limit) {
+                    PacketPageToken token = new PacketPageToken(
+                            TimeEncoding.fromProtobufTimestamp(last.getGenerationTime()),
+                            last.getSequenceNumber());
+                    responseb.setContinuationToken(token.encodeAsString());
+                }
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    @Override
+    public void getPacket(Context ctx, GetPacketRequest request, Observer<TmPacketData> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        long gentime = TimeEncoding.fromProtobufTimestamp(request.getGentime());
+        int seqNum = request.getSeqnum();
+
+        var sqlb = new SqlBuilder(XtceTmRecorder.TABLE_NAME);
+        if (request.hasPname()) { // Optional due to deprecated API where name is not provided
+            sqlb = sqlb.where("pname = ?", request.getPname());
+        }
+        sqlb = sqlb.where("gentime = ?", gentime);
+        sqlb = sqlb.where("seqNum = ?", seqNum);
+
+        List<TmPacketData> packets = new ArrayList<>();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                TmPacketData pdata = GPBHelper.tupleToTmPacketData(tuple);
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadPacket, pdata.getId().getName())) {
+                    packets.add(pdata);
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (packets.isEmpty()) {
+                    observer.completeExceptionally(
+                            new NotFoundException("No packet for id (" + gentime + ", " + seqNum + ")"));
+                } else if (packets.size() > 1) {
+                    observer.completeExceptionally(new InternalServerErrorException("Too many results"));
+                } else {
+                    observer.complete(packets.get(0));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void streamPackets(Context ctx, StreamPacketsRequest request, Observer<TmPacketData> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.ReadPacket, request.getNameList());
+
+        SqlBuilder sqlb = new SqlBuilder(XtceTmRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual(GENTIME_COLUMN, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore(GENTIME_COLUMN, request.getStop());
+        }
+
+        if (request.getNameCount() > 0) {
+            sqlb.whereColIn("pname", request.getNameList());
+        }
+
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                TmPacketData pdata = GPBHelper.tupleToTmPacketData(tuple);
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadPacket, pdata.getId().getName())) {
+                    observer.next(pdata);
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                observer.complete();
+            }
+        });
+    }
+
+    @Override
+    public void exportPacket(Context ctx, ExportPacketRequest request, Observer<HttpBody> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        long gentime = TimeEncoding.fromProtobufTimestamp(request.getGentime());
+        int seqNum = request.getSeqnum();
+
+        var sqlb = new SqlBuilder(XtceTmRecorder.TABLE_NAME);
+        if (request.hasPname()) { // Optional due to deprecated API where name is not provided
+            sqlb = sqlb.where("pname = ?", request.getPname());
+        }
+        sqlb = sqlb.where("gentime = ?", gentime);
+        sqlb = sqlb.where("seqNum = ?", seqNum);
+
+        List<TmPacketData> packets = new ArrayList<>();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                TmPacketData pdata = GPBHelper.tupleToTmPacketData(tuple);
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadPacket, pdata.getId().getName())) {
+                    packets.add(pdata);
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (packets.isEmpty()) {
+                    observer.completeExceptionally(
+                            new NotFoundException("No packet for id (" + gentime + ", " + seqNum + ")"));
+                } else if (packets.size() > 1) {
+                    observer.completeExceptionally(new InternalServerErrorException("Too many results"));
+                } else {
+                    String timestamp = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now()
+                            .truncatedTo(ChronoUnit.MILLIS))
+                            .replace("-", "")
+                            .replace(":", "")
+                            .replace(".", "");
+                    observer.complete(HttpBody.newBuilder()
+                            .setFilename("packet-" + timestamp + "-" + seqNum + ".raw")
+                            .setContentType(MediaType.OCTET_STREAM.toString())
+                            .setData(packets.get(0).getPacket())
+                            .build());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void extractPacket(Context ctx, ExtractPacketRequest request, Observer<ExtractPacketResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        long gentime = TimeEncoding.fromProtobufTimestamp(request.getGentime());
+        int seqNum = request.getSeqnum();
+
+        var sqlb = new SqlBuilder(XtceTmRecorder.TABLE_NAME);
+        if (request.hasPname()) { // Optional due to deprecated API where name is not provided
+            sqlb = sqlb.where("pname = ?", request.getPname());
+        }
+        sqlb = sqlb.where("gentime = ?", gentime);
+        sqlb = sqlb.where("seqNum = ?", seqNum);
+
+        List<TmPacketData> packets = new ArrayList<>();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                TmPacketData pdata = GPBHelper.tupleToTmPacketData(tuple);
+                if (ctx.user.hasObjectPrivilege(ObjectPrivilegeType.ReadPacket, pdata.getId().getName())) {
+                    packets.add(pdata);
+                }
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                if (packets.isEmpty()) {
+                    observer.completeExceptionally(
+                            new NotFoundException("No packet for id (" + gentime + ", " + seqNum + ")"));
+                } else if (packets.size() > 1) {
+                    observer.completeExceptionally(new InternalServerErrorException("Too many results"));
+                } else {
+                    var packet = packets.get(0);
+
+                    var mdb = MdbFactory.getInstance(instance);
+
+                    // Best effort to find a suitable root container
+                    // It could be that the MDB has changed so much that this
+                    // logic doesn't work, so then we fallback to using the default.
+                    var candidate = mdb.getSequenceContainer(packet.getId());
+                    SequenceContainer rootContainer = candidate;
+                    while (candidate != null) {
+                        rootContainer = candidate;
+                        candidate = candidate.getBaseContainer();
+                    }
+                    if (rootContainer != null) {
+                        mdb.setRootSequenceContainer(rootContainer);
+                    }
+
+                    var responseb = ExtractPacketResponse.newBuilder();
+
+                    var pdata = new ProcessorData(instance, "XTCEPROC", mdb, new ProcessorConfig());
+
+                    var eventProducer = new AbstractEventProducer() {
+                        @Override
+                        public void sendEvent(Event event) {
+                            responseb.addMessages(event.getMessage());
+                        }
+
+                        @Override
+                        public void close() {
+                            // NOP
+                        }
+
+                        @Override
+                        public long getMissionTime() {
+                            return TimeEncoding.INVALID_INSTANT;
+                        }
+                    };
+                    eventProducer.setSource("Extraction");
+                    pdata.setEventProducer(eventProducer);
+
+                    var extractor = new XtceTmExtractor(mdb, pdata);
+                    extractor.getOptions().setIgnoreOutOfContainerEntries(true);
+                    extractor.provideAll();
+
+                    var bytes = packet.getPacket().toByteArray();
+                    var result = extractor.processPacket(bytes, gentime, gentime, seqNum);
+                    var packetName = XtceTmRecorder.deriveArchivePartition(result);
+                    responseb.setPacketName(packetName);
+
+                    for (var pval : result.getParameterResult()) {
+                        if (pval instanceof ContainerParameterValue) {
+                            var containedPval = (ContainerParameterValue) pval;
+                            var container = containedPval.getSequenceEntry().getSequenceContainer();
+                            var pvalb = ExtractedParameterValue.newBuilder()
+                                    .setParameter(XtceToGpbAssembler.toParameterInfo(
+                                            containedPval.getParameter(), DetailLevel.SUMMARY))
+                                    .setEntryContainer(XtceToGpbAssembler.toContainerInfo(container, DetailLevel.LINK))
+                                    .setLocation(containedPval.getAbsoluteBitOffset())
+                                    .setSize(containedPval.getBitSize());
+                            if (containedPval.getRawValue() != null) {
+                                pvalb.setRawValue(ValueUtility.toGbp(containedPval.getRawValue()));
+                            }
+                            if (containedPval.getEngValue() != null) {
+                                pvalb.setEngValue(ValueUtility.toGbp(containedPval.getEngValue()));
+                            }
+                            responseb.addParameterValues(pvalb);
+                        }
+                    }
+
+                    observer.complete(responseb.build());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void exportPackets(Context ctx, ExportPacketsRequest request, Observer<HttpBody> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        Set<String> nameSet = new HashSet<>(request.getNameList());
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.ReadPacket, nameSet);
+
+        SqlBuilder sqlb = new SqlBuilder(XtceTmRecorder.TABLE_NAME);
+
+        if (request.hasStart()) {
+            sqlb.whereColAfterOrEqual(GENTIME_COLUMN, request.getStart());
+        }
+        if (request.hasStop()) {
+            sqlb.whereColBefore(GENTIME_COLUMN, request.getStop());
+        }
+
+        if (request.getNameCount() > 0) {
+            sqlb.whereColIn("pname", nameSet);
+        }
+        String sql = sqlb.toString();
+
+        HttpBody metadata = HttpBody.newBuilder()
+                .setContentType(MediaType.OCTET_STREAM.toString())
+                .setFilename("packets.raw")
+                .build();
+        observer.next(metadata);
+
+        StreamFactory.stream(instance, sql, sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (observer.isCancelled()) {
+                    stream.close();
+                    return;
+                }
+
+                byte[] raw = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+                HttpBody body = HttpBody.newBuilder()
+                        .setData(ByteString.copyFrom(raw))
+                        .build();
+                observer.next(body);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                observer.complete();
+            }
+        });
+    }
+
+    @Override
+    public void subscribePackets(Context ctx, SubscribePacketsRequest request, Observer<TmPacketData> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        if (request.hasProcessor()) {
+            Mdb mdb = MdbFactory.getInstance(instance);
+            Processor processor = ProcessingApi.verifyProcessor(instance, request.getProcessor());
+            ContainerRequestManager containerRequestManager = processor.getContainerRequestManager();
+            ContainerConsumer containerConsumer = (link, result) -> {
+                var tmb = TmPacketData.newBuilder()
+                        .setId(NamedObjectId.newBuilder().setName(result.getContainer().getQualifiedName()))
+                        .setPacket(ByteString.copyFrom(result.getContainerContent()))
+                        .setSize(result.getContainerContent().length)
+                        .setGenerationTime(TimeEncoding.toProtobufTimestamp(result.getGenerationTime()))
+                        .setReceptionTime(TimeEncoding.toProtobufTimestamp(result.getAcquisitionTime()))
+                        .setSequenceNumber(result.getSeqCount());
+                if (link != null) {
+                    tmb.setLink(link);
+                }
+
+                observer.next(tmb.build());
+            };
+            observer.setCancelHandler(
+                    () -> containerRequestManager.unsubscribe(containerConsumer, mdb.getRootSequenceContainer()));
+            containerRequestManager.subscribe(containerConsumer, mdb.getRootSequenceContainer());
+
+        } else if (request.hasStream()) {
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+            Stream stream = TableApi.verifyStream(ctx, ydb, request.getStream());
+            StreamSubscriber streamSubscriber = new StreamSubscriber() {
+                @Override
+                public void onTuple(Stream stream, Tuple tuple) {
+
+                    byte[] pktData = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+                    long genTime = (Long) tuple.getColumn(GENTIME_COLUMN);
+                    long receptionTime = (Long) tuple.getColumn(StandardTupleDefinitions.TM_RECTIME_COLUMN);
+                    int seqNumber = (Integer) tuple.getColumn(StandardTupleDefinitions.SEQNUM_COLUMN);
+                    String link = tuple.getColumn(StandardTupleDefinitions.TM_LINK_COLUMN);
+
+                    var tmb = TmPacketData.newBuilder().setPacket(ByteString.copyFrom(pktData))
+                            .setSize(pktData.length)
+                            .setGenerationTime(TimeEncoding.toProtobufTimestamp(genTime))
+                            .setReceptionTime(TimeEncoding.toProtobufTimestamp(receptionTime))
+                            .setSequenceNumber(seqNumber);
+                    if (link != null) {
+                        tmb.setLink(link);
+                    }
+
+                    observer.next(tmb.build());
+                }
+
+                @Override
+                public void streamClosed(Stream stream) {
+                    observer.complete();
+                }
+            };
+            observer.setCancelHandler(() -> stream.removeSubscriber(streamSubscriber));
+            stream.addSubscriber(streamSubscriber);
+        } else {
+            throw new BadRequestException("One of 'processor' or 'stream' must be set");
+        }
+    }
+
+    @Override
+    public void subscribeContainers(Context ctx, SubscribeContainersRequest request, Observer<ContainerData> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        Mdb mdb = MdbFactory.getInstance(instance);
+        if (request.getNamesCount() == 0) {
+            throw new BadRequestException("At least one container name must be specified");
+        }
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.ReadPacket, request.getNamesList());
+
+        List<SequenceContainer> containers = new ArrayList<>(request.getNamesCount());
+        for (String name : request.getNamesList()) {
+            SequenceContainer container = mdb.getSequenceContainer(name);
+            if (container == null) {
+                throw new BadRequestException("Unknown container '" + name + "'");
+            }
+            containers.add(container);
+        }
+
+        Processor processor = ProcessingApi.verifyProcessor(instance, request.getProcessor());
+        ContainerRequestManager containerRequestManager = processor.getContainerRequestManager();
+        ContainerConsumer containerConsumer = (link, result) -> {
+            var packetb = ContainerData.newBuilder()
+                    .setName(result.getContainer().getQualifiedName())
+                    .setBinary(ByteString.copyFrom(result.getContainerContent()))
+                    .setGenerationTime(TimeEncoding.toProtobufTimestamp(result.getGenerationTime()))
+                    .setReceptionTime(TimeEncoding.toProtobufTimestamp(result.getAcquisitionTime()))
+                    .setSeqCount(result.getSeqCount());
+            observer.next(packetb.build());
+        };
+        observer.setCancelHandler(() -> {
+            for (SequenceContainer container : containers) {
+                containerRequestManager.unsubscribe(containerConsumer, container);
+            }
+        });
+        for (SequenceContainer container : containers) {
+            containerRequestManager.subscribe(containerConsumer, container);
+        }
+    }
+
+    /**
+     * Get packet names this user has appropriate privileges for.
+     */
+    private Set<String> getTmPacketNames(String yamcsInstance, User user) {
+        var result = new HashSet<String>();
+
+        var ydb = YarchDatabase.getInstance(yamcsInstance);
+        var tableDefinition = ydb.getTable(XtceTmRecorder.TABLE_NAME);
+        if (tableDefinition != null) {
+            BiMap<String, Short> enumValues = tableDefinition.getEnumValues(XtceTmRecorder.PNAME_COLUMN);
+            if (enumValues != null) {
+                for (var pname : enumValues.keySet()) {
+                    if (user.hasObjectPrivilege(ObjectPrivilegeType.ReadPacket, pname)) {
+                        result.add(pname);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Stateless continuation token for paged requests on the tm table
+     */
+    private static class PacketPageToken {
+
+        public long gentime;
+        public int seqNum;
+
+        public PacketPageToken(long timestamp, int seqNum) {
+            this.gentime = timestamp;
+            this.seqNum = seqNum;
+        }
+
+        public static PacketPageToken decode(String encoded) {
+            String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+            return new Gson().fromJson(decoded, PacketPageToken.class);
+        }
+
+        public String encodeAsString() {
+            String json = new Gson().toJson(this);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+        }
+    }
+}
+```
+
+### `ParameterArchiveApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterArchiveApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.util.Base64;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.api.AbstractPaginatedParameterRetrievalConsumer.PaginatedSingleParameterRetrievalConsumer;
+import org.yamcs.http.api.Downsampler.Sample;
+import org.yamcs.http.api.ParameterRanger.Range;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.ParameterRetrievalService;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.ParameterWithId;
+import org.yamcs.parameterarchive.BackFiller;
+import org.yamcs.parameterarchive.BackFillerListener;
+import org.yamcs.parameterarchive.ParameterArchive;
+import org.yamcs.parameterarchive.ParameterGroupIdDb;
+import org.yamcs.parameterarchive.ParameterId;
+import org.yamcs.parameterarchive.ParameterIdDb;
+import org.yamcs.parameterarchive.ParameterInfoRetrieval;
+import org.yamcs.protobuf.AbstractParameterArchiveApi;
+import org.yamcs.protobuf.Archive.GetParameterSamplesRequest;
+import org.yamcs.protobuf.Archive.ListParameterHistoryRequest;
+import org.yamcs.protobuf.Archive.ListParameterHistoryResponse;
+import org.yamcs.protobuf.ArchivedParameterGroupResponse;
+import org.yamcs.protobuf.ArchivedParameterInfo;
+import org.yamcs.protobuf.ArchivedParameterSegmentsResponse;
+import org.yamcs.protobuf.ArchivedParametersInfoResponse;
+import org.yamcs.protobuf.DisableBackfillingRequest;
+import org.yamcs.protobuf.EnableBackfillingRequest;
+import org.yamcs.protobuf.GetArchivedParameterGroupRequest;
+import org.yamcs.protobuf.GetArchivedParameterSegmentsRequest;
+import org.yamcs.protobuf.GetArchivedParametersInfoRequest;
+import org.yamcs.protobuf.GetParameterRangesRequest;
+import org.yamcs.protobuf.PurgeRequest;
+import org.yamcs.protobuf.Pvalue.Ranges;
+import org.yamcs.protobuf.Pvalue.TimeSeries;
+import org.yamcs.protobuf.RebuildRangeRequest;
+import org.yamcs.protobuf.SubscribeBackfillingData;
+import org.yamcs.protobuf.SubscribeBackfillingData.BackfillFinishedInfo;
+import org.yamcs.protobuf.SubscribeBackfillingRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+
+import com.google.gson.Gson;
+import com.google.protobuf.Empty;
+
+public class ParameterArchiveApi extends AbstractParameterArchiveApi<Context> {
+
+    private static final Log log = new Log(ParameterArchiveApi.class);
+
+    @Override
+    public void rebuildRange(Context ctx, RebuildRangeRequest request, Observer<Empty> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        long start = TimeEncoding.INVALID_INSTANT;
+        long stop = TimeEncoding.INVALID_INSTANT;
+
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+
+        ParameterArchive parchive = getParameterArchive(ysi);
+        try {
+            parchive.reprocess(start, stop);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void subscribeBackfilling(Context ctx, SubscribeBackfillingRequest request,
+            Observer<SubscribeBackfillingData> observer) {
+        var ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        var parchives = ysi.getServices(ParameterArchive.class);
+        if (parchives.isEmpty()) {
+            // Ignore quietely
+            return;
+        }
+
+        var parchive = parchives.get(0);
+        var backFiller = parchive.getBackFiller();
+        if (backFiller == null) {
+            // Ignore quietely
+            return;
+        }
+
+        var pendingNotifications = new ConcurrentLinkedQueue<BackfillFinishedInfo>();
+
+        var listener = (BackFillerListener) (start, stop, processedParameters) -> {
+            pendingNotifications.add(BackfillFinishedInfo.newBuilder()
+                    .setStart(TimeEncoding.toProtobufTimestamp(start))
+                    .setStop(TimeEncoding.toProtobufTimestamp(stop))
+                    .setProcessedParameters(processedParameters)
+                    .build());
+        };
+
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+        var execFuture = exec.scheduleAtFixedRate(() -> {
+            if (!pendingNotifications.isEmpty()) {
+                var b = SubscribeBackfillingData.newBuilder();
+
+                BackfillFinishedInfo item;
+                while ((item = pendingNotifications.poll()) != null) {
+                    b.addFinished(item);
+                }
+
+                observer.next(b.build());
+            }
+        }, 0, 5, TimeUnit.SECONDS);
+
+        observer.setCancelHandler(() -> {
+            backFiller.removeListener(listener);
+            execFuture.cancel(false);
+        });
+        backFiller.addListener(listener);
+    }
+
+    @Override
+    public void getParameterSamples(Context ctx, GetParameterSamplesRequest request,
+            Observer<TimeSeries> observer) {
+
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(ysi.getName());
+
+        ParameterWithId pid = MdbApi.verifyParameterWithId(ctx, mdb, request.getName());
+
+        /*
+         * TODO check commented out, in order to support sampling system parameters which don't have a type
+         * 
+         * ParameterType ptype = p.getParameterType(); if (ptype == null) { throw new
+         * BadRequestException("Requested parameter has no type"); } else if (!(ptype instanceof FloatParameterType) &&
+         * !(ptype instanceof IntegerParameterType)) { throw new
+         * BadRequestException("Only integer or float parameters can be sampled. Got " + ptype.getTypeAsString()); }
+         */
+
+        long defaultStop = TimeEncoding.getWallclockTime();
+        long defaultStart = defaultStop - (1000 * 60 * 60); // 1 hour
+
+        long start = defaultStart;
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        long stop = defaultStop;
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+
+        int sampleCount = request.hasCount() ? request.getCount() : 500;
+        boolean useRawValue = request.hasUseRawValue() && request.getUseRawValue();
+
+        Downsampler sampler = new Downsampler(start, stop, sampleCount);
+        sampler.setUseRawValue(useRawValue);
+        sampler.setGapTime(request.hasGapTime() ? request.getGapTime() : 120000);
+
+        ParameterRetrievalService prs = getParameterRetrievalService(ysi);
+        ParameterRetrievalOptions opts = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop)
+                .withAscending(true)
+                .withRetrieveRawValues(useRawValue)
+                .withRetrieveEngineeringValues(!useRawValue)
+                .withoutRealtime(request.getNorealtime())
+                .withoutParchive(request.hasSource() && isReplayAsked(request.getSource()))
+                .build();
+        prs.retrieveScalar(pid, opts, sampler)
+                .thenRun(() -> {
+                    TimeSeries.Builder series = TimeSeries.newBuilder();
+                    for (Sample s : sampler.collect()) {
+                        series.addSample(StreamArchiveApi.toGPBSample(s));
+                    }
+                    observer.complete(series.build());
+                })
+                .exceptionally(e -> {
+                    log.warn("Received exception during parameter retrieval", e);
+                    observer.completeExceptionally(new InternalServerErrorException(e.toString()));
+                    return null;
+                });
+
+    }
+
+    @Override
+    public void getParameterRanges(Context ctx, GetParameterRangesRequest request, Observer<Ranges> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(ysi.getName());
+
+        ParameterWithId pid = MdbApi.verifyParameterWithId(ctx, mdb, request.getName());
+
+        long start = 0;
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        long stop = TimeEncoding.getWallclockTime();
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+
+        long minGap = request.hasMinGap() ? request.getMinGap() : 0;
+        long maxGap = request.hasMaxGap() ? request.getMaxGap() : Long.MAX_VALUE;
+        long minRange = request.hasMinRange() ? request.getMinRange() : -1;
+        int maxValues = request.hasMaxValues() ? request.getMaxValues() : -1;
+
+        ParameterRanger ranger = new ParameterRanger(minGap, maxGap, minRange, maxValues);
+
+        ParameterRetrievalService prs = getParameterRetrievalService(ysi);
+        ParameterRetrievalOptions opts = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop)
+                .withRetrieveRawValues(false)
+                .withoutRealtime(request.getNorealtime())
+                .build();
+
+        prs.retrieveScalar(pid, opts, ranger)
+                .thenRun(() -> {
+                    Ranges.Builder ranges = Ranges.newBuilder();
+                    for (Range r : ranger.getRanges()) {
+                        ranges.addRange(toGPBRange(r));
+                    }
+                    observer.complete(ranges.build());
+                })
+                .exceptionally(e -> {
+                    log.warn("Received exception during parameter retrieval", e);
+                    observer.completeExceptionally(new InternalServerErrorException(e.toString()));
+                    return null;
+                });
+
+    }
+
+    @Override
+    public void listParameterHistory(Context ctx, ListParameterHistoryRequest request,
+            Observer<ListParameterHistoryResponse> observer) {
+
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+
+        Mdb mdb = MdbFactory.getInstance(ysi.getName());
+        ParameterWithId requestedParamWithId = MdbApi.verifyParameterWithId(ctx, mdb, request.getName());
+
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        int maxBytes = request.hasMaxBytes() ? request.getMaxBytes() : -1;
+
+        long start = 0;
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        long stop = TimeEncoding.getWallclockTime();
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+        boolean ascending = request.getOrder().equals("asc");
+        if (request.hasNext()) {
+            TimeSortedPageToken token = TimeSortedPageToken.decode(request.getNext());
+            if (ascending) {
+                start = token.time;
+            } else {
+                stop = token.time;
+            }
+        }
+        var optsb = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop)
+                .withAscending(ascending)
+                .withRetrieveParameterStatus(false);
+
+        if (request.hasSource() && isReplayAsked(request.getSource())) {
+            optsb = optsb
+                    .withoutParchive(true)
+                    .withoutReplay(false);
+        } else {
+            if (request.hasNoreplay()) {
+                optsb = optsb.withoutReplay(request.getNoreplay());
+            }
+            optsb = optsb.withoutRealtime(request.getNorealtime());
+        }
+
+        ParameterRetrievalOptions opts = optsb.build();
+        ParameterRetrievalService prs = getParameterRetrievalService(ysi);
+
+        ListParameterHistoryResponse.Builder resultb = ListParameterHistoryResponse.newBuilder();
+        final int fLimit = limit + 1; // one extra to detect continuation token
+
+        PaginatedSingleParameterRetrievalConsumer replayListener = new PaginatedSingleParameterRetrievalConsumer(0,
+                fLimit) {
+            @Override
+            public void onParameterData(ParameterValueWithId pvwid) {
+                if (resultb.getParameterCount() < fLimit - 1) {
+                    resultb.addParameter(StreamArchiveApi.toGpb(pvwid, maxBytes));
+                } else {
+                    TimeSortedPageToken token = new TimeSortedPageToken(pvwid.getParameterValue().getGenerationTime());
+                    resultb.setContinuationToken(token.encodeAsString());
+                }
+            }
+        };
+
+        replayListener.setNoRepeat(request.getNorepeat());
+        prs.retrieveSingle(requestedParamWithId, opts, replayListener)
+                .thenRun(() -> {
+                    observer.complete(resultb.build());
+                })
+                .exceptionally(e -> {
+                    log.warn("Received exception during parameter retrieval", e);
+                    observer.completeExceptionally(new InternalServerErrorException(e.toString()));
+                    return null;
+                });
+    }
+
+    private ParameterArchive getParameterArchive(YamcsServerInstance ysi) throws BadRequestException {
+        List<ParameterArchive> l = ysi.getServices(ParameterArchive.class);
+
+        if (l.isEmpty()) {
+            throw new BadRequestException("ParameterArchive not configured for this instance");
+        }
+
+        return l.get(0);
+    }
+
+    static ParameterRetrievalService getParameterRetrievalService(YamcsServerInstance ysi) throws BadRequestException {
+        List<ParameterRetrievalService> l = ysi.getServices(ParameterRetrievalService.class);
+
+        if (l.isEmpty()) {
+            throw new BadRequestException("ParameterRetrievalService not configured for this instance");
+        }
+
+        return l.get(0);
+    }
+
+    static boolean isReplayAsked(String source) throws HttpException {
+        if (source.equalsIgnoreCase("ParameterArchive")) {
+            return false;
+        } else if (source.equalsIgnoreCase("replay")) {
+            return true;
+        } else {
+            throw new BadRequestException(
+                    "Bad value for parameter 'source'; valid values are: 'ParameterArchive' or 'replay'");
+        }
+    }
+
+    private static Ranges.Range toGPBRange(Range r) {
+        Ranges.Range.Builder b = Ranges.Range.newBuilder();
+        b.setCount(r.totalCount());
+        b.setStart(TimeEncoding.toProtobufTimestamp(r.start));
+        b.setStop(TimeEncoding.toProtobufTimestamp(r.stop));
+        var valueCount = 0;
+        for (int i = 0; i < r.valueCount(); i++) {
+            b.addEngValues(ValueUtility.toGbp(r.getValue(i)));
+            b.addCounts(r.getCount(i));
+            valueCount += r.getCount(i);
+        }
+        b.setOtherCount(r.totalCount() - valueCount);
+
+        return b.build();
+    }
+
+    @Override
+    public void getArchivedParametersInfo(Context ctx, GetArchivedParametersInfoRequest request,
+            Observer<ArchivedParametersInfoResponse> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        ParameterArchive parchive = getParameterArchive(ysi);
+        ParameterIdDb pdb = parchive.getParameterIdDb();
+        ParameterGroupIdDb pgdb = parchive.getParameterGroupIdDb();
+
+        var responseb = ArchivedParametersInfoResponse.newBuilder();
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+
+        var filter = request.hasFilter()
+                ? ArchivedParameterFilterFactory.create(request.getFilter())
+                : null;
+
+        var nextToken = request.hasNext() ? PidPageToken.decode(request.getNext()) : null;
+
+        pdb.iterate((fqn, pid) -> {
+            if (nextToken != null && pid.getPid() <= nextToken.pid) {
+                return true; // Continue
+            }
+            if (!pid.isSimple()) {
+                return true; // Continue;
+            }
+
+            var infob = ArchivedParameterInfo.newBuilder()
+                    .setParameter(fqn)
+                    .setPid(pid.getPid());
+            if (pid.getEngType() != null) {
+                infob.setEngType(pid.getEngType());
+            }
+            if (pid.getRawType() != null) {
+                infob.setRawType(pid.getRawType());
+            }
+            for (int gid : pgdb.getAllGroups(pid.getPid())) {
+                infob.addGids(gid);
+            }
+
+            var info = infob.build();
+
+            if (filter != null && !filter.matches(info)) {
+                return true; // Continue
+            }
+
+            responseb.addPids(info);
+            return responseb.getPidsCount() < limit;
+        });
+
+        if (responseb.getPidsCount() > 0) {
+            var lastPid = responseb.getPids(responseb.getPidsCount() - 1).getPid();
+            var token = new PidPageToken(lastPid);
+            responseb.setContinuationToken(token.encodeAsString());
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getArchivedParameterSegments(Context ctx, GetArchivedParameterSegmentsRequest request,
+            Observer<ArchivedParameterSegmentsResponse> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        if (!request.hasPid()) {
+            throw new BadRequestException("id is mandatory");
+        }
+        int pid = request.getPid();
+
+        long start = 0;
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        long stop = ysi.getTimeService().getMissionTime();
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+
+        ParameterArchive parchive = getParameterArchive(ysi);
+        ParameterIdDb pdb = parchive.getParameterIdDb();
+
+        ArchivedParameterSegmentsResponse.Builder resp = ArchivedParameterSegmentsResponse.newBuilder();
+        ArchivedParameterInfo.Builder paraInfo = ArchivedParameterInfo.newBuilder();
+
+        ParameterId paraId = pdb.getParameterId(pid);
+
+        if (paraId == null) {
+            throw new NotFoundException("Unknown parameter id " + pid);
+        }
+
+        paraInfo.setParameter(paraId.getParamFqn());
+        paraInfo.setEngType(paraId.getEngType());
+        paraInfo.setRawType(paraId.getRawType());
+        paraInfo.setPid(pid);
+
+        resp.setParameterInfo(paraInfo.build());
+
+        ParameterInfoRetrieval pir = new ParameterInfoRetrieval(parchive, paraId, start, stop);
+
+        try {
+            pir.retrieve(segInfo -> resp.addSegments(segInfo));
+            observer.complete(resp.build());
+        } catch (RocksDBException | IOException e) {
+            log.error("Error retrieving parameter info", e);
+            throw new InternalServerErrorException(e.toString());
+        }
+    }
+
+    @Override
+    public void getArchivedParameterGroup(Context ctx, GetArchivedParameterGroupRequest request,
+            Observer<ArchivedParameterGroupResponse> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+        if (!request.hasGid()) {
+            throw new BadRequestException("gid is mandatory");
+        }
+        int gid = request.getGid();
+
+        ParameterArchive parchive = getParameterArchive(ysi);
+        ParameterIdDb pdb = parchive.getParameterIdDb();
+        ParameterGroupIdDb pgdb = parchive.getParameterGroupIdDb();
+        IntArray pids;
+
+        try {
+            pids = pgdb.getParameterGroup(gid);
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException("No such group " + gid);
+        }
+        SortedIntArray sortedPids = new SortedIntArray(pids);
+        ArchivedParameterGroupResponse.Builder resp = ArchivedParameterGroupResponse.newBuilder();
+
+        pdb.iterate((fqn, paraId) -> {
+            if (sortedPids.contains(paraId.getPid())) {
+                ArchivedParameterInfo.Builder paraInfo = ArchivedParameterInfo.newBuilder()
+                        .setParameter(fqn);
+                if (paraId.getEngType() != null) {
+                    paraInfo.setEngType(paraId.getEngType());
+                }
+                if (paraId.getRawType() != null) {
+                    paraInfo.setRawType(paraId.getRawType());
+                }
+
+                paraInfo.setPid(paraId.getPid());
+
+                resp.addParameters(paraInfo.build());
+            }
+            return true;
+        });
+        observer.complete(resp.build());
+    }
+
+    @Override
+    public void purge(Context ctx, PurgeRequest request, Observer<Empty> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        ParameterArchive parchive = getParameterArchive(ysi);
+        try {
+            parchive.purge();
+        } catch (RocksDBException | InterruptedException | IOException e) {
+            log.error("Error purging parameter archive", e);
+            throw new InternalServerErrorException(e.toString());
+        }
+
+        observer.complete(Empty.getDefaultInstance());
+
+    }
+
+    @Override
+    public void disableBackfilling(Context ctx, DisableBackfillingRequest request, Observer<Empty> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        getBackFiller(ysi).enableAutomaticBackfilling(false);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void enableBackfilling(Context ctx, EnableBackfillingRequest request, Observer<Empty> observer) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        getBackFiller(ysi).enableAutomaticBackfilling(true);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    BackFiller getBackFiller(YamcsServerInstance ysi) {
+        var parchive = getParameterArchive(ysi);
+        var backfiller = parchive.getBackFiller();
+        if (backfiller == null) {
+            throw new BadRequestException("Backfiller not enabled");
+        }
+        return backfiller;
+    }
+
+    private static class PidPageToken {
+
+        /**
+         * PID associated with the last object that was emitted.
+         */
+        public int pid;
+
+        public PidPageToken(int pid) {
+            this.pid = pid;
+        }
+
+        public static PidPageToken decode(String encoded) {
+            String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+            return new Gson().fromJson(decoded, PidPageToken.class);
+        }
+
+        public String encodeAsString() {
+            String json = new Gson().toJson(this);
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+        }
+    }
+}
+```
+
+### `ParameterListsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterListsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.api.XtceToGpbAssembler.DetailLevel;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.plists.ParameterList;
+import org.yamcs.plists.ParameterListDb;
+import org.yamcs.plists.ParameterListService;
+import org.yamcs.protobuf.plists.AbstractParameterListsApi;
+import org.yamcs.protobuf.plists.CreateParameterListRequest;
+import org.yamcs.protobuf.plists.DeleteParameterListRequest;
+import org.yamcs.protobuf.plists.GetParameterListRequest;
+import org.yamcs.protobuf.plists.ListParameterListsRequest;
+import org.yamcs.protobuf.plists.ListParameterListsResponse;
+import org.yamcs.protobuf.plists.ParameterListInfo;
+import org.yamcs.protobuf.plists.UpdateParameterListRequest;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+
+import com.google.protobuf.Empty;
+
+public class ParameterListsApi extends AbstractParameterListsApi<Context> {
+
+    private static final Log log = new Log(ParameterListsApi.class);
+
+    @Override
+    public void listParameterLists(Context ctx, ListParameterListsRequest request,
+            Observer<ListParameterListsResponse> observer) {
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        verifyService(instance);
+        var mdb = MdbFactory.getInstance(instance);
+
+        var sqlb = new SqlBuilder(ParameterListDb.TABLE_NAME);
+
+        var plists = new ArrayList<ParameterList>();
+        StreamFactory.stream(instance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                var plist = new ParameterList(tuple);
+                plists.add(plist);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                Collections.sort(plists);
+
+                var responseb = ListParameterListsResponse.newBuilder();
+                plists.forEach(plist -> {
+                    var info = toParameterListInfo(ctx, mdb, plist, false);
+                    responseb.addLists(info);
+                });
+
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    @Override
+    public void getParameterList(Context ctx, GetParameterListRequest request, Observer<ParameterListInfo> observer) {
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        var plistService = verifyService(instance);
+        var plist = verifyParameterList(plistService, request.getList());
+        var mdb = MdbFactory.getInstance(instance);
+        observer.complete(toParameterListInfo(ctx, mdb, plist, true));
+    }
+
+    @Override
+    public void createParameterList(Context ctx, CreateParameterListRequest request,
+            Observer<ParameterListInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ManageParameterLists);
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        var plistService = verifyService(instance);
+        var db = plistService.getParameterListDb();
+        var mdb = MdbFactory.getInstance(instance);
+
+        if (!request.hasName()) {
+            throw new BadRequestException("Name is required");
+        }
+        var name = request.getName().trim();
+        if (name.isEmpty()) {
+            throw new BadRequestException("Name is required");
+        }
+
+        var plist = new ParameterList(UUID.randomUUID(), name);
+        if (request.hasDescription()) {
+            plist.setDescription(request.getDescription());
+        }
+        plist.setPatterns(request.getPatternsList());
+
+        db.insert(plist);
+        observer.complete(toParameterListInfo(ctx, mdb, plist, true));
+    }
+
+    @Override
+    public void updateParameterList(Context ctx, UpdateParameterListRequest request,
+            Observer<ParameterListInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ManageParameterLists);
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        var plistService = verifyService(instance);
+        var db = plistService.getParameterListDb();
+        var mdb = MdbFactory.getInstance(instance);
+        var plist = verifyParameterList(plistService, request.getList());
+
+        if (request.hasName()) {
+            var newName = request.getName().trim();
+            if (newName.isEmpty()) {
+                throw new BadRequestException("Name must not be empty");
+            }
+            plist.setName(newName);
+        }
+        if (request.hasDescription()) {
+            plist.setDescription(request.getDescription());
+        }
+        if (request.hasPatternDefinition()) {
+            plist.setPatterns(request.getPatternDefinition().getPatternsList());
+        }
+
+        db.update(plist);
+        observer.complete(toParameterListInfo(ctx, mdb, plist, true));
+    }
+
+    @Override
+    public void deleteParameterList(Context ctx, DeleteParameterListRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ManageParameterLists);
+        var plistService = verifyService(request.getInstance());
+        var db = plistService.getParameterListDb();
+        var plistId = verifyId(request.getList());
+
+        db.delete(plistId);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    private static ParameterListInfo toParameterListInfo(Context ctx, Mdb mdb, ParameterList plist,
+            boolean addResolvedParameters) {
+        var plistb = ParameterListInfo.newBuilder()
+                .setId(plist.getId().toString())
+                .setName(plist.getName());
+        if (plist.getDescription() != null) {
+            plistb.setDescription(plist.getDescription());
+        }
+        plistb.addAllPatterns(plist.getPatterns());
+
+        if (addResolvedParameters) {
+            for (var parameter : resolveParameters(ctx, mdb, plist)) {
+                var pinfo = XtceToGpbAssembler.toParameterInfo(parameter, DetailLevel.SUMMARY);
+                plistb.addMatch(pinfo);
+            }
+        }
+
+        return plistb.build();
+    }
+
+    public static List<Parameter> resolveParameters(Context ctx, Mdb mdb, ParameterList plist) {
+        var parameters = new ArrayList<Parameter>();
+        for (String p : plist.getPatterns()) {
+            if (p.endsWith("/")) {
+                var system = mdb.getSpaceSystem(p.substring(0, p.length() - 1));
+                if (system == null) {
+                    continue;
+                }
+                system.getParameters().forEach(parameters::add);
+            } else {
+                var matcher = FileSystems.getDefault().getPathMatcher("glob:" + p);
+                for (var candidate : mdb.getParameters()) {
+                    if (matcher.matches(Path.of(candidate.getQualifiedName()))) {
+                        parameters.add(candidate);
+                    }
+                }
+            }
+        }
+
+        return parameters.stream()
+                .filter(p -> ctx.user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, p))
+                .collect(Collectors.toList());
+    }
+
+    public static ParameterListService verifyService(String yamcsInstance) {
+        String instance = InstancesApi.verifyInstance(yamcsInstance);
+
+        var services = YamcsServer.getServer().getInstance(instance)
+                .getServices(ParameterListService.class);
+        if (services.isEmpty()) {
+            throw new NotFoundException("No parameter list service found");
+        } else {
+            if (services.size() > 1) {
+                log.warn("Multiple parameter list services found but only one supported");
+            }
+            return services.get(0);
+        }
+    }
+
+    public static ParameterList verifyParameterList(ParameterListService plistService, String id) {
+        var plistId = verifyId(id);
+        var plist = plistService.getParameterListDb().getById(plistId);
+        if (plist == null) {
+            throw new NotFoundException("Parameter list not found");
+        }
+        return plist;
+    }
+
+    private static UUID verifyId(String id) {
+        try {
+            return UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid identifier '" + id + "'");
+        }
+    }
+}
+```
+
+### `ParameterRanger.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterRanger.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.parameterarchive.ParameterValueArray;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.MutableLong;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+/**
+ * builds ranges of parameters
+ * 
+ */
+public class ParameterRanger implements Consumer<ParameterValueArray> {
+    private static final Logger log = LoggerFactory.getLogger(ParameterRanger.class);
+    static final int MAX_RANGES = 5000;
+    static final int MAX_VALUES = 100;
+
+    // Time in milliseconds. Any gap smaller than this will be ignored. However
+    // if the parameter changes value, the ranges will still be split.
+    final long minGap;
+
+    // Time in milliseconds. If the distance between two subsequent values of the parameter is bigger than this value
+    // (but smaller than the parameter expiration), then an artificial gap will be constructed. This also applies if
+    // there is no parameter expiration defined for the parameter.
+    final long maxGap;
+
+    // Time in milliseconds of the minimum range to be returned. If the data changes more often, a new range will not be
+    // created but the data will be added to the old range.
+    final long minRange;
+
+    // max number of values sent
+    final int maxValues;
+
+    List<Range> ranges = new ArrayList<>();
+
+    Range curRange = null;
+    Value prevValue;
+    ParameterStatus prevStatus;
+    long prevTimestamp;
+
+    boolean accumulatingDistinct = true;
+    Map<Value, MutableLong> distinctValues = new HashMap<>();
+
+    public ParameterRanger(long minGap, long maxGap, long minRange, int maxValues) {
+        this.minGap = minGap;
+        this.maxGap = maxGap;
+        this.minRange = minRange;
+        if (maxValues <= 0) {
+            maxValues = MAX_VALUES;
+        } else if (maxValues > MAX_VALUES) {
+            log.warn("Maximum values {} greater than maximum allowed {}, using max ", maxValues, MAX_VALUES);
+            maxValues = MAX_VALUES;
+        }
+        this.maxValues = maxValues;
+    }
+
+    @Override
+    public void accept(ParameterValueArray pva) {
+        if (ranges.size() >= MAX_RANGES) {
+            log.warn("Maximum number of ranges reached, ignoring further data.", ranges.size());
+            return;
+        }
+
+        long[] timestamps = pva.getTimestamps();
+        ParameterStatus[] statuses = pva.getStatuses();
+        ValueArray va = pva.getEngValues();
+        int n = va.size();
+        Type type = va.getType();
+
+        if (curRange != null && type != curRange.getValue(0).getType()) {
+            ranges.add(curRange);
+            curRange = null;
+        }
+
+        for (int i = 0; i < n; i++) {
+            Value v = va.getValue(i);
+
+            // if distinct is true, it means the value is part of the distinctValues map
+            // if it's false we do not need to keep track of it but we do if it is part of a new range
+            boolean distinct = addToDistinct(v);
+
+            ParameterStatus status = statuses[i];
+            long timestamp = timestamps[i];
+
+            if (curRange == null) {
+                curRange = new SingleRange(timestamp, v);
+            } else {
+                long stop = checkDataInterruption(prevTimestamp, timestamp, prevStatus);
+                if (stop != Long.MIN_VALUE) {// data interruption
+                    curRange.stop = stop;
+                    potentiallyCreateNewRange(timestamp, v, distinct);
+                } else if (!v.equals(prevValue)) {
+                    curRange.stop = timestamp;
+                    potentiallyCreateNewRange(timestamp, v, distinct);
+                } else {
+                    curRange.add(v, distinct);
+                    curRange.stop = timestamp;
+                }
+            }
+            prevValue = v;
+            prevTimestamp = timestamp;
+            prevStatus = status;
+        }
+    }
+
+    // add the value to the distinct values and return true if it has been added or false if there are already more than
+    // 2*maxValues distinct values
+    private boolean addToDistinct(Value v) {
+        MutableLong ml = distinctValues.get(v);
+        if (ml != null) {
+            ml.increment();
+            return true;
+        } else if (distinctValues.size() < 2 * maxValues) {
+            distinctValues.put(v, new MutableLong(1));
+            return true;
+        }
+        return false;
+    }
+
+    // create a new range unless the minRange parameter is in effect and the current range is too small, case in which
+    // create a multi value range and add to it
+    void potentiallyCreateNewRange(long timestamp, Value v, boolean distinct) {
+        if (timestamp - curRange.start < minRange) {
+            if (curRange instanceof SingleRange) {
+                curRange = new MultiRange((SingleRange) curRange);
+            }
+            curRange.add(v, distinct);
+            curRange.stop = timestamp;
+        } else {
+            ranges.add(curRange);
+            curRange = new SingleRange(timestamp, v);
+            if (!distinct) {
+                // if a new value appears after a while,
+                // we give it a chance to appear among the values part of the final result
+                distinctValues.put(v, new MutableLong(1));
+            }
+        }
+    }
+
+    // check for data interruption and return Long.MIN_VALUE if not
+    // or the timestamp when the value was last valid if yes
+    private long checkDataInterruption(long prevTimestamp, long timestamp, ParameterStatus prevStatus) {
+        long delta = timestamp - prevTimestamp;
+
+        if (delta < minGap) {
+            return Long.MIN_VALUE;
+        }
+
+        if (prevStatus.hasExpireMillis() && delta > prevStatus.getExpireMillis()) {
+            return prevTimestamp;
+        }
+
+        if (delta > maxGap) {
+            return prevTimestamp;
+        }
+        return Long.MIN_VALUE;
+    }
+
+    public abstract static class Range {
+        long start;
+        long stop;
+        int count;
+
+        public Range(long start, long stop) {
+            this.start = start;
+            this.stop = stop;
+        }
+
+        public abstract void add(Value v, boolean distinct);
+
+        public abstract int valueCount();
+
+        public abstract Value getValue(int idx);
+
+        public abstract int getCount(int idx);
+
+        public int totalCount() {
+            return count;
+        }
+    }
+
+    public static class SingleRange extends Range {
+
+        Value value;
+
+        SingleRange(long start, Value v) {
+            super(start, start);
+            this.value = v;
+            this.count = 1;
+        }
+
+        @Override
+        public void add(Value v, boolean distinct) {
+            count++;
+        }
+
+        @Override
+        public int valueCount() {
+            return value == null ? 0 : 1;
+        }
+
+        @Override
+        public Value getValue(int idx) {
+            return value;
+        }
+
+        @Override
+        public int getCount(int idx) {
+            return count;
+        }
+
+        @Override
+        public String toString() {
+            return "SingleRange [value=" + value + ", count=" + count + "]";
+        }
+
+    }
+
+    public static class MultiRange extends Range {
+
+        List<Value> values = new ArrayList<>();
+        IntArray counts = new IntArray();
+
+        public MultiRange(SingleRange range) {
+            super(range.start, range.stop);
+            count = range.count;
+            counts.add(range.count);
+            values.add(range.value);
+        }
+
+        // add value to the range;
+        // if distinct is false, only increase the total count, not add the value itself
+        @Override
+        public void add(Value v, boolean distinct) {
+            count++;
+
+            int idx = values.indexOf(v);
+            if (idx < 0) {
+                if (distinct) {
+                    values.add(v);
+                    counts.add(1);
+                }
+            } else {
+                counts.set(idx, counts.get(idx) + 1);
+            }
+        }
+
+        @Override
+        public int valueCount() {
+            return counts.size();
+        }
+
+        @Override
+        public Value getValue(int idx) {
+            return values.get(idx);
+        }
+
+        @Override
+        public int getCount(int idx) {
+            return counts.get(idx);
+        }
+
+        @Override
+        public String toString() {
+            return "MultiRange [values=" + values + ", counts=" + counts + "]";
+        }
+    }
+
+    public List<Range> getRanges() {
+        if (curRange != null) {
+            ranges.add(curRange);
+            curRange = null;
+        }
+        boolean trimmed = false;
+        while (distinctValues.size() > maxValues) {
+            // trim down the number of values
+            Value min = distinctValues.entrySet().stream()
+                    .min((me1, me2) -> Long.compare(me1.getValue().getLong(), me2.getValue().getLong()))
+                    .get().getKey();
+            distinctValues.remove(min);
+            trimmed = true;
+        }
+        if (trimmed) {
+            // remove values which are not in distinct
+            for (Range r : ranges) {
+                if (r instanceof SingleRange) {
+                    SingleRange sr = (SingleRange) r;
+                    if (!distinctValues.containsKey(sr.value)) {
+                        sr.value = null;
+                    }
+                } else {
+                    MultiRange mr = (MultiRange) r;
+                    List<Value> vlist = mr.values;
+                    for (int i = vlist.size() - 1; i >= 0; i--) {
+                        Value v = vlist.get(i);
+                        if (!distinctValues.containsKey(v)) {
+                            vlist.remove(i);
+                            mr.counts.remove(i);
+                        }
+                    }
+                }
+            }
+        }
+        return ranges;
+    }
+}
+```
+
+### `ParameterValuesApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ParameterValuesApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.AbstractParameterValuesApi;
+import org.yamcs.protobuf.LoadParameterValuesRequest;
+import org.yamcs.protobuf.LoadParameterValuesResponse;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.tctm.StreamParameterSender;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.YarchDatabase;
+
+public class ParameterValuesApi extends AbstractParameterValuesApi<Context> {
+
+    @Override
+    public Observer<LoadParameterValuesRequest> loadParameterValues(Context ctx,
+            Observer<LoadParameterValuesResponse> observer) {
+        return new Observer<>() {
+
+            int count = 0;
+            long minGenerationTime = TimeEncoding.INVALID_INSTANT;
+            long maxGenerationTime = TimeEncoding.INVALID_INSTANT;
+            Mdb mdb;
+            TimeService timeService;
+            StreamParameterSender sender;
+
+            @Override
+            public void next(LoadParameterValuesRequest request) {
+                if (count == 0) {
+                    var instance = InstancesApi.verifyInstance(request.getInstance());
+                    var streamName = request.hasStream() ? request.getStream() : "pp_dump";
+                    var stream = YarchDatabase.getInstance(instance).getStream(streamName);
+                    mdb = MdbFactory.getInstance(instance);
+                    timeService = YamcsServer.getTimeService(instance);
+                    sender = new StreamParameterSender(instance, stream);
+                }
+
+                var acquisitionTime = timeService.getMissionTime();
+
+                var valueCount = request.getValuesCount();
+                if (valueCount > 0) {
+                    var pvals = new ArrayList<ParameterValue>(valueCount);
+                    for (var update : request.getValuesList()) {
+                        var pid = MdbApi.verifyParameterWithId(ctx, mdb, update.getParameter());
+                        ctx.checkParameterPrivilege(ObjectPrivilegeType.WriteParameter, pid.getParameter());
+
+                        var pval = new ParameterValue(pid.getParameter());
+                        pval.setAcquisitionTime(acquisitionTime);
+                        if (update.hasValue()) {
+                            pval.setEngValue(ValueUtility.fromGpb(update.getValue()));
+                        }
+                        if (update.hasGenerationTime()) {
+                            var instant = TimeEncoding.fromProtobufTimestamp(update.getGenerationTime());
+                            if (minGenerationTime == TimeEncoding.INVALID_INSTANT || instant < minGenerationTime) {
+                                minGenerationTime = instant;
+                            }
+                            if (maxGenerationTime == TimeEncoding.INVALID_INSTANT || instant > maxGenerationTime) {
+                                maxGenerationTime = instant;
+                            }
+                            pval.setGenerationTime(instant);
+                        }
+                        if (update.hasExpiresIn()) {
+                            pval.setExpireMillis(update.getExpiresIn());
+                        }
+                        pvals.add(pval);
+                    }
+
+                    sender.sendParameters(pvals);
+                    count += valueCount;
+                }
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete() {
+                var responseb = LoadParameterValuesResponse.newBuilder()
+                        .setValueCount(count);
+                if (minGenerationTime != TimeEncoding.INVALID_INSTANT) {
+                    responseb.setMinGenerationTime(TimeEncoding.toProtobufTimestamp(minGenerationTime));
+                }
+                if (maxGenerationTime != TimeEncoding.INVALID_INSTANT) {
+                    responseb.setMaxGenerationTime(TimeEncoding.toProtobufTimestamp(maxGenerationTime));
+                }
+                observer.complete(responseb.build());
+            }
+        };
+    }
+}
+```
+
+### `ProcessingApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ProcessingApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.yamcs.InvalidIdentification;
+import org.yamcs.NoPermissionException;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.ProcessorServiceWithConfig;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.algorithms.AlgorithmManager;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.ForbiddenException;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.management.ManagementGpbHelper;
+import org.yamcs.management.ManagementListener;
+import org.yamcs.management.ManagementService;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.ParameterWithId;
+import org.yamcs.parameter.ParameterWithIdConsumer;
+import org.yamcs.parameter.ParameterWithIdRequestHelper;
+import org.yamcs.parameter.PartialParameterValue;
+import org.yamcs.parameter.SoftwareParameterManager;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.AbstractProcessingApi;
+import org.yamcs.protobuf.AlgorithmStatus;
+import org.yamcs.protobuf.AlgorithmTrace;
+import org.yamcs.protobuf.BatchGetParameterValuesRequest;
+import org.yamcs.protobuf.BatchGetParameterValuesResponse;
+import org.yamcs.protobuf.BatchSetParameterValuesRequest;
+import org.yamcs.protobuf.CreateProcessorRequest;
+import org.yamcs.protobuf.DeleteProcessorRequest;
+import org.yamcs.protobuf.EditAlgorithmTraceRequest;
+import org.yamcs.protobuf.EditProcessorRequest;
+import org.yamcs.protobuf.GetAlgorithmStatusRequest;
+import org.yamcs.protobuf.GetAlgorithmTraceRequest;
+import org.yamcs.protobuf.GetParameterValueRequest;
+import org.yamcs.protobuf.GetProcessorRequest;
+import org.yamcs.protobuf.ListProcessorTypesResponse;
+import org.yamcs.protobuf.ListProcessorsRequest;
+import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.ProcessorManagementRequest;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SetParameterValueRequest;
+import org.yamcs.protobuf.Statistics;
+import org.yamcs.protobuf.SubscribeAlgorithmStatusRequest;
+import org.yamcs.protobuf.SubscribeParametersData;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.SubscribeProcessorsRequest;
+import org.yamcs.protobuf.SubscribeTMStatisticsRequest;
+import org.yamcs.protobuf.Yamcs.EndAction;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.security.User;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+
+import com.google.protobuf.Empty;
+
+public class ProcessingApi extends AbstractProcessingApi<Context> {
+
+    @Override
+    public void listProcessorTypes(Context ctx, Empty request, Observer<ListProcessorTypesResponse> observer) {
+        ListProcessorTypesResponse.Builder response = ListProcessorTypesResponse.newBuilder();
+        List<String> processorTypes = new ArrayList<>(ProcessorFactory.getProcessorTypes().keySet());
+        Collections.sort(processorTypes);
+        response.addAllTypes(processorTypes);
+        observer.complete(response.build());
+    }
+
+    @Override
+    public void listProcessors(Context ctx, ListProcessorsRequest request, Observer<ListProcessorsResponse> observer) {
+        ListProcessorsResponse.Builder response = ListProcessorsResponse.newBuilder();
+        if (request.hasInstance()) {
+            YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+            for (Processor processor : ysi.getProcessors()) {
+                response.addProcessors(toProcessorInfo(processor));
+            }
+        } else {
+            for (YamcsServerInstance ysi : YamcsServer.getInstances()) {
+                for (Processor processor : ysi.getProcessors()) {
+                    response.addProcessors(toProcessorInfo(processor));
+                }
+            }
+        }
+
+        observer.complete(response.build());
+    }
+
+    @Override
+    public void getProcessor(Context ctx, GetProcessorRequest request, Observer<ProcessorInfo> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+
+        ProcessorInfo pinfo = toProcessorInfo(processor);
+        observer.complete(pinfo);
+    }
+
+    @Override
+    public void deleteProcessor(Context ctx, DeleteProcessorRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlProcessor);
+
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        if (processor.isProtected()) {
+            throw new BadRequestException("Cannot delete a protected processor");
+        }
+
+        processor.quit();
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void createProcessor(Context ctx, CreateProcessorRequest request, Observer<Empty> observer) {
+        String yamcsInstance = InstancesApi.verifyInstance(request.getInstance());
+
+        if (!request.hasName()) {
+            throw new BadRequestException("No processor name was specified");
+        }
+        String processorName = request.getName();
+
+        if (!request.hasType()) {
+            throw new BadRequestException("No processor type was specified");
+        }
+        String processorType = request.getType();
+
+        ProcessorManagementRequest.Builder reqb = ProcessorManagementRequest.newBuilder();
+        reqb.setInstance(yamcsInstance);
+        reqb.setName(processorName);
+        reqb.setType(processorType);
+        if (request.hasPersistent()) {
+            reqb.setPersistent(request.getPersistent());
+        }
+        verifyPermissions(reqb.getPersistent(), processorType, ctx.user);
+
+        if (request.hasConfig()) {
+            reqb.setConfig(request.getConfig());
+        }
+
+        ManagementService mservice = ManagementService.getInstance();
+        try {
+            mservice.createProcessor(reqb.build(), ctx.user.getName());
+            observer.complete(Empty.getDefaultInstance());
+        } catch (YamcsException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void editProcessor(Context ctx, EditProcessorRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlProcessor);
+
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        if (!processor.isReplay()) {
+            throw new BadRequestException("Cannot update a non-replay processor");
+        }
+
+        if (request.hasState()) {
+            switch (request.getState().toLowerCase()) {
+            case "running":
+                processor.resume();
+                break;
+            case "paused":
+                processor.pause();
+                break;
+            default:
+                throw new BadRequestException("Invalid processor state '" + request.getState() + "'");
+            }
+        }
+
+        if (request.hasStart() && request.hasStop()) {
+            long start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            long stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+            processor.changeRange(start, stop);
+        }
+
+        if (request.hasLoop()) {
+            processor.changeEndAction(request.getLoop() ? EndAction.LOOP : EndAction.STOP);
+        }
+
+        if (request.hasSeek()) {
+            long seek = TimeEncoding.fromProtobufTimestamp(request.getSeek());
+            processor.seek(seek);
+        }
+
+        String speed = null;
+        if (request.hasSpeed()) {
+            speed = request.getSpeed().toLowerCase();
+        }
+        if (speed != null) {
+            ReplaySpeed replaySpeed;
+            if ("afap".equals(speed)) {
+                replaySpeed = ReplaySpeed.newBuilder().setType(ReplaySpeedType.AFAP).build();
+            } else if (speed.endsWith("x")) {
+                try {
+                    float factor = Float.parseFloat(speed.substring(0, speed.length() - 1));
+                    replaySpeed = ReplaySpeed.newBuilder()
+                            .setType(ReplaySpeedType.REALTIME)
+                            .setParam(factor).build();
+                } catch (NumberFormatException e) {
+                    throw new BadRequestException("Speed factor is not a valid number");
+                }
+
+            } else {
+                try {
+                    int fixedDelay = Integer.parseInt(speed);
+                    replaySpeed = ReplaySpeed.newBuilder()
+                            .setType(ReplaySpeedType.FIXED_DELAY)
+                            .setParam(fixedDelay).build();
+                } catch (NumberFormatException e) {
+                    throw new BadRequestException("Fixed delay value is not an integer");
+                }
+            }
+            processor.changeSpeed(replaySpeed);
+        }
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void getParameterValue(Context ctx, GetParameterValueRequest request,
+            Observer<ParameterValue> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+
+        NamedObjectId id = MdbApi.verifyParameterId(ctx, mdb, request.getName());
+
+        long timeout = request.hasTimeout() ? request.getTimeout() : 10000;
+        boolean fromCache = request.hasFromCache() ? request.getFromCache() : true;
+
+        List<NamedObjectId> ids = Arrays.asList(id);
+        CompletableFuture<List<ParameterValue>> cf = doGetParameterValues(processor, ctx.user, ids, fromCache, timeout);
+
+        cf.handle((pvals, t) -> {
+            if (t != null) {
+                observer.completeExceptionally(t.getCause());
+            } else {
+                ParameterValue pval;
+                if (pvals.isEmpty()) {
+                    pval = ParameterValue.newBuilder().setId(id).build();
+                } else {
+                    pval = pvals.get(0);
+                }
+                observer.complete(pval);
+            }
+            return null;
+        });
+
+    }
+
+    @Override
+    public void setParameterValue(Context ctx, SetParameterValueRequest request, Observer<Empty> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+
+        ParameterWithId pid = MdbApi.verifyParameterWithId(ctx, mdb, request.getName());
+        ctx.checkParameterPrivilege(ObjectPrivilegeType.WriteParameter, pid.getParameter());
+
+        SoftwareParameterManager mgr = verifySoftwareParameterManager(processor, pid.getParameter().getDataSource());
+
+        Value v = ValueUtility.fromGpb(request.getValue());
+        Parameter p = pid.getParameter();
+        org.yamcs.parameter.ParameterValue pv;
+        if (pid.getPath() == null) {
+            pv = new org.yamcs.parameter.ParameterValue(p);
+        } else {
+            pv = new PartialParameterValue(p, pid.getPath());
+        }
+        pv.setEngValue(v);
+        if (request.hasGenerationTime()) {
+            pv.setGenerationTime(TimeEncoding
+                    .fromProtobufTimestamp(request.getGenerationTime()));
+        }
+        if (request.hasExpiresIn()) {
+            pv.setExpireMillis(request.getExpiresIn());
+        }
+        try {
+            mgr.updateParameters(Arrays.asList(pv));
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public Observer<SubscribeParametersRequest> subscribeParameters(Context ctx,
+            Observer<SubscribeParametersData> observer) {
+        SubscribeParameterObserver clientObserver = new SubscribeParameterObserver(ctx.user, observer);
+        observer.setCancelHandler(() -> clientObserver.complete());
+        return clientObserver;
+    }
+
+    @Override
+    public void subscribeProcessors(Context ctx, SubscribeProcessorsRequest request, Observer<ProcessorInfo> observer) {
+        String instance = null;
+        String processor = null;
+        if (request.hasInstance()) {
+            instance = InstancesApi.verifyInstance(request.getInstance());
+            if (request.hasProcessor()) {
+                var processorObj = verifyProcessor(request.getInstance(), request.getProcessor());
+                processor = processorObj.getName();
+
+                // Emit current state, if a specific processor is requested
+                observer.next(ManagementGpbHelper.toProcessorInfo(processorObj));
+            }
+        }
+
+        String fInstance = instance;
+        String fProcessor = processor;
+        ManagementListener listener = new ManagementListener() {
+            @Override
+            public void processorAdded(ProcessorInfo info) {
+                maybeEmit(info);
+            }
+
+            @Override
+            public void processorStateChanged(ProcessorInfo info) {
+                maybeEmit(info);
+            }
+
+            @Override
+            public void processorClosed(ProcessorInfo info) {
+                maybeEmit(info);
+            }
+
+            void maybeEmit(ProcessorInfo info) {
+                if (fInstance == null || fInstance.equals(info.getInstance())) {
+                    if (fProcessor == null || fProcessor.equals(info.getName())) {
+                        observer.next(info);
+                    }
+                }
+            }
+        };
+
+        observer.setCancelHandler(() -> ManagementService.getInstance().removeManagementListener(listener));
+        ManagementService.getInstance().addManagementListener(listener);
+    }
+
+    @Override
+    public void batchGetParameterValues(Context ctx, BatchGetParameterValuesRequest request,
+            Observer<BatchGetParameterValuesResponse> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+
+        if (request.getIdCount() == 0) {
+            throw new BadRequestException("Empty parameter list");
+        }
+
+        long timeout = request.hasTimeout() ? request.getTimeout() : 10000;
+        boolean fromCache = request.hasFromCache() ? request.getFromCache() : true;
+
+        List<NamedObjectId> ids = request.getIdList();
+        CompletableFuture<List<ParameterValue>> cf = doGetParameterValues(processor, ctx.user, ids, fromCache,
+                timeout);
+
+        cf.handle((pvals, t) -> {
+            if (t != null) {
+                observer.completeExceptionally(t.getCause());
+            } else {
+                BatchGetParameterValuesResponse.Builder responseb = BatchGetParameterValuesResponse.newBuilder();
+                responseb.addAllValue(pvals);
+                observer.complete(responseb.build());
+            }
+            return null;
+        });
+    }
+
+    @Override
+    public void batchSetParameterValues(Context ctx, BatchSetParameterValuesRequest request,
+            Observer<Empty> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        ParameterRequestManager prm = processor.getParameterRequestManager();
+
+        List<NamedObjectId> idList = request.getRequestList().stream().map(r -> r.getId()).collect(Collectors.toList());
+        List<ParameterWithId> pidList;
+        try {
+            pidList = ParameterWithIdRequestHelper.checkNames(prm, idList);
+        } catch (InvalidIdentification e) {
+            throw new BadRequestException("InvalidIdentification: " + e.getMessage());
+        }
+
+        Map<DataSource, List<org.yamcs.parameter.ParameterValue>> pvmap = new HashMap<>();
+        for (int i = 0; i < pidList.size(); i++) {
+            BatchSetParameterValuesRequest.SetParameterValueRequest r = request.getRequest(i);
+            ParameterWithId pid = pidList.get(i);
+            Parameter p = pid.getParameter();
+
+            ctx.checkParameterPrivilege(ObjectPrivilegeType.WriteParameter, p);
+
+            org.yamcs.parameter.ParameterValue pv;
+            if (pid.getPath() == null) {
+                pv = new org.yamcs.parameter.ParameterValue(p);
+            } else {
+                pv = new PartialParameterValue(p, pid.getPath());
+            }
+            pv.setEngValue(ValueUtility.fromGpb(r.getValue()));
+            if (r.hasGenerationTime()) {
+                pv.setGenerationTime(TimeEncoding
+                        .fromProtobufTimestamp(r.getGenerationTime()));
+            }
+            if (r.hasExpiresIn()) {
+                pv.setExpireMillis(r.getExpiresIn());
+            }
+            List<org.yamcs.parameter.ParameterValue> l = pvmap.computeIfAbsent(p.getDataSource(),
+                    k -> new ArrayList<>());
+            l.add(pv);
+        }
+
+        for (Map.Entry<DataSource, List<org.yamcs.parameter.ParameterValue>> me : pvmap.entrySet()) {
+            List<org.yamcs.parameter.ParameterValue> l = me.getValue();
+            DataSource ds = me.getKey();
+            SoftwareParameterManager mgr = verifySoftwareParameterManager(processor, ds);
+            try {
+                mgr.updateParameters(l);
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException(e.getMessage());
+            }
+        }
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void subscribeTMStatistics(Context ctx, SubscribeTMStatisticsRequest request,
+            Observer<Statistics> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+
+        ManagementListener listener = new ManagementListener() {
+            @Override
+            public void statisticsUpdated(Processor statsProcessor, Statistics stats) {
+                if (statsProcessor.equals(processor)) {
+                    observer.next(stats);
+                }
+            }
+        };
+        observer.setCancelHandler(() -> ManagementService.getInstance().removeManagementListener(listener));
+        ManagementService.getInstance().addManagementListener(listener);
+    }
+
+    @Override
+    public void getAlgorithmStatus(Context ctx, GetAlgorithmStatusRequest request, Observer<AlgorithmStatus> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Algorithm alg = MdbApi.verifyAlgorithm(mdb, request.getName());
+        AlgorithmManager algMng = verifyAlgorithmManager(processor);
+        ctx.checkObjectPrivileges(ObjectPrivilegeType.ReadAlgorithm, alg.getQualifiedName());
+
+        observer.complete(algMng.getAlgorithmStatus(alg));
+    }
+
+    @Override
+    public void subscribeAlgorithmStatus(Context ctx, SubscribeAlgorithmStatusRequest request,
+            Observer<AlgorithmStatus> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Algorithm alg = MdbApi.verifyAlgorithm(mdb, request.getName());
+        AlgorithmManager algMng = verifyAlgorithmManager(processor);
+
+        ScheduledExecutorService exec = YamcsServer.getServer().getThreadPoolExecutor();
+        ScheduledFuture<?> future = exec.scheduleAtFixedRate(() -> {
+            AlgorithmStatus status = algMng.getAlgorithmStatus(alg);
+            observer.next(status);
+        }, 0, 1, TimeUnit.SECONDS);
+
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    @Override
+    public void editAlgorithmTrace(Context ctx, EditAlgorithmTraceRequest request, Observer<Empty> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlProcessor);
+
+        if (!request.hasState()) {
+            throw new BadRequestException("state is mandatory");
+        }
+        String state = request.getState();
+
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Algorithm a = MdbApi.verifyAlgorithm(mdb, request.getName());
+
+        AlgorithmManager algMng = verifyAlgorithmManager(processor);
+        if ("enabled".equalsIgnoreCase(state)) {
+            algMng.enableTracing(a);
+        } else if ("disabled".equalsIgnoreCase(state)) {
+            algMng.disableTracing(a);
+        } else {
+            throw new BadRequestException("Invalid state '" + state + "'. Please use enabled or disabled");
+        }
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void getAlgorithmTrace(Context ctx, GetAlgorithmTraceRequest request, Observer<AlgorithmTrace> observer) {
+        Processor processor = verifyProcessor(request.getInstance(), request.getProcessor());
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlProcessor);
+        Mdb mdb = MdbFactory.getInstance(processor.getInstance());
+        Algorithm a = MdbApi.verifyAlgorithm(mdb, request.getName());
+        AlgorithmManager algMng = verifyAlgorithmManager(processor);
+
+        org.yamcs.algorithms.AlgorithmTrace trace = algMng.getTrace(a);
+        if (trace != null) {
+            observer.complete(trace.toProto());
+        } else {
+            observer.complete(AlgorithmTrace.newBuilder().build());
+        }
+    }
+
+    private CompletableFuture<List<ParameterValue>> doGetParameterValues(Processor processor, User user,
+            List<NamedObjectId> ids,
+            boolean fromCache, long timeout) throws HttpException {
+        try {
+            if (fromCache) {
+                return doGetParameterValuesFromCache(processor, user, ids);
+            } else {
+                return doGetParameterValuesFromRealtime(processor, user, ids, timeout);
+            }
+        } catch (InvalidIdentification e) {
+            // TODO - send the invalid parameters in a parsable form
+            throw new BadRequestException(
+                    "Invalid parameters: " + e.getInvalidParameters().toString());
+        } catch (NoPermissionException e) {
+            throw new ForbiddenException(e.getMessage(), e);
+        }
+    }
+
+    // get the parameters waiting for new values
+    private CompletableFuture<List<ParameterValue>> doGetParameterValuesFromRealtime(Processor processor, User user,
+            List<NamedObjectId> ids, long timeout) throws HttpException, NoPermissionException, InvalidIdentification {
+
+        if (timeout > 60000) {
+            throw new BadRequestException("Invalid timeout specified. Maximum is 60.000 milliseconds");
+        }
+        CompletableFuture<List<ParameterValue>> cf = new CompletableFuture<>();
+
+        ParameterRequestManager prm = processor.getParameterRequestManager();
+
+        // we make the list synchronized because the timeout may expire (and send a partial list to the consumer) at the
+        // same time with some values just coming in and the list expanding.
+        List<ParameterValue> pvals = Collections.synchronizedList(new ArrayList<>());
+
+        ParameterWithIdRequestHelper pwirh = new ParameterWithIdRequestHelper(prm, (subscriptionId, params) -> {
+            if (!cf.isDone()) {
+                for (ParameterValueWithId pvwi : params) {
+                    pvals.add(pvwi.toGbpParameterValue());
+                }
+                // TODO: this may not be correct: if we get a parameter multiple times, we stop here before
+                // receiving all parameters
+                if (pvals.size() == ids.size()) {
+                    cf.complete(pvals);
+                }
+            }
+        });
+
+        int reqId = pwirh.addRequest(ids, user);
+
+        cf.thenApply(pvals1 -> {
+            pwirh.removeRequest(reqId);
+            return pvals1;
+        });
+
+        ScheduledExecutorService exec = YamcsServer.getServer().getThreadPoolExecutor();
+        exec.schedule(() -> cf.complete(pvals), timeout, TimeUnit.MILLISECONDS);
+
+        return cf;
+    }
+
+    private CompletableFuture<List<ParameterValue>> doGetParameterValuesFromCache(Processor processor, User user,
+            List<NamedObjectId> ids) throws NoPermissionException, InvalidIdentification {
+
+        CompletableFuture<List<ParameterValue>> cf = new CompletableFuture<>();
+
+        ParameterRequestManager prm = processor.getParameterRequestManager();
+        List<ParameterValue> pvals = new ArrayList<>();
+        MyConsumer myConsumer = new MyConsumer();
+        ParameterWithIdRequestHelper pwirh = new ParameterWithIdRequestHelper(prm, myConsumer);
+        List<ParameterValueWithId> l;
+        l = pwirh.getValuesFromCache(ids, user);
+        for (ParameterValueWithId pvwi : l) {
+            pvals.add(pvwi.toGbpParameterValue());
+        }
+        cf.complete(pvals);
+        return cf;
+    }
+
+    private static class MyConsumer implements ParameterWithIdConsumer {
+        LinkedBlockingQueue<List<ParameterValueWithId>> queue = new LinkedBlockingQueue<>();
+
+        @Override
+        public void update(int subscriptionId, List<ParameterValueWithId> params) {
+            queue.add(params);
+        }
+    }
+
+    private SoftwareParameterManager verifySoftwareParameterManager(Processor processor, DataSource ds)
+            throws BadRequestException {
+        SoftwareParameterManager mgr = processor.getParameterProcessorManager().getSoftwareParameterManager(ds);
+        if (mgr == null) {
+            throw new BadRequestException(String.format("Cannot set the value of %s parameters"
+                    + " on processor %s", ds, processor.getName()));
+        } else {
+            return mgr;
+        }
+    }
+
+    public static ProcessorInfo toProcessorInfo(Processor processor) {
+        ProcessorInfo pinfo = ManagementGpbHelper.toProcessorInfo(processor);
+        ProcessorInfo.Builder b = ProcessorInfo.newBuilder(pinfo);
+
+        String instance = processor.getInstance();
+        String name = processor.getName();
+
+        for (ProcessorServiceWithConfig serviceWithConfig : processor.getServices()) {
+            b.addServices(ServicesApi.toServiceInfo(serviceWithConfig, instance, name));
+        }
+        return b.build();
+    }
+
+    private void verifyPermissions(boolean persistent, String processorType, User user) throws ForbiddenException {
+        if (!user.hasSystemPrivilege(SystemPrivilege.ControlProcessor)) {
+            if (persistent) {
+                throw new ForbiddenException("No permission to create persistent processors");
+            }
+            if (!"Archive".equals(processorType)) {
+                throw new ForbiddenException("No permission to create processors of type " + processorType);
+            }
+        }
+    }
+
+    public static Processor verifyProcessor(String instance, String processorName) {
+        YamcsServerInstance ysi = InstancesApi.verifyInstanceObj(instance);
+        Processor processor = ysi.getProcessor(processorName);
+        if (processor == null) {
+            throw new NotFoundException("No processor '" + processorName + "' within instance '" + instance + "'");
+        } else {
+            return processor;
+        }
+    }
+
+    private AlgorithmManager verifyAlgorithmManager(Processor processor) {
+        List<AlgorithmManager> l = processor.getServices(AlgorithmManager.class);
+        if (l.size() == 0) {
+            throw new BadRequestException("No AlgorithmManager available for this processor");
+        }
+        return l.get(0);
+    }
+
+}
+```
+
+### `QueuesApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/QueuesApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.Processor;
+import org.yamcs.api.Observer;
+import org.yamcs.commanding.ActiveCommand;
+import org.yamcs.commanding.CommandQueue;
+import org.yamcs.commanding.CommandQueueListener;
+import org.yamcs.commanding.CommandQueueManager;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.management.ManagementService;
+import org.yamcs.protobuf.AbstractQueuesApi;
+import org.yamcs.protobuf.AcceptCommandRequest;
+import org.yamcs.protobuf.BlockQueueRequest;
+import org.yamcs.protobuf.Commanding.CommandQueueEntry;
+import org.yamcs.protobuf.Commanding.CommandQueueEvent;
+import org.yamcs.protobuf.Commanding.CommandQueueEvent.Type;
+import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.Commanding.QueueState;
+import org.yamcs.protobuf.DisableQueueRequest;
+import org.yamcs.protobuf.EnableQueueRequest;
+import org.yamcs.protobuf.GetQueueRequest;
+import org.yamcs.protobuf.ListQueuedCommandsRequest;
+import org.yamcs.protobuf.ListQueuedCommandsResponse;
+import org.yamcs.protobuf.ListQueuesRequest;
+import org.yamcs.protobuf.ListQueuesResponse;
+import org.yamcs.protobuf.RejectCommandRequest;
+import org.yamcs.protobuf.SubscribeQueueEventsRequest;
+import org.yamcs.protobuf.SubscribeQueueStatisticsRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Significance.Levels;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+
+public class QueuesApi extends AbstractQueuesApi<Context> {
+
+    private AuditLog auditLog;
+
+    public QueuesApi(AuditLog auditLog) {
+        this.auditLog = auditLog;
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+        });
+        // Legacy name, remove eventually
+        auditLog.addPrivilegeChecker("QueueApi", user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+        });
+    }
+
+    @Override
+    public void listQueues(Context ctx, ListQueuesRequest request, Observer<ListQueuesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+
+        ListQueuesResponse.Builder response = ListQueuesResponse.newBuilder();
+        List<CommandQueue> queues = new ArrayList<>(mgr.getQueues()); // In definition order
+        for (int i = 0; i < queues.size(); i++) {
+            CommandQueue q = queues.get(i);
+            response.addQueues(toCommandQueueInfo(q, i + 1, true));
+        }
+        observer.complete(response.build());
+    }
+
+    @Override
+    public void getQueue(Context ctx, GetQueueRequest request, Observer<CommandQueueInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        CommandQueue queue = verifyCommandQueue(mgr, request.getQueue());
+
+        int order = mgr.getQueues().indexOf(queue) + 1;
+        CommandQueueInfo info = toCommandQueueInfo(queue, order, true);
+        observer.complete(info);
+    }
+
+    @Override
+    public void subscribeQueueStatistics(Context ctx, SubscribeQueueStatisticsRequest request,
+            Observer<CommandQueueInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+
+        for (CommandQueue q : mgr.getQueues()) {
+            int order = mgr.getQueues().indexOf(q) + 1;
+            CommandQueueInfo info = toCommandQueueInfo(q, order, true);
+            observer.next(info);
+        }
+
+        CommandQueueListener listener = new CommandQueueListener() {
+            @Override
+            public void updateQueue(CommandQueue q) {
+                int order = mgr.getQueues().indexOf(q) + 1;
+                CommandQueueInfo info = toCommandQueueInfo(q, order, false);
+                observer.next(info);
+            }
+        };
+        observer.setCancelHandler(() -> mgr.removeListener(listener));
+        mgr.registerListener(listener);
+    }
+
+    @Override
+    public void subscribeQueueEvents(Context ctx, SubscribeQueueEventsRequest request,
+            Observer<CommandQueueEvent> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+
+        CommandQueueListener listener = new CommandQueueListener() {
+            @Override
+            public void commandAdded(CommandQueue q, ActiveCommand pc) {
+                CommandQueueEntry data = toCommandQueueEntry(q, pc);
+                CommandQueueEvent.Builder evtb = CommandQueueEvent.newBuilder();
+                evtb.setType(Type.COMMAND_ADDED);
+                evtb.setData(data);
+                observer.next(evtb.build());
+            }
+
+            @Override
+            public void commandUpdated(CommandQueue q, ActiveCommand pc) {
+                CommandQueueEntry data = toCommandQueueEntry(q, pc);
+                CommandQueueEvent.Builder evtb = CommandQueueEvent.newBuilder();
+                evtb.setType(Type.COMMAND_UPDATED);
+                evtb.setData(data);
+                observer.next(evtb.build());
+            }
+
+            @Override
+            public void commandRejected(CommandQueue q, ActiveCommand pc) {
+                CommandQueueEntry data = toCommandQueueEntry(q, pc);
+                CommandQueueEvent.Builder evtb = CommandQueueEvent.newBuilder();
+                evtb.setType(Type.COMMAND_REJECTED);
+                evtb.setData(data);
+                observer.next(evtb.build());
+            }
+
+            @Override
+            public void commandSent(CommandQueue q, ActiveCommand pc) {
+                CommandQueueEntry data = toCommandQueueEntry(q, pc);
+                CommandQueueEvent.Builder evtb = CommandQueueEvent.newBuilder();
+                evtb.setType(Type.COMMAND_SENT);
+                evtb.setData(data);
+                observer.next(evtb.build());
+            }
+        };
+        observer.setCancelHandler(() -> mgr.removeListener(listener));
+        mgr.registerListener(listener);
+    }
+
+    @Override
+    public void enableQueue(Context ctx, EnableQueueRequest request, Observer<CommandQueueInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        CommandQueue queue = verifyCommandQueue(mgr, request.getQueue());
+
+        CommandQueue updatedQueue = mgr.setQueueState(queue.getName(), QueueState.ENABLED);
+        int order = mgr.getQueues().indexOf(queue) + 1;
+        CommandQueueInfo info = toCommandQueueInfo(updatedQueue, order, true);
+        observer.complete(info);
+    }
+
+    @Override
+    public void disableQueue(Context ctx, DisableQueueRequest request, Observer<CommandQueueInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        CommandQueue queue = verifyCommandQueue(mgr, request.getQueue());
+
+        CommandQueue updatedQueue = mgr.setQueueState(queue.getName(), QueueState.DISABLED);
+        int order = mgr.getQueues().indexOf(queue) + 1;
+        CommandQueueInfo info = toCommandQueueInfo(updatedQueue, order, true);
+        observer.complete(info);
+    }
+
+    @Override
+    public void blockQueue(Context ctx, BlockQueueRequest request, Observer<CommandQueueInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        CommandQueue queue = verifyCommandQueue(mgr, request.getQueue());
+
+        CommandQueue updatedQueue = mgr.setQueueState(queue.getName(), QueueState.BLOCKED);
+        int order = mgr.getQueues().indexOf(queue) + 1;
+        CommandQueueInfo info = toCommandQueueInfo(updatedQueue, order, true);
+        observer.complete(info);
+    }
+
+    private CommandQueueManager verifyCommandQueueManager(Processor processor) throws BadRequestException {
+        ManagementService managementService = ManagementService.getInstance();
+        CommandQueueManager mgr = managementService.getCommandQueueManager(processor);
+        if (mgr == null) {
+            throw new BadRequestException("Commanding not enabled for processor '" + processor.getName() + "'");
+        }
+        return mgr;
+    }
+
+    private CommandQueue verifyCommandQueue(CommandQueueManager mgr, String queueName) throws NotFoundException {
+        CommandQueue queue = mgr.getQueue(queueName);
+        if (queue == null) {
+            String processorName = mgr.getChannelName();
+            String instance = mgr.getInstance();
+            throw new NotFoundException(
+                    "No queue named '" + queueName + "' (processor: '" + instance + "/" + processorName + "')");
+        } else {
+            return queue;
+        }
+    }
+
+    @Override
+    public void listQueuedCommands(Context ctx, ListQueuedCommandsRequest request,
+            Observer<ListQueuedCommandsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        CommandQueue queue = verifyCommandQueue(mgr, request.getQueue());
+
+        ListQueuedCommandsResponse.Builder responseb = ListQueuedCommandsResponse.newBuilder();
+        for (ActiveCommand pc : queue.getCommands()) {
+            CommandQueueEntry qEntry = toCommandQueueEntry(queue, pc);
+            responseb.addCommands(qEntry);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void acceptCommand(Context ctx, AcceptCommandRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        String commandId = request.getCommand();
+        PreparedCommand pc = mgr.sendCommand(commandId);
+
+        auditLog.addRecord(ctx, request, String.format(
+                "Command '%s' accepted for processor '%s' (id: %s)",
+                pc.getCommandName(), processor.getName(), pc.getId()));
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void rejectCommand(Context ctx, RejectCommandRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlCommandQueue);
+        Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+        CommandQueueManager mgr = verifyCommandQueueManager(processor);
+        String commandId = request.getCommand();
+        String username = ctx.user.getName();
+        PreparedCommand pc = mgr.rejectCommand(commandId, username);
+
+        auditLog.addRecord(ctx, request, String.format(
+                "Command '%s' rejected for processor '%s' (id: %s)",
+                pc.getCommandName(), processor.getName(), pc.getId()));
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    private CommandQueueInfo toCommandQueueInfo(CommandQueue queue, int order, boolean detail) {
+        CommandQueueInfo.Builder b = CommandQueueInfo.newBuilder();
+        b.setInstance(queue.getProcessor().getInstance());
+        b.setProcessorName(queue.getProcessor().getName());
+        b.setName(queue.getName());
+        b.setState(queue.getState());
+        b.setAcceptedCommandsCount(queue.getNbSentCommands());
+        b.setRejectedCommandsCount(queue.getNbRejectedCommands());
+        b.setOrder(order);
+        b.addAllUsers(queue.getUsers());
+        b.addAllGroups(queue.getGroups());
+        var tcPatterns = new ArrayList<>(queue.getTcPatterns())
+                .stream().map(p -> p.pattern())
+                .sorted()
+                .collect(Collectors.toList());
+        b.addAllTcPatterns(tcPatterns);
+
+        if (queue.getMinLevel() != Levels.NONE) {
+            b.setMinLevel(XtceToGpbAssembler.toSignificanceLevelType(queue.getMinLevel()));
+        }
+        if (detail) {
+            for (ActiveCommand activeCommand : queue.getCommands()) {
+                CommandQueueEntry qEntry = toCommandQueueEntry(queue, activeCommand);
+                b.addEntries(qEntry);
+            }
+        }
+        return b.build();
+    }
+
+    private static CommandQueueEntry toCommandQueueEntry(CommandQueue q, ActiveCommand activeCommand) {
+        Processor c = q.getProcessor();
+        PreparedCommand pc = activeCommand.getPreparedCommand();
+        CommandQueueEntry.Builder entryb = CommandQueueEntry.newBuilder()
+                .setInstance(q.getProcessor().getInstance())
+                .setProcessorName(c.getName())
+                .setQueueName(q.getName())
+                .setId(pc.getId())
+                .setOrigin(pc.getOrigin())
+                .setSequenceNumber(pc.getSequenceNumber())
+                .setCommandName(pc.getCommandName())
+                .setPendingTransmissionConstraints(activeCommand.isPendingTransmissionConstraints())
+                .setGenerationTime(TimeEncoding.toProtobufTimestamp(pc.getGenerationTime()))
+                .setUsername(pc.getUsername())
+                .addAllAssignments(pc.getAssignments());
+
+        if (pc.getBinary() != null) {
+            entryb.setBinary(ByteString.copyFrom(pc.getBinary()));
+        }
+
+        if (pc.getComment() != null) {
+            entryb.setComment(pc.getComment());
+        }
+
+        return entryb.build();
+    }
+}
+```
+
+### `ReplayFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ReplayFactory.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.archive.ReplayOptions;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.ServiceUnavailableException;
+import org.yamcs.http.api.AbstractPaginatedParameterRetrievalConsumer.PaginatedMultiParameterRetrievalConsumer;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.ParameterWithIdConsumer;
+import org.yamcs.parameter.ParameterWithIdRequestHelper;
+import org.yamcs.parameterarchive.ConsumerAbortException;
+import org.yamcs.security.User;
+
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service.Listener;
+import com.google.common.util.concurrent.Service.State;
+
+/**
+ * Abstracts some common logic for creating replays
+ */
+public class ReplayFactory {
+
+    static AtomicInteger count = new AtomicInteger();
+    private static int MAX_CONCURRENT_REPLAYS = 2 * Runtime.getRuntime().availableProcessors();
+    static AtomicInteger concurrentCount = new AtomicInteger();
+
+    /**
+     * launches a replay will only return when the replay is done (either through success or through error)
+     */
+    public static ReplayWrapper replay(String instance, User user, ReplayOptions replayRequest,
+            PaginatedMultiParameterRetrievalConsumer l) {
+        int n = concurrentCount.incrementAndGet();
+
+        if (n > MAX_CONCURRENT_REPLAYS) {
+            concurrentCount.decrementAndGet();
+            throw new ServiceUnavailableException("Maximum number of concurrent replays has been reached");
+        }
+
+        try {
+            Processor processor = ProcessorFactory.create(instance, "api_replay" + count.incrementAndGet(),
+                    "ArchiveRetrieval", "internal", replayRequest);
+            ReplayWrapper wrapper = new ReplayWrapper(l, processor);
+
+            ParameterWithIdRequestHelper pidrm = new ParameterWithIdRequestHelper(
+                    processor.getParameterRequestManager(),
+                    wrapper);
+            pidrm.addRequest(replayRequest.getParameterRequest().getNameFilterList(), user);
+            processor.startAsync();
+            processor.addListener(new Listener() {
+                @Override
+                public void terminated(State from) {
+                    concurrentCount.decrementAndGet();
+                }
+
+                @Override
+                public void failed(State from, Throwable failure) {
+                    concurrentCount.decrementAndGet();
+                }
+            }, MoreExecutors.directExecutor());
+
+            return wrapper;
+
+        } catch (Exception e) {
+            throw new InternalServerErrorException("Exception creating the replay", e);
+        }
+    }
+
+    private static class ReplayWrapper implements ParameterWithIdConsumer {
+        PaginatedMultiParameterRetrievalConsumer wrappedListener;
+        Processor processor;
+
+        ReplayWrapper(PaginatedMultiParameterRetrievalConsumer l, Processor processor) {
+            this.wrappedListener = l;
+            this.processor = processor;
+            // processor.addListener(l, MoreExecutors.directExecutor());
+        }
+
+        @Override
+        public void update(int subscriptionId, List<ParameterValueWithId> params) {
+            try {
+                wrappedListener.accept(params);
+            } catch (ConsumerAbortException e) {
+                processor.quit();
+            }
+        }
+    }
+
+}
+```
+
+### `ReplicationApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ReplicationApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.protobuf.AbstractReplicationApi;
+import org.yamcs.protobuf.ReplicationInfo;
+import org.yamcs.protobuf.ReplicationMasterInfo;
+import org.yamcs.protobuf.ReplicationSlaveInfo;
+import org.yamcs.replication.MasterChannelHandler;
+import org.yamcs.replication.ReplicationClient;
+import org.yamcs.replication.ReplicationMaster;
+import org.yamcs.replication.ReplicationMaster.SlaveServer;
+import org.yamcs.replication.ReplicationServer;
+import org.yamcs.replication.ReplicationSlave;
+import org.yamcs.security.SystemPrivilege;
+
+import com.google.protobuf.Empty;
+
+import io.netty.channel.Channel;
+
+public class ReplicationApi extends AbstractReplicationApi<Context> {
+
+    @Override
+    public void getReplicationInfo(Context ctx, Empty request, Observer<ReplicationInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        observer.complete(toReplicationInfo());
+    }
+
+    @Override
+    public void subscribeReplicationInfo(Context ctx, Empty request, Observer<ReplicationInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        var yamcs = YamcsServer.getServer();
+        var future = yamcs.getThreadPoolExecutor().scheduleAtFixedRate(() -> {
+            ReplicationInfo info = toReplicationInfo();
+            observer.next(info);
+        }, 0, 1, TimeUnit.SECONDS);
+
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    private ReplicationInfo toReplicationInfo() {
+        List<ReplicationMasterInfo> masters = new ArrayList<>();
+        List<ReplicationSlaveInfo> slaves = new ArrayList<>();
+
+        for (YamcsServerInstance ysi : YamcsServer.getInstances()) {
+            for (ReplicationMaster master : ysi.getServices(ReplicationMaster.class)) {
+                masters.addAll(toReplicationMasterInfo(master));
+            }
+            for (ReplicationSlave slave : ysi.getServices(ReplicationSlave.class)) {
+                slaves.addAll(toReplicationSlaveInfo(slave));
+            }
+        }
+        Collections.sort(masters, (a, b) -> a.getInstance().compareTo(b.getInstance()));
+        Collections.sort(masters, (a, b) -> a.getInstance().compareTo(b.getInstance()));
+
+        ReplicationInfo.Builder infob = ReplicationInfo.newBuilder()
+                .addAllMasters(masters)
+                .addAllSlaves(slaves);
+        return infob.build();
+    }
+
+    private List<ReplicationMasterInfo> toReplicationMasterInfo(ReplicationMaster master) {
+        List<ReplicationMasterInfo> result = new ArrayList<>();
+
+        List<String> streamNames = new ArrayList<>(master.getStreamNames());
+        Collections.sort(streamNames);
+
+        long txid = master.getTxId();
+
+        if (master.isTcpClient()) {
+            for (SlaveServer slaveServer : master.getSlaveServers()) {
+                ReplicationMasterInfo.Builder masterb = ReplicationMasterInfo.newBuilder()
+                        .setInstance(master.getYamcsInstance())
+                        .addAllStreams(streamNames)
+                        .setPush(true)
+                        .setPushTo(slaveServer.getInstance())
+                        .setLocalTx(txid);
+
+                ReplicationClient tcpClient = slaveServer.getTcpClient();
+                if (tcpClient != null) {
+                    Channel ch = tcpClient.getChannel();
+                    if (ch != null && ch.isActive()) {
+                        InetSocketAddress address = (InetSocketAddress) ch.localAddress();
+                        masterb.setLocalAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+                        MasterChannelHandler handler = ch.pipeline().get(MasterChannelHandler.class);
+                        if (handler != null) {
+                            masterb.setNextTx(handler.getNextTxId());
+                        }
+                    }
+                }
+
+                masterb.setRemoteAddress(slaveServer.getHost() + ":" + slaveServer.getPort());
+                result.add(masterb.build());
+            }
+        } else {
+            ReplicationServer server = getReplicationServer();
+            if (server != null) {
+                for (Channel ch : server.getActiveChannels(master)) {
+                    ReplicationMasterInfo.Builder masterb = ReplicationMasterInfo.newBuilder()
+                            .setInstance(master.getYamcsInstance())
+                            .addAllStreams(streamNames)
+                            .setPush(false)
+                            .setLocalTx(txid);
+
+                    InetSocketAddress address = (InetSocketAddress) ch.localAddress();
+                    masterb.setLocalAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+
+                    address = (InetSocketAddress) ch.remoteAddress();
+                    masterb.setRemoteAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+
+                    MasterChannelHandler handler = ch.pipeline().get(MasterChannelHandler.class);
+                    if (handler != null) {
+                        masterb.setNextTx(handler.getNextTxId());
+                    }
+
+                    result.add(masterb.build());
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<ReplicationSlaveInfo> toReplicationSlaveInfo(ReplicationSlave slave) {
+        List<ReplicationSlaveInfo> result = new ArrayList<>();
+
+        List<String> streamNames = new ArrayList<>(slave.getStreamNames());
+        Collections.sort(streamNames);
+
+        long txid = slave.getTxId();
+
+        if (slave.isTcpClient()) {
+            ReplicationSlaveInfo.Builder slaveb = ReplicationSlaveInfo.newBuilder()
+                    .setInstance(slave.getYamcsInstance())
+                    .addAllStreams(streamNames)
+                    .setPush(false)
+                    .setPullFrom(slave.getMasterInstance())
+                    .setTx(txid);
+
+            ReplicationClient tcpClient = slave.getTcpClient();
+            if (tcpClient != null) {
+                Channel ch = tcpClient.getChannel();
+                if (ch != null && ch.isActive()) {
+                    InetSocketAddress address = (InetSocketAddress) ch.localAddress();
+                    slaveb.setLocalAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+                }
+            }
+
+            slaveb.setRemoteAddress(slave.getMasterHost() + ":" + slave.getMasterPort());
+            result.add(slaveb.build());
+        } else {
+            ReplicationServer server = getReplicationServer();
+            if (server != null) {
+                ReplicationSlaveInfo slavePrototype = ReplicationSlaveInfo.newBuilder()
+                        .setInstance(slave.getYamcsInstance())
+                        .addAllStreams(streamNames)
+                        .setPush(true)
+                        .setTx(txid)
+                        .buildPartial();
+
+                List<Channel> activeChannels = server.getActiveChannels(slave);
+                for (Channel ch : activeChannels) {
+                    ReplicationSlaveInfo.Builder slaveb = ReplicationSlaveInfo.newBuilder(slavePrototype);
+
+                    InetSocketAddress address = (InetSocketAddress) ch.localAddress();
+                    slaveb.setLocalAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+
+                    address = (InetSocketAddress) ch.remoteAddress();
+                    slaveb.setRemoteAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+
+                    result.add(slaveb.build());
+                }
+                if (activeChannels.isEmpty()) {
+                    result.add(ReplicationSlaveInfo.newBuilder(slavePrototype).build());
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private static ReplicationServer getReplicationServer() {
+        YamcsServer yamcs = YamcsServer.getServer();
+        return yamcs.getGlobalService(ReplicationServer.class);
+    }
+}
+```
+
+### `RocksDbApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/RocksDbApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.MediaType;
+import org.yamcs.http.audit.AuditLog;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.AbstractRocksDbApi;
+import org.yamcs.protobuf.BackupDatabaseRequest;
+import org.yamcs.protobuf.CompactDatabaseRequest;
+import org.yamcs.protobuf.DescribeDatabaseRequest;
+import org.yamcs.protobuf.ListRocksDbDatabasesResponse;
+import org.yamcs.protobuf.ListRocksDbTablespacesResponse;
+import org.yamcs.protobuf.RocksDbDatabaseInfo;
+import org.yamcs.protobuf.RocksDbTablespaceInfo;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.yarch.BackupUtils;
+import org.yamcs.yarch.rocksdb.RDBFactory;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.rocksdb.YRDB;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+
+public class RocksDbApi extends AbstractRocksDbApi<Context> {
+
+    private static final Log log = new Log(RocksDbApi.class);
+
+    public RocksDbApi(AuditLog auditLog) {
+        auditLog.addPrivilegeChecker(getClass().getSimpleName(), user -> {
+            return user.hasSystemPrivilege(SystemPrivilege.ControlArchiving);
+        });
+    }
+
+    @Override
+    public void listTablespaces(Context ctx, Empty request, Observer<ListRocksDbTablespacesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        List<RocksDbTablespaceInfo> unsorted = new ArrayList<>();
+        RdbStorageEngine storageEngine = RdbStorageEngine.getInstance();
+        for (Tablespace tblsp : storageEngine.getTablespaces().values()) {
+            RocksDbTablespaceInfo.Builder tablespaceb = RocksDbTablespaceInfo.newBuilder()
+                    .setName(tblsp.getName())
+                    .setDataDir(tblsp.getDataDir());
+            RDBFactory rdbf = tblsp.getRdbFactory();
+            for (String dbPath : rdbf.getOpenDbPaths()) {
+                RocksDbDatabaseInfo database = toRocksDbDatabaseInfo(tblsp, dbPath);
+                tablespaceb.addDatabases(database);
+            }
+            unsorted.add(tablespaceb.build());
+        }
+
+        ListRocksDbTablespacesResponse.Builder responseb = ListRocksDbTablespacesResponse.newBuilder();
+        Collections.sort(unsorted, (t1, t2) -> t1.getName().compareTo(t2.getName()));
+        responseb.addAllTablespaces(unsorted);
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void backupDatabase(Context ctx, BackupDatabaseRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        Tablespace tablespace = verifyTablespace(request.getTablespace());
+        String dbpath = request.hasDbpath() ? request.getDbpath() : null;
+
+        if (!request.hasBackupDir()) {
+            throw new BadRequestException("No backup directory specified");
+        }
+
+        String backupDir = request.getBackupDir();
+        try {
+            BackupUtils.verifyBackupDirectory(backupDir, false);
+        } catch (Exception e1) {
+            throw new BadRequestException(e1.toString());
+        }
+
+        RDBFactory rdbFactory = tablespace.getRdbFactory();
+
+        CompletableFuture<Void> cf = (dbpath == null) ? rdbFactory.doBackup(backupDir)
+                : rdbFactory.doBackup(dbpath, backupDir);
+
+        cf.whenComplete((r, e) -> {
+            if (e != null) {
+                observer.completeExceptionally(e);
+            } else {
+                observer.complete(Empty.getDefaultInstance());
+            }
+        });
+    }
+
+    @Override
+    public void listDatabases(Context ctx, Empty request, Observer<ListRocksDbDatabasesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        List<RocksDbDatabaseInfo> unsorted = new ArrayList<>();
+        RdbStorageEngine storageEngine = RdbStorageEngine.getInstance();
+        for (Tablespace tblsp : storageEngine.getTablespaces().values()) {
+            RDBFactory rdbf = tblsp.getRdbFactory();
+            for (String dbPath : rdbf.getOpenDbPaths()) {
+                RocksDbDatabaseInfo database = toRocksDbDatabaseInfo(tblsp, dbPath);
+                unsorted.add(database);
+            }
+        }
+
+        ListRocksDbDatabasesResponse.Builder responseb = ListRocksDbDatabasesResponse.newBuilder();
+        Collections.sort(unsorted, (db1, db2) -> {
+            if (db1.getTablespace().equals(db2.getTablespace())) {
+                return db1.getDbPath().compareTo(db2.getDbPath());
+            } else {
+                return db1.getTablespace().compareTo(db2.getTablespace());
+            }
+        });
+        responseb.addAllDatabases(unsorted);
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void compactDatabase(Context ctx, CompactDatabaseRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+        Tablespace tablespace = verifyTablespace(request.getTablespace());
+        String dbpath = request.hasDbpath() ? request.getDbpath() : null;
+
+        RDBFactory rdbFactory = tablespace.getRdbFactory();
+        YRDB yrdb;
+        if (dbpath == null) {
+            yrdb = rdbFactory.getOpenRdb();
+        } else {
+            yrdb = rdbFactory.getOpenRdb(dbpath);
+            if (yrdb == null) {
+                yrdb = rdbFactory.getOpenRdb("/" + dbpath);
+            }
+        }
+
+        if (yrdb == null) {
+            if (dbpath == null) {
+                throw new BadRequestException("Root database not open for tablespace " + tablespace.getName());
+            } else {
+                throw new BadRequestException("No open database " + dbpath + " for tablespace " + tablespace.getName());
+            }
+        }
+
+        try {
+            String cfName = request.hasCfname() ? request.getCfname() : null;
+            yrdb.compactRange(cfName, null, null);
+            observer.complete(Empty.getDefaultInstance());
+        } catch (RocksDBException e) {
+            log.error("Error when compacting database", e);
+            observer.completeExceptionally(new InternalServerErrorException(e));
+        } finally {
+            rdbFactory.dispose(yrdb);
+        }
+    }
+
+    @Override
+    public void describeRocksDb(Context ctx, Empty request, Observer<HttpBody> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        StringBuilder sb = new StringBuilder();
+        for (Tablespace tblsp : rse.getTablespaces().values()) {
+            sb.append("Tablespace: ").append(tblsp.getName()).append("\n");
+            sb.append("  dataDir: ").append(tblsp.getDataDir()).append("\n");
+            sb.append("  open databases: ").append("\n");
+            RDBFactory rdbf = tblsp.getRdbFactory();
+            for (String s : rdbf.getOpenDbPaths()) {
+                if (s.isEmpty()) {
+                    s = "<root>";
+                }
+                sb.append("    ").append(s).append("\n");
+            }
+        }
+
+        HttpBody body = HttpBody.newBuilder()
+                .setContentType(MediaType.PLAIN_TEXT.toString())
+                .setData(ByteString.copyFrom(sb.toString().getBytes()))
+                .build();
+
+        observer.complete(body);
+    }
+
+    @Override
+    public void describeDatabase(Context ctx, DescribeDatabaseRequest request, Observer<HttpBody> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+        Tablespace tablespace = verifyTablespace(request.getTablespace());
+        String dbpath = request.getDbpath();
+
+        RDBFactory rdbFactory = tablespace.getRdbFactory();
+        YRDB yrdb;
+        if (dbpath == null) {
+            yrdb = rdbFactory.getOpenRdb();
+        } else {
+            yrdb = rdbFactory.getOpenRdb(dbpath);
+            if (yrdb == null) {
+                yrdb = rdbFactory.getOpenRdb("/" + dbpath);
+            }
+        }
+        if (yrdb == null) {
+            if (dbpath == null) {
+                throw new BadRequestException("Root database not open for tablespace " + tablespace.getName());
+            } else {
+                throw new BadRequestException("No open database " + dbpath + " for tablespace " + tablespace.getName());
+            }
+        }
+
+        try {
+            String s = yrdb.getProperties();
+
+            HttpBody body = HttpBody.newBuilder()
+                    .setContentType(MediaType.PLAIN_TEXT.toString())
+                    .setData(ByteString.copyFrom(s.getBytes()))
+                    .build();
+
+            observer.complete(body);
+        } catch (RocksDBException e) {
+            log.error("Error when getting database properties", e);
+            observer.completeExceptionally(e);
+        } finally {
+            rdbFactory.dispose(yrdb);
+        }
+    }
+
+    private Tablespace verifyTablespace(String tablespaceName) throws HttpException {
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        Tablespace tablespace = rse.getTablespace(tablespaceName);
+        if (tablespace == null) {
+            throw new BadRequestException("No tablespace by name '" + tablespaceName + "'");
+        }
+        return tablespace;
+    }
+
+    private static RocksDbDatabaseInfo toRocksDbDatabaseInfo(Tablespace tablespace, String dbPath) {
+        RocksDbDatabaseInfo.Builder databaseb = RocksDbDatabaseInfo.newBuilder()
+                .setTablespace(tablespace.getName())
+                .setDataDir(tablespace.getDataDir())
+                .setDbPath(dbPath);
+        return databaseb.build();
+    }
+}
+```
+
+### `ServerApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ServerApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.CommandOption;
+import org.yamcs.Plugin;
+import org.yamcs.PluginManager;
+import org.yamcs.PluginMetadata;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.YamcsVersion;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpRequestHandler;
+import org.yamcs.http.HttpServer;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.MediaType;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.Route;
+import org.yamcs.http.RpcDescriptor;
+import org.yamcs.http.Topic;
+import org.yamcs.http.WebSocketFrameHandler;
+import org.yamcs.protobuf.AbstractServerApi;
+import org.yamcs.protobuf.ClientConnectionInfo;
+import org.yamcs.protobuf.ClientConnectionInfo.HttpRequestInfo;
+import org.yamcs.protobuf.GetServerInfoResponse;
+import org.yamcs.protobuf.GetServerInfoResponse.CommandOptionInfo;
+import org.yamcs.protobuf.GetServerInfoResponse.PluginInfo;
+import org.yamcs.protobuf.GetThreadRequest;
+import org.yamcs.protobuf.HttpTraffic;
+import org.yamcs.protobuf.ListRoutesResponse;
+import org.yamcs.protobuf.ListThreadsRequest;
+import org.yamcs.protobuf.ListThreadsResponse;
+import org.yamcs.protobuf.ListTopicsResponse;
+import org.yamcs.protobuf.ProcessInfo;
+import org.yamcs.protobuf.RootDirectory;
+import org.yamcs.protobuf.RouteInfo;
+import org.yamcs.protobuf.SystemInfo;
+import org.yamcs.protobuf.ThreadGroupInfo;
+import org.yamcs.protobuf.ThreadInfo;
+import org.yamcs.protobuf.TopicInfo;
+import org.yamcs.protobuf.TraceElementInfo;
+import org.yamcs.security.SystemPrivilege;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Durations;
+
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.traffic.ChannelTrafficShapingHandler;
+import io.netty.handler.traffic.TrafficCounter;
+
+public class ServerApi extends AbstractServerApi<Context> {
+
+    private HttpServer httpServer;
+
+    public ServerApi(HttpServer httpServer) {
+        this.httpServer = httpServer;
+    }
+
+    @Override
+    public void subscribeSystemInfo(Context ctx, Empty request, Observer<SystemInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+        var future = exec.scheduleAtFixedRate(() -> {
+            var systemInfo = toSystemInfo();
+            observer.next(systemInfo);
+        }, 0, 5, TimeUnit.SECONDS);
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    @Override
+    public void getSystemInfo(Context ctx, Empty request, Observer<SystemInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        var systemInfo = toSystemInfo();
+        observer.complete(systemInfo);
+    }
+
+    @Override
+    public void getServerInfo(Context ctx, Empty request, Observer<GetServerInfoResponse> observer) {
+        GetServerInfoResponse.Builder responseb = GetServerInfoResponse.newBuilder();
+        if (YamcsVersion.VERSION != null) {
+            responseb.setYamcsVersion(YamcsVersion.VERSION);
+        }
+        if (YamcsVersion.REVISION != null) {
+            responseb.setRevision(YamcsVersion.REVISION);
+        }
+        responseb.setServerId(YamcsServer.getServer().getServerId());
+
+        PluginManager pluginManager = YamcsServer.getServer().getPluginManager();
+        List<Plugin> plugins = new ArrayList<>(pluginManager.getPlugins());
+        List<PluginInfo> pluginInfos = new ArrayList<>();
+        for (Plugin plugin : plugins) {
+            PluginMetadata meta = pluginManager.getMetadata(plugin.getClass());
+            PluginInfo.Builder pluginb = PluginInfo.newBuilder()
+                    .setName(meta.getName());
+            if (meta.getVersion() != null) {
+                pluginb.setVersion(meta.getVersion());
+            }
+            if (meta.getOrganization() != null) {
+                pluginb.setVendor(meta.getOrganization());
+            }
+            if (meta.getDescription() != null) {
+                pluginb.setDescription(meta.getDescription());
+            }
+            pluginInfos.add(pluginb.build());
+        }
+
+        for (CommandOption option : YamcsServer.getServer().getCommandOptions()) {
+            responseb.addCommandOptions(toCommandOptionInfo(option));
+        }
+
+        pluginInfos.sort((p1, p2) -> p1.getName().compareTo(p2.getName()));
+        responseb.addAllPlugins(pluginInfos);
+
+        // Property to be interpreted at client's leisure.
+        // Concept of defaultInstance could be moved into YamcsServer
+        // at some point, but there's for now unsufficient support.
+        // (would need websocket adjustments, which are now
+        // instance-specific).
+        YConfiguration yconf = YamcsServer.getServer().getConfig();
+        if (yconf.containsKey("defaultInstance")) {
+            responseb.setDefaultYamcsInstance(yconf.getString("defaultInstance"));
+        } else {
+            List<YamcsServerInstance> instances = YamcsServer.getInstances();
+            if (!instances.isEmpty()) {
+                YamcsServerInstance anyInstance = instances.iterator().next();
+                responseb.setDefaultYamcsInstance(anyInstance.getName());
+            }
+        }
+
+        observer.complete(responseb.build());
+    }
+
+    public static CommandOptionInfo toCommandOptionInfo(CommandOption option) {
+        CommandOptionInfo.Builder infob = CommandOptionInfo.newBuilder();
+        infob.setId(option.getId());
+        infob.setType(option.getType().name());
+        if (option.getVerboseName() != null) {
+            infob.setVerboseName(option.getVerboseName());
+        }
+        if (option.getHelp() != null) {
+            infob.setHelp(option.getHelp());
+        }
+        return infob.build();
+    }
+
+    @Override
+    public void listRoutes(Context ctx, Empty request, Observer<ListRoutesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        List<RouteInfo> result = new ArrayList<>();
+        for (Route route : httpServer.getRoutes()) {
+            RouteInfo.Builder routeb = RouteInfo.newBuilder();
+            routeb.setHttpMethod(route.getHttpMethod().toString());
+            routeb.setUrl(httpServer.getContextPath() + route.getUriTemplate());
+            routeb.setRequestCount(route.getRequestCount());
+            routeb.setErrorCount(route.getErrorCount());
+            RpcDescriptor descriptor = route.getDescriptor();
+            if (descriptor != null) {
+                routeb.setService(descriptor.getService());
+                routeb.setMethod(descriptor.getMethod());
+                routeb.setInputType(descriptor.getInputType().getName());
+                routeb.setOutputType(descriptor.getOutputType().getName());
+                if (descriptor.getDescription() != null) {
+                    routeb.setDescription(descriptor.getDescription());
+                }
+                if (route.isDeprecated()) {
+                    routeb.setDeprecated(true);
+                }
+                if (route.getLogFormat() != null) {
+                    routeb.setLogFormat(route.getLogFormat());
+                }
+            }
+            result.add(routeb.build());
+        }
+
+        Collections.sort(result, (r1, r2) -> {
+            int rc = r1.getUrl().compareToIgnoreCase(r2.getUrl());
+            return rc != 0 ? rc : r1.getMethod().compareTo(r2.getMethod());
+        });
+
+        ListRoutesResponse.Builder responseb = ListRoutesResponse.newBuilder();
+        responseb.addAllRoutes(result);
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listTopics(Context ctx, Empty request, Observer<ListTopicsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        List<TopicInfo> result = new ArrayList<>();
+        for (Topic topic : httpServer.getTopics()) {
+            TopicInfo.Builder topicb = TopicInfo.newBuilder()
+                    .setTopic(topic.getName());
+            RpcDescriptor descriptor = topic.getDescriptor();
+            if (descriptor != null) {
+                topicb.setService(descriptor.getService());
+                topicb.setMethod(descriptor.getMethod());
+                topicb.setInputType(descriptor.getInputType().getName());
+                topicb.setOutputType(descriptor.getOutputType().getName());
+                if (descriptor.getDescription() != null) {
+                    topicb.setDescription(descriptor.getDescription());
+                }
+                if (topic.isDeprecated()) {
+                    topicb.setDeprecated(true);
+                }
+            }
+            result.add(topicb.build());
+        }
+
+        Collections.sort(result, (r1, r2) -> {
+            return r1.getTopic().compareToIgnoreCase(r2.getTopic());
+        });
+
+        ListTopicsResponse.Builder responseb = ListTopicsResponse.newBuilder();
+        responseb.addAllTopics(result);
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getHttpTraffic(Context ctx, Empty request, Observer<HttpTraffic> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        observer.complete(toHttpTraffic());
+    }
+
+    @Override
+    public void subscribeHttpTraffic(Context ctx, Empty request, Observer<HttpTraffic> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+        var future = exec.scheduleAtFixedRate(() -> {
+            var httpTraffic = toHttpTraffic();
+            observer.next(httpTraffic);
+        }, 0, 5, TimeUnit.SECONDS);
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    @Override
+    public void listThreads(Context ctx, ListThreadsRequest request, Observer<ListThreadsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+
+        ListThreadsResponse.Builder responseb = ListThreadsResponse.newBuilder();
+
+        // Try to acquire group information only available from the actual Thread object
+        Map<Long, ThreadGroupInfo> groupsById = new HashMap<>();
+        for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            ThreadGroup group = thread.getThreadGroup();
+            if (group != null) {
+                groupsById.put(thread.getId(), toThreadGroupInfo(group));
+            }
+        }
+
+        // Use MXBean for the actual dump, inject group info if (still) matched
+        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        for (java.lang.management.ThreadInfo managementInfo : bean.dumpAllThreads(false, false)) {
+            ThreadGroupInfo group = groupsById.get(managementInfo.getThreadId());
+            responseb.addThreads(toThreadInfo(managementInfo, group));
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void dumpThreads(Context ctx, Empty request, Observer<HttpBody> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+
+        ByteString.Output out = ByteString.newOutput();
+        ThreadMXBean mxbean = ManagementFactory.getThreadMXBean();
+        try {
+            for (java.lang.management.ThreadInfo threadInfo : mxbean.dumpAllThreads(false, false)) {
+                String dump = describeThread(threadInfo);
+                out.write(dump.getBytes(StandardCharsets.UTF_8));
+            }
+        } catch (IOException e) {
+            observer.completeExceptionally(e);
+            return;
+        }
+
+        String timestamp = DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        observer.next(HttpBody.newBuilder()
+                .setFilename("thread-dump-" + timestamp.replace(':', '-') + ".txt")
+                .setContentType(MediaType.PLAIN_TEXT.toString())
+                .setData(out.toByteString())
+                .build());
+    }
+
+    // Same as ThreadInfo.toString but without stack trace limitation
+    private String describeThread(java.lang.management.ThreadInfo thread) {
+        StringBuilder sb = new StringBuilder("\"" + thread.getThreadName() + "\"" +
+                " Id=" + thread.getThreadId() + " " +
+                thread.getThreadState());
+        if (thread.getLockName() != null) {
+            sb.append(" on " + thread.getLockName());
+        }
+        if (thread.getLockOwnerName() != null) {
+            sb.append(" owned by \"" + thread.getLockOwnerName() +
+                    "\" Id=" + thread.getLockOwnerId());
+        }
+        if (thread.isSuspended()) {
+            sb.append(" (suspended)");
+        }
+        if (thread.isInNative()) {
+            sb.append(" (in native)");
+        }
+        sb.append('\n');
+
+        StackTraceElement[] stackTrace = thread.getStackTrace();
+        for (int i = 0; i < stackTrace.length && i < stackTrace.length; i++) {
+            StackTraceElement ste = stackTrace[i];
+            sb.append("\tat " + ste.toString());
+            sb.append('\n');
+            if (i == 0 && thread.getLockInfo() != null) {
+                Thread.State ts = thread.getThreadState();
+                switch (ts) {
+                case BLOCKED:
+                    sb.append("\t-  blocked on " + thread.getLockInfo());
+                    sb.append('\n');
+                    break;
+                case WAITING:
+                    sb.append("\t-  waiting on " + thread.getLockInfo());
+                    sb.append('\n');
+                    break;
+                case TIMED_WAITING:
+                    sb.append("\t-  waiting on " + thread.getLockInfo());
+                    sb.append('\n');
+                    break;
+                default:
+                }
+            }
+        }
+
+        return sb.append('\n').toString();
+    }
+
+    @Override
+    public void getThread(Context ctx, GetThreadRequest request, Observer<ThreadInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadSystemInfo);
+
+        ThreadGroupInfo groupInfo = null;
+        for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            if (thread.getId() == request.getId()) {
+                ThreadGroup group = thread.getThreadGroup();
+                if (group != null) {
+                    groupInfo = toThreadGroupInfo(group);
+                }
+                break;
+            }
+        }
+
+        ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        java.lang.management.ThreadInfo managementInfo = bean.getThreadInfo(request.getId(), Integer.MAX_VALUE);
+        if (managementInfo != null) {
+            observer.complete(toThreadInfo(managementInfo, groupInfo));
+        } else {
+            throw new NotFoundException("No thread with ID " + request.getId());
+        }
+    }
+
+    private ThreadGroupInfo toThreadGroupInfo(ThreadGroup group) {
+        ThreadGroupInfo.Builder b = ThreadGroupInfo.newBuilder()
+                .setName(group.getName());
+        ThreadGroup parent = group.getParent();
+        if (parent != null) {
+            b.setParent(toThreadGroupInfo(parent));
+        }
+        return b.build();
+    }
+
+    private ThreadInfo toThreadInfo(java.lang.management.ThreadInfo threadInfo, ThreadGroupInfo group) {
+        ThreadInfo.Builder threadb = ThreadInfo.newBuilder()
+                .setId(threadInfo.getThreadId())
+                .setName(threadInfo.getThreadName())
+                .setState(threadInfo.getThreadState().name())
+                .setNative(threadInfo.isInNative())
+                .setSuspended(threadInfo.isSuspended());
+
+        StackTraceElement[] trace = threadInfo.getStackTrace();
+        for (int i = 0; i < trace.length; i++) {
+            StackTraceElement traceEl = trace[i];
+            TraceElementInfo.Builder elb = TraceElementInfo.newBuilder()
+                    .setClassName(traceEl.getClassName())
+                    .setMethodName(traceEl.getMethodName());
+            String fileName = traceEl.getFileName();
+            if (fileName != null) {
+                elb.setFileName(fileName);
+            }
+            int lineNumber = traceEl.getLineNumber();
+            if (lineNumber >= 0) {
+                elb.setLineNumber(lineNumber);
+            }
+            threadb.addTrace(elb);
+        }
+
+        if (group != null) {
+            threadb.setGroup(group);
+        }
+
+        return threadb.build();
+    }
+
+    private HttpTraffic toHttpTraffic() {
+        var trafficb = HttpTraffic.newBuilder();
+
+        var globalTrafficHandler = httpServer.getGlobalTrafficShapingHandler();
+        if (globalTrafficHandler != null) {
+            TrafficCounter counter = globalTrafficHandler.trafficCounter();
+            if (counter != null) {
+                trafficb.setReadThroughput(counter.lastReadThroughput());
+                trafficb.setWriteThroughput(counter.lastWriteThroughput());
+                trafficb.setReadBytes(counter.cumulativeReadBytes());
+                trafficb.setWrittenBytes(counter.cumulativeWrittenBytes());
+            }
+        }
+
+        List<ClientConnectionInfo> result = new ArrayList<>();
+        for (Channel channel : httpServer.getClientChannels()) {
+            HttpRequest httpRequest = channel.attr(HttpRequestHandler.CTX_HTTP_REQUEST).get();
+            if (httpRequest == null) {
+                continue; // Could be in the process of being handled
+            }
+
+            var connectionb = ClientConnectionInfo.newBuilder()
+                    .setId(channel.id().asShortText())
+                    .setOpen(channel.isOpen())
+                    .setActive(channel.isActive())
+                    .setWritable(channel.isWritable());
+
+            InetSocketAddress address = (InetSocketAddress) channel.remoteAddress();
+            if (address != null) {
+                connectionb.setRemoteAddress(address.getAddress().getHostAddress() + ":" + address.getPort());
+            }
+
+            var trafficHandler = channel.pipeline().get(ChannelTrafficShapingHandler.class);
+            if (trafficHandler != null) {
+                TrafficCounter counter = trafficHandler.trafficCounter();
+                if (counter != null) {
+                    connectionb.setReadThroughput(counter.lastReadThroughput());
+                    connectionb.setWriteThroughput(counter.lastWriteThroughput());
+                    connectionb.setReadBytes(counter.cumulativeReadBytes());
+                    connectionb.setWrittenBytes(counter.cumulativeWrittenBytes());
+                }
+            }
+
+            String username = channel.attr(HttpRequestHandler.CTX_USERNAME).get();
+            if (username != null) {
+                connectionb.setUsername(username);
+            }
+
+            String protocol = httpRequest.protocolVersion().text();
+            if (channel.pipeline().get(WebSocketFrameHandler.class) != null) {
+                protocol = "WebSocket";
+            }
+            var httpRequestb = HttpRequestInfo.newBuilder()
+                    .setKeepAlive(HttpUtil.isKeepAlive(httpRequest))
+                    .setProtocol(protocol)
+                    .setMethod(httpRequest.method().name())
+                    .setUri(httpRequest.uri());
+            String userAgent = httpRequest.headers().getAsString(HttpHeaderNames.USER_AGENT);
+            if (userAgent != null) {
+                httpRequestb.setUserAgent(userAgent);
+            }
+
+            connectionb.setHttpRequest(httpRequestb.build());
+            result.add(connectionb.build());
+        }
+
+        trafficb.addAllConnections(result);
+        return trafficb.build();
+    }
+
+    private static SystemInfo toSystemInfo() {
+        var yamcs = YamcsServer.getServer();
+
+        var b = SystemInfo.newBuilder()
+                .setServerId(yamcs.getServerId());
+        if (YamcsVersion.VERSION != null) {
+            b.setYamcsVersion(YamcsVersion.VERSION);
+        }
+        if (YamcsVersion.REVISION != null) {
+            b.setRevision(YamcsVersion.REVISION);
+        }
+
+        var process = ProcessHandle.current();
+        b.setProcess(toProcessInfo(process));
+
+        var runtime = ManagementFactory.getRuntimeMXBean();
+        b.setUptime(runtime.getUptime());
+        b.setJvm(runtime.getVmName() + " " + runtime.getVmVersion() + " (" + runtime.getVmVendor() + ")");
+        b.setWorkingDirectory(new File("").getAbsolutePath());
+        b.setConfigDirectory(yamcs.getConfigDirectory().toAbsolutePath().toString());
+        b.setDataDirectory(yamcs.getDataDirectory().toAbsolutePath().toString());
+        b.setCacheDirectory(yamcs.getCacheDirectory().toAbsolutePath().toString());
+        b.setJvmThreadCount(Thread.activeCount());
+
+        var memory = ManagementFactory.getMemoryMXBean();
+        var heap = memory.getHeapMemoryUsage();
+        b.setHeapMemory(heap.getCommitted());
+        b.setUsedHeapMemory(heap.getUsed());
+        if (heap.getMax() != -1) {
+            b.setMaxHeapMemory(heap.getMax());
+        }
+        var nonheap = memory.getNonHeapMemoryUsage();
+        b.setNonHeapMemory(nonheap.getCommitted());
+        b.setUsedNonHeapMemory(nonheap.getUsed());
+        if (nonheap.getMax() != -1) {
+            b.setMaxNonHeapMemory(nonheap.getMax());
+        }
+
+        var os = ManagementFactory.getOperatingSystemMXBean();
+        b.setOs(os.getName() + " " + os.getVersion());
+        b.setArch(os.getArch());
+        b.setAvailableProcessors(os.getAvailableProcessors());
+        var systemLoadAverage = os.getSystemLoadAverage();
+        if (systemLoadAverage >= 0) {
+            b.setLoadAverage(os.getSystemLoadAverage());
+        }
+
+        try {
+            for (var root : FileSystems.getDefault().getRootDirectories()) {
+                var store = Files.getFileStore(root);
+                b.addRootDirectories(RootDirectory.newBuilder()
+                        .setDirectory(root.toString())
+                        .setType(store.type())
+                        .setTotalSpace(store.getTotalSpace())
+                        .setUnallocatedSpace(store.getUnallocatedSpace())
+                        .setUsableSpace(store.getUsableSpace()));
+            }
+        } catch (IOException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return b.build();
+    }
+
+    private static ProcessInfo toProcessInfo(ProcessHandle process) {
+        var processb = ProcessInfo.newBuilder()
+                .setPid(process.pid());
+        var processInfo = process.info();
+        if (processInfo.user().isPresent()) {
+            processb.setUser(processInfo.user().get());
+        }
+        if (processInfo.startInstant().isPresent()) {
+            var startTime = processInfo.startInstant().get();
+            processb.setStartTime(Timestamp.newBuilder()
+                    .setSeconds(startTime.getEpochSecond())
+                    .setNanos(startTime.getNano()));
+        }
+        if (processInfo.totalCpuDuration().isPresent()) {
+            var duration = processInfo.totalCpuDuration().get();
+            processb.setTotalCpuDuration(Durations.fromSeconds(duration.getSeconds()));
+        }
+        if (processInfo.command().isPresent()) {
+            var command = processInfo.command().get();
+            processb.setCommand(command);
+        }
+        if (processInfo.arguments().isPresent()) {
+            for (var argument : processInfo.arguments().get()) {
+                processb.addArguments(argument);
+            }
+        }
+
+        process.children()
+                .map(ServerApi::toProcessInfo)
+                .forEach(processb::addChildren);
+
+        return processb.build();
+    }
+}
+```
+
+### `ServicesApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/ServicesApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import org.yamcs.ProcessorServiceWithConfig;
+import org.yamcs.ServiceWithConfig;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.protobuf.AbstractServicesApi;
+import org.yamcs.protobuf.GetServiceRequest;
+import org.yamcs.protobuf.ListServicesRequest;
+import org.yamcs.protobuf.ListServicesResponse;
+import org.yamcs.protobuf.ServiceInfo;
+import org.yamcs.protobuf.ServiceState;
+import org.yamcs.protobuf.StartServiceRequest;
+import org.yamcs.protobuf.StopServiceRequest;
+import org.yamcs.security.SystemPrivilege;
+
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.Service.State;
+import com.google.protobuf.Empty;
+
+public class ServicesApi extends AbstractServicesApi<Context> {
+
+    @Override
+    public void listServices(Context ctx, ListServicesRequest request, Observer<ListServicesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        String instance = request.getInstance();
+        boolean global = false;
+        if (YamcsServer.GLOBAL_INSTANCE.equals(instance)) {
+            global = true;
+        } else {
+            InstancesApi.verifyInstance(instance);
+        }
+
+        ListServicesResponse.Builder responseb = ListServicesResponse.newBuilder();
+
+        if (global) {
+            for (ServiceWithConfig serviceWithConfig : yamcs.getGlobalServices()) {
+                responseb.addServices(toServiceInfo(serviceWithConfig, null, null));
+            }
+        } else {
+            YamcsServerInstance ysi = yamcs.getInstance(instance);
+            for (ServiceWithConfig serviceWithConfig : ysi.getServices()) {
+                responseb.addServices(toServiceInfo(serviceWithConfig, instance, null));
+            }
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getService(Context ctx, GetServiceRequest request, Observer<ServiceInfo> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        String instance = request.getInstance();
+        boolean global = false;
+        if (YamcsServer.GLOBAL_INSTANCE.equals(instance)) {
+            global = true;
+        } else {
+            InstancesApi.verifyInstance(instance);
+        }
+        String serviceName = request.getName();
+        if (global) {
+            ServiceWithConfig serviceWithConfig = yamcs.getGlobalServiceWithConfig(serviceName);
+            if (serviceWithConfig == null) {
+                throw new NotFoundException();
+            }
+
+            ServiceInfo serviceInfo = toServiceInfo(serviceWithConfig, null, null);
+            observer.complete(serviceInfo);
+        } else {
+            YamcsServerInstance ysi = yamcs.getInstance(instance);
+            ServiceWithConfig serviceWithConfig = ysi.getServiceWithConfig(serviceName);
+            if (serviceWithConfig == null) {
+                throw new NotFoundException();
+            }
+
+            ServiceInfo serviceInfo = toServiceInfo(serviceWithConfig, instance, null);
+            observer.complete(serviceInfo);
+        }
+    }
+
+    @Override
+    public void startService(Context ctx, StartServiceRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        String instance = request.getInstance();
+        String serviceName = request.getName();
+
+        boolean global = false;
+        if (YamcsServer.GLOBAL_INSTANCE.equals(instance)) {
+            global = true;
+        } else {
+            InstancesApi.verifyInstance(instance);
+        }
+
+        try {
+            if (global) {
+                ServiceWithConfig service = yamcs.getGlobalServiceWithConfig(serviceName);
+                yamcs.startGlobalService(service.getName());
+            } else {
+                ServiceWithConfig service = yamcs.getInstance(instance)
+                        .getServiceWithConfig(serviceName);
+                yamcs.getInstance(instance).startService(service.getName());
+            }
+            observer.complete(Empty.getDefaultInstance());
+        } catch (Exception e) {
+            observer.completeExceptionally(e);
+        }
+    }
+
+    @Override
+    public void stopService(Context ctx, StopServiceRequest request, Observer<Empty> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlServices);
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        String instance = request.getInstance();
+        String serviceName = request.getName();
+
+        boolean global = false;
+        if (YamcsServer.GLOBAL_INSTANCE.equals(instance)) {
+            global = true;
+        } else {
+            InstancesApi.verifyInstance(instance);
+        }
+
+        try {
+            Service s;
+            if (global) {
+                s = yamcs.getGlobalService(serviceName);
+            } else {
+                s = yamcs.getInstance(instance).getService(serviceName);
+            }
+            if (s == null) {
+                throw new NotFoundException("No service by name '" + serviceName + "'");
+            }
+
+            s.stopAsync();
+            observer.complete(Empty.getDefaultInstance());
+        } catch (Exception e) {
+            observer.completeExceptionally(e);
+        }
+    }
+
+    public static ServiceInfo toServiceInfo(ServiceWithConfig serviceWithConfig, String instance, String processor) {
+        var service = serviceWithConfig.getService();
+        var serviceb = ServiceInfo.newBuilder()
+                .setName(serviceWithConfig.getName())
+                .setClassName(serviceWithConfig.getServiceClass())
+                .setState(ServiceState.valueOf(service.state().name()));
+        if (instance != null) {
+            serviceb.setInstance(instance);
+        }
+        if (processor != null) {
+            serviceb.setProcessor(processor);
+        }
+        if (service.state() == State.FAILED) {
+            var cause = service.failureCause();
+            var failureMessage = cause.getMessage();
+            if (failureMessage == null) {
+                failureMessage = cause.getClass().getName();
+            }
+            serviceb.setFailureMessage(failureMessage);
+            serviceb.setFailureCause(toString(cause));
+        }
+        return serviceb.build();
+    }
+
+    private static String toString(Throwable t) {
+        var sb = new StringBuffer();
+        sb.append(t.toString()).append("\n");
+        for (StackTraceElement ste : t.getStackTrace()) {
+            sb.append("\t").append(ste.toString()).append("\n");
+        }
+        Throwable cause = t.getCause();
+        while (cause != null && cause != t) {
+            sb.append("Caused by: ").append(cause.toString()).append("\n");
+            for (StackTraceElement ste : cause.getStackTrace()) {
+                sb.append("\t").append(ste.toString()).append("\n");
+            }
+            cause = cause.getCause();
+        }
+        return sb.toString();
+    }
+
+    public static ServiceInfo toServiceInfo(ProcessorServiceWithConfig serviceWithConfig, String instance,
+            String processor) {
+        ServiceInfo.Builder serviceb = ServiceInfo.newBuilder()
+                .setName(serviceWithConfig.getName())
+                .setClassName(serviceWithConfig.getServiceClass())
+                .setState(ServiceState.valueOf(serviceWithConfig.getService().state().name()));
+        if (instance != null) {
+            serviceb.setInstance(instance);
+        }
+        if (processor != null) {
+            serviceb.setProcessor(processor);
+        }
+        return serviceb.build();
+    }
+}
+```
+
+### `SessionsApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SessionsApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.time.Instant;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpHandler;
+import org.yamcs.http.HttpRequestHandler;
+import org.yamcs.http.HttpServer;
+import org.yamcs.http.UnauthorizedException;
+import org.yamcs.protobuf.AbstractSessionsApi;
+import org.yamcs.protobuf.ListSessionsResponse;
+import org.yamcs.protobuf.SessionEventInfo;
+import org.yamcs.protobuf.SessionInfo;
+import org.yamcs.security.AuthenticationInfo;
+import org.yamcs.security.SecurityStore;
+import org.yamcs.security.SessionListener;
+import org.yamcs.security.SessionManager;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.security.UserSession;
+
+import com.google.protobuf.Empty;
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Timestamps;
+
+public class SessionsApi extends AbstractSessionsApi<Context> {
+
+    @Override
+    public void listSessions(Context ctx, Empty request, Observer<ListSessionsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlAccess);
+
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        SessionManager sessionManager = securityStore.getSessionManager();
+
+        ListSessionsResponse.Builder responseb = ListSessionsResponse.newBuilder();
+        sessionManager.getSessions().stream()
+                .forEach(session -> responseb.addSessions(toSession(session)));
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void subscribeSession(Context ctx, Empty request, Observer<SessionEventInfo> observer) {
+        // The Context does not currently provide easy access to the session id,
+        // so this here is somewhat unelegant.
+        AuthenticationInfo authenticationInfo = null;
+        var httpRequest = ctx.nettyContext.channel().attr(HttpRequestHandler.CTX_HTTP_REQUEST).get();
+
+        if (httpRequest != null) {
+            var accessToken = HttpHandler.getAccessTokenFromCookie(httpRequest);
+            if (accessToken != null) {
+                var httpServer = YamcsServer.getServer().getGlobalService(HttpServer.class);
+                var tokenStore = httpServer.getTokenStore();
+                try {
+                    authenticationInfo = tokenStore.verifyAccessToken(accessToken);
+                } catch (UnauthorizedException e) {
+                    // Ignore
+                }
+            }
+        }
+
+        if (authenticationInfo == null) {
+            return;
+        }
+
+        var fAuthenticationInfo = authenticationInfo;
+        var securityStore = YamcsServer.getServer().getSecurityStore();
+        var sessionManager = securityStore.getSessionManager();
+        var sessionListener = new SessionListener() {
+            @Override
+            public void onCreated(UserSession session) {
+            }
+
+            @Override
+            public void onInvalidated(UserSession session) {
+                if (fAuthenticationInfo.equals(session.getAuthenticationInfo())) {
+                    observer.next(SessionEventInfo.newBuilder().setEndReason("Session invalidated").build());
+                }
+            }
+
+            @Override
+            public void onExpired(UserSession session) {
+                if (fAuthenticationInfo.equals(session.getAuthenticationInfo())) {
+                    observer.next(SessionEventInfo.newBuilder().setEndReason("Session expired").build());
+                }
+            }
+        };
+        observer.setCancelHandler(() -> sessionManager.removeSessionListener(sessionListener));
+        sessionManager.addSessionListener(sessionListener);
+    }
+
+    private static SessionInfo toSession(UserSession session) {
+        SessionInfo.Builder proto = SessionInfo.newBuilder()
+                .setId(session.getId())
+                .setUsername(session.getLogin())
+                .setIpAddress(session.getIpAddress())
+                .setHostname(session.getHostname())
+                .setStartTime(toTimestamp(session.getStartTime()))
+                .setLastAccessTime(toTimestamp(session.getLastAccessTime()))
+                .setExpirationTime(toTimestamp(session.getExpirationTime()))
+                .addAllClients(session.getClients());
+        return proto.build();
+    }
+
+    private static Timestamp toTimestamp(Instant instant) {
+        return Timestamps.fromMillis(instant.toEpochMilli());
+    }
+}
+```
+
+### `SingleParameterRetriever.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SingleParameterRetriever.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.parameter.ParameterCache;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterWithId;
+import org.yamcs.parameter.Value;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.parameterarchive.ParameterArchive;
+import org.yamcs.parameterarchive.ParameterValueArray;
+import org.yamcs.parameterarchive.SingleParameterRetrieval;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.utils.MutableLong;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+import com.google.common.collect.Lists;
+
+/**
+ * Retrieves values for one parameter combining parameter archive (for past data) and cache (for recent data).
+ *
+ */
+public class SingleParameterRetriever {
+    final ParameterRetrievalOptions spvr;
+    final ParameterArchive parchive;
+    final ParameterCache cache;
+    final ParameterWithId pid;
+
+    public SingleParameterRetriever(ParameterArchive parchive, ParameterCache cache, ParameterWithId pid,
+            ParameterRetrievalOptions spvr) {
+        this.spvr = spvr;
+        this.cache = cache;
+        this.parchive = parchive;
+        this.pid = pid;
+    }
+
+    public void retrieve(Consumer<ParameterValueArray> consumer) throws IOException {
+        ParameterRetrievalOptions spvr1 = spvr;
+        if (cache != null && !spvr.ascending()) {// descending -> first retrieve from cache
+            List<ParameterValue> pvlist = cache.getAllValues(pid.getParameter(), spvr.start(), spvr.stop());
+            if (pid.getPath() != null) {
+                pvlist = extractMembers(pvlist, pid.getPath());
+            }
+            MutableLong lastTime = new MutableLong(Long.MAX_VALUE);
+            if (pvlist != null) {
+                splitAndSend(pvlist, pva -> {
+                    long[] timestamps = pva.getTimestamps();
+                    lastTime.setLong(timestamps[timestamps.length - 1]);
+                    consumer.accept(pva);
+                });
+            }
+            if (lastTime.getLong() != Long.MAX_VALUE) {
+                spvr1 = spvr1.toBuilder().withStartStop(lastTime.getLong(), spvr.stop()).build();
+            }
+        }
+
+        SingleParameterRetrieval spar = new SingleParameterRetrieval(parchive, pid.getQualifiedName(), spvr1);
+        MutableLong lastTime = new MutableLong(Long.MAX_VALUE);
+        try {
+            spar.retrieve(pva -> {
+                long[] timestamps = pva.getTimestamps();
+                lastTime.setLong(timestamps[timestamps.length - 1]);
+                consumer.accept(pva);
+            });
+        } catch (RocksDBException e) {
+            throw new IOException(e);
+        }
+
+        if (cache != null && spvr.ascending()) {// ascending -> send last values from cache
+            long start = spvr1.start();
+
+            if (lastTime.getLong() != Long.MAX_VALUE) {
+                start = lastTime.getLong();
+            }
+
+            List<ParameterValue> pvlist = cache.getAllValues(pid.getParameter(), start, spvr1.stop());
+            if (pvlist != null) {
+                if (pid.getPath() != null) {
+                    pvlist = extractMembers(pvlist, pid.getPath());
+                }
+                pvlist = Lists.reverse(pvlist);
+                splitAndSend(pvlist, consumer);
+            }
+        }
+    }
+
+    private List<ParameterValue> extractMembers(List<ParameterValue> pvlist, PathElement[] path) {
+        List<ParameterValue> l = new ArrayList<ParameterValue>(pvlist.size());
+        for (ParameterValue pv : pvlist) {
+            ParameterValue pv1 = AggregateUtil.extractMember(pv, path);
+            if (pv1 != null) {
+                l.add(pv1);
+            }
+        }
+        return l;
+    }
+
+    // splits the list in arrays of parameters having the same type
+    private void splitAndSend(List<ParameterValue> pvlist, Consumer<ParameterValueArray> consumer) {
+        int n = 0;
+        int m = pvlist.size();
+        ParameterValue pv0 = pvlist.get(n);
+
+        for (int j = 1; j < m; j++) {
+            ParameterValue pv = pvlist.get(j);
+            if (differentType(pv0, pv)) {
+                sendToConsumer(pvlist, n, j, consumer);
+                pv0 = pv;
+                n = j;
+            }
+        }
+        sendToConsumer(pvlist, n, m, consumer);
+    }
+
+    private void sendToConsumer(List<ParameterValue> pvlist, int n, int m, Consumer<ParameterValueArray> consumer) {
+        ParameterValue pv0 = pvlist.get(n);
+        ValueArray rawValues = null;
+        if (pv0.getRawValue() != null) {
+            rawValues = new ValueArray(pv0.getRawValue().getType(), m - n);
+            for (int i = n; i < m; i++) {
+                rawValues.setValue(i - n, pvlist.get(i).getRawValue());
+            }
+        }
+
+        ValueArray engValues = null;
+        if (pv0.getEngValue() != null) {
+            engValues = new ValueArray(pv0.getEngValue().getType(), m - n);
+            for (int i = n; i < m; i++) {
+                engValues.setValue(i - n, pvlist.get(i).getEngValue());
+            }
+        }
+        long[] timestamps = new long[m - n];
+        ParameterStatus[] statuses = new ParameterStatus[m - n];
+        for (int i = n; i < m; i++) {
+            ParameterValue pv = pvlist.get(i);
+            timestamps[i - n] = pv.getGenerationTime();
+            statuses[i - n] = pv.getStatus().toProtoBuf(false);
+        }
+        ParameterValueArray pva = new ParameterValueArray(timestamps, engValues, rawValues, statuses);
+        consumer.accept(pva);
+    }
+
+    private boolean differentType(ParameterValue pv0, ParameterValue pv1) {
+        return differentType(pv0.getRawValue(), pv1.getRawValue())
+                || differentType(pv0.getEngValue(), pv1.getEngValue());
+    }
+
+    private boolean differentType(Value v1, Value v2) {
+        if (v1 == null) {
+            return v2 != null;
+        }
+        if (v2 == null) {
+            return true;
+        }
+
+        return v1.getType() != v2.getType();
+    }
+}
+```
+
+### `StreamArchiveApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/StreamArchiveApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.http.api.ParameterArchiveApi.isReplayAsked;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.Observer;
+import org.yamcs.archive.ParameterRecorder;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.MediaType;
+import org.yamcs.http.api.AbstractPaginatedParameterRetrievalConsumer.PaginatedMultiParameterRetrievalConsumer;
+import org.yamcs.http.api.AbstractPaginatedParameterRetrievalConsumer.PaginatedSingleParameterRetrievalConsumer;
+import org.yamcs.http.api.Downsampler.Sample;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.ParameterWithId;
+import org.yamcs.protobuf.AbstractStreamArchiveApi;
+import org.yamcs.protobuf.Archive.ExportParameterValuesRequest;
+import org.yamcs.protobuf.Archive.GetParameterSamplesRequest;
+import org.yamcs.protobuf.Archive.ListParameterGroupsRequest;
+import org.yamcs.protobuf.Archive.ListParameterHistoryRequest;
+import org.yamcs.protobuf.Archive.ListParameterHistoryResponse;
+import org.yamcs.protobuf.Archive.ParameterGroupInfo;
+import org.yamcs.protobuf.Archive.StreamParameterValuesRequest;
+import org.yamcs.protobuf.Pvalue.ParameterData;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Pvalue.TimeSeries;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.utils.ParameterFormatter;
+import org.yamcs.utils.ParameterFormatter.Header;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.FloatParameterType;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.collect.BiMap;
+import com.google.protobuf.ByteString;
+
+public class StreamArchiveApi extends AbstractStreamArchiveApi<Context> {
+
+    @Override
+    public void listParameterGroups(Context ctx, ListParameterGroupsRequest request,
+            Observer<ParameterGroupInfo> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+
+        ParameterGroupInfo.Builder responseb = ParameterGroupInfo.newBuilder();
+        TableDefinition tableDefinition = ydb.getTable(ParameterRecorder.TABLE_NAME);
+        BiMap<String, Short> enumValues = tableDefinition.getEnumValues("group");
+        if (enumValues != null) {
+            List<String> unsortedGroups = new ArrayList<>();
+            for (Entry<String, Short> entry : enumValues.entrySet()) {
+                unsortedGroups.add(entry.getKey());
+            }
+            Collections.sort(unsortedGroups);
+            responseb.addAllGroups(unsortedGroups);
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void listParameterHistory(Context ctx, ListParameterHistoryRequest request,
+            Observer<ListParameterHistoryResponse> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+
+        var ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        var prs = ParameterArchiveApi.getParameterRetrievalService(ysi);
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+        String pathName = request.getName();
+
+        ParameterWithId p = MdbApi.verifyParameterWithId(ctx, mdb, pathName);
+
+        long pos = request.hasPos() ? request.getPos() : 0;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+        boolean noRepeat = request.getNorepeat();
+        boolean ascending = request.getOrder().equals("asc");
+        int maxBytes = request.hasMaxBytes() ? request.getMaxBytes() : -1;
+
+        long start = TimeEncoding.INVALID_INSTANT;
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+
+        long stop = TimeEncoding.INVALID_INSTANT;
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+        boolean replayRequested = request.hasSource() && isReplayAsked(request.getSource());
+        ParameterRetrievalOptions opts = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop)
+                .withAscending(ascending)
+                .withRetrieveParameterStatus(false)
+                .withoutRealtime(request.getNorealtime())
+                .withoutParchive(replayRequested)
+                .withoutReplay(!replayRequested)
+                .build();
+
+        ListParameterHistoryResponse.Builder resultb = ListParameterHistoryResponse.newBuilder();
+        PaginatedSingleParameterRetrievalConsumer replayListener = new PaginatedSingleParameterRetrievalConsumer(pos,
+                limit) {
+            @Override
+            public void onParameterData(ParameterValueWithId pvalid) {
+                resultb.addParameter(toGpb(pvalid, maxBytes));
+            }
+        };
+        replayListener.setNoRepeat(noRepeat);
+
+        prs.retrieveSingle(p, opts, replayListener).thenRun(() -> {
+            observer.complete(resultb.build());
+        }).exceptionally(e -> {
+            observer.completeExceptionally(e);
+            return null;
+        });
+    }
+
+    public static ParameterValue toGpb(ParameterValueWithId pvalWithId, int maxBytes) {
+        var gpb = pvalWithId.toGbpParameterValue();
+        if (maxBytes >= 0) {
+            var hasRawBinaryValue = gpb.hasRawValue() && gpb.getRawValue().hasBinaryValue();
+            var hasEngBinaryValue = gpb.hasEngValue() && gpb.getEngValue().hasBinaryValue();
+            if (hasRawBinaryValue || hasEngBinaryValue) {
+                var truncated = org.yamcs.protobuf.Pvalue.ParameterValue.newBuilder(gpb);
+                if (hasRawBinaryValue) {
+                    var binaryValue = gpb.getRawValue().getBinaryValue();
+                    if (binaryValue.size() > maxBytes) {
+                        truncated.getRawValueBuilder().setBinaryValue(
+                                binaryValue.substring(0, maxBytes));
+                    }
+                }
+                if (hasEngBinaryValue) {
+                    var binaryValue = gpb.getEngValue().getBinaryValue();
+                    if (binaryValue.size() > maxBytes) {
+                        truncated.getEngValueBuilder().setBinaryValue(
+                                binaryValue.substring(0, maxBytes));
+                    }
+                }
+                return truncated.build();
+            }
+        }
+        return gpb;
+    }
+
+    @Override
+    public void getParameterSamples(Context ctx, GetParameterSamplesRequest request,
+            Observer<TimeSeries> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        var ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        var prs = ParameterArchiveApi.getParameterRetrievalService(ysi);
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+        Parameter p = MdbApi.verifyParameter(ctx, mdb, request.getName());
+
+        ParameterType ptype = p.getParameterType();
+        if ((ptype != null) && (!(ptype instanceof FloatParameterType) && !(ptype instanceof IntegerParameterType))) {
+            throw new BadRequestException(
+                    "Only integer or float parameters can be sampled. Got " + ptype.getTypeAsString());
+        }
+
+        long stop = TimeEncoding.getWallclockTime();
+        long start = stop - (1000 * 60 * 60); // 1 hour
+
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+
+        int sampleCount = request.hasCount() ? request.getCount() : 500;
+        Downsampler sampler = new Downsampler(start, stop, sampleCount);
+        sampler.setUseRawValue(request.hasUseRawValue() && request.getUseRawValue());
+        sampler.setGapTime(request.hasGapTime() ? request.getGapTime() : 120000);
+
+        boolean replayRequested = request.hasSource() && isReplayAsked(request.getSource());
+        ParameterRetrievalOptions opts = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop)
+                .withRetrieveParameterStatus(false)
+                .withoutRealtime(request.getNorealtime())
+                .withoutParchive(replayRequested)
+                .withoutReplay(!replayRequested)
+                .build();
+
+        PaginatedSingleParameterRetrievalConsumer replayListener = new PaginatedSingleParameterRetrievalConsumer() {
+            @Override
+            public void onParameterData(ParameterValueWithId pvalid) {
+                sampler.process(pvalid.getParameterValue());
+            }
+        };
+
+        NamedObjectId id = NamedObjectId.newBuilder().setName(p.getQualifiedName()).build();
+        prs.retrieveSingle(new ParameterWithId(p, id, null), opts, replayListener).thenRun(() -> {
+            TimeSeries.Builder series = TimeSeries.newBuilder();
+            for (Sample s : sampler.collect()) {
+                series.addSample(toGPBSample(s));
+            }
+            observer.complete(series.build());
+        }).exceptionally(e -> {
+            observer.completeExceptionally(e);
+            return null;
+        });
+
+    }
+
+    @Override
+    public void streamParameterValues(Context ctx, StreamParameterValuesRequest request,
+            Observer<ParameterData> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        var ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        var prs = ParameterArchiveApi.getParameterRetrievalService(ysi);
+
+        Mdb mdb = MdbFactory.getInstance(instance);
+
+        var optsb = ParameterRetrievalOptions.newBuilder()
+                .withRetrieveParameterStatus(false)
+                .withoutParchive(true)
+                .withoutRealtime(true)
+                .withoutReplay(false);
+
+        if (request.hasStart()) {
+            optsb.withStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            optsb.withStop(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        List<ParameterWithId> pids = new ArrayList<>();
+
+        for (NamedObjectId id : request.getIdsList()) {
+            ParameterWithId paramWithId = MdbApi.verifyParameterWithId(ctx, mdb, id);
+            pids.add(paramWithId);
+        }
+
+        if (pids.isEmpty()) {
+            for (Parameter p : mdb.getParameters()) {
+                if (ctx.user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, p)) {
+                    var id = NamedObjectId.newBuilder().setName(p.getQualifiedName()).build();
+                    pids.add(new ParameterWithId(p, id, null));
+                }
+            }
+        }
+
+        if (request.getTmLinksCount() > 0) {
+            optsb.withPacketReplayRequest(PacketReplayRequest.newBuilder()
+                    .addAllTmLinks(request.getTmLinksList())
+                    .build());
+        }
+
+        var replayListener = new PaginatedMultiParameterRetrievalConsumer() {
+            @Override
+            protected void onParameterData(List<ParameterValueWithId> params) {
+                ParameterData.Builder pd = ParameterData.newBuilder();
+                for (ParameterValueWithId pvalid : params) {
+                    ParameterValue pval = pvalid.toGbpParameterValue();
+                    pd.addParameter(pval);
+                }
+                observer.next(pd.build());
+            }
+        };
+
+        prs.retrieveMulti(pids, optsb.build(), replayListener).thenRun(() -> {
+            observer.complete();
+        }).exceptionally(e -> {
+            observer.completeExceptionally(e);
+            return null;
+        });
+
+    }
+
+    @Override
+    public void exportParameterValues(Context ctx, ExportParameterValuesRequest request, Observer<HttpBody> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        var ysi = InstancesApi.verifyInstanceObj(request.getInstance());
+        var prs = ParameterArchiveApi.getParameterRetrievalService(ysi);
+
+        List<NamedObjectId> ids = new ArrayList<>();
+        Mdb mdb = MdbFactory.getInstance(instance);
+        String namespace = null;
+        int interval = -1;
+        boolean ascending = !request.getOrder().equals("desc");
+
+        long start = TimeEncoding.INVALID_INSTANT;
+        if (request.hasStart()) {
+            start = TimeEncoding.fromProtobufTimestamp(request.getStart());
+        }
+        long stop = TimeEncoding.INVALID_INSTANT;
+        if (request.hasStop()) {
+            stop = TimeEncoding.fromProtobufTimestamp(request.getStop());
+        }
+        List<ParameterWithId> pids = new ArrayList<>();
+
+        for (String id : request.getParametersList()) {
+            ParameterWithId paramWithId = MdbApi.verifyParameterWithId(ctx, mdb, id);
+            ids.add(paramWithId.getId());
+            pids.add(paramWithId);
+        }
+        if (request.hasNamespace()) {
+            namespace = request.getNamespace();
+        }
+        if (request.hasInterval() && request.getInterval() >= 0) {
+            interval = request.getInterval();
+        }
+
+        if (request.hasList()) {
+            var plistService = ParameterListsApi.verifyService(instance);
+            var plist = ParameterListsApi.verifyParameterList(plistService, request.getList());
+            for (Parameter p : ParameterListsApi.resolveParameters(ctx, mdb, plist)) {
+                if (!ctx.user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, p)) {
+                    continue;
+                }
+                if (namespace != null) {
+                    String alias = p.getAlias(namespace);
+                    if (alias != null) {
+                        var id = NamedObjectId.newBuilder().setNamespace(namespace).setName(alias).build();
+                        ids.add(id);
+                        pids.add(new ParameterWithId(p, id, null));
+                    }
+                } else {
+                    var id = NamedObjectId.newBuilder().setName(p.getQualifiedName()).build();
+                    ids.add(id);
+                    pids.add(new ParameterWithId(p, id, null));
+                }
+            }
+        } else if (ids.isEmpty()) {
+            for (Parameter p : mdb.getParameters()) {
+                if (!ctx.user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, p)) {
+                    continue;
+                }
+                if (namespace != null) {
+                    String alias = p.getAlias(namespace);
+                    if (alias != null) {
+                        var id = NamedObjectId.newBuilder().setNamespace(namespace).setName(alias).build();
+                        ids.add(id);
+                        pids.add(new ParameterWithId(p, id, null));
+                    }
+                } else {
+                    var id = NamedObjectId.newBuilder().setName(p.getQualifiedName()).build();
+                    ids.add(id);
+                    pids.add(new ParameterWithId(p, id, null));
+                }
+            }
+        }
+
+        String filename;
+        if (request.hasFilename()) {
+            filename = request.getFilename();
+        } else {
+            String dateString = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
+            if (ids.size() == 1) {
+                NamedObjectId id = ids.get(0);
+                String parameterName = id.hasNamespace() ? id.getName() : id.getName().substring(1);
+                filename = parameterName.replace('/', '_') + "_export_" + dateString + ".csv";
+            } else {
+                filename = "parameter_export_" + dateString + ".csv";
+            }
+        }
+
+        boolean addRaw = false;
+        boolean addMonitoring = false;
+        for (String extra : request.getExtraList()) {
+            if (extra.equals("raw")) {
+                addRaw = true;
+            } else if (extra.equals("monitoring")) {
+                addMonitoring = true;
+            } else {
+                throw new BadRequestException("Unexpected option for parameter 'extra': " + extra);
+            }
+        }
+
+        char columnDelimiter = '\t';
+        if (request.hasDelimiter()) {
+            switch (request.getDelimiter()) {
+            case "TAB":
+                columnDelimiter = '\t';
+                break;
+            case "SEMICOLON":
+                columnDelimiter = ';';
+                break;
+            case "COMMA":
+                columnDelimiter = ',';
+                break;
+            default:
+                throw new BadRequestException("Unexpected column delimiter");
+            }
+        }
+
+        var header = Header.QUALIFIED_NAME;
+        if (request.hasHeader()) {
+            switch (request.getHeader()) {
+            case "QUALIFIED_NAME":
+                header = Header.QUALIFIED_NAME;
+                break;
+            case "SHORT_NAME":
+                header = Header.SHORT_NAME;
+                break;
+            case "NONE":
+                header = Header.NONE;
+                break;
+            default:
+                throw new BadRequestException("Unexpected value for header option");
+            }
+        }
+
+        var preserveLastValue = request.hasPreserveLastValue() ? request.getPreserveLastValue() : false;
+
+        long pos = -1;
+        int limit = -1;
+        if (request.hasPos()) {
+            pos = request.getPos();
+        }
+        if (request.hasLimit()) {
+            pos = Math.max(0, pos);
+            limit = request.getLimit();
+        }
+
+        ParameterRetrievalOptions opts = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop)
+                .withRetrieveParameterStatus(false)
+                .withAscending(ascending)
+                .withoutParchive(true)
+                .withoutRealtime(true)
+                .withoutReplay(false)
+                .build();
+
+        var listener = new CsvParameterStreamer(observer, pos, limit, filename, ids, addRaw, addMonitoring,
+                preserveLastValue, interval, columnDelimiter, header);
+
+        prs.retrieveMulti(pids, opts, listener).thenRun(() -> {
+            listener.finished();
+        }).exceptionally(e -> {
+            listener.failed(e);
+            return null;
+        });
+        // observer.setCancelHandler(listener::requestReplayAbortion);
+    }
+
+    public static TimeSeries.Sample toGPBSample(Sample sample) {
+        TimeSeries.Sample.Builder b = TimeSeries.Sample.newBuilder();
+        b.setTime(TimeEncoding.toProtobufTimestamp(sample.t));
+        b.setN(sample.n);
+
+        if (sample.n > 0) {
+            b.setAvg(sample.avg);
+            b.setMin(sample.min);
+            b.setMax(sample.max);
+            b.setMinTime(TimeEncoding.toProtobufTimestamp(sample.minTime));
+            b.setMaxTime(TimeEncoding.toProtobufTimestamp(sample.maxTime));
+            b.setFirstTime(TimeEncoding.toProtobufTimestamp(sample.firstTime));
+            b.setLastTime(TimeEncoding.toProtobufTimestamp(sample.lastTime));
+        }
+
+        return b.build();
+    }
+
+    private static class CsvParameterStreamer extends PaginatedMultiParameterRetrievalConsumer {
+
+        Observer<HttpBody> observer;
+        ParameterFormatter formatter;
+
+        CsvParameterStreamer(Observer<HttpBody> observer, long pos, int limit, String filename, List<NamedObjectId> ids,
+                boolean addRaw, boolean addMonitoring, boolean preserveLastValue, int interval, char columnDelimiter,
+                Header header) {
+            super(pos, limit);
+            this.observer = observer;
+
+            formatter = new ParameterFormatter(null, ids, columnDelimiter);
+            formatter.setWriteHeader(header);
+            formatter.setPrintRaw(addRaw);
+            formatter.setPrintMonitoring(addMonitoring);
+            formatter.setKeepValues(preserveLastValue);
+            formatter.setTimeWindow(interval);
+
+            HttpBody metadata = HttpBody.newBuilder()
+                    .setContentType(MediaType.CSV.toString())
+                    .setFilename(filename)
+                    .build();
+            observer.next(metadata);
+        }
+
+        @Override
+        protected void onParameterData(List<ParameterValueWithId> params) {
+            ByteString.Output data = ByteString.newOutput();
+            formatter.updateWriter(data, StandardCharsets.UTF_8);
+
+            try {
+                formatter.writeParameters(params);
+                formatter.flush();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+
+            HttpBody body = HttpBody.newBuilder()
+                    .setData(data.toByteString())
+                    .build();
+            observer.next(body);
+        }
+
+        public void failed(Throwable t) {
+            observer.completeExceptionally(t);
+        }
+
+        public void finished() {
+            ByteString.Output data = ByteString.newOutput();
+            formatter.updateWriter(data, StandardCharsets.UTF_8);
+            try {
+                formatter.close();
+                if (data.size() > 0) {
+                    HttpBody body = HttpBody.newBuilder()
+                            .setData(data.toByteString())
+                            .build();
+                    observer.next(body);
+                }
+                observer.complete();
+            } catch (IOException e) {
+                observer.completeExceptionally(e);
+            }
+        }
+    }
+}
+```
+
+### `StreamFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/StreamFactory.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class StreamFactory {
+
+    private static AtomicInteger streamCounter = new AtomicInteger();
+    private static final Log log = new Log(StreamFactory.class);
+
+    public static void stream(String instance, String selectSql, StreamSubscriber subscriber) {
+        stream(instance, selectSql, Collections.emptyList(), subscriber);
+    }
+
+    public static void stream(String instance, String selectSql, List<Object> args, StreamSubscriber subscriber) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+
+        String streamName = "http_stream" + streamCounter.incrementAndGet();
+        String sql = new StringBuilder("create stream ")
+                .append(streamName)
+                .append(" as ")
+                .append(selectSql)
+                .append(" nofollow")
+                .toString();
+
+        log.debug("Executing: {}", sql);
+        try {
+            ydb.executeDiscardingResult(sql, args.toArray());
+        } catch (StreamSqlException | ParseException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        Stream stream = ydb.getStream(streamName);
+        stream.addSubscriber(subscriber);
+        stream.start();
+        return;
+    }
+
+    public static Stream insertStream(String instance, TableDefinition table) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+
+        String streamName = "http_stream" + streamCounter.incrementAndGet();
+        String sql = new StringBuilder("create stream ")
+                .append(streamName)
+                .append(" ")
+                .append(table.getTupleDefinition().getStringDefinition())
+                .toString();
+
+        log.debug("Executing: {}", sql);
+        try {
+            ydb.executeDiscardingResult(sql);
+            ydb.executeDiscardingResult(String.format("insert into %s select * from %s", table.getName(), streamName));
+        } catch (StreamSqlException | ParseException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return ydb.getStream(streamName);
+    }
+
+    public static Stream loadStream(String instance, TableDefinition table) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(instance);
+
+        String streamName = "http_stream" + streamCounter.incrementAndGet();
+        String sql = new StringBuilder("create stream ")
+                .append(streamName)
+                .append(" ")
+                .append(table.getTupleDefinition().getStringDefinition())
+                .toString();
+
+        log.debug("Executing: {}", sql);
+        try {
+            ydb.executeDiscardingResult(sql);
+            ydb.executeDiscardingResult(String.format("load into %s select * from %s", table.getName(), streamName));
+        } catch (StreamSqlException | ParseException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return ydb.getStream(streamName);
+    }
+}
+```
+
+### `SubscribeEventsObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SubscribeEventsObserver.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.StandardTupleDefinitions.BODY_COLUMN;
+
+import org.yamcs.api.Observer;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.protobuf.Db;
+
+public class SubscribeEventsObserver implements Observer<SubscribeEventsRequest>, StreamSubscriber {
+
+    private Observer<Event> responseObserver;
+
+    private Stream stream;
+
+    private EventFilter filter;
+
+    public SubscribeEventsObserver(Observer<Event> responseObserver) {
+        this.responseObserver = responseObserver;
+    }
+
+    @Override
+    public void next(SubscribeEventsRequest request) {
+        if (stream != null) {
+            stream.removeSubscriber(this);
+            stream = null;
+        }
+
+        filter = request.hasFilter()
+                ? EventFilterFactory.create(request.getFilter())
+                : null;
+
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        var ydb = YarchDatabase.getInstance(instance);
+        stream = ydb.getStream(EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        if (stream == null) {
+            return; // No error, just don't send data
+        }
+
+        stream.addSubscriber(this);
+    }
+
+    @Override
+    public void onTuple(Stream stream, Tuple tuple) {
+        if (filter != null && !filter.matches(tuple)) {
+            return;
+        }
+
+        var event = (Db.Event) tuple.getColumn(BODY_COLUMN);
+        responseObserver.next(EventsApi.fromDbEvent(event));
+    }
+
+    @Override
+    public void streamClosed(Stream stream) {
+        // Ignore
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        if (stream != null) {
+            stream.removeSubscriber(this);
+        }
+    }
+
+    @Override
+    public void complete() {
+        if (stream != null) {
+            stream.removeSubscriber(this);
+        }
+    }
+}
+```
+
+### `SubscribeParameterObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/SubscribeParameterObserver.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.InvalidIdentification;
+import org.yamcs.NoPermissionException;
+import org.yamcs.Processor;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.logging.Log;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.ParameterWithIdRequestHelper;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.SubscribeParametersData;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.SubscribeParametersRequest.Action;
+import org.yamcs.protobuf.SubscribedParameterInfo;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.NamedObjectList;
+import org.yamcs.security.User;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.BaseDataType;
+import org.yamcs.xtce.DataType;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.util.DataTypeUtil;
+
+public class SubscribeParameterObserver implements Observer<SubscribeParametersRequest> {
+
+    private static final Log log = new Log(SubscribeParameterObserver.class);
+
+    private User user;
+    private Observer<SubscribeParametersData> responseObserver;
+
+    private int subscriptionId = -1;
+    private ParameterWithIdRequestHelper pidrm;
+
+    private ConcurrentMap<NamedObjectId, Integer> numericIdMap = new ConcurrentHashMap<>();
+    private AtomicInteger numericIdGenerator = new AtomicInteger();
+
+    // Max emitted bytes for a singular binary value updates (either raw or eng)
+    private int maxBytes = -1;
+
+    public SubscribeParameterObserver(User user, Observer<SubscribeParametersData> responseObserver) {
+        this.user = user;
+        this.responseObserver = responseObserver;
+    }
+
+    @Override
+    public void next(SubscribeParametersRequest request) {
+        if (request.hasMaxBytes()) {
+            maxBytes = request.getMaxBytes();
+        }
+
+        if (pidrm == null) {
+            Processor processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+            ParameterRequestManager requestManager = processor.getParameterRequestManager();
+            pidrm = new ParameterWithIdRequestHelper(requestManager, (subscriptionId, params) -> {
+                if (params.isEmpty()) {
+                    return;
+                }
+                SubscribeParametersData.Builder datab = SubscribeParametersData.newBuilder();
+                for (ParameterValueWithId pvwi : params) {
+                    ParameterValue pval = pvwi.getParameterValue();
+                    Integer numericId = numericIdMap.get(pvwi.getId());
+                    if (numericId != null) {
+                        datab.addValues(toGpb(pval, numericId));
+                    }
+                }
+                responseObserver.next(datab.build());
+            });
+        }
+
+        Action action = Action.REPLACE;
+        if (request.hasAction()) {
+            action = request.getAction();
+        }
+
+        try {
+            List<NamedObjectId> idList = request.getIdList();
+            List<NamedObjectId> invalid = new ArrayList<>();
+            try {
+                updateSubscription(action, idList, request.getUpdateOnExpiration());
+            } catch (InvalidIdentification e) {
+                invalid.addAll(e.getInvalidParameters());
+
+                if (!request.hasAbortOnInvalid() || request.getAbortOnInvalid()) {
+                    BadRequestException ex = new BadRequestException(e);
+                    ex.setDetail(NamedObjectList.newBuilder().addAllList(invalid).build());
+                    responseObserver.completeExceptionally(ex);
+                } else {
+                    if (idList.size() == e.getInvalidParameters().size()) {
+                        log.warn("Received subscribe attempt with only invalid parameters");
+                        idList = Collections.emptyList();
+                    } else {
+                        Set<NamedObjectId> valid = new HashSet<>(idList);
+                        valid.removeAll(e.getInvalidParameters());
+                        idList = new ArrayList<>(valid);
+
+                        log.warn("Received subscribe attempt with {} invalid parameters. "
+                                + "Subscription will continue with {} remaining valids.",
+                                e.getInvalidParameters().size(), idList.size());
+                        if (log.isDebugEnabled()) {
+                            log.debug("The invalid IDs are: {}",
+                                    StringConverter.idListToString(e.getInvalidParameters()));
+                        }
+                        updateSubscription(action, idList, request.getUpdateOnExpiration());
+                    }
+                }
+            }
+
+            SubscribeParametersData.Builder datab = SubscribeParametersData.newBuilder()
+                    .addAllInvalid(invalid);
+
+            Map<NamedObjectId, Integer> mappingUpdate = new HashMap<>(idList.size());
+            for (NamedObjectId id : idList) {
+                int numericId = numericIdGenerator.incrementAndGet();
+                mappingUpdate.put(id, numericId);
+                datab.putMapping(numericId, id);
+
+                var info = generateInfo(id);
+                datab.putInfo(numericId, info);
+            }
+            if (subscriptionId != -1 && (!request.hasSendFromCache() || request.getSendFromCache())) {
+                for (ParameterValueWithId rec : pidrm.getValuesFromCache(subscriptionId)) {
+                    ParameterValue pval = rec.getParameterValue();
+                    Integer numericId = mappingUpdate.get(rec.getId());
+                    if (numericId != null) {
+                        datab.addValues(toGpb(pval, numericId));
+                    }
+                }
+            }
+
+            responseObserver.next(datab.build());
+
+            // After having sent out the mapping, update internal state
+            // (updates come from another thread, and we want to client to
+            // know a mapping before receiving a value for it)
+            numericIdMap.putAll(mappingUpdate);
+        } catch (InvalidIdentification e) {
+            log.warn("Invalid identification: {}", e.getMessage());
+            responseObserver.completeExceptionally(e);
+        } catch (NoPermissionException e) {
+            log.warn("No permission for parameters: {}", e.getMessage());
+            responseObserver.completeExceptionally(e);
+        }
+    }
+
+    private SubscribedParameterInfo generateInfo(NamedObjectId id) {
+        var infob = SubscribedParameterInfo.newBuilder();
+        try {
+            var parameterWithId = ParameterWithIdRequestHelper.checkName(pidrm.getPrm(), id);
+            var parameter = parameterWithId.getParameter();
+
+            infob.setParameter(parameter.getQualifiedName());
+
+            var dataSource = parameter.getDataSource().name();
+            if (dataSource != null) {
+                infob.setDataSource(DataSourceType.valueOf(parameter.getDataSource().name()));
+            }
+
+            if (parameter.getParameterType() != null) {
+                DataType dtype = parameter.getParameterType();
+                if (parameterWithId.getPath() != null) {
+                    dtype = DataTypeUtil.getMemberType(dtype, parameterWithId.getPath());
+                }
+
+                if (dtype instanceof BaseDataType baseDataType) {
+                    var unitSet = baseDataType.getUnitSet();
+                    if (!unitSet.isEmpty()) {
+                        var units = unitSet.get(0).getUnit();
+                        infob.setUnits(units);
+                    }
+                }
+                if (dtype instanceof EnumeratedParameterType ept) {
+                    infob.addAllEnumValues(XtceToGpbAssembler.toEnumValues(ept));
+                    infob.addAllEnumRanges(XtceToGpbAssembler.toEnumRanges(ept));
+                }
+            }
+        } catch (InvalidIdentification e) {
+            // Ignore
+        }
+        return infob.build();
+    }
+
+    private void updateSubscription(Action action, List<NamedObjectId> idList, boolean updateOnExpiration)
+            throws NoPermissionException, InvalidIdentification {
+        if (action == Action.REPLACE) {
+            if (subscriptionId != -1) {
+                pidrm.removeRequest(subscriptionId);
+                subscriptionId = -1;
+            }
+            subscriptionId = pidrm.addRequest(idList, updateOnExpiration, user);
+        } else if (action == Action.ADD) {
+            if (subscriptionId == -1) {
+                subscriptionId = pidrm.addRequest(idList, updateOnExpiration, user);
+            } else {
+                pidrm.addItemsToRequest(subscriptionId, idList, user);
+            }
+        } else if (action == Action.REMOVE) {
+            if (subscriptionId != -1) {
+                pidrm.removeItemsFromRequest(subscriptionId, idList, user);
+            }
+        }
+    }
+
+    private org.yamcs.protobuf.Pvalue.ParameterValue toGpb(ParameterValue pval, int numericId) {
+        var gpb = pval.toGpb(numericId);
+        if (maxBytes >= 0) {
+            var hasRawBinaryValue = gpb.hasRawValue() && gpb.getRawValue().hasBinaryValue();
+            var hasEngBinaryValue = gpb.hasEngValue() && gpb.getEngValue().hasBinaryValue();
+            if (hasRawBinaryValue || hasEngBinaryValue) {
+                var truncated = org.yamcs.protobuf.Pvalue.ParameterValue.newBuilder(gpb);
+                if (hasRawBinaryValue) {
+                    var binaryValue = gpb.getRawValue().getBinaryValue();
+                    if (binaryValue.size() > maxBytes) {
+                        truncated.getRawValueBuilder().setBinaryValue(
+                                binaryValue.substring(0, maxBytes));
+                    }
+                }
+                if (hasEngBinaryValue) {
+                    var binaryValue = gpb.getEngValue().getBinaryValue();
+                    if (binaryValue.size() > maxBytes) {
+                        truncated.getEngValueBuilder().setBinaryValue(
+                                binaryValue.substring(0, maxBytes));
+                    }
+                }
+                return truncated.build();
+            }
+        }
+        return gpb;
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        log.error("Parameter subscription errored", t);
+        if (pidrm != null) {
+            pidrm.quit();
+        }
+    }
+
+    @Override
+    public void complete() {
+        if (pidrm != null) {
+            pidrm.quit();
+        }
+    }
+}
+```
+
+### `TableApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TableApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.ForbiddenException;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.logging.Log;
+import org.yamcs.management.ManagementService;
+import org.yamcs.management.TableStreamListener;
+import org.yamcs.protobuf.AbstractTableApi;
+import org.yamcs.protobuf.StreamEvent;
+import org.yamcs.protobuf.Table.ColumnData;
+import org.yamcs.protobuf.Table.ColumnInfo;
+import org.yamcs.protobuf.Table.EnumValue;
+import org.yamcs.protobuf.Table.ExecuteSqlRequest;
+import org.yamcs.protobuf.Table.GetStreamRequest;
+import org.yamcs.protobuf.Table.GetTableDataRequest;
+import org.yamcs.protobuf.Table.GetTableRequest;
+import org.yamcs.protobuf.Table.ListStreamsRequest;
+import org.yamcs.protobuf.Table.ListStreamsResponse;
+import org.yamcs.protobuf.Table.ListTablesRequest;
+import org.yamcs.protobuf.Table.ListTablesResponse;
+import org.yamcs.protobuf.Table.ListValue;
+import org.yamcs.protobuf.Table.PartitioningInfo;
+import org.yamcs.protobuf.Table.PartitioningInfo.PartitioningType;
+import org.yamcs.protobuf.Table.ReadRowsRequest;
+import org.yamcs.protobuf.Table.RebuildHistogramRequest;
+import org.yamcs.protobuf.Table.RebuildHistogramResponse;
+import org.yamcs.protobuf.Table.ResultSet;
+import org.yamcs.protobuf.Table.Row;
+import org.yamcs.protobuf.Table.Row.Cell;
+import org.yamcs.protobuf.Table.StreamData;
+import org.yamcs.protobuf.Table.StreamInfo;
+import org.yamcs.protobuf.Table.SubscribeStreamRequest;
+import org.yamcs.protobuf.Table.SubscribeStreamStatisticsRequest;
+import org.yamcs.protobuf.Table.TableData;
+import org.yamcs.protobuf.Table.TableData.TableRecord;
+import org.yamcs.protobuf.Table.TableInfo;
+import org.yamcs.protobuf.Table.WriteRowsExceptionDetail;
+import org.yamcs.protobuf.Table.WriteRowsRequest;
+import org.yamcs.protobuf.Table.WriteRowsResponse;
+import org.yamcs.protobuf.Yamcs.AggregateValue;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ArrayDataType;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.ProtobufDataType;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.rocksdb.HistogramRebuilder;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.collect.BiMap;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.MessageLite;
+import com.google.protobuf.Struct;
+
+public class TableApi extends AbstractTableApi<Context> {
+    private static final long MAX_NUM_ROWS = 2000;
+
+    private static final Log log = new Log(TableApi.class);
+
+    @Override
+    public void listStreams(Context ctx, ListStreamsRequest request, Observer<ListStreamsResponse> observer) {
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+
+        ListStreamsResponse.Builder responseb = ListStreamsResponse.newBuilder();
+        List<Stream> streams = new ArrayList<>(ydb.getStreams());
+        streams.sort((s1, s2) -> s1.getName().compareToIgnoreCase(s2.getName()));
+        for (Stream stream : streams) {
+            if (!ctx.user.hasSystemPrivilege(SystemPrivilege.ControlArchiving) &&
+                    !ctx.user.hasObjectPrivilege(ObjectPrivilegeType.Stream, stream.getName())) {
+                continue;
+            }
+            responseb.addStreams(toStreamInfo(stream));
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void subscribeStreamStatistics(Context ctx, SubscribeStreamStatisticsRequest request,
+            Observer<StreamEvent> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+
+        for (Stream stream : ydb.getStreams()) {
+            observer.next(StreamEvent.newBuilder()
+                    .setType(StreamEvent.Type.CREATED)
+                    .setName(stream.getName())
+                    .setDataCount(stream.getDataCount())
+                    .build());
+        }
+
+        TableStreamListener listener = new TableStreamListener() {
+            @Override
+            public void streamRegistered(String streamInstance, Stream stream) {
+                if (streamInstance.equals(ydb.getName())) {
+                    observer.next(StreamEvent.newBuilder()
+                            .setType(StreamEvent.Type.CREATED)
+                            .setName(stream.getName())
+                            .setDataCount(stream.getDataCount())
+                            .build());
+                }
+            }
+
+            @Override
+            public void streamUpdated(String streamInstance, StreamInfo stream) {
+                if (streamInstance.equals(ydb.getName())) {
+                    observer.next(StreamEvent.newBuilder()
+                            .setType(StreamEvent.Type.UPDATED)
+                            .setName(stream.getName())
+                            .setDataCount(stream.getDataCount())
+                            .build());
+                }
+            }
+
+            @Override
+            public void streamUnregistered(String streamInstance, String name) {
+                if (streamInstance.equals(ydb.getName())) {
+                    observer.next(StreamEvent.newBuilder()
+                            .setType(StreamEvent.Type.DELETED)
+                            .setName(name)
+                            .build());
+                }
+            }
+        };
+        observer.setCancelHandler(() -> ManagementService.getInstance().removeTableStreamListener(listener));
+        ManagementService.getInstance().addTableStreamListener(listener);
+    }
+
+    @Override
+    public void getStream(Context ctx, GetStreamRequest request, Observer<StreamInfo> observer) {
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+        Stream stream = verifyStream(ctx, ydb, request.getName());
+
+        StreamInfo response = toStreamInfo(stream);
+        observer.complete(response);
+    }
+
+    @Override
+    public void subscribeStream(Context ctx, SubscribeStreamRequest request, Observer<StreamData> observer) {
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+        Stream stream = verifyStream(ctx, ydb, request.getStream());
+
+        StreamSubscriber listener = new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                observer.next(StreamData.newBuilder()
+                        .setStream(stream.getName())
+                        .addAllColumn(TableApi.toColumnDataList(tuple))
+                        .build());
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                observer.complete();
+            }
+        };
+        observer.setCancelHandler(() -> stream.removeSubscriber(listener));
+        stream.addSubscriber(listener);
+    }
+
+    @Override
+    public void listTables(Context ctx, ListTablesRequest request, Observer<ListTablesResponse> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ControlArchiving, SystemPrivilege.ReadTables);
+
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+
+        ListTablesResponse.Builder responseb = ListTablesResponse.newBuilder();
+        List<TableDefinition> defs = new ArrayList<>(ydb.getTableDefinitions());
+        defs.sort((d1, d2) -> d1.getName().compareToIgnoreCase(d2.getName()));
+        for (TableDefinition def : defs) {
+            responseb.addTables(toTableInfo(def));
+        }
+        observer.complete(responseb.build());
+    }
+
+    @Override
+    public void getTable(Context ctx, GetTableRequest request, Observer<TableInfo> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ControlArchiving, SystemPrivilege.ReadTables);
+
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+        TableDefinition table = verifyTable(ydb, request.getName());
+
+        TableInfo response = toTableInfo(table);
+        observer.complete(response);
+    }
+
+    @Override
+    public void getTableData(Context ctx, GetTableDataRequest request, Observer<TableData> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ControlArchiving, SystemPrivilege.ReadTables);
+
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+        TableDefinition table = verifyTable(ydb, request.getName());
+
+        long pos = request.hasPos() ? request.getPos() : 0;
+        int limit = request.hasLimit() ? request.getLimit() : 100;
+
+        List<Object> args = new ArrayList<>();
+        SqlBuilder sqlb = new SqlBuilder(table.getName());
+
+        if (request.getColsCount() > 0) {
+            request.getColsList().forEach(col -> {
+                sqlb.select("?");
+                args.add(col);
+            });
+        }
+
+        sqlb.descend(!request.getOrder().equals("asc"));
+        sqlb.limit(pos, limit);
+
+        String sql = sqlb.toString();
+        TableData.Builder responseb = TableData.newBuilder();
+        StreamFactory.stream(ydb.getName(), sql, args, new StreamSubscriber() {
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                TableRecord.Builder rec = TableRecord.newBuilder();
+                rec.addAllColumn(toColumnDataList(tuple));
+                responseb.addRecord(rec); // TODO estimate byte size
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                observer.complete(responseb.build());
+            }
+        });
+    }
+
+    @Override
+    public void readRows(Context ctx, ReadRowsRequest request, Observer<Row> observer) {
+        ctx.checkAnyOfSystemPrivileges(SystemPrivilege.ControlArchiving, SystemPrivilege.ReadTables);
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+
+        TableDefinition table = verifyTable(ydb, request.getTable());
+
+        SqlBuilder sqlb = new SqlBuilder(table.getName());
+        request.getColsList().forEach(col -> sqlb.select(col));
+        if (request.hasQuery()) {
+            sqlb.where(request.getQuery());
+        }
+        String sql = sqlb.toString();
+
+        StreamFactory.stream(ydb.getName(), sql, new RowReader(observer));
+    }
+
+    @Override
+    public Observer<WriteRowsRequest> writeRows(Context ctx, Observer<WriteRowsResponse> observer) {
+        if (!ctx.user.hasSystemPrivilege(SystemPrivilege.WriteTables)
+                && !ctx.user.hasSystemPrivilege(SystemPrivilege.ControlArchiving)) {
+            throw new ForbiddenException("Insufficient privileges");
+        }
+
+        return new Observer<>() {
+
+            Map<Integer, ColumnSerializer<?>> serializers = new HashMap<>();
+            Map<Integer, ColumnDefinition> colDefinitions = new HashMap<>();
+            static final int MAX_COLUMNS = 65535;
+
+            Stream inputStream;
+            int count = 0;
+
+            @Override
+            public void next(WriteRowsRequest request) {
+                if (count == 0) {
+                    YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+
+                    String tableName = request.getTable();
+                    TableDefinition table = ydb.getTable(tableName);
+                    if (table == null) {
+                        throw new NotFoundException(
+                                "No table named '" + tableName + "' (database: '" + ydb.getName() + "')");
+                    }
+                    inputStream = StreamFactory.loadStream(ydb.getName(), table);
+                }
+
+                try {
+                    if (request.hasRow()) {
+                        Tuple t = rowToTuple(request.getRow());
+                        inputStream.emitTuple(t);
+                        count++;
+                    }
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                HttpException e;
+                if (t instanceof HttpException) {
+                    e = (HttpException) t;
+                } else {
+                    e = new InternalServerErrorException(t);
+                }
+
+                e.setDetail(WriteRowsExceptionDetail.newBuilder()
+                        .setCount(count)
+                        .build());
+
+                observer.completeExceptionally(e);
+            }
+
+            @Override
+            public void complete() {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                log.debug("Wrote {} rows", count);
+                WriteRowsResponse.Builder responseb = WriteRowsResponse.newBuilder()
+                        .setCount(count);
+                observer.complete(responseb.build());
+            }
+
+            private Tuple rowToTuple(Row row) throws IOException {
+                for (Row.ColumnInfo cinfo : row.getColumnsList()) {
+                    if (!cinfo.hasId() || !cinfo.hasName() || !cinfo.hasType()) {
+                        throw new IllegalArgumentException(
+                                "Invalid row provided, no id or name or type in the column info");
+                    }
+                    int colId = cinfo.getId();
+                    String cname = cinfo.getName();
+                    String ctype = cinfo.getType();
+                    DataType type = DataType.byName(ctype);
+                    ColumnDefinition cd = new ColumnDefinition(cname, type);
+                    ColumnSerializer<?> cs = ColumnSerializerFactory.getColumnSerializerForReplication(cd);
+
+                    serializers.put(colId, cs);
+                    colDefinitions.put(colId, cd);
+                    if (serializers.size() > MAX_COLUMNS) {
+                        throw new IllegalArgumentException("Too many columns specified");
+                    }
+                }
+                TupleDefinition tdef = new TupleDefinition();
+                List<Object> values = new ArrayList<>(row.getCellsCount());
+                for (Cell cell : row.getCellsList()) {
+                    if (!cell.hasColumnId() || !cell.hasData()) {
+                        throw new IllegalArgumentException("Invalid cell provided, no id or no data");
+                    }
+                    int colId = cell.getColumnId();
+                    ColumnDefinition cd = colDefinitions.get(colId);
+                    if (cd == null) {
+                        throw new IllegalArgumentException("Invalid column id " + colId
+                                + " specified. It has to be defined by the ColumnInfo message");
+                    }
+                    tdef.addColumn(cd);
+                    ColumnSerializer<?> cs = serializers.get(colId);
+                    Object v = cs.fromByteArray(cell.getData().toByteArray(), cd);
+                    values.add(v);
+                }
+                return new Tuple(tdef, values);
+            }
+        };
+    }
+
+    @Override
+    public void executeSql(Context ctx, ExecuteSqlRequest request, Observer<ResultSet> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+        if (request.hasStatement()) {
+            try {
+                StreamSqlStatement stmt = ydb.createStatement(request.getStatement());
+
+                ResultSet.Builder rsBuilder = ResultSet.newBuilder();
+                ydb.execute(stmt, new ResultListener() {
+                    TupleDefinition tdef;
+
+                    @Override
+                    public void start(TupleDefinition tdef) {
+                        for (int i = 0; i < tdef.size(); i++) {
+                            ColumnDefinition cdef = tdef.getColumn(i);
+                            ColumnInfo.Builder cinfo = ColumnInfo.newBuilder()
+                                    .setName(cdef.getName())
+                                    .setType(cdef.getType().name());
+                            rsBuilder.addColumns(cinfo);
+                        }
+                        this.tdef = tdef.copy();
+                    }
+
+                    @Override
+                    public void next(Tuple tuple) {
+                        rsBuilder.addRows(ListValue.newBuilder()
+                                .addAllValues(getTupleValues(tdef, tuple)));
+                    }
+
+                    @Override
+                    public void completeExceptionally(Throwable t) {
+                        observer.completeExceptionally(t);
+                    }
+
+                    @Override
+                    public void complete() {
+                        observer.complete(rsBuilder.build());
+                    }
+                }, MAX_NUM_ROWS);
+            } catch (ParseException e) {
+                throw new BadRequestException(e);
+            } catch (StreamSqlException e) {
+                throw new InternalServerErrorException(e);
+            }
+        }
+    }
+
+    @Override
+    public void executeStreamingSql(Context ctx, ExecuteSqlRequest request, Observer<ResultSet> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+
+        if (request.hasStatement()) {
+            try {
+                StreamSqlStatement stmt = ydb.createStatement(request.getStatement());
+
+                // Note: we batch rows together in result sets despite knowing that
+                // there is already batching going on before an http chunk is emitted.
+                // The advantage though would be if in the future we add some sort of
+                // resume token per result set. This would help to recover from abrupt
+                // failures.
+                final int RESULT_SET_SIZE_TRESHOLD = 2000;
+
+                ydb.execute(stmt, new ResultListener() {
+                    TupleDefinition tdef;
+                    int sizeEstimate;
+                    ResultSet.Builder rsBuilder = ResultSet.newBuilder();
+
+                    @Override
+                    public void start(TupleDefinition tdef) {
+                        for (int i = 0; i < tdef.size(); i++) {
+                            ColumnDefinition cdef = tdef.getColumn(i);
+                            rsBuilder.addColumns(ColumnInfo.newBuilder()
+                                    .setName(cdef.getName())
+                                    .setType(cdef.getType().name()));
+                        }
+                        this.tdef = tdef.copy();
+                    }
+
+                    @Override
+                    public void next(Tuple tuple) {
+                        ListValue row = ListValue.newBuilder().addAllValues(getTupleValues(tdef, tuple)).build();
+                        rsBuilder.addRows(row);
+                        sizeEstimate += row.getSerializedSize();
+                        if (sizeEstimate > RESULT_SET_SIZE_TRESHOLD) {
+                            observer.next(rsBuilder.build());
+                            rsBuilder = ResultSet.newBuilder();
+                            sizeEstimate = 0;
+                        }
+                    }
+
+                    @Override
+                    public void completeExceptionally(Throwable t) {
+                        observer.completeExceptionally(t);
+                    }
+
+                    @Override
+                    public void complete() {
+                        if (rsBuilder.getRowsCount() > 0) {
+                            observer.next(rsBuilder.build());
+                        }
+                        observer.complete();
+                    }
+                });
+            } catch (ParseException e) {
+                throw new BadRequestException(e);
+            } catch (StreamSqlException e) {
+                throw new InternalServerErrorException(e);
+            }
+        }
+    }
+
+    public static Stream verifyStream(Context ctx, YarchDatabaseInstance ydb, String streamName) {
+        Stream stream = ydb.getStream(streamName);
+
+        if (stream != null
+                && !ctx.user.hasSystemPrivilege(SystemPrivilege.ControlArchiving)
+                && !ctx.user.hasObjectPrivilege(ObjectPrivilegeType.Stream, streamName)) {
+            log.warn("Stream {} found, but withheld due to insufficient privileges. Returning 404 instead",
+                    streamName);
+            stream = null;
+        }
+
+        if (stream == null) {
+            throw new NotFoundException("No stream named '" + streamName + "' (instance: '" + ydb.getName() + "')");
+        } else {
+            return stream;
+        }
+    }
+
+    private TableDefinition verifyTable(YarchDatabaseInstance ydb, String tableName) {
+        TableDefinition table = ydb.getTable(tableName);
+        if (table == null) {
+            throw new NotFoundException("No table named '" + tableName + "' (instance: '" + ydb.getName() + "')");
+        } else {
+            return table;
+        }
+    }
+
+    private static class RowReader implements StreamSubscriber {
+
+        Observer<Row> observer;
+        TupleDefinition completeTuple = new TupleDefinition();
+
+        RowReader(Observer<Row> observer) {
+            this.observer = observer;
+        }
+
+        @Override
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+        public void onTuple(Stream stream, Tuple tuple) {
+            if (observer.isCancelled()) {
+                stream.close();
+                return;
+            }
+
+            Row.Builder rowb = Row.newBuilder();
+            for (int i = 0; i < tuple.size(); i++) {
+                ColumnDefinition cd = tuple.getColumnDefinition(i);
+                Object v = tuple.getColumn(i);
+                int colId = completeTuple.getColumnIndex(cd.getName());
+                if (colId == -1) {
+                    completeTuple.addColumn(cd);
+                    colId = completeTuple.getColumnIndex(cd.getName());
+                    rowb.addColumns(Row.ColumnInfo.newBuilder().setId(colId).setName(cd.getName())
+                            .setType(cd.getType().name()).build());
+                }
+                ColumnSerializer cs = ColumnSerializerFactory.getColumnSerializerForReplication(cd);
+                rowb.addCells(Cell.newBuilder()
+                        .setColumnId(colId)
+                        .setData(ByteString.copyFrom(cs.toByteArray(v)))
+                        .build());
+            }
+
+            observer.next(rowb.build());
+        }
+
+        @Override
+        public void streamClosed(Stream stream) {
+            observer.complete();
+        }
+    }
+
+    private static TableInfo toTableInfo(TableDefinition def) {
+        TableInfo.Builder infob = TableInfo.newBuilder();
+        infob.setName(def.getName());
+        infob.setCompressed(def.isCompressed());
+        infob.setFormatVersion(def.getFormatVersion());
+        infob.setStorageEngine(def.getStorageEngineName());
+        if (def.hasHistogram()) {
+            infob.addAllHistogramColumn(def.getHistogramColumns());
+        }
+        if (def.hasPartitioning()) {
+            PartitioningInfo.Builder partb = PartitioningInfo.newBuilder();
+            PartitioningSpec spec = def.getPartitioningSpec();
+            switch (spec.type) {
+            case TIME:
+                partb.setType(PartitioningType.TIME);
+                break;
+            case VALUE:
+                partb.setType(PartitioningType.VALUE);
+                break;
+            case TIME_AND_VALUE:
+                partb.setType(PartitioningType.TIME_AND_VALUE);
+                break;
+            case NONE:
+                break;
+            default:
+                throw new IllegalStateException("Unexpected partitioning type " + spec.type);
+            }
+            if (spec.type == PartitioningSpec._type.TIME || spec.type == PartitioningSpec._type.TIME_AND_VALUE) {
+                if (spec.timeColumn != null) {
+                    partb.setTimeColumn(spec.timeColumn);
+                    partb.setTimePartitionSchema(spec.getTimePartitioningSchema().getName());
+                }
+            }
+            if (spec.type == PartitioningSpec._type.VALUE || spec.type == PartitioningSpec._type.TIME_AND_VALUE) {
+                if (spec.valueColumn != null) {
+                    partb.setValueColumn(spec.valueColumn);
+                    partb.setValueColumnType(spec.getValueColumnType().toString());
+                }
+            }
+
+            if (spec.type != PartitioningSpec._type.NONE) {
+                infob.setPartitioningInfo(partb);
+            }
+        }
+        StringBuilder scriptb = new StringBuilder("create table ").append(def.getName());
+
+        List<TableColumnDefinition> columns = new ArrayList<>();
+        columns.addAll(def.getKeyDefinition());
+        columns.addAll(def.getValueDefinition());
+        String columnSpec = columns.stream()
+                .map(colDef -> {
+                    String colDefString = "\"" + colDef.getName() + "\" " + colDef.getType().name();
+                    if (colDef.isAutoIncrement()) {
+                        colDefString += " auto_increment";
+                    }
+                    return colDefString;
+                })
+                .collect(Collectors.joining(", "));
+        scriptb.append("(").append(columnSpec).append(")");
+
+        List<TableColumnDefinition> keyColumns = def.getKeyDefinition();
+        if (!keyColumns.isEmpty()) {
+            String keySpec = keyColumns.stream().map(TableColumnDefinition::getName).collect(Collectors.joining(", "));
+            scriptb.append(" primary key(").append(keySpec).append(")");
+        }
+
+        scriptb.append(" engine ").append(def.getStorageEngineName());
+        if (def.hasHistogram()) {
+            scriptb.append(" histogram(").append(String.join(", ", def.getHistogramColumns())).append(")");
+        }
+        if (def.hasPartitioning()) {
+            PartitioningSpec spec = def.getPartitioningSpec();
+            if (spec.type == PartitioningSpec._type.TIME) {
+                scriptb.append(" partition by time(").append(spec.timeColumn)
+                        .append("('").append(spec.getTimePartitioningSchema().getName()).append("'))");
+            } else if (spec.type == PartitioningSpec._type.VALUE) {
+                scriptb.append(" partition by value(").append(spec.valueColumn).append(")");
+            } else if (spec.type == PartitioningSpec._type.TIME_AND_VALUE) {
+                scriptb.append(" partition by time_and_value(").append(spec.timeColumn)
+                        .append("('").append(spec.getTimePartitioningSchema().getName()).append("')")
+                        .append(", ").append(spec.valueColumn).append(")");
+            }
+        }
+        if (def.isCompressed()) {
+            scriptb.append(" table_format=compressed");
+        }
+        infob.setScript(scriptb.toString());
+        for (ColumnDefinition cdef : def.getKeyDefinition()) {
+            infob.addKeyColumn(toColumnInfo(cdef, def));
+        }
+        for (ColumnDefinition cdef : def.getValueDefinition()) {
+            infob.addValueColumn(toColumnInfo(cdef, def));
+        }
+        return infob.build();
+    }
+
+    private static StreamInfo toStreamInfo(Stream stream) {
+        StreamInfo.Builder infob = StreamInfo.newBuilder();
+        infob.setName(stream.getName());
+        infob.setDataCount(stream.getDataCount());
+        var def = stream.getDefinition();
+        if (def == null) {
+            infob.setScript("create stream " + stream.getName());
+        } else {
+            infob.setScript("create stream " + stream.getName() + def.getStringDefinition());
+            for (var cdef : def.getColumnDefinitions()) {
+                infob.addColumn(toColumnInfo(cdef, null));
+                infob.addColumns(toColumnInfo(cdef, null));
+            }
+        }
+        for (var subscriber : stream.getSubscribers()) {
+            infob.addSubscribers(subscriber.getClass().getName() + "@" + Integer.toHexString(subscriber.hashCode()));
+        }
+        return infob.build();
+    }
+
+    private static ColumnInfo toColumnInfo(ColumnDefinition cdef, TableDefinition tableDefinition) {
+        ColumnInfo.Builder infob = ColumnInfo.newBuilder();
+        infob.setName(cdef.getName());
+        infob.setType(cdef.getType().name());
+        if (tableDefinition != null && cdef.getType() == DataType.ENUM) {
+            BiMap<String, Short> enumValues = tableDefinition.getEnumValues(cdef.getName());
+            if (enumValues != null) {
+                List<EnumValue> enumValueList = new ArrayList<>();
+                for (Entry<String, Short> entry : enumValues.entrySet()) {
+                    EnumValue val = EnumValue.newBuilder().setValue(entry.getValue()).setLabel(entry.getKey()).build();
+                    enumValueList.add(val);
+                }
+                Collections.sort(enumValueList, (v1, v2) -> Integer.compare(v1.getValue(), v2.getValue()));
+                infob.addAllEnumValue(enumValueList);
+            }
+        }
+        if (cdef instanceof TableColumnDefinition) {
+            var tcdef = (TableColumnDefinition) cdef;
+            infob.setAutoIncrement(tcdef.isAutoIncrement());
+        }
+        return infob.build();
+    }
+
+    private static List<Value> getTupleValues(TupleDefinition tdef, Tuple tuple) {
+        List<Value> result = new ArrayList<>();
+        for (ColumnDefinition cdef : tdef.getColumnDefinitions()) {
+            Object column = tuple.getColumn(cdef.getName());
+            result.add(toTupleValue(cdef.getType(), column));
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Value toTupleValue(DataType type, Object column) {
+        Value.Builder v = Value.newBuilder();
+        if (column == null) {
+            v.setType(Type.NONE);
+        } else {
+            switch (type.val) {
+            case SHORT:
+                v.setType(Type.SINT32);
+                v.setSint32Value((Short) column);
+                break;
+            case DOUBLE:
+                v.setType(Type.DOUBLE);
+                v.setDoubleValue((Double) column);
+                break;
+            case BINARY:
+                v.setType(Type.BINARY);
+                v.setBinaryValue(ByteString.copyFrom((byte[]) column));
+                break;
+            case INT:
+                v.setType(Type.SINT32);
+                v.setSint32Value((Integer) column);
+                break;
+            case TIMESTAMP:
+                v.setType(Type.TIMESTAMP);
+                v.setTimestampValue((Long) column);
+                v.setStringValue(TimeEncoding.toString((Long) column));
+                break;
+            case HRES_TIMESTAMP:
+                v.setType(Type.TIMESTAMP);
+                long m = ((Instant) column).getMillis();
+                v.setTimestampValue(m);
+                v.setStringValue(TimeEncoding.toString(m));
+                break;
+            case ENUM:
+            case STRING:
+                v.setType(Type.STRING);
+                v.setStringValue((String) column);
+                break;
+            case BOOLEAN:
+                v.setType(Type.BOOLEAN);
+                v.setBooleanValue((Boolean) column);
+                break;
+            case LONG:
+                v.setType(Type.SINT64);
+                v.setSint64Value((Long) column);
+                break;
+            case PARAMETER_VALUE:
+                org.yamcs.parameter.ParameterValue pv = (org.yamcs.parameter.ParameterValue) column;
+                v = ValueUtility.toGbp(pv.getEngValue()).toBuilder();
+                break;
+            case PROTOBUF:
+                String protobufClass = ((ProtobufDataType) type).getClassName();
+                if (protobufClass.equals(Struct.class.getName())) {
+                    v.setType(Type.AGGREGATE);
+                    Struct message = (Struct) column;
+                    AggregateValue aggregateValue = toAggregateValue(message);
+                    v.setAggregateValue(aggregateValue);
+                } else {
+                    v.setType(Type.BINARY);
+                    MessageLite message = (MessageLite) column;
+                    v.setBinaryValue(message.toByteString());
+                }
+                break;
+            case UUID:
+                v.setType(Type.STRING);
+                v.setStringValue(((java.util.UUID) column).toString());
+                break;
+            case ARRAY:
+                v.setType(Type.ARRAY);
+                DataType elementType = ((ArrayDataType) type).getElementType();
+                for (Object o : (List<Object>) column) {
+                    v.addArrayValue(toTupleValue(elementType, o));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Tuple column type " + type.val + " is currently not supported");
+            }
+        }
+        return v.build();
+    }
+
+    private static AggregateValue toAggregateValue(Struct structValue) {
+        AggregateValue.Builder aggregate = AggregateValue.newBuilder();
+        for (Entry<String, com.google.protobuf.Value> entry : structValue.getFieldsMap().entrySet()) {
+            aggregate.addName(entry.getKey());
+            aggregate.addValue(toValue(entry.getValue()));
+        }
+        return aggregate.build();
+    }
+
+    private static List<Value> toArrayValue(com.google.protobuf.ListValue listValue) {
+        List<Value> arrayValue = new ArrayList<>();
+        for (com.google.protobuf.Value value : listValue.getValuesList()) {
+            arrayValue.add(toValue(value));
+        }
+        return arrayValue;
+    }
+
+    private static Value toValue(com.google.protobuf.Value value) {
+        switch (value.getKindCase()) {
+        case BOOL_VALUE:
+            boolean booleanValue = value.getBoolValue();
+            return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(booleanValue).build();
+        case NUMBER_VALUE:
+            double doubleValue = value.getNumberValue();
+            return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(doubleValue).build();
+        case STRING_VALUE:
+            String stringValue = value.getStringValue();
+            return Value.newBuilder().setType(Type.STRING).setStringValue(stringValue).build();
+        case NULL_VALUE:
+            return Value.newBuilder().setType(Type.NONE).build();
+        case STRUCT_VALUE:
+            AggregateValue aggregateValue = toAggregateValue(value.getStructValue());
+            return Value.newBuilder().setType(Type.AGGREGATE).setAggregateValue(aggregateValue).build();
+        case LIST_VALUE:
+            List<Value> arrayValue = toArrayValue(value.getListValue());
+            return Value.newBuilder().setType(Type.ARRAY).addAllArrayValue(arrayValue).build();
+        default:
+            throw new IllegalStateException("Unexpected value type " + value.getKindCase());
+        }
+    }
+
+    public final static List<ColumnData> toColumnDataList(Tuple tuple) {
+        List<ColumnData> result = new ArrayList<>();
+        int i = 0;
+        for (Value value : getTupleValues(tuple.getDefinition(), tuple)) {
+            ColumnDefinition cdef = tuple.getColumnDefinition(i);
+
+            ColumnData.Builder colData = ColumnData.newBuilder();
+            colData.setName(cdef.getName());
+            colData.setValue(value);
+            result.add(colData.build());
+            i++;
+        }
+        return result;
+    }
+
+    @Override
+    public void rebuildHistogram(Context ctx, RebuildHistogramRequest request,
+            Observer<RebuildHistogramResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlArchiving);
+
+        YarchDatabaseInstance ydb = DatabaseApi.verifyDatabase(request.getInstance());
+        TableDefinition table = verifyTable(ydb, request.getTable());
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(table);
+
+        Tablespace tablespace = rse.getTablespace(ydb.getName());
+        HistogramRebuilder rebuilder = new HistogramRebuilder(tablespace, ydb, table.getName());
+        TimeInterval interval = new TimeInterval();
+        if (request.hasStart()) {
+            interval.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            interval.setEnd(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+
+        try {
+            rebuilder.rebuild(interval).whenComplete((v, e) -> {
+                if (e != null) {
+                    observer.completeExceptionally(e);
+                } else {
+                    observer.complete(RebuildHistogramResponse.newBuilder().build());
+                }
+            });
+        } catch (YarchException e) {
+            log.warn("Error when executing rebuild request", e);
+            observer.completeExceptionally(e);
+        }
+
+    }
+}
+```
+
+### `TimeApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimeApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.protobuf.AbstractTimeApi;
+import org.yamcs.protobuf.LeapSecondsTable;
+import org.yamcs.protobuf.LeapSecondsTable.ValidityRange;
+import org.yamcs.protobuf.SetTimeRequest;
+import org.yamcs.protobuf.SubscribeTimeRequest;
+import org.yamcs.time.SimulationTimeService;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.TaiUtcConverter.ValidityLine;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Empty;
+import com.google.protobuf.Timestamp;
+
+public class TimeApi extends AbstractTimeApi<Context> {
+
+    @Override
+    public void getLeapSeconds(Context ctx, Empty request, Observer<LeapSecondsTable> observer) {
+        LeapSecondsTable.Builder b = LeapSecondsTable.newBuilder();
+        List<ValidityLine> lines = TimeEncoding.getTaiUtcConversionTable();
+        for (int i = 0; i < lines.size(); i++) {
+            ValidityLine line = lines.get(i);
+            long instant = TimeEncoding.fromUnixMillisec(line.unixMillis);
+            ValidityRange.Builder rangeb = ValidityRange.newBuilder()
+                    .setStart(TimeEncoding.toString(instant))
+                    .setLeapSeconds(line.seconds - 10)
+                    .setTaiDifference(line.seconds);
+            if (i != lines.size() - 1) {
+                ValidityLine next = lines.get(i + 1);
+                instant = TimeEncoding.fromUnixMillisec(next.unixMillis);
+                rangeb.setStop(TimeEncoding.toString(instant));
+            }
+            b.addRanges(rangeb);
+        }
+        observer.complete(b.build());
+    }
+
+    @Override
+    public void setTime(Context ctx, SetTimeRequest request, Observer<Empty> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        YamcsServer yamcs = YamcsServer.getServer();
+        TimeService timeService = yamcs.getInstance(instance).getTimeService();
+
+        if (timeService instanceof SimulationTimeService) {
+            SimulationTimeService sts = (SimulationTimeService) timeService;
+
+            if (request.hasTime0()) {
+                sts.setTime0(TimeEncoding.fromProtobufTimestamp(request.getTime0()));
+            }
+            if (request.hasSpeed()) {
+                sts.setSimSpeed(request.getSpeed());
+            }
+            if (request.hasElapsedTime()) {
+                sts.setSimElapsedTime(request.getElapsedTime());
+            }
+
+            observer.complete(Empty.getDefaultInstance());
+        } else {
+            observer.completeExceptionally(new BadRequestException("Cannot set time for a non-simulation TimeService"));
+        }
+    }
+
+    @Override
+    public void subscribeTime(Context ctx, SubscribeTimeRequest request, Observer<Timestamp> observer) {
+        var instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeProvider provider;
+        if (request.hasProcessor()) {
+            var processor = ProcessingApi.verifyProcessor(request.getInstance(), request.getProcessor());
+            provider = () -> processor.getCurrentTime();
+        } else {
+            var yamcs = YamcsServer.getServer();
+            var timeService = yamcs.getInstance(instance).getTimeService();
+            provider = () -> timeService.getMissionTime();
+        }
+
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+        var future = exec.scheduleAtFixedRate(() -> {
+            var time = provider.getTime();
+            observer.next(TimeEncoding.toProtobufTimestamp(time));
+        }, 0, 1, TimeUnit.SECONDS);
+
+        observer.setCancelHandler(() -> future.cancel(false));
+    }
+
+    @FunctionalInterface
+    private static interface TimeProvider {
+        long getTime();
+    }
+}
+```
+
+### `TimeCorrelationApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimeCorrelationApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.HttpException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.protobuf.AbstractTimeCorrelationApi;
+import org.yamcs.protobuf.AddTimeOfFlightIntervalsRequest;
+import org.yamcs.protobuf.DeleteTimeOfFlightIntervalsRequest;
+import org.yamcs.protobuf.GetTcoConfigRequest;
+import org.yamcs.protobuf.GetTcoStatusRequest;
+import org.yamcs.protobuf.SetCoefficientsRequest;
+import org.yamcs.protobuf.SetTcoConfigRequest;
+import org.yamcs.protobuf.TcoConfig;
+import org.yamcs.protobuf.TcoResetRequest;
+import org.yamcs.protobuf.TcoStatus;
+import org.yamcs.protobuf.TofInterval;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.time.Instant;
+import org.yamcs.time.TimeCorrelationService;
+import org.yamcs.time.TimeOfFlightEstimator;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Empty;
+import com.google.protobuf.Timestamp;
+
+public class TimeCorrelationApi extends AbstractTimeCorrelationApi<Context> {
+
+    @Override
+    public void getConfig(Context ctx, GetTcoConfigRequest request, Observer<TcoConfig> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+        observer.complete(tco.getTcoConfig());
+    }
+
+    @Override
+    public void setConfig(Context ctx, SetTcoConfigRequest request, Observer<Empty> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+
+        TcoConfig conf = request.getConfig();
+
+        if (conf.hasAccuracy()) {
+            tco.setAccuracy(verifyPositive("accuracy", conf.getAccuracy()));
+        }
+
+        if (conf.hasValidity()) {
+            tco.setValidity(verifyPositive("validity", conf.getValidity()));
+        }
+
+        if (conf.hasDefaultTof()) {
+            tco.setDefaultTof(verifyPositive("defaultTof", conf.getDefaultTof()));
+        }
+
+        if (conf.hasOnboardDelay()) {
+            tco.setOnboardDelay(verifyPositive("onboardDelay", conf.getOnboardDelay()));
+        }
+
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    private double verifyPositive(String name, double value) {
+        if (value < 0 || !Double.isFinite(value)) {
+            throw new BadRequestException("Invalid " + name);
+        }
+        return value;
+    }
+
+    @Override
+    public void getStatus(Context ctx, GetTcoStatusRequest request, Observer<TcoStatus> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+
+        observer.complete(tco.getStatus());
+    }
+
+    @Override
+    public void setCoefficients(Context ctx, SetCoefficientsRequest request, Observer<Empty> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+        if (!request.hasCoefficients()) {
+            throw new BadRequestException("no coefficients provided");
+        }
+
+        org.yamcs.protobuf.TcoCoefficients pcoef = request.getCoefficients();
+        if (!pcoef.hasUtc()) {
+            throw new BadRequestException("no UTC provided");
+        }
+        if (!pcoef.hasObt()) {
+            throw new BadRequestException("no OBT provided");
+        }
+        double gradient = pcoef.hasGradient() ? pcoef.getGradient() : 0;
+        double offset = pcoef.hasOffset() ? pcoef.getOffset() : 0;
+
+        tco.forceCoefficients(TimeEncoding.fromProtobufHresTimestamp(pcoef.getUtc()), pcoef.getObt(), offset, gradient);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    @Override
+    public void reset(Context ctx, TcoResetRequest request, Observer<Empty> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+        tco.reset();
+        observer.complete();
+    }
+
+    @Override
+    public void addTimeOfFlightIntervals(Context ctx, AddTimeOfFlightIntervalsRequest request,
+            Observer<Empty> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+        TimeOfFlightEstimator tofEstimator = tco.getTofEstimator();
+        if (tofEstimator == null) {
+            throw new BadRequestException(
+                    "Time of flight estimator not configured for this service ( 'useTofEstimator: true' in the configuration)");
+        }
+        List<TimeOfFlightEstimator.TofInterval> intervalList = new ArrayList<>();
+
+        for (TofInterval ti : request.getIntervalsList()) {
+            Instant start = verifyInstant("ertStart", ti.getErtStart());
+            Instant stop = verifyInstant("ertStop", ti.getErtStop());
+
+            if (ti.getPolCoefCount() == 0) {
+                throw new BadRequestException("no polynomial coefficient has been specified");
+            }
+            double[] coef = ti.getPolCoefList().stream().mapToDouble(d -> d).toArray();
+            intervalList.add(new TimeOfFlightEstimator.TofInterval(start, stop, coef));
+        }
+
+        tofEstimator.addIntervals(intervalList);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    private Instant verifyInstant(String name, Timestamp value) {
+        if (value == null) {
+            throw new BadRequestException(name + " has not been provided");
+        }
+        return TimeEncoding.fromProtobufHresTimestamp(value);
+    }
+
+    @Override
+    public void deleteTimeOfFlightIntervals(Context ctx, DeleteTimeOfFlightIntervalsRequest request,
+            Observer<Empty> observer) {
+        String instance = InstancesApi.verifyInstance(request.getInstance());
+        TimeCorrelationService tco = verifyService(ctx, instance, request.getServiceName());
+        TimeOfFlightEstimator tofEstimator = tco.getTofEstimator();
+        Instant start = verifyInstant("start", request.getStart());
+        Instant stop = verifyInstant("stop", request.getStop());
+
+        tofEstimator.deleteSplineIntervals(start, stop);
+        observer.complete(Empty.getDefaultInstance());
+    }
+
+    TimeCorrelationService verifyService(Context ctx, String yamcsInstance, String serviceName) throws HttpException {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeCorrelation);
+        TimeCorrelationService tco = YamcsServer.getServer().getInstance(yamcsInstance)
+                .getService(TimeCorrelationService.class, serviceName);
+        if (tco == null) {
+            throw new NotFoundException("Time correlation service '" + serviceName + "'not found");
+        }
+        return tco;
+    }
+}
+```
+
+### `TimelineApi.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimelineApi.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.yamcs.timeline.TimelineService.RDB_TIMELINE_SOURCE;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.activities.protobuf.ActivityDefinition;
+import org.yamcs.api.Observer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.Context;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.AbstractTimelineApi;
+import org.yamcs.protobuf.AddBandRequest;
+import org.yamcs.protobuf.AddItemLogRequest;
+import org.yamcs.protobuf.AddViewRequest;
+import org.yamcs.protobuf.CreateItemRequest;
+import org.yamcs.protobuf.DeleteBandRequest;
+import org.yamcs.protobuf.DeleteItemRequest;
+import org.yamcs.protobuf.DeleteTimelineGroupRequest;
+import org.yamcs.protobuf.DeleteViewRequest;
+import org.yamcs.protobuf.GetBandRequest;
+import org.yamcs.protobuf.GetItemLogRequest;
+import org.yamcs.protobuf.GetItemRequest;
+import org.yamcs.protobuf.GetViewRequest;
+import org.yamcs.protobuf.ListBandsRequest;
+import org.yamcs.protobuf.ListBandsResponse;
+import org.yamcs.protobuf.ListItemsRequest;
+import org.yamcs.protobuf.ListItemsResponse;
+import org.yamcs.protobuf.ListSourcesRequest;
+import org.yamcs.protobuf.ListSourcesResponse;
+import org.yamcs.protobuf.ListTimelineTagsRequest;
+import org.yamcs.protobuf.ListTimelineTagsResponse;
+import org.yamcs.protobuf.ListViewsRequest;
+import org.yamcs.protobuf.ListViewsResponse;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.RelativeTime;
+import org.yamcs.protobuf.TimelineBand;
+import org.yamcs.protobuf.TimelineItem;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.protobuf.TimelineView;
+import org.yamcs.protobuf.UpdateBandRequest;
+import org.yamcs.protobuf.UpdateItemRequest;
+import org.yamcs.protobuf.UpdateViewRequest;
+import org.yamcs.security.SystemPrivilege;
+import org.yamcs.timeline.ActivityGroup;
+import org.yamcs.timeline.BandListener;
+import org.yamcs.timeline.ItemGroup;
+import org.yamcs.timeline.ItemProvider;
+import org.yamcs.timeline.ItemReceiver;
+import org.yamcs.timeline.RetrievalFilter;
+import org.yamcs.timeline.TimelineActivity;
+import org.yamcs.timeline.TimelineBandDb;
+import org.yamcs.timeline.TimelineEvent;
+import org.yamcs.timeline.TimelineItemDb;
+import org.yamcs.timeline.TimelineService;
+import org.yamcs.timeline.TimelineViewDb;
+import org.yamcs.timeline.ViewListener;
+import org.yamcs.utils.InvalidRequestException;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+
+import com.google.protobuf.util.Durations;
+
+public class TimelineApi extends AbstractTimelineApi<Context> {
+    static final String MSG_NO_ID = "No id specified";
+
+    private static final Log log = new Log(TimelineApi.class);
+
+    @Override
+    public void createItem(Context ctx, CreateItemRequest request, Observer<TimelineItem> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+
+        org.yamcs.timeline.TimelineItem item = req2Item(request);
+        try {
+            item = timelineSource.addItem(item);
+            observer.complete(item.toProtoBuf(true));
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void getItem(Context ctx, GetItemRequest request, Observer<TimelineItem> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+
+        if (!request.hasId()) {
+            throw new BadRequestException(MSG_NO_ID);
+        }
+        String id = request.getId();
+        org.yamcs.timeline.TimelineItem item = timelineSource.getItem(id);
+        if (item == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(id));
+        } else {
+            observer.complete(item.toProtoBuf(true));
+        }
+    }
+
+    @Override
+    public void updateItem(Context ctx, UpdateItemRequest request, Observer<TimelineItem> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+
+        if (!request.hasId()) {
+            throw new BadRequestException(MSG_NO_ID);
+        }
+
+        String id = request.getId();
+        org.yamcs.timeline.TimelineItem item = timelineSource.getItem(id);
+        if (item == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(id));
+        }
+
+        List<String> changeList = new ArrayList<>();
+        if (request.hasName() && !request.getName().equals(item.getName())) {
+            item.setName(request.getName());
+            changeList.add("name");
+        }
+
+        if (request.hasStart()) {
+            if (request.hasRelativeTime()) {
+                throw new BadRequestException("Cannot specify both start and relative time");
+            }
+            long newStart = TimeEncoding.fromProtobufTimestamp(request.getStart());
+            if (item.getStart() != newStart) {
+                changeList.add("start");
+                item.setStart(newStart);
+            }
+            item.setRelativeItemUuid(null);
+
+        } else if (request.hasRelativeTime()) {
+            RelativeTime relt = request.getRelativeTime();
+            if (!relt.hasRelto()) {
+                throw new BadRequestException("relto item is required with relative time");
+            }
+            if (!relt.hasRelativeStart()) {
+                throw new BadRequestException("relative start is required in the relative time");
+            }
+            var relto = parseUuid(relt.getRelto());
+            if (!relto.equals(item.getRelativeItemUuid())) {
+                item.setRelativeItemUuid(relto);
+                changeList.add("relativeItemUuid");
+            }
+
+            long relstart = Durations.toMillis(relt.getRelativeStart());
+            if (relstart != item.getRelativeStart()) {
+                item.setRelativeStart(relstart);
+                changeList.add("relativeStart");
+            }
+        }
+
+        if (request.hasDuration()) {
+            long duration = Durations.toMillis(request.getDuration());
+            if (item.getDuration() != duration) {
+                item.setDuration(duration);
+                changeList.add("duration");
+            }
+        }
+        if (item instanceof TimelineActivity) {
+            TimelineActivity activity = (TimelineActivity) item;
+            if (request.hasStatus() && activity.getStatus() != request.getStatus()) {
+                activity.setStatus(request.getStatus());
+                changeList.add("status");
+            }
+            if (request.hasFailureReason() && !request.getFailureReason().equals(activity.getFailureReason())) {
+                activity.setFailureReason(request.getFailureReason());
+                changeList.add("failureReason");
+            }
+        }
+
+        if (request.hasGroupId()) {
+            UUID gid = request.getGroupId().isBlank() ? null : parseUuid(request.getGroupId());
+            if (!Objects.equals(gid, item.getGroupUuid())) {
+                item.setGroupUuid(gid);
+                changeList.add("groupUuid");
+            }
+        }
+        if (request.getTagsCount() > 0) {
+            List<String> tags = new ArrayList<>(request.getTagsList());
+            Collections.sort(tags);
+            if (!tags.equals(item.getTags())) {
+                item.setTags(tags);
+                changeList.add("tags");
+            }
+        } else if (request.hasClearTags() && request.getClearTags()) {
+            if (item.getTags() != null) {
+                item.setTags(null);
+                changeList.add("tags");
+            }
+        }
+
+        if (request.getPropertiesCount() > 0) {
+            item.setProperties(request.getPropertiesMap());
+            changeList.add("properties");
+        } else if (request.hasClearProperties() && request.getClearProperties()) {
+            item.getProperties().clear();
+            changeList.add("properties");
+        }
+
+        try {
+            item = timelineSource.updateItem(item);
+
+            timelineSource.addItemLog(item.getId(), LogEntry.newBuilder().setUser(ctx.user.getName()).setType("update")
+                    .setMsg(changeList.toString()).build());
+            observer.complete(item.toProtoBuf(true));
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void listItems(Context ctx, ListItemsRequest request, Observer<ListItemsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+
+        String next = request.hasNext() ? request.getNext() : null;
+        int limit = request.hasLimit() ? request.getLimit() : 500;
+        TimeInterval interval = new TimeInterval();
+        if (request.hasStart()) {
+            interval.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+        }
+        if (request.hasStop()) {
+            interval.setEnd(TimeEncoding.fromProtobufTimestamp(request.getStop()));
+        }
+        boolean details = request.hasDetails() && request.getDetails();
+
+        ItemProvider timelineSource;
+        RetrievalFilter filter;
+        String source;
+
+        if (request.hasBand()) {
+            try {
+                UUID bandId = UUID.fromString(request.getBand());
+                var band = timelineService.getTimelineBandDb().getBand(bandId);
+                if (band == null) {
+                    throw new NotFoundException("No such band");
+                }
+                source = band.getSource() != null ? band.getSource()
+                        : request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE;
+
+                filter = new RetrievalFilter(interval, band.getItemFilters());
+                filter.setTags(band.getTags());
+            } catch (IllegalArgumentException e) { // TEMP
+                var tag = request.getBand();
+                source = request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE;
+                filter = new RetrievalFilter(interval, Collections.emptyList());
+                filter.setTags(Arrays.asList(tag));
+            }
+        } else {
+            source = request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE;
+            filter = new RetrievalFilter(interval, request.getFiltersList());
+        }
+        timelineSource = verifySource(timelineService, source);
+
+        ListItemsResponse.Builder resp = ListItemsResponse.newBuilder().setSource(source);
+
+        timelineSource.getItems(limit, next, filter, new ItemReceiver() {
+            @Override
+            public void next(org.yamcs.timeline.TimelineItem item) {
+                resp.addItems(item.toProtoBuf(details));
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                log.warn("Error retrieving timeline items", t);
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete(String token) {
+                if (token != null) {
+                    resp.setContinuationToken(token);
+                }
+                observer.complete(resp.build());
+            }
+        });
+
+    }
+
+    @Override
+    public void getItemLog(Context ctx, GetItemLogRequest request, Observer<TimelineItemLog> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+
+        if (!request.hasId()) {
+            throw new BadRequestException(MSG_NO_ID);
+        }
+        String id = request.getId();
+        TimelineItemLog log = timelineSource.getItemLog(id);
+        if (log == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(id));
+        } else {
+            observer.complete(log);
+        }
+    }
+
+    @Override
+    public void addItemLog(Context ctx, AddItemLogRequest request, Observer<LogEntry> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+
+        if (!request.hasId()) {
+            throw new BadRequestException(MSG_NO_ID);
+        }
+        if (!request.hasEntry()) {
+            throw new BadRequestException("log entry is mandatory");
+        }
+        String id = request.getId();
+        LogEntry log = timelineSource.addItemLog(id, request.getEntry());
+        if (log == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(id));
+        } else {
+            observer.complete(log);
+        }
+
+    }
+
+    @Override
+    public void listSources(Context ctx, ListSourcesRequest request, Observer<ListSourcesResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ListSourcesResponse.Builder lsrb = ListSourcesResponse.newBuilder().putAllSources(timelineService.getSources());
+        observer.complete(lsrb.build());
+    }
+
+    @Override
+    public void listTags(Context ctx, ListTimelineTagsRequest request, Observer<ListTimelineTagsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineItemDb itemdb = timelineService.getTimelineItemDb();
+        ListTimelineTagsResponse.Builder responseb = ListTimelineTagsResponse.newBuilder()
+                .addAllTags(itemdb.getTags());
+        observer.complete(responseb.build());
+
+    }
+
+    @Override
+    public void addBand(Context ctx, AddBandRequest request, Observer<TimelineBand> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineBandDb timelineBandDb = timelineService.getTimelineBandDb();
+        org.yamcs.timeline.TimelineBand band = req2Band(request, ctx.user.getName());
+        try {
+            band = timelineBandDb.addBand(band);
+            observer.complete(band.toProtobuf());
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void getBand(Context ctx, GetBandRequest request, Observer<TimelineBand> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+        observer.complete(verifyBand(timelineService, uuid).toProtobuf());
+    }
+
+    @Override
+    public void listBands(Context ctx, ListBandsRequest request, Observer<ListBandsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineBandDb timelineBandDb = timelineService.getTimelineBandDb();
+
+        List<TimelineBand> bands = new ArrayList<>();
+        timelineBandDb.listBands(ctx.user.getName(), new BandListener() {
+
+            @Override
+            public void next(org.yamcs.timeline.TimelineBand band) {
+                bands.add(band.toProtobuf());
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                log.warn("Error retrieving timeline bands", t);
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete(String token) {
+                Collections.sort(bands, (b1, b2) -> b1.getName().compareToIgnoreCase(b2.getName()));
+                ListBandsResponse.Builder resp = ListBandsResponse.newBuilder()
+                        .addAllBands(bands);
+                observer.complete(resp.build());
+            }
+        });
+    }
+
+    @Override
+    public void updateBand(Context ctx, UpdateBandRequest request, Observer<TimelineBand> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineBandDb timelineBandDb = timelineService.getTimelineBandDb();
+
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+
+        org.yamcs.timeline.TimelineBand band = verifyBand(timelineService, uuid);
+
+        if (request.hasName()) {
+            band.setName(request.getName());
+        }
+        if (request.hasDescription()) {
+            band.setDescription(request.getDescription());
+        }
+        if (request.hasSource()) {
+            verifySource(timelineService, request.getSource());
+            band.setSource(request.getSource());
+        }
+        band.setTags(request.getTagsList());
+        band.setProperties(request.getPropertiesMap());
+
+        try {
+            band = timelineBandDb.updateBand(band);
+            observer.complete(band.toProtobuf());
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteBand(Context ctx, DeleteBandRequest request, Observer<TimelineBand> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineBandDb timelineBandDb = timelineService.getTimelineBandDb();
+
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+
+        org.yamcs.timeline.TimelineBand band;
+        try {
+            band = timelineBandDb.deleteBand(uuid);
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        if (band == null) {
+            throw new NotFoundException(MSG_BAND_NOT_FOUND(request.getId()));
+        } else {
+            observer.complete(band.toProtobuf());
+        }
+    }
+
+    @Override
+    public void addView(Context ctx, AddViewRequest request, Observer<TimelineView> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineViewDb timelineViewDb = timelineService.getTimelineViewDb();
+        org.yamcs.timeline.TimelineView view = req2View(request);
+        try {
+            view = timelineViewDb.addView(view);
+            observer.complete(enrichView(timelineService, view));
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void getView(Context ctx, GetViewRequest request, Observer<TimelineView> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineViewDb timelineViewDb = timelineService.getTimelineViewDb();
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+        org.yamcs.timeline.TimelineView view = timelineViewDb.getView(uuid);
+        if (view == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(request.getId()));
+        } else {
+            observer.complete(enrichView(timelineService, view));
+        }
+    }
+
+    @Override
+    public void listViews(Context ctx, ListViewsRequest request, Observer<ListViewsResponse> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ReadTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineViewDb timelineViewDb = timelineService.getTimelineViewDb();
+
+        List<TimelineView> views = new ArrayList<>();
+        timelineViewDb.listViews(new ViewListener() {
+
+            @Override
+            public void next(org.yamcs.timeline.TimelineView view) {
+                views.add(enrichView(timelineService, view));
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                log.warn("Error retrieving timeline views", t);
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete(String token) {
+                Collections.sort(views, (v1, v2) -> v1.getName().compareToIgnoreCase(v2.getName()));
+                ListViewsResponse.Builder resp = ListViewsResponse.newBuilder()
+                        .addAllViews(views);
+                observer.complete(resp.build());
+            }
+        });
+    }
+
+    @Override
+    public void updateView(Context ctx, UpdateViewRequest request, Observer<TimelineView> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineViewDb timelineViewDb = timelineService.getTimelineViewDb();
+
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+
+        org.yamcs.timeline.TimelineView view = timelineViewDb.getView(uuid);
+        if (view == null) {
+            throw new NotFoundException(MSG_VIEW_NOT_FOUND(request.getId()));
+        }
+
+        if (request.hasName()) {
+            view.setName(request.getName());
+        }
+        if (request.hasDescription()) {
+            view.setDescription(request.getDescription());
+        }
+        view.setBands(request.getBandsList().stream()
+                .map(id -> UUID.fromString(id))
+                .collect(Collectors.toList()));
+
+        try {
+            view = timelineViewDb.updateView(view);
+            observer.complete(enrichView(timelineService, view));
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteView(Context ctx, DeleteViewRequest request, Observer<TimelineView> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        TimelineViewDb timelineViewDb = timelineService.getTimelineViewDb();
+
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+
+        org.yamcs.timeline.TimelineView view;
+        try {
+            view = timelineViewDb.deleteView(uuid);
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        if (view == null) {
+            throw new NotFoundException(MSG_BAND_NOT_FOUND(request.getId()));
+        } else {
+            observer.complete(view.toProtobuf());
+        }
+    }
+
+    private TimelineView enrichView(TimelineService service, org.yamcs.timeline.TimelineView view) {
+        TimelineBandDb bandDb = service.getTimelineBandDb();
+        TimelineView.Builder b = TimelineView.newBuilder(view.toProtobuf());
+        b.clearBands();
+        for (UUID bandId : view.getBands()) {
+            org.yamcs.timeline.TimelineBand enrichedBand = bandDb.getBand(bandId);
+            if (enrichedBand != null) {
+                b.addBands(enrichedBand.toProtobuf());
+            }
+        }
+        return b.build();
+    }
+
+    @Override
+    public void deleteItem(Context ctx, DeleteItemRequest request, Observer<TimelineItem> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+
+        org.yamcs.timeline.TimelineItem item;
+        try {
+            item = timelineSource.deleteItem(uuid);
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        if (item == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(request.getId()));
+        } else {
+            observer.complete(item.toProtoBuf(true));
+        }
+
+    }
+
+    @Override
+    public void deleteTimelineGroup(Context ctx, DeleteTimelineGroupRequest request, Observer<TimelineItem> observer) {
+        ctx.checkSystemPrivilege(SystemPrivilege.ControlTimeline);
+        TimelineService timelineService = verifyService(request.getInstance());
+        ItemProvider timelineSource = verifySource(timelineService,
+                request.hasSource() ? request.getSource() : RDB_TIMELINE_SOURCE);
+        UUID uuid = verifyUuid(request.hasId(), request.getId());
+
+        org.yamcs.timeline.TimelineItem item;
+        try {
+            item = timelineSource.deleteTimelineGroup(uuid);
+        } catch (InvalidRequestException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+        if (item == null) {
+            throw new NotFoundException(MSG_ITEM_NOT_FOUND(request.getId()));
+        } else {
+            observer.complete(item.toProtoBuf(true));
+        }
+
+    }
+
+    // NOTE: the checkSource is to warn users to set a source for the band because in older versions of Yamcs this was
+    // not done. The check should disappear in the future.
+    private org.yamcs.timeline.TimelineBand verifyBand(TimelineService timelineService, UUID bandId) {
+        var band = timelineService.getTimelineBandDb().getBand(bandId);
+        if (band == null) {
+            throw new NotFoundException(MSG_BAND_NOT_FOUND(bandId.toString()));
+        }
+        return band;
+    }
+
+    private ItemProvider verifySource(TimelineService timelineService, String source) {
+        ItemProvider ts = timelineService.getSource(source);
+        if (ts == null) {
+            throw new BadRequestException("Invalid source '" + source + "'");
+        }
+        return ts;
+    }
+
+    private TimelineService verifyService(String yamcsInstance) {
+        String instance = InstancesApi.verifyInstance(yamcsInstance);
+
+        List<TimelineService> cl = YamcsServer.getServer().getInstance(instance)
+                .getServices(TimelineService.class);
+        if (cl.isEmpty()) {
+            throw new NotFoundException("No timeline service found");
+        } else {
+            if (cl.size() > 1) {
+                log.warn("multiple timeline services found but only one supported");
+            }
+            return cl.get(0);
+        }
+    }
+
+    private org.yamcs.timeline.TimelineItem req2Item(CreateItemRequest request) {
+        if (!request.hasType()) {
+            throw new BadRequestException("Type is mandatory");
+        }
+        TimelineItemType type = request.getType();
+        org.yamcs.timeline.TimelineItem item;
+
+        UUID id;
+        if (request.hasId()) {
+            try {
+                id = UUID.fromString(request.getId());
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Provided ID is not a valid UUID");
+            }
+        } else {
+            id = UUID.randomUUID();
+        }
+
+        switch (type) {
+        case EVENT:
+            TimelineEvent event = new TimelineEvent(id.toString());
+            item = event;
+            break;
+        case ITEM_GROUP:
+            ItemGroup itemGroup = new ItemGroup(id);
+            item = itemGroup;
+            break;
+        case ACTIVITY:
+            var activity = new TimelineActivity(id);
+            item = activity;
+            if (request.hasActivityDefinition()) { // If missing, it's a 'manual' activity
+                var defInfo = request.getActivityDefinition();
+                activity.setActivityDefinition(ActivityDefinition.newBuilder()
+                        .setType(defInfo.getType())
+                        .setArgs(defInfo.getArgs())
+                        .build());
+            }
+            break;
+        case ACTIVITY_GROUP:
+            ActivityGroup activityGroup = new ActivityGroup(id);
+            item = activityGroup;
+            break;
+        default:
+            throw new InternalServerErrorException("Unknown item type " + type);
+        }
+
+        if (request.hasName()) {
+            item.setName(request.getName());
+        }
+
+        if (request.hasStart()) {
+            if (request.hasRelativeTime()) {
+                throw new BadRequestException("Cannot specify both start and relative time");
+            }
+            item.setStart(TimeEncoding.fromProtobufTimestamp(request.getStart()));
+
+        } else if (request.hasRelativeTime()) {
+            RelativeTime relt = request.getRelativeTime();
+            if (!relt.hasRelto()) {
+                throw new BadRequestException("relto item is required when using relative time");
+            }
+            if (!relt.hasRelativeStart()) {
+                throw new BadRequestException("relative start is required when using relative time");
+            }
+            item.setRelativeItemUuid(parseUuid(relt.getRelto()));
+            item.setRelativeStart(Durations.toMillis(relt.getRelativeStart()));
+        } else {
+            throw new BadRequestException("One of start or relativeTime has to be specified");
+        }
+        if (!request.hasDuration()) {
+            throw new BadRequestException("Duration is mandatory");
+        }
+        item.setDuration(Durations.toMillis(request.getDuration()));
+
+        if (request.hasGroupId()) {
+            item.setGroupUuid(parseUuid(request.getGroupId()));
+        }
+        if (request.hasDescription()) {
+            item.setDescription(request.getDescription());
+        }
+
+        item.setTags(request.getTagsList());
+        item.setProperties(request.getPropertiesMap());
+        return item;
+    }
+
+    private org.yamcs.timeline.TimelineBand req2Band(AddBandRequest request, String user) {
+        UUID id;
+        if (request.hasId()) {
+            try {
+                id = UUID.fromString(request.getId());
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Provided ID is not a valid UUID");
+            }
+        } else {
+            id = UUID.randomUUID();
+        }
+
+        var band = new org.yamcs.timeline.TimelineBand(id);
+
+        if (!request.hasType()) {
+            throw new BadRequestException("Type is mandatory");
+        }
+        band.setType(request.getType());
+
+        if (request.hasSource()) {
+            band.setSource(request.getSource());
+        }
+
+        if (request.hasName()) {
+            band.setName(request.getName());
+        }
+        if (request.hasDescription()) {
+            band.setDescription(request.getDescription());
+        }
+        band.setShared(request.getShared());
+        band.setUsername(user);
+        band.setTags(request.getTagsList());
+
+        band.setItemFilters(request.getFiltersList());
+        band.setProperties(request.getPropertiesMap());
+
+        return band;
+    }
+
+    private org.yamcs.timeline.TimelineView req2View(AddViewRequest request) {
+        List<UUID> bands = request.getBandsList().stream()
+                .map(id -> UUID.fromString(id))
+                .collect(Collectors.toList());
+
+        UUID id;
+        if (request.hasId()) {
+            try {
+                id = UUID.fromString(request.getId());
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Provided ID is not a valid UUID");
+            }
+        } else {
+            id = UUID.randomUUID();
+        }
+
+        var view = new org.yamcs.timeline.TimelineView(id);
+        view.setName(request.getName());
+        if (view.toProtobuf().hasDescription()) {
+            view.setDescription(request.getDescription());
+        }
+        view.setBands(bands);
+        return view;
+    }
+
+    private static UUID verifyUuid(boolean hasId, String uuid) {
+        if (!hasId) {
+            throw new BadRequestException(MSG_NO_ID);
+        }
+        return parseUuid(uuid);
+
+    }
+
+    private static UUID parseUuid(String uuid) {
+        try {
+            return UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Invalid uuid '" + uuid + "'");
+        }
+    }
+
+    static final String MSG_ITEM_NOT_FOUND(String id) {
+        return "Item " + id + " not found";
+    }
+
+    static final String MSG_BAND_NOT_FOUND(String id) {
+        return "Band " + id + " not found";
+    }
+
+    static final String MSG_VIEW_NOT_FOUND(String id) {
+        return "View " + id + " not found";
+    }
+}
+```
+
+### `TimeSortedPageToken.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/TimeSortedPageToken.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.util.Base64;
+
+import com.google.gson.Gson;
+
+/**
+ * Stateless continuation token for paged requests that output timesorted data
+ */
+public class TimeSortedPageToken {
+
+    /**
+     * Time associated with the last object that was emitted.
+     * <p>
+     * Consuming routes should not assume that an object with this time still exists, and rather use it for offsetting.
+     */
+    public long time;
+
+    public TimeSortedPageToken(long time) {
+        this.time = time;
+    }
+
+    public static TimeSortedPageToken decode(String encoded) {
+        String decoded = new String(Base64.getUrlDecoder().decode(encoded));
+        return new Gson().fromJson(decoded, TimeSortedPageToken.class);
+    }
+
+    public String encodeAsString() {
+        String json = new Gson().toJson(this);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(json.getBytes());
+    }
+}
+```
+
+### `XtceToGpbAssembler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/api/XtceToGpbAssembler.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.MatchCriteriaEvaluator;
+import org.yamcs.mdb.MatchCriteriaEvaluatorFactory;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterWithId;
+import org.yamcs.protobuf.Mdb;
+import org.yamcs.protobuf.Mdb.AbsoluteTimeInfo;
+import org.yamcs.protobuf.Mdb.AlarmInfo;
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Mdb.AlarmRange;
+import org.yamcs.protobuf.Mdb.AlgorithmInfo;
+import org.yamcs.protobuf.Mdb.AlgorithmInfo.Scope;
+import org.yamcs.protobuf.Mdb.AncillaryDataInfo;
+import org.yamcs.protobuf.Mdb.ArgumentAssignmentInfo;
+import org.yamcs.protobuf.Mdb.ArgumentDimensionInfo;
+import org.yamcs.protobuf.Mdb.ArgumentInfo;
+import org.yamcs.protobuf.Mdb.ArgumentMemberInfo;
+import org.yamcs.protobuf.Mdb.ArgumentTypeInfo;
+import org.yamcs.protobuf.Mdb.ArrayInfo;
+import org.yamcs.protobuf.Mdb.CalibratorInfo;
+import org.yamcs.protobuf.Mdb.CheckWindowInfo;
+import org.yamcs.protobuf.Mdb.CommandContainerInfo;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.protobuf.Mdb.ComparisonInfo;
+import org.yamcs.protobuf.Mdb.ContainerInfo;
+import org.yamcs.protobuf.Mdb.ContextAlarmInfo;
+import org.yamcs.protobuf.Mdb.ContextCalibratorInfo;
+import org.yamcs.protobuf.Mdb.DataEncodingInfo;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+import org.yamcs.protobuf.Mdb.FixedValueInfo;
+import org.yamcs.protobuf.Mdb.HistoryInfo;
+import org.yamcs.protobuf.Mdb.IndirectParameterRefInfo;
+import org.yamcs.protobuf.Mdb.InputParameterInfo;
+import org.yamcs.protobuf.Mdb.JavaExpressionCalibratorInfo;
+import org.yamcs.protobuf.Mdb.MathElement;
+import org.yamcs.protobuf.Mdb.MemberInfo;
+import org.yamcs.protobuf.Mdb.NumberFormatTypeInfo;
+import org.yamcs.protobuf.Mdb.OutputParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterDimensionInfo;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.ParameterTypeInfo;
+import org.yamcs.protobuf.Mdb.PolynomialCalibratorInfo;
+import org.yamcs.protobuf.Mdb.RepeatInfo;
+import org.yamcs.protobuf.Mdb.SequenceEntryInfo;
+import org.yamcs.protobuf.Mdb.SignificanceInfo;
+import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
+import org.yamcs.protobuf.Mdb.SpaceSystemInfo;
+import org.yamcs.protobuf.Mdb.SplineCalibratorInfo;
+import org.yamcs.protobuf.Mdb.SplineCalibratorInfo.SplinePointInfo;
+import org.yamcs.protobuf.Mdb.TransmissionConstraintInfo;
+import org.yamcs.protobuf.Mdb.UnitInfo;
+import org.yamcs.protobuf.Mdb.VerifierInfo;
+import org.yamcs.protobuf.Mdb.VerifierInfo.TerminationActionType;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.AbsoluteTimeParameterType;
+import org.yamcs.xtce.AggregateArgumentType;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.AlarmLevels;
+import org.yamcs.xtce.AlarmRanges;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.AlgorithmCalibrator;
+import org.yamcs.xtce.AncillaryData;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.ArgumentAssignment;
+import org.yamcs.xtce.ArgumentEntry;
+import org.yamcs.xtce.ArgumentInstanceRef;
+import org.yamcs.xtce.ArgumentType;
+import org.yamcs.xtce.ArrayArgumentType;
+import org.yamcs.xtce.ArrayParameterEntry;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.BaseDataType;
+import org.yamcs.xtce.BinaryArgumentType;
+import org.yamcs.xtce.BinaryDataEncoding;
+import org.yamcs.xtce.BooleanArgumentType;
+import org.yamcs.xtce.BooleanDataEncoding;
+import org.yamcs.xtce.BooleanParameterType;
+import org.yamcs.xtce.Calibrator;
+import org.yamcs.xtce.CheckWindow;
+import org.yamcs.xtce.CommandContainer;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.CommandVerifier.TerminationAction;
+import org.yamcs.xtce.Comparison;
+import org.yamcs.xtce.ComparisonList;
+import org.yamcs.xtce.ContainerEntry;
+import org.yamcs.xtce.ContextCalibrator;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.DataType;
+import org.yamcs.xtce.DynamicIntegerValue;
+import org.yamcs.xtce.EnumeratedArgumentType;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.EnumerationAlarm;
+import org.yamcs.xtce.EnumerationAlarm.EnumerationAlarmItem;
+import org.yamcs.xtce.EnumerationContextAlarm;
+import org.yamcs.xtce.FixedIntegerValue;
+import org.yamcs.xtce.FixedValueEntry;
+import org.yamcs.xtce.FloatArgumentType;
+import org.yamcs.xtce.FloatDataEncoding;
+import org.yamcs.xtce.FloatParameterType;
+import org.yamcs.xtce.Header;
+import org.yamcs.xtce.History;
+import org.yamcs.xtce.IndirectParameterRefEntry;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.IntegerArgumentType;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.IntegerRange;
+import org.yamcs.xtce.IntegerValue;
+import org.yamcs.xtce.JavaExpressionCalibrator;
+import org.yamcs.xtce.MatchCriteria;
+import org.yamcs.xtce.MathAlgorithm;
+import org.yamcs.xtce.MathOperationCalibrator;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.NumberFormatType;
+import org.yamcs.xtce.NumericAlarm;
+import org.yamcs.xtce.NumericContextAlarm;
+import org.yamcs.xtce.OnParameterUpdateTrigger;
+import org.yamcs.xtce.OnPeriodicRateTrigger;
+import org.yamcs.xtce.OperatorType;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterEntry;
+import org.yamcs.xtce.ParameterInstanceRef;
+import org.yamcs.xtce.ParameterOrArgumentRef;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.xtce.PolynomialCalibrator;
+import org.yamcs.xtce.ReferenceTime;
+import org.yamcs.xtce.Repeat;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SequenceEntry;
+import org.yamcs.xtce.Significance;
+import org.yamcs.xtce.Significance.Levels;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.SplineCalibrator;
+import org.yamcs.xtce.SplinePoint;
+import org.yamcs.xtce.StringArgumentType;
+import org.yamcs.xtce.StringDataEncoding;
+import org.yamcs.xtce.TimeEpoch;
+import org.yamcs.xtce.TransmissionConstraint;
+import org.yamcs.xtce.TriggerSetType;
+import org.yamcs.xtce.UnitType;
+import org.yamcs.xtce.ValueEnumeration;
+import org.yamcs.xtce.ValueEnumerationRange;
+
+public class XtceToGpbAssembler {
+    static final Log log = new Log(XtceToGpbAssembler.class);
+
+    public enum DetailLevel {
+        LINK, SUMMARY, FULL
+    }
+
+    public static ContainerInfo toContainerInfo(SequenceContainer c, DetailLevel detail) {
+        ContainerInfo.Builder cb = ContainerInfo.newBuilder();
+
+        cb.setName(c.getName());
+        cb.setQualifiedName(c.getQualifiedName());
+
+        if (detail == DetailLevel.SUMMARY || detail == DetailLevel.FULL) {
+            if (c.getShortDescription() != null) {
+                cb.setShortDescription(c.getShortDescription());
+            }
+            if (c.getLongDescription() != null) {
+                cb.setLongDescription(c.getLongDescription());
+            }
+            if (c.getAliasSet() != null) {
+                Map<String, String> aliases = c.getAliasSet().getAliases();
+                for (Entry<String, String> me : aliases.entrySet()) {
+                    cb.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+                }
+            }
+            if (c.getAncillaryData() != null) {
+                for (AncillaryData data : c.getAncillaryData()) {
+                    cb.putAncillaryData(data.getName(), toAncillaryDataInfo(data));
+                }
+            }
+            cb.setArchivePartition(c.useAsArchivePartition());
+            if (c.getRateInStream() != null) {
+                cb.setMaxInterval(c.getRateInStream().getMaxInterval());
+            }
+            if (c.getSizeInBits() != -1) {
+                cb.setSizeInBits(c.getSizeInBits());
+            }
+            if (c.getBaseContainer() != null) {
+                if (detail == DetailLevel.SUMMARY) {
+                    cb.setBaseContainer(toContainerInfo(c.getBaseContainer(), DetailLevel.LINK));
+                } else if (detail == DetailLevel.FULL) {
+                    cb.setBaseContainer(toContainerInfo(c.getBaseContainer(), DetailLevel.FULL));
+                }
+            }
+            if (c.getRestrictionCriteria() != null) {
+                cb.setRestrictionCriteriaExpression(toExpressionString(c.getRestrictionCriteria()));
+                if (c.getRestrictionCriteria() instanceof ComparisonList) {
+                    ComparisonList xtceList = (ComparisonList) c.getRestrictionCriteria();
+                    for (Comparison comparison : xtceList.getComparisonList()) {
+                        cb.addRestrictionCriteria(toComparisonInfo(comparison));
+                    }
+                } else if (c.getRestrictionCriteria() instanceof Comparison) {
+                    cb.addRestrictionCriteria(toComparisonInfo((Comparison) c.getRestrictionCriteria()));
+                }
+            }
+            for (SequenceEntry entry : c.getEntryList()) {
+                if (detail == DetailLevel.SUMMARY) {
+                    cb.addEntry(toSequenceEntryInfo(entry, DetailLevel.SUMMARY));
+                } else if (detail == DetailLevel.FULL) {
+                    cb.addEntry(toSequenceEntryInfo(entry, DetailLevel.FULL));
+                }
+            }
+        }
+
+        return cb.build();
+    }
+
+    public static SequenceEntryInfo toSequenceEntryInfo(SequenceEntry e, DetailLevel detail) {
+        SequenceEntryInfo.Builder b = SequenceEntryInfo.newBuilder();
+        b.setLocationInBits(e.getLocationInContainerInBits());
+
+        switch (e.getReferenceLocation()) {
+        case CONTAINER_START:
+            b.setReferenceLocation(SequenceEntryInfo.ReferenceLocationType.CONTAINER_START);
+            break;
+        case PREVIOUS_ENTRY:
+            b.setReferenceLocation(SequenceEntryInfo.ReferenceLocationType.PREVIOUS_ENTRY);
+            break;
+        default:
+            throw new IllegalStateException("Unexpected reference location " + e);
+        }
+
+        if (e.getRepeatEntry() != null) {
+            b.setRepeat(toRepeatInfo(e.getRepeatEntry(), detail));
+        }
+
+        if (e instanceof ContainerEntry ce) {
+            if (detail == DetailLevel.SUMMARY) {
+                b.setContainer(toContainerInfo(ce.getRefContainer(), DetailLevel.LINK));
+            } else if (detail == DetailLevel.FULL) {
+                b.setContainer(toContainerInfo(ce.getRefContainer(), DetailLevel.FULL));
+            }
+        } else if (e instanceof ParameterEntry pe) {
+            if (detail == DetailLevel.SUMMARY) {
+                b.setParameter(toParameterInfo(pe.getParameter(), DetailLevel.LINK));
+            } else if (detail == DetailLevel.FULL) {
+                b.setParameter(toParameterInfo(pe.getParameter(), DetailLevel.FULL));
+            }
+        } else if (e instanceof ArrayParameterEntry ae) {
+            if (detail == DetailLevel.SUMMARY) {
+                b.setParameter(toParameterInfo(ae.getParameter(), DetailLevel.LINK));
+            } else if (detail == DetailLevel.FULL) {
+                b.setParameter(toParameterInfo(ae.getParameter(), DetailLevel.FULL));
+            }
+            // TODO map dimensions info
+        } else if (e instanceof ArgumentEntry ae) {
+            b.setArgument(toArgumentInfo(ae.getArgument()));
+        } else if (e instanceof FixedValueEntry fe) {
+            FixedValueInfo.Builder feb = FixedValueInfo.newBuilder();
+            if (fe.getName() != null) {
+                feb.setName(fe.getName());
+            }
+            if (fe.getSizeInBits() != -1) {
+                feb.setSizeInBits(fe.getSizeInBits());
+            }
+            feb.setHexValue(StringConverter.arrayToHexString(fe.getBinaryValue()));
+            b.setFixedValue(feb.build());
+        } else if (e instanceof IndirectParameterRefEntry ipe) {
+            IndirectParameterRefInfo.Builder ipeb = IndirectParameterRefInfo.newBuilder();
+            if (ipe.getAliasNameSpace() != null) {
+                ipeb.setAliasNamespace(ipe.getAliasNameSpace());
+            }
+            ipeb.setParameter(toParameterInfo(ipe.getParameterRef()));
+        } else {
+            throw new IllegalStateException("Unexpected entry " + e);
+        }
+
+        return b.build();
+    }
+
+    public static FixedValueInfo toFixedValueInfo(FixedValueEntry entry) {
+        FixedValueInfo.Builder b = FixedValueInfo.newBuilder();
+        if (entry.getName() != null) {
+            b.setName(entry.getName());
+        }
+        if (entry.getSizeInBits() != -1) {
+            b.setSizeInBits(entry.getSizeInBits());
+        }
+        b.setHexValue(StringConverter.arrayToHexString(entry.getBinaryValue()));
+        return b.build();
+    }
+
+    public static RepeatInfo toRepeatInfo(Repeat xtceRepeat, DetailLevel detail) {
+        RepeatInfo.Builder b = RepeatInfo.newBuilder();
+        b.setBitsBetween(xtceRepeat.getOffsetSizeInBits());
+        if (xtceRepeat.getCount() instanceof FixedIntegerValue) {
+            FixedIntegerValue val = (FixedIntegerValue) xtceRepeat.getCount();
+            b.setFixedCount(val.getValue());
+        } else if (xtceRepeat.getCount() instanceof DynamicIntegerValue) {
+            DynamicIntegerValue val = (DynamicIntegerValue) xtceRepeat.getCount();
+            if (detail == DetailLevel.SUMMARY) {
+                b.setDynamicCount(
+                        toParameterInfo(val.getParameterInstanceRef().getParameter(), DetailLevel.LINK));
+            } else if (detail == DetailLevel.FULL) {
+                b.setDynamicCount(
+                        toParameterInfo(val.getParameterInstanceRef().getParameter(), DetailLevel.FULL));
+            }
+        } else {
+            throw new IllegalStateException("Unexpected repeat count " + xtceRepeat.getCount());
+        }
+
+        return b.build();
+    }
+
+    public static CommandContainerInfo toCommandContainerInfo(CommandContainer container, DetailLevel detail) {
+        CommandContainerInfo.Builder ccb = CommandContainerInfo.newBuilder();
+        ccb.setName(container.getName());
+        if (container.getQualifiedName() != null) {
+            ccb.setQualifiedName(container.getQualifiedName());
+        }
+        if (container.getShortDescription() != null) {
+            ccb.setShortDescription(container.getShortDescription());
+        }
+        if (container.getLongDescription() != null) {
+            ccb.setLongDescription(container.getLongDescription());
+        }
+        if (container.getAliasSet() != null) {
+            Map<String, String> aliases = container.getAliasSet().getAliases();
+            for (Entry<String, String> me : aliases.entrySet()) {
+                ccb.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+            }
+        }
+
+        for (SequenceEntry entry : container.getEntryList()) {
+            ccb.addEntry(toSequenceEntryInfo(entry, detail));
+        }
+
+        return ccb.build();
+    }
+
+    /**
+     * @param detail
+     *            whether base commands should be expanded
+     */
+    public static CommandInfo toCommandInfo(MetaCommand cmd, DetailLevel detail) {
+        CommandInfo.Builder cb = CommandInfo.newBuilder();
+
+        cb.setName(cmd.getName());
+        cb.setQualifiedName(cmd.getQualifiedName());
+
+        if (detail == DetailLevel.SUMMARY || detail == DetailLevel.FULL) {
+            if (cmd.getShortDescription() != null) {
+                cb.setShortDescription(cmd.getShortDescription());
+            }
+            if (cmd.getLongDescription() != null) {
+                cb.setLongDescription(cmd.getLongDescription());
+            }
+            if (cmd.getAliasSet() != null) {
+                Map<String, String> aliases = cmd.getAliasSet().getAliases();
+                for (Entry<String, String> me : aliases.entrySet()) {
+                    cb.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+                }
+            }
+            if (cmd.getAncillaryData() != null) {
+                for (AncillaryData data : cmd.getAncillaryData()) {
+                    cb.putAncillaryData(data.getName(), toAncillaryDataInfo(data));
+                }
+            }
+
+            if (cmd.getDefaultSignificance() != null) {
+                var significanceInfo = toSignificanceInfo(cmd.getDefaultSignificance());
+                cb.setSignificance(significanceInfo);
+                cb.setEffectiveSignificance(significanceInfo);
+            } else if (cmd.getEffectiveDefaultSignificance() != null) {
+                var significanceInfo = toSignificanceInfo(cmd.getEffectiveDefaultSignificance());
+                cb.setEffectiveSignificance(significanceInfo);
+            }
+
+            if (cmd.getArgumentList() != null) {
+                for (Argument xtceArgument : cmd.getArgumentList()) {
+                    cb.addArgument(toArgumentInfo(xtceArgument));
+                }
+            }
+            if (cmd.getArgumentAssignmentList() != null) {
+                for (ArgumentAssignment xtceAssignment : cmd.getArgumentAssignmentList()) {
+                    cb.addArgumentAssignment(toArgumentAssignmentInfo(xtceAssignment));
+                }
+            }
+            cb.setAbstract(cmd.isAbstract());
+            if (cmd.getTransmissionConstraintList() != null) {
+                for (TransmissionConstraint xtceConstraint : cmd.getTransmissionConstraintList()) {
+                    cb.addConstraint(toTransmissionConstraintInfo(xtceConstraint));
+                }
+            }
+
+            if (cmd.getCommandContainer() != null) {
+                CommandContainer container = cmd.getCommandContainer();
+                cb.setCommandContainer(toCommandContainerInfo(container, DetailLevel.FULL));
+            }
+
+            if (detail == DetailLevel.SUMMARY) {
+                if (cmd.getBaseMetaCommand() != null) {
+                    cb.setBaseCommand(toCommandInfo(cmd.getBaseMetaCommand(), DetailLevel.LINK));
+                }
+            } else if (detail == DetailLevel.FULL) {
+                if (cmd.getBaseMetaCommand() != null) {
+                    cb.setBaseCommand(toCommandInfo(cmd.getBaseMetaCommand(), DetailLevel.FULL));
+                }
+            }
+
+            for (CommandVerifier verifier : cmd.getCommandVerifiers()) {
+                cb.addVerifier(toVerifierInfo(verifier));
+            }
+        }
+
+        return cb.build();
+    }
+
+    public static ArgumentInfo toArgumentInfo(Argument xtceArgument) {
+        ArgumentInfo.Builder b = ArgumentInfo.newBuilder();
+        b.setName(xtceArgument.getName());
+        if (xtceArgument.getShortDescription() != null) {
+            b.setDescription(xtceArgument.getShortDescription());
+        }
+        if (xtceArgument.getInitialValue() != null) {
+            if (xtceArgument.getArgumentType() != null) {
+                String strInitialValue = xtceArgument.getArgumentType().toString(xtceArgument.getInitialValue());
+                b.setInitialValue(strInitialValue);
+            } else {
+                log.warn("Argument {} has no type so cannot convert initial value to string", xtceArgument.getName());
+            }
+        }
+
+        if (xtceArgument.getArgumentType() != null) {
+            ArgumentType xtceType = xtceArgument.getArgumentType();
+            b.setType(toArgumentTypeInfo(xtceType));
+            if (!b.hasInitialValue()) {
+                String initialValue = null;
+                initialValue = getDataTypeInitialValue(xtceArgument.getArgumentType());
+                if (initialValue != null) {
+                    b.setInitialValue(initialValue);
+                }
+            }
+        }
+        return b.build();
+    }
+
+    public static ArgumentInfo toArgumentInfo(ArgumentInstanceRef ref) {
+        ArgumentInfo.Builder b = ArgumentInfo.newBuilder();
+        Argument arg = ref.getArgument();
+        PathElement[] path = ref.getMemberPath();
+        if (path == null) {
+            b.setName(arg.getName());
+        } else {
+            String memberPath = "";
+            for (PathElement el : path) {
+                memberPath += "." + el.toString();
+            }
+            b.setName(arg.getName() + memberPath);
+        }
+        return b.build();
+    }
+
+    public static ArgumentAssignmentInfo toArgumentAssignmentInfo(ArgumentAssignment xtceArgument) {
+        ArgumentAssignmentInfo.Builder b = ArgumentAssignmentInfo.newBuilder();
+        b.setName(xtceArgument.getArgumentName());
+        b.setValue(xtceArgument.getArgumentValue());
+        return b.build();
+    }
+
+    public static TransmissionConstraintInfo toTransmissionConstraintInfo(TransmissionConstraint xtceConstraint) {
+
+        TransmissionConstraintInfo.Builder b = TransmissionConstraintInfo.newBuilder()
+                .setTimeout(xtceConstraint.getTimeout())
+                .setExpression(toExpressionString(xtceConstraint.getMatchCriteria()));
+        return b.build();
+    }
+
+    public static VerifierInfo toVerifierInfo(CommandVerifier xtceVerifier) {
+        VerifierInfo.Builder b = VerifierInfo.newBuilder();
+        b.setStage(xtceVerifier.getStage());
+        b.setCheckWindow(toCheckWindow(xtceVerifier.getCheckWindow()));
+        if (xtceVerifier.getOnSuccess() != null) {
+            b.setOnSuccess(toTerminationType(xtceVerifier.getOnSuccess()));
+        }
+        if (xtceVerifier.getOnFail() != null) {
+            b.setOnFail(toTerminationType(xtceVerifier.getOnFail()));
+        }
+        if (xtceVerifier.getOnTimeout() != null) {
+            b.setOnTimeout(toTerminationType(xtceVerifier.getOnTimeout()));
+        }
+        if (xtceVerifier.getAlgorithm() != null) {
+            b.setAlgorithm(toAlgorithmInfo(xtceVerifier.getAlgorithm(), DetailLevel.SUMMARY));
+        }
+        if (xtceVerifier.getContainerRef() != null) {
+            b.setContainer(toContainerInfo(xtceVerifier.getContainerRef(), DetailLevel.SUMMARY));
+        }
+        if (xtceVerifier.getMatchCriteria() != null) {
+            b.setExpression(toExpressionString(xtceVerifier.getMatchCriteria()));
+        }
+        return b.build();
+    }
+
+    private static TerminationActionType toTerminationType(TerminationAction xtceTerminationAction) {
+        switch (xtceTerminationAction) {
+        case FAIL:
+            return TerminationActionType.FAIL;
+        case SUCCESS:
+            return TerminationActionType.SUCCESS;
+        default:
+            throw new IllegalStateException("Unexpected termination action " + xtceTerminationAction);
+        }
+    }
+
+    private static CheckWindowInfo toCheckWindow(CheckWindow checkWindow) {
+        CheckWindowInfo.Builder b = CheckWindowInfo.newBuilder();
+        b.setTimeToStopChecking(checkWindow.getTimeToStopChecking());
+        b.setRelativeTo(checkWindow.getTimeWindowIsRelativeTo().toString());
+        if (checkWindow.hasStart()) {
+            b.setTimeToStartChecking(checkWindow.getTimeToStartChecking());
+        }
+        return b.build();
+    }
+
+    public static ComparisonInfo toComparisonInfo(Comparison xtceComparison) {
+        ComparisonInfo.Builder b = ComparisonInfo.newBuilder();
+        ParameterOrArgumentRef ref = xtceComparison.getRef();
+        if (ref instanceof ParameterInstanceRef) {
+            b.setParameter(toParameterInfo((ParameterInstanceRef) ref));
+        } else {
+            b.setArgument(toArgumentInfo((ArgumentInstanceRef) ref));
+        }
+        b.setOperator(toOperatorType(xtceComparison.getComparisonOperator()));
+        b.setValue(xtceComparison.getStringValue());
+        return b.build();
+    }
+
+    public static ComparisonInfo.OperatorType toOperatorType(OperatorType xtceOperator) {
+        switch (xtceOperator) {
+        case EQUALITY:
+            return ComparisonInfo.OperatorType.EQUAL_TO;
+        case INEQUALITY:
+            return ComparisonInfo.OperatorType.NOT_EQUAL_TO;
+        case LARGEROREQUALTHAN:
+            return ComparisonInfo.OperatorType.GREATER_THAN_OR_EQUAL_TO;
+        case LARGERTHAN:
+            return ComparisonInfo.OperatorType.GREATER_THAN;
+        case SMALLEROREQUALTHAN:
+            return ComparisonInfo.OperatorType.SMALLER_THAN_OR_EQUAL_TO;
+        case SMALLERTHAN:
+            return ComparisonInfo.OperatorType.SMALLER_THAN;
+        default:
+            throw new IllegalStateException("Unexpected operator " + xtceOperator);
+        }
+    }
+
+    public static SignificanceInfo toSignificanceInfo(Significance xtceSignificance) {
+        SignificanceInfo.Builder b = SignificanceInfo.newBuilder();
+        SignificanceLevelType level = toSignificanceLevelType(xtceSignificance.getConsequenceLevel());
+        b.setConsequenceLevel(level);
+        if (xtceSignificance.getReasonForWarning() != null) {
+            b.setReasonForWarning(xtceSignificance.getReasonForWarning());
+        }
+
+        return b.build();
+    }
+
+    public static SignificanceLevelType toSignificanceLevelType(Levels level) {
+        switch (level) {
+        case NONE:
+            return SignificanceLevelType.NONE;
+        case WATCH:
+            return SignificanceLevelType.WATCH;
+        case WARNING:
+            return SignificanceLevelType.WARNING;
+        case DISTRESS:
+            return SignificanceLevelType.DISTRESS;
+        case CRITICAL:
+            return SignificanceLevelType.CRITICAL;
+        case SEVERE:
+            return SignificanceLevelType.SEVERE;
+        default:
+            throw new IllegalStateException("Unexpected level " + level);
+        }
+    }
+
+    public static ParameterInfo toParameterInfo(ParameterInstanceRef ref) {
+        ParameterInfo.Builder b = ParameterInfo.newBuilder();
+        Parameter p = ref.getParameter();
+        PathElement[] path = ref.getMemberPath();
+        if (path == null) {
+            b.setName(ref.getParameter().getName());
+            b.setQualifiedName(p.getQualifiedName());
+        } else {
+            String memberPath = "";
+            for (PathElement el : path) {
+                memberPath += "." + el.toString();
+            }
+            b.setName(p.getName() + memberPath);
+            b.setQualifiedName(p.getQualifiedName() + memberPath);
+        }
+        return b.build();
+    }
+
+    public static ParameterInfo toParameterInfo(ParameterWithId parameterWithId, DetailLevel detail) {
+        ParameterInfo pinfo = XtceToGpbAssembler.toParameterInfo(parameterWithId.getParameter(), detail);
+        if (parameterWithId.getPath() != null && parameterWithId.getPath().length > 0) {
+            ParameterInfo.Builder infob = ParameterInfo.newBuilder(pinfo);
+            for (PathElement el : parameterWithId.getPath()) {
+                infob.addPath(el.toString());
+            }
+            pinfo = infob.build();
+        }
+        return pinfo;
+    }
+
+    public static ParameterInfo toParameterInfo(Parameter p, DetailLevel detail) {
+        ParameterInfo.Builder b = ParameterInfo.newBuilder();
+
+        b.setName(p.getName());
+        b.setQualifiedName(p.getQualifiedName());
+
+        if (detail == DetailLevel.SUMMARY || detail == DetailLevel.FULL) {
+            if (p.getShortDescription() != null) {
+                b.setShortDescription(p.getShortDescription());
+            }
+            DataSource xtceDs = p.getDataSource();
+            if (xtceDs != null) {
+                b.setDataSource(DataSourceType.valueOf(xtceDs.name()));
+            }
+            if (p.getParameterType() != null) {
+                b.setType(toParameterTypeInfo(p.getParameterType(), detail));
+            }
+        }
+
+        if (detail == DetailLevel.FULL) {
+            if (p.getLongDescription() != null) {
+                b.setLongDescription(p.getLongDescription());
+            }
+            if (p.getAliasSet() != null) {
+                Map<String, String> aliases = p.getAliasSet().getAliases();
+                for (Entry<String, String> me : aliases.entrySet()) {
+                    b.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+                }
+            }
+            if (p.getAncillaryData() != null) {
+                for (AncillaryData data : p.getAncillaryData()) {
+                    b.putAncillaryData(data.getName(), toAncillaryDataInfo(data));
+                }
+            }
+        }
+
+        return b.build();
+    }
+
+    public static AncillaryDataInfo toAncillaryDataInfo(AncillaryData data) {
+        AncillaryDataInfo.Builder infob = AncillaryDataInfo.newBuilder();
+        if (data.getValue() != null) {
+            infob.setValue(data.getValue());
+        }
+        if (data.getMimeType() != null) {
+            infob.setMimeType(data.getMimeType());
+        }
+        if (data.getHref() != null) {
+            infob.setHref(data.getHref().toString());
+        }
+        return infob.build();
+    }
+
+    public static ParameterTypeInfo toParameterTypeInfo(ParameterType parameterType, DetailLevel detail) {
+        ParameterTypeInfo.Builder infob = ParameterTypeInfo.newBuilder();
+        infob.setName(parameterType.getName());
+        infob.setEngType(parameterType.getTypeAsString());
+
+        if (parameterType instanceof NameDescription) {
+            var nameDescription = (NameDescription) parameterType;
+
+            if (parameterType.getQualifiedName() != null) {
+                // Should not happen, but can be null when loading
+                // very old spreadsheet formats (where parameter types
+                // were not added to a subsystem)
+                infob.setQualifiedName(parameterType.getQualifiedName());
+            }
+
+            if (detail == DetailLevel.SUMMARY || detail == DetailLevel.FULL) {
+                if (parameterType.getShortDescription() != null) {
+                    infob.setShortDescription(parameterType.getShortDescription());
+                }
+            }
+
+            if (detail == DetailLevel.FULL) {
+                if (parameterType.getLongDescription() != null) {
+                    infob.setLongDescription(parameterType.getLongDescription());
+                }
+                if (nameDescription.getAliasSet() != null) {
+                    Map<String, String> aliases = nameDescription.getAliasSet().getAliases();
+                    for (Entry<String, String> me : aliases.entrySet()) {
+                        infob.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+                    }
+                }
+                if (nameDescription.getAncillaryData() != null) {
+                    for (AncillaryData data : nameDescription.getAncillaryData()) {
+                        infob.putAncillaryData(data.getName(), toAncillaryDataInfo(data));
+                    }
+                }
+            }
+        }
+
+        if (parameterType instanceof BaseDataType) {
+            BaseDataType bdt = (BaseDataType) parameterType;
+            for (UnitType ut : bdt.getUnitSet()) {
+                infob.addUnitSet(toUnitInfo(ut));
+            }
+        } else if (parameterType instanceof AggregateParameterType) {
+            AggregateParameterType apt = (AggregateParameterType) parameterType;
+            for (Member member : apt.getMemberList()) {
+                MemberInfo.Builder memberb = MemberInfo.newBuilder();
+                memberb.setName(member.getName());
+                if (member.getType() instanceof ParameterType) {
+                    ParameterType ptype = (ParameterType) member.getType();
+                    memberb.setType(toParameterTypeInfo(ptype, detail));
+                }
+                if (member.getShortDescription() != null) {
+                    memberb.setShortDescription(member.getShortDescription());
+                }
+                if (member.getLongDescription() != null) {
+                    memberb.setLongDescription(member.getLongDescription());
+                }
+                if (member.getAliasSet() != null) {
+                    Map<String, String> aliases = member.getAliasSet().getAliases();
+                    for (Entry<String, String> me : aliases.entrySet()) {
+                        memberb.addAlias(NamedObjectId.newBuilder()
+                                .setName(me.getValue()).setNamespace(me.getKey()));
+                    }
+                }
+                infob.addMember(memberb);
+            }
+        } else if (parameterType instanceof ArrayParameterType) {
+            ArrayParameterType apt = (ArrayParameterType) parameterType;
+            ArrayInfo.Builder arrayInfob = ArrayInfo.newBuilder();
+            List<IntegerValue> dims = apt.getSize();
+            for (int i = 0; i < apt.getNumberOfDimensions(); i++) {
+                if (dims != null) { // XTCE 1.2+
+                    IntegerValue dim = dims.get(i);
+                    if (dim instanceof FixedIntegerValue) {
+                        arrayInfob.addDimensions(ParameterDimensionInfo.newBuilder()
+                                .setFixedValue(((FixedIntegerValue) dim).getValue()));
+                    } else if (dim instanceof DynamicIntegerValue) {
+                        ParameterDimensionInfo.Builder dimb = ParameterDimensionInfo.newBuilder();
+                        DynamicIntegerValue dynamicValue = (DynamicIntegerValue) dim;
+                        ParameterInstanceRef ref = dynamicValue.getParameterInstanceRef();
+                        if (ref != null) {
+                            dimb.setParameter(toParameterInfo(ref.getParameter(), DetailLevel.SUMMARY));
+                            dimb.setSlope(dynamicValue.getSlope());
+                            dimb.setIntercept(dynamicValue.getIntercept());
+                        }
+                        arrayInfob.addDimensions(dimb);
+                    }
+                } else { // XTCE 1.1
+                    arrayInfob.addDimensions(ParameterDimensionInfo.getDefaultInstance());
+                }
+            }
+
+            if (apt.getElementType() instanceof ParameterType) {
+                ParameterType elementType = (ParameterType) apt.getElementType();
+                arrayInfob.setType(toParameterTypeInfo(elementType, detail));
+            }
+            infob.setArrayInfo(arrayInfob);
+        } else {
+            throw new IllegalStateException("unknown parameter type " + parameterType);
+        }
+
+        if (detail == DetailLevel.FULL) {
+            if (parameterType instanceof BaseDataType) {
+                BaseDataType bdt = (BaseDataType) parameterType;
+                if (bdt.getEncoding() != null) {
+                    infob.setDataEncoding(toDataEncodingInfo(bdt.getEncoding()));
+                }
+            }
+            if (parameterType instanceof NameDescription) {
+                NameDescription namedItem = (NameDescription) parameterType;
+                if (namedItem.getAncillaryData() != null) {
+                    for (AncillaryData data : namedItem.getAncillaryData()) {
+                        infob.putAncillaryData(data.getName(), toAncillaryDataInfo(data));
+                    }
+                }
+            }
+
+            if (parameterType instanceof IntegerParameterType) {
+                IntegerParameterType ipt = (IntegerParameterType) parameterType;
+                infob.setSigned(ipt.isSigned());
+                infob.setSizeInBits(ipt.getSizeInBits());
+                if (ipt.getDefaultAlarm() != null) {
+                    infob.setDefaultAlarm(toAlarmInfo(ipt.getDefaultAlarm()));
+                }
+                if (ipt.getContextAlarmList() != null) {
+                    for (NumericContextAlarm contextAlarm : ipt.getContextAlarmList()) {
+                        infob.addContextAlarm(toContextAlarmInfo(contextAlarm));
+                    }
+                }
+                if (ipt.getNumberFormat() != null) {
+                    infob.setNumberFormat(toNumberFormatTypeInfo(ipt.getNumberFormat()));
+                }
+            } else if (parameterType instanceof FloatParameterType) {
+                FloatParameterType fpt = (FloatParameterType) parameterType;
+                infob.setSizeInBits(fpt.getSizeInBits());
+                if (fpt.getDefaultAlarm() != null) {
+                    infob.setDefaultAlarm(toAlarmInfo(fpt.getDefaultAlarm()));
+                }
+                if (fpt.getContextAlarmList() != null) {
+                    for (NumericContextAlarm contextAlarm : fpt.getContextAlarmList()) {
+                        infob.addContextAlarm(toContextAlarmInfo(contextAlarm));
+                    }
+                }
+                if (fpt.getNumberFormat() != null) {
+                    infob.setNumberFormat(toNumberFormatTypeInfo(fpt.getNumberFormat()));
+                }
+            } else if (parameterType instanceof EnumeratedParameterType) {
+                EnumeratedParameterType ept = (EnumeratedParameterType) parameterType;
+                if (ept.getDefaultAlarm() != null) {
+                    infob.setDefaultAlarm(toAlarmInfo(ept.getDefaultAlarm()));
+                }
+                if (ept.getContextAlarmList() != null) {
+                    for (EnumerationContextAlarm contextAlarm : ept.getContextAlarmList()) {
+                        infob.addContextAlarm(toContextAlarmInfo(contextAlarm));
+                    }
+                }
+                var enumValues = toEnumValues(ept);
+                infob.addAllEnumValue(enumValues);
+                infob.addAllEnumValues(enumValues);
+                var enumRanges = toEnumRanges(ept);
+                infob.addAllEnumRanges(enumRanges);
+            } else if (parameterType instanceof AbsoluteTimeParameterType) {
+                AbsoluteTimeParameterType apt = (AbsoluteTimeParameterType) parameterType;
+                AbsoluteTimeInfo.Builder timeb = AbsoluteTimeInfo.newBuilder();
+                if (apt.getInitialValue() != null) {
+                    timeb.setInitialValue(apt.getInitialValue().toString());
+                }
+                if (apt.needsScaling()) {
+                    timeb.setScale(apt.getScale());
+                    timeb.setOffset(apt.getOffset());
+                }
+                ReferenceTime referenceTime = apt.getReferenceTime();
+                if (referenceTime != null) {
+                    TimeEpoch epoch = referenceTime.getEpoch();
+                    if (epoch != null) {
+                        if (epoch.getCommonEpoch() != null) {
+                            timeb.setEpoch(epoch.getCommonEpoch().toString());
+                        } else {
+                            timeb.setEpoch(epoch.getDateTime());
+                        }
+                    }
+                    if (referenceTime.getOffsetFrom() != null) {
+                        Parameter p = referenceTime.getOffsetFrom().getParameter();
+                        timeb.setOffsetFrom(toParameterInfo(p, DetailLevel.LINK));
+                    }
+                }
+                infob.setAbsoluteTimeInfo(timeb);
+            } else if (parameterType instanceof BooleanParameterType) {
+                BooleanParameterType bpt = (BooleanParameterType) parameterType;
+                infob.setOneStringValue(bpt.getOneStringValue());
+                infob.setZeroStringValue(bpt.getZeroStringValue());
+            }
+        }
+        return infob.build();
+    }
+
+    private static NumberFormatTypeInfo toNumberFormatTypeInfo(NumberFormatType numberFormatType) {
+        NumberFormatTypeInfo.Builder infob = NumberFormatTypeInfo.newBuilder();
+        infob.setNumberBase(numberFormatType.getNumberBase().name());
+        infob.setMinimumFractionDigits(numberFormatType.getMinimumFractionDigits());
+        if (numberFormatType.getMaximumFractionDigits() >= 0) {
+            infob.setMaximumFractionDigits(numberFormatType.getMaximumFractionDigits());
+        }
+        infob.setMinimumIntegerDigits(numberFormatType.getMinimumIntegerDigits());
+        if (numberFormatType.getMaximumIntegerDigits() >= 0) {
+            infob.setMaximumIntegerDigits(numberFormatType.getMaximumIntegerDigits());
+        }
+        if (numberFormatType.getNegativeSuffix() != null) {
+            infob.setNegativeSuffix(numberFormatType.getNegativeSuffix());
+        }
+        if (numberFormatType.getPositiveSuffix() != null) {
+            infob.setPositiveSuffix(numberFormatType.getPositiveSuffix());
+        }
+        if (numberFormatType.getNegativePrefix() != null) {
+            infob.setNegativePrefix(numberFormatType.getNegativePrefix());
+        }
+        if (numberFormatType.getPositivePrefix() != null) {
+            infob.setPositivePrefix(numberFormatType.getPositivePrefix());
+        }
+        infob.setShowThousandsGrouping(numberFormatType.isShowThousandsGrouping());
+        infob.setNotation(numberFormatType.getNotation().name());
+
+        return infob.build();
+    }
+
+    private static String getDataTypeInitialValue(DataType dataType) {
+        if (dataType == null || dataType.getInitialValue() == null) {
+            return null;
+        }
+        return dataType.toString(dataType.getInitialValue());
+    }
+
+    public static ArgumentTypeInfo toArgumentTypeInfo(ArgumentType argumentType) {
+        ArgumentTypeInfo.Builder infob = ArgumentTypeInfo.newBuilder()
+                .setEngType(argumentType.getTypeAsString());
+        if (argumentType.getName() != null) {
+            infob.setName(argumentType.getName());
+        }
+
+        if (argumentType instanceof BaseDataType) {
+            BaseDataType bdt = (BaseDataType) argumentType;
+            if (bdt.getEncoding() != null) {
+                infob.setDataEncoding(toDataEncodingInfo(bdt.getEncoding()));
+            }
+            for (UnitType ut : argumentType.getUnitSet()) {
+                infob.addUnitSet(toUnitInfo(ut));
+            }
+        }
+
+        if (argumentType instanceof AggregateArgumentType) {
+            AggregateArgumentType aat = (AggregateArgumentType) argumentType;
+            for (Member member : aat.getMemberList()) {
+                ArgumentMemberInfo.Builder memberb = ArgumentMemberInfo.newBuilder();
+                memberb.setName(member.getName());
+                if (member.getType() instanceof ArgumentType) {
+                    ArgumentType ptype = (ArgumentType) member.getType();
+                    memberb.setType(toArgumentTypeInfo(ptype));
+                    if (member.getInitialValue() != null) {
+                        String initialValue = ptype.toString(member.getInitialValue());
+                        memberb.setInitialValue(initialValue);
+                    } else if (ptype.getInitialValue() != null) {
+                        String initialValue = ptype.toString(ptype.getInitialValue());
+                        memberb.setInitialValue(initialValue);
+                    }
+                }
+                if (member.getShortDescription() != null) {
+                    memberb.setShortDescription(member.getShortDescription());
+                }
+                if (member.getLongDescription() != null) {
+                    memberb.setLongDescription(member.getLongDescription());
+                }
+                if (member.getAliasSet() != null) {
+                    Map<String, String> aliases = member.getAliasSet().getAliases();
+                    for (Entry<String, String> me : aliases.entrySet()) {
+                        memberb.addAlias(NamedObjectId.newBuilder()
+                                .setName(me.getValue()).setNamespace(me.getKey()));
+                    }
+                }
+                infob.addMember(memberb);
+            }
+        } else if (argumentType instanceof ArrayArgumentType) {
+            ArrayArgumentType aat = (ArrayArgumentType) argumentType;
+            for (int i = 0; i < aat.getNumberOfDimensions(); i++) {
+                ArgumentDimensionInfo.Builder dimensionb = ArgumentDimensionInfo.newBuilder();
+                IntegerValue dimension = aat.getDimension(i);
+                if (dimension instanceof FixedIntegerValue) {
+                    var fixedIntegerValue = (FixedIntegerValue) dimension;
+                    dimensionb.setFixedValue(fixedIntegerValue.getValue());
+                } else if (dimension instanceof DynamicIntegerValue) {
+                    var dynamicIntegerValue = (DynamicIntegerValue) dimension;
+                    ParameterOrArgumentRef ref = dynamicIntegerValue.getDynamicInstanceRef();
+                    if (ref instanceof ParameterInstanceRef) {
+                        ParameterInstanceRef parameterRef = (ParameterInstanceRef) ref;
+                        dimensionb.setParameter(toParameterInfo(parameterRef.getParameter(), DetailLevel.SUMMARY));
+                    } else if (ref instanceof ArgumentInstanceRef) {
+                        ArgumentInstanceRef argumentRef = (ArgumentInstanceRef) ref;
+                        PathElement[] path = ref.getMemberPath();
+                        if (path == null) {
+                            dimensionb.setArgument(argumentRef.getName());
+                        } else {
+                            String memberPath = "";
+                            for (PathElement el : path) {
+                                memberPath += "." + el.toString();
+                            }
+                            dimensionb.setArgument(argumentRef.getName() + memberPath);
+                        }
+                    }
+                    dimensionb.setSlope(dynamicIntegerValue.getSlope());
+                    dimensionb.setIntercept(dynamicIntegerValue.getIntercept());
+                }
+                if (aat.getElementType() instanceof ArgumentType) {
+                    ArgumentType elementType = (ArgumentType) aat.getElementType();
+                    infob.setElementType(toArgumentTypeInfo(elementType));
+                }
+                infob.addDimensions(dimensionb);
+            }
+        } else if (argumentType instanceof IntegerArgumentType) {
+            IntegerArgumentType iat = (IntegerArgumentType) argumentType;
+            infob.setSigned(iat.isSigned());
+            if (iat.getValidRange() != null) {
+                if (iat.getValidRange().getMinInclusive() != Long.MIN_VALUE) {
+                    infob.setRangeMin(iat.getValidRange().getMinInclusive());
+                }
+                if (iat.getValidRange().getMaxInclusive() != Long.MAX_VALUE) {
+                    infob.setRangeMax(iat.getValidRange().getMaxInclusive());
+                }
+            }
+        } else if (argumentType instanceof FloatArgumentType) {
+            FloatArgumentType fat = (FloatArgumentType) argumentType;
+            if (fat.getValidRange() != null) {
+                if (!Double.isNaN(fat.getValidRange().getMin())) {
+                    infob.setRangeMin(fat.getValidRange().getMin());
+                }
+                if (!Double.isNaN(fat.getValidRange().getMax())) {
+                    infob.setRangeMax(fat.getValidRange().getMax());
+                }
+            }
+        } else if (argumentType instanceof EnumeratedArgumentType) {
+            EnumeratedArgumentType eat = (EnumeratedArgumentType) argumentType;
+            for (ValueEnumeration xtceValue : eat.getValueEnumerationList()) {
+                infob.addEnumValue(toEnumValue(xtceValue));
+            }
+        } else if (argumentType instanceof BooleanArgumentType) {
+            BooleanArgumentType bat = (BooleanArgumentType) argumentType;
+            infob.setZeroStringValue(bat.getZeroStringValue());
+            infob.setOneStringValue(bat.getOneStringValue());
+        } else if (argumentType instanceof StringArgumentType) {
+            StringArgumentType sat = (StringArgumentType) argumentType;
+            IntegerRange sizeRange = sat.getSizeRangeInCharacters();
+            if (sizeRange != null) {
+                if (sizeRange.getMinInclusive() != Long.MIN_VALUE) {
+                    infob.setMinChars((int) sizeRange.getMinInclusive());
+                }
+                if (sizeRange.getMaxInclusive() != Long.MAX_VALUE) {
+                    infob.setMaxChars((int) sizeRange.getMaxInclusive());
+                }
+            }
+        } else if (argumentType instanceof BinaryArgumentType) {
+            BinaryArgumentType bat = (BinaryArgumentType) argumentType;
+            IntegerRange sizeRange = bat.getSizeRangeInBytes();
+            if (sizeRange != null) {
+                if (sizeRange.getMinInclusive() != Long.MIN_VALUE) {
+                    infob.setMinBytes((int) sizeRange.getMinInclusive());
+                }
+                if (sizeRange.getMaxInclusive() != Long.MAX_VALUE) {
+                    infob.setMaxBytes((int) sizeRange.getMaxInclusive());
+                }
+            }
+        }
+        return infob.build();
+    }
+
+    public static List<ComparisonInfo> toComparisons(MatchCriteria matchCriteria) {
+        List<ComparisonInfo> comparisons = new ArrayList<>(2);
+        if (matchCriteria instanceof Comparison) {
+            comparisons.add(toComparisonInfo((Comparison) matchCriteria));
+        } else if (matchCriteria instanceof ComparisonList) {
+            ComparisonList xtceList = (ComparisonList) matchCriteria;
+            for (Comparison xtceComparison : xtceList.getComparisonList()) {
+                comparisons.add(toComparisonInfo(xtceComparison));
+            }
+        }
+
+        // Other classes (ANDedConditions, ORedConditions) are ignored for now
+        // These first require serializing support for arbitrary expressions.
+
+        return comparisons;
+    }
+
+    // Simplifies the XTCE structure a bit for outside use.
+    // String-encoded numeric types see some sort of two-step conversion from raw to eng
+    // with the first to interpret the string (stored in a nested StringDataEncoding)
+    // and the second to apply any regular integer calibrations (stored in the actual DataEncoding)
+    // Below code will represent all of those things as type 'STRING' as the user should expect it.
+    public static DataEncodingInfo toDataEncodingInfo(DataEncoding xtceDataEncoding) {
+        DataEncodingInfo.Builder infob = DataEncodingInfo.newBuilder();
+        infob.setLittleEndian(xtceDataEncoding.getByteOrder() == ByteOrder.LITTLE_ENDIAN);
+        if (xtceDataEncoding.getSizeInBits() >= 0) {
+            infob.setSizeInBits(xtceDataEncoding.getSizeInBits());
+        }
+        if (xtceDataEncoding instanceof BinaryDataEncoding) {
+            infob.setType(DataEncodingInfo.Type.BINARY);
+            infob.setEncoding(toTextualEncoding((BinaryDataEncoding) xtceDataEncoding));
+        } else if (xtceDataEncoding instanceof BooleanDataEncoding) {
+            infob.setType(DataEncodingInfo.Type.BOOLEAN);
+        } else if (xtceDataEncoding instanceof FloatDataEncoding) {
+            FloatDataEncoding fde = (FloatDataEncoding) xtceDataEncoding;
+            if (fde.getEncoding() == FloatDataEncoding.Encoding.STRING) {
+                infob.setType(DataEncodingInfo.Type.STRING);
+                infob.setEncoding(toTextualEncoding(fde.getStringDataEncoding()));
+            } else {
+                infob.setType(DataEncodingInfo.Type.FLOAT);
+                infob.setEncoding(fde.getEncoding().toString());
+            }
+            if (fde.getDefaultCalibrator() != null) {
+                Calibrator calibrator = fde.getDefaultCalibrator();
+                infob.setDefaultCalibrator(toCalibratorInfo(calibrator));
+            }
+            if (fde.getContextCalibratorList() != null) {
+                for (ContextCalibrator contextCalibrator : fde.getContextCalibratorList()) {
+                    ContextCalibratorInfo.Builder contextCalibratorb = ContextCalibratorInfo.newBuilder();
+                    MatchCriteria matchCriteria = contextCalibrator.getContextMatch();
+                    contextCalibratorb.setContext(toExpressionString(matchCriteria));
+                    contextCalibratorb.addAllComparison(toComparisons(matchCriteria));
+                    contextCalibratorb.setCalibrator(toCalibratorInfo(contextCalibrator.getCalibrator()));
+                    infob.addContextCalibrators(contextCalibratorb);
+                    infob.addContextCalibrator(contextCalibratorb);
+                }
+            }
+        } else if (xtceDataEncoding instanceof IntegerDataEncoding) {
+            IntegerDataEncoding ide = (IntegerDataEncoding) xtceDataEncoding;
+            if (ide.getEncoding() == IntegerDataEncoding.Encoding.STRING) {
+                infob.setType(DataEncodingInfo.Type.STRING);
+                infob.setEncoding(toTextualEncoding(ide.getStringEncoding()));
+            } else {
+                infob.setType(DataEncodingInfo.Type.INTEGER);
+                infob.setEncoding(ide.getEncoding().toString());
+            }
+            if (ide.getDefaultCalibrator() != null) {
+                Calibrator calibrator = ide.getDefaultCalibrator();
+                infob.setDefaultCalibrator(toCalibratorInfo(calibrator));
+            }
+            if (ide.getContextCalibratorList() != null) {
+                for (ContextCalibrator contextCalibrator : ide.getContextCalibratorList()) {
+                    ContextCalibratorInfo.Builder contextCalibratorb = ContextCalibratorInfo.newBuilder();
+                    MatchCriteria matchCriteria = contextCalibrator.getContextMatch();
+                    contextCalibratorb.setContext(toExpressionString(matchCriteria));
+                    contextCalibratorb.addAllComparison(toComparisons(matchCriteria));
+                    contextCalibratorb.setCalibrator(toCalibratorInfo(contextCalibrator.getCalibrator()));
+                    infob.addContextCalibrators(contextCalibratorb);
+                    infob.addContextCalibrator(contextCalibratorb);
+                }
+            }
+        } else if (xtceDataEncoding instanceof StringDataEncoding) {
+            infob.setType(DataEncodingInfo.Type.STRING);
+            StringDataEncoding sde = (StringDataEncoding) xtceDataEncoding;
+            infob.setEncoding(toTextualEncoding(sde));
+        }
+        return infob.build();
+    }
+
+    public static String toTextualEncoding(StringDataEncoding sde) {
+        String result = sde.getSizeType() + "(";
+        switch (sde.getSizeType()) {
+        case FIXED:
+            result += sde.getSizeInBits();
+            break;
+        case LEADING_SIZE:
+            result += sde.getSizeInBitsOfSizeTag();
+            break;
+        case TERMINATION_CHAR:
+            String hexChar = Integer.toHexString(sde.getTerminationChar()).toUpperCase();
+            if (hexChar.length() == 1) {
+                hexChar = "0" + hexChar;
+            }
+            result += "0x" + hexChar;
+            break;
+        default:
+            throw new IllegalStateException("Unexpected size type " + sde.getSizeType());
+        }
+        return result + ")";
+    }
+
+    public static String toTextualEncoding(BinaryDataEncoding bde) {
+        String result = bde.getType() + "(";
+        switch (bde.getType()) {
+        case FIXED_SIZE:
+            result += bde.getSizeInBits();
+            break;
+        case LEADING_SIZE:
+            result += bde.getSizeInBitsOfSizeTag();
+            break;
+        case CUSTOM:
+            break;
+        case DYNAMIC:
+            break;
+        default:
+            throw new IllegalStateException("Unexpected type " + bde.getType());
+        }
+        return result + ")";
+    }
+
+    public static List<Mdb.EnumValue> toEnumValues(EnumeratedParameterType ptype) {
+        return ptype.getValueEnumerationList().stream()
+                .sorted((a, b) -> Long.compare(a.getValue(), b.getValue()))
+                .map(XtceToGpbAssembler::toEnumValue)
+                .toList();
+    }
+
+    public static List<Mdb.EnumRange> toEnumRanges(EnumeratedParameterType ptype) {
+        return ptype.getValueEnumerationRangeList().stream()
+                .sorted((a, b) -> Double.compare(a.getMin(), b.getMin()))
+                .map(XtceToGpbAssembler::toEnumRange)
+                .toList();
+    }
+
+    public static Mdb.EnumValue toEnumValue(ValueEnumeration xtceValue) {
+        Mdb.EnumValue.Builder b = Mdb.EnumValue.newBuilder();
+        b.setValue(xtceValue.getValue());
+        b.setLabel(xtceValue.getLabel());
+        if (xtceValue.getDescription() != null) {
+            b.setDescription(xtceValue.getDescription());
+        }
+        return b.build();
+    }
+
+    public static Mdb.EnumRange toEnumRange(ValueEnumerationRange range) {
+        var b = Mdb.EnumRange.newBuilder()
+                .setLabel(range.getLabel())
+                .setMin(range.getMin())
+                .setMax(range.getMax())
+                .setMinInclusive(range.getMinInclusive())
+                .setMaxInclusive(range.getMaxInclusive());
+        if (range.getDescription() != null) {
+            b.setDescription(range.getDescription());
+        }
+        return b.build();
+    }
+
+    public static UnitInfo toUnitInfo(UnitType ut) {
+        return UnitInfo.newBuilder().setUnit(ut.getUnit()).build();
+    }
+
+    public static CalibratorInfo toCalibratorInfo(Calibrator calibrator) {
+        CalibratorInfo.Builder calibratorInfob = CalibratorInfo.newBuilder();
+        if (calibrator instanceof PolynomialCalibrator) {
+            calibratorInfob.setType(CalibratorInfo.Type.POLYNOMIAL);
+            PolynomialCalibrator polynomialCalibrator = (PolynomialCalibrator) calibrator;
+            PolynomialCalibratorInfo.Builder polyb = PolynomialCalibratorInfo.newBuilder();
+            for (double coefficient : polynomialCalibrator.getCoefficients()) {
+                polyb.addCoefficients(coefficient);
+                polyb.addCoefficient(coefficient);
+            }
+            calibratorInfob.setPolynomialCalibrator(polyb);
+        } else if (calibrator instanceof SplineCalibrator) {
+            calibratorInfob.setType(CalibratorInfo.Type.SPLINE);
+            SplineCalibrator splineCalibrator = (SplineCalibrator) calibrator;
+            SplineCalibratorInfo.Builder splineb = SplineCalibratorInfo.newBuilder();
+            for (SplinePoint point : splineCalibrator.getPoints()) {
+                var pointInfo = SplinePointInfo.newBuilder()
+                        .setRaw(point.getRaw())
+                        .setCalibrated(point.getCalibrated());
+                splineb.addPoints(pointInfo);
+                splineb.addPoint(pointInfo);
+            }
+            calibratorInfob.setSplineCalibrator(splineb);
+        } else if (calibrator instanceof JavaExpressionCalibrator) {
+            calibratorInfob.setType(CalibratorInfo.Type.JAVA_EXPRESSION);
+            JavaExpressionCalibrator javaCalibrator = (JavaExpressionCalibrator) calibrator;
+            JavaExpressionCalibratorInfo.Builder javab = JavaExpressionCalibratorInfo.newBuilder();
+            javab.setFormula(javaCalibrator.getFormula());
+            calibratorInfob.setJavaExpressionCalibrator(javab);
+        } else if (calibrator instanceof MathOperationCalibrator) {
+            calibratorInfob.setType(CalibratorInfo.Type.MATH_OPERATION);
+            // MathOperationCalibrator mathOperationCalibrator = (MathOperationCalibrator) calibrator;
+        } else if (calibrator instanceof AlgorithmCalibrator) {
+            calibratorInfob.setType(CalibratorInfo.Type.ALGORITHM);
+        } else {
+            throw new IllegalArgumentException("Unexpected calibrator type " + calibrator.getClass());
+        }
+        return calibratorInfob.build();
+    }
+
+    public static AlarmInfo toAlarmInfo(NumericAlarm numericAlarm) {
+        AlarmInfo.Builder alarmInfob = AlarmInfo.newBuilder();
+        alarmInfob.setMinViolations(numericAlarm.getMinViolations());
+        AlarmRanges staticRanges = numericAlarm.getStaticAlarmRanges();
+        if (staticRanges.getWatchRange() != null) {
+            AlarmRange watchRange = BasicParameterValue.toGpbAlarmRange(AlarmLevelType.WATCH,
+                    staticRanges.getWatchRange());
+            alarmInfob.addStaticAlarmRanges(watchRange);
+            alarmInfob.addStaticAlarmRange(watchRange);
+        }
+        if (staticRanges.getWarningRange() != null) {
+            AlarmRange warningRange = BasicParameterValue.toGpbAlarmRange(AlarmLevelType.WARNING,
+                    staticRanges.getWarningRange());
+            alarmInfob.addStaticAlarmRanges(warningRange);
+            alarmInfob.addStaticAlarmRange(warningRange);
+        }
+        if (staticRanges.getDistressRange() != null) {
+            AlarmRange distressRange = BasicParameterValue.toGpbAlarmRange(AlarmLevelType.DISTRESS,
+                    staticRanges.getDistressRange());
+            alarmInfob.addStaticAlarmRanges(distressRange);
+            alarmInfob.addStaticAlarmRange(distressRange);
+        }
+        if (staticRanges.getCriticalRange() != null) {
+            AlarmRange criticalRange = BasicParameterValue.toGpbAlarmRange(AlarmLevelType.CRITICAL,
+                    staticRanges.getCriticalRange());
+            alarmInfob.addStaticAlarmRanges(criticalRange);
+            alarmInfob.addStaticAlarmRange(criticalRange);
+        }
+        if (staticRanges.getSevereRange() != null) {
+            AlarmRange severeRange = BasicParameterValue.toGpbAlarmRange(AlarmLevelType.SEVERE,
+                    staticRanges.getSevereRange());
+            alarmInfob.addStaticAlarmRanges(severeRange);
+            alarmInfob.addStaticAlarmRange(severeRange);
+        }
+
+        return alarmInfob.build();
+    }
+
+    private static ContextAlarmInfo toContextAlarmInfo(NumericContextAlarm contextAlarm) {
+        ContextAlarmInfo.Builder resultb = ContextAlarmInfo.newBuilder()
+                .setAlarm(toAlarmInfo(contextAlarm))
+                .setContext(toExpressionString(contextAlarm.getContextMatch()))
+                .addAllComparison(toComparisons(contextAlarm.getContextMatch()));
+        return resultb.build();
+    }
+
+    public static AlarmInfo toAlarmInfo(EnumerationAlarm enumerationAlarm) {
+        AlarmInfo.Builder alarmInfob = AlarmInfo.newBuilder();
+        alarmInfob.setMinViolations(enumerationAlarm.getMinViolations());
+        for (EnumerationAlarmItem item : enumerationAlarm.getAlarmList()) {
+            alarmInfob.addEnumerationAlarms(toEnumerationAlarm(item));
+            alarmInfob.addEnumerationAlarm(toEnumerationAlarm(item));
+        }
+        alarmInfob.setDefaultLevel(toLevel(enumerationAlarm.getDefaultAlarmLevel()));
+        return alarmInfob.build();
+    }
+
+    private static ContextAlarmInfo toContextAlarmInfo(EnumerationContextAlarm contextAlarm) {
+        ContextAlarmInfo.Builder resultb = ContextAlarmInfo.newBuilder()
+                .setAlarm(toAlarmInfo(contextAlarm))
+                .setContext(toExpressionString(contextAlarm.getContextMatch()))
+                .addAllComparison(toComparisons(contextAlarm.getContextMatch()));
+        return resultb.build();
+    }
+
+    public static Mdb.EnumerationAlarm toEnumerationAlarm(EnumerationAlarmItem xtceAlarmItem) {
+        Mdb.EnumerationAlarm.Builder resultb = Mdb.EnumerationAlarm.newBuilder();
+        resultb.setLabel(xtceAlarmItem.getEnumerationLabel());
+        resultb.setLevel(toLevel(xtceAlarmItem.getAlarmLevel()));
+        return resultb.build();
+    }
+
+    public static AlarmLevelType toLevel(AlarmLevels level) {
+        return switch (level) {
+        case NORMAL -> AlarmLevelType.NORMAL;
+        case WATCH -> AlarmLevelType.WATCH;
+        case WARNING -> AlarmLevelType.WARNING;
+        case DISTRESS -> AlarmLevelType.DISTRESS;
+        case CRITICAL -> AlarmLevelType.CRITICAL;
+        case SEVERE -> AlarmLevelType.SEVERE;
+        default -> throw new IllegalStateException("Unexpected alarm level " + level);
+        };
+    }
+
+    public static AlgorithmInfo toAlgorithmInfo(Algorithm a, DetailLevel detail) {
+        AlgorithmInfo.Builder b = AlgorithmInfo.newBuilder();
+
+        b.setName(a.getName());
+        b.setQualifiedName(a.getQualifiedName());
+
+        if (detail == DetailLevel.SUMMARY || detail == DetailLevel.FULL) {
+            if (a.getShortDescription() != null) {
+                b.setShortDescription(a.getShortDescription());
+            }
+            if (a.getLongDescription() != null) {
+                b.setLongDescription(a.getLongDescription());
+            }
+            if (a.getAliasSet() != null) {
+                Map<String, String> aliases = a.getAliasSet().getAliases();
+                for (Entry<String, String> me : aliases.entrySet()) {
+                    b.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+                }
+            }
+            switch (a.getScope()) {
+            case GLOBAL:
+                b.setScope(Scope.GLOBAL);
+                break;
+            case COMMAND_VERIFICATION:
+                b.setScope(Scope.COMMAND_VERIFICATION);
+                break;
+            case CONTAINER_PROCESSING:
+                b.setScope(Scope.CONTAINER_PROCESSING);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected scope " + a.getScope());
+            }
+
+            if (a instanceof CustomAlgorithm) {
+                b.setType(AlgorithmInfo.Type.CUSTOM);
+                CustomAlgorithm ca = (CustomAlgorithm) a;
+                if (ca.getLanguage() != null) {
+                    b.setLanguage(ca.getLanguage());
+                }
+                if (ca.getAlgorithmText() != null) {
+                    b.setText(ca.getAlgorithmText());
+                }
+            } else if (a instanceof MathAlgorithm) {
+                b.setType(AlgorithmInfo.Type.MATH);
+                MathAlgorithm ma = (MathAlgorithm) a;
+                for (var el : ma.getOperation().getElementList()) {
+                    switch (el.getType()) {
+                    case OPERATOR:
+                        b.addMathElements(MathElement.newBuilder()
+                                .setType(MathElement.Type.OPERATOR)
+                                .setOperator(el.getOperator().xtceName()));
+                        break;
+                    case THIS_PARAMETER_OPERAND:
+                        b.addMathElements(MathElement.newBuilder()
+                                .setType(MathElement.Type.THIS_PARAMETER_OPERAND));
+                        break;
+                    case VALUE_OPERAND:
+                        b.addMathElements(MathElement.newBuilder()
+                                .setType(MathElement.Type.VALUE_OPERAND)
+                                .setValue(el.getValue()));
+                        break;
+                    case PARAMETER_INSTANCE_REF_OPERAND:
+                        var pref = el.getParameterInstanceRef();
+                        b.addMathElements(MathElement.newBuilder()
+                                .setType(MathElement.Type.PARAMETER)
+                                .setParameter(toParameterInfo(pref.getParameter(), DetailLevel.SUMMARY))
+                                .setParameterInstance(pref.getInstance()));
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected math element " + el.getType());
+                    }
+                }
+            } else {
+                throw new IllegalStateException("Unexpected algorithm type " + a.getClass());
+            }
+        }
+
+        if (detail == DetailLevel.FULL) {
+            for (InputParameter p : a.getInputSet()) {
+                b.addInputParameter(toInputParameterInfo(p));
+            }
+            for (OutputParameter p : a.getOutputSet()) {
+                b.addOutputParameter(toOutputParameterInfo(p));
+            }
+            TriggerSetType triggerSet = a.getTriggerSet();
+            if (triggerSet != null) {
+                for (OnParameterUpdateTrigger trig : triggerSet.getOnParameterUpdateTriggers()) {
+                    b.addOnParameterUpdate(toParameterInfo(trig.getParameter(), DetailLevel.SUMMARY));
+                }
+                for (OnPeriodicRateTrigger trig : triggerSet.getOnPeriodicRateTriggers()) {
+                    b.addOnPeriodicRate(trig.getFireRate());
+                }
+            }
+        }
+
+        return b.build();
+    }
+
+    public static InputParameterInfo toInputParameterInfo(InputParameter xtceInput) {
+        InputParameterInfo.Builder resultb = InputParameterInfo.newBuilder();
+        ParameterInstanceRef pref = xtceInput.getParameterInstance();
+        if (pref != null) {
+            resultb.setParameter(toParameterInfo(pref.getParameter(), DetailLevel.SUMMARY));
+            resultb.setParameterInstance(pref.getInstance());
+        } else {
+            resultb.setArgument(toArgumentInfo(xtceInput.getArgumentRef().getArgument()));
+        }
+        if (xtceInput.getInputName() != null) {
+            resultb.setInputName(xtceInput.getInputName());
+        }
+        resultb.setMandatory(xtceInput.isMandatory());
+        return resultb.build();
+    }
+
+    public static OutputParameterInfo toOutputParameterInfo(OutputParameter xtceOutput) {
+        OutputParameterInfo.Builder resultb = OutputParameterInfo.newBuilder();
+        resultb.setParameter(toParameterInfo(xtceOutput.getParameter(), DetailLevel.SUMMARY));
+        if (xtceOutput.getOutputName() != null) {
+            resultb.setOutputName(xtceOutput.getOutputName());
+        }
+        return resultb.build();
+    }
+
+    public static SpaceSystemInfo toSpaceSystemInfo(SpaceSystem ss, DetailLevel detail) {
+        SpaceSystemInfo.Builder b = SpaceSystemInfo.newBuilder();
+        b.setName(ss.getName());
+        b.setQualifiedName(ss.getQualifiedName());
+        if (ss.getShortDescription() != null) {
+            b.setShortDescription(ss.getShortDescription());
+        }
+        if (ss.getLongDescription() != null) {
+            b.setLongDescription(ss.getLongDescription());
+        }
+        if (ss.getAliasSet() != null) {
+            Map<String, String> aliases = ss.getAliasSet().getAliases();
+            for (Entry<String, String> me : aliases.entrySet()) {
+                b.addAlias(NamedObjectId.newBuilder().setName(me.getValue()).setNamespace(me.getKey()));
+            }
+        }
+        if (ss.getAncillaryData() != null) {
+            for (AncillaryData data : ss.getAncillaryData()) {
+                b.putAncillaryData(data.getName(), toAncillaryDataInfo(data));
+            }
+        }
+
+        if (detail == DetailLevel.FULL) {
+            Header h = ss.getHeader();
+            if (h != null) {
+                if (h.getVersion() != null) {
+                    b.setVersion(h.getVersion());
+                }
+
+                History[] sortedHistory = h.getHistoryList().toArray(new History[] {});
+                Arrays.sort(sortedHistory);
+                for (History history : sortedHistory) {
+                    HistoryInfo.Builder historyb = HistoryInfo.newBuilder();
+                    if (history.getVersion() != null) {
+                        historyb.setVersion(history.getVersion());
+                    }
+                    if (history.getDate() != null) {
+                        historyb.setDate(history.getDate());
+                    }
+                    if (history.getMessage() != null) {
+                        historyb.setMessage(history.getMessage());
+                    }
+                    if (history.getAuthor() != null) {
+                        historyb.setAuthor(history.getAuthor());
+                    }
+                    b.addHistory(historyb);
+                }
+            }
+
+            for (SpaceSystem sub : ss.getSubSystems()) {
+                b.addSub(toSpaceSystemInfo(sub, DetailLevel.FULL));
+            }
+        }
+        return b.build();
+    }
+
+    static String toExpressionString(MatchCriteria matchCriteria) {
+        MatchCriteriaEvaluator evaluator = MatchCriteriaEvaluatorFactory
+                .getEvaluator(matchCriteria);
+        return evaluator.toExpressionString();
+    }
+}
+```

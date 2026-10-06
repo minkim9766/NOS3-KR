@@ -3,26 +3,46 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.cpython-310.pyc`
 
-file--__init__.cpython-310.pyc
-file--cleanup.cpython-310.pyc
-file--data_conversion.cpython-310.pyc
-file--file_io.cpython-310.pyc
-file--plugin_import.cpython-310.pyc
-file--print_io.cpython-310.pyc
-file--sim_io.cpython-310.pyc
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/__init__.cpython-310.pyc`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/__init__.cpython-310.pyc`](file--__init__.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/cleanup.cpython-310.pyc`](file--cleanup.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/data_conversion.cpython-310.pyc`](file--data_conversion.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/file_io.cpython-310.pyc`](file--file_io.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/plugin_import.cpython-310.pyc`](file--plugin_import.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/print_io.cpython-310.pyc`](file--print_io.cpython-310.pyc) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/sim_io.cpython-310.pyc`](file--sim_io.cpython-310.pyc) — 빌드 산출물 (경로만)
+### `cleanup.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/cleanup.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `data_conversion.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/data_conversion.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `file_io.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/file_io.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `plugin_import.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/plugin_import.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `print_io.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/print_io.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sim_io.cpython-310.pyc`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/sim_io.cpython-310.pyc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

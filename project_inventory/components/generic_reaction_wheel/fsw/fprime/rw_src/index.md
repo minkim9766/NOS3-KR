@@ -3,22 +3,782 @@
 
 **경로:** `components/generic_reaction_wheel/fsw/fprime/rw_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_reaction_wheel.cpp
-file--Generic_reaction_wheel.fpp
-file--Generic_reaction_wheel.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_reaction_wheel/fsw/fprime/rw_src/docs/`](docs/index) — 폴더
-- [`components/generic_reaction_wheel/fsw/fprime/rw_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/fsw/fprime/rw_src/Generic_reaction_wheel.cpp`](file--Generic_reaction_wheel.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/fsw/fprime/rw_src/Generic_reaction_wheel.fpp`](file--Generic_reaction_wheel.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/fsw/fprime/rw_src/Generic_reaction_wheel.hpp`](file--Generic_reaction_wheel.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_reaction_wheel/fsw/fprime/rw_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared/") #device.h
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc") #platform_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_reaction_wheel.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_reaction_wheel.cpp"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_reaction_wheel_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+  )
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_reaction_wheel_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+```
+
+### `Generic_reaction_wheel.cpp`
+
+**경로:** `components/generic_reaction_wheel/fsw/fprime/rw_src/Generic_reaction_wheel.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_reaction_wheel.cpp
+// \author jstar
+// \brief  cpp file for Generic_reaction_wheel component implementation class
+// ======================================================================
+
+/*
+** Include Files
+*/
+#include "rw_src/Generic_reaction_wheel.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_reaction_wheel ::
+    Generic_reaction_wheel(const char* const compName) :
+      Generic_reaction_wheelComponentBase(compName)
+  {
+    uint32_t status = OS_SUCCESS;
+
+    /* Initialize HWLIB */
+    nos_init_link();
+
+    /* Connect to the UART */
+    status = uart_init_port(&RW_UART[0]);
+    if(status != OS_SUCCESS)
+    {
+    	OS_printf("GENERIC_RW Checkout: UART 0 port initialization error!\n");
+    }    
+    status = uart_init_port(&RW_UART[1]);
+    if(status != OS_SUCCESS)
+    {
+    	OS_printf("GENERIC_RW Checkout: UART 1 port initialization error!\n");
+    }    
+    status = uart_init_port(&RW_UART[2]);
+    if(status != OS_SUCCESS)
+    {
+    	OS_printf("GENERIC_RW Checkout: UART 2 port initialization error!\n");
+    } 
+
+    // for ( int i = 0; i < RW_NUM; i++ )
+    // {
+    //     uart_close_port(&RW_UART[i]);
+    // }
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+
+    for(int i = 0; i < RW_NUM; i++){
+      HkTelemetryPkt.DeviceCount[i] = 0;
+      HkTelemetryPkt.DeviceErrorCount[i] = 0;
+      HkTelemetryPkt.DeviceEnabled[i] = GENERIC_RW_DEVICE_ENABLED;
+    }
+  }
+
+  Generic_reaction_wheel ::
+    ~Generic_reaction_wheel()
+  {
+    // Close the devices
+    for ( int i = 0; i < RW_NUM; i++ )
+    {
+        uart_close_port(&RW_UART[i]);
+    }
+
+    nos_destroy_link();
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_reaction_wheel :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_DeviceEnabledRW0(get_active_state(HkTelemetryPkt.DeviceEnabled[0]));
+    this->tlmWrite_DeviceEnabledRW1(get_active_state(HkTelemetryPkt.DeviceEnabled[1]));
+    this->tlmWrite_DeviceEnabledRW2(get_active_state(HkTelemetryPkt.DeviceEnabled[2]));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_reaction_wheel :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount[0] = 0;
+    HkTelemetryPkt.DeviceErrorCount[0] = 0;
+    HkTelemetryPkt.DeviceCount[1] = 0;
+    HkTelemetryPkt.DeviceErrorCount[1] = 0;
+    HkTelemetryPkt.DeviceCount[2] = 0;
+    HkTelemetryPkt.DeviceErrorCount[2] = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+
+    this->tlmWrite_DeviceCountRW0(HkTelemetryPkt.DeviceCount[0]);
+    this->tlmWrite_DeviceErrorCountRW0(HkTelemetryPkt.DeviceErrorCount[0]);
+    this->tlmWrite_DeviceEnabledRW0(get_active_state(HkTelemetryPkt.DeviceEnabled[0]));
+
+    this->tlmWrite_DeviceCountRW1(HkTelemetryPkt.DeviceCount[1]);
+    this->tlmWrite_DeviceErrorCountRW1(HkTelemetryPkt.DeviceErrorCount[1]);
+    this->tlmWrite_DeviceEnabledRW1(get_active_state(HkTelemetryPkt.DeviceEnabled[1]));
+
+    this->tlmWrite_DeviceCountRW2(HkTelemetryPkt.DeviceCount[2]);
+    this->tlmWrite_DeviceErrorCountRW2(HkTelemetryPkt.DeviceErrorCount[2]);
+    this->tlmWrite_DeviceEnabledRW2(get_active_state(HkTelemetryPkt.DeviceEnabled[2]));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_reaction_wheel :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Generic_reaction_wheel_wheelNums wheel_num){
+
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled[wheel_num.e] == GENERIC_RW_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = uart_init_port(&RW_UART[wheel_num.e]);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount[wheel_num.e]++;
+        HkTelemetryPkt.DeviceEnabled[wheel_num.e] = GENERIC_RW_DEVICE_ENABLED;
+        char configMsg[40];
+        sprintf(configMsg, "Enabled RW%d successfully!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount[wheel_num.e]++;
+        char configMsg[40];
+        sprintf(configMsg, "Enable RW%d failed, uart init fail!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      char configMsg[40];
+        sprintf(configMsg, "Enable RW%d failed, already enabled!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_DeviceCountRW0(HkTelemetryPkt.DeviceCount[0]);
+    this->tlmWrite_DeviceErrorCountRW0(HkTelemetryPkt.DeviceErrorCount[0]);
+    this->tlmWrite_DeviceEnabledRW0(get_active_state(HkTelemetryPkt.DeviceEnabled[0]));
+
+    this->tlmWrite_DeviceCountRW1(HkTelemetryPkt.DeviceCount[1]);
+    this->tlmWrite_DeviceErrorCountRW1(HkTelemetryPkt.DeviceErrorCount[1]);
+    this->tlmWrite_DeviceEnabledRW1(get_active_state(HkTelemetryPkt.DeviceEnabled[1]));
+
+    this->tlmWrite_DeviceCountRW2(HkTelemetryPkt.DeviceCount[2]);
+    this->tlmWrite_DeviceErrorCountRW2(HkTelemetryPkt.DeviceErrorCount[2]);
+    this->tlmWrite_DeviceEnabledRW2(get_active_state(HkTelemetryPkt.DeviceEnabled[2]));
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_reaction_wheel :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Generic_reaction_wheel_wheelNums wheel_num){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled[wheel_num.e] == GENERIC_RW_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = uart_close_port(&RW_UART[wheel_num.e]);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount[wheel_num.e]++;
+        HkTelemetryPkt.DeviceEnabled[wheel_num.e] = GENERIC_RW_DEVICE_DISABLED;
+        char configMsg[40];
+        sprintf(configMsg, "Disabled RW%d successfully!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount[wheel_num.e]++;
+        char configMsg[40];
+        sprintf(configMsg, "Disable RW%d failed, uart close fail!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      char configMsg[40];
+        sprintf(configMsg, "Disable RW%d failed, already Disabled!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_DeviceCountRW0(HkTelemetryPkt.DeviceCount[0]);
+    this->tlmWrite_DeviceErrorCountRW0(HkTelemetryPkt.DeviceErrorCount[0]);
+    this->tlmWrite_DeviceEnabledRW0(get_active_state(HkTelemetryPkt.DeviceEnabled[0]));
+
+    this->tlmWrite_DeviceCountRW1(HkTelemetryPkt.DeviceCount[1]);
+    this->tlmWrite_DeviceErrorCountRW1(HkTelemetryPkt.DeviceErrorCount[1]);
+    this->tlmWrite_DeviceEnabledRW1(get_active_state(HkTelemetryPkt.DeviceEnabled[1]));
+
+    this->tlmWrite_DeviceCountRW2(HkTelemetryPkt.DeviceCount[2]);
+    this->tlmWrite_DeviceErrorCountRW2(HkTelemetryPkt.DeviceErrorCount[2]);
+    this->tlmWrite_DeviceEnabledRW2(get_active_state(HkTelemetryPkt.DeviceEnabled[2]));
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  // GENERIC_REACTION_WHEEL_REQUEST_DATA
+  void Generic_reaction_wheel :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq)
+  {
+
+    int32_t status = OS_SUCCESS;
+
+    for(int i = 0; i < RW_NUM; i++){
+      status = GetCurrentMomentum(&RW_UART[i], &HkTelemetryPkt.momentum[i]);
+      if (status < 0)
+      {
+        char configMsg[40];
+        sprintf(configMsg, "Failed to get momentum for RW%d!", i);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.DeviceErrorCount[i]++;
+      }
+      else
+      {
+        char configMsg[40];
+        sprintf(configMsg, "Successfully got momentum for RW%d!", i);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.DeviceCount[i]++;
+      }
+
+      switch (i)
+      {
+      case 0:
+        this->tlmWrite_RW0_Data(HkTelemetryPkt.momentum[i]);
+        break;
+      case 1:
+        this->tlmWrite_RW1_Data(HkTelemetryPkt.momentum[i]);
+        break;
+      case 2:
+        this->tlmWrite_RW2_Data(HkTelemetryPkt.momentum[i]);
+        break;
+      
+      default:
+        break;
+      }
+    }
+    
+    this->tlmWrite_CommandCount(++HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCountRW0(HkTelemetryPkt.DeviceCount[0]);
+    this->tlmWrite_DeviceErrorCountRW0(HkTelemetryPkt.DeviceErrorCount[0]);
+    this->tlmWrite_DeviceCountRW1(HkTelemetryPkt.DeviceCount[1]);
+    this->tlmWrite_DeviceErrorCountRW1(HkTelemetryPkt.DeviceErrorCount[1]);
+    this->tlmWrite_DeviceCountRW2(HkTelemetryPkt.DeviceCount[2]);
+    this->tlmWrite_DeviceErrorCountRW2(HkTelemetryPkt.DeviceErrorCount[2]);
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_reaction_wheel :: updateData_handler(const FwIndexType portNum, U32 context)
+  {
+    int32_t status = OS_SUCCESS;
+    for(int i = 0; i < 3; i++){
+      status = GetCurrentMomentum(&RW_UART[i], &HkTelemetryPkt.momentum[i]);
+
+      if(status < 0)
+      {
+        HkTelemetryPkt.DeviceErrorCount[i]++;
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceCount[i]++;
+      }
+    }
+
+    this->RWout_out(0, HkTelemetryPkt.momentum[0], HkTelemetryPkt.momentum[1], HkTelemetryPkt.momentum[2]);
+  }
+
+  void Generic_reaction_wheel :: updateTlm_handler(const FwIndexType portNum, U32 context)
+  {
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCountRW0(HkTelemetryPkt.DeviceCount[0]);
+    this->tlmWrite_DeviceErrorCountRW0(HkTelemetryPkt.DeviceErrorCount[0]);
+    this->tlmWrite_DeviceCountRW1(HkTelemetryPkt.DeviceCount[1]);
+    this->tlmWrite_DeviceErrorCountRW1(HkTelemetryPkt.DeviceErrorCount[1]);
+    this->tlmWrite_DeviceCountRW2(HkTelemetryPkt.DeviceCount[2]);
+    this->tlmWrite_DeviceErrorCountRW2(HkTelemetryPkt.DeviceErrorCount[2]);
+    this->tlmWrite_RW0_Data(HkTelemetryPkt.momentum[0]);
+    this->tlmWrite_RW1_Data(HkTelemetryPkt.momentum[1]);
+    this->tlmWrite_RW2_Data(HkTelemetryPkt.momentum[2]);
+  }
+
+  void Generic_reaction_wheel :: RWin_handler( FwIndexType portNum, F64 Torque0, F64 Torque1, F64 Torque2)
+  {
+    double torques[3] = {Torque0, Torque1, Torque2};
+
+    int32_t status = OS_SUCCESS;
+
+    for(int i = 0; i < 3; i++)
+    {
+      status = SetRWTorque(&RW_UART[i], torques[i]);
+
+      if(status < 0)
+      {
+        HkTelemetryPkt.DeviceErrorCount[i]++;
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceCount[i]++;
+      }
+    }
+  }
+
+  // GENERIC_REACTION_WHEEL_Set_Torque
+  void Generic_reaction_wheel :: SET_TORQUE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Generic_reaction_wheel_wheelNums wheel_num, const F64 torque) 
+  {
+    int32_t status = OS_SUCCESS;
+
+    double scaledTorque = torque / 10000;
+
+    if(HkTelemetryPkt.DeviceEnabled[wheel_num.e] == GENERIC_RW_DEVICE_ENABLED){
+
+      status = SetRWTorque(&RW_UART[wheel_num.e], scaledTorque);
+      if (status < 0)
+      {   
+        char configMsg[40];
+        sprintf(configMsg, "Failed to set torque for RW%d!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg);  
+        HkTelemetryPkt.DeviceErrorCount[wheel_num.e]++;
+        HkTelemetryPkt.CommandErrorCount++;
+      }
+      else
+      {
+        char configMsg[40];
+        sprintf(configMsg, "Successfully set torque for RW%d!", wheel_num.e);
+        Fw::LogStringArg log_msg(configMsg);
+        this->log_ACTIVITY_HI_TELEM(log_msg); 
+        HkTelemetryPkt.DeviceCount[wheel_num.e]++;
+        HkTelemetryPkt.CommandCount++;
+      }    
+      
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Command Failed, Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);      
+    }
+
+    this->tlmWrite_CommandCount(++HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCountRW0(HkTelemetryPkt.DeviceCount[0]);
+    this->tlmWrite_DeviceErrorCountRW0(HkTelemetryPkt.DeviceErrorCount[0]);
+    this->tlmWrite_DeviceCountRW1(HkTelemetryPkt.DeviceCount[1]);
+    this->tlmWrite_DeviceErrorCountRW1(HkTelemetryPkt.DeviceErrorCount[1]);
+    this->tlmWrite_DeviceCountRW2(HkTelemetryPkt.DeviceCount[2]);
+    this->tlmWrite_DeviceErrorCountRW2(HkTelemetryPkt.DeviceErrorCount[2]);
+
+    this->tlmWrite_RW0_Data(HkTelemetryPkt.momentum[0]);
+    this->tlmWrite_RW1_Data(HkTelemetryPkt.momentum[1]);
+    this->tlmWrite_RW2_Data(HkTelemetryPkt.momentum[2]);
+      // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    
+  }
+
+  inline Generic_reaction_wheel_ActiveState Generic_reaction_wheel :: get_active_state(uint8_t DeviceEnable)
+  {
+    Generic_reaction_wheel_ActiveState state;
+
+    if(DeviceEnable == GENERIC_RW_DEVICE_ENABLED)
+    {
+      state.e = Generic_reaction_wheel_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_reaction_wheel_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+}
+```
+
+### `Generic_reaction_wheel.fpp`
+
+**경로:** `components/generic_reaction_wheel/fsw/fprime/rw_src/Generic_reaction_wheel.fpp`
+
+
+```fpp
+module Components {
+    @ reaction wheel device control and monitoring
+    active component Generic_reaction_wheel {
+
+        @ RW output port
+        output port RWout: RWDataPort
+
+        @ Periodic Data RW
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm RW
+        async input port updateTlm: Svc.Sched
+
+        @ RW input port
+        async input port RWin: RWOUTDataPort
+        
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        enum wheelNums {
+            RW0 @< Reaction Wheel 0
+            RW1 @< Reaction Wheel 1
+            RW2 @< Reaction Wheel 2
+        }
+
+        @ Command to Request Momentum from all wheels
+        async command REQUEST_DATA(
+        )
+
+        @ Command to Set Reaction Wheel Torque
+        async command SET_TORQUE(
+            wheel_num: wheelNums @< Reaction Wheel Number (0-2) to set torque of
+            torque: F64 @< Torque to set reaction wheel to in 10^-4 Nm
+        )
+
+        @ NOOP Command
+        async command NOOP(
+        )
+
+        @ Enable Cmd
+        async command ENABLE(
+            wheel_num: wheelNums @< RW Numbers (0-2)
+        )
+
+        @ Disable Cmd
+        async command DISABLE(
+            wheel_num: wheelNums @< RW Numbers (0-2)
+        )
+
+        @ Reset Counters Cmd
+        async command RESET_COUNTERS()
+
+        @ event with maximum greeting length of 30 characters
+        event TELEM(
+            log_info: string size 60 @< 
+        ) severity activity high format "Generic_reaction_wheel: {}"
+
+        @ Momentum of Reaction Wheel 0
+        telemetry RW0_Data: F64
+
+        @ Momentum of Reaction Wheel 1
+        telemetry RW1_Data: F64
+
+        @ Momentum of Reaction Wheel 2
+        telemetry RW2_Data: F64
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCountRW0: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCountRW0: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabledRW0: ActiveState
+
+        @ Device Count
+        telemetry DeviceCountRW1: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCountRW1: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabledRW1: ActiveState
+
+        @ Device Count
+        telemetry DeviceCountRW2: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCountRW2: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabledRW2: ActiveState
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_reaction_wheel.hpp`
+
+**경로:** `components/generic_reaction_wheel/fsw/fprime/rw_src/Generic_reaction_wheel.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_reaction_wheel.hpp
+// \author jstar
+// \brief  hpp file for Generic_reaction_wheel component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_reaction_wheel_HPP
+#define Components_Generic_reaction_wheel_HPP
+
+#include "rw_src/Generic_reaction_wheelComponentAc.hpp"
+#include "rw_src/Generic_reaction_wheel_ActiveStateEnumAc.hpp"
+#include "rw_src/Generic_reaction_wheel_wheelNumsEnumAc.hpp"
+
+extern "C"{
+#include "generic_reaction_wheel_device.h"
+#include "libuart.h"
+}
+
+#include "nos_link.h"
+
+#define RW_NUM 3
+
+typedef struct
+{
+    uint8_t                         CommandCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         DeviceCount[RW_NUM];
+    uint8_t                         DeviceErrorCount[RW_NUM];
+    uint8_t                         DeviceEnabled[RW_NUM];
+    double                          momentum[RW_NUM];
+} RW_Hk_tlm_t;
+#define RW_HK_TLM_LNGTH sizeof(RW_Hk_tlm_t)
+
+#define GENERIC_RW_DEVICE_DISABLED 0
+#define GENERIC_RW_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_reaction_wheel :
+    public Generic_reaction_wheelComponentBase
+  {
+
+    public:
+
+    uart_info_t RW_UART[RW_NUM] = {
+      {.deviceString = &GENERIC_REACTION_WHEEL_1_CFG_STRING[0], .handle = GENERIC_REACTION_WHEEL_1_CFG_HANDLE, .isOpen = GENERIC_REACTION_WHEEL_1_CFG_IS_OPEN, .baud = GENERIC_REACTION_WHEEL_1_CFG_BAUDRATE_HZ},
+      {.deviceString = &GENERIC_REACTION_WHEEL_2_CFG_STRING[0], .handle = GENERIC_REACTION_WHEEL_2_CFG_HANDLE, .isOpen = GENERIC_REACTION_WHEEL_2_CFG_IS_OPEN, .baud = GENERIC_REACTION_WHEEL_2_CFG_BAUDRATE_HZ},
+      {.deviceString = &GENERIC_REACTION_WHEEL_3_CFG_STRING[0], .handle = GENERIC_REACTION_WHEEL_3_CFG_HANDLE, .isOpen = GENERIC_REACTION_WHEEL_3_CFG_IS_OPEN, .baud = GENERIC_REACTION_WHEEL_3_CFG_BAUDRATE_HZ},
+    };
+
+    RW_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_reaction_wheel object
+      Generic_reaction_wheel(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_reaction_wheel object
+      ~Generic_reaction_wheel();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq,
+        const Generic_reaction_wheel_wheelNums wheel_num
+      ) override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq,
+        const Generic_reaction_wheel_wheelNums wheel_num
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_DATA_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+      
+      void SET_TORQUE_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        const Generic_reaction_wheel_wheelNums wheel_num, //!< Reaction Wheel Number to set torque of
+        const F64 torque //!< Torque to set reaction wheel to
+      ) override;
+
+      void updateData_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void RWin_handler(
+        FwIndexType portNum,
+        F64 Torque0,
+        F64 Torque1,
+        F64 Torque2
+      ) override;
+      
+      inline Generic_reaction_wheel_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

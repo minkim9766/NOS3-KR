@@ -3,58 +3,4627 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 pdu/index
-file--CancelRequest.java
-file--CfdpFileTransfer.java
-file--CfdpIncomingTransfer.java
-file--CfdpOutgoingTransfer.java
-file--CfdpRequest.java
-file--CfdpService.java
-file--CfdpTransactionId.java
-file--CfdpUtils.java
-file--ChecksumCalculator.java
-file--ChecksumType.java
-file--CompletedTransfer.java
-file--DataFile.java
-file--EntityConf.java
-file--FileDirective.java
-file--FileDownloadRequests.java
-file--FilePutRequest.java
-file--OngoingCfdpTransfer.java
-file--PauseRequest.java
-file--PutRequest.java
-file--QueuedCfdpOutgoingTransfer.java
-file--ResumeRequest.java
-file--Timer.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/pdu/`](pdu/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CancelRequest.java`](file--CancelRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpFileTransfer.java`](file--CfdpFileTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpIncomingTransfer.java`](file--CfdpIncomingTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpOutgoingTransfer.java`](file--CfdpOutgoingTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpRequest.java`](file--CfdpRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpService.java`](file--CfdpService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpTransactionId.java`](file--CfdpTransactionId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpUtils.java`](file--CfdpUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/ChecksumCalculator.java`](file--ChecksumCalculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/ChecksumType.java`](file--ChecksumType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CompletedTransfer.java`](file--CompletedTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/DataFile.java`](file--DataFile.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/EntityConf.java`](file--EntityConf.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/FileDirective.java`](file--FileDirective.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/FileDownloadRequests.java`](file--FileDownloadRequests.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/FilePutRequest.java`](file--FilePutRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/OngoingCfdpTransfer.java`](file--OngoingCfdpTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/PauseRequest.java`](file--PauseRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/PutRequest.java`](file--PutRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/QueuedCfdpOutgoingTransfer.java`](file--QueuedCfdpOutgoingTransfer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/ResumeRequest.java`](file--ResumeRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/Timer.java`](file--Timer.java) — UTF-8 텍스트 파일 본문 포함
+### `CancelRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CancelRequest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.filetransfer.FileTransfer;
+
+/**
+ * A Cancel.request is a primitive that requests a certain transaction canceled*
+ */
+public class CancelRequest extends CfdpRequest {
+
+    private OngoingCfdpTransfer transfer;
+
+    public CancelRequest(FileTransfer transfer) {
+        super(CfdpRequestType.CANCEL);
+        if (!(transfer instanceof OngoingCfdpTransfer)) {
+            throw new IllegalArgumentException();
+        }
+        this.transfer = (OngoingCfdpTransfer) transfer;
+    }
+
+    public OngoingCfdpTransfer getTransfer() {
+        return this.transfer;
+    }
+}
+```
+
+### `CfdpFileTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpFileTransfer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.filetransfer.FileTransfer;
+import org.yamcs.protobuf.TransferDirection;
+
+public interface CfdpFileTransfer extends FileTransfer {
+
+    enum PredefinedTransferTypes {
+        FILE_TRANSFER("File Transfer"),
+        LARGE_FILE_TRANSFER("Large File Transfer"),
+        METADATA_ONLY_TRANSFER("Metadata Only Transfer"),
+        DOWNLOAD_REQUEST("Download Request"),
+        DOWNLOAD_REQUEST_RESPONSE("Download Request Response"),
+        DIRECTORY_LISTING_REQUEST("Directory Listing Request"),
+        DIRECTORY_LISTING_RESPONSE("Directory Listing Response"),
+        ORIGINATING_TRANSACTION_ID_ONLY("Originating Transaction ID only"),
+        UNKNOWN_METADATA_OPTION("Unknown Metadata Option"),
+        UNKNOWN("Unknown");
+
+        private final String value;
+
+        PredefinedTransferTypes(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return value.toUpperCase();
+        }
+    }
+
+    /**
+     * Get the CFDP transaction id. Returns null for queued transfers.
+     */
+    CfdpTransactionId getTransactionId();
+
+    long getInitiatorEntityId();
+
+    long getDestinationId();
+
+    @Override
+    default Long getLocalEntityId() {
+        if (getDirection() == TransferDirection.UPLOAD) {
+            return getInitiatorEntityId();
+        } else {
+            return getDestinationId();
+        }
+    }
+
+    @Override
+    default Long getRemoteEntityId() {
+        if (getDirection() == TransferDirection.UPLOAD) {
+            return getDestinationId();
+        } else {
+            return getInitiatorEntityId();
+        }
+    }
+}
+```
+
+### `CfdpIncomingTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpIncomingTransfer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.yamcs.cfdp.CfdpService.ETYPE_FIN_LIMIT_REACHED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_COMPLETED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_FINISHED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_META;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_RESUMED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_SUSPENDED;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.cfdp.pdu.AckPacket;
+import org.yamcs.cfdp.pdu.AckPacket.FileDirectiveSubtypeCode;
+import org.yamcs.cfdp.pdu.AckPacket.TransactionStatus;
+import org.yamcs.cfdp.pdu.CfdpHeader;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.DirectoryListingResponse;
+import org.yamcs.cfdp.pdu.EofPacket;
+import org.yamcs.cfdp.pdu.FileDataPacket;
+import org.yamcs.cfdp.pdu.FileDirectiveCode;
+import org.yamcs.cfdp.pdu.FinishedPacket;
+import org.yamcs.cfdp.pdu.FinishedPacket.FileStatus;
+import org.yamcs.cfdp.pdu.MetadataPacket;
+import org.yamcs.cfdp.pdu.NakPacket;
+import org.yamcs.cfdp.pdu.OriginatingTransactionId;
+import org.yamcs.cfdp.pdu.SegmentRequest;
+import org.yamcs.cfdp.pdu.TLV;
+import org.yamcs.events.EventProducer;
+import org.yamcs.filetransfer.FileSaveHandler;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.Stream;
+
+public class CfdpIncomingTransfer extends OngoingCfdpTransfer {
+    private final FileSaveHandler fileSaveHandler;
+    private CfdpTransactionId originatingTransactionId;
+    private DirectoryListingResponse directoryListingResponse;
+
+    private enum InTxState {
+        /**
+         * Receives metadata, data and EOF.
+         * <p>
+         * Sends NAK with missing segments.
+         * <p>
+         * Goes into FIN as soon as the EOF and all data has been received.
+         * <p>
+         * Also goes into FIN when an error is encountered or if the transaction is cancelled.
+         */
+        RECEIVING_DATA,
+        /**
+         * Send Finished PDUs until ack then go into COMPLETED.
+         *
+         */
+        FIN,
+        /**
+         *
+         */
+        COMPLETED
+    }
+
+    private InTxState inTxState = InTxState.RECEIVING_DATA;
+
+    private String originalObjectName;
+
+    private DataFile incomingDataFile;
+    MetadataPacket metadataPacket;
+    EofPacket eofPacket;
+    final Timer finTimer;
+    Timer checkTimer;
+
+    FinishedPacket finPacket;
+
+    CfdpHeader directiveHeader;
+
+    final long maxFileSize;
+    /**
+     * How often in millisec we should send the NAK PDUs
+     */
+    final int nakTimeout;
+
+    /**
+     * How many times to sent the NAK PDUs
+     */
+    final int nakLimit;
+
+    /**
+     * If true send EOF ACK even when suspended
+     */
+    final boolean ackEofWhileSuspended;
+
+    int nakCount = 0;
+    long lastNakSentTime = 0;
+    long lastNakDataSize;
+
+    /**
+     * used to limit the number of NAKs sent in one PDU
+     */
+    int maxPduDataSize;
+
+    /**
+     * If true, send NAK before receiving the EOF
+     */
+    final boolean immediateNak;
+
+    /**
+     * if true, we have to end the transaction with a Finished packet.
+     * <p>
+     * This is always true for Class 2 transactions but can also be requested for Class 1 transactions.
+     */
+    boolean needsFinish;
+
+    private boolean suspended = false;
+
+    // this will be set if the transfer is cancelled while suspended, either by user request or by EOF
+    ConditionCode cancelUponResume;
+
+    // in case we start a transaction before receiving the metadata, this list will save the packets which will be
+    // processed after we have the metadata
+    List<CfdpPacket> queuedPackets = new ArrayList<>();
+
+    public CfdpIncomingTransfer(String yamcsInstance, long id, long creationTime, ScheduledThreadPoolExecutor executor,
+            YConfiguration config, CfdpHeader hdr, Stream cfdpOut, FileSaveHandler fileSaveHandler,
+            EventProducer eventProducer, TransferMonitor monitor,
+            Map<ConditionCode, FaultHandlingAction> faultHandlerActions) {
+        super(yamcsInstance, id, creationTime, executor, config, hdr.getTransactionId(), hdr.getDestinationId(),
+                cfdpOut, eventProducer, monitor, faultHandlerActions);
+        this.fileSaveHandler = fileSaveHandler;
+        rescheduleInactivityTimer();
+        long finAckTimeout = config.getLong("finAckTimeout", 10000l);
+        int finAckLimit = config.getInt("finAckLimit", 5);
+
+        this.acknowledged = hdr.isAcknowledged();
+        this.finTimer = new Timer(executor, finAckLimit, finAckTimeout);
+        this.maxFileSize = config.getLong("maxFileSize", 100 * 1024 * 1024l);
+        this.nakTimeout = config.getInt("nakTimeout", 5000);
+        this.nakLimit = config.getInt("nakLimit", -1);
+        this.immediateNak = config.getBoolean("immediateNak", true);
+        this.ackEofWhileSuspended = config.getBoolean("ackEofWhileSuspended", true);
+        var maxPduSize = config.getInt("maxPduSize", 512);
+
+        if (!acknowledged) {
+            long checkAckTimeout = config.getLong("checkAckTimeout", 10000l);
+            int checkAckLimit = config.getInt("checkAckLimit", 5);
+            checkTimer = new Timer(executor, checkAckLimit, checkAckTimeout);
+        }
+
+        // this header will be used for all the outgoing PDUs; copy all settings from the incoming PDU header
+        this.directiveHeader = new CfdpHeader(
+                true, // file directive
+                true, // towards sender
+                acknowledged,
+                false, // no CRC
+                hdr.getEntityIdLength(),
+                hdr.getSequenceNumberLength(),
+                hdr.getSourceId(),
+                hdr.getDestinationId(),
+                hdr.getSequenceNumber());
+
+        this.maxPduDataSize = maxPduSize - directiveHeader.getLength();
+        needsFinish = acknowledged;
+        incomingDataFile = new DataFile(-1);
+    }
+
+    @Override
+    public void processPacket(CfdpPacket packet) {
+        executor.execute(() -> doProcessPacket(packet));
+    }
+
+    private void sendOrScheduleNak() {
+        if (inTxState != InTxState.RECEIVING_DATA || suspended) {
+            return;
+        }
+
+        if (!eofReceived() && !immediateNak) {
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        if (now - lastNakSentTime < nakTimeout) {
+            return;
+        }
+
+        if (sendNak()) {
+            lastNakSentTime = now;
+        }
+
+        executor.schedule(this::sendOrScheduleNak, nakTimeout, TimeUnit.MILLISECONDS);
+    }
+
+    private boolean sendNak() {
+        List<SegmentRequest> missingSegments = incomingDataFile.getMissingChunks(eofReceived() && metadataReceived());
+
+        if (!metadataReceived()) {
+            missingSegments.add(0, new SegmentRequest(0, 0));
+        }
+        if (missingSegments.isEmpty()) {
+            return false;
+        }
+        // if there has been some data received since last NAK, reset the counter
+        // (this doesn't account for metadata but let's not be picky..)
+        long size = incomingDataFile.getReceivedSize();
+        if (size > lastNakDataSize) {
+            lastNakDataSize = size;
+            nakCount = 0;
+        }
+        nakCount++;
+        if (nakLimit > 0 && nakCount > nakLimit) {
+            log.warn("TXID{} NAK limit reached", cfdpTransactionId);
+            handleFault(ConditionCode.NAK_LIMIT_REACHED);
+            return false;
+        }
+
+        var maxNumSeg = NakPacket.maxNumSegments(maxPduDataSize);
+        if (missingSegments.size() > maxNumSeg) {
+            missingSegments = missingSegments.subList(0, maxNumSeg);
+        }
+        sendPacket(new NakPacket(
+                missingSegments.get(0).getSegmentStart(),
+                missingSegments.get(missingSegments.size() - 1).getSegmentEnd(),
+                missingSegments,
+                directiveHeader));
+        return true;
+    }
+
+    private void doProcessPacket(CfdpPacket packet) {
+        log.debug("TXID{} received PDU: {}", cfdpTransactionId, packet);
+
+        if (log.isTraceEnabled()) {
+            log.trace("{}", StringConverter.arrayToHexString(packet.toByteArray(), true));
+        }
+
+        if (inTxState == InTxState.RECEIVING_DATA) {
+            rescheduleInactivityTimer();
+        }
+
+        if (packet instanceof MetadataPacket) {
+            processMetadata((MetadataPacket) packet);
+        } else if (packet instanceof FileDataPacket) {
+            processFileDataPacket((FileDataPacket) packet);
+        } else if (packet instanceof EofPacket) {
+            processEofPacket((EofPacket) packet);
+        } else if (packet instanceof AckPacket) {
+            processAckPacket((AckPacket) packet);
+        } else {
+            log.info("TXID{} received unexpected packet {}", cfdpTransactionId, packet);
+        }
+    }
+
+    private void processMetadata(MetadataPacket packet) {
+        if (metadataPacket != null || inTxState != InTxState.RECEIVING_DATA) {
+            log.debug("TXID{} Ignoring metadata packet {}", cfdpTransactionId, packet);
+            return;
+        }
+        if (packet.getChecksumType() != ChecksumType.MODULAR) {
+            log.warn("TXID{} received metadata indicating unsupported checksum type {}", cfdpTransactionId,
+                    packet.getChecksumType());
+            handleFault(ConditionCode.UNSUPPORTED_CHECKSUM_TYPE);
+            return;
+        }
+        long fileSize = packet.getFileLength();
+        if (fileSize > maxFileSize) {
+            String err = String.format(
+                    "received metadata with file size %.02f KB exceeding the maximum allowed %.02f KB",
+                    fileSize / 1024.0, maxFileSize / 1024.0);
+
+            log.warn("TXID{} {}", cfdpTransactionId, err);
+            pushError(err);
+
+            handleFault(ConditionCode.FILE_SIZE_ERROR);
+            return;
+        }
+        long eof = incomingDataFile.endOfFileOffset();
+        if (eof > fileSize) {
+            log.warn("TXID{} Received size {} but maximum offset of existing segments is {}",
+                    cfdpTransactionId, fileSize, eof);
+            handleFault(ConditionCode.FILE_SIZE_ERROR);
+            return;
+        }
+        this.metadataPacket = packet;
+
+        transferType = getTransferType(metadataPacket);
+
+        if (metadataPacket.getOptions() != null) {
+            for (TLV option : metadataPacket.getOptions()) {
+                if (option instanceof OriginatingTransactionId) {
+                    this.originatingTransactionId = ((OriginatingTransactionId) option).toCfdpTransactionId();
+                } else if (option instanceof DirectoryListingResponse) {
+                    this.directoryListingResponse = (DirectoryListingResponse) option;
+                }
+            }
+        }
+
+        needsFinish = acknowledged || packet.closureRequested();
+
+        incomingDataFile.setSize(fileSize);
+
+        this.acknowledged = packet.getHeader().isAcknowledged();
+        originalObjectName = !packet.getDestinationFilename().isEmpty() ? packet.getDestinationFilename()
+                : packet.getSourceFilename();
+
+        sendInfoEvent(ETYPE_TRANSFER_META, "Received metadata: " + toEventMsg(packet));
+
+        try {
+            if (originatingTransactionId != null) {
+                fileSaveHandler.processOriginatingTransactionId(originatingTransactionId);
+            }
+            fileSaveHandler.setObjectName(directoryListingResponse == null ? originalObjectName : null);
+
+            try {
+                var props = fileSaveHandler.getBucket().getPropertiesAsync().get();
+                if (props.maxSize() - props.size() < fileSize) {
+                    throw new IOException(
+                            "File too big for bucket '" + getBucketName() + "' (" + fileSize + " bytes for "
+                                    + (props.maxSize() - props.size()) + " available)");
+                }
+            } catch (ExecutionException e) {
+                throw new IOException("Could not determine bucket properties", e.getCause());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+
+            checkFileComplete();
+        } catch (IOException e) {
+            handleFault(ConditionCode.FILESTORE_REJECTION);
+            log.warn(e.getMessage());
+            pushError(e.getMessage());
+        }
+    }
+
+    private void processAckPacket(AckPacket ack) {
+        if (inTxState == InTxState.RECEIVING_DATA
+                || ack.getDirectiveCode() != FileDirectiveCode.FINISHED) {
+            log.warn("TXID{} ignoring bogus ACK {}", cfdpTransactionId, ack);
+            return;
+        }
+
+        finTimer.cancel();
+        if (inTxState == InTxState.FIN) {
+            complete(finPacket.getConditionCode());
+        } else {
+            log.debug("TXID{} ignoring ACK {}", cfdpTransactionId, ack);
+        }
+    }
+
+    private void processEofPacket(EofPacket packet) {
+        if (acknowledged && (!suspended || ackEofWhileSuspended)) {
+            sendPacket(getAckEofPacket(packet.getConditionCode()));
+        }
+
+        if (eofPacket != null || inTxState != InTxState.RECEIVING_DATA) {
+            log.debug("TXID{} ignoring packet {}", cfdpTransactionId, packet);
+            return;
+        }
+        eofPacket = packet;
+
+        if (eofPacket.getConditionCode() == ConditionCode.NO_ERROR) {
+            if (!suspended) {
+                checkFileComplete();
+            }
+        } else if (eofPacket.getConditionCode() == ConditionCode.CANCEL_REQUEST_RECEIVED) {
+            pushError("Canceled by the Sender");
+            complete(ConditionCode.CANCEL_REQUEST_RECEIVED);
+        } else {
+            log.warn("TXID{} EOF received indicating error {}", cfdpTransactionId, eofPacket.getConditionCode());
+            handleFault(eofPacket.getConditionCode());
+        }
+
+        if (!acknowledged && inTxState == InTxState.RECEIVING_DATA && !suspended) {
+            // start the checkTimer
+            checkTimer.start(this::checkFileComplete, () -> {
+                log.warn("TXID{} check limit reached", cfdpTransactionId);
+                handleFault(ConditionCode.CHECK_LIMIT_REACHED);
+            });
+        }
+    }
+
+    private void checkFileComplete() {
+        if (incomingDataFile.isComplete() && eofReceived()) {
+            onFileCompleted();
+        } else {
+            if (acknowledged) {
+                sendOrScheduleNak();
+            }
+        }
+    }
+
+    private void processFileDataPacket(FileDataPacket fdp) {
+        if (inTxState != InTxState.RECEIVING_DATA) {
+            log.debug("TXID{} ignoring packet {}", cfdpTransactionId, fdp);
+            return;
+        }
+
+        long fileSize = incomingDataFile.getSize();
+        if (fileSize > 0) {
+            if (fdp.getEndOffset() > fileSize) {
+                String err = String.format("Received data file whose end offset %d is larger than the file size %d",
+                        fdp.getEndOffset(), fileSize);
+                log.warn("TXID{} {}", cfdpTransactionId, err);
+                pushError(err);
+                handleFault(ConditionCode.FILE_SIZE_ERROR);
+            }
+        } else {
+            if (fdp.getEndOffset() > maxFileSize) {
+                String err = String.format(
+                        "Received data file whose end offset %d is larger than the maximum file size %d",
+                        fdp.getEndOffset(), maxFileSize);
+                pushError(err);
+                log.warn("TXID{} {}", cfdpTransactionId, err);
+                handleFault(ConditionCode.FILE_SIZE_ERROR);
+            }
+        }
+
+        incomingDataFile.addSegment(fdp);
+        monitor.stateChanged(this);
+        checkFileComplete();
+    }
+
+    private void onFileCompleted() {
+        // verify checksum
+        long expectedChecksum = eofPacket.getFileChecksum();
+        if (expectedChecksum == incomingDataFile.getChecksum()) {
+            log.info("TXID{} file completed, checksum OK", cfdpTransactionId);
+            if (needsFinish) {
+                finish(ConditionCode.NO_ERROR);
+            } else {
+                complete(ConditionCode.NO_ERROR);
+            }
+            saveFile(false, Collections.emptyList());
+            sendInfoEvent(ETYPE_TRANSFER_FINISHED,
+                    " downlink finished and saved in " + getBucketName() + "/" + getObjectName());
+        } else {
+            log.warn("TXID{} file checksum failure; EOF packet indicates {} while data received has {}",
+                    cfdpTransactionId, expectedChecksum, incomingDataFile.getChecksum());
+            saveFile(true, Collections.emptyList());
+            sendWarnEvent(ETYPE_TRANSFER_FINISHED,
+                    " checksum failure; corrupted file saved in " + getBucketName() + "/" + getObjectName());
+            handleFault(ConditionCode.FILE_CHECKSUM_FAILURE);
+        }
+    }
+
+    private void finish(ConditionCode code) {
+        if (inTxState == InTxState.FIN) {
+            throw new IllegalStateException("already in FINISHED state");
+        }
+        assert (!suspended);
+
+        log.debug("TXID{} finishing with code {}", cfdpTransactionId, code);
+        cancelInactivityTimer();
+        if (!acknowledged) {
+            checkTimer.cancel();
+        }
+
+        finPacket = getFinishedPacket(code);
+        this.inTxState = InTxState.FIN;
+        if (code != ConditionCode.NO_ERROR) {
+            changeState(TransferState.CANCELLING);
+        }
+
+        sendFin();
+    }
+
+    private void sendFin() {
+        sendPacket(finPacket);
+
+        finTimer.start(() -> sendPacket(finPacket),
+                () -> {
+                    sendWarnEvent(ETYPE_FIN_LIMIT_REACHED,
+                            "resend attempts (" + finTimer.maxNumAttempts + ") of Finished PDU reached");
+                    if (finPacket.getConditionCode() == ConditionCode.NO_ERROR) {
+                        pushError("File was received OK but the Finished PDU has not been acknowledged");
+                        complete(ConditionCode.ACK_LIMIT_REACHED);
+                    } else {
+                        pushError("The Finished PDU has not been acknowledged");
+                        complete(ConditionCode.ACK_LIMIT_REACHED);
+                    }
+                });
+    }
+
+    private void complete(ConditionCode conditionCode) {
+        inTxState = InTxState.COMPLETED;
+        if (!acknowledged) {
+            checkTimer.cancel();
+        }
+
+        if (conditionCode == ConditionCode.NO_ERROR) {
+            changeState(TransferState.COMPLETED);
+            sendInfoEvent(ETYPE_TRANSFER_COMPLETED, " transfer completed (ack received from remote) successfully");
+        } else {
+            if (errors.isEmpty()) {
+                pushError(conditionCode.toString());
+            }
+            sendWarnEvent(ETYPE_TRANSFER_COMPLETED, " transfer completed unsuccessfully: " + getFailuredReason());
+            changeState(TransferState.FAILED);
+        }
+    }
+
+    private void handleFault(ConditionCode conditionCode) {
+        switch (inTxState) {
+        case RECEIVING_DATA:
+            FaultHandlingAction action = getFaultHandlingAction(conditionCode);
+            switch (action) {
+            case ABANDON:
+                complete(conditionCode);
+                break;
+            case CANCEL:
+                cancel(conditionCode);
+                break;
+            case SUSPEND:
+                suspend();
+                break;
+            }
+            break;
+        case FIN:
+            complete(conditionCode);
+            break;
+        case COMPLETED:
+            break;
+        }
+    }
+
+    @Override
+    protected void onInactivityTimerExpiration() {
+        log.warn("TXID{} inactivity timer expired, state: {}", cfdpTransactionId, inTxState);
+
+        switch (inTxState) {
+        case RECEIVING_DATA:
+            handleFault(ConditionCode.INACTIVITY_DETECTED);
+            break;
+        case FIN:
+        case COMPLETED:
+            log.error("TXID{} Illegal state", cfdpTransactionId);
+            break;
+        }
+    }
+
+    @Override
+    protected void suspend() {
+        if (inTxState == InTxState.COMPLETED) {
+            log.info("TXID{} transfer finished, suspend ignored", cfdpTransactionId);
+            return;
+        }
+        log.info("TXID{} suspending transfer", cfdpTransactionId);
+        sendInfoEvent(ETYPE_TRANSFER_SUSPENDED, "transfer suspended");
+        changeState(TransferState.PAUSED);
+        finTimer.cancel();
+        if (!acknowledged) {
+            checkTimer.cancel();
+        }
+        suspended = true;
+    }
+
+    @Override
+    protected void resume() {
+        if (!suspended) {
+            log.info("TXID{} resume called while not suspended, ignoring", cfdpTransactionId);
+            return;
+        }
+        suspended = false;
+        if (inTxState == InTxState.COMPLETED) {
+            // it is possible the transfer has finished while being suspended
+            log.info("TXID{} transfer finished, resume ignored", cfdpTransactionId);
+            return;
+        }
+        if (cancelUponResume != null) {
+            cancel(cancelUponResume);
+            cancelUponResume = null;
+            return;
+        }
+        log.info("TXID{} resuming transfer", cfdpTransactionId);
+
+        sendInfoEvent(ETYPE_TRANSFER_RESUMED, "transfer resumed");
+        if (inTxState == InTxState.RECEIVING_DATA) {
+            checkFileComplete();
+        } else if (inTxState == InTxState.FIN) {
+            sendFin();
+        }
+
+        if (!acknowledged && inTxState == InTxState.RECEIVING_DATA) {
+            // start the checkTimer
+            checkTimer.start(this::checkFileComplete, () -> {
+                log.warn("TXID{} check limit reached", cfdpTransactionId);
+                handleFault(ConditionCode.CHECK_LIMIT_REACHED);
+            });
+        }
+        changeState(TransferState.RUNNING);
+    }
+
+    @Override
+    protected void cancel(ConditionCode code) {
+        if (inTxState == InTxState.RECEIVING_DATA) {
+            if (needsFinish) {
+                if (suspended) {
+                    cancelUponResume = code;
+                } else {
+                    finish(code);
+                }
+            } else {
+                complete(code);
+            }
+        } else {
+            log.debug("TXID{} ignoring cancel, wrong state", cfdpTransactionId);
+        }
+    }
+
+    private void saveFile(boolean checksumError, List<SegmentRequest> missingSegments) {
+        if (directoryListingResponse != null) {
+            log.debug("TXID{} Ignoring save action for Directory Listing Response", cfdpTransactionId);
+            return;
+        }
+
+        Map<String, String> metadata = null;
+        if (!missingSegments.isEmpty()) {
+            metadata = new HashMap<>();
+            metadata.put("missingSegments", missingSegments.toString());
+        }
+        if (checksumError) {
+            if (metadata == null) {
+                metadata = new HashMap<>();
+            }
+            metadata.put("checksumError", "true");
+        }
+
+        // TODO: source data in metadata
+
+        fileSaveHandler.saveFile(incomingDataFile, metadata, originatingTransactionId);
+    }
+
+    private AckPacket getAckEofPacket(ConditionCode code) {
+        return new AckPacket(
+                FileDirectiveCode.EOF,
+                FileDirectiveSubtypeCode.FINISHED_BY_WAYPOINT_OR_OTHER,
+                code,
+                TransactionStatus.ACTIVE,
+                directiveHeader);
+    }
+
+    private FinishedPacket getFinishedPacket(ConditionCode code) {
+
+        FinishedPacket fpck;
+
+        if (code == ConditionCode.NO_ERROR) {
+            fpck = new FinishedPacket(
+                    ConditionCode.NO_ERROR,
+                    true, // data complete
+                    FileStatus.SUCCESSFUL_RETENTION,
+                    null,
+                    directiveHeader);
+        } else {
+            fpck = new FinishedPacket(
+                    code,
+                    true, // data complete
+                    FileStatus.DELIBERATELY_DISCARDED,
+                    null,
+                    directiveHeader);
+        }
+        return fpck;
+    }
+
+    private boolean metadataReceived() {
+        return metadataPacket != null;
+    }
+
+    private boolean eofReceived() {
+        return eofPacket != null;
+    }
+
+    @Override
+    public long getInitiatorEntityId() {
+        return directiveHeader.getSourceId();
+    }
+
+    @Override
+    public String getBucketName() {
+        return fileSaveHandler.getBucketName();
+    }
+
+    @Override
+    public String getObjectName() {
+        return fileSaveHandler.getObjectName() != null || directoryListingResponse != null
+                ? fileSaveHandler.getObjectName()
+                : originalObjectName;
+    }
+
+    public String getOriginalObjectName() {
+        return originalObjectName;
+    }
+
+    @Override
+    public String getRemotePath() {
+        return (metadataPacket == null) ? null : metadataPacket.getSourceFilename();
+    }
+
+    @Override
+    public TransferDirection getDirection() {
+        return TransferDirection.DOWNLOAD;
+    }
+
+    @Override
+    public long getTotalSize() {
+        return incomingDataFile.getSize();
+    }
+
+    @Override
+    public long getTransferredSize() {
+        return incomingDataFile.getReceivedSize();
+    }
+
+    public DirectoryListingResponse getDirectoryListingResponse() {
+        return directoryListingResponse;
+    }
+
+    public byte[] getFileData() {
+        return incomingDataFile.getData();
+    }
+
+    public CfdpTransactionId getOriginatingTransactionId() {
+        return originatingTransactionId;
+    }
+
+}
+```
+
+### `CfdpOutgoingTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpOutgoingTransfer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.yamcs.cfdp.CfdpService.ETYPE_EOF_LIMIT_REACHED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_FINISHED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_META;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_RESUMED;
+import static org.yamcs.cfdp.CfdpService.ETYPE_TRANSFER_SUSPENDED;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.pdu.AckPacket;
+import org.yamcs.cfdp.pdu.AckPacket.FileDirectiveSubtypeCode;
+import org.yamcs.cfdp.pdu.AckPacket.TransactionStatus;
+import org.yamcs.cfdp.pdu.CfdpHeader;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.EofPacket;
+import org.yamcs.cfdp.pdu.FileDataPacket;
+import org.yamcs.cfdp.pdu.FileDirectiveCode;
+import org.yamcs.cfdp.pdu.FinishedPacket;
+import org.yamcs.cfdp.pdu.KeepAlivePacket;
+import org.yamcs.cfdp.pdu.MetadataPacket;
+import org.yamcs.cfdp.pdu.NakPacket;
+import org.yamcs.cfdp.pdu.SegmentRequest;
+import org.yamcs.cfdp.pdu.TLV;
+import org.yamcs.events.EventProducer;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.Stream;
+
+public class CfdpOutgoingTransfer extends OngoingCfdpTransfer {
+
+    private enum OutTxState {
+        /**
+         * Initial state. Going to SENDING_DATA in the first sendPdu step.
+         */
+        START,
+        /**
+         * Sending data and EOF. Going to FINISHED as soon as the Finished PDU is received.
+         */
+        SENDING_DATA,
+        /**
+         * Sending CANCEL EOF Going to COMPLETED as soon as the CANCEL EOF ACK is received
+         */
+        CANCELING,
+        /**
+         * End state. Still sending FINISHED ACK in return of Finished PDUs.
+         */
+        COMPLETED,
+    }
+
+    private final boolean withCrc = false; // no CRCs are used
+    private final CfdpHeader directiveHeader, dataHeader;
+    final Timer eofTimer;
+    private final int entityIdLength;
+    private final int seqNrSize;
+    private Bucket bucket;
+    private final int maxDataSize;
+    private final int sleepBetweenPdus;
+    private final boolean closureRequested;
+    private final List<FileDataPacket> sentFileDataPackets = new ArrayList<>();
+    private Queue<FileDataPacket> toResend;
+
+    private OutTxState outTxState;
+    private long transferred;
+
+    private long offset = 0;
+    private long end = 0;
+
+    private boolean suspended = false;
+    private final ChecksumType checksumType = ChecksumType.MODULAR;
+
+    private PutRequest request;
+    private ScheduledFuture<?> pduSendingSchedule;
+    FinishedPacket finishedPacket;
+
+    boolean resendMetadata = false;
+    boolean eofSent = false;
+    boolean eofAckReceived = false;
+
+    EofPacket eofPacket;
+    MetadataPacket metadata;
+    ConditionCode reasonForCancellation;
+
+    /**
+     * Create a new CFDP outgoing (uplink) transfer.
+     * <p>
+     * The transfer has to be started with the {@link #start()} method.
+     *
+     * @param yamcsInstance
+     *            - yamcsInstance where this transfer is running. It is used for log configuration and to get the time
+     *            service.
+     * @param initiatorEntityId
+     * @param id
+     *            - unique identifier. The least significant number of bits (according to the CFDP sequence length) of
+     *            this id will be used to make the CFDP transaction id.
+     * @param creationTime
+     *            - time when the transaction has been created
+     * @param executor
+     *            - the CFDP state machine is serialized in this executor. It is also used to schedule timeouts.
+     * @param request
+     *            - the request containing the file to be sent.
+     * @param cfdpOut
+     *            - the stream where the outgoing PDUs are placed.
+     * @param config
+     *            - the configuration of various settings (see yamcs manual)
+     * @param bucket
+     *            - bucket from/to which the file should be
+     * @param customPduSize
+     *            - if not null, size to overwrite the config maxPduSize
+     * @param customPduDelay
+     *            - if not null, delay to overwrite the config sleepBetweenPdus
+     * @param eventProducer
+     *            - used to send events when important things happen
+     * @param monitor
+     *            - will be notified when transaction status changes
+     * @param faultHandlerActions
+     *            - can be used to change behaviour in case of timeouts or failures. Can be null, in which case the
+     *            default behaviour to cancel the transaction will be used.
+     */
+    public CfdpOutgoingTransfer(String yamcsInstance, long initiatorEntityId, long id, long creationTime,
+            ScheduledThreadPoolExecutor executor,
+            PutRequest request, Stream cfdpOut, YConfiguration config, Bucket bucket,
+            Integer customPduSize, Integer customPduDelay,
+            EventProducer eventProducer,
+            TransferMonitor monitor, Map<ConditionCode, FaultHandlingAction> faultHandlerActions) {
+        super(yamcsInstance, id, creationTime,
+                executor, config, makeTransactionId(initiatorEntityId, config, id),
+                request.getDestinationCfdpEntityId(), cfdpOut,
+                eventProducer, monitor, faultHandlerActions);
+        this.request = request;
+        this.metadata = request.getMetadata();
+        transferType = getTransferType(metadata);
+        this.bucket = bucket;
+        entityIdLength = config.getInt("entityIdLength");
+        seqNrSize = config.getInt("sequenceNrLength");
+        int maxPduSize = customPduSize != null && customPduSize > 0 ? customPduSize : config.getInt("maxPduSize", 512);
+        maxDataSize = maxPduSize - 4 - 2 * entityIdLength - seqNrSize - 4;
+        long eofAckTimeout = config.getInt("eofAckTimeout", 10000);
+        int eofAckLimit = config.getInt("eofAckLimit", 5);
+
+        eofTimer = new Timer(executor, eofAckLimit, eofAckTimeout);
+        acknowledged = request.isAcknowledged();
+
+        outTxState = OutTxState.START;
+        this.sleepBetweenPdus = customPduDelay != null && customPduDelay > 0 ? customPduDelay
+                : config.getInt("sleepBetweenPdus", 500);
+        this.closureRequested = request.isClosureRequested();
+
+        if (request.getHeader() != null) {
+            directiveHeader = request.getHeader().copy(true);
+            dataHeader = request.getHeader().copy(false);
+        } else {
+            // create header for all file directive PDUs
+            directiveHeader = new CfdpHeader(
+                    true, // it's a file directive
+                    false, // it's sent towards the receiver
+                    acknowledged,
+                    withCrc, // no CRC
+                    entityIdLength,
+                    seqNrSize,
+                    cfdpTransactionId.getInitiatorEntity(), // my Entity Id
+                    request.getDestinationCfdpEntityId(), // the id of the target
+                    cfdpTransactionId.getSequenceNumber());
+
+            dataHeader = new CfdpHeader(
+                    false, // it's file data
+                    false, // it's sent towards the receiver
+                    acknowledged,
+                    withCrc, // no CRC
+                    entityIdLength,
+                    seqNrSize,
+                    getTransactionId().getInitiatorEntity(), // my Entity Id
+                    request.getDestinationCfdpEntityId(), // the id of the target
+                    this.cfdpTransactionId.getSequenceNumber());
+        }
+    }
+
+    private static CfdpTransactionId makeTransactionId(long sourceId, YConfiguration config, long id) {
+        int seqNrSize = config.getInt("sequenceNrLength");
+        long seqNum = id & ((1l << seqNrSize * 8) - 1);
+
+        return new CfdpTransactionId(sourceId, seqNum);
+    }
+
+    /**
+     * Start the transfer
+     */
+    public void start() {
+        pduSendingSchedule = executor.scheduleAtFixedRate(this::sendPDU, 0, sleepBetweenPdus, TimeUnit.MILLISECONDS);
+    }
+
+    private void sendPDU() {
+        if (suspended) {
+            return;
+        }
+
+        switch (outTxState) {
+        case START:
+            if (metadata == null) {
+                metadata = getMetadataPacket();
+                transferType = getTransferType(metadata);
+            }
+            sendInfoEvent(ETYPE_TRANSFER_META, "Sending metadata: " + toEventMsg(metadata));
+            sendPacket(metadata);
+            this.outTxState = OutTxState.SENDING_DATA;
+            offset = 0; // first file data packet starts at the start of the data
+            end = Math.min(maxDataSize, request.getFileLength());
+            monitor.stateChanged(this);
+            break;
+        case SENDING_DATA:
+            if (resendMetadata) {
+                sendPacket(metadata);
+                resendMetadata = false;
+            } else {
+                if (offset == request.getFileLength()) {
+                    if (toResend != null && !toResend.isEmpty()) {
+                        FileDataPacket fdp = toResend.poll();
+                        sendPacket(fdp);
+                    } else if (!eofSent) {
+                        sendEof(ConditionCode.NO_ERROR);
+                    }
+                } else {
+                    end = Math.min(offset + maxDataSize, request.getFileLength());
+                    FileDataPacket nextPacket = getNextFileDataPacket();
+                    sentFileDataPackets.add(nextPacket);
+                    sendPacket(nextPacket);
+                    transferred += (end - offset);
+                    offset = end;
+                }
+            }
+            monitor.stateChanged(this);
+            break;
+        case COMPLETED:
+            pduSendingSchedule.cancel(true);
+            cancelInactivityTimer();
+            break;
+        default:
+            throw new IllegalStateException("unknown/illegal state");
+        }
+    }
+
+    private void sendEof(ConditionCode code) {
+        // remember the EOF sent, we need to resend it in case of suspend/resume
+        eofPacket = getEofPacket(code);
+        sendEof();
+    }
+
+    private void sendEof() {
+        sendPacket(eofPacket);
+        eofSent = true;
+
+        if (!acknowledged && !metadata.closureRequested()) {
+            complete(ConditionCode.NO_ERROR);
+        } else {
+            eofTimer.start(() -> sendPacket(eofPacket),
+                    () -> {
+                        sendWarnEvent(ETYPE_EOF_LIMIT_REACHED,
+                                "Resend attempts (" + eofTimer.maxNumAttempts + ") of EOF reached");
+                        handleFault(ConditionCode.ACK_LIMIT_REACHED);
+                    });
+        }
+    }
+
+    @Override
+    public void processPacket(CfdpPacket packet) {
+        executor.submit(() -> doProcessPacket(packet));
+    }
+
+    private void doProcessPacket(CfdpPacket packet) {
+        if (log.isDebugEnabled()) {
+            log.debug("TXID{} state:{}, received PDU: {}", cfdpTransactionId, state, packet);
+            log.trace("{}", StringConverter.arrayToHexString(packet.toByteArray(), true));
+        }
+        if (state == TransferState.COMPLETED || state == TransferState.FAILED) {
+            if (packet instanceof FinishedPacket) {
+                sendPacket(getAckPacket(((FinishedPacket) packet).getConditionCode()));
+            } else {
+                log.info("Ignoring PDU {} for finished transaction {}", packet, cfdpTransactionId);
+            }
+            return;
+        }
+        if (eofAckReceived) {
+            rescheduleInactivityTimer();
+        }
+        if (packet instanceof AckPacket) {
+            processAckPacket((AckPacket) packet);
+        } else if (packet instanceof FinishedPacket) {
+            processFinishedPacket((FinishedPacket) packet);
+        } else if (packet instanceof NakPacket) {
+            toResend = new LinkedList<>();
+            for (SegmentRequest segment : ((NakPacket) packet).getSegmentRequests()) {
+                if (segment.isMetadata()) {
+                    resendMetadata = true;
+                } else {
+                    toResend.addAll(sentFileDataPackets.stream()
+                            .filter(x -> segment.isInRange(x.getOffset()))
+                            .collect(Collectors.toList()));
+                }
+            }
+        } else if (packet instanceof KeepAlivePacket) {
+            log.info("TXID{} Ignoring Keep Alive PDU: {}", cfdpTransactionId, packet); // Handling not implemented
+        } else {
+            log.warn("TXID{} unexpected packet {} ", cfdpTransactionId, packet);
+        }
+    }
+
+    private void processAckPacket(AckPacket ackPacket) {
+        if (ackPacket.getDirectiveCode() != FileDirectiveCode.EOF) {
+            log.info("TXID{} received bogus non EOF ACK packet: {}", cfdpTransactionId, ackPacket);
+        }
+
+        if (!eofSent) {
+            log.info("TXID{} received unexpected ACK packet (EOF not sent): {}", cfdpTransactionId, ackPacket);
+            return;
+        }
+        eofTimer.cancel();
+
+        if (outTxState == OutTxState.CANCELING) {
+            complete(reasonForCancellation);
+        }
+    }
+
+    private void processFinishedPacket(FinishedPacket finishedPacket) {
+        eofTimer.cancel();
+
+        sendPacket(getAckPacket(finishedPacket.getConditionCode()));
+
+        if (outTxState == OutTxState.COMPLETED) {
+            return;
+        }
+
+        // depending on the conditioncode, the transfer was a success or a failure
+        if (finishedPacket.getConditionCode() != ConditionCode.NO_ERROR) {
+            complete(finishedPacket.getConditionCode());
+        } else {
+            if (eofSent) {
+                complete(ConditionCode.NO_ERROR);
+            } else {
+                log.warn("TXID{} received Finished PDU before sending the EOF: {}", cfdpTransactionId,
+                        finishedPacket);
+            }
+        }
+    }
+
+    /**
+     * The inactivity timer is active after the EOF ACK has been received
+     */
+    @Override
+    protected void onInactivityTimerExpiration() {
+        log.warn("TXID{} Inactivity timeout while in {} state; transaction failed", cfdpTransactionId,
+                outTxState);
+        handleFault(ConditionCode.INACTIVITY_DETECTED);
+    }
+
+    @Override
+    protected void suspend() {
+        if (outTxState == OutTxState.COMPLETED) {
+            log.info("TXID{} transfer finished, suspend ignored", cfdpTransactionId);
+            return;
+        }
+
+        sendInfoEvent(ETYPE_TRANSFER_SUSPENDED, "transfer suspended");
+        log.info("TXID{} suspending transfer", cfdpTransactionId);
+
+        eofTimer.cancel();
+        pduSendingSchedule.cancel(true);
+        cancelInactivityTimer();
+
+        suspended = true;
+        changeState(TransferState.PAUSED);
+    }
+
+    @Override
+    protected void resume() {
+        if (!suspended) {
+            log.info("TXID{} resume called while not suspended, ignoring", cfdpTransactionId);
+            return;
+        }
+        if (outTxState == OutTxState.COMPLETED) {
+            // it is possible the transfer has finished while being suspended
+            log.info("TXID{} transfer finished, suspend ignored", cfdpTransactionId);
+            return;
+        }
+        log.info("TXID{} resuming transfer", cfdpTransactionId);
+        sendInfoEvent(ETYPE_TRANSFER_RESUMED, "transfer resumed");
+        pduSendingSchedule = executor.scheduleAtFixedRate(this::sendPDU, 0, sleepBetweenPdus, TimeUnit.MILLISECONDS);
+        if (expectingAck()) {
+            sendEof();
+        }
+        if (outTxState == OutTxState.SENDING_DATA && eofAckReceived) {
+            rescheduleInactivityTimer();
+        }
+
+        changeState(TransferState.RUNNING);
+        suspended = false;
+    }
+
+    private boolean expectingAck() {
+        return (outTxState == OutTxState.SENDING_DATA
+                || outTxState == OutTxState.CANCELING)
+                && eofSent
+                && !eofAckReceived;
+    }
+
+    public OutTxState getCfdpState() {
+        return this.outTxState;
+    }
+
+    private void complete(ConditionCode conditionCode) {
+        if (outTxState == OutTxState.COMPLETED) {
+            return;
+        }
+        outTxState = OutTxState.COMPLETED;
+
+        long duration = (System.currentTimeMillis() - wallclockStartTime) / 1000;
+
+        String eventMessageSuffix;
+        if (metadata.getFileLength() > 0 || directiveHeader.isLargeFile()) {
+            eventMessageSuffix = request.getSourceFileName() + " -> " + request.getDestinationFileName();
+        } else {
+            eventMessageSuffix = "Fileless transfer (metadata options: \n"
+                    + metadata.getOptions().stream().map(TLV::toString).collect(Collectors.joining(",\n")) + "\n)";
+        }
+
+        if (conditionCode == ConditionCode.NO_ERROR) {
+            changeState(TransferState.COMPLETED);
+            sendInfoEvent(ETYPE_TRANSFER_FINISHED,
+                    "transfer finished successfully in " + duration + " seconds: "
+                            + eventMessageSuffix);
+        } else {
+            failTransfer(conditionCode.toString());
+            sendWarnEvent(ETYPE_TRANSFER_FINISHED,
+                    "transfer finished with error in " + duration + " seconds: "
+                            + eventMessageSuffix + ", error: " + finishedPacket.getConditionCode());
+        }
+    }
+
+    @Override
+    protected void cancel(ConditionCode conditionCode) {
+        log.debug("TXID{} Cancelling with code {}", cfdpTransactionId, conditionCode);
+        switch (outTxState) {
+        case START:
+        case SENDING_DATA:
+            reasonForCancellation = conditionCode;
+            suspended = false; // wake up if sleeping
+            outTxState = OutTxState.CANCELING;
+            changeState(TransferState.CANCELLING);
+            sendEof(conditionCode);
+            break;
+        case CANCELING:
+        case COMPLETED:
+            break;
+        }
+    }
+
+    private void handleFault(ConditionCode conditionCode) {
+        log.debug("TXID{} Handling fault {}", cfdpTransactionId, conditionCode);
+
+        if (outTxState == OutTxState.CANCELING) {
+            complete(conditionCode);
+        } else {
+            FaultHandlingAction action = getFaultHandlingAction(conditionCode);
+            switch (action) {
+            case ABANDON:
+                complete(conditionCode);
+                break;
+            case CANCEL:
+                cancel(conditionCode);
+                break;
+            case SUSPEND:
+                suspend();
+            }
+        }
+    }
+
+    @Override
+    public TransferDirection getDirection() {
+        return TransferDirection.UPLOAD;
+    }
+
+    @Override
+    public long getTotalSize() {
+        return this.request.getFileLength();
+    }
+
+    @Override
+    public String getBucketName() {
+        return bucket != null ? bucket.getName() : null;
+    }
+
+    @Override
+    public String getObjectName() {
+        return request.getSourceFileName();
+    }
+
+    @Override
+    public String getRemotePath() {
+        return request.getDestinationFileName();
+    }
+
+    @Override
+    public long getTransferredSize() {
+        return this.transferred;
+    }
+
+    private EofPacket getEofPacket(ConditionCode code) {
+        long checksum;
+        long filesize;
+        TLV tlv;
+
+        if (code == ConditionCode.NO_ERROR) {
+            checksum = request.getChecksum();
+            filesize = request.getFileLength();
+            tlv = null;
+        } else {
+            filesize = getTransferredSize();
+            checksum = ChecksumCalculator.calculateChecksum(request.getFileData(), 0l, filesize);
+            tlv = TLV.getEntityIdTLV(cfdpTransactionId.getInitiatorEntity(), entityIdLength);
+        }
+
+        return new EofPacket(code, checksum, filesize, tlv, directiveHeader);
+    }
+
+    private MetadataPacket getMetadataPacket() {
+        return new MetadataPacket(
+                closureRequested, checksumType,
+                request.getFileLength(),
+                request.getSourceFileName(),
+                request.getDestinationFileName(),
+                null, directiveHeader);
+    }
+
+    private FileDataPacket getNextFileDataPacket() {
+        return new FileDataPacket(Arrays.copyOfRange(request.getFileData(), (int) offset, (int) end),
+                offset, dataHeader);
+    }
+
+    private AckPacket getAckPacket(ConditionCode code) {
+        return new AckPacket(
+                FileDirectiveCode.FINISHED,
+                FileDirectiveSubtypeCode.FINISHED_BY_END_SYSTEM,
+                code,
+                TransactionStatus.TERMINATED,
+                directiveHeader);
+    }
+}
+```
+
+### `CfdpRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpRequest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+public abstract class CfdpRequest {
+
+    private CfdpRequestType type;
+
+    enum CfdpRequestType {
+        PUT,
+        PAUSE,
+        RESUME,
+        CANCEL
+    }
+
+    protected CfdpRequest(CfdpRequestType type) {
+        this.type = type;
+    }
+
+    public CfdpRequestType getType() {
+        return this.type;
+    }
+}
+```
+
+### `CfdpService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpService.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.yamcs.cfdp.CompletedTransfer.COL_CREATION_TIME;
+import static org.yamcs.cfdp.CompletedTransfer.COL_DIRECTION;
+import static org.yamcs.cfdp.CompletedTransfer.COL_TRANSFER_STATE;
+import static org.yamcs.cfdp.CompletedTransfer.TDEF;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.OngoingCfdpTransfer.FaultHandlingAction;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.DirectoryListingRequest;
+import org.yamcs.cfdp.pdu.DirectoryListingResponse.ListingResponseCode;
+import org.yamcs.cfdp.pdu.EofPacket;
+import org.yamcs.cfdp.pdu.FileDataPacket;
+import org.yamcs.cfdp.pdu.MessageToUser;
+import org.yamcs.cfdp.pdu.MetadataPacket;
+import org.yamcs.cfdp.pdu.PduDecodingException;
+import org.yamcs.cfdp.pdu.ProxyClosureRequest;
+import org.yamcs.cfdp.pdu.ProxyPutRequest;
+import org.yamcs.cfdp.pdu.ProxyTransmissionMode;
+import org.yamcs.cfdp.pdu.TLV;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.filetransfer.AbstractFileTransferService;
+import org.yamcs.filetransfer.BasicListingParser;
+import org.yamcs.filetransfer.FileListingParser;
+import org.yamcs.filetransfer.FileListingService;
+import org.yamcs.filetransfer.FileSaveHandler;
+import org.yamcs.filetransfer.FileTransfer;
+import org.yamcs.filetransfer.FileTransferFilter;
+import org.yamcs.filetransfer.InvalidRequestException;
+import org.yamcs.filetransfer.RemoteFileListMonitor;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.filetransfer.TransferOptions;
+import org.yamcs.protobuf.EntityInfo;
+import org.yamcs.protobuf.FileTransferCapabilities;
+import org.yamcs.protobuf.FileTransferOption;
+import org.yamcs.protobuf.ListFilesResponse;
+import org.yamcs.protobuf.RemoteFile;
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Sequence;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+import com.google.common.collect.Streams;
+
+/**
+ * Implements CCSDS File Delivery Protocol (CFDP) in Yamcs.
+ * <p>
+ * The standard is specified in <a href="https://public.ccsds.org/Pubs/727x0b5.pdf"> CCSDS 727.0-B-5 </a>
+ * 
+ * @author nm
+ *
+ */
+public class CfdpService extends AbstractFileTransferService implements StreamSubscriber, TransferMonitor {
+
+    static final String ETYPE_UNEXPECTED_CFDP_PDU = "UNEXPECTED_CFDP_PDU";
+    static final String ETYPE_TRANSFER_STARTED = "TRANSFER_STARTED";
+    static final String ETYPE_TRANSFER_META = "TRANSFER_METADATA";
+    static final String ETYPE_TRANSFER_FINISHED = "TRANSFER_FINISHED";
+    static final String ETYPE_TRANSFER_SUSPENDED = "TRANSFER_SUSPENDED";
+    static final String ETYPE_TRANSFER_RESUMED = "TRANSFER_RESUMED";
+    static final String ETYPE_TRANSFER_COMPLETED = "TRANSFER_COMPLETED";
+    static final String ETYPE_TX_LIMIT_REACHED = "TX_LIMIT_REACHED";
+    static final String ETYPE_EOF_LIMIT_REACHED = "EOF_LIMIT_REACHED";
+    static final String ETYPE_FIN_LIMIT_REACHED = "FIN_LIMIT_REACHED";
+    static final String ETYPE_NO_LARGE_FILE = "LARGE_FILES_NOT_SUPPORTED";
+    static final String ETYPE_PDU_DECODING_ERROR = "PDU_DECODING_ERROR";
+
+    static final String BUCKET_OPT = "bucket";
+
+    static final String TABLE_NAME = "cfdp";
+    static final String SEQUENCE_NAME = "cfdp";
+
+    // FileTransferOption name literals
+    private final String OVERWRITE_OPTION = "overwrite";
+    private final String RELIABLE_OPTION = "reliable";
+    private final String CLOSURE_OPTION = "closureRequested";
+    private final String CREATE_PATH_OPTION = "createPath";
+    private final String PDU_DELAY_OPTION = "pduDelay";
+    private final String PDU_SIZE_OPTION = "pduSize";
+
+    Map<CfdpTransactionId, OngoingCfdpTransfer> pendingTransfers = new ConcurrentHashMap<>();
+    Queue<QueuedCfdpOutgoingTransfer> queuedTransfers = new ConcurrentLinkedQueue<>();
+
+    FileDownloadRequests fileDownloadRequests = new FileDownloadRequests();
+    Map<CfdpTransactionId, List<String>> directoryListingRequests = new ConcurrentHashMap<>();
+
+    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    Map<ConditionCode, FaultHandlingAction> receiverFaultHandlers;
+    Map<ConditionCode, FaultHandlingAction> senderFaultHandlers;
+    Stream cfdpIn;
+    Stream cfdpOut;
+    Bucket defaultIncomingBucket;
+
+    EventProducer eventProducer;
+
+    private Set<TransferMonitor> transferListeners = new CopyOnWriteArraySet<>();
+    private Set<RemoteFileListMonitor> remoteFileListMonitors = new CopyOnWriteArraySet<>();
+    private Map<String, EntityConf> localEntities = new LinkedHashMap<>();
+    private Map<String, EntityConf> remoteEntities = new LinkedHashMap<>();
+
+    private boolean allowRemoteProvidedBucket;
+    private boolean allowRemoteProvidedSubdirectory;
+
+    private boolean allowDownloadOverwrites;
+    private int maxExistingFileRenames;
+
+    boolean nakMetadata;
+    int maxNumPendingDownloads;
+    int maxNumPendingUploads;
+    int archiveRetrievalLimit;
+    int pendingAfterCompletion;
+
+    boolean queueConcurrentUploads;
+    boolean allowConcurrentFileOverwrites;
+    List<String> directoryTerminators;
+    private boolean hasDownloadCapability;
+
+    private boolean hasFileListingCapability;
+    private FileListingService fileListingService;
+    private FileListingParser fileListingParser;
+    private boolean automaticDirectoryListingReloads;
+
+    private boolean canChangePduSize;
+    private List<Integer> pduSizePredefinedValues;
+    private boolean canChangePduDelay;
+    private List<Integer> pduDelayPredefinedValues;
+
+    private Stream dbStream;
+
+    private Stream fileListStream;
+
+    Sequence idSeq;
+    static final Map<String, ConditionCode> VALID_CODES = new HashMap<>();
+
+    static {
+        VALID_CODES.put("AckLimitReached", ConditionCode.ACK_LIMIT_REACHED);
+        VALID_CODES.put("KeepAliveLimitReached", ConditionCode.KEEP_ALIVE_LIMIT_REACHED);
+        VALID_CODES.put("InvalidTransmissionMode", ConditionCode.INVALID_TRANSMISSION_MODE);
+        VALID_CODES.put("FilestoreRejection", ConditionCode.FILESTORE_REJECTION);
+        VALID_CODES.put("FileChecksumFailure", ConditionCode.FILE_CHECKSUM_FAILURE);
+        VALID_CODES.put("FileSizeError", ConditionCode.FILE_SIZE_ERROR);
+        VALID_CODES.put("NakLimitReached", ConditionCode.NAK_LIMIT_REACHED);
+        VALID_CODES.put("InactivityDetected", ConditionCode.INACTIVITY_DETECTED);
+        VALID_CODES.put("InvalidFileStructure", ConditionCode.INVALID_FILE_STRUCTURE);
+        VALID_CODES.put("CheckLimitReached", ConditionCode.CHECK_LIMIT_REACHED);
+        VALID_CODES.put("UnsupportedChecksum", ConditionCode.UNSUPPORTED_CHECKSUM_TYPE);
+        VALID_CODES.put("CancelRequestReceived", ConditionCode.CANCEL_REQUEST_RECEIVED);
+    }
+
+    String FILELIST_TABLE_NAME = "cfdp_filelist";
+    static TupleDefinition FILELIST_TDEF = new TupleDefinition();
+    static String COL_DESTINATION = "destination";
+    static String COL_REMOTE_PATH = "remotePath";
+    static String COL_LIST_TIME = "listTime";
+    static String COL_LIST_FILES_RESPONSE = "listFilesResponse";
+
+    static {
+        FILELIST_TDEF.addColumn(COL_LIST_TIME, DataType.TIMESTAMP);
+        FILELIST_TDEF.addColumn(COL_DESTINATION, DataType.STRING);
+        FILELIST_TDEF.addColumn(COL_REMOTE_PATH, DataType.STRING);
+        FILELIST_TDEF.addColumn(COL_LIST_FILES_RESPONSE, DataType.protobuf("org.yamcs.protobuf.ListFilesResponse"));
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec entitySpec = new Spec();
+        entitySpec.addOption("name", OptionType.STRING);
+        entitySpec.addOption("id", OptionType.INTEGER);
+        entitySpec.addOption(BUCKET_OPT, OptionType.STRING).withDefault(null);
+
+        Spec spec = new Spec();
+        spec.addOption("inStream", OptionType.STRING).withDefault("cfdp_in");
+        spec.addOption("outStream", OptionType.STRING).withDefault("cfdp_out");
+        spec.addOption("incomingBucket", OptionType.STRING).withDefault("cfdpDown");
+        spec.addOption("allowRemoteProvidedBucket", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("allowRemoteProvidedSubdirectory", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("allowDownloadOverwrites", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("maxExistingFileRenames", OptionType.INTEGER).withDefault(1000);
+        spec.addOption("entityIdLength", OptionType.INTEGER).withDefault(2);
+        spec.addOption("sequenceNrLength", OptionType.INTEGER).withDefault(4);
+        spec.addOption("maxPduSize", OptionType.INTEGER).withDefault(512);
+        spec.addOption("canChangePduSize", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("pduSizePredefinedValues", OptionType.LIST).withDefault(Collections.emptyList())
+                .withElementType(OptionType.INTEGER);
+        spec.addOption("canChangePduDelay", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("pduDelayPredefinedValues", OptionType.LIST).withDefault(Collections.emptyList())
+                .withElementType(OptionType.INTEGER);
+        spec.addOption("eofAckTimeout", OptionType.INTEGER).withDefault(5000);
+        spec.addOption("eofAckLimit", OptionType.INTEGER).withDefault(5);
+        spec.addOption("finAckTimeout", OptionType.INTEGER).withDefault(5000);
+        spec.addOption("finAckLimit", OptionType.INTEGER).withDefault(5);
+        spec.addOption("sleepBetweenPdus", OptionType.INTEGER).withDefault(500);
+        spec.addOption("localEntities", OptionType.LIST).withElementType(OptionType.MAP).withSpec(entitySpec);
+        spec.addOption("remoteEntities", OptionType.LIST).withElementType(OptionType.MAP).withSpec(entitySpec);
+        spec.addOption("nakLimit", OptionType.INTEGER).withDefault(-1);
+        spec.addOption("nakTimeout", OptionType.INTEGER).withDefault(5000);
+        spec.addOption("immediateNak", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("archiveRetrievalLimit", OptionType.INTEGER).withDefault(100);
+        spec.addOption("receiverFaultHandlers", OptionType.MAP).withSpec(Spec.ANY);
+        spec.addOption("senderFaultHandlers", OptionType.MAP).withSpec(Spec.ANY);
+        spec.addOption("queueConcurrentUploads", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("allowConcurrentFileOverwrites", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("directoryTerminators", OptionType.LIST).withElementType(OptionType.STRING)
+                .withDefault(Arrays.asList(":", "/", "\\"));
+        spec.addOption("maxNumPendingDownloads", OptionType.INTEGER).withDefault(100);
+        spec.addOption("maxNumPendingUploads", OptionType.INTEGER).withDefault(10);
+        spec.addOption("inactivityTimeout", OptionType.INTEGER).withDefault(10000);
+        spec.addOption("pendingAfterCompletion", OptionType.INTEGER).withDefault(600000);
+        spec.addOption("hasDownloadCapability", OptionType.BOOLEAN).withDefault(true);
+
+        spec.addOption("hasFileListingCapability", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("fileListingServiceClassName", OptionType.STRING).withDefault("org.yamcs.cfdp.CfdpService");
+        spec.addOption("fileListingServiceArgs", OptionType.MAP).withSpec(Spec.ANY)
+                .withDefault(new HashMap<>());
+        spec.addOption("fileListingParserClassName", OptionType.STRING)
+                .withDefault("org.yamcs.filetransfer.BasicListingParser");
+        spec.addOption("fileListingParserArgs", OptionType.MAP).withSpec(Spec.ANY)
+                .withDefault(new HashMap<>());
+        spec.addOption("automaticDirectoryListingReloads", OptionType.BOOLEAN).withDefault(false);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        String inStream = config.getString("inStream");
+        String outStream = config.getString("outStream");
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        cfdpIn = ydb.getStream(inStream);
+        if (cfdpIn == null) {
+            throw new ConfigurationException("cannot find stream " + inStream);
+        }
+        cfdpOut = ydb.getStream(outStream);
+        if (cfdpOut == null) {
+            throw new ConfigurationException("cannot find stream " + outStream);
+        }
+
+        defaultIncomingBucket = getBucket(config.getString("incomingBucket"));
+        // TODO: duplicate default values as specified in getSpec?
+        allowRemoteProvidedBucket = config.getBoolean("allowRemoteProvidedBucket", false);
+        allowRemoteProvidedSubdirectory = config.getBoolean("allowRemoteProvidedSubdirectory", false);
+        allowDownloadOverwrites = config.getBoolean("allowDownloadOverwrites", false);
+        maxExistingFileRenames = config.getInt("maxExistingFileRenames", 1000);
+        maxNumPendingDownloads = config.getInt("maxNumPendingDownloads");
+        maxNumPendingUploads = config.getInt("maxNumPendingUploads");
+        archiveRetrievalLimit = config.getInt("archiveRetrievalLimit", 100);
+        pendingAfterCompletion = config.getInt("pendingAfterCompletion", 600000);
+        queueConcurrentUploads = config.getBoolean("queueConcurrentUploads");
+        allowConcurrentFileOverwrites = config.getBoolean("allowConcurrentFileOverwrites");
+        directoryTerminators = config.getList("directoryTerminators");
+        canChangePduSize = config.getBoolean("canChangePduSize");
+        pduSizePredefinedValues = config.getList("pduSizePredefinedValues");
+        canChangePduDelay = config.getBoolean("canChangePduDelay");
+        pduDelayPredefinedValues = config.getList("pduDelayPredefinedValues");
+        hasDownloadCapability = config.getBoolean("hasDownloadCapability");
+        hasFileListingCapability = config.getBoolean("hasFileListingCapability");
+
+        String fileListingServiceClassName = config.getString("fileListingServiceClassName");
+        YConfiguration fileListingServiceConfig = config.getConfig("fileListingServiceArgs");
+        if (Objects.equals(fileListingServiceClassName, this.getClass().getName())) {
+            fileListingService = this;
+
+            String fileListingParserClassName;
+            try {
+                fileListingParserClassName = fileListingServiceConfig.getString("fileListingParserClassName");
+            } catch (ConfigurationException e) {
+                fileListingParserClassName = config.getString("fileListingParserClassName");
+            }
+            fileListingParser = YObjectLoader.loadObject(fileListingParserClassName);
+            if (fileListingParser instanceof BasicListingParser) {
+                // directoryTerminators will be overwritten by the specific fileListingParserArgs if existing
+                ((BasicListingParser) fileListingParser).setDirectoryTerminators(directoryTerminators);
+            }
+
+            try {
+                Spec spec = fileListingParser.getSpec();
+                YConfiguration fileListingParserConfig;
+                try {
+                    fileListingParserConfig = fileListingServiceConfig.getConfig("fileListingParserArgs");
+                } catch (ConfigurationException e) {
+                    fileListingParserConfig = config.getConfig("fileListingParserArgs");
+                }
+                fileListingParser.init(yamcsInstance,
+                        spec != null ? spec.validate(fileListingParserConfig) : fileListingParserConfig);
+            } catch (ValidationException e) {
+                throw new InitException("Failed to validate FileListingParser config", e);
+            }
+        } else {
+            fileListingService = YObjectLoader.loadObject(fileListingServiceClassName);
+            fileListingService.init(yamcsInstance, serviceName + "_" + fileListingServiceClassName,
+                    fileListingServiceConfig);
+        }
+
+        automaticDirectoryListingReloads = config.getBoolean("automaticDirectoryListingReloads");
+
+        initSrcDst(config);
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "CfdpService", 10000);
+        idSeq = ydb.getSequence(SEQUENCE_NAME, true);
+        if (config.containsKey("senderFaultHandlers")) {
+            senderFaultHandlers = readFaultHandlers(config.getMap("senderFaultHandlers"));
+        } else {
+            senderFaultHandlers = Collections.emptyMap();
+        }
+
+        if (config.containsKey("receiverFaultHandlers")) {
+            receiverFaultHandlers = readFaultHandlers(config.getMap("receiverFaultHandlers"));
+        } else {
+            receiverFaultHandlers = Collections.emptyMap();
+        }
+        setupRecording(ydb);
+        setupFileListTable(ydb);
+    }
+
+    private Map<ConditionCode, FaultHandlingAction> readFaultHandlers(Map<String, String> map) {
+        Map<ConditionCode, FaultHandlingAction> m = new EnumMap<>(ConditionCode.class);
+        for (Map.Entry<String, String> me : map.entrySet()) {
+            ConditionCode code = VALID_CODES.get(me.getKey());
+            if (code == null) {
+                throw new ConfigurationException(
+                        "Unknown condition code " + me.getKey() + ". Valid codes: " + VALID_CODES.keySet());
+            }
+            FaultHandlingAction action = FaultHandlingAction.fromString(me.getValue());
+            if (action == null) {
+                throw new ConfigurationException(
+                        "Unknown action " + me.getValue() + ". Valid actions: " + FaultHandlingAction.actions());
+            }
+            m.put(code, action);
+        }
+        return m;
+    }
+
+    private void initSrcDst(YConfiguration config) throws InitException {
+        if (config.containsKey("localEntities")) {
+            for (YConfiguration c : config.getConfigList("localEntities")) {
+                long id = c.getLong("id");
+                String name = c.getString("name");
+                if (localEntities.containsKey(name)) {
+                    throw new ConfigurationException("Duplicate local entity '" + name + "'.");
+                }
+                Bucket bucket = null;
+                if (c.containsKey(BUCKET_OPT)) {
+                    bucket = getBucket(c.getString(BUCKET_OPT));
+                }
+                EntityConf ent = new EntityConf(id, name, bucket);
+                localEntities.put(name, ent);
+            }
+        }
+
+        if (config.containsKey("remoteEntities")) {
+            for (YConfiguration c : config.getConfigList("remoteEntities")) {
+                long id = c.getLong("id");
+                String name = c.getString("name");
+                if (remoteEntities.containsKey(name)) {
+                    throw new ConfigurationException("Duplicate remote entity '" + name + "'.");
+                }
+                Bucket bucket = null;
+                if (c.containsKey(BUCKET_OPT)) {
+                    bucket = getBucket(c.getString(BUCKET_OPT));
+                }
+                EntityConf ent = new EntityConf(id, name, bucket);
+                remoteEntities.put(name, ent);
+            }
+        }
+
+        if (localEntities.isEmpty()) {
+            throw new ConfigurationException("No local entity specified");
+        }
+        if (remoteEntities.isEmpty()) {
+            throw new ConfigurationException("No remote entity specified");
+        }
+    }
+
+    private Bucket getBucket(String bucketName) throws InitException {
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        try {
+            Bucket bucket = bucketManager.getBucket(bucketName);
+            if (bucket == null) {
+                bucket = bucketManager.createBucket(bucketName);
+            }
+            return bucket;
+        } catch (IOException e) {
+            throw new InitException(e);
+        }
+    }
+
+    private void setupRecording(YarchDatabaseInstance ydb) throws InitException {
+        try {
+            if (ydb.getTable(TABLE_NAME) == null) {
+                String query = "create table " + TABLE_NAME + "(" + TDEF.getStringDefinition1()
+                        + ", primary key(id, serverId))";
+                ydb.execute(query);
+            }
+            String streamName = TABLE_NAME + "table_in";
+            if (ydb.getStream(streamName) == null) {
+                ydb.execute("create stream " + streamName + TDEF.getStringDefinition());
+            }
+            ydb.execute("upsert_append into " + TABLE_NAME + " select * from " + streamName);
+            dbStream = ydb.getStream(streamName);
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+    }
+
+    private void setupFileListTable(YarchDatabaseInstance ydb) throws InitException {
+        try {
+            if (ydb.getTable(FILELIST_TABLE_NAME) == null) {
+                String query = "create table " + FILELIST_TABLE_NAME + "(" + FILELIST_TDEF.getStringDefinition1()
+                        + ", primary key(" + COL_LIST_TIME + ", " + COL_DESTINATION + ", " + COL_REMOTE_PATH + "))";
+                ydb.execute(query);
+            }
+            String streamName = FILELIST_TABLE_NAME + "_stream";
+            if (ydb.getStream(streamName) == null) {
+                ydb.execute("create stream " + streamName + FILELIST_TDEF.getStringDefinition());
+            }
+            ydb.execute("upsert_append into " + FILELIST_TABLE_NAME + " select * from " + streamName);
+            fileListStream = ydb.getStream(streamName);
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+    }
+
+    public OngoingCfdpTransfer getCfdpTransfer(CfdpTransactionId transferId) {
+        return pendingTransfers.get(transferId);
+    }
+
+    @Override
+    public FileTransfer getFileTransfer(long id) {
+        Optional<CfdpFileTransfer> r = Streams.concat(pendingTransfers.values().stream(), queuedTransfers.stream())
+                .filter(c -> c.getId() == id).findAny();
+        if (r.isPresent()) {
+            return r.get();
+        } else {
+            return searchInArchive(id);
+        }
+    }
+
+    private FileTransfer searchInArchive(long id) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            StreamSqlResult res = ydb.execute("select * from " + TABLE_NAME + " where id=?", id);
+            FileTransfer r = null;
+            if (res.hasNext()) {
+                r = new CompletedTransfer(res.next());
+            }
+            res.close();
+            return r;
+
+        } catch (Exception e) {
+            log.error("Error executing query", e);
+            return null;
+        }
+    }
+
+    @Override
+    public List<FileTransfer> getTransfers(FileTransferFilter filter) {
+        List<FileTransfer> toReturn = new ArrayList<>();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        pendingTransfers.values().stream()
+                .filter(CfdpService::isRunning)
+                .forEach(toReturn::add);
+        toReturn.addAll(queuedTransfers);
+
+        toReturn.removeIf(transfer -> {
+            if (filter.start != TimeEncoding.INVALID_INSTANT) {
+                if (transfer.getCreationTime() < filter.start) {
+                    return true;
+                }
+            }
+            if (filter.stop != TimeEncoding.INVALID_INSTANT) {
+                if (transfer.getCreationTime() >= filter.stop) {
+                    return true;
+                }
+            }
+            if (!filter.states.isEmpty() && !filter.states.contains(transfer.getTransferState())) {
+                return true;
+            }
+            if (filter.direction != null && !Objects.equals(filter.direction, transfer.getDirection())) {
+                return true;
+            }
+            if (filter.localEntityId != null && !Objects.equals(filter.localEntityId, transfer.getLocalEntityId())) {
+                return true;
+            }
+            if (filter.remoteEntityId != null && !Objects.equals(filter.remoteEntityId, transfer.getRemoteEntityId())) {
+                return true;
+            }
+
+            return false;
+        });
+
+        if (toReturn.size() >= filter.limit) {
+            return toReturn;
+        }
+
+        // Query only for COMPLETED or FAILED, while respecting the incoming requested states
+        // (want to avoid duplicates with the in-memory data structure)
+        if (filter.states.isEmpty() || filter.states.contains(TransferState.COMPLETED)
+                || filter.states.contains(TransferState.FAILED)) {
+
+            var sqlb = new SqlBuilder(TABLE_NAME);
+
+            if (filter.start != TimeEncoding.INVALID_INSTANT) {
+                sqlb.whereColAfterOrEqual(COL_CREATION_TIME, filter.start);
+            }
+            if (filter.stop != TimeEncoding.INVALID_INSTANT) {
+                sqlb.whereColBefore(COL_CREATION_TIME, filter.stop);
+            }
+
+            if (filter.states.isEmpty()) {
+                sqlb.whereColIn(COL_TRANSFER_STATE,
+                        Arrays.asList(TransferState.COMPLETED.name(), TransferState.FAILED.name()));
+            } else {
+                var queryStates = new ArrayList<>(filter.states);
+                queryStates.removeIf(state -> {
+                    return state != TransferState.COMPLETED && state != TransferState.FAILED;
+                });
+
+                var stringStates = queryStates.stream().map(TransferState::name).toList();
+                sqlb.whereColIn(COL_TRANSFER_STATE, stringStates);
+
+            }
+            if (filter.direction != null) {
+                sqlb.where(COL_DIRECTION + " = ?", filter.direction.name());
+            }
+            if (filter.localEntityId != null) {
+                // The 1=1 clause is a trick because Yarch is being difficult about multiple lparens
+                sqlb.where("""
+                        (1=1 and
+                          (direction = 'UPLOAD' and sourceId = ?) or
+                          (direction = 'DOWNLOAD' and destinationId = ?)
+                        )
+                        """, filter.localEntityId, filter.localEntityId);
+            }
+            if (filter.remoteEntityId != null) {
+                // The 1=1 clause is a trick because Yarch is being difficult about multiple lparens
+                sqlb.where("""
+                        (1=1 and
+                          (direction = 'UPLOAD' and destinationId = ?) or
+                          (direction = 'DOWNLOAD' and sourceId = ?)
+                        )
+                        """, filter.remoteEntityId, filter.remoteEntityId);
+            }
+
+            sqlb.descend(filter.descending);
+            sqlb.limit(filter.limit - toReturn.size());
+
+            try {
+                var res = ydb.execute(sqlb.toString(), sqlb.getQueryArgumentsArray());
+                while (res.hasNext()) {
+                    Tuple t = res.next();
+                    toReturn.add(new CompletedTransfer(t));
+                }
+                res.close();
+            } catch (ParseException | StreamSqlException e) {
+                log.error("Error executing query", e);
+            }
+        }
+
+        Collections.sort(toReturn, (a, b) -> {
+            var rc = Long.compare(a.getCreationTime(), b.getCreationTime());
+            return filter.descending ? -rc : rc;
+        });
+        return toReturn;
+    }
+
+    private CfdpFileTransfer processPutRequest(long initiatorEntityId, long seqNum, long creationTime,
+            PutRequest request,
+            Bucket bucket, Integer customPduSize, Integer customPduDelay) {
+        CfdpOutgoingTransfer transfer = new CfdpOutgoingTransfer(yamcsInstance, initiatorEntityId, seqNum, creationTime,
+                executor, request, cfdpOut, config, bucket, customPduSize, customPduDelay, eventProducer, this,
+                senderFaultHandlers);
+
+        dbStream.emitTuple(CompletedTransfer.toInitialTuple(transfer));
+
+        stateChanged(transfer);
+        pendingTransfers.put(transfer.getTransactionId(), transfer);
+
+        if (request.getFileLength() > 0) {
+            eventProducer.sendInfo(ETYPE_TRANSFER_STARTED,
+                    "Starting new CFDP upload TXID[" + transfer.getTransactionId() + "] " + transfer.getObjectName()
+                            + " -> " + transfer.getRemotePath());
+        } else {
+            eventProducer.sendInfo(ETYPE_TRANSFER_STARTED,
+                    "Starting new CFDP upload TXID[" + transfer.getTransactionId()
+                            + "] Fileless transfer (metadata options: \n"
+                            + (request.getMetadata() != null ? request.getMetadata().getOptions().stream()
+                                    .map(TLV::toString).collect(Collectors.joining(",\n")) : "")
+                            + "\n)");
+        }
+        transfer.start();
+        return transfer;
+    }
+
+    // called when queueConcurrentUploads = true, will start a queued transfer if no other transfer is running
+    private void tryStartQueuedTransfer() {
+        if (numPendingUploads() >= maxNumPendingUploads) {
+            return;
+        }
+
+        QueuedCfdpOutgoingTransfer trsf = queuedTransfers.poll();
+        if (trsf != null) {
+            processPutRequest(trsf.getInitiatorEntityId(), trsf.getId(), trsf.getCreationTime(), trsf.getPutRequest(),
+                    trsf.getBucket(), trsf.getCustomPduSize(), trsf.getCustomPduDelay());
+        }
+    }
+
+    private long numPendingUploads() {
+        return pendingTransfers.values().stream()
+                .filter(trsf -> isRunning(trsf) && trsf.getDirection() == TransferDirection.UPLOAD)
+                .count();
+    }
+
+    private long numPendingDownloads() {
+        return pendingTransfers.values().stream()
+                .filter(trsf -> isRunning(trsf) && trsf.getDirection() == TransferDirection.DOWNLOAD)
+                .count();
+    }
+
+    static boolean isRunning(OngoingCfdpTransfer trsf) {
+        return trsf.state == TransferState.RUNNING || trsf.state == TransferState.PAUSED
+                || trsf.state == TransferState.CANCELLING;
+    }
+
+    private OngoingCfdpTransfer processPauseRequest(PauseRequest request) {
+        OngoingCfdpTransfer transfer = request.getTransfer();
+        try {
+            return transfer.pauseTransfer().get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to pause transfer", e);
+        }
+    }
+
+    private OngoingCfdpTransfer processResumeRequest(ResumeRequest request) {
+        OngoingCfdpTransfer transfer = request.getTransfer();
+        try {
+            return transfer.resumeTransfer().get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to resume transfer", e);
+        }
+    }
+
+    private OngoingCfdpTransfer processCancelRequest(CancelRequest request) {
+        OngoingCfdpTransfer transfer = request.getTransfer();
+        try {
+            return transfer.cancelTransfer().get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("Failed to cancel transfer", e);
+        }
+    }
+
+    @Override
+    public void onTuple(Stream stream, Tuple tuple) {
+        CfdpPacket packet;
+        try {
+            packet = CfdpPacket.fromTuple(tuple);
+            if (packet == null) {// not supported PDU, ignored
+                return;
+            }
+        } catch (PduDecodingException e) {
+            log.warn("Error decoding PDU: {}, packet: {}", e.toString(),
+                    StringConverter.arrayToHexString(e.getData(), true));
+            eventProducer.sendWarning(ETYPE_PDU_DECODING_ERROR, "Error decoding CFDP PDU; " + e.getMessage());
+            return;
+        } catch (Exception e) {
+            log.error("Unexpected error decoding pdu tuple", e);
+            return;
+        }
+
+        CfdpTransactionId id = packet.getTransactionId();
+
+        OngoingCfdpTransfer transfer = null;
+        if (pendingTransfers.containsKey(id)) {
+            transfer = pendingTransfers.get(id);
+        } else {
+            if (!isTransferInitiator(packet)) {
+                eventProducer.sendWarning(ETYPE_UNEXPECTED_CFDP_PDU,
+                        "Unexpected CFDP PDU received; " + packet.getHeader() + ": " + packet);
+                return;
+            }
+            // the communication partner has initiated a transfer
+
+            if (numPendingDownloads() >= maxNumPendingDownloads) {
+                eventProducer.sendWarning(ETYPE_TX_LIMIT_REACHED, "Maximum number of pending downloads "
+                        + maxNumPendingDownloads + " reached. Dropping packet " + packet);
+            } else {
+                transfer = instantiateIncomingTransaction(packet);
+                if (transfer != null) {
+                    pendingTransfers.put(transfer.getTransactionId(), transfer);
+                    OngoingCfdpTransfer t1 = transfer;
+                    executor.submit(() -> dbStream.emitTuple(CompletedTransfer.toInitialTuple(t1)));
+                }
+            }
+        }
+
+        if (transfer != null) {
+            transfer.processPacket(packet);
+            if (packet instanceof MetadataPacket) {
+                OngoingCfdpTransfer t1 = transfer;
+                executor.submit(() -> dbStream.emitTuple(CompletedTransfer.toInitialTuple(t1)));
+            }
+        }
+    }
+
+    private boolean isTransferInitiator(CfdpPacket packet) {
+        return packet instanceof MetadataPacket
+                || packet instanceof FileDataPacket
+                || packet instanceof EofPacket;
+    }
+
+    private OngoingCfdpTransfer instantiateIncomingTransaction(CfdpPacket packet) {
+        CfdpTransactionId txId = packet.getTransactionId();
+
+        if (packet.getHeader().isLargeFile()) {
+            eventProducer.sendWarning(ETYPE_NO_LARGE_FILE, "Large files not supported; " + txId + ": " + packet);
+            return null;
+        }
+
+        EntityConf remoteEntity = getRemoteEntity(txId.getInitiatorEntity());
+        if (remoteEntity == null) {
+            eventProducer.sendWarning(ETYPE_UNEXPECTED_CFDP_PDU,
+                    "Received a transaction start for an unknown remote entity Id " + txId.getInitiatorEntity());
+            return null;
+        }
+
+        EntityConf localEntity = getLocalEntity(packet.getHeader().getDestinationId());
+        if (localEntity == null) {
+            eventProducer.sendWarning(ETYPE_UNEXPECTED_CFDP_PDU,
+                    "Received a transaction start for an unknown local entity Id "
+                            + packet.getHeader().getDestinationId());
+            return null;
+        }
+
+        eventProducer.sendInfo(ETYPE_TRANSFER_STARTED,
+                "Starting new CFDP downlink TXID[" + txId + "] " + remoteEntity + " -> " + localEntity);
+
+        Bucket bucket = defaultIncomingBucket;
+
+        if (localEntity.bucket != null) {
+            bucket = localEntity.bucket;
+        } else if (remoteEntity.bucket != null) {
+            bucket = remoteEntity.bucket;
+        }
+
+        long creationTime = YamcsServer.getTimeService(yamcsInstance).getMissionTime();
+
+        final FileSaveHandler fileSaveHandler = new FileSaveHandler(yamcsInstance, bucket, fileDownloadRequests,
+                allowRemoteProvidedBucket, allowRemoteProvidedSubdirectory, allowDownloadOverwrites,
+                maxExistingFileRenames);
+
+        return new CfdpIncomingTransfer(yamcsInstance, idSeq.next(), creationTime, executor, config, packet.getHeader(),
+                cfdpOut, fileSaveHandler, eventProducer, this, receiverFaultHandlers);
+    }
+
+    public EntityConf getRemoteEntity(long entityId) {
+        return remoteEntities.entrySet()
+                .stream()
+                .filter(me -> me.getValue().id == entityId)
+                .map(Map.Entry::getValue)
+                .findAny()
+                .orElse(null);
+    }
+
+    public EntityConf getLocalEntity(long entityId) {
+        return localEntities.entrySet()
+                .stream()
+                .filter(me -> me.getValue().id == entityId)
+                .map(Map.Entry::getValue)
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public void registerTransferMonitor(TransferMonitor listener) {
+        transferListeners.add(listener);
+    }
+
+    @Override
+    public void unregisterTransferMonitor(TransferMonitor listener) {
+        transferListeners.remove(listener);
+    }
+
+    @Override
+    public void registerRemoteFileListMonitor(RemoteFileListMonitor monitor) {
+        if (fileListingService != this) {
+            fileListingService.registerRemoteFileListMonitor(monitor);
+            return;
+        }
+        log.debug("Registering file list monitor");
+        remoteFileListMonitors.add(monitor);
+    }
+
+    @Override
+    public void unregisterRemoteFileListMonitor(RemoteFileListMonitor monitor) {
+        if (fileListingService != this) {
+            fileListingService.unregisterRemoteFileListMonitor(monitor);
+            return;
+        }
+        log.debug("Un-registering file list monitor");
+        remoteFileListMonitors.remove(monitor);
+    }
+
+    @Override
+    public void notifyRemoteFileListMonitors(ListFilesResponse listFilesResponse) {
+        if (fileListingService != this) {
+            fileListingService.notifyRemoteFileListMonitors(listFilesResponse);
+            return;
+        }
+        remoteFileListMonitors.forEach(l -> l.receivedFileList(listFilesResponse));
+    }
+
+    @Override
+    public Set<RemoteFileListMonitor> getRemoteFileListMonitors() {
+        if (fileListingService != this) {
+            return fileListingService.getRemoteFileListMonitors();
+        }
+        return remoteFileListMonitors;
+    }
+
+    @Override
+    protected void doStart() {
+        cfdpIn.addSubscriber(this);
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        for (OngoingCfdpTransfer trsf : pendingTransfers.values()) {
+            if (trsf.state == TransferState.RUNNING || trsf.state == TransferState.PAUSED) {
+                trsf.failTransfer("service shutdown");
+            }
+        }
+        executor.shutdown();
+        cfdpIn.removeSubscriber(this);
+        notifyStopped();
+    }
+
+    @Override
+    public void streamClosed(Stream stream) {
+        if (isRunning()) {
+            log.debug("Stream {} closed", stream.getName());
+            notifyFailed(new Exception("Stream " + stream.getName() + " cloased"));
+        }
+    }
+
+    @Override
+    public void stateChanged(FileTransfer ft) {
+        CfdpFileTransfer cfdpTransfer = (CfdpFileTransfer) ft;
+        dbStream.emitTuple(CompletedTransfer.toUpdateTuple(cfdpTransfer));
+
+        // Notify downstream listeners
+        transferListeners.forEach(l -> l.stateChanged(cfdpTransfer));
+
+        if (cfdpTransfer.getTransferState() == TransferState.COMPLETED
+                || cfdpTransfer.getTransferState() == TransferState.FAILED) {
+
+            if (cfdpTransfer instanceof OngoingCfdpTransfer) {
+                // keep it in pending for a while such that PDUs from remote entity can still be answered
+                executor.schedule(() -> pendingTransfers.remove(cfdpTransfer.getTransactionId()),
+                        pendingAfterCompletion, TimeUnit.MILLISECONDS);
+
+                if (cfdpTransfer instanceof CfdpIncomingTransfer) {
+                    CfdpIncomingTransfer incomingTransfer = (CfdpIncomingTransfer) cfdpTransfer;
+                    CfdpTransactionId originatingTransactionId = incomingTransfer.getOriginatingTransactionId();
+                    if (originatingTransactionId != null) {
+                        List<String> request = directoryListingRequests.remove(originatingTransactionId);
+                        if (request != null || incomingTransfer.getDirectoryListingResponse() != null) {
+                            processDirectoryListingResponse(incomingTransfer, request);
+                        }
+                    }
+                }
+            }
+            executor.submit(this::tryStartQueuedTransfer);
+        }
+    }
+
+    @Override
+    public List<EntityInfo> getLocalEntities() {
+        return localEntities.values().stream()
+                .map(c -> EntityInfo.newBuilder().setName(c.name).setId(c.id).build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EntityInfo> getRemoteEntities() {
+        return remoteEntities.values().stream()
+                .map(c -> EntityInfo.newBuilder().setName(c.name).setId(c.id).build())
+                .collect(Collectors.toList());
+    }
+
+    public OngoingCfdpTransfer getOngoingCfdpTransfer(long id) {
+        return pendingTransfers.values().stream().filter(c -> c.getId() == id).findAny().orElse(null);
+    }
+
+    @Override
+    public synchronized CfdpFileTransfer startUpload(String source, Bucket bucket, String objectName,
+            String destination, final String destinationPath, TransferOptions options) throws IOException {
+        byte[] objData;
+        try {
+            objData = bucket.getObjectAsync(objectName).get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e.getCause());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return null;
+        }
+        if (objData == null) {
+            throw new InvalidRequestException("No object named '" + objectName + "' in bucket " + bucket.getName());
+        }
+        String absoluteDestinationPath = getAbsoluteDestinationPath(destinationPath, objectName);
+        if (!allowConcurrentFileOverwrites) {
+            if (pendingTransfers.values().stream()
+                    .filter(CfdpService::isRunning)
+                    .anyMatch(trsf -> trsf.getRemotePath().equals(absoluteDestinationPath))) {
+                throw new InvalidRequestException(
+                        "There is already a transfer ongoing to '" + absoluteDestinationPath
+                                + "' and allowConcurrentFileOverwrites is false");
+            }
+
+            if (queuedTransfers.stream()
+                    .anyMatch(trsf -> trsf.getRemotePath().equals(absoluteDestinationPath))) {
+                throw new InvalidRequestException(
+                        "There is already a transfer queued to '" + absoluteDestinationPath
+                                + "' and allowConcurrentFileOverwrites is false");
+            }
+        }
+
+        long sourceId = getEntityFromName(source, localEntities).id;
+        long destinationId = getEntityFromName(destination, remoteEntities).id;
+
+        // For backwards compatibility
+        var booleanOptions = new HashMap<>(Map.of(
+                OVERWRITE_OPTION, options.isOverwrite(),
+                RELIABLE_OPTION, options.isReliable(),
+                CLOSURE_OPTION, options.isClosureRequested(),
+                CREATE_PATH_OPTION, options.isCreatePath()));
+
+        OptionValues optionValues = getOptionValues(options.getExtraOptions());
+
+        booleanOptions.putAll(optionValues.booleanOptions);
+
+        FilePutRequest request = new FilePutRequest(sourceId, destinationId, objectName, absoluteDestinationPath,
+                booleanOptions.get(OVERWRITE_OPTION), booleanOptions.get(RELIABLE_OPTION),
+                booleanOptions.get(CLOSURE_OPTION), booleanOptions.get(CREATE_PATH_OPTION), bucket, objData);
+        long creationTime = YamcsServer.getTimeService(yamcsInstance).getMissionTime();
+
+        Double pduSize = optionValues.doubleOptions.get(PDU_SIZE_OPTION);
+        Double pduDelay = optionValues.doubleOptions.get(PDU_DELAY_OPTION);
+
+        if (numPendingUploads() < maxNumPendingUploads) {
+            return processPutRequest(sourceId, idSeq.next(), creationTime, request, bucket,
+                    pduSize != null ? pduSize.intValue() : null, pduDelay != null ? pduDelay.intValue() : null);
+        } else {
+            QueuedCfdpOutgoingTransfer transfer = new QueuedCfdpOutgoingTransfer(sourceId, idSeq.next(), creationTime,
+                    request, bucket, pduSize != null ? pduSize.intValue() : null,
+                    pduDelay != null ? pduDelay.intValue() : null);
+            dbStream.emitTuple(CompletedTransfer.toInitialTuple(transfer));
+            queuedTransfers.add(transfer);
+            transferListeners.forEach(l -> l.stateChanged(transfer));
+
+            executor.submit(this::tryStartQueuedTransfer);
+            return transfer;
+        }
+
+    }
+
+    @Override
+    public FileTransfer startDownload(String sourceEntity, String sourcePath, String destinationEntity, Bucket bucket,
+            String objectName, TransferOptions options) throws InvalidRequestException {
+        if (!hasDownloadCapability) {
+            throw new InvalidRequestException("Downloading is not enabled on this CFDP service");
+        }
+
+        long destinationId = getEntityFromName(destinationEntity, localEntities).id;
+        long sourceId = getEntityFromName(sourceEntity, remoteEntities).id;
+
+        if (objectName.isBlank()) {
+            String[] splitPath = sourcePath.split("[\\\\/]");
+            objectName = splitPath[splitPath.length - 1];
+        }
+
+        // For backwards compatibility
+        var booleanOptions = new HashMap<>(Map.of(
+                OVERWRITE_OPTION, options.isOverwrite(),
+                RELIABLE_OPTION, options.isReliable(),
+                CLOSURE_OPTION, options.isClosureRequested(),
+                CREATE_PATH_OPTION, options.isCreatePath()));
+
+        OptionValues optionValues = getOptionValues(options.getExtraOptions());
+
+        booleanOptions.putAll(optionValues.booleanOptions);
+
+        // Prepare request
+        int entityIdLength = config.getInt("entityIdLength");
+        ArrayList<MessageToUser> messagesToUser = new ArrayList<>(
+                List.of(new ProxyPutRequest(destinationId, sourcePath, objectName, entityIdLength)));
+
+        CfdpPacket.TransmissionMode transmissionMode = CfdpPacket.TransmissionMode.UNACKNOWLEDGED;
+        if (Boolean.TRUE.equals(booleanOptions.get(RELIABLE_OPTION))) {
+            transmissionMode = CfdpPacket.TransmissionMode.ACKNOWLEDGED;
+        }
+
+        if (options.isReliableSet() || options.getExtraOptions().containsKey(RELIABLE_OPTION)) {
+            messagesToUser.add(new ProxyTransmissionMode(transmissionMode));
+        }
+        if (options.isClosureRequestedSet() || options.getExtraOptions().containsKey(CLOSURE_OPTION)) {
+            messagesToUser.add(new ProxyClosureRequest(booleanOptions.get(CLOSURE_OPTION)));
+        }
+
+        Double pduSize = optionValues.doubleOptions.get(PDU_SIZE_OPTION);
+        Double pduDelay = optionValues.doubleOptions.get(PDU_DELAY_OPTION);
+
+        PutRequest request = new PutRequest(sourceId, transmissionMode, messagesToUser);
+        CfdpTransactionId transactionId = request.process(destinationId, idSeq.next(), ChecksumType.MODULAR, config);
+
+        long creationTime = YamcsServer.getTimeService(yamcsInstance).getMissionTime();
+
+        fileDownloadRequests.addTransfer(transactionId, bucket.getName());
+        if (numPendingUploads() < maxNumPendingUploads) {
+            return processPutRequest(destinationId, transactionId.getSequenceNumber(), creationTime, request, bucket,
+                    pduSize != null ? pduSize.intValue() : null, pduDelay != null ? pduDelay.intValue() : null);
+        } else {
+            QueuedCfdpOutgoingTransfer transfer = new QueuedCfdpOutgoingTransfer(destinationId,
+                    transactionId.getSequenceNumber(),
+                    creationTime, request, bucket, pduSize != null ? pduSize.intValue() : null,
+                    pduDelay != null ? pduDelay.intValue() : null);
+            dbStream.emitTuple(CompletedTransfer.toInitialTuple(transfer));
+            queuedTransfers.add(transfer);
+            transferListeners.forEach(l -> l.stateChanged(transfer));
+
+            executor.submit(this::tryStartQueuedTransfer);
+            return transfer;
+        }
+    }
+
+    @Override
+    public void fetchFileList(String source, String destination, String remotePath, Map<String, Object> options) {
+        if (!hasFileListingCapability) {
+            throw new InvalidRequestException("File listing is not enabled on this CFDP service");
+        }
+
+        EntityConf sourceEntity = getEntityFromName(source, localEntities);
+        EntityConf destinationEntity = getEntityFromName(destination, remoteEntities);
+
+        if (fileListingService != this) {
+            fileListingService.fetchFileList(sourceEntity.getName(), destinationEntity.getName(), remotePath, options);
+            return;
+        }
+
+        // Start upload of Directory Listing Request
+        String dirPath = remotePath.replaceFirst("/*$", "");
+
+        long creationTime = YamcsServer.getTimeService(yamcsInstance).getMissionTime();
+
+        DirectoryListingRequest directoryListingRequest = new DirectoryListingRequest(dirPath, ".dirlist.notsaved");
+        ArrayList<MessageToUser> messagesToUser = new ArrayList<>(List.of(directoryListingRequest));
+
+        PutRequest request = new PutRequest(
+                destinationEntity.id,
+                Boolean.TRUE.equals(options.get(RELIABLE_OPTION)) ? CfdpPacket.TransmissionMode.ACKNOWLEDGED
+                        : CfdpPacket.TransmissionMode.UNACKNOWLEDGED,
+                messagesToUser);
+        CfdpTransactionId transactionId = request.process(sourceEntity.id, idSeq.next(), ChecksumType.MODULAR, config);
+
+        OptionValues optionValues = getOptionValues(options);
+
+        Double pduSize = optionValues.doubleOptions.get(PDU_SIZE_OPTION);
+        Double pduDelay = optionValues.doubleOptions.get(PDU_DELAY_OPTION);
+
+        directoryListingRequests.put(transactionId, Arrays.asList(destinationEntity.getName(), dirPath));
+        if (numPendingUploads() < maxNumPendingUploads) {
+            processPutRequest(sourceEntity.id, transactionId.getSequenceNumber(), creationTime, request, null,
+                    pduSize != null ? pduSize.intValue() : null, pduDelay != null ? pduDelay.intValue() : null);
+        } else {
+            QueuedCfdpOutgoingTransfer transfer = new QueuedCfdpOutgoingTransfer(sourceEntity.id,
+                    transactionId.getSequenceNumber(),
+                    creationTime, request, null, pduSize != null ? pduSize.intValue() : null,
+                    pduDelay != null ? pduDelay.intValue() : null);
+            dbStream.emitTuple(CompletedTransfer.toInitialTuple(transfer));
+            queuedTransfers.add(transfer);
+            transferListeners.forEach(l -> l.stateChanged(transfer));
+
+            executor.submit(this::tryStartQueuedTransfer);
+        }
+    }
+
+    @Override
+    public ListFilesResponse getFileList(String source, String destination, String remotePath,
+            Map<String, Object> options) {
+        EntityConf sourceEntity = getEntityFromName(source, localEntities);
+        EntityConf destinationEntity = getEntityFromName(destination, remoteEntities);
+
+        if (fileListingService != this) {
+            return fileListingService.getFileList(sourceEntity.getName(), destinationEntity.getName(), remotePath,
+                    options);
+        }
+
+        String dirPath = remotePath.replaceFirst("/*$", "");
+        if (automaticDirectoryListingReloads && directoryListingRequests.values().stream()
+                .noneMatch(request -> request.equals(Arrays.asList(destinationEntity.getName(), dirPath)))) {
+            fetchFileList(sourceEntity.getName(), destinationEntity.getName(), dirPath, options);
+        }
+
+        try {
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            StreamSqlResult res = ydb.execute("select * from " + FILELIST_TABLE_NAME + " where " + COL_DESTINATION
+                    + "=? and " + COL_REMOTE_PATH + "=? ORDER DESC LIMIT 1", destinationEntity.getName(), dirPath);
+            if (res.hasNext()) {
+                ListFilesResponse response = res.next().getColumn(COL_LIST_FILES_RESPONSE);
+                res.close();
+                return response;
+            } else {
+                res.close();
+                log.info("No saved file lists found for destination: " + destination + " and remote path: "
+                        + remotePath);
+            }
+        } catch (Exception e) {
+            log.error("Failed to query database for previous file listings", e);
+        }
+
+        return null;
+    }
+
+    private void processDirectoryListingResponse(CfdpIncomingTransfer incomingTransfer, List<String> request) {
+        if (incomingTransfer.getTransferState() != TransferState.COMPLETED) {
+            return;
+        }
+        if (request == null) {
+            eventProducer.sendWarning(
+                    "Received CFDP Directory Listing Response but with no matching Directory Listing Request");
+            return;
+        }
+
+        if (incomingTransfer.getDirectoryListingResponse().getListingResponseCode() != ListingResponseCode.SUCCESSFUL) {
+            eventProducer.sendWarning("Directory Listing Response was "
+                    + incomingTransfer.getDirectoryListingResponse().getListingResponseCode() + ". Associated request: "
+                    + request);
+            return;
+        }
+
+        EntityConf remoteEntity = remoteEntities.values().stream()
+                .filter(entity -> entity.id == incomingTransfer.cfdpTransactionId.getInitiatorEntity()).findFirst()
+                .orElse(null);
+        if (remoteEntity == null) {
+            eventProducer.sendWarning("Directory Listing Response coming from an unknown remote entity: id="
+                    + incomingTransfer.cfdpTransactionId.getInitiatorEntity());
+            return;
+        }
+
+        String remotePath = request.get(1);
+
+        List<RemoteFile> files = fileListingParser.parse(remotePath, incomingTransfer.getFileData());
+
+        ListFilesResponse listFilesResponse = ListFilesResponse.newBuilder()
+                .addAllFiles(files)
+                .setDestination(request.get(0))
+                .setRemotePath(remotePath)
+                .setListTime(TimeEncoding.toProtobufTimestamp(incomingTransfer.getStartTime()))
+                .build();
+
+        saveFileList(listFilesResponse);
+
+        log.debug("Notifying {} file list listeners with {} files for destination={} path={}",
+                fileListingService.getRemoteFileListMonitors().size(), files.size(), remoteEntity.getName(),
+                remotePath);
+        notifyRemoteFileListMonitors(listFilesResponse);
+    }
+
+    @Override
+    public void saveFileList(ListFilesResponse listFilesResponse) {
+        if (fileListingService != this) {
+            fileListingService.saveFileList(listFilesResponse);
+            return;
+        }
+
+        Tuple t = new Tuple();
+        t.addTimestampColumn(COL_LIST_TIME, TimeEncoding.fromProtobufTimestamp(listFilesResponse.getListTime()));
+        t.addColumn(COL_DESTINATION, listFilesResponse.getDestination());
+        t.addColumn(COL_REMOTE_PATH, listFilesResponse.getRemotePath());
+        t.addColumn(COL_LIST_FILES_RESPONSE, DataType.protobuf("org.yamcs.protobuf.ListFilesResponse"),
+                listFilesResponse);
+        fileListStream.emitTuple(t);
+    }
+
+    private EntityConf getEntityFromName(String entityName, Map<String, EntityConf> entities) {
+        if (entityName == null || entityName.isBlank()) {
+            return entities.values().iterator().next();
+        } else {
+            if (!entities.containsKey(entityName)) {
+                throw new InvalidRequestException(
+                        "Invalid entity '" + entityName + "' (should be one of " + entities + "");
+            }
+            return entities.get(entityName);
+        }
+    }
+
+    private String getAbsoluteDestinationPath(String destinationPath, String localObjectName) {
+        if (localObjectName == null) {
+            throw new NullPointerException("local object name cannot be null");
+        }
+        if (destinationPath == null) {
+            return localObjectName;
+        }
+        if (directoryTerminators.stream().anyMatch(destinationPath::endsWith)) {
+            return destinationPath + localObjectName;
+        }
+        return destinationPath;
+    }
+
+    private static class OptionValues {
+        HashMap<String, Boolean> booleanOptions = new HashMap<>();
+        HashMap<String, Double> doubleOptions = new HashMap<>();
+    }
+
+    private OptionValues getOptionValues(Map<String, Object> extraOptions) {
+        var optionValues = new OptionValues();
+
+        for (Map.Entry<String, Object> option : extraOptions.entrySet()) {
+            try {
+                switch (option.getKey()) {
+                case OVERWRITE_OPTION:
+                case RELIABLE_OPTION:
+                case CLOSURE_OPTION:
+                case CREATE_PATH_OPTION:
+                    optionValues.booleanOptions.put(option.getKey(), (boolean) option.getValue());
+                    break;
+                case PDU_DELAY_OPTION:
+                case PDU_SIZE_OPTION:
+                    optionValues.doubleOptions.put(option.getKey(), (double) option.getValue());
+                    break;
+                default:
+                    log.warn("Unknown file transfer option: {} (value: {})", option.getKey(), option.getValue());
+                }
+            } catch (ClassCastException e) {
+                log.warn("Failed to cast option '{}' to its correct type (value: {})", option.getKey(),
+                        option.getValue());
+            }
+        }
+
+        return optionValues;
+    }
+
+    @Override
+    public void pause(FileTransfer transfer) {
+        processPauseRequest(new PauseRequest(transfer));
+    }
+
+    @Override
+    public void resume(FileTransfer transfer) {
+        processResumeRequest(new ResumeRequest(transfer));
+    }
+
+    @Override
+    public void cancel(FileTransfer transfer) {
+        if (transfer instanceof OngoingCfdpTransfer) {
+            processCancelRequest(new CancelRequest(transfer));
+        } else if (transfer instanceof QueuedCfdpOutgoingTransfer) {
+            QueuedCfdpOutgoingTransfer trsf = (QueuedCfdpOutgoingTransfer) transfer;
+            if (queuedTransfers.remove(trsf)) {
+                trsf.setTransferState(TransferState.FAILED);
+                trsf.setFailureReason("Cancelled while queued");
+                stateChanged(trsf);
+            }
+        } else {
+            throw new InvalidRequestException("Unknown transfer type " + transfer);
+        }
+    }
+
+    @Override
+    public List<FileTransferOption> getFileTransferOptions() {
+        var options = new ArrayList<FileTransferOption>();
+        options.add(FileTransferOption.newBuilder()
+                .setName(RELIABLE_OPTION)
+                .setType(FileTransferOption.Type.BOOLEAN)
+                .setTitle("Reliability")
+                .setDescription("Acknowledged or unacknowledged transmission mode")
+                .setAssociatedText("Reliable")
+                .setDefault("true")
+                .build());
+
+        if (canChangePduDelay) {
+            options.add(FileTransferOption.newBuilder()
+                    .setName(PDU_DELAY_OPTION)
+                    .setType(FileTransferOption.Type.DOUBLE)
+                    .setTitle("PDU delay")
+                    .setDefault(Integer.toString(config.getInt("sleepBetweenPdus")))
+                    .addAllValues(pduDelayPredefinedValues.stream()
+                            .map(value -> FileTransferOption.Value.newBuilder().setValue(value.toString()).build())
+                            .collect(Collectors.toList()))
+                    .setAllowCustomOption(true)
+                    .build());
+        }
+
+        if (canChangePduSize) {
+            options.add(FileTransferOption.newBuilder()
+                    .setName(PDU_SIZE_OPTION)
+                    .setType(FileTransferOption.Type.DOUBLE)
+                    .setTitle("PDU size")
+                    .setDefault(Integer.toString(config.getInt("maxPduSize")))
+                    .addAllValues(pduSizePredefinedValues.stream()
+                            .map(value -> FileTransferOption.Value.newBuilder().setValue(value.toString()).build())
+                            .collect(Collectors.toList()))
+                    .setAllowCustomOption(true)
+                    .build());
+        }
+
+        return options;
+    }
+
+    @Override
+    protected void addCapabilities(FileTransferCapabilities.Builder builder) {
+        builder.setDownload(hasDownloadCapability)
+                .setUpload(true)
+                .setRemotePath(true)
+                .setFileList(hasFileListingCapability)
+                .setPauseResume(true)
+                .setHasTransferType(true);
+    }
+
+    ScheduledThreadPoolExecutor getExecutor() {
+        return executor;
+    }
+
+    public FaultHandlingAction getSenderFaultHandler(ConditionCode code) {
+        return senderFaultHandlers.get(code);
+    }
+
+    public FaultHandlingAction getReceiverFaultHandler(ConditionCode code) {
+        return receiverFaultHandlers.get(code);
+    }
+
+    /**
+     * Called from unit tests to abort all transactions
+     */
+    void abortAll() {
+        pendingTransfers.clear();
+        queuedTransfers.clear();
+    }
+}
+```
+
+### `CfdpTransactionId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpTransactionId.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import java.util.Objects;
+
+public class CfdpTransactionId {
+    private int sequenceNumber;
+    private long initiatorEntity;
+
+    public CfdpTransactionId(long entityId, long sequenceNumber) {
+        this.initiatorEntity = entityId;
+        this.sequenceNumber = (int)sequenceNumber;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    public long getInitiatorEntity() {
+        return initiatorEntity;
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        CfdpTransactionId other = (CfdpTransactionId) o;
+        return sequenceNumber == other.sequenceNumber && initiatorEntity == other.initiatorEntity;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sequenceNumber, initiatorEntity);
+    }
+    
+    @Override
+    public String toString() {
+        return initiatorEntity+"_"+sequenceNumber;
+    }
+
+}
+```
+
+### `CfdpUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CfdpUtils.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import com.google.common.primitives.Longs;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+public class CfdpUtils {
+
+    // counting from zero (and big-endian) , is the bitnr't bit of the input byte set?
+    public static boolean isBitOfByteSet(Byte input, int bitnr) {
+        return getBitOfByte(input, bitnr) == 1;
+    }
+
+    // counting from zero (and big-endian) , get the bitnr't bit of the input byte
+    public static int getBitOfByte(Byte input, int bitnr) {
+        return (input >> (7 - bitnr)) & 1;
+    }
+
+    /*
+     * get an unsigned byte value from an input buffer, at its current position
+     * A byte has range -2ˆ7+1 to 2ˆ7-1, while we want 0 to 2ˆ15-1, the mask and short cast takes care of this
+     */
+    public static short getUnsignedByte(ByteBuffer buffer) {
+        return (short) (buffer.get() & 0xff);
+    }
+
+    /*
+     * write the given int as an unsigned byte to the given buffer at its current position
+     */
+    public static void writeUnsignedByte(ByteBuffer buffer, int input) {
+        buffer.put((byte) input);
+    }
+
+    /*
+     * get an unsigned short value from an input buffer, at its current position
+     * A short has range -2ˆ15+1 to 2ˆ15-1, while we want 0 to 2ˆ16-1, the mask and int cast takes care of this
+     */
+    public static int getUnsignedShort(ByteBuffer buffer) {
+        return buffer.getShort() & 0xffff;
+    }
+
+    /**
+     * get an unsigned int value from an input buffer, at its current position A short has range -2ˆ31+1 to 2ˆ31-1,
+     * while we want 0 to 2ˆ32-1, the mask and int cast takes care of this
+     */
+    public static long getUnsignedInt(ByteBuffer buffer) {
+        return buffer.getInt() & 0xffffffffL;
+    }
+
+    /**
+     * Gets an unsigned 32-bit integer or 64-bit long from the given buffer depending on the is64bits parameter.
+     * Useful for FSS (File-Size Sensitive) data type
+     */
+    public static long getUnsignedNumber(ByteBuffer buffer, boolean is64bits) {
+        return is64bits ? buffer.getLong() : getUnsignedInt(buffer);
+    }
+
+    /**
+     * Write the given long as an unsigned int (32bits) to the given buffer at its current position
+     */
+    public static void writeUnsignedInt(ByteBuffer buffer, long input) {
+        buffer.putInt((int) input);
+    }
+
+    /**
+     * Write the given long as an unsigned long (64bits) to the given buffer at its current position
+     */
+    public static void writeUnsignedLong(ByteBuffer buffer, long input) {
+        buffer.putLong(input);
+    }
+
+    /**
+     * Writes the given long as either unsigned 32-bit integer or unsigned 64-bit long depending on the is64bits parameter.
+     * Useful for FSS (File-Size Sensitive) data type
+     */
+    public static void writeUnsignedNumber(ByteBuffer buffer, long input, boolean is64bits) {
+        if (is64bits) {
+            writeUnsignedLong(buffer, input);
+        } else {
+            writeUnsignedInt(buffer, input);
+        }
+    }
+
+    /*
+     * Read nrOfBytesToRead bytes (max 8) from a given buffer at the current position, 
+     * return the result as an unsigned long,
+     * moves the position of the buffer to after the read bytes
+     * 
+     * Note that if nrOfBytesToRead > 8, a cap to 8 bytes is done
+     * 
+     */
+    public static Long getUnsignedLongFromBuffer(ByteBuffer buffer, int nrOfBytesToRead) {
+        byte[] temp = new byte[java.lang.Math.min(nrOfBytesToRead, 8)];
+        buffer.get(temp);
+        return getUnsignedLongFromByteArray(temp);
+    }
+
+    /**
+     * if bool is true, write bit 1 on bitnr position
+     */
+    public static byte boolToByte(boolean bool, int bitnr) {
+        return (byte) (bool ? (1 << (7 - bitnr)) : 0);
+    }
+
+    public static long getUnsignedLongFromByteArray(byte[] input) {
+        long toReturn = 0;
+        for (int i = 0; i < input.length; i++) {
+            toReturn <<= 8;
+            toReturn |= (input[i] & 0xFF);
+        }
+        return toReturn;
+    }
+
+    public static byte[] longToBytesFixed(long input, int length) {
+        byte[] toReturn = new byte[length];
+        for (int i = length - 1; i >= 0; i--) {
+            toReturn[i] = (byte) (input & 0xFF);
+            input >>= 8;
+        }
+        return toReturn;
+    }
+
+    public static byte[] longToTrimmedBytes(long input) {
+        byte[] array = Longs.toByteArray(input);
+        for (int i = 0; i < array.length; i++) {
+            if (array[i]!= 0) {
+                return Arrays.copyOfRange(array, i, array.length);
+            }
+        }
+        return new byte[] {0};
+    }
+}
+```
+
+### `ChecksumCalculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/ChecksumCalculator.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+public class ChecksumCalculator {
+    public static long calculateChecksum(byte[] data) {
+        return calculateChecksum(data, 0, data.length);
+    }
+
+    /**
+     * Calculate checksum for a data segment of given length starting at the given offset inside the file (not in the
+     * data buffer passed as parameter!)
+     * <p>
+     * length has to be smaller than data.lenght but offset can be arbitrary. It is used to pad the beginning with 0 to
+     * reach multiple of 4 bytes.
+     * <p>
+     * The end (after length) is also padded with 0 to reach multiple of 4 bytes.
+     * <p>
+     * Adding up the checksum for the file segments should match the checksum of the file, no matter the order and the
+     * size of the segments.
+     * 
+     */
+    static long calculateChecksum(byte[] data, long fileOffset, long length) {
+        int k = (int) (fileOffset & 3);
+        long checksum = 0;
+        int i = 0;
+        long x = 0;
+        while (i < length) {
+            x = (x << 8) + (data[i] & 0xFF);
+            i++;
+            k++;
+            if (k == 4) {
+                checksum += x;
+                x = 0;
+                k = 0;
+            }
+        }
+
+        x = x << ((4 - k)<<3);
+        checksum += x;
+
+        return checksum & 0xFFFFFFFFl;
+    }
+}
+```
+
+### `ChecksumType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/ChecksumType.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+public enum ChecksumType {
+    MODULAR(0), PROXIMITY_CRC32(1), CRC32C(2), CRC32(3), NONE(15);
+    
+    final byte id;
+    ChecksumType(int id) {
+        this.id = (byte) id;
+    }
+    
+    public byte id() {
+        return id;
+    }
+
+    /**
+     * 
+     * @return the checksum type corresponding to the given id or null if it does not exist (invalid id)
+     */
+    public static ChecksumType fromId(int id) {
+        for (ChecksumType ct : values()) {
+            if (ct.id == id) {
+                return ct;
+            }
+        }
+        return null;
+    }
+}
+```
+
+### `CompletedTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/CompletedTransfer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.filetransfer.FileTransfer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+/**
+ * Represents a past {@link CfdpFileTransfer} obtained from the database. Reads all the properties from a tuple (row in
+ * the database).
+ * <p>
+ * Implements also some methods for converting between on-going transfers and tuples.
+ * 
+ * @author nm
+ *
+ */
+public class CompletedTransfer implements CfdpFileTransfer {
+    public static final TupleDefinition TDEF = new TupleDefinition();
+    static final Log log = new Log(CompletedTransfer.class);
+    static final String COL_ID = "id";
+    static final String COL_SERVER_ID = "serverId";
+    static final String COL_BUCKET = "bucket";
+    static final String COL_START_TIME = "startTime";
+    static final String COL_CREATION_TIME = "creationTime";
+    static final String COL_OBJECT_NAME = "objectName";
+    static final String COL_REMOTE_PATH = "remotePath";
+    static final String COL_DIRECTION = "direction";
+    static final String COL_SOURCE_ID = "sourceId";
+    static final String COL_DESTINATION_ID = "destinationId";
+    static final String COL_TOTAL_SIZE = "totalSize";
+    static final String COL_TRANSFERED_SIZE = "transferredSize";
+    static final String COL_RELIABLE = "reliable";
+    static final String COL_SEQUENCE_NUMBER = "sequenceNumber";
+    static final String COL_TRANSFER_STATE = "transferState";
+    static final String COL_FAILURE_REASON = "failureReason";
+    static final String COL_TRANSFER_TYPE = "transferType";
+
+    static final String SERVER_ID = YamcsServer.getServer().getServerId();
+
+    static {
+        TDEF.addColumn(COL_ID, DataType.LONG);
+        TDEF.addColumn(COL_SERVER_ID, DataType.ENUM);
+        TDEF.addColumn(COL_START_TIME, DataType.TIMESTAMP);
+        TDEF.addColumn(COL_BUCKET, DataType.STRING);
+        TDEF.addColumn(COL_OBJECT_NAME, DataType.STRING);
+        TDEF.addColumn(COL_REMOTE_PATH, DataType.STRING);
+        TDEF.addColumn(COL_DIRECTION, DataType.ENUM);
+        TDEF.addColumn(COL_SOURCE_ID, DataType.LONG);
+        TDEF.addColumn(COL_DESTINATION_ID, DataType.LONG);
+        TDEF.addColumn(COL_SEQUENCE_NUMBER, DataType.INT);
+        TDEF.addColumn(COL_TOTAL_SIZE, DataType.LONG);
+        TDEF.addColumn(COL_TRANSFERED_SIZE, DataType.LONG);
+        TDEF.addColumn(COL_RELIABLE, DataType.BOOLEAN);
+        TDEF.addColumn(COL_TRANSFER_STATE, DataType.STRING);
+        TDEF.addColumn(COL_CREATION_TIME, DataType.TIMESTAMP);
+        TDEF.addColumn(COL_TRANSFER_TYPE, DataType.STRING);
+    }
+    final Tuple tuple;
+
+    public CompletedTransfer(Tuple tuple) {
+        this.tuple = tuple;
+    }
+
+    @Override
+    public long getStartTime() {
+        if (tuple.hasColumn(COL_START_TIME)) {
+            return tuple.getTimestampColumn(COL_START_TIME);
+        } else {
+            return TimeEncoding.INVALID_INSTANT;
+        }
+    }
+
+    @Override
+    public long getId() {
+        return tuple.getLongColumn(COL_ID);
+    }
+
+    @Override
+    public String getObjectName() {
+        return tuple.getColumn(COL_OBJECT_NAME);
+    }
+
+    @Override
+    public String getRemotePath() {
+        return tuple.getColumn(COL_REMOTE_PATH);
+    }
+
+    @Override
+    public TransferDirection getDirection() {
+        String str = tuple.getColumn(COL_DIRECTION);
+        if (str == null) {
+            log.warn("No transfer direction retrieved from the archive");
+            return null;
+        }
+
+        try {
+            return TransferDirection.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            log.warn("Unknown transfer direction {} retrieved from the archive", str);
+        }
+        return null;
+    }
+
+    @Override
+    public long getTotalSize() {
+        Long l = tuple.getColumn(COL_TOTAL_SIZE);
+        return l == null ? -1 : l;
+    }
+
+    @Override
+    public long getTransferredSize() {
+        Long l = tuple.getColumn(COL_TRANSFERED_SIZE);
+        return l == null ? -1 : l;
+    }
+
+    @Override
+    public String getBucketName() {
+        return tuple.getColumn(COL_BUCKET);
+    }
+
+    @Override
+    public CfdpTransactionId getTransactionId() {
+        if (tuple.hasColumn(COL_SEQUENCE_NUMBER)) {
+            return new CfdpTransactionId(tuple.getLongColumn(COL_SOURCE_ID),
+                    tuple.getIntColumn(COL_SEQUENCE_NUMBER));
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public TransferState getTransferState() {
+        String str = tuple.getColumn(COL_TRANSFER_STATE);
+        try {
+            return TransferState.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            log.warn("Unknown transfer state {} retrieved from archive", str);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isReliable() {
+        return tuple.getColumn(COL_RELIABLE);
+    }
+
+    @Override
+    public String getFailuredReason() {
+        return tuple.getColumn(COL_FAILURE_REASON);
+    }
+
+    static Tuple toInitialTuple(CfdpFileTransfer transfer) {
+        Tuple t = new Tuple();
+        t.addColumn(COL_ID, transfer.getId());
+        t.addColumn(COL_SERVER_ID, SERVER_ID);
+        t.addTimestampColumn(COL_CREATION_TIME, transfer.getCreationTime());
+        if (transfer.getBucketName() != null) {
+            t.addColumn(COL_BUCKET, transfer.getBucketName());
+        }
+
+        if (transfer.getObjectName() != null) {
+            t.addColumn(COL_OBJECT_NAME, transfer.getObjectName());
+        }
+        if (transfer.getRemotePath() != null) {
+            t.addColumn(COL_REMOTE_PATH, transfer.getRemotePath());
+        }
+        t.addEnumColumn(COL_DIRECTION, transfer.getDirection().name());
+        t.addColumn(COL_TOTAL_SIZE, transfer.getTotalSize());
+        t.addColumn(COL_RELIABLE, transfer.isReliable());
+        t.addColumn(COL_SOURCE_ID, transfer.getInitiatorEntityId());
+
+        CfdpTransactionId txId = transfer.getTransactionId();
+        if (txId != null) {// queued transfers have no transaction id
+            t.addColumn(COL_SEQUENCE_NUMBER, txId.getSequenceNumber());
+        }
+        t.addColumn(COL_DESTINATION_ID, transfer.getDestinationId());
+        t.addEnumColumn(COL_TRANSFER_STATE, transfer.getTransferState().name());
+        t.addColumn(COL_TRANSFER_TYPE, transfer.getTransferType());
+        return t;
+    }
+
+    static Tuple toUpdateTuple(FileTransfer transfer) {
+        Tuple t = new Tuple();
+        t.addColumn(COL_ID, transfer.getId());
+        t.addColumn(COL_SERVER_ID, SERVER_ID);
+        if (transfer.getBucketName() != null) {
+            t.addColumn(COL_BUCKET, transfer.getBucketName());
+        }
+        t.addTimestampColumn(COL_START_TIME, transfer.getStartTime());
+        t.addEnumColumn(COL_TRANSFER_STATE, transfer.getTransferState().name());
+        t.addColumn(COL_TOTAL_SIZE, transfer.getTotalSize());
+        t.addColumn(COL_TRANSFERED_SIZE, transfer.getTransferredSize());
+        t.addColumn(COL_TRANSFER_TYPE, transfer.getTransferType());
+
+        t.addColumn(COL_FAILURE_REASON, transfer.getFailuredReason());
+        if (transfer.getDirection() == TransferDirection.DOWNLOAD) {
+            // the object name is updated when saved in a bucket
+            t.addColumn(COL_OBJECT_NAME, transfer.getObjectName());
+        }
+
+        return t;
+    }
+
+    @Override
+    public boolean pausable() {
+        return false;
+    }
+
+    @Override
+    public boolean cancellable() {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return tuple.toString();
+    }
+
+    @Override
+    public long getInitiatorEntityId() {
+        return tuple.getLongColumn(COL_SOURCE_ID);
+    }
+
+    @Override
+    public long getDestinationId() {
+        return tuple.getLongColumn(COL_DESTINATION_ID);
+    }
+
+    @Override
+    public long getCreationTime() {
+        if (tuple.hasColumn(COL_CREATION_TIME)) {
+            return tuple.getTimestampColumn(COL_CREATION_TIME);
+        } else {
+            return TimeEncoding.INVALID_INSTANT;
+        }
+    }
+
+    @Override
+    public String getTransferType() {
+        return tuple.getColumn(COL_TRANSFER_TYPE);
+    }
+}
+```
+
+### `DataFile.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/DataFile.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.yamcs.cfdp.pdu.FileDataPacket;
+import org.yamcs.cfdp.pdu.SegmentRequest;
+
+public class DataFile {
+    List<Segment> dataFileSegments = new ArrayList<Segment>();
+    // -1 means size unknown or unbounded
+    private int size = -1;
+    byte[] data;
+    static int MAX_SIZE = Integer.MAX_VALUE;
+
+    public DataFile() {
+        this(-1);
+    }
+
+    public DataFile(long size) {
+        this.size = checkMaxSize(size);
+        if (size > MAX_SIZE) {
+            throw new UnsupportedOperationException(
+                    "file transfers larger than " + MAX_SIZE + " not supported");
+        }
+        if (size > 0) {
+            this.data = new byte[(int) size];
+        } else {
+            this.data = new byte[1024];
+        }
+    }
+
+    public synchronized void addSegment(FileDataPacket fdp) {
+        if (size != -1 && fdp.getEndOffset() > size) {
+            throw new IllegalArgumentException("Segment falls beyond the end of the file");
+        }
+
+        Segment newseg = new Segment(fdp.getOffset(), fdp.getEndOffset());
+
+        if (dataFileSegments.size() == 0) {
+            dataFileSegments.add(newseg);
+            addData(fdp);
+            return;
+        }
+        var lastSegment = dataFileSegments.get(dataFileSegments.size() - 1);
+        if (lastSegment.end == newseg.start) {
+            // happy case the new segment comes right after the last segment
+            lastSegment.end = newseg.end;
+            addData(fdp);
+            return;
+        }
+
+        int idx = Collections.binarySearch(dataFileSegments, newseg,
+                (s1, s2) -> Long.compare(s1.start, s2.start));
+
+        if (idx >= 0) {// newseg offset coincides with an existing segment offset
+            Segment seg1 = dataFileSegments.get(idx);
+            assert (seg1.start == newseg.start);
+            if (seg1.end < newseg.end) {
+                // newseg is longer than seg1 and starts at the same offset
+                // replace seg1 with newseg
+                seg1.end = newseg.end;
+            }
+        } else { // the segment does not start at the same offset with an existing segment
+                 // but it might still overlap with one
+            idx = -(idx + 1);
+            if (idx == dataFileSegments.size()) {
+
+                Segment prevseg = dataFileSegments.get(idx - 1);
+                if (prevseg.end > newseg.start) {
+                    // overlaps with the last segment
+                    // extend the last segment
+                    if (prevseg.end < newseg.end) {
+                        prevseg.end = newseg.end;
+                    }
+                } else {
+                    dataFileSegments.add(newseg);
+                }
+            } else {
+                if (idx == 0) {
+                    Segment nextseg = dataFileSegments.get(0);
+                    if (newseg.end >= nextseg.start) {
+                        nextseg.start = newseg.start;
+                    } else {
+                        dataFileSegments.add(0, newseg);
+                    }
+                } else {
+                    Segment prevseg = dataFileSegments.get(idx - 1);
+                    Segment nextseg = dataFileSegments.get(idx);
+
+                    if (prevseg.end >= newseg.start && newseg.end >= nextseg.start) {
+                        // overlaps with both prev and next
+                        prevseg.end = nextseg.end;
+                        dataFileSegments.remove(idx);
+                    } else if (prevseg.end >= newseg.start) {
+                        // overlaps only with prev
+                        if (newseg.end >= prevseg.end) {
+                            prevseg.end = newseg.end;
+                        }
+                    } else if (newseg.end >= nextseg.start) {
+                        // overlaps only with next
+                        nextseg.start = newseg.start;
+                    } else { // does not overlap
+                        dataFileSegments.add(idx, newseg);
+                    }
+                }
+            }
+        }
+
+        addData(fdp);
+    }
+
+    private void addData(FileDataPacket fdp) {
+        if (data.length < fdp.getEndOffset()) {
+            checkMaxSize(fdp.getEndOffset());
+            var length = (int) Long.min(fdp.getEndOffset() + 1024 * 1024, MAX_SIZE);
+            data = Arrays.copyOf(data, length);
+        }
+        System.arraycopy(fdp.getData(), 0, data, (int) fdp.getOffset(), fdp.getLength());
+    }
+
+    public synchronized List<SegmentRequest> getMissingChunks() {
+        return getMissingChunks(true);
+    }
+
+    /**
+     * Returns the missing data segments.
+     * <p>
+     * includeEnd = false is used when the file has been partially transfer to not return a segment covering the end of
+     * the file
+     *
+     * @param includeEnd
+     * @return
+     */
+    public synchronized List<SegmentRequest> getMissingChunks(boolean includeEnd) {
+        List<SegmentRequest> toReturn = new ArrayList<SegmentRequest>();
+        long startOffset = 0;
+        long endOffset = 0;
+        if (includeEnd && size < 0) {
+            throw new IllegalArgumentException("Size is not known, cannot pass includeEnd=true");
+        }
+        for (Segment segment : dataFileSegments) {
+            if (segment.start != startOffset) {
+                endOffset = segment.start;
+                toReturn.add(new SegmentRequest(startOffset, endOffset));
+            }
+            startOffset = segment.end;
+        }
+        if (startOffset != size && includeEnd) {
+            toReturn.add(new SegmentRequest(startOffset, size));
+        }
+        return toReturn;
+    }
+
+    // returns the amount of bytes received of this Data Files.
+    // Missing intermediate chunks are not yet received and are therefore not counted
+    public synchronized long getReceivedSize() {
+        return this.dataFileSegments.stream().mapToLong(Segment::length).sum();
+    }
+
+    public synchronized byte[] getData() {
+        if (size == -1) {
+            throw new IllegalStateException("Size unknown");
+        }
+        if (data.length > size) {
+            return Arrays.copyOf(data, size);
+        } else {
+            return data;
+        }
+    }
+
+    /**
+     * 
+     * @return true if all the data has been received. If size is not known return false.
+     */
+    public synchronized boolean isComplete() {
+        if (size < 0) {
+            return false;
+        }
+        if (dataFileSegments.size() != 1) {
+            return false;
+        }
+        var seg0 = dataFileSegments.get(0);
+        return seg0.start == 0 && seg0.end == size;
+    }
+
+    public synchronized long getChecksum() {
+        long checksum = 0;
+        for (Segment segment : this.dataFileSegments) {
+            checksum += ChecksumCalculator.calculateChecksum(data, segment.start, segment.length());
+        }
+        return checksum & 0xFFFFFFFFl;
+    }
+
+    /**
+     * return end of the last segment or -1 if not known
+     *
+     * @return
+     */
+    public synchronized long endOfFileOffset() {
+        if (!dataFileSegments.isEmpty()) {
+            Segment seg = dataFileSegments.get(dataFileSegments.size() - 1);
+            return seg.end;
+        } else {
+            return -1;
+        }
+    }
+
+    public synchronized void setSize(long size) {
+        long eof = endOfFileOffset();
+        if (size < 0 || size < eof) {
+            throw new IllegalArgumentException("Invalid size");
+        }
+        this.size = checkMaxSize(size);
+    }
+
+    public synchronized long getSize() {
+        return size;
+    }
+
+    public static int checkMaxSize(long size) {
+        if (size > MAX_SIZE) {
+            throw new IllegalArgumentException(
+                    "file transfers larger than " + Integer.MAX_VALUE + " not supported");
+        }
+        return (int) size;
+    }
+
+    static class Segment {
+        long start;
+        long end;
+
+        public Segment(long start, long end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public int length() {
+            return (int) (end - start);
+        }
+    }
+
+}
+```
+
+### `EntityConf.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/EntityConf.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.buckets.Bucket;
+
+public class EntityConf {
+    final long id;
+    final Bucket bucket;
+    final String name;
+
+    public EntityConf(long id, String name, Bucket bucket) {
+        this.id = id;
+        this.name = name;
+        this.bucket = bucket;
+    }
+
+    public String toString() {
+        return name + " [id=" + id + "]";
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+}
+```
+
+### `FileDirective.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/FileDirective.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.cfdp.pdu.FileDirectiveCode;
+
+public interface FileDirective {
+
+    public FileDirectiveCode getFileDirectiveCode();
+
+}
+```
+
+### `FileDownloadRequests.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/FileDownloadRequests.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Only mapping a transaction ID to a download bucket at the moment
+ */
+public class FileDownloadRequests {
+
+    private Map<CfdpTransactionId, String> buckets = new HashMap<>();
+
+    public synchronized void addTransfer(CfdpTransactionId transactionId, String bucket) {
+        buckets.put(transactionId, bucket);
+    }
+
+    public synchronized String removeTransfer(CfdpTransactionId transactionId) {
+        return buckets.remove(transactionId);
+    }
+
+    public synchronized Map<CfdpTransactionId, String> getBuckets() {
+        return Collections.unmodifiableMap(buckets);
+    }
+}
+```
+
+### `FilePutRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/FilePutRequest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+
+/**
+ * A Put.request is a primitive that requests data delivery from a source to a destination
+ */
+public class FilePutRequest extends PutRequest {
+    private long sourceId;
+    private byte[] fileData;
+    private Bucket bucket;
+    private boolean overwrite;
+    private boolean createpath;
+    private long checksum;
+
+    public FilePutRequest(long sourceId, long destinationCfdpEntityId, String sourceFileName,
+            String destinationFileName, boolean overwrite, boolean acknowledged, boolean closureRequested,
+            boolean createpath, Bucket b, byte[] data) {
+        super(destinationCfdpEntityId, sourceFileName, destinationFileName, null, null,
+                null,
+                acknowledged ? CfdpPacket.TransmissionMode.ACKNOWLEDGED : CfdpPacket.TransmissionMode.UNACKNOWLEDGED,
+                closureRequested, null, null);
+        this.sourceId = sourceId;
+        this.overwrite = overwrite;
+        this.createpath = createpath;
+        this.bucket = b;
+        this.fileData = data;
+        this.checksum = ChecksumCalculator.calculateChecksum(data);
+    }
+
+    public long getSourceId() {
+        return this.sourceId;
+    }
+
+    @Override
+    public int getFileLength() {
+        return fileData.length;
+    }
+
+    @Override
+    public long getChecksum() {
+        return this.checksum;
+    }
+
+    @Override
+    public byte[] getFileData() {
+        return fileData;
+    }
+
+    public Bucket getBucket() {
+        return bucket;
+    }
+
+    public boolean getOverwrite() {
+        return overwrite;
+    }
+
+    public boolean getCreatePath() {
+        return createpath;
+    }
+}
+```
+
+### `OngoingCfdpTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/OngoingCfdpTransfer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.DirectoryListingRequest;
+import org.yamcs.cfdp.pdu.DirectoryListingResponse;
+import org.yamcs.cfdp.pdu.MetadataPacket;
+import org.yamcs.cfdp.pdu.OriginatingTransactionId;
+import org.yamcs.cfdp.pdu.ProxyClosureRequest;
+import org.yamcs.cfdp.pdu.ProxyPutRequest;
+import org.yamcs.cfdp.pdu.ProxyPutResponse;
+import org.yamcs.cfdp.pdu.ProxyTransmissionMode;
+import org.yamcs.cfdp.pdu.ReservedMessageToUser;
+import org.yamcs.cfdp.pdu.TLV;
+import org.yamcs.events.EventProducer;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.Stream;
+
+public abstract class OngoingCfdpTransfer implements CfdpFileTransfer {
+
+    protected final CfdpTransactionId cfdpTransactionId;
+    private Stream cfdpOut;
+    protected TransferState state;
+    protected final ScheduledThreadPoolExecutor executor;
+    protected final EventProducer eventProducer;
+    protected boolean acknowledged = false;
+    protected final Log log;
+    protected final long startTime;
+    protected final long wallclockStartTime;
+    protected final long creationTime;
+
+    protected String transferType = PredefinedTransferTypes.UNKNOWN.toString();
+
+    final TransferMonitor monitor;
+    final long destinationId;
+
+    // transaction unique identifier (coming from a database)
+    final long id;
+
+    protected ScheduledFuture<?> inactivityFuture;
+
+    final long inactivityTimeout;
+
+    long maxAckSendFreqNanos;
+    long lastAckSentTime;
+    boolean logAckDrop = true;
+
+    // accumulate the errors
+    List<String> errors = new ArrayList<>();
+
+    enum FaultHandlingAction {
+        // "Handler code" in protocol?
+        // ‘0000’ — reserved for future expansion
+        // ‘0001’ — issue Notice of Cancellation
+        // ‘0010’ — issue Notice of Suspension
+        // ‘0011’ — Ignore error
+        // ‘0100’ — Abandon transaction
+        // ‘0101’–‘1111’ — reserved
+        SUSPEND, CANCEL, ABANDON;
+
+        public static FaultHandlingAction fromString(String str) {
+            for (FaultHandlingAction a : values()) {
+                if (a.name().equalsIgnoreCase(str)) {
+                    return a;
+                }
+            }
+            return null;
+        }
+
+        public static List<String> actions() {
+            return Arrays.stream(FaultHandlingAction.values()).map(a -> a.name().toLowerCase())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    final Map<ConditionCode, FaultHandlingAction> faultHandlerActions;
+
+    public OngoingCfdpTransfer(String yamcsInstance, long id, long creationTime, ScheduledThreadPoolExecutor executor,
+            YConfiguration config, CfdpTransactionId cfdpTransactionId, long destinationId, Stream cfdpOut,
+            EventProducer eventProducer, TransferMonitor monitor,
+            Map<ConditionCode, FaultHandlingAction> faultHandlerActions) {
+        this.cfdpTransactionId = cfdpTransactionId;
+        this.cfdpOut = cfdpOut;
+        this.state = TransferState.RUNNING;
+        this.executor = executor;
+        this.eventProducer = eventProducer;
+        this.startTime = YamcsServer.getTimeService(yamcsInstance).getMissionTime();
+        this.wallclockStartTime = System.currentTimeMillis();
+        this.log = new Log(this.getClass(), yamcsInstance);
+        this.id = id;
+        this.destinationId = destinationId;
+        this.creationTime = creationTime;
+        if (monitor == null) {
+            throw new NullPointerException("the monitor cannot be null");
+        }
+        this.monitor = monitor;
+        this.inactivityTimeout = config.getLong("inactivityTimeout", 10000);
+
+        this.maxAckSendFreqNanos = config.getLong("maxAckSendFreq", 500) * 1_000_000;
+        this.faultHandlerActions = faultHandlerActions;
+    }
+
+    /**
+     * Sets the transfer type fom the metadata packet
+     *
+     * @param metadata
+     *            Metadata packet
+     */
+    protected static String getTransferType(MetadataPacket metadata) {
+        if (metadata == null) {
+            return PredefinedTransferTypes.UNKNOWN.toString();
+        }
+
+        ArrayList<String> transferTypeInfo = new ArrayList<>();
+        if (metadata.getFileLength() > 0) {
+            transferTypeInfo.add(PredefinedTransferTypes.FILE_TRANSFER.toString());
+        } else if (metadata.getHeader().isLargeFile()) {
+            transferTypeInfo.add(PredefinedTransferTypes.LARGE_FILE_TRANSFER.toString());
+        }
+
+        List<TLV> options = metadata.getOptions();
+        if (options == null || options.isEmpty()) {
+            if (transferTypeInfo.isEmpty()) {
+                return PredefinedTransferTypes.METADATA_ONLY_TRANSFER.toString();
+            } else {
+                return transferTypeInfo.get(0);
+            }
+        }
+
+        boolean hasOriginatingTransactionId = false;
+        int unknownOptions = 0;
+        for (TLV option : options) {
+            if (option instanceof ReservedMessageToUser) {
+                if (option instanceof OriginatingTransactionId) {
+                    hasOriginatingTransactionId = true;
+                } else if (option instanceof ProxyPutRequest) {
+                    ProxyPutRequest proxyPutRequest = (ProxyPutRequest) option;
+                    transferTypeInfo.add(
+                            PredefinedTransferTypes.DOWNLOAD_REQUEST + " (" + proxyPutRequest.getDestinationFileName()
+                                    + " ⟵ " + proxyPutRequest.getSourceFileName() + ")");
+                } else if (option instanceof ProxyPutResponse) {
+                    ProxyPutResponse proxyPutResponse = (ProxyPutResponse) option;
+                    transferTypeInfo.add(PredefinedTransferTypes.DOWNLOAD_REQUEST_RESPONSE + " ("
+                            + proxyPutResponse.getConditionCode() + ", "
+                            + (proxyPutResponse.isDataComplete() ? "Complete" : "Incomplete") + ", "
+                            + proxyPutResponse.getFileStatus() + ")");
+                } else if (option instanceof ProxyTransmissionMode || option instanceof ProxyClosureRequest) {
+                    transferTypeInfo.add(option.toString());
+                } else if (option instanceof DirectoryListingRequest) {
+                    transferTypeInfo.add(PredefinedTransferTypes.DIRECTORY_LISTING_REQUEST + " ("
+                            + ((DirectoryListingRequest) option).getDirectoryName() + ")");
+                } else if (option instanceof DirectoryListingResponse) {
+                    transferTypeInfo.add(PredefinedTransferTypes.DIRECTORY_LISTING_RESPONSE + " ("
+                            + ((DirectoryListingResponse) option).getListingResponseCode() + ")");
+                } else {
+                    transferTypeInfo.add(((ReservedMessageToUser) option).getMessageType().toString());
+                }
+            } else {
+                unknownOptions += 1;
+            }
+        }
+
+        if (hasOriginatingTransactionId && transferTypeInfo.isEmpty()) {
+            transferTypeInfo.add(PredefinedTransferTypes.ORIGINATING_TRANSACTION_ID_ONLY.toString());
+        }
+
+        if (unknownOptions > 0) {
+            transferTypeInfo.add(unknownOptions + " " + PredefinedTransferTypes.UNKNOWN_METADATA_OPTION
+                    + (unknownOptions > 1 ? "s" : ""));
+        }
+
+        return String.join(", ", transferTypeInfo);
+    }
+
+    public abstract void processPacket(CfdpPacket packet);
+
+    protected void pushError(String err) {
+        errors.add(err);
+    }
+
+    protected void sendPacket(CfdpPacket packet) {
+        if (log.isDebugEnabled()) {
+            log.debug("TXID{} sending PDU: {}", cfdpTransactionId, packet);
+            log.trace("{}", StringConverter.arrayToHexString(packet.toByteArray(), true));
+        }
+        cfdpOut.emitTuple(packet.toTuple(this));
+    }
+
+    public final boolean isOngoing() {
+        return state == TransferState.RUNNING || state == TransferState.PAUSED;
+    }
+
+    @Override
+    public final TransferState getTransferState() {
+        return state;
+    }
+
+    @Override
+    public boolean cancellable() {
+        return true;
+    }
+
+    @Override
+    public boolean pausable() {
+        return true;
+    }
+
+    protected abstract void onInactivityTimerExpiration();
+
+    protected void cancelInactivityTimer() {
+        if (inactivityFuture != null) {
+            inactivityFuture.cancel(false);
+        }
+    }
+
+    protected void rescheduleInactivityTimer() {
+        cancelInactivityTimer();
+        inactivityFuture = executor.schedule(this::onInactivityTimerExpiration, inactivityTimeout,
+                TimeUnit.MILLISECONDS);
+    }
+
+    public CompletableFuture<OngoingCfdpTransfer> pauseTransfer() {
+        return CompletableFuture.supplyAsync(() -> {
+            suspend();
+            return this;
+        }, executor);
+    }
+
+    protected abstract void suspend();
+
+    public CompletableFuture<OngoingCfdpTransfer> resumeTransfer() {
+        return CompletableFuture.supplyAsync(() -> {
+            resume();
+            return this;
+        }, executor);
+    }
+
+    protected abstract void resume();
+
+    public CompletableFuture<OngoingCfdpTransfer> cancelTransfer() {
+        return CompletableFuture.supplyAsync(() -> {
+            pushError("Cancel request received");
+            cancel(ConditionCode.CANCEL_REQUEST_RECEIVED);
+            return this;
+        }, executor);
+    }
+
+    protected abstract void cancel(ConditionCode code);
+
+    public OngoingCfdpTransfer abandonTransfer(String reason) {
+        executor.submit(() -> failTransfer(reason));
+        return this;
+    }
+
+    @Override
+    public CfdpTransactionId getTransactionId() {
+        return cfdpTransactionId;
+    }
+
+    @Override
+    public boolean isReliable() {
+        return acknowledged;
+    }
+
+    @Override
+    public long getStartTime() {
+        return startTime;
+    }
+
+    protected void failTransfer(String failureReason) {
+        pushError(failureReason);
+        changeState(TransferState.FAILED);
+    }
+
+    protected void changeState(TransferState newState) {
+        this.state = newState;
+        if (state != TransferState.RUNNING) {
+            cancelInactivityTimer();
+        }
+        monitor.stateChanged(this);
+    }
+
+    @Override
+    public String getFailuredReason() {
+        return errors.stream().collect(Collectors.joining("; "));
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    protected FaultHandlingAction getFaultHandlingAction(ConditionCode code) {
+        FaultHandlingAction action = faultHandlerActions.get(code);
+        if (action == null) {
+            return FaultHandlingAction.CANCEL;
+        } else {
+            return action;
+        }
+    }
+
+    /**
+     * Return the entity id of the Sender
+     */
+    @Override
+    public long getInitiatorEntityId() {
+        return cfdpTransactionId.getInitiatorEntity();
+    }
+
+    /**
+     * Return the entity id of the Receiver
+     */
+    @Override
+    public long getDestinationId() {
+        return destinationId;
+    }
+
+    @Override
+    public String getTransferType() {
+        return transferType;
+    }
+
+    protected void sendInfoEvent(String type, String msg) {
+        eventProducer.sendInfo(type, "TXID[" + cfdpTransactionId + "] " + msg);
+    }
+
+    protected void sendWarnEvent(String type, String msg) {
+        eventProducer.sendWarning(type, "TXID[" + cfdpTransactionId + "] " + msg);
+    }
+
+    protected String toEventMsg(MetadataPacket packet) {
+        return packet.toJson();
+    }
+
+    @Override
+    public long getCreationTime() {
+        return creationTime;
+    }
+}
+```
+
+### `PauseRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/PauseRequest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.filetransfer.FileTransfer;
+
+/**
+ * A Pause.request is a primitive that requests a certain transaction to be paused*
+ */
+public class PauseRequest extends CfdpRequest {
+
+    private OngoingCfdpTransfer transfer;
+
+    public PauseRequest(FileTransfer transfer) {
+        super(CfdpRequestType.PAUSE);
+        if (!(transfer instanceof OngoingCfdpTransfer)) {
+            throw new IllegalArgumentException();
+        }
+        this.transfer = (OngoingCfdpTransfer) transfer;
+    }
+
+    public OngoingCfdpTransfer getTransfer() {
+        return this.transfer;
+    }
+}
+```
+
+### `PutRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/PutRequest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.cfdp.OngoingCfdpTransfer.FaultHandlingAction;
+import org.yamcs.cfdp.pdu.CfdpHeader;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.FileStoreRequest;
+import org.yamcs.cfdp.pdu.MessageToUser;
+import org.yamcs.cfdp.pdu.MetadataPacket;
+
+/**
+ * Put.request (destination CFDP entity ID, [source file name], [destination file name], [segmentation control], [fault
+ * handler overrides], [flow label], [transmission mode], [closure requested], [messages to user], [filestore requests])
+ */
+public class PutRequest extends CfdpRequest {
+
+    // Required fields
+    private final long destinationCfdpEntityId;
+
+    // Optional fields
+    private String sourceFileName;
+    private String destinationFileName;
+    private SegmentationControl segmentationControl; // NOT IMPLEMENTED
+    private Map<ConditionCode, FaultHandlingAction> faultHandlerOverride; // [[condition code, handler code],...] NOT
+                                                                          // IMPLEMENTED
+    private String flowLabel; // NOT IMPLEMENTED
+    private CfdpPacket.TransmissionMode transmissionMode;
+    private boolean closureRequested = false;
+    private List<MessageToUser> messagesToUser;
+    private List<FileStoreRequest> fileStoreRequests; // NOT IMPLEMENTED
+
+    // ========== Extra fields ==========
+    private CfdpHeader header;
+    private MetadataPacket metadata;
+    // ==================================
+
+    public enum SegmentationControl {
+        RECORD_BOUNDARIES_NOT_PRESERVED(0),
+        RECORD_BOUNDARIES_PRESERVED(1);
+
+        private final int value;
+
+        SegmentationControl(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
+
+    protected PutRequest(long destinationCfdpEntityId) {
+        super(CfdpRequestType.PUT);
+        this.destinationCfdpEntityId = destinationCfdpEntityId;
+    }
+
+    protected PutRequest(long destinationCfdpEntityId, String sourceFileName, String destinationFileName,
+            SegmentationControl segmentationControl, Map<ConditionCode, FaultHandlingAction> faultHandlerOverride,
+            String flowLabel, CfdpPacket.TransmissionMode transmissionMode, boolean closureRequested,
+            List<MessageToUser> messagesToUser, List<FileStoreRequest> fileStoreRequests) {
+        this(destinationCfdpEntityId);
+        this.sourceFileName = sourceFileName;
+        this.destinationFileName = destinationFileName;
+        this.segmentationControl = segmentationControl;
+        this.faultHandlerOverride = faultHandlerOverride;
+        this.flowLabel = flowLabel;
+        this.transmissionMode = transmissionMode;
+        this.closureRequested = closureRequested;
+        this.messagesToUser = messagesToUser;
+        this.fileStoreRequests = fileStoreRequests;
+    }
+
+    // Constructor for messages to user
+    protected PutRequest(long destinationCfdpEntityId, CfdpPacket.TransmissionMode transmissionMode,
+            List<MessageToUser> messagesToUser) {
+        this(destinationCfdpEntityId);
+        this.transmissionMode = transmissionMode;
+        this.messagesToUser = messagesToUser;
+    }
+
+    /**
+     * Generate relevant header and metadata the put request (Only implemented for Messages To User currently)
+     *
+     * @param initiatorEntityId
+     * @param sequenceNumber
+     * @param checksumType
+     * @param config
+     * @return
+     */
+    public CfdpTransactionId process(long initiatorEntityId, long sequenceNumber, ChecksumType checksumType,
+            YConfiguration config) {
+        CfdpTransactionId transactionId = new CfdpTransactionId(initiatorEntityId, sequenceNumber);
+        // Copy File Procedure
+        // fault handlers from PR
+        // messages to user & file store requests from PR
+        // no source/destination = only metadata
+        // transmission mode from PR if specified (Management Information Base otherwise)
+        // closure requested from PR if specified (Management Information Base otherwise)
+
+        // TODO: Generalise, only implemented for Messages To User only transaction at the moment
+        header = new CfdpHeader(
+                true, // file directive
+                false, // towards receiver
+                isAcknowledged(),
+                false, // noCRC
+                config.getInt("entityIdLength"),
+                config.getInt("sequenceNrLength"),
+                initiatorEntityId,
+                destinationCfdpEntityId,
+                sequenceNumber);
+
+        metadata = new MetadataPacket(
+                closureRequested,
+                checksumType,
+                0,
+                "",
+                "",
+                new ArrayList<>(messagesToUser),
+                header);
+
+        return transactionId;
+    }
+
+    public long getDestinationCfdpEntityId() {
+        return destinationCfdpEntityId;
+    }
+
+    public String getSourceFileName() {
+        return sourceFileName;
+    }
+
+    public String getDestinationFileName() {
+        return destinationFileName;
+    }
+
+    public SegmentationControl getSegmentationControl() {
+        return segmentationControl;
+    }
+
+    public Map<ConditionCode, FaultHandlingAction> getFaultHandlerOverride() {
+        return faultHandlerOverride;
+    }
+
+    public String getFlowLabel() {
+        return flowLabel;
+    }
+
+    public CfdpPacket.TransmissionMode getTransmissionMode() {
+        return transmissionMode;
+    }
+
+    public boolean isAcknowledged() {
+        return transmissionMode == CfdpPacket.TransmissionMode.ACKNOWLEDGED;
+    }
+
+    public boolean isClosureRequested() {
+        return closureRequested;
+    }
+
+    public List<MessageToUser> getMessagesToUser() {
+        return messagesToUser;
+    }
+
+    public List<FileStoreRequest> getFileStoreRequests() {
+        return fileStoreRequests;
+    }
+
+    public CfdpHeader getHeader() {
+        return header;
+    }
+
+    public MetadataPacket getMetadata() {
+        return metadata;
+    }
+
+    public int getFileLength() {
+        return 0;
+    }
+
+    public byte[] getFileData() {
+        return new byte[0];
+    }
+
+    public long getChecksum() {
+        return 0;
+    }
+}
+```
+
+### `QueuedCfdpOutgoingTransfer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/QueuedCfdpOutgoingTransfer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.buckets.Bucket;
+import org.yamcs.protobuf.TransferDirection;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.TimeEncoding;
+
+public class QueuedCfdpOutgoingTransfer implements CfdpFileTransfer {
+
+    private final PutRequest putRequest;
+    private final long initiatorEntityId;
+    private final long id;
+    private TransferState state = TransferState.QUEUED;
+    private String failureReason;
+    private final long creationTime;
+    private final Bucket bucket;
+    private final Integer customPduSize;
+    private final Integer customPduDelay;
+    private final String transferType;
+
+    public QueuedCfdpOutgoingTransfer(long initiatorEntityId, long id, long creationTime, PutRequest putRequest,
+            Bucket bucket, Integer customPduSize, Integer customPduDelay) {
+        this.initiatorEntityId = initiatorEntityId;
+        this.id = id;
+        this.putRequest = putRequest;
+        this.creationTime = creationTime;
+        this.bucket = bucket;
+        this.customPduSize = customPduSize;
+        this.customPduDelay = customPduDelay;
+        this.transferType = OngoingCfdpTransfer.getTransferType(putRequest.getMetadata());
+    }
+
+    @Override
+    public String getBucketName() {
+        return bucket != null ? bucket.getName() : null;
+    }
+
+    @Override
+    public String getObjectName() {
+        return putRequest.getSourceFileName();
+    }
+
+    @Override
+    public String getRemotePath() {
+        return putRequest.getDestinationFileName();
+    }
+
+    @Override
+    public TransferDirection getDirection() {
+        return TransferDirection.UPLOAD;
+    }
+
+    @Override
+    public long getTotalSize() {
+        return putRequest.getFileLength();
+    }
+
+    @Override
+    public long getTransferredSize() {
+        return 0;
+    }
+
+    @Override
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    public TransferState getTransferState() {
+        return state;
+    }
+
+    @Override
+    public boolean isReliable() {
+        return putRequest.isAcknowledged();
+    }
+
+    @Override
+    public String getFailuredReason() {
+        return failureReason;
+    }
+
+    @Override
+    public long getStartTime() {
+        return TimeEncoding.INVALID_INSTANT;
+    }
+
+    @Override
+    public boolean pausable() {
+        return false;
+    }
+
+    @Override
+    public boolean cancellable() {
+        return true;
+    }
+
+    @Override
+    public CfdpTransactionId getTransactionId() {
+        return null;
+    }
+
+    @Override
+    public long getDestinationId() {
+        return putRequest.getDestinationCfdpEntityId();
+    }
+
+    @Override
+    public String getTransferType() {
+        return transferType;
+    }
+
+    public void setTransferState(TransferState state) {
+        this.state = state;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
+    }
+
+    @Override
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    @Override
+    public long getInitiatorEntityId() {
+        return initiatorEntityId;
+    }
+
+    public PutRequest getPutRequest() {
+        return putRequest;
+    }
+
+    public Bucket getBucket() {
+        return bucket;
+    }
+
+    public Integer getCustomPduSize() {
+        return customPduSize;
+    }
+
+    public Integer getCustomPduDelay() {
+        return customPduDelay;
+    }
+}
+```
+
+### `ResumeRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/ResumeRequest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import org.yamcs.filetransfer.FileTransfer;
+
+/**
+ * A Resume.request is a primitive that requests a certain paused transaction to be resumed*
+ */
+public class ResumeRequest extends CfdpRequest {
+
+    private OngoingCfdpTransfer transfer;
+
+    public ResumeRequest(FileTransfer transfer) {
+        super(CfdpRequestType.RESUME);
+        if (!(transfer instanceof OngoingCfdpTransfer)) {
+            throw new IllegalArgumentException();
+        }
+        this.transfer = (OngoingCfdpTransfer) transfer;
+    }
+
+    public OngoingCfdpTransfer getTransfer() {
+        return this.transfer;
+    }
+}
+```
+
+### `Timer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cfdp/Timer.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Implements a timer used by CFDP for verifying the sending of EOF, FIN and NAK PDUs
+ * 
+ * <p>
+ * This class works with one thrad executor and expects all methods to be called on the executor thread.
+ * @author nm
+ *
+ */
+public class Timer {
+    final int maxNumAttempts;
+    final long timeout;
+    final ScheduledThreadPoolExecutor executor;
+
+    int numAttempts;
+    ScheduledFuture<?> scheduledFuture;
+
+    public Timer(ScheduledThreadPoolExecutor executor, int maxNumAttempts, long timeout) {
+        this.maxNumAttempts = maxNumAttempts;
+        this.timeout = timeout;
+        this.executor = executor;
+    }
+
+    public void start(Runnable onIntermediate, Runnable onFinal) {
+        numAttempts = 0;
+
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+        }
+        
+        scheduledFuture = executor.scheduleAtFixedRate(() -> {
+            if (maxNumAttempts < 0 || numAttempts < maxNumAttempts) {
+                onIntermediate.run();
+            } else {
+                scheduledFuture.cancel(true);
+                onFinal.run();
+            }
+            numAttempts++;
+
+        }, timeout, timeout, TimeUnit.MILLISECONDS);
+    }
+
+    public void cancel() {
+        if (scheduledFuture != null) {
+            scheduledFuture.cancel(true);
+            scheduledFuture = null;
+        }
+    }
+
+    boolean isActive() {
+        return scheduledFuture != null;
+    }
+}
+```

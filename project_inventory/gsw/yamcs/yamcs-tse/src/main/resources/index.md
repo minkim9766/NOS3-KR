@@ -3,14 +3,20 @@
 
 **경로:** `gsw/yamcs/yamcs-tse/src/main/resources/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `tse-logging.properties`
 
-file--tse-logging.properties
+**경로:** `gsw/yamcs/yamcs-tse/src/main/resources/tse-logging.properties`
+
+
+```text
+handlers=java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+java.util.logging.ConsoleHandler.level=INFO
+java.util.logging.SimpleFormatter.format=%1$tH:%1$tM:%1$tS.%1$tL %5$s %6$s\n
+
+.level=WARNING
+org.yamcs.level=INFO
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-tse/src/main/resources/tse-logging.properties`](file--tse-logging.properties) — UTF-8 텍스트 파일 본문 포함

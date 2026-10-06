@@ -3,22 +3,249 @@
 
 **경로:** `components/generic_star_tracker/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_star_tracker_42_data_provider.hpp`
 
-file--generic_star_tracker_42_data_provider.hpp
-file--generic_star_tracker_data_point.hpp
-file--generic_star_tracker_data_provider.hpp
-file--generic_star_tracker_hardware_model.hpp
-file--generic_star_tracker_shmem_data_provider.hpp
+**경로:** `components/generic_star_tracker/sim/inc/generic_star_tracker_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_STAR_TRACKER42DATAPROVIDER_HPP
+#define NOS3_GENERIC_STAR_TRACKER42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_star_tracker_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_star_tracker42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_star_tracker42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_star_tracker42DataProvider(void) {};
+        Generic_star_tracker42DataProvider& operator=(const Generic_star_tracker42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+        int16_t _st;  /* Which star tracker number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_star_tracker_data_point.hpp`
 
-- [`components/generic_star_tracker/sim/inc/generic_star_tracker_42_data_provider.hpp`](file--generic_star_tracker_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/inc/generic_star_tracker_data_point.hpp`](file--generic_star_tracker_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/inc/generic_star_tracker_data_provider.hpp`](file--generic_star_tracker_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/inc/generic_star_tracker_hardware_model.hpp`](file--generic_star_tracker_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/inc/generic_star_tracker_shmem_data_provider.hpp`](file--generic_star_tracker_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_star_tracker/sim/inc/generic_star_tracker_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_STAR_TRACKERDATAPOINT_HPP
+#define NOS3_GENERIC_STAR_TRACKERDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_star_trackerDataPoint : public Sim42DataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_star_trackerDataPoint(double count);
+        Generic_star_trackerDataPoint(int16_t spacecraft, int16_t star_tracker, const boost::shared_ptr<Sim42DataPoint> dp);
+        Generic_star_trackerDataPoint(int16_t spacecraft, int16_t star_tracker, bool valid, double quaternion[4]);
+        ~Generic_star_trackerDataPoint(void) {};
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        double      get_generic_star_tracker_data_q0(void) const {parse_data_point(); return _generic_star_tracker_data[0];}
+        double      get_generic_star_tracker_data_q1(void) const {parse_data_point(); return _generic_star_tracker_data[1];}
+        double      get_generic_star_tracker_data_q2(void) const {parse_data_point(); return _generic_star_tracker_data[2];}
+        double      get_generic_star_tracker_data_q3(void) const {parse_data_point(); return _generic_star_tracker_data[3];}
+        bool        is_generic_star_tracker_data_valid(void) const {parse_data_point(); return _generic_star_tracker_data_is_valid;}
+    
+    private:
+        /* Disallow these */
+        Generic_star_trackerDataPoint(void) {};
+        Generic_star_trackerDataPoint(const Generic_star_trackerDataPoint& sdp) : Sim42DataPoint(sdp) {};
+
+        // Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        int16_t _st;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable bool   _generic_star_tracker_data_is_valid;
+        mutable double _generic_star_tracker_data[4];
+    };
+}
+
+#endif
+```
+
+### `generic_star_tracker_data_provider.hpp`
+
+**경로:** `components/generic_star_tracker/sim/inc/generic_star_tracker_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_STAR_TRACKERDATAPROVIDER_HPP
+#define NOS3_GENERIC_STAR_TRACKERDATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_star_tracker_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class Generic_star_trackerDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_star_trackerDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_star_trackerDataProvider(void) {};
+        Generic_star_trackerDataProvider& operator=(const Generic_star_trackerDataProvider&) {return *this;};
+
+        mutable double _request_count;
+    };
+}
+
+#endif
+```
+
+### `generic_star_tracker_hardware_model.hpp`
+
+**경로:** `components/generic_star_tracker/sim/inc/generic_star_tracker_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_STAR_TRACKERHARDWAREMODEL_HPP
+#define NOS3_GENERIC_STAR_TRACKERHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Uart/Client/Uart.hpp> /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+
+#include <sim_i_data_provider.hpp>
+#include <generic_star_tracker_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Defines
+*/
+#define GENERIC_STAR_TRACKER_SIM_SUCCESS 0
+#define GENERIC_STAR_TRACKER_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_star_trackerHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_star_trackerHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_star_trackerHardwareModel(void);
+
+    private:
+        /* Private helper methods */
+        void create_generic_star_tracker_hk(std::vector<uint8_t>& out_data); 
+        void create_generic_star_tracker_data(std::vector<uint8_t>& out_data); 
+        void uart_read_callback(const uint8_t *buf, size_t len); /* Handle data the hardware receives from its protocol bus */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        /* Private data members */
+        std::unique_ptr<NosEngine::Uart::Uart>              _uart_connection; /* TODO: Change if your protocol bus is different (e.g. SPI, I2C, etc.) */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_star_tracker_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        std::uint32_t                                       _count;
+    };
+}
+
+#endif
+```
+
+### `generic_star_tracker_shmem_data_provider.hpp`
+
+**경로:** `components/generic_star_tracker/sim/inc/generic_star_tracker_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_STAR_TRACKER_SHMEM_DATAPROVIDER_HPP
+#define NOS3_GENERIC_STAR_TRACKER_SHMEM_DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <generic_star_tracker_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    class Generic_star_trackerShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_star_trackerShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_star_trackerShmemDataProvider(void) {};
+        Generic_star_trackerShmemDataProvider& operator=(const Generic_star_trackerShmemDataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+        int16_t _st;  /* Which star tracker number to parse out of 42 data */
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

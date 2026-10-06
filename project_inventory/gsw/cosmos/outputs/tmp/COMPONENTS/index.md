@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -25,20 +25,4 @@ SAMPLE/index
 SIM_CMDBUS_BRIDGE/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_ADCS/`](GENERIC_ADCS/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_CSS/`](GENERIC_CSS/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_EPS/`](GENERIC_EPS/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_FSS/`](GENERIC_FSS/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_IMU/`](GENERIC_IMU/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_MAG/`](GENERIC_MAG/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_RADIO/`](GENERIC_RADIO/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_REACTION_WHEEL/`](GENERIC_REACTION_WHEEL/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_STAR_TRACKER/`](GENERIC_STAR_TRACKER/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_THRUSTER/`](GENERIC_THRUSTER/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_TORQUER/`](GENERIC_TORQUER/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/MGR/`](MGR/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/NOVATEL_OEM615/`](NOVATEL_OEM615/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/SAMPLE/`](SAMPLE/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/SIM_CMDBUS_BRIDGE/`](SIM_CMDBUS_BRIDGE/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

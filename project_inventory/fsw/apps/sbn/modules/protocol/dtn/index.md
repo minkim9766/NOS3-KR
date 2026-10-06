@@ -3,20 +3,75 @@
 
 **경로:** `fsw/apps/sbn/modules/protocol/dtn/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 fsw/index
-file--app.cfg
-file--CMakeLists.txt
-file--README.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/modules/protocol/dtn/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/dtn/app.cfg`](file--app.cfg) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/modules/protocol/dtn/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/modules/protocol/dtn/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
+### `app.cfg`
+
+**경로:** `fsw/apps/sbn/modules/protocol/dtn/app.cfg`
+
+
+```text
+SHOULD_START=0
+APP_NAME=dtn        
+APP_ABBREV=DTN    
+OBJ_TYPE=CFE_APP           
+APP_PATH=/cf/apps/dtn.so   
+ENTRY_PT=DTN_AppMain 
+CFE_NAME=DTN_APP     
+PRIORITY=15                   
+STACK_SIZE=4096               
+LOAD_ADDR=0x0                 
+EXCEPT_ACT=0                  
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn/modules/protocol/dtn/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(SBN_DTN C)
+
+if(NOT(IS_DIRECTORY ${SBN_APP_SOURCE_DIR}))
+    message(FATAL_ERROR "SBN_APP_SOURCE_DIR not defined, is sbn in the target list before this module?")
+endif()
+
+include_directories(${SBN_APP_SOURCE_DIR}/fsw/platform_inc)
+#include_directories(${ION}/include)
+include_directories(/home/vmuser/ion/include)
+
+aux_source_directory(fsw/src LIB_SRC_FILES)
+
+link_directories(/home/vmuser/ion/lib)
+
+find_library(ION_BP libbp.a PATHS /home/vmuser/ion/lib )
+find_library(ION_ICI libici.a PATHS /home/vmuser/ion/lib )
+
+# Create the app module
+add_cfe_app(sbn_dtn ${LIB_SRC_FILES})
+
+#set_target_properties(sbn_dtn PROPERTIES LINK_FLAGS "-Wl,--whole-archive")
+target_link_libraries(sbn_dtn bp ici)
+```
+
+### `README.txt`
+
+**경로:** `fsw/apps/sbn/modules/protocol/dtn/README.txt`
+
+
+```text
+NOTE: By default ION uses SIGALRM, as does PSP, which causes a conflict.
+A version of PSP was created in branch trac-76-posix_timer that replaces
+the logic with posix timers; or if you can build ION without the alarm-based
+logic, you should have success. (I was unable to get ION to build with
+the POSIX_SEMAPHORES option...tricky with a *lot* of compiler option switches.)
+```

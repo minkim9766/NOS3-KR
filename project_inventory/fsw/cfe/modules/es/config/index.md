@@ -3,34 +3,3444 @@
 
 **경로:** `fsw/cfe/modules/es/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_cfe_es_extern_typedefs.h`
 
-file--default_cfe_es_extern_typedefs.h
-file--default_cfe_es_fcncodes.h
-file--default_cfe_es_interface_cfg.h
-file--default_cfe_es_internal_cfg.h
-file--default_cfe_es_mission_cfg.h
-file--default_cfe_es_msg.h
-file--default_cfe_es_msgdefs.h
-file--default_cfe_es_msgids.h
-file--default_cfe_es_msgstruct.h
-file--default_cfe_es_platform_cfg.h
-file--default_cfe_es_topicids.h
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_extern_typedefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_es_extern_typedefs module
+ */
+
+#ifndef CFE_ES_EXTERN_TYPEDEFS_H
+#define CFE_ES_EXTERN_TYPEDEFS_H
+
+#include "common_types.h"
+#include "cfe_resourceid_typedef.h"
+#include "cfe_mission_cfg.h"
+
+/**
+ * @brief Label definitions associated with CFE_ES_LogMode_Enum_t
+ */
+enum CFE_ES_LogMode
+{
+    /**
+     * @brief Overwrite Log Mode
+     */
+    CFE_ES_LogMode_OVERWRITE = 0,
+
+    /**
+     * @brief Discard Log Mode
+     */
+    CFE_ES_LogMode_DISCARD = 1
+};
+
+/**
+ * @brief Identifies handling of log messages after storage is filled
+ *
+ * @sa enum CFE_ES_LogMode
+ */
+typedef uint8 CFE_ES_LogMode_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_ES_ExceptionAction_Enum_t
+ */
+enum CFE_ES_ExceptionAction
+{
+    /**
+     * @brief Restart application if exception occurs
+     */
+    CFE_ES_ExceptionAction_RESTART_APP = 0,
+
+    /**
+     * @brief Restart processor if exception occurs
+     */
+    CFE_ES_ExceptionAction_PROC_RESTART = 1
+};
+
+/**
+ * @brief Identifies action to take if exception occurs
+ *
+ * @sa enum CFE_ES_ExceptionAction
+ */
+typedef uint8 CFE_ES_ExceptionAction_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_ES_AppType_Enum_t
+ */
+enum CFE_ES_AppType
+{
+    /**
+     * @brief CFE core application
+     */
+    CFE_ES_AppType_CORE = 1,
+
+    /**
+     * @brief CFE external application
+     */
+    CFE_ES_AppType_EXTERNAL = 2,
+
+    /**
+     * @brief CFE library
+     */
+    CFE_ES_AppType_LIBRARY = 3
+};
+
+/**
+ * @brief Identifies type of CFE application
+ *
+ * @sa enum CFE_ES_AppType
+ */
+typedef uint8 CFE_ES_AppType_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_ES_RunStatus_Enum_t
+ */
+enum CFE_ES_RunStatus
+{
+    /**
+     * @brief Reserved value, should not be used
+     */
+    CFE_ES_RunStatus_UNDEFINED = 0,
+
+    /**
+     * @brief Indicates that the Application should continue to run
+     */
+    CFE_ES_RunStatus_APP_RUN = 1,
+
+    /**
+     * @brief Indicates that the Application wants to exit normally
+     */
+    CFE_ES_RunStatus_APP_EXIT = 2,
+
+    /**
+     * @brief Indicates that the Application is quitting with an error
+     */
+    CFE_ES_RunStatus_APP_ERROR = 3,
+
+    /**
+     * @brief The cFE App caused an exception
+     */
+    CFE_ES_RunStatus_SYS_EXCEPTION = 4,
+
+    /**
+     * @brief The system is requesting a restart of the cFE App
+     */
+    CFE_ES_RunStatus_SYS_RESTART = 5,
+
+    /**
+     * @brief The system is requesting a reload of the cFE App
+     */
+    CFE_ES_RunStatus_SYS_RELOAD = 6,
+
+    /**
+     * @brief The system is requesting that the cFE App is stopped
+     */
+    CFE_ES_RunStatus_SYS_DELETE = 7,
+
+    /**
+     * @brief Indicates that the Core Application could not Init
+     */
+    CFE_ES_RunStatus_CORE_APP_INIT_ERROR = 8,
+
+    /**
+     * @brief Indicates that the Core Application had a runtime failure
+     */
+    CFE_ES_RunStatus_CORE_APP_RUNTIME_ERROR = 9,
+
+    /**
+     * @brief Reserved value, marker for the maximum state
+     */
+    CFE_ES_RunStatus_MAX
+};
+
+/**
+ * @brief Run Status and Exit Status identifiers
+ *
+ * @sa enum CFE_ES_RunStatus
+ */
+typedef uint32 CFE_ES_RunStatus_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_ES_SystemState_Enum_t
+ */
+enum CFE_ES_SystemState
+{
+    /**
+     * @brief reserved
+     */
+    CFE_ES_SystemState_UNDEFINED = 0,
+
+    /**
+     * @brief single threaded mode while setting up CFE itself
+     */
+    CFE_ES_SystemState_EARLY_INIT = 1,
+
+    /**
+     * @brief core apps (CFE_ES_ObjectTable) are starting (multi-threaded)
+     */
+    CFE_ES_SystemState_CORE_STARTUP = 2,
+
+    /**
+     * @brief core is ready, starting other external apps/libraries (if any)
+     */
+    CFE_ES_SystemState_CORE_READY = 3,
+
+    /**
+     * @brief startup apps have all completed their early init, but not necessarily operational yet
+     */
+    CFE_ES_SystemState_APPS_INIT = 4,
+
+    /**
+     * @brief normal operation mode; all apps are RUNNING
+     */
+    CFE_ES_SystemState_OPERATIONAL = 5,
+
+    /**
+     * @brief reserved for future use, all apps would be STOPPED
+     */
+    CFE_ES_SystemState_SHUTDOWN = 6,
+
+    /**
+     * @brief Reserved value, marker for the maximum state
+     */
+    CFE_ES_SystemState_MAX
+};
+
+/**
+ * @brief The overall cFE System State
+ *
+ * These values are used with the #CFE_ES_WaitForSystemState API call to synchronize application startup.
+ *
+ * @note These are defined in order so that relational comparisons e.g. if (STATEA < STATEB) are possible
+ *
+ * @sa enum CFE_ES_SystemState
+ */
+typedef uint32 CFE_ES_SystemState_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_ES_LogEntryType_Enum_t
+ */
+enum CFE_ES_LogEntryType
+{
+    /**
+     * @brief Log entry from a core subsystem
+     */
+    CFE_ES_LogEntryType_CORE = 1,
+
+    /**
+     * @brief Log entry from an application
+     */
+    CFE_ES_LogEntryType_APPLICATION = 2
+};
+
+/**
+ * @brief Type of entry in the Error and Reset (ER) Log
+ *
+ * @sa enum CFE_ES_LogEntryType
+ */
+typedef uint8 CFE_ES_LogEntryType_Enum_t;
+
+/**
+ * @brief Label definitions associated with CFE_ES_AppState_Enum_t
+ */
+enum CFE_ES_AppState
+{
+    /**
+     * @brief Initial state before app thread is started
+     */
+    CFE_ES_AppState_UNDEFINED = 0,
+
+    /**
+     * @brief App thread has started, app performing early initialization of its own data
+     */
+    CFE_ES_AppState_EARLY_INIT = 1,
+
+    /**
+     * @brief Early/Local initialization is complete.  First sync point.
+     */
+    CFE_ES_AppState_LATE_INIT = 2,
+
+    /**
+     * @brief All initialization is complete.  Second sync point.
+     */
+    CFE_ES_AppState_RUNNING = 3,
+
+    /**
+     * @brief Application is waiting on a Restart/Reload/Delete request
+     */
+    CFE_ES_AppState_WAITING = 4,
+
+    /**
+     * @brief Application is stopped
+     */
+    CFE_ES_AppState_STOPPED = 5,
+
+    /**
+     * @brief Reserved entry, marker for the maximum state
+     */
+    CFE_ES_AppState_MAX
+};
+
+/**
+ * @brief Application Run State
+ *
+ * The normal progression of APP states:
+ * UNDEFINED -> EARLY_INIT -> LATE_INIT -> RUNNING -> WAITING -> STOPPED
+ *
+ * @note These are defined in order so that relational comparisons e.g. if (STATEA < STATEB) are possible
+ *
+ * @sa enum CFE_ES_AppState
+ */
+typedef uint32 CFE_ES_AppState_Enum_t;
+
+/**
+ * @brief A type for Application IDs
+ *
+ * This is the type that is used for any API accepting or returning an App ID
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_ES_AppId_t;
+
+/**
+ * @brief A type for Task IDs
+ *
+ * This is the type that is used for any API accepting or returning a Task ID
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_ES_TaskId_t;
+
+/**
+ * @brief A type for Library IDs
+ *
+ * This is the type that is used for any API accepting or returning a Lib ID
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_ES_LibId_t;
+
+/**
+ * @brief A type for Counter IDs
+ *
+ * This is the type that is used for any API accepting or returning a Counter ID
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_ES_CounterId_t;
+
+/**
+ * @brief Memory Handle type
+ *
+ * Data type used to hold Handles of Memory Pools
+ * created via CFE_ES_PoolCreate and CFE_ES_PoolCreateNoSem
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_ES_MemHandle_t;
+
+/**
+ * @brief CDS Handle type
+ *
+ * Data type used to hold Handles of Critical Data Stores. See #CFE_ES_RegisterCDS
+ */
+typedef CFE_RESOURCEID_BASE_TYPE CFE_ES_CDSHandle_t;
+
+/**
+ * @brief Type used for task priority in CFE ES as
+ * including the commands/telemetry messages.
+ *
+ * @note the valid range is only 0-255 (same as OSAL) but
+ * a wider type is used for backward compatibility
+ * in binary formats of messages.
+ */
+typedef uint16 CFE_ES_TaskPriority_Atom_t;
+
+/**
+ * @brief Type used for memory sizes and offsets in commands and telemetry
+ *
+ * For backward compatibility with existing CFE code this should be uint32,
+ * but all telemetry information will be limited to 4GB in size as a result.
+ *
+ * On 64-bit platforms this can be a 64-bit value which will allow larger
+ * memory objects, but this will break compatibility with existing control
+ * systems, and may also change the alignment/padding of messages.
+ *
+ * In either case this must be an unsigned type.
+ */
+typedef uint32 CFE_ES_MemOffset_t;
+
+/**
+ * @brief Memory Offset initializer wrapper
+ *
+ * A converter macro to use when initializing a CFE_ES_MemOffset_t
+ * from an integer value of a different type.
+ */
+#define CFE_ES_MEMOFFSET_C(x) ((CFE_ES_MemOffset_t)(x))
+
+/**
+ * @brief Memory Offset to integer value (size_t) wrapper
+ *
+ * A converter macro to use when interpreting a CFE_ES_MemOffset_t
+ * value as a "size_t" type
+ */
+#define CFE_ES_MEMOFFSET_TO_SIZET(x) ((size_t)(x))
+
+/**
+ * @brief Type used for memory addresses in command and telemetry messages
+ *
+ * For backward compatibility with existing CFE code this should be uint32,
+ * but if running on a 64-bit platform, addresses in telemetry will be
+ * truncated to 32 bits and therefore will not be valid.
+ *
+ * On 64-bit platforms this can be a 64-bit address which will allow the
+ * full memory address in commands and telemetry, but this will break
+ * compatibility with existing control systems, and may also change
+ * the alignment/padding of messages.
+ *
+ * In either case this must be an unsigned type.
+ *
+ * FSW code should access this value via the macros provided, which
+ * converts to the native "cpuaddr" type provided by OSAL.  This macro
+ * provides independence between the message representation and local
+ * representation of a memory address.
+ */
+typedef uint32 CFE_ES_MemAddress_t;
+
+/**
+ * @brief Memory Address initializer wrapper
+ *
+ * A converter macro to use when initializing a CFE_ES_MemAddress_t
+ * from a pointer value of a different type.
+ */
+#define CFE_ES_MEMADDRESS_C(x) ((CFE_ES_MemAddress_t)((cpuaddr)(x)&0xFFFFFFFF))
+
+/**
+ * @brief Memory Address to pointer wrapper
+ *
+ * A converter macro to use when interpreting a CFE_ES_MemAddress_t
+ * as a pointer value.
+ */
+#define CFE_ES_MEMADDRESS_TO_PTR(x) ((void *)(cpuaddr)(x))
+
+/*
+ * Data Structures shared between API and Message (CMD/TLM) interfaces
+ */
+
+/**
+ * \brief Application Information
+ *
+ * Structure that is used to provide information about an app.
+ * It is primarily used for the QueryOne and QueryAll Commands.
+ *
+ * While this structure is primarily intended for Application info,
+ * it can also represent Library information where only a subset of
+ * the information applies.
+ */
+typedef struct CFE_ES_AppInfo
+{
+    CFE_ResourceId_t ResourceId; /**< \cfetlmmnemonic \ES_APP_ID
+                                      \brief Application or Library ID for this resource */
+    uint32 Type;                 /**< \cfetlmmnemonic \ES_APPTYPE
+                                      \brief The type of App: CORE or EXTERNAL */
+
+    char Name[CFE_MISSION_MAX_API_LEN];       /**< \cfetlmmnemonic \ES_APPNAME
+                                                   \brief The Registered Name of the Application */
+    char EntryPoint[CFE_MISSION_MAX_API_LEN]; /**< \cfetlmmnemonic \ES_APPENTRYPT
+                                                   \brief The Entry Point label for the Application */
+    char FileName[CFE_MISSION_MAX_PATH_LEN];  /**< \cfetlmmnemonic \ES_APPFILENAME
+                                                   \brief The Filename of the file containing the Application */
+
+    CFE_ES_MemOffset_t StackSize;                  /**< \cfetlmmnemonic \ES_STACKSIZE
+                                                        \brief The Stack Size of the Application */
+    uint32 AddressesAreValid;                      /**< \cfetlmmnemonic \ES_ADDRVALID
+                                                        \brief Indicates that the Code, Data, and BSS addresses/sizes are valid */
+    CFE_ES_MemAddress_t CodeAddress;               /**< \cfetlmmnemonic \ES_CODEADDR
+                                                        \brief The Address of the Application Code Segment*/
+    CFE_ES_MemOffset_t CodeSize;                   /**< \cfetlmmnemonic \ES_CODESIZE
+                                                        \brief The Code Size of the Application */
+    CFE_ES_MemAddress_t DataAddress;               /**< \cfetlmmnemonic \ES_DATAADDR
+                                                        \brief The Address of the Application Data Segment*/
+    CFE_ES_MemOffset_t DataSize;                   /**< \cfetlmmnemonic \ES_DATASIZE
+                                                        \brief The Data Size of the Application */
+    CFE_ES_MemAddress_t BSSAddress;                /**< \cfetlmmnemonic \ES_BSSADDR
+                                                        \brief The Address of the Application BSS Segment*/
+    CFE_ES_MemOffset_t BSSSize;                    /**< \cfetlmmnemonic \ES_BSSSIZE
+                                                        \brief The BSS Size of the Application */
+    CFE_ES_MemAddress_t StartAddress;              /**< \cfetlmmnemonic \ES_STARTADDR
+                                                        \brief The Start Address of the Application */
+    CFE_ES_ExceptionAction_Enum_t ExceptionAction; /**< \cfetlmmnemonic \ES_EXCEPTNACTN
+                                                   \brief What should occur if Application has an exception
+                                                   (Restart Application OR Restart Processor) */
+    CFE_ES_TaskPriority_Atom_t Priority;           /**< \cfetlmmnemonic \ES_PRIORITY
+                                                      \brief The Priority of the Application */
+    CFE_ES_TaskId_t MainTaskId;                    /**< \cfetlmmnemonic \ES_MAINTASKID
+                                                        \brief The Application's Main Task ID */
+    uint32 ExecutionCounter;                       /**< \cfetlmmnemonic \ES_MAINTASKEXECNT
+                                                        \brief The Application's Main Task Execution Counter */
+    char MainTaskName[CFE_MISSION_MAX_API_LEN];    /**< \cfetlmmnemonic \ES_MAINTASKNAME
+                                                        \brief The Application's Main Task ID */
+    uint32 NumOfChildTasks;                        /**< \cfetlmmnemonic \ES_CHILDTASKS
+                                                        \brief Number of Child tasks for an App */
+} CFE_ES_AppInfo_t;
+
+/**
+ * \brief Task Information
+ *
+ * Structure that is used to provide information about a task. It is primarily
+ * used for the Query All Tasks (#CFE_ES_QUERY_ALL_TASKS_CC) command.
+ *
+ * \note There is not currently a telemetry message directly containing this
+ * data structure, but it does define the format of the data file generated
+ * by the Query All Tasks command.  Therefore it should be considered
+ * part of the overall telemetry interface.
+ */
+typedef struct CFE_ES_TaskInfo
+{
+    CFE_ES_TaskId_t            TaskId;                            /**< \brief Task Id */
+    uint32                     ExecutionCounter;                  /**< \brief Task Execution Counter */
+    char                       TaskName[CFE_MISSION_MAX_API_LEN]; /**< \brief Task Name */
+    CFE_ES_AppId_t             AppId;                             /**< \brief Parent Application ID */
+    char                       AppName[CFE_MISSION_MAX_API_LEN];  /**< \brief Parent Application Name */
+    CFE_ES_MemOffset_t         StackSize;                         /**< Size of task stack */
+    CFE_ES_TaskPriority_Atom_t Priority;                          /**< Priority of task */
+    uint8                      Spare[2];                          /**< Spare bytes for alignment */
+} CFE_ES_TaskInfo_t;
+
+/**
+ * \brief CDS Register Dump Record
+ *
+ * Structure that is used to provide information about a critical data store.
+ * It is primarily used for the Dump CDS registry (#CFE_ES_DUMP_CDS_REGISTRY_CC)
+ * command.
+ *
+ * \note There is not currently a telemetry message directly containing this
+ * data structure, but it does define the format of the data file generated
+ * by the Dump CDS registry command.  Therefore it should be considered
+ * part of the overall telemetry interface.
+ */
+typedef struct CFE_ES_CDSRegDumpRec
+{
+    CFE_ES_CDSHandle_t Handle; /**< \brief Handle of CDS */
+    CFE_ES_MemOffset_t Size;   /**< \brief Size, in bytes, of the CDS memory block */
+    bool               Table;  /**< \brief Flag that indicates whether CDS contains a Critical Table */
+    char               Name[CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN]; /**< \brief Processor Unique Name of CDS */
+    uint8              ByteAlignSpare[3]; /**< \brief Spare bytes to ensure structure size is multiple of 4 bytes */
+} CFE_ES_CDSRegDumpRec_t;
+
+/**
+ * \brief Block statistics
+ *
+ * Sub-Structure that is used to provide information about a specific
+ * block size/bucket within a memory pool.
+ */
+typedef struct CFE_ES_BlockStats
+{
+    CFE_ES_MemOffset_t BlockSize;  /**< \brief Number of bytes in each of these blocks */
+    uint32             NumCreated; /**< \brief Number of Memory Blocks of this size created */
+    uint32             NumFree;    /**< \brief Number of Memory Blocks of this size that are free */
+} CFE_ES_BlockStats_t;
+
+/**
+ * \brief Memory Pool Statistics
+ *
+ * Structure that is used to provide information about a memory
+ * pool.  Used by the Memory Pool Stats telemetry message.
+ *
+ * \sa #CFE_ES_SEND_MEM_POOL_STATS_CC
+ */
+typedef struct CFE_ES_MemPoolStats
+{
+    CFE_ES_MemOffset_t PoolSize;                                     /**< \cfetlmmnemonic \ES_POOLSIZE
+                                                                          \brief  Size of Memory Pool (in bytes) */
+    uint32 NumBlocksRequested;                                       /**< \cfetlmmnemonic \ES_BLKSREQ
+                                                                          \brief Number of times a memory block has been allocated */
+    uint32 CheckErrCtr;                                              /**< \cfetlmmnemonic \ES_BLKERRCTR
+                                                                          \brief Number of errors detected when freeing a memory block */
+    CFE_ES_MemOffset_t NumFreeBytes;                                 /**< \cfetlmmnemonic \ES_FREEBYTES
+                                                                          \brief Number of bytes never allocated to a block */
+    CFE_ES_BlockStats_t BlockStats[CFE_MISSION_ES_POOL_MAX_BUCKETS]; /**< \cfetlmmnemonic \ES_BLKSTATS
+                                                                          \brief Contains stats on each block size */
+} CFE_ES_MemPoolStats_t;
+
+#endif /* CFE_ES_EXTERN_TYPEDEFS_H */
 ```
 
-## 항목
+### `default_cfe_es_fcncodes.h`
 
-- [`fsw/cfe/modules/es/config/default_cfe_es_extern_typedefs.h`](file--default_cfe_es_extern_typedefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_fcncodes.h`](file--default_cfe_es_fcncodes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_interface_cfg.h`](file--default_cfe_es_interface_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_internal_cfg.h`](file--default_cfe_es_internal_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_mission_cfg.h`](file--default_cfe_es_mission_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_msg.h`](file--default_cfe_es_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_msgdefs.h`](file--default_cfe_es_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_msgids.h`](file--default_cfe_es_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_msgstruct.h`](file--default_cfe_es_msgstruct.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_platform_cfg.h`](file--default_cfe_es_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/config/default_cfe_es_topicids.h`](file--default_cfe_es_topicids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_fcncodes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Executive Services (CFE_ES) command function codes
+ *
+ * @note
+ *   This file should be strictly limited to the command/function code (CC)
+ *   macro definitions.  Other definitions such as enums, typedefs, or other
+ *   macros should be placed in the msgdefs.h or msg.h files.
+ */
+#ifndef CFE_ES_FCNCODES_H
+#define CFE_ES_FCNCODES_H
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+/** \name Executive Services Command Codes */
+/** \{ */
+
+/** \cfeescmd Executive Services No-Op
+**
+**  \par Description
+**       This command performs no other function than to increment the
+**       command execution counter. The command may be used to verify
+**       general aliveness of the Executive Services task.
+**
+**  \cfecmdmnemonic \ES_NOOP
+**
+**  \par Command Structure
+**       #CFE_ES_NoopCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_BUILD_INF_EID informational event message will
+**         be generated
+**       - The #CFE_ES_NOOP_INF_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The command packet length is incorrect
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - the #CFE_ES_LEN_ERR_EID error event message will be generated
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_ES_NOOP_CC 0
+
+/** \cfeescmd Executive Services Reset Counters
+**
+**  \par Description
+**       This command resets the following counters within the Executive
+**       Services housekeeping telemetry:
+**       - Command Execution Counter
+**       - Command Error Counter
+**
+**  \cfecmdmnemonic \ES_RESETCTRS
+**
+**  \par Command Structure
+**       #CFE_ES_ResetCountersCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter and error counter will
+**         be reset to zero
+**       - The #CFE_ES_RESET_INF_EID informational event message will be
+**         generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Executive
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  However, it is
+**       possible for ground systems and on-board safing procedures
+**       to be designed such that they react to changes in the counter
+**       values that are reset by this command.
+**
+**  \sa  #CFE_ES_RESET_PR_COUNT_CC
+*/
+#define CFE_ES_RESET_COUNTERS_CC 1
+
+/** \cfeescmd Executive Services Processor / Power-On Reset
+**
+**  \par Description
+**       This command restarts the cFE in one of two modes.  The Power-On Reset
+**       will cause the cFE to restart as though the power were first applied
+**       to the processor.  The Processor Reset will attempt to retain the contents
+**       of the volatile disk and the contents of the Critical Data Store.
+**       NOTE: If a requested Processor Reset should cause the
+**       Processor Reset Counter (\b \c \ES_PROCRESETCNT)
+**       to exceed OR EQUAL the limit #CFE_PLATFORM_ES_MAX_PROCESSOR_RESETS (which is reported in
+**       housekeeping telemetry as \b \c \ES_MAXPROCRESETS),
+**       the command is \b AUTOMATICALLY upgraded to a Power-On Reset.
+**
+**  \cfecmdmnemonic \ES_RESET
+**
+**  \par Command Structure
+**       #CFE_ES_RestartCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \ES_PROCRESETCNT - processor reset counter will increment (processor
+**               reset) or reset to zero (power-on reset)
+**       - \b \c \ES_RESETTYPE - processor reset type will be updated
+**       - \b \c \ES_RESETSUBTYPE - processor reset subtype will be updated
+**       - New entries in the Exception Reset Log and System Log can be found<BR>
+**       NOTE: Verification of a Power-On Reset is shown through the loss of
+**       data nominally retained through a Processor Reset<BR>
+**       NOTE: Since the reset of the processor resets the command execution
+**       counter (\b \c \ES_CMDPC), this counter \b CANNOT be used to verify
+**       command execution.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The \link #CFE_ES_RestartCmd_Payload_t Restart Type \endlink was
+**         not a recognized value.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - the #CFE_ES_BOOT_ERR_EID error event message will be generated
+**
+**  \par Criticality
+**       This command is, by definition, dangerous.  Significant loss of
+**       data will occur.  All processes and the cFE itself will be stopped
+**       and restarted.  With the Power-On reset option, all data on the
+**       volatile disk and the contents of the Critical Data Store will be
+**       lost.
+**
+**  \sa  #CFE_ES_RESET_PR_COUNT_CC, #CFE_ES_SET_MAX_PR_COUNT_CC
+*/
+#define CFE_ES_RESTART_CC 2
+
+/** \cfeescmd Load and Start an Application
+**
+**  \par Description
+**       This command starts the specified application with the
+**       specified start address, stack size, etc options.
+**
+**  \cfecmdmnemonic \ES_STARTAPP
+**
+**  \par Command Structure
+**       #CFE_ES_StartAppCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_START_INF_EID informational event message will be
+**         generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified application filename string cannot be parsed
+**       - The specified application entry point is an empty string
+**       - The specified application name is an empty string
+**       - The specified priority is greater than 255
+**       - The specified exception action is neither #CFE_ES_ExceptionAction_RESTART_APP (0) or
+**         #CFE_ES_ExceptionAction_PROC_RESTART (1)
+**       - The Operating System was unable to load the specified application file
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous although system resources
+**       could be taxed beyond their limits with the starting of erroneous
+**       or invalid applications.
+**
+**  \sa #CFE_ES_STOP_APP_CC, #CFE_ES_RESTART_APP_CC, #CFE_ES_RELOAD_APP_CC
+*/
+#define CFE_ES_START_APP_CC 4
+
+/** \cfeescmd Stop and Unload Application
+**
+**  \par Description
+**       This command halts and removes the specified Application
+**       from the system. \b NOTE: This command should never be used
+**       on the Command Ingest application.  This would prevent further
+**       commands from entering the system.  If Command Ingest needs to
+**       be stopped and restarted, use #CFE_ES_RESTART_APP_CC or
+**       #CFE_ES_RELOAD_APP_CC.
+**
+**  \cfecmdmnemonic \ES_STOPAPP
+**
+**  \par Command Structure
+**       #CFE_ES_StopAppCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_STOP_DBG_EID debug event message will be
+**         generated. NOTE: This event message only identifies that the
+**         stop request has been initiated, not that it has completed.
+**       - Once the stop has successfully completed, the list of Applications
+**         and Tasks created in response to the \b \c \ES_WRITEAPPINFO2FILE,
+**         \b \c \ES_WRITETASKINFO2FILE should no longer contain the
+**         specified application.
+**       - \b \c \ES_REGTASKS - number of tasks will decrease after tasks
+**         associated with app (main task and any child tasks) are stopped
+**       - \b \c \ES_REGEXTAPPS - external application counter will decrement
+**         after app is cleaned up
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified application name is not recognized as an active application
+**       - The specified application is one of the cFE's Core applications (ES, EVS, SB, TBL, TIME)
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**       - Additional information on the reason for command failure may be found
+**         in the System Log
+**
+**  \par Criticality
+**       This command is not inherently dangerous, however the removal of certain
+**       applications (e.g. - Spacecraft Attitude and Control) may have a detrimental effect
+**       on the spacecraft.
+**
+**  \sa #CFE_ES_START_APP_CC, #CFE_ES_RESTART_APP_CC, #CFE_ES_RELOAD_APP_CC
+*/
+#define CFE_ES_STOP_APP_CC 5
+
+/** \cfeescmd Stops, Unloads, Loads using the previous File name, and Restarts an Application
+**
+**  \par Description
+**       This command halts and removes the specified Application
+**       from the system.  Then it immediately loads the Application from
+**       the same filename last used to start.  This command is
+**       especially useful for restarting a Command Ingest Application
+**       since once it has been stopped, no further commands can come in
+**       to restart it.
+**
+**  \cfecmdmnemonic \ES_RESTARTAPP
+**
+**  \par Command Structure
+**       #CFE_ES_RestartAppCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_RESTART_APP_DBG_EID debug event message will be
+**         generated. NOTE: This event message only identifies that the
+**         restart process has been initiated, not that it has completed.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The original file is missing
+**       - The specified application name is not recognized as an active application
+**       - The specified application is one of the cFE's Core applications (ES, EVS, SB, TBL, TIME)
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**       - Additional information on the reason for command failure may be found
+**         in the System Log
+**
+**  \par Criticality
+**       This command is not inherently dangerous, however the restarting of certain
+**       applications (e.g. - Spacecraft Attitude and Control) may have a detrimental effect
+**       on the spacecraft.
+**
+**  \sa #CFE_ES_START_APP_CC, #CFE_ES_STOP_APP_CC, #CFE_ES_RELOAD_APP_CC
+*/
+#define CFE_ES_RESTART_APP_CC 6
+
+/** \cfeescmd Stops, Unloads, Loads from the command specified File and Restarts an Application
+**
+**  \par Description
+**       This command halts and removes the specified Application
+**       from the system.  Then it immediately loads the Application from
+**       the command specified file and restarts it.  This command is
+**       especially useful for restarting a Command Ingest Application
+**       since once it has been stopped, no further commands can come in
+**       to restart it.
+**
+**  \cfecmdmnemonic \ES_RELOADAPP
+**
+**  \par Command Structure
+**       #CFE_ES_ReloadAppCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_RELOAD_APP_DBG_EID debug event message will be
+**         generated. NOTE: This event message only identifies that the
+**         reload process has been initiated, not that it has completed.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified application filename string cannot be parsed
+**       - The specified application name is not recognized as an active application
+**       - The specified application is one of the cFE's Core applications (ES, EVS, SB, TBL, TIME)
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**       - Additional information on the reason for command failure may be found
+**         in the System Log
+**
+**  \par Criticality
+**       This command is not inherently dangerous, however the restarting of certain
+**       applications (e.g. - Spacecraft Attitude and Control) may have a detrimental effect
+**       on the spacecraft.
+**
+**  \sa #CFE_ES_START_APP_CC, #CFE_ES_STOP_APP_CC, #CFE_ES_RESTART_APP_CC
+*/
+#define CFE_ES_RELOAD_APP_CC 7
+
+/** \cfeescmd Request Executive Services Information on a specified module
+**
+**  \par Description
+**       This command takes the information kept by Executive Services on the
+**       specified application or library and telemeters it to the ground.
+**
+**  \cfecmdmnemonic \ES_QUERYAPP
+**
+**  \par Command Structure
+**       #CFE_ES_QueryOneCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_ONE_APP_EID debug event message will be
+**         generated.
+**       - Receipt of the #CFE_ES_OneAppTlm_t telemetry packet
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified name is not recognized as an active application or library
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       None
+**
+**  \sa #CFE_ES_QUERY_ALL_CC, #CFE_ES_QUERY_ALL_TASKS_CC
+*/
+#define CFE_ES_QUERY_ONE_CC 8
+
+/** \cfeescmd Writes all Executive Services Information on all loaded modules to a File
+**
+**  \par Description
+**       This command takes the information kept by Executive Services on all of the
+**       registered applications and libraries and writes it to the specified file.
+**
+**  \cfecmdmnemonic \ES_WRITEAPPINFO2FILE
+**
+**  \par Command Structure
+**       #CFE_ES_QueryAllCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_ALL_APPS_EID debug event message will be
+**         generated.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_ES_DEFAULT_APP_LOG_FILE configuration parameter) will be
+**         updated with the latest information.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified FileName cannot be parsed
+**       - An Error occurs while trying to write to the file
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system (or overwrite an existing one) and could,
+**       if performed repeatedly without sufficient file management by the
+**       operator, fill the file system.
+**
+**  \sa #CFE_ES_QUERY_ONE_CC, #CFE_ES_QUERY_ALL_TASKS_CC
+*/
+#define CFE_ES_QUERY_ALL_CC 9
+
+/** \cfeescmd Clear Executive Services System Log
+**
+**  \par Description
+**       This command clears the contents of the Executive Services System Log.
+**
+**  \cfecmdmnemonic \ES_CLEARSYSLOG
+**
+**  \par Command Structure
+**       #CFE_ES_ClearSysLogCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_SYSLOG1_INF_EID informational event message will be
+**         generated.
+**       - \b \c \ES_SYSLOGBYTEUSED - System Log Bytes Used will go to zero
+**       - \b \c \ES_SYSLOGENTRIES - Number of System Log Entries will go to zero
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Executive
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not dangerous.  However, any previously logged data
+**       will be lost.
+**
+**  \sa #CFE_ES_WRITE_SYSLOG_CC, #CFE_ES_CLEAR_ER_LOG_CC, #CFE_ES_WRITE_ER_LOG_CC,
+**      #CFE_ES_OVER_WRITE_SYSLOG_CC
+*/
+#define CFE_ES_CLEAR_SYSLOG_CC 10
+
+/** \cfeescmd Writes contents of Executive Services System Log to a File
+**
+**  \par Description
+**       This command causes the contents of the Executive Services System Log
+**       to be written to a log file.
+**
+**  \cfecmdmnemonic \ES_WRITESYSLOG2FILE
+**
+**  \par Command Structure
+**       #CFE_ES_WriteSysLogCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_SYSLOG2_EID debug event message will be
+**         generated.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_ES_DEFAULT_SYSLOG_FILE configuration parameter) will be
+**         updated with the latest information.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified FileName cannot be parsed
+**       - An Error occurs while trying to write to the file
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system (or overwrite an existing one) and could,
+**       if performed repeatedly without sufficient file management by the
+**       operator, fill the file system.
+**
+**  \sa #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_CLEAR_ER_LOG_CC, #CFE_ES_WRITE_ER_LOG_CC,
+**      #CFE_ES_OVER_WRITE_SYSLOG_CC
+*/
+#define CFE_ES_WRITE_SYSLOG_CC 11
+
+/** \cfeescmd Clears the contents of the Exception and Reset Log
+**
+**  \par Description
+**       This command causes the contents of the Executive Services Exception
+**       and Reset Log to be cleared.
+**
+**  \cfecmdmnemonic \ES_CLEARERLOG
+**
+**  \par Command Structure
+**       #CFE_ES_ClearERLogCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_ERLOG1_INF_EID informational event message will be
+**         generated.
+**       - \b \c \ES_ERLOGINDEX - Index into Exception Reset Log goes to zero
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Executive
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not dangerous.  However, any previously logged data
+**       will be lost.
+**
+**  \sa #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_WRITE_SYSLOG_CC, #CFE_ES_WRITE_ER_LOG_CC
+*/
+#define CFE_ES_CLEAR_ER_LOG_CC 12
+
+/** \cfeescmd Writes Exception and Reset Log to a File
+**
+**  \par Description
+**       This command causes the contents of the Executive Services Exception
+**       and Reset Log to be written to the specified file.
+**
+**  \cfecmdmnemonic \ES_WRITEERLOG2FILE
+**
+**  \par Command Structure
+**       #CFE_ES_WriteERLogCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_ERLOG2_EID debug event message will be
+**         generated.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_ES_DEFAULT_ER_LOG_FILE configuration parameter) will be
+**         updated with the latest information.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A previous request to write the ER log has not yet completed
+**       - The specified FileName cannot be parsed
+**       - An Error occurs while trying to write to the file
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system (or overwrite an existing one) and could,
+**       if performed repeatedly without sufficient file management by the
+**       operator, fill the file system.
+**
+**  \sa #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_WRITE_SYSLOG_CC, #CFE_ES_CLEAR_ER_LOG_CC
+*/
+#define CFE_ES_WRITE_ER_LOG_CC 13
+
+/** \cfeescmd Start Performance Analyzer
+**
+**  \par Description
+**       This command causes the Performance Analyzer to begin collecting data using the specified trigger mode.
+**
+**  \cfecmdmnemonic \ES_STARTLADATA
+**
+**  \par Command Structure
+**       #CFE_ES_StartPerfDataCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_PERFSTATE - Current performance analyzer state will change to
+**         either WAITING FOR TRIGGER or, if conditions are appropriate fast enough,
+**         TRIGGERED.
+**       - \b \c \ES_PERFMODE - Performance Analyzer Mode will change to the commanded trigger mode (TRIGGER START,
+**         TRIGGER CENTER, or TRIGGER END).
+**       - \b \c \ES_PERFTRIGCNT - Performance Trigger Count will go to zero
+**       - \b \c \ES_PERFDATASTART - Data Start Index will go to zero
+**       - \b \c \ES_PERFDATAEND - Data End Index will go to zero
+**       - \b \c \ES_PERFDATACNT - Performance Data Counter will go to zero
+**       - The #CFE_ES_PERF_STARTCMD_EID debug event message will be
+**         generated.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A previous #CFE_ES_STOP_PERF_DATA_CC command has not completely finished.
+**       - An invalid trigger mode is requested.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous but may cause a small increase in CPU
+**       utilization as the performance analyzer data is collected.
+**
+**  \sa #CFE_ES_STOP_PERF_DATA_CC, #CFE_ES_SET_PERF_FILTER_MASK_CC, #CFE_ES_SET_PERF_TRIGGER_MASK_CC
+*/
+#define CFE_ES_START_PERF_DATA_CC 14
+
+/** \cfeescmd Stop Performance Analyzer and write data file
+**
+**  \par Description
+**       This command stops the Performance Analyzer from collecting any more data,
+**       and writes all previously collected performance data to a log file.
+**
+**  \cfecmdmnemonic \ES_STOPLADATA
+**
+**  \par Command Structure
+**       #CFE_ES_StopPerfDataCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_PERFSTATE - Current performance analyzer state will change to
+**         IDLE.
+**       - The #CFE_ES_PERF_STOPCMD_EID debug event message will be
+**         generated to indicate that data collection has been stopped.
+**         NOTE: Performance log data is written to the file as a background job.
+**         This event indicates that the file write process is initiated, not that
+**         it has completed.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_ES_DEFAULT_PERF_DUMP_FILENAME configuration parameter) will be
+**         updated with the latest information.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The file name specified could not be parsed
+**       - Log data from a previous Stop Performance Analyzer command is still
+**         being written to a file.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**       NOTE: The performance analyzer data collection will still be stopped
+**       in the event of an error parsing the log file name or writing the log file.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  However, depending on configuration,
+**       performance data log files may be large in size and thus may fill the available
+**       storage.
+**
+**  \sa #CFE_ES_START_PERF_DATA_CC, #CFE_ES_SET_PERF_FILTER_MASK_CC, #CFE_ES_SET_PERF_TRIGGER_MASK_CC
+*/
+#define CFE_ES_STOP_PERF_DATA_CC 15
+
+/** \cfeescmd Set Performance Analyzer's Filter Masks
+**
+**  \par Description
+**       This command sets the Performance Analyzer's Filter Masks.
+**
+**  \cfecmdmnemonic \ES_LAFILTERMASK
+**
+**  \par Command Structure
+**       #CFE_ES_SetPerfFilterMaskCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_PERFFLTRMASK - the current performance filter mask
+**         value(s) should reflect the commanded value
+**       - The #CFE_ES_PERF_FILTMSKCMD_EID debug event message will be
+**         generated.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The Filter Mask ID number is out of range
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       Changing the filter masks may cause a small change in the Performance
+**       Analyzer's CPU utilization.
+**
+**  \sa #CFE_ES_START_PERF_DATA_CC, #CFE_ES_STOP_PERF_DATA_CC, #CFE_ES_SET_PERF_TRIGGER_MASK_CC
+*/
+#define CFE_ES_SET_PERF_FILTER_MASK_CC 16
+
+/** \cfeescmd Set Performance Analyzer's Trigger Masks
+**
+**  \par Description
+**       This command sets the Performance Analyzer's Trigger Masks.
+**
+**  \cfecmdmnemonic \ES_LATRIGGERMASK
+**
+**  \par Command Structure
+**       #CFE_ES_SetPerfTriggerMaskCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_PERFTRIGMASK - the current performance trigger mask
+**         value(s) should reflect the commanded value
+**       - The #CFE_ES_PERF_TRIGMSKCMD_EID debug event message will be
+**         generated.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The Trigger Mask ID number is out of range
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       Changing the trigger masks may cause a small change in the Performance
+**       Analyzer's CPU utilization.
+**
+**  \sa #CFE_ES_START_PERF_DATA_CC, #CFE_ES_STOP_PERF_DATA_CC, #CFE_ES_SET_PERF_FILTER_MASK_CC
+*/
+#define CFE_ES_SET_PERF_TRIGGER_MASK_CC 17
+
+/** \cfeescmd Set Executive Services System Log Mode to Discard/Overwrite
+**
+**  \par Description
+**       This command allows the user to configure the Executive Services
+**       to either discard new System Log messages when it is full or to
+**       overwrite the oldest messages.
+**
+**  \cfecmdmnemonic \ES_OVERWRITESYSLOGMODE
+**
+**  \par Command Structure
+**       #CFE_ES_OverWriteSysLogCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_SYSLOGMODE - Current System Log Mode should reflect
+**         the commanded value
+**       - The #CFE_ES_SYSLOGMODE_EID debug event message will be
+**         generated.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The desired mode is neither #CFE_ES_LogMode_OVERWRITE or #CFE_ES_LogMode_DISCARD
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       None. (It should be noted that "Overwrite" mode would allow a message
+**       identifying the cause of a problem to be lost by a subsequent flood of
+**       additional messages).
+**
+**  \sa #CFE_ES_CLEAR_SYSLOG_CC, #CFE_ES_WRITE_SYSLOG_CC
+*/
+#define CFE_ES_OVER_WRITE_SYSLOG_CC 18
+
+/** \cfeescmd Resets the Processor Reset Counter to Zero
+**
+**  \par Description
+**       This command allows the user to reset the Processor Reset Counter to zero.
+**       The Processor Reset Counter counts the number of Processor Resets that
+**       have occurred so as to identify when a Processor Reset should automatically
+**       be upgraded to a full Power-On Reset.
+**
+**  \cfecmdmnemonic \ES_RESETPRCNT
+**
+**  \par Command Structure
+**       #CFE_ES_ResetPRCountCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_PROCRESETCNT - Current number of processor resets will go to zero
+**       - The #CFE_ES_RESET_PR_COUNT_EID informational event message will be
+**         generated.
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Executive
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not critical.  The only impact would be that the system
+**       would have to have more processor resets before an automatic power-on reset
+**       occurred.
+**
+**  \sa #CFE_ES_SET_MAX_PR_COUNT_CC, #CFE_ES_RESET_COUNTERS_CC
+*/
+#define CFE_ES_RESET_PR_COUNT_CC 19
+
+/** \cfeescmd Configure the Maximum Number of Processor Resets before a Power-On Reset
+**
+**  \par Description
+**       This command allows the user to specify the number of Processor Resets that
+**       are allowed before the next Processor Reset is upgraded to a Power-On Reset.
+**
+**  \cfecmdmnemonic \ES_SETMAXPRCNT
+**
+**  \par Command Structure
+**       #CFE_ES_SetMaxPRCountCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - \b \c \ES_MAXPROCRESETS - Current maximum number of processor resets
+**         before an automatic power-on reset will go to the command specified value.
+**       - The #CFE_ES_SET_MAX_PR_COUNT_EID informational event message will be
+**         generated.
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Executive
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       If the operator were to set the Maximum Processor Reset Count to too high a value,
+**       the processor would require an inordinate number of consecutive processor resets
+**       before an automatic power-on reset would occur.  This could potentially leave the
+**       spacecraft without any control for a significant amount of time if a processor reset
+**       fails to clear a problem.
+**
+**  \sa #CFE_ES_RESET_PR_COUNT_CC
+*/
+#define CFE_ES_SET_MAX_PR_COUNT_CC 20
+
+/** \cfeescmd Delete Critical Data Store
+**
+**  \par Description
+**       This command allows the user to delete a Critical Data Store that was created
+**       by an Application that is now no longer executing.
+**
+**  \cfecmdmnemonic \ES_DELETECDS
+**
+**  \par Command Structure
+**       #CFE_ES_DeleteCDSCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_CDS_DELETED_INFO_EID informational event message will be
+**         generated.
+**       - The specified CDS should no longer appear in a CDS Registry dump generated
+**         upon receipt of the #CFE_ES_DUMP_CDS_REGISTRY_CC command
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified CDS is the CDS portion of a Critical Table
+**       - The specified CDS is not found in the CDS Registry
+**       - The specified CDS is associated with an Application that is still active
+**       - An error occurred while accessing the CDS memory (see the System Log for more details)
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not critical because it is not possible to delete a CDS that is
+**       associated with an active application.  However, deleting a CDS does eliminate
+**       any "history" that an application may be wishing to keep.
+**
+**  \sa #CFE_ES_DUMP_CDS_REGISTRY_CC, #CFE_TBL_DELETE_CDS_CC
+*/
+#define CFE_ES_DELETE_CDS_CC 21
+
+/** \cfeescmd Telemeter Memory Pool Statistics
+**
+**  \par Description
+**       This command allows the user to obtain a snapshot of the statistics maintained
+**       for a specified memory pool.
+**
+**  \cfecmdmnemonic \ES_TLMPOOLSTATS
+**
+**  \par Command Structure
+**       #CFE_ES_SendMemPoolStatsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_TLM_POOL_STATS_INFO_EID debug event message will be
+**         generated.
+**       - The \link #CFE_ES_MemStatsTlm_t Memory Pool Statistics Telemetry Packet \endlink
+**         is produced
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified handle is not associated with a known memory pool
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       <B>An incorrect Memory Pool Handle value can cause a system crash.</B>
+**       Extreme care should be taken to ensure the memory handle value
+**       used in the command is correct.
+**
+**  \sa
+*/
+#define CFE_ES_SEND_MEM_POOL_STATS_CC 22
+
+/** \cfeescmd Dump Critical Data Store Registry to a File
+**
+**  \par Description
+**       This command allows the user to dump the Critical Data Store
+**       Registry to an onboard file.
+**
+**  \cfecmdmnemonic \ES_DUMPCDSREG
+**
+**  \par Command Structure
+**       #CFE_ES_DumpCDSRegistryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_CDS_REG_DUMP_INF_EID debug event message will be
+**         generated.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_ES_DEFAULT_CDS_REG_DUMP_FILE configuration parameter) will be
+**         updated with the latest information.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The file name specified could not be parsed
+**       - Error occurred while creating or writing to the dump file
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system (or overwrite an existing one) and could,
+**       if performed repeatedly without sufficient file management by the
+**       operator, fill the file system.
+**
+**  \sa  #CFE_ES_DELETE_CDS_CC, #CFE_TBL_DELETE_CDS_CC
+*/
+#define CFE_ES_DUMP_CDS_REGISTRY_CC 23
+
+/** \cfeescmd Writes a list of All Executive Services Tasks to a File
+**
+**  \par Description
+**       This command takes the information kept by Executive Services on all of the
+**       registered tasks and writes it to the specified file.
+**
+**  \cfecmdmnemonic \ES_WRITETASKINFO2FILE
+**
+**  \par Command Structure
+**       #CFE_ES_QueryAllTasksCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \ES_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_ES_TASKINFO_EID debug event message will be
+**         generated.
+**       - The file specified in the command (or the default specified
+**         by the #CFE_PLATFORM_ES_DEFAULT_TASK_LOG_FILE configuration parameter) will be
+**         updated with the latest information.
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The file name specified could not be parsed
+**       - An Error occurs while trying to write to the file
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \ES_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system (or overwrite an existing one) and could,
+**       if performed repeatedly without sufficient file management by the
+**       operator, fill the file system.
+**
+**  \sa #CFE_ES_QUERY_ALL_CC, CFE_ES_QUERY_ONE_CC
+*/
+#define CFE_ES_QUERY_ALL_TASKS_CC 24
+
+/** \} */
+
+#endif
+```
+
+### `default_cfe_es_interface_cfg.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_interface_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Executive Services (CFE_ES) Application Public Definitions
+ *
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_ES_INTERFACE_CFG_H
+#define CFE_ES_INTERFACE_CFG_H
+
+/**
+**  \cfeescfg Mission Max Apps in a message
+**
+**  \par Description:
+**      Indicates the maximum number of apps in a telemetry housekeeping message
+**
+**      This affects the layout of command/telemetry messages but does not affect run
+**      time behavior or internal allocation.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+*/
+#define CFE_MISSION_ES_MAX_APPLICATIONS 16
+
+/**
+**  \cfeescfg Define Max Number of Performance IDs for messages
+**
+**  \par Description:
+**       Defines the maximum number of perf ids allowed in command/telemetry messages
+**
+**      This affects the layout of command/telemetry messages but does not affect run
+**      time behavior or internal allocation.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+*/
+#define CFE_MISSION_ES_PERF_MAX_IDS 128
+
+/** \cfeescfg Maximum number of block sizes in pool structures
+**
+**  \par Description:
+**      The upper limit for the number of block sizes supported in the generic
+**      pool implementation, which in turn implements the memory pools and CDS.
+**      This definition is used as the array size with the pool stats structure,
+**      and therefore should be consistent across all CPUs in a mission, as well
+**      as with the ground station.
+**
+**      There is also a platform-specific limit which may be fewer than this
+**      value.
+**
+**  \par Limits:
+**       Must be at least one.  No specific upper limit, but the number is
+**       anticipated to be reasonably small (i.e. tens, not hundreds).  Large
+**       values have not been tested.
+**
+**
+*/
+#define CFE_MISSION_ES_POOL_MAX_BUCKETS 17
+
+/**
+**  \cfeescfg Maximum Length of CDS Name
+**
+**  \par Description:
+**      Indicates the maximum length (in characters) of the CDS name ('CDSName')
+**      portion of a Full CDS Name of the following form:
+**      "ApplicationName.CDSName"
+**
+**      This length does not need to include an extra character for NULL termination.
+**
+**  \par Limits
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+**
+*/
+#define CFE_MISSION_ES_CDS_MAX_NAME_LENGTH 16
+
+/**
+**  \cfeescfg Mission Default CRC algorithm
+**
+**  \par Description:
+**      Indicates the which CRC algorithm should be used as the default
+**      for verifying the contents of Critical Data Stores and when calculating
+**      Table Image data integrity values.
+**
+**  \par Limits
+**      Currently only CFE_ES_CrcType_CRC_16 is supported (see brief in CFE_ES_CrcType_Enum
+**      definition in cfe_es_api_typedefs.h)
+*/
+#define CFE_MISSION_ES_DEFAULT_CRC CFE_ES_CrcType_CRC_16
+
+/**
+**  \cfeescfg Maximum Length of Full CDS Name in messages
+**
+**  \par Description:
+**      Indicates the maximum length (in characters) of the entire CDS name
+**      of the following form: "ApplicationName.CDSName"
+**
+**       This affects the layout of command/telemetry messages but does not affect run
+**       time behavior or internal allocation.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN (CFE_MISSION_ES_CDS_MAX_NAME_LENGTH + CFE_MISSION_MAX_API_LEN + 4)
+
+#ifndef CFE_OMIT_DEPRECATED_6_8
+/* These names have been converted to an enum in cfe_es_api_typedefs.h */
+
+/** \name Checksum/CRC algorithm identifiers */
+
+#define CFE_MISSION_ES_CRC_8  CFE_ES_CrcType_CRC_8  /* 1 */
+#define CFE_MISSION_ES_CRC_16 CFE_ES_CrcType_CRC_16 /* 2 */
+#define CFE_MISSION_ES_CRC_32 CFE_ES_CrcType_CRC_32 /* 3 */
+
+#endif
+
+#endif
+```
+
+### `default_cfe_es_internal_cfg.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_internal_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Executive Services (CFE_ES) Application Private Config Definitions
+ *
+ * This provides default values for configurable items that are internal
+ * to this module and do NOT affect the interface(s) of this module.  Changes
+ * to items in this file only affect the local module and will be transparent
+ * to external entities that are using the public interface(s).
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_ES_INTERNAL_CFG_H
+#define CFE_ES_INTERNAL_CFG_H
+
+/**
+**  \cfeescfg Define ES Task Priority
+**
+**  \par Description:
+**       Defines the cFE_ES Task priority.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_ES_START_TASK_PRIORITY 68
+
+/**
+**  \cfeescfg Define ES Task Stack Size
+**
+**  \par Description:
+**       Defines the cFE_ES Task Stack Size
+**
+**  \par Limits
+**       There is a lower limit of 2048 on this configuration parameter.  There
+**       are no restrictions on the upper limit however, the maximum stack size
+**       is system dependent and should be verified.  Most operating systems provide
+**       tools for measuring the amount of stack used by a task during operation. It
+**       is always a good idea to verify that no more than 1/2 of the stack is used.
+*/
+#define CFE_PLATFORM_ES_START_TASK_STACK_SIZE CFE_PLATFORM_ES_DEFAULT_STACK_SIZE
+
+/**
+**  \cfeescfg Default virtual path for persistent storage
+**
+**  \par Description:
+**       This configures the default location in the virtual file system
+**       for persistent/non-volatile storage.  Files such as the startup
+**       script, app/library dynamic modules, and configuration tables are
+**       expected to be stored in this directory.
+**
+*/
+#define CFE_PLATFORM_ES_NONVOL_DISK_MOUNT_STRING "/cf"
+
+/**
+**  \cfeescfg Default virtual path for volatile storage
+**
+**  \par Description:
+**      The #CFE_PLATFORM_ES_RAM_DISK_MOUNT_STRING parameter is used to set the cFE mount path
+**      for the CFE RAM disk. This is a parameter for missions that do not want to
+**      use the default value of "/ram", or for missions that need to have a different
+**      value for different CPUs or Spacecraft.
+**      Note that the vxWorks OSAL cannot currently handle names that have more than one
+**      path separator in it. The names "/ram", "/ramdisk", "/disk123" will all work, but
+**      "/disks/ram" will not.
+**      Multiple separators can be used with the posix or RTEMS ports.
+**
+*/
+#define CFE_PLATFORM_ES_RAM_DISK_MOUNT_STRING "/ram"
+
+/**
+**  \cfeescfg Define Max Number of Applications
+**
+**  \par Description:
+**       Defines the maximum number of applications that can be loaded into the
+**       system. This number does not include child tasks.
+**
+**  \par Limits
+**       There is a lower limit of 6.  The lower limit corresponds to the cFE internal
+**       applications.  There are no restrictions on the upper limit however, the
+**       maximum number of applications is system dependent and should be verified.
+**       AppIDs that are checked against this configuration are defined by a 32 bit
+**       data word.
+*/
+#define CFE_PLATFORM_ES_MAX_APPLICATIONS 32
+
+/**
+**  \cfeescfg Define Max Number of Shared libraries
+**
+**  \par Description:
+**       Defines the maximum number of cFE Shared libraries that can be loaded into
+**       the system.
+**
+**  \par Limits
+**       There is a lower limit of 1.  There are no restrictions on the upper limit
+**       however, the maximum number of libraries is system dependent and should be
+**       verified.
+*/
+#define CFE_PLATFORM_ES_MAX_LIBRARIES 10
+
+/**
+**  \cfeescfg Define Max Number of ER (Exception and Reset) log entries
+**
+**  \par Description:
+**       Defines the maximum number of ER (Exception and Reset) log entries
+**
+**  \par Limits
+**       There is a lower limit of 1.  There are no restrictions on the upper limit
+**       however, the maximum number of log entries is system dependent and should be
+**       verified.
+*/
+#define CFE_PLATFORM_ES_ER_LOG_ENTRIES 20
+
+/** \cfeescfg Maximum size of CPU Context in ES Error Log
+**
+**  \par Description:
+**       This should be large enough to accommodate the CPU context
+**       information supplied by the PSP on the given platform.
+**
+**  \par Limits:
+**       Must be greater than zero and a multiple of sizeof(uint32).
+**       Limited only by the available memory and the number of entries
+**       in the error log. Any context information beyond this size will
+**       be truncated.
+*/
+#define CFE_PLATFORM_ES_ER_LOG_MAX_CONTEXT_SIZE 256
+
+/**
+**  \cfeescfg Define Size of the cFE System Log.
+**
+**  \par Description:
+**       Defines the size in bytes of the cFE system log. The system log holds
+**       variable length strings that are terminated by a linefeed and null
+**       character.
+**
+**  \par Limits
+**       There is a lower limit of 512.  There are no restrictions on the upper limit
+**       however, the maximum system log size is system dependent and should be
+**       verified.
+*/
+#define CFE_PLATFORM_ES_SYSTEM_LOG_SIZE 3072
+
+/**
+**  \cfeescfg Define Number of entries in the ES Object table
+**
+**  \par Description:
+**       Defines the number of entries in the ES Object table. This table controls
+**       the core cFE startup.
+**
+**  \par Limits
+**       There is a lower limit of 15.  There are no restrictions on the upper limit
+**       however, the maximum object table size is system dependent and should be
+**       verified.
+*/
+#define CFE_PLATFORM_ES_OBJECT_TABLE_SIZE 30
+
+/**
+**  \cfeescfg Define Max Number of Generic Counters
+**
+**  \par Description:
+**       Defines the maximum number of Generic Counters that can be registered.
+**
+**  \par Limits
+**       This parameter has a lower limit of 1 and an upper limit of 65535.
+*/
+#define CFE_PLATFORM_ES_MAX_GEN_COUNTERS 8
+
+/**
+**  \cfeescfg Define ES Application Control Scan Rate
+**
+**  \par Description:
+**       ES Application Control Scan Rate. This parameter controls the speed that ES
+**       scans the Application Table looking for App Delete/Restart/Reload requests.
+**       All Applications are deleted, restarted, or reloaded by the ES Application.
+**       ES will periodically scan for control requests to process. The scan rate is
+**       controlled by this parameter, which is given in milliseconds. A value of
+**       1000 means that ES will scan the Application Table once per second. Be
+**       careful not to set the value of this too low, because ES will use more CPU
+**       cycles scanning the table.
+**
+**  \par Limits
+**       There is a lower limit of 100 and an upper limit of 20000 on this
+**       configuration parameter. millisecond units.
+*/
+#define CFE_PLATFORM_ES_APP_SCAN_RATE 1000
+
+/**
+**  \cfeescfg Define ES Application Kill Timeout
+**
+**  \par Description:
+**      ES Application Kill Timeout. This parameter controls the number of
+**      "scan periods" that ES will wait for an application to Exit after getting
+**      the signal Delete, Reload or Restart. The sequence works as follows:
+**      -# ES will set the control request for an App to Delete/Restart/Reload and
+**         set this kill timer to the value in this parameter.
+**      -# If the App is responding and Calls it's RunLoop function, it will drop out
+**         of it's main loop and call CFE_ES_ExitApp. Once it calls Exit App, then
+**         ES can delete, restart, or reload the app the next time it scans the app
+**         table.
+**      -# If the App is not responding, the ES App will decrement this Kill Timeout
+**         value each time it runs. If the timeout value reaches zero, ES will kill
+**         the app.
+**
+**      The Kill timeout value depends on the #CFE_PLATFORM_ES_APP_SCAN_RATE. If the Scan Rate
+**      is 1000, or 1 second, and this #CFE_PLATFORM_ES_APP_KILL_TIMEOUT is set to 5, then it
+**      will take 5 seconds to kill a non-responding App.
+**      If the Scan Rate is 250, or 1/4 second, and the #CFE_PLATFORM_ES_APP_KILL_TIMEOUT is
+**      set to 2, then it will take 1/2 second to time out.
+**
+**  \par Limits
+**       There is a lower limit of 1 and an upper limit of 100 on this configuration
+**       parameter. Units are number of #CFE_PLATFORM_ES_APP_SCAN_RATE cycles.
+*/
+#define CFE_PLATFORM_ES_APP_KILL_TIMEOUT 5
+
+/**
+**  \cfeescfg ES Ram Disk Sector Size
+**
+**  \par Description:
+**       Defines the ram disk sector size. The ram disk is 1 of 4 memory areas that
+**       are preserved on a processor reset.
+**       NOTE: Changing this value changes memory allocation, and may
+**       require changes to platform specific values (in CFE_PSP) such as
+**       USER_RESERVED_MEM in VxWorks depending on the memory areas
+**       being used for preserved data and on OS specific behavior.
+**
+**  \par Limits
+**       There is a lower limit of 128.  There are no restrictions on the upper limit
+**       however, the maximum RAM disk sector size is system dependent and should be
+**       verified.
+*/
+#define CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE 512
+
+/**
+**  \cfeescfg ES Ram Disk Number of Sectors
+**
+**  \par Description:
+**       Defines the ram disk number of sectors. The ram disk is one of four memory
+**       areas that are preserved on a processor reset.
+**       NOTE: Changing this value changes memory allocation, and may
+**       require changes to platform specific values (in CFE_PSP) such as
+**       USER_RESERVED_MEM in VxWorks depending on the memory areas
+**       being used for preserved data and on OS specific behavior.
+**
+**  \par Limits
+**       There is a lower limit of 128.  There are no restrictions on the upper limit
+**       however, the maximum number of RAM sectors is system dependent and should be
+**       verified.
+*/
+#define CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS 4096
+
+/**
+**  \cfeescfg Percentage of Ram Disk Reserved for Decompressing Apps
+**
+**  \par Description:
+**      The #CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED parameter is used to make sure that the
+**      Volatile ( RAM ) Disk has a defined amount of free space during a processor
+**      reset. The cFE uses the Volatile disk to decompress cFE applications during
+**      system startup. If this Volatile disk happens to get filled with logs and
+**      misc files, then a processor reset may not work, because there will be no
+**      room to decompress cFE apps. To solve that problem, this parameter sets the
+**      "Low Water Mark" for disk space on a Processor reset. It should be set to
+**      allow the largest cFE Application to be decompressed.
+**      During a Processor reset, if there is not sufficient space left on the disk,
+**      it will be re-formatted in order to clear up some space.
+**
+**      This feature can be turned OFF by setting the parameter to 0.
+**
+**  \par Limits
+**       There is a lower limit of 0 and an upper limit of 75 on this configuration
+**       parameter.Units are percentage. A setting of zero will turn this feature
+**       off.
+*/
+#define CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED 30
+
+/**
+**  \cfeescfg Define Critical Data Store Size
+**
+**  \par Description:
+**       Defines the Critical Data Store (CDS) area size in bytes size. The CDS is
+**       one of four memory areas that are preserved during a processor reset.
+**       NOTE: Changing this value changes memory allocation, and may
+**       require changes to platform specific values (in CFE_PSP) such as
+**       USER_RESERVED_MEM in VxWorks depending on the memory areas
+**       being used for preserved data and on OS specific behavior.
+**
+**  \par Limits
+**       There is a lower limit of 8192 and an upper limit of UINT_MAX (4 Gigabytes)
+**       on this configuration parameter.
+*/
+#define CFE_PLATFORM_ES_CDS_SIZE (128 * 1024)
+
+/**
+**  \cfeescfg Define User Reserved Memory Size
+**
+**  \par Description:
+**       User Reserved Memory Size. This is the size in bytes of the cFE User
+**       reserved Memory area. This is a block of memory that is available for cFE
+**       application use. The address is obtained by calling
+**       #CFE_PSP_GetUserReservedArea. The User Reserved Memory is one of four memory
+**       areas that are preserved during a processor reset.
+**       NOTE: Changing this value changes memory allocation, and may
+**       require changes to platform specific values (in CFE_PSP) such as
+**       USER_RESERVED_MEM in VxWorks depending on the memory areas
+**       being used for preserved data and on OS specific behavior.
+**
+**  \par Limits
+**       There is a lower limit of 1024 and an upper limit of UINT_MAX (4 Gigabytes)
+**       on this configuration parameter.
+*/
+#define CFE_PLATFORM_ES_USER_RESERVED_SIZE (1024 * 1024)
+
+/**
+**  \cfeescfg Define Memory Pool Alignment Size
+**
+**  \par Description:
+**       Ensures that buffers obtained from a memory pool are aligned
+**       to a certain minimum block size.  Note the allocator will always
+**       align to the minimum required by the CPU architecture.  This may
+**       be set greater than the CPU requirement as desired for optimal
+**       performance.
+**
+**       For some architectures/applications it may be beneficial to set this
+**       to the cache line size of the target CPU, or to use special SIMD
+**       instructions that require a more stringent memory alignment.
+**
+**  \par Limits
+**       This must always be a power of 2, as it is used as a binary address mask.
+*/
+#define CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN 4
+
+/**
+**  \cfeescfg ES Nonvolatile Startup Filename
+**
+**  \par Description:
+**       The value of this constant defines the path and name of the file that
+**       contains a list of modules that will be loaded and started by the cFE after
+**       the cFE finishes its startup sequence.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_NONVOL_STARTUP_FILE "/cf/cfe_es_startup.scr"
+
+/**
+**  \cfeescfg ES Volatile Startup Filename
+**
+**  \par Description:
+**       The value of this constant defines the path and name of the file that
+**       contains a list of modules that will be loaded and started by the cFE after
+**       the cFE finishes its startup sequence.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_VOLATILE_STARTUP_FILE "/ram/cfe_es_startup.scr"
+
+/**
+**  \cfeescfg Default Application Information Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store information
+**       pertaining to all of the Applications that are registered with Executive
+**       Services. This filename is used only when no filename is specified in the
+**       the command to query all system apps.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_APP_LOG_FILE "/ram/cfe_es_app_info.log"
+
+/**
+**  \cfeescfg Default Application Information Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store information
+**       pertaining to all of the Applications that are registered with Executive
+**       Services. This filename is used only when no filename is specified in the
+**       the command to query all system tasks.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_TASK_LOG_FILE "/ram/cfe_es_taskinfo.log"
+
+/**
+**  \cfeescfg Default System Log Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store important
+**       information (as ASCII text strings) that might not be able to be sent in an
+**       Event Message. This filename is used only when no filename is specified in
+**       the command to dump the system log. No file specified in the cmd means the
+**       first character in the cmd filename is a NULL terminator (zero).
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_SYSLOG_FILE "/ram/cfe_es_syslog.log"
+
+/**
+**  \cfeescfg Default Exception and Reset (ER) Log Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store the
+**       Exception and Reset (ER) Log. This filename is used only when no filename is
+**       specified in the command to dump the ER log. No file specified in the cmd
+**       means the first character in the cmd filename is a NULL terminator (zero).
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_ER_LOG_FILE "/ram/cfe_erlog.log"
+
+/**
+**  \cfeescfg Default Performance Data Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store the
+**       Performance Data. This filename is used only when no filename is specified
+**       in the command to stop performance data collecting.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_PERF_DUMP_FILENAME "/ram/cfe_es_perf.dat"
+
+/**
+**  \cfeescfg Default Critical Data Store Registry Filename
+**
+**  \par Description:
+**       The value of this constant defines the filename used to store the
+**       Critical Data Store Registry. This filename is used only when no filename is
+**       specified in the command to stop performance data collecting.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_CDS_REG_DUMP_FILE "/ram/cfe_cds_reg.log"
+
+/**
+**  \cfeescfg Define Default System Log Mode following Power On Reset
+**
+**  \par Description:
+**       Defines the default mode for the operation of the ES System log following a power
+**       on reset. The log may operate in either Overwrite mode = 0, where once the
+**       log becomes full the oldest message in the log will be overwritten, or
+**       Discard mode = 1, where once the log becomes full the contents of the log are
+**       preserved and the new event is discarded.  This constant may hold a value of
+**       either 0 or 1 depending on the desired default.
+**       Overwrite Mode = 0, Discard Mode = 1.
+**
+**  \par Limits
+**       There is a lower limit of 0 and an upper limit of 1 on this configuration
+**       parameter.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_POR_SYSLOG_MODE 0
+
+/**
+**  \cfeescfg Define Default System Log Mode following Processor Reset
+**
+**  \par Description:
+**       Defines the default mode for the operation of the ES System log following a
+**       processor reset. The log may operate in either Overwrite mode = 0, where once
+**       the log becomes full the oldest message in the log will be overwritten, or
+**       Discard mode = 1, where once the log becomes full the contents of the log are
+**       preserved and the new event is discarded.  This constant may hold a value of
+**       either 0 or 1 depending on the desired default.
+**       Overwrite Mode = 0, Discard Mode = 1.
+**
+**  \par Limits
+**       There is a lower limit of 0 and an upper limit of 1 on this configuration
+**       parameter.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_PR_SYSLOG_MODE 1
+
+/**
+**  \cfeescfg Define Max Size of Performance Data Buffer
+**
+**  \par Description:
+**       Defines the maximum size of the performance data buffer. Units are number of
+**       performance data entries. An entry is defined by a 32 bit data word followed
+**       by a 64 bit time stamp.
+**
+**  \par Limits
+**       There is a lower limit of 1025.  There are no restrictions on the upper limit
+**       however, the maximum buffer size is system dependent and should be verified.
+**       The units are number of entries. An entry is defined by a 32 bit data word followed
+**       by a 64 bit time stamp.
+*/
+#define CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE 10000
+
+/**
+**  \cfeescfg Define Filter Mask Setting for Disabling All Performance Entries
+**
+**  \par Description:
+**       Defines the filter mask for disabling all performance entries. The value is a
+**       bit mask.  For each bit, 0 means the corresponding entry is disabled and
+**       1 means it is enabled.
+*/
+#define CFE_PLATFORM_ES_PERF_FILTMASK_NONE 0
+
+/**
+**  \cfeescfg Define Filter Mask Setting for Enabling All Performance Entries
+**
+**  \par Description:
+**       Defines the filter mask for enabling all performance entries. The value is a
+**       bit mask.  For each bit, 0 means the corresponding entry is disabled and
+**       1 means it is enabled.
+*/
+#define CFE_PLATFORM_ES_PERF_FILTMASK_ALL ~CFE_PLATFORM_ES_PERF_FILTMASK_NONE
+
+/**
+**  \cfeescfg Define Default Filter Mask Setting for Performance Data Buffer
+**
+**  \par Description:
+**       Defines the default filter mask for the performance data buffer. The value is a
+**       bit mask.  For each bit, 0 means the corresponding entry is disabled and 1
+**       means it is enabled.
+**
+*/
+#define CFE_PLATFORM_ES_PERF_FILTMASK_INIT CFE_PLATFORM_ES_PERF_FILTMASK_ALL
+
+/**
+**  \cfeescfg Define Default Filter Trigger Setting for Disabling All Performance Entries
+**
+**  \par Description:
+**       Defines the default trigger mask for disabling all performance data entries. The value
+**       is a bit mask.  For each bit, 0 means the trigger for the corresponding entry is
+**       disabled and 1 means it is enabled.
+**
+*/
+#define CFE_PLATFORM_ES_PERF_TRIGMASK_NONE 0
+
+/**
+**  \cfeescfg Define Filter Trigger Setting for Enabling All Performance Entries
+**
+**  \par Description:
+**       Defines the trigger mask for enabling all performance data entries. The value is
+**       a bit mask.  For each bit, 0 means the trigger for the corresponding entry is
+**       disabled and 1 means it is enabled.
+**
+*/
+#define CFE_PLATFORM_ES_PERF_TRIGMASK_ALL ~CFE_PLATFORM_ES_PERF_TRIGMASK_NONE
+
+/**
+**  \cfeescfg Define Default Filter Trigger Setting for Performance Data Buffer
+**
+**  \par Description:
+**       Defines the default trigger mask for the performance data buffer. The value is a
+**       32-bit mask.  For each bit, 0 means the trigger for the corresponding entry is
+**       disabled and 1 means it is enabled.
+**
+*/
+#define CFE_PLATFORM_ES_PERF_TRIGMASK_INIT CFE_PLATFORM_ES_PERF_TRIGMASK_NONE
+
+/**
+**  \cfeescfg Define Performance Analyzer Child Task Priority
+**
+**  \par Description:
+**       This parameter defines the priority of the child task spawned by the
+**       Executive Services to write performance data to a file.  Lower numbers
+**       are higher priority, with 1 being the highest priority in the case of a
+**       child task.
+**
+**  \par Limits
+**       Valid range for a child task is 1 to 255 however, the priority cannot
+**       be higher (lower number) than the ES parent application priority.
+*/
+#define CFE_PLATFORM_ES_PERF_CHILD_PRIORITY 200
+
+/**
+**  \cfeescfg Define Performance Analyzer Child Task Stack Size
+**
+**  \par Description:
+**       This parameter defines the stack size of the child task spawned by the
+**       Executive Services to write performance data to a file.
+**
+**  \par Limits
+**       It is recommended this parameter be greater than or equal to 4KB. This parameter
+**       is limited by the maximum value allowed by the data type. In this case, the data
+**       type is an unsigned 32-bit integer, so the valid range is 0 to 0xFFFFFFFF.
+*/
+#define CFE_PLATFORM_ES_PERF_CHILD_STACK_SIZE 4096
+
+/**
+**  \cfeescfg Define Performance Analyzer Child Task Delay
+**
+**  \par Description:
+**       This parameter defines the delay time (in milliseconds) between performance
+**       data file writes performed by the Executive Services Performance Analyzer
+**       Child Task.
+**
+**  \par Limits
+**       It is recommended this parameter be greater than or equal to 20ms. This parameter
+**       is limited by the maximum value allowed by the data type. In this case, the data
+**       type is an unsigned 32-bit integer, so the valid range is 0 to 0xFFFFFFFF.
+*/
+#define CFE_PLATFORM_ES_PERF_CHILD_MS_DELAY 20
+
+/**
+**  \cfeescfg Define Performance Analyzer Child Task Number of Entries Between Delay
+**
+**  \par Description:
+**       This parameter defines the number of performance analyzer entries the Performance
+**       Analyzer Child Task will write to the file between delays.
+**
+*/
+#define CFE_PLATFORM_ES_PERF_ENTRIES_BTWN_DLYS 50
+
+/**
+**  \cfeescfg Define Default Stack Size for an Application
+**
+**  \par Description:
+**       This parameter defines a default stack size. This parameter is used by the
+**       cFE Core Applications.
+**
+**  \par Limits
+**       There is a lower limit of 2048.  There are no restrictions on the upper limit
+**       however, the maximum stack size is system dependent and should be verified.
+**       Most operating systems provide tools for measuring the amount of stack used by a
+**       task during operation. It is always a good idea to verify that no more than 1/2
+**       of the stack is used.
+*/
+#define CFE_PLATFORM_ES_DEFAULT_STACK_SIZE 8192
+
+/**
+**  \cfeescfg Define Maximum Number of Registered CDS Blocks
+**
+**  \par Description:
+**       Maximum number of registered CDS Blocks
+**
+**  \par Limits
+**       There is a lower limit of 8.  There are no restrictions on the upper limit
+**       however, the maximum number of CDS entries is system dependent and
+**       should be verified.
+*/
+#define CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES 512
+
+/**
+**  \cfeescfg Define Number of Processor Resets Before a Power On Reset
+**
+**  \par Description:
+**       Number of Processor Resets before a Power On Reset is called. If set to 2,
+**       then 2 processor resets will occur, and the 3rd processor reset will be a
+**       power on reset instead.
+**
+**  \par Limits
+**       There is a lower limit of 0.  There are no restrictions on the upper limit
+**       however, the maximum number of processor resets may be system dependent and
+**       should be verified.
+*/
+#define CFE_PLATFORM_ES_MAX_PROCESSOR_RESETS 2
+
+/** \cfeescfg Maximum number of block sizes in pool structures
+**
+**  \par Description:
+**      The upper limit for the number of block sizes supported in the generic
+**      pool implementation, which in turn implements the memory pools and CDS.
+**
+**  \par Limits:
+**       Must be at least one.  No specific upper limit, but the number is
+**       anticipated to be reasonably small (i.e. tens, not hundreds).  Large
+**       values have not been tested.
+**
+**       The ES and CDS block size lists must correlate with this value
+*/
+#define CFE_PLATFORM_ES_POOL_MAX_BUCKETS 17
+
+/** \cfeescfg Maximum number of memory pools
+**
+**  \par Description:
+**      The upper limit for the number of memory pools that can concurrently
+**      exist within the system.
+**
+**      The CFE_SB and CFE_TBL core subsystems each define a memory pool.
+**
+**      Individual applications may also create memory pools, so this value
+**      should be set sufficiently high enough to support the applications
+**      being used on this platform.
+**
+**  \par Limits:
+**       Must be at least 2 to support CFE core - SB and TBL pools.  No
+**       specific upper limit.
+*/
+#define CFE_PLATFORM_ES_MAX_MEMORY_POOLS 10
+
+/**
+**  \cfeescfg Define Default ES Memory Pool Block Sizes
+**
+**  \par Description:
+**       Default Intermediate ES Memory Pool Block Sizes.  If an application
+**       is using the CFE_ES Memory Pool APIs (#CFE_ES_PoolCreate, #CFE_ES_PoolCreateNoSem,
+**       #CFE_ES_GetPoolBuf and #CFE_ES_PutPoolBuf) but finds these sizes
+**       inappropriate for their use, they may wish to use the #CFE_ES_PoolCreateEx
+**       API to specify their own intermediate block sizes
+**
+**  \par Limits
+**       These sizes MUST be increasing and MUST be an integral multiple of 4.  Also,
+**       CFE_PLATFORM_ES_MAX_BLOCK_SIZE must be larger than CFE_MISSION_SB_MAX_SB_MSG_SIZE and both
+**       CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE and CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE.  Note that if Table
+**       Services have been removed from the CFE, the table size limits are still
+**       enforced although the table size definitions may be reduced.
+*/
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_01 8
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_02 16
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_03 32
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_04 48
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_05 64
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_06 96
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_07 128
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_08 160
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_09 256
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_10 512
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_11 1024
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_12 2048
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_13 4096
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_14 8192
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_15 16384
+#define CFE_PLATFORM_ES_MEM_BLOCK_SIZE_16 32768
+#define CFE_PLATFORM_ES_MAX_BLOCK_SIZE    80000
+
+/**
+**  \cfeescfg Define ES Critical Data Store Memory Pool Block Sizes
+**
+**  \par Description:
+**       Intermediate ES Critical Data Store Memory Pool Block Sizes
+**
+**  \par Limits
+**       These sizes MUST be increasing and MUST be an integral multiple of 4.
+*/
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_01 8
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_02 16
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_03 32
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_04 48
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_05 64
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_06 96
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_07 128
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_08 160
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_09 256
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_10 512
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_11 1024
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_12 2048
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_13 4096
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_14 8192
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_15 16384
+#define CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_16 32768
+#define CFE_PLATFORM_ES_CDS_MAX_BLOCK_SIZE    80000
+
+/** \cfeescfg Poll timer for startup sync delay
+**
+**  \par Description:
+**      During startup, some tasks may need to synchronize their own initialization
+**      with the initialization of other applications in the system.
+**
+**      CFE ES implements an API to accomplish this, that performs a task delay (sleep)
+**      while polling the overall system state until other tasks are ready.
+**
+**      This value controls the amount of time that the CFE_ES_ApplicationSyncDelay
+**      will sleep between each check of the system state.  This should be large enough
+**      to allow other tasks to run, but not so large as to noticeably delay the startup
+**      completion.
+**
+**      Units are in milliseconds
+**
+**  \par Limits:
+**       Must be defined as an integer value that is greater than
+**       or equal to zero.
+*/
+#define CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC 50
+
+/** \cfeescfg Startup script timeout
+**
+**  \par Description:
+**      The upper limit for the total amount of time that all apps listed in the CFE ES startup
+**      script may take to all become ready.
+**
+**      Unlike the "core" app timeout, this is a soft limit; if the allotted time is exceeded,
+**      it probably indicates an issue with one of the apps, but does not cause CFE ES to take
+**      any additional action other than logging the event to the syslog.
+**
+**      Units are in milliseconds
+**
+**  \par Limits:
+**       Must be defined as an integer value that is greater than
+**       or equal to zero.
+*/
+#define CFE_PLATFORM_ES_STARTUP_SCRIPT_TIMEOUT_MSEC 1000
+
+#endif
+```
+
+### `default_cfe_es_mission_cfg.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_mission_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Executive Services (CFE_ES) Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_ES_MISSION_CFG_H
+#define CFE_ES_MISSION_CFG_H
+
+#include "cfe_es_interface_cfg.h"
+
+#endif
+```
+
+### `default_cfe_es_msg.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_msg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Executive Services (CFE_ES) command and telemetry
+ *   message data types.
+ *
+ * This is a compatibility header for the "cfe_es_msg.h" file that has
+ * traditionally provided the message definitions for cFS apps.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_ES_MSG_H
+#define CFE_ES_MSG_H
+
+#include "cfe_mission_cfg.h"
+#include "cfe_es_msgdefs.h"
+#include "cfe_es_msgstruct.h"
+
+#endif
+```
+
+### `default_cfe_es_msgdefs.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_msgdefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Executive Services (CFE_ES) command and telemetry
+ *   message constant definitions.
+ *
+ *  For CFE_ES this is only the function/command code definitions
+ */
+#ifndef CFE_ES_MSGDEFS_H
+#define CFE_ES_MSGDEFS_H
+
+#include "cfe_es_fcncodes.h"
+
+#endif
+```
+
+### `default_cfe_es_msgids.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Executive Services (CFE_ES) Application Message IDs
+ */
+#ifndef CFE_ES_MSGIDS_H
+#define CFE_ES_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_es_topicids.h"
+
+/*
+** cFE ES Command Message Id's
+*/
+#define CFE_ES_CMD_MID     CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_ES_CMD_MSG     /* 0x1806 */
+#define CFE_ES_SEND_HK_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_ES_SEND_HK_MSG /* 0x1808 */
+
+/*
+** CFE ES Telemetry Message Id's
+*/
+#define CFE_ES_HK_TLM_MID       CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_ES_HK_TLM_MSG       /* 0x0800 */
+#define CFE_ES_APP_TLM_MID      CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_ES_APP_TLM_MSG      /* 0x080B */
+#define CFE_ES_MEMSTATS_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_ES_MEMSTATS_TLM_MSG /* 0x0810 */
+
+#endif
+```
+
+### `default_cfe_es_msgstruct.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_msgstruct.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE Executive Services (ES) Command and Telemetry packet definition file.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+#ifndef CFE_ES_MSGSTRUCT_H
+#define CFE_ES_MSGSTRUCT_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe_es_msgdefs.h"
+#include "cfe_msg_hdr.h"
+#include "cfe_mission_cfg.h"
+
+/********************************/
+/* Command Message Data Formats */
+/********************************/
+/**
+** \brief Generic "no arguments" command
+**
+** This command structure is used for commands that do not have any parameters.
+** This includes:
+** -# The Housekeeping Request Message
+** -# The No-Op Command (For details, see #CFE_ES_NOOP_CC)
+** -# The Reset Counters Command (For details, see #CFE_ES_RESET_COUNTERS_CC)
+*/
+typedef struct CFE_ES_NoArgsCmd
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CFE_ES_NoArgsCmd_t;
+
+/*
+ * The following commands all share the "NoArgs" format
+ *
+ * They are each given their own type name matching the command name, which
+ * allows them to change independently in the future without changing the prototype
+ * of the handler function.
+ */
+typedef CFE_ES_NoArgsCmd_t CFE_ES_NoopCmd_t;
+typedef CFE_ES_NoArgsCmd_t CFE_ES_ResetCountersCmd_t;
+typedef CFE_ES_NoArgsCmd_t CFE_ES_ClearSysLogCmd_t;
+typedef CFE_ES_NoArgsCmd_t CFE_ES_ClearERLogCmd_t;
+typedef CFE_ES_NoArgsCmd_t CFE_ES_ResetPRCountCmd_t;
+typedef CFE_ES_NoArgsCmd_t CFE_ES_SendHkCmd_t;
+
+/**
+** \brief Restart cFE Command Payload
+**
+** For command details, see #CFE_ES_RESTART_CC
+**
+**/
+typedef struct CFE_ES_RestartCmd_Payload
+{
+    uint16 RestartType; /**< \brief #CFE_PSP_RST_TYPE_PROCESSOR=Processor Reset
+                             or #CFE_PSP_RST_TYPE_POWERON=Power-On Reset        */
+} CFE_ES_RestartCmd_Payload_t;
+
+/**
+ * \brief Restart cFE Command
+ */
+typedef struct CFE_ES_RestartCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CFE_ES_RestartCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_RestartCmd_t;
+
+/**
+** \brief Generic file name command payload
+**
+** This format is shared by several executive services commands.
+** For command details, see #CFE_ES_QUERY_ALL_CC, #CFE_ES_QUERY_ALL_TASKS_CC,
+** #CFE_ES_WRITE_SYSLOG_CC, and #CFE_ES_WRITE_ER_LOG_CC
+**
+**/
+typedef struct CFE_ES_FileNameCmd_Payload
+{
+    char FileName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief ASCII text string containing full path and
+                                                 filename of file in which Application data is to be dumped */
+} CFE_ES_FileNameCmd_Payload_t;
+
+/**
+ * \brief Generic file name command
+ */
+typedef struct CFE_ES_FileNameCmd
+{
+    CFE_MSG_CommandHeader_t      CommandHeader; /**< \brief Command header */
+    CFE_ES_FileNameCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_FileNameCmd_t;
+
+/*
+ * Unique typedefs for each of the commands that utilize the FileNameCmd
+ * packet format
+ */
+typedef CFE_ES_FileNameCmd_t CFE_ES_QueryAllCmd_t;
+typedef CFE_ES_FileNameCmd_t CFE_ES_QueryAllTasksCmd_t;
+typedef CFE_ES_FileNameCmd_t CFE_ES_WriteSysLogCmd_t;
+typedef CFE_ES_FileNameCmd_t CFE_ES_WriteERLogCmd_t;
+
+/**
+** \brief Overwrite/Discard System Log Configuration Command Payload
+**
+** For command details, see #CFE_ES_OVER_WRITE_SYSLOG_CC
+**
+**/
+typedef struct CFE_ES_OverWriteSysLogCmd_Payload
+{
+    uint32 Mode; /**< \brief #CFE_ES_LogMode_DISCARD=Throw away most recent messages,
+                             #CFE_ES_LogMode_OVERWRITE=Overwrite oldest with most recent */
+} CFE_ES_OverWriteSysLogCmd_Payload_t;
+
+/**
+ * \brief Overwrite/Discard System Log Configuration Command Payload
+ */
+typedef struct CFE_ES_OverWriteSysLogCmd
+{
+    CFE_MSG_CommandHeader_t             CommandHeader; /**< \brief Command header */
+    CFE_ES_OverWriteSysLogCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_OverWriteSysLogCmd_t;
+
+/**
+** \brief Start Application Command Payload
+**
+** For command details, see #CFE_ES_START_APP_CC
+**
+**/
+typedef struct CFE_ES_StartAppCmd_Payload
+{
+    char Application[CFE_MISSION_MAX_API_LEN];   /**< \brief Name of Application to be started */
+    char AppEntryPoint[CFE_MISSION_MAX_API_LEN]; /**< \brief Symbolic name of Application's entry point */
+    char AppFileName[CFE_MISSION_MAX_PATH_LEN];  /**< \brief Full path and filename of Application's
+                                                    executable image */
+
+    CFE_ES_MemOffset_t StackSize; /**< \brief Desired stack size for the new application */
+
+    CFE_ES_ExceptionAction_Enum_t ExceptionAction; /**< \brief #CFE_ES_ExceptionAction_RESTART_APP=On exception,
+                                                       restart Application,
+                                                       #CFE_ES_ExceptionAction_PROC_RESTART=On exception,
+                                                       perform a Processor Reset */
+    CFE_ES_TaskPriority_Atom_t Priority;           /**< \brief The new Applications runtime priority. */
+} CFE_ES_StartAppCmd_Payload_t;
+
+/**
+ * \brief Start Application Command
+ */
+typedef struct CFE_ES_StartApp
+{
+    CFE_MSG_CommandHeader_t      CommandHeader; /**< \brief Command header */
+    CFE_ES_StartAppCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_StartAppCmd_t;
+
+/**
+** \brief Generic application name command payload
+**
+** For command details, see #CFE_ES_STOP_APP_CC, #CFE_ES_RESTART_APP_CC, #CFE_ES_QUERY_ONE_CC
+**
+**/
+typedef struct CFE_ES_AppNameCmd_Payload
+{
+    char Application[CFE_MISSION_MAX_API_LEN]; /**< \brief ASCII text string containing Application or Library Name */
+} CFE_ES_AppNameCmd_Payload_t;
+
+/**
+ * \brief Generic application name command
+ */
+typedef struct CFE_ES_AppNameCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CFE_ES_AppNameCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_AppNameCmd_t;
+
+/*
+ * Like NoArgsCmd, this message definition is shared by multiple commands.
+ * Create a separate typedef for each one so they can all evolve independently
+ * without affecting the prototype.
+ */
+typedef CFE_ES_AppNameCmd_t CFE_ES_StopAppCmd_t;
+typedef CFE_ES_AppNameCmd_t CFE_ES_RestartAppCmd_t;
+typedef CFE_ES_AppNameCmd_t CFE_ES_QueryOneCmd_t;
+
+/**
+** \brief Reload Application Command Payload
+**
+** For command details, see #CFE_ES_RELOAD_APP_CC
+**
+**/
+typedef struct CFE_ES_AppReloadCmd_Payload
+{
+    char Application[CFE_MISSION_MAX_API_LEN];  /**< \brief ASCII text string containing Application Name */
+    char AppFileName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Full path and filename of Application's
+                                                   executable image */
+} CFE_ES_AppReloadCmd_Payload_t;
+
+/**
+ * \brief Reload Application Command
+ */
+typedef struct CFE_ES_ReloadAppCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**< \brief Command header */
+    CFE_ES_AppReloadCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_ReloadAppCmd_t;
+
+/**
+** \brief Set Maximum Processor Reset Count Command Payload
+**
+** For command details, see #CFE_ES_SET_MAX_PR_COUNT_CC
+**
+**/
+typedef struct CFE_ES_SetMaxPRCountCmd_Payload
+{
+    uint16 MaxPRCount; /**< \brief New maximum number of Processor Resets before
+                                   an automatic Power-On Reset is performed */
+} CFE_ES_SetMaxPRCountCmd_Payload_t;
+
+/**
+ * \brief Set Maximum Processor Reset Count Command
+ */
+typedef struct CFE_ES_SetMaxPRCountCmd
+{
+    CFE_MSG_CommandHeader_t           CommandHeader; /**< \brief Command header */
+    CFE_ES_SetMaxPRCountCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_SetMaxPRCountCmd_t;
+
+/**
+** \brief Delete Critical Data Store Command Payload
+**
+** For command details, see #CFE_ES_DELETE_CDS_CC
+**
+**/
+typedef struct CFE_ES_DeleteCDSCmd_Payload
+{
+    char
+        CdsName[CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN]; /**< \brief ASCII text string containing name of CDS to delete */
+} CFE_ES_DeleteCDSCmd_Payload_t;
+
+/**
+ * \brief Delete Critical Data Store Command
+ */
+typedef struct CFE_ES_DeleteCDSCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**< \brief Command header */
+    CFE_ES_DeleteCDSCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_DeleteCDSCmd_t;
+
+/**
+** \brief Start Performance Analyzer Command Payload
+**
+** For command details, see #CFE_ES_START_PERF_DATA_CC
+**
+**/
+typedef struct CFE_ES_StartPerfCmd_Payload
+{
+    uint32 TriggerMode; /**< \brief Desired trigger position (Start, Center, End) */
+} CFE_ES_StartPerfCmd_Payload_t;
+
+/**
+ * \brief Start Performance Analyzer Command
+ */
+typedef struct CFE_ES_StartPerfDataCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**< \brief Command header */
+    CFE_ES_StartPerfCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_StartPerfDataCmd_t;
+
+/**
+** \brief Stop Performance Analyzer Command Payload
+**
+** For command details, see #CFE_ES_STOP_PERF_DATA_CC
+**
+**/
+typedef struct CFE_ES_StopPerfCmd_Payload
+{
+    char DataFileName[CFE_MISSION_MAX_PATH_LEN]; /**< \brief ASCII text string of full path and filename
+                                                    of file Performance Analyzer data is to be written */
+} CFE_ES_StopPerfCmd_Payload_t;
+
+/**
+ * \brief Stop Performance Analyzer Command
+ */
+typedef struct CFE_ES_StopPerfDataCmd
+{
+    CFE_MSG_CommandHeader_t      CommandHeader; /**< \brief Command header */
+    CFE_ES_StopPerfCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_StopPerfDataCmd_t;
+
+/**
+** \brief Set Performance Analyzer Filter Mask Command Payload
+**
+** For command details, see #CFE_ES_SET_PERF_FILTER_MASK_CC
+**
+**/
+typedef struct CFE_ES_SetPerfFilterMaskCmd_Payload
+{
+    uint32 FilterMaskNum; /**< \brief Index into array of Filter Masks */
+    uint32 FilterMask;    /**< \brief New Mask for specified entry in array of Filter Masks */
+} CFE_ES_SetPerfFilterMaskCmd_Payload_t;
+
+/**
+ * \brief Set Performance Analyzer Filter Mask Command
+ */
+typedef struct CFE_ES_SetPerfFilterMaskCmd
+{
+    CFE_MSG_CommandHeader_t               CommandHeader; /**< \brief Command header */
+    CFE_ES_SetPerfFilterMaskCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_SetPerfFilterMaskCmd_t;
+
+/**
+** \brief Set Performance Analyzer Trigger Mask Command Payload
+**
+** For command details, see #CFE_ES_SET_PERF_TRIGGER_MASK_CC
+**
+**/
+typedef struct CFE_ES_SetPerfTrigMaskCmd_Payload
+{
+    uint32 TriggerMaskNum; /**< \brief Index into array of Trigger Masks */
+    uint32 TriggerMask;    /**< \brief New Mask for specified entry in array of Trigger Masks */
+} CFE_ES_SetPerfTrigMaskCmd_Payload_t;
+
+/**
+ * \brief Set Performance Analyzer Trigger Mask Command
+ */
+typedef struct CFE_ES_SetPerfTriggerMaskCmd
+{
+    CFE_MSG_CommandHeader_t             CommandHeader; /**< \brief Command header */
+    CFE_ES_SetPerfTrigMaskCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_SetPerfTriggerMaskCmd_t;
+
+/**
+** \brief Send Memory Pool Statistics Command Payload
+**
+** For command details, see #CFE_ES_SEND_MEM_POOL_STATS_CC
+**
+**/
+typedef struct CFE_ES_SendMemPoolStatsCmd_Payload
+{
+    char               Application[CFE_MISSION_MAX_API_LEN]; /**< \brief - RESERVED - should be all zeroes */
+    CFE_ES_MemHandle_t PoolHandle; /**< \brief Handle of Pool whose statistics are to be telemetered */
+} CFE_ES_SendMemPoolStatsCmd_Payload_t;
+
+/**
+ * \brief Send Memory Pool Statistics Command
+ */
+typedef struct CFE_ES_SendMemPoolStatsCmd
+{
+    CFE_MSG_CommandHeader_t              CommandHeader; /**< \brief Command header */
+    CFE_ES_SendMemPoolStatsCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_SendMemPoolStatsCmd_t;
+
+/**
+** \brief Dump CDS Registry Command Payload
+**
+** For command details, see #CFE_ES_DUMP_CDS_REGISTRY_CC
+**
+**/
+typedef struct CFE_ES_DumpCDSRegistryCmd_Payload
+{
+    char DumpFilename[CFE_MISSION_MAX_PATH_LEN]; /**< \brief ASCII text string of full path and filename
+                                                    of file CDS Registry is to be written */
+} CFE_ES_DumpCDSRegistryCmd_Payload_t;
+
+/**
+ * \brief Dump CDS Registry Command
+ */
+typedef struct CFE_ES_DumpCDSRegistryCmd
+{
+    CFE_MSG_CommandHeader_t             CommandHeader; /**< \brief Command header */
+    CFE_ES_DumpCDSRegistryCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_ES_DumpCDSRegistryCmd_t;
+
+/*************************************************************************/
+
+/************************************/
+/* Telemetry Interface Data Formats */
+/************************************/
+
+/**********************************/
+/* Telemetry Message Data Formats */
+/**********************************/
+/**
+**  \cfeestlm Single Application Information Packet
+**/
+typedef struct CFE_ES_OneAppTlm_Payload
+{
+    CFE_ES_AppInfo_t AppInfo; /**< \brief For more information, see #CFE_ES_AppInfo_t */
+} CFE_ES_OneAppTlm_Payload_t;
+
+typedef struct CFE_ES_OneAppTlm
+{
+    CFE_MSG_TelemetryHeader_t  TelemetryHeader; /**< \brief Telemetry header */
+    CFE_ES_OneAppTlm_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_ES_OneAppTlm_t;
+
+/**
+**  \cfeestlm Memory Pool Statistics Packet
+**/
+typedef struct CFE_ES_PoolStatsTlm_Payload
+{
+    CFE_ES_MemHandle_t PoolHandle;   /**< \cfetlmmnemonic \ES_POOLHANDLE
+                                          \brief Handle of memory pool whose stats are being telemetered */
+    CFE_ES_MemPoolStats_t PoolStats; /**< \brief For more info, see #CFE_ES_MemPoolStats_t */
+} CFE_ES_PoolStatsTlm_Payload_t;
+
+typedef struct CFE_ES_MemStatsTlm
+{
+    CFE_MSG_TelemetryHeader_t     TelemetryHeader; /**< \brief Telemetry header */
+    CFE_ES_PoolStatsTlm_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_ES_MemStatsTlm_t;
+
+/*************************************************************************/
+
+/**
+**  \cfeestlm Executive Services Housekeeping Packet
+**/
+typedef struct CFE_ES_HousekeepingTlm_Payload
+{
+    uint8 CommandCounter;      /**< \cfetlmmnemonic \ES_CMDPC
+                                \brief The ES Application Command Counter */
+    uint8 CommandErrorCounter; /**< \cfetlmmnemonic \ES_CMDEC
+                           \brief The ES Application Command Error Counter */
+
+    uint16 CFECoreChecksum;    /**< \cfetlmmnemonic \ES_CKSUM
+                                    \brief Checksum of cFE Core Code */
+    uint8 CFEMajorVersion;     /**< \cfetlmmnemonic \ES_CFEMAJORVER
+                                    \brief Major Version Number of cFE */
+    uint8 CFEMinorVersion;     /**< \cfetlmmnemonic \ES_CFEMINORVER
+                                    \brief Minor Version Number of cFE */
+    uint8 CFERevision;         /**< \cfetlmmnemonic \ES_CFEREVISION
+                                    \brief Sub-Minor Version Number of cFE */
+    uint8 CFEMissionRevision;  /**< \cfetlmmnemonic \ES_CFEMISSIONREV
+                                    \brief Mission Version Number of cFE */
+    uint8 OSALMajorVersion;    /**< \cfetlmmnemonic \ES_OSMAJORVER
+                                    \brief OS Abstraction Layer Major Version Number */
+    uint8 OSALMinorVersion;    /**< \cfetlmmnemonic \ES_OSMINORVER
+                                    \brief OS Abstraction Layer Minor Version Number */
+    uint8 OSALRevision;        /**< \cfetlmmnemonic \ES_OSREVISION
+                                    \brief OS Abstraction Layer Revision Number */
+    uint8 OSALMissionRevision; /**< \cfetlmmnemonic \ES_OSMISSIONREV
+                                    \brief OS Abstraction Layer MissionRevision Number */
+
+    uint8 PSPMajorVersion;    /**< \cfetlmmnemonic \ES_PSPMAJORVER
+                                   \brief Platform Support Package Major Version Number */
+    uint8 PSPMinorVersion;    /**< \cfetlmmnemonic \ES_PSPMINORVER
+                                   \brief Platform Support Package Minor Version Number */
+    uint8 PSPRevision;        /**< \cfetlmmnemonic \ES_PSPREVISION
+                                   \brief Platform Support Package Revision Number */
+    uint8 PSPMissionRevision; /**< \cfetlmmnemonic \ES_PSPMISSIONREV
+                                   \brief Platform Support Package MissionRevision Number */
+
+    CFE_ES_MemOffset_t SysLogBytesUsed; /**< \cfetlmmnemonic \ES_SYSLOGBYTEUSED
+                                             \brief Total number of bytes used in system log */
+    CFE_ES_MemOffset_t SysLogSize;      /**< \cfetlmmnemonic \ES_SYSLOGSIZE
+                                             \brief Total size of the system log */
+    uint32 SysLogEntries;               /**< \cfetlmmnemonic \ES_SYSLOGENTRIES
+                                             \brief Number of entries in the system log */
+    uint32 SysLogMode;                  /**< \cfetlmmnemonic \ES_SYSLOGMODE
+                                             \brief Write/Overwrite Mode */
+
+    uint32 ERLogIndex;   /**< \cfetlmmnemonic \ES_ERLOGINDEX
+                              \brief Current index of the ER Log (wraps around) */
+    uint32 ERLogEntries; /**< \cfetlmmnemonic \ES_ERLOGENTRIES
+                              \brief Number of entries made in the ER Log since the power on */
+
+    uint32 RegisteredCoreApps;     /**< \cfetlmmnemonic \ES_REGCOREAPPS
+                                        \brief Number of Applications registered with ES */
+    uint32 RegisteredExternalApps; /**< \cfetlmmnemonic \ES_REGEXTAPPS
+                                        \brief Number of Applications registered with ES */
+    uint32 RegisteredTasks;        /**< \cfetlmmnemonic \ES_REGTASKS
+                                        \brief Number of Tasks ( main AND child tasks ) registered with ES */
+    uint32 RegisteredLibs;         /**< \cfetlmmnemonic \ES_REGLIBS
+                                        \brief Number of Libraries registered with ES */
+
+    uint32 ResetType;          /**< \cfetlmmnemonic \ES_RESETTYPE
+                                    \brief Reset type ( PROCESSOR or POWERON ) */
+    uint32 ResetSubtype;       /**< \cfetlmmnemonic \ES_RESETSUBTYPE
+                                    \brief Reset Sub Type */
+    uint32 ProcessorResets;    /**< \cfetlmmnemonic \ES_PROCRESETCNT
+                                    \brief Number of processor resets since last power on */
+    uint32 MaxProcessorResets; /**< \cfetlmmnemonic \ES_MAXPROCRESETS
+                                    \brief Max processor resets before a power on is done */
+    uint32 BootSource;         /**< \cfetlmmnemonic \ES_BOOTSOURCE
+                                    \brief Boot source ( as provided from BSP ) */
+
+    uint32 PerfState;                                        /**< \cfetlmmnemonic \ES_PERFSTATE
+                                                                  \brief Current state of Performance Analyzer */
+    uint32 PerfMode;                                         /**< \cfetlmmnemonic \ES_PERFMODE
+                                                                  \brief Current mode of Performance Analyzer */
+    uint32 PerfTriggerCount;                                 /**< \cfetlmmnemonic \ES_PERFTRIGCNT
+                                                                  \brief Number of Times Performance Analyzer has Triggered */
+    uint32 PerfFilterMask[CFE_MISSION_ES_PERF_MAX_IDS / 32]; /**< \cfetlmmnemonic \ES_PERFFLTRMASK
+                                                          \brief Current Setting of Performance Analyzer Filter Masks */
+    uint32
+        PerfTriggerMask[CFE_MISSION_ES_PERF_MAX_IDS / 32]; /**< \cfetlmmnemonic \ES_PERFTRIGMASK
+                                                        \brief Current Setting of Performance Analyzer Trigger Masks */
+    uint32 PerfDataStart;                                  /**< \cfetlmmnemonic \ES_PERFDATASTART
+                                                                \brief Identifies First Stored Entry in Performance Analyzer Log */
+    uint32 PerfDataEnd;                                    /**< \cfetlmmnemonic \ES_PERFDATAEND
+                                                                \brief Identifies Last Stored Entry in Performance Analyzer Log */
+    uint32 PerfDataCount;                                  /**< \cfetlmmnemonic \ES_PERFDATACNT
+                                                                \brief Number of Entries Put Into the Performance Analyzer Log */
+    uint32
+        PerfDataToWrite;                 /**< \cfetlmmnemonic \ES_PERFDATA2WRITE
+                                              \brief Number of Performance Analyzer Log Entries Left to be Written to Log Dump File */
+    CFE_ES_MemOffset_t HeapBytesFree;    /**< \cfetlmmnemonic \ES_HEAPBYTESFREE
+                                            \brief Number of free bytes remaining in the OS heap */
+    CFE_ES_MemOffset_t HeapBlocksFree;   /**< \cfetlmmnemonic \ES_HEAPBLKSFREE
+                                            \brief Number of free blocks remaining in the OS heap */
+    CFE_ES_MemOffset_t HeapMaxBlockSize; /**< \cfetlmmnemonic \ES_HEAPMAXBLK
+                                            \brief Number of bytes in the largest free block */
+} CFE_ES_HousekeepingTlm_Payload_t;
+
+typedef struct CFE_ES_HousekeepingTlm
+{
+    CFE_MSG_TelemetryHeader_t        TelemetryHeader; /**< \brief Telemetry header */
+    CFE_ES_HousekeepingTlm_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_ES_HousekeepingTlm_t;
+
+#endif
+```
+
+### `default_cfe_es_platform_cfg.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_platform_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Executive Services (CFE_ES) Application Platform Configuration Header File
+ *
+ * This is a compatibility header for the "platform_cfg.h" file that has
+ * traditionally provided both public and private config definitions
+ * for each CFS app.
+ *
+ * These definitions are now provided in two separate files, one for
+ * the public/mission scope and one for internal scope.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_ES_PLATFORM_CFG_H
+#define CFE_ES_PLATFORM_CFG_H
+
+#include "cfe_es_mission_cfg.h"
+#include "cfe_es_internal_cfg.h"
+
+#endif
+```
+
+### `default_cfe_es_topicids.h`
+
+**경로:** `fsw/cfe/modules/es/config/default_cfe_es_topicids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Executive Services (CFE_ES) Application Topic IDs
+ */
+#ifndef CFE_ES_TOPICIDS_H
+#define CFE_ES_TOPICIDS_H
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Commands
+**
+**  \par Description:
+**      Portable message numbers for the cFE ES command messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_ES_CMD_MSG     6
+#define CFE_MISSION_ES_SEND_HK_MSG 8
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Telemetry
+**
+**  \par Description:
+**      Portable message numbers for the cFE ES telemetry messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_ES_HK_TLM_MSG       0
+#define CFE_MISSION_ES_APP_TLM_MSG      11
+#define CFE_MISSION_ES_MEMSTATS_TLM_MSG 16
+
+#endif
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ TestConfigDeployment/index
 TestDeployment/index
 ```
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/`](cmake/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/`](test-config-library/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/`](test-fprime-library/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library2/`](test-fprime-library2/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/`](test-implementations/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestConfigDeployment/`](TestConfigDeployment/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/`](TestDeployment/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

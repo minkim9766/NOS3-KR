@@ -3,84 +3,220 @@
 
 **경로:** `cfg/build/InOut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Flex_Simple.txt`
 
-file--Flex_Simple.txt
-file--Inp_AcOutput.txt
-file--Inp_Cmd.txt
-file--Inp_CommLink.txt
-file--Inp_FOV.txt
-file--Inp_Graphics.txt
-file--Inp_Graphics_DeepSpace.txt
-file--Inp_Graphics_Gateway.txt
-file--Inp_Graphics_STF1.txt
-file--Inp_IPC.shmem.txt
-file--Inp_IPC.sockets.txt
-file--Inp_IPC.txt
-file--Inp_IPC_MultipleSC.txt
-file--Inp_NOS3.txt
-file--Inp_Region.txt
-file--Inp_ScOutput.txt
-file--Inp_Sim.txt
-file--Inp_Sim_DeepSpace.txt
-file--Inp_Sim_Gateway.txt
-file--Inp_Sim_STF1.txt
-file--Inp_TDRS.txt
-file--Nodes_Simple.txt
-file--Optics_Simple.txt
-file--Orb_Ellipse.txt
-file--Orb_L3.txt
-file--Orb_LEO.txt
-file--Orb_LLO.txt
-file--Orb_NRHO.txt
-file--SC_DeepSpaceComm.txt
-file--SC_Gateway.txt
-file--SC_NOS3.txt
-file--SC_SensorFOV.txt
-file--SC_Simple.txt
-file--Shaker_Simple.txt
-file--TRV.txt
-file--Whl_Simple.txt
-```
+**경로:** `cfg/build/InOut/Flex_Simple.txt`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`cfg/build/InOut/Flex_Simple.txt`](file--Flex_Simple.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_AcOutput.txt`](file--Inp_AcOutput.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Cmd.txt`](file--Inp_Cmd.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_CommLink.txt`](file--Inp_CommLink.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_FOV.txt`](file--Inp_FOV.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Graphics.txt`](file--Inp_Graphics.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Graphics_DeepSpace.txt`](file--Inp_Graphics_DeepSpace.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Graphics_Gateway.txt`](file--Inp_Graphics_Gateway.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Graphics_STF1.txt`](file--Inp_Graphics_STF1.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_IPC.shmem.txt`](file--Inp_IPC.shmem.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_IPC.sockets.txt`](file--Inp_IPC.sockets.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_IPC.txt`](file--Inp_IPC.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_IPC_MultipleSC.txt`](file--Inp_IPC_MultipleSC.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_NOS3.txt`](file--Inp_NOS3.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Region.txt`](file--Inp_Region.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_ScOutput.txt`](file--Inp_ScOutput.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Sim.txt`](file--Inp_Sim.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Sim_DeepSpace.txt`](file--Inp_Sim_DeepSpace.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Sim_Gateway.txt`](file--Inp_Sim_Gateway.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_Sim_STF1.txt`](file--Inp_Sim_STF1.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Inp_TDRS.txt`](file--Inp_TDRS.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Nodes_Simple.txt`](file--Nodes_Simple.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Optics_Simple.txt`](file--Optics_Simple.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Orb_Ellipse.txt`](file--Orb_Ellipse.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Orb_L3.txt`](file--Orb_L3.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Orb_LEO.txt`](file--Orb_LEO.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Orb_LLO.txt`](file--Orb_LLO.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Orb_NRHO.txt`](file--Orb_NRHO.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/SC_DeepSpaceComm.txt`](file--SC_DeepSpaceComm.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/SC_Gateway.txt`](file--SC_Gateway.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/SC_NOS3.txt`](file--SC_NOS3.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/SC_SensorFOV.txt`](file--SC_SensorFOV.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/SC_Simple.txt`](file--SC_Simple.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Shaker_Simple.txt`](file--Shaker_Simple.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/TRV.txt`](file--TRV.txt) — 빌드 산출물 (경로만)
-- [`cfg/build/InOut/Whl_Simple.txt`](file--Whl_Simple.txt) — 빌드 산출물 (경로만)
+### `Inp_AcOutput.txt`
+
+**경로:** `cfg/build/InOut/Inp_AcOutput.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Cmd.txt`
+
+**경로:** `cfg/build/InOut/Inp_Cmd.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_CommLink.txt`
+
+**경로:** `cfg/build/InOut/Inp_CommLink.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_FOV.txt`
+
+**경로:** `cfg/build/InOut/Inp_FOV.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Graphics.txt`
+
+**경로:** `cfg/build/InOut/Inp_Graphics.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Graphics_DeepSpace.txt`
+
+**경로:** `cfg/build/InOut/Inp_Graphics_DeepSpace.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Graphics_Gateway.txt`
+
+**경로:** `cfg/build/InOut/Inp_Graphics_Gateway.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Graphics_STF1.txt`
+
+**경로:** `cfg/build/InOut/Inp_Graphics_STF1.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_IPC.shmem.txt`
+
+**경로:** `cfg/build/InOut/Inp_IPC.shmem.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_IPC.sockets.txt`
+
+**경로:** `cfg/build/InOut/Inp_IPC.sockets.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_IPC.txt`
+
+**경로:** `cfg/build/InOut/Inp_IPC.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_IPC_MultipleSC.txt`
+
+**경로:** `cfg/build/InOut/Inp_IPC_MultipleSC.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_NOS3.txt`
+
+**경로:** `cfg/build/InOut/Inp_NOS3.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Region.txt`
+
+**경로:** `cfg/build/InOut/Inp_Region.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_ScOutput.txt`
+
+**경로:** `cfg/build/InOut/Inp_ScOutput.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Sim.txt`
+
+**경로:** `cfg/build/InOut/Inp_Sim.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Sim_DeepSpace.txt`
+
+**경로:** `cfg/build/InOut/Inp_Sim_DeepSpace.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Sim_Gateway.txt`
+
+**경로:** `cfg/build/InOut/Inp_Sim_Gateway.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_Sim_STF1.txt`
+
+**경로:** `cfg/build/InOut/Inp_Sim_STF1.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Inp_TDRS.txt`
+
+**경로:** `cfg/build/InOut/Inp_TDRS.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Nodes_Simple.txt`
+
+**경로:** `cfg/build/InOut/Nodes_Simple.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Optics_Simple.txt`
+
+**경로:** `cfg/build/InOut/Optics_Simple.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Orb_Ellipse.txt`
+
+**경로:** `cfg/build/InOut/Orb_Ellipse.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Orb_L3.txt`
+
+**경로:** `cfg/build/InOut/Orb_L3.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Orb_LEO.txt`
+
+**경로:** `cfg/build/InOut/Orb_LEO.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Orb_LLO.txt`
+
+**경로:** `cfg/build/InOut/Orb_LLO.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Orb_NRHO.txt`
+
+**경로:** `cfg/build/InOut/Orb_NRHO.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `SC_DeepSpaceComm.txt`
+
+**경로:** `cfg/build/InOut/SC_DeepSpaceComm.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `SC_Gateway.txt`
+
+**경로:** `cfg/build/InOut/SC_Gateway.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `SC_NOS3.txt`
+
+**경로:** `cfg/build/InOut/SC_NOS3.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `SC_SensorFOV.txt`
+
+**경로:** `cfg/build/InOut/SC_SensorFOV.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `SC_Simple.txt`
+
+**경로:** `cfg/build/InOut/SC_Simple.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Shaker_Simple.txt`
+
+**경로:** `cfg/build/InOut/Shaker_Simple.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `TRV.txt`
+
+**경로:** `cfg/build/InOut/TRV.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Whl_Simple.txt`
+
+**경로:** `cfg/build/InOut/Whl_Simple.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

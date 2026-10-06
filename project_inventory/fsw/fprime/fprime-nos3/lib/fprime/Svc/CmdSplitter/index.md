@@ -3,24 +3,210 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--CmdSplitter.cpp
-file--CmdSplitter.fpp
-file--CmdSplitter.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CmdSplitter.cpp`](file--CmdSplitter.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CmdSplitter.fpp`](file--CmdSplitter.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CmdSplitter.hpp`](file--CmdSplitter.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CMakeLists.txt`
+
+
+```cmake
+register_fprime_module(
+    AUTOCODER_INPUTS
+       "${CMAKE_CURRENT_LIST_DIR}/CmdSplitter.fpp"
+    SOURCES
+       "${CMAKE_CURRENT_LIST_DIR}/CmdSplitter.cpp"
+)
+
+register_fprime_ut(
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/CmdSplitter.fpp"
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/CmdSplitterTestMain.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/CmdSplitterTester.cpp"
+    UT_AUTO_HELPERS
+    DEPENDS
+        STest
+)
+```
+
+### `CmdSplitter.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CmdSplitter.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdSplitter.cpp
+// \author watney
+// \brief  cpp file for CmdSplitter component implementation class
+// ======================================================================
+
+#include <Fw/Cmd/CmdPacket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/CmdSplitter/CmdSplitter.hpp>
+#include <config/FppConstantsAc.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+CmdSplitter ::CmdSplitter(const char* const compName) : CmdSplitterComponentBase(compName) {}
+
+CmdSplitter ::~CmdSplitter() {}
+
+void CmdSplitter ::configure(const FwOpcodeType remoteBaseOpcode) {
+    this->m_remoteBase = remoteBaseOpcode;
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void CmdSplitter ::CmdBuff_handler(const FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    Fw::CmdPacket cmdPkt;
+    Fw::SerializeStatus stat = cmdPkt.deserializeFrom(data);
+
+    FW_ASSERT(portNum < CmdSplitterPorts);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        // Let the local command dispatcher deal with it
+        this->LocalCmd_out(portNum, data, context);
+    } else {
+        // Check if local or remote
+        if (cmdPkt.getOpCode() < this->m_remoteBase) {
+            this->LocalCmd_out(portNum, data, context);
+        } else {
+            this->RemoteCmd_out(portNum, data, context);
+        }
+    }
+}
+
+void CmdSplitter ::seqCmdStatus_handler(const FwIndexType portNum,
+                                        FwOpcodeType opCode,
+                                        U32 cmdSeq,
+                                        const Fw::CmdResponse& response) {
+    FW_ASSERT(portNum < CmdSplitterPorts);
+    // Forward the command status
+    this->forwardSeqCmdStatus_out(portNum, opCode, cmdSeq, response);
+}
+
+}  // end namespace Svc
+```
+
+### `CmdSplitter.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CmdSplitter.fpp`
+
+
+```fpp
+
+module Svc {
+
+  @ A component for splitting incoming commands to local or remote
+  passive component CmdSplitter {
+
+    # ----------------------------------------------------------------------
+    # Upstream connections: uplink commanding and command sequencers
+    # ----------------------------------------------------------------------
+
+    @ Input port for local or remote commands
+    sync input port CmdBuff: [CmdSplitterPorts] Fw.Com
+
+    @ Output port for forwarding the Command status
+    output port forwardSeqCmdStatus: [CmdSplitterPorts] Fw.CmdResponse
+
+    # ----------------------------------------------------------------------
+    # Downstream connections: local and remote command sequencers
+    # ----------------------------------------------------------------------
+
+    @ Input port for receiving the command status
+    sync input port seqCmdStatus: [CmdSplitterPorts] Fw.CmdResponse
+
+    @ Output port for local commands
+    output port LocalCmd: [CmdSplitterPorts] Fw.Com
+
+    @ Output port for remote commands
+    output port RemoteCmd: [CmdSplitterPorts] Fw.Com
+
+  }
+}
+```
+
+### `CmdSplitter.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/CmdSplitter.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdSplitter.hpp
+// \author watney
+// \brief  hpp file for CmdSplitter component implementation class
+// ======================================================================
+
+#ifndef CmdSplitter_HPP
+#define CmdSplitter_HPP
+
+#include <Fw/Cmd/CmdResponsePortAc.hpp>
+#include "Svc/CmdSplitter/CmdSplitterComponentAc.hpp"
+
+namespace Svc {
+
+class CmdSplitter final : public CmdSplitterComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSplitter
+    //!
+    CmdSplitter(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object CmdSplitter
+    //!
+    ~CmdSplitter();
+
+    //! Configure this splitter
+    //!
+    void configure(const FwOpcodeType remoteBaseOpcode /*!< Base remote opcode*/);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for CmdBuff
+    //!
+    void CmdBuff_handler(const FwIndexType portNum, /*!< The port number */
+                         Fw::ComBuffer& data,       /*!< Buffer containing packet data */
+                         U32 context                /*!< Call context value; meaning chosen by user */
+    );
+
+    //! Handler implementation for seqCmdStatus
+    //!
+    void seqCmdStatus_handler(const FwIndexType portNum,      /*!< The port number */
+                              FwOpcodeType opCode,            /*!< Command Op Code */
+                              U32 cmdSeq,                     /*!< Command Sequence */
+                              const Fw::CmdResponse& response /*!< The command response argument */
+    );
+
+    FwOpcodeType m_remoteBase;  // Opcodes greater than or equal than this value will route remotely
+};
+
+}  // end namespace Svc
+
+#endif
+```

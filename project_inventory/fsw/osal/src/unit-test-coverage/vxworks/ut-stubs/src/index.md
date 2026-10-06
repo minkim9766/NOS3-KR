@@ -3,36 +3,481 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `vxworks-os-impl-binsem-stubs.c`
 
-file--vxworks-os-impl-binsem-stubs.c
-file--vxworks-os-impl-common-stubs.c
-file--vxworks-os-impl-countsem-stubs.c
-file--vxworks-os-impl-dir-stubs.c
-file--vxworks-os-impl-file-stubs.c
-file--vxworks-os-impl-idmap-stubs.c
-file--vxworks-os-impl-module-stubs.c
-file--vxworks-os-impl-mutex-stubs.c
-file--vxworks-os-impl-queue-stubs.c
-file--vxworks-os-impl-sockets-stubs.c
-file--vxworks-os-impl-task-stubs.c
-file--vxworks-os-impl-timer-stubs.c
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-binsem-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-binsem.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_BinSemAPI_Impl_Init, (void))
 ```
 
-## 항목
+### `vxworks-os-impl-common-stubs.c`
 
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-binsem-stubs.c`](file--vxworks-os-impl-binsem-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-common-stubs.c`](file--vxworks-os-impl-common-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-countsem-stubs.c`](file--vxworks-os-impl-countsem-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-dir-stubs.c`](file--vxworks-os-impl-dir-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-file-stubs.c`](file--vxworks-os-impl-file-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-idmap-stubs.c`](file--vxworks-os-impl-idmap-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-module-stubs.c`](file--vxworks-os-impl-module-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-mutex-stubs.c`](file--vxworks-os-impl-mutex-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-queue-stubs.c`](file--vxworks-os-impl-queue-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-sockets-stubs.c`](file--vxworks-os-impl-sockets-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-task-stubs.c`](file--vxworks-os-impl-task-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-timer-stubs.c`](file--vxworks-os-impl-timer-stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-common-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-common.h"
+#include "OCS_semLib.h"
+
+UT_DEFAULT_STUB(OS_API_Impl_Init, (osal_objtype_t idtype))
+
+int OS_VxWorks_GenericSemTake(OCS_SEM_ID vxid, int sys_ticks)
+{
+    return UT_DEFAULT_IMPL(OS_VxWorks_GenericSemTake);
+}
+
+int OS_VxWorks_GenericSemGive(OCS_SEM_ID vxid)
+{
+    return UT_DEFAULT_IMPL(OS_VxWorks_GenericSemGive);
+}
+```
+
+### `vxworks-os-impl-countsem-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-countsem-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-countsem.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_CountSemAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-dir-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-dir-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-dir.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_DirAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-file-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-file-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-file.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_StreamAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-idmap-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-idmap-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_TableMutex_Init, (uint32 idtype))
+```
+
+### `vxworks-os-impl-module-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-module-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-module.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_ModuleAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-mutex-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-mutex-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-mutex.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_MutexAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-queue-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-queue-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-queue.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_QueueAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-sockets-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-sockets-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-idmap.h"
+
+void OS_VxWorks_SetSocketFlags_Impl(const OS_object_token_t *token) {}
+```
+
+### `vxworks-os-impl-task-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-task-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-task.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_TaskAPI_Impl_Init, (void))
+```
+
+### `vxworks-os-impl-timer-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/vxworks/ut-stubs/src/vxworks-os-impl-timer-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-timebase.h"
+
+UT_DEFAULT_STUB(OS_VxWorks_TimeBaseAPI_Impl_Init, (void))
+```

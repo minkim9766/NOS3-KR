@@ -3,224 +3,9310 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `arpa-inet-stubs.c`
 
-file--arpa-inet-stubs.c
-file--bsp-console-impl-stubs.c
-file--libc-ctype-stubs.c
-file--libc-stdio-stubs.c
-file--libc-stdlib-stubs.c
-file--libc-string-stubs.c
-file--netinet-in-stubs.c
-file--os-shared-binsem-impl-stubs.c
-file--os-shared-binsem-init-stubs.c
-file--os-shared-clock-impl-stubs.c
-file--os-shared-common-impl-stubs.c
-file--os-shared-common-init-stubs.c
-file--os-shared-common-stubs.c
-file--os-shared-condvar-impl-stubs.c
-file--os-shared-condvar-init-stubs.c
-file--os-shared-condvar-stubs.c
-file--os-shared-console-impl-stubs.c
-file--os-shared-console-init-stubs.c
-file--os-shared-countsem-impl-stubs.c
-file--os-shared-countsem-init-stubs.c
-file--os-shared-dir-impl-stubs.c
-file--os-shared-dir-init-stubs.c
-file--os-shared-file-impl-handlers.c
-file--os-shared-file-impl-stubs.c
-file--os-shared-file-init-stubs.c
-file--os-shared-file-stubs.c
-file--os-shared-filesys-impl-handlers.c
-file--os-shared-filesys-impl-stubs.c
-file--os-shared-filesys-init-stubs.c
-file--os-shared-filesys-stubs.c
-file--os-shared-globaldefs-stubs.c
-file--os-shared-heap-impl-stubs.c
-file--os-shared-idmap-handlers.c
-file--os-shared-idmap-impl-stubs.c
-file--os-shared-idmap-stubs.c
-file--os-shared-module-impl-stubs.c
-file--os-shared-module-init-stubs.c
-file--os-shared-module-stubs.c
-file--os-shared-mutex-impl-stubs.c
-file--os-shared-mutex-init-stubs.c
-file--os-shared-network-impl-handlers.c
-file--os-shared-network-impl-stubs.c
-file--os-shared-network-init-stubs.c
-file--os-shared-printf-impl-stubs.c
-file--os-shared-queue-impl-stubs.c
-file--os-shared-queue-init-stubs.c
-file--os-shared-select-impl-stubs.c
-file--os-shared-shell-impl-stubs.c
-file--os-shared-sockets-impl-handlers.c
-file--os-shared-sockets-impl-stubs.c
-file--os-shared-sockets-init-stubs.c
-file--os-shared-sockets-stubs.c
-file--os-shared-task-impl-stubs.c
-file--os-shared-task-init-stubs.c
-file--os-shared-task-stubs.c
-file--os-shared-time-init-stubs.c
-file--os-shared-timebase-impl-stubs.c
-file--os-shared-timebase-init-stubs.c
-file--os-shared-timebase-stubs.c
-file--osapi-shared-binsem-table-stubs.c
-file--osapi-shared-common-stubs.c
-file--osapi-shared-console-table-stubs.c
-file--osapi-shared-countsem-table-stubs.c
-file--osapi-shared-dir-table-stubs.c
-file--osapi-shared-error-impl-table-stubs.c
-file--osapi-shared-filesys-table-stubs.c
-file--osapi-shared-idmap-table-stubs.c
-file--osapi-shared-module-table-stubs.c
-file--osapi-shared-mutex-table-stubs.c
-file--osapi-shared-queue-table-stubs.c
-file--osapi-shared-stream-table-stubs.c
-file--osapi-shared-task-table-stubs.c
-file--osapi-shared-timebase-table-stubs.c
-file--osapi-shared-timecb-table-stubs.c
-file--posix-dirent-stubs.c
-file--posix-dlfcn-stubs.c
-file--posix-errno-stubs.c
-file--posix-fcntl-stubs.c
-file--posix-ioctl-stubs.c
-file--posix-mqueue-stubs.c
-file--posix-pthread-stubs.c
-file--posix-sched-stubs.c
-file--posix-semaphore-stubs.c
-file--posix-signal-stubs.c
-file--posix-stat-stubs.c
-file--posix-time-stubs.c
-file--posix-unistd-stubs.c
-file--sys-select-stubs.c
-file--sys-socket-stubs.c
-file--vxworks-ataDrv-stubs.c
-file--vxworks-dosFsLib-stubs.c
-file--vxworks-errnoLib-stubs.c
-file--vxworks-hostLib-stubs.c
-file--vxworks-intLib-stubs.c
-file--vxworks-loadLib-stubs.c
-file--vxworks-memPartLib-stubs.c
-file--vxworks-moduleLib-stubs.c
-file--vxworks-msgQLib-stubs.c
-file--vxworks-ramDrv-stubs.c
-file--vxworks-semLib-stubs.c
-file--vxworks-shellLib-stubs.c
-file--vxworks-symLib-stubs.c
-file--vxworks-sysLib-stubs.c
-file--vxworks-taskLib-stubs.c
-file--vxworks-taskVarLib-stubs.c
-file--vxworks-xbdBlkDev-stubs.c
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/arpa-inet-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief    Stubs for arpa/inet.h
+ * \ingroup  ut-stubs
+ */
+#include <arpa/inet.h>
+#include "utstubs.h"
+#include "OCS_arpa_inet.h"
+
+const char *OCS_inet_ntop(int af, const void *cp, char *buf, size_t len)
+{
+    int32 Status;
+
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_ntop), af);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_ntop), cp);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_ntop), buf);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_ntop), len);
+
+    Status = UT_DEFAULT_IMPL(OCS_inet_ntop);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return buf;
+    }
+
+    return (char *)0;
+}
+
+int OCS_inet_pton(int af, const char *cp, void *buf)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_pton), af);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_pton), cp);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_inet_pton), buf);
+
+    return UT_DEFAULT_IMPL(OCS_inet_pton);
+}
 ```
 
-## 항목
+### `bsp-console-impl-stubs.c`
 
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/arpa-inet-stubs.c`](file--arpa-inet-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/bsp-console-impl-stubs.c`](file--bsp-console-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-ctype-stubs.c`](file--libc-ctype-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-stdio-stubs.c`](file--libc-stdio-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-stdlib-stubs.c`](file--libc-stdlib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-string-stubs.c`](file--libc-string-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/netinet-in-stubs.c`](file--netinet-in-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-binsem-impl-stubs.c`](file--os-shared-binsem-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-binsem-init-stubs.c`](file--os-shared-binsem-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-clock-impl-stubs.c`](file--os-shared-clock-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-common-impl-stubs.c`](file--os-shared-common-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-common-init-stubs.c`](file--os-shared-common-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-common-stubs.c`](file--os-shared-common-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-condvar-impl-stubs.c`](file--os-shared-condvar-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-condvar-init-stubs.c`](file--os-shared-condvar-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-condvar-stubs.c`](file--os-shared-condvar-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-console-impl-stubs.c`](file--os-shared-console-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-console-init-stubs.c`](file--os-shared-console-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-countsem-impl-stubs.c`](file--os-shared-countsem-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-countsem-init-stubs.c`](file--os-shared-countsem-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-dir-impl-stubs.c`](file--os-shared-dir-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-dir-init-stubs.c`](file--os-shared-dir-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-impl-handlers.c`](file--os-shared-file-impl-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-impl-stubs.c`](file--os-shared-file-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-init-stubs.c`](file--os-shared-file-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-stubs.c`](file--os-shared-file-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-impl-handlers.c`](file--os-shared-filesys-impl-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-impl-stubs.c`](file--os-shared-filesys-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-init-stubs.c`](file--os-shared-filesys-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-stubs.c`](file--os-shared-filesys-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-globaldefs-stubs.c`](file--os-shared-globaldefs-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-heap-impl-stubs.c`](file--os-shared-heap-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-idmap-handlers.c`](file--os-shared-idmap-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-idmap-impl-stubs.c`](file--os-shared-idmap-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-idmap-stubs.c`](file--os-shared-idmap-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-module-impl-stubs.c`](file--os-shared-module-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-module-init-stubs.c`](file--os-shared-module-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-module-stubs.c`](file--os-shared-module-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-mutex-impl-stubs.c`](file--os-shared-mutex-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-mutex-init-stubs.c`](file--os-shared-mutex-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-network-impl-handlers.c`](file--os-shared-network-impl-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-network-impl-stubs.c`](file--os-shared-network-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-network-init-stubs.c`](file--os-shared-network-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-printf-impl-stubs.c`](file--os-shared-printf-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-queue-impl-stubs.c`](file--os-shared-queue-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-queue-init-stubs.c`](file--os-shared-queue-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-select-impl-stubs.c`](file--os-shared-select-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-shell-impl-stubs.c`](file--os-shared-shell-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-impl-handlers.c`](file--os-shared-sockets-impl-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-impl-stubs.c`](file--os-shared-sockets-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-init-stubs.c`](file--os-shared-sockets-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-stubs.c`](file--os-shared-sockets-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-task-impl-stubs.c`](file--os-shared-task-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-task-init-stubs.c`](file--os-shared-task-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-task-stubs.c`](file--os-shared-task-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-time-init-stubs.c`](file--os-shared-time-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-timebase-impl-stubs.c`](file--os-shared-timebase-impl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-timebase-init-stubs.c`](file--os-shared-timebase-init-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-timebase-stubs.c`](file--os-shared-timebase-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-binsem-table-stubs.c`](file--osapi-shared-binsem-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-common-stubs.c`](file--osapi-shared-common-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-console-table-stubs.c`](file--osapi-shared-console-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-countsem-table-stubs.c`](file--osapi-shared-countsem-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-dir-table-stubs.c`](file--osapi-shared-dir-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-error-impl-table-stubs.c`](file--osapi-shared-error-impl-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-filesys-table-stubs.c`](file--osapi-shared-filesys-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-idmap-table-stubs.c`](file--osapi-shared-idmap-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-module-table-stubs.c`](file--osapi-shared-module-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-mutex-table-stubs.c`](file--osapi-shared-mutex-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-queue-table-stubs.c`](file--osapi-shared-queue-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-stream-table-stubs.c`](file--osapi-shared-stream-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-task-table-stubs.c`](file--osapi-shared-task-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-timebase-table-stubs.c`](file--osapi-shared-timebase-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-timecb-table-stubs.c`](file--osapi-shared-timecb-table-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-dirent-stubs.c`](file--posix-dirent-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-dlfcn-stubs.c`](file--posix-dlfcn-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-errno-stubs.c`](file--posix-errno-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-fcntl-stubs.c`](file--posix-fcntl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-ioctl-stubs.c`](file--posix-ioctl-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-mqueue-stubs.c`](file--posix-mqueue-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-pthread-stubs.c`](file--posix-pthread-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-sched-stubs.c`](file--posix-sched-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-semaphore-stubs.c`](file--posix-semaphore-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-signal-stubs.c`](file--posix-signal-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-stat-stubs.c`](file--posix-stat-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-time-stubs.c`](file--posix-time-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-unistd-stubs.c`](file--posix-unistd-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/sys-select-stubs.c`](file--sys-select-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/sys-socket-stubs.c`](file--sys-socket-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-ataDrv-stubs.c`](file--vxworks-ataDrv-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-dosFsLib-stubs.c`](file--vxworks-dosFsLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-errnoLib-stubs.c`](file--vxworks-errnoLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-hostLib-stubs.c`](file--vxworks-hostLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-intLib-stubs.c`](file--vxworks-intLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-loadLib-stubs.c`](file--vxworks-loadLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-memPartLib-stubs.c`](file--vxworks-memPartLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-moduleLib-stubs.c`](file--vxworks-moduleLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-msgQLib-stubs.c`](file--vxworks-msgQLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-ramDrv-stubs.c`](file--vxworks-ramDrv-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-semLib-stubs.c`](file--vxworks-semLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-shellLib-stubs.c`](file--vxworks-shellLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-symLib-stubs.c`](file--vxworks-symLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-sysLib-stubs.c`](file--vxworks-sysLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-taskLib-stubs.c`](file--vxworks-taskLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-taskVarLib-stubs.c`](file--vxworks-taskVarLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-xbdBlkDev-stubs.c`](file--vxworks-xbdBlkDev-stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/bsp-console-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_bsp-impl.h"
+
+/*----------------------------------------------------------------
+   Stub for OS_BSP_Lock_Impl
+ ------------------------------------------------------------------*/
+void OCS_OS_BSP_Lock_Impl(void)
+{
+    UT_DEFAULT_IMPL(OCS_OS_BSP_Lock_Impl);
+}
+
+/*----------------------------------------------------------------
+   Stub for OS_BSP_Unlock_Impl
+ ------------------------------------------------------------------*/
+void OCS_OS_BSP_Unlock_Impl(void)
+{
+    UT_DEFAULT_IMPL(OCS_OS_BSP_Unlock_Impl);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Low level raw console data output.  Writes a sequence of
+             characters directly to the BSP debug terminal or console device.
+
+             The string is not required to be null terminated, and
+             any control characters will be passed through.  Any
+             non-printable ASCII codes will have platform-defined
+             interpretation.
+
+       Note: This should write the string as-is without buffering.
+ ------------------------------------------------------------------*/
+void OCS_OS_BSP_ConsoleOutput_Impl(const char *Str, size_t DataLen)
+{
+    int32_t retcode = UT_DEFAULT_IMPL(OCS_OS_BSP_ConsoleOutput_Impl);
+
+    if (retcode == 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(OCS_OS_BSP_ConsoleOutput_Impl), Str, DataLen);
+    }
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Set the console output mode, if supported by the BSP.
+
+             Causes any future text written to the debug console to
+             be colored/highlighted accordingly.  Intended for use
+             with test applications where certain messages may need
+             visual distinction (e.g. failures).
+
+             See the OS_BSP_CONSOLEMODE constants for possible values.
+             Values may be bitwise OR'ed together.
+
+             This call is ignored if the BSP does not support console
+             control codes.
+ ------------------------------------------------------------------*/
+void OCS_OS_BSP_ConsoleSetMode_Impl(uint32_t ModeBits)
+{
+    int32_t retcode = UT_DEFAULT_IMPL(OCS_OS_BSP_ConsoleSetMode_Impl);
+
+    if (retcode == 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(OCS_OS_BSP_ConsoleSetMode_Impl), &ModeBits, sizeof(ModeBits));
+    }
+}
+```
+
+### `libc-ctype-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-ctype-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for string.h */
+#include <ctype.h>
+#include "utstubs.h"
+
+#include "OCS_ctype.h"
+
+int OCS_isgraph(int c)
+{
+    return UT_DEFAULT_IMPL_RC(OCS_isgraph, isgraph(c));
+}
+```
+
+### `libc-stdio-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-stdio-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for stdio.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+
+#include "OCS_stdio.h"
+
+struct OCS_FILE
+{
+    int f;
+};
+
+#define OCS_STDIO_MAX_SIZE 0x01000000
+
+int OCS_fclose(OCS_FILE *stream)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_fclose);
+
+    return Status;
+}
+
+char *OCS_fgets(char *s, int n, OCS_FILE *stream)
+{
+    int32  Status;
+    size_t CopySize;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_fgets, OCS_STDIO_MAX_SIZE);
+
+    if (Status > 0)
+    {
+        if (Status > n)
+        {
+            CopySize = n;
+        }
+        else
+        {
+            CopySize = Status;
+        }
+
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OCS_fgets), s, CopySize);
+
+        if (CopySize != 0)
+        {
+            Status = CopySize;
+        }
+        else if (Status <= n)
+        {
+            memset(s, 'x', Status);
+        }
+        else if (UT_GetStubCount(UT_KEY(OCS_fgets) < 4))
+        {
+            memset(s, 'x', n);
+            Status = n;
+        }
+        else
+        {
+            Status = 0;
+        }
+    }
+
+    if (Status <= 0)
+    {
+        return NULL;
+    }
+
+    return s;
+}
+
+OCS_FILE *OCS_fopen(const char *filename, const char *modes)
+{
+    int32           Status;
+    OCS_FILE *      retval;
+    static OCS_FILE FOPEN_FP = {0};
+
+    Status = UT_DEFAULT_IMPL(OCS_fopen);
+
+    if (Status == 0)
+    {
+        retval = &FOPEN_FP;
+    }
+    else
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+int OCS_fputs(const char *s, OCS_FILE *stream)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_fputs);
+
+    return Status;
+}
+
+int OCS_putchar(int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_putchar);
+
+    return Status;
+}
+
+int OCS_remove(const char *filename)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_remove);
+
+    return Status;
+}
+
+int OCS_rename(const char *old, const char *nw)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_rename);
+
+    return Status;
+}
+
+int OCS_snprintf(char *s, size_t maxlen, const char *format, ...)
+{
+    int32   Status;
+    int     actual = 0;
+    va_list ap;
+
+    Status = UT_DEFAULT_IMPL(OCS_snprintf);
+
+    /* need to actually _do_ the snprintf */
+    if (Status >= 0)
+    {
+        va_start(ap, format);
+        actual = vsnprintf(s, maxlen, format, ap);
+        va_end(ap);
+    }
+
+    if (Status != 0)
+    {
+        actual = Status;
+    }
+
+    return actual;
+}
+
+int OCS_vsnprintf(char *s, size_t maxlen, const char *format, OCS_va_list arg)
+{
+    int32 Status;
+    int   actual = 0;
+
+    Status = UT_DEFAULT_IMPL(OCS_vsnprintf);
+
+    /* need to actually _do_ something here -
+     * cannot do the real vsnprintf because we lost the args. */
+    if (Status >= 0)
+    {
+        actual = snprintf(s, maxlen, "%s", format);
+    }
+
+    if (Status != 0)
+    {
+        actual = Status;
+    }
+
+    return actual;
+}
+
+int OCS_printf(const char *format, ...)
+{
+    return UT_DEFAULT_IMPL(OCS_printf);
+}
+
+int OCS_fprintf(OCS_FILE *fp, const char *format, ...)
+{
+    return UT_DEFAULT_IMPL(OCS_fprintf);
+}
+
+static OCS_FILE LOCAL_FP[3] = {{10}, {11}, {12}};
+
+OCS_FILE *OCS_stdin  = &LOCAL_FP[0];
+OCS_FILE *OCS_stdout = &LOCAL_FP[1];
+OCS_FILE *OCS_stderr = &LOCAL_FP[2];
+```
+
+### `libc-stdlib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-stdlib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for stdlib.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+#include "utassert.h"
+
+#include "OCS_stdlib.h"
+
+/*
+ * The malloc emulator relies on two magic numbers;
+ * one at the start of the pool, one for each block allocated.
+ *
+ * Note that the malloc emulator is not a real allocator,
+ * it only allocates sequential blocks and does not recover
+ * the space after free.
+ */
+#define MPOOL_START_SIGNATURE 0x8a458c6b
+#define MPOOL_BLOCK_SIGNATURE 0x3ef65721
+#define MPOOL_ALIGN           16
+
+struct MPOOL_REC
+{
+    cpuaddr BlockAddr;
+    uint32  Magic;
+    uint32  Size;
+};
+
+void OCS_exit(int c)
+{
+    UT_DEFAULT_IMPL(OCS_exit);
+
+    /*
+     * This call is never supposed to return, but this stub will.
+     * The application therefore must handle a return from exit()
+     *
+     * TBD: IT would be nice if this could use a setjmp-like
+     * method to avoid returning here.
+     */
+}
+
+void OCS_abort(void)
+{
+    UT_DEFAULT_IMPL(OCS_abort);
+
+    /* Note - same issue as with OCS_exit() - this isn't supposed to return */
+}
+
+unsigned long int OCS_strtoul(const char *nptr, char **endptr, int base)
+{
+    int32         Status;
+    unsigned long Result = 0;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_strtoul, -1);
+
+    if (Status < 0)
+    {
+        /* do the real op */
+        Result = strtoul(nptr, endptr, base);
+    }
+    else
+    {
+        Result = Status;
+    }
+
+    return Result;
+}
+
+int OCS_system(const char *command)
+{
+    return UT_DEFAULT_IMPL(OCS_system);
+}
+
+void *OCS_malloc(size_t sz)
+{
+    int32             Status;
+    void *            PoolPtr;
+    cpuaddr           PoolStart;
+    cpuaddr           PoolEnd;
+    cpuaddr           NextBlock;
+    size_t            NextSize;
+    size_t            PoolSize;
+    uint32            CallCnt;
+    struct MPOOL_REC *Rec;
+
+    Rec     = NULL;
+    CallCnt = UT_GetStubCount(UT_KEY(OCS_malloc));
+    UT_GetDataBuffer(UT_KEY(OCS_malloc), &PoolPtr, &PoolSize, NULL);
+
+    if (PoolPtr != NULL)
+    {
+        PoolStart = (cpuaddr)PoolPtr;
+        PoolEnd   = PoolStart + PoolSize;
+        PoolStart = (PoolStart + MPOOL_ALIGN - 1) & ~((cpuaddr)MPOOL_ALIGN - 1);
+        PoolSize  = PoolEnd - PoolStart;
+
+        if (PoolSize > (MPOOL_ALIGN * 2))
+        {
+            Rec       = (struct MPOOL_REC *)PoolStart;
+            NextBlock = PoolStart + MPOOL_ALIGN;
+            PoolSize -= MPOOL_ALIGN;
+            if (CallCnt == 0)
+            {
+                Rec->Magic     = MPOOL_START_SIGNATURE;
+                Rec->Size      = 0;
+                Rec->BlockAddr = NextBlock;
+            }
+            else if (Rec->Magic != MPOOL_START_SIGNATURE)
+            {
+                UtAssert_Failed("OCS_malloc() heap corruption detected");
+            }
+        }
+    }
+
+    Status = UT_DEFAULT_IMPL(OCS_malloc);
+
+    if (Status != 0 || Rec == NULL)
+    {
+        return NULL;
+    }
+
+    NextSize = Rec->Size + sz + MPOOL_ALIGN;
+    if (NextSize > PoolSize)
+    {
+        /*
+         * This indicates that the application is trying to allocate
+         * a block larger than the pool.  It typically means that the
+         * emulated heap size is too small, so it is prudent to generate
+         * a message.
+         */
+        UtAssert_Failed("OCS_malloc() heap has been exhausted");
+        return NULL;
+    }
+
+    NextSize  = (NextSize + MPOOL_ALIGN - 1) & ~((size_t)MPOOL_ALIGN);
+    NextBlock = Rec->BlockAddr + MPOOL_ALIGN;
+    Rec->BlockAddr += NextSize;
+    Rec->Size += NextSize;
+
+    Rec            = (struct MPOOL_REC *)(NextBlock - sizeof(struct MPOOL_REC));
+    Rec->BlockAddr = NextBlock;
+    Rec->Magic     = MPOOL_BLOCK_SIGNATURE;
+    Rec->Size      = sz;
+
+    return (void *)NextBlock;
+}
+
+void OCS_free(void *ptr)
+{
+    int32             Status;
+    cpuaddr           BlockAddr;
+    void *            PoolPtr;
+    size_t            PoolSize;
+    struct MPOOL_REC *Rec;
+
+    /*
+     * If there is a data buffer associated with free() then this
+     * will sanity-check that the block being freed came from that heap.
+     */
+    UT_GetDataBuffer(UT_KEY(OCS_free), &PoolPtr, &PoolSize, NULL);
+
+    Status = UT_DEFAULT_IMPL(OCS_free);
+    if (Status == 0 && PoolPtr != NULL)
+    {
+        BlockAddr = (cpuaddr)ptr;
+        if (BlockAddr < (cpuaddr)PoolPtr || BlockAddr >= ((cpuaddr)PoolPtr + PoolSize))
+        {
+            UtAssert_Failed("OCS_free(): Heap corruption -- Non-Heap pointer");
+        }
+        else
+        {
+            Rec = (struct MPOOL_REC *)(BlockAddr - sizeof(struct MPOOL_REC));
+            if (Rec->Magic == MPOOL_BLOCK_SIGNATURE)
+            {
+                Rec->Magic = ~MPOOL_BLOCK_SIGNATURE;
+            }
+            else if (Rec->Magic == ~MPOOL_BLOCK_SIGNATURE)
+            {
+                UtAssert_Failed("OCS_free(): Heap corruption -- Double free detected");
+            }
+            else
+            {
+                UtAssert_Failed("OCS_free(): Heap corruption -- Corrupted block detected");
+            }
+        }
+    }
+}
+```
+
+### `libc-string-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/libc-string-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for string.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+
+#include "OCS_string.h"
+
+void *OCS_memset(void *s, int c, size_t n)
+{
+    int32 Status;
+    void *Result;
+
+    Status = UT_DEFAULT_IMPL(OCS_memset);
+
+    if (Status == 0)
+    {
+        Result = memset(s, c, n);
+    }
+    else
+    {
+        Result = NULL;
+    }
+
+    return Result;
+}
+
+void *OCS_memchr(const void *s, int c, size_t n)
+{
+    int32 Status;
+    void *Result;
+
+    Status = UT_DEFAULT_IMPL(OCS_memchr);
+    if (Status == 0)
+    {
+        Result = memchr(s, c, n);
+    }
+    else
+    {
+        Result = NULL;
+    }
+
+    return Result;
+}
+
+void *OCS_memcpy(void *dest, const void *src, size_t n)
+{
+    int32 Status;
+    void *Result;
+
+    Status = UT_DEFAULT_IMPL(OCS_memcpy);
+
+    if (Status == 0)
+    {
+        Result = memcpy(dest, src, n);
+    }
+    else
+    {
+        Result = NULL;
+    }
+
+    return Result;
+}
+
+char *OCS_strchr(const char *s, int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strchr);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strchr(s, c);
+    }
+    if (Status < 0)
+    {
+        return (char *)0;
+    }
+
+    return (char *)&s[Status - 1];
+}
+
+char *OCS_strrchr(const char *s, int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strrchr);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strrchr(s, c);
+    }
+    if (Status < 0)
+    {
+        return (char *)0;
+    }
+
+    return (char *)&s[Status - 1];
+}
+
+size_t OCS_strlen(const char *s)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_strlen, strlen(s));
+
+    return Status;
+}
+
+char *OCS_strcat(char *dest, const char *src)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strcat);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strcat(dest, src);
+    }
+
+    return (char *)0;
+}
+
+char *OCS_strncat(char *dest, const char *src, size_t size)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strncat);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strncat(dest, src, size);
+    }
+
+    return (char *)0;
+}
+
+int OCS_strncmp(const char *s1, const char *s2, size_t size)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_strncmp, strncmp(s1, s2, size));
+
+    return Status;
+}
+
+int OCS_strcmp(const char *s1, const char *s2)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_strcmp, strcmp(s1, s2));
+
+    return Status;
+}
+
+char *OCS_strcpy(char *dst, const char *src)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strcpy);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strcpy(dst, src);
+    }
+
+    return (char *)0;
+}
+
+char *OCS_strncpy(char *dst, const char *src, size_t size)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strncpy);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strncpy(dst, src, size);
+    }
+
+    return (char *)0;
+}
+
+char *OCS_strerror(int errnum)
+{
+    static char str[16];
+    int32       Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_strerror);
+
+    if (Status != 0)
+    {
+        return NULL;
+    }
+
+    /* "nominal" response */
+    snprintf(str, sizeof(str), "UT_ERR_%d", errnum);
+    return str;
+}
+```
+
+### `netinet-in-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/netinet-in-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief    Stubs for netinet/in.h
+ * \ingroup  ut-stubs
+ */
+#include "utstubs.h"
+#include "OCS_arpa_inet.h"
+
+uint16_t OCS_htons(uint16_t hostshort)
+{
+    return UT_DEFAULT_IMPL(OCS_htons);
+}
+
+uint16_t OCS_ntohs(uint16_t netshort)
+{
+    return UT_DEFAULT_IMPL(OCS_ntohs);
+}
+
+uint32_t OCS_htonl(uint32_t hostlong)
+{
+    return UT_DEFAULT_IMPL(OCS_htonl);
+}
+
+uint32_t OCS_ntohl(uint32_t netlong)
+{
+    return UT_DEFAULT_IMPL(OCS_ntohl);
+}
+```
+
+### `os-shared-binsem-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-binsem-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-binsem header
+ */
+
+#include "os-shared-binsem.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_BinSemCreate_Impl, uint32, sem_initial_value);
+    UT_GenStub_AddParam(OS_BinSemCreate_Impl, uint32, options);
+
+    UT_GenStub_Execute(OS_BinSemCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_BinSemDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemFlush_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemFlush_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemFlush_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemFlush_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_BinSemFlush_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemFlush_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemGetInfo_Impl(const OS_object_token_t *token, OS_bin_sem_prop_t *bin_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_BinSemGetInfo_Impl, OS_bin_sem_prop_t *, bin_prop);
+
+    UT_GenStub_Execute(OS_BinSemGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemGive_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemGive_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemGive_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemGive_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_BinSemGive_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemGive_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemTake_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemTake_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemTake_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemTake_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_BinSemTake_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemTake_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemTimedWait_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemTimedWait_Impl, int32);
+
+    UT_GenStub_AddParam(OS_BinSemTimedWait_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_BinSemTimedWait_Impl, uint32, msecs);
+
+    UT_GenStub_Execute(OS_BinSemTimedWait_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemTimedWait_Impl, int32);
+}
+```
+
+### `os-shared-binsem-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-binsem-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-binsem header
+ */
+
+#include "os-shared-binsem.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_BinSemAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemAPI_Init, int32);
+}
+```
+
+### `os-shared-clock-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-clock-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-clock header
+ */
+
+#include "os-shared-clock.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetLocalTime_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_GetLocalTime_Impl(OS_time_t *time_struct)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetLocalTime_Impl, int32);
+
+    UT_GenStub_AddParam(OS_GetLocalTime_Impl, OS_time_t *, time_struct);
+
+    UT_GenStub_Execute(OS_GetLocalTime_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_GetLocalTime_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SetLocalTime_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SetLocalTime_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SetLocalTime_Impl, const OS_time_t *, time_struct);
+
+    UT_GenStub_Execute(OS_SetLocalTime_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SetLocalTime_Impl, int32);
+}
+```
+
+### `os-shared-common-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-common-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-common header
+ */
+
+#include "os-shared-common.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ApplicationShutdown_Impl()
+ * ----------------------------------------------------
+ */
+void OS_ApplicationShutdown_Impl(void)
+{
+
+    UT_GenStub_Execute(OS_ApplicationShutdown_Impl, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_IdleLoop_Impl()
+ * ----------------------------------------------------
+ */
+void OS_IdleLoop_Impl(void)
+{
+
+    UT_GenStub_Execute(OS_IdleLoop_Impl, Basic, NULL);
+}
+```
+
+### `os-shared-common-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-common-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-common header
+ */
+
+#include "os-shared-common.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_API_Impl_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_API_Impl_Init(osal_objtype_t idtype)
+{
+    UT_GenStub_SetupReturnBuffer(OS_API_Impl_Init, int32);
+
+    UT_GenStub_AddParam(OS_API_Impl_Init, osal_objtype_t, idtype);
+
+    UT_GenStub_Execute(OS_API_Impl_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_API_Impl_Init, int32);
+}
+```
+
+### `os-shared-common-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-common-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-common header
+ */
+
+#include "os-shared-common.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_NotifyEvent()
+ * ----------------------------------------------------
+ */
+int32 OS_NotifyEvent(OS_Event_t event, osal_id_t object_id, void *data)
+{
+    UT_GenStub_SetupReturnBuffer(OS_NotifyEvent, int32);
+
+    UT_GenStub_AddParam(OS_NotifyEvent, OS_Event_t, event);
+    UT_GenStub_AddParam(OS_NotifyEvent, osal_id_t, object_id);
+    UT_GenStub_AddParam(OS_NotifyEvent, void *, data);
+
+    UT_GenStub_Execute(OS_NotifyEvent, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_NotifyEvent, int32);
+}
+```
+
+### `os-shared-condvar-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-condvar-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-condvar header
+ */
+
+#include "os-shared-condvar.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarBroadcast_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarBroadcast_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarBroadcast_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarBroadcast_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarBroadcast_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CondVarCreate_Impl, uint32, options);
+
+    UT_GenStub_Execute(OS_CondVarCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CondVarGetInfo_Impl, OS_condvar_prop_t *, condvar_prop);
+
+    UT_GenStub_Execute(OS_CondVarGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarLock_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarLock_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarLock_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarLock_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarLock_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarLock_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarSignal_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarSignal_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarSignal_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarSignal_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarSignal_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarSignal_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarTimedWait_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarTimedWait_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarTimedWait_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CondVarTimedWait_Impl, const OS_time_t *, abs_wakeup_time);
+
+    UT_GenStub_Execute(OS_CondVarTimedWait_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarTimedWait_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarUnlock_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarUnlock_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarUnlock_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarUnlock_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarUnlock_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarWait_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarWait_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarWait_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarWait_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarWait_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarWait_Impl, int32);
+}
+```
+
+### `os-shared-condvar-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-condvar-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-condvar header
+ */
+
+#include "os-shared-condvar.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_CondVarAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarAPI_Init, int32);
+}
+```
+
+### `os-shared-condvar-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-condvar-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-condvar header
+ */
+
+#include "os-shared-condvar.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_CondVarAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarAPI_Init, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarBroadcast_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarBroadcast_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarBroadcast_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarBroadcast_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarBroadcast_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CondVarCreate_Impl, uint32, options);
+
+    UT_GenStub_Execute(OS_CondVarCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CondVarGetInfo_Impl, OS_condvar_prop_t *, condvar_prop);
+
+    UT_GenStub_Execute(OS_CondVarGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarLock_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarLock_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarLock_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarLock_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarLock_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarLock_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarSignal_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarSignal_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarSignal_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarSignal_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarSignal_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarSignal_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarTimedWait_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarTimedWait_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarTimedWait_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CondVarTimedWait_Impl, const OS_time_t *, abs_wakeup_time);
+
+    UT_GenStub_Execute(OS_CondVarTimedWait_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarTimedWait_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarUnlock_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarUnlock_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarUnlock_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarUnlock_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarUnlock_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarWait_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarWait_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarWait_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CondVarWait_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CondVarWait_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarWait_Impl, int32);
+}
+```
+
+### `os-shared-console-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-console-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-console header
+ */
+
+#include "os-shared-console.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ConsoleCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ConsoleCreate_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ConsoleCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ConsoleCreate_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ConsoleCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ConsoleCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ConsoleWakeup_Impl()
+ * ----------------------------------------------------
+ */
+void OS_ConsoleWakeup_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_ConsoleWakeup_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ConsoleWakeup_Impl, Basic, NULL);
+}
+```
+
+### `os-shared-console-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-console-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-console header
+ */
+
+#include "os-shared-console.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ConsoleAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_ConsoleAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ConsoleAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_ConsoleAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ConsoleAPI_Init, int32);
+}
+```
+
+### `os-shared-countsem-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-countsem-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-countsem header
+ */
+
+#include "os-shared-countsem.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CountSemCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CountSemCreate_Impl, uint32, sem_initial_value);
+    UT_GenStub_AddParam(OS_CountSemCreate_Impl, uint32, options);
+
+    UT_GenStub_Execute(OS_CountSemCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CountSemDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CountSemDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemGetInfo_Impl(const OS_object_token_t *token, OS_count_sem_prop_t *count_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CountSemGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CountSemGetInfo_Impl, OS_count_sem_prop_t *, count_prop);
+
+    UT_GenStub_Execute(OS_CountSemGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemGive_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemGive_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemGive_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CountSemGive_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CountSemGive_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemGive_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemTake_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemTake_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemTake_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CountSemTake_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_CountSemTake_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemTake_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemTimedWait_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemTimedWait_Impl, int32);
+
+    UT_GenStub_AddParam(OS_CountSemTimedWait_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CountSemTimedWait_Impl, uint32, msecs);
+
+    UT_GenStub_Execute(OS_CountSemTimedWait_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemTimedWait_Impl, int32);
+}
+```
+
+### `os-shared-countsem-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-countsem-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-countsem header
+ */
+
+#include "os-shared-countsem.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_CountSemAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemAPI_Init, int32);
+}
+```
+
+### `os-shared-dir-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-dir-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-dir header
+ */
+
+#include "os-shared-dir.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirClose_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_DirClose_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirClose_Impl, int32);
+
+    UT_GenStub_AddParam(OS_DirClose_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_DirClose_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirClose_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_DirCreate_Impl(const char *local_path, uint32 access)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_DirCreate_Impl, const char *, local_path);
+    UT_GenStub_AddParam(OS_DirCreate_Impl, uint32, access);
+
+    UT_GenStub_Execute(OS_DirCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirOpen_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_DirOpen_Impl(const OS_object_token_t *token, const char *local_path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirOpen_Impl, int32);
+
+    UT_GenStub_AddParam(OS_DirOpen_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_DirOpen_Impl, const char *, local_path);
+
+    UT_GenStub_Execute(OS_DirOpen_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirOpen_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirRead_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_DirRead_Impl(const OS_object_token_t *token, os_dirent_t *dirent)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirRead_Impl, int32);
+
+    UT_GenStub_AddParam(OS_DirRead_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_DirRead_Impl, os_dirent_t *, dirent);
+
+    UT_GenStub_Execute(OS_DirRead_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirRead_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirRemove_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_DirRemove_Impl(const char *local_path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirRemove_Impl, int32);
+
+    UT_GenStub_AddParam(OS_DirRemove_Impl, const char *, local_path);
+
+    UT_GenStub_Execute(OS_DirRemove_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirRemove_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirRewind_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_DirRewind_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirRewind_Impl, int32);
+
+    UT_GenStub_AddParam(OS_DirRewind_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_DirRewind_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirRewind_Impl, int32);
+}
+```
+
+### `os-shared-dir-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-dir-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-dir header
+ */
+
+#include "os-shared-dir.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_DirAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_DirAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirAPI_Init, int32);
+}
+```
+
+### `os-shared-file-impl-handlers.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-impl-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-file.h" /* OSAL public API for this subsystem */
+#include "os-shared-file.h"
+#include "utstubs.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GenericRead_Impl' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GenericRead_Impl(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void * buffer = UT_Hook_GetArgValueByName(Context, "buffer", void *);
+    size_t nbytes = UT_Hook_GetArgValueByName(Context, "nbytes", size_t);
+    int32  status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = UT_Stub_CopyToLocal(UT_KEY(OS_GenericRead_Impl), buffer, nbytes);
+        UT_Stub_SetReturnValue(FuncKey, status);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GenericWrite_Impl' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GenericWrite_Impl(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const void *buffer = UT_Hook_GetArgValueByName(Context, "buffer", const void *);
+    size_t      nbytes = UT_Hook_GetArgValueByName(Context, "nbytes", size_t);
+    int32       status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = UT_Stub_CopyFromLocal(UT_KEY(OS_GenericWrite_Impl), buffer, nbytes);
+        UT_Stub_SetReturnValue(FuncKey, status);
+    }
+}
+```
+
+### `os-shared-file-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-file header
+ */
+
+#include "os-shared-file.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_GenericRead_Impl(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_GenericWrite_Impl(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileChmod_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileChmod_Impl(const char *local_path, uint32 access_mode)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileChmod_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileChmod_Impl, const char *, local_path);
+    UT_GenStub_AddParam(OS_FileChmod_Impl, uint32, access_mode);
+
+    UT_GenStub_Execute(OS_FileChmod_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileChmod_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileOpen_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileOpen_Impl(const OS_object_token_t *token, const char *local_path, int32 flags, int32 access_mode)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileOpen_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileOpen_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_FileOpen_Impl, const char *, local_path);
+    UT_GenStub_AddParam(OS_FileOpen_Impl, int32, flags);
+    UT_GenStub_AddParam(OS_FileOpen_Impl, int32, access_mode);
+
+    UT_GenStub_Execute(OS_FileOpen_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileOpen_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileRemove_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileRemove_Impl(const char *local_path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileRemove_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileRemove_Impl, const char *, local_path);
+
+    UT_GenStub_Execute(OS_FileRemove_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileRemove_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileRename_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileRename_Impl(const char *old_path, const char *new_path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileRename_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileRename_Impl, const char *, old_path);
+    UT_GenStub_AddParam(OS_FileRename_Impl, const char *, new_path);
+
+    UT_GenStub_Execute(OS_FileRename_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileRename_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileStat_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileStat_Impl(const char *local_path, os_fstat_t *filestat)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileStat_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileStat_Impl, const char *, local_path);
+    UT_GenStub_AddParam(OS_FileStat_Impl, os_fstat_t *, filestat);
+
+    UT_GenStub_Execute(OS_FileStat_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileStat_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GenericClose_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_GenericClose_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GenericClose_Impl, int32);
+
+    UT_GenStub_AddParam(OS_GenericClose_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_GenericClose_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_GenericClose_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GenericRead_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_GenericRead_Impl(const OS_object_token_t *token, void *buffer, size_t nbytes, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GenericRead_Impl, int32);
+
+    UT_GenStub_AddParam(OS_GenericRead_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_GenericRead_Impl, void *, buffer);
+    UT_GenStub_AddParam(OS_GenericRead_Impl, size_t, nbytes);
+    UT_GenStub_AddParam(OS_GenericRead_Impl, int32, timeout);
+
+    UT_GenStub_Execute(OS_GenericRead_Impl, Basic, UT_DefaultHandler_OS_GenericRead_Impl);
+
+    return UT_GenStub_GetReturnValue(OS_GenericRead_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GenericSeek_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_GenericSeek_Impl(const OS_object_token_t *token, int32 offset, uint32 whence)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GenericSeek_Impl, int32);
+
+    UT_GenStub_AddParam(OS_GenericSeek_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_GenericSeek_Impl, int32, offset);
+    UT_GenStub_AddParam(OS_GenericSeek_Impl, uint32, whence);
+
+    UT_GenStub_Execute(OS_GenericSeek_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_GenericSeek_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GenericWrite_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_GenericWrite_Impl(const OS_object_token_t *token, const void *buffer, size_t nbytes, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GenericWrite_Impl, int32);
+
+    UT_GenStub_AddParam(OS_GenericWrite_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_GenericWrite_Impl, const void *, buffer);
+    UT_GenStub_AddParam(OS_GenericWrite_Impl, size_t, nbytes);
+    UT_GenStub_AddParam(OS_GenericWrite_Impl, int32, timeout);
+
+    UT_GenStub_Execute(OS_GenericWrite_Impl, Basic, UT_DefaultHandler_OS_GenericWrite_Impl);
+
+    return UT_GenStub_GetReturnValue(OS_GenericWrite_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ShellOutputToFile_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ShellOutputToFile_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ShellOutputToFile_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ShellOutputToFile_Impl, const char *, Cmd);
+
+    UT_GenStub_Execute(OS_ShellOutputToFile_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ShellOutputToFile_Impl, int32);
+}
+```
+
+### `os-shared-file-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-file header
+ */
+
+#include "os-shared-file.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_FileAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_FileAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileAPI_Init, int32);
+}
+```
+
+### `os-shared-file-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-file-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-file header
+ */
+
+#include "os-shared-file.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileIteratorClose()
+ * ----------------------------------------------------
+ */
+int32 OS_FileIteratorClose(osal_id_t filedes, void *arg)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileIteratorClose, int32);
+
+    UT_GenStub_AddParam(OS_FileIteratorClose, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_FileIteratorClose, void *, arg);
+
+    UT_GenStub_Execute(OS_FileIteratorClose, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileIteratorClose, int32);
+}
+```
+
+### `os-shared-filesys-impl-handlers.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-impl-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-filesys.h" /* OSAL public API for this subsystem */
+#include "os-shared-filesys.h"
+#include "utstubs.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_FileSysStatVolume_Impl' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_FileSysStatVolume_Impl(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_statvfs_t *result = UT_Hook_GetArgValueByName(Context, "result", OS_statvfs_t *);
+    int32         status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_FileSysStatVolume_Impl), result, sizeof(*result)) < sizeof(*result))
+    {
+        memset(result, 0, sizeof(*result));
+    }
+}
+```
+
+### `os-shared-filesys-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-filesys header
+ */
+
+#include "os-shared-filesys.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_FileSysStatVolume_Impl(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysCheckVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysCheckVolume_Impl(const OS_object_token_t *token, bool repair)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysCheckVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysCheckVolume_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_FileSysCheckVolume_Impl, bool, repair);
+
+    UT_GenStub_Execute(OS_FileSysCheckVolume_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysCheckVolume_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysFormatVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysFormatVolume_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysFormatVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysFormatVolume_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_FileSysFormatVolume_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysFormatVolume_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysMountVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysMountVolume_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysMountVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysMountVolume_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_FileSysMountVolume_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysMountVolume_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysStartVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysStartVolume_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysStartVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysStartVolume_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_FileSysStartVolume_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysStartVolume_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysStatVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysStatVolume_Impl(const OS_object_token_t *token, OS_statvfs_t *result)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysStatVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysStatVolume_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_FileSysStatVolume_Impl, OS_statvfs_t *, result);
+
+    UT_GenStub_Execute(OS_FileSysStatVolume_Impl, Basic, UT_DefaultHandler_OS_FileSysStatVolume_Impl);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysStatVolume_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysStopVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysStopVolume_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysStopVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysStopVolume_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_FileSysStopVolume_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysStopVolume_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysUnmountVolume_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysUnmountVolume_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysUnmountVolume_Impl, int32);
+
+    UT_GenStub_AddParam(OS_FileSysUnmountVolume_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_FileSysUnmountVolume_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysUnmountVolume_Impl, int32);
+}
+```
+
+### `os-shared-filesys-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-filesys header
+ */
+
+#include "os-shared-filesys.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_FileSysAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysAPI_Init, int32);
+}
+```
+
+### `os-shared-filesys-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-filesys-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-filesys header
+ */
+
+#include "os-shared-filesys.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysFilterFree()
+ * ----------------------------------------------------
+ */
+bool OS_FileSysFilterFree(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysFilterFree, bool);
+
+    UT_GenStub_AddParam(OS_FileSysFilterFree, void *, ref);
+    UT_GenStub_AddParam(OS_FileSysFilterFree, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_FileSysFilterFree, const OS_common_record_t *, obj);
+
+    UT_GenStub_Execute(OS_FileSysFilterFree, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysFilterFree, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSys_FindVirtMountPoint()
+ * ----------------------------------------------------
+ */
+bool OS_FileSys_FindVirtMountPoint(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSys_FindVirtMountPoint, bool);
+
+    UT_GenStub_AddParam(OS_FileSys_FindVirtMountPoint, void *, ref);
+    UT_GenStub_AddParam(OS_FileSys_FindVirtMountPoint, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_FileSys_FindVirtMountPoint, const OS_common_record_t *, obj);
+
+    UT_GenStub_Execute(OS_FileSys_FindVirtMountPoint, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSys_FindVirtMountPoint, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSys_Initialize()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSys_Initialize(char *address, const char *fsdevname, const char *fsvolname, size_t blocksize,
+                            osal_blockcount_t numblocks, bool should_format)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSys_Initialize, int32);
+
+    UT_GenStub_AddParam(OS_FileSys_Initialize, char *, address);
+    UT_GenStub_AddParam(OS_FileSys_Initialize, const char *, fsdevname);
+    UT_GenStub_AddParam(OS_FileSys_Initialize, const char *, fsvolname);
+    UT_GenStub_AddParam(OS_FileSys_Initialize, size_t, blocksize);
+    UT_GenStub_AddParam(OS_FileSys_Initialize, osal_blockcount_t, numblocks);
+    UT_GenStub_AddParam(OS_FileSys_Initialize, bool, should_format);
+
+    UT_GenStub_Execute(OS_FileSys_Initialize, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileSys_Initialize, int32);
+}
+```
+
+### `os-shared-globaldefs-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-globaldefs-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-globaldefs header
+ */
+
+#include <stdarg.h>
+
+#include "os-shared-globaldefs.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DebugPrintf()
+ * ----------------------------------------------------
+ */
+void OS_DebugPrintf(uint32 Level, const char *Func, uint32 Line, const char *Format, ...)
+{
+    va_list UtStub_ArgList;
+
+    UT_GenStub_AddParam(OS_DebugPrintf, uint32, Level);
+    UT_GenStub_AddParam(OS_DebugPrintf, const char *, Func);
+    UT_GenStub_AddParam(OS_DebugPrintf, uint32, Line);
+    UT_GenStub_AddParam(OS_DebugPrintf, const char *, Format);
+
+    va_start(UtStub_ArgList, Format);
+    UT_GenStub_Execute(OS_DebugPrintf, Va, NULL, UtStub_ArgList);
+    va_end(UtStub_ArgList);
+}
+```
+
+### `os-shared-heap-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-heap-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-heap header
+ */
+
+#include "os-shared-heap.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_HeapGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_HeapGetInfo_Impl(OS_heap_prop_t *heap_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_HeapGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_HeapGetInfo_Impl, OS_heap_prop_t *, heap_prop);
+
+    UT_GenStub_Execute(OS_HeapGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_HeapGetInfo_Impl, int32);
+}
+```
+
+### `os-shared-idmap-handlers.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-idmap-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ *
+ * NOTE: The Object ID manipulation calls would not be called by applications.
+ * However stubs are still defined in order to support things such as
+ * coverage testing of the low-level implementation.  This set of stubs
+ * is implemented separately here as it is only needed when coverage testing
+ * OSAL itself (not for coverage testing other units).
+ */
+
+#include "osapi-idmap.h" /* OSAL public API for this subsystem */
+#include "os-shared-idmap.h"
+#include "utstubs.h"
+
+#define OSAL_MAX_VALID_PER_TYPE 16
+
+/*
+ * Note that fabricates IDs that are compatible with the IDs from the other (public) API stubs
+ */
+static void UT_ObjIdCompose(uint32 indx, osal_objtype_t objtype, osal_id_t *id)
+{
+    *id = OS_ObjectIdFromInteger((unsigned long)indx | ((0x4000UL | objtype) << 16));
+}
+
+/*
+ * UT Helper function to create a fake object lock token
+ */
+static void UT_TokenCompose(uint32 lock_mode, uint32 indx, osal_objtype_t objtype, OS_object_token_t *token)
+{
+    token->lock_mode = lock_mode;
+    token->obj_type  = objtype;
+    token->obj_idx   = indx;
+    UT_ObjIdCompose(indx, objtype, &token->obj_id);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetMaxForObjectType' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetMaxForObjectType(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_objtype_t idtype = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    int32          status;
+    uint32         max;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        /* interpret the registered status code as a max */
+        max = status;
+    }
+    else if (idtype > OS_OBJECT_TYPE_UNDEFINED && idtype < OS_OBJECT_TYPE_USER)
+    {
+        max = OSAL_MAX_VALID_PER_TYPE;
+    }
+    else
+    {
+        max = 0;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, max);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetBaseForObjectType' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetBaseForObjectType(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_objtype_t idtype = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    int32          status;
+    uint32         base;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        /* interpret the registered status code as a max */
+        base = status;
+    }
+    else if (idtype > OS_OBJECT_TYPE_UNDEFINED && idtype < OS_OBJECT_TYPE_USER)
+    {
+        base = OSAL_MAX_VALID_PER_TYPE * (idtype - 1);
+    }
+    else
+    {
+        base = 0;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, base);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdGlobalFromToken' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdGlobalFromToken(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    static OS_common_record_t fake_record;
+    int32                     status;
+    OS_common_record_t *      recptr = &fake_record;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == 0 &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdGlobalFromToken), &recptr, sizeof(recptr)) < sizeof(recptr))
+    {
+        /* This function should never return null */
+        recptr = &fake_record;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, recptr);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdFinalizeNew' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdFinalizeNew(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32              operation_status = UT_Hook_GetArgValueByName(Context, "operation_status", int32);
+    OS_object_token_t *token            = UT_Hook_GetArgValueByName(Context, "token", OS_object_token_t *);
+    osal_id_t *        outid            = UT_Hook_GetArgValueByName(Context, "outid", osal_id_t *);
+    int32              Status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &Status))
+    {
+        /* pass through the argument status unless overridden */
+        Status = operation_status;
+    }
+
+    /* need to actually write something to the output buffer */
+    if (Status == OS_SUCCESS && token != NULL && outid != NULL &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdFinalizeNew), outid, sizeof(*outid)) < sizeof(*outid))
+    {
+        *outid = token->obj_id;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Status);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdFinalizeDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdFinalizeDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32 operation_status = UT_Hook_GetArgValueByName(Context, "operation_status", int32);
+    int32 Status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &Status))
+    {
+        /* pass through the argument status unless overridden */
+        Status = operation_status;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Status);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdGetBySearch' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdGetBySearch(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_lock_mode_t     lock_mode = UT_Hook_GetArgValueByName(Context, "lock_mode", OS_lock_mode_t);
+    osal_objtype_t     idtype    = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    OS_object_token_t *token     = UT_Hook_GetArgValueByName(Context, "token", OS_object_token_t *);
+    int32              Status;
+
+    /* by default this stub should return NAME_NOT_FOUND
+     * unless the test case has set up otherwise.  To set
+     * up a success response, just register a buffer for
+     * the function
+     */
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdGetBySearch), token, sizeof(*token)) < sizeof(*token))
+    {
+        UT_TokenCompose(lock_mode, 1, idtype, token);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdTransactionInit' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdTransactionInit(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_object_token_t *token = UT_Hook_GetArgValueByName(Context, "token", OS_object_token_t *);
+    int32              Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdTransactionInit), token, sizeof(*token)) < sizeof(*token))
+    {
+        memset(&token, 0, sizeof(token));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdFindByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdFindByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_objtype_t idtype    = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    osal_id_t *    object_id = UT_Hook_GetArgValueByName(Context, "object_id", osal_id_t *);
+    int32          Status;
+
+    /* by default this stub should return NAME_NOT_FOUND
+     * unless the test case has set up otherwise.  To set
+     * up a success response, just register a buffer for
+     * the function
+     */
+    if (!UT_Stub_GetInt32StatusCode(Context, &Status))
+    {
+        Status = OS_ERR_NAME_NOT_FOUND;
+    }
+
+    if (Status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdFindByName), object_id, sizeof(*object_id)) < sizeof(*object_id))
+    {
+        UT_ObjIdCompose(1, idtype, object_id);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, Status);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdGetByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdGetByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_lock_mode_t     lock_mode = UT_Hook_GetArgValueByName(Context, "lock_mode", OS_lock_mode_t);
+    osal_objtype_t     idtype    = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    OS_object_token_t *token     = UT_Hook_GetArgValueByName(Context, "token", OS_object_token_t *);
+    int32              Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdGetByName), token, sizeof(*token)) < sizeof(*token))
+    {
+        UT_TokenCompose(lock_mode, 1, idtype, token);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdGetById' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdGetById(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_lock_mode_t     lock_mode = UT_Hook_GetArgValueByName(Context, "lock_mode", OS_lock_mode_t);
+    osal_objtype_t     idtype    = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    osal_id_t          id        = UT_Hook_GetArgValueByName(Context, "id", osal_id_t);
+    OS_object_token_t *token     = UT_Hook_GetArgValueByName(Context, "token", OS_object_token_t *);
+    int32              Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS && UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdGetById), token, sizeof(*token)) < sizeof(*token))
+    {
+        UT_TokenCompose(lock_mode, OS_ObjectIdToInteger(id) & 0xFFFF, idtype, token);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdTransferToken' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdTransferToken(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_object_token_t *token_from = UT_Hook_GetArgValueByName(Context, "token_from", OS_object_token_t *);
+    OS_object_token_t *token_to   = UT_Hook_GetArgValueByName(Context, "token_to", OS_object_token_t *);
+    int32              Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdTransferToken), token_to, sizeof(*token_to)) < sizeof(*token_to))
+    {
+        /* just copy it if nothing specified */
+        *token_to = *token_from;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdAllocateNew' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdAllocateNew(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_objtype_t     idtype = UT_Hook_GetArgValueByName(Context, "idtype", osal_objtype_t);
+    OS_object_token_t *token  = UT_Hook_GetArgValueByName(Context, "token", OS_object_token_t *);
+    int32              Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdAllocateNew), token, sizeof(*token)) < sizeof(*token))
+    {
+        UT_TokenCompose(OS_LOCK_MODE_GLOBAL, UT_GetStubCount(UT_KEY(OS_ObjectIdAllocateNew)), idtype, token);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdIteratorInit' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdIteratorInit(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_object_iter_t *iter = UT_Hook_GetArgValueByName(Context, "iter", OS_object_iter_t *);
+
+    if (!UT_Stub_GetInt32StatusCode(Context, NULL) &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdIteratorGetNext), iter, sizeof(*iter)) < sizeof(*iter))
+    {
+        memset(iter, 0, sizeof(*iter));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdIterateActive' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdIterateActive(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_object_iter_t *iter = UT_Hook_GetArgValueByName(Context, "iter", OS_object_iter_t *);
+
+    if (!UT_Stub_GetInt32StatusCode(Context, NULL) &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdIterateActive), iter, sizeof(*iter)) < sizeof(*iter))
+    {
+        memset(iter, 0, sizeof(*iter));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdIteratorGetNext' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdIteratorGetNext(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_object_iter_t *iter = UT_Hook_GetArgValueByName(Context, "iter", OS_object_iter_t *);
+    bool              ReturnCode;
+    int32             Status;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &Status))
+    {
+        ReturnCode = Status;
+    }
+    else
+    {
+        /* if test case has registered something, return true, otherwise return false */
+        ReturnCode = (UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdIteratorGetNext), &iter->token, sizeof(iter->token)) ==
+                      sizeof(iter->token));
+    }
+    UT_Stub_SetReturnValue(FuncKey, ReturnCode);
+}
+```
+
+### `os-shared-idmap-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-idmap-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-idmap header
+ */
+
+#include "os-shared-idmap.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_Lock_Global_Impl()
+ * ----------------------------------------------------
+ */
+void OS_Lock_Global_Impl(osal_objtype_t idtype)
+{
+    UT_GenStub_AddParam(OS_Lock_Global_Impl, osal_objtype_t, idtype);
+
+    UT_GenStub_Execute(OS_Lock_Global_Impl, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_Unlock_Global_Impl()
+ * ----------------------------------------------------
+ */
+void OS_Unlock_Global_Impl(osal_objtype_t idtype)
+{
+    UT_GenStub_AddParam(OS_Unlock_Global_Impl, osal_objtype_t, idtype);
+
+    UT_GenStub_Execute(OS_Unlock_Global_Impl, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_WaitForStateChange_Impl()
+ * ----------------------------------------------------
+ */
+void OS_WaitForStateChange_Impl(osal_objtype_t objtype, uint32 attempts)
+{
+    UT_GenStub_AddParam(OS_WaitForStateChange_Impl, osal_objtype_t, objtype);
+    UT_GenStub_AddParam(OS_WaitForStateChange_Impl, uint32, attempts);
+
+    UT_GenStub_Execute(OS_WaitForStateChange_Impl, Basic, NULL);
+}
+```
+
+### `os-shared-idmap-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-idmap-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-idmap header
+ */
+
+#include "os-shared-idmap.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_GetBaseForObjectType(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_GetMaxForObjectType(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdAllocateNew(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdFinalizeDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdFinalizeNew(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdFindByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdGetById(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdGetByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdGetBySearch(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdGlobalFromToken(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdIterateActive(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdIteratorGetNext(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdIteratorInit(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdTransactionInit(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdTransferToken(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetBaseForObjectType()
+ * ----------------------------------------------------
+ */
+uint32 OS_GetBaseForObjectType(osal_objtype_t idtype)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetBaseForObjectType, uint32);
+
+    UT_GenStub_AddParam(OS_GetBaseForObjectType, osal_objtype_t, idtype);
+
+    UT_GenStub_Execute(OS_GetBaseForObjectType, Basic, UT_DefaultHandler_OS_GetBaseForObjectType);
+
+    return UT_GenStub_GetReturnValue(OS_GetBaseForObjectType, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetMaxForObjectType()
+ * ----------------------------------------------------
+ */
+uint32 OS_GetMaxForObjectType(osal_objtype_t idtype)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetMaxForObjectType, uint32);
+
+    UT_GenStub_AddParam(OS_GetMaxForObjectType, osal_objtype_t, idtype);
+
+    UT_GenStub_Execute(OS_GetMaxForObjectType, Basic, UT_DefaultHandler_OS_GetMaxForObjectType);
+
+    return UT_GenStub_GetReturnValue(OS_GetMaxForObjectType, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_Lock_Global()
+ * ----------------------------------------------------
+ */
+void OS_Lock_Global(OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_Lock_Global, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_Lock_Global, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectFilterActive()
+ * ----------------------------------------------------
+ */
+bool OS_ObjectFilterActive(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectFilterActive, bool);
+
+    UT_GenStub_AddParam(OS_ObjectFilterActive, void *, ref);
+    UT_GenStub_AddParam(OS_ObjectFilterActive, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ObjectFilterActive, const OS_common_record_t *, obj);
+
+    UT_GenStub_Execute(OS_ObjectFilterActive, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectFilterActive, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdAllocateNew()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdAllocateNew(osal_objtype_t idtype, const char *name, OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdAllocateNew, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdAllocateNew, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdAllocateNew, const char *, name);
+    UT_GenStub_AddParam(OS_ObjectIdAllocateNew, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdAllocateNew, Basic, UT_DefaultHandler_OS_ObjectIdAllocateNew);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdAllocateNew, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdConvertToken()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdConvertToken(OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdConvertToken, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdConvertToken, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdConvertToken, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdConvertToken, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdFinalizeDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdFinalizeDelete(int32 operation_status, OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdFinalizeDelete, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdFinalizeDelete, int32, operation_status);
+    UT_GenStub_AddParam(OS_ObjectIdFinalizeDelete, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdFinalizeDelete, Basic, UT_DefaultHandler_OS_ObjectIdFinalizeDelete);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdFinalizeDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdFinalizeNew()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdFinalizeNew(int32 operation_status, OS_object_token_t *token, osal_id_t *outid)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdFinalizeNew, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdFinalizeNew, int32, operation_status);
+    UT_GenStub_AddParam(OS_ObjectIdFinalizeNew, OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ObjectIdFinalizeNew, osal_id_t *, outid);
+
+    UT_GenStub_Execute(OS_ObjectIdFinalizeNew, Basic, UT_DefaultHandler_OS_ObjectIdFinalizeNew);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdFinalizeNew, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdFindByName()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdFindByName(osal_objtype_t idtype, const char *name, osal_id_t *object_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdFindByName, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdFindByName, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdFindByName, const char *, name);
+    UT_GenStub_AddParam(OS_ObjectIdFindByName, osal_id_t *, object_id);
+
+    UT_GenStub_Execute(OS_ObjectIdFindByName, Basic, UT_DefaultHandler_OS_ObjectIdFindByName);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdFindByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdFindNextFree()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdFindNextFree(OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdFindNextFree, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdFindNextFree, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdFindNextFree, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdFindNextFree, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdFindNextMatch()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdFindNextMatch(OS_ObjectMatchFunc_t MatchFunc, void *arg, OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdFindNextMatch, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdFindNextMatch, OS_ObjectMatchFunc_t, MatchFunc);
+    UT_GenStub_AddParam(OS_ObjectIdFindNextMatch, void *, arg);
+    UT_GenStub_AddParam(OS_ObjectIdFindNextMatch, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdFindNextMatch, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdFindNextMatch, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdGetById()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdGetById(OS_lock_mode_t lock_mode, osal_objtype_t idtype, osal_id_t id, OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdGetById, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdGetById, OS_lock_mode_t, lock_mode);
+    UT_GenStub_AddParam(OS_ObjectIdGetById, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdGetById, osal_id_t, id);
+    UT_GenStub_AddParam(OS_ObjectIdGetById, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdGetById, Basic, UT_DefaultHandler_OS_ObjectIdGetById);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdGetById, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdGetByName()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdGetByName(OS_lock_mode_t lock_mode, osal_objtype_t idtype, const char *name, OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdGetByName, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdGetByName, OS_lock_mode_t, lock_mode);
+    UT_GenStub_AddParam(OS_ObjectIdGetByName, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdGetByName, const char *, name);
+    UT_GenStub_AddParam(OS_ObjectIdGetByName, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdGetByName, Basic, UT_DefaultHandler_OS_ObjectIdGetByName);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdGetByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdGetBySearch()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdGetBySearch(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_ObjectMatchFunc_t MatchFunc, void *arg,
+                             OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdGetBySearch, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdGetBySearch, OS_lock_mode_t, lock_mode);
+    UT_GenStub_AddParam(OS_ObjectIdGetBySearch, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdGetBySearch, OS_ObjectMatchFunc_t, MatchFunc);
+    UT_GenStub_AddParam(OS_ObjectIdGetBySearch, void *, arg);
+    UT_GenStub_AddParam(OS_ObjectIdGetBySearch, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdGetBySearch, Basic, UT_DefaultHandler_OS_ObjectIdGetBySearch);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdGetBySearch, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdGlobalFromToken()
+ * ----------------------------------------------------
+ */
+OS_common_record_t *OS_ObjectIdGlobalFromToken(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdGlobalFromToken, OS_common_record_t *);
+
+    UT_GenStub_AddParam(OS_ObjectIdGlobalFromToken, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdGlobalFromToken, Basic, UT_DefaultHandler_OS_ObjectIdGlobalFromToken);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdGlobalFromToken, OS_common_record_t *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdInit()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdInit(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdInit, int32);
+
+    UT_GenStub_Execute(OS_ObjectIdInit, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdIterateActive()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdIterateActive(osal_objtype_t objtype, OS_object_iter_t *iter)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdIterateActive, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdIterateActive, osal_objtype_t, objtype);
+    UT_GenStub_AddParam(OS_ObjectIdIterateActive, OS_object_iter_t *, iter);
+
+    UT_GenStub_Execute(OS_ObjectIdIterateActive, Basic, UT_DefaultHandler_OS_ObjectIdIterateActive);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdIterateActive, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdIteratorDestroy()
+ * ----------------------------------------------------
+ */
+void OS_ObjectIdIteratorDestroy(OS_object_iter_t *iter)
+{
+    UT_GenStub_AddParam(OS_ObjectIdIteratorDestroy, OS_object_iter_t *, iter);
+
+    UT_GenStub_Execute(OS_ObjectIdIteratorDestroy, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdIteratorGetNext()
+ * ----------------------------------------------------
+ */
+bool OS_ObjectIdIteratorGetNext(OS_object_iter_t *iter)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdIteratorGetNext, bool);
+
+    UT_GenStub_AddParam(OS_ObjectIdIteratorGetNext, OS_object_iter_t *, iter);
+
+    UT_GenStub_Execute(OS_ObjectIdIteratorGetNext, Basic, UT_DefaultHandler_OS_ObjectIdIteratorGetNext);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdIteratorGetNext, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdIteratorInit()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdIteratorInit(OS_ObjectMatchFunc_t matchfunc, void *matcharg, osal_objtype_t objtype,
+                              OS_object_iter_t *iter)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdIteratorInit, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdIteratorInit, OS_ObjectMatchFunc_t, matchfunc);
+    UT_GenStub_AddParam(OS_ObjectIdIteratorInit, void *, matcharg);
+    UT_GenStub_AddParam(OS_ObjectIdIteratorInit, osal_objtype_t, objtype);
+    UT_GenStub_AddParam(OS_ObjectIdIteratorInit, OS_object_iter_t *, iter);
+
+    UT_GenStub_Execute(OS_ObjectIdIteratorInit, Basic, UT_DefaultHandler_OS_ObjectIdIteratorInit);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdIteratorInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdIteratorProcessEntry()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdIteratorProcessEntry(OS_object_iter_t *iter, OS_ObjectIdIteratorProcessFunc_t func)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdIteratorProcessEntry, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdIteratorProcessEntry, OS_object_iter_t *, iter);
+    UT_GenStub_AddParam(OS_ObjectIdIteratorProcessEntry, OS_ObjectIdIteratorProcessFunc_t, func);
+
+    UT_GenStub_Execute(OS_ObjectIdIteratorProcessEntry, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdIteratorProcessEntry, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdRelease()
+ * ----------------------------------------------------
+ */
+void OS_ObjectIdRelease(OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_ObjectIdRelease, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdRelease, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdTransactionCancel()
+ * ----------------------------------------------------
+ */
+void OS_ObjectIdTransactionCancel(OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_ObjectIdTransactionCancel, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdTransactionCancel, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdTransactionFinish()
+ * ----------------------------------------------------
+ */
+void OS_ObjectIdTransactionFinish(OS_object_token_t *token, const osal_id_t *final_id)
+{
+    UT_GenStub_AddParam(OS_ObjectIdTransactionFinish, OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ObjectIdTransactionFinish, const osal_id_t *, final_id);
+
+    UT_GenStub_Execute(OS_ObjectIdTransactionFinish, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdTransactionInit()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdTransactionInit(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdTransactionInit, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdTransactionInit, OS_lock_mode_t, lock_mode);
+    UT_GenStub_AddParam(OS_ObjectIdTransactionInit, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdTransactionInit, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ObjectIdTransactionInit, Basic, UT_DefaultHandler_OS_ObjectIdTransactionInit);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdTransactionInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdTransferToken()
+ * ----------------------------------------------------
+ */
+void OS_ObjectIdTransferToken(OS_object_token_t *token_from, OS_object_token_t *token_to)
+{
+    UT_GenStub_AddParam(OS_ObjectIdTransferToken, OS_object_token_t *, token_from);
+    UT_GenStub_AddParam(OS_ObjectIdTransferToken, OS_object_token_t *, token_to);
+
+    UT_GenStub_Execute(OS_ObjectIdTransferToken, Basic, UT_DefaultHandler_OS_ObjectIdTransferToken);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectNameMatch()
+ * ----------------------------------------------------
+ */
+bool OS_ObjectNameMatch(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectNameMatch, bool);
+
+    UT_GenStub_AddParam(OS_ObjectNameMatch, void *, ref);
+    UT_GenStub_AddParam(OS_ObjectNameMatch, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ObjectNameMatch, const OS_common_record_t *, obj);
+
+    UT_GenStub_Execute(OS_ObjectNameMatch, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectNameMatch, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_Unlock_Global()
+ * ----------------------------------------------------
+ */
+void OS_Unlock_Global(OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_Unlock_Global, OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_Unlock_Global, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_WaitForStateChange()
+ * ----------------------------------------------------
+ */
+void OS_WaitForStateChange(OS_object_token_t *token, uint32 attempts)
+{
+    UT_GenStub_AddParam(OS_WaitForStateChange, OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_WaitForStateChange, uint32, attempts);
+
+    UT_GenStub_Execute(OS_WaitForStateChange, Basic, NULL);
+}
+```
+
+### `os-shared-module-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-module-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-module header
+ */
+
+#include "os-shared-module.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ModuleGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ModuleGetInfo_Impl, OS_module_prop_t *, module_prop);
+
+    UT_GenStub_Execute(OS_ModuleGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleLoad_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleLoad_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ModuleLoad_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ModuleLoad_Impl, const char *, translated_path);
+
+    UT_GenStub_Execute(OS_ModuleLoad_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleLoad_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleSymbolLookup_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleSymbolLookup_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ModuleSymbolLookup_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ModuleSymbolLookup_Impl, cpuaddr *, SymbolAddress);
+    UT_GenStub_AddParam(OS_ModuleSymbolLookup_Impl, const char *, SymbolName);
+
+    UT_GenStub_Execute(OS_ModuleSymbolLookup_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleSymbolLookup_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleUnload_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleUnload_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ModuleUnload_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ModuleUnload_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleUnload_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SymbolLookup_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SymbolLookup_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SymbolLookup_Impl, cpuaddr *, SymbolAddress);
+    UT_GenStub_AddParam(OS_SymbolLookup_Impl, const char *, SymbolName);
+
+    UT_GenStub_Execute(OS_SymbolLookup_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SymbolLookup_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SymbolTableDump_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t size_limit)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SymbolTableDump_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SymbolTableDump_Impl, const char *, filename);
+    UT_GenStub_AddParam(OS_SymbolTableDump_Impl, size_t, size_limit);
+
+    UT_GenStub_Execute(OS_SymbolTableDump_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SymbolTableDump_Impl, int32);
+}
+```
+
+### `os-shared-module-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-module-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-module header
+ */
+
+#include "os-shared-module.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_ModuleAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleAPI_Init, int32);
+}
+```
+
+### `os-shared-module-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-module-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-module header
+ */
+
+#include "os-shared-module.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleLoad_Static()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleLoad_Static(const char *ModuleName)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleLoad_Static, int32);
+
+    UT_GenStub_AddParam(OS_ModuleLoad_Static, const char *, ModuleName);
+
+    UT_GenStub_Execute(OS_ModuleLoad_Static, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleLoad_Static, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SymbolLookup_Static()
+ * ----------------------------------------------------
+ */
+int32 OS_SymbolLookup_Static(cpuaddr *SymbolAddress, const char *SymbolName, const char *ModuleName)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SymbolLookup_Static, int32);
+
+    UT_GenStub_AddParam(OS_SymbolLookup_Static, cpuaddr *, SymbolAddress);
+    UT_GenStub_AddParam(OS_SymbolLookup_Static, const char *, SymbolName);
+    UT_GenStub_AddParam(OS_SymbolLookup_Static, const char *, ModuleName);
+
+    UT_GenStub_Execute(OS_SymbolLookup_Static, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SymbolLookup_Static, int32);
+}
+```
+
+### `os-shared-mutex-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-mutex-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-mutex header
+ */
+
+#include "os-shared-mutex.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemCreate_Impl(const OS_object_token_t *token, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_MutSemCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_MutSemCreate_Impl, uint32, options);
+
+    UT_GenStub_Execute(OS_MutSemCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_MutSemDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_MutSemDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemGetInfo_Impl(const OS_object_token_t *token, OS_mut_sem_prop_t *mut_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_MutSemGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_MutSemGetInfo_Impl, OS_mut_sem_prop_t *, mut_prop);
+
+    UT_GenStub_Execute(OS_MutSemGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemGive_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemGive_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemGive_Impl, int32);
+
+    UT_GenStub_AddParam(OS_MutSemGive_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_MutSemGive_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemGive_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemTake_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemTake_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemTake_Impl, int32);
+
+    UT_GenStub_AddParam(OS_MutSemTake_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_MutSemTake_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemTake_Impl, int32);
+}
+```
+
+### `os-shared-mutex-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-mutex-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-mutex header
+ */
+
+#include "os-shared-mutex.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutexAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_MutexAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutexAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_MutexAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutexAPI_Init, int32);
+}
+```
+
+### `os-shared-network-impl-handlers.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-network-impl-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-network.h" /* OSAL public API for this subsystem */
+#include "os-shared-network.h"
+#include "utstubs.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_NetworkGetID_Impl' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_NetworkGetID_Impl(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32 *IdBuf = UT_Hook_GetArgValueByName(Context, "IdBuf", int32 *);
+    int32  status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == 0)
+    {
+        *IdBuf = 42;
+    }
+}
+```
+
+### `os-shared-network-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-network-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-network header
+ */
+
+#include "os-shared-network.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_NetworkGetID_Impl(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_NetworkGetHostName_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len)
+{
+    UT_GenStub_SetupReturnBuffer(OS_NetworkGetHostName_Impl, int32);
+
+    UT_GenStub_AddParam(OS_NetworkGetHostName_Impl, char *, host_name);
+    UT_GenStub_AddParam(OS_NetworkGetHostName_Impl, size_t, name_len);
+
+    UT_GenStub_Execute(OS_NetworkGetHostName_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_NetworkGetHostName_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_NetworkGetID_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_NetworkGetID_Impl(int32 *IdBuf)
+{
+    UT_GenStub_SetupReturnBuffer(OS_NetworkGetID_Impl, int32);
+
+    UT_GenStub_AddParam(OS_NetworkGetID_Impl, int32 *, IdBuf);
+
+    UT_GenStub_Execute(OS_NetworkGetID_Impl, Basic, UT_DefaultHandler_OS_NetworkGetID_Impl);
+
+    return UT_GenStub_GetReturnValue(OS_NetworkGetID_Impl, int32);
+}
+```
+
+### `os-shared-network-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-network-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-network header
+ */
+
+#include "os-shared-network.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_NetworkAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_NetworkAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_NetworkAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_NetworkAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_NetworkAPI_Init, int32);
+}
+```
+
+### `os-shared-printf-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-printf-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-printf header
+ */
+
+#include "os-shared-printf.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ConsoleOutput_Impl()
+ * ----------------------------------------------------
+ */
+void OS_ConsoleOutput_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_ConsoleOutput_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_ConsoleOutput_Impl, Basic, NULL);
+}
+```
+
+### `os-shared-queue-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-queue-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-queue header
+ */
+
+#include "os-shared-queue.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_QueueCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_QueueCreate_Impl, uint32, flags);
+
+    UT_GenStub_Execute(OS_QueueCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_QueueCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_QueueDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_QueueDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_QueueDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueGetInfo_Impl(const OS_object_token_t *token, OS_queue_prop_t *queue_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_QueueGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_QueueGetInfo_Impl, OS_queue_prop_t *, queue_prop);
+
+    UT_GenStub_Execute(OS_QueueGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_QueueGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueGet_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueGet_Impl(const OS_object_token_t *token, void *data, size_t size, size_t *size_copied, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueGet_Impl, int32);
+
+    UT_GenStub_AddParam(OS_QueueGet_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_QueueGet_Impl, void *, data);
+    UT_GenStub_AddParam(OS_QueueGet_Impl, size_t, size);
+    UT_GenStub_AddParam(OS_QueueGet_Impl, size_t *, size_copied);
+    UT_GenStub_AddParam(OS_QueueGet_Impl, int32, timeout);
+
+    UT_GenStub_Execute(OS_QueueGet_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_QueueGet_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueuePut_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_QueuePut_Impl(const OS_object_token_t *token, const void *data, size_t size, uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueuePut_Impl, int32);
+
+    UT_GenStub_AddParam(OS_QueuePut_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_QueuePut_Impl, const void *, data);
+    UT_GenStub_AddParam(OS_QueuePut_Impl, size_t, size);
+    UT_GenStub_AddParam(OS_QueuePut_Impl, uint32, flags);
+
+    UT_GenStub_Execute(OS_QueuePut_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_QueuePut_Impl, int32);
+}
+```
+
+### `os-shared-queue-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-queue-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-queue header
+ */
+
+#include "os-shared-queue.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_QueueAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_QueueAPI_Init, int32);
+}
+```
+
+### `os-shared-select-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-select-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-select header
+ */
+
+#include "os-shared-select.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectMultiple_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectMultiple_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SelectMultiple_Impl, OS_FdSet *, ReadSet);
+    UT_GenStub_AddParam(OS_SelectMultiple_Impl, OS_FdSet *, WriteSet);
+    UT_GenStub_AddParam(OS_SelectMultiple_Impl, int32, msecs);
+
+    UT_GenStub_Execute(OS_SelectMultiple_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectMultiple_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectSingle_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectSingle_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SelectSingle_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SelectSingle_Impl, uint32 *, SelectFlags);
+    UT_GenStub_AddParam(OS_SelectSingle_Impl, int32, msecs);
+
+    UT_GenStub_Execute(OS_SelectSingle_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectSingle_Impl, int32);
+}
+```
+
+### `os-shared-shell-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-shell-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-shell header
+ */
+
+#include "os-shared-shell.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ShellOutputToFile_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ShellOutputToFile_Impl, int32);
+
+    UT_GenStub_AddParam(OS_ShellOutputToFile_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_ShellOutputToFile_Impl, const char *, Cmd);
+
+    UT_GenStub_Execute(OS_ShellOutputToFile_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ShellOutputToFile_Impl, int32);
+}
+```
+
+### `os-shared-sockets-impl-handlers.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-impl-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-sockets.h" /* OSAL public API for this subsystem */
+#include "os-shared-sockets.h"
+#include "utstubs.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketAddrGetPort_Impl(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint16 *PortNum = UT_Hook_GetArgValueByName(Context, "PortNum", uint16 *);
+    int32   status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_SocketAddrGetPort_Impl), PortNum, sizeof(*PortNum)) < sizeof(*PortNum))
+    {
+        *PortNum = 0;
+    }
+}
+```
+
+### `os-shared-sockets-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-sockets header
+ */
+
+#include "os-shared-sockets.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_SocketAddrGetPort_Impl(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SetSocketDefaultFlags_Impl()
+ * ----------------------------------------------------
+ */
+void OS_SetSocketDefaultFlags_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_SetSocketDefaultFlags_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_SetSocketDefaultFlags_Impl, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAccept_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAccept_Impl(const OS_object_token_t *sock_token, const OS_object_token_t *conn_token,
+                           OS_SockAddr_t *Addr, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAccept_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketAccept_Impl, const OS_object_token_t *, sock_token);
+    UT_GenStub_AddParam(OS_SocketAccept_Impl, const OS_object_token_t *, conn_token);
+    UT_GenStub_AddParam(OS_SocketAccept_Impl, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAccept_Impl, int32, timeout);
+
+    UT_GenStub_Execute(OS_SocketAccept_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAccept_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrFromString_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrFromString_Impl(OS_SockAddr_t *Addr, const char *string)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrFromString_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrFromString_Impl, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAddrFromString_Impl, const char *, string);
+
+    UT_GenStub_Execute(OS_SocketAddrFromString_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrFromString_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrGetPort_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrGetPort_Impl(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrGetPort_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrGetPort_Impl, uint16 *, PortNum);
+    UT_GenStub_AddParam(OS_SocketAddrGetPort_Impl, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketAddrGetPort_Impl, Basic, UT_DefaultHandler_OS_SocketAddrGetPort_Impl);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrGetPort_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrInit_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrInit_Impl(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrInit_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrInit_Impl, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAddrInit_Impl, OS_SocketDomain_t, Domain);
+
+    UT_GenStub_Execute(OS_SocketAddrInit_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrInit_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrSetPort_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrSetPort_Impl(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrSetPort_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrSetPort_Impl, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAddrSetPort_Impl, uint16, PortNum);
+
+    UT_GenStub_Execute(OS_SocketAddrSetPort_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrSetPort_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrToString_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrToString_Impl(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrToString_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrToString_Impl, char *, buffer);
+    UT_GenStub_AddParam(OS_SocketAddrToString_Impl, size_t, buflen);
+    UT_GenStub_AddParam(OS_SocketAddrToString_Impl, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketAddrToString_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrToString_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketBindAddress_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketBindAddress_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketBindAddress_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketBindAddress_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SocketBindAddress_Impl, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketBindAddress_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketBindAddress_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketConnect_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketConnect_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketConnect_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketConnect_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SocketConnect_Impl, const OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketConnect_Impl, int32, timeout);
+
+    UT_GenStub_Execute(OS_SocketConnect_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketConnect_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketGetInfo_Impl(const OS_object_token_t *token, OS_socket_prop_t *sock_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SocketGetInfo_Impl, OS_socket_prop_t *, sock_prop);
+
+    UT_GenStub_Execute(OS_SocketGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketListen_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketListen_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketListen_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketListen_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_SocketListen_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketListen_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketOpen_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketOpen_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketOpen_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketOpen_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_SocketOpen_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketOpen_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketRecvFrom_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketRecvFrom_Impl(const OS_object_token_t *token, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr,
+                             int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketRecvFrom_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketRecvFrom_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SocketRecvFrom_Impl, void *, buffer);
+    UT_GenStub_AddParam(OS_SocketRecvFrom_Impl, size_t, buflen);
+    UT_GenStub_AddParam(OS_SocketRecvFrom_Impl, OS_SockAddr_t *, RemoteAddr);
+    UT_GenStub_AddParam(OS_SocketRecvFrom_Impl, int32, timeout);
+
+    UT_GenStub_Execute(OS_SocketRecvFrom_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketRecvFrom_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketSendTo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketSendTo_Impl(const OS_object_token_t *token, const void *buffer, size_t buflen,
+                           const OS_SockAddr_t *RemoteAddr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketSendTo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketSendTo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SocketSendTo_Impl, const void *, buffer);
+    UT_GenStub_AddParam(OS_SocketSendTo_Impl, size_t, buflen);
+    UT_GenStub_AddParam(OS_SocketSendTo_Impl, const OS_SockAddr_t *, RemoteAddr);
+
+    UT_GenStub_Execute(OS_SocketSendTo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketSendTo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketShutdown_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketShutdown_Impl(const OS_object_token_t *token, OS_SocketShutdownMode_t Mode)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketShutdown_Impl, int32);
+
+    UT_GenStub_AddParam(OS_SocketShutdown_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_SocketShutdown_Impl, OS_SocketShutdownMode_t, Mode);
+
+    UT_GenStub_Execute(OS_SocketShutdown_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketShutdown_Impl, int32);
+}
+```
+
+### `os-shared-sockets-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-sockets header
+ */
+
+#include "os-shared-sockets.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_SocketAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAPI_Init, int32);
+}
+```
+
+### `os-shared-sockets-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-sockets-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-sockets header
+ */
+
+#include "os-shared-sockets.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CreateSocketName()
+ * ----------------------------------------------------
+ */
+void OS_CreateSocketName(const OS_object_token_t *token, const OS_SockAddr_t *Addr, const char *parent_name)
+{
+    UT_GenStub_AddParam(OS_CreateSocketName, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_CreateSocketName, const OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_CreateSocketName, const char *, parent_name);
+
+    UT_GenStub_Execute(OS_CreateSocketName, Basic, NULL);
+}
+```
+
+### `os-shared-task-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-task-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-task header
+ */
+
+#include "os-shared-task.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskCreate_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_TaskCreate_Impl, uint32, flags);
+
+    UT_GenStub_Execute(OS_TaskCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskDelay_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskDelay_Impl(uint32 millisecond)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskDelay_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskDelay_Impl, uint32, millisecond);
+
+    UT_GenStub_Execute(OS_TaskDelay_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskDelay_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TaskDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskDetach_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskDetach_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskDetach_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskDetach_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TaskDetach_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskDetach_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskExit_Impl()
+ * ----------------------------------------------------
+ */
+void OS_TaskExit_Impl(void)
+{
+
+    UT_GenStub_Execute(OS_TaskExit_Impl, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskGetId_Impl()
+ * ----------------------------------------------------
+ */
+osal_id_t OS_TaskGetId_Impl(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskGetId_Impl, osal_id_t);
+
+    UT_GenStub_Execute(OS_TaskGetId_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskGetId_Impl, osal_id_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskGetInfo_Impl(const OS_object_token_t *token, OS_task_prop_t *task_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_TaskGetInfo_Impl, OS_task_prop_t *, task_prop);
+
+    UT_GenStub_Execute(OS_TaskGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskIdMatchSystemData_Impl()
+ * ----------------------------------------------------
+ */
+bool OS_TaskIdMatchSystemData_Impl(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskIdMatchSystemData_Impl, bool);
+
+    UT_GenStub_AddParam(OS_TaskIdMatchSystemData_Impl, void *, ref);
+    UT_GenStub_AddParam(OS_TaskIdMatchSystemData_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_TaskIdMatchSystemData_Impl, const OS_common_record_t *, obj);
+
+    UT_GenStub_Execute(OS_TaskIdMatchSystemData_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskIdMatchSystemData_Impl, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskMatch_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskMatch_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskMatch_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskMatch_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TaskMatch_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskMatch_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskRegister_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskRegister_Impl(osal_id_t global_task_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskRegister_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskRegister_Impl, osal_id_t, global_task_id);
+
+    UT_GenStub_Execute(OS_TaskRegister_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskRegister_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskSetPriority_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskSetPriority_Impl(const OS_object_token_t *token, osal_priority_t new_priority)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskSetPriority_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskSetPriority_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_TaskSetPriority_Impl, osal_priority_t, new_priority);
+
+    UT_GenStub_Execute(OS_TaskSetPriority_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskSetPriority_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskValidateSystemData_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskValidateSystemData_Impl(const void *sysdata, size_t sysdata_size)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskValidateSystemData_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TaskValidateSystemData_Impl, const void *, sysdata);
+    UT_GenStub_AddParam(OS_TaskValidateSystemData_Impl, size_t, sysdata_size);
+
+    UT_GenStub_Execute(OS_TaskValidateSystemData_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskValidateSystemData_Impl, int32);
+}
+```
+
+### `os-shared-task-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-task-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-task header
+ */
+
+#include "os-shared-task.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_TaskAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskAPI_Init, int32);
+}
+```
+
+### `os-shared-task-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-task-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-task header
+ */
+
+#include "os-shared-task.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskEntryPoint()
+ * ----------------------------------------------------
+ */
+void OS_TaskEntryPoint(osal_id_t global_task_id)
+{
+    UT_GenStub_AddParam(OS_TaskEntryPoint, osal_id_t, global_task_id);
+
+    UT_GenStub_Execute(OS_TaskEntryPoint, Basic, NULL);
+}
+```
+
+### `os-shared-time-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-time-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-time header
+ */
+
+#include "os-shared-time.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerCbAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerCbAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerCbAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_TimerCbAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimerCbAPI_Init, int32);
+}
+```
+
+### `os-shared-timebase-impl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-timebase-impl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-timebase header
+ */
+
+#include "os-shared-timebase.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseCreate_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseCreate_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseCreate_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseCreate_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TimeBaseCreate_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseCreate_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseDelete_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseDelete_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseDelete_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseDelete_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TimeBaseDelete_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseDelete_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseGetInfo_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseGetInfo_Impl(const OS_object_token_t *token, OS_timebase_prop_t *timer_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseGetInfo_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseGetInfo_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_TimeBaseGetInfo_Impl, OS_timebase_prop_t *, timer_prop);
+
+    UT_GenStub_Execute(OS_TimeBaseGetInfo_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseGetInfo_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseLock_Impl()
+ * ----------------------------------------------------
+ */
+void OS_TimeBaseLock_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_TimeBaseLock_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TimeBaseLock_Impl, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseSet_Impl()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseSet_Impl(const OS_object_token_t *token, uint32 start_time, uint32 interval_time)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseSet_Impl, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseSet_Impl, const OS_object_token_t *, token);
+    UT_GenStub_AddParam(OS_TimeBaseSet_Impl, uint32, start_time);
+    UT_GenStub_AddParam(OS_TimeBaseSet_Impl, uint32, interval_time);
+
+    UT_GenStub_Execute(OS_TimeBaseSet_Impl, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseSet_Impl, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseUnlock_Impl()
+ * ----------------------------------------------------
+ */
+void OS_TimeBaseUnlock_Impl(const OS_object_token_t *token)
+{
+    UT_GenStub_AddParam(OS_TimeBaseUnlock_Impl, const OS_object_token_t *, token);
+
+    UT_GenStub_Execute(OS_TimeBaseUnlock_Impl, Basic, NULL);
+}
+```
+
+### `os-shared-timebase-init-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-timebase-init-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-timebase header
+ */
+
+#include "os-shared-timebase.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseAPI_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseAPI_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseAPI_Init, int32);
+
+    UT_GenStub_Execute(OS_TimeBaseAPI_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseAPI_Init, int32);
+}
+```
+
+### `os-shared-timebase-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/os-shared-timebase-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in os-shared-timebase header
+ */
+
+#include "os-shared-timebase.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_Milli2Ticks()
+ * ----------------------------------------------------
+ */
+int32 OS_Milli2Ticks(uint32 milli_seconds, int *ticks)
+{
+    UT_GenStub_SetupReturnBuffer(OS_Milli2Ticks, int32);
+
+    UT_GenStub_AddParam(OS_Milli2Ticks, uint32, milli_seconds);
+    UT_GenStub_AddParam(OS_Milli2Ticks, int *, ticks);
+
+    UT_GenStub_Execute(OS_Milli2Ticks, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_Milli2Ticks, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBase_CallbackThread()
+ * ----------------------------------------------------
+ */
+void OS_TimeBase_CallbackThread(osal_id_t timebase_id)
+{
+    UT_GenStub_AddParam(OS_TimeBase_CallbackThread, osal_id_t, timebase_id);
+
+    UT_GenStub_Execute(OS_TimeBase_CallbackThread, Basic, NULL);
+}
+```
+
+### `osapi-shared-binsem-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-binsem-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-binsem.h"
+
+OS_bin_sem_internal_record_t OS_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+```
+
+### `osapi-shared-common-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-common-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-common.h"
+
+OS_SharedGlobalVars_t OS_SharedGlobalVars;
+```
+
+### `osapi-shared-console-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-console-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-printf.h"
+
+OS_console_internal_record_t OS_console_table[OS_MAX_CONSOLES];
+```
+
+### `osapi-shared-countsem-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-countsem-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-countsem.h"
+
+OS_count_sem_internal_record_t OS_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+```
+
+### `osapi-shared-dir-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-dir-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-dir.h"
+
+OS_dir_internal_record_t OS_dir_table[OS_MAX_NUM_OPEN_DIRS];
+```
+
+### `osapi-shared-error-impl-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-error-impl-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <stdarg.h>
+
+#include "utstubs.h"
+
+#include "os-shared-errors.h"
+
+/* Nonzero/NULL entry required for full branch coverage */
+const OS_ErrorTable_Entry_t OS_IMPL_ERROR_NAME_TABLE[] = {{-4444, "UT_ERROR"}, {-4445, NULL}, {0, NULL}};
+```
+
+### `osapi-shared-filesys-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-filesys-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-filesys.h"
+
+OS_filesys_internal_record_t OS_filesys_table[OS_MAX_FILE_SYSTEMS];
+```
+
+### `osapi-shared-idmap-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-idmap-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-idmap.h"
+
+OS_common_record_t OS_stub_task_table[OS_MAX_TASKS];
+OS_common_record_t OS_stub_queue_table[OS_MAX_QUEUES];
+OS_common_record_t OS_stub_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+OS_common_record_t OS_stub_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+OS_common_record_t OS_stub_mutex_table[OS_MAX_MUTEXES];
+OS_common_record_t OS_stub_console_table[OS_MAX_CONSOLES];
+OS_common_record_t OS_stub_module_table[OS_MAX_MODULES];
+OS_common_record_t OS_stub_filesys_table[OS_MAX_FILE_SYSTEMS];
+OS_common_record_t OS_stub_timebase_table[OS_MAX_TIMEBASES];
+OS_common_record_t OS_stub_timecb_table[OS_MAX_TIMERS];
+OS_common_record_t OS_stub_stream_table[OS_MAX_NUM_OPEN_FILES];
+OS_common_record_t OS_stub_dir_table[OS_MAX_NUM_OPEN_DIRS];
+OS_common_record_t OS_stub_condvar_table[OS_MAX_CONDVARS];
+
+OS_common_record_t *const OS_global_task_table      = OS_stub_task_table;
+OS_common_record_t *const OS_global_queue_table     = OS_stub_queue_table;
+OS_common_record_t *const OS_global_bin_sem_table   = OS_stub_bin_sem_table;
+OS_common_record_t *const OS_global_count_sem_table = OS_stub_count_sem_table;
+OS_common_record_t *const OS_global_mutex_table     = OS_stub_mutex_table;
+OS_common_record_t *const OS_global_stream_table    = OS_stub_stream_table;
+OS_common_record_t *const OS_global_dir_table       = OS_stub_dir_table;
+OS_common_record_t *const OS_global_timebase_table  = OS_stub_timebase_table;
+OS_common_record_t *const OS_global_timecb_table    = OS_stub_timecb_table;
+OS_common_record_t *const OS_global_module_table    = OS_stub_module_table;
+OS_common_record_t *const OS_global_filesys_table   = OS_stub_filesys_table;
+OS_common_record_t *const OS_global_console_table   = OS_stub_console_table;
+OS_common_record_t *const OS_global_condvar_table   = OS_stub_condvar_table;
+```
+
+### `osapi-shared-module-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-module-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-module.h"
+
+OS_module_internal_record_t OS_module_table[OS_MAX_MODULES];
+```
+
+### `osapi-shared-mutex-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-mutex-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-mutex.h"
+
+OS_mutex_internal_record_t OS_mutex_table[OS_MAX_MUTEXES];
+```
+
+### `osapi-shared-queue-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-queue-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-queue.h"
+
+OS_queue_internal_record_t OS_queue_table[OS_MAX_QUEUES];
+```
+
+### `osapi-shared-stream-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-stream-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-file.h"
+
+OS_stream_internal_record_t OS_stream_table[OS_MAX_NUM_OPEN_FILES];
+```
+
+### `osapi-shared-task-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-task-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-task.h"
+
+OS_task_internal_record_t OS_task_table[OS_MAX_TASKS];
+```
+
+### `osapi-shared-timebase-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-timebase-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-timebase.h"
+
+OS_timebase_internal_record_t OS_timebase_table[OS_MAX_TIMEBASES];
+```
+
+### `osapi-shared-timecb-table-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/osapi-shared-timecb-table-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "os-shared-time.h"
+
+OS_timecb_internal_record_t OS_timecb_table[OS_MAX_TIMERS];
+```
+
+### `posix-dirent-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-dirent-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for dirent.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_dirent.h"
+
+struct OCS_DIR
+{
+    int d;
+};
+
+static struct OCS_DIR OCS_LOCAL_DIR;
+struct OCS_dirent     OCS_LOCAL_DIRENT;
+
+int OCS_closedir(OCS_DIR *dirp)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_closedir);
+
+    return Status;
+}
+
+OCS_DIR *OCS_opendir(const char *name)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_opendir);
+
+    if (Status != 0)
+    {
+        return (OCS_DIR *)0;
+    }
+
+    return &OCS_LOCAL_DIR;
+}
+
+struct OCS_dirent *OCS_readdir(OCS_DIR *dirp)
+{
+    int32              Status;
+    struct OCS_dirent *retval = (struct OCS_dirent *)0;
+
+    Status = UT_DEFAULT_IMPL(OCS_readdir);
+
+    if (Status == 0 && UT_Stub_CopyToLocal(UT_KEY(OCS_readdir), &retval, sizeof(retval)) < sizeof(retval) &&
+        UT_GetStubCount(UT_KEY(OCS_readdir)) < 2)
+    {
+        memset(&OCS_LOCAL_DIRENT, 0, sizeof(OCS_LOCAL_DIRENT));
+        retval = &OCS_LOCAL_DIRENT;
+    }
+
+    return retval;
+}
+
+void OCS_rewinddir(OCS_DIR *dirp)
+{
+    UT_DEFAULT_IMPL(OCS_rewinddir);
+}
+```
+
+### `posix-dlfcn-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-dlfcn-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for dlfcn.h */
+#ifndef OCS_DLFCN_H
+#define OCS_DLFCN_H
+
+/* ----------------------------------------- */
+/* constants normally defined in dlfcn.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in dlfcn.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* prototypes normally declared in dlfcn.h */
+/* ----------------------------------------- */
+
+extern int   OCS_dlclose(void *handle);
+extern char *OCS_dlerror(void);
+extern void *OCS_dlopen(const char *file, int mode);
+extern void *OCS_dlsym(void *handle, const char *name);
+
+#endif /*  OCS_DLFCN_H */
+```
+
+### `posix-errno-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-errno-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for errno.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_errno.h"
+
+int OCS_errno = 0;
+```
+
+### `posix-fcntl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-fcntl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for functions in fcntl.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_fcntl.h"
+
+int OCS_fcntl(int fd, int cmd, ...)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_fcntl);
+
+    return Status;
+}
+
+int OCS_open(const char *file, int oflag, ...)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_open);
+
+    return Status;
+}
+```
+
+### `posix-ioctl-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-ioctl-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for functions in sys/ioctl.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_sys_ioctl.h"
+
+int OCS_ioctl(int fd, unsigned long req, ...)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_ioctl);
+
+    return Status;
+}
+```
+
+### `posix-mqueue-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-mqueue-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for mqueue.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_mqueue.h"
+
+int OCS_mq_close(OCS_mqd_t mqdes)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mq_close);
+
+    return Status;
+}
+
+OCS_mqd_t OCS_mq_open(const char *name, int oflag, ...)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mq_open);
+
+    return Status;
+}
+
+OCS_ssize_t OCS_mq_receive(OCS_mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mq_receive);
+
+    return Status;
+}
+
+OCS_ssize_t OCS_mq_timedreceive(OCS_mqd_t mqdes, char *msg_ptr, size_t msg_len, unsigned int *msg_prio,
+                                const struct OCS_timespec *abs_timeout)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mq_timedreceive);
+
+    return Status;
+}
+
+int OCS_mq_timedsend(OCS_mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio,
+                     const struct OCS_timespec *abs_timeout)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mq_timedsend);
+
+    return Status;
+}
+
+int OCS_mq_unlink(const char *name)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mq_unlink);
+
+    return Status;
+}
+```
+
+### `posix-pthread-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-pthread-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for pthread.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_pthread.h"
+
+int OCS_pthread_attr_destroy(OCS_pthread_attr_t *attr)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_destroy);
+
+    return Status;
+}
+
+int OCS_pthread_attr_getschedparam(const OCS_pthread_attr_t *attr, struct OCS_sched_param *param)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_getschedparam);
+
+    return Status;
+}
+
+int OCS_pthread_attr_init(OCS_pthread_attr_t *attr)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_init);
+
+    return Status;
+}
+
+int OCS_pthread_attr_setinheritsched(OCS_pthread_attr_t *attr, int inherit)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_setinheritsched);
+
+    return Status;
+}
+
+int OCS_pthread_attr_setschedparam(OCS_pthread_attr_t *attr, const struct OCS_sched_param *param)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_setschedparam);
+
+    return Status;
+}
+
+int OCS_pthread_attr_setschedpolicy(OCS_pthread_attr_t *attr, int policy)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_setschedpolicy);
+
+    return Status;
+}
+
+int OCS_pthread_attr_setstacksize(OCS_pthread_attr_t *attr, size_t stacksize)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_attr_setstacksize);
+
+    return Status;
+}
+
+int OCS_pthread_cancel(OCS_pthread_t th)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cancel);
+
+    return Status;
+}
+
+int OCS_pthread_cond_broadcast(OCS_pthread_cond_t *cond)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cond_broadcast);
+
+    return Status;
+}
+
+int OCS_pthread_cond_destroy(OCS_pthread_cond_t *cond)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cond_destroy);
+
+    return Status;
+}
+
+int OCS_pthread_cond_init(OCS_pthread_cond_t *cond, const OCS_pthread_condattr_t *cond_attr)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cond_init);
+
+    return Status;
+}
+
+int OCS_pthread_cond_signal(OCS_pthread_cond_t *cond)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cond_signal);
+
+    return Status;
+}
+
+int OCS_pthread_cond_timedwait(OCS_pthread_cond_t *cond, OCS_pthread_mutex_t *mutex, const struct OCS_timespec *abstime)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cond_timedwait);
+
+    return Status;
+}
+
+int OCS_pthread_cond_wait(OCS_pthread_cond_t *cond, OCS_pthread_mutex_t *mutex)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_cond_wait);
+
+    return Status;
+}
+
+int OCS_pthread_create(OCS_pthread_t *newthread, const OCS_pthread_attr_t *attr, void *(*start_routine)(void *),
+                       void *arg)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_create);
+
+    return Status;
+}
+
+int OCS_pthread_detach(OCS_pthread_t th)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_detach);
+
+    return Status;
+}
+
+int OCS_pthread_equal(OCS_pthread_t thread1, OCS_pthread_t thread2)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_pthread_equal, 2);
+
+    if (Status == 2)
+    {
+        Status = (thread1.pthr == thread2.pthr);
+    }
+
+    return Status;
+}
+
+void OCS_pthread_exit(void *retval)
+{
+    UT_DEFAULT_IMPL(OCS_pthread_exit);
+}
+
+int OCS_pthread_getschedparam(OCS_pthread_t target_thread, int *policy, struct OCS_sched_param *param)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_getschedparam);
+
+    return Status;
+}
+
+void *OCS_pthread_getspecific(OCS_pthread_key_t key)
+{
+    int32 Status;
+    void *retval;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_getspecific);
+
+    if (Status != 0 || UT_Stub_CopyToLocal(UT_KEY(OCS_pthread_getspecific), &retval, sizeof(retval)) < sizeof(retval))
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+int OCS_pthread_key_create(OCS_pthread_key_t *key, void (*destr_function)(void *))
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_key_create);
+
+    return Status;
+}
+
+int OCS_pthread_mutexattr_destroy(OCS_pthread_mutexattr_t *attr)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutexattr_destroy);
+
+    return Status;
+}
+
+int OCS_pthread_mutexattr_init(OCS_pthread_mutexattr_t *attr)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutexattr_init);
+
+    return Status;
+}
+
+int OCS_pthread_mutexattr_setprotocol(OCS_pthread_mutexattr_t *attr, int protocol)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutexattr_setprotocol);
+
+    return Status;
+}
+
+int OCS_pthread_mutexattr_settype(OCS_pthread_mutexattr_t *attr, int kind)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutexattr_settype);
+
+    return Status;
+}
+
+int OCS_pthread_mutex_destroy(OCS_pthread_mutex_t *mutex)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutex_destroy);
+
+    return Status;
+}
+
+int OCS_pthread_mutex_init(OCS_pthread_mutex_t *mutex, const OCS_pthread_mutexattr_t *mutexattr)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutex_init);
+
+    return Status;
+}
+
+int OCS_pthread_mutex_lock(OCS_pthread_mutex_t *mutex)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutex_lock);
+
+    return Status;
+}
+
+int OCS_pthread_mutex_unlock(OCS_pthread_mutex_t *mutex)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_mutex_unlock);
+
+    return Status;
+}
+
+OCS_pthread_t OCS_pthread_self(void)
+{
+    OCS_pthread_t result;
+
+    result.pthr = UT_DEFAULT_IMPL(OCS_pthread_self);
+
+    return result;
+}
+
+int OCS_pthread_setschedparam(OCS_pthread_t target_thread, int policy, const struct OCS_sched_param *param)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_setschedparam);
+
+    return Status;
+}
+
+int OCS_pthread_setschedprio(OCS_pthread_t target_thread, int prio)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_setschedprio);
+
+    return Status;
+}
+
+int OCS_pthread_setspecific(OCS_pthread_key_t key, const void *pointer)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_setspecific);
+
+    return Status;
+}
+
+int OCS_pthread_sigmask(int how, const OCS_sigset_t *set, OCS_sigset_t *oldset)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_pthread_sigmask);
+
+    return Status;
+}
+```
+
+### `posix-sched-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-sched-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for sched.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_sched.h"
+
+int OCS_sched_get_priority_max(int policy)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_sched_get_priority_max, 9);
+
+    return Status;
+}
+
+int OCS_sched_get_priority_min(int policy)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_sched_get_priority_min, 1);
+
+    return Status;
+}
+```
+
+### `posix-semaphore-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-semaphore-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for semaphore.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_semaphore.h"
+
+int OCS_sem_destroy(OCS_sem_t *sem)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sem_destroy);
+
+    return Status;
+}
+
+int OCS_sem_getvalue(OCS_sem_t *sem, int *sval)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sem_getvalue);
+
+    return Status;
+}
+
+int OCS_sem_init(OCS_sem_t *sem, int pshared, unsigned int value)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sem_init);
+
+    return Status;
+}
+
+int OCS_sem_post(OCS_sem_t *sem)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sem_post);
+
+    return Status;
+}
+
+int OCS_sem_timedwait(OCS_sem_t *sem, const struct OCS_timespec *abstime)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sem_timedwait);
+
+    return Status;
+}
+
+int OCS_sem_wait(OCS_sem_t *sem)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sem_wait);
+
+    return Status;
+}
+```
+
+### `posix-signal-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-signal-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for signal.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_signal.h"
+
+int OCS_kill(OCS_pid_t pid, int sig)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_kill);
+
+    return Status;
+}
+
+int OCS_sigaddset(OCS_sigset_t *set, int signo)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigaddset);
+
+    return Status;
+}
+
+int OCS_sigdelset(OCS_sigset_t *set, int signo)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigdelset);
+
+    return Status;
+}
+
+int OCS_sigemptyset(OCS_sigset_t *set)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigemptyset);
+
+    return Status;
+}
+
+int OCS_sigfillset(OCS_sigset_t *set)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigfillset);
+
+    return Status;
+}
+
+int OCS_sigismember(const OCS_sigset_t *set, int signo)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigismember);
+
+    return Status;
+}
+
+OCS_sighandler_t OCS_signal(int signum, OCS_sighandler_t handler)
+{
+    UT_DEFAULT_IMPL(OCS_signal);
+    return (OCS_sighandler_t)0;
+}
+
+int OCS_sigprocmask(int how, const OCS_sigset_t *set, OCS_sigset_t *oset)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigprocmask);
+
+    return Status;
+}
+
+int OCS_sigsuspend(const OCS_sigset_t *set)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigsuspend);
+
+    return Status;
+}
+
+int OCS_sigwait(const OCS_sigset_t *set, int *sig)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sigwait);
+
+    /*
+     * The "sig" value is an output, which the UT test
+     * case may need to control.
+     */
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_sigwait), sig, sizeof(*sig)) < sizeof(*sig))
+    {
+        *sig = 1;
+    }
+
+    return Status;
+}
+```
+
+### `posix-stat-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-stat-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for functions in sys/stat.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_stat.h"
+
+int OCS_fchmod(int fd, OCS_mode_t mode)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_fchmod);
+
+    return Status;
+}
+
+int OCS_chmod(const char *path, OCS_mode_t mode)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_chmod);
+
+    return Status;
+}
+
+int OCS_mkdir(const char *path, ...)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_mkdir);
+
+    return Status;
+}
+
+int OCS_stat(const char *file, struct OCS_stat *buf)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_stat);
+
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_stat), buf, sizeof(*buf)) < sizeof(*buf))
+    {
+        memset(buf, 0, sizeof(*buf));
+    }
+
+    return Status;
+}
+
+int OCS_fstat(int fd, struct OCS_stat *buf)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_fstat);
+
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_fstat), buf, sizeof(*buf)) < sizeof(*buf))
+    {
+        memset(buf, 0, sizeof(*buf));
+    }
+
+    return Status;
+}
+
+int OCS_statvfs(const char *file, struct OCS_statvfs *buf)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_statvfs);
+
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_statvfs), buf, sizeof(*buf)) < sizeof(*buf))
+    {
+        memset(buf, 0, sizeof(*buf));
+    }
+
+    return Status;
+}
+```
+
+### `posix-time-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-time-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for time.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_time.h"
+
+int OCS_clock_getres(OCS_clockid_t clock_id, struct OCS_timespec *res)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_clock_getres);
+
+    return Status;
+}
+
+int OCS_clock_gettime(OCS_clockid_t clock_id, struct OCS_timespec *tp)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_clock_gettime);
+
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_clock_gettime), tp, sizeof(*tp)) < sizeof(*tp))
+    {
+        memset(tp, 0, sizeof(*tp));
+    }
+
+    return Status;
+}
+
+int OCS_clock_nanosleep(OCS_clockid_t clock_id, int flags, const struct OCS_timespec *req, struct OCS_timespec *rem)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_clock_nanosleep);
+
+    return Status;
+}
+
+int OCS_clock_settime(OCS_clockid_t clock_id, const struct OCS_timespec *tp)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_clock_settime);
+
+    return Status;
+}
+
+int OCS_timer_create(OCS_clockid_t clock_id, struct OCS_sigevent *evp, OCS_timer_t *timerid)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_timer_create);
+
+    return Status;
+}
+
+int OCS_timer_delete(OCS_timer_t timerid)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_timer_delete);
+
+    return Status;
+}
+
+int OCS_timer_settime(OCS_timer_t timerid, int flags, const struct OCS_itimerspec *value, struct OCS_itimerspec *ovalue)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_timer_settime);
+    if (Status == 0)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(OCS_timer_settime), value, sizeof(*value));
+    }
+
+    return Status;
+}
+
+int OCS_timer_gettime(OCS_timer_t timerid, struct OCS_itimerspec *value)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_timer_gettime);
+
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_timer_gettime), value, sizeof(*value)) < sizeof(*value))
+    {
+        memset(value, 0, sizeof(*value));
+    }
+
+    return Status;
+}
+```
+
+### `posix-unistd-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/posix-unistd-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for unistd.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_unistd.h"
+
+#define OCS_MAX_RDWR_SIZE 0x01000000 /* 16MB */
+
+int OCS_close(int fd)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_close);
+
+    return Status;
+}
+
+OCS_gid_t OCS_getegid(void)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_getegid);
+
+    return Status;
+}
+
+OCS_uid_t OCS_geteuid(void)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_geteuid);
+
+    return Status;
+}
+
+long int OCS_gethostid(void)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_gethostid);
+
+    return Status;
+}
+
+int OCS_gethostname(char *name, size_t len)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_gethostname);
+
+    if (Status == 0 && len > 0)
+    {
+        strncpy(name, "ut", len - 1);
+        name[len - 1] = 0;
+    }
+
+    return Status;
+}
+
+OCS_pid_t OCS_getpid(void)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_getpid);
+
+    return Status;
+}
+
+OCS_off_t OCS_lseek(int fd, OCS_off_t offset, int whence)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_lseek);
+
+    return Status;
+}
+
+OCS_ssize_t OCS_read(int fd, void *buf, size_t n)
+{
+    int32  Status;
+    size_t CopySize;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_read, OCS_MAX_RDWR_SIZE);
+
+    if (Status > 0)
+    {
+        if (Status > n)
+        {
+            CopySize = n;
+        }
+        else
+        {
+            CopySize = Status;
+        }
+
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OCS_read), buf, CopySize);
+
+        if (CopySize != 0)
+        {
+            Status = CopySize;
+        }
+        else if (Status <= n)
+        {
+            memset(buf, 'r', Status);
+        }
+        else if (UT_GetStubCount(UT_KEY(OCS_read) < 4))
+        {
+            memset(buf, 'r', n);
+            Status = n;
+        }
+        else
+        {
+            Status = 0;
+        }
+    }
+
+    return Status;
+}
+
+int OCS_rmdir(const char *path)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_rmdir);
+
+    return Status;
+}
+
+long int OCS_sysconf(int name)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_sysconf);
+
+    return Status;
+}
+
+OCS_ssize_t OCS_write(int fd, const void *buf, size_t n)
+{
+    int32  Status;
+    size_t CopySize;
+
+    Status = UT_DEFAULT_IMPL_RC(OCS_write, OCS_MAX_RDWR_SIZE);
+
+    if (Status > 0)
+    {
+        if (Status > n)
+        {
+            CopySize = n;
+        }
+        else
+        {
+            CopySize = Status;
+        }
+
+        CopySize = UT_Stub_CopyFromLocal(UT_KEY(OCS_write), buf, CopySize);
+
+        if (CopySize != 0)
+        {
+            Status = CopySize;
+        }
+        else if (Status > n)
+        {
+            Status = n;
+        }
+    }
+
+    return Status;
+}
+```
+
+### `sys-select-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/sys-select-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/* OSAL coverage stub replacement for functions in sys/stat.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_sys_select.h"
+
+int OCS_select(int nfds, OCS_fd_set *readfds, OCS_fd_set *writefds, OCS_fd_set *exceptfds, struct OCS_timeval *timeout)
+{
+    return UT_DEFAULT_IMPL_RC(OCS_select, 1);
+}
+
+void OCS_FD_SET(int fd, OCS_fd_set *set)
+{
+    UT_DEFAULT_IMPL(OCS_FD_SET);
+}
+
+int OCS_FD_ISSET(int fd, OCS_fd_set *set)
+{
+    return UT_DEFAULT_IMPL(OCS_FD_ISSET);
+}
+
+void OCS_FD_CLR(int fd, OCS_fd_set *set)
+{
+    UT_DEFAULT_IMPL(OCS_FD_CLR);
+}
+
+void OCS_FD_ZERO(OCS_fd_set *set)
+{
+    UT_DEFAULT_IMPL(OCS_FD_ZERO);
+}
+```
+
+### `sys-socket-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/sys-socket-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief    Stubs for sys/sockets.h
+ * \ingroup  ut-stubs
+ */
+#include "utstubs.h"
+#include "OCS_sys_socket.h"
+
+int OCS_accept(int fd, struct OCS_sockaddr *addr, OCS_socklen_t *addr_len)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_accept), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_accept), addr);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_accept), addr_len);
+
+    return UT_DEFAULT_IMPL(OCS_accept);
+}
+
+int OCS_bind(int fd, const struct OCS_sockaddr *addr, OCS_socklen_t len)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_bind), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_bind), addr);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_bind), len);
+
+    return UT_DEFAULT_IMPL(OCS_bind);
+}
+
+int OCS_connect(int fd, const struct OCS_sockaddr *addr, OCS_socklen_t len)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_connect), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_connect), addr);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_connect), len);
+
+    return UT_DEFAULT_IMPL(OCS_connect);
+}
+
+int OCS_getsockopt(int fd, int level, int optname, void *optval, OCS_socklen_t *optlen)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_getsockopt), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_getsockopt), level);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_getsockopt), optname);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_getsockopt), optval);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_getsockopt), optlen);
+
+    return UT_DEFAULT_IMPL(OCS_getsockopt);
+}
+
+int OCS_listen(int fd, int n)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_listen), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_listen), n);
+
+    return UT_DEFAULT_IMPL(OCS_listen);
+}
+
+OCS_ssize_t OCS_recvfrom(int fd, void *buf, size_t n, int flags, struct OCS_sockaddr *addr, OCS_socklen_t *addr_len)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_recvfrom), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_recvfrom), buf);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_recvfrom), n);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_recvfrom), flags);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_recvfrom), addr);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_recvfrom), addr_len);
+
+    return UT_DEFAULT_IMPL(OCS_recvfrom);
+}
+
+OCS_ssize_t OCS_sendto(int fd, const void *buf, size_t n, int flags, const struct OCS_sockaddr *addr,
+                       OCS_socklen_t addr_len)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_sendto), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_sendto), buf);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_sendto), n);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_sendto), flags);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_sendto), addr);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_sendto), addr_len);
+
+    return UT_DEFAULT_IMPL(OCS_sendto);
+}
+
+int OCS_setsockopt(int fd, int level, int optname, const void *optval, OCS_socklen_t optlen)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_setsockopt), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_setsockopt), level);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_setsockopt), optname);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_setsockopt), optval);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_setsockopt), optlen);
+
+    return UT_DEFAULT_IMPL(OCS_setsockopt);
+}
+
+int OCS_shutdown(int fd, int how)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_shutdown), fd);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_shutdown), how);
+
+    return UT_DEFAULT_IMPL(OCS_shutdown);
+}
+
+int OCS_socket(int domain, int type, int protocol)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_socket), domain);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_socket), type);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(OCS_socket), protocol);
+
+    return UT_DEFAULT_IMPL(OCS_socket);
+}
+```
+
+### `vxworks-ataDrv-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-ataDrv-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for ataDrv.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_drv_hdisk_ataDrv.h"
+
+static OCS_BLK_DEV LOCAL_ATADEV = {0};
+
+OCS_BLK_DEV *OCS_ataDevCreate(int ctrl, int drive, unsigned int nBlocks, unsigned int blkOffset)
+{
+    int32        Status;
+    OCS_BLK_DEV *retval = NULL;
+
+    Status = UT_DEFAULT_IMPL(OCS_ataDevCreate);
+    if (Status == 0)
+    {
+        retval = &LOCAL_ATADEV;
+    }
+
+    return retval;
+}
+```
+
+### `vxworks-dosFsLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-dosFsLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for dosFsLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_dosFsLib.h"
+
+/* ----------------------------------------- */
+/* prototypes normally declared in dosFsLib.h */
+/* ----------------------------------------- */
+OCS_STATUS OCS_dosFsVolFormat(char *path, int opt, OCS_FUNCPTR pPromptFunc)
+{
+    return UT_DEFAULT_IMPL(OCS_dosFsVolFormat);
+}
+```
+
+### `vxworks-errnoLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-errnoLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for errnoLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_errnoLib.h"
+
+int OCS_errnoGet(void)
+{
+    return UT_DEFAULT_IMPL(OCS_errnoGet);
+}
+```
+
+### `vxworks-hostLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-hostLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/* OSAL coverage stub replacement for hostLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_hostLib.h"
+
+int OCS_hostGetByName(char *name)
+{
+    return UT_DEFAULT_IMPL(OCS_hostGetByName);
+}
+```
+
+### `vxworks-intLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-intLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for intLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_intLib.h"
+
+OCS_STATUS OCS_intConnect(OCS_VOIDFUNCPTR *vector, OCS_VOIDFUNCPTR routine, int parameter)
+{
+    return UT_DEFAULT_IMPL(OCS_intConnect);
+}
+
+int OCS_intDisable(int level)
+{
+    return UT_DEFAULT_IMPL(OCS_intDisable);
+}
+
+int OCS_intEnable(int level)
+{
+    return UT_DEFAULT_IMPL(OCS_intEnable);
+}
+
+int OCS_intLock(void)
+{
+    return UT_DEFAULT_IMPL(OCS_intLock);
+}
+
+int OCS_intUnlock(int lockKey)
+{
+    return UT_DEFAULT_IMPL(OCS_intUnlock);
+}
+
+static void OCS_intLib_dummyfunc(void) {}
+
+OCS_VOIDFUNCPTR *OCS_INUM_TO_IVEC(unsigned int ui)
+{
+    int32                  Status = UT_DEFAULT_IMPL(OCS_INUM_TO_IVEC);
+    OCS_VOIDFUNCPTR *      VecTbl;
+    static OCS_VOIDFUNCPTR DummyVec;
+    size_t                 VecTblSize;
+    void *                 GenericPtr;
+
+    if (Status == 0)
+    {
+        UT_GetDataBuffer(UT_KEY(OCS_INUM_TO_IVEC), &GenericPtr, &VecTblSize, NULL);
+        VecTbl = GenericPtr;
+        if (VecTbl != NULL && ui < (VecTblSize / sizeof(OCS_VOIDFUNCPTR)))
+        {
+            VecTbl += ui;
+        }
+        else
+        {
+            DummyVec = &OCS_intLib_dummyfunc;
+            VecTbl   = &DummyVec;
+        }
+    }
+    else
+    {
+        VecTbl = NULL;
+    }
+
+    return VecTbl;
+}
+```
+
+### `vxworks-loadLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-loadLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for loadLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_loadLib.h"
+#include "OCS_unldLib.h"
+
+static OCS_MODULE LOCAL_MODULE = {0};
+
+OCS_MODULE_ID OCS_loadModule(int fd, unsigned int symFlag)
+{
+    int32         Status;
+    OCS_MODULE_ID retval;
+
+    Status = UT_DEFAULT_IMPL(OCS_loadModule);
+    if (Status == 0)
+    {
+        retval = &LOCAL_MODULE;
+    }
+    else
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+OCS_STATUS OCS_unldByModuleId(OCS_MODULE_ID moduleId, int options)
+{
+    return UT_DEFAULT_IMPL(OCS_unldByModuleId);
+}
+```
+
+### `vxworks-memPartLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-memPartLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for memPartLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_memPartLib.h"
+
+OCS_STATUS OCS_memPartShow(OCS_PART_ID partId, int type)
+{
+    return UT_DEFAULT_IMPL(OCS_memPartShow);
+}
+
+OCS_STATUS OCS_memPartInfoGet(OCS_PART_ID partId, OCS_MEM_PART_STATS *ppartStats)
+{
+    memset(ppartStats, 0, sizeof(*ppartStats));
+    return UT_DEFAULT_IMPL(OCS_memPartInfoGet);
+}
+
+OCS_PART_ID OCS_memSysPartId;
+```
+
+### `vxworks-moduleLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-moduleLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for moduleLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_moduleLib.h"
+
+OCS_STATUS OCS_moduleInfoGet(OCS_MODULE_ID moduleId, OCS_MODULE_INFO *pModuleInfo)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_moduleInfoGet);
+
+    if (Status == 0 &&
+        UT_Stub_CopyToLocal(UT_KEY(OCS_moduleInfoGet), pModuleInfo, sizeof(*pModuleInfo)) < sizeof(*pModuleInfo))
+    {
+        memset(pModuleInfo, 0, sizeof(*pModuleInfo));
+    }
+
+    return Status;
+}
+```
+
+### `vxworks-msgQLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-msgQLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for msgQLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_msgQLib.h"
+
+static OCS_MSG_Q LOCAL_UT_MSGQ = {0};
+
+OCS_MSG_Q_ID OCS_msgQCreate(int maxMsgs, int maxMsgLength, int options)
+{
+    int32        Status;
+    OCS_MSG_Q_ID retval;
+
+    Status = UT_DEFAULT_IMPL(OCS_msgQCreate);
+    if (Status == 0)
+    {
+        retval = &LOCAL_UT_MSGQ;
+    }
+    else
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+OCS_STATUS OCS_msgQDelete(OCS_MSG_Q_ID msgQId)
+{
+    return UT_DEFAULT_IMPL(OCS_msgQDelete);
+}
+
+int OCS_msgQReceive(OCS_MSG_Q_ID msgQId, char *buffer, OCS_UINT maxNBytes, int timeout)
+{
+    return UT_DEFAULT_IMPL(OCS_msgQReceive);
+}
+
+OCS_STATUS OCS_msgQSend(OCS_MSG_Q_ID msgQId, char *buffer, OCS_UINT nBytes, int timeout, int priority)
+{
+    return UT_DEFAULT_IMPL(OCS_msgQSend);
+}
+```
+
+### `vxworks-ramDrv-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-ramDrv-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for ramDrv.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_ramDrv.h"
+
+static OCS_BLK_DEV LOCAL_RAMDEV = {0};
+
+OCS_BLK_DEV *OCS_ramDevCreate(char *ramAddr, int bytesPerSec, int secPerTrack, int nSectors, int secOffset)
+{
+    int32        Status;
+    OCS_BLK_DEV *retval = NULL;
+
+    Status = UT_DEFAULT_IMPL(OCS_ramDevCreate);
+    if (Status == 0)
+    {
+        retval = &LOCAL_RAMDEV;
+    }
+
+    return retval;
+}
+```
+
+### `vxworks-semLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-semLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for semLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_semLib.h"
+
+static OCS_SEM LOCAL_UT_SEM = {0};
+
+OCS_SEM_ID OCS_semBInitialize(OCS_SEM *pSemMem, int options, OCS_SEM_B_STATE initialState)
+{
+    OCS_SEM_ID retval = NULL;
+    int32      Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_semBInitialize);
+    if (Status == 0)
+    {
+        retval = pSemMem;
+    }
+
+    return retval;
+}
+
+OCS_SEM_ID OCS_semBCreate(int options, OCS_SEM_B_STATE initialState)
+{
+    OCS_SEM_ID retval = NULL;
+    int32      Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_semBCreate);
+    if (Status == 0)
+    {
+        retval = &LOCAL_UT_SEM;
+    }
+
+    return retval;
+}
+
+OCS_SEM_ID OCS_semMInitialize(OCS_SEM *pSemMem, int options)
+{
+    OCS_SEM_ID retval = NULL;
+    int32      Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_semMInitialize);
+    if (Status == 0)
+    {
+        retval = pSemMem;
+    }
+
+    return retval;
+}
+
+OCS_SEM_ID OCS_semMCreate(int options)
+{
+    OCS_SEM_ID retval = NULL;
+    int32      Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_semMCreate);
+    if (Status == 0)
+    {
+        retval = &LOCAL_UT_SEM;
+    }
+
+    return retval;
+}
+
+OCS_SEM_ID OCS_semCInitialize(OCS_SEM *pSemMem, int options, int initialCount)
+{
+    OCS_SEM_ID retval = NULL;
+    int32      Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_semCInitialize);
+    if (Status == 0)
+    {
+        retval = pSemMem;
+    }
+
+    return retval;
+}
+
+OCS_SEM_ID OCS_semCCreate(int flags, int count)
+{
+    OCS_SEM_ID retval = NULL;
+    int32      Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_semCCreate);
+    if (Status == 0)
+    {
+        retval = &LOCAL_UT_SEM;
+    }
+
+    return retval;
+}
+
+OCS_STATUS OCS_semDelete(OCS_SEM_ID semId)
+{
+    return UT_DEFAULT_IMPL(OCS_semDelete);
+}
+
+OCS_STATUS OCS_semFlush(OCS_SEM_ID semId)
+{
+    return UT_DEFAULT_IMPL(OCS_semFlush);
+}
+
+OCS_STATUS OCS_semTake(OCS_SEM_ID semId, int timeout)
+{
+    return UT_DEFAULT_IMPL(OCS_semTake);
+}
+
+OCS_STATUS OCS_semGive(OCS_SEM_ID semId)
+{
+    return UT_DEFAULT_IMPL(OCS_semGive);
+}
+```
+
+### `vxworks-shellLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-shellLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for shellLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_shellLib.h"
+
+OCS_STATUS OCS_shellGenericInit(const char *config, int stackSize, const char *shellName, char **pShellName,
+                                OCS_BOOL interactive, OCS_BOOL loginAccess, int fdin, int fdout, int fderr)
+{
+    return UT_DEFAULT_IMPL(OCS_shellGenericInit);
+}
+```
+
+### `vxworks-symLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-symLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  ut-stubs
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/* OSAL coverage stub replacement for symLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_symLib.h"
+
+struct OCS_SYMBOL
+{
+    int sym;
+};
+
+struct OCS_SYMTAB
+{
+    int symtab;
+};
+
+static OCS_SYMBOL LOCAL_SYMBOL = {1};
+static OCS_SYMTAB LOCAL_SYMTAB = {2};
+
+OCS_SYMTAB_ID OCS_sysSymTbl = &LOCAL_SYMTAB;
+
+OCS_STATUS OCS_symFindByName(OCS_SYMTAB_ID symTblId, char *name, char **pValue, OCS_SYM_TYPE *pType)
+{
+    return UT_DEFAULT_IMPL(OCS_symFindByName);
+}
+
+OCS_SYMBOL *OCS_symEach(OCS_SYMTAB_ID symTblId, OCS_symEach_Routine_t routine, int routineArg)
+{
+    int32       Status;
+    OCS_SYMBOL *retval;
+
+    Status = UT_DEFAULT_IMPL(OCS_symEach);
+    if (Status == 0)
+    {
+        retval = &LOCAL_SYMBOL;
+    }
+    else
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+OCS_STATUS OCS_symFind(OCS_SYMTAB_ID symTblId, OCS_SYMBOL_DESC *pSymbol)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_symFind);
+    if (Status == 0 && UT_Stub_CopyToLocal(UT_KEY(OCS_symFind), pSymbol, sizeof(*pSymbol)) < sizeof(*pSymbol))
+    {
+        memset(pSymbol, 0, sizeof(*pSymbol));
+    }
+
+    return Status;
+}
+```
+
+### `vxworks-sysLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-sysLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for sysLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_sysLib.h"
+
+int OCS_sysClkRateGet(void)
+{
+    return UT_DEFAULT_IMPL_RC(OCS_sysClkRateGet, 10000);
+}
+```
+
+### `vxworks-taskLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-taskLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for taskLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_taskLib.h"
+#include "OCS_errnoLib.h"
+
+static OCS_WIND_TCB OCS_LOCAL_TASK = {0};
+
+void OCS_taskExit(int code)
+{
+    UT_DEFAULT_IMPL(OCS_taskExit);
+}
+
+OCS_TASK_ID OCS_taskIdSelf(void)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_taskIdSelf);
+    if (Status != 0)
+    {
+        return (OCS_TASK_ID)OCS_ERROR;
+    }
+
+    return &OCS_LOCAL_TASK;
+}
+
+OCS_TASK_ID OCS_taskNameToId(const char *name)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_taskNameToId);
+    if (Status != 0)
+    {
+        return (OCS_TASK_ID)OCS_ERROR;
+    }
+
+    return &OCS_LOCAL_TASK;
+}
+
+OCS_STATUS OCS_taskDelay(int ticks)
+{
+    return UT_DEFAULT_IMPL(OCS_taskDelay);
+}
+
+OCS_STATUS OCS_taskDelete(OCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(OCS_taskDelete);
+}
+
+OCS_STATUS OCS_taskDeleteForce(OCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(OCS_taskDeleteForce);
+}
+
+OCS_STATUS OCS_taskSuspend(OCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(OCS_taskSuspend);
+}
+
+OCS_STATUS OCS_taskResume(OCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(OCS_taskResume);
+}
+
+OCS_STATUS OCS_taskPrioritySet(OCS_TASK_ID tid, int newPriority)
+{
+    return UT_DEFAULT_IMPL(OCS_taskPrioritySet);
+}
+
+OCS_STATUS OCS_taskInit(OCS_WIND_TCB *pTcb, char *name, int priority, int options, char *pStackBase, int stackSize,
+                        OCS_FUNCPTR entryPt, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7,
+                        int arg8, int arg9, int arg10)
+{
+    return UT_DEFAULT_IMPL(OCS_taskInit);
+}
+
+OCS_TASK_ID OCS_taskSpawn(char *name, int priority, int options, int stackSize, OCS_FUNCPTR entryPt, int arg1, int arg2,
+                          int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10)
+
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_taskSpawn);
+    if (Status != 0)
+    {
+        return (OCS_TASK_ID)OCS_ERROR;
+    }
+
+    return &OCS_LOCAL_TASK;
+}
+
+OCS_STATUS OCS_taskActivate(OCS_TASK_ID tid)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(OCS_taskActivate);
+
+    return Status;
+}
+
+OCS_WIND_TCB *OCS_taskTcb(OCS_TASK_ID tid)
+{
+    int32         Status;
+    OCS_WIND_TCB *LocalTcb;
+
+    Status = UT_DEFAULT_IMPL(OCS_taskTcb);
+    if (Status != 0)
+    {
+        return NULL;
+    }
+
+    if (UT_Stub_CopyToLocal(UT_KEY(OCS_taskTcb), &LocalTcb, sizeof(LocalTcb)) < sizeof(LocalTcb))
+    {
+        /*
+         * On VxWorks the TASK_ID is defined as a direct type cast
+         * of the TCB address.  This is actually documented
+         * in the API and application code that works with TCBs
+         * certainly will depend on this being the case.
+         */
+        LocalTcb = (OCS_WIND_TCB *)tid;
+    }
+
+    return LocalTcb;
+}
+```
+
+### `vxworks-taskVarLib-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-taskVarLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for taskVarLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_taskVarLib.h"
+
+OCS_STATUS OCS_taskVarAdd(int tid, int *pVar)
+{
+    return UT_DEFAULT_IMPL(OCS_taskVarAdd);
+}
+```
+
+### `vxworks-xbdBlkDev-stubs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/src/vxworks-xbdBlkDev-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* OSAL coverage stub replacement for xbdBlkDev.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "OCS_xbdBlkDev.h"
+
+OCS_device_t OCS_xbdBlkDevCreateSync(OCS_BLK_DEV *bd, const char *name)
+{
+    int32        status = UT_DEFAULT_IMPL(OCS_xbdBlkDevCreateSync);
+    OCS_device_t res;
+
+    if (status != 0)
+    {
+        res = OCS_NULLDEV; /* NULLDEV (0) means error */
+    }
+    else
+    {
+        res = (OCS_device_t)0x123456; /* something non-zero means success */
+    }
+
+    return res;
+}
+
+OCS_STATUS OCS_xbdBlkDevDelete(OCS_device_t dev, OCS_BLK_DEV **ppbd)
+{
+    return UT_DEFAULT_IMPL(OCS_xbdBlkDevDelete);
+}
+```

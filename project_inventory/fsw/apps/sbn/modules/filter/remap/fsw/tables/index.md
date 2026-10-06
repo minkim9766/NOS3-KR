@@ -3,14 +3,23 @@
 
 **경로:** `fsw/apps/sbn/modules/filter/remap/fsw/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_remap_tbl.c`
 
-file--sbn_remap_tbl.c
+**경로:** `fsw/apps/sbn/modules/filter/remap/fsw/tables/sbn_remap_tbl.c`
+
+
+```c
+#include "sbn_remap_tbl.h"
+#include "cfe_tbl_filedef.h"
+
+SBN_RemapTbl_t SBN_RemapTbl = {
+    .RemapDefaultFlag = SBN_REMAP_DEFAULT_SEND,
+    .Entries          = {{.ProcessorID = 3, .SpacecraftID = 0x42, .FromMID = {0x0882}, .ToMID = {0x0883}},
+
+                /** ProcessorID "0" signals the end of the table. */
+                {.ProcessorID = 0, .SpacecraftID = 0, .FromMID = {0x0000}, .ToMID = {0x0000}}}}; /* end SBN_RemapTbl */
+
+CFE_TBL_FILEDEF(SBN_RemapTbl, SBN.SBN_RemapTbl, SBN Remap Table, sbn_remap_tbl.tbl)
 ```
-
-## 항목
-
-- [`fsw/apps/sbn/modules/filter/remap/fsw/tables/sbn_remap_tbl.c`](file--sbn_remap_tbl.c) — UTF-8 텍스트 파일 본문 포함

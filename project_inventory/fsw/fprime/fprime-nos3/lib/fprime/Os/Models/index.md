@@ -3,32 +3,538 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--Directory.fpp
-file--File.fpp
-file--FileSystem.fpp
-file--Generic.fpp
-file--Models.cpp
-file--Mutex.fpp
-file--Queue.fpp
-file--RawTime.fpp
-file--Task.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+register_fprime_module(
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/File.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/Task.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/Mutex.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/Directory.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FileSystem.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/Generic.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/RawTime.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/Queue.fpp"
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/Models.cpp"
+    DEPENDS
+        Fw_Types
+)
 ```
 
-## 항목
+### `Directory.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Directory.fpp`](file--Directory.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/File.fpp`](file--File.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/FileSystem.fpp`](file--FileSystem.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Generic.fpp`](file--Generic.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Models.cpp`](file--Models.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Mutex.fpp`](file--Mutex.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Queue.fpp`](file--Queue.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/RawTime.fpp`](file--RawTime.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Task.fpp`](file--Task.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Directory.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/Directory.fpp
+# \brief FPP type definitions for Os/Directory.hpp concepts
+# ======================================================================
+
+module Os {
+@ FPP shadow-enum representing Os::Directory::Status
+enum DirectoryStatus {
+    OP_OK,          @<  Operation was successful
+    DOESNT_EXIST,   @<  Directory doesn't exist
+    NO_PERMISSION,  @<  No permission to read directory
+    NOT_OPENED,     @<  Directory hasn't been opened yet
+    NOT_DIR,        @<  Path is not a directory
+    NO_MORE_FILES,  @<  Directory stream has no more files
+    FILE_LIMIT,     @<  Directory has more files than can be read
+    BAD_DESCRIPTOR, @<  Directory stream descriptor is invalid
+    ALREADY_EXISTS, @<  Directory already exists
+    NOT_SUPPORTED,  @<  Operation is not supported by the current implementation
+    OTHER_ERROR,    @<  A catch-all for other errors. Have to look in implementation-specific code
+}
+
+enum DirectoryOpenMode {
+    READ,               @<  Error if directory doesn't exist
+    CREATE_IF_MISSING,  @<  Create directory if it doesn't exist
+    CREATE_EXCLUSIVE,   @<  Create directory and error if it already exists
+}
+}
+```
+
+### `File.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/File.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/file.fpp
+# \brief FPP type definitions for Os/File.hpp concepts
+# ======================================================================
+
+module Os {
+@ FPP shadow-enum representing Os::File::Status
+enum FileStatus {
+    OP_OK,            @< Operation was successful
+    DOESNT_EXIST,     @< File doesn't exist (for read)
+    NO_SPACE,         @< No space left
+    NO_PERMISSION,    @< No permission to read/write file
+    BAD_SIZE,         @< Invalid size parameter
+    NOT_OPENED,       @< file hasn't been opened yet
+    FILE_EXISTS,      @< file already exist (for CREATE with O_EXCL enabled)
+    NOT_SUPPORTED,    @< Kernel or file system does not support operation
+    INVALID_MODE,     @< Mode for file access is invalid for current operation
+    INVALID_ARGUMENT, @< Invalid argument passed in
+    NO_MORE_RESOURCES,@< No more available resources
+    OTHER_ERROR,      @< A catch-all for other errors. Have to look in implementation-specific code
+}
+@ FPP shadow-enum representing Os::File::Mode
+enum FileMode {
+    OPEN_NO_MODE,     @< File mode not yet selected
+    OPEN_READ,        @< Open file for reading
+    OPEN_CREATE,      @< Open file for writing and truncates file if it exists, ie same flags as creat()
+    OPEN_WRITE,       @< Open file for writing
+    OPEN_SYNC_WRITE,  @< Open file for writing; writes don't return until data is on disk
+    OPEN_APPEND,      @< Open file for appending
+}
+}
+```
+
+### `FileSystem.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/FileSystem.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/FileSystem.fpp
+# \brief FPP type definitions for Os/FileSystem.hpp concepts
+# ======================================================================
+
+module Os {
+@ FPP shadow-enum representing Os::FileSystem::Status
+enum FileSystemStatus {
+        OP_OK,            @<  Operation was successful
+        ALREADY_EXISTS,   @<  File already exists
+        NO_SPACE,         @<  No space left
+        NO_PERMISSION,    @<  No permission to write
+        NOT_DIR,          @<  Path is not a directory
+        IS_DIR,           @<  Path is a directory
+        NOT_EMPTY,        @<  directory is not empty
+        INVALID_PATH,     @<  Path is too long, too many sym links, etc.
+        DOESNT_EXIST,     @<  Path doesn't exist
+        FILE_LIMIT,       @<  Too many files or links
+        BUSY,             @<  Operand is in use by the system or by a process
+        NO_MORE_FILES,    @<  Directory stream has no more files
+        BUFFER_TOO_SMALL, @<  Buffer size is too small to hold full path (for getWorkingDirectory)
+        EXDEV_ERROR,      @<  Operation not supported across devices (e.g. rename)
+        OVERFLOW_ERROR,   @<  Operation failed due to overflow in calculation of the result
+        NOT_SUPPORTED,    @<  Operation is not supported by the current implementation
+        OTHER_ERROR,      @<  other OS-specific error
+}
+
+}
+```
+
+### `Generic.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Generic.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/Generic.fpp
+# \brief FPP type definitions for Os/Os.hpp concepts
+# ======================================================================
+
+module Os {
+@ FPP shadow-enum representing Os::Generic::Status
+enum GenericStatus {
+    OP_OK, @< operation okay
+    ERROR, @< error return value
+}
+}
+
+```
+
+### `Models.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Models.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Models/Models.cpp
+// \brief test used to validate Os/Models before use
+// ======================================================================
+#include "Os/Directory.hpp"
+#include "Os/File.hpp"
+#include "Os/FileSystem.hpp"
+#include "Os/Models/DirectoryOpenModeEnumAc.hpp"
+#include "Os/Models/DirectoryStatusEnumAc.hpp"
+#include "Os/Models/FileModeEnumAc.hpp"
+#include "Os/Models/FileStatusEnumAc.hpp"
+#include "Os/Models/FileSystemStatusEnumAc.hpp"
+#include "Os/Models/GenericStatusEnumAc.hpp"
+#include "Os/Models/MutexStatusEnumAc.hpp"
+#include "Os/Models/QueueBlockingTypeEnumAc.hpp"
+#include "Os/Models/QueueStatusEnumAc.hpp"
+#include "Os/Models/RawTimeStatusEnumAc.hpp"
+#include "Os/Models/TaskStatusEnumAc.hpp"
+#include "Os/Mutex.hpp"
+#include "Os/Os.hpp"
+#include "Os/Queue.hpp"
+#include "Os/RawTime.hpp"
+#include "Os/Task.hpp"
+
+// Check consistency of every constant in the Os::File::Status enum
+static_assert(static_cast<FwIndexType>(Os::File::Status::MAX_STATUS) ==
+                  static_cast<FwIndexType>(Os::FileStatus::NUM_CONSTANTS),
+              "File status and FPP shadow enum have inconsistent number of values");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::OP_OK) == Os::FileStatus::T::OP_OK,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::DOESNT_EXIST) == Os::FileStatus::T::DOESNT_EXIST,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::NO_SPACE) == Os::FileStatus::T::NO_SPACE,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::NO_PERMISSION) == Os::FileStatus::T::NO_PERMISSION,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::BAD_SIZE) == Os::FileStatus::T::BAD_SIZE,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::NOT_OPENED) == Os::FileStatus::T::NOT_OPENED,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::FILE_EXISTS) == Os::FileStatus::T::FILE_EXISTS,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::NOT_SUPPORTED) == Os::FileStatus::T::NOT_SUPPORTED,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::INVALID_MODE) == Os::FileStatus::T::INVALID_MODE,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::INVALID_ARGUMENT) == Os::FileStatus::T::INVALID_ARGUMENT,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::NO_MORE_RESOURCES) ==
+                  Os::FileStatus::T::NO_MORE_RESOURCES,
+              "File status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileStatus::T>(Os::File::Status::OTHER_ERROR) == Os::FileStatus::T::OTHER_ERROR,
+              "File status and FPP shadow enum do not match");
+
+// Check consistency of every constant in the Os::File::Mode enum
+static_assert(static_cast<FwIndexType>(Os::File::Mode::MAX_OPEN_MODE) ==
+                  static_cast<FwIndexType>(Os::FileMode::NUM_CONSTANTS),
+              "File mode and FPP shadow enum have inconsistent number of values");
+static_assert(static_cast<Os::FileMode::T>(Os::File::Mode::OPEN_NO_MODE) == Os::FileMode::T::OPEN_NO_MODE,
+              "File mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileMode::T>(Os::File::Mode::OPEN_READ) == Os::FileMode::T::OPEN_READ,
+              "File mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileMode::T>(Os::File::Mode::OPEN_CREATE) == Os::FileMode::T::OPEN_CREATE,
+              "File mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileMode::T>(Os::File::Mode::OPEN_WRITE) == Os::FileMode::T::OPEN_WRITE,
+              "File mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileMode::T>(Os::File::Mode::OPEN_SYNC_WRITE) == Os::FileMode::T::OPEN_SYNC_WRITE,
+              "File mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileMode::T>(Os::File::Mode::OPEN_APPEND) == Os::FileMode::T::OPEN_APPEND,
+              "File mode and FPP shadow enum do not Mode");
+
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::OP_OK) == Os::TaskStatus::T::OP_OK,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::INVALID_HANDLE) == Os::TaskStatus::T::INVALID_HANDLE,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::INVALID_PARAMS) == Os::TaskStatus::T::INVALID_PARAMS,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::INVALID_STACK) == Os::TaskStatus::T::INVALID_STACK,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::UNKNOWN_ERROR) == Os::TaskStatus::T::UNKNOWN_ERROR,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::INVALID_AFFINITY) == Os::TaskStatus::T::INVALID_AFFINITY,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::DELAY_ERROR) == Os::TaskStatus::T::DELAY_ERROR,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::JOIN_ERROR) == Os::TaskStatus::T::JOIN_ERROR,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::ERROR_RESOURCES) == Os::TaskStatus::T::ERROR_RESOURCES,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::ERROR_PERMISSION) == Os::TaskStatus::T::ERROR_PERMISSION,
+              "Task status and FPP shadow enum do not match");
+static_assert(static_cast<Os::TaskStatus::T>(Os::Task::Status::INVALID_STATE) == Os::TaskStatus::T::INVALID_STATE,
+              "Task status and FPP shadow enum do not match");
+
+static_assert(static_cast<Os::MutexStatus::T>(Os::Mutex::Status::OP_OK) == Os::MutexStatus::T::OP_OK,
+              "Mutex status and FPP shadow enum do not match");
+static_assert(static_cast<Os::MutexStatus::T>(Os::Mutex::Status::ERROR_BUSY) == Os::MutexStatus::T::ERROR_BUSY,
+              "Mutex status and FPP shadow enum do not match");
+static_assert(static_cast<Os::MutexStatus::T>(Os::Mutex::Status::ERROR_DEADLOCK) == Os::MutexStatus::T::ERROR_DEADLOCK,
+              "Mutex status and FPP shadow enum do not match");
+static_assert(static_cast<Os::MutexStatus::T>(Os::Mutex::Status::ERROR_OTHER) == Os::MutexStatus::T::ERROR_OTHER,
+              "Mutex status and FPP shadow enum do not match");
+
+// Check consistency of every constant in the Os::Directory::Status enum
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::OP_OK) == Os::DirectoryStatus::T::OP_OK,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::DOESNT_EXIST) ==
+                  Os::DirectoryStatus::T::DOESNT_EXIST,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::NO_PERMISSION) ==
+                  Os::DirectoryStatus::T::NO_PERMISSION,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::NOT_OPENED) ==
+                  Os::DirectoryStatus::T::NOT_OPENED,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::NOT_DIR) == Os::DirectoryStatus::T::NOT_DIR,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::NO_MORE_FILES) ==
+                  Os::DirectoryStatus::T::NO_MORE_FILES,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::FILE_LIMIT) ==
+                  Os::DirectoryStatus::T::FILE_LIMIT,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::BAD_DESCRIPTOR) ==
+                  Os::DirectoryStatus::T::BAD_DESCRIPTOR,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::ALREADY_EXISTS) ==
+                  Os::DirectoryStatus::T::ALREADY_EXISTS,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::NOT_SUPPORTED) ==
+                  Os::DirectoryStatus::T::NOT_SUPPORTED,
+              "Directory status and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryStatus::T>(Os::Directory::Status::OTHER_ERROR) ==
+                  Os::DirectoryStatus::T::OTHER_ERROR,
+              "Directory status and FPP shadow enum do not match");
+
+// Check consistency of every constant in the Os::Directory::Mode enum
+static_assert(static_cast<FwIndexType>(Os::Directory::OpenMode::MAX_OPEN_MODE) ==
+                  static_cast<FwIndexType>(Os::DirectoryOpenMode::NUM_CONSTANTS),
+              "File mode and FPP shadow enum have inconsistent number of values");
+static_assert(static_cast<Os::DirectoryOpenMode::T>(Os::Directory::OpenMode::READ) == Os::DirectoryOpenMode::T::READ,
+              "Directory mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryOpenMode::T>(Os::Directory::OpenMode::CREATE_IF_MISSING) ==
+                  Os::DirectoryOpenMode::T::CREATE_IF_MISSING,
+              "Directory mode and FPP shadow enum do not match");
+static_assert(static_cast<Os::DirectoryOpenMode::T>(Os::Directory::OpenMode::CREATE_EXCLUSIVE) ==
+                  Os::DirectoryOpenMode::T::CREATE_EXCLUSIVE,
+              "Directory mode and FPP shadow enum do not match");
+
+// Check consistency of every constant in the Os::FileSystem::Status enum
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::OP_OK) == Os::FileSystemStatus::T::OP_OK,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::ALREADY_EXISTS) ==
+                  Os::FileSystemStatus::T::ALREADY_EXISTS,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::NO_SPACE) ==
+                  Os::FileSystemStatus::T::NO_SPACE,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::NO_PERMISSION) ==
+                  Os::FileSystemStatus::T::NO_PERMISSION,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::NOT_DIR) == Os::FileSystemStatus::T::NOT_DIR,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::IS_DIR) == Os::FileSystemStatus::T::IS_DIR,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::NOT_EMPTY) ==
+                  Os::FileSystemStatus::T::NOT_EMPTY,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::INVALID_PATH) ==
+                  Os::FileSystemStatus::T::INVALID_PATH,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::DOESNT_EXIST) ==
+                  Os::FileSystemStatus::T::DOESNT_EXIST,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::FILE_LIMIT) ==
+                  Os::FileSystemStatus::T::FILE_LIMIT,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::BUSY) == Os::FileSystemStatus::T::BUSY,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::NO_MORE_FILES) ==
+                  Os::FileSystemStatus::T::NO_MORE_FILES,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::BUFFER_TOO_SMALL) ==
+                  Os::FileSystemStatus::T::BUFFER_TOO_SMALL,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::EXDEV_ERROR) ==
+                  Os::FileSystemStatus::T::EXDEV_ERROR,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::OVERFLOW_ERROR) ==
+                  Os::FileSystemStatus::T::OVERFLOW_ERROR,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::NOT_SUPPORTED) ==
+                  Os::FileSystemStatus::T::NOT_SUPPORTED,
+              "FileSystem status and FPP shadow enum do not match");
+static_assert(static_cast<Os::FileSystemStatus::T>(Os::FileSystem::Status::OTHER_ERROR) ==
+                  Os::FileSystemStatus::T::OTHER_ERROR,
+              "FileSystem status and FPP shadow enum do not match");
+
+// Check consistency of every constant in the Os::RawTime::Status enum
+static_assert(static_cast<Os::RawTimeStatus::T>(Os::RawTime::Status::OP_OK) == Os::RawTimeStatus::T::OP_OK,
+              "RawTime status enums do not match");
+static_assert(static_cast<Os::RawTimeStatus::T>(Os::RawTime::Status::OP_OVERFLOW) == Os::RawTimeStatus::T::OP_OVERFLOW,
+              "RawTime status enums do not match");
+static_assert(static_cast<Os::RawTimeStatus::T>(Os::RawTime::Status::INVALID_PARAMS) ==
+                  Os::RawTimeStatus::T::INVALID_PARAMS,
+              "RawTime status enums do not match");
+static_assert(static_cast<Os::RawTimeStatus::T>(Os::RawTime::Status::OTHER_ERROR) == Os::RawTimeStatus::T::OTHER_ERROR,
+              "Generic status enums do not match");
+
+// Check consistency of every constant in the Os::Queue::Status enum
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::OP_OK) == Os::QueueStatus::T::OP_OK,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::ALREADY_CREATED) ==
+                  Os::QueueStatus::T::ALREADY_CREATED,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::EMPTY) == Os::QueueStatus::T::EMPTY,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::UNINITIALIZED) == Os::QueueStatus::T::UNINITIALIZED,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::SIZE_MISMATCH) == Os::QueueStatus::T::SIZE_MISMATCH,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::SEND_ERROR) == Os::QueueStatus::T::SEND_ERROR,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::RECEIVE_ERROR) == Os::QueueStatus::T::RECEIVE_ERROR,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::INVALID_PRIORITY) ==
+                  Os::QueueStatus::T::INVALID_PRIORITY,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::FULL) == Os::QueueStatus::T::FULL,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::UNKNOWN_ERROR) == Os::QueueStatus::T::UNKNOWN_ERROR,
+              "Queue status enums do not match");
+static_assert(static_cast<Os::QueueStatus::T>(Os::Queue::Status::ALLOCATION_FAILED) ==
+                  Os::QueueStatus::T::ALLOCATION_FAILED,
+              "Queue status enums do not match");
+
+// Check consistency of every constant in the Os::Queue::BlockingType enum
+static_assert(static_cast<Os::QueueBlockingType::T>(Os::Queue::BlockingType::BLOCKING) ==
+                  Os::QueueBlockingType::T::BLOCKING,
+              "Queue BlockingType enums do not match");
+static_assert(static_cast<Os::QueueBlockingType::T>(Os::Queue::BlockingType::NONBLOCKING) ==
+                  Os::QueueBlockingType::T::NONBLOCKING,
+              "Queue BlockingType enums do not match");
+
+// Check Generic mappings
+static_assert(static_cast<Os::GenericStatus::T>(Os::Generic::Status::OP_OK) == Os::GenericStatus::T::OP_OK,
+              "Generic status enums do not match");
+static_assert(static_cast<Os::GenericStatus::T>(Os::Generic::Status::ERROR) == Os::GenericStatus::T::ERROR,
+              "Generic status enums do not match");
+```
+
+### `Mutex.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Mutex.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/Mutex.fpp
+# \brief FPP type definitions for Os/Mutex.hpp concepts
+# ======================================================================
+
+module Os {
+    @ FPP shadow-enum representing Os::Mutex::Status
+    enum MutexStatus {
+        OP_OK,          @< Operation was successful
+        ERROR_BUSY,     @< Mutex is busy
+        ERROR_DEADLOCK, @< Deadlock condition detected
+        NOT_SUPPORTED,  @< Mutex feature is not supported
+        ERROR_OTHER     @< All other errors
+    }
+}
+```
+
+### `Queue.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Queue.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/Queue.fpp
+# \brief FPP type definitions for Os/Queue.hpp concepts
+# ======================================================================
+
+module Os {
+    @ FPP shadow-enum representing Os::Queue::Status
+    enum QueueStatus {
+        OP_OK,             @<  message sent/received okay
+        ALREADY_CREATED,   @<  creating an already created queue
+        EMPTY,             @<  If non-blocking, all the messages have been drained.
+        UNINITIALIZED,     @<  Queue wasn't initialized successfully
+        SIZE_MISMATCH,     @<  attempted to send or receive with buffer too large, too small
+        SEND_ERROR,        @<  message send error
+        RECEIVE_ERROR,     @<  message receive error
+        INVALID_PRIORITY,  @<  invalid priority requested
+        FULL,              @<  Queue was full when attempting to send a message
+        NOT_SUPPORTED,     @<  Queue feature is not supported
+        ALLOCATION_FAILED, @<  required memory could not be allocated
+        UNKNOWN_ERROR      @<  Unexpected error; can't match with returns
+    }
+
+    @ FPP shadow-enum representing Os::Queue::BlockingType
+    enum QueueBlockingType {
+        BLOCKING,    @< Message will block until space is available
+        NONBLOCKING  @< Message will return with status when space is unavailable
+    }
+}
+```
+
+### `RawTime.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/RawTime.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/RawTime.fpp
+# \brief FPP type definitions for Os/RawTime.hpp concepts
+# ======================================================================
+
+module Os {
+
+    @ FPP shadow-enum representing Os::RawTime::Status
+    enum RawTimeStatus {
+        OP_OK,          @< Operation was successful
+        OP_OVERFLOW,    @< Operation result caused an overflow
+        INVALID_PARAMS, @< Parameters invalid for current platform
+        NOT_SUPPORTED,  @< RawTime feature is not supported
+        OTHER_ERROR,    @< All other errors
+    }
+
+}
+```
+
+### `Task.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Models/Task.fpp`
+
+
+```fpp
+# ======================================================================
+# \title Os/Models/task.fpp
+# \brief FPP type definitions for Os/Task.hpp concepts
+# ======================================================================
+
+module Os {
+@ FPP shadow-enum representing Os::Task::Status
+enum TaskStatus {
+    OP_OK,             @< message sent/received okay
+    INVALID_HANDLE,    @< Task handle invalid
+    INVALID_PARAMS,    @< started task with invalid parameters
+    INVALID_STACK,     @< started with invalid stack size
+    UNKNOWN_ERROR,     @< unexpected error return value
+    INVALID_AFFINITY,  @< unable to set the task affinity
+    DELAY_ERROR,       @< error trying to delay the task
+    JOIN_ERROR,        @< error trying to join the task
+    ERROR_RESOURCES,   @< unable to allocate more tasks
+    ERROR_PERMISSION,  @< permissions error setting-up tasks
+    NOT_SUPPORTED,     @< Task feature is not supported
+    INVALID_STATE,     @< Task is in an invalid state for the operation
+}
+}
+
+```

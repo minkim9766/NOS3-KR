@@ -3,16 +3,48 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-menu-item/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `download-menu-item.component.html`
 
-file--download-menu-item.component.html
-file--download-menu-item.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-menu-item/download-menu-item.component.html`
+
+
+```html
+<button mat-menu-item class="ya-menu" (click)="triggerDownload()" [disabled]="disabled">
+  <ng-content />
+</button>
+<a #hiddenLink [href]="link" style="display: none" download></a>
 ```
 
-## 항목
+### `download-menu-item.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-menu-item/download-menu-item.component.html`](file--download-menu-item.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-menu-item/download-menu-item.component.ts`](file--download-menu-item.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-menu-item/download-menu-item.component.ts`
+
+
+```typescript
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { MatMenuItem } from '@angular/material/menu';
+
+@Component({
+  selector: 'ya-download-menu-item',
+  templateUrl: './download-menu-item.component.html',
+  imports: [MatMenuItem],
+})
+export class YaDownloadMenuItem {
+  @Input()
+  link: string;
+
+  @Input()
+  disabled = false;
+
+  @ViewChild('hiddenLink', { static: true })
+  private hiddenLink: ElementRef;
+
+  triggerDownload() {
+    if (!this.disabled) {
+      this.hiddenLink.nativeElement.click();
+    }
+  }
+}
+```

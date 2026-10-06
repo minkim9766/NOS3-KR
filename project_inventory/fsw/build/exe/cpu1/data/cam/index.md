@@ -3,14 +3,10 @@
 
 **경로:** `fsw/build/exe/cpu1/data/cam/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cam2000001000002.ds`
 
-file--cam2000001000002.ds
-```
+**경로:** `fsw/build/exe/cpu1/data/cam/cam2000001000002.ds`
 
-## 항목
-
-- [`fsw/build/exe/cpu1/data/cam/cam2000001000002.ds`](file--cam2000001000002.ds) — 빌드 산출물 (경로만)
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

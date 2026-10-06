@@ -3,18 +3,231 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FprimeFramerTester.cpp`
 
-file--FprimeFramerTester.cpp
-file--FprimeFramerTester.hpp
-file--FprimeFramerTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/FprimeFramerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFramerTester.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeFramer component test harness implementation class
+// ======================================================================
+
+#include "FprimeFramerTester.hpp"
+#include "Svc/FprimeProtocol/FrameHeaderSerializableAc.hpp"
+#include "Svc/FprimeProtocol/FrameTrailerSerializableAc.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+FprimeFramerTester ::FprimeFramerTester()
+    : FprimeFramerGTestBase("FprimeFramerTester", FprimeFramerTester::MAX_HISTORY_SIZE), component("FprimeFramer") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+FprimeFramerTester ::~FprimeFramerTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void FprimeFramerTester ::testFrameDeallocation() {
+    // When receiving a buffer on dataReturnIn, the buffer should be deallocated
+    Fw::Buffer buffer;
+    ComCfg::FrameContext context;
+    this->invoke_to_dataReturnIn(0, buffer, context);
+    ASSERT_from_bufferDeallocate_SIZE(1);
+    ASSERT_from_bufferDeallocate(0, buffer);
+}
+
+void FprimeFramerTester ::testComStatusPassThrough() {
+    // Send a status message to the component
+    Fw::Success inputStatus = Fw::Success::SUCCESS;
+    this->invoke_to_comStatusIn(0, inputStatus);
+    ASSERT_from_comStatusOut_SIZE(1);
+    ASSERT_from_comStatusOut(0, inputStatus);  // at index 0, received SUCCESS
+    inputStatus = Fw::Success::FAILURE;
+    this->invoke_to_comStatusIn(0, inputStatus);
+    ASSERT_from_comStatusOut_SIZE(2);
+    ASSERT_from_comStatusOut(1, inputStatus);  // at index 1, received FAILURE
+}
+
+void FprimeFramerTester ::testNominalFraming() {
+    U8 bufferData[100];
+    Fw::Buffer buffer(bufferData, sizeof(bufferData));
+    ComCfg::FrameContext context;
+
+    // Fill the buffer with some data
+    for (U32 i = 0; i < sizeof(bufferData); ++i) {
+        bufferData[i] = static_cast<U8>(i);
+    }
+
+    // Send the buffer to the component
+    this->invoke_to_dataIn(0, buffer, context);
+    ASSERT_from_dataOut_SIZE(1);        // One frame emitted
+    ASSERT_from_dataReturnOut_SIZE(1);  // Original data buffer ownership returned
+
+    Fw::Buffer outputBuffer = this->fromPortHistory_dataOut->at(0).data;
+    // Check the size of the output buffer
+    ASSERT_EQ(outputBuffer.getSize(), sizeof(bufferData) + FprimeProtocol::FrameHeader::SERIALIZED_SIZE +
+                                          FprimeProtocol::FrameTrailer::SERIALIZED_SIZE);
+    // Check header
+    FprimeProtocol::FrameHeader defaultHeader;
+    FprimeProtocol::FrameHeader outputHeader;
+    outputBuffer.getDeserializer().deserialize(outputHeader);
+    ASSERT_EQ(outputHeader.get_startWord(), defaultHeader.get_startWord());
+    ASSERT_EQ(outputHeader.get_lengthField(), sizeof(bufferData));
+    // Check data
+    for (U32 i = 0; i < sizeof(bufferData); ++i) {
+        ASSERT_EQ(outputBuffer.getData()[i + FprimeProtocol::FrameHeader::SERIALIZED_SIZE], bufferData[i]);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Test Harness: Handler implementations for output ports
+// ----------------------------------------------------------------------
+
+Fw::Buffer FprimeFramerTester::from_bufferAllocate_handler(FwIndexType portNum, FwSizeType size) {
+    this->pushFromPortEntry_bufferAllocate(size);
+    this->m_buffer.setData(this->m_buffer_slot);
+    this->m_buffer.setSize(size);
+    ::memset(this->m_buffer.getData(), 0, size);
+    return this->m_buffer;
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `FprimeFramerTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/FprimeFramerTester.cpp`](file--FprimeFramerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/FprimeFramerTester.hpp`](file--FprimeFramerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/FprimeFramerTestMain.cpp`](file--FprimeFramerTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/FprimeFramerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFramerTester.hpp
+// \author thomas-bc
+// \brief  hpp file for FprimeFramer component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_FprimeFramerTester_HPP
+#define Svc_FprimeFramerTester_HPP
+
+#include "Svc/FprimeFramer/FprimeFramer.hpp"
+#include "Svc/FprimeFramer/FprimeFramerGTestBase.hpp"
+
+namespace Svc {
+
+class FprimeFramerTester final : public FprimeFramerGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FprimeFramerTester
+    FprimeFramerTester();
+
+    //! Destroy object FprimeFramerTester
+    ~FprimeFramerTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test pass through of comStatusIn to comStatusOut
+    void testComStatusPassThrough();
+
+    //! Test deallocation of data
+    void testFrameDeallocation();
+
+    //! Test framing of data
+    void testNominalFraming();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+    // ----------------------------------------------------------------------
+    // Test Harness: Handler implementations for output ports
+    // ----------------------------------------------------------------------
+
+    Fw::Buffer from_bufferAllocate_handler(FwIndexType portNum, FwSizeType size) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    FprimeFramer component;
+
+    U8 m_buffer_slot[2048];
+    Fw::Buffer m_buffer;  // buffer to be returned by mocked allocate call
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `FprimeFramerTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/test/ut/FprimeFramerTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFramerTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeFramer component test main function
+// ======================================================================
+
+#include "FprimeFramerTester.hpp"
+
+TEST(Nominal, testComStatusPassThrough) {
+    Svc::FprimeFramerTester tester;
+    tester.testComStatusPassThrough();
+}
+
+TEST(Nominal, testFrameDeallocation) {
+    Svc::FprimeFramerTester tester;
+    tester.testFrameDeallocation();
+}
+
+TEST(Nominal, testNominalFraming) {
+    Svc::FprimeFramerTester tester;
+    tester.testNominalFraming();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

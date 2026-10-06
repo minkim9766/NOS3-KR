@@ -3,16 +3,103 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/start-replay-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `start-replay-dialog.component.html`
 
-file--start-replay-dialog.component.html
-file--start-replay-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/start-replay-dialog/start-replay-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Start replay processor</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Start time">
+      <ya-date-time-input formControlName="start" />
+    </ya-field>
+
+    <ya-field label="Stop time" hint="(optional)">
+      <ya-date-time-input formControlName="stop" />
+    </ya-field>
+
+    <ya-field label="Processor name">
+      <input type="text" formControlName="name" />
+      <span class="hint">Must be unique. Other users can join your replay via this name</span>
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="start()" [disabled]="!form.valid">START</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `start-replay-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/start-replay-dialog/start-replay-dialog.component.html`](file--start-replay-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/start-replay-dialog/start-replay-dialog.component.ts`](file--start-replay-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/start-replay-dialog/start-replay-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule, YamcsService, utils } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-start-replay-dialog',
+  templateUrl: './start-replay-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class StartReplayDialogComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<StartReplayDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    let initialStart = yamcs.getMissionTime();
+    let initialStop;
+
+    if (this.data) {
+      if (this.data.start) {
+        initialStart = this.data.start;
+      }
+      if (this.data.stop) {
+        initialStop = this.data.stop;
+      }
+    }
+
+    this.form = formBuilder.group({
+      name: [utils.generateRandomName(), Validators.required],
+      start: [utils.toISOString(initialStart), [Validators.required]],
+      stop: [initialStop ? utils.toISOString(initialStop) : ''],
+    });
+  }
+
+  start() {
+    const replayConfig: { [key: string]: any } = {
+      start: utils.toISOString(this.form.value.start),
+      endAction: 'STOP',
+    };
+    if (this.form.value.stop) {
+      replayConfig.stop = utils.toISOString(this.form.value.stop);
+    }
+
+    this.dialogRef.close({
+      instance: this.yamcs.instance!,
+      name: this.form.value.name,
+      type: 'Archive', // TODO make configurable?
+      persistent: true,
+      config: JSON.stringify(replayConfig),
+    });
+  }
+}
+```

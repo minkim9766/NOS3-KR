@@ -3,18 +3,32 @@
 
 **경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmd_tlm/index
 lib/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/lib/`](lib/index) — 폴더
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `gsw/cosmos/config/targets/SIM_42_TRUTH/target.txt`
+
+
+```text
+REQUIRE vector_magnitude.rb
+REQUIRE orbit_normal.rb
+REQUIRE svn.rb
+REQUIRE beta_angle.rb
+REQUIRE in_sun.rb
+REQUIRE x_ram_angle.rb
+REQUIRE xz_ram_angle.rb
+REQUIRE z_nadir_angle.rb
+REQUIRE ram_in_body.rb
+REQUIRE nadir_in_body.rb
+REQUIRE geocentric_latitude.rb
+```

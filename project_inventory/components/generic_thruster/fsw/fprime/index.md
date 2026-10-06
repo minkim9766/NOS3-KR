@@ -3,18 +3,24 @@
 
 **경로:** `components/generic_thruster/fsw/fprime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 platform_inc/index
 thruster_src/index
-file--library.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_thruster/fsw/fprime/platform_inc/`](platform_inc/index) — 폴더
-- [`components/generic_thruster/fsw/fprime/thruster_src/`](thruster_src/index) — 폴더
-- [`components/generic_thruster/fsw/fprime/library.cmake`](file--library.cmake) — UTF-8 텍스트 파일 본문 포함
+### `library.cmake`
+
+**경로:** `components/generic_thruster/fsw/fprime/library.cmake`
+
+
+```cmake
+add_fprime_subdirectory(
+    "${CMAKE_CURRENT_LIST_DIR}/thruster_src"
+)
+```

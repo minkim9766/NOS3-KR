@@ -3,16 +3,436 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/alarms/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarms.proto`
 
-file--alarms.proto
-file--alarms_service.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/alarms/alarms.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.alarms;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "AlarmsProto";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/protobuf/yamcs.proto";
+import "yamcs/protobuf/mdb/mdb.proto";
+import "yamcs/protobuf/pvalue/pvalue.proto";
+import "yamcs/protobuf/events/events.proto";
+
+
+message AcknowledgeInfo {
+  optional string acknowledgedBy = 1;
+  optional string acknowledgeMessage = 2;
+  optional google.protobuf.Timestamp acknowledgeTime = 5;
+}
+
+message ShelveInfo {
+  optional string shelvedBy = 1;
+  optional string shelveMessage = 2;
+  optional google.protobuf.Timestamp shelveTime = 3;
+  //when the shelving will expire (can be unset which means that it will never expire)
+  optional google.protobuf.Timestamp shelveExpiration = 4; 
+}
+
+message ClearInfo {
+  optional string clearedBy = 1;
+  optional google.protobuf.Timestamp clearTime = 2;
+  //if the alarm has been manually cleared, this is the message provided by the operator
+  optional string clearMessage = 3;
+}
+
+enum AlarmNotificationType {
+  ACTIVE = 1;  // Initial active alarms at the moment of request
+  TRIGGERED = 2;  // Whenever a new alarm triggers
+  SEVERITY_INCREASED = 3;  // Whenever an alarm jumps severity
+  VALUE_UPDATED = 4;  // Whenever a value is updated (even if that value is not a violation by itself)
+  ACKNOWLEDGED = 5;  // Whenever somebody acknowledged an alarm (it could be that it is still OOL)
+  CLEARED = 6; // When the alarm was really cleared by the server (acknowledged && not OOL)
+  RTN = 7; // When the parameter that triggered the alarm has returned to normal (the alarm may still be triggered if it has not been acknowledged)
+  SHELVED = 8; //when the alarm has been shelved
+  UNSHELVED = 9; //when the alarm has been unshelved (either by operator request or automatically at timer expiration)
+  RESET = 10; //when a latching alarm has been reset  
+  
+  TRIGGERED_PENDING = 11; //when an alarm first becomes active but the minimum number of violations has not been met. When that number is met, a TRIGGERED event will be sent
+}
+
+enum AlarmType {
+  PARAMETER = 1;
+  EVENT = 2;
+}
+
+enum AlarmSeverity {
+  WATCH = 1;
+  WARNING = 2;
+  DISTRESS = 3;
+  CRITICAL = 4;
+  SEVERE = 5;
+}
+
+// Summary of an alarm applicable for Parameter or Event (possibly
+// other in the future) alarms.
+// Contains detailed information on the value occurrence that initially
+// triggered the alarm, the most severe value since it originally triggered,
+// and the latest value at the time of your request.
+message AlarmData {
+  optional AlarmType type = 1;
+  optional google.protobuf.Timestamp triggerTime = 2;
+
+  // For parameter alarms, this is the id of the parameters
+  // For event alarms
+  //   - the id.namespace is /yamcs/event/<EVENT_SOURCE>, unless 
+  //     EVENT_SOURCE starts with a "/" in which case the namespace
+  //     is just the <EVENT_SOURCE>
+  //   - the id.name is the <EVENT_TYPE>
+  optional NamedObjectId id = 3;
+
+  // Distinguisher between multiple alarms for the same id
+  optional uint32 seqNum = 4;
+
+  optional AlarmSeverity severity = 5;
+
+  // Number of times the object was in alarm state
+  optional uint32 violations = 6;
+
+  // Number of samples received for the object
+  optional uint32 count = 7;
+  
+  optional AcknowledgeInfo acknowledgeInfo = 8;
+  optional AlarmNotificationType notificationType = 9;
+
+  // Additional detail in case the alarm is of type PARAMETER
+  optional ParameterAlarmData parameterDetail = 10;
+  
+  // Additional detail in case the alarm is of type EVENT
+  optional EventAlarmData eventDetail = 11;
+
+  // Whether the alarm will stay triggered even when the process is OK
+  optional bool latching = 12;
+
+  // if the process that generated the alarm is ok (i.e. parameter is within limits)
+  optional bool processOK = 13;
+  // triggered is same with processOK except when the alarm is latching
+  optional bool triggered = 14;
+  // if the operator has acknowledged the alarm
+  optional bool acknowledged = 15;
+
+  // Details in case the alarm was shelved
+  optional ShelveInfo shelveInfo = 16;
+
+  optional ClearInfo clearInfo = 17;
+
+  // Time when the alarm was last updated
+  optional google.protobuf.Timestamp updateTime = 18;
+
+  // Whether this alarm may be updated by this processor.
+  // Set to false when the alarms are mirrored from another Yamcs instance.
+  optional bool readonly = 19;
+  
+  // An alarm is in pending state if the minViolations has not been reached
+  // The alarm is not actually triggered in this case
+  // This is only sent when true
+  optional bool pending = 20;
+}
+
+message ParameterAlarmData {
+  optional pvalue.ParameterValue triggerValue = 1;
+  optional pvalue.ParameterValue mostSevereValue = 2;
+  optional pvalue.ParameterValue currentValue = 3;
+  optional mdb.ParameterInfo parameter = 4;
+}
+
+message EventAlarmData {
+  optional events.Event triggerEvent = 1;
+  optional events.Event mostSevereEvent = 2;
+  optional events.Event currentEvent = 3;
+}
 ```
 
-## 항목
+### `alarms_service.proto`
 
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/alarms/alarms.proto`](file--alarms.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/alarms/alarms_service.proto`](file--alarms_service.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/alarms/alarms_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.alarms;
+
+option java_package = "org.yamcs.protobuf.alarms";
+option java_outer_classname = "AlarmsServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/alarms/alarms.proto";
+
+
+service AlarmsApi {
+
+  // List alarms
+  rpc ListAlarms(ListAlarmsRequest) returns (ListAlarmsResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/alarms/{name**}"
+    };
+  }
+  
+  // List alarms
+  rpc ListProcessorAlarms(ListProcessorAlarmsRequest) returns (ListProcessorAlarmsResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/processors/{instance}/{processor}/alarms"
+    };
+  }
+  
+  // Update an alarm
+  rpc EditAlarm(EditAlarmRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      patch: "/api/processors/{instance}/{processor}/alarms/{name*}/{seqnum}"
+      body: "*"
+      deprecated: true
+    };
+  }
+
+  // Acknowledge an alarm
+  rpc AcknowledgeAlarm(AcknowledgeAlarmRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/alarms/{alarm*}/{seqnum}:acknowledge"
+      body: "*"
+    };
+  }
+
+  // Shelve an alarm
+  rpc ShelveAlarm(ShelveAlarmRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/alarms/{alarm*}/{seqnum}:shelve"
+      body: "*"
+    };
+  }
+
+  // Unshelve an alarm
+  rpc UnshelveAlarm(UnshelveAlarmRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/alarms/{alarm*}/{seqnum}:unshelve"
+    };
+  }
+
+  // Clear an alarm
+  rpc ClearAlarm(ClearAlarmRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/alarms/{alarm*}/{seqnum}:clear"
+      body: "*"
+    };
+  }
+
+  // Receive alarm status updates
+  rpc SubscribeGlobalStatus(SubscribeGlobalStatusRequest) returns (stream GlobalAlarmStatus) {
+    option (yamcs.api.websocket) = {
+      topic: "global-alarm-status"
+    };
+  }
+  
+  // Receive alarm updates
+  rpc SubscribeAlarms(SubscribeAlarmsRequest) returns (stream AlarmData) {
+    option (yamcs.api.websocket) = {
+      topic: "alarms"
+    };
+  }
+}
+
+message ListAlarmsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // The zero-based row number at which to start outputting results.
+  // Default: ``0``
+  optional int64 pos = 2;
+  
+  // The maximum number of returned records per page. Choose this value
+  // too high and you risk hitting the maximum response size limit
+  // enforced by the server. Default: ``100``
+  optional int32 limit = 3;
+  
+  // Filter the lower bound of the alarm's trigger time. Specify a date
+  // string in ISO 8601 format. This bound is inclusive.
+  optional google.protobuf.Timestamp start = 4;
+  
+  // Filter the upper bound of the alarm's trigger time. Specify a date
+  // string in ISO 8601 format. This bound is exclusive.
+  optional google.protobuf.Timestamp stop = 5;
+  
+  // The order of the returned results. Can be either ``asc`` or
+  // ``desc``. The sorting is always by trigger time (i.e. the
+  // generation time of the trigger value). Default: ``desc``
+  optional string order = 6;
+  
+  // Filter alarm instances on a specific alarm name (for example:
+  // parameter name)
+  optional string name = 7;
+
+  // Continuation token returned by a previous page response.
+  optional string next = 8;
+}
+
+message ListAlarmsResponse {
+  repeated AlarmData alarms = 1;
+
+  // Token indicating the response is only partial. More results can then
+  // be obtained by performing the same request (including all original
+  // query parameters) and setting the ``next`` parameter to this token.
+  optional string continuationToken = 2;
+}
+
+message ListProcessorAlarmsRequest {
+  optional string instance = 1;
+  optional string processor = 2;
+  // pending alarms are those for which the minimum number of violations has not been reached
+  optional bool includePending = 3;
+}
+
+message ListProcessorAlarmsResponse {
+  repeated AlarmData alarms = 1;
+}
+
+message SubscribeAlarmsRequest {
+  optional string instance = 1;
+  optional string processor = 2;
+  // pending alarms are those for which the minimum number of violations has not been reached
+  optional bool includePending = 3;
+}
+
+message EditAlarmRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Processor name
+  optional string processor = 2;
+  
+  // Alarm name
+  optional string name = 3;
+  
+  optional uint32 seqnum = 4;
+  
+  // **Required.** The state of the alarm. 
+  // Either ``acknowledged``, ``shelved``, ``unshelved`` or ``cleared``.
+  optional string state = 5;
+  
+  // Message documenting the alarm change.
+  optional string comment = 6;
+
+  //shelve time in milliseconds (if the state = shelved)
+  //can be left out which means it is shelved indefinitely
+  optional uint64 shelveDuration = 7;
+}
+
+message AcknowledgeAlarmRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Processor name
+  optional string processor = 2;
+  
+  // Alarm name
+  optional string alarm = 3;
+  
+  optional uint32 seqnum = 4;
+  
+  // Message documenting the alarm change.
+  optional string comment = 5;
+}
+
+message ShelveAlarmRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Processor name
+  optional string processor = 2;
+  
+  // Alarm name
+  optional string alarm = 3;
+  
+  optional uint32 seqnum = 4;
+  
+  // Message documenting the alarm change.
+  optional string comment = 5;
+
+  //shelve time in milliseconds (if the state = shelved)
+  //can be left out which means it is shelved indefinitely
+  optional uint64 shelveDuration = 6;
+}
+
+message UnshelveAlarmRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Processor name
+  optional string processor = 2;
+  
+  // Alarm name
+  optional string alarm = 3;
+  
+  optional uint32 seqnum = 4;
+}
+
+message ClearAlarmRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Processor name
+  optional string processor = 2;
+  
+  // Alarm name
+  optional string alarm = 3;
+  
+  optional uint32 seqnum = 4;
+  
+  // Message documenting the alarm change
+  optional string comment = 5;
+}
+
+message SubscribeGlobalStatusRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Processor name
+  optional string processor = 2;
+}
+
+message GlobalAlarmStatus {  
+  // The number of active unacknowledged alarms
+  optional int32 unacknowledgedCount = 1;
+
+  // True if there is at least one unacknowledged alarm not OK
+  // (i.e. latest value of parameter still out of limits)
+  optional bool unacknowledgedActive = 2;
+
+  // Highest severity among all unacknowledged alarms
+  optional AlarmSeverity unacknowledgedSeverity = 7;
+
+  // The number of active acknowledged alarms
+  optional int32 acknowledgedCount = 3;
+
+  // True if there is at least one acknowledged alarm not OK
+  // (i.e. latest value of parameter still out of limits)
+  optional bool acknowledgedActive = 4;
+
+  // Highest severity among all acknowledged alarms
+  optional AlarmSeverity acknowledgedSeverity = 8;
+
+  // The number of shelved alarms
+  optional int32 shelvedCount = 5;
+
+  // True if there is at least one shelved alarm not OK (i.e. latest value of parameter still out of limits)
+  optional bool shelvedActive = 6;
+
+  // Highest severity among all shelved alarms
+  optional AlarmSeverity shelvedSeverity = 9;
+}
+```

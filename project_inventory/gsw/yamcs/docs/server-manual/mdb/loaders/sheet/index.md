@@ -3,42 +3,1020 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 _includes/index
-file--alarms.rst
-file--algorithms.rst
-file--calibration.rst
-file--changelog.rst
-file--command-options.rst
-file--command-verification.rst
-file--commands.rst
-file--containers.rst
-file--data-types.rst
-file--derived-parameters.rst
-file--general.rst
-file--index.rst
-file--local-parameters.rst
-file--parameters.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/_includes/`](_includes/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/alarms.rst`](file--alarms.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/algorithms.rst`](file--algorithms.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/calibration.rst`](file--calibration.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/changelog.rst`](file--changelog.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/command-options.rst`](file--command-options.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/command-verification.rst`](file--command-verification.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/commands.rst`](file--commands.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/containers.rst`](file--containers.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/data-types.rst`](file--data-types.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/derived-parameters.rst`](file--derived-parameters.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/general.rst`](file--general.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/local-parameters.rst`](file--local-parameters.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/parameters.rst`](file--parameters.rst) — UTF-8 텍스트 파일 본문 포함
+### `alarms.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/alarms.rst`
+
+
+```rst
+Alarms Sheet
+============
+
+This sheet defines how the monitoring results of a parameter should be derived. E.g. if a parameter exceeds some pre-defined value, this parameter's state changes to ``CRITICAL``.
+
+``parameter reference``
+    The reference name of the parameter for which this alarm definition applies
+
+``context``
+    A condition under which the defined triggers apply. This can be used to define multiple different sets of triggers for one and the same parameter, that apply depending on some other condition (typically a state of some kind). When left blank, the defined set of conditions are assumed to be part of the *default* context.
+
+    Contextual alarms are evaluated from top to bottom, until a match is found. If no context conditions apply, the default context applies.
+
+``report``
+    When alarms under the given context should be reported. Should be one of ``OnSeverityChange`` or ``OnValueChange``. With ``OnSeverityChange`` being the default. The condition ``OnValueChange`` will check value changes based on the engineering values. It can also be applied to a parameter without any defined severity levels, in which case an event will be generated with every change in value.
+
+``min violations``
+    Number of successive instances that meet any of the alarm conditions under the given context before the alarm event triggers (defaults to 1). This field affects when an event is generated (i.e. only after X violations). It does not affect the monitoring result associated with each parameter. That would still be out of limits, even after a first violation.
+
+``watch: trigger type``
+    One of ``low`` (or alias ``lowInclusive``), ``high`` (or alias ``highInclusive``), ``lowExclusive``, ``highExlusive`` or ``state``. For each context of a numeric parameter, you can have both a low and a high trigger that lead to the ``WATCH`` state. For each context of an enumerated parameter, you can have multiple state triggers that lead to the ``WATCH`` state.
+
+``watch: trigger value``
+    If the trigger type is ``low``, ``lowInclusive``, ``high`` or ``highInclusive``: a numeric value indicating the low resp. high limit value. The value is considered inclusive with respect to its nominal range. For example, a low limit of 20, will have a ``WATCH`` alarm if and only if its value is smaller than 20.
+
+    If the trigger type is ``lowExclusive`` or ``highExclusive``: a numeric value indicating the low resp. heigh limit value. The value is considered exclusive with respect to its nominal range. For example, a lowExclusive limit of 20, will have a ``WATCH`` alarm if and only if its value is smaller than or equal to 20.
+
+    If the trigger value is ``state``: a state that would bring the given parameter in its ``WATCH`` state.
+
+``warning trigger type``, ``warning trigger value``
+    Analogous to ``watch`` trigger
+
+``distress trigger type``, ``distress trigger value``
+    Analogous to ``watch`` trigger
+
+``critical trigger type``, ``critical trigger value``
+    Analogous to ``watch`` trigger
+
+``severe trigger type``, ``severe trigger value``
+    Analogous to ``watch`` trigger
+```
+
+### `algorithms.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/algorithms.rst`
+
+
+```rst
+Algorithms Sheet
+================
+
+This sheet contains arbitrarily complex user algorithms that can set (derived) output parameters based on any number of input parameters.
+
+Empty lines are used to separate algorithms and cannot be used inside the specification of one algorithm.
+
+The column names are:
+
+
+``algorithm name``
+    The name of the algorithm within the space system.
+
+``language``
+    The programming language of the algorithm. Currently supported values are JavaScript, python and java.
+
+    ``python`` requires adding the `jython-standalone <https://mvnrepository.com/artifact/org.python/jython-standalone>` jar to the Java classpath (due to its large size, this is by default not included in Yamcs distributions).
+
+``text``
+    The code of the algorithm. See: :doc:`../../algorithm-definitions`.
+
+``trigger``
+    Optionally specify when the algorithm should trigger:
+
+    * ``OnParameterUpdate('/some-param', 'some-other-param')`` Execute the algorithm whenever *any* of the specified parameters are updated
+    * ``OnInputParameterUpdate`` This is the same as above for all input parameters (i.e. execute whenever *any* input parameter is updated).
+    * ``OnPeriodicRate(<fireRate>)`` Execute the algorithm every ``fireRate`` milliseconds
+    * ``none`` The algorithm doesn't trigger automatically but can be called upon from other parts of the system (like the command verifier)
+
+    The default is none.
+
+``in/out``
+    Whether a parameter is inputted to, or outputted from the algorithm. Parameters are defined, one per line, following the line defining the algorithm name.
+
+``parameter reference``
+    Algorithms can be interdependent, meaning that the output parameters of one algorithm could be used as input parameters of another algorithm.
+
+``instance``
+    Allows inputting a specific instance of a parameter. At this stage, only values smaller than or equal to zero are allowed. A negative value, means going back in time. Zero is the default and means the actual value. This functionality allows for time-based window operations over multiple packets. Algorithms with windowed parameters will only trigger as soon as all of those parameters have all instances defined (i.e. when the windows are full).
+
+    Note that this column should be left empty for output parameters.
+
+``variable name``
+    An optional friendlier name for use in the algorithm. By default the parameter name is used, which may lead to runtime errors depending on the naming conventions of the applicable script language.
+
+    Note that a unique name is required in this column, when multiple instances of the same parameter are inputted.
+
+``flags``
+    This column is applicable for each ``in`` parameter and can have the following values:
+ 
+    ``M``
+        Short for mandatory. The algorithm will not trigger unless a value is set for this input parameter.
+
+``description``
+    Textual description of the algorithm. Should be one line.
+
+``long description``
+    Long textual description of the algorithm. In Markdown format.
+
+``namespace:<ALIAS>``
+    Any numbers of namespace columns can be added using the prefix ``namespace:`` followed by the name of a namespace.
+
+    This allows associating alternative names to algorithms.
+```
+
+### `calibration.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/calibration.rst`
+
+
+```rst
+Calibration Sheet
+=================
+
+This sheet contains calibration data including enumerations. It has the following columns:
+
+``calibrator name`` (required)
+    Name of the calibration. Used as a reference in the :doc:`Parameters <parameters>` or :doc:`Commands <commands>` sheet.
+
+``type`` (required)
+    One of ``polynomial``, ``spline``, ``enumeration``, ``java-expression`` or ``time``.
+
+    Detailed in sections below.
+
+    * ``time`` for converting a raw integer or float value into a timestamp value.
+
+``calib1``
+    Contents depends on the chosen ``type``. See sections below.
+
+``calib2``
+    Contents depends on the chosen ``type``. See sections below.
+
+
+Polynomials
+^^^^^^^^^^^
+
+If the type is set to ``polynomial``, polynomial calibration is performed.
+
+``calib1`` (required)
+    List the coefficients, one per row starting with the constant and up to the highest grade. There is no limit in the number of coefficients (i.e. order of polynomial).
+
+``calib2``
+    (not used)
+
+Note that the polynomial calibration is performed with double precision floating point numbers even though the input and/or output may be 32 bit.
+
+
+Splines
+^^^^^^^
+
+If the type is set to ``spline``, linear spline (pointpair) interpolation is performed. As with polynomial calibration, the computation is performed with double precision numbers.
+
+``calib1`` (required)
+    Start point: ``x`` from ``(x, y)`` pair.
+
+``calib2`` (required)
+    Stop point: ``y`` from ``(x, y)`` pair.
+
+
+Enumerations
+^^^^^^^^^^^^
+
+If the type is set to ``enumeration``, the calibrator can be used to map enumeration states.
+
+``calib1`` (required)
+    Numeric value
+
+``calib2`` (required)
+    Text state corresponding to ``calib1``.
+
+
+Java Expressions
+^^^^^^^^^^^^^^^^
+
+The type ``java-expression`` serves as a catch-all. They can be used for float or integer calibrations.
+
+``calib1`` (required)
+    The textual formula to be executed. This expression will be enclosed and compiled into a class like this:
+
+    .. code-block:: java
+
+        package org.yamcs.mdb.jecf;
+        public class Expression665372494 implements org.yamcs.mdb.CalibratorProc {
+            public double calibrate(double rv) {
+                    return <expression>;
+            }
+        }
+
+    The expression should return a double, but Java will convert implicitly any other primitive type to a double.
+
+    Java statements cannot be used, however the ternary operator ``? :`` can be used; for example this expression would compile fine:
+
+    .. code-block:: java
+
+        rv > 0 ? rv + 5 : rv - 5
+
+    Static functions can be also referenced. In addition to the usual Java ones (e.g. ``Math.sin``, ``Math.log``, etc) user-own functions (available in the Java classpath) can be referenced by specifying the full class name:
+
+    .. code-block:: java
+
+        my.very.complicated.calibrator.Execute(rv)
+
+``calib2``
+    (not used)
+
+
+Time
+^^^^
+
+If the type is ``time``, this calibrator allows to convert a raw integer or float value into a timestamp value by using the raw value as an offset from a well known epoch or from another parameter. Optionally allow to use an (offset:scale) which can be used to scale the raw value from other units (e.g. millseconds) to seconds.
+
+Known epochs are ``GPS``, ``TAI``, ``UNIX`` and ``J2000``.
+
+The conversion is performed as follows:
+
+* When using a known epoch: ``engValue = <epoch>_yamcs_difference + offset+rawValue*scale``.
+* When using another parameter ``p``: ``engValue = p.engValue + offset+rawValue*scale``.
+
+
+``calib1`` (required)
+    Something of the shape ``epoch:<epoch>`` or ``parameter:<parameter reference>``. The reference has to be to a parameter of type ``time``.
+
+``calib2``
+    Optionally something of the shape ``offset:scale`` where both offset and scale are numbers.
+
+    If unset, this defaults to ``0:1``
+```
+
+### `changelog.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/changelog.rst`
+
+
+```rst
+ChangeLog Sheet
+===============
+
+This optional sheet contains the list revisions made to the described space system.
+
+The sheet should have these columns:
+
+``version`` (required)
+    Version number of this spreadsheet. Defined by the author. Entries in the changelog should have increasing version numbers.
+
+``date`` (required)
+    When the change was made. This should be a date field, however any string value is accepted.
+
+``message``
+    Free-text description of the change.
+
+``author``
+    Author of the change.
+
+Unlike with other sheets, the column names are not currently enforced. Instead the column order must match this description.
+```
+
+### `command-options.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/command-options.rst`
+
+
+```rst
+CommandOptions Sheet
+====================
+
+This sheet defines two types of options for commands:
+
+* Transmission constraints: these are conditions that have to be met in order for the command to be sent.
+* Command significance: this flags commands that are of **significance**. The significance can be used in end-user applications to raise the user's awareness before sending a command.
+
+The column names are:
+
+``command name`` (required)
+    The name of a command. Any entry starting with ``#`` is treated as a comment row
+
+``transmission constraints``
+    Constraints can be specified on multiple lines. All of them have to be met for the command to be allowed for transmission.
+
+``constraint timeout``
+    This refers to the left column. A command stays in the queue for that many milliseconds. If the constraint is not met, the command is rejected. 0 means that the command is rejected even before being added to the queue, if the constraint is not met.
+
+``command significance``
+    Significance level for commands. Depending on the configuration, an extra confirmation or certain privileges may be required to send commands of high significance. One of:
+
+    - ``none``
+    - ``watch``
+    - ``warning``
+    - ``distress``
+    - ``critical``
+    - ``severe``
+
+``significance reason``
+    A message that will be presented to the user explaining why the command is significant.
+
+Unlike with other sheets, the column names are not currently enforced. Instead the column order must match this description.
+```
+
+### `command-verification.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/command-verification.rst`
+
+
+```rst
+CommandVerification Sheet
+=========================
+
+This sheet defines how a command shall be verified once it has been sent for execution.
+
+The transmission/execution of a command usual goes through multiple stages and a verifier can be associated to each stage.
+
+Each verifier runs within a defined time window which can be relative to the release of the command or to the completion of the previous verifier. The verifiers have three possible outcomes:
+
+* | **OK**
+  | the stage has been passed successfully.
+* | **NOK**
+  | the stage verification has failed (for example there was an error on-board when executing the command, or the uplink was not activated).
+* | **timeout**
+  | the condition could not be verified within the defined time interval.
+
+For each verifier it has to be defined what happens for each of the three outputs.
+
+``Command name``
+    The command relative name as defined in the Command sheet. Referencing commands from other subsystems is not supported.
+
+``CmdVerifier Stage``
+    Any name for a stage is accepted but XTCE defines the following ones:
+
+    * TransferredToRange
+    * SentFromRange
+    * Received
+    * Accepted
+    * Queued
+    * Execution
+    * Complete
+    * Failed
+
+    Yamcs interprets these as strings without any special semantics. If special actions (like declaring the command as completed) are required for Complete or Failed, they have to be configured in ``OnSuccess``/``OnFail``/``OnTimeout`` columns. By default command history events with the name ``Verification_<stage>`` are generated.
+
+``CmdVerifier Type``
+    Supported types are:
+
+    * ``container``: the command is considered verified when the container is received. Note that this cannot generate a Fail (NOK) condition - it's either OK if the container is received in the timewindow or timeout if the container is not received.
+    * ``algorithm``: the result of the algorithm run is used as the output of the verifier. If the algorithm is not run (because it gets no inputs) or returns null, then the timeout condition applies
+
+``CmdVerifier Text``
+    Depending on the type:
+
+    * ``container``: is the name of the container from the Containers sheet. Reference to containers from other space systems is not supported.
+    * ``algorithm``: is the name of the algorithm from the Algorithms sheet. Reference to algorithms from other space systems is not supported.
+
+``Time Check Window``
+    start,stop in milliseconds defines when the verifier starts checking the command and when it stops.
+
+``checkWindow is relative to``
+    * ``LastVerifier`` (default): the start,stop in the window definition are relative to the end of the previous verifier. If there is no previous verifier, the start,stop are relative to the command release time. If the previous verifier ends with timeout, this verifier will also timeout without checking anything.
+    * ``CommandRelease``: the start,stop in the window definition are relative to the command release.
+
+``OnSuccess``
+    Defines what happens when the verification returns true. It has to be one of:
+
+    * ``SUCCESS``: command considered completed successful (``CommandComplete`` event is generated)
+    * ``FAIL``:  ``CommandFailed`` event is generated
+    * none (default): only a ``Verification_<stage>`` event is generated without an effect on the final execution status of the command.
+
+``OnFail``
+    Same as ``OnSuccess`` but the event is generated in case the verifier returns false.
+
+``OnTimeout``
+    Same as ``OnSuccess`` but the event is generated in case the verifier times out.
+```
+
+### `commands.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/commands.rst`
+
+
+```rst
+Commands Sheet
+==============
+
+This sheet contains commands description, including arguments. General conventions:
+
+* First line with a new 'Command name' starts a new command
+* Second line after a new 'Command name' should contain the first command arguments
+* Empty lines are only allowed between two commands.
+
+The column names are:
+
+``command name``
+    The name of the command. Any entry starting with `#` is treated as a comment row.
+
+``parent``
+    Name of the parent command and position in bits.
+
+    Can be specified starting with ``/`` for an absolute reference or with ``../`` for pointing to parent space system.
+    
+    A suffix ``:x`` means that the arguments in this container start at position ``x`` (in bits) relative to the top-most container.
+    
+    Currently there is a problem for containers that have no argument: the bit position does not apply to children and has to be repeated.
+
+``argument assignment``
+    ``name1=value1;name2=value2`` where ``name1`` and ``name2`` are the names of arguments which are assigned when the inheritance takes place.
+
+``flags``
+    For commands: ``A`` is abstract. For arguments: ``L`` is little endian.
+
+``argument name``
+    From this column on, most of the cells are valid for arguments only. These have to be defined on a new row after the command. The exceptions are: ``description``, ``long description`` and aliases.
+
+``position``
+    Relative position to the previous argument. Default: 0
+
+``data type``
+    Reference to a data type define in the :doc:`DataTypes sheet <data-types>`.
+
+    Or a value of the form ``FixedValue(n)`` where ``n`` is the size in bits. This can be used to fill the packet with a value without requiring an argument.
+
+``default value``
+    Default value. If ``data type`` is a ``FixedValue``, this has to contain the value in hexadecimal.
+    
+    Note that when the size of the argument is not an integer number of bytes (which is how hexadecimal binary strings are specified), the most significant bits are ignored.
+
+``range low``
+    The value of the argument cannot be smaller than this. For strings and binary arguments this means the minimum length in characters, respectively bytes.
+
+``range high``
+    The value of the argument cannot be higher than this. Only applies to numbers. For strings and binary arguments this means the minimum length in characters, respectively bytes.
+
+``description``
+    Optional free text description. Should be one line.
+
+``long description``
+    Long textual description. In Markdown format.
+```
+
+### `containers.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/containers.rst`
+
+
+```rst
+Containers Sheet
+================
+
+The sheet contains description of the content of the container (packet). As per XTCE, a container is a structure describing a binary chunk of data composed of multiple entries.
+
+A container can inherit from other container meaning that it takes all entries from the parent, and add some more. A container can have two types of entries:
+
+* parameters
+* other containers (this is called aggregation)
+
+General conventions:
+
+* first line with a new ``container name`` starts a new container
+* second line after a new ``container name`` should contain the first entry
+* empty lines are only allowed between two containers
+
+These are the column names:
+
+``container name``
+    The name of the container within the space system.
+
+``parent``
+    Parent container and position in bits where the subcontainer starts, for example ``PARENT_CONTAINER:64``. If the position in bits is not specified, the default position is to start from the last parameter in the parent. If parent is not specified, either the container is the root, or it can be used as part of another container in aggregation.
+
+``condition``
+    Inheritance condition. This specifies a switch within the parent which activates this child container, for example ``MID=0x101``. There are currently three condition forms supported:
+
+    * Simple condition: ``Parameter==value``
+    * Condition list: ``Parameter==value;Parameter2==value2``. All conditions must be true.
+    * Boolean condition: ``&(epx1;exp2;...;expn)`` for an AND expression, or ``|(exp1;exp2;...;expn)`` for an OR expression. Nested expressions are either other boolean conditions or a simple condition.
+
+    Currently the only supported conditions are on the parameters of the parent container. This cover the usual case where the parent defines a header and the inheritance condition is based on parameters from the header.
+
+``flags``
+    Optional flags.
+
+    ``a``
+        Use this container as archive partition. In the Archive Browser this will appear as a line, and it will be more efficient to filter the retrieval on this container.
+
+``entry``
+    A reference to a parameter, or a container without parent.
+
+``position``
+    Position of the entry. Could be relative to the previous entry or absolute (relative to the beginning of the packet).
+
+    ``r:<n>``
+        Position is relative to the previous entry separated by ``<n>`` bits.
+    ``a:<n>``
+        Position is absolute. ``<n>`` is the number of bits from the beginning of the packet.
+
+     ``<n>`` is equivalent to ``r:<n>``.
+
+     If unset, the default is ``r:0``, meaning the entry directly follows the preceding entry.
+
+``size in bits``
+    Only for containers (and not for parameter entries). If set, this represents the size of the container. Otherwise, the size is derived from the entries in the container.
+
+    For example if the container contains some fillers at the end, this entry can be used to enforce the size such that it is not needed to add an artificial parameter. Note that the size matters only if the container is used as part of another container. Either inherited from or in aggregation.
+
+``expected interval``
+    Expected interval in milliseconds. If set then all parameters extracted from this container have an expiration time set to this interval multiplied with a configurable constant. See the option :ref:`expirationTolerance <expirationTolerance>` in :file:`etc/processor.yaml`.
+
+``description``
+    Textual description of the container. Should be one line.
+
+``long description``
+    Long textual description of the container. In Markdown format.
+
+``namespace:<ALIAS>``
+    Any numbers of namespace columns can be added using the prefix ``namespace:`` followed by the name of a namespace.
+
+    This allows associating alternative names to containers.
+```
+
+### `data-types.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/data-types.rst`
+
+
+```rst
+DataTypes Sheet
+===============
+
+This sheet describes data types that can then be used in the definition of :doc:`parameters <parameters>` and :doc:`command arguments <commands>`.
+
+``type name`` (required)
+    Name of the type used as a reference in the parameter and command sheets.
+
+``eng type`` (required)
+    Engineering type. One of:
+
+    * ``uint``: unsigned 32 bit integer
+    * ``uint64``: unsigned 64 bit integer
+    * ``int``: signed 32 bit integer
+    * ``int64``: signed 64 bit integer
+    * ``enumerated``: enumeration (integer to string)
+    * ``float``: 32 bit floating point number
+    * ``double``: 64 bit floating point number
+    * ``boolean``: true or false
+    * ``string``: text value
+    * ``binary``: byte array
+    * ``time``: absolute time
+
+    It is also possible to define an aggregate or array type.
+
+    See: :ref:`engineering-types`.
+
+``raw type``
+    See: :ref:`raw-encoding`.
+
+    A parameter when extracted from a binary packet has two forms: a raw value and an engineering value. The extraction from the raw packet is performed according to the encoding, whereas the conversion from raw to engineering value is performed by a calibrator.
+    
+    Raw types are optional for use with parameters that do not require encoding. For example because they are already extracted. Then Yamcs can only do their calibration. Or it can be that a parameter is already calibrated, then it can still be specified here to be able to associate alarms.
+
+``encoding``
+    See: :ref:`raw-encoding`.
+
+``eng unit``
+    Unit of measure. For informational purpose only.
+
+``calibration``
+    Reference to a calibrator defined in the :doc:`Calibration sheet <calibration>`. Leave empty if no calibration is applied.
+
+``initial value``
+    Initial (default) value given to a parameter or command argument.
+
+    Note that this value can be overwritten for specific parameters, or command arguments using a column of the same name in the :doc:`Commands <commands>` and :doc:`Parameters <parameters>` sheets.
+
+    .. include:: _includes/initial-value.rst
+
+``description``
+    A description for the parameter or command argument. Should be one line.
+
+``long description``
+    Long textual description. In Markdown format.
+
+
+.. _raw-encoding:
+
+Encoding and Raw Types
+^^^^^^^^^^^^^^^^^^^^^^
+
+The columns ``raw type`` and ``encoding`` describe how the parameter is encoded in the binary packet. All types are case-insensitive.
+
+
+Unsigned Integers
+"""""""""""""""""
+
+Raw type: ``uint``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``unsigned(<n>,<BE|LE>)``
+      - unsigned integer
+    * - ``<n>``
+      - shortcut for ``unsigned(<n>,BE)``
+
+Where:
+
+* ``n`` is the size in bits
+* ``LE`` = little endian
+* ``BE`` = big endian
+
+
+Signed Integers
+"""""""""""""""
+
+Raw type: ``int``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``twosComplement(<n>,<BE|LE>)``
+      - two's complement encoding
+    * - ``signMagnitude(<n>,<BE|LE>)``
+      - sign magnitude encoding - first (or last for LE) bit is the sign, the remaining bits represent the magnitude (absolute value).
+    * - ``<n>``
+      - shortcut for ``twosComplement(<n>,BE)``
+
+Where:
+
+* ``n`` is the size in bits
+* ``LE`` = little endian
+* ``BE`` = big endian
+
+
+Floats
+""""""
+
+Raw type: ``float``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``ieee754_1985(<n>,<BE|LE>)``
+      - IEE754_1985 encoding
+    * - ``<n>``
+      - shortcut for ``ieee754_1985(<n>,BE)``
+
+Where:
+
+* ``n`` is the size in bits
+* ``LE`` = little endian
+* ``BE`` = big endian
+
+
+Booleans
+""""""""
+
+Raw type: ``boolean``
+
+Encoding: Leave empty. 1 bit is assumed.
+
+
+String
+""""""
+
+Raw type: ``string``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``fixed(<n>, <charset>)``
+      - fixed size string. The string has to start at a byte boundary inside the container.
+    * - ``PrependedSize(<x>, <charset>)``
+      - string whose length in bytes is specified by the first ``x`` bits of the array
+    * - ``<n>``
+      - shortcut for ``fixed(<n>)``
+    * - ``terminated(<0xBB>, <charset><m>)``
+      - terminated string
+
+Where:
+
+``n`` is the size in bits. Only multiples of 8 are supported.
+
+``x`` is the size in bits of the size tag. Only multiples of 8 are supported. The size must be expressed in bytes.
+
+``charset`` is one of the `charsets supported by java <https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html>`_ (UTF-8, ISO-8859-1, etc). Default: UTF-8.
+
+``0xBB`` specifies a byte that is the string terminator. Pay attention to the parameters following this one; if the terminator is not found the entire buffer will be consumed.
+
+
+Binary
+""""""
+
+Raw type: ``binary``
+
+Encoding:
+
+.. list-table::
+    :widths: 40 60
+    :header-rows: 1
+
+    * - Encoding
+      - Description
+    * - ``fixed(<n>)``
+      - fixed size byte array
+    * - ``PrependedSize(<x>)``
+      - byte array whose size in bytes is specified in the first ``x`` bits of the array
+    * - ``<n>``
+      - shortcut for ``fixed(<n>)``
+
+Where:
+
+``n`` is the size in bits. Only multiples of 8 are supported and it has to start at a byte boundary.
+
+``x`` is the size in bits of the size tag. Note that while ``x`` can be any number <= 32, the byte array has to start at a byte boundary.
+
+
+Custom
+""""""
+
+Raw type: *any*
+
+Encoding: ``custom(<n>,algorithm)``
+
+The decoding will be performed by a user defined algorithm.
+
+* ``<n>`` is optional and may be used to specify the size in bits of the entry in the container (in case the size is fixed) - it is used for optimizing the access to the parameters following this one.
+* ``algorithm`` the name of the algorithm - it has to be defined in the *Algorithms* sheet
+
+
+.. _engineering-types:
+
+Engineering Types
+^^^^^^^^^^^^^^^^^
+
+Engineering types describe a parameter in its processed form (i.e. after any calibrations). All types are case-insensitive.
+
+Depending on the combination of raw and engineering type, automatic conversion is applicable. For more advanced use cases, define and refer to a calibrator in the :doc:`Calibration sheet <calibration>`.
+
+.. list-table::
+    :widths: 20 40 40
+    :header-rows: 1
+
+    * - Type
+      - Description
+      - Automatic Conversion
+    * - ``uint``
+      - Unsigned 32 bit integer - it corresponds to ``int`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``uint64``
+      - Unsigned 64 bit integer - it corresponds to ``long`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``int``
+      - Signed 32 bit integer - it corresponds to ``int`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``int64``
+      - Signed 64 bit integer - it corresponds to ``long`` in Java.
+      - From ``int``, ``uint`` or ``string``
+    * - ``string``
+      - Character string - it corresponds to ``String`` in Java.
+      - From ``string``
+    * - ``float``
+      - 32 bit floating point number - it corresponds to ``float`` in Java.
+      - From ``float``, ``int``, ``uint`` or ``string``
+    * - ``double``
+      - 64 bit floating point number - it corresponds to ``double`` in Java.
+      - From ``float``, ``int``, ``uint`` or ``string``
+    * - ``enumerated``
+      - A kind of string that can only be one out of a fixed set of predefined state values. It corresponds to ``String`` in Java.
+      - From ``int`` or ``uint``. A Calibrator is required.
+    * - ``boolean``
+      - A binary true/false value - it corresponds to 'boolean' in Java.
+      - From any raw type. Values equal to zero, all-zero bytes or an empty string are considered *false*.
+    * - ``binary``
+      - Byte array - it corresponds to ``byte[]`` in Java.
+      - From ``binary`` only.
+```
+
+### `derived-parameters.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/derived-parameters.rst`
+
+
+```rst
+Derived Parameters Sheet
+========================
+
+This sheet contains information for parameters that are the results of algorithm computations.
+
+The structure of this sheet is identical to the :doc:`Parameters sheet <parameters>`.
+```
+
+### `general.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/general.rst`
+
+
+```rst
+General Sheet
+=============
+
+This sheet is required and allows global properties to be defined. Apart from the column headers, the sheet should contain only a single row.
+
+``format version`` (required)
+    Used by the loader to ensure a compatible spreadsheet structure.
+
+    The latest format version is 7.1.
+
+    The earliest supported format is 5.3.
+
+``name`` (required)
+    Name of the space system. All definitions in this system will be added to this system.
+
+``document version`` (required)
+    Available to the spreadsheet author to track versions in an arbitrary manner.
+
+    If the :doc:`ChangeLog <changelog>` sheet is used, the document version should match the version of the latest changelog entry.
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/index.rst`
+
+
+```rst
+Spreadsheet Loader
+==================
+
+The spreadsheet loader loads TM/TC definitions from an Excel spreadsheet. The spreadsheet structure must follow a specific structure. The advantage of this loader is that the Excel files are very convenient to modify with any spreadsheet program. It is recommended to start from an existing example and replace its content as required.
+
+The Excel file must be in Excel 97-2003 Format (``.xls``). ``.xlsx`` is not supported.
+
+The loader is configured in :file:`etc/mdb.yaml` or in the instance configuration by specifying the type as ``sheet``, and providing the location of the XML file.
+
+.. code-block:: yaml
+
+    - type: "sheet"
+      args:
+        file: "mdb/BogusSAT.xls"
+
+The following notation is also accepted for historical reasons:
+
+.. code-block:: yaml
+
+   - type: "sheet"
+     spec: "mdb/BogusSAT.xls"
+
+
+.. rubric:: Configuration Options
+
+file (string)
+   **Required.** The filename to be loaded.
+
+enableXtceNameRestrictions (boolean)
+   If true, names must only use characters, digits, underscores or dashes. Default: ``true``
+
+
+.. rubric:: Sheets
+
+The spreadsheet may contain any sheets, however only the following names are considered, and further detailed in their respective sections.
+
+.. hlist::
+   :columns: 2
+
+   * :doc:`General <general>` (required)
+   * :doc:`ChangeLog <changelog>`
+   * :doc:`DataTypes <data-types>`
+   * :doc:`Parameters <parameters>`
+   * :doc:`DerivedParameters <derived-parameters>`
+   * :doc:`LocalParameters <local-parameters>`
+   * :doc:`Containers <containers>`
+   * :doc:`Algorithms <algorithms>`
+   * :doc:`Alarms <alarms>`
+   * :doc:`Commands <commands>`
+   * :doc:`CommandOptions <command-options>`
+   * :doc:`CommandVerification <command-verification>`
+   * :doc:`Calibration <calibration>`
+
+
+.. rubric:: Multiple Space Systems
+
+A spreadsheet file describes one space system. Multiple spreadsheets can be combined in a space system tree as described in :doc:`../index`.
+
+Alternatively, Yamcs also allows to describe a tree of space systems in a single spreadsheet file with the following rules:
+
+* All sheets that do not have a prefix, contain data for the main space system whose name is defined in the :doc:`general`.
+* To define data in subsystems, a sheet can be named like ``SYSTEM1|SYSTEM2|Containers``. This definition will create a ``SYSTEM1`` as part of the main space system and a child ``SYSTEM2`` of ``SYSTEM1``. Then the containers will be loaded in ``SYSTEM2``.
+
+The spreadsheet loader scans and creates the subsystem hierarchy and then it loads the data inside the systems traversing the hierarchy in a depth-first order.
+
+
+.. rubric:: Number Base
+
+Numeric values can be entered as decimals or as hexadecimals (with prefix ``0x``)
+
+
+.. rubric:: Referencing Parameter and Containers
+
+Name references can be used to refer to items in other space systems. They look like UNIX-like directory access expressions, such as ``../a/b``.
+
+The result of the lookup depends on the exact tree configuration in :file:`etc/mdb.yaml`
+
+
+.. rubric:: Comments
+
+Rows that begin with the symbol '#' in their first cell are ignored.
+
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    general
+    changelog
+    data-types
+    parameters
+    derived-parameters
+    local-parameters
+    containers
+    algorithms
+    alarms
+    commands
+    command-options
+    command-verification
+    calibration
+```
+
+### `local-parameters.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/local-parameters.rst`
+
+
+```rst
+Local Parameters Sheet
+======================
+
+This sheet contains information for parameters that are local to Yamcs and that can be set by users.
+
+The structure of this sheet is identical to the :doc:`Parameters sheet <parameters>`.
+```
+
+### `parameters.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/sheet/parameters.rst`
+
+
+```rst
+Parameters Sheet
+================
+
+This sheet contains parameter information.
+
+Recognised column names are:
+
+``parameter name`` (required)
+    The name of the parameter within the space system.
+
+``data type`` (required)
+    Reference to a data type define in the :doc:`DataTypes sheet <data-types>`.
+
+``description``
+    Textual description of the parameter. Should be one line.
+
+``long description``
+    Long textual description of the parameter. In Markdown format.
+
+``namespace:<ALIAS>``
+    Any numbers of namespace columns can be added using the prefix ``namespace:`` followed by the name of a namespace.
+
+    This allows associating alternative names to parameters.
+
+``initial value``
+    Initial (default) value of this parameter. If present, this overrides any initial value set on the referenced ``data type``.
+
+    .. include:: _includes/initial-value.rst
+
+``flags``
+   The only recognized flag is ``p`` which sets the parameter as persistent - that means its value will be saved and restored when the Yamcs restarts. For this to work, the realtime processor has to be configured (in processor.yaml) with ``persistParameters: true``
+```

@@ -3,36 +3,76 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `lc_action.c.o`
 
-file--lc_action.c.o
-file--lc_action.c.o.d
-file--lc_app.c.o
-file--lc_app.c.o.d
-file--lc_cmds.c.o
-file--lc_cmds.c.o.d
-file--lc_custom.c.o
-file--lc_custom.c.o.d
-file--lc_utils.c.o
-file--lc_utils.c.o.d
-file--lc_watch.c.o
-file--lc_watch.c.o.d
-```
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_action.c.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_action.c.o`](file--lc_action.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_action.c.o.d`](file--lc_action.c.o.d) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_app.c.o`](file--lc_app.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_app.c.o.d`](file--lc_app.c.o.d) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_cmds.c.o`](file--lc_cmds.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_cmds.c.o.d`](file--lc_cmds.c.o.d) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_custom.c.o`](file--lc_custom.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_custom.c.o.d`](file--lc_custom.c.o.d) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_utils.c.o`](file--lc_utils.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_utils.c.o.d`](file--lc_utils.c.o.d) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_watch.c.o`](file--lc_watch.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_watch.c.o.d`](file--lc_watch.c.o.d) — 빌드 산출물 (경로만)
+### `lc_action.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_action.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_app.c.o`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_app.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_app.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_app.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_cmds.c.o`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_cmds.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_cmds.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_cmds.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_custom.c.o`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_custom.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_custom.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_custom.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_utils.c.o`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_utils.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_utils.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_utils.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_watch.c.o`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_watch.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc_watch.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/lc.dir/fsw/src/lc_watch.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

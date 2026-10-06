@@ -3,38 +3,6456 @@
 
 **경로:** `fsw/apps/ds/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ds_app.c`
 
-file--ds_app.c
-file--ds_app.h
-file--ds_appdefs.h
-file--ds_cmds.c
-file--ds_cmds.h
-file--ds_dispatch.c
-file--ds_dispatch.h
-file--ds_file.c
-file--ds_file.h
-file--ds_table.c
-file--ds_table.h
-file--ds_verify.h
-file--ds_version.h
+**경로:** `fsw/apps/ds/fsw/src/ds_app.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application file containing the application
+ *  initialization routines, the main routine and the command interface.
+ */
+
+#include "cfe.h"
+
+#include "ds_perfids.h"
+#include "ds_msgids.h"
+
+#include "ds_platform_cfg.h"
+#include "ds_verify.h"
+
+#include "ds_appdefs.h"
+
+#include "ds_msg.h"
+#include "ds_app.h"
+#include "ds_dispatch.h"
+#include "ds_cmds.h"
+#include "ds_file.h"
+#include "ds_table.h"
+#include "ds_events.h"
+#include "ds_msgdefs.h"
+#include "ds_version.h"
+
+#include <stdio.h>
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Application global data structure                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+DS_AppData_t DS_AppData;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Application entry point and main process loop                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AppMain(void)
+{
+    CFE_SB_Buffer_t *BufPtr = NULL;
+    int32            Result;
+    uint32           RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Performance Log (start time counter)...
+    */
+    CFE_ES_PerfLogEntry(DS_APPMAIN_PERF_ID);
+
+    /*
+    ** Perform application-specific initialization...
+    */
+    Result = DS_AppInitialize();
+
+    /*
+    ** Check for start-up error...
+    */
+    if (Result != CFE_SUCCESS)
+    {
+        /*
+        ** Set request to terminate main loop...
+        */
+        RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** Main process loop...
+    */
+    while (CFE_ES_RunLoop(&RunStatus))
+    {
+        /*
+        ** Performance Log (stop time counter)...
+        */
+        CFE_ES_PerfLogExit(DS_APPMAIN_PERF_ID);
+
+        /*
+        ** Wait for next Software Bus message...
+        */
+        Result = CFE_SB_ReceiveBuffer(&BufPtr, DS_AppData.CmdPipe, DS_SB_TIMEOUT);
+
+        /*
+        ** Performance Log (start time counter)...
+        */
+        CFE_ES_PerfLogEntry(DS_APPMAIN_PERF_ID);
+
+        /*
+        ** Process Software Bus messages...
+        */
+        if (Result == CFE_SUCCESS)
+        {
+            DS_AppProcessMsg(BufPtr);
+        }
+        else if (Result == CFE_SB_TIME_OUT)
+        {
+            /*
+             * Check for table updates.  This is usually done during the
+             * housekeeping cycle, but if housekeeping requests are
+             * coming at a rate slower than 1Hz, we perform the operations
+             * here.
+             */
+            DS_TableManageDestFile();
+            DS_TableManageFilter();
+        }
+        else
+        {
+            /*
+            ** Set request to terminate main loop...
+            */
+            RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+
+        /*
+        ** Note: If there were some reason to exit normally
+        **       (without error) then we would set
+        **       RunStatus = CFE_ES_APP_EXIT
+        */
+    }
+
+    /*
+    ** Check for "fatal" process error...
+    */
+    if (Result != CFE_SUCCESS)
+    {
+        /*
+        ** Send an event describing the reason for the termination...
+        */
+        CFE_EVS_SendEvent(DS_EXIT_ERR_EID, CFE_EVS_EventType_CRITICAL, "Application terminating, err = 0x%08X",
+                          (unsigned int)Result);
+
+        /*
+        ** In case cFE Event Services is not working...
+        */
+        CFE_ES_WriteToSysLog("DS application terminating, err = 0x%08X\n", (unsigned int)Result);
+    }
+
+    /*
+    ** Performance Log (stop time counter)...
+    */
+    CFE_ES_PerfLogExit(DS_APPMAIN_PERF_ID);
+
+    /*
+    ** Let cFE kill the application (and any child tasks)...
+    */
+    CFE_ES_ExitApp(RunStatus);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Application initialization                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t DS_AppInitialize(void)
+{
+    CFE_Status_t Result;
+    int32        i = 0;
+
+    /*
+    ** Initialize global data structure...
+    */
+    memset(&DS_AppData, 0, sizeof(DS_AppData));
+
+    DS_AppData.AppEnableState = DS_DEF_ENABLE_STATE;
+    DS_AppData.EnableMoveFiles = DS_MOVE_FILES;
+
+    /*
+    ** Mark files as closed
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileHandle = OS_OBJECT_ID_UNDEFINED;
+    }
+
+    /*
+    ** Initialize interface to cFE Event Services...
+    */
+    Result = CFE_EVS_Register(NULL, 0, 0);
+
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("DS App: Error registering for Event Services, RC = 0x%08X\n", (unsigned int)Result);
+    }
+    else
+    {
+        Result = CFE_SB_CreatePipe(&DS_AppData.CmdPipe, DS_APP_PIPE_DEPTH, DS_APP_PIPE_NAME);
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR, "Unable to create input pipe, err = 0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    /*
+    ** Subscribe to application housekeeping request command...
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_SEND_HK_MID), DS_AppData.CmdPipe);
+
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Unable to subscribe to HK request, err = 0x%08X", (unsigned int)Result);
+        }
+    }
+
+    /*
+    ** Subscribe to application commands...
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(DS_CMD_MID), DS_AppData.CmdPipe);
+
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(DS_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Unable to subscribe to DS commands, err = 0x%08X", (unsigned int)Result);
+        }
+    }
+
+    /*
+    ** Initialize application tables...
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        Result = DS_TableInit();
+    }
+
+    /*
+    ** Initialize access to Critical Data Store (CDS)...
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        Result = DS_TableCreateCDS();
+    }
+
+    /*
+    ** Generate application startup event message...
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(DS_INIT_EID, CFE_EVS_EventType_INFORMATION,
+                          "Application initialized, version %d.%d.%d.%d, data at %p", DS_MAJOR_VERSION,
+                          DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV, (void *)&DS_AppData);
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process HK request command                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AppSendHkCmd(void)
+{
+    DS_HkPacket_t  HkPacket;
+    int32          i                                              = 0;
+    CFE_Status_t   Status                                         = 0;
+    char           FilterTblName[CFE_MISSION_TBL_MAX_NAME_LENGTH] = {0};
+    CFE_TBL_Info_t FilterTblInfo;
+
+    DS_HkTlm_Payload_t *PayloadPtr;
+
+    memset(&HkPacket, 0, sizeof(HkPacket));
+
+    /*
+    ** Initialize housekeeping packet...
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(DS_HK_TLM_MID), sizeof(DS_HkPacket_t));
+
+    /*
+    ** Process data storage file age limits...
+    */
+    DS_FileTestAge(DS_SECS_PER_HK_CYCLE);
+
+    /*
+    ** Take this opportunity to check for table updates...
+    */
+    DS_TableManageDestFile();
+    DS_TableManageFilter();
+
+    /* Get internal payload substructure */
+    PayloadPtr = &HkPacket.Payload;
+
+    /*
+    ** Copy application command counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->CmdAcceptedCounter = DS_AppData.CmdAcceptedCounter;
+    PayloadPtr->CmdRejectedCounter = DS_AppData.CmdRejectedCounter;
+
+    /*
+    ** Copy packet storage counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->DisabledPktCounter = DS_AppData.DisabledPktCounter;
+    PayloadPtr->IgnoredPktCounter  = DS_AppData.IgnoredPktCounter;
+    PayloadPtr->FilteredPktCounter = DS_AppData.FilteredPktCounter;
+    PayloadPtr->PassedPktCounter   = DS_AppData.PassedPktCounter;
+
+    /*
+    ** Copy file I/O counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->FileWriteCounter     = DS_AppData.FileWriteCounter;
+    PayloadPtr->FileWriteErrCounter  = DS_AppData.FileWriteErrCounter;
+    PayloadPtr->FileUpdateCounter    = DS_AppData.FileUpdateCounter;
+    PayloadPtr->FileUpdateErrCounter = DS_AppData.FileUpdateErrCounter;
+
+    /*
+    ** Copy configuration table counters to housekeeping telemetry packet...
+    */
+    PayloadPtr->DestTblLoadCounter   = DS_AppData.DestTblLoadCounter;
+    PayloadPtr->DestTblErrCounter    = DS_AppData.DestTblErrCounter;
+    PayloadPtr->FilterTblLoadCounter = DS_AppData.FilterTblLoadCounter;
+    PayloadPtr->FilterTblErrCounter  = DS_AppData.FilterTblErrCounter;
+
+    /*
+    ** Copy app enable/disable state to housekeeping telemetry packet...
+    */
+    PayloadPtr->AppEnableState = DS_AppData.AppEnableState;
+
+    /*
+    ** Compute file growth rate from the number of bytes since the last HK request...
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        DS_AppData.FileStatus[i].FileRate   = DS_AppData.FileStatus[i].FileGrowth / DS_SECS_PER_HK_CYCLE;
+        DS_AppData.FileStatus[i].FileGrowth = 0;
+    }
+
+    /* Get the filter table info, put the file name in the HK pkt. */
+    Status = snprintf(FilterTblName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "DS.%s", DS_FILTER_TBL_NAME);
+    if (Status >= 0)
+    {
+        Status = CFE_TBL_GetInfo(&FilterTblInfo, FilterTblName);
+        if (Status == CFE_SUCCESS)
+        {
+            snprintf(PayloadPtr->FilterTblFilename, OS_MAX_PATH_LEN, "%s", FilterTblInfo.LastFileLoaded);
+        }
+        else
+        {
+            /* If the filter table name is invalid, send an event and erase any
+             * stale/misleading filename from the HK packet */
+            CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid filter tbl name in DS_AppSendHkCmd. Name=%s, Err=0x%08X", FilterTblName,
+                              (unsigned int)Status);
+
+            memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
+        }
+    }
+    else
+    {
+        /* If the filter table name couldn't be copied, send an event and erase
+         * any stale/misleading filename from the HK packet */
+        CFE_EVS_SendEvent(DS_APPHK_FILTER_TBL_PRINT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Filter tbl name copy fail in DS_AppSendHkCmd. Err=%d", (int)Status);
+
+        memset(PayloadPtr->FilterTblFilename, 0, sizeof(PayloadPtr->FilterTblFilename));
+    }
+
+    /*
+    ** Timestamp and send housekeeping telemetry packet...
+    */
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(HkPacket.TelemetryHeader), true);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Packet storage pre-processor                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_AppData.AppEnableState == DS_DISABLED)
+    {
+        /*
+        ** Application must be enabled in order to store data...
+        */
+        DS_AppData.DisabledPktCounter++;
+    }
+    else if ((DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL) ||
+             (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL))
+    {
+        /*
+        ** Must have both tables loaded in order to store data...
+        */
+        DS_AppData.IgnoredPktCounter++;
+    }
+    else
+    {
+        /*
+        ** Store packet (if permitted by filter table)...
+        */
+        DS_FileStorePacket(MessageID, BufPtr);
+    }
+}
 ```
 
-## 항목
+### `ds_app.h`
 
-- [`fsw/apps/ds/fsw/src/ds_app.c`](file--ds_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_app.h`](file--ds_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_appdefs.h`](file--ds_appdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_cmds.c`](file--ds_cmds.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_cmds.h`](file--ds_cmds.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_dispatch.c`](file--ds_dispatch.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_dispatch.h`](file--ds_dispatch.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_file.c`](file--ds_file.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_file.h`](file--ds_file.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_table.c`](file--ds_table.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_table.h`](file--ds_table.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_verify.h`](file--ds_verify.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ds/fsw/src/ds_version.h`](file--ds_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/ds/fsw/src/ds_app.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application header file
+ */
+#ifndef DS_APP_H
+#define DS_APP_H
+
+#include "cfe.h"
+
+#include "ds_appdefs.h"
+
+#include "ds_platform_cfg.h"
+
+#include "ds_table.h"
+
+#include "ds_extern_typedefs.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS application data structures                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief Wakeup for DS
+ *
+ * \par Description
+ *      Wakes up DS every 1 second for routine maintenance whether a
+ *      message was received or not.
+ */
+#define DS_SB_TIMEOUT       1000
+#define DS_SECS_PER_TIMEOUT (DS_SB_TIMEOUT / 1000)
+
+/**
+ * \brief Current state of destination files
+ */
+typedef struct
+{
+    osal_id_t FileHandle;                       /**< \brief Current file handle */
+    uint32    FileAge;                          /**< \brief Current file age in seconds */
+    uint32    FileSize;                         /**< \brief Current file size in bytes */
+    uint32    FileGrowth;                       /**< \brief Current file growth in bytes (since HK) */
+    uint32    FileRate;                         /**< \brief File growth rate in bytes (at last HK) */
+    uint32    FileCount;                        /**< \brief Current file sequence count */
+    uint16    FileState;                        /**< \brief Current file enable/disable state */
+    uint16    Unused;                           /**< \brief Unused - structure padding */
+    char      FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief Current filename (path+base+seq+ext) */
+} DS_AppFileStatus_t;
+
+/**
+ *  \brief DS global data structure definition
+ */
+typedef struct
+{
+    CFE_SB_PipeId_t CmdPipe; /**< \brief Pipe Id for DS command pipe */
+
+    CFE_ES_CDSHandle_t DataStoreHandle; /**< \brief Critical Data Store (CDS) handle */
+
+    CFE_TBL_Handle_t FilterTblHandle;   /**< \brief Packet filter table handle */
+    CFE_TBL_Handle_t DestFileTblHandle; /**< \brief Destination file table handle */
+
+    DS_FilterTable_t *  FilterTblPtr;   /**< \brief Packet filter table data pointer */
+    DS_DestFileTable_t *DestFileTblPtr; /**< \brief Destination file table data pointer */
+
+    uint8 CmdAcceptedCounter;   /**< \brief Count of valid commands received */
+    uint8 CmdRejectedCounter;   /**< \brief Count of invalid commands received */
+    uint8 DestTblLoadCounter;   /**< \brief Count of destination file table loads */
+    uint8 DestTblErrCounter;    /**< \brief Count of failed attempts to get table data pointer */
+    uint8 FilterTblLoadCounter; /**< \brief Count of packet filter table loads */
+    uint8 FilterTblErrCounter;  /**< \brief Count of failed attempts to get table data pointer */
+    uint8 AppEnableState;       /**< \brief Application enable/disable state */
+    uint8 Spare8;               /**< \brief Structure alignment padding */
+
+    uint16 FileWriteCounter;     /**< \brief Count of good destination file writes */
+    uint16 FileWriteErrCounter;  /**< \brief Count of bad destination file writes */
+    uint16 FileUpdateCounter;    /**< \brief Count of good updates to secondary header */
+    uint16 FileUpdateErrCounter; /**< \brief Count of bad updates to secondary header */
+
+    uint32 DisabledPktCounter; /**< \brief Count of packets discarded (DS app disabled) */
+    uint32 IgnoredPktCounter;  /**< \brief Count of packets discarded (pkt has no filter) */
+    uint32 FilteredPktCounter; /**< \brief Count of packets discarded (failed filter test) */
+    uint32 PassedPktCounter;   /**< \brief Count of packets that passed filter test */
+
+    DS_AppFileStatus_t FileStatus[DS_DEST_FILE_CNT]; /**< \brief Current state of destination files */
+
+    DS_HashLink_t  HashLinks[DS_PACKETS_IN_FILTER_TABLE]; /**< \brief Hash table linked list elements */
+    DS_HashLink_t *HashTable[DS_HASH_TABLE_ENTRIES];      /**< \brief Each hash table entry is a linked list */
+
+    uint8 EnableMoveFiles; /**< \brief Whether to move files to downlink directory after close */
+} DS_AppData_t;
+
+/** \brief DS global data structure reference */
+extern DS_AppData_t DS_AppData;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Prototypes for functions defined in ds_app.c                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief CFS Data Storage (DS) application entry point
+ *
+ *  \par Description
+ *       DS application entry point and main process loop.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ */
+void DS_AppMain(void);
+
+/**
+ *  \brief Application initialization function
+ *
+ *  \par Description
+ *       Performs the following startup initialization:
+ *       - register DS application for cFE Event Services
+ *       - create a cFE Software Bus message pipe
+ *       - subscribe to DS commands via message pipe
+ *       - register DS filter and file destination tables
+ *       - load default filter and file destination tables
+ *       - subscribe to packets referenced in DS filter table
+ *       - generate startup initialization event message
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+CFE_Status_t DS_AppInitialize(void);
+
+/**
+ *  \brief Application housekeeping request command handler
+ *
+ *  \par Description
+ *       Check with cFE Table Services for table updates
+ *       Generate application housekeeping telemetry packet
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_HkPacket_t
+ */
+void DS_AppSendHkCmd(void);
+
+/**
+ *  \brief Application packet storage pre-processor
+ *
+ *  \par Description
+ *       This function verifies that DS storage is enabled and that
+ *       both DS tables (filter and file) are loaded before calling
+ *       the file storage function (#DS_FileStorePacket).
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MessageID Message ID
+ *  \param[in] BufPtr    Software Bus message pointer
+ *
+ *  \sa #CFE_SB_Buffer_t*
+ */
+void DS_AppStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr);
+
+#endif
+```
+
+### `ds_appdefs.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_appdefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application header file
+ */
+#ifndef DS_APPDEFS_H
+#define DS_APPDEFS_H
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS common application macro definitions                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define DS_CLOSED 0 /**< \brief File is closed */
+#define DS_OPEN   1 /**< \brief File is open */
+
+#define DS_STRING_REQUIRED true  /**< \brief String text is required */
+#define DS_STRING_OPTIONAL false /**< \brief String text is optional */
+
+#define DS_FILENAME_TEXT    true  /**< \brief String text is part of a filename */
+#define DS_DESCRIPTIVE_TEXT false /**< \brief String text is not part of a filename */
+
+#define DS_INDEX_NONE -1 /**< \brief Packet filter table look-up = not found */
+
+#define DS_PATH_SEPARATOR '/' /**< \brief File system path separator */
+
+#define DS_TABLE_VERIFY_ERR -1 /**< \brief Table verification error return value */
+
+#define DS_FILE_HEADER_NONE 0 /**< \brief File header type is NONE */
+#define DS_FILE_HEADER_CFE  1 /**< \brief File header type is CFE */
+
+#endif
+```
+
+### `ds_cmds.c`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_cmds.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) command handler functions
+ */
+
+#include "cfe.h"
+
+#include "ds_platform_cfg.h"
+#include "ds_verify.h"
+
+#include "ds_appdefs.h"
+#include "ds_msgids.h"
+
+#include "ds_msg.h"
+#include "ds_app.h"
+#include "ds_cmds.h"
+#include "ds_file.h"
+#include "ds_table.h"
+#include "ds_events.h"
+#include "ds_version.h"
+
+#include <stdio.h>
+
+/**
+ * \brief Internal Macro to access the internal payload structure of a message
+ *
+ * This is done as a macro so it can be applied consistently to all
+ * message processing functions, based on the way DS defines its messages.
+ */
+#define DS_GET_CMD_PAYLOAD(ptr, type) (&((const type *)(ptr))->Payload)
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* NOOP command                                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    /*
+    ** Do nothing except display "aliveness" event...
+    */
+    DS_AppData.CmdAcceptedCounter++;
+
+    CFE_EVS_SendEvent(DS_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION, "NOOP command, Version %d.%d.%d.%d",
+                      DS_MAJOR_VERSION, DS_MINOR_VERSION, DS_REVISION, DS_MISSION_REV);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset hk telemetry counters command                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    /*
+    ** Reset application command counters...
+    */
+    DS_AppData.CmdAcceptedCounter = 0;
+    DS_AppData.CmdRejectedCounter = 0;
+
+    /*
+    ** Reset packet storage counters...
+    */
+    DS_AppData.DisabledPktCounter = 0;
+    DS_AppData.IgnoredPktCounter  = 0;
+    DS_AppData.FilteredPktCounter = 0;
+    DS_AppData.PassedPktCounter   = 0;
+
+    /*
+    ** Reset file I/O counters...
+    */
+    DS_AppData.FileWriteCounter     = 0;
+    DS_AppData.FileWriteErrCounter  = 0;
+    DS_AppData.FileUpdateCounter    = 0;
+    DS_AppData.FileUpdateErrCounter = 0;
+
+    /*
+    ** Reset configuration table counters...
+    */
+    DS_AppData.DestTblLoadCounter   = 0;
+    DS_AppData.DestTblErrCounter    = 0;
+    DS_AppData.FilterTblLoadCounter = 0;
+    DS_AppData.FilterTblErrCounter  = 0;
+
+    CFE_EVS_SendEvent(DS_RESET_CMD_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set application ena/dis state                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_AppState_Payload_t *DS_AppStateCmd;
+
+    DS_AppStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_AppStateCmd_t);
+
+    if (DS_TableVerifyState(DS_AppStateCmd->EnableState) == false)
+    {
+        /*
+        ** Invalid enable/disable state...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_ENADIS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid APP STATE command arg: app state = %d", DS_AppStateCmd->EnableState);
+    }
+    else
+    {
+        /*
+        ** Set new DS application enable/disable state...
+        */
+        DS_AppData.AppEnableState = DS_AppStateCmd->EnableState;
+
+        /*
+        ** Update the Critical Data Store (CDS)...
+        */
+        DS_TableUpdateCDS();
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_ENADIS_CMD_EID, CFE_EVS_EventType_INFORMATION, "APP STATE command: state = %d",
+                          DS_AppStateCmd->EnableState);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set packet filter file index                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_FilterFile_Payload_t *DS_FilterFileCmd;
+
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+
+    DS_FilterFileCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterFileCmd_t);
+
+    if (!CFE_SB_IsValidMsgId(DS_FilterFileCmd->MessageID))
+    {
+        /*
+        ** Invalid packet messageID...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER FILE command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID));
+    }
+    else if (DS_FilterFileCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
+    {
+        /*
+        ** Invalid packet filter parameters index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER FILE command arg: filter parameters index = %d",
+                          DS_FilterFileCmd->FilterParmsIndex);
+    }
+    else if (DS_TableVerifyFileIndex(DS_FilterFileCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER FILE command arg: file table index = %d", DS_FilterFileCmd->FileTableIndex);
+    }
+    else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid packet filter table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER FILE command: packet filter table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Get the index of the filter table entry for this message ID...
+        */
+        FilterTableIndex = DS_TableFindMsgID(DS_FilterFileCmd->MessageID);
+
+        if (FilterTableIndex == DS_INDEX_NONE)
+        {
+            /*
+            ** Must not create - may only modify existing packet filter...
+            */
+            DS_AppData.CmdRejectedCounter++;
+
+            CFE_EVS_SendEvent(DS_FILE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid FILTER FILE command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID));
+        }
+        else
+        {
+            /*
+            ** Set new packet filter value (file table index)...
+            */
+            pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+            pFilterParms = &pPacketEntry->Filter[DS_FilterFileCmd->FilterParmsIndex];
+
+            pFilterParms->FileTableIndex = DS_FilterFileCmd->FileTableIndex;
+
+            /*
+            ** Notify cFE that we have modified the table data...
+            */
+            CFE_TBL_Modified(DS_AppData.FilterTblHandle);
+
+            DS_AppData.CmdAcceptedCounter++;
+
+            CFE_EVS_SendEvent(DS_FILE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                              "FILTER FILE command: MID = 0x%08lX, index = %d, filter = %d, file = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterFileCmd->MessageID), (int)FilterTableIndex,
+                              DS_FilterFileCmd->FilterParmsIndex, DS_FilterFileCmd->FileTableIndex);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set pkt filter filename type                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_FilterType_Payload_t *DS_FilterTypeCmd;
+
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+
+    DS_FilterTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_FilterTypeCmd_t);
+
+    if (!CFE_SB_IsValidMsgId(DS_FilterTypeCmd->MessageID))
+    {
+        /*
+        ** Invalid packet messageID...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER TYPE command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID));
+    }
+    else if (DS_FilterTypeCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
+    {
+        /*
+        ** Invalid packet filter parameters index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER TYPE command arg: filter parameters index = %d",
+                          DS_FilterTypeCmd->FilterParmsIndex);
+    }
+    else if (DS_TableVerifyType(DS_FilterTypeCmd->FilterType) == false)
+    {
+        /*
+        ** Invalid packet filter filename type...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER TYPE command arg: filter type = %d", DS_FilterTypeCmd->FilterType);
+    }
+    else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid packet filter table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER TYPE command: packet filter table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Get the index of the filter table entry for this message ID...
+        */
+        FilterTableIndex = DS_TableFindMsgID(DS_FilterTypeCmd->MessageID);
+
+        if (FilterTableIndex == DS_INDEX_NONE)
+        {
+            /*
+            ** Must not create - may only modify existing packet filter...
+            */
+            DS_AppData.CmdRejectedCounter++;
+
+            CFE_EVS_SendEvent(DS_FTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid FILTER TYPE command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID));
+        }
+        else
+        {
+            /*
+            ** Set new packet filter value (filter type)...
+            */
+            pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+            pFilterParms = &pPacketEntry->Filter[DS_FilterTypeCmd->FilterParmsIndex];
+
+            pFilterParms->FilterType = DS_FilterTypeCmd->FilterType;
+
+            /*
+            ** Notify cFE that we have modified the table data...
+            */
+            CFE_TBL_Modified(DS_AppData.FilterTblHandle);
+
+            DS_AppData.CmdAcceptedCounter++;
+
+            CFE_EVS_SendEvent(DS_FTYPE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                              "FILTER TYPE command: MID = 0x%08lX, index = %d, filter = %d, type = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterTypeCmd->MessageID), (int)FilterTableIndex,
+                              DS_FilterTypeCmd->FilterParmsIndex, DS_FilterTypeCmd->FilterType);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set packet filter parameters                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_FilterParms_Payload_t *DS_FilterParmsCmd;
+
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+
+    DS_FilterParmsCmd = &((const DS_FilterParmsCmd_t *)BufPtr)->Payload;
+
+    if (!CFE_SB_IsValidMsgId(DS_FilterParmsCmd->MessageID))
+    {
+        /*
+        ** Invalid packet messageID...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER PARMS command arg: invalid messageID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID));
+    }
+    else if (DS_FilterParmsCmd->FilterParmsIndex >= DS_FILTERS_PER_PACKET)
+    {
+        /*
+        ** Invalid packet filter parameters index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER PARMS command arg: filter parameters index = %d",
+                          DS_FilterParmsCmd->FilterParmsIndex);
+    }
+    else if (DS_TableVerifyParms(DS_FilterParmsCmd->Algorithm_N, DS_FilterParmsCmd->Algorithm_X,
+                                 DS_FilterParmsCmd->Algorithm_O) == false)
+    {
+        /*
+        ** Invalid packet filter algorithm parameters...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER PARMS command arg: N = %d, X = %d, O = %d", DS_FilterParmsCmd->Algorithm_N,
+                          DS_FilterParmsCmd->Algorithm_X, DS_FilterParmsCmd->Algorithm_O);
+    }
+    else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid packet filter table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid FILTER PARMS command: packet filter table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Get the index of the filter table entry for this message ID...
+        */
+        FilterTableIndex = DS_TableFindMsgID(DS_FilterParmsCmd->MessageID);
+
+        if (FilterTableIndex == DS_INDEX_NONE)
+        {
+            /*
+            ** Must not create - may only modify existing packet filter...
+            */
+            DS_AppData.CmdRejectedCounter++;
+
+            CFE_EVS_SendEvent(DS_PARMS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid FILTER PARMS command: Message ID 0x%08lX is not in filter table",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID));
+        }
+        else
+        {
+            /*
+            ** Set new packet filter values (algorithm)...
+            */
+            pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+            pFilterParms = &pPacketEntry->Filter[DS_FilterParmsCmd->FilterParmsIndex];
+
+            pFilterParms->Algorithm_N = DS_FilterParmsCmd->Algorithm_N;
+            pFilterParms->Algorithm_X = DS_FilterParmsCmd->Algorithm_X;
+            pFilterParms->Algorithm_O = DS_FilterParmsCmd->Algorithm_O;
+
+            /*
+            ** Notify cFE that we have modified the table data...
+            */
+            CFE_TBL_Modified(DS_AppData.FilterTblHandle);
+
+            DS_AppData.CmdAcceptedCounter++;
+
+            CFE_EVS_SendEvent(DS_PARMS_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                              "FILTER PARMS command: MID = 0x%08lX, index = %d, filter = %d, N = %d, X = %d, O = %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(DS_FilterParmsCmd->MessageID), (int)FilterTableIndex,
+                              DS_FilterParmsCmd->FilterParmsIndex, pFilterParms->Algorithm_N, pFilterParms->Algorithm_X,
+                              pFilterParms->Algorithm_O);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set destination filename type                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestType_Payload_t *DS_DestTypeCmd;
+
+    DS_DestFileEntry_t *pDest = NULL;
+
+    DS_DestTypeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestTypeCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestTypeCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST TYPE command arg: file table index = %d", DS_DestTypeCmd->FileTableIndex);
+    }
+    else if (DS_TableVerifyType(DS_DestTypeCmd->FileNameType) == false)
+    {
+        /*
+        ** Invalid destination filename type...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST TYPE command arg: filename type = %d", DS_DestTypeCmd->FileNameType);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_NTYPE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST TYPE command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set new destination table filename type...
+        */
+        pDest               = &DS_AppData.DestFileTblPtr->File[DS_DestTypeCmd->FileTableIndex];
+        pDest->FileNameType = DS_DestTypeCmd->FileNameType;
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_NTYPE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST TYPE command: file table index = %d, filename type = %d",
+                          DS_DestTypeCmd->FileTableIndex, DS_DestTypeCmd->FileNameType);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set dest file ena/dis state                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestState_Payload_t *DS_DestStateCmd;
+
+    DS_DestStateCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestStateCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestStateCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST STATE command arg: file table index = %d", DS_DestStateCmd->FileTableIndex);
+    }
+    else if (DS_TableVerifyState(DS_DestStateCmd->EnableState) == false)
+    {
+        /*
+        ** Invalid destination file state...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST STATE command arg: file state = %d", DS_DestStateCmd->EnableState);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_STATE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST STATE command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set new destination table file state in table and in current status...
+        */
+        DS_AppData.DestFileTblPtr->File[DS_DestStateCmd->FileTableIndex].EnableState = DS_DestStateCmd->EnableState;
+        DS_AppData.FileStatus[DS_DestStateCmd->FileTableIndex].FileState             = DS_DestStateCmd->EnableState;
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_STATE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST STATE command: file table index = %d, file state = %d", DS_DestStateCmd->FileTableIndex,
+                          DS_DestStateCmd->EnableState);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set path portion of filename                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestPath_Payload_t *DS_DestPathCmd;
+
+    DS_DestFileEntry_t *pDest = NULL;
+
+    DS_DestPathCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestPathCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestPathCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST PATH command arg: file table index = %d", (int)DS_DestPathCmd->FileTableIndex);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_PATH_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST PATH command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set path portion of destination table filename...
+        */
+        pDest = &DS_AppData.DestFileTblPtr->File[DS_DestPathCmd->FileTableIndex];
+        CFE_SB_MessageStringGet(pDest->Pathname, DS_DestPathCmd->Pathname, NULL, sizeof(pDest->Pathname),
+                                sizeof(DS_DestPathCmd->Pathname));
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_PATH_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST PATH command: file table index = %d, pathname = '%s'",
+                          (int)DS_DestPathCmd->FileTableIndex, DS_DestPathCmd->Pathname);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set base portion of filename                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestBase_Payload_t *DS_DestBaseCmd;
+    DS_DestFileEntry_t *         pDest = NULL;
+
+    DS_DestBaseCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestBaseCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestBaseCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST BASE command arg: file table index = %d", (int)DS_DestBaseCmd->FileTableIndex);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_BASE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST BASE command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set base portion of destination table filename...
+        */
+        pDest = &DS_AppData.DestFileTblPtr->File[DS_DestBaseCmd->FileTableIndex];
+        CFE_SB_MessageStringGet(pDest->Basename, DS_DestBaseCmd->Basename, NULL, sizeof(pDest->Basename),
+                                sizeof(DS_DestBaseCmd->Basename));
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_BASE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST BASE command: file table index = %d, base filename = '%s'",
+                          (int)DS_DestBaseCmd->FileTableIndex, DS_DestBaseCmd->Basename);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set extension portion of filename                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestExt_Payload_t *DS_DestExtCmd;
+    DS_DestFileEntry_t *        pDest = NULL;
+
+    DS_DestExtCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestExtCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestExtCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST EXT command arg: file table index = %d", (int)DS_DestExtCmd->FileTableIndex);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_EXT_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST EXT command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set extension portion of destination table filename...
+        */
+        pDest = &DS_AppData.DestFileTblPtr->File[DS_DestExtCmd->FileTableIndex];
+        CFE_SB_MessageStringGet(pDest->Extension, DS_DestExtCmd->Extension, NULL, sizeof(pDest->Extension),
+                                sizeof(DS_DestExtCmd->Extension));
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_EXT_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST EXT command: file table index = %d, extension = '%s'",
+                          (int)DS_DestExtCmd->FileTableIndex, DS_DestExtCmd->Extension);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set maximum file size limit                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestSize_Payload_t *DS_DestSizeCmd;
+    DS_DestFileEntry_t *         pDest = NULL;
+
+    DS_DestSizeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestSizeCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestSizeCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST SIZE command arg: file table index = %d", (int)DS_DestSizeCmd->FileTableIndex);
+    }
+    else if (DS_TableVerifySize(DS_DestSizeCmd->MaxFileSize) == false)
+    {
+        /*
+        ** Invalid destination file size limit...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST SIZE command arg: size limit = %d", (int)DS_DestSizeCmd->MaxFileSize);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_SIZE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST SIZE command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set size limit for destination file...
+        */
+        pDest              = &DS_AppData.DestFileTblPtr->File[DS_DestSizeCmd->FileTableIndex];
+        pDest->MaxFileSize = DS_DestSizeCmd->MaxFileSize;
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_SIZE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST SIZE command: file table index = %d, size limit = %d",
+                          (int)DS_DestSizeCmd->FileTableIndex, (int)DS_DestSizeCmd->MaxFileSize);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set maximum file age limit                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestAge_Payload_t *DS_DestAgeCmd;
+    DS_DestFileEntry_t *        pDest = NULL;
+
+    DS_DestAgeCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestAgeCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestAgeCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST AGE command arg: file table index = %d", (int)DS_DestAgeCmd->FileTableIndex);
+    }
+    else if (DS_TableVerifyAge(DS_DestAgeCmd->MaxFileAge) == false)
+    {
+        /*
+        ** Invalid destination file age limit...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid DEST AGE command arg: age limit = %d",
+                          (int)DS_DestAgeCmd->MaxFileAge);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_AGE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST AGE command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set age limit for destination file...
+        */
+        pDest             = &DS_AppData.DestFileTblPtr->File[DS_DestAgeCmd->FileTableIndex];
+        pDest->MaxFileAge = DS_DestAgeCmd->MaxFileAge;
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_AGE_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST AGE command: file table index = %d, age limit = %d", (int)DS_DestAgeCmd->FileTableIndex,
+                          (int)DS_DestAgeCmd->MaxFileAge);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set seq cnt portion of filename                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_DestCount_Payload_t *DS_DestCountCmd;
+    DS_AppFileStatus_t *          FileStatus = NULL;
+    DS_DestFileEntry_t *          DestFile   = NULL;
+
+    DS_DestCountCmd = DS_GET_CMD_PAYLOAD(BufPtr, DS_DestCountCmd_t);
+
+    if (DS_TableVerifyFileIndex(DS_DestCountCmd->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST COUNT command arg: file table index = %d",
+                          (int)DS_DestCountCmd->FileTableIndex);
+    }
+    else if (DS_TableVerifyCount(DS_DestCountCmd->SequenceCount) == false)
+    {
+        /*
+        ** Invalid destination file sequence count...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST COUNT command arg: sequence count = %d", (int)DS_DestCountCmd->SequenceCount);
+    }
+    else if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid destination file table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_SEQ_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST COUNT command: destination file table is not loaded");
+    }
+    else
+    {
+        /*
+        ** Set next sequence count for destination file...
+        */
+        DestFile   = &DS_AppData.DestFileTblPtr->File[DS_DestCountCmd->FileTableIndex];
+        FileStatus = &DS_AppData.FileStatus[DS_DestCountCmd->FileTableIndex];
+
+        /*
+        ** Update both destination file table and current status...
+        */
+        DestFile->SequenceCount = DS_DestCountCmd->SequenceCount;
+        FileStatus->FileCount   = DS_DestCountCmd->SequenceCount;
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.DestFileTblHandle);
+
+        /*
+        ** Update the Critical Data Store (CDS)...
+        */
+        DS_TableUpdateCDS();
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_SEQ_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "DEST COUNT command: file table index = %d, sequence count = %d",
+                          (int)DS_DestCountCmd->FileTableIndex, (int)DS_DestCountCmd->SequenceCount);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Close destination file                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_CloseFile_Payload_t *PayloadPtr;
+
+    PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_CloseFileCmd_t);
+
+    if (DS_TableVerifyFileIndex(PayloadPtr->FileTableIndex) == false)
+    {
+        /*
+        ** Invalid destination file table index...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_CLOSE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid DEST CLOSE command arg: file table index = %d",
+                          (int)PayloadPtr->FileTableIndex);
+    }
+    else
+    {
+        /*
+        ** Close destination file (if the file was open)...
+        */
+        if (OS_ObjectIdDefined(DS_AppData.FileStatus[PayloadPtr->FileTableIndex].FileHandle))
+        {
+            DS_FileUpdateHeader(PayloadPtr->FileTableIndex);
+            DS_FileCloseDest(PayloadPtr->FileTableIndex);
+        }
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_CLOSE_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE command: file table index = %d",
+                          (int)PayloadPtr->FileTableIndex);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Close all open destination files                                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    int32 i = 0;
+
+    /*
+    ** Close all open destination files...
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        if (OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
+        {
+            DS_FileUpdateHeader(i);
+            DS_FileCloseDest(i);
+        }
+    }
+
+    DS_AppData.CmdAcceptedCounter++;
+
+    CFE_EVS_SendEvent(DS_CLOSE_ALL_CMD_EID, CFE_EVS_EventType_INFORMATION, "DEST CLOSE ALL command");
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get file info packet                                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    DS_FileInfoPkt_t DS_FileInfoPkt;
+    DS_FileInfo_t *  FileInfoPtr;
+    int32            i = 0;
+
+    /*
+    ** Create and send a file info packet...
+    */
+    DS_AppData.CmdAcceptedCounter++;
+
+    CFE_EVS_SendEvent(DS_GET_FILE_INFO_CMD_EID, CFE_EVS_EventType_INFORMATION, "GET FILE INFO command");
+
+    /*
+    ** Initialize file info telemetry packet...
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_DIAG_TLM_MID),
+                 sizeof(DS_FileInfoPkt_t));
+
+    /*
+    ** Process array of destination file info data...
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        FileInfoPtr = &DS_FileInfoPkt.Payload[i];
+
+        /*
+        ** Set file age and size...
+        */
+        FileInfoPtr->FileAge  = DS_AppData.FileStatus[i].FileAge;
+        FileInfoPtr->FileSize = DS_AppData.FileStatus[i].FileSize;
+
+        /*
+        ** Set file growth rate (computed when process last HK request)...
+        */
+        FileInfoPtr->FileRate = DS_AppData.FileStatus[i].FileRate;
+
+        /*
+        ** Set current filename sequence count...
+        */
+        FileInfoPtr->SequenceCount = DS_AppData.FileStatus[i].FileCount;
+
+        /*
+        ** Set file enable/disable state...
+        */
+        if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+        {
+            FileInfoPtr->EnableState = DS_DISABLED;
+        }
+        else
+        {
+            FileInfoPtr->EnableState = DS_AppData.FileStatus[i].FileState;
+        }
+
+        /*
+        ** Set file open/closed state...
+        */
+        if (!OS_ObjectIdDefined(DS_AppData.FileStatus[i].FileHandle))
+        {
+            FileInfoPtr->OpenState = DS_CLOSED;
+        }
+        else
+        {
+            FileInfoPtr->OpenState = DS_OPEN;
+
+            /*
+            ** Set current open filename...
+            */
+            snprintf(FileInfoPtr->FileName, sizeof(FileInfoPtr->FileName), "%s", DS_AppData.FileStatus[i].FileName);
+        }
+    }
+
+    /*
+    ** Timestamp and send file info telemetry packet...
+    */
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(DS_FileInfoPkt.TelemetryHeader), true);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Add message ID to packet filter table                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_AddRemoveMid_Payload_t *PayloadPtr;
+    DS_PacketEntry_t *               pPacketEntry     = NULL;
+    DS_FilterParms_t *               pFilterParms     = NULL;
+    int32                            FilterTableIndex = 0;
+    int32                            HashTableIndex   = 0;
+    int32                            i                = 0;
+
+    PayloadPtr = DS_GET_CMD_PAYLOAD(BufPtr, DS_AddMidCmd_t);
+
+    if (!CFE_SB_IsValidMsgId(PayloadPtr->MessageID))
+    {
+        /*
+        ** Invalid packet message ID - can be anything but unused...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid ADD MID command arg: invalid MID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID));
+    }
+    else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid packet filter table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid ADD MID command: filter table is not loaded");
+    }
+    else if ((FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID)) != DS_INDEX_NONE)
+    {
+        /*
+        ** New message ID is already in packet filter table...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid ADD MID command: MID = 0x%08lX is already in filter table at index = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex);
+    }
+    else if ((FilterTableIndex = DS_TableFindMsgID(CFE_SB_INVALID_MSG_ID)) == DS_INDEX_NONE)
+    {
+        /*
+        ** Packet filter table has no unused entries...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_ADD_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid ADD MID command: filter table is full");
+    }
+    else
+    {
+        /*
+        ** Initialize unused packet filter entry for new message ID...
+        */
+        pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+
+        pPacketEntry->MessageID = PayloadPtr->MessageID;
+
+        /* Add the message ID to the hash table as well */
+        HashTableIndex = DS_TableAddMsgID(PayloadPtr->MessageID, FilterTableIndex);
+
+        for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
+        {
+            pFilterParms = &pPacketEntry->Filter[i];
+
+            pFilterParms->FileTableIndex = 0;
+            pFilterParms->FilterType     = DS_BY_COUNT;
+
+            pFilterParms->Algorithm_N = 0;
+            pFilterParms->Algorithm_X = 0;
+            pFilterParms->Algorithm_O = 0;
+        }
+
+        CFE_SB_SubscribeEx(PayloadPtr->MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.FilterTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_ADD_MID_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "ADD MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex,
+                          (int)HashTableIndex);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS_RemoveMIDCmd() - remove message ID from packet filter table  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    const DS_AddRemoveMid_Payload_t *PayloadPtr;
+
+    DS_PacketEntry_t *pPacketEntry     = NULL;
+    DS_FilterParms_t *pFilterParms     = NULL;
+    int32             FilterTableIndex = 0;
+    int32             HashTableIndex   = 0;
+    int32             i                = 0;
+
+    PayloadPtr  = DS_GET_CMD_PAYLOAD(BufPtr, DS_RemoveMidCmd_t);
+    FilterTableIndex = DS_TableFindMsgID(PayloadPtr->MessageID);
+
+    if (!CFE_SB_IsValidMsgId(PayloadPtr->MessageID))
+    {
+        /*
+        ** Invalid packet message ID - can be anything but unused...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command arg: invalid MID = 0x%08lX",
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID));
+    }
+    else if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Must have a valid packet filter table loaded...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command: filter table is not loaded");
+    }
+    else if (FilterTableIndex == DS_INDEX_NONE)
+    {
+        /*
+        ** Message ID is not in packet filter table...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid REMOVE MID command: MID = 0x%08lX is not in filter table",
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID));
+    }
+    else
+    {
+        /* Convert MID into hash table index */
+        HashTableIndex = DS_TableHashFunction(PayloadPtr->MessageID);
+
+        /*
+        ** Reset used packet filter entry for used message ID...
+        */
+        pPacketEntry = &DS_AppData.FilterTblPtr->Packet[FilterTableIndex];
+
+        pPacketEntry->MessageID = CFE_SB_INVALID_MSG_ID;
+
+        /* Create new hash table as well */
+        DS_TableCreateHash();
+
+        for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
+        {
+            pFilterParms = &pPacketEntry->Filter[i];
+
+            pFilterParms->FileTableIndex = 0;
+            pFilterParms->FilterType     = DS_BY_COUNT;
+
+            pFilterParms->Algorithm_N = 0;
+            pFilterParms->Algorithm_X = 0;
+            pFilterParms->Algorithm_O = 0;
+        }
+
+        CFE_SB_Unsubscribe(PayloadPtr->MessageID, DS_AppData.CmdPipe);
+
+        /*
+        ** Notify cFE that we have modified the table data...
+        */
+        CFE_TBL_Modified(DS_AppData.FilterTblHandle);
+
+        DS_AppData.CmdAcceptedCounter++;
+
+        CFE_EVS_SendEvent(DS_REMOVE_MID_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "REMOVE MID command: MID = 0x%08lX, filter index = %d, hash index = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(PayloadPtr->MessageID), (int)FilterTableIndex,
+                          (int)HashTableIndex);
+    }
+}
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `ds_cmds.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_cmds.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) command handler header file
+ */
+#ifndef DS_CMDS_H
+#define DS_CMDS_H
+
+#include "cfe.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Prototypes for functions defined in ds_app.c                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief NOOP command handler
+ *
+ *  \par Description
+ *       The NOOP command performs no specific function (no operation)
+ *       Validate command packet
+ *       - generate error event if invalid command packet length
+ *       Process valid command packets
+ *       - generate success event (event type = informational)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_NOOP_CC, #DS_NoopCmd_t
+ */
+void DS_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief RESET command handler
+ *
+ *  \par Description
+ *       Reset housekeeping telemetry counters command
+ *       Validate command packet
+ *       - generate error event if invalid command packet length
+ *       Process valid command packets
+ *       - set selected housekeeping telemetry counters to zero
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_RESET_COUNTERS_CC, #DS_ResetCountersCmd_t
+ */
+void DS_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set application enable/disable state command handler
+ *
+ *  \par Description
+ *       Set application enable/disable state command
+ *       Validate command packet
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid enable/disable state
+ *       Process valid command packets
+ *       - update application enable/disable state
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_APP_STATE_CC, #DS_AppStateCmd_t
+ */
+void DS_SetAppStateCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set file index for filter table entry command handler
+ *
+ *  \par Description
+ *       Set destination file index for filter table entry command
+ *       Validate command packet
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid filter parameters index
+ *       - generate error event if invalid file table index
+ *       - generate error event if packet filter table is not loaded
+ *       - generate error event if message ID is not in filter table
+ *       Process valid command packets
+ *       - update file index for selected filter table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_FILTER_FILE_CC, #DS_FilterFileCmd_t
+ */
+void DS_SetFilterFileCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set filter type for filter table entry command handler
+ *
+ *  \par Description
+ *       Set filter type for filter table entry command
+ *       Validate command packet
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid filter parameters index
+ *       - generate error event if invalid filter type
+ *       - generate error event if packet filter table is not loaded
+ *       - generate error event if message ID is not in filter table
+ *       Process valid command packets
+ *       - update filter type for selected filter table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_FILTER_TYPE_CC, #DS_FilterTypeCmd_t
+ */
+void DS_SetFilterTypeCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set filter parameters for filter table entry command handler
+ *
+ *  \par Description
+ *       Set filter parameters for filter table entry command
+ *       Validate command packet
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid filter parameters index
+ *       - generate error event if invalid filter parameters
+ *       - generate error event if packet filter table is not loaded
+ *       - generate error event if message ID is not in filter table
+ *       Process valid command packets
+ *       - update filter parameters for selected filter table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_FILTER_PARMS_CC, #DS_FilterParmsCmd_t
+ */
+void DS_SetFilterParmsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage filename type command handler
+ *
+ *  \par Description
+ *       Modify the filename type for the selected entry in the
+ *       destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid filename type
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update filename type for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_TYPE_CC, #DS_DestTypeCmd_t
+ */
+void DS_SetDestTypeCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage enable/disable state command handler
+ *
+ *  \par Description
+ *       Modify the enable/disable state for the selected entry
+ *       in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid enable/disable state
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update enable/disable state for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_STATE_CC, #DS_DestStateCmd_t
+ */
+void DS_SetDestStateCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage file pathname command handler
+ *
+ *  \par Description
+ *       Modify the path portion of the filename for the selected
+ *       entry in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid pathname characters
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update file pathname for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_PATH_CC, #DS_DestPathCmd_t
+ */
+void DS_SetDestPathCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage file basename command handler
+ *
+ *  \par Description
+ *       Modify the base portion of the filename for the selected
+ *       entry in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid basename characters
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update file basename for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_BASE_CC, #DS_DestBaseCmd_t
+ */
+void DS_SetDestBaseCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage file extension command handler
+ *
+ *  \par Description
+ *       Modify the extension portion of the filename for the
+ *       selected entry in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid extension characters
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update file extension for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_EXT_CC, #DS_DestExtCmd_t
+ */
+void DS_SetDestExtCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**  \brief Set data storage file size limit command handler
+ *
+ *  \par Description
+ *       Modify the max file size limit for the selected entry
+ *       in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid file size limit
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update max size limit for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_SIZE_CC, #DS_DestSizeCmd_t
+ */
+void DS_SetDestSizeCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage file age limit command handler
+ *
+ *  \par Description
+ *       Modify the max file age limit for the selected entry
+ *       in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid file size limit
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update max age limit for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_AGE_CC, #DS_DestAgeCmd_t
+ */
+void DS_SetDestAgeCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Set data storage filename sequence count command handler
+ *
+ *  \par Description
+ *       Modify the filename sequence count for the selected
+ *       entry in the destination file definitions table.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid file table index
+ *       - generate error event if invalid filename sequence count
+ *       - generate error event if file table is not loaded
+ *       Accept valid command packets
+ *       - update filename sequence count for selected file table entry
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_SET_DEST_COUNT_CC, #DS_DestCountCmd_t
+ */
+void DS_SetDestCountCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Close data storage file command handler
+ *
+ *  \par Description
+ *       Close the selected data storage file. If this destination
+ *       is still enabled, another file will be opened upon receipt
+ *       of the next packet which passes the filter algorithm.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       - generate error event if invalid destination file index
+ *       Accept valid command packets
+ *       - close the selected destination file
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_CLOSE_FILE_CC, #DS_CloseFileCmd_t
+ */
+void DS_CloseFileCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Close all data storage files command handler
+ *
+ *  \par Description
+ *       Close all open data storage files. If any open destination
+ *       file is still enabled, another file will be opened upon receipt
+ *       of the next packet which passes the filter algorithm.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       Accept valid command packets
+ *       - close all open destination files
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_CLOSE_ALL_CC, #DS_CloseAllCmd_t
+ */
+void DS_CloseAllCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Get file information telemetry packet command handler
+ *
+ *  \par Description
+ *       Create and send a telemetry packet containing the current
+ *       status for all destination files.
+ *       Reject invalid command packets
+ *       - generate error event if invalid command packet length
+ *       Accept valid command packets
+ *       - generate file info telemetry packet
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_GET_FILE_INFO_CC, #DS_GetFileInfoCmd_t, #DS_FileInfoPkt_t
+ */
+void DS_GetFileInfoCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Add Message ID to Packet Filter Table
+ *
+ *  \par Description
+ *       Set MID selection for unused packet filter table entry
+ *       Reject invalid commands
+ *       - generate error event if invalid command packet length
+ *       - generate error event if MID argument is invalid (cannot be zero)
+ *       - generate error event if packet filter table is not loaded
+ *       - generate error event if MID is already in packet filter table
+ *       - generate error event if no unused packet filter table entries
+ *       Accept valid commands
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_ADD_MID_CC, #DS_AddMidCmd_t
+ */
+void DS_AddMIDCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Remove Message ID from Packet Filter Table
+ *
+ *  \par Description
+ *       Remove used packet filter table entry
+ *       Reject invalid commands
+ *       - generate error event if invalid command packet length
+ *       - generate error event if MID argument is invalid (cannot be zero)
+ *       - generate error event if packet filter table is not loaded
+ *       - generate error event if MID is not in packet filter table
+ *       Accept valid commands
+ *       - generate success event (event type = debug)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ *
+ *  \sa #DS_REMOVE_MID_CC, #DS_RemoveMidCmd_t
+ */
+void DS_RemoveMIDCmd(const CFE_SB_Buffer_t *BufPtr);
+
+#endif
+```
+
+### `ds_dispatch.c`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_dispatch.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application file containing the application
+ *  initialization routines, the main routine and the command interface.
+ */
+
+#include "cfe.h"
+#include "ds_perfids.h"
+#include "ds_msgids.h"
+#include "ds_platform_cfg.h"
+#include "ds_dispatch.h"
+#include "ds_msg.h"
+#include "ds_app.h"
+#include "ds_cmds.h"
+#include "ds_file.h"
+#include "ds_table.h"
+#include "ds_events.h"
+#include "ds_msgdefs.h"
+
+#include <stdio.h>
+
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) command handler functions
+ */
+
+#include "cfe.h"
+
+#include "ds_platform_cfg.h"
+#include "ds_verify.h"
+
+#include "ds_appdefs.h"
+#include "ds_msgids.h"
+#include "ds_events.h"
+
+#include "ds_msg.h"
+#include "ds_app.h"
+#include "ds_cmds.h"
+
+#include <stdio.h>
+
+int32 DS_VerifyLength(const CFE_SB_Buffer_t *BufPtr, size_t ExpectedLength, uint16 FailEventID, const char *CommandName)
+{
+    size_t ActualLength = 0;
+
+    CFE_MSG_GetSize(&BufPtr->Msg, &ActualLength);
+
+    if (ExpectedLength != ActualLength)
+    {
+        /*
+        ** Invalid command packet length...
+        */
+        DS_AppData.CmdRejectedCounter++;
+
+        CFE_EVS_SendEvent(FailEventID, CFE_EVS_EventType_ERROR,
+                          "Invalid %s command length: expected = %lu, actual = %lu", CommandName,
+                          (unsigned long)ExpectedLength, (unsigned long)ActualLength);
+    }
+
+    return (ExpectedLength == ActualLength);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* NOOP command                                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_NoopVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_NoopCmd_t), DS_NOOP_CMD_ERR_EID, "NOOP"))
+    {
+        DS_NoopCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset hk telemetry counters command                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_ResetVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_ResetCountersCmd_t), DS_RESET_CMD_ERR_EID, "RESET"))
+    {
+        DS_ResetCountersCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set application ena/dis state                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetAppStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_AppStateCmd_t), DS_ENADIS_CMD_ERR_EID, "APP STATE"))
+    {
+        DS_SetAppStateCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set packet filter file index                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetFilterFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_FilterFileCmd_t), DS_FILE_CMD_ERR_EID, "FILTER FILE"))
+    {
+        DS_SetFilterFileCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set pkt filter filename type                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetFilterTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_FilterTypeCmd_t), DS_FTYPE_CMD_ERR_EID, "FILTER TYPE"))
+    {
+        DS_SetFilterTypeCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set packet filter parameters                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetFilterParmsVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_FilterParmsCmd_t), DS_PARMS_CMD_ERR_EID, "FILTER PARMS"))
+    {
+        DS_SetFilterParmsCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set destination filename type                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestTypeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestTypeCmd_t), DS_NTYPE_CMD_ERR_EID, "DEST TYPE"))
+    {
+        DS_SetDestTypeCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set dest file ena/dis state                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestStateVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestStateCmd_t), DS_STATE_CMD_ERR_EID, "DEST STATE"))
+    {
+        DS_SetDestStateCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set path portion of filename                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestPathVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestPathCmd_t), DS_PATH_CMD_ERR_EID, "DEST PATH"))
+    {
+        DS_SetDestPathCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set base portion of filename                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestBaseVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestBaseCmd_t), DS_BASE_CMD_ERR_EID, "DEST BASE"))
+    {
+        DS_SetDestBaseCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set extension portion of filename                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestExtVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestExtCmd_t), DS_EXT_CMD_ERR_EID, "DEST EXT"))
+    {
+        DS_SetDestExtCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set maximum file size limit                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestSizeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestSizeCmd_t), DS_SIZE_CMD_ERR_EID, "DEST SIZE"))
+    {
+        DS_SetDestSizeCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set maximum file age limit                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestAgeVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestAgeCmd_t), DS_AGE_CMD_ERR_EID, "DEST AGE"))
+    {
+        DS_SetDestAgeCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set seq cnt portion of filename                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_SetDestCountVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_DestCountCmd_t), DS_SEQ_CMD_ERR_EID, "DEST COUNT"))
+    {
+        DS_SetDestCountCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Close destination file                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_CloseFileVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_CloseFileCmd_t), DS_CLOSE_CMD_ERR_EID, "DEST CLOSE"))
+    {
+        DS_CloseFileCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Close all open destination files                                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_CloseAllVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_CloseAllCmd_t), DS_CLOSE_ALL_CMD_ERR_EID, "DEST CLOSE ALL"))
+    {
+        DS_CloseAllCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get file info packet                                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_GetFileInfoVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_GetFileInfoCmd_t), DS_GET_FILE_INFO_CMD_ERR_EID, "GET FILE INFO"))
+    {
+        DS_GetFileInfoCmd(BufPtr);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Add message ID to packet filter table                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AddMIDVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_AddMidCmd_t), DS_ADD_MID_CMD_ERR_EID, "ADD MID"))
+    {
+        DS_AddMIDCmd(BufPtr);
+    }
+}
+
+void DS_RemoveMIDVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_RemoveMidCmd_t), DS_REMOVE_MID_CMD_ERR_EID, "REMOVE MID"))
+    {
+        DS_RemoveMIDCmd(BufPtr);
+    }
+}
+
+void DS_SendHkVerifyDispatch(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (DS_VerifyLength(BufPtr, sizeof(DS_SendHkCmd_t), DS_HK_REQUEST_ERR_EID, "SEND HK"))
+    {
+        DS_AppSendHkCmd();
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process Software Bus messages                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr)
+{
+    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+
+    switch (CFE_SB_MsgIdToValue(MessageID))
+    {
+        /*
+        ** DS application commands...
+        */
+        case DS_CMD_MID:
+            DS_AppProcessCmd(BufPtr);
+            if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
+            {
+                DS_AppStorePacket(MessageID, BufPtr);
+            }
+            break;
+
+        /*
+        ** DS housekeeping request command...
+        */
+        case DS_SEND_HK_MID:
+            DS_SendHkVerifyDispatch(BufPtr);
+            if (DS_TableFindMsgID(MessageID) != DS_INDEX_NONE)
+            {
+                DS_AppStorePacket(MessageID, BufPtr);
+            }
+            break;
+
+        /*
+        ** Unknown message ID's (must be something to store)...
+        */
+        default:
+            DS_AppStorePacket(MessageID, BufPtr);
+            break;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process application commands                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
+
+    switch (CommandCode)
+    {
+        /*
+        ** Do nothing command (aliveness test)...
+        */
+        case DS_NOOP_CC:
+            DS_NoopVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set housekeeping telemetry counters to zero...
+        */
+        case DS_RESET_COUNTERS_CC:
+            DS_ResetVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set DS application enable/disable state...
+        */
+        case DS_SET_APP_STATE_CC:
+            DS_SetAppStateVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set packet filter file index...
+        */
+        case DS_SET_FILTER_FILE_CC:
+            DS_SetFilterFileVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set packet filter type (time vs count)...
+        */
+        case DS_SET_FILTER_TYPE_CC:
+            DS_SetFilterTypeVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set packet filter algorithm parameters...
+        */
+        case DS_SET_FILTER_PARMS_CC:
+            DS_SetFilterParmsVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file filename type (time vs count)...
+        */
+        case DS_SET_DEST_TYPE_CC:
+            DS_SetDestTypeVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file enable/disable state...
+        */
+        case DS_SET_DEST_STATE_CC:
+            DS_SetDestStateVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file path portion of filename...
+        */
+        case DS_SET_DEST_PATH_CC:
+            DS_SetDestPathVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file base portion of filename...
+        */
+        case DS_SET_DEST_BASE_CC:
+            DS_SetDestBaseVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file extension portion of filename...
+        */
+        case DS_SET_DEST_EXT_CC:
+            DS_SetDestExtVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file maximum size limit...
+        */
+        case DS_SET_DEST_SIZE_CC:
+            DS_SetDestSizeVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file maximum age limit...
+        */
+        case DS_SET_DEST_AGE_CC:
+            DS_SetDestAgeVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Set destination file sequence count portion of filename...
+        */
+        case DS_SET_DEST_COUNT_CC:
+            DS_SetDestCountVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Close destination file (next packet will re-open)...
+        */
+        case DS_CLOSE_FILE_CC:
+            DS_CloseFileVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Get file info telemetry packet...
+        */
+        case DS_GET_FILE_INFO_CC:
+            DS_GetFileInfoVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Add message ID to filter table...
+        */
+        case DS_ADD_MID_CC:
+            DS_AddMIDVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Remove message ID from filter table...
+        */
+        case DS_REMOVE_MID_CC:
+            DS_RemoveMIDVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** Close all destination files (next packet will re-open)...
+        */
+        case DS_CLOSE_ALL_CC:
+            DS_CloseAllVerifyDispatch(BufPtr);
+            break;
+
+        /*
+        ** DS application command with unknown command code...
+        */
+        default:
+            CFE_EVS_SendEvent(DS_CMD_CODE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid command code: MID = 0x%08X, CC = %d", DS_CMD_MID, CommandCode);
+
+            DS_AppData.CmdRejectedCounter++;
+            break;
+    }
+}
+```
+
+### `ds_dispatch.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_dispatch.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) dispatch header file
+ */
+#ifndef DS_DISPATCH_H
+#define DS_DISPATCH_H
+
+#include "cfe.h"
+#include "ds_platform_cfg.h"
+
+/**
+ *  \brief Software Bus message handler
+ *
+ *  \par Description
+ *       Process packets received via Software Bus message pipe
+ *       - may call application housekeeping request command handler
+ *       - may call 1Hz wakeup command handler (if enabled)
+ *       - may call application ground command handler
+ *       All packets are processed for possible data storage
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ */
+void DS_AppProcessMsg(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Application ground command handler
+ *
+ *  \par Description
+ *       Call command code specific DS command handler function
+ *       Generate command error event for unknown command codes
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] BufPtr Software Bus message pointer
+ */
+void DS_AppProcessCmd(const CFE_SB_Buffer_t *BufPtr);
+
+#endif
+```
+
+### `ds_file.c`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_file.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) file functions
+ */
+
+#include "cfe.h"
+#include "cfe_fs.h"
+
+#include "ds_platform_cfg.h"
+#include "ds_verify.h"
+
+#include "ds_appdefs.h"
+#include "ds_msgids.h"
+
+#include "ds_msg.h"
+#include "ds_app.h"
+#include "ds_file.h"
+#include "ds_table.h"
+#include "ds_events.h"
+
+#include <stdio.h>
+
+#define DS_PKT_SEQUENCE_BASED_FILTER_TYPE 1
+#define DS_PKT_TIME_BASED_FILTER_TYPE     2
+
+#define DS_16_MSB_SUBSECS_SHIFT 16
+#define DS_11_LSB_SECONDS_MASK  0x07FF
+#define DS_11_LSB_SECONDS_SHIFT 4
+#define DS_4_MSB_SUBSECS_MASK   0xF000
+#define DS_4_MSB_SUBSECS_SHIFT  12
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Apply common filter algorithm to Software Bus packet            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint16 Algorithm_N, uint16 Algorithm_X,
+                         uint16 Algorithm_O)
+{
+    /*
+    ** Algorithm_N = the filter will pass this many packets
+    ** Algorithm_X = out of every group of this many packets
+    ** Algorithm_O = starting at this offset within the group
+    */
+    int32                    PacketIsFiltered = false;
+    CFE_TIME_SysTime_t      PacketTime;
+    uint16                  PacketValue;
+    uint16                  Seconds;
+    uint16                  Subsecs;
+    CFE_MSG_SequenceCount_t SeqCnt = 0;
+
+    memset(&PacketTime, 0, sizeof(PacketTime));
+
+    /*
+    ** Verify input values (all errors = packet is filtered)...
+    */
+    if (Algorithm_X == 0)
+    {
+        /*
+        ** Group size of zero will result in divide by zero...
+        */
+        PacketIsFiltered = true;
+    }
+    else if (Algorithm_N == 0)
+    {
+        /*
+        ** Pass count of zero will result in zero packets...
+        */
+        PacketIsFiltered = true;
+    }
+    else if (Algorithm_N > Algorithm_X)
+    {
+        /*
+        ** Pass count cannot exceed group size...
+        */
+        PacketIsFiltered = true;
+    }
+    else if (Algorithm_O >= Algorithm_X)
+    {
+        /*
+        ** Group offset must be less than group size...
+        */
+        PacketIsFiltered = true;
+    }
+    else if ((FilterType != DS_PKT_TIME_BASED_FILTER_TYPE) && (FilterType != DS_PKT_SEQUENCE_BASED_FILTER_TYPE))
+    {
+        /*
+        ** Invalid - unknown filter type...
+        */
+        PacketIsFiltered = true;
+    }
+    else
+    {
+        if (FilterType == DS_PKT_SEQUENCE_BASED_FILTER_TYPE)
+        {
+            /*
+            ** Create packet filter value from packet sequence count...
+            */
+            CFE_MSG_GetSequenceCount(MessagePtr, &SeqCnt);
+            PacketValue = (uint16)SeqCnt;
+        }
+        else
+        {
+            /*
+            ** Create packet filter value from packet timestamp...
+            */
+            CFE_MSG_GetMsgTime(MessagePtr, &PacketTime);
+
+            /*
+            ** Get the least significant 11 bits of timestamp seconds...
+            */
+            Seconds = (uint16)PacketTime.Seconds;
+            Seconds = Seconds & DS_11_LSB_SECONDS_MASK;
+
+            /*
+            ** Get the most significant 4 bits of timestamp subsecs...
+            */
+            Subsecs = (uint16)(PacketTime.Subseconds >> DS_16_MSB_SUBSECS_SHIFT);
+            Subsecs = Subsecs & DS_4_MSB_SUBSECS_MASK;
+
+            /*
+            ** Shift seconds and subsecs to allow merge...
+            */
+            Seconds = Seconds << DS_11_LSB_SECONDS_SHIFT;
+            Subsecs = Subsecs >> DS_4_MSB_SUBSECS_SHIFT;
+
+            /*
+            ** Merge seconds and subsecs to create packet filter value...
+            */
+            PacketValue = Seconds | Subsecs;
+        }
+
+        /*
+        ** Apply the filter algorithm (common for both filter types)...
+        */
+        if (PacketValue < Algorithm_O)
+        {
+            /*
+            ** Value is less than offset of passed range...
+            */
+            PacketIsFiltered = true;
+        }
+        else if (((PacketValue - Algorithm_O) % Algorithm_X) < Algorithm_N)
+        {
+            /*
+            ** This packet was passed by the filter algorithm...
+            */
+            PacketIsFiltered = false;
+        }
+        else
+        {
+            /*
+            ** This packet was filtered by the filter algorithm...
+            */
+            PacketIsFiltered = true;
+        }
+    }
+
+    return PacketIsFiltered;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Store packet in file(s)                                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    DS_PacketEntry_t *PacketEntry  = NULL;
+    DS_FilterParms_t *FilterParms  = NULL;
+    int32              PassedFilter = false;
+    int32              FilterResult = false;
+    int32             FilterIndex  = 0;
+    int32             FileIndex    = 0;
+    int32             i            = 0;
+
+    /*
+    ** Convert packet MessageID to packet filter table index...
+    */
+    FilterIndex = DS_TableFindMsgID(MessageID);
+
+    /*
+    ** Ignore packets not listed in the packet filter table...
+    */
+    if (FilterIndex == DS_INDEX_NONE)
+    {
+        DS_AppData.IgnoredPktCounter++;
+    }
+    else
+    {
+        PacketEntry  = &DS_AppData.FilterTblPtr->Packet[FilterIndex];
+        PassedFilter = false;
+
+        /*
+        ** Each packet has multiple filters for multiple files...
+        */
+        for (i = 0; i < DS_FILTERS_PER_PACKET; i++)
+        {
+            FilterParms = &PacketEntry->Filter[i];
+
+            /*
+            ** Ignore unused and invalid filters...
+            */
+            if ((FilterParms->Algorithm_N != DS_UNUSED) && (FilterParms->FileTableIndex < DS_DEST_FILE_CNT))
+            {
+                FileIndex = FilterParms->FileTableIndex;
+                /*
+                ** Ignore disabled destination files...
+                */
+                if (DS_AppData.FileStatus[FileIndex].FileState == DS_ENABLED)
+                {
+                    /*
+                    ** Apply filter algorithm to the packet...
+                    */
+                    FilterResult = DS_IsPacketFiltered((CFE_MSG_Message_t *)BufPtr, FilterParms->FilterType,
+                                                       FilterParms->Algorithm_N, FilterParms->Algorithm_X,
+                                                       FilterParms->Algorithm_O);
+                    if (FilterResult == false)
+                    {
+                        /*
+                        ** Write unfiltered packets to destination file...
+                        */
+                        DS_FileSetupWrite(FileIndex, BufPtr);
+                        PassedFilter = true;
+                    }
+                }
+            }
+        }
+
+        /*
+        ** Count packet as passed if any filters passed...
+        */
+        if (PassedFilter)
+        {
+            DS_AppData.PassedPktCounter++;
+        }
+        else
+        {
+            DS_AppData.FilteredPktCounter++;
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Prepare to write packet data to file                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr)
+{
+    DS_DestFileEntry_t *DestFile     = &DS_AppData.DestFileTblPtr->File[FileIndex];
+    DS_AppFileStatus_t *FileStatus   = &DS_AppData.FileStatus[FileIndex];
+    int32                OpenNewFile  = false;
+    size_t              PacketLength = 0;
+
+    /*
+    ** Create local pointers for array indexed data...
+    */
+    CFE_MSG_GetSize(&BufPtr->Msg, &PacketLength);
+
+    if (!OS_ObjectIdDefined(FileStatus->FileHandle))
+    {
+        /*
+        ** 1st packet since destination enabled or file closed...
+        */
+        OpenNewFile = true;
+    }
+    else
+    {
+        /*
+        ** Test size of existing destination file...
+        */
+        if ((FileStatus->FileSize + PacketLength) > DestFile->MaxFileSize)
+        {
+            /*
+            ** This packet would cause file to exceed max size limit...
+            */
+            DS_FileUpdateHeader(FileIndex);
+            DS_FileCloseDest(FileIndex);
+            OpenNewFile = true;
+        }
+        else
+        {
+            /*
+            ** File size is OK - write packet data to file...
+            */
+            DS_FileWriteData(FileIndex, BufPtr, PacketLength);
+        }
+    }
+
+    if (OpenNewFile)
+    {
+        /*
+        ** Either the file did not exist or we closed it because
+        **   of the size limit test above...
+        */
+        DS_FileCreateDest(FileIndex);
+
+        if (OS_ObjectIdDefined(FileStatus->FileHandle))
+        {
+            /*
+            ** By writing the first packet without first performing a size
+            **   limit test, we avoid issues resulting from having the max
+            **   file size set less than the size of one packet...
+            */
+            DS_FileWriteData(FileIndex, BufPtr, PacketLength);
+        }
+    }
+
+    /*
+    ** If the write did not occur due to I/O error (create or write)
+    **   then current state = file closed and destination disabled...
+    */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Write data to destination file                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength)
+{
+    DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+    int32               Result;
+
+    /*
+    ** Let cFE manage the file I/O...
+    */
+    Result = OS_write(FileStatus->FileHandle, FileData, DataLength);
+    if (Result == DataLength)
+    {
+        /*
+        ** Success - update file size and data rate counters...
+        */
+        DS_AppData.FileWriteCounter++;
+
+        FileStatus->FileSize += DataLength;
+        FileStatus->FileGrowth += DataLength;
+    }
+    else
+    {
+        /*
+        ** Error - send event, close file and disable destination...
+        */
+        DS_FileWriteError(FileIndex, DataLength, Result);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Write header to destination file                                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileWriteHeader(int32 FileIndex)
+{
+    if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
+    {
+        DS_DestFileEntry_t *DestFile   = &DS_AppData.DestFileTblPtr->File[FileIndex];
+        DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+        CFE_FS_Header_t     CFE_FS_Header;
+        DS_FileHeader_t     DS_FileHeader;
+        int32               Result;
+
+        /*
+        ** Initialize selected parts of the cFE file header...
+        */
+        CFE_FS_InitHeader(&CFE_FS_Header, DS_FILE_HDR_DESCRIPTION, DS_FILE_HDR_SUBTYPE);
+
+        /*
+        ** Let cFE finish the init and write the primary header...
+        */
+        Result = CFE_FS_WriteHeader(FileStatus->FileHandle, &CFE_FS_Header);
+
+        if (Result == sizeof(CFE_FS_Header_t))
+        {
+            /*
+            ** Success - update file size and data rate counters...
+            */
+            DS_AppData.FileWriteCounter++;
+
+            FileStatus->FileSize += sizeof(CFE_FS_Header_t);
+            FileStatus->FileGrowth += sizeof(CFE_FS_Header_t);
+
+            /*
+            ** Initialize the DS file header...
+            */
+            memset(&DS_FileHeader, 0, sizeof(DS_FileHeader));
+            DS_FileHeader.FileTableIndex = FileIndex;
+            DS_FileHeader.FileNameType   = DestFile->FileNameType;
+            strncpy(DS_FileHeader.FileName, FileStatus->FileName, sizeof(DS_FileHeader.FileName));
+
+            /*
+            ** Manually write the secondary header...
+            */
+            Result = OS_write(FileStatus->FileHandle, &DS_FileHeader, sizeof(DS_FileHeader_t));
+
+            if (Result == sizeof(DS_FileHeader_t))
+            {
+                /*
+                ** Success - update file size and data rate counters...
+                */
+                DS_AppData.FileWriteCounter++;
+
+                FileStatus->FileSize += sizeof(DS_FileHeader_t);
+                FileStatus->FileGrowth += sizeof(DS_FileHeader_t);
+            }
+            else
+            {
+                /*
+                ** Error - send event, close file and disable destination...
+                */
+                DS_FileWriteError(FileIndex, sizeof(DS_FileHeader_t), Result);
+            }
+        }
+        else
+        {
+            /*
+            ** Error - send event, close file and disable destination...
+            */
+            DS_FileWriteError(FileIndex, sizeof(CFE_FS_Header_t), Result);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* File write error handler                                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult)
+{
+    DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+
+    /*
+    ** Send event, close file and disable destination...
+    */
+    DS_AppData.FileWriteErrCounter++;
+
+    CFE_EVS_SendEvent(DS_WRITE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                      "FILE WRITE error: result = %d, length = %d, dest = %d, name = '%s'", (int)WriteResult,
+                      (int)DataLength, (int)FileIndex, FileStatus->FileName);
+
+    DS_FileCloseDest(FileIndex);
+
+    FileStatus->FileState = DS_DISABLED;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Create destination file                                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void DS_FileCreateDest(uint32 FileIndex)
+{
+    DS_DestFileEntry_t *DestFile   = &DS_AppData.DestFileTblPtr->File[FileIndex];
+    DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+    int32               Result;
+    osal_id_t           LocalFileHandle = OS_OBJECT_ID_UNDEFINED;
+
+    /*
+    ** Create filename from "path + base + sequence count + extension"...
+    */
+    DS_FileCreateName(FileIndex);
+
+    if (FileStatus->FileName[0] != 0)
+    {
+        /*
+        ** Success - create a new destination file...
+        */
+        Result = OS_OpenCreate(&LocalFileHandle, FileStatus->FileName, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE,
+                               OS_READ_WRITE);
+
+        if (Result != OS_SUCCESS)
+        {
+            /*
+            ** Error - send event, disable destination and reset filename...
+            */
+            DS_AppData.FileWriteErrCounter++;
+
+            CFE_EVS_SendEvent(DS_CREATE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "FILE CREATE error: result = %d, dest = %d, name = '%s'", (int)Result, (int)FileIndex,
+                              FileStatus->FileName);
+
+            memset(FileStatus->FileName, 0, sizeof(FileStatus->FileName));
+
+            /*
+            ** Something needs to get fixed before we try again...
+            */
+            FileStatus->FileState = DS_DISABLED;
+        }
+        else
+        {
+            /*
+            ** Success - store the file handle...
+            */
+            DS_AppData.FileWriteCounter++;
+
+            FileStatus->FileHandle = LocalFileHandle;
+
+            /*
+            ** Initialize and write config specific file header...
+            */
+            DS_FileWriteHeader(FileIndex);
+
+            /*
+            ** Update sequence count if have one and write successful...
+            */
+            if (OS_ObjectIdDefined(FileStatus->FileHandle) && (DestFile->FileNameType == DS_BY_COUNT))
+            {
+                FileStatus->FileCount++;
+                if (FileStatus->FileCount > DS_MAX_SEQUENCE_COUNT)
+                {
+                    FileStatus->FileCount = DestFile->SequenceCount;
+                }
+
+                /*
+                ** Update Critical Data Store (CDS)...
+                */
+                DS_TableUpdateCDS();
+            }
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Create destination filename                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void DS_FileCreateName(uint32 FileIndex)
+{
+    DS_DestFileEntry_t *DestFile    = &DS_AppData.DestFileTblPtr->File[FileIndex];
+    DS_AppFileStatus_t *FileStatus  = &DS_AppData.FileStatus[FileIndex];
+    int32               TotalLength = 0;
+
+    char Workname[2 * DS_TOTAL_FNAME_BUFSIZE];
+    char Sequence[DS_TOTAL_FNAME_BUFSIZE];
+
+    /* Copy in path */
+    CFE_SB_MessageStringGet(Workname, DestFile->Pathname, NULL, sizeof(Workname), sizeof(DestFile->Pathname));
+    TotalLength = strlen(Workname);
+
+    if (TotalLength > 0)
+    {
+        /* Add separator if needed */
+        if (Workname[TotalLength - 1] != DS_PATH_SEPARATOR)
+        {
+            /* There's always space since Workname is twice the size of Pathname */
+            Workname[TotalLength++] = DS_PATH_SEPARATOR;
+        }
+
+        /* Add base name */
+        CFE_SB_MessageStringGet(&Workname[TotalLength], DestFile->Basename, NULL, sizeof(Workname) - TotalLength,
+                                sizeof(DestFile->Basename));
+        TotalLength = strlen(Workname);
+
+        /* Create the sequence portion of the filename */
+        DS_FileCreateSequence(Sequence, DestFile->FileNameType, FileStatus->FileCount);
+
+        /* Sequence is always null terminated so can use strncat */
+        strncat(&Workname[TotalLength], Sequence, sizeof(Workname) - TotalLength - 1);
+        TotalLength = strlen(Workname);
+
+        /* Only add extension if not empty */
+        if (DestFile->Extension[0] != '\0')
+        {
+            /* Add a "." character (if needed) before appending the extension */
+            if (DestFile->Extension[0] != '.')
+            {
+                strncat(Workname, ".", sizeof(Workname) - strlen(Workname) - 1);
+                TotalLength++;
+            }
+
+            /* Append the extension portion to the path/base+sequence portion */
+            CFE_SB_MessageStringGet(&Workname[TotalLength], DestFile->Extension, NULL, sizeof(Workname) - TotalLength,
+                                    sizeof(DestFile->Extension));
+        }
+
+        /* Confirm working name fits */
+        if (strlen(Workname) < DS_TOTAL_FNAME_BUFSIZE)
+        {
+            /* Success - copy workname to filename buffer */
+            strcpy(FileStatus->FileName, Workname);
+        }
+        else
+        {
+            /* Error - send event and disable destination */
+            CFE_EVS_SendEvent(DS_FILE_NAME_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "FILE NAME error: dest = %d, path = '%s', base = '%s', seq = '%s', ext = '%s'",
+                              (int)FileIndex, DestFile->Pathname, DestFile->Basename, Sequence, DestFile->Extension);
+            DS_AppData.FileStatus[FileIndex].FileState = DS_DISABLED;
+        }
+    }
+    else
+    {
+        /* Send event and disable for invalid path */
+        CFE_EVS_SendEvent(DS_FILE_CREATE_EMPTY_PATH_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "FILE NAME error: Path empty. dest = %d, path = '%s'", (int)FileIndex, DestFile->Pathname);
+        DS_AppData.FileStatus[FileIndex].FileState = DS_DISABLED;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set text from count or time                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count)
+{
+    CFE_TIME_SysTime_t TimeToPrint;
+
+    uint32 SequenceCount = 0;
+    uint32 NumericDigit  = 0;
+
+    int32 BufferIndex = 0;
+
+    /*
+    ** Build the sequence portion of the filename (time or count)...
+    */
+    if (Type == DS_BY_COUNT)
+    {
+        /*
+        ** Get copy of sequence count that can be modified...
+        */
+        SequenceCount = Count;
+
+        /*
+        ** Extract each digit (least significant digit first)...
+        */
+        for (BufferIndex = DS_SEQUENCE_DIGITS - 1; BufferIndex >= 0; BufferIndex--)
+        {
+            /*
+            ** Extract this digit and prepare for next digit...
+            */
+            NumericDigit  = SequenceCount % 10;
+            SequenceCount = SequenceCount / 10;
+
+            /*
+            ** Store this digit as ASCII in sequence string buffer...
+            */
+            Buffer[BufferIndex] = '0' + NumericDigit;
+        }
+
+        /*
+        ** Add string terminator...
+        */
+        Buffer[DS_SEQUENCE_DIGITS] = '\0';
+    }
+    else if (Type == DS_BY_TIME)
+    {
+        /*
+        ** Filename is based on seconds from current time...
+        */
+        TimeToPrint = CFE_TIME_GetTime();
+
+        /*
+        ** Convert time value to cFE format text string...
+        */
+        CFE_TIME_Print(Buffer, TimeToPrint);
+
+/*
+** cFE time string has format: "YYYY-DDD-HH:MM:SS.sssss"...
+*/
+#define CFE_YYYY_INDEX 0
+#define CFE_DDD_INDEX  5
+#define CFE_HH_INDEX   9
+#define CFE_MM_INDEX   12
+#define CFE_SS_INDEX   15
+#define CFE_ssss_INDEX 18
+
+/*
+** DS time string has format: "YYYYDDDHHMMSS"...
+*/
+#define DS_YYYY_INDEX 0
+#define DS_DDD_INDEX  4
+#define DS_HH_INDEX   7
+#define DS_MM_INDEX   9
+#define DS_SS_INDEX   11
+#define DS_TERM_INDEX 13
+
+        /*
+        ** Convert cFE time string to DS time string by moving
+        **  the cFE chars to the left to remove extra stuff...
+        */
+
+        /*
+        ** Step 1: Leave "year" (YYYY) alone - it is already OK...
+        */
+
+        /*
+        ** Step 2: Move "day of year" (DDD) next to (YYYY)...
+        */
+        Buffer[DS_DDD_INDEX + 0] = Buffer[CFE_DDD_INDEX + 0];
+        Buffer[DS_DDD_INDEX + 1] = Buffer[CFE_DDD_INDEX + 1];
+        Buffer[DS_DDD_INDEX + 2] = Buffer[CFE_DDD_INDEX + 2];
+
+        /*
+        ** Step 3: Move "hour of day" (HH) next to (DDD)...
+        */
+        Buffer[DS_HH_INDEX + 0] = Buffer[CFE_HH_INDEX + 0];
+        Buffer[DS_HH_INDEX + 1] = Buffer[CFE_HH_INDEX + 1];
+
+        /*
+        ** Step 4: Move "minutes" (MM) next to (HH)...
+        */
+        Buffer[DS_MM_INDEX + 0] = Buffer[CFE_MM_INDEX + 0];
+        Buffer[DS_MM_INDEX + 1] = Buffer[CFE_MM_INDEX + 1];
+
+        /*
+        ** Step 5: Move "seconds" (SS) next to (MM)...
+        */
+        Buffer[DS_SS_INDEX + 0] = Buffer[CFE_SS_INDEX + 0];
+        Buffer[DS_SS_INDEX + 1] = Buffer[CFE_SS_INDEX + 1];
+
+        /*
+        ** Step 6: Skip "subsecs" (ssss) - not in DS format...
+        */
+
+        /*
+        ** Step 7: Add string terminator...
+        */
+        Buffer[DS_TERM_INDEX] = '\0';
+    }
+    else
+    {
+        /*
+        ** Bad filename type, init buffer as empty...
+        */
+        Buffer[0] = '\0';
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Update destination file header                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileUpdateHeader(int32 FileIndex)
+{
+    if (DS_FILE_HEADER_TYPE == DS_FILE_HEADER_CFE)
+    {
+        /*
+        ** Update CFE specific header fields...
+        */
+        DS_AppFileStatus_t *FileStatus  = &DS_AppData.FileStatus[FileIndex];
+        CFE_TIME_SysTime_t  CurrentTime = CFE_TIME_GetTime();
+        int32               Result;
+
+        Result = OS_lseek(FileStatus->FileHandle, sizeof(CFE_FS_Header_t), OS_SEEK_SET);
+
+        if (Result == sizeof(CFE_FS_Header_t))
+        {
+            /* update file close time */
+            Result = OS_write(FileStatus->FileHandle, &CurrentTime, sizeof(CFE_TIME_SysTime_t));
+
+            if (Result == sizeof(CFE_TIME_SysTime_t))
+            {
+                DS_AppData.FileUpdateCounter++;
+            }
+            else
+            {
+                DS_AppData.FileUpdateErrCounter++;
+            }
+        }
+        else
+        {
+            DS_AppData.FileUpdateErrCounter++;
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Close destination file                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void DS_FileCloseDest(int32 FileIndex)
+{
+    DS_AppFileStatus_t *FileStatus = &DS_AppData.FileStatus[FileIndex];
+    int32               OS_result;
+    int32               PathLength;
+    char *              FileName;
+    char                PathName[DS_TOTAL_FNAME_BUFSIZE];
+
+    /*
+    ** First, close the file...
+    */
+    OS_close(FileStatus->FileHandle);
+
+    if (DS_AppData.EnableMoveFiles == DS_ENABLED)
+    {
+        /*
+        ** Move file only if table has a downlink directory name...
+        */
+        if (DS_AppData.DestFileTblPtr->File[FileIndex].Movename[0] != '\0')
+        {
+            /*
+            ** Make sure directory name does not end with slash character...
+            */
+            CFE_SB_MessageStringGet(PathName, DS_AppData.DestFileTblPtr->File[FileIndex].Movename, NULL,
+                                    sizeof(PathName), sizeof(DS_AppData.DestFileTblPtr->File[FileIndex].Movename));
+            PathLength = strlen(PathName);
+            if (PathName[PathLength - 1] == '/')
+            {
+                PathName[PathLength - 1] = '\0';
+                PathLength--;
+            }
+
+            /*
+            ** Get a pointer to slash character before the filename...
+            */
+            FileName = strrchr(FileStatus->FileName, '/');
+
+            if (FileName != NULL)
+            {
+                /*
+                ** Verify that directory name plus filename is not too large...
+                */
+                if ((PathLength + strlen(FileName)) < DS_TOTAL_FNAME_BUFSIZE)
+                {
+                    /*
+                    ** Append the filename (with slash) to the directory name...
+                    */
+                    strcat(PathName, FileName);
+
+                    /*
+                    ** Use OS function to move/rename the file...
+                    */
+                    OS_result = OS_mv(FileStatus->FileName, PathName);
+
+                    if (OS_result != OS_SUCCESS)
+                    {
+                        /*
+                        ** Error - send event but leave destination enabled...
+                        */
+                        CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                          "FILE MOVE error: src = '%s', tgt = '%s', result = %d", FileStatus->FileName,
+                                          PathName, (int)OS_result);
+                    }
+                }
+                else
+                {
+                    /*
+                    ** Error - send event but leave destination enabled...
+                    */
+                    CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "FILE MOVE error: dir name = '%s', filename = '%s'", PathName, FileName);
+                }
+            }
+            else
+            {
+                /*
+                ** Error - send event but leave destination enabled...
+                */
+                CFE_EVS_SendEvent(DS_MOVE_FILE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "FILE MOVE error: dir name = '%s', filename = 'NULL'", PathName);
+            }
+
+            /* Update the path name for reporting */
+            snprintf(FileStatus->FileName, sizeof(FileStatus->FileName), "%s", PathName);
+        }
+    }
+
+    /*
+    ** Transmit file information telemetry...
+    */
+    DS_FileTransmit(FileStatus);
+
+    /*
+    ** Reset status for this destination file...
+    */
+    FileStatus->FileHandle = OS_OBJECT_ID_UNDEFINED;
+    FileStatus->FileAge    = 0;
+    FileStatus->FileSize   = 0;
+
+    /*
+    ** Remove previous filename from status data...
+    */
+    memset(FileStatus->FileName, 0, sizeof(FileStatus->FileName));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* File age processor                                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void DS_FileTestAge(uint32 ElapsedSeconds)
+{
+    uint32 FileIndex = 0;
+
+    /*
+    ** Called from HK request command handler (elapsed = platform config)
+    */
+    if (DS_AppData.DestFileTblPtr != (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Cannot test file age without destination file table...
+        */
+        for (FileIndex = 0; FileIndex < DS_DEST_FILE_CNT; FileIndex++)
+        {
+            /*
+            ** Update age of open files...
+            */
+            if (OS_ObjectIdDefined(DS_AppData.FileStatus[FileIndex].FileHandle))
+            {
+                DS_AppData.FileStatus[FileIndex].FileAge += ElapsedSeconds;
+
+                if (DS_AppData.FileStatus[FileIndex].FileAge >= DS_AppData.DestFileTblPtr->File[FileIndex].MaxFileAge)
+                {
+                    /*
+                    ** Close files that exceed maximum file age...
+                    */
+                    DS_FileUpdateHeader(FileIndex);
+                    DS_FileCloseDest(FileIndex);
+                }
+            }
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Transmit file info                                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_FileTransmit(DS_AppFileStatus_t *FileStatus)
+{
+    DS_FileCompletePktBuf_t *PktBuf;
+    DS_FileInfo_t *          FileInfo;
+
+    /*
+    ** Get a Message block of memory and initialize it
+    */
+    PktBuf = (DS_FileCompletePktBuf_t *)CFE_SB_AllocateMessageBuffer(sizeof(*PktBuf));
+
+    /*
+    ** Process destination file info data...
+    */
+    if (PktBuf != NULL)
+    {
+        CFE_MSG_Init(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader), CFE_SB_ValueToMsgId(DS_COMP_TLM_MID), sizeof(*PktBuf));
+
+        FileInfo = &PktBuf->Pkt.Payload;
+
+        /*
+        ** Set file age and size...
+        */
+        FileInfo->FileAge  = FileStatus->FileAge;
+        FileInfo->FileSize = FileStatus->FileSize;
+        /*
+        ** Set file growth rate (computed when process last HK request)...
+        */
+        FileInfo->FileRate = FileStatus->FileRate;
+        /*
+        ** Set current filename sequence count...
+        */
+        FileInfo->SequenceCount = FileStatus->FileCount;
+        /*
+        ** Set file enable/disable state...
+        */
+        FileInfo->EnableState = FileStatus->FileState;
+        /*
+        ** Set file closed state...
+        */
+        FileInfo->OpenState = DS_CLOSED;
+        /*
+        ** Set current open filename...
+        */
+        snprintf(FileInfo->FileName, sizeof(FileInfo->FileName), "%s", FileStatus->FileName);
+
+        /*
+        ** Timestamp and send file info telemetry...
+        */
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(PktBuf->Pkt.TelemetryHeader));
+        CFE_SB_TransmitBuffer(&PktBuf->SBBuf, true);
+    }
+}
+```
+
+### `ds_file.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_file.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Data Storage (DS) file storage header file
+ */
+#ifndef DS_FILE_H
+#define DS_FILE_H
+
+#include "cfe.h"
+
+#include "ds_platform_cfg.h"
+#include "ds_app.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS file header definitions                                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief DS File Header (follows cFE file header at start of file)
+ */
+typedef struct
+{
+    uint32 CloseSeconds; /**< \brief Time when file was closed */
+    uint32 CloseSubsecs;
+
+    uint16 FileTableIndex; /**< \brief Destination file table index */
+    uint16 FileNameType;   /**< \brief Filename type - count vs time */
+
+    char FileName[DS_TOTAL_FNAME_BUFSIZE]; /**< \brief On-board filename */
+} DS_FileHeader_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Prototypes for functions defined in ds_file.c                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Data Storage packet processor
+ *
+ *  \par Description
+ *       This function searches for a packet filter table entry that
+ *       matches the input argument Message ID. If no matching packet
+ *       filter table entry is found, the packet referenced via the
+ *       Message Pointer is discarded (filtered). When a matching
+ *       packet table entry is found, each of the multiple filters
+ *       defined for the packet are tested by applying the common
+ *       CFS filter algorithm to the table defined filter parameters.
+ *       Packets that are passed by any filter continue with the
+ *       write process. Next step: prepare to write data to a file.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MessageID Message ID
+ *  \param[in] BufPtr    Software Bus message pointer
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ */
+void DS_FileStorePacket(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Prepare to write to a data storage destination file
+ *
+ *  \par Description
+ *       This function is called for packets that have passed the
+ *       common CFS filter algorithm. The function first queries the
+ *       packet length and determines whether writing the packet to
+ *       an existing data storage file would exceed the max file size
+ *       limit. If so, the existing destination file header is updated
+ *       and the file is closed. Then the function determines whether
+ *       a new file needs to be opened and if so, creates the file.
+ *       Files may be closed due to size or by command, and files may
+ *       have not yet been created because this is the first packet
+ *       destined for that file. Next step: write data to file.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex Destination file index
+ *  \param[in] BufPtr    Software Bus message pointer
+ *
+ *  \sa #DS_AppFileStatus_t, #DS_DestFileEntry_t
+ */
+void DS_FileSetupWrite(int32 FileIndex, const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ *  \brief Write data (packet) to file
+ *
+ *  \par Description
+ *       This function writes data to an existing data storage
+ *       destination file and updates the associated data rate
+ *       counters. If necessary, the function will invoke a
+ *       file write error handler.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex  Destination file index
+ *  \param[in] FileData   Pointer to packet data
+ *  \param[in] DataLength Length of packet data
+ *
+ *  \sa #DS_AppFileStatus_t, #DS_DestFileEntry_t
+ */
+void DS_FileWriteData(int32 FileIndex, const void *FileData, uint32 DataLength);
+
+/**
+ *  \brief Write data storage file header
+ *
+ *  \par Description
+ *       This function is called just after opening a new data storage
+ *       destination file. The purpose of the function is to write
+ *       a file header and initialize those elements in the file
+ *       header that can be known in advance, such as the filename
+ *       or file type.  Any seek or write errors will result in the
+ *       execution of the common file write error handler.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex Destination file index
+ *
+ *  \sa #DS_FileUpdateHeader
+ */
+void DS_FileWriteHeader(int32 FileIndex);
+
+/**
+ *  \brief File write error handler
+ *
+ *  \par Description
+ *       This function is called upon detection of a file I/O error
+ *       that occurred while writing to a data storage destination
+ *       file. The function sends an event describing the error,
+ *       closes the file and disables the destination. If DS tables
+ *       have been defined as "critical", the version of the table
+ *       in the Critical Data Store (CDS) will be updated to reflect
+ *       the change in enable/disable state for the destination.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex   Destination file index
+ *  \param[in] DataLength  Length of data being written to file
+ *  \param[in] WriteResult Result of file write
+ */
+void DS_FileWriteError(uint32 FileIndex, uint32 DataLength, int32 WriteResult);
+
+/**
+ *  \brief Create a new data storage destination file
+ *
+ *  \par Description
+ *       This function is called when a packet has passed the filter
+ *       test and the destination file does not exist. The file may
+ *       not yet have been created - if this is the first packet for
+ *       this destination to pass the filter test - or the previous
+ *       file may have been closed by command or file size/age test.
+ *       Note that destination files are not created until there is
+ *       a packet ready to be written.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex Destination file index
+ */
+void DS_FileCreateDest(uint32 FileIndex);
+
+/**
+ *  \brief Construct the next filename for a destination file
+ *
+ *  \par Description
+ *       The filename is constructed using data from the Destination
+ *       File Table.  First, the pathname and basename fields from
+ *       the table are combined. Then, based on the filename type
+ *       from the table, a sequence string is created and appended
+ *       to the filename. Finally, the file extension from the table
+ *       is appended to complete the filename.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex Destination file index
+ *
+ *  \sa #DS_DestFileEntry_t
+ */
+void DS_FileCreateName(uint32 FileIndex);
+
+/**
+ *  \brief Construct the sequence portion of a filename
+ *
+ *  \par Description
+ *       The filename sequence string will be constructed to contain
+ *       either the current date and time, or a file sequence count
+ *       value. If the filename type is "time" then the sequence
+ *       string will have the format "YYYYDDDHHMMSS". Or, if the
+ *       filename type is "count" then the sequence string will be
+ *       a fixed number of text digits, where the string length is a
+ *       platform defined value.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] Buffer Pointer to buffer for sequence portion of filename
+ *  \param[in] Type   Filename type (date and time vs sequence count)
+ *  \param[in] Count  Sequence counter (used only if type is sequence)
+ *
+ *  \sa #DS_DestFileEntry_t
+ */
+void DS_FileCreateSequence(char *Buffer, uint32 Type, uint32 Count);
+
+/**
+ *  \brief Update destination file header (prior to closing)
+ *
+ *  \par Description
+ *       This function is called just before closing a data storage
+ *       destination file. The purpose of the function is to update
+ *       portions of the file header that cannot be known in advance,
+ *       such as the file size or the file close time.  During the
+ *       update process, seek and write errors are counted but
+ *       otherwise ignored as the file is about to be closed.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex Destination file index
+ *
+ *  \sa #DS_FileWriteHeader
+ */
+void DS_FileUpdateHeader(int32 FileIndex);
+
+/**
+ *  \brief Close selected destination file
+ *
+ *  \par Description
+ *       This function may be called from the DS Close File command
+ *       handler, from the file age processor, from the file size
+ *       processor and from the file write error handler.
+ *       The function closes the selected destination file and updates
+ *       the file status data to indicate that the file handle is not
+ *       in use and that the file age, size and name fields are reset.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileIndex Destination file index
+ */
+void DS_FileCloseDest(int32 FileIndex);
+
+/**
+ *  \brief File age processor
+ *
+ *  \par Description
+ *       This function is called upon receipt of the DS 1Hz command
+ *       (if defined) or upon receipt of the DS housekeeping request
+ *       command (if the 1Hz cmd is not defined).
+ *       The function increments the elapsed file age for all open
+ *       data storage files by the amount specified.
+ *       Files that exceed the age limit set in the destination file
+ *       definition table will be closed.
+ *       If this destination remains enabled, another file will be
+ *       opened when the next packet is written to this destination.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] ElapsedSeconds Elapsed seconds since previous call
+ */
+void DS_FileTestAge(uint32 ElapsedSeconds);
+
+/**
+ *  \brief Transmit file information telemetry handler
+ *
+ *  \par Description
+ *       Create and send a telemetry packet containing the current
+ *       status for a closed destination file.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileStatus Current state of destination file
+ *
+ *  \sa #DS_FileCompletePktBuf_t
+ */
+void DS_FileTransmit(DS_AppFileStatus_t *FileStatus);
+
+/**
+ * \brief Determine whether Software Bus message packet is filtered
+ *
+ *  \par Description
+ *       This routine will apply the DS filter algorithm to the packet
+ *       to determine whether the packet should be filtered.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] MessagePtr  Pointer to a Software Bus message packet
+ *  \param[in] FilterType  Packet sequence count (1) or timestamp (2)
+ *  \param[in] Algorithm_N Algorithm parameter N "pass this many"
+ *  \param[in] Algorithm_X Algorithm parameter X "out of this many"
+ *  \param[in] Algorithm_O Algorithm parameter O "at this offset"
+ *
+ *  \return Boolean packet filtered response
+ *  \retval true  The packet should be filtered (not used)
+ *  \retval false The packet should not be filtered (used)
+ */
+int32 DS_IsPacketFiltered(CFE_MSG_Message_t *MessagePtr, uint16 FilterType, uint16 Algorithm_N, uint16 Algorithm_X,
+                         uint16 Algorithm_O);
+
+#endif
+```
+
+### `ds_table.c`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_table.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) table management functions
+ */
+
+#include "cfe.h"
+
+#include "ds_msgids.h"
+
+#include "ds_platform_cfg.h"
+#include "ds_verify.h"
+
+#include "ds_appdefs.h"
+
+#include "ds_app.h"
+#include "ds_table.h"
+#include "ds_msg.h"
+#include "ds_events.h"
+
+#define DS_CDS_NAME "DS_CDS"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS application table initialization                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t DS_TableInit(void)
+{
+    CFE_Status_t Result1;
+    CFE_Status_t Result2;
+    int32         NeedToLoadDestTable   = false;
+    int32         NeedToLoadFilterTable = false;
+    uint16       TableRegisterFlags    = CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP;
+
+    if (DS_MAKE_TABLES_CRITICAL == 1)
+    {
+        TableRegisterFlags |= CFE_TBL_OPT_CRITICAL;
+    }
+
+    /*
+    ** If registration fails for either table then the DS app will
+    **   terminate immediately. Without valid table handles, the DS
+    **   app will never be able to load table data.
+    **
+    ** However, as long as both tables were successfully registered,
+    **   it doesn't matter that one or both table loads fail.  The
+    **   DS app can still continue - or at least the DS app can limp
+    **   along until an external influence (ground or RTS) can manage
+    **   to get both tables loaded.
+    */
+    Result1 = CFE_TBL_Register(&DS_AppData.DestFileTblHandle, DS_DESTINATION_TBL_NAME, sizeof(DS_DestFileTable_t),
+                               TableRegisterFlags, (CFE_TBL_CallbackFuncPtr_t)DS_TableVerifyDestFile);
+
+    if (Result1 == CFE_TBL_INFO_RECOVERED_TBL)
+    {
+        /*
+        ** cFE registered the table and restored the table data
+        */
+        NeedToLoadDestTable = false;
+
+        CFE_EVS_SendEvent(DS_INIT_TBL_CDS_EID, CFE_EVS_EventType_DEBUG,
+                          "Destination File Table data restored from CDS");
+        /*
+        ** This is not an error so clear the result value for later tests
+        */
+        Result1 = CFE_SUCCESS;
+    }
+    else if (Result1 == CFE_SUCCESS)
+    {
+        /*
+        ** cFE registered the table - we need to load the table data
+        */
+        NeedToLoadDestTable = true;
+    }
+    else
+    {
+        /*
+        ** cFE did not register the table - we cannot continue
+        */
+        CFE_EVS_SendEvent(DS_INIT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to register Destination File Table: Error = 0x%08X", (unsigned int)Result1);
+    }
+
+    if (Result1 == CFE_SUCCESS)
+    {
+        Result1 = CFE_TBL_Register(&DS_AppData.FilterTblHandle, DS_FILTER_TBL_NAME, sizeof(DS_FilterTable_t),
+                                   TableRegisterFlags, (CFE_TBL_CallbackFuncPtr_t)DS_TableVerifyFilter);
+
+        if (Result1 == CFE_TBL_INFO_RECOVERED_TBL)
+        {
+            /*
+            ** cFE registered the table and restored the table data
+            */
+            NeedToLoadFilterTable = false;
+
+            CFE_EVS_SendEvent(DS_INIT_TBL_CDS_EID, CFE_EVS_EventType_DEBUG, "Filter Table data restored from CDS");
+            /*
+            ** This is not an error so clear the result value for later tests
+            */
+            Result1 = CFE_SUCCESS;
+        }
+        else if (Result1 == CFE_SUCCESS)
+        {
+            /*
+            ** cFE registered the table - we need to load the table data
+            */
+            NeedToLoadFilterTable = true;
+        }
+        else
+        {
+            /*
+            ** cFE did not register the table - we cannot continue
+            */
+            CFE_EVS_SendEvent(DS_INIT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Unable to register Filter Table: Error = 0x%08X", (unsigned int)Result1);
+        }
+    }
+
+    /*
+    ** Now load the tables - but only if the registration succeeded
+    **   and the table data has not already been restored from the
+    **   Critical Data Store.
+    */
+    if (Result1 == CFE_SUCCESS)
+    {
+        if (NeedToLoadDestTable)
+        {
+            Result2 = CFE_TBL_Load(DS_AppData.DestFileTblHandle, CFE_TBL_SRC_FILE, DS_DEF_DEST_FILENAME);
+
+            if (Result2 != CFE_SUCCESS)
+            {
+                CFE_EVS_SendEvent(DS_INIT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Unable to load default Destination File Table: Filename = '%s', Error = 0x%08X",
+                                  DS_DEF_DEST_FILENAME, (unsigned int)Result2);
+            }
+        }
+
+        if (NeedToLoadFilterTable)
+        {
+            Result2 = CFE_TBL_Load(DS_AppData.FilterTblHandle, CFE_TBL_SRC_FILE, DS_DEF_FILTER_FILENAME);
+
+            if (Result2 != CFE_SUCCESS)
+            {
+                CFE_EVS_SendEvent(DS_INIT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Unable to load default Filter Table: Filename = '%s', Error = 0x%08X",
+                                  DS_DEF_FILTER_FILENAME, (unsigned int)Result2);
+            }
+        }
+
+        /*
+        ** Get initial table data pointers...
+        */
+        DS_TableManageDestFile();
+        DS_TableManageFilter();
+    }
+
+    return Result1;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Manage table data updates                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_TableManageDestFile(void)
+{
+    int32        i = 0;
+    CFE_Status_t Result;
+
+    /*
+    ** Pointer will be NULL until first successful table load...
+    */
+    if (DS_AppData.DestFileTblPtr == (DS_DestFileTable_t *)NULL)
+    {
+        /*
+        ** Still waiting for the first table load...
+        */
+        CFE_TBL_ReleaseAddress(DS_AppData.DestFileTblHandle);
+        CFE_TBL_Manage(DS_AppData.DestFileTblHandle);
+        Result = CFE_TBL_GetAddress((void *)&DS_AppData.DestFileTblPtr, DS_AppData.DestFileTblHandle);
+
+        if (Result == CFE_TBL_INFO_UPDATED)
+        {
+            /*
+            ** Got a pointer to initial table data...
+            */
+            DS_AppData.DestTblLoadCounter++;
+
+            /*
+            ** Keep local copies of table values that software will modify...
+            */
+            for (i = 0; i < DS_DEST_FILE_CNT; i++)
+            {
+                DS_AppData.FileStatus[i].FileState = DS_AppData.DestFileTblPtr->File[i].EnableState;
+                DS_AppData.FileStatus[i].FileCount = DS_AppData.DestFileTblPtr->File[i].SequenceCount;
+            }
+
+            /*
+            ** Store local values in the Critical Data Store (CDS)...
+            */
+            DS_TableUpdateCDS();
+        }
+        else if (Result == CFE_TBL_ERR_NEVER_LOADED)
+        {
+            /*
+            ** Still waiting for the first table load...
+            */
+            DS_AppData.DestTblErrCounter++;
+
+            /*
+            ** Make sure we don't try to use the empty table buffer...
+            */
+            DS_AppData.DestFileTblPtr = (DS_DestFileTable_t *)NULL;
+        }
+    }
+    else
+    {
+        /*
+        ** Already have initial table data...
+        */
+        Result = CFE_TBL_GetStatus(DS_AppData.DestFileTblHandle);
+
+        if (Result == CFE_TBL_INFO_DUMP_PENDING)
+        {
+            /*
+            ** Dump the current table data...
+            */
+            CFE_TBL_DumpToBuffer(DS_AppData.DestFileTblHandle);
+        }
+        else if (Result == CFE_TBL_INFO_VALIDATION_PENDING)
+        {
+            /*
+            ** Validate the pending table data...
+            */
+            CFE_TBL_Validate(DS_AppData.DestFileTblHandle);
+        }
+        else if (Result == CFE_TBL_INFO_UPDATE_PENDING)
+        {
+            /*
+            ** Update the current table with new data...
+            */
+            DS_AppData.DestTblLoadCounter++;
+
+            /*
+            ** Allow cFE to update the table data...
+            */
+            CFE_TBL_ReleaseAddress(DS_AppData.DestFileTblHandle);
+            CFE_TBL_Update(DS_AppData.DestFileTblHandle);
+            CFE_TBL_GetAddress((void *)&DS_AppData.DestFileTblPtr, DS_AppData.DestFileTblHandle);
+            /*
+            ** Keep local copies of table values that software will modify...
+            */
+            for (i = 0; i < DS_DEST_FILE_CNT; i++)
+            {
+                DS_AppData.FileStatus[i].FileState = DS_AppData.DestFileTblPtr->File[i].EnableState;
+                DS_AppData.FileStatus[i].FileCount = DS_AppData.DestFileTblPtr->File[i].SequenceCount;
+            }
+
+            /*
+            ** Store local values in the Critical Data Store (CDS)...
+            */
+            DS_TableUpdateCDS();
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Manage table data updates                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_TableManageFilter(void)
+{
+    CFE_Status_t Result;
+
+    /*
+    ** Pointer will be NULL until first successful filter table load...
+    */
+    if (DS_AppData.FilterTblPtr == (DS_FilterTable_t *)NULL)
+    {
+        /*
+        ** Still waiting for the first filter table load...
+        */
+        CFE_TBL_ReleaseAddress(DS_AppData.FilterTblHandle);
+        CFE_TBL_Manage(DS_AppData.FilterTblHandle);
+        Result = CFE_TBL_GetAddress((void *)&DS_AppData.FilterTblPtr, DS_AppData.FilterTblHandle);
+
+        if (Result == CFE_TBL_INFO_UPDATED)
+        {
+            /*
+            ** Got a pointer to initial filter table data...
+            */
+            DS_AppData.FilterTblLoadCounter++;
+
+            /*
+            ** Subscribe to the packets in the new filter table...
+            */
+            DS_TableSubscribe();
+
+            /*
+            ** Create hash table for messageID's in new filter table...
+            */
+            DS_TableCreateHash();
+        }
+        else if (Result == CFE_TBL_ERR_NEVER_LOADED)
+        {
+            /*
+            ** Still waiting for the first filter table load...
+            */
+            DS_AppData.FilterTblErrCounter++;
+
+            /*
+            ** Make sure we don't try to use the empty table buffer...
+            */
+            DS_AppData.FilterTblPtr = (DS_FilterTable_t *)NULL;
+        }
+    }
+    else
+    {
+        /*
+        ** Already have initial filter table data...
+        */
+        Result = CFE_TBL_GetStatus(DS_AppData.FilterTblHandle);
+
+        if (Result == CFE_TBL_INFO_DUMP_PENDING)
+        {
+            /*
+            ** Dump the current filter table data...
+            */
+            CFE_TBL_DumpToBuffer(DS_AppData.FilterTblHandle);
+        }
+        else if (Result == CFE_TBL_INFO_VALIDATION_PENDING)
+        {
+            /*
+            ** Validate the pending filter table data...
+            */
+            CFE_TBL_Validate(DS_AppData.FilterTblHandle);
+        }
+        else if (Result == CFE_TBL_INFO_UPDATE_PENDING)
+        {
+            /*
+            ** Update the current filter table with new data...
+            */
+            DS_AppData.FilterTblLoadCounter++;
+
+            /*
+            ** Un-subscribe to the packets in the old filter table...
+            */
+            DS_TableUnsubscribe();
+
+            /*
+            ** Allow cFE to update the filter table data...
+            */
+            CFE_TBL_ReleaseAddress(DS_AppData.FilterTblHandle);
+            CFE_TBL_Update(DS_AppData.FilterTblHandle);
+            CFE_TBL_GetAddress((void *)&DS_AppData.FilterTblPtr, DS_AppData.FilterTblHandle);
+            /*
+            ** Subscribe to the packets in the new filter table...
+            */
+            DS_TableSubscribe();
+
+            /*
+            ** Create hash table for messageID's in new filter table...
+            */
+            DS_TableCreateHash();
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Validate table data                                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t DS_TableVerifyDestFile(const void *TableData)
+{
+    DS_DestFileTable_t *DestFileTable = (DS_DestFileTable_t *)TableData;
+    CFE_Status_t        Result        = CFE_SUCCESS;
+    int32               i             = 0;
+
+    int32 CountGood   = 0;
+    int32 CountBad    = 0;
+    int32 CountUnused = 0;
+
+    /*
+    ** Each entry in table will be unused, good or bad
+    */
+    for (i = 0; i < DS_DEST_FILE_CNT; i++)
+    {
+        if (DS_TableEntryUnused(&DestFileTable->File[i], sizeof(DS_DestFileEntry_t)) == true)
+        {
+            CountUnused++;
+        }
+        else if (DS_TableVerifyDestFileEntry(&DestFileTable->File[i], (uint8)i, CountBad) == true)
+        {
+            CountGood++;
+        }
+        else
+        {
+            CountBad++;
+            Result = DS_TABLE_VERIFY_ERR;
+        }
+    }
+
+    /*
+    ** Note that totals include each table entry plus the descriptor
+    */
+    CFE_EVS_SendEvent(DS_FIL_TBL_EID, CFE_EVS_EventType_INFORMATION,
+                      "Destination file table verify results: good entries = %d, bad = %d, unused = %d", (int)CountGood,
+                      (int)CountBad, (int)CountUnused);
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify dest table entry                                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableIndex, int32 ErrorCount)
+{
+    const char *CommonErrorText = "Destination file table verify err:";
+    int32        Result          = true;
+
+    /*
+    ** Perform the following "per table entry" validation:
+    **
+    **  FileNameType = DS_BY_COUNT or DS_BY_TIME
+    **  EnableState  = DS_ENABLED or DS_DISABLED
+    **
+    **  MaxFileSize   = cannot be less than DS_FILE_MIN_SIZE_LIMIT
+    **  MaxFileAge    = cannot be less than DS_FILE_MIN_AGE_LIMIT
+    **  SequenceCount = may be zero, cannot exceed DS_MAX_SEQUENCE_COUNT
+    */
+    if (DS_TableVerifyType(DestFileEntry->FileNameType) == false)
+    {
+        if (ErrorCount == 0)
+        {
+            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, filename type = %d",
+                              CommonErrorText, TableIndex, DestFileEntry->FileNameType);
+        }
+        Result = false;
+    }
+    else if (DS_TableVerifyState(DestFileEntry->EnableState) == false)
+    {
+        if (ErrorCount == 0)
+        {
+            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, file enable state = %d",
+                              CommonErrorText, TableIndex, DestFileEntry->EnableState);
+        }
+        Result = false;
+    }
+    else if (DS_TableVerifySize(DestFileEntry->MaxFileSize) == false)
+    {
+        if (ErrorCount == 0)
+        {
+            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, max file size = %d",
+                              CommonErrorText, (int)TableIndex, (int)DestFileEntry->MaxFileSize);
+        }
+        Result = false;
+    }
+    else if (DS_TableVerifyAge(DestFileEntry->MaxFileAge) == false)
+    {
+        if (ErrorCount == 0)
+        {
+            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, max file age = %d",
+                              CommonErrorText, (int)TableIndex, (int)DestFileEntry->MaxFileAge);
+        }
+        Result = false;
+    }
+    else if (DS_TableVerifyCount(DestFileEntry->SequenceCount) == false)
+    {
+        if (ErrorCount == 0)
+        {
+            CFE_EVS_SendEvent(DS_FIL_TBL_ERR_EID, CFE_EVS_EventType_ERROR, "%s index = %d, sequence count = %d",
+                              CommonErrorText, (int)TableIndex, (int)DestFileEntry->SequenceCount);
+        }
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Validate table data                                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t DS_TableVerifyFilter(const void *TableData)
+{
+    DS_FilterTable_t *FilterTable = (DS_FilterTable_t *)TableData;
+    CFE_Status_t      Result      = CFE_SUCCESS;
+    int32             i           = 0;
+
+    int32 CountGood   = 0;
+    int32 CountBad    = 0;
+    int32 CountUnused = 0;
+
+    /*
+    ** Perform the following validation:
+    **
+    **   MessageID = unlimited, zero means unused
+    */
+
+    /*
+    ** Each entry in table will be unused, good or bad
+    */
+    for (i = 0; i < DS_PACKETS_IN_FILTER_TABLE; i++)
+    {
+        if (!CFE_SB_IsValidMsgId(FilterTable->Packet[i].MessageID))
+        {
+            CountUnused++;
+        }
+        else if (DS_TableVerifyFilterEntry(&FilterTable->Packet[i], (uint8)i, CountBad) == true)
+        {
+            CountGood++;
+        }
+        else
+        {
+            CountBad++;
+            Result = DS_TABLE_VERIFY_ERR;
+        }
+    }
+
+    /*
+    ** Note that totals include each table entry plus the descriptor
+    */
+    CFE_EVS_SendEvent(DS_FLT_TBL_EID, CFE_EVS_EventType_INFORMATION,
+                      "Filter table verify results: good entries = %d, bad = %d, unused = %d", (int)CountGood,
+                      (int)CountBad, (int)CountUnused);
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify filter table entry                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount)
+{
+    const char *      CommonErrorText = "Filter table verify err:";
+    DS_FilterParms_t *FilterParms;
+    int32              Result = true;
+    int32             i      = 0;
+
+    /*
+    ** Each packet filter table entry has multiple filters per packet
+    **
+    ** Perform the following validation (per filter):
+    **
+    **   FileTableIndex = must be less than DS_DEST_FILE_CNT
+    **   FilterType = must be DS_BY_COUNT or DS_BY_TIME
+    **
+    **   Algorithm_N = cannot exceed Algorithm_X, zero means filter ALL
+    **   Algorithm_X = unlimited
+    **   Algorithm_O = must be less than Algorithm_X
+    **
+    **   Note: unused filters (all zero's) are valid
+    */
+    for (i = 0; (i < DS_FILTERS_PER_PACKET) && (Result == true); i++)
+    {
+        FilterParms = &PacketEntry->Filter[i];
+
+        if (DS_TableEntryUnused(FilterParms, sizeof(DS_FilterParms_t)) == false)
+        {
+            /*
+            ** If any filter field is non-zero then all filter fields must be valid
+            */
+            if (DS_TableVerifyFileIndex((uint32)FilterParms->FileTableIndex) == false)
+            {
+                if (ErrorCount == 0)
+                {
+                    CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, file table index = %d",
+                                      CommonErrorText, (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
+                                      (int)TableIndex, (int)i, FilterParms->FileTableIndex);
+                }
+                Result = false;
+            }
+            else if (DS_TableVerifyType((uint16)FilterParms->FilterType) == false)
+            {
+                if (ErrorCount == 0)
+                {
+                    CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, filter type = %d", CommonErrorText,
+                                      (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID), (int)TableIndex,
+                                      (int)i, FilterParms->FilterType);
+                }
+                Result = false;
+            }
+            else if (DS_TableVerifyParms(FilterParms->Algorithm_N, FilterParms->Algorithm_X,
+                                         FilterParms->Algorithm_O) == false)
+            {
+                if (ErrorCount == 0)
+                {
+                    CFE_EVS_SendEvent(DS_FLT_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "%s MID = 0x%08lX, index = %d, filter = %d, filter parms N = %d, X = %d, O = %d",
+                                      CommonErrorText, (unsigned long)CFE_SB_MsgIdToValue(PacketEntry->MessageID),
+                                      (int)TableIndex, (int)i, FilterParms->Algorithm_N, FilterParms->Algorithm_X,
+                                      FilterParms->Algorithm_O);
+                }
+                Result = false;
+            }
+        }
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Find unused table entries                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableEntryUnused(const void *TableEntry, int32 BufferSize)
+{
+    const char *Buffer = (char *)TableEntry;
+    int32        Result = true;
+    int32       i      = 0;
+
+    for (i = 0; i < BufferSize; i++)
+    {
+        if (Buffer[i] != DS_UNUSED)
+        {
+            Result = false;
+            break;
+        }
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify dest file index                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyFileIndex(uint16 FileTableIndex)
+{
+    int32 Result = true;
+
+    if (FileTableIndex >= DS_DEST_FILE_CNT)
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify algorithm parameters                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O)
+{
+    int32 Result = true;
+
+    /*
+    ** Unused entries (all zero's) are valid
+    */
+    if ((Algorithm_N != 0) || (Algorithm_X != 0) || (Algorithm_O != 0))
+    {
+        if (Algorithm_N > Algorithm_X)
+        {
+            /*
+            ** "pass this many" cannot exceed "out of this many"
+            */
+            Result = false;
+        }
+        else if (Algorithm_O >= Algorithm_X)
+        {
+            /*
+            ** "at this offset" must be less than "out of this many"
+            */
+            Result = false;
+        }
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify filter or filename type                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyType(uint16 TimeVsCount)
+{
+    int32 Result = true;
+
+    if ((TimeVsCount != DS_BY_COUNT) && (TimeVsCount != DS_BY_TIME))
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify file ena/dis state                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyState(uint16 EnableState)
+{
+    int32 Result = true;
+
+    if ((EnableState != DS_ENABLED) && (EnableState != DS_DISABLED))
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify file size limit                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifySize(uint32 MaxFileSize)
+{
+    int32 Result = true;
+
+    if (MaxFileSize < DS_FILE_MIN_SIZE_LIMIT)
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify file age limit                                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyAge(uint32 MaxFileAge)
+{
+    int32 Result = true;
+
+    if (MaxFileAge < DS_FILE_MIN_AGE_LIMIT)
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify sequence count                                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableVerifyCount(uint32 SequenceCount)
+{
+    int32 Result = true;
+
+    if (SequenceCount > DS_MAX_SEQUENCE_COUNT)
+    {
+        Result = false;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process new filter table                                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_TableSubscribe(void)
+{
+    DS_PacketEntry_t *FilterPackets = NULL;
+    CFE_SB_MsgId_t    MessageID;
+    int32             i;
+
+    FilterPackets = DS_AppData.FilterTblPtr->Packet;
+
+    /*
+    ** Check each entry in "new" packet filter table...
+    */
+    for (i = 0; i < DS_PACKETS_IN_FILTER_TABLE; i++)
+    {
+        MessageID = FilterPackets[i].MessageID;
+
+        /*
+        ** Already subscribe to DS command packets...
+        */
+        if (CFE_SB_IsValidMsgId(MessageID) && (CFE_SB_MsgIdToValue(MessageID) != DS_CMD_MID) &&
+            (CFE_SB_MsgIdToValue(MessageID) != DS_SEND_HK_MID))
+        {
+            CFE_SB_SubscribeEx(MessageID, DS_AppData.CmdPipe, CFE_SB_DEFAULT_QOS, DS_PER_PACKET_PIPE_LIMIT);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process old filter table                                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_TableUnsubscribe(void)
+{
+    DS_PacketEntry_t *FilterPackets = NULL;
+    CFE_SB_MsgId_t    MessageID;
+    int32             i;
+
+    FilterPackets = DS_AppData.FilterTblPtr->Packet;
+
+    /*
+    ** Check each entry in "old" packet filter table...
+    */
+    for (i = 0; i < DS_PACKETS_IN_FILTER_TABLE; i++)
+    {
+        MessageID = FilterPackets[i].MessageID;
+
+        /*
+        ** Do not un-subscribe to unused or DS command packets...
+        */
+        if (CFE_SB_IsValidMsgId(MessageID) && (CFE_SB_MsgIdToValue(MessageID) != DS_CMD_MID) &&
+            (CFE_SB_MsgIdToValue(MessageID) != DS_SEND_HK_MID))
+        {
+            CFE_SB_Unsubscribe(MessageID, DS_AppData.CmdPipe);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Create DS storage area in CDS                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t DS_TableCreateCDS(void)
+{
+    /* Store file sequence counts and task ena/dis state in CDS */
+    uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1] = {0};
+    CFE_Status_t Result;
+    int32        i = 0;
+
+    /*
+    ** Request for CDS area from cFE Executive Services...
+    */
+    Result = CFE_ES_RegisterCDS(&DS_AppData.DataStoreHandle, sizeof(DataStoreBuffer), DS_CDS_NAME);
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** New CDS area - write to Critical Data Store...
+        */
+        for (i = 0; i < DS_DEST_FILE_CNT; i++)
+        {
+            DataStoreBuffer[i] = DS_AppData.FileStatus[i].FileCount;
+        }
+
+        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.AppEnableState;
+
+        Result = CFE_ES_CopyToCDS(DS_AppData.DataStoreHandle, DataStoreBuffer);
+    }
+    else if (Result == CFE_ES_CDS_ALREADY_EXISTS)
+    {
+        /*
+        ** Pre-existing CDS area - read from Critical Data Store...
+        */
+        Result = CFE_ES_RestoreFromCDS(DataStoreBuffer, DS_AppData.DataStoreHandle);
+
+        if (Result == CFE_SUCCESS)
+        {
+            for (i = 0; i < DS_DEST_FILE_CNT; i++)
+            {
+                DS_AppData.FileStatus[i].FileCount = DataStoreBuffer[i];
+            }
+
+            if (DS_CDS_ENABLE_STATE == 1)
+            {
+                /* Only restore enable/disable state if configured */
+                DS_AppData.AppEnableState = (uint8)DataStoreBuffer[DS_DEST_FILE_CNT];
+            }
+        }
+    }
+
+    if (Result != CFE_SUCCESS)
+    {
+        /*
+        ** CDS is broken - prevent further errors...
+        */
+        DS_AppData.DataStoreHandle = CFE_ES_CDS_BAD_HANDLE;
+
+        CFE_EVS_SendEvent(DS_INIT_CDS_ERR_EID, CFE_EVS_EventType_ERROR, "Critical Data Store access error = 0x%08X",
+                          (unsigned int)Result);
+        /*
+        ** CDS errors are not fatal - DS can still run...
+        */
+        Result = CFE_SUCCESS;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Update DS storage area in CDS                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_TableUpdateCDS(void)
+{
+    /* Store file sequence counts and task ena/dis state in CDS */
+    uint32       DataStoreBuffer[DS_DEST_FILE_CNT + 1] = {0};
+    CFE_Status_t Result;
+    int32        i = 0;
+
+    /*
+    ** Handle is non-zero when CDS is active...
+    */
+    if (!CFE_RESOURCEID_TEST_EQUAL(DS_AppData.DataStoreHandle, CFE_ES_CDS_BAD_HANDLE))
+    {
+        /*
+        ** Copy file sequence counts values to the data array...
+        */
+        for (i = 0; i < DS_DEST_FILE_CNT; i++)
+        {
+            DataStoreBuffer[i] = DS_AppData.FileStatus[i].FileCount;
+        }
+
+        /*
+        ** Always save the DS enable/disable state in the CDS...
+        **  (DS_CDS_ENABLE_STATE controls restoring the state)
+        */
+        DataStoreBuffer[DS_DEST_FILE_CNT] = DS_AppData.AppEnableState;
+
+        /*
+        ** Update DS portion of Critical Data Store...
+        */
+        Result = CFE_ES_CopyToCDS(DS_AppData.DataStoreHandle, DataStoreBuffer);
+
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(DS_INIT_CDS_ERR_EID, CFE_EVS_EventType_ERROR, "Critical Data Store access error = 0x%08X",
+                              (unsigned int)Result);
+            /*
+            ** CDS is broken - prevent further errors...
+            */
+            DS_AppData.DataStoreHandle = CFE_ES_CDS_BAD_HANDLE;
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Convert messageID to hash table index                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID)
+{
+    /*
+    **   The purpose of a hash function is to take the input value
+    ** and convert it to an index into the hash table. Assume that
+    ** the range of input values is much different (larger) than
+    ** the number of entries in the hash table. Then multiple input
+    ** values must resolve to the same output table index. This is ok
+    ** because each entry in the hash table is a linked list of all
+    ** the inputs with the same hash function result.
+    **
+    **   This particular hash function takes advantage of knowledge
+    ** regarding the format of the input values (cFE MessageID). By
+    ** ignoring the bits that define version number, packet type and
+    ** secondary header (high 5 bits of 16) we are left with the bits
+    ** (mask = 0x7FF) that can identify 2048 unique input telemetry
+    ** packets. Also, by using a fixed hash table size of 256 entries
+    ** and using only the lower 8 bits of the bitmask as the result
+    ** of the hash function, no single hash table entry will have more
+    ** than 8 elements in its linked list.
+    **
+    **   To look up a MessageID in the DS packet filter table, rather
+    ** than search the entire filter table, DS does the following:
+    **
+    **   - call the hash function
+    **     (input = MessageID, output = hash table index)
+    **
+    **   - search hash table entry linked list for matching MessageID
+    **     (each linked list contains, at most, 8 linked list elements)
+    **
+    **   - matching linked list element has index into filter table
+    **     (can now go directly to the correct filter table entry)
+    */
+    return ((uint32)(CFE_SB_MsgIdToValue(MessageID) & DS_HASH_TABLE_MASK));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Create and populate hash table                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void DS_TableCreateHash(void)
+{
+    int32 FilterIndex = 0;
+
+    /*
+    ** Initialize global hash table structures...
+    */
+    memset(DS_AppData.HashLinks, 0, sizeof(DS_AppData.HashLinks));
+    memset(DS_AppData.HashTable, 0, sizeof(DS_AppData.HashTable));
+
+    for (FilterIndex = 0; FilterIndex < DS_PACKETS_IN_FILTER_TABLE; FilterIndex++)
+    {
+        DS_TableAddMsgID(DS_AppData.FilterTblPtr->Packet[FilterIndex].MessageID, FilterIndex);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get hash table index for MID                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex)
+{
+    int32          HashIndex = 0;
+    DS_HashLink_t *NewLink   = NULL;
+    DS_HashLink_t *LinkList  = NULL;
+
+    /* Get unused linked list entry (one link entry per filter table entry) */
+    NewLink = &DS_AppData.HashLinks[FilterIndex];
+
+    /* Set filter table data values for new linked list entry */
+    NewLink->Index     = FilterIndex;
+    NewLink->MessageID = MessageID;
+
+    /* Hash table function converts MID into hash table index */
+    HashIndex = DS_TableHashFunction(NewLink->MessageID);
+
+    if (DS_AppData.HashTable[HashIndex] == (DS_HashLink_t *)NULL)
+    {
+        /* Set first link in this hash table entry linked list */
+        DS_AppData.HashTable[HashIndex] = NewLink;
+    }
+    else
+    {
+        /* Get start of linked list (all MID's with same hash result) */
+        LinkList = DS_AppData.HashTable[HashIndex];
+
+        /* Find last link */
+        while (LinkList->Next != (DS_HashLink_t *)NULL)
+        {
+            LinkList = LinkList->Next;
+        }
+
+        /* Add new link */
+        LinkList->Next = NewLink;
+    }
+
+    return HashIndex;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS_TableFindMsgID() - get filter table index for MID            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID)
+{
+    DS_PacketEntry_t *FilterPackets    = NULL;
+    DS_HashLink_t *   HashLink         = NULL;
+    int32             HashTableIndex   = 0;
+    int32             FilterTableIndex = 0;
+
+    /* De-reference filter table packet array */
+    FilterPackets = DS_AppData.FilterTblPtr->Packet;
+
+    /* Set search result to "not found" */
+    FilterTableIndex = DS_INDEX_NONE;
+
+    /* Hash table function converts MID into hash table index */
+    HashTableIndex = DS_TableHashFunction(MessageID);
+
+    /* Get start of linked list (all MID's with same hash result) */
+    HashLink = DS_AppData.HashTable[HashTableIndex];
+
+    /* NULL when list is empty or end of list */
+    while (HashLink != (DS_HashLink_t *)NULL)
+    {
+        /* Compare this linked list entry for matching MessageID */
+        if (CFE_SB_MsgIdToValue(FilterPackets[HashLink->Index].MessageID) == CFE_SB_MsgIdToValue(MessageID))
+        {
+            /* Stop the search - we found it */
+            FilterTableIndex = HashLink->Index;
+            break;
+        }
+
+        /* Max of 8 links per design */
+        HashLink = HashLink->Next;
+    }
+
+    return FilterTableIndex;
+}
+```
+
+### `ds_table.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_table.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  CFS Data Storage (DS) table definitions
+ */
+#ifndef DS_TABLE_H
+#define DS_TABLE_H
+
+#include "cfe.h"
+
+#include "ds_platform_cfg.h"
+
+#include "ds_extern_typedefs.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* DS hash table structures and definitions                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define DS_HASH_TABLE_ENTRIES 256
+#define DS_HASH_TABLE_MASK    0x00FF
+
+/** \brief DS Hash Table Linked List structure */
+typedef struct DS_HashTag
+{
+    CFE_SB_MsgId_t MessageID; /**< \brief DS filter table entry MessageID */
+    uint16         Index;     /**< \brief DS filter table entry index */
+
+    struct DS_HashTag *Next; /**< \brief Next hash table linked list element */
+} DS_HashLink_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Prototypes for functions defined in ds_table.c                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Startup table initialization function
+ *
+ *  \par Description
+ *       This function creates the Packet Filter and Destination
+ *       File tables. The function then tries to load default table
+ *       data for each table. If the Packet Filter Table load is
+ *       successful, then the function will subscribe to all of the
+ *       packets referenced by the table.
+ *
+ *  \par Called From:
+ *       - DS startup initialization function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ */
+CFE_Status_t DS_TableInit(void);
+
+/**
+ *  \brief Manage destination file table loads, dumps, etc.
+ *
+ *  \par Description
+ *       This function will provide cFE Table Services with an
+ *       opportunity to make updates to the Destination File Table
+ *       while in the context of the DS application. There is no
+ *       special handling necessary if a new version of this table
+ *       is loaded.
+ *
+ *  \par Called From:
+ *       - DS table initialization function
+ *       - DS housekeeping request command processor
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFile
+ */
+void DS_TableManageDestFile(void);
+
+/**
+ *  \brief Manage packet filter table loads, dumps, etc.
+ *
+ *  \par Description
+ *       This function will provide cFE Table Services with an
+ *       opportunity to make updates to the Packet Filter Table
+ *       while in the context of the DS application. If a new
+ *       version of the filter table gets loaded, the function
+ *       will first unsubscribe to any packets referenced by the
+ *       previous version of the table, and then subscribe to
+ *       all packets referenced by the new version of the table.
+ *
+ *  \par Called From:
+ *       - DS table initialization function
+ *       - DS housekeeping request command processor
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
+ */
+void DS_TableManageFilter(void);
+
+/**
+ *  \brief Verify destination file table data
+ *
+ *  \par Description
+ *       This function is called by cFE Table Services to verify
+ *       the contents of a candidate Destination File Table.  This
+ *       will occur while cFE Table Services is processing another
+ *       call from the DS application to manage the table. Thus,
+ *       this verification function will be executed from within
+ *       the context of the DS application.
+ *
+ *  \par Called From:
+ *       - cFE Table Services
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] TableData Pointer to Destination File Table data
+ *
+ *  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFileEntry
+ */
+CFE_Status_t DS_TableVerifyDestFile(const void *TableData);
+
+/**
+ *  \brief Verify destination file table entry
+ *
+ *  \par Description
+ *       This function is called from the Destination File Table
+ *       verification function to verify a single table entry.
+ *       This function, in turn, calls common utility functions
+ *       to verify each field within the selected table entry.
+ *
+ *  \par Called From:
+ *       - Destination File Table validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] DestFileEntry Pointer to selected Destination File Table entry
+ *  \param[in] TableIndex    Index of selected Destination File Table entry
+ *  \param[in] ErrorCount    Number of errors already encountered
+ *
+ *  \sa #DS_DestFileEntry_t, #DS_TableVerifyDestFile
+ */
+int32 DS_TableVerifyDestFileEntry(DS_DestFileEntry_t *DestFileEntry, uint8 TableIndex, int32 ErrorCount);
+
+/**
+ *  \brief Verify packet filter table data
+ *
+ *  \par Description
+ *       This function is called by cFE Table Services to verify
+ *       the contents of a candidate Packet Filter Table.  This
+ *       will occur while cFE Table Services is processing another
+ *       call from the DS application to manage the table. Thus,
+ *       this verification function will be executed from within
+ *       the context of the DS application.
+ *
+ *  \par Called From:
+ *       - cFE Table Services
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] TableData Pointer to Packet Filter Table data
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilterEntry
+ */
+CFE_Status_t DS_TableVerifyFilter(const void *TableData);
+
+/**
+ *  \brief Verify packet filter table entry
+ *
+ *  \par Description
+ *       This function is called from the Packet Filter Table
+ *       verification function to verify a single table entry.
+ *       This function, in turn, calls common utility functions
+ *       to verify each field within the selected table entry.
+ *
+ *  \par Called From:
+ *       - Packet Filter Table validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] PacketEntry Pointer to a Packet Filter Table entry
+ *  \param[in] TableIndex  Index of selected Packet Filter Table entry
+ *  \param[in] ErrorCount  Number of errors already encountered
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableVerifyFilter
+ */
+int32 DS_TableVerifyFilterEntry(DS_PacketEntry_t *PacketEntry, int32 TableIndex, int32 ErrorCount);
+
+/**
+ *  \brief Test for unused table entry
+ *
+ *  \par Description
+ *       This function returns true if a table entry is unused.
+ *       Unused is defined as containing nothing but zero's.
+ *
+ *  \par Called From:
+ *       - Packet Filter Table validation function
+ *       - Destination File Table validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] TableEntry Pointer to the table entry data
+ *  \param[in] BufferSize Length of the table entry data
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ */
+int32 DS_TableEntryUnused(const void *TableEntry, int32 BufferSize);
+
+/**
+ *  \brief Verify destination file index
+ *
+ *  \par Description
+ *       This function verifies that the indicated packet filter
+ *       table file table index is within bounds - as defined by
+ *       platform configuration parameters. Note
+ *       that the utility functions are also called from the ground
+ *       command handlers to verify command arguments that nodify
+ *       the table data.
+ *
+ *  \par Called From:
+ *       - Command handler (set file table index)
+ *       - Command handler (set filename type)
+ *       - Command handler (set file enable/disable state)
+ *       - Command handler (set pathname)
+ *       - Command handler (set basename)
+ *       - Command handler (set extension)
+ *       - Command handler (set max file size limit)
+ *       - Command handler (set max file age limit)
+ *       - Command handler (set file sequence count)
+ *       - Command handler (close file)
+ *       - Packet Filter Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] FileTableIndex Destination File Table Index value
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifyFileIndex(uint16 FileTableIndex);
+
+/**
+ *  \brief Verify packet filter parameters
+ *
+ *  \par Description
+ *       This function verifies that the indicated packet filter
+ *       table filter parameters are within bounds.
+ *       Algorithm N must be <= Algorithm X
+ *       Algorithm O must be <  Algorithm X
+ *
+ *  \par Called From:
+ *       - Command handler (set filter parms)
+ *       - Packet Filter Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] Algorithm_N Filter Algorithm N value
+ *  \param[in] Algorithm_X Filter Algorithm X value
+ *  \param[in] Algorithm_O Filter Algorithm O value
+ *
+ *  \sa #DS_TableVerifyType, #DS_TableVerifyState, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifyParms(uint16 Algorithm_N, uint16 Algorithm_X, uint16 Algorithm_O);
+
+/**
+ *  \brief Verify packet filter type or filename type
+ *
+ *  \par Description
+ *       This common function verifies that the indicated packet
+ *       filter table filter type, or destination file table
+ *       filename type is within bounds.
+ *       Must be DS_BY_COUNT or DS_BY_TIME.
+ *
+ *  \par Called From:
+ *       - Command handler (set filter type)
+ *       - Command handler (set filename type)
+ *       - Packet Filter Table entry validation function
+ *       - Destination File Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] TimeVsCount Filter Type or Filename Type value
+ *                         #DS_BY_COUNT or #DS_BY_TIME
+ *
+ *  \sa #DS_TableVerifyState, #DS_TableVerifySize, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifyType(uint16 TimeVsCount);
+
+/**
+ *  \brief Verify application or destination file enable/disable state
+ *
+ *  \par Description
+ *       This function verifies that the indicated destination file
+ *       enable/disable state is within bounds.
+ *       Must be DS_ENABLED or DS_DISABLED.
+ *
+ *  \par Called From:
+ *       - Command handler (set application enable/disable state)
+ *       - Command handler (set file enable/disable state)
+ *       - Destination File Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] EnableState Enable/Disable State value
+ *
+ *  \sa #DS_TableVerifySize, #DS_TableVerifyAge, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifyState(uint16 EnableState);
+
+/**
+ *  \brief Verify destination file max size limit
+ *
+ *  \par Description
+ *       This function verifies that the indicated destination file
+ *       max size limit is within bounds - as defined by platform
+ *       configuration parameters.
+ *
+ *  \par Called From:
+ *       - Command handler (set file max size limit)
+ *       - Destination File Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MaxFileSize Maximum Size Limit value
+ *
+ *  \sa #DS_TableVerifyAge, #DS_TableVerifyCount, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifySize(uint32 MaxFileSize);
+
+/**
+ *  \brief Verify destination file max age limit
+ *
+ *  \par Description
+ *       This function verifies that the indicated destination file
+ *       max age limit is within bounds - as defined by platform
+ *       configuration parameters.
+ *
+ *  \par Called From:
+ *       - Command handler (set file max age limit)
+ *       - Destination File Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MaxFileAge Maximum Age Limit value
+ *
+ *  \sa #DS_TableVerifySize, #DS_TableVerifyCount, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifyAge(uint32 MaxFileAge);
+
+/**
+ *  \brief Verify destination file sequence count
+ *
+ *  \par Description
+ *       This function verifies that the indicated destination file
+ *       sequence count is within bounds - as defined by platform
+ *       configuration parameters.
+ *
+ *  \par Called From:
+ *       - Command handler (set file sequence count)
+ *       - Destination File Table entry validation function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] SequenceCount Sequence Count value
+ *
+ *  \sa #DS_TableVerifySize, #DS_TableVerifyAge, #DS_DestFileEntry_t
+ */
+int32 DS_TableVerifyCount(uint32 SequenceCount);
+
+/**
+ *  \brief Subscribe to packet filter table packets
+ *
+ *  \par Description
+ *       A new Packet Filter Table is available for use. This
+ *       function is called to subscribe to packets referenced
+ *       by the new filter table.
+ *
+ *  \par Called From:
+ *       - Packet Filter Table manage function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       Caller has determined that the new filter table exists.
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableUnsubscribe
+ */
+void DS_TableSubscribe(void);
+
+/**
+ *  \brief Unsubscribe to packet filter table packets
+ *
+ *  \par Description
+ *       A new Packet Filter Table is available for use. Prior to
+ *       subscribing to the packets referenced by the new filter
+ *       table, this function is called to unsubscribe to packets
+ *       referenced by the old filter table.
+ *
+ *  \par Called From:
+ *       - Packet Filter Table manage function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       Caller has determined that the old filter table exists.
+ *
+ *  \sa #DS_PacketEntry_t, #DS_FilterParms_t, #DS_TableSubscribe
+ */
+void DS_TableUnsubscribe(void);
+
+/**
+ *  \brief Create local area within the Critical Data Store (CDS)
+ *
+ *  \par Description
+ *       This function creates a new CDS area or gets access to a
+ *       CDS area created prior to a processor reset. The CDS area
+ *       will be used to store the current values for destination
+ *       filename sequence counts.
+ *
+ *  \par Called From:
+ *       - Application initialization function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_DestFileEntry_t
+ */
+CFE_Status_t DS_TableCreateCDS(void);
+
+/**
+ *  \brief Update CDS with current filename sequence count values
+ *
+ *  \par Description
+ *       This function writes the current filename sequence count
+ *       values to the Critical Data Store. The function is called
+ *       each time the sequence count values are modified.
+ *
+ *  \par Called From:
+ *       - Destination table data update handler
+ *       - Destination file creation function
+ *       - Command handler (set sequence count)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_DestFileEntry_t
+ */
+void DS_TableUpdateCDS(void);
+
+/**
+ *  \brief Hash table function
+ *
+ *  \par Description
+ *       This function converts a cFE MessageID into an index into
+ *       the hash table. The indexed hash table entry contains a
+ *       linked list where each link identifies a single entry in
+ *       the packet filter table. Thus, the scope of searching the
+ *       Packet Filter Table for a specific MessageID has been reduced
+ *       from searching the total number of entries in the filter
+ *       table by a factor equal to the size of the hash table.
+ *
+ *  \par Called From:
+ *       - Hash table creation function (after load filter table)
+ *       - Find messageID in filter table function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MessageID Message ID
+ *
+ *  \return Index of hash table entry for input message ID
+ *
+ *  \sa #DS_HashLink_t, #DS_TableCreateHash, #DS_TableFindMsgID
+ */
+uint32 DS_TableHashFunction(CFE_SB_MsgId_t MessageID);
+
+/**
+ *  \brief Create hash table function
+ *
+ *  \par Description
+ *       This function populates the hash table following a new
+ *       load of the packet filter table. Because there may be
+ *       more message ID's than hash table entries, the hash table
+ *       function may translate multiple message ID's into each
+ *       hash table index. Each hash table entry is a linked list
+ *       containing a link for each message ID that translates to
+ *       the same hash table index.
+ *
+ *  \par Called From:
+ *       - Filter table manage updates function (after table load)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \sa #DS_HashLink_t, #DS_TableHashFunction, #DS_TableFindMsgID
+ */
+void DS_TableCreateHash(void);
+
+/**
+ *  \brief Adds a message ID to the hash table
+ *
+ *  \par Description
+ *       This function populates the hash table with a new message ID
+ *
+ *  \par Called From:
+ *       - Creation of Hash Table
+ *       - Command to add a MID
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MessageID   Message ID
+ *  \param[in] FilterIndex Filter table index for message ID
+ *
+ *  \return Hash table index for message ID
+ *
+ *  \sa #DS_HashLink_t, #DS_TableHashFunction, #DS_TableFindMsgID
+ */
+int32 DS_TableAddMsgID(CFE_SB_MsgId_t MessageID, int32 FilterIndex);
+
+/**
+ *  \brief Search packet filter table for message ID
+ *
+ *  \par Description
+ *       This function searches for a packet filter table entry that
+ *       matches the input argument message ID.
+ *
+ *  \par Called From:
+ *       - Data storage packet processor
+ *       - Command handler (set file index)
+ *       - Command handler (set filter type)
+ *       - Command handler (set filter parms)
+ *       - Command handler (add messageID to filter table)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       (none)
+ *
+ *  \param[in] MessageID Message ID
+ *
+ *  \return Filter table index for message ID
+ *
+ *  \sa #DS_HashLink_t, #DS_TableHashFunction, #DS_TableCreateHash
+ */
+int32 DS_TableFindMsgID(CFE_SB_MsgId_t MessageID);
+
+#endif
+```
+
+### `ds_verify.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Define the CFS Data Storage (DS) Application compile-time checks
+ */
+#ifndef DS_VERIFY_H
+#define DS_VERIFY_H
+
+#include "cfe.h"
+
+#include "ds_platform_cfg.h"
+
+#ifndef DS_DESTINATION_TBL_NAME
+#error DS_DESTINATION_TBL_NAME must be defined!
+#endif
+
+#ifndef DS_DEF_FILTER_FILENAME
+#error DS_DEF_FILTER_FILENAME must be defined!
+#endif
+
+#ifndef DS_DEST_FILE_CNT
+#error DS_DEST_FILE_CNT must be defined!
+#elif (DS_DEST_FILE_CNT < 1)
+#error DS_DEST_FILE_CNT cannot be less than 1!
+#endif
+
+#ifndef DS_PATHNAME_BUFSIZE
+#error DS_PATHNAME_BUFSIZE must be defined!
+#elif (DS_PATHNAME_BUFSIZE < 1)
+#error DS_PATHNAME_BUFSIZE cannot be less than 1!
+#elif ((DS_PATHNAME_BUFSIZE % 4) != 0)
+#error DS_PATHNAME_BUFSIZE must be a multiple of 4!
+#elif (DS_PATHNAME_BUFSIZE > OS_MAX_PATH_LEN)
+#error DS_PATHNAME_BUFSIZE cannot be greater than OS_MAX_PATH_LEN!
+#endif
+
+#ifndef DS_BASENAME_BUFSIZE
+#error DS_BASENAME_BUFSIZE must be defined!
+#elif (DS_BASENAME_BUFSIZE < 1)
+#error DS_BASENAME_BUFSIZE cannot be less than 1!
+#elif ((DS_BASENAME_BUFSIZE % 4) != 0)
+#error DS_BASENAME_BUFSIZE must be a multiple of 4!
+#elif (DS_BASENAME_BUFSIZE > OS_MAX_PATH_LEN)
+#error DS_BASENAME_BUFSIZE cannot be greater than OS_MAX_PATH_LEN!
+#endif
+
+#ifndef DS_EXTENSION_BUFSIZE
+#error DS_EXTENSION_BUFSIZE must be defined!
+#elif (DS_EXTENSION_BUFSIZE < 1)
+#error DS_EXTENSION_BUFSIZE cannot be less than 1!
+#elif ((DS_EXTENSION_BUFSIZE % 4) != 0)
+#error DS_EXTENSION_BUFSIZE must be a multiple of 4!
+#elif (DS_EXTENSION_BUFSIZE > OS_MAX_PATH_LEN)
+#error DS_EXTENSION_BUFSIZE cannot be greater than OS_MAX_PATH_LEN!
+#endif
+
+#ifndef DS_FILTER_TBL_NAME
+#error DS_FILTER_TBL_NAME must be defined!
+#endif
+
+#ifndef DS_DEF_DEST_FILENAME
+#error DS_DEF_DEST_FILENAME must be defined!
+#endif
+
+#ifndef DS_PACKETS_IN_FILTER_TABLE
+#error DS_PACKETS_IN_FILTER_TABLE must be defined!
+#elif (DS_PACKETS_IN_FILTER_TABLE < 1)
+#error DS_PACKETS_IN_FILTER_TABLE cannot be less than 1!
+#endif
+
+#ifndef DS_FILTERS_PER_PACKET
+#error DS_FILTERS_PER_PACKET must be defined!
+#elif (DS_FILTERS_PER_PACKET < 1)
+#error DS_FILTERS_PER_PACKET cannot be less than 1!
+#elif (DS_FILTERS_PER_PACKET > DS_DEST_FILE_CNT)
+#error DS_FILTERS_PER_PACKET cannot be greater than DS_DEST_FILE_CNT!
+#endif
+
+#ifndef DS_DESCRIPTOR_BUFSIZE
+#error DS_DESCRIPTOR_BUFSIZE must be defined!
+#elif (DS_DESCRIPTOR_BUFSIZE < 1)
+#error DS_DESCRIPTOR_BUFSIZE cannot be less than 1!
+#elif ((DS_DESCRIPTOR_BUFSIZE % 4) != 0)
+#error DS_DESCRIPTOR_BUFSIZE must be a multiple of 4!
+#endif
+
+#ifndef DS_SEQUENCE_DIGITS
+#error DS_SEQUENCE_DIGITS must be defined!
+#elif (DS_SEQUENCE_DIGITS < 1)
+#error DS_SEQUENCE_DIGITS cannot be less than 1!
+#endif
+
+#ifndef DS_MAX_SEQUENCE_COUNT
+#error DS_MAX_SEQUENCE_COUNT must be defined!
+#elif (DS_MAX_SEQUENCE_COUNT < 1)
+#error DS_MAX_SEQUENCE_COUNT cannot be less than 1!
+#endif
+
+#ifndef DS_TOTAL_FNAME_BUFSIZE
+#error DS_TOTAL_FNAME_BUFSIZE must be defined!
+#elif (DS_TOTAL_FNAME_BUFSIZE < 1)
+#error DS_TOTAL_FNAME_BUFSIZE cannot be less than 1!
+#elif ((DS_TOTAL_FNAME_BUFSIZE % 4) != 0)
+#error DS_TOTAL_FNAME_BUFSIZE must be a multiple of 4!
+#elif (DS_TOTAL_FNAME_BUFSIZE > OS_MAX_PATH_LEN)
+#error DS_TOTAL_FNAME_BUFSIZE cannot be greater than OS_MAX_PATH_LEN!
+#endif
+
+#ifndef DS_FILE_HDR_SUBTYPE
+#error DS_FILE_HDR_SUBTYPE must be defined!
+#endif
+
+#ifndef DS_FILE_HDR_DESCRIPTION
+#error DS_FILE_HDR_DESCRIPTION must be defined!
+#endif
+
+#ifndef DS_FILE_MIN_SIZE_LIMIT
+#error DS_FILE_MIN_SIZE_LIMIT must be defined!
+#elif (DS_FILE_MIN_SIZE_LIMIT < 1)
+#error DS_FILE_MIN_SIZE_LIMIT cannot be less than 1!
+#endif
+
+#ifndef DS_FILE_MIN_AGE_LIMIT
+#error DS_FILE_MIN_AGE_LIMIT must be defined!
+#elif (DS_FILE_MIN_AGE_LIMIT < 1)
+#error DS_FILE_MIN_AGE_LIMIT cannot be less than 1!
+#endif
+
+#ifndef DS_APP_PIPE_NAME
+#error DS_APP_PIPE_NAME must be defined!
+#endif
+
+#ifndef DS_APP_PIPE_DEPTH
+#error DS_APP_PIPE_DEPTH must be defined!
+#elif (DS_APP_PIPE_DEPTH < 1)
+#error DS_APP_PIPE_DEPTH cannot be less than 1!
+#elif (DS_APP_PIPE_DEPTH > OS_QUEUE_MAX_DEPTH)
+#error DS_APP_PIPE_DEPTH cannot exceed OS_QUEUE_MAX_DEPTH!
+#endif
+
+#ifndef DS_MAKE_TABLES_CRITICAL
+#error DS_MAKE_TABLES_CRITICAL must be defined!
+#elif ((DS_MAKE_TABLES_CRITICAL != 0) && (DS_MAKE_TABLES_CRITICAL != 1))
+#error DS_MAKE_TABLES_CRITICAL must be 0 or 1!
+#endif
+
+#if (DS_SECS_PER_HK_CYCLE < 1)
+#error DS_SECS_PER_HK_CYCLE cannot be less than 1!
+#endif
+
+#ifndef DS_DEF_ENABLE_STATE
+#error DS_DEF_ENABLE_STATE must be defined!
+#elif ((DS_DEF_ENABLE_STATE != 0) && (DS_DEF_ENABLE_STATE != 1))
+#error DS_DEF_ENABLE_STATE must be 0 or 1!
+#endif
+
+#ifndef DS_CDS_ENABLE_STATE
+#error DS_CDS_ENABLE_STATE must be defined!
+#elif ((DS_CDS_ENABLE_STATE != 0) && (DS_CDS_ENABLE_STATE != 1))
+#error DS_CDS_ENABLE_STATE must be 0 or 1!
+#endif
+
+#ifndef DS_MISSION_REV
+#error DS_MISSION_REV must be defined!
+#elif (DS_MISSION_REV < 0)
+#error DS_MISSION_REV must be greater than or equal to zero!
+#endif
+
+#ifndef DS_FILE_HEADER_TYPE
+#error DS_FILE_HEADER_TYPE must be defined!
+#elif ((DS_FILE_HEADER_TYPE != 0) && (DS_FILE_HEADER_TYPE != 1))
+#error DS_FILE_HEADER_TYPE must be 0 or 1!
+#endif
+
+#ifndef DS_MOVE_FILES
+#error DS_MOVE_FILES must be defined!
+#elif ((DS_MOVE_FILES != true) && (DS_MOVE_FILES != false))
+#error DS_MOVE_FILES must be true or false!
+#endif
+
+#ifndef DS_PER_PACKET_PIPE_LIMIT
+#error DS_PER_PACKET_PIPE_LIMIT must be defined!
+#elif (DS_PER_PACKET_PIPE_LIMIT < 1)
+#error DS_PER_PACKET_PIPE_LIMIT cannot be less than 1!
+#elif (DS_PER_PACKET_PIPE_LIMIT > DS_APP_PIPE_DEPTH)
+#error DS_PER_PACKET_PIPE_LIMIT cannot be greater than DS_APP_PIPE_DEPTH!
+#endif
+
+#endif
+```
+
+### `ds_version.h`
+
+**경로:** `fsw/apps/ds/fsw/src/ds_version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,917-1, and identified as “CFS Data Storage
+ * (DS) application version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CFS Data Storage (DS) Application header file containing version number
+ */
+#ifndef DS_VERSION_H
+#define DS_VERSION_H
+
+/**
+ * \defgroup cfsdsversion CFS Data Storage Version
+ * \ref cfsversions
+ * \{
+ */
+
+#define DS_MAJOR_VERSION 2  /**< \brief Major version number */
+#define DS_MINOR_VERSION 6  /**< \brief Minor version number */
+#define DS_REVISION      99 /**< \brief Revision number */
+
+/**\}*/
+
+#endif
+```

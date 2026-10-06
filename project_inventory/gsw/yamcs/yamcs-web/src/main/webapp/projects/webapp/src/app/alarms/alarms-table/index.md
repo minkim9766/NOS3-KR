@@ -3,18 +3,288 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-table.component.css`
 
-file--alarm-table.component.css
-file--alarm-table.component.html
-file--alarm-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/alarm-table.component.css`
+
+
+```css
+.hide {
+  display: none;
+}
+
+td {
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `alarm-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/alarm-table.component.css`](file--alarm-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/alarm-table.component.html`](file--alarm-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/alarm-table.component.ts`](file--alarm-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/alarm-table.component.html`
+
+
+```html
+<table
+  mat-table
+  [dataSource]="dataSource"
+  [trackBy]="tableTrackerFn"
+  class="ya-data-table expand"
+  [class.hide]="dataSource.isEmpty()">
+  <ng-container matColumnDef="type">
+    <th mat-header-cell *matHeaderCellDef>Alarm type</th>
+    <td mat-cell *matCellDef="let alarm">
+      @if (alarm.type === "EVENT") {
+        <mat-icon style="vertical-align: middle">event_note</mat-icon>
+      }
+      @if (alarm.type === "PARAMETER") {
+        <mat-icon style="vertical-align: middle">toll</mat-icon>
+      }
+      {{ alarm.type || "-" | titlecase }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="alarm">
+    <th mat-header-cell *matHeaderCellDef>Alarm name</th>
+    <td mat-cell *matCellDef="let alarm">
+      @if (alarm.id.namespace && alarm.id.name) {
+        @if (alarm.parameterDetail) {
+          <a
+            [routerLink]="'/telemetry/parameters' + alarm.id.namespace + '/' + alarm.id.name"
+            [queryParams]="{ c: yamcs.context }">
+            {{ alarm.id.namespace }}/{{ alarm.id.name }}
+          </a>
+        } @else {
+          {{ alarm.id.namespace }}/{{ alarm.id.name }}
+        }
+      }
+
+      @if (alarm.id.namespace && !alarm.id.name) {
+        @if (alarm.parameterDetail) {
+          <a
+            [routerLink]="'/telemetry/parameters' + alarm.id.namespace"
+            [queryParams]="{ c: yamcs.context }">
+            {{ alarm.id.namespace }}
+          </a>
+        } @else {
+          {{ alarm.id.namespace }}
+        }
+      }
+
+      @if (!alarm.id.namespace && alarm.id.name) {
+        @if (alarm.parameterDetail) {
+          <a
+            [routerLink]="'/telemetry/parameters' + alarm.id.name"
+            [queryParams]="{ c: yamcs.context }">
+            {{ alarm.id.name }}
+          </a>
+        } @else {
+          {{ alarm.id.name }}
+        }
+      }
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="state">
+    <th mat-header-cell *matHeaderCellDef class="status">State</th>
+    <td mat-cell *matCellDef="let alarm" class="status">
+      <app-alarm-state-icon [alarm]="alarm" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="time">
+    <th mat-header-cell *matHeaderCellDef>Alarm time</th>
+    <td mat-cell *matCellDef="let alarm">
+      <span [matTooltip]="alarm.triggerTime | datetime">
+        <app-ago [time]="alarm.triggerTime" />
+      </span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="severity">
+    <th mat-header-cell *matHeaderCellDef class="status">Severity</th>
+    <td mat-cell *matCellDef="let alarm" class="status">
+      <app-alarm-level [level]="alarm.severity" [grayscale]="alarm.pending" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="trip_value">
+    <th mat-header-cell *matHeaderCellDef>Trip value</th>
+    <td mat-cell *matCellDef="let alarm" class="wrap200">
+      @if (alarm.parameterDetail; as parameterDetail) {
+        {{ parameterDetail.triggerValue.engValue | value }}
+        @if (parameterDetail.triggerValue.rangeCondition === "LOW") {
+          <span>&#8595;</span>
+        }
+        @if (parameterDetail.triggerValue.rangeCondition === "HIGH") {
+          <span>&#8593;</span>
+        }
+      }
+      @if (alarm.eventDetail; as eventDetail) {
+        {{ eventDetail.triggerEvent.message || "-" }}
+      }
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="live_value">
+    <th mat-header-cell *matHeaderCellDef>Live value</th>
+    <td mat-cell *matCellDef="let alarm" class="wrap200">
+      @if (alarm.parameterDetail; as parameterDetail) {
+        {{ parameterDetail.currentValue.engValue | value }}
+        @if (parameterDetail.currentValue.rangeCondition === "LOW") {
+          <span>&#8595;</span>
+        }
+        @if (parameterDetail.currentValue.rangeCondition === "HIGH") {
+          <span>&#8593;</span>
+        }
+      }
+      @if (alarm.eventDetail; as eventDetail) {
+        {{ eventDetail.triggerEvent.message || "-" }}
+      }
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="violations">
+    <th mat-header-cell *matHeaderCellDef>Violations</th>
+    <td mat-cell *matCellDef="let alarm">{{ alarm.violations | number }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef style="width: 100%"></th>
+    <td mat-cell *matCellDef="let alarm">
+      @if (mayControl && !alarm.readonly && !alarm.pending) {
+        <ya-more>
+          <button
+            mat-menu-item
+            (click)="acknowledgeAlarm.emit(alarm)"
+            [disabled]="alarm.shelveInfo || alarm.acknowledged">
+            Acknowledge...
+          </button>
+          <button mat-menu-item (click)="shelveAlarm.emit(alarm)" [disabled]="alarm.shelveInfo">
+            Shelve...
+          </button>
+          <button mat-menu-item (click)="unshelveAlarm.emit(alarm)" [disabled]="!alarm.shelveInfo">
+            Unshelve
+          </button>
+        </ya-more>
+      }
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: displayedColumns"
+    (click)="toggleOne(row)"
+    [class.selected]="selection.isSelected(row)"
+    [class.hide]="hideAlarm(row)"></tr>
+</table>
+
+<ng-template #dash>-</ng-template>
+```
+
+### `alarm-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/alarm-table.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Alarm, BaseComponent, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AgoComponent } from '../../shared/ago/ago.component';
+import { AlarmLevelComponent } from '../../shared/alarm-level/alarm-level.component';
+import { AlarmStateIconComponent } from '../alarm-state-icon/alarm-state-icon.component';
+import { AlarmsDataSource } from '../alarms.datasource';
+
+@Component({
+  selector: 'app-alarms-table',
+  templateUrl: './alarm-table.component.html',
+  styleUrl: './alarm-table.component.css',
+  imports: [
+    AgoComponent,
+    AlarmLevelComponent,
+    AlarmStateIconComponent,
+    WebappSdkModule,
+  ],
+})
+export class AlarmsTableComponent extends BaseComponent implements OnInit {
+  displayedColumns = [
+    'state',
+    'severity',
+    'time',
+    'alarm',
+    'type',
+    'trip_value',
+    'live_value',
+    'actions',
+  ];
+
+  @Input()
+  dataSource: AlarmsDataSource;
+
+  @Input()
+  selection: SelectionModel<Alarm>;
+
+  @Input()
+  view:
+    | 'standard'
+    | 'unacknowledged'
+    | 'acknowledged'
+    | 'shelved'
+    | 'all'
+    | 'pending' = 'standard';
+
+  @Input()
+  mayControl = false;
+
+  @Output()
+  acknowledgeAlarm = new EventEmitter<Alarm>();
+
+  @Output()
+  shelveAlarm = new EventEmitter<Alarm>();
+
+  @Output()
+  unshelveAlarm = new EventEmitter<Alarm>();
+
+  // Used in table trackBy to prevent continuous row recreation
+  tableTrackerFn = (index: number, alarm: Alarm) => {
+    return `${alarm.triggerTime}__${alarm.id.namespace}__${alarm.id.name}__${alarm.seqNum}`;
+  };
+
+  ngOnInit(): void {
+    if (this.view === 'pending') {
+      this.displayedColumns.splice(
+        this.displayedColumns.length - 1,
+        0,
+        'violations',
+      );
+    }
+  }
+
+  toggleOne(row: Alarm) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+    this.openDetailPane();
+  }
+
+  hideAlarm(alarm: Alarm) {
+    if (this.view === 'pending') {
+      return !alarm.pending;
+    } else if (this.view === 'standard') {
+      return alarm.pending || !!alarm.shelveInfo;
+    } else if (this.view === 'all') {
+      return alarm.pending;
+    } else if (this.view === 'unacknowledged') {
+      return alarm.pending || !!alarm.shelveInfo || alarm.acknowledged;
+    } else if (this.view === 'acknowledged') {
+      return alarm.pending || !!alarm.shelveInfo || !alarm.acknowledged;
+    } else if (this.view === 'shelved') {
+      return alarm.pending || !alarm.shelveInfo;
+    }
+  }
+}
+```

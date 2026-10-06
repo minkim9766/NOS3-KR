@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/data/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ raw_telemetry_data/index
 telemetry_configs/index
 ```
 
-## 항목
-
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/raw_telemetry_data/`](raw_telemetry_data/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/data/telemetry_configs/`](telemetry_configs/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

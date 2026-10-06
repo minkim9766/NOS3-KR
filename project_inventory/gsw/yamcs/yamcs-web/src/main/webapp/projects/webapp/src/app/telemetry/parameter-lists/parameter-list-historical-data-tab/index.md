@@ -3,18 +3,387 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-list-historical-data-tab.component.css`
 
-file--parameter-list-historical-data-tab.component.css
-file--parameter-list-historical-data-tab.component.html
-file--parameter-list-historical-data-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/parameter-list-historical-data-tab.component.css`
+
+
+```css
+.table-container {
+  position: absolute;
+  top: calc(36px + 24px + 12px + 24px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  margin-top: 24px;
+}
+
+.table-container table {
+  padding-left: 24px;
+  padding-right: 24px;
+  background-color: inherit;
+  border-bottom: none;
+}
+
+.table-container table td {
+  background-color: #ffffff;
+}
+
+.table-container table th:first-child,
+.table-container table td:first-child {
+  background-color: var(--y-background-color);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table-container table th:last-child,
+.table-container table td:last-child {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table-container table tr:last-child td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
 ```
 
-## 항목
+### `parameter-list-historical-data-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/parameter-list-historical-data-tab.component.css`](file--parameter-list-historical-data-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/parameter-list-historical-data-tab.component.html`](file--parameter-list-historical-data-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/parameter-list-historical-data-tab.component.ts`](file--parameter-list-historical-data-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/parameter-list-historical-data-tab.component.html`
+
+
+```html
+@if (plist$ | async; as plist) {
+  <ya-panel>
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-select icon="access_time" formControlName="interval" [options]="intervalOptions" />
+
+      @if (filterForm.value["interval"] === "CUSTOM") {
+        <ya-date-time-input formControlName="customStart" />
+        <ya-date-time-input formControlName="customStop" />
+        <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+      } @else {
+        <ya-button (click)="jumpToNow()">Jump to now</ya-button>
+      }
+
+      <div style="flex: 1 1 auto"></div>
+
+      <ya-button appearance="primary" (click)="exportParameterData()" icon="download">
+        Export CSV
+      </ya-button>
+    </ya-filter-bar>
+
+    <ya-table-window [duration]="appliedInterval" [start]="validStart" [stop]="validStop" />
+
+    @if (exportData$ | async; as exportData) {
+      <div class="table-container">
+        <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+          <ng-container matColumnDef="generationTime" sticky>
+            <th mat-header-cell *cdkHeaderCellDef>Generation time</th>
+            <td mat-cell *cdkCellDef="let row">
+              {{ row.generationTime | datetime }}
+            </td>
+          </ng-container>
+
+          @for (header of exportData.headers; track header; let i = $index) {
+            <ng-container [cdkColumnDef]="header">
+              <th mat-header-cell *cdkHeaderCellDef>{{ header }}</th>
+              <td mat-cell *cdkCellDef="let row">
+                {{ row.values[i] ?? "-" }}
+              </td>
+            </ng-container>
+          }
+
+          <ng-container cdkColumnDef="actions">
+            <th mat-header-cell *cdkHeaderCellDef class="expand"></th>
+            <td mat-cell *cdkCellDef="let row"></td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns$ | async; sticky: true"></tr>
+          <tr mat-row *cdkRowDef="let row; columns: displayedColumns$ | async"></tr>
+        </table>
+      </div>
+    }
+  </ya-panel>
+}
+```
+
+### `parameter-list-historical-data-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list-historical-data-tab/parameter-list-historical-data-tab.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ExportParameterValuesOptions,
+  ParameterList,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ExportArchiveDataDialogComponent } from '../../displays/export-archive-data-dialog/export-archive-data-dialog.component';
+
+export interface ValueExport {
+  headers: string[];
+  records: ValueSnapshot[];
+}
+
+export interface ValueSnapshot {
+  generationTime: string;
+  values: (string | null)[];
+}
+
+const defaultInterval = 'PT1H';
+
+@Component({
+  templateUrl: './parameter-list-historical-data-tab.component.html',
+  styleUrl: './parameter-list-historical-data-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterListHistoricalDataTabComponent {
+  plistId: string;
+  intervalOptions: YaSelectOption[] = [
+    { id: 'PT1H', label: 'Last hour' },
+    { id: 'PT6H', label: 'Last 6 hours' },
+    { id: 'P1D', label: 'Last 24 hours' },
+    { id: 'NO_LIMIT', label: 'No limit' },
+    { id: 'CUSTOM', label: 'Custom' },
+  ];
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new UntypedFormGroup({
+    interval: new UntypedFormControl(defaultInterval),
+    customStart: new UntypedFormControl(null),
+    customStop: new UntypedFormControl(null),
+  });
+
+  displayedColumns = ['generationTime', 'actions'];
+  displayedColumns$ = new BehaviorSubject<string[]>(this.displayedColumns);
+
+  plist$ = new BehaviorSubject<ParameterList | null>(null);
+  exportData$ = new BehaviorSubject<ValueExport | null>(null);
+
+  dataSource = new MatTableDataSource<ValueSnapshot>();
+
+  constructor(
+    readonly router: Router,
+    readonly route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private dialog: MatDialog,
+  ) {
+    this.plistId = route.snapshot.paramMap.get('list')!;
+
+    this.validStop = yamcs.getMissionTime();
+    this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    this.appliedInterval = defaultInterval;
+
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else {
+        this.validStop = yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('interval')) {
+      this.appliedInterval = queryParams.get('interval')!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = queryParams.get('customStart')!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = new Date(customStart);
+        const customStop = queryParams.get('customStop')!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = new Date(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.value['interval'];
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else {
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  applyCustomDates() {
+    this.validStart = utils.toDate(this.filterForm.value['customStart']);
+    this.validStop = utils.toDate(this.filterForm.value['customStop']);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  private loadData() {
+    this.updateURL();
+    const options: ExportParameterValuesOptions = {
+      delimiter: 'TAB',
+      limit: 100,
+      order: 'desc',
+    };
+    if (this.validStart) {
+      // When descending, Yamcs does not include start bound, so make sure
+      // the user's indicated start is included.
+      const start = new Date(this.validStart.getTime());
+      start.setUTCMilliseconds(this.validStart.getUTCMilliseconds() - 1);
+      options.start = start.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+
+    this.yamcs.yamcsClient
+      .getParameterList(this.yamcs.instance!, this.plistId)
+      .then((plist) => {
+        this.plist$.next(plist);
+
+        if (plist.match) {
+          this.yamcs.yamcsClient
+            .exportParameterValues(this.yamcs.instance!, {
+              ...options,
+              list: plist.id,
+            })
+            .then((pdata) => {
+              const exportData = this.processCsv(pdata);
+              this.exportData$.next(exportData);
+              this.displayedColumns$.next([
+                'generationTime',
+                ...exportData.headers,
+                'actions',
+              ]);
+              this.dataSource.data = exportData.records;
+            });
+        }
+      });
+  }
+
+  private processCsv(csv: string) {
+    const records: ValueSnapshot[] = [];
+    const lines = csv.split(/\r?\n/);
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i];
+      if (!line) {
+        continue;
+      }
+      const cells = line.split(/\t/);
+      const snapshot: ValueSnapshot = {
+        generationTime: cells[0],
+        values: [],
+      };
+      for (let j = 1; j < cells.length; j++) {
+        snapshot.values[j - 1] = cells[j] || null;
+      }
+      records.push(snapshot);
+    }
+
+    const qualifiedNames = lines[0].split(/\t/).slice(1);
+    const headers: string[] = qualifiedNames.map((x) => utils.getFilename(x)!);
+    const result: ValueExport = { headers, records };
+    return result;
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStart']
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStop']
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  exportParameterData() {
+    const plist = this.plist$.value;
+    const parameters = plist?.match;
+    if (parameters) {
+      let filename = plist.name;
+      if (this.validStart && this.validStop) {
+        filename +=
+          '_' +
+          this.validStart.toISOString() +
+          '_' +
+          this.validStop.toISOString();
+      } else if (this.validStart) {
+        filename += '_' + this.validStart.toISOString();
+      } else if (this.validStop) {
+        filename += '_' + this.validStop.toISOString();
+      }
+      filename += '.csv';
+      this.dialog.open(ExportArchiveDataDialogComponent, {
+        width: '400px',
+        data: {
+          list: plist.id,
+          start: this.validStart,
+          stop: this.validStop,
+          filename,
+        },
+      });
+    }
+  }
+}
+```

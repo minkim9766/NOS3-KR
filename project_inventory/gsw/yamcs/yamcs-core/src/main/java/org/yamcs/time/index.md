@@ -3,32 +3,1559 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FixedSizeTimeDecoder.java`
 
-file--FixedSizeTimeDecoder.java
-file--Float64TimeDecoder.java
-file--Instant.java
-file--RealtimeTimeService.java
-file--SimulationTimeService.java
-file--TimeCorrelationService.java
-file--TimeDecoder.java
-file--TimeEncoder.java
-file--TimeOfFlightEstimator.java
-file--TimeService.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/FixedSizeTimeDecoder.java`
+
+
+```java
+package org.yamcs.time;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteOrder;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes time on a fixed number of bytes.
+ * 
+ * <p>
+ * Parameters are the size in bytes of the encoded time as well as a multiplier.
+ * <p>
+ * The multiplier is used to convert the extracted value to milliseconds in the {@link #decode(byte[], int)}} method.
+ * The multiplier is not used in the {@link #decodeRaw(byte[], int)} method.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class FixedSizeTimeDecoder implements TimeDecoder {
+    final ByteOrder byteOrder;
+    final double multiplier;
+    final int size;
+
+    /**
+     * @param byteOrder
+     *            byte order of the encoded integer value
+     * @param size
+     *            how many bytes to be used to decode the time. Has to be maximum 8, otherwise a
+     *            IllegalArgumentException will be thrown
+     * @param multiplier
+     *            the multiplier to convert the extracted value to milliseconds.
+     *
+     */
+    public FixedSizeTimeDecoder(ByteOrder byteOrder, int size, double multiplier) {
+        this.byteOrder = byteOrder;
+        this.multiplier = multiplier;
+        if (size != 4 && size != 8) {
+            throw new IllegalArgumentException("Invalid size " + size + " (should be between 4 or 8)");
+        }
+        this.size = size;
+
+    }
+
+    private long get(byte[] buf, int offset) {
+        if (offset + size > buf.length) {
+            throw new BufferUnderflowException();
+        }
+        switch (size) {
+        case 4:
+            return (byteOrder == ByteOrder.BIG_ENDIAN)
+                    ? ByteArrayUtils.decodeInt(buf, offset)
+                    : ByteArrayUtils.decodeIntLE(buf, offset);
+        case 8:
+            return (byteOrder == ByteOrder.BIG_ENDIAN)
+                    ? ByteArrayUtils.decodeLong(buf, offset)
+                    : ByteArrayUtils.decodeLongLE(buf, offset);
+        default:
+            throw new IllegalStateException("unknown size " + size);
+        }
+    }
+
+    @Override
+    public long decode(byte[] buf, int offset) {
+        return (long) (get(buf, offset) * multiplier);
+    }
+
+    @Override
+    public long decodeRaw(byte[] buf, int offset) {
+        return get(buf, offset);
+    }
+
+}
 ```
 
-## 항목
+### `Float64TimeDecoder.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/FixedSizeTimeDecoder.java`](file--FixedSizeTimeDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/Float64TimeDecoder.java`](file--Float64TimeDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/Instant.java`](file--Instant.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/RealtimeTimeService.java`](file--RealtimeTimeService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/SimulationTimeService.java`](file--SimulationTimeService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeCorrelationService.java`](file--TimeCorrelationService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeDecoder.java`](file--TimeDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeEncoder.java`](file--TimeEncoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeOfFlightEstimator.java`](file--TimeOfFlightEstimator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeService.java`](file--TimeService.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/Float64TimeDecoder.java`
+
+
+```java
+package org.yamcs.time;
+
+import java.nio.BufferUnderflowException;
+import java.nio.ByteOrder;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes milliseconds from fractional seconds stored in a 64-bit float
+ */
+public class Float64TimeDecoder implements TimeDecoder {
+
+    private final ByteOrder byteOrder;
+
+    public Float64TimeDecoder(ByteOrder byteOrder) {
+        this.byteOrder = byteOrder;
+    }
+
+    private double get(byte[] buf, int offset) {
+        if (offset + 8 > buf.length) {
+            throw new BufferUnderflowException();
+        }
+
+        var longBits = (byteOrder == ByteOrder.LITTLE_ENDIAN)
+                ? ByteArrayUtils.decodeLongLE(buf, offset)
+                : ByteArrayUtils.decodeLong(buf, offset);
+        return Double.longBitsToDouble(longBits);
+    }
+
+    @Override
+    public long decode(byte[] buf, int offset) {
+        // Return the value in milliseconds
+        return (long) (get(buf, offset) * 1000);
+    }
+
+    @Override
+    public long decodeRaw(byte[] buf, int offset) {
+        // Same as normal decode
+        return decode(buf, offset);
+    }
+}
+```
+
+### `Instant.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/Instant.java`
+
+
+```java
+package org.yamcs.time;
+
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Yamcs high resolution instant storing milliseconds since 1970-01-01T00:00:00 TAI (including leap seconds) and
+ * picoseconds.
+ * <p>
+ * Most of the Yamcs classes use just the milliseconds.
+ * 
+ * @author nm
+ *
+ */
+public class Instant implements Comparable<Instant> {
+    public static final Instant INVALID_INSTANT = new Instant(TimeEncoding.INVALID_INSTANT);
+    static final long PICOS_PER_MILLIS = 1000_000_000;
+
+    public static final long MIN_INSTANT = TimeEncoding.MIN_INSTANT;
+    public static final long MAX_INSTANT = TimeEncoding.MAX_INSTANT;
+
+    private final long millis;
+    private final int picos;
+
+    private Instant(long millis, int picos) {
+
+        this.millis = millis;
+        this.picos = picos;
+    }
+
+    private Instant(long millis) {
+        this(millis, 0);
+    }
+
+    /**
+     * Create a new instant given the number of milliseconds and the number of picoseconds
+     * 
+     * @param millis
+     * @param picos
+     * @return
+     */
+    public static Instant get(long millis, long picos) {
+        int picos1;
+
+        if (picos >= PICOS_PER_MILLIS || picos < 0) {
+            millis = Math.addExact(millis, Math.floorDiv(picos, PICOS_PER_MILLIS));
+            picos1 = (int) Math.floorMod(picos, PICOS_PER_MILLIS);
+        } else {
+            picos1 = (int) picos;
+        }
+        if (millis > MAX_INSTANT || millis < MIN_INSTANT) {
+            throw new IllegalArgumentException("instant exceeds the limit");
+        }
+        return new Instant(millis, picos1);
+    }
+
+    /**
+     * Returns a new instant with the given milliseconds and the picos 0
+     * 
+     * @param millis
+     * @return
+     */
+    public static Instant get(long millis) {
+        if(millis == TimeEncoding.INVALID_INSTANT) {
+            return INVALID_INSTANT;
+        }
+        if (millis > MAX_INSTANT || millis < MIN_INSTANT) {
+            throw new IllegalArgumentException("instant exceeds the limit");
+        }
+        return new Instant(millis, 0);
+    }
+
+    public long getMillis() {
+        return millis;
+    }
+
+    public int getPicos() {
+        return picos;
+    }
+
+    /**
+     * Add the given instant to this and return the result.
+     * 
+     * @param t
+     * @return
+     */
+    public Instant plus(Instant t) {
+        if ((t.millis | t.picos) == 0) {
+            return this;
+        }
+
+        long millis = Math.addExact(this.millis, t.millis);
+        int picos = this.picos + t.picos;
+
+        return get(millis, picos);
+    }
+
+    /**
+     * Add the given number of seconds to this and return the result
+     * 
+     * @param secs
+     * @return
+     */
+    public Instant plus(double secs) {
+        double millis = 1000 * secs;
+        if (millis > Long.MAX_VALUE || millis < Long.MIN_VALUE) {
+            throw new IllegalArgumentException("seconds value exceeds the limit");
+        }
+
+        long m = (long) millis;
+        int p = (int) Math.round((millis - m) * PICOS_PER_MILLIS);
+        return get(Math.addExact(this.millis, m), this.picos + p);
+    }
+
+    /**
+     * Compute the distance in seconds between this instant and the given instant.
+     * 
+     * @param t
+     * @return
+     */
+    public double deltaFrom(Instant t) {
+        double d = 0.001 * (this.millis - t.millis);
+        d += (this.picos - t.picos) * 1e-12;
+
+        return d;
+    }
+
+    @Override
+    public int compareTo(Instant o) {
+        int cmp = Long.compare(millis, o.millis);
+        if (cmp != 0) {
+            return cmp;
+        }
+        return Integer.compare(picos, o.picos);
+    }
+
+    @Override
+    public int hashCode() {
+        return ((int) (millis ^ (millis >>> 32))) + 51 * picos;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+
+        Instant other = (Instant) obj;
+        if (millis != other.millis)
+            return false;
+        if (picos != other.picos)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (TimeEncoding.isSetUp()) {
+            return TimeEncoding.toString(this.millis);
+        } else {
+            return "Instant [millis=" + millis + ", picos=" + picos + "]";
+        }
+    }
+
+}
+```
+
+### `RealtimeTimeService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/RealtimeTimeService.java`
+
+
+```java
+package org.yamcs.time;
+
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Simple model from TimeService implementing the mission time as the wallclock time
+ * 
+ *
+ */
+public class RealtimeTimeService implements TimeService {
+    @Override
+    public long getMissionTime() {
+        return TimeEncoding.getWallclockTime();
+    }
+}
+```
+
+### `SimulationTimeService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/SimulationTimeService.java`
+
+
+```java
+package org.yamcs.time;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Simulation time model. Can be used by configuring in the yamcs.instance.yaml:
+ * 
+ * <pre>
+ * timeService:
+ *     class: org.yamcs.time.SimulationTimeService
+ *     args:
+ *         time0: "2020-10-02T18:10:00.000Z"
+ *         speed: 1.0
+ * </pre>
+ * 
+ * By default the time0 is initialised with the time at the instance startup and the speed is 1.
+ * <p>
+ * The service maintains a simulated time which is running based on the computer clock according to speed (e.g. speed =
+ * 2
+ * means it runs two times realtime speed). If the speed is 0, the simulated time never advances and it has to be
+ * advanced externally (see below).
+ * <p>
+ * The simulation time service (as well as the speed) can be updated by various means:
+ * <ul>
+ * <li>Using the http time API; see
+ * <a href="https://docs.yamcs.org/yamcs-http-api/time/">https://docs.yamcs.org/yamcs-http-api/time/</a> for
+ * details.</li>
+ * <li>Setting the option {@code updateSimulationTime: true} on a TM Data Link (this is implemented in
+ * {@link AbstractTmDataLink}) and will cause the simulation time to be updated with the packet generation time each
+ * time a packet is received on the corresponding link.
+ * <li>By a custom service.
+ * </ul>
+ * <p>
+ * Note: using a time0 configured with a fixed value will cause the Yamcs to start always with the same simulation time
+ * and that might cause undesired effects such as packets overwriting eachother in the archive.
+ * <p>
+ * Such an option is better to be used in a template which
+ * can then be used to create always new Yamcs instances (corresponding to test sessions) such that the data is
+ * separated. See the <a href="https://docs.yamcs.org/yamcs-http-api/management/">instance and templates API</a> .
+ *
+ * @author nm
+ *
+ */
+public class SimulationTimeService implements TimeService {
+    double speed;
+    long time0;
+    long javaTime; // this is the java time when the last simElapsedTime has been set
+    long simElapsedTime;
+
+    public SimulationTimeService(String yamcsInstance, YConfiguration config) {
+        if (config.containsKey("time0")) {
+            time0 = TimeEncoding.parse(config.getString("time0"));
+        } else {
+            time0 = TimeEncoding.getWallclockTime();
+        }
+        speed = config.getDouble("speed", 1);
+
+        javaTime = System.currentTimeMillis();
+        simElapsedTime = 0;
+    }
+
+    public SimulationTimeService(String yamcsInstance) {
+        this(yamcsInstance, YConfiguration.emptyConfig());
+
+    }
+
+    /**
+     * The mission time returned is:
+     * <p>
+     * {@code time0 + simElapsedTime + speed * (System.currentTimeMillis() - javaTime)}
+     * <p>
+     * where time0 is the value set with {@link #setTime0(long)}, speed is the value set with
+     * {@link #setSimSpeed(double)} and javaTime are the values set with {@link #setSimElapsedTime(long, long)}.
+     */
+    @Override
+    public long getMissionTime() {
+        return (long) (time0 + simElapsedTime + speed * (System.currentTimeMillis() - javaTime));
+    }
+
+    /**
+     * Sets the javaTime and simElapsedTime used to compute the mission time by {@link #getMissionTime()}
+     *
+     * @param javaTime
+     * @param simElapsedTime
+     */
+    public void setSimElapsedTime(long javaTime, long simElapsedTime) {
+        this.javaTime = javaTime;
+        this.simElapsedTime = simElapsedTime;
+    }
+
+    /**
+     * Same as setSimElapsedTime(System.currentTimeMillis(), simElapsedTime).
+     *
+     * @param simElapsedTime
+     */
+    public void setSimElapsedTime(long simElapsedTime) {
+        setSimElapsedTime(System.currentTimeMillis(), simElapsedTime);
+    }
+
+    /**
+     * Set the time0
+     * 
+     * @param time0
+     */
+    public void setTime0(long time0) {
+        this.time0 = time0;
+    }
+
+    /**
+     * Set the simulation speed. If greater than 0, the time passes even without the update of the simElapsedTime.
+     * 
+     * @param simSpeed
+     */
+    public void setSimSpeed(double simSpeed) {
+        this.speed = simSpeed;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+}
+```
+
+### `TimeCorrelationService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeCorrelationService.java`
+
+
+```java
+package org.yamcs.time;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.external.SimpleRegression;
+import org.yamcs.parameter.ParameterStatus;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.parameter.SystemParametersProducer;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.TcoConfig;
+import org.yamcs.protobuf.TcoSample;
+import org.yamcs.protobuf.TcoStatus;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.xtce.SystemParameter;
+import org.yamcs.xtce.UnitType;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+/**
+ * On-board time correlation service (inspired from SCOS2K (ESA MCS)).
+ * <p>
+ * It receives samples {@code (obt, ert, tof)} where:
+ * <ul>
+ * <li>obt - onboard time considered to be a counter starting at 0 when an on-board computer starts. This service uses
+ * an 64bits integer.</li>
+ * <li>ert - Earth Reception Time - the timestamp when the signal has been received on the ground - it is typically
+ * provided by a ground station. This service expects the time to be provided in the {@link Instant} format which has
+ * picoseconds resolution.</li>
+ * </ul>
+ * 
+ * In addition it takes two other parameters:
+ * 
+ * <ul>
+ * <li>onboardDelay - configurable in the service configuration. It covers any delay happening on-board (sampling time,
+ * radiation time)
+ * <li>tof - time of flight - the time it takes for the signal to reach the ground.</li>
+ * </ul>
+ * 
+ * The time of flight can be fixed or computed by the {@link TimeOfFlightEstimator} by dynamically interpolating from
+ * data provided by a flight dynamics system.
+ * <p>
+ * Computes {@code m} = gradient and {@code c} = offset such that
+ * <p>
+ * {@code ob_time = m*obt + c}
+ * <p>
+ * The determination of the gradient and offset is done using the least squares method.
+ * <p>
+ * The number of samples used for computing the coefficients is configurable and has to be minimum 2.
+ * <h2>Accuracy and validity</h2> Once the coefficients have been calculated, for each new sample received a deviation
+ * is calculated as the delta between the OBT computed using the coefficients and the OBT which is part of the sample
+ * (after adjusting for delays). The deviation is compared with the accuracy and validity parameters:
+ *
+ * <ul>
+ * <li>If the deviation is greater than {@code accuracy} but smaller than {@code validity}, then a recalculation of the
+ * coefficients is performed based on the last received samples.</li>
+ *
+ * <li>If the deviation is greater than {@code validity} then the coefficients are declared as invalid and all the
+ * samples from the buffer except the last one are dropped. The time returned by {@link #getTime(long)} will be invalid
+ * until the required number of new samples is received and the next recalculation is performed</li>
+ * </ul>
+ * 
+ * <h2>Historical coefficients</h2> The service keeps track of multiple intervals corresponding to different on-board
+ * time resets. At Yamcs startup the service loads a list of intervals from the tco table.
+ * <p>
+ * If using the historical recording to insert some old data into the Yamcs, in order to get the correct coefficients
+ * one has to know the approximate time when the data has been generated.
+ *
+ * <h2>Verify Only Mode</h2> If the on-board clock is synchronized via a different method, this service can still be
+ * used to verify the synchronization.
+ *
+ * <p>
+ * The method {@link #verify} will check the difference between the packet generation time and the expected generation
+ * time (using ert - delays) and in case the difference is greater than the validity, the packet will be changed with
+ * the local computed time and the flag {@link TmPacket#setLocalGenTimeFlag()} will also be set.
+ * 
+ * <h2>Usage</h2>
+ * 
+ * <p>
+ * To use this service there will be typically one component which adds samples using the
+ * {@link #addSample(long, Instant)} each time it receives a correlation sample from on-board. How the on-board system
+ * will send such samples is mission specific (for example the PUS protocol defines some specific time packets for this
+ * purpose).
+ * <p>
+ * In addition there will be other components (preprocessors or other services) which can use the class to get a Yamcs
+ * time associated to a specific OBT.
+ * 
+ * 
+ * <p>
+ * This class is thread safe: the synchronised methods {@link #addSample} and {@link #reset} are the only one where the
+ * state is changed and thus the {@link #getTime(long)} can be used from multiple threads concurrently.
+ * 
+ */
+public class TimeCorrelationService extends AbstractYamcsService implements SystemParametersProducer {
+    static public final String TABLE_NAME = "tco_";
+    static public final int MAX_HISTCOEF = 1000;
+
+    public static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("obi0", DataType.HRES_TIMESTAMP);
+        TDEF.addColumn("obt0", DataType.LONG);
+        TDEF.addColumn("gradient", DataType.DOUBLE);
+        TDEF.addColumn("offset", DataType.DOUBLE);
+    }
+    volatile TcoCoefficients curCoefficients;
+
+    TimeOfFlightEstimator tofEstimator;
+    List<TcoCoefficients> coefHist = new CopyOnWriteArrayList<>();
+
+    SimpleRegression sg;
+
+    ArrayDeque<Sample> sampleQueue;
+    TimeService timeService;
+    ParameterStatus nominalStatus, watchStatus, warningStatus;
+
+    /**
+     * how long (in seconds) it takes to sample the clock on-board, pack the data in the frame, etc.
+     */
+    double onboardDelay;
+
+    double accuracy;
+    double validity;
+    /**
+     * how many samples are used for the regression
+     */
+    int numSamples;
+
+    /**
+     * default time of flight, used if cannot be obtained from the tofEstimator
+     */
+    double defaultTof;
+
+    /**
+     * last computed deviation
+     */
+    volatile double lastDeviation = Double.NaN;
+
+    /**
+     * Last time when the coefficients have been computed
+     */
+    long coefficientsTime = TimeEncoding.INVALID_INSTANT;
+
+    Stream tcoStream;
+    EventProducer eventProducer;
+    private SystemParameter spDeviation;
+    private ParameterValue deviationPv;
+    String tableName;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("onboardDelay", OptionType.FLOAT).withDefault(0.0);
+        spec.addOption("numSamples", OptionType.INTEGER).withDefault(3);
+        spec.addOption("accuracy", OptionType.FLOAT).withDefault(0.1);
+        spec.addOption("validity", OptionType.FLOAT).withDefault(0.2);
+        spec.addOption("saveCoefficients", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("saveTofPolynomials", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("defaultTof", OptionType.FLOAT).withDefault(0.0);
+        spec.addOption("useTofEstimator", OptionType.BOOLEAN).withDefault(false);
+
+        return spec;
+    }
+
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        onboardDelay = config.getDouble("onboardDelay", 0);
+        numSamples = config.getInt("numSamples", 3);
+        sampleQueue = new ArrayDeque<>(numSamples);
+        accuracy = config.getDouble("accuracy", 0.1);
+        validity = config.getDouble("validity", 0.2);
+        defaultTof = config.getDouble("defaultTof", 0.0);
+
+        boolean saveCoefficients = config.getBoolean("saveCoefficients", true);
+        boolean saveTofPolynomials = config.getBoolean("saveTofPolynomials", true);
+        boolean useTofEstimator = config.getBoolean("useTofEstimator", false);
+
+        if (useTofEstimator) {
+            tofEstimator = new TimeOfFlightEstimator(yamcsInstance, serviceName, saveTofPolynomials);
+        } else {
+            tofEstimator = null;
+        }
+
+        this.timeService = YamcsServer.getTimeService(yamcsInstance);
+        if (saveCoefficients) {
+            tableName = TABLE_NAME + serviceName;
+
+            String streamName = tableName + "_in";
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            try {
+                if (ydb.getTable(tableName) == null) {
+                    String query = "create table " + tableName + "(" + TDEF.getStringDefinition1()
+                            + ", primary key(obi0))";
+                    ydb.execute(query);
+                } else {
+                    retrieveArchivedCoefficients(ydb);
+                }
+                if (ydb.getStream(streamName) == null) {
+                    ydb.execute("create stream " + streamName + TDEF.getStringDefinition());
+                }
+                ydb.execute("insert into " + tableName + " select * from " + streamName);
+            } catch (ParseException | StreamSqlException e) {
+                throw new InitException(e);
+            }
+            tcoStream = ydb.getStream(streamName);
+        } else {
+            tcoStream = null;
+        }
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, this.getClass().getName(), 10000);
+    }
+
+    private void retrieveArchivedCoefficients(YarchDatabaseInstance ydb) throws InitException {
+        try {
+            // we add them to a temporary list because CopyOnWriteArrayList is not very efficient at adding one by one
+            List<TcoCoefficients> tmpl = new ArrayList<>();
+            StreamSqlStatement stmt = ydb.createStatement(
+                    "select * from " + tableName + " order desc limit " + MAX_HISTCOEF,
+                    serviceName);
+
+            StreamSqlResult res = ydb.execute(stmt);
+            while (res.hasNext()) {
+                tmpl.add(TcoCoefficients.fromTuple(res.next()));
+            }
+            res.close();
+            if (!tmpl.isEmpty()) {
+                curCoefficients = tmpl.get(0);
+            }
+            coefHist.addAll(tmpl);
+        } catch (Exception e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    /**
+     * 
+     * Add a time synchronisation sample.
+     * <p>
+     * If the coefficients are already computed, the sample will be used to asses the accuracy of the computation. If
+     * the accuracy is lower than {@link #accuracy}, the coefficients will be recomputed based on the latest samples.
+     * <p>
+     * If the coefficients are not yet computed, the sample will be simply added to the sample buffer. If there are
+     * enough samples in the buffer, the coefficients will be calculated.
+     * 
+     * 
+     * @param obt
+     *            - On-Board Time
+     * @param ert
+     *            - Earth Reception Time
+     * @throws IllegalArgumentException
+     *             if the obt or ert are smaller than the ones in the previous sample
+     */
+    public synchronized void addSample(long obt, Instant ert) {
+        double delay = getTof(ert) + onboardDelay;
+        Instant obi = ert.plus(-delay);
+
+        if (!sampleQueue.isEmpty()) {
+            Sample last = sampleQueue.getLast();
+            if (obt < last.obt || obi.compareTo(last.obi) < 0) {
+                throw new IllegalArgumentException("Sample (" + obt + ", " + obi + ") is preceeding the previous one ("
+                        + last.obt + ", " + last.obi + ")");
+            }
+        }
+        Sample s = new Sample(obt, obi);
+
+        if (curCoefficients == null) {
+            sampleQueue.addLast(s);
+            if (sampleQueue.size() == numSamples) {
+                computeCoefficients();
+            }
+        } else {// state=SYNC
+            if (sampleQueue.size() >= numSamples) {
+                sampleQueue.removeFirst();
+            }
+            sampleQueue.addLast(s);
+            // verify accuracy
+            Instant obi1 = curCoefficients.getInstant(obt);
+            double deviation = obi1.deltaFrom(obi);
+            double dev = Math.abs(deviation);
+
+            if (dev > validity) {
+                eventProducer.sendWarning(String.format("Deviation %f sec "
+                        + "greater than the allowed validity %f sec, reseting correlation", dev,
+                        validity));
+                curCoefficients = null;
+                sampleQueue.clear();
+                sampleQueue.addLast(s);
+            } else if (dev > accuracy) {
+                eventProducer.sendInfo(String.format("Deviation %f sec "
+                        + "greater than the allowed accuracy %f sec, recomputing coefficients", dev,
+                        accuracy));
+                computeCoefficients();
+            }
+            publishDeviation(deviation);
+        }
+    }
+
+    /**
+     * Forgets about the computed coefficients and the stored tuples.
+     * <p>
+     * Should be called when the on-board clock resets.
+     */
+    public synchronized void reset() {
+        curCoefficients = null;
+        sampleQueue.clear();
+        lastDeviation = Double.NaN;
+    }
+
+    /**
+     * 
+     * Returns the time when the on-board clock had the given value. If the coefficients are not computed yet, it will
+     * return {@link Instant#INVALID_INSTANT}
+     * 
+     * @param obt
+     * @return the time instant corresponding to the on-board obt tick.
+     * 
+     */
+    public Instant getTime(long obt) {
+        TcoCoefficients c = curCoefficients;
+
+        if (c == null) {
+            return Instant.INVALID_INSTANT;
+        } else {
+            return c.getInstant(obt);
+        }
+    }
+
+    /**
+     * Returns the on-board time corresponding to the given on-board clock
+     * <p>
+     * If the coefficients are not computed yet, it will return Long.MIN_VALUE
+     * 
+     * @param scheduleTime
+     * @return
+     */
+    public long getObt(long scheduleTime) {
+        TcoCoefficients c = curCoefficients;
+
+        if (c == null) {
+            return Long.MIN_VALUE;
+        } else {
+            return c.getObt(Instant.get(scheduleTime));
+        }
+    }
+
+    /**
+     * Set the generation time of the packet based on the computed coefficients.
+     * <p>
+     * If the coefficients are not valid, set the generation time to gentime = ert-delays and also set the flag
+     * {@link TmPacket#setLocalGenTimeFlag()}
+     * 
+     * <p>
+     * The packet has to have the ert set, otherwise an exception is thrown
+     * 
+     * @param obt
+     * @param pkt
+     * @throws IllegalArgumentException
+     *             if the packet has no ert set
+     */
+    public void timestamp(long obt, TmPacket pkt) {
+        Instant ert = pkt.getEarthReceptionTime();
+
+        if (ert == null) {
+            throw new IllegalArgumentException("no ert available");
+        }
+
+        TcoCoefficients c = curCoefficients;
+        if (c == null) {
+            double delay = getTof(ert) + onboardDelay;
+            Instant genTime = ert.plus(-delay);
+            pkt.setGenerationTime(genTime.getMillis());
+            pkt.setLocalGenTimeFlag();
+        } else {
+            Instant genTime = c.getInstant(obt);
+            pkt.setGenerationTime(genTime.getMillis());
+        }
+    }
+
+    double getTof(Instant ert) {
+        if (tofEstimator == null) {
+            return defaultTof;
+        }
+        double d = tofEstimator.getTof(ert);
+        if (Double.isNaN(d)) {
+            return defaultTof;
+        } else {
+            return d;
+        }
+    }
+
+    /**
+     * Verify the time synchronization of the packet. This assumes that the packet generation time has already been
+     * computed (by a packet pre-processor).
+     * <p>
+     * If the deviation between the provided generation time and the expected generation time (computed based on the ert
+     * - delays) is greater than the validity threshold, the generation time is changed to the expected time and the
+     * {@link TmPacket#setLocalGenTimeFlag()} is also set.
+     * <p>
+     * The computed deviation is also published as a processed parameter.
+     * 
+     * @param pkt
+     * @throws IllegalArgumentException
+     *             if the packet has no ert set
+     */
+    public void verify(TmPacket pkt) {
+
+        Instant ert = pkt.getEarthReceptionTime();
+
+        if (ert == null || ert == Instant.INVALID_INSTANT) {
+            throw new IllegalArgumentException("no ert available");
+        }
+        double delay = getTof(ert) + onboardDelay;
+        Instant expectedGenTime = ert.plus(-delay);
+
+        double deviation = expectedGenTime.deltaFrom(Instant.get(pkt.getGenerationTime()));
+        if (Math.abs(deviation) > validity) {
+            pkt.setGenerationTime(expectedGenTime.getMillis());
+            pkt.setLocalGenTimeFlag();
+        }
+
+        publishDeviation(deviation);
+    }
+
+    /**
+     * Returns the time when the on-board clock had the given value. obi is an approximative time used to search in
+     * history for the coefficients applicable at that time.
+     * <p>
+     * Returns {@link Instant#INVALID_INSTANT} if no historical coefficients are found.
+     * 
+     * @param obi
+     * @param obt
+     * @return
+     */
+    public Instant getHistoricalTime(Instant obi, long obt) {
+        for (TcoCoefficients tc : coefHist) {
+            if (tc.obi0.compareTo(obi) <= 0) {
+                return tc.getInstant(obt);
+            }
+        }
+        return Instant.INVALID_INSTANT;
+    }
+
+    private void publishDeviation(double deviation) {
+        lastDeviation = deviation;
+
+        if (spDeviation == null) {
+            return;// no system parameter collector configured
+        }
+        long time = timeService.getMissionTime();
+        double dabs = Math.abs(deviation);
+        ParameterValue pv = SystemParametersService.getPV(spDeviation, time, deviation);
+        if (dabs > validity) {
+            pv.setStatus(warningStatus);
+        } else if (dabs > accuracy) {
+            pv.setStatus(watchStatus);
+        } else {
+            pv.setStatus(nominalStatus);
+        }
+        deviationPv = pv;
+    }
+
+    @Override
+    protected void doStart() {
+        setupSystemParameters();
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    public TimeOfFlightEstimator getTofEstimator() {
+        return tofEstimator;
+    }
+
+    private void computeCoefficients() {
+        TcoCoefficients c = new TcoCoefficients();
+        Sample s0 = sampleQueue.getFirst();
+        c.obi0 = s0.obi;
+        c.obt0 = s0.obt;
+        SimpleRegression sr = new SimpleRegression();
+        for (Sample s : sampleQueue) {
+            sr.addData(s.obt - c.obt0, s.obi.deltaFrom(c.obi0));
+        }
+        c.gradient = sr.getSlope();
+        c.offset = sr.getIntercept();
+        if (tcoStream != null) {
+            tcoStream.emitTuple(c.toTuple());
+        }
+        curCoefficients = c;
+        coefHist.add(0, c);
+        if (coefHist.size() > MAX_HISTCOEF) {
+            coefHist.remove(coefHist.size() - 1);
+        }
+
+        eventProducer.sendInfo("Computed new coefficients: " + c);
+    }
+
+    void setupSystemParameters() {
+        SystemParametersService collector = SystemParametersService.getInstance(yamcsInstance);
+        if (collector != null) {
+            makeParameterStatus();
+            spDeviation = collector.createSystemParameter(serviceName + "/deviation", Type.DOUBLE, new UnitType("sec"),
+                    "delta between the OBT computed using the coefficients and the OBT which is part of a time sample"
+                            + " (after adjusting for delays)");
+            collector.registerProducer(this);
+        }
+    }
+
+    @Override
+    public List<ParameterValue> getSystemParameters(long gentime) {
+        if (deviationPv != null) {
+            return Arrays.asList(deviationPv);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private void makeParameterStatus() {
+        nominalStatus = getParaStatus();
+        nominalStatus.setMonitoringResult(MonitoringResult.IN_LIMITS);
+        watchStatus = getParaStatus();
+        watchStatus.setMonitoringResult(MonitoringResult.WATCH);
+        warningStatus = getParaStatus();
+        warningStatus.setMonitoringResult(MonitoringResult.WARNING);
+    }
+
+    private ParameterStatus getParaStatus() {
+        ParameterStatus status = new ParameterStatus();
+        status.setWatchRange(new DoubleRange(-accuracy, accuracy));
+        status.setWarningRange(new DoubleRange(-validity, validity));
+
+        return status;
+    }
+
+    public synchronized void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    public synchronized void setValidity(double validity) {
+        this.validity = validity;
+    }
+
+    public synchronized void setOnboardDelay(double onboardDelay) {
+        this.onboardDelay = onboardDelay;
+    }
+
+    public synchronized void setDefaultTof(double defaultTof) {
+        this.defaultTof = defaultTof;
+    }
+
+    public synchronized void forceCoefficients(Instant obi, long obt, double offset, double gradient) {
+        TcoCoefficients tcoef = new TcoCoefficients();
+        tcoef.obt0 = obt;
+        tcoef.obi0 = obi;
+        tcoef.offset = offset;
+        tcoef.gradient = gradient;
+        curCoefficients = tcoef;
+        coefficientsTime = timeService.getMissionTime();
+    }
+
+    static class TcoCoefficients {
+        Instant obi0;
+        long obt0;
+        double gradient;
+        double offset;
+
+        /**
+         * Returns the Yamcs Instant corresponding to the given obt
+         * 
+         * @param obt
+         * @return
+         */
+        Instant getInstant(long obt) {
+            return obi0.plus(gradient * (obt - obt0) + offset);
+        }
+
+        /**
+         * Returns the obt corresponding to the given Yamcs instant
+         */
+        long getObt(Instant instant) {
+            return (long) ((instant.deltaFrom(obi0) - offset) / gradient) + obt0;
+        }
+
+        Tuple toTuple() {
+            Tuple t = new Tuple(TDEF, Arrays.asList(obi0, obt0, gradient, offset));
+            return t;
+        }
+
+        static TcoCoefficients fromTuple(Tuple t) {
+            TcoCoefficients c = new TcoCoefficients();
+            c.obi0 = (Instant) t.getColumn("obi0");
+            c.obt0 = (Long) t.getColumn("obt0");
+            c.gradient = (Double) t.getColumn("gradient");
+            c.offset = (Double) t.getColumn("offset");
+
+            return c;
+        }
+
+        @Override
+        public String toString() {
+            return "TcoCoefficients [obi0=" + obi0 + ", obt0=" + obt0 + ", gradient=" + gradient + ", offset=" + offset
+                    + "]";
+        }
+
+        public double getOffset() {
+            return offset;
+        }
+    }
+
+    static class Sample {
+        final long obt;
+        final Instant obi;
+
+        public Sample(long obt, Instant obi) {
+            this.obt = obt;
+            this.obi = obi;
+        }
+    }
+
+    public synchronized TcoConfig getTcoConfig() {
+        TcoConfig.Builder tcb = TcoConfig.newBuilder();
+        tcb.setAccuracy(accuracy).setValidity(validity).setOnboardDelay(onboardDelay).setDefaultTof(defaultTof);
+        return tcb.build();
+    }
+
+    public synchronized TcoStatus getStatus() {
+        TcoStatus.Builder status = TcoStatus.newBuilder();
+        double d = lastDeviation;
+        if (!Double.isNaN(d)) {
+            status.setDeviation(d);
+        }
+
+        TcoCoefficients c = curCoefficients;
+        if (c != null) {
+            status.setCoefficients(toProto(c));
+        }
+
+        long ct = coefficientsTime;
+        if (ct != TimeEncoding.INVALID_INSTANT) {
+            status.setCoefficientsTime(TimeEncoding.toProtobufTimestamp(ct));
+        }
+
+        for (Sample sample : sampleQueue) {
+            status.addSamples(toProto(sample));
+        }
+        return status.build();
+    }
+
+    private TcoSample toProto(Sample sample) {
+        return TcoSample.newBuilder().setObt(sample.obt).setUtc(TimeEncoding.toProtobufTimestamp(sample.obi)).build();
+    }
+
+    private org.yamcs.protobuf.TcoCoefficients toProto(TcoCoefficients c) {
+        org.yamcs.protobuf.TcoCoefficients.Builder tcb = org.yamcs.protobuf.TcoCoefficients.newBuilder();
+        tcb.setOffset(c.offset).setGradient(c.gradient)
+                .setUtc(TimeEncoding.toProtobufTimestamp(c.obi0)).setObt(c.obt0);
+
+        return tcb.build();
+    }
+
+
+}
+```
+
+### `TimeDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeDecoder.java`
+
+
+```java
+package org.yamcs.time;
+
+import org.yamcs.tctm.PacketPreprocessor;
+
+/**
+ * Interface for time decoders used in the {@link PacketPreprocessor}
+ * 
+ */
+public interface TimeDecoder {
+
+    /**
+     * Decodes the time from the binary buffer and returns the time in milliseconds. The value returned can be either
+     * absolute or relative (this has to be known by the caller)
+     * <p>
+     * It is assumed that the buffer will contain enough data; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param buf
+     *            - where to read the data from
+     * @param offset
+     *            - offset in the buffer where the decoding will begin
+     * @return decoded time in milliseconds
+     * 
+     */
+    public long decode(byte[] buf, int offset);
+
+    /**
+     * Returns the time in an unspecified unit.
+     * <p>
+     * Can be used when the on-board time is free running.
+     * 
+     * <p>
+     * It is assumed that the buffer will contain enough data; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param buf
+     *            - where to read the data from
+     * 
+     * @param offset
+     *            - offset in the buffer where the decoding will begin
+     * @return time
+     * 
+     */
+    public long decodeRaw(byte[] buf, int offset);
+}
+```
+
+### `TimeEncoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeEncoder.java`
+
+
+```java
+package org.yamcs.time;
+
+import org.yamcs.tctm.PacketPreprocessor;
+
+/**
+ * Interface for time encoders used in the {@link PacketPreprocessor}
+ */
+public interface TimeEncoder {
+
+    /**
+     * Encodes the Yamcs instant into the binary buffer.
+     * <p>
+     * It is assumed that the buffer will have enough space; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param instant
+     *            - time in milliseconds to be encoded
+     * @param buf
+     *            - where to write the encoded time
+     * @param offset
+     *            - offset in the buffer where the encoding will begin
+     * @return the number of bytes encoded
+     */
+    public int encode(long instant, byte[] buf, int offset);
+
+    /**
+     * Encodes the time in an unspecified unit.
+     * <p>
+     * This can be used when the on-board time is free running.
+     * 
+     * <p>
+     * It is assumed that the buffer will have enough space; if not, an {@link ArrayIndexOutOfBoundsException} will be
+     * thrown.
+     * 
+     * @param time
+     *            - time in unspecified units to be encoded
+     * @param buf
+     *            - where to write the encoded time
+     * @param offset
+     *            - offset in the buffer where the encoding will begin
+     * 
+     * @return the number of bytes encoded
+     */
+    public int encodeRaw(long time, byte[] buf, int offset);
+
+    /**
+     * Returns the size in bytes of the encoded time.
+     * <p>
+     * If the size is variable return -1
+     */
+    public int getEncodedLength();
+
+}
+```
+
+### `TimeOfFlightEstimator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeOfFlightEstimator.java`
+
+
+```java
+package org.yamcs.time;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.InitException;
+import org.yamcs.YamcsServer;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+/**
+ * Time of flight estimator.
+ * <p>
+ * It returns time of flight between a spacecraft and a ground antenna by interpolating using user defined spline
+ * polynomials.
+ * 
+ * @author nm
+ *
+ */
+public class TimeOfFlightEstimator {
+    // currently we only support one antenna, in the future we may have one object of this class for each antenna
+    final static String DEFAULT_ANTENNA = "gs1";
+    final static String TABLE_NAME = "tof_";
+
+    public static final TupleDefinition TDEF = new TupleDefinition();
+    static {
+        TDEF.addColumn("ertStart", DataType.HRES_TIMESTAMP);
+        TDEF.addColumn("ertStop", DataType.HRES_TIMESTAMP);
+        TDEF.addColumn("polCoef", DataType.BINARY);
+    }
+
+    CopyOnWriteArrayList<TofInterval> calibIntervals = new CopyOnWriteArrayList<>();
+    final String clockName;
+    final String antenna = DEFAULT_ANTENNA;
+    final boolean savePolynomials;
+    final String yamcsInstance;
+    final Stream tofStream;
+    String tableName;
+
+    public TimeOfFlightEstimator(String yamcsInstance, String clockName, boolean savePolynomials) throws InitException {
+        this.clockName = clockName;
+        this.savePolynomials = savePolynomials;
+        this.yamcsInstance = yamcsInstance;
+
+        if (savePolynomials) {
+            tableName = TABLE_NAME + clockName;
+
+            String streamName = tableName + "_in";
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            try {
+                if (ydb.getTable(tableName) == null) {
+                    String query = "create table " + tableName + "(" + TDEF.getStringDefinition1()
+                            + ", primary key(ertStart, ertStop))";
+                    ydb.execute(query);
+                } else {
+                    retrieveArchivedCoefficients(ydb);
+                }
+                if (ydb.getStream(streamName) == null) {
+                    ydb.execute("create stream " + streamName + TDEF.getStringDefinition());
+                }
+                ydb.execute("insert into " + tableName + " select * from " + streamName);
+            } catch (ParseException | StreamSqlException e) {
+                throw new InitException(e);
+            }
+            tofStream = ydb.getStream(streamName);
+        } else {
+            tofStream = null;
+        }
+
+    }
+
+    private void retrieveArchivedCoefficients(YarchDatabaseInstance ydb) throws InitException {
+        TimeService timeService = YamcsServer.getTimeService(ydb.getName());
+        long now = timeService.getMissionTime();
+        try {
+            List<TofInterval> tmpl = new ArrayList<>();
+            StreamSqlResult res = ydb.execute(
+                    "select * from " + tableName + " where ertStart>? order desc ", now);
+            while (res.hasNext()) {
+                tmpl.add(TofInterval.fromTuple(res.next()));
+            }
+
+            calibIntervals.addAll(tmpl);
+        } catch (Exception e) {
+            throw new InitException(e);
+        }
+    }
+
+    /**
+     * Returns time of flight of the signal received at ert at the ground station
+     * 
+     * @param ert
+     * @return time of flight in seconds or NaN if it cannot be computed
+     */
+    public double getTof(Instant ert) {
+        // this iteration assumes that it is more likely to find the wanted ert in front of the list
+        for (TofInterval ti : calibIntervals) {
+            if (ti.ertStart.compareTo(ert) <= 0 && ti.ertStop.compareTo(ert) > 0) {
+                return ti.getTof(ert);
+            }
+        }
+
+        return Double.NaN;
+    }
+
+    public void addInterval(Instant ertStart, Instant ertStop, double[] polCoefficients) {
+        TofInterval ti = new TofInterval(ertStart, ertStop, polCoefficients);
+        calibIntervals.add(ti);
+        calibIntervals.sort(new IntervalComparator());
+        if (tofStream != null) {
+            tofStream.emitTuple(ti.toTuple());
+        }
+    }
+
+    public void addIntervals(Collection<TofInterval> intervals) {
+        calibIntervals.addAll(intervals);
+        calibIntervals.sort(new IntervalComparator());
+        if (tofStream != null) {
+            for (TofInterval ti : intervals) {
+                tofStream.emitTuple(ti.toTuple());
+            }
+        }
+    }
+
+    class IntervalComparator implements Comparator<TofInterval> {
+        @Override
+        public int compare(TofInterval p1, TofInterval p2) {
+            int c = p2.ertStart.compareTo(p1.ertStart);
+            if (c == 0) {// in case of intervals with the same start, we put the shorter one in front
+                return p1.ertStop.compareTo(p2.ertStop);
+            } else {
+                return c;
+            }
+        }
+    }
+
+    public void deleteSplineIntervals(Instant start, Instant stop) {
+        List<TofInterval> tiList = new ArrayList<>();
+        for (TofInterval ti : calibIntervals) {
+            Instant d = ti.ertStart;
+            if (d.compareTo(start) >= 0 && d.compareTo(stop) <= 0) {
+                tiList.add(ti);
+            }
+        }
+        calibIntervals.removeAll(tiList);
+    }
+
+    /**
+     * Used for polynomial interpolation of time of flight based on ERT.
+     * <p>
+     * Each interval has a start/stop and a set of polynomial coefficients.
+     * <p>
+     * The time of flight {@code tof} corresponding to a given earth reception time {@code ert} is given by the formula:
+     * 
+     * <pre>
+     * delta = ert - ertStart
+     * tof =c[0] + c[1]*delta + c[2]*delta^2 + ...
+     * </pre>
+     * 
+     * where {@code ertStart} is the start of the interval and {@code c} are the polynomial coefficients. {@code delta}
+     * is the duration of the given {@code ert} from the interval start.
+     * <p>
+     * {@code delta} as well as {@code tof} are expressed in seconds.
+     *
+     */
+    static public class TofInterval {
+        final Instant ertStart;
+        final Instant ertStop;
+        final double[] polCoef;
+
+        public TofInterval(Instant ertStart, Instant ertStop, double[] polCoefficients) {
+            this.ertStart = ertStart;
+            this.ertStop = ertStop;
+            this.polCoef = polCoefficients;
+        }
+
+        double getTof(Instant ert) {
+            double d = ert.deltaFrom(ertStart);
+            double r = 0;
+
+            for (int i = polCoef.length - 1; i >= 0; i--) {
+                r = d * r + polCoef[i];
+            }
+            return r;
+        }
+
+        public static TofInterval fromTuple(Tuple tuple) {
+            return new TofInterval((Instant) tuple.getColumn("ertStart"),
+                    (Instant) tuple.getColumn("ertStop"),
+                    decodeCoefficients((byte[]) tuple.getColumn("polCoef")));
+        }
+
+        Tuple toTuple() {
+            return new Tuple(TDEF, Arrays.asList(ertStart, ertStop, encodeCoefficients(polCoef)));
+        }
+
+    }
+
+    static double[] decodeCoefficients(byte[] data) {
+        double[] d = new double[data.length / 8];
+        ByteBuffer bb = ByteBuffer.wrap(data);
+        for (int i = 0; i < d.length; i++) {
+            d[i] = bb.getDouble();
+        }
+        return d;
+    }
+
+    static byte[] encodeCoefficients(double[] polCoef) {
+        ByteBuffer bb = ByteBuffer.allocate(polCoef.length * 8);
+        for (double d : polCoef) {
+            bb.putDouble(d);
+        }
+        return bb.array();
+    }
+}
+```
+
+### `TimeService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/time/TimeService.java`
+
+
+```java
+package org.yamcs.time;
+
+/**
+ * The time service provides the so call mission time.
+ * <p>
+ * There is one such service for each Yamcs instance.
+ *
+ * <p>
+ * Different implementations of these can alow to simulate time in the past or in the future or provide a time
+ * synchronized with a simulator.
+ * 
+ */
+public interface TimeService {
+    /**
+     * @return the mission time in Yamcs millisecond resolution
+     */
+    public long getMissionTime();
+    
+    /**
+     * 
+     * @return the mission time in high resolution. When there is no high resolution time available, this returns an
+     *         Instant equivalent with {@link #getMissionTime()}
+     */
+    default public Instant getHresMissionTime() {
+        return Instant.get(getMissionTime());
+    }
+
+    /**
+     * If the time service is a simulated time, this gives the relation between the (simulated) mission time and the
+     * wall clock time:
+     * <ul>
+     * <li>1.0 = realtime speed.</li>
+     * <li>&gt;1.0 = faster than realtime</li>
+     * <li>&lt;1.0 = slower than realtime.</li>
+     * </ul>
+     *
+     * @return the relation between the mission time and the wall clock time
+     *
+     */
+    default public double getSpeed() {
+        return 1.0;
+    }
+}
+```

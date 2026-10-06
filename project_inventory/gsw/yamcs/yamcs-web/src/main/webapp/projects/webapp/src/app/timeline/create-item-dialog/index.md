@@ -3,16 +3,188 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-item-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-item-dialog.component.html`
 
-file--create-item-dialog.component.html
-file--create-item-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-item-dialog/create-item-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Add {{ data.type | lowercase }} item</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <mat-tab-group animationDuration="0ms" class="small-tabs" [mat-stretch-tabs]="false">
+      <mat-tab label="General">
+        <div style="margin-top: 1em">
+          <ya-field label="Name">
+            <input cdkFocusRegionstart type="text" formControlName="name" />
+          </ya-field>
+
+          <ya-field label="Tags">
+            <ya-help dialogTitle="Tags">
+              Tags allow to categorise items per band. Bands only show items for which one of the
+              tags is matching.
+            </ya-help>
+            <ya-tag-select formControlName="tags" />
+          </ya-field>
+
+          <ya-field label="Duration">
+            <ya-duration-input formControlName="duration" />
+          </ya-field>
+
+          <ya-field-divider />
+
+          <ya-field label="Start">
+            <ya-date-time-input formControlName="start" />
+          </ya-field>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Styles">
+        <div style="margin-top: 1em">
+          <app-item-styles [form]="form" />
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">SAVE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-item-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-item-dialog/create-item-dialog.component.html`](file--create-item-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-item-dialog/create-item-dialog.component.ts`](file--create-item-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-item-dialog/create-item-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+} from '@angular/core';
+import {
+  FormGroup,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  CreateTimelineItemRequest,
+  MessageService,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+import { itemPropertyInfo } from '../item-band/ItemBand';
+import { ItemStylesComponent } from '../item-band/item-styles/item-styles.component';
+import { resolveProperties } from '../shared/properties';
+
+const OVERRIDE_SUFFIX = '_overrideBand';
+
+@Component({
+  templateUrl: './create-item-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ItemStylesComponent, WebappSdkModule],
+})
+export class CreateItemDialogComponent implements OnDestroy {
+  startConstraintOptions: YaSelectOption[] = [
+    { id: 'START_ON', label: 'Start on' },
+  ];
+
+  form: UntypedFormGroup;
+  private formSubscription: Subscription;
+
+  constructor(
+    private dialogRef: MatDialogRef<CreateItemDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    const props = resolveProperties(itemPropertyInfo, {});
+    this.form = formBuilder.group({
+      name: ['', Validators.required],
+      start: [utils.toISOString(yamcs.getMissionTime()), Validators.required],
+      duration: ['', Validators.required],
+      tags: [[], []],
+      properties: formBuilder.group({
+        backgroundColor: [props.backgroundColor, []],
+        backgroundColor_overrideBand: false,
+        borderColor: [props.borderColor, []],
+        borderColor_overrideBand: false,
+        borderWidth: [props.borderWidth, []],
+        borderWidth_overrideBand: false,
+        cornerRadius: [props.cornerRadius, []],
+        cornerRadius_overrideBand: false,
+        marginLeft: [props.marginLeft, []],
+        marginLeft_overrideBand: false,
+        textColor: [props.textColor, []],
+        textColor_overrideBand: false,
+        textSize: [props.textSize, []],
+        textSize_overrideBand: false,
+      }),
+    });
+
+    this.updateDisabledState();
+    this.formSubscription = this.form.valueChanges.subscribe(() => {
+      this.updateDisabledState();
+    });
+  }
+
+  private updateDisabledState() {
+    const { controls } = this.propertiesGroup;
+    for (const key in controls) {
+      if (key.endsWith(OVERRIDE_SUFFIX)) {
+        const styleControl =
+          controls[key.substring(0, key.length - OVERRIDE_SUFFIX.length)];
+        if (controls[key].value) {
+          styleControl.enable({ onlySelf: true });
+        } else {
+          styleControl.disable({ onlySelf: true });
+        }
+      }
+    }
+  }
+
+  get propertiesGroup(): FormGroup {
+    return this.form.controls['properties'] as FormGroup;
+  }
+
+  save() {
+    const options: CreateTimelineItemRequest = {
+      type: this.data.type,
+      name: this.form.value['name'],
+      start: utils.toISOString(this.form.value['start']),
+      duration: this.form.value['duration'],
+      tags: this.form.value['tags'],
+      properties: {},
+    };
+    const { controls: propControls } = this.propertiesGroup;
+    for (const key in propControls) {
+      if (key.endsWith(OVERRIDE_SUFFIX) && propControls[key].value) {
+        const propName = key.substring(0, key.length - OVERRIDE_SUFFIX.length);
+        options.properties![propName] = propControls[propName].value;
+      }
+    }
+
+    this.yamcs.yamcsClient
+      .createTimelineItem(this.yamcs.instance!, options)
+      .then((item) => this.dialogRef.close(item))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.formSubscription?.unsubscribe();
+  }
+}
+```

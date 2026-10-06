@@ -3,16 +3,77 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-message/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `event-message.component.html`
 
-file--event-message.component.html
-file--event-message.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-message/event-message.component.html`
+
+
+```html
+@if (summary === null || summary === undefined) {
+  -
+}
+@if (summary !== null && summary !== undefined) {
+  <ya-highlight [text]="summary" [term]="highlight" />
+}
+@if (detail) {
+  <ya-icon-action icon="more_horiz" (click)="toggleExpanded()" />
+  @if (expanded$ | async) {
+    <br />
+    <ya-highlight [text]="detail" [term]="highlight" />
+  }
+}
 ```
 
-## 항목
+### `event-message.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-message/event-message.component.html`](file--event-message.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-message/event-message.component.ts`](file--event-message.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-message/event-message.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'app-event-message',
+  templateUrl: './event-message.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class EventMessageComponent implements OnInit {
+  @Input()
+  message?: string;
+
+  @Input()
+  highlight?: string;
+
+  summary?: string;
+  detail?: string;
+  expanded$ = new BehaviorSubject<boolean>(false);
+
+  ngOnInit() {
+    if (this.message !== null && this.message !== undefined) {
+      const idx = this.message.indexOf('\n');
+      if (idx === -1) {
+        this.summary = this.message;
+      } else {
+        this.summary = this.message.substring(0, idx);
+        if (idx + 1 < this.message.length) {
+          this.detail = this.message.substring(idx + 1);
+        }
+      }
+    }
+  }
+
+  toggleExpanded() {
+    this.expanded$.next(!this.expanded$.value);
+  }
+}
+```

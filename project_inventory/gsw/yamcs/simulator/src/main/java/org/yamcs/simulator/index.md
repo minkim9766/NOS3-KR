@@ -3,68 +3,3469 @@
 
 **경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cfdp/index
 pus/index
-file--AbstractSimulator.java
-file--ColSimulator.java
-file--ColumbusCcsdsPacket.java
-file--DHSData.java
-file--DHSHandler.java
-file--EpsLvpduData.java
-file--EpsLvpduHandler.java
-file--FlightData.java
-file--FlightDataHandler.java
-file--LosRecorder.java
-file--PerfMdbLoader.java
-file--PerfPacketGenerator.java
-file--PowerData.java
-file--PowerHandler.java
-file--RCSData.java
-file--RCSHandler.java
-file--SimulatorArgs.java
-file--SimulatorCcsdsPacket.java
-file--SimulatorCommander.java
-file--TcPacketFactory.java
-file--TcpTmTcLink.java
-file--TcVcFrameLink.java
-file--TelnetServer.java
-file--TelnetServerHandler.java
-file--UdpTcFrameLink.java
-file--UdpTmFrameLink.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/cfdp/`](cfdp/index) — 폴더
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/pus/`](pus/index) — 폴더
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/AbstractSimulator.java`](file--AbstractSimulator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/ColSimulator.java`](file--ColSimulator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/ColumbusCcsdsPacket.java`](file--ColumbusCcsdsPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/DHSData.java`](file--DHSData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/DHSHandler.java`](file--DHSHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/EpsLvpduData.java`](file--EpsLvpduData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/EpsLvpduHandler.java`](file--EpsLvpduHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/FlightData.java`](file--FlightData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/FlightDataHandler.java`](file--FlightDataHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/LosRecorder.java`](file--LosRecorder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PerfMdbLoader.java`](file--PerfMdbLoader.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PerfPacketGenerator.java`](file--PerfPacketGenerator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PowerData.java`](file--PowerData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PowerHandler.java`](file--PowerHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/RCSData.java`](file--RCSData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/RCSHandler.java`](file--RCSHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/SimulatorArgs.java`](file--SimulatorArgs.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/SimulatorCcsdsPacket.java`](file--SimulatorCcsdsPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/SimulatorCommander.java`](file--SimulatorCommander.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TcPacketFactory.java`](file--TcPacketFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TcpTmTcLink.java`](file--TcpTmTcLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TcVcFrameLink.java`](file--TcVcFrameLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TelnetServer.java`](file--TelnetServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TelnetServerHandler.java`](file--TelnetServerHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/UdpTcFrameLink.java`](file--UdpTcFrameLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/UdpTmFrameLink.java`](file--UdpTmFrameLink.java) — UTF-8 텍스트 파일 본문 포함
+### `AbstractSimulator.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/AbstractSimulator.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import org.yamcs.cfdp.pdu.CfdpPacket;
+
+import com.google.common.util.concurrent.AbstractService;
+import org.yamcs.simulator.cfdp.CfdpSender;
+
+public abstract class AbstractSimulator extends AbstractService {
+    protected abstract void processTc(SimulatorCcsdsPacket tc);
+
+    protected abstract void setTmLink(TcpTmTcLink tmLink);
+
+    protected abstract void setTm2Link(TcpTmTcLink tm2Link);
+
+    protected abstract void setLosLink(TcpTmTcLink losLink);
+
+    public abstract void transmitCfdp(CfdpPacket packet);
+
+    public void setCfdpSender(CfdpSender cfdpSender) {
+        throw new UnsupportedOperationException("CfdpSender is not settable for " + this);
+    }
+
+    public abstract int maxTmDataSize();
+
+}
+```
+
+### `ColSimulator.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/ColSimulator.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.cfdp.pdu.CfdpHeader;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.simulator.cfdp.CfdpCcsdsPacket;
+import org.yamcs.simulator.cfdp.CfdpReceiver;
+import org.yamcs.simulator.cfdp.CfdpSender;
+import org.yamcs.tctm.ErrorDetectionWordCalculator;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Simulator working with Columbus/ISS kind of packet structure
+ *
+ * @author nm
+ *
+ */
+public class ColSimulator extends AbstractSimulator {
+
+    private static final Logger log = LoggerFactory.getLogger(ColSimulator.class);
+
+    // no more than 100 pending commands
+    protected BlockingQueue<ColumbusCcsdsPacket> pendingCommands = new ArrayBlockingQueue<>(100);
+
+    static int MAX_PKT_LENGTH = 1500;
+
+    final File dataDir;
+
+    private TcpTmTcLink tmLink;
+    private TcpTmTcLink tm2Link;
+    private TcpTmTcLink losLink;
+    private UdpTmFrameLink tmFrameLink;
+
+    private boolean los;
+    private Date lastLosStart;
+    private Date lastLosStop;
+    private LosRecorder losRecorder;
+
+    FlightDataHandler flightDataHandler;
+    DHSHandler dhsHandler;
+    PowerHandler powerDataHandler;
+    RCSHandler rcsHandler;
+    EpsLvpduHandler epslvpduHandler;
+
+    int tmCycle = 0;
+    AtomicInteger tm2SeqCount = new AtomicInteger(0);
+    ErrorDetectionWordCalculator edwc2 = new CrcCciitCalculator();
+
+    ScheduledThreadPoolExecutor executor;
+
+    static final int MAIN_APID = 1;
+    static final int PERF_TEST_APID = 2;
+    static final int TC_ACK_APID = 101;
+
+    CfdpReceiver cfdpReceiver;
+
+    private CfdpSender cfdpSender;
+
+    private PerfPacketGenerator perfPacketGenerator;
+
+    @Override
+    public void setCfdpSender(CfdpSender cfdpSender) {
+        this.cfdpSender = cfdpSender;
+    }
+
+    public ColSimulator(File losDir, File dataDir) {
+        losRecorder = new LosRecorder(losDir);
+        powerDataHandler = new PowerHandler();
+        rcsHandler = new RCSHandler();
+        epslvpduHandler = new EpsLvpduHandler();
+        flightDataHandler = new FlightDataHandler();
+        dhsHandler = new DHSHandler();
+        cfdpReceiver = new CfdpReceiver(this, dataDir);
+        this.dataDir = dataDir;
+    }
+
+    /**
+     * this runs in a separate thread but pushes commands to the main TM thread
+     */
+    public LosRecorder getLosDataRecorder() {
+        return losRecorder;
+    }
+
+    public boolean isLOS() {
+        return los;
+    }
+
+    public Date getLastLosStart() {
+        return lastLosStart;
+    }
+
+    public Date getLastLosStop() {
+        return lastLosStop;
+    }
+
+    public void setAOS() {
+        if (los) {
+            los = false;
+            lastLosStop = new Date();
+            losRecorder.stopRecording();
+        }
+    }
+
+    public void setLOS() {
+        if (!los) {
+            los = true;
+            lastLosStart = new Date();
+            losRecorder.startRecording(lastLosStart);
+        }
+    }
+
+    public void transmitRealtimeTM(SimulatorCcsdsPacket packet) {
+        packet.fillChecksum();
+        if (isLOS()) {
+            losRecorder.record(packet);
+        } else {
+            tmLink.sendPacket(packet.getBytes());
+            if (tmFrameLink != null) {
+                tmFrameLink.queuePacket(0, packet.getBytes());
+            }
+
+        }
+    }
+
+    protected void transmitTM2(byte[] packet) {
+        if (!isLOS()) {
+            tm2Link.sendPacket(packet);
+            if (tmFrameLink != null) {
+                tmFrameLink.queuePacket(1, encapsulate(packet));
+            }
+        }
+
+    }
+
+    // encapsulate packet
+    byte[] encapsulate(byte[] p) {
+
+        byte[] p1 = new byte[p.length + 4];
+        System.arraycopy(p, 0, p1, 4, p.length);
+        p1[0] = (byte) 0xFE;
+        ByteArrayUtils.encodeUnsignedShort(p1.length, p1, 2);
+        return p1;
+    }
+
+    public void dumpLosDataFile(String filename) {
+        // read data from los storage
+        if (filename == null) {
+            filename = losRecorder.getCurrentRecordingName();
+            if (filename == null) {
+                return;
+            }
+        }
+
+        try (DataInputStream dataStream = new DataInputStream(losRecorder.getInputStream(filename))) {
+            while (dataStream.available() > 0) {
+                ColumbusCcsdsPacket packet = readLosPacket(dataStream);
+                if (packet != null) {
+                    losLink.sendPacket(packet.getBytes());
+                    if (tmFrameLink != null) {
+                        tmFrameLink.queuePacket(2, packet.getBytes());
+                    }
+                }
+            }
+
+            // add packet notifying that the file has been downloaded entirely
+            ColumbusCcsdsPacket confirmationPacket = buildLosTransmittedRecordingPacket(filename);
+            transmitRealtimeTM(confirmationPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static ColumbusCcsdsPacket buildLosTransmittedRecordingPacket(String transmittedRecordName) {
+        byte[] recName = transmittedRecordName.getBytes();
+        ColumbusCcsdsPacket packet = new ColumbusCcsdsPacket(0, recName.length + 1, 10, false);
+        packet.getUserDataBuffer().put(recName);
+
+        return packet;
+    }
+
+    public void deleteLosDataFile(String filename) {
+        losRecorder.deleteDump(filename);
+        // add packet notifying that the file has been deleted
+        ColumbusCcsdsPacket confirmationPacket = buildLosDeletedRecordingPacket(filename);
+        transmitRealtimeTM(confirmationPacket);
+    }
+
+    private static ColumbusCcsdsPacket buildLosDeletedRecordingPacket(String deletedRecordName) {
+        byte[] recName = deletedRecordName.getBytes();
+        ColumbusCcsdsPacket packet = new ColumbusCcsdsPacket(0, recName.length + 1, 11, false);
+        packet.getUserDataBuffer().put(recName);
+        return packet;
+    }
+
+    protected ColumbusCcsdsPacket ackPacket(ColumbusCcsdsPacket commandPacket, int stage, int result) {
+        ColumbusCcsdsPacket ackPacket = new ColumbusCcsdsPacket(TC_ACK_APID, 10, commandPacket.getPacketType(), 2000,
+                false);
+        int batNum = commandPacket.getPacketId();
+
+        ByteBuffer bb = ackPacket.getUserDataBuffer();
+
+        bb.putInt(0, batNum);
+        bb.putInt(4, commandPacket.getSequenceCount());
+        bb.put(8, (byte) stage);
+        bb.put(9, (byte) result);
+
+        return ackPacket;
+    }
+
+    private void sendFlightPacket() {
+        ColumbusCcsdsPacket flightpacket = new ColumbusCcsdsPacket(MAIN_APID, flightDataHandler.dataSize(), 33);
+        flightDataHandler.fillPacket(flightpacket.getUserDataBuffer());
+        transmitRealtimeTM(flightpacket);
+    }
+
+    private void sendCfdp() {
+        // byte[] filedata = { 'T', 'h', 'i', 's', ' ', 'i', 's', ' ', 'a', ' ', 't', 'e', 's', 't', '.' };
+        // CfdpPacket cfdpFileData = new FileDataPacket(filedata, 0, FileDataPacket.createHeader(filedata));
+        // transmitCfdp(cfdpFileData);
+    }
+
+    private void sendHkTm() {
+        ColumbusCcsdsPacket powerpacket = new ColumbusCcsdsPacket(MAIN_APID, powerDataHandler.dataSize(), 1);
+        powerDataHandler.fillPacket(powerpacket.getUserDataBuffer());
+        transmitRealtimeTM(powerpacket);
+
+        ColumbusCcsdsPacket packet = new ColumbusCcsdsPacket(MAIN_APID, dhsHandler.dataSize(), 2);
+        dhsHandler.fillPacket(packet.getUserDataBuffer());
+        transmitRealtimeTM(packet);
+
+        packet = new ColumbusCcsdsPacket(MAIN_APID, rcsHandler.dataSize(), 3);
+        rcsHandler.fillPacket(packet.getUserDataBuffer());
+        transmitRealtimeTM(packet);
+
+        packet = new ColumbusCcsdsPacket(MAIN_APID, epslvpduHandler.dataSize(), 4);
+        epslvpduHandler.fillPacket(packet.getUserDataBuffer());
+        transmitRealtimeTM(packet);
+    }
+
+    /**
+     * creates and sends a dummy packet with the following structure
+     * <ul>
+     * <li>size (2 bytes)</li>
+     * <li>unix timestamp in millisec(8 bytes)</li>
+     * <li>seq count(4 bytes)</li>
+     * <li>uint32</li>
+     * <li>64 bit float</li>
+     * <li>checksum (2 bytes)</li>
+     * </ul>
+     */
+    private void sendTm2() {
+        int n = 28;
+        ByteBuffer bb = ByteBuffer.allocate(n);
+        bb.putShort((short) (n - 2));
+        bb.putLong(System.currentTimeMillis());
+        int seq = tm2SeqCount.getAndIncrement();
+        bb.putInt(seq);
+        bb.putInt(seq + 1000);
+        bb.putDouble(Math.sin(seq / 10.0));
+        bb.putShort((short) edwc2.compute(bb.array(), 0, n - 2));
+        transmitTM2(bb.array());
+    }
+
+    /**
+     * runs in the main TM thread, executes commands from the queue (if any)
+     */
+    private void executePendingCommands() {
+        ColumbusCcsdsPacket commandPacket;
+        while ((commandPacket = pendingCommands.poll()) != null) {
+            if (commandPacket.getPacketType() == 10) {
+                log.info("Received TC packet-id: " + commandPacket.getPacketId());
+
+                switch (commandPacket.getPacketId()) {
+                case 1:
+                    switchBatteryOn(commandPacket);
+                    break;
+                case 2:
+                    switchBatteryOff(commandPacket);
+                    break;
+                case 3:
+                    criticalTc1(commandPacket);
+                    break;
+                case 4:
+                    criticalTc2(commandPacket);
+                    break;
+                case 5:
+                    listRecordings(commandPacket);
+                    break;
+                case 6:
+                    dumpRecording(commandPacket);
+                    break;
+                case 7:
+                    deleteRecording(commandPacket);
+                    break;
+                case 8:
+                    downloadFile(commandPacket);
+                    break;
+                case 9:
+                    // this is used to demonstrate cascading with BINARY_EMBEDDED command mapping
+                    switchBatteryOnOff(commandPacket);
+                    break;
+                case 10:
+                    perfTestOnOff(commandPacket);
+                    break;
+                default:
+                    log.error("Invalid command packet id: {}", commandPacket.getPacketId());
+                }
+            } else {
+                log.warn("Unknown command type " + commandPacket.getPacketType());
+            }
+        }
+    }
+
+    private void switchBatteryOnOff(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        commandPacket.setPacketId(9);
+        int onOff = commandPacket.getUserDataBuffer().get(0);
+        int batNum = commandPacket.getUserDataBuffer().get(1);
+        if (onOff == 1) {
+            executor.schedule(() -> powerDataHandler.setBatteryOn(batNum), 500, TimeUnit.MILLISECONDS);
+        } else {
+            executor.schedule(() -> powerDataHandler.setBatteryOff(batNum), 500, TimeUnit.MILLISECONDS);
+        }
+
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    private void switchBatteryOn(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        commandPacket.setPacketId(1);
+        int batNum = commandPacket.getUserDataBuffer().get(0);
+        executor.schedule(() -> powerDataHandler.setBatteryOn(batNum), 500, TimeUnit.MILLISECONDS);
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    private void switchBatteryOff(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        commandPacket.setPacketId(2);
+        int batNum = commandPacket.getUserDataBuffer().get(0);
+        executor.schedule(() -> powerDataHandler.setBatteryOff(batNum), 500, TimeUnit.MILLISECONDS);
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    private void listRecordings(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        String[] dumps = losRecorder.listRecordings();
+
+        log.info("LOS dump count: {}", dumps.length);
+        String joined = String.join(" ", dumps);
+        byte[] b = joined.getBytes();
+
+        ColumbusCcsdsPacket packet = new ColumbusCcsdsPacket(0, b.length + 1, 9, false);
+        packet.getUserDataBuffer().put(b);
+
+        transmitRealtimeTM(packet);
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    private void dumpRecording(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        String fileName = readNullTerminatedString(commandPacket.getUserDataBuffer());
+        if (checkFile(fileName)) {
+            log.info("DUMP_RECORDING for file {}", fileName);
+            dumpLosDataFile(fileName);
+            transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+        } else {
+            log.warn("Invalid filename (has to be relative to the dataDir) {}", fileName);
+        }
+    }
+
+    private void downloadFile(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        ByteBuffer bb = commandPacket.getUserDataBuffer();
+        int destinationId = bb.getInt();
+        String fileName = readNullTerminatedString(bb);
+
+        int[] skippedPdus = new int[bb.remaining() / 4];
+        int k = 0;
+        while (bb.remaining() >= 4) {
+            skippedPdus[k++] = bb.getInt();
+        }
+        Arrays.sort(skippedPdus);
+
+        if (!checkFile(fileName)) {
+            log.warn("Invalid filename {}", fileName);
+            transmitRealtimeTM(ackPacket(commandPacket, 2, 1));
+            return;
+        }
+
+        File f = new File(dataDir, fileName);
+        if (!f.exists()) {
+            log.warn("File does not exist or is not readable: {}", f.getAbsoluteFile());
+            transmitRealtimeTM(ackPacket(commandPacket, 2, 1));
+        } else if (f.length() == 0) {
+            log.warn(
+                    "Empty files not supported due to the file length in metadata = 0 indicating unbounded file: {}",
+                    f.getAbsoluteFile());
+            transmitRealtimeTM(ackPacket(commandPacket, 2, 1));
+        } else {
+            log.info("CFDP download file {} skippedPdus: {}", fileName, Arrays.toString(skippedPdus));
+            try {
+                cfdpSender = new CfdpSender(this, destinationId, f, f.getName(), null, skippedPdus);
+                cfdpSender.start();
+                transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+            } catch (IOException e) {
+                log.warn("File does not exist or is not readable: {}", f.getAbsoluteFile());
+                transmitRealtimeTM(ackPacket(commandPacket, 2, 1));
+            }
+        }
+    }
+
+    private void perfTestOnOff(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        if (perfPacketGenerator == null) {
+            log.warn("Received command for the perf packet generator but it is not enabled");
+            transmitRealtimeTM(ackPacket(commandPacket, 2, 1));
+        } else {
+            int pause = commandPacket.getUserDataBuffer().get(0);
+
+            if (pause == 1) {
+                perfPacketGenerator.pause();
+            } else {
+                perfPacketGenerator.resume();
+            }
+            transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+        }
+
+    }
+
+    private boolean checkFile(String fileName) {
+        return !fileName.contains("..");
+    }
+
+    String readNullTerminatedString(ByteBuffer bb) {
+        if (!bb.hasRemaining()) {
+            return null;
+        }
+        int position = bb.position();
+        while (bb.hasRemaining() && bb.get() != 0) {
+        }
+
+        int position1 = bb.position();
+        byte[] b = new byte[position1 - position - 1];
+        bb.position(position);
+        bb.get(b);
+        bb.position(position1);
+        return new String(b);
+    }
+
+    private void deleteRecording(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        byte[] fileNameArray = commandPacket.getUserDataBuffer().array();
+        String fileName = new String(fileNameArray, 16, fileNameArray.length - 22);
+        log.info("Command DELETE_RECORDING for file {}", fileName);
+        deleteLosDataFile(fileName);
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    private void criticalTc1(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        log.info("Command CRITICAL_TC1");
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    private void criticalTc2(ColumbusCcsdsPacket commandPacket) {
+        transmitRealtimeTM(ackPacket(commandPacket, 1, 0));
+        log.info("Command CRITICAL_TC2");
+        transmitRealtimeTM(ackPacket(commandPacket, 2, 0));
+    }
+
+    public void setTmLink(TcpTmTcLink tmLink) {
+        this.tmLink = tmLink;
+    }
+
+    public void setTm2Link(TcpTmTcLink tm2Link) {
+        this.tm2Link = tm2Link;
+    }
+
+    public void processTc(SimulatorCcsdsPacket tc) {
+
+        if (tc.getAPID() == CfdpCcsdsPacket.APID) {
+            byte b0 = tc.getUserDataBuffer().get();
+            if ((b0 & 0x08) == 0) { // towards receiver
+                cfdpReceiver.processCfdp(tc.getUserDataBuffer());
+            } else {// towards sender
+                if (cfdpSender != null) {
+                    cfdpSender.processCfdp(tc.getUserDataBuffer());
+                } else {
+                    log.warn("Received CFDP packet for sender but have no sender");
+                }
+            }
+        } else {
+            ColumbusCcsdsPacket coltc = (ColumbusCcsdsPacket) tc;
+            transmitRealtimeTM(ackPacket(coltc, 0, 0));
+            try {
+                pendingCommands.put(coltc);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    protected ColumbusCcsdsPacket readLosPacket(DataInputStream dIn) {
+        try {
+            byte hdr[] = new byte[6];
+            dIn.readFully(hdr);
+            int remaining = ((hdr[4] & 0xFF) << 8) + (hdr[5] & 0xFF) + 1;
+            if (remaining > MAX_PKT_LENGTH - 6) {
+                throw new IOException(
+                        "Remaining packet length too big: " + remaining + " maximum allowed is "
+                                + (MAX_PKT_LENGTH - 6));
+            }
+            byte[] b = new byte[6 + remaining];
+            System.arraycopy(hdr, 0, b, 0, 6);
+            dIn.readFully(b, 6, remaining);
+            return new ColumbusCcsdsPacket(ByteBuffer.wrap(b));
+        } catch (Exception e) {
+            log.error("Error reading LOS packet from file " + e.getMessage(), e);
+        }
+        return null;
+    }
+
+    public void setLosLink(TcpTmTcLink losLink) {
+        this.losLink = losLink;
+    }
+
+    public void setTmFrameLink(UdpTmFrameLink tmFrameLink) {
+        this.tmFrameLink = tmFrameLink;
+    }
+
+    public void setTcFrameLink(UdpTcFrameLink tcFrameLink) {
+        // nothing to do with the link, we get called in new command
+    }
+
+    @Override
+    protected void doStart() {
+        executor = new ScheduledThreadPoolExecutor(1);
+        executor.scheduleAtFixedRate(() -> sendFlightPacket(), 0, 200, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> sendHkTm(), 0, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> sendTm2(), 0, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> sendCfdp(), 0, 1000, TimeUnit.MILLISECONDS);
+        executor.scheduleAtFixedRate(() -> executePendingCommands(), 0, 200, TimeUnit.MILLISECONDS);
+
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        executor.shutdownNow();
+        notifyStopped();
+    }
+
+    @Override
+    public void transmitCfdp(CfdpPacket packet) {
+        CfdpHeader header = packet.getHeader();
+        int length = header.getLength() + packet.getDataFieldLength();
+        CfdpCcsdsPacket pkt = new CfdpCcsdsPacket(length);
+        ByteBuffer buffer = pkt.getUserDataBuffer();
+        packet.writeToBuffer(buffer);
+        transmitRealtimeTM(pkt);
+    }
+
+    public void setPerfPacketGenerator(PerfPacketGenerator ppg) {
+        this.perfPacketGenerator = ppg;
+    }
+
+    @Override
+    public int maxTmDataSize() {
+        return MAX_PKT_LENGTH - 20;
+    }
+}
+```
+
+### `ColumbusCcsdsPacket.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/ColumbusCcsdsPacket.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * CCSDS packets as used in Columbus/ISS
+ * 
+ * <pre>
+ * primary header (6 bytes):
+ * 3 bit = version
+ * 1 bit = type (0 = system packet, 1 = payload packet)
+ * 1 bit = 2nd header present
+ * 11 bit = apid
+ * 
+ * 2 bit = grouping, 01 = first, 00 = cont, 10 = last packet of group
+ * 14 bit = seq
+ * 
+ * 16 bit = packet length (excluding primary header) minus 1
+ * 
+ * secondary header (10 bytes):
+ * 32 bit = coarse time (seconds since 1970)
+ * 8 bit = fine time
+ * 2 bits = time id (see constants)
+ * 1 bit = checksum present (2 bytes after user data)
+ * 5 bits = packet type (see constants)
+ * 32 bit = packet id
+ * </pre>
+ */
+public class ColumbusCcsdsPacket extends SimulatorCcsdsPacket {
+    final byte SH_TIME_ID_NO_TIME_FIELD = 0;
+    final byte SH_TIME_ID_TIME_OF_PACKET_GENERATION = 1;
+    final byte SH_TIME_ID_TIME_TAG = 2;
+    final byte SH_TIME_ID_UNDEFINED = 3;
+
+    // Packet types
+    final static byte SH_PKT_TYPE_CCSDS_CCSDS_PAYLOAD_HK_PACKET = 5;
+    final static byte SH_PKT_TYPE_CCSDS_PAYLOAD_COMMAND_PACKET = 10;
+    final static byte SH_PKT_TYPE_CCSDS_MEMORY_LOAD_PACKET = 11;
+    final static byte SH_PKT_TYPE_CCSDS_RESPONSE_PACKET = 12;
+
+    private int packetid, packetType;
+    private long timeMillis; // yamcs time
+
+    private boolean checksumPresent;
+
+    public ColumbusCcsdsPacket(byte[] packet) {
+        super(packet);
+        readHeader();
+    }
+
+    public ColumbusCcsdsPacket(ByteBuffer bb) {
+        super(bb);
+        readHeader();
+    }
+
+    public ColumbusCcsdsPacket(int apid, int userDataLength, int packetid) {
+        this(apid, userDataLength, packetid, true);
+    }
+
+    public ColumbusCcsdsPacket(int apid, int userDataLength, int packetid, boolean checksumPresent) {
+        this(apid, userDataLength, SH_PKT_TYPE_CCSDS_CCSDS_PAYLOAD_HK_PACKET, packetid, checksumPresent);
+    }
+
+    public ColumbusCcsdsPacket(int apid, int userDataLength, int packetType, int packetid, boolean checksumPresent) {
+        super(ByteBuffer.allocate(getPacketLength(userDataLength, checksumPresent)));
+        setHeader(apid, 0, 1, 3, getSeq(apid));
+
+        timeMillis = TimeEncoding.getWallclockTime(); // gps time as of 2017
+
+        this.packetType = packetType;
+        this.packetid = packetid;
+        this.checksumPresent = checksumPresent;
+
+        putHeader();
+    }
+
+    private static int getPacketLength(int userDataLength, boolean checksumPresent) {
+        int pl = userDataLength + 16;
+        if (checksumPresent) {
+            pl += 2;
+            if ((pl & 1) == 1) { // need an even number of bytes to compute a checksum
+                pl += 1;
+            }
+        }
+        return pl;
+    }
+
+    public ByteBuffer getUserDataBuffer() {
+        bb.position(16);
+        return bb.slice();
+    }
+
+    public int getPacketId() {
+        return packetid;
+    }
+
+    public void setPacketId(int packetId) {
+        this.packetid = packetId;
+    }
+
+    public int getPacketType() {
+        return packetType;
+    }
+
+    public void setTime(long instant) {
+        timeMillis = instant;
+        putHeader();
+    }
+
+    private void putHeader() {
+        long gpsMillis = TimeEncoding.toGpsTimeMillisec(timeMillis);
+        bb.putInt(6, (int) (gpsMillis / 1000));
+        bb.put(10, (byte) ((gpsMillis % 1000) * 256 / 1000));
+        int checksum = checksumPresent ? 1 : 0;
+        bb.put(11, (byte) ((SH_TIME_ID_TIME_OF_PACKET_GENERATION << 6) | (checksum << 5) | packetType));
+        bb.putInt(12, packetid);
+        // describePacketHeader();
+    }
+
+    private void readHeader() {
+        this.timeMillis = TimeEncoding.fromGpsCcsdsTime(bb.getInt(6), bb.get(10));
+        this.packetType = bb.get(11) & 0x1F;
+        this.packetid = bb.getInt(12);
+        this.checksumPresent = this.getChecksumIndicator();
+    }
+
+    @Override
+    public void fillChecksum() {
+        if (checksumPresent) {
+            int checksum = 0;
+            for (int i = 0; i < bb.capacity() - 2; i += 2) {
+                checksum += bb.getShort(i);
+            }
+            bb.putShort(bb.capacity() - 2, (short) checksum);
+        }
+    }
+}
+```
+
+### `DHSData.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/DHSData.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+
+public class DHSData {
+
+    float timestamp;
+    float primBusVoltage1, primBusCurrent1;
+    float primBusVoltage2, primBusCurrent2;
+    float secBusVoltage2, secBusCurrent2;
+    float secBusVoltage3, secBusCurrent3;
+
+    public static int size() {
+        return 9;
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        buffer.put((byte) primBusVoltage1);
+        buffer.put((byte) primBusCurrent1);
+        buffer.put((byte) primBusVoltage2);
+        buffer.put((byte) primBusCurrent2);
+        buffer.put((byte) secBusVoltage2);
+        buffer.put((byte) secBusCurrent2);
+        buffer.put((byte) secBusVoltage3);
+        buffer.put((byte) secBusCurrent3);
+        buffer.put((byte) 0);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[DHSData]");
+    }
+
+}
+```
+
+### `DHSHandler.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/DHSHandler.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+
+public class DHSHandler {
+    private static final Logger log = LoggerFactory.getLogger(DHSHandler.class);
+
+    private List<DHSData> entries = new ArrayList<>(100);
+    private int currentEntry = 0;
+
+    public DHSHandler() {
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(DHSHandler.class.getResourceAsStream("/landing_data/DHS.csv")))) {
+            String line;
+            line = in.readLine(); // skip column titles
+            if (line == null) {
+                throw new ConfigurationException("Empty DHS.csv file");
+            }
+
+            while ((line = in.readLine()) != null) {
+                line = line.replace(',', '.'); // compatible to decimals with comma (e.g. 1,23)
+                String[] parts = line.split(";");
+                DHSData entry = new DHSData();
+
+                entry.timestamp = Float.parseFloat(parts[0]);
+                entry.primBusVoltage1 = Float.parseFloat(parts[1]);
+                entry.primBusCurrent1 = Float.parseFloat(parts[2]);
+                entry.primBusVoltage2 = Float.parseFloat(parts[3]);
+                entry.primBusCurrent2 = Float.parseFloat(parts[4]);
+                entry.secBusVoltage2 = Float.parseFloat(parts[5]);
+                entry.secBusCurrent2 = Float.parseFloat(parts[6]);
+                entry.secBusVoltage3 = Float.parseFloat(parts[7]);
+                entry.secBusCurrent3 = Float.parseFloat(parts[8]);
+
+                entries.add(entry);
+            }
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        log.debug("have {} DHS data records", entries.size());
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        if (currentEntry >= entries.size()) {
+            currentEntry = 0;
+        }
+
+        DHSData entry = entries.get(currentEntry++);
+        entry.fillPacket(buffer);
+    }
+
+    public int dataSize() {
+        return DHSData.size();
+    }
+}
+```
+
+### `EpsLvpduData.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/EpsLvpduData.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+
+public class EpsLvpduData {
+
+    float timestamp;
+    public float LVPDUStatus;
+    public float LVPDUVoltage;
+
+    public static int size() {
+        return 2;
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        buffer.put((byte) LVPDUStatus);
+        buffer.put((byte) LVPDUVoltage);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[EpsLVPDUData]");
+    }
+
+}
+```
+
+### `EpsLvpduHandler.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/EpsLvpduHandler.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+
+public class EpsLvpduHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(EpsLvpduHandler.class);
+
+    private List<EpsLvpduData> entries = new ArrayList<>(100);
+    private int currentEntry = 0;
+
+    public EpsLvpduHandler() {
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(EpsLvpduHandler.class.getResourceAsStream("/landing_data/ESPLVPDU.csv")))) {
+            String line;
+            line = in.readLine(); // skip column titles
+            if (line == null) {
+                throw new ConfigurationException("Empty ESPLVPDU.csv file");
+            }
+
+            while ((line = in.readLine()) != null) {
+
+                line = line.replace(',', '.'); // compatible to decimals with comma (e.g. 1,23)
+                String[] parts = line.split(";");
+
+                EpsLvpduData entry = new EpsLvpduData();
+
+                entry.LVPDUStatus = Integer.parseInt(parts[0]);
+                entry.LVPDUVoltage = Float.parseFloat(parts[1]);
+
+                entries.add(entry);
+            }
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
+        }
+        log.debug("have {} EPS LVPDU data records", entries.size());
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        if (currentEntry >= entries.size()) {
+            currentEntry = 0;
+        }
+
+        EpsLvpduData entry = entries.get(currentEntry++);
+        entry.fillPacket(buffer);
+    }
+
+    public int dataSize() {
+        return EpsLvpduData.size();
+    }
+}
+```
+
+### `FlightData.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/FlightData.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+
+public class FlightData {
+
+    public final static double MACH_ONE = 340.3; // m/s
+
+    public double latitude, longitude, altitude;
+    public double heading, timestamp, phi, theta, psi;
+    public double groundSpeed, verticalSpeed, mach, sinkRate, tas, cas, alpha, beta, loadFactor;
+
+    public FlightData() {
+        groundSpeed = -1;
+        verticalSpeed = -1;
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        buffer.putFloat((float) timestamp);
+        buffer.putFloat((float) longitude);
+        buffer.putFloat((float) latitude);
+        buffer.putFloat((float) altitude);
+        buffer.putFloat((float) heading);
+        buffer.putFloat((float) alpha);
+        buffer.putFloat((float) beta);
+        buffer.putFloat((float) tas);
+        buffer.putFloat((float) cas);
+        buffer.putFloat((float) mach);
+        buffer.putFloat((float) loadFactor);
+        buffer.putFloat((float) sinkRate);
+        buffer.putFloat((float) phi);
+        buffer.putFloat((float) theta);
+        buffer.putFloat((float) psi);
+    }
+
+    public static int size() {
+        return 60;
+    }
+
+    public double getYaw() {
+        return Math.toRadians(psi); // left/right turn
+    }
+
+    public double getPitch() {
+        return Math.toRadians(theta); // nose up/down
+    }
+
+    public double getRoll() {
+        return Math.toRadians(phi);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[CSVEntry lat=%.6f lon=%.6f alt=%.2fm time=%.3fs]", latitude, longitude, altitude,
+                timestamp);
+    }
+}
+```
+
+### `FlightDataHandler.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/FlightDataHandler.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class FlightDataHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(FlightDataHandler.class);
+
+    private List<FlightData> entries = new ArrayList<>(1000);
+    private int currentEntry = 0;
+
+    public FlightDataHandler() {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                FlightDataHandler.class.getResourceAsStream("/landing_data/Flight parameters.csv")))) {
+            String line;
+            line = in.readLine(); // skip column titles
+            while ((line = in.readLine()) != null) {
+                line = line.replace(',', '.'); // compatible to decimals with comma (e.g. 1,23)
+                String[] parts = line.split(";");
+                FlightData entry = new FlightData();
+
+                entry.timestamp = Double.parseDouble(parts[0]);
+                entry.longitude = Double.parseDouble(parts[1]);
+                entry.latitude = Double.parseDouble(parts[2]);
+                entry.altitude = Double.parseDouble(parts[3]);
+                entry.heading = Float.parseFloat(parts[4]);
+                entry.alpha = Float.parseFloat(parts[5]);
+                entry.beta = Float.parseFloat(parts[6]);
+                entry.tas = Float.parseFloat(parts[7]);
+                entry.cas = Float.parseFloat(parts[8]);
+                entry.mach = Float.parseFloat(parts[9]);
+                entry.loadFactor = Float.parseFloat(parts[10]);
+                entry.sinkRate = Float.parseFloat(parts[11]);
+                entry.phi = Float.parseFloat(parts[12]);
+                entry.theta = Float.parseFloat(parts[13]);
+                entry.psi = Float.parseFloat(parts[14]);
+
+                entries.add(entry);
+            }
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
+        }
+        log.debug("have {} flight data records", entries.size());
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        if (currentEntry >= entries.size()) {
+            currentEntry = 0;
+        }
+
+        FlightData entry = entries.get(currentEntry++);
+        entry.fillPacket(buffer);
+    }
+
+    public int dataSize() {
+        return FlightData.size();
+    }
+}
+```
+
+### `LosRecorder.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/LosRecorder.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Simulates the storing and retrieving of TM during an LOS (Loss of Signal).
+ */
+public class LosRecorder {
+
+    private static final Logger log = LoggerFactory.getLogger(LosRecorder.class);
+
+    private File dataDir;
+
+    private OutputStream losOs;
+    private File currentFile;
+
+    public LosRecorder(File dataDir) {
+        this.dataDir = dataDir;
+    }
+
+    public void startRecording(Date start) {
+        String timestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(start);
+        currentFile = new File(dataDir, "tm_" + timestamp + ".dat");
+        try {
+            log.info("Creating LOS dump: {}", currentFile);
+            Files.createFile(currentFile.toPath());
+
+            losOs = new FileOutputStream(currentFile, false);
+        } catch (IOException e) {
+            log.error("Error while creating LOS dump: " + e.getMessage(), e);
+        }
+    }
+
+    public void stopRecording() {
+        if (losOs != null) {
+            try {
+                log.info("Closing LOS recording.");
+                losOs.close();
+            } catch (IOException e) {
+                log.error("Could not close LOS recording: " + e.getMessage(), e);
+            }
+        }
+    }
+
+    public String[] listRecordings() {
+        return Arrays.asList(dataDir.listFiles()).stream()
+                .map(File::getName)
+                .toArray(String[]::new);
+    }
+
+    public InputStream getInputStream(String recordingName) throws IOException {
+        return new FileInputStream(new File(dataDir, recordingName));
+    }
+
+    public void record(SimulatorCcsdsPacket packet) {
+        try {
+            losOs.write(packet.getBytes());
+        } catch (IOException e) {
+            log.error("Could not record packet: " + e.getMessage(), e);
+        }
+    }
+
+    public void deleteDump(String name) {
+        File file = new File(dataDir, name);
+        file.delete();
+    }
+
+    public String getCurrentRecordingName() {
+        if (currentFile == null) {
+            return null;
+        }
+        return currentFile.getName();
+    }
+}
+```
+
+### `PerfMdbLoader.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PerfMdbLoader.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.DatabaseLoadException;
+import org.yamcs.mdb.SpaceSystemLoader;
+import org.yamcs.xtce.Comparison;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.OperatorType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterEntry;
+import org.yamcs.xtce.ParameterInstanceRef;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SequenceEntry;
+import org.yamcs.xtce.SequenceEntry.ReferenceLocationType;
+import org.yamcs.xtce.util.NameReference.Type;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.xtce.util.NameReference;
+import org.yamcs.xtce.SpaceSystem;
+
+/**
+ * Generates a MDB used for performance testing.
+ * 
+ * It generates all unsigned integer parameters with the size in bits specified
+ * 
+ * @author nm
+ *
+ */
+public class PerfMdbLoader implements SpaceSystemLoader {
+    int numPackets;
+    int packetSize;
+    int numParam;
+    int paramSizeInBits;
+    int numParamWithAlarmsPerPacket;
+    DoubleRange warningRange, criticalRange;
+
+    static String PACKET_ID_PARA_NAME = "packet-id";
+
+    public PerfMdbLoader(YConfiguration config) {
+        numPackets = config.getInt("numPackets");
+        packetSize = config.getInt("packetSize");
+        paramSizeInBits = config.getInt("paramSizeInBits", 32);
+        if (paramSizeInBits > 64 || paramSizeInBits < 1) {
+            throw new ConfigurationException("paramSizeInBits has to be between 1 and 64");
+        }
+        double percentangeParamWithAlarms = config.getDouble("percentangeParamWithAlarms", 5);
+        if (percentangeParamWithAlarms < 0 || percentangeParamWithAlarms > 100) {
+            throw new ConfigurationException("percentangeParamWithAlarms has to be between 0 and 100");
+        }
+        numParam = packetSize * 8 / paramSizeInBits;
+        numParamWithAlarmsPerPacket = (int) (numParam * percentangeParamWithAlarms / 100);
+        double warningOolChance = config.getDouble("warningOolChance", 1e-3);
+        if (warningOolChance < 0 || warningOolChance > 1) {
+            throw new ConfigurationException("warningOolChance has to be between 0 and 1");
+        }
+        double criticalOolChance = config.getDouble("criticalOolChance", 1e-5);
+        if (criticalOolChance < 0 || criticalOolChance > 1) {
+            throw new ConfigurationException("criticalOolChance has to be between 0 and 1");
+        }
+
+        double maxParmValue = Math.pow(2, paramSizeInBits) - 1;
+        double warnMargin = maxParmValue * warningOolChance / 2;
+        double criticalMargin = maxParmValue * criticalOolChance / 2;
+
+        warningRange = new DoubleRange(config.getDouble("warningRangeMin", warnMargin),
+                config.getDouble("warningRangeMax", maxParmValue - warnMargin));
+        criticalRange = new DoubleRange(config.getDouble("criticalRangeMin", criticalMargin),
+                config.getDouble("criticalRangeMax", maxParmValue - criticalMargin));
+    }
+
+    @Override
+    public boolean needsUpdate(RandomAccessFile consistencyDateFile) throws IOException, ConfigurationException {
+        return true;
+    }
+
+    @Override
+    public String getConfigName() {
+        return "perf-data";
+    }
+
+    @Override
+    public void writeConsistencyDate(FileWriter consistencyDateFile) {
+        return;
+    }
+
+    @Override
+    public SpaceSystem load() throws ConfigurationException, DatabaseLoadException {
+        SpaceSystem ss = new SpaceSystem("perf-data");
+        IntegerParameterType.Builder ptypeb = new IntegerParameterType.Builder().setName("uint" + paramSizeInBits);
+        ptypeb.setSizeInBits(paramSizeInBits);
+        ptypeb.setSigned(false);
+        IntegerDataEncoding.Builder ide = new IntegerDataEncoding.Builder().setSizeInBits(paramSizeInBits);
+        ptypeb.setEncoding(ide);
+        IntegerParameterType basicIntType = ptypeb.build();
+        ss.addParameterType(basicIntType);
+
+
+        for (int j = 0; j < numPackets; j++) {
+            int numAlarms = 0;
+            int pktId = PerfPacketGenerator.PERF_TEST_PACKET_ID + j;
+            SequenceContainer sc = new SequenceContainer("pkt_" + pktId);
+            sc.useAsArchivePartition(true);
+            NameReference unr = new NameReference("/YSS/ccsds-default", Type.SEQUENCE_CONTAINER);
+
+            unr.addResolvedAction(nd -> {
+                addCcsdsInheritance((SequenceContainer) nd, sc, pktId);
+            });
+            ss.addUnresolvedReference(unr);
+            for (int i = 0; i < numParam; i++) {
+                IntegerParameterType ptype;
+                Parameter p = new Parameter("p_" + pktId + "_" + basicIntType.getName() + "_" + i);
+                if (numAlarms < numParamWithAlarmsPerPacket) {
+                    ptypeb = new IntegerParameterType.Builder(basicIntType);
+                    ptypeb.setName("uint" + paramSizeInBits + "_" + j + "_" + i);
+                    ptypeb.addWarningAlarmRange(null, warningRange);
+                    ptypeb.addCriticalAlarmRange(null, criticalRange);
+                    ptype = ptypeb.build();
+                    ss.addParameterType(ptype);
+                    numAlarms++;
+                } else {
+                    ptype = basicIntType;
+                }
+
+                p.setParameterType(ptype);
+                ParameterEntry pe = new ParameterEntry(128 + paramSizeInBits * i, ReferenceLocationType.CONTAINER_START,
+                        p);
+                sc.addEntry(pe);
+                ss.addParameter(p);
+
+            }
+            ss.addSequenceContainer(sc);
+        }
+        return ss;
+    }
+
+    private void addCcsdsInheritance(SequenceContainer ccsds, SequenceContainer sc, int id) {
+        for (SequenceEntry se : ccsds.getEntryList()) {
+            if (se instanceof ParameterEntry) {
+                ParameterEntry pe = (ParameterEntry) se;
+                if (PACKET_ID_PARA_NAME.equals(pe.getParameter().getName())) {
+                    Parameter packetIdParam = pe.getParameter();
+                    Comparison c = new Comparison(new ParameterInstanceRef(packetIdParam), Integer.toString(id),
+                            OperatorType.EQUALITY);
+                    sc.setBaseContainer(ccsds);
+                    sc.setRestrictionCriteria(c);
+                    return;
+                }
+            }
+        }
+        throw new ConfigurationException(
+                "Cannot find a parameter '" + PACKET_ID_PARA_NAME + "' in the container " + ccsds.getName());
+    }
+
+}
+```
+
+### `PerfPacketGenerator.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PerfPacketGenerator.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * Generates packets for performance testing
+ * 
+ * @author nm
+ *
+ */
+public class PerfPacketGenerator extends AbstractExecutionThreadService {
+    int numPackets;
+    int packetSize;
+    long interval;
+    double changePercent;
+
+    volatile boolean paused;
+    final ColSimulator simulator;
+    private static final Logger log = LoggerFactory.getLogger(PerfPacketGenerator.class);
+    final public static int PERF_TEST_PACKET_ID = 1000; // the packet id of the packets used for performance testing
+                                                        // start from here
+
+    public PerfPacketGenerator(ColSimulator simulator, int numPackets, int packetSize, long interval,
+            double changePercent) {
+        this.simulator = simulator;
+        this.numPackets = numPackets;
+        this.packetSize = packetSize;
+        this.interval = interval;
+        this.changePercent = changePercent;
+    }
+
+    @Override
+    protected void run() throws Exception {
+        Random r = new Random();
+        log.info("Starting performance data sending thread with {} packets of {} size spaced at {} ms intervals",
+                numPackets, packetSize, interval);
+        byte[][] pktData = new byte[numPackets][];
+
+        for (int i = 0; i < numPackets; i++) {
+            byte[] p = new byte[packetSize];
+            r.nextBytes(p);
+            pktData[i] = p;
+        }
+
+        int changeChunk = (int) (400 / changePercent);
+        if (changeChunk < 4) {
+            changeChunk = 4;
+        }
+
+        while (isRunning()) {
+            if (!paused) {
+                for (int i = 0; i < numPackets; i++) {
+                    ColumbusCcsdsPacket packet = new ColumbusCcsdsPacket(ColSimulator.PERF_TEST_APID, packetSize,
+                            PERF_TEST_PACKET_ID + i);
+                    ByteBuffer bb = packet.getUserDataBuffer();
+                    bb.put(pktData[i]);
+                    for (int j = 0; j < packetSize - changeChunk; j += changeChunk) {
+                        int offset = j + (changeChunk > 4 ? r.nextInt(changeChunk - 4) : 0);
+                        bb.putInt(offset, r.nextInt());
+                    }
+                    packet.setTime(TimeEncoding.getWallclockTime());
+
+                    simulator.transmitRealtimeTM(packet);
+                }
+                Thread.sleep(interval);
+            } else {
+                Thread.sleep(1000);
+            }
+        }
+    }
+
+    public void pause() {
+        this.paused = true;
+    }
+
+    public void resume() {
+        this.paused = false;
+    }
+
+}
+```
+
+### `PowerData.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PowerData.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+
+public class PowerData {
+
+    public float timestamp;
+    public int busStatus;
+    public float busVoltage, busCurrent, systemCurrent;
+    public float batteryVoltage1, batteryTemp1, batteryCapacity1;
+    public float batteryVoltage2, batteryTemp2, batteryCapacity2;
+    public float batteryVoltage3, batteryTemp3, batteryCapacity3;
+
+
+
+    public static int size() {
+        return 16;
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        buffer.put((byte) busStatus);
+        buffer.put((byte) busVoltage);
+        buffer.put((byte) busCurrent);
+        buffer.put((byte) systemCurrent);
+        buffer.put((byte) batteryVoltage1);
+        buffer.put((byte) batteryTemp1);
+        buffer.putShort((short) batteryCapacity1);
+        buffer.put((byte) batteryVoltage2);
+        buffer.put((byte) batteryTemp2);
+        buffer.putShort((short) batteryCapacity2);
+        buffer.put((byte) batteryVoltage3);
+        buffer.put((byte) batteryTemp3);
+        buffer.putShort((short) batteryCapacity3);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[PowerData]");
+    }
+
+}
+```
+
+### `PowerHandler.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/PowerHandler.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class PowerHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(PowerHandler.class);
+
+    private List<PowerData> entries = new ArrayList<>(100);
+    private int currentEntry = 0;
+    boolean batOnOff[] = { false, true, true, true }; // battery number is from 1 to 3, [0] is not used
+
+    public PowerHandler() {
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(PowerHandler.class.getResourceAsStream("/landing_data/power.csv")))) {
+            String line;
+            in.readLine(); // skip column titles
+            while ((line = in.readLine()) != null) {
+                line = line.replace(',', '.'); // compatible to decimals with comma (e.g. 1,23)
+                String[] parts = line.split(";");
+
+                PowerData entry = new PowerData();
+
+                entry.timestamp = Float.parseFloat(parts[0]);
+                entry.busStatus = Integer.parseInt(parts[1]);
+                entry.busVoltage = Float.parseFloat(parts[2]);
+                entry.busCurrent = Float.parseFloat(parts[3]);
+                entry.systemCurrent = Float.parseFloat(parts[4]);
+
+                entry.batteryVoltage1 = Float.parseFloat(parts[5]);
+                entry.batteryTemp1 = Float.parseFloat(parts[6]);
+                entry.batteryCapacity1 = Float.parseFloat(parts[7]);
+
+                entry.batteryVoltage2 = Float.parseFloat(parts[8]);
+                entry.batteryTemp2 = Float.parseFloat(parts[9]);
+                entry.batteryCapacity2 = Float.parseFloat(parts[10]);
+
+                entry.batteryVoltage3 = Float.parseFloat(parts[11]);
+                entry.batteryTemp3 = Float.parseFloat(parts[12]);
+                entry.batteryCapacity3 = Float.parseFloat(parts[13]);
+
+                entries.add(entry);
+            }
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
+        }
+        log.debug("have {} power data records", entries.size());
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        if (currentEntry >= entries.size()) {
+            currentEntry = 0;
+        }
+
+        PowerData entry = entries.get(currentEntry++);
+        entry.fillPacket(buffer);
+
+        for (int i = 1; i < 4; i++) {
+            if (!batOnOff[i]) {
+                buffer.put(4 * i, (byte) 0);
+            }
+        }
+
+    }
+
+    public void setBatteryOn(int batNum) {
+        batOnOff[batNum] = true;
+    }
+
+    public void setBatteryOff(int batNum) {
+        batOnOff[batNum] = false;
+    }
+
+    public float getBattery1Voltage() {
+        PowerData data = entries.get(currentEntry);
+        return data.batteryVoltage1;
+    }
+
+    public float getBattery2Voltage() {
+        PowerData data = entries.get(currentEntry);
+        return data.batteryVoltage2;
+    }
+
+    public float getBattery3Voltage() {
+        PowerData data = entries.get(currentEntry);
+        return data.batteryVoltage3;
+    }
+
+    public int dataSize() {
+        return PowerData.size();
+    }
+}
+```
+
+### `RCSData.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/RCSData.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+
+public class RCSData {
+
+    public float timestamp;
+    public float H2TankFill, H2TankTemp, H2TankPressure, H2ValveTemp, H2ValvePressure;
+    public float O2TankFill, O2TankTemp, O2TankPressure, O2ValveTemp, O2ValvePressure;
+    public float TurbineTemp, TurbinePressure;
+
+    public static int size() {
+        return 36;
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        buffer.putFloat(H2TankFill);
+        buffer.putFloat(O2TankFill);
+        buffer.putShort((short) H2TankTemp);
+        buffer.putShort((short) O2TankTemp);
+        buffer.putFloat(H2TankPressure);
+        buffer.putFloat(O2TankPressure);
+        buffer.putShort((short) H2ValveTemp);
+        buffer.putShort((short) O2ValveTemp);
+        buffer.putFloat(H2ValvePressure);
+        buffer.putFloat(O2ValvePressure);
+        buffer.putShort((short) 0);
+        buffer.putShort((short) 0);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[RCSData]");
+    }
+}
+```
+
+### `RCSHandler.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/RCSHandler.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+
+public class RCSHandler {
+    private static final Logger log = LoggerFactory.getLogger(RCSHandler.class);
+
+    private List<RCSData> entries = new ArrayList<>(100);
+    private int currentEntry = 0;
+
+    public RCSHandler() {
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(RCSHandler.class.getResourceAsStream("/landing_data/RCS.csv")))) {
+            String line;
+            line = in.readLine(); // skip column titles
+            if (line == null) {
+                throw new ConfigurationException("Empty RCS.csv file");
+            }
+
+            while ((line = in.readLine()) != null) {
+                line = line.replace(',', '.'); // compatible to decimals with comma (e.g. 1,23)
+                String[] parts = line.split(";");
+                RCSData entry = new RCSData();
+
+                entry.timestamp = Float.parseFloat(parts[0]);
+
+                entry.H2TankFill = Float.parseFloat(parts[1]);
+                entry.H2TankTemp = Float.parseFloat(parts[2]);
+                entry.H2TankPressure = Float.parseFloat(parts[3]);
+                entry.H2ValveTemp = Float.parseFloat(parts[4]);
+                entry.H2ValvePressure = Float.parseFloat(parts[5]);
+
+                entry.O2TankFill = Float.parseFloat(parts[6]);
+                entry.O2TankTemp = Float.parseFloat(parts[7]);
+                entry.O2TankPressure = Float.parseFloat(parts[8]);
+                entry.O2ValveTemp = Float.parseFloat(parts[9]);
+                entry.O2ValvePressure = Float.parseFloat(parts[10]);
+
+                entry.TurbineTemp = Float.parseFloat(parts[11]);
+                entry.TurbinePressure = Float.parseFloat(parts[12]);
+
+                entries.add(entry);
+            }
+        } catch (IOException e) {
+            log.warn(e.getMessage(), e);
+        }
+        log.debug("have {} RHS data records", entries.size());
+    }
+
+    public void fillPacket(ByteBuffer buffer) {
+        if (entries.isEmpty()) {
+            return;
+        }
+
+        if (currentEntry >= entries.size()) {
+            currentEntry = 0;
+        }
+
+        RCSData entry = entries.get(currentEntry++);
+        entry.fillPacket(buffer);
+    }
+
+    public int dataSize() {
+        return RCSData.size();
+    }
+}
+```
+
+### `SimulatorArgs.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/SimulatorArgs.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import com.beust.jcommander.Parameter;
+
+public class SimulatorArgs {
+
+    @Parameter(names = "--telnet-port")
+    public int telnetPort = 10023;
+
+    @Parameter(names = "--tc-port")
+    public Integer tcPort = 10025;
+
+    @Parameter(names = "--tm-port")
+    public Integer tmPort = 10015;
+
+    @Parameter(names = "--tm2-port")
+    public Integer tm2Port = 10016;
+
+    @Parameter(names = "--cfdp-port")
+    public Integer cfdpPort = 10014;
+
+    @Parameter(names = "--los-port")
+    public int losPort = 10115;
+
+    @Parameter(names = "--tm-frame-type", description = "which frame type to send: TM, AOS or USLP")
+    public String tmFrameType = "AOS";
+
+    @Parameter(names = "--tm-frame-host", description = "the UDP host where to send TM/AOS/USLP frames")
+    public String tmFrameHost = "localhost";
+
+    @Parameter(names = "--tm-frame-port", description = "the UDP port where to send TM/AOS/USLP frames")
+    public int tmFramePort = 10017;
+
+    @Parameter(names = "--tc-frame-port", description = "the UDP port where the simulator listens for TC frames")
+    public int tcFramePort = 10018;
+
+    @Parameter(names = "--tm-frame-length", description = "the TM/AOS/USLP frame length (set to 0 to disable the frame functionality)")
+    public int tmFrameLength = 0;
+
+    @Parameter(names = "--tm-frame-freq", description = "the number of TM frames to send per second")
+    public double tmFrameFreq = 10;
+
+    @Parameter(names = "--perf-np", description = "performance test: number of packets. Set to 0 to disable sending the performance packets")
+    public int perfNp = 0;
+
+    @Parameter(names = "--perf-ps", description = "performance test: packet size")
+    public int perfPs = 1400;
+
+    @Parameter(names = "--perf-ms", description = "performance test: interval in between batch of packets in milliseconds")
+    public long perfMs = 100l;
+
+    @Parameter(names = "--perf-cp", description = "performance test: percentange (0-100) of data changed between two subsequent versions of the same packet")
+    public float perfChangePercent = 10;
+
+    @Parameter(names = "--type", description = "one of pus or columbus")
+    public String type;
+
+}
+```
+
+### `SimulatorCcsdsPacket.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/SimulatorCcsdsPacket.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.tctm.CcsdsPacket;
+
+public abstract class SimulatorCcsdsPacket extends CcsdsPacket {
+    protected static HashMap<Integer, AtomicInteger> seqMap = new HashMap<>(2); // apid -> seq
+
+    
+    public SimulatorCcsdsPacket(byte[] packet) {
+        super(packet);
+    }
+
+    public SimulatorCcsdsPacket(ByteBuffer bb) {
+        super(bb);
+    }
+
+    public abstract ByteBuffer getUserDataBuffer();
+
+    protected abstract void fillChecksum();
+
+    protected static int getSeq(int apid) {
+        AtomicInteger seq = seqMap.computeIfAbsent(apid, a -> new AtomicInteger(0));
+        return seq.getAndIncrement() & 0xFFFF;
+    }
+}
+```
+
+### `SimulatorCommander.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/SimulatorCommander.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.LogManager;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.ProcessRunner;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.simulator.pus.PusSimulator;
+import org.yamcs.utils.TimeEncoding;
+
+import com.beust.jcommander.JCommander;
+import com.google.common.util.concurrent.MoreExecutors;
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.ServiceManager;
+
+/**
+ * Starts the simulator.
+ * <p>
+ * This class is configured as a service inside Yamcs but it starts itself as an external process via the
+ * {@link #main(String[])} function.
+ *
+ */
+public class SimulatorCommander extends ProcessRunner {
+
+    @Override
+    public Spec getSpec() {
+
+        Spec telnetSpec = new Spec();
+        telnetSpec.addOption("port", OptionType.INTEGER);
+
+        Spec tmtcSpec = new Spec();
+        tmtcSpec.addOption("tcPort", OptionType.INTEGER);
+        tmtcSpec.addOption("tmPort", OptionType.INTEGER);
+        tmtcSpec.addOption("losPort", OptionType.INTEGER);
+        tmtcSpec.addOption("tm2Port", OptionType.INTEGER);
+
+        Spec frameSpec = new Spec();
+        frameSpec.addOption("type", OptionType.STRING);
+        frameSpec.addOption("tmPort", OptionType.INTEGER);
+        frameSpec.addOption("tmHost", OptionType.STRING);
+        frameSpec.addOption("tmFrameLength", OptionType.INTEGER);
+        frameSpec.addOption("tmFrameFreq", OptionType.FLOAT);
+        frameSpec.addOption("tcPort", OptionType.INTEGER);
+
+        Spec perfTestSpec = new Spec();
+        perfTestSpec.addOption("numPackets", OptionType.INTEGER);
+        perfTestSpec.addOption("packetSize", OptionType.INTEGER);
+        perfTestSpec.addOption("interval", OptionType.INTEGER);
+        perfTestSpec.addOption("changePercent", OptionType.FLOAT);
+
+        Spec spec = new Spec();
+        spec.addOption("telnet", OptionType.MAP).withSpec(telnetSpec);
+        spec.addOption("tctm", OptionType.MAP).withSpec(tmtcSpec);
+        spec.addOption("frame", OptionType.MAP).withSpec(frameSpec);
+        spec.addOption("perfTest", OptionType.MAP).withSpec(perfTestSpec);
+
+        spec.addOption("type", OptionType.STRING);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        SimulatorArgs defaultOptions = new SimulatorArgs();
+        List<String> cmdl = new ArrayList<>();
+
+        cmdl.add(new File(System.getProperty("java.home"), "bin/java").toString());
+        cmdl.add(SimulatorCommander.class.getName());
+        if (config.containsKey("telnet")) {
+            YConfiguration telnetArgs = config.getConfig("telnet");
+            int telnetPort = telnetArgs.getInt("port", defaultOptions.telnetPort);
+            cmdl.add("--telnet-port");
+            cmdl.add(Integer.toString(telnetPort));
+        }
+
+        if (config.containsKey("type")) {
+            cmdl.add("--type");
+            cmdl.add(config.getString("type"));
+        }
+
+        if (config.containsKey("tctm")) {
+            YConfiguration yamcsArgs = config.getConfig("tctm");
+            int tcPort = yamcsArgs.getInt("tcPort", defaultOptions.tcPort);
+            int tmPort = yamcsArgs.getInt("tmPort", defaultOptions.tmPort);
+            int losPort = yamcsArgs.getInt("losPort", defaultOptions.losPort);
+            int tm2Port = yamcsArgs.getInt("tm2Port", defaultOptions.tm2Port);
+
+            cmdl.addAll(Arrays.asList("--tc-port", "" + tcPort,
+                    "--tm-port", "" + tmPort,
+                    "--los-port", "" + losPort,
+                    "--tm2-port", "" + tm2Port));
+        }
+        if (config.containsKey("frame")) {
+            YConfiguration frameArgs = config.getConfig("frame");
+            String tmFrameType = frameArgs.getString("type", defaultOptions.tmFrameType);
+            int tmFramePort = frameArgs.getInt("tmPort", defaultOptions.tmFramePort);
+            String tmFrameHost = frameArgs.getString("tmHost", defaultOptions.tmFrameHost);
+            int tmFrameSize = frameArgs.getInt("tmFrameLength", defaultOptions.tmFrameLength);
+            double tmFrameFreq = frameArgs.getDouble("tmFrameFreq", defaultOptions.tmFrameFreq);
+            int tcFramePort = frameArgs.getInt("tcFramePort", defaultOptions.tcFramePort);
+
+            cmdl.addAll(Arrays.asList("--tm-frame-type", "" + tmFrameType,
+                    "--tm-frame-host", "" + tmFrameHost,
+                    "--tm-frame-port", "" + tmFramePort,
+                    "--tc-frame-port", "" + tcFramePort,
+                    "--tm-frame-length", "" + tmFrameSize,
+                    "--tm-frame-freq", "" + tmFrameFreq));
+        }
+        if (config.containsKey("perfTest")) {
+            YConfiguration yamcsArgs = config.getConfig("perfTest");
+            int numPackets = yamcsArgs.getInt("numPackets", defaultOptions.perfNp);
+            if (numPackets > 0) {
+                int packetSize = yamcsArgs.getInt("packetSize", defaultOptions.perfPs);
+                long interval = yamcsArgs.getLong("interval", defaultOptions.perfMs);
+                double changePercent = yamcsArgs.getDouble("changePercent", defaultOptions.perfChangePercent);
+                cmdl.addAll(Arrays.asList("--perf-np", "" + numPackets,
+                        "--perf-ps", "" + packetSize,
+                        "--perf-ms", "" + interval,
+                        "--perf-cp", "" + changePercent));
+            }
+        }
+
+        try {
+            Map<String, Object> processRunnerConfig = new HashMap<>();
+            processRunnerConfig.put("command", cmdl);
+            processRunnerConfig.put("logPrefix", "");
+            Map<String, Object> processEnvironment = new HashMap<>();
+            processEnvironment.put("CLASSPATH", System.getProperty("java.class.path"));
+            processRunnerConfig.put("environment", processEnvironment);
+            processRunnerConfig = super.getSpec().validate(processRunnerConfig);
+            super.init(yamcsInstance, serviceName, YConfiguration.wrap(processRunnerConfig));
+        } catch (ValidationException e) {
+            throw new InitException(e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        SimulatorArgs runtimeOptions = new SimulatorArgs();
+        new JCommander(runtimeOptions).parse(args);
+
+        configureLogging();
+        TimeEncoding.setUp();
+
+        List<Service> services = createServices(runtimeOptions);
+
+        ServiceManager serviceManager = new ServiceManager(services);
+        serviceManager.addListener(new ServiceManager.Listener() {
+            @Override
+            public void failure(Service service) {
+                // Stop entire process as soon as one service fails.
+                service.failureCause().printStackTrace(System.err);
+                System.exit(1);
+            }
+        }, MoreExecutors.directExecutor());
+
+        // Allow services to shutdown gracefully
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                try {
+                    serviceManager.stopAsync().awaitStopped(10, TimeUnit.SECONDS);
+                } catch (TimeoutException e) {
+                    // ignore
+                }
+            }
+        });
+
+        serviceManager.startAsync();
+    }
+
+    private static void configureLogging() {
+        try {
+            LogManager logManager = LogManager.getLogManager();
+            try (InputStream in = SimulatorCommander.class.getResourceAsStream("/simulator-logging.properties")) {
+                logManager.readConfiguration(in);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to set up logging configuration: " + e.getMessage());
+        }
+    }
+
+    private static List<Service> createServices(SimulatorArgs runtimeOptions) {
+        TcPacketFactory pktFactory;
+        AbstractSimulator simulator;
+        File losDir = new File("losData");
+        losDir.mkdirs();
+        File dataDir = new File("data");
+        dataDir.mkdirs();
+
+        if (runtimeOptions.type == null || runtimeOptions.type.equalsIgnoreCase("col")) {
+            pktFactory = TcPacketFactory.COL_PACKET_FACTORY;
+
+            simulator = new ColSimulator(losDir, dataDir);
+        } else if (runtimeOptions.type.equalsIgnoreCase("pus")) {
+            pktFactory = TcPacketFactory.PUS_PACKET_FACTORY;
+            simulator = new PusSimulator(dataDir);
+        } else {
+            throw new ConfigurationException("Unknonw simulatior type '" + runtimeOptions.type + "'. Use COL or PUS");
+        }
+
+        List<Service> services = new ArrayList<>();
+        services.add(simulator);
+        TcpTmTcLink tmLink = new TcpTmTcLink("TM", simulator, runtimeOptions.tmPort, pktFactory);
+        services.add(tmLink);
+        simulator.setTmLink(tmLink);
+
+        TcpTmTcLink tm2Link = new TcpTmTcLink("TM2", simulator, runtimeOptions.tm2Port, pktFactory);
+        services.add(tm2Link);
+        simulator.setTm2Link(tm2Link);
+
+        TcpTmTcLink losLink = new TcpTmTcLink("LOS", simulator, runtimeOptions.losPort, pktFactory);
+        services.add(losLink);
+        simulator.setLosLink(losLink);
+
+        services.add(new TcpTmTcLink("TC", simulator, runtimeOptions.tcPort, pktFactory));
+
+        if (simulator instanceof ColSimulator) {
+            TelnetServer telnetServer = new TelnetServer((ColSimulator) simulator);
+            telnetServer.setPort(runtimeOptions.telnetPort);
+            services.add(telnetServer);
+        }
+
+        if (simulator instanceof ColSimulator) {
+            ColSimulator sim = (ColSimulator) simulator;
+            if (runtimeOptions.tmFrameLength > 0) {
+                UdpTcFrameLink tcFrameLink = new UdpTcFrameLink(sim, runtimeOptions.tcFramePort);
+                UdpTmFrameLink frameLink = new UdpTmFrameLink(runtimeOptions.tmFrameType, runtimeOptions.tmFrameHost,
+                        runtimeOptions.tmFramePort,
+                        runtimeOptions.tmFrameLength, runtimeOptions.tmFrameFreq, () -> {
+                            return tcFrameLink.getClcw();
+                        });
+                services.add(tcFrameLink);
+                services.add(frameLink);
+                sim.setTmFrameLink(frameLink);
+            }
+
+            if (runtimeOptions.perfNp > 0) {
+                PerfPacketGenerator ppg = new PerfPacketGenerator(sim, runtimeOptions.perfNp, runtimeOptions.perfPs,
+                        runtimeOptions.perfMs, runtimeOptions.perfChangePercent);
+                sim.setPerfPacketGenerator(ppg);
+                services.add(ppg);
+            }
+        }
+        return services;
+    }
+}
+```
+
+### `TcPacketFactory.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TcPacketFactory.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import org.yamcs.simulator.pus.PusTcPacket;
+
+public interface TcPacketFactory {
+    SimulatorCcsdsPacket getPacket(byte[] b);
+    
+    TcPacketFactory COL_PACKET_FACTORY = new TcPacketFactory() {
+        @Override
+        public SimulatorCcsdsPacket getPacket(byte[] b) {
+            return new ColumbusCcsdsPacket(b);
+        }
+
+        @Override
+        public int getMinLength() {
+            return 16;
+        }
+    };
+    TcPacketFactory PUS_PACKET_FACTORY = new TcPacketFactory() {
+        @Override
+        public SimulatorCcsdsPacket getPacket(byte[] b) {
+            return new PusTcPacket(b);
+        }
+
+        @Override
+        public int getMinLength() {
+            return 13;
+        }
+        
+    };
+    int getMinLength();
+}
+
+```
+
+### `TcpTmTcLink.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TcpTmTcLink.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.simulator.cfdp.CfdpCcsdsPacket;
+import org.yamcs.tctm.CcsdsPacket;
+
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * TCP link that can be used both for TM and TC
+ */
+public class TcpTmTcLink extends AbstractExecutionThreadService {
+
+    private static final Logger log = LoggerFactory.getLogger(TcpTmTcLink.class);
+    final String name;
+    private AbstractSimulator simulator;
+    int port;
+    volatile boolean connected;
+    Socket socket;
+    ServerSocket serverSocket;
+    DataInputStream inputStream;
+
+    private int maxTcLength = ColSimulator.MAX_PKT_LENGTH;
+
+    private BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>(100);
+    final TcPacketFactory packetFactory;
+
+    public TcpTmTcLink(String name, AbstractSimulator simulator, int port, TcPacketFactory packetFactory) {
+        this.name = name;
+        this.simulator = simulator;
+        this.port = port;
+        this.packetFactory = packetFactory;
+    }
+
+    public void sendPacket(byte[] packet) {
+        try {
+            if (connected) {
+                queue.put(packet);
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Override
+    protected void run() throws Exception {
+        while (isRunning()) {
+            if (!connected) {
+                connect();
+            }
+            if (!connected) {
+                continue;
+            }
+            try {
+                byte[] p = queue.poll(250, TimeUnit.MILLISECONDS);
+
+                if (p != null) {
+                    socket.getOutputStream().write(p);
+                }
+
+            } catch (IOException e1) {
+                log.error("Error while sending " + name + " packet", e1);
+                connect();
+            }
+
+            try {
+                while (socket.getInputStream().available() > 0) {
+                    SimulatorCcsdsPacket tc = readPacket(inputStream);
+                    if (tc != null) {
+                        simulator.processTc(tc);
+                    } else {
+                        connected = false;
+                    }
+                }
+            } catch (IOException e1) {
+                log.error("Error while receiving packet on " + name + " socket", e1);
+                connect();
+            }
+        }
+    }
+
+    void connect() {
+        // Check for previous connection, used for loss of server.
+        if (socket != null) {
+            try {
+                connected = false;
+                inputStream.close();
+                socket.close();
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            log.debug("Waiting for {} connection from server on port {}", name, port);
+            serverSocket = new ServerSocket(port);
+            socket = serverSocket.accept();
+            inputStream = new DataInputStream(socket.getInputStream());
+            connected = true;
+            log.debug("Connected: {}:{}", socket.getInetAddress(), socket.getPort());
+        } catch (Exception e) {
+            if (isRunning()) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendImmediate(SimulatorCcsdsPacket packet) {
+        if (connected) {
+            try {
+                socket.getOutputStream().write(packet.getBytes());
+            } catch (IOException e1) {
+                log.error("Error while sending {} packet", name, e1);
+                connect();
+            }
+        }
+    }
+
+    SimulatorCcsdsPacket readPacket(DataInputStream dIn) {
+        int minTcLength = packetFactory.getMinLength();
+        try {
+            byte hdr[] = new byte[6];
+            dIn.readFully(hdr);
+            int remaining = ((hdr[4] & 0xFF) << 8) + (hdr[5] & 0xFF) + 1;
+            if (remaining < minTcLength - 6) {
+                throw new IOException("Command too short: " + (remaining + 6) + " minimum required " + minTcLength);
+            }
+            if (remaining > maxTcLength - 6) {
+                throw new IOException(
+                        "Remaining packet length too big: " + remaining + " maximum allowed is " + (maxTcLength - 6));
+            }
+            byte[] b = new byte[6 + remaining];
+            System.arraycopy(hdr, 0, b, 0, 6);
+            dIn.readFully(b, 6, remaining);
+            
+            SimulatorCcsdsPacket packet;
+            if(CcsdsPacket.getAPID(b) == CfdpCcsdsPacket.APID) {
+                packet = new CfdpCcsdsPacket(b);
+            } else {
+                packet = packetFactory.getPacket(b);
+            }
+            return packet;
+        } catch (EOFException e) {
+            log.error(name + " Connection lost");
+            connected = false;
+        } catch (Exception e) {
+            connected = false;
+            log.error("Error reading command " + e.getMessage(), e);
+        }
+        return null;
+    }
+
+    @Override
+    protected void triggerShutdown() {
+        if (serverSocket != null) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                // ignore error
+            }
+        }
+    }
+
+}
+```
+
+### `TcVcFrameLink.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TcVcFrameLink.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.nio.ByteBuffer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.StringConverter;
+
+/**
+ * Works as a child of {@link UdpTcFrameLink} and handles commands for one VC.
+ * 
+ * * It implements FARM part of the COP-1 protocol
+ * CCSDS 232.1-B-2 ( COMMUNICATIONS OPERATION PROCEDURE-1)
+ * 
+ * @author nm
+ *
+ */
+public class TcVcFrameLink {
+    private static final Logger log = LoggerFactory.getLogger(TcVcFrameLink.class);
+    final static CrcCciitCalculator crc = new CrcCciitCalculator();
+    final ColSimulator simulator;
+
+    // FARM parameters
+    boolean lockout;
+    boolean retransmit;
+    boolean waitFlag = false;// this is set to true when we are overloaded with commands, but we don't use this one
+    int vR;
+    int windowWidth = 15; // positive/negative sliding window width PW=NW
+    final int vcId;
+
+    int farmBCounter;
+
+    public TcVcFrameLink(ColSimulator simulator, int vcId) {
+        this.simulator = simulator;
+        this.vcId = vcId;
+    }
+
+    void processTcFrame(byte[] data, int offset, int length) {
+
+        byte d0 = data[offset];
+        int vn = d0 >>> 6;
+
+        boolean bypassFlag = ((d0 >> 5) & 1) == 1;
+
+        boolean controlCommand = ((d0 >> 4) & 1) == 1;
+
+        int spacecraftId = ByteArrayUtils.decodeUnsignedShort(data, offset) & 0x3FF;
+        int d23 = ByteArrayUtils.decodeUnsignedShort(data, offset + 2);
+        int virtualChannelId = d23 >> 10;
+        int frameLength = 1 + (d23 & 0x3FF);
+
+        int frameSeq = data[offset + 4] & 0xFF;
+        log.info(
+                "Received TC frame data length: {}, frameLength: {}, spacecraftId: {}, VC: {}, frameSeq: {}, bypassFlag: {}",
+                length, frameLength, spacecraftId, virtualChannelId, frameSeq, bypassFlag);
+
+        if (vn != 0) {
+            log.warn("Invalid frame version number {} received; expecting 0; ignoring frame", vn);
+            return;
+        }
+        if (frameLength > length) {
+            log.warn("Bad decoded frame length {}, expected max {}", frameLength, length);
+            return;
+        }
+        int c1 = crc.compute(data, offset, frameLength - 2);
+        int c2 = ByteArrayUtils.decodeShort(data, offset + frameLength - 2) & 0xFFFF;
+        if (c1 != c2) {
+            log.warn("CRC check failed, computed CRC: {}, frame data: {}", Integer.toHexString(c1).toUpperCase(),
+                    StringConverter.arrayToHexString(data, offset, frameLength, true));
+            return;
+        }
+        int cmdLength = frameLength - 7;
+        offset += 5;
+        if (controlCommand) {// BC frame
+            if (bypassFlag) {
+                log.warn("Invalid frame with both control and bypass flags set, ignoring");
+                return;
+            }
+            processControlCommand(data, offset, cmdLength);
+            return;
+        } else if (bypassFlag) { // BD frame
+            farmBCounter++;
+            processCommand(data, offset, cmdLength);
+        } else {// AD frame
+            if (lockout) {
+                log.warn("Command received in lockout state, ignoring");
+                return;
+            }
+            if (frameSeq == vR) {
+                vR = incr(vR);
+                retransmit = false;
+                processCommand(data, offset, cmdLength);
+            } else if (insidePositiveWindow(frameSeq)) {
+                log.warn("Command inside positive sliding window, ignoring command, setting retransmit=1");
+                retransmit = true;
+            } else if (insideNegativeWindow(frameSeq)) {
+                log.debug("Command inside negative sliding window, ignoring ");
+            } else { // outside window
+                log.warn("Command outside sliding window, ignoring command, entering lockout state");
+                lockout = true;
+            }
+        }
+    }
+
+    private boolean insidePositiveWindow(int nS) {
+        if (nS < vR) {
+            nS += 256;
+        }
+        return nS < vR + windowWidth;
+    }
+
+    private boolean insideNegativeWindow(int nS) {
+        int v = vR;
+        if (v < nS) {
+            v += 256;
+        }
+        return nS >= v - windowWidth;
+    }
+
+    private static int incr(int vR) {
+        return (vR + 1) & 0xFF;
+    }
+
+    private void processCommand(byte[] data, int offset, int length) {
+        ByteBuffer bb = ByteBuffer.wrap(data, offset, length).slice();
+        simulator.processTc(new ColumbusCcsdsPacket(bb));
+    }
+
+    private void processControlCommand(byte[] data, int offset, int length) {
+        if (length == 1 && data[offset] == 0) {// unlock
+            farmBCounter++;
+            retransmit = false;
+            waitFlag = false;
+            lockout = false;
+        } else if (length == 3 && data[offset] == 0x82) {// set VR
+            farmBCounter++;
+            if (lockout) {
+                log.debug("setVR command ignored because in lockout state");
+            } else {
+                retransmit = false;
+                waitFlag = false;
+                vR = data[offset + 2] & 0xFF;
+            }
+        } else {
+            log.warn("Unknown control command {}", StringConverter.arrayToHexString(data, offset, length));
+        }
+    }
+
+    public int getCLCW() {
+        // 1 bit control word = 0
+        // 2 bits version number = 00
+        // 3 bits status field = 000
+        // 2 bits cop in effect = 01
+        // 6 bits virtual channel identifier
+        // 2 bits spare = 00
+        // 1 bit no rf available = 0
+        // 1 bit no bit lock = 0
+        // 1 bit lockout
+        // 1 bit waitFlag
+        // 1 bit retransmit
+        // 2 bit FARM-B counter
+        // 1 bit spare
+        // 8 bit vR
+
+        return (1 << 24) + (vcId << 18) + (bit(lockout) << 13)
+                + (bit(waitFlag) << 12) + (bit(retransmit) << 11)
+                + ((farmBCounter & 3) << 9) + vR;
+    }
+
+    static int bit(boolean b) {
+        return b ? 1 : 0;
+    }
+}
+```
+
+### `TelnetServer.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TelnetServer.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import static io.netty.handler.codec.Delimiters.lineDelimiter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.util.concurrent.AbstractService;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
+
+public class TelnetServer extends AbstractService {
+
+    private static final Logger log = LoggerFactory.getLogger(TelnetServer.class);
+
+    // These are marked as '@Sharable'
+    private static final StringDecoder STRING_DECODER = new StringDecoder(CharsetUtil.US_ASCII);
+    private static final StringEncoder STRING_ENCODER = new StringEncoder(CharsetUtil.US_ASCII);
+
+    private ColSimulator simulator;
+    private int port = 8023;
+
+    private NioEventLoopGroup eventLoopGroup;
+
+    public TelnetServer(ColSimulator simulator) {
+        this.simulator = simulator;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    @Override
+    protected void doStart() {
+        eventLoopGroup = new NioEventLoopGroup();
+        ServerBootstrap b = new ServerBootstrap()
+                .group(eventLoopGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new DelimiterBasedFrameDecoder(8192, lineDelimiter()));
+                        pipeline.addLast(STRING_DECODER);
+                        pipeline.addLast(STRING_ENCODER);
+                        pipeline.addLast(new TelnetServerHandler(simulator));
+                    }
+                });
+
+        try {
+            b.bind(port).sync();
+            log.debug("Listening for Telnet clients on port " + port);
+            notifyStarted();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        eventLoopGroup.shutdownGracefully().addListener(future -> {
+            if (future.isSuccess()) {
+                notifyStopped();
+            } else {
+                notifyFailed(future.cause());
+            }
+        });
+    }
+}
+```
+
+### `TelnetServerHandler.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/TelnetServerHandler.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+
+public class TelnetServerHandler extends SimpleChannelInboundHandler<String> {
+
+    private static final Logger log = LoggerFactory.getLogger(TelnetServerHandler.class);
+
+    private ColSimulator simulator;
+
+    public TelnetServerHandler(ColSimulator simulator) {
+        this.simulator = simulator;
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Telnet client connected: " + ctx.channel().remoteAddress());
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, String scpi) throws Exception {
+        String[] commands = scpi.trim().split(";");
+        List<String> responses = new ArrayList<>();
+
+        for (String command : commands) {
+            if (command.trim().isEmpty()) {
+                continue;
+            }
+
+            String[] parts = command.trim().split("\\s+", 2);
+            switch (parts[0].toUpperCase()) {
+            case "*IDN?":
+                responses.add("SPACEAPPS,Demo Simulator");
+                break;
+            case ":BATTERY1:VOLTAGE?":
+                responses.add(Float.toString(simulator.powerDataHandler.getBattery1Voltage()));
+                break;
+            case ":BATTERY2:VOLTAGE?":
+                responses.add(Float.toString(simulator.powerDataHandler.getBattery2Voltage()));
+                break;
+            case ":BATTERY3:VOLTAGE?":
+                responses.add(Float.toString(simulator.powerDataHandler.getBattery3Voltage()));
+                break;
+            case ":LOS?":
+                responses.add((simulator.isLOS() ? "1" : "0"));
+                break;
+            case ":LOS:STAR":
+            case ":LOS:START":
+                simulator.setLOS();
+                break;
+            case ":LOS:STOP":
+                simulator.setAOS();
+                break;
+            case ":LOS:START:DATE?":
+            case ":LOS:STAR:DATE?":
+                Date startDate = simulator.getLastLosStart();
+                if (startDate == null) {
+                    responses.add("");
+                } else {
+                    responses.add(formatDate(startDate));
+                }
+                break;
+            case ":LOS:START:TIME?":
+            case ":LOS:STAR:TIME?":
+                Date startTime = simulator.getLastLosStart();
+                if (startTime == null) {
+                    responses.add("");
+                } else {
+                    responses.add(formatTime(startTime));
+                }
+                break;
+            case ":LOS:STOP:DATE?":
+                Date stopDate = simulator.getLastLosStop();
+                if (stopDate == null) {
+                    responses.add("");
+                } else {
+                    responses.add(formatDate(stopDate));
+                }
+                break;
+            case ":LOS:STOP:TIME?":
+                Date stopTime = simulator.getLastLosStop();
+                if (stopTime == null) {
+                    responses.add("");
+                } else {
+                    responses.add(formatTime(stopTime));
+                }
+                break;
+            case ":DATE?":
+                responses.add(formatDate(new Date()));
+                break;
+            case ":TIME?":
+                responses.add(formatTime(new Date()));
+                break;
+            default:
+                responses.add("unrecognized command");
+            }
+        }
+
+        if (!responses.isEmpty()) {
+            ctx.write(String.join(";", responses));
+            ctx.writeAndFlush("\r\n");
+        }
+    }
+
+    private static String formatDate(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy,MM,dd");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return df.format(date);
+    }
+
+    private static String formatTime(Date date) {
+        SimpleDateFormat df = new SimpleDateFormat("HH,mm,ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return df.format(date);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        log.error("Closing channel due to exception", cause);
+        ctx.close();
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Telnet client disconnected: " + ctx.channel().remoteAddress());
+    }
+}
+```
+
+### `UdpTcFrameLink.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/UdpTcFrameLink.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tctm.ccsds.error.BchCltuGenerator.BchEncoder;
+import org.yamcs.tctm.ccsds.error.CltuGenerator.Encoding;
+import org.yamcs.tctm.ccsds.error.Ldpc64CltuGenerator.Ldpc64Encoder;
+import org.yamcs.utils.ByteArrayUtils;
+
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * Simulator TC link implementing the
+ * CCSDS 232.0-B-3 (TC SPACE DATA LINK PROTOCOL)
+ * <p>
+ * and partly
+ * CCSDS 231.0-B-3 (TC SYNCHRONIZATION AND CHANNEL CODING)
+ * <p>
+ * 
+ * It receives TCs as CLTUs via UDP (one UDP frame = one CLTU)
+ * 
+ */
+public class UdpTcFrameLink extends AbstractExecutionThreadService {
+    final ColSimulator simulator;
+    int port;
+    private DatagramSocket socket;
+    DatagramPacket datagram;
+    private static final Logger log = LoggerFactory.getLogger(UdpTcFrameLink.class);
+
+    Encoding enc = Encoding.BCH;
+    boolean ldpcTailSeq; // if enc is LDPC64 or LDPC256
+    TcVcFrameLink[] vcHandlers;
+    int[] clcw;
+
+    public UdpTcFrameLink(ColSimulator simulator, int port) {
+        this.simulator = simulator;
+        this.port = port;
+        datagram = new DatagramPacket(new byte[2048], 2048);
+        vcHandlers = new TcVcFrameLink[] { new TcVcFrameLink(simulator, 0) };
+        clcw = new int[] { vcHandlers[0].getCLCW() };
+    }
+
+    @Override
+    public void startUp() throws IOException {
+        socket = new DatagramSocket(port);
+    }
+
+    @Override
+    protected void run() throws Exception {
+        while (isRunning()) {
+            socket.receive(datagram);
+            if (enc == Encoding.BCH) {
+                processBCH_CLTU(datagram.getData(), datagram.getOffset(), datagram.getLength());
+            } else {
+                processLDPC_CLTU(datagram.getData(), datagram.getOffset(), datagram.getLength());
+            }
+        }
+
+    }
+
+    private void processBCH_CLTU(byte[] data, int offset, int length) {
+        if (length < 10) {
+            log.warn("Invalid CLTU, length {} (expected at least 10)", length);
+            return;
+        }
+        int ss = ByteArrayUtils.decodeUnsignedShort(data, offset);
+        if (ss != 0xEB90) {
+            log.warn("Invalid BCH start sequence 0x" + Integer.toHexString(ss)+" expected 0xEB90");
+            return;
+        }
+        offset += 2;
+        length -= 2;
+        long ts = ByteArrayUtils.decodeLong(data, offset + length - 8);
+        if (ts != 0xC5C5_C5C5_C5C5_C579L) {
+            log.warn("Invalid BCH tail sequence " + Long.toHexString(ts));
+            return;
+        }
+        length -= 8;
+        if ((length & 7) != 0) {
+            log.warn("Invalid length of encoded data {}, expected multiple of 8 bytes (BCH codeblock length)", length);
+            return;
+        }
+        int cb = length >> 3;
+        byte[] tcframe = new byte[7 * cb];
+        int tcoff = 0;
+        for (int i = 0; i < cb; i++) {
+            // we don't have a BCH decoder so we just verify that the data matches
+            byte b = BchEncoder.encode(data, offset);
+            if (data[offset + 7] != b) {
+                log.warn("Failed to decode BCH data at offset " + offset);
+                return;
+            }
+            System.arraycopy(data, offset, tcframe, tcoff, 7);
+            offset += 8;
+            tcoff += 7;
+        }
+        processTcFrame(tcframe, 0, tcframe.length);
+    }
+
+    private void processLDPC_CLTU(byte[] data, int offset, int length) {
+        int minLength = 8 + (ldpcTailSeq ? 16 : 0);
+        if (length < minLength) {
+            log.warn("Invalid CLTU, length {} (expected at least {})", length, minLength);
+            return;
+        }
+        long ss = ByteArrayUtils.decodeLong(data, offset);
+        if (ss != 0x0347_76C7_2728_95B0L) {
+            log.warn("Invalid LDLC start sequence {}", Long.toHexString(ss));
+            return;
+        }
+        offset += 8;
+        length -= 8;
+        if (ldpcTailSeq) {
+            long ts0 = ByteArrayUtils.decodeLong(data, offset + length - 16);
+            long ts1 = ByteArrayUtils.decodeLong(data, offset + length - 8);
+            if (ts0 != 0x5555_5556_AAAA_AAAAL || ts1 != 0x5555_5555_5555_5555L) {
+                log.warn("Invalid LDLC tail sequence {}{}", Long.toHexString(ts0), Long.toHexString(ts1));
+                return;
+            }
+            length -= 16;
+        }
+        if (enc == Encoding.LDCP64) {
+            processLDPC64(data, offset, length);
+        } else {
+            processLDPC256(data, offset, length);
+        }
+    }
+
+    private void processLDPC64(byte[] data, int offset, int length) {
+        if ((length & 0xF) != 0) {
+            log.warn("Invalid length of encoded data {}, expected multiple of 16 bytes (LDPC64 codeblock length)",
+                    length);
+            return;
+        }
+        int cb = length >> 4;
+        byte[] tcframe = new byte[8 * cb];
+        int tcoff = 0;
+        byte[] tmp = new byte[8];
+        for (int i = 0; i < cb; i++) {
+            // we don't have a LDPC decoder so we just verify that the data matches
+            Ldpc64Encoder.encode(data, offset, tmp, 0);
+            if (!equals(data, offset + 8, tmp, 0, 8)) {
+                log.warn("Failed to decode LDPC data at offset " + offset);
+                return;
+            }
+            System.arraycopy(data, offset, tcframe, tcoff, 8);
+            offset += 16;
+            tcoff += 8;
+        }
+        processTcFrame(tcframe, 0, tcframe.length);
+
+    }
+
+    private void processLDPC256(byte[] data, int offset, int length) {
+        if ((length & 0x1F) != 0) {
+            log.warn("Invalid length of encoded data {}, expected multiple of 32 bytes (LDPC256 codeblock length)",
+                    length);
+            return;
+        }
+        int cb = length >> 5;
+        byte[] tcframe = new byte[16 * cb];
+        int tcoff = 0;
+        byte[] tmp = new byte[16];
+
+        for (int i = 0; i < cb; i++) {
+            // we don't have a LDPC decoder so we just verify that the data matches
+            Ldpc64Encoder.encode(data, offset, tmp, 0);
+            if (!equals(data, offset + 16, tmp, 0, 16)) {
+                log.warn("Failed to decode LDPC data at offset " + offset);
+                return;
+            }
+            System.arraycopy(data, offset, tcframe, tcoff, 16);
+            offset += 32;
+            tcoff += 16;
+        }
+        processTcFrame(tcframe, 0, tcframe.length);
+    }
+
+    private boolean equals(byte[] a1, int a1Offset, byte[] a2, int a2Offset, int length) {
+        for (int i = 0; i < length; i++)
+            if (a1[i + a1Offset] != a2[i + a2Offset])
+                return false;
+
+        return true;
+    }
+
+    private void processTcFrame(byte[] data, int offset, int length) {
+        int vcId = (data[offset + 2] & 0xFF) >> 2;
+        TcVcFrameLink vcfl;
+        if (vcId >= vcHandlers.length || (vcfl = vcHandlers[vcId]) == null) {
+            log.warn("No TC handler for VC {}", vcId);
+        } else {
+            vcfl.processTcFrame(data, offset, length);
+            clcw[vcId] = vcfl.getCLCW();
+        }
+    }
+
+    private int nextClcwVc;
+
+    public int getClcw() {
+        nextClcwVc++;
+        if (nextClcwVc >= vcHandlers.length) {
+            nextClcwVc = 0;
+        }
+        return clcw[nextClcwVc];
+    }
+}
+```
+
+### `UdpTmFrameLink.java`
+
+**경로:** `gsw/yamcs/simulator/src/main/java/org/yamcs/simulator/UdpTmFrameLink.java`
+
+
+```java
+package org.yamcs.simulator;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.function.IntSupplier;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tctm.ccsds.error.AosFrameHeaderErrorCorr;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.utils.ByteArrayUtils;
+
+import com.google.common.util.concurrent.AbstractScheduledService;
+
+/**
+ * Simulator link implementing the TM frames using one of the three CCSDS specs:
+ * 
+ * AOS CCSDS 732.0-B-3
+ * TM CCSDS 132.0-B-2
+ * USLP CCSDS 732.1-B-1
+ * 
+ * 
+ * Sends frames of predefined size at a configured frequency. If there is no data to send, it sends idle frames.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class UdpTmFrameLink extends AbstractScheduledService {
+    final String frameType;
+    final String host;
+    final int port;
+    final int frameSize;
+
+    DatagramSocket socket;
+    static final int NUM_VC = 3;
+    static final int SPACECRAFT_ID = 0xAB;
+    final double framesPerSec;
+    final static CrcCciitCalculator crc = new CrcCciitCalculator();
+    VcBuilder[] builders = new VcBuilder[NUM_VC];
+    VcBuilder idleFrameBuilder;
+
+    private static final Logger log = LoggerFactory.getLogger(UdpTmFrameLink.class);
+
+    int lastVcSent; // switches between 0 and 1 so we don't send always from the same vc
+
+    InetAddress addr;
+    IntSupplier clcwSupplier;
+
+    public UdpTmFrameLink(String frameType, String host, int port, int frameLength, double framesPerSec,
+            IntSupplier clcwSupplier) {
+        this.frameType = frameType;
+        this.host = host;
+        this.port = port;
+        this.frameSize = frameLength;
+        this.framesPerSec = framesPerSec;
+        this.clcwSupplier = clcwSupplier;
+
+        if ("AOS".equalsIgnoreCase(frameType)) {
+            for (int i = 0; i < NUM_VC; i++) {
+                builders[i] = new AosVcSender(i, frameLength);
+            }
+            idleFrameBuilder = new AosVcSender(63, frameLength);
+        } else if ("TM".equalsIgnoreCase(frameType)) {
+            for (int i = 0; i < NUM_VC; i++) {
+                builders[i] = new TmVcSender(i, frameLength);
+            }
+            idleFrameBuilder = builders[0];
+        } else if ("USLP".equalsIgnoreCase(frameType)) {
+            for (int i = 0; i < NUM_VC; i++) {
+                builders[i] = new UslpVcSender(i, frameLength);
+            }
+            idleFrameBuilder = new UslpVcSender(63, frameLength);
+        }
+
+    }
+
+    @Override
+    protected void startUp() throws Exception {
+        addr = InetAddress.getByName(host);
+        socket = new DatagramSocket();
+    }
+
+    @Override
+    protected Scheduler scheduler() {
+        return Scheduler.newFixedRateSchedule(0, (long) (1e6 / framesPerSec), TimeUnit.MICROSECONDS);
+    }
+
+    @Override
+    protected void runOneIteration() throws Exception {
+        // dequeue data from all frames
+        for (int i = 0; i < NUM_VC; i++) {
+            builders[i].dequeue();
+        }
+        // if one of the first VCs is full, send it
+        for (int i = 0; i < 2; i++) {
+            int vc = (lastVcSent + i) & 1;
+            if (builders[vc].isFull()) {
+                sendData(builders[vc]);
+                return;
+            }
+        }
+
+        int mini = -1;
+        int minData = Integer.MAX_VALUE;
+        // send the first one that has least empty space
+        for (int i = 0; i < NUM_VC; i++) {
+            if (builders[i].isEmpty()) {
+                continue;
+            }
+            int emptySpace = builders[i].emtySpaceLength();
+            if (emptySpace < minData) {
+                mini = i;
+                minData = emptySpace;
+            }
+        }
+        if (mini != -1) {
+            sendData(builders[mini]);
+            return;
+        }
+        // no data available for any VC, send an idle frame
+        byte[] idleData = idleFrameBuilder.getIdleFrame();
+        socket.send(new DatagramPacket(idleData, idleData.length, addr, port));
+    }
+
+    private void sendData(VcBuilder vcb) throws IOException {
+        vcb.setCLCW(clcwSupplier.getAsInt());
+        if (!vcb.isFull()) {
+            vcb.fillIdlePacket();
+        }
+
+        byte[] data = vcb.getFrame();
+
+        socket.send(new DatagramPacket(data, data.length, addr, port));
+        vcb.reset();
+    }
+
+    /**
+     * queue packet for virtual channel
+     * 
+     * @param vcId
+     * @param packet
+     */
+    public void queuePacket(int vcId, byte[] packet) {
+        VcBuilder s = builders[vcId];
+
+        if (!s.queue.offer(packet)) {
+            log.warn("dropping packet for virtual channel {} because the queue is full", vcId);
+        }
+    }
+
+    static abstract class VcBuilder {
+        final int vcId;
+
+        protected long vcSeqCount = 0;
+        ArrayBlockingQueue<byte[]> queue = new ArrayBlockingQueue<>(100);
+        protected int dataOffset;
+
+        byte[] pendingPacket;
+        int pendingPacketOffset;
+        byte[] data;
+
+        boolean firstPacketInFrame = true;
+        int firstHeaderPointer = -1;
+        int dataEnd;
+
+        protected int clcw;
+
+        public VcBuilder(int vcId) {
+            this.vcId = vcId;
+            this.dataOffset = hdrSize();
+
+        }
+
+        public void setCLCW(int clcw) {
+            this.clcw = clcw;
+        }
+
+        public int emtySpaceLength() {
+            return dataEnd - dataOffset;
+        }
+
+        public byte[] getFrame() {
+            encodeHeaderAndTrailer();
+            return data;
+        }
+
+        public boolean isEmpty() {
+            return dataOffset == hdrSize();
+        }
+
+        public boolean isFull() {
+            return dataOffset == dataEnd;
+        }
+
+        void reset() {
+            vcSeqCount++;
+            firstPacketInFrame = true;
+            dataOffset = hdrSize();
+        }
+
+        /**
+         * Copy data from the queue into the frame
+         * 
+         * @param q
+         * @return
+         * @throws IOException
+         */
+        void dequeue() throws IOException {
+            if (pendingPacket != null) {
+                copyPendingToBuffer();
+                if (pendingPacket != null) {// not yet fully copied but the frame is full
+                    return;
+                }
+            }
+            while (dataOffset < dataEnd) {
+                pendingPacket = queue.poll();
+                if (pendingPacket == null) {
+                    break;
+                }
+                if (firstPacketInFrame) {
+                    firstHeaderPointer = dataOffset - hdrSize();
+                    firstPacketInFrame = false;
+                }
+                pendingPacketOffset = 0;
+                copyPendingToBuffer();
+                if (pendingPacket != null) {// not yet fully copied but the frame is full
+                    break;
+                }
+            }
+        }
+
+        void copyPendingToBuffer() {
+            int length = Math.min(pendingPacket.length - pendingPacketOffset, dataEnd - dataOffset);
+            log.trace("VC{} writing {} bytes from packet of length {} at offset {}",
+                    vcId, length, pendingPacket.length, dataOffset);
+            ;
+            System.arraycopy(pendingPacket, pendingPacketOffset, data, dataOffset, length);
+            dataOffset += length;
+            pendingPacketOffset += length;
+            if (pendingPacketOffset == pendingPacket.length) {
+                pendingPacket = null;
+            }
+        }
+
+        private void fillIdlePacket() {
+            int n = dataEnd - dataOffset;
+            log.trace("VC{} writing idle packet of size {} at offset {}", vcId, n, dataOffset);
+            if (n == 0) {
+                return;
+            } else if (n == 1) {
+                data[dataOffset] = (byte) 0xE0;
+            } else if (n < 254) {
+                data[dataOffset] = (byte) 0xE1;
+                data[dataOffset + 1] = (byte) n;
+            } else {
+                data[dataOffset] = (byte) 0xE2;
+                data[dataOffset + 1] = 0;
+                ByteArrayUtils.encodeUnsignedShort(n, data, dataOffset + 2);
+            }
+            dataOffset += n;
+        }
+
+        abstract int hdrSize();
+
+        abstract void encodeHeaderAndTrailer();
+
+        abstract public byte[] getIdleFrame();
+    }
+
+    static class AosVcSender extends VcBuilder {
+
+        public AosVcSender(int vcId, int frameSize) {
+            super(vcId);
+            if ((vcId < 0) || (vcId > 63)) {
+                throw new IllegalArgumentException("Invalid virtual channel id " + vcId);
+            }
+
+            this.data = new byte[frameSize];
+            dataEnd = frameSize - 6;// last 6 bytes are the OCF and CRC
+            writeGvcId(data, vcId);
+
+        }
+
+        void writeGvcId(byte[] frameData, int vcId) {
+            ByteArrayUtils.encodeUnsignedShort((1 << 14) + (SPACECRAFT_ID << 6) + vcId, frameData, 0);
+        }
+
+        @Override
+        int hdrSize() {
+            // 2 bytes master channel id
+            // 3 bytes virtual channel frame count
+            // 1 byte signaling field
+            // 2 bytes frame header error control
+            // 2 bytes M_PDU header
+
+            // NOTE: there is no insert zone; if there should be any, its size should be added as part of the header
+            // size
+            return 10;
+        }
+
+        @Override
+        void encodeHeaderAndTrailer() {
+            // set the frame sequence count
+
+            ByteArrayUtils.encodeUnsigned3Bytes((int) vcSeqCount, data, 2);
+            data[5] = (byte) (0x60 + ((vcSeqCount >>> 24) & 0xF));
+
+            ByteArrayUtils.encodeInt(clcw, data, data.length - 6);
+
+            ByteArrayUtils.encodeUnsignedShort(firstHeaderPointer, data, 8);
+            fillChecksums(data);
+
+        }
+
+        static void fillChecksums(byte[] data) {
+            // first Reed-Solomon the header
+            int gvcid = ByteArrayUtils.decodeUnsignedShort(data, 0);
+            int x = AosFrameHeaderErrorCorr.encode(gvcid, data[5]);
+            ByteArrayUtils.encodeUnsignedShort(x, data, 6);
+
+            // then overall CRC
+            x = crc.compute(data, 0, data.length - 2);
+            ByteArrayUtils.encodeUnsignedShort(x, data, data.length - 2);
+        }
+
+        @Override
+        public byte[] getIdleFrame() {
+            vcSeqCount++;
+            encodeHeaderAndTrailer();
+            return data;
+        }
+    }
+
+    static class TmVcSender extends VcBuilder {
+        byte[] idleFrameData;
+        int ocfFlag = 1;
+
+        public TmVcSender(int vcId, int frameSize) {
+            super(vcId);
+            this.data = new byte[frameSize];
+            dataEnd = frameSize - 4 - 2 * ocfFlag; // last 6 bytes are the OCF and CRC
+            writeGvcId(data, vcId);
+        }
+
+        @Override
+        int hdrSize() {
+            return 6;
+        }
+
+        void writeGvcId(byte[] frameData, int vcId) {
+            ByteArrayUtils.encodeUnsignedShort((SPACECRAFT_ID << 4) + (vcId << 1) + ocfFlag, frameData, 0);
+        }
+
+        @Override
+        void encodeHeaderAndTrailer() {
+            // set the frame sequence count
+            data[3] = (byte) (vcSeqCount);
+
+            // write the first header pointer
+            ByteArrayUtils.encodeUnsignedShort(firstHeaderPointer, data, 4);
+
+            ByteArrayUtils.encodeInt(clcw, data, data.length - 6);
+
+            // compute crc
+            int x = crc.compute(data, 0, data.length - 2);
+            ByteArrayUtils.encodeUnsignedShort(x, data, data.length - 2);
+        }
+
+        @Override
+        public byte[] getIdleFrame() {
+            ByteArrayUtils.encodeUnsignedShort(0x7FE, data, 4);
+            int x = crc.compute(data, 0, data.length - 2);
+            ByteArrayUtils.encodeUnsignedShort(x, data, data.length - 2);
+
+            vcSeqCount++;
+
+            return data;
+
+        }
+    }
+
+    /**
+     * This builds USLP frames with complete primary header, OCF , no insert data, and 32 bits frame count
+     *
+     */
+    static class UslpVcSender extends VcBuilder {
+        byte[] idleFrameData;
+        int ocfFlag = 1;
+
+        public UslpVcSender(int vcId, int frameLength) {
+            super(vcId);
+            this.data = new byte[frameLength];
+            dataEnd = frameLength - 4 - 2 * ocfFlag; // last 6 bytes are the OCF and CRC
+
+            ByteArrayUtils.encodeInt((12 << 28) + (SPACECRAFT_ID << 12) + (vcId << 5), data, 0);
+
+            // frame length
+            ByteArrayUtils.encodeUnsignedShort(frameLength - 1, data, 4);
+
+            data[6] = 0x0C; // ocfFlag = 1, vc frame count = 100(in binary)
+
+        }
+
+        @Override
+        int hdrSize() {
+            // 11 for the primary header (with a 32 bit frame length)
+            // 3 bytes for the data field header
+            return 14;
+        }
+
+        @Override
+        void encodeHeaderAndTrailer() {
+            // set the frame sequence count
+            ByteArrayUtils.encodeInt((int) vcSeqCount, data, 7);
+
+            // write the first header pointer
+            ByteArrayUtils.encodeUnsignedShort(firstHeaderPointer, data, 12);
+
+            if (ocfFlag == 1) {
+                ByteArrayUtils.encodeInt(clcw, data, data.length - 6);
+            }
+            // compute crc
+            int x = crc.compute(data, 0, data.length - 2);
+            ByteArrayUtils.encodeUnsignedShort(x, data, data.length - 2);
+        }
+
+        @Override
+        public byte[] getIdleFrame() {
+            vcSeqCount++;
+            encodeHeaderAndTrailer();
+            return data;
+        }
+    }
+}
+```

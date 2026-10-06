@@ -3,18 +3,244 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SpacePacketFramerTester.cpp`
 
-file--SpacePacketFramerTester.cpp
-file--SpacePacketFramerTester.hpp
-file--SpacePacketFramerTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/SpacePacketFramerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketFramerTester.cpp
+// \author thomas-bc
+// \brief  cpp file for SpacePacketFramer component test harness implementation class
+// ======================================================================
+
+#include "SpacePacketFramerTester.hpp"
+#include "STest/Random/Random.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+SpacePacketFramerTester ::SpacePacketFramerTester()
+    : SpacePacketFramerGTestBase("SpacePacketFramerTester", SpacePacketFramerTester::MAX_HISTORY_SIZE),
+      component("SpacePacketFramer") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+SpacePacketFramerTester ::~SpacePacketFramerTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void SpacePacketFramerTester::testComStatusPassthrough() {
+    // Simulate a comStatusIn event and check comStatusOut
+    Fw::Success status = Fw::Success::SUCCESS;
+    this->invoke_to_comStatusIn(0, status);
+    ASSERT_from_comStatusOut_SIZE(1);
+    ASSERT_EQ(this->fromPortHistory_comStatusOut->at(0).condition, status);
+    this->clearHistory();
+    status = Fw::Success::FAILURE;
+    this->invoke_to_comStatusIn(0, status);
+    ASSERT_from_comStatusOut_SIZE(1);
+    ASSERT_EQ(this->fromPortHistory_comStatusOut->at(0).condition, status);
+}
+
+void SpacePacketFramerTester::testDataReturnPassthrough() {
+    // Simulate a dataReturnIn event and check bufferDeallocate_out
+    U8 data[8] = {0};
+    Fw::Buffer buffer(data, sizeof(data));
+    ComCfg::FrameContext context;
+    this->invoke_to_dataReturnIn(0, buffer, context);
+    ASSERT_from_bufferDeallocate_SIZE(1);
+    ASSERT_EQ(this->fromPortHistory_bufferDeallocate->at(0).fwBuffer.getData(), data);
+    ASSERT_EQ(this->fromPortHistory_bufferDeallocate->at(0).fwBuffer.getSize(), sizeof(data));
+}
+
+void SpacePacketFramerTester::testNominalFraming() {
+    // Simulate framing a buffer and check output
+    U8 payload[16];
+    for (U32 i = 0; i < sizeof(payload); ++i) {
+        payload[i] = static_cast<U8>(STest::Random::lowerUpper(0, 0xFF));
+    }
+    Fw::Buffer data(payload, sizeof(payload));
+    ComCfg::APID::T apid = static_cast<ComCfg::APID::T>(STest::Random::lowerUpper(0, 0x7FF));  // random 11 bit APID
+    U16 seqCount = static_cast<U8>(STest::Random::lowerUpper(0, 0x3FFF));  // random 14 bit sequence count
+    ComCfg::FrameContext context;
+    context.set_apid(apid);
+    this->m_nextSeqCount = seqCount;  // seqCount to be returned by getApidSeqCount output port
+
+    this->invoke_to_dataIn(0, data, context);
+
+    // Check dataOut
+    ASSERT_from_dataOut_SIZE(1);
+    Fw::Buffer outBuffer = this->fromPortHistory_dataOut->at(0).data;
+    ASSERT_EQ(outBuffer.getSize(), sizeof(payload) + SpacePacketHeader::SERIALIZED_SIZE);
+    // Check that the payload is present at the correct offset
+    for (U32 i = 0; i < sizeof(payload); ++i) {
+        ASSERT_EQ(outBuffer.getData()[SpacePacketHeader::SERIALIZED_SIZE + i], payload[i]);
+    }
+    // Check that dataReturnOut is called for the original buffer
+    ASSERT_from_dataReturnOut_SIZE(1);
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).data.getData(), payload);
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).data.getSize(), sizeof(payload));
+}
+
+// ----------------------------------------------------------------------
+// Output port handler overrides
+// ----------------------------------------------------------------------
+
+U16 SpacePacketFramerTester ::from_getApidSeqCount_handler(FwIndexType portNum,
+                                                           const ComCfg::APID& apid,
+                                                           U16 sequenceCount) {
+    return this->m_nextSeqCount;
+}
+
+Fw::Buffer SpacePacketFramerTester ::from_bufferAllocate_handler(FwIndexType portNum, FwSizeType size) {
+    return Fw::Buffer(this->m_internalDataBuffer, size);
+}
+
+}  // namespace Ccsds
+
+}  // namespace Svc
 ```
 
-## 항목
+### `SpacePacketFramerTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/SpacePacketFramerTester.cpp`](file--SpacePacketFramerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/SpacePacketFramerTester.hpp`](file--SpacePacketFramerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/SpacePacketFramerTestMain.cpp`](file--SpacePacketFramerTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/SpacePacketFramerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketFramerTester.hpp
+// \author thomas-bc
+// \brief  hpp file for SpacePacketFramer component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_SpacePacketFramerTester_HPP
+#define Svc_Ccsds_SpacePacketFramerTester_HPP
+
+#include "Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.hpp"
+#include "Svc/Ccsds/SpacePacketFramer/SpacePacketFramerGTestBase.hpp"
+#include "Svc/Ccsds/Types/SpacePacketHeaderSerializableAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+class SpacePacketFramerTester final : public SpacePacketFramerGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object SpacePacketFramerTester
+    SpacePacketFramerTester();
+
+    //! Destroy object SpacePacketFramerTester
+    ~SpacePacketFramerTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    void testComStatusPassthrough();
+    void testDataReturnPassthrough();
+    void testNominalFraming();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+    // ----------------------------------------------------------------------
+    // Test Harness: output port overrides
+    // ----------------------------------------------------------------------
+    U16 from_getApidSeqCount_handler(FwIndexType portNum,  //!< The port number
+                                     const ComCfg::APID& apid,
+                                     U16 sequenceCount) override;
+
+    Fw::Buffer from_bufferAllocate_handler(FwIndexType portNum, FwSizeType size) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    SpacePacketFramer component;
+
+    //! Test buffer
+    static const FwSizeType MAX_TEST_PACKET_DATA_SIZE = 200;
+    U8 m_internalDataBuffer[SpacePacketHeader::SERIALIZED_SIZE + MAX_TEST_PACKET_DATA_SIZE];
+
+    U16 m_nextSeqCount;  // Sequence count to be returned by getApidSeqCount output port
+};
+
+}  // namespace Ccsds
+
+}  // namespace Svc
+
+#endif
+```
+
+### `SpacePacketFramerTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/ut/SpacePacketFramerTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketFramerTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for SpacePacketFramer component test main function
+// ======================================================================
+
+#include "SpacePacketFramerTester.hpp"
+
+TEST(SpacePacketFramer, testComStatusPassthrough) {
+    Svc::Ccsds::SpacePacketFramerTester tester;
+    tester.testComStatusPassthrough();
+}
+
+TEST(SpacePacketFramer, testDataReturnPassthrough) {
+    Svc::Ccsds::SpacePacketFramerTester tester;
+    tester.testDataReturnPassthrough();
+}
+
+TEST(SpacePacketFramer, testNominalFraming) {
+    Svc::Ccsds::SpacePacketFramerTester tester;
+    tester.testNominalFraming();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

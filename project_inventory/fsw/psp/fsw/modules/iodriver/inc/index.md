@@ -3,26 +3,624 @@
 
 **경로:** `fsw/psp/fsw/modules/iodriver/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `iodriver_analog_io.h`
 
-file--iodriver_analog_io.h
-file--iodriver_base.h
-file--iodriver_discrete_io.h
-file--iodriver_impl.h
-file--iodriver_memory_io.h
-file--iodriver_packet_io.h
-file--iodriver_stream_io.h
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_analog_io.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file
+ *
+ * I/O adapter for analog (ADC/DAC) devices
+ */
+
+#ifndef CFE_PSP_IODRIVER_ANALOG_IO_H
+#define CFE_PSP_IODRIVER_ANALOG_IO_H
+
+/* Include all base definitions */
+#include "iodriver_base.h"
+
+/**
+ * Standardized width of ADC/DAC codes.
+ *
+ * This should reflect the highest-precision ADC that the system is expected to use.  ADC inputs
+ * that are less precise than this will be bit-expanded in software such that all processing
+ * in the upper layers receives consistent data no matter what the actual hardware implements.
+ * This permits easier swapping between different phsyical hardware types, including those with
+ * potentially less ADC/DAC precision, while presenting similar values to application code.
+ */
+#define CFE_PSP_IODRIVER_ADC_BITWIDTH 24
+
+/**
+ * Type abstraction for expressing analog ADC codes.
+ *
+ * This type is an integer type of at least CFE_PSP_IODRIVER_ADC_BITWIDTH in length.  It is used
+ * as a parameter for the Read/Write opcodes on ADC/DAC channels.  Normalized (fixed-width) ADC
+ * codes are used at this layer rather than floating point due to the fact that floats involve a
+ * lot of extra overhead and some CPUs do not have FP units at all.
+ *
+ * If desired on CPUs that are capable of good-performance floating point operations, another
+ * module/CFS application can convert the ADC codes to real-word floats.  This would be done
+ * outside the I/O driver layer.
+ */
+typedef int32 CFE_PSP_IODriver_AdcCode_t;
+
+/**
+ * Complete API container for analog read/write commands.
+ * This allows reading/writing multiple channels at once with a single entry into the API.
+ * As each entry into the API needs to acquire a mutex for serialization, this can be much
+ * more efficient to read channels through this means rather than single channel read/write.
+ * Set NumChannels to 1 to perform single channel read/write
+ */
+typedef struct
+{
+    uint16 NumChannels;                  /**<  Number of channels in the i/o structure (length of "samples" array) */
+    CFE_PSP_IODriver_AdcCode_t *Samples; /**<  Array for ADC/DAC samples */
+} CFE_PSP_IODriver_AnalogRdWr_t;
+
+/**
+ * Opcodes specific to analog io (ADC/DAC) devices
+ */
+enum
+{
+    CFE_PSP_IODriver_ANALOG_IO_NOOP = CFE_PSP_IODriver_ANALOG_IO_CLASS_BASE,
+
+    CFE_PSP_IODriver_ANALOG_IO_READ_CHANNELS,  /**< CFE_PSP_IODriver_AnalogRdWr_t argument */
+    CFE_PSP_IODriver_ANALOG_IO_WRITE_CHANNELS, /**< CFE_PSP_IODriver_AnalogRdWr_t argument */
+
+    CFE_PSP_IODriver_ANALOG_IO_MAX
+};
+
+#endif /* CFE_PSP_IODRIVER_ANALOG_IO_H */
 ```
 
-## 항목
+### `iodriver_base.h`
 
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_analog_io.h`](file--iodriver_analog_io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_base.h`](file--iodriver_base.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_discrete_io.h`](file--iodriver_discrete_io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_impl.h`](file--iodriver_impl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_memory_io.h`](file--iodriver_memory_io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_packet_io.h`](file--iodriver_packet_io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/modules/iodriver/inc/iodriver_stream_io.h`](file--iodriver_stream_io.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_base.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file
+ *
+ * Generic abstraction API for on-board devices
+ *
+ * The design of this interface is similar to the POSIX "ioctl()" in concept -
+ * A single interface function, with 3 basic arguments:
+ *  - A device/target identifier
+ *  - A command "opcode"
+ *  - A generic argument containing the I/O parameter for that opcode
+ *
+ * Note that the last argument may in fact be a structure for opcodes that
+ * require multiple parameters.
+ *
+ * This type of interface makes it fairly simple to swap one hardware device
+ * for another, as long as they both implement a common set of opcodes, while
+ * also being extendable/customizable by adding additional opcodes to expose
+ * device-specific functionality, as long as those extension opcodes do not
+ * interfere or overlap with the common set.
+ */
+
+#ifndef IODRIVER_BASE_H
+#define IODRIVER_BASE_H
+
+#include <common_types.h>
+
+/**
+ * Physical channel location descriptor.
+ *
+ * See the CFE_PSP_IODriver_LOOKUP_SUBCHANNEL opcode to determine channel number to set in here,
+ * as each board may have their own unique channel naming conventions.  The integer value that
+ * goes in this structure may or may not correlate to the physical device labeling.
+ */
+typedef struct
+{
+    uint32 PspModuleId;  /**<  Device selection */
+    uint16 SubsystemId;  /**<  Instance or subsystem number */
+    uint16 SubchannelId; /**<  Subchannel number - optional, set to 0 for devices that do not have multiple channels */
+} CFE_PSP_IODriver_Location_t;
+
+/**
+ * Wrapper for constant arguments, to avoid a compiler warning
+ * about arguments differing in const-ness.  Use the inline functions to
+ * pass in an immediate/constant value.
+ */
+typedef union
+{
+    void *      Vptr;
+    const void *ConstVptr;
+    const char *ConstStr;
+    uint32      U32;
+} CFE_PSP_IODriver_Arg_t;
+
+static inline CFE_PSP_IODriver_Arg_t CFE_PSP_IODriver_VPARG(void *x)
+{
+    CFE_PSP_IODriver_Arg_t a;
+    a.Vptr = x;
+    return a;
+}
+static inline CFE_PSP_IODriver_Arg_t CFE_PSP_IODriver_CONST_VPARG(const void *x)
+{
+    CFE_PSP_IODriver_Arg_t a;
+    a.ConstVptr = x;
+    return a;
+}
+static inline CFE_PSP_IODriver_Arg_t CFE_PSP_IODriver_CONST_STR(const char *x)
+{
+    CFE_PSP_IODriver_Arg_t a;
+    a.ConstStr = x;
+    return a;
+}
+static inline CFE_PSP_IODriver_Arg_t CFE_PSP_IODriver_U32ARG(uint32 x)
+{
+    CFE_PSP_IODriver_Arg_t a;
+    a.U32 = x;
+    return a;
+}
+
+/**
+ * Standardized concept of directionality for any device
+ *
+ * Some code may use these enumeration values as a bitmask -
+ * use care when updating to ensure that the values may be used as bitmasks.
+ * Specific hardware drivers may or may not implement all modes depending on capabilities.
+ */
+typedef enum
+{
+    CFE_PSP_IODriver_Direction_DISABLED     = 0,    /**<  Disabled (inactive, tri-state if possible) */
+    CFE_PSP_IODriver_Direction_INPUT_ONLY   = 0x01, /**<  Device/channel is configured for input */
+    CFE_PSP_IODriver_Direction_OUTPUT_ONLY  = 0x02, /**<  Device/channel is configured for output */
+    CFE_PSP_IODriver_Direction_INPUT_OUTPUT = 0x03  /**<  Input/Output (some HW supports this) */
+} CFE_PSP_IODriver_Direction_t;
+
+/**
+ * Some common values for the device command codes
+ * These are some VERY basic ops that many devices may support in some way.
+ * Any opcode that is not implemented should return CFE_PSP_ERROR_NOT_IMPLEMENTED
+ *
+ * Negative return values indicate an error of some type, while return values >= 0 indicate success
+ */
+enum
+{
+    CFE_PSP_IODriver_NOOP = 0, /**< Reserved, do nothing */
+
+    /* Start/stop opcodes */
+    CFE_PSP_IODriver_SET_RUNNING = 1, /**< uint32 argument, 0=stop 1=start device */
+    CFE_PSP_IODriver_GET_RUNNING = 2, /**< no argument, returns positive nonzero (true) if running and zero (false) if
+                                     stopped, negative on error */
+
+    /* Configuration opcodes */
+    CFE_PSP_IODriver_SET_CONFIGURATION = 3, /**< const string argument (device-dependent content) */
+    CFE_PSP_IODriver_GET_CONFIGURATION = 4, /**< void * argument (device-dependent content) */
+
+    /* Sub-channel configuration/mapping opcodes */
+    CFE_PSP_IODriver_LOOKUP_SUBSYSTEM = 5,  /**< const char * argument, looks up ChannelName and returns positive value
+                                           for  subsystem ID, negative value for error */
+    CFE_PSP_IODriver_LOOKUP_SUBCHANNEL = 6, /**< const char * argument, looks up ChannelName and returns positive value
+                                           for subchannel ID, negative value for error */
+    CFE_PSP_IODriver_SET_DIRECTION   = 7,   /**< U32 (CFE_PSP_IODriver_Direction_t) argument as input */
+    CFE_PSP_IODriver_QUERY_DIRECTION = 8,   /**< U32 (CFE_PSP_IODriver_Direction_t) argument as output */
+
+    /*
+     * Placeholders for opcodes that could be implemented across a class of devices.
+     * For instance, all ADC/DAC devices should implement a common set of read/write opcodes
+     * so that devices can be interchanged without affecting higher-level software
+     */
+    CFE_PSP_IODriver_ANALOG_IO_CLASS_BASE   = 0x00010000, /**< Opcodes for typical adc/dac devices */
+    CFE_PSP_IODriver_DISCRETE_IO_CLASS_BASE = 0x00020000, /**< Opcodes for discrete IO (digital logic) devices */
+    CFE_PSP_IODriver_PACKET_IO_CLASS_BASE   = 0x00030000, /**< Opcodes for packet/datagram-oriented devices */
+    CFE_PSP_IODriver_MEMORY_IO_CLASS_BASE   = 0x00040000, /**< Opcodes for memory/register oriented devices */
+    CFE_PSP_IODriver_STREAM_IO_CLASS_BASE   = 0x00050000, /**< Opcodes for data stream oriented devices */
+
+    /**
+     * Placeholder for extended opcodes that may be very specific to a single device/device type.
+     * This allows the same API call (CFE_PSP_DeviceCommandFunc_t) but
+     */
+    CFE_PSP_IODriver_EXTENDED_BASE = 0x7FFF0000
+
+};
+
+/* ------------------------------------------------------------- */
+/**
+ * @brief Find an IO device module ID by name
+ *
+ * @param DriverName the device name to find
+ * @param PspModuleId location to store the module ID, if found
+ *
+ * @retval #CFE_PSP_SUCCESS if found, or error code if not found
+ */
+int32 CFE_PSP_IODriver_FindByName(const char *DriverName, uint32 *PspModuleId);
+
+/* ------------------------------------------------------------- */
+/**
+ * @brief Issue a request to an IO device module
+ *
+ * @param Location Aggregate location identifier
+ * @param CommandCode Request identifier
+ * @param Arg Request Argument
+ *
+ * @retval #CFE_PSP_SUCCESS if successful, or error code if not successful
+ */
+int32 CFE_PSP_IODriver_Command(const CFE_PSP_IODriver_Location_t *Location, uint32 CommandCode,
+                               CFE_PSP_IODriver_Arg_t Arg);
+
+#endif /* IODRIVER_BASE_H */
+```
+
+### `iodriver_discrete_io.h`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_discrete_io.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file
+ *
+ * I/O adapter for discrete (digitial gpio) interfaces
+ */
+
+#ifndef CFE_PSP_IODRIVER_DISCRETE_IO_H
+#define CFE_PSP_IODRIVER_DISCRETE_IO_H
+
+/**
+ * Type abstraction for expressing digital logic levels.
+ *
+ * This value will be filled starting with the LSB. A typical GPIO logic channel is 1 bit, so
+ * only the LSB is signficiant and the other bits are not used.
+ *
+ * This allows single channels up to 8 bits wide, but multiple "channels" could be concatenated
+ * using a multi-read/write opcode to allow atomic access to any number of bits.
+ */
+typedef uint8 CFE_PSP_IODriver_GpioLevel_t;
+
+/**
+ * Enumerated names for typical digital 1-bit logic channel states.
+ *
+ * For convenience / code readability.
+ */
+enum
+{
+    CFE_PSP_IODriver_GPIO_LOGIC_LOW  = 0,
+    CFE_PSP_IODriver_GPIO_LOGIC_HIGH = 1
+};
+
+/**
+ * Complete API container for gpio read/write commands.
+ * This allows reading/writing multiple channels at once with a single entry into the API.
+ * As each entry into the API needs to acquire a mutex for serialization, this can be much
+ * more efficient to read channels through this means rather than single channel read/write.
+ */
+typedef struct
+{
+    uint16 NumChannels;                    /**<  Number of channels in the i/o structure (length of "samples" array) */
+    CFE_PSP_IODriver_GpioLevel_t *Samples; /**<  Array for digital logic levels */
+} CFE_PSP_IODriver_GpioRdWr_t;
+
+/**
+ * Opcodes specific to digital GPIO devices
+ */
+enum
+{
+    CFE_PSP_IODriver_DISCRETE_IO_NOOP = CFE_PSP_IODriver_DISCRETE_IO_CLASS_BASE,
+
+    CFE_PSP_IODriver_DISCRETE_IO_READ_CHANNELS,  /**< CFE_PSP_IODriver_GpioRdWr_t argument */
+    CFE_PSP_IODriver_DISCRETE_IO_WRITE_CHANNELS, /**< CFE_PSP_IODriver_GpioRdWr_t argument */
+
+    CFE_PSP_IODriver_DISCRETE_IO_MAX
+};
+
+#endif /* CFE_PSP_IODRIVER_DISCRETE_IO_H */
+```
+
+### `iodriver_impl.h`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_impl.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file iodriver_impl.h
+ *
+ *  Created on: Oct 5, 2015
+ *  Created by: joseph.p.hickey@nasa.gov
+ *
+ */
+
+#ifndef IODRIVER_IMPL_H
+#define IODRIVER_IMPL_H
+
+#ifndef _CFE_PSP_MODULE_
+#error "Do not include this file from outside the PSP"
+#endif
+
+#include "cfe_psp_module.h"
+#include "iodriver_base.h"
+
+/**
+ * Macro to declare the global object for an IO device driver
+ */
+#define CFE_PSP_MODULE_DECLARE_IODEVICEDRIVER(name)         \
+    static void         name##_Init(uint32 PspModuleId);    \
+    CFE_PSP_ModuleApi_t CFE_PSP_##name##_API = {            \
+        .ModuleType     = CFE_PSP_MODULE_TYPE_DEVICEDRIVER, \
+        .OperationFlags = 0,                                \
+        .Init           = name##_Init,                      \
+        .ExtendedApi    = &name##_DevApi,                   \
+    }
+
+/**
+ * Prototype for a basic device command function
+ * Implemented as a single API call with an extendible command code for device-specific ops.  This allows
+ * a common API to be used while still allowing full freedom to handle many different device types.
+ */
+typedef int32 (*CFE_PSP_IODriver_ApiFunc_t)(uint32 CommandCode, uint16 Instance, uint16 SubChannel,
+                                            CFE_PSP_IODriver_Arg_t arg);
+
+typedef const struct
+{
+    CFE_PSP_IODriver_ApiFunc_t DeviceCommand;
+    CFE_PSP_IODriver_ApiFunc_t DeviceMutex;
+} CFE_PSP_IODriver_API_t;
+
+osal_id_t CFE_PSP_IODriver_GetMutex(uint32 PspModuleId, int32 DeviceHash);
+int32     CFE_PSP_IODriver_HashMutex(int32 StartHash, int32 Datum);
+
+#endif /* IODRIVER_IMPL_H */
+```
+
+### `iodriver_memory_io.h`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_memory_io.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file
+ *
+ * I/O adapter for memory device access
+ */
+
+#ifndef CFE_PSP_IODRIVER_MEMORY_IO_H
+#define CFE_PSP_IODRIVER_MEMORY_IO_H
+
+/* Include all base definitions */
+#include "iodriver_base.h"
+
+/**
+ * API container for memory write commands.
+ *
+ * Associates a device address, buffer pointer and a buffer size.
+ */
+typedef struct
+{
+    uint32      DeviceAddress;
+    uint32      BufferSize;
+    const void *BufferMem;
+} CFE_PSP_IODriver_WriteMemoryBuffer_t;
+
+/**
+ * API container for memory write commands.
+ *
+ * Associates a device address, buffer pointer and a buffer size.
+ */
+typedef struct
+{
+    uint32 DeviceAddress;
+    uint32 BufferSize;
+    void * BufferMem;
+} CFE_PSP_IODriver_ReadMemoryBuffer_t;
+
+/**
+ * Opcodes specific to memory devices or other direct register-oriented interfaces
+ */
+enum
+{
+    CFE_PSP_IODriver_MEMORY_IO_NOOP = CFE_PSP_IODriver_MEMORY_IO_CLASS_BASE,
+
+    CFE_PSP_IODriver_MEMORY_IO_READ_32,    /**< CFE_PSP_IODriver_ReadMemoryBuffer_t argument, use 32 bit access */
+    CFE_PSP_IODriver_MEMORY_IO_WRITE_32,   /**< CFE_PSP_IODriver_WriteMemoryBuffer_t argument, use 32 bit access */
+    CFE_PSP_IODriver_MEMORY_IO_READ_16,    /**< CFE_PSP_IODriver_ReadMemoryBuffer_t argument, use 16 bit access */
+    CFE_PSP_IODriver_MEMORY_IO_WRITE_16,   /**< CFE_PSP_IODriver_WriteMemoryBuffer_t argument, use 16 bit access */
+    CFE_PSP_IODriver_MEMORY_IO_READ_8,     /**< CFE_PSP_IODriver_ReadMemoryBuffer_t argument, use 8 bit access */
+    CFE_PSP_IODriver_MEMORY_IO_WRITE_8,    /**< CFE_PSP_IODriver_WriteMemoryBuffer_t argument, use 8 bit access */
+    CFE_PSP_IODriver_MEMORY_IO_READ_BLOCK, /**< CFE_PSP_IODriver_ReadMemoryBuffer_t argument, use any appropriate access
+                                              cycle (generic) */
+    CFE_PSP_IODriver_MEMORY_IO_WRITE_BLOCK, /**< CFE_PSP_IODriver_WriteMemoryBuffer_t argument, use any appropriate
+                                               access cycle (generic) */
+
+    CFE_PSP_IODriver_MEMORY_IO_MAX
+};
+
+#endif /* CFE_PSP_IODRIVER_MEMORY_IO_H */
+```
+
+### `iodriver_packet_io.h`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_packet_io.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file
+ *
+ * I/O adapter for packet/message-based interfaces
+ */
+
+#ifndef CFE_PSP_IODRIVER_PACKET_IO_H
+#define CFE_PSP_IODRIVER_PACKET_IO_H
+
+/* Include all base definitions */
+#include "iodriver_base.h"
+
+/**
+ * API container for packet read/write commands.
+ *
+ * Associates a buffer pointer and a buffer size.
+ * For "write" operations the size reflects the actual size of the packet,
+ * and the buffer memory should not be modified by the driver (const).
+ */
+typedef struct
+{
+    uint32      OutputSize; /**<  Number of channels in the i/o structure (length of "samples" array) */
+    const void *BufferMem;
+} CFE_PSP_IODriver_WritePacketBuffer_t;
+
+/**
+ * API container for packet read/write commands.
+ *
+ * Associates a buffer pointer and a buffer size.
+ * For "read" operations the size reflects maximum (allocated) size.  It
+ * must be adjusted to the actual size of the packet recieved.
+ */
+typedef struct
+{
+    uint32 BufferSize; /**<  Number of channels in the i/o structure (length of "samples" array) */
+    void * BufferMem;
+} CFE_PSP_IODriver_ReadPacketBuffer_t;
+
+/**
+ * Opcodes specific to packet oriented interfaces
+ */
+enum
+{
+    CFE_PSP_IODriver_PACKET_IO_NOOP = CFE_PSP_IODriver_PACKET_IO_CLASS_BASE,
+
+    CFE_PSP_IODriver_PACKET_IO_READ,  /**< CFE_PSP_IODriver_ReadPacketBuffer_t argument */
+    CFE_PSP_IODriver_PACKET_IO_WRITE, /**< CFE_PSP_IODriver_WritePacketBuffer_t argument */
+
+    CFE_PSP_IODriver_PACKET_IO_MAX
+};
+
+/**
+ * Additional error codes specific to Packet I/O
+ *
+ * These are based from the CFE_PSP_IODriver_PACKET_IO_CLASS_BASE so as to not conflict with other classes of I/O
+ */
+enum
+{
+    CFE_PSP_IODriver_PACKET_ERROR_BASE = -(CFE_PSP_IODriver_PACKET_IO_CLASS_BASE + 0xFFFF),
+    CFE_PSP_IODriver_PACKET_LENGTH_ERROR,
+    CFE_PSP_IODriver_PACKET_CRC_ERROR
+};
+
+#endif /* CFE_PSP_IODRIVER_PACKET_IO_H */
+```
+
+### `iodriver_stream_io.h`
+
+**경로:** `fsw/psp/fsw/modules/iodriver/inc/iodriver_stream_io.h`
+
+
+```c
+/*
+ *  Copyright (c) 2015, United States government as represented by the
+ *  administrator of the National Aeronautics Space Administration.
+ *  All rights reserved. This software was created at NASA Glenn
+ *  Research Center pursuant to government contracts.
+ */
+
+/**
+ * \file
+ *
+ * I/O adapter for streams
+ */
+
+#ifndef CFE_PSP_IODRIVER_STREAM_IO_H
+#define CFE_PSP_IODRIVER_STREAM_IO_H
+
+/* Include all base definitions */
+#include "iodriver_base.h"
+
+/**
+ * API container for stream write commands.
+ * -- Associates a buffer pointer and a buffer size.
+ */
+typedef struct
+{
+    uint32      BufferSize; /**<  Size of data buffer */
+    const void *BufferMem;  /**<  Pointer to data buffer to write */
+} CFE_PSP_IODriver_WriteStreamBuffer_t;
+
+/**
+ * API container for stream read commands.
+ * -- Associates a buffer pointer and a buffer size.
+ */
+typedef struct
+{
+    uint32 BufferSize; /**<  Size of data buffer */
+    void * BufferMem;  /**<  Pointer to data buffer to store read data */
+} CFE_PSP_IODriver_ReadStreamBuffer_t;
+
+/**
+ * Opcodes specific to stream oriented interfaces
+ * FIX: Right now these are the same as the packet interface and need to be changed.
+ */
+enum
+{
+    CFE_PSP_IODriver_STREAM_IO_NOOP = CFE_PSP_IODriver_STREAM_IO_CLASS_BASE,
+
+    CFE_PSP_IODriver_STREAM_IO_READ,  /**< CFE_PSP_IODriver_ReadStreamBuffer_t argument */
+    CFE_PSP_IODriver_STREAM_IO_WRITE, /**< CFE_PSP_IODriver_WriteStreamBuffer_t argument */
+
+    CFE_PSP_IODriver_STREAM_IO_MAX
+};
+
+/**
+ * Additional error codes specific to Stream I/O
+ *
+ * These are based from the CFE_PSP_IODriver_STREAM_IO_CLASS_BASE so as to not conflict with other classes of I/O
+ */
+enum
+{
+    CFE_PSP_IODriver_STREAM_ERROR_BASE = -(CFE_PSP_IODriver_STREAM_IO_CLASS_BASE + 0xFFFF),
+    CFE_PSP_IODriver_STREAM_LENGTH_ERROR,
+    CFE_PSP_IODriver_STREAM_CRC_ERROR
+};
+
+#endif /* CFE_PSP_IODRIVER_STREAM_IO_H */
+```

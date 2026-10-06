@@ -3,24 +3,258 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--SpacePacketDeframer.cpp
-file--SpacePacketDeframer.fpp
-file--SpacePacketDeframer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.cpp`](file--SpacePacketDeframer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.fpp`](file--SpacePacketDeframer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.hpp`](file--SpacePacketDeframer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/devel/docs/reference/api/cmake/API/
+#
+####
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/SpacePacketDeframer.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/SpacePacketDeframer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+)
+
+
+### Unit Tests ###
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SpacePacketDeframerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SpacePacketDeframerTester.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/SpacePacketDeframer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+    STest
+  UT_AUTO_HELPERS
+)
+
+```
+
+### `SpacePacketDeframer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketDeframer.cpp
+// \author thomas-bc
+// \brief  cpp file for SpacePacketDeframer component implementation class
+// ======================================================================
+
+#include "Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.hpp"
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+#include "Svc/Ccsds/Types/SpacePacketHeaderSerializableAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+SpacePacketDeframer ::SpacePacketDeframer(const char* const compName) : SpacePacketDeframerComponentBase(compName) {}
+
+SpacePacketDeframer ::~SpacePacketDeframer() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void SpacePacketDeframer ::dataIn_handler(FwIndexType portNum, Fw::Buffer& data, const ComCfg::FrameContext& context) {
+    // ################################
+    // CCSDS SpacePacket Format:
+    // 6 octets - Primary Header
+    // 0-65536 octets - Data Field (with optional secondary header)
+
+    // CCSDS SpacePacket Primary Header:
+    //  3b - 000 - (PVN) Packet Version Number
+    //  1b - 0/1 - (PT) Packet Type
+    //  1b - 0/1 - (SHF) Secondary Header Flag
+    // 11b - n/a - (APID) Application Process ID
+    //  2b - 00  - Sequence Flag
+    // 14b - n/a - Sequence Count
+    // 16b - n/a - Packet Data Length
+    // ################################
+
+    FW_ASSERT(data.getSize() > SpacePacketHeader::SERIALIZED_SIZE, static_cast<FwAssertArgType>(data.getSize()));
+
+    SpacePacketHeader header;
+    Fw::SerializeStatus status = data.getDeserializer().deserialize(header);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Space Packet protocol defines the Data Length as number of bytes minus 1
+    // so we need to add 1 to the length to get the actual data size
+    U16 pkt_length = static_cast<U16>(header.get_packetDataLength() + 1);
+    if (pkt_length > data.getSize() - SpacePacketHeader::SERIALIZED_SIZE) {
+        FwSizeType maxDataAvailable = data.getSize() - SpacePacketHeader::SERIALIZED_SIZE;
+        this->log_WARNING_HI_InvalidLength(pkt_length, maxDataAvailable);
+        this->dataReturnOut_out(0, data, context);  // Drop the packet
+        return;
+    }
+
+    U16 apidValue = header.get_packetIdentification() & SpacePacketSubfields::ApidMask;
+    ComCfg::APID::T apid = static_cast<ComCfg::APID::T>(apidValue);
+    ComCfg::FrameContext contextCopy = context;
+    contextCopy.set_apid(apid);
+
+    // Validate with the ApidManager that the sequence count is correct
+    U16 receivedSequenceCount = header.get_packetSequenceControl() & SpacePacketSubfields::SeqCountMask;
+    (void)this->validateApidSeqCount_out(0, apid, receivedSequenceCount);
+    contextCopy.set_sequenceCount(receivedSequenceCount);
+
+    // Set data buffer to be of the encapsulated data: HEADER (6 bytes) | PACKET DATA
+    data.setData(data.getData() + SpacePacketHeader::SERIALIZED_SIZE);
+    data.setSize(pkt_length);
+
+    this->dataOut_out(0, data, contextCopy);
+}
+
+void SpacePacketDeframer ::dataReturnIn_handler(FwIndexType portNum,
+                                                Fw::Buffer& data,
+                                                const ComCfg::FrameContext& context) {
+    this->dataReturnOut_out(0, data, context);
+}
+
+}  // namespace Ccsds
+}  // namespace Svc
+```
+
+### `SpacePacketDeframer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.fpp`
+
+
+```fpp
+module Svc {
+module Ccsds {
+    @ Deframer for the CCSDS Space Packet protocol
+    passive component SpacePacketDeframer {
+
+        import Deframer
+
+        @ Port to validate a received sequence count for a given APID
+        output port validateApidSeqCount: Ccsds.ApidSequenceCount
+
+        @ Deframing received an invalid frame length
+        event InvalidLength(transmitted: U16, actual: FwSizeType) \
+            severity warning high \
+            format "Invalid length received. Header specified packet byte size of {} | Actual received data length: {}"
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @ Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+
+} # end Ccsds
+} # end Svc
+```
+
+### `SpacePacketDeframer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketDeframer.hpp
+// \author thomas-bc
+// \brief  hpp file for SpacePacketDeframer component implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_SpacePacketDeframer_HPP
+#define Svc_Ccsds_SpacePacketDeframer_HPP
+
+#include "Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframerComponentAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+class SpacePacketDeframer final : public SpacePacketDeframerComponentBase {
+    friend class SpacePacketDeframerTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct SpacePacketDeframer object
+    SpacePacketDeframer(const char* const compName  //!< The component name
+    );
+
+    //! Destroy SpacePacketDeframer object
+    ~SpacePacketDeframer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for dataIn
+    //!
+    //! Port to receive framed data, with optional context
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& data,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Port receiving back ownership of sent frame buffers
+    void dataReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& data,
+                              const ComCfg::FrameContext& context) override;
+};
+
+}  // namespace Ccsds
+
+}  // namespace Svc
+
+#endif
+```

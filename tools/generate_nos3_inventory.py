@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate Sphinx pages mirroring a NOS3 checkout's directory and file tree."""
+"""Generate Sphinx pages mirroring NOS3 directories and grouping sibling files."""
 
 from __future__ import annotations
 
@@ -12,7 +12,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import DefaultDict, Dict, List, Optional, Sequence, Set, Tuple
-from urllib.parse import quote
 
 
 CONTENT_OMIT_DIRS = {".git", "__pycache__", "build", "node_modules"}
@@ -97,12 +96,10 @@ def collect_entries(root: Path, output: Path) -> List[Entry]:
     return entries
 
 
-def page_path(output: Path, entry: Entry) -> Path:
-    if entry.is_directory:
-        return output / Path(*entry.relative.parts) / "index.md"
-    encoded_name = quote(entry.path.name, safe="._-")
-    parent = output / Path(*entry.relative.parent.parts)
-    return parent / f"file--{encoded_name}.md"
+def directory_page(output: Path, entry: Optional[Entry]) -> Path:
+    if entry is None:
+        return output / "index.md"
+    return output / Path(*entry.relative.parts) / "index.md"
 
 
 def relative_doc(from_page: Path, to_page: Path) -> str:
@@ -110,9 +107,18 @@ def relative_doc(from_page: Path, to_page: Path) -> str:
     return Path(relative).as_posix()[:-3]
 
 
-def format_path(relative: PurePosixPath, is_directory: bool = False) -> str:
-    value = relative.as_posix()
-    return value + ("/" if is_directory else "")
+def inline_code(value: str) -> str:
+    longest = 0
+    current = 0
+    for character in value:
+        if character == "`":
+            current += 1
+            longest = max(longest, current)
+        else:
+            current = 0
+    delimiter = "`" * (longest + 1)
+    padding = " " if value.startswith("`") or value.endswith("`") else ""
+    return f"{delimiter}{padding}{value}{padding}{delimiter}"
 
 
 def render_directory_page(
@@ -124,12 +130,12 @@ def render_directory_page(
     total_count: int,
 ) -> str:
     directory_path = PurePosixPath() if entry is None else entry.relative
-    label = format_path(directory_path, is_directory=True) if entry else root.name + "/"
+    label = directory_path.as_posix() + "/" if entry else root.name + "/"
     lines = [
         MARKER,
         "# NOS3 파일 인벤토리",
         "",
-        f"**경로:** `{label}`",
+        f"**경로:** {inline_code(label)}",
         "",
     ]
     if entry is None:
@@ -142,40 +148,66 @@ def render_directory_page(
                 "",
             ]
         )
-    lines.extend(["## 하위 폴더 및 파일", "", "```{toctree}", ":maxdepth: 1", ""])
-    ordered = sorted(
-        children,
-        key=lambda child: (
-            not child.is_directory,
-            child.path.name.casefold(),
-            child.path.name,
-        ),
+    directories = sorted(
+        (child for child in children if child.is_directory),
+        key=lambda child: (child.path.name.casefold(), child.path.name),
     )
-    for child in ordered:
-        destination = page_path(output, child)
-        lines.append(relative_doc(page_path(output, entry) if entry else output / "index.md", destination))
-    lines.extend(["```", "", "## 항목", ""])
-    for child in ordered:
-        value = format_path(child.relative, child.is_directory)
-        destination = page_path(output, child)
-        from_page = page_path(output, entry) if entry else output / "index.md"
-        link = relative_doc(from_page, destination)
-        status = child.content_status
-        if status == "generated":
-            detail = "빌드 산출물 (경로만)"
-        elif status == "binary":
-            detail = "바이너리 (경로만)"
-        elif status == "symlink":
-            detail = f"심볼릭 링크 → `{child.link_target}` (대상 미포함)"
-        elif status == "special file":
-            detail = "특수 파일 (경로만)"
-        elif child.is_directory:
-            detail = "폴더"
-        else:
-            detail = "UTF-8 텍스트 파일 본문 포함"
-        lines.append(f"- [`{value}`]({link}) — {detail}")
-    lines.append("")
+    if directories:
+        lines.extend(["## 하위 폴더", "", "```{toctree}", ":maxdepth: 1", ""])
+        current_page = directory_page(output, entry)
+        for child in directories:
+            lines.append(relative_doc(current_page, directory_page(output, child)))
+        lines.extend(["```", ""])
+
+    files = sorted(
+        (child for child in children if not child.is_directory),
+        key=lambda child: (child.path.name.casefold(), child.path.name),
+    )
+    if files:
+        lines.extend(["## 이 폴더의 파일", ""])
+        for child in files:
+            lines.extend(render_file_section(child))
+    else:
+        lines.extend(["이 폴더에는 직접 포함된 파일이 없습니다.", ""])
     return "\n".join(lines)
+
+
+def render_file_section(entry: Entry) -> List[str]:
+    lines = [
+        f"### {inline_code(entry.path.name)}",
+        "",
+        f"**경로:** {inline_code(entry.relative.as_posix())}",
+        "",
+    ]
+    if entry.link_target is not None:
+        lines.extend(
+            [
+                f"심볼릭 링크 대상: {inline_code(entry.link_target)} (대상 미포함)",
+                "",
+            ]
+        )
+    elif entry.content_status == "generated":
+        lines.extend(["빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.", ""])
+    elif entry.content_status == "binary":
+        lines.extend(["바이너리 파일입니다. 본문은 생략했습니다.", ""])
+    elif entry.content_status == "special file":
+        lines.extend(["일반 파일이 아닌 특수 파일입니다. 본문은 생략했습니다.", ""])
+    else:
+        fence = markdown_fence(entry.path)
+        content_chunks: List[str] = []
+        try:
+            with entry.path.open("r", encoding="utf-8", newline="") as source:
+                while chunk := source.read(CHUNK_SIZE):
+                    content_chunks.append(chunk)
+        except (OSError, UnicodeDecodeError) as error:
+            raise OSError(f"Cannot read text file {entry.path}: {error}") from error
+        content = "".join(content_chunks)
+        code_block = f"{fence}{language_for(entry.path)}\n{content}"
+        if content and not content.endswith(("\n", "\r")):
+            code_block += "\n"
+        code_block += fence
+        lines.extend(["", code_block, ""])
+    return lines
 
 
 def markdown_fence(path: Path) -> str:
@@ -225,37 +257,6 @@ def language_for(path: Path) -> str:
     }.get(path.suffix.lower(), "text")
 
 
-def write_file_page(entry: Entry) -> str:
-    relative = entry.relative.as_posix()
-    lines = [MARKER, "# NOS3 파일", "", f"**경로:** `{relative}`", ""]
-    if entry.link_target is not None:
-        lines.extend(
-            [
-                f"심볼릭 링크 대상: `{entry.link_target}`",
-                "",
-                "링크 대상의 내용은 인벤토리에 포함하지 않습니다.",
-                "",
-            ]
-        )
-    elif entry.content_status == "generated":
-        lines.extend(["빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.", ""])
-    elif entry.content_status == "binary":
-        lines.extend(["바이너리 파일입니다. 본문은 생략했습니다.", ""])
-    elif entry.content_status == "special file":
-        lines.extend(["일반 파일이 아닌 특수 파일입니다. 본문은 생략했습니다.", ""])
-    else:
-        fence = markdown_fence(entry.path)
-        lines.extend(["## 파일 내용", "", f"{fence}{language_for(entry.path)}"])
-        try:
-            with entry.path.open("r", encoding="utf-8", newline="") as source:
-                while chunk := source.read(CHUNK_SIZE):
-                    lines.append(chunk)
-        except (OSError, UnicodeDecodeError) as error:
-            raise OSError(f"Cannot read text file {entry.path}: {error}") from error
-        lines.extend([fence, ""])
-    return "\n".join(lines)
-
-
 def atomic_write(path: Path, contents: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     descriptor, temporary_name = tempfile.mkstemp(
@@ -290,7 +291,7 @@ def previous_generated_paths(output: Path) -> Set[str]:
     return set(files)
 
 
-def generate(root: Path, output: Path) -> Tuple[int, int]:
+def generate(root: Path, output: Path) -> Tuple[int, int, int]:
     entries = collect_entries(root, output)
     children_by_parent: DefaultDict[str, List[Entry]] = defaultdict(list)
     directories: List[Optional[Entry]] = [None]
@@ -299,12 +300,16 @@ def generate(root: Path, output: Path) -> Tuple[int, int]:
         if entry.is_directory:
             directories.append(entry)
     text_count = sum(entry.content_status == "text" for entry in entries)
-    planned: Dict[Path, str] = {}
-
+    planned: Dict[Path, Optional[Entry]] = {}
     for directory in directories:
         directory_relative = PurePosixPath() if directory is None else directory.relative
-        index_page = output / Path(*directory_relative.parts) / "index.md"
-        planned[index_page] = render_directory_page(
+        planned[directory_page(output, directory)] = directory
+
+    old_paths = previous_generated_paths(output)
+    output.mkdir(parents=True, exist_ok=True)
+    for path, directory in planned.items():
+        directory_relative = PurePosixPath() if directory is None else directory.relative
+        contents = render_directory_page(
             directory,
             root,
             output,
@@ -312,13 +317,6 @@ def generate(root: Path, output: Path) -> Tuple[int, int]:
             text_count,
             len(entries),
         )
-    for entry in entries:
-        if not entry.is_directory:
-            planned[page_path(output, entry)] = write_file_page(entry)
-
-    old_paths = previous_generated_paths(output)
-    output.mkdir(parents=True, exist_ok=True)
-    for path, contents in planned.items():
         atomic_write(path, contents)
 
     new_paths = {path.relative_to(output).as_posix() for path in planned}
@@ -334,14 +332,14 @@ def generate(root: Path, output: Path) -> Tuple[int, int]:
         indent=2,
     ) + "\n"
     atomic_write(output / MANIFEST_NAME, manifest_contents)
-    return len(entries), text_count
+    return len(entries), text_count, len(directories)
 
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Generate a Sphinx page for every directory and file in a NOS3 checkout. "
-            "The generated documentation directory mirrors the source tree."
+            "Generate one Sphinx page per directory in a NOS3 checkout. "
+            "Files in the same directory are combined on that directory's page."
         )
     )
     parser.add_argument("root", type=Path, help="Path to the NOS3 checkout")
@@ -362,8 +360,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     output = output.expanduser().resolve()
     if output == root or root in output.parents:
         raise ValueError("Documentation output must not be inside the NOS3 source tree")
-    path_count, text_count = generate(root, output)
-    page_count = path_count + 1
+    path_count, text_count, page_count = generate(root, output)
     print(
         f"Wrote {output} ({path_count:,} source paths; "
         f"{text_count:,} text files; {page_count:,} pages)"

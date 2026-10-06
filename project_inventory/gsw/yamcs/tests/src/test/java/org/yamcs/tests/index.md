@@ -3,52 +3,4833 @@
 
 **경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AlarmIntegrationTest.java`
 
-file--AlarmIntegrationTest.java
-file--AlarmTest.java
-file--ArchiveIntegrationTest.java
-file--CommandIntegration2Test.java
-file--CommandIntegrationTest.java
-file--ContainerRequestManagerTest.java
-file--EventTests.java
-file--HttpServerTest.java
-file--InstancesIntegrationTest.java
-file--LongWebsocketFrameTest.java
-file--MdbModificationPersistenceTest.java
-file--ModifyMissionDatabaseTest.java
-file--ParameterArchiveIntegrationTest.java
-file--ParameterPersistenceTest.java
-file--ParameterTest.java
-file--PermissionsTest.java
-file--RealtimeParchiveTest.java
-file--ServicesTest.java
-file--TimelineIntegrationTest.java
-file--TimeSubscriptionTest.java
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/AlarmIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.AlarmSubscription;
+import org.yamcs.client.GlobalAlarmStatusSubscription;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.protobuf.AlarmData;
+import org.yamcs.protobuf.AlarmNotificationType;
+import org.yamcs.protobuf.AlarmSeverity;
+import org.yamcs.protobuf.AlarmType;
+import org.yamcs.protobuf.CreateEventRequest;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.EventAlarmData;
+import org.yamcs.protobuf.alarms.EditAlarmRequest;
+import org.yamcs.protobuf.alarms.GlobalAlarmStatus;
+import org.yamcs.protobuf.alarms.ListAlarmsResponse;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsResponse;
+import org.yamcs.protobuf.alarms.SubscribeAlarmsRequest;
+import org.yamcs.protobuf.alarms.SubscribeGlobalStatusRequest;
+import org.yamcs.utils.TimeEncoding;
+
+public class AlarmIntegrationTest extends AbstractIntegrationTest {
+    @Test
+    public void testEventAlarms() throws Exception {
+        AlarmSubscription subscription = subscribeAlarms();
+        MessageCaptor<AlarmData> captor = MessageCaptor.of(subscription);
+
+        var event = createWarningEvent();
+
+        AlarmData a1 = captor.expectTimely();
+        EventAlarmData ea1 = a1.getEventDetail();
+
+        assertEquals(EventSeverity.WARNING, ea1.getTriggerEvent().getSeverity());
+        assertEquals(event.getSource(), ea1.getTriggerEvent().getSource());
+        assertEquals(event.getType(), ea1.getTriggerEvent().getType());
+        assertEquals(event.getMessage(), ea1.getTriggerEvent().getMessage());
+
+        shelveAlarm(a1.getId().getNamespace() + "/" + a1.getId().getName(), a1.getSeqNum(), 500,
+                "I will deal with this later");
+
+        AlarmData a2 = captor.expectTimely();
+        assertEquals(AlarmNotificationType.SHELVED, a2.getNotificationType());
+        assertTrue(a2.hasShelveInfo());
+        assertEquals("I will deal with this later", a2.getShelveInfo().getShelveMessage());
+
+        // after 500 millisec, the shelving has expired
+        AlarmData a3 = captor.expectTimely();
+        assertEquals(AlarmNotificationType.UNSHELVED, a3.getNotificationType());
+
+        // shelve it again
+        shelveAlarm(a1.getId().getNamespace() + "/" + a1.getId().getName(), a1.getSeqNum(), -1,
+                "I will deal with this later#2");
+
+        a2 = captor.expectTimely();
+        assertEquals(AlarmNotificationType.SHELVED, a2.getNotificationType());
+        a3 = captor.poll(2000);
+        assertNull(a3);
+
+        acknowledgeAlarm(a1.getId().getNamespace() + "/" + a1.getId().getName(), a1.getSeqNum(),
+                "a nice ack explanation");
+        AlarmData a4 = captor.expectTimely();
+
+        assertEquals("a nice ack explanation", a4.getAcknowledgeInfo().getAcknowledgeMessage());
+
+        ListProcessorAlarmsResponse lar = yamcsClient.listAlarms(yamcsInstance, "realtime").get();
+
+        assertEquals(1, lar.getAlarmsCount());
+        assertEquals("a nice ack explanation", lar.getAlarms(0).getAcknowledgeInfo().getAcknowledgeMessage());
+
+        clearAlarm(a1.getId().getNamespace() + "/" + a1.getId().getName(), a1.getSeqNum(),
+                "a nice clear explanation");
+
+        AlarmData a5 = captor.expectTimely();
+        assertTrue(a5.hasClearInfo());
+        assertEquals("a nice clear explanation", a5.getClearInfo().getClearMessage());
+
+        lar = yamcsClient.listAlarms(yamcsInstance, "realtime").get();
+        assertEquals(0, lar.getAlarmsCount());
+
+        // check the archive
+        ListAlarmsResponse lar1 = yamcsClient.listAlarms(yamcsInstance).get();
+        assertEquals(1, lar1.getAlarmsCount());
+        AlarmData a6 = lar1.getAlarms(0);
+        assertEquals("a nice clear explanation", a6.getClearInfo().getClearMessage());
+    }
+
+    @Test
+    public void testParamAlarms() throws Exception {
+        AlarmSubscription subscription = subscribeAlarms();
+        MessageCaptor<AlarmData> captor = MessageCaptor.of(subscription);
+
+        packetGenerator.setGenerationTime(TimeEncoding.parse("2022-01-19T21:21:00"));
+        // this generates a EnumerationPara1_10_2 WARNING and a FloatPara1_10_3 DISTRESS
+        packetGenerator.generate_PKT1_10(0, 3, 51);
+
+        packetGenerator.setGenerationTime(TimeEncoding.parse("2022-01-19T21:21:01"));
+        // this increases the severity of FloatPara1_10_3 to CRITICAL
+        packetGenerator.generate_PKT1_10(0, 3, 70);
+
+        AlarmData a1 = captor.expectTimely();
+        assertEquals("EnumerationPara1_10_2", a1.getId().getName());
+        assertEquals(AlarmSeverity.WARNING, a1.getSeverity());
+
+        AlarmData a2 = captor.expectTimely();
+        assertEquals("FloatPara1_10_3", a2.getId().getName());
+        assertEquals(AlarmSeverity.DISTRESS, a2.getSeverity());
+        assertEquals(1, a2.getCount());
+
+        AlarmData a3 = captor.expectTimely();
+        assertEquals("EnumerationPara1_10_2", a3.getId().getName());
+        assertEquals(AlarmSeverity.WARNING, a3.getSeverity());
+        assertEquals(AlarmNotificationType.VALUE_UPDATED, a3.getNotificationType());
+
+        AlarmData a4 = captor.expectTimely();
+        assertEquals("FloatPara1_10_3", a4.getId().getName());
+        assertEquals(AlarmSeverity.CRITICAL, a4.getSeverity());
+        assertEquals(AlarmNotificationType.SEVERITY_INCREASED, a4.getNotificationType());
+        assertEquals(2, a4.getCount());
+
+        // shelve
+        EditAlarmRequest ear = EditAlarmRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .setName("/REFMDB/SUBSYS1/FloatPara1_10_3")
+                .setSeqnum(a2.getSeqNum())
+                .setState("shelved")
+                .setComment("I will deal with this later")
+                .setShelveDuration(200000).build();
+
+        yamcsClient.editAlarm(ear);
+
+        AlarmData a5 = captor.expectTimely();
+        assertEquals("FloatPara1_10_3", a5.getId().getName());
+        assertEquals(AlarmSeverity.CRITICAL, a5.getSeverity());
+        assertEquals(AlarmNotificationType.SHELVED, a5.getNotificationType());
+
+        // unshelve
+        ear = EditAlarmRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .setName("/REFMDB/SUBSYS1/FloatPara1_10_3")
+                .setSeqnum(a2.getSeqNum())
+                .setState("unshelved")
+                .build();
+
+        yamcsClient.editAlarm(ear);
+        AlarmData a6 = captor.expectTimely();
+        assertEquals("FloatPara1_10_3", a6.getId().getName());
+        assertEquals(AlarmSeverity.CRITICAL, a6.getSeverity());
+        assertEquals(AlarmNotificationType.UNSHELVED, a6.getNotificationType());
+
+        // check the archive
+        Instant t0 = Instant.parse("2022-01-19T21:21:00Z");
+        Instant t1 = t0.plusSeconds(2);
+        ArchiveClient archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+        List<AlarmData> l1 = archiveClient.listAlarms(t0, t1).get().stream()
+                .filter(alarm -> alarm.getType() == AlarmType.PARAMETER)
+                .collect(Collectors.toList());
+        assertEquals(2, l1.size());
+
+        List<AlarmData> l2 = archiveClient.listAlarms("/REFMDB/SUBSYS1/FloatPara1_10_3", t0, t1).get();
+        assertEquals(1, l2.size());
+    }
+
+    @Test
+    public void testGlobalStatusSubscription() throws Exception {
+        GlobalAlarmStatusSubscription subscription = yamcsClient.createGlobalAlarmStatusSubscription();
+        MessageCaptor<GlobalAlarmStatus> captor = MessageCaptor.of(subscription);
+
+        SubscribeGlobalStatusRequest request = SubscribeGlobalStatusRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        GlobalAlarmStatus s0 = captor.expectTimely();
+        assertEquals(0, s0.getUnacknowledgedCount());
+
+        packetGenerator.setGenerationTime(TimeEncoding.parse("2022-01-19T23:59:00"));
+        packetGenerator.generate_PKT1_10(0, 3, 51);
+
+        GlobalAlarmStatus s1 = captor.expectTimely();
+        assertEquals(2, s1.getUnacknowledgedCount());
+        assertTrue(s1.getUnacknowledgedActive());
+        assertFalse(s1.getAcknowledgedActive());
+        assertFalse(s1.getShelvedActive());
+
+        ListProcessorAlarmsResponse lar = yamcsClient.listAlarms(yamcsInstance, "realtime").get();
+        assertEquals(2, lar.getAlarmsCount());
+        AlarmData a1 = lar.getAlarms(1);
+
+        // acknowledge
+        EditAlarmRequest ear = EditAlarmRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .setName(a1.getId().getNamespace() + "/" + a1.getId().getName())
+                .setSeqnum(a1.getSeqNum())
+                .setState("acknowledged")
+                .setComment("all is good")
+                .build();
+
+        yamcsClient.editAlarm(ear);
+
+        GlobalAlarmStatus s2 = captor.expectTimely();
+        assertEquals(1, s2.getUnacknowledgedCount());
+        assertEquals(1, s2.getAcknowledgedCount());
+        assertTrue(s2.getUnacknowledgedActive());
+        assertTrue(s2.getAcknowledgedActive());
+        assertFalse(s2.getShelvedActive());
+
+    }
+
+    @Test
+    public void testAlarmPersistence() throws Exception {
+        createWarningEvent();
+        packetGenerator.setGenerationTime(TimeEncoding.getWallclockTime());
+        packetGenerator.generate_PKT1_10(0, 3, 51);
+
+        var alarms0 = yamcsClient.listAlarms(yamcsInstance, "realtime").get().getAlarmsList();
+        assertEquals(3, alarms0.size());
+        yamcsClient.restartInstance(yamcsInstance).get();
+
+        var alarms1 = yamcsClient.listAlarms(yamcsInstance, "realtime").get().getAlarmsList();
+        assertEquals(3, alarms1.size());
+        alarms0 = sortAlarms(alarms0);
+        alarms1 = sortAlarms(alarms1);
+
+        for (int i = 0; i < alarms0.size(); i++) {
+            var a0 = alarms0.get(i);
+            var a1 = alarms1.get(i);
+            assertEquals(a0.getId(), a1.getId());
+            assertEquals(a0.getSeverity(), a1.getSeverity());
+            assertEquals(a0.getAcknowledged(), a1.getAcknowledged());
+            assertEquals(a0.getTriggerTime(), a1.getTriggerTime());
+
+            clearAlarm(a0.getId().getNamespace() + "/" + a1.getId().getName(), a0.getSeqNum(), "");
+        }
+    }
+
+    private List<AlarmData> sortAlarms(List<AlarmData> alarmList) {
+        var l = new ArrayList<>(alarmList);
+        l.sort((a, b) -> {
+            return a.getId().getName().compareTo(b.getId().getName());
+        });
+        return l;
+    }
+
+    AlarmSubscription subscribeAlarms() throws Exception {
+        AlarmSubscription subscription = yamcsClient.createAlarmSubscription();
+
+        SubscribeAlarmsRequest request = SubscribeAlarmsRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        return subscription;
+    }
+
+    Event createWarningEvent() throws Exception {
+        CreateEventRequest createRequest = CreateEventRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setSeverity("warning")
+                .setSource("IntegrationTest")
+                .setType("Event-Alarm-Test")
+                .setMessage("event1")
+                .build();
+        return yamcsClient.createEvent(createRequest).get();
+    }
+
+    void clearAlarm(String name, int seq, String comment) throws Exception {
+        EditAlarmRequest ear = EditAlarmRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .setName(name)
+                .setSeqnum(seq)
+                .setState("cleared")
+                .setComment(comment)
+                .setShelveDuration(500).build();
+        yamcsClient.editAlarm(ear).get();
+    }
+
+    void acknowledgeAlarm(String name, int seq, String comment) throws Exception {
+        var earb = EditAlarmRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .setName(name)
+                .setSeqnum(seq)
+                .setState("acknowledged")
+                .setComment(comment);
+
+        yamcsClient.editAlarm(earb.build()).get();
+    }
+
+    void shelveAlarm(String name, int seq, long duration, String comment) throws Exception {
+        var earb = EditAlarmRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .setName(name)
+                .setSeqnum(seq)
+                .setState("shelved")
+                .setComment(comment);
+
+        if (duration > 0) {
+            earb.setShelveDuration(duration);
+        }
+        yamcsClient.editAlarm(earb.build()).get();
+    }
+}
 ```
 
-## 항목
+### `AlarmTest.java`
 
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/AlarmIntegrationTest.java`](file--AlarmIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/AlarmTest.java`](file--AlarmTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ArchiveIntegrationTest.java`](file--ArchiveIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/CommandIntegration2Test.java`](file--CommandIntegration2Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/CommandIntegrationTest.java`](file--CommandIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ContainerRequestManagerTest.java`](file--ContainerRequestManagerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/EventTests.java`](file--EventTests.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/HttpServerTest.java`](file--HttpServerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/InstancesIntegrationTest.java`](file--InstancesIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/LongWebsocketFrameTest.java`](file--LongWebsocketFrameTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/MdbModificationPersistenceTest.java`](file--MdbModificationPersistenceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ModifyMissionDatabaseTest.java`](file--ModifyMissionDatabaseTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ParameterArchiveIntegrationTest.java`](file--ParameterArchiveIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ParameterPersistenceTest.java`](file--ParameterPersistenceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ParameterTest.java`](file--ParameterTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/PermissionsTest.java`](file--PermissionsTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/RealtimeParchiveTest.java`](file--RealtimeParchiveTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/ServicesTest.java`](file--ServicesTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/TimelineIntegrationTest.java`](file--TimelineIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/TimeSubscriptionTest.java`](file--TimeSubscriptionTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/AlarmTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Queue;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorException;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.alarms.AlarmReporter;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class AlarmTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+    }
+
+    private Mdb db;
+    private Processor processor;
+    private RefMdbPacketGenerator tmGenerator;
+    private ParameterRequestManager prm;
+    private Queue<Event> q;
+    private AlarmReporter alarmReporter;
+
+    @BeforeEach
+    public void beforeEachTest() throws ConfigurationException, ProcessorException {
+        String yamcsInstance = "refmdb";
+        EventProducerFactory.setMockup(true);
+        q = EventProducerFactory.getMockupQueue();
+        db = MdbFactory.getInstance(yamcsInstance);
+        assertNotNull(db.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"));
+
+        tmGenerator = new RefMdbPacketGenerator();
+        try {
+            processor = ProcessorFactory.create(yamcsInstance, "AlarmTest", tmGenerator);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        prm = processor.getParameterRequestManager();
+
+        Map<String, Object> config = new HashMap<>();
+        config.put("processor", "AlarmTest");
+        alarmReporter = new AlarmReporter();
+        alarmReporter.init(processor, YConfiguration.wrap(config), null);
+    }
+
+    @AfterEach
+    public void afterEachTest() { // Prevents us from wrapping our code in try-finally
+        processor.quit();
+    }
+
+    @Test
+    public void testIntegerLimits() throws InvalidIdentification {
+        Parameter p = db.getParameter("/REFMDB/SUBSYS1/IntegerPara1_10_1");
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(p,
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+        processor.start();
+        alarmReporter.startAsync();
+
+        tmGenerator.generate_PKT1_10(30, 7, 0);
+
+        // Check whether spreadsheet loads all levels ok
+        assertEquals(-11, params.get(0).getWatchRange().getMin(), 1e-17);
+        assertEquals(30, params.get(0).getWatchRange().getMax(), 1e-17);
+        assertTrue(params.get(0).getWatchRange().isMaxInclusive());
+        assertEquals(-22, params.get(0).getWarningRange().getMin(), 1e-17);
+        assertEquals(40, params.get(0).getWarningRange().getMax(), 1e-17);
+        assertEquals(-33, params.get(0).getDistressRange().getMin(), 1e-17);
+        assertEquals(50, params.get(0).getDistressRange().getMax(), 1e-17);
+        assertEquals(Double.NEGATIVE_INFINITY, params.get(0).getCriticalRange().getMin(), 1e-17);
+        assertEquals(60, params.get(0).getCriticalRange().getMax(), 1e-17);
+        assertEquals(Double.NEGATIVE_INFINITY, params.get(0).getSevereRange().getMin(), 1e-17);
+        assertEquals(70, params.get(0).getSevereRange().getMax(), 1e-17);
+
+        assertEquals(MonitoringResult.IN_LIMITS, params.get(0).getMonitoringResult());
+        assertEquals(0, q.size());
+
+        tmGenerator.generate_PKT1_10(42, 7, 0);
+        assertEquals(MonitoringResult.WARNING, params.get(1).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(1).getRangeCondition());
+        assertEquals(1, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(52, 7, 0);
+        assertEquals(MonitoringResult.DISTRESS, params.get(2).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(2).getRangeCondition());
+        assertEquals(2, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(62, 7, 0);
+        assertEquals(MonitoringResult.CRITICAL, params.get(3).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(3).getRangeCondition());
+        assertEquals(3, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(72, 7, 0);
+        assertEquals(MonitoringResult.SEVERE, params.get(4).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(4).getRangeCondition());
+        assertEquals(4, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(74, 7, 0);
+        assertEquals(MonitoringResult.SEVERE, params.get(5).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(5).getRangeCondition());
+        assertEquals(4 /* ! */, q.size()); // No message, since nothing changed
+
+        tmGenerator.generate_PKT1_10(15, 7, 0);
+        assertEquals(MonitoringResult.IN_LIMITS, params.get(6).getMonitoringResult());
+        assertEquals(5, q.size()); // Message for back to normal
+
+        // Now, change context
+        tmGenerator.generate_PKT1_10(71, 0 /* ! */, 0);
+        assertEquals(MonitoringResult.CRITICAL, params.get(7).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(7).getRangeCondition());
+        assertEquals(6, q.size()); // Message for changed MonitoringResult
+
+        // Test minViolations of 3 under context 6
+        tmGenerator.generate_PKT1_10(40, 6, 0);
+        assertEquals(MonitoringResult.WARNING, params.get(8).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(8).getRangeCondition());
+
+        assertEquals(6, q.size()); // No message, violations=1
+
+        tmGenerator.generate_PKT1_10(40, 6, 0);
+        assertEquals(MonitoringResult.WARNING, params.get(9).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(9).getRangeCondition());
+        assertEquals(6, q.size()); // No message, violations=2
+
+        tmGenerator.generate_PKT1_10(40, 6, 0);
+        assertEquals(MonitoringResult.WARNING, params.get(10).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(10).getRangeCondition());
+        assertEquals(7, q.size()); // Message because violations=3
+    }
+
+    @Test
+    public void testFloatLimits() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/FloatPara1_10_3").build());
+        prm.addRequest(p,
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+        processor.start();
+        alarmReporter.startAsync();
+
+        tmGenerator.generate_PKT1_10(0, 1, 30);
+        ParameterValue pv = params.get(0);
+
+        // Check whether spreadsheet loads all levels ok
+        assertEquals(-11, pv.getWatchRange().getMin(), 1e-17);
+        assertEquals(30, pv.getWatchRange().getMax(), 1e-17);
+        assertEquals(-22, pv.getWarningRange().getMin(), 1e-17);
+        assertEquals(40, pv.getWarningRange().getMax(), 1e-17);
+        assertEquals(-33, pv.getDistressRange().getMin(), 1e-17);
+        assertEquals(50, pv.getDistressRange().getMax(), 1e-17);
+        assertEquals(Double.NEGATIVE_INFINITY, pv.getCriticalRange().getMin(), 1e-17);
+        assertEquals(60, pv.getCriticalRange().getMax(), 1e-17);
+        assertEquals(Double.NEGATIVE_INFINITY, pv.getSevereRange().getMin(), 1e-17);
+        assertEquals(70, pv.getSevereRange().getMax(), 1e-17);
+
+        assertEquals(MonitoringResult.IN_LIMITS, pv.getMonitoringResult());
+        assertEquals(0, q.size());
+
+        tmGenerator.generate_PKT1_10(0, 1, 42);
+        assertEquals(MonitoringResult.WARNING, params.get(1).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(1).getRangeCondition());
+        assertEquals(1, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 1, 52);
+        assertEquals(MonitoringResult.DISTRESS, params.get(2).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(2).getRangeCondition());
+        assertEquals(2, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 1, 62);
+        assertEquals(MonitoringResult.CRITICAL, params.get(3).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(3).getRangeCondition());
+        assertEquals(3, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 1, 72);
+        assertEquals(MonitoringResult.SEVERE, params.get(4).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(4).getRangeCondition());
+        assertEquals(4, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 1, 74);
+        assertEquals(MonitoringResult.SEVERE, params.get(5).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(5).getRangeCondition());
+        assertEquals(4 /* ! */, q.size()); // No message, since nothing changed
+
+        tmGenerator.generate_PKT1_10(0, 1, 15);
+        assertEquals(MonitoringResult.IN_LIMITS, params.get(6).getMonitoringResult());
+        assertEquals(5, q.size()); // Message for back to normal
+
+        // Now, change context
+        tmGenerator.generate_PKT1_10(0, 0 /* ! */, 71);
+        assertEquals(MonitoringResult.CRITICAL, params.get(7).getMonitoringResult());
+        assertEquals(RangeCondition.HIGH, params.get(7).getRangeCondition());
+        assertEquals(6, q.size()); // Message for changed MonitoringResult
+    }
+
+    @Test
+    public void testEnumerationAlarms() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm
+                .getParameter(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/EnumerationPara1_10_2").build());
+        prm.addRequest(p,
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+        processor.start();
+        alarmReporter.startAsync();
+
+        tmGenerator.generate_PKT1_10(0, 1, 0);
+        assertEquals(MonitoringResult.IN_LIMITS, params.get(0).getMonitoringResult());
+        assertEquals(0, q.size());
+
+        tmGenerator.generate_PKT1_10(0, 2, 0);
+        assertEquals(MonitoringResult.WATCH, params.get(1).getMonitoringResult());
+        assertEquals(1, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 3, 0);
+        assertEquals(MonitoringResult.WARNING, params.get(2).getMonitoringResult());
+        assertEquals(2, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 4, 0);
+        assertEquals(MonitoringResult.WARNING, params.get(3).getMonitoringResult());
+        assertEquals(2 /* ! */, q.size()); // No message, since nothing changed
+
+        tmGenerator.generate_PKT1_10(0, 5, 0);
+        assertEquals(MonitoringResult.CRITICAL, params.get(4).getMonitoringResult());
+        assertEquals(3, q.size()); // Message for changed MonitoringResult
+
+        tmGenerator.generate_PKT1_10(0, 0, 0);
+        assertEquals(MonitoringResult.IN_LIMITS, params.get(5).getMonitoringResult());
+        assertEquals(4, q.size()); // Message for back to normal
+    }
+
+    @Test
+    public void testAlarmReportingWithoutSubscription() {
+        processor.start();
+        alarmReporter.startAsync();
+
+        tmGenerator.generate_PKT1_10(30, 1, 0);
+        assertEquals(0, q.size());
+
+        tmGenerator.generate_PKT1_10(42, 1, 0);
+        assertEquals(1, q.size()); // Message for changed MonitoringResult
+    }
+
+    @Test
+    public void testOnValueChangeReport() {
+        processor.start();
+        alarmReporter.startAsync();
+
+        tmGenerator.generate_PKT1_10(20, 1, 0);
+        assertEquals(0, q.size());
+
+        tmGenerator.generate_PKT1_10(20, 1, 0);
+        assertEquals(0, q.size()); // No change
+
+        tmGenerator.generate_PKT1_10(21, 1, 0);
+        assertEquals(1, q.size()); // Change
+
+        tmGenerator.generate_PKT1_10(21, 1, 0);
+        assertEquals(1, q.size()); // No Change
+
+        tmGenerator.generate_PKT1_10(20, 1, 0);
+        assertEquals(2, q.size()); // Change
+    }
+}
+```
+
+### `ArchiveIntegrationTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ArchiveIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ClientException.ExceptionData;
+import org.yamcs.client.Page;
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.ListOptions;
+import org.yamcs.client.archive.ArchiveClient.TableLoader;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.events.StreamEventProducer;
+import org.yamcs.protobuf.AlarmData;
+import org.yamcs.protobuf.AlarmSeverity;
+import org.yamcs.protobuf.AlarmType;
+import org.yamcs.protobuf.CreateProcessorRequest;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.IndexEntry;
+import org.yamcs.protobuf.IndexGroup;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.Table.Row;
+import org.yamcs.protobuf.Table.Row.Cell;
+import org.yamcs.protobuf.Table.TableData.TableRecord;
+import org.yamcs.protobuf.Table.WriteRowsExceptionDetail;
+import org.yamcs.protobuf.Table.WriteRowsResponse;
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueHelper;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Message;
+import com.google.protobuf.util.Timestamps;
+
+public class ArchiveIntegrationTest extends AbstractIntegrationTest {
+
+    private ColumnSerializer<Integer> csint = ColumnSerializerFactory.getBasicColumnSerializerV2(DataType.INT);
+    private ColumnSerializer<String> csstr = ColumnSerializerFactory.getBasicColumnSerializerV2(DataType.STRING);
+
+    private ArchiveClient archiveClient;
+    private ProcessorClient realtime;
+
+    static { // to avoid getting the warning in the console in the test below that loads invalid table records
+        Logger.getLogger("org.yamcs.yarch").setLevel(Level.SEVERE);
+    }
+
+    @BeforeEach
+    public void prepare() {
+        archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+        realtime = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+    }
+
+    @Test
+    public void testReplay() throws Exception {
+        /*
+         * Generate some realtime data (processor: realtime).
+         * Then create a replay within the previous range of data (processor: testReplay).
+         */
+        generatePkt13AndPps("2015-01-01T10:00:00", 300);
+
+        CreateProcessorRequest prequest = CreateProcessorRequest.newBuilder()
+                .setInstance("instance1")
+                .setName("testReplay")
+                .setPersistent(true) // TODO temp
+                .setType("Archive")
+                .setConfig("{\"start\": \"2015-01-01T10:01:00Z\", \"stop\": \"2015-01-01T10:05:00Z\"}")
+                .build();
+        ProcessorClient replay = yamcsClient.createProcessor(prequest).get();
+        Thread.sleep(2000);
+
+        /*
+         * Listen to these parameters on our replay.
+         */
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(replay.getInstance())
+                .setProcessor(replay.getProcessor())
+                .setSendFromCache(false)
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_uint"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_double"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_enum_nc"))
+                .build();
+        subscription.sendMessage(request);
+
+        /*
+         * Pause the replay.
+         */
+        replay.pause().get();
+
+        // Give Yamcs some time to establish the subscription and empty the websocket of any message that might have
+        // been pending
+        Thread.sleep(2000);
+
+        captor.clear();
+        captor.assertSilence();
+
+        /*
+         * Now seek to the beginning (this also starts it)
+         */
+        replay.seek(Instant.parse("2015-01-01T10:01:00Z")).get();
+
+        /*
+         * Verify the delivery on testReplay
+         */
+        List<ParameterValue> values = captor.expectTimely();
+        assertEquals(2, values.size(), "Expected 2 values, but got: " + values);
+        ParameterValue p1_1_6 = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1_6", p1_1_6.getId().getName());
+        assertEquals(Timestamps.parse("2015-01-01T10:01:00.000Z"), p1_1_6.getGenerationTime());
+
+        values = captor.expectTimely();
+        assertEquals(3, values.size());
+        ParameterValue pp_para_uint = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/processed_para_uint", pp_para_uint.getId().getName());
+        assertEquals(Timestamps.parse("2015-01-01T10:01:00.010Z"), pp_para_uint.getGenerationTime());
+
+        ParameterValue pp_para_enum_nc = values.get(1);
+        assertEquals("/REFMDB/SUBSYS1/processed_para_enum_nc", pp_para_enum_nc.getId().getName());
+        assertEquals(Timestamps.parse("2015-01-01T10:01:00.010Z"), pp_para_uint.getGenerationTime());
+        assertEquals(1, pp_para_enum_nc.getRawValue().getUint32Value());
+        assertEquals("one_why not", pp_para_enum_nc.getEngValue().getStringValue());
+
+        ParameterValue pp_para_double = values.get(2);
+        assertEquals("/REFMDB/SUBSYS1/processed_para_double", pp_para_double.getId().getName());
+        assertEquals(Timestamps.parse("2015-01-01T10:01:00.010Z"), pp_para_uint.getGenerationTime());
+
+        values = captor.expectTimely();
+        assertEquals(1, values.size());
+        pp_para_uint = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/processed_para_uint", pp_para_uint.getId().getName());
+        assertEquals(Timestamps.parse("2015-01-01T10:01:00.030Z"), pp_para_uint.getGenerationTime());
+
+        values = captor.expectTimely();
+        assertEquals(2, values.size());
+        p1_1_6 = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1_6", p1_1_6.getId().getName());
+        assertEquals(Timestamps.parse("2015-01-01T10:01:01.000Z"), p1_1_6.getGenerationTime());
+    }
+
+    @Test
+    public void testReplayWithTm2() throws Exception {
+        generatePkt1AndTm2Pkt1("2019-01-01T10:00:00", 300);
+
+        CreateProcessorRequest prequest = CreateProcessorRequest.newBuilder()
+                .setInstance("instance1")
+                .setName("testReplayWithTm2")
+                .setPersistent(true) // TODO temp
+                .setType("Archive")
+                .setConfig("{\"start\": \"2019-01-01T10:01:00Z\", \"stop\": \"2019-01-01T10:05:00Z\"}")
+                .build();
+
+        ProcessorClient replay = yamcsClient.createProcessor(prequest).get();
+        Thread.sleep(2000);
+
+        /*
+         * Listen to these parameters against testReplayWithTm2.
+         */
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(replay.getInstance())
+                .setProcessor(replay.getProcessor())
+                .setSendFromCache(false)
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/tm2_para1"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/col-packet_id"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .build();
+        subscription.sendMessage(request);
+
+        /*
+         * Pause the replay.
+         */
+        replay.pause().get();
+
+        // Give Yamcs some time to establish the subscription and empty the websocket of any message that might have
+        // been pending
+        Thread.sleep(2000);
+
+        captor.clear();
+        captor.assertSilence();
+
+        /*
+         * Now seek to the beginning (this also starts it)
+         */
+        replay.seek(Instant.parse("2019-01-01T10:01:00Z"));
+
+        List<ParameterValue> values = captor.expectTimely();
+
+        assertEquals(1, values.size());
+        ParameterValue pv1 = values.get(0);
+        assertEquals("/REFMDB/tm2_para1", pv1.getId().getName());
+        assertEquals(Timestamps.parse("2019-01-01T10:01:00.000Z"), pv1.getGenerationTime());
+        assertEquals(20, pv1.getEngValue().getUint32Value());
+
+        values = captor.expectTimely();
+        assertEquals(2, values.size());
+
+        ParameterValue pv2 = values.get(0);
+        assertEquals("/REFMDB/col-packet_id", pv2.getId().getName());
+        assertEquals(Timestamps.parse("2019-01-01T10:01:00.000Z"), pv2.getGenerationTime());
+
+        ParameterValue pv3 = values.get(1);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1_7", pv3.getId().getName());
+        assertEquals(Timestamps.parse("2019-01-01T10:01:00.000Z"), pv3.getGenerationTime());
+        assertEquals(packetGenerator.pIntegerPara1_1_7, pv3.getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testReplayWithPpExclusion() throws Exception {
+        generatePkt13AndPps("2015-02-01T10:00:00", 300);
+
+        CreateProcessorRequest prequest = CreateProcessorRequest.newBuilder()
+                .setInstance("instance1")
+                .setName("testReplayWithPpExclusion")
+                .setType("ArchiveWithPpExclusion")
+                .setPersistent(true) // TODO temp
+                .setConfig("{\"start\": \"2015-02-01T10:01:00Z\", \"stop\": \"2015-02-01T10:05:00Z\"}")
+                .build();
+        ProcessorClient replay = yamcsClient.createProcessor(prequest).get();
+        Thread.sleep(2000);
+
+        /*
+         * Listen to these parameters against testReplayWithPpExclusion.
+         */
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(replay.getInstance())
+                .setProcessor(replay.getProcessor())
+                .setSendFromCache(false)
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_uint"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_double"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_enum_nc"))
+                .build();
+        subscription.sendMessage(request);
+
+        /*
+         * Pause the replay.
+         */
+        replay.pause().get();
+
+        // Give Yamcs some time to establish the subscription and empty the websocket of any message that might have
+        // been pending
+        Thread.sleep(2000);
+
+        captor.clear();
+        captor.assertSilence();
+
+        /*
+         * Now seek to the beginning (this also starts it)
+         */
+        replay.seek(Instant.parse("2015-02-01T10:01:00Z")).get();
+
+        List<ParameterValue> values = captor.expectTimely();
+
+        assertEquals(2, values.size());
+        ParameterValue p1_1_6 = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1_6", p1_1_6.getId().getName());
+        assertEquals(Timestamps.parse("2015-02-01T10:01:00.000Z"), p1_1_6.getGenerationTime());
+
+        values = captor.expectTimely();
+        assertEquals(1, values.size());
+        ParameterValue pp_para_uint = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/processed_para_uint", pp_para_uint.getId().getName());
+        assertEquals(Timestamps.parse("2015-02-01T10:01:00.030Z"), pp_para_uint.getGenerationTime());
+
+        values = captor.expectTimely();
+
+        assertEquals(2, values.size());
+        p1_1_6 = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1_6", p1_1_6.getId().getName());
+        assertEquals(Timestamps.parse("2015-02-01T10:01:01.000Z"), p1_1_6.getGenerationTime());
+    }
+
+    @Test
+    public void testReplayLocalParams() throws Exception {
+        Instant fmg = Instant.ofEpochMilli(System.currentTimeMillis() - 5 * 60 * 1000);
+
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/LocalParaWithInitialValue1", fmg, null,
+                ListOptions.source("replay"),
+                ListOptions.limit(3))
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(1, values.size());
+        ParameterValue pv = values.get(0);
+        assertEquals(3.14, pv.getEngValue().getFloatValue(), 1e-5);
+
+        Value v = ValueHelper.newValue((float) 6.62);
+        realtime.setValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue1", v);
+        Thread.sleep(1000);
+
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/LocalParaWithInitialValue1", fmg, null,
+                ListOptions.source("replay"),
+                ListOptions.limit(3),
+                ListOptions.ascending(true))
+                .get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(2, values.size());
+        pv = values.get(0);
+        assertEquals(3.14, pv.getEngValue().getFloatValue(), 1e-5);
+        pv = values.get(1);
+        assertEquals(6.62, pv.getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testReplayAggregateAlgoOutput() throws Exception {
+        generatePkt1AndTm2Pkt1("2022-06-01T10:00:00", 300);
+        Page<ParameterValue> page = archiveClient
+                .listValues("/REFMDB/SUBSYS1/AlgoJavaAggr4.member2", Instant.parse("2022-06-01T10:00:00Z"), null,
+                        ListOptions.source("replay"),
+                        ListOptions.limit(3))
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(3, values.size());
+        assertEquals(23, values.get(0).getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testReplayAggregateParts() throws Exception {
+        generatePkt3("2025-01-21T11:16:00", 300);
+        List<ParameterValue> values = new ArrayList<>();
+        archiveClient
+                .streamValues(Arrays.asList("/REFMDB/SUBSYS1/aggregate_para2.member1"), params -> {
+                    values.addAll(params.values());
+                }, Instant.parse("2025-01-21T11:16:00Z"), Instant.parse("2025-01-21T12:16:00Z"))
+                .get();
+        assertEquals(300, values.size());
+        for (int i = 0; i < 300; i++) {
+            assertEquals(16, values.get(i).getRawValue().getUint32Value());
+            assertEquals(16, values.get(i).getEngValue().getUint32Value());
+        }
+    }
+
+    @Test
+    public void testEmptyIndex() throws Exception {
+        Instant start = Instant.parse("2035-01-02T00:00:00Z");
+        Page<IndexGroup> page = archiveClient.listPacketIndex(start, null).get();
+        List<IndexGroup> groups = new ArrayList<>();
+        page.iterator().forEachRemaining(groups::add);
+        assertTrue(groups.isEmpty());
+    }
+
+    @Test
+    public void testStreamingIndex() throws Exception {
+        generatePkt13AndPps("2015-02-01T10:00:00", 3600);
+
+        Instant start = Instant.parse("2015-02-01T00:00:00Z");
+        Instant stop = Instant.parse("2015-02-01T11:00:00Z");
+
+        List<ArchiveRecord> received = new ArrayList<>();
+        archiveClient.streamPacketIndex(received::add, start, stop).get();
+        assertEquals(4, received.size());
+
+        received = new ArrayList<>();
+        archiveClient.streamPacketIndex(received::add, start, stop).get();
+        assertEquals(4, received.size());
+    }
+
+    @Test
+    public void testStreamValues() throws Exception {
+        generatePkt13AndTm2Pkt1("2022-06-15T13:50:00", 120);
+        Instant start = Instant.parse("2022-06-15T13:50:00Z");
+        Instant stop = Instant.parse("2022-06-15T13:50:10Z");
+        List<Map<String, ParameterValue>> l = new ArrayList<>();
+        archiveClient.streamValues(Arrays.asList("/REFMDB/tm2_para2"), m -> l.add(m), start, stop).get();
+        assertEquals(20, l.size());
+
+        l.clear();
+        // replay only data received originally via tm2_realtime, that will halve the number of parameters
+        archiveClient.streamValues(Arrays.asList("/REFMDB/tm2_para2"),
+                Arrays.asList("tm2_realtime"),
+                m -> l.add(m), start, stop).get();
+        assertEquals(10, l.size());
+    }
+
+    @Test
+    public void testParameterHistory() throws Exception {
+        generatePkt13AndPps("2015-02-02T10:00:00", 3600);
+
+        Instant start = Instant.parse("2015-02-02T10:10:00Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/ccsds-apid", start, null,
+                ListOptions.noRepeat(true),
+                ListOptions.limit(3)).get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(1, values.size());
+        ParameterValue pv = values.get(0);
+        assertEquals(995, pv.getEngValue().getUint32Value());
+
+        page = archiveClient.listValues("/REFMDB/ccsds-apid", start, null,
+                ListOptions.noRepeat(false),
+                ListOptions.limit(3)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(3, values.size());
+    }
+
+    @Test
+    public void testTableLoadDump() throws Exception {
+        createTable("table0");
+
+        TableLoader loader = archiveClient.createTableLoader("table0");
+
+        for (int i = 0; i < 100; i++) {
+            loader.send(getRecord(i));
+        }
+
+        WriteRowsResponse response = loader.complete().get();
+        assertEquals(100, response.getCount());
+
+        verifyRecords("table0", 100);
+        verifyRecordsDumpFormat("table0", 100);
+    }
+
+    @Test
+    public void testTokenizedHistoIndex() throws Exception {
+        generatePkt13AndPps("2015-02-03T10:00:00", 120);
+        generatePkt13AndPps("2015-02-03T10:03:00", 100);
+
+        // first without a limit
+        Instant start = Instant.parse("2015-02-03T00:00:00Z");
+        Instant stop = Instant.parse("2015-02-03T11:00:00Z");
+        Page<IndexGroup> page = archiveClient.listPacketIndex(start, stop).get();
+        List<IndexGroup> groups = new ArrayList<>();
+        page.iterator().forEachRemaining(groups::add);
+
+        assertEquals(2, groups.size());
+
+        Map<String, AtomicInteger> packetCounts1 = new HashMap<>();
+        for (IndexGroup group : page) {
+            String packet = group.getId().getName();
+            packetCounts1.putIfAbsent(packet, new AtomicInteger());
+            packetCounts1.get(packet).addAndGet(group.getEntryCount());
+        }
+
+        // now with pagination
+        page = archiveClient.listPacketIndex(start, stop, ListOptions.limit(2)).get();
+        Map<String, AtomicInteger> packetCounts2 = new HashMap<>();
+        do {
+            for (IndexGroup group : page) {
+                String packet = group.getId().getName();
+                packetCounts2.putIfAbsent(packet, new AtomicInteger());
+                packetCounts2.get(packet).addAndGet(group.getEntryCount());
+            }
+            page = page.getNextPage().get();
+        } while (page.hasNextPage());
+
+        packetCounts1.forEach((k, v) -> assertEquals(v.get(), packetCounts2.get(k).get()));
+    }
+
+    @Test
+    public void testTokenizedCompletenessIndex() throws Exception {
+        generatePkt13AndPps("2015-02-04T10:00:00", 120);
+        packetGenerator.simulateGap(995);
+        generatePkt13AndPps("2015-02-04T10:03:00", 100);
+
+        // first without a limit
+        Instant start = Instant.parse("2015-02-04T00:00:00Z");
+        Instant stop = Instant.parse("2015-02-04T11:00:00Z");
+        Page<IndexGroup> page = archiveClient.listCompletenessIndex(start, stop).get();
+        List<IndexGroup> groups = new ArrayList<>();
+        page.iterator().forEachRemaining(groups::add);
+
+        assertEquals(1, groups.size());
+        assertEquals(2, groups.get(0).getEntryCount());
+        assertFalse(page.hasNextPage());
+        int total = 0;
+        for (IndexEntry entry : groups.get(0).getEntryList()) {
+            total += entry.getCount();
+        }
+        assertEquals(440, total);
+
+        // now with a limit
+        page = archiveClient.listCompletenessIndex(start, stop, ListOptions.limit(1)).get();
+        groups = new ArrayList<>();
+        page.iterator().forEachRemaining(groups::add);
+        total = 0;
+        assertEquals(1, groups.size());
+        for (IndexEntry entry : groups.get(0).getEntryList()) {
+            total += entry.getCount();
+        }
+        assertTrue(page.hasNextPage());
+
+        page = page.getNextPage().get();
+        groups = new ArrayList<>();
+        page.iterator().forEachRemaining(groups::add);
+        assertEquals(1, groups.size());
+        for (IndexEntry entry : groups.get(0).getEntryList()) {
+            total += entry.getCount();
+        }
+        assertEquals(440, total);
+    }
+
+    @Test
+    @Disabled("Java client does not consistently read all received data after a sudden close, causing the exception from the server to be discarded")
+    public void testTableLoadWithInvalidRecord() throws Exception {
+        createTable("table1");
+
+        TableLoader loader = archiveClient.createTableLoader("table1");
+
+        Throwable t1 = null;
+        try {
+            for (int i = 0; i < 100; i++) {
+                if (i != 50) {
+                    loader.send(getRecord(i));
+                } else {
+                    Row.Builder trb = Row.newBuilder();
+                    trb.addCells(Cell.newBuilder()
+                            .setColumnId(2)
+                            .setData(ByteString.copyFrom(csstr.toByteArray("test " + i))));
+                    loader.send(trb.build());
+                }
+            }
+            loader.complete().get();
+        } catch (ExecutionException e) {
+            t1 = e.getCause();
+        }
+        assertNotNull(t1);
+        assertEquals(ClientException.class, t1.getClass());
+        ExceptionData excData = ((ClientException) t1).getDetail();
+
+        assertTrue(excData.getDetail() != null);
+        WriteRowsExceptionDetail detail = excData.getDetail().unpack(WriteRowsExceptionDetail.class);
+        assertEquals(50, detail.getCount());
+        verifyRecords("table1", 50);
+    }
+
+    @Test
+    @Disabled("Java client does not consistently read all received data after a sudden close, causing the exception from the server to be discarded")
+    public void testTableLoadWithInvalidRecord2() throws Exception {
+        createTable("table2");
+
+        TableLoader loader = archiveClient.createTableLoader("table2");
+        Throwable t1 = null;
+        try {
+            for (int i = 0; i < 100; i++) {
+                if (i != 50) {
+                    loader.send(getRecord(i));
+                } else {
+                    Message invalidMessage = Event.newBuilder().setMessage("abc").build();
+                    loader.send((Row) invalidMessage);
+                }
+            }
+            loader.complete().get();
+        } catch (ExecutionException e) {
+            t1 = e.getCause();
+        }
+        assertNotNull(t1);
+        t1.printStackTrace();
+        assertTrue(t1 instanceof ClientException);
+        ExceptionData excData = ((ClientException) t1).getDetail();
+
+        assertTrue(excData.getDetail() != null);
+        WriteRowsExceptionDetail detail = excData.getDetail().unpack(WriteRowsExceptionDetail.class);
+        assertEquals(50, detail.getCount());
+        verifyRecords("table2", 50);
+    }
+
+    @Test
+    public void testRetrieveAlarmHistory() throws Exception {
+        StreamEventProducer sep = new StreamEventProducer(yamcsInstance);
+        Db.Event e1 = Db.Event.newBuilder().setSource("IntegrationTest").setType("Event-Alarm-Test")
+                .setSeverity(EventSeverity.WARNING).setSeqNumber(1)
+                .setGenerationTime(TimeEncoding.parse("2019-05-12T11:15:00"))
+                .setMessage("event1").build();
+        sep.sendEvent(e1);
+
+        Db.Event e2 = e1.toBuilder().setSeverity(EventSeverity.CRITICAL).setSeqNumber(2)
+                .setGenerationTime(TimeEncoding.parse("2019-05-12T11:15:00"))
+                .setMessage("event2").build();
+        sep.sendEvent(e2);
+
+        Instant start = Instant.parse("2019-05-12T11:00:00Z");
+        Instant stop = Instant.parse("2019-05-12T12:00:00Z");
+        List<AlarmData> alarms = archiveClient.listAlarms(start, stop).get();
+
+        assertEquals(1, alarms.size());
+        AlarmData alarm = alarms.get(0);
+        assertEquals(AlarmType.EVENT, alarm.getType());
+
+        assertEquals("Event-Alarm-Test", alarm.getId().getName());
+        assertEquals("/yamcs/event/IntegrationTest", alarm.getId().getNamespace());
+        assertEquals(AlarmSeverity.CRITICAL, alarm.getSeverity());
+    }
+
+    private Row getRecord(int i) {
+        // the column info is only required for the first record actually
+        Row tr = Row.newBuilder()
+                .addColumns(Row.ColumnInfo.newBuilder().setId(1).setName("a1").setType("INT"))
+                .addColumns(Row.ColumnInfo.newBuilder().setId(2).setName("a2").setType("STRING"))
+                .addCells(Cell.newBuilder().setColumnId(1).setData(ByteString.copyFrom(csint.toByteArray(i))))
+                .addCells(Cell.newBuilder().setColumnId(2).setData(ByteString.copyFrom(csstr.toByteArray("test " + i))))
+                .build();
+        return tr;
+    }
+
+    private void verifyRecords(String table, int n) throws Exception {
+        List<TableRecord> records = archiveClient.listRecords(table).get();
+        assertEquals(n, records.size());
+    }
+
+    private void verifyRecordsDumpFormat(String table, int n) throws Exception {
+        List<Row> trList = new ArrayList<>();
+        archiveClient.dumpTable(table, trList::add).get();
+        assertEquals(n, trList.size());
+    }
+
+    private void createTable(String tblName) throws Exception {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        TupleDefinition td = new TupleDefinition();
+        td.addColumn("a1", DataType.INT);
+        td.addColumn("a2", DataType.STRING);
+
+        TableDefinition tblDef = new TableDefinition(tblName, td, Arrays.asList("a1"));
+        ydb.createTable(tblDef);
+
+    }
+}
+```
+
+### `CommandIntegration2Test.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/CommandIntegration2Test.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.Command;
+import org.yamcs.client.CommandSubscription;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+
+/**
+ * Tests commands with two links (instance IntegrationTest2)
+ * 
+ * @author nm
+ *
+ */
+public class CommandIntegration2Test extends AbstractIntegrationTest {
+
+    private ProcessorClient processorClient;
+    private CommandSubscription subscription;
+    TcDataLink mtdl1;
+    TcDataLink mtdl2;
+
+    String yamcsInstance2 = "instance2";
+
+    @BeforeEach
+    public void prepareTests() throws InterruptedException {
+
+        processorClient = yamcsClient.createProcessorClient(yamcsInstance2, "realtime");
+        subscription = yamcsClient.createCommandSubscription();
+
+        SubscribeCommandsRequest request = SubscribeCommandsRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .build();
+        subscription.sendMessage(request);
+        mtdl1 = TcDataLink.instance[1];
+        mtdl2 = TcDataLink.instance[2];
+        assertNotNull(mtdl1);
+        assertNotNull(mtdl2);
+        mtdl1.commands.clear();
+        mtdl2.commands.clear();
+    }
+
+    @Test
+    public void testSendCommandDifferentLinks() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC")
+                .withArgument("uint32_arg", 1000)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(20)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        assertEquals(1, mtdl1.commands.size());
+        assertEquals(0, mtdl2.commands.size());
+
+        command = processorClient.prepareCommand("/REFMDB/SUBSYS1/LE_ARG_TC")
+                .withArgument("p2", 1000)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(21)
+                .issue()
+                .get();
+
+        assertEquals(1, mtdl1.commands.size());
+        assertEquals(1, mtdl2.commands.size());
+    }
+}
+```
+
+### `CommandIntegrationTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/CommandIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.Command;
+import org.yamcs.client.CommandSubscription;
+import org.yamcs.client.Page;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.VerifierConfig;
+import org.yamcs.protobuf.Commanding.VerifierConfig.CheckWindow;
+import org.yamcs.protobuf.IndexGroup;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.ValueHelper;
+
+import com.google.protobuf.util.Timestamps;
+
+public class CommandIntegrationTest extends AbstractIntegrationTest {
+
+    private ProcessorClient processorClient;
+    private ArchiveClient archiveClient;
+    private CommandSubscription subscription;
+    private MessageCaptor<CommandHistoryEntry> captor;
+
+    @BeforeEach
+    public void prepareTests() throws Exception {
+        processorClient = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+        archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+        subscription = yamcsClient.createCommandSubscription();
+        captor = MessageCaptor.of(subscription);
+
+        SubscribeCommandsRequest request = SubscribeCommandsRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+    }
+
+    @Test
+    public void testSendCommandNoTransmissionConstraint() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC")
+                .withArgument("uint32_arg", 1000)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(5)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        CommandHistoryEntry entry = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/ONE_INT_ARG_TC", entry.getCommandName());
+        assertEquals(5, entry.getSequenceNumber());
+        assertEquals("IntegrationTest", entry.getOrigin());
+    }
+
+    @Test
+    public void testSendCommandFailedTransmissionConstraint() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CRITICAL_TC1")
+                .withArgument("p1", 2)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(6)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/CRITICAL_TC1", cmdhist.getCommandName());
+        assertEquals(6, cmdhist.getSequenceNumber());
+        assertEquals("IntegrationTest", cmdhist.getOrigin());
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NOK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.NOK,
+                "Transmission constraints check failed");
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.CommandComplete_KEY, AckStatus.NOK,
+                "Transmission constraints check failed");
+    }
+
+    @Test
+    public void testSendCommandFailedTransmissionConstraint2() throws Exception {
+        processorClient.setValue("/REFMDB/SUBSYS1/AllowCriticalTC2", ValueHelper.newValue(false)).get();
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CRITICAL_TC2")
+                .withArgument("p1", 2)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(12)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/CRITICAL_TC2", cmdhist.getCommandName());
+        assertEquals(12, cmdhist.getSequenceNumber());
+        assertEquals("IntegrationTest", cmdhist.getOrigin());
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.PENDING);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NOK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.NOK,
+                "Transmission constraints check failed");
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.CommandComplete_KEY, AckStatus.NOK,
+                "Transmission constraints check failed");
+    }
+
+    @Test
+    public void testSendCommandDisableTransmissionConstraint() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CRITICAL_TC1")
+                .withArgument("p1", 2)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(6)
+                .withDisableTransmissionConstraints()
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/CRITICAL_TC1", cmdhist.getCommandName());
+        assertEquals(6, cmdhist.getSequenceNumber());
+        assertEquals("IntegrationTest", cmdhist.getOrigin());
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NA);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+    }
+
+    @Test
+    public void testSendCommandSucceedTransmissionConstraint() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CRITICAL_TC2")
+                .withArgument("p1", 2)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(6)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/CRITICAL_TC2", cmdhist.getCommandName());
+        assertEquals(6, cmdhist.getSequenceNumber());
+        assertEquals("IntegrationTest", cmdhist.getOrigin());
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY,
+                AckStatus.PENDING);
+
+        Value v = ValueHelper.newValue(true);
+        processorClient.setValue("/REFMDB/SUBSYS1/AllowCriticalTC2", v).get();
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+    }
+
+    @Test
+    public void testCommandVerificationContainer() throws Exception {
+        Command command = processorClient
+                .prepareCommand("/REFMDB/SUBSYS1/CONT_VERIF_TC")
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(7)
+                .issue()
+                .get();
+
+        assertEquals("/REFMDB/SUBSYS1/CONT_VERIF_TC()", command.getSource());
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/CONT_VERIF_TC", cmdhist.getCommandName());
+        assertEquals(7, cmdhist.getSequenceNumber());
+        assertEquals("IntegrationTest", cmdhist.getOrigin());
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 0, 0);
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NA);
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.PENDING);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.OK);
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 5, 0);
+
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.PENDING);
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.CommandComplete_KEY, AckStatus.OK);
+
+        // check commands histogram
+        Instant start = Instant.ofEpochMilli(Timestamps.toMillis(cmdhist.getGenerationTime())).minusMillis(1);
+        Page<IndexGroup> page = archiveClient.listCommandIndex(start, Instant.now()).get();
+        List<IndexGroup> allItems = new ArrayList<>();
+        page.iterator().forEachRemaining(allItems::add);
+        assertEquals(1, allItems.size());
+        IndexGroup item = allItems.get(0);
+        assertEquals(1, item.getEntryCount());
+        assertEquals("/REFMDB/SUBSYS1/CONT_VERIF_TC", item.getId().getName());
+    }
+
+    @Test
+    public void testCommandVerificationAlgorithm() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/ALG_VERIF_TC")
+                .withArgument("p1", 10)
+                .withArgument("p2", 20)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(4)
+                .issue()
+                .get();
+        assertEquals("/REFMDB/SUBSYS1/ALG_VERIF_TC(p1: 10, p2: 20)", command.getSource());
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+
+        assertEquals("/REFMDB/SUBSYS1/ALG_VERIF_TC", cmdhist.getCommandName());
+        assertEquals(4, cmdhist.getSequenceNumber());
+        assertEquals("IntegrationTest", cmdhist.getOrigin());
+        packetGenerator.generateAlgVerifCmdAck((short) 25, (short) 5000, (byte) 0, 0);
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NA);
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.PENDING);
+
+        cmdhist = captor.expectTimely();
+        assertEquals(1, cmdhist.getAttrCount());
+
+        CommandHistoryAttribute cha = cmdhist.getAttr(0);
+        assertEquals("packetSeqNum", cha.getName());
+        assertEquals(5000, cha.getValue().getSint32Value());
+
+        packetGenerator.generateAlgVerifCmdAck((short) 25, (short) 5000, (byte) 1, 5);
+
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.OK);
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.PENDING);
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.NOK);
+        checkNextCmdHistoryAck("CommandComplete", AckStatus.NOK, "Verifier Complete result: NOK");
+    }
+
+    @Test
+    public void testCommandWithOneVerifierDisabled() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CONT_VERIF_TC")
+                .withSequenceNumber(8)
+                .withVerifierConfig("Execution", VerifierConfig.newBuilder().setDisable(true).build())
+                .issue()
+                .get();
+
+        assertEquals("/REFMDB/SUBSYS1/CONT_VERIF_TC()", command.getSource());
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals(8, cmdhist.getSequenceNumber());
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 0, 0);
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NA);
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 5, 0);
+
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.DISABLED);
+
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.PENDING);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.CommandComplete_KEY, AckStatus.OK);
+    }
+
+    @Test
+    public void testCommandWithAllVerifiersDisabled() throws Exception {
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CONT_VERIF_TC")
+                .withSequenceNumber(9)
+                .withDisableVerification()
+                .issue()
+                .get();
+
+        assertEquals("/REFMDB/SUBSYS1/CONT_VERIF_TC()", command.getSource());
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals(9, cmdhist.getSequenceNumber());
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 0, 0);
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NA);
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 5, 0);
+
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.DISABLED);
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.DISABLED);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+    }
+
+    @Test
+    public void testCommandVerificationWithModifiedWindow() throws Exception {
+        // modify the timeout for the Complete stage from 1000 (in refmdb.xls) to 5000 and sleep 1500 before sending the
+        // ack
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/CONT_VERIF_TC")
+                .withSequenceNumber(10)
+                .withVerifierConfig("Complete", VerifierConfig.newBuilder()
+                        .setCheckWindow(CheckWindow.newBuilder()
+                                .setTimeToStartChecking(0)
+                                .setTimeToStopChecking(5000))
+                        .build())
+                .issue()
+                .get();
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals("/REFMDB/SUBSYS1/CONT_VERIF_TC()", command.getSource());
+        assertEquals(10, cmdhist.getSequenceNumber());
+
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 0, 0);
+
+        checkNextCmdHistoryAttr(CommandHistoryPublisher.Queue_KEY, "default");
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeQueued_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.TransmissionConstraints_KEY, AckStatus.NA);
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.PENDING);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.AcknowledgeReleased_KEY, AckStatus.OK);
+        checkNextCmdHistoryAck("Verifier_Execution", AckStatus.OK);
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.PENDING);
+
+        Thread.sleep(1500); // the default verifier would have timed out in 1000ms
+        packetGenerator.generateContVerifCmdAck((short) 1001, (byte) 5, 0);
+
+        checkNextCmdHistoryAck("Verifier_Complete", AckStatus.OK);
+        checkNextCmdHistoryAck(CommandHistoryPublisher.CommandComplete_KEY, AckStatus.OK);
+    }
+
+    @Test
+    public void testPermissionSendCommand() throws Exception {
+        yamcsClient.login("testuser", "password".toCharArray());
+
+        // Command INT_ARG_TC is allowed
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/INT_ARG_TC")
+                .withSequenceNumber(5)
+                .withArgument("uint32_arg", 1000)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        // Command FLOAT_ARG_TC is denied
+        try {
+            command = processorClient.prepareCommand("/REFMDB/SUBSYS1/FLOAT_ARG_TC")
+                    .withSequenceNumber(5)
+                    .withArgument("float_arg", -15)
+                    .withArgument("double_arg", 0)
+                    .issue()
+                    .get();
+            fail("should have thrown an exception");
+        } catch (ExecutionException e) {
+            assertTrue(e.getCause() instanceof ClientException);
+        }
+    }
+
+    /*-@Test
+    public void testValidateCommand() throws Exception {
+        WebSocketRequest wsr = new WebSocketRequest("cmdhistory", "subscribe");
+        wsClient.sendRequest(wsr).get(2, TimeUnit.SECONDS);
+    
+        ValidateCommandRequest cmdreq = getValidateCommand("/REFMDB/SUBSYS1/CRITICAL_TC1", 10, "p1", "2");
+        String resp = doRequest("/commanding/validator", HttpMethod.POST, cmdreq, SchemaRest.ValidateCommandRequest.WRITE);
+        ValidateCommandResponse vcr = (fromJson(resp, SchemaRest.ValidateCommandResponse.MERGE)).build();
+        assertEquals(1, vcr.getCommandSignificanceCount());
+        CommandSignificance significance = vcr.getCommandSignificance(0);
+        assertEquals(10, significance.getSequenceNumber());
+        assertEquals(SignificanceLevelType.CRITICAL, significance.getSignificance().getConsequenceLevel());
+        assertEquals("this is a critical command, pay attention", significance.getSignificance().getReasonForWarning());
+    
+    }*/
+
+    @Test
+    public void testUpdateCommandHistory() throws Exception {
+
+        // Send a command a store its commandId
+        Command command = processorClient.prepareCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC")
+                .withArgument("uint32_arg", 1000)
+                .withOrigin("IntegrationTest")
+                .withSequenceNumber(5)
+                .issue()
+                .get();
+        assertNotNull(command.getBinary());
+
+        // Insert two values in the command history
+        Map<String, Value> attributes = new HashMap<>();
+        attributes.put("testKey1", Value.newBuilder()
+                .setType(Type.STRING)
+                .setStringValue("testValue1")
+                .build());
+        attributes.put("testKey2", Value.newBuilder()
+                .setType(Type.STRING)
+                .setStringValue("testValue2")
+                .build());
+        processorClient.updateCommand(command.getName(), command.getId(), attributes).get();
+
+        // Query command history and check that we can retreive the inserted values
+        Command entry = archiveClient.listCommands().get().iterator().next();
+        assertEquals("testValue1", entry.getAttribute("testKey1"));
+        assertEquals("testValue2", entry.getAttribute("testKey2"));
+    }
+
+    /*
+     * private ValidateCommandRequest getValidateCommand(String cmdName, int seq, String... args) { NamedObjectId cmdId
+     * = NamedObjectId.newBuilder().setName(cmdName).build();
+     * 
+     * CommandType.Builder cmdb =
+     * CommandType.newBuilder().setOrigin("IntegrationTest").setId(cmdId).setSequenceNumber(seq); for(int i =0
+     * ;i<args.length; i+=2) {
+     * cmdb.addArguments(ArgumentAssignmentType.newBuilder().setName(args[i]).setValue(args[i+1]).build()); }
+     * 
+     * return ValidateCommandRequest.newBuilder().addCommand(cmdb.build()).build(); }
+     */
+
+    private void checkNextCmdHistoryAttr(String name, String value) throws InterruptedException, TimeoutException {
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+        assertEquals(1, cmdhist.getAttrCount());
+        CommandHistoryAttribute cha = cmdhist.getAttr(0);
+        assertEquals(name, cha.getName());
+        assertEquals(value, cha.getValue().getStringValue());
+    }
+
+    private void checkNextCmdHistoryAck(String name, AckStatus ack)
+            throws InterruptedException, TimeoutException {
+        checkNextCmdHistoryAck(name, ack, null);
+    }
+
+    private void checkNextCmdHistoryAck(String name, AckStatus ack, String message)
+            throws InterruptedException, TimeoutException {
+
+        CommandHistoryEntry cmdhist = captor.expectTimely();
+
+        // Filter out permitted attributes, that we are not testing for
+        var filteredArgs = cmdhist.getAttrList().stream()
+                .filter(attr -> !attr.getName().equals(name + "_Return"))
+                .collect(Collectors.toList());
+
+        assertEquals(message == null ? 2 : 3, filteredArgs.size());
+
+        CommandHistoryAttribute cha = filteredArgs.get(0);
+        assertEquals(name + "_Status", cha.getName());
+        assertEquals(ack.name(), cha.getValue().getStringValue());
+
+        cha = filteredArgs.get(1);
+        assertEquals(name + "_Time", cha.getName());
+
+        if (message != null) {
+            cha = filteredArgs.get(2);
+            assertEquals(name + "_Message", cha.getName());
+            assertEquals(message, cha.getValue().getStringValue());
+        }
+    }
+}
+```
+
+### `ContainerRequestManagerTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ContainerRequestManagerTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ContainerExtractionResult;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.container.ContainerConsumer;
+import org.yamcs.container.ContainerRequestManager;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.mdb.Mdb;
+
+public class ContainerRequestManagerTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+        EventProducerFactory.setMockup(false);
+    }
+
+    @Test
+    public void testSubscriptions() throws Exception {
+        RefMdbPacketGenerator packetGenerator = new RefMdbPacketGenerator();
+        Processor c = ProcessorFactory.create("refmdb", "ContainerRequestManagerTest", packetGenerator);
+        ContainerRequestManager rm = c.getContainerRequestManager();
+        Mdb xtceDb = c.getMdb();
+
+        RecordingPacketConsumer consumer1 = new RecordingPacketConsumer();
+        RecordingPacketConsumer consumer2 = new RecordingPacketConsumer();
+
+        rm.subscribeAll(consumer1);
+        rm.subscribeAll(consumer2);
+
+        packetGenerator.generate_PKT1_1();
+        packetGenerator.generate_PKT1_3();
+
+        assertEquals(6, consumer1.received.size());
+        Iterator<SequenceContainer> it = consumer1.received.iterator();
+        assertEquals("ccsds-default", it.next().getName());
+        assertEquals("PKT1", it.next().getName());
+        assertEquals("PKT1_1", it.next().getName());
+        assertEquals("ccsds-default", it.next().getName());
+        assertEquals("PKT1", it.next().getName());
+        assertEquals("PKT1_3", it.next().getName());
+
+        // Same for 2nd consumer
+        assertEquals(6, consumer2.received.size());
+        it = consumer2.received.iterator();
+        assertEquals("ccsds-default", it.next().getName());
+        assertEquals("PKT1", it.next().getName());
+        assertEquals("PKT1_1", it.next().getName());
+        assertEquals("ccsds-default", it.next().getName());
+        assertEquals("PKT1", it.next().getName());
+        assertEquals("PKT1_3", it.next().getName());
+
+        // Now try unsubscribing 2nd consumer
+        consumer1.reset();
+        consumer2.reset();
+        rm.unsubscribeAll(consumer2);
+
+        packetGenerator.generate_PKT1_1();
+        packetGenerator.generate_PKT1_3();
+
+        assertEquals(6, consumer1.received.size());
+        assertEquals(0, consumer2.received.size());
+
+        // Now subscribe 2nd consumer to PKT13 only
+
+        rm.subscribe(consumer2, xtceDb.getSequenceContainer("/REFMDB/SUBSYS1/PKT1_3"));
+
+        packetGenerator.generate_PKT1_1();
+        packetGenerator.generate_PKT1_3();
+
+        assertEquals(1, consumer2.received.size());
+        SequenceContainer cont = consumer2.received.iterator().next();
+        assertEquals("PKT1_3", cont.getName());
+
+        // Subscribe consumer2 to all again
+        consumer2.reset();
+        rm.subscribeAll(consumer2);
+
+        packetGenerator.generate_PKT1_1();
+        packetGenerator.generate_PKT1_3();
+
+        assertEquals(6, consumer2.received.size());
+    }
+
+    /**
+     * PacketConsumer that stores whatever it consumes for later retrieval
+     */
+    private static class RecordingPacketConsumer implements ContainerConsumer {
+        List<SequenceContainer> received = new ArrayList<>();
+
+        @Override
+        public void processContainer(String link, ContainerExtractionResult cer) {
+            received.add(cer.getContainer());
+        }
+
+        void reset() {
+            received.clear();
+        }
+    }
+}
+```
+
+### `EventTests.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/EventTests.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.EventSubscription;
+import org.yamcs.client.archive.ArchiveClient.ListOptions;
+import org.yamcs.protobuf.CreateEventRequest;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.common.collect.ImmutableList;
+
+public class EventTests extends AbstractIntegrationTest {
+
+    @Test
+    public void testFilter() throws Exception {
+        var msg1 = "Oops";
+        var msg2 = "Hello";
+        var msg3 = "Hello World";
+
+        var now = TimeEncoding.getWallclockTime();
+        var createRequest = CreateEventRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setTime(TimeEncoding.toProtobufTimestamp(now))
+                .setSource("FS")
+                .setType("FC")
+                .setMessage(msg1)
+                .setSeverity("critical")
+                .setSequenceNumber(1)
+                .build();
+        yamcsClient.createEvent(createRequest).get();
+
+        createRequest = CreateEventRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setTime(TimeEncoding.toProtobufTimestamp(now + 100))
+                .setSource("FS")
+                .setType("EPS")
+                .setMessage(msg2)
+                .setSeverity("info")
+                .setSequenceNumber(2)
+                .build();
+        yamcsClient.createEvent(createRequest).get();
+
+        createRequest = CreateEventRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setTime(TimeEncoding.toProtobufTimestamp(now + 200))
+                .setSource("FS")
+                .setType("EPS")
+                .setMessage(msg3)
+                .setSeverity("info")
+                .setSequenceNumber(3)
+                .build();
+        yamcsClient.createEvent(createRequest).get();
+
+        var archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+        var page = archiveClient.listEvents(ListOptions.ascending(true)).get();
+        var results = ImmutableList.copyOf(page.iterator());
+        assertEquals(3, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+        assertEquals(msg2, results.get(1).getMessage());
+        assertEquals(msg3, results.get(2).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("source=fs"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(3, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+        assertEquals(msg2, results.get(1).getMessage());
+        assertEquals(msg3, results.get(2).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("type=eps"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(2, results.size());
+        assertEquals(msg2, results.get(0).getMessage());
+        assertEquals(msg3, results.get(1).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("type!=eps"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(1, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("severity=critical"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(1, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("severity=info AND type=FC"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(0, results.size());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("severity=info OR type=FC"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(3, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+        assertEquals(msg2, results.get(1).getMessage());
+        assertEquals(msg3, results.get(2).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("seqNumber=3"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(1, results.size());
+        assertEquals(msg3, results.get(0).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("seqNumber<=2"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(2, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+        assertEquals(msg2, results.get(1).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("hello"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(2, results.size());
+        assertEquals(msg2, results.get(0).getMessage());
+        assertEquals(msg3, results.get(1).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("world hello"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(1, results.size());
+        assertEquals(msg3, results.get(0).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("\"world hello\""),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(0, results.size());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("\"hello world\""),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(1, results.size());
+        assertEquals(msg3, results.get(0).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("message =~ \"Hello$\""),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(1, results.size());
+        assertEquals(msg2, results.get(0).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("message !~ \"Hello$\""),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(2, results.size());
+        assertEquals(msg1, results.get(0).getMessage());
+        assertEquals(msg3, results.get(1).getMessage());
+
+        page = archiveClient.listEvents(
+                ListOptions.filter("type:s"),
+                ListOptions.ascending(true)).get();
+        results = ImmutableList.copyOf(page.iterator());
+        assertEquals(2, results.size());
+        assertEquals(msg2, results.get(0).getMessage());
+        assertEquals(msg3, results.get(1).getMessage());
+    }
+
+    @Test
+    public void testSubscription() throws Exception {
+        EventSubscription subscription = yamcsClient.createEventSubscription();
+        MessageCaptor<Event> captor = MessageCaptor.of(subscription);
+
+        SubscribeEventsRequest request = SubscribeEventsRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        long now = TimeEncoding.getWallclockTime();
+        CreateEventRequest createRequest = CreateEventRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setTime(TimeEncoding.toProtobufTimestamp(now))
+                .setMessage("event1")
+                .build();
+        yamcsClient.createEvent(createRequest).get();
+
+        Event receivedEvent = captor.expectTimely();
+        assertEquals(now, TimeEncoding.fromProtobufTimestamp(receivedEvent.getGenerationTime()));
+        assertEquals("event1", receivedEvent.getMessage());
+    }
+}
+```
+
+### `HttpServerTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/HttpServerTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.IF_MODIFIED_SINCE;
+import static io.netty.handler.codec.http.HttpMethod.GET;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.base.HttpClient;
+import org.yamcs.http.HttpServer;
+import org.yamcs.http.StaticFileHandler;
+
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.HttpHeaders;
+
+public class HttpServerTest extends AbstractIntegrationTest {
+
+    @Test
+    public void testStaticFile() throws Exception {
+        Path dir = Path.of(System.getProperty("java.io.tmpdir"), "yamcs-web");
+
+        var staticFileHandler = new StaticFileHandler("/static", dir);
+        YamcsServer.getServer().getGlobalService(HttpServer.class).addRoute("static", () -> staticFileHandler);
+
+        HttpClient httpClient = new HttpClient();
+        Files.createDirectories(dir);
+
+        File file1 = File.createTempFile("test1_", null, dir.toFile());
+        FileOutputStream file1Out = new FileOutputStream(file1);
+        Random rand = new Random();
+        byte[] b = new byte[1932];
+        for (int i = 0; i < 20; i++) {
+            rand.nextBytes(b);
+            file1Out.write(b);
+        }
+        file1Out.close();
+
+        File file2 = File.createTempFile("test2_", null, dir.toFile());
+        try (var file2Out = new FileOutputStream(file2)) {
+            httpClient.doBulkReceiveRequest("http://localhost:9190/static/" + file1.getName(), GET, null, data -> {
+                try {
+                    file2Out.write(data);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).get();
+        }
+        assertTrue(com.google.common.io.Files.equal(file1, file2));
+
+        // test if not modified since
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(StaticFileHandler.HTTP_DATE_FORMAT);
+
+        HttpHeaders httpHeaders = new DefaultHttpHeaders();
+        httpHeaders.add(IF_MODIFIED_SINCE, dateFormatter.format(file1.lastModified()));
+        ClientException e1 = null;
+        try {
+            httpClient.doAsyncRequest("http://localhost:9190/static/" + file1.getName(), GET, null,
+                    httpHeaders).get();
+        } catch (ExecutionException e) {
+            e1 = (ClientException) e.getCause();
+        }
+        assertNotNull(e1);
+        assertTrue(e1.toString().contains("304"));
+
+        httpHeaders = new DefaultHttpHeaders();
+        httpHeaders.add(IF_MODIFIED_SINCE, dateFormatter.format(file1.lastModified() - 1000));
+        byte[] b1 = httpClient.doAsyncRequest("http://localhost:9190/static/" + file1.getName(), GET, null,
+                httpHeaders).get();
+        assertEquals(file1.length(), b1.length);
+
+        file1.delete();
+        file2.delete();
+    }
+}
+```
+
+### `InstancesIntegrationTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/InstancesIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.InstanceFilter;
+import org.yamcs.protobuf.CreateInstanceRequest;
+import org.yamcs.protobuf.ListInstancesResponse;
+import org.yamcs.protobuf.YamcsInstance;
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+import org.yamcs.templating.ParseException;
+import org.yamcs.templating.Template;
+
+import com.google.common.io.CharStreams;
+
+public class InstancesIntegrationTest extends AbstractIntegrationTest {
+
+    @BeforeAll
+    public static void setup() throws IOException, ParseException {
+        try (Reader in = new InputStreamReader(InstancesIntegrationTest.class.getResourceAsStream(
+                "/IntegrationTest/instance-templates/templ1/template.yaml"))) {
+            String source = CharStreams.toString(in);
+            Template template = new Template("templ1", source);
+            YamcsServer.getServer().addInstanceTemplate(template);
+        }
+    }
+
+    @Test
+    public void testStopStart() throws Exception {
+        List<YamcsInstance> instances = yamcsClient.listInstances().get();
+        assertEquals(2, instances.size());
+        YamcsInstance yi = instances.get(0);
+        assertEquals(yamcsInstance, yi.getName());
+        assertEquals(InstanceState.RUNNING, yi.getState());
+
+        yamcsClient.stopInstance(yamcsInstance).get();
+
+        instances = yamcsClient.listInstances().get();
+        assertEquals(2, instances.size());
+        yi = instances.get(0);
+        assertEquals(yamcsInstance, yi.getName());
+        assertEquals(InstanceState.OFFLINE, yi.getState());
+
+        yamcsClient.startInstance(yamcsInstance).get();
+
+        instances = yamcsClient.listInstances().get();
+        assertEquals(2, instances.size());
+        yi = instances.get(0);
+        assertEquals(yamcsInstance, yi.getName());
+        assertEquals(InstanceState.RUNNING, yi.getState());
+    }
+
+    @Test
+    public void testCreateStop() throws Exception {
+        CreateInstanceRequest cir = CreateInstanceRequest.newBuilder()
+                .setName("inst-test1")
+                .setTemplate("templ1")
+                .putLabels("label1", "labelValue1")
+                .putLabels("label2", "labelValue2")
+                .build();
+
+        String tmpdir = System.getProperty("java.io.tmpdir");
+
+        YamcsInstance yi = yamcsClient.createInstance(cir).get();
+        assertTrue(new File(tmpdir, "yamcs-IntegrationTest-data/instance-def/yamcs.inst-test1.yaml").exists());
+        assertTrue(new File(tmpdir, "yamcs-IntegrationTest-data/instance-def/yamcs.inst-test1.metadata").exists());
+        assertEquals(InstanceState.RUNNING, yi.getState());
+
+        yi = yamcsClient.stopInstance("inst-test1").get();
+        assertEquals(InstanceState.OFFLINE, yi.getState());
+
+        assertFalse(new File(tmpdir, "yamcs-IntegrationTest-data/instance-def/yamcs.inst-test1.yaml").exists());
+        assertTrue(new File(tmpdir, "yamcs-IntegrationTest-data/instance-def/yamcs.inst-test1.yaml.offline").exists());
+
+        InstanceFilter filter = new InstanceFilter();
+        filter.addLabel("label1", "labelValue1");
+        ListInstancesResponse lir = yamcsClient.listInstances(filter).get();
+        assertEquals(1, lir.getInstancesCount());
+        yi = lir.getInstances(0);
+        assertEquals("inst-test1", yi.getName());
+        assertEquals(InstanceState.OFFLINE, yi.getState());
+
+        filter = new InstanceFilter();
+        filter.addLabel("label1", "labelValue1");
+        filter.addLabel("state", "running");
+        lir = yamcsClient.listInstances(filter).get();
+        assertEquals(0, lir.getInstancesCount());
+
+        filter = new InstanceFilter();
+        filter.excludeState(InstanceState.OFFLINE);
+        lir = yamcsClient.listInstances(filter).get();
+        assertEquals(2, lir.getInstancesCount());
+        yi = lir.getInstances(0);
+        assertEquals("instance1", yi.getName());
+    }
+}
+```
+
+### `LongWebsocketFrameTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/LongWebsocketFrameTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.protobuf.SubscribeParametersData;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.tests.AbstractIntegrationTest.MyConnectionListener;
+
+public class LongWebsocketFrameTest {
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        YConfiguration.setupTest("LongWebsocketFrameTest");
+        YamcsServer.getServer().prepareStart();
+        YamcsServer.getServer().start();
+    }
+
+    @AfterAll
+    public static void shutDownYamcs() throws Exception {
+        YamcsServer.getServer().shutDown();
+    }
+
+    @Test
+    public void testWithSmallFrame() {
+        assertThrows(TimeoutException.class, () -> {
+            runIt(65536);
+        });
+    }
+
+    @Test
+    public void testWithBigFrame() throws Exception {
+        try {
+            runIt(1024 * 1024);
+        } catch (TimeoutException e) {
+            fail();
+        }
+    }
+
+    private void runIt(int maxFrameSize) throws Exception {
+        MyConnectionListener connectionListener = new MyConnectionListener();
+        YamcsClient client = YamcsClient.newBuilder("localhost", 9191).build();
+        client.getWebSocketClient().setMaxFramePayloadLength(maxFrameSize);
+        client.getWebSocketClient().setAllowCompression(false);
+        client.addConnectionListener(connectionListener);
+
+        try {
+            client.connectWebSocket();
+            assertTrue(connectionListener.onConnect.tryAcquire(5, TimeUnit.SECONDS));
+
+            SubscribeParametersRequest.Builder requestb = SubscribeParametersRequest.newBuilder()
+                    .setAbortOnInvalid(false)
+                    .setInstance("LongWebsocketFrameTest")
+                    .setProcessor("realtime");
+            for (int i = 0; i < 10000; i++) {
+                requestb.addId(NamedObjectId.newBuilder().setName("/very/long/parameter/name" + i));
+            }
+
+            SubscribeParametersRequest request = requestb.build();
+            assertTrue(request.toByteArray().length > 65535);
+
+            ParameterSubscription subscription = client.createParameterSubscription();
+            MessageCaptor<SubscribeParametersData> captor = MessageCaptor.of(subscription);
+            subscription.sendMessage(request);
+
+            // If our frame is sufficiently large, we should get a first message
+            // (all parameters being invalid, is irrelevant to this)
+            // Else this will throw a TimeoutException
+            captor.expectTimely();
+        } finally {
+            client.close();
+        }
+    }
+}
+```
+
+### `MdbModificationPersistenceTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/MdbModificationPersistenceTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.Mdb.DataSourceType;
+
+import com.google.common.io.Files;
+
+public class MdbModificationPersistenceTest extends AbstractIntegrationTest {
+
+    private MissionDatabaseClient mdbClient;
+
+    @BeforeAll
+    @AfterAll
+    public static void copyEmptyXtce() throws IOException {
+        Files.copy(new File("mdb/writable_subsys_empty.xml"), new File("mdb/writable_subsys.xml"));
+    }
+
+    @BeforeEach
+    public void prepare() {
+        mdbClient = yamcsClient.createMissionDatabaseClient(yamcsInstance);
+    }
+
+    @Test
+    public void testCreate() throws Exception {
+        mdbClient.createParameter("/writable_subsys/new_param1", DataSourceType.GROUND)
+                .withParameterType("/REFMDB/uint32")
+                .create()
+                .get();
+
+        // this will reload the MDB from file
+        YConfiguration instanceConfig = YConfiguration.getConfiguration("yamcs." + yamcsInstance);
+        var mdb = MdbFactory.createInstance(instanceConfig.getConfigList("mdb"), true, true);
+        var p = mdb.getParameter("/writable_subsys/new_param1");
+        assertNotNull(p);
+    }
+}
+```
+
+### `ModifyMissionDatabaseTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ModifyMissionDatabaseTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.protobuf.Mdb.AlarmInfo;
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Mdb.AlarmRange;
+import org.yamcs.protobuf.Mdb.CalibratorInfo;
+import org.yamcs.protobuf.Mdb.ComparisonInfo;
+import org.yamcs.protobuf.Mdb.ComparisonInfo.OperatorType;
+import org.yamcs.protobuf.Mdb.ContextAlarmInfo;
+import org.yamcs.protobuf.Mdb.ContextCalibratorInfo;
+import org.yamcs.protobuf.Mdb.EnumerationAlarm;
+import org.yamcs.protobuf.Mdb.ParameterInfo;
+import org.yamcs.protobuf.Mdb.PolynomialCalibratorInfo;
+import org.yamcs.protobuf.Mdb.SplineCalibratorInfo;
+import org.yamcs.protobuf.Mdb.SplineCalibratorInfo.SplinePointInfo;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+public class ModifyMissionDatabaseTest extends AbstractIntegrationTest {
+
+    private ProcessorClient processorClient;
+
+    @BeforeEach
+    public void prepare() {
+        processorClient = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+    }
+
+    @Test
+    public void testModifyParameterCalibration() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/FloatPara1_1_2"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_1();
+        List<ParameterValue> values = captor.expectTimely();
+        assertEquals(packetGenerator.pFloatPara1_1_2 * 0.0001672918,
+                values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        CalibratorInfo calibrator = CalibratorInfo.newBuilder()
+                .setType(CalibratorInfo.Type.POLYNOMIAL)
+                .setPolynomialCalibrator(PolynomialCalibratorInfo.newBuilder()
+                        .addCoefficient(1)
+                        .addCoefficient(2))
+                .build();
+        processorClient.setDefaultCalibrator("/REFMDB/SUBSYS1/FloatPara1_1_2", calibrator).get();
+
+        packetGenerator.generate_PKT1_1();
+        values = captor.expectTimely();
+        assertEquals(1 + packetGenerator.pFloatPara1_1_2 * 2, values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        processorClient.revertCalibrators("/REFMDB/SUBSYS1/FloatPara1_1_2").get();
+
+        packetGenerator.generate_PKT1_1();
+        values = captor.expectTimely();
+        assertEquals(packetGenerator.pFloatPara1_1_2 * 0.0001672918, values.get(0).getEngValue().getFloatValue(), 1e-5);
+        captor.assertSilence();
+    }
+
+    @Test
+    public void testModifyParameterContextCalibration() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/FloatPara1_10_3"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_10(5, 0, 30);
+        List<ParameterValue> values = captor.expectTimely();
+        assertEquals(3, values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        processorClient.removeCalibrators("/REFMDB/SUBSYS1/FloatPara1_10_3").get();
+
+        packetGenerator.generate_PKT1_10(5, 0, 30);
+        values = captor.expectTimely();
+        assertEquals(30, values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        // Set a context calibrator based on IntegerPara1_10_1
+
+        ComparisonInfo cinfo = ComparisonInfo.newBuilder()
+                .setParameter(ParameterInfo.newBuilder().setQualifiedName("/REFMDB/SUBSYS1/IntegerPara1_10_1"))
+                .setOperator(OperatorType.EQUAL_TO)
+                .setValue("10")
+                .build();
+        SplineCalibratorInfo spi = SplineCalibratorInfo.newBuilder()
+                .addPoint(SplinePointInfo.newBuilder().setRaw(30).setCalibrated(6))
+                .addPoint(SplinePointInfo.newBuilder().setRaw(60).setCalibrated(12))
+                .build();
+
+        ContextCalibratorInfo cci = ContextCalibratorInfo.newBuilder()
+                .addComparison(cinfo)
+                .setCalibrator(CalibratorInfo.newBuilder()
+                        .setType(CalibratorInfo.Type.SPLINE)
+                        .setSplineCalibrator(spi))
+                .build();
+
+        processorClient.setCalibrators("/REFMDB/SUBSYS1/FloatPara1_10_3", null, Arrays.asList(cci)).get();
+
+        packetGenerator.generate_PKT1_10(10, 0, 40);
+        values = captor.expectTimely();
+        assertEquals(8, values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        // Remove all overrides
+        processorClient.revertCalibrators("/REFMDB/SUBSYS1/FloatPara1_10_3").get();
+
+        packetGenerator.generate_PKT1_10(0, 0, 30);
+        values = captor.expectTimely();
+        assertEquals(3, values.get(0).getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testModifyParameterAlarm() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/EnumerationPara1_10_2"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_10(0, 3, 0);
+        List<ParameterValue> values = captor.expectTimely();
+
+        assertEquals(MonitoringResult.WARNING, values.get(0).getMonitoringResult());
+
+        AlarmInfo alarm = AlarmInfo.newBuilder()
+                .addEnumerationAlarm(EnumerationAlarm.newBuilder()
+                        .setLevel(AlarmLevelType.CRITICAL)
+                        .setLabel("three_ok"))
+                .build();
+        processorClient.setDefaultAlarm("/REFMDB/SUBSYS1/EnumerationPara1_10_2", alarm).get();
+
+        packetGenerator.generate_PKT1_10(0, 3, 0);
+        values = captor.expectTimely();
+        assertEquals(MonitoringResult.CRITICAL, values.get(0).getMonitoringResult());
+
+        processorClient.revertAlarms("/REFMDB/SUBSYS1/EnumerationPara1_10_2").get();
+
+        packetGenerator.generate_PKT1_10(0, 3, 0);
+        values = captor.expectTimely();
+        assertEquals(MonitoringResult.WARNING, values.get(0).getMonitoringResult());
+    }
+
+    @Test
+    public void testModifyParameterContextAlarm() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_10_1"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_10(80, 3, 0);
+        List<ParameterValue> values = captor.expectTimely();
+        assertEquals(MonitoringResult.SEVERE, values.get(0).getMonitoringResult());
+
+        // add a context alarm for EnumerationPara1_10_2=3
+        ComparisonInfo cinfo = ComparisonInfo.newBuilder()
+                .setParameter(ParameterInfo.newBuilder()
+                        .setQualifiedName("/REFMDB/SUBSYS1/EnumerationPara1_10_2"))
+                .setOperator(OperatorType.EQUAL_TO)
+                .setValue("three_ok")
+                .build();
+        AlarmInfo ai = AlarmInfo.newBuilder().addStaticAlarmRange(AlarmRange.newBuilder()
+                .setLevel(AlarmLevelType.DISTRESS)
+                .setMaxExclusive(70))
+                .build();
+        ContextAlarmInfo cai = ContextAlarmInfo.newBuilder().addComparison(cinfo).setAlarm(ai).build();
+
+        processorClient.setAlarms("/REFMDB/SUBSYS1/IntegerPara1_10_1", null, Arrays.asList(cai)).get();
+
+        packetGenerator.generate_PKT1_10(80, 3, 0);
+        values = captor.expectTimely();
+        assertEquals(MonitoringResult.DISTRESS, values.get(0).getMonitoringResult());
+
+        // set the context using a string rather than comparison
+        ai = AlarmInfo.newBuilder().addStaticAlarmRange(
+                AlarmRange.newBuilder().setLevel(AlarmLevelType.SEVERE).setMaxExclusive(10).build()).build();
+        cai = ContextAlarmInfo.newBuilder().setContext("EnumerationPara1_10_2==five_yes").setAlarm(ai).build();
+
+        processorClient.setAlarms("/REFMDB/SUBSYS1/IntegerPara1_10_1", null, Arrays.asList(cai)).get();
+
+        packetGenerator.generate_PKT1_10(11, 5, 0);
+        values = captor.expectTimely();
+        assertEquals(MonitoringResult.SEVERE, values.get(0).getMonitoringResult());
+
+        // reset to the original MDB value
+        processorClient.revertAlarms("/REFMDB/SUBSYS1/IntegerPara1_10_1").get();
+
+        packetGenerator.generate_PKT1_10(80, 3, 0);
+        values = captor.expectTimely();
+        assertEquals(MonitoringResult.SEVERE, values.get(0).getMonitoringResult());
+    }
+
+    @Test
+    public void testModifyAlgorithm() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/AlgoFloatAdditionJs"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_1();
+        List<ParameterValue> values = captor.expectTimely();
+        assertEquals(2.16729187, values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        // change the algorithm
+        String text = "AlgoFloatAdditionJs.value = 10 + f0.value + f1.value";
+        processorClient.updateAlgorithm("/REFMDB/SUBSYS1/float_add", text).get();
+
+        packetGenerator.generate_PKT1_1();
+        values = captor.expectTimely();
+        assertEquals(12.16729187, values.get(0).getEngValue().getFloatValue(), 1e-5);
+
+        // reset back to MDB version
+        processorClient.revertAlgorithm("/REFMDB/SUBSYS1/float_add").get();
+
+        packetGenerator.generate_PKT1_1();
+        values = captor.expectTimely();
+        assertEquals(2.16729187, values.get(0).getEngValue().getFloatValue(), 1e-5);
+    }
+}
+```
+
+### `ParameterArchiveIntegrationTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ParameterArchiveIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.Page;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.ListOptions;
+import org.yamcs.client.archive.ArchiveClient.RangeOptions;
+import org.yamcs.parameter.ParameterRetrievalService;
+import org.yamcs.parameterarchive.ParameterArchive;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Pvalue.Ranges.Range;
+import org.yamcs.protobuf.Pvalue.TimeSeries.Sample;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.util.Timestamps;
+
+public class ParameterArchiveIntegrationTest extends AbstractIntegrationTest {
+
+    private ArchiveClient archiveClient;
+    ParameterRetrievalService prs;
+    ParameterArchive parameterArchive;
+
+    @BeforeEach
+    public void clearParameterCache() {
+        if (prs == null) {
+            var ysi = YamcsServer.getServer().getInstance(yamcsInstance);
+            List<ParameterRetrievalService> l = ysi.getServices(ParameterRetrievalService.class);
+            prs = l.get(0);
+        }
+        prs.getParameterCache().clear();
+        archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+        parameterArchive = YamcsServer.getServer().getService(yamcsInstance, ParameterArchive.class);
+        parameterArchive.resetCoverageEnd();
+    }
+
+    @Test
+    public void testRetrieval() throws Exception {
+        generatePkt13AndPps("2015-01-02T10:00:00", 2 * 3600);
+
+        Value engValue;
+        org.yamcs.protobuf.Pvalue.ParameterValue pv;
+        Sample s0;
+
+        // first two requests before the consolidation, should return data from cache
+        Instant start = Instant.parse("2015-01-02T10:00:00Z");
+        Instant stop = Instant.parse("2015-01-02T11:00:00Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(100, values.size());
+        pv = values.get(0);
+        engValue = pv.getEngValue();
+        assertEquals(0.167291805148, engValue.getFloatValue(), 1e-5);
+        assertEquals(2850, pv.getExpireMillis());
+
+        start = Instant.parse("2015-01-02T11:40:00Z");
+        stop = Instant.parse("2015-01-02T12:00:00Z");
+        List<Sample> samples = archiveClient.getSamples("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+
+        assertEquals(500, samples.size());
+        s0 = samples.get(0);
+        assertEquals(0.167291805148, s0.getMin(), 1e-5);
+        assertEquals(0.167291805148, s0.getMax(), 1e-5);
+        assertEquals(0.167291805148, s0.getAvg(), 1e-5);
+
+        buildParameterArchive("2015-01-02T10:00:00", "2016-01-02T11:00:00");
+
+        start = Instant.parse("2015-01-02T10:00:00Z");
+        stop = Instant.parse("2015-01-02T11:00:00Z");
+
+        samples = archiveClient.getSamples("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+        assertEquals(500, samples.size());
+        s0 = samples.get(0);
+        assertEquals(0.167291805148, s0.getMin(), 1e-5);
+        assertEquals(0.167291805148, s0.getMax(), 1e-5);
+        assertEquals(0.167291805148, s0.getAvg(), 1e-5);
+
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(100, values.size());
+        pv = values.get(0);
+        engValue = pv.getEngValue();
+        assertEquals(0.167291805148, engValue.getFloatValue(), 1e-5);
+        assertEquals(2850, pv.getExpireMillis());
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.limit(10)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(10, values.size());
+
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.noRepeat(true)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(1, values.size());
+        pv = values.get(0);
+
+        assertEquals("2015-01-02T11:00:00Z", Timestamps.toString(pv.getGenerationTime()));
+        assertEquals(0.167291805148, pv.getEngValue().getFloatValue(), 1e-5);
+        AcquisitionStatus acqs = values.get(0).getAcquisitionStatus();
+        assertEquals(AcquisitionStatus.ACQUIRED, acqs);
+
+        // add some realtime data
+        generatePkt13AndPps("2015-01-02T12:00:00", 10);
+
+        stop = Instant.parse("2015-01-03T11:59:00Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", null, stop,
+                ListOptions.limit(20)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(20, values.size());
+        long t = TimeEncoding.parse("2015-01-02T12:00:09.000");
+        for (ParameterValue value : values) {
+            assertEquals(t, TimeEncoding.fromProtobufTimestamp(value.getGenerationTime()));
+            t -= 1000;
+        }
+
+        start = Instant.parse("2015-01-02T12:00:00Z");
+        stop = Instant.parse("2015-01-03T11:59:00Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(9, values.size());
+        t = TimeEncoding.parse("2015-01-02T12:00:09.000");
+        for (ParameterValue value : values) {
+            assertEquals(t, TimeEncoding.fromProtobufTimestamp(value.getGenerationTime()));
+            t -= 1000;
+        }
+
+        // request excluding realtime cache
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.noRealtime(true), ListOptions.noReplay(true)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(0, values.size());
+
+        // ascending request combining archive with cache
+        start = Instant.parse("2015-01-02T10:00:00Z");
+        stop = Instant.parse("2015-01-03T11:59:00Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.ascending(true), ListOptions.limit(10000)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(7210, values.size());
+        t = TimeEncoding.parse("2015-01-02T10:00:00");
+        for (ParameterValue value : values) {
+            assertEquals(t, TimeEncoding.fromProtobufTimestamp(value.getGenerationTime()));
+            t += 1000;
+        }
+    }
+
+    @Test
+    public void testWithEnums() throws Exception {
+        generatePkt13AndPps("2020-12-08T10:00:00", 3600);
+        // org.yamcs.LoggingUtils.enableLogging(Level.ALL);
+        buildParameterArchive("2020-12-08T10:00:00", "2020-12-08T11:00:00");
+        Instant start = Instant.parse("2020-12-08T10:00:00Z");
+        Instant stop = Instant.parse("2020-12-08T10:00:19.59Z");
+        Page<ParameterValue> page = archiveClient
+                .listValues("/REFMDB/SUBSYS1/EnumerationPara1_1_4", start, stop, ListOptions.ascending(true)).get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(20, values.size());
+        ParameterValue pv = values.get(0);
+        Value engValue = pv.getEngValue();
+        assertEquals("zero_yep", engValue.getStringValue());
+
+        List<Range> ranges = archiveClient.getRanges("/REFMDB/SUBSYS1/EnumerationPara1_1_4", start, stop).get();
+        assertEquals(1, ranges.size());
+        Range r0 = ranges.get(0);
+        assertEquals(20, r0.getCounts(0));
+        assertEquals("zero_yep", r0.getEngValues(0).getStringValue());
+    }
+
+    @Test
+    public void testRanges() throws Exception {
+        generatePkt13AndPps("2018-01-01T10:00:00", 2 * 3600);
+
+        // first request before the consolidation, should return data from cache
+        Instant start = Instant.parse("2018-01-01T11:40:00.001Z");
+        Instant stop = Instant.parse("2018-01-02T12:00:00Z");
+
+        List<Range> ranges = archiveClient.getRanges("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+
+        assertEquals(1, ranges.size());
+        Range r0 = ranges.get(0);
+        assertEquals(1199, r0.getCount());
+        assertEquals(1199, r0.getCounts(0));
+        assertEquals(0.167291805148, r0.getEngValues(0).getFloatValue(), 1e-5);
+        assertEquals("2018-01-01T11:40:01.000Z",
+                TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(r0.getStart())));
+        assertEquals("2018-01-01T11:59:59.000Z",
+                TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(r0.getStop())));
+
+        buildParameterArchive("2018-01-01T10:00:00", "2018-01-02T11:00:00");
+
+        start = Instant.parse("2018-01-01T10:00:00Z");
+        stop = Instant.parse("2018-01-02T11:00:00Z");
+        ranges = archiveClient.getRanges("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+        assertEquals(1, ranges.size());
+        r0 = ranges.get(0);
+        assertEquals(7200, r0.getCounts(0));
+        assertEquals(0.167291805148, r0.getEngValues(0).getFloatValue(), 1e-5);
+
+        generatePkt13AndPps("2018-01-01T13:00:00", 3600);
+
+        ranges = archiveClient.getRanges("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop).get();
+
+        assertEquals(2, ranges.size());
+        r0 = ranges.get(0);
+        assertEquals(7200, r0.getCounts(0));
+
+        assertEquals("2018-01-01T10:00:00.000Z",
+                TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(r0.getStart())));
+        // last parameter time (does not currently include expiration time)
+        assertEquals("2018-01-01T11:59:59.000Z",
+                TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(r0.getStop())));
+
+        Range r1 = ranges.get(1);
+        assertEquals(3600, r1.getCounts(0));
+        assertEquals("2018-01-01T13:00:00.000Z",
+                TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(r1.getStart())));
+        assertEquals("2018-01-01T13:59:59.000Z",
+                TimeEncoding.toString(TimeEncoding.fromProtobufTimestamp(r1.getStop())));
+
+        start = Instant.parse("2018-01-01T10:00:00Z");
+        stop = Instant.parse("2018-01-02T11:00:00Z");
+        ranges = archiveClient.getRanges("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                RangeOptions.minimumGap(3601001)).get();
+
+        assertEquals(1, ranges.size());
+        r0 = ranges.get(0);
+        assertEquals(7200 + 3600, r0.getCounts(0));
+
+        ranges = archiveClient.getRanges("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                RangeOptions.minimumRange(4 * 3600000l)).get();
+        assertEquals(1, ranges.size());
+        r0 = ranges.get(0);
+        assertEquals(7200 + 3600, r0.getCounts(0));
+
+    }
+
+    String toString(Range range) {
+        return Timestamps.toString(range.getStart()) + " - " + Timestamps.toString(range.getStop()) + ": "
+                + range.getCount();
+    }
+
+    @Test
+    public void testWithAggregateMembers() throws Exception {
+        generatePkt7("2019-04-06T00:00:00", 2 * 3600);
+
+        // first two requests before the consolidation, should return data from cache
+        Instant start = Instant.parse("2019-04-06T01:59:00Z");
+        Instant stop = Instant.parse("2019-04-06T03:00:00Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/aggregate_para1.member2", start, stop)
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(59, values.size());
+        org.yamcs.protobuf.Pvalue.ParameterValue pv = values.get(0);
+        Value engValue = pv.getEngValue();
+        assertEquals(packetGenerator.paggr1_member2, engValue.getUint32Value());
+        assertFalse(pv.hasExpireMillis());
+
+        // build the parameter archive
+        buildParameterArchive("2019-04-06T00:00:00", "2019-04-06T03:00:00");
+
+        start = Instant.parse("2019-04-06T00:00:00Z");
+        stop = Instant.parse("2019-04-06T03:00:00Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/aggregate_para1.member2", start, stop).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(100, values.size());
+        pv = values.get(0);
+        engValue = pv.getEngValue();
+        assertEquals(packetGenerator.paggr1_member2, engValue.getUint32Value());
+
+        start = Instant.parse("2019-04-06T00:00:00Z");
+        stop = Instant.parse("2019-04-06T02:00:00Z");
+        List<Sample> samples = archiveClient.getSamples("/REFMDB/SUBSYS1/aggregate_para1.member3", start, stop).get();
+        assertEquals(500, samples.size());
+        Sample s0 = samples.get(0);
+        assertEquals(2.72, s0.getAvg(), 1e-5);
+    }
+
+    @Test
+    public void testWithArrayElements() throws Exception {
+        generatePkt8("2019-04-06T20:00:00", 2 * 3600);
+
+        // first two requests before the consolidation, should return data from cache
+        Instant start = Instant.parse("2019-04-06T21:59:00Z");
+        Instant stop = Instant.parse("2019-04-06T23:00:00Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/array_para1[5].member2", start, stop)
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(59, values.size());
+        org.yamcs.protobuf.Pvalue.ParameterValue pv = values.get(0);
+        Value engValue = pv.getEngValue();
+        assertEquals(10, engValue.getUint32Value());
+        assertFalse(pv.hasExpireMillis());
+
+        // build the parameter archive
+        buildParameterArchive("2019-04-06T20:00:00", "2019-04-06T23:00:00");
+
+        start = Instant.parse("2019-04-06T20:00:00Z");
+        stop = Instant.parse("2019-04-06T23:00:00Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/array_para1[1].member3",
+                start, stop, ListOptions.ascending(true)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(100, values.size());
+        pv = values.get(0);
+        assertEquals("2019-04-06T20:00:00Z", Timestamps.toString(pv.getGenerationTime()));
+
+        engValue = pv.getEngValue();
+        assertEquals(0.5, engValue.getFloatValue(), 1e-5);
+
+        start = Instant.parse("2019-04-06T20:00:00Z");
+        stop = Instant.parse("2019-04-06T22:00:00Z");
+        List<Sample> samples = archiveClient.getSamples("/REFMDB/SUBSYS1/array_para1[23].member1", start, stop).get();
+        assertEquals(500, samples.size());
+        Sample s0 = samples.get(0);
+        assertEquals(23, s0.getAvg(), 1e-5);
+    }
+
+    @Test
+    public void testWithFullArrayAggregates() throws Exception {
+        generatePkt8("2021-05-17T20:00:00", 2 * 3600);
+
+        // first two requests before the consolidation, should return data from cache
+        Instant start = Instant.parse("2021-05-17T21:59:00Z");
+        Instant stop = Instant.parse("2021-05-17T23:00:00Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/array_para1", start, stop)
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(59, values.size());
+        org.yamcs.protobuf.Pvalue.ParameterValue pv = values.get(0);
+        Value engValue = pv.getEngValue().getArrayValue(5).getAggregateValue().getValue(1);
+
+        assertEquals(10, engValue.getUint32Value());
+        assertFalse(pv.hasExpireMillis());
+
+        // build the parameter archive
+        buildParameterArchive("2021-05-17T20:00:00", "2021-05-17T23:00:00");
+
+        start = Instant.parse("2021-05-17T20:00:00Z");
+        stop = Instant.parse("2021-05-17T23:00:00Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/array_para1",
+                start, stop, ListOptions.ascending(true)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(100, values.size());
+        pv = values.get(0);
+
+        assertEquals("2021-05-17T20:00:00Z", Timestamps.toString(pv.getGenerationTime()));
+
+        engValue = pv.getEngValue().getArrayValue(1).getAggregateValue().getValue(2);
+        assertEquals(0.5, engValue.getFloatValue(), 1e-5);
+
+        stop = Instant.parse("2021-05-17T20:00:01Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/array_para1",
+                start, stop, ListOptions.ascending(true)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(1, values.size());
+
+    }
+
+    /**
+     * PKT3 contains n*block constructs that generate multiple values for one parameter at the same timestamp
+     */
+    @Test
+    public void testWithSameTimestamps() throws Exception {
+        generatePkt3("2024-07-05T04:00:00", 100);
+
+        Instant start = Instant.parse("2024-07-05T04:00:00Z");
+        Instant stop = Instant.parse("2024-07-05T04:00:30Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/IntegerPara1_2", start, stop)
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(60, values.size());
+        org.yamcs.protobuf.Pvalue.ParameterValue pv0 = values.get(0);
+        org.yamcs.protobuf.Pvalue.ParameterValue pv1 = values.get(1);
+
+        assertEquals("2024-07-05T04:00:30Z", Timestamps.toString(pv0.getGenerationTime()));
+        assertEquals("2024-07-05T04:00:30Z", Timestamps.toString(pv1.getGenerationTime()));
+
+        assertEquals(4, pv0.getEngValue().getUint32Value());
+        assertEquals(3, pv1.getEngValue().getUint32Value());
+
+        // build the parameter archive
+        buildParameterArchive("2024-07-05T04:00:00", "2024-07-05T06:00:00");
+
+        start = Instant.parse("2024-07-05T04:00:02Z");
+        stop = Instant.parse("2024-07-05T04:00:10Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/IntegerPara1_2",
+                start, stop, ListOptions.ascending(true)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(16, values.size());
+        pv0 = values.get(0);
+        pv1 = values.get(1);
+
+        assertEquals("2024-07-05T04:00:02Z", Timestamps.toString(pv0.getGenerationTime()));
+        assertEquals("2024-07-05T04:00:02Z", Timestamps.toString(pv1.getGenerationTime()));
+
+        assertEquals(3, pv0.getEngValue().getUint32Value());
+        assertEquals(4, pv1.getEngValue().getUint32Value());
+
+        start = Instant.parse("2024-07-05T04:00:02Z");
+        stop = Instant.parse("2024-07-05T04:00:10Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/IntegerPara1_2",
+                start, stop, ListOptions.ascending(false)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(16, values.size());
+        pv0 = values.get(0);
+        pv1 = values.get(1);
+
+        assertEquals("2024-07-05T04:00:10Z", Timestamps.toString(pv0.getGenerationTime()));
+        assertEquals("2024-07-05T04:00:10Z", Timestamps.toString(pv1.getGenerationTime()));
+
+        assertEquals(4, pv0.getEngValue().getUint32Value());
+        assertEquals(3, pv1.getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testAggregatesWithSameTimestamps() throws Exception {
+        generatePkt3("2024-07-05T14:00:00", 100);
+
+        Instant start = Instant.parse("2024-07-05T14:00:00Z");
+        Instant stop = Instant.parse("2024-07-05T14:00:30Z");
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/aggregate_para2", start, stop)
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(60, values.size());
+        org.yamcs.protobuf.Pvalue.ParameterValue pv0 = values.get(0);
+        org.yamcs.protobuf.Pvalue.ParameterValue pv1 = values.get(1);
+
+        assertEquals("2024-07-05T14:00:30Z", Timestamps.toString(pv0.getGenerationTime()));
+        assertEquals("2024-07-05T14:00:30Z", Timestamps.toString(pv1.getGenerationTime()));
+
+        assertEquals(16, pv0.getEngValue().getAggregateValue().getValue(0).getUint32Value());
+        assertEquals(16.5, pv0.getEngValue().getAggregateValue().getValue(1).getFloatValue());
+
+        assertEquals(15, pv1.getEngValue().getAggregateValue().getValue(0).getUint32Value());
+        assertEquals(15.5, pv1.getEngValue().getAggregateValue().getValue(1).getFloatValue());
+
+        // build the parameter archive
+        buildParameterArchive("2024-07-05T14:00:00", "2024-07-05T16:00:00");
+
+        start = Instant.parse("2024-07-05T14:00:02Z");
+        stop = Instant.parse("2024-07-05T14:00:10Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/aggregate_para2",
+                start, stop, ListOptions.ascending(true)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(16, values.size());
+        pv0 = values.get(0);
+        pv1 = values.get(1);
+
+        assertEquals("2024-07-05T14:00:02Z", Timestamps.toString(pv0.getGenerationTime()));
+        assertEquals("2024-07-05T14:00:02Z", Timestamps.toString(pv1.getGenerationTime()));
+
+        assertEquals(15, pv0.getEngValue().getAggregateValue().getValue(0).getUint32Value());
+        assertEquals(15.5, pv0.getEngValue().getAggregateValue().getValue(1).getFloatValue());
+
+        assertEquals(16, pv1.getEngValue().getAggregateValue().getValue(0).getUint32Value());
+        assertEquals(16.5, pv1.getEngValue().getAggregateValue().getValue(1).getFloatValue());
+
+        start = Instant.parse("2024-07-05T14:00:02Z");
+        stop = Instant.parse("2024-07-05T14:00:10Z");
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/aggregate_para2",
+                start, stop, ListOptions.ascending(false)).get();
+
+        values.clear();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(16, values.size());
+        pv0 = values.get(0);
+        pv1 = values.get(1);
+
+        assertEquals("2024-07-05T14:00:10Z", Timestamps.toString(pv0.getGenerationTime()));
+        assertEquals("2024-07-05T14:00:10Z", Timestamps.toString(pv1.getGenerationTime()));
+
+        assertEquals(16, pv0.getEngValue().getAggregateValue().getValue(0).getUint32Value());
+        assertEquals(16.5, pv0.getEngValue().getAggregateValue().getValue(1).getFloatValue());
+
+        assertEquals(15, pv1.getEngValue().getAggregateValue().getValue(0).getUint32Value());
+        assertEquals(15.5, pv1.getEngValue().getAggregateValue().getValue(1).getFloatValue());
+    }
+
+    @Test
+    public void testPurge() throws Exception {
+        generatePkt13AndPps("2025-03-02T07:29:00", 300);
+
+        // check no data from cache
+        Instant start = Instant.parse("2025-03-02T07:29:00Z");
+        Instant stop = Instant.parse("2025-03-02T07:30:40Z");
+
+        var values = listValues(start, stop, true, true);
+        assertEquals(0, values.size());
+
+        buildParameterArchive("2025-03-02T07:29:00Z", "2025-03-02T08:00:00Z");
+        // org.yamcs.tests.LoggingUtils.enableTracing();
+        var values1 = listValues(start, stop, true, true);
+        assertEquals(100, values1.size());
+
+        parameterArchive.purge();
+
+        var values2 = listValues(start, stop, true, true);
+        assertEquals(0, values2.size());
+
+        buildParameterArchive("2025-03-02T08:29:00", "2025-03-02T09:00:00");
+
+        var values3 = listValues(start, stop, true, true);
+        assertEquals(100, values3.size());
+
+    }
+
+    List<ParameterValue> listValues(Instant start, Instant stop, boolean noReplay, boolean noRealtime)
+            throws Exception {
+        Page<ParameterValue> page = archiveClient
+                .listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                        ListOptions.noRealtime(noRealtime), ListOptions.noReplay(noReplay))
+                .get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        return values;
+    }
+
+    private void buildParameterArchive(String start, String stop) throws InterruptedException, ExecutionException {
+        Future<?> f = parameterArchive.reprocess(TimeEncoding.parse(start), TimeEncoding.parse(stop));
+        f.get();
+    }
+}
+```
+
+### `ParameterPersistenceTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ParameterPersistenceTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.utils.ValueHelper;
+
+public class ParameterPersistenceTest extends AbstractIntegrationTest {
+
+    @Test
+    public void testSetParameter_Aggregate() throws Exception {
+        var processorClient = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+
+        Value v0 = ValueHelper.newAggregateValue("member1", ValueHelper.newUnsignedValue(10),
+                "member2", ValueHelper.newUnsignedValue(1300),
+                "member3", ValueHelper.newValue(3.14f));
+
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalAggregate1", v0).get();
+
+        ParameterValue p6_initialValue = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue6").get();
+
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue6", v0).get();
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue9", v0).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        yamcs.shutDown();
+
+        setupYamcs("IntegrationTest", false);
+
+        before();
+        processorClient = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+
+        ParameterValue p6v_afterRestart = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue6").get();
+        assertEquals(p6_initialValue.getEngValue(), p6v_afterRestart.getEngValue());
+
+        ParameterValue p9v_afterRestart = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue9").get();
+        assertEquals(v0, p9v_afterRestart.getEngValue());
+
+    }
+
+    public static void configureLogging(Level level) {
+        Logger logger = Logger.getLogger("org.yamcs");
+        logger.setLevel(level);
+        ConsoleHandler ch = null;
+
+        for (Handler h : Logger.getLogger("").getHandlers()) {
+            if (h instanceof ConsoleHandler) {
+                ch = (ConsoleHandler) h;
+                break;
+            }
+        }
+        if (ch == null) {
+            ch = new ConsoleHandler();
+            Logger.getLogger("").addHandler(ch);
+        }
+        ch.setLevel(level);
+    }
+
+    /**
+     * use to enable logging during junit tests debugging.
+     */
+    public static void enableTracing() {
+        configureLogging(Level.ALL);
+    }
+}
+```
+
+### `ParameterTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ParameterTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.processor.ProcessorClient.GetOptions;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.Yamcs;
+import org.yamcs.protobuf.Yamcs.AggregateValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueHelper;
+
+public class ParameterTest extends AbstractIntegrationTest {
+
+    private ProcessorClient processorClient;
+
+    @BeforeEach
+    public void prepare() {
+        processorClient = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+    }
+
+    @Test
+    @Disabled
+    public void testParameterSubscriptionPerformance() throws Exception {
+        long t0 = System.currentTimeMillis();
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .build();
+        yamcsClient.createParameterSubscription().sendMessage(request);
+
+        for (int i = 0; i < 1000000; i++) {
+            packetGenerator.generate_PKT1_1();
+        }
+        System.out.println("total time: " + (System.currentTimeMillis() - t0));
+    }
+
+    @Test
+    public void testSimpleSubscription() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        assertTrue(captor.isEmpty());
+        packetGenerator.generate_PKT1_1();
+
+        List<ParameterValue> values = captor.expectTimely();
+        checkPvals(2, values, packetGenerator);
+
+        captor.assertSilence();
+    }
+
+    @Test
+    public void testWithAnInvalidIdentifier() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        /*
+         * Subscribe to three parameters, one of which is invalid
+         */
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/InvalidParaName"))
+                .setSendFromCache(false)
+                .setAbortOnInvalid(false)
+                .build();
+        subscription.sendMessage(request);
+
+        assertEquals("/REFMDB/SUBSYS1/InvalidParaName", captor.expectTimelyInvalidIdentifier().getName());
+
+        /*
+         * Emit a packet, and expect to receive one update.
+         */
+        packetGenerator.generate_PKT1_1();
+        List<ParameterValue> values = captor.expectTimely();
+        checkPvals(values, packetGenerator);
+        captor.assertSilence();
+
+        /*
+         * Unsubscribe from both of the valid parameters.
+         */
+        subscription.remove(Arrays.asList(
+                NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7").build(),
+                NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6").build()));
+        captor.assertSilence();
+
+        /*
+         * Subscribe again, and expect to receive cached values
+         */
+        captor.clear();
+        subscription.add(Arrays.asList(
+                NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7").build(),
+                NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6").build()));
+
+        values = captor.expectTimely();
+        checkPvals(values, packetGenerator);
+    }
+
+    @Test
+    public void testAggregatesAndArrays() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        // The array has only 150 elements (0-149), the [150] is subscribed but never received
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/aggregate_para1.member2"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/array_para1[3].member3"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/array_para1[150].member3"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+
+        // Give the subscription some time to establish before emitting a packet
+        Thread.sleep(2000);
+
+        packetGenerator.generate_PKT7();
+        List<ParameterValue> values = captor.expectTimely();
+        ParameterValue value = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/aggregate_para1.member2", value.getId().getName());
+        assertEquals(30, value.getEngValue().getUint32Value());
+
+        packetGenerator.generate_PKT8();
+        values = captor.expectTimely();
+
+        value = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/array_para1[3].member3", value.getId().getName());
+        assertEquals(1.5, value.getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testInvalidAggregateMember() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/aggregate_para1.invalid_member"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        captor.expectTimelyInvalidIdentifier();
+    }
+
+    @Test
+    public void testParameterExpiration() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .setSendFromCache(false)
+                .setUpdateOnExpiration(true)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_1();
+        List<ParameterValue> values = captor.expectTimely();
+        checkPvals(values, packetGenerator);
+
+        // After 1500*1.9 millisec we should get a set of expired parameters
+        values = captor.poll(4500);
+        assertNotNull(values);
+        assertEquals(2, values.size());
+        for (ParameterValue pv : values) {
+            assertEquals(AcquisitionStatus.EXPIRED, pv.getAcquisitionStatus());
+        }
+    }
+
+    @Test
+    public void testSubscriptionModification() throws Exception {
+        ParameterSubscription subscription = yamcsClient.createParameterSubscription();
+        ParameterCaptor captor = ParameterCaptor.of(subscription);
+
+        SubscribeParametersRequest request = SubscribeParametersRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .setProcessor("realtime")
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6"))
+                .addId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_7"))
+                .addId(NamedObjectId.newBuilder().setNamespace("MDB:AliasParam").setName("para6alias"))
+                .setSendFromCache(false)
+                .build();
+        subscription.sendMessage(request);
+        subscription.awaitConfirmation();
+
+        packetGenerator.generate_PKT1_1();
+        List<ParameterValue> values = captor.expectTimely();
+        checkPvals(3, values, packetGenerator);
+
+        subscription.remove(Arrays.asList(
+                NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/IntegerPara1_1_6").build()));
+        Thread.sleep(2000);
+
+        packetGenerator.generate_PKT1_1();
+        values = captor.expectTimely();
+        checkPvals(2, values, packetGenerator);
+    }
+
+    @Test
+    public void testBatchGet() throws Exception {
+        /*
+         *  Include one invalid parameter
+         */
+        try {
+            processorClient.getValues(Arrays.asList(
+                    "/REFMDB/SUBSYS1/IntegerPara1_1_7",
+                    "/REFMDB/SUBSYS1/IntegerPara1_1_6",
+                    "/REFMDB/SUBSYS1/InvalidParaName"),
+                    GetOptions.fromCache(true))
+                    .get();
+            fail("should have thrown an exception");
+        } catch (ExecutionException e) {
+            String err = e.getMessage();
+            assertTrue(err.contains("Invalid parameters"));
+            assertTrue(err.contains("/REFMDB/SUBSYS1/InvalidParaName"));
+        }
+
+        packetGenerator.generate_PKT1_1();
+        Thread.sleep(1000);
+
+        /*
+         * From cache, with all valid identifiers
+         */
+        List<ParameterValue> values = processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/IntegerPara1_1_6",
+                "/REFMDB/SUBSYS1/IntegerPara1_1_7"),
+                GetOptions.fromCache(true))
+                .get();
+        checkPvals(values, packetGenerator);
+
+        /*
+         * Waiting for an update. first test the timeout in case no update is coming
+         */
+        long t0 = System.currentTimeMillis();
+        values = processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/IntegerPara1_1_6",
+                "/REFMDB/SUBSYS1/IntegerPara1_1_7"),
+                GetOptions.fromCache(false),
+                GetOptions.timeout(2000))
+                .get();
+
+        long t1 = System.currentTimeMillis();
+        assertEquals(2000, t1 - t0, 200);
+        assertEquals(0, values.size());
+
+        packetGenerator.pIntegerPara1_1_6 = 10;
+        packetGenerator.pIntegerPara1_1_7 = 5;
+
+        /*
+         * Test the timeout functionality
+         */
+        CompletableFuture<List<ParameterValue>> bulkPvalsFuture = processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/IntegerPara1_1_6",
+                "/REFMDB/SUBSYS1/IntegerPara1_1_7"),
+                GetOptions.fromCache(false),
+                GetOptions.timeout(2000));
+        Thread.sleep(1000); // wait to make sure that the subscription request has reached the server
+
+        packetGenerator.generate_PKT1_1();
+        values = bulkPvalsFuture.get();
+        checkPvals(values, packetGenerator);
+    }
+
+    @Test
+    public void testBatchGetAggregateMembers() throws Exception {
+        packetGenerator.generate_PKT7();
+        packetGenerator.generate_PKT8();
+
+        List<ParameterValue> values = processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/aggregate_para1.member1",
+                "/REFMDB/SUBSYS1/aggregate_para1.member3",
+                "/REFMDB/SUBSYS1/array_para1[105].member2"),
+                GetOptions.fromCache(true))
+                .get();
+
+        assertEquals(3, values.size());
+        ParameterValue pv = values.get(0);
+        assertEquals("/REFMDB/SUBSYS1/aggregate_para1.member1", pv.getId().getName());
+        assertEquals(2, pv.getEngValue().getUint32Value());
+
+        pv = values.get(2);
+        assertEquals("/REFMDB/SUBSYS1/array_para1[105].member2", pv.getId().getName());
+        assertEquals(210, pv.getRawValue().getUint32Value());
+
+        // Retrieve with a timeout
+        CompletableFuture<List<ParameterValue>> valuesFuture = processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/aggregate_para1.member1",
+                "/REFMDB/SUBSYS1/aggregate_para1.member3",
+                "/REFMDB/SUBSYS1/array_para1[105].member2"),
+                GetOptions.fromCache(false),
+                GetOptions.timeout(2000));
+
+        Thread.sleep(1000); // wait to make sure that the subscription request has reached the server
+
+        packetGenerator.generate_PKT7();
+        packetGenerator.generate_PKT8();
+
+        values = valuesFuture.get();
+        assertEquals(3, values.size());
+        pv = values.get(1);
+        assertEquals("/REFMDB/SUBSYS1/aggregate_para1.member3", pv.getId().getName());
+        assertEquals(2.72, pv.getEngValue().getFloatValue(), 1e-5);
+
+        // Get the value with the single get
+        pv = processorClient.getValue("/REFMDB/SUBSYS1/array_para1[149].member2").get();
+        assertEquals("/REFMDB/SUBSYS1", pv.getId().getNamespace());
+        assertEquals("array_para1[149].member2", pv.getId().getName());
+        assertEquals(298, pv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testBatchGetArraysAndAggregates() throws Exception {
+        packetGenerator.generate_PKT8();
+
+        List<ParameterValue> values = processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/array_para1"),
+                GetOptions.fromCache(true))
+                .get();
+
+        assertEquals(1, values.size());
+        ParameterValue pv = values.get(0);
+        Value v = pv.getEngValue();
+        assertEquals(Value.Type.ARRAY, v.getType());
+
+        Value v1 = v.getArrayValue(10);
+        assertEquals(Value.Type.AGGREGATE, v1.getType());
+        AggregateValue av = v1.getAggregateValue();
+        assertEquals("member1", av.getName(0));
+        assertEquals(5.0, av.getValue(2).getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testSetInvalidParameterValue() {
+        assertThrows(ClientException.class, () -> {
+            try {
+                processorClient.setValue("/REFMDB/SUBSYS1/IntegerPara1_1_6", ValueHelper.newValue(3.14)).get();
+            } catch (ExecutionException e) {
+                throw (ClientException) e.getCause();
+            }
+        });
+    }
+
+    @Test
+    public void testSetParameterWithInvalidType() {
+        assertThrows(ClientException.class, () -> {
+            try {
+                processorClient.setValue("/REFMDB/SUBSYS1/LocalPara1", ValueHelper.newValue("blablab")).get();
+            } catch (ExecutionException e) {
+                throw (ClientException) e.getCause();
+            }
+        });
+    }
+
+    @Test
+    public void testSetParameter() throws Exception {
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalPara1", ValueHelper.newValue(5)).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue value = processorClient.getValue("/REFMDB/SUBSYS1/LocalPara1").get();
+        assertEquals(ValueHelper.newUnsignedValue(5), value.getEngValue());
+    }
+
+    @Test
+    public void testSetParameter2() throws Exception {
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalPara2", ValueHelper.newValue(3.14)).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue value = processorClient.getValue("/REFMDB/SUBSYS1/LocalPara2").get();
+        assertEquals(ValueHelper.newValue(3.14f), value.getEngValue());
+    }
+
+    @Test
+    public void testSetParameter9() throws Exception {
+        String ts = "2021-03-11T00:00:00.000Z";
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalParaTime9", ValueHelper.newValue(ts)).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue value = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaTime9").get();
+        Value tv = value.getEngValue();
+        assertEquals(Yamcs.Value.Type.TIMESTAMP, tv.getType());
+        assertEquals(ts, tv.getStringValue());
+        assertEquals(TimeEncoding.parse(ts), tv.getTimestampValue());
+    }
+
+    @Test
+    public void testSetParameter10() throws Exception {
+        String ts = "2021-03-11T00:00:00.000Z";
+        Value vsent = Value.newBuilder().setType(Type.TIMESTAMP).setStringValue(ts).build();
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalParaTime9", vsent).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue value = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaTime9").get();
+        Value tv = value.getEngValue();
+        assertEquals(Yamcs.Value.Type.TIMESTAMP, tv.getType());
+        assertEquals(ts, tv.getStringValue());
+        assertEquals(TimeEncoding.parse(ts), tv.getTimestampValue());
+    }
+
+    @Test
+    public void testSetAggregateParameter_Invalid() throws Exception {
+        Value v0 = ValueHelper.newAggregateValue("member1", ValueHelper.newValue(10),
+                "member2", ValueHelper.newValue(1300));
+        try {
+            processorClient.setValue("/REFMDB/SUBSYS1/LocalArray1",
+                    ValueHelper.newArrayValue(v0)).get();
+        } catch (ExecutionException e) {
+            ClientException e1 = (ClientException) e.getCause();
+            assertTrue(e1.getMessage().contains("no value for member member3"));
+            return;
+        }
+
+        fail("should have thrown an exception");
+    }
+
+    @Test
+    public void testSetArrayParameter() throws Exception {
+        Value v0 = ValueHelper.newAggregateValue("member1", ValueHelper.newUnsignedValue(10),
+                "member2", ValueHelper.newUnsignedValue(1300),
+                "member3", ValueHelper.newValue(3.14f));
+        v0 = ValueHelper.newArrayValue(v0, v0);
+
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalArray1", v0).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue pv = processorClient.getValue("/REFMDB/SUBSYS1/LocalArray1").get();
+        assertEquals(v0, pv.getEngValue());
+    }
+
+    @Test
+    public void testSetParameter_Aggregate() throws Exception {
+        Value v0 = ValueHelper.newAggregateValue("member1", ValueHelper.newUnsignedValue(10),
+                "member2", ValueHelper.newUnsignedValue(1300),
+                "member3", ValueHelper.newValue(3.14f));
+
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalAggregate1", v0).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue pv = processorClient.getValue("/REFMDB/SUBSYS1/LocalAggregate1").get();
+        assertEquals(v0, pv.getEngValue());
+    }
+
+    @Test
+    public void testSetParameter_AggregateElement() throws Exception {
+        Value v0 = ValueHelper.newValue(55);
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue6.member1", v0).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue pv = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue6.member1").get();
+        assertEquals(v0, pv.getEngValue());
+    }
+
+    @Test
+    public void testSetParameter_ArrayElement() throws Exception {
+        Value v0 = ValueHelper.newValue((float) 55.2);
+        processorClient.setValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue8[2]", v0).get();
+
+        // parameter is set in another thread so it might not be immediately available
+        Thread.sleep(1000);
+
+        ParameterValue pv = processorClient.getValue("/REFMDB/SUBSYS1/LocalParaWithInitialValue8[2]").get();
+        assertEquals(v0, pv.getEngValue());
+    }
+
+    private void checkPvals(List<ParameterValue> pvals, RefMdbPacketGenerator packetProvider) {
+        checkPvals(2, pvals, packetProvider);
+    }
+
+    private void checkPvals(int expectedNumParams, List<ParameterValue> pvals, RefMdbPacketGenerator packetProvider) {
+        assertNotNull(pvals);
+        assertEquals(expectedNumParams, pvals.size());
+
+        for (ParameterValue p : pvals) {
+            // Due to unit tests waiting for certain events, it's quite plausible to
+            // receive expired parameter values.
+            assertTrue(AcquisitionStatus.ACQUIRED == p.getAcquisitionStatus()
+                    || AcquisitionStatus.EXPIRED == p.getAcquisitionStatus());
+            Value praw = p.getRawValue();
+            assertNotNull(praw);
+            Value peng = p.getEngValue();
+            NamedObjectId id = p.getId();
+            if ("/REFMDB/SUBSYS1/IntegerPara1_1_6".equals(id.getName())
+                    || "para6alias".equals(p.getId().getName())) {
+                assertEquals(Type.UINT32, praw.getType());
+                assertEquals(packetProvider.pIntegerPara1_1_6, praw.getUint32Value());
+
+                assertEquals(Type.UINT32, peng.getType());
+                assertEquals(packetProvider.pIntegerPara1_1_6, peng.getUint32Value());
+
+            } else if ("/REFMDB/SUBSYS1/IntegerPara1_1_7".equals(id.getName())) {
+                assertEquals(Type.UINT32, praw.getType());
+                assertEquals(packetProvider.pIntegerPara1_1_7, praw.getUint32Value());
+
+                assertEquals(Type.UINT32, peng.getType());
+                assertEquals(packetProvider.pIntegerPara1_1_7, peng.getUint32Value());
+            } else {
+                fail("Unknown parameter '" + id + "'");
+            }
+        }
+    }
+}
+```
+
+### `PermissionsTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/PermissionsTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ClientException.ExceptionData;
+import org.yamcs.client.Page;
+import org.yamcs.client.UnauthorizedException;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.archive.ArchiveClient.ListOptions;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.processor.ProcessorClient.GetOptions;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.ValueHelper;
+
+import com.google.protobuf.util.Timestamps;
+
+public class PermissionsTest extends AbstractIntegrationTest {
+
+    private ProcessorClient processorClient;
+    private ArchiveClient archiveClient;
+
+    @BeforeAll
+    public static void silenceWarnings() {
+        // to avoid getting warnings in the test console for invalid permissions
+        Logger.getLogger("org.yamcs").setLevel(Level.SEVERE);
+    }
+
+    @BeforeEach
+    public void prepare() {
+        processorClient = yamcsClient.createProcessorClient(yamcsInstance, "realtime");
+        archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+    }
+
+    @Test
+    public void testAuthenticationWebServices() {
+        assertThrows(UnauthorizedException.class, () -> {
+            yamcsClient.login("baduser", "wrongpassword".toCharArray());
+        });
+    }
+
+    @Test
+    public void testPermissionArchive() throws Exception {
+        // testuser is allowed to replay integer parameters but no string parameters
+        yamcsClient.login("testuser", "password".toCharArray());
+
+        // Check that integer parameter replay is ok
+        generatePkt13AndPps("2015-03-02T10:00:00Z", 3600);
+
+        Instant start = Instant.parse("2015-03-02T10:10:00Z");
+        Instant stop = Instant.parse("2015-03-02T10:10:02Z");
+        Page<ParameterValue> page = archiveClient.listValues(
+                "/REFMDB/SUBSYS1/IntegerPara1_1_6", start, stop,
+                ListOptions.ascending(true)).get();
+
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(2, values.size());
+        ParameterValue pv0 = values.get(0);
+        assertEquals(Timestamps.parse("2015-03-02T10:10:00.000Z"), pv0.getGenerationTime());
+
+        // Check that string parameter replay is denied
+        try {
+            page = archiveClient.listValues(
+                    "/REFMDB/SUBSYS1/FixedStringPara1_3_1", start, stop).get();
+            fail("Should generate an exception");
+        } catch (ExecutionException e) {
+            ClientException clientException = (ClientException) e.getCause();
+            assertTrue(clientException.getMessage().contains("No ReadParameter authorization"));
+        }
+    }
+
+    @Test
+    public void testPermissionGetParameter() throws Exception {
+        yamcsClient.login("testuser", "password".toCharArray());
+
+        // Allowed to get Integer parameter from cache
+        processorClient.getValues(Arrays.asList(
+                "/REFMDB/SUBSYS1/IntegerPara1_1_6",
+                "/REFMDB/SUBSYS1/IntegerPara1_1_7"),
+                GetOptions.fromCache(true))
+                .get();
+
+        // Denied to get Float parameter from cache
+        try {
+            processorClient.getValues(Arrays.asList(
+                    "/REFMDB/SUBSYS1/FloatPara1_1_3",
+                    "/REFMDB/SUBSYS1/FloatPara1_1_2"),
+                    GetOptions.fromCache(true))
+                    .get();
+            fail("should have thrown an exception");
+        } catch (ExecutionException e) {
+            ExceptionData excData = ((ClientException) e.getCause()).getDetail();
+            assertEquals("ForbiddenException", excData.getType());
+        }
+    }
+
+    @Test
+    public void testPermissionSetParameter() throws Exception {
+        yamcsClient.login("operator", "password".toCharArray());
+        try {
+            processorClient.setValue("/REFMDB/SUBSYS1/LocalPara1", ValueHelper.newValue(5)).get();
+            fail("should have thrown an exception");
+        } catch (ExecutionException e) {
+            ClientException e1 = (ClientException) e.getCause();
+            ExceptionData excData = e1.getDetail();
+            assertEquals("ForbiddenException", excData.getType());
+        }
+    }
+
+    @Test
+    public void testPermissionUpdateCommandHistory() throws Exception {
+        // testUser does not have the permission to update the command history
+        // operator has the permission
+
+        yamcsClient.login("testuser", "password".toCharArray());
+        try {
+            processorClient.updateCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC", "0-0",
+                    "testKey1",
+                    Value.newBuilder().setType(Type.STRING).setStringValue("testValue1").build())
+                    .get();
+            fail("Should have thrown an exception");
+        } catch (ExecutionException e) {
+            ExceptionData excData = ((ClientException) e.getCause()).getDetail();
+            assertEquals("ForbiddenException", excData.getType());
+        }
+
+        yamcsClient.login("operator", "password".toCharArray());
+        processorClient.updateCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC", "0-0",
+                "testKey1",
+                Value.newBuilder().setType(Type.STRING).setStringValue("testValue1").build())
+                .get();
+    }
+}
+```
+
+### `RealtimeParchiveTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/RealtimeParchiveTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.Page;
+import org.yamcs.client.archive.ArchiveClient.ListOptions;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.util.Timestamps;
+
+/**
+ * Tests with the realtime parameter archive filler
+ */
+public class RealtimeParchiveTest extends AbstractIntegrationTest {
+    Mdb mdb;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        setupYamcs("RealtimeParchive", true);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        generatePkt13AndPps("2024-07-23T06:00:00", 3600);
+
+        Instant start = Instant.parse("2024-07-23T06:59:00Z");
+        Instant stop = Instant.parse("2024-07-23T07:01:00Z");
+
+        var archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+
+        Page<ParameterValue> page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.ascending(true), ListOptions.limit(500)).get();
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(60, values.size());
+
+        yamcs.shutDown();
+        setupYamcs("RealtimeParchive", false);
+
+        before();
+        generatePkt13AndPps("2024-07-23T07:00:00", 3600);
+
+        archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.ascending(true), ListOptions.limit(500)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(120, values.size());
+        assertEquals(Timestamps.parse("2024-07-23T06:59:00Z"), values.get(0).getGenerationTime());
+        assertEquals(Timestamps.parse("2024-07-23T07:00:00Z"), values.get(60).getGenerationTime());
+        assertEquals(Timestamps.parse("2024-07-23T07:00:59Z"), values.get(119).getGenerationTime());
+
+        yamcs.shutDown();
+        setupYamcs("RealtimeParchive", false);
+
+        before();
+        generatePkt13AndPps("2024-07-23T07:00:00.100", 1);
+
+        // if we perform now the retrieval, we only get 120 records because the SegmentIterator only looks at realtime
+        // filler data after has read the data from the archive and does not expect data that is already written in the
+        // archive to be modified
+        yamcs.shutDown();
+        setupYamcs("RealtimeParchive", false);
+
+        archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+
+        page = archiveClient.listValues("/REFMDB/SUBSYS1/FloatPara1_1_2", start, stop,
+                ListOptions.ascending(true), ListOptions.limit(500)).get();
+        values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+
+        assertEquals(121, values.size());
+        assertEquals(Timestamps.parse("2024-07-23T06:59:00Z"), values.get(0).getGenerationTime());
+        assertEquals(Timestamps.parse("2024-07-23T07:00:00Z"), values.get(60).getGenerationTime());
+        assertEquals(Timestamps.parse("2024-07-23T07:00:00.100Z"), values.get(61).getGenerationTime());
+        assertEquals(Timestamps.parse("2024-07-23T07:00:59Z"), values.get(120).getGenerationTime());
+
+    }
+
+    @Test
+    public void test2() throws Exception {
+        mdb = MdbFactory.getInstance(yamcsInstance);
+        // t0 and t1 are two different intervals
+        var t0 = TimeEncoding.parse("2025-03-04T16:00:00Z");
+        var t1 = TimeEncoding.parse("2025-03-04T19:00:00Z");
+
+        inject(t0, true, true);
+        inject(t1, true, false);
+        yamcs.shutDown();
+        setupYamcs("RealtimeParchive", false);
+        before();
+        inject(t1 + 10, true, true);
+
+        yamcs.shutDown();
+        setupYamcs("RealtimeParchive", false);
+        before();
+
+        var archiveClient = yamcsClient.createArchiveClient(yamcsInstance);
+        var page = archiveClient.listValues("/REFMDB/SUBSYS1/processed_para_string",
+                Instant.parse("2025-03-04T16:00:00Z"), Instant.parse("2025-03-04T20:00:00Z"),
+                ListOptions.ascending(true)).get();
+        List<ParameterValue> values = new ArrayList<>();
+        page.iterator().forEachRemaining(values::add);
+        assertEquals(2, values.size());
+        assertEquals(Timestamps.parse("2025-03-04T16:00:00Z"), values.get(0).getGenerationTime());
+        assertEquals(Timestamps.parse("2025-03-04T19:00:00.010Z"), values.get(1).getGenerationTime());
+    }
+
+    void inject(long t, boolean p1, boolean p2) {
+        List<org.yamcs.parameter.ParameterValue> pvList = new ArrayList<>();
+        if (p1) {
+            org.yamcs.parameter.ParameterValue pv1 = new org.yamcs.parameter.ParameterValue(
+                    mdb.getParameter("/REFMDB/SUBSYS1/processed_para_uint"));
+            pv1.setUnsignedIntegerValue(3);
+            pv1.setGenerationTime(t);
+            pvList.add(pv1);
+        }
+        if (p2) {
+            org.yamcs.parameter.ParameterValue pv2 = new org.yamcs.parameter.ParameterValue(
+                    mdb.getParameter("/REFMDB/SUBSYS1/processed_para_string"));
+            pv2.setGenerationTime(t);
+            pv2.setStringValue("para" + t);
+            pvList.add(pv2);
+        }
+        parameterProvider.inject(t, pvList);
+    }
+}
+```
+
+### `ServicesTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/ServicesTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.archive.CommandHistoryRecorder;
+import org.yamcs.protobuf.ServiceInfo;
+import org.yamcs.protobuf.ServiceState;
+
+public class ServicesTest extends AbstractIntegrationTest {
+
+    @Test
+    public void testServicesStopStart() throws Exception {
+        String serviceClass = CommandHistoryRecorder.class.getName();
+
+        List<ServiceInfo> services = yamcsClient.listServices(yamcsInstance).get();
+        assertEquals(11, services.size());
+
+        ServiceInfo servInfo = services.stream()
+                .filter(si -> serviceClass.equals(si.getClassName()))
+                .findFirst()
+                .orElse(null);
+        assertEquals(ServiceState.RUNNING, servInfo.getState());
+
+        yamcsClient.stopService(yamcsInstance, servInfo.getName()).get();
+
+        services = yamcsClient.listServices(yamcsInstance).get();
+        servInfo = services.stream()
+                .filter(si -> serviceClass.equals(si.getClassName()))
+                .findFirst()
+                .orElse(null);
+        assertEquals(ServiceState.TERMINATED, servInfo.getState());
+
+        yamcsClient.startService(yamcsInstance, servInfo.getName()).get();
+
+        services = yamcsClient.listServices(yamcsInstance).get();
+        servInfo = services.stream()
+                .filter(si -> serviceClass.equals(si.getClassName()))
+                .findFirst()
+                .orElse(null);
+        assertEquals(ServiceState.RUNNING, servInfo.getState());
+    }
+}
+```
+
+### `TimelineIntegrationTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/TimelineIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.yamcs.client.utils.WellKnownTypes.TIMESTAMP_MAX;
+import static org.yamcs.client.utils.WellKnownTypes.TIMESTAMP_MIN;
+import static org.yamcs.client.utils.WellKnownTypes.toTimestamp;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.Page;
+import org.yamcs.client.timeline.TimelineClient;
+import org.yamcs.protobuf.ExecutionStatus;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.TimelineBand;
+import org.yamcs.protobuf.TimelineBandType;
+import org.yamcs.protobuf.TimelineItem;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.protobuf.util.Durations;
+
+public class TimelineIntegrationTest extends AbstractIntegrationTest {
+    private TimelineClient timelineClient;
+    private YarchDatabaseInstance ydb;
+
+    @BeforeEach
+    public void prepareTests() throws Exception {
+        timelineClient = yamcsClient.createTimelineClient(yamcsInstance, "realtime");
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        for (TimelineItem item : timelineClient.getItems(null, null, null).get()) {
+            timelineClient.deleteItem(item.getId()).get();
+        }
+        for (TimelineBand band : timelineClient.getBands().get()) {
+            timelineClient.deleteBand(band.getId()).get();
+        }
+    }
+
+    @Test
+    public void testGetSources() throws Exception {
+        Map<String, TimelineSourceCapabilities> sources = timelineClient.getSources().get();
+        assertEquals(2, sources.size());
+        TimelineSourceCapabilities c = sources.get("rdb");
+        assertNotNull(c);
+        assertFalse(c.getReadOnly());
+        assertTrue(c.getHasActivityGroups());
+
+        c = sources.get("commands");
+        assertNotNull(c);
+        assertTrue(c.getReadOnly());
+    }
+
+    @Test
+    public void testItem1() throws Exception {
+        verifyEmpty();
+        TimelineItem item1a = TimelineItem.newBuilder()
+                .setType(TimelineItemType.EVENT)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .addTags("tag1")
+                .addTags("tag2")
+                .setDescription("description 1")
+                .build();
+
+        TimelineItem item1b = timelineClient.addItem(item1a).get();
+        assertEquals(item1a.getStart(), item1b.getStart());
+        assertEquals(item1a.getDuration(), item1b.getDuration());
+        assertEquals(item1a.getTagsList(), item1b.getTagsList());
+        assertEquals(item1a.getDescription(), item1b.getDescription());
+
+        TimelineItem item1c = timelineClient.getItem(item1b.getId()).get();
+
+        assertEquals(item1b, item1c);
+
+        List<String> tags = timelineClient.getTags().get();
+        assertEquals(Arrays.asList("tag1", "tag2"), tags);
+
+        TimelineItem item1d = item1b.toBuilder().addTags("tag3")
+                .setStart(toTimestamp(Instant.parse("2020-01-25T00:00:00Z"))).build();
+
+        TimelineItem item1e = timelineClient.updateItem(item1d).get();
+        assertEquals(item1d, item1e);
+
+        TimelineItem item1f = timelineClient.getItem(item1b.getId()).get();
+        assertEquals(item1d, item1f);
+
+        tags = timelineClient.getTags().get();
+        assertEquals(Arrays.asList("tag1", "tag2", "tag3"), tags);
+
+        TimelineItem item1g = timelineClient.deleteItem(item1b.getId()).get();
+        assertEquals(item1d, item1g);
+
+        Throwable t = null;
+
+        try {
+            timelineClient.getItem(item1b.getId()).get();
+        } catch (ExecutionException e) {
+            t = e.getCause();
+        }
+        assertNotNull(t);
+        assertTrue(t.getMessage().contains("not found"));
+    }
+
+    @Test
+    public void testItem2() throws Exception {
+        verifyEmpty();
+        TimelineItem item1a = TimelineItem.newBuilder()
+                .setType(TimelineItemType.EVENT)
+                .setStart(toTimestamp(Instant.parse("2020-01-11T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .addTags("tag1")
+                .addTags("tag2")
+                .build();
+        TimelineItem item1b = TimelineItem.newBuilder()
+                .setType(TimelineItemType.EVENT)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .addTags("tag2")
+                .addTags("tag3")
+                .build();
+        TimelineBand band1a = TimelineBand.newBuilder()
+                .setType(TimelineBandType.ITEM_BAND)
+                .setName("name1a")
+                .setShared(true)
+                .addTags("tag2")
+                .build();
+        item1a = timelineClient.addItem(item1a).get();
+        item1b = timelineClient.addItem(item1b).get();
+        band1a = timelineClient.addBand(band1a).get();
+
+        Page<TimelineItem> page = timelineClient.getItems(
+                Instant.parse("2020-01-20T00:00:00Z"),
+                Instant.parse("2020-01-22T00:00:00Z"),
+                band1a.getId())
+                .get();
+        Iterator<TimelineItem> iterator = page.iterator();
+        TimelineItem item1 = iterator.next();
+        assertEquals("tag2", item1.getTags(0));
+        assertEquals("tag3", item1.getTags(1));
+        assertEquals(false, iterator.hasNext());
+    }
+
+    @Test
+    public void testActivity1() throws Exception {
+        verifyEmpty();
+        TimelineItem item1a = TimelineItem.newBuilder()
+                .setType(TimelineItemType.ACTIVITY)
+                .setStart(toTimestamp(Instant.parse("2022-07-29T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .addTags("tag1")
+                .addTags("tag2")
+                .build();
+
+        item1a = timelineClient.addItem(item1a).get();
+        assertEquals(ExecutionStatus.PLANNED, item1a.getStatus());
+
+        TimelineItem item1b = item1a.toBuilder().setStatus(ExecutionStatus.IN_PROGRESS).build();
+        item1b = timelineClient.updateItem(item1b).get();
+
+        assertEquals(ExecutionStatus.IN_PROGRESS, item1b.getStatus());
+
+        TimelineItemLog log = timelineClient.getItemLog(item1b.getId()).get();
+        assertEquals(1, log.getEntriesCount());
+        assertEquals("[status]", log.getEntries(0).getMsg());
+    }
+
+    @Test
+    public void testGroup1() throws Exception {
+        verifyEmpty();
+        // create group
+        TimelineItem group = TimelineItem.newBuilder()
+                .setType(TimelineItemType.ITEM_GROUP)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .build();
+        group = timelineClient.addItem(group).get();
+        // create event1 in group
+        TimelineItem event1 = TimelineItem.newBuilder()
+                .setType(TimelineItemType.EVENT)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .setGroupId(group.getId())
+                .build();
+        event1 = timelineClient.addItem(event1).get();
+        // create event2 in group
+        TimelineItem event2 = TimelineItem.newBuilder()
+                .setType(TimelineItemType.EVENT)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .setGroupId(group.getId())
+                .build();
+        event2 = timelineClient.addItem(event2).get();
+        // try to remove group => error
+        timelineClient.deleteItem(group.getId()).handle((item, t) -> {
+            assertNotNull(t);
+            return null;
+        }).get();
+        // remove event1 from group
+        event1 = event1.toBuilder().clearGroupId().build();
+        event1 = timelineClient.updateItem(event1).get();
+        // try to remove group => error
+        timelineClient.deleteItem(group.getId()).handle((item, t) -> {
+            assertNotNull(t);
+            return null;
+        }).get();
+        // remove group via deleteTimelineGroup
+        timelineClient.deleteTimelineGroup(group.getId()).get();
+        // verify that group and event2 are gone
+        timelineClient.getItem(group.getId()).handle((item, t) -> verifyException(t, "NotFoundException")).get();
+        timelineClient.getItem(event2.getId()).handle((item, t) -> verifyException(t, "NotFoundException")).get();
+        // verify that event1 is still there
+        event1 = timelineClient.getItem(event1.getId()).get();
+        assertNotNull(event1);
+    }
+
+    @Test
+    public void testGroup2() throws Exception {
+        verifyEmpty();
+        // create group
+        TimelineItem group = TimelineItem.newBuilder()
+                .setType(TimelineItemType.ITEM_GROUP)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .build();
+        group = timelineClient.addItem(group).get();
+        // create activity group
+        TimelineItem activityGroup = TimelineItem.newBuilder()
+                .setType(TimelineItemType.ACTIVITY_GROUP)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .build();
+        activityGroup = timelineClient.addItem(activityGroup).get();
+        // create event
+        TimelineItem event = TimelineItem.newBuilder()
+                .setType(TimelineItemType.EVENT)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .build();
+        event = timelineClient.addItem(event).get();
+        // create activity
+        TimelineItem activity = TimelineItem.newBuilder()
+                .setType(TimelineItemType.ACTIVITY)
+                .setStart(toTimestamp(Instant.parse("2020-01-21T00:00:00Z")))
+                .setDuration(Durations.fromMillis(1001))
+                .build();
+        activity = timelineClient.addItem(activity).get();
+        // try to add event to "group" activity => error
+        event = event.toBuilder().setGroupId(activity.getId()).build();
+        timelineClient.updateItem(event).handle((item, t) -> verifyException(t, "BadRequestException")).get();
+        // try to add event to group => ok
+        event = event.toBuilder().setGroupId(group.getId()).build();
+        timelineClient.updateItem(event).get();
+        // try to add event to activityGroup => error
+        event = event.toBuilder().setGroupId(activityGroup.getId()).build();
+        timelineClient.updateItem(event).handle((item, t) -> verifyException(t, "BadRequestException")).get();
+        // try to add activity to activityGroup => ok
+        activity = activity.toBuilder().setGroupId(activityGroup.getId()).build();
+        timelineClient.updateItem(activity).get();
+    }
+
+    @Test
+    public void testBand1() throws Exception {
+        verifyEmpty();
+        TimelineBand band1a = TimelineBand.newBuilder()
+                .setType(TimelineBandType.ITEM_BAND)
+                .setName("name")
+                .setDescription("description")
+                .setShared(true)
+                .addFilters(getTagFilter("tag1", "tag2"))
+                .putAllProperties(Collections.singletonMap("key1", "value1"))
+                .build();
+
+        TimelineBand band1b = timelineClient.addBand(band1a)
+                .get();
+        assertEquals(band1a.getName(), band1b.getName());
+        assertEquals(band1a.getDescription(), band1b.getDescription());
+        assertEquals(band1a.getFiltersList(), band1b.getFiltersList());
+        assertEquals(band1a.getPropertiesMap(), band1b.getPropertiesMap());
+    }
+
+    private ItemFilter getTagFilter(String... tags) {
+        ItemFilter.Builder ifb = ItemFilter.newBuilder();
+        for (String tag : tags) {
+            ifb.addCriteria(FilterCriterion.newBuilder().setKey("tag").setValue(tag).build());
+        }
+        return ifb.build();
+    }
+
+    @Test
+    public void testBand2() throws Exception {
+        verifyEmpty();
+        TimelineBand band1a = TimelineBand.newBuilder()
+                .setType(TimelineBandType.ITEM_BAND)
+                .setName("name1a")
+                .setShared(true)
+                .build();
+        TimelineBand band1b = TimelineBand.newBuilder()
+                .setType(TimelineBandType.ITEM_BAND)
+                .setName("name1b")
+                .setShared(false)
+                .build();
+        TimelineBand band1c = TimelineBand.newBuilder()
+                .setType(TimelineBandType.ITEM_BAND)
+                .setName("name1c")
+                .setShared(false)
+                .build();
+
+        band1a = timelineClient.addBand(band1a).get();
+        band1b = timelineClient.addBand(band1b).get();
+        band1c = timelineClient.addBand(band1c).get();
+
+        List<TimelineBand> timelineBands = timelineClient.getBands().get();
+        assertEquals(3, timelineBands.size());
+
+        ydb.execute("update timeline_band set username='blabla'");
+        timelineBands = timelineClient.getBands().get();
+        assertEquals(1, timelineBands.size());
+        assertEquals("name1a", timelineBands.get(0).getName());
+    }
+
+    @Test
+    public void testInvalidSource() throws Exception {
+        TimelineItem item = TimelineItem.newBuilder().setType(TimelineItemType.EVENT).build();
+        Throwable t = null;
+        try {
+            timelineClient.addItem("invalid-source", item).get();
+        } catch (ExecutionException e) {
+            t = e.getCause();
+        }
+        assertNotNull(t);
+        assertTrue(t.toString().contains("Invalid"));
+    }
+
+    @Test
+    public void testCommands() throws Exception {
+        ydb.execute("insert into cmdhist (gentime, cmdName, origin, seqNum) values(?, ?, ?, ?)", 1000l,
+                "timeline_testA", "test", 1);
+        ydb.execute("insert into cmdhist (gentime, cmdName, origin, seqNum) values(?, ?, ?, ?)", 1001l,
+                "timeline_testAB", "test", 2);
+        ydb.execute("insert into cmdhist (gentime, cmdName, origin, seqNum) values(?, ?, ?, ?)", 1002l,
+                "timeline_testB", "test", 3);
+
+        var band = timelineClient.addBand(TimelineBand.newBuilder()
+                .setSource("commands").setName("cmd_test")
+                .addFilters(ItemFilter.newBuilder()
+                        .addCriteria(FilterCriterion.newBuilder()
+                                .setKey("cmdNamePattern").setValue("time.*_testA.*")
+                                .build())
+                        .build())
+                .build())
+                .get();
+        Page<TimelineItem> page = timelineClient.getItems(TIMESTAMP_MIN, TIMESTAMP_MAX, band.getId()).get();
+
+        Iterator<TimelineItem> iterator = page.iterator();
+        TimelineItem item1 = iterator.next();
+        assertEquals("timeline_testA", item1.getName());
+        TimelineItem item2 = iterator.next();
+        assertEquals("timeline_testAB", item2.getName());
+        assertFalse(iterator.hasNext());
+    }
+
+    void verifyEmpty() throws Exception {
+        Page<TimelineItem> page = timelineClient.getItems(TIMESTAMP_MIN, TIMESTAMP_MAX, null).get();
+        assertFalse(page.iterator().hasNext());
+        assertFalse(page.hasNextPage());
+    }
+
+    private Void verifyException(Throwable t, String type) {
+        ClientException e = (ClientException) t;
+        assertEquals(type, e.getDetail().getType());
+        return null;
+    }
+}
+```
+
+### `TimeSubscriptionTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/tests/TimeSubscriptionTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.client.TimeSubscription;
+import org.yamcs.protobuf.SubscribeTimeRequest;
+
+import com.google.protobuf.Timestamp;
+
+public class TimeSubscriptionTest extends AbstractIntegrationTest {
+
+    @Test
+    public void testSimpleSubscription() throws Exception {
+        TimeSubscription subscription = yamcsClient.createTimeSubscription();
+        MessageCaptor<Timestamp> captor = MessageCaptor.of(subscription);
+
+        SubscribeTimeRequest request = SubscribeTimeRequest.newBuilder()
+                .setInstance(yamcsInstance)
+                .build();
+        subscription.sendMessage(request);
+        captor.expectTimely();
+    }
+}
+```

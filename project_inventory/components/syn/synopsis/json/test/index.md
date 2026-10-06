@@ -3,14 +3,13 @@
 
 **경로:** `components/syn/synopsis/json/test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
+**경로:** `components/syn/synopsis/json/test/CMakeLists.txt`
+
+
+```cmake
+message(FATAL_ERROR "The JSON_CI option is not availablewhen using the nlohmann_json_cmake_fetchcontent repository.")
 ```
-
-## 항목
-
-- [`components/syn/synopsis/json/test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함

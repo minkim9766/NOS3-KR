@@ -3,24 +3,710 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--Events.fppi
-file--LinuxUartDriver.cpp
-file--LinuxUartDriver.fpp
-file--LinuxUartDriver.hpp
-file--Telemetry.fppi
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Linux Darwin)
+
+set(MOD_DEPS Os)
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/LinuxUartDriver.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/LinuxUartDriver.cpp"
+)
+register_fprime_module()
 ```
 
-## 항목
+### `Events.fppi`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/LinuxUartDriver.cpp`](file--LinuxUartDriver.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/LinuxUartDriver.fpp`](file--LinuxUartDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/LinuxUartDriver.hpp`](file--LinuxUartDriver.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/Events.fppi`
+
+
+```text
+@ UART open error
+event OpenError(
+                    device: string size 40 @< The device
+                    error: I32 @< The error code
+                    name: string size 40 @< error string
+                  ) \
+  severity warning high \
+  id 0 \
+  format "Error opening UART device {}: {} {}"
+
+@ UART config error
+event ConfigError(
+                      device: string size 40 @< The device
+                      error: I32 @< The error code
+                    ) \
+  severity warning high \
+  id 1 \
+  format "Error configuring UART device {}: {}"
+
+@ UART write error
+event WriteError(
+                     device: string size 40 @< The device
+                     error: I32 @< The error code
+                   ) \
+  severity warning high \
+  id 2 \
+  format "Error writing UART device {}: {}" \
+  throttle 5
+
+@ UART read error
+event ReadError(
+                    device: string size 40 @< The device
+                    error: I32 @< The error code
+                  ) \
+  severity warning high \
+  id 3 \
+  format "Error reading UART device {}: {}" \
+  throttle 5
+
+@ UART port opened event
+event PortOpened(
+                     device: string size 40 @< The device
+                   ) \
+  severity activity high \
+  id 4 \
+  format "UART Device {} configured"
+
+@ UART ran out of buffers
+event NoBuffers(
+                    device: string size 40 @< The device
+                  ) \
+  severity warning high \
+  id 5 \
+  format "UART Device {} ran out of buffers" \
+  throttle 20
+
+@ UART ran out of buffers
+event BufferTooSmall(
+                         device: string size 40 @< The device
+                         $size: U32 @< The provided buffer size
+                         needed: U32 @< The buffer size needed
+                       ) \
+  severity warning high \
+  id 6 \
+  format "UART Device {} target buffer too small. Size: {} Needs: {}"
+```
+
+### `LinuxUartDriver.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/LinuxUartDriver.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxUartDriverImpl.cpp
+// \author tcanham
+// \brief  cpp file for LinuxUartDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <unistd.h>
+#include <Drv/LinuxUartDriver/LinuxUartDriver.hpp>
+#include <Os/TaskString.hpp>
+
+#include "Fw/Types/BasicTypes.hpp"
+
+#include <fcntl.h>
+#include <termios.h>
+#include <cerrno>
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+LinuxUartDriver ::LinuxUartDriver(const char* const compName)
+    : LinuxUartDriverComponentBase(compName),
+      m_fd(-1),
+      m_allocationSize(0),
+      m_device("NOT_EXIST"),
+      m_bytesSent(0),
+      m_bytesReceived(0),
+      m_quitReadThread(false) {}
+
+bool LinuxUartDriver::open(const char* const device,
+                           UartBaudRate baud,
+                           UartFlowControl fc,
+                           UartParity parity,
+                           FwSizeType allocationSize) {
+    FW_ASSERT(device != nullptr);
+    int fd = -1;
+    int stat = -1;
+    this->m_allocationSize = allocationSize;
+
+    this->m_device = device;
+
+    /*
+     The O_NOCTTY flag tells UNIX that this program doesn't want to be the "controlling terminal" for that port. If you
+     don't specify this then any input (such as keyboard abort signals and so forth) will affect your process. Programs
+     like getty(1M/8) use this feature when starting the login process, but normally a user program does not want this
+     behavior.
+     */
+    fd = ::open(device, O_RDWR | O_NOCTTY);
+
+    if (fd == -1) {
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, this->m_fd, _err);
+        return false;
+    }
+
+    this->m_fd = fd;
+
+    // Configure blocking reads
+    struct termios cfg;
+
+    stat = tcgetattr(fd, &cfg);
+    if (-1 == stat) {
+        close(fd);
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, fd, _err);
+        return false;
+    }
+
+    /*
+     If MIN > 0 and TIME = 0, MIN sets the number of characters to receive before the read is satisfied. As TIME is
+     zero, the timer is not used.
+
+     If MIN = 0 and TIME > 0, TIME serves as a timeout value. The read will be satisfied if a single character is read,
+     or TIME is exceeded (t = TIME *0.1 s). If TIME is exceeded, no character will be returned.
+
+     If MIN > 0 and TIME > 0, TIME serves as an inter-character timer. The read will be satisfied if MIN characters are
+     received, or the time between two characters exceeds TIME. The timer is restarted every time a character is
+     received and only becomes active after the first character has been received.
+
+     If MIN = 0 and TIME = 0, read will be satisfied immediately. The number of characters currently available, or the
+     number of characters requested will be returned. According to Antonino (see contributions), you could issue a
+     fcntl(fd, F_SETFL, FNDELAY); before reading to get the same result.
+     */
+    cfg.c_cc[VMIN] = 0;
+    cfg.c_cc[VTIME] = 10;  // 1 sec timeout on no-data
+
+    stat = tcsetattr(fd, TCSANOW, &cfg);
+    if (-1 == stat) {
+        close(fd);
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, fd, _err);
+        return false;
+    }
+
+    // Set flow control
+    if (fc == HW_FLOW) {
+        struct termios t;
+
+        stat = tcgetattr(fd, &t);
+        if (-1 == stat) {
+            close(fd);
+            Fw::LogStringArg _arg = device;
+            Fw::LogStringArg _err = strerror(errno);
+            this->log_WARNING_HI_OpenError(_arg, fd, _err);
+            return false;
+        }
+
+        // modify flow control flags
+        t.c_cflag |= CRTSCTS;
+
+        stat = tcsetattr(fd, TCSANOW, &t);
+        if (-1 == stat) {
+            close(fd);
+            Fw::LogStringArg _arg = device;
+            Fw::LogStringArg _err = strerror(errno);
+            this->log_WARNING_HI_OpenError(_arg, fd, _err);
+            return false;
+        }
+    }
+
+    int relayRate = B0;
+    switch (baud) {
+        case BAUD_9600:
+            relayRate = B9600;
+            break;
+        case BAUD_19200:
+            relayRate = B19200;
+            break;
+        case BAUD_38400:
+            relayRate = B38400;
+            break;
+        case BAUD_57600:
+            relayRate = B57600;
+            break;
+        case BAUD_115K:
+            relayRate = B115200;
+            break;
+        case BAUD_230K:
+            relayRate = B230400;
+            break;
+#if defined TGT_OS_TYPE_LINUX
+        case BAUD_460K:
+            relayRate = B460800;
+            break;
+        case BAUD_921K:
+            relayRate = B921600;
+            break;
+        case BAUD_1000K:
+            relayRate = B1000000;
+            break;
+        case BAUD_1152K:
+            relayRate = B1152000;
+            break;
+        case BAUD_1500K:
+            relayRate = B1500000;
+            break;
+        case BAUD_2000K:
+            relayRate = B2000000;
+            break;
+#ifdef B2500000
+        case BAUD_2500K:
+            relayRate = B2500000;
+            break;
+#endif
+#ifdef B3000000
+        case BAUD_3000K:
+            relayRate = B3000000;
+            break;
+#endif
+#ifdef B3500000
+        case BAUD_3500K:
+            relayRate = B3500000;
+            break;
+#endif
+#ifdef B4000000
+        case BAUD_4000K:
+            relayRate = B4000000;
+            break;
+#endif
+#endif
+        default:
+            FW_ASSERT(0, static_cast<FwAssertArgType>(baud));
+            break;
+    }
+
+    struct termios newtio;
+
+    stat = tcgetattr(fd, &newtio);
+    if (-1 == stat) {
+        close(fd);
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, fd, _err);
+        return false;
+    }
+
+    // CS8 = 8 data bits, CLOCAL = Local line, CREAD = Enable Receiver
+    /*
+      Even parity (7E1):
+      options.c_cflag |= PARENB
+      options.c_cflag &= ~PARODD
+      options.c_cflag &= ~CSTOPB
+      options.c_cflag &= ~CSIZE;
+      options.c_cflag |= CS7;
+      Odd parity (7O1):
+      options.c_cflag |= PARENB
+      options.c_cflag |= PARODD
+      options.c_cflag &= ~CSTOPB
+      options.c_cflag &= ~CSIZE;
+      options.c_cflag |= CS7;
+     */
+    newtio.c_cflag |= CS8 | CLOCAL | CREAD;
+
+    switch (parity) {
+        case PARITY_ODD:
+            newtio.c_cflag |= (PARENB | PARODD);
+            break;
+        case PARITY_EVEN:
+            newtio.c_cflag |= PARENB;
+            break;
+        case PARITY_NONE:
+            newtio.c_cflag &= static_cast<unsigned int>(~PARENB);
+            break;
+        default:
+            FW_ASSERT(0, parity);
+            break;
+    }
+
+    // Set baud rate:
+    stat = cfsetispeed(&newtio, static_cast<speed_t>(relayRate));
+    if (stat) {
+        close(fd);
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, fd, _err);
+        return false;
+    }
+    stat = cfsetospeed(&newtio, static_cast<speed_t>(relayRate));
+    if (stat) {
+        close(fd);
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, fd, _err);
+        return false;
+    }
+
+    // Raw output:
+    newtio.c_oflag = 0;
+
+    // set input mode (non-canonical, no echo,...)
+    newtio.c_lflag = 0;
+
+    newtio.c_iflag = INPCK;
+
+    // Flush old data:
+    (void)tcflush(fd, TCIFLUSH);
+
+    // Set attributes:
+    stat = tcsetattr(fd, TCSANOW, &newtio);
+    if (-1 == stat) {
+        close(fd);
+        Fw::LogStringArg _arg = device;
+        Fw::LogStringArg _err = strerror(errno);
+        this->log_WARNING_HI_OpenError(_arg, fd, _err);
+        return false;
+    }
+
+    // All done!
+    Fw::LogStringArg _arg = device;
+    this->log_ACTIVITY_HI_PortOpened(_arg);
+    if (this->isConnected_ready_OutputPort(0)) {
+        this->ready_out(0);  // Indicate the driver is connected
+    }
+    return true;
+}
+
+LinuxUartDriver ::~LinuxUartDriver() {
+    if (this->m_fd != -1) {
+        (void)close(this->m_fd);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void LinuxUartDriver ::run_handler(FwIndexType portNum, U32 context) {
+    this->tlmWrite_BytesSent(this->m_bytesSent);
+    this->tlmWrite_BytesRecv(this->m_bytesReceived);
+}
+
+Drv::ByteStreamStatus LinuxUartDriver ::send_handler(const FwIndexType portNum, Fw::Buffer& serBuffer) {
+    Drv::ByteStreamStatus status = Drv::ByteStreamStatus::OP_OK;
+    if (this->m_fd == -1 || serBuffer.getData() == nullptr || serBuffer.getSize() == 0) {
+        status = Drv::ByteStreamStatus::OTHER_ERROR;
+    } else {
+        unsigned char* data = serBuffer.getData();
+        FW_ASSERT_NO_OVERFLOW(serBuffer.getSize(), size_t);
+        size_t xferSize = static_cast<size_t>(serBuffer.getSize());
+
+        ssize_t stat = ::write(this->m_fd, data, xferSize);
+
+        if (-1 == stat || static_cast<size_t>(stat) != xferSize) {
+            Fw::LogStringArg _arg = this->m_device;
+            this->log_WARNING_HI_WriteError(_arg, static_cast<I32>(stat));
+            status = Drv::ByteStreamStatus::OTHER_ERROR;
+        } else {
+            this->m_bytesSent += static_cast<FwSizeType>(stat);
+        }
+    }
+    return status;
+}
+
+void LinuxUartDriver::recvReturnIn_handler(FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->deallocate_out(0, fwBuffer);
+}
+
+void LinuxUartDriver ::serialReadTaskEntry(void* ptr) {
+    FW_ASSERT(ptr != nullptr);
+    Drv::ByteStreamStatus status = ByteStreamStatus::OTHER_ERROR;  // added by m.chase 03.06.2017
+    LinuxUartDriver* comp = reinterpret_cast<LinuxUartDriver*>(ptr);
+    while (!comp->m_quitReadThread) {
+        Fw::Buffer buff = comp->allocate_out(0, comp->m_allocationSize);
+
+        // On failed allocation, error
+        if (buff.getData() == nullptr) {
+            Fw::LogStringArg _arg = comp->m_device;
+            comp->log_WARNING_HI_NoBuffers(_arg);
+            status = ByteStreamStatus::OTHER_ERROR;
+            comp->recv_out(0, buff, status);
+            // to avoid spinning, wait 50 ms
+            Os::Task::delay(Fw::TimeInterval(0, 50000));
+            continue;
+        }
+
+        int stat = 0;
+
+        // Read until something is received or an error occurs. Only loop when
+        // stat == 0 as this is the timeout condition and the read should spin
+        FW_ASSERT_NO_OVERFLOW(buff.getSize(), size_t);
+        while ((stat == 0) && !comp->m_quitReadThread) {
+            stat = static_cast<int>(::read(comp->m_fd, buff.getData(), static_cast<size_t>(buff.getSize())));
+        }
+        buff.setSize(0);
+
+        // On error stat (-1) must mark the read as error
+        // On normal stat (>0) pass a recv ok
+        // On timeout stat (0) and m_quitReadThread, error to return the buffer
+        if (stat == -1) {
+            Fw::LogStringArg _arg = comp->m_device;
+            comp->log_WARNING_HI_ReadError(_arg, stat);
+            status = ByteStreamStatus::OTHER_ERROR;
+        } else if (stat > 0) {
+            buff.setSize(static_cast<U32>(stat));
+            status = ByteStreamStatus::OP_OK;  // added by m.chase 03.06.2017
+            comp->m_bytesReceived += static_cast<FwSizeType>(stat);
+        } else {
+            status = ByteStreamStatus::OTHER_ERROR;  // Simply to return the buffer
+        }
+
+        comp->recv_out(0, buff, status);  // added by m.chase 03.06.2017
+    }
+}
+
+void LinuxUartDriver ::start(FwTaskPriorityType priority,
+                             Os::Task::ParamType stackSize,
+                             Os::Task::ParamType cpuAffinity) {
+    Os::TaskString task("SerReader");
+    Os::Task::Arguments arguments(task, serialReadTaskEntry, this, priority, stackSize, cpuAffinity);
+    Os::Task::Status stat = this->m_readTask.start(arguments);
+    FW_ASSERT(stat == Os::Task::OP_OK, stat);
+}
+
+void LinuxUartDriver ::quitReadThread() {
+    this->m_quitReadThread = true;
+}
+
+Os::Task::Status LinuxUartDriver ::join() {
+    return m_readTask.join();
+}
+
+}  // end namespace Drv
+```
+
+### `LinuxUartDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/LinuxUartDriver.fpp`
+
+
+```fpp
+module Drv {
+
+  passive component LinuxUartDriver {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    import ByteStreamDriver
+
+    @ Allocation port used for allocating memory in the receive task
+    output port allocate: Fw.BufferGet
+
+    @ Deallocation of allocated buffers
+    output port deallocate: Fw.BufferSend
+
+    @ The rate group input for sending telemetry
+    sync input port run: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    event port Log
+
+    telemetry port Tlm
+
+    text event port LogText
+
+    time get port Time
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+  }
+
+}
+```
+
+### `LinuxUartDriver.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/LinuxUartDriver.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxUartDriverImpl.hpp
+// \author tcanham
+// \brief  hpp file for LinuxUartDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef LinuxUartDriver_HPP
+#define LinuxUartDriver_HPP
+
+#include <Drv/LinuxUartDriver/LinuxUartDriverComponentAc.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/Task.hpp>
+
+#include <termios.h>
+#include <atomic>
+
+namespace Drv {
+
+class LinuxUartDriver final : public LinuxUartDriverComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object LinuxUartDriver
+    //!
+    LinuxUartDriver(const char* const compName /*!< The component name*/
+    );
+
+    //! Configure UART parameters
+    enum UartBaudRate {
+        BAUD_9600 = 9600,
+        BAUD_19200 = 19200,
+        BAUD_38400 = 38400,
+        BAUD_57600 = 57600,
+        BAUD_115K = 115200,
+        BAUD_230K = 230400,
+#ifdef TGT_OS_TYPE_LINUX
+        BAUD_460K = 460800,
+        BAUD_921K = 921600,
+        BAUD_1000K = 1000000,
+        BAUD_1152K = 1152000,
+        BAUD_1500K = 1500000,
+        BAUD_2000K = 2000000,
+#ifdef B2500000
+        BAUD_2500K = 2500000,
+#endif
+#ifdef B3000000
+        BAUD_3000K = 3000000,
+#endif
+#ifdef B3500000
+        BAUD_3500K = 3500000,
+#endif
+#ifdef B4000000
+        BAUD_4000K = 4000000
+#endif
+#endif
+    };
+
+    enum UartFlowControl { NO_FLOW, HW_FLOW };
+
+    enum UartParity { PARITY_NONE, PARITY_ODD, PARITY_EVEN };
+
+    // Open device with specified baud and flow control.
+    bool open(const char* const device,
+              UartBaudRate baud,
+              UartFlowControl fc,
+              UartParity parity,
+              FwSizeType allocationSize);
+
+    //! start the serial poll thread.
+    //! buffSize is the max receive buffer size
+    //!
+    void start(FwTaskPriorityType priority = Os::Task::TASK_PRIORITY_DEFAULT,
+               Os::Task::ParamType stackSize = Os::Task::TASK_DEFAULT,
+               Os::Task::ParamType cpuAffinity = Os::Task::TASK_DEFAULT);
+
+    //! Quit thread
+    void quitReadThread();
+
+    //! Join thread
+    Os::Task::Status join();
+
+    //! Destroy object LinuxUartDriver
+    //!
+    ~LinuxUartDriver();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for run
+    //!
+    //! The rate group input for sending telemetry
+    void run_handler(FwIndexType portNum,  //!< The port number
+                     U32 context           //!< The call order
+                     ) override;
+
+    //! Handler implementation for serialSend
+    //!
+    Drv::ByteStreamStatus send_handler(FwIndexType portNum, /*!< The port number*/
+                                       Fw::Buffer& serBuffer) override;
+
+    //! Handler implementation for recvReturnIn
+    //!
+    //! Port receiving back ownership of data sent out on $recv port
+    void recvReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& fwBuffer  //!< The buffer
+                              ) override;
+
+    int m_fd;                     //!< file descriptor returned for I/O device
+    FwSizeType m_allocationSize;  //!< size of allocation request to memory manager
+    const char* m_device;         //!< original device path
+
+    //! This method will be called by the new thread to wait for input on the serial port.
+    static void serialReadTaskEntry(void* ptr);
+
+    Os::Task m_readTask;  //!< task instance for thread to read serial port
+
+    std::atomic<FwSizeType> m_bytesSent;      //!< number of bytes sent
+    std::atomic<FwSizeType> m_bytesReceived;  //!< number of bytes received
+    bool m_quitReadThread;                    //!< flag to quit thread
+};
+
+}  // end namespace Drv
+
+#endif
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxUartDriver/Telemetry.fppi`
+
+
+```text
+@ Bytes Sent
+telemetry BytesSent: FwSizeType id 0
+
+@ Bytes Received
+telemetry BytesRecv: FwSizeType id 1
+```

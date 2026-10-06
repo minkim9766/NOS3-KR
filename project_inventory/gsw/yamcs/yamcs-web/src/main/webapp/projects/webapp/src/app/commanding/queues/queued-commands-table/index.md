@@ -3,18 +3,257 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `queued-commands-table.component.css`
 
-file--queued-commands-table.component.css
-file--queued-commands-table.component.html
-file--queued-commands-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/queued-commands-table.component.css`
+
+
+```css
+.args {
+  margin: 0;
+  margin-left: 10px;
+}
+
+.args .key {
+  min-width: 120px;
+  white-space: nowrap;
+}
+
+.args .value {
+  color: grey;
+  padding-left: 10px;
+}
+
+.args td,
+.args th {
+  border: none;
+  font-size: 10px;
+  line-height: 12px;
+  font-family: "Roboto Mono", monospace;
+}
+
+.spin {
+  animation: yspin 2s infinite linear;
+}
+
+@keyframes yspin {
+  0% {
+    -webkit-transform: rotate(0deg) scaleX(-1);
+    transform: rotate(0deg) scaleX(-1);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg) scaleX(-1);
+    transform: rotate(359deg) scaleX(-1);
+  }
+}
 ```
 
-## 항목
+### `queued-commands-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/queued-commands-table.component.css`](file--queued-commands-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/queued-commands-table.component.html`](file--queued-commands-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/queued-commands-table.component.ts`](file--queued-commands-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/queued-commands-table.component.html`
+
+
+```html
+@if (dataSource) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="generationTime"
+    matSortDirection="asc"
+    matSortDisableClear>
+    <ng-container matColumnDef="generationTime">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
+      <td mat-cell *matCellDef="let entry">
+        {{ entry.generationTime | datetime }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="comment">
+      <th mat-header-cell *matHeaderCellDef style="text-align: center">
+        <mat-icon matTooltip="Comment">comment</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let item" style="text-align: center">
+        @if (item.comment) {
+          <mat-icon [matTooltip]="item.comment">comment</mat-icon>
+        }
+        @if (!item.comment) {
+          -
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="commandName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Command</th>
+      <td mat-cell *matCellDef="let entry">
+        {{ entry.commandName || "-" }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="queueName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Queue</th>
+      <td mat-cell *matCellDef="let entry">
+        {{ entry.queueName || "-" }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="issuer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Issuer</th>
+      <td mat-cell *matCellDef="let entry">
+        @if (entry.origin) {
+          {{ entry.username }}&#64;{{ entry.origin }}
+        } @else {
+          {{ entry.username }}
+        }
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="origin">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Source</th>
+      <td mat-cell *matCellDef="let entry">
+        {{ entry.origin || "-" }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="source">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 350px">Command</th>
+      <td mat-cell *matCellDef="let entry">
+        {{ entry.commandName }}
+        <table class="args">
+          @for (arg of entry.assignments; track arg) {
+            @if (arg.userInput) {
+              <tr>
+                <td class="key" width="1">{{ arg.name }}</td>
+                <td class="value">{{ arg.value | value }}</td>
+              </tr>
+            }
+          }
+        </table>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand">Actions</th>
+      <td mat-cell *matCellDef="let entry">
+        @if (entry.pendingTransmissionConstraints) {
+          <span style="color: #999">
+            <mat-icon class="icon16 spin" style="vertical-align: middle">cached</mat-icon>
+            Checking transmission constraints
+          </span>
+        }
+        @if (!entry.pendingTransmissionConstraints) {
+          <ya-text-action
+            icon="check"
+            (click)="acceptEntry(entry)"
+            [disabled]="entry.pendingTransmissionConstraints">
+            ACCEPT
+          </ya-text-action>
+          <ya-text-action
+            icon="close"
+            (click)="rejectEntry(entry)"
+            [disabled]="entry.pendingTransmissionConstraints">
+            REJECT
+          </ya-text-action>
+        }
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
+```
+
+### `queued-commands-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/queues/queued-commands-table/queued-commands-table.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  CommandQueue,
+  CommandQueueEntry,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-queued-commands-table',
+  templateUrl: './queued-commands-table.component.html',
+  styleUrl: './queued-commands-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class QueuedCommandsTableComponent implements AfterViewInit {
+  @Input()
+  cqueues$: Observable<CommandQueue[]>;
+
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  dataSource = new MatTableDataSource<CommandQueueEntry>();
+
+  displayedColumns = [
+    'generationTime',
+    'comment',
+    'source',
+    'queueName',
+    'issuer',
+    'actions',
+  ];
+
+  constructor(private yamcs: YamcsService) {}
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+
+    // We receive entries grouped by queue, but rather
+    // have a flat list
+    this.cqueues$.subscribe((cqueues) => {
+      const entries = [];
+      for (const cqueue of cqueues) {
+        if (cqueue.entries) {
+          entries.push(...cqueue.entries);
+        }
+      }
+      this.dataSource.data = entries;
+    });
+  }
+
+  acceptEntry(entry: CommandQueueEntry) {
+    if (
+      confirm(
+        `Are you sure you want to accept this command?\n\n ${entry.commandName}`,
+      )
+    ) {
+      this.yamcs.yamcsClient.acceptCommand(
+        entry.instance,
+        entry.processorName,
+        entry.queueName,
+        entry.id,
+      );
+    }
+  }
+
+  rejectEntry(entry: CommandQueueEntry) {
+    if (
+      confirm(
+        `Are you sure you want to reject this command?\n\n ${entry.commandName}`,
+      )
+    ) {
+      this.yamcs.yamcsClient.rejectCommand(
+        entry.instance,
+        entry.processorName,
+        entry.queueName,
+        entry.id,
+      );
+    }
+  }
+}
+```

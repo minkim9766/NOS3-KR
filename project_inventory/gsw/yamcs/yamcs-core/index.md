@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,16 +11,242 @@
 mdb/index
 src/index
 wrappers/index
-file--.gitignore
-file--pom.xml
-file--wrappers.descriptor.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/`](src/index) — 폴더
-- [`gsw/yamcs/yamcs-core/wrappers/`](wrappers/index) — 폴더
-- [`gsw/yamcs/yamcs-core/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/wrappers.descriptor.xml`](file--wrappers.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `gsw/yamcs/yamcs-core/.gitignore`
+
+
+```text
+/cache/
+
+```
+
+### `pom.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/pom.xml`
+
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>yamcs-core</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: Core</name>
+
+  <properties>
+    <javaModuleName>org.yamcs.core</javaModuleName>
+    <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+
+    <!-- If empty, revision is derived using git command,
+         else the passed revision information is used. -->
+    <yamcs.revision></yamcs.revision>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-client</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-xtce</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.beust</groupId>
+      <artifactId>jcommander</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-codec-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <classifier>linux-aarch_64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-transport-native-epoll</artifactId>
+      <classifier>linux-x86_64</classifier>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.javacsv</groupId>
+      <artifactId>javacsv</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.jexcelapi</groupId>
+      <artifactId>jxl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.janino</groupId>
+      <artifactId>janino</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.nashorn</groupId>
+      <artifactId>nashorn-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-rocksdb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>log4j-over-slf4j</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-jdk14</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.python</groupId>
+      <artifactId>jython-standalone</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${basedir}/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${basedir}/target/generated-resources/version</directory>
+      </resource>
+    </resources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.yamcs</groupId>
+        <artifactId>yamcs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>protoc</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-version</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>src/main/java/org/yamcs/YamcsVersion.java</argument>
+                <argument>VERSION=${project.version}</argument>
+                <argument>REVISION=${yamcs.revision}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>package-wrappers</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>wrappers.descriptor.xml</descriptor>
+              </descriptors>
+              <attach>true</attach>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <tarLongFileMode>posix</tarLongFileMode>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
+          <systemPropertyVariables>
+            <java.util.logging.config.file>
+              ${project.build.directory}/test-classes/logging.properties
+            </java.util.logging.config.file>
+          </systemPropertyVariables>
+          <excludes>
+            <exclude>**/RdbPerformanceTest.java</exclude>
+            <exclude>**/*$*</exclude> <!-- this excludes the inner classes which causes maven to get stuck somehow -->
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+```
+
+### `wrappers.descriptor.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/wrappers.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+
+  <id>wrappers</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <fileSets>
+    <fileSet>
+      <directory>wrappers</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>
+```

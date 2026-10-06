@@ -3,50 +3,2442 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractAlarmMirrorServer.java`
 
-file--AbstractAlarmMirrorServer.java
-file--AbstractAlarmServer.java
-file--ActiveAlarm.java
-file--AlarmListener.java
-file--AlarmMirrorService.java
-file--AlarmNotificationType.java
-file--AlarmReporter.java
-file--AlarmSequenceException.java
-file--AlarmServer.java
-file--AlarmState.java
-file--AlarmStreamer.java
-file--CouldNotAcknowledgeAlarmException.java
-file--EventAlarmMirrorServer.java
-file--EventAlarmServer.java
-file--EventAlarmStreamer.java
-file--EventId.java
-file--ParameterAlarmMirrorServer.java
-file--ParameterAlarmServer.java
-file--ParameterAlarmStreamer.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AbstractAlarmMirrorServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_LAST_VALUE;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VALUE_COUNT;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VIOLATION_COUNT;
+
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+
+abstract class AbstractAlarmMirrorServer<S, T> extends AbstractAlarmServer<S, T> {
+
+    AbstractAlarmMirrorServer(String yamcsInstance, double alarmLoadDays) {
+        super(yamcsInstance);
+        if (alarmLoadDays > 0) {
+            loadAlarmsFromDb(alarmLoadDays, activeAlarms);
+        }
+        log.info("Restored {} alarms from the database", activeAlarms.size());
+    }
+
+    void processTuple(Stream stream, Tuple tuple) {
+        S subject = getSubject(tuple);
+
+        var activeAlarm = activeAlarms.get(subject);
+        if (activeAlarm == null) {
+            // first see if we have enough information in the tuple to make the alarm
+            activeAlarm = createNewAlarm(subject, tuple);
+            if (activeAlarm != null) {
+                activeAlarms.put(subject, activeAlarm);
+                if (activeAlarm.isPending()) {
+                    notifyUpdate(AlarmNotificationType.TRIGGERED_PENDING, activeAlarm);
+                } else {
+                    notifyUpdate(AlarmNotificationType.TRIGGERED, activeAlarm);
+                }
+            } else {
+                log.info("Ignoring tuple as no active or restored alarm has been found: {}", tuple);
+            }
+            return;
+        }
+
+        if (tuple.hasColumn(AlarmStreamer.CNAME_VIOLATION_COUNT)) {
+            activeAlarm.setViolations(tuple.getIntColumn(AlarmStreamer.CNAME_VIOLATION_COUNT));
+        }
+
+        if (tuple.hasColumn(getColNameLastEvent())) {
+            var notificationType = AlarmNotificationType.valueOf(
+                    tuple.getColumn(getColNameLastEvent()));
+            switch (notificationType) {
+            case TRIGGERED:
+                activeAlarm.trigger();
+                break;
+            case ACKNOWLEDGED:
+                long ackTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_ACK_TIME);
+                activeAlarm.acknowledge(tuple.getColumn(AlarmStreamer.CNAME_ACK_BY), ackTime,
+                        tuple.getColumn(AlarmStreamer.CNAME_ACK_MSG));
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case CLEARED:
+                long clearTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_CLEARED_TIME);
+                String clearedBy = tuple.getColumn(AlarmStreamer.CNAME_CLEARED_BY);
+                String clearMessage = tuple.getColumn(AlarmStreamer.CNAME_CLEAR_MSG);
+                activeAlarm.clear(clearedBy, clearTime, clearMessage);
+                activeAlarms.remove(subject);
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case RESET:
+                // TODO reset not yet implemented in the AlarmServer
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case RTN:
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case SEVERITY_INCREASED:
+                processSeverityIncrease(subject, activeAlarm, tuple);
+                notifySeverityIncrease(activeAlarm);
+                break;
+            case SHELVED:
+                long shelveTime = tuple.getTimestampColumn(AlarmStreamer.CNAME_SHELVED_TIME);
+                activeAlarm.shelve(shelveTime, tuple.getColumn(AlarmStreamer.CNAME_SHELVED_BY),
+                        tuple.getColumn(AlarmStreamer.CNAME_SHELVED_MSG),
+                        tuple.getLongColumn(AlarmStreamer.CNAME_SHELVE_DURATION));
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case UNSHELVED:
+                activeAlarm.unshelve();
+                notifyUpdate(notificationType, activeAlarm);
+                break;
+            case VALUE_UPDATED:
+                processValueUpdate(subject, activeAlarm, tuple);
+                notifyValueUpdate(activeAlarm);
+                break;
+            default:
+                log.warn("Unexpected alarm notification type {}", notificationType);
+                break;
+
+            }
+        } else {
+            // yamcs older than 5.11
+            processValueUpdate(subject, activeAlarm, tuple);
+            notifyValueUpdate(activeAlarm);
+        }
+    }
+
+    protected void processValueUpdate(S subject, ActiveAlarm<T> activeAlarm, Tuple tuple) {
+        activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        activeAlarm.setValueCount(tuple.getIntColumn(CNAME_VALUE_COUNT));
+        activeAlarm.setCurrentValue(tuple.getColumn(CNAME_LAST_VALUE));
+    }
+
+    protected void processSeverityIncrease(S subject, ActiveAlarm<T> activeAlarm, Tuple tuple) {
+        activeAlarm.setMostSevereValue(tuple
+                .getColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED));
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    abstract S getSubject(Tuple tuple);
+
+    protected abstract ActiveAlarm<T> createNewAlarm(S subject, Tuple tuple);
+
+    protected abstract String getColNameLastEvent();
+}
 ```
 
-## 항목
+### `AbstractAlarmServer.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AbstractAlarmMirrorServer.java`](file--AbstractAlarmMirrorServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AbstractAlarmServer.java`](file--AbstractAlarmServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ActiveAlarm.java`](file--ActiveAlarm.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmListener.java`](file--AlarmListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmMirrorService.java`](file--AlarmMirrorService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmNotificationType.java`](file--AlarmNotificationType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmReporter.java`](file--AlarmReporter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmSequenceException.java`](file--AlarmSequenceException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmServer.java`](file--AlarmServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmState.java`](file--AlarmState.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmStreamer.java`](file--AlarmStreamer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/CouldNotAcknowledgeAlarmException.java`](file--CouldNotAcknowledgeAlarmException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmMirrorServer.java`](file--EventAlarmMirrorServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmServer.java`](file--EventAlarmServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmStreamer.java`](file--EventAlarmStreamer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventId.java`](file--EventId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmMirrorServer.java`](file--ParameterAlarmMirrorServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmServer.java`](file--ParameterAlarmServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmStreamer.java`](file--ParameterAlarmStreamer.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AbstractAlarmServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_TRIGGER_TIME;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+import com.google.common.util.concurrent.AbstractService;
+
+public abstract class AbstractAlarmServer<S, T> extends AbstractService {
+    final protected Log log;
+    final protected String yamcsInstance;
+    final protected TimeService timeService;
+
+    Map<Stream, StreamSubscriber> susbscribers = new HashMap<>();
+
+    // NUM_LOCKS has to be power of 2
+    static final int NUM_LOCKS = 32;
+    Object[] locks;
+
+    protected Map<S, ActiveAlarm<T>> activeAlarms = new ConcurrentHashMap<>();
+    protected CopyOnWriteArrayList<AlarmListener<T>> alarmListeners = new CopyOnWriteArrayList<>();
+
+    public AbstractAlarmServer(String yamcsInstance) {
+        this.yamcsInstance = yamcsInstance;
+        this.timeService = YamcsServer.getTimeService(yamcsInstance);
+
+        log = new Log(getClass(), yamcsInstance);
+
+        locks = new Object[NUM_LOCKS];
+        for (int i = 0; i < NUM_LOCKS; i++) {
+            locks[i] = new Object();
+        }
+    }
+
+    /**
+     * Returns the current set of active alarms
+     * <p>
+     * 
+     */
+    public Map<S, ActiveAlarm<T>> getActiveAlarms() {
+        return activeAlarms;
+    }
+
+    /**
+     * Register for alarm notices
+     * 
+     * @return the current set of active alarms
+     */
+    public Map<S, ActiveAlarm<T>> addAlarmListener(AlarmListener<T> listener) {
+        alarmListeners.addIfAbsent(listener);
+        return activeAlarms;
+    }
+
+    public void removeAlarmListener(AlarmListener<T> listener) {
+        alarmListeners.remove(listener);
+    }
+
+    void notifyUpdate(AlarmNotificationType notificationType, ActiveAlarm<T> alarm) {
+        if (alarm.getTriggerValue() != null) {
+            alarmListeners.forEach(l -> l.notifyUpdate(notificationType, alarm));
+        } // else the alarm has never been triggered probably due to the minViolatios not being met
+    }
+
+    void notifySeverityIncrease(ActiveAlarm<T> alarm) {
+        if (alarm.getTriggerValue() != null) {
+            alarmListeners.forEach(l -> l.notifySeverityIncrease(alarm));
+        } // else the alarm has never been triggered probably due to the minViolatios not being met
+    }
+
+    void notifyValueUpdate(ActiveAlarm<T> alarm) {
+        if (alarm.getTriggerValue() != null) {
+            alarmListeners.forEach(l -> l.notifyValueUpdate(alarm));
+        } // else the alarm has never been triggered probably due to the minViolatios not being met
+    }
+
+    protected void loadAlarmsFromDb(double numDays, Map<S, ActiveAlarm<T>> alarms) {
+        Mdb mdb = MdbFactory.getInstance(yamcsInstance);
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        String tblName = alarmTableName();
+        var table = ydb.getTable(tblName);
+        if (table == null) {
+            log.debug("Cannot load alarms since table {} does not exist", tblName);
+            return;
+        }
+        if (table.getColumnDefinition(getColNameLastEvent()) == null) {
+            log.debug("Cannot load alarms since table {} does not have the column {} (probably it is empty)", tblName,
+                    getColNameLastEvent());
+            return;
+        }
+        StreamSqlResult result = null;
+        try {
+            long startTime = timeService.getMissionTime() - (long) (numDays * 24 * 3600_000);
+            result = ydb.execute(
+                    "select * from " + tblName + " where " + CNAME_TRIGGER_TIME + " > ? AND " + getColNameLastEvent()
+                            + " != 'CLEARED'",
+                    startTime);
+
+            while (result.hasNext()) {
+                var tuple = result.next();
+                try {
+                    addActiveAlarmFromTuple(mdb, tuple, alarms);
+                } catch (Exception e) {
+                    log.warn("Unable to load active alarm from tuple {}: {}", tuple, e);
+                }
+            }
+
+        } catch (ParseException | StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (result != null) {
+                result.close();
+            }
+        }
+    }
+
+    protected Object getLock(S alarmId) {
+        return locks[alarmId.hashCode() & (NUM_LOCKS - 1)];
+    }
+
+    protected abstract void addActiveAlarmFromTuple(Mdb mdb, Tuple t, Map<S, ActiveAlarm<T>> alarms);
+
+    protected abstract S getSubject(T value);
+
+    protected abstract String alarmTableName();
+
+    protected abstract String getColNameLastEvent();
+
+}
+```
+
+### `ActiveAlarm.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ActiveAlarm.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Keeps track of the alarm for one parameter or event.
+ * <p>
+ * This will only exist for an alarm that has been triggered. A parameter that has limits definition but never had an
+ * out of limits value, will not have an active alarm.
+ * <p>
+ * Note: generics parameter T can effectively be either {@link ParameterValue} or {@link Event}
+ * 
+ */
+public class ActiveAlarm<T> {
+    static AtomicInteger counter = new AtomicInteger();
+    /**
+     * If the alarm should auto acknowledge once the values are back within limits
+     */
+    final boolean autoAcknowledge;
+
+    /**
+     * Latching means that the alarm will stay triggered even if the value comes back within limits
+     */
+    final boolean latching;
+
+    /**
+     * unique identifier for the alarm (used to store it in the database also for the REST API)
+     */
+    private final int id;
+
+    /**
+     * If the process that generates the alarm is OK or not (i.e. if the latest value of the parameter is within limits)
+     */
+    boolean processOK = true;
+    /**
+     * If the alarm is latching triggered will stay true even when processOK becomes true
+     */
+    boolean triggered = false;
+
+    /**
+     * If a user has acknowledged the alarm
+     */
+    boolean acknowledged = true;
+
+    // the value that triggered the alarm
+    private T triggerValue;
+
+    // most severe value
+    private T mostSevereValue;
+
+    // current value of the parameter
+    private T currentValue;
+
+    private long shelveTime;
+
+    private int violations = 1;
+    private int valueCount = 1;
+
+    ChangeEvent ackEvent;
+    ChangeEvent clearEvent;
+    ChangeEvent resetEvent;
+    ChangeEvent shelveEvent;
+
+    boolean shelved;
+    private long shelveDuration;
+
+    /**
+     * Pending is when the minViolations has not been reached
+     */
+    boolean pending = true;
+
+    ActiveAlarm(T pv, boolean autoAck, boolean latching, int id) {
+        this.autoAcknowledge = autoAck;
+        this.latching = latching;
+
+        this.triggerValue = this.currentValue = this.setMostSevereValue(pv);
+        this.id = id;
+    }
+
+    ActiveAlarm(T pv, boolean autoAck, boolean latching) {
+        this(pv, autoAck, latching, counter.getAndIncrement());
+    }
+
+    public boolean isAutoAcknowledge() {
+        return autoAcknowledge;
+    }
+
+    public boolean isAcknowledged() {
+        return acknowledged;
+    }
+
+    public boolean isPending() {
+        return pending;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getAckMessage() {
+        return ackEvent == null ? null : ackEvent.message;
+    }
+
+    public boolean triggered() {
+        return triggered;
+    }
+
+    /**
+     * Clear the alarm
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void clear(String username, long time, String message) {
+        this.processOK = true;
+        this.triggered = false;
+        this.acknowledged = true;
+        this.clearEvent = new ChangeEvent(username, time, message);
+    }
+
+    /**
+     * Trigger the alarm if not already triggered
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    synchronized void trigger() {
+        if (!triggered) {
+            pending = false;
+            processOK = false;
+            triggered = true;
+            acknowledged = false;
+        }
+    }
+
+    /**
+     * Acknowledge the alarm. This method does nothing if the alarm is already acknowledged.
+     * 
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void acknowledge(String username, long ackTime, String message) {
+        if (acknowledged) {
+            return;
+        }
+        this.acknowledged = true;
+
+        this.ackEvent = new ChangeEvent(username, ackTime, message);
+
+        if (isNormal()) {
+            this.clearEvent = new ChangeEvent("yamcs", ackTime, "cleared due to ack");
+        }
+
+    }
+
+    /**
+     * Called when the process returns to normal (i.e. parameter is back in limits)
+     * 
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    boolean processRTN(long time) {
+        if (processOK) {
+            return false;
+        }
+
+        processOK = true;
+        if (!latching) {
+            triggered = false;
+        }
+        if (autoAcknowledge) {
+            this.ackEvent = new ChangeEvent("yamcs", time, "auto-acknowledged");
+            acknowledged = true;
+        }
+        if (!triggered && acknowledged) {
+            new ChangeEvent("yamcs", time, "cleared due to ack");
+        }
+
+        return true;
+    }
+
+    /**
+     * Called when the operator resets a latching alarm
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void reset(String username, long time, String message) {
+        triggered = processOK;
+        this.resetEvent = new ChangeEvent(username, time, message);
+    }
+
+    /**
+     * Shelve the alarm. Uses the wallckock time
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void shelve(String username, String message, long shelveDuration) {
+        shelve(TimeEncoding.getWallclockTime(), username, message, shelveDuration);
+    }
+
+    /**
+     * Shelve the alarm
+     * <p>
+     * Note: only the Alarm Server is allowed to call this after acquiring the lock
+     */
+    void shelve(long shelveTime, String username, String message, long shelveDuration) {
+        this.shelved = true;
+        this.shelveEvent = new ChangeEvent(username, TimeEncoding.getWallclockTime(), message);
+        this.shelveTime = shelveTime;
+        this.shelveDuration = shelveDuration;
+    }
+
+    public boolean isShelved() {
+        return shelved;
+    }
+
+    public void unshelve() {
+        this.shelved = false;
+    }
+
+    public String getShelveUsername() {
+        return getUsernameThatShelved();
+    }
+
+    public long getShelveTime() {
+        return shelveTime;
+    }
+
+    public String getShelveMessage() {
+        return shelveEvent == null ? null : shelveEvent.message;
+    }
+
+    public long getShelveDuration() {
+        return shelveDuration;
+    }
+
+    /**
+     * 
+     * Returns true if the alarm is back to normal: processOK=true, acknowledged=true and triggered=false
+     * <p>
+     * Note that when latching is enabled, triggered can be true even if processOK=true
+     */
+    public boolean isNormal() {
+        return processOK && !triggered && acknowledged;
+    }
+
+    public long getShelveExpiration() {
+        if (shelveDuration == -1) {
+            return -1;
+        } else {
+            return shelveTime + shelveDuration;
+        }
+    }
+
+    public boolean isProcessOK() {
+        return processOK;
+    }
+
+    public boolean isTriggered() {
+        return triggered;
+    }
+
+    public long getClearTime() {
+        return clearEvent == null ? TimeEncoding.INVALID_INSTANT : clearEvent.time;
+    }
+
+    public String getUsernameThatShelved() {
+        return shelveEvent == null ? null : shelveEvent.username;
+    }
+
+    public String getClearMessage() {
+        return clearEvent == null ? null : clearEvent.message;
+    }
+
+    public String getUsernameThatCleared() {
+        return clearEvent == null ? null : clearEvent.username;
+    }
+
+    public String getUsernameThatAcknowledged() {
+        return ackEvent == null ? null : ackEvent.username;
+    }
+
+    public long getAcknowledgeTime() {
+        return ackEvent == null ? TimeEncoding.INVALID_INSTANT : ackEvent.time;
+    }
+
+    public T getTriggerValue() {
+        return triggerValue;
+    }
+
+    public T getCurrentValue() {
+        return currentValue;
+    }
+
+    public void setCurrentValue(T value) {
+        this.currentValue = value;
+    }
+
+    public T getMostSevereValue() {
+        return mostSevereValue;
+    }
+
+    public void incrementValueCount() {
+        valueCount++;
+    }
+
+    public int getValueCount() {
+        return valueCount;
+    }
+
+    public void setValueCount(int valueCount) {
+        this.valueCount = valueCount;
+    }
+
+    public void incrementViolations() {
+        violations++;
+    }
+
+    public int getViolations() {
+        return violations;
+    }
+
+    void setViolations(int count) {
+        this.violations = count;
+    }
+
+    public T setMostSevereValue(T mostSevereValue) {
+        this.mostSevereValue = mostSevereValue;
+        return mostSevereValue;
+    }
+
+    void setAcknowledged(boolean ack) {
+        this.acknowledged = ack;
+    }
+
+    public void setPending(boolean pending) {
+        this.pending = pending;
+    }
+
+    @Override
+    public String toString() {
+        return "ActiveAlarm [autoAcknowledge=" + autoAcknowledge + ", latching=" + latching + ", id=" + id
+                + ", processOK=" + processOK + ", triggered=" + triggered + ", ackEvent=" + ackEvent
+                + ", clearEvent=" + clearEvent + ", triggerValue=" + triggerValue
+                + ", mostSevereValue=" + getMostSevereValue() + ", currentValue=" + currentValue
+                + ", violations=" + violations + ", valueCount=" + valueCount + ", usernameThatAcknowledged="
+                + ", shelved=" + shelved + ", shelveEvent=" + shelveEvent + ", shelveTime=" + shelveTime
+                + ", shelveDuration=" + shelveDuration + ", pending: " + pending + "]";
+    }
+
+
+    static class ChangeEvent {
+        final String username;
+        final long time;
+        final String message;
+
+        public ChangeEvent(String username, long time, String message) {
+            this.username = username;
+            this.time = time;
+            this.message = message;
+        }
+
+        public String toString() {
+            return "[username: " + username + " time: " + TimeEncoding.toString(time) + " message: " + message + "]";
+        }
+    }
+}
+```
+
+### `AlarmListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmListener.java`
+
+
+```java
+package org.yamcs.alarms;
+
+public interface AlarmListener<T> {
+    public void notifyUpdate(AlarmNotificationType notificationType, ActiveAlarm<T> activeAlarm) ;
+    public void notifySeverityIncrease(ActiveAlarm<T> activeAlarm);    
+    public void notifyValueUpdate(ActiveAlarm<T> activeAlarm);
+
+    /**
+     * Called when the alarm server is shutting down.
+     */
+    default void notifyShutdown(ActiveAlarm<T> alarm) {
+    }
+}
+```
+
+### `AlarmMirrorService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmMirrorService.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.StreamConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * This service is used in a replication setup to mirror the active alarms from a master instance. It works by
+ * monitoring the replicated alarms_realtime and event_alarms_realtime and maintaining a list of active alarms.
+ * <p>
+ * Only reading alarms is allowed (including websocket subscription), no editing (ack, clear, shelve, etc).
+ * <p>
+ * Both parameters and events are supported.
+ */
+public class AlarmMirrorService extends AbstractYamcsService {
+
+    Map<Stream, StreamSubscriber> susbscribers = new HashMap<>();
+    Mdb mdb;
+    ParameterAlarmMirrorServer parameterServer;
+    EventAlarmMirrorServer eventServer;
+    double alarmLoadDays = 30;
+
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        mdb = MdbFactory.getInstance(yamcsInstance);
+        this.alarmLoadDays = config.getDouble("alarmLoadDays", alarmLoadDays);
+        parameterServer = new ParameterAlarmMirrorServer(yamcsInstance, alarmLoadDays);
+        eventServer = new EventAlarmMirrorServer(yamcsInstance, alarmLoadDays);
+    }
+
+    @Override
+    protected void doStart() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+
+
+        List<StreamConfigEntry> sceList = sc.getEntries(StandardStreamType.PARAMETER_ALARM);
+        for (StreamConfigEntry sce : sceList) {
+            Stream inputStream = ydb.getStream(sce.getName());
+            if (inputStream == null) {
+                throw new ConfigurationException("Cannot find stream '" + sce.getName() + "'");
+            }
+            StreamSubscriber subscr = parameterServer::processTuple;
+            inputStream.addSubscriber(subscr);
+            susbscribers.put(inputStream, subscr);
+        }
+
+        sceList = sc.getEntries(StandardStreamType.EVENT_ALARM);
+        for (StreamConfigEntry sce : sceList) {
+            Stream inputStream = ydb.getStream(sce.getName());
+            if (inputStream == null) {
+                throw new ConfigurationException("Cannot find stream '" + sce.getName() + "'");
+            }
+            StreamSubscriber subscr = eventServer::processTuple;
+            inputStream.addSubscriber(subscr);
+            susbscribers.put(inputStream, subscr);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        for (Map.Entry<Stream, StreamSubscriber> entry : susbscribers.entrySet()) {
+            Stream stream = entry.getKey();
+            StreamSubscriber subscriber = entry.getValue();
+            stream.removeSubscriber(subscriber);
+        }
+        susbscribers.clear();
+        notifyStopped();
+    }
+
+
+    public AbstractAlarmServer<Parameter, ParameterValue> getParameterServer() {
+        return parameterServer;
+    }
+
+    public AbstractAlarmServer<EventId, Event> getEventServer() {
+        return eventServer;
+    }
+}
+```
+
+### `AlarmNotificationType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmNotificationType.java`
+
+
+```java
+package org.yamcs.alarms;
+ 
+
+public enum AlarmNotificationType {
+    TRIGGERED_PENDING, // when the alarm was created but the not yet triggered because the minViolations has not been reached
+    TRIGGERED, //when the alarm has been initially triggered
+    ACKNOWLEDGED, //when the operator acknowledges the alarm
+    RTN, //when the process (parameter) has returned to normal (in limits)
+    CLEARED, //when the alarm has been cleared (it is not anymore triggered)
+    RESET, //for latched alarms, when the operator resets it
+    SHELVED, //when the operator shelves the alarm (disable temporarily)
+    UNSHELVED, //when the operator shelves the alarm (disable temporarily)
+    VALUE_UPDATED, //when a new value has been received for a parameter and the value does not change the alarm state 
+    SEVERITY_INCREASED; //when the severity has increased
+}
+```
+
+### `AlarmReporter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmReporter.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorService;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
+import org.yamcs.xtce.AlarmReportType;
+import org.yamcs.xtce.AlarmType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.mdb.Mdb;
+
+/**
+ * Generates events for parameters out of limits.
+ * <p>
+ * This was used when Yamcs did not have the {@link AlarmServer}. It may be removed in the future.
+ */
+public class AlarmReporter extends AbstractProcessorService implements ProcessorService {
+
+    private EventProducer eventProducer;
+    private Map<Parameter, ActiveAlarm> activeAlarms = new HashMap<>();
+    // Last value of each param (for detecting changes in value)
+    private Map<Parameter, ParameterValue> lastValuePerParameter = new HashMap<>();
+
+    @Override
+    public void init(Processor processor, YConfiguration config, Object spec) {
+        super.init(processor, config, spec);
+        eventProducer = EventProducerFactory.getEventProducer(processor.getInstance());
+        String source = config.getString("source", "AlarmChecker");
+        eventProducer.setSource(source);
+    }
+
+    @Override
+    public void doStart() {
+        ParameterProcessorManager ppm = processor.getParameterProcessorManager();
+        ppm.getAlarmChecker().enableReporting(this);
+
+        // Auto-subscribe to parameters with alarms
+        Set<Parameter> requiredParameters = new HashSet<>();
+        try {
+            Mdb mdb = MdbFactory.getInstance(getYamcsInstance());
+            for (Parameter parameter : mdb.getParameters()) {
+                ParameterType ptype = parameter.getParameterType();
+                if (ptype != null && ptype.hasAlarm()) {
+                    requiredParameters.add(parameter);
+                    requiredParameters.addAll(ptype.getDependentParameters());
+                }
+            }
+        } catch (ConfigurationException e) {
+            notifyFailed(e);
+            return;
+        }
+
+        if (!requiredParameters.isEmpty()) {
+            ppm.subscribeToProviders(requiredParameters);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        notifyStopped();
+    }
+
+    /**
+     * Sends an event if an alarm condition for the active context has been triggered {@code minViolations} times. This
+     * configuration does not affect events for parameters that go back to normal, or that change severity levels while
+     * the alarm is already active.
+     */
+    public void reportNumericParameterEvent(ParameterValue pv, AlarmType alarmType, int minViolations) {
+        boolean sendUpdateEvent = false;
+
+        if (alarmType == null) {
+            // TODO: do something with more interesting
+            return;
+        }
+
+        if (alarmType.getAlarmReportType() == AlarmReportType.ON_VALUE_CHANGE) {
+            ParameterValue oldPv = lastValuePerParameter.get(pv.getParameter());
+            if (oldPv != null && hasChanged(oldPv, pv)) {
+                sendUpdateEvent = true;
+            }
+            lastValuePerParameter.put(pv.getParameter(), pv);
+        }
+
+        if (pv.getMonitoringResult() == MonitoringResult.IN_LIMITS) {
+            if (activeAlarms.containsKey(pv.getParameter())) {
+                eventProducer.sendInfo(null,
+                        "Parameter " + pv.getParameter().getQualifiedName() + " is back to normal");
+                activeAlarms.remove(pv.getParameter());
+            }
+        } else { // out of limits
+            MonitoringResult previousMonitoringResult = null;
+            ActiveAlarm activeAlarm = activeAlarms.get(pv.getParameter());
+            if (activeAlarm == null || activeAlarm.alarmType != alarmType) {
+                activeAlarm = new ActiveAlarm(alarmType, pv.getMonitoringResult());
+            } else {
+                previousMonitoringResult = activeAlarm.monitoringResult;
+                activeAlarm.monitoringResult = pv.getMonitoringResult();
+                activeAlarm.violations++;
+            }
+
+            if (activeAlarm.violations == minViolations || (activeAlarm.violations > minViolations
+                    && previousMonitoringResult != activeAlarm.monitoringResult)) {
+                sendUpdateEvent = true;
+            }
+
+            activeAlarms.put(pv.getParameter(), activeAlarm);
+        }
+
+        if (sendUpdateEvent) {
+            sendValueChangeEvent(pv);
+        }
+    }
+
+    public void reportEnumeratedParameterEvent(ParameterValue pv, AlarmType alarmType, int minViolations) {
+        boolean sendUpdateEvent = false;
+
+        if (alarmType == null) {
+            // TODO: something more interesting
+            return;
+        }
+
+        if (alarmType.getAlarmReportType() == AlarmReportType.ON_VALUE_CHANGE) {
+            ParameterValue oldPv = lastValuePerParameter.get(pv.getParameter());
+            if (oldPv != null && hasChanged(oldPv, pv)) {
+                sendUpdateEvent = true;
+            }
+            lastValuePerParameter.put(pv.getParameter(), pv);
+        }
+
+        if (pv.getMonitoringResult() == MonitoringResult.IN_LIMITS) {
+            if (activeAlarms.containsKey(pv.getParameter())) {
+                eventProducer.sendInfo(null, "Parameter " + pv.getParameter().getQualifiedName()
+                        + " is back to a normal state (" + pv.getEngValue().getStringValue() + ")");
+                activeAlarms.remove(pv.getParameter());
+            }
+        } else { // out of limits
+            MonitoringResult previousMonitoringResult = null;
+            ActiveAlarm activeAlarm = activeAlarms.get(pv.getParameter());
+            if (activeAlarm == null || activeAlarm.alarmType != alarmType) {
+                activeAlarm = new ActiveAlarm(alarmType, pv.getMonitoringResult());
+            } else {
+                previousMonitoringResult = activeAlarm.monitoringResult;
+                activeAlarm.monitoringResult = pv.getMonitoringResult();
+                activeAlarm.violations++;
+            }
+
+            if (activeAlarm.violations == minViolations || (activeAlarm.violations > minViolations
+                    && previousMonitoringResult != activeAlarm.monitoringResult)) {
+                sendUpdateEvent = true;
+            }
+
+            activeAlarms.put(pv.getParameter(), activeAlarm);
+        }
+
+        if (sendUpdateEvent) {
+            sendStateChangeEvent(pv);
+        }
+    }
+
+    private void sendValueChangeEvent(ParameterValue pv) {
+        if (pv.getMonitoringResult() == null) {
+            eventProducer.sendInfo(null,
+                    "Parameter " + pv.getParameter().getQualifiedName() + " has changed to value " + pv.getEngValue());
+            return;
+        }
+
+        if (pv.getMonitoringResult() == MonitoringResult.IN_LIMITS) {
+            eventProducer.sendInfo(null,
+                    "Parameter " + pv.getParameter().getQualifiedName() + " has changed to value " + pv.getEngValue());
+        } else {
+            String message;
+            if (pv.getRangeCondition() == RangeCondition.LOW) {
+                message = "Parameter " + pv.getParameter().getQualifiedName() + " is too low";
+            } else if (pv.getRangeCondition() == RangeCondition.HIGH) {
+                message = "Parameter " + pv.getParameter().getQualifiedName() + " is too high";
+            } else {
+                throw new IllegalStateException("Unexpected range condition: " + pv.getRangeCondition());
+            }
+
+            EventSeverity severity = getEventSeverity(pv.getMonitoringResult());
+            eventProducer.sendEvent(severity, null, message);
+        }
+    }
+
+    private void sendStateChangeEvent(ParameterValue pv) {
+        EventSeverity severity = getEventSeverity(pv.getMonitoringResult());
+        eventProducer.sendEvent(severity, null, "Parameter " + pv.getParameter().getQualifiedName()
+                + " transitioned to state " + pv.getEngValue().getStringValue());
+    }
+
+    EventSeverity getEventSeverity(MonitoringResult mr) {
+        switch (mr) {
+        case WATCH:
+            return EventSeverity.WATCH;
+        case WARNING:
+            return EventSeverity.WARNING;
+        case DISTRESS:
+            return EventSeverity.DISTRESS;
+        case CRITICAL:
+            return EventSeverity.CRITICAL;
+        case SEVERE:
+            return EventSeverity.SEVERE;
+        case IN_LIMITS:
+            return EventSeverity.INFO;
+        default:
+            throw new IllegalStateException("Unexpected monitoring result: " + mr);
+        }
+    }
+
+    private boolean hasChanged(ParameterValue pvOld, ParameterValue pvNew) {
+        // Crude string value comparison.
+        return !pvOld.getEngValue().equals(pvNew.getEngValue());
+    }
+
+    private static class ActiveAlarm {
+        MonitoringResult monitoringResult;
+        AlarmType alarmType;
+        int violations = 1;
+
+        ActiveAlarm(AlarmType alarmType, MonitoringResult monitoringResult) {
+            this.alarmType = alarmType;
+            this.monitoringResult = monitoringResult;
+        }
+    }
+
+}
+```
+
+### `AlarmSequenceException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmSequenceException.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import org.yamcs.YamcsException;
+
+/**
+ * Used by AlarmServer to indicate that a specified alarm instance does not have the expected sequence number.
+ */
+@SuppressWarnings("serial")
+public class AlarmSequenceException extends YamcsException {
+
+    public AlarmSequenceException(int expectedId, int actualId) {
+        super(String.format("Alarm sequence number does not match active alarm."
+                + " Was: %s, expected %s", actualId, expectedId));
+    }
+}
+```
+
+### `AlarmServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.mdb.ParameterAlarmChecker;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * Maintains a list of active alarms.
+ * <p>
+ * (S,T) can be one of: (Parameter,ParamerValue) or (EventId, Event)
+ * <p>
+ * This class implements functionality common for parameter alarms and event alarms.
+ * <p>
+ * Specific functionality for each alarm type (e.g. disabling alarms) should be implemented in the respective
+ * {@link ParameterAlarmChecker} or {@link EventAlarmServer}.
+ * 
+ */
+public abstract class AlarmServer<S, T> extends AbstractAlarmServer<S, T> {
+    static private final Logger log = LoggerFactory.getLogger(AlarmServer.class);
+
+    final private ScheduledThreadPoolExecutor timer;
+
+    public AlarmServer(String yamcsInstance, ProcessorConfig procConfig, ScheduledThreadPoolExecutor timer) {
+        super(yamcsInstance);
+        this.timer = timer;
+        if (procConfig.getAlarmLoadDays() > 0) {
+            loadAlarmsFromDb(procConfig.getAlarmLoadDays(), activeAlarms);
+        }
+    }
+
+    /**
+     * Returns the active alarm for the specified {@code subject} if it also matches the specified {@code id}.
+     * 
+     * @param subject
+     *            the subject to look for.
+     * @param id
+     *            the expected id of the active alarm.
+     * @return the active alarm, or {@code null} if no alarm was found
+     * @throws AlarmSequenceException
+     *             when the specified id does not match the id of the active alarm
+     */
+    public ActiveAlarm<T> getActiveAlarm(S subject, int id) throws AlarmSequenceException {
+        var lock = getLock(subject);
+        synchronized (lock) {
+            ActiveAlarm<T> alarm = activeAlarms.get(subject);
+            if (alarm != null) {
+                if (alarm.getId() != id) {
+                    throw new AlarmSequenceException(alarm.getId(), id);
+                }
+                return alarm;
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Returns the active alarm for the specified {@code subject}.
+     * 
+     * @param subject
+     *            the subject to look for.
+     * @return the active alarm, or {@code null} if no alarm was found
+     */
+    public ActiveAlarm<T> getActiveAlarm(S subject) {
+        return activeAlarms.get(subject);
+    }
+
+    /**
+     * Acknowledges an active alarm instance. If the alarm state is no longer applicable, the alarm is also cleared,
+     * otherwise the alarm will remain active.
+     * 
+     * @param alarm
+     *            the alarm to acknowledge
+     * @param username
+     *            the acknowledging user
+     * @param ackTime
+     *            the time associated with the acknowledgment
+     * @param message
+     *            reason message. Leave <code>null</code> when no reason is given.
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm<T> acknowledge(ActiveAlarm<T> alarm, String username, long ackTime, String message) {
+        var subject = getSubject(alarm.getTriggerValue());
+
+        var lock = getLock(subject);
+        synchronized (lock) {
+            var alarm1 = activeAlarms.get(subject);
+
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.acknowledge(username, ackTime, message);
+            notifyUpdate(AlarmNotificationType.ACKNOWLEDGED, alarm);
+
+            if (alarm.isNormal()) {
+                activeAlarms.remove(subject);
+                notifyUpdate(AlarmNotificationType.CLEARED, alarm);
+            }
+
+            return alarm;
+        }
+    }
+
+    /**
+     * Reset a latched alarm
+     * 
+     * @param alarm
+     * @param username
+     * @param resetTime
+     * @param message
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm<T> reset(ActiveAlarm<T> alarm, String username, long resetTime, String message) {
+        S subject = getSubject(alarm.getTriggerValue());
+
+        var lock = getLock(subject);
+        synchronized (lock) {
+            var alarm1 = activeAlarms.get(subject);
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.reset(username, resetTime, message);
+            return alarm;
+        }
+    }
+
+    /**
+     * Clears an active alarm instance.
+     * 
+     * @param alarm
+     *            the alarm to clear
+     * @param username
+     *            the user that cleared the alarm
+     * @param message
+     *            reason message. Leave <code>null</code> when no reason is given.
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm<T> clear(ActiveAlarm<T> alarm, String username, long clearTime, String message) {
+        S subject = getSubject(alarm.getTriggerValue());
+        var lock = getLock(subject);
+        synchronized (lock) {
+            if (!activeAlarms.remove(subject, alarm)) {
+                return null;
+            }
+
+            alarm.clear(username, clearTime, message);
+            notifyUpdate(AlarmNotificationType.CLEARED, alarm);
+
+            return alarm;
+        }
+    }
+
+    /**
+     * Shelve an alarm
+     * 
+     * @param alarm
+     * @param username
+     * @param message
+     * @param shelveDuration
+     *            shelve duration in milliseconds
+     * 
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm<T> shelve(ActiveAlarm<T> alarm, String username, String message,
+            long shelveDuration) {
+        S subject = getSubject(alarm.getTriggerValue());
+        var lock = getLock(subject);
+
+        synchronized (lock) {
+            var alarm1 = activeAlarms.get(subject);
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.shelve(username, message, shelveDuration);
+            notifyUpdate(AlarmNotificationType.SHELVED, alarm);
+            timer.schedule(this::checkShelved, shelveDuration, TimeUnit.MILLISECONDS);
+
+            return alarm;
+        }
+    }
+
+    private void checkShelved() {
+        long t = TimeEncoding.getWallclockTime();
+
+        for (ActiveAlarm<T> alarm : activeAlarms.values()) {
+            if (alarm.isShelved()) {
+                long exp = alarm.getShelveExpiration();
+                if (exp == -1) {
+                    continue;
+                }
+                if (exp <= t) {
+                    alarm.unshelve();
+                    notifyUpdate(AlarmNotificationType.UNSHELVED, alarm);
+                }
+            }
+        }
+    }
+
+    /**
+     * Un-shelve an alarm
+     * 
+     * @param alarm
+     * @param username
+     * @return the updated alarm instance or null if the alarm was not found
+     */
+    public ActiveAlarm<T> unshelve(ActiveAlarm<T> alarm, String username) {
+        S subject = getSubject(alarm.getTriggerValue());
+
+        var lock = getLock(subject);
+        synchronized (lock) {
+
+            var alarm1 = activeAlarms.get(subject);
+            if (alarm1 != alarm) {
+                return null;
+            }
+
+            alarm.unshelve();
+            notifyUpdate(AlarmNotificationType.UNSHELVED, alarm);
+            return alarm;
+        }
+    }
+
+    public void update(T pv, int minViolations) {
+        update(pv, minViolations, false, false);
+    }
+
+    public void update(T value, int minViolations, boolean autoAck, boolean latching) {
+        S subject = getSubject(value);
+        var lock = getLock(subject);
+
+        boolean noAlarm = isOkNoAlarm(value);
+        if (noAlarm && !activeAlarms.containsKey(subject)) {
+            // fast return path for parameters in limits and not in an alarm state from a previous value
+            // no locking necessary
+            return;
+        }
+
+        synchronized (lock) {
+            ActiveAlarm<T> activeAlarm = activeAlarms.get(subject);
+            if (noAlarm) {
+                if (activeAlarm == null) {
+                    // this check was already performed above but another thread may have removed the
+                    // alarm before the lock acquisition
+                    return;
+                }
+                if (activeAlarm.isPending()) {
+                    log.debug("Clearing glitch for {}", getName(subject));
+                    activeAlarms.remove(subject);
+                    notifyUpdate(AlarmNotificationType.CLEARED, activeAlarm);
+                    return;
+                }
+                boolean updated = activeAlarm.processRTN(timeService.getMissionTime());
+
+                activeAlarm.setCurrentValue(value);
+                activeAlarm.incrementValueCount();
+                notifyValueUpdate(activeAlarm);
+
+                if (updated) {
+                    notifyUpdate(AlarmNotificationType.RTN, activeAlarm);
+
+                    if (activeAlarm.isNormal()) {
+                        activeAlarms.remove(subject);
+                        notifyUpdate(AlarmNotificationType.CLEARED, activeAlarm);
+                    }
+                }
+            } else { // alarm
+                if (activeAlarm == null) {
+                    activeAlarm = new ActiveAlarm<>(value, autoAck, latching);
+                    activeAlarms.put(subject, activeAlarm);
+
+                    if (activeAlarm.getViolations() >= minViolations) {
+                        activeAlarm.trigger();
+                        notifyUpdate(AlarmNotificationType.TRIGGERED, activeAlarm);
+                    } else {
+                        notifyUpdate(AlarmNotificationType.TRIGGERED_PENDING, activeAlarm);
+                    }
+                } else {
+                    activeAlarm.setCurrentValue(value);
+                    activeAlarm.incrementViolations();
+                    activeAlarm.incrementValueCount();
+                    boolean notifySimpleUpdate = true;
+                    if (activeAlarm.isPending() && activeAlarm.getViolations() >= minViolations) {
+                        activeAlarm.trigger();
+                        notifyUpdate(AlarmNotificationType.TRIGGERED, activeAlarm);
+                        notifySimpleUpdate = false;
+                    }
+                    if (moreSevere(value, activeAlarm.getMostSevereValue())) {
+                        activeAlarm.setMostSevereValue(value);
+                        notifySeverityIncrease(activeAlarm);
+                        notifySimpleUpdate = false;
+                    }
+                    if (notifySimpleUpdate) {
+                        notifyValueUpdate(activeAlarm);
+                    }
+                }
+            }
+        }
+    }
+
+    static private String getName(Object subject) {
+        if (subject instanceof Parameter) {
+            return ((Parameter) subject).getQualifiedName();
+        } else if (subject instanceof EventId) {
+            EventId eid = (EventId) subject;
+            return eid.source + "." + eid.type;
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    static private boolean isOkNoAlarm(Object value) {
+        if (value instanceof ParameterValue) {
+            ParameterValue pv = (ParameterValue) value;
+            return (pv.getMonitoringResult() == null
+                    || pv.getMonitoringResult() == MonitoringResult.IN_LIMITS
+                    || pv.getMonitoringResult() == MonitoringResult.DISABLED);
+        } else if (value instanceof Event) {
+            Event ev = (Event) value;
+            return ev.getSeverity() == null || ev.getSeverity() == EventSeverity.INFO;
+        } else {
+            throw new IllegalStateException("Unknown value " + value.getClass());
+        }
+    }
+
+    protected static boolean moreSevere(Object newValue, Object oldValue) {
+        if (newValue instanceof ParameterValue) {
+            return moreSevere(((ParameterValue) newValue).getMonitoringResult(),
+                    ((ParameterValue) oldValue).getMonitoringResult());
+        } else if (newValue instanceof Event) {
+            return moreSevere(((Event) newValue).getSeverity(), ((Event) oldValue).getSeverity());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    protected static boolean moreSevere(MonitoringResult mr1, MonitoringResult mr2) {
+        return mr1.getNumber() > mr2.getNumber();
+    }
+
+    protected static boolean moreSevere(EventSeverity es1, EventSeverity es2) {
+        return es1.getNumber() > es2.getNumber();
+    }
+
+    @Override
+    public void doStart() {
+        timer.execute(this::checkShelved);
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        // run the notifyShutdown in order to save the latest alarm information to the database
+        for (var alarm : activeAlarms.values()) {
+            alarmListeners.forEach(l -> l.notifyShutdown(alarm));
+        }
+
+        notifyStopped();
+    }
+
+    /**
+     * Removes all active alarms without acknowledgement !use only for unit tests!
+     */
+    public void clearAll() {
+        activeAlarms.clear();
+    }
+}
+```
+
+### `AlarmState.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmState.java`
+
+
+```java
+package org.yamcs.alarms;
+
+/**
+ * Inspired from ANSI/ISA–18.2 Management Of Alarm Systems For The Process Industries
+ * 
+ * process is the entity that triggers the alarm, in our case parameters or events.
+ * 
+ * @author nm
+ *
+ */
+public enum AlarmState {
+    NORMAL,      //process : OK,   Alm: OK,    Ack: ack
+    UNACK_ALARM, //process: alarm, Alm: alarm, Ack: unack
+    ACK_ALARM,   //process: alarm, Alm: alarm, Ack: ack
+    RTN_UNACK,   //process: OK,    Alm: OK,    Ack: unack
+    LATCH_UNACK, //process: OK,    Alm: alarm, Ack: unack
+    LATCH_ACK,   //process: OK,    Alm: alarm, Ack: ack
+    SHELVED      //ignored temporarely at operator's request
+}
+```
+
+### `AlarmStreamer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/AlarmStreamer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.ArrayList;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+public abstract class AlarmStreamer<T> implements AlarmListener<T> {
+    protected Stream stream;
+    final DataType dataType;
+    final TupleDefinition tdefTemplate;
+    public static final String CNAME_TRIGGER_TIME = "triggerTime";
+    public static final String CNAME_SEQ_NUM = "seqNum";
+    public static final String CNAME_CLEARED_BY = "clearedBy";
+    public static final String CNAME_CLEAR_MSG = "clearedMessage";
+    public static final String CNAME_CLEARED_TIME = "clearedTime";
+
+    public static final String CNAME_ACK_BY = "acknowledgedBy";
+    public static final String CNAME_ACK_MSG = "acknowledgeMessage";
+    public static final String CNAME_ACK_TIME = "acknowledgeTime";
+
+    public static final String CNAME_SHELVED_BY = "shelvedBy";
+    public static final String CNAME_SHELVED_MSG = "shelvedMessage";
+    public static final String CNAME_SHELVED_TIME = "shelvedTime";
+    public static final String CNAME_SHELVE_DURATION = "shelvedDuration";
+
+    public static final String CNAME_UPDATE_TIME = "updateTime";
+    public static final String CNAME_VALUE_COUNT = "valueCount";
+    public static final String CNAME_VIOLATION_COUNT = "violationCount";
+
+    public static final String CNAME_LAST_VALUE = "lastValue";
+    public static final String CNAME_PENDING = "pending";
+
+    public AlarmStreamer(Stream s, DataType dataType, TupleDefinition tdefTemplate) {
+        this.stream = s;
+        this.dataType = dataType;
+        this.tdefTemplate = tdefTemplate;
+    }
+
+    @Override
+    public void notifySeverityIncrease(ActiveAlarm<T> activeAlarm) {
+        TupleDefinition tdef = tdefTemplate.copy();
+        ArrayList<Object> al = getTupleKey(AlarmNotificationType.SEVERITY_INCREASED, activeAlarm);
+        addCommonColumns(activeAlarm, tdef, al);
+
+        tdef.addColumn(getColNameSeverityIncreased(), dataType);
+        al.add(activeAlarm.getMostSevereValue());
+
+        Tuple t = new Tuple(tdef, al);
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void notifyValueUpdate(ActiveAlarm<T> activeAlarm) {
+        TupleDefinition tdef = tdefTemplate.copy();
+        ArrayList<Object> al = getTupleKey(AlarmNotificationType.VALUE_UPDATED, activeAlarm);
+        addCommonColumns(activeAlarm, tdef, al);
+
+        tdef.addColumn(CNAME_LAST_VALUE, dataType);
+        al.add(activeAlarm.getCurrentValue());
+
+        Tuple t = new Tuple(tdef, al);
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void notifyUpdate(AlarmNotificationType notificationType, ActiveAlarm<T> activeAlarm) {
+        TupleDefinition tdef = tdefTemplate.copy();
+        ArrayList<Object> al = getTupleKey(notificationType, activeAlarm);
+        addCommonColumns(activeAlarm, tdef, al);
+
+        switch (notificationType) {
+        case TRIGGERED:
+        case TRIGGERED_PENDING:
+            tdef.addColumn(getColNameTrigger(), dataType);
+            al.add(activeAlarm.getTriggerValue());
+            break;
+        case ACKNOWLEDGED:
+            tdef.addColumn(CNAME_ACK_BY, DataType.STRING);
+            String username = activeAlarm.getUsernameThatAcknowledged();
+            if (activeAlarm.isAutoAcknowledge()) {
+                username = "autoAcknowledged";
+            }
+            al.add(username);
+
+            if (activeAlarm.getAckMessage() != null) {
+                tdef.addColumn(CNAME_ACK_MSG, DataType.STRING);
+                al.add(activeAlarm.getAckMessage());
+            }
+
+            tdef.addColumn(CNAME_ACK_TIME, DataType.TIMESTAMP);
+            al.add(activeAlarm.getAcknowledgeTime());
+
+            break;
+        case CLEARED:
+            tdef.addColumn(getColNameClear(), dataType);
+            al.add(activeAlarm.getCurrentValue());
+
+            if (activeAlarm.getUsernameThatCleared() != null) {
+                tdef.addColumn(CNAME_CLEARED_BY, DataType.STRING);
+                al.add(activeAlarm.getUsernameThatCleared());
+            }
+            if (activeAlarm.getClearMessage() != null) {
+                tdef.addColumn(CNAME_CLEAR_MSG, DataType.STRING);
+                al.add(activeAlarm.getClearMessage());
+            }
+
+            tdef.addColumn(CNAME_CLEARED_TIME, DataType.TIMESTAMP);
+            al.add(activeAlarm.getClearTime());
+            break;
+        case SHELVED:
+            tdef.addColumn(CNAME_SHELVED_BY, DataType.STRING);
+            username = activeAlarm.getUsernameThatShelved();
+            al.add(username);
+
+            if (activeAlarm.getShelveMessage() != null) {
+                tdef.addColumn(CNAME_SHELVED_MSG, DataType.STRING);
+                al.add(activeAlarm.getShelveMessage());
+            }
+            if (activeAlarm.getShelveDuration() != -1) {
+                tdef.addColumn(CNAME_SHELVE_DURATION, DataType.LONG);
+                al.add(activeAlarm.getShelveDuration());
+            }
+
+            tdef.addColumn(CNAME_SHELVED_TIME, DataType.TIMESTAMP);
+            al.add(activeAlarm.getShelveTime());
+            break;
+        default:
+            break;
+
+        }
+        Tuple t = new Tuple(tdef, al);
+        stream.emitTuple(t);
+    }
+
+    private void addCommonColumns(ActiveAlarm<T> activeAlarm,
+            TupleDefinition tdef, ArrayList<Object> al) {
+        tdef.addColumn(CNAME_UPDATE_TIME, DataType.TIMESTAMP);
+        al.add(getUpdateTime(activeAlarm.getCurrentValue()));
+
+        tdef.addColumn(CNAME_VALUE_COUNT, DataType.INT);
+        al.add(activeAlarm.getValueCount());
+
+        tdef.addColumn(CNAME_VIOLATION_COUNT, DataType.INT);
+        al.add(activeAlarm.getViolations());
+
+    }
+
+    protected abstract String getColNameLastEvent();
+
+    protected abstract String getColNameClear();
+
+    protected abstract String getColNameTrigger();
+
+    protected abstract ArrayList<Object> getTupleKey(AlarmNotificationType notificationType,
+            ActiveAlarm<T> activeAlarm);
+
+    protected abstract String getColNameSeverityIncreased();
+
+    protected abstract long getUpdateTime(T alarmDetail);
+}
+```
+
+### `CouldNotAcknowledgeAlarmException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/CouldNotAcknowledgeAlarmException.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import org.yamcs.YamcsException;
+
+/**
+ * Used by AlarmServer to indicate when the acknowledge on an alarm did not work.
+ */
+public class CouldNotAcknowledgeAlarmException extends YamcsException {
+
+    private static final long serialVersionUID = 1L;
+
+    public CouldNotAcknowledgeAlarmException(String message) {
+        super(message);
+    }
+
+    public CouldNotAcknowledgeAlarmException(Throwable t) {
+        super(t);
+    }
+}
+```
+
+### `EventAlarmMirrorServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmMirrorServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import static org.yamcs.alarms.EventAlarmStreamer.CNAME_TRIGGER;
+
+import java.util.Map;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+class EventAlarmMirrorServer extends AbstractAlarmMirrorServer<EventId, Event> {
+    public EventAlarmMirrorServer(String yamcsInstance, double alarmLoadDays) {
+        super(yamcsInstance, alarmLoadDays);
+    }
+
+    EventId getSubject(Tuple tuple) {
+        String source = tuple.getColumn(StandardTupleDefinitions.EVENT_SOURCE_COLUMN);
+        String type = tuple.getColumn(StandardTupleDefinitions.EVENT_TYPE_COLUMN);
+        return new EventId(source, type);
+    }
+
+    @Override
+    protected ActiveAlarm<Event> createNewAlarm(EventId eventId, Tuple tuple) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+        if (o == null || !(o instanceof Event)) {
+            return null;
+        }
+
+        return EventAlarmServer.tupleToActiveAlarm((Event) o, tuple);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return EventAlarmStreamer.CNAME_LAST_EVENT;
+    }
+
+    protected String alarmTableName() {
+        return AlarmRecorder.EVENT_ALARM_TABLE_NAME;
+    }
+
+    @Override
+    protected EventId getSubject(Event ev) {
+        return new EventId(ev.getSource(), ev.hasType() ? ev.getType() : null);
+    }
+
+    @Override
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map<EventId, ActiveAlarm<Event>> alarms) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+        if (o == null || !(o instanceof Event)) {
+            log.info("Not adding alarm from tuple because could not extract the triggered Event: {}", tuple);
+            return;
+        }
+        var triggerValue = (Event) o;
+        var activeAlarm = EventAlarmServer.tupleToActiveAlarm(triggerValue, tuple);
+        alarms.put(getSubject(triggerValue), activeAlarm);
+    }
+}
+```
+
+### `EventAlarmServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_ACK_BY;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_ACK_MSG;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_ACK_TIME;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_PENDING;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SEQ_NUM;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_BY;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_MSG;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_SHELVED_TIME;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VIOLATION_COUNT;
+import static org.yamcs.alarms.EventAlarmStreamer.*;
+
+/**
+ * Handles alarms for events. These are generated whenever an event with a severity level different than INFO is
+ * received.
+ * <p>
+ * The events having the same (source, type) are considered to be part of the same alarm.
+ *
+ */
+// In the future we could implement some additional options like configuring events that never throw alarms or adding
+// the possibility to configure the minViolations for each event id (= event source+ type).
+public class EventAlarmServer extends AlarmServer<EventId, Event> {
+    static private final Logger log = LoggerFactory.getLogger(EventAlarmServer.class);
+    private StreamSubscriber eventStreamSubscriber;
+    private int eventAlarmMinViolations;
+    Stream eventStream;
+    static final String EVENT_ALARMS_REALTIME_STREAM = "event_alarms_realtime";
+
+    public EventAlarmServer(String yamcsInstance, ProcessorConfig procConfig, ScheduledThreadPoolExecutor timer) {
+        super(yamcsInstance, procConfig, timer);
+        eventAlarmMinViolations = procConfig.getEventAlarmMinViolations();
+    }
+
+    @Override
+    public void doStart() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        Stream s = ydb.getStream(EVENT_ALARMS_REALTIME_STREAM);
+        if (s == null) {
+            notifyFailed(
+                    new ConfigurationException("Cannot find a stream named '" + EVENT_ALARMS_REALTIME_STREAM + "'"));
+            return;
+        }
+        addAlarmListener(new EventAlarmStreamer(s));
+
+        eventStream = ydb.getStream(EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        eventStreamSubscriber = new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                Event event = (Event) tuple.getColumn("body");
+                update(event, eventAlarmMinViolations);
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                notifyFailed(new Exception("Stream " + stream.getName() + " closed"));
+            }
+        };
+        eventStream.addSubscriber(eventStreamSubscriber);
+
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        eventStream.removeSubscriber(eventStreamSubscriber);
+        notifyStopped();
+    }
+
+    protected String alarmTableName() {
+        return AlarmRecorder.EVENT_ALARM_TABLE_NAME;
+    }
+
+    @Override
+    protected EventId getSubject(Event ev) {
+        return new EventId(ev.getSource(), ev.hasType() ? ev.getType() : null);
+    }
+
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map<EventId, ActiveAlarm<Event>> alarms) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+        if (o == null || !(o instanceof Event)) {
+            log.info("Not adding alarm from tuple because could not extract the triggered Event: {}", tuple);
+            return;
+        }
+        var triggerValue = (Event) o;
+        var activeAlarm = tupleToActiveAlarm(triggerValue, tuple);
+        alarms.put(getSubject(triggerValue), activeAlarm);
+    }
+
+    static ActiveAlarm<Event> tupleToActiveAlarm(Event triggerValue, Tuple tuple) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+
+        int seqNum = tuple.getIntColumn(CNAME_SEQ_NUM);
+
+        var activeAlarm = new ActiveAlarm<Event>(triggerValue, false, false, seqNum);
+        if (tuple.hasColumn(CNAME_PENDING) && tuple.getBooleanColumn(CNAME_PENDING)) {
+            activeAlarm.setPending(true);
+        } else {
+            activeAlarm.trigger();
+        }
+
+        activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        if (tuple.hasColumn(CNAME_ACK_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_ACK_TIME);
+            activeAlarm.acknowledge(tuple.getColumn(CNAME_ACK_BY), t, tuple.getColumn(CNAME_ACK_MSG));
+        }
+
+        if (tuple.hasColumn(CNAME_SHELVED_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_SHELVED_TIME);
+            activeAlarm.shelve(t, tuple.getColumn(CNAME_SHELVED_BY), tuple.getColumn(CNAME_SHELVED_MSG), t);
+        }
+
+        o = tuple.getColumn(CNAME_SEVERITY_INCREASED);
+        if (o != null && !(o instanceof Event)) {
+            activeAlarm.setMostSevereValue((Event) o);
+        }
+
+        if (tuple.hasColumn(CNAME_PENDING)) {
+            activeAlarm.setPending(tuple.getColumn(CNAME_PENDING));
+        }
+
+        return activeAlarm;
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+}
+```
+
+### `EventAlarmStreamer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventAlarmStreamer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.ArrayList;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * Receives event alarms from the {@link AlarmServer} and sends them to the events_alarms stream to be recorded
+ * 
+ */
+public class EventAlarmStreamer extends AlarmStreamer<Event> {
+
+    public static final DataType EVENT_DATA_TYPE = DataType
+            .protobuf(Event.class.getName());
+    public static final String CNAME_LAST_EVENT = "event";
+    public static final String CNAME_TRIGGER = "triggerEvent";
+    public static final String CNAME_CLEAR = "clearEvent";
+    public static final String CNAME_SEVERITY_INCREASED = "severityIncreasedEvent";
+
+    public EventAlarmStreamer(Stream s) {
+        super(s, EVENT_DATA_TYPE, StandardTupleDefinitions.EVENT_ALARM);
+    }
+
+    @Override
+    protected ArrayList<Object> getTupleKey(AlarmNotificationType notificationType, ActiveAlarm<Event> activeAlarm) {
+        ArrayList<Object> al = new ArrayList<>(7);
+        Event triggerValue = activeAlarm.getTriggerValue();
+
+        // triggerTime
+        al.add(triggerValue.getGenerationTime());
+        // event source
+        al.add(triggerValue.getSource());
+        // seqNum
+        al.add(activeAlarm.getId());
+        // event
+        al.add(notificationType.toString());
+
+        // event type
+        al.add(triggerValue.getType());
+
+        // the AlarmRecorder checks for null
+        al.add(activeAlarm.isPending() ? Boolean.TRUE : null);
+
+        return al;
+    }
+
+    /**
+     * generate a tuple with the violation/value counters and the last value to be saved in the database before shutdown
+     */
+    @Override
+    public void notifyShutdown(ActiveAlarm<Event> alarm) {
+        Tuple t = new Tuple();
+
+        // primary key
+        t.addTimestampColumn(AlarmStreamer.CNAME_TRIGGER_TIME, alarm.getTriggerValue().getGenerationTime());
+        t.addColumn(StandardTupleDefinitions.EVENT_SOURCE_COLUMN,
+                alarm.getTriggerValue().getSource());
+        t.addColumn(StandardTupleDefinitions.SEQNUM_COLUMN, alarm.getId());
+
+        // values we are interested in
+        t.addColumn(CNAME_VIOLATION_COUNT, alarm.getViolations());
+        t.addColumn(CNAME_VALUE_COUNT, alarm.getValueCount());
+        t.addColumn(CNAME_LAST_VALUE, EVENT_DATA_TYPE, alarm.getCurrentValue());
+
+        stream.emitTuple(t);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+
+    @Override
+    protected String getColNameClear() {
+        return CNAME_CLEAR;
+    }
+
+    @Override
+    protected String getColNameTrigger() {
+        return CNAME_TRIGGER;
+    }
+
+    @Override
+    protected String getColNameSeverityIncreased() {
+        return CNAME_SEVERITY_INCREASED;
+    }
+
+    @Override
+    protected long getUpdateTime(Event alarmDetail) {
+        return alarmDetail.getGenerationTime();
+    }
+}
+```
+
+### `EventId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/EventId.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * The id of an event alarm is its (source,type)
+ * <p>
+ * This means if an alarm is active and an event is generated with the same (source,type) a new alarm will not be
+ * created but the old one updated
+ * 
+ */
+public class EventId {
+
+    private static final Pattern QNAME_PATTERN = Pattern.compile("(.+)\\/([^\\/]+)");
+    public static final String DEFAULT_NAMESPACE = "/yamcs/event/";
+
+    private static final String CA_NAME = "/yamcs/event/CustomAlgorithm/";
+    final String source;
+    final String type;
+
+    public EventId(String source, String type) {
+        if (source == null) {
+            throw new NullPointerException("Source cannot be null");
+        }
+
+        this.source = source;
+        this.type = type;
+    }
+
+    public EventId(String qualifiedName) {
+        if (qualifiedName.startsWith(CA_NAME)) {// FIXME: hack for events generated from custom algorithms
+            this.source = "CustomAlgorithm";
+            this.type = qualifiedName.substring(CA_NAME.length());
+        } else if (qualifiedName.startsWith(DEFAULT_NAMESPACE)) {
+            String withoutPrefix = qualifiedName.substring(DEFAULT_NAMESPACE.length());
+            Matcher matcher = QNAME_PATTERN.matcher(withoutPrefix);
+            if (matcher.matches()) {
+                source = matcher.group(1);
+                type = matcher.group(2);
+            } else {
+                source = withoutPrefix;
+                type = null;
+            }
+        } else {
+            Matcher matcher = QNAME_PATTERN.matcher(qualifiedName);
+            if (!matcher.matches()) {
+                throw new IllegalArgumentException("Invalid qualified name '" + qualifiedName + "'");
+            }
+            source = matcher.group(1);
+            type = matcher.group(2);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + source.hashCode();
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        EventId other = (EventId) obj;
+
+        if (!source.equals(other.source)) {
+            return false;
+        }
+        if (type == null) {
+            if (other.type != null) {
+                return false;
+            }
+        } else if (!type.equals(other.type)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        if (source.startsWith("/")) {
+            return source + (type != null ? "/" + type : "");
+        } else {
+            return DEFAULT_NAMESPACE + source + (type != null ? "/" + type : "");
+        }
+    }
+}
+```
+
+### `ParameterAlarmMirrorServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmMirrorServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_LAST_VALUE;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VALUE_COUNT;
+import static org.yamcs.alarms.AlarmStreamer.CNAME_VIOLATION_COUNT;
+
+import java.util.Map;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Tuple;
+
+class ParameterAlarmMirrorServer extends AbstractAlarmMirrorServer<Parameter, ParameterValue> {
+    Mdb mdb;
+
+    ParameterAlarmMirrorServer(String yamcsInstance, double alarmLoadDays) {
+        super(yamcsInstance, alarmLoadDays);
+        mdb = MdbFactory.getInstance(yamcsInstance);
+    }
+
+    Parameter getSubject(Tuple tuple) {
+        String pname = tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+        var parameter = mdb.getParameter(pname);
+
+        if (parameter == null) {
+            log.info("Not processing alarm for {} because the parameter was not found in the MDB", pname);
+            return null;
+        }
+        return parameter;
+    }
+
+    @Override
+    protected ActiveAlarm<ParameterValue> createNewAlarm(Parameter parameter, Tuple tuple) {
+        String ev = tuple.getColumn(ParameterAlarmStreamer.CNAME_LAST_EVENT);
+        if (ev == null) {
+            return null;
+        }
+
+        var notificationType = AlarmNotificationType.valueOf(ev);
+        if (notificationType == AlarmNotificationType.TRIGGERED
+                || notificationType == AlarmNotificationType.TRIGGERED_PENDING) {
+            return ParameterAlarmServer.tupleToActiveAlarm(parameter, tuple);
+        } else {
+            return null;
+        }
+    }
+
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map<Parameter, ActiveAlarm<ParameterValue>> alarms) {
+        String pname = tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+        var parameter = mdb.getParameter(pname);
+
+        if (parameter == null) {
+            log.info("Not adding alarm for {} because parameter was not found in the MDB", pname);
+            return;
+        }
+        alarms.put(parameter, ParameterAlarmServer.tupleToActiveAlarm(parameter, tuple));
+    }
+
+    @Override
+    protected void processValueUpdate(Parameter parameter, ActiveAlarm<ParameterValue> activeAlarm, Tuple tuple) {
+        ParameterValue pv = tuple.getColumn(ParameterAlarmStreamer.CNAME_LAST_VALUE);
+        pv.setParameter(parameter);
+
+        activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        activeAlarm.setValueCount(tuple.getIntColumn(CNAME_VALUE_COUNT));
+        activeAlarm.setCurrentValue(tuple.getColumn(CNAME_LAST_VALUE));
+    }
+
+    @Override
+    protected void processSeverityIncrease(Parameter parameter, ActiveAlarm<ParameterValue> activeAlarm, Tuple tuple) {
+        ParameterValue pv = tuple.getColumn(ParameterAlarmStreamer.CNAME_SEVERITY_INCREASED);
+        pv.setParameter(parameter);
+        activeAlarm.setMostSevereValue(pv);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return ParameterAlarmStreamer.CNAME_LAST_EVENT;
+    }
+
+    @Override
+    protected Parameter getSubject(ParameterValue pv) {
+        return pv.getParameter();
+    }
+
+    @Override
+    protected String alarmTableName() {
+        return AlarmRecorder.PARAMETER_ALARM_TABLE_NAME;
+    }
+}
+```
+
+### `ParameterAlarmServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmServer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.AlarmRecorder;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Tuple;
+import static org.yamcs.alarms.ParameterAlarmStreamer.*;
+
+public class ParameterAlarmServer extends AlarmServer<Parameter, ParameterValue> {
+    static private final Logger log = LoggerFactory.getLogger(ParameterAlarmServer.class);
+
+    public ParameterAlarmServer(String yamcsInstance, ProcessorConfig procConfig, ScheduledThreadPoolExecutor timer) {
+        super(yamcsInstance, procConfig, timer);
+    }
+
+    protected void addActiveAlarmFromTuple(Mdb mdb, Tuple tuple, Map<Parameter, ActiveAlarm<ParameterValue>> alarms) {
+        String pname = tuple.getColumn(StandardTupleDefinitions.PARAMETER_COLUMN);
+        var parameter = mdb.getParameter(pname);
+
+        if (parameter == null) {
+            log.info("Not adding alarm for {} because parameter was not found in the MDB", pname);
+            return;
+        }
+        alarms.put(parameter, tupleToActiveAlarm(parameter, tuple));
+    }
+
+    protected static ActiveAlarm<ParameterValue> tupleToActiveAlarm(Parameter parameter, Tuple tuple) {
+        var o = tuple.getColumn(CNAME_TRIGGER);
+
+        if (o == null || !(o instanceof ParameterValue)) {
+            throw new RuntimeException("Cannot extract the triggered PV from the tuple: " + tuple);
+        }
+        var triggeredValue = (ParameterValue) o;
+        triggeredValue.setParameter(parameter);
+        int seqNum = tuple.getIntColumn(CNAME_SEQ_NUM);
+
+        var activeAlarm = new ActiveAlarm<ParameterValue>(triggeredValue, false, false, seqNum);
+
+        if (tuple.hasColumn(CNAME_PENDING) && tuple.getBooleanColumn(CNAME_PENDING)) {
+            activeAlarm.setPending(true);
+        } else {
+            activeAlarm.trigger();
+        }
+
+        if (tuple.hasColumn(CNAME_VIOLATION_COUNT)) {
+            activeAlarm.setViolations(tuple.getIntColumn(CNAME_VIOLATION_COUNT));
+        }
+        if (tuple.hasColumn(CNAME_VALUE_COUNT)) {
+            activeAlarm.setValueCount(tuple.getIntColumn(CNAME_VALUE_COUNT));
+        }
+
+        if (tuple.hasColumn(CNAME_ACK_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_ACK_TIME);
+            activeAlarm.acknowledge(tuple.getColumn(CNAME_ACK_BY), t, tuple.getColumn(CNAME_ACK_MSG));
+        }
+
+        if (tuple.hasColumn(CNAME_SHELVED_TIME)) {
+            long t = tuple.getTimestampColumn(CNAME_SHELVED_TIME);
+            activeAlarm.shelve(t, tuple.getColumn(CNAME_SHELVED_BY), tuple.getColumn(CNAME_SHELVED_MSG),
+                    tuple.getLongColumn(CNAME_SHELVE_DURATION));
+        }
+        if (tuple.hasColumn(CNAME_LAST_VALUE)) {
+            ParameterValue pv = tuple.getColumn(CNAME_LAST_VALUE);
+            pv.setParameter(parameter);
+            activeAlarm.setCurrentValue(pv);
+        }
+
+        if (tuple.hasColumn(CNAME_SEVERITY_INCREASED)) {
+            ParameterValue pv = tuple.getColumn(CNAME_SEVERITY_INCREASED);
+            pv.setParameter(parameter);
+            activeAlarm.setMostSevereValue(pv);
+        }
+        return activeAlarm;
+    }
+
+    protected String alarmTableName() {
+        return AlarmRecorder.PARAMETER_ALARM_TABLE_NAME;
+    }
+
+    @Override
+    protected Parameter getSubject(ParameterValue pv) {
+        return pv.getParameter();
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+}
+```
+
+### `ParameterAlarmStreamer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/alarms/ParameterAlarmStreamer.java`
+
+
+```java
+package org.yamcs.alarms;
+
+import java.util.ArrayList;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+
+public class ParameterAlarmStreamer extends AlarmStreamer<ParameterValue> {
+    static public final String CNAME_LAST_EVENT = "alarmEvent";
+    static public final String CNAME_UPDATE_PV = "updatePV";
+    static public final String CNAME_TRIGGER = "triggerPV";
+    static public final String CNAME_CLEAR = "clearPV";
+    static public final String CNAME_SEVERITY_INCREASED = "severityIncreasedPV";
+
+    public ParameterAlarmStreamer(Stream s) {
+        super(s, DataType.PARAMETER_VALUE, StandardTupleDefinitions.PARAMETER_ALARM);
+    }
+
+    @Override
+    protected ArrayList<Object> getTupleKey(AlarmNotificationType notificationType,
+            ActiveAlarm<ParameterValue> activeAlarm) {
+        ArrayList<Object> al = new ArrayList<>();
+
+        // triggerTime
+        al.add(activeAlarm.getTriggerValue().getGenerationTime());
+        // parameter
+        al.add(activeAlarm.getTriggerValue().getParameter().getQualifiedName());
+        // seqNum
+        al.add(activeAlarm.getId());
+
+        // alarmEvent
+        al.add(notificationType.toString());
+
+        // the AlarmRecorder checks for null
+        al.add(activeAlarm.isPending() ? Boolean.TRUE : null);
+
+        return al;
+    }
+
+    /**
+     * generate a tuple with the violation/value counters and the last value to be saved in the database before shutdown
+     */
+    @Override
+    public void notifyShutdown(ActiveAlarm<ParameterValue> alarm) {
+        if (alarm.isPending()) {
+            return;
+        }
+        Tuple t = new Tuple();
+        // primary key
+        t.addTimestampColumn(AlarmStreamer.CNAME_TRIGGER_TIME, alarm.getTriggerValue().getGenerationTime());
+        t.addColumn(StandardTupleDefinitions.PARAMETER_COLUMN,
+                alarm.getTriggerValue().getParameter().getQualifiedName());
+        t.addColumn(StandardTupleDefinitions.SEQNUM_COLUMN, alarm.getId());
+
+        // values we are interested in
+        t.addColumn(CNAME_VIOLATION_COUNT, alarm.getViolations());
+        t.addColumn(CNAME_VALUE_COUNT, alarm.getValueCount());
+        t.addColumn(CNAME_LAST_VALUE, DataType.PARAMETER_VALUE, alarm.getCurrentValue());
+
+        stream.emitTuple(t);
+    }
+
+    @Override
+    protected String getColNameLastEvent() {
+        return CNAME_LAST_EVENT;
+    }
+
+    @Override
+    protected String getColNameClear() {
+        return CNAME_CLEAR;
+    }
+
+    @Override
+    protected String getColNameTrigger() {
+        return CNAME_TRIGGER;
+    }
+
+    @Override
+    protected String getColNameSeverityIncreased() {
+        return CNAME_SEVERITY_INCREASED;
+    }
+
+    @Override
+    protected long getUpdateTime(ParameterValue alarmDetail) {
+        return alarmDetail.getGenerationTime();
+    }
+
+}
+```

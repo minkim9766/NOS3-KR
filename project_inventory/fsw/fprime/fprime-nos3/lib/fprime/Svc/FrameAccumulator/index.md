@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,20 +11,458 @@
 docs/index
 FrameDetector/index
 test/index
-file--CMakeLists.txt
-file--FrameAccumulator.cpp
-file--FrameAccumulator.fpp
-file--FrameAccumulator.hpp
-file--FrameDetector.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector/`](FrameDetector/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameAccumulator.cpp`](file--FrameAccumulator.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameAccumulator.fpp`](file--FrameAccumulator.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameAccumulator.hpp`](file--FrameAccumulator.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector.hpp`](file--FrameDetector.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/FrameAccumulator.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/FrameDetector/FprimeFrameDetector.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/FrameDetector/CcsdsTcFrameDetector.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/FrameAccumulator.fpp"
+  DEPENDS
+    Utils_Types
+    Svc_FprimeProtocol
+    Svc_Ccsds_Types
+)
+
+#### UTs ####
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/FrameAccumulatorTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/FrameAccumulatorTestMain.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/FrameAccumulator.fpp"
+  DEPENDS
+    STest
+  UT_AUTO_HELPERS
+)
+
+#### FrameDetector tests ####
+
+register_fprime_ut(
+  "Svc_FrameAccumulator_FprimeFrameDetector_test"
+  SOURCES 
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/detectors/FprimeFrameDetectorTestMain.cpp"
+  HEADERS
+    "${CMAKE_CURRENT_LIST_DIR}/FrameDetector/FprimeFrameDetector.hpp"
+  DEPENDS
+    STest
+  UT_AUTO_HELPERS
+)
+
+register_fprime_ut(
+  "Svc_FrameAccumulator_CcsdsTcFrameDetector_test"
+  SOURCES 
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/detectors/CcsdsTcFrameDetectorTestMain.cpp"
+  HEADERS
+    "${CMAKE_CURRENT_LIST_DIR}/FrameDetector/CcsdsTcFrameDetector.hpp"
+  DEPENDS
+    STest
+  UT_AUTO_HELPERS
+)
+```
+
+### `FrameAccumulator.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameAccumulator.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FrameAccumulator.cpp
+// \author mstarch
+// \brief  cpp file for FrameAccumulator component implementation class
+// ======================================================================
+
+#include "Svc/FrameAccumulator/FrameAccumulator.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+FrameAccumulator ::FrameAccumulator(const char* const compName)
+    : FrameAccumulatorComponentBase(compName),
+      m_detector(nullptr),
+      m_memoryAllocator(nullptr),
+      m_memory(nullptr),
+      m_allocatorId(0) {}
+
+FrameAccumulator ::~FrameAccumulator() {}
+
+void FrameAccumulator ::configure(const FrameDetector& detector,
+                                  FwEnumStoreType allocationId,
+                                  Fw::MemAllocator& allocator,
+                                  FwSizeType store_size) {
+    bool recoverable = false;
+    U8* const data = static_cast<U8*>(allocator.allocate(allocationId, store_size, recoverable));
+    FW_ASSERT(data != nullptr);
+    m_inRing.setup(data, store_size);
+
+    this->m_detector = &detector;
+    this->m_allocatorId = allocationId;
+    this->m_memoryAllocator = &allocator;
+    this->m_memory = data;
+}
+
+void FrameAccumulator ::cleanup() {
+    // If configuration happened, we must deallocate
+    if (this->m_memoryAllocator != nullptr) {
+        this->m_memoryAllocator->deallocate(this->m_allocatorId, this->m_memory);
+        this->m_memory = nullptr;
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FrameAccumulator ::dataIn_handler(FwIndexType portNum, Fw::Buffer& buffer, const ComCfg::FrameContext& context) {
+    // Check whether there is data to process
+    if (buffer.isValid()) {
+        // The buffer is not necessarily a full frame, so the attached context has no meaning and we ignore it
+        this->processBuffer(buffer);
+    }
+    // Return ownership of the incoming data
+    this->dataReturnOut_out(0, buffer, context);
+}
+
+void FrameAccumulator ::processBuffer(Fw::Buffer& buffer) {
+    const FwSizeType bufferSize = buffer.getSize();
+    U8* const bufferData = buffer.getData();
+    // Current offset into buffer
+    FwSizeType offset = 0;
+    // Remaining data in buffer
+    FwSizeType remaining = bufferSize;
+
+    for (FwSizeType i = 0; i < bufferSize; ++i) {
+        // If there is no data left or no space, exit the loop
+        if (remaining == 0 || this->m_inRing.get_free_size() == 0) {
+            break;
+        }
+        // Compute the size of data to serialize
+        const FwSizeType ringFreeSize = this->m_inRing.get_free_size();
+        const FwSizeType serSize = (ringFreeSize <= remaining) ? ringFreeSize : remaining;
+        // Serialize data into the ring buffer
+        const Fw::SerializeStatus status = this->m_inRing.serialize(&bufferData[offset], serSize);
+        // If data does not fit, there is a coding error
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status),
+                  static_cast<FwAssertArgType>(offset), static_cast<FwAssertArgType>(serSize));
+        // Process the data
+        this->processRing();
+        // Update buffer offset and remaining
+        offset += serSize;
+        remaining -= serSize;
+    }
+    // Either all the bytes from the data buffer must be processed, or the ring must be full
+    FW_ASSERT(remaining == 0 || this->m_inRing.get_free_size() == 0, static_cast<FwAssertArgType>(remaining));
+}
+
+void FrameAccumulator ::processRing() {
+    FW_ASSERT(this->m_detector != nullptr);
+
+    // The number of remaining bytes in the ring buffer
+    FwSizeType remaining = 0;
+    // The protocol status
+    FrameDetector::Status status = FrameDetector::Status::FRAME_DETECTED;
+    // The ring buffer capacity
+    const FwSizeType ringCapacity = this->m_inRing.get_capacity();
+
+    // Process the ring buffer looking for at least the header
+    for (FwSizeType i = 0; i < ringCapacity; i++) {
+        // Get the number of bytes remaining in the ring buffer
+        remaining = this->m_inRing.get_allocated_size();
+        // If there are none, we are done
+        if (remaining == 0) {
+            break;
+        }
+        // size_out is a return variable we initialize to zero, but it should be overwritten
+        FwSizeType size_out = 0;
+        // Attempt to detect the frame without changing the circular buffer
+        status = this->m_detector->detect(this->m_inRing, size_out);
+        // Detect must not consume data in the ring buffer
+        FW_ASSERT(m_inRing.get_allocated_size() == remaining,
+                  static_cast<FwAssertArgType>(m_inRing.get_allocated_size()), static_cast<FwAssertArgType>(remaining));
+        // On successful detection, consume data from the ring buffer and place it into an allocated frame
+        if (status == FrameDetector::FRAME_DETECTED) {
+            // size_out must be set to the size of the buffer and must fit within the existing data
+            FW_ASSERT(size_out != 0);
+            FW_ASSERT(size_out <= remaining, static_cast<FwAssertArgType>(size_out),
+                      static_cast<FwAssertArgType>(remaining));
+            // check for overflow before casting down to U32
+            FW_ASSERT(size_out <= std::numeric_limits<U32>::max());
+            Fw::Buffer buffer = this->bufferAllocate_out(0, static_cast<U32>(size_out));
+            if (buffer.isValid()) {
+                // Copy data out of ring buffer into the allocated buffer
+                Fw::SerializeStatus serialize_status = this->m_inRing.peek(buffer.getData(), size_out);
+                buffer.setSize(static_cast<Fw::Buffer::SizeType>(size_out));
+                FW_ASSERT(serialize_status == Fw::SerializeStatus::FW_SERIALIZE_OK);
+                // Consume (rotate) the data from the ring buffer
+                serialize_status = this->m_inRing.rotate(size_out);
+                FW_ASSERT(serialize_status == Fw::SerializeStatus::FW_SERIALIZE_OK);
+                FW_ASSERT(m_inRing.get_allocated_size() == remaining - size_out,
+                          static_cast<FwAssertArgType>(m_inRing.get_allocated_size()),
+                          static_cast<FwAssertArgType>(remaining), static_cast<FwAssertArgType>(size_out));
+                ComCfg::FrameContext context;
+                this->dataOut_out(0, buffer, context);
+            } else {
+                // No buffer is available, we need to exit and try again later
+                this->log_WARNING_HI_NoBufferAvailable();
+                break;
+            }
+        }
+        // More data needed
+        else if (status == FrameDetector::MORE_DATA_NEEDED) {
+            // size_out can never be larger than the capacity of the ring. Otherwise all uplink will fail.
+            FW_ASSERT(size_out < m_inRing.get_capacity(), static_cast<FwAssertArgType>(size_out));
+            // Detection should report "more is needed" and set size_out to something larger than available data
+            FW_ASSERT(size_out > remaining, static_cast<FwAssertArgType>(size_out),
+                      static_cast<FwAssertArgType>(remaining));
+            // Break out of loop: suspend detection until we receive another buffer
+            break;
+        }
+        // No frame was detected or an unknown status was received
+        else {
+            // Discard a single byte of data and start again
+            (void)this->m_inRing.rotate(1);
+            FW_ASSERT(m_inRing.get_allocated_size() == remaining - 1,
+                      static_cast<FwAssertArgType>(m_inRing.get_allocated_size()),
+                      static_cast<FwAssertArgType>(remaining));
+        }
+    }
+}
+
+void FrameAccumulator ::dataReturnIn_handler(FwIndexType portNum,
+                                             Fw::Buffer& fwBuffer,
+                                             const ComCfg::FrameContext& context) {
+    // Frame buffer ownership is returned to the component. Component had allocated with a buffer manager,
+    // so we return it to the buffer manager for deallocation
+    this->bufferDeallocate_out(0, fwBuffer);
+}
+
+}  // namespace Svc
+```
+
+### `FrameAccumulator.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameAccumulator.fpp`
+
+
+```fpp
+module Svc {
+    @ Accumulates data into frames
+    passive component FrameAccumulator {
+
+        # ----------------------------------------------------------------------
+        # FrameAccumulator interface
+        # ----------------------------------------------------------------------
+        import FrameAccumulator
+
+        @ Port for deallocating buffers holding extracted frames
+        output port bufferDeallocate: Fw.BufferSend
+
+        @ Port for allocating buffer to hold extracted frame
+        output port bufferAllocate: Fw.BufferGet
+
+        @ An error occurred while deserializing a packet
+        event NoBufferAvailable \
+            severity warning high \
+            format "Could not allocate a valid buffer to fit the detected frame"
+
+
+        ###############################################################################
+        # Standard AC Ports for Events 
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+    }
+}
+```
+
+### `FrameAccumulator.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameAccumulator.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FrameAccumulator.hpp
+// \author mstarch
+// \brief  hpp file for FrameAccumulator component implementation class
+// ======================================================================
+
+#ifndef Svc_FrameAccumulator_HPP
+#define Svc_FrameAccumulator_HPP
+
+#include "Fw/Types/MemAllocator.hpp"
+#include "Svc/FrameAccumulator/FrameAccumulatorComponentAc.hpp"
+#include "Svc/FrameAccumulator/FrameDetector.hpp"
+#include "Utils/Types/CircularBuffer.hpp"
+
+namespace Svc {
+
+class FrameAccumulator final : public FrameAccumulatorComponentBase {
+    friend class FrameAccumulatorTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! \brief Construct FrameAccumulator object
+    FrameAccumulator(const char* const compName  //!< The component name
+    );
+
+    //! \brief Destroy FrameAccumulator object
+    ~FrameAccumulator();
+
+    //! \brief configure memory allocation for the circular buffer
+    //!
+    //! Takes in parameters used in the Fw::MemAllocator pattern and configures a memory allocation for storing the
+    //! circular buffer.
+    void configure(const FrameDetector& detector,  //!< Frame detector helper instance
+                   FwEnumStoreType allocationId,   //!< Identifier used  when dealing with the Fw::MemAllocator
+                   Fw::MemAllocator& allocator,    //!< Fw::MemAllocator used to acquire memory
+                   FwSizeType store_size           //!< Size to request for circular buffer
+    );
+
+    //! \brief Deallocate internal resources (set up by configure() call)
+    void cleanup();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for dataIn
+    //!
+    //! Receive stream of bytes from a ComInterface component
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& recvBuffer,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for bufferReturnIn
+    //!
+    //! Port receiving ownership back of buffers sent on dataOut
+    void dataReturnIn_handler(FwIndexType portNum,                 //!< The port number
+                              Fw::Buffer& fwBuffer,                //!< The buffer
+                              const ComCfg::FrameContext& context  //!< The context object
+                              ) override;
+
+  private:
+    //! \brief process raw buffer
+    //! \return raw data buffer
+    void processBuffer(Fw::Buffer& buffer);
+
+    //! \brief process circular buffer
+    void processRing();
+
+    //! Circular buffer for storing data
+    Types::CircularBuffer m_inRing;
+
+    //! Pointer to helper class that detects frames
+    FrameDetector const* m_detector;
+
+    //! Memory allocator instance used with deallocating
+    Fw::MemAllocator* m_memoryAllocator;
+
+    //! Memory pointer for allocated memory
+    U8* m_memory;
+
+    //! Identification used with the memory allocator
+    FwEnumStoreType m_allocatorId;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `FrameDetector.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/FrameDetector.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FrameDetector.hpp
+// \author mstarch
+// \brief  hpp interface specification for FrameDetector
+// ======================================================================
+#ifndef SVC_FPRIME_FRAME_DETECTOR_HPP
+#define SVC_FPRIME_FRAME_DETECTOR_HPP
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Utils/Types/CircularBuffer.hpp>
+
+namespace Svc {
+
+//! \brief interface class used to codify what must be supported to allow frame detection
+class FrameDetector {
+  public:
+    //! \brief status returned from the detection step
+    enum Status {
+        FRAME_DETECTED,     //!< Frame detected. Extract frame and return with new data.
+        NO_FRAME_DETECTED,  //!< No frame detected. Discard data and return with new data.
+        MORE_DATA_NEEDED    //!< More data is needed to detect a frame. Keep current data and return with more.
+    };
+
+    //! \brief virtual destructor
+    virtual ~FrameDetector() = default;
+
+    //! \brief detect if a frame is available within the circular buffer
+    //!
+    //! Function implemented by sub classes used to determine if a frame is available at the current position of the
+    //! circular buffer. Implementors should detect if a frame is available, set size_out, and return a status while
+    //! following these expectations:
+    //!
+    //!  1. FRAME_DETECTED status implies a frame is available at the current offset of the circular buffer.
+    //!     size_out must be set to the size of the frame from that location.
+    //!
+    //!  2. NO_FRAME_DETECTED status implies no frame is possible at the current offset of the circular buffer.
+    //!     e.g. no start word is found at the current offset. size_out is ignored.
+    //!
+    //!  3. MORE_DATA_NEEDED status implies that a frame might be possible but more data is needed before a
+    //!     determination is possible. size_out must be set to the total amount of data needed.
+    //!
+    //!     For example, if a frame start word is 4 bytes, and 3 bytes are available in the circular buffer then the
+    //!     return status would be NO_FRAME_DETECTED and size_out must be set to 4 to ensure that at least the start
+    //!     word is available.
+    //!
+    //! \param data: circular buffer with read-only access
+    //! \param size_out: set as output to caller indicating size when appropriate
+    //! \return status of the detection to be paired with size_out
+    virtual Status detect(const Types::CircularBuffer& data, FwSizeType& size_out) const = 0;
+};
+
+}  // namespace Svc
+
+#endif  // SVC_FPRIME_FRAME_DETECTOR_HPP
+```

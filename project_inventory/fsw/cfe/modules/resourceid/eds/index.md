@@ -3,14 +3,24 @@
 
 **경로:** `fsw/cfe/modules/resourceid/eds/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_resourceid.xml`
 
-file--cfe_resourceid.xml
+**경로:** `fsw/cfe/modules/resourceid/eds/cfe_resourceid.xml`
+
+
+```xml
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
+  <Package name="CFE_RESOURCEID">
+    <DataTypeSet>
+      <ContainerDataType name="BaseType">
+        <EntryList>
+          <Entry name="BaseType" type="BASE_TYPES/uint32" />
+        </EntryList>
+      </ContainerDataType>
+    </DataTypeSet>
+  </Package>
+</PackageFile>
 ```
-
-## 항목
-
-- [`fsw/cfe/modules/resourceid/eds/cfe_resourceid.xml`](file--cfe_resourceid.xml) — UTF-8 텍스트 파일 본문 포함

@@ -3,22 +3,1547 @@
 
 **경로:** `gsw/yamcs/tests/src/main/java/org/yamcs/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractIntegrationTest.java`
 
-file--AbstractIntegrationTest.java
-file--LoggingUtils.java
-file--MessageCaptor.java
-file--ParameterCaptor.java
-file--RefMdbPacketGenerator.java
+**경로:** `gsw/yamcs/tests/src/main/java/org/yamcs/tests/AbstractIntegrationTest.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.tctm.AbstractTcDataLink;
+import org.yamcs.tctm.ParameterDataLink;
+import org.yamcs.tctm.ParameterSink;
+import org.yamcs.tctm.TmPacketDataLink;
+import org.yamcs.tctm.TmSink;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.mdb.Mdb;
+
+public abstract class AbstractIntegrationTest {
+
+    protected final String yamcsHost = "localhost";
+    protected final int yamcsPort = 9190;
+    protected final String yamcsInstance = "instance1";
+
+    ParameterProvider parameterProvider;
+    MyConnectionListener connectionListener;
+    protected YamcsClient yamcsClient;
+
+    protected String adminUsername = "admin";
+    protected char[] adminPassword = "rootpassword".toCharArray();
+    RefMdbPacketGenerator packetGenerator; // sends data to tm_realtime
+    RefMdbPacketGenerator packetGenerator2; // sends data to tm2_realtime
+    static YamcsServer yamcs;
+
+    static {
+        // LoggingUtils.enableLogging();
+    }
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        setupYamcs("IntegrationTest", true);
+    }
+
+    @BeforeEach
+    public void before() throws ClientException {
+        parameterProvider = ParameterProvider.instance[0];
+        assertNotNull(parameterProvider);
+
+        connectionListener = new MyConnectionListener();
+        yamcsClient = YamcsClient.newBuilder(yamcsHost, yamcsPort)
+                .withUserAgent("it-junit")
+                .build();
+        yamcsClient.addConnectionListener(connectionListener);
+        if (yamcs.getSecurityStore().isEnabled()) {
+            yamcsClient.login(adminUsername, adminPassword);
+        }
+        yamcsClient.connectWebSocket();
+
+        packetGenerator = PacketProvider.instance[0].mdbPacketGenerator;
+        packetGenerator.setGenerationTime(TimeEncoding.INVALID_INSTANT);
+        packetGenerator2 = PacketProvider.instance[1].mdbPacketGenerator;
+        packetGenerator2.setGenerationTime(TimeEncoding.INVALID_INSTANT);
+
+        yamcs.getInstance(yamcsInstance).getProcessor("realtime").getParameterProcessorManager().getAlarmServer()
+                .clearAll();
+    }
+
+    protected static void setupYamcs(String integrationTestConfig, boolean cleanExistingData) throws Exception {
+        if (cleanExistingData) {
+            Path dataDir = Path.of(System.getProperty("java.io.tmpdir"), "yamcs-IntegrationTest-data");
+            FileUtils.deleteRecursivelyIfExists(dataDir);
+        }
+        YConfiguration.setupTest(integrationTestConfig);
+
+        yamcs = YamcsServer.getServer();
+        yamcs.prepareStart();
+        yamcs.start();
+    }
+
+    @AfterEach
+    public void after() throws InterruptedException {
+        yamcsClient.close();
+        assertTrue(connectionListener.onDisconnect.tryAcquire(5, TimeUnit.SECONDS));
+    }
+
+    @AfterAll
+    public static void shutDownYamcs() throws Exception {
+        YamcsServer.getServer().shutDown();
+    }
+
+    void generatePkt13AndPps(String utcStart, int numPackets) {
+        long t0 = TimeEncoding.parse(utcStart);
+        for (int i = 0; i < numPackets; i++) {
+            packetGenerator.setGenerationTime(t0 + 1000 * i);
+            packetGenerator.generate_PKT1_1();
+            packetGenerator.generate_PKT1_3();
+
+            // parameters are 10ms later than packets to make sure that we have a predictable order during replay
+            parameterProvider.setGenerationTime(t0 + 1000 * i + 10);
+            parameterProvider.generateParameters(i);
+        }
+    }
+
+    void generatePkt1AndTm2Pkt1(String utcStart, int numPackets) {
+        long t0 = TimeEncoding.parse(utcStart);
+        for (int i = 0; i < numPackets; i++) {
+            packetGenerator.setGenerationTime(t0 + 1000 * i);
+            packetGenerator.generate_PKT1_1();
+
+            packetGenerator2.setGenerationTime(t0 + 1000 * i);
+            packetGenerator2.generate_TM2_PKT1();
+        }
+    }
+
+    void generatePkt3(String utcStart, int numPackets) {
+        long t0 = TimeEncoding.parse(utcStart);
+        for (int i = 0; i < numPackets; i++) {
+            packetGenerator.setGenerationTime(t0 + 1000 * i);
+            packetGenerator.generate_PKT3();
+        }
+    }
+
+    void generatePkt7(String utcStart, int numPackets) {
+        long t0 = TimeEncoding.parse(utcStart);
+        for (int i = 0; i < numPackets; i++) {
+            packetGenerator.setGenerationTime(t0 + 1000 * i);
+            packetGenerator.generate_PKT7();
+        }
+    }
+
+    void generatePkt8(String utcStart, int numPackets) {
+        long t0 = TimeEncoding.parse(utcStart);
+        for (int i = 0; i < numPackets; i++) {
+            packetGenerator.setGenerationTime(t0 + 1000 * i);
+            packetGenerator.generate_PKT8();
+        }
+    }
+
+    void generatePkt13AndTm2Pkt1(String utcStart, int numPackets) {
+        long t0 = TimeEncoding.parse(utcStart);
+        for (int i = 0; i < numPackets; i++) {
+            packetGenerator.setGenerationTime(t0 + 1000 * i);
+            packetGenerator.generate_PKT13();
+
+            packetGenerator2.setGenerationTime(t0 + 1000 * i);
+            packetGenerator2.generate_TM2_PKT1();
+        }
+    }
+
+    static class MyConnectionListener implements ConnectionListener {
+        Semaphore onConnect = new Semaphore(0);
+        Semaphore onDisconnect = new Semaphore(0);
+
+        @Override
+        public void connecting() {
+        }
+
+        @Override
+        public void connected() {
+            onConnect.release();
+        }
+
+        @Override
+        public void connectionFailed(Throwable cause) {
+        }
+
+        @Override
+        public void disconnected() {
+            onDisconnect.release();
+        }
+    }
+
+    public static class PacketProvider implements TmPacketDataLink {
+        static volatile PacketProvider[] instance = new PacketProvider[4];
+        RefMdbPacketGenerator mdbPacketGenerator = new RefMdbPacketGenerator();
+        YConfiguration config;
+        String name;
+
+        @Override
+        public void init(String yamcsInstance, String linkName, YConfiguration config) {
+            instance[config.getInt("num", 0)] = this;
+            this.config = config;
+            this.name = linkName;
+        }
+
+        @Override
+        public Status getLinkStatus() {
+            return Status.OK;
+        }
+
+        @Override
+        public String getDetailedStatus() {
+            return "OK";
+        }
+
+        @Override
+        public void enable() {
+        }
+
+        @Override
+        public void disable() {
+
+        }
+
+        @Override
+        public boolean isDisabled() {
+            return false;
+        }
+
+        @Override
+        public long getDataInCount() {
+            return 0;
+        }
+
+        @Override
+        public long getDataOutCount() {
+            return 0;
+        }
+
+        @Override
+        public void resetCounters() {
+        }
+
+        @Override
+        public void setTmSink(TmSink tmSink) {
+            mdbPacketGenerator.setTmSink(tmSink);
+        }
+
+        @Override
+        public YConfiguration getConfig() {
+            return config;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+    }
+
+    public static class ParameterProvider implements ParameterDataLink {
+        int seqNum = 0;
+        ParameterSink ppListener;
+        long generationTime;
+
+        static volatile ParameterProvider[] instance = new ParameterProvider[2];
+        Mdb xtcedb;
+        YConfiguration config;
+
+        String name;
+
+        @Override
+        public void init(String yamcsInstance, String linkName, YConfiguration config) {
+            instance[config.getInt("num", 0)] = this;
+            xtcedb = MdbFactory.getInstance(yamcsInstance);
+            this.config = config;
+            this.name = linkName;
+        }
+
+        @Override
+        public Status getLinkStatus() {
+            return Status.OK;
+        }
+
+        @Override
+        public String getDetailedStatus() {
+            return null;
+        }
+
+        @Override
+        public void enable() {
+        }
+
+        @Override
+        public void disable() {
+        }
+
+        @Override
+        public boolean isDisabled() {
+            return false;
+        }
+
+        @Override
+        public long getDataInCount() {
+            return 0;
+        }
+
+        @Override
+        public long getDataOutCount() {
+            return seqNum * 3;
+        }
+
+        @Override
+        public void resetCounters() {
+        }
+
+        @Override
+        public void setParameterSink(ParameterSink ppListener) {
+            this.ppListener = ppListener;
+        }
+
+        public void setGenerationTime(long genTime) {
+            this.generationTime = genTime;
+        }
+
+        void generateParameters(int x) {
+
+            ParameterValue pv1 = new ParameterValue(xtcedb.getParameter("/REFMDB/SUBSYS1/processed_para_uint"));
+            pv1.setUnsignedIntegerValue(x);
+            pv1.setGenerationTime(generationTime);
+
+            ParameterValue pv2 = new ParameterValue(xtcedb.getParameter("/REFMDB/SUBSYS1/processed_para_string"));
+            pv2.setGenerationTime(generationTime);
+            pv2.setStringValue("para" + x);
+
+            // add a parameter raw value to see that it's calibrated
+            ParameterValue pv5 = new ParameterValue(xtcedb.getParameter("/REFMDB/SUBSYS1/processed_para_enum_nc"));
+            pv5.setGenerationTime(generationTime);
+            pv5.setRawUnsignedInteger(1);
+
+            ppListener.updateParameters(generationTime, "IntegrationTest", seqNum, Arrays.asList(pv1, pv2, pv5));
+
+            // this one should be combined with the two above in the archive as they have the same generation time,
+            // group and sequence
+            org.yamcs.protobuf.Pvalue.ParameterValue pv3 = org.yamcs.protobuf.Pvalue.ParameterValue.newBuilder()
+                    .setAcquisitionStatus(AcquisitionStatus.ACQUIRED)
+                    .setId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_double"))
+                    .setGenerationTime(TimeEncoding.toProtobufTimestamp(generationTime))
+                    .setEngValue(ValueUtility.getDoubleGbpValue(x))
+                    .build();
+            ppListener.updateParams(generationTime, "IntegrationTest", seqNum, Arrays.asList(pv3));
+
+            // mixup some ParameterValue with Protobuf ParameterValue to test compatibility with old yamcs
+            org.yamcs.protobuf.Pvalue.ParameterValue pv4 = org.yamcs.protobuf.Pvalue.ParameterValue.newBuilder()
+                    .setAcquisitionStatus(AcquisitionStatus.ACQUIRED)
+                    .setId(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/processed_para_uint"))
+                    .setGenerationTime(TimeEncoding.toProtobufTimestamp(generationTime + 20))
+                    .setEngValue(ValueUtility.getUint32GbpValue(x))
+                    .build();
+            ppListener.updateParams(generationTime + 20, "IntegrationTest2", seqNum, Arrays.asList(pv4));
+
+            seqNum++;
+        }
+
+        @Override
+        public YConfiguration getConfig() {
+            return config;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        public void inject(long generationTime, List<ParameterValue> pvList) {
+            ppListener.updateParameters(generationTime, "test", 0, pvList);
+        }
+    }
+
+    public static class TcDataLink extends AbstractTcDataLink {
+        static short seqNum = 5000;
+        static volatile TcDataLink[] instance = new TcDataLink[4];
+
+        List<PreparedCommand> commands = new ArrayList<>();
+
+        @Override
+        public void init(String yamcsInstance, String name, YConfiguration config) {
+            super.init(yamcsInstance, name, config);
+            instance[config.getInt("num", 0)] = this;
+        }
+
+        @Override
+        public boolean sendCommand(PreparedCommand preparedCommand) {
+            if (preparedCommand.getCmdName().contains("ALG_VERIF_TC")) {
+                commandHistoryPublisher.publish(preparedCommand.getCommandId(), "packetSeqNum", seqNum);
+            }
+            commands.add(preparedCommand);
+            return true;
+        }
+
+        @Override
+        protected Status connectionStatus() {
+            return Status.OK;
+        }
+
+        @Override
+        protected void doStart() {
+            notifyStarted();
+        }
+
+        @Override
+        protected void doStop() {
+            notifyStopped();
+        }
+    }
+}
 ```
 
-## 항목
+### `LoggingUtils.java`
 
-- [`gsw/yamcs/tests/src/main/java/org/yamcs/tests/AbstractIntegrationTest.java`](file--AbstractIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/main/java/org/yamcs/tests/LoggingUtils.java`](file--LoggingUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/main/java/org/yamcs/tests/MessageCaptor.java`](file--MessageCaptor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/main/java/org/yamcs/tests/ParameterCaptor.java`](file--ParameterCaptor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/main/java/org/yamcs/tests/RefMdbPacketGenerator.java`](file--RefMdbPacketGenerator.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/tests/src/main/java/org/yamcs/tests/LoggingUtils.java`
+
+
+```java
+package org.yamcs.tests;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+public class LoggingUtils {
+
+    public static void configureLogging(Level level) {
+        Logger logger = Logger.getLogger("org.yamcs");
+        logger.setLevel(level);
+        ConsoleHandler ch = null;
+        
+        for (Handler h: Logger.getLogger("").getHandlers()) {
+            if(h instanceof ConsoleHandler) {
+                ch = (ConsoleHandler) h;
+                break;
+            }
+        }
+        if(ch==null) {
+            ch = new ConsoleHandler();
+            Logger.getLogger("").addHandler(ch);
+        }
+        ch.setLevel(level);
+    }
+
+    /**
+     * use to enable logging during junit tests debugging.
+     */
+    public static void enableTracing() {
+        configureLogging(Level.ALL);
+    }
+
+    /**
+     * Start capturing all the logs generated by the class into the ArrayLogHandler.
+     * <p>
+     * The capture should be stopped by calling {@link #stopCapture}
+     */
+    public static ArrayLogHandler startCapture(Class<?> clazz) {
+        Logger logger = Logger.getLogger(clazz.getName());
+        logger.setLevel(Level.ALL);
+
+        ArrayLogHandler ah = new ArrayLogHandler();
+        ah.setLevel(Level.ALL);
+
+        logger.addHandler(ah);
+        return ah;
+    }
+
+    public static void stopCapture(Class<?> clazz) {
+        Logger logger = Logger.getLogger(clazz.getName());
+
+        for (Handler h : logger.getHandlers()) {
+            if (h instanceof ArrayLogHandler) {
+                logger.removeHandler(h);
+            }
+        }
+    }
+
+    public static class ArrayLogHandler extends Handler {
+        
+        public final List<LogRecord> records = new ArrayList<>();
+        
+        
+        @Override
+        public void publish(LogRecord record) {
+            records.add(record);
+        }
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public void close() throws SecurityException {
+        }
+
+        public boolean contains(String msg) {
+            for (LogRecord lr : records) {
+                if (lr.getMessage().contains(msg)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+}
+```
+
+### `MessageCaptor.java`
+
+**경로:** `gsw/yamcs/tests/src/main/java/org/yamcs/tests/MessageCaptor.java`
+
+
+```java
+package org.yamcs.tests;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.client.Subscription;
+
+import com.google.protobuf.Message;
+
+/**
+ * Utility class for queueing original messages as they are received from a subscription to Yamcs. This is intended for
+ * use in unit tests only.
+ */
+public class MessageCaptor<T extends Message> {
+
+    // The maximum wait time before a timeout exception is generated on 'timely' methods.
+    // On slow machines this can be increased, but it may also have an impact on code
+    // that _expects_ to receive nothing for a certain time.
+    private static final int TIMELY_WAIT_TIME = 3000;
+
+    private BlockingQueue<T> queue = new LinkedBlockingQueue<>();
+
+    private MessageCaptor(Subscription<?, T> subscription) {
+        subscription.addMessageListener(queue::add);
+    }
+
+    /**
+     * Returns the next received message. Or null, if nothing was received yet.
+     */
+    public T poll() {
+        return queue.poll();
+    }
+
+    public T poll(long timeout) throws InterruptedException {
+        return queue.poll(timeout, TimeUnit.MILLISECONDS);
+    }
+
+    public T expectTimely() throws InterruptedException, TimeoutException {
+        T message = queue.poll(TIMELY_WAIT_TIME, TimeUnit.MILLISECONDS);
+        if (message == null) {
+            throw new TimeoutException();
+        }
+        return message;
+    }
+
+    public void clear() {
+        queue.clear();
+    }
+
+    /**
+     * Returns true if there are not currently any unprocessed messages.
+     */
+    public boolean isEmpty() {
+        return queue.isEmpty();
+    }
+
+    /**
+     * Returns the number of unprocessed messages.
+     */
+    public int getPendingCount() {
+        return queue.size();
+    }
+
+    public static <T extends Message> MessageCaptor<T> of(Subscription<?, T> subscription) {
+        return new MessageCaptor<>(subscription);
+    }
+}
+```
+
+### `ParameterCaptor.java`
+
+**경로:** `gsw/yamcs/tests/src/main/java/org/yamcs/tests/ParameterCaptor.java`
+
+
+```java
+package org.yamcs.tests;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.client.ParameterSubscription;
+import org.yamcs.client.ParameterSubscription.Listener;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+/**
+ * Utility class for queueing parameter deliveries as they are received from a subscription to Yamcs. This is intended
+ * for use in unit tests only.
+ */
+public class ParameterCaptor {
+
+    // The maximum wait time before a timeout exception is generated on 'timely' methods.
+    // On slow machines this can be increased, but it may also have an impact on code
+    // that _expects_ to receive nothing for a certain time.
+    private static final int TIMELY_WAIT_TIME = 3000;
+
+    private BlockingQueue<NamedObjectId> invalidIdentifierQueue = new LinkedBlockingQueue<>();
+    private BlockingQueue<List<ParameterValue>> deliveryQueue = new LinkedBlockingQueue<>();
+
+    private ParameterCaptor(ParameterSubscription subscription) {
+        subscription.addListener(new Listener() {
+
+            @Override
+            public void onData(List<ParameterValue> values) {
+                deliveryQueue.add(values);
+            }
+
+            @Override
+            public void onInvalidIdentification(NamedObjectId id) {
+                invalidIdentifierQueue.add(id);
+            }
+        });
+    }
+
+    /**
+     * Returns the next delivery. Or null, if nothing was received yet.
+     */
+    public List<ParameterValue> poll() {
+        return deliveryQueue.poll();
+    }
+
+    /**
+     * Returns the next delivery. Or null, if nothing was received yet.
+     */
+    public List<ParameterValue> poll(long timeout) throws InterruptedException {
+        return deliveryQueue.poll(timeout, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Returns the next delivery. If there is nothing available yet, this will block for the specified time awaiting
+     * delivery.
+     */
+    public List<ParameterValue> expectTimely() throws InterruptedException, TimeoutException {
+        List<ParameterValue> values = deliveryQueue.poll(TIMELY_WAIT_TIME, TimeUnit.MILLISECONDS);
+        if (values == null) {
+            throw new TimeoutException();
+        }
+        return values;
+    }
+
+    public void assertSilence() throws InterruptedException {
+        List<ParameterValue> values = deliveryQueue.poll(TIMELY_WAIT_TIME, TimeUnit.MILLISECONDS);
+        assertNull(values, "Received a message while a moment of silence was expected");
+    }
+
+    public void clear() {
+        deliveryQueue.clear();
+        invalidIdentifierQueue.clear();
+    }
+
+    /**
+     * Returns true if there are not currently any unprocessed deliveries.
+     */
+    public boolean isEmpty() {
+        return deliveryQueue.isEmpty();
+    }
+
+    /**
+     * Returns the number of unprocessed value deliveries.
+     */
+    public int getPendingCount() {
+        return deliveryQueue.size();
+    }
+
+    public NamedObjectId expectTimelyInvalidIdentifier() throws InterruptedException, TimeoutException {
+        NamedObjectId id = invalidIdentifierQueue.poll(TIMELY_WAIT_TIME, TimeUnit.MILLISECONDS);
+        if (id == null) {
+            throw new TimeoutException();
+        }
+        return id;
+    }
+
+    public static ParameterCaptor of(ParameterSubscription subscription) {
+        return new ParameterCaptor(subscription);
+    }
+}
+```
+
+### `RefMdbPacketGenerator.java`
+
+**경로:** `gsw/yamcs/tests/src/main/java/org/yamcs/tests/RefMdbPacketGenerator.java`
+
+
+```java
+package org.yamcs.tests;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.TmPacket;
+import org.yamcs.TmPacketProvider;
+import org.yamcs.TmProcessor;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.TmSink;
+import org.yamcs.utils.GpsCcsdsTime;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.SequenceContainer;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * Generates packets according to the refmdb database.
+ * 
+ * Works either as a ProcessorService part of a processor or as TmPacketProvider in the integration tests
+ * 
+ * @author nm
+ *
+ */
+public class RefMdbPacketGenerator extends AbstractService implements TmPacketProvider {
+    TmProcessor tmProcessor;
+    public final int headerLength = 16;
+    public final int pkt1Length = headerLength + 3;
+    public final int pkt1_1Length = pkt1Length + 56;
+    public final int pkt1_2Length = pkt1Length + 16;
+    public final int pkt1_3Length = pkt1Length + 100;
+    public final int pkt1_4Length = pkt1Length + 300;
+    public final int pkt1_5Length = pkt1Length + 50;
+    public final int pkt1_6Length = pkt1Length + 4;
+    public final int pkt1_7Length = pkt1Length + 6;
+    public final int pkt1_8Length = pkt1Length + 6;
+    public final int pkt1_9Length = pkt1Length + 1;
+    public final int pkt1_10Length = pkt1Length + 8;
+    public final int pkt1_11Length = pkt1Length + 4;
+
+    public final int pkt4Length = headerLength + 4;
+    public final int pkt5Length = headerLength + pFixedBinary1.length + pPrependedSizeBinary1.length;
+    public final int pkt6Length = headerLength + 5;
+
+    public final int pkt2Length = 8;
+    public final int pkt1_ListLength = pkt1Length;
+    public final int pkt1_AndLength = pkt1Length;
+    public final int pkt1_OrLength = pkt1Length;
+    public final int pkt1_And_OrLength = pkt1Length;
+
+    public final int contVerifCmdAck_Length = headerLength + 7;
+    public final int algVerifCmdAck_Length = headerLength + 9;
+
+    // raw values of parameters
+    public volatile short pIntegerPara1_1 = 5;
+
+    public volatile byte pIntegerPara1_1_1 = 20;
+    public volatile short pFloatPara1_1_2 = 1000;
+    public volatile float pFloatPara1_1_3 = 2;
+    public volatile byte pEnumerationPara1_1_4 = 0;
+    public volatile String pStringPara1_1_5 = "cucu";
+    public volatile int pIntegerPara1_1_6 = 236;
+    public volatile byte pIntegerPara1_1_7 = 34;
+    public volatile long pIntegerPara1_1_8 = 5084265585L;
+    public volatile int pIntegerPara1_11_1 = 0xAFFFFFFE; // a uint32 stored in signed java int
+    public volatile long pIntegerPara1_11_1_unsigned_value = 2952790014L; // the equivalent unsigned value
+    public volatile float pFloatPara1_20_1 = (float) (Math.PI / 2);
+    public volatile int pTimePara_sec6_1 = 1;
+    public volatile byte pTimePara_sec6_2 = (byte) 128;
+
+    public volatile byte pLEIntegerPara1_2_1 = 13;
+    public volatile short pLEIntegerPara1_2_2 = 1300;
+    public volatile int pLEIntegerPara1_2_3 = 130000;
+    public volatile short pLEFloatPara1_2_1 = 300;
+    public volatile float pLEFloatPara1_2_2 = 2.7182f;
+
+    static public final String pFixedStringPara1_3_1 = "Ab"; // 16 bits
+    static public final String pFixedStringPara1_3_2 = "A"; // 8 bits
+    static public final String pTerminatedStringPara1_3_3 = "Abcdef"; // Null terminated
+    static public final String pTerminatedStringPara1_3_4 = "Abcdef"; // Comma terminated
+    static public final String pPrependedSizeStringPara1_3_5 = "Abcdefghijklmnopqrstuvwxyz"; // First 16 bits (2 bytes)
+                                                                                             // set size in bits of size
+                                                                                             // tag
+    static public final String pPrependedSizeStringPara1_3_6 = "Abcdef"; // First 8 bits (1 byte) set size in bits of
+                                                                         // size tag
+    static public final String pFixedStringPara1_3_7 = "Abcdefghijklmnop"; // 128 bits
+
+    // Get floats from strings
+    public String pStringFloatFSPara1_4_1 = "1.34"; // Fixed size 32 bit
+    public String pStringFloatTSCPara1_4_2 = "0.0000001"; // Comma terminated, leading zeros and calibrated
+    static public final String pStringFloatTSSCPara1_4_3 = "0.12"; // Semi-colon terminated, leading zero
+    static public final String pStringFloatFSBPara1_4_4 = "1.34567890123456"; // 128 bit string
+    static public final String pStringFloatPSPara1_4_5 = "1.345678"; // Prepended size string, first 8 bits (1 byte) set
+                                                                     // size in bits of size tag
+
+    // Get integers from strings
+    static public final String pStringIntFixedPara1_5_1 = "120"; // Fixed size, 24 bits
+    public String pStringIntTermPara1_5_2 = "12"; // Comma terminated
+    static public final String pStringIntTermPara1_5_3 = "12045"; // Semi-colon terminated
+    static public final String pStringIntPrePara1_5_4 = "1204507"; // Prepended size (16 bits)
+    static public final String pStringIntStrPara1_5_5 = "123406789"; // string
+
+    static public final byte[] pFixedBinary1 = StringConverter.hexStringToArray("0102030004050607");
+    static public final byte[] pPrependedSizeBinary1 = StringConverter.hexStringToArray("0220AC");
+
+    // Get enumerations from strings
+    public String pStringEnumPara1_12_1 = "1";
+
+    // Get boolean from strings
+    public String pStringBooleanPara10_1 = "True";
+
+    static public final int pIntegerPara2_1 = 123;
+    static public final int pIntegerPara2_2 = 25;
+
+    Map<Integer, AtomicInteger> seqCount = new HashMap<Integer, AtomicInteger>();
+
+    private long generationTime = TimeEncoding.INVALID_INSTANT;
+    TmSink tmSink;
+
+    SequenceContainer rootSc;
+
+    public RefMdbPacketGenerator(String instance, String name, String spec) {
+
+    }
+
+    public RefMdbPacketGenerator() {
+    }
+
+    @Override
+    public void init(Processor proc, YConfiguration config, Object spec) {
+        this.tmProcessor = proc.getTmProcessor();
+        proc.setPacketProvider(this);
+        rootSc = proc.getMdb().getRootSequenceContainer();
+        if (rootSc == null) {
+            throw new ConfigurationException("Cannot find the root sequence container");
+        }
+    }
+
+    public void setTmSink(TmSink tmSink) {
+        this.tmSink = tmSink;
+    }
+
+    public byte[] generate_PKT1_1() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_1Length);
+        fill_PKT1_1(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_2() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_2Length);
+        fill_PKT1_2(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_3() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_3Length);
+        fill_PKT1_3(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT14() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_4Length);
+        fill_PKT1_4(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_5() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_5Length);
+        fill_PKT1_5(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_TM2_PKT1() {
+        ByteBuffer bb = ByteBuffer.allocate(12);
+        bb.putInt(1);// pkt id
+        bb.putInt(20); // para1
+        bb.putFloat((float) 3.15); // para2
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    /**
+     * Generate a packet with configurable content
+     */
+    public byte[] generate_PKT1_6(int pIntegerPara16_1, int pIntegerPara16_2) {
+        return generate_PKT1_6(pIntegerPara16_1, pIntegerPara16_2, TimeEncoding.getWallclockTime(),
+                TimeEncoding.getWallclockTime());
+    }
+
+    /**
+     * Generate a packet with configurable content
+     */
+    public byte[] generate_PKT1_6(int pIntegerPara16_1, int pIntegerPara16_2, long rectime, long gentime) {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_6Length);
+        fill_PKT1_6(bb, pIntegerPara16_1, pIntegerPara16_2);
+        sendToTmProcessor(bb, rectime, gentime);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_7() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_7Length);
+        fill_PKT1_7(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_8(int pIntegerPara18_1, int pIntegerPara18_2) {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_8Length);
+        fill_PKT1_8(bb, pIntegerPara18_1, pIntegerPara18_2);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_9() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_9Length);
+        fill_PKT1_9(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_10(int pIntegerPara1_10_1, int pEnumerationPara1_10_2, float pFloatPara1_10_3) {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_10Length);
+        fill_PKT1_10(bb, pIntegerPara1_10_1, pEnumerationPara1_10_2, pFloatPara1_10_3);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_11() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_11Length);
+        fill_PKT1(bb, 11);
+        bb.position(pkt1Length);
+        bb.putInt(pIntegerPara1_11_1);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT1_12() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1Length + pStringEnumPara1_12_1.length() + 1);
+        fill_PKT1_12(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT4() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt4Length);
+        fill_PKT4(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT5() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt5Length);
+        fill_PKT5(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    private void fill_PKT5(ByteBuffer bb) {
+        fill_CcsdsHeader(bb, 995, 5);
+        bb.position(headerLength);
+        bb.put(pFixedBinary1);
+        bb.put(pPrependedSizeBinary1);
+    }
+
+    public byte[] generate_PKT6() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt6Length);
+        fill_PKT6(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT2() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt2Length);
+        fill_PKT2(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    // Packets to test the boolean inheritance condition
+    public ByteBuffer generate_PKT1_List() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_ListLength);
+        fill_PKT1(bb, 1, 13, (short) 2);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    public ByteBuffer generate_PKT1_AND() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_ListLength);
+        fill_PKT1(bb, 2, 13, (short) 3);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    public ByteBuffer generate_PKT1_OR_1() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_ListLength);
+        fill_PKT1(bb, 1, 14, (short) 2);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    public ByteBuffer generate_PKT1_AND_OR_1() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_ListLength);
+        fill_PKT1(bb, 1, 15, (short) 1);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    public ByteBuffer generate_PKT1_AND_OR_2() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_ListLength);
+        fill_PKT1(bb, 14, 0, (short) 15);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    public byte[] generate_PKT1(int integerPara1_1, int packetType, short integerPara1_2) {
+        ByteBuffer bb = ByteBuffer.allocate(pkt1_ListLength);
+        fill_PKT1(bb, integerPara1_1, packetType, integerPara1_2);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public ByteBuffer generateContVerifCmdAck(short cmdId, byte stage, int result) {
+        ByteBuffer bb = ByteBuffer.allocate(contVerifCmdAck_Length);
+        fill_CcsdsHeader(bb, 101, 1000);
+        bb.position(headerLength);
+        bb.putShort(cmdId);
+        bb.put(stage);
+        bb.putInt(result);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    public ByteBuffer generateAlgVerifCmdAck(short cmdId, short packetSeq, byte stage, int result) {
+        ByteBuffer bb = ByteBuffer.allocate(algVerifCmdAck_Length);
+        fill_CcsdsHeader(bb, 101, 2000);
+        bb.position(headerLength);
+        bb.putShort(cmdId);
+        bb.putShort(packetSeq);
+        bb.put(stage);
+        bb.putInt(result);
+        sendToTmProcessor(bb);
+        return bb;
+    }
+
+    /*
+     * Dynamic sized packet.
+     * Test packet contains:
+     * ccsds_header (headerLength bits)
+     * IntegerPara1_1 = 2 (4 bits)
+     * IntegerPara1_2 = 3 (16 bits)
+     * IntegerPara1_2 = 4 (16 bits)
+     * block_para1 = 5 (8 bits)
+     * block_para2 = 6 (8 bits)
+     * block_para1 = 7 (8 bits)
+     * block_para2 = 8 (8 bits)
+     * block_para1 = 9 (8 bits)
+     * block_para2 = 10 (8 bits)
+     * block_para3 = 11 (8 bits)
+     * block_para4 = 12 (8 bits)
+     * block_para3 = 13 (8 bits)
+     * block_para4 = 14 (8 bits)
+     * aggregate_para2 = 15 (48 bits)
+     * aggregate_para2 = 16 (48 bits)
+     *  
+     */
+    public byte[] generate_PKT3() {
+        int pktLength = headerLength + 1 + 2 * 2 + 11 + 12;
+        ByteBuffer bb = ByteBuffer.allocate(pktLength);
+        fill_PKT3(bb);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    /**
+     * set the generation time used to send the packets.
+     * If TimeEncoding.INVALID_INSTANT is used, the current time will be sent
+     * 
+     * @param genTime
+     */
+    public void setGenerationTime(long genTime) {
+        this.generationTime = genTime;
+    }
+
+    private void fill_CcsdsHeader(ByteBuffer bb, int apid, int packetId) {
+        short xs;
+        // Primary header:
+        // version(3bits) type(1bit) secondary header flag(1bit) apid(11 bits)
+        xs = (short) ((3 << 11) | apid);
+        bb.putShort(0, xs);
+
+        AtomicInteger a = seqCount.computeIfAbsent(apid, r -> new AtomicInteger(0));
+
+        // Seq Flags (2 bits) Seq Count(14 bits)
+        xs = (short) ((3 << 14) | a.getAndIncrement());
+
+        bb.putShort(2, xs);
+        // packet length (16 bits).
+        bb.putShort(4, (short) (bb.capacity() - 7));
+
+        // Secondary header:
+        // coarse time(32 bits)
+        GpsCcsdsTime t = TimeEncoding.toGpsTime(generationTime);
+        bb.putInt(6, t.coarseTime);
+        // fine time(8 bits) timeID(2bits) checkword(1 bit) spare(1 bit) pktType(4 bits)
+        // xs=(short)((shTimeId<<6)|(shChecksumIndicator<<5)|shPacketType);
+
+        bb.put(10, t.fineTime);
+        // packetId(32 bits)
+        bb.putInt(12, packetId);
+        bb.position(headerLength);
+    }
+
+    private void fill_PKT1(ByteBuffer bb, int packetType) {
+        fill_CcsdsHeader(bb, 995, 318813007);
+        bb.put(headerLength, (byte) ((pIntegerPara1_1 << 4) + packetType));
+    }
+
+    private void fill_PKT1(ByteBuffer bb, int integerPara1_1, int packetType, short integerPara1_2) {
+        fill_CcsdsHeader(bb, 995, 318813007);
+        bb.put(headerLength, (byte) ((integerPara1_1 << 4) + packetType));
+        bb.putShort(headerLength + 1, integerPara1_2);
+    }
+
+    private void fill_PKT1_1(ByteBuffer bb) {
+        fill_PKT1(bb, 1);
+        int offset = pkt1Length;
+        bb.position(offset);
+        bb.put(pIntegerPara1_1_1);
+        bb.putShort(pFloatPara1_1_2);
+        bb.putFloat(pFloatPara1_1_3);
+        bb.put(pEnumerationPara1_1_4);
+
+        bb.put((byte) (pIntegerPara1_1_6 >> 16));
+        bb.putShort((short) (pIntegerPara1_1_6 & 0xFFFF));
+        bb.put(pIntegerPara1_1_7);
+
+        bb.putShort((short) (pIntegerPara1_1_8 >> 32));
+        bb.putInt((int) pIntegerPara1_1_8 & 0xFFFFFFFF);
+
+        byte[] b = new byte[10];
+        System.arraycopy(pStringPara1_1_5.getBytes(), 0, b, 0, pStringPara1_1_5.getBytes().length);
+        bb.put(b);
+    }
+
+    private void fill_PKT1_2(ByteBuffer bb) {
+        fill_PKT1(bb, 2);
+        bb.position(pkt1Length);
+
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        bb.put(pLEIntegerPara1_2_1);
+        bb.putShort(pLEIntegerPara1_2_2);
+        bb.putInt(pLEIntegerPara1_2_3);
+        bb.putShort(pLEFloatPara1_2_1);
+        bb.putFloat(pLEFloatPara1_2_2);
+    }
+
+    private void fill_PKT1_3(ByteBuffer bb) {
+        fill_PKT1(bb, 3);
+        int offset = pkt1Length;
+        bb.position(offset);
+
+        putFixedStringParam(bb, pFixedStringPara1_3_1, 16);
+        putFixedStringParam(bb, pFixedStringPara1_3_2, 8);
+
+        putTerminatedStringParam(bb, pTerminatedStringPara1_3_3, (byte) 0);
+        putTerminatedStringParam(bb, pTerminatedStringPara1_3_4, (byte) ',');
+
+        putPrependedSizeStringParam(bb, pPrependedSizeStringPara1_3_5, 16);
+        putPrependedSizeStringParam(bb, pPrependedSizeStringPara1_3_6, 8);
+
+        putFixedStringParam(bb, pFixedStringPara1_3_7, 128);
+    }
+
+    private void fill_PKT1_4(ByteBuffer bb) {
+        fill_PKT1(bb, 4);
+        int offset = pkt1Length;
+        bb.position(offset);
+
+        // Floats in strings
+        putFixedStringParam(bb, pStringFloatFSPara1_4_1, 32);
+        putTerminatedStringParam(bb, pStringFloatTSCPara1_4_2, (byte) ',');
+        putTerminatedStringParam(bb, pStringFloatTSSCPara1_4_3, (byte) ';');
+        putTerminatedStringParam(bb, pStringFloatTSSCPara1_4_3, (byte) ';');
+        putPrependedSizeStringParam(bb, pStringFloatPSPara1_4_5, 8);
+        putFixedStringParam(bb, pStringFloatFSBPara1_4_4, 128);
+    }
+
+    private void fill_PKT1_5(ByteBuffer bb) {
+        fill_PKT1(bb, 5);
+        int offset = pkt1Length;
+        bb.position(offset);
+
+        // Integers in strings
+        putFixedStringParam(bb, pStringIntFixedPara1_5_1, 24);
+        putTerminatedStringParam(bb, pStringIntTermPara1_5_2, (byte) ',');
+        putTerminatedStringParam(bb, pStringIntTermPara1_5_3, (byte) ';');
+        putPrependedSizeStringParam(bb, pStringIntPrePara1_5_4, 16);
+        // Straight string is null terminated
+        putTerminatedStringParam(bb, pStringIntStrPara1_5_5, (byte) 0);
+    }
+
+    private void fill_PKT4(ByteBuffer bb) {
+        fill_CcsdsHeader(bb, 995, 4);
+        bb.position(headerLength);
+        bb.putFloat(pFloatPara1_20_1);
+    }
+
+    private void fill_PKT6(ByteBuffer bb) {
+        fill_CcsdsHeader(bb, 995, 6);
+        bb.position(headerLength);
+        bb.putInt(pTimePara_sec6_1);
+        bb.put(pTimePara_sec6_2);
+    }
+
+    private void fill_PKT2(ByteBuffer bb) {
+        bb.position(4);
+        bb.putShort((short) (pIntegerPara2_1 & 0xFFFF));
+        bb.putShort((short) (pIntegerPara2_2 & 0xFFFF));
+    }
+
+    private void fill_PKT1_6(ByteBuffer bb, int pIntegerPara16_1, int pIntegerPara16_2) {
+        fill_PKT1(bb, 6);
+        int offset = pkt1Length;
+        bb.position(offset);
+        bb.putShort((short) (pIntegerPara16_1 & 0xFFFF));
+        bb.putShort((short) (pIntegerPara16_2 & 0xFFFF));
+    }
+
+    private void fill_PKT1_7(ByteBuffer bb) {
+        fill_PKT1(bb, 7);
+        int offset = pkt1Length;
+        bb.position(offset);
+
+        // 16-bit signed integer (in sign-magnitude)
+        bb.put(StringConverter.hexStringToArray("BA50"));
+        // 6 (000110), filler (000), -6 (1000110) (sign-magnitude)
+        bb.put(StringConverter.hexStringToArray("1846"));
+        // 6 (000110), filler (000), -6 (1111001) (1's complement)
+        bb.put(StringConverter.hexStringToArray("1879"));
+    }
+
+    private void fill_PKT1_8(ByteBuffer bb, int pIntegerPara18_1, int pIntegerPara18_2) {
+        fill_PKT1(bb, 8);
+        int offset = pkt1Length;
+        bb.position(offset);
+
+        bb.putShort((short) (pIntegerPara18_1 & 0xFFFF));
+        bb.putInt(pIntegerPara18_2);
+    }
+
+    private void fill_PKT1_9(ByteBuffer bb) {
+        fill_PKT1(bb, 9);
+        int offset = pkt1Length;
+        bb.position(offset);
+        bb.put((byte) 0xA1);
+    }
+
+    private void fill_PKT1_10(ByteBuffer bb, int pIntegerPara1_10_1, int pEnumerationPara1_10_2,
+            float pFloatPara1_10_3) {
+        fill_PKT1(bb, 10);
+        int offset = pkt1Length;
+        bb.position(offset);
+        bb.putShort((short) pIntegerPara1_10_1);
+        bb.put((byte) pEnumerationPara1_10_2);
+        bb.put((byte) 0);
+        bb.putFloat(pFloatPara1_10_3);
+    }
+
+    private void fill_PKT1_12(ByteBuffer bb) {
+        fill_PKT1(bb, 12);
+        int offset = pkt1Length;
+        bb.position(offset);
+
+        putTerminatedStringParam(bb, pStringEnumPara1_12_1, (byte) ';');
+    }
+
+    private void fill_PKT3(ByteBuffer bb) {
+        fill_CcsdsHeader(bb, 995, 318813009);
+        bb.position(headerLength);
+        bb.put((byte) (2 << 4)); // IntegerPara1_1 = 2 (4 bits)
+        bb.put((byte) 0); // IntegerPara1_2 = 3
+        bb.put((byte) 3); //
+        bb.put((byte) 0); // IntegerPara1_2 = 4
+        bb.put((byte) 4); //
+        bb.put((byte) 5); // block_para1 = 5
+        bb.put((byte) 6); // block_para2 = 6
+        bb.put((byte) 61); // block_para2_1 = 61
+        bb.put((byte) 7); // block_para1 = 7
+        bb.put((byte) 8); // block_para2 = 8
+        bb.put((byte) 9); // block_para1 = 9
+        bb.put((byte) 10); // block_para2 = 10
+        bb.put((byte) 11); // block_para3 = 11
+        bb.put((byte) 12); // block_para4 = 12
+        bb.put((byte) 13); // block_para3 = 13
+        bb.put((byte) 14); // block_para4 = 14
+
+        bb.putShort((short) 15); // aggregate_para2.member1
+        bb.putFloat(15.5f); // aggregate_para2.member2
+
+        bb.putShort((short) 16); // aggregate_para2.member1
+        bb.putFloat(16.5f); // aggregate_para2.member2
+    }
+
+    // ######################### PKT7
+    public final int pkt7Length = headerLength + 7;
+    public byte paggr1_member1 = 2;
+    public short paggr1_member2 = 30;
+    public float paggr1_member3 = 2.72f;
+
+    public byte[] generate_PKT7() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt7Length);
+        fill_CcsdsHeader(bb, 995, 7);
+        bb.put(paggr1_member1);
+        bb.putShort(paggr1_member2);
+        bb.putFloat(paggr1_member3);
+
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    // ########################### PKT8
+    public final int para_pkt8_count = 150;
+    public final int pkt8Length = headerLength + 1 + 7 * para_pkt8_count + 9 * 4;
+
+    public byte[] generate_PKT8() {
+        ByteBuffer bb = ByteBuffer.allocate(pkt8Length);
+        fill_CcsdsHeader(bb, 995, 8);
+        bb.position(headerLength);
+        bb.put((byte) para_pkt8_count);
+        for (int i = 0; i < para_pkt8_count; i++) {
+            bb.put((byte) i);
+            bb.putShort((short) (i * 2));
+            bb.putFloat(i / 2.0f);
+        }
+
+        // 3x3 matrix
+        for (int i = 0; i < 9; i++) {
+            bb.putFloat(i);
+        }
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    // ########################### PKT9
+    public final int pkt9Length = headerLength + 6;
+
+    public byte[] generate_PKT9(short obId, int v) {
+        ByteBuffer bb = ByteBuffer.allocate(pkt8Length);
+        fill_CcsdsHeader(bb, 995, 9);
+        bb.putShort(obId);
+        bb.putInt(v);
+
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT10() {
+        int pkt10Length = headerLength + pStringBooleanPara10_1.length() + 1;
+        ByteBuffer bb = ByteBuffer.allocate(pkt10Length);
+
+        fill_CcsdsHeader(bb, 995, 10);
+        putTerminatedStringParam(bb, pStringBooleanPara10_1, (byte) 0);
+
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT11(String s, byte v) {
+        int strLength = 20;
+        int pkt11Length = headerLength + strLength + 1;
+        ByteBuffer bb = ByteBuffer.allocate(pkt11Length);
+        fill_CcsdsHeader(bb, 995, 11);
+        byte[] sb = s.getBytes();
+        bb.put(sb, 0, Math.min(20, sb.length));
+        bb.put(headerLength + strLength, v);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT12() {
+        int pkt12Length = headerLength + 100;
+        ByteBuffer bb = ByteBuffer.allocate(pkt12Length);
+        fill_CcsdsHeader(bb, 995, 12);
+
+        // sint32
+        bb.putInt(-1);
+
+        // uint32
+        bb.putInt(0xF0F1F2F3);
+
+        // sint64
+        bb.putLong(-2);
+
+        // uint64
+        bb.putLong(0xF0F1F2F3F4F5F6F7l);
+
+        // double
+        bb.putDouble(3.14);
+
+        // float
+        bb.putFloat(2.72f);
+
+        // boolean
+        bb.put((byte) 1);
+
+        // enum
+        bb.put((byte) 1);
+
+        // string
+        bb.put("bla".getBytes());
+        bb.put((byte) 0);
+
+        // binary
+        bb.put((byte) 5);
+        bb.put(StringConverter.hexStringToArray("0102030405"));
+
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    public byte[] generate_PKT13() {
+        int pkt13Length = headerLength + 4;
+        ByteBuffer bb = ByteBuffer.allocate(pkt13Length);
+        fill_CcsdsHeader(bb, 995, 13);
+        bb.putFloat(headerLength, 100.100f);
+        sendToTmProcessor(bb);
+        return bb.array();
+    }
+
+    private void putFixedStringParam(ByteBuffer bb, String value, int bits) {
+        int baSize = bits / 8;
+        if (bits == -1) {
+            baSize = value.getBytes().length;
+        }
+        byte[] ba = new byte[baSize];
+        System.arraycopy(value.getBytes(), 0, ba, 0, value.getBytes().length);
+        bb.put(ba);
+    }
+
+    private void putTerminatedStringParam(ByteBuffer bb, String value, byte terminator) {
+        byte[] ba = new byte[value.getBytes().length + 1];
+        System.arraycopy(value.getBytes(), 0, ba, 0, value.getBytes().length);
+        ba[ba.length - 1] = terminator;
+        bb.put(ba);
+        /*
+         * if( terminator == 0 ) {
+         * System.out.println( String.format(
+         * "- put TerminatedString '%s' length %d bits (%d bytes) with terminator null", value,
+         * value.getBytes().length*8, value.getBytes().length ) );
+         * } else {
+         * System.out.println( String.format(
+         * "- put TerminatedString '%s' length %d bits (%d bytes) with terminator '%c'", value,
+         * value.getBytes().length*8, value.getBytes().length, terminator ) );
+         * }
+         */
+    }
+
+    private void putPrependedSizeStringParam(ByteBuffer bb, String value, int tagSizeInBits) {
+        if (tagSizeInBits <= 8) {
+            bb.put(((byte) (value.getBytes().length)));
+        } else {
+            bb.putShort(((short) (value.getBytes().length)));
+        }
+        byte[] ba = new byte[value.getBytes().length];
+        System.arraycopy(value.getBytes(), 0, ba, 0, value.getBytes().length);
+        bb.put(ba);
+        // System.out.println( String.format("- put PrependedSizeString '%s' with leading %d bits filled with number %d
+        // to specify the number of bytes the string uses.",value,tagSizeInBits,value.getBytes().length) );
+    }
+
+    private void sendToTmProcessor(ByteBuffer bb) {
+
+        long gentime = generationTime;
+        if (gentime == TimeEncoding.INVALID_INSTANT) {
+            gentime = TimeEncoding.getWallclockTime();
+        }
+        sendToTmProcessor(bb, TimeEncoding.getWallclockTime(), gentime);
+    }
+
+    private void sendToTmProcessor(ByteBuffer bb, long rectime, long gentime) {
+        if (tmProcessor != null) {
+            tmProcessor.processPacket(new TmPacket(rectime, gentime, bb.getInt(0), bb.array()), rootSc);
+        }
+        if (tmSink != null) {
+            tmSink.processPacket(new TmPacket(rectime, gentime, bb.getInt(0), bb.array()));
+        }
+    }
+
+    public long getGenerationTime() {
+        return generationTime;
+    }
+
+    public void simulateGap(int apid) {
+        AtomicInteger a = seqCount.computeIfAbsent(apid, r -> new AtomicInteger(0));
+        a.incrementAndGet();
+    }
+
+    @Override
+    public boolean isArchiveReplay() {
+        return false;
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+}
+```

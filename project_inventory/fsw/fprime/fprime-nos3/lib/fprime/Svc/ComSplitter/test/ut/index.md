@@ -3,18 +3,226 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ComSplitterMain.cpp`
 
-file--ComSplitterMain.cpp
-file--ComSplitterTester.cpp
-file--ComSplitterTester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/ComSplitterMain.cpp`
+
+
+```cpp
+/*
+ * Main.cpp
+ *
+ *  Created on: March 9, 2017
+ *      Author: Gorang Gandhi
+ */
+
+#include <gtest/gtest.h>
+#include <Fw/Obj/SimpleObjRegistry.hpp>
+#include <Fw/Test/UnitTest.hpp>
+#include <Svc/ComSplitter/ComSplitter.hpp>
+#include "ComSplitterTester.hpp"
+
+TEST(TestNominal, Nominal) {
+    Svc::ComSplitterTester tester;
+    tester.test_nominal();
+}
+
+#ifndef TGT_OS_TYPE_VXWORKS
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+
+    return 0;
+}
+
+#endif
 ```
 
-## 항목
+### `ComSplitterTester.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/ComSplitterMain.cpp`](file--ComSplitterMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/ComSplitterTester.cpp`](file--ComSplitterTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/ComSplitterTester.hpp`](file--ComSplitterTester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/ComSplitterTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ComSplitter.hpp
+// \author gcgandhi
+// \brief  cpp file for ComSplitter test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "ComSplitterTester.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 100
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+ComSplitterTester ::ComSplitterTester() : ComSplitterGTestBase("Tester", MAX_HISTORY_SIZE), component("ComSplitter") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+ComSplitterTester ::~ComSplitterTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void ComSplitterTester ::test_nominal() {
+    U8 d[4] = {0xde, 0xad, 0xbe, 0xef};
+    for (U8 i = 0; i < 3; i++) {
+        d[0] = i;
+        Fw::ComBuffer buffer(d, sizeof(d));
+        invoke_to_comIn(0, buffer, 0);
+    }
+
+    ASSERT_from_comOut_SIZE(9);
+
+    for (U8 i = 0; i < 3; i++) {
+        d[0] = i;
+        Fw::ComBuffer data(d, sizeof(d));
+        for (U8 j = 0; j < 3; j++) {
+            assert_comOut(i * 3 + j, data);
+        }
+    }
+}
+
+void ComSplitterTester ::assert_comOut(const U32 index, const Fw::ComBuffer& data) const {
+    ASSERT_GT(fromPortHistory_comOut->size(), index);
+    const FromPortEntry_comOut& e = fromPortHistory_comOut->at(index);
+    ASSERT_EQ(data.getBuffLength(), e.data.getBuffLength());
+    ASSERT_EQ(memcmp(data.getBuffAddr(), e.data.getBuffAddr(), data.getBuffLength()), 0);
+    // for(int k=0; k < e.data.getBuffLength(); k++)
+    //   printf("0x%02x ", e.data.getBuffAddr()[k]);
+    // printf("\n");
+}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void ComSplitterTester ::from_comOut_handler(const FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    this->pushFromPortEntry_comOut(data, context);
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void ComSplitterTester ::connectPorts() {
+    // comIn
+    this->connect_to_comIn(0, this->component.get_comIn_InputPort(0));
+
+    // Just connect 3 of 5:
+    // comOut
+    for (FwIndexType i = 0; i < 3; ++i) {
+        this->component.set_comOut_OutputPort(i, this->get_from_comOut(i));
+    }
+}
+
+void ComSplitterTester ::initComponents() {
+    this->init();
+    this->component.init(INSTANCE);
+}
+
+}  // end namespace Svc
+```
+
+### `ComSplitterTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/test/ut/ComSplitterTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ComSplitter/test/ut/Tester.hpp
+// \author gcgandhi
+// \brief  hpp file for ComSplitter test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "ComSplitterGTestBase.hpp"
+#include "Svc/ComSplitter/ComSplitter.hpp"
+
+namespace Svc {
+
+class ComSplitterTester : public ComSplitterGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object ComSplitterTester
+    //!
+    ComSplitterTester();
+
+    //! Destroy object ComSplitterTester
+    //!
+    ~ComSplitterTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    void test_nominal();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_comOut
+    //!
+    void from_comOut_handler(const FwIndexType portNum, /*!< The port number*/
+                             Fw::ComBuffer& data,       /*!< Buffer containing packet data*/
+                             U32 context                /*!< Call context value; meaning chosen by user*/
+    );
+
+    void assert_comOut(const U32 index, const Fw::ComBuffer& data) const;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    ComSplitter component;
+};
+
+}  // end namespace Svc
+
+#endif
+```

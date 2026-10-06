@@ -3,38 +3,624 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ioctl.h`
 
-file--ioctl.h
-file--ipc.h
-file--mman.h
-file--select.h
-file--signal.h
-file--socket.h
-file--stat.h
-file--statvfs.h
-file--time.h
-file--times.h
-file--types.h
-file--un.h
-file--wait.h
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/ioctl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/ioctl.h
+ */
+
+#ifndef OVERRIDE_SYS_IOCTL_H
+#define OVERRIDE_SYS_IOCTL_H
+
+#include "OCS_sys_ioctl.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/ioctl.h */
+/* ----------------------------------------- */
+
+#define ioctl OCS_ioctl
+
+#endif /* OVERRIDE_SYS_IOCTL_H */
 ```
 
-## 항목
+### `ipc.h`
 
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/ioctl.h`](file--ioctl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/ipc.h`](file--ipc.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/mman.h`](file--mman.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/select.h`](file--select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/signal.h`](file--signal.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/socket.h`](file--socket.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/stat.h`](file--stat.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/statvfs.h`](file--statvfs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/time.h`](file--time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/times.h`](file--times.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/types.h`](file--types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/un.h`](file--un.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/wait.h`](file--wait.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/ipc.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/ipc.h
+ */
+
+#ifndef OVERRIDE_SYS_IPC_H
+#define OVERRIDE_SYS_IPC_H
+
+#include "OCS_sys_ipc.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/ipc.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SYS_IPC_H */
+```
+
+### `mman.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/mman.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/mman.h
+ */
+
+#ifndef OVERRIDE_SYS_MMAN_H
+#define OVERRIDE_SYS_MMAN_H
+
+#include "OCS_sys_mman.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/mman.h */
+/* ----------------------------------------- */
+
+#define MAP_SHARED  OCS_MAP_SHARED
+#define MAP_PRIVATE OCS_MAP_PRIVATE
+#define PROT_EXEC   OCS_PROT_EXEC
+#define PROT_READ   OCS_PROT_READ
+#define PROT_WRITE  OCS_PROT_WRITE
+#define PROT_NONE   OCS_PROT_NONE
+#define MAP_FIXED   OCS_MAP_FIXED
+#define mmap        OCS_mmap
+#define munmap      OCS_munmap
+
+#endif /* OVERRIDE_SYS_MMAN_H */
+```
+
+### `select.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/select.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * Declarations and prototypes for select
+ */
+
+#ifndef OVERRIDE_SYS_SELECT_H
+#define OVERRIDE_SYS_SELECT_H
+
+#include "OCS_sys_select.h"
+
+/* ----------------------------------------- */
+/* constants normally defined in sys/select.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* types normally defined in sys/select.h */
+/* ----------------------------------------- */
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/select.h */
+/* ----------------------------------------- */
+
+#define fd_set OCS_fd_set
+#define select OCS_select
+
+#define FD_SET   OCS_FD_SET
+#define FD_ISSET OCS_FD_ISSET
+#define FD_CLR   OCS_FD_CLR
+#define FD_ZERO  OCS_FD_ZERO
+
+#define FD_SETSIZE OCS_FD_SETSIZE
+
+#endif /* OVERRIDE_SYS_SELECT_H */
+```
+
+### `signal.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/signal.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/signal.h
+ */
+
+#ifndef OVERRIDE_SYS_SIGNAL_H
+#define OVERRIDE_SYS_SIGNAL_H
+
+/* alias to signal.h */
+#include <signal.h>
+
+#endif /* OVERRIDE_SYS_SIGNAL_H */
+```
+
+### `socket.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/socket.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/socket.h
+ */
+
+#ifndef OVERRIDE_SYS_SOCKET_H
+#define OVERRIDE_SYS_SOCKET_H
+
+#include "OCS_sys_socket.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/socket.h */
+/* ----------------------------------------- */
+#define socklen_t    OCS_socklen_t
+#define sockaddr     OCS_sockaddr
+#define sockaddr_in  OCS_sockaddr_in
+#define sockaddr_in6 OCS_sockaddr_in6
+#define sa_family_t  OCS_sa_family_t
+#define accept       OCS_accept
+#define bind         OCS_bind
+#define connect      OCS_connect
+#define getsockopt   OCS_getsockopt
+#define listen       OCS_listen
+#define recvfrom     OCS_recvfrom
+#define sendto       OCS_sendto
+#define setsockopt   OCS_setsockopt
+#define shutdown     OCS_shutdown
+#define socket       OCS_socket
+
+#define EINPROGRESS  OCS_EINPROGRESS
+#define EWOULDBLOCK  OCS_EWOULDBLOCK
+#define AF_INET      OCS_AF_INET
+#define AF_INET6     OCS_AF_INET6
+#define SOCK_DGRAM   OCS_SOCK_DGRAM
+#define SOCK_STREAM  OCS_SOCK_STREAM
+#define IPPROTO_UDP  OCS_IPPROTO_UDP
+#define IPPROTO_TCP  OCS_IPPROTO_TCP
+#define SOL_SOCKET   OCS_SOL_SOCKET
+#define SO_REUSEADDR OCS_SO_REUSEADDR
+#define SO_ERROR     OCS_SO_ERROR
+#define MSG_DONTWAIT OCS_MSG_DONTWAIT
+#define SHUT_WR      OCS_SHUT_WR
+#define SHUT_RD      OCS_SHUT_RD
+#define SHUT_RDWR    OCS_SHUT_RDWR
+
+#endif /* OVERRIDE_SYS_SOCKET_H */
+```
+
+### `stat.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/stat.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/stat.h
+ */
+
+#ifndef OVERRIDE_SYS_STAT_H
+#define OVERRIDE_SYS_STAT_H
+
+/* alias to stat.h */
+#include <stat.h>
+
+#endif /* OVERRIDE_SYS_STAT_H */
+```
+
+### `statvfs.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/statvfs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/statvfs.h
+ */
+
+#ifndef OVERRIDE_SYS_STATVFS_H
+#define OVERRIDE_SYS_STATVFS_H
+
+/* alias to stat.h */
+#include <stat.h>
+
+#endif /* OVERRIDE_SYS_STATVFS_H */
+```
+
+### `time.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/time.h
+ */
+
+#ifndef OVERRIDE_SYS_TIME_H
+#define OVERRIDE_SYS_TIME_H
+
+#include "OCS_sys_time.h"
+#include <time.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/time.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SYS_TIME_H */
+```
+
+### `times.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/times.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/times.h
+ */
+
+#ifndef OVERRIDE_SYS_TIMES_H
+#define OVERRIDE_SYS_TIMES_H
+
+#include "OCS_sys_times.h"
+#include <time.h>
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/times.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SYS_TIMES_H */
+```
+
+### `types.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/types.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/types.h
+ */
+
+#ifndef OVERRIDE_SYS_TYPES_H
+#define OVERRIDE_SYS_TYPES_H
+
+#include "OCS_sys_types.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/types.h */
+/* ----------------------------------------- */
+#define ssize_t OCS_ssize_t
+#define off_t   OCS_off_t
+#define mode_t  OCS_mode_t
+#define pid_t   OCS_pid_t
+#define gid_t   OCS_gid_t
+#define uid_t   OCS_uid_t
+#define u_short OCS_u_short
+
+#endif /* OVERRIDE_SYS_TYPES_H */
+```
+
+### `un.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/un.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/un.h
+ */
+
+#ifndef OVERRIDE_SYS_UN_H
+#define OVERRIDE_SYS_UN_H
+
+#include "OCS_sys_un.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/un.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SYS_UN_H */
+```
+
+### `wait.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/ut-stubs/override_inc/sys/wait.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup ut-stubs
+ *
+ * OSAL coverage stub replacement for sys/wait.h
+ */
+
+#ifndef OVERRIDE_SYS_WAIT_H
+#define OVERRIDE_SYS_WAIT_H
+
+#include "OCS_sys_wait.h"
+
+/* ----------------------------------------- */
+/* mappings for declarations in sys/wait.h */
+/* ----------------------------------------- */
+
+#endif /* OVERRIDE_SYS_WAIT_H */
+```

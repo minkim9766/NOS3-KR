@@ -3,18 +3,32 @@
 
 **경로:** `fsw/psp/unit-test-coverage/modules/timebase_vxworks/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/unit-test-coverage/modules/timebase_vxworks/inc/`](inc/index) — 폴더
-- [`fsw/psp/unit-test-coverage/modules/timebase_vxworks/src/`](src/index) — 폴더
-- [`fsw/psp/unit-test-coverage/modules/timebase_vxworks/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/psp/unit-test-coverage/modules/timebase_vxworks/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for white-box coverage tests of VxWorks timebase module
+#
+######################################################################
+
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/inc")
+
+add_psp_covtest(timebase_vxworks src/coveragetest-timebase_vxworks.c
+    ${CFEPSP_SOURCE_DIR}/fsw/modules/timebase_vxworks/cfe_psp_timebase_vxworks.c
+)
+```

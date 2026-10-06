@@ -3,16 +3,382 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/test/int/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `dp_demo_integration_test.py`
 
-file--dp_demo_integration_test.py
-file--dp_ref_output.json
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/test/int/dp_demo_integration_test.py`
+
+
+```python
+import os
+import json
+from fprime_gds.executables.data_product_writer import DataProductWriter
+
+
+def test_dp_send(fprime_test_api):
+    """Test that DPs are generated and received on the ground"""
+
+    # Run Dp command to send a data product
+    fprime_test_api.send_and_assert_command("Ref.dpDemo.Dp", ["IMMEDIATE", 1])
+    # Wait for DpStarted event
+    result = fprime_test_api.await_event("Ref.dpDemo.DpStarted", start=0, timeout=5)
+    assert result
+    # Wait for DpComplete event
+    result = fprime_test_api.await_event("Ref.dpDemo.DpComplete", start=0, timeout=10)
+    assert result
+    # Check for FileWritten event and capture the name of the file that was created
+    file_result = fprime_test_api.await_event(
+        "DataProducts.dpWriter.FileWritten", start=0, timeout=10
+    )
+    dp_file_path = file_result.get_display_text().split().pop()
+    # Verify that the file exists
+    # Assumes that we are running the test from the Ref directory
+    assert os.path.isfile(dp_file_path)
+
+
+def test_dp_decode(fprime_test_api):
+    """Test that we can decode DPs on the ground via fprime_dp_writer"""
+
+    # Run Dp command to send a data product
+    fprime_test_api.send_and_assert_command("Ref.dpDemo.Dp", ["IMMEDIATE", 1])
+    # Check for FileWritten event and capture the name of the file that was created
+    file_result = fprime_test_api.await_event(
+        "DataProducts.dpWriter.FileWritten", start=0, timeout=10
+    )
+    dp_file_path = file_result.get_display_text().split().pop()
+    # Verify that the file exists
+    # Assumes that we are running the test from the Ref directory
+    assert os.path.isfile(dp_file_path)
+    # Decode DP with fprime-dp-writer tool
+    json_dict = fprime_test_api.pipeline.dictionary_path
+    decoded_file_name = os.path.basename(dp_file_path).replace(".fdp", ".json")
+    DataProductWriter(json_dict, dp_file_path).process()
+    assert os.path.isfile(decoded_file_name)
+    with open("./DpDemo/test/int/dp_ref_output.json", "r") as ref_file, open(
+        decoded_file_name, "r"
+    ) as output_file:
+        ref_json = json.load(ref_file)
+        output_json = json.load(output_file)
+        # Remove fields that we expect to be different
+        exclude = ["Seconds", "USeconds", "TimeBase", "Context", "headerHash"]
+        assert len(ref_json) > 0 and len(output_json) > 0
+        for f in exclude:
+            assert isinstance(ref_json[0], dict) and isinstance(output_json[0], dict)
+            assert f in ref_json[0] and f in output_json[0]
+            ref_json[0].pop(f)
+            output_json[0].pop(f)
+        # Check that the JSON strings are the same
+        assert json.dumps(ref_json) == json.dumps(output_json)
 ```
 
-## 항목
+### `dp_ref_output.json`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/test/int/dp_demo_integration_test.py`](file--dp_demo_integration_test.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/test/int/dp_ref_output.json`](file--dp_ref_output.json) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/test/int/dp_ref_output.json`
+
+
+```json
+[
+  {
+    "PacketDescriptor": 5,
+    "Id": 2576,
+    "Priority": 1,
+    "Seconds": 131176,
+    "USeconds": 2435760640,
+    "TimeBase": 2418,
+    "Context": 210,
+    "ProcTypes": 0,
+    "UserData": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "DpState": 0,
+    "DataSize": 1212,
+    "headerHash": 2646027546,
+    "dataHash": 4072048964
+  },
+  {
+    "dataId": 2578,
+    "data": "Test string"
+  },
+  {
+    "dataId": 2579,
+    "data": true
+  },
+  {
+    "dataId": 2580,
+    "data": -100
+  },
+  {
+    "dataId": 2581,
+    "data": 1.25
+  },
+  {
+    "dataId": 2582,
+    "data": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  {
+    "dataId": 2583,
+    "data": [
+      1.100000023841858,
+      2.200000047683716,
+      3.299999952316284
+    ]
+  },
+  {
+    "dataId": 2584,
+    "data": [
+      true,
+      false
+    ]
+  },
+  {
+    "dataId": 2586,
+    "size": 3,
+    "data": [
+      "String array element 0",
+      "String array element 1",
+      "String array element 2"
+    ]
+  },
+  {
+    "dataId": 2588,
+    "size": 1,
+    "data": [
+      [
+        "0 - String array record element 0",
+        "0 - String array record element 1"
+      ]
+    ]
+  },
+  {
+    "dataId": 2587,
+    "size": 2,
+    "data": [
+      [
+        {
+          "stringMember": "0 - String member"
+        },
+        {
+          "stringArrayMember": [
+            "0 - String array element 0",
+            "0 - String array element 1"
+          ]
+        }
+      ],
+      [
+        {
+          "stringMember": "1 - String member"
+        },
+        {
+          "stringArrayMember": [
+            "1 - String array element 0",
+            "1 - String array element 1"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "dataId": 2589,
+    "data": [
+      [
+        "0 - String array element 0",
+        "0 - String array element 1"
+      ],
+      [
+        "1 - String array element 0",
+        "1 - String array element 1"
+      ],
+      [
+        "2 - String array element 0",
+        "2 - String array element 1"
+      ]
+    ]
+  },
+  {
+    "dataId": 2591,
+    "data": [
+      [
+        {
+          "stringMember": "0 - String member"
+        },
+        {
+          "stringArrayMember": [
+            "0 - String array element 0",
+            "0 - String array element 1"
+          ]
+        }
+      ],
+      [
+        {
+          "stringMember": "1 - String member"
+        },
+        {
+          "stringArrayMember": [
+            "1 - String array element 0",
+            "1 - String array element 1"
+          ]
+        }
+      ],
+      [
+        {
+          "stringMember": "2 - String member"
+        },
+        {
+          "stringArrayMember": [
+            "2 - String array element 0",
+            "2 - String array element 1"
+          ]
+        }
+      ]
+    ]
+  },
+  {
+    "dataId": 2585,
+    "data": [
+      "RED",
+      "GREEN",
+      "BLUE"
+    ]
+  },
+  {
+    "dataId": 2590,
+    "data": [
+      {
+        "integerMember": -1
+      },
+      {
+        "floatMember": 2.5
+      },
+      {
+        "stringMember": "String Member"
+      },
+      {
+        "booleanMember": false
+      },
+      {
+        "enumMember": "RED"
+      },
+      {
+        "arrayMemberU32": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "arrayMemberU32": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "F32Array": [
+          4.400000095367432,
+          5.5,
+          6.599999904632568
+        ]
+      },
+      {
+        "U32Array": [
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      {
+        "enumArray": [
+          "RED",
+          "GREEN",
+          "BLUE"
+        ]
+      },
+      {
+        "stringArray": [
+          "String array element 0",
+          "String array element 1"
+        ]
+      },
+      {
+        "booleanArray": [
+          true,
+          false
+        ]
+      },
+      {
+        "structWithStrings": [
+          {
+            "stringMember": "String member"
+          },
+          {
+            "stringArrayMember": [
+              "String array element 0",
+              "String array element 1"
+            ]
+          }
+        ]
+      },
+      {
+        "nestedArrays": [
+          [
+            "0 - String array element 0",
+            "0 - String array element 1"
+          ],
+          [
+            "1 - String array element 0",
+            "1 - String array element 1"
+          ],
+          [
+            "2 - String array element 0",
+            "2 - String array element 1"
+          ]
+        ]
+      }
+    ]
+  }
+]
+```

@@ -3,22 +3,161 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CdhCoreConfig/index
-file--CdhCore.fpp
-file--CMakeLists.txt
-file--PingEntries.hpp
-file--SubtopologyTopologyDefs.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/CdhCoreConfig/`](CdhCoreConfig/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/CdhCore.fpp`](file--CdhCore.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/PingEntries.hpp`](file--PingEntries.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/SubtopologyTopologyDefs.hpp`](file--SubtopologyTopologyDefs.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CdhCore.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/CdhCore.fpp`
+
+
+```fpp
+module CdhCore {
+    # ----------------------------------------------------------------------
+    # Active Components
+    # ----------------------------------------------------------------------
+    instance cmdDisp: Svc.CommandDispatcher base id CdhCoreConfig.BASE_ID + 0x00000 \
+        queue size CdhCoreConfig.QueueSizes.cmdDisp \
+        stack size CdhCoreConfig.StackSizes.cmdDisp \
+        priority CdhCoreConfig.Priorities.cmdDisp
+
+    instance events: Svc.EventManager base id CdhCoreConfig.BASE_ID + 0x001000 \
+        queue size CdhCoreConfig.QueueSizes.events \
+        stack size CdhCoreConfig.StackSizes.events \
+        priority CdhCoreConfig.Priorities.events
+
+    # ----------------------------------------------------------------------
+    # Queued Components
+    # ----------------------------------------------------------------------
+    instance $health: Svc.Health base id CdhCoreConfig.BASE_ID + 0x002000 \
+        queue size CdhCoreConfig.QueueSizes.$health \
+    {
+        phase Fpp.ToCpp.Phases.configConstants """
+        enum {
+            HEALTH_WATCHDOG_CODE = 0x123
+        };
+        """
+        phase Fpp.ToCpp.Phases.configComponents """
+        // Health is supplied a set of ping entires.
+        CdhCore::health.setPingEntries(
+            ConfigObjects::CdhCore_health::pingEntries,
+            FW_NUM_ARRAY_ELEMENTS(ConfigObjects::CdhCore_health::pingEntries),
+            ConfigConstants::CdhCore_health::HEALTH_WATCHDOG_CODE
+        );
+        """
+    }
+
+    # ----------------------------------------------------------------------
+    # Passive Components
+    # ----------------------------------------------------------------------
+    instance version: Svc.Version base id CdhCoreConfig.BASE_ID + 0x003000 \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+        // Startup TLM and Config verbosity for Versions
+        CdhCore::version.config(true);
+        """
+    }
+
+    instance textLogger: Svc.PassiveTextLogger base id CdhCoreConfig.BASE_ID + 0x004000
+
+    instance fatalAdapter: Svc.AssertFatalAdapter base id CdhCoreConfig.BASE_ID + 0x005000
+
+    topology Subtopology {
+        #Active Components
+        instance cmdDisp
+        instance events
+        instance tlmSend
+
+        #Queued Components
+        instance $health
+
+        #Passive Components
+        instance version
+        instance textLogger
+        instance fatalAdapter
+        instance fatalHandler
+
+        connections FaultProtection {
+            events.FatalAnnounce -> fatalHandler.FatalReceive
+        }
+        
+    } # end topology
+} # end CdhCore Subtopology
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/CdhCoreConfig/")
+
+register_fprime_module(
+    EXCLUDE_FROM_ALL
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/CdhCore.fpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/SubtopologyTopologyDefs.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PingEntries.hpp"
+    INTERFACE
+    DEPENDS
+        Svc_Subtopologies_CdhCore_CdhCoreConfig
+)
+```
+
+### `PingEntries.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/PingEntries.hpp`
+
+
+```cpp
+#ifndef CDHCORE_PINGENTRIES_HPP
+#define CDHCORE_PINGENTRIES_HPP
+
+namespace PingEntries {
+struct CdhCore_cmdDisp {
+    enum { WARN = 3, FATAL = 5 };
+};
+struct CdhCore_events {
+    enum { WARN = 3, FATAL = 5 };
+};
+struct CdhCore_tlmSend {
+    enum { WARN = 3, FATAL = 5 };
+};
+}  // namespace PingEntries
+
+#endif
+```
+
+### `SubtopologyTopologyDefs.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/SubtopologyTopologyDefs.hpp`
+
+
+```cpp
+#ifndef CDHCORESUBTOPOLOGY_DEFS_HPP
+#define CDHCORESUBTOPOLOGY_DEFS_HPP
+
+#include "Svc/Subtopologies/CdhCore/CdhCoreConfig/FppConstantsAc.hpp"
+
+namespace CdhCore {
+// State for topology construction
+struct SubtopologyState {
+    // Empty - no external state needed for CdhCore subtopology
+};
+
+struct TopologyState {
+    SubtopologyState cdhCore;
+};
+}  // namespace CdhCore
+
+#endif
+```

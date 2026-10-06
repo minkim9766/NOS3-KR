@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -67,72 +67,144 @@ TlmChan/index
 TlmPacketizer/index
 Version/index
 WatchDog/index
-file--build
-file--check
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/`](ActiveRateGroup/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/`](ActiveTextLogger/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/AssertFatalAdapter/`](AssertFatalAdapter/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/`](BufferAccumulator/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/`](BufferLogger/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/`](BufferManager/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/`](BufferRepeater/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/`](Ccsds/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/`](ChronoTime/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdDispatcher/`](CmdDispatcher/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/`](CmdSequencer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSplitter/`](CmdSplitter/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/`](ComLogger/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/`](ComQueue/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComSplitter/`](ComSplitter/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComStub/`](ComStub/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/`](Cycle/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/`](DpCatalog/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/`](DpManager/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpPorts/`](DpPorts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/`](DpWriter/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/EventManager/`](EventManager/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Fatal/`](Fatal/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FatalHandler/`](FatalHandler/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/`](FileDownlink/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlinkPorts/`](FileDownlinkPorts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/`](FileManager/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileUplink/`](FileUplink/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/`](FprimeDeframer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/`](FprimeFramer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeProtocol/`](FprimeProtocol/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/`](FprimeRouter/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/`](FpySequencer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/`](FrameAccumulator/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/`](FramingProtocol/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/GenericHub/`](GenericHub/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Health/`](Health/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Interfaces/`](Interfaces/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/`](LinuxTimer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/OsTime/`](OsTime/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/`](PassiveConsoleTextLogger/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/`](PassiveRateGroup/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ping/`](Ping/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyDb/`](PolyDb/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/`](PolyIf/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/`](Ports/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/`](PosixTime/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/`](PrmDb/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/`](RateGroupDriver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/`](Sched/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Seq/`](Seq/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SeqDispatcher/`](SeqDispatcher/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/StaticMemory/`](StaticMemory/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/`](Subtopologies/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/SystemResources/`](SystemResources/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/`](TlmChan/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmPacketizer/`](TlmPacketizer/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Version/`](Version/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/`](WatchDog/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/build`](file--build) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/check`](file--check) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `build`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/build`
+
+
+```text
+#!/bin/sh -e
+
+export GREEN='\033[32m'
+export RED='\033[31m'
+export NO_COLOR='\033[0m'
+
+files=`find . -name CMakeLists.txt | xargs grep -l '^register_fprime_module' | sort | uniq`
+here=$PWD
+for file in $files
+do
+  dir=`dirname $file`
+  printf '%-60s' $dir
+  cd $dir
+  if fprime-util build > /dev/null 2>&1
+  then
+    echo $GREEN'OK'$NO_COLOR
+  else
+    echo $RED'FAILED'$NO_COLOR
+  fi
+  cd $here
+done
+```
+
+### `check`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/check`
+
+
+```text
+#!/bin/sh -e
+
+export GREEN='\033[32m'
+export RED='\033[31m'
+export NO_COLOR='\033[0m'
+
+files=`find . -name CMakeLists.txt | xargs grep -l '^register_fprime_ut' | sort | uniq`
+here=$PWD
+for file in $files
+do
+  dir=`dirname $file`
+  printf '%-60s' $dir
+  cd $dir
+  if fprime-util check 2>&1 | grep -q '100% tests passed'
+  then
+    echo $GREEN'PASSED'$NO_COLOR
+  else
+    echo $RED'FAILED'$NO_COLOR
+  fi
+  cd $here
+done
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CMakeLists.txt`
+
+
+```cmake
+# Module subdirectories
+
+# Ports
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Cycle/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Fatal/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Interfaces/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ping/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PolyIf/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Sched/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Seq/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/WatchDog/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ports/")
+
+# Components
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ActiveRateGroup/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/AssertFatalAdapter/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/BufferAccumulator/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/BufferManager/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/BufferLogger/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/BufferRepeater/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ChronoTime/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComLogger/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComQueue/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComSplitter/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComStub/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/CmdDispatcher/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/CmdSequencer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/CmdSplitter/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DpCatalog/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DpManager/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DpPorts/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DpWriter/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/EventManager/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FatalHandler/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileDownlinkPorts/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileDownlink/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileManager/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileUplink/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FprimeDeframer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FprimeFramer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FprimeProtocol/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FprimeRouter/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FrameAccumulator/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FramingProtocol/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/GenericHub/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Health/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/OsTime/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PassiveRateGroup")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PolyDb/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PrmDb/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/RateGroupDriver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SeqDispatcher/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/StaticMemory/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TlmChan/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TlmPacketizer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SystemResources/")
+
+# Subtopologies
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Subtopologies/")
+
+# Text logger components included by default, 
+# but can be disabled if FW_ENABLE_TEXT_LOGGING=0 is desired.
+if (FPRIME_ENABLE_TEXT_LOGGERS)
+	add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PassiveConsoleTextLogger/")
+	add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ActiveTextLogger/")
+endif()
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PosixTime/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/LinuxTimer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Version/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FpySequencer/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Ccsds/")
+```

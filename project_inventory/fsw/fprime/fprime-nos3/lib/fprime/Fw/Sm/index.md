@@ -3,20 +3,140 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--README
-file--SmSignalBuffer.cpp
-file--SmSignalBuffer.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SmSignalBuffer.cpp"
+)
+set(MOD_DEPS Fw_Types)
+register_fprime_module()
 ```
 
-## 항목
+### `README`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/README`](file--README) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/SmSignalBuffer.cpp`](file--SmSignalBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/SmSignalBuffer.hpp`](file--SmSignalBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/README`
+
+
+```text
+SmSignalBuffer.hpp(.cpp) - A buffer holding serialized state machine signal data
+```
+
+### `SmSignalBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/SmSignalBuffer.cpp`
+
+
+```cpp
+#include <Fw/Sm/SmSignalBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+SmSignalBuffer::SmSignalBuffer(const U8* args, Serializable::SizeType size) : m_bufferData{} {
+    FW_ASSERT(args != nullptr);
+    FW_ASSERT(size <= sizeof(this->m_bufferData));
+    SerializeStatus stat = SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+SmSignalBuffer::SmSignalBuffer() : m_bufferData{} {}
+
+SmSignalBuffer::~SmSignalBuffer() {}
+
+SmSignalBuffer::SmSignalBuffer(const SmSignalBuffer& other) : Fw::SerializeBufferBase(), m_bufferData{} {
+    FW_ASSERT(other.getBuffAddr() != nullptr);
+    FW_ASSERT(other.getBuffLength() <= sizeof(this->m_bufferData));
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+SmSignalBuffer& SmSignalBuffer::operator=(const SmSignalBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    FW_ASSERT(other.getBuffAddr() != nullptr);
+    FW_ASSERT(other.getBuffLength() <= sizeof(this->m_bufferData));
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+Serializable::SizeType SmSignalBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* SmSignalBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* SmSignalBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+}  // namespace Fw
+```
+
+### `SmSignalBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Sm/SmSignalBuffer.hpp`
+
+
+```cpp
+/*
+ * SmSignalBuffer.hpp
+ *
+ */
+
+/*
+ * Description:
+ * This object contains the SmSignalBuffer type, used for attaching data to state machine signals
+ */
+#ifndef FW_SM_SIGNAL_BUFFER_HPP
+#define FW_SM_SIGNAL_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class SmSignalBuffer final : public SerializeBufferBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = 1010,
+        SERIALIZED_SIZE = FW_COM_BUFFER_MAX_SIZE + sizeof(FwSizeStoreType)  // size of buffer + storage of size word
+    };
+
+    SmSignalBuffer(const U8* args, Serializable::SizeType size);
+    SmSignalBuffer();
+    SmSignalBuffer(const SmSignalBuffer& other);
+    virtual ~SmSignalBuffer();
+    SmSignalBuffer& operator=(const SmSignalBuffer& other);
+
+    Serializable::SizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_bufferData[FW_SM_SIGNAL_BUFFER_MAX_SIZE];  // packet data buffer
+};
+
+}  // namespace Fw
+
+#endif
+```

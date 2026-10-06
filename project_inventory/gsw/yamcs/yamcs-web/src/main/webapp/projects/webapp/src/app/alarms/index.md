@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -18,21 +18,225 @@ alarms-page-tabs/index
 alarms-table/index
 pending-alarm-list/index
 shelve-alarm-dialog/index
-file--alarms.datasource.ts
-file--alarms.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/acknowledge-alarm-dialog/`](acknowledge-alarm-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/action-log-tab/`](action-log-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/active-alarm-list/`](active-alarm-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-detail/`](alarm-detail/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-history/`](alarm-history/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-state-icon/`](alarm-state-icon/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-page-tabs/`](alarms-page-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms-table/`](alarms-table/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/pending-alarm-list/`](pending-alarm-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/shelve-alarm-dialog/`](shelve-alarm-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms.datasource.ts`](file--alarms.datasource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms.routes.ts`](file--alarms.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `alarms.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  Alarm,
+  AlarmSeverity,
+  AlarmSubscription,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export class AlarmsDataSource extends DataSource<Alarm> {
+  alarms$ = new BehaviorSubject<Alarm[]>([]);
+  filteredAlarms$ = new BehaviorSubject<Alarm[]>([]);
+
+  unacknowledgedAlarms$: Observable<Alarm[]>;
+  acknowledgedAlarms$: Observable<Alarm[]>;
+  shelvedAlarms$: Observable<Alarm[]>;
+
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  private alarmSubscription: AlarmSubscription;
+
+  private alarmsByName: { [key: string]: Alarm } = {};
+
+  private filter: string | null = null;
+
+  constructor(
+    private yamcs: YamcsService,
+    private pendingOnly: boolean,
+  ) {
+    super();
+    this.unacknowledgedAlarms$ = this.alarms$.pipe(
+      map((alarms) => {
+        return alarms.filter(
+          (alarm) => !alarm.shelveInfo && !alarm.acknowledged,
+        );
+      }),
+    );
+    this.acknowledgedAlarms$ = this.alarms$.pipe(
+      map((alarms) => {
+        return alarms.filter(
+          (alarm) => !alarm.shelveInfo && alarm.acknowledged,
+        );
+      }),
+    );
+    this.shelvedAlarms$ = this.alarms$.pipe(
+      map((alarms) => {
+        return alarms.filter((alarm) => !!alarm.shelveInfo);
+      }),
+    );
+  }
+
+  connect() {
+    return this.filteredAlarms$;
+  }
+
+  setFilter(filter: string | null) {
+    this.filter = filter || null;
+  }
+
+  loadAlarms() {
+    this.loading$.next(true);
+    this.yamcs.yamcsClient
+      .getActiveAlarms(this.yamcs.instance!, this.yamcs.processor!)
+      .then((alarms) => {
+        this.loading$.next(false);
+        for (const alarm of alarms) {
+          this.processAlarm(alarm);
+        }
+        this.updateSubject();
+      });
+
+    this.alarmSubscription = this.yamcs.yamcsClient.createAlarmSubscription(
+      {
+        instance: this.yamcs.instance!,
+        processor: this.yamcs.processor!,
+        includePending: true,
+      },
+      (alarm) => {
+        this.processAlarm(alarm);
+        this.updateSubject();
+      },
+    );
+  }
+
+  private updateSubject() {
+    const alarms = Object.values(this.alarmsByName).sort((a1, a2) => {
+      let rc =
+        a1.acknowledged === a2.acknowledged ? 0 : a1.acknowledged ? 1 : -1;
+      if (rc === 0) {
+        const m1 = this.getNumericSeverity(a1.severity);
+        const m2 = this.getNumericSeverity(a2.severity);
+        rc = m1 === m2 ? 0 : m1 < m2 ? 1 : -1;
+      }
+      if (rc === 0) {
+        const id1 = a1.id.namespace + '/' + a1.id.name;
+        const id2 = a2.id.namespace + '/' + a2.id.name;
+        rc = id1.localeCompare(id2);
+      }
+      return rc;
+    });
+
+    const allAlarms = [...alarms];
+
+    this.alarms$.next(allAlarms);
+
+    if (this.filter) {
+      const filteredAlarms = allAlarms.filter((alarm) => {
+        const fullName = alarm.id.namespace + '/' + alarm.id.name;
+        return fullName.toLowerCase().indexOf(this.filter!) !== -1;
+      });
+      this.filteredAlarms$.next(filteredAlarms);
+    } else {
+      this.filteredAlarms$.next(allAlarms);
+    }
+  }
+
+  private getNumericSeverity(severity: AlarmSeverity) {
+    switch (severity) {
+      case 'WATCH':
+        return 0;
+      case 'WARNING':
+        return 1;
+      case 'DISTRESS':
+        return 2;
+      case 'CRITICAL':
+        return 3;
+      case 'SEVERE':
+        return 4;
+      default:
+        return 5;
+    }
+  }
+
+  disconnect() {
+    this.alarms$.complete();
+    this.filteredAlarms$.complete();
+    this.loading$.complete();
+    if (this.alarmSubscription) {
+      this.alarmSubscription.cancel();
+    }
+  }
+
+  isEmpty() {
+    return !this.filteredAlarms$.getValue().length;
+  }
+
+  private processAlarm(alarm: Alarm) {
+    const alarmId = alarm.id.namespace + '/' + alarm.id.name;
+    if (this.pendingOnly) {
+      if (!alarm.pending) {
+        delete this.alarmsByName[alarmId];
+      } else {
+        this.alarmsByName[alarmId] = alarm;
+      }
+    } else {
+      if (alarm.pending) {
+        delete this.alarmsByName[alarmId];
+      } else if (alarm.processOK && !alarm.triggered && alarm.acknowledged) {
+        delete this.alarmsByName[alarmId];
+      } else {
+        this.alarmsByName[alarmId] = alarm;
+      }
+    }
+  }
+}
+```
+
+### `alarms.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarms.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { ActionLogTabComponent } from './action-log-tab/action-log-tab.component';
+import { ActiveAlarmListComponent } from './active-alarm-list/active-alarm-list.component';
+import { AlarmHistoryComponent } from './alarm-history/alarm-history.component';
+import { PendingAlarmListComponent } from './pending-alarm-list/pending-alarm-list.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: ActiveAlarmListComponent,
+      },
+      {
+        path: 'pending',
+        component: PendingAlarmListComponent,
+      },
+      {
+        path: 'history',
+        component: AlarmHistoryComponent,
+      },
+      {
+        path: 'log',
+        component: ActionLogTabComponent,
+      },
+    ],
+  },
+];
+```

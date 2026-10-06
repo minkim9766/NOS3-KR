@@ -3,66 +3,5060 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AggarrayBuilderTest.java`
 
-file--AggarrayBuilderTest.java
-file--ArrayAndAggregatesTest.java
-file--BaseParchiveTest.java
-file--BooleanValueSegmentTest.java
-file--DataQueueTest.java
-file--DoubleValueSegmentTest.java
-file--FloatCompress.java
-file--FloatValueSegmentTest.java
-file--IntValueSegmentTest.java
-file--LongValueSegmentTest.java
-file--MockupTimeService.java
-file--MyValueConsumer.java
-file--ObjectSegmentTest.java
-file--ParameterArchiveTest.java
-file--ParameterGroupIdMapTest.java
-file--ParameterIdDbTest.java
-file--ParameterStatusTest.java
-file--ParameterValueSegmentTest.java
-file--ParchiveWithSparseGroupsTest.java
-file--PrintStats.java
-file--RealtimeArchiveFillerTest.java
-file--RocksdbMergeOperatorTest.java
-file--SortedTimeSegmentTest.java
-file--StringValueSegmentTest.java
-file--TestCompression.java
-file--TestUtils.java
-file--TimeSegmentTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/AggarrayBuilderTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.ValueUtility;
+
+public class AggarrayBuilderTest {
+
+    @Test
+    public void test1() {
+        ParameterId px = new MyPid("/sys1/a.x");
+        ParameterId py = new MyPid("/sys1/a.y");
+        AggrrayBuilder builder = new AggrrayBuilder(px, py);
+        builder.setValue(px, ValueUtility.getUint32Value(1));
+        builder.setValue(py, ValueUtility.getUint32Value(2));
+        AggregateValue av = (AggregateValue) builder.build();
+        assertEquals(1, av.getMemberValue("x").getUint32Value());
+        assertEquals(2, av.getMemberValue("y").getUint32Value());
+    }
+
+    @Test
+    public void test2() {
+        ParameterId p1 = new MyPid("/sys1/a[0]");
+        ParameterId p2 = new MyPid("/sys1/a[1]");
+        AggrrayBuilder builder = new AggrrayBuilder(p1, p2);
+        builder.setValue(p1, ValueUtility.getUint32Value(1));
+        builder.setValue(p2, ValueUtility.getUint32Value(2));
+        ArrayValue av = (ArrayValue) builder.build();
+        assertEquals(1, av.getElementValue(0).getUint32Value());
+        assertEquals(2, av.getElementValue(1).getUint32Value());
+    }
+
+    @Test
+    public void test3() {
+        ParameterId px0 = new MyPid("/sys1/a.x[0]");
+        ParameterId px1 = new MyPid("/sys1/a.x[1]");
+        ParameterId py = new MyPid("/sys1/a.y");
+        AggrrayBuilder builder = new AggrrayBuilder(px0, px1, py);
+        builder.setValue(px0, ValueUtility.getUint32Value(1));
+        builder.setValue(px1, ValueUtility.getUint32Value(2));
+        builder.setValue(py, ValueUtility.getUint32Value(3));
+
+        AggregateValue pv = (AggregateValue) builder.build();
+
+        ArrayValue av = (ArrayValue) pv.getMemberValue("x");
+        assertEquals(1, av.getElementValue(0).getUint32Value());
+        assertEquals(2, av.getElementValue(1).getUint32Value());
+
+        assertEquals(3, pv.getMemberValue("y").getUint32Value());
+    }
+
+    @Test
+    public void test4() {
+        ParameterId pbx = new MyPid("/sys1/a.b.x");
+        ParameterId pby = new MyPid("/sys1/a.b.y");
+        ParameterId py = new MyPid("/sys1/a.y");
+        AggrrayBuilder builder = new AggrrayBuilder(pbx, pby, py);
+
+        builder.setValue(pbx, ValueUtility.getUint32Value(1));
+        builder.setValue(pby, ValueUtility.getUint32Value(2));
+        builder.setValue(py, ValueUtility.getUint32Value(3));
+
+        AggregateValue pv = (AggregateValue) builder.build();
+
+        AggregateValue av = (AggregateValue) pv.getMemberValue("b");
+        assertEquals(1, av.getMemberValue("x").getUint32Value());
+        assertEquals(2, av.getMemberValue("y").getUint32Value());
+
+        assertEquals(3, pv.getMemberValue("y").getUint32Value());
+    }
+
+    @Test
+    public void test5() {
+        ParameterId pb0x = new MyPid("/sys1/a.b[0].x");
+        ParameterId pb0y = new MyPid("/sys1/a.b[0].y");
+        ParameterId pb1x = new MyPid("/sys1/a.b[1].x");
+        ParameterId pb1y = new MyPid("/sys1/a.b[1].y");
+        ParameterId py = new MyPid("/sys1/a.y");
+        AggrrayBuilder builder = new AggrrayBuilder(pb0x, pb0y, pb1x, pb1y, py);
+
+        builder.setValue(pb0x, ValueUtility.getUint32Value(1));
+        builder.setValue(pb0y, ValueUtility.getUint32Value(2));
+        builder.setValue(pb1x, ValueUtility.getUint32Value(3));
+        builder.setValue(pb1y, ValueUtility.getUint32Value(4));
+        builder.setValue(py, ValueUtility.getUint32Value(5));
+
+        AggregateValue pv = (AggregateValue) builder.build();
+
+        ArrayValue av = (ArrayValue) pv.getMemberValue("b");
+        AggregateValue pb0 = (AggregateValue) av.getElementValue(0);
+        AggregateValue pb1 = (AggregateValue) av.getElementValue(1);
+
+        assertEquals(1, pb0.getMemberValue("x").getUint32Value());
+        assertEquals(2, pb0.getMemberValue("y").getUint32Value());
+        assertEquals(3, pb1.getMemberValue("x").getUint32Value());
+        assertEquals(4, pb1.getMemberValue("y").getUint32Value());
+
+        assertEquals(5, pv.getMemberValue("y").getUint32Value());
+    }
+
+    @Test
+    public void test6() {
+        ParameterId p0x = new MyPid("/sys1/a[0].x");
+        ParameterId p0y = new MyPid("/sys1/a[0].y");
+        ParameterId p1x = new MyPid("/sys1/a[1].x");
+        ParameterId p1y = new MyPid("/sys1/a[1].y");
+        AggrrayBuilder builder = new AggrrayBuilder(p0x, p0y, p1x, p1y);
+
+        builder.setValue(p0x, ValueUtility.getUint32Value(1));
+        builder.setValue(p0y, ValueUtility.getUint32Value(2));
+        builder.setValue(p1x, ValueUtility.getUint32Value(3));
+        builder.setValue(p1y, ValueUtility.getUint32Value(4));
+
+        ArrayValue pv = (ArrayValue) builder.build();
+
+        AggregateValue p0 = (AggregateValue) pv.getElementValue(0);
+        AggregateValue p1 = (AggregateValue) pv.getElementValue(1);
+
+        assertEquals(1, p0.getMemberValue("x").getUint32Value());
+        assertEquals(2, p0.getMemberValue("y").getUint32Value());
+        assertEquals(3, p1.getMemberValue("x").getUint32Value());
+        assertEquals(4, p1.getMemberValue("y").getUint32Value());
+
+    }
+
+    static class MyPid implements ParameterId {
+        static int n = 1;
+        String fqn;
+        int pid;
+
+        public MyPid(String fqn) {
+            this.fqn = fqn;
+            this.pid = n++;
+        }
+
+        @Override
+        public Type getRawType() {
+            return Type.UINT32;
+        }
+
+        @Override
+        public Type getEngType() {
+            return Type.UINT32;
+        }
+
+        @Override
+        public int getPid() {
+            return pid;
+        }
+
+        @Override
+        public String getParamFqn() {
+            return fqn;
+        }
+
+        @Override
+        public boolean isSimple() {
+            return true;
+        }
+
+        @Override
+        public boolean hasRawValue() {
+            return true;
+        }
+
+        @Override
+        public IntArray getComponents() {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    }
+}
 ```
 
-## 항목
+### `ArrayAndAggregatesTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/AggarrayBuilderTest.java`](file--AggarrayBuilderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ArrayAndAggregatesTest.java`](file--ArrayAndAggregatesTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/BaseParchiveTest.java`](file--BaseParchiveTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/BooleanValueSegmentTest.java`](file--BooleanValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/DataQueueTest.java`](file--DataQueueTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/DoubleValueSegmentTest.java`](file--DoubleValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/FloatCompress.java`](file--FloatCompress.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/FloatValueSegmentTest.java`](file--FloatValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/IntValueSegmentTest.java`](file--IntValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/LongValueSegmentTest.java`](file--LongValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/MockupTimeService.java`](file--MockupTimeService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/MyValueConsumer.java`](file--MyValueConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ObjectSegmentTest.java`](file--ObjectSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterArchiveTest.java`](file--ParameterArchiveTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterGroupIdMapTest.java`](file--ParameterGroupIdMapTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterIdDbTest.java`](file--ParameterIdDbTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterStatusTest.java`](file--ParameterStatusTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterValueSegmentTest.java`](file--ParameterValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParchiveWithSparseGroupsTest.java`](file--ParchiveWithSparseGroupsTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/PrintStats.java`](file--PrintStats.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/RealtimeArchiveFillerTest.java`](file--RealtimeArchiveFillerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/RocksdbMergeOperatorTest.java`](file--RocksdbMergeOperatorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/SortedTimeSegmentTest.java`](file--SortedTimeSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/StringValueSegmentTest.java`](file--StringValueSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/TestCompression.java`](file--TestCompression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/TestUtils.java`](file--TestUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/TimeSegmentTest.java`](file--TimeSegmentTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ArrayAndAggregatesTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+public class ArrayAndAggregatesTest {
+    String instance = "ParameterArchiveAggrTest";
+    ParameterArchive parchive;
+    ParameterIdDb pidDb;
+    static MockupTimeService timeService;
+    static Parameter p1, p2, p3, p4, p5;
+    MyFiller filler;
+
+    @BeforeEach
+    public void openDb() throws Exception {
+        Path dbroot = Path.of(YarchDatabase.getDataDir(), instance);
+        FileUtils.deleteRecursivelyIfExists(dbroot);
+        FileUtils.deleteRecursivelyIfExists(Path.of(dbroot + ".rdb"));
+        FileUtils.deleteRecursivelyIfExists(Path.of(dbroot + ".tbs"));
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        if (rse.getTablespace(instance) != null) {
+            rse.dropTablespace(instance);
+        }
+        rse.createTablespace(instance);
+
+        parchive = new ParameterArchive();
+
+        YConfiguration config = parchive.getSpec().validate(ParameterArchiveTest.backFillerDisabledConfig());
+        parchive.init(instance, "test", config);
+        pidDb = parchive.getParameterIdDb();
+        ParameterGroupIdDb pgidMap = parchive.getParameterGroupIdDb();
+        assertNotNull(pidDb);
+        assertNotNull(pgidMap);
+        filler = new MyFiller(parchive);
+    }
+
+    @BeforeAll
+    public static void beforeClass() {
+        p1 = new Parameter("p1");
+        p2 = new Parameter("p2");
+        p3 = new Parameter("p3");
+        p4 = new Parameter("p4");
+        p5 = new Parameter("p5");
+        p1.setQualifiedName("/test/p1");
+        p2.setQualifiedName("/test/p2");
+        p3.setQualifiedName("/test/p3");
+        p4.setQualifiedName("/test/p4");
+        p5.setQualifiedName("/test/p5");
+        TimeEncoding.setUp();
+
+        timeService = new MockupTimeService();
+        YamcsServer.setMockupTimeService(timeService);
+        // org.yamcs.LoggingUtils.enableLogging();
+    }
+
+    @AfterEach
+    public void closeDb() throws Exception {
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        rse.dropTablespace(instance);
+    }
+
+    @Test
+    public void testArray() throws Exception {
+        ParameterValue pv1 = getArrayPv(p1, 3, 1000);
+        filler.addParameter(pv1).flush();
+        ParameterId[] pids = pidDb.get("/test/p1[0]");
+        assertEquals(1, pids.length);
+        assertEquals(Type.FLOAT, pids[0].getEngType());
+    }
+
+    @Test
+    public void testEmptyArray() throws Exception {
+        ParameterValue pv1 = getArrayPv(p1, 0, 1000);
+        filler.addParameter(pv1).flush();
+        ParameterId[] pids = pidDb.get("/test/p1[0]");
+        assertNull(pids);
+    }
+
+    private ParameterValue getArrayPv(Parameter p, int n, long t) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(t);
+        pv.setAcquisitionTime(t);
+
+        ArrayValue av = new ArrayValue(new int[] { n }, Type.FLOAT);
+        for (int i = 0; i < n; i++) {
+            av.setElementValue(i, ValueUtility.getFloatValue(i));
+        }
+        pv.setEngValue(av);
+        pv.setRawValue(av);
+
+        return pv;
+    }
+
+    static class MyFiller extends BackFillerTask {
+        List<ParameterValue> pvlist = new ArrayList<>();
+
+        public MyFiller(ParameterArchive parameterArchive) {
+            super(parameterArchive);
+        }
+
+        public MyFiller addParameter(ParameterValue pv) {
+            pvlist.add(pv);
+            return this;
+        }
+
+        @Override
+        public void flush() {
+            processParameters(pvlist);
+            super.flush();
+        }
+    }
+}
+```
+
+### `BaseParchiveTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/BaseParchiveTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.junit.jupiter.api.AfterEach;
+import org.rocksdb.RocksDBException;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterRetrievalOptions;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+public abstract class BaseParchiveTest {
+    String instance;
+
+    static MockupTimeService timeService;
+    ParameterArchive parchive;
+    ParameterIdDb pidMap;
+    ParameterGroupIdDb pgidMap;
+
+    public void openDb(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema, false, 0);
+    }
+
+    public void openDb(String partitioningSchema, boolean sparseGroups, double minOverlap) throws Exception {
+        Path dbroot = Path.of(YarchDatabase.getDataDir(), instance);
+        FileUtils.deleteRecursivelyIfExists(dbroot);
+        FileUtils.deleteRecursivelyIfExists(Path.of(dbroot + ".rdb"));
+        FileUtils.deleteRecursivelyIfExists(Path.of(dbroot + ".tbs"));
+
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        if (rse.getTablespace(instance) != null) {
+            rse.dropTablespace(instance);
+        }
+        rse.createTablespace(instance);
+        Map<String, Object> conf = new HashMap<>();
+
+        if (partitioningSchema != null) {
+            conf.put(YarchDatabaseInstance.PART_CONF_KEY, partitioningSchema);
+        }
+        Map<String, Object> bfc = new HashMap<>();
+        bfc.put("automaticBackfilling", Boolean.FALSE);
+        bfc.put("monitorStreams", Collections.emptyList());
+        conf.put("backFiller", bfc);
+        conf.put("sparseGroups", sparseGroups);
+        conf.put("minimumGroupOverlap", minOverlap);
+
+        parchive = new ParameterArchive();
+        YConfiguration config = parchive.getSpec().validate(YConfiguration.wrap(conf));
+        parchive.init(instance, "test", config);
+        pidMap = parchive.getParameterIdDb();
+        pgidMap = parchive.getParameterGroupIdDb();
+        assertNotNull(pidMap);
+        assertNotNull(pgidMap);
+    }
+
+    @AfterEach
+    public void closeDb() throws Exception {
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        rse.dropTablespace(instance);
+    }
+
+    List<ParameterValueArray> retrieveSingleParamSingleGroup(long start, long stop, int parameterId,
+            int parameterGroupId, boolean ascending) throws Exception {
+        return retrieveSingleParamSingleGroup(start, stop, parameterId, parameterGroupId, ascending, true, true, true);
+    }
+
+    List<ParameterValueArray> retrieveSingleParamSingleGroup(long start, long stop, int parameterId,
+            int parameterGroupId, boolean ascending, boolean retrieveEngValues, boolean retrieveRawValues,
+            boolean retriveParamStatus) throws Exception {
+        // ascending request on empty data
+        SingleValueConsumer c = new SingleValueConsumer();
+        ParameterRetrievalOptions spvr = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop).withAscending(ascending)
+                .withRetrieveEngineeringValues(retrieveEngValues).withRetrieveRawValues(retrieveRawValues)
+                .withRetrieveParameterStatus(retriveParamStatus).build();
+        SingleParameterRetrieval spdr = new SingleParameterRetrieval(parchive, parameterId,
+                new int[] { parameterGroupId }, spvr);
+        spdr.retrieve(c);
+        return c.list;
+    }
+
+    List<ParameterValueArray> retrieveSingleValueMultigroup(long start, long stop, int parameterId,
+            int[] parameterGroupIds, boolean ascending, boolean retrieveEng, boolean retrieveRaw,
+            boolean retrieveStatus) throws RocksDBException, DecodingException, IOException {
+        ParameterRetrievalOptions spvr = ParameterRetrievalOptions.newBuilder()
+                .withStartStop(start, stop).withAscending(ascending)
+                .withRetrieveEngineeringValues(retrieveEng)
+                .withRetrieveEngineeringValues(retrieveRaw)
+                .withRetrieveParameterStatus(retrieveStatus).build();
+
+        SingleParameterRetrieval spdr = new SingleParameterRetrieval(parchive, parameterId,
+                parameterGroupIds, spvr);
+        SingleValueConsumer svc = new SingleValueConsumer();
+        spdr.retrieve(svc);
+        return svc.list;
+    }
+
+    List<ParameterValueArray> retrieveSingleValueMultigroup(long start, long stop, int parameterId,
+            int[] parameterGroupIds, boolean ascending) throws RocksDBException, DecodingException, IOException {
+        return retrieveSingleValueMultigroup(start, stop, parameterId, parameterGroupIds, ascending, true, true, true);
+    }
+
+    ParameterValue getParameterValue(Parameter p, long instant, String sv) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(instant);
+        Value v = ValueUtility.getStringValue(sv);
+        pv.setEngValue(v);
+        return pv;
+    }
+
+    ParameterValue getArrayValue(Parameter p, long instant, String... values) {
+        ParameterValue pv = new ParameterValue(p);
+        ArrayValue engValue = new ArrayValue(new int[] { values.length }, Type.STRING);
+        for (int i = 0; i < values.length; i++) {
+            engValue.setElementValue(i, ValueUtility.getStringValue(values[i]));
+        }
+        pv.setGenerationTime(instant);
+        pv.setEngValue(engValue);
+        return pv;
+    }
+
+    ParameterValue getParameterValue(Parameter p, long instant, String sv, int rv) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(instant);
+        Value v = ValueUtility.getStringValue(sv);
+        pv.setEngValue(v);
+        pv.setRawValue(ValueUtility.getUint32Value(rv));
+        return pv;
+    }
+
+    ParameterValue getParameterValue(Parameter p, long instant, String sv, String rv) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(instant);
+        Value v = ValueUtility.getStringValue(sv);
+        pv.setEngValue(v);
+        pv.setRawValue(ValueUtility.getStringValue(rv));
+        return pv;
+    }
+
+    List<ParameterIdValueList> retrieveMultipleParameters(long start, long stop, int[] parameterIds,
+            int[] parameterGroupIds, boolean ascending) throws Exception {
+        return retrieveMultipleParameters(start, stop, parameterIds, parameterGroupIds, ascending, -1);
+    }
+
+    List<ParameterIdValueList> retrieveMultipleParameters(long start, long stop, int[] parameterIds,
+            int[] parameterGroupIds, boolean ascending, int limit) throws Exception {
+        ParameterId[] pids = Arrays.stream(parameterIds).mapToObj(pid -> pidMap.getParameterId(pid))
+                .toArray(ParameterId[]::new);
+        MultipleParameterRequest mpvr = new MultipleParameterRequest(start, stop,
+                pids, parameterGroupIds, ascending, true, true, true);
+        mpvr.setLimit(limit);
+
+        MultiParameterRetrieval mpdr = new MultiParameterRetrieval(parchive, mpvr);
+        MultiValueConsumer c = new MultiValueConsumer();
+        mpdr.retrieve(c);
+        return c.list;
+    }
+
+    class SingleValueConsumer implements Consumer<ParameterValueArray> {
+        List<ParameterValueArray> list = new ArrayList<>();
+
+        @Override
+        public void accept(ParameterValueArray x) {
+            // System.out.println("received: engValues: "+x.engValues+" rawValues: "+x.rawValues+" paramStatus:
+            // "+Arrays.toString(x.paramStatus));
+            list.add(x);
+        }
+    }
+
+    class MultiValueConsumer implements Consumer<ParameterIdValueList> {
+        List<ParameterIdValueList> list = new ArrayList<>();
+
+        @Override
+        public void accept(ParameterIdValueList x) {
+            list.add(x);
+        }
+    }
+}
+```
+
+### `BooleanValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/BooleanValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class BooleanValueSegmentTest {
+
+    @Test
+    public void test() throws IOException, DecodingException {
+        BooleanValueSegment bvs = BooleanValueSegment.consolidate(Arrays.asList(ValueUtility.getBooleanValue(true),
+                ValueUtility.getBooleanValue(true), ValueUtility.getBooleanValue(false)));
+
+        assertEquals(16, bvs.getMaxSerializedSize());
+        assertEquals(3, bvs.size());
+
+        ByteBuffer bb = ByteBuffer.allocate(bvs.getMaxSerializedSize());
+        bvs.writeTo(bb);
+
+        bb.rewind();
+        BooleanValueSegment bvs1 = BooleanValueSegment.parseFrom(bb);
+
+        assertEquals(ValueUtility.getBooleanValue(true), bvs1.getValue(0));
+        assertEquals(ValueUtility.getBooleanValue(true), bvs1.getValue(1));
+        assertEquals(ValueUtility.getBooleanValue(false), bvs1.getValue(2));
+    }
+}
+```
+
+### `DataQueueTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/DataQueueTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameterarchive.RealtimeArchiveFiller.DataQueue;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+
+import static org.yamcs.parameterarchive.RealtimeArchiveFiller.DataQueue.IntervalData.QSIZE;
+
+public class DataQueueTest {
+
+    /** The size of an interval, in milliseconds. (2^23 seconds) */
+    private static final long INTERVAL_SIZE_MILLIS = 8388608000L;
+
+    Function<PGSegment, CompletableFuture<Void>> dbWriter = pgs -> CompletableFuture.completedFuture(null);
+    FillerLock fillerLock;
+
+    @BeforeAll
+    public static void beforeAll() {
+        TimeEncoding.setUp();
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        fillerLock = new FillerLock();
+    }
+
+    @Test
+    public void test1() {
+
+        List<BasicParameterValue> plist1 = getParaList(9);
+        List<BasicParameterValue> plist2 = getParaList(10);
+
+        DataQueue sq = new DataQueue(1, 2, dbWriter, t -> null, fillerLock);
+        sq.addRecord(10, new BasicParameterList(IntArray.wrap(1), plist2));
+        sq.addRecord(9, new BasicParameterList(IntArray.wrap(1), plist1));
+
+        sq.getPVSegments(0, false);
+        List<ParameterValueSegment> pvsegList = sq.getPVSegments(1, true);
+
+        testEquals(pvsegList, Arrays.asList(Arrays.asList(9l, 10l)));
+
+        List<BasicParameterValue> plist3 = getParaList(11);
+        sq.addRecord(11, new BasicParameterList(IntArray.wrap(1), plist3));// this will be added to a new segment
+                                                                           // because the maxSegmentSize is 2
+
+        pvsegList = sq.getPVSegments(1, true);
+        testEquals(pvsegList, Arrays.asList(Arrays.asList(9l, 10l), Arrays.asList(11l)));
+
+        pvsegList = sq.getPVSegments(1, false);// descending
+        testEquals(pvsegList, Arrays.asList(Arrays.asList(11l), Arrays.asList(9l, 10l)));
+    }
+
+    @Test
+    public void testAcrossIntervals() {
+
+        long t1 = ParameterArchive.getIntervalEnd(9);
+        List<BasicParameterValue> plist1 = getParaList(t1);
+        List<BasicParameterValue> plist2 = getParaList(t1 + 1);
+
+        DataQueue sq = new DataQueue(1, 2, dbWriter, t -> null, fillerLock);
+        sq.addRecord(t1 + 1, new BasicParameterList(IntArray.wrap(1), plist2));
+        sq.addRecord(t1, new BasicParameterList(IntArray.wrap(1), plist1));
+
+        sq.getPVSegments(0, false);
+        List<ParameterValueSegment> pvsegList = sq.getPVSegments(1, true);
+        testEquals(pvsegList, Arrays.asList(Arrays.asList(t1), Arrays.asList(t1 + 1)));
+
+        sq.addRecord(t1 - 1, new BasicParameterList(IntArray.wrap(1), getParaList(t1 - 1)));
+
+        pvsegList = sq.getPVSegments(1, true);
+        testEquals(pvsegList, Arrays.asList(Arrays.asList(t1 - 1, t1), Arrays.asList(t1 + 1)));
+
+        sq.addRecord(t1 + 2, new BasicParameterList(IntArray.wrap(1), getParaList(t1 + 2)));
+        pvsegList = sq.getPVSegments(1, true);
+        testEquals(pvsegList, Arrays.asList(Arrays.asList(t1 - 1, t1), Arrays.asList(t1 + 1, t1 + 2)));
+
+    }
+
+    /**
+     * Tests that with an empty queue no segments are returned.
+     */
+    @Test
+    public void testEmptyQueue() {
+        DataQueue sq = new DataQueue(1, 2, dbWriter, t -> null, fillerLock);
+        assertFalse(sq.hasDataToWrite());
+        assertEquals(0, sq.getPVSegments(1, false).size());
+        assertEquals(0, sq.getPVSegments(1, true).size());
+    }
+
+    /**
+     * Tests that the queue is full when one slot is still open, so that <code>head!=tail</code>.
+     */
+    @Test
+    public void testQueueCapacity() {
+        DataQueue sq = new DataQueue(1, 2, dbWriter, t -> null, fillerLock);
+
+        // Add two values in each separate interval, until the cache has only one
+        // slot free.
+        for (int i = 0; i < QSIZE - 1; ++i) {
+            long t = 2 * i;
+            List<BasicParameterValue> plist0 = getParaList(t);
+            assertTrue(sq.addRecord(t, new BasicParameterList(IntArray.wrap(1), plist0)));
+
+            List<BasicParameterValue> plist1 = getParaList(t + 1);
+            assertTrue(sq.addRecord(t + 1, new BasicParameterList(IntArray.wrap(1), plist1)));
+
+            assertEquals(i + 1, sq.numReadSegments());
+            assertEquals(i + 1, sq.getPVSegments(1, false).size());
+            assertEquals(i + 1, sq.getPVSegments(1, true).size());
+        }
+
+        // Inserting another value in a new interval should fail, since then the queue would
+        // be full, with <code>head==tail</code>, which looks the same as an empty queue.
+        assertEquals(sq.numReadSegments(), QSIZE - 1);
+        List<BasicParameterValue> plist = getParaList(QSIZE * INTERVAL_SIZE_MILLIS);
+        assertFalse(sq.addRecord(QSIZE * 2, new BasicParameterList(IntArray.wrap(1), plist)));
+        assertTrue(sq.hasDataToWrite());
+
+        // We should be able to retrieve all segments in the queue.
+        assertEquals(QSIZE - 1, sq.getPVSegments(1, false).size());
+        assertEquals(QSIZE - 1, sq.getPVSegments(1, true).size());
+    }
+
+    private void testEquals(List<ParameterValueSegment> pvsegList, List<List<Long>> l) {
+        assertEquals(l.size(), pvsegList.size());
+
+        for (int i = 0; i < l.size(); i++) {
+            List<Long> l1 = l.get(i);
+            ParameterValueSegment pvs = pvsegList.get(i);
+            assertEquals(l1.size(), pvs.numValues());
+            for (int j = 0; j < l1.size(); j++) {
+                assertEquals((long) l1.get(j), pvs.getEngValue(j).getUint64Value());
+            }
+        }
+    }
+
+    List<BasicParameterValue> getParaList(long time) {
+        ParameterValue pv = new ParameterValue("test1");
+        pv.setEngValue(ValueUtility.getUint64Value(time));
+        pv.setGenerationTime(time);
+        return Arrays.asList(pv);
+    }
+}
+```
+
+### `DoubleValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/DoubleValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class DoubleValueSegmentTest {
+    @Test
+    public void test() throws IOException, DecodingException {
+        DoubleValueSegment dvs = new DoubleValueSegment();
+
+        dvs.add(ValueUtility.getDoubleValue(1.2));
+        dvs.add(ValueUtility.getDoubleValue(2.3));
+        dvs.add(ValueUtility.getDoubleValue(3));
+        dvs.consolidate();
+
+        assertEquals(28, dvs.getMaxSerializedSize());
+
+        ByteBuffer bb = ByteBuffer.allocate(28);
+        dvs.writeTo(bb);
+
+        bb.rewind();
+        DoubleValueSegment dvs1 = DoubleValueSegment.parseFrom(bb);
+
+        assertEquals(ValueUtility.getDoubleValue(1.2), dvs1.getValue(0));
+        assertEquals(ValueUtility.getDoubleValue(2.3), dvs1.getValue(1));
+        assertEquals(ValueUtility.getDoubleValue(3), dvs1.getValue(2));
+
+        assertArrayEquals(new double[] { 1.2, 2.3, 3 }, dvs1.getRange(0, 3, true).getDoubleArray(), 1e-10);
+        assertArrayEquals(new double[] { 3, 2.3 }, dvs1.getRange(0, 2, false).getDoubleArray(), 1e-10);
+    }
+}
+```
+
+### `FloatCompress.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/FloatCompress.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.Random;
+import java.util.zip.GZIPInputStream;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.FloatArray;
+
+public class FloatCompress {
+
+    public static float[] readFile(String file) throws Exception {
+        InputStream s = new FileInputStream(file);
+        if (file.endsWith(".gz")) {
+            s = new GZIPInputStream(s);
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(s));
+        String line;
+        br.readLine();// skip first line
+        FloatArray farray = new FloatArray();
+        while ((line = br.readLine()) != null) {
+            float f = Float.parseFloat(line);
+            farray.add(f);
+        }
+        br.close();
+        return farray.toArray();
+    }
+
+    @Test
+    public void test_5V_Current() throws Exception {
+        String file = "src/test/resources/parameterarchive/5V_Current.txt.gz";
+        float[] fa = readFile(file);
+        ByteBuffer bb = ByteBuffer.allocate(4 * fa.length);
+        FloatCompressor.compress(fa, bb);
+        // int us = fa.length*4;
+        // int cs = bb.position();
+        // System.out.println("result for "+file+" size: "+cs+" fa.size: "+us+" ratio: "+(100*cs/us)+"% bitsPerValue:
+        // "+8*cs/(float)fa.length);
+        bb.rewind();
+        float[] fa1 = FloatCompressor.decompress(bb, fa.length);
+        assertArrayEquals(fa, fa1, 1e-10f);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        float[] fa = new float[] { 1.2f, 2.3f, 3.0f };
+        ByteBuffer bb = ByteBuffer.allocate(24);
+        FloatCompressor.compress(fa, bb);
+
+        // int us = fa.length*4;
+        // int cs = bb.position();
+        // System.out.println("result size: "+cs+" fa.size: "+us+" ratio: "+(100*cs/us)+"% bitsPerValue:
+        // "+8*cs/(float)fa.length);
+
+        bb.rewind();
+        float[] fa1 = FloatCompressor.decompress(bb, fa.length);
+        assertArrayEquals(fa, fa1, 1e-10f);
+    }
+
+    @Test
+    public void test2() throws Exception {
+        float[] fa = new float[300];
+        Random rand = new Random();
+        for (int i = 0; i < 9; i++) {
+            fa[i] = rand.nextFloat();
+        }
+        fa[9] = 10f;
+        for (int i = 10; i < fa.length; i++) {
+            fa[i] = fa[i - 1] + 1e-7f;
+        }
+        ByteBuffer bb = ByteBuffer.allocate(5 * fa.length);
+        FloatCompressor.compress(fa, bb);
+
+        // int us = fa.length*4;
+        // int cs = bb.position();
+        // System.out.println("result size: "+cs+" fa.size: "+us+" ratio: "+(100*cs/us)+"% bitsPerValue:
+        // "+8*cs/(float)fa.length);
+
+        bb.rewind();
+        float[] fa1 = FloatCompressor.decompress(bb, fa.length);
+        assertArrayEquals(fa, fa1, 1e-10f);
+    }
+
+    @Test
+    public void testRandom() throws Exception {
+        float[] fa = new float[200];
+        Random rand = new Random();
+        for (int i = 0; i < fa.length; i++) {
+            fa[i] = rand.nextFloat() - 0.5f;
+        }
+        ByteBuffer bb = ByteBuffer.allocate(5 * fa.length);
+        FloatCompressor.compress(fa, bb);
+
+        // int us = fa.length*4;
+        // int cs = bb.position();
+        // System.out.println("result size: "+cs+" fa.size: "+us+" ratio: "+(100*cs/us)+"% bitsPerValue:
+        // "+8*cs/(float)fa.length);
+
+        bb.rewind();
+        float[] fa1 = FloatCompressor.decompress(bb, fa.length);
+        assertArrayEquals(fa, fa1, 1e-10f);
+    }
+
+    @Test
+    public void test5() throws Exception {
+        float[] fa = new float[] { 20.403667f, 20.403667f, -59.953f, -59.953f, -59.953f };
+        ByteBuffer bb = ByteBuffer.allocate(fa.length * 4);
+        FloatCompressor.compress(fa, bb);
+
+        // int us = fa.length*4;
+        // int cs = bb.position();
+        // System.out.println("result size: "+cs+" fa.size: "+us+" ratio: "+(100*cs/us)+"% bitsPerValue:
+        // "+8*cs/(float)fa.length);
+
+        bb.rewind();
+        float[] fa1 = FloatCompressor.decompress(bb, fa.length);
+        assertArrayEquals(fa, fa1, 1e-10f);
+    }
+
+}
+```
+
+### `FloatValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/FloatValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class FloatValueSegmentTest {
+    @Test
+    public void test() throws IOException, DecodingException {
+        
+        FloatValueSegment fvs = new FloatValueSegment();
+        fvs.add(ValueUtility.getFloatValue(1.2f));
+        
+        fvs.add(ValueUtility.getFloatValue(2.3f));
+        fvs.add(ValueUtility.getFloatValue((float) 3));
+        fvs.consolidate();
+
+        assertEquals(18, fvs.getMaxSerializedSize());
+
+        ByteBuffer bb = ByteBuffer.allocate(24);
+        fvs.writeTo(bb);
+
+        bb.rewind();
+        FloatValueSegment fvs1 = FloatValueSegment.parseFrom(bb);
+
+        assertEquals(ValueUtility.getFloatValue(1.2f), fvs1.getValue(0));
+        assertEquals(ValueUtility.getFloatValue(2.3f), fvs1.getValue(1));
+        assertEquals(ValueUtility.getFloatValue(3f), fvs1.getValue(2));
+
+        assertArrayEquals(new float[] { 1.2f, 2.3f, 3 }, fvs1.getRange(0, 3, true).getFloatArray(), 1e-10f);
+        assertArrayEquals(new float[] { 3, 2.3f }, fvs1.getRange(0, 2, false).getFloatArray(), 1e-10f);
+    }
+
+    @Test
+    public void test2() throws IOException, DecodingException {
+        FloatValueSegment fvs = new FloatValueSegment();
+        List<Value> values = new ArrayList<>(200);
+        for (int i = 0; i < 200; i++) {
+            Value v = ValueUtility.getFloatValue(1.2f);
+            values.add(v);
+            fvs.add(v);
+        }
+        fvs.consolidate();
+
+        ByteBuffer bb = ByteBuffer.allocate(fvs.getMaxSerializedSize());
+        fvs.writeTo(bb);
+        int length = bb.position();
+        ByteBuffer bb1 = ByteBuffer.allocate(length);
+        bb1.put(bb.array(), 0, length);
+
+        bb1.rewind();
+        FloatValueSegment fvs1 = FloatValueSegment.parseFrom(bb1);
+        assertEquals(200, fvs1.size());
+    }
+}
+```
+
+### `IntValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/IntValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+import me.lemire.integercompression.FastPFOR128;
+import me.lemire.integercompression.IntWrapper;
+
+public class IntValueSegmentTest {
+    @Test
+    public void testShortNonRandom() throws IOException, DecodingException {
+        int n = 3;
+        List<Value> l = new ArrayList<>(n);
+        IntValueSegment ivs = new IntValueSegment(true);
+        for (int i = 0; i < n; i++) {
+            Value v = ValueUtility.getSint32Value(100000 + i);
+            l.add(v);
+            ivs.add(v);
+        }
+        ivs.consolidate();
+        ByteBuffer bb = ByteBuffer.allocate(ivs.getMaxSerializedSize());
+        ivs.writeTo(bb);
+
+        assertEquals(IntValueSegment.SUBFORMAT_ID_DELTAZG_VB, bb.get(0) & 0xF);
+        bb.limit(bb.position());
+
+        bb.rewind();
+        IntValueSegment fvs1 = IntValueSegment.parseFrom(bb);
+
+        for (int i = 0; i < n; i++) {
+            assertEquals(l.get(i), fvs1.getValue(i));
+        }
+    }
+
+    @Test
+    public void testLongNonRandom() throws IOException, DecodingException {
+        int n = 1000;
+        List<Value> l = new ArrayList<>(n);
+        IntValueSegment ivs = new IntValueSegment(false);
+        for (int i = 0; i < n; i++) {
+            Value v = ValueUtility.getUint32Value(100000 + i);
+            l.add(v);
+            ivs.add(v);
+        }
+        ivs.consolidate();
+        ByteBuffer bb = ByteBuffer.allocate(ivs.getMaxSerializedSize());
+        ivs.writeTo(bb);
+        assertEquals(IntValueSegment.SUBFORMAT_ID_DELTAZG_FPF128_VB, bb.get(0) & 0xF);
+
+        bb.limit(bb.position());
+        bb.rewind();
+        IntValueSegment fvs1 = IntValueSegment.parseFrom(bb);
+
+        for (int i = 0; i < n; i++) {
+            assertEquals(l.get(i), fvs1.getValue(i));
+        }
+    }
+
+    @Test
+    public void testRandom() throws IOException, DecodingException {
+        int n = 10;
+        Random rand = new Random(0);
+        List<Value> l = new ArrayList<>(n);
+        IntValueSegment ivs = new IntValueSegment(false);
+
+        for (int i = 0; i < n; i++) {
+            Value v = ValueUtility.getUint32Value(rand.nextInt());
+            l.add(v);
+            ivs.add(v);
+        }
+        ivs.consolidate();
+        ByteBuffer bb = ByteBuffer.allocate(ivs.getMaxSerializedSize());
+        ivs.writeTo(bb);
+        assertEquals(IntValueSegment.SUBFORMAT_ID_RAW, bb.get(0) & 0xF);
+
+        // assertEquals(5, bb.position());
+        bb.limit(bb.position());
+
+        bb.rewind();
+        IntValueSegment fvs1 = IntValueSegment.parseFrom(bb);
+
+        for (int i = 0; i < n; i++) {
+            assertEquals(l.get(i), fvs1.getValue(i));
+        }
+    }
+
+    // tests for equivalence of the C++ implementation
+    // note that the C++ implementation has a SIMD version that produces slightly different output
+    @Test
+    public void test150() throws IOException, DecodingException {
+        FastPFOR128 fastpfor = FastPFORFactory.get();
+        int N = 9984;
+        int[] mydata = new int[N];
+        for (var i = 0; i < N; i += 150) {
+            mydata[i] = i;
+        }
+
+        int[] compressedoutput = new int[N + 1024];
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+
+        fastpfor.compress(mydata, inputoffset, N, compressedoutput, outputoffset);
+
+        long[] expected = { 9984, 1, 288, 16777216, 16782856, 16788489, 16794121, 16799754, 28170, 67764480, 436928768,
+                806027520, 1175126272, 1544225024, 1913323776, 16777216, 16779275, 16784907, 16790540, 16796172,
+                16801804, 30220, 202113280, 571212032, 940310784, 1309409536, 1678508288, 2047607040, 16777216,
+                16781324, 16786956, 16792588, 16798220, 16803853, 32269, 336396544, 705495296, 1074594048, 1443692800,
+                1812791552, 16777216, 16777741, 16783373, 16789005, 16794637, 16800269, 28685, 101515520, 470614272,
+                839713024, 1208811776, 1577910528, 1947009280, 16777216, 16779789, 16785421, 16791053, 16796685,
+                16802317, 30733, 235733248, 604832000, 973996288, 1343095040, 1712193792, 2081292544, 16777216,
+                16781838, 16787470, 16793102, 16798734, 27150, 917760, 370016512, 739115264, 16256, 1, 150, 2, 230700,
+                3, 944487000, 7, 1369801754, 2221353913l, 7803, 14, 1619830836, 713858921, 3303782578l, 282569956,
+                792521326, 253, 27, 1377816680, 738792774, 352003757, 3050641572l, 191715602, 657460599, 3653814678l,
+                3312177995l, 963494413, 2028934995, 2123620830, 12, 1748246586, 2458382870l, 1005111842, 619352402,
+                2992728416l, 154 };
+        for (var i = 0; i < outputoffset.intValue(); i++) {
+            assertEquals((int) expected[i], compressedoutput[i]);
+        }
+
+    }
+
+    // tests for equivalence of the C++ implementation
+    @Test
+    public void test256() {
+        int[] data = new int[] { 2, 2, 536870906, 536870907, 536870911, 1073741828, 1073741831, 1073741836, 1073741839,
+                1073741844, 1073741847, 1073741852, 1073741855, 1073741860, 1073741863, 1073741868, 1073741871,
+                1073741876, 1073741879, 1073741884, 1073741887, 1073741892, 1073741895, 1073741900, 1073741903,
+                1073741908, 1073741911, 1073741916, 1073741919, 1073741924, 1073741927, 1073741932, 1073741935,
+                1073741940, 1073741943, 1073741948, 1073741951, 1073741956, 1073741959, 1073741964, 1073741967,
+                1073741972, 1073741975, 1073741980, 1073741983, 1073741988, 1073741991, 1073741996, 1073741999,
+                1073742004, 1073742007, 1073742012, 1073742015, 1073742020, 1073742023, 1073742028, 1073742031,
+                1073742036, 1073742039, 1073742044, 1073742047, 1073742052, 1073742055, 1073742060, 1073742063,
+                1073742068, 1073742071, 1073742076, 1073742079, 1073742084, 1073742087, 1073742092, 1073742095,
+                1073742100, 1073742103, 1073742108, 1073742111, 1073742116, 1073742119, 1073742124, 1073742127,
+                1073742132, 1073742135, 1073742140, 1073742143, 1073742148, 1073742151, 1073742156, 1073742159,
+                1073742164, 1073742167, 1073742172, 1073742175, 1073742180, 1073742183, 1073742188, 1073742191,
+                1073742196, 1073742199, 1073742204, 1073742207, 1073742212, 1073742215, 1073742220, 1073742223,
+                1073742228, 1073742231, 1073742236, 1073742239, 1073742244, 1073742247, 1073742252, 1073742255,
+                1073742260, 1073742263, 1073742268, 1073742271, 1073742276, 1073742279, 1073742284, 1073742287,
+                1073742292, 1073742295, 1073742300, 1073742303, 1073742308, 1073742311, 536869156, 4000, 2001, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        int N = data.length;
+        int cppcompressed[] = { 256, 125, 2, (int) 2147483649l, 1744830462, (int) 4093640703l, 570425343, 503316480,
+                419430400, 260046848, 171966464, 98566144, 59768832, 33030144, 19136512, 10354688, 5832704, 3112960,
+                1720320, 909312, 495616, 260096, 140288, 73216, 39168, 20352, 10816, 5600, 2960, 1528, 804, 414,
+                (int) 2147483865l, 1073741935, (int) 3758096442l, (int) 2415919133l, (int) 4160749583l, 603979783,
+                503316484, 419430402, (int) 2407530497l, 1245708288, 635437056, 328204288, 167247872, 86245376,
+                43909120, 22609920, 11501568, 5914624, 3006464, 1544192, 784384, 402432, 204288, 104704, 53120, 27200,
+                13792, 7056, 3576, 1828, 926, (int) 2147484121l, 1073742063, (int) 3758096506l, (int) 2415919165l,
+                (int) 4160749599l, 603979791, 503316488, 419430404, 260046850, (int) 2319450113l, 1172307968, 596639744,
+                301465600, 153354240, 77463552, 39387136, 19890176, 10108928, 5103616, 2592768, 1308672, 664576, 335360,
+                170240, 85888, 43584, 21984, 11152, 5624, 2852, 1438, (int) 2147484377l, 1073742191, (int) 3758096570l,
+                (int) 2415919197l, (int) 4160749615l, 603979799, 503316492, 419430406, (int) 2407530499l,
+                (int) 3393191937l, 1709178880, 865075200, 435683328, 220463104, 111017984, 56164352, 28278784, 14303232,
+                7200768, 3641344, 1832960, 926720, 466432, 235776, 118656, 59968, 30176, 15248, 7672, 3876, 1950,
+                1073738313, 7, 33554463, 65548, 2048, 2, 8200096 };
+
+        int[] output = new int[N + 1024];
+
+        IntWrapper inputoffset = new IntWrapper(0);
+        IntWrapper outputoffset = new IntWrapper(0);
+        FastPFOR128 fastpfor = FastPFORFactory.get();
+
+        fastpfor.uncompress(cppcompressed, inputoffset, N, output, outputoffset);
+
+        for (var i = 0; i < outputoffset.intValue(); i++) {
+            assertEquals((int) data[i], output[i]);
+        }
+    }
+}
+```
+
+### `LongValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/LongValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class LongValueSegmentTest {
+    @Test
+    public void testUnsigned() throws IOException, DecodingException {
+        LongValueSegment lvs = new LongValueSegment(Type.UINT64);
+
+        lvs.add(ValueUtility.getUint64Value(1));
+        lvs.add(ValueUtility.getUint64Value(2));
+        lvs.add(ValueUtility.getUint64Value(3));
+        assertEquals(28, lvs.getMaxSerializedSize());
+
+        ByteBuffer bb = ByteBuffer.allocate(28);
+        lvs.writeTo(bb);
+
+        bb.rewind();
+        LongValueSegment fvs1 = LongValueSegment.parseFrom(bb);
+
+        assertEquals(ValueUtility.getUint64Value(1), fvs1.getValue(0));
+        assertEquals(ValueUtility.getUint64Value(2), fvs1.getValue(1));
+        assertEquals(ValueUtility.getUint64Value(3), fvs1.getValue(2));
+
+        assertArrayEquals(new long[] { 1, 2, 3 }, fvs1.getRange(0, 3, true).getLongArray());
+        assertArrayEquals(new long[] { 3, 2 }, fvs1.getRange(0, 2, false).getLongArray());
+    }
+
+    @Test
+    public void testSigned() throws IOException, DecodingException {
+        LongValueSegment lvs = new LongValueSegment(Type.SINT64);
+
+        lvs.add(ValueUtility.getSint64Value(1));
+        lvs.add(ValueUtility.getSint64Value(2));
+
+        lvs.add(ValueUtility.getSint64Value(3));
+        lvs.consolidate();
+
+        assertEquals(28, lvs.getMaxSerializedSize());
+
+        ByteBuffer bb = ByteBuffer.allocate(28);
+        lvs.writeTo(bb);
+
+        bb.rewind();
+        LongValueSegment fvs1 = LongValueSegment.parseFrom(bb);
+
+        assertEquals(ValueUtility.getSint64Value(1), fvs1.getValue(0));
+        assertEquals(ValueUtility.getSint64Value(2), fvs1.getValue(1));
+        assertEquals(ValueUtility.getSint64Value(3), fvs1.getValue(2));
+
+        assertArrayEquals(new long[] { 1, 2, 3 }, fvs1.getRange(0, 3, true).getLongArray());
+        assertArrayEquals(new long[] { 3, 2 }, fvs1.getRange(0, 2, false).getLongArray());
+    }
+
+    @Test
+    public void testTimestamp() throws IOException, DecodingException {
+        LongValueSegment lvs = new LongValueSegment(Type.TIMESTAMP);
+
+        lvs.add(ValueUtility.getTimestampValue(1));
+        lvs.add(ValueUtility.getTimestampValue(2));
+
+        lvs.add(ValueUtility.getTimestampValue(3));
+        assertEquals(28, lvs.getMaxSerializedSize());
+
+        ByteBuffer bb = ByteBuffer.allocate(28);
+        lvs.writeTo(bb);
+
+        bb.rewind();
+        LongValueSegment fvs1 = LongValueSegment.parseFrom(bb);
+
+        assertEquals(ValueUtility.getTimestampValue(1), fvs1.getValue(0));
+        assertEquals(ValueUtility.getTimestampValue(2), fvs1.getValue(1));
+        assertEquals(ValueUtility.getTimestampValue(3), fvs1.getValue(2));
+
+        assertArrayEquals(new long[] { 1, 2, 3 }, fvs1.getRange(0, 3, true).getLongArray());
+        assertArrayEquals(new long[] { 3, 2 }, fvs1.getRange(0, 2, false).getLongArray());
+    }
+}
+```
+
+### `MockupTimeService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/MockupTimeService.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import org.yamcs.time.TimeService;
+
+class MockupTimeService implements TimeService {
+
+    long missionTime = 0;
+
+    @Override
+    public long getMissionTime() {
+        return missionTime;
+    }
+}
+```
+
+### `MyValueConsumer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/MyValueConsumer.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import org.yamcs.parameter.Value;
+
+public class MyValueConsumer implements Consumer<TimedValue> {
+
+    ArrayList<Long> times = new ArrayList<>();
+    ArrayList<Value> values = new ArrayList<>();
+
+    @Override
+    public void accept(TimedValue tv) {
+        times.add(tv.instant);
+        values.add(tv.engValue);
+    }
+}
+```
+
+### `ObjectSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ObjectSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Mdb.AlarmRange;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+public class ObjectSegmentTest {
+    Parameter p1 = new Parameter("abc");
+
+    @Test
+    public void test() throws DecodingException {
+        ParameterStatusSegment pss = new ParameterStatusSegment(true);
+        ParameterValue pv = TestUtils.getParameterValue(p1, 0, 120);
+        pv.setMonitoringResult(MonitoringResult.CRITICAL);
+        pv.setCriticalRange(new DoubleRange(5, 100));
+
+        pss.addParameterValue(pv);
+        pss.consolidate();
+
+        assertEquals(1, pss.rleValues.size());
+        ParameterStatus s = pss.get(0);
+        // assertEquals(pv.getCriticalRange().getMax(), s.getAlarmRange(0).getMaxInclusive(), 1e-10);
+        assertEquals(pv.getCriticalRange().getMin(), s.getAlarmRange(0).getMinInclusive(), 1e-10);
+
+        // ascending range
+        ParameterStatus[] statusList = (ParameterStatus[]) pss.getRangeArray(0, 1, true);
+        assertEquals(1, statusList.length);
+        assertEquals(s, statusList[0]);
+
+        // descending range
+        statusList = (ParameterStatus[]) pss.getRangeArray(-1, 0, false);
+        assertEquals(1, statusList.length);
+        assertEquals(s, statusList[0]);
+
+        pv.setAcquisitionTime(100);
+        pss.addParameterValue(pv);
+        assertEquals(1, pss.rleValues.size());
+        ParameterStatus s1 = pss.get(1);
+        assertEquals(s, s1);
+
+        // ascending range
+        statusList = (ParameterStatus[]) pss.getRangeArray(0, 2, true);
+        assertEquals(2, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+
+        // descending range
+        statusList = (ParameterStatus[]) pss.getRangeArray(-1, 1, false);
+        assertEquals(2, statusList.length);
+        assertEquals(s, statusList[1]);
+        assertEquals(s, statusList[0]);
+
+        pv.setEngValue(ValueUtility.getUint32Value(70));
+        pv.setMonitoringResult(MonitoringResult.WARNING);
+        pv.setWarningRange(new DoubleRange(0, 80));
+        pv.setAcquisitionTime(200);
+        pss.addParameterValue(pv);
+        pss.consolidate();
+        assertEquals(2, pss.rleValues.size());
+        ParameterStatus s2 = pss.get(2);
+        assertEquals(pv.getWarningRange().getMax(), s2.getAlarmRange(0).getMaxInclusive(), 1e-10);
+        assertEquals(pv.getWarningRange().getMin(), s2.getAlarmRange(0).getMinInclusive(), 1e-10);
+        assertEquals(pv.getCriticalRange().getMax(), s2.getAlarmRange(1).getMaxInclusive(), 1e-10);
+        assertEquals(pv.getCriticalRange().getMin(), s2.getAlarmRange(1).getMinInclusive(), 1e-10);
+
+        // ascending ranges
+        statusList = (ParameterStatus[]) pss.getRangeArray(0, 3, true);
+        assertEquals(3, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+        assertEquals(s2, statusList[2]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(0, 1, true);
+        assertEquals(1, statusList.length);
+        assertEquals(s, statusList[0]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(0, 2, true);
+        assertEquals(2, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(1, 2, true);
+        assertEquals(1, statusList.length);
+        assertEquals(s, statusList[0]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(2, 3, true);
+        assertEquals(1, statusList.length);
+        assertEquals(s2, statusList[0]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(1, 3, true);
+        assertEquals(2, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s2, statusList[1]);
+
+        // descending ranges
+        statusList = (ParameterStatus[]) pss.getRangeArray(-1, 2, false);
+        assertEquals(3, statusList.length);
+        assertEquals(s2, statusList[0]);
+        assertEquals(s, statusList[1]);
+        assertEquals(s, statusList[2]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(-1, 0, false);
+        assertEquals(1, statusList.length);
+        assertEquals(s, statusList[0]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(-1, 1, false);
+        assertEquals(2, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(0, 1, false);
+        assertEquals(1, statusList.length);
+        assertEquals(s, statusList[0]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(1, 2, false);
+        assertEquals(1, statusList.length);
+        assertEquals(s2, statusList[0]);
+
+        statusList = (ParameterStatus[]) pss.getRangeArray(0, 2, false);
+        assertEquals(2, statusList.length);
+        assertEquals(s2, statusList[0]);
+        assertEquals(s, statusList[1]);
+
+        // encoding/decoding RAW
+        int size = pss.getMaxSerializedSize();
+
+        ByteBuffer bb = ByteBuffer.allocate(size);
+        pss.writeRaw(bb);
+        assertEquals(105, bb.position());
+
+        bb.rewind();
+        ParameterStatusSegment pss1 = ParameterStatusSegment.parseFrom(bb);
+
+        assertEquals(3, pss1.objectList.size());
+        statusList = (ParameterStatus[]) pss1.getRangeArray(0, 3, true);
+        assertEquals(3, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+        assertEquals(s2, statusList[2]);
+
+        // encoding/decoding ENUM RLE
+        bb = ByteBuffer.allocate(pss.enumRleSize);
+        pss.writeEnumRle(bb);
+        assertEquals(83, bb.position());
+
+        bb.rewind();
+        pss1 = ParameterStatusSegment.parseFrom(bb);
+
+        assertTrue(pss1.runLengthEncoded);
+        assertEquals(2, pss1.rleObjectList.size());
+        statusList = (ParameterStatus[]) pss1.getRangeArray(0, 3, true);
+        assertEquals(3, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+        assertEquals(s2, statusList[2]);
+
+        // encoding/decoding ENUM FPROF
+        bb = ByteBuffer.allocate(size);
+        pss.writeEnumFprof(bb);
+        assertEquals(82, bb.position());
+
+        bb.rewind();
+        pss1 = ParameterStatusSegment.parseFrom(bb);
+
+        assertFalse(pss1.runLengthEncoded);
+        assertEquals(3, pss1.objectList.size());
+        statusList = (ParameterStatus[]) pss1.getRangeArray(0, 3, true);
+        assertEquals(3, statusList.length);
+        assertEquals(s, statusList[0]);
+        assertEquals(s, statusList[1]);
+        assertEquals(s2, statusList[2]);
+
+    }
+
+    @Test
+    public void testEnumFprof() throws DecodingException {
+        ParameterStatus ps1 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(1).build()).build();
+        ParameterStatus ps2 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(2).build()).build();
+        ParameterStatusSegment pss = new ParameterStatusSegment(true);
+
+        for (int i = 0; i < 1000; i++) {
+            pss.add(ps1);
+            pss.add(ps2);
+        }
+        pss.consolidate();
+
+        assertTrue(pss.enumRleSize > pss.enumRawSize);
+
+        ByteBuffer bb = ByteBuffer.allocate(pss.getMaxSerializedSize());
+
+        pss.writeTo(bb);
+        assertEquals(396, bb.position());
+
+        assertEquals(ObjectSegment.SUBFORMAT_ID_ENUM_FPROF, bb.get(0));
+        bb.rewind();
+        pss = ParameterStatusSegment.parseFrom(bb);
+
+        for (int i = 0; i < 2000; i += 2) {
+            assertTrue(ps1.equals(pss.get(i)));
+            assertTrue(ps2.equals(pss.get(i + 1)));
+        }
+
+        pss.makeWritable();
+        pss.add(ps1);
+        pss.add(ps2);
+        for (int i = 0; i < 2002; i += 2) {
+            assertTrue(ps1.equals(pss.get(i)));
+            assertTrue(ps2.equals(pss.get(i + 1)));
+        }
+
+        pss.consolidate();
+        bb = ByteBuffer.allocate(pss.getMaxSerializedSize());
+        pss.writeTo(bb);
+
+        assertEquals(ObjectSegment.SUBFORMAT_ID_ENUM_FPROF, bb.get(0));
+        bb.rewind();
+        pss = ParameterStatusSegment.parseFrom(bb);
+
+        for (int i = 0; i < 2002; i += 2) {
+            assertTrue(ps1.equals(pss.get(i)));
+            assertTrue(ps2.equals(pss.get(i + 1)));
+        }
+    }
+
+    @Test
+    public void testRangesAscending() throws DecodingException {
+        ParameterStatus ps1 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(1).build()).build();
+        ParameterStatus ps2 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(2).build()).build();
+        ParameterStatus ps3 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(3).build()).build();
+
+        ParameterStatusSegment pss = new ParameterStatusSegment(true);
+        pss.add(ps1);
+        pss.add(ps1);
+
+        pss.add(ps2);
+        pss.add(ps2);
+        pss.add(ps2);
+
+        pss.add(ps3);
+        pss.add(ps3);
+        pss.add(ps3);
+        pss.add(ps3);
+
+        pss.consolidate();
+
+        assertEquals(9, pss.size);
+
+        ByteBuffer bb = ByteBuffer.allocate(pss.getMaxSerializedSize());
+        pss.writeTo(bb);
+        bb.rewind();
+
+        pss = ParameterStatusSegment.parseFrom(bb);
+
+        assertTrue(pss.runLengthEncoded);
+        assertEquals(3, pss.rleObjectList.size());
+
+        ParameterStatus[] r = pss.getRangeArray(0, 1, true);
+        checkEquals(r, ps1);
+
+        r = pss.getRangeArray(0, 3, true);
+        checkEquals(r, ps1, ps1, ps2);
+
+        r = pss.getRangeArray(1, 2, true);
+        checkEquals(r, ps1);
+
+        r = pss.getRangeArray(2, 3, true);
+        checkEquals(r, ps2);
+
+        r = pss.getRangeArray(1, 5, true);
+        checkEquals(r, ps1, ps2, ps2, ps2);
+
+        r = pss.getRangeArray(2, 5, true);
+        checkEquals(r, ps2, ps2, ps2);
+
+        r = pss.getRangeArray(5, 9, true);
+        checkEquals(r, ps3, ps3, ps3, ps3);
+
+        r = pss.getRangeArray(8, 9, true);
+        checkEquals(r, ps3);
+
+        r = pss.getRangeArray(0, 9, true);
+        checkEquals(r, ps1, ps1, ps2, ps2, ps2, ps3, ps3, ps3, ps3);
+
+        pss.makeWritable();
+        pss.add(ps3);
+
+        r = pss.getRangeArray(0, 10, true);
+        checkEquals(r, ps1, ps1, ps2, ps2, ps2, ps3, ps3, ps3, ps3, ps3);
+
+        pss.consolidate();
+
+        assertEquals(10, pss.size);
+
+        bb = ByteBuffer.allocate(pss.getMaxSerializedSize());
+        pss.writeTo(bb);
+        bb.rewind();
+
+        pss = ParameterStatusSegment.parseFrom(bb);
+
+        assertTrue(pss.runLengthEncoded);
+        assertEquals(3, pss.rleObjectList.size());
+
+        r = pss.getRangeArray(0, 10, true);
+        checkEquals(r, ps1, ps1, ps2, ps2, ps2, ps3, ps3, ps3, ps3, ps3);
+
+    }
+
+    @Test
+    public void testRangesDescending() throws DecodingException {
+        ParameterStatus ps1 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(1).build()).build();
+        ParameterStatus ps2 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(2).build()).build();
+        ParameterStatus ps3 = ParameterStatus.newBuilder()
+                .addAlarmRange(AlarmRange.newBuilder().setMinInclusive(3).build()).build();
+
+        ParameterStatusSegment pss = new ParameterStatusSegment(true);
+        pss.add(ps1);
+        pss.add(ps1);
+
+        pss.add(ps2);
+        pss.add(ps2);
+        pss.add(ps2);
+
+        pss.add(ps3);
+        pss.add(ps3);
+        pss.add(ps3);
+        pss.add(ps3);
+
+        assertEquals(9, pss.size);
+        pss.consolidate();
+        ByteBuffer bb = ByteBuffer.allocate(pss.getMaxSerializedSize());
+        pss.writeTo(bb);
+        bb.rewind();
+        pss = ParameterStatusSegment.parseFrom(bb);
+
+        ParameterStatus[] r = pss.getRangeArray(-1, 8, false);
+        checkEquals(r, ps3, ps3, ps3, ps3, ps2, ps2, ps2, ps1, ps1);
+
+        r = pss.getRangeArray(-1, 0, false);
+        checkEquals(r, ps1);
+
+        r = pss.getRangeArray(-1, 2, false);
+        checkEquals(r, ps2, ps1, ps1);
+
+        r = pss.getRangeArray(0, 1, false);
+        checkEquals(r, ps1);
+
+        r = pss.getRangeArray(1, 2, false);
+        checkEquals(r, ps2);
+
+        r = pss.getRangeArray(0, 4, false);
+        checkEquals(r, ps2, ps2, ps2, ps1);
+
+        r = pss.getRangeArray(1, 4, false);
+        checkEquals(r, ps2, ps2, ps2);
+
+        r = pss.getRangeArray(4, 8, false);
+        checkEquals(r, ps3, ps3, ps3, ps3);
+
+        r = pss.getRangeArray(7, 8, false);
+        checkEquals(r, ps3);
+
+        r = pss.getRangeArray(6, 7, false);
+        checkEquals(r, ps3);
+
+        r = pss.getRangeArray(3, 5, false);
+        checkEquals(r, ps3, ps2);
+    }
+
+    private void checkEquals(ParameterStatus[] actual, ParameterStatus... expected) {
+        assertEquals(expected.length, actual.length);
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i], actual[i]);
+        }
+    }
+}
+```
+
+### `ParameterArchiveTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterArchiveTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.yamcs.parameter.ParameterStatus.isExpired;
+import static org.yamcs.parameter.ParameterStatus.isNominal;
+import static org.yamcs.parameter.ParameterStatus.isInvalid;
+import static org.yamcs.parameterarchive.TestUtils.checkEquals;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameterarchive.ParameterArchive.Partition;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+public class ParameterArchiveTest extends BaseParchiveTest {
+
+    static Parameter p1, p2, p3, p4, p5, a1;
+
+    @BeforeAll
+    public static void beforeClass() {
+        p1 = new Parameter("p1");
+        p2 = new Parameter("p2");
+        p3 = new Parameter("p3");
+        p4 = new Parameter("p4");
+        p5 = new Parameter("p5");
+        a1 = new Parameter("a1");
+        p1.setQualifiedName("/test/p1");
+        p2.setQualifiedName("/test/p2");
+        p3.setQualifiedName("/test/p3");
+        p4.setQualifiedName("/test/p4");
+        p5.setQualifiedName("/test/p5");
+
+        a1.setQualifiedName("/test/a1");
+        TimeEncoding.setUp();
+
+        timeService = new MockupTimeService();
+        YamcsServer.setMockupTimeService(timeService);
+        // org.yamcs.LoggingUtils.enableLogging();
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        instance = "ParameterArchiveTest";
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void test1(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        // create a parameter in the map
+        int p1id = pidMap.createAndGet("/test/p1", Type.BINARY);
+
+        // close and reopen the archive to check that the parameter is still there
+
+        parchive = new ParameterArchive();
+        YConfiguration config = parchive.getSpec().validate(ParameterArchiveTest.backFillerDisabledConfig());
+        parchive.init(instance, "test", config);
+        pidMap = parchive.getParameterIdDb();
+        pgidMap = parchive.getParameterGroupIdDb();
+        assertNotNull(pidMap);
+        assertNotNull(pgidMap);
+        int p2id = pidMap.createAndGet("/test/p2", Type.SINT32);
+
+        assertFalse(p1id == p2id);
+        assertEquals(p1id, pidMap.createAndGet("/test/p1", Type.BINARY));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testSingleParameter(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "blala100", 100);
+
+        int p1id = pidMap.createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType(),
+                pv1_0.getRawValue().getType());
+
+        var pg1 = pgidMap.getGroup(IntArray.wrap(p1id));
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+
+        pgSegment1.addRecord(100, pg1.pids, Arrays.asList(pv1_0));
+
+        ParameterValue pv1_1 = getParameterValue(p1, 200, "blala200", 200);
+        pgSegment1.addRecord(200, pg1.pids, Arrays.asList(pv1_1));
+
+        // ascending request on empty data
+        List<ParameterValueArray> l0a = retrieveSingleParamSingleGroup(0, 1000, p1id, pg1.id, true);
+        assertEquals(0, l0a.size());
+
+        // descending request on empty data
+        List<ParameterValueArray> l0d = retrieveSingleParamSingleGroup(0, 1000, p1id, pg1.id, true);
+        assertEquals(0, l0d.size());
+
+        parchive.writeToArchive(pgSegment1);
+        assertEquals(TimeEncoding.NEGATIVE_INFINITY, parchive.getCoverageEnd(0));
+        assertEquals(TimeEncoding.NEGATIVE_INFINITY, parchive.getCoverageEnd(99));
+        assertEquals(100, parchive.getCoverageEnd(199));
+        assertEquals(200, parchive.getCoverageEnd(200));
+        assertEquals(200, parchive.getCoverageEnd(10000));
+
+        // ascending request on two value
+        List<ParameterValueArray> l4a = retrieveSingleParamSingleGroup(0, TimeEncoding.POSITIVE_INFINITY, p1id, pg1.id,
+                true);
+        checkEquals(l4a.get(0), pv1_0, pv1_1);
+
+        // descending request on two value
+        List<ParameterValueArray> l4d = retrieveSingleParamSingleGroup(0, TimeEncoding.POSITIVE_INFINITY, p1id, pg1.id,
+                false);
+        checkEquals(l4d.get(0), pv1_1, pv1_0);
+
+        // ascending request on two value with start on first value
+        List<ParameterValueArray> l5a = retrieveSingleParamSingleGroup(100, 1000, p1id, pg1.id, true);
+        checkEquals(l5a.get(0), pv1_0, pv1_1);
+
+        // descending request on two value with start on second value
+        List<ParameterValueArray> l5d = retrieveSingleParamSingleGroup(0, 200, p1id, pg1.id, false);
+        checkEquals(l5d.get(0), pv1_1, pv1_0);
+
+        // ascending request on two value with start on the first value and stop on second
+        List<ParameterValueArray> l6a = retrieveSingleParamSingleGroup(100, 200, p1id, pg1.id, true);
+        checkEquals(l6a.get(0), pv1_0);
+
+        // descending request on two value with start on the second value and stop on first
+        List<ParameterValueArray> l6d = retrieveSingleParamSingleGroup(100, 200, p1id, pg1.id, false);
+        checkEquals(l6d.get(0), pv1_1);
+
+        // new value in a different interval but same partition
+        long t2 = ParameterArchive.getIntervalEnd(0) + 100;
+        PGSegment pgSegment2 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t2));
+        ParameterValue pv1_2 = getParameterValue(p1, t2, "pv1_2", 30);
+        pv1_2.setExpired();
+
+        pgSegment2.addRecord(t2, IntArray.wrap(p1id), Arrays.asList(pv1_2));
+        parchive.writeToArchive(pgSegment2);
+
+        // new value in a different partition
+        long t3 = TimeEncoding.parse("2017-01-01T00:00:51");
+        PGSegment pgSegment3 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t3));
+        ParameterValue pv1_3 = getParameterValue(p1, t3, "pv1_3", 45);
+        pgSegment3.addRecord(t3, IntArray.wrap(p1id), Arrays.asList(pv1_3));
+        parchive.writeToArchive(pgSegment3);
+
+        assertEquals(t3, parchive.getCoverageEnd(t3));
+        assertEquals(t2, parchive.getCoverageEnd(t3 - 1));
+
+        // ascending request on four values
+        List<ParameterValueArray> l7a = retrieveSingleParamSingleGroup(0, t3 + 1, p1id, pg1.id, true);
+        checkEquals(l7a.get(0), pv1_0, pv1_1);
+        checkEquals(l7a.get(1), pv1_2);
+        checkEquals(l7a.get(2), pv1_3);
+
+        // descending request on four values
+        List<ParameterValueArray> l7d = retrieveSingleParamSingleGroup(0, t3 + 1, p1id, pg1.id, false);
+        checkEquals(l7d.get(0), pv1_3);
+        checkEquals(l7d.get(1), pv1_2);
+        checkEquals(l7d.get(2), pv1_1, pv1_0);
+
+        // ascending request on the last partition
+        List<ParameterValueArray> l8a = retrieveSingleParamSingleGroup(t3, t3 + 1, p1id, pg1.id, true);
+        checkEquals(l8a.get(0), pv1_3);
+
+        // descending request on the last partition
+        List<ParameterValueArray> l8d = retrieveSingleParamSingleGroup(t2, t3, p1id, pg1.id, false);
+        checkEquals(l8d.get(0), pv1_3);
+
+        // retrieve only statuses
+        List<ParameterValueArray> l9a = retrieveSingleParamSingleGroup(0, t3 + 1, p1id, pg1.id, false, false, false,
+                true);
+        assertNull(l9a.get(0).engValues);
+        assertNull(l9a.get(1).rawValues);
+        assertNull(l9a.get(2).engValues);
+        assertNotNull(l9a.get(0).paramStatus);
+        assertNotNull(l9a.get(1).paramStatus);
+        assertNotNull(l9a.get(2).paramStatus);
+        assertTrue(isExpired(l9a.get(1).paramStatus[0].getAcqStatus()));
+        assertTrue(isNominal(l9a.get(2).paramStatus[0].getAcqStatus()));
+    }
+
+    /**
+     * If raw values are identical with engineering values, the Parameter Archive stores only the engineering values.
+     */
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testRawEqualsEngParameter(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "blala100", "blala100");
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType(),
+                pv1_0.getRawValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id));
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+
+        pgSegment1.addRecord(100, IntArray.wrap(p1id), Arrays.asList(pv1_0));
+        ParameterValue pv1_1 = getParameterValue(p1, 200, "blala200", "blala200");
+        pgSegment1.addRecord(200, IntArray.wrap(p1id), Arrays.asList(pv1_1));
+
+        parchive.writeToArchive(pgSegment1);
+
+        Partition p = parchive.getPartitions(100);
+        var rdb = parchive.getTablespace().getRdb(p.partitionDir);
+        var cfh = rdb.getColumnFamilyHandle(ParameterArchive.CF_NAME);
+        assertNotNull(rdb.get(cfh, new SegmentKey(p1id, pg1.id, 0, SegmentKey.TYPE_ENG_VALUE).encode()));
+        assertNull(rdb.get(cfh, new SegmentKey(p1id, pg1.id, 0, SegmentKey.TYPE_RAW_VALUE).encode()));
+
+        List<ParameterValueArray> l1a = retrieveSingleParamSingleGroup(0, TimeEncoding.POSITIVE_INFINITY, p1id, pg1.id,
+                true, false, true, false);
+        checkEquals(false, true, false, l1a.get(0), pv1_0, pv1_1);
+
+        List<ParameterValueArray> l1d = retrieveSingleParamSingleGroup(0, TimeEncoding.POSITIVE_INFINITY, p1id, pg1.id,
+                false, false, true, true);
+        checkEquals(false, true, true, l1d.get(0), pv1_1, pv1_0);
+
+        List<ParameterIdValueList> params = retrieveMultipleParameters(0, TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id },
+                new int[] { pg1.id }, true);
+        assertEquals(2, params.size());
+        checkEquals(params.get(0), 100, pv1_0);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testSingleParameterMultipleGroups(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "pv1_0");
+        ParameterValue pv2_0 = getParameterValue(p2, 100, "pv2_0");
+        ParameterValue pv1_1 = getParameterValue(p1, 200, "pv1_1");
+        ParameterValue pv1_2 = getParameterValue(p1, 300, "pv1_2");
+        pv1_2.setInvalid();
+
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType());
+        int p2id = parchive.getParameterIdDb().createAndGet(p2.getQualifiedName(), pv2_0.getEngValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id));
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id));
+
+        // ascending on empty db
+        List<ParameterValueArray> l0a = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id, pg2.id }, true);
+        assertEquals(0, l0a.size());
+        // descending on empty db
+        List<ParameterValueArray> l0d = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id, pg2.id }, false);
+        assertEquals(0, l0d.size());
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+        pgSegment1.addRecord(100, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_0, pv2_0));
+
+        PGSegment pgSegment2 = new PGSegment(pg2.id, 0);
+        pgSegment2.addRecord(200, IntArray.wrap(p1id), Arrays.asList(pv1_1));
+        pgSegment2.addRecord(300, IntArray.wrap(p1id), Arrays.asList(pv1_2));
+
+        parchive.writeToArchive(0, Arrays.asList(pgSegment1, pgSegment2));
+
+        // ascending on 3 values from same segment
+        List<ParameterValueArray> l1a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, true);
+        assertEquals(1, l1a.size());
+        checkEquals(l1a.get(0), pv1_0, pv1_1, pv1_2);
+
+        // descending on 3 values from same segment
+        List<ParameterValueArray> l1d = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, false);
+        assertEquals(1, l1d.size());
+        checkEquals(l1d.get(0), pv1_2, pv1_1, pv1_0);
+
+        // new value in a different interval but same partition
+        long t2 = ParameterArchive.getIntervalEnd(0) + 100;
+        PGSegment pgSegment3 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t2));
+        ParameterValue pv1_3 = getParameterValue(p1, t2, "pv1_3");
+        ParameterValue pv2_1 = getParameterValue(p1, t2, "pv2_1");
+        pgSegment3.addRecord(t2, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_3, pv2_1));
+        parchive.writeToArchive(pgSegment3);
+
+        // new value in a different partition
+        long t3 = TimeEncoding.parse("2017-01-01T00:00:00");
+        PGSegment pgSegment4 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t3));
+        ParameterValue pv1_4 = getParameterValue(p1, t3, "pv1_4");
+        ParameterValue pv2_2 = getParameterValue(p1, t3, "pv2_2");
+        pgSegment4.addRecord(t3, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_4, pv2_2));
+        parchive.writeToArchive(pgSegment4);
+
+        // ascending on 5 values from three segments ascending
+        List<ParameterValueArray> l2a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, true);
+        assertEquals(3, l2a.size());
+        checkEquals(l2a.get(0), pv1_0, pv1_1, pv1_2);
+        checkEquals(l2a.get(1), pv1_3);
+        checkEquals(l2a.get(2), pv1_4);
+
+        // descending on 3 values from three segments descending
+        List<ParameterValueArray> l2d = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, false);
+        assertEquals(3, l2d.size());
+        checkEquals(l2d.get(0), pv1_4);
+        checkEquals(l2d.get(1), pv1_3);
+        checkEquals(l2d.get(2), pv1_2, pv1_1, pv1_0);
+
+        // partial retrieval from first segment ascending
+        List<ParameterValueArray> l3a = retrieveSingleValueMultigroup(101, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, true);
+        assertEquals(3, l3a.size());
+        checkEquals(l3a.get(0), pv1_1, pv1_2);
+        checkEquals(l3a.get(1), pv1_3);
+        checkEquals(l3a.get(2), pv1_4);
+
+        // partial retrieval from first segment descending
+        List<ParameterValueArray> l3d = retrieveSingleValueMultigroup(101, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, false);
+        assertEquals(3, l3d.size());
+        checkEquals(l3d.get(0), pv1_4);
+        checkEquals(l3d.get(1), pv1_3);
+        checkEquals(l3d.get(2), pv1_2, pv1_1);
+
+        // ascending with empty request inside existing segment
+        List<ParameterValueArray> l4a = retrieveSingleValueMultigroup(101, 102, p1id, new int[] { pg1.id, pg2.id },
+                true);
+        assertEquals(0, l4a.size());
+
+        // descending with empty request inside existing segment
+        List<ParameterValueArray> l4d = retrieveSingleValueMultigroup(101, 102, p1id, new int[] { pg1.id, pg2.id },
+                false);
+        assertEquals(0, l4d.size());
+
+        // retrieve only statuses
+        List<ParameterValueArray> l5a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id, pg2.id }, true, false, false, true);
+        assertNull(l5a.get(0).engValues);
+        assertNull(l5a.get(1).rawValues);
+        assertNull(l5a.get(2).engValues);
+        assertNotNull(l5a.get(0).paramStatus);
+        assertNotNull(l5a.get(1).paramStatus);
+        assertNotNull(l5a.get(2).paramStatus);
+
+        assertTrue(isInvalid(l5a.get(0).paramStatus[2].getAcqStatus()));
+        assertTrue(isNominal(l5a.get(2).paramStatus[0].getAcqStatus()));
+
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testMultipleParameters(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "pv1_0");
+        ParameterValue pv2_0 = getParameterValue(p2, 100, "pv2_0");
+        ParameterValue pv1_1 = getParameterValue(p1, 200, "pv1_1");
+        ParameterValue pv1_2 = getParameterValue(p1, 300, "pv1_2");
+
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType());
+        int p2id = parchive.getParameterIdDb().createAndGet(p2.getQualifiedName(), pv2_0.getEngValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id));
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id));
+
+        // ascending on empty db
+        List<ParameterIdValueList> l0a = retrieveMultipleParameters(0, TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id }, new int[] { pg1.id, pg1.id }, true);
+        assertEquals(0, l0a.size());
+
+        // descending on empty db
+        List<ParameterIdValueList> l0d = retrieveMultipleParameters(0, TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id }, new int[] { pg1.id, pg1.id }, false);
+        assertEquals(0, l0d.size());
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+        pgSegment1.addRecord(100, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_0, pv2_0));
+
+        PGSegment pgSegment2 = new PGSegment(pg2.id, 0);
+        pgSegment2.addRecord(200, IntArray.wrap(p1id), Arrays.asList(pv1_1));
+        pgSegment2.addRecord(300, IntArray.wrap(p1id), Arrays.asList(pv1_2));
+
+        parchive.writeToArchive(0, Arrays.asList(pgSegment1, pgSegment2));
+
+        // ascending, retrieving one parameter from he group of two
+        List<ParameterIdValueList> l1a = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT, new int[] { p1id },
+                new int[] { pg1.id }, true);
+        assertEquals(1, l1a.size());
+        checkEquals(l1a.get(0), 100, pv1_0);
+
+        // descending, retrieving one parameter from the group of two
+        List<ParameterIdValueList> l1d = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT, new int[] { p1id },
+                new int[] { pg1.id }, false);
+        assertEquals(1, l1d.size());
+        checkEquals(l1d.get(0), 100, pv1_0);
+
+        // ascending, retrieving one para from the group of one
+        List<ParameterIdValueList> l2a = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT, new int[] { p1id },
+                new int[] { pg2.id }, true);
+        assertEquals(2, l2a.size());
+        checkEquals(l2a.get(0), 200, pv1_1);
+        checkEquals(l2a.get(1), 300, pv1_2);
+
+        // descending, retrieving one para from the group of one
+        List<ParameterIdValueList> l2d = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT, new int[] { p1id },
+                new int[] { pg2.id }, false);
+        assertEquals(2, l2d.size());
+        checkEquals(l2d.get(0), 300, pv1_2);
+        checkEquals(l2d.get(1), 200, pv1_1);
+
+        // ascending retrieving two para
+        List<ParameterIdValueList> l3a = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT,
+                new int[] { p1id, p2id }, new int[] { pg1.id, pg1.id }, true);
+
+        assertEquals(1, l3a.size());
+        checkEquals(l3a.get(0), 100, pv1_0, pv2_0);
+
+        // descending retrieving two para
+        List<ParameterIdValueList> l3d = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT,
+                new int[] { p2id, p1id }, new int[] { pg1.id, pg1.id }, false);
+        assertEquals(1, l3d.size());
+        checkEquals(l3d.get(0), 100, pv1_0, pv2_0);
+
+        // new value in a different interval but same partition
+        long t2 = ParameterArchive.getIntervalEnd(0) + 100;
+        PGSegment pgSegment3 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t2));
+        ParameterValue pv1_3 = getParameterValue(p1, t2, "pv1_3");
+        ParameterValue pv2_1 = getParameterValue(p1, t2, "pv2_1");
+        pgSegment3.addRecord(t2, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_3, pv2_1));
+        parchive.writeToArchive(pgSegment3);
+
+        // new value in a different partition
+        long t3 = TimeEncoding.parse("2017-01-01T00:00:00");
+        PGSegment pgSegment4 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t3));
+        ParameterValue pv1_4 = getParameterValue(p1, t3, "pv1_4");
+        ParameterValue pv2_2 = getParameterValue(p1, t3, "pv2_2");
+        pgSegment4.addRecord(t3, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_4, pv2_2));
+        parchive.writeToArchive(pgSegment4);
+
+        // ascending retrieving two para
+        List<ParameterIdValueList> l4a = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT,
+                new int[] { p1id, p2id }, new int[] { pg1.id, pg1.id }, true);
+        assertEquals(3, l4a.size());
+        checkEquals(l4a.get(0), 100, pv1_0, pv2_0);
+        checkEquals(l4a.get(1), t2, pv1_3, pv2_1);
+        checkEquals(l4a.get(2), t3, pv1_4, pv2_2);
+
+        // descending retrieving two para
+        List<ParameterIdValueList> l4d = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT,
+                new int[] { p2id, p1id }, new int[] { pg1.id, pg1.id }, false);
+        assertEquals(3, l4d.size());
+        checkEquals(l4d.get(0), t3, pv1_4, pv2_2);
+        checkEquals(l4d.get(1), t2, pv1_3, pv2_1);
+        checkEquals(l4d.get(2), 100, pv1_0, pv2_0);
+
+        // ascending with empty request inside existing segment
+        List<ParameterIdValueList> l5a = retrieveMultipleParameters(101, 102, new int[] { p1id, p2id },
+                new int[] { pg1.id, pg1.id }, true);
+        assertEquals(0, l5a.size());
+
+        // descending with empty request inside existing segment
+        List<ParameterIdValueList> l5d = retrieveMultipleParameters(101, 102, new int[] { p2id, p1id },
+                new int[] { pg1.id, pg1.id }, false);
+        assertEquals(0, l5d.size());
+
+        // ascending retrieving two para limited time interval
+        List<ParameterIdValueList> l6a = retrieveMultipleParameters(t2, t2 + 1, new int[] { p1id, p2id },
+                new int[] { pg1.id, pg1.id }, true);
+        assertEquals(1, l6a.size());
+        checkEquals(l6a.get(0), t2, pv1_3, pv2_1);
+
+        // descending retrieving two para limited time interval
+        List<ParameterIdValueList> l6d = retrieveMultipleParameters(t2 - 1, t2, new int[] { p2id, p1id },
+                new int[] { pg1.id, pg1.id }, false);
+        assertEquals(1, l6d.size());
+        checkEquals(l6d.get(0), t2, pv1_3, pv2_1);
+
+        // ascending retrieving two para with limit 2
+        List<ParameterIdValueList> l7a = retrieveMultipleParameters(0, TimeEncoding.MAX_INSTANT,
+                new int[] { p1id, p2id }, new int[] { pg1.id, pg1.id }, true, 2);
+        assertEquals(2, l7a.size());
+        checkEquals(l7a.get(0), 100, pv1_0, pv2_0);
+        checkEquals(l7a.get(1), t2, pv1_3, pv2_1);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testArrays(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        ParameterValue pva1_0 = getArrayValue(a1, 100, "a");
+        ParameterValue pva1_1 = getArrayValue(a1, 100, "b", "c");
+
+        long t1 = TimeEncoding.parse("2021-06-02T00:00:00");
+        long t2 = TimeEncoding.parse("2021-06-02T00:10:00");
+
+        BasicParameterList l1 = new BasicParameterList(parchive.getParameterIdDb());
+        l1.add(pva1_0);
+
+        BasicParameterList l2 = new BasicParameterList(parchive.getParameterIdDb());
+        l2.add(pva1_1);
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(l1.getPids());
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(l2.getPids());
+
+        // because sparseGroups is false, the different size array values are stored in different groups
+        assertTrue(pg2.id != pg1.id);
+
+        PGSegment pgSegment2 = new PGSegment(pg2.id, ParameterArchive.getInterval(t2));
+        pgSegment2.addRecord(t2, l2.getPids(), l2.getValues());
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, ParameterArchive.getInterval(t1));
+
+        pgSegment1.addRecord(t1, l1.getPids(), l1.getValues());
+
+        parchive.writeToArchive(pgSegment2);
+        parchive.writeToArchive(pgSegment1);
+
+        ParameterId[] parameterIds = parchive.getParameterIdDb().get(a1.getQualifiedName());
+        assertEquals(1, parameterIds.length);
+
+        MultipleParameterRequest mpvr = new MultipleParameterRequest(0l, TimeEncoding.MAX_INSTANT,
+                parameterIds, true);
+
+        MultiParameterRetrieval mpdr = new MultiParameterRetrieval(parchive, mpvr);
+        MultiValueConsumer c = new MultiValueConsumer();
+        mpdr.retrieve(c);
+        assertEquals(2, c.list.size());
+        ParameterIdValueList rl0 = c.list.get(0);
+        assertEquals(1, rl0.size());
+        checkEquals(c.list.get(0), t1, pva1_0);
+
+        checkEquals(c.list.get(1), t2, pva1_1);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testExpireMillis(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        long t = TimeEncoding.parse("2018-03-19T10:35:00");
+        ParameterValue pv1_0 = getParameterValue(p1, t, "blala" + t, (int) t);
+        pv1_0.setExpireMillis(1234);
+
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType(),
+                pv1_0.getRawValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id));
+        PGSegment pgSegment1 = new PGSegment(pg1.id, ParameterArchive.getInterval(t));
+
+        pgSegment1.addRecord(t, IntArray.wrap(p1id), Arrays.asList(pv1_0));
+
+        parchive.writeToArchive(pgSegment1);
+
+        // ascending request on empty data
+        List<ParameterValueArray> l0a = retrieveSingleParamSingleGroup(t, t + 1, p1id, pg1.id, true);
+        ParameterStatus pstatus = l0a.get(0).paramStatus[0];
+        assertTrue(pstatus.hasExpireMillis());
+        assertEquals(1234, pstatus.getExpireMillis());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "none", "YYYY", "YYYY/MM" })
+    public void testSameTimestamp(String partitioningSchema) throws Exception {
+        openDb(partitioningSchema);
+
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "blala100", 100);
+
+        int p1id = pidMap.createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType(),
+                pv1_0.getRawValue().getType());
+
+        var pg1 = pgidMap.getGroup(IntArray.wrap(p1id));
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+
+        pgSegment1.addRecord(100, IntArray.wrap(p1id), Arrays.asList(pv1_0));
+        ParameterValue pv1_1 = getParameterValue(p1, 100, "blala200", 200);
+        pgSegment1.addRecord(100, IntArray.wrap(p1id), Arrays.asList(pv1_1));
+
+        parchive.writeToArchive(pgSegment1);
+
+        List<ParameterValueArray> l1a = retrieveSingleParamSingleGroup(0, TimeEncoding.POSITIVE_INFINITY, p1id, pg1.id,
+                true);
+        checkEquals(l1a.get(0), pv1_0, pv1_1);
+
+        List<ParameterIdValueList> l2a = retrieveMultipleParameters(0, TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id },
+                new int[] { pg1.id }, true);
+        assertEquals(1, l1a.size());
+        checkEquals(l2a.get(0), 100, pv1_0, pv1_1);
+    }
+
+    public static YConfiguration backFillerDisabledConfig() {
+        Map<String, Object> pam = new HashMap<>();
+        Map<String, Object> bfm = new HashMap<>();
+        bfm.put("automaticBackfilling", Boolean.FALSE);
+        bfm.put("monitorStreams", Collections.emptyList());
+        pam.put("backFiller", bfm);
+        return YConfiguration.wrap(pam);
+    }
+}
+```
+
+### `ParameterGroupIdMapTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterGroupIdMapTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.IntArray;
+import org.yamcs.yarch.rocksdb.Tablespace;
+
+public class ParameterGroupIdMapTest {
+
+    @Test
+    public void testFullOverlap() throws Exception {
+        Path f = Path.of(System.getProperty("java.io.tmpdir"), "TestParameterGroupIdMap_testFullOverlap");
+        FileUtils.deleteRecursivelyIfExists(f);
+
+        Tablespace tablespace = new Tablespace("test1");
+        tablespace.setCustomDataDir(f.toString());
+        tablespace.loadDb(false);
+
+        ParameterGroupIdDb pgidMap = new ParameterGroupIdDb("test1", tablespace, false, 0);
+        IntArray p1 = IntArray.wrap(1, 3, 4);
+        IntArray p2 = IntArray.wrap(1, 3, 4);
+        IntArray p3 = IntArray.wrap(1, 4, 5);
+
+        var pg1 = pgidMap.getGroup(p1);
+        var pg3 = pgidMap.getGroup(p3);
+        var pg2 = pgidMap.getGroup(p2);
+
+        int[] ia = pgidMap.getAllGroups(1);
+        assertArrayEquals(new int[] { pg1.id, pg3.id }, ia);
+
+        assertEquals(pg1, pg2);
+        assertTrue(pg3.id > pg1.id);
+
+        tablespace.close();
+
+        tablespace.loadDb(false);
+        pgidMap = new ParameterGroupIdDb("test1", tablespace, false, 0);
+
+        var pg4 = pgidMap.getGroup(p1);
+        assertEquals(pg1.id, pg4.id);
+
+        IntArray p4 = IntArray.wrap(1, 4, 7);
+
+        var pg6 = pgidMap.getGroup(p4);
+
+        assertTrue(pg6.id > pg3.id);
+
+        int[] ia1 = pgidMap.getAllGroups(1);
+        assertArrayEquals(new int[] { pg1.id, pg3.id, pg6.id }, ia1);
+    }
+
+    @Test
+    public void testHalfOverlap() throws Exception {
+        Path f = Path.of(System.getProperty("java.io.tmpdir"), "TestParameterGroupIdMap_testHalfOverlap");
+        FileUtils.deleteRecursivelyIfExists(f);
+
+        Tablespace tablespace = new Tablespace("test1");
+        tablespace.setCustomDataDir(f.toString());
+        tablespace.loadDb(false);
+
+        ParameterGroupIdDb pgidMap = new ParameterGroupIdDb("test1", tablespace, true, 0.5);
+        IntArray p1 = IntArray.wrap(1, 3, 4);
+        IntArray p2 = IntArray.wrap(1, 3, 5);
+        IntArray p3 = IntArray.wrap(1, 6, 7);
+
+        var pg1 = pgidMap.getGroup(p1);
+        var pg2 = pgidMap.getGroup(p2);
+        var pg3 = pgidMap.getGroup(p3);
+
+        assertEquals(pg1.id, pg2.id);
+        assertEquals(4, pg1.pids.size());
+
+        assertTrue(pg3.id > pg2.id);
+        assertEquals(3, pg3.pids.size());
+
+    }
+
+    void checkEquals(IntArray result, int... expected) {
+        assertEquals(expected.length, result.size());
+        for (int i = 0; i < expected.length; i++) {
+            assertEquals(expected[i], result.get(i));
+        }
+    }
+}
+```
+
+### `ParameterIdDbTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterIdDbTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Arrays;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDBException;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.IntArray;
+import org.yamcs.yarch.rocksdb.Tablespace;
+
+public class ParameterIdDbTest {
+    Tablespace tablespace;
+
+    @BeforeEach
+    public void before() throws Exception {
+        Path f = Path.of(System.getProperty("java.io.tmpdir"), "TestParameterIdDb");
+        FileUtils.deleteRecursivelyIfExists(f);
+
+        tablespace = new Tablespace("test1");
+        tablespace.setCustomDataDir(f.toString());
+
+        tablespace.loadDb(false);
+    }
+
+    @AfterEach
+    public void after() {
+        tablespace.close();
+    }
+
+    ParameterIdDb pdb(String name) throws RocksDBException, IOException {
+        return new ParameterIdDb(name, tablespace, false, 0);
+    }
+
+    @Test
+    public void test1() throws Exception {
+
+        ParameterIdDb pidDb = pdb("test1");
+        assertEquals(0, pidDb.size());
+
+        int p1 = pidDb.createAndGet("/test1/bla", Value.Type.BOOLEAN);
+        int p2 = pidDb.createAndGet("/test1/bla", Value.Type.BOOLEAN);
+        assertEquals(p1, p2);
+
+        int p3 = pidDb.createAndGet("/test1/bla", Value.Type.DOUBLE);
+        assertTrue(p3 > p1);
+        int p10 = pidDb.createAndGet("/test1/bla", Value.Type.DOUBLE, Value.Type.SINT32);
+        assertTrue(p10 > p3);
+
+        tablespace.close();
+        tablespace.loadDb(false);
+
+        pidDb = pdb("test1");
+        int p4 = pidDb.createAndGet("/test1/bla", Value.Type.BOOLEAN);
+        assertEquals(p1, p4);
+        int p5 = pidDb.createAndGet("/test1/bla", Value.Type.DOUBLE);
+        assertEquals(p3, p5);
+
+        int p6 = pidDb.createAndGet("/test2/bla", Value.Type.DOUBLE);
+        assertTrue(p6 > p3);
+
+        int p11 = pidDb.createAndGet("/test1/bla", Value.Type.DOUBLE, Value.Type.SINT32);
+        assertEquals(p10, p11);
+
+    }
+
+    @Test
+    public void test2() throws Exception {
+        Value.Type vt = Value.Type.AGGREGATE;
+        ParameterIdDb pidDb = pdb("test2");
+        int p1 = pidDb.createAndGet("/test2/bp1", Value.Type.BOOLEAN);
+        int p2 = pidDb.createAndGet("/test2/bp2", Value.Type.BOOLEAN);
+
+        int aggp1 = pidDb.createAndGetAggrray("/test2/aggregate1", vt, vt, IntArray.wrap(p1, p2));
+
+        int p3 = pidDb.createAndGet("/test2/bp3", Value.Type.BOOLEAN);
+
+        int aggp2 = pidDb.createAndGetAggrray("/test2/aggregate1", vt, vt, IntArray.wrap(p3, p1, p2));
+        assertEquals(aggp1, aggp2);
+
+        tablespace.close();
+        tablespace.loadDb(false);
+        pidDb = pdb("test2");
+
+        int p4 = pidDb.createAndGet("/test2/bp4", Value.Type.BOOLEAN);
+        int aggp3 = pidDb.createAndGetAggrray("/test2/aggregate1", vt, vt, IntArray.wrap(p1, p4));
+
+        assertTrue(aggp1 != aggp3);
+
+        int aggp4 = pidDb.createAndGetAggrray("/test2/aggregate1", vt, vt, IntArray.wrap(p1, p2));
+        assertEquals(aggp1, aggp4);
+    }
+
+    @Test
+    public void test3() throws Exception {
+        ParameterIdDb pidDb = pdb("test3");
+        int n = 1000;
+        int[] pid = new int[n];
+        for (int i = 0; i < n; i++) {
+            pid[i] = pidDb.createAndGet("/test3/bp[" + i + "]", Value.Type.BOOLEAN);
+        }
+
+        tablespace.close();
+        tablespace.loadDb(false);
+        pidDb = pdb("test3");
+
+        for (int i = 0; i < n; i++) {
+            String fqn = "/test3/bp[" + i + "]";
+            int p = pidDb.createAndGet(fqn, Value.Type.BOOLEAN);
+            assertEquals(pid[i], p);
+            ParameterId[] pids = pidDb.get(fqn);
+
+            assertEquals(1, pids.length);
+            assertEquals(p, pids[0].getPid());
+            assertEquals(fqn, pids[0].getParamFqn());
+
+            assertEquals(p, pidDb.getParameterId(p).getPid());
+        }
+    }
+
+    @Test
+    public void test4() throws Exception {
+        ParameterIdDb pidDb = pdb("test4");
+        int p1 = pidDb.createAndGet("/test4/p", Value.Type.BOOLEAN);
+        int p2 = pidDb.createAndGet("/test4/p", Value.Type.UINT32);
+        ParameterId[] pids = pidDb.get("/test4/p");
+        assertEquals(2, pids.length);
+        assertEquals(p1, pids[0].getPid());
+        assertEquals(p2, pids[1].getPid());
+    }
+
+    @Test
+    public void testSimpleToAggregate() throws Exception {
+        Value.Type vt = Value.Type.AGGREGATE;
+        ParameterIdDb pidDb = pdb("testSimpleToAggregate");
+
+        // first /test2/aggregate1 is a simple parameter
+        int p0 = pidDb.createAndGet("/test2/aggregate1", Value.Type.SINT32);
+
+        // but then it becomes an aggregate with two members
+        int p1 = pidDb.createAndGet("/test2/aggregate1.bp1", Value.Type.BOOLEAN);
+        int p2 = pidDb.createAndGet("/test2/aggregate1.bp2", Value.Type.BOOLEAN);
+        int aggp1 = pidDb.createAndGetAggrray("/test2/aggregate1", vt, vt, IntArray.wrap(p1, p2));
+
+        tablespace.close();
+        tablespace.loadDb(false);
+        pidDb = pdb("testSimpleToAggregate");
+
+        int p0_1 = pidDb.createAndGet("/test2/aggregate1", Value.Type.SINT32);
+        assertEquals(p0, p0_1);
+
+        int aggp3 = pidDb.createAndGetAggrray("/test2/aggregate1", vt, vt, IntArray.wrap(p1, p2));
+        assertEquals(aggp1, aggp3);
+    }
+}
+```
+
+### `ParameterStatusTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterStatusTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+public class ParameterStatusTest {
+
+    @Test
+    public void test1() {
+        Parameter p = new Parameter("p1");
+        ParameterValue pv = new ParameterValue(p);
+
+        ParameterStatus s1 = ParameterStatusSegment.getStatus(pv, null);
+        assertNotNull(s1);
+        assertTrue(s1 == ParameterStatusSegment.getStatus(pv, s1));
+
+        pv.setMonitoringResult(MonitoringResult.IN_LIMITS);
+        ParameterStatus s2 = ParameterStatusSegment.getStatus(pv, s1);
+        assertNotEquals(s1, s2);
+        assertTrue(s2 == ParameterStatusSegment.getStatus(pv, s2));
+
+        pv.setExpired();
+        ParameterStatus s3 = ParameterStatusSegment.getStatus(pv, s2);
+        assertNotEquals(s2, s3);
+        assertTrue(s3 == ParameterStatusSegment.getStatus(pv, s3));
+
+        pv.setMonitoringResult(MonitoringResult.CRITICAL);
+        ParameterStatus s4 = ParameterStatusSegment.getStatus(pv, s3);
+        assertNotEquals(s3, s4);
+        assertTrue(s4 == ParameterStatusSegment.getStatus(pv, s4));
+
+        pv.setDistressRange(new DoubleRange(100, 1000));
+        ParameterStatus s5 = ParameterStatusSegment.getStatus(pv, s4);
+        assertNotEquals(s4, s5);
+        assertTrue(s5 == ParameterStatusSegment.getStatus(pv, s5));
+
+        pv.setWarningRange(new DoubleRange(0, 2, false, false));
+        ParameterStatus s6 = ParameterStatusSegment.getStatus(pv, s5);
+        assertNotEquals(s5, s6);
+        assertTrue(s6 == ParameterStatusSegment.getStatus(pv, s6));
+    }
+}
+```
+
+### `ParameterValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParameterValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.PeekingIterator;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.ValueUtility;
+
+public class ParameterValueSegmentTest {
+
+    @Test
+    public void testGaps() {
+        SortedTimeSegment ts = new SortedTimeSegment(0);
+        for (int i = 0; i < 10; i++) {
+            ts.add(i);
+        }
+        ts.add(11);
+        ts.add(12);
+        SortedIntArray gaps = new SortedIntArray(0, 1, 2, 4, 10);
+
+        // t: 0 1 2 3 4 5 6 7 8 9 11 12
+        // v: - - - 0 - 1 2 3 4 5 -- 6
+        // g: 0 1 2 4 10
+        ParameterValueSegment pvs = getPvs(ts, gaps);
+
+        assertEquals(-1, pvs.previousBeforeGap(0));
+        assertEquals(-1, pvs.previousBeforeGap(1));
+        assertEquals(-1, pvs.previousBeforeGap(2));
+        assertEquals(0, pvs.previousBeforeGap(3));
+        assertEquals(0, pvs.previousBeforeGap(4));
+        assertEquals(1, pvs.previousBeforeGap(5));
+        assertEquals(5, pvs.previousBeforeGap(10));
+
+        assertEquals(0, pvs.nextAfterGap(0));
+        assertEquals(0, pvs.nextAfterGap(1));
+        assertEquals(0, pvs.nextAfterGap(2));
+        assertEquals(0, pvs.nextAfterGap(3));
+        assertEquals(1, pvs.nextAfterGap(4));
+        assertEquals(1, pvs.nextAfterGap(5));
+        assertEquals(6, pvs.nextAfterGap(10));
+
+        var it1a = pvs.newAscendingIterator(0);
+        checkEquals(new long[] { 3, 5, 6, 7, 8, 9, 12 }, getAll(it1a));
+
+        var it1d = pvs.newDescendingIterator(0);
+        checkEquals(new long[] {}, getAll(it1d));
+
+        var it2a = pvs.newAscendingIterator(2);
+        checkEquals(new long[] { 3, 5, 6, 7, 8, 9, 12 }, getAll(it2a));
+
+        var it2d = pvs.newDescendingIterator(2);
+        checkEquals(new long[] {}, getAll(it2d));
+
+        var it3a = pvs.newAscendingIterator(3);
+        checkEquals(new long[] { 3, 5, 6, 7, 8, 9, 12 }, getAll(it3a));
+
+        var it3d = pvs.newDescendingIterator(3);
+        checkEquals(new long[] { 3 }, getAll(it3d));
+
+        var it4a = pvs.newAscendingIterator(4);
+        checkEquals(new long[] { 5, 6, 7, 8, 9, 12 }, getAll(it4a));
+
+        var it4d = pvs.newDescendingIterator(4);
+        checkEquals(new long[] { 3 }, getAll(it4d));
+
+        var it9a = pvs.newAscendingIterator(9);
+        checkEquals(new long[] { 9, 12 }, getAll(it9a));
+
+        var it9d = pvs.newDescendingIterator(9);
+        checkEquals(new long[] { 9, 8, 7, 6, 5, 3 }, getAll(it9d));
+
+        var it10a = pvs.newAscendingIterator(10);
+        checkEquals(new long[] { 12 }, getAll(it10a));
+
+        var it10d = pvs.newDescendingIterator(10);
+        checkEquals(new long[] { 9, 8, 7, 6, 5, 3 }, getAll(it10d));
+    }
+
+    @Test
+    public void testGaps2() {
+        SortedTimeSegment ts = new SortedTimeSegment(0);
+        ts.add(1);
+        ts.add(3);
+
+        SortedIntArray gaps = new SortedIntArray();
+        gaps.insert(1);
+
+        ParameterValueSegment pvs = getPvs(ts, gaps);
+
+        var it2d = pvs.newDescendingIterator(4);
+        checkEquals(new long[] { 1 }, getAll(it2d));
+    }
+
+
+    @Test
+    public void testWithoutGaps() {
+        SortedTimeSegment ts = new SortedTimeSegment(0);
+        ts.add(1);
+        ts.add(2);
+        ts.add(4);
+        ParameterValueSegment pvs = getPvs(ts, null);
+
+        var it0a = pvs.newAscendingIterator(0);
+        checkEquals(new long[] { 1, 2, 4 }, getAll(it0a));
+        var it0d = pvs.newDescendingIterator(0);
+        checkEquals(new long[] {}, getAll(it0d));
+
+        var it1a = pvs.newAscendingIterator(1);
+        checkEquals(new long[] { 1, 2, 4 }, getAll(it1a));
+        var it1d = pvs.newDescendingIterator(1);
+        checkEquals(new long[] { 1 }, getAll(it1d));
+
+        var it2a = pvs.newAscendingIterator(2);
+        checkEquals(new long[] { 2, 4 }, getAll(it2a));
+        var it2d = pvs.newDescendingIterator(2);
+        checkEquals(new long[] { 2, 1 }, getAll(it2d));
+
+        var it3a = pvs.newAscendingIterator(3);
+        checkEquals(new long[] { 4 }, getAll(it3a));
+        var it3d = pvs.newDescendingIterator(3);
+        checkEquals(new long[] { 2, 1 }, getAll(it3d));
+
+        var it4a = pvs.newAscendingIterator(4);
+        checkEquals(new long[] { 4 }, getAll(it4a));
+        var it4d = pvs.newDescendingIterator(4);
+        checkEquals(new long[] { 4, 2, 1 }, getAll(it4d));
+
+        var it5a = pvs.newAscendingIterator(5);
+        checkEquals(new long[] {}, getAll(it5a));
+        var it5d = pvs.newDescendingIterator(5);
+        checkEquals(new long[] { 4, 2, 1 }, getAll(it5d));
+    }
+
+    List<TimedValue> getAll(PeekingIterator<TimedValue> it) {
+        var r = new ArrayList<TimedValue>();
+        while (it.isValid()) {
+            r.add(it.value());
+            it.next();
+        }
+        return r;
+    }
+
+    private void checkEquals(long[] ls, List<TimedValue> values) {
+        assertEquals(ls.length, values.size());
+        for (int i = 0; i < ls.length; i++) {
+            var tv = values.get(i);
+            assertEquals(ls[i], tv.instant);
+            assertEquals(ls[i], tv.engValue.getUint64Value());
+        }
+
+    }
+
+    private ParameterValueSegment getPvs(SortedTimeSegment ts, SortedIntArray gaps) {
+        ValueSegment vs = new LongValueSegment(Type.UINT64);
+        for (int i = 0; i < ts.size(); i++) {
+            if (gaps == null || !gaps.contains(i)) {
+                vs.add(ValueUtility.getIntValue(64, false, ts.getTime(i)));
+            }
+        }
+        return new ParameterValueSegment(0, ts, vs, null, null, gaps);
+    }
+
+}
+```
+
+### `ParchiveWithSparseGroupsTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/ParchiveWithSparseGroupsTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.yamcs.parameter.ParameterStatus.isInvalid;
+import static org.yamcs.parameter.ParameterStatus.isNominal;
+import static org.yamcs.parameterarchive.TestUtils.checkEquals;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YamcsServer;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+public class ParchiveWithSparseGroupsTest extends BaseParchiveTest {
+
+    static Parameter p1, p2, p3, p4, p5, a1;
+    static Random random = new Random();
+
+    @BeforeAll
+    public static void beforeClass() {
+        p1 = new Parameter("p1");
+        p2 = new Parameter("p2");
+        p3 = new Parameter("p3");
+        p4 = new Parameter("p4");
+        p5 = new Parameter("p5");
+        a1 = new Parameter("a1");
+        p1.setQualifiedName("/test/p1");
+        p2.setQualifiedName("/test/p2");
+        p3.setQualifiedName("/test/p3");
+        p4.setQualifiedName("/test/p4");
+        p5.setQualifiedName("/test/p5");
+
+        a1.setQualifiedName("/test/a1");
+        TimeEncoding.setUp();
+
+        timeService = new MockupTimeService();
+        YamcsServer.setMockupTimeService(timeService);
+        // org.yamcs.LoggingUtils.enableTracing();
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        instance = "ParchiveWithSparseGroupsTest";
+    }
+
+    @AfterEach
+    public void closeDb() throws Exception {
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        rse.dropTablespace(instance);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        openDb("none", true, 0.5);
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "pv1_0");
+        ParameterValue pv2_0 = getParameterValue(p2, 100, "pv2_0");
+        ParameterValue pv1_1 = getParameterValue(p1, 200, "pv1_1");
+        ParameterValue pv1_2 = getParameterValue(p1, 300, "pv1_2");
+        pv1_2.setInvalid();
+
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType());
+        int p2id = parchive.getParameterIdDb().createAndGet(p2.getQualifiedName(), pv2_0.getEngValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id));
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id));
+
+        assertEquals(pg1.id, pg2.id);
+
+        // ascending on empty db
+        List<ParameterValueArray> l0a = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(0, l0a.size());
+        // descending on empty db
+        List<ParameterValueArray> l0d = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id }, false);
+        assertEquals(0, l0d.size());
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+        pgSegment1.addRecord(100, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_0, pv2_0));
+        pgSegment1.addRecord(200, IntArray.wrap(p1id), Arrays.asList(pv1_1));
+        pgSegment1.addRecord(300, IntArray.wrap(p1id), Arrays.asList(pv1_2));
+
+        parchive.writeToArchive(0, Arrays.asList(pgSegment1));
+
+        List<ParameterValueArray> l1a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(1, l1a.size());
+        checkEquals(l1a.get(0), pv1_0, pv1_1, pv1_2);
+
+        List<ParameterValueArray> l1d = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, false);
+        assertEquals(1, l1d.size());
+        checkEquals(l1d.get(0), pv1_2, pv1_1, pv1_0);
+
+        List<ParameterValueArray> l2a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p2id,
+                new int[] { pg1.id }, true);
+        assertEquals(1, l2a.size());
+        checkEquals(l2a.get(0), pv2_0);
+
+        List<ParameterValueArray> l2d = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p2id,
+                new int[] { pg1.id }, false);
+        assertEquals(1, l2d.size());
+        checkEquals(l2d.get(0), pv2_0);
+
+        // new value in a different interval but same partition
+        long t2 = ParameterArchive.getIntervalEnd(0) + 100;
+        PGSegment pgSegment3 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t2));
+        ParameterValue pv1_3 = getParameterValue(p1, t2, "pv1_3");
+        ParameterValue pv2_1 = getParameterValue(p1, t2, "pv2_1");
+        pgSegment3.addRecord(t2, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_3, pv2_1));
+        parchive.writeToArchive(pgSegment3);
+
+        // new value in a different partition
+        long t3 = TimeEncoding.parse("2017-01-01T00:00:00");
+        PGSegment pgSegment4 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t3));
+        ParameterValue pv1_4 = getParameterValue(p1, t3, "pv1_4");
+        ParameterValue pv2_2 = getParameterValue(p2, t3, "pv2_2");
+        pgSegment4.addRecord(t3, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_4, pv2_2));
+        parchive.writeToArchive(pgSegment4);
+
+        // p1 ascending on 5 values from three segments (fourth one is empty)
+        List<ParameterValueArray> l3a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(3, l3a.size());
+        checkEquals(l3a.get(0), pv1_0, pv1_1, pv1_2);
+        checkEquals(l3a.get(1), pv1_3);
+        checkEquals(l3a.get(2), pv1_4);
+
+        // p1 descending on 3 values from three segments (fourth one is empty)
+        List<ParameterValueArray> l3d = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, false);
+        assertEquals(3, l3d.size());
+        checkEquals(l3d.get(0), pv1_4);
+        checkEquals(l3d.get(1), pv1_3);
+        checkEquals(l3d.get(2), pv1_2, pv1_1, pv1_0);
+
+        // p2 ascending on 5 values from four segments
+        List<ParameterValueArray> l4a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p2id,
+                new int[] { pg1.id }, true);
+        assertEquals(3, l4a.size());
+        checkEquals(l4a.get(0), pv2_0);
+        checkEquals(l4a.get(1), pv2_1);
+        checkEquals(l4a.get(2), pv2_2);
+
+        // p2 ascending on 5 values from four segments
+        List<ParameterValueArray> l4d = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p2id,
+                new int[] { pg1.id }, false);
+        assertEquals(3, l4d.size());
+        checkEquals(l4d.get(0), pv2_2);
+        checkEquals(l4d.get(1), pv2_1);
+        checkEquals(l4d.get(2), pv2_0);
+
+        // p1 partial retrieval from first segment ascending
+        List<ParameterValueArray> l5a = retrieveSingleValueMultigroup(101, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(3, l5a.size());
+        checkEquals(l5a.get(0), pv1_1, pv1_2);
+        checkEquals(l5a.get(1), pv1_3);
+        checkEquals(l5a.get(2), pv1_4);
+
+        // p1 partial retrieval from the first segment descending
+        List<ParameterValueArray> l5d = retrieveSingleValueMultigroup(101, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, false);
+        assertEquals(3, l5d.size());
+        checkEquals(l5d.get(0), pv1_4);
+        checkEquals(l5d.get(1), pv1_3);
+        checkEquals(l5d.get(2), pv1_2, pv1_1);
+
+        // ascending with empty request inside existing segment
+        List<ParameterValueArray> l6a = retrieveSingleValueMultigroup(101, 102, p1id, new int[] { pg1.id, pg2.id },
+                true);
+        assertEquals(0, l6a.size());
+
+        // descending with empty request inside existing segment
+        List<ParameterValueArray> l6d = retrieveSingleValueMultigroup(101, 102, p1id, new int[] { pg1.id, pg2.id },
+                false);
+        assertEquals(0, l6d.size());
+
+        // retrieve only statuses
+        List<ParameterValueArray> l7a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, true, false, false, true);
+        assertNull(l7a.get(0).engValues);
+        assertNull(l7a.get(1).rawValues);
+        assertNull(l7a.get(2).engValues);
+        assertNotNull(l7a.get(0).paramStatus);
+        assertNotNull(l7a.get(1).paramStatus);
+        assertNotNull(l7a.get(2).paramStatus);
+
+        assertTrue(isInvalid(l7a.get(0).paramStatus[2].getAcqStatus()));
+        assertTrue(isNominal(l7a.get(2).paramStatus[0].getAcqStatus()));
+    }
+
+    @Test
+    public void test2() throws Exception {
+        openDb("none", true, 1);
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "pv1_0");
+        ParameterValue pv3_0 = getParameterValue(p3, 100, "pv1_2");
+
+        ParameterValue pv2_0 = getParameterValue(p2, 200, "pv2_0");
+        ParameterValue pv3_1 = getParameterValue(p3, 200, "pv3_1");
+
+        ParameterValue pv3_2 = getParameterValue(p3, 300, "pv3_2");
+
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType());
+        int p2id = parchive.getParameterIdDb().createAndGet(p2.getQualifiedName(), pv2_0.getEngValue().getType());
+        int p3id = parchive.getParameterIdDb().createAndGet(p3.getQualifiedName(), pv3_0.getEngValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p3id));
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p2id, p3id));
+        var pg3 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p3id));
+
+        assertNotEquals(pg1.id, pg2.id);
+        assertEquals(pg1.id, pg3.id);
+
+        // ascending on empty db
+        List<ParameterValueArray> l0a = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id, pg2.id }, true);
+        assertEquals(0, l0a.size());
+        // descending on empty db
+        List<ParameterValueArray> l0d = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id, pg2.id }, false);
+        assertEquals(0, l0d.size());
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+        PGSegment pgSegment2 = new PGSegment(pg2.id, 0);
+
+        pgSegment1.addRecord(100, IntArray.wrap(p1id, p3id), Arrays.asList(pv1_0, pv3_0));
+        pgSegment2.addRecord(200, IntArray.wrap(p2id, p3id), Arrays.asList(pv2_0, pv3_1));
+        pgSegment1.addRecord(300, IntArray.wrap(p3id), Arrays.asList(pv3_2));
+
+        parchive.writeToArchive(pgSegment1);
+        parchive.writeToArchive(pgSegment2);
+
+        List<ParameterValueArray> l1a = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p3id,
+                new int[] { pg1.id, pg2.id }, true);
+
+        assertEquals(1, l1a.size());
+        checkEquals(l1a.get(0), pv3_0, pv3_1, pv3_2);
+
+        List<ParameterValueArray> l1d = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p3id,
+                new int[] { pg1.id, pg2.id }, false);
+        assertEquals(1, l1d.size());
+        checkEquals(l1a.get(0), pv3_0, pv3_1, pv3_2);
+
+        List<ParameterValueArray> l2a = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(1, l2a.size());
+        checkEquals(l2a.get(0), pv1_0);
+
+        List<ParameterValueArray> l2d = retrieveSingleValueMultigroup(0, TimeEncoding.POSITIVE_INFINITY, p1id,
+                new int[] { pg1.id }, false);
+        assertEquals(1, l2d.size());
+        checkEquals(l2a.get(0), pv1_0);
+
+        List<ParameterIdValueList> l4a = retrieveMultipleParameters(0, TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id, p3id, p3id }, new int[] { pg1.id, pg2.id, pg1.id, pg2.id }, true);
+        assertEquals(3, l4a.size());
+        checkEquals(l4a.get(0), 100, pv1_0, pv3_0);
+        checkEquals(l4a.get(1), 200, pv2_0, pv3_1);
+        checkEquals(l4a.get(2), 300, pv3_2);
+
+        List<ParameterIdValueList> l4d = retrieveMultipleParameters(0, TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id, p3id, p3id }, new int[] { pg1.id, pg2.id, pg1.id, pg2.id }, false);
+        assertEquals(3, l4a.size());
+        checkEquals(l4d.get(0), 300, pv3_2);
+        checkEquals(l4d.get(1), 200, pv2_0, pv3_1);
+        checkEquals(l4d.get(2), 100, pv1_0, pv3_0);
+
+    }
+
+    @Test
+    public void testArrays() throws Exception {
+        openDb("none", true, 0.5);
+
+        ParameterValue pva1_0 = getArrayValue(a1, 100, "a");
+        ParameterValue pva1_1 = getArrayValue(a1, 100, "b", "c");
+
+        long t1 = TimeEncoding.parse("2021-06-02T00:00:00");
+        long t2 = TimeEncoding.parse("2021-06-02T00:10:00");
+
+        BasicParameterList l1 = new BasicParameterList(parchive.getParameterIdDb());
+        l1.add(pva1_0);
+
+        BasicParameterList l2 = new BasicParameterList(parchive.getParameterIdDb());
+        l2.add(pva1_1);
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(l1.getPids());
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(l2.getPids());
+
+        // because sparseGroups is true, the different size array values are stored in the same group
+        assertTrue(pg2.id == pg1.id);
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, ParameterArchive.getIntervalStart(t2));
+        pgSegment1.addRecord(t2, l2.getPids(), l2.getValues());
+        pgSegment1.addRecord(t1, l1.getPids(), l1.getValues());
+
+        parchive.writeToArchive(pgSegment1);
+
+        ParameterId[] parameterIds = parchive.getParameterIdDb().get(a1.getQualifiedName());
+        assertEquals(1, parameterIds.length);
+
+        MultipleParameterRequest mpvr = new MultipleParameterRequest(0l, TimeEncoding.MAX_INSTANT,
+                parameterIds, true);
+
+        MultiParameterRetrieval mpdr = new MultiParameterRetrieval(parchive, mpvr);
+        MultiValueConsumer c = new MultiValueConsumer();
+        mpdr.retrieve(c);
+        assertEquals(2, c.list.size());
+        ParameterIdValueList rl0 = c.list.get(0);
+        assertEquals(1, rl0.size());
+        checkEquals(c.list.get(0), t1, pva1_0);
+        checkEquals(c.list.get(1), t2, pva1_1);
+    }
+
+    @Test
+    public void test3() throws Exception {
+        openDb("none", true, 1);
+
+        BackFillerTask task = new BackFillerTask(parchive);
+        task.maxSegmentSize = 2;
+
+        // segment 0 - only p1
+        ParameterValue pv1_0 = getParameterValue(p1, 0, "pv1_0");
+        ParameterValue pv1_1 = getParameterValue(p1, 100, "pv1_1");
+        task.processParameters(Arrays.asList(pv1_0));
+        task.processParameters(Arrays.asList(pv1_1));
+
+        // segment 1 - both p1 and p2
+        ParameterValue pv1_2 = getParameterValue(p1, 200, "pv1_2");
+        ParameterValue pv2_2 = getParameterValue(p2, 200, "pv2_2");
+        ParameterValue pv1_3 = getParameterValue(p1, 300, "pv1_3");
+        ParameterValue pv2_3 = getParameterValue(p2, 300, "pv2_3");
+        task.processParameters(Arrays.asList(pv1_2, pv2_2));
+        task.processParameters(Arrays.asList(pv1_3, pv2_3));
+
+        // segment 2 - p1 and partially p2
+        ParameterValue pv1_4 = getParameterValue(p1, 400, "pv1_4");
+        ParameterValue pv2_4 = getParameterValue(p2, 400, "pv2_4");
+        ParameterValue pv1_5 = getParameterValue(p1, 500, "pv1_5");
+        task.processParameters(Arrays.asList(pv1_4, pv2_4));
+        task.processParameters(Arrays.asList(pv1_5));
+
+        // segment 3 - only p1
+        ParameterValue pv1_6 = getParameterValue(p1, 600, "pv1_6");
+        ParameterValue pv1_7 = getParameterValue(p1, 700, "pv1_7");
+        task.processParameters(Arrays.asList(pv1_6));
+        task.processParameters(Arrays.asList(pv1_7));
+
+        // segment 4 - p1 and partially p2
+        ParameterValue pv1_8 = getParameterValue(p1, 800, "pv1_8");
+        ParameterValue pv1_9 = getParameterValue(p1, 900, "pv1_9");
+        ParameterValue pv2_9 = getParameterValue(p2, 900, "pv2_9");
+        task.processParameters(Arrays.asList(pv1_8));
+        task.processParameters(Arrays.asList(pv1_9, pv2_9));
+
+        // segment 5 - both p1 and p2
+        ParameterValue pv1_10 = getParameterValue(p1, 1000, "pv1_10");
+        ParameterValue pv2_10 = getParameterValue(p2, 1000, "pv2_10");
+        ParameterValue pv1_11 = getParameterValue(p1, 1100, "pv1_11");
+        ParameterValue pv2_11 = getParameterValue(p2, 1100, "pv2_11");
+        task.processParameters(Arrays.asList(pv1_10, pv2_10));
+        task.processParameters(Arrays.asList(pv1_11, pv2_11));
+
+        // segment 6 - only p1
+        ParameterValue pv1_12 = getParameterValue(p1, 1200, "pv1_12");
+        ParameterValue pv1_13 = getParameterValue(p1, 1300, "pv1_13");
+        task.processParameters(Arrays.asList(pv1_12));
+        task.processParameters(Arrays.asList(pv1_13));
+
+        task.flush();
+        var p1id = parchive.getParameterIdDb().get(p1.getQualifiedName())[0].getPid();
+        var p2id = parchive.getParameterIdDb().get(p2.getQualifiedName())[0].getPid();
+        var pgid = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id)).id;
+
+        List<ParameterIdValueList> l = retrieveMultipleParameters(0,
+                TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id }, new int[] { pgid, pgid }, true);
+        assertEquals(14, l.size());
+
+        checkEquals(l.get(0), 0, pv1_0);
+        checkEquals(l.get(1), 100, pv1_1);
+        checkEquals(l.get(2), 200, pv1_2, pv2_2);
+        checkEquals(l.get(3), 300, pv1_3, pv2_3);
+        checkEquals(l.get(4), 400, pv1_4, pv2_4);
+        checkEquals(l.get(5), 500, pv1_5);
+        checkEquals(l.get(6), 600, pv1_6);
+        checkEquals(l.get(7), 700, pv1_7);
+        checkEquals(l.get(8), 800, pv1_8);
+        checkEquals(l.get(9), 900, pv1_9, pv2_9);
+        checkEquals(l.get(10), 1000, pv1_10, pv2_10);
+        checkEquals(l.get(11), 1100, pv1_11, pv2_11);
+        checkEquals(l.get(12), 1200, pv1_12);
+        checkEquals(l.get(13), 1300, pv1_13);
+
+    }
+
+    @Test
+    public void test3bis() throws Exception {
+        openDb("none", true, 1);
+
+        BackFillerTask task = new BackFillerTask(parchive);
+        task.maxSegmentSize = 2;
+
+        // segment 0 - p1 and partially p2
+        ParameterValue pv1_1 = getParameterValue(p1, 100, "pv1_1");
+        ParameterValue pv1_2 = getParameterValue(p1, 200, "pv1_2");
+        ParameterValue pv2_2 = getParameterValue(p2, 200, "pv2_2");
+        task.processParameters(Arrays.asList(pv1_1));
+        task.processParameters(Arrays.asList(pv1_2, pv2_2));
+
+        // segment 1 - both p1 and p2
+        ParameterValue pv1_3 = getParameterValue(p1, 300, "pv1_3");
+        ParameterValue pv2_3 = getParameterValue(p2, 300, "pv2_3");
+        ParameterValue pv1_4 = getParameterValue(p1, 400, "pv1_4");
+        ParameterValue pv2_4 = getParameterValue(p2, 400, "pv2_4");
+        task.processParameters(Arrays.asList(pv1_3, pv2_3));
+        task.processParameters(Arrays.asList(pv1_4, pv2_4));
+
+        // segment 2 - only p1
+        ParameterValue pv1_5 = getParameterValue(p1, 500, "pv1_5");
+        ParameterValue pv1_6 = getParameterValue(p1, 600, "pv1_6");
+        task.processParameters(Arrays.asList(pv1_5));
+        task.processParameters(Arrays.asList(pv1_6));
+
+        // segment 3 - only p1
+        ParameterValue pv1_7 = getParameterValue(p1, 700, "pv1_7");
+        ParameterValue pv1_8 = getParameterValue(p1, 800, "pv1_8");
+        task.processParameters(Arrays.asList(pv1_7));
+        task.processParameters(Arrays.asList(pv1_8));
+
+        // segment 4 - both p1 and p2
+        ParameterValue pv1_9 = getParameterValue(p1, 900, "pv1_9");
+        ParameterValue pv2_9 = getParameterValue(p2, 900, "pv2_9");
+        ParameterValue pv1_10 = getParameterValue(p1, 1000, "pv1_10");
+        ParameterValue pv2_10 = getParameterValue(p2, 1000, "pv2_10");
+        task.processParameters(Arrays.asList(pv1_9, pv2_9));
+        task.processParameters(Arrays.asList(pv1_10, pv2_10));
+
+        task.flush();
+        var p1id = parchive.getParameterIdDb().get(p1.getQualifiedName())[0].getPid();
+        var p2id = parchive.getParameterIdDb().get(p2.getQualifiedName())[0].getPid();
+        var pgid = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id)).id;
+
+        List<ParameterIdValueList> l = retrieveMultipleParameters(0,
+                TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id }, new int[] { pgid, pgid }, true);
+        assertEquals(10, l.size());
+
+        checkEquals(l.get(0), 100, pv1_1);
+        checkEquals(l.get(1), 200, pv1_2, pv2_2);
+        checkEquals(l.get(2), 300, pv1_3, pv2_3);
+        checkEquals(l.get(3), 400, pv1_4, pv2_4);
+        checkEquals(l.get(4), 500, pv1_5);
+        checkEquals(l.get(5), 600, pv1_6);
+        checkEquals(l.get(6), 700, pv1_7);
+        checkEquals(l.get(7), 800, pv1_8);
+        checkEquals(l.get(8), 900, pv1_9, pv2_9);
+        checkEquals(l.get(9), 1000, pv1_10, pv2_10);
+    }
+
+    @Test
+    public void testUnsorted() throws Exception {
+        openDb("none", true, 1);
+
+        BackFillerTask task = new BackFillerTask(parchive);
+        task.maxSegmentSize = 3;
+
+        // interval 0 - p1 and p2 - to make sure that p1 and p2 are in the same group
+        ParameterValue pv1_1 = getParameterValue(p1, 100, "pv1_1");
+        ParameterValue pv2_1 = getParameterValue(p2, 100, "pv2_1");
+        task.processParameters(Arrays.asList(pv1_1, pv2_1));
+
+
+        // interval 1 - p1, p1 and then p2 in between
+        long t1 = ParameterArchive.getIntervalEnd(0) + 1;
+        ParameterValue pv1_2 = getParameterValue(p1, t1, "pv1_2");
+        ParameterValue pv1_3 = getParameterValue(p1, t1 + 200, "pv1_3");
+        ParameterValue pv2_2 = getParameterValue(p2, t1 + 100, "pv2_2");
+
+        task.processParameters(Arrays.asList(pv1_2));
+        task.processParameters(Arrays.asList(pv1_3));
+        task.processParameters(Arrays.asList(pv2_2));
+        task.flush();
+
+        var p1id = parchive.getParameterIdDb().get(p1.getQualifiedName())[0].getPid();
+        var p2id = parchive.getParameterIdDb().get(p2.getQualifiedName())[0].getPid();
+        var pgid = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id)).id;
+
+        List<ParameterIdValueList> l = retrieveMultipleParameters(0,
+                TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id }, new int[] { pgid, pgid }, true);
+        assertEquals(4, l.size());
+        checkEquals(l.get(0), 100, pv1_1, pv2_1);
+        checkEquals(l.get(1), t1, pv1_2);
+        checkEquals(l.get(2), t1 + 100, pv2_2);
+        checkEquals(l.get(3), t1 + 200, pv1_3);
+    }
+
+    @Test
+    public void testRandomized() throws Exception {
+        openDb("none", true, 0);
+
+        BackFillerTask task = new BackFillerTask(parchive);
+        task.maxSegmentSize = 2;
+        int maxNumParams = 30;
+        List<Parameter> params = new ArrayList<>(maxNumParams);
+        for (int i = 0; i < maxNumParams; i++) {
+            var p = new Parameter("p" + i);
+            p.setQualifiedName("/randomized_test/" + p.getName());
+            params.add(p);
+            // add parameters to the parameter id db in order to make sure they get increasing numbers
+            parchive.getParameterIdDb().createAndGet(p.getQualifiedName(), Type.STRING);
+        }
+        /*     var sl = List.of(a(0), a(0, 0), a(0, 1), a(0, 0), a(0, 1), a(0, 0), a(0, 0), a(0, 0), a(1), a(1, 1), a(0, 1),
+                a(1, 0), a(1), a(0), a(1), a(0), a(1), a(0), a(0), a(0));
+        testRandomOne(task, params, sl, 0);
+          */
+        long t0 = 0;
+        for (int numParams = 2; numParams < maxNumParams; numParams++) {
+            for (int i = 0; i < 100; i++) {
+                var setList = generateSetList(numParams, 100);
+                try {
+                    testRandomOne(task, params, setList, t0);
+                } catch (Throwable e) {
+                    fail(toString(setList), e);
+                }
+                t0 = ParameterArchive.getIntervalEnd(t0) + 1;
+            }
+        }
+    }
+
+    public void testRandomOne(BackFillerTask task, List<Parameter> params, List<IntArray> setList, long t0)
+            throws Exception {
+        List<ParameterValue[]> expectedValueList = new ArrayList<>();
+
+        for (int k = 0; k < setList.size(); k++) {
+            var set = setList.get(k);
+            List<ParameterValue> values = new ArrayList<>();
+            for (int pid : set) {
+                Parameter param = params.get(pid);
+                ParameterValue pv = getParameterValue(param, t0 + k, "pv" + pid + "_" + k);
+                values.add(pv);
+
+            }
+            task.processParameters(values);
+            var sortedValues = IntStream.range(0, values.size())
+                    .boxed()
+                    .sorted(Comparator.comparing(set::get))
+                    .map(values::get)
+                    .toArray(ParameterValue[]::new);
+            // the parameter archive returns values in the order of their parameter ids
+            expectedValueList.add(sortedValues);
+        }
+        task.flush();
+        var paramIds = params.stream()
+                .map(p -> parchive.getParameterIdDb().get(p.getQualifiedName())[0].getPid())
+                .mapToInt(Integer::intValue)
+                .toArray();
+        List<ParameterIdValueList> l = retrieveMultipleParameters(t0,
+                TimeEncoding.POSITIVE_INFINITY,
+                paramIds, null, true);
+
+        for (int k = 0; k < expectedValueList.size(); k++) {
+            checkEquals(l.get(k), t0 + k, expectedValueList.get(k));
+        }
+    }
+
+    @Test
+    public void test4() throws Exception {
+        openDb("none", true, 0);
+
+        BackFillerTask task = new BackFillerTask(parchive);
+        task.maxSegmentSize = 2;
+
+        // segment 0 - only p1
+        ParameterValue pv1_0 = getParameterValue(p1, 0, "pv1_0");
+        ParameterValue pv1_1 = getParameterValue(p1, 100, "pv1_1");
+        task.processParameters(Arrays.asList(pv1_0));
+        task.processParameters(Arrays.asList(pv1_1));
+
+        // segment 1 - only p1
+        ParameterValue pv1_2 = getParameterValue(p1, 200, "pv1_2");
+        ParameterValue pv1_3 = getParameterValue(p1, 300, "pv1_3");
+        task.processParameters(Arrays.asList(pv1_2));
+        task.processParameters(Arrays.asList(pv1_3));
+
+        // segment 2 - partially p1 and p2
+        ParameterValue pv1_4 = getParameterValue(p1, 400, "pv1_4");
+        ParameterValue pv2_4 = getParameterValue(p2, 400, "pv2_4");
+        ParameterValue pv2_5 = getParameterValue(p2, 500, "pv2_5");
+        task.processParameters(Arrays.asList(pv2_4, pv1_4));
+        task.processParameters(Arrays.asList(pv2_5));
+
+        // segment 2 - only p2
+        ParameterValue pv2_6 = getParameterValue(p2, 600, "pv2_6");
+        ParameterValue pv2_7 = getParameterValue(p2, 700, "pv2_7");
+        task.processParameters(Arrays.asList(pv2_6));
+        task.processParameters(Arrays.asList(pv2_7));
+
+        task.flush();
+        var p1id = parchive.getParameterIdDb().get(p1.getQualifiedName())[0].getPid();
+        var p2id = parchive.getParameterIdDb().get(p2.getQualifiedName())[0].getPid();
+        var pgid = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id)).id;
+
+        List<ParameterIdValueList> l = retrieveMultipleParameters(0,
+                TimeEncoding.POSITIVE_INFINITY,
+                new int[] { p1id, p2id }, new int[] { pgid, pgid }, true);
+        assertEquals(8, l.size());
+
+        checkEquals(l.get(0), 0, pv1_0);
+        checkEquals(l.get(1), 100, pv1_1);
+        checkEquals(l.get(2), 200, pv1_2);
+        checkEquals(l.get(3), 300, pv1_3);
+        checkEquals(l.get(4), 400, pv1_4, pv2_4);
+        checkEquals(l.get(5), 500, pv2_5);
+        checkEquals(l.get(6), 600, pv2_6);
+        checkEquals(l.get(7), 700, pv2_7);
+
+    }
+
+    @Test
+    public void testOrphanRemoval() throws Exception {
+        openDb("none", true, 0.5);
+        ParameterValue pv1_0 = getParameterValue(p1, 100, "pv1_0");
+        ParameterValue pv2_0 = getParameterValue(p2, 100, "pv2_0");
+        ParameterValue pv1_2 = getParameterValue(p1, 300, "pv1_2");
+        pv1_2.setInvalid();
+
+        int p1id = parchive.getParameterIdDb().createAndGet(p1.getQualifiedName(), pv1_0.getEngValue().getType());
+        int p2id = parchive.getParameterIdDb().createAndGet(p2.getQualifiedName(), pv2_0.getEngValue().getType());
+
+        var pg1 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id, p2id));
+        var pg2 = parchive.getParameterGroupIdDb().getGroup(IntArray.wrap(p1id));
+
+        assertEquals(pg1.id, pg2.id);
+
+        PGSegment pgSegment1 = new PGSegment(pg1.id, 0);
+        pgSegment1.addRecord(100, IntArray.wrap(p1id, p2id), Arrays.asList(pv1_0, pv2_0));
+        parchive.writeToArchive(0, Arrays.asList(pgSegment1));
+
+        List<ParameterValueArray> l1a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(1, l1a.size());
+
+        PGSegment pgSegment2 = new PGSegment(pg1.id, 0);
+        pgSegment2.addRecord(100, IntArray.wrap(p2id), Arrays.asList(pv2_0));
+        parchive.writeToArchive(0, Arrays.asList(pgSegment2));
+
+        List<ParameterValueArray> l2a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p1id,
+                new int[] { pg1.id }, true);
+        assertEquals(0, l2a.size());
+
+        List<ParameterValueArray> l3a = retrieveSingleValueMultigroup(0, TimeEncoding.MAX_INSTANT, p2id,
+                new int[] { pg1.id }, true);
+        assertEquals(1, l3a.size());
+
+    }
+
+    public static List<IntArray> generateSetList(int maxSetSize, int listLength) {
+        List<IntArray> list = new ArrayList<>();
+
+        for (int j = 0; j < listLength; j++) {
+            IntArray set = new IntArray();
+            int setSize = 1 + random.nextInt(maxSetSize);
+            while (set.size() < setSize) {
+                set.add(random.nextInt(maxSetSize));
+            }
+            list.add(set);
+        }
+        return list;
+    }
+
+    String toString(List<IntArray> setList) {
+        StringBuilder sb = new StringBuilder("List.of(");
+        boolean first0 = true;
+        for (var set : setList) {
+            if (first0) {
+                first0 = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append("a(");
+            boolean first1 = true;
+            for (var i : set) {
+                if (first1) {
+                    first1 = false;
+                } else {
+                    sb.append(", ");
+                }
+                sb.append(i);
+            }
+            sb.append(")");
+
+        }
+        sb.append("); ");
+        return sb.toString();
+    }
+
+    IntArray a(int... a) {
+        return IntArray.wrap(a);
+    }
+}
+```
+
+### `PrintStats.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/PrintStats.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.io.PrintStream;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.YarchDatabase;
+
+public class PrintStats {
+
+    @Test
+    @Disabled
+    public void test1() throws Exception {
+        TimeEncoding.setUp();
+        YarchDatabase.setHome("/storage/yamcs-data");
+
+        ParameterArchive parchive = new ParameterArchive();
+        YConfiguration config = parchive.getSpec().validate(YConfiguration.emptyConfig());
+        parchive.init("aces-ops", "test", config);
+        PrintStream ps = new PrintStream("/tmp/aces-ops6-stats.txt");
+        PrintStream ps1 = new PrintStream("/storage/aces-ops-stats/aces-ops6-paraid.txt");
+        parchive.printKeys(ps);
+        parchive.getParameterIdDb().print(ps1);
+        ps1.close();
+        ps.close();
+    }
+}
+```
+
+### `RealtimeArchiveFillerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/RealtimeArchiveFillerTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.rocksdb.RocksDBException;
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yaml.snakeyaml.Yaml;
+
+import static org.yamcs.parameterarchive.RealtimeArchiveFiller.DataQueue.IntervalData.QSIZE;
+
+/**
+ * Implements unit tests for {@link RealtimeArchiveFiller}.
+ */
+public class RealtimeArchiveFillerTest {
+
+    /** The size of an interval, in milliseconds. (2^23 milliseconds) */
+    private static final long INTERVAL_SIZE_MILLIS = 8388608L;
+
+    /** The amount of a backward time jump that will trigger a cache flush. */
+    private static final long PAST_JUMP_THRESHOLD_SECS = 86400;
+    private static final long PAST_JUMP_THRESHOLD_MILLIS = PAST_JUMP_THRESHOLD_SECS * 1000;
+
+    /** The Yamcs instant at the start of 2021. */
+    private static final long YEAR_2021_START_INSTANT = 1609472533000L;
+
+    @Mock
+    private ParameterArchive parameterArchive;
+
+    @Mock
+    private ParameterIdDb parameterIdDb;
+
+    @Mock
+    private ParameterGroupIdDb parameterGroupIdDb;
+
+    @Mock
+    private YamcsServer yamcsServer;
+
+    @Mock
+    private Processor processor;
+
+    @Mock
+    private ParameterRequestManager parameterRequestManager;
+    Map<String, Integer> paramFqnToIdMap = new HashMap<>();
+
+    @BeforeEach
+    public void setup() throws RocksDBException {
+        // TimeEncoding is used when logging messages by RealtimeArchiveFiller.
+        TimeEncoding.setUp();
+
+        MockitoAnnotations.openMocks(this);
+        when(processor.getParameterRequestManager()).thenReturn(parameterRequestManager);
+        when(parameterArchive.getYamcsInstance()).thenReturn("realtime");
+        when(parameterArchive.getFillerLock()).thenReturn(new FillerLock());
+        when(parameterArchive.getParameterIdDb()).thenReturn(parameterIdDb);
+        when(parameterArchive.getParameterGroupIdDb()).thenReturn(parameterGroupIdDb);
+        when(parameterGroupIdDb.getGroup(any(IntArray.class)))
+                .thenReturn(new ParameterGroupIdDb.ParameterGroup(0, null));
+
+        when(parameterIdDb.createAndGet(anyString(), any(Type.class), any(Type.class)))
+                .thenAnswer(invocation -> {
+                    String paramFqn = invocation.getArgument(0);
+                    return paramFqnToIdMap.computeIfAbsent(paramFqn, k -> paramFqnToIdMap.size());
+                });
+
+    }
+
+    /**
+     * Tests that when there are no parameter values added to the archiver that no segments are written.
+     * 
+     * @throws InterruptedException
+     *             if the archiver is interrupted during shutdown
+     * @throws RocksDBException
+     *             if there is an error writing to RocksDB
+     * @throws IOException
+     *             if there is an I/O error writing segments
+     */
+    @Test
+    public void testNoParametersToArchive() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        filler.shutDown();
+        verify(parameterArchive, never()).writeToArchive(any(PGSegment.class));
+    }
+
+    /**
+     * Tests that when no processor is configured the archiver fails to start.
+     */
+    @Test
+    public void testNoProcessor() {
+        assertThrows(ConfigurationException.class, () -> {
+            RealtimeArchiveFiller filler = getFiller(1000);
+            filler.start();
+        });
+    }
+
+    /**
+     * Tests that all segments are flushed when the archiver is shut down. In this case there is a single value
+     * archived, which should be in one segment.
+     * 
+     * @throws InterruptedException
+     *             if the archiver is interrupted during shutdown
+     * @throws RocksDBException
+     *             if there is an error writing to RocksDB
+     * @throws IOException
+     *             if there is an I/O error writing segments
+     */
+    @Test
+    public void testFlushOnShutdown() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values = getValues(0, "/myproject/value");
+        filler.processParameters(values);
+        filler.shutDown();
+
+        verify(parameterArchive, times(1)).writeToArchive(any(PGSegment.class));
+    }
+
+    /**
+     * Tests that a new value added older than the <code>pastJumpThreshold</code> causes a complete cache flush before
+     * adding the value.
+     * 
+     * @throws InterruptedException
+     *             if the executor is interrupted while shutting down
+     * @throws IOException
+     *             if there is an error writing to the archive
+     * @throws RocksDBException
+     *             if there is an error writing to the database
+     */
+    @Test
+    public void testFlushBeforeVeryOldValues() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values = getValues(YEAR_2021_START_INSTANT + PAST_JUMP_THRESHOLD_MILLIS + 1,
+                "/myproject/value");
+        filler.processParameters(values);
+
+        values = getValues(YEAR_2021_START_INSTANT, "/myproject/value");
+        filler.processParameters(values);
+
+        // Shut down the executor to make sure the write of the first segment completes.
+        filler.executor.shutdown();
+        filler.executor.awaitTermination(10, TimeUnit.SECONDS);
+        verify(parameterArchive, times(1)).writeToArchive(any(PGSegment.class));
+
+        // And the archiver should now have one segment for the old data.
+        assertEquals(1, filler.getSegments(0, 0, false).size());
+    }
+
+    /**
+     * Tests that values older than the sorting threshold are not added.
+     * 
+     * @throws InterruptedException
+     *             if the executor is interrupted while shutting down
+     * @throws IOException
+     *             if there is an error writing to the archive
+     * @throws RocksDBException
+     *             if there is an error writing to the database
+     */
+    @Test
+    public void testIgnoreOldValues() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values = getValues(5000, "/myproject/value");
+        filler.processParameters(values);
+
+        // Add a value that is older than the last time minus the sorting threshold.
+        values = getValues(3000, "/myproject/value");
+        filler.processParameters(values);
+
+        // Shut down and capture the segment that was written.
+        filler.shutDown();
+        ArgumentCaptor<PGSegment> segCaptor = ArgumentCaptor.forClass(PGSegment.class);
+        verify(parameterArchive).writeToArchive(segCaptor.capture());
+        var segList = segCaptor.getAllValues();
+        assertEquals(1, segList.size());
+        PGSegment seg = segList.get(0);
+        assertEquals(5000, seg.getSegmentStart());
+        assertEquals(5000, seg.getSegmentEnd());
+    }
+
+    /**
+     * Tests that when adding a new value, if there is a segment from a prior interval that ends before the new time
+     * minus the sorting threshold, that the old segment is archived.
+     * 
+     * @throws InterruptedException
+     *             if the executor is interrupted while shutting down
+     * @throws IOException
+     *             if there is an error writing to the archive
+     * @throws RocksDBException
+     *             if there is an error writing to the database
+     */
+    @Test
+    public void testPriorIntervalSegmentIsArchived() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values = getValues(INTERVAL_SIZE_MILLIS - 1, "/myproject/value");
+        filler.processParameters(values);
+
+        // Add a value that is older than the last time minus the sorting threshold.
+        values = getValues(INTERVAL_SIZE_MILLIS + 1000, "/myproject/value");
+        filler.processParameters(values);
+
+        // Shut down the executor to make sure the write of the first segment completes.
+        filler.executor.shutdown();
+        filler.executor.awaitTermination(10, TimeUnit.SECONDS);
+
+        ArgumentCaptor<PGSegment> segCaptor = ArgumentCaptor.forClass(PGSegment.class);
+        verify(parameterArchive).writeToArchive(segCaptor.capture());
+        PGSegment seg = segCaptor.getValue();
+        assertEquals(INTERVAL_SIZE_MILLIS - 1, seg.getSegmentStart());
+        assertEquals(INTERVAL_SIZE_MILLIS - 1, seg.getSegmentEnd());
+
+        // And the archiver should now have one segment for the new data.
+        var pvSegList = filler.getSegments(0, 0, false);
+        assertEquals(1, pvSegList.size());
+        var pvseg = pvSegList.get(0);
+        assertEquals(INTERVAL_SIZE_MILLIS + 1000, pvseg.getSegmentStart());
+        assertEquals(INTERVAL_SIZE_MILLIS + 1000, pvseg.getSegmentEnd());
+    }
+
+    /**
+     * Tests that when adding a new value, a prior segment that ends before the current time minus the sorting threshold
+     * is archived.
+     * 
+     */
+    @Test
+    public void testFullIntervalOutsideSortingThresholdIsArchived()
+            throws InterruptedException, RocksDBException, IOException {
+        when(parameterArchive.getMaxSegmentSize()).thenReturn(2);
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+
+        // Add two values to fill up a segment.
+        List<ParameterValue> values = getValues(0, "/myproject/value");
+        filler.processParameters(values);
+        values = getValues(1, "/myproject/value");
+        filler.processParameters(values);
+
+        // Add a new value after the sorting threshold has elapsed.
+        values = getValues(1002, "/myproject/value");
+        filler.processParameters(values);
+
+        // Shut down the executor to make sure the write of the first segment completes.
+        filler.executor.shutdown();
+        filler.executor.awaitTermination(10, TimeUnit.SECONDS);
+        verify(parameterArchive, times(1)).writeToArchive(any(PGSegment.class));
+
+        // And the archiver should now have one segment for the new data.
+        var pvSegList = filler.getSegments(0, 0, false);
+        assertEquals(1, pvSegList.size());
+        var pvseg = pvSegList.get(0);
+        assertEquals(1002, pvseg.getSegmentStart());
+        assertEquals(1002, pvseg.getSegmentEnd());
+    }
+
+    /**
+     * 
+     * Verifies correct computation of {@link PGSegment#segmentIdxInsideInterval}
+     */
+    @Test
+    public void testSegmentStartIdxComputation()
+            throws InterruptedException, RocksDBException, IOException {
+        when(parameterArchive.getMaxSegmentSize()).thenReturn(2);
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+
+        filler.start();
+
+        // Add three unsorted values to fill up a segment.
+        filler.processParameters(getValues(0, "/myproject/value"));
+        filler.processParameters(getValues(2, "/myproject/value"));
+        filler.processParameters(getValues(1, "/myproject/value"));
+
+        // two more values for the next segment
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS - 2, "/myproject/value"));
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS - 1, "/myproject/value"));
+
+        // repeat with a new interval
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS + 0, "/myproject/value"));
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS + 2, "/myproject/value"));
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS + 3, "/myproject/value"));
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS + 4, "/myproject/value"));
+        filler.processParameters(getValues(INTERVAL_SIZE_MILLIS + 1, "/myproject/value"));
+
+        // Shut down the executor to make sure the write of the first segment completes.
+        filler.shutDown();
+
+        ArgumentCaptor<PGSegment> segCaptor = ArgumentCaptor.forClass(PGSegment.class);
+        verify(parameterArchive, times(4)).writeToArchive(segCaptor.capture());
+        Map<Long, List<PGSegment>> segs = segCaptor.getAllValues().stream()
+                .collect(Collectors.groupingBy(PGSegment::getInterval, HashMap::new, Collectors.toList()));
+
+        PGSegment seg0 = segs.get(0l).get(0);
+        assertEquals(0, seg0.getSegmentStart());
+        assertEquals(2, seg0.getSegmentEnd());
+        assertEquals(0, seg0.getSegmentIdxInsideInterval());
+
+        PGSegment seg1 = segs.get(0l).get(1);
+        assertEquals(INTERVAL_SIZE_MILLIS - 2, seg1.getSegmentStart());
+        assertEquals(INTERVAL_SIZE_MILLIS - 1, seg1.getSegmentEnd());
+        assertEquals(3, seg1.getSegmentIdxInsideInterval());
+
+        PGSegment seg2 = segs.get(INTERVAL_SIZE_MILLIS).get(0);
+        assertEquals(INTERVAL_SIZE_MILLIS + 0, seg2.getSegmentStart());
+        assertEquals(INTERVAL_SIZE_MILLIS + 2, seg2.getSegmentEnd());
+        assertEquals(0, seg2.getSegmentIdxInsideInterval());
+
+        PGSegment seg3 = segs.get(INTERVAL_SIZE_MILLIS).get(1);
+        assertEquals(INTERVAL_SIZE_MILLIS + 3, seg3.getSegmentStart());
+        assertEquals(INTERVAL_SIZE_MILLIS + 4, seg3.getSegmentEnd());
+        assertEquals(3, seg3.getSegmentIdxInsideInterval());
+    }
+
+    /**
+     * Tests with multiple values for the same parameter at the same timestamp
+     */
+    @Test
+    public void testWithSameTimstamps() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values = getValues(5000, "/myproject/value1", "/myproject/value1", "/myproject/value2");
+        filler.processParameters(values);
+
+        // Shut down and capture the segment that was written.
+        filler.shutDown();
+        ArgumentCaptor<PGSegment> segCaptor = ArgumentCaptor.forClass(PGSegment.class);
+        verify(parameterArchive).writeToArchive(segCaptor.capture());
+        var segList = segCaptor.getAllValues();
+        assertEquals(1, segList.size());
+        PGSegment seg = segList.get(0);
+        assertEquals(5000, seg.getSegmentStart());
+        assertEquals(5000, seg.getSegmentEnd());
+        assertEquals(2, seg.numParameters());
+        assertEquals(2, seg.size());
+
+        var mpvs = seg.getParametersValues(new ParameterId[] { new MyPid(0, "/myproject/value1") });
+        var pvs = mpvs.getPvs(0);
+        assertEquals(2, pvs.numValues());
+    }
+
+    /**
+     * Tests that when the cache is full, a new value cannot be added, but that all segments are flushed when the
+     * archive is shut down.
+     * 
+     * @throws InterruptedException
+     *             if the executor is interrupted while shutting down
+     * @throws IOException
+     *             if there is an error writing to the archive
+     * @throws RocksDBException
+     *             if there is an error writing to the database
+     */
+    @Test
+    public void testAddWhenCacheIsFull() throws InterruptedException, RocksDBException, IOException {
+        when(parameterArchive.getMaxSegmentSize()).thenReturn(2);
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        filler.processParameters(getValues(10, "/myproject/value"));
+
+        for (int i = 0; i < QSIZE - 1; ++i) {
+            // Add two values to fill a segment.
+            List<ParameterValue> values = getValues(2 * i, "/myproject/value");
+            filler.processParameters(values);
+            values = getValues(2 * i + 1, "/myproject/value");
+            filler.processParameters(values);
+        }
+
+        // The queue should now be full. Adding another value should fail.
+        // assertEquals(SegmentQueue.QSIZE - 1, filler.getSegments(0, 0, false).size());
+        List<ParameterValue> values = getValues(2 * QSIZE, "/myproject/value");
+        filler.processParameters(values);
+        // assertEquals(SegmentQueue.QSIZE - 1, filler.getSegments(0, 0, false).size());
+
+        // Shut down and make sure all segments are flushed.
+        filler.shutDown();
+        // verify(parameterArchive, times(SegmentQueue.QSIZE - 1)).writeToArchive(any(PGSegment.class));
+    }
+
+    /**
+     * Tests with gaps. Two segments in the same interval, the second segment does not have all the parameters from the
+     * interval
+     */
+    @Test
+    public void testWithGaps1() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        when(parameterArchive.getMaxSegmentSize()).thenReturn(2);
+
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values0 = getValues(5000, "/myproject/value1", "/myproject/value2");
+        List<ParameterValue> values1 = getValues(5001, "/myproject/value1");
+        List<ParameterValue> values2 = getValues(5002, "/myproject/value1");
+
+        filler.processParameters(values1);
+        filler.processParameters(values0);
+        filler.processParameters(values2);
+        // Shut down and capture the segment that was written.
+        filler.shutDown();
+        ArgumentCaptor<PGSegment> segCaptor = ArgumentCaptor.forClass(PGSegment.class);
+        verify(parameterArchive, times(2)).writeToArchive(segCaptor.capture());
+
+        var segList = segCaptor.getAllValues();
+        PGSegment seg0 = segList.get(0);
+        assertEquals(2, seg0.numParameters());
+        assertEquals(2, seg0.size());
+
+        PGSegment seg1 = segList.get(1);
+        assertEquals(1, seg1.numParameters());
+        assertEquals(1, seg1.size());
+        assertEquals(1, seg1.currentFullGaps.size());
+        assertEquals(0, seg1.previousFullGaps.size());
+    }
+
+    /**
+     * Tests with gaps. Two segments in the same interval, the first segment does not have all the parameters from the
+     * interval
+     */
+    @Test
+    public void testWithGaps2() throws InterruptedException, RocksDBException, IOException {
+        when(yamcsServer.getProcessor(anyString(), anyString())).thenReturn(processor);
+        when(parameterArchive.getMaxSegmentSize()).thenReturn(2);
+
+        RealtimeArchiveFiller filler = getFiller(1000);
+        filler.start();
+        List<ParameterValue> values0 = getValues(5000, "/myproject/value1");
+        List<ParameterValue> values1 = getValues(5001, "/myproject/value1");
+        List<ParameterValue> values2 = getValues(5002, "/myproject/value1", "/myproject/value2");
+
+        filler.processParameters(values1);
+        filler.processParameters(values0);
+        filler.processParameters(values2);
+        // Shut down and capture the segment that was written.
+        filler.shutDown();
+        ArgumentCaptor<PGSegment> segCaptor = ArgumentCaptor.forClass(PGSegment.class);
+        verify(parameterArchive, times(2)).writeToArchive(segCaptor.capture());
+
+        var segList = segCaptor.getAllValues();
+        PGSegment seg0 = segList.get(0);
+        assertEquals(1, seg0.numParameters());
+        assertEquals(2, seg0.size());
+
+        PGSegment seg1 = segList.get(1);
+        assertEquals(2, seg1.numParameters());
+        assertEquals(1, seg1.size());
+        assertEquals(0, seg1.currentFullGaps.size());
+        assertEquals(1, seg1.previousFullGaps.size());
+    }
+
+    private RealtimeArchiveFiller getFiller(long sortingThreshold) {
+        String configStr = String.format(
+                "sortingThreshold: %d\n"
+                        + "pastJumpThreshold: %d\n",
+                sortingThreshold, PAST_JUMP_THRESHOLD_SECS);
+        YConfiguration config = YConfiguration.wrap(new Yaml().load(configStr));
+        RealtimeArchiveFiller filler = new RealtimeArchiveFiller(parameterArchive, config);
+        filler.setYamcsServer(yamcsServer);
+        return filler;
+    }
+
+    private List<ParameterValue> getValues(long genTime, String... names) {
+        long acqTime = genTime;
+        List<ParameterValue> values = new ArrayList<>();
+        for (String name : names) {
+            ParameterValue value = new ParameterValue(name);
+            value.setGenerationTime(genTime);
+            value.setAcquisitionTime(acqTime);
+            value.setRawSignedInteger(123);
+            value.setEngValue(value.getRawValue());
+            values.add(value);
+        }
+        return values;
+    }
+
+    List<BasicParameterValue> getParaList(long time) {
+        ParameterValue pv = new ParameterValue("test1");
+        pv.setEngValue(ValueUtility.getUint64Value(time));
+        pv.setGenerationTime(time);
+        return Arrays.asList(pv);
+    }
+
+    static class MyPid implements ParameterId {
+        int pid;
+        String fqn;
+
+        MyPid(int pid, String fqn) {
+            this.pid = pid;
+            this.fqn = fqn;
+        }
+
+        @Override
+        public Type getRawType() {
+            return Type.SINT32;
+        }
+
+        @Override
+        public Type getEngType() {
+            return Type.SINT32;
+        }
+
+        @Override
+        public int getPid() {
+            return pid;
+        }
+
+        @Override
+        public String getParamFqn() {
+            return fqn;
+        }
+
+        @Override
+        public boolean isSimple() {
+            return true;
+        }
+
+        @Override
+        public boolean hasRawValue() {
+            return true;
+        }
+
+        @Override
+        public IntArray getComponents() {
+            return null;
+        }
+
+    }
+}
+```
+
+### `RocksdbMergeOperatorTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/RocksdbMergeOperatorTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.rocksdb.YamcsParchiveMergeOperator;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.ValueUtility;
+
+public class RocksdbMergeOperatorTest {
+
+    private static RocksDB db;
+    private static Options options;
+
+    @BeforeAll
+    public static void loadRocksdb() throws Exception {
+        RocksDB.loadLibrary();
+        var path = Files.createTempDirectory("RocksdbMergeOperatorTest");
+
+        options = new Options();
+        options.setMergeOperator(new YamcsParchiveMergeOperator());
+        options.setCreateIfMissing(true);
+        db = RocksDB.open(options, path.toString());
+
+    }
+
+    /***** Int segment ****/
+    @Test
+    public void testIntSegment() throws Exception {
+        IntValueSegment ivs1 = new IntValueSegment(true);
+        ivs1.add(ValueUtility.getSint32Value(1));
+        byte[] data1 = SegmentEncoderDecoder.encode(ivs1);
+
+        IntValueSegment ivs2 = new IntValueSegment(true);
+        ivs2.add(ValueUtility.getSint32Value(2));
+        byte[] data2 = SegmentEncoderDecoder.encode(ivs2);
+
+        var key = "testIntSegment".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var ivs12_out = (IntValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(ivs12_out, ivs1, ivs2);
+
+        IntValueSegment ivs3 = new IntValueSegment(true);
+        ivs3.add(ValueUtility.getSint32Value(268435456));
+        byte[] data3 = SegmentEncoderDecoder.encode(ivs3);
+        db.merge(key, data3);
+
+        var data123_out = db.get(key);
+
+        var ivs123_out = (IntValueSegment) SegmentEncoderDecoder.decode(data123_out, 0);
+
+        verify_merge(ivs123_out, ivs1, ivs2, ivs3);
+
+        IntValueSegment ivs4 = new IntValueSegment(true);
+        for (int i = 0; i < 124; i++) {
+            if (i % 2 == 0) {
+                ivs4.add(ValueUtility.getSint32Value(268435456 + i));
+            } else {
+                ivs4.add(ValueUtility.getSint32Value(0));
+            }
+        }
+        byte[] data4 = SegmentEncoderDecoder.encode(ivs4);
+
+        db.merge(key, data4);
+
+        var data1234_out = db.get(key);
+        var ivs1234_out = (IntValueSegment) SegmentEncoderDecoder.decode(data1234_out, 0);
+        verify_merge(ivs1234_out, ivs1, ivs2, ivs3, ivs4);
+
+        IntValueSegment ivs5 = new IntValueSegment(true);
+        ivs5.add(ValueUtility.getSint32Value(-1000));
+        byte[] data5 = SegmentEncoderDecoder.encode(ivs5);
+        db.merge(key, data5);
+
+        var data12345_out = db.get(key);
+        var ivs12345_out = (IntValueSegment) SegmentEncoderDecoder.decode(data12345_out, 0);
+
+        verify_merge(ivs12345_out, ivs1, ivs2, ivs3, ivs4, ivs5);
+
+        IntValueSegment ivs6 = new IntValueSegment(true);
+        for (int i = 0; i < 128; i++) {
+            ivs6.add(ValueUtility.getSint32Value(-i));
+        }
+        byte[] data6 = SegmentEncoderDecoder
+                .encode(ivs6);
+
+        db.merge(key, data6);
+
+        var data123456_out = db.get(key);
+        var ivs123456_out = (IntValueSegment) SegmentEncoderDecoder.decode(data123456_out, 0);
+
+        verify_merge(ivs123456_out, ivs1, ivs2, ivs3, ivs4, ivs5, ivs6);
+    }
+
+    @Test
+    public void testIntSegment2() throws Exception {
+        IntValueSegment ivs1 = new IntValueSegment(false);
+        ivs1.add(ValueUtility.getUint32Value(1));
+        byte[] data1 = SegmentEncoderDecoder.encode(ivs1);
+
+        IntValueSegment ivs2 = new IntValueSegment(false);
+        for (int i = 0; i < 2000; i++) {
+            ivs2.add(ValueUtility.getUint32Value(i));
+        }
+        byte[] data2 = SegmentEncoderDecoder.encode(ivs2);
+
+        var key = "testIntSegment".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var ivs12_out = (IntValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(ivs12_out, ivs1, ivs2);
+
+    }
+
+
+    /***** Long segment ****/
+    @Test
+    public void testLongSegment() throws Exception {
+
+        LongValueSegment lvs1 = new LongValueSegment(Type.UINT64);
+        lvs1.add(ValueUtility.getUint64Value(1));
+        byte[] data1 = SegmentEncoderDecoder.encode(lvs1);
+
+        LongValueSegment lvs2 = new LongValueSegment(Type.UINT64);
+        lvs2.add(ValueUtility.getUint64Value(2));
+        byte[] data2 = SegmentEncoderDecoder.encode(lvs2);
+
+        var key = "testLongSegment".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var lvs12_out = (LongValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(lvs12_out, lvs1, lvs2);
+
+    }
+
+    /***** Boolean segment ****/
+    @Test
+    public void testBooleanSegment() throws Exception {
+
+        BooleanValueSegment bvs1 = new BooleanValueSegment();
+        bvs1.add(ValueUtility.getBooleanValue(true));
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+
+        BooleanValueSegment bvs2 = new BooleanValueSegment();
+        for (int i = 0; i < 64; i++) {
+            bvs2.add(ValueUtility.getBooleanValue(i % 2 == 0));
+        }
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+
+        var key = "a1".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BooleanValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testBooleanSegment2() throws Exception {
+
+        BooleanValueSegment bvs1 = new BooleanValueSegment();
+        for (int i = 0; i < 186; i++) {
+            bvs1.add(ValueUtility.getBooleanValue(false));
+        }
+        for (int i = 0; i < 14; i++) {
+            bvs1.add(ValueUtility.getBooleanValue(true));
+        }
+
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+
+        BooleanValueSegment bvs2 = new BooleanValueSegment();
+        for (int i = 0; i < 200; i++) {
+            bvs2.add(ValueUtility.getBooleanValue(true));
+        }
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+
+        var key = "a1".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BooleanValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    /***** Double segment ****/
+    @Test
+    public void testDoubleSegment() throws Exception {
+
+        DoubleValueSegment dvs1 = new DoubleValueSegment();
+        dvs1.add(ValueUtility.getDoubleValue(1.1));
+        byte[] data1 = SegmentEncoderDecoder.encode(dvs1);
+
+        DoubleValueSegment dvs2 = new DoubleValueSegment();
+        for (int i = 0; i < 1; i++) {
+            dvs2.add(ValueUtility.getDoubleValue(i * 1.1));
+        }
+        byte[] data2 = SegmentEncoderDecoder.encode(dvs2);
+
+
+        var key = "testDoubleSegment".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var dvs12_out = (DoubleValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(dvs12_out, dvs1, dvs2);
+    }
+
+    /***** Float segment ****/
+    @Test
+    public void testFloatSegment() throws Exception {
+        FloatValueSegment fvs = new FloatValueSegment();
+
+        FloatValueSegment fvs1 = new FloatValueSegment();
+        fvs1.add(ValueUtility.getFloatValue(1.1f));
+        fvs.add(ValueUtility.getFloatValue(1.1f));
+        byte[] data1 = SegmentEncoderDecoder.encode(fvs1);
+
+        FloatValueSegment fvs2 = new FloatValueSegment();
+        for (int i = 0; i < 11; i++) {
+            fvs2.add(ValueUtility.getFloatValue(i * 1.1f));
+            fvs.add(ValueUtility.getFloatValue(i * 1.1f));
+        }
+        byte[] data2 = SegmentEncoderDecoder.encode(fvs2);
+
+        FloatValueSegment fvs3 = new FloatValueSegment();
+        for (int i = 0; i < 10; i++) {
+            fvs3.add(ValueUtility.getFloatValue(3.14f));
+            fvs.add(ValueUtility.getFloatValue(3.14f));
+        }
+        byte[] data3 = SegmentEncoderDecoder.encode(fvs3);
+
+        byte[] data = SegmentEncoderDecoder.encode(fvs);
+
+        var key = "testFloatSegment".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+        db.merge(key, data3);
+
+        var data123_out = db.get(key);
+        var fvs123_out = (FloatValueSegment) SegmentEncoderDecoder.decode(data123_out, 0);
+
+        verify_merge(fvs123_out, fvs1, fvs2, fvs3);
+    }
+
+    /***** Object Value segment ****/
+    @Test
+    public void testObjectSegment_RawPlusRaw() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("bcd".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_RawPlusRaw".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("cde".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_RawPlusRle() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("bcd".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_RawPlusRle".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_RawPlusEnum() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("bcd".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_RawPlusEnum".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_RlePlusRaw() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_RlePlusRaw".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("bcd".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_RlePlusRle() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_RlePlusRle".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_RlePlusEnum() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_RlePlusEnum".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_EnumPlusRaw() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_EnumPlusRaw".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("bcd".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_EnumPlusRle() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_EnumPlusRle".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("def".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    @Test
+    public void testObjectSegment_EnumPlusEnum() throws Exception {
+        BinaryValueSegment bvs1 = new BinaryValueSegment(true);
+        bvs1.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("abc".getBytes()));
+        bvs1.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs1.consolidate();
+        byte[] data1 = SegmentEncoderDecoder.encode(bvs1);
+        var key = "testObjectSegment_EnumPlusEnum".getBytes();
+        db.put(key, data1);
+
+        BinaryValueSegment bvs2 = new BinaryValueSegment(true);
+        bvs2.add(ValueUtility.getBinaryValue("uvw".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("xyz".getBytes()));
+        bvs2.add(ValueUtility.getBinaryValue("uvw".getBytes()));
+        bvs2.consolidate();
+        byte[] data2 = SegmentEncoderDecoder.encode(bvs2);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var bvs12_out = (BinaryValueSegment) SegmentEncoderDecoder.decode(data12_out, 0);
+
+        verify_merge(bvs12_out, bvs1, bvs2);
+    }
+
+    /***** gaps segment ****/
+    @Test
+    public void testGapsSegment() throws Exception {
+        var gs1 = new SortedIntArray(2, 5, 6);
+        var gs2 = new SortedIntArray(2, 5, 6);
+        
+        byte[] data1 = SegmentEncoderDecoder.encodeGaps(0, gs1);
+        byte[] data2 = SegmentEncoderDecoder.encodeGaps(100, gs2);
+        
+        var key = "testGapsSegment".getBytes();
+        db.put(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var gs12_out = (SortedIntArray) SegmentEncoderDecoder.decodeGaps(data12_out);
+        assertEquals(new SortedIntArray(2, 5, 6, 102, 105, 106), gs12_out);
+    }
+
+    @Test
+    public void testGapsSegment1() throws Exception {
+        var gs1 = new SortedIntArray(2, 5, 6);
+        var gs2 = new SortedIntArray(2, 5, 6);
+
+        byte[] data1 = SegmentEncoderDecoder.encodeGaps(10, gs1);
+        byte[] data2 = SegmentEncoderDecoder.encodeGaps(100, gs2);
+
+        var key = "testGapsSegment1".getBytes();
+        db.merge(key, data1);
+        db.merge(key, data2);
+
+        var data12_out = db.get(key);
+        var gs12_out = (SortedIntArray) SegmentEncoderDecoder.decodeGaps(data12_out);
+        assertEquals(new SortedIntArray(12, 15, 16, 102, 105, 106), gs12_out);
+    }
+
+    private void verify_merge(ValueSegment vs, ValueSegment... expectedSegments) {
+        List<Value> expectedValues = new ArrayList<>();
+        for (var segment : expectedSegments) {
+            for (int i = 0; i < segment.size(); i++) {
+                expectedValues.add(segment.getValue(i));
+            }
+        }
+
+        List<Value> actualValues = new ArrayList<>();
+        for (int i = 0; i < vs.size(); i++) {
+            actualValues.add(vs.getValue(i));
+        }
+
+        assertEquals(expectedValues.size(), actualValues.size(),
+                "The merged segment does not have the expected number of values.");
+
+        for (int i = 0; i < expectedValues.size(); i++) {
+            assertEquals(expectedValues.get(i), actualValues.get(i),
+                    "The value at index " + i + " does not match.");
+        }
+    }
+}
+```
+
+### `SortedTimeSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/SortedTimeSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.SortedIntArray;
+
+public class SortedTimeSegmentTest {
+
+    @Test
+    public void test1() {
+        SortedTimeSegment sts = new SortedTimeSegment(0);
+        for (long i = 0; i < 10; i++) {
+            sts.add(i);
+        }
+
+        SortedIntArray gaps = new SortedIntArray(2, 3, 6);
+        long[] x = sts.getRange(1, 8, true);
+        long[] xg = sts.getRangeWithGaps(1, 8, true, gaps);
+        assertArrayEquals(new long[] { 1, 2, 3, 4, 5, 6, 7 }, x);
+        assertArrayEquals(new long[] { 1, 4, 5, 7 }, xg);
+
+        long[] xr = sts.getRange(1, 8, false);
+        long[] xrg = sts.getRangeWithGaps(1, 8, false, gaps);
+
+        assertArrayEquals(new long[] { 8, 7, 6, 5, 4, 3, 2 }, xr);
+        assertArrayEquals(new long[] { 8, 7, 5, 4 }, xrg);
+
+    }
+}
+```
+
+### `StringValueSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/StringValueSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.utils.ValueUtility;
+
+public class StringValueSegmentTest {
+
+    @Test
+    public void testStringVsEnum() throws DecodingException {
+        StringValueSegment svs = new StringValueSegment(true);
+        for (int i = 0; i < 1000; i++) {
+            svs.addValue(ValueUtility.getStringValue("random " + i + " value"));
+        }
+        svs.consolidate();
+        assertTrue(svs.rawSize < svs.enumRawSize);
+
+        svs = new StringValueSegment(true);
+        for (int i = 0; i < 1000; i++) {
+            svs.addValue(ValueUtility.getStringValue("not so random " + (i % 10) + " value"));
+        }
+        svs.consolidate();
+        assertTrue(svs.rawSize > svs.enumRawSize);
+    }
+}
+```
+
+### `TestCompression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/TestCompression.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import java.nio.ByteBuffer;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.ColumnFamilyDescriptor;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ColumnFamilyOptions;
+import org.rocksdb.CompressionType;
+import org.rocksdb.FlushOptions;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.FileUtils;
+
+public class TestCompression {
+
+    @Test
+    @Disabled
+    public void test() throws Exception {
+        Path path = Path.of(System.getProperty("java.io.tmpdir"), "testcompression");
+        FileUtils.deleteRecursivelyIfExists(path);
+
+        Options options = new Options();
+        options.setCreateIfMissing(true);
+        // options.setCompressionType(CompressionType.SNAPPY_COMPRESSION);
+        options.setCompressionType(CompressionType.SNAPPY_COMPRESSION);
+
+        ColumnFamilyOptions cfo = new ColumnFamilyOptions();
+        cfo.setCompressionType(CompressionType.SNAPPY_COMPRESSION);
+        //
+        RocksDB rdb = RocksDB.open(options, path.toString());
+        int numparam = 1;
+        int pphour = 3600;
+        int nhours = 10000;
+        // WriteOptions wo = new WriteOptions();
+        // wo.setSync(false);
+        for (int j = 0; j < numparam; j++) {
+            String s = "parameter_" + j;
+            ColumnFamilyDescriptor cfd = new ColumnFamilyDescriptor(s.getBytes(), cfo);
+            ColumnFamilyHandle cfh = rdb.createColumnFamily(cfd);
+
+            for (int i = 0; i < nhours; i++) {
+                byte[] key = new byte[8];
+                ByteBuffer.wrap(key).putLong(i * 1000L);
+
+                byte[] value = getIncreasingIntValue(pphour);
+                rdb.put(cfh, key, value);
+            }
+        }
+        FlushOptions flushOptions = new FlushOptions();
+        rdb.flush(flushOptions);
+        System.out.println("stats: " + rdb.getProperty("rocksdb.stats"));
+
+        rdb.close();
+    }
+
+    byte[] getIncreasingIntValue(int n) {
+        int keySize = 2 + 4;
+        byte[] v = new byte[n * keySize];
+        int m = 100000;
+        ByteBuffer bb = ByteBuffer.wrap(v);
+        for (int i = 0; i < n; i++) {
+            // bb.putShort(2*i, (short)0);
+            bb.putShort(2 * i, (short) i);
+        }
+        for (int i = 0; i < n; i++) {
+            // bb.putInt(2*n+4*i, m+i);
+
+            bb.putInt(2 * n + 4 * i, m);
+        }
+        return v;
+    }
+}
+```
+
+### `TestUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/TestUtils.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+public class TestUtils {
+    static ParameterValue getParameterValue(Parameter p, long instant, int intv) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setAcquisitionTime(instant);
+        Value v = ValueUtility.getSint32Value(intv);
+        pv.setEngValue(v);
+        return pv;
+    }
+
+    static ParameterValue getParameterValue(Parameter p, long instant, String sv) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setAcquisitionTime(instant);
+        Value v = ValueUtility.getStringValue(sv);
+        pv.setEngValue(v);
+        return pv;
+    }
+
+    public static void checkEquals(ParameterValue pv1, ParameterValue pv2) {
+        assertEquals(pv1.getParameter(), pv2.getParameter());
+        assertEquals(pv1.getGenerationTime(), pv2.getGenerationTime());
+        assertEquals(pv1.getAcquisitionTime(), pv2.getAcquisitionTime());
+        assertEquals(pv1.getRawValue(), pv2.getRawValue());
+        assertEquals(pv1.getEngValue(), pv2.getEngValue());
+        assertEquals(pv1.getStatus(), pv2.getStatus());
+    }
+
+    public static void checkEquals(ParameterValueArray pva, ParameterValue... pvs) {
+        checkEquals(true, true, true, pva, pvs);
+    }
+
+    public static void checkEquals(boolean shouldHaveEngValues, boolean shouldHaveRawValues,
+            boolean shouldHaveParameterStatus, ParameterValueArray actualPva, ParameterValue... expectedPvs) {
+        assertEquals(expectedPvs.length, actualPva.timestamps.length);
+        for (int i = 0; i < expectedPvs.length; i++) {
+            ParameterValue pv = expectedPvs[i];
+            assertEquals(pv.getGenerationTime(), actualPva.timestamps[i]);
+        }
+        if (shouldHaveEngValues) {
+            for (int i = 0; i < expectedPvs.length; i++) {
+                assertEquals(expectedPvs[i].getEngValue(), actualPva.getEngValues().getValue(i));
+            }
+        } else {
+            assertNull(actualPva.engValues);
+        }
+        if (shouldHaveRawValues) {
+            for (int i = 0; i < expectedPvs.length; i++) {
+                if (expectedPvs[i].getRawValue() != null) {
+                    assertEquals(expectedPvs[i].getRawValue(), actualPva.getRawValues().getValue(i));
+                }
+            }
+        } else {
+            assertNull(actualPva.rawValues);
+        }
+        if (shouldHaveParameterStatus) {
+            assertNotNull(actualPva.paramStatus);
+            assertEquals(expectedPvs.length, actualPva.paramStatus.length);
+            for (int i = 0; i < expectedPvs.length; i++) {
+                checkEquals(expectedPvs[i], actualPva.paramStatus[i]);
+            }
+        } else {
+            assertNull(actualPva.paramStatus);
+        }
+    }
+
+    private static void checkEquals(ParameterValue parameterValue, ParameterStatus parameterStatus) {
+        assertEquals(ParameterStatusSegment.getStatus(parameterValue, null), parameterStatus);
+    }
+
+    public static void checkEquals(ParameterIdValueList plist, long expectedTime, ParameterValue... expectedPv) {
+        assertEquals(expectedTime, plist.instant);
+        assertEquals(expectedPv.length, plist.values.size());
+        for (int i = 0; i < expectedPv.length; i++) {
+            ParameterValue pv = expectedPv[i];
+            Value v = plist.values.get(i).getEngValue();
+            Value rv = plist.values.get(i).getRawValue();
+            assertEquals(pv.getEngValue(), v);
+            if (pv.getRawValue() != null) {
+                assertEquals(pv.getRawValue(), rv);
+            }
+        }
+    }
+
+    static void checkEquals(MyValueConsumer c, ParameterValue... pvs) {
+        assertEquals(pvs.length, c.times.size());
+        for (int i = 0; i < pvs.length; i++) {
+            ParameterValue pv = pvs[i];
+            assertEquals(pv.getAcquisitionTime(), (long) c.times.get(i));
+            assertEquals(pv.getEngValue(), c.values.get(i));
+        }
+    }
+}
+```
+
+### `TimeSegmentTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameterarchive/TimeSegmentTest.java`
+
+
+```java
+package org.yamcs.parameterarchive;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+
+public class TimeSegmentTest {
+    long t0 = ParameterArchive.getIntervalStart(10 * 365 * 25 * 60 * 1000L);
+
+    @BeforeAll
+    public static void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testIllegalAdd() {
+        SortedTimeSegment ts = new SortedTimeSegment(t0);
+        try {
+            ts.add(1000);
+            fail("Should not allow to add timestamp because it does not fit into the segment");
+        } catch (IllegalArgumentException e) {
+
+        }
+    }
+
+    @Test
+    public void test1() {
+        SortedTimeSegment ts = new SortedTimeSegment(t0);
+        ts.add(t0 + 1000);
+        assertEquals(0, ts.search(t0 + 1000));
+        assertEquals(-1, ts.search(t0 + 10));
+        assertEquals(-2, ts.search(t0 + 2000));
+    }
+
+    @Test
+    public void testNegativeTimestamps() {
+        long t1 = -62072693919990l;
+        long t0 = ParameterArchive.getIntervalStart(t1);
+        assertTrue(t1 > t0);
+
+        SortedTimeSegment ts = new SortedTimeSegment(t0);
+        assertEquals(-1, ts.search(t1));
+        ts.add(t1);
+        assertEquals(0, ts.search(t1));
+    }
+}
+```

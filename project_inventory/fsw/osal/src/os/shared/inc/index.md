@@ -3,60 +3,3191 @@
 
 **경로:** `fsw/osal/src/os/shared/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-shared-binsem.h`
 
-file--os-shared-binsem.h
-file--os-shared-clock.h
-file--os-shared-common.h
-file--os-shared-condvar.h
-file--os-shared-console.h
-file--os-shared-countsem.h
-file--os-shared-dir.h
-file--os-shared-errors.h
-file--os-shared-file.h
-file--os-shared-filesys.h
-file--os-shared-globaldefs.h
-file--os-shared-heap.h
-file--os-shared-idmap.h
-file--os-shared-module.h
-file--os-shared-mutex.h
-file--os-shared-network.h
-file--os-shared-printf.h
-file--os-shared-queue.h
-file--os-shared-select.h
-file--os-shared-shell.h
-file--os-shared-sockets.h
-file--os-shared-task.h
-file--os-shared-time.h
-file--os-shared-timebase.h
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-binsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_BINSEM_H
+#define OS_SHARED_BINSEM_H
+
+#include "osapi-binsem.h"
+#include "os-shared-globaldefs.h"
+
+/* other objects that have only an API name and no other data */
+typedef struct
+{
+    char obj_name[OS_MAX_API_NAME];
+} OS_bin_sem_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_bin_sem_internal_record_t OS_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+/****************************************************************************************
+                 SEMAPHORE API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+  ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_BinSemAPI_Init
+
+   Purpose: Initialize the OS-independent layer for binary semaphores
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_BinSemAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare/allocate OS resources for a binary semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_BinSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options);
+
+/*----------------------------------------------------------------
+
+    Purpose: Unblock all tasks waiting on the binary semaphore.
+             Does not change the semaphore value.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_BinSemFlush_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Release the semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_BinSemGive_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Acquire the semaphore
+             Block the calling task if the semaphore is 0.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_BinSemTake_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Acquire the semaphore, with a time limit
+
+    Returns: OS_SUCCESS on success, or relevant error code
+             OS_SEM_TIMEOUT must be returned if the time limit was reached
+ ------------------------------------------------------------------*/
+int32 OS_BinSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with the binary semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_BinSemDelete_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain OS-specific information about the semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_BinSemGetInfo_Impl(const OS_object_token_t *token, OS_bin_sem_prop_t *bin_prop);
+
+#endif /* OS_SHARED_BINSEM_H */
 ```
 
-## 항목
+### `os-shared-clock.h`
 
-- [`fsw/osal/src/os/shared/inc/os-shared-binsem.h`](file--os-shared-binsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-clock.h`](file--os-shared-clock.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-common.h`](file--os-shared-common.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-condvar.h`](file--os-shared-condvar.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-console.h`](file--os-shared-console.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-countsem.h`](file--os-shared-countsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-dir.h`](file--os-shared-dir.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-errors.h`](file--os-shared-errors.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-file.h`](file--os-shared-file.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-filesys.h`](file--os-shared-filesys.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-globaldefs.h`](file--os-shared-globaldefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-heap.h`](file--os-shared-heap.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-idmap.h`](file--os-shared-idmap.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-module.h`](file--os-shared-module.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-mutex.h`](file--os-shared-mutex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-network.h`](file--os-shared-network.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-printf.h`](file--os-shared-printf.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-queue.h`](file--os-shared-queue.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-select.h`](file--os-shared-select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-shell.h`](file--os-shared-shell.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-sockets.h`](file--os-shared-sockets.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-task.h`](file--os-shared-task.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-time.h`](file--os-shared-time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/inc/os-shared-timebase.h`](file--os-shared-timebase.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-clock.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_CLOCK_H
+#define OS_SHARED_CLOCK_H
+
+#include "osapi-clock.h"
+#include "os-shared-globaldefs.h"
+
+/*
+ * Clock API low-level handlers
+ * These simply get/set the kernel RTC (if it has one)
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Get the time from the RTC
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_GetLocalTime_Impl(OS_time_t *time_struct);
+
+/*----------------------------------------------------------------
+
+    Purpose: Set the time in the RTC
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct);
+
+#endif /* OS_SHARED_CLOCK_H */
+```
+
+### `os-shared-common.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-common.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_COMMON_H
+#define OS_SHARED_COMMON_H
+
+#include "osapi-common.h"
+#include "os-shared-globaldefs.h"
+
+/*
+ * Flag values for the "GlobalState" member the global state structure
+ */
+#define OS_INIT_MAGIC_NUMBER     0xBE57C0DE /**< Indicates that OS_API_Init() has been successfully run */
+#define OS_SHUTDOWN_MAGIC_NUMBER 0xABADC0DE /**< Indicates that a system shutdown request is pending */
+
+/* Global variables that are common between implementations */
+struct OS_shared_global_vars
+{
+    /*
+     * Tracks whether OS_API_Init() has been called or if
+     * there is a shutdown request pending.
+     *
+     * After boot/first startup this should have 0 (from BSS clearing)
+     * After OS_API_Init() is called this has OS_INIT_MAGIC_NUMBER
+     * After OS_ApplicationShutdown() this has OS_SHUTDOWN_MAGIC_NUMBER
+     */
+    volatile uint32 GlobalState;
+
+    /*
+     * The console device ID used for OS_printf() calls
+     */
+    osal_id_t PrintfConsoleId;
+
+    /*
+     * PrintfEnabled and GlobalState are marked "volatile"
+     * because they are updated and read by different threads
+     */
+    volatile bool PrintfEnabled;
+    uint32        MicroSecPerTick;
+    uint32        TicksPerSecond;
+
+    /*
+     * The event handler is an application-defined callback
+     * that gets invoked as resources are created/configured/deleted.
+     */
+    OS_EventHandler_t EventHandler;
+
+#ifdef OSAL_CONFIG_DEBUG_PRINTF
+    uint8 DebugLevel;
+#endif
+};
+
+/*
+ * Shared data structure for global values
+ */
+extern OS_SharedGlobalVars_t OS_SharedGlobalVars;
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_NotifyEvent
+
+   Purpose: Notify the user application of a change in the state of an OSAL resource
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_NotifyEvent(OS_Event_t event, osal_id_t object_id, void *data);
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_API_Impl_Init
+
+   Purpose: Initialize the OS-specific layer for the given object type
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_API_Impl_Init(osal_objtype_t idtype);
+
+/*
+ * This function implements the OS-specific portion
+ * of various OSAL functions.  They are defined in
+ * OS-specific source files.
+ */
+
+/*----------------------------------------------------------------
+
+   Purpose: Block the "idle" thread until woken up
+
+   The "IdleLoop_Impl" is called by the main thread once
+   everything is running and there is no more work to do.
+
+   It should suspend the calling thread until a wakeup
+   event happens.
+
+ ------------------------------------------------------------------*/
+void OS_IdleLoop_Impl(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Wake up the idle task
+
+   The "ApplicationShutdown_Impl" should wake up whatever
+   task is currently suspended in "IdleLoop_Impl" and cause
+   that thread to resume and return to its caller.
+
+   NOTE: This should not block but it may cause the current
+   thread to be preempted by the thread that was woken up,
+   depending on priority levels.
+
+ ------------------------------------------------------------------*/
+void OS_ApplicationShutdown_Impl(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Utility function to safely find the length of a string
+             within a fixed-size array buffer.
+
+             Provides a local OSAL routine to get the functionality
+             of the (non-C99) "strnlen()" function, via the
+             C89/C99 standard "memchr()" function instead.
+
+ ------------------------------------------------------------------*/
+static inline size_t OS_strnlen(const char *s, size_t maxlen)
+{
+    const char *end = (const char *)memchr(s, 0, maxlen);
+    if (end != NULL)
+    {
+        /* actual length of string is difference */
+        maxlen = end - s;
+    }
+    return maxlen;
+}
+
+#endif /* OS_SHARED_COMMON_H */
+```
+
+### `os-shared-condvar.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-condvar.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_CONDVAR_H
+#define OS_SHARED_CONDVAR_H
+
+#include "osapi-condvar.h"
+#include "os-shared-globaldefs.h"
+
+typedef struct
+{
+    char obj_name[OS_MAX_API_NAME];
+} OS_condvar_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_condvar_internal_record_t OS_condvar_table[OS_MAX_CONDVARS];
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_CondVarAPI_Init
+
+   Purpose: Initialize the OS-independent layer for condvar objects
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_CondVarAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare/allocate OS resources for a condvar object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options);
+
+/*----------------------------------------------------------------
+
+    Purpose: Acquires the underlying mutex
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarLock_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Release the underlying mutex
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Wake up one blocked task
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarSignal_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Wake up all blocked tasks
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Wait indefinitely for the condvar to be signaled
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarWait_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Time-Limited wait for the condvar to be signaled
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with a condvar object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarDelete_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain OS-specific information about the condvar object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop);
+
+#endif /* OS_SHARED_CONDVAR_H */
+```
+
+### `os-shared-console.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-console.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ * Table implementation and calls related to the console buffer.
+ *
+ * This is a simple ring buffer that decouples
+ * the OS_printf() call from actual console output.
+ *
+ * The implementation layer may optionally spawn a
+ * "utility task" or equivalent to forward data, or
+ * it may process data immediately.
+ */
+
+#ifndef OS_SHARED_CONSOLE_H
+#define OS_SHARED_CONSOLE_H
+
+#include "osapi-printf.h"
+#include "os-shared-printf.h"
+#include "os-shared-globaldefs.h"
+
+/**
+ * The generic console data record
+ */
+typedef struct
+{
+    char device_name[OS_MAX_API_NAME];
+
+    char *          BufBase;        /**< Start of the buffer memory */
+    size_t          BufSize;        /**< Total size of the buffer */
+    volatile size_t ReadPos;        /**< Offset of next byte to read */
+    volatile size_t WritePos;       /**< Offset of next byte to write */
+    uint32          OverflowEvents; /**< Number of lines dropped due to overflow */
+    bool            IsAsync;        /**< Whether to write data via deferred utility task */
+} OS_console_internal_record_t;
+
+extern OS_console_internal_record_t OS_console_table[OS_MAX_CONSOLES];
+
+/****************************************************************************************
+                 CONSOLE / DEBUG API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_ConsoleAPI_Init
+
+   Purpose: Initialize the OS-independent layer for console service
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_ConsoleAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare a console device for use
+             For Async devices, this sets up the background writer task
+ ------------------------------------------------------------------*/
+int32 OS_ConsoleCreate_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Console output data notification
+
+   This is a notification API that is invoked whenever there
+   is new data available in the console output buffer.
+
+   It is only used if the console is configured for async operation,
+   and it should wakeup the actual console servicing thread.
+ ------------------------------------------------------------------*/
+void OS_ConsoleWakeup_Impl(const OS_object_token_t *token);
+
+#endif /* OS_SHARED_CONSOLE_H */
+```
+
+### `os-shared-countsem.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-countsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_COUNTSEM_H
+#define OS_SHARED_COUNTSEM_H
+
+#include "osapi-countsem.h"
+#include "os-shared-globaldefs.h"
+
+/* other objects that have only an API name and no other data */
+typedef struct
+{
+    char obj_name[OS_MAX_API_NAME];
+} OS_count_sem_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_count_sem_internal_record_t OS_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+/****************************************************************************************
+                                IMPLEMENTATION FUNCTIONS
+  ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_CountSemAPI_Init
+
+   Purpose: Initialize the OS-independent layer for counting semaphores
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_CountSemAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare/allocate OS resources for a counting semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CountSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options);
+
+/*----------------------------------------------------------------
+
+    Purpose: Increment the semaphore value
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CountSemGive_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Decrement the semaphore value
+             Block the calling task if the semaphore is 0.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CountSemTake_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Decrement the semaphore value, with a time limit
+
+    Returns: OS_SUCCESS on success, or relevant error code
+             OS_SEM_TIMEOUT must be returned if the time limit was reached
+ ------------------------------------------------------------------*/
+int32 OS_CountSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with the counting semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CountSemDelete_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain OS-specific information about the semaphore
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_CountSemGetInfo_Impl(const OS_object_token_t *token, OS_count_sem_prop_t *count_prop);
+
+#endif /* OS_SHARED_COUNTSEM_H */
+```
+
+### `os-shared-dir.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-dir.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_DIR_H
+#define OS_SHARED_DIR_H
+
+#include "osapi-dir.h"
+#include "os-shared-globaldefs.h"
+
+/* directory objects */
+typedef struct
+{
+    char dir_name[OS_MAX_PATH_LEN];
+} OS_dir_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_dir_internal_record_t OS_dir_table[OS_MAX_NUM_OPEN_DIRS];
+
+/*
+ * Directory API abstraction layer
+ *
+ */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_DirAPI_Init
+
+   Purpose: Initialize the OS-independent layer for directory resources
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_DirAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Create a directory in the local filesystem
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_DirCreate_Impl(const char *local_path, uint32 access);
+
+/*----------------------------------------------------------------
+
+    Purpose: Open a directory and prepare to read the entries
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_DirOpen_Impl(const OS_object_token_t *token, const char *local_path);
+
+/*----------------------------------------------------------------
+
+    Purpose: Close a directory
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_DirClose_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Read the next entry from a directory handle
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_DirRead_Impl(const OS_object_token_t *token, os_dirent_t *dirent);
+
+/*----------------------------------------------------------------
+
+    Purpose: Rewind a directory handle back to the start
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_DirRewind_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Remove a directory in the local filesystem
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_DirRemove_Impl(const char *local_path);
+
+#endif /* OS_SHARED_DIR_H */
+```
+
+### `os-shared-errors.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-errors.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_ERRORS_H
+#define OS_SHARED_ERRORS_H
+
+#include "os-shared-globaldefs.h"
+
+/* Mapping of integer error number to name */
+typedef struct
+{
+    int32       Number;
+    const char *Name;
+} OS_ErrorTable_Entry_t;
+
+extern const OS_ErrorTable_Entry_t OS_IMPL_ERROR_NAME_TABLE[];
+
+#endif /* OS_SHARED_ERRORS_H */
+```
+
+### `os-shared-file.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-file.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_FILE_H
+#define OS_SHARED_FILE_H
+
+#include "osapi-file.h"
+#include "os-shared-globaldefs.h"
+
+typedef struct
+{
+    char   stream_name[OS_MAX_PATH_LEN];
+    uint8  socket_domain;
+    uint8  socket_type;
+    uint16 stream_state;
+} OS_stream_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_stream_internal_record_t OS_stream_table[OS_MAX_NUM_OPEN_FILES];
+
+/****************************************************************************************
+                 FILE / DIRECTORY API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_FileAPI_Init
+
+   Purpose: Initialize the OS-independent layer for file resources
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_FileAPI_Init(void);
+
+/*
+ * Generic stream manipulation implementation
+ *
+ * These generic seek/read/write/close calls are usable for regular files and
+ * anything else that is stream-oriented in nature, including pipes, devices,
+ * and sockets if supported.  Note that "open" is not generic as this usually
+ * requires a different approach depending on whether it is a socket, file, etc.
+ * (There is a separate "FileOpen_Impl" later for this purpose).
+ *
+ * Note that read/write also include an option for a timeout.  This is more
+ * relevant for fifos or sockets.  It should be set to OS_PEND for normal
+ * behavior on regular files which is to wait forever.
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Seek to a given position in a file
+
+    Returns: File position (non-negative) on success, or relevant error code (negative)
+ ------------------------------------------------------------------*/
+int32 OS_GenericSeek_Impl(const OS_object_token_t *token, int32 offset, uint32 whence);
+
+/*----------------------------------------------------------------
+
+    Purpose: Read from a file descriptor
+             This may be a normal file or a socket/pipe
+
+    Returns: Number of bytes read (non-negative) on success, or relevant error code (negative)
+ ------------------------------------------------------------------*/
+int32 OS_GenericRead_Impl(const OS_object_token_t *token, void *buffer, size_t nbytes, int32 timeout);
+
+/*----------------------------------------------------------------
+
+    Purpose: Write to a file descriptor
+             This may be a normal file or a socket/pipe
+
+    Returns: Number of bytes written (non-negative) on success, or relevant error code (negative)
+ ------------------------------------------------------------------*/
+int32 OS_GenericWrite_Impl(const OS_object_token_t *token, const void *buffer, size_t nbytes, int32 timeout);
+
+/*----------------------------------------------------------------
+
+    Purpose: Close a file descriptor
+             This may be a normal file or a socket/pipe
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_GenericClose_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Opens the file indicated by "local_path" with permission
+             indicated by "access_mode".
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileOpen_Impl(const OS_object_token_t *token, const char *local_path, int32 flags, int32 access_mode);
+
+/*----------------------------------------------------------------
+
+    Purpose: Takes a shell command in and writes the output of that command to the specified file
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd);
+
+/****************************************************************************************
+                             Filename-based Operations
+  ***************************************************************************************/
+
+/*
+ * These FileXXX_Impl calls are usable for things that operate on pathnames,
+ * that is to say they appear in the file system in some way.
+ *
+ * Mainly intended for regular files but they should work on named pipes or
+ * devices too, provided they have a pathname associated with them.
+ *
+ * Note that sockets (at least the inet variety) usually do _not_ have a
+ * filename, so they require a different "open" method, but usually do use
+ * the generic read/write/close pattern thereafter.
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Output stats on the file indicated by "local_path"
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileStat_Impl(const char *local_path, os_fstat_t *filestat);
+
+/*----------------------------------------------------------------
+
+    Purpose: Remove/Unlink the file indicated by "local_path"
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileRemove_Impl(const char *local_path);
+
+/*----------------------------------------------------------------
+
+    Purpose: Rename "old_path" to "new_path" in the filesystem
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileRename_Impl(const char *old_path, const char *new_path);
+
+/*----------------------------------------------------------------
+
+    Purpose: Change permission on an existing file
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileChmod_Impl(const char *local_path, uint32 access_mode);
+
+/*
+ * Internal helper function
+ *
+ * Not called outside this unit, but need to be prototyped
+ * here for coverage test.
+ */
+int32 OS_FileIteratorClose(osal_id_t filedes, void *arg);
+
+#endif /* OS_SHARED_FILE_H */
+```
+
+### `os-shared-filesys.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-filesys.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_FILESYS_H
+#define OS_SHARED_FILESYS_H
+
+#include "osapi-filesys.h"
+#include "os-shared-globaldefs.h"
+
+/**
+ * This flag will be set on the internal record to indicate
+ * that the filesystem is "fixed" and therefore not mountable
+ * or unmountable by OSAL on the system side.
+ *
+ * The filesystem should be configured and mounted at the right
+ * spot prior to starting OSAL.
+ */
+#define OS_FILESYS_FLAG_IS_FIXED 0x01
+
+/**
+ * This flag will be set on the internal record to indicate
+ * that the low level device driver has been started.
+ *
+ * On Linux, this might mean that the relevant block device
+ * module has been loaded and an appropriate /dev entry exists.
+ *
+ * On VxWorks, this means that the low-level block device
+ * is registered in the kernel and XBD layers.
+ */
+#define OS_FILESYS_FLAG_IS_READY 0x02
+
+/**
+ * This flag will be set on the internal record to indicate
+ * that the file system is accessible within the underlying
+ * operating system, i.e. that the system_mountpt is valid.
+ */
+#define OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM 0x10
+
+/**
+ * This flag will be set on the internal record to indicate
+ * that the file system is mounted within the virtualized
+ * file system exposed to applications.
+ */
+#define OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL 0x20
+
+/**
+ * These definitions apply to the "type" field within
+ * the file system record.  This field may serve as a
+ * hint or guidance for the implementation layer as to
+ * what type of file system to use when initializing or
+ * mounting the file system.
+ */
+enum
+{
+    OS_FILESYS_TYPE_UNKNOWN = 0,   /**< Unspecified or unknown file system type */
+    OS_FILESYS_TYPE_FS_BASED,      /**< An emulated virtual file system that maps to another file system location */
+    OS_FILESYS_TYPE_NORMAL_DISK,   /**< A traditional disk drive or something that emulates one */
+    OS_FILESYS_TYPE_VOLATILE_DISK, /**< A temporary/volatile file system or RAM disk */
+    OS_FILESYS_TYPE_MTD,           /**< A "memory technology device" such as FLASH or EEPROM */
+    OS_FILESYS_TYPE_MAX
+};
+
+typedef struct
+{
+    char device_name[OS_FS_DEV_NAME_LEN]; /**< The name of the underlying block device, if applicable */
+    char volume_name[OS_FS_VOL_NAME_LEN];
+    char system_mountpt[OS_MAX_LOCAL_PATH_LEN]; /**< The name/prefix where the contents are accessible in the host
+                                                   operating system */
+    char virtual_mountpt[OS_MAX_PATH_LEN]; /**< The name/prefix in the OSAL Virtual File system exposed to applications
+                                            */
+    char *            address;
+    size_t            blocksize;
+    osal_blockcount_t numblocks;
+    uint8             flags;
+    uint8             fstype;
+} OS_filesys_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_filesys_internal_record_t OS_filesys_table[OS_MAX_FILE_SYSTEMS];
+
+/*
+ * File system abstraction layer
+ */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_FileSysAPI_Init
+
+   Purpose: Initialize the OS-independent layer for file systems
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_FileSysAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Starts/Registers a file system on the target
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysStartVolume_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Stops/Unregisters a file system on the target
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysStopVolume_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Formats a file system on the target to prepare it for use
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysFormatVolume_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Checks the drives and optionally repairs inconsistencies
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysCheckVolume_Impl(const OS_object_token_t *token, bool repair);
+
+/*----------------------------------------------------------------
+
+    Purpose: Returns stats about a volume
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysStatVolume_Impl(const OS_object_token_t *token, OS_statvfs_t *result);
+
+/*----------------------------------------------------------------
+
+    Purpose: mounts a drive
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysMountVolume_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: unmounts a drive.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_FileSysUnmountVolume_Impl(const OS_object_token_t *token);
+
+/*
+ * Internal helper functions
+ *
+ * Not normally invoked outside this unit, except for unit testing
+ */
+
+bool  OS_FileSys_FindVirtMountPoint(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj);
+int32 OS_FileSys_Initialize(char *address, const char *fsdevname, const char *fsvolname, size_t blocksize,
+                            osal_blockcount_t numblocks, bool should_format);
+bool  OS_FileSysFilterFree(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj);
+
+#endif /* OS_SHARED_FILESYS_H */
+```
+
+### `os-shared-globaldefs.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-globaldefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ * Internal type/macro definitions used across the "shared" OSAPI layer.
+ * These definitions are internal to OSAL but shared/referenced across all subsystems
+ * so they are put into a common header file.
+ */
+
+#ifndef OS_SHARED_GLOBALDEFS_H
+#define OS_SHARED_GLOBALDEFS_H
+
+/* All subsystems reference the same config, common types, and other constants */
+#include "osconfig.h"
+#include "common_types.h"
+#include "osapi-constants.h"
+#include "osapi-error.h"
+#include "osapi-macros.h"
+
+/*
+ * The "common_record" is part of the generic ID mapping -
+ * Functions in the internal API may use this as an abstract pointer.
+ */
+struct OS_common_record;
+typedef struct OS_common_record OS_common_record_t;
+
+/*
+ * The "OS_shared_global_vars" keeps global state -
+ * Functions in the internal API may use this as an abstract pointer.
+ */
+struct OS_shared_global_vars;
+typedef struct OS_shared_global_vars OS_SharedGlobalVars_t;
+
+/*
+ * The "OS_object_token" tracks to the type of lock currently held
+ * and the specific object record the requested operation should
+ * execute on.  All operations start by obtaining a token, which must
+ * be released when the operation is complete.
+ */
+struct OS_object_token;
+typedef struct OS_object_token OS_object_token_t;
+
+/*
+ * Wrapper for encoding of other types into a generic void* type required as argument
+ * to callbacks and pthread entry/return values, etc.
+ *
+ * This is used where OSAL needs to pass non-pointer/integer values through an interface
+ * that accepts a void* opaque pass-through argument.
+ *
+ * Note this can only encode types with sizes <= sizeof(void*)
+ */
+typedef union
+{
+    void *           opaque_arg;
+    OS_ArgCallback_t arg_callback_func;
+    osal_id_t        id;
+    osal_index_t     idx;
+} OS_VoidPtrValueWrapper_t;
+
+/*
+ * The wrapper structure size should be equal to void* - if not this means
+ * one or more of the other members are bigger than void*, and therefore cannot
+ * be passed directly through the intended interface
+ */
+CompileTimeAssert(sizeof(OS_VoidPtrValueWrapper_t) == sizeof(void *), VoidValueWrapperSize);
+
+/*
+ * The "OS_DEBUG" is a no-op unless OSAL_CONFIG_DEBUG_PRINTF is enabled.
+ * When enabled, it is a macro that includes function/line number info.
+ */
+#if defined(OSAL_CONFIG_DEBUG_PRINTF)
+extern void OS_DebugPrintf(uint32 Level, const char *Func, uint32 Line, const char *Format, ...);
+/* Debug printfs are compiled in, but also can be disabled by a run-time flag.
+ * Note that the ##__VA_ARGS__ syntax works on GCC but might need tweaks for other compilers... */
+#define OS_DEBUG_LEV(l, ...) OS_DebugPrintf(l, __func__, __LINE__, __VA_ARGS__);
+#define OS_DEBUG(...)        OS_DEBUG_LEV(1, __VA_ARGS__)
+#else
+/* Debug printfs are not compiled in at all */
+#define OS_DEBUG(...)
+#endif
+
+/*
+ * An OSAL-specific check macro for NULL pointer.
+ * Checked via BUGCHECK - considered a bug/fatal error if check fails.
+ *
+ * Returns OS_INVALID_POINTER if pointer is NULL.
+ */
+#define OS_CHECK_POINTER(ptr) BUGCHECK((ptr) != NULL, OS_INVALID_POINTER)
+
+/*
+ * An OSAL-specific check macro for an input buffer size.
+ * Checked via ARGCHECK - non-fatal if check fails.
+ *
+ * Returns OS_ERR_INVALID_SIZE if size is 0.
+ *
+ * Also returns OS_ERR_INVALID_SIZE if size is excessively large.
+ * Currently (UINT32_MAX/2) is used as the upper limit, as some API calls
+ * (e.g. read/write) return a size as an int32 type, and therefore the
+ * operation cannot exceed the bounds of this type.
+ */
+#define OS_CHECK_SIZE(val) ARGCHECK((val) > 0 && (val) < (UINT32_MAX / 2), OS_ERR_INVALID_SIZE)
+
+/*
+ * An OSAL-specific check macro for arbitrary string argument validation.
+ *
+ * First confirms string is not null using OS_CHECK_POINTER, then checks the maximum
+ * length of the string using LENGTHCHECK.
+ */
+#define OS_CHECK_STRING(str, maxlen, errcode) \
+    do                                        \
+    {                                         \
+        OS_CHECK_POINTER(str);                \
+        LENGTHCHECK(str, maxlen, errcode);    \
+    } while (0)
+
+/*
+ * An OSAL-specific check macro for object name strings.
+ *
+ * Returns OS_ERR_NAME_TOO_LONG if length is exceeded.
+ */
+#define OS_CHECK_APINAME(str) OS_CHECK_STRING(str, OS_MAX_API_NAME, OS_ERR_NAME_TOO_LONG)
+
+/*
+ * An OSAL specific argument check macro for path names
+ *
+ * Returns OS_FS_ERR_PATH_TOO_LONG if length is exceeded.
+ */
+#define OS_CHECK_PATHNAME(str) OS_CHECK_STRING(str, OS_MAX_PATH_LEN, OS_FS_ERR_PATH_TOO_LONG)
+
+#endif /* OS_SHARED_GLOBALDEFS_H */
+```
+
+### `os-shared-heap.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-heap.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_HEAP_H
+#define OS_SHARED_HEAP_H
+
+#include "osapi-heap.h"
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+                    MEMORY HEAP API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*
+ * This may also not be implementable on some platforms
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Return current info on the heap
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_HeapGetInfo_Impl(OS_heap_prop_t *heap_prop);
+
+#endif /* OS_SHARED_HEAP_H */
+```
+
+### `os-shared-idmap.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-idmap.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_IDMAP_H
+#define OS_SHARED_IDMAP_H
+
+#include "osapi-idmap.h"
+#include "os-shared-globaldefs.h"
+
+#define OS_OBJECT_ID_RESERVED ((osal_id_t) {0xFFFFFFFF})
+
+/*
+ * This supplies a non-abstract definition of "OS_common_record_t"
+ */
+struct OS_common_record
+{
+    const char *name_entry;
+    osal_id_t   active_id;
+    osal_id_t   creator;
+    uint16      refcount;
+};
+
+typedef enum
+{
+    OS_TASK_BASE         = 0,
+    OS_QUEUE_BASE        = OS_TASK_BASE + OS_MAX_TASKS,
+    OS_BINSEM_BASE       = OS_QUEUE_BASE + OS_MAX_QUEUES,
+    OS_COUNTSEM_BASE     = OS_BINSEM_BASE + OS_MAX_BIN_SEMAPHORES,
+    OS_MUTEX_BASE        = OS_COUNTSEM_BASE + OS_MAX_COUNT_SEMAPHORES,
+    OS_STREAM_BASE       = OS_MUTEX_BASE + OS_MAX_MUTEXES,
+    OS_DIR_BASE          = OS_STREAM_BASE + OS_MAX_NUM_OPEN_FILES,
+    OS_TIMEBASE_BASE     = OS_DIR_BASE + OS_MAX_NUM_OPEN_DIRS,
+    OS_TIMECB_BASE       = OS_TIMEBASE_BASE + OS_MAX_TIMEBASES,
+    OS_MODULE_BASE       = OS_TIMECB_BASE + OS_MAX_TIMERS,
+    OS_FILESYS_BASE      = OS_MODULE_BASE + OS_MAX_MODULES,
+    OS_CONSOLE_BASE      = OS_FILESYS_BASE + OS_MAX_FILE_SYSTEMS,
+    OS_CONDVAR_BASE      = OS_CONSOLE_BASE + OS_MAX_CONSOLES,
+    OS_MAX_TOTAL_RECORDS = OS_CONDVAR_BASE + OS_MAX_CONDVARS
+} OS_ObjectIndex_t;
+
+/*
+ * Type of locking that should occur when checking IDs.
+ */
+typedef enum
+{
+    OS_LOCK_MODE_NONE,      /**< Quick ID validity check, does not lock global table at all (use with caution) */
+    OS_LOCK_MODE_GLOBAL,    /**< Confirm ID match, and if successful, leave global table locked */
+    OS_LOCK_MODE_REFCOUNT,  /**< Confirm ID match, increment refcount, and unlock global table.  ID is not changed. */
+    OS_LOCK_MODE_EXCLUSIVE, /**< Confirm ID match AND refcount equal zero, then change ID to RESERVED value and unlock
+                               global. */
+    OS_LOCK_MODE_RESERVED   /**< Confirm ID is already set to RESERVED, otherwise like OS_LOCK_MODE_GLOBAL. */
+} OS_lock_mode_t;
+
+/*
+ * A unique key value issued when obtaining a table lock, based on
+ * a combination of the requesting task ID and a transaction ID
+ */
+typedef struct
+{
+    uint32 key_value;
+} osal_key_t;
+
+/*
+ * Actual (non-abstract) definition of "OS_object_token_t"
+ */
+struct OS_object_token
+{
+    OS_lock_mode_t lock_mode;
+    osal_key_t     lock_key;
+    osal_objtype_t obj_type;
+    osal_index_t   obj_idx;
+    osal_id_t      obj_id;
+};
+
+/*
+ * Macro to retrieve an entry from an object table, based on a token
+ */
+#define OS_OBJECT_TABLE_GET(tbl, tok) (&tbl[OS_ObjectIndexFromToken(&(tok))])
+
+/*
+ * Macro to clear a table entry and reset its name
+ */
+#define OS_OBJECT_INIT(tok, ref, namefield, nameval)                   \
+    {                                                                  \
+        memset(ref, 0, sizeof(*ref));                                  \
+        strncpy(ref->namefield, nameval, sizeof(ref->namefield) - 1);  \
+        OS_ObjectIdGlobalFromToken(&tok)->name_entry = ref->namefield; \
+    }
+
+/*
+ * A function to perform arbitrary record matching.
+ *
+ * This can be used to find a record based on criteria other than the ID,
+ * such as the name or any other record within the structure.
+ *
+ * Returns true if the id/obj matches the reference, false otherwise.
+ */
+typedef bool (*OS_ObjectMatchFunc_t)(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj);
+
+/*
+ * A function to serve as callback with object ID iterators
+ *
+ * This is the prototype of callback functions for use with OS_ObjectIdIteratorProcessEntry()
+ */
+typedef int32 (*OS_ObjectIdIteratorProcessFunc_t)(osal_id_t, void *);
+
+/*
+ * State object associated with an object iterator
+ */
+typedef struct
+{
+    OS_common_record_t * base;
+    OS_ObjectMatchFunc_t match;
+    void *               arg;
+    osal_index_t         limit;
+    OS_object_token_t    token;
+} OS_object_iter_t;
+
+/*
+ * Global instantiations
+ */
+/* The following are quick-access pointers to the various sections of the common table */
+extern OS_common_record_t *const OS_global_task_table;
+extern OS_common_record_t *const OS_global_queue_table;
+extern OS_common_record_t *const OS_global_bin_sem_table;
+extern OS_common_record_t *const OS_global_count_sem_table;
+extern OS_common_record_t *const OS_global_mutex_table;
+extern OS_common_record_t *const OS_global_stream_table;
+extern OS_common_record_t *const OS_global_dir_table;
+extern OS_common_record_t *const OS_global_timebase_table;
+extern OS_common_record_t *const OS_global_timecb_table;
+extern OS_common_record_t *const OS_global_module_table;
+extern OS_common_record_t *const OS_global_filesys_table;
+extern OS_common_record_t *const OS_global_console_table;
+extern OS_common_record_t *const OS_global_condvar_table;
+
+/****************************************************************************************
+                                ID MAPPING FUNCTIONS
+  ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_ObjectIdInit
+
+   Purpose: Initialize the OS-independent layer for object ID management
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_ObjectIdInit(void);
+
+/*
+ * Table locking and unlocking for global objects can be done at the shared code
+ * layer but the actual implementation is OS-specific
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Locks the global table identified by "idtype"
+
+   Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+void OS_Lock_Global(OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Locks the global table identified by "idtype"
+
+   Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+void OS_Lock_Global_Impl(osal_objtype_t idtype);
+
+/*----------------------------------------------------------------
+
+    Purpose: Unlocks the global table identified by "idtype"
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+void OS_Unlock_Global(OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Unlocks the global table identified by "idtype"
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+void OS_Unlock_Global_Impl(osal_objtype_t idtype);
+
+/*----------------------------------------------------------------
+
+    Purpose: Waits for a change in the global table identified by "idtype"
+
+   NOTE: The table must be already "owned" (via OS_Lock_Global) by the calling
+   at the time this function is invoked.  The lock is released and re-acquired
+   before returning from this function.
+
+  -----------------------------------------------------------------*/
+void OS_WaitForStateChange(OS_object_token_t *token, uint32 attempts);
+
+/*----------------------------------------------------------------
+
+   Purpose: Block the caller until some sort of change event
+   has occurred for the given object type, such as a record changing
+   state i.e. the acquisition or release of a lock/refcount from
+   another thread.
+
+   It is not guaranteed what, if any, state change has actually
+   occurred when this function returns.  This may be implemented as
+   a simple OS_TaskDelay().
+
+ ------------------------------------------------------------------*/
+void OS_WaitForStateChange_Impl(osal_objtype_t objtype, uint32 attempts);
+
+/*
+   Function prototypes for routines implemented in common layers but private to OSAL
+
+   These implement the basic OSAL ObjectID patterns - that is a 32-bit number that
+   is opaque externally, but internally identifies a specific type of object and
+   corresponding index within the local tables.
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain the serial number component of a generic OSAL Object ID
+ ------------------------------------------------------------------*/
+static inline uint32 OS_ObjectIdToSerialNumber_Impl(osal_id_t id)
+{
+    return (OS_ObjectIdToInteger(id) & OS_OBJECT_INDEX_MASK);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain the object type component of a generic OSAL Object ID
+ ------------------------------------------------------------------*/
+static inline osal_objtype_t OS_ObjectIdToType_Impl(osal_id_t id)
+{
+    return (OS_ObjectIdToInteger(id) >> OS_OBJECT_TYPE_SHIFT);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Convert an object serial number and resource type into an external 32-bit OSAL ID
+ ------------------------------------------------------------------*/
+static inline void OS_ObjectIdCompose_Impl(osal_objtype_t idtype, uint32 idserial, osal_id_t *result)
+{
+    *result = OS_ObjectIdFromInteger((idtype << OS_OBJECT_TYPE_SHIFT) | idserial);
+}
+
+/*-------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if an object ID represents a valid/active value.
+ *
+ * This tests that the ID value is within the range specifically used by
+ * valid OSAL IDs. This is smaller than the set of defined IDs.
+ *
+ * For example, the value of OS_OBJECT_ID_RESERVED is defined but not valid.
+ * So while OS_ObjectIdDefined() will match entries being actively created or
+ * deleted, OS_ObjectIdIsValid() will not.
+ *
+ * @param[in]   object_id The object ID
+ * @returns     true if table entry is valid
+ */
+static inline bool OS_ObjectIdIsValid(osal_id_t object_id)
+{
+    osal_objtype_t objtype = OS_ObjectIdToType_Impl(object_id);
+    return (objtype > OS_OBJECT_TYPE_UNDEFINED && objtype < OS_OBJECT_TYPE_USER);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtains the maximum number of objects for "idtype" in the global table
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+uint32 OS_GetMaxForObjectType(osal_objtype_t idtype);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtains the base object number for "idtype" in the global table
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+uint32 OS_GetBaseForObjectType(osal_objtype_t idtype);
+
+/*----------------------------------------------------------------
+
+    Purpose: Gets the index referenced by the token
+
+    Returns: None
+ ------------------------------------------------------------------*/
+static inline osal_objtype_t OS_ObjectTypeFromToken(const OS_object_token_t *token)
+{
+    return token->obj_type;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Gets the index referenced by the token
+
+    Returns: None
+ ------------------------------------------------------------------*/
+static inline osal_index_t OS_ObjectIndexFromToken(const OS_object_token_t *token)
+{
+    return token->obj_idx;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Gets the object ID referenced by the token
+
+    Returns: None
+ ------------------------------------------------------------------*/
+static inline osal_id_t OS_ObjectIdFromToken(const OS_object_token_t *token)
+{
+    return token->obj_id;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtains the global record corresponding to the token
+
+    Returns: Pointer to global object
+ ------------------------------------------------------------------*/
+OS_common_record_t *OS_ObjectIdGlobalFromToken(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Initiates a transaction by obtaining the global table lock
+             and preparing the object token value
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdTransactionInit(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Cancels/Releases the lock obtained by OS_ObjectIdTransactionInit()
+             without making any modification to global IDs.
+
+    Returns: None
+ ------------------------------------------------------------------*/
+void OS_ObjectIdTransactionCancel(OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Releases the lock obtained by OS_ObjectIdTransactionInit()
+             with an optional synchronized ID update for new/deleted IDs.
+
+    Returns: None
+ ------------------------------------------------------------------*/
+void OS_ObjectIdTransactionFinish(OS_object_token_t *token, const osal_id_t *final_id);
+
+/*----------------------------------------------------------------
+
+    Purpose: Converts a token from OS_ObjectIdTransactionInit() to the
+             type that was requested by the user.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdConvertToken(OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Finds an entry in the global resource table matching the given name
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdFindByName(osal_objtype_t idtype, const char *name, osal_id_t *object_id);
+
+/*----------------------------------------------------------------
+
+    Purpose: Find and lock an entry in the global resource table
+             Search is performed using a user-specified match function
+             (Allows searching for items by arbitrary keys)
+
+   Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdGetBySearch(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_ObjectMatchFunc_t MatchFunc, void *arg,
+                             OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Find and lock an entry in the global resource table
+             Search is performed using a name match function
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdGetByName(OS_lock_mode_t lock_mode, osal_objtype_t idtype, const char *name, OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Find and lock an entry in the global resource table
+             Lookup is performed by ID value (no searching required)
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdGetById(OS_lock_mode_t lock_mode, osal_objtype_t idtype, osal_id_t id, OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Releases (unlocks) the object token previously obtained using
+             OS_ObjectIdGetById() or OS_ObjectIdGetBySearch().
+
+    Returns: none
+ ------------------------------------------------------------------*/
+void OS_ObjectIdRelease(OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Transfers ownership of an object token without unlocking/releasing.
+             The original token will become benign and the new token becomes active.
+
+    Returns: none
+ ------------------------------------------------------------------*/
+void OS_ObjectIdTransferToken(OS_object_token_t *token_from, OS_object_token_t *token_to);
+
+/*----------------------------------------------------------------
+
+    Purpose: Issue a new object ID of the given type and associate with the given name
+             The array index (0-based) and global record pointers are output back to the caller
+             The table will be left in a "locked" state to allow further initialization
+             The OS_ObjectIdFinalizeNew() function must be called to complete the operation
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdAllocateNew(osal_objtype_t idtype, const char *name, OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Completes the operation initiated by OS_ObjectIdAllocateNew()
+             If the operation was successful, the final OSAL ID is returned
+             If the operation was unsuccessful, the ID is deleted and returned to the pool.
+             The global table is unlocked for future operations
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdFinalizeNew(int32 operation_status, OS_object_token_t *token, osal_id_t *outid);
+
+/*----------------------------------------------------------------
+
+    Purpose: Completes a delete operation
+             If the operation was successful, the OSAL ID is deleted and returned to the pool
+             If the operation was unsuccessful, no operation is performed.
+             The global table is unlocked for future operations
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdFinalizeDelete(int32 operation_status, OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Initialize a generic object iterator of the given type.
+             Note This obtains and holds a global lock on the internal table, so
+             this call must be followed by a call to OS_ObjectIdIteratorDestroy()
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdIteratorInit(OS_ObjectMatchFunc_t matchfunc, void *matcharg, osal_objtype_t objtype,
+                              OS_object_iter_t *iter);
+
+/*----------------------------------------------------------------
+
+    Purpose: Initialize an object iterator of the given type that will
+             return only active/valid OSAL objects.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdIterateActive(osal_objtype_t objtype, OS_object_iter_t *iter);
+
+/*----------------------------------------------------------------
+
+    Purpose: Move then token to the next matching iterator entry
+
+    Returns: true if successful, false if at last entry/end of table
+ ------------------------------------------------------------------*/
+bool OS_ObjectIdIteratorGetNext(OS_object_iter_t *iter);
+
+/*----------------------------------------------------------------
+
+    Purpose: Releases an iterator from OS_ObjectIdIteratorInit()
+
+    Returns: None
+ ------------------------------------------------------------------*/
+void OS_ObjectIdIteratorDestroy(OS_object_iter_t *iter);
+
+/*----------------------------------------------------------------
+
+    Purpose: Gets the token indicating current iterator position
+             The returned token can be used to access the relevant entry
+
+    Returns: None
+ ------------------------------------------------------------------*/
+static inline const OS_object_token_t *OS_ObjectIdIteratorRef(OS_object_iter_t *iter)
+{
+    return &iter->token;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Calls a function using the ID of the entry from the iterator
+
+    Returns: None
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdIteratorProcessEntry(OS_object_iter_t *iter, OS_ObjectIdIteratorProcessFunc_t func);
+
+/*
+ * Internal helper functions
+ * These are not normally called outside this unit, but need
+ * to be exposed for unit testing.
+ */
+bool  OS_ObjectFilterActive(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj);
+bool  OS_ObjectNameMatch(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj);
+int32 OS_ObjectIdFindNextMatch(OS_ObjectMatchFunc_t MatchFunc, void *arg, OS_object_token_t *token);
+int32 OS_ObjectIdFindNextFree(OS_object_token_t *token);
+
+#endif /* OS_SHARED_IDMAP_H */
+```
+
+### `os-shared-module.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-module.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_MODULE_H
+#define OS_SHARED_MODULE_H
+
+#include "osapi-module.h"
+#include "os-shared-globaldefs.h"
+
+typedef enum
+{
+    OS_MODULE_TYPE_UNKNOWN = 0, /**< Default/unspecified (reserved value) */
+    OS_MODULE_TYPE_DYNAMIC = 1, /**< Module is dynamically loaded via the OS loader */
+    OS_MODULE_TYPE_STATIC  = 2  /**< Module is statically linked and is a placeholder */
+} OS_module_type_t;
+
+typedef struct
+{
+    char             module_name[OS_MAX_API_NAME];
+    char             file_name[OS_MAX_PATH_LEN];
+    OS_module_type_t module_type;
+    uint32           flags;
+    cpuaddr          entry_point;
+} OS_module_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_module_internal_record_t OS_module_table[OS_MAX_MODULES];
+
+/****************************************************************************************
+                 MODULE LOADER API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_ModuleAPI_Init
+
+   Purpose: Initialize the OS-independent layer for modules
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_ModuleAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Loads an object file into the running operating system
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ModuleLoad_Impl(const OS_object_token_t *token, const char *translated_path);
+
+/*----------------------------------------------------------------
+
+    Purpose: Unloads the module file from the running operating system
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ModuleUnload_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Returns information about the loadable module
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ModuleGetInfo_Impl(const OS_object_token_t *token, OS_module_prop_t *module_prop);
+
+/*----------------------------------------------------------------
+
+    Purpose: Find the Address of a Symbol in the symbol table.  If global and
+             local tables exist all are checked.
+             The address of the symbol will be stored in the pointer that is passed in.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SymbolLookup_Impl(cpuaddr *SymbolAddress, const char *SymbolName);
+
+/*----------------------------------------------------------------
+
+    Purpose: Find the Address of a Symbol within a specific module.
+             The address of the symbol will be stored in the pointer that is passed in.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup_Impl(const OS_object_token_t *token, cpuaddr *SymbolAddress, const char *SymbolName);
+
+/*----------------------------------------------------------------
+
+    Purpose: Dumps the system symbol table to a file
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SymbolTableDump_Impl(const char *filename, size_t size_limit);
+
+/*
+ * Helper functions within the shared layer that are not normally invoked outside the local module
+ * These need to be exposed for unit testing
+ */
+int32 OS_ModuleLoad_Static(const char *ModuleName);
+int32 OS_SymbolLookup_Static(cpuaddr *SymbolAddress, const char *SymbolName, const char *ModuleName);
+
+#endif /* OS_SHARED_MODULE_H */
+```
+
+### `os-shared-mutex.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-mutex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_MUTEX_H
+#define OS_SHARED_MUTEX_H
+
+#include "osapi-mutex.h"
+#include "os-shared-globaldefs.h"
+
+typedef struct
+{
+    char      obj_name[OS_MAX_API_NAME];
+    osal_id_t last_owner;
+} OS_mutex_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_mutex_internal_record_t OS_mutex_table[OS_MAX_MUTEXES];
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_MutexAPI_Init
+
+   Purpose: Initialize the OS-independent layer for mutex objects
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_MutexAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare/allocate OS resources for a mutex object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_MutSemCreate_Impl(const OS_object_token_t *token, uint32 options);
+
+/*----------------------------------------------------------------
+
+    Purpose: Release the mutex, which must be owned by the caller
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_MutSemGive_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Acquire the mutex, blocking the caller as necessary
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_MutSemTake_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with a mutex object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_MutSemDelete_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain OS-specific information about the mutex object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_MutSemGetInfo_Impl(const OS_object_token_t *token, OS_mut_sem_prop_t *mut_prop);
+
+#endif /* OS_SHARED_MUTEX_H */
+```
+
+### `os-shared-network.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-network.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_NETWORK_H
+#define OS_SHARED_NETWORK_H
+
+#include "osapi-network.h"
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+              NETWORK / SOCKET API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_NetworkAPI_Init
+
+   Purpose: Initialize the OS-independent layer for network services
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_NetworkAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Gets the name of the current host
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_NetworkGetHostName_Impl(char *host_name, size_t name_len);
+
+/*----------------------------------------------------------------
+
+    Purpose: Gets the ID of the host on the network
+
+    Returns: the ID value on success, or -1 on error.
+ ------------------------------------------------------------------*/
+int32 OS_NetworkGetID_Impl(int32 *IdBuf);
+
+#endif /* OS_SHARED_NETWORK_H */
+```
+
+### `os-shared-printf.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-printf.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_PRINTF_H
+#define OS_SHARED_PRINTF_H
+
+#include "osapi-printf.h"
+#include "os-shared-console.h"
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+                 CONSOLE / DEBUG API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*----------------------------------------------------------------
+
+    Purpose: Basic Console output implementation
+
+   This function forwards the data from the console
+   ring buffer into the actual output device/descriptor
+
+   The data is already formatted, this just writes the characters.
+ ------------------------------------------------------------------*/
+void OS_ConsoleOutput_Impl(const OS_object_token_t *token);
+
+#endif /* OS_SHARED_PRINTF_H */
+```
+
+### `os-shared-queue.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-queue.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_QUEUE_H
+#define OS_SHARED_QUEUE_H
+
+#include "osapi-queue.h"
+#include "os-shared-globaldefs.h"
+
+typedef struct
+{
+    char              queue_name[OS_MAX_API_NAME];
+    size_t            max_size;
+    osal_blockcount_t max_depth;
+} OS_queue_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_queue_internal_record_t OS_queue_table[OS_MAX_QUEUES];
+
+/****************************************************************************************
+                 MESSAGE QUEUE API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+  ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_QueueAPI_Init
+
+   Purpose: Initialize the OS-independent layer for queues
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_QueueAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare/Allocate OS resources for a message queue
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_QueueCreate_Impl(const OS_object_token_t *token, uint32 flags);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with the message queue
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_QueueDelete_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Receive a message on a message queue.
+             The calling task will be blocked if no message is immediately available
+
+    Returns: OS_SUCCESS on success, or relevant error code
+             OS_QUEUE_TIMEOUT must be returned if the timeout expired and no message was received
+             OS_QUEUE_EMPTY must be returned if the queue is empty when polled (OS_CHECK)
+             OS_QUEUE_INVALID_SIZE must be returned if the supplied buffer is too small
+ ------------------------------------------------------------------*/
+int32 OS_QueueGet_Impl(const OS_object_token_t *token, void *data, size_t size, size_t *size_copied, int32 timeout);
+
+/*----------------------------------------------------------------
+
+    Purpose: Put a message into a message queue
+
+    Returns: OS_SUCCESS on success, or relevant error code
+             OS_QUEUE_FULL must be returned if the queue is full.
+ ------------------------------------------------------------------*/
+int32 OS_QueuePut_Impl(const OS_object_token_t *token, const void *data, size_t size, uint32 flags);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain OS-specific information about a message queue
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_QueueGetInfo_Impl(const OS_object_token_t *token, OS_queue_prop_t *queue_prop);
+
+#endif /* OS_SHARED_QUEUE_H */
+```
+
+### `os-shared-select.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-select.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_SELECT_H
+#define OS_SHARED_SELECT_H
+
+#include "osapi-select.h"
+#include "os-shared-globaldefs.h"
+
+/*
+ * Select API
+ * Blocks until specified readable/writable conditions
+ * are met on a file id or set of file ids
+ */
+
+/*----------------------------------------------------------------
+
+   Purpose: Waits for activity on a single file descriptor
+            This wrapper is usable by the File or Socket API
+            The type of activity to wait for is indicated by "SelectFlags"
+            msecs indicates the timeout.  Positive values will wait up to that many milliseconds.
+            Zero will not wait (poll) or negative values will wait forever (pend)
+
+            Bits in "SelectFlags" will be unset according to activity
+
+    Returns: OS_SUCCESS on success, or relevant error code
+             OS_ERR_OPERATION_NOT_SUPPORTED if the specified file handle does not support select
+ ------------------------------------------------------------------*/
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs);
+
+/*----------------------------------------------------------------
+
+   Purpose: Waits for activity on multiple file descriptors
+            This wrapper is usable by the File or Socket API
+            Will wait for any file descriptor in "ReadSet" to be readable OR
+            any descriptor in "WriteSet" to be writable.
+            Time-Limited to "msecs" (negative to wait forever, zero to poll)
+
+   Notes: It is not possible for this function to verify that the file descriptors
+          passed in are actually valid.  In order to do so would require a different
+          approach to the OS_FdSet structure (this is currently just a bitmask so
+          the actual file descriptor value is lost in translation).
+
+          Using an array of uint32's would solve the problem but make the structures
+          much bigger.
+
+          File descriptors in sets be modified according to activity
+
+    Returns: OS_SUCCESS on success, or relevant error code
+             OS_ERR_OPERATION_NOT_SUPPORTED if the specified file handle(s) do not support select
+ ------------------------------------------------------------------*/
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs);
+
+#endif /* OS_SHARED_SELECT_H */
+```
+
+### `os-shared-shell.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-shell.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_SHELL_H
+#define OS_SHARED_SHELL_H
+
+#include "osapi-shell.h"
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+                 SHELL API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*----------------------------------------------------------------
+
+    Purpose: Takes a shell command in and writes the output of that command to the specified file
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_ShellOutputToFile_Impl(const OS_object_token_t *token, const char *Cmd);
+
+#endif /* OS_SHARED_SHELL_H */
+```
+
+### `os-shared-sockets.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-sockets.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_SOCKETS_H
+#define OS_SHARED_SOCKETS_H
+
+#include "osapi-sockets.h"
+#include "os-shared-globaldefs.h"
+
+/*
+ * Sockets API abstraction layer
+ */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_SocketAPI_Init
+
+   Purpose: Initialize the OS-independent layer for network sockets
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_SocketAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Opens the OS socket indicated by the sock_id table entry
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketOpen_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+   Purpose: Binds the indicated socket table entry to the passed-in address
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketBindAddress_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr);
+
+/*----------------------------------------------------------------
+
+   Purpose: Binds the indicated socket table entry to the passed-in address
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketListen_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+   Purpose: Accept an incoming connection on the indicated socket (must be a STREAM socket)
+            Will wait up to "timeout" milliseconds for an incoming connection
+            Will wait forever if timeout is negative
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketAccept_Impl(const OS_object_token_t *sock_token, const OS_object_token_t *conn_token,
+                           OS_SockAddr_t *Addr, int32 timeout);
+
+/*----------------------------------------------------------------
+
+    Purpose: Connects the socket to a remote address.
+             Socket must be of the STREAM variety.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketConnect_Impl(const OS_object_token_t *token, const OS_SockAddr_t *Addr, int32 timeout);
+
+/*----------------------------------------------------------------
+
+    Purpose: Graceful shutdown of a stream socket
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketShutdown_Impl(const OS_object_token_t *token, OS_SocketShutdownMode_t Mode);
+
+/*----------------------------------------------------------------
+
+    Purpose: Receives a datagram from the specified socket (must be of the DATAGRAM type)
+             Stores the datagram in "buffer" which has a maximum size of "buflen"
+             Stores the remote address (sender of the datagram) in "RemoteAddr"
+             Will wait up to "timeout" milliseconds to receive a packet
+             (zero to poll, negative to wait forever)
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketRecvFrom_Impl(const OS_object_token_t *token, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr,
+                             int32 timeout);
+
+/*----------------------------------------------------------------
+
+    Purpose: Sends a datagram from the specified socket (must be of the DATAGRAM type)
+             to the remote address specified by "RemoteAddr"
+             The datagram to send must be stored in "buffer" with a size of "buflen"
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketSendTo_Impl(const OS_object_token_t *token, const void *buffer, size_t buflen,
+                           const OS_SockAddr_t *RemoteAddr);
+
+/*----------------------------------------------------------------
+
+    Purpose: Get OS-specific information about a socket
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketGetInfo_Impl(const OS_object_token_t *token, OS_socket_prop_t *sock_prop);
+
+/*----------------------------------------------------------------
+
+    Purpose: Initializes an OSAL SockAddr structure to the given address domain
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketAddrInit_Impl(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain);
+
+/*----------------------------------------------------------------
+
+   Purpose: Converts a Socket Address structure to a printable string
+            Useful for including a dotted-decimal IP address in a message or log
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketAddrToString_Impl(char *buffer, size_t buflen, const OS_SockAddr_t *Addr);
+
+/*----------------------------------------------------------------
+
+   Purpose: Sets the Address portion of the SockAddr structure according to the string
+            For IPV4 (SocketDomain_INET) this will parse the dotted decimal IP address.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketAddrFromString_Impl(OS_SockAddr_t *Addr, const char *string);
+
+/*----------------------------------------------------------------
+
+   Purpose: Retrieve the TCP/UDP port number from the SockAddr structure
+
+   NOTE: The port number is output to the caller in native byte order
+            (the value is converted from network order before return)
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketAddrGetPort_Impl(uint16 *PortNum, const OS_SockAddr_t *Addr);
+
+/*----------------------------------------------------------------
+
+    Purpose: Set the TCP/UDP port number in the SockAddr structure
+
+   NOTE: The port number should be passed in native byte order
+             (this function will convert to network order)
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_SocketAddrSetPort_Impl(OS_SockAddr_t *Addr, uint16 PortNum);
+
+/*
+ * Internal helper functions
+ * Not normally called outside the local unit, except during unit test
+ */
+void OS_CreateSocketName(const OS_object_token_t *token, const OS_SockAddr_t *Addr, const char *parent_name);
+void OS_SetSocketDefaultFlags_Impl(const OS_object_token_t *token);
+
+#endif /* OS_SHARED_SOCKETS_H */
+```
+
+### `os-shared-task.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-task.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_TASK_H
+#define OS_SHARED_TASK_H
+
+#include "osapi-task.h"
+#include "os-shared-globaldefs.h"
+
+/*tasks */
+typedef struct
+{
+    char            task_name[OS_MAX_API_NAME];
+    size_t          stack_size;
+    osal_priority_t priority;
+    osal_task_entry entry_function_pointer;
+    osal_task_entry delete_hook_pointer;
+    void *          entry_arg;
+    osal_stackptr_t stack_pointer;
+} OS_task_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_task_internal_record_t OS_task_table[OS_MAX_TASKS];
+
+/****************************************************************************************
+                          TASK API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+  ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_TaskAPI_Init
+
+   Purpose: Initialize the OS-independent layer for tasks
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_TaskAPI_Init(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Entry point for all newly created tasks
+
+   The "OS_TaskEntryPoint" is a generic method implemented in the
+   shared layer that performs housekeeping and then calls the user-specified
+   entry point.  It should be the first thing called in any new task.
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+void OS_TaskEntryPoint(osal_id_t global_task_id);
+
+/*----------------------------------------------------------------
+
+    Purpose: Determines if the caller matches the given task_id
+
+    Returns: OS_SUCCESS on match, any other code on non-match
+ ------------------------------------------------------------------*/
+int32 OS_TaskMatch_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare/Allocate OS resources for a new task and start
+             running it, based on configuration in the global object
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags);
+
+/*----------------------------------------------------------------
+
+    Purpose: Sets the thread so that the OS resources associated with the task
+             will be released when the thread exits itself
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskDetach_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with the specified task
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskDelete_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Exits the calling task
+
+    This function does not return
+ ------------------------------------------------------------------*/
+void OS_TaskExit_Impl(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Blocks the calling task for the specified number of milliseconds
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskDelay_Impl(uint32 millisecond);
+
+/*----------------------------------------------------------------
+
+    Purpose: Set the scheduling priority of the specified task
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskSetPriority_Impl(const OS_object_token_t *token, osal_priority_t new_priority);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain the OSAL task ID of the caller
+
+    Returns: The OSAL ID of the calling task, or zero if not registered
+ ------------------------------------------------------------------*/
+osal_id_t OS_TaskGetId_Impl(void);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain OS-specific information about a task
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskGetInfo_Impl(const OS_object_token_t *token, OS_task_prop_t *task_prop);
+
+/*----------------------------------------------------------------
+
+    Purpose: Perform registration actions after new task creation
+
+        NOTE: This is invoked via the OS_TaskEntryPoint() immediately
+              after new task creation
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TaskRegister_Impl(osal_id_t global_task_id);
+
+/*----------------------------------------------------------------
+
+    Purpose: A helper "match" function to find an OSAL task ID based on system ID
+             Compatible with the "OS_ObjectIdFindBySearch" routine
+
+ ------------------------------------------------------------------*/
+bool OS_TaskIdMatchSystemData_Impl(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj);
+
+/*----------------------------------------------------------------
+
+    Purpose: Checks that the supplied sysdata pointer and sysdata_size are
+             compatible/reasonable for the underlying OS.
+
+ ------------------------------------------------------------------*/
+int32 OS_TaskValidateSystemData_Impl(const void *sysdata, size_t sysdata_size);
+
+#endif /* OS_SHARED_TASK_H */
+```
+
+### `os-shared-time.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_TIME_H
+#define OS_SHARED_TIME_H
+
+#include "osapi-timer.h"
+
+#include "os-shared-globaldefs.h"
+#include "os-shared-idmap.h"
+
+#define TIMECB_FLAG_DEDICATED_TIMEBASE 0x1
+
+typedef struct
+{
+    char              timer_name[OS_MAX_API_NAME];
+    uint32            flags;
+    OS_object_token_t timebase_token;
+    osal_id_t         prev_cb;
+    osal_id_t         next_cb;
+    uint32            backlog_resets;
+    int32             wait_time;
+    int32             interval_time;
+    OS_ArgCallback_t  callback_ptr;
+    void *            callback_arg;
+} OS_timecb_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_timecb_internal_record_t OS_timecb_table[OS_MAX_TIMERS];
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_TimerCbAPI_Init
+
+   Purpose: Initialize the OS-independent layer for timer callback objects
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_TimerCbAPI_Init(void);
+
+#endif /* OS_SHARED_TIME_H */
+```
+
+### `os-shared-timebase.h`
+
+**경로:** `fsw/osal/src/os/shared/inc/os-shared-timebase.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  shared
+ *
+ */
+
+#ifndef OS_SHARED_TIMEBASE_H
+#define OS_SHARED_TIMEBASE_H
+
+#include "osapi-timebase.h"
+#include "os-shared-globaldefs.h"
+
+typedef struct
+{
+    char           timebase_name[OS_MAX_API_NAME];
+    OS_TimerSync_t external_sync;
+    uint32         accuracy_usec;
+    osal_id_t      first_cb;
+    uint32         freerun_time;
+    uint32         nominal_start_time;
+    uint32         nominal_interval_time;
+} OS_timebase_internal_record_t;
+
+/*
+ * These record types have extra information with each entry.  These tables are used
+ * to share extra data between the common layer and the OS-specific implementation.
+ */
+extern OS_timebase_internal_record_t OS_timebase_table[OS_MAX_TIMEBASES];
+
+/****************************************************************************************
+                 CLOCK / TIME API LOW-LEVEL IMPLEMENTATION FUNCTIONS
+ ****************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_TimeBaseAPI_Init
+
+   Purpose: Initialize the OS-independent layer for timebase objects
+
+   returns: OS_SUCCESS on success, or relevant error code
+---------------------------------------------------------------------------------------*/
+int32 OS_TimeBaseAPI_Init(void);
+
+/*
+ * TimeBase routines implement a low-level timer tick/interrupt;
+ * no callbacks to user code here.  All application callbacks are
+ * done in the shared layer timer API.
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Prepare OS resources for a time base
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TimeBaseCreate_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Configure the OS resources to provide a timer tick
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TimeBaseSet_Impl(const OS_object_token_t *token, uint32 start_time, uint32 interval_time);
+
+/*----------------------------------------------------------------
+
+    Purpose: Free the OS resources associated with the time base
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TimeBaseDelete_Impl(const OS_object_token_t *token);
+
+/****************************************************************************************
+                                INTERNAL FUNCTIONS
+****************************************************************************************/
+
+/*----------------------------------------------------------------
+
+    Purpose: Get exclusive access to the given timebase
+             Add/remove of application callbacks is prevented
+ ------------------------------------------------------------------*/
+void OS_TimeBaseLock_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Release exclusive access to the given timebase
+             Add/remove of application callbacks is allowed
+ ------------------------------------------------------------------*/
+void OS_TimeBaseUnlock_Impl(const OS_object_token_t *token);
+
+/*----------------------------------------------------------------
+
+    Purpose: Obtain the OS-specific time base information, if any
+
+    Returns: OS_SUCCESS on success, or relevant error code
+ ------------------------------------------------------------------*/
+int32 OS_TimeBaseGetInfo_Impl(const OS_object_token_t *token, OS_timebase_prop_t *timer_prop);
+
+/*----------------------------------------------------------------
+
+    Purpose: Implement the time base helper thread
+             This is the context for providing application callbacks
+ ------------------------------------------------------------------*/
+void OS_TimeBase_CallbackThread(osal_id_t timebase_id);
+
+/*----------------------------------------------------------------
+
+    Purpose: Convert milliseconds to ticks
+ ------------------------------------------------------------------*/
+int32 OS_Milli2Ticks(uint32 milli_seconds, int *ticks);
+
+#endif /* OS_SHARED_TIMEBASE_H */
+```

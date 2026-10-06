@@ -3,14 +3,52 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `TransferItem.ts`
 
-file--TransferItem.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/shared/TransferItem.ts`
+
+
+```typescript
+import { Transfer } from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  distinctUntilChanged,
+  map,
+  sampleTime,
+  startWith,
+} from 'rxjs/operators';
+
+export class TransferItem {
+  // Not exposed to template (may update too fast)
+  private originalTransfer$: BehaviorSubject<Transfer>;
+
+  /**
+   * Slowed down derivatives for use in templates
+   */
+  transfer$: Observable<Transfer>;
+  state$: Observable<string>;
+
+  constructor(
+    public transfer: Transfer,
+    public objectUrl: string,
+  ) {
+    this.originalTransfer$ = new BehaviorSubject<Transfer>(transfer);
+
+    this.transfer$ = this.originalTransfer$.pipe(
+      sampleTime(500),
+      startWith(transfer),
+    );
+    this.state$ = this.originalTransfer$.pipe(
+      map((t) => t.state),
+      distinctUntilChanged(),
+    );
+  }
+
+  updateTransfer(transfer: Transfer) {
+    this.transfer = transfer;
+    this.originalTransfer$.next(transfer);
+  }
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/shared/TransferItem.ts`](file--TransferItem.ts) — UTF-8 텍스트 파일 본문 포함

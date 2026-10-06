@@ -3,22 +3,108 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/access-control/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `groups.rst`
 
-file--groups.rst
-file--index.rst
-file--roles.rst
-file--service-accounts.rst
-file--users.rst
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/access-control/groups.rst`
+
+
+```rst
+Groups
+======
+
+The groups page allow to group users together. Role assignment is done at either user or group level, and so groups allow to manage role assignment without needing to manage each user individually.
 ```
 
-## 항목
+### `index.rst`
 
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/access-control/groups.rst`](file--groups.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/access-control/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/access-control/roles.rst`](file--roles.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/access-control/service-accounts.rst`](file--service-accounts.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/access-control/users.rst`](file--users.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/access-control/index.rst`
+
+
+```rst
+Access Control
+==============
+
+Group of administrative pages for managing users and groups.
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    users
+    service-accounts
+    groups
+    roles
+```
+
+### `roles.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/access-control/roles.rst`
+
+
+```rst
+Roles
+=====
+
+This page provides a readonly view of the configured roles of your Yamcs deployment.
+
+Roles group zero or more privileges.
+```
+
+### `service-accounts.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/access-control/service-accounts.rst`
+
+
+```rst
+Service accounts
+================
+
+This page is experimental and without further documentation.
+
+Avoid using it for now.
+```
+
+### `users.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/access-control/users.rst`
+
+
+```rst
+Users
+=====
+
+Page that lists users *known* to Yamcs. There are two categories of users:
+
+Internal users
+    Users whose identity is managed directly by Yamcs using a password hash stored in the Yamcs database.
+
+External users
+    Users whose identity is managed by an external system, such as an LDAP server or Keycloak server.
+
+    When an external user logs in to Yamcs, that user's username and metadata of interest (display name, email) is synced into the Yamcs database.
+
+.. note::
+
+    Some installations make use of :doc:`../../../security/authmodules/yaml`. While this uses a local :file:`etc/users.yaml` configuration file, it counts as an external user because the password verification is managed with YAML instead of the Yamcs database.
+
+
+.. rubric:: Converting a user from external to internal
+
+#. Open the user detail page.
+#. Delete entries under the rubric **External Identities**.
+#. It is now possible to set or change the user password.
+
+
+.. rubric:: Block a user
+
+#. Open the user detail page, and click `EDIT USER`.
+#. Untoggle the Active slider.
+
+
+.. rubric:: Promote a user to administrator
+
+#. Open the user detail page, and click `EDIT USER`.
+#. Toggle the superuser slider.
+```

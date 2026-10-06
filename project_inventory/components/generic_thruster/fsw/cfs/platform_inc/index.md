@@ -3,16 +3,76 @@
 
 **경로:** `components/generic_thruster/fsw/cfs/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_thruster_msgids.h`
 
-file--generic_thruster_msgids.h
-file--generic_thruster_platform_cfg.h
+**경로:** `components/generic_thruster/fsw/cfs/platform_inc/generic_thruster_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_thruster_msgids.h  $
+**
+** Purpose:
+**  Define GENERIC_THRUSTER Message IDs
+**
+*************************************************************************/
+#ifndef _GENERIC_THRUSTER_MSGIDS_H_
+#define _GENERIC_THRUSTER_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define GENERIC_THRUSTER_CMD_MID 0x18EA
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define GENERIC_THRUSTER_REQ_HK_MID 0x18EB
+
+/*
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define GENERIC_THRUSTER_HK_TLM_MID 0x08EA
+
+#endif /* _GENERIC_THRUSTER_MSGIDS_H_ */
 ```
 
-## 항목
+### `generic_thruster_platform_cfg.h`
 
-- [`components/generic_thruster/fsw/cfs/platform_inc/generic_thruster_msgids.h`](file--generic_thruster_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_thruster/fsw/cfs/platform_inc/generic_thruster_platform_cfg.h`](file--generic_thruster_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_thruster/fsw/cfs/platform_inc/generic_thruster_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_thruster_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_thruster Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_THRUSTER_PLATFORM_CFG_H_
+#define _GENERIC_THRUSTER_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_THRUSTER Configuration
+*/
+#ifndef GENERIC_THRUSTER_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_THRUSTER_CFG_STRING      "usart_29"
+#define GENERIC_THRUSTER_CFG_HANDLE      29
+#define GENERIC_THRUSTER_CFG_BAUDRATE_HZ 115200
+#define GENERIC_THRUSTER_CFG_MS_TIMEOUT  50 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_THRUSTER_CFG_DEBUG
+#endif
+
+#endif /* _GENERIC_THRUSTER_PLATFORM_CFG_H_ */
+```

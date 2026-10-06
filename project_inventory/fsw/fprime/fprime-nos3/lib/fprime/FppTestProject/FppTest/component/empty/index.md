@@ -3,22 +3,142 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--Empty.cpp
-file--empty.fpp
-file--Empty.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/Empty.cpp`](file--Empty.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/empty.fpp`](file--empty.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/Empty.hpp`](file--Empty.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/CMakeLists.txt`
+
+
+```cmake
+# ====================================================================== 
+# CMakeLists.txt
+# ====================================================================== 
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/empty.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Empty.cpp"
+)
+
+register_fprime_module()
+
+# Sets MODULE_NAME to unique name based on path
+get_module_name(${CMAKE_CURRENT_LIST_DIR})
+
+# Exclude test module from all build
+set_target_properties(
+  ${MODULE_NAME}
+  PROPERTIES
+  EXCLUDE_FROM_ALL TRUE
+)
+
+# Declare dependencies on test modules
+set(UT_MOD_DEPS
+  Fw/Test
+  STest
+)
+
+# Add unit test directory
+# UT_SOURCE_FILES: Sources for unit test
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/empty.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Tester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TesterHelpers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestMain.cpp"
+)
+register_fprime_ut()
+```
+
+### `Empty.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/Empty.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Empty.cpp
+// \author tiffany
+// \brief  cpp file for Empty component implementation class
+// ======================================================================
+
+
+#include "Empty.hpp"
+#include <Fw/FPrimeBasicTypes.hpp>
+
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+Empty ::
+  Empty(
+      const char *const compName
+  ) : EmptyComponentBase(compName)
+{
+
+}
+
+Empty ::
+  ~Empty()
+{
+
+}
+
+```
+
+### `empty.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/empty.fpp`
+
+
+```fpp
+passive component Empty {}
+```
+
+### `Empty.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/Empty.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Empty.hpp
+// \author tiffany
+// \brief  hpp file for Empty component implementation class
+// ======================================================================
+
+#ifndef Empty_HPP
+#define Empty_HPP
+
+#include "FppTest/component/empty/EmptyComponentAc.hpp"
+
+class Empty :
+  public EmptyComponentBase
+{
+
+  public:
+
+    // ----------------------------------------------------------------------
+    // Component construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct Empty object
+    Empty(
+        const char* const compName //!< The component name
+    );
+
+    //! Destroy Empty object
+    ~Empty();
+
+};
+
+#endif
+```

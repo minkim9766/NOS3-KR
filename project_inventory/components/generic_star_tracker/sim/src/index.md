@@ -3,22 +3,531 @@
 
 **경로:** `components/generic_star_tracker/sim/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_star_tracker_42_data_provider.cpp`
 
-file--generic_star_tracker_42_data_provider.cpp
-file--generic_star_tracker_data_point.cpp
-file--generic_star_tracker_data_provider.cpp
-file--generic_star_tracker_hardware_model.cpp
-file--generic_star_tracker_shmem_data_provider.cpp
+**경로:** `components/generic_star_tracker/sim/src/generic_star_tracker_42_data_provider.cpp`
+
+
+```cpp
+#include <generic_star_tracker_42_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_star_tracker42DataProvider,"GENERIC_STAR_TRACKER_42_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_star_tracker42DataProvider::Generic_star_tracker42DataProvider(const boost::property_tree::ptree& config) : SimData42SocketProvider(config)
+    {
+        sim_logger->trace("Generic_star_tracker42DataProvider::Generic_star_tracker42DataProvider:  Constructor executed");
+
+        connect_reader_thread_as_42_socket_client(
+            config.get("simulator.hardware-model.data-provider.hostname", "localhost"),
+            config.get("simulator.hardware-model.data-provider.port", 4242) );
+
+        _sc = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+        _st = config.get("simulator.hardware-model.data-provider.star_tracker", 0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_star_tracker42DataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_star_tracker42DataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        const boost::shared_ptr<Sim42DataPoint> dp42 = boost::dynamic_pointer_cast<Sim42DataPoint>(SimData42SocketProvider::get_data_point());
+
+        /* Prepare the specific data */
+        SimIDataPoint *dp = new Generic_star_trackerDataPoint(_sc, _st, dp42);
+
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
 ```
 
-## 항목
+### `generic_star_tracker_data_point.cpp`
 
-- [`components/generic_star_tracker/sim/src/generic_star_tracker_42_data_provider.cpp`](file--generic_star_tracker_42_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/src/generic_star_tracker_data_point.cpp`](file--generic_star_tracker_data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/src/generic_star_tracker_data_provider.cpp`](file--generic_star_tracker_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/src/generic_star_tracker_hardware_model.cpp`](file--generic_star_tracker_hardware_model.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/sim/src/generic_star_tracker_shmem_data_provider.cpp`](file--generic_star_tracker_shmem_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_star_tracker/sim/src/generic_star_tracker_data_point.cpp`
+
+
+```cpp
+#include <ItcLogger/Logger.hpp>
+#include <generic_star_tracker_data_point.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_star_trackerDataPoint::Generic_star_trackerDataPoint(double count) : _not_parsed(false)
+    {
+        sim_logger->trace("Generic_star_trackerDataPoint::Generic_star_trackerDataPoint:  Defined Constructor executed");
+
+        /* Do calculations based on provided data */
+        _generic_star_tracker_data_is_valid = true;
+        _generic_star_tracker_data[0] = count * 0.001;
+        _generic_star_tracker_data[1] = count * 0.002;
+        _generic_star_tracker_data[2] = count * 0.003;
+        _generic_star_tracker_data[3] = count * 0.004;
+    }
+
+    Generic_star_trackerDataPoint::Generic_star_trackerDataPoint(int16_t spacecraft, int16_t star_tracker, const boost::shared_ptr<Sim42DataPoint> dp) : _dp(*dp), _sc(spacecraft), _st(star_tracker), _not_parsed(true)
+    {
+        sim_logger->trace("Generic_star_trackerDataPoint::Generic_star_trackerDataPoint:  42 Constructor executed");
+
+        /* Initialize data */
+        _generic_star_tracker_data_is_valid = false;
+        _generic_star_tracker_data[0] = _generic_star_tracker_data[1] = _generic_star_tracker_data[2] = 0.0;
+    }
+
+    Generic_star_trackerDataPoint::Generic_star_trackerDataPoint(int16_t spacecraft, int16_t star_tracker, bool valid, double quaternion[4]) :
+        _sc(spacecraft), _st(star_tracker), _not_parsed(false), _generic_star_tracker_data_is_valid(valid)
+    {
+        _generic_star_tracker_data[0] = quaternion[0];
+        _generic_star_tracker_data[1] = quaternion[1];
+        _generic_star_tracker_data[2] = quaternion[2];
+        _generic_star_tracker_data[3] = quaternion[3];
+    }
+
+    void Generic_star_trackerDataPoint::do_parsing(void) const
+    {
+        try {
+            /*
+            ** Declare 42 telemetry string prefix
+            ** 42 variables defined in `42/Include/42types.h`
+            ** 42 data stream defined in `42/Source/IPC/SimWriteToSocket.c`
+            */
+            std::string valid_key, qn_key;
+            valid_key.append("SC[").append(std::to_string(_sc)).append("].ST[").append(std::to_string(_st)).append("]"); // SC[N].ST[M].qn / Valid
+            qn_key = valid_key;
+            valid_key.append(".Valid");
+            qn_key.append(".qn");
+
+            /* Parse 42 telemetry */
+            std::string valid_value = _dp.get_value_for_key(valid_key);
+            std::string qn_values = _dp.get_value_for_key(qn_key);
+
+            _generic_star_tracker_data_is_valid = (valid_value == "1");
+            std::vector<double> data;
+            parse_double_vector(qn_values, data);
+
+            if (data.size() < 4) {
+                _generic_star_tracker_data_is_valid = false;
+            } else {
+                _generic_star_tracker_data[0] = data[0];
+                _generic_star_tracker_data[1] = data[1];
+                _generic_star_tracker_data[2] = data[2];
+                _generic_star_tracker_data[3] = data[3];
+            }
+
+            _not_parsed = false;
+
+            /* Debug print */
+            sim_logger->trace("Generic_star_trackerDataPoint::Generic_star_trackerDataPoint:  Parsed qn = %f %f %f %f", _generic_star_tracker_data[0], _generic_star_tracker_data[1], _generic_star_tracker_data[2], _generic_star_tracker_data[3]);
+        } catch (const std::exception &e) {
+            sim_logger->error("Generic_star_trackerDataPoint::Generic_star_trackerDataPoint:  Error parsing qn.  Error=%s", e.what());
+        }
+    }
+
+    /* Used for printing a representation of the data point */
+    std::string Generic_star_trackerDataPoint::to_string(void) const
+    {
+        sim_logger->trace("Generic_star_trackerDataPoint::to_string:  Executed");
+        
+        std::stringstream ss;
+
+        ss << std::fixed << std::setfill(' ');
+        ss << "Generic_star_tracker Data Point:   Valid: ";
+        ss << (_generic_star_tracker_data_is_valid ? "Valid" : "INVALID");
+        ss << std::setprecision(std::numeric_limits<double>::digits10); /* Full double precision */
+        ss << " Generic_star_tracker Data: "
+           << _generic_star_tracker_data[0]
+           << " "
+           << _generic_star_tracker_data[1]
+           << " "
+           << _generic_star_tracker_data[2]
+           << " "
+           << _generic_star_tracker_data[3]
+           << std::endl;
+        ss << Sim42DataPoint::to_string();
+
+        return ss.str();
+    }
+} /* namespace Nos3 */
+```
+
+### `generic_star_tracker_data_provider.cpp`
+
+**경로:** `components/generic_star_tracker/sim/src/generic_star_tracker_data_provider.cpp`
+
+
+```cpp
+#include <generic_star_tracker_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_star_trackerDataProvider,"GENERIC_STAR_TRACKER_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_star_trackerDataProvider::Generic_star_trackerDataProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        sim_logger->trace("Generic_star_trackerDataProvider::Generic_star_trackerDataProvider:  Constructor executed");
+        _request_count = 0;
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_star_trackerDataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_star_trackerDataProvider::get_data_point:  Executed");
+
+        /* Prepare the provider data */
+        _request_count++;
+
+        /* Request a data point */
+        SimIDataPoint *dp = new Generic_star_trackerDataPoint(_request_count);
+
+        /* Return the data point */
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
+```
+
+### `generic_star_tracker_hardware_model.cpp`
+
+**경로:** `components/generic_star_tracker/sim/src/generic_star_tracker_hardware_model.cpp`
+
+
+```cpp
+#include <generic_star_tracker_hardware_model.hpp>
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(Generic_star_trackerHardwareModel,"GENERIC_STAR_TRACKER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_star_trackerHardwareModel::Generic_star_trackerHardwareModel(const boost::property_tree::ptree& config) : SimIHardwareModel(config), 
+    _enabled(GENERIC_STAR_TRACKER_SIM_SUCCESS), _count(0)
+    {
+        /* Get the NOS engine connection string */
+        std::string connection_string = config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"); 
+        sim_logger->info("Generic_star_trackerHardwareModel::Generic_star_trackerHardwareModel:  NOS Engine connection string: %s.", connection_string.c_str());
+
+        /* Get a data provider */
+        std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "GENERIC_STAR_TRACKER_PROVIDER");
+        _generic_star_tracker_dp = SimDataProviderFactory::Instance().Create(dp_name, config);
+        sim_logger->info("Generic_star_trackerHardwareModel::Generic_star_trackerHardwareModel:  Data provider %s created.", dp_name.c_str());
+
+        /* Get on a protocol bus */
+        /* Note: Initialized defaults in case value not found in config file */
+        std::string bus_name = "usart_10";
+        int node_port = 29;
+        if (config.get_child_optional("simulator.hardware-model.connections")) 
+        {
+            /* Loop through the connections for hardware model */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("simulator.hardware-model.connections"))
+            {
+                /* v.second is the child tree (v.first is the name of the child) */
+                if (v.second.get("type", "").compare("usart") == 0)
+                {
+                    /* Configuration found */
+                    bus_name = v.second.get("bus-name", bus_name);
+                    node_port = v.second.get("node-port", node_port);
+                    break;
+                }
+            }
+        }
+        _uart_connection.reset(new NosEngine::Uart::Uart(_hub, config.get("simulator.name", "generic_star_tracker_sim"), connection_string, bus_name));
+        _uart_connection->open(node_port);
+        sim_logger->info("Generic_star_trackerHardwareModel::Generic_star_trackerHardwareModel:  Now on UART bus name %s, port %d.", bus_name.c_str(), node_port);
+    
+        /* Configure protocol callback */
+        _uart_connection->set_read_callback(std::bind(&Generic_star_trackerHardwareModel::uart_read_callback, this, std::placeholders::_1, std::placeholders::_2));
+
+        /* Get on the command bus*/
+        std::string time_bus_name = "command";
+        if (config.get_child_optional("hardware-model.connections")) 
+        {
+            /* Loop through the connections for the hardware model */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("hardware-model.connections"))
+            {
+                /* v.first is the name of the child */
+                /* v.second is the child tree */
+                if (v.second.get("type", "").compare("time") == 0) // 
+                {
+                    time_bus_name = v.second.get("bus-name", "command");
+                    /* Found it... don't need to go through any more items*/
+                    break; 
+                }
+            }
+        }
+        _time_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, time_bus_name));
+        sim_logger->info("Generic_star_trackerHardwareModel::Generic_star_trackerHardwareModel:  Now on time bus named %s.", time_bus_name.c_str());
+
+        /* Construction complete */
+        sim_logger->info("Generic_star_trackerHardwareModel::Generic_star_trackerHardwareModel:  Construction complete.");
+    }
+
+
+    Generic_star_trackerHardwareModel::~Generic_star_trackerHardwareModel(void)
+    {        
+        /* Close the protocol bus */
+        _uart_connection->close();
+
+        /* Clean up the data provider */
+        delete _generic_star_tracker_dp;
+        _generic_star_tracker_dp = nullptr;
+
+        /* The bus will clean up the time node */
+    }
+
+
+    /* Automagically set up by the base class to be called */
+    void Generic_star_trackerHardwareModel::command_callback(NosEngine::Common::Message msg)
+    {
+        /* Get the data out of the message */
+        NosEngine::Common::DataBufferOverlay dbf(const_cast<NosEngine::Utility::Buffer&>(msg.buffer));
+        sim_logger->info("Generic_star_trackerHardwareModel::command_callback:  Received command: %s.", dbf.data);
+
+        /* Do something with the data */
+        std::string command = dbf.data;
+        std::string response = "Generic_star_trackerHardwareModel::command_callback:  INVALID COMMAND! (Try HELP)";
+        boost::to_upper(command);
+        if (command.compare("HELP") == 0) 
+        {
+            response = "Generic_star_trackerHardwareModel::command_callback: Valid commands are HELP, ENABLE, DISABLE, STATUS=X, or STOP";
+        }
+        else if (command.compare(0,6,"ENABLE") == 0) 
+        {
+            _enabled = GENERIC_STAR_TRACKER_SIM_SUCCESS;
+            response = "Generic_star_trackerHardwareModel::command_callback:  Enabled\n";
+        }
+        else if (command.compare(0,7,"DISABLE") == 0) 
+        {
+            _enabled = GENERIC_STAR_TRACKER_SIM_ERROR;
+            _count = 0;
+            response = "Generic_star_trackerHardwareModel::command_callback:  Disabled";
+        }
+        else if (command.compare(0,4,"STOP") == 0) 
+        {
+            _keep_running = false;
+            response = "Generic_star_trackerHardwareModel::command_callback:  Stopping";
+        }
+        /* TODO: Add anything additional commands here */
+
+        /* Send a reply */
+        sim_logger->info("Generic_star_trackerHardwareModel::command_callback:  Sending reply: %s", response.c_str());
+        _command_node->send_reply_message_async(msg, response.size(), response.c_str());
+    }
+
+
+    /* Custom function to prepare the Generic_star_tracker HK telemetry */
+    void Generic_star_trackerHardwareModel::create_generic_star_tracker_hk(std::vector<uint8_t>& out_data)
+    {
+        /* Prepare data size */
+        out_data.resize(8, 0x00);
+
+        /* Streaming data header - 0xDEAD */
+        out_data[0] = 0xDE;
+        out_data[1] = 0xAD;
+        
+        /* Sequence count */
+        out_data[2] = (_count >> 24) & 0x000000FF; 
+        out_data[3] = (_count >> 16) & 0x000000FF; 
+        out_data[4] = (_count >>  8) & 0x000000FF; 
+        out_data[5] =  _count & 0x000000FF;
+        
+        /* Streaming data trailer - 0xBEEF */
+        out_data[6] = 0xBE;
+        out_data[7] = 0xEF;
+    }
+
+
+    /* Custom function to prepare the Generic_star_tracker Data */
+    void Generic_star_trackerHardwareModel::create_generic_star_tracker_data(std::vector<uint8_t>& out_data)
+    {
+        boost::shared_ptr<Generic_star_trackerDataPoint> data_point = boost::dynamic_pointer_cast<Generic_star_trackerDataPoint>(_generic_star_tracker_dp->get_data_point());
+
+        /* Prepare data size */
+        out_data.resize(13, 0x00);
+
+        /* Streaming data header - 0xDEAD */
+        out_data[0] = 0xDE;
+        out_data[1] = 0xAD;
+        
+        /* 
+        ** Payload 
+        ** 
+        ** Device is big engian (most significant byte first)
+        ** Assuming data is valid regardless of dynamic / environmental data
+        ** Floating poing numbers are extremely problematic 
+        **   (https://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html)
+        ** Most hardware transmits some type of unsigned integer (e.g. from an ADC), so that's what we've done
+        ** Scale each of the qi (which are in the range [-1.0, 1.0]) by 32767, 
+        **   and add 32768 so that the result fits in a uint16
+        */
+        double dq0 = data_point->get_generic_star_tracker_data_q0();
+        double dq1 = data_point->get_generic_star_tracker_data_q1();
+        double dq2 = data_point->get_generic_star_tracker_data_q2();
+        double dq3 = data_point->get_generic_star_tracker_data_q3();
+        uint16_t q0  = (uint16_t)(dq0*32767.0 + 32768.0);
+        out_data[2]  = (q0 >> 8) & 0x00FF;
+        out_data[3]  =  q0       & 0x00FF;
+        uint16_t q1  = (uint16_t)(dq1*32767.0 + 32768.0);
+        out_data[4]  = (q1 >> 8) & 0x00FF;
+        out_data[5]  =  q1       & 0x00FF;
+        uint16_t q2  = (uint16_t)(dq2*32767.0 + 32768.0);
+        out_data[6] = (q2 >> 8) & 0x00FF;
+        out_data[7] =  q2       & 0x00FF;
+        uint16_t q3  = (uint16_t)(dq3*32767.0 + 32768.0);
+        out_data[8] = (q3 >> 8) & 0x00FF;
+        out_data[9] =  q3       & 0x00FF;
+
+        out_data[10] = data_point->is_generic_star_tracker_data_valid() ? 1 : 0;
+
+        sim_logger->debug("Generic_star_trackerHardwareModel::create_generic_star_tracker_data: is_valid=%d, data_point=%f, %f, %f, %f, converted values=%u, %u, %u, %u.", out_data[10], dq0, dq1, dq2, dq3, q0, q1, q2, q3);
+        /* Streaming data trailer - 0xBEEF */
+        out_data[11] = 0xBE;
+        out_data[12] = 0xEF;
+    }
+
+
+    /* Protocol callback */
+    void Generic_star_trackerHardwareModel::uart_read_callback(const uint8_t *buf, size_t len)
+    {
+        std::vector<uint8_t> out_data; 
+        std::uint8_t valid = GENERIC_STAR_TRACKER_SIM_SUCCESS;
+        
+        /* Retrieve data and log in man readable format */
+        std::vector<uint8_t> in_data(buf, buf + len);
+        sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  REQUEST %s",
+            SimIHardwareModel::uint8_vector_to_hex_string(in_data).c_str());
+
+        /* Check simulator is enabled */
+        if (_enabled != GENERIC_STAR_TRACKER_SIM_SUCCESS)
+        {
+            sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Generic_star_tracker sim disabled!");
+            valid = GENERIC_STAR_TRACKER_SIM_ERROR;
+        }
+        else
+        {
+            /* Check if message is incorrect size */
+            if (in_data.size() != 9)
+            {
+                sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Invalid command size of %ld received!", in_data.size());
+                valid = GENERIC_STAR_TRACKER_SIM_ERROR;
+            }
+            else
+            {
+                /* Check header - 0xDEAD */
+                if ((in_data[0] != 0xDE) || (in_data[1] !=0xAD))
+                {
+                    sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Header incorrect!");
+                    valid = GENERIC_STAR_TRACKER_SIM_ERROR;
+                }
+                else
+                {
+                    /* Check trailer - 0xBEEF */
+                    if ((in_data[7] != 0xBE) || (in_data[8] !=0xEF))
+                    {
+                        sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Trailer incorrect!");
+                        valid = GENERIC_STAR_TRACKER_SIM_ERROR;
+                    }
+                    else
+                    {
+                        /* Increment count as valid command format received */
+                        _count++;
+                    }
+                }
+            }
+
+            if (valid == GENERIC_STAR_TRACKER_SIM_SUCCESS)
+            {   
+                /* Process command */
+                switch (in_data[2])
+                {
+                    case 0:
+                        /* NOOP */
+                        sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  NOOP command received!");
+                        break;
+
+                case 1:
+                        /* Request HK */
+                        sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Send HK command received!");
+                        create_generic_star_tracker_hk(out_data);
+                        break;
+
+                    case 2:
+                        /* Request data */
+                        sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Send data command received!");
+                        create_generic_star_tracker_data(out_data);
+                        break;
+
+                    default:
+                        /* Unused command code */
+                        valid = GENERIC_STAR_TRACKER_SIM_ERROR;
+                        sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  Unused command %d received!", in_data[2]);
+                        break;
+                }
+            }
+        }
+
+        /* Increment count and echo command since format valid */
+        if (valid == GENERIC_STAR_TRACKER_SIM_SUCCESS)
+        {
+            _count++;
+            _uart_connection->write(&in_data[0], in_data.size());
+
+            /* Send response if existing */
+            if (out_data.size() > 0)
+            {
+                sim_logger->debug("Generic_star_trackerHardwareModel::uart_read_callback:  REPLY %s",
+                    SimIHardwareModel::uint8_vector_to_hex_string(out_data).c_str());
+                _uart_connection->write(&out_data[0], out_data.size());
+            }
+        }
+    }
+}
+```
+
+### `generic_star_tracker_shmem_data_provider.cpp`
+
+**경로:** `components/generic_star_tracker/sim/src/generic_star_tracker_shmem_data_provider.cpp`
+
+
+```cpp
+#include <generic_star_tracker_shmem_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_star_trackerShmemDataProvider,"GENERIC_STAR_TRACKER_SHMEM_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_star_trackerShmemDataProvider::Generic_star_trackerShmemDataProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        sim_logger->trace("Generic_star_trackerShmemDataProvider::Generic_star_trackerShmemDataProvider:  Constructor executed");
+        const std::string shm_name = config.get("simulator.hardware-model.data-provider.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't le this go out of scope/get destroyed
+        _blackboard_data = static_cast<BlackboardData*>(_shm_region.get_address());
+        _sc = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+        _st = config.get("simulator.hardware-model.data-provider.star_tracker", 0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_star_trackerShmemDataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_star_trackerShmemDataProvider::get_data_point:  Executed");
+
+        boost::shared_ptr<Generic_star_trackerDataPoint> dp;
+        {
+            dp = boost::shared_ptr<Generic_star_trackerDataPoint>(
+                new Generic_star_trackerDataPoint(_sc, _st, _blackboard_data->STValid, _blackboard_data->STqn));
+        }
+        return dp;
+    }
+}
+```

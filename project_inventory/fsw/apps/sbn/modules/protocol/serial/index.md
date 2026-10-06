@@ -3,20 +3,56 @@
 
 **경로:** `fsw/apps/sbn/modules/protocol/serial/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 fsw/index
-file--app.cfg
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/modules/protocol/serial/docs/`](docs/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/serial/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sbn/modules/protocol/serial/app.cfg`](file--app.cfg) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/modules/protocol/serial/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `app.cfg`
+
+**경로:** `fsw/apps/sbn/modules/protocol/serial/app.cfg`
+
+
+```text
+SHOULD_START=0
+APP_NAME=serial        
+APP_ABBREV=Serial    
+OBJ_TYPE=CFE_APP           
+APP_PATH=/cf/apps/serial.so   
+ENTRY_PT=Serial_AppMain 
+CFE_NAME=Serial_APP     
+PRIORITY=15                   
+STACK_SIZE=4096               
+LOAD_ADDR=0x0                 
+EXCEPT_ACT=0                  
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn/modules/protocol/serial/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(SBN_SERIAL C)
+
+if(NOT(IS_DIRECTORY ${SBN_APP_SOURCE_DIR}))
+    message(FATAL_ERROR "SBN_APP_SOURCE_DIR not defined, is sbn in the target list before this module?")
+endif()
+
+include_directories(fsw/platform_inc)
+
+include_directories(${SBN_APP_SOURCE_DIR}/fsw/platform_inc)
+
+aux_source_directory(fsw/src LIB_SRC_FILES)
+
+# Create the app module
+add_cfe_app(sbn_serial ${LIB_SRC_FILES})
+```

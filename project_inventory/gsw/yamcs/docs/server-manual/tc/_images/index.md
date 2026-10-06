@@ -3,16 +3,16 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/tc/_images/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `constraints.png`
 
-file--constraints.png
-file--significance.png
-```
+**경로:** `gsw/yamcs/docs/server-manual/tc/_images/constraints.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`gsw/yamcs/docs/server-manual/tc/_images/constraints.png`](file--constraints.png) — 바이너리 (경로만)
-- [`gsw/yamcs/docs/server-manual/tc/_images/significance.png`](file--significance.png) — 바이너리 (경로만)
+### `significance.png`
+
+**경로:** `gsw/yamcs/docs/server-manual/tc/_images/significance.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

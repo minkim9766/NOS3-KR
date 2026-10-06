@@ -3,36 +3,1915 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BackupCli.java`
 
-file--BackupCli.java
-file--CheckConfig.java
-file--Command.java
-file--MdbCli.java
-file--OutputFormat.java
-file--PasswordHashCli.java
-file--RocksDbBenchmark.java
-file--RocksDbCli.java
-file--TableStringBuilder.java
-file--UsersCli.java
-file--YamcsAdminCli.java
-file--YamcsAdminException.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/BackupCli.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.management.JMX;
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+
+import org.rocksdb.BackupEngine;
+import org.rocksdb.BackupEngineOptions;
+import org.rocksdb.BackupInfo;
+import org.rocksdb.ColumnFamilyDescriptor;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ColumnFamilyOptions;
+import org.rocksdb.DBOptions;
+import org.rocksdb.Env;
+import org.rocksdb.Options;
+import org.rocksdb.RestoreOptions;
+import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
+import org.yamcs.YamcsServer;
+import org.yamcs.yarch.BackupControlMBean;
+import org.yamcs.yarch.BackupUtils;
+
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+import com.beust.jcommander.converters.PathConverter;
+import com.sun.tools.attach.VirtualMachine;
+import com.sun.tools.attach.VirtualMachineDescriptor;
+
+/**
+ * Command line backup utility for yamcs.
+ * 
+ * Taking a backup can be done while Yamcs server is running.
+ * 
+ * Restoring it has to be done while Yamcs is offline.
+ * 
+ * @author nm
+ *
+ */
+@Parameters(commandDescription = "Perform and restore backups")
+public class BackupCli extends Command {
+    public BackupCli(YamcsAdminCli yamcsCli) {
+        super("backup", yamcsCli);
+        addSubCommand(new BackupCreate());
+        addSubCommand(new BackupDelete());
+        addSubCommand(new BackupList());
+        addSubCommand(new BackupRestore());
+        addSubCommand(new BackupPurge());
+    }
+
+    @Override
+    void execute() throws Exception {
+        RocksDB.loadLibrary();
+        super.execute();
+    }
+
+    private abstract class BackupCommand extends Command {
+        public BackupCommand(String name, Command parent) {
+            super(name, parent);
+        }
+
+        @Parameter(names = "--backup-dir", description = "Directory containing backups", required = true)
+        String backupDir;
+
+    }
+
+    @Parameters(commandDescription = "Create a new backup.")
+    private class BackupCreate extends BackupCommand {
+
+        @Parameter(names = "--data-dir", description = "Yamcs Data directory", converter = PathConverter.class)
+        Path dataDir;
+
+        @Parameter(names = "--host", description = "Trigger a hot backup over JMX")
+        String jmxAddress;
+
+        @Parameter(names = "--pid", description = "Process identifier of a Yamcs server")
+        String pid;
+
+        @Parameter(description = "TABLESPACE", required = true)
+        List<String> mainParameter;
+
+        public BackupCreate() {
+            super("create", BackupCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            if (mainParameter.size() > 1) {
+                throw new IllegalArgumentException("Only one tablespace can be backed up at a time");
+            }
+            String tablespace = mainParameter.get(0);
+            if (dataDir != null) {
+                Path tablespaceDir = dataDir.resolve(tablespace + ".rdb");
+                Path current = tablespaceDir.resolve("CURRENT");
+                if (!Files.exists(current)) {
+                    throw new IllegalArgumentException("'" + tablespaceDir
+                            + "' does not look like a tablespace, the CURRENT file does not exist inside");
+                }
+                BackupUtils.verifyBackupDirectory(backupDir, false);
+                try (Options opt = new Options();
+                        BackupEngineOptions bopt = new BackupEngineOptions(backupDir);
+                        ColumnFamilyOptions cfOptions = new ColumnFamilyOptions();
+                        DBOptions dbOptions = new DBOptions();
+                        BackupEngine backupEngine = BackupEngine.open(Env.getDefault(), bopt);) {
+
+                    List<byte[]> cfl = RocksDB.listColumnFamilies(opt, tablespaceDir.toString());
+                    List<ColumnFamilyDescriptor> cfdList = new ArrayList<>(cfl.size());
+
+                    for (byte[] b : cfl) {
+                        cfdList.add(new ColumnFamilyDescriptor(b, cfOptions));
+                    }
+                    List<ColumnFamilyHandle> cfhList = new ArrayList<>(cfl.size());
+
+                    try (RocksDB db = RocksDB.open(dbOptions, tablespaceDir.toString(), cfdList, cfhList)) {
+                        backupEngine.createNewBackup(db);
+                        console.println("Backup performed successfully");
+                    } finally {
+                        for (final ColumnFamilyHandle cfh : cfhList) {
+                            cfh.close();
+                        }
+                    }
+                } catch (RocksDBException e) {
+                    throw new IOException(
+                            "Error when backing up tablespace '" + tablespace + "' to '" + backupDir + "': "
+                                    + e.toString());
+                }
+            } else if (jmxAddress != null) {
+                JMXServiceURL jmxServiceUrl = new JMXServiceURL(String.format(
+                        "service:jmx:rmi:///jndi/rmi://%s/jmxrmi", jmxAddress));
+                JMXConnector jmxc = JMXConnectorFactory.connect(jmxServiceUrl);
+                MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+                ObjectName mbeanName = new ObjectName("org.yamcs:name=Backup");
+                BackupControlMBean control = JMX.newMBeanProxy(conn, mbeanName, BackupControlMBean.class);
+                control.createBackup(tablespace, backupDir);
+            } else {
+                String jvmIdentifier = pid;
+                if (jvmIdentifier == null) {
+                    // Find a single local runnning Yamcs
+                    for (VirtualMachineDescriptor vmDescriptor : VirtualMachine.list()) {
+                        // Something of the form:
+                        // org.yamcs.YamcsServer --data-dir /storage/yamcs-data
+                        var displayName = vmDescriptor.displayName();
+                        if (displayName.startsWith(YamcsServer.class.getName())) {
+                            if (jvmIdentifier != null) {
+                                throw new YamcsAdminException(
+                                        "More than one Yamcs server is running. Specify --pid");
+                            }
+                            jvmIdentifier = vmDescriptor.id();
+                        }
+                    }
+                }
+
+                if (jvmIdentifier == null) {
+                    throw new YamcsAdminException("Cannot connect to Yamcs. "
+                            + "Use --data-dir if you want to perform an offline backup");
+                }
+
+                VirtualMachine vm = VirtualMachine.attach(jvmIdentifier);
+                try {
+                    String jmxAddress = vm.startLocalManagementAgent();
+                    JMXServiceURL url = new JMXServiceURL(jmxAddress);
+                    JMXConnector jmxc = JMXConnectorFactory.connect(url);
+                    MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+                    ObjectName mbeanName = new ObjectName("org.yamcs:name=Backup");
+                    BackupControlMBean control = JMX.newMBeanProxy(conn, mbeanName, BackupControlMBean.class);
+                    control.createBackup(tablespace, backupDir);
+                } finally {
+                    vm.detach();
+                }
+            }
+        }
+    }
+
+    @Parameters(commandDescription = "Restore a backup. This can only be done when Yamcs is not running.")
+    private class BackupRestore extends BackupCommand {
+
+        @Parameter(names = "--restore-dir", description = "Directory where to restore the backup", required = true)
+        String restoreDir;
+
+        @Parameter(description = "ID", required = true)
+        List<String> mainParameters;
+
+        public BackupRestore() {
+            super("restore", BackupCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            BackupUtils.verifyBackupDirectory(backupDir, true);
+            try (BackupEngineOptions opt = new BackupEngineOptions(backupDir);
+                    BackupEngine backupEngine = BackupEngine.open(Env.getDefault(), opt);
+                    RestoreOptions restoreOpt = new RestoreOptions(true);) {
+                if (mainParameters.size() > 1) {
+                    throw new IllegalArgumentException("Too many arguments. Only one backup can be restored");
+                } else if (mainParameters.size() == 1) {
+                    int backupId = Integer.parseInt(mainParameters.get(0));
+                    backupEngine.restoreDbFromBackup(backupId, restoreDir, restoreDir, restoreOpt);
+                } else {
+                    backupEngine.restoreDbFromLatestBackup(restoreDir, restoreDir, restoreOpt);
+                }
+            }
+            console.println("Backup restored successfully to " + restoreDir);
+        }
+    }
+
+    @Parameters(commandDescription = "List the existing backups")
+    private class BackupList extends BackupCommand {
+        public BackupList() {
+            super("list", BackupCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            BackupUtils.verifyBackupDirectory(backupDir, true);
+
+            try (BackupEngineOptions opt = new BackupEngineOptions(backupDir);
+                    BackupEngine backupEngine = BackupEngine.open(Env.getDefault(), opt)) {
+                TableStringBuilder b = new TableStringBuilder("backup id", "size (bytes)", "num files", "time");
+                final DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneId.of("UTC"));
+                for (BackupInfo bi : backupEngine.getBackupInfo()) {
+                    b.addLine(bi.backupId(), bi.size(), bi.numberFiles(),
+                            formatter.format(Instant.ofEpochMilli(1000 * bi.timestamp())));
+                }
+                console.println(b.toString());
+            }
+        }
+    }
+
+    @Parameters(commandDescription = "Delete a backup")
+    public class BackupDelete extends BackupCommand {
+
+        @Parameter(description = "ID ...", required = true)
+        List<String> mainParameters;
+
+        public BackupDelete() {
+            super("delete", BackupCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            BackupUtils.verifyBackupDirectory(backupDir, true);
+            try (BackupEngineOptions opt = new BackupEngineOptions(backupDir);
+                    BackupEngine backupEngine = BackupEngine.open(Env.getDefault(), opt);) {
+
+                for (String mainParameter : mainParameters) {
+                    int backupId = Integer.parseInt(mainParameter);
+                    backupEngine.deleteBackup(backupId);
+                    console.println("Deleted backup " + backupId);
+                }
+            }
+        }
+    }
+
+    @Parameters(commandDescription = "Purge old backups")
+    public class BackupPurge extends BackupCommand {
+
+        @Parameter(names = "--keep", description = "Number of backups to keep", required = true)
+        Integer backupsToKeep;
+
+        public BackupPurge() {
+            super("purge", BackupCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            BackupUtils.verifyBackupDirectory(backupDir, true);
+            try (BackupEngineOptions opt = new BackupEngineOptions(backupDir);
+                    BackupEngine backupEngine = BackupEngine.open(Env.getDefault(), opt);) {
+                backupEngine.purgeOldBackups(backupsToKeep);
+                int n = backupEngine.getBackupInfo().size();
+                console.println("Purged operation successful; " + n + " backups remaining.");
+            }
+        }
+    }
+}
 ```
 
-## 항목
+### `CheckConfig.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/BackupCli.java`](file--BackupCli.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/CheckConfig.java`](file--CheckConfig.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/Command.java`](file--Command.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/MdbCli.java`](file--MdbCli.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/OutputFormat.java`](file--OutputFormat.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/PasswordHashCli.java`](file--PasswordHashCli.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/RocksDbBenchmark.java`](file--RocksDbBenchmark.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/RocksDbCli.java`](file--RocksDbCli.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/TableStringBuilder.java`](file--TableStringBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/UsersCli.java`](file--UsersCli.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/YamcsAdminCli.java`](file--YamcsAdminCli.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/YamcsAdminException.java`](file--YamcsAdminException.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/CheckConfig.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.Spec;
+import org.yamcs.Spec.ValidationContext;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.YamcsService;
+import org.yamcs.utils.YObjectLoader;
+
+import com.beust.jcommander.Parameters;
+
+@Parameters(commandDescription = "Check Yamcs configuration")
+public class CheckConfig extends Command {
+
+    private static final Logger log = LoggerFactory.getLogger(CheckConfig.class);
+
+    public CheckConfig(YamcsAdminCli parent) {
+        super("confcheck", parent);
+    }
+
+    @Override
+    void execute() throws Exception {
+        YamcsServer yamcs = YamcsServer.getServer();
+
+        try {
+            log.debug("Validating yamcs.yaml ...");
+            yamcs.validateMainConfiguration();
+
+            // Global services
+            YConfiguration config = yamcs.getConfig();
+            if (config.containsKey("services")) {
+                log.debug("Validating global services ...");
+                for (YConfiguration serviceConfig : config.getServiceConfigList("services")) {
+                    validateServiceConfig(serviceConfig);
+                }
+            }
+
+            if (config.containsKey("instances")) {
+                log.debug("Validating instances ...");
+                for (String name : config.<String> getList("instances")) {
+                    YConfiguration instanceConfig = YConfiguration.getConfiguration("yamcs." + name);
+                    YamcsServerInstance.getSpec().validate(instanceConfig);
+                    if (instanceConfig.containsKey("services")) {
+                        log.debug("Validating instance services ...");
+                        for (YConfiguration serviceConfig : instanceConfig.getServiceConfigList("services")) {
+                            validateServiceConfig(serviceConfig);
+                        }
+                    }
+                }
+            }
+
+            console.println("Configuration OK");
+        } catch (ValidationException e) {
+            console.println(e.getContext().getPath() + ": " + e.getMessage());
+            console.println("Configuration Invalid");
+        }
+    }
+
+    private void validateServiceConfig(YConfiguration serviceConfig) throws ValidationException, IOException {
+        String serviceClass = serviceConfig.getString("class");
+        log.debug(serviceClass);
+        try {
+            YamcsService service = YObjectLoader.loadObject(serviceClass);
+            Spec spec = service.getSpec();
+            if (spec == null) {
+                return;
+            }
+
+            YConfiguration args = YConfiguration.emptyConfig();
+            if (serviceConfig.containsKey("args")) {
+                args = serviceConfig.getConfig("args");
+            }
+            spec.validate(args);
+        } catch (ValidationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ValidationException(new ValidationContext(serviceConfig.getPath()), e.getMessage());
+        }
+    }
+}
+```
+
+### `Command.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/Command.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.function.IntFunction;
+
+import org.yamcs.Plugin;
+import org.yamcs.PluginManager;
+import org.yamcs.PluginMetadata;
+import org.yamcs.YamcsVersion;
+
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterDescription;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.internal.Console;
+import com.google.protobuf.Message;
+import com.google.protobuf.util.JsonFormat;
+import com.google.protobuf.util.JsonFormat.Printer;
+
+/**
+ * This represents a command together with its options and subcommands
+ *
+ * <pre>
+ * yamcs &lt;options&gt; subcmd &lt;options&gt; subcmd &lt;options&gt;...
+ * </pre>
+ */
+public abstract class Command {
+    protected static Console console = JCommander.getConsole();
+
+    // called to exit the VM, overwritten in unit tests
+    protected static IntFunction<Void> exitFunction = status -> {
+        System.exit(status);
+        return null;
+    };
+
+    protected JCommander jc = new JCommander(this);
+    protected Map<String, Command> subCommands = new LinkedHashMap<>();
+    protected Command selectedCommand;
+    private final String name;
+    protected final Command parent;
+
+    @Parameter(names = { "-h", "--help" }, description = "Show usage", help = true)
+    private boolean help;
+
+    public Command(String name, Command parent) {
+        this.name = name;
+        this.parent = parent;
+        jc.setProgramName(getFullCommandName());
+    }
+
+    protected void addSubCommand(Command cmd) {
+        subCommands.put(cmd.name, cmd);
+        jc.addCommand(cmd.name, cmd);
+    }
+
+    public void parse(String... args) {
+        int k = 0;
+        try {
+            if (subCommands.isEmpty()) {
+                jc.parse(args);
+            } else {
+                while (k < args.length) {
+                    if (args[k].startsWith("-")) {
+                        k += getArity(args[k]);
+                    } else {
+                        break;
+                    }
+                    k++;
+                }
+                jc.parse(Arrays.copyOf(args, k));
+            }
+            if (help) {
+                console.println(getUsage());
+                exit(0);
+            }
+        } catch (ParameterException e) {
+            console.println(e.getMessage());
+            console.println(getUsage());
+            exit(1);
+        }
+        if (subCommands.isEmpty()) {
+            return;
+        }
+
+        // Special case. Global --version flag prints version info and quits
+        if (getRootCommand().version) {
+            console.println("yamcs " + YamcsVersion.VERSION + ", build " + YamcsVersion.REVISION);
+            PluginManager pluginManager;
+            try {
+                pluginManager = new PluginManager();
+                for (Plugin plugin : ServiceLoader.load(Plugin.class)) {
+                    PluginMetadata meta = pluginManager.getMetadata(plugin.getClass());
+                    console.println(meta.getName() + " " + meta.getVersion());
+                }
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+            exit(0);
+        }
+
+        if (k == args.length) {
+            console.println(getUsage());
+            exit(1);
+        }
+
+        String subcmdName = args[k];
+
+        selectedCommand = subCommands.get(subcmdName);
+
+        if (selectedCommand == null) {
+            String fullcmd = getFullCommandName();
+            StringBuilder sb = new StringBuilder();
+            sb.append(fullcmd).append(": '").append(subcmdName)
+                    .append("'").append(" is not a valid command name. See '")
+                    .append(fullcmd)
+                    .append(" -h'");
+            console.println(sb.toString());
+            exit(1);
+        }
+        selectedCommand.parse(Arrays.copyOfRange(args, k + 1, args.length));
+    }
+
+    OutputFormat getFormat() {
+        return getRootCommand().format;
+    }
+
+    private YamcsAdminCli getRootCommand() {
+        Command command = this;
+        while (command.parent != null) {
+            command = command.parent;
+        }
+        return (YamcsAdminCli) command;
+    }
+
+    int getArity(String arg) {
+        for (ParameterDescription pd : jc.getParameters()) {
+            if (Arrays.asList(pd.getParameter().names()).contains(arg)) {
+                return getArity(pd);
+            }
+        }
+        throw new ParameterException("Unknown option '" + arg + "'");
+    }
+
+    int getArity(ParameterDescription pd) {
+        Class<?> fieldType = pd.getParameterized().getType();
+        if ((fieldType == boolean.class || fieldType == Boolean.class)) {
+            return 0;
+        }
+
+        return pd.getParameter().arity() == -1 ? 1 : pd.getParameter().arity();
+    }
+
+    String getFullCommandName() {
+        List<Command> a = new ArrayList<>();
+        Command c = this;
+        while (c != null) {
+            a.add(c);
+            c = c.parent;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = a.size() - 1;; i--) {
+            sb.append(a.get(i).getName());
+            if (i == 0) {
+                break;
+            }
+            sb.append(" ");
+        }
+        return sb.toString();
+    }
+
+    String printJsonArray(List<? extends Message> messages) {
+        StringBuilder buf = new StringBuilder("[");
+        Printer printer = JsonFormat.printer();
+        try {
+            for (int i = 0; i < messages.size(); i++) {
+                if (i != 0) {
+                    buf.append(", ");
+                }
+                printer.appendTo(messages.get(i), buf);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return buf.append("]").toString();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    void execute() throws Exception {
+        if (selectedCommand == null) {
+            throw new IllegalStateException("Please implement the execute method in " + this);
+        } else {
+            selectedCommand.execute();
+        }
+    }
+
+    void validate() throws ParameterException {
+        if (selectedCommand != null) {
+            selectedCommand.validate();
+        }
+    }
+
+    public String getUsage() {
+        StringBuilder out = new StringBuilder();
+        out.append("usage: " + getFullCommandName()).append(" ");
+        List<ParameterDescription> sorted = jc.getParameters();
+        Collections.sort(sorted, parameterDescriptionComparator);
+        if (!sorted.isEmpty()) {
+            out.append("[<options>]");
+        }
+
+        if (!subCommands.isEmpty()) {
+            out.append(" <command> [<command options>]");
+        }
+        if (jc.getMainParameter() != null) {
+            out.append(" ");
+            if (jc.getMainParameter().getParameter().required()) {
+                out.append(jc.getMainParameterDescription());
+            } else {
+                out.append("[").append(jc.getMainParameterDescription()).append("]");
+            }
+        }
+        out.append("\n");
+        if (!sorted.isEmpty()) {
+            int maxLength = 3 + sorted.stream().map(pd -> pd.getNames().length()).max(Integer::max).get();
+
+            out.append("Options:\n");
+            for (ParameterDescription pd : sorted) {
+                String descr = pd.getDescription();
+                String[] descrArray = descr.split("\\n");
+                out.append(String.format("    %-" + maxLength + "s    %s\n", pd.getNames(), descrArray[0]));
+                for (int i = 1; i < descrArray.length; i++) {
+                    String format = "%-" + (maxLength + pd.getNames().length() + 1) + "s%s\n";
+                    out.append(String.format(format, "", descrArray[i]));
+                }
+            }
+        }
+
+        if (!subCommands.isEmpty()) {
+            out.append("Commands:\n");
+            int maxLength = subCommands.values().stream().mapToInt(c -> c.getName().length()).max().getAsInt();
+            for (Command c : subCommands.values()) {
+                String descr = jc.getCommandDescription(c.getName());
+                String[] descrArray = descr.split("\\n");
+                out.append(String.format("    %-" + maxLength + "s    %s\n", c.getName(), descrArray[0]));
+                for (int i = 1; i < descrArray.length; i++) {
+                    String format = "%-" + (maxLength + c.getName().length() + 3) + "s%s\n";
+                    out.append(String.format(format, "", descrArray[i]));
+                }
+            }
+        }
+        return out.toString();
+    }
+
+    protected static void exit(int status) {
+        exitFunction.apply(status);
+    }
+
+    private Comparator<? super ParameterDescription> parameterDescriptionComparator = (p0, p1) -> {
+        return p0.getLongestName().compareTo(p1.getLongestName());
+    };
+}
+```
+
+### `MdbCli.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/MdbCli.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.io.PrintStream;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.Mdb;
+
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
+
+@Parameters(commandDescription = "Provides MDB information")
+public class MdbCli extends Command {
+
+    public MdbCli(Command parent) {
+        super("mdb", parent);
+        addSubCommand(new MdbPrint());
+        addSubCommand(new MdbVerify());
+    }
+
+    private static Mdb getMdb(String specOrInstance) {
+        Set<String> mdbSpecs = Collections.emptySet();
+        if (YConfiguration.isDefined("mdb")) {
+            mdbSpecs = YConfiguration.getConfiguration("mdb").getKeys();
+        }
+
+        if (mdbSpecs.contains(specOrInstance)) {
+            return MdbFactory.createInstanceByConfig(specOrInstance);
+        } else {
+            return MdbFactory.getInstance(specOrInstance);
+        }
+    }
+
+    @Parameters(commandDescription = "Print MDB content")
+    private class MdbPrint extends Command {
+
+        @Parameter(required = true, description = "INSTANCE")
+        private List<String> args;
+
+        public MdbPrint() {
+            super("print", MdbCli.this);
+        }
+
+        @Override
+        void validate() {
+            if (args.size() > 1) {
+                throw new ParameterException("Specify only one configuration");
+            }
+        }
+
+        @Override
+        void execute() throws Exception {
+            YConfiguration.setupTool();
+            Mdb mdb = getMdb(args.get(0));
+            mdb.print(new PrintStream(System.err) {
+
+                @Override
+                public void print(String x) {
+                    console.print(x);
+                }
+
+                @Override
+                public void println() {
+                    console.println("");
+                }
+
+                @Override
+                public void println(String x) {
+                    console.println(x);
+                }
+            });
+        }
+    }
+
+    @Parameters(commandDescription = "Verify that the MDB can be loaded")
+    private class MdbVerify extends Command {
+
+        @Parameter(required = true, description = "INSTANCE")
+        private List<String> args;
+
+        public MdbVerify() {
+            super("verify", MdbCli.this);
+        }
+
+        @Override
+        void validate() {
+            if (args.size() > 1) {
+                throw new ParameterException("Specify only one configuration");
+            }
+        }
+
+        @Override
+        void execute() throws Exception {
+            YConfiguration.setupTool();
+            Mdb mdb = getMdb(args.get(0));
+            console.println("MDB loaded successfully. Contents:");
+            console.println(String.format("%10d subsystems", mdb.getSpaceSystems().size()));
+            console.println(String.format("%10d parameters", mdb.getParameters().size()));
+            console.println(String.format("%10d sequence containers", mdb.getSequenceContainers().size()));
+            console.println(String.format("%10d commands", mdb.getMetaCommands().size()));
+        }
+    }
+}
+```
+
+### `OutputFormat.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/OutputFormat.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+public enum OutputFormat {
+
+    DEFAULT,
+    JSON;
+
+    public static String joinOptions() {
+        return Arrays.asList(values()).stream()
+                .map(f -> f.name().toLowerCase())
+                .collect(Collectors.joining(", "));
+    }
+}
+```
+
+### `PasswordHashCli.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/PasswordHashCli.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.util.Arrays;
+
+import org.yamcs.security.PBKDF2PasswordHasher;
+import org.yamcs.security.PasswordHasher;
+
+import com.beust.jcommander.Parameters;
+
+/**
+ * Generates password hashes for use in users.yaml
+ */
+@Parameters(commandDescription = "Generate password hash for use in users.yaml")
+public class PasswordHashCli extends Command {
+
+    public PasswordHashCli(YamcsAdminCli yamcsCli) {
+        super("password-hash", yamcsCli);
+    }
+
+    @Override
+    void execute() throws Exception {
+        char[] password;
+        String passwordString = System.getenv("YAMCSADMIN_PASSWORD");
+        if (passwordString == null) {
+            console.println("Enter password: ");
+            password = console.readPassword(false);
+            console.println("Confirm password: ");
+            char[] confirmedPassword = console.readPassword(false);
+
+            if (!Arrays.equals(password, confirmedPassword)) {
+                console.println("Password confirmation does not match\n");
+                exit(-1);
+            }
+        } else {
+            password = passwordString.trim().toCharArray();
+        }
+
+        PasswordHasher hasher = new PBKDF2PasswordHasher();
+        console.println(hasher.createHash(password));
+        console.println("\n");
+    }
+}
+```
+
+### `RocksDbBenchmark.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/RocksDbBenchmark.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.util.Arrays;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.XtceTmRecorder;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.PartitioningSpec;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
+
+@Parameters(commandDescription = "Benchmark rocksdb storage engine. The benchmark consists of a table load and a few selects.\n"
+        + "The table is loaded with telemetry packets received at frequencies of [10/sec, 1/sec, 1/10sec, 1/60sec and 1/hour].\n"
+        + "The table will be identical to the tm table and will contain a histogram on pname (=packet name).\n"
+        + "It is possible to specify how many partitions (i.e. how many different pnames) to be loaded for each frequency\n"
+        + "and the time duration of the data." + "")
+class RocksDbBenchmark extends Command {
+    @Parameter(names = "--dbDir", description = "the directory where the database will be created.\n"
+            + "A \"rocksbench\" archive instance will be created in this directory", required = true)
+    String dbDir;
+
+    @Parameter(names = "--count", description = "The partition counts for the 5 frequencies: [10/sec, 1/sec, 1/10sec, 1/60sec and 1/hour].\n"
+            + "It has to be specified as a string (use quotes).\n"
+            + "By default, it is \"5 5 5 5 5\"", required = false)
+    String counts = "5 5 5 5 5";
+
+    @Parameter(names = "--duration", description = "The duration in hours of the simulated data. By default it's 24 hours", required = false)
+    int durationHours = 24;
+
+    @Parameter(names = "--baseTime", description = "Start inserting data with this time. By default it's 2017-01-01T00:00:00", required = false)
+    String baseTime = "2017-01-01T00:00:00";
+
+    // frequencies in 100ms
+    private long freq[] = { 1, 10, 100, 600, 36000 };
+
+    private int count[];
+
+    private String tableName = "tm";
+
+    private YarchDatabaseInstance ydb;
+
+    public RocksDbBenchmark(RocksDbCli rocksDbCli) {
+        super("bench", rocksDbCli);
+    }
+
+    @Override
+    void validate() {
+        String[] a = counts.split("\\s+");
+        if (a.length != freq.length) {
+            throw new ParameterException(
+                    "Invalid count specified; please provide " + freq.length + " numbers (e.g. \"1 2 3 4 5\"");
+        }
+        count = new int[a.length];
+        for (int i = 0; i < a.length; i++) {
+            try {
+                count[i] = Integer.valueOf(a[i]);
+            } catch (NumberFormatException e) {
+                throw new ParameterException("Cannot parse '" + a[i] + "' to integer.");
+            }
+        }
+    }
+
+    @Override
+    public void execute() throws Exception {
+        YarchDatabase.setHome(dbDir);
+        this.ydb = YarchDatabase.getInstance("rocksbench");
+        TableDefinition tblDef = ydb.getTable(tableName);
+        if (tblDef == null) {
+            TupleDefinition tdef = XtceTmRecorder.RECORDED_TM_TUPLE_DEFINITION;
+            tblDef = new TableDefinition(tableName, tdef,
+                    Arrays.asList(StandardTupleDefinitions.GENTIME_COLUMN,
+                            StandardTupleDefinitions.SEQNUM_COLUMN));
+            tblDef.setHistogramColumns(Arrays.asList(XtceTmRecorder.PNAME_COLUMN));
+
+            PartitioningSpec pspec = PartitioningSpec.valueSpec(XtceTmRecorder.PNAME_COLUMN);
+            pspec.setValueColumnType(DataType.ENUM);
+            tblDef.setPartitioningSpec(pspec);
+
+            tblDef.setStorageEngineName(YarchDatabase.RDB_ENGINE_NAME);
+
+            ydb.createTable(tblDef);
+        } else {
+            console.println("Table " + tableName + " already exists!. Old data will not be overwritten.");
+        }
+        populate(tblDef, durationHours * 36000l);
+
+        console.println("*********************** reading data ********************");
+
+        read(tableName, null, -1);
+
+        for (int j = 0; j < freq.length; j++) {
+            if (count[j] == 0) {
+                continue;
+            }
+            read(tableName, "/rocksbench/packet_" + j + "_0", freq[j]);
+        }
+
+        read(tableName, null, -1);
+    }
+
+    void populate(TableDefinition tblDef, long duration100ms) throws Exception {
+        RdbStorageEngine rse = (RdbStorageEngine) ydb.getStorageEngine(tblDef);
+        TableWriter tw = rse.newTableWriter(ydb, tblDef, InsertMode.INSERT);
+
+        long baseTime = TimeEncoding.parse("2017-01-01T00:00:00");
+        console.println("writing " + durationHours + " hours of data starting with " + TimeEncoding.toString(baseTime));
+        ThreadLocalRandom r = ThreadLocalRandom.current();
+        byte[] b = new byte[256];
+        int numPackets = 0;
+        TupleDefinition tdef = tblDef.getTupleDefinition();
+
+        long t0 = System.currentTimeMillis();
+        long genTime = baseTime;
+        for (long i = 0; i < duration100ms; i++) {
+            for (int j = 0; j < freq.length; j++) {
+                if (i % freq[j] == 0) {
+                    for (int k = 0; k < count[j]; k++) {
+                        r.nextBytes(b);
+                        numPackets++;
+
+                        Tuple t;
+                        int seqNum = (int) i;
+                        genTime = baseTime + i * 100L + j;
+                        long recTime = TimeEncoding.getWallclockTime();
+                        t = new Tuple(tdef,
+                                new Object[] { genTime, seqNum, recTime, b, "/rocksbench/packet_" + j + "_" + k });
+                        tw.onTuple(null, t);
+                        if (numPackets % 1000000 == 0) {
+                            console.println(String.format("%3dM packets written; %d%% completed", numPackets / 1000000,
+                                    i * 100 / duration100ms));
+                        }
+                    }
+                }
+            }
+        }
+        console.println("write finished; last packet time: " + TimeEncoding.toString(genTime) + "; total numPackets: "
+                + numPackets);
+        long t1 = System.currentTimeMillis();
+        long d = t1 - t0;
+        console.println(
+                "time to populate " + (d / 1000.0) + " seconds; speed: " + (numPackets * 1000l / d) + " packets/sec");
+    }
+
+    void read(String tblName, String packetName, long rate100ms) throws Exception {
+        long t0 = System.currentTimeMillis();
+        String q = "create stream s as select * from " + tblName;
+        if (packetName != null) {
+            q = q + " where pname='" + packetName + "'";
+        }
+        ydb.execute(q);
+        Stream s = ydb.getStream("s");
+
+        Semaphore semaphore = new Semaphore(0);
+        AtomicInteger count = new AtomicInteger();
+        s.addSubscriber(new StreamSubscriber() {
+            int c = 0;
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                if (packetName != null) {
+                    if (!packetName.equals(tuple.getColumn("pname"))) {
+                        throw new RuntimeException("invalid tuple received");
+                    }
+                }
+                c++;
+            }
+
+            @Override
+            public void streamClosed(Stream stream) {
+                count.set(c);
+                semaphore.release();
+            }
+        });
+        s.start();
+        semaphore.acquire();
+
+        long t1 = System.currentTimeMillis();
+        long d = t1 - t0;
+        long speed = 1000 * count.get() / d;
+        if (packetName == null) {
+            console.println(String.format("time to read all %d packets: %.3f seconds, speed: %d packets/second",
+                    count.get(), d / 1000.0, speed));
+        } else {
+            console.println(String.format(
+                    "time to read %8d %s (pkt rate: %.2f sec) packets: %.3f seconds, speed: %d packets/second",
+                    count.get(), packetName, rate100ms / 10.0, d / 1000.0, speed));
+        }
+    }
+}
+```
+
+### `RocksDbCli.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/RocksDbCli.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.rocksdb.ColumnFamilyDescriptor;
+import org.rocksdb.ColumnFamilyHandle;
+import org.rocksdb.ColumnFamilyOptions;
+import org.rocksdb.CompactionStyle;
+import org.rocksdb.DBOptions;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.yamcs.yarch.rocksdb.YRDB;
+
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
+
+/**
+ * Command line utility for doing rocksdb operations
+ * 
+ * 
+ * @author nm
+ *
+ */
+@Parameters(commandDescription = "Provides low-level RocksDB data operations")
+public class RocksDbCli extends Command {
+
+    public RocksDbCli(YamcsAdminCli yamcsCli) {
+        super("rocksdb", yamcsCli);
+        addSubCommand(new RocksDbCompact());
+        addSubCommand(new RocksDbBenchmark(this));
+    }
+
+    @Override
+    public void execute() throws Exception {
+        RocksDB.loadLibrary();
+        super.execute();
+    }
+
+    @Parameters(commandDescription = "Compact RocksDB database")
+    private class RocksDbCompact extends Command {
+        @Parameter(names = "--dbDir", description = "database directory", required = true)
+        String dbDir;
+
+        @Parameter(names = "--sizeMB", description = "target size of each SST files in MB (by default 256 MB)", required = false)
+        int sizeMB = 256;
+
+        public RocksDbCompact() {
+            super("compact", RocksDbCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+
+            Options opt = new Options();
+            List<byte[]> cfl = RocksDB.listColumnFamilies(opt, dbDir);
+            List<ColumnFamilyDescriptor> cfdList = new ArrayList<>(cfl.size());
+            ColumnFamilyOptions cfoptions = new ColumnFamilyOptions();
+
+            cfoptions.setCompactionStyle(CompactionStyle.UNIVERSAL);
+            cfoptions.setTargetFileSizeBase(1024L * 1024 * sizeMB);
+            cfoptions.setTargetFileSizeMultiplier(1);
+            for (byte[] b : cfl) {
+                cfdList.add(new ColumnFamilyDescriptor(b, cfoptions));
+            }
+            List<ColumnFamilyHandle> cfhList = new ArrayList<>(cfl.size());
+
+            try (DBOptions dbOptions = new DBOptions();
+                    RocksDB db = RocksDB.open(dbOptions, dbDir, cfdList, cfhList)) {
+                for (int i = 0; i < cfhList.size(); i++) {
+                    ColumnFamilyHandle cfh = cfhList.get(i);
+                    console.println("Compacting Column Family " + YRDB.cfNameToString(cfl.get(i)));
+                    db.compactRange(cfh);
+                }
+            }
+            cfoptions.close();
+            opt.close();
+        }
+    }
+}
+```
+
+### `TableStringBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/TableStringBuilder.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Helper for outputting records in columnar fashion without harcoding column widths
+ */
+public class TableStringBuilder {
+
+    private String[] header;
+    private List<String[]> rows = new ArrayList<>();
+
+    private int[] widths;
+
+    public TableStringBuilder(String... header) {
+        this.header = header;
+        widths = new int[header.length];
+        for (int i = 0; i < header.length; i++) {
+            widths[i] = header[i].length();
+        }
+    }
+
+    public TableStringBuilder(int cols) {
+        widths = new int[cols];
+    }
+
+    public void addLine(Object... data) {
+        String[] dataStrings = new String[data.length];
+        for (int i = 0; i < data.length; i++) {
+            String stringValue = data[i] != null ? data[i].toString() : "";
+            dataStrings[i] = stringValue;
+            if (data[i] != null && stringValue.length() > widths[i]) {
+                widths[i] = stringValue.length();
+            }
+        }
+        rows.add(dataStrings);
+    }
+
+    private String buildStringFormat() {
+        StringBuilder fm = new StringBuilder();
+        for (int i = 0; i < widths.length; i++) {
+            fm.append("%-").append(widths[i]).append("s");
+            if (i < widths.length - 1) {
+                fm.append("  "); // 2 spaces so that it is larger than column name with spaces
+            }
+        }
+        return fm.toString();
+    }
+
+    @Override
+    public String toString() {
+        String fm = buildStringFormat();
+
+        String hline = header != null ? String.format(fm, (Object[]) header) + "\n" : "";
+        StringBuilder buf = new StringBuilder(hline);
+        boolean first = true;
+        for (String[] row : rows) {
+            if (!first) {
+                buf.append("\n");
+            }
+            String line = String.format(fm, (Object[]) row);
+            buf.append(line);
+            first = false;
+        }
+
+        return buf.toString();
+    }
+}
+```
+
+### `UsersCli.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/UsersCli.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.rocksdb.RocksDB;
+import org.yamcs.http.api.IamApi;
+import org.yamcs.protobuf.Mdb.SignificanceInfo.SignificanceLevelType;
+import org.yamcs.protobuf.UserInfo;
+import org.yamcs.security.Directory;
+import org.yamcs.security.User;
+import org.yamcs.security.protobuf.Clearance;
+import org.yamcs.utils.TimeEncoding;
+
+import com.beust.jcommander.IStringConverter;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.Parameters;
+import com.google.protobuf.util.JsonFormat;
+
+/**
+ * Generates password hashes for use in users.yaml
+ */
+@Parameters(commandDescription = "User operations")
+public class UsersCli extends Command {
+
+    public UsersCli(YamcsAdminCli yamcsCli) {
+        super("users", yamcsCli);
+        addSubCommand(new AddRole());
+        addSubCommand(new CheckPassword());
+        addSubCommand(new CreateUser());
+        addSubCommand(new DeleteUser());
+        addSubCommand(new DescribeUser());
+        addSubCommand(new ListUsers());
+        addSubCommand(new RemoveIdentity());
+        addSubCommand(new RemoveRole());
+        addSubCommand(new ResetPassword());
+        addSubCommand(new UpdateUser());
+        TimeEncoding.setUp();
+    }
+
+    @Parameters(commandDescription = "Add a role to a user")
+    private class AddRole extends Command {
+
+        @Parameter(description = "The name of the user.")
+        private List<String> username;
+
+        @Parameter(names = "--role", required = true, description = "Role to be added.")
+        private String role;
+
+        AddRole() {
+            super("add-role", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username.get(0) + "'");
+                exit(-1);
+            }
+
+            user.addRole(role, false);
+            directory.updateUserProperties(user);
+        }
+    }
+
+    @Parameters(commandDescription = "Remove an identity from a user")
+    private class RemoveIdentity extends Command {
+
+        @Parameter(description = "The name of the user.")
+        private List<String> username;
+
+        @Parameter(names = "--identity", required = true, description = "Identity to be removed.")
+        private String identity;
+
+        RemoveIdentity() {
+            super("remove-identity", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username.get(0) + "'");
+                exit(-1);
+            }
+
+            user.deleteIdentity(identity);
+            directory.updateUserProperties(user);
+        }
+    }
+
+    @Parameters(commandDescription = "Remove a role from a user")
+    private class RemoveRole extends Command {
+
+        @Parameter(description = "The name of the user.")
+        private List<String> username;
+
+        @Parameter(names = "--role", required = true, description = "Role to be removed.")
+        private String role;
+
+        RemoveRole() {
+            super("remove-role", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username.get(0) + "'");
+                exit(-1);
+            }
+
+            user.deleteRole(role);
+            directory.updateUserProperties(user);
+        }
+    }
+
+    @Parameters(commandDescription = "Update a user")
+    private class UpdateUser extends Command {
+
+        @Parameter(description = "The name of the user.")
+        private List<String> username;
+
+        @Parameter(names = "--display-name", description = "Displayed name of the user.")
+        private String displayName;
+
+        @Parameter(names = "--email", description = "User email.")
+        private String email;
+
+        @Parameter(names = "--active", arity = 1, description = "Activate this user.")
+        private Boolean active;
+
+        @Parameter(names = "--superuser", arity = 1, description = "Grant superuser privileges")
+        private Boolean superuser;
+
+        @Parameter(names = "--clearance", description = "Clearance level of the user", converter = SignificanceLevelConverter.class)
+        private SignificanceLevelType clearance;
+
+        UpdateUser() {
+            super("update", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username.get(0) + "'");
+                exit(-1);
+            }
+
+            if (displayName != null) {
+                user.setDisplayName(displayName);
+            }
+            if (email != null) {
+                user.setEmail(email);
+            }
+            if (active != null) {
+                user.setActive(active);
+            }
+            if (superuser != null) {
+                user.setSuperuser(superuser);
+            }
+            if (clearance != null) {
+                user.setClearance(Clearance.newBuilder()
+                        .setLevel(clearance.name())
+                        .setIssueTime(TimeEncoding.toProtobufTimestamp(TimeEncoding.getWallclockTime()))
+                        .build());
+            }
+
+            directory.updateUserProperties(user);
+        }
+    }
+
+    @Parameters(commandDescription = "Create a new user")
+    private class CreateUser extends Command {
+
+        @Parameter(description = "The name of the new user.")
+        private List<String> username;
+
+        @Parameter(names = "--email", description = "User email.")
+        private String email;
+
+        @Parameter(names = "--display-name", description = "Displayed name of the user.")
+        private String displayName;
+
+        @Parameter(names = "--inactive", description = "Add this flag to prevent Yamcs from activating the user.")
+        private boolean inactive;
+
+        @Parameter(names = "--superuser", description = "Add this flag to grant the user superuser privileges.")
+        private boolean superuser;
+
+        @Parameter(names = "--no-password", description = "Add this flag to indicate that this user should not have a password. This will also bypass the password prompt.")
+        private boolean noPassword;
+
+        @Parameter(names = "--clearance", description = "Clearance level of the user", converter = SignificanceLevelConverter.class)
+        private SignificanceLevelType clearance;
+
+        CreateUser() {
+            super("create", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user != null) {
+                console.println("user already exists: '" + username.get(0) + "'");
+                exit(-1);
+            }
+
+            user = new User(username.get(0), null);
+            user.setDisplayName(displayName);
+            user.setEmail(email);
+            user.setSuperuser(superuser);
+
+            if (clearance != null) {
+                user.setClearance(Clearance.newBuilder()
+                        .setLevel(clearance.name())
+                        .setIssueTime(TimeEncoding.toProtobufTimestamp(TimeEncoding.getWallclockTime()))
+                        .build());
+            }
+
+            char[] password = null;
+            if (!noPassword) {
+                String passwordString = System.getenv("YAMCSADMIN_PASSWORD");
+                if (passwordString == null) {
+                    console.println("Enter password: ");
+                    password = console.readPassword(false);
+                    console.println("Confirm password: ");
+                    char[] confirmedPassword = console.readPassword(false);
+
+                    if (!Arrays.equals(password, confirmedPassword)) {
+                        console.println("Password confirmation does not match\n");
+                        exit(-1);
+                    }
+                } else {
+                    password = passwordString.trim().toCharArray();
+                }
+            }
+
+            if (!inactive) {
+                user.confirm();
+            }
+
+            directory.addUser(user);
+            if (password != null) {
+                directory.changePassword(user, password);
+            }
+        }
+    }
+
+    @Parameters(commandDescription = "List users")
+    private class ListUsers extends Command {
+
+        ListUsers() {
+            super("list", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            switch (getFormat()) {
+            case JSON:
+                List<UserInfo> users = directory.getUsers().stream()
+                        .map(user -> IamApi.toUserInfo(user, true, directory))
+                        .collect(Collectors.toList());
+                console.println(printJsonArray(users));
+                break;
+            default:
+                TableStringBuilder b = new TableStringBuilder("username", "display name", "email", "active",
+                        "superuser");
+                directory.getUsers().forEach(user -> {
+                    b.addLine(user.getName(), user.getDisplayName(), user.getEmail(), user.isActive(),
+                            user.isSuperuser());
+                });
+                console.println(b.toString());
+            }
+        }
+    }
+
+    @Parameters(commandDescription = "Describe user details")
+    private class DescribeUser extends Command {
+
+        @Parameter()
+        private List<String> username;
+
+        DescribeUser() {
+            super("describe", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username + "'");
+                exit(-1);
+            }
+
+            switch (getFormat()) {
+            case JSON:
+                UserInfo userinfo = IamApi.toUserInfo(user, true, directory);
+                console.println(JsonFormat.printer().print(userinfo));
+                break;
+            default:
+                TableStringBuilder b = new TableStringBuilder(2);
+                b.addLine("id:", user.getId());
+                b.addLine("username:", user.getName());
+                b.addLine("display name:", user.getDisplayName());
+                b.addLine("email:", user.getEmail());
+                b.addLine("active:", user.isActive());
+                b.addLine("superuser:", user.isSuperuser());
+                b.addLine("roles:", String.join(", ", user.getRoles()));
+                if (user.getClearance() != null) {
+                    b.addLine("clearance:", user.getClearance().getLevel());
+                }
+                b.addLine("external:", user.isExternallyManaged());
+                b.addLine("created:", printInstant(user.getCreationTime()));
+                b.addLine("confirmed:", printInstant(user.getConfirmationTime()));
+                b.addLine("last login:", printInstant(user.getLastLoginTime()));
+                console.println(b.toString());
+            }
+        }
+
+        private String printInstant(long instant) {
+            if (instant == TimeEncoding.INVALID_INSTANT) {
+                return "";
+            } else {
+                return TimeEncoding.toString(instant);
+            }
+
+        }
+    }
+
+    @Parameters(commandDescription = "Delete user")
+    private class DeleteUser extends Command {
+
+        @Parameter()
+        private List<String> username;
+
+        DeleteUser() {
+            super("delete", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username + "'");
+                exit(-1);
+            }
+
+            directory.deleteUser(user);
+        }
+    }
+
+    @Parameters(commandDescription = "Reset a user's password")
+    private class ResetPassword extends Command {
+
+        @Parameter()
+        private List<String> username;
+
+        ResetPassword() {
+            super("reset-password", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username.get(0) + "'");
+                exit(-1);
+            }
+            if (user.isExternallyManaged()) {
+                console.println("credentials of user '" + username.get(0) + "' are not managed by Yamcs");
+                exit(-1);
+            }
+
+            char[] newPassword;
+            String newPasswordString = System.getenv("YAMCSADMIN_PASSWORD");
+            if (newPasswordString == null) {
+                console.print("Enter new password: ");
+                newPassword = console.readPassword(false);
+                console.print("Confirm new password: ");
+                char[] confirmedPassword = console.readPassword(false);
+
+                if (!Arrays.equals(newPassword, confirmedPassword)) {
+                    console.println("Password confirmation does not match\n");
+                    exit(-1);
+                }
+            } else {
+                newPassword = newPasswordString.trim().toCharArray();
+            }
+
+            directory.changePassword(user, newPassword);
+            console.println("Password updated successfully");
+        }
+    }
+
+    @Parameters(commandDescription = "Check a user's password")
+    private class CheckPassword extends Command {
+
+        @Parameter()
+        private List<String> username;
+
+        CheckPassword() {
+            super("check-password", UsersCli.this);
+        }
+
+        @Override
+        void execute() throws Exception {
+            RocksDB.loadLibrary();
+            Directory directory = new Directory();
+
+            if (username == null) {
+                console.println("username not specified");
+                exit(-1);
+            }
+
+            User user = directory.getUser(username.get(0));
+            if (user == null) {
+                console.println("invalid user '" + username.get(0) + "'");
+                exit(-1);
+            }
+            if (user.isExternallyManaged()) {
+                console.println("credentials of user '" + username.get(0) + "' are not managed by Yamcs");
+                exit(-1);
+            }
+
+            char[] password;
+            String passwordString = System.getenv("YAMCSADMIN_PASSWORD");
+            if (passwordString == null) {
+                console.print("Enter password: ");
+                password = console.readPassword(false);
+            } else {
+                password = passwordString.trim().toCharArray();
+            }
+
+            if (directory.validateUserPassword(user.getName(), password)) {
+                console.println("Password correct");
+            } else {
+                console.println("Password incorrect");
+                exit(-1);
+            }
+        }
+    }
+
+    // Keep public, required by JCommander
+    public static class SignificanceLevelConverter implements IStringConverter<SignificanceLevelType> {
+
+        @Override
+        public SignificanceLevelType convert(String value) {
+            try {
+                return SignificanceLevelType.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new ParameterException(
+                        "Unknown value for --clearance. Possible values: "
+                                + Arrays.asList(SignificanceLevelType.values()));
+            }
+        }
+    }
+}
+```
+
+### `YamcsAdminCli.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/YamcsAdminCli.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+
+import org.yamcs.FileBasedConfigurationResolver;
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.YarchDatabase;
+
+import com.beust.jcommander.IStringConverter;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import com.beust.jcommander.converters.PathConverter;
+
+/**
+ * Command line utility for doing yamcs stuff.
+ *
+ * This usage is yamcsadmin &lt;command&gt; [command_specific_options]
+ *
+ * @author nm
+ */
+public class YamcsAdminCli extends Command {
+
+    public YamcsAdminCli() {
+        super("yamcsadmin", null);
+        addSubCommand(new BackupCli(this));
+        addSubCommand(new CheckConfig(this));
+        addSubCommand(new MdbCli(this));
+        addSubCommand(new PasswordHashCli(this));
+        addSubCommand(new RocksDbCli(this));
+        addSubCommand(new UsersCli(this));
+    }
+
+    @Parameter(names = "--etc-dir", description = "Path to config directory", converter = PathConverter.class)
+    private Path configDirectory = Paths.get("etc").toAbsolutePath();
+
+    @Parameter(names = "--data-dir", description = "Path to data directory", converter = PathConverter.class)
+    private Path dataDir;
+
+    @Parameter(names = "--format", description = "Set the format for printing output", converter = OutputFormatConverter.class)
+    OutputFormat format = OutputFormat.DEFAULT;
+
+    @Parameter(names = "--log", description = "Level of verbosity")
+    private int verbose = 1;
+
+    @Parameter(names = { "-v", "--version" }, description = "Print version information and quit")
+    boolean version;
+
+    @Parameter(names = { "--debug" }, hidden = true)
+    private boolean debug;
+
+    private void initialize() {
+        YConfiguration config = YConfiguration.getConfiguration("yamcs");
+        if (dataDir == null) {
+            dataDir = Paths.get(config.getString("dataDir"));
+        }
+        YarchDatabase.setHome(dataDir.toAbsolutePath().toString());
+    }
+
+    @Override
+    void validate() throws ParameterException {
+        selectedCommand.validate();
+    }
+
+    // Keep public, required by JCommander
+    public static class OutputFormatConverter implements IStringConverter<OutputFormat> {
+
+        @Override
+        public OutputFormat convert(String value) {
+            try {
+                return OutputFormat.valueOf(value.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new ParameterException(
+                        "Unknown value for --format. Possible values: "
+                                + OutputFormat.joinOptions());
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        YamcsAdminCli cli = new YamcsAdminCli();
+        cli.parse(args);
+
+        Level[] levels = { Level.OFF, Level.WARNING, Level.INFO, Level.FINE };
+
+        Level logLevel = cli.verbose >= levels.length ? Level.ALL : levels[cli.verbose];
+
+        Log.forceStandardStreams(logLevel);
+
+        YConfiguration.setResolver(new FileBasedConfigurationResolver(cli.configDirectory));
+
+        try {
+            cli.initialize();
+            cli.validate();
+            cli.execute();
+        } catch (ExecutionException e) {
+            System.err.println(e.getCause());
+            exit(1);
+        } catch (Exception e) {
+            if (cli.debug) {
+                e.printStackTrace();
+            } else {
+                // Avoid class prefix if it's a known exception
+                System.err.println((e instanceof YamcsAdminException) ? e.getMessage() : e);
+            }
+            exit(1);
+        }
+        exit(0);
+    }
+}
+```
+
+### `YamcsAdminException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cli/YamcsAdminException.java`
+
+
+```java
+package org.yamcs.cli;
+
+@SuppressWarnings("serial")
+public class YamcsAdminException extends Exception {
+
+    public YamcsAdminException(String message) {
+        super(message);
+    }
+}
+```

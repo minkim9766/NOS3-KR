@@ -3,20 +3,793 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `clearance_service.proto`
 
-file--clearance_service.proto
-file--commanding.proto
-file--commands_service.proto
-file--queues_service.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/clearance_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.commanding;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "ClearanceServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/mdb/mdb.proto";
+
+service ClearanceApi {
+
+  // List clearances
+  rpc ListClearances(google.protobuf.Empty) returns (ListClearancesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/clearances"
+    };
+  }
+  
+  // Update a user's clearance
+  rpc UpdateClearance(UpdateClearanceRequest) returns (ClearanceInfo) {
+    option (yamcs.api.route) = {
+      patch: "/api/clearances/{username}"
+      body: "*"
+      log: "Clearance of '{username}' changed to {level}"
+    };
+  }
+
+  // Delete a user's clearance
+  rpc DeleteClearance(DeleteClearanceRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      delete: "/api/clearances/{username}"
+      log: "Clearance revoked from user '{username}'"
+    };
+  }
+  
+  // Receive updates on own clearance
+  rpc SubscribeClearance(google.protobuf.Empty) returns (stream ClearanceInfo) {
+    option (yamcs.api.websocket) = {
+      topic: "clearance"
+    };
+  }
+}
+
+message ListClearancesResponse {
+  repeated ClearanceInfo clearances = 1;
+}
+
+message ClearanceInfo {
+  optional string username = 1;
+  optional mdb.SignificanceInfo.SignificanceLevelType level = 2;
+  optional string issuedBy = 3;
+  optional google.protobuf.Timestamp issueTime = 4;
+  optional bool hasCommandPrivileges = 5;
+}
+
+message UpdateClearanceRequest {
+  optional string username = 1;
+  optional mdb.SignificanceInfo.SignificanceLevelType level = 2;
+}
+
+message DeleteClearanceRequest {
+  optional string username = 1;
+}
 ```
 
-## 항목
+### `commanding.proto`
 
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/clearance_service.proto`](file--clearance_service.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/commanding.proto`](file--commanding.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/commands_service.proto`](file--commands_service.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/queues_service.proto`](file--queues_service.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/commanding.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.commanding;
+option java_package = "org.yamcs.protobuf";
+
+import "yamcs/protobuf/yamcs.proto";
+import "yamcs/protobuf/mdb/mdb.proto";
+import "google/protobuf/timestamp.proto";
+
+
+message CommandId {
+  required int64 generationTime = 1;
+  required string origin = 2;
+  required int32 sequenceNumber = 3; //unique in relation to generationTime and origin
+  optional string commandName = 4;
+}
+
+enum QueueState {
+  BLOCKED = 1;
+  DISABLED = 2;
+  ENABLED = 3;
+}
+
+message CommandQueueInfo {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Processor name
+  optional string processorName = 2;
+
+  // Command queue name
+  optional string name = 3;
+
+  // Current queue state
+  optional QueueState state = 4;
+
+  // Submitted commands are matches to the first queue that
+  // whose filter criteria (if any) match the command's
+  // features. Queues are considered in the order specified by
+  // this field, going from lowest to highest.
+  optional int32 order = 9;
+
+  // This queue only considers commands that are issued
+  // by one of the users in this list.
+  //
+  // If the list is empty, all commands are considered.
+  //
+  // Note that users/groups are considered at the same time
+  // (a match with any of the two is sufficient).
+  repeated string users = 10;
+
+  // This queue only considers commands that are issued
+  // by one of the users who belongs to any of these groups.
+  //
+  // If the list is empty, all commands are considered.
+  //
+  // Note that users/groups are considered at the same time
+  // (a match with any of the two is sufficient).
+  repeated string groups = 11;
+
+  // This queue only considers commands that are at least
+  // as significant as this level.
+  optional mdb.SignificanceInfo.SignificanceLevelType minLevel = 12;
+
+  // This queue only considers commands whose qualified name
+  // matches any of the regular expressions in this list.
+  //
+  // If the list is empty, all commands are considered.
+  repeated string tcPatterns = 13;
+
+  // Currently pending (queued) commands
+  repeated CommandQueueEntry entries = 14;
+
+  // Number of commands that successfully passed through this queue.
+  optional int32 acceptedCommandsCount = 15;
+
+  // Number of commands that were rejected by this queue.
+  optional int32 rejectedCommandsCount = 16;
+}
+
+/*One entry (command) in the command queue*/
+message CommandQueueEntry {
+  optional string instance = 1;
+  optional string processorName = 2;
+  optional string queueName = 3;
+  optional string id = 14;
+  optional string origin = 15;
+  optional int32 sequenceNumber = 16;
+  optional string commandName = 17;
+
+  repeated CommandAssignment assignments = 18;
+  optional bytes binary = 6;
+  optional string username = 7;
+
+  optional string comment = 11;
+  optional google.protobuf.Timestamp generationTime = 12;
+  
+  // If true, the command has been accepted and is due for release
+  // as soon as transmission constraints are satisfied.
+  optional bool pendingTransmissionConstraints = 13;
+}
+
+message CommandQueueEvent {
+  enum Type {
+    COMMAND_ADDED = 1;
+    COMMAND_REJECTED = 2;
+    COMMAND_SENT = 3;
+    COMMAND_UPDATED = 4;
+  }
+  optional Type type = 1;
+  optional CommandQueueEntry data = 2;
+}
+
+message CommandQueueRequest {
+  optional CommandQueueInfo queueInfo = 1; // for SetQueueState
+  optional CommandQueueEntry queueEntry = 2; //for SendCommand and RejectCommand
+  optional bool rebuild = 3[default=false]; //if rebuild is true, the binary packet will be recreated to include new time and sequence count
+}
+
+/* this message is sent as response to validate, in case the significance is defined for a commands*/
+message CommandSignificance {
+  optional int32 sequenceNumber = 1; //the sequence number of the command sent
+  optional mdb.SignificanceInfo significance = 2;
+}
+
+//can be used when sending commands to affect the way post transmission verifiers are running
+message VerifierConfig {
+  message CheckWindow {
+    optional int64 timeToStartChecking = 1;
+    optional int64 timeToStopChecking = 2;
+  }
+
+  optional bool disable = 2; //disable the verifier
+  optional CheckWindow checkWindow = 3;
+}
+
+message CommandHistoryAttribute {
+  optional string name = 1;
+  optional Value value = 2;
+  optional int64 time = 3;
+}
+
+message CommandAssignment {
+  optional string name = 1;
+  optional Value value = 2;
+  optional bool userInput = 3;
+}
+
+message CommandHistoryEntry {
+  optional string id = 7;
+
+  // Qualified name
+  optional string commandName = 8;
+
+  // Name aliases keyed by namespace.
+  // (as currently present in Mission Database)
+  map<string, string> aliases = 12;
+
+  optional string origin = 9;
+  optional int32 sequenceNumber = 10;
+  optional CommandId commandId = 1;
+  repeated CommandHistoryAttribute attr = 3;
+  optional google.protobuf.Timestamp generationTime = 6;
+  repeated CommandAssignment assignments = 11;
+}
+```
+
+### `commands_service.proto`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/commands_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.commanding;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "CommandsServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/api/httpbody.proto";
+import "yamcs/protobuf/commanding/commanding.proto";
+import "yamcs/protobuf/yamcs.proto";
+
+service CommandsApi {
+
+  // Issue a command
+  //
+  // After validating the input parameters, the command is added to the appropriate
+  // command queue for further dispatch.
+  rpc IssueCommand(IssueCommandRequest) returns (IssueCommandResponse) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/commands/{name*}"
+      body: "*"
+    };
+  }
+
+  // Update command history
+  rpc UpdateCommandHistory(UpdateCommandHistoryRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/commandhistory/{name*}"
+      body: "*"
+    };
+  }
+
+  // List commands
+  rpc ListCommands(ListCommandsRequest) returns (ListCommandsResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/commands"
+    };
+  }
+  
+  // Get a command
+  rpc GetCommand(GetCommandRequest) returns (CommandHistoryEntry) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/commands/{id}"
+    };
+  }
+  
+  // Streams back commands
+  rpc StreamCommands(StreamCommandsRequest) returns (stream CommandHistoryEntry) {
+    option (yamcs.api.route) = {
+      post: "/api/stream-archive/{instance}:streamCommands"
+      body: "*"
+    };
+  }
+  
+  // Receive updates on issued commands
+  rpc SubscribeCommands(SubscribeCommandsRequest) returns (stream CommandHistoryEntry) {
+    option (yamcs.api.websocket) = {
+      topic: "commands"
+    };
+  }
+  
+  // Export a raw command
+  rpc ExportCommand(ExportCommandRequest) returns (yamcs.api.HttpBody) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}/commands/{id}:export"
+    };
+  }
+
+  // Export commands in CSV format
+  rpc ExportCommands(ExportCommandsRequest) returns (stream yamcs.api.HttpBody) {
+    option (yamcs.api.route) = {
+      get: "/api/archive/{instance}:exportCommands"
+    };
+  }
+}
+
+message ListCommandsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // The zero-based row number at which to start outputting results.
+  // Default: ``0``
+  // 
+  // This option is deprecated and will be removed in a later version.
+  // Use the returned continuationToken instead.
+  optional int64 pos = 2 [deprecated = true];
+  
+  // The maximum number of returned records per page. Choose this value too
+  // high and you risk hitting the maximum response size limit enforced by
+  // the server. Default: ``100``
+  optional int32 limit = 3;
+  
+  // The order of the returned results. Can be either ``asc`` or ``desc``.
+  // Default: ``desc``
+  optional string order = 4;
+  
+  // Text to search in the name of the command. This searches both the
+  // qualified name, and any aliases.
+  optional string q = 5;
+
+  // Continuation token returned by a previous page response.
+  optional string next = 6;
+  
+  // Filter the lower bound of the command's generation time. Specify a date
+  // string in ISO 8601 format. This bound is inclusive.
+  optional google.protobuf.Timestamp start = 7;
+  
+  // Filter the upper bound of the command's generation time. Specify a date
+  // string in ISO 8601 format. This bound is exclusive.
+  optional google.protobuf.Timestamp stop = 8;
+
+  // Filter the results by the used queue.
+  optional string queue = 9;
+}
+
+message IssueCommandRequest {
+  message Assignment {
+    optional string name = 1;
+    optional string value = 2;
+  }
+  
+  // Yamcs instance name
+  optional string instance = 6;
+  
+  // Processor name
+  optional string processor = 7;
+  
+  // Command name
+  optional string name = 8;
+
+  // The name/value assignments for this command.
+  optional google.protobuf.Struct args = 16;
+
+  // The origin of the command. Typically a hostname.
+  optional string origin = 2;
+  
+  // The sequence number as specified by the origin. This gets
+  // communicated back in command history and command queue entries,
+  // thereby allowing clients to map local with remote command
+  // identities.
+  optional int32 sequenceNumber = 3;
+  
+  // Whether a response will be returned without actually issuing
+  // the command. This is useful when debugging commands.
+  // Default ``no``
+  optional bool dryRun = 4;
+  
+  // Comment attached to this command.
+  optional string comment = 5;
+  
+  // Override the stream on which the command should be sent out.
+  //
+  // Requires elevated privilege.
+  optional string stream = 11;
+  
+  // Disable verification of all transmission constrains (if any
+  // specified in the MDB).
+  //
+  // Requires elevated privilege.
+  optional bool disableTransmissionConstraints = 12;
+  
+  // Disable all post transmission verifiers (if any specified in the MDB)
+  //
+  // Requires elevated privilege.
+  optional bool disableVerifiers = 13;
+  
+  // Override verifier configuration. Keyed by verifier name
+  //
+  // Requires elevated privilege.
+  map<string, commanding.VerifierConfig> verifierConfig = 14;
+  
+  // Specify custom options for interpretation by non-core extensions.
+  // Extensions must register these options against org.yamcs.YamcsServer
+  map<string, Value> extra = 15;
+}
+
+message IssueCommandResponse {
+  // Command ID
+  optional string id = 5;
+
+  // Command generation time
+  optional google.protobuf.Timestamp generationTime = 6;
+
+  // The origin of the command. Typically a hostname.
+  optional string origin = 7;
+
+  // The sequence number for the origin
+  optional int32 sequenceNumber = 8;
+
+  // Qualified name
+  optional string commandName = 9;
+
+  // Name aliases keyed by namespace.
+  // (as currently present in Mission Database)
+  map<string, string> aliases = 14;
+
+  // The name/value assignments for this command
+  repeated CommandAssignment assignments = 12;
+
+  // Generated binary, before any link post-processing
+  optional bytes unprocessedBinary = 13;
+
+  // Generated binary, after link post-processing.
+  //
+  // The differences compared to ``unprocessedBinary``,
+  // can be anything. Typical manipulations include
+  // sequence numbers or checksum calculations.
+  optional bytes binary = 4;
+
+  // Command issuer
+  optional string username = 11;
+
+  // Queue that was selected for this command
+  optional string queue = 10;
+}
+
+message UpdateCommandHistoryRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+  
+  // Processor name
+  optional string processor = 2;
+  
+  // Command name
+  optional string name = 3;
+
+  // Command ID
+  optional string id = 4;
+
+  repeated commanding.CommandHistoryAttribute attributes = 5;
+}
+
+message ListCommandsResponse {
+  // Deprecated, use ``commands`` instead
+  repeated CommandHistoryEntry entry = 1 [deprecated=true];
+
+  // Page  of matching commands
+  repeated CommandHistoryEntry commands = 3;
+
+  // Token indicating the response is only partial. More results can then
+  // be obtained by performing the same request (including all original
+  // query parameters) and setting the ``next`` parameter to this token.
+  optional string continuationToken = 2;
+}
+
+message GetCommandRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Command ID
+  optional string id = 2;
+}
+
+message ExportCommandRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Command ID
+  optional string id = 2;
+}
+
+message StreamCommandsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Filter the lower bound of the command's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp start = 2;
+
+  // Filter the upper bound of the command's generation time. Specify a date
+  // string in ISO 8601 format.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Command names to include. Leave unset, to include all.
+  repeated string name = 4;
+}
+
+message SubscribeCommandsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Processor name
+  optional string processor = 2;
+
+  // If true, send only updates for commands that
+  // were issued after the subscription start.
+  //
+  // For clients that piece together command updates, this
+  // can help avoid partially received commands. 
+  optional bool ignorePastCommands = 3;
+}
+
+message ExportCommandsRequest {
+  // Yamcs instance name
+  optional string instance = 1;
+
+  // Filter the lower bound of the command's generation time.
+  // Specify a date string in ISO 8601 format. This bound is inclusive.
+  optional google.protobuf.Timestamp start = 2;
+
+  // Filter the upper bound of the command's generation time. Specify a date
+  // string in ISO 8601 format. This bound is exclusive.
+  optional google.protobuf.Timestamp stop = 3;
+
+  // Command names to include. Leave unset, to include all.
+  repeated string name = 4;
+
+  // Column delimiter. One of ``TAB``, ``COMMA`` or ``SEMICOLON``.
+  // Default: ``TAB``.
+  optional string delimiter = 5;
+}
+```
+
+### `queues_service.proto`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/commanding/queues_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.commanding;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "QueuesServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+import "yamcs/api/annotations.proto";
+import "yamcs/protobuf/commanding/commanding.proto";
+
+service QueuesApi {
+
+  // List command queues
+  rpc ListQueues(ListQueuesRequest) returns (ListQueuesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/processors/{instance}/{processor}/queues"
+    };
+  }
+  
+  // Get a command queue
+  rpc GetQueue(GetQueueRequest) returns (CommandQueueInfo) {
+    option (yamcs.api.route) = {
+      get: "/api/processors/{instance}/{processor}/queues/{queue}"
+    };
+  }
+
+  // Enable a command queue
+  rpc EnableQueue(EnableQueueRequest) returns (CommandQueueInfo) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/queues/{queue}:enable"
+      log: "Queue '{queue}' enabled for processor '{processor}'"
+    };
+  }
+
+  // Disable a command queue
+  rpc DisableQueue(DisableQueueRequest) returns (CommandQueueInfo) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/queues/{queue}:disable"
+      log: "Queue '{queue}' disabled for processor '{processor}'"
+    };
+  }
+
+  // Block a command queue
+  rpc BlockQueue(BlockQueueRequest) returns (CommandQueueInfo) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/queues/{queue}:block"
+      log: "Queue '{queue}' blocked for processor '{processor}'"
+    };
+  }
+
+  // Receive updates on queue stats
+  rpc SubscribeQueueStatistics(SubscribeQueueStatisticsRequest) returns (stream CommandQueueInfo) {
+    option (yamcs.api.websocket) = {
+      topic: "queue-stats"
+    };
+  }
+  
+  // Receive updates on queue events
+  rpc SubscribeQueueEvents(SubscribeQueueEventsRequest) returns (stream CommandQueueEvent) {
+    option (yamcs.api.websocket) = {
+      topic: "queue-events"
+    };
+  }
+  
+  // List queued commands
+  rpc ListQueuedCommands(ListQueuedCommandsRequest) returns (ListQueuedCommandsResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/processors/{instance}/{processor}/queues/{queue}/commands"
+      additional_bindings: {
+        get: "/api/processors/{instance}/{processor}/queues/{queue}/entries"
+        deprecated: true
+      }
+    };
+  }
+
+  // Accept a queued command
+  rpc AcceptCommand(AcceptCommandRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/queues/{queue}/commands/{command}:accept"
+    };
+  }
+
+  // Reject a queued command
+  rpc RejectCommand(RejectCommandRequest) returns (google.protobuf.Empty) {
+    option (yamcs.api.route) = {
+      post: "/api/processors/{instance}/{processor}/queues/{queue}/commands/{command}:reject"
+    };
+  }
+}
+
+message ListQueuesRequest {
+  // Yamcs instance namee.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+}
+
+message ListQueuesResponse {
+  repeated CommandQueueInfo queues = 1;
+}
+
+message SubscribeQueueStatisticsRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+}
+
+message SubscribeQueueEventsRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+}
+
+message GetQueueRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+}
+
+message EnableQueueRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+}
+
+message DisableQueueRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+}
+
+message BlockQueueRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+}
+
+message ListQueuedCommandsRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+}
+
+message ListQueuedCommandsResponse {
+  repeated CommandQueueEntry commands = 1;
+}
+
+message AcceptCommandRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+  
+  // Command identifier.
+  optional string command = 4;
+}
+
+message RejectCommandRequest {
+  // Yamcs instance name.
+  optional string instance = 1;
+  
+  // Processor name.
+  optional string processor = 2;
+  
+  // Queue name.
+  optional string queue = 3;
+  
+  // Command identifier.
+  optional string command = 4;
+}
+```

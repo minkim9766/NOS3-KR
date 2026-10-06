@@ -3,18 +3,22 @@
 
 **경로:** `fsw/apps/sc/docs/users_guide_historical/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CFS SC User Guide Doc No 582-2012-003 Ver 1.1 2014_12-18.docx`
 
-file--CFS%20SC%20User%20Guide%20Doc%20No%20582-2012-003%20Ver%201.1%202014_12-18.docx
-file--CFS%20SC%20User%20Guide%20Doc%20No%20582-2012-003%20Ver%201.1%202014_12-18.pdf
-file--CFS%20SC%20User%20Guide%20Doc%20No%20582-2012-003_Graphics%20Source%20Files.zip
-```
+**경로:** `fsw/apps/sc/docs/users_guide_historical/CFS SC User Guide Doc No 582-2012-003 Ver 1.1 2014_12-18.docx`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/apps/sc/docs/users_guide_historical/CFS SC User Guide Doc No 582-2012-003 Ver 1.1 2014_12-18.docx`](file--CFS%20SC%20User%20Guide%20Doc%20No%20582-2012-003%20Ver%201.1%202014_12-18.docx) — 바이너리 (경로만)
-- [`fsw/apps/sc/docs/users_guide_historical/CFS SC User Guide Doc No 582-2012-003 Ver 1.1 2014_12-18.pdf`](file--CFS%20SC%20User%20Guide%20Doc%20No%20582-2012-003%20Ver%201.1%202014_12-18.pdf) — 바이너리 (경로만)
-- [`fsw/apps/sc/docs/users_guide_historical/CFS SC User Guide Doc No 582-2012-003_Graphics Source Files.zip`](file--CFS%20SC%20User%20Guide%20Doc%20No%20582-2012-003_Graphics%20Source%20Files.zip) — 바이너리 (경로만)
+### `CFS SC User Guide Doc No 582-2012-003 Ver 1.1 2014_12-18.pdf`
+
+**경로:** `fsw/apps/sc/docs/users_guide_historical/CFS SC User Guide Doc No 582-2012-003 Ver 1.1 2014_12-18.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CFS SC User Guide Doc No 582-2012-003_Graphics Source Files.zip`
+
+**경로:** `fsw/apps/sc/docs/users_guide_historical/CFS SC User Guide Doc No 582-2012-003_Graphics Source Files.zip`
+
+바이너리 파일입니다. 본문은 생략했습니다.

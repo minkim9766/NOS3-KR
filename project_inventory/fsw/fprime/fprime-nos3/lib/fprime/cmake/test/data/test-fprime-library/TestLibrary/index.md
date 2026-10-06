@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 TestComponent/index
 ```
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/`](TestComponent/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

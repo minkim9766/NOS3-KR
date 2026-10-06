@@ -3,36 +3,1298 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--check.xml
-file--CMakeLists.txt
-file--Commands.fppi
-file--Events.fppi
-file--File.cpp
-file--FileDownlink.cpp
-file--FileDownlink.fpp
-file--FileDownlink.hpp
-file--Telemetry.fppi
-file--Warnings.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/check.xml`](file--check.xml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/FileDownlink.cpp`](file--FileDownlink.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/FileDownlink.fpp`](file--FileDownlink.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/FileDownlink.hpp`](file--FileDownlink.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Warnings.cpp`](file--Warnings.cpp) — UTF-8 텍스트 파일 본문 포함
+### `check.xml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/check.xml`
+
+
+```xml
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FileDownlink.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FileDownlink.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/File.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Warnings.cpp"
+)
+set(MOD_DEPS
+  Os
+  Fw/FilePacket
+  Utils/Hash
+  CFDP/Checksum
+)
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/FileDownlink/FileDownlink.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FileDownlinkTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FileDownlinkMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FileBuffer.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Commands.fppi`
+
+
+```text
+@ Read a named file off the disk. Divide it into packets and send the packets for transmission to the ground.
+async command SendFile(
+                        sourceFileName: string size 100 @< The name of the on-board file to send
+                        destFileName: string size 100 @< The name of the destination file on the ground
+                      ) \
+  opcode 0x00
+
+@ Cancel the downlink in progress, if any
+async command Cancel \
+  opcode 0x01
+
+@ Read a named file off the disk from a starting position. Divide it into packets and send the packets for transmission to the ground.
+async command SendPartial(
+                           sourceFileName: string size 100 @< The name of the on-board file to send
+                           destFileName: string size 100 @< The name of the destination file on the ground
+                           startOffset: U32 @< Starting offset of the source file
+                           length: U32 @< Number of bytes to send from starting offset. Length of 0 implies until the end of the file
+                         ) \
+  opcode 0x02
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Events.fppi`
+
+
+```text
+@ An error occurred opening a file
+event FileOpenError(
+                     fileName: string size 100 @< The name of the file
+                   ) \
+  severity warning high \
+  id 0x00 \
+  format "Could not open file {}"
+
+@ An error occurred reading a file
+event FileReadError(
+                     fileName: string size 100 @< The name of the file
+                     status: I32 @< The file status of read
+                   ) \
+  severity warning high \
+  id 0x01 \
+  format "Could not read file {} with status {}"
+
+@ The File Downlink component successfully sent a file
+event FileSent(
+                sourceFileName: string size 100 @< The source file name
+                destFileName: string size 100 @< The destination file name
+              ) \
+  severity activity high \
+  id 0x02 \
+  format "Sent file {} to file {}"
+
+@ The File Downlink component canceled downlink of a file
+event DownlinkCanceled(
+                        sourceFileName: string size 100 @< The source file name
+                        destFileName: string size 100 @< The destination file name
+                      ) \
+  severity activity high \
+  id 0x03 \
+  format "Canceled downlink of file {} to file {}"
+
+@ The File Downlink component has detected a timeout. Downlink has been canceled.
+event DownlinkTimeout(
+                       sourceFileName: string size 100 @< The source filename
+                       destFileName: string size 100 @< The destination file name
+                     ) \
+  severity warning high \
+  id 0x04 \
+  format "Timeout occurred during downlink of file {} to file {}. Downlink has been canceled."
+
+@ The File Downlink component has detected a timeout. Downlink has been canceled.
+event DownlinkPartialWarning(
+                              startOffset: U32 @< Starting file offset in bytes
+                              length: U32 @< Number of bytes to downlink
+                              filesize: U32 @< Size of source file
+                              sourceFileName: string size 100 @< The source filename
+                              destFileName: string size 100 @< The destination file name
+                            ) \
+  severity warning low \
+  id 0x05 \
+  format "Offset {} plus length {} is greater than source size {} for partial downlink of file {} to file {}. "
+
+@ The File Downlink component has detected a timeout. Downlink has been canceled.
+event DownlinkPartialFail(
+                           sourceFileName: string size 100 @< The source filename
+                           destFileName: string size 100 @< The destination file name
+                           startOffset: U32 @< Starting file offset in bytes
+                           filesize: U32 @< Size of source file
+                         ) \
+  severity warning high \
+  id 0x06 \
+  format "Error occurred during partial downlink of file {} to file {}. Offset {} greater than or equal to source filesize {}."
+
+@ The File Downlink component generated an error when trying to send a data packet.
+event SendDataFail(
+                    sourceFileName: string size 100 @< The source filename
+                    byteOffset: U32 @< Byte offset
+                  ) \
+  severity warning high \
+  id 0x07 \
+  format "Failed to send data packet from file {} at byte offset {}."
+
+@ The File Downlink component started a file download.
+event SendStarted(
+                   fileSize: U32 @< The source file size
+                   sourceFileName: string size 100 @< The source filename
+                   destFileName: string size 100 @< The destination filename
+                 ) \
+  severity activity high \
+  id 0x08 \
+  format "Downlink of {} bytes started from {} to {}"
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/File.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  File.cpp
+// \author bocchino
+// \brief  cpp file for FileDownlink::File
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/FileSystem.hpp>
+#include <Svc/FileDownlink/FileDownlink.hpp>
+
+namespace Svc {
+
+Os::File::Status FileDownlink::File ::open(const char* const sourceFileName, const char* const destFileName) {
+    // Set source name
+    Fw::LogStringArg sourceLogStringArg(sourceFileName);
+    this->m_sourceName = sourceLogStringArg;
+
+    // Set dest name
+    Fw::LogStringArg destLogStringArg(destFileName);
+    this->m_destName = destLogStringArg;
+
+    // Set size
+    FwSizeType file_size;
+    const Os::FileSystem::Status status = Os::FileSystem::getFileSize(sourceFileName, file_size);
+    if (status != Os::FileSystem::OP_OK) {
+        return Os::File::BAD_SIZE;
+    }
+    // If the size does not cast cleanly to the desired U32 type, return size error
+    if (static_cast<FwSizeType>(static_cast<U32>(file_size)) != file_size) {
+        return Os::File::BAD_SIZE;
+    }
+    this->m_size = static_cast<U32>(file_size);
+
+    // Initialize checksum
+    CFDP::Checksum checksum;
+    this->m_checksum = checksum;
+
+    // Open osFile for reading
+    return this->m_osFile.open(sourceFileName, Os::File::OPEN_READ);
+}
+
+Os::File::Status FileDownlink::File ::read(U8* const data, const U32 byteOffset, const U32 size) {
+    Os::File::Status status;
+    status = this->m_osFile.seek(byteOffset, Os::File::SeekType::ABSOLUTE);
+    if (status != Os::File::OP_OK) {
+        return status;
+    }
+
+    FwSizeType intSize = size;
+    status = this->m_osFile.read(data, intSize);
+
+    if (status != Os::File::OP_OK) {
+        return status;
+    }
+    // Force a bad size error when the U32 carrying size is bad
+    if (static_cast<U32>(intSize) != size) {
+        return Os::File::BAD_SIZE;
+    }
+    this->m_checksum.update(data, byteOffset, size);
+
+    return Os::File::OP_OK;
+}
+}  // namespace Svc
+```
+
+### `FileDownlink.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/FileDownlink.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FileDownlink.hpp
+// \author bocchino, mstarch
+// \brief  hpp file for FileDownlink component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include <Fw/Com/ComPacket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Os/QueueString.hpp>
+#include <Svc/FileDownlink/FileDownlink.hpp>
+#include <limits>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+FileDownlink ::FileDownlink(const char* const name)
+    : FileDownlinkComponentBase(name),
+      m_configured(false),
+      m_filesSent(this),
+      m_packetsSent(this),
+      m_warnings(this),
+      m_sequenceIndex(0),
+      m_curTimer(0),
+      m_bufferSize(0),
+      m_byteOffset(0),
+      m_endOffset(0),
+      m_lastCompletedType(Fw::FilePacket::T_NONE),
+      m_lastBufferId(0),
+      m_curEntry(),
+      m_cntxId(0) {}
+
+void FileDownlink ::configure(U32 timeout, U32 cooldown, U32 cycleTime, U32 fileQueueDepth) {
+    this->m_timeout = timeout;
+    this->m_cooldown = cooldown;
+    this->m_cycleTime = cycleTime;
+    this->m_configured = true;
+
+    Os::Queue::Status stat =
+        m_fileQueue.create(Os::QueueString("fileDownlinkQueue"), static_cast<FwSizeType>(fileQueueDepth),
+                           static_cast<FwSizeType>(sizeof(struct FileEntry)));
+    FW_ASSERT(stat == Os::Queue::OP_OK, static_cast<FwAssertArgType>(stat));
+}
+
+void FileDownlink ::preamble() {
+    FW_ASSERT(this->m_configured == true);
+}
+
+FileDownlink ::~FileDownlink() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void FileDownlink ::Run_handler(const FwIndexType portNum, U32 context) {
+    switch (this->m_mode.get()) {
+        case Mode::IDLE: {
+            FwSizeType real_size = 0;
+            FwQueuePriorityType prio = 0;
+            Os::Queue::Status stat = m_fileQueue.receive(reinterpret_cast<U8*>(&this->m_curEntry),
+                                                         static_cast<FwSizeType>(sizeof(this->m_curEntry)),
+                                                         Os::Queue::BlockingType::NONBLOCKING, real_size, prio);
+
+            if (stat != Os::Queue::Status::OP_OK || sizeof(this->m_curEntry) != real_size) {
+                return;
+            }
+
+            sendFile(this->m_curEntry.srcFilename, this->m_curEntry.destFilename, this->m_curEntry.offset,
+                     this->m_curEntry.length);
+            break;
+        }
+        case Mode::COOLDOWN: {
+            if (this->m_curTimer >= this->m_cooldown) {
+                this->m_curTimer = 0;
+                this->m_mode.set(Mode::IDLE);
+            } else {
+                this->m_curTimer += m_cycleTime;
+            }
+            break;
+        }
+        case Mode::WAIT: {
+            // If current timeout is too-high and we are waiting for a packet, issue a timeout
+            if (this->m_curTimer >= this->m_timeout) {
+                this->m_curTimer = 0;
+                this->log_WARNING_HI_DownlinkTimeout(this->m_file.getSourceName(), this->m_file.getDestName());
+                this->enterCooldown();
+                this->sendResponse(FILEDOWNLINK_COMMAND_FAILURES_DISABLED ? SendFileStatus::STATUS_OK
+                                                                          : SendFileStatus::STATUS_ERROR);
+            } else {  // Otherwise update the current counter
+                this->m_curTimer += m_cycleTime;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+Svc::SendFileResponse FileDownlink ::SendFile_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase& sourceFilename,  // lgtm[cpp/large-parameter] dictated by command architecture
+    const Fw::StringBase& destFilename,    // lgtm[cpp/large-parameter] dictated by command architecture
+    U32 offset,
+    U32 length) {
+    struct FileEntry entry;
+    entry.srcFilename[0] = 0;
+    entry.destFilename[0] = 0;
+    entry.offset = offset;
+    entry.length = length;
+    entry.source = FileDownlink::PORT;
+    entry.opCode = 0;
+    entry.cmdSeq = 0;
+    entry.context = m_cntxId++;
+
+    FW_ASSERT(sourceFilename.length() < sizeof(entry.srcFilename));
+    FW_ASSERT(destFilename.length() < sizeof(entry.destFilename));
+    (void)Fw::StringUtils::string_copy(entry.srcFilename, sourceFilename.toChar(),
+                                       static_cast<FwSizeType>(sizeof(entry.srcFilename)));
+    (void)Fw::StringUtils::string_copy(entry.destFilename, destFilename.toChar(),
+                                       static_cast<FwSizeType>(sizeof(entry.destFilename)));
+
+    Os::Queue::Status status = m_fileQueue.send(reinterpret_cast<U8*>(&entry), static_cast<FwSizeType>(sizeof(entry)),
+                                                0, Os::Queue::BlockingType::NONBLOCKING);
+
+    if (status != Os::Queue::Status::OP_OK) {
+        return SendFileResponse(SendFileStatus::STATUS_ERROR, std::numeric_limits<U32>::max());
+    }
+    return SendFileResponse(SendFileStatus::STATUS_OK, entry.context);
+}
+
+void FileDownlink ::pingIn_handler(const FwIndexType portNum, U32 key) {
+    this->pingOut_out(0, key);
+}
+
+void FileDownlink ::bufferReturn_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    // If this is a stale buffer (old, timed-out, or both), then ignore its return.
+    // File downlink actions only respond to the return of the most-recently-sent buffer.
+    if (this->m_lastBufferId != fwBuffer.getContext() + 1 || this->m_mode.get() == Mode::IDLE) {
+        return;
+    }
+    // Non-ignored buffers cannot be returned in "DOWNLINK" and "IDLE" state.  Only in "WAIT", "CANCEL" state.
+    FW_ASSERT(this->m_mode.get() == Mode::WAIT || this->m_mode.get() == Mode::CANCEL,
+              static_cast<FwAssertArgType>(this->m_mode.get()));
+    // If the last packet has been sent (and is returning now) then finish the file
+    if (this->m_lastCompletedType == Fw::FilePacket::T_END || this->m_lastCompletedType == Fw::FilePacket::T_CANCEL) {
+        finishHelper(this->m_lastCompletedType == Fw::FilePacket::T_CANCEL);
+        return;
+    }
+    // If waiting and a buffer is in-bound, then switch to downlink mode
+    else if (this->m_mode.get() == Mode::WAIT) {
+        this->m_mode.set(Mode::DOWNLINK);
+    }
+
+    this->downlinkPacket();
+}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void FileDownlink ::SendFile_cmdHandler(const FwOpcodeType opCode,
+                                        const U32 cmdSeq,
+                                        const Fw::CmdStringArg& sourceFilename,
+                                        const Fw::CmdStringArg& destFilename) {
+    struct FileEntry entry;
+    entry.srcFilename[0] = 0;
+    entry.destFilename[0] = 0;
+    entry.offset = 0;
+    entry.length = 0;
+    entry.source = FileDownlink::COMMAND;
+    entry.opCode = opCode;
+    entry.cmdSeq = cmdSeq;
+    entry.context = std::numeric_limits<U32>::max();
+
+    FW_ASSERT(sourceFilename.length() < sizeof(entry.srcFilename));
+    FW_ASSERT(destFilename.length() < sizeof(entry.destFilename));
+    (void)Fw::StringUtils::string_copy(entry.srcFilename, sourceFilename.toChar(),
+                                       static_cast<FwSizeType>(sizeof(entry.srcFilename)));
+    (void)Fw::StringUtils::string_copy(entry.destFilename, destFilename.toChar(),
+                                       static_cast<FwSizeType>(sizeof(entry.destFilename)));
+
+    Os::Queue::Status status = m_fileQueue.send(reinterpret_cast<U8*>(&entry), static_cast<FwSizeType>(sizeof(entry)),
+                                                0, Os::Queue::BlockingType::NONBLOCKING);
+
+    if (status != Os::Queue::Status::OP_OK) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void FileDownlink ::SendPartial_cmdHandler(FwOpcodeType opCode,
+                                           U32 cmdSeq,
+                                           const Fw::CmdStringArg& sourceFilename,
+                                           const Fw::CmdStringArg& destFilename,
+                                           U32 startOffset,
+                                           U32 length) {
+    struct FileEntry entry;
+    entry.srcFilename[0] = 0;
+    entry.destFilename[0] = 0;
+    entry.offset = startOffset;
+    entry.length = length;
+    entry.source = FileDownlink::COMMAND;
+    entry.opCode = opCode;
+    entry.cmdSeq = cmdSeq;
+    entry.context = std::numeric_limits<U32>::max();
+
+    FW_ASSERT(sourceFilename.length() < sizeof(entry.srcFilename));
+    FW_ASSERT(destFilename.length() < sizeof(entry.destFilename));
+    (void)Fw::StringUtils::string_copy(entry.srcFilename, sourceFilename.toChar(),
+                                       static_cast<FwSizeType>(sizeof(entry.srcFilename)));
+    (void)Fw::StringUtils::string_copy(entry.destFilename, destFilename.toChar(),
+                                       static_cast<FwSizeType>(sizeof(entry.destFilename)));
+
+    Os::Queue::Status status = m_fileQueue.send(reinterpret_cast<U8*>(&entry), static_cast<FwSizeType>(sizeof(entry)),
+                                                0, Os::Queue::BlockingType::NONBLOCKING);
+
+    if (status != Os::Queue::Status::OP_OK) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+void FileDownlink ::Cancel_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    // Must be able to cancel in both downlink and waiting states
+    if (this->m_mode.get() == Mode::DOWNLINK || this->m_mode.get() == Mode::WAIT) {
+        this->m_mode.set(Mode::CANCEL);
+    }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+Fw::CmdResponse FileDownlink ::statusToCmdResp(SendFileStatus status) {
+    switch (status.e) {
+        case SendFileStatus::STATUS_OK:
+            return Fw::CmdResponse::OK;
+        case SendFileStatus::STATUS_ERROR:
+            return Fw::CmdResponse::EXECUTION_ERROR;
+        case SendFileStatus::STATUS_INVALID:
+            return Fw::CmdResponse::VALIDATION_ERROR;
+        case SendFileStatus::STATUS_BUSY:
+            return Fw::CmdResponse::BUSY;
+        default:
+            // Trigger assertion if given unknown status
+            FW_ASSERT(false);
+    }
+
+    // It's impossible to reach this, but added to suppress gcc missing return warning
+    return Fw::CmdResponse::EXECUTION_ERROR;
+}
+
+void FileDownlink ::sendResponse(SendFileStatus resp) {
+    if (this->m_curEntry.source == FileDownlink::COMMAND) {
+        this->cmdResponse_out(this->m_curEntry.opCode, this->m_curEntry.cmdSeq, statusToCmdResp(resp));
+    } else {
+        for (FwIndexType i = 0; i < this->getNum_FileComplete_OutputPorts(); i++) {
+            if (this->isConnected_FileComplete_OutputPort(i)) {
+                this->FileComplete_out(i, Svc::SendFileResponse(resp, this->m_curEntry.context));
+            }
+        }
+    }
+}
+
+void FileDownlink ::sendFile(const char* sourceFilename, const char* destFilename, U32 startOffset, U32 length) {
+    // Open file for downlink
+    Os::File::Status status = this->m_file.open(sourceFilename, destFilename);
+
+    // Reject command if error when opening file
+    if (status != Os::File::OP_OK) {
+        this->m_mode.set(Mode::IDLE);
+        this->m_warnings.fileOpenError();
+        sendResponse(FILEDOWNLINK_COMMAND_FAILURES_DISABLED ? SendFileStatus::STATUS_OK : SendFileStatus::STATUS_ERROR);
+        return;
+    }
+
+    if (startOffset >= this->m_file.getSize()) {
+        this->enterCooldown();
+        this->log_WARNING_HI_DownlinkPartialFail(this->m_file.getSourceName(), this->m_file.getDestName(), startOffset,
+                                                 this->m_file.getSize());
+        sendResponse(FILEDOWNLINK_COMMAND_FAILURES_DISABLED ? SendFileStatus::STATUS_OK
+                                                            : SendFileStatus::STATUS_INVALID);
+        return;
+    } else if (startOffset + length > this->m_file.getSize()) {
+        // If the amount to downlink is greater than the file size, emit a Warning and then allow
+        // the file to be downlinked anyway
+        this->log_WARNING_LO_DownlinkPartialWarning(startOffset, length, this->m_file.getSize(),
+                                                    this->m_file.getSourceName(), this->m_file.getDestName());
+        length = this->m_file.getSize() - startOffset;
+    }
+
+    // Send file and switch to WAIT mode
+    this->getBuffer(this->m_buffer, FILE_PACKET);
+    this->sendStartPacket();
+    this->m_mode.set(Mode::WAIT);
+    this->m_sequenceIndex = 1;
+    this->m_curTimer = 0;
+    this->m_byteOffset = startOffset;
+    this->m_lastCompletedType = Fw::FilePacket::T_START;
+
+    // zero length means read until end of file
+    if (length > 0) {
+        this->log_ACTIVITY_HI_SendStarted(length, this->m_file.getSourceName(), this->m_file.getDestName());
+        this->m_endOffset = startOffset + length;
+    } else {
+        this->log_ACTIVITY_HI_SendStarted(this->m_file.getSize() - startOffset, this->m_file.getSourceName(),
+                                          this->m_file.getDestName());
+        this->m_endOffset = this->m_file.getSize();
+    }
+}
+
+Os::File::Status FileDownlink ::sendDataPacket(U32& byteOffset) {
+    FW_ASSERT(byteOffset < this->m_endOffset);
+    const U32 maxDataSize =
+        FILEDOWNLINK_INTERNAL_BUFFER_SIZE - Fw::FilePacket::DataPacket::HEADERSIZE - sizeof(FwPacketDescriptorType);
+    const U32 dataSize =
+        (byteOffset + maxDataSize > this->m_endOffset) ? (this->m_endOffset - byteOffset) : maxDataSize;
+    U8 buffer[maxDataSize];
+    // This will be last data packet sent
+    if (dataSize + byteOffset == this->m_endOffset) {
+        this->m_lastCompletedType = Fw::FilePacket::T_DATA;
+    }
+
+    const Os::File::Status status = this->m_file.read(buffer, byteOffset, dataSize);
+    if (status != Os::File::OP_OK) {
+        this->m_warnings.fileRead(status);
+        return status;
+    }
+
+    Fw::FilePacket::DataPacket dataPacket;
+    dataPacket.initialize(this->m_sequenceIndex, byteOffset, static_cast<U16>(dataSize), buffer);
+    ++this->m_sequenceIndex;
+    Fw::FilePacket filePacket;
+    filePacket.fromDataPacket(dataPacket);
+    this->sendFilePacket(filePacket);
+
+    byteOffset += dataSize;
+
+    return Os::File::OP_OK;
+}
+
+void FileDownlink ::sendCancelPacket() {
+    Fw::Buffer buffer;
+    Fw::FilePacket::CancelPacket cancelPacket;
+    cancelPacket.initialize(this->m_sequenceIndex);
+
+    Fw::FilePacket filePacket;
+    filePacket.fromCancelPacket(cancelPacket);
+    this->getBuffer(buffer, CANCEL_PACKET);
+    FW_ASSERT(buffer.getSize() >= filePacket.bufferSize() + sizeof(FwPacketDescriptorType),
+              static_cast<FwAssertArgType>(buffer.getSize()),
+              static_cast<FwAssertArgType>(filePacket.bufferSize() + sizeof(FwPacketDescriptorType)));
+
+    // Serialize the packet descriptor FW_PACKET_FILE to the buffer
+    Fw::SerializeStatus status =
+        buffer.getSerializer().serialize(static_cast<FwPacketDescriptorType>(Fw::ComPacketType::FW_PACKET_FILE));
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    Fw::Buffer offsetBuffer(buffer.getData() + sizeof(FwPacketDescriptorType),
+                            buffer.getSize() - static_cast<Fw::Buffer::SizeType>(sizeof(FwPacketDescriptorType)));
+    // Serialize the filePacket content into the buffer
+    status = filePacket.toBuffer(offsetBuffer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    this->bufferSendOut_out(0, buffer);
+    this->m_packetsSent.packetSent();
+}
+
+void FileDownlink ::sendEndPacket() {
+    CFDP::Checksum checksum;
+    this->m_file.getChecksum(checksum);
+
+    Fw::FilePacket::EndPacket endPacket;
+    endPacket.initialize(this->m_sequenceIndex, checksum);
+
+    Fw::FilePacket filePacket;
+    filePacket.fromEndPacket(endPacket);
+    this->sendFilePacket(filePacket);
+}
+
+void FileDownlink ::sendStartPacket() {
+    Fw::FilePacket::StartPacket startPacket;
+    startPacket.initialize(this->m_file.getSize(), this->m_file.getSourceName().toChar(),
+                           this->m_file.getDestName().toChar());
+    Fw::FilePacket filePacket;
+    filePacket.fromStartPacket(startPacket);
+    this->sendFilePacket(filePacket);
+}
+
+void FileDownlink ::sendFilePacket(const Fw::FilePacket& filePacket) {
+    const U32 bufferSize = filePacket.bufferSize() + static_cast<U32>(sizeof(FwPacketDescriptorType));
+    FW_ASSERT(this->m_buffer.getData() != nullptr);
+    FW_ASSERT(this->m_buffer.getSize() >= bufferSize, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(this->m_buffer.getSize()));
+    // Serialize packet descriptor FW_PACKET_FILE to the buffer
+    Fw::SerializeStatus status = this->m_buffer.getSerializer().serialize(
+        static_cast<FwPacketDescriptorType>(Fw::ComPacketType::FW_PACKET_FILE));
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    // Serialize the filePacket content into the buffer, offset by the size of the packet descriptor
+    Fw::Buffer offsetBuffer(
+        this->m_buffer.getData() + sizeof(FwPacketDescriptorType),
+        this->m_buffer.getSize() - static_cast<Fw::Buffer::SizeType>(sizeof(FwPacketDescriptorType)));
+    status = filePacket.toBuffer(offsetBuffer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK);
+    // set the buffer size to the packet size
+    this->m_buffer.setSize(bufferSize);
+    this->bufferSendOut_out(0, this->m_buffer);
+    // restore buffer size to max
+    this->m_buffer.setSize(FILEDOWNLINK_INTERNAL_BUFFER_SIZE);
+    this->m_packetsSent.packetSent();
+}
+
+void FileDownlink ::enterCooldown() {
+    this->m_file.getOsFile().close();
+    this->m_mode.set(Mode::COOLDOWN);
+    this->m_lastCompletedType = Fw::FilePacket::T_NONE;
+    this->m_curTimer = 0;
+}
+
+void FileDownlink ::downlinkPacket() {
+    FW_ASSERT(this->m_lastCompletedType != Fw::FilePacket::T_NONE,
+              static_cast<FwAssertArgType>(this->m_lastCompletedType));
+    FW_ASSERT(this->m_mode.get() == Mode::CANCEL || this->m_mode.get() == Mode::DOWNLINK,
+              static_cast<FwAssertArgType>(this->m_mode.get()));
+    // If canceled mode and currently downlinking data then send a cancel packet
+    if (this->m_mode.get() == Mode::CANCEL && this->m_lastCompletedType == Fw::FilePacket::T_START) {
+        this->sendCancelPacket();
+        this->m_lastCompletedType = Fw::FilePacket::T_CANCEL;
+    }
+    // If in downlink mode and currently downlinking data then continue with the next packer
+    else if (this->m_mode.get() == Mode::DOWNLINK && this->m_lastCompletedType == Fw::FilePacket::T_START) {
+        // Send the next packet, or fail doing so
+        const Os::File::Status status = this->sendDataPacket(this->m_byteOffset);
+        if (status != Os::File::OP_OK) {
+            this->log_WARNING_HI_SendDataFail(this->m_file.getSourceName(), this->m_byteOffset);
+            this->enterCooldown();
+            this->sendResponse(FILEDOWNLINK_COMMAND_FAILURES_DISABLED ? SendFileStatus::STATUS_OK
+                                                                      : SendFileStatus::STATUS_ERROR);
+            // Don't go to wait state
+            return;
+        }
+    }
+    // If in downlink mode or cancel and finished downlinking data then send the last packet
+    else if (this->m_lastCompletedType == Fw::FilePacket::T_DATA) {
+        this->sendEndPacket();
+        this->m_lastCompletedType = Fw::FilePacket::T_END;
+    }
+    this->m_mode.set(Mode::WAIT);
+    this->m_curTimer = 0;
+}
+
+void FileDownlink ::finishHelper(bool cancel) {
+    // Complete command and switch to IDLE
+    if (not cancel) {
+        this->m_filesSent.fileSent();
+        this->log_ACTIVITY_HI_FileSent(this->m_file.getSourceName(), this->m_file.getDestName());
+    } else {
+        this->log_ACTIVITY_HI_DownlinkCanceled(this->m_file.getSourceName(), this->m_file.getDestName());
+    }
+    this->enterCooldown();
+    sendResponse(SendFileStatus::STATUS_OK);
+}
+
+void FileDownlink ::getBuffer(Fw::Buffer& buffer, PacketType type) {
+    // Check type is correct
+    FW_ASSERT(type < COUNT_PACKET_TYPE && type >= 0, static_cast<FwAssertArgType>(type));
+    // Wrap the buffer around our indexed memory.
+    buffer.setData(this->m_memoryStore[type]);
+    buffer.setSize(FILEDOWNLINK_INTERNAL_BUFFER_SIZE);
+    // Set a known ID to look for later
+    buffer.setContext(m_lastBufferId);
+    m_lastBufferId++;
+}
+}  // end namespace Svc
+```
+
+### `FileDownlink.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/FileDownlink.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for downlinking files
+  active component FileDownlink {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Run input port
+    async input port Run: Svc.Sched
+
+    @ Mutexed Sendfile input port
+    guarded input port SendFile: Svc.SendFileRequest
+
+    @ File complete output port
+    output port FileComplete: [FileDownCompletePorts] Svc.SendFileComplete
+
+    @ Buffer return input port
+    async input port bufferReturn: Fw.BufferSend
+
+    @ Buffer send output port
+    output port bufferSendOut: Fw.BufferSend
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Time get port
+    time get port timeCaller
+
+    @ Command registration port
+    command reg port cmdRegOut
+
+    @ Command receive port
+    command recv port cmdIn
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Event port
+    event port eventOut
+
+    @ Text event port
+    text event port textEventOut
+
+    @ Telemetry port
+    telemetry port tlmOut
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+  }
+
+}
+```
+
+### `FileDownlink.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/FileDownlink.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FileDownlink.hpp
+// \author bocchino, mstarch
+// \brief  hpp file for FileDownlink component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_FileDownlink_HPP
+#define Svc_FileDownlink_HPP
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Os/File.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/Queue.hpp>
+#include <Svc/FileDownlink/FileDownlinkComponentAc.hpp>
+#include <config/FileDownlinkCfg.hpp>
+
+namespace Svc {
+
+class FileDownlink final : public FileDownlinkComponentBase {
+    friend class FileDownlinkTester;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The Mode class
+    class Mode {
+        friend class FileDownlinkTester;
+
+      public:
+        //! The Mode type
+        typedef enum { IDLE, DOWNLINK, CANCEL, WAIT, COOLDOWN } Type;
+
+      public:
+        //! Constructor
+        Mode() : m_value(IDLE) {}
+
+      public:
+        //! Set the Mode value
+        void set(const Type value) {
+            this->m_mutex.lock();
+            this->m_value = value;
+            this->m_mutex.unLock();
+        }
+
+        //! Get the Mode value
+        Type get() {
+            this->m_mutex.lock();
+            const Type value = this->m_value;
+            this->m_mutex.unLock();
+            return value;
+        }
+
+      private:
+        //! The Mode value
+        Type m_value;
+
+        //! The Mode mutex
+        Os::Mutex m_mutex;
+    };
+
+    //! Class representing an outgoing file
+    class File {
+        friend class FileDownlinkTester;
+
+      public:
+        //! Constructor
+        File() : m_size(0) {}
+
+      private:
+        //! The source file name
+        Fw::LogStringArg m_sourceName;
+
+        //! The destination file name
+        Fw::LogStringArg m_destName;
+
+        //! The underlying OS file
+        Os::File m_osFile;
+
+        //! The file size
+        U32 m_size;
+
+        //! The checksum for the file
+        CFDP::Checksum m_checksum;
+
+      public:
+        //! Open the OS file for reading and initialize the checksum
+        Os::File::Status open(const char* const sourceFileName,  //!< The source file name
+                              const char* const destFileName     //!< The destination file name
+        );
+
+        //! Read bytes from the OS file and update the checksum
+        Os::File::Status read(U8* const data, const U32 byteOffset, const U32 size);
+
+        //! Get the checksum
+        void getChecksum(CFDP::Checksum& checksum) { checksum = this->m_checksum; }
+
+        //! Get the source file name
+        Fw::LogStringArg& getSourceName(void) { return this->m_sourceName; }
+
+        //! Get the destination file name
+        Fw::LogStringArg& getDestName(void) { return this->m_destName; }
+
+        //! Get the underlying OS file
+        Os::File& getOsFile(void) { return this->m_osFile; }
+
+        //! Get the file size
+        U32 getSize(void) { return this->m_size; }
+    };
+
+    //! Class to record files sent
+    class FilesSent {
+        friend class FileDownlinkTester;
+
+      public:
+        //! Construct a FilesSent object
+        FilesSent(FileDownlink* const fileDownlink) : m_sent_file_count(0), m_fileDownlink(fileDownlink) {}
+
+      public:
+        //! Record a file sent
+        void fileSent() {
+            ++this->m_sent_file_count;
+            this->m_fileDownlink->tlmWrite_FilesSent(m_sent_file_count);
+        }
+
+      private:
+        //! The total number of file sent
+        U32 m_sent_file_count;
+
+        //! The enclosing FileDownlink object
+        FileDownlink* const m_fileDownlink;
+    };
+
+    //! Class to record packets sent
+    class PacketsSent {
+        friend class FileDownlinkTester;
+
+      public:
+        //! Construct a PacketsSent object
+        PacketsSent(FileDownlink* const fileDownlink) : m_sent_packet_count(0), m_fileDownlink(fileDownlink) {}
+
+      public:
+        //! Record a packet sent
+        void packetSent() {
+            ++this->m_sent_packet_count;
+            this->m_fileDownlink->tlmWrite_PacketsSent(m_sent_packet_count);
+        }
+
+      private:
+        //! The total number of downlinked packets
+        U32 m_sent_packet_count;
+
+        //! The enclosing FileDownlink object
+        FileDownlink* const m_fileDownlink;
+    };
+
+    //! Class to record warnings
+    class Warnings {
+        friend class FileDownlinkTester;
+
+      public:
+        //! Construct a Warnings object
+        Warnings(FileDownlink* const fileDownlink) : m_warning_count(0), m_fileDownlink(fileDownlink) {}
+
+      public:
+        //! Issue a File Open Error warning
+        void fileOpenError();
+
+        //! Issue a File Read Error warning
+        void fileRead(const Os::File::Status status);
+
+      private:
+        //! Record a warning
+        void warning() {
+            ++this->m_warning_count;
+            this->m_fileDownlink->tlmWrite_Warnings(m_warning_count);
+        }
+
+      private:
+        //! The total number of warnings
+        U32 m_warning_count;
+
+        //! The enclosing FileDownlink object
+        FileDownlink* const m_fileDownlink;
+    };
+
+    //! Sources of send file requests
+    enum CallerSource { COMMAND, PORT };
+
+#define FILE_ENTRY_FILENAME_LEN 101
+
+    //! Used to track a single file downlink request
+    struct FileEntry {
+        char srcFilename[FILE_ENTRY_FILENAME_LEN];   // Name of requested file
+        char destFilename[FILE_ENTRY_FILENAME_LEN];  // Name of requested file
+        U32 offset;
+        U32 length;
+        CallerSource source;  // Source of the downlink request
+        FwOpcodeType opCode;  // Op code of command, only set for CMD sources.
+        U32 cmdSeq;           // CmdSeq number, only set for CMD sources.
+        U32 context;          // Context id of request, only set for PORT sources.
+    };
+
+    //! Enumeration for packet types
+    //! Each type has a buffer to store it.
+    enum PacketType { FILE_PACKET, CANCEL_PACKET, COUNT_PACKET_TYPE };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FileDownlink
+    //!
+    FileDownlink(const char* const compName  //!< The component name
+    );
+
+    //! Configure FileDownlink component
+    //!
+    void configure(U32 timeout,        //!< Timeout threshold (milliseconds) while in WAIT state
+                   U32 cooldown,       //!< Cooldown (in ms) between finishing a downlink and starting the next file.
+                   U32 cycleTime,      //!< Rate at which we are running
+                   U32 fileQueueDepth  //!< Max number of items in file downlink queue
+    );
+
+    //! Start FileDownlink component
+    //! The component must be configured with configure() before starting.
+    //!
+    void preamble();
+
+    //! Destroy object FileDownlink
+    //!
+    ~FileDownlink();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for Run
+    //!
+    void Run_handler(const FwIndexType portNum,  //!< The port number
+                     U32 context                 //!< The call order
+    );
+
+    //! Handler implementation for SendFile
+    //!
+    Svc::SendFileResponse SendFile_handler(
+        const FwIndexType portNum,            /*!< The port number*/
+        const Fw::StringBase& sourceFilename, /*!< Path of file to downlink*/
+        const Fw::StringBase& destFilename,   /*!< Path to store downlinked file at*/
+        U32 offset, /*!< Amount of data in bytes to downlink from file. 0 to read until end of file*/
+        U32 length  /*!< Amount of data in bytes to downlink from file. 0 to read until end of file*/
+    );
+
+    //! Handler implementation for bufferReturn
+    //!
+    void bufferReturn_handler(const FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& fwBuffer);
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum, /*!< The port number*/
+                        U32 key                    /*!< Value to return to pinger*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for FileDownlink_SendFile command handler
+    //!
+    void SendFile_cmdHandler(const FwOpcodeType opCode,               //!< The opcode
+                             const U32 cmdSeq,                        //!< The command sequence number
+                             const Fw::CmdStringArg& sourceFilename,  //!< The name of the on-board file to send
+                             const Fw::CmdStringArg& destFilename  //!< The name of the destination file on the ground
+    );
+
+    //! Implementation for FileDownlink_Cancel command handler
+    //!
+    void Cancel_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                           const U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Implementation for FILE_DWN_SEND_PARTIAL command handler
+    //!
+    void SendPartial_cmdHandler(
+        FwOpcodeType opCode,                     //!< The opcode
+        U32 cmdSeq,                              //!< The command sequence number
+        const Fw::CmdStringArg& sourceFilename,  //!< The name of the on-board file to send
+        const Fw::CmdStringArg& destFilename,    //!< The name of the destination file on the ground
+        U32 startOffset,                         //!< Starting offset of the source file
+        U32 length  //!< Number of bytes to send from starting offset. Length of 0 implies until the end of the file
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    void sendFile(
+        const char* sourceFilename,  //!< The name of the on-board file to send
+        const char* destFilename,    //!< The name of the destination file on the ground
+        U32 startOffset,             //!< Starting offset of the source file
+        U32 length  //!< Number of bytes to send from starting offset. Length of 0 implies until the end of the file
+    );
+
+    // Individual packet transfer functions
+    Os::File::Status sendDataPacket(U32& byteOffset);
+    void sendCancelPacket();
+    void sendEndPacket();
+    void sendStartPacket();
+    void sendFilePacket(const Fw::FilePacket& filePacket);
+
+    // State-helper functions
+    void exitFileTransfer();
+    void enterCooldown();
+
+    // Function to acquire a buffer internally
+    void getBuffer(Fw::Buffer& buffer, PacketType type);
+    // Downlink the "next" packet
+    void downlinkPacket();
+    // Finish the file transfer
+    void finishHelper(bool is_cancel);
+    // Convert internal status enum to a command response;
+    Fw::CmdResponse statusToCmdResp(SendFileStatus status);
+    // Send response after completing file downlink
+    void sendResponse(SendFileStatus resp);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! Whether the configuration function has been called.
+    bool m_configured;
+
+    //! File downlink queue
+    Os::Queue m_fileQueue;
+
+    //! Buffer's memory backing
+    U8 m_memoryStore[COUNT_PACKET_TYPE][FILEDOWNLINK_INTERNAL_BUFFER_SIZE];
+
+    //! The mode
+    Mode m_mode;
+
+    //! The file
+    File m_file;
+
+    //! Files sent
+    FilesSent m_filesSent;
+
+    //! Packets sent
+    PacketsSent m_packetsSent;
+
+    //! Warnings
+    Warnings m_warnings;
+
+    //! The current sequence index
+    U32 m_sequenceIndex;
+
+    //! Timeout threshold (milliseconds) while in WAIT state
+    U32 m_timeout;
+
+    //! Cooldown (in ms) between finishing a downlink and starting the next file.
+    U32 m_cooldown;
+
+    //! current time residing in WAIT state
+    U32 m_curTimer;
+
+    //! rate (milliseconds) at which we are running
+    U32 m_cycleTime;
+
+    ////! Buffer for sending file data
+    Fw::Buffer m_buffer;
+
+    //! Buffer size for file data
+    U32 m_bufferSize;
+
+    //! Current byte offset in file
+    U32 m_byteOffset;
+
+    //! Amount of bytes left to read
+    U32 m_endOffset;
+
+    //! Set to true when all data packets have been sent
+    Fw::FilePacket::Type m_lastCompletedType;
+
+    //! Last buffer used
+    U32 m_lastBufferId;
+
+    //! Current in progress file entry from queue
+    struct FileEntry m_curEntry;
+
+    //! Incrementing context id used to unique identify a specific downlink request
+    U32 m_cntxId;
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Telemetry.fppi`
+
+
+```text
+@ The total number of files sent
+telemetry FilesSent: U32 id 0x00
+
+@ The total number of packets sent
+telemetry PacketsSent: U32 id 0x01
+
+@ The total number of warnings
+telemetry Warnings: U32 id 0x02
+```
+
+### `Warnings.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileDownlink/Warnings.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Warnings.cpp
+// \author bocchino
+// \brief  cpp file for FileDownlink::Warnings
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+#include <Svc/FileDownlink/FileDownlink.hpp>
+
+namespace Svc {
+
+void FileDownlink::Warnings ::fileOpenError() {
+    this->m_fileDownlink->log_WARNING_HI_FileOpenError(this->m_fileDownlink->m_file.getSourceName());
+    this->warning();
+}
+
+void FileDownlink::Warnings ::fileRead(const Os::File::Status status) {
+    this->m_fileDownlink->log_WARNING_HI_FileReadError(this->m_fileDownlink->m_file.getSourceName(), status);
+    this->warning();
+}
+
+}  // namespace Svc
+```

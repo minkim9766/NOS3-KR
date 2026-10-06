@@ -3,14 +3,10 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `framer-topology.png`
 
-file--framer-topology.png
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/docs/img/framer-topology.png`
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeFramer/docs/img/framer-topology.png`](file--framer-topology.png) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

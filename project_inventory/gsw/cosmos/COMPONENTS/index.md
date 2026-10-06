@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -25,80 +25,4542 @@ NOVATEL_OEM615/index
 SAMPLE/index
 SIM_CMDBUS_BRIDGE/index
 SYN/index
-file--arducam.xtce
-file--ARDUCAM_SIM_CMD.txt
-file--generic_adcs.xtce
-file--generic_css.xtce
-file--GENERIC_CSS_SIM_CMD.txt
-file--generic_eps.xtce
-file--GENERIC_EPS_SIM_CMD.txt
-file--generic_fss.xtce
-file--GENERIC_FSS_SIM_CMD.txt
-file--generic_imu.xtce
-file--GENERIC_IMU_SIM_CMD.txt
-file--generic_mag.xtce
-file--GENERIC_MAG_SIM_CMD.txt
-file--generic_radio.xtce
-file--GENERIC_RADIO_SIM_CMD.txt
-file--generic_reaction_wheel.xtce
-file--GENERIC_RW_SIM_CMD.txt
-file--generic_star_tracker.xtce
-file--GENERIC_STAR_TRACKER_SIM_CMD.txt
-file--generic_thruster.xtce
-file--GENERIC_THRUSTER_SIM_CMD.txt
-file--generic_torquer.xtce
-file--GENERIC_TORQUER_SIM_CMD.txt
-file--mgr.xtce
-file--novatel_oem615.xtce
-file--NOVATEL_OEM615_SIM_CMD.txt
-file--sample.xtce
-file--SAMPLE_SIM_CMD.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/COMPONENTS/ARDUCAM/`](ARDUCAM/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_ADCS/`](GENERIC_ADCS/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_CSS/`](GENERIC_CSS/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_EPS/`](GENERIC_EPS/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_FSS/`](GENERIC_FSS/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_IMU/`](GENERIC_IMU/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_MAG/`](GENERIC_MAG/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_RADIO/`](GENERIC_RADIO/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_REACTION_WHEEL/`](GENERIC_REACTION_WHEEL/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER/`](GENERIC_STAR_TRACKER/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_THRUSTER/`](GENERIC_THRUSTER/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_TORQUER/`](GENERIC_TORQUER/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/MGR/`](MGR/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/NOVATEL_OEM615/`](NOVATEL_OEM615/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/SAMPLE/`](SAMPLE/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/SIM_CMDBUS_BRIDGE/`](SIM_CMDBUS_BRIDGE/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/SYN/`](SYN/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/arducam.xtce`](file--arducam.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/ARDUCAM_SIM_CMD.txt`](file--ARDUCAM_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_adcs.xtce`](file--generic_adcs.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_css.xtce`](file--generic_css.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_CSS_SIM_CMD.txt`](file--GENERIC_CSS_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_eps.xtce`](file--generic_eps.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_EPS_SIM_CMD.txt`](file--GENERIC_EPS_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_fss.xtce`](file--generic_fss.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_FSS_SIM_CMD.txt`](file--GENERIC_FSS_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_imu.xtce`](file--generic_imu.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_IMU_SIM_CMD.txt`](file--GENERIC_IMU_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_mag.xtce`](file--generic_mag.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_MAG_SIM_CMD.txt`](file--GENERIC_MAG_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_radio.xtce`](file--generic_radio.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_RADIO_SIM_CMD.txt`](file--GENERIC_RADIO_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_reaction_wheel.xtce`](file--generic_reaction_wheel.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_RW_SIM_CMD.txt`](file--GENERIC_RW_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_star_tracker.xtce`](file--generic_star_tracker.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER_SIM_CMD.txt`](file--GENERIC_STAR_TRACKER_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_thruster.xtce`](file--generic_thruster.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_THRUSTER_SIM_CMD.txt`](file--GENERIC_THRUSTER_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/generic_torquer.xtce`](file--generic_torquer.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_TORQUER_SIM_CMD.txt`](file--GENERIC_TORQUER_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/mgr.xtce`](file--mgr.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/novatel_oem615.xtce`](file--novatel_oem615.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/NOVATEL_OEM615_SIM_CMD.txt`](file--NOVATEL_OEM615_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/sample.xtce`](file--sample.xtce) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/SAMPLE_SIM_CMD.txt`](file--SAMPLE_SIM_CMD.txt) — UTF-8 텍스트 파일 본문 포함
+### `arducam.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/arducam.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="ARDUCAM" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="ARDUCAM_HK_TLM_T">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="COMMANDERRORCOUNT_Type" shortDescription="CommandErrorCount" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="COMMANDCOUNT_Type" shortDescription="CommandCount" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="COMMANDERRORCOUNT" parameterTypeRef="COMMANDERRORCOUNT_Type"/>
+        <xtce:Parameter name="COMMANDCOUNT" parameterTypeRef="COMMANDCOUNT_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="ARDUCAM_HK_TLM_T" shortDescription="Arducam CAM_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="COMMANDERRORCOUNT"/>
+            <xtce:ParameterRefEntry parameterRef="COMMANDCOUNT"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2248"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="ARDUCAM_EXP_TLM_T">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:BinaryParameterType name="CAM_DATA_Type" shortDescription="CAM Data">
+          <xtce:BinaryDataEncoding>
+            <xtce:SizeInBits>
+              <xtce:FixedValue>8080</xtce:FixedValue>
+            </xtce:SizeInBits>
+          </xtce:BinaryDataEncoding>
+        </xtce:BinaryParameterType>
+        <xtce:IntegerParameterType name="MSG_COUNT_Type" shortDescription="CAM Experiment Message Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CAM_FIFO_LENGTH_Type" shortDescription="CAM FIFO Length" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CAM_DATA" parameterTypeRef="CAM_DATA_Type"/>
+        <xtce:Parameter name="MSG_COUNT" parameterTypeRef="MSG_COUNT_Type"/>
+        <xtce:Parameter name="CAM_FIFO_LENGTH" parameterTypeRef="CAM_FIFO_LENGTH_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="ARDUCAM_EXP_TLM_T" shortDescription="Arducam Experiment Telemetry">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CAM_DATA"/>
+            <xtce:ParameterRefEntry parameterRef="MSG_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CAM_FIFO_LENGTH"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2249"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet/>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="CAM_SEND_HK_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6345"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="ARDUCAM_CAM_SEND_HK_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="CAM_HW_CHECK_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6344"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="13"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="ARDUCAM_CAM_HW_CHECK_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="CAM_EXP3_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6344"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="12"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="ARDUCAM_CAM_EXP3_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="CAM_RESET_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6344"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="ARDUCAM_CAM_RESET_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="CAM_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6344"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="ARDUCAM_CAM_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `ARDUCAM_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/ARDUCAM_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS BIG_ENDIAN "Set Arducam Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"arducam-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS BIG_ENDIAN "Set Arducam Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"arducam-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `generic_adcs.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_adcs.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_ADCS" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_ADCS_DO">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="QBA_0_Type" sizeInBits="64" shortDescription="Quaternion from magnetic torqer to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="QBA_1_Type" sizeInBits="64" shortDescription="Quaternion from magnetic torquer to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="QBA_2_Type" sizeInBits="64" shortDescription="Quaternion from magnetic torquer to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="QBA_3_Type" sizeInBits="64" shortDescription="Quaternion from magnetic torquer to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MCMD_X_Type" sizeInBits="64" shortDescription="Magnetorquer Command in Actuator Frame, X component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MCMD_Y_Type" sizeInBits="64" shortDescription="Magnetorquer Command in Actuator Frame, Y component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MCMD_Z_Type" sizeInBits="64" shortDescription="Magnetorquer Command in Actuator Frame, Z component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW0_AXIS_X_Type" sizeInBits="64" shortDescription="Reaction wheel 0 axis in body, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW0_AXIS_Y_Type" sizeInBits="64" shortDescription="Reaction wheel 0 axis in body, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW0_AXIS_Z_Type" sizeInBits="64" shortDescription="Reaction wheel 0 axis in body, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW1_AXIS_X_Type" sizeInBits="64" shortDescription="Reaction wheel 1 axis in body, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW1_AXIS_Y_Type" sizeInBits="64" shortDescription="Reaction wheel 1 axis in body, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW1_AXIS_Z_Type" sizeInBits="64" shortDescription="Reaction wheel 1 axis in body, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW2_AXIS_X_Type" sizeInBits="64" shortDescription="Reaction wheel 2 axis in body, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW2_AXIS_Y_Type" sizeInBits="64" shortDescription="Reaction wheel 2 axis in body, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW2_AXIS_Z_Type" sizeInBits="64" shortDescription="Reaction wheel 2 axis in body, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_X_Type" sizeInBits="64" shortDescription="Reaction wheel torque in body frame, X component (Nm)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_Y_Type" sizeInBits="64" shortDescription="Reaction wheel torque in body frame, Y component (Nm)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_Z_Type" sizeInBits="64" shortDescription="Reaction wheel torque in body frame, Z component (Nm)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="QBA_0" parameterTypeRef="QBA_0_Type"/>
+        <xtce:Parameter name="QBA_1" parameterTypeRef="QBA_1_Type"/>
+        <xtce:Parameter name="QBA_2" parameterTypeRef="QBA_2_Type"/>
+        <xtce:Parameter name="QBA_3" parameterTypeRef="QBA_3_Type"/>
+        <xtce:Parameter name="MCMD_X" parameterTypeRef="MCMD_X_Type"/>
+        <xtce:Parameter name="MCMD_Y" parameterTypeRef="MCMD_Y_Type"/>
+        <xtce:Parameter name="MCMD_Z" parameterTypeRef="MCMD_Z_Type"/>
+        <xtce:Parameter name="RW0_AXIS_X" parameterTypeRef="RW0_AXIS_X_Type"/>
+        <xtce:Parameter name="RW0_AXIS_Y" parameterTypeRef="RW0_AXIS_Y_Type"/>
+        <xtce:Parameter name="RW0_AXIS_Z" parameterTypeRef="RW0_AXIS_Z_Type"/>
+        <xtce:Parameter name="RW1_AXIS_X" parameterTypeRef="RW1_AXIS_X_Type"/>
+        <xtce:Parameter name="RW1_AXIS_Y" parameterTypeRef="RW1_AXIS_Y_Type"/>
+        <xtce:Parameter name="RW1_AXIS_Z" parameterTypeRef="RW1_AXIS_Z_Type"/>
+        <xtce:Parameter name="RW2_AXIS_X" parameterTypeRef="RW2_AXIS_X_Type"/>
+        <xtce:Parameter name="RW2_AXIS_Y" parameterTypeRef="RW2_AXIS_Y_Type"/>
+        <xtce:Parameter name="RW2_AXIS_Z" parameterTypeRef="RW2_AXIS_Z_Type"/>
+        <xtce:Parameter name="TCMD_X" parameterTypeRef="TCMD_X_Type"/>
+        <xtce:Parameter name="TCMD_Y" parameterTypeRef="TCMD_Y_Type"/>
+        <xtce:Parameter name="TCMD_Z" parameterTypeRef="TCMD_Z_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_ADCS_DO" shortDescription="Generic_ADCS_DO_Tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="QBA_0"/>
+            <xtce:ParameterRefEntry parameterRef="QBA_1"/>
+            <xtce:ParameterRefEntry parameterRef="QBA_2"/>
+            <xtce:ParameterRefEntry parameterRef="QBA_3"/>
+            <xtce:ParameterRefEntry parameterRef="MCMD_X"/>
+            <xtce:ParameterRefEntry parameterRef="MCMD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="MCMD_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW0_AXIS_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW0_AXIS_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW0_AXIS_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW1_AXIS_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW1_AXIS_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW1_AXIS_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW2_AXIS_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW2_AXIS_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW2_AXIS_Z"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_X"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_Z"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2373"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_ADCS_AC">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="B_RANGE_Type" sizeInBits="64" shortDescription="Bdot Magnetic Field Range to Operate In (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KB_Type" sizeInBits="64" shortDescription="Bdot Gain parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BOLD_X_Type" sizeInBits="64" shortDescription="Bdot Old Magnetic Field Vector in Body Frame, X component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BOLD_Y_Type" sizeInBits="64" shortDescription="Bdot Old Magnetic Field Vector in Body Frame, Y component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BOLD_Z_Type" sizeInBits="64" shortDescription="Bdot Old Magnetic Field Vector in Body Frame, Z component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BDOT_X_Type" sizeInBits="64" shortDescription="Bdot Derivative of Magnetic Field Vector in Body Frame, X component (T/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BDOT_Y_Type" sizeInBits="64" shortDescription="Bdot Derivative of Magnetic Field Vector in Body Frame, Y component (T/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BDOT_Z_Type" sizeInBits="64" shortDescription="Bdot Derivative of Magnetic Field Vector in Body Frame, Z component (T/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KP_X_Type" sizeInBits="64" shortDescription="Sunsafe Gain Parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KP_Y_Type" sizeInBits="64" shortDescription="Sunsafe Gain Parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KP_Z_Type" sizeInBits="64" shortDescription="Sunsafe Gain Parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KR_X_Type" sizeInBits="64" shortDescription="Sunsafe Gain Parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KR_Y_Type" sizeInBits="64" shortDescription="Sunsafe Gain Parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="KR_Z_Type" sizeInBits="64" shortDescription="Sunsafe Gain Parameter">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SSIDE_X_Type" sizeInBits="64" shortDescription="Sunsafe sunside vector, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SSIDE_Y_Type" sizeInBits="64" shortDescription="Sunsafe sunside vector, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SSIDE_Z_Type" sizeInBits="64" shortDescription="Sunsafe sunside vector, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="VMAX_Type" sizeInBits="64" shortDescription="Sunsafe Rate limit (m/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CMD_WBN_X_Type" sizeInBits="64" shortDescription="Sunsafe commanded angular rate, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CMD_WBN_Y_Type" sizeInBits="64" shortDescription="Sunsafe commanded angular rate, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CMD_WBN_Z_Type" sizeInBits="64" shortDescription="Sunsafe commanded angular rate, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="H_MGMT_Type" shortDescription="Sunsafe allow momentum management" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="THERR_X_Type" sizeInBits="64" shortDescription="Sunsafe Theta error, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="THERR_Y_Type" sizeInBits="64" shortDescription="Sunsafe Theta error, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="THERR_Z_Type" sizeInBits="64" shortDescription="Sunsafe Theta error, z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WERR_X_Type" sizeInBits="64" shortDescription="Sunsafe Omega error, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WERR_Y_Type" sizeInBits="64" shortDescription="Sunsafe Omega error, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WERR_Z_Type" sizeInBits="64" shortDescription="Sunsafe Omega error, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_X_Type" sizeInBits="64" shortDescription="Sunsafe torque command, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_Y_Type" sizeInBits="64" shortDescription="Sunsafe torque command, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_Z_Type" sizeInBits="64" shortDescription="Sunsafe torque command, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ERR_T_Type" sizeInBits="64" shortDescription="Sunsafe error">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="B_RANGE" parameterTypeRef="B_RANGE_Type"/>
+        <xtce:Parameter name="KB" parameterTypeRef="KB_Type"/>
+        <xtce:Parameter name="BOLD_X" parameterTypeRef="BOLD_X_Type"/>
+        <xtce:Parameter name="BOLD_Y" parameterTypeRef="BOLD_Y_Type"/>
+        <xtce:Parameter name="BOLD_Z" parameterTypeRef="BOLD_Z_Type"/>
+        <xtce:Parameter name="BDOT_X" parameterTypeRef="BDOT_X_Type"/>
+        <xtce:Parameter name="BDOT_Y" parameterTypeRef="BDOT_Y_Type"/>
+        <xtce:Parameter name="BDOT_Z" parameterTypeRef="BDOT_Z_Type"/>
+        <xtce:Parameter name="KP_X" parameterTypeRef="KP_X_Type"/>
+        <xtce:Parameter name="KP_Y" parameterTypeRef="KP_Y_Type"/>
+        <xtce:Parameter name="KP_Z" parameterTypeRef="KP_Z_Type"/>
+        <xtce:Parameter name="KR_X" parameterTypeRef="KR_X_Type"/>
+        <xtce:Parameter name="KR_Y" parameterTypeRef="KR_Y_Type"/>
+        <xtce:Parameter name="KR_Z" parameterTypeRef="KR_Z_Type"/>
+        <xtce:Parameter name="SSIDE_X" parameterTypeRef="SSIDE_X_Type"/>
+        <xtce:Parameter name="SSIDE_Y" parameterTypeRef="SSIDE_Y_Type"/>
+        <xtce:Parameter name="SSIDE_Z" parameterTypeRef="SSIDE_Z_Type"/>
+        <xtce:Parameter name="VMAX" parameterTypeRef="VMAX_Type"/>
+        <xtce:Parameter name="CMD_WBN_X" parameterTypeRef="CMD_WBN_X_Type"/>
+        <xtce:Parameter name="CMD_WBN_Y" parameterTypeRef="CMD_WBN_Y_Type"/>
+        <xtce:Parameter name="CMD_WBN_Z" parameterTypeRef="CMD_WBN_Z_Type"/>
+        <xtce:Parameter name="H_MGMT" parameterTypeRef="H_MGMT_Type"/>
+        <xtce:Parameter name="THERR_X" parameterTypeRef="THERR_X_Type"/>
+        <xtce:Parameter name="THERR_Y" parameterTypeRef="THERR_Y_Type"/>
+        <xtce:Parameter name="THERR_Z" parameterTypeRef="THERR_Z_Type"/>
+        <xtce:Parameter name="WERR_X" parameterTypeRef="WERR_X_Type"/>
+        <xtce:Parameter name="WERR_Y" parameterTypeRef="WERR_Y_Type"/>
+        <xtce:Parameter name="WERR_Z" parameterTypeRef="WERR_Z_Type"/>
+        <xtce:Parameter name="TCMD_X" parameterTypeRef="TCMD_X_Type"/>
+        <xtce:Parameter name="TCMD_Y" parameterTypeRef="TCMD_Y_Type"/>
+        <xtce:Parameter name="TCMD_Z" parameterTypeRef="TCMD_Z_Type"/>
+        <xtce:Parameter name="ERR_T" parameterTypeRef="ERR_T_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_ADCS_AC" shortDescription="Generic_ADCS_AC_Tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="B_RANGE"/>
+            <xtce:ParameterRefEntry parameterRef="KB"/>
+            <xtce:ParameterRefEntry parameterRef="BOLD_X"/>
+            <xtce:ParameterRefEntry parameterRef="BOLD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="BOLD_Z"/>
+            <xtce:ParameterRefEntry parameterRef="BDOT_X"/>
+            <xtce:ParameterRefEntry parameterRef="BDOT_Y"/>
+            <xtce:ParameterRefEntry parameterRef="BDOT_Z"/>
+            <xtce:ParameterRefEntry parameterRef="KP_X"/>
+            <xtce:ParameterRefEntry parameterRef="KP_Y"/>
+            <xtce:ParameterRefEntry parameterRef="KP_Z"/>
+            <xtce:ParameterRefEntry parameterRef="KR_X"/>
+            <xtce:ParameterRefEntry parameterRef="KR_Y"/>
+            <xtce:ParameterRefEntry parameterRef="KR_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SSIDE_X"/>
+            <xtce:ParameterRefEntry parameterRef="SSIDE_Y"/>
+            <xtce:ParameterRefEntry parameterRef="SSIDE_Z"/>
+            <xtce:ParameterRefEntry parameterRef="VMAX"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_WBN_X"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_WBN_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_WBN_Z"/>
+            <xtce:ParameterRefEntry parameterRef="H_MGMT"/>
+            <xtce:ParameterRefEntry parameterRef="THERR_X"/>
+            <xtce:ParameterRefEntry parameterRef="THERR_Y"/>
+            <xtce:ParameterRefEntry parameterRef="THERR_Z"/>
+            <xtce:ParameterRefEntry parameterRef="WERR_X"/>
+            <xtce:ParameterRefEntry parameterRef="WERR_Y"/>
+            <xtce:ParameterRefEntry parameterRef="WERR_Z"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_X"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_Z"/>
+            <xtce:ParameterRefEntry parameterRef="ERR_T"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2372"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_ADCS_GNC">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="DT_Type" sizeInBits="64" shortDescription="Delta T">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MAX_MCMD_Type" sizeInBits="64" shortDescription="Maximum Magnetic Torquer Command (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:EnumeratedParameterType name="MODE_Type" shortDescription="GN&amp;C Mode">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="PASSIVE"/>
+            <xtce:Enumeration value="1" label="BDOT"/>
+            <xtce:Enumeration value="2" label="SUNSAFE"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="H_MGMTON_Type" shortDescription="Momentum Management off (0) / on (1)">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="OFF"/>
+            <xtce:Enumeration value="1" label="ON"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:FloatParameterType name="MM_KB_Type" sizeInBits="64" shortDescription="Momentum Management Kb gain">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MM_B_RANGE_Type" sizeInBits="64" shortDescription="Momentum Management magnetic field range">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MM_LO_FRAC_Type" sizeInBits="64" shortDescription="Momentum Management lower limit to disable MM">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MM_HI_FRAC_Type" sizeInBits="64" shortDescription="Momentum Management upper limit to enable MM">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="MM_ACTIVE_X_Type" shortDescription="Momentum Management active in X axis" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="MM_ACTIVE_Y_Type" shortDescription="Momentum Management active in Y axis" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="MM_ACTIVE_Z_Type" shortDescription="Momentum Management active in Z axis" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="MM_MCMD_X_Type" sizeInBits="64" shortDescription="Momentum Management magnetorquer command in body frame, X component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MM_MCMD_Y_Type" sizeInBits="64" shortDescription="Momentum Management magnetorquer command in body frame, Y component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MM_MCMD_Z_Type" sizeInBits="64" shortDescription="Momentum Management magnetorquer command in body frame, Z component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_X_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, X component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_Y_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, Y component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_Z_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, Z component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SVB_X_Type" sizeInBits="64" shortDescription="Sun Unit Vector in Body Frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SVB_Y_Type" sizeInBits="64" shortDescription="Sun Unit Vector in Body Frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SVB_Z_Type" sizeInBits="64" shortDescription="Sun Unit Vector in Body Frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="SUN_VALID_Type" shortDescription="Sun Valid(1) / Invalid(0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="WBN_X_Type" sizeInBits="64" shortDescription="Angular Rate Vector in Body Frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_Y_Type" sizeInBits="64" shortDescription="Angular Rate Vector in Body Frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_Z_Type" sizeInBits="64" shortDescription="Angular Rate Vector in Body Frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MAX_MOM_X_Type" sizeInBits="64" shortDescription="Reaction wheel maximum momentum in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MAX_MOM_Y_Type" sizeInBits="64" shortDescription="Reaction wheel maximum momentum in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MAX_MOM_Z_Type" sizeInBits="64" shortDescription="Reaction wheel maximum momentum in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MOMENTUM_X_Type" sizeInBits="64" shortDescription="Reaction wheel momentum in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MOMENTUM_Y_Type" sizeInBits="64" shortDescription="Reaction wheel momentum in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MOMENTUM_Z_Type" sizeInBits="64" shortDescription="Reaction wheel momentum in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MCMD_X_Type" sizeInBits="64" shortDescription="Magnetorquer Command in Body Frame, X component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MCMD_Y_Type" sizeInBits="64" shortDescription="Magnetorquer Command in Body Frame, Y component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MCMD_Z_Type" sizeInBits="64" shortDescription="Magnetorquer Command in Body Frame, Z component (A-m^2)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_X_Type" sizeInBits="64" shortDescription="Reaction Wheel Torque Command in Body Frame, X component (N-m)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_Y_Type" sizeInBits="64" shortDescription="Reaction Wheel Torque Command in Body Frame, Y component (N-m)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="TCMD_Z_Type" sizeInBits="64" shortDescription="Reaction Wheel Torque Command in Body Frame, Z component (N-m)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="DT" parameterTypeRef="DT_Type"/>
+        <xtce:Parameter name="MAX_MCMD" parameterTypeRef="MAX_MCMD_Type"/>
+        <xtce:Parameter name="MODE" parameterTypeRef="MODE_Type"/>
+        <xtce:Parameter name="H_MGMTON" parameterTypeRef="H_MGMTON_Type"/>
+        <xtce:Parameter name="MM_KB" parameterTypeRef="MM_KB_Type"/>
+        <xtce:Parameter name="MM_B_RANGE" parameterTypeRef="MM_B_RANGE_Type"/>
+        <xtce:Parameter name="MM_LO_FRAC" parameterTypeRef="MM_LO_FRAC_Type"/>
+        <xtce:Parameter name="MM_HI_FRAC" parameterTypeRef="MM_HI_FRAC_Type"/>
+        <xtce:Parameter name="MM_ACTIVE_X" parameterTypeRef="MM_ACTIVE_X_Type"/>
+        <xtce:Parameter name="MM_ACTIVE_Y" parameterTypeRef="MM_ACTIVE_Y_Type"/>
+        <xtce:Parameter name="MM_ACTIVE_Z" parameterTypeRef="MM_ACTIVE_Z_Type"/>
+        <xtce:Parameter name="MM_MCMD_X" parameterTypeRef="MM_MCMD_X_Type"/>
+        <xtce:Parameter name="MM_MCMD_Y" parameterTypeRef="MM_MCMD_Y_Type"/>
+        <xtce:Parameter name="MM_MCMD_Z" parameterTypeRef="MM_MCMD_Z_Type"/>
+        <xtce:Parameter name="BVB_X" parameterTypeRef="BVB_X_Type"/>
+        <xtce:Parameter name="BVB_Y" parameterTypeRef="BVB_Y_Type"/>
+        <xtce:Parameter name="BVB_Z" parameterTypeRef="BVB_Z_Type"/>
+        <xtce:Parameter name="SVB_X" parameterTypeRef="SVB_X_Type"/>
+        <xtce:Parameter name="SVB_Y" parameterTypeRef="SVB_Y_Type"/>
+        <xtce:Parameter name="SVB_Z" parameterTypeRef="SVB_Z_Type"/>
+        <xtce:Parameter name="SUN_VALID" parameterTypeRef="SUN_VALID_Type"/>
+        <xtce:Parameter name="WBN_X" parameterTypeRef="WBN_X_Type"/>
+        <xtce:Parameter name="WBN_Y" parameterTypeRef="WBN_Y_Type"/>
+        <xtce:Parameter name="WBN_Z" parameterTypeRef="WBN_Z_Type"/>
+        <xtce:Parameter name="RW_MAX_MOM_X" parameterTypeRef="RW_MAX_MOM_X_Type"/>
+        <xtce:Parameter name="RW_MAX_MOM_Y" parameterTypeRef="RW_MAX_MOM_Y_Type"/>
+        <xtce:Parameter name="RW_MAX_MOM_Z" parameterTypeRef="RW_MAX_MOM_Z_Type"/>
+        <xtce:Parameter name="RW_MOMENTUM_X" parameterTypeRef="RW_MOMENTUM_X_Type"/>
+        <xtce:Parameter name="RW_MOMENTUM_Y" parameterTypeRef="RW_MOMENTUM_Y_Type"/>
+        <xtce:Parameter name="RW_MOMENTUM_Z" parameterTypeRef="RW_MOMENTUM_Z_Type"/>
+        <xtce:Parameter name="MCMD_X" parameterTypeRef="MCMD_X_Type"/>
+        <xtce:Parameter name="MCMD_Y" parameterTypeRef="MCMD_Y_Type"/>
+        <xtce:Parameter name="MCMD_Z" parameterTypeRef="MCMD_Z_Type"/>
+        <xtce:Parameter name="TCMD_X" parameterTypeRef="TCMD_X_Type"/>
+        <xtce:Parameter name="TCMD_Y" parameterTypeRef="TCMD_Y_Type"/>
+        <xtce:Parameter name="TCMD_Z" parameterTypeRef="TCMD_Z_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_ADCS_GNC" shortDescription="Generic_ADCS_GNC_Tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="DT"/>
+            <xtce:ParameterRefEntry parameterRef="MAX_MCMD"/>
+            <xtce:ParameterRefEntry parameterRef="MODE"/>
+            <xtce:ParameterRefEntry parameterRef="H_MGMTON"/>
+            <xtce:ParameterRefEntry parameterRef="MM_KB"/>
+            <xtce:ParameterRefEntry parameterRef="MM_B_RANGE"/>
+            <xtce:ParameterRefEntry parameterRef="MM_LO_FRAC"/>
+            <xtce:ParameterRefEntry parameterRef="MM_HI_FRAC"/>
+            <xtce:ParameterRefEntry parameterRef="MM_ACTIVE_X"/>
+            <xtce:ParameterRefEntry parameterRef="MM_ACTIVE_Y"/>
+            <xtce:ParameterRefEntry parameterRef="MM_ACTIVE_Z"/>
+            <xtce:ParameterRefEntry parameterRef="MM_MCMD_X"/>
+            <xtce:ParameterRefEntry parameterRef="MM_MCMD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="MM_MCMD_Z"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="SVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="SVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SUN_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_X"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_Y"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MAX_MOM_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MAX_MOM_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MAX_MOM_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MOMENTUM_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MOMENTUM_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MOMENTUM_Z"/>
+            <xtce:ParameterRefEntry parameterRef="MCMD_X"/>
+            <xtce:ParameterRefEntry parameterRef="MCMD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="MCMD_Z"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_X"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_Y"/>
+            <xtce:ParameterRefEntry parameterRef="TCMD_Z"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2371"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_ADCS_AD">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="BVB_X_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, X component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_Y_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, Y component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_Z_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, Z component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="SUN_VALID_Type" shortDescription="Sun Unit Vector Valid(1) / Invalid(0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="FSS_VALID_Type" shortDescription="FSS Sun Unit Vector Valid(1) / Invalid(0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="SVB_X_Type" sizeInBits="64" shortDescription="Sun Unit Vector in Body Frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SVB_Y_Type" sizeInBits="64" shortDescription="Sun Unit Vector in Body Frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SVB_Z_Type" sizeInBits="64" shortDescription="Sun Unit Vector in Body Frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="IMU_INIT_Type" shortDescription="IMU AD initialized" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="ALPHA_Type" sizeInBits="64" shortDescription="Filter coefficient for IMU wbn data">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="IMU_VALID_Type" shortDescription="IMU data valid(1) / invalid(0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="WBN_PREV_X_Type" sizeInBits="64" shortDescription="Previous angular rate, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_PREV_Y_Type" sizeInBits="64" shortDescription="Previous angular rate, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_PREV_Z_Type" sizeInBits="64" shortDescription="Previous angular rate, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_X_Type" sizeInBits="64" shortDescription="Angular rate, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_Y_Type" sizeInBits="64" shortDescription="Angular rate, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="WBN_Z_Type" sizeInBits="64" shortDescription="Angular rate, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ACC_X_Type" sizeInBits="64" shortDescription="Acceleration, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ACC_Y_Type" sizeInBits="64" shortDescription="Acceleration, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ACC_Z_Type" sizeInBits="64" shortDescription="Acceleration, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="BVB_X" parameterTypeRef="BVB_X_Type"/>
+        <xtce:Parameter name="BVB_Y" parameterTypeRef="BVB_Y_Type"/>
+        <xtce:Parameter name="BVB_Z" parameterTypeRef="BVB_Z_Type"/>
+        <xtce:Parameter name="SUN_VALID" parameterTypeRef="SUN_VALID_Type"/>
+        <xtce:Parameter name="FSS_VALID" parameterTypeRef="FSS_VALID_Type"/>
+        <xtce:Parameter name="SVB_X" parameterTypeRef="SVB_X_Type"/>
+        <xtce:Parameter name="SVB_Y" parameterTypeRef="SVB_Y_Type"/>
+        <xtce:Parameter name="SVB_Z" parameterTypeRef="SVB_Z_Type"/>
+        <xtce:Parameter name="IMU_INIT" parameterTypeRef="IMU_INIT_Type"/>
+        <xtce:Parameter name="ALPHA" parameterTypeRef="ALPHA_Type"/>
+        <xtce:Parameter name="IMU_VALID" parameterTypeRef="IMU_VALID_Type"/>
+        <xtce:Parameter name="WBN_PREV_X" parameterTypeRef="WBN_PREV_X_Type"/>
+        <xtce:Parameter name="WBN_PREV_Y" parameterTypeRef="WBN_PREV_Y_Type"/>
+        <xtce:Parameter name="WBN_PREV_Z" parameterTypeRef="WBN_PREV_Z_Type"/>
+        <xtce:Parameter name="WBN_X" parameterTypeRef="WBN_X_Type"/>
+        <xtce:Parameter name="WBN_Y" parameterTypeRef="WBN_Y_Type"/>
+        <xtce:Parameter name="WBN_Z" parameterTypeRef="WBN_Z_Type"/>
+        <xtce:Parameter name="ACC_X" parameterTypeRef="ACC_X_Type"/>
+        <xtce:Parameter name="ACC_Y" parameterTypeRef="ACC_Y_Type"/>
+        <xtce:Parameter name="ACC_Z" parameterTypeRef="ACC_Z_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_ADCS_AD" shortDescription="Generic_ADCS_AD_Tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="BVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SUN_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="SVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="SVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="SVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_INIT"/>
+            <xtce:ParameterRefEntry parameterRef="ALPHA"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_PREV_X"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_PREV_Y"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_PREV_Z"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_X"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_Y"/>
+            <xtce:ParameterRefEntry parameterRef="WBN_Z"/>
+            <xtce:ParameterRefEntry parameterRef="ACC_X"/>
+            <xtce:ParameterRefEntry parameterRef="ACC_Y"/>
+            <xtce:ParameterRefEntry parameterRef="ACC_Z"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2370"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_ADCS_DI">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="MAG_QBS_0_Type" sizeInBits="64" shortDescription="Quaternion from magnetic sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MAG_QBS_1_Type" sizeInBits="64" shortDescription="Quaternion from magnetic sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MAG_QBS_2_Type" sizeInBits="64" shortDescription="Quaternion from magnetic sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MAG_QBS_3_Type" sizeInBits="64" shortDescription="Quaternion from magnetic sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_X_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, X component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_Y_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, Y component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="BVB_Z_Type" sizeInBits="64" shortDescription="Magnetic Field Vector in Body Frame, Z component (T)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="FSS_QBS_0_Type" sizeInBits="64" shortDescription="Quaternion from fine sun sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="FSS_QBS_1_Type" sizeInBits="64" shortDescription="Quaternion from fine sun sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="FSS_QBS_2_Type" sizeInBits="64" shortDescription="Quaternion from fine sun sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="FSS_QBS_3_Type" sizeInBits="64" shortDescription="Quaternion from fine sun sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="FSS_VALID_Type" shortDescription="FSS Sun Unit Vector valid (1) / invalid (0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="FSS_SVB_X_Type" sizeInBits="64" shortDescription="FSS Sun Unit Vector in Body Frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="FSS_SVB_Y_Type" sizeInBits="64" shortDescription="FSS Sun Unit Vector in Body Frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="FSS_SVB_Z_Type" sizeInBits="64" shortDescription="FSS Sun Unit Vector in Body Frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS0_X_Type" sizeInBits="64" shortDescription="CSS 0 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS0_Y_Type" sizeInBits="64" shortDescription="CSS 0 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS0_Z_Type" sizeInBits="64" shortDescription="CSS 0 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SCALE0_Type" sizeInBits="64" shortDescription="CSS 0 scale factor">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="PERCENTON0_Type" sizeInBits="64" shortDescription="CSS 0 percent on">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS1_X_Type" sizeInBits="64" shortDescription="CSS 1 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS1_Y_Type" sizeInBits="64" shortDescription="CSS 1 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS1_Z_Type" sizeInBits="64" shortDescription="CSS 1 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SCALE1_Type" sizeInBits="64" shortDescription="CSS 1 scale factor">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="PERCENTON1_Type" sizeInBits="64" shortDescription="CSS 1 percent on">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS2_X_Type" sizeInBits="64" shortDescription="CSS 2 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS2_Y_Type" sizeInBits="64" shortDescription="CSS 2 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS2_Z_Type" sizeInBits="64" shortDescription="CSS 2 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SCALE2_Type" sizeInBits="64" shortDescription="CSS 2 scale factor">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="PERCENTON2_Type" sizeInBits="64" shortDescription="CSS 2 percent on">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS3_X_Type" sizeInBits="64" shortDescription="CSS 3 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS3_Y_Type" sizeInBits="64" shortDescription="CSS 3 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS3_Z_Type" sizeInBits="64" shortDescription="CSS 3 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SCALE3_Type" sizeInBits="64" shortDescription="CSS 3 scale factor">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="PERCENTON3_Type" sizeInBits="64" shortDescription="CSS 3 percent on">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS4_X_Type" sizeInBits="64" shortDescription="CSS 4 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS4_Y_Type" sizeInBits="64" shortDescription="CSS 4 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS4_Z_Type" sizeInBits="64" shortDescription="CSS 4 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SCALE4_Type" sizeInBits="64" shortDescription="CSS 4 scale factor">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="PERCENTON4_Type" sizeInBits="64" shortDescription="CSS 4 percent on">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS5_X_Type" sizeInBits="64" shortDescription="CSS 5 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS5_Y_Type" sizeInBits="64" shortDescription="CSS 5 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS5_Z_Type" sizeInBits="64" shortDescription="CSS 5 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="SCALE5_Type" sizeInBits="64" shortDescription="CSS 5 scale factor">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="PERCENTON5_Type" sizeInBits="64" shortDescription="CSS 5 percent on">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="CSS_VALID_Type" shortDescription="CSS Sun Unit Vector valid (1) / invalid (0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="CSS_SVB_X_Type" sizeInBits="64" shortDescription="CSS Sun Unit Vector in Body Frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS_SVB_Y_Type" sizeInBits="64" shortDescription="CSS Sun Unit Vector in Body Frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="CSS_SVB_Z_Type" sizeInBits="64" shortDescription="CSS Sun Unit Vector in Body Frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_QBS_0_Type" sizeInBits="64" shortDescription="Quaternion from IMU sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_QBS_1_Type" sizeInBits="64" shortDescription="Quaternion from IMU sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_QBS_2_Type" sizeInBits="64" shortDescription="Quaternion from IMU sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_QBS_3_Type" sizeInBits="64" shortDescription="Quaternion from IMU sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_POS_X_Type" sizeInBits="64" shortDescription="Position of IMU sensor in body, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_POS_Y_Type" sizeInBits="64" shortDescription="Position of IMU sensor in body, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_POS_Z_Type" sizeInBits="64" shortDescription="Position of IMU sensor in body, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="IMU_VALID_Type" shortDescription="IMU data valid(1) / invalid(0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="IMU_WBN_X_Type" sizeInBits="64" shortDescription="Angular rate of body, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_WBN_Y_Type" sizeInBits="64" shortDescription="Angular rate of body, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_WBN_Z_Type" sizeInBits="64" shortDescription="Angular rate of body, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_ACC_X_Type" sizeInBits="64" shortDescription="Acceleration, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_ACC_Y_Type" sizeInBits="64" shortDescription="Acceleration, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="IMU_ACC_Z_Type" sizeInBits="64" shortDescription="Acceleration, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_0_X_Type" sizeInBits="64" shortDescription="Reaction wheel 0 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_0_Y_Type" sizeInBits="64" shortDescription="Reaction wheel 0 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_0_Z_Type" sizeInBits="64" shortDescription="Reaction wheel 0 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_1_X_Type" sizeInBits="64" shortDescription="Reaction wheel 1 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_1_Y_Type" sizeInBits="64" shortDescription="Reaction wheel 1 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_1_Z_Type" sizeInBits="64" shortDescription="Reaction wheel 1 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_2_X_Type" sizeInBits="64" shortDescription="Reaction wheel 2 axis in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_2_Y_Type" sizeInBits="64" shortDescription="Reaction wheel 2 axis in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_2_Z_Type" sizeInBits="64" shortDescription="Reaction wheel 2 axis in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MAX_MOMENTUM_X_Type" sizeInBits="64" shortDescription="Reaction wheel maximum momentum in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MAX_MOMENTUM_Y_Type" sizeInBits="64" shortDescription="Reaction wheel maximum momentum in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MAX_MOMENTUM_Z_Type" sizeInBits="64" shortDescription="Reaction wheel maximum momentum in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MOMENTUM_X_Type" sizeInBits="64" shortDescription="Reaction wheel momentum in body frame, X component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MOMENTUM_Y_Type" sizeInBits="64" shortDescription="Reaction wheel momentum in body frame, Y component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="RW_MOMENTUM_Z_Type" sizeInBits="64" shortDescription="Reaction wheel momentum in body frame, Z component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_QBS_0_Type" sizeInBits="64" shortDescription="Quaternion from star tracker sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_QBS_1_Type" sizeInBits="64" shortDescription="Quaternion from star tracker sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_QBS_2_Type" sizeInBits="64" shortDescription="Quaternion from star tracker sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_QBS_3_Type" sizeInBits="64" shortDescription="Quaternion from star tracker sensor to body frame">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_Q_0_Type" sizeInBits="64" shortDescription="Inertial quaternion of body, 0 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_Q_1_Type" sizeInBits="64" shortDescription="Inertial quaternion of body, 1 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_Q_2_Type" sizeInBits="64" shortDescription="Inertial quaternion of body, 2 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ST_Q_3_Type" sizeInBits="64" shortDescription="Inertial quaternion of body, 3 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="ST_VALID_Type" shortDescription="Star tracker data valid(1) / invalid(0)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="MAG_QBS_0" parameterTypeRef="MAG_QBS_0_Type"/>
+        <xtce:Parameter name="MAG_QBS_1" parameterTypeRef="MAG_QBS_1_Type"/>
+        <xtce:Parameter name="MAG_QBS_2" parameterTypeRef="MAG_QBS_2_Type"/>
+        <xtce:Parameter name="MAG_QBS_3" parameterTypeRef="MAG_QBS_3_Type"/>
+        <xtce:Parameter name="BVB_X" parameterTypeRef="BVB_X_Type"/>
+        <xtce:Parameter name="BVB_Y" parameterTypeRef="BVB_Y_Type"/>
+        <xtce:Parameter name="BVB_Z" parameterTypeRef="BVB_Z_Type"/>
+        <xtce:Parameter name="FSS_QBS_0" parameterTypeRef="FSS_QBS_0_Type"/>
+        <xtce:Parameter name="FSS_QBS_1" parameterTypeRef="FSS_QBS_1_Type"/>
+        <xtce:Parameter name="FSS_QBS_2" parameterTypeRef="FSS_QBS_2_Type"/>
+        <xtce:Parameter name="FSS_QBS_3" parameterTypeRef="FSS_QBS_3_Type"/>
+        <xtce:Parameter name="FSS_VALID" parameterTypeRef="FSS_VALID_Type"/>
+        <xtce:Parameter name="FSS_SVB_X" parameterTypeRef="FSS_SVB_X_Type"/>
+        <xtce:Parameter name="FSS_SVB_Y" parameterTypeRef="FSS_SVB_Y_Type"/>
+        <xtce:Parameter name="FSS_SVB_Z" parameterTypeRef="FSS_SVB_Z_Type"/>
+        <xtce:Parameter name="CSS0_X" parameterTypeRef="CSS0_X_Type"/>
+        <xtce:Parameter name="CSS0_Y" parameterTypeRef="CSS0_Y_Type"/>
+        <xtce:Parameter name="CSS0_Z" parameterTypeRef="CSS0_Z_Type"/>
+        <xtce:Parameter name="SCALE0" parameterTypeRef="SCALE0_Type"/>
+        <xtce:Parameter name="PERCENTON0" parameterTypeRef="PERCENTON0_Type"/>
+        <xtce:Parameter name="CSS1_X" parameterTypeRef="CSS1_X_Type"/>
+        <xtce:Parameter name="CSS1_Y" parameterTypeRef="CSS1_Y_Type"/>
+        <xtce:Parameter name="CSS1_Z" parameterTypeRef="CSS1_Z_Type"/>
+        <xtce:Parameter name="SCALE1" parameterTypeRef="SCALE1_Type"/>
+        <xtce:Parameter name="PERCENTON1" parameterTypeRef="PERCENTON1_Type"/>
+        <xtce:Parameter name="CSS2_X" parameterTypeRef="CSS2_X_Type"/>
+        <xtce:Parameter name="CSS2_Y" parameterTypeRef="CSS2_Y_Type"/>
+        <xtce:Parameter name="CSS2_Z" parameterTypeRef="CSS2_Z_Type"/>
+        <xtce:Parameter name="SCALE2" parameterTypeRef="SCALE2_Type"/>
+        <xtce:Parameter name="PERCENTON2" parameterTypeRef="PERCENTON2_Type"/>
+        <xtce:Parameter name="CSS3_X" parameterTypeRef="CSS3_X_Type"/>
+        <xtce:Parameter name="CSS3_Y" parameterTypeRef="CSS3_Y_Type"/>
+        <xtce:Parameter name="CSS3_Z" parameterTypeRef="CSS3_Z_Type"/>
+        <xtce:Parameter name="SCALE3" parameterTypeRef="SCALE3_Type"/>
+        <xtce:Parameter name="PERCENTON3" parameterTypeRef="PERCENTON3_Type"/>
+        <xtce:Parameter name="CSS4_X" parameterTypeRef="CSS4_X_Type"/>
+        <xtce:Parameter name="CSS4_Y" parameterTypeRef="CSS4_Y_Type"/>
+        <xtce:Parameter name="CSS4_Z" parameterTypeRef="CSS4_Z_Type"/>
+        <xtce:Parameter name="SCALE4" parameterTypeRef="SCALE4_Type"/>
+        <xtce:Parameter name="PERCENTON4" parameterTypeRef="PERCENTON4_Type"/>
+        <xtce:Parameter name="CSS5_X" parameterTypeRef="CSS5_X_Type"/>
+        <xtce:Parameter name="CSS5_Y" parameterTypeRef="CSS5_Y_Type"/>
+        <xtce:Parameter name="CSS5_Z" parameterTypeRef="CSS5_Z_Type"/>
+        <xtce:Parameter name="SCALE5" parameterTypeRef="SCALE5_Type"/>
+        <xtce:Parameter name="PERCENTON5" parameterTypeRef="PERCENTON5_Type"/>
+        <xtce:Parameter name="CSS_VALID" parameterTypeRef="CSS_VALID_Type"/>
+        <xtce:Parameter name="CSS_SVB_X" parameterTypeRef="CSS_SVB_X_Type"/>
+        <xtce:Parameter name="CSS_SVB_Y" parameterTypeRef="CSS_SVB_Y_Type"/>
+        <xtce:Parameter name="CSS_SVB_Z" parameterTypeRef="CSS_SVB_Z_Type"/>
+        <xtce:Parameter name="IMU_QBS_0" parameterTypeRef="IMU_QBS_0_Type"/>
+        <xtce:Parameter name="IMU_QBS_1" parameterTypeRef="IMU_QBS_1_Type"/>
+        <xtce:Parameter name="IMU_QBS_2" parameterTypeRef="IMU_QBS_2_Type"/>
+        <xtce:Parameter name="IMU_QBS_3" parameterTypeRef="IMU_QBS_3_Type"/>
+        <xtce:Parameter name="IMU_POS_X" parameterTypeRef="IMU_POS_X_Type"/>
+        <xtce:Parameter name="IMU_POS_Y" parameterTypeRef="IMU_POS_Y_Type"/>
+        <xtce:Parameter name="IMU_POS_Z" parameterTypeRef="IMU_POS_Z_Type"/>
+        <xtce:Parameter name="IMU_VALID" parameterTypeRef="IMU_VALID_Type"/>
+        <xtce:Parameter name="IMU_WBN_X" parameterTypeRef="IMU_WBN_X_Type"/>
+        <xtce:Parameter name="IMU_WBN_Y" parameterTypeRef="IMU_WBN_Y_Type"/>
+        <xtce:Parameter name="IMU_WBN_Z" parameterTypeRef="IMU_WBN_Z_Type"/>
+        <xtce:Parameter name="IMU_ACC_X" parameterTypeRef="IMU_ACC_X_Type"/>
+        <xtce:Parameter name="IMU_ACC_Y" parameterTypeRef="IMU_ACC_Y_Type"/>
+        <xtce:Parameter name="IMU_ACC_Z" parameterTypeRef="IMU_ACC_Z_Type"/>
+        <xtce:Parameter name="RW_0_X" parameterTypeRef="RW_0_X_Type"/>
+        <xtce:Parameter name="RW_0_Y" parameterTypeRef="RW_0_Y_Type"/>
+        <xtce:Parameter name="RW_0_Z" parameterTypeRef="RW_0_Z_Type"/>
+        <xtce:Parameter name="RW_1_X" parameterTypeRef="RW_1_X_Type"/>
+        <xtce:Parameter name="RW_1_Y" parameterTypeRef="RW_1_Y_Type"/>
+        <xtce:Parameter name="RW_1_Z" parameterTypeRef="RW_1_Z_Type"/>
+        <xtce:Parameter name="RW_2_X" parameterTypeRef="RW_2_X_Type"/>
+        <xtce:Parameter name="RW_2_Y" parameterTypeRef="RW_2_Y_Type"/>
+        <xtce:Parameter name="RW_2_Z" parameterTypeRef="RW_2_Z_Type"/>
+        <xtce:Parameter name="RW_MAX_MOMENTUM_X" parameterTypeRef="RW_MAX_MOMENTUM_X_Type"/>
+        <xtce:Parameter name="RW_MAX_MOMENTUM_Y" parameterTypeRef="RW_MAX_MOMENTUM_Y_Type"/>
+        <xtce:Parameter name="RW_MAX_MOMENTUM_Z" parameterTypeRef="RW_MAX_MOMENTUM_Z_Type"/>
+        <xtce:Parameter name="RW_MOMENTUM_X" parameterTypeRef="RW_MOMENTUM_X_Type"/>
+        <xtce:Parameter name="RW_MOMENTUM_Y" parameterTypeRef="RW_MOMENTUM_Y_Type"/>
+        <xtce:Parameter name="RW_MOMENTUM_Z" parameterTypeRef="RW_MOMENTUM_Z_Type"/>
+        <xtce:Parameter name="ST_QBS_0" parameterTypeRef="ST_QBS_0_Type"/>
+        <xtce:Parameter name="ST_QBS_1" parameterTypeRef="ST_QBS_1_Type"/>
+        <xtce:Parameter name="ST_QBS_2" parameterTypeRef="ST_QBS_2_Type"/>
+        <xtce:Parameter name="ST_QBS_3" parameterTypeRef="ST_QBS_3_Type"/>
+        <xtce:Parameter name="ST_Q_0" parameterTypeRef="ST_Q_0_Type"/>
+        <xtce:Parameter name="ST_Q_1" parameterTypeRef="ST_Q_1_Type"/>
+        <xtce:Parameter name="ST_Q_2" parameterTypeRef="ST_Q_2_Type"/>
+        <xtce:Parameter name="ST_Q_3" parameterTypeRef="ST_Q_3_Type"/>
+        <xtce:Parameter name="ST_VALID" parameterTypeRef="ST_VALID_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_ADCS_DI" shortDescription="Generic_ADCS_DI_Tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="MAG_QBS_0"/>
+            <xtce:ParameterRefEntry parameterRef="MAG_QBS_1"/>
+            <xtce:ParameterRefEntry parameterRef="MAG_QBS_2"/>
+            <xtce:ParameterRefEntry parameterRef="MAG_QBS_3"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="BVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_QBS_0"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_QBS_1"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_QBS_2"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_QBS_3"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_SVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_SVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="FSS_SVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="CSS0_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS0_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS0_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SCALE0"/>
+            <xtce:ParameterRefEntry parameterRef="PERCENTON0"/>
+            <xtce:ParameterRefEntry parameterRef="CSS1_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS1_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS1_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SCALE1"/>
+            <xtce:ParameterRefEntry parameterRef="PERCENTON1"/>
+            <xtce:ParameterRefEntry parameterRef="CSS2_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS2_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS2_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SCALE2"/>
+            <xtce:ParameterRefEntry parameterRef="PERCENTON2"/>
+            <xtce:ParameterRefEntry parameterRef="CSS3_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS3_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS3_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SCALE3"/>
+            <xtce:ParameterRefEntry parameterRef="PERCENTON3"/>
+            <xtce:ParameterRefEntry parameterRef="CSS4_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS4_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS4_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SCALE4"/>
+            <xtce:ParameterRefEntry parameterRef="PERCENTON4"/>
+            <xtce:ParameterRefEntry parameterRef="CSS5_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS5_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS5_Z"/>
+            <xtce:ParameterRefEntry parameterRef="SCALE5"/>
+            <xtce:ParameterRefEntry parameterRef="PERCENTON5"/>
+            <xtce:ParameterRefEntry parameterRef="CSS_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="CSS_SVB_X"/>
+            <xtce:ParameterRefEntry parameterRef="CSS_SVB_Y"/>
+            <xtce:ParameterRefEntry parameterRef="CSS_SVB_Z"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_QBS_0"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_QBS_1"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_QBS_2"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_QBS_3"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_POS_X"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_POS_Y"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_POS_Z"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_VALID"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_WBN_X"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_WBN_Y"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_WBN_Z"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_ACC_X"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_ACC_Y"/>
+            <xtce:ParameterRefEntry parameterRef="IMU_ACC_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_0_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_0_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_0_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_1_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_1_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_1_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_2_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_2_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_2_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MAX_MOMENTUM_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MAX_MOMENTUM_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MAX_MOMENTUM_Z"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MOMENTUM_X"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MOMENTUM_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RW_MOMENTUM_Z"/>
+            <xtce:ParameterRefEntry parameterRef="ST_QBS_0"/>
+            <xtce:ParameterRefEntry parameterRef="ST_QBS_1"/>
+            <xtce:ParameterRefEntry parameterRef="ST_QBS_2"/>
+            <xtce:ParameterRefEntry parameterRef="ST_QBS_3"/>
+            <xtce:ParameterRefEntry parameterRef="ST_Q_0"/>
+            <xtce:ParameterRefEntry parameterRef="ST_Q_1"/>
+            <xtce:ParameterRefEntry parameterRef="ST_Q_2"/>
+            <xtce:ParameterRefEntry parameterRef="ST_Q_3"/>
+            <xtce:ParameterRefEntry parameterRef="ST_VALID"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2369"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_ADCS_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_ADCS_HK_TLM" shortDescription="Generic_ADCS_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2368"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:EnumeratedArgumentType name="GNC_MODE_Type" initialValue="OFF" shortDescription="Momentum Management off (0) / on (1)">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="OFF"/>
+            <xtce:Enumeration value="1" label="ON"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:ArgumentTypeSet>
+        <xtce:EnumeratedArgumentType name="GNC_ADCS_MODE_Type" initialValue="PASSIVE" shortDescription="ADCS Mode">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="PASSIVE"/>
+            <xtce:Enumeration value="1" label="BDOT"/>
+            <xtce:Enumeration value="2" label="SUNSAFE"/>
+            <xtce:Enumeration value="3" label="INERTIAL"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+      </xtce:ArgumentTypeSet>      
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_ADCS_PERFORM_ADAC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6466"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_PERFORM_ADAC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6465"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SEND_DO_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="7"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SEND_DO_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SEND_AC_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="6"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SEND_AC_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SEND_GNC_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="5"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SEND_GNC_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SEND_AD_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="4"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SEND_AD_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SEND_DI_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SEND_DI_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="8"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="GNC_MODE" argumentTypeRef="GNC_MODE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="GNC_MODE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_SET_MODE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="GNC_MODE" argumentTypeRef="GNC_ADCS_MODE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_SET_MODE_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="GNC_MODE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_ADCS_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6464"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_ADCS_GENERIC_ADCS_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `generic_css.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_css.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_CSS" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_CSS_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="RAW_CSS_0_Type" shortDescription="Raw css[0] (0-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_CSS_1_Type" shortDescription="Raw css[1] (0-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_CSS_2_Type" shortDescription="Raw css[2] (0-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_CSS_3_Type" shortDescription="Raw css[3] (0-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_CSS_4_Type" shortDescription="Raw css[4] (0-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_CSS_5_Type" shortDescription="Raw css[5] (0-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="RAW_CSS_0" parameterTypeRef="RAW_CSS_0_Type"/>
+        <xtce:Parameter name="RAW_CSS_1" parameterTypeRef="RAW_CSS_1_Type"/>
+        <xtce:Parameter name="RAW_CSS_2" parameterTypeRef="RAW_CSS_2_Type"/>
+        <xtce:Parameter name="RAW_CSS_3" parameterTypeRef="RAW_CSS_3_Type"/>
+        <xtce:Parameter name="RAW_CSS_4" parameterTypeRef="RAW_CSS_4_Type"/>
+        <xtce:Parameter name="RAW_CSS_5" parameterTypeRef="RAW_CSS_5_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_CSS_DATA_TLM" shortDescription="GENERIC_CSS_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="RAW_CSS_0"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_CSS_1"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_CSS_2"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_CSS_3"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_CSS_4"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_CSS_5"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2321"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_CSS_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_CSS_HK_TLM" shortDescription="GENERIC_CSS_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2320"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet/>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_CSS_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6417"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_CSS_GENERIC_CSS_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_CSS_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6417"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_CSS_GENERIC_CSS_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_CSS_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6416"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_CSS_GENERIC_CSS_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_CSS_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6416"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_CSS_GENERIC_CSS_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_CSS_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6416"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_CSS_GENERIC_CSS_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_CSS_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6416"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_CSS_GENERIC_CSS_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_CSS_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_CSS_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_ENABLE BIG_ENDIAN "Enable GENERIC_CSS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_css-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_DISABLE BIG_ENDIAN "Disable GENERIC_CSS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_css-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS BIG_ENDIAN "Set GENERIC_CSS Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_css-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS BIG_ENDIAN "Set GENERIC_CSS Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_css-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `generic_eps.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_eps.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_EPS" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_EPS_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_BATTERY_VOLTAGE_Type" shortDescription="Battery Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_BATTERY_TEMPERATURE_Type" shortDescription="Battery Temperature" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_BUS_3P3V_Type" shortDescription="Bus 3.3 Volt Rail" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_BUS_5P0V_Type" shortDescription="Bus 5.0 Volt Rail" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_BUS_12V_Type" shortDescription="Bus 12 Volt Rail" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_EPS_TEMPERATURE_Type" shortDescription="EPS Temperature" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SA_VOLTAGE_Type" shortDescription="Solar Array Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SA_TEMPERATURE_Type" shortDescription="Solar Array Temperature" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_0_VOLTAGE_Type" shortDescription="Switch 0 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_0_CURRENT_Type" shortDescription="Switch 0 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_0_STATE_Type" shortDescription="Switch 0 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_0_FLAGS_Type" shortDescription="Switch 0 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_1_VOLTAGE_Type" shortDescription="Switch 1 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_1_CURRENT_Type" shortDescription="Switch 1 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_1_STATE_Type" shortDescription="Switch 1 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_1_FLAGS_Type" shortDescription="Switch 1 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_2_VOLTAGE_Type" shortDescription="Switch 2 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_2_CURRENT_Type" shortDescription="Switch 2 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_2_STATE_Type" shortDescription="Switch 2 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_2_FLAGS_Type" shortDescription="Switch 2 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_3_VOLTAGE_Type" shortDescription="Switch 3 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_3_CURRENT_Type" shortDescription="Switch 3 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_3_STATE_Type" shortDescription="Switch 3 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_3_FLAGS_Type" shortDescription="Switch 3 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_4_VOLTAGE_Type" shortDescription="Switch 4 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_4_CURRENT_Type" shortDescription="Switch 4 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_4_STATE_Type" shortDescription="Switch 4 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_4_FLAGS_Type" shortDescription="Switch 4 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_5_VOLTAGE_Type" shortDescription="Switch 5 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_5_CURRENT_Type" shortDescription="Switch 5 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_5_STATE_Type" shortDescription="Switch 5 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_5_FLAGS_Type" shortDescription="Switch 5 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_6_VOLTAGE_Type" shortDescription="Switch 6 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_6_CURRENT_Type" shortDescription="Switch 6 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_6_STATE_Type" shortDescription="Switch 6 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_6_FLAGS_Type" shortDescription="Switch 6 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_7_VOLTAGE_Type" shortDescription="Switch 7 Voltage" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SWITCH_7_CURRENT_Type" shortDescription="Switch 7 Current" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_7_STATE_Type" shortDescription="Switch 7 State">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="170" label="ON"/>
+            <xtce:Enumeration value="0" label="OFF"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SWITCH_7_FLAGS_Type" shortDescription="Switch 7 Flags">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="HEALTHY"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="RAW_BATTERY_VOLTAGE" parameterTypeRef="RAW_BATTERY_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_BATTERY_TEMPERATURE" parameterTypeRef="RAW_BATTERY_TEMPERATURE_Type"/>
+        <xtce:Parameter name="RAW_BUS_3P3V" parameterTypeRef="RAW_BUS_3P3V_Type"/>
+        <xtce:Parameter name="RAW_BUS_5P0V" parameterTypeRef="RAW_BUS_5P0V_Type"/>
+        <xtce:Parameter name="RAW_BUS_12V" parameterTypeRef="RAW_BUS_12V_Type"/>
+        <xtce:Parameter name="RAW_EPS_TEMPERATURE" parameterTypeRef="RAW_EPS_TEMPERATURE_Type"/>
+        <xtce:Parameter name="RAW_SA_VOLTAGE" parameterTypeRef="RAW_SA_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SA_TEMPERATURE" parameterTypeRef="RAW_SA_TEMPERATURE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_0_VOLTAGE" parameterTypeRef="RAW_SWITCH_0_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_0_CURRENT" parameterTypeRef="RAW_SWITCH_0_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_0_STATE" parameterTypeRef="SWITCH_0_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_0_FLAGS" parameterTypeRef="SWITCH_0_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_1_VOLTAGE" parameterTypeRef="RAW_SWITCH_1_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_1_CURRENT" parameterTypeRef="RAW_SWITCH_1_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_1_STATE" parameterTypeRef="SWITCH_1_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_1_FLAGS" parameterTypeRef="SWITCH_1_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_2_VOLTAGE" parameterTypeRef="RAW_SWITCH_2_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_2_CURRENT" parameterTypeRef="RAW_SWITCH_2_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_2_STATE" parameterTypeRef="SWITCH_2_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_2_FLAGS" parameterTypeRef="SWITCH_2_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_3_VOLTAGE" parameterTypeRef="RAW_SWITCH_3_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_3_CURRENT" parameterTypeRef="RAW_SWITCH_3_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_3_STATE" parameterTypeRef="SWITCH_3_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_3_FLAGS" parameterTypeRef="SWITCH_3_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_4_VOLTAGE" parameterTypeRef="RAW_SWITCH_4_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_4_CURRENT" parameterTypeRef="RAW_SWITCH_4_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_4_STATE" parameterTypeRef="SWITCH_4_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_4_FLAGS" parameterTypeRef="SWITCH_4_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_5_VOLTAGE" parameterTypeRef="RAW_SWITCH_5_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_5_CURRENT" parameterTypeRef="RAW_SWITCH_5_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_5_STATE" parameterTypeRef="SWITCH_5_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_5_FLAGS" parameterTypeRef="SWITCH_5_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_6_VOLTAGE" parameterTypeRef="RAW_SWITCH_6_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_6_CURRENT" parameterTypeRef="RAW_SWITCH_6_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_6_STATE" parameterTypeRef="SWITCH_6_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_6_FLAGS" parameterTypeRef="SWITCH_6_FLAGS_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_7_VOLTAGE" parameterTypeRef="RAW_SWITCH_7_VOLTAGE_Type"/>
+        <xtce:Parameter name="RAW_SWITCH_7_CURRENT" parameterTypeRef="RAW_SWITCH_7_CURRENT_Type"/>
+        <xtce:Parameter name="SWITCH_7_STATE" parameterTypeRef="SWITCH_7_STATE_Type"/>
+        <xtce:Parameter name="SWITCH_7_FLAGS" parameterTypeRef="SWITCH_7_FLAGS_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_EPS_HK_TLM" shortDescription="GENERIC_EPS_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_BATTERY_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_BATTERY_TEMPERATURE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_BUS_3P3V"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_BUS_5P0V"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_BUS_12V"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_EPS_TEMPERATURE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SA_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SA_TEMPERATURE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_0_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_0_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_0_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_0_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_1_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_1_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_1_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_1_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_2_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_2_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_2_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_2_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_3_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_3_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_3_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_3_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_4_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_4_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_4_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_4_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_5_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_5_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_5_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_5_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_6_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_6_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_6_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_6_FLAGS"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_7_VOLTAGE"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SWITCH_7_CURRENT"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_7_STATE"/>
+            <xtce:ParameterRefEntry parameterRef="SWITCH_7_FLAGS"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2330"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:EnumeratedArgumentType name="SWITCH_NUMBER_Type" initialValue="UNDEFINED" shortDescription="Switch Number (0-7)">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="SWITCH_0"/>
+            <xtce:Enumeration value="1" label="SWITCH_1"/>
+            <xtce:Enumeration value="2" label="SWITCH_2"/>
+            <xtce:Enumeration value="3" label="SWITCH_3"/>
+            <xtce:Enumeration value="4" label="SWITCH_4"/>
+            <xtce:Enumeration value="5" label="SWITCH_5"/>
+            <xtce:Enumeration value="6" label="SWITCH_6"/>
+            <xtce:Enumeration value="7" label="SWITCH_7"/>
+            <xtce:Enumeration value="255" label="UNDEFINED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+        <xtce:EnumeratedArgumentType name="STATE_Type" initialValue="OFF" shortDescription="ON / OFF">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="OFF"/>
+            <xtce:Enumeration value="170" label="ON"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_EPS_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6427"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_EPS_GENERIC_EPS_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_EPS_SWITCH_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6426"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="SWITCH_NUMBER" argumentTypeRef="SWITCH_NUMBER_Type"/>
+            <xtce:Argument name="STATE" argumentTypeRef="STATE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_EPS_GENERIC_EPS_SWITCH_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="SWITCH_NUMBER"/>
+              <xtce:ArgumentRefEntry argumentRef="STATE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_EPS_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6426"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_EPS_GENERIC_EPS_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_EPS_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6426"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_EPS_GENERIC_EPS_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_EPS_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_EPS_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_ENABLE BIG_ENDIAN "Enable EPS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_DISABLE BIG_ENDIAN "Disable EPS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_STATE_OF_CHARGE BIG_ENDIAN "Set EPS Sim State of Charge (Percentage of Max Voltage (0-100))"
+  APPEND_PARAMETER STATE_OF_CHARGE 32 UINT 0 100 80
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"STATE_OF_CHARGE=<STATE_OF_CHARGE>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_RATE_OF_CHARGE BIG_ENDIAN "Set a modifier to the EPS Sim Rate of Charge (positive or negative watt value)"
+  APPEND_PARAMETER RATE_OF_CHARGE 32 INT MIN_INT32 MAX_INT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"RATE_OF_CHARGE=<RATE_OF_CHARGE>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_TOGGLE_POSX_PANEL BIG_ENDIAN "Toggle EPS Sim Positive X Axis Solar Panel (0 = off, 1 = on)"
+  APPEND_PARAMETER TOGGLE_POSX_PANEL 8 UINT 0 1 1
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"TOGGLE_POSX_PANEL=<TOGGLE_POSX_PANEL>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_TOGGLE_NEGX_PANEL BIG_ENDIAN "Toggle EPS Sim Negative X Axis Solar Panel (0 = off, 1 = on)"
+  APPEND_PARAMETER TOGGLE_NEGX_PANEL 8 UINT 0 1 1
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"TOGGLE_NEGX_PANEL=<TOGGLE_NEGX_PANEL>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_TOGGLE_POSY_PANEL BIG_ENDIAN "Toggle EPS Sim Positive Y Axis Solar Panel (0 = off, 1 = on)"
+  APPEND_PARAMETER TOGGLE_POSY_PANEL 8 UINT 0 1 1
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"TOGGLE_POSY_PANEL=<TOGGLE_POSY_PANEL>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_TOGGLE_NEGY_PANEL BIG_ENDIAN "Toggle EPS Sim Negative Y Axis Solar Panel (0 = off, 1 = on)"
+  APPEND_PARAMETER TOGGLE_NEGY_PANEL 8 UINT 0 1 1
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"TOGGLE_NEGY_PANEL=<TOGGLE_NEGY_PANEL>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_EPS_SIM_TOGGLE_NEGZ_PANEL BIG_ENDIAN "Toggle EPS Sim Negative Z Axis Solar Panel (0 = off, 1 = on)"
+  APPEND_PARAMETER TOGGLE_NEGZ_PANEL 8 UINT 0 1 1
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"eps-command","cmd":"TOGGLE_NEGZ_PANEL=<TOGGLE_NEGZ_PANEL>"}'
+```
+
+### `generic_fss.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_fss.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_FSS" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_FSS_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="GENERIC_FSS_ALPHA_Type" sizeInBits="32" shortDescription="Raw generic_fss data alpha angle (-60 to 60)">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="GENERIC_FSS_BETA_Type" sizeInBits="32" shortDescription="Raw generic_fss data beta angle  (-60 to 60)">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="GENERIC_FSS_ERROR_CODE_Type" shortDescription="Raw generic_fss data error code  (0=no error, 1=error)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="GENERIC_FSS_ALPHA" parameterTypeRef="GENERIC_FSS_ALPHA_Type"/>
+        <xtce:Parameter name="GENERIC_FSS_BETA" parameterTypeRef="GENERIC_FSS_BETA_Type"/>
+        <xtce:Parameter name="GENERIC_FSS_ERROR_CODE" parameterTypeRef="GENERIC_FSS_ERROR_CODE_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_FSS_DATA_TLM" shortDescription="GENERIC_FSS_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="GENERIC_FSS_ALPHA"/>
+            <xtce:ParameterRefEntry parameterRef="GENERIC_FSS_BETA"/>
+            <xtce:ParameterRefEntry parameterRef="GENERIC_FSS_ERROR_CODE"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2337"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_FSS_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_FSS_HK_TLM" shortDescription="GENERIC_FSS_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2336"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet/>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_FSS_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6433"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_FSS_GENERIC_FSS_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_FSS_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6433"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_FSS_GENERIC_FSS_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_FSS_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6432"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_FSS_GENERIC_FSS_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_FSS_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6432"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_FSS_GENERIC_FSS_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_FSS_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6432"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_FSS_GENERIC_FSS_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_FSS_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6432"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_FSS_GENERIC_FSS_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_FSS_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_FSS_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_FSS_SIM_ENABLE BIG_ENDIAN "Enable FSS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_FSS_SIM_DISABLE BIG_ENDIAN "Disable FSS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"DISABLE"}'
+```
+
+### `generic_imu.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_imu.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_IMU" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_IMU_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="X_LINEAR_ACCELERATION_Type" sizeInBits="32" shortDescription="Linear acceleration in the X-direction">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="X_ANGULAR_ACCELERATION_Type" sizeInBits="32" shortDescription="Angular acceleration in the X-direction">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="Y_LINEAR_ACCELERATION_Type" sizeInBits="32" shortDescription="Linear acceleration in the Y-direction">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="Y_ANGULAR_ACCELERATION_Type" sizeInBits="32" shortDescription="Angular acceleration in the Y-direction">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="Z_LINEAR_ACCELERATION_Type" sizeInBits="32" shortDescription="Linear acceleration in the Z-direction">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="Z_ANGULAR_ACCELERATION_Type" sizeInBits="32" shortDescription="Angular acceleration in the Z-direction">
+          <xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="X_LINEAR_ACCELERATION" parameterTypeRef="X_LINEAR_ACCELERATION_Type"/>
+        <xtce:Parameter name="X_ANGULAR_ACCELERATION" parameterTypeRef="X_ANGULAR_ACCELERATION_Type"/>
+        <xtce:Parameter name="Y_LINEAR_ACCELERATION" parameterTypeRef="Y_LINEAR_ACCELERATION_Type"/>
+        <xtce:Parameter name="Y_ANGULAR_ACCELERATION" parameterTypeRef="Y_ANGULAR_ACCELERATION_Type"/>
+        <xtce:Parameter name="Z_LINEAR_ACCELERATION" parameterTypeRef="Z_LINEAR_ACCELERATION_Type"/>
+        <xtce:Parameter name="Z_ANGULAR_ACCELERATION" parameterTypeRef="Z_ANGULAR_ACCELERATION_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_IMU_DATA_TLM" shortDescription="GENERIC_IMU_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="X_LINEAR_ACCELERATION"/>
+            <xtce:ParameterRefEntry parameterRef="X_ANGULAR_ACCELERATION"/>
+            <xtce:ParameterRefEntry parameterRef="Y_LINEAR_ACCELERATION"/>
+            <xtce:ParameterRefEntry parameterRef="Y_ANGULAR_ACCELERATION"/>
+            <xtce:ParameterRefEntry parameterRef="Z_LINEAR_ACCELERATION"/>
+            <xtce:ParameterRefEntry parameterRef="Z_ANGULAR_ACCELERATION"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2342"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_IMU_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNTER_Type" shortDescription="Reported Device Command Counter" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_STATUS_Type" shortDescription="Reported Device Status" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+        <xtce:Parameter name="DEVICE_COUNTER" parameterTypeRef="DEVICE_COUNTER_Type"/>
+        <xtce:Parameter name="DEVICE_STATUS" parameterTypeRef="DEVICE_STATUS_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_IMU_HK_TLM" shortDescription="GENERIC_IMU_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_STATUS"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2341"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet/>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_IMU_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6438"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_IMU_GENERIC_IMU_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_IMU_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6438"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_IMU_GENERIC_IMU_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_IMU_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6437"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_IMU_GENERIC_IMU_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_IMU_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6437"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_IMU_GENERIC_IMU_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_IMU_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6437"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_IMU_GENERIC_IMU_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_IMU_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6437"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_IMU_GENERIC_IMU_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_IMU_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_IMU_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_ENABLE BIG_ENDIAN "Enable GENERIC_IMU Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_imu-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_DISABLE BIG_ENDIAN "Disable GENERIC_IMU Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_imu-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS BIG_ENDIAN "Set GENERIC_IMU Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_imu-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS BIG_ENDIAN "Set GENERIC_IMU Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_imu-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `generic_mag.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_mag.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_MAG" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_MAG_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="RAW_MAG_X_Type" shortDescription="Raw mag data x component (nT)" signed="true">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="twosComplement" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_MAG_Y_Type" shortDescription="Raw mag data y component (nT)" signed="true">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="twosComplement" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_MAG_Z_Type" shortDescription="Raw mag data z component (nT)" signed="true">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="twosComplement" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="RAW_MAG_X" parameterTypeRef="RAW_MAG_X_Type"/>
+        <xtce:Parameter name="RAW_MAG_Y" parameterTypeRef="RAW_MAG_Y_Type"/>
+        <xtce:Parameter name="RAW_MAG_Z" parameterTypeRef="RAW_MAG_Z_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_MAG_DATA_TLM" shortDescription="GENERIC_MAG_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="RAW_MAG_X"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_MAG_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_MAG_Z"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2347"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_MAG_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_MAG_HK_TLM" shortDescription="GENERIC_MAG_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2346"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet/>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_MAG_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6443"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_MAG_GENERIC_MAG_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_MAG_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6443"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_MAG_GENERIC_MAG_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_MAG_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6442"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_MAG_GENERIC_MAG_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_MAG_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6442"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_MAG_GENERIC_MAG_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_MAG_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6442"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_MAG_GENERIC_MAG_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_MAG_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6442"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_MAG_GENERIC_MAG_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_MAG_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_MAG_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_ENABLE BIG_ENDIAN "Enable Generic_mag Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_mag-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_DISABLE BIG_ENDIAN "Disable Generic_mag Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_mag-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS BIG_ENDIAN "Set Generic_mag Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_mag-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS BIG_ENDIAN "Set Generic_mag Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_mag-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `generic_radio.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_radio.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_RADIO" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_RADIO_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="FORWARD_ERR_COUNT_Type" shortDescription="Proxmity Forward Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="FORWARD_COUNT_Type" shortDescription="Proximity Forward Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNTER_Type" shortDescription="Reported Device Command Counter" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_CONFIG_Type" shortDescription="Reported Device Configuration" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="PROXIMITY_SIGNAL_Type" shortDescription="Proxmity Signal Strength" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="FORWARD_ERR_COUNT" parameterTypeRef="FORWARD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="FORWARD_COUNT" parameterTypeRef="FORWARD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNTER" parameterTypeRef="DEVICE_COUNTER_Type"/>
+        <xtce:Parameter name="DEVICE_CONFIG" parameterTypeRef="DEVICE_CONFIG_Type"/>
+        <xtce:Parameter name="PROXIMITY_SIGNAL" parameterTypeRef="PROXIMITY_SIGNAL_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_RADIO_HK_TLM" shortDescription="GENERIC_RADIO_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="FORWARD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="FORWARD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_CONFIG"/>
+            <xtce:ParameterRefEntry parameterRef="PROXIMITY_SIGNAL"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2352"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:IntegerArgumentType name="SCID_Type" initialValue="0" shortDescription="SpaceCraft ID" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="65535"/>
+        </xtce:IntegerArgumentType>
+        <xtce:BinaryArgumentType name="PROX_DATA_Type" initialValue="1930C00000010000" shortDescription="Proximity Data">
+          <xtce:BinaryDataEncoding>
+            <xtce:SizeInBits>
+              <xtce:FixedValue>512</xtce:FixedValue>
+            </xtce:SizeInBits>
+          </xtce:BinaryDataEncoding>
+        </xtce:BinaryArgumentType>
+        <xtce:IntegerArgumentType name="DEVICE_CONFIG_Type" initialValue="0" shortDescription="Device Configuration" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="4294967295"/>
+        </xtce:IntegerArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_RADIO_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6449"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_PROXIMITY_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="SCID" argumentTypeRef="SCID_Type"/>
+            <xtce:Argument name="PROX_DATA" argumentTypeRef="PROX_DATA_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_PROXIMITY_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="SCID"/>
+              <xtce:ArgumentRefEntry argumentRef="PROX_DATA"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_CONFIG_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="DEVICE_CONFIG" argumentTypeRef="DEVICE_CONFIG_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_CONFIG_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="DEVICE_CONFIG"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RADIO_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6448"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_RADIO_GENERIC_RADIO_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_RADIO_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_RADIO_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RADIO_SIM_ENABLE BIG_ENDIAN "Enable Generic Radio Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"radio-sim-command-node","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RADIO_SIM_DISABLE BIG_ENDIAN "Disable Generic Radio Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"radio-sim-command-node","cmd":"DISABLE"}'
+
+
+```
+
+### `generic_reaction_wheel.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_reaction_wheel.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_REACTION_WHEEL" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENRW_HK_TLM_T">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="ERROR_COUNT_Type" shortDescription="Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="COMMAND_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="MOMENTUM_NMS_0_Type" sizeInBits="64" shortDescription="Reaction Wheel 0 Momentum in Newton-meter-seconds">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MOMENTUM_NMS_1_Type" sizeInBits="64" shortDescription="Reaction Wheel 1 Momentum in Newton-meter-seconds">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="MOMENTUM_NMS_2_Type" sizeInBits="64" shortDescription="Reaction Wheel 2 Momentum in Newton-meter-seconds">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="ERROR_COUNT" parameterTypeRef="ERROR_COUNT_Type"/>
+        <xtce:Parameter name="COMMAND_COUNT" parameterTypeRef="COMMAND_COUNT_Type"/>
+        <xtce:Parameter name="MOMENTUM_NMS_0" parameterTypeRef="MOMENTUM_NMS_0_Type"/>
+        <xtce:Parameter name="MOMENTUM_NMS_1" parameterTypeRef="MOMENTUM_NMS_1_Type"/>
+        <xtce:Parameter name="MOMENTUM_NMS_2" parameterTypeRef="MOMENTUM_NMS_2_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENRW_HK_TLM_T" shortDescription="Generic Reaction Wheel Application Housekeeping Telemetry Message">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="ERROR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="COMMAND_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="MOMENTUM_NMS_0"/>
+            <xtce:ParameterRefEntry parameterRef="MOMENTUM_NMS_1"/>
+            <xtce:ParameterRefEntry parameterRef="MOMENTUM_NMS_2"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2451"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:IntegerArgumentType name="WHEEL_NUMBER_Type" initialValue="0" shortDescription="Wheel number to command" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="2"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="TORQUE_Type" initialValue="0" shortDescription="Torque to set in 10^-4 Newton-meters" signed="true">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement" byteOrder="leastSignificantByteFirst"/>
+          <xtce:ValidRange minInclusive="-32768" maxInclusive="32767"/>
+        </xtce:IntegerArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_RW_SET_TORQUE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6546"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="WHEEL_NUMBER" argumentTypeRef="WHEEL_NUMBER_Type"/>
+            <xtce:Argument name="TORQUE" argumentTypeRef="TORQUE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_REACTION_WHEEL_GENERIC_RW_SET_TORQUE_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="WHEEL_NUMBER"/>
+              <xtce:ArgumentRefEntry argumentRef="TORQUE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RW_REQ_DATA_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6546"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_REACTION_WHEEL_GENERIC_RW_REQ_DATA_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RW_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6546"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_REACTION_WHEEL_GENERIC_RW_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_RW_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6546"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_REACTION_WHEEL_GENERIC_RW_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_RW_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_RW_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RW0_ENABLE BIG_ENDIAN "Enable RW0 Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"rw0-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RW0_DISABLE BIG_ENDIAN "Disable RW0 Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"rw0-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RW1_ENABLE BIG_ENDIAN "Enable RW1 Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"rw1-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RW1_DISABLE BIG_ENDIAN "Disable RW1 Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"rw1-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RW2_ENABLE BIG_ENDIAN "Enable RW2 Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"rw2-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_RW2_DISABLE BIG_ENDIAN "Disable RW2 Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"rw2-command","cmd":"DISABLE"}'
+
+```
+
+### `generic_star_tracker.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_star_tracker.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_STAR_TRACKER" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_STAR_TRACKER_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="STAR_TRACKER_Q0_Type" sizeInBits="64" shortDescription="generic_star_tracker data q0 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="STAR_TRACKER_Q1_Type" sizeInBits="64" shortDescription="generic_star_tracker data q1 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="STAR_TRACKER_Q2_Type" sizeInBits="64" shortDescription="generic_star_tracker data q2 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="STAR_TRACKER_Q3_Type" sizeInBits="64" shortDescription="generic_star_tracker data q3 component">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="STAR_TRACKER_IS_VALID_Type" shortDescription="generic_star_tracker data is valid flag" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="STAR_TRACKER_Q0" parameterTypeRef="STAR_TRACKER_Q0_Type"/>
+        <xtce:Parameter name="STAR_TRACKER_Q1" parameterTypeRef="STAR_TRACKER_Q1_Type"/>
+        <xtce:Parameter name="STAR_TRACKER_Q2" parameterTypeRef="STAR_TRACKER_Q2_Type"/>
+        <xtce:Parameter name="STAR_TRACKER_Q3" parameterTypeRef="STAR_TRACKER_Q3_Type"/>
+        <xtce:Parameter name="STAR_TRACKER_IS_VALID" parameterTypeRef="STAR_TRACKER_IS_VALID_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_STAR_TRACKER_DATA_TLM" shortDescription="GENERIC_STAR_TRACKER_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="STAR_TRACKER_Q0"/>
+            <xtce:ParameterRefEntry parameterRef="STAR_TRACKER_Q1"/>
+            <xtce:ParameterRefEntry parameterRef="STAR_TRACKER_Q2"/>
+            <xtce:ParameterRefEntry parameterRef="STAR_TRACKER_Q3"/>
+            <xtce:ParameterRefEntry parameterRef="STAR_TRACKER_IS_VALID"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2358"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="GENERIC_STAR_TRACKER_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNTER_Type" shortDescription="Reported Device Command Counter" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+        <xtce:Parameter name="DEVICE_COUNTER" parameterTypeRef="DEVICE_COUNTER_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_STAR_TRACKER_HK_TLM" shortDescription="GENERIC_STAR_TRACKER_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNTER"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2357"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet/>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_STAR_TRACKER_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6454"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_STAR_TRACKER_GENERIC_STAR_TRACKER_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_STAR_TRACKER_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6454"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_STAR_TRACKER_GENERIC_STAR_TRACKER_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_STAR_TRACKER_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6453"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_STAR_TRACKER_GENERIC_STAR_TRACKER_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_STAR_TRACKER_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6453"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_STAR_TRACKER_GENERIC_STAR_TRACKER_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_STAR_TRACKER_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6453"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_STAR_TRACKER_GENERIC_STAR_TRACKER_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_STAR_TRACKER_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6453"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_STAR_TRACKER_GENERIC_STAR_TRACKER_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_STAR_TRACKER_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_ENABLE BIG_ENDIAN "Enable Generic_star_tracker Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_star_tracker-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_DISABLE BIG_ENDIAN "Disable Generic_star_tracker Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_star_tracker-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS BIG_ENDIAN "Set Generic_star_tracker Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_star_tracker-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS BIG_ENDIAN "Set Generic_star_tracker Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_star_tracker-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `generic_thruster.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_thruster.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_THRUSTER" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_THRUSTER_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_THRUSTER_HK_TLM" shortDescription="GENERIC_THRUSTER_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2282"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:IntegerArgumentType name="THRUSTER_NUMBER_Type" initialValue="0" shortDescription="Thruster number" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="3"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="PERCENTAGE_Type" initialValue="0" shortDescription="Percentage of full thrust, 0 to 100" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="100"/>
+        </xtce:IntegerArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_THRUSTER_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6379"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_THRUSTER_GENERIC_THRUSTER_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_THRUSTER_PERCENTAGE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6378"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="4"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="THRUSTER_NUMBER" argumentTypeRef="THRUSTER_NUMBER_Type"/>
+            <xtce:Argument name="PERCENTAGE" argumentTypeRef="PERCENTAGE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_THRUSTER_GENERIC_THRUSTER_PERCENTAGE_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="THRUSTER_NUMBER"/>
+              <xtce:ArgumentRefEntry argumentRef="PERCENTAGE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_THRUSTER_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6378"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_THRUSTER_GENERIC_THRUSTER_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_THRUSTER_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6378"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_THRUSTER_GENERIC_THRUSTER_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_THRUSTER_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6378"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_THRUSTER_GENERIC_THRUSTER_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_THRUSTER_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6378"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_THRUSTER_GENERIC_THRUSTER_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_THRUSTER_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_THRUSTER_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE BIG_ENDIAN "Enable Sample Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE BIG_ENDIAN "Disable Sample Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS BIG_ENDIAN "Set Sample Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS BIG_ENDIAN "Set Sample Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `generic_torquer.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/generic_torquer.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GENERIC_TORQUER" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="GENERIC_TORQUER_HK_TLM_T">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="TORQUER_PERIOD_Type" shortDescription="Torquer Period" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TORQUER_DIRECTION_0_Type" shortDescription="Torquer 0 Direction" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TORQUER_PERCENT_ON_0_Type" shortDescription="Torquer 0 Percent On" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TORQUER_DIRECTION_1_Type" shortDescription="Torquer 1 Direction" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TORQUER_PERCENT_ON_1_Type" shortDescription="Torquer 1 Percent On" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TORQUER_DIRECTION_2_Type" shortDescription="Torquer 2 Direction" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TORQUER_PERCENT_ON_2_Type" shortDescription="Torquer 2 Percent On" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+        <xtce:Parameter name="TORQUER_PERIOD" parameterTypeRef="TORQUER_PERIOD_Type"/>
+        <xtce:Parameter name="TORQUER_DIRECTION_0" parameterTypeRef="TORQUER_DIRECTION_0_Type"/>
+        <xtce:Parameter name="TORQUER_PERCENT_ON_0" parameterTypeRef="TORQUER_PERCENT_ON_0_Type"/>
+        <xtce:Parameter name="TORQUER_DIRECTION_1" parameterTypeRef="TORQUER_DIRECTION_1_Type"/>
+        <xtce:Parameter name="TORQUER_PERCENT_ON_1" parameterTypeRef="TORQUER_PERCENT_ON_1_Type"/>
+        <xtce:Parameter name="TORQUER_DIRECTION_2" parameterTypeRef="TORQUER_DIRECTION_2_Type"/>
+        <xtce:Parameter name="TORQUER_PERCENT_ON_2" parameterTypeRef="TORQUER_PERCENT_ON_2_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="GENERIC_TORQUER_HK_TLM_T" shortDescription="GENERIC_TORQUER_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_PERIOD"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_DIRECTION_0"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_PERCENT_ON_0"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_DIRECTION_1"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_PERCENT_ON_1"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_DIRECTION_2"/>
+            <xtce:ParameterRefEntry parameterRef="TORQUER_PERCENT_ON_2"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2362"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:IntegerArgumentType name="DIRECTION_0_Type" initialValue="0" shortDescription="Direction - 0" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="1"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="PERCENT_ON_0_Type" initialValue="0" shortDescription="Percent On - 0" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="100"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="DIRECTION_1_Type" initialValue="0" shortDescription="Direction - 1" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="1"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="PERCENT_ON_1_Type" initialValue="0" shortDescription="Percent On - 1" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="100"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="DIRECTION_2_Type" initialValue="0" shortDescription="Direction - 2" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="1"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="PERCENT_ON_2_Type" initialValue="0" shortDescription="Percent On - 2" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="100"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="TRQNUM_Type" initialValue="0" shortDescription="The number corresponding to the torquer" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="2"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="DIRECTION_Type" initialValue="0" shortDescription="The direction for the current to flow" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="1"/>
+        </xtce:IntegerArgumentType>
+        <xtce:IntegerArgumentType name="PERCENT_ON_Type" initialValue="0" shortDescription="The percent of maximum current to use" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="100"/>
+        </xtce:IntegerArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="GENERIC_TORQUER_REQ_HK_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6459"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="7"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_REQ_HK_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_TORQUER_ALL_PERCENT_ON_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6458"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="5"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="DIRECTION_0" argumentTypeRef="DIRECTION_0_Type"/>
+            <xtce:Argument name="PERCENT_ON_0" argumentTypeRef="PERCENT_ON_0_Type"/>
+            <xtce:Argument name="DIRECTION_1" argumentTypeRef="DIRECTION_1_Type"/>
+            <xtce:Argument name="PERCENT_ON_1" argumentTypeRef="PERCENT_ON_1_Type"/>
+            <xtce:Argument name="DIRECTION_2" argumentTypeRef="DIRECTION_2_Type"/>
+            <xtce:Argument name="PERCENT_ON_2" argumentTypeRef="PERCENT_ON_2_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_ALL_PERCENT_ON_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="DIRECTION_0"/>
+              <xtce:ArgumentRefEntry argumentRef="PERCENT_ON_0"/>
+              <xtce:ArgumentRefEntry argumentRef="DIRECTION_1"/>
+              <xtce:ArgumentRefEntry argumentRef="PERCENT_ON_1"/>
+              <xtce:ArgumentRefEntry argumentRef="DIRECTION_2"/>
+              <xtce:ArgumentRefEntry argumentRef="PERCENT_ON_2"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_TORQUER_PERCENT_ON_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6458"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="4"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="TRQNUM" argumentTypeRef="TRQNUM_Type"/>
+            <xtce:Argument name="DIRECTION" argumentTypeRef="DIRECTION_Type"/>
+            <xtce:Argument name="PERCENT_ON" argumentTypeRef="PERCENT_ON_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_PERCENT_ON_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="TRQNUM"/>
+              <xtce:ArgumentRefEntry argumentRef="DIRECTION"/>
+              <xtce:ArgumentRefEntry argumentRef="PERCENT_ON"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_TORQUER_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6458"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_TORQUER_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6458"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_TORQUER_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6458"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="GENERIC_TORQUER_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6458"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="GENERIC_TORQUER_GENERIC_TORQUER_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `GENERIC_TORQUER_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_TORQUER_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_ENABLE BIG_ENDIAN "Enable Generic_torquer Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_torquer-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_DISABLE BIG_ENDIAN "Disable Generic_torquer Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_torquer-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS BIG_ENDIAN "Set Generic_torquer Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_torquer-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS BIG_ENDIAN "Set Generic_torquer Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"generic_torquer-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `mgr.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/mgr.xtce`
+
+
+```text
+<?xml version='1.0' encoding='UTF-8'?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="MGR">
+  <xtce:SpaceSystem name="MGR_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="BOOT_COUNTER_Type" shortDescription="Boot Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="ANOM_REBOOT_COUNTER_Type" shortDescription="Anomalous Boot Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="TIME_TICS_Type" shortDescription="Time Tics Offset from J2000" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="64" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="SCIENCE_PASS_COUNT_Type" shortDescription="Science Pass Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="SPACECRAFT_MODE_Type" shortDescription="SPACECRAFT_MODE_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="1" label="SAFE"/>
+            <xtce:Enumeration value="2" label="SAFE_REBOOT"/>
+            <xtce:Enumeration value="3" label="SCIENCE"/>
+            <xtce:Enumeration value="4" label="SCIENCE_REBOOT"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="SCIENCE_STATUS_Type" shortDescription="SCIENCE_STATUS_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="SCIENCE_OFF"/>
+            <xtce:Enumeration value="1" label="SCIENCE_INITIALIZED"/>
+            <xtce:Enumeration value="2" label="SCIENCE_OVER_AK"/>
+            <xtce:Enumeration value="3" label="SCIENCE_OVER_CONUS"/>
+            <xtce:Enumeration value="4" label="SCIENCE_OVER_HI"/>
+            <xtce:Enumeration value="5" label="NO_SCIENCE_LEFT_AK"/>
+            <xtce:Enumeration value="6" label="NO_SCIENCE_LEFT_CONUS"/>
+            <xtce:Enumeration value="7" label="NO_SCIENCE_LEFT_HI"/>
+            <xtce:Enumeration value="8" label="NO_SCIENCE_LOW_POWER"/>
+            <xtce:Enumeration value="9" label="NO_SCIENCE_RECHARGED"/>
+            <xtce:Enumeration value="10" label="EXITED_SCIENCE_MODE"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="AK_CONFIG_Type" shortDescription="AK_CONFIG_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="CONUS_CONFIG_Type" shortDescription="CONUS_CONFIG_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:EnumeratedParameterType name="HI_CONFIG_Type" shortDescription="HI_CONFIG_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="BOOT_COUNTER" parameterTypeRef="BOOT_COUNTER_Type"/>
+        <xtce:Parameter name="ANOM_REBOOT_COUNTER" parameterTypeRef="ANOM_REBOOT_COUNTER_Type"/>
+        <xtce:Parameter name="TIME_TICS" parameterTypeRef="TIME_TICS_Type"/>
+        <xtce:Parameter name="SCIENCE_PASS_COUNT" parameterTypeRef="SCIENCE_PASS_COUNT_Type"/>
+        <xtce:Parameter name="SPACECRAFT_MODE" parameterTypeRef="SPACECRAFT_MODE_Type"/>
+        <xtce:Parameter name="SCIENCE_STATUS" parameterTypeRef="SCIENCE_STATUS_Type"/>
+        <xtce:Parameter name="AK_CONFIG" parameterTypeRef="AK_CONFIG_Type"/>
+        <xtce:Parameter name="CONUS_CONFIG" parameterTypeRef="CONUS_CONFIG_Type"/>
+        <xtce:Parameter name="HI_CONFIG" parameterTypeRef="HI_CONFIG_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="MGR_HK_TLM" shortDescription="MGR_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="SPACECRAFT_MODE"/>
+            <xtce:ParameterRefEntry parameterRef="BOOT_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="ANOM_REBOOT_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="TIME_TICS"/>
+            <xtce:ParameterRefEntry parameterRef="SCIENCE_STATUS"/>
+            <xtce:ParameterRefEntry parameterRef="SCIENCE_PASS_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="AK_CONFIG"/>
+            <xtce:ParameterRefEntry parameterRef="CONUS_CONFIG"/>
+            <xtce:ParameterRefEntry parameterRef="HI_CONFIG"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2296"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:EnumeratedArgumentType name="SPACECRAFT_MODE_Type" shortDescription="SPACECRAFT_MODE_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="1" label="SAFE"/>
+            <xtce:Enumeration value="2" label="SAFE_REBOOT"/>
+            <xtce:Enumeration value="3" label="SCIENCE"/>
+            <xtce:Enumeration value="4" label="SCIENCE_REBOOT"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+        <xtce:EnumeratedArgumentType name="AK_STATUS_Type" shortDescription="AK_STATUS_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLE"/>
+            <xtce:Enumeration value="1" label="ENABLE"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+        <xtce:EnumeratedArgumentType name="CONUS_STATUS_Type" shortDescription="CONUS_STATUS_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLE"/>
+            <xtce:Enumeration value="1" label="ENABLE"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+        <xtce:EnumeratedArgumentType name="HI_STATUS_Type" shortDescription="HI_STATUS_Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLE"/>
+            <xtce:Enumeration value="1" label="ENABLE"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="MGR_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="MGR_MGR_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="MGR_MGR_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_SET_MODE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="SPACECRAFT_MODE" argumentTypeRef="SPACECRAFT_MODE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="MGR_MGR_SET_MODE_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="SPACECRAFT_MODE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_REBOOT_PREP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="MGR_MGR_REBOOT_PREP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_SCIPASS_COUNT_INC_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="4"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="MGR_MGR_SCIPASS_COUNT_INC_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_SCIPASS_COUNT_RESET_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="5"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="MGR_MGR_SCIPASS_COUNT_RESET_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_SET_AK_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="6"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="AK_STATUS" argumentTypeRef="AK_STATUS_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="MGR_MGR_SET_AK_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="AK_STATUS"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_SET_CONUS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="7"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="CONUS_STATUS" argumentTypeRef="CONUS_STATUS_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="MGR_MGR_SET_CONUS_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="CONUS_STATUS"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_SET_HI_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6392"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="8"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="HI_STATUS" argumentTypeRef="HI_STATUS_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="MGR_MGR_SET_HI_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="HI_STATUS"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="MGR_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6393"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="MGR_MGR_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `novatel_oem615.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/novatel_oem615.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="NOVATEL_OEM615" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="NOVATEL_OEM615_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="GPS_WEEKS_Type" shortDescription="GPS Week Number" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="GPS_SECONDS_Type" shortDescription="GPS Seconds into the Week" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:FloatParameterType name="GPS_FRAC_SECS_Type" sizeInBits="64" shortDescription="GPS Fractions of a Second">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ECEF_X_Type" sizeInBits="64" shortDescription="ECEF Position X (meters)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ECEF_Y_Type" sizeInBits="64" shortDescription="ECEF Position Y (meters)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="ECEF_Z_Type" sizeInBits="64" shortDescription="ECEF Position Z (meters)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="VEL_X_Type" sizeInBits="64" shortDescription="ECEF Velocity X (m/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="VEL_Y_Type" sizeInBits="64" shortDescription="ECEF Velocity Y (m/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+        <xtce:FloatParameterType name="VEL_Z_Type" sizeInBits="64" shortDescription="ECEF Velocity Z (m/s)">
+          <xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" byteOrder="leastSignificantByteFirst"/>
+        </xtce:FloatParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="GPS_WEEKS" parameterTypeRef="GPS_WEEKS_Type"/>
+        <xtce:Parameter name="GPS_SECONDS" parameterTypeRef="GPS_SECONDS_Type"/>
+        <xtce:Parameter name="GPS_FRAC_SECS" parameterTypeRef="GPS_FRAC_SECS_Type"/>
+        <xtce:Parameter name="ECEF_X" parameterTypeRef="ECEF_X_Type"/>
+        <xtce:Parameter name="ECEF_Y" parameterTypeRef="ECEF_Y_Type"/>
+        <xtce:Parameter name="ECEF_Z" parameterTypeRef="ECEF_Z_Type"/>
+        <xtce:Parameter name="VEL_X" parameterTypeRef="VEL_X_Type"/>
+        <xtce:Parameter name="VEL_Y" parameterTypeRef="VEL_Y_Type"/>
+        <xtce:Parameter name="VEL_Z" parameterTypeRef="VEL_Z_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="NOVATEL_OEM615_DATA_TLM" shortDescription="NOVATEL_OEM615_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="GPS_WEEKS"/>
+            <xtce:ParameterRefEntry parameterRef="GPS_SECONDS"/>
+            <xtce:ParameterRefEntry parameterRef="GPS_FRAC_SECS"/>
+            <xtce:ParameterRefEntry parameterRef="ECEF_X"/>
+            <xtce:ParameterRefEntry parameterRef="ECEF_Y"/>
+            <xtce:ParameterRefEntry parameterRef="ECEF_Z"/>
+            <xtce:ParameterRefEntry parameterRef="VEL_X"/>
+            <xtce:ParameterRefEntry parameterRef="VEL_Y"/>
+            <xtce:ParameterRefEntry parameterRef="VEL_Z"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2161"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="NOVATEL_OEM615_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="NOVATEL_OEM615_HK_TLM" shortDescription="NOVATEL_OEM615_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2160"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:EnumeratedArgumentType name="LOG_TYPE_Type" initialValue="BESTXYZA" shortDescription="Log Type">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="BESTXYZA"/>
+            <xtce:Enumeration value="1" label="GPGGA"/>
+            <xtce:Enumeration value="2" label="RANGECMPA"/>
+            <xtce:Enumeration value="3" label="BESTXYZB"/>
+            <xtce:Enumeration value="4" label="RANGECMPB"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+        <xtce:EnumeratedArgumentType name="PERIOD_OPTIONS_Type" initialValue="ONCE" shortDescription="Period Options">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="ONCE"/>
+            <xtce:Enumeration value="1" label="0.05"/>
+            <xtce:Enumeration value="2" label="0.1"/>
+            <xtce:Enumeration value="3" label="0.2"/>
+            <xtce:Enumeration value="4" label="0.25"/>
+            <xtce:Enumeration value="5" label="0.5"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="NOVATEL_OEM615_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6257"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6257"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_SERIALCONFIG_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="7"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_SERIALCONFIG_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_UNLOGALL_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="6"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_UNLOGALL_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_UNLOG_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="5"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="LOG_TYPE" argumentTypeRef="LOG_TYPE_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_UNLOG_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="LOG_TYPE"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_LOG_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="4"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="LOG_TYPE" argumentTypeRef="LOG_TYPE_Type"/>
+            <xtce:Argument name="PERIOD_OPTIONS" argumentTypeRef="PERIOD_OPTIONS_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_LOG_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="LOG_TYPE"/>
+              <xtce:ArgumentRefEntry argumentRef="PERIOD_OPTIONS"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="NOVATEL_OEM615_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6256"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="NOVATEL_OEM615_NOVATEL_OEM615_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `NOVATEL_OEM615_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/NOVATEL_OEM615_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_ENABLE BIG_ENDIAN "Enable GPS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"gps-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_DISABLE BIG_ENDIAN "Disable GPS Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"gps-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS BIG_ENDIAN "Set GPS Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"gps-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS BIG_ENDIAN "Set GPS Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"gps-command","cmd":"STATUS=<STATUS>"}'
+```
+
+### `sample.xtce`
+
+**경로:** `gsw/cosmos/COMPONENTS/sample.xtce`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="SAMPLE" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+  <xtce:SpaceSystem name="SAMPLE_DATA_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="DEVICE_COUNTER_Type" shortDescription="Reported Device Command Counter" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SAMPLE_X_Type" shortDescription="Raw sample data x component (1-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SAMPLE_Y_Type" shortDescription="Raw sample data y component (1-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="RAW_SAMPLE_Z_Type" shortDescription="Raw sample data z component (1-65535)" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="DEVICE_COUNTER" parameterTypeRef="DEVICE_COUNTER_Type"/>
+        <xtce:Parameter name="RAW_SAMPLE_X" parameterTypeRef="RAW_SAMPLE_X_Type"/>
+        <xtce:Parameter name="RAW_SAMPLE_Y" parameterTypeRef="RAW_SAMPLE_Y_Type"/>
+        <xtce:Parameter name="RAW_SAMPLE_Z" parameterTypeRef="RAW_SAMPLE_Z_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="SAMPLE_DATA_TLM" shortDescription="SAMPLE_Device_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SAMPLE_X"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SAMPLE_Y"/>
+            <xtce:ParameterRefEntry parameterRef="RAW_SAMPLE_Z"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2299"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="SAMPLE_HK_TLM">
+    <xtce:TelemetryMetaData>
+      <xtce:ParameterTypeSet>
+        <xtce:IntegerParameterType name="CMD_ERR_COUNT_Type" shortDescription="Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="CMD_COUNT_Type" shortDescription="Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_ERR_COUNT_Type" shortDescription="Device Command Error Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNT_Type" shortDescription="Device Command Count" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+        <xtce:EnumeratedParameterType name="DEVICE_ENABLED_Type" shortDescription="Device Enable Status">
+          <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+          <xtce:EnumerationList>
+            <xtce:Enumeration value="0" label="DISABLED"/>
+            <xtce:Enumeration value="1" label="ENABLED"/>
+          </xtce:EnumerationList>
+        </xtce:EnumeratedParameterType>
+        <xtce:IntegerParameterType name="DEVICE_COUNTER_Type" shortDescription="Reported Device Command Counter" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_CONFIG_Type" shortDescription="Reported Device Configuration" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+        <xtce:IntegerParameterType name="DEVICE_STATUS_Type" shortDescription="Reported Device Status" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" byteOrder="leastSignificantByteFirst"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+      <xtce:ParameterSet>
+        <xtce:Parameter name="CMD_ERR_COUNT" parameterTypeRef="CMD_ERR_COUNT_Type"/>
+        <xtce:Parameter name="CMD_COUNT" parameterTypeRef="CMD_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ERR_COUNT" parameterTypeRef="DEVICE_ERR_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_COUNT" parameterTypeRef="DEVICE_COUNT_Type"/>
+        <xtce:Parameter name="DEVICE_ENABLED" parameterTypeRef="DEVICE_ENABLED_Type"/>
+        <xtce:Parameter name="DEVICE_COUNTER" parameterTypeRef="DEVICE_COUNTER_Type"/>
+        <xtce:Parameter name="DEVICE_CONFIG" parameterTypeRef="DEVICE_CONFIG_Type"/>
+        <xtce:Parameter name="DEVICE_STATUS" parameterTypeRef="DEVICE_STATUS_Type"/>
+      </xtce:ParameterSet>
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="SAMPLE_HK_TLM" shortDescription="SAMPLE_Hk_tlm_t">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="CMD_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="CMD_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ERR_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNT"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_ENABLED"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_COUNTER"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_CONFIG"/>
+            <xtce:ParameterRefEntry parameterRef="DEVICE_STATUS"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/CCSDS/CCSDS_TM">
+            <xtce:RestrictionCriteria>
+              <xtce:ComparisonList>
+                <xtce:Comparison parameterRef="/CCSDS/CCSDS_STREAMID" value="2298"/>
+              </xtce:ComparisonList>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+    </xtce:TelemetryMetaData>
+  </xtce:SpaceSystem>
+  <xtce:SpaceSystem name="CMD">
+    <xtce:CommandMetaData>
+      <xtce:ArgumentTypeSet>
+        <xtce:IntegerArgumentType name="DEVICE_CONFIG_Type" initialValue="0" shortDescription="Device Configuration" signed="false">
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+          <xtce:ValidRange minInclusive="0" maxInclusive="4294967295"/>
+        </xtce:IntegerArgumentType>
+      </xtce:ArgumentTypeSet>
+      <xtce:MetaCommandSet>
+        <xtce:MetaCommand name="SAMPLE_REQ_DATA">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6395"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_REQ_DATA_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="SAMPLE_REQ_HK">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6395"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_REQ_HK_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="SAMPLE_CONFIG_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6394"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="4"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList>
+            <xtce:Argument name="DEVICE_CONFIG" argumentTypeRef="DEVICE_CONFIG_Type"/>
+          </xtce:ArgumentList>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_CONFIG_CC_CommandContainer">
+            <xtce:EntryList>
+              <xtce:ArgumentRefEntry argumentRef="DEVICE_CONFIG"/>
+            </xtce:EntryList>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="SAMPLE_DISABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6394"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="3"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_DISABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="SAMPLE_ENABLE_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6394"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="2"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_ENABLE_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="SAMPLE_RST_COUNTERS_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6394"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="1"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_RST_COUNTERS_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+        <xtce:MetaCommand name="SAMPLE_NOOP_CC">
+          <xtce:BaseMetaCommand metaCommandRef="/CCSDS/CCSDS_TC">
+            <xtce:ArgumentAssignmentList>
+              <xtce:ArgumentAssignment argumentName="CCSDS_STREAMID" argumentValue="6394"/>
+              <xtce:ArgumentAssignment argumentName="CCSDS_FC" argumentValue="0"/>
+            </xtce:ArgumentAssignmentList>
+          </xtce:BaseMetaCommand>
+          <xtce:ArgumentList/>
+          <xtce:CommandContainer name="SAMPLE_SAMPLE_NOOP_CC_CommandContainer">
+            <xtce:EntryList/>
+          </xtce:CommandContainer>
+        </xtce:MetaCommand>
+      </xtce:MetaCommandSet>
+    </xtce:CommandMetaData>
+  </xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `SAMPLE_SIM_CMD.txt`
+
+**경로:** `gsw/cosmos/COMPONENTS/SAMPLE_SIM_CMD.txt`
+
+
+```text
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE BIG_ENDIAN "Enable Sample Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"ENABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE BIG_ENDIAN "Disable Sample Sim"
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"DISABLE"}'
+
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS BIG_ENDIAN "Set Sample Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"STATUS=<STATUS>"}'
+
+COMMAND SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS BIG_ENDIAN "Set Sample Sim Status"
+  APPEND_PARAMETER STATUS 32 UINT MIN_UINT32 MAX_UINT32 0
+  APPEND_PARAMETER CMD_TEMPLATE 0 STRING '{"node":"sample-command","cmd":"STATUS=<STATUS>"}'
+```

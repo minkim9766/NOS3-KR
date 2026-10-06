@@ -3,14 +3,46 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sdd.md`
 
-file--sdd.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/docs/sdd.md`
+
+
+```markdown
+# Svc::PassiveConsoleTextLogger Component
+
+## 1. Introduction
+
+The `Svc::PassiveConsoleTextLogger` is a component that prints the text version of events to stdout.
+
+## 2. Requirements
+
+TBD
+
+## 3. Design
+
+### 3.1 Context
+
+#### 3.1.1 Component Diagram
+
+TBD
+
+## 4. Dictionaries
+
+Not applicable
+
+## 5. Module Checklists
+
+## 6. Unit Testing
+
+## 7. Change Log
+
+Date | Description
+---- | -----------
+4/20/2017 | Initial Version
+
+
+
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveConsoleTextLogger/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함

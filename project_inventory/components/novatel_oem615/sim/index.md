@@ -3,20 +3,86 @@
 
 **경로:** `components/novatel_oem615/sim/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/novatel_oem615/sim/inc/`](inc/index) — 폴더
-- [`components/novatel_oem615/sim/src/`](src/index) — 폴더
-- [`components/novatel_oem615/sim/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/sim/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/novatel_oem615/sim/CMakeLists.txt`
+
+
+```cmake
+project(gps_sim)
+
+find_package(Boost REQUIRED QUIET COMPONENTS system program_options filesystem)
+find_package(ITC_Common REQUIRED QUIET COMPONENTS itc_logger)
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart)
+
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+include_directories(inc
+                    ${sim_common_SOURCE_DIR}/inc
+                    ${ITC_Common_INCLUDE_DIRS}
+                    ${NOSENGINE_INCLUDE_DIRS}
+)
+
+set(gps_sim_src
+    src/gps_sim_hardware_model_OEM615.cpp
+    src/gps_sim_data_file_provider.cpp
+    src/gps_sim_data_42socket_provider.cpp
+    src/gps_sim_data_point.cpp
+    src/gps_sim_data_shmem_provider.cpp
+)
+
+# For Code::Blocks and other IDEs
+file(GLOB gps_sim_inc inc/*.hpp)
+
+set(gps_sim_libs
+    sim_common
+    ${Boost_LIBRARIES}
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:$ORIGIN/../lib") # Pick up .so in install directory
+
+add_library(gps_sim SHARED ${gps_sim_src} ${gps_sim_inc})
+
+set_target_properties(gps_sim PROPERTIES COMPILE_FLAGS "" LINK_FLAGS "")
+target_link_libraries(gps_sim ${gps_sim_libs})
+install(TARGETS gps_sim LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+```
+
+### `README.md`
+
+**경로:** `components/novatel_oem615/sim/README.md`
+
+
+```markdown
+# NovAtel OEM 615 - NOS3 Simulator
+
+This repository contains the NovAtel OEM 615 NOS3 Simulator.
+
+## Documentation
+Currently support exists for the following versions:
+* [OEM615 Dual-Frequency GNSS Receiver](https://www.novatel.com/products/gnss-receivers/oem-receiver-boards/oem6-receivers/oem615/)
+
+### Versioning
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the tags on this repository.
+
+## Legal 
+If this project interests you or if you have any questions, please feel free to contact any developer.
+
+### License
+This project is licensed under the NOSA (NASA Open Source Agreement) License. 
+
+### Acknowledgments
+* Special thanks to all the developers involved!
+```

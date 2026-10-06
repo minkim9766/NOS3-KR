@@ -3,24 +3,276 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--BufferRepeater.cpp
-file--BufferRepeater.fpp
-file--BufferRepeater.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/BufferRepeater.cpp`](file--BufferRepeater.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/BufferRepeater.fpp`](file--BufferRepeater.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/BufferRepeater.hpp`](file--BufferRepeater.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `BufferRepeater.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/BufferRepeater.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferRepeater.cpp
+// \author lestarch
+// \brief  cpp file for GenericRepeater component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Svc/BufferRepeater/BufferRepeater.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+BufferRepeater ::BufferRepeater(const char* const compName)
+    : BufferRepeaterComponentBase(compName),
+      m_allocation_failure_response(BufferRepeater::NUM_BUFFER_REPEATER_FAILURE_OPTIONS) {}
+
+BufferRepeater ::~BufferRepeater() {}
+
+void BufferRepeater ::configure(BufferRepeater::BufferRepeaterFailureOption allocation_failure_response) {
+    this->m_allocation_failure_response = allocation_failure_response;
+}
+
+bool BufferRepeater ::check_allocation(FwIndexType index,
+                                       const Fw::Buffer& new_allocation,
+                                       const Fw::Buffer& incoming_buffer) {
+    FW_ASSERT(index < NUM_PORTOUT_OUTPUT_PORTS, static_cast<FwAssertArgType>(index));
+    bool is_valid = (new_allocation.getData() != nullptr) && (new_allocation.getSize() >= incoming_buffer.getSize());
+
+    // Respond to invalid buffer allocation
+    if (!is_valid) {
+        switch (this->m_allocation_failure_response) {
+            case NO_RESPONSE_ON_OUT_OF_MEMORY:
+                // No response intended
+                break;
+            case WARNING_ON_OUT_OF_MEMORY:
+                this->log_WARNING_HI_AllocationSoftFailure(index, incoming_buffer.getSize());
+                break;
+            case FATAL_ON_OUT_OF_MEMORY:
+                this->log_FATAL_AllocationHardFailure(index, incoming_buffer.getSize());
+                break;
+            default:
+                FW_ASSERT(0);
+                break;
+        }
+    }
+    return is_valid;
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined serial input ports
+// ----------------------------------------------------------------------
+
+void BufferRepeater ::portIn_handler(FwIndexType portNum, /*!< The port number*/
+                                     Fw::Buffer& buffer   /*!< The serialization buffer*/
+) {
+    FW_ASSERT(this->m_allocation_failure_response < NUM_BUFFER_REPEATER_FAILURE_OPTIONS);
+    for (FwIndexType i = 0; i < NUM_PORTOUT_OUTPUT_PORTS; i++) {
+        if (isConnected_portOut_OutputPort(i)) {
+            Fw::Buffer new_allocation = this->allocate_out(0, buffer.getSize());
+            if (this->check_allocation(i, new_allocation, buffer)) {
+                // Clone the data and send it
+                FW_ASSERT_NO_OVERFLOW(buffer.getSize(), size_t);
+                ::memcpy(new_allocation.getData(), buffer.getData(), static_cast<size_t>(buffer.getSize()));
+                new_allocation.setSize(buffer.getSize());
+                this->portOut_out(i, new_allocation);
+            }
+        }
+    }
+    this->deallocate_out(0, buffer);
+}
+}  // end namespace Svc
+```
+
+### `BufferRepeater.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/BufferRepeater.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for repeating Fw.BufferSend calls to multiple consumers
+  passive component BufferRepeater {
+    @ Port to duplicate across the repeater
+    sync input port portIn: Fw.BufferSend
+
+    @ Duplicated output ports
+    output port portOut: [BufferRepeaterOutputPorts] Fw.BufferSend
+
+    @ Port to allocate new memory for each buffer output
+    output port allocate: Fw.BufferGet
+
+    @ Port to deallocate original buffer output
+    output port deallocate: Fw.BufferSend
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Soft failure in allocation
+    event AllocationSoftFailure(
+                            $port: I32 @< The port index that needed an allocation
+                            $size: FwSizeType @< The requested allocation size
+                          ) \
+        severity warning high \
+        id 0 \
+        format "Failed to allocate {} byte buffer for port {}"
+
+
+    @ Hard failure in allocation
+    event AllocationHardFailure(
+                            $port: I32 @< The port index that needed an allocation
+                            $size: FwSizeType @< The requested allocation size
+                          ) \
+        severity fatal \
+        id 1 \
+        format "Failed to allocate {} byte buffer for port {}"
+  }
+}
+```
+
+### `BufferRepeater.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/BufferRepeater.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferRepeater.hpp
+// \author lestarch
+// \brief  hpp file for GenericRepeater component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef BufferRepeater_HPP
+#define BufferRepeater_HPP
+
+#include "Svc/BufferRepeater/BufferRepeaterComponentAc.hpp"
+
+namespace Svc {
+
+class BufferRepeater final : public BufferRepeaterComponentBase {
+  public:
+    /**
+     * Set of responses to failures to allocate a buffer when requested
+     */
+    enum BufferRepeaterFailureOption {
+        NO_RESPONSE_ON_OUT_OF_MEMORY,       /*!< The component will continue regardless of allocation failures */
+        WARNING_ON_OUT_OF_MEMORY,           /*!< The component will produce a warning on allocation failures */
+        FATAL_ON_OUT_OF_MEMORY,             /*!< The component will produce a FATAL on allocation failures */
+        NUM_BUFFER_REPEATER_FAILURE_OPTIONS /*!< Maximum value of this setting. Used to mark as uninitialized. */
+    };
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object BufferRepeater
+    //!
+    BufferRepeater(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object BufferRepeater
+    //!
+    ~BufferRepeater();
+
+    /**
+     * Set the response used when an allocation request fails to produce a buffer. By default this will assert.
+     * @param allocation_failure_response: set response
+     */
+    void configure(BufferRepeaterFailureOption allocation_failure_response);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks the allocation for viability and reports if it fails.
+     * @param index: index of the port that needs this allocation
+     * @param new_allocation: new allocation for a copy of the incoming buffer.
+     * @param incoming_buffer: buffer that is to be cloned
+     * @return true when the allocation is valid, false otherwise
+     */
+    bool check_allocation(FwIndexType index, const Fw::Buffer& new_allocation, const Fw::Buffer& incoming_buffer);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined serial input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for portIn
+    //!
+    void portIn_handler(FwIndexType portNum, /*!< The port number*/
+                        Fw::Buffer& Buffer   /*!< The serialization buffer*/
+    );
+
+    BufferRepeaterFailureOption m_allocation_failure_response;  //!< Local storage for configured response
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoded files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/BufferRepeater.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/BufferRepeater.cpp"
+)
+
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/BufferRepeater.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferRepeaterTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferRepeaterTester.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```

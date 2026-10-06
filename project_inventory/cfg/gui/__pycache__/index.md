@@ -3,14 +3,10 @@
 
 **경로:** `cfg/gui/__pycache__/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfg_gui_ui.cpython-314.pyc`
 
-file--cfg_gui_ui.cpython-314.pyc
-```
+**경로:** `cfg/gui/__pycache__/cfg_gui_ui.cpython-314.pyc`
 
-## 항목
-
-- [`cfg/gui/__pycache__/cfg_gui_ui.cpython-314.pyc`](file--cfg_gui_ui.cpython-314.pyc) — 빌드 산출물 (경로만)
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

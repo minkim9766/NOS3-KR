@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/config/CMakeFiles/config.dir/home/minseo/nos3/fsw/build/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_config_map.c.o`
 
-file--cfe_config_map.c.o
-file--cfe_config_map.c.o.d
-```
+**경로:** `fsw/build/amd64-nos3/default_cpu1/config/CMakeFiles/config.dir/home/minseo/nos3/fsw/build/src/cfe_config_map.c.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/amd64-nos3/default_cpu1/config/CMakeFiles/config.dir/home/minseo/nos3/fsw/build/src/cfe_config_map.c.o`](file--cfe_config_map.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/config/CMakeFiles/config.dir/home/minseo/nos3/fsw/build/src/cfe_config_map.c.o.d`](file--cfe_config_map.c.o.d) — 빌드 산출물 (경로만)
+### `cfe_config_map.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/config/CMakeFiles/config.dir/home/minseo/nos3/fsw/build/src/cfe_config_map.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

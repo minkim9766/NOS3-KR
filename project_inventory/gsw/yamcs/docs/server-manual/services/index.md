@@ -3,18 +3,37 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/services/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 global/index
 instance/index
-file--index.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/services/global/`](global/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/services/instance/`](instance/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/services/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/index.rst`
+
+
+```rst
+Services
+========
+
+Yamcs functionality is modularised into different services, representing objects with operational state, with methods to start and stop. Yamcs acts as a container for services, each running in a different thread. Services carry out a specific function. Some services are vital to core functionality, others can be thought of as more optional and give Yamcs its pluggable nature.
+
+Services appear at different conceptual levels:
+
+* **Global services** provide functionality across all instances.
+* **Instance services** provide functionality for one specific instance.
+
+
+.. toctree::
+    :maxdepth: 2
+
+    global/index
+    instance/index
+```

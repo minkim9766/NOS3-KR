@@ -3,18 +3,187 @@
 
 **경로:** `components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_rw_app_test.rb`
 
-file--generic_rw_app_test.rb
-file--generic_rw_ast_test.rb
-file--generic_rw_device_test.rb
+**경로:** `components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/generic_rw_app_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_reaction_wheel_lib.rb"
+
+##
+# get tlm packet for Reaction wheel
+##
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+  get_GENERIC_REACTION_WHEEL_data()
+end
+
+##
+## Confirm NOOP command
+##
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+  GENERIC_REACTION_WHEEL_cmd("GENERIC_REACTION_WHEEL GENERIC_RW_NOOP_CC")
+end
+
+##
+## Confirm RW Data
+## 
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+  #Testing RW commands and detecting Momentum directions
+  confirm_GENERIC_REACTION_WHEEL_data()
+end
+
+##
+## reset counters
+##
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+  GENERIC_REACTION_WHEEL_cmd("GENERIC_REACTION_WHEEL GENERIC_RW_NOOP_CC")
+  #ADCS May be running, so saving variables before reset
+  initial_command_count = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT")
+  initial_error_count = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT")
+
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_RST_COUNTERS_CC")
+
+  get_GENERIC_REACTION_WHEEL_data()
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT  < #{initial_command_count}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT <= #{initial_error_count}")
+
+end
+
+##
+##   Invalid ground command, confirm bad lengths and codes are rejected
+##
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+   GENERIC_REACTION_WHEEL_cmd("GENERIC_REACTION_WHEEL GENERIC_RW_NOOP_CC")
+   # Bad length
+   cmd_cnt = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT")
+   cmd_err_cnt = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT")
+   cmd("GENERIC_REACTION_WHEEL GENERIC_RW_NOOP_CC with CCSDS_LENGTH #{n+2}")  # Note +2 due to CCSDS already being +1
+   get_GENERIC_REACTION_WHEEL_data()
+   check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT  == #{cmd_cnt}")
+   check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT == #{cmd_err_cnt+1}")
+end
+
+puts "End of RW App Test Script"
 ```
 
-## 항목
+### `generic_rw_ast_test.rb`
 
-- [`components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/generic_rw_app_test.rb`](file--generic_rw_app_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/generic_rw_ast_test.rb`](file--generic_rw_ast_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/generic_rw_device_test.rb`](file--generic_rw_device_test.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/generic_rw_ast_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_reaction_wheel_lib.rb"
+
+##
+## Hardware failure
+##
+
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+  # Prepare
+  GENERIC_REACTION_WHEEL_prepare_ast()
+
+  cmd_cnt = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT")
+  cmd_err_cnt = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT")
+  dev_err_cnt_RW0 = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW0")
+  dev_err_cnt_RW1 = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW1")
+  dev_err_cnt_RW2 = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW2")
+
+  generic_rw0_sim_disable()
+  generic_rw1_sim_disable()
+  generic_rw2_sim_disable()
+
+  # 3 RW commands, 1 for each wheel
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 0, TORQUE 0")
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 1, TORQUE 0")
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 2, TORQUE 0")
+
+  get_GENERIC_REACTION_WHEEL_data()
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT  == #{cmd_cnt}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT >= #{cmd_err_cnt}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW0 >= #{dev_err_cnt_RW0}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW1 >= #{dev_err_cnt_RW1}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW2 >= #{dev_err_cnt_RW2}")
+
+  generic_rw0_sim_enable()
+  generic_rw1_sim_enable()
+  generic_rw2_sim_enable()
+  sleep GENERIC_REACTION_WHEEL_TORQUE_RESPONSE_SLEEP
+
+  confirm_GENERIC_REACTION_WHEEL_data()
+end 
+
+puts "End of RW AST Test Script"
+```
+
+### `generic_rw_device_test.rb`
+
+**경로:** `components/generic_reaction_wheel/gsw/GENERIC_REACTION_WHEEL/procedures/tests/generic_rw_device_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_reaction_wheel_lib.rb"
+
+##
+## This script tests the cFS component device functionality.
+## Currently this includes: 
+##   Enable / disable, control hardware communications
+##   Configuration, reconfigure sample instrument register
+##
+
+
+##
+## Enable / disable, control hardware communications
+##
+GENERIC_REACTION_WHEEL_TEST_LOOP_COUNT.times do |n|
+  # Get to known state
+  safe_GENERIC_REACTION_WHEEL()
+  #resetting counters
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_RST_COUNTERS_CC")
+  
+  get_GENERIC_REACTION_WHEEL_data()
+
+  dev_err_cnt_RW0 = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW0")
+  dev_err_cnt_RW1 = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW1")
+  dev_err_cnt_RW2 = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW2")
+
+  # Manually command to disable when already disabled
+  #disable RWs watch error counters increase:
+  disable_all_RW()
+
+  get_GENERIC_REACTION_WHEEL_data()
+
+  cmd_cnt = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT")
+  cmd_err_cnt = tlm("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT")
+
+  #sending 3 torque commands (value set to 0)
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 0, TORQUE 0")
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 1, TORQUE 0")
+  cmd("GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 2, TORQUE 0")
+
+  get_GENERIC_REACTION_WHEEL_data()
+
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW0 == #{dev_err_cnt_RW0+1}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW1 == #{dev_err_cnt_RW1+1}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T DEVICE_ERR_COUNT_RW2 == #{dev_err_cnt_RW2+1}")
+
+  puts("command count is: #{cmd_cnt}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T COMMAND_COUNT == #{cmd_cnt}")
+  check("GENERIC_REACTION_WHEEL GENRW_HK_TLM_T ERROR_COUNT == #{cmd_err_cnt+3}") #+3 for 3 commands failed
+
+  enable_all_RW()
+
+  #confirming normal counters
+  confirm_RW_device_data()
+end
+
+puts "End of RW Device Test Script"
+```

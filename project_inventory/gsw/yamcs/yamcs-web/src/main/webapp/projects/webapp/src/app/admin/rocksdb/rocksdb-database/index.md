@@ -3,16 +3,154 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `rocksdb-database.component.html`
 
-file--rocksdb-database.component.html
-file--rocksdb-database.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database/rocksdb-database.component.html`
+
+
+```html
+@if (properties$ | async; as properties) {
+  <app-admin-page>
+    <app-admin-toolbar>
+      <ng-template app-admin-toolbar-label>
+        <ya-page-icon-button routerLink="/admin/rocksdb/databases" icon="arrow_back" />
+        {{ tablespace }}://{{ dbPath }}
+      </ng-template>
+
+      <ya-page-button [matMenuTriggerFor]="compactMenu" icon="fullscreen_exit" dropdown="true">
+        Compact
+      </ya-page-button>
+      <mat-menu #compactMenu="matMenu" class="ya-menu">
+        <button
+          mat-menu-item
+          (click)="compact('_metadata_')"
+          matTooltip="Information about tables and partitions"
+          matTooltipPosition="right">
+          _metadata_
+        </button>
+        <button
+          mat-menu-item
+          (click)="compact('rt_data')"
+          matTooltip="TM, PP and events"
+          matTooltipPosition="right">
+          rt_data
+        </button>
+        <button
+          mat-menu-item
+          (click)="compact('parameter_archive')"
+          matTooltip="Parameter Archive"
+          matTooltipPosition="right">
+          parameter_archive
+        </button>
+        <button
+          mat-menu-item
+          (click)="compact('default')"
+          matTooltip="Command history, alarms completeness, timeline, activities, users, buckets, ..."
+          matTooltipPosition="right">
+          default
+        </button>
+      </mat-menu>
+    </app-admin-toolbar>
+
+    <ya-panel>
+      <dl class="dl-horizontal">
+        <dt>Tablespace</dt>
+        <dd>{{ tablespace || "-" }}</dd>
+        <dt>DB Path</dt>
+        <dd>{{ dbPath || "-" }}</dd>
+      </dl>
+      <pre style="font-size: 10px; margin: 0">{{ properties }}</pre>
+    </ya-panel>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `rocksdb-database.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database/rocksdb-database.component.html`](file--rocksdb-database.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database/rocksdb-database.component.ts`](file--rocksdb-database.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database/rocksdb-database.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './rocksdb-database.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+  ],
+})
+export class RocksDbDatabaseComponent {
+  tablespace: string;
+  dbPath: string;
+  properties$: Promise<string>;
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+    route: ActivatedRoute,
+    private snackBar: MatSnackBar,
+  ) {
+    this.tablespace = route.snapshot.paramMap.get('tablespace')!;
+
+    const routeSegments = route.snapshot.url;
+    if (routeSegments.length) {
+      this.dbPath = routeSegments.map((s) => s.path).join('/');
+    } else {
+      this.dbPath = '';
+    }
+
+    title.setTitle(this.tablespace + '://' + this.dbPath);
+    this.properties$ = yamcs.yamcsClient.getRocksDbDatabaseProperties(
+      this.tablespace,
+      this.dbPath,
+    );
+  }
+
+  compact(cfname: string) {
+    this.snackBar.open(
+      `Compacting ${this.tablespace}://${this.dbPath}...`,
+      undefined,
+      {
+        horizontalPosition: 'end',
+      },
+    );
+    this.yamcs.yamcsClient
+      .compactRocksDbDatabase(this.tablespace, this.dbPath, {
+        cfname,
+      })
+      .then(() => {
+        this.snackBar.open(
+          `Compaction of ${this.tablespace}://${this.dbPath} successful`,
+          undefined,
+          {
+            duration: 3000,
+            horizontalPosition: 'end',
+          },
+        );
+      })
+      .catch((err) => {
+        this.snackBar.open(
+          `Compaction of ${this.tablespace}://${this.dbPath} failed`,
+          undefined,
+          {
+            duration: 3000,
+            horizontalPosition: 'end',
+          },
+        );
+      });
+  }
+}
+```

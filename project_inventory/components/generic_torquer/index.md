@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_torquer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,21 +12,465 @@
 fsw/index
 gsw/index
 sim/index
-file--.clang-format
-file--.git
-file--.gitignore
-file--LICENSE
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_torquer/.github/`](.github/index) — 폴더
-- [`components/generic_torquer/fsw/`](fsw/index) — 폴더
-- [`components/generic_torquer/gsw/`](gsw/index) — 폴더
-- [`components/generic_torquer/sim/`](sim/index) — 폴더
-- [`components/generic_torquer/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/LICENSE`](file--LICENSE) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `components/generic_torquer/.clang-format`
+
+
+```text
+---
+Language:        Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands:   true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit:     120
+CommentPragmas:  ''
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+ExperimentalAutoDetectBinPacking: false
+ForEachMacros: []
+IncludeBlocks:   Preserve
+IncludeCategories:  []
+IncludeIsMainRegex: '$'
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWidth:     4
+KeepEmptyLinesAtTheStartOfBlocks: true
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments:  true
+SortIncludes:    false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpaceBeforeCpp11BracedList: true
+SpacesBeforeTrailingComments: 1
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard:        c++11
+TabWidth:        8
+UseTab:          Never
+```
+
+### `.git`
+
+**경로:** `components/generic_torquer/.git`
+
+
+```text
+gitdir: ../../.git/modules/components/generic_torquer
+```
+
+### `.gitignore`
+
+**경로:** `components/generic_torquer/.gitignore`
+
+
+```text
+#
+# Metadata
+#
+.vagrant
+.vscode
+
+#
+# Build Files
+#
+build
+fprime/build
+fsw/standalone/build
+tmp
+.cdskeyfile
+.reservedkeyfile
+.resetkeyfile
+```
+
+### `LICENSE`
+
+**경로:** `components/generic_torquer/LICENSE`
+
+
+```text
+NASA OPEN SOURCE AGREEMENT  VERSION 1.3
+
+THIS OPEN SOURCE AGREEMENT ("AGREEMENT") DEFINES THE RIGHTS OF USE,
+REPRODUCTION, DISTRIBUTION, MODIFICATION AND REDISTRIBUTION OF CERTAIN
+COMPUTER SOFTWARE ORIGINALLY RELEASED BY THE UNITED STATES GOVERNMENT
+AS REPRESENTED BY THE GOVERNMENT AGENCY LISTED BELOW ("GOVERNMENT
+AGENCY").  THE UNITED STATES GOVERNMENT, AS REPRESENTED BY GOVERNMENT
+AGENCY, IS AN INTENDED THIRD-PARTY BENEFICIARY OF ALL SUBSEQUENT
+DISTRIBUTIONS OR REDISTRIBUTIONS OF THE SUBJECT SOFTWARE.  ANYONE WHO
+USES, REPRODUCES, DISTRIBUTES, MODIFIES OR REDISTRIBUTES THE SUBJECT
+SOFTWARE, AS DEFINED HEREIN, OR ANY PART THEREOF, IS, BY THAT ACTION,
+ACCEPTING IN FULL THE RESPONSIBILITIES AND OBLIGATIONS CONTAINED IN
+THIS AGREEMENT.
+
+Government Agency: NASA 
+Government Agency Original Software Designation: GSC-17737-1
+Government Agency Original Software Title:
+  NASA Operational Simulator for Space Systems
+User Registration Requested. Please Visit 
+  https://github.com/nasa/nos3
+Government Agency Point of Contact for Original Software:
+  Justin.R.Morris@nasa.gov
+
+1. DEFINITIONS
+
+A. "Contributor" means Government Agency, as the developer of the
+Original Software, and any entity that makes a Modification.
+B. "Covered Patents" mean patent claims licensable by a Contributor
+that are necessarily infringed by the use or sale of its Modification
+alone or when combined with the Subject Software.
+C. "Display" means the showing of a copy of the Subject Software,
+either directly or by means of an image, or any other device.
+D. "Distribution" means conveyance or transfer of the Subject
+Software, regardless of means, to another.
+E. "Larger Work" means computer software that combines Subject
+Software, or portions thereof, with software separate from the Subject
+Software that is not governed by the terms of this Agreement.
+F.  "Modification" means any alteration of, including addition to or
+deletion from, the substance or structure of either the Original
+Software or Subject Software, and includes derivative works, as that
+term is defined in the Copyright Statute, 17 USC 101.  However, the
+act of including Subject Software as part of a Larger Work does not in
+and of itself constitute a Modification.
+G. "Original Software" means the computer software first released
+under this Agreement by Government Agency with Government Agency
+designation GSC-17776-1 and entitled Core Flight System Cryptography 
+Library, including source code, object code and accompanying 
+documentation, if any.
+H. "Recipient" means anyone who acquires the Subject Software under
+this Agreement, including all Contributors.
+I. "Redistribution" means Distribution of the Subject Software after a
+Modification has been made.
+J. "Reproduction" means the making of a counterpart, image or copy of
+the Subject Software.
+K. "Sale" means the exchange of the Subject Software for money or
+equivalent value.
+L. "Subject Software" means the Original Software, Modifications, or
+any respective parts thereof.
+M. "Use" means the application or employment of the Subject Software
+for any purpose.
+
+2. GRANT OF RIGHTS
+
+A. Under Non-Patent Rights: Subject to the terms and conditions of
+this Agreement, each Contributor, with respect to its own contribution
+to the Subject Software, hereby grants to each Recipient a
+non-exclusive, world-wide, royalty-free license to engage in the
+following activities pertaining to the Subject Software:
+
+1. Use
+2. Distribution
+3. Reproduction
+4. Modification
+5. Redistribution
+6. Display
+
+B. Under Patent Rights: Subject to the terms and conditions of this
+Agreement, each Contributor, with respect to its own contribution to
+the Subject Software, hereby grants to each Recipient under Covered
+Patents a non-exclusive, world-wide, royalty-free license to engage in
+the following activities pertaining to the Subject Software:
+
+1. Use
+2. Distribution
+3. Reproduction
+4. Sale
+5. Offer for Sale
+
+C. The rights granted under Paragraph B. also apply to the combination
+of a Contributor's Modification and the Subject Software if, at the
+time the Modification is added by the Contributor, the addition of
+such Modification causes the combination to be covered by the Covered
+Patents.  It does not apply to any other combinations that include a
+Modification.
+
+D. The rights granted in Paragraphs A. and B. allow the Recipient to
+sublicense those same rights.  Such sublicense must be under the same
+terms and conditions of this Agreement.
+
+3. OBLIGATIONS OF RECIPIENT
+
+A. Distribution or Redistribution of the Subject Software must be made
+under this Agreement except for additions covered under paragraph 3H.
+
+1. Whenever a Recipient distributes or redistributes the Subject
+    Software, a copy of this Agreement must be included with each copy
+    of the Subject Software; and
+2. If Recipient distributes or redistributes the Subject Software in
+    any form other than source code, Recipient must also make the
+    source code freely available, and must provide with each copy of
+    the Subject Software information on how to obtain the source code
+    in a reasonable manner on or through a medium customarily used for
+    software exchange.
+
+B. Each Recipient must ensure that the following copyright notice
+appears prominently in the Subject Software:
+
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to specifications, any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation, whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+C. Each Contributor must characterize its alteration of the Subject
+Software as a Modification and must identify itself as the originator
+of its Modification in a manner that reasonably allows subsequent
+Recipients to identify the originator of the Modification.  In
+fulfillment of these requirements, Contributor must include a file
+(e.g., a change log file) that describes the alterations made and the
+date of the alterations, identifies Contributor as originator of the
+alterations, and consents to characterization of the alterations as a
+Modification, for example, by including a statement that the
+Modification is derived, directly or indirectly, from Original
+Software provided by Government Agency. Once consent is granted, it
+may not thereafter be revoked.
+
+D. A Contributor may add its own copyright notice to the Subject
+Software.  Once a copyright notice has been added to the Subject
+Software, a Recipient may not remove it without the express permission
+of the Contributor who added the notice.
+
+E. A Recipient may not make any representation in the Subject Software
+or in any promotional, advertising or other material that may be
+construed as an endorsement by Government Agency or by any prior
+Recipient of any product or service provided by Recipient, or that may
+seek to obtain commercial advantage by the fact of Government Agency's
+or a prior Recipient's participation in this Agreement.
+
+F. In an effort to track usage and maintain accurate records of the
+Subject Software, each Recipient, upon receipt of the Subject
+Software, is requested to register with Government Agency by visiting
+the following website: https://github.com/nasa/CryptoLib.  Recipient's
+name and personal information shall be used for statistical purposes
+only. Once a Recipient makes a Modification available, it is requested
+that the Recipient inform Government Agency at the web site provided
+above how to access the Modification.
+
+G. Each Contributor represents that that its Modification is believed
+to be Contributor's original creation and does not violate any
+existing agreements, regulations, statutes or rules, and further that
+Contributor has sufficient rights to grant the rights conveyed by this
+Agreement.
+
+H. A Recipient may choose to offer, and to charge a fee for, warranty,
+support, indemnity and/or liability obligations to one or more other
+Recipients of the Subject Software.  A Recipient may do so, however,
+only on its own behalf and not on behalf of Government Agency or any
+other Recipient.  Such a Recipient must make it absolutely clear that
+any such warranty, support, indemnity and/or liability obligation is
+offered by that Recipient alone.  Further, such Recipient agrees to
+indemnify Government Agency and every other Recipient for any
+liability incurred by them as a result of warranty, support, indemnity
+and/or liability offered by such Recipient.
+
+I. A Recipient may create a Larger Work by combining Subject Software
+with separate software not governed by the terms of this agreement and
+distribute the Larger Work as a single product. In such case, the
+Recipient must make sure Subject Software, or portions thereof,
+included in the Larger Work is subject to this Agreement.
+
+J. Notwithstanding any provisions contained herein, Recipient is
+hereby put on notice that export of any goods or technical data from
+the United States may require some form of export license from the
+U.S. Government.  Failure to obtain necessary export licenses may
+result in criminal liability under U.S. laws.  Government Agency
+neither represents that a license shall not be required nor that, if
+required, it shall be issued.  Nothing granted herein provides any
+such export license.
+
+4. DISCLAIMER OF WARRANTIES AND LIABILITIES; WAIVER AND INDEMNIFICATION
+
+A. No Warranty: THE SUBJECT SOFTWARE IS PROVIDED "AS IS" WITHOUT ANY
+WARRANTY OF ANY KIND, EITHER EXPRESSED, IMPLIED, OR STATUTORY,
+INCLUDING, BUT NOT LIMITED TO, ANY WARRANTY THAT THE SUBJECT SOFTWARE
+WILL CONFORM TO SPECIFICATIONS, ANY IMPLIED WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR FREEDOM FROM
+INFRINGEMENT, ANY WARRANTY THAT THE SUBJECT SOFTWARE WILL BE ERROR
+FREE, OR ANY WARRANTY THAT DOCUMENTATION, IF PROVIDED, WILL CONFORM TO
+THE SUBJECT SOFTWARE. THIS AGREEMENT DOES NOT, IN ANY MANNER,
+CONSTITUTE AN ENDORSEMENT BY GOVERNMENT AGENCY OR ANY PRIOR RECIPIENT
+OF ANY RESULTS, RESULTING DESIGNS, HARDWARE, SOFTWARE PRODUCTS OR ANY
+OTHER APPLICATIONS RESULTING FROM USE OF THE SUBJECT SOFTWARE.
+FURTHER, GOVERNMENT AGENCY DISCLAIMS ALL WARRANTIES AND LIABILITIES
+REGARDING THIRD-PARTY SOFTWARE, IF PRESENT IN THE ORIGINAL SOFTWARE,
+AND DISTRIBUTES IT "AS IS."
+
+B. Waiver and Indemnity: RECIPIENT AGREES TO WAIVE ANY AND ALL CLAIMS
+AGAINST THE UNITED STATES GOVERNMENT, ITS CONTRACTORS AND
+SUBCONTRACTORS, AS WELL AS ANY PRIOR RECIPIENT.  IF RECIPIENT'S USE OF
+THE SUBJECT SOFTWARE RESULTS IN ANY LIABILITIES, DEMANDS, DAMAGES,
+EXPENSES OR LOSSES ARISING FROM SUCH USE, INCLUDING ANY DAMAGES FROM
+PRODUCTS BASED ON, OR RESULTING FROM, RECIPIENT'S USE OF THE SUBJECT
+SOFTWARE, RECIPIENT SHALL INDEMNIFY AND HOLD HARMLESS THE UNITED
+STATES GOVERNMENT, ITS CONTRACTORS AND SUBCONTRACTORS, AS WELL AS ANY
+PRIOR RECIPIENT, TO THE EXTENT PERMITTED BY LAW.  RECIPIENT'S SOLE
+REMEDY FOR ANY SUCH MATTER SHALL BE THE IMMEDIATE, UNILATERAL
+TERMINATION OF THIS AGREEMENT.
+
+
+5. GENERAL TERMS
+
+A. Termination: This Agreement and the rights granted hereunder will
+terminate automatically if a Recipient fails to comply with these
+terms and conditions, and fails to cure such noncompliance within
+thirty (30) days of becoming aware of such noncompliance.  Upon
+termination, a Recipient agrees to immediately cease use and
+distribution of the Subject Software.  All sublicenses to the Subject
+Software properly granted by the breaching Recipient shall survive any
+such termination of this Agreement.
+
+B. Severability: If any provision of this Agreement is invalid or
+unenforceable under applicable law, it shall not affect the validity
+or enforceability of the remainder of the terms of this Agreement.
+
+C. Applicable Law: This Agreement shall be subject to United States
+federal law only for all purposes, including, but not limited to,
+determining the validity of this Agreement, the meaning of its
+provisions and the rights, obligations and remedies of the parties.
+
+D. Entire Understanding: This Agreement constitutes the entire
+understanding and agreement of the parties relating to release of the
+Subject Software and may not be superseded, modified or amended except
+by further written agreement duly executed by the parties.
+
+E. Binding Authority: By accepting and using the Subject Software
+under this Agreement, a Recipient affirms its authority to bind the
+Recipient to all terms and conditions of this Agreement and that that
+Recipient hereby agrees to all terms and conditions herein.
+
+F. Point of Contact: Any Recipient contact with Government Agency is
+to be directed to the designated representative as follows:
+  Justin.R.Morris@nasa.gov
+```
+
+### `README.md`
+
+**경로:** `components/generic_torquer/README.md`
+
+
+````markdown
+# Generic Torquer – NOS3 Component
+This repository contains the NOS3 Generic Torquer Component. This includes flight software (fsw), ground software (gsw), and simulation (sim) directories.
+
+## Overview
+Torquers, or magnetorquers, are commonly used on spacecraft as a secondary attitude control mechanism. They consist of electromagnets placed asymmetrically. Different currents running through them then generate different magnetic fields, and the torque created by the interaction of the spacecraft magnetic field and the Earth’s magnetic field rotates the vehicle. Because of the small amounts of torque available, magnetorquers are only infrequently used as the primary attitude control mechanism; they frequently serve as a secondary mechanism, though, and are used to provide small rotational changes or to gradually unload reaction wheels. 
+The generic torquer is a device which accepts as input a current (as a percent of the maximum) and returns a value of the generated magnetic field. 
+The available flight software is for use in the core Flight System (cFS) while the ground software supports COSMOS.
+A NOS3 simulation is available which uses a 42 data provider.
+
+## Mechanical
+### Reference System
+The +z axis is down the length of the magnetorquer (in the same direction as the coil). The +x and +y axes are perpendicular to the coil, and together with the +z axis make an orthogonal, right-handed coordinate system.
+
+## Communications
+The NOS3 Generic Torquer communicates by means of the hardware library (hwlib) defined in [hwlib/tree/dev](https://github.com/nasa-itc/hwlib/tree/dev). Specifically, it makes use of two functions from the torquer library at [libtrq.h](https://github.com/nasa-itc/hwlib/blob/dev/fsw/public_inc/libtrq.h) to send commands to the torquers. These commands wrap the specific functionality of an FPGA or other interface which is used to send a PWM signal.
+
+
+### Commands
+There are two commands defined in libtrq which this generic torquer uses. They are:
+- trq_set_direction(trq_info_t* device, bool direction)
+- trq_command(trq_info_t *device, uint8_t percent_high, bool pos_dir)
+
+
+#### Command trq_set_direction
+Command for the current to the torquers to be set in one direction or the other.
+- Command
+    - trq_info_t* device = the address of the device being controlled
+    - bool direction = the direction the current takes through the torquer
+
+- Response
+    - int32_t response = an integer which indicates the success or failure of the command
+
+#### Command trq_command
+Command for a torquer to be set to a percentage of its maximum power.  
+- Command
+    - trq_info_t* device = the address of the device being controlled
+    - uint8_t percent_high = percent power to send through the torquer
+    - bool direction = the direction the current should take
+
+- Response
+    - int32_t response = an integer which indicates the success or failure of the command
+
+Error codes:
+- 0 = No error.  The torquer is set to the given power.
+- 1 = Error.  The magnetorquer was not able to be set to the given power value for some reason.
+
+
+# Software Configuration
+
+## Flight Software
+Refer to the file [fsw/platform_inc/generic_torquer_app_platform_cfg.h](fsw/platform_inc/generic_torquer_app_platform_cfg.h) for the default configuration settings to the component hardware bus, as well as a summary on overriding parameters in mission-specific repositories.  In addition, to build the flight software, the component must be listed in the ```APPLICATION_LIST``` setting of the cFS ```targets.cmake``` file (typically in a ```*_defs``` directory).  Also, to run the generic_torquer app as part of the flight software, the component must be listed in the cFE startup script (```*.scr```) file (also typically found in a ```*_defs``` directory).  A typical line to add the generic torquer app looks like:
+
+```
+CFE_APP, /cf/generic_torquer.so,	GENERIC_TORQUER_AppMain,  TORQUER,          60, 8192,  0x0, 0;
+```
+
+For more information on the format, please refer to the cFE startup script (```*.scr```) file.
+
+
+## Simulator
+Refer to the file [sim/cfg/nos3-torquer-simulator.xml](sim/cfg/nos3-torquer-simulator.xml) for the default configuration settings.  Note that the block of XML within this file should be placed within the `<simulators></simulators>` section of the main ```nos3-simulator.xml``` configuration file which is read by the ```sim_common code``` and used by the simulator.  For more information, refer to the example configuration file in ```nos3/sims/cfg/nos3-simulator.xml```.
+
+## 42
+The ```GENERIC_TORQUER_42_PROVIDER``` simulation data provider depends on receiving data for a fine sun sensor over a TCP/IP socket (specified in the simulator configuration) from the 42 spacecraft simulator.  To provide this data, 42 must be configured with a fine sun sensor block in the 42 spacecraft configuration file (typically named to begin with ```SC_``` but whose name is ultimately specified in the Spacecraft section of the 42 ```Inp_Sim.txt``` file).  Refer to the file [sim/cfg/SC_torquer_NOS3.txt](sim/cfg/SC_torquer_NOS3.txt) for what this configuration block should look like.  This block should be placed within the `************************* Generic Torquer *******************************` section of the ```SC_*.xml``` configuration file which is read by 42 for spacecraft information.  For more information, refer to the example 42 spacecraft configuration file in ```nos3/sims/cfg/InOut/SC_NOS3.txt```.
+
+In addition, the 42 ```Inp_IPC.txt``` configuration file must specify information about the TCP/IP socket connection to the simulation data provider.  Refer to the file [sim/cfg/Inp_torquer_IPC.txt](sim/cfg/Inp_torquer_IPC.txt) for what this configuration block should look like.  This block should be placed in the ```Inp_IPC.txt``` configuration file which is read by 42 for IPC information.  For more information, refer to the example 42 spacecraft configuration file in ```nos3/sims/cfg/InOut/Inp_IPC.txt```.
+
+Important for communication with the simulation provider:
+- The ```IPC Mode``` must be ```TX```
+- The ```Socket Role``` must be ```SERVER```
+- The ```Server Host Name, Port``` must be specified and match the setting in the simulator XML configuration file
+- ```Allow Blocking``` must be ```FALSE```
+- ```Prefix```(es) must be set based on the data to send from 42 and based on what is expected to be parsed by the simulation data provider
+
+To get a better understanding of the data that can be provided by 42, try running 42 with ```Echo to stdout``` set to ```TRUE```, 1 ```TX``` prefix, and a prefix of ```SC```.  If you then run 42, the main terminal window will echo the data being sent out from 42 to the TCP/IP socket.  You can then choose the prefix(es) to filter out and determine how to parse the 42 data in the simulation data provider (or the data point that provides the interface between the simulation data provider and the simulation hardware model).
+````

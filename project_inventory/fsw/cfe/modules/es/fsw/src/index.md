@@ -3,70 +3,16293 @@
 
 **경로:** `fsw/cfe/modules/es/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_es_api.c`
 
-file--cfe_es_api.c
-file--cfe_es_apps.c
-file--cfe_es_apps.h
-file--cfe_es_backgroundtask.c
-file--cfe_es_cds.c
-file--cfe_es_cds.h
-file--cfe_es_cds_mempool.c
-file--cfe_es_cds_mempool.h
-file--cfe_es_dispatch.c
-file--cfe_es_dispatch.h
-file--cfe_es_erlog.c
-file--cfe_es_generic_pool.c
-file--cfe_es_generic_pool.h
-file--cfe_es_global.h
-file--cfe_es_log.h
-file--cfe_es_mempool.c
-file--cfe_es_mempool.h
-file--cfe_es_module_all.h
-file--cfe_es_objtab.c
-file--cfe_es_perf.c
-file--cfe_es_perf.h
-file--cfe_es_resource.c
-file--cfe_es_resource.h
-file--cfe_es_start.c
-file--cfe_es_start.h
-file--cfe_es_syslog.c
-file--cfe_es_task.c
-file--cfe_es_task.h
-file--cfe_es_verify.h
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_api.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**    cfe_es_api.c
+**
+**  Purpose:
+**    This file implements the cFE Executive Services API functions.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+*/
+
+/*
+** Required header files.
+*/
+#include "cfe_es_module_all.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GetResetType(uint32 *ResetSubtypePtr)
+{
+    if (ResetSubtypePtr != NULL)
+    {
+        *ResetSubtypePtr = CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype;
+    }
+
+    return CFE_ES_Global.ResetDataPtr->ResetVars.ResetType;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_ResetCFE(uint32 ResetType)
+{
+    int32 ReturnCode;
+
+    if (ResetType == CFE_PSP_RST_TYPE_PROCESSOR)
+    {
+        /*
+        ** Increment the processor reset count
+        */
+        CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount++;
+
+        /*
+        ** Before doing a Processor reset, check to see
+        ** if the maximum number has been exceeded
+        */
+        if (CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount >
+            CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount)
+        {
+            CFE_ES_WriteToSysLog("%s: POWER ON RESET due to max proc resets (Commanded).\n", __func__);
+
+            /*
+            ** Log the reset in the ER Log. The log will be wiped out, but it's good to have
+            ** the entry just in case something fails.
+            */
+            CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, CFE_PSP_RST_SUBTYPE_RESET_COMMAND,
+                                "POWER ON RESET due to max proc resets (Commanded).");
+            /*
+            ** Call the BSP reset routine
+            */
+            CFE_PSP_Restart(CFE_PSP_RST_TYPE_POWERON);
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: PROCESSOR RESET called from CFE_ES_ResetCFE (Commanded).\n", __func__);
+
+            /*
+            ** Update the reset variables
+            */
+            CFE_ES_Global.ResetDataPtr->ResetVars.ES_CausedReset = true;
+
+            /*
+            ** Log the reset in the ER Log
+            */
+            CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_PROCESSOR, CFE_PSP_RST_SUBTYPE_RESET_COMMAND,
+                                "PROCESSOR RESET called from CFE_ES_ResetCFE (Commanded).");
+            /*
+            ** Call the BSP reset routine
+            */
+            CFE_PSP_Restart(CFE_PSP_RST_TYPE_PROCESSOR);
+        }
+
+        /*
+        ** If the BSP routine is not implemented,
+        ** it will return.
+        */
+        ReturnCode = CFE_ES_NOT_IMPLEMENTED;
+    }
+    else if (ResetType == CFE_PSP_RST_TYPE_POWERON)
+    {
+        CFE_ES_WriteToSysLog("%s: POWERON RESET called from CFE_ES_ResetCFE (Commanded).\n", __func__);
+
+        /*
+        ** Log the reset in the ER Log. The log will be wiped out, but it's good to have
+        ** the entry just in case something fails.
+        */
+        CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, CFE_PSP_RST_SUBTYPE_RESET_COMMAND,
+                            "POWERON RESET called from CFE_ES_ResetCFE (Commanded).");
+
+        /*
+        ** Call the BSP reset routine
+        */
+        CFE_PSP_Restart(CFE_PSP_RST_TYPE_POWERON);
+
+        /*
+        ** If the BSP routine is not implemented,
+        ** it will return.
+        */
+        ReturnCode = CFE_ES_NOT_IMPLEMENTED;
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid Reset Type: %d.\n", __func__, (int)ResetType);
+        ReturnCode = CFE_ES_BAD_ARGUMENT;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_RestartApp(CFE_ES_AppId_t AppID)
+{
+    int32               ReturnCode = CFE_SUCCESS;
+    os_fstat_t          FileStatus;
+    CFE_ES_AppRecord_t *AppRecPtr;
+
+    AppRecPtr = CFE_ES_LocateAppRecordByID(AppID);
+    if (AppRecPtr != NULL)
+    {
+        CFE_ES_LockSharedData(__func__, __LINE__);
+
+        /*
+        ** Check to see if the App is an external cFE App.
+        */
+        if (AppRecPtr->Type == CFE_ES_AppType_CORE)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Cannot Restart a CORE Application: %s.\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else if (AppRecPtr->AppState != CFE_ES_AppState_RUNNING)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Cannot Restart Application %s, It is not running.\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else
+        {
+            /*
+            ** Check to see if the file exists
+            */
+            if (OS_stat(AppRecPtr->StartParams.BasicInfo.FileName, &FileStatus) == OS_SUCCESS)
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: Restart Application %s Initiated\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr));
+                AppRecPtr->ControlReq.AppControlRequest = CFE_ES_RunStatus_SYS_RESTART;
+            }
+            else
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: Cannot Restart Application %s, File %s does not exist.\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr),
+                                          AppRecPtr->StartParams.BasicInfo.FileName);
+                ReturnCode = CFE_ES_FILE_IO_ERR;
+            }
+        }
+
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+    }
+    else /* App ID is not valid */
+    {
+        ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+
+        CFE_ES_WriteToSysLog("%s: Invalid Application ID received, AppID = %lu\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(AppID));
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_ReloadApp(CFE_ES_AppId_t AppID, const char *AppFileName)
+{
+    int32               ReturnCode = CFE_SUCCESS;
+    os_fstat_t          FileStatus;
+    CFE_ES_AppRecord_t *AppRecPtr = CFE_ES_LocateAppRecordByID(AppID);
+
+    if (AppRecPtr != NULL)
+    {
+        CFE_ES_LockSharedData(__func__, __LINE__);
+
+        /*
+        ** Check to see if the App is an external cFE App.
+        */
+        if (AppRecPtr->Type == CFE_ES_AppType_CORE)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Cannot Reload a CORE Application: %s.\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else if (AppRecPtr->AppState != CFE_ES_AppState_RUNNING)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Cannot Reload Application %s, It is not running.\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else
+        {
+            /*
+            ** Check to see if the file exists
+            */
+            if (OS_stat(AppFileName, &FileStatus) == OS_SUCCESS)
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: Reload Application %s Initiated. New filename = %s\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr), AppFileName);
+                strncpy(AppRecPtr->StartParams.BasicInfo.FileName, AppFileName,
+                        sizeof(AppRecPtr->StartParams.BasicInfo.FileName) - 1);
+                AppRecPtr->StartParams.BasicInfo.FileName[sizeof(AppRecPtr->StartParams.BasicInfo.FileName) - 1] = 0;
+                AppRecPtr->ControlReq.AppControlRequest = CFE_ES_RunStatus_SYS_RELOAD;
+            }
+            else
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: Cannot Reload Application %s, File %s does not exist.\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr), AppFileName);
+                ReturnCode = CFE_ES_FILE_IO_ERR;
+            }
+        }
+
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+    }
+    else /* App ID is not valid */
+    {
+        ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+
+        CFE_ES_WriteToSysLog("%s: Invalid Application ID received, AppID = %lu\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(AppID));
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_DeleteApp(CFE_ES_AppId_t AppID)
+{
+    int32               ReturnCode = CFE_SUCCESS;
+    CFE_ES_AppRecord_t *AppRecPtr  = CFE_ES_LocateAppRecordByID(AppID);
+
+    if (AppRecPtr != NULL)
+    {
+        CFE_ES_LockSharedData(__func__, __LINE__);
+
+        /*
+        ** Check to see if the App is an external cFE App.
+        */
+        if (AppRecPtr->Type == CFE_ES_AppType_CORE)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Cannot Delete a CORE Application: %s.\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else if (AppRecPtr->AppState != CFE_ES_AppState_RUNNING)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Cannot Delete Application %s, It is not running.\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Delete Application %s Initiated\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+            AppRecPtr->ControlReq.AppControlRequest = CFE_ES_RunStatus_SYS_DELETE;
+        }
+
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+    }
+    else /* App ID is not valid */
+    {
+        ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+
+        CFE_ES_WriteToSysLog("%s: Invalid Application ID received, AppID = %lu\n", __func__,
+                             CFE_RESOURCEID_TO_ULONG(AppID));
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_ExitApp(uint32 ExitStatus)
+{
+    int32               ReturnCode;
+    CFE_ES_AppRecord_t *AppRecPtr;
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+     * This should only be called with a valid ExitStatus, anything else is invalid
+     * and indicates a bug in the caller.
+     */
+
+    if (ExitStatus == CFE_ES_RunStatus_UNDEFINED || ExitStatus >= CFE_ES_RunStatus_MAX)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Called with invalid status (%u).\n", __func__, (unsigned int)ExitStatus);
+
+        /* revert to the ERROR status */
+        ExitStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    AppRecPtr = CFE_ES_GetAppRecordByContext();
+    if (AppRecPtr != NULL)
+    {
+        /*
+         * Set the status in the global table.
+         *
+         * The passed-in status should only be stored if there was no already-pending
+         * request from a ground command or other source, such as an exception, etc.
+         *
+         * If a control request is already pending, it is assumed that this exit is
+         * part of an orderly shutdown caused by that request, and therefore it
+         * should not be overwritten here.
+         */
+        if (AppRecPtr->ControlReq.AppControlRequest == CFE_ES_RunStatus_APP_RUN)
+        {
+            AppRecPtr->ControlReq.AppControlRequest = ExitStatus;
+        }
+
+        /*
+        ** Check to see if the App is an external cFE App.
+        */
+        if (AppRecPtr->Type == CFE_ES_AppType_CORE)
+        {
+            /*
+            ** A core app should only call this function with one of two ExitStatus codes.
+            */
+            if (ExitStatus == CFE_ES_RunStatus_CORE_APP_INIT_ERROR)
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: CORE Application %s Had an Init Error.\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr));
+
+                /*
+                ** Unlock the ES Shared data before calling ResetCFE
+                */
+                CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+                /*
+                ** Do a Processor Reset the cFE
+                */
+                ReturnCode = CFE_ES_ResetCFE(CFE_PSP_RST_TYPE_PROCESSOR);
+
+                /*
+                ** The CFE_ES_ResetCFE function does not normally return,
+                ** but it may return during unit testing. If it does,
+                ** log the return code (even if it claims CFE_SUCCESS).
+                */
+                CFE_ES_WriteToSysLog("%s: CORE Application Init Error Processor Reset, RC = 0x%08X\n", __func__,
+                                     (unsigned int)ReturnCode);
+
+                return;
+            }
+            else if (ExitStatus == CFE_ES_RunStatus_CORE_APP_RUNTIME_ERROR)
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: CORE Application %s Had a Runtime Error.\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr));
+
+                /*
+                ** Unlock the ES Shared data before killing the main task
+                */
+                CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+                /*
+                ** Exit this task
+                */
+                OS_TaskExit();
+
+                /*
+                ** Code will not return, except under unit test
+                */
+                return;
+            }
+            else
+            {
+                CFE_ES_SysLogWrite_Unsync("%s: Cannot Exit CORE Application %s\n", __func__,
+                                          CFE_ES_AppRecordGetName(AppRecPtr));
+            }
+        }
+        else /* It is an external App */
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Application %s called CFE_ES_ExitApp\n", __func__,
+                                      CFE_ES_AppRecordGetName(AppRecPtr));
+
+            AppRecPtr->AppState = CFE_ES_AppState_STOPPED;
+
+            /*
+            ** Unlock the ES Shared data before suspending the app
+            */
+            CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+            /*
+            ** Suspend the Application until ES kills it.
+            ** It might be better to have a way of suspending the app in the OS
+            */
+            while (1)
+            {
+                OS_TaskDelay(500);
+            }
+        }
+
+    } /* end if ReturnCode == CFE_SUCCESS */
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_RunLoop(uint32 *RunStatus)
+{
+    bool                ReturnCode;
+    CFE_ES_AppRecord_t *AppRecPtr;
+
+    /*
+     * call CFE_ES_IncrementTaskCounter() so this is
+     * recorded as task activity for outgoing telemetry.
+     *
+     * This will update the counter for whatever task context
+     * is calling this API, which is expected to be the main
+     * task of the app.  This can be done outside of any lock
+     * because each task has its own counter which is only updated
+     * by itself.
+     */
+    CFE_ES_IncrementTaskCounter();
+
+    /*
+     * This API should generally only be called with the status as CFE_ES_RunStatus_APP_RUN.
+     * Anything else gets an immediate "false" return which should cause the caller to
+     * break out of its main loop.  There is no need to take the lock or do any other
+     * accounting in that case.
+     *
+     * Note that the RunStatus really doesn't add much value here, so this also allows
+     * this function to be called with NULL, with the possibility of phasing this out
+     * entirely.
+     */
+    if (RunStatus != NULL && *RunStatus != CFE_ES_RunStatus_APP_RUN)
+    {
+        return false;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+    ** Get App Record
+    */
+    AppRecPtr = CFE_ES_GetAppRecordByContext();
+    if (AppRecPtr != NULL)
+    {
+        /*
+         ** App state must be RUNNING (no-op if already set to running)
+         */
+        if (AppRecPtr->AppState < CFE_ES_AppState_RUNNING)
+        {
+            AppRecPtr->AppState = CFE_ES_AppState_RUNNING;
+        }
+
+        /*
+         * Check if the control request is also set to "RUN"
+         * Anything else should also return false, so the loop will exit.
+         */
+        if (AppRecPtr->ControlReq.AppControlRequest == CFE_ES_RunStatus_APP_RUN)
+        {
+            ReturnCode = true;
+        }
+        else
+        {
+            /*
+             * Just in case, also output the status, just in case the app looks at this.
+             */
+            if (RunStatus != NULL)
+            {
+                *RunStatus = AppRecPtr->ControlReq.AppControlRequest;
+            }
+            ReturnCode = false;
+        }
+    }
+    else
+    {
+        /*
+         * Cannot do anything without the AppID
+         */
+        CFE_ES_SysLogWrite_Unsync("%s: Error getting AppID for the caller\n", __func__);
+        ReturnCode = false;
+
+    } /* end if Status == CFE_SUCCESS */
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_WaitForSystemState(uint32 MinSystemState, uint32 TimeOutMilliseconds)
+{
+    int32               Status = CFE_SUCCESS;
+    CFE_ES_AppRecord_t *AppRecPtr;
+    uint32              RequiredAppState;
+    uint32              WaitTime;
+    uint32              WaitRemaining;
+
+    /*
+     * Calling app is assumed to have completed its own initialization up to the point
+     * it is waiting for.
+     *
+     * Determine the implicit app state based on the system state it is indicating
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+    ** Get App Record
+    */
+    AppRecPtr = CFE_ES_GetAppRecordByContext();
+    if (AppRecPtr != NULL)
+    {
+        RequiredAppState = CFE_ES_AppState_EARLY_INIT;
+        /*
+         * If a core app waits for anything above "CORE_READY" then it is assumed to be RUNNING
+         *
+         * External apps have additional finer-grained sync:
+         *  - SYSTEM_STATE_APPS_INIT requires that all apps are at least up to LATE_INIT
+         *  - SYSTEM_STATE_OPERATIONAL requires that all apps are RUNNING
+         *  - SYSTEM_STATE_SHUTDOWN requires that all apps are STOPPED (in concept anyway)
+         */
+        if (AppRecPtr->Type == CFE_ES_AppType_CORE)
+        {
+            if (MinSystemState >= CFE_ES_SystemState_CORE_READY)
+            {
+                RequiredAppState = CFE_ES_AppState_RUNNING;
+            }
+        }
+        else if (MinSystemState >= CFE_ES_SystemState_SHUTDOWN)
+        {
+            RequiredAppState = CFE_ES_AppState_STOPPED;
+        }
+        else if (MinSystemState >= CFE_ES_SystemState_OPERATIONAL)
+        {
+            RequiredAppState = CFE_ES_AppState_RUNNING;
+        }
+        else if (MinSystemState >= CFE_ES_SystemState_APPS_INIT)
+        {
+            RequiredAppState = CFE_ES_AppState_LATE_INIT;
+        }
+
+        /*
+         * NOTE -- a call to "CFE_ES_WaitForSystemState()" implies that the calling app MUST also
+         * be in the requisite state.  This is hooked into here to avoid needing to update all existing
+         * apps to add an explicit state change call, but it makes sense because if this was not done an app could
+         * be waiting for itself (which will always time out).
+         */
+        if (AppRecPtr->AppState < RequiredAppState)
+        {
+            AppRecPtr->AppState = RequiredAppState;
+        }
+    }
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     * Do the actual delay loop.
+     *
+     * This is only dependent on the main (startup) task updating the global variable
+     * to be at least the state requested.
+     */
+    WaitRemaining = TimeOutMilliseconds;
+    while (CFE_ES_Global.SystemState < MinSystemState)
+    {
+        /* TBD: Very Crude timing here, but not sure if it matters,
+         * as this is only done during startup, not real work */
+        if (WaitRemaining > CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC)
+        {
+            WaitTime = CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC;
+        }
+        else if (WaitRemaining > 0)
+        {
+            WaitTime = WaitRemaining;
+        }
+        else
+        {
+            Status = CFE_ES_OPERATION_TIMED_OUT;
+            break;
+        }
+
+        OS_TaskDelay(WaitTime);
+        WaitRemaining -= WaitTime;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_WaitForStartupSync(uint32 TimeOutMilliseconds)
+{
+    CFE_ES_WaitForSystemState(CFE_ES_SystemState_OPERATIONAL, TimeOutMilliseconds);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetAppIDByName(CFE_ES_AppId_t *AppIdPtr, const char *AppName)
+{
+    CFE_ES_AppRecord_t *AppRecPtr;
+    int32               Result;
+
+    if (AppName == NULL || AppIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    AppRecPtr = CFE_ES_LocateAppRecordByName(AppName);
+    if (AppRecPtr == NULL)
+    {
+        /*
+         * ensure the output value is set to a safe value,
+         * in case the caller does not check the return code.
+         */
+        Result    = CFE_ES_ERR_NAME_NOT_FOUND;
+        *AppIdPtr = CFE_ES_APPID_UNDEFINED;
+    }
+    else
+    {
+        Result    = CFE_SUCCESS;
+        *AppIdPtr = CFE_ES_AppRecordGetID(AppRecPtr);
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetLibIDByName(CFE_ES_LibId_t *LibIdPtr, const char *LibName)
+{
+    CFE_ES_LibRecord_t *LibRecPtr;
+    int32               Result;
+
+    if (LibName == NULL || LibIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    LibRecPtr = CFE_ES_LocateLibRecordByName(LibName);
+    if (LibRecPtr == NULL)
+    {
+        /*
+         * ensure the output value is set to a safe value,
+         * in case the caller does not check the return code.
+         */
+        Result    = CFE_ES_ERR_NAME_NOT_FOUND;
+        *LibIdPtr = CFE_ES_LIBID_UNDEFINED;
+    }
+    else
+    {
+        Result    = CFE_SUCCESS;
+        *LibIdPtr = CFE_ES_LibRecordGetID(LibRecPtr);
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetTaskIDByName(CFE_ES_TaskId_t *TaskIdPtr, const char *TaskName)
+{
+    osal_id_t    OsalId = OS_OBJECT_ID_UNDEFINED;
+    int32        OsStatus;
+    CFE_Status_t Result;
+
+    if (TaskName == NULL || TaskIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* For tasks IDs, defer to OSAL for name lookup */
+    OsStatus = OS_TaskGetIdByName(&OsalId, TaskName);
+    if (OsStatus == OS_SUCCESS)
+    {
+        Result     = CFE_SUCCESS;
+        *TaskIdPtr = CFE_ES_TaskId_FromOSAL(OsalId);
+    }
+    else
+    {
+        Result     = CFE_ES_ERR_NAME_NOT_FOUND;
+        *TaskIdPtr = CFE_ES_TASKID_UNDEFINED;
+    }
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetAppID(CFE_ES_AppId_t *AppIdPtr)
+{
+    CFE_ES_AppRecord_t *AppRecPtr;
+    int32               Result;
+
+    if (AppIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    AppRecPtr = CFE_ES_GetAppRecordByContext();
+
+    if (AppRecPtr != NULL)
+    {
+        *AppIdPtr = CFE_ES_AppRecordGetID(AppRecPtr);
+        Result    = CFE_SUCCESS;
+    }
+    else
+    {
+        *AppIdPtr = CFE_ES_APPID_UNDEFINED;
+        Result    = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetTaskID(CFE_ES_TaskId_t *TaskIdPtr)
+{
+    int32                Result;
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+
+    if (TaskIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+    TaskRecPtr = CFE_ES_GetTaskRecordByContext();
+    if (TaskRecPtr == NULL)
+    {
+        *TaskIdPtr = CFE_ES_TASKID_UNDEFINED;
+        Result     = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+    else
+    {
+        *TaskIdPtr = CFE_ES_TaskRecordGetID(TaskRecPtr);
+        Result     = CFE_SUCCESS;
+    }
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetAppName(char *AppName, CFE_ES_AppId_t AppId, size_t BufferLength)
+{
+    int32               Result;
+    CFE_ES_AppRecord_t *AppRecPtr;
+
+    if (BufferLength == 0 || AppName == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /*
+    ** Get App Record
+    */
+    AppRecPtr = CFE_ES_LocateAppRecordByID(AppId);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+     * confirm that the app record is a match,
+     * which must be done while locked.
+     */
+    if (CFE_ES_AppRecordIsMatch(AppRecPtr, AppId))
+    {
+        strncpy(AppName, CFE_ES_AppRecordGetName(AppRecPtr), BufferLength - 1);
+        AppName[BufferLength - 1] = '\0';
+        Result                    = CFE_SUCCESS;
+    }
+    else
+    {
+        AppName[0] = 0;
+        Result     = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetLibName(char *LibName, CFE_ES_LibId_t LibId, size_t BufferLength)
+{
+    int32               Result;
+    CFE_ES_LibRecord_t *LibRecPtr;
+
+    if (BufferLength == 0 || LibName == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /*
+    ** Get Lib Record
+    */
+    LibRecPtr = CFE_ES_LocateLibRecordByID(LibId);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+     * confirm that the Lib record is a match,
+     * which must be done while locked.
+     */
+    if (CFE_ES_LibRecordIsMatch(LibRecPtr, LibId))
+    {
+        strncpy(LibName, CFE_ES_LibRecordGetName(LibRecPtr), BufferLength - 1);
+        LibName[BufferLength - 1] = '\0';
+        Result                    = CFE_SUCCESS;
+    }
+    else
+    {
+        LibName[0] = 0;
+        Result     = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetTaskName(char *TaskName, CFE_ES_TaskId_t TaskId, size_t BufferLength)
+{
+    int32     OsStatus;
+    osal_id_t OsalId;
+
+    if (BufferLength == 0 || TaskName == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    if (!CFE_RESOURCEID_TEST_DEFINED(TaskId))
+    {
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    /*
+     * Query OSAL to get the task name
+     */
+    OsalId   = CFE_ES_TaskId_ToOSAL(TaskId);
+    OsStatus = OS_GetResourceName(OsalId, TaskName, BufferLength);
+
+    if (OsStatus == OS_ERR_INVALID_ID)
+    {
+        /* Supplied ID is not a CFE task */
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+    if (OsStatus == OS_ERR_NAME_TOO_LONG)
+    {
+        /* Name is too long to fit in supplied buffer */
+        return CFE_ES_BAD_ARGUMENT;
+    }
+    if (OsStatus != OS_SUCCESS)
+    {
+        /* Some other uncaught error */
+        CFE_ES_WriteToSysLog("%s(): Unexpected error from OS_GetResourceName(): %ld", __func__, (long)OsStatus);
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetAppInfo(CFE_ES_AppInfo_t *AppInfo, CFE_ES_AppId_t AppId)
+{
+    CFE_ES_AppRecord_t * AppRecPtr;
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    int32                Status;
+    osal_id_t            ModuleId;
+    uint32               i;
+
+    if (AppInfo == NULL)
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid Parameter ( Null Pointer )\n", __func__);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    memset(AppInfo, 0, sizeof(*AppInfo));
+    ModuleId = OS_OBJECT_ID_UNDEFINED;
+
+    AppRecPtr = CFE_ES_LocateAppRecordByID(AppId);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (!CFE_ES_AppRecordIsMatch(AppRecPtr, AppId))
+    {
+        /*
+         * Log a message if called with an invalid ID.
+         */
+        CFE_ES_WriteToSysLog("%s: App ID not active: %lu\n", __func__, CFE_RESOURCEID_TO_ULONG(AppId));
+
+        Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+    else
+    {
+        AppInfo->ResourceId = CFE_RESOURCEID_UNWRAP(AppId); /* make into a generic resource ID */
+        AppInfo->Type       = AppRecPtr->Type;
+
+        strncpy(AppInfo->Name, CFE_ES_AppRecordGetName(AppRecPtr), sizeof(AppInfo->Name) - 1);
+
+        CFE_ES_CopyModuleBasicInfo(&AppRecPtr->StartParams.BasicInfo, AppInfo);
+        CFE_ES_CopyModuleStatusInfo(&AppRecPtr->LoadStatus, AppInfo);
+
+        AppInfo->ExceptionAction = AppRecPtr->StartParams.ExceptionAction;
+        AppInfo->MainTaskId      = AppRecPtr->MainTaskId;
+
+        ModuleId = AppRecPtr->LoadStatus.ModuleId;
+
+        /*
+        ** Calculate the number of child tasks
+        */
+        AppInfo->NumOfChildTasks = 0;
+        TaskRecPtr               = CFE_ES_Global.TaskTable;
+        for (i = 0; i < OS_MAX_TASKS; i++)
+        {
+            if (CFE_ES_TaskRecordIsUsed(TaskRecPtr) && CFE_RESOURCEID_TEST_EQUAL(TaskRecPtr->AppId, AppId))
+            {
+                if (CFE_RESOURCEID_TEST_EQUAL(CFE_ES_TaskRecordGetID(TaskRecPtr), AppInfo->MainTaskId))
+                {
+                    /* This is the main task - capture its name and execution count */
+                    AppInfo->ExecutionCounter = TaskRecPtr->ExecutionCounter;
+                    strncpy(AppInfo->MainTaskName, TaskRecPtr->TaskName, sizeof(AppInfo->MainTaskName) - 1);
+                    AppInfo->MainTaskName[sizeof(AppInfo->MainTaskName) - 1] = '\0';
+
+                    AppInfo->StackSize = CFE_ES_MEMOFFSET_C(TaskRecPtr->StartParams.StackSize);
+                    AppInfo->Priority  = TaskRecPtr->StartParams.Priority;
+                }
+                else
+                {
+                    /* This is a child task, no extra info, just increment count */
+                    ++AppInfo->NumOfChildTasks;
+                }
+            }
+            ++TaskRecPtr;
+        }
+
+        Status = CFE_SUCCESS;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+    ** Get the address information from the OSAL
+    */
+    if (Status == CFE_SUCCESS)
+    {
+        CFE_ES_CopyModuleAddressInfo(ModuleId, AppInfo);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GetLibInfo(CFE_ES_AppInfo_t *LibInfo, CFE_ES_LibId_t LibId)
+{
+    int32               Status;
+    CFE_ES_LibRecord_t *LibRecPtr;
+    osal_id_t           ModuleId;
+
+    if (LibInfo == NULL)
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid Parameter ( Null Pointer )\n", __func__);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    memset(LibInfo, 0, sizeof(*LibInfo));
+    ModuleId = OS_OBJECT_ID_UNDEFINED;
+
+    LibRecPtr = CFE_ES_LocateLibRecordByID(LibId);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (!CFE_ES_LibRecordIsMatch(LibRecPtr, LibId))
+    {
+        /*
+         * Log a message if called with an invalid ID.
+         */
+        CFE_ES_SysLogWrite_Unsync("%s: Lib ID not active: %lu\n", __func__, CFE_RESOURCEID_TO_ULONG(LibId));
+
+        Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+    else
+    {
+        LibInfo->ResourceId = CFE_RESOURCEID_UNWRAP(LibId); /* make into generic ID */
+        LibInfo->Type       = CFE_ES_AppType_LIBRARY;
+
+        strncpy(LibInfo->Name, CFE_ES_LibRecordGetName(LibRecPtr), sizeof(LibInfo->Name) - 1);
+
+        CFE_ES_CopyModuleBasicInfo(&LibRecPtr->LoadParams, LibInfo);
+        CFE_ES_CopyModuleStatusInfo(&LibRecPtr->LoadStatus, LibInfo);
+
+        ModuleId = LibRecPtr->LoadStatus.ModuleId;
+
+        Status = CFE_SUCCESS;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     ** Get the address information from the OSAL
+     */
+    if (Status == CFE_SUCCESS)
+    {
+        CFE_ES_CopyModuleAddressInfo(ModuleId, LibInfo);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GetModuleInfo(CFE_ES_AppInfo_t *ModuleInfo, CFE_ResourceId_t ResourceId)
+{
+    int32 Status;
+
+    /* Note - ModuleInfo NULL pointer check is performed by CFE_ES_GetAppInfo or CFE_ES_GetLibInfo */
+    switch (CFE_ResourceId_GetBase(ResourceId))
+    {
+        case CFE_ES_APPID_BASE:
+            Status = CFE_ES_GetAppInfo(ModuleInfo, CFE_ES_APPID_C(ResourceId));
+            break;
+        case CFE_ES_LIBID_BASE:
+            Status = CFE_ES_GetLibInfo(ModuleInfo, CFE_ES_LIBID_C(ResourceId));
+            break;
+        default:
+            /*
+             * Log a message if called with an invalid ID.
+             */
+            CFE_ES_WriteToSysLog("%s: Resource ID not valid: %lu\n", __func__, CFE_ResourceId_ToInteger(ResourceId));
+            Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+            break;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetTaskInfo(CFE_ES_TaskInfo_t *TaskInfo, CFE_ES_TaskId_t TaskId)
+{
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    CFE_ES_AppRecord_t * AppRecPtr;
+    int32                Status;
+
+    if (TaskInfo == NULL)
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid Parameter ( Null Pointer )\n", __func__);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    memset(TaskInfo, 0, sizeof(*TaskInfo));
+
+    TaskRecPtr = CFE_ES_LocateTaskRecordByID(TaskId);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (!CFE_ES_TaskRecordIsMatch(TaskRecPtr, TaskId))
+    {
+        /* task ID is bad */
+        Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        CFE_ES_SysLogWrite_Unsync("%s: Task ID Not Active: %lu\n", __func__, CFE_RESOURCEID_TO_ULONG(TaskId));
+    }
+    else
+    {
+        /*
+        ** Get the Application ID and Task Name
+        */
+        TaskInfo->AppId = TaskRecPtr->AppId;
+        strncpy(TaskInfo->TaskName, CFE_ES_TaskRecordGetName(TaskRecPtr), sizeof(TaskInfo->TaskName) - 1);
+        TaskInfo->TaskName[sizeof(TaskInfo->TaskName) - 1] = '\0';
+
+        /*
+        ** Store away the Task ID ( for the QueryAllTasks Cmd )
+        */
+        TaskInfo->TaskId = CFE_ES_TaskRecordGetID(TaskRecPtr);
+
+        /*
+        ** Get the other stats for the task
+        */
+        TaskInfo->ExecutionCounter = TaskRecPtr->ExecutionCounter;
+        TaskInfo->StackSize        = CFE_ES_MEMOFFSET_C(TaskRecPtr->StartParams.StackSize);
+        TaskInfo->Priority         = TaskRecPtr->StartParams.Priority;
+
+        /*
+        ** Get the Application Details
+        */
+        AppRecPtr = CFE_ES_LocateAppRecordByID(TaskRecPtr->AppId);
+        if (CFE_ES_AppRecordIsMatch(AppRecPtr, TaskRecPtr->AppId))
+        {
+            strncpy(TaskInfo->AppName, CFE_ES_AppRecordGetName(AppRecPtr), sizeof(TaskInfo->AppName) - 1);
+            TaskInfo->AppName[sizeof(TaskInfo->AppName) - 1] = '\0';
+            Status                                           = CFE_SUCCESS;
+        }
+        else
+        {
+            /* task ID was OK but parent app ID is bad */
+            Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_CreateChildTask(CFE_ES_TaskId_t *TaskIdPtr, const char *TaskName,
+                                    CFE_ES_ChildTaskMainFuncPtr_t FunctionPtr, CFE_ES_StackPointer_t StackPtr,
+                                    size_t StackSize, CFE_ES_TaskPriority_Atom_t Priority, uint32 Flags)
+{
+    int32                    ReturnCode;
+    CFE_ES_AppRecord_t *     AppRecPtr;
+    CFE_ES_AppId_t           ParentAppId;
+    CFE_ES_TaskId_t          SelfTaskId;
+    CFE_ES_TaskStartParams_t Params;
+
+    ParentAppId = CFE_ES_APPID_UNDEFINED;
+
+    memset(&Params, 0, sizeof(Params));
+    Params.Priority  = Priority;
+    Params.StackSize = StackSize;
+
+    /*
+    ** Validate some of the arguments
+    */
+    if (TaskIdPtr == NULL)
+    {
+        if (TaskName == NULL)
+        {
+            CFE_ES_WriteToSysLog("%s: Task Id and Name Pointer Parameters are NULL.\n", __func__);
+            ReturnCode = CFE_ES_BAD_ARGUMENT;
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: Task Id Pointer Parameter is NULL for Task '%s'.\n", __func__, TaskName);
+            ReturnCode = CFE_ES_BAD_ARGUMENT;
+        }
+    }
+    else if (TaskName == NULL)
+    {
+        CFE_ES_WriteToSysLog("%s: TaskName Parameter is NULL\n", __func__);
+        ReturnCode = CFE_ES_BAD_ARGUMENT;
+    }
+    else if (FunctionPtr == NULL)
+    {
+        CFE_ES_WriteToSysLog("%s: Function Pointer Parameter is NULL for Task '%s'\n", __func__, TaskName);
+        ReturnCode = CFE_ES_BAD_ARGUMENT;
+    }
+    else
+    {
+        /*
+        ** First, Make sure the Calling Task is a cFE Main task.
+        ** TaskID must be the same as the Parent Task ID.
+        */
+        SelfTaskId = CFE_ES_TaskId_FromOSAL(OS_TaskGetId());
+
+        CFE_ES_LockSharedData(__func__, __LINE__);
+
+        /*
+        ** Get the App Record of the calling Application
+        */
+        AppRecPtr = CFE_ES_GetAppRecordByContext();
+        if (AppRecPtr == NULL)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Invalid calling context when creating Task '%s'\n", __func__, TaskName);
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+        else if (!CFE_RESOURCEID_TEST_EQUAL(SelfTaskId, AppRecPtr->MainTaskId))
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Error: Cannot call from a Child Task (for Task '%s').\n", __func__,
+                                      TaskName);
+            ReturnCode = CFE_ES_ERR_CHILD_TASK_CREATE;
+        }
+        else
+        {
+            ParentAppId = CFE_ES_AppRecordGetID(AppRecPtr);
+            ReturnCode  = CFE_SUCCESS;
+        } /* end If AppID is valid */
+
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    } /* end if parameter checking */
+
+    /*
+    ** Step 2: Create the new task if the parameter validation succeeded
+    */
+    if (ReturnCode == CFE_SUCCESS)
+    {
+        ReturnCode = CFE_ES_StartAppTask(TaskIdPtr, TaskName, FunctionPtr, &Params, ParentAppId);
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_IncrementTaskCounter(void)
+{
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    CFE_ES_TaskId_t      TaskID;
+
+    /*
+     * Note this locates a task record but intentionally does _not_
+     * lock the global data structure.  Locking is avoided for
+     * efficiency reasons.
+     *
+     * As tasks can only increment their own counters, there is no risk
+     * of concurrent access to the same counter.
+     *
+     * Because the global data is not locked, only minimal validation
+     * is performed.
+     */
+    TaskID     = CFE_ES_TaskId_FromOSAL(OS_TaskGetId());
+    TaskRecPtr = CFE_ES_LocateTaskRecordByID(TaskID);
+    if (TaskRecPtr != NULL)
+    {
+        TaskRecPtr->ExecutionCounter++;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_DeleteChildTask(CFE_ES_TaskId_t TaskId)
+{
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    CFE_ES_AppRecord_t * AppRecPtr;
+    uint32               i;
+    bool                 TaskIsMain;
+    int32                ReturnCode = CFE_SUCCESS;
+    int32                OsStatus;
+    osal_id_t            OsalId;
+
+    /*
+    ** Make sure the task ID is within range
+    */
+    TaskRecPtr = CFE_ES_LocateTaskRecordByID(TaskId);
+    if (TaskRecPtr != NULL)
+    {
+        CFE_ES_LockSharedData(__func__, __LINE__);
+
+        /*
+        ** Make sure the task is active/valid
+        */
+        if (CFE_ES_TaskRecordIsMatch(TaskRecPtr, TaskId))
+        {
+            /*
+            ** Search for this task ID in the ES App Table to make sure
+            ** it is not a cFE App Main Task
+            */
+            TaskIsMain = false;
+            AppRecPtr  = CFE_ES_Global.AppTable;
+            for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+            {
+                if (CFE_ES_AppRecordIsUsed(AppRecPtr))
+                {
+                    if (CFE_RESOURCEID_TEST_EQUAL(AppRecPtr->MainTaskId, TaskId))
+                    {
+                        /*
+                        ** Error, the task Id is an App Main Task ID
+                        */
+                        TaskIsMain = true;
+                        break;
+                    }
+                }
+                ++AppRecPtr;
+            }
+
+            if (TaskIsMain == false)
+            {
+                /*
+                ** Can delete the Task
+                */
+                OsalId   = CFE_ES_TaskId_ToOSAL(TaskId);
+                OsStatus = OS_TaskDelete(OsalId);
+                if (OsStatus == OS_SUCCESS)
+                {
+                    /*
+                    ** Invalidate the task table entry
+                    */
+                    CFE_ES_TaskRecordSetFree(TaskRecPtr);
+                    CFE_ES_Global.RegisteredTasks--;
+
+                    /*
+                    ** Report the task delete
+                    */
+                    CFE_ES_SysLogWrite_Unsync("%s: Task %lu Deleted\n", __func__, CFE_RESOURCEID_TO_ULONG(TaskId));
+                    ReturnCode = CFE_SUCCESS;
+                }
+                else
+                {
+                    CFE_ES_SysLogWrite_Unsync("%s: Error Calling OS_TaskDelete: Task %lu, RC = %ld\n", __func__,
+                                              CFE_RESOURCEID_TO_ULONG(TaskId), (long)OsStatus);
+                    ReturnCode = CFE_ES_ERR_CHILD_TASK_DELETE;
+                }
+            }
+            else
+            {
+                /*
+                ** Error: The task is a cFE Application Main task
+                */
+                CFE_ES_SysLogWrite_Unsync("%s: Error: Task %lu is a cFE Main Task.\n", __func__,
+                                          CFE_RESOURCEID_TO_ULONG(TaskId));
+                ReturnCode = CFE_ES_ERR_CHILD_TASK_DELETE_MAIN_TASK;
+            } /* end if TaskMain == false */
+        }
+        else
+        {
+            /*
+            ** Task ID is not in use, so it is invalid
+            */
+            CFE_ES_SysLogWrite_Unsync("%s: Error: Task ID is not active: %lu\n", __func__,
+                                      CFE_RESOURCEID_TO_ULONG(TaskId));
+            ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+        }
+
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+    }
+    else
+    {
+        /*
+        ** Task ID is invalid ( too large )
+        */
+        CFE_ES_WriteToSysLog("%s: Error: Invalid Task ID: %lu\n", __func__, CFE_RESOURCEID_TO_ULONG(TaskId));
+        ReturnCode = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_ExitChildTask(void)
+{
+    CFE_ES_AppRecord_t * AppRecPtr;
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+    ** Check to see if this is being called from a cFE Application's
+    ** main task.
+    */
+    TaskRecPtr = CFE_ES_GetTaskRecordByContext();
+    if (TaskRecPtr != NULL)
+    {
+        AppRecPtr = CFE_ES_LocateAppRecordByID(TaskRecPtr->AppId);
+
+        if (CFE_ES_AppRecordIsMatch(AppRecPtr, TaskRecPtr->AppId) &&
+            !CFE_ES_TaskRecordIsMatch(TaskRecPtr, AppRecPtr->MainTaskId))
+        {
+            /*
+            ** Invalidate the task table entry
+            */
+            CFE_ES_TaskRecordSetFree(TaskRecPtr);
+            CFE_ES_Global.RegisteredTasks--;
+
+            CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+            /*
+            ** Call the OS AL routine
+            */
+            OS_TaskExit();
+            /*
+            ** Does not return from OS_TaskExit, except under unit test
+            */
+            return;
+        }
+        else
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Error: Cannot Call from a cFE App Main Task. ID = %lu\n", __func__,
+                                      CFE_RESOURCEID_TO_ULONG(CFE_ES_TaskRecordGetID(TaskRecPtr)));
+        }
+    }
+    else
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Called from invalid task context\n", __func__);
+    } /* end if GetAppId */
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_WriteToSysLog(const char *SpecStringPtr, ...)
+{
+    char    TmpString[CFE_ES_MAX_SYSLOG_MSG_SIZE];
+    int32   ReturnCode;
+    va_list ArgPtr;
+
+    if (SpecStringPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    va_start(ArgPtr, SpecStringPtr);
+    CFE_ES_SysLog_vsnprintf(TmpString, sizeof(TmpString), SpecStringPtr, ArgPtr);
+    va_end(ArgPtr);
+
+    /*
+     * Append to the syslog buffer, which must be done while locked.
+     * Only one thread can actively write into the buffer at time.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+    ReturnCode = CFE_ES_SysLogAppend_Unsync(TmpString);
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /* Output the entry to the console */
+    OS_printf("%s", TmpString);
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 CFE_ES_CalculateCRC(const void *DataPtr, size_t DataLength, uint32 InputCRC, CFE_ES_CrcType_Enum_t TypeCRC)
+{
+    uint32       i;
+    int16        Index;
+    int16        Crc = 0;
+    const uint8 *BufPtr;
+    uint8        ByteValue;
+
+    static const uint16 CrcTable[256] = {
+
+        0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241, 0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1,
+        0xC481, 0x0440, 0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40, 0x0A00, 0xCAC1, 0xCB81, 0x0B40,
+        0xC901, 0x09C0, 0x0880, 0xC841, 0xD801, 0x18C0, 0x1980, 0xD941, 0x1B00, 0xDBC1, 0xDA81, 0x1A40, 0x1E00, 0xDEC1,
+        0xDF81, 0x1F40, 0xDD01, 0x1DC0, 0x1C80, 0xDC41, 0x1400, 0xD4C1, 0xD581, 0x1540, 0xD701, 0x17C0, 0x1680, 0xD641,
+        0xD201, 0x12C0, 0x1380, 0xD341, 0x1100, 0xD1C1, 0xD081, 0x1040, 0xF001, 0x30C0, 0x3180, 0xF141, 0x3300, 0xF3C1,
+        0xF281, 0x3240, 0x3600, 0xF6C1, 0xF781, 0x3740, 0xF501, 0x35C0, 0x3480, 0xF441, 0x3C00, 0xFCC1, 0xFD81, 0x3D40,
+        0xFF01, 0x3FC0, 0x3E80, 0xFE41, 0xFA01, 0x3AC0, 0x3B80, 0xFB41, 0x3900, 0xF9C1, 0xF881, 0x3840, 0x2800, 0xE8C1,
+        0xE981, 0x2940, 0xEB01, 0x2BC0, 0x2A80, 0xEA41, 0xEE01, 0x2EC0, 0x2F80, 0xEF41, 0x2D00, 0xEDC1, 0xEC81, 0x2C40,
+        0xE401, 0x24C0, 0x2580, 0xE541, 0x2700, 0xE7C1, 0xE681, 0x2640, 0x2200, 0xE2C1, 0xE381, 0x2340, 0xE101, 0x21C0,
+        0x2080, 0xE041, 0xA001, 0x60C0, 0x6180, 0xA141, 0x6300, 0xA3C1, 0xA281, 0x6240, 0x6600, 0xA6C1, 0xA781, 0x6740,
+        0xA501, 0x65C0, 0x6480, 0xA441, 0x6C00, 0xACC1, 0xAD81, 0x6D40, 0xAF01, 0x6FC0, 0x6E80, 0xAE41, 0xAA01, 0x6AC0,
+        0x6B80, 0xAB41, 0x6900, 0xA9C1, 0xA881, 0x6840, 0x7800, 0xB8C1, 0xB981, 0x7940, 0xBB01, 0x7BC0, 0x7A80, 0xBA41,
+        0xBE01, 0x7EC0, 0x7F80, 0xBF41, 0x7D00, 0xBDC1, 0xBC81, 0x7C40, 0xB401, 0x74C0, 0x7580, 0xB541, 0x7700, 0xB7C1,
+        0xB681, 0x7640, 0x7200, 0xB2C1, 0xB381, 0x7340, 0xB101, 0x71C0, 0x7080, 0xB041, 0x5000, 0x90C1, 0x9181, 0x5140,
+        0x9301, 0x53C0, 0x5280, 0x9241, 0x9601, 0x56C0, 0x5780, 0x9741, 0x5500, 0x95C1, 0x9481, 0x5440, 0x9C01, 0x5CC0,
+        0x5D80, 0x9D41, 0x5F00, 0x9FC1, 0x9E81, 0x5E40, 0x5A00, 0x9AC1, 0x9B81, 0x5B40, 0x9901, 0x59C0, 0x5880, 0x9841,
+        0x8801, 0x48C0, 0x4980, 0x8941, 0x4B00, 0x8BC1, 0x8A81, 0x4A40, 0x4E00, 0x8EC1, 0x8F81, 0x4F40, 0x8D01, 0x4DC0,
+        0x4C80, 0x8C41, 0x4400, 0x84C1, 0x8581, 0x4540, 0x8701, 0x47C0, 0x4680, 0x8641, 0x8201, 0x42C0, 0x4380, 0x8341,
+        0x4100, 0x81C1, 0x8081, 0x4040
+
+    };
+
+    if (DataPtr == NULL || DataLength == 0)
+    {
+        return InputCRC;
+    }
+
+    switch (TypeCRC)
+    {
+        case CFE_ES_CrcType_CRC_32:
+            CFE_ES_WriteToSysLog("%s: Calculate CRC32 not Implemented\n", __func__);
+            break;
+
+        case CFE_ES_CrcType_CRC_16:
+            Crc    = (int16)(0xFFFF & InputCRC);
+            BufPtr = (const uint8 *)DataPtr;
+
+            for (i = 0; i < DataLength; i++, BufPtr++)
+            {
+                /*
+                 * It is assumed that the supplied buffer is in a
+                 * directly-accessible memory space that does not
+                 * require special logic to access
+                 */
+                ByteValue = *BufPtr;
+                Index     = ((Crc ^ ByteValue) & 0x00FF);
+                Crc       = ((Crc >> 8) & 0x00FF) ^ CrcTable[Index];
+            }
+            break;
+
+        case CFE_ES_CrcType_CRC_8:
+            CFE_ES_WriteToSysLog("%s: Calculate CRC8 not Implemented\n", __func__);
+            break;
+
+        default:
+            break;
+    }
+    return Crc;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_RegisterCDS(CFE_ES_CDSHandle_t *CDSHandlePtr, size_t BlockSize, const char *Name)
+{
+    int32          Status;
+    size_t         NameLen;
+    CFE_ES_AppId_t ThisAppId;
+
+    char AppName[OS_MAX_API_NAME]                      = {"UNKNOWN"};
+    char CDSName[CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN] = {""};
+
+    /* Check to make sure calling application is legit */
+    Status = CFE_ES_GetAppID(&ThisAppId);
+
+    if (CDSHandlePtr == NULL || Name == NULL)
+    {
+        CFE_ES_WriteToSysLog("%s: Failed invalid arguments\n", __func__);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* Initialize output to safe value, in case this fails */
+    *CDSHandlePtr = CFE_ES_CDS_BAD_HANDLE;
+
+    if (Status != CFE_SUCCESS) /* Application ID was invalid */
+    {
+        CFE_ES_WriteToSysLog("%s: Bad AppId context\n", __func__);
+    }
+    else if (!CFE_ES_Global.CDSIsAvailable)
+    {
+        CFE_ES_WriteToSysLog("%s: CDS not available\n", __func__);
+        Status = CFE_ES_NOT_IMPLEMENTED;
+    }
+    else
+    {
+        /* Make sure specified CDS name is not too long or too short */
+        NameLen = strlen(Name);
+        if ((NameLen > CFE_MISSION_ES_CDS_MAX_NAME_LENGTH) || (NameLen == 0))
+        {
+            Status = CFE_ES_CDS_INVALID_NAME;
+
+            /* Perform a buffer overrun safe copy of name for debug log message */
+
+            strncpy(CDSName, Name, sizeof(CDSName) - 1);
+            CDSName[sizeof(CDSName) - 1] = '\0';
+            CFE_ES_WriteToSysLog("%s: CDS Name (%s) is too long\n", __func__, CDSName);
+        }
+        else
+        {
+            /* Modify specified name to be processor specific name */
+            /* of the form "AppName.Name"                          */
+            CFE_ES_FormCDSName(CDSName, Name, ThisAppId);
+
+            /* Create CDS and designate it as NOT being a Critical Table */
+            Status = CFE_ES_RegisterCDSEx(CDSHandlePtr, BlockSize, CDSName, false);
+
+            /* If size is unacceptable, log it */
+            if (Status == CFE_ES_CDS_INVALID_SIZE)
+            {
+                CFE_ES_WriteToSysLog("%s: CDS %s has invalid size (%lu)\n", __func__, Name, (unsigned long)BlockSize);
+            }
+        }
+    }
+
+    /* On Error conditions, notify ground of screw up */
+    if (Status < 0)
+    {
+        /* Translate AppID of caller into App Name */
+        CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+        CFE_EVS_SendEventWithAppID(CFE_ES_CDS_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR, ThisAppId,
+                                   "%s Failed to Register CDS '%s', Status=0x%08X", AppName, Name,
+                                   (unsigned int)Status);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetCDSBlockIDByName(CFE_ES_CDSHandle_t *BlockIdPtr, const char *BlockName)
+{
+    CFE_Status_t         Status;
+    CFE_ES_CDS_RegRec_t *RegRecPtr;
+
+    if (BlockName == NULL || BlockIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+    if (!CFE_ES_Global.CDSIsAvailable)
+    {
+        return CFE_ES_NOT_IMPLEMENTED;
+    }
+
+    CFE_ES_LockCDS();
+
+    RegRecPtr = CFE_ES_LocateCDSBlockRecordByName(BlockName);
+
+    if (RegRecPtr != NULL)
+    {
+        *BlockIdPtr = CFE_ES_CDSBlockRecordGetID(RegRecPtr);
+        Status      = CFE_SUCCESS;
+    }
+    else
+    {
+        *BlockIdPtr = CFE_ES_CDS_BAD_HANDLE;
+        Status      = CFE_ES_ERR_NAME_NOT_FOUND;
+    }
+
+    CFE_ES_UnlockCDS();
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetCDSBlockName(char *BlockName, CFE_ES_CDSHandle_t BlockId, size_t BufferLength)
+{
+    CFE_Status_t         Status;
+    CFE_ES_CDS_RegRec_t *RegRecPtr;
+
+    if (BufferLength == 0 || BlockName == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+    if (!CFE_ES_Global.CDSIsAvailable)
+    {
+        return CFE_ES_NOT_IMPLEMENTED;
+    }
+
+    RegRecPtr = CFE_ES_LocateCDSBlockRecordByID(BlockId);
+
+    CFE_ES_LockCDS();
+
+    if (CFE_ES_CDSBlockRecordIsMatch(RegRecPtr, BlockId))
+    {
+        strncpy(BlockName, RegRecPtr->Name, BufferLength - 1);
+        BlockName[BufferLength - 1] = 0;
+        Status                      = CFE_SUCCESS;
+    }
+    else
+    {
+        BlockName[0] = 0;
+        Status       = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockCDS();
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_CopyToCDS(CFE_ES_CDSHandle_t Handle, const void *DataToCopy)
+{
+    if (DataToCopy == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    return CFE_ES_CDSBlockWrite(Handle, DataToCopy);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_RestoreFromCDS(void *RestoreToMemory, CFE_ES_CDSHandle_t Handle)
+{
+    if (RestoreToMemory == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    return CFE_ES_CDSBlockRead(RestoreToMemory, Handle);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_RegisterGenCounter(CFE_ES_CounterId_t *CounterIdPtr, const char *CounterName)
+{
+    CFE_ES_GenCounterRecord_t *CountRecPtr;
+    CFE_ResourceId_t           PendingResourceId;
+    int32                      Status;
+
+    if (CounterName == NULL || CounterIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    if (strlen(CounterName) >= sizeof(CountRecPtr->CounterName))
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+     * Check for an existing entry with the same name.
+     */
+    CountRecPtr = CFE_ES_LocateCounterRecordByName(CounterName);
+    if (CountRecPtr != NULL)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Duplicate Counter name '%s'\n", __func__, CounterName);
+        Status            = CFE_ES_ERR_DUPLICATE_NAME;
+        PendingResourceId = CFE_RESOURCEID_UNDEFINED;
+    }
+    else
+    {
+        /* scan for a free slot */
+        PendingResourceId = CFE_ResourceId_FindNext(CFE_ES_Global.LastCounterId, CFE_PLATFORM_ES_MAX_GEN_COUNTERS,
+                                                    CFE_ES_CheckCounterIdSlotUsed);
+        CountRecPtr       = CFE_ES_LocateCounterRecordByID(CFE_ES_COUNTERID_C(PendingResourceId));
+
+        if (CountRecPtr == NULL)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: No free Counter slots available\n", __func__);
+            Status = CFE_ES_NO_RESOURCE_IDS_AVAILABLE;
+        }
+        else
+        {
+            strncpy(CountRecPtr->CounterName, CounterName, sizeof(CountRecPtr->CounterName) - 1);
+            CountRecPtr->CounterName[sizeof(CountRecPtr->CounterName) - 1] = '\0';
+            CountRecPtr->Counter                                           = 0;
+            CFE_ES_CounterRecordSetUsed(CountRecPtr, PendingResourceId);
+            CFE_ES_Global.LastCounterId = PendingResourceId;
+            Status                      = CFE_SUCCESS;
+        }
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    *CounterIdPtr = CFE_ES_COUNTERID_C(PendingResourceId);
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_DeleteGenCounter(CFE_ES_CounterId_t CounterId)
+{
+    CFE_ES_GenCounterRecord_t *CountRecPtr;
+    int32                      Status = CFE_ES_BAD_ARGUMENT;
+
+    CountRecPtr = CFE_ES_LocateCounterRecordByID(CounterId);
+    if (CountRecPtr != NULL)
+    {
+        CFE_ES_LockSharedData(__func__, __LINE__);
+        if (CFE_ES_CounterRecordIsMatch(CountRecPtr, CounterId))
+        {
+            CountRecPtr->Counter = 0;
+            CFE_ES_CounterRecordSetFree(CountRecPtr);
+            Status = CFE_SUCCESS;
+        }
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_IncrementGenCounter(CFE_ES_CounterId_t CounterId)
+{
+    int32                      Status = CFE_ES_BAD_ARGUMENT;
+    CFE_ES_GenCounterRecord_t *CountRecPtr;
+
+    CountRecPtr = CFE_ES_LocateCounterRecordByID(CounterId);
+    if (CFE_ES_CounterRecordIsMatch(CountRecPtr, CounterId))
+    {
+        ++CountRecPtr->Counter;
+        Status = CFE_SUCCESS;
+    }
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_SetGenCount(CFE_ES_CounterId_t CounterId, uint32 Count)
+{
+    int32                      Status = CFE_ES_BAD_ARGUMENT;
+    CFE_ES_GenCounterRecord_t *CountRecPtr;
+
+    CountRecPtr = CFE_ES_LocateCounterRecordByID(CounterId);
+    if (CFE_ES_CounterRecordIsMatch(CountRecPtr, CounterId))
+    {
+        CountRecPtr->Counter = Count;
+        Status               = CFE_SUCCESS;
+    }
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetGenCount(CFE_ES_CounterId_t CounterId, uint32 *Count)
+{
+    int32                      Status = CFE_ES_BAD_ARGUMENT;
+    CFE_ES_GenCounterRecord_t *CountRecPtr;
+
+    CountRecPtr = CFE_ES_LocateCounterRecordByID(CounterId);
+    if (CFE_ES_CounterRecordIsMatch(CountRecPtr, CounterId) && Count != NULL)
+    {
+        *Count = CountRecPtr->Counter;
+        Status = CFE_SUCCESS;
+    }
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetGenCounterIDByName(CFE_ES_CounterId_t *CounterIdPtr, const char *CounterName)
+{
+    CFE_ES_GenCounterRecord_t *CounterRecPtr;
+    int32                      Result;
+
+    if (CounterName == NULL || CounterIdPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /*
+    ** Search the ES Generic Counter table for a counter with a matching name.
+    */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    CounterRecPtr = CFE_ES_LocateCounterRecordByName(CounterName);
+    if (CounterRecPtr == NULL)
+    {
+        /*
+         * ensure the output value is set to a safe value,
+         * in case the caller does not check the return code.
+         */
+        Result        = CFE_ES_ERR_NAME_NOT_FOUND;
+        *CounterIdPtr = CFE_ES_COUNTERID_UNDEFINED;
+    }
+    else
+    {
+        Result        = CFE_SUCCESS;
+        *CounterIdPtr = CFE_ES_CounterRecordGetID(CounterRecPtr);
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetGenCounterName(char *CounterName, CFE_ES_CounterId_t CounterId, size_t BufferLength)
+{
+    CFE_ES_GenCounterRecord_t *CountRecPtr;
+    CFE_Status_t               Status;
+
+    if (BufferLength == 0 || CounterName == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CountRecPtr = CFE_ES_LocateCounterRecordByID(CounterId);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (CFE_ES_CounterRecordIsMatch(CountRecPtr, CounterId))
+    {
+        strncpy(CounterName, CFE_ES_CounterRecordGetName(CountRecPtr), BufferLength - 1);
+        CounterName[BufferLength - 1] = 0;
+        Status                        = CFE_SUCCESS;
+    }
+    else
+    {
+        CounterName[0] = 0;
+        Status         = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_AppID_ToIndex(CFE_ES_AppId_t AppID, uint32 *Idx)
+{
+    return CFE_ResourceId_ToIndex(CFE_RESOURCEID_UNWRAP(AppID), CFE_ES_APPID_BASE, CFE_PLATFORM_ES_MAX_APPLICATIONS,
+                                  Idx);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_LibID_ToIndex(CFE_ES_LibId_t LibId, uint32 *Idx)
+{
+    return CFE_ResourceId_ToIndex(CFE_RESOURCEID_UNWRAP(LibId), CFE_ES_LIBID_BASE, CFE_PLATFORM_ES_MAX_LIBRARIES, Idx);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_TaskID_ToIndex(CFE_ES_TaskId_t TaskID, uint32 *Idx)
+{
+    osal_id_t    OsalID;
+    osal_index_t OsalIndex = OSAL_INDEX_C(0);
+    int32        OsStatus;
+
+    if (!CFE_RESOURCEID_TEST_DEFINED(TaskID))
+    {
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    if (Idx == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    OsalID   = CFE_ES_TaskId_ToOSAL(TaskID);
+    OsStatus = OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_TASK, OsalID, &OsalIndex);
+    if (OsStatus != OS_SUCCESS)
+    {
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    *Idx = OsalIndex;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_CounterID_ToIndex(CFE_ES_CounterId_t CounterId, uint32 *Idx)
+{
+    return CFE_ResourceId_ToIndex(CFE_RESOURCEID_UNWRAP(CounterId), CFE_ES_COUNTID_BASE,
+                                  CFE_PLATFORM_ES_MAX_GEN_COUNTERS, Idx);
+}
+
+/***************************************************************************************
+** Private API functions
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_LockSharedData(const char *FunctionName, int32 LineNumber)
+{
+    int32 OsStatus;
+
+    OsStatus = OS_MutSemTake(CFE_ES_Global.SharedDataMutex);
+    if (OsStatus != OS_SUCCESS)
+    {
+        /*
+         * NOTE: this is going to write into a buffer that itself
+         * is _supposed_ to be protected by this same mutex.
+         */
+        CFE_ES_SysLogWrite_Unsync("%s: SharedData Mutex Take Err Stat=%ld,Func=%s,Line=%d\n", __func__, (long)OsStatus,
+                                  FunctionName, (int)LineNumber);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_UnlockSharedData(const char *FunctionName, int32 LineNumber)
+{
+    int32 OsStatus;
+
+    OsStatus = OS_MutSemGive(CFE_ES_Global.SharedDataMutex);
+    if (OsStatus != OS_SUCCESS)
+    {
+        /*
+         * NOTE: this is going to write into a buffer that itself
+         * is _supposed_ to be protected by this same mutex.
+         */
+        CFE_ES_SysLogWrite_Unsync("%s: SharedData Mutex Give Err Stat=%ld,Func=%s,Line=%d\n", __func__, (long)OsStatus,
+                                  FunctionName, (int)LineNumber);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_ProcessAsyncEvent(void)
+{
+    /* This just wakes up the background task to log/handle the event. */
+    CFE_ES_BackgroundWakeup();
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+char *CFE_ES_StatusToString(CFE_Status_t status, CFE_StatusString_t *status_string)
+{
+    char *string = NULL;
+
+    if (status_string != NULL)
+    {
+        snprintf(*status_string, sizeof(*status_string), "0x%08x", (unsigned int)status);
+        string = *status_string;
+    }
+    return string;
+}
 ```
 
-## 항목
+### `cfe_es_apps.c`
 
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_api.c`](file--cfe_es_api.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_apps.c`](file--cfe_es_apps.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_apps.h`](file--cfe_es_apps.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_backgroundtask.c`](file--cfe_es_backgroundtask.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_cds.c`](file--cfe_es_cds.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_cds.h`](file--cfe_es_cds.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_cds_mempool.c`](file--cfe_es_cds_mempool.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_cds_mempool.h`](file--cfe_es_cds_mempool.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_dispatch.c`](file--cfe_es_dispatch.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_dispatch.h`](file--cfe_es_dispatch.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_erlog.c`](file--cfe_es_erlog.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_generic_pool.c`](file--cfe_es_generic_pool.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_generic_pool.h`](file--cfe_es_generic_pool.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_global.h`](file--cfe_es_global.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_log.h`](file--cfe_es_log.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_mempool.c`](file--cfe_es_mempool.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_mempool.h`](file--cfe_es_mempool.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_module_all.h`](file--cfe_es_module_all.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_objtab.c`](file--cfe_es_objtab.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_perf.c`](file--cfe_es_perf.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_perf.h`](file--cfe_es_perf.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_resource.c`](file--cfe_es_resource.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_resource.h`](file--cfe_es_resource.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_start.c`](file--cfe_es_start.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_start.h`](file--cfe_es_start.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_syslog.c`](file--cfe_es_syslog.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_task.c`](file--cfe_es_task.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_task.h`](file--cfe_es_task.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/es/fsw/src/cfe_es_verify.h`](file--cfe_es_verify.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_apps.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**    cfe_es_apps.c
+**
+**  Purpose:
+**    This file contains functions for starting cFE applications from a filesystem.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+*/
+
+/*
+** Includes
+*/
+#include "cfe_es_module_all.h"
+
+#include "cfe_evs_core_internal.h"
+#include "cfe_sb_core_internal.h"
+#include "cfe_tbl_core_internal.h"
+#include "cfe_time_core_internal.h"
+
+#include <stdio.h>
+#include <string.h> /* memset() */
+#include <fcntl.h>
+
+/*
+** Defines
+*/
+#define ES_START_BUFF_SIZE 128
+
+/*
+**
+**  Global Variables
+**
+*/
+
+/*
+****************************************************************************
+** Functions
+***************************************************************************
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_StartApplications(uint32 ResetType, const char *StartFilePath)
+{
+    char        ES_AppLoadBuffer[ES_START_BUFF_SIZE]; /* A buffer of for a line in a file */
+    char        ScriptFileName[OS_MAX_PATH_LEN];
+    const char *TokenList[CFE_ES_STARTSCRIPT_MAX_TOKENS_PER_LINE];
+    uint32      NumTokens;
+    uint32      NumLines;
+    uint32      BuffLen; /* Length of the current buffer */
+    osal_id_t   AppFile = OS_OBJECT_ID_UNDEFINED;
+    int32       Status;
+    int32       OsStatus;
+    char        c           = 0;
+    bool        LineTooLong = false;
+    bool        FileOpened  = false;
+
+    /*
+    ** Get the ES startup script filename.
+    ** If this is a Processor Reset, try to open the file in the volatile disk first.
+    */
+    if (ResetType == CFE_PSP_RST_TYPE_PROCESSOR)
+    {
+        /*
+        ** First Attempt to parse as file in the volatile disk (temp area).
+        */
+        Status = CFE_FS_ParseInputFileName(ScriptFileName, CFE_PLATFORM_ES_VOLATILE_STARTUP_FILE,
+                                           sizeof(ScriptFileName), CFE_FS_FileCategory_TEMP);
+
+        if (Status == CFE_SUCCESS)
+        {
+            OsStatus = OS_OpenCreate(&AppFile, ScriptFileName, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+            if (OsStatus == OS_SUCCESS)
+            {
+                FileOpened = true;
+            }
+            else
+            {
+                CFE_ES_WriteToSysLog("%s: Cannot Open Volatile Startup file: %s, Trying Nonvolatile.\n", __func__,
+                                     ScriptFileName);
+            }
+        }
+        else
+        {
+            /* not expected -- likely a misconfiguration in CFE_PLATFORM_ES_VOLATILE_STARTUP_FILE setting */
+            CFE_ES_WriteToSysLog("%s: CFE_FS_ParseInputFileName() RC=%08x parsing volatile script file name.\n",
+                                 __func__, (unsigned int)Status);
+        }
+    }
+
+    /*
+    ** This if block covers two cases: A Power on reset, and a Processor reset when
+    ** the startup file on the volatile file system could not be opened.
+    */
+    if (FileOpened == false)
+    {
+        /*
+        ** Try to Open the file passed in to the cFE start.
+        */
+        Status = CFE_FS_ParseInputFileName(ScriptFileName, StartFilePath, sizeof(ScriptFileName),
+                                           CFE_FS_FileCategory_SCRIPT);
+
+        if (Status == CFE_SUCCESS)
+        {
+            OsStatus = OS_OpenCreate(&AppFile, ScriptFileName, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+            if (OsStatus == OS_SUCCESS)
+            {
+                FileOpened = true;
+            }
+            else
+            {
+                CFE_ES_WriteToSysLog("%s: Error, Can't Open ES App Startup file: %s, EC = %ld\n", __func__,
+                                     ScriptFileName, (long)OsStatus);
+            }
+        }
+        else
+        {
+            /* not expected -- likely a misconfiguration in the user-supplied StartFilePath */
+            CFE_ES_WriteToSysLog("%s: CFE_FS_ParseInputFileName() RC=%08x parsing StartFilePath.\n", __func__,
+                                 (unsigned int)Status);
+        }
+    }
+
+    /*
+    ** If the file is opened in either the Nonvolatile or the Volatile disk, process it.
+    */
+    if (FileOpened == true)
+    {
+        CFE_ES_WriteToSysLog("%s: Opened ES App Startup file: %s\n", __func__, ScriptFileName);
+
+        memset(ES_AppLoadBuffer, 0x0, ES_START_BUFF_SIZE);
+        BuffLen      = 0;
+        NumTokens    = 0;
+        NumLines     = 0;
+        TokenList[0] = ES_AppLoadBuffer;
+
+        /*
+        ** Parse the lines from the file. If it has an error
+        ** or reaches EOF, then abort the loop.
+        */
+        while (1)
+        {
+            OsStatus = OS_read(AppFile, &c, 1);
+            if (OsStatus < OS_SUCCESS)
+            {
+                CFE_ES_WriteToSysLog("%s: Error Reading Startup file. EC = %ld\n", __func__, (long)OsStatus);
+                break;
+            }
+            else if (OsStatus == 0)
+            {
+                /*
+                ** EOF Reached
+                */
+                break;
+            }
+            else if (c != '!')
+            {
+                if (c <= ' ')
+                {
+                    /*
+                    ** Skip all white space in the file
+                    */
+                    ;
+                }
+                else if (c == ',')
+                {
+                    /*
+                    ** replace the field delimiter with a null
+                    ** This is used to separate the tokens
+                    */
+                    if (BuffLen < ES_START_BUFF_SIZE)
+                    {
+                        ES_AppLoadBuffer[BuffLen] = 0;
+                    }
+                    else
+                    {
+                        LineTooLong = true;
+                    }
+                    BuffLen++;
+
+                    ++NumTokens;
+                    if (NumTokens < CFE_ES_STARTSCRIPT_MAX_TOKENS_PER_LINE)
+                    {
+                        /*
+                         * NOTE: pointer never dereferenced unless "LineTooLong" is false.
+                         */
+                        TokenList[NumTokens] = &ES_AppLoadBuffer[BuffLen];
+                    }
+                    else
+                    {
+                        LineTooLong = true;
+                    }
+                }
+                else if (c != ';')
+                {
+                    /*
+                    ** Regular data gets copied in
+                    */
+                    if (BuffLen < ES_START_BUFF_SIZE)
+                    {
+                        ES_AppLoadBuffer[BuffLen] = c;
+                    }
+                    else
+                    {
+                        LineTooLong = true;
+                    }
+                    BuffLen++;
+                }
+                else
+                {
+                    ++NumLines;
+
+                    if (LineTooLong == true)
+                    {
+                        /*
+                        ** The line was not formed correctly
+                        */
+                        CFE_ES_WriteToSysLog("%s: **WARNING** File Line %u is malformed: %u bytes, %u tokens.\n",
+                                             __func__, (unsigned int)NumLines, (unsigned int)BuffLen,
+                                             (unsigned int)NumTokens);
+                        LineTooLong = false;
+                    }
+                    else
+                    {
+                        /*
+                        ** Send the line to the file parser
+                        ** Ensure termination of the last token and send it along
+                        */
+                        ES_AppLoadBuffer[BuffLen] = 0;
+                        CFE_ES_ParseFileEntry(TokenList, 1 + NumTokens);
+                    }
+                    BuffLen   = 0;
+                    NumTokens = 0;
+                }
+            }
+            else
+            {
+                /*
+                ** break when EOF character '!' is reached
+                */
+                break;
+            }
+        }
+        /*
+        ** close the file
+        */
+        OS_close(AppFile);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ParseFileEntry(const char **TokenList, uint32 NumTokens)
+{
+    const char *  ModuleName;
+    const char *  EntryType;
+    unsigned long ParsedValue;
+    union
+    {
+        CFE_ES_AppId_t AppId;
+        CFE_ES_LibId_t LibId;
+    } IdBuf;
+    int32                   Status;
+    CFE_ES_AppStartParams_t ParamBuf;
+
+    /*
+    ** Check to see if the correct number of items were parsed
+    */
+    if (NumTokens < 8)
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid ES Startup file entry: %u\n", __func__, (unsigned int)NumTokens);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* Get pointers to specific tokens that are simple strings used as-is */
+    EntryType  = TokenList[0];
+    ModuleName = TokenList[3];
+
+    /*
+     * Other tokens will need to be scrubbed/converted.
+     * Both Libraries and Apps use File Name (1) and Symbol Name (2) fields so copy those now
+     */
+    memset(&ParamBuf, 0, sizeof(ParamBuf));
+    Status = CFE_FS_ParseInputFileName(ParamBuf.BasicInfo.FileName, TokenList[1], sizeof(ParamBuf.BasicInfo.FileName),
+                                       CFE_FS_FileCategory_DYNAMIC_MODULE);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid ES Startup script file name: %s\n", __func__, TokenList[1]);
+        return Status;
+    }
+
+    strncpy(ParamBuf.BasicInfo.InitSymbolName, TokenList[2], sizeof(ParamBuf.BasicInfo.InitSymbolName) - 1);
+
+    if (strcmp(EntryType, "CFE_APP") == 0)
+    {
+        CFE_ES_WriteToSysLog("%s: Loading file: %s, APP: %s\n", __func__, ParamBuf.BasicInfo.FileName, ModuleName);
+
+        /*
+         * Priority and Exception action have limited ranges, which is checked here
+         * Task priority cannot be bigger than OS_MAX_TASK_PRIORITY
+         */
+        ParsedValue = strtoul(TokenList[4], NULL, 0);
+        if (ParsedValue > OS_MAX_TASK_PRIORITY)
+        {
+            ParamBuf.MainTaskInfo.Priority = OS_MAX_TASK_PRIORITY;
+        }
+        else
+        {
+            /* convert parsed value to correct type */
+            ParamBuf.MainTaskInfo.Priority = (CFE_ES_TaskPriority_Atom_t)ParsedValue;
+        }
+
+        /* No specific upper/lower limit for stack size - will pass value through */
+        ParamBuf.MainTaskInfo.StackSize = strtoul(TokenList[5], NULL, 0);
+
+        /*
+        ** Validate Some parameters
+        ** Exception action should be 0 ( Restart App ) or
+        ** 1 ( Processor reset ). If it's non-zero, assume it means
+        ** reset CPU.
+        */
+        ParsedValue = strtoul(TokenList[7], NULL, 0);
+        if (ParsedValue > CFE_ES_ExceptionAction_RESTART_APP)
+        {
+            ParamBuf.ExceptionAction = CFE_ES_ExceptionAction_PROC_RESTART;
+        }
+        else
+        {
+            /* convert parsed value to correct type */
+            ParamBuf.ExceptionAction = (CFE_ES_ExceptionAction_Enum_t)ParsedValue;
+        }
+
+        /*
+        ** Now create the application
+        */
+        Status = CFE_ES_AppCreate(&IdBuf.AppId, ModuleName, &ParamBuf);
+    }
+    else if (strcmp(EntryType, "CFE_LIB") == 0)
+    {
+        CFE_ES_WriteToSysLog("%s: Loading shared library: %s\n", __func__, ParamBuf.BasicInfo.FileName);
+
+        /*
+        ** Now load the library
+        */
+        Status = CFE_ES_LoadLibrary(&IdBuf.LibId, ModuleName, &ParamBuf.BasicInfo);
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: Unexpected EntryType %s in startup file.\n", __func__, EntryType);
+        Status = CFE_ES_ERR_APP_CREATE;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_LoadModule(CFE_ResourceId_t ParentResourceId, const char *ModuleName,
+                        const CFE_ES_ModuleLoadParams_t *LoadParams, CFE_ES_ModuleLoadStatus_t *LoadStatus)
+{
+    osal_id_t ModuleId = OS_OBJECT_ID_UNDEFINED;
+    cpuaddr   InitSymbolAddress;
+    int32     ReturnCode;
+    int32     OsStatus;
+    uint32    LoadFlags;
+
+    LoadFlags         = 0;
+    InitSymbolAddress = 0;
+    ReturnCode        = CFE_SUCCESS;
+
+    if (LoadParams->FileName[0] != 0)
+    {
+        switch (CFE_ResourceId_GetBase(ParentResourceId))
+        {
+            case CFE_ES_APPID_BASE:
+                /*
+                 * Apps should not typically have symbols exposed to other apps.
+                 *
+                 * Keeping symbols local/private may help ensure this module is unloadable
+                 * in the future, depending on underlying OS/loader implementation.
+                 */
+                LoadFlags |= OS_MODULE_FLAG_LOCAL_SYMBOLS;
+                break;
+            case CFE_ES_LIBID_BASE:
+                /*
+                 * Libraries need to have their symbols exposed to other apps.
+                 *
+                 * Note on some OS/loader implementations this may make it so the module
+                 * cannot be unloaded, if there is no way to ensure that symbols
+                 * are not being referenced.  CFE does not currently support unloading
+                 * of libraries for this reason, among others.
+                 */
+                LoadFlags |= OS_MODULE_FLAG_GLOBAL_SYMBOLS;
+                break;
+            default:
+                break;
+        }
+
+        /*
+         * Load the module via OSAL.
+         */
+        OsStatus = OS_ModuleLoad(&ModuleId, ModuleName, LoadParams->FileName, LoadFlags);
+
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: Could not load file:%s. EC = %ld\n", __func__, LoadParams->FileName,
+                                 (long)OsStatus);
+            ModuleId   = OS_OBJECT_ID_UNDEFINED;
+            ReturnCode = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+    else
+    {
+        ModuleId = OS_OBJECT_ID_UNDEFINED;
+    }
+
+    /*
+     * If the Load was OK, then lookup the address of the entry point
+     */
+    if (ReturnCode == CFE_SUCCESS && LoadParams->InitSymbolName[0] != 0 &&
+        strcmp(LoadParams->InitSymbolName, "NULL") != 0)
+    {
+        OsStatus = OS_ModuleSymbolLookup(ModuleId, &InitSymbolAddress, LoadParams->InitSymbolName);
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: Could not find symbol:%s. EC = %ld\n", __func__, LoadParams->InitSymbolName,
+                                 (long)OsStatus);
+            ReturnCode = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+
+    if (ReturnCode == CFE_SUCCESS)
+    {
+        /* store the data in the app record after successful load+lookup */
+        LoadStatus->ModuleId          = ModuleId;
+        LoadStatus->InitSymbolAddress = InitSymbolAddress;
+    }
+    else if (OS_ObjectIdDefined(ModuleId))
+    {
+        /* If the module had been successfully loaded, then unload it,
+         * so that it does not consume resources */
+        OsStatus = OS_ModuleUnload(ModuleId);
+        if (OsStatus != OS_SUCCESS) /* There's not much we can do except notify */
+        {
+            CFE_ES_WriteToSysLog("%s: Failed to unload: %s. EC = %ld\n", __func__, ModuleName, (long)OsStatus);
+        }
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GetTaskFunction(CFE_ES_TaskEntryFuncPtr_t *FuncPtr)
+{
+    CFE_ES_TaskRecord_t *     TaskRecPtr;
+    CFE_ES_TaskEntryFuncPtr_t EntryFunc;
+    int32                     ReturnCode;
+    int32                     Timeout;
+
+    /*
+     * Use the same timeout as was used for the startup script itself.
+     */
+    ReturnCode = CFE_ES_ERR_APP_REGISTER;
+    Timeout    = CFE_PLATFORM_ES_STARTUP_SCRIPT_TIMEOUT_MSEC;
+    EntryFunc  = NULL;
+
+    while (true)
+    {
+        OS_TaskDelay(CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC);
+
+        CFE_ES_LockSharedData(__func__, __LINE__);
+        TaskRecPtr = CFE_ES_GetTaskRecordByContext();
+        if (TaskRecPtr != NULL)
+        {
+            EntryFunc = TaskRecPtr->EntryFunc;
+            if (CFE_RESOURCEID_TEST_DEFINED(TaskRecPtr->AppId) && EntryFunc != 0)
+            {
+                ReturnCode = CFE_SUCCESS;
+            }
+        }
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+        if (ReturnCode == CFE_SUCCESS || Timeout <= 0)
+        {
+            /* end of loop condition */
+            break;
+        }
+
+        Timeout -= CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC;
+    }
+
+    /* output function address to caller */
+    if (FuncPtr != NULL)
+    {
+        *FuncPtr = EntryFunc;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_TaskEntryPoint(void)
+{
+    CFE_ES_TaskEntryFuncPtr_t RealEntryFunc;
+
+    if (CFE_ES_GetTaskFunction(&RealEntryFunc) == CFE_SUCCESS && RealEntryFunc != NULL)
+    {
+        /*
+         * Set the default exception environment, which should
+         * be done serialized (i.e. only one task at a time should
+         * call into CFE_PSP_SetDefaultExceptionEnvironment).
+         */
+        CFE_ES_LockSharedData(__func__, __LINE__);
+        CFE_PSP_SetDefaultExceptionEnvironment();
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+        /*
+         * Call the actual task entry function
+         */
+        (*RealEntryFunc)();
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_StartAppTask(CFE_ES_TaskId_t *TaskIdPtr, const char *TaskName, CFE_ES_TaskEntryFuncPtr_t EntryFunc,
+                          const CFE_ES_TaskStartParams_t *Params, CFE_ES_AppId_t ParentAppId)
+{
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    osal_id_t            OsalTaskId = OS_OBJECT_ID_UNDEFINED;
+    CFE_ES_TaskId_t      LocalTaskId;
+    int32                OsStatus;
+    int32                ReturnCode;
+
+    /*
+     * Create the primary task for the newly loaded task
+     */
+    OsStatus = OS_TaskCreate(&OsalTaskId,              /* task id */
+                             TaskName,                 /* task name matches app name for main task */
+                             CFE_ES_TaskEntryPoint,    /* task function pointer */
+                             OSAL_TASK_STACK_ALLOCATE, /* stack pointer (allocate) */
+                             Params->StackSize,        /* stack size */
+                             Params->Priority,         /* task priority */
+                             OS_FP_ENABLED);           /* task options */
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (OsStatus == OS_SUCCESS)
+    {
+        /*
+         * As this is a newly-created task, this shouldn't fail.
+         * The entry is not (yet) matching the task ID - it will be
+         * initialized here.
+         */
+        LocalTaskId = CFE_ES_TaskId_FromOSAL(OsalTaskId);
+        TaskRecPtr  = CFE_ES_LocateTaskRecordByID(LocalTaskId);
+        if (CFE_ES_TaskRecordIsUsed(TaskRecPtr))
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Error: ES_TaskTable slot for ID %lx in use at task creation!\n", __func__,
+                                      OS_ObjectIdToInteger(OsalTaskId));
+        }
+
+        /*
+         * Clear any other/stale data that might be in the entry,
+         * and reset all fields to the correct value.
+         */
+        memset(TaskRecPtr, 0, sizeof(*TaskRecPtr));
+
+        TaskRecPtr->AppId       = ParentAppId;
+        TaskRecPtr->EntryFunc   = EntryFunc;
+        TaskRecPtr->StartParams = *Params;
+
+        strncpy(TaskRecPtr->TaskName, TaskName, sizeof(TaskRecPtr->TaskName) - 1);
+        TaskRecPtr->TaskName[sizeof(TaskRecPtr->TaskName) - 1] = 0;
+
+        CFE_ES_TaskRecordSetUsed(TaskRecPtr, CFE_RESOURCEID_UNWRAP(LocalTaskId));
+
+        /*
+         * Increment the registered Task count.
+         */
+        CFE_ES_Global.RegisteredTasks++;
+        ReturnCode = CFE_SUCCESS;
+        *TaskIdPtr = CFE_ES_TaskRecordGetID(TaskRecPtr);
+    }
+    else
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: AppCreate Error: TaskCreate %s Failed. EC = %ld!\n", __func__, TaskName,
+                                  (long)OsStatus);
+        ReturnCode = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        *TaskIdPtr = CFE_ES_TASKID_UNDEFINED;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_AppCreate(CFE_ES_AppId_t *ApplicationIdPtr, const char *AppName, const CFE_ES_AppStartParams_t *Params)
+{
+    CFE_Status_t        Status;
+    CFE_ES_AppRecord_t *AppRecPtr;
+    CFE_ResourceId_t    PendingResourceId = CFE_RESOURCEID_UNDEFINED;
+
+    /*
+     * The AppName must not be NULL
+     */
+    if (AppName == NULL || Params == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* Confirm name will fit inside the record */
+    if (memchr(AppName, 0, sizeof(AppRecPtr->AppName)) == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /*
+    ** Allocate an ES_AppTable entry
+    */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+    ** Find an ES AppTable entry, and set to RESERVED
+    **
+    ** In this state, the entry is no longer free, but also will not pass the
+    ** validation test.  So this function effectively has exclusive access
+    ** without holding the global lock.
+    **
+    ** IMPORTANT: it must set the ID to something else before leaving
+    ** this function or else the resource will be leaked.  After this
+    ** point, execution must proceed to the end of the function to
+    ** guarantee that the entry is either completed or freed.
+    */
+
+    /*
+     * Check for an existing entry with the same name.
+     * Also check for a matching Library name.
+     * (Apps and libraries should be uniquely named)
+     */
+    AppRecPtr = CFE_ES_LocateAppRecordByName(AppName);
+    if (AppRecPtr != NULL)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Duplicate app name '%s'\n", __func__, AppName);
+        Status = CFE_ES_ERR_DUPLICATE_NAME;
+    }
+    else
+    {
+        /* scan for a free slot */
+        PendingResourceId = CFE_ResourceId_FindNext(CFE_ES_Global.LastAppId, CFE_PLATFORM_ES_MAX_APPLICATIONS,
+                                                    CFE_ES_CheckAppIdSlotUsed);
+        AppRecPtr         = CFE_ES_LocateAppRecordByID(CFE_ES_APPID_C(PendingResourceId));
+
+        if (AppRecPtr == NULL)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: No free application slots available\n", __func__);
+            Status = CFE_ES_NO_RESOURCE_IDS_AVAILABLE;
+        }
+        else
+        {
+            /* Fully clear the entry, just in case of stale data */
+            memset(AppRecPtr, 0, sizeof(*AppRecPtr));
+
+            /* Store the app name from passed-in value */
+            strncpy(AppRecPtr->AppName, AppName, sizeof(AppRecPtr->AppName) - 1);
+
+            AppRecPtr->Type = CFE_ES_AppType_EXTERNAL;
+
+            /*
+             * Fill out the parameters in the StartParams sub-structure
+             *
+             * This contains all relevant info, including file name, entry point,
+             * main task info, etc. which is required to start the app now
+             * or in a future restart/reload request.
+             */
+            AppRecPtr->StartParams = *Params;
+
+            /*
+             * Fill out the Task State info
+             */
+            AppRecPtr->ControlReq.AppControlRequest = CFE_ES_RunStatus_APP_RUN;
+            AppRecPtr->ControlReq.AppTimerMsec      = 0;
+
+            CFE_ES_AppRecordSetUsed(AppRecPtr, CFE_RESOURCEID_RESERVED);
+            CFE_ES_Global.LastAppId = PendingResourceId;
+            Status                  = CFE_SUCCESS;
+        }
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     * If ID allocation was not successful, return now.
+     * A message regarding the issue should have already been logged
+     */
+    if (Status != CFE_SUCCESS)
+    {
+        return Status;
+    }
+
+    /*
+     * Load the module based on StartParams configured above.
+     */
+    Status = CFE_ES_LoadModule(PendingResourceId, AppName, &AppRecPtr->StartParams.BasicInfo, &AppRecPtr->LoadStatus);
+
+    /*
+     * If the Load was OK, then complete the initialization
+     */
+    if (Status == CFE_SUCCESS)
+    {
+        Status =
+            CFE_ES_StartAppTask(&AppRecPtr->MainTaskId, /* Task ID (output) stored in App Record as main task */
+                                AppName,                /* Main Task name matches app name */
+                                (CFE_ES_TaskEntryFuncPtr_t)
+                                    AppRecPtr->LoadStatus.InitSymbolAddress, /* Init Symbol is main task entry point */
+                                &AppRecPtr->StartParams.MainTaskInfo,        /* Main task parameters */
+                                CFE_ES_APPID_C(PendingResourceId));          /* Parent App ID */
+    }
+
+    /*
+     * Finalize data in the app table entry, which must be done under lock.
+     * This transitions the entry from being RESERVED to the real ID.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+         * important - set the ID to its proper value
+         * which turns this into a real/valid table entry
+         */
+        CFE_ES_AppRecordSetUsed(AppRecPtr, PendingResourceId);
+
+        /*
+         ** Increment the registered App counter.
+         */
+        CFE_ES_Global.RegisteredExternalApps++;
+    }
+    else
+    {
+        /*
+         * Set the table entry back to free
+         */
+        CFE_ES_AppRecordSetFree(AppRecPtr);
+        PendingResourceId = CFE_RESOURCEID_UNDEFINED;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    *ApplicationIdPtr = CFE_ES_APPID_C(PendingResourceId);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_LoadLibrary(CFE_ES_LibId_t *LibraryIdPtr, const char *LibName, const CFE_ES_ModuleLoadParams_t *Params)
+{
+    CFE_ES_LibraryEntryFuncPtr_t FunctionPointer;
+    CFE_ES_LibRecord_t *         LibSlotPtr;
+    int32                        Status;
+    CFE_ResourceId_t             PendingResourceId;
+
+    /*
+     * The LibName must not be NULL
+     */
+    if (LibName == NULL || Params == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* Confirm name will fit inside the record */
+    if (memchr(LibName, 0, sizeof(LibSlotPtr->LibName)) == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /*
+    ** Allocate an ES_LibTable entry
+    */
+    FunctionPointer   = NULL;
+    PendingResourceId = CFE_RESOURCEID_UNDEFINED;
+
+    /*
+    ** Find an ES AppTable entry, and set to RESERVED
+    **
+    ** In this state, the entry is no longer free, but also will not pass the
+    ** validation test.  So this function effectively has exclusive access
+    ** without holding the global lock.
+    **
+    ** IMPORTANT: it must set the ID to something else before leaving
+    ** this function or else the resource will be leaked.  After this
+    ** point, execution must proceed to the end of the function to
+    ** guarantee that the entry is either completed or freed.
+    */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+     * Check for an existing entry with the same name.
+     * Also check for a matching Library name.
+     * (Libs and libraries should be uniquely named)
+     */
+    LibSlotPtr = CFE_ES_LocateLibRecordByName(LibName);
+    if (LibSlotPtr != NULL || CFE_ES_LocateAppRecordByName(LibName) != NULL)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Duplicate Lib name '%s'\n", __func__, LibName);
+        if (LibSlotPtr != NULL)
+        {
+            PendingResourceId = CFE_RESOURCEID_UNWRAP(CFE_ES_LibRecordGetID(LibSlotPtr));
+        }
+        Status = CFE_ES_ERR_DUPLICATE_NAME;
+    }
+    else
+    {
+        /* scan for a free slot */
+        PendingResourceId =
+            CFE_ResourceId_FindNext(CFE_ES_Global.LastLibId, CFE_PLATFORM_ES_MAX_LIBRARIES, CFE_ES_CheckLibIdSlotUsed);
+        LibSlotPtr = CFE_ES_LocateLibRecordByID(CFE_ES_LIBID_C(PendingResourceId));
+
+        if (LibSlotPtr == NULL)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: No free library slots available\n", __func__);
+            Status = CFE_ES_NO_RESOURCE_IDS_AVAILABLE;
+        }
+        else
+        {
+            /* Fully clear the entry, just in case of stale data */
+            memset(LibSlotPtr, 0, sizeof(*LibSlotPtr));
+
+            /*
+             * Fill out the parameters in the AppStartParams sub-structure
+             */
+            strncpy(LibSlotPtr->LibName, LibName, sizeof(LibSlotPtr->LibName) - 1);
+            LibSlotPtr->LibName[sizeof(LibSlotPtr->LibName) - 1] = '\0';
+            LibSlotPtr->LoadParams                               = *Params;
+
+            CFE_ES_LibRecordSetUsed(LibSlotPtr, CFE_RESOURCEID_RESERVED);
+            CFE_ES_Global.LastLibId = PendingResourceId;
+            Status                  = CFE_SUCCESS;
+        }
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     * If any off-nominal condition exists, skip the rest of this logic.
+     * (Log message already written)
+     */
+    if (Status != CFE_SUCCESS)
+    {
+        *LibraryIdPtr = CFE_ES_LIBID_C(PendingResourceId);
+        return Status;
+    }
+
+    /*
+     * Load the module based on StartParams configured above.
+     */
+    Status = CFE_ES_LoadModule(PendingResourceId, LibName, &LibSlotPtr->LoadParams, &LibSlotPtr->LoadStatus);
+    if (Status == CFE_SUCCESS)
+    {
+        FunctionPointer = (CFE_ES_LibraryEntryFuncPtr_t)LibSlotPtr->LoadStatus.InitSymbolAddress;
+        if (FunctionPointer != NULL)
+        {
+            Status = (*FunctionPointer)(CFE_ES_LIBID_C(PendingResourceId));
+            if (Status != CFE_SUCCESS)
+            {
+                CFE_ES_WriteToSysLog("%s: Load Shared Library Init Error = 0x%08x\n", __func__, (unsigned int)Status);
+            }
+        }
+    }
+
+    /*
+     * Finalize data in the app table entry, which must be done under lock.
+     * This transitions the entry from being RESERVED to the real type,
+     * either MAIN_TASK (success) or returning to INVALID (failure).
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+         * important - set the ID to its proper value
+         * which turns this into a real/valid table entry
+         */
+        CFE_ES_LibRecordSetUsed(LibSlotPtr, PendingResourceId);
+
+        /*
+         * Increment the registered Lib counter.
+         */
+        CFE_ES_Global.RegisteredLibs++;
+    }
+    else
+    {
+        CFE_ES_LibRecordSetFree(LibSlotPtr);
+        PendingResourceId = CFE_RESOURCEID_UNDEFINED;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    *LibraryIdPtr = CFE_ES_LIBID_C(PendingResourceId);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_RunAppTableScan(uint32 ElapsedTime, void *Arg)
+{
+    CFE_ES_AppTableScanState_t *State = (CFE_ES_AppTableScanState_t *)Arg;
+    uint32                      i;
+    CFE_ES_AppRecord_t *        AppPtr;
+    CFE_ES_AppId_t              AppTimeoutList[CFE_PLATFORM_ES_MAX_APPLICATIONS];
+    uint32                      NumAppTimeouts;
+
+    if (State->PendingAppStateChanges == 0)
+    {
+        /*
+         * If the command count changes, then a scan becomes due immediately.
+         */
+        if (State->LastScanCommandCount == CFE_ES_Global.TaskData.CommandCounter &&
+            State->BackgroundScanTimer > ElapsedTime)
+        {
+            /* no action at this time, background scan is not due yet */
+            State->BackgroundScanTimer -= ElapsedTime;
+            return false;
+        }
+    }
+
+    /*
+     * Every time a scan is initiated (for any reason)
+     * reset the background scan timer to the full value,
+     * and take a snapshot of the command counter.
+     */
+    NumAppTimeouts                = 0;
+    State->BackgroundScanTimer    = CFE_PLATFORM_ES_APP_SCAN_RATE;
+    State->LastScanCommandCount   = CFE_ES_Global.TaskData.CommandCounter;
+    State->PendingAppStateChanges = 0;
+
+    /*
+     * Scan needs to be done with the table locked,
+     * as these state changes need to be done atomically
+     * with respect to other tasks that also access/update
+     * the state.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+    ** Scan the ES Application table. Skip entries that are:
+    **  - Not in use, or
+    **  - cFE Core apps, or
+    **  - Currently running
+    */
+    AppPtr = CFE_ES_Global.AppTable;
+    for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+    {
+        if (CFE_ES_AppRecordIsUsed(AppPtr) && AppPtr->Type == CFE_ES_AppType_EXTERNAL)
+        {
+            if (AppPtr->AppState > CFE_ES_AppState_RUNNING)
+            {
+                /*
+                 * Increment the "pending" counter which reflects
+                 * the number of apps that are in some phase of clean up.
+                 */
+                ++State->PendingAppStateChanges;
+
+                /*
+                 * Decrement the wait timer, if active.
+                 * When the timeout value becomes zero, take the action to delete/restart/reload the app
+                 */
+                if (AppPtr->ControlReq.AppTimerMsec > ElapsedTime)
+                {
+                    AppPtr->ControlReq.AppTimerMsec -= ElapsedTime;
+                }
+                else
+                {
+                    AppPtr->ControlReq.AppTimerMsec = 0;
+
+                    /* Add it to the list to be processed later */
+                    AppTimeoutList[NumAppTimeouts] = CFE_ES_AppRecordGetID(AppPtr);
+                    ++NumAppTimeouts;
+                }
+            }
+            else if (AppPtr->AppState == CFE_ES_AppState_RUNNING &&
+                     AppPtr->ControlReq.AppControlRequest > CFE_ES_RunStatus_APP_RUN)
+            {
+                /* this happens after a command arrives to restart/reload/delete an app */
+                /* switch to WAITING state, and set the timer for transition */
+                AppPtr->AppState                = CFE_ES_AppState_WAITING;
+                AppPtr->ControlReq.AppTimerMsec = CFE_PLATFORM_ES_APP_KILL_TIMEOUT * CFE_PLATFORM_ES_APP_SCAN_RATE;
+            }
+        }
+
+        ++AppPtr;
+
+    } /* end for loop */
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     * Now invoke the CFE_ES_ProcessControlRequest() routine for any app
+     * which has reached that point.
+     */
+    for (i = 0; i < NumAppTimeouts; i++)
+    {
+        /*
+         * Call CFE_ES_ProcessControlRequest() with a reference to
+         * the _copies_ of the app record details.  (This avoids
+         * needing to access the global records outside of the lock).
+         */
+        CFE_ES_ProcessControlRequest(AppTimeoutList[i]);
+    }
+
+    /*
+     * This state machine is considered active if there are any
+     * pending app state changes.  Returning "true" will cause this job
+     * to be called from the background task at a faster interval.
+     */
+    return (State->PendingAppStateChanges != 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_ProcessControlRequest(CFE_ES_AppId_t AppId)
+{
+    CFE_ES_AppRecord_t *     AppRecPtr;
+    uint32                   PendingControlReq;
+    CFE_ES_AppStartParams_t  RestartParams;
+    char                     OrigAppName[OS_MAX_API_NAME];
+    CFE_Status_t             CleanupStatus;
+    CFE_Status_t             StartupStatus;
+    CFE_ES_AppId_t           NewAppId;
+    const char *             ReqName;
+    char                     MessageDetail[48];
+    uint16                   EventID;
+    CFE_EVS_EventType_Enum_t EventType;
+
+    /* Init/clear all local state variables */
+    ReqName           = NULL;
+    MessageDetail[0]  = 0;
+    EventID           = 0;
+    EventType         = 0;
+    StartupStatus     = CFE_SUCCESS;
+    PendingControlReq = 0;
+    NewAppId          = CFE_ES_APPID_UNDEFINED;
+    OrigAppName[0]    = 0;
+    memset(&RestartParams, 0, sizeof(RestartParams));
+
+    AppRecPtr = CFE_ES_LocateAppRecordByID(AppId);
+
+    /*
+     * Take a local snapshot of the important app record data
+     * This way it becomes private and can be accessed without
+     * concerns about other threads/tasks, even after the global
+     * data records are eventually cleared.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (CFE_ES_AppRecordIsMatch(AppRecPtr, AppId))
+    {
+        PendingControlReq = AppRecPtr->ControlReq.AppControlRequest;
+        strncpy(OrigAppName, AppRecPtr->AppName, sizeof(OrigAppName) - 1);
+        OrigAppName[sizeof(OrigAppName) - 1] = 0;
+
+        /* If a restart was requested, copy the parameters to re-use in new app */
+        if (PendingControlReq == CFE_ES_RunStatus_SYS_RESTART || PendingControlReq == CFE_ES_RunStatus_SYS_RELOAD)
+        {
+            RestartParams = AppRecPtr->StartParams;
+        }
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     * All control requests start by deleting the app/task and
+     * all associated resources.
+     *
+     * The reload/restart requests will start it again, and it gets
+     * a new appID.  For other requests it just leaves it deleted.
+     *
+     * Note that Cleanup can fail for a variety of reasons, including
+     * situations where e.g. a task ID had become stale because the task
+     * already exited itself.  In most cases these are minor errors and
+     * reflect problems with the consistency of the old app record.
+     *
+     * Even when this happens the cleanup should still do its best effort
+     * to release all relevant global data entries.  So it should not
+     * prevent starting the new app, if a restart/reload is indicated.
+     */
+    CleanupStatus = CFE_ES_CleanUpApp(AppId);
+
+    /*
+     * Attempt to restart the app if the request indicated to do so,
+     * regardless of the CleanupStatus.
+     */
+    if (PendingControlReq == CFE_ES_RunStatus_SYS_RESTART || PendingControlReq == CFE_ES_RunStatus_SYS_RELOAD)
+    {
+        StartupStatus = CFE_ES_AppCreate(&NewAppId, OrigAppName, &RestartParams);
+    }
+
+    /*
+     * Determine the event ID associated with the control request,
+     * which indicates the success/failure of the operation and
+     * any other relevant detail.
+     *
+     * Note that the specific event ID that gets generated is the only
+     * other difference between all these control request types.
+     */
+    switch (PendingControlReq)
+    {
+        case CFE_ES_RunStatus_APP_EXIT:
+            ReqName = "Exit";
+            if (CleanupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_EXIT_APP_ERR_EID;
+            }
+            else
+            {
+                /* success event for this request */
+                EventID = CFE_ES_EXIT_APP_INF_EID;
+            }
+            break;
+
+        case CFE_ES_RunStatus_APP_ERROR:
+            ReqName = "Exit";
+            if (CleanupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_ERREXIT_APP_ERR_EID;
+            }
+            else
+            {
+                /* success event for this request */
+                EventID = CFE_ES_ERREXIT_APP_INF_EID;
+            }
+            break;
+
+        case CFE_ES_RunStatus_SYS_DELETE:
+            ReqName = "Stop";
+            if (CleanupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_STOP_ERR3_EID;
+            }
+            else
+            {
+                /* success event for this request */
+                EventID = CFE_ES_STOP_INF_EID;
+            }
+            break;
+
+        case CFE_ES_RunStatus_SYS_RESTART:
+            ReqName = "Restart";
+            if (CleanupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_RESTART_APP_ERR4_EID;
+            }
+            else if (StartupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_RESTART_APP_ERR3_EID;
+            }
+            else
+            {
+                /* success event for this request */
+                EventID = CFE_ES_RESTART_APP_INF_EID;
+            }
+            break;
+
+        case CFE_ES_RunStatus_SYS_RELOAD:
+            ReqName = "Reload";
+            if (CleanupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_RELOAD_APP_ERR4_EID;
+            }
+            else if (StartupStatus != CFE_SUCCESS)
+            {
+                /* error event for this request */
+                EventID = CFE_ES_RELOAD_APP_ERR3_EID;
+            }
+            else
+            {
+                /* success event for this request */
+                EventID = CFE_ES_RELOAD_APP_INF_EID;
+            }
+            break;
+
+            /*
+             * These two cases below should never occur so they are always
+             * reported as errors, but the  CFE_ES_CleanUpApp() should hopefully
+             * have fixed it either way.
+             */
+        case CFE_ES_RunStatus_SYS_EXCEPTION:
+            ReqName = "ES_ProcControlReq: Invalid State";
+            EventID = CFE_ES_PCR_ERR1_EID;
+            snprintf(MessageDetail, sizeof(MessageDetail), "EXCEPTION");
+            break;
+
+        default:
+            ReqName = "ES_ProcControlReq: Unknown State";
+            EventID = CFE_ES_PCR_ERR2_EID;
+            snprintf(MessageDetail, sizeof(MessageDetail), "( %lu )", (unsigned long)PendingControlReq);
+            break;
+    }
+
+    if (MessageDetail[0] != 0)
+    {
+        /* Detail message already set, assume it is an error event */
+        EventType = CFE_EVS_EventType_ERROR;
+    }
+    else if (StartupStatus != CFE_SUCCESS)
+    {
+        /* Make detail message for event containing startup error code */
+        EventType = CFE_EVS_EventType_ERROR;
+        snprintf(MessageDetail, sizeof(MessageDetail), "Failed: AppCreate Error 0x%08X.", (unsigned int)StartupStatus);
+    }
+    else if (CleanupStatus != CFE_SUCCESS)
+    {
+        /* Make detail message for event containing cleanup error code */
+        EventType = CFE_EVS_EventType_ERROR;
+        snprintf(MessageDetail, sizeof(MessageDetail), "Failed: CleanUpApp Error 0x%08X.", (unsigned int)CleanupStatus);
+    }
+    else if (CFE_RESOURCEID_TEST_DEFINED(NewAppId))
+    {
+        /* Record success message for event where app is restarted */
+        EventType = CFE_EVS_EventType_INFORMATION;
+        snprintf(MessageDetail, sizeof(MessageDetail), "Completed, AppID=%lu", CFE_RESOURCEID_TO_ULONG(NewAppId));
+    }
+    else
+    {
+        /* Record success message for event */
+        EventType = CFE_EVS_EventType_INFORMATION;
+        snprintf(MessageDetail, sizeof(MessageDetail), "Completed.");
+    }
+
+    CFE_EVS_SendEvent(EventID, EventType, "%s Application %s %s", ReqName, OrigAppName, MessageDetail);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CleanUpApp(CFE_ES_AppId_t AppId)
+{
+    uint32                  i;
+    int32                   OsStatus;
+    int32                   Status;
+    int32                   ReturnCode;
+    CFE_ES_TaskId_t         TaskList[OS_MAX_TASKS];
+    CFE_ES_MemHandle_t      PoolList[CFE_PLATFORM_ES_MAX_MEMORY_POOLS];
+    osal_id_t               ModuleId;
+    uint32                  NumTasks;
+    uint32                  NumPools;
+    CFE_ES_AppRecord_t *    AppRecPtr;
+    CFE_ES_TaskRecord_t *   TaskRecPtr;
+    CFE_ES_MemPoolRecord_t *MemPoolRecPtr;
+
+    NumTasks   = 0;
+    NumPools   = 0;
+    ModuleId   = OS_OBJECT_ID_UNDEFINED;
+    ReturnCode = CFE_SUCCESS;
+
+    AppRecPtr = CFE_ES_LocateAppRecordByID(AppId);
+
+    /*
+     * Collect a list of resources previously owned by this app, which
+     * must be done while the global data is locked.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    if (CFE_ES_AppRecordIsMatch(AppRecPtr, AppId))
+    {
+        if (AppRecPtr->Type == CFE_ES_AppType_EXTERNAL)
+        {
+            CFE_ES_Global.RegisteredExternalApps--;
+
+            /*
+             * Get the Module ID, if it was an external app
+             *
+             * (this will be OS_OBJECT_ID_UNDEFINED if it was not loaded dynamically)
+             */
+            ModuleId = AppRecPtr->LoadStatus.ModuleId;
+        }
+
+        /*
+         * Collect all tasks associated with this app
+         */
+        TaskRecPtr = CFE_ES_Global.TaskTable;
+        for (i = 0; i < OS_MAX_TASKS; i++)
+        {
+            if (CFE_ES_TaskRecordIsUsed(TaskRecPtr) && CFE_RESOURCEID_TEST_EQUAL(TaskRecPtr->AppId, AppId))
+            {
+                TaskList[NumTasks] = CFE_ES_TaskRecordGetID(TaskRecPtr);
+
+                /* Store the main task ID at index 0 (swap with whatever was there) */
+                if (CFE_RESOURCEID_TEST_EQUAL(TaskList[NumTasks], AppRecPtr->MainTaskId) && NumTasks != 0)
+                {
+                    TaskList[NumTasks] = TaskList[0];
+                    TaskList[0]        = AppRecPtr->MainTaskId;
+                }
+
+                /* Mark record for removal */
+                CFE_ES_TaskRecordSetUsed(TaskRecPtr, CFE_RESOURCEID_RESERVED);
+                ++NumTasks;
+            }
+
+            ++TaskRecPtr;
+        }
+
+        CFE_ES_Global.RegisteredTasks -= NumTasks;
+
+        /*
+         * Collect memory pools associated with this app
+         */
+        MemPoolRecPtr = CFE_ES_Global.MemPoolTable;
+        for (i = 0; i < CFE_PLATFORM_ES_MAX_MEMORY_POOLS; i++)
+        {
+            if (CFE_ES_MemPoolRecordIsUsed(MemPoolRecPtr) &&
+                CFE_RESOURCEID_TEST_EQUAL(MemPoolRecPtr->OwnerAppID, AppId))
+            {
+                PoolList[NumPools] = CFE_ES_MemPoolRecordGetID(MemPoolRecPtr);
+                ++NumPools;
+            }
+
+            ++MemPoolRecPtr;
+        }
+
+        /*
+         * Set the record to RESERVED.
+         *
+         * This prevents reallocation of this slot while the remainder
+         * of resources are freed.
+         */
+        CFE_ES_AppRecordSetUsed(AppRecPtr, CFE_RESOURCEID_RESERVED);
+    }
+    else
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: AppID %lu is not valid for deletion\n", __func__,
+                                  CFE_RESOURCEID_TO_ULONG(AppId));
+        ReturnCode = CFE_ES_APP_CLEANUP_ERR;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    if (ReturnCode != CFE_SUCCESS)
+    {
+        return ReturnCode;
+    }
+
+    /*
+     * Now actually delete all the resources associated with the task.
+     *
+     * Most of this involves calling into other subsystems, so it is
+     * done while the ES global data is UNLOCKED to avoid holding more
+     * than one lock at a time.
+     */
+
+    /*
+     ** Call the Table Clean up function
+     */
+    CFE_TBL_CleanUpApp(AppId);
+
+    /*
+     ** Call the Software Bus clean up function
+     */
+    CFE_SB_CleanUpApp(AppId);
+
+    /*
+     ** Call the TIME Clean up function
+     */
+    CFE_TIME_CleanUpApp(AppId);
+
+    /*
+     ** Call the EVS Clean up function
+     */
+    Status = CFE_EVS_CleanUpApp(AppId);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Call to CFE_EVS_CleanUpApp returned Error: 0x%08X\n", __func__, (unsigned int)Status);
+        ReturnCode = CFE_ES_APP_CLEANUP_ERR;
+    }
+
+    /*
+     * Delete all tasks.
+     *
+     * Note that the main task is always positioned at index 0 in this list.
+     *
+     * This iterates the list in reverse order, such that the child
+     * tasks are deleted first (in any order) and main task is deleted last.
+     */
+    i = NumTasks;
+    while (i > 0)
+    {
+        --i;
+        Status = CFE_ES_CleanupTaskResources(TaskList[i]);
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: CleanUpTaskResources for Task ID:%lu returned Error: 0x%08X\n", __func__,
+                                 CFE_RESOURCEID_TO_ULONG(TaskList[i]), (unsigned int)Status);
+            ReturnCode = CFE_ES_APP_CLEANUP_ERR;
+        }
+    }
+
+    /*
+     * Delete all mem pools.
+     */
+    for (i = 0; i < NumPools; ++i)
+    {
+        Status = CFE_ES_PoolDelete(PoolList[i]);
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: delete pool %lu returned Error: 0x%08X\n", __func__,
+                                 CFE_RESOURCEID_TO_ULONG(PoolList[i]), (unsigned int)Status);
+            ReturnCode = CFE_ES_APP_CLEANUP_ERR;
+        }
+    }
+
+    /*
+     ** Unload the module, if applicable
+     */
+    if (OS_ObjectIdDefined(ModuleId))
+    {
+        /*
+         ** Unload the module only if it is an external app
+         */
+        OsStatus = OS_ModuleUnload(ModuleId);
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: Module (ID:0x%08lX) Unload failed. RC=%ld\n", __func__,
+                                 OS_ObjectIdToInteger(ModuleId), (long)OsStatus);
+            ReturnCode = CFE_ES_APP_CLEANUP_ERR;
+        }
+    }
+
+    /*
+     * Finally, re-acquire the ES lock and set all
+     * table entries free for re-use.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+     * Free all task records.
+     */
+    for (i = 0; i < NumTasks; ++i)
+    {
+        TaskRecPtr = CFE_ES_LocateTaskRecordByID(TaskList[i]);
+        if (CFE_ES_TaskRecordIsMatch(TaskRecPtr, CFE_ES_TASKID_C(CFE_RESOURCEID_RESERVED)))
+        {
+            CFE_ES_TaskRecordSetFree(TaskRecPtr);
+        }
+    }
+
+    /*
+     * Now finally delete the record and allow re-use of the slot.
+     */
+    if (CFE_ES_AppRecordIsMatch(AppRecPtr, CFE_ES_APPID_C(CFE_RESOURCEID_RESERVED)))
+    {
+        CFE_ES_AppRecordSetFree(AppRecPtr);
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return ReturnCode;
+}
+
+/*
+ * Simple state structure used when cleaning up objects associated with tasks
+ *
+ * This is used locally by CFE_ES_CleanupTaskResources
+ */
+typedef struct
+{
+    uint32 ErrorFlag;
+    uint32 FoundObjects;
+    uint32 PrevFoundObjects;
+    uint32 DeletedObjects;
+    int32  OverallStatus;
+} CFE_ES_CleanupState_t;
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Purpose: clean up all objects.
+ * NOTE: This is called while holding the ES global lock
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_CleanupObjectCallback(osal_id_t ObjectId, void *arg)
+{
+    CFE_ES_CleanupState_t *CleanState;
+    int32                  OsStatus;
+    osal_objtype_t         ObjType;
+    bool                   ObjIsValid;
+
+    CleanState = (CFE_ES_CleanupState_t *)arg;
+    ObjIsValid = true;
+
+    ObjType = OS_IdentifyObject(ObjectId);
+    switch (ObjType)
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            OsStatus = OS_TaskDelete(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            OsStatus = OS_QueueDelete(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            OsStatus = OS_BinSemDelete(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            OsStatus = OS_CountSemDelete(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            OsStatus = OS_MutSemDelete(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_TIMECB:
+            OsStatus = OS_TimerDelete(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            OsStatus = OS_close(ObjectId);
+            break;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            OsStatus = OS_ModuleUnload(ObjectId);
+            break;
+        default:
+            ObjIsValid = false;
+            OsStatus   = OS_ERROR;
+            break;
+    }
+
+    if (ObjIsValid)
+    {
+        ++CleanState->FoundObjects;
+        if (OsStatus == OS_SUCCESS)
+        {
+            ++CleanState->DeletedObjects;
+        }
+        else
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: Call to OSAL Delete Object (ID:%lu) failed. RC=%ld\n", __func__,
+                                      OS_ObjectIdToInteger(ObjectId), (long)OsStatus);
+            if (CleanState->OverallStatus == CFE_SUCCESS)
+            {
+                /*
+                 * Translate any OS failures into the appropriate CFE_ES return codes
+                 * (Some object types have special return codes, depending on what type
+                 * of object failed to delete)
+                 */
+                switch (ObjType)
+                {
+                    case OS_OBJECT_TYPE_OS_TASK:
+                        CleanState->OverallStatus = CFE_ES_ERR_CHILD_TASK_DELETE;
+                        break;
+                    case OS_OBJECT_TYPE_OS_QUEUE:
+                        CleanState->OverallStatus = CFE_ES_QUEUE_DELETE_ERR;
+                        break;
+                    case OS_OBJECT_TYPE_OS_BINSEM:
+                        CleanState->OverallStatus = CFE_ES_BIN_SEM_DELETE_ERR;
+                        break;
+                    case OS_OBJECT_TYPE_OS_COUNTSEM:
+                        CleanState->OverallStatus = CFE_ES_COUNT_SEM_DELETE_ERR;
+                        break;
+                    case OS_OBJECT_TYPE_OS_MUTEX:
+                        CleanState->OverallStatus = CFE_ES_MUT_SEM_DELETE_ERR;
+                        break;
+                    case OS_OBJECT_TYPE_OS_TIMECB:
+                        CleanState->OverallStatus = CFE_ES_TIMER_DELETE_ERR;
+                        break;
+                    default:
+                        /* generic failure */
+                        CleanState->OverallStatus = CFE_ES_APP_CLEANUP_ERR;
+                        break;
+                }
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CleanupTaskResources(CFE_ES_TaskId_t TaskId)
+{
+    CFE_ES_CleanupState_t CleanState;
+    int32                 OsStatus;
+    int32                 Result;
+    osal_id_t             OsalId;
+
+    /* Get the Task ID for calling OSAL APIs (convert type) */
+    OsalId = CFE_ES_TaskId_ToOSAL(TaskId);
+
+    /*
+    ** Delete all OSAL resources that belong to this task
+    */
+    memset(&CleanState, 0, sizeof(CleanState));
+    --CleanState.PrevFoundObjects;
+    while (1)
+    {
+        OS_ForEachObject(OsalId, CFE_ES_CleanupObjectCallback, &CleanState);
+        if (CleanState.FoundObjects == 0 || CleanState.ErrorFlag != 0)
+        {
+            break;
+        }
+        /*
+         * The number of found objects should show a downward trend,
+         * if not, then stop and do not loop here forever.  (This can
+         * happen when using the UT stub functions, or if an object
+         * cannot be fully deleted successfully).
+         */
+        CleanState.ErrorFlag =
+            (CleanState.DeletedObjects == 0 || CleanState.FoundObjects >= CleanState.PrevFoundObjects);
+        CleanState.PrevFoundObjects = CleanState.FoundObjects;
+        CleanState.FoundObjects     = 0;
+        CleanState.DeletedObjects   = 0;
+    }
+
+    /*
+    ** Delete the task itself
+    **
+    ** Note, if the task self exited, then the ID becomes invalid.
+    ** In this case the OS_ERR_INVALID_ID status is returned, but
+    ** that is OK, there is nothing else needed to do.
+    */
+    OsStatus = OS_TaskDelete(OsalId);
+    if (OsStatus == OS_SUCCESS || OsStatus == OS_ERR_INVALID_ID)
+    {
+        Result = CleanState.OverallStatus;
+        if (Result == CFE_SUCCESS && CleanState.FoundObjects > 0)
+        {
+            /* Objects leftover after cleanup -- resource leak */
+            Result = CFE_ES_APP_CLEANUP_ERR;
+        }
+    }
+    else
+    {
+        Result = CFE_ES_TASK_DELETE_ERR;
+    }
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_CopyModuleBasicInfo(const CFE_ES_ModuleLoadParams_t *ParamsPtr, CFE_ES_AppInfo_t *AppInfoPtr)
+{
+    strncpy(AppInfoPtr->EntryPoint, ParamsPtr->InitSymbolName, sizeof(AppInfoPtr->EntryPoint) - 1);
+    AppInfoPtr->EntryPoint[sizeof(AppInfoPtr->EntryPoint) - 1] = '\0';
+
+    strncpy(AppInfoPtr->FileName, ParamsPtr->FileName, sizeof(AppInfoPtr->FileName) - 1);
+    AppInfoPtr->FileName[sizeof(AppInfoPtr->FileName) - 1] = '\0';
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_CopyModuleStatusInfo(const CFE_ES_ModuleLoadStatus_t *StatusPtr, CFE_ES_AppInfo_t *AppInfoPtr)
+{
+    AppInfoPtr->StartAddress = CFE_ES_MEMADDRESS_C(StatusPtr->InitSymbolAddress);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_CopyModuleAddressInfo(osal_id_t ModuleId, CFE_ES_AppInfo_t *AppInfoPtr)
+{
+    OS_module_prop_t ModuleInfo;
+    int32            OsStatus;
+
+    memset(&ModuleInfo, 0, sizeof(ModuleInfo));
+
+    OsStatus = OS_ModuleInfo(ModuleId, &ModuleInfo);
+    if (OsStatus == OS_SUCCESS)
+    {
+        AppInfoPtr->AddressesAreValid =
+            (sizeof(ModuleInfo.addr.code_address) <= sizeof(AppInfoPtr->CodeAddress)) && ModuleInfo.addr.valid;
+    }
+    else
+    {
+        AppInfoPtr->AddressesAreValid = false;
+    }
+
+    /*
+     * Convert the internal size and address to the telemetry format.
+     * (The telemetry format may be a different bitwidth than the native processor)
+     */
+    AppInfoPtr->CodeAddress = CFE_ES_MEMADDRESS_C(ModuleInfo.addr.code_address);
+    AppInfoPtr->CodeSize    = CFE_ES_MEMOFFSET_C(ModuleInfo.addr.code_size);
+    AppInfoPtr->DataAddress = CFE_ES_MEMADDRESS_C(ModuleInfo.addr.data_address);
+    AppInfoPtr->DataSize    = CFE_ES_MEMOFFSET_C(ModuleInfo.addr.data_size);
+    AppInfoPtr->BSSAddress  = CFE_ES_MEMADDRESS_C(ModuleInfo.addr.bss_address);
+    AppInfoPtr->BSSSize     = CFE_ES_MEMOFFSET_C(ModuleInfo.addr.bss_size);
+}
+```
+
+### `cfe_es_apps.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_apps.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  This file contains the Internal interface for the cFE Application control functions of ES.
+ *  These functions and data structures manage the Applications and Child tasks in the cFE.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ */
+
+#ifndef CFE_ES_APPS_H
+#define CFE_ES_APPS_H
+
+/*
+** Include Files
+*/
+#include "common_types.h"
+
+#include "cfe_es_api_typedefs.h"
+#include "cfe_fs_api_typedefs.h"
+
+/*
+** Macro Definitions
+*/
+#define CFE_ES_STARTSCRIPT_MAX_TOKENS_PER_LINE 8
+
+/*
+** Type Definitions
+*/
+
+/*
+** CFE_ES_AppState_t is a structure of information for External cFE Apps.
+**   This information is used to control/alter the state of External Apps.
+**   The fields in this structure are not needed or used for the cFE Core Apps.
+*/
+typedef struct
+{
+    uint32 AppControlRequest; /* What the App should be doing next */
+    int32  AppTimerMsec;      /* Countdown timer for killing an app, in milliseconds */
+} CFE_ES_ControlReq_t;
+
+/*
+** CFE_ES_ModuleLoadParams_t contains the information used when a module
+** (library or app) load request initially processed in the system.  It captures
+** the fundamental information - the name, the file to load, its entry point.
+** It contains information directly provided by the user, not runtime status or
+** other derived information.
+**
+** This information should remain fairly constant after initial allocation, even
+** if the application is restarted for some reason.  The major exception is the
+** ReloadApp command, which can change the FileName.
+*/
+typedef struct
+{
+    char InitSymbolName[OS_MAX_API_NAME];
+    char FileName[OS_MAX_PATH_LEN];
+} CFE_ES_ModuleLoadParams_t;
+
+/*
+** CFE_ES_ModuleLoadStatus_t is a structure of information used when a module
+** (library or app) is actually loaded in the system.  It captures the
+** runtime information - the module ID and starting address.
+**
+** This information may change if the module is reloaded.
+*/
+typedef struct
+{
+    osal_id_t ModuleId;
+    cpuaddr   InitSymbolAddress;
+} CFE_ES_ModuleLoadStatus_t;
+
+/*
+** CFE_ES_TaskStartParams_t contains basic details about a CFE task
+**
+** This information needs to be specified when starting a task and is
+** stored as part of the task record for future reference.
+*/
+typedef struct
+{
+    size_t                     StackSize;
+    CFE_ES_TaskPriority_Atom_t Priority;
+} CFE_ES_TaskStartParams_t;
+
+/*
+** CFE_ES_AppStartParams_t contains basic details about a CFE app.
+**
+** This is an extension of the CFE_ES_ModuleLoadParams_t which adds information
+** about the main task and exception action.  It is only used for apps, as libraries
+** do not have a task associated.
+*/
+typedef struct
+{
+    /*
+     * Basic (static) information about the module
+     */
+    CFE_ES_ModuleLoadParams_t BasicInfo;
+
+    CFE_ES_TaskStartParams_t      MainTaskInfo;
+    CFE_ES_ExceptionAction_Enum_t ExceptionAction;
+} CFE_ES_AppStartParams_t;
+
+/*
+** CFE_ES_AppRecord_t is an internal structure used to keep track of
+** CFE Applications that are active in the system.
+*/
+typedef struct
+{
+    CFE_ES_AppId_t            AppId;                    /* The actual AppID of this entry, or undefined */
+    char                      AppName[OS_MAX_API_NAME]; /* The name of the app */
+    CFE_ES_AppState_Enum_t    AppState;                 /* Is the app running, or stopped, or waiting? */
+    CFE_ES_AppType_Enum_t     Type;                     /* The type of App: CORE or EXTERNAL */
+    CFE_ES_AppStartParams_t   StartParams;              /* The start parameters for an App */
+    CFE_ES_ModuleLoadStatus_t LoadStatus;               /* Runtime module information */
+    CFE_ES_ControlReq_t       ControlReq;               /* The Control Request Record for External cFE Apps */
+    CFE_ES_TaskId_t           MainTaskId;               /* The Application's Main Task ID */
+} CFE_ES_AppRecord_t;
+
+/*
+** CFE_ES_TaskRecord_t is an internal structure used to keep track of
+** CFE Tasks that are active in the system.
+*/
+typedef struct
+{
+    CFE_ES_TaskId_t           TaskId;                    /* The actual TaskID of this entry, or undefined */
+    char                      TaskName[OS_MAX_API_NAME]; /* Task Name */
+    CFE_ES_AppId_t            AppId;                     /* The parent Application's App ID */
+    CFE_ES_TaskStartParams_t  StartParams;               /* The start parameters for the task */
+    CFE_ES_TaskEntryFuncPtr_t EntryFunc;                 /* Task entry function */
+    uint32                    ExecutionCounter;          /* The execution counter for the task */
+} CFE_ES_TaskRecord_t;
+
+/*
+** CFE_ES_LibRecord_t is an internal structure used to keep track of
+** CFE Shared Libraries that are loaded in the system.
+*/
+typedef struct
+{
+    CFE_ES_LibId_t            LibId;                    /* The actual LibID of this entry, or undefined */
+    char                      LibName[OS_MAX_API_NAME]; /* Library Name */
+    CFE_ES_ModuleLoadParams_t LoadParams;               /* Basic (static) information about the module */
+    CFE_ES_ModuleLoadStatus_t LoadStatus;               /* Runtime information about the module */
+} CFE_ES_LibRecord_t;
+
+/*
+** CFE_ES_AppTableScanState_t is an internal structure used to keep state of
+** the background app table scan/cleanup process
+*/
+typedef struct
+{
+    uint32 PendingAppStateChanges;
+    uint32 BackgroundScanTimer;
+    uint8  LastScanCommandCount;
+} CFE_ES_AppTableScanState_t;
+
+/*****************************************************************************/
+/*
+** Function prototypes
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * This routine loads/starts cFE applications.
+ */
+void CFE_ES_StartApplications(uint32 ResetType, const char *StartFilePath);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * This function parses the startup file line for an individual cFE application.
+ */
+int32 CFE_ES_ParseFileEntry(const char **TokenList, uint32 NumTokens);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Helper function to load + configure (but not start) a new app/lib module
+ *
+ * Loads the module file via OSAL and stores all relevant info in the table entry as necessary.
+ *
+ * This only loads the code and looks up relevant runtime information.
+ * It does not start any tasks.
+ */
+int32 CFE_ES_LoadModule(CFE_ResourceId_t ParentResourceId, const char *ModuleName,
+                        const CFE_ES_ModuleLoadParams_t *LoadParams, CFE_ES_ModuleLoadStatus_t *LoadStatus);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Internal function to determine the entry point of an app.
+ *
+ * If the app isn't fully registered in the global app table, then this delays until
+ * the app is completely configured and the entry point is confirmed to be valid.
+ */
+int32 CFE_ES_GetTaskFunction(CFE_ES_TaskEntryFuncPtr_t *FuncPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Helper function to act as the intermediate entry point of an app
+ *
+ * This is to support starting apps before having a fully completed entry in the
+ * global app table.  The app startup will delay until the app creation is completed
+ * and verified, then the actual entry point will be determined.
+ */
+void CFE_ES_TaskEntryPoint(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Helper function to start (but not load) a new app/lib module
+ *
+ * Note that OSAL does not separate the action of creating and start a task, providing
+ * only OS_TaskCreate which does both.  But there is a potential race condition if
+ * the real task code starts and calls any function that depends on having an AppID
+ * context before its fully registered in the global app table.
+ *
+ * Therefore this calls a dedicated CFE_ES_AppEntryPoint which then will wait until
+ * the task is fully registered in the global, before calling the actual app entry point.
+ */
+int32 CFE_ES_StartAppTask(CFE_ES_TaskId_t *TaskIdPtr, const char *TaskName, CFE_ES_TaskEntryFuncPtr_t EntryFunc,
+                          const CFE_ES_TaskStartParams_t *Params, CFE_ES_AppId_t ParentAppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * This function loads and creates a cFE Application.
+ *
+ * This function can be called from the ES startup code when it
+ * loads the cFE Applications from the disk using the startup script, or it
+ * can be called when the ES Start Application command is executed.
+ */
+int32 CFE_ES_AppCreate(CFE_ES_AppId_t *ApplicationIdPtr, const char *AppName, const CFE_ES_AppStartParams_t *Params);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * This function loads and initializes a cFE Shared Library.
+ */
+int32 CFE_ES_LoadLibrary(CFE_ES_LibId_t *LibraryIdPtr, const char *LibName, const CFE_ES_ModuleLoadParams_t *Params);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Scan the Application Table for actions to take
+ *
+ * This function scans the ES Application table and acts on the changes
+ * in application states. This is where the external cFE Applications are
+ * restarted, reloaded, or deleted.
+ */
+bool CFE_ES_RunAppTableScan(uint32 ElapsedTime, void *Arg);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Scan for new exceptions stored in the PSP
+ *
+ * This function pools the PSP to check if any exceptions have been logged
+ * since the last background cycle.  If an exception is present, retrieve
+ * the details, add it to the ER log, and trigger the action (e.g. app restart).
+ */
+bool CFE_ES_RunExceptionScan(uint32 ElapsedTime, void *Arg);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Background file write data getter for ER log entry
+ *
+ * Gets a single record from exception & reset log to write to a file.
+ */
+bool CFE_ES_BackgroundERLogFileDataGetter(void *Meta, uint32 RecordNum, void **Buffer, size_t *BufSize);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Background file write event handler for ER log entry
+ *
+ * Report events during writing exception & reset log to a file
+ */
+void CFE_ES_BackgroundERLogFileEventHandler(void *Meta, CFE_FS_FileWriteEvent_t Event, int32 Status, uint32 RecordNum,
+                                            size_t BlockSize, size_t Position);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Perform the requested control action for an application
+ */
+void CFE_ES_ProcessControlRequest(CFE_ES_AppId_t AppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Clean up all app resources and delete it
+ */
+int32 CFE_ES_CleanUpApp(CFE_ES_AppId_t AppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Clean up all Task resources and delete the task
+ *
+ * Cleans up the OS resources associated with an individual Task.
+ *
+ * Note: This is called when the ES global is UNLOCKED  so it should not touch
+ * any ES global data structures.  It should only clean up at the OSAL level.
+ */
+int32 CFE_ES_CleanupTaskResources(CFE_ES_TaskId_t TaskId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Populate the cFE_ES_AppInfo structure with the data for an app.
+ *
+ * This internal function does not log any errors/events.  The caller is expected
+ * to check the return code and log any relevant errors based on the context.
+ */
+void CFE_ES_CopyModuleBasicInfo(const CFE_ES_ModuleLoadParams_t *ParamsPtr, CFE_ES_AppInfo_t *AppInfoPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Populate the cFE_ES_AppInfo structure with the data for an app.
+ *
+ * This internal function does not log any errors/events.  The caller is expected
+ * to check the return code and log any relevant errors based on the context.
+ */
+void CFE_ES_CopyModuleStatusInfo(const CFE_ES_ModuleLoadStatus_t *StatusPtr, CFE_ES_AppInfo_t *AppInfoPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Populate the cFE_ES_AppInfo structure with the data for an app.
+ *
+ * This internal function does not log any errors/events.  The caller is expected
+ * to check the return code and log any relevant errors based on the context.
+ */
+void CFE_ES_CopyModuleAddressInfo(osal_id_t ModuleId, CFE_ES_AppInfo_t *AppInfoPtr);
+
+#endif /* CFE_ES_APPS_H */
+```
+
+### `cfe_es_backgroundtask.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_backgroundtask.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_es_backgroundtask.c
+**
+** Purpose: This file contains the implementation of the ES "background task"
+**
+** This task sits idle most of the time, but is woken by the ES application
+** for various maintenance duties that may take time to execute, such as
+** writing status/log files.
+**
+*/
+
+/*
+** Include Section
+*/
+
+#include <string.h>
+
+#include "cfe_es_module_all.h"
+#include "cfe_fs_core_internal.h"
+
+#define CFE_ES_BACKGROUND_SEM_NAME         "ES_BG_SEM"
+#define CFE_ES_BACKGROUND_CHILD_NAME       "ES_BG_TASK"
+#define CFE_ES_BACKGROUND_CHILD_STACK_PTR  CFE_ES_TASK_STACK_ALLOCATE
+#define CFE_ES_BACKGROUND_CHILD_STACK_SIZE CFE_PLATFORM_ES_PERF_CHILD_STACK_SIZE
+#define CFE_ES_BACKGROUND_CHILD_PRIORITY   CFE_PLATFORM_ES_PERF_CHILD_PRIORITY
+#define CFE_ES_BACKGROUND_CHILD_FLAGS      0
+#define CFE_ES_BACKGROUND_MAX_IDLE_DELAY   30000 /* 30 seconds */
+
+typedef struct
+{
+    bool (*RunFunc)(uint32 ElapsedTime, void *Arg);
+    void * JobArg;
+    uint32 ActivePeriod; /**< max wait/delay time between calls when job is active */
+    uint32 IdlePeriod;   /**< max wait/delay time between calls when job is idle */
+} CFE_ES_BackgroundJobEntry_t;
+
+/*
+ * List of "background jobs"
+ *
+ * This is just a list of functions to periodically call from the context of the background task,
+ * and can be added/extended as needed.
+ *
+ * Each Job function returns a boolean, and should return "true" if it is active, or "false" if it is idle.
+ *
+ * This uses "cooperative multitasking" -- the function should do some limited work, then return to the
+ * background task.  It will be called again after a delay period to do more work.
+ */
+const CFE_ES_BackgroundJobEntry_t CFE_ES_BACKGROUND_JOB_TABLE[] = {
+    {/* ES app table background scan */
+     .RunFunc      = CFE_ES_RunAppTableScan,
+     .JobArg       = &CFE_ES_Global.BackgroundAppScanState,
+     .ActivePeriod = CFE_PLATFORM_ES_APP_SCAN_RATE / 4,
+     .IdlePeriod   = CFE_PLATFORM_ES_APP_SCAN_RATE},
+    {/* Performance Log Data Dump to file */
+     .RunFunc      = CFE_ES_RunPerfLogDump,
+     .JobArg       = &CFE_ES_Global.BackgroundPerfDumpState,
+     .ActivePeriod = CFE_PLATFORM_ES_PERF_CHILD_MS_DELAY,
+     .IdlePeriod   = CFE_PLATFORM_ES_PERF_CHILD_MS_DELAY * 1000},
+    {/* Check for exceptions stored in the PSP */
+     .RunFunc      = CFE_ES_RunExceptionScan,
+     .JobArg       = NULL,
+     .ActivePeriod = CFE_PLATFORM_ES_APP_SCAN_RATE,
+     .IdlePeriod   = CFE_PLATFORM_ES_APP_SCAN_RATE},
+    {/* Call FS to handle background file writes */
+     .RunFunc      = CFE_FS_RunBackgroundFileDump,
+     .JobArg       = NULL,
+     .ActivePeriod = CFE_PLATFORM_ES_APP_SCAN_RATE,
+     .IdlePeriod   = CFE_PLATFORM_ES_APP_SCAN_RATE}};
+
+#define CFE_ES_BACKGROUND_NUM_JOBS (sizeof(CFE_ES_BACKGROUND_JOB_TABLE) / sizeof(CFE_ES_BACKGROUND_JOB_TABLE[0]))
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_BackgroundTask(void)
+{
+    int32                              OsStatus;
+    uint32                             JobTotal;
+    uint32                             NumJobsRunning;
+    uint32                             NextDelay;
+    uint32                             ElapsedTime;
+    OS_time_t                          CurrTime;
+    OS_time_t                          LastTime;
+    const CFE_ES_BackgroundJobEntry_t *JobPtr;
+
+    memset(&LastTime, 0, sizeof(LastTime));
+    memset(&CurrTime, 0, sizeof(CurrTime));
+
+    CFE_PSP_GetTime(&LastTime);
+
+    while (true)
+    {
+        /*
+         * compute the elapsed time (difference) between last
+         * execution and now, in milliseconds.
+         */
+        CFE_PSP_GetTime(&CurrTime);
+        ElapsedTime = OS_TimeGetTotalMilliseconds(OS_TimeSubtract(CurrTime, LastTime));
+        LastTime    = CurrTime;
+
+        NextDelay      = CFE_ES_BACKGROUND_MAX_IDLE_DELAY; /* default; will be adjusted based on active jobs */
+        JobPtr         = CFE_ES_BACKGROUND_JOB_TABLE;
+        JobTotal       = CFE_ES_BACKGROUND_NUM_JOBS;
+        NumJobsRunning = 0;
+
+        while (JobTotal > 0)
+        {
+            /*
+             * call the background job -
+             * if it returns "true" that means it is active,
+             * if it returns "false" that means it is idle
+             */
+            if (JobPtr->RunFunc != NULL && JobPtr->RunFunc(ElapsedTime, JobPtr->JobArg))
+            {
+                ++NumJobsRunning;
+
+                if (JobPtr->ActivePeriod != 0 && NextDelay > JobPtr->ActivePeriod)
+                {
+                    /* next delay is based on this active job wait time */
+                    NextDelay = JobPtr->ActivePeriod;
+                }
+            }
+            else if (JobPtr->IdlePeriod != 0 && NextDelay > JobPtr->IdlePeriod)
+            {
+                /* next delay is based on this idle job wait time */
+                NextDelay = JobPtr->IdlePeriod;
+            }
+            --JobTotal;
+            ++JobPtr;
+        }
+
+        CFE_ES_Global.BackgroundTask.NumJobsRunning = NumJobsRunning;
+
+        OsStatus = OS_BinSemTimedWait(CFE_ES_Global.BackgroundTask.WorkSem, NextDelay);
+        if (OsStatus != OS_SUCCESS && OsStatus != OS_SEM_TIMEOUT)
+        {
+            /* should never occur */
+            CFE_ES_WriteToSysLog("%s: Failed to take background sem: %ld\n", __func__, (long)OsStatus);
+            break;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_BackgroundInit(void)
+{
+    int32 status;
+    int32 OsStatus;
+
+    OsStatus = OS_BinSemCreate(&CFE_ES_Global.BackgroundTask.WorkSem, CFE_ES_BACKGROUND_SEM_NAME, 0, 0);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Failed to create background sem: %ld\n", __func__, (long)OsStatus);
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    /* Spawn a task to write the performance data to a file */
+    status = CFE_ES_CreateChildTask(&CFE_ES_Global.BackgroundTask.TaskID, CFE_ES_BACKGROUND_CHILD_NAME,
+                                    CFE_ES_BackgroundTask, CFE_ES_BACKGROUND_CHILD_STACK_PTR,
+                                    CFE_ES_BACKGROUND_CHILD_STACK_SIZE, CFE_ES_BACKGROUND_CHILD_PRIORITY,
+                                    CFE_ES_BACKGROUND_CHILD_FLAGS);
+
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Failed to create background task: %08lx\n", __func__, (unsigned long)status);
+        return status;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_BackgroundCleanup(void)
+{
+    CFE_ES_DeleteChildTask(CFE_ES_Global.BackgroundTask.TaskID);
+    OS_BinSemDelete(CFE_ES_Global.BackgroundTask.WorkSem);
+
+    CFE_ES_Global.BackgroundTask.TaskID  = CFE_ES_TASKID_UNDEFINED;
+    CFE_ES_Global.BackgroundTask.WorkSem = OS_OBJECT_ID_UNDEFINED;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_BackgroundWakeup(void)
+{
+    /* wake up the background task by giving the sem.
+     * This is "informational" and not strictly required,
+     * but it will make the task immediately wake up and check for new
+     * work if it was idle. */
+    OS_BinSemGive(CFE_ES_Global.BackgroundTask.WorkSem);
+}
+```
+
+### `cfe_es_cds.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_cds.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**    cfe_es_cds.c
+**
+**  Purpose:
+**    This file implements the cFE Executive Services Critical Data Store functions.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+**  Modification History:
+**
+*/
+
+/*
+** Required header files.
+*/
+#include "cfe_es_module_all.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDS_EarlyInit(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    uint32                 PlatformSize;
+    size_t                 MinRequiredSize;
+    int32                  OsStatus;
+    int32                  Status;
+    int32                  PspStatus;
+
+    CFE_ES_Global.CDSIsAvailable = false;
+
+    /* Create CDS general access mutex */
+    OsStatus = OS_MutSemCreate(&CDS->GenMutex, CFE_ES_CDS_MUT_REG_NAME, CFE_ES_CDS_MUT_REG_VALUE);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Failed to create mutex with error %ld\n", __func__, (long)OsStatus);
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    CDS->LastCDSBlockId = CFE_ResourceId_FromInteger(CFE_ES_CDSBLOCKID_BASE);
+
+    /* Get CDS size from PSP.  Note that the PSP interface
+     * uses "uint32" for size here. */
+    PspStatus = CFE_PSP_GetCDSSize(&PlatformSize);
+    if (PspStatus != CFE_PSP_SUCCESS)
+    {
+        /* Error getting the size of the CDS from the BSP */
+        CFE_ES_WriteToSysLog("%s: Unable to obtain CDS Size from BSP (Err=0x%08X)\n", __func__,
+                             (unsigned int)PspStatus);
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    /* Always truncate the size to the nearest 4 byte boundary */
+    CDS->TotalSize = PlatformSize & 0xfffffffc;
+
+    /* Compute the minimum size required for the CDS with the current configuration of the cFE */
+    MinRequiredSize = CDS_RESERVED_MIN_SIZE;
+    MinRequiredSize += CFE_ES_CDSReqdMinSize(CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES); /* Max # of Min Sized Blocks */
+
+    if (CDS->TotalSize < MinRequiredSize)
+    {
+        CFE_ES_WriteToSysLog("%s: CDS Size (%lu) less than required (%lu)\n", __func__, (unsigned long)CDS->TotalSize,
+                             (unsigned long)MinRequiredSize);
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        CDS->DataSize = CDS->TotalSize;
+        CDS->DataSize -= CDS_RESERVED_MIN_SIZE;
+
+        /* If the size was obtained successfully and meets the minimum requirements, then check its contents */
+        Status = CFE_ES_ValidateCDS();
+
+        if (Status == CFE_SUCCESS)
+        {
+            /* If a valid CDS was found, rebuild the memory pool */
+            Status = CFE_ES_RebuildCDS();
+        }
+
+        /* If the CDS is accessible but invalid, then create a new one */
+        if (Status == CFE_ES_CDS_INVALID)
+        {
+            /* First wipe the entire CDS area */
+            Status = CFE_ES_ClearCDS();
+
+            if (Status == CFE_SUCCESS)
+            {
+                Status = CFE_ES_InitCDSSignatures();
+            }
+
+            if (Status == CFE_SUCCESS)
+            {
+                /* Initialize the variables for managing the CDS Memory Pool */
+                Status = CFE_ES_CreateCDSPool(CDS->DataSize, CDS_POOL_OFFSET);
+            }
+
+            if (Status == CFE_SUCCESS)
+            {
+                Status = CFE_ES_InitCDSRegistry();
+            }
+        }
+
+        if (Status != CFE_SUCCESS)
+        {
+            /* Unrecoverable error while reading the CDS */
+            CFE_ES_WriteToSysLog("%s: Error validating/initializing CDS (0x%08lX)\n", __func__, (unsigned long)Status);
+        }
+        else
+        {
+            /* Set the CDS Overall flag to be present/valid */
+            CFE_ES_Global.CDSIsAvailable = true;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDSHandle_ToIndex(CFE_ES_CDSHandle_t BlockID, uint32 *Idx)
+{
+    return CFE_ResourceId_ToIndex(CFE_RESOURCEID_UNWRAP(BlockID), CFE_ES_CDSBLOCKID_BASE,
+                                  CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES, Idx);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_CheckCDSHandleSlotUsed(CFE_ResourceId_t CheckId)
+{
+    CFE_ES_CDS_RegRec_t *CDSRegRecPtr;
+    /*
+     * Note - The pointer here should never be NULL because the ID should always be
+     * within the expected range, but if it ever is NULL, this should return true
+     * such that the caller will _not_ attempt to use the record.
+     */
+    CDSRegRecPtr = CFE_ES_LocateCDSBlockRecordByID(CFE_ES_CDSHANDLE_C(CheckId));
+    return (CDSRegRecPtr == NULL || CFE_ES_CDSBlockRecordIsUsed(CDSRegRecPtr));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_CDS_RegRec_t *CFE_ES_LocateCDSBlockRecordByID(CFE_ES_CDSHandle_t BlockID)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    CFE_ES_CDS_RegRec_t *  CDSRegRecPtr;
+    uint32                 Idx;
+
+    if (CFE_ES_CDSHandle_ToIndex(BlockID, &Idx) == CFE_SUCCESS)
+    {
+        CDSRegRecPtr = &CDS->Registry[Idx];
+    }
+    else
+    {
+        CDSRegRecPtr = NULL;
+    }
+
+    return CDSRegRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDS_CacheFetch(CFE_ES_CDS_AccessCache_t *Cache, size_t Offset, size_t Size)
+{
+    int32 Status;
+
+    if (Size > 0 && Size <= sizeof(Cache->Data))
+    {
+        Cache->AccessStatus = CFE_PSP_ReadFromCDS(&Cache->Data, Offset, Size);
+
+        if (Cache->AccessStatus == CFE_PSP_SUCCESS)
+        {
+            Cache->Offset = Offset;
+            Cache->Size   = Size;
+            Status        = CFE_SUCCESS;
+        }
+        else
+        {
+            Status = CFE_ES_CDS_ACCESS_ERROR;
+        }
+    }
+    else
+    {
+        Status = CFE_ES_CDS_INVALID_SIZE;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDS_CacheFlush(CFE_ES_CDS_AccessCache_t *Cache)
+{
+    int32 Status;
+
+    if (Cache->Size > 0 && Cache->Size <= sizeof(Cache->Data))
+    {
+        Cache->AccessStatus = CFE_PSP_WriteToCDS(&Cache->Data, Cache->Offset, Cache->Size);
+
+        if (Cache->AccessStatus == CFE_PSP_SUCCESS)
+        {
+            Status = CFE_SUCCESS;
+        }
+        else
+        {
+            Status = CFE_ES_CDS_ACCESS_ERROR;
+        }
+    }
+    else
+    {
+        Status = CFE_ES_CDS_INVALID_SIZE;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDS_CachePreload(CFE_ES_CDS_AccessCache_t *Cache, const void *Source, size_t Offset, size_t Size)
+{
+    int32 Status;
+
+    if (Size > 0 && Size <= sizeof(Cache->Data))
+    {
+        if (Source == NULL)
+        {
+            /* just zero it out */
+            memset(&Cache->Data, 0, Size);
+        }
+        else if (Source != &Cache->Data)
+        {
+            /* copy from the user-supplied preload data */
+            memcpy(&Cache->Data, Source, Size);
+        }
+        Cache->Size   = Size;
+        Cache->Offset = Offset;
+        Status        = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_ES_CDS_INVALID_SIZE;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_RegisterCDSEx(CFE_ES_CDSHandle_t *HandlePtr, size_t UserBlockSize, const char *Name, bool CriticalTbl)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+    int32                  RegUpdateStatus;
+    CFE_ES_CDS_RegRec_t *  RegRecPtr;
+    size_t                 BlockOffset;
+    size_t                 OldBlockSize;
+    size_t                 NewBlockSize;
+    CFE_ResourceId_t       PendingBlockId;
+    bool                   IsNewEntry;
+    bool                   IsNewOffset;
+
+    Status          = CFE_SUCCESS;
+    RegUpdateStatus = CFE_SUCCESS;
+    IsNewEntry      = false;
+    IsNewOffset     = false;
+
+    if (UserBlockSize == 0 || UserBlockSize > CDS_ABS_MAX_BLOCK_SIZE)
+    {
+        /* Block size is not supportable */
+        return CFE_ES_CDS_INVALID_SIZE;
+    }
+
+    /* Lock Registry for update.  This prevents two applications from */
+    /* trying to register CDSs at the same location at the same time  */
+    CFE_ES_LockCDS();
+
+    /*
+     * Check for an existing entry with the same name.
+     */
+    RegRecPtr = CFE_ES_LocateCDSBlockRecordByName(Name);
+    if (RegRecPtr != NULL)
+    {
+        /* in CDS a duplicate name is not necessarily an error, we
+         * may reuse/resize the existing entry */
+        PendingBlockId = CFE_RESOURCEID_UNWRAP(CFE_ES_CDSBlockRecordGetID(RegRecPtr));
+    }
+    else
+    {
+        /* scan for a free slot */
+        PendingBlockId = CFE_ResourceId_FindNext(CDS->LastCDSBlockId, CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES,
+                                                 CFE_ES_CheckCDSHandleSlotUsed);
+        RegRecPtr      = CFE_ES_LocateCDSBlockRecordByID(CFE_ES_CDSHANDLE_C(PendingBlockId));
+
+        if (RegRecPtr != NULL)
+        {
+            /* Fully clear the entry, just in case of stale data */
+            memset(RegRecPtr, 0, sizeof(*RegRecPtr));
+            CDS->LastCDSBlockId = PendingBlockId;
+            IsNewEntry          = true;
+            Status              = CFE_SUCCESS;
+        }
+        else
+        {
+            Status         = CFE_ES_NO_RESOURCE_IDS_AVAILABLE;
+            PendingBlockId = CFE_RESOURCEID_UNDEFINED;
+        }
+    }
+
+    if (RegRecPtr != NULL)
+    {
+        /* Account for the extra header which will be added */
+        NewBlockSize = UserBlockSize;
+        NewBlockSize += sizeof(CFE_ES_CDS_BlockHeader_t);
+
+        /* If a reallocation is needed, the old block may need to be freed first */
+        if (Status == CFE_SUCCESS && RegRecPtr->BlockOffset != 0 && NewBlockSize != RegRecPtr->BlockSize)
+        {
+            /* If the new size is different, the old CDS must be deleted first  */
+            Status = CFE_ES_GenPoolPutBlock(&CDS->Pool, &OldBlockSize, RegRecPtr->BlockOffset);
+
+            /*
+             * Note because CDS puts a signature at the very beginning of the memory,
+             * valid data offsets are never zero.
+             */
+            if (Status == CFE_SUCCESS)
+            {
+                RegRecPtr->BlockOffset = 0;
+                RegRecPtr->BlockSize   = 0;
+            }
+        }
+
+        /* If a new allocation is needed, do it now */
+        if (Status == CFE_SUCCESS && RegRecPtr->BlockOffset == 0)
+        {
+            /* Allocate the block for the CDS */
+            Status = CFE_ES_GenPoolGetBlock(&CDS->Pool, &BlockOffset, NewBlockSize);
+            if (Status == CFE_SUCCESS)
+            {
+                /* Save the size of the CDS */
+                RegRecPtr->BlockOffset = BlockOffset;
+                RegRecPtr->BlockSize   = NewBlockSize;
+                IsNewOffset            = true;
+            }
+        }
+
+        if (Status == CFE_SUCCESS && IsNewEntry)
+        {
+            /* Save flag indicating whether it is a Critical Table or not */
+            RegRecPtr->Table = CriticalTbl;
+
+            /* Save CDS Name in Registry */
+            strncpy(RegRecPtr->Name, Name, sizeof(RegRecPtr->Name) - 1);
+            RegRecPtr->Name[sizeof(RegRecPtr->Name) - 1] = 0;
+            CFE_ES_CDSBlockRecordSetUsed(RegRecPtr, PendingBlockId);
+        }
+
+        if (Status == CFE_SUCCESS && IsNewOffset)
+        {
+            /* If we succeeded at creating a CDS, save updated registry in the CDS */
+            RegUpdateStatus = CFE_ES_UpdateCDSRegistry();
+        }
+    }
+
+    /* Unlock Registry for update */
+    CFE_ES_UnlockCDS();
+
+    /* Log any failures AFTER releasing the lock */
+    if (RegUpdateStatus != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Failed to update CDS Registry (Stat=0x%08X)\n", __func__,
+                             (unsigned int)RegUpdateStatus);
+
+        /*
+         * Return failure only if this was the primary error,
+         * do not overwrite a preexisting error.
+         */
+        if (Status == CFE_SUCCESS)
+        {
+            Status = RegUpdateStatus;
+        }
+    }
+
+    if (Status == CFE_SUCCESS && !IsNewOffset)
+    {
+        /*
+         * For backward compatibility, return the
+         * special non-success success code when
+         * reallocating an existing CDS.
+         *
+         * Note this intentionally needs to return CFE_SUCCESS
+         * when reusing an exiting entry but changing the size.
+         */
+        Status = CFE_ES_CDS_ALREADY_EXISTS;
+    }
+
+    *HandlePtr = CFE_ES_CDSHANDLE_C(PendingBlockId);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ValidateCDS(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    size_t                 TrailerOffset;
+    const size_t           SIG_CDS_SIZE = {CFE_ES_CDS_SIGNATURE_LEN};
+    int32                  Status;
+
+    /* Perform 2 checks to validate the CDS Memory Pool */
+    /* First, determine if the first validity check field is correct */
+    Status = CFE_ES_CDS_CacheFetch(&CDS->Cache, CDS_SIG_BEGIN_OFFSET, SIG_CDS_SIZE);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: 1st ReadFromCDS Failed. Status=0x%X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    if (strncmp(CDS->Cache.Data.Sig, CFE_ES_CDS_SIGNATURE_BEGIN, CFE_ES_CDS_SIGNATURE_LEN) != 0)
+    {
+        /* Beginning Validity Field failed */
+        return CFE_ES_CDS_INVALID;
+    }
+
+    TrailerOffset = CDS->TotalSize;
+    TrailerOffset -= sizeof(CFE_ES_CDS_PersistentTrailer_t);
+
+    Status = CFE_ES_CDS_CacheFetch(&CDS->Cache, TrailerOffset, SIG_CDS_SIZE);
+    if (Status != CFE_SUCCESS)
+    {
+        /* BSP reported an error reading from CDS */
+        CFE_ES_WriteToSysLog("%s: 2nd ReadFromCDS Failed. Status=0x%X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    if (strncmp(CDS->Cache.Data.Sig, CFE_ES_CDS_SIGNATURE_END, CFE_ES_CDS_SIGNATURE_LEN) != 0)
+    {
+        /* Ending Validity Field failed */
+        return CFE_ES_CDS_INVALID;
+    }
+
+    /* All sanity checks passed */
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ClearCDS(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    size_t                 RemainSize;
+    int32                  Status;
+
+    Status = CFE_SUCCESS;
+
+    /* Clear the CDS to ensure everything is gone */
+    /* Create a block of zeros to write to the CDS */
+    CFE_ES_CDS_CachePreload(&CDS->Cache, NULL, 0, sizeof(CDS->Cache.Data.Zero));
+
+    /* While there is space to write another block of zeros, then do so */
+    while (CDS->Cache.Offset < CDS->TotalSize)
+    {
+        RemainSize = CDS->TotalSize - CDS->Cache.Offset;
+        if (RemainSize < sizeof(CDS->Cache.Data.Zero))
+        {
+            /* partial size */
+            CDS->Cache.Size = RemainSize;
+        }
+        Status = CFE_ES_CDS_CacheFlush(&CDS->Cache);
+        if (Status != CFE_SUCCESS)
+        {
+            break;
+        }
+
+        CDS->Cache.Offset += CDS->Cache.Size;
+    }
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Clear CDS failed @ Offset=%lu Status=0x%08X\n", __func__,
+                             (unsigned long)CDS->Cache.Offset, (unsigned int)CDS->Cache.AccessStatus);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_InitCDSSignatures(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    size_t                 SigOffset;
+    int32                  Status;
+
+    /* Initialize the Validity Check strings */
+    SigOffset = 0;
+    CFE_ES_CDS_CachePreload(&CDS->Cache, CFE_ES_CDS_SIGNATURE_BEGIN, SigOffset, CFE_ES_CDS_SIGNATURE_LEN);
+    Status = CFE_ES_CDS_CacheFlush(&CDS->Cache);
+    if (Status != CFE_SUCCESS)
+    {
+        /* BSP reported an error writing to CDS */
+        CFE_ES_WriteToSysLog("%s: '_CDSBeg_' write failed. Status=0x%08X\n", __func__,
+                             (unsigned int)CDS->Cache.AccessStatus);
+        return Status;
+    }
+
+    SigOffset = CDS->TotalSize;
+    SigOffset -= sizeof(CFE_ES_CDS_PersistentTrailer_t);
+
+    CFE_ES_CDS_CachePreload(&CDS->Cache, CFE_ES_CDS_SIGNATURE_END, SigOffset, CFE_ES_CDS_SIGNATURE_LEN);
+    Status = CFE_ES_CDS_CacheFlush(&CDS->Cache);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: '_CDSEnd_' write failed. Status=0x%08X\n", __func__,
+                             (unsigned int)CDS->Cache.AccessStatus);
+        return Status;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_InitCDSRegistry(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+    uint32                 RegSize;
+
+    /* Initialize the local CDS Registry */
+    RegSize = CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES;
+    CFE_ES_CDS_CachePreload(&CDS->Cache, &RegSize, CDS_REG_SIZE_OFFSET, sizeof(RegSize));
+    /* Copy the number of registry entries to the CDS */
+    Status = CFE_ES_CDS_CacheFlush(&CDS->Cache);
+    if (Status == CFE_SUCCESS)
+    {
+        memset(CDS->Registry, 0, sizeof(CDS->Registry));
+
+        Status = CFE_ES_UpdateCDSRegistry();
+    }
+    else
+    {
+        CFE_ES_WriteToSysLog("%s: Failed to write Reg Size. Status=0x%08X\n", __func__,
+                             (unsigned int)CDS->Cache.AccessStatus);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_UpdateCDSRegistry(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  PspStatus;
+
+    /* Copy the contents of the local registry to the CDS */
+    PspStatus = CFE_PSP_WriteToCDS(CDS->Registry, CDS_REG_OFFSET, sizeof(CDS->Registry));
+
+    if (PspStatus != CFE_PSP_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Failed to write CDS Registry. Status=0x%08X\n", __func__, (unsigned int)PspStatus);
+        return CFE_ES_CDS_ACCESS_ERROR;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_FormCDSName(char *FullCDSName, const char *CDSName, CFE_ES_AppId_t ThisAppId)
+{
+    char AppName[OS_MAX_API_NAME];
+
+    CFE_ES_GetAppName(AppName, ThisAppId, sizeof(AppName));
+
+    /* Ensure that AppName is null terminated */
+    AppName[OS_MAX_API_NAME - 1] = '\0';
+
+    /* Complete formation of processor specific table name */
+    sprintf(FullCDSName, "%s.%s", AppName, CDSName);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_LockCDS(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  OsStatus;
+    int32                  Status;
+
+    OsStatus = OS_MutSemTake(CDS->GenMutex);
+
+    /* Convert to CFE return code */
+    if (OsStatus == OS_SUCCESS)
+    {
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_UnlockCDS(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  OsStatus;
+    int32                  Status;
+
+    OsStatus = OS_MutSemGive(CDS->GenMutex);
+
+    /* Convert to CFE return code */
+    if (OsStatus == OS_SUCCESS)
+    {
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_CDS_RegRec_t *CFE_ES_LocateCDSBlockRecordByName(const char *CDSName)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    CFE_ES_CDS_RegRec_t *  CDSRegRecPtr;
+    uint32                 NumReg;
+
+    CDSRegRecPtr = CDS->Registry;
+    NumReg       = CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES;
+    while (true)
+    {
+        if (NumReg == 0)
+        {
+            CDSRegRecPtr = NULL; /* not found */
+            break;
+        }
+
+        if (CFE_ES_CDSBlockRecordIsUsed(CDSRegRecPtr))
+        {
+            /* Perform a case sensitive name comparison */
+            if (strcmp(CDSName, CDSRegRecPtr->Name) == 0)
+            {
+                /* If the names match, then stop */
+                break;
+            }
+        }
+
+        ++CDSRegRecPtr;
+        --NumReg;
+    }
+
+    return CDSRegRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_RebuildCDS(void)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+    int32                  PspStatus;
+
+    /* First, determine if the CDS registry stored in the CDS is smaller or equal */
+    /* in size to the CDS registry we are currently configured for                */
+    /* Copy the number of registry entries to the CDS */
+    Status = CFE_ES_CDS_CacheFetch(&CDS->Cache, CDS_REG_SIZE_OFFSET, sizeof(CDS->Cache.Data.RegistrySize));
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: PSP Error reading Registry size (%lx)\n", __func__,
+                             (unsigned long)CDS->Cache.AccessStatus);
+        return CFE_ES_CDS_INVALID;
+    }
+
+    if (CDS->Cache.Data.RegistrySize != CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES)
+    {
+        /* Registry in CDS is incompatible size to recover */
+        CFE_ES_WriteToSysLog("%s: Registry in CDS incorrect size (%lu)\n", __func__,
+                             (unsigned long)CDS->Cache.Data.RegistrySize);
+        return CFE_ES_CDS_INVALID;
+    }
+
+    PspStatus = CFE_PSP_ReadFromCDS(&CDS->Registry, CDS_REG_OFFSET, sizeof(CDS->Registry));
+
+    if (PspStatus == CFE_PSP_SUCCESS)
+    {
+        /* Scan the memory pool and identify the created but currently unused memory blocks */
+        Status = CFE_ES_RebuildCDSPool(CDS->DataSize, CDS_POOL_OFFSET);
+    }
+    else
+    {
+        /* Registry in CDS is unreadable */
+        CFE_ES_WriteToSysLog("%s: Registry in CDS is unreadable, PSP error %lx\n", __func__, (unsigned long)PspStatus);
+        Status = CFE_ES_CDS_INVALID;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_DeleteCDS(const char *CDSName, bool CalledByTblServices)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+    CFE_ES_CDS_RegRec_t *  RegRecPtr;
+    char                   OwnerName[OS_MAX_API_NAME];
+    CFE_ES_AppId_t         AppId;
+    uint32                 i;
+    char                   LogMessage[CFE_ES_MAX_SYSLOG_MSG_SIZE];
+    size_t                 OldBlockSize;
+
+    LogMessage[0] = 0;
+
+    /* Lock Registry for update.  This prevents two applications from */
+    /* trying to change the CDS registry at the same time  */
+    CFE_ES_LockCDS();
+
+    /* Find CDS name in registry */
+    RegRecPtr = CFE_ES_LocateCDSBlockRecordByName(CDSName);
+
+    /* Check to see if CDS is already in the registry */
+    if (RegRecPtr != NULL)
+    {
+        /* Critical tables are not allowed to be deleted via an ES Command. */
+        /* They must be deleted by a Table Services Command */
+        if (RegRecPtr->Table != CalledByTblServices)
+        {
+            Status = CFE_ES_CDS_WRONG_TYPE_ERR;
+        }
+        else
+        {
+            /* Check to see if the owning application is still active */
+            /* First, extract the owning application name */
+            i = 0;
+            while ((i < (OS_MAX_API_NAME - 1) && (RegRecPtr->Name[i] != '.')))
+            {
+                OwnerName[i] = RegRecPtr->Name[i];
+                i++;
+            }
+
+            /* Null terminate the application name */
+            OwnerName[i] = '\0';
+
+            /* Check to see if the Application Name is in the Registered Apps list */
+            Status = CFE_ES_GetAppIDByName(&AppId, OwnerName);
+
+            /* If we can't find the name, then things are good */
+            if (Status != CFE_SUCCESS)
+            {
+                /* Free the registry entry and the CDS memory block associated with it */
+                Status = CFE_ES_GenPoolPutBlock(&CDS->Pool, &OldBlockSize, RegRecPtr->BlockOffset);
+
+                /* Report any errors incurred while freeing the CDS Memory Block */
+                if (Status != CFE_SUCCESS)
+                {
+                    snprintf(LogMessage, sizeof(LogMessage),
+                             "Failed to free CDS Mem Block (Handle=0x%08lX)(Stat=0x%08X)\n",
+                             (unsigned long)RegRecPtr->BlockOffset, (unsigned int)Status);
+                }
+                else
+                {
+                    /* Remove entry from the CDS Registry */
+                    CFE_ES_CDSBlockRecordSetFree(RegRecPtr);
+
+                    Status = CFE_ES_UpdateCDSRegistry();
+
+                    if (Status != CFE_SUCCESS)
+                    {
+                        snprintf(LogMessage, sizeof(LogMessage), "Failed to update CDS Registry (Stat=0x%08X)\n",
+                                 (unsigned int)Status);
+                    }
+                }
+            }
+            else
+            {
+                Status = CFE_ES_CDS_OWNER_ACTIVE_ERR;
+            }
+        }
+    }
+    else /* Error - CDS not in registry */
+    {
+        Status = CFE_ES_ERR_NAME_NOT_FOUND;
+    }
+
+    /* Unlock Registry for future updates */
+    CFE_ES_UnlockCDS();
+
+    /* Output the message to syslog once the CDS registry resource is unlocked */
+    if (LogMessage[0] != 0)
+    {
+        CFE_ES_WriteToSysLog("%s: %s", __func__, LogMessage);
+    }
+
+    return Status;
+}
+```
+
+### `cfe_es_cds.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_cds.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  This file contains the Internal interface for the cFE Critical Data Store functions.
+ *  These functions and data structures manage the Critical Data Store in the cFE.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_ES_CDS_H
+#define CFE_ES_CDS_H
+
+/*
+** Include Files
+*/
+#include "common_types.h"
+#include "cfe_es_generic_pool.h"
+
+/*
+** Macro Definitions
+*/
+
+/** \name Registry Mutex Definitions */
+/**  \{ */
+#define CFE_ES_CDS_MUT_REG_NAME  "CDS_MUTEX" /**< \brief Name of Mutex controlling CDS Access */
+#define CFE_ES_CDS_MUT_REG_VALUE 0           /**< \brief Initial Value of CDS Access Mutex */
+/** \} */
+
+/** \name Registry Signature Definitions */
+/**  \{ */
+#define CFE_ES_CDS_SIGNATURE_LEN   8          /**< \brief Length of CDS signature field. */
+#define CFE_ES_CDS_SIGNATURE_BEGIN "_CDSBeg_" /**< \brief Fixed signature at beginning of CDS */
+#define CFE_ES_CDS_SIGNATURE_END   "_CDSEnd_" /**< \brief Fixed signature at end of CDS */
+/** \} */
+
+/*
+ * Space in CDS should be aligned to a multiple of uint32
+ * These helper macros round up to a whole number of words
+ */
+#define CDS_SIZE_TO_U32WORDS(x)       (((x) + 3) / sizeof(uint32))
+#define CDS_RESERVE_SPACE(name, size) uint32 name[CDS_SIZE_TO_U32WORDS(size)]
+
+/* Define offset addresses for CDS data segments */
+#define CDS_SIG_BEGIN_OFFSET offsetof(CFE_ES_CDS_PersistentHeader_t, SignatureBegin)
+#define CDS_REG_SIZE_OFFSET  offsetof(CFE_ES_CDS_PersistentHeader_t, RegistrySize)
+#define CDS_REG_OFFSET       offsetof(CFE_ES_CDS_PersistentHeader_t, RegistryContent)
+#define CDS_POOL_OFFSET      sizeof(CFE_ES_CDS_PersistentHeader_t)
+
+/*
+ * Absolute Minimum CDS size conceivably supportable by the implementation.
+ * This is the space required for the basic signatures and registry information.
+ * It is not possible to create a CDS with a storage area smaller than this.
+ */
+#define CDS_RESERVED_MIN_SIZE sizeof(CFE_ES_CDS_PersistentHeader_t) + sizeof(CFE_ES_CDS_PersistentTrailer_t)
+
+/*
+ * Absolute Maximum Block size conceivably supportable by the implementation.
+ * User-defined platform limits (in cfe_platform_cfg.h) may be lower,
+ * but this is a hard limit to avoid overflow of a 32 bit integer.
+ *
+ * This ensures the size is safe for a PSP that uses 32 bit CDS offsets.
+ * (It is not anticipated that a CDS would need to exceed this size)
+ */
+#define CDS_ABS_MAX_BLOCK_SIZE ((size_t)(1 << 30) - sizeof(CFE_ES_CDS_BlockHeader_t))
+
+/*
+** Type Definitions
+*/
+
+/**
+ * The structure cached in RAM for each block within the CDS non-volatile memory
+ * This has the basic runtime info without having to go to CDS.
+ */
+typedef struct
+{
+    /*
+     * Note that the block size and offset stored here are for the
+     * total block size.  The CDS code adds is own extra metadata
+     * which has a CRC, and therefore the actual user data size is
+     * less than this.
+     */
+    CFE_ES_CDSHandle_t BlockID;     /**< Abstract ID associated with this CDS block */
+    size_t             BlockOffset; /**< Start offset of the block in CDS memory */
+    size_t             BlockSize;   /**< Size, in bytes, of the CDS memory block */
+    char               Name[CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN];
+    bool               Table; /**< \brief Flag that indicates whether CDS contains a Critical Table */
+} CFE_ES_CDS_RegRec_t;
+
+typedef struct CFE_ES_CDSBlockHeader
+{
+    uint32 Crc; /**< CRC of content */
+} CFE_ES_CDS_BlockHeader_t;
+
+/*
+ * A generic buffer to hold the various objects that need
+ * to be cached in RAM from the CDS non-volatile storage.
+ */
+typedef union CFE_ES_CDS_AccessCacheData
+{
+    char                     Sig[CFE_ES_CDS_SIGNATURE_LEN]; /**< A signature field (beginning or end) */
+    uint32                   RegistrySize;                  /**< Registry Size Field */
+    uint32                   Zero[4];                       /**< Used when clearing CDS content */
+    CFE_ES_GenPoolBD_t       Desc;                          /**< A generic block descriptor */
+    CFE_ES_CDS_BlockHeader_t BlockHeader;                   /**< A user block header */
+    CFE_ES_CDS_RegRec_t      RegEntry;                      /**< A registry entry */
+} CFE_ES_CDS_AccessCacheData_t;
+
+typedef struct CFE_ES_CDS_AccessCache
+{
+    CFE_ES_CDS_AccessCacheData_t Data;         /**< Cached data (varies in size) */
+    size_t                       Offset;       /**< The offset where Data is cached from */
+    size_t                       Size;         /**< The size of cached Data */
+    int32                        AccessStatus; /**< The PSP status of the last read/write from CDS memory */
+} CFE_ES_CDS_AccessCache_t;
+
+/**
+ * Instance data associated with a CDS
+ *
+ * Currently there is just one global CDS instance (i.e. a singleton)
+ * stored in the CFE_ES_Global structure.
+ */
+typedef struct
+{
+    /*
+     * The generic pool structure
+     * This must be the first entry in this structure.
+     */
+    CFE_ES_GenPoolRecord_t Pool;
+
+    /*
+     * Cache of last accessed data block
+     * Because CDS memory is not memory mapped, this serves
+     * as temporary holding location for data being actively accessed.
+     */
+    CFE_ES_CDS_AccessCache_t Cache;
+
+    osal_id_t           GenMutex;       /**< \brief Mutex that controls access to CDS and registry */
+    size_t              TotalSize;      /**< \brief Total size of the CDS as reported by BSP */
+    size_t              DataSize;       /**< \brief Size of actual user data pool */
+    CFE_ResourceId_t    LastCDSBlockId; /**< \brief Last issued CDS block ID */
+    CFE_ES_CDS_RegRec_t Registry[CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES]; /**< \brief CDS Registry (Local Copy) */
+} CFE_ES_CDS_Instance_t;
+
+/*
+ * structs representing the intended layout of data
+ * in the actual CDS/PSP-provided non-volatile memory
+ *
+ * All blocks should be multiples of uint32
+ *
+ * NOTE: these aren't necessarily instantiated in RAM,
+ * just in CDS.  Mainly interested in the size of these
+ * elements, and offset of the various members within.
+ */
+typedef struct CFE_ES_CDS_PersistentHeader
+{
+    CDS_RESERVE_SPACE(SignatureBegin, CFE_ES_CDS_SIGNATURE_LEN);
+    CDS_RESERVE_SPACE(RegistrySize, sizeof(uint32));
+    CDS_RESERVE_SPACE(RegistryContent, CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES * sizeof(CFE_ES_CDS_RegRec_t));
+} CFE_ES_CDS_PersistentHeader_t;
+
+typedef struct CFE_ES_CDS_PersistentTrailer
+{
+    CDS_RESERVE_SPACE(SignatureEnd, CFE_ES_CDS_SIGNATURE_LEN);
+} CFE_ES_CDS_PersistentTrailer_t;
+
+/*****************************************************************************/
+/*
+** Function prototypes
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Fetch data from the non-volatile storage and store in RAM cache
+ *
+ * This fetches a data segment from the PSP and loads it into the
+ * local CDS cache buffer.  The content can be accessed via the
+ * "Data" member inside the cache structure.
+ *
+ * Only one thread can use CDS cache at a given time, so the CDS access
+ * control mutex must be obtained before calling this function.
+ *
+ * @param[inout] Cache  the global CDS cache buffer
+ * @param[in]    Offset the CDS offset to fetch
+ * @param[in]    Size   the CDS data size to fetch
+ * @returns #CFE_SUCCESS on success, or appropriate error code.
+ */
+int32 CFE_ES_CDS_CacheFetch(CFE_ES_CDS_AccessCache_t *Cache, size_t Offset, size_t Size);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Write data from the RAM cache back to non-volatile storage
+ *
+ * This stores a data segment from the cache into the PSP for
+ * permanent storage.  Data should be loaded into the cache
+ * prior to invoking this function, either via CFE_ES_CDS_CacheFetch()
+ * or CFE_ES_CDS_CachePreload().
+ *
+ * Only one thread can use CDS cache at a given time, so the CDS access
+ * control mutex must be obtained before calling this function.
+ *
+ * @param[inout] Cache  the global CDS cache buffer
+ * @returns #CFE_SUCCESS on success, or appropriate error code.
+ */
+int32 CFE_ES_CDS_CacheFlush(CFE_ES_CDS_AccessCache_t *Cache);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Preload the cache data from a local buffer
+ *
+ * This loads the CDS cache directly from a provided object/buffer to
+ * prepare for writing to PSP.  The data can then be committed to PSP
+ * at a later time using CFE_ES_CDS_CacheFlush().
+ *
+ * If Source is NULL, then the cache data will be initialized to zero.
+ *
+ * If Source refers to the cache buffer, then no copying will take place, because
+ * source and destination are the same.  No copy is performed, and the data will be
+ * unchanged.  In this mode only the size and offset are updated.
+ *
+ * Only one thread can use CDS cache at a given time, so the CDS access
+ * control mutex must be obtained before calling this function.
+ *
+ * @param[inout] Cache  the global CDS cache buffer
+ * @param[in]    Source the local object to load into cache
+ * @param[in]    Offset the CDS offset to fetch
+ * @param[in]    Size   the CDS data size to fetch
+ * @returns #CFE_SUCCESS on success, or appropriate error code.
+ */
+int32 CFE_ES_CDS_CachePreload(CFE_ES_CDS_AccessCache_t *Cache, const void *Source, size_t Offset, size_t Size);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the registry array index correlating with a CDS block ID
+ *
+ * Calculates the array position/index of the CDS registry entry for
+ * the given block ID.
+ *
+ * @param[in]  BlockID the ID/handle of the CDS block to retrieve
+ * @param[out] Idx     Output buffer to store the index
+ * @returns    #CFE_SUCCESS if conversion successful. @copydoc CFE_SUCCESS
+ *             #CFE_ES_ERR_RESOURCEID_NOT_VALID if block ID is outside valid range
+ */
+int32 CFE_ES_CDSHandle_ToIndex(CFE_ES_CDSHandle_t BlockID, uint32 *Idx);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get a registry record within the CDS, given a block ID/handle
+ *
+ * This only returns a pointer to the table entry where the record
+ * should reside, but does _not_ actually check/validate the entry.
+ *
+ * If the passed-in ID parameter is not within the acceptable range of ID
+ * values for CDS blocks, such that it could never be valid under
+ * any circumstances, then NULL is returned.  Otherwise, a pointer to the
+ * corresponding table entry is returned, indicating the location where
+ * that ID _should_ reside, if it is currently in use.
+ *
+ * @note This only returns where the ID should reside, not that it actually
+ * resides there.  If looking up an existing ID, then caller must additionally
+ * confirm that the returned record is a match to the expected ID before using
+ * or modifying the data within the returned record pointer.
+ *
+ * The CFE_ES_CDSBlockRecordIsMatch() function can be used to check/confirm
+ * if the returned table entry is a positive match for the given ID.
+ *
+ * @sa CFE_ES_CDSBlockRecordIsMatch()
+ *
+ * @param[in] BlockID the ID/handle of the CDS block to retrieve
+ * @returns   Pointer to registry record, or NULL if ID/handle invalid.
+ */
+CFE_ES_CDS_RegRec_t *CFE_ES_LocateCDSBlockRecordByID(CFE_ES_CDSHandle_t BlockID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Memory Pool record is in use or free/empty
+ *
+ * This routine checks if the Pool table entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CDSBlockRecPtr   pointer to Pool table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool CFE_ES_CDSBlockRecordIsUsed(const CFE_ES_CDS_RegRec_t *CDSBlockRecPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(CDSBlockRecPtr->BlockID);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from a Memory Pool table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CDSBlockRecPtr   pointer to Pool table entry
+ * @returns BlockID of entry
+ */
+static inline CFE_ES_CDSHandle_t CFE_ES_CDSBlockRecordGetID(const CFE_ES_CDS_RegRec_t *CDSBlockRecPtr)
+{
+    return CDSBlockRecPtr->BlockID;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks a Memory Pool table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given Pool ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CDSBlockRecPtr   pointer to Pool table entry
+ * @param[in]   PendingId        the Pool ID of this entry
+ */
+static inline void CFE_ES_CDSBlockRecordSetUsed(CFE_ES_CDS_RegRec_t *CDSBlockRecPtr, CFE_ResourceId_t PendingId)
+{
+    CDSBlockRecPtr->BlockID = CFE_ES_CDSHANDLE_C(PendingId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set a Memory Pool record table entry free (not used)
+ *
+ * This clears the internal field(s) within this entry, and allows the
+ * memory to be re-used in the future.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CDSBlockRecPtr   pointer to Pool table entry
+ */
+static inline void CFE_ES_CDSBlockRecordSetFree(CFE_ES_CDS_RegRec_t *CDSBlockRecPtr)
+{
+    CDSBlockRecPtr->BlockID = CFE_ES_CDS_BAD_HANDLE;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a CDS block record is a match for the given BlockID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected block ID.
+ *
+ * As this dereferences fields within the record, CDS access mutex must be
+ * locked prior to invoking this function.
+ *
+ * This function may be used in conjunction with CFE_ES_LocateCDSBlockRecordByID()
+ * to confirm that the located record is a positive match to the expected ID.
+ * As such, the record pointer is also permitted to be NULL, to alleviate the
+ * need for the caller to handle this possibility explicitly.
+ *
+ * Once a record pointer has been successfully validated using this routine,
+ * it may be safely passed to all other internal functions.
+ *
+ * @sa CFE_ES_LocateCDSBlockRecordByID
+ *
+ * @param[in]   CDSBlockRecPtr   pointer to registry table entry
+ * @param[in]   BlockID          expected block ID
+ * @returns true if the entry matches the given block ID
+ */
+static inline bool CFE_ES_CDSBlockRecordIsMatch(const CFE_ES_CDS_RegRec_t *CDSBlockRecPtr, CFE_ES_CDSHandle_t BlockID)
+{
+    return (CDSBlockRecPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(CDSBlockRecPtr->BlockID, BlockID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Gets the data size from a given registry record
+ *
+ * This computes the usable data size of the CDS registry entry
+ *
+ * As this dereferences fields within the record, CDS access mutex must be
+ * locked prior to invoking this function.
+ *
+ * @note CDS entries include an extra header in addition to the data,
+ * which contains error checking information.  Therefore the usable data
+ * size is less than the raw block size.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CDSBlockRecPtr   pointer to registry table entry
+ * @returns     Usable size of the CDS
+ */
+static inline size_t CFE_ES_CDSBlockRecordGetUserSize(const CFE_ES_CDS_RegRec_t *CDSBlockRecPtr)
+{
+    return (CDSBlockRecPtr->BlockSize - sizeof(CFE_ES_CDS_BlockHeader_t));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a CDS Block ID table slot is used
+ *
+ * Checks if a table slot is available for a potential new ID
+ * This is a helper function intended to be used with
+ * CFE_ResourceId_FindNext() for allocating new IDs
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @param[in]   CheckId       pending/candidate Block ID to check
+ * @returns true if the table slot for the ID is occupied, false if available
+ */
+bool CFE_ES_CheckCDSHandleSlotUsed(CFE_ResourceId_t CheckId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Initializes CDS data constructs
+**
+** \par Description
+**        Locates and validates any pre-existing CDS memory or initializes the
+**        memory as a fresh CDS.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \par SysLog Messages
+**
+** \return None
+**
+******************************************************************************/
+int32 CFE_ES_CDS_EarlyInit(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Determines whether a CDS currently exists
+**
+** \par Description
+**        Reads a set of bytes from the beginning and end of the CDS memory
+**        area and determines if a fixed pattern is present, thus determining
+**        whether the CDS still likely contains valid data or not.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \return #CFE_SUCCESS         \copydoc CFE_SUCCESS
+** \return #CFE_ES_CDS_INVALID  \copydoc CFE_ES_CDS_INVALID
+** \return Any of the return values from #CFE_PSP_ReadFromCDS
+**
+******************************************************************************/
+int32 CFE_ES_ValidateCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Initializes the CDS Registry
+**
+** \par Description
+**        Initializes the data structure used to keep track of CDS blocks and
+**        who they belong to.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \retval #CFE_SUCCESS         \copydoc CFE_SUCCESS
+**
+******************************************************************************/
+int32 CFE_ES_InitCDSRegistry(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Rebuilds memory pool for CDS and recovers existing registry
+**
+** \par Description
+**        Scans memory for existing CDS and initializes memory pool and registry
+**        settings accordingly
+**
+** \par Assumptions, External Events, and Notes:
+**        -# Assumes the validity of the CDS has already been determined
+**
+** \return #CFE_SUCCESS         \copydoc CFE_SUCCESS
+** \return Any of the return values from #CFE_PSP_ReadFromCDS
+**
+******************************************************************************/
+int32 CFE_ES_RebuildCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Copies the local version of the CDS Registry to the actual CDS
+**
+** \par Description
+**        Copies the local working copy of the CDS Registry to the CDS.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \return #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+** \return Any of the return values from #CFE_PSP_WriteToCDS
+**
+******************************************************************************/
+int32 CFE_ES_UpdateCDSRegistry(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Creates a Full CDS name from application name and CDS name
+**
+** \par Description
+**        Takes a given CDS Name and combines it with the calling
+**        Application's name to make a processor specific name of the
+**        form: "AppName.CDSName"
+**
+** \par Assumptions, External Events, and Notes:
+**        Note: AppName portion will be truncated to OS_MAX_API_NAME.
+**
+** \param[in, out]  FullCDSName pointer to character buffer of #CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN size
+**                  that will be filled with the processor specific CDS Name. *FullCDSName is the processor
+**                  specific CDS Name of the form "AppName.CDSName".
+**
+** \param[in]  CDSName pointer to character string containing the Application's local name for
+**                     the CDS.
+**
+** \param[in]  ThisAppId the Application ID of the Application making the call.
+**
+******************************************************************************/
+void CFE_ES_FormCDSName(char *FullCDSName, const char *CDSName, CFE_ES_AppId_t ThisAppId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Returns the Registry Record for the specified CDS Name
+**
+** \par Description
+**        Locates given CDS Name in the CDS Registry and
+**        returns the appropriate Registry Index.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \param[in]  CDSName - Pointer to character string containing complete
+**                       CDS Name (of the format "AppName.CDSName").
+**
+** \retval NULL if not found, Non null entry pointer on success
+**
+******************************************************************************/
+CFE_ES_CDS_RegRec_t *CFE_ES_LocateCDSBlockRecordByName(const char *CDSName);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Locks access to the CDS
+**
+** \par Description
+**        Locks the CDS to prevent multiple tasks/threads
+**        from modifying it at once.
+**
+**        This lock covers both the registry and the data access.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+******************************************************************************/
+int32 CFE_ES_LockCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Unlocks access to the CDS
+**
+** \par Description
+**        Unlocks CDS to allow other tasks/threads to
+**        modify the CDS contents.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \retval #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+**
+******************************************************************************/
+int32 CFE_ES_UnlockCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Rebuilds memory pool for CDS and recovers existing registry
+**
+** \par Description
+**        Scans memory for existing CDS and initializes memory pool and registry
+**        settings accordingly
+**
+** \par Assumptions, External Events, and Notes:
+**        -# Assumes the validity of the CDS has already been determined
+**
+** \return #CFE_SUCCESS         \copydoc CFE_SUCCESS
+** \return Any of the return values from #CFE_PSP_ReadFromCDS
+**
+******************************************************************************/
+int32 CFE_ES_RebuildCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Initializes the CDS Registry
+**
+** \par Description
+**        Initializes the data structure used to keep track of CDS blocks and
+**        who they belong to.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \retval #CFE_SUCCESS         \copydoc CFE_SUCCESS
+**
+******************************************************************************/
+int32 CFE_ES_InitCDSRegistry(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Determines whether a CDS currently exists
+**
+** \par Description
+**        Reads a set of bytes from the beginning and end of the CDS memory
+**        area and determines if a fixed pattern is present, thus determining
+**        whether the CDS still likely contains valid data or not.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \return #CFE_SUCCESS         \copydoc CFE_SUCCESS
+** \return #CFE_ES_CDS_INVALID  \copydoc CFE_ES_CDS_INVALID
+** \return Any of the return values from #CFE_PSP_ReadFromCDS
+**
+******************************************************************************/
+int32 CFE_ES_ValidateCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Clears the contents of the CDS
+**
+** \par Description
+**        Writes zeros to the entire CDS storage area
+**
+**        This prevents any stale data that may exist in the
+**        memory area from being potentially interpreted as valid
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \return #CFE_SUCCESS          \copydoc CFE_SUCCESS
+** \return Any of the return values from #CFE_ES_CDS_CacheFlush
+**
+******************************************************************************/
+int32 CFE_ES_ClearCDS(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Initializes the signatures of the CDS area
+**
+** \par Description
+**        Stores a fixed pattern at the beginning and end of the CDS memory
+**        to tag it for future verification following a reset.
+**
+** \par Assumptions, External Events, and Notes:
+**          None
+**
+** \return #CFE_SUCCESS          \copydoc CFE_SUCCESS
+** \return Any of the return values from #CFE_ES_CDS_CacheFlush
+**
+******************************************************************************/
+int32 CFE_ES_InitCDSSignatures(void);
+
+#endif /* CFE_ES_CDS_H */
+```
+
+### `cfe_es_cds_mempool.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_cds_mempool.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**  cfe_es_cds_mempool.c
+**
+**  Purpose:
+**  Set of services for management of the CDS discrete sized memory pools.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+*/
+
+/*
+** Includes
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "cfe_es_module_all.h"
+
+/*****************************************************************************/
+/*
+** Type Definitions
+*/
+
+/*****************************************************************************/
+/*
+** File Global Data
+*/
+
+const size_t CFE_ES_CDSMemPoolDefSize[CFE_ES_CDS_NUM_BLOCK_SIZES] = {
+    CFE_PLATFORM_ES_CDS_MAX_BLOCK_SIZE,    CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_16, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_15,
+    CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_14, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_13, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_12,
+    CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_11, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_10, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_09,
+    CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_08, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_07, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_06,
+    CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_05, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_04, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_03,
+    CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_02, CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_01};
+
+/*****************************************************************************/
+/*
+** Functions
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Obtains a block descriptor from CDS storage.
+ * This is a bridge between the generic pool implementation and the CDS cache.
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDS_PoolRetrieve(CFE_ES_GenPoolRecord_t *GenPoolRecPtr, size_t Offset, CFE_ES_GenPoolBD_t **BdPtr)
+{
+    CFE_ES_CDS_Instance_t *CDS = (CFE_ES_CDS_Instance_t *)GenPoolRecPtr;
+
+    *BdPtr = &CDS->Cache.Data.Desc;
+
+    return CFE_ES_CDS_CacheFetch(&CDS->Cache, Offset, sizeof(CFE_ES_GenPoolBD_t));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Writes a block descriptor to CDS storage.
+ * This is a bridge between the generic pool implementation and the CDS cache.
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDS_PoolCommit(CFE_ES_GenPoolRecord_t *GenPoolRecPtr, size_t Offset, const CFE_ES_GenPoolBD_t *BdPtr)
+{
+    CFE_ES_CDS_Instance_t *CDS = (CFE_ES_CDS_Instance_t *)GenPoolRecPtr;
+
+    CFE_ES_CDS_CachePreload(&CDS->Cache, BdPtr, Offset, sizeof(CFE_ES_GenPoolBD_t));
+
+    return CFE_ES_CDS_CacheFlush(&CDS->Cache);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CreateCDSPool(size_t CDSPoolSize, size_t StartOffset)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+    size_t                 SizeCheck;
+    size_t                 ActualSize;
+
+    SizeCheck  = CFE_ES_GenPoolCalcMinSize(CFE_ES_CDS_NUM_BLOCK_SIZES, CFE_ES_CDSMemPoolDefSize, 1);
+    ActualSize = CDSPoolSize;
+
+    if (ActualSize < SizeCheck)
+    {
+        /* Must be able make Pool verification, block descriptor and at least one of the smallest blocks  */
+        CFE_ES_SysLogWrite_Unsync("%s: Pool size(%lu) too small for one CDS Block, need >=%lu\n", __func__,
+                                  (unsigned long)ActualSize, (unsigned long)SizeCheck);
+        return CFE_ES_CDS_INVALID_SIZE;
+    }
+
+    Status = CFE_ES_GenPoolInitialize(&CDS->Pool, StartOffset, /* starting offset */
+                                      ActualSize,              /* total size */
+                                      4,                       /* alignment */
+                                      CFE_ES_CDS_NUM_BLOCK_SIZES, CFE_ES_CDSMemPoolDefSize, CFE_ES_CDS_PoolRetrieve,
+                                      CFE_ES_CDS_PoolCommit);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_RebuildCDSPool(size_t CDSPoolSize, size_t StartOffset)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+
+    /*
+     * Start by creating the pool in a clean state, as it would be in a non-rebuild.
+     */
+    Status = CFE_ES_CreateCDSPool(CDSPoolSize, StartOffset);
+    if (Status != CFE_SUCCESS)
+    {
+        return Status;
+    }
+
+    /* Now walk through the CDS memory and attempt to recover existing CDS blocks */
+    Status = CFE_ES_GenPoolRebuild(&CDS->Pool);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Err rebuilding CDS (Stat=0x%08x)\n", __func__, (unsigned int)Status);
+        Status = CFE_ES_CDS_ACCESS_ERROR;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDSBlockWrite(CFE_ES_CDSHandle_t Handle, const void *DataToWrite)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    char                   LogMessage[CFE_ES_MAX_SYSLOG_MSG_SIZE];
+    int32                  Status;
+    int32                  PspStatus;
+    size_t                 BlockSize;
+    size_t                 UserDataSize;
+    size_t                 UserDataOffset;
+    CFE_ES_CDS_RegRec_t *  CDSRegRecPtr;
+
+    /* Ensure the log message is an empty string in case it is never written to */
+    LogMessage[0] = 0;
+
+    CDSRegRecPtr = CFE_ES_LocateCDSBlockRecordByID(Handle);
+
+    /*
+     * A CDS block ID must be accessed by only one thread at a time.
+     * Checking the validity of the block requires access to the registry.
+     */
+    CFE_ES_LockCDS();
+
+    if (CFE_ES_CDSBlockRecordIsMatch(CDSRegRecPtr, Handle))
+    {
+        /*
+         * Getting the buffer size via this function retrieves it from the
+         * internal descriptor, and validates the descriptor as part of the operation.
+         * This should always agree with the size in the registry for this block.
+         */
+        Status = CFE_ES_GenPoolGetBlockSize(&CDS->Pool, &BlockSize, CDSRegRecPtr->BlockOffset);
+        if (Status != CFE_SUCCESS)
+        {
+            snprintf(LogMessage, sizeof(LogMessage), "Invalid Handle or Block Descriptor.\n");
+        }
+        else if (BlockSize <= sizeof(CFE_ES_CDS_BlockHeader_t) || BlockSize != CDSRegRecPtr->BlockSize)
+        {
+            snprintf(LogMessage, sizeof(LogMessage), "Block size %lu invalid, expected %lu\n", (unsigned long)BlockSize,
+                     (unsigned long)CDSRegRecPtr->BlockSize);
+            Status = CFE_ES_CDS_INVALID_SIZE;
+        }
+        else
+        {
+            UserDataSize = CDSRegRecPtr->BlockSize;
+            UserDataSize -= sizeof(CFE_ES_CDS_BlockHeader_t);
+            UserDataOffset = CDSRegRecPtr->BlockOffset;
+            UserDataOffset += sizeof(CFE_ES_CDS_BlockHeader_t);
+
+            CDS->Cache.Data.BlockHeader.Crc =
+                CFE_ES_CalculateCRC(DataToWrite, UserDataSize, 0, CFE_MISSION_ES_DEFAULT_CRC);
+            CDS->Cache.Offset = CDSRegRecPtr->BlockOffset;
+            CDS->Cache.Size   = sizeof(CFE_ES_CDS_BlockHeader_t);
+
+            /* Write the new block descriptor for the data coming from the Application */
+            Status = CFE_ES_CDS_CacheFlush(&CDS->Cache);
+            if (Status != CFE_SUCCESS)
+            {
+                snprintf(LogMessage, sizeof(LogMessage),
+                         "Err writing header data to CDS (Stat=0x%08x) @Offset=0x%08lx\n",
+                         (unsigned int)CDS->Cache.AccessStatus, (unsigned long)CDSRegRecPtr->BlockOffset);
+            }
+            else
+            {
+                PspStatus = CFE_PSP_WriteToCDS(DataToWrite, UserDataOffset, UserDataSize);
+                if (PspStatus != CFE_PSP_SUCCESS)
+                {
+                    snprintf(LogMessage, sizeof(LogMessage),
+                             "Err writing user data to CDS (Stat=0x%08x) @Offset=0x%08lx\n", (unsigned int)PspStatus,
+                             (unsigned long)UserDataOffset);
+
+                    Status = CFE_ES_CDS_ACCESS_ERROR;
+                }
+            }
+        }
+    }
+    else
+    {
+        Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockCDS();
+
+    /* Do the actual syslog if something went wrong */
+    if (LogMessage[0] != 0)
+    {
+        CFE_ES_WriteToSysLog("%s: %s", __func__, LogMessage);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_CDSBlockRead(void *DataRead, CFE_ES_CDSHandle_t Handle)
+{
+    CFE_ES_CDS_Instance_t *CDS = &CFE_ES_Global.CDSVars;
+    int32                  Status;
+    int32                  PspStatus;
+    uint32                 CrcOfCDSData;
+    size_t                 BlockSize;
+    size_t                 UserDataSize;
+    size_t                 UserDataOffset;
+    CFE_ES_CDS_RegRec_t *  CDSRegRecPtr;
+
+    CDSRegRecPtr = CFE_ES_LocateCDSBlockRecordByID(Handle);
+
+    /*
+     * A CDS block ID must be accessed by only one thread at a time.
+     * Checking the validity of the block requires access to the registry.
+     */
+    CFE_ES_LockCDS();
+
+    if (CFE_ES_CDSBlockRecordIsMatch(CDSRegRecPtr, Handle))
+    {
+        /*
+         * Getting the buffer size via this function retrieves it from the
+         * internal descriptor, and validates the descriptor as part of the operation.
+         * This should always agree with the size in the registry for this block.
+         */
+        Status = CFE_ES_GenPoolGetBlockSize(&CDS->Pool, &BlockSize, CDSRegRecPtr->BlockOffset);
+        if (Status == CFE_SUCCESS)
+        {
+            if (BlockSize <= sizeof(CFE_ES_CDS_BlockHeader_t) || BlockSize != CDSRegRecPtr->BlockSize)
+            {
+                Status = CFE_ES_CDS_INVALID_SIZE;
+            }
+            else
+            {
+                UserDataSize = CDSRegRecPtr->BlockSize;
+                UserDataSize -= sizeof(CFE_ES_CDS_BlockHeader_t);
+                UserDataOffset = CDSRegRecPtr->BlockOffset;
+                UserDataOffset += sizeof(CFE_ES_CDS_BlockHeader_t);
+
+                /* Read the header */
+                Status =
+                    CFE_ES_CDS_CacheFetch(&CDS->Cache, CDSRegRecPtr->BlockOffset, sizeof(CFE_ES_CDS_BlockHeader_t));
+
+                if (Status == CFE_SUCCESS)
+                {
+                    /* Read the data block */
+                    PspStatus = CFE_PSP_ReadFromCDS(DataRead, UserDataOffset, UserDataSize);
+                    if (PspStatus == CFE_PSP_SUCCESS)
+                    {
+                        /* Compute the CRC for the data read from the CDS and determine if the data is still valid */
+                        CrcOfCDSData = CFE_ES_CalculateCRC(DataRead, UserDataSize, 0, CFE_MISSION_ES_DEFAULT_CRC);
+
+                        /* If the CRCs do not match, report an error */
+                        if (CrcOfCDSData != CDS->Cache.Data.BlockHeader.Crc)
+                        {
+                            Status = CFE_ES_CDS_BLOCK_CRC_ERR;
+                        }
+                        else
+                        {
+                            Status = CFE_SUCCESS;
+                        }
+                    }
+                    else
+                    {
+                        Status = CFE_ES_CDS_ACCESS_ERROR;
+                    }
+                }
+            }
+        }
+    }
+    else
+    {
+        Status = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockCDS();
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+size_t CFE_ES_CDSReqdMinSize(uint32 MaxNumBlocksToSupport)
+{
+    size_t ReqSize;
+
+    ReqSize = CFE_ES_GenPoolCalcMinSize(CFE_ES_CDS_NUM_BLOCK_SIZES, CFE_ES_CDSMemPoolDefSize, MaxNumBlocksToSupport);
+
+    return ReqSize;
+}
+```
+
+### `cfe_es_cds_mempool.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_cds_mempool.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  This file contains the Internal interface for the cFE Critical Data Store
+ *  memory pool functions.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_ES_CDS_MEMPOOL_H
+#define CFE_ES_CDS_MEMPOOL_H
+
+/*
+** Include Files
+*/
+#include "cfe_es_cds.h"
+
+/*
+** Macro Definitions
+*/
+#define CFE_ES_CDS_NUM_BLOCK_SIZES 17
+
+/*****************************************************************************/
+/*
+** Function prototypes
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+** \brief Creates a CDS memory pool from scratch
+**
+** \par Description
+**        Creates a memory pool of the specified size starting at the specified
+**        offset into the CDS memory.
+**
+** \par Assumptions, External Events, and Notes:
+**          This function must only be called during "Early Init" phase.
+**
+** \return #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+**
+******************************************************************************/
+int32 CFE_ES_CreateCDSPool(size_t CDSPoolSize, size_t StartOffset);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Rebuilds an existing CDS memory pool from contents
+ *
+ * \par Description
+ *        Reconstructs pool data structures from an existing CDS
+ *
+ * \par Assumptions, External Events, and Notes:
+ *          This function is only ever called during "Early Init" phase.
+ *
+ * \return #CFE_SUCCESS                     \copydoc CFE_SUCCESS
+ */
+int32 CFE_ES_RebuildCDSPool(size_t CDSPoolSize, size_t StartOffset);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Writes a block of data to CDS
+ */
+int32 CFE_ES_CDSBlockWrite(CFE_ES_CDSHandle_t Handle, const void *DataToWrite);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Reads a block of data from CDS
+ */
+int32 CFE_ES_CDSBlockRead(void *DataRead, CFE_ES_CDSHandle_t Handle);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Computes the minimum required size for a CDS pool
+ */
+size_t CFE_ES_CDSReqdMinSize(uint32 MaxNumBlocksToSupport);
+
+#endif /* CFE_ES_CDS_MEMPOOL_H */
+```
+
+### `cfe_es_dispatch.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_dispatch.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ *  @file
+ *
+ * Msg pipe dispatcher routines for CFE ES
+ */
+
+/*
+ * Includes
+ */
+#include "cfe_es_module_all.h"
+
+#include "cfe_version.h"
+#include "target_config.h"
+#include "cfe_es_verify.h"
+
+#include "cfe_config.h"
+
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
+{
+    bool              result       = true;
+    CFE_MSG_Size_t    ActualLength = 0;
+    CFE_MSG_FcnCode_t FcnCode      = 0;
+    CFE_SB_MsgId_t    MsgId        = CFE_SB_INVALID_MSG_ID;
+
+    CFE_MSG_GetSize(MsgPtr, &ActualLength);
+
+    /*
+     ** Verify the command packet length
+     */
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(MsgPtr, &MsgId);
+        CFE_MSG_GetFcnCode(MsgPtr, &FcnCode);
+
+        CFE_EVS_SendEvent(CFE_ES_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X,  CC = %u, Len = %u, Expected = %u",
+                          (unsigned int)CFE_SB_MsgIdToValue(MsgId), (unsigned int)FcnCode, (unsigned int)ActualLength,
+                          (unsigned int)ExpectedLength);
+        result = false;
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_TaskPipe(const CFE_SB_Buffer_t *SBBufPtr)
+{
+    CFE_SB_MsgId_t    MessageID   = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    CFE_MSG_GetMsgId(&SBBufPtr->Msg, &MessageID);
+    switch (CFE_SB_MsgIdToValue(MessageID))
+    {
+        /*
+        ** Housekeeping telemetry request
+        */
+        case CFE_ES_SEND_HK_MID:
+            CFE_ES_HousekeepingCmd((const CFE_ES_SendHkCmd_t *)SBBufPtr);
+            break;
+
+        /*
+        ** ES task ground commands
+        */
+        case CFE_ES_CMD_MID:
+
+            CFE_MSG_GetFcnCode(&SBBufPtr->Msg, &CommandCode);
+            switch (CommandCode)
+            {
+                case CFE_ES_NOOP_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_NoopCmd_t)))
+                    {
+                        CFE_ES_NoopCmd((const CFE_ES_NoopCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_RESET_COUNTERS_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_ResetCountersCmd_t)))
+                    {
+                        CFE_ES_ResetCountersCmd((const CFE_ES_ResetCountersCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_RESTART_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_RestartCmd_t)))
+                    {
+                        CFE_ES_RestartCmd((const CFE_ES_RestartCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_START_APP_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_StartAppCmd_t)))
+                    {
+                        CFE_ES_StartAppCmd((const CFE_ES_StartAppCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_STOP_APP_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_StopAppCmd_t)))
+                    {
+                        CFE_ES_StopAppCmd((const CFE_ES_StopAppCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_RESTART_APP_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_RestartAppCmd_t)))
+                    {
+                        CFE_ES_RestartAppCmd((const CFE_ES_RestartAppCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_RELOAD_APP_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_ReloadAppCmd_t)))
+                    {
+                        CFE_ES_ReloadAppCmd((const CFE_ES_ReloadAppCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_QUERY_ONE_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_QueryOneCmd_t)))
+                    {
+                        CFE_ES_QueryOneCmd((const CFE_ES_QueryOneCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_QUERY_ALL_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_QueryAllCmd_t)))
+                    {
+                        CFE_ES_QueryAllCmd((const CFE_ES_QueryAllCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_QUERY_ALL_TASKS_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_QueryAllTasksCmd_t)))
+                    {
+                        CFE_ES_QueryAllTasksCmd((const CFE_ES_QueryAllTasksCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_CLEAR_SYSLOG_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_ClearSysLogCmd_t)))
+                    {
+                        CFE_ES_ClearSysLogCmd((const CFE_ES_ClearSysLogCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_WRITE_SYSLOG_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_WriteSysLogCmd_t)))
+                    {
+                        CFE_ES_WriteSysLogCmd((const CFE_ES_WriteSysLogCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_OVER_WRITE_SYSLOG_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_OverWriteSysLogCmd_t)))
+                    {
+                        CFE_ES_OverWriteSysLogCmd((const CFE_ES_OverWriteSysLogCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_CLEAR_ER_LOG_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_ClearERLogCmd_t)))
+                    {
+                        CFE_ES_ClearERLogCmd((const CFE_ES_ClearERLogCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_WRITE_ER_LOG_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_WriteERLogCmd_t)))
+                    {
+                        CFE_ES_WriteERLogCmd((const CFE_ES_WriteERLogCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_START_PERF_DATA_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_StartPerfDataCmd_t)))
+                    {
+                        CFE_ES_StartPerfDataCmd((const CFE_ES_StartPerfDataCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_STOP_PERF_DATA_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_StopPerfDataCmd_t)))
+                    {
+                        CFE_ES_StopPerfDataCmd((const CFE_ES_StopPerfDataCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_SET_PERF_FILTER_MASK_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_SetPerfFilterMaskCmd_t)))
+                    {
+                        CFE_ES_SetPerfFilterMaskCmd((const CFE_ES_SetPerfFilterMaskCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_SET_PERF_TRIGGER_MASK_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_SetPerfTriggerMaskCmd_t)))
+                    {
+                        CFE_ES_SetPerfTriggerMaskCmd((const CFE_ES_SetPerfTriggerMaskCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_RESET_PR_COUNT_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_ResetPRCountCmd_t)))
+                    {
+                        CFE_ES_ResetPRCountCmd((const CFE_ES_ResetPRCountCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_SET_MAX_PR_COUNT_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_SetMaxPRCountCmd_t)))
+                    {
+                        CFE_ES_SetMaxPRCountCmd((const CFE_ES_SetMaxPRCountCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_DELETE_CDS_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_DeleteCDSCmd_t)))
+                    {
+                        CFE_ES_DeleteCDSCmd((const CFE_ES_DeleteCDSCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_SEND_MEM_POOL_STATS_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_SendMemPoolStatsCmd_t)))
+                    {
+                        CFE_ES_SendMemPoolStatsCmd((const CFE_ES_SendMemPoolStatsCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                case CFE_ES_DUMP_CDS_REGISTRY_CC:
+                    if (CFE_ES_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_ES_DumpCDSRegistryCmd_t)))
+                    {
+                        CFE_ES_DumpCDSRegistryCmd((const CFE_ES_DumpCDSRegistryCmd_t *)SBBufPtr);
+                    }
+                    break;
+
+                default:
+                    CFE_EVS_SendEvent(CFE_ES_CC1_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Invalid ground command code: ID = 0x%X, CC = %d",
+                                      (unsigned int)CFE_SB_MsgIdToValue(MessageID), (int)CommandCode);
+                    CFE_ES_Global.TaskData.CommandErrorCounter++;
+                    break;
+            }
+            break;
+
+        default:
+
+            CFE_EVS_SendEvent(CFE_ES_MID_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid command pipe message ID: 0x%X",
+                              (unsigned int)CFE_SB_MsgIdToValue(MessageID));
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            break;
+    }
+}
+```
+
+### `cfe_es_dispatch.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_dispatch.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  cFE Executive Services (ES) dispatch header file
+ *
+ */
+
+#ifndef CFE_ES_DISPATCH_H
+#define CFE_ES_DISPATCH_H
+
+/*
+** Includes
+*/
+#include "common_types.h"
+
+#include "cfe_es_api_typedefs.h"
+#include "cfe_sb_api_typedefs.h"
+#include "cfe_msg_api_typedefs.h"
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Reads and processes messages from the executive services command pipe
+ */
+void CFE_ES_TaskPipe(const CFE_SB_Buffer_t *SBBufPtr);
+
+#endif /* CFE_ES_DISPATCH_H */
+```
+
+### `cfe_es_erlog.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_erlog.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**    cfe_es_erlog.c
+**
+**  Purpose:
+**    This file implements the cFE Executive Services Exception and Reset Log functions.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+**  Modification History:
+**
+*/
+
+/*
+** Required header files.
+*/
+#include "cfe_es_module_all.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_WriteToERLogWithContext(CFE_ES_LogEntryType_Enum_t EntryType, uint32 ResetType, uint32 ResetSubtype,
+                                     const char *Description, CFE_ES_AppId_t AppId, uint32 PspContextId)
+{
+    uint32                   LogIdx;
+    CFE_ES_ERLog_MetaData_t *EntryPtr;
+    CFE_TIME_SysTime_t       PendingTime;
+
+    /*
+     * Snapshot the time before locking (different subsystem)
+     */
+    PendingTime = CFE_TIME_GetTime();
+
+    /*
+     * Ensure that description string is not NULL.
+     */
+    if (Description == NULL)
+    {
+        Description = "No Description String Given.";
+    }
+
+    /*
+     * This routine needs to lock in case it is called
+     * from concurrent threads
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /*
+    ** Try to clean up an invalid ER log index variable.
+    */
+    if (CFE_ES_Global.ResetDataPtr->ERLogIndex >= CFE_PLATFORM_ES_ER_LOG_ENTRIES)
+    {
+        CFE_ES_Global.ResetDataPtr->ERLogIndex = 0;
+    }
+    LogIdx = CFE_ES_Global.ResetDataPtr->ERLogIndex;
+
+    /*
+    ** Now that the Local Index variable is set, increment the index for the next entry.
+    */
+    CFE_ES_Global.ResetDataPtr->ERLogIndex++;
+    if (CFE_ES_Global.ResetDataPtr->ERLogIndex >= CFE_PLATFORM_ES_ER_LOG_ENTRIES)
+    {
+        CFE_ES_Global.ResetDataPtr->ERLogIndex = 0;
+    }
+
+    /*
+    ** Clear out the log entry we are about to use.
+    */
+    EntryPtr = &CFE_ES_Global.ResetDataPtr->ERLog[LogIdx];
+    memset(EntryPtr, 0, sizeof(*EntryPtr));
+
+    /*
+    ** Fill out the log fields
+    */
+    EntryPtr->BaseInfo.LogEntryType           = EntryType;
+    EntryPtr->BaseInfo.ResetType              = ResetType;
+    EntryPtr->BaseInfo.ResetSubtype           = ResetSubtype;
+    EntryPtr->BaseInfo.BootSource             = CFE_ES_Global.ResetDataPtr->ResetVars.BootSource;
+    EntryPtr->BaseInfo.ProcessorResetCount    = CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount;
+    EntryPtr->BaseInfo.MaxProcessorResetCount = CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount;
+
+    /*
+    ** Copy the ES Reset variables to the log (before they are modified by the log entry).
+    */
+    memcpy(&EntryPtr->BaseInfo.DebugVars, &CFE_ES_Global.DebugVars, sizeof(EntryPtr->BaseInfo.DebugVars));
+
+    /*
+    ** Time Stamp the log entry with the system time
+    */
+    EntryPtr->BaseInfo.TimeCode = PendingTime;
+
+    /*
+    ** Copy the Description string to the log.
+    */
+    strncpy(EntryPtr->BaseInfo.Description, Description, sizeof(EntryPtr->BaseInfo.Description) - 1);
+    EntryPtr->BaseInfo.Description[sizeof(EntryPtr->BaseInfo.Description) - 1] = '\0';
+
+    /*
+     * Store the context info (if any)
+     */
+    EntryPtr->AppID        = AppId;
+    EntryPtr->PspContextId = PspContextId;
+
+    /*
+    ** Increment the number of ER log entries made
+    */
+    CFE_ES_Global.ResetDataPtr->ERLogEntries++;
+
+    /*
+     * Shared data update is complete
+     */
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_WriteToERLog(CFE_ES_LogEntryType_Enum_t EntryType, uint32 ResetType, uint32 ResetSubtype,
+                          const char *Description)
+{
+    /* passing 0xFFFFFFFF as the appid avoids confusion with actual appid 0 */
+    return CFE_ES_WriteToERLogWithContext(EntryType, ResetType, ResetSubtype, Description, CFE_ES_APPID_UNDEFINED,
+                                          CFE_ES_ERLOG_NO_CONTEXT);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_BackgroundERLogFileDataGetter(void *Meta, uint32 RecordNum, void **Buffer, size_t *BufSize)
+{
+    CFE_ES_BackgroundLogDumpGlobal_t *BgFilePtr;
+    CFE_ES_ERLog_FileEntry_t *        FileBufferPtr;
+    CFE_ES_ERLog_MetaData_t *         EntryPtr;
+    int32                             PspStatus;
+
+    BgFilePtr     = (CFE_ES_BackgroundLogDumpGlobal_t *)Meta;
+    FileBufferPtr = &BgFilePtr->EntryBuffer;
+
+    if (RecordNum < CFE_PLATFORM_ES_ER_LOG_ENTRIES)
+    {
+        EntryPtr = &CFE_ES_Global.ResetDataPtr->ERLog[RecordNum];
+
+        /* First wipe the buffer before re-use */
+        memset(FileBufferPtr, 0, sizeof(*FileBufferPtr));
+
+        CFE_ES_LockSharedData(__func__, __LINE__);
+
+        /* The basic info comes directly from the ES log */
+        FileBufferPtr->BaseInfo = EntryPtr->BaseInfo;
+
+        /*
+         * The context info, if available, comes from the PSP.
+         * This returns the actual size of the context info, or <0 on error.
+         */
+        PspStatus = CFE_PSP_Exception_CopyContext(EntryPtr->PspContextId, &FileBufferPtr->Context,
+                                                  sizeof(FileBufferPtr->Context));
+        if (PspStatus > 0)
+        {
+            FileBufferPtr->ContextSize = PspStatus;
+        }
+        else
+        {
+            /*
+             * errors here are OK - just means there is no context available.
+             * Record a size of 0 in the log file.
+             */
+            FileBufferPtr->ContextSize = 0;
+        }
+
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+        /*
+         * Export data to caller for actual write
+         */
+        *Buffer  = FileBufferPtr;
+        *BufSize = sizeof(*FileBufferPtr);
+    }
+    else
+    {
+        *Buffer  = NULL;
+        *BufSize = 0;
+    }
+
+    /* Check for EOF (last entry)  */
+    return (RecordNum >= (CFE_PLATFORM_ES_ER_LOG_ENTRIES - 1));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_BackgroundERLogFileEventHandler(void *Meta, CFE_FS_FileWriteEvent_t Event, int32 Status, uint32 RecordNum,
+                                            size_t BlockSize, size_t Position)
+{
+    CFE_ES_BackgroundLogDumpGlobal_t *BgFilePtr;
+
+    BgFilePtr = (CFE_ES_BackgroundLogDumpGlobal_t *)Meta;
+
+    /* Note that this runs in the context of ES background task (file writer background job) */
+    switch (Event)
+    {
+        case CFE_FS_FileWriteEvent_COMPLETE:
+            CFE_EVS_SendEvent(CFE_ES_ERLOG2_EID, CFE_EVS_EventType_DEBUG, "%s written:Size=%lu",
+                              BgFilePtr->FileWrite.FileName, (unsigned long)Position);
+            break;
+
+        case CFE_FS_FileWriteEvent_HEADER_WRITE_ERROR:
+        case CFE_FS_FileWriteEvent_RECORD_WRITE_ERROR:
+            CFE_EVS_SendEvent(CFE_ES_FILEWRITE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "File write,byte cnt err,file %s,request=%u,actual=%u", BgFilePtr->FileWrite.FileName,
+                              (int)BlockSize, (int)Status);
+            break;
+
+        case CFE_FS_FileWriteEvent_CREATE_ERROR:
+            CFE_EVS_SendEvent(CFE_ES_ERLOG2_ERR_EID, CFE_EVS_EventType_ERROR, "Error creating file %s, RC = %d",
+                              BgFilePtr->FileWrite.FileName, (int)Status);
+            break;
+
+        default:
+            /* unhandled event - ignore */
+            break;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_RunExceptionScan(uint32 ElapsedTime, void *Arg)
+{
+    int32                      Status;
+    int32                      PspStatus;
+    uint32                     PspContextId;
+    char                       ReasonString[CFE_ES_ERLOG_DESCRIPTION_MAX_LENGTH];
+    CFE_ES_TaskInfo_t          EsTaskInfo;
+    osal_id_t                  ExceptionTaskID;
+    uint32                     ResetType;
+    CFE_ES_LogEntryType_Enum_t LogType;
+    CFE_ES_AppRecord_t *       AppRecPtr;
+
+    if (CFE_PSP_Exception_GetCount() == 0)
+    {
+        /* no exceptions pending, nothing to do */
+        return false;
+    }
+
+    /*
+     * Note a reset type of 0 is not defined by the PSP -
+     * the real values are all nonzero
+     */
+    ResetType = 0;
+    memset(&EsTaskInfo, 0, sizeof(EsTaskInfo));
+    PspStatus = CFE_PSP_Exception_GetSummary(&PspContextId, &ExceptionTaskID, ReasonString, sizeof(ReasonString));
+    if (PspStatus != CFE_PSP_SUCCESS)
+    {
+        /* reason string is not available - populate with something for the PspStatus*/
+        snprintf(ReasonString, sizeof(ReasonString), "Unknown - CFE_PSP_ExceptionGetSummary() error %ld",
+                 (long)PspStatus);
+        PspContextId    = 0;
+        ExceptionTaskID = OS_OBJECT_ID_UNDEFINED;
+    }
+
+    /*
+     * Note that writes to the ES ER log actually do not get propagated to the debug console.
+     * so by writing to SysLog here it becomes visible in both places.
+     */
+    CFE_ES_WriteToSysLog("%s: ExceptionID 0x%lx in TaskID %lu: %s\n", __func__, (unsigned long)PspContextId,
+                         OS_ObjectIdToInteger(ExceptionTaskID), ReasonString);
+
+    /*
+     * If task ID is 0, this means it was a system level exception and
+     * not associated with a specific task.
+     *
+     * Otherwise, if it was related to a task, determine the associated AppID
+     * so the exception action can be checked.
+     *
+     * NOTE: the default exception handling is to restart the processor/system.
+     * There is an option to only restart the specific app needs, but this must
+     * be "opt-in", that is, the app was created initially with this option, and
+     * the exception is also traced back to that app.  If either is not possible
+     * for whatever reason then the restart action (default) should be taken, as
+     * this gets the highest assurance that the system will be returned to a coherent
+     * state.
+     */
+    if (OS_ObjectIdDefined(ExceptionTaskID))
+    {
+        Status = CFE_ES_GetTaskInfo(&EsTaskInfo, CFE_ES_TaskId_FromOSAL(ExceptionTaskID));
+
+        /*
+         * The App ID was found, now see if the ExceptionAction is set for a reset
+         *
+         * NOTE: if anything in this logic fails and the app which caused the exception is not
+         * positively identified, then this will just follow the default case of PSP reset.
+         */
+        if (Status == CFE_SUCCESS)
+        {
+            AppRecPtr = CFE_ES_LocateAppRecordByID(EsTaskInfo.AppId);
+            CFE_ES_LockSharedData(__func__, __LINE__);
+            if (CFE_ES_AppRecordIsMatch(AppRecPtr, EsTaskInfo.AppId) &&
+                AppRecPtr->StartParams.ExceptionAction == CFE_ES_ExceptionAction_RESTART_APP)
+            {
+                /*
+                 * Log the Application reset
+                 */
+                ResetType = CFE_ES_APP_RESTART;
+            }
+            CFE_ES_UnlockSharedData(__func__, __LINE__);
+        }
+    }
+
+    do
+    {
+        /*
+         * If no disposition is identified yet, then trigger a PSP reset.
+         * Need to determine if a processor or poweron reset is needed.
+         */
+        if (ResetType == 0)
+        {
+            if (CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount >=
+                CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount)
+            {
+                CFE_ES_WriteToSysLog("%s: Maximum Processor Reset count reached (%u)", __func__,
+                                     (unsigned int)CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount);
+
+                ResetType = CFE_PSP_RST_TYPE_POWERON;
+            }
+            else
+            {
+                CFE_ES_WriteToSysLog("%s: Processor Reset count not reached (%u/%u)", __func__,
+                                     (unsigned int)CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount,
+                                     (unsigned int)CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount);
+
+                /*
+                ** Update the reset variables
+                */
+                CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount++;
+                CFE_ES_Global.ResetDataPtr->ResetVars.ES_CausedReset = true;
+
+                ResetType = CFE_PSP_RST_TYPE_PROCESSOR;
+            }
+        }
+
+        if (ResetType == CFE_ES_APP_RESTART)
+        {
+            LogType = CFE_ES_LogEntryType_APPLICATION;
+        }
+        else
+        {
+            LogType = CFE_ES_LogEntryType_CORE;
+        }
+
+        CFE_ES_WriteToERLogWithContext(LogType, ResetType, CFE_PSP_RST_SUBTYPE_EXCEPTION, ReasonString,
+                                       EsTaskInfo.AppId, PspContextId);
+
+        if (ResetType == CFE_ES_APP_RESTART)
+        {
+            /*
+             * Restart the App. This call is just a request
+             * to ES, but the request could fail.  If that happens,
+             * proceed to a processor reset.
+             */
+            Status = CFE_ES_RestartApp(EsTaskInfo.AppId);
+            if (Status != CFE_SUCCESS)
+            {
+                ResetType = 0;
+                snprintf(ReasonString, sizeof(ReasonString), "App Restart Failed");
+            }
+        }
+        else
+        {
+            /* normally this will not return */
+            CFE_PSP_Restart(ResetType);
+        }
+    } while (ResetType == 0);
+
+    return true; /* returning true because there was an exception to deal with */
+}
+```
+
+### `cfe_es_generic_pool.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_generic_pool.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**  cfe_es_generic_pool.c
+**
+**  Purpose:
+**  Set of services for management of discrete sized memory pools.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+*/
+
+/*
+** Includes
+*/
+#include "cfe_es_module_all.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+/*****************************************************************************/
+/*
+** Functions
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Find the appropriate bucket given a requested block size
+ *
+ *-----------------------------------------------------------------*/
+uint16 CFE_ES_GenPoolFindBucket(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t ReqSize)
+{
+    uint16 Index;
+
+    for (Index = 0; Index < PoolRecPtr->NumBuckets; ++Index)
+    {
+        if (ReqSize <= PoolRecPtr->Buckets[Index].BlockSize)
+        {
+            /* it fits - stop here */
+            break;
+        }
+    }
+
+    /*
+     * Invert output such that if a bucket wasn't found, this
+     * will return 0.  A valid bucket ID will be nonzero.
+     */
+    return (PoolRecPtr->NumBuckets - Index);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Obtain a pointer to the state structure associated with a given bucket ID
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_GenPoolBucket_t *CFE_ES_GenPoolGetBucketState(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 BucketId)
+{
+    uint16 Index;
+
+    Index = PoolRecPtr->NumBuckets - BucketId;
+    if (Index >= PoolRecPtr->NumBuckets)
+    {
+        return NULL;
+    }
+
+    return &PoolRecPtr->Buckets[Index];
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Find and re-allocate a previously returned block
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolRecyclePoolBlock(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 BucketId, size_t NewSize,
+                                     size_t *BlockOffsetPtr)
+{
+    CFE_ES_GenPoolBucket_t *BucketPtr;
+    size_t                  DescOffset;
+    size_t                  BlockOffset;
+    size_t                  NextOffset;
+    CFE_ES_GenPoolBD_t *    BdPtr;
+    uint16                  RecycleBucketId;
+    int32                   Status;
+
+    BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+    if (BucketPtr == NULL || BucketPtr->RecycleCount == BucketPtr->ReleaseCount || BucketPtr->FirstOffset == 0)
+    {
+        /* no buffers in pool to recycle */
+        return CFE_ES_BUFFER_NOT_IN_POOL;
+    }
+
+    BlockOffset = BucketPtr->FirstOffset;
+    DescOffset  = BlockOffset - CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+    Status      = PoolRecPtr->Retrieve(PoolRecPtr, DescOffset, &BdPtr);
+    if (Status == CFE_SUCCESS)
+    {
+        RecycleBucketId = BdPtr->Allocated - CFE_ES_MEMORY_DEALLOCATED;
+        if (BdPtr->CheckBits != CFE_ES_CHECK_PATTERN || RecycleBucketId != BucketId)
+        {
+            /* sanity check failed - possible pool corruption? */
+            Status = CFE_ES_BUFFER_NOT_IN_POOL;
+        }
+        else
+        {
+            /*
+             * Get it off the top on the list
+             */
+            NextOffset = BdPtr->NextOffset;
+
+            BdPtr->Allocated  = CFE_ES_MEMORY_ALLOCATED + BucketId; /* Flag memory block as allocated */
+            BdPtr->ActualSize = NewSize;
+            BdPtr->NextOffset = 0;
+
+            Status = PoolRecPtr->Commit(PoolRecPtr, DescOffset, BdPtr);
+            if (Status == CFE_SUCCESS)
+            {
+                *BlockOffsetPtr        = BlockOffset;
+                BucketPtr->FirstOffset = NextOffset;
+                ++BucketPtr->RecycleCount;
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Create a new block of the given size
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolCreatePoolBlock(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 BucketId, size_t NewSize,
+                                    size_t *BlockOffsetPtr)
+{
+    CFE_ES_GenPoolBucket_t *BucketPtr;
+    size_t                  DescOffset;
+    size_t                  BlockOffset;
+    size_t                  NextTailPosition;
+    CFE_ES_GenPoolBD_t *    BdPtr;
+    int32                   Status;
+
+    BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+    if (BucketPtr == NULL)
+    {
+        /* no buffers in pool to create */
+        return CFE_ES_BUFFER_NOT_IN_POOL;
+    }
+
+    /*
+     * Determine the offsets of the new user block,
+     * which must be aligned according to the AlignMask member.
+     *
+     * Note - just pre-calculating offsets here, nothing is committed yet.
+     */
+    BlockOffset = PoolRecPtr->TailPosition + CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+    BlockOffset += PoolRecPtr->AlignMask;
+    BlockOffset &= ~PoolRecPtr->AlignMask;
+
+    DescOffset       = BlockOffset - CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+    NextTailPosition = BlockOffset + BucketPtr->BlockSize;
+
+    /*
+     * Check if there is enough space remaining in the pool -- the
+     * proposed start address plus the block size must not exceed the pool end.
+     */
+    if (NextTailPosition > PoolRecPtr->PoolMaxOffset)
+    {
+        /* can't fit in remaining mem */
+        return CFE_ES_ERR_MEM_BLOCK_SIZE;
+    }
+
+    /*
+     * Now commit the new block
+     */
+    Status = PoolRecPtr->Retrieve(PoolRecPtr, DescOffset, &BdPtr);
+    if (Status == CFE_SUCCESS)
+    {
+        BdPtr->CheckBits  = CFE_ES_CHECK_PATTERN;
+        BdPtr->Allocated  = CFE_ES_MEMORY_ALLOCATED + BucketId; /* Flag memory block as allocated */
+        BdPtr->ActualSize = NewSize;
+        BdPtr->NextOffset = 0;
+
+        Status = PoolRecPtr->Commit(PoolRecPtr, DescOffset, BdPtr);
+        if (Status == CFE_SUCCESS)
+        {
+            /*
+            ** adjust pool current pointer and other record keeping
+            */
+            PoolRecPtr->TailPosition = NextTailPosition;
+            ++BucketPtr->AllocationCount;
+            ++PoolRecPtr->AllocationCount;
+
+            *BlockOffsetPtr = BlockOffset;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolInitialize(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t StartOffset, size_t PoolSize,
+                               size_t AlignSize, uint16 NumBlockSizes, const size_t *BlockSizeList,
+                               CFE_ES_PoolRetrieve_Func_t RetrieveFunc, CFE_ES_PoolCommit_Func_t CommitFunc)
+{
+    cpuaddr                 AlignMask;
+    uint32                  i;
+    uint32                  j;
+    CFE_ES_GenPoolBucket_t *BucketPtr;
+
+    /*
+     * Note - being an internal/non-public API this does not need to
+     * check the directly-supplied arguments, it is assumed they are already
+     * sanity checked.
+     */
+    memset(PoolRecPtr, 0, sizeof(*PoolRecPtr));
+
+    /*
+     * Convert alignment to a bit mask.
+     */
+    if (AlignSize <= 1)
+    {
+        AlignMask = 0;
+    }
+    else
+    {
+        AlignMask = AlignSize - 1;
+    }
+
+    /*
+     * This confirms that the passed in value is a power of 2.
+     * The result of this check should always be 0 if so.
+     */
+    if ((AlignMask & AlignSize) != 0)
+    {
+        CFE_ES_WriteToSysLog("%s: invalid alignment for pool: %lu\n", __func__, (unsigned long)AlignSize);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* complete initialization of pool record entry */
+    PoolRecPtr->AlignMask     = AlignMask;
+    PoolRecPtr->PoolTotalSize = PoolSize;
+    PoolRecPtr->PoolMaxOffset = PoolSize + StartOffset;
+    PoolRecPtr->NumBuckets    = NumBlockSizes;
+    PoolRecPtr->Retrieve      = RetrieveFunc;
+    PoolRecPtr->Commit        = CommitFunc;
+    PoolRecPtr->TailPosition  = StartOffset;
+
+    /* initially copy all block sizes */
+    BucketPtr = PoolRecPtr->Buckets;
+    for (i = 0; i < NumBlockSizes; ++i)
+    {
+        BucketPtr->BlockSize = BlockSizeList[i];
+        ++BucketPtr;
+    }
+
+    /* Sort by block size - a simple bubble sort -
+     * this does not run often and the list is relatively small. */
+    do
+    {
+        j         = 0;
+        BucketPtr = PoolRecPtr->Buckets;
+        for (i = 1; i < NumBlockSizes; ++i)
+        {
+            if (BucketPtr[0].BlockSize > BucketPtr[1].BlockSize)
+            {
+                /* swap */
+                BucketPtr[0].BlockSize ^= BucketPtr[1].BlockSize;
+                BucketPtr[1].BlockSize ^= BucketPtr[0].BlockSize;
+                BucketPtr[0].BlockSize ^= BucketPtr[1].BlockSize;
+                ++j;
+            }
+            ++BucketPtr;
+        }
+    } while (j > 0);
+
+    /*
+     * Additional sanity check - after sorting the list,
+     * confirm that the smallest block size (first entry)
+     * is not zero.
+     */
+    if (PoolRecPtr->Buckets[0].BlockSize == 0)
+    {
+        return CFE_ES_ERR_MEM_BLOCK_SIZE;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+size_t CFE_ES_GenPoolCalcMinSize(uint16 NumBlockSizes, const size_t *BlockSizeList, uint32 NumBlocks)
+{
+    uint16 BucketId;
+    size_t MinBlockSize;
+
+    MinBlockSize = 0;
+
+    if (NumBlockSizes > 0)
+    {
+        MinBlockSize = BlockSizeList[0];
+        for (BucketId = 1; BucketId < NumBlockSizes; ++BucketId)
+        {
+            if (BlockSizeList[BucketId] < MinBlockSize)
+            {
+                MinBlockSize = BlockSizeList[BucketId];
+            }
+        }
+    }
+
+    MinBlockSize += sizeof(CFE_ES_GenPoolBD_t);
+
+    return (NumBlocks * MinBlockSize);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolGetBlock(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t *BlockOffsetPtr, size_t ReqSize)
+{
+    int32  Status;
+    uint16 BucketId;
+
+    /* Find the bucket which can accommodate the requested size. */
+    BucketId = CFE_ES_GenPoolFindBucket(PoolRecPtr, ReqSize);
+    if (BucketId == 0)
+    {
+        CFE_ES_WriteToSysLog("%s: Err:size(%lu) > max(%lu)\n", __func__, (unsigned long)ReqSize,
+                             (unsigned long)PoolRecPtr->Buckets[PoolRecPtr->NumBuckets - 1].BlockSize);
+        return CFE_ES_ERR_MEM_BLOCK_SIZE;
+    }
+
+    /* first attempt to recycle any buffers from the same bucket that were freed */
+    Status = CFE_ES_GenPoolRecyclePoolBlock(PoolRecPtr, BucketId, ReqSize, BlockOffsetPtr);
+    if (Status != CFE_SUCCESS)
+    {
+        /* recycling not available - try making a new one instead */
+        Status = CFE_ES_GenPoolCreatePoolBlock(PoolRecPtr, BucketId, ReqSize, BlockOffsetPtr);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolGetBlockSize(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t *BlockSizePtr, size_t BlockOffset)
+{
+    size_t                  DescOffset;
+    CFE_ES_GenPoolBucket_t *BucketPtr;
+    CFE_ES_GenPoolBD_t *    BdPtr;
+    int32                   Status;
+    uint16                  BucketId;
+
+    if (BlockOffset >= PoolRecPtr->TailPosition || BlockOffset < CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE)
+    {
+        /* outside the bounds of the pool */
+        return CFE_ES_BUFFER_NOT_IN_POOL;
+    }
+
+    DescOffset = BlockOffset - CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+
+    Status = PoolRecPtr->Retrieve(PoolRecPtr, DescOffset, &BdPtr);
+    if (Status == CFE_SUCCESS)
+    {
+        BucketId  = BdPtr->Allocated - CFE_ES_MEMORY_ALLOCATED;
+        BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+
+        if (BdPtr->CheckBits != CFE_ES_CHECK_PATTERN || BucketPtr == NULL || BdPtr->ActualSize == 0 ||
+            BucketPtr->BlockSize < BdPtr->ActualSize)
+        {
+            /* This does not appear to be a valid data buffer */
+            Status = CFE_ES_POOL_BLOCK_INVALID;
+        }
+        else
+        {
+            *BlockSizePtr = BdPtr->ActualSize;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolPutBlock(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t *BlockSizePtr, size_t BlockOffset)
+{
+    size_t                  DescOffset;
+    CFE_ES_GenPoolBucket_t *BucketPtr;
+    CFE_ES_GenPoolBD_t *    BdPtr;
+    int32                   Status;
+    uint16                  BucketId;
+
+    if (BlockOffset >= PoolRecPtr->TailPosition || BlockOffset < CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE)
+    {
+        /* outside the bounds of the pool */
+        return CFE_ES_BUFFER_NOT_IN_POOL;
+    }
+
+    DescOffset = BlockOffset - CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+
+    Status = PoolRecPtr->Retrieve(PoolRecPtr, DescOffset, &BdPtr);
+    if (Status == CFE_SUCCESS)
+    {
+        BucketId  = BdPtr->Allocated - CFE_ES_MEMORY_ALLOCATED;
+        BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+
+        if (BdPtr->CheckBits != CFE_ES_CHECK_PATTERN || BucketPtr == NULL || BdPtr->ActualSize == 0 ||
+            BucketPtr->BlockSize < BdPtr->ActualSize)
+        {
+            /* This does not appear to be a valid data buffer */
+            ++PoolRecPtr->ValidationErrorCount;
+            Status = CFE_ES_POOL_BLOCK_INVALID;
+        }
+        else
+        {
+            BdPtr->Allocated  = CFE_ES_MEMORY_DEALLOCATED + BucketId;
+            BdPtr->NextOffset = BucketPtr->FirstOffset;
+            *BlockSizePtr     = BdPtr->ActualSize;
+
+            Status = PoolRecPtr->Commit(PoolRecPtr, DescOffset, BdPtr);
+            if (Status == CFE_SUCCESS)
+            {
+                BucketPtr->FirstOffset = BlockOffset;
+                ++BucketPtr->ReleaseCount;
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenPoolRebuild(CFE_ES_GenPoolRecord_t *PoolRecPtr)
+{
+    int32                   Status;
+    size_t                  DescOffset;
+    size_t                  BlockOffset;
+    CFE_ES_GenPoolBucket_t *BucketPtr;
+    CFE_ES_GenPoolBD_t *    BdPtr;
+    uint16                  BucketId;
+    bool                    IsDeallocatedBlock;
+
+    Status = CFE_SUCCESS;
+
+    /* Scan the pool to find blocks that were created and freed */
+    while (true)
+    {
+        IsDeallocatedBlock = false;
+        BucketId           = 0;
+        BucketPtr          = NULL;
+
+        /*
+         * Determine the offsets of the next user block,
+         * which must be aligned according to the AlignMask member.
+         */
+        BlockOffset = PoolRecPtr->TailPosition + CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+        BlockOffset += PoolRecPtr->AlignMask;
+        BlockOffset &= ~PoolRecPtr->AlignMask;
+
+        if (BlockOffset > PoolRecPtr->PoolMaxOffset)
+        {
+            /* End of pool reached, stop now */
+            break;
+        }
+
+        DescOffset = BlockOffset - CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE;
+        Status     = PoolRecPtr->Retrieve(PoolRecPtr, DescOffset, &BdPtr);
+        if (Status != CFE_SUCCESS)
+        {
+            /* Failed to read descriptor */
+            break;
+        }
+
+        /*
+         * If the CheckBits indicate the block was in use,
+         * then do further inspection to find the block size
+         * and allocated/deallocated status.
+         */
+        if (BdPtr->CheckBits == CFE_ES_CHECK_PATTERN)
+        {
+            /* Test if block is deallocated */
+            BucketId  = BdPtr->Allocated - CFE_ES_MEMORY_DEALLOCATED;
+            BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+            if (BucketPtr != 0)
+            {
+                IsDeallocatedBlock = true;
+            }
+            else
+            {
+                /*
+                 * Test if block is allocated.
+                 * In this case there is nothing more to do, just
+                 * get the size and skip the block.
+                 */
+                BucketId  = BdPtr->Allocated - CFE_ES_MEMORY_ALLOCATED;
+                BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+            }
+        }
+
+        /*
+         * Sanity check that the actual size is less than the bucket size -
+         * it always should be, as long as the pool was created with the same
+         * set of bucket sizes.
+         */
+        if (BucketPtr == NULL || BucketPtr->BlockSize < BdPtr->ActualSize)
+        {
+            /* Not a valid block signature - stop recovery now */
+            break;
+        }
+
+        PoolRecPtr->TailPosition = BlockOffset + BucketPtr->BlockSize;
+
+        BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+        ++BucketPtr->AllocationCount;
+        ++PoolRecPtr->AllocationCount;
+
+        /*
+         * If it was a deallocated block, then add it to the local
+         * pool linked list structure and rewrite the descriptor.
+         */
+        if (IsDeallocatedBlock)
+        {
+            ++BucketPtr->ReleaseCount;
+            BdPtr->NextOffset      = BucketPtr->FirstOffset;
+            BucketPtr->FirstOffset = BlockOffset;
+            Status                 = PoolRecPtr->Commit(PoolRecPtr, DescOffset, BdPtr);
+            if (Status != CFE_SUCCESS)
+            {
+                break;
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_GenPoolValidateState(const CFE_ES_GenPoolRecord_t *PoolRecPtr)
+{
+    return (PoolRecPtr->PoolTotalSize > 0 && PoolRecPtr->TailPosition <= PoolRecPtr->PoolMaxOffset &&
+            PoolRecPtr->NumBuckets > 0 && PoolRecPtr->NumBuckets <= CFE_PLATFORM_ES_POOL_MAX_BUCKETS);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_GenPoolGetUsage(CFE_ES_GenPoolRecord_t *PoolRecPtr, CFE_ES_MemOffset_t *FreeSizeBuf,
+                            CFE_ES_MemOffset_t *TotalSizeBuf)
+{
+    if (TotalSizeBuf != NULL)
+    {
+        *TotalSizeBuf = CFE_ES_MEMOFFSET_C(PoolRecPtr->PoolTotalSize);
+    }
+    if (FreeSizeBuf != NULL)
+    {
+        *FreeSizeBuf = CFE_ES_MEMOFFSET_C(PoolRecPtr->PoolMaxOffset - PoolRecPtr->TailPosition);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_GenPoolGetCounts(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 *NumBucketsBuf, uint32 *AllocCountBuf,
+                             uint32 *ValidationErrorCountBuf)
+{
+    if (NumBucketsBuf != NULL)
+    {
+        *NumBucketsBuf = PoolRecPtr->NumBuckets;
+    }
+    if (AllocCountBuf != NULL)
+    {
+        *AllocCountBuf = PoolRecPtr->AllocationCount;
+    }
+    if (ValidationErrorCountBuf != NULL)
+    {
+        *ValidationErrorCountBuf = PoolRecPtr->ValidationErrorCount;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_GenPoolGetBucketUsage(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 BucketId,
+                                  CFE_ES_BlockStats_t *BlockStatsBuf)
+{
+    const CFE_ES_GenPoolBucket_t *      BucketPtr;
+    static const CFE_ES_GenPoolBucket_t ZeroBucket = {0};
+
+    BucketPtr = CFE_ES_GenPoolGetBucketState(PoolRecPtr, BucketId);
+    if (BucketPtr == NULL)
+    {
+        /* bucket ID is not valid */
+        BucketPtr = &ZeroBucket;
+    }
+
+    if (BlockStatsBuf != NULL)
+    {
+        BlockStatsBuf->NumCreated = BucketPtr->AllocationCount;
+        BlockStatsBuf->BlockSize  = CFE_ES_MEMOFFSET_C(BucketPtr->BlockSize);
+        BlockStatsBuf->NumFree    = BucketPtr->ReleaseCount - BucketPtr->RecycleCount;
+    }
+}
+```
+
+### `cfe_es_generic_pool.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_generic_pool.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  This file contains the Internal interface for the cFE Critical Data Store
+ *  memory pool functions.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_ES_GENERIC_POOL_H
+#define CFE_ES_GENERIC_POOL_H
+
+/*
+** Include Files
+*/
+#include "common_types.h"
+
+/*
+** Macro Definitions
+*/
+#define CFE_ES_CHECK_PATTERN      ((uint16)0x5a5a)
+#define CFE_ES_MEMORY_ALLOCATED   ((uint16)0xaaaa)
+#define CFE_ES_MEMORY_DEALLOCATED ((uint16)0xdddd)
+
+#define CFE_ES_GENERIC_POOL_DESCRIPTOR_SIZE \
+    sizeof(CFE_ES_GenPoolBD_t) /* amount of space to reserve with every allocation */
+
+/*
+** Type Definitions
+*/
+
+typedef struct CFE_ES_GenPoolBD
+{
+    uint16 CheckBits;  /**< Set to a fixed bit pattern after init */
+    uint16 Allocated;  /**< Set to a bit pattern depending on allocation state */
+    size_t ActualSize; /**< The actual requested size of the block */
+    size_t NextOffset; /**< The offset of the next descriptor in the free stack */
+} CFE_ES_GenPoolBD_t;
+
+typedef struct CFE_ES_GenPoolBucket
+{
+    size_t BlockSize;
+    size_t FirstOffset;     /**< Top of the "free stack" of buffers which have been returned */
+    uint32 AllocationCount; /**< Total number of buffers of this block size that exist (initial get) */
+    uint32 ReleaseCount;    /**< Total number of buffers that have been released (put back) */
+    uint32 RecycleCount;    /**< Total number of buffers that have been recycled (get after put) */
+} CFE_ES_GenPoolBucket_t;
+
+/*
+ * Forward struct typedef so it can be used in retrieve/commit prototype
+ */
+typedef struct CFE_ES_GenPoolRecord CFE_ES_GenPoolRecord_t;
+
+/**
+ * \brief Function to retrieve a buffer descriptor from the pool storage
+ *
+ * The generic pool implementation does not assume that buffers can be
+ * directly accessed as memory.  This routine obtains a reference to
+ * the descriptor data.  On memory mapped pools it may output a direct
+ * pointer to the data instead of copying it.
+ */
+typedef int32 (*CFE_ES_PoolRetrieve_Func_t)(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t Offset,
+                                            CFE_ES_GenPoolBD_t **BdPtr);
+
+/**
+ * \brief Function to commit a buffer descriptor to the pool storage
+ *
+ * The generic pool implementation does not assume that buffers can be
+ * directly accessed as memory.  This routine writes data back to pool
+ * storage.  It may be a no-op for memory mapped pools.
+ */
+typedef int32 (*CFE_ES_PoolCommit_Func_t)(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t Offset,
+                                          const CFE_ES_GenPoolBD_t *BdPtr);
+
+/**
+ * \brief Generic Memory Pool Type
+ */
+struct CFE_ES_GenPoolRecord
+{
+    size_t PoolTotalSize; /**< Total size of the pool area, in bytes */
+    size_t PoolMaxOffset; /**< End offset (position) of the pool */
+    size_t AlignMask;     /**< Alignment mask applied to all new allocations */
+    size_t TailPosition;  /**< Current high watermark of the pool, end of last allocation */
+
+    CFE_ES_PoolRetrieve_Func_t Retrieve; /**< Function to access a buffer descriptor in the pool storage */
+    CFE_ES_PoolCommit_Func_t   Commit;   /**< Function to commit a buffer descriptor to the pool storage */
+
+    uint32 AllocationCount;      /**< Total number of block allocations of any size */
+    uint32 ValidationErrorCount; /**< Count of validation errors */
+
+    uint16                 NumBuckets; /**< Number of entries in the "Buckets" array that are valid */
+    CFE_ES_GenPoolBucket_t Buckets[CFE_PLATFORM_ES_POOL_MAX_BUCKETS]; /**< Bucket States */
+};
+
+/*****************************************************************************/
+/*
+** Function prototypes
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Initialize a generic pool structure
+ *
+ * Resets the pool to its initial state, given the size
+ * and alignment specifications.
+ *
+ * \param[out]  PoolRecPtr    Pointer to pool structure
+ * \param[in]   StartOffset   Initial starting location of pool
+ * \param[in]   PoolSize      Size of pool (beyond start offset)
+ * \param[in]   AlignSize     Required Alignment of blocks
+ * \param[in]   NumBlockSizes Number of entries in the BlockSizeList
+ * \param[in]   BlockSizeList Size of pool blocks
+ * \param[in]   RetrieveFunc  Function to retrieve buffer descriptors
+ * \param[in]   CommitFunc    Function to commit buffer descriptors
+ *
+ * \return #CFE_SUCCESS, or error code \ref CFEReturnCodes
+ */
+int32 CFE_ES_GenPoolInitialize(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t StartOffset, size_t PoolSize,
+                               size_t AlignSize, uint16 NumBlockSizes, const size_t *BlockSizeList,
+                               CFE_ES_PoolRetrieve_Func_t RetrieveFunc, CFE_ES_PoolCommit_Func_t CommitFunc);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Gets a block from the pool
+ *
+ * This may recycle a previously returned block or allocate
+ * a new block, depending on availability.
+ *
+ * \param[inout] PoolRecPtr     Pointer to pool structure
+ * \param[out]   BlockOffsetPtr  Location to output new block offset
+ * \param[in]    ReqSize        Size of block requested
+ *
+ * \return #CFE_SUCCESS, or error code \ref CFEReturnCodes
+ */
+int32 CFE_ES_GenPoolGetBlock(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t *BlockOffsetPtr, size_t ReqSize);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Returns a block to the pool
+ *
+ * This marks the previously allocated block as deallocated,
+ * and allows it to be recycled on a future get request.
+ *
+ * \param[inout] PoolRecPtr     Pointer to pool structure
+ * \param[out]   BlockSizePtr   Location to output original allocation size
+ * \param[in]    BlockOffset    Offset of data block
+ *
+ * \return #CFE_SUCCESS, or error code \ref CFEReturnCodes
+ */
+int32 CFE_ES_GenPoolPutBlock(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t *BlockSizePtr, size_t BlockOffset);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Rebuild list of free blocks in pool
+ *
+ * If pools are stored in a nonvolatile memory area, then it is
+ * possible to resume pool operation from a previously initialized
+ * pool.  This function attempts to restore the state of the pool
+ * by scanning for allocated and deallocated block markers.
+ *
+ * Before using this function, one should call CFE_ES_GenPoolInitialize()
+ * to first configure the basic pool structure and block size list.
+ *
+ * This function will then attempt to recreate the internal free lists
+ * based on descriptors/signatures already existing in the memory area.
+ *
+ * \param[inout] PoolRecPtr     Pointer to pool structure
+ *
+ * \return #CFE_SUCCESS, or error code \ref CFEReturnCodes
+ */
+int32 CFE_ES_GenPoolRebuild(CFE_ES_GenPoolRecord_t *PoolRecPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Get size of pool block
+ *
+ * Given a previously allocated block, look up its descriptor information
+ * and return the actual size.
+ *
+ * \param[inout] PoolRecPtr     Pointer to pool structure
+ * \param[out]   BlockSizePtr   Location to output original allocation size
+ * \param[in]    BlockOffset    Offset of data block
+ *
+ * \return #CFE_SUCCESS, or error code \ref CFEReturnCodes
+ */
+int32 CFE_ES_GenPoolGetBlockSize(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t *BlockSizePtr, size_t BlockOffset);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Validate a pool structure
+ *
+ * Perform basic sanity checks on the pool internal data.
+ *
+ * \param[in] PoolRecPtr     Pointer to pool structure
+ *
+ * \return #CFE_SUCCESS, or error code \ref CFEReturnCodes
+ */
+bool CFE_ES_GenPoolValidateState(const CFE_ES_GenPoolRecord_t *PoolRecPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Query basic usage of the pool structure
+ *
+ * Obtain basic pool usage info for telemetry/statistics reporting.
+ *
+ * \param[in]  PoolRecPtr     Pointer to pool structure
+ * \param[out] FreeSizeBuf    Buffer to store free size
+ * \param[out] TotalSizeBuf   Buffer to store total size
+ *
+ * \note This function is intended for telemetry purposes, so it
+ * uses the message size type (CFE_ES_MemOffset_t) rather
+ * than size_t, to be compatible with the type used in telemetry
+ * messages.
+ */
+void CFE_ES_GenPoolGetUsage(CFE_ES_GenPoolRecord_t *PoolRecPtr, CFE_ES_MemOffset_t *FreeSizeBuf,
+                            CFE_ES_MemOffset_t *TotalSizeBuf);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Query counters associated with the pool structure
+ *
+ * Obtain pool counters for telemetry/statistics reporting.
+ *
+ * \param[in]  PoolRecPtr     Pointer to pool structure
+ * \param[out] NumBucketsBuf  Buffer to store bucket count
+ * \param[out] AllocCountBuf  Buffer to store allocation count
+ * \param[out] ValidationErrorCountBuf  Buffer to store validation error count
+ */
+void CFE_ES_GenPoolGetCounts(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 *NumBucketsBuf, uint32 *AllocCountBuf,
+                             uint32 *ValidationErrorCountBuf);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Query bucket-specific usage of the pool structure
+ *
+ * Obtain pool per-bucket stats for telemetry/statistics reporting.
+ *
+ * If the bucket number is not valid, this sets all output values to zero.
+ *
+ * \param[in]  PoolRecPtr     Pointer to pool structure
+ * \param[in]  BucketId       Bucket number (non-zero)
+ * \param[out] BlockStatsBuf  Buffer to store block stats
+ */
+void CFE_ES_GenPoolGetBucketUsage(CFE_ES_GenPoolRecord_t *PoolRecPtr, uint16 BucketId,
+                                  CFE_ES_BlockStats_t *BlockStatsBuf);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Calculate the pool size required for the specified number of blocks
+ *
+ * Given a block size list, determine the amount of bytes required to allocate
+ * the requested number of minimally-sized blocks, including descriptor overhead.
+ *
+ * \note This is intended only as a sanity check on pool sizes, and does not
+ * guarantee the ability to actually allocate buffers in a real pool. In particular,
+ * alignment is not factored into the size calculation, and this may require
+ * some additional overhead.
+ *
+ * \param[in] NumBlockSizes     Number of entries in BlockSizeList
+ * \param[in] BlockSizeList     Size of pool blocks
+ * \param[in] NumBlocks         Number of blocks
+ *
+ * \return Minimum size required for requested number of blocks.
+ */
+size_t CFE_ES_GenPoolCalcMinSize(uint16 NumBlockSizes, const size_t *BlockSizeList, uint32 NumBlocks);
+
+#endif /* CFE_ES_GENERIC_POOL_H */
+```
+
+### `cfe_es_global.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_global.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  This file contains the ES global data definitions.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ */
+
+#ifndef CFE_ES_GLOBAL_H
+#define CFE_ES_GLOBAL_H
+
+/*
+** Includes
+*/
+#include "common_types.h"
+#include "cfe_es_msg.h"
+#include "cfe_es_api_typedefs.h"
+
+#include "cfe_es_erlog_typedef.h"
+#include "cfe_es_resetdata_typedef.h"
+#include "cfe_es_cds.h"
+
+#include <signal.h> /* for sig_atomic_t */
+
+/*
+** Typedefs
+*/
+
+/*
+** CFE_ES_GenCounterRecord_t is an internal structure used to keep track of
+** Generic Counters that are active in the system.
+*/
+typedef struct
+{
+    CFE_ES_CounterId_t CounterId; /**< The actual counter ID of this entry, or undefined */
+    uint32             Counter;
+    char               CounterName[OS_MAX_API_NAME]; /* Counter Name */
+} CFE_ES_GenCounterRecord_t;
+
+/*
+ * Encapsulates the state of the ES background task
+ */
+typedef struct
+{
+    CFE_ES_TaskId_t TaskID;         /**< ES ID of the background task */
+    osal_id_t       WorkSem;        /**< Semaphore that is given whenever background work is pending */
+    uint32          NumJobsRunning; /**< Current Number of active jobs (updated by background task) */
+} CFE_ES_BackgroundTaskState_t;
+
+/*
+ * Background log dump state structure
+ *
+ * This structure is stored in global memory and keeps the state
+ * of the log dump from one iteration to the next.
+ *
+ * NOTE: This is used for log structures which are expected to be small
+ * enough so such that it is not necessary to throttle the file write or
+ * spread it over time.
+ *
+ * Therefore, the only thing necessary to be stored is whether there
+ * is a pending write request, and the data file name.
+ *
+ * Larger log files, such as the Perf log, must implement a state machine
+ * with a dedicated state data structure.
+ */
+typedef struct
+{
+    CFE_FS_FileWriteMetaData_t FileWrite;   /**< FS state data - must be first */
+    CFE_ES_ERLog_FileEntry_t   EntryBuffer; /**< Temp holding area for record to write */
+} CFE_ES_BackgroundLogDumpGlobal_t;
+
+/*
+** Type definition (ES task global data)
+*/
+typedef struct
+{
+    /*
+    ** ES Task command interface counters
+    */
+    uint8 CommandCounter;
+    uint8 CommandErrorCounter;
+
+    /*
+    ** ES Task housekeeping telemetry
+    */
+    CFE_ES_HousekeepingTlm_t HkPacket;
+
+    /*
+    ** Single application telemetry
+    */
+    CFE_ES_OneAppTlm_t OneAppPacket;
+
+    /*
+    ** Memory statistics telemetry
+    */
+    CFE_ES_MemStatsTlm_t MemStatsPacket;
+
+    /*
+    ** ES Task operational data (not reported in housekeeping)
+    */
+    CFE_SB_PipeId_t CmdPipe;
+} CFE_ES_TaskData_t;
+
+/*
+** Executive Services Global Memory Data
+** This is the regular global data that is not preserved on a
+**  processor reset.
+*/
+typedef struct
+{
+    /*
+    ** Debug Variables
+    */
+    CFE_ES_DebugVariables_t DebugVars;
+
+    /*
+    ** Shared Data Semaphore
+    */
+    osal_id_t SharedDataMutex;
+
+    /*
+    ** Performance Data Mutex
+    */
+    osal_id_t PerfDataMutex;
+
+    /*
+    ** Startup Sync
+    */
+    volatile sig_atomic_t SystemState;
+
+    /*
+    ** ES Task Table
+    */
+    uint32              RegisteredTasks;
+    CFE_ES_TaskRecord_t TaskTable[OS_MAX_TASKS];
+
+    /*
+    ** ES App Table
+    */
+    uint32             RegisteredCoreApps;
+    uint32             RegisteredExternalApps;
+    CFE_ResourceId_t   LastAppId;
+    CFE_ES_AppRecord_t AppTable[CFE_PLATFORM_ES_MAX_APPLICATIONS];
+
+    /*
+    ** ES Shared Library Table
+    */
+    uint32             RegisteredLibs;
+    CFE_ResourceId_t   LastLibId;
+    CFE_ES_LibRecord_t LibTable[CFE_PLATFORM_ES_MAX_LIBRARIES];
+
+    /*
+    ** ES Generic Counters Table
+    */
+    CFE_ResourceId_t          LastCounterId;
+    CFE_ES_GenCounterRecord_t CounterTable[CFE_PLATFORM_ES_MAX_GEN_COUNTERS];
+
+    /*
+    ** Critical Data Store Management Variables
+    */
+    CFE_ES_CDS_Instance_t CDSVars;
+    bool                  CDSIsAvailable; /**< \brief Whether or not the CDS service is active/valid */
+
+    /*
+     * Background task for handling long-running, non real time tasks
+     * such as maintenance, file writes, and other items.
+     */
+    CFE_ES_BackgroundTaskState_t BackgroundTask;
+
+    /*
+    ** Memory Pools
+    */
+    CFE_ResourceId_t       LastMemPoolId;
+    CFE_ES_MemPoolRecord_t MemPoolTable[CFE_PLATFORM_ES_MAX_MEMORY_POOLS];
+
+    /*
+    ** ES Task initialization data (not reported in housekeeping)
+    */
+    CFE_ES_BackgroundLogDumpGlobal_t BackgroundERLogDumpState;
+
+    /*
+     * Persistent state data associated with performance log data file writes
+     */
+    CFE_ES_PerfDumpGlobal_t BackgroundPerfDumpState;
+
+    /*
+     * Persistent state data associated with background app table scans
+     */
+    CFE_ES_AppTableScanState_t BackgroundAppScanState;
+
+    /*
+     * Task global data (formerly a separate global).
+     */
+    CFE_ES_TaskData_t TaskData;
+
+    /*
+     * Pointer to the Reset data that is preserved on a processor reset
+     */
+    CFE_ES_ResetData_t *ResetDataPtr;
+} CFE_ES_Global_t;
+
+/*
+** The Executive Services Global Data declaration
+*/
+extern CFE_ES_Global_t CFE_ES_Global;
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain exclusive access to the ES global data structures
+ *
+ * ES internal function to take the Shared Data Mutex and handle
+ * error conditions.
+ *
+ * @param FunctionName   the name of the function/caller
+ * @param LineNumber     the line number of the caller
+ */
+void CFE_ES_LockSharedData(const char *FunctionName, int32 LineNumber);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Release exclusive access to the ES global data structures
+ *
+ * ES internal function to Release the shared data mutex and handle error
+ * conditions.
+ *
+ * @param FunctionName   the name of the function/caller
+ * @param LineNumber     the line number of the caller
+ */
+void CFE_ES_UnlockSharedData(const char *FunctionName, int32 LineNumber);
+
+#endif /* CFE_ES_GLOBAL_H */
+```
+
+### `cfe_es_log.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_log.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *    This file contains definitions needed for the cFE ES Logs. The
+ *    logs include the Mode Transition log, the System Log, and the
+ *    Performance log.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_ES_LOG_H
+#define CFE_ES_LOG_H
+
+/*
+** Include Files
+*/
+#include "common_types.h"
+#include "cfe_es_api_typedefs.h"
+#include "cfe_time_api_typedefs.h"
+
+#include <stdarg.h> /* required for "va_list" */
+
+/*
+** Macro Definitions
+*/
+
+/**
+ * Buffer size for system log messages
+ *
+ * This is based on the EVS maximum event message size, plus a time stamp
+ * and required extra formatting characters.
+ *
+ * Two extra characters are necessary:
+ *   - for the space between the timestamp and the message in the system log
+ *   - to enforce a newline character at the end of the string
+ *
+ * note that a null terminator byte is accounted for in "CFE_TIME_PRINTED_STRING_SIZE"
+ */
+#define CFE_ES_MAX_SYSLOG_MSG_SIZE (CFE_MISSION_EVS_MAX_MESSAGE_LENGTH + CFE_TIME_PRINTED_STRING_SIZE + 2)
+
+/**
+ * Size of the syslog "dump buffer"
+ *
+ * This is a temporary buffer that serves as a holding place for syslog data as
+ * it is being dumped to a file on disk.  Since disks are comparatively slow and
+ * access to the syslog buffer must be synchronized, copying to a temporary buffer
+ * first significantly decreases the amount of time that the syslog is locked after
+ * a file dump is requested.
+ *
+ * This buffer also reflects the SysLog "burst size" that is guaranteed to be
+ * safe for concurrent writes and reads/dump operations.  If applications Log more than
+ * this amount of data in less time than it takes to write this amount of data to disk,
+ * then some log messages may be corrupt or lost in the output file.
+ *
+ * @note If contention occurs where applications would overwrite logs that are still
+ * being "read" by a dump process, the realtime applications are given preference and
+ * therefore NOT blocked.   Design preference is given to applications over the absolute
+ * integrity of the dump file.
+ */
+#define CFE_ES_SYSLOG_READ_BUFFER_SIZE (3 * CFE_ES_MAX_SYSLOG_MSG_SIZE)
+
+/**
+ * \brief Indicates no context information Error Logs
+ *
+ * For use with the CFE_ES_WriteToERLog() function when no context
+ * information is available.
+ */
+#define CFE_ES_ERLOG_NO_CONTEXT (0)
+
+/*
+** Type Definitions
+*/
+
+/**
+ * \brief Buffer structure for reading data out of the SysLog
+ *
+ * Access to the syslog must be synchronized, so it is not possible to
+ * directly access the contents.  This structure keeps the state of
+ * read operations such that the syslog can be read in segments.
+ *
+ * @sa CFE_ES_SysLogReadData(), CFE_ES_SysLogReadStart_Unsync()
+ */
+typedef struct
+{
+    size_t SizeLeft;   /**< Total amount of unread syslog data */
+    size_t BlockSize;  /**< Size of content currently in the "Data" member */
+    size_t EndIdx;     /**< End of the syslog buffer at the time reading started */
+    size_t LastOffset; /**< Current Read Position */
+
+    char Data[CFE_ES_SYSLOG_READ_BUFFER_SIZE]; /**< Actual syslog content */
+} CFE_ES_SysLogReadBuffer_t;
+
+/*
+** Function prototypes
+*/
+
+/*
+** System log management
+**
+** NOTE: CFE_ES_WriteToSysLog() is a public routine in cfe_es.h, it is not prototyped here
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Clear system log
+ *
+ * This discards the entire system log buffer and resets internal index values
+ *
+ * \note This function requires external thread synchronization
+ */
+void CFE_ES_SysLogClear_Unsync(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Begin reading the system log
+ *
+ * This a helper function is intended to assist with the "Write" command to dump
+ * the contents of the syslog to a disk file.  This locates the oldest complete
+ * log message currently contained in the buffer.
+ *
+ * The oldest log message may be overwritten when any application calls
+ * CFE_ES_WriteToSysLog() if set to OVERWRITE mode.
+ *
+ * This function only locates the first message, it does not actually copy any
+ * data to the supplied buffer.  The CFE_ES_SysLogReadData() should be called
+ * to read log data.
+ *
+ * \param Buffer  A local buffer which will be initialized to the start of the log buffer
+ *
+ * \note This function requires external thread synchronization
+ * \sa CFE_ES_SysLogReadData()
+ */
+void CFE_ES_SysLogReadStart_Unsync(CFE_ES_SysLogReadBuffer_t *Buffer);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Write a printf-style formatted string to the system log
+ *
+ * This is a drop-in replacement for the existing CFE_ES_WriteToSysLog() API
+ * that does _not_ perform any synchronization or locking.  It is intended for
+ * logging from within the ES subsystem where the appropriate lock is
+ * already held for other reasons.
+ *
+ * \note This function requires external thread synchronization
+ */
+int32 CFE_ES_SysLogWrite_Unsync(const char *SpecStringPtr, ...);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Append a complete pre-formatted string to the ES SysLog
+ *
+ * The new message will be copied to the current write location in the
+ * system log buffer.  If there is not sufficient space to completely store
+ * the message, then the behavior depends on the "LogMode" setting.
+ *
+ * If "LogMode" is set to DISCARD, then the message will be truncated
+ * to fit in the available space, or completely discarded if no space exists.
+ *
+ * If "LogMode" is set to OVERWRITE, then the oldest message(s) in the
+ * system log will be overwritten with this new message.
+ *
+ * \param LogString     Message to append
+ *
+ * \note This function requires external thread synchronization
+ * \sa CFE_ES_SysLogSetMode()
+ */
+int32 CFE_ES_SysLogAppend_Unsync(const char *LogString);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Read data from the system log buffer into the local buffer
+ *
+ * Prior to calling this function, the buffer structure should be initialized
+ * using CFE_ES_SysLogReadStart_Unsync()
+ *
+ * This copies the data from the syslog memory space into the local buffer, starting
+ * from the end of the previously read data.  To read the complete system log,
+ * this function should be called repeatedly until the "BlockSize" member in the
+ * returned buffer is returned as zero, indicating there is no more data in the syslog.
+ *
+ * There is no specific external synchronization requirement on this function, since
+ * copies of the relevant log indices are kept in the buffer structure itself.  However,
+ * if system log data is overwritten between calls to this function, it may result in
+ * undefined data being returned to the caller.
+ *
+ * Therefore, in cases where it is critically important to read log message data, the
+ * lock should be held for the entire procedure (initialization through complete read).
+ * However this may have significant realtime implications, so it is not the required
+ * mode of operation.
+ *
+ * \param Buffer  A local buffer which will be filled with data from the log buffer
+ */
+void CFE_ES_SysLogReadData(CFE_ES_SysLogReadBuffer_t *Buffer);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Sets the operating mode of the system log buffer
+ *
+ * The operating mode of the system log controls its behavior once filled to the point
+ * where additional messages can no longer be stored.
+ *
+ * If "Mode" is set to DISCARD, then the message will be truncated
+ * to fit in the available space, or completely discarded if no space exists.
+ *
+ * If "Mode" is set to OVERWRITE, then the oldest message(s) in the
+ * system log will be overwritten with this new message.
+ *
+ * \note Switching from OVERWRITE to DISCARD mode may take effect immediately, as the
+ * setting only takes effect when the buffer "wrap-point" is reached at the end.
+ *
+ * \param Mode   The desired operating mode
+ * \return CFE_SUCCESS if set successfully
+ */
+int32 CFE_ES_SysLogSetMode(CFE_ES_LogMode_Enum_t Mode);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Format a message intended for output to the system log
+ *
+ * This function prepares a complete message for passing into CFE_ES_SysLogAppend_Unsync(),
+ * based on the given vsnprintf-style specification string and argument list.
+ *
+ * The message is prefixed with a time stamp based on the current time, followed by the
+ * caller-specified string.  An ending newline and terminating null character are both
+ * ensured on the output string.
+ *
+ * To account for the timestamp, newline, and terminating null character, the supplied buffer
+ * must be greater than (CFE_TIME_PRINTED_STRING_SIZE+2) to get a useful output.  Any user-specified
+ * output string will be truncated to fit into the remaining space.
+ *
+ * \param Buffer        User supplied buffer to output formatted string into
+ * \param BufferSize    Size of "Buffer" parameter.  Should be greater than (CFE_TIME_PRINTED_STRING_SIZE+2)
+ * \param SpecStringPtr Printf-style format string
+ * \param ArgPtr        Variable argument list as obtained by va_start() in the caller
+ *
+ * \sa CFE_ES_SysLogAppend_Unsync()
+ */
+void CFE_ES_SysLog_vsnprintf(char *Buffer, size_t BufferSize, const char *SpecStringPtr, va_list ArgPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Write the contents of the syslog to a disk file
+ *
+ * Writes the current contents of the syslog buffer to a file specified
+ * by the Filename parameter.  The log messages will be written to the file
+ * in the same order in which they were written into the syslog buffer.
+ *
+ * A snapshot of the log indices is taken at the beginning of the writing
+ * process.  Additional log entries added after this (e.g. from applications
+ * calling CFE_ES_WriteToSysLog() after starting a syslog dump) will not be
+ * included in the dump file.
+ *
+ * Note that preference is given to the realtime application threads over
+ * any pending log read activities, such as a dumping to a file.  The design
+ * of this function can tolerate a limited level of logging activity while
+ * the dump is in progress without any negative side effects.  However, a significant
+ * "flood" of log messages may corrupt the output file, by overwriting older data
+ * before it has actually been written.
+ *
+ * \param Filename      Output file to write
+ * \return CFE_SUCCESS if successful, or an appropriate error code from cfe_error.h
+ *
+ * \sa CFE_ES_SYSLOG_READ_BUFFER_SIZE
+ *
+ */
+int32 CFE_ES_SysLogDump(const char *Filename);
+
+/*
+** Exception and Reset Log API
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Create an entry in the ES Exception and Reset Log.
+ *
+ * The exception and reset log is used to track significant system-level events and anomalies
+ * for later analysis.
+ *
+ * \param EntryType Whether the event is relevant to the CORE or an APPLICATION (#CFE_ES_LogEntryType_Enum_t)
+ * \param ResetType The type of the last reset
+ * \param ResetSubtype The subtype of the last reset
+ * \param Description A summary of the event
+ *
+ * \return CFE_SUCCESS if successful, or an appropriate error code from cfe_error.h
+ */
+int32 CFE_ES_WriteToERLog(CFE_ES_LogEntryType_Enum_t EntryType, uint32 ResetType, uint32 ResetSubtype,
+                          const char *Description);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \copydoc CFE_ES_WriteToERLog()
+ *
+ * This log API accepts extra context information (AppID and ContextID)
+ * and is used when the app/task invoking this API is not the same app
+ * as where the event occurred.
+ *
+ * \param AppId The Application ID associated with the task that caused the exception
+ * \param PspContextId Identifier of extended context info stored in the PSP (if available)
+ */
+int32 CFE_ES_WriteToERLogWithContext(CFE_ES_LogEntryType_Enum_t EntryType, uint32 ResetType, uint32 ResetSubtype,
+                                     const char *Description, CFE_ES_AppId_t AppId, uint32 PspContextId);
+
+#endif /* CFE_ES_LOG_H */
+```
+
+### `cfe_es_mempool.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_mempool.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**  cfe_es_mempool.c
+**
+**  Purpose:
+**  Set of services for management of discrete sized memory pools.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+*/
+
+/*
+** Includes
+*/
+#include "cfe_es_module_all.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+/**
+ * Macro that determines the native alignment requirement of a specific type
+ *
+ * By getting the offset of the structure after following a single char,
+ * this effectively gets how much padding the compiler added, which in turn reveals its
+ * minimum alignment requirement.  (C99 is lacking a standardized "alignof" operator,
+ * and this is intended to substitute).
+ */
+#define ALIGN_OF(type)           \
+    ((cpuaddr) & ((struct {      \
+                     char Byte;  \
+                     type Align; \
+                 } *)0)          \
+                     ->Align)
+
+/*****************************************************************************/
+/*
+** Type Definitions
+*/
+
+const size_t CFE_ES_MemPoolDefSize[CFE_PLATFORM_ES_POOL_MAX_BUCKETS] = {
+    CFE_PLATFORM_ES_MAX_BLOCK_SIZE,    CFE_PLATFORM_ES_MEM_BLOCK_SIZE_16, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_15,
+    CFE_PLATFORM_ES_MEM_BLOCK_SIZE_14, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_13, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_12,
+    CFE_PLATFORM_ES_MEM_BLOCK_SIZE_11, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_10, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_09,
+    CFE_PLATFORM_ES_MEM_BLOCK_SIZE_08, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_07, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_06,
+    CFE_PLATFORM_ES_MEM_BLOCK_SIZE_05, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_04, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_03,
+    CFE_PLATFORM_ES_MEM_BLOCK_SIZE_02, CFE_PLATFORM_ES_MEM_BLOCK_SIZE_01};
+
+/*****************************************************************************/
+/*
+** Functions
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_MemPoolDirectRetrieve(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t Offset, CFE_ES_GenPoolBD_t **BdPtr)
+{
+    cpuaddr                 DataAddress;
+    CFE_ES_MemPoolRecord_t *MemPoolRecPtr = (CFE_ES_MemPoolRecord_t *)PoolRecPtr;
+
+    DataAddress = MemPoolRecPtr->BaseAddr + Offset;
+    *BdPtr      = (CFE_ES_GenPoolBD_t *)DataAddress;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_MemPoolDirectCommit(CFE_ES_GenPoolRecord_t *PoolRecPtr, size_t Offset, const CFE_ES_GenPoolBD_t *BdPtr)
+{
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_MemPoolID_ToIndex(CFE_ES_MemHandle_t PoolID, uint32 *Idx)
+{
+    return CFE_ResourceId_ToIndex(CFE_RESOURCEID_UNWRAP(PoolID), CFE_ES_POOLID_BASE, CFE_PLATFORM_ES_MAX_MEMORY_POOLS,
+                                  Idx);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_CheckMemPoolSlotUsed(CFE_ResourceId_t CheckId)
+{
+    CFE_ES_MemPoolRecord_t *MemPoolRecPtr;
+    /*
+     * Note - The pointer here should never be NULL because the ID should always be
+     * within the expected range, but if it ever is NULL, this should return true
+     * such that the caller will _not_ attempt to use the record.
+     */
+    MemPoolRecPtr = CFE_ES_LocateMemPoolRecordByID(CFE_ES_MEMHANDLE_C(CheckId));
+    return (MemPoolRecPtr == NULL || CFE_ES_MemPoolRecordIsUsed(MemPoolRecPtr));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_MemPoolRecord_t *CFE_ES_LocateMemPoolRecordByID(CFE_ES_MemHandle_t PoolID)
+{
+    CFE_ES_MemPoolRecord_t *MemPoolRecPtr;
+    uint32                  Idx;
+
+    if (CFE_ES_MemPoolID_ToIndex(PoolID, &Idx) == CFE_SUCCESS)
+    {
+        MemPoolRecPtr = &CFE_ES_Global.MemPoolTable[Idx];
+    }
+    else
+    {
+        MemPoolRecPtr = NULL;
+    }
+
+    return MemPoolRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_PoolCreateNoSem(CFE_ES_MemHandle_t *PoolID, void *MemPtr, size_t Size)
+{
+    return CFE_ES_PoolCreateEx(PoolID, MemPtr, Size, CFE_PLATFORM_ES_POOL_MAX_BUCKETS, &CFE_ES_MemPoolDefSize[0],
+                               CFE_ES_NO_MUTEX);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_PoolCreate(CFE_ES_MemHandle_t *PoolID, void *MemPtr, size_t Size)
+{
+    return CFE_ES_PoolCreateEx(PoolID, MemPtr, Size, CFE_PLATFORM_ES_POOL_MAX_BUCKETS, &CFE_ES_MemPoolDefSize[0],
+                               CFE_ES_USE_MUTEX);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_PoolCreateEx(CFE_ES_MemHandle_t *PoolID, void *MemPtr, size_t Size, uint16 NumBlockSizes,
+                                 const size_t *BlockSizes, bool UseMutex)
+{
+    int32                   OsStatus;
+    int32                   Status;
+    CFE_ResourceId_t        PendingID;
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    size_t                  Alignment;
+    size_t                  MinimumSize;
+    char                    MutexName[OS_MAX_API_NAME];
+
+    /* Sanity Check inputs */
+    if (MemPtr == NULL || PoolID == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /* If too many sizes are specified, return an error */
+    if (NumBlockSizes > CFE_PLATFORM_ES_POOL_MAX_BUCKETS)
+    {
+        CFE_ES_WriteToSysLog("%s: Num Block Sizes (%d) greater than max (%d)\n", __func__, (int)NumBlockSizes,
+                             CFE_PLATFORM_ES_POOL_MAX_BUCKETS);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    /*
+     * Use default block sizes if not specified
+     */
+    if (BlockSizes == NULL)
+    {
+        BlockSizes = CFE_ES_MemPoolDefSize;
+        if (NumBlockSizes == 0)
+        {
+            NumBlockSizes = CFE_PLATFORM_ES_POOL_MAX_BUCKETS;
+        }
+    }
+
+    /*
+     * Sanity check the pool size
+     */
+    MinimumSize = CFE_ES_GenPoolCalcMinSize(NumBlockSizes, BlockSizes, 1);
+    if (Size < MinimumSize)
+    {
+        CFE_ES_WriteToSysLog("%s: Pool size(%lu) too small, need >=%lu bytes\n", __func__, (unsigned long)Size,
+                             (unsigned long)MinimumSize);
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /* scan for a free slot */
+    PendingID  = CFE_ResourceId_FindNext(CFE_ES_Global.LastMemPoolId, CFE_PLATFORM_ES_MAX_MEMORY_POOLS,
+                                        CFE_ES_CheckMemPoolSlotUsed);
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(CFE_ES_MEMHANDLE_C(PendingID));
+
+    if (PoolRecPtr == NULL)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: No free MemPool slots available\n", __func__);
+        Status = CFE_ES_NO_RESOURCE_IDS_AVAILABLE;
+    }
+    else
+    {
+        /* Fully clear the entry, just in case of stale data */
+        memset(PoolRecPtr, 0, sizeof(*PoolRecPtr));
+        CFE_ES_MemPoolRecordSetUsed(PoolRecPtr, CFE_RESOURCEID_RESERVED);
+        CFE_ES_Global.LastMemPoolId = PendingID;
+        Status                      = CFE_SUCCESS;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+     * If no open resource ID was found, return now.
+     *
+     * No more inline returns after this point; execution
+     * must continue to the end of this function where the ID is freed
+     * if not fully successful.
+     */
+    if (Status != CFE_SUCCESS)
+    {
+        return Status;
+    }
+
+    Alignment = ALIGN_OF(CFE_ES_PoolAlign_t); /* memory mapped pools should be aligned */
+    if (Alignment < CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN)
+    {
+        /*
+         * Note about path coverage testing - depending on the
+         * system architecture and configuration this line may be
+         * unreachable.  This is OK.
+         */
+        Alignment = CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN;
+    }
+
+    /*
+     * Most of the work is done by the generic pool implementation.
+     * This subsystem works in offsets, not pointers.
+     */
+    Status = CFE_ES_GenPoolInitialize(&PoolRecPtr->Pool, 0, Size, Alignment, NumBlockSizes, BlockSizes,
+                                      CFE_ES_MemPoolDirectRetrieve, CFE_ES_MemPoolDirectCommit);
+
+    /*
+     * If successful, complete the process.
+     */
+    if (Status == CFE_SUCCESS && UseMutex == CFE_ES_USE_MUTEX)
+    {
+        /*
+        ** Construct a name for the Mutex from the address
+        ** This is needed only because OS_MutSemCreate requires
+        ** a unique name for each semaphore created.
+        */
+        snprintf(MutexName, OS_MAX_API_NAME, "Pool%08lX", CFE_ResourceId_ToInteger(PendingID));
+
+        /* create a mutex to protect this memory pool */
+        OsStatus = OS_MutSemCreate(&PoolRecPtr->MutexId, MutexName, 0);
+        if (OsStatus != OS_SUCCESS)
+        {
+            /* log error and rewrite to CFE status code */
+            CFE_ES_WriteToSysLog("%s: OSAL error %ld while creating mutex\n", __func__, (long)OsStatus);
+
+            Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+         * Store the base address.
+         * This is only relevant for memory-mapped pools which is why it is done here.
+         */
+        PoolRecPtr->BaseAddr = (cpuaddr)MemPtr;
+
+        /*
+         * Get the calling context.
+         * If this is not a valid CFE context, then AppID will be undefined.
+         * We can still permit the creation of the pool but automatic cleanup
+         * if an exception or other event occurs will not be possible.
+         */
+        CFE_ES_GetAppID(&PoolRecPtr->OwnerAppID);
+
+        /*
+         * Store the actual/correct pool ID in the record.
+         */
+        CFE_ES_MemPoolRecordSetUsed(PoolRecPtr, PendingID);
+    }
+    else
+    {
+        /*
+         * Free the entry that was reserved earlier
+         */
+        CFE_ES_MemPoolRecordSetFree(PoolRecPtr);
+        PendingID = CFE_RESOURCEID_UNDEFINED;
+    }
+
+    /*
+     * Export pool ID to caller as handle
+     */
+    *PoolID = CFE_ES_MEMHANDLE_C(PendingID);
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_PoolDelete(CFE_ES_MemHandle_t PoolID)
+{
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    osal_id_t               MutexId;
+    int32                   Status;
+    int32                   OsStatus;
+
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(PoolID);
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+
+    /* basic sanity check */
+    if (CFE_ES_MemPoolRecordIsMatch(PoolRecPtr, PoolID))
+    {
+        MutexId = PoolRecPtr->MutexId; /* snapshot mutex ID, will be freed later */
+        CFE_ES_MemPoolRecordSetFree(PoolRecPtr);
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        MutexId = OS_OBJECT_ID_UNDEFINED;
+        Status  = CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /* Release the mutex if it was configured.
+     * This is done after releasing the ES lock, to avoid
+     * potential conflict with holding two locks. */
+    if (OS_ObjectIdDefined(MutexId))
+    {
+        OsStatus = OS_MutSemDelete(MutexId);
+        if (OsStatus != OS_SUCCESS)
+        {
+            /*
+             * Report to syslog for informational purposes only.
+             *
+             * The MemPool entry has already been deleted, so this
+             * function should not return an error at this point.
+             */
+            CFE_ES_WriteToSysLog("%s: Error %ld deleting mutex\n", __func__, (long)OsStatus);
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GetPoolBuf(CFE_ES_MemPoolBuf_t *BufPtr, CFE_ES_MemHandle_t Handle, size_t Size)
+{
+    int32                   Status;
+    CFE_ES_AppId_t          AppId;
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    size_t                  DataOffset;
+
+    if (BufPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(Handle);
+
+    /* basic sanity check */
+    if (!CFE_ES_MemPoolRecordIsMatch(PoolRecPtr, Handle))
+    {
+        CFE_ES_GetAppID(&AppId);
+        CFE_ES_WriteToSysLog("%s: Err:Bad handle(0x%08lX) AppId=%lu\n", __func__, CFE_RESOURCEID_TO_ULONG(Handle),
+                             CFE_RESOURCEID_TO_ULONG(AppId));
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    /*
+     * Real work begins here.
+     * If pool is mutex-protected, take the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemTake(PoolRecPtr->MutexId);
+    }
+
+    /*
+     * Fundamental work is done as a generic routine.
+     *
+     * If successful, this gets an offset, which can then
+     * be translated into a pointer to return to the caller.
+     */
+    Status = CFE_ES_GenPoolGetBlock(&PoolRecPtr->Pool, &DataOffset, Size);
+
+    /*
+     * Real work ends here.
+     * If pool is mutex-protected, release the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemGive(PoolRecPtr->MutexId);
+    }
+
+    /* If not successful, return error now */
+    if (Status != CFE_SUCCESS)
+    {
+        return Status;
+    }
+
+    /* Compute the actual buffer address. */
+    *BufPtr = CFE_ES_MEMPOOLBUF_C(PoolRecPtr->BaseAddr + DataOffset);
+
+    return (int32)Size;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetPoolBufInfo(CFE_ES_MemHandle_t Handle, CFE_ES_MemPoolBuf_t BufPtr)
+{
+    int32                   Status;
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    size_t                  DataOffset;
+    size_t                  DataSize;
+
+    if (BufPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(Handle);
+
+    /* basic sanity check */
+    if (!CFE_ES_MemPoolRecordIsMatch(PoolRecPtr, Handle))
+    {
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    /*
+     * Real work begins here.
+     * If pool is mutex-protected, take the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemTake(PoolRecPtr->MutexId);
+    }
+
+    DataOffset = (cpuaddr)BufPtr - PoolRecPtr->BaseAddr;
+
+    Status = CFE_ES_GenPoolGetBlockSize(&PoolRecPtr->Pool, &DataSize, DataOffset);
+
+    /*
+     * Real work ends here.
+     * If pool is mutex-protected, release the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemGive(PoolRecPtr->MutexId);
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+         * Historically this function returns the size of the buffer
+         * as an int32.  This is not workable for large (64 bit) pools.
+         */
+        Status = (int32)DataSize;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_PutPoolBuf(CFE_ES_MemHandle_t Handle, CFE_ES_MemPoolBuf_t BufPtr)
+{
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    size_t                  DataSize;
+    size_t                  DataOffset;
+    int32                   Status;
+
+    if (BufPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(Handle);
+
+    /* basic sanity check */
+    if (!CFE_ES_MemPoolRecordIsMatch(PoolRecPtr, Handle))
+    {
+        CFE_ES_WriteToSysLog("%s: Err:Invalid Memory Handle (0x%08lX).\n", __func__, CFE_RESOURCEID_TO_ULONG(Handle));
+
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    /*
+     * Real work begins here.
+     * If pool is mutex-protected, take the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemTake(PoolRecPtr->MutexId);
+    }
+
+    DataOffset = (cpuaddr)BufPtr - PoolRecPtr->BaseAddr;
+
+    /*
+     * Fundamental work is done as a generic routine.
+     *
+     * If successful, this gets an offset, which can then
+     * be translated into a pointer to return to the caller.
+     */
+    Status = CFE_ES_GenPoolPutBlock(&PoolRecPtr->Pool, &DataSize, DataOffset);
+
+    /*
+     * Real work ends here.
+     * If pool is mutex-protected, release the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemGive(PoolRecPtr->MutexId);
+    }
+
+    /*
+     * If successful then modify return code to be
+     * the size of the original buffer that was put (backward compatible)
+     *
+     * Otherwise if not successful, log the relevant detail
+     */
+    if (Status == CFE_SUCCESS)
+    {
+        Status = (int32)DataSize;
+    }
+    else if (Status == CFE_ES_POOL_BLOCK_INVALID)
+    {
+        CFE_ES_WriteToSysLog("%s: Err:Deallocating invalid or corrupt memory block @ 0x%08lX\n", __func__,
+                             (unsigned long)BufPtr);
+    }
+    else if (Status == CFE_ES_BUFFER_NOT_IN_POOL)
+    {
+        CFE_ES_WriteToSysLog("%s: Err:Bad offset(%lu) outside pool boundary\n", __func__, (unsigned long)DataOffset);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_ES_GetMemPoolStats(CFE_ES_MemPoolStats_t *BufPtr, CFE_ES_MemHandle_t Handle)
+{
+    CFE_ES_AppId_t          AppId;
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    uint16                  NumBuckets;
+    uint16                  Idx;
+
+    if (BufPtr == NULL)
+    {
+        return CFE_ES_BAD_ARGUMENT;
+    }
+
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(Handle);
+
+    /* basic sanity check */
+    if (!CFE_ES_MemPoolRecordIsMatch(PoolRecPtr, Handle))
+    {
+        CFE_ES_GetAppID(&AppId);
+        CFE_ES_WriteToSysLog("%s: Err:Bad handle(0x%08lX) AppId=%lu\n", __func__, CFE_RESOURCEID_TO_ULONG(Handle),
+                             CFE_RESOURCEID_TO_ULONG(AppId));
+        return CFE_ES_ERR_RESOURCEID_NOT_VALID;
+    }
+
+    /*
+     * Real work begins here.
+     * If pool is mutex-protected, take the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemTake(PoolRecPtr->MutexId);
+    }
+
+    /*
+     * Obtain the free and total byte count
+     */
+    CFE_ES_GenPoolGetUsage(&PoolRecPtr->Pool, &BufPtr->NumFreeBytes, &BufPtr->PoolSize);
+
+    /*
+     * Obtain the allocation and validation error counts
+     */
+    CFE_ES_GenPoolGetCounts(&PoolRecPtr->Pool, &NumBuckets, &BufPtr->NumBlocksRequested, &BufPtr->CheckErrCtr);
+
+    for (Idx = 0; Idx < CFE_MISSION_ES_POOL_MAX_BUCKETS; ++Idx)
+    {
+        CFE_ES_GenPoolGetBucketUsage(&PoolRecPtr->Pool, NumBuckets, &BufPtr->BlockStats[Idx]);
+
+        if (NumBuckets > 0)
+        {
+            --NumBuckets;
+        }
+    }
+
+    /*
+     * Real work ends here.
+     * If pool is mutex-protected, release the mutex now.
+     */
+    if (OS_ObjectIdDefined(PoolRecPtr->MutexId))
+    {
+        OS_MutSemGive(PoolRecPtr->MutexId);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_ValidateHandle(CFE_ES_MemHandle_t Handle)
+{
+    CFE_ES_MemPoolRecord_t *PoolRecPtr;
+    CFE_ES_MemOffset_t      TotalSize;
+
+    /* Test #1) Handle must be valid */
+    PoolRecPtr = CFE_ES_LocateMemPoolRecordByID(Handle);
+    if (!CFE_ES_MemPoolRecordIsMatch(PoolRecPtr, Handle))
+    {
+        return false;
+    }
+
+    /* Test #2) Check critical internal fields are within reason */
+    if (!CFE_ES_GenPoolValidateState(&PoolRecPtr->Pool))
+    {
+        return false;
+    }
+
+    /* Test #3) Check memory address in PSP (allows both RAM and EEPROM) */
+    CFE_ES_GenPoolGetUsage(&PoolRecPtr->Pool, NULL, &TotalSize);
+    if (CFE_PSP_MemValidateRange(PoolRecPtr->BaseAddr, CFE_ES_MEMOFFSET_TO_SIZET(TotalSize), CFE_PSP_MEM_ANY) !=
+        CFE_PSP_SUCCESS)
+    {
+        return false;
+    }
+
+    return true;
+}
+```
+
+### `cfe_es_mempool.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_mempool.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Contains data structure definitions used by the ES mempool implementation.
+ *
+ * The ES memory pools are now built on top of the generic memory pool implementation,
+ * with a layer on top to translate into memory mapped buffer addresses.
+ */
+
+#ifndef CFE_ES_MEMPOOL_H
+#define CFE_ES_MEMPOOL_H
+
+/*
+** Include Files
+*/
+#include "common_types.h"
+#include "cfe_resourceid.h"
+#include "cfe_es_generic_pool.h"
+
+typedef struct
+{
+    /*
+     * The generic pool structure
+     * This must be the first entry in this structure.
+     */
+    CFE_ES_GenPoolRecord_t Pool;
+
+    /*
+     * The ID of this pool record
+     */
+    CFE_ES_MemHandle_t PoolID;
+
+    /**
+     * This indicates the start/base address
+     * of the memory block.
+     */
+    cpuaddr BaseAddr;
+
+    /**
+     * The "owner" field stores the AppID of the creator of the pool.
+     * If an exception or other event occurs that causes this app to exit,
+     * this allows ES to also release the memory pool entry.
+     *
+     * It is still possible for pools to be created outside the context of
+     * an ES app, but in that case the resource cannot be cleaned up if the
+     * app exits unexpectedly.
+     */
+    CFE_ES_AppId_t OwnerAppID;
+
+    /**
+     * Optional Mutex for serializing get/put operations
+     */
+    osal_id_t MutexId;
+} CFE_ES_MemPoolRecord_t;
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain an index value correlating to an ES Memory Pool ID
+ *
+ * This calculates a zero based integer value that may be used for indexing
+ * into a local resource table/array.
+ *
+ * Index values are only guaranteed to be unique for resources of the same
+ * type.  For instance, the indices corresponding to two [valid] Memory Pool
+ * IDs will never overlap, but the index of a Memory Pool and a library ID
+ * may be the same.  Furthermore, indices may be reused if a resource is
+ * deleted and re-created.
+ *
+ * @note There is no inverse of this function - indices cannot be converted
+ * back to the original PoolID value.  The caller should retain the original ID
+ * for future use.
+ *
+ * @param[in]   PoolID Memory Pool ID to convert
+ * @param[out]  Idx    Buffer where the calculated index will be stored
+ *
+ * @return Execution status, see @ref CFEReturnCodes
+ * @retval #CFE_SUCCESS                 @copybrief CFE_SUCCESS
+ */
+int32 CFE_ES_MemPoolID_ToIndex(CFE_ES_MemHandle_t PoolID, uint32 *Idx);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Locate the Pool table entry correlating with a given Pool ID.
+ *
+ * This only returns a pointer to the table entry where the record
+ * should reside, but does _not_ actually check/validate the entry.
+ *
+ * If the passed-in ID parameter is not within the acceptable range of ID
+ * values for memory pools, such that it could never be valid under
+ * any circumstances, then NULL is returned.  Otherwise, a pointer to the
+ * corresponding table entry is returned, indicating the location where
+ * that ID _should_ reside, if it is currently in use.
+ *
+ * @note This only returns where the ID should reside, not that it actually
+ * resides there.  If looking up an existing ID, then caller must additionally
+ * confirm that the returned record is a match to the expected ID before using
+ * or modifying the data within the returned record pointer.
+ *
+ * The CFE_ES_MemPoolRecordIsMatch() function can be used to check/confirm
+ * if the returned table entry is a positive match for the given ID.
+ *
+ * @sa CFE_ES_MemPoolRecordIsMatch()
+ *
+ * @param[in]   PoolID   the Pool ID to locate
+ * @return pointer to Pool Table entry for the given Pool ID
+ */
+CFE_ES_MemPoolRecord_t *CFE_ES_LocateMemPoolRecordByID(CFE_ES_MemHandle_t PoolID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Memory Pool record is in use or free/empty
+ *
+ * This routine checks if the Pool table entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   PoolRecPtr   pointer to Pool table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool CFE_ES_MemPoolRecordIsUsed(const CFE_ES_MemPoolRecord_t *PoolRecPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(PoolRecPtr->PoolID);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from a Memory Pool table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   PoolRecPtr   pointer to Pool table entry
+ * @returns PoolID of entry
+ */
+static inline CFE_ES_MemHandle_t CFE_ES_MemPoolRecordGetID(const CFE_ES_MemPoolRecord_t *PoolRecPtr)
+{
+    return PoolRecPtr->PoolID;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks a Memory Pool table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given Pool ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   PoolRecPtr   pointer to Pool table entry
+ * @param[in]   PendingId    the Pool ID of this entry
+ */
+static inline void CFE_ES_MemPoolRecordSetUsed(CFE_ES_MemPoolRecord_t *PoolRecPtr, CFE_ResourceId_t PendingId)
+{
+    PoolRecPtr->PoolID = CFE_ES_MEMHANDLE_C(PendingId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set a Memory Pool record table entry free (not used)
+ *
+ * This clears the internal field(s) within this entry, and allows the
+ * memory to be re-used in the future.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   PoolRecPtr   pointer to Pool table entry
+ */
+static inline void CFE_ES_MemPoolRecordSetFree(CFE_ES_MemPoolRecord_t *PoolRecPtr)
+{
+    PoolRecPtr->PoolID = CFE_ES_MEMHANDLE_UNDEFINED;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Mem Pool record is a match for the given Pool ID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected Pool ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * This function may be used in conjunction with CFE_ES_LocateMemPoolRecordByID()
+ * to confirm that the located record is a positive match to the expected ID.
+ * As such, the record pointer is also permitted to be NULL, to alleviate the
+ * need for the caller to handle this possibility explicitly.
+ *
+ * Once a record pointer has been successfully validated using this routine,
+ * it may be safely passed to all other internal functions.
+ *
+ * @sa CFE_ES_LocateMemPoolRecordByID
+ *
+ * @param[in]   PoolRecPtr   pointer to Pool table entry
+ * @param[in]   PoolID       expected Pool ID
+ * @returns true if the entry matches the given pool ID
+ */
+static inline bool CFE_ES_MemPoolRecordIsMatch(const CFE_ES_MemPoolRecord_t *PoolRecPtr, CFE_ES_MemHandle_t PoolID)
+{
+    return (PoolRecPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(PoolRecPtr->PoolID, PoolID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Pool ID table slot is used
+ *
+ * Checks if a table slot is available for a potential new ID
+ * This is a helper function intended to be used with
+ * CFE_ResourceId_FindNext() for allocating new IDs
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @param[in]   CheckId       pending/candidate Pool ID to check
+ * @returns true if the table slot for the ID is occupied, false if available
+ */
+bool CFE_ES_CheckMemPoolSlotUsed(CFE_ResourceId_t CheckId);
+
+#endif /* CFE_ES_MEMPOOL_H */
+```
+
+### `cfe_es_module_all.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_module_all.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Encapsulates all ES module internal header files, as well
+ * as the public API from all other CFE core modules, OSAL, and PSP.
+ *
+ * This simplifies the set of include files that need to be put at the
+ * start of every source file.
+ */
+
+#ifndef CFE_ES_MODULE_ALL_H
+#define CFE_ES_MODULE_ALL_H
+
+/*
+** Includes
+*/
+#include "cfe.h"
+#include "cfe_platform_cfg.h"
+
+#include "cfe_msgids.h"
+#include "cfe_perfids.h"
+
+#include "cfe_es_core_internal.h"
+#include "cfe_es_apps.h"
+#include "cfe_es_cds.h"
+#include "cfe_es_perf.h"
+#include "cfe_es_generic_pool.h"
+#include "cfe_es_mempool.h"
+#include "cfe_es_global.h"
+#include "cfe_es_cds_mempool.h"
+#include "cfe_es_eventids.h"
+#include "cfe_es_start.h"
+#include "cfe_es_task.h"
+#include "cfe_es_dispatch.h"
+#include "cfe_es_resource.h"
+#include "cfe_es_log.h"
+
+#endif /* CFE_ES_MODULE_ALL_H */
+```
+
+### `cfe_es_objtab.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_objtab.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**   File:
+**    cfe_es_objtab.c
+**
+**   Purpose:
+**     This file contains the OS_object_table for system initialization/startup.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+*/
+
+/*
+** Include files
+*/
+#include "cfe_es_module_all.h"
+
+/* Init functions from other modules are in separate headers */
+#include "cfe_evs_core_internal.h"
+#include "cfe_fs_core_internal.h"
+#include "cfe_sb_core_internal.h"
+#include "cfe_tbl_core_internal.h"
+#include "cfe_time_core_internal.h"
+#include "cfe_config_core_internal.h"
+
+/*
+**
+** ES_object_table
+** Note: The name field in this table should be no more than OS_MAX_API_NAME -1 characters.
+**
+*/
+CFE_ES_ObjectTable_t CFE_ES_ObjectTable[CFE_PLATFORM_ES_OBJECT_TABLE_SIZE] = {
+    /*
+    ** Spare entries -- The spares should be distributed evenly through this table
+    */
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+
+    /* Initialize the configuration registry early, so it can be used by core apps */
+    {.ObjectType = CFE_ES_FUNCTION_CALL, .ObjectName = "CFE_Config_Init", .FuncPtrUnion.FunctionPtr = CFE_Config_Init},
+
+    /*
+    ** cFE core early initialization calls. These must be done before the tasks start
+    */
+    {.ObjectType               = CFE_ES_FUNCTION_CALL,
+     .ObjectName               = "CFE_ES_CDSEarlyInit",
+     .FuncPtrUnion.FunctionPtr = CFE_ES_CDS_EarlyInit},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_FUNCTION_CALL,
+     .ObjectName               = "CFE_EVS_EarlyInit",
+     .FuncPtrUnion.FunctionPtr = CFE_EVS_EarlyInit},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_FUNCTION_CALL,
+     .ObjectName               = "CFE_SB_EarlyInit",
+     .FuncPtrUnion.FunctionPtr = CFE_SB_EarlyInit},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_FUNCTION_CALL,
+     .ObjectName               = "CFE_TIME_EarlyInit",
+     .FuncPtrUnion.FunctionPtr = CFE_TIME_EarlyInit},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_FUNCTION_CALL,
+     .ObjectName               = "CFE_TBL_EarlyInit",
+     .FuncPtrUnion.FunctionPtr = CFE_TBL_EarlyInit},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_FUNCTION_CALL,
+     .ObjectName               = "CFE_FS_EarlyInit",
+     .FuncPtrUnion.FunctionPtr = CFE_FS_EarlyInit},
+
+    /*
+    ** Spare entries
+    */
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+
+    /*
+    ** cFE core tasks
+    */
+    {.ObjectType               = CFE_ES_CORE_TASK,
+     .ObjectName               = "CFE_EVS",
+     .FuncPtrUnion.MainTaskPtr = CFE_EVS_TaskMain,
+     .ObjectPriority           = CFE_PLATFORM_EVS_START_TASK_PRIORITY,
+     .ObjectSize               = CFE_PLATFORM_EVS_START_TASK_STACK_SIZE},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_CORE_TASK,
+     .ObjectName               = "CFE_SB",
+     .FuncPtrUnion.MainTaskPtr = CFE_SB_TaskMain,
+     .ObjectPriority           = CFE_PLATFORM_SB_START_TASK_PRIORITY,
+     .ObjectSize               = CFE_PLATFORM_SB_START_TASK_STACK_SIZE},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_CORE_TASK,
+     .ObjectName               = "CFE_ES",
+     .FuncPtrUnion.MainTaskPtr = CFE_ES_TaskMain,
+     .ObjectPriority           = CFE_PLATFORM_ES_START_TASK_PRIORITY,
+     .ObjectSize               = CFE_PLATFORM_ES_START_TASK_STACK_SIZE},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_CORE_TASK,
+     .ObjectName               = "CFE_TIME",
+     .FuncPtrUnion.MainTaskPtr = CFE_TIME_TaskMain,
+     .ObjectPriority           = CFE_PLATFORM_TIME_START_TASK_PRIORITY,
+     .ObjectSize               = CFE_PLATFORM_TIME_START_TASK_STACK_SIZE},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType               = CFE_ES_CORE_TASK,
+     .ObjectName               = "CFE_TBL",
+     .FuncPtrUnion.MainTaskPtr = CFE_TBL_TaskMain,
+     .ObjectPriority           = CFE_PLATFORM_TBL_START_TASK_PRIORITY,
+     .ObjectSize               = CFE_PLATFORM_TBL_START_TASK_STACK_SIZE},
+
+    /*
+    ** Spare entries
+    */
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType = CFE_ES_NULL_ENTRY},
+    {.ObjectType = CFE_ES_NULL_ENTRY}};
+```
+
+### `cfe_es_perf.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_perf.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+** File: cfe_es_perf.c
+**
+** Purpose: This file contains the functions that implement the software timing
+**  performance markers.
+**
+*/
+
+/*
+** Include Section
+*/
+#include "cfe_es_module_all.h"
+
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_SetupPerfVariables(uint32 ResetType)
+{
+    /* Create a constant union -
+     * The "Endian" field will have "0x01" on a big endian processor
+     * and will have value "0x00" on a little endian processor.
+     */
+    const union
+    {
+        uint16 Word;
+        uint8  Endian;
+    } EndianCheck = {.Word = 0x0100};
+
+    uint32             i;
+    CFE_ES_PerfData_t *Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    if (ResetType == CFE_PSP_RST_TYPE_PROCESSOR)
+    {
+        /*
+        ** On a processor reset, just IDLE the data
+        ** collection so the ground can dump the data
+        */
+        Perf->MetaData.State = CFE_ES_PERF_IDLE;
+    }
+    else
+    {
+        Perf->MetaData.Version             = 1;
+        Perf->MetaData.Endian              = EndianCheck.Endian;
+        Perf->MetaData.TimerTicksPerSecond = CFE_PSP_GetTimerTicksPerSecond();
+        Perf->MetaData.TimerLow32Rollover  = CFE_PSP_GetTimerLow32Rollover();
+
+        /* set data collection state to waiting for command state */
+        Perf->MetaData.State                 = CFE_ES_PERF_IDLE;
+        Perf->MetaData.Mode                  = CFE_ES_PERF_TRIGGER_START;
+        Perf->MetaData.TriggerCount          = 0;
+        Perf->MetaData.DataStart             = 0;
+        Perf->MetaData.DataEnd               = 0;
+        Perf->MetaData.DataCount             = 0;
+        Perf->MetaData.InvalidMarkerReported = false;
+        Perf->MetaData.FilterTriggerMaskSize = CFE_ES_PERF_32BIT_WORDS_IN_MASK;
+
+        for (i = 0; i < CFE_ES_PERF_32BIT_WORDS_IN_MASK; i++)
+        {
+            Perf->MetaData.FilterMask[i]  = CFE_PLATFORM_ES_PERF_FILTMASK_INIT;
+            Perf->MetaData.TriggerMask[i] = CFE_PLATFORM_ES_PERF_TRIGMASK_INIT;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 CFE_ES_GetPerfLogDumpRemaining(void)
+{
+    CFE_ES_PerfDumpGlobal_t *PerfDumpState = &CFE_ES_Global.BackgroundPerfDumpState;
+    CFE_ES_PerfDumpState_t   CurrentState  = PerfDumpState->CurrentState;
+    uint32                   Result;
+    CFE_ES_PerfData_t *      Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    /* note this reads the data "live" without exclusion and as such it
+     * may change even between checking the state and checking the value.
+     * This shouldn't be a big deal, as the result should still be meaningful
+     * for a progress report, and the actual 32-bit counters should be atomic */
+    if (CurrentState > CFE_ES_PerfDumpState_IDLE && CurrentState < CFE_ES_PerfDumpState_WRITE_PERF_ENTRIES)
+    {
+        /* dump is requested but not yet to entry writing state,
+         * report the entire data count from perf log */
+        Result = Perf->MetaData.DataCount;
+    }
+    else if (CurrentState == CFE_ES_PerfDumpState_WRITE_PERF_ENTRIES)
+    {
+        /* dump is in active writing state,
+         * report the block counter (number remaining) */
+        Result = PerfDumpState->StateCounter;
+    }
+    else
+    {
+        /* no dump active or dump is complete, report 0 */
+        Result = 0;
+    }
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_StartPerfDataCmd(const CFE_ES_StartPerfDataCmd_t *data)
+{
+    const CFE_ES_StartPerfCmd_Payload_t *CmdPtr        = &data->Payload;
+    CFE_ES_PerfDumpGlobal_t *            PerfDumpState = &CFE_ES_Global.BackgroundPerfDumpState;
+    CFE_ES_PerfData_t *                  Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    /* Ensure there is no file write in progress before proceeding */
+    if (PerfDumpState->CurrentState == CFE_ES_PerfDumpState_IDLE &&
+        PerfDumpState->PendingState == CFE_ES_PerfDumpState_IDLE)
+    {
+        /* Make sure Trigger Mode is valid */
+        /* cppcheck-suppress unsignedPositive */
+        if ((CmdPtr->TriggerMode >= CFE_ES_PERF_TRIGGER_START) && (CmdPtr->TriggerMode < CFE_ES_PERF_MAX_MODES))
+        {
+            CFE_ES_Global.TaskData.CommandCounter++;
+
+            /* Taking lock here as this might be changing states from one active mode to another.
+             * In that case, need to make sure that the log is not written to while resetting the counters. */
+            OS_MutSemTake(CFE_ES_Global.PerfDataMutex);
+            Perf->MetaData.Mode                  = CmdPtr->TriggerMode;
+            Perf->MetaData.TriggerCount          = 0;
+            Perf->MetaData.DataStart             = 0;
+            Perf->MetaData.DataEnd               = 0;
+            Perf->MetaData.DataCount             = 0;
+            Perf->MetaData.InvalidMarkerReported = false;
+            Perf->MetaData.State                 = CFE_ES_PERF_WAITING_FOR_TRIGGER; /* this must be done last */
+            OS_MutSemGive(CFE_ES_Global.PerfDataMutex);
+
+            CFE_EVS_SendEvent(CFE_ES_PERF_STARTCMD_EID, CFE_EVS_EventType_DEBUG,
+                              "Start collecting performance data cmd received, trigger mode = %d",
+                              (int)CmdPtr->TriggerMode);
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_PERF_STARTCMD_TRIG_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Cannot start collecting performance data, trigger mode (%d) out of range (%d to %d)",
+                              (int)CmdPtr->TriggerMode, (int)CFE_ES_PERF_TRIGGER_START, (int)CFE_ES_PERF_TRIGGER_END);
+        }
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_PERF_STARTCMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Cannot start collecting performance data,perf data write in progress");
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_StopPerfDataCmd(const CFE_ES_StopPerfDataCmd_t *data)
+{
+    const CFE_ES_StopPerfCmd_Payload_t *CmdPtr        = &data->Payload;
+    CFE_ES_PerfDumpGlobal_t *           PerfDumpState = &CFE_ES_Global.BackgroundPerfDumpState;
+    CFE_ES_PerfData_t *                 Perf;
+    int32                               Status;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    /* Ensure there is no file write in progress before proceeding */
+    /* note - also need to check the PendingState here, in case this command
+     * was sent twice in succession and the background task has not awakened yet */
+    if (PerfDumpState->CurrentState == CFE_ES_PerfDumpState_IDLE &&
+        PerfDumpState->PendingState == CFE_ES_PerfDumpState_IDLE)
+    {
+        Perf->MetaData.State = CFE_ES_PERF_IDLE;
+
+        /* Copy out the string, using default if unspecified */
+        Status = CFE_FS_ParseInputFileNameEx(PerfDumpState->DataFileName, CmdPtr->DataFileName,
+                                             sizeof(PerfDumpState->DataFileName), sizeof(CmdPtr->DataFileName),
+                                             CFE_PLATFORM_ES_DEFAULT_PERF_DUMP_FILENAME,
+                                             CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                             CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+        if (Status == CFE_SUCCESS)
+        {
+            PerfDumpState->PendingState = CFE_ES_PerfDumpState_INIT;
+            CFE_ES_BackgroundWakeup();
+
+            CFE_ES_Global.TaskData.CommandCounter++;
+
+            CFE_EVS_SendEvent(CFE_ES_PERF_STOPCMD_EID, CFE_EVS_EventType_DEBUG,
+                              "Perf Stop Cmd Rcvd, will write %d entries.%dmS dly every %d entries",
+                              (int)Perf->MetaData.DataCount, (int)CFE_PLATFORM_ES_PERF_CHILD_MS_DELAY,
+                              (int)CFE_PLATFORM_ES_PERF_ENTRIES_BTWN_DLYS);
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_PERF_LOG_ERR_EID, CFE_EVS_EventType_ERROR, "Error parsing filename, RC = %d",
+                              (int)Status);
+        }
+
+    } /* if data to write == 0 */
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_PERF_STOPCMD_ERR2_EID, CFE_EVS_EventType_ERROR,
+                          "Stop performance data cmd ignored,perf data write in progress");
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_RunPerfLogDump(uint32 ElapsedTime, void *Arg)
+{
+    CFE_ES_PerfDumpGlobal_t *State = (CFE_ES_PerfDumpGlobal_t *)Arg;
+    int32                    OsStatus;
+    int32                    Status;
+    CFE_FS_Header_t          FileHdr;
+    size_t                   BlockSize;
+    CFE_ES_PerfData_t *      Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    /*
+     * each time this background job is re-entered after a time delay,
+     * accumulate a work credit amount based on the elapsed time.
+     *
+     * This implements work-throttling as a form of cooperative
+     * CPU sharing with other low priority background jobs.
+     */
+    State->WorkCredit += (ElapsedTime * CFE_PLATFORM_ES_PERF_ENTRIES_BTWN_DLYS) / CFE_PLATFORM_ES_PERF_CHILD_MS_DELAY;
+
+    /*
+     * do not allow credit to accumulate indefinitely -
+     * after a long idle time this would defeat the purpose.
+     */
+    if (State->WorkCredit > CFE_PLATFORM_ES_PERF_ENTRIES_BTWN_DLYS)
+    {
+        State->WorkCredit = CFE_PLATFORM_ES_PERF_ENTRIES_BTWN_DLYS;
+    }
+
+    while (State->WorkCredit > 0)
+    {
+        --State->WorkCredit;
+
+        if (State->PendingState != State->CurrentState)
+        {
+            /*
+             * Handle state change/entry logic.
+             * Zero the block counter register (may be changed later).
+             */
+            State->StateCounter = 0;
+
+            switch (State->PendingState)
+            {
+                case CFE_ES_PerfDumpState_OPEN_FILE:
+                    /* Create the file to dump to */
+                    OsStatus = OS_OpenCreate(&State->FileDesc, State->DataFileName,
+                                             OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+                    if (OsStatus != OS_SUCCESS)
+                    {
+                        State->FileDesc = OS_OBJECT_ID_UNDEFINED;
+                        CFE_EVS_SendEvent(CFE_ES_PERF_LOG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                          "Error creating file %s, RC = %ld", State->DataFileName, (long)OsStatus);
+                    }
+                    State->FileSize = 0;
+                    break;
+
+                case CFE_ES_PerfDumpState_DELAY:
+                    /*
+                     * Add a state entry delay before locking the "Perf" structure to
+                     * ensure that any foreground task that may have been writing to this
+                     * structure has completed its access.
+                     *
+                     * Note that the state should already have been set to IDLE, so
+                     * no new writes will start, this is just to yield the CPU such that
+                     * any already-started writes may finish.
+                     *
+                     * This can be done by simply zeroing out the current credit,
+                     * which will cause this loop to exit for now and resume after
+                     * some time delay (does not really matter how much time).
+                     */
+                    State->WorkCredit = 0;
+                    break;
+
+                case CFE_ES_PerfDumpState_LOCK_DATA:
+                    OS_MutSemTake(CFE_ES_Global.PerfDataMutex);
+                    break;
+
+                case CFE_ES_PerfDumpState_WRITE_FS_HDR:
+                case CFE_ES_PerfDumpState_WRITE_PERF_METADATA:
+                    State->StateCounter = 1;
+                    break;
+
+                case CFE_ES_PerfDumpState_WRITE_PERF_ENTRIES:
+                    State->DataPos      = Perf->MetaData.DataStart;
+                    State->StateCounter = Perf->MetaData.DataCount;
+                    break;
+
+                case CFE_ES_PerfDumpState_UNLOCK_DATA:
+                    OS_MutSemGive(CFE_ES_Global.PerfDataMutex);
+                    break;
+
+                case CFE_ES_PerfDumpState_CLOSE_FILE:
+                    /* close the fd */
+                    if (OS_ObjectIdDefined(State->FileDesc))
+                    {
+                        OS_close(State->FileDesc);
+                        State->FileDesc = OS_OBJECT_ID_UNDEFINED;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            State->CurrentState = State->PendingState;
+        }
+
+        if (State->CurrentState == CFE_ES_PerfDumpState_IDLE)
+        {
+            break;
+        }
+
+        if (State->StateCounter == 0)
+        {
+            /*
+             * State is finished, do any final error checking and logging
+             *
+             * Default transition is to the next state by numeric value.
+             * This prevent endless looping in the same state.
+             *
+             * The switch statement can override this transition, however,
+             * based on any relevant error checks.
+             */
+            State->PendingState = 1 + State->CurrentState;
+            if (State->PendingState >= CFE_ES_PerfDumpState_MAX)
+            {
+                State->PendingState = CFE_ES_PerfDumpState_IDLE;
+            }
+            switch (State->CurrentState)
+            {
+                case CFE_ES_PerfDumpState_OPEN_FILE:
+                    if (!OS_ObjectIdDefined(State->FileDesc))
+                    {
+                        State->PendingState = CFE_ES_PerfDumpState_IDLE;
+                    }
+                    break;
+
+                case CFE_ES_PerfDumpState_WRITE_PERF_ENTRIES:
+                    CFE_EVS_SendEvent(CFE_ES_PERF_DATAWRITTEN_EID, CFE_EVS_EventType_DEBUG,
+                                      "%s written:Size=%lu,EntryCount=%lu", State->DataFileName,
+                                      (unsigned long)State->FileSize, (unsigned long)Perf->MetaData.DataCount);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            /*
+             * State is in progress, perform work item(s) as required
+             */
+            Status    = 0;
+            BlockSize = 0;
+            switch (State->CurrentState)
+            {
+                case CFE_ES_PerfDumpState_WRITE_FS_HDR:
+                    /* Zero cFE header, then fill in fields */
+                    CFE_FS_InitHeader(&FileHdr, CFE_ES_PERF_LOG_DESC, CFE_FS_SubType_ES_PERFDATA);
+                    /* predicted total length of final output */
+                    FileHdr.Length =
+                        sizeof(CFE_ES_PerfMetaData_t) + (Perf->MetaData.DataCount * sizeof(CFE_ES_PerfDataEntry_t));
+                    /* write the cFE header to the file */
+                    Status    = CFE_FS_WriteHeader(State->FileDesc, &FileHdr);
+                    BlockSize = sizeof(CFE_FS_Header_t);
+                    break;
+
+                case CFE_ES_PerfDumpState_WRITE_PERF_METADATA:
+                    /* write the performance metadata to the file */
+                    BlockSize = sizeof(CFE_ES_PerfMetaData_t);
+                    OsStatus  = OS_write(State->FileDesc, &Perf->MetaData, BlockSize);
+                    Status    = (long)OsStatus; /* status type conversion (size) */
+                    break;
+
+                case CFE_ES_PerfDumpState_WRITE_PERF_ENTRIES:
+                    BlockSize = sizeof(CFE_ES_PerfDataEntry_t);
+                    OsStatus  = OS_write(State->FileDesc, &Perf->DataBuffer[State->DataPos], BlockSize);
+                    Status    = (long)OsStatus; /* status type conversion (size) */
+
+                    ++State->DataPos;
+                    if (State->DataPos >= CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE)
+                    {
+                        State->DataPos = 0;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (BlockSize != 0)
+            {
+                if (Status != BlockSize)
+                {
+                    CFE_ES_FileWriteByteCntErr(State->DataFileName, BlockSize, Status);
+
+                    /* skip to cleanup  */
+                    if (State->CurrentState < CFE_ES_PerfDumpState_CLEANUP)
+                    {
+                        State->PendingState = CFE_ES_PerfDumpState_CLEANUP;
+                    }
+                }
+                else
+                {
+                    State->FileSize += BlockSize;
+                }
+            }
+
+            --State->StateCounter;
+        }
+    }
+
+    /*
+     * Return "true" if activity is ongoing, or "false" if not active
+     */
+    return (State->CurrentState != CFE_ES_PerfDumpState_IDLE);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SetPerfFilterMaskCmd(const CFE_ES_SetPerfFilterMaskCmd_t *data)
+{
+    const CFE_ES_SetPerfFilterMaskCmd_Payload_t *cmd = &data->Payload;
+    CFE_ES_PerfData_t *                          Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    if (cmd->FilterMaskNum < CFE_ES_PERF_32BIT_WORDS_IN_MASK)
+    {
+        Perf->MetaData.FilterMask[cmd->FilterMaskNum] = cmd->FilterMask;
+
+        CFE_EVS_SendEvent(CFE_ES_PERF_FILTMSKCMD_EID, CFE_EVS_EventType_DEBUG,
+                          "Set Performance Filter Mask Cmd rcvd, num %u, val 0x%08X", (unsigned int)cmd->FilterMaskNum,
+                          (unsigned int)cmd->FilterMask);
+
+        CFE_ES_Global.TaskData.CommandCounter++;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_PERF_FILTMSKERR_EID, CFE_EVS_EventType_ERROR,
+                          "Performance Filter Mask Cmd Error,Index(%u)out of range(%u)",
+                          (unsigned int)cmd->FilterMaskNum, (unsigned int)CFE_ES_PERF_32BIT_WORDS_IN_MASK);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SetPerfTriggerMaskCmd(const CFE_ES_SetPerfTriggerMaskCmd_t *data)
+{
+    const CFE_ES_SetPerfTrigMaskCmd_Payload_t *cmd = &data->Payload;
+    CFE_ES_PerfData_t *                        Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    if (cmd->TriggerMaskNum < CFE_ES_PERF_32BIT_WORDS_IN_MASK)
+    {
+        Perf->MetaData.TriggerMask[cmd->TriggerMaskNum] = cmd->TriggerMask;
+
+        CFE_EVS_SendEvent(CFE_ES_PERF_TRIGMSKCMD_EID, CFE_EVS_EventType_DEBUG,
+                          "Set Performance Trigger Mask Cmd rcvd,num %u, val 0x%08X", (unsigned int)cmd->TriggerMaskNum,
+                          (unsigned int)cmd->TriggerMask);
+
+        CFE_ES_Global.TaskData.CommandCounter++;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_PERF_TRIGMSKERR_EID, CFE_EVS_EventType_ERROR,
+                          "Performance Trigger Mask Cmd Error,Index(%u)out of range(%u)",
+                          (unsigned int)cmd->TriggerMaskNum, (unsigned int)CFE_ES_PERF_32BIT_WORDS_IN_MASK);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_PerfLogAdd(uint32 Marker, uint32 EntryExit)
+{
+    CFE_ES_PerfDataEntry_t EntryData;
+    uint32                 DataEnd;
+    CFE_ES_PerfData_t *    Perf;
+
+    /*
+    ** Set the pointer to the data area
+    */
+    Perf = &CFE_ES_Global.ResetDataPtr->Perf;
+
+    /*
+     * If the global state is idle, exit immediately without locking or doing anything
+     */
+    if (Perf->MetaData.State == CFE_ES_PERF_IDLE)
+    {
+        return;
+    }
+
+    /* if marker is out of range... */
+    if (Marker >= CFE_MISSION_ES_PERF_MAX_IDS)
+    {
+        /* if marker has not been reported previously ... */
+        if (Perf->MetaData.InvalidMarkerReported == false)
+        {
+            CFE_ES_WriteToSysLog("%s: Invalid performance marker %d,max is %d\n", __func__, (unsigned int)Marker,
+                                 (CFE_MISSION_ES_PERF_MAX_IDS - 1));
+            Perf->MetaData.InvalidMarkerReported = true;
+        }
+
+        return;
+    }
+
+    /*
+     * check if this ID is filtered.
+     * This is also done outside the lock -
+     * normally masks should NOT be changed while perf log is active / non-idle,
+     * so although this is reading a global it should be constant, and this avoids
+     * locking (and potential task switch) if the data is ultimately not going to
+     * be written to the log.
+     */
+    if (!CFE_ES_TEST_LONG_MASK(Perf->MetaData.FilterMask, Marker))
+    {
+        return;
+    }
+
+    /*
+     * prepare the entry data (timestamp) before locking,
+     * just in case the locking operation incurs a delay
+     */
+    EntryData.Data = (Marker | (EntryExit << CFE_MISSION_ES_PERF_EXIT_BIT));
+    CFE_PSP_Get_Timebase(&EntryData.TimerUpper32, &EntryData.TimerLower32);
+
+    /*
+     * Acquire the perflog mutex before writing into the shared area.
+     * Note this lock is held for long periods while a background dump
+     * is taking place, but the dump should never be active at the
+     * same time that a capture/record is taking place.
+     */
+    OS_MutSemTake(CFE_ES_Global.PerfDataMutex);
+
+    /*
+     * Confirm that the global is still non-idle after lock
+     * (state could become idle while getting lock)
+     */
+    if (Perf->MetaData.State != CFE_ES_PERF_IDLE)
+    {
+        /* copy data to next perflog slot */
+        DataEnd                   = Perf->MetaData.DataEnd;
+        Perf->DataBuffer[DataEnd] = EntryData;
+
+        ++DataEnd;
+        if (DataEnd >= CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE)
+        {
+            DataEnd = 0;
+        }
+        Perf->MetaData.DataEnd = DataEnd;
+
+        /* we have filled up the buffer */
+        if (Perf->MetaData.DataCount < CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE)
+        {
+            Perf->MetaData.DataCount++;
+        }
+        else
+        {
+            /* after the buffer fills up start and end point to the same entry since we
+               are now overwriting old data */
+            Perf->MetaData.DataStart = Perf->MetaData.DataEnd;
+        }
+
+        /* waiting for trigger */
+        if (Perf->MetaData.State == CFE_ES_PERF_WAITING_FOR_TRIGGER)
+        {
+            if (CFE_ES_TEST_LONG_MASK(Perf->MetaData.TriggerMask, Marker))
+            {
+                Perf->MetaData.State = CFE_ES_PERF_TRIGGERED;
+            }
+        }
+
+        /* triggered */
+        if (Perf->MetaData.State == CFE_ES_PERF_TRIGGERED)
+        {
+            Perf->MetaData.TriggerCount++;
+            if (Perf->MetaData.Mode == CFE_ES_PERF_TRIGGER_START)
+            {
+                if (Perf->MetaData.TriggerCount >= CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE)
+                {
+                    Perf->MetaData.State = CFE_ES_PERF_IDLE;
+                }
+            }
+            else if (Perf->MetaData.Mode == CFE_ES_PERF_TRIGGER_CENTER)
+            {
+                if (Perf->MetaData.TriggerCount >= CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE / 2)
+                {
+                    Perf->MetaData.State = CFE_ES_PERF_IDLE;
+                }
+            }
+            else if (Perf->MetaData.Mode == CFE_ES_PERF_TRIGGER_END)
+            {
+                Perf->MetaData.State = CFE_ES_PERF_IDLE;
+            }
+        }
+    }
+
+    OS_MutSemGive(CFE_ES_Global.PerfDataMutex);
+}
+```
+
+### `cfe_es_perf.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_perf.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose: Performance Analyzer data structures
+ *
+ * Design Notes:
+ *
+ * References:
+ *
+ */
+
+#ifndef CFE_ES_PERF_H
+#define CFE_ES_PERF_H
+
+/*
+** Include Files
+*/
+#include "common_types.h"
+#include "osconfig.h"
+#include "cfe_es_api_typedefs.h"
+
+/*
+**  Defines
+*/
+
+enum CFE_ES_PerfState_t
+{
+    CFE_ES_PERF_IDLE = 0,
+    CFE_ES_PERF_WAITING_FOR_TRIGGER,
+    CFE_ES_PERF_TRIGGERED,
+    CFE_ES_PERF_MAX_STATES
+};
+
+enum CFE_ES_PerfMode_t
+{
+    CFE_ES_PERF_TRIGGER_START = 0,
+    CFE_ES_PERF_TRIGGER_CENTER,
+    CFE_ES_PERF_TRIGGER_END,
+    CFE_ES_PERF_MAX_MODES
+};
+
+/*
+ * Perflog Dump Background Job states
+ *
+ * Writing performance log data is now handled by a state machine that runs
+ * as a background job in Executive services.  When a performance log dump is
+ * pending, each iteration of the state machine performs a limited amount of
+ * work.  Each iteration resumes work where the last iteration left off.
+ */
+typedef enum
+{
+    CFE_ES_PerfDumpState_IDLE,                /* Placeholder for idle, no action */
+    CFE_ES_PerfDumpState_INIT,                /* Placeholder for entry/init, no action */
+    CFE_ES_PerfDumpState_OPEN_FILE,           /* Opening of the output file */
+    CFE_ES_PerfDumpState_DELAY,               /* Wait-state to ensure in-progress writes are finished */
+    CFE_ES_PerfDumpState_LOCK_DATA,           /* Locking of the global data structure */
+    CFE_ES_PerfDumpState_WRITE_FS_HDR,        /* Write the CFE FS file header */
+    CFE_ES_PerfDumpState_WRITE_PERF_METADATA, /* Write the Perf global metadata */
+    CFE_ES_PerfDumpState_WRITE_PERF_ENTRIES,  /* Write the Perf Log entries (throttled) */
+    CFE_ES_PerfDumpState_CLEANUP,             /* Placeholder for cleanup, no action */
+    CFE_ES_PerfDumpState_UNLOCK_DATA,         /* Unlocking of the global data structure */
+    CFE_ES_PerfDumpState_CLOSE_FILE,          /* Closing of the output file */
+    CFE_ES_PerfDumpState_MAX                  /* Placeholder for last state, no action, always last */
+} CFE_ES_PerfDumpState_t;
+
+/*
+ * Performance log dump state structure
+ *
+ * This structure is stored in global memory and keeps the state
+ * of the performance log dump from one iteration to the next.
+ *
+ * When state is IDLE, the background task does nothing and does not
+ * access or update any other members.
+ *
+ * The first state transition (IDLE->INIT) is triggered via ES command,
+ * where the command processor sets the PendingState.
+ *
+ * Once state is non-IDLE, the structure becomes owned by the background
+ * task.  It will progress through the remainder of the state machine,
+ * eventually arriving back at IDLE when the request is completed.
+ */
+typedef struct
+{
+    CFE_ES_PerfDumpState_t CurrentState; /* the current state of the job */
+    CFE_ES_PerfDumpState_t PendingState; /* the pending/next state, if transitioning */
+
+    char      DataFileName[OS_MAX_PATH_LEN]; /* output file name from dump command */
+    osal_id_t FileDesc;                      /* file descriptor for writing */
+    uint32    WorkCredit;                    /* accumulator based on the passage of time */
+    uint32    StateCounter;                  /* number of blocks/items left in current state */
+    uint32    DataPos;                       /* last position within the Perf Log */
+    size_t    FileSize;                      /* Total file size, for progress reporting in telemetry */
+} CFE_ES_PerfDumpGlobal_t;
+
+/*
+ * Helper function to obtain the progress/remaining items from
+ * the background task that is writing the performance log data
+ *
+ * This is no longer just simply reading a single value from a struct,
+ * as it depends on the state of the overall process.  The return value
+ * from this should mimic the value which was historically
+ * returned in the ES telemetry to report progress on this task.
+ *
+ * Foreground tasks/telemetry code shouldn't directly "peek"
+ * into data structures which it does not own.
+ */
+uint32 CFE_ES_GetPerfLogDumpRemaining(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Write performance data to a file
+ *
+ * Implementation of the background state machine for writing
+ * performance log data.
+ *
+ * This is implemented as a state machine that is invoked in the background
+ * Each iteration should perform a limited amount of work, which will resume
+ * on the next iteration.  State is kept in a global structure.
+ */
+bool CFE_ES_RunPerfLogDump(uint32 ElapsedTime, void *Arg);
+
+#endif /* CFE_ES_PERF_H */
+```
+
+### `cfe_es_resource.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_resource.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**  cfe_es_resource.c
+**
+**  Purpose:
+**      Function definitions related to CFE resource management
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+*/
+
+/*
+** Includes
+*/
+#include "cfe_es_module_all.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+osal_id_t CFE_ES_TaskId_ToOSAL(CFE_ES_TaskId_t id)
+{
+    osal_id_t     Result;
+    unsigned long Val;
+
+    Val    = CFE_ResourceId_ToInteger(CFE_RESOURCEID_UNWRAP(id));
+    Result = OS_ObjectIdFromInteger(Val ^ CFE_RESOURCEID_MARK);
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_TaskId_t CFE_ES_TaskId_FromOSAL(osal_id_t id)
+{
+    CFE_ResourceId_t Result;
+    unsigned long    Val;
+
+    Val    = OS_ObjectIdToInteger(id);
+    Result = CFE_ResourceId_FromInteger(Val ^ CFE_RESOURCEID_MARK);
+
+    return CFE_ES_TASKID_C(Result);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_AppRecord_t *CFE_ES_LocateAppRecordByName(const char *Name)
+{
+    CFE_ES_AppRecord_t *AppRecPtr;
+    uint32              Count;
+
+    /*
+    ** Search the Application table for an app with a matching name.
+    */
+    AppRecPtr = CFE_ES_Global.AppTable;
+    Count     = CFE_PLATFORM_ES_MAX_APPLICATIONS;
+    while (true)
+    {
+        if (Count == 0)
+        {
+            AppRecPtr = NULL;
+            break;
+        }
+        if (CFE_ES_AppRecordIsUsed(AppRecPtr) && strcmp(Name, CFE_ES_AppRecordGetName(AppRecPtr)) == 0)
+        {
+            break;
+        }
+
+        ++AppRecPtr;
+        --Count;
+    }
+
+    return AppRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_LibRecord_t *CFE_ES_LocateLibRecordByName(const char *Name)
+{
+    CFE_ES_LibRecord_t *LibRecPtr;
+    uint32              Count;
+
+    /*
+    ** Search the Library table for a library with a matching name.
+    */
+    LibRecPtr = CFE_ES_Global.LibTable;
+    Count     = CFE_PLATFORM_ES_MAX_LIBRARIES;
+    while (true)
+    {
+        if (Count == 0)
+        {
+            LibRecPtr = NULL;
+            break;
+        }
+        if (CFE_ES_LibRecordIsUsed(LibRecPtr) && strcmp(Name, CFE_ES_LibRecordGetName(LibRecPtr)) == 0)
+        {
+            break;
+        }
+
+        ++LibRecPtr;
+        --Count;
+    }
+
+    return LibRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_GenCounterRecord_t *CFE_ES_LocateCounterRecordByName(const char *Name)
+{
+    CFE_ES_GenCounterRecord_t *CounterRecPtr;
+    uint32                     Count;
+
+    /*
+    ** Search the Counter table for a matching name.
+    */
+    CounterRecPtr = CFE_ES_Global.CounterTable;
+    Count         = CFE_PLATFORM_ES_MAX_GEN_COUNTERS;
+    while (true)
+    {
+        if (Count == 0)
+        {
+            CounterRecPtr = NULL;
+            break;
+        }
+        if (CFE_ES_CounterRecordIsUsed(CounterRecPtr) && strcmp(Name, CFE_ES_CounterRecordGetName(CounterRecPtr)) == 0)
+        {
+            break;
+        }
+
+        ++CounterRecPtr;
+        --Count;
+    }
+
+    return CounterRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_AppRecord_t *CFE_ES_LocateAppRecordByID(CFE_ES_AppId_t AppID)
+{
+    CFE_ES_AppRecord_t *AppRecPtr;
+    uint32              Idx;
+
+    if (CFE_ES_AppID_ToIndex(AppID, &Idx) == CFE_SUCCESS)
+    {
+        AppRecPtr = &CFE_ES_Global.AppTable[Idx];
+    }
+    else
+    {
+        AppRecPtr = NULL;
+    }
+
+    return AppRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_LibRecord_t *CFE_ES_LocateLibRecordByID(CFE_ES_LibId_t LibID)
+{
+    CFE_ES_LibRecord_t *LibRecPtr;
+    uint32              Idx;
+
+    if (CFE_ES_LibID_ToIndex(LibID, &Idx) == CFE_SUCCESS)
+    {
+        LibRecPtr = &CFE_ES_Global.LibTable[Idx];
+    }
+    else
+    {
+        LibRecPtr = NULL;
+    }
+
+    return LibRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_TaskRecord_t *CFE_ES_LocateTaskRecordByID(CFE_ES_TaskId_t TaskID)
+{
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    uint32               Idx;
+
+    if (CFE_ES_TaskID_ToIndex(TaskID, &Idx) == CFE_SUCCESS)
+    {
+        TaskRecPtr = &CFE_ES_Global.TaskTable[Idx];
+    }
+    else
+    {
+        TaskRecPtr = NULL;
+    }
+
+    return TaskRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_GenCounterRecord_t *CFE_ES_LocateCounterRecordByID(CFE_ES_CounterId_t CounterID)
+{
+    CFE_ES_GenCounterRecord_t *CounterRecPtr;
+    uint32                     Idx;
+
+    if (CFE_ES_CounterID_ToIndex(CounterID, &Idx) == CFE_SUCCESS)
+    {
+        CounterRecPtr = &CFE_ES_Global.CounterTable[Idx];
+    }
+    else
+    {
+        CounterRecPtr = NULL;
+    }
+
+    return CounterRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_TaskRecord_t *CFE_ES_GetTaskRecordByContext(void)
+{
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+    CFE_ES_TaskId_t      TaskID;
+
+    /*
+    ** Use the OS task ID to get the ES task record
+    */
+    TaskID     = CFE_ES_TaskId_FromOSAL(OS_TaskGetId());
+    TaskRecPtr = CFE_ES_LocateTaskRecordByID(TaskID);
+
+    /*
+     * Confirm that the entry is actually a match (this requires/assumes
+     * the global data is locked).
+     *
+     * If not a match, return NULL.
+     */
+    if (!CFE_ES_TaskRecordIsMatch(TaskRecPtr, TaskID))
+    {
+        TaskRecPtr = NULL;
+    }
+
+    return TaskRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ES_AppRecord_t *CFE_ES_GetAppRecordByContext(void)
+{
+    CFE_ES_AppRecord_t * AppRecPtr;
+    CFE_ES_TaskRecord_t *TaskRecPtr;
+
+    /*
+    ** Step 1: Get the task record
+    */
+    TaskRecPtr = CFE_ES_GetTaskRecordByContext();
+    if (TaskRecPtr != NULL)
+    {
+        /*
+        ** Step 2: get the Application ID for the current task
+        */
+        AppRecPtr = CFE_ES_LocateAppRecordByID(TaskRecPtr->AppId);
+
+        /*
+         * Confirm that the entry is actually a match (this requires/assumes
+         * the global data is locked).
+         *
+         * If not a match, return NULL.
+         */
+        if (!CFE_ES_AppRecordIsMatch(AppRecPtr, TaskRecPtr->AppId))
+        {
+            AppRecPtr = NULL;
+        }
+    }
+    else
+    {
+        AppRecPtr = NULL;
+    }
+
+    return AppRecPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_CheckCounterIdSlotUsed(CFE_ResourceId_t CheckId)
+{
+    CFE_ES_GenCounterRecord_t *GenCounterRecPtr;
+    /*
+     * Note - The pointer here should never be NULL because the ID should always be
+     * within the expected range, but if it ever is NULL, this should return true
+     * such that the caller will _not_ attempt to use the record.
+     */
+    GenCounterRecPtr = CFE_ES_LocateCounterRecordByID(CFE_ES_COUNTERID_C(CheckId));
+    return (GenCounterRecPtr == NULL || CFE_ES_CounterRecordIsUsed(GenCounterRecPtr));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_CheckAppIdSlotUsed(CFE_ResourceId_t CheckId)
+{
+    CFE_ES_AppRecord_t *AppRecPtr;
+    /*
+     * Note - The pointer here should never be NULL because the ID should always be
+     * within the expected range, but if it ever is NULL, this should return true
+     * such that the caller will _not_ attempt to use the record.
+     */
+    AppRecPtr = CFE_ES_LocateAppRecordByID(CFE_ES_APPID_C(CheckId));
+    return (AppRecPtr == NULL || CFE_ES_AppRecordIsUsed(AppRecPtr));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_ES_CheckLibIdSlotUsed(CFE_ResourceId_t CheckId)
+{
+    CFE_ES_LibRecord_t *LibRecPtr;
+    /*
+     * Note - The pointer here should never be NULL because the ID should always be
+     * within the expected range, but if it ever is NULL, this should return true
+     * such that the caller will _not_ attempt to use the record.
+     */
+    LibRecPtr = CFE_ES_LocateLibRecordByID(CFE_ES_LIBID_C(CheckId));
+    return (LibRecPtr == NULL || CFE_ES_LibRecordIsUsed(LibRecPtr));
+}
+```
+
+### `cfe_es_resource.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_resource.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Contains basic prototypes and definitions related to CFE ES resource
+ * management and related resource IDs.
+ *
+ * A CFE ES Resource ID is a common way to identify CFE-managed resources such
+ * as apps, tasks, counters, memory pools, CDS blocks, and other entities.
+ */
+
+#ifndef CFE_ES_RESOURCE_H
+#define CFE_ES_RESOURCE_H
+
+/*
+** Include Files
+*/
+#include "cfe_resourceid.h"
+#include "cfe_core_resourceid_basevalues.h"
+#include "cfe_es_global.h"
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Locate the app table entry correlating with a given app ID.
+ *
+ * This only returns a pointer to the table entry where the record
+ * should reside, but does _not_ actually check/validate the entry.
+ *
+ * If the passed-in ID parameter is not within the acceptable range of ID
+ * values for applications, such that it could never be valid under
+ * any circumstances, then NULL is returned.  Otherwise, a pointer to the
+ * corresponding table entry is returned, indicating the location where
+ * that ID _should_ reside, if it is currently in use.
+ *
+ * @note This only returns where the ID should reside, not that it actually
+ * resides there.  If looking up an existing ID, then caller must additionally
+ * confirm that the returned record is a match to the expected ID before using
+ * or modifying the data within the returned record pointer.
+ *
+ * The CFE_ES_AppRecordIsMatch() function can be used to check/confirm
+ * if the returned table entry is a positive match for the given ID.
+ *
+ * @sa CFE_ES_AppRecordIsMatch()
+ *
+ * @param[in]   AppID   the app ID to locate
+ * @return pointer to App Table entry for the given app ID, or NULL if out of range
+ */
+CFE_ES_AppRecord_t *CFE_ES_LocateAppRecordByID(CFE_ES_AppId_t AppID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Locate the Library table entry correlating with a given Lib ID.
+ *
+ * This only returns a pointer to the table entry where the record
+ * should reside, but does _not_ actually check/validate the entry.
+ *
+ * If the passed-in ID parameter is not within the acceptable range of ID
+ * values for libraries, such that it could never be valid under
+ * any circumstances, then NULL is returned.  Otherwise, a pointer to the
+ * corresponding table entry is returned, indicating the location where
+ * that ID _should_ reside, if it is currently in use.
+ *
+ * @note This only returns where the ID should reside, not that it actually
+ * resides there.  If looking up an existing ID, then caller must additionally
+ * confirm that the returned record is a match to the expected ID before using
+ * or modifying the data within the returned record pointer.
+ *
+ * The CFE_ES_LibRecordIsMatch() function can be used to check/confirm
+ * if the returned table entry is a positive match for the given ID.
+ *
+ * @sa CFE_ES_LibRecordIsMatch()
+ *
+ * @param[in]   LibID   the Lib ID to locate
+ * @return pointer to Library Table entry for the given Lib ID, or NULL if out of range
+ */
+CFE_ES_LibRecord_t *CFE_ES_LocateLibRecordByID(CFE_ES_LibId_t LibID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Locate the task table entry correlating with a given task ID.
+ *
+ * This only returns a pointer to the table entry where the record
+ * should reside, but does _not_ actually check/validate the entry.
+ *
+ * If the passed-in ID parameter is not within the acceptable range of ID
+ * values for tasks, such that it could never be valid under
+ * any circumstances, then NULL is returned.  Otherwise, a pointer to the
+ * corresponding table entry is returned, indicating the location where
+ * that ID _should_ reside, if it is currently in use.
+ *
+ * @note This only returns where the ID should reside, not that it actually
+ * resides there.  If looking up an existing ID, then caller must additionally
+ * confirm that the returned record is a match to the expected ID before using
+ * or modifying the data within the returned record pointer.
+ *
+ * The CFE_ES_TaskRecordIsMatch() function can be used to check/confirm
+ * if the returned table entry is a positive match for the given ID.
+ *
+ * @sa CFE_ES_TaskRecordIsMatch()
+ *
+ * @param[in]   TaskID   the task ID to locate
+ * @return pointer to Task Table entry for the given task ID, or NULL if out of range
+ */
+CFE_ES_TaskRecord_t *CFE_ES_LocateTaskRecordByID(CFE_ES_TaskId_t TaskID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Locate the Counter table entry correlating with a given Counter ID.
+ *
+ * This only returns a pointer to the table entry where the record
+ * should reside, but does _not_ actually check/validate the entry.
+ *
+ * If the passed-in ID parameter is not within the acceptable range of ID
+ * values for counters, such that it could never be valid under
+ * any circumstances, then NULL is returned.  Otherwise, a pointer to the
+ * corresponding table entry is returned, indicating the location where
+ * that ID _should_ reside, if it is currently in use.
+ *
+ * @note This only returns where the ID should reside, not that it actually
+ * resides there.  If looking up an existing ID, then caller must additionally
+ * confirm that the returned record is a match to the expected ID before using
+ * or modifying the data within the returned record pointer.
+ *
+ * The CFE_ES_CounterRecordIsMatch() function can be used to check/confirm
+ * if the returned table entry is a positive match for the given ID.
+ *
+ * @sa CFE_ES_CounterRecordIsMatch()
+ *
+ * @param[in]   CounterID   the Counter ID to locate
+ * @return pointer to Counter Table entry for the given Counter ID, or NULL if out of range
+ */
+CFE_ES_GenCounterRecord_t *CFE_ES_LocateCounterRecordByID(CFE_ES_CounterId_t CounterID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if an app record is in use or free/empty
+ *
+ * This routine checks if the App table entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   AppRecPtr   pointer to app table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool CFE_ES_AppRecordIsUsed(const CFE_ES_AppRecord_t *AppRecPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(AppRecPtr->AppId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from an app table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   AppRecPtr   pointer to app table entry
+ * @returns AppID of entry
+ */
+static inline CFE_ES_AppId_t CFE_ES_AppRecordGetID(const CFE_ES_AppRecord_t *AppRecPtr)
+{
+    return AppRecPtr->AppId;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks an app table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given app ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   AppRecPtr   pointer to app table entry
+ * @param[in]   PendingId   the app ID of this entry
+ */
+static inline void CFE_ES_AppRecordSetUsed(CFE_ES_AppRecord_t *AppRecPtr, CFE_ResourceId_t PendingId)
+{
+    AppRecPtr->AppId = CFE_ES_APPID_C(PendingId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set an app record table entry free (not used)
+ *
+ * This clears the internal field(s) within this entry, and allows the
+ * memory to be re-used in the future.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   AppRecPtr   pointer to app table entry
+ */
+static inline void CFE_ES_AppRecordSetFree(CFE_ES_AppRecord_t *AppRecPtr)
+{
+    AppRecPtr->AppId = CFE_ES_APPID_UNDEFINED;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if an app record is a match for the given AppID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected app ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * This function may be used in conjunction with CFE_ES_LocateAppRecordByID()
+ * to confirm that the located record is a positive match to the expected ID.
+ * As such, the record pointer is also permitted to be NULL, to alleviate the
+ * need for the caller to handle this possibility explicitly.
+ *
+ * Once a record pointer has been successfully validated using this routine,
+ * it may be safely passed to all other internal functions.
+ *
+ * @sa CFE_ES_LocateAppRecordByID
+ *
+ * @param[in]   AppRecPtr   pointer to app table entry, or NULL
+ * @param[in]   AppID       expected app ID
+ * @returns true if the entry matches the given app ID
+ */
+static inline bool CFE_ES_AppRecordIsMatch(const CFE_ES_AppRecord_t *AppRecPtr, CFE_ES_AppId_t AppID)
+{
+    return (AppRecPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(AppRecPtr->AppId, AppID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain the name associated with the Application record
+ *
+ * Returns the name field from within the Application record
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   AppRecPtr   pointer to App table entry
+ * @returns Pointer to Application name
+ */
+static inline const char *CFE_ES_AppRecordGetName(const CFE_ES_AppRecord_t *AppRecPtr)
+{
+    return AppRecPtr->AppName;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Library record is in use or free/empty
+ *
+ * This routine checks if the Lib table entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   LibRecPtr   pointer to Lib table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool CFE_ES_LibRecordIsUsed(const CFE_ES_LibRecord_t *LibRecPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(LibRecPtr->LibId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from a Library table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   LibRecPtr   pointer to Lib table entry
+ * @returns LibID of entry
+ */
+static inline CFE_ES_LibId_t CFE_ES_LibRecordGetID(const CFE_ES_LibRecord_t *LibRecPtr)
+{
+    /*
+     * The initial implementation does not store the ID in the entry;
+     * the ID is simply the zero-based index into the table.
+     */
+    return LibRecPtr->LibId;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks a Library table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given Lib ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   LibRecPtr   pointer to Lib table entry
+ * @param[in]   PendingId   the Lib ID of this entry
+ */
+static inline void CFE_ES_LibRecordSetUsed(CFE_ES_LibRecord_t *LibRecPtr, CFE_ResourceId_t PendingId)
+{
+    LibRecPtr->LibId = CFE_ES_LIBID_C(PendingId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set a Library record table entry free (not used)
+ *
+ * This clears the internal field(s) within this entry, and allows the
+ * memory to be re-used in the future.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   LibRecPtr   pointer to Lib table entry
+ */
+static inline void CFE_ES_LibRecordSetFree(CFE_ES_LibRecord_t *LibRecPtr)
+{
+    LibRecPtr->LibId = CFE_ES_LIBID_UNDEFINED;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Library record is a match for the given LibID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected Lib ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * This function may be used in conjunction with CFE_ES_LocateLibRecordByID()
+ * to confirm that the located record is a positive match to the expected ID.
+ * As such, the record pointer is also permitted to be NULL, to alleviate the
+ * need for the caller to handle this possibility explicitly.
+ *
+ * Once a record pointer has been successfully validated using this routine,
+ * it may be safely passed to all other internal functions.
+ *
+ * @sa CFE_ES_LocateLibRecordByID
+ *
+ * @param[in]   LibRecPtr   pointer to Lib table entry
+ * @param[in]   LibID       expected Lib ID
+ * @returns true if the entry matches the given Lib ID
+ */
+static inline bool CFE_ES_LibRecordIsMatch(const CFE_ES_LibRecord_t *LibRecPtr, CFE_ES_LibId_t LibID)
+{
+    return (LibRecPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(LibRecPtr->LibId, LibID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain the name associated with the Library record
+ *
+ * Returns the name field from within the Library record
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   LibRecPtr   pointer to Lib table entry
+ * @returns Pointer to Library name
+ */
+static inline const char *CFE_ES_LibRecordGetName(const CFE_ES_LibRecord_t *LibRecPtr)
+{
+    return LibRecPtr->LibName;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from a Task table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   TaskRecPtr   pointer to Task table entry
+ * @returns TaskID of entry
+ */
+static inline CFE_ES_TaskId_t CFE_ES_TaskRecordGetID(const CFE_ES_TaskRecord_t *TaskRecPtr)
+{
+    return TaskRecPtr->TaskId;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Task record is in use or free/empty
+ *
+ * This routine checks if the Task table entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   TaskRecPtr   pointer to task table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool CFE_ES_TaskRecordIsUsed(const CFE_ES_TaskRecord_t *TaskRecPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(TaskRecPtr->TaskId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks a Task table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given Task ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   TaskRecPtr   pointer to Task table entry
+ * @param[in]   PendingId    the Task ID of this entry
+ */
+static inline void CFE_ES_TaskRecordSetUsed(CFE_ES_TaskRecord_t *TaskRecPtr, CFE_ResourceId_t PendingId)
+{
+    TaskRecPtr->TaskId = CFE_ES_TASKID_C(PendingId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set a Task record table entry free
+ *
+ * This allows the table entry to be re-used by another Task.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   TaskRecPtr   pointer to task table entry
+ */
+static inline void CFE_ES_TaskRecordSetFree(CFE_ES_TaskRecord_t *TaskRecPtr)
+{
+    TaskRecPtr->TaskId = CFE_ES_TASKID_UNDEFINED;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Task record is a match for the given TaskID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected Task ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * This function may be used in conjunction with CFE_ES_LocateTaskRecordByID()
+ * to confirm that the located record is a positive match to the expected ID.
+ * As such, the record pointer is also permitted to be NULL, to alleviate the
+ * need for the caller to handle this possibility explicitly.
+ *
+ * Once a record pointer has been successfully validated using this routine,
+ * it may be safely passed to all other internal functions.
+ *
+ * @sa CFE_ES_LocateTaskRecordByID
+ *
+ * @param[in]   TaskRecPtr   pointer to task table entry
+ * @param[in]   TaskID       The expected task ID to verify
+ * @returns true if the entry matches the given task ID
+ */
+static inline bool CFE_ES_TaskRecordIsMatch(const CFE_ES_TaskRecord_t *TaskRecPtr, CFE_ES_TaskId_t TaskID)
+{
+    return (TaskRecPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(TaskRecPtr->TaskId, TaskID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain the name associated with the Task record
+ *
+ * Returns the name field from within the Task record
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   TaskRecPtr   pointer to Task table entry
+ * @returns Pointer to Task name
+ */
+static inline const char *CFE_ES_TaskRecordGetName(const CFE_ES_TaskRecord_t *TaskRecPtr)
+{
+    return TaskRecPtr->TaskName;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Counter record is in use or free/empty
+ *
+ * This routine checks if the Counter table entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CounterRecPtr   pointer to Counter table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool CFE_ES_CounterRecordIsUsed(const CFE_ES_GenCounterRecord_t *CounterRecPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(CounterRecPtr->CounterId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from a Counter table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CounterRecPtr   pointer to Counter table entry
+ * @returns CounterID of entry
+ */
+static inline CFE_ES_CounterId_t CFE_ES_CounterRecordGetID(const CFE_ES_GenCounterRecord_t *CounterRecPtr)
+{
+    return CounterRecPtr->CounterId;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks a Counter table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given Counter ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CounterRecPtr   pointer to Counter table entry
+ * @param[in]   PendingId       the Counter ID of this entry
+ */
+static inline void CFE_ES_CounterRecordSetUsed(CFE_ES_GenCounterRecord_t *CounterRecPtr, CFE_ResourceId_t PendingId)
+{
+    CounterRecPtr->CounterId = CFE_ES_COUNTERID_C(PendingId);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set a Counter record table entry free (not used)
+ *
+ * This clears the internal field(s) within this entry, and allows the
+ * memory to be re-used in the future.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CounterRecPtr   pointer to Counter table entry
+ */
+static inline void CFE_ES_CounterRecordSetFree(CFE_ES_GenCounterRecord_t *CounterRecPtr)
+{
+    CounterRecPtr->CounterId = CFE_ES_COUNTERID_UNDEFINED;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if a Counter record is a match for the given CounterID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected Counter ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * This function may be used in conjunction with CFE_ES_LocateCounterRecordByID()
+ * to confirm that the located record is a positive match to the expected ID.
+ * As such, the record pointer is also permitted to be NULL, to alleviate the
+ * need for the caller to handle this possibility explicitly.
+ *
+ * Once a record pointer has been successfully validated using this routine,
+ * it may be safely passed to all other internal functions.
+ *
+ * @sa CFE_ES_LocateCounterRecordByID
+ *
+ * @param[in]   CounterRecPtr   pointer to Counter table entry
+ * @param[in]   CounterID       expected Counter ID
+ * @returns true if the entry matches the given Counter ID
+ */
+static inline bool CFE_ES_CounterRecordIsMatch(const CFE_ES_GenCounterRecord_t *CounterRecPtr,
+                                               CFE_ES_CounterId_t               CounterID)
+{
+    return (CounterRecPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(CounterRecPtr->CounterId, CounterID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain the name associated with the counter record
+ *
+ * Returns the name field from within the counter record
+ *
+ * @note This internal helper function must only be used on record pointers
+ * that are known to refer to an actual table location (i.e. non-null).
+ *
+ * @param[in]   CounterRecPtr   pointer to Counter table entry
+ * @returns Pointer to counter name
+ */
+static inline const char *CFE_ES_CounterRecordGetName(const CFE_ES_GenCounterRecord_t *CounterRecPtr)
+{
+    return CounterRecPtr->CounterName;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Locate and validate the app record for the calling context.
+ *
+ * Finds and validates the ES AppTable entry corresponding to the
+ * caller. This confirms that the fields within the table entry match the
+ * expected value(s), otherwise NULL is returned if no matching entry
+ * is found.
+ *
+ * The global data lock should be obtained prior to invoking this function.
+ */
+CFE_ES_AppRecord_t *CFE_ES_GetAppRecordByContext(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * Locate and validate the task record for the calling context.
+ *
+ * Finds and validates the ES TaskTable entry corresponding to the
+ * caller. This confirms that the fields within the table entry match the
+ * expected value(s), otherwise NULL is returned if no matching entry
+ * is found.
+ *
+ * The global data lock should be obtained prior to invoking this function.
+ */
+CFE_ES_TaskRecord_t *CFE_ES_GetTaskRecordByContext(void);
+
+/*
+ * OSAL <-> CFE task ID conversion
+ *
+ * CFE ES does not currently allocate its own task IDs; instead it piggybacks on top
+ * of the allocation that is already done by OSAL.  This is partly for backward
+ * compatibility - historically the OSAL task IDs were used directly by CFE task APIs.
+ *
+ * This is _only_ used for tasks - for all other resource types ES should allocate
+ * its own identifiers independently of any other subsystem.  This conversion may also
+ * be removed in a future version of CFE, if ES starts allocating task IDs independently
+ * of OSAL task IDs.
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Convert an ES Task ID to an OSAL task ID
+ *
+ * Task IDs created via CFE ES are also OSAL task IDs, but technically
+ * do refer to a different scope and therefore have a different type
+ * to represent them.
+ *
+ * This function facilitates converting between the types.
+ *
+ * @note With "simple" resource IDs, numeric values are the same and can be interchanged
+ * for backward compatibility, however they will be different when using "strict" IDs.
+ * New code should not assume equivalence between OSAL and ES task IDs.
+ *
+ * @sa CFE_ES_TaskId_FromOSAL
+ *
+ * @param[in] id    The CFE task ID
+ * @returns         The OSAL task ID
+ */
+osal_id_t CFE_ES_TaskId_ToOSAL(CFE_ES_TaskId_t id);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Convert an ES Task ID to an OSAL task ID
+ *
+ * Task IDs created via CFE ES are also OSAL task IDs, but technically
+ * do refer to a different scope and therefore have a different type
+ * to represent them.
+ *
+ * This function facilitates converting between the types.
+ *
+ * @note With "simple" resource IDs, numeric values are the same and can be interchanged
+ * for backward compatibility, however they will be different when using "strict" IDs.
+ * New code should not assume equivalence between OSAL and ES task IDs.
+ *
+ * @sa CFE_ES_TaskId_ToOSAL
+ *
+ * @param[in] id    The OSAL task ID
+ * @returns         The CFE task ID
+ */
+CFE_ES_TaskId_t CFE_ES_TaskId_FromOSAL(osal_id_t id);
+
+/*
+ * Internal functions to perform name based resource lookups
+ *
+ * These functions do not lock, they must only be used internally by ES when
+ * the lock is already held.
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Finds an application table record matching the given name
+ *
+ * Helper function, aids in finding an application record from a name string.
+ * Must be called while locked.
+ *
+ * @returns pointer to table entry matching name, or NULL if not found
+ */
+CFE_ES_AppRecord_t *CFE_ES_LocateAppRecordByName(const char *Name);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Finds a library table record matching the given name
+ *
+ * Helper function, aids in finding a library record from a name string.
+ * Must be called while locked.
+ *
+ * @returns pointer to table entry matching name, or NULL if not found
+ */
+CFE_ES_LibRecord_t *CFE_ES_LocateLibRecordByName(const char *Name);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Finds a task table record matching the given name
+ *
+ * Helper function, aids in finding a task record from a name string.
+ * Must be called while locked.
+ *
+ * @returns pointer to table entry matching name, or NULL if not found
+ */
+CFE_ES_TaskRecord_t *CFE_ES_LocateTaskRecordByName(const char *Name);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Finds a counter table record matching the given name
+ *
+ * Helper function, aids in finding a counter record from a name string.
+ * Must be called while locked.
+ *
+ * @returns pointer to table entry matching name, or NULL if not found
+ */
+CFE_ES_GenCounterRecord_t *CFE_ES_LocateCounterRecordByName(const char *Name);
+
+/*
+ * Availability check functions used in conjunction with CFE_ResourceId_FindNext()
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Checks if Application slot is currently used
+ *
+ * Helper function, Aids in allocating a new ID by checking if
+ * a given ID is available.  Must be called while locked.
+ *
+ * @returns false if slot is unused/available, true if used/unavailable
+ */
+bool CFE_ES_CheckAppIdSlotUsed(CFE_ResourceId_t CheckId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Checks if Library slot is currently used
+ *
+ * Helper function, Aids in allocating a new ID by checking if
+ * a given ID is available.  Must be called while locked.
+ *
+ * @returns false if slot is unused/available, true if used/unavailable
+ */
+bool CFE_ES_CheckLibIdSlotUsed(CFE_ResourceId_t CheckId);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Checks if Counter slot is currently used
+ *
+ * Helper function, Aids in allocating a new ID by checking if
+ * a given ID is available.  Must be called while locked.
+ *
+ * @returns false if slot is unused/available, true if used/unavailable
+ */
+bool CFE_ES_CheckCounterIdSlotUsed(CFE_ResourceId_t CheckId);
+
+#endif /* CFE_ES_RESOURCE_H */
+```
+
+### `cfe_es_start.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_start.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**  cfe_es_start.c
+**
+**  Purpose:
+**  This file contains the Main entrypoint and startup code for the cFE core.
+**  The entry point is called by the board support package for the OS. When the
+**  entry point is finished, the cFE should be fully initialized and running.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+*/
+
+/*
+** Includes
+*/
+
+#include "cfe_es_module_all.h"
+
+#include <stdio.h>
+#include <string.h>
+
+static int32 CFE_ES_MainTaskSyncDelay(uint32 AppStateId, uint32 TimeOutMilliseconds);
+
+/***************************************************************************/
+
+/*
+** Defines for this module
+*/
+
+/*
+** Number of msecs to delay before exiting cFE. Allows LogMsg to get through
+*/
+#define CFE_ES_PANIC_DELAY 500
+
+/*
+** Global data for the ES startup code and Runtime library
+*/
+CFE_ES_Global_t CFE_ES_Global;
+
+/***************************************************************************/
+/*
+** Code
+*/
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_Main(uint32 StartType, uint32 StartSubtype, uint32 ModeId, const char *StartFilePath)
+{
+    int32 OsStatus;
+
+    /*
+     * Clear the entire global data structure.
+     * This also takes care of setting all resource IDs on all table entries
+     * to be "undefined" (not in use).
+     */
+    memset(&CFE_ES_Global, 0, sizeof(CFE_ES_Global));
+
+    /*
+    ** Indicate that the CFE is the earliest initialization state
+    */
+    CFE_ES_Global.SystemState = CFE_ES_SystemState_EARLY_INIT;
+
+    /*
+    ** Create the ES Shared Data Mutex
+    ** This must be done before ANY calls to CFE_ES_WriteToSysLog(), since this uses the mutex
+    */
+    OsStatus = OS_MutSemCreate(&(CFE_ES_Global.SharedDataMutex), "ES_DATA_MUTEX", 0);
+    if (OsStatus != OS_SUCCESS)
+    {
+        /* Cannot use SysLog here, since that requires the reset area to be set up */
+        OS_printf("ES Startup: Error: ES Shared Data Mutex could not be created. RC=%ld\n", (long)OsStatus);
+
+        /*
+        ** Delay to allow the message to be printed
+        */
+        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+        /*
+        ** cFE Cannot continue to start up.
+        */
+        CFE_PSP_Panic(CFE_PSP_PANIC_STARTUP_SEM);
+
+        /*
+         * Normally CFE_PSP_Panic() will not return but it will under UT
+         */
+        return;
+    }
+
+    /*
+    ** Initialize the Reset variables. This call is required
+    ** Before most of the ES functions can be used including the
+    ** ES System log.
+    */
+    CFE_ES_SetupResetVariables(StartType, StartSubtype, ModeId);
+
+    /*
+    ** Initialize the Logic Perf variables
+    ** Because this is in the ES Reset area, it must be called after
+    ** CFE_ES_SetupResetVariables.
+    */
+    CFE_ES_SetupPerfVariables(StartType);
+
+    /*
+    ** Also Create the ES Performance Data Mutex
+    ** This is to separately protect against concurrent writes to the global performance log data
+    */
+    OsStatus = OS_MutSemCreate(&CFE_ES_Global.PerfDataMutex, "ES_PERF_MUTEX", 0);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_SysLogWrite_Unsync("%s: Error: ES Performance Data Mutex could not be created. RC=%ld\n", __func__,
+                                  (long)OsStatus);
+
+        /*
+        ** Delay to allow the message to be read
+        */
+        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+        /*
+        ** cFE Cannot continue to start up.
+        */
+        CFE_PSP_Panic(CFE_PSP_PANIC_STARTUP_SEM);
+
+        /*
+         * Normally CFE_PSP_Panic() will not return but it will under UT
+         */
+        return;
+    }
+
+    /*
+    ** Announce the startup
+    */
+    CFE_ES_WriteToSysLog("%s: CFE_ES_Main in EARLY_INIT state\n", __func__);
+
+    /*
+    ** Create and Mount the filesystems needed
+    */
+    CFE_ES_InitializeFileSystems(StartType);
+
+    /*
+    ** Install exception Handlers ( Placeholder )
+    */
+    CFE_PSP_AttachExceptions();
+
+    /*
+    ** Initialize the Last Id
+    */
+    CFE_ES_Global.LastAppId     = CFE_ResourceId_FromInteger(CFE_ES_APPID_BASE);
+    CFE_ES_Global.LastLibId     = CFE_ResourceId_FromInteger(CFE_ES_LIBID_BASE);
+    CFE_ES_Global.LastCounterId = CFE_ResourceId_FromInteger(CFE_ES_COUNTID_BASE);
+    CFE_ES_Global.LastMemPoolId = CFE_ResourceId_FromInteger(CFE_ES_POOLID_BASE);
+
+    /*
+    ** Indicate that the CFE core is now starting up / going multi-threaded
+    */
+    CFE_ES_WriteToSysLog("%s: CFE_ES_Main entering CORE_STARTUP state\n", __func__);
+    CFE_ES_Global.SystemState = CFE_ES_SystemState_CORE_STARTUP;
+
+    /*
+    ** Create the tasks, OS objects, and initialize hardware
+    */
+    CFE_ES_CreateObjects();
+
+    /*
+    ** Indicate that the CFE core is ready
+    */
+    CFE_ES_WriteToSysLog("%s: CFE_ES_Main entering CORE_READY state\n", __func__);
+    CFE_ES_Global.SystemState = CFE_ES_SystemState_CORE_READY;
+
+    /*
+    ** Start the cFE Applications from the disk using the file
+    ** specified in the CFE_PLATFORM_ES_NONVOL_STARTUP_FILE or CFE_PLATFORM_ES_VOLATILE_STARTUP_FILE
+    ** ( defined in the cfe_platform_cfg.h file )
+    */
+    CFE_ES_StartApplications(StartType, StartFilePath);
+
+    /*
+     * Wait for applications to be in at least "LATE_INIT"
+     *
+     * However, if not everything starts up, that is not a fatal error, we will
+     * continue anyway since the core apps are OK and control/telemetry should function.
+     * The problem app could be deleted/restarted/etc by the ground station.
+     */
+    if (CFE_ES_MainTaskSyncDelay(CFE_ES_AppState_LATE_INIT, CFE_PLATFORM_ES_STARTUP_SCRIPT_TIMEOUT_MSEC) != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Startup Sync failed - Applications may not have all initialized\n", __func__);
+    }
+
+    CFE_ES_WriteToSysLog("%s: CFE_ES_Main entering APPS_INIT state\n", __func__);
+    CFE_ES_Global.SystemState = CFE_ES_SystemState_APPS_INIT;
+
+    /*
+     * Wait for applications to be "RUNNING" before moving to operational system state.
+     *
+     * However, if not everything starts up, that is not a fatal error, we will
+     * continue anyway since the core apps are OK and control/telemetry should function.
+     * The problem app could be deleted/restarted/etc by the ground station.
+     */
+    if (CFE_ES_MainTaskSyncDelay(CFE_ES_AppState_RUNNING, CFE_PLATFORM_ES_STARTUP_SCRIPT_TIMEOUT_MSEC) != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Startup Sync failed - Applications may not have all started\n", __func__);
+    }
+
+    /*
+    ** Startup is fully complete
+    */
+    CFE_ES_WriteToSysLog("%s: CFE_ES_Main entering OPERATIONAL state\n", __func__);
+    CFE_ES_Global.SystemState = CFE_ES_SystemState_OPERATIONAL;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ * SYSLOGGING NOTE: Any logging in here must use CFE_ES_SysLogWrite_Unsync() as the necessary
+ * primitives are not even initialized yet.  There is no chance for log contention here.
+ *-----------------------------------------------------------------*/
+void CFE_ES_SetupResetVariables(uint32 StartType, uint32 StartSubtype, uint32 BootSource)
+{
+    int32   PspStatus;
+    uint32  resetAreaSize;
+    cpuaddr ResetDataAddr;
+
+    /*
+    ** Get the pointer to the Reset area from the BSP
+    */
+    PspStatus = CFE_PSP_GetResetArea(&ResetDataAddr, &resetAreaSize);
+
+    /*
+    ** Make sure the status is OK or size is big enough
+    */
+    if (PspStatus != CFE_PSP_SUCCESS)
+    {
+        /*
+        ** Cannot use the ES System log without the Reset Area
+        */
+        OS_printf("ES Startup: CFE_PSP_GetResetArea call Failed (0x%08x)!\n", (unsigned int)PspStatus);
+
+        /*
+        ** Delay to allow the message to be read
+        */
+        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+        /*
+        ** cFE Cannot continue to start up.
+        */
+        CFE_PSP_Panic(CFE_PSP_PANIC_MEMORY_ALLOC);
+
+        /*
+         * Normally unreachable, except in UT where
+         * CFE_PSP_Panic is a stub that may return
+         */
+        return;
+    }
+    else if (resetAreaSize < sizeof(CFE_ES_ResetData_t))
+    {
+        /*
+        ** Cannot use the ES system log without the Reset Area
+        */
+        OS_printf("ES Startup: Error: ES Reset area not big enough. Needed: %d, Given: %d.\n",
+                  (int)sizeof(CFE_ES_ResetData_t), (int)resetAreaSize);
+        /*
+        ** Delay to allow the message to be read
+        */
+        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+        /*
+        ** cFE Cannot continue to start up.
+        */
+        CFE_PSP_Panic(CFE_PSP_PANIC_MEMORY_ALLOC);
+
+        /*
+         * Normally unreachable, except in UT where
+         * CFE_PSP_Panic is a stub that may return
+         */
+        return;
+    }
+
+    CFE_ES_Global.ResetDataPtr = (CFE_ES_ResetData_t *)ResetDataAddr;
+
+    /*
+    ** Record the BootSource (bank) so it will be valid in the ER log entries.
+    */
+    CFE_ES_Global.ResetDataPtr->ResetVars.BootSource = BootSource;
+
+    /*
+    ** Determine how the system was started. The choices are:
+    **   CFE_ES_POWER_ON_RESET, or CFE_PSP_RST_TYPE_PROCESSOR
+    ** The subtypes include:
+    **   CFE_PSP_RST_SUBTYPE_POWER_CYCLE, CFE_PSP_RST_SUBTYPE_PUSH_BUTTON, CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND,
+    **   CFE_PSP_RST_SUBTYPE_HW_WATCHDOG, CFE_PSP_RST_TYPE_COMMAND, or CFE_PSP_RST_SUBTYPE_EXCEPTION.
+    ** Some of these reset types are logged before the system is restarted.
+    **  ( CFE_PSP_RST_TYPE_COMMAND, CFE_PSP_RST_SUBTYPE_EXCEPTION ) while others occur
+    **  without the knowledge of the software and must be logged here.
+    */
+    if (StartType == CFE_PSP_RST_TYPE_POWERON)
+    {
+        /*
+        ** Record the reset type and subtype
+        */
+        CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype = StartSubtype;
+        CFE_ES_Global.ResetDataPtr->ResetVars.ResetType    = CFE_PSP_RST_TYPE_POWERON;
+
+        /*
+        ** Log the power-on reset.
+        */
+        if (StartSubtype == CFE_PSP_RST_SUBTYPE_POWER_CYCLE)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: POWER ON RESET due to Power Cycle (Power Cycle).\n", __func__);
+            CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, StartSubtype,
+                                "POWER ON RESET due to Power Cycle (Power Cycle)");
+        }
+        else if (StartSubtype == CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND)
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: POWER ON RESET due to HW Special Cmd (Hw Spec Cmd).\n", __func__);
+            CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, StartSubtype,
+                                "POWER ON RESET due to HW Special Cmd (Hw Spec Cmd)");
+        }
+        else
+        {
+            CFE_ES_SysLogWrite_Unsync("%s: POWER ON RESET due to other cause (See Subtype).\n", __func__);
+            CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, StartSubtype,
+                                "POWER ON RESET due to other cause (See Subtype)");
+        }
+
+        /*
+        ** Initialize all reset counters.
+        */
+        CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount    = 0;
+        CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount = CFE_PLATFORM_ES_MAX_PROCESSOR_RESETS;
+        CFE_ES_Global.DebugVars.DebugFlag                            = 0;
+    }
+    else if (StartType == CFE_PSP_RST_TYPE_PROCESSOR)
+    {
+        /*
+        ** If a Processor reset was not commanded, it must be a watchdog or other non-commanded reset
+        ** Log the reset before updating any reset variables.
+        */
+        if (CFE_ES_Global.ResetDataPtr->ResetVars.ES_CausedReset != true)
+        {
+            CFE_ES_Global.ResetDataPtr->ResetVars.ResetType = CFE_PSP_RST_TYPE_PROCESSOR;
+            CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount++;
+
+            /*
+            ** When coming up from a Processor reset that was not caused by ES, check to see
+            ** if the maximum number has been exceeded
+            */
+            if (CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount >
+                CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount)
+            {
+                if (StartSubtype == CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND)
+                {
+                    CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype = CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND;
+                    CFE_ES_SysLogWrite_Unsync("%s: POWER ON RESET due to max proc resets (HW Spec Cmd).\n", __func__);
+
+                    /*
+                    ** Log the reset in the ER Log. The log will be wiped out, but it's good to have
+                    ** the entry just in case something fails.
+                    */
+                    CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, StartSubtype,
+                                        "POWER ON RESET due to max proc resets (HW Spec Cmd).");
+                }
+                else
+                {
+                    CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype = CFE_PSP_RST_SUBTYPE_HW_WATCHDOG;
+                    CFE_ES_SysLogWrite_Unsync("%s: POWER ON RESET due to max proc resets (Watchdog).\n", __func__);
+
+                    /*
+                    ** Log the reset in the ER Log. The log will be wiped out, but it's good to have
+                    ** the entry just in case something fails.
+                    */
+                    CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_POWERON, StartSubtype,
+                                        "POWER ON RESET due to max proc resets (Watchdog).");
+                }
+                /*
+                ** Call the BSP reset routine
+                */
+                CFE_PSP_Restart(CFE_PSP_RST_TYPE_POWERON);
+
+                /*
+                ** Should not return here.
+                */
+                CFE_ES_SysLogWrite_Unsync("%s: Error: CFE_PSP_Restart returned.\n", __func__);
+            }
+            else /* Maximum processor reset not exceeded */
+            {
+                if (StartSubtype == CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND)
+                {
+                    CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype = CFE_PSP_RST_SUBTYPE_HW_SPECIAL_COMMAND;
+                    CFE_ES_SysLogWrite_Unsync("%s: PROCESSOR RESET due to Hardware Special Command (HW Spec Cmd).\n",
+                                              __func__);
+
+                    /*
+                    ** Log the watchdog reset
+                    */
+                    CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_PROCESSOR, StartSubtype,
+                                        "PROCESSOR RESET due to Hardware Special Command (Hw Spec Cmd).");
+                }
+                else
+                {
+                    CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype = CFE_PSP_RST_SUBTYPE_HW_WATCHDOG;
+                    CFE_ES_SysLogWrite_Unsync("%s: PROCESSOR RESET due to Watchdog (Watchdog).\n", __func__);
+
+                    /*
+                    ** Log the watchdog reset
+                    */
+                    CFE_ES_WriteToERLog(CFE_ES_LogEntryType_CORE, CFE_PSP_RST_TYPE_PROCESSOR, StartSubtype,
+                                        "PROCESSOR RESET due to Watchdog (Watchdog).");
+                }
+            }
+        }
+        /*
+        ** If a processor reset is due to a command or exception, the reset has already been logged.
+        ** Update the reset variables only.
+        ** The logic for detecting maximum resets is done on the command/exception side
+        ** on the "way down" when the command or exception handler is executed.
+        */
+        else
+        {
+            CFE_ES_Global.ResetDataPtr->ResetVars.ResetType    = CFE_PSP_RST_TYPE_PROCESSOR;
+            CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype = StartSubtype;
+        }
+
+        /*
+        ** Initialize processor reset counters.
+        */
+        CFE_ES_Global.DebugVars.DebugFlag = 0;
+    }
+
+    /*
+    ** Clear the commanded reset flag, in case a watchdog happens.
+    */
+    CFE_ES_Global.ResetDataPtr->ResetVars.ES_CausedReset = false;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_InitializeFileSystems(uint32 StartType)
+{
+    int32        OsStatus;
+    int32        PspStatus;
+    cpuaddr      RamDiskMemoryAddress = 0;
+    uint32       RamDiskMemorySize;
+    int32        PercentFree;
+    OS_statvfs_t StatBuf;
+
+    memset(&StatBuf, 0, sizeof(StatBuf));
+
+    /*
+    ** Get the memory area for the RAM disk
+    */
+    PspStatus = CFE_PSP_GetVolatileDiskMem(&(RamDiskMemoryAddress), &(RamDiskMemorySize));
+
+    if (PspStatus != CFE_PSP_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Cannot Get Memory for Volatile Disk. EC = 0x%08X\n", __func__,
+                             (unsigned int)PspStatus);
+
+        /*
+        ** Delay to allow the message to be read
+        */
+        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+        /*
+        ** cFE Cannot continue to start up.
+        */
+        CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+    }
+
+    /*
+    ** Next, either format, or just initialize the RAM disk depending on
+    ** the reset type
+    */
+    if (StartType == CFE_PSP_RST_TYPE_POWERON)
+    {
+        OsStatus = OS_mkfs((void *)RamDiskMemoryAddress, "/ramdev0", "RAM", CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE,
+                           CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS);
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: Error Creating Volatile(RAM) Volume. EC = %ld\n", __func__, (long)OsStatus);
+
+            /*
+            ** Delay to allow the message to be read
+            */
+            OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+            /*
+            ** cFE Cannot continue to start up.
+            */
+            CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+        }
+    }
+    else
+    {
+        OsStatus = OS_initfs((void *)RamDiskMemoryAddress, "/ramdev0", "RAM", CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE,
+                             CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS);
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: Error Initializing Volatile(RAM) Volume. EC = %ld\n", __func__, (long)OsStatus);
+            CFE_ES_WriteToSysLog("%s: Formatting Volatile(RAM) Volume.\n", __func__);
+
+            OsStatus = OS_mkfs((void *)RamDiskMemoryAddress, "/ramdev0", "RAM", CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE,
+                               CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS);
+            if (OsStatus != OS_SUCCESS)
+            {
+                CFE_ES_WriteToSysLog("%s: Error Creating Volatile(RAM) Volume. EC = %ld\n", __func__, (long)OsStatus);
+
+                /*
+                ** Delay to allow the message to be read
+                */
+                OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                /*
+                ** cFE Cannot continue to start up.
+                */
+                CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+            }
+        }
+    }
+
+    /*
+    ** Now, mount the RAM disk
+    */
+    OsStatus = OS_mount("/ramdev0", CFE_PLATFORM_ES_RAM_DISK_MOUNT_STRING);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error Mounting Volatile(RAM) Volume. EC = %ld\n", __func__, (long)OsStatus);
+        /*
+        ** Delay to allow the message to be read
+        */
+        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+        /*
+        ** cFE Cannot continue to start up.
+        */
+        CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+    }
+
+    /*
+    ** During a Processor reset, if the RAM disk has less than a defined
+    ** amount of free space, reformat and re-mount it.
+    ** The parameter being checked is CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED
+    ** Note: When CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED is set to 0, this feature is
+    **       disabled.
+    */
+    if ((StartType == CFE_PSP_RST_TYPE_PROCESSOR) && (CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED > 0))
+    {
+        /*
+        ** See how many blocks are free in the RAM disk
+        */
+        OsStatus = OS_FileSysStatVolume(CFE_PLATFORM_ES_RAM_DISK_MOUNT_STRING, &StatBuf);
+        if (OsStatus == OS_SUCCESS && StatBuf.total_blocks > 0)
+        {
+            /*
+            ** Determine if the disk is too full
+            */
+            PercentFree = (StatBuf.blocks_free * 100) / StatBuf.total_blocks;
+            CFE_ES_WriteToSysLog("%s: Volatile Disk has %d Percent free space.\n", __func__, (int)PercentFree);
+
+            if (PercentFree < CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED)
+            {
+                CFE_ES_WriteToSysLog("%s: Insufficient Free Space on Volatile Disk, Reformatting.\n", __func__);
+
+                /*
+                ** First, unmount the disk
+                */
+                OsStatus = OS_unmount(CFE_PLATFORM_ES_RAM_DISK_MOUNT_STRING);
+                if (OsStatus == OS_SUCCESS)
+                {
+                    /*
+                    ** Remove the file system from the OSAL
+                    */
+                    OsStatus = OS_rmfs("/ramdev0");
+                    if (OsStatus == OS_SUCCESS)
+                    {
+                        /*
+                        ** Next, make a new file system on the disk
+                        */
+                        OsStatus = OS_mkfs((void *)RamDiskMemoryAddress, "/ramdev0", "RAM",
+                                           CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE, CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS);
+                        if (OsStatus == OS_SUCCESS)
+                        {
+                            /*
+                            ** Last, remount the disk
+                            */
+                            OsStatus = OS_mount("/ramdev0", CFE_PLATFORM_ES_RAM_DISK_MOUNT_STRING);
+                            if (OsStatus != OS_SUCCESS)
+                            {
+                                CFE_ES_WriteToSysLog("%s: Error Re-Mounting Volatile(RAM) Volume. EC = %ld\n", __func__,
+                                                     (long)OsStatus);
+                                /*
+                                ** Delay to allow the message to be read
+                                */
+                                OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                                /*
+                                ** cFE Cannot continue to start up.
+                                */
+                                CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+
+                            } /* end if mount */
+                        }
+                        else
+                        {
+                            CFE_ES_WriteToSysLog("%s: Error Re-Formatting Volatile(RAM) Volume. EC = %ld\n", __func__,
+                                                 (long)OsStatus);
+                            /*
+                            ** Delay to allow the message to be read
+                            */
+                            OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                            /*
+                            ** cFE Cannot continue to start up.
+                            */
+                            CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+
+                        } /* end if mkfs */
+                    }
+                    else /* could not Remove File system */
+                    {
+                        CFE_ES_WriteToSysLog("%s: Error Removing Volatile(RAM) Volume. EC = %ld\n", __func__,
+                                             (long)OsStatus);
+                        /*
+                        ** Delay to allow the message to be read
+                        */
+                        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                        /*
+                        ** cFE Cannot continue to start up.
+                        */
+                        CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+
+                    } /* end if OS_rmfs */
+                }
+                else /* could not un-mount disk */
+                {
+                    CFE_ES_WriteToSysLog("%s: Error Un-Mounting Volatile(RAM) Volume. EC = %ld\n", __func__,
+                                         (long)OsStatus);
+                    /*
+                    ** Delay to allow the message to be read
+                    */
+                    OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                    /*
+                    ** cFE Cannot continue to start up.
+                    */
+                    CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+                }
+
+            } /* end if enough free space */
+        }
+        else /* could not determine free blocks */
+        {
+            /* Log error message -- note that BlocksFree returns the error code in this case */
+            CFE_ES_WriteToSysLog("%s: Error Determining Blocks Free on Volume. EC = %ld\n", __func__, (long)OsStatus);
+
+            /*
+            ** Delay to allow the message to be read
+            */
+            OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+            /*
+            ** cFE Cannot continue to start up.
+            */
+            CFE_PSP_Panic(CFE_PSP_PANIC_VOLATILE_DISK);
+
+        } /* end if BlocksFree */
+
+    } /* end if processor reset */
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_CreateObjects(void)
+{
+    int32               ReturnCode;
+    uint16              i;
+    CFE_ES_AppRecord_t *AppRecPtr;
+    CFE_ResourceId_t    PendingAppId;
+
+    CFE_ES_WriteToSysLog("%s: Starting Object Creation calls.\n", __func__);
+
+    for (i = 0; i < CFE_PLATFORM_ES_OBJECT_TABLE_SIZE; i++)
+    {
+        switch (CFE_ES_ObjectTable[i].ObjectType)
+        {
+            case CFE_ES_DRIVER_TASK:
+            case CFE_ES_CORE_TASK:
+
+                /*
+                ** Allocate an ES AppTable entry
+                */
+                CFE_ES_LockSharedData(__func__, __LINE__);
+
+                PendingAppId = CFE_ResourceId_FindNext(CFE_ES_Global.LastAppId, CFE_PLATFORM_ES_MAX_APPLICATIONS,
+                                                       CFE_ES_CheckAppIdSlotUsed);
+                AppRecPtr    = CFE_ES_LocateAppRecordByID(CFE_ES_APPID_C(PendingAppId));
+                if (AppRecPtr != NULL)
+                {
+                    /*
+                    ** Fill out the parameters in the AppStartParams sub-structure
+                    */
+                    AppRecPtr->Type = CFE_ES_AppType_CORE;
+
+                    strncpy(AppRecPtr->AppName, CFE_ES_ObjectTable[i].ObjectName, sizeof(AppRecPtr->AppName) - 1);
+                    AppRecPtr->AppName[sizeof(AppRecPtr->AppName) - 1] = '\0';
+
+                    /* FileName and EntryPoint is not valid for core apps */
+                    AppRecPtr->StartParams.MainTaskInfo.StackSize = CFE_ES_ObjectTable[i].ObjectSize;
+                    AppRecPtr->StartParams.MainTaskInfo.Priority  = CFE_ES_ObjectTable[i].ObjectPriority;
+                    AppRecPtr->StartParams.ExceptionAction        = CFE_ES_ExceptionAction_PROC_RESTART;
+
+                    /*
+                    ** Fill out the Task State info
+                    */
+                    AppRecPtr->ControlReq.AppControlRequest = CFE_ES_RunStatus_APP_RUN;
+                    AppRecPtr->ControlReq.AppTimerMsec      = 0;
+
+                    CFE_ES_AppRecordSetUsed(AppRecPtr, CFE_RESOURCEID_RESERVED);
+                    CFE_ES_Global.LastAppId = PendingAppId;
+                }
+
+                CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+                /*
+                ** If a slot was found, create the application
+                */
+                if (AppRecPtr != NULL)
+                {
+                    /*
+                    ** Start the core app main task
+                    ** (core apps are already in memory - no loading needed)
+                    */
+                    ReturnCode = CFE_ES_StartAppTask(
+                        &AppRecPtr->MainTaskId, AppRecPtr->AppName, CFE_ES_ObjectTable[i].FuncPtrUnion.MainTaskPtr,
+                        &AppRecPtr->StartParams.MainTaskInfo, CFE_ES_APPID_C(PendingAppId));
+
+                    /*
+                     * Finalize data in the app table entry, which must be done under lock.
+                     * This transitions the entry from being RESERVED to the real type,
+                     * either MAIN_TASK (success) or returning to INVALID (failure).
+                     */
+                    CFE_ES_LockSharedData(__func__, __LINE__);
+
+                    if (ReturnCode == CFE_SUCCESS)
+                    {
+                        CFE_ES_AppRecordSetUsed(AppRecPtr, PendingAppId);
+
+                        /*
+                        ** Increment the Core App counter.
+                        */
+                        CFE_ES_Global.RegisteredCoreApps++;
+                    }
+                    else
+                    {
+                        /* failure mode - just clear the whole app table entry.
+                         * This will set the AppType back to CFE_ES_ResourceType_INVALID (0),
+                         * as well as clearing any other data that had been written */
+                        memset(AppRecPtr, 0, sizeof(*AppRecPtr));
+                    }
+
+                    CFE_ES_UnlockSharedData(__func__, __LINE__);
+                }
+                else
+                {
+                    /* appSlot not found -- This should never happen!*/
+                    CFE_ES_WriteToSysLog("%s: Error, No free application slots available for CORE App!\n", __func__);
+                    ReturnCode = CFE_ES_ERR_APP_CREATE;
+                }
+
+                if (ReturnCode == CFE_SUCCESS)
+                {
+                    /*
+                     * CFE_ES_MainTaskSyncDelay() will delay this thread until the
+                     * newly-started thread calls CFE_ES_WaitForSystemState()
+                     */
+                    ReturnCode =
+                        CFE_ES_MainTaskSyncDelay(CFE_ES_AppState_RUNNING, CFE_PLATFORM_CORE_MAX_STARTUP_MSEC * 1000);
+                }
+
+                if (ReturnCode != CFE_SUCCESS)
+                {
+                    CFE_ES_WriteToSysLog("%s: OS_TaskCreate error creating core App: %s: EC = 0x%08X\n", __func__,
+                                         CFE_ES_ObjectTable[i].ObjectName, (unsigned int)ReturnCode);
+
+                    /*
+                    ** Delay to allow the message to be read
+                    */
+                    OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                    /*
+                    ** cFE Cannot continue to start up.
+                    */
+                    CFE_PSP_Panic(CFE_PSP_PANIC_CORE_APP);
+                }
+                break;
+
+            case CFE_ES_FUNCTION_CALL: /*----------------------------------------------------------*/
+
+                if (CFE_ES_ObjectTable[i].FuncPtrUnion.FunctionPtr != NULL)
+                {
+                    CFE_ES_WriteToSysLog("%s: Calling %s\n", __func__, CFE_ES_ObjectTable[i].ObjectName);
+                    /*
+                    ** Call the function
+                    */
+                    ReturnCode = (*CFE_ES_ObjectTable[i].FuncPtrUnion.FunctionPtr)();
+                    if (ReturnCode != CFE_SUCCESS)
+                    {
+                        CFE_ES_WriteToSysLog("%s: Error returned when calling function: %s: EC = 0x%08X\n", __func__,
+                                             CFE_ES_ObjectTable[i].ObjectName, (unsigned int)ReturnCode);
+
+                        /*
+                        ** Delay to allow the message to be read
+                        */
+                        OS_TaskDelay(CFE_ES_PANIC_DELAY);
+
+                        /*
+                        ** cFE Cannot continue to start up.
+                        */
+                        CFE_PSP_Panic(CFE_PSP_PANIC_CORE_APP);
+                    }
+                }
+                else
+                {
+                    CFE_ES_WriteToSysLog("%s: bad function pointer ( table entry = %d).\n", __func__, i);
+                }
+                break;
+
+            case CFE_ES_NULL_ENTRY: /*-------------------------------------------------------*/
+                break;
+            default:
+                break;
+        } /* end switch */
+
+    } /* end for */
+
+    CFE_ES_WriteToSysLog("%s: Finished ES CreateObject table entries.\n", __func__);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Waits for all of the applications that CFE has started thus far to
+ * reach the indicated state, by polling the app counters in a delay loop.
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_MainTaskSyncDelay(uint32 AppStateId, uint32 TimeOutMilliseconds)
+{
+    int32               Status;
+    uint32              i;
+    uint32              WaitTime;
+    uint32              WaitRemaining;
+    uint32              AppNotReadyCounter;
+    CFE_ES_AppRecord_t *AppRecPtr;
+
+    Status        = CFE_ES_OPERATION_TIMED_OUT;
+    WaitRemaining = TimeOutMilliseconds;
+    while (true)
+    {
+        AppNotReadyCounter = 0;
+
+        /*
+         * Count the number of apps that are NOT in (at least) in the state requested
+         */
+        CFE_ES_LockSharedData(__func__, __LINE__);
+        AppRecPtr = CFE_ES_Global.AppTable;
+        for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+        {
+            if (CFE_ES_AppRecordIsUsed(AppRecPtr) && (AppRecPtr->AppState < AppStateId))
+            {
+                ++AppNotReadyCounter;
+            }
+            ++AppRecPtr;
+        }
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+        if (AppNotReadyCounter == 0)
+        {
+            /* Condition Met */
+            Status = CFE_SUCCESS;
+            break;
+        }
+
+        /*
+         * Must delay and check again
+         */
+        if (WaitRemaining > CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC)
+        {
+            WaitTime = CFE_PLATFORM_ES_STARTUP_SYNC_POLL_MSEC;
+        }
+        else if (WaitRemaining > 0)
+        {
+            WaitTime = WaitRemaining;
+        }
+        else
+        {
+            break;
+        }
+
+        OS_TaskDelay(WaitTime);
+        WaitRemaining -= WaitTime;
+    }
+
+    return Status;
+}
+```
+
+### `cfe_es_start.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_start.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE core startup module defines, data types and prototypes.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_ES_START_H
+#define CFE_ES_START_H
+
+/*
+** Include Files
+*/
+#include "cfe_es_api_typedefs.h"
+
+/*
+** Macro Definitions
+*/
+
+/*
+** values of object_type in OS object table
+*/
+#define CFE_ES_NULL_ENTRY    0x00
+#define CFE_ES_CORE_TASK     0x01
+#define CFE_ES_DRIVER_TASK   0x02
+#define CFE_ES_BIN_SEM       0x03
+#define CFE_ES_FUNCTION_CALL 0x04
+#define CFE_ES_MUTEX_SEM     0x05
+
+/*
+** Type Definitions
+*/
+
+typedef int32 (*CFE_ES_EarlyInitFuncPtr_t)(void); /**< \brief Req'd prototype of Early Init Functions */
+
+typedef union
+{
+    CFE_ES_EarlyInitFuncPtr_t FunctionPtr;
+    CFE_ES_TaskEntryFuncPtr_t MainTaskPtr;
+    void *                    VoidPtr;
+} CFE_ES_FuncPtrUnion_t;
+
+typedef struct
+{
+    uint32                ObjectType;                  /* The type of object being created */
+    char                  ObjectName[OS_MAX_API_NAME]; /* task or OS object name */
+    CFE_ES_FuncPtrUnion_t FuncPtrUnion;                /* task or function reference */
+    uint32                ObjectPriority;              /* object priority */
+    uint32                ObjectSize;                  /* size used for stack, queue size, etc. */
+    uint32                ObjectFlags;                 /* extra flags to pass */
+} CFE_ES_ObjectTable_t;
+
+/*
+** Exported data
+*/
+extern CFE_ES_ObjectTable_t CFE_ES_ObjectTable[CFE_PLATFORM_ES_OBJECT_TABLE_SIZE]; /* es object table */
+
+/*
+ * Name: CFE_ES_CreateObjects
+ *
+ * Purpose: This function reads the es_object_table and performs all of the
+ *          application layer initialization.
+ */
+void CFE_ES_CreateObjects(void);
+
+/*
+ * Name: CFE_ES_SetupResetVariables
+ *
+ * Purpose: This function initializes the ES reset variables depending on the reset type.
+ *          It will also initiate a power on reset when too many processor resets
+ *          have happened.
+ *
+ */
+void CFE_ES_SetupResetVariables(uint32 StartType, uint32 StartSubtype, uint32 BootSource);
+
+/*
+ * Name: CFE_ES_InitializeFileSystems
+ *
+ * Purpose: This function initializes the file systems used in the cFE core.
+ *
+ */
+void CFE_ES_InitializeFileSystems(uint32 StartType);
+
+/*
+ * Name: CFE_ES_SetupPerfVariables
+ *
+ * Purpose:This function initializes filter mask,trigger mask, data & state vals
+ *
+ * Assumptions and Notes: This gets called from CFE_ES_Main() at startup
+ * This code must be called before any other task or code that would use
+ * CFE_ES_PerfLogEntry() / CFE_ES_PerfLogExit() functions
+ */
+void CFE_ES_SetupPerfVariables(uint32 ResetType);
+
+#endif /* CFE_ES_START_H */
+```
+
+### `cfe_es_syslog.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_syslog.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**    cfe_es_syslog.c
+**
+**  Purpose:
+**    This file implements the cFE Executive Services System Log functions.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+**     Some functions have EXTERNAL SYNC REQUIREMENTS
+**
+**     SysLog functions marked with "Unsync" in their name are designated
+**     as functions which are _not_ safe to be called concurrently by multiple
+**     threads, and also do _not_ implement any locking or protection.  These
+**     functions expect the caller to perform all thread synchronization before
+**     calling it.
+**
+**     The synchronization requirement is across all functions; i.e. it is not safe
+**     to call B_Unsync() while A_Unsync() is executing or vice-versa.  The external
+**     lock must wait until A_Unsync() finishes before calling B_Unsync().
+**
+**     The expectation is that the required level of synchronization can be achieved
+**     using the existing ES shared data lock.  However, if it becomes necessary, this
+**     could be replaced with a finer grained syslog-specific lock.
+*/
+
+/*
+** Required header files.
+*/
+#include "cfe_es_module_all.h"
+
+#include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <ctype.h>
+
+/*******************************************************************
+ *
+ * Non-synchronized helper functions
+ *
+ * An external mutex be held while calling any function marked "Unsync"
+ * These helper functions are local to the ES subsystem and must _NOT_
+ * be exposed to the public API.
+ *
+ * For external access, a public wrapper API must first acquire the
+ * necessary mutex before calling any function marked as "Unsync"
+ *
+ *******************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_SysLogClear_Unsync(void)
+{
+    /*
+     * Note - no need to actually memset the SystemLog buffer -
+     * by simply zeroing out the indices will cover it.
+     */
+
+    CFE_ES_Global.ResetDataPtr->SystemLogWriteIdx = 0;
+    CFE_ES_Global.ResetDataPtr->SystemLogEndIdx   = 0;
+    CFE_ES_Global.ResetDataPtr->SystemLogEntryNum = 0;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_SysLogReadStart_Unsync(CFE_ES_SysLogReadBuffer_t *Buffer)
+{
+    size_t ReadIdx;
+    size_t EndIdx;
+    size_t TotalSize;
+
+    ReadIdx   = CFE_ES_Global.ResetDataPtr->SystemLogWriteIdx;
+    EndIdx    = CFE_ES_Global.ResetDataPtr->SystemLogEndIdx;
+    TotalSize = EndIdx;
+
+    /*
+     * Ensure that we start reading at the start of a message
+     * Likely pointing to an old fragment right now -- find the end of it
+     */
+    while (TotalSize > 0 && ReadIdx < EndIdx)
+    {
+        ++ReadIdx;
+        --TotalSize;
+        if (CFE_ES_Global.ResetDataPtr->SystemLog[ReadIdx - 1] == '\n')
+        {
+            break;
+        }
+    }
+
+    Buffer->SizeLeft   = TotalSize;
+    Buffer->LastOffset = ReadIdx;
+    Buffer->EndIdx     = EndIdx;
+    Buffer->BlockSize  = 0;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SysLogAppend_Unsync(const char *LogString)
+{
+    int32  ReturnCode;
+    size_t MessageLen;
+    size_t WriteIdx;
+    size_t EndIdx;
+
+    /*
+     * Sanity check - Make sure the message length is actually reasonable
+     * Do not allow any single message to consume more than half of the total log
+     * (even this may be overly generous)
+     */
+    MessageLen = strlen(LogString);
+    if (MessageLen > (CFE_PLATFORM_ES_SYSTEM_LOG_SIZE / 2))
+    {
+        MessageLen = CFE_PLATFORM_ES_SYSTEM_LOG_SIZE / 2;
+        ReturnCode = CFE_ES_ERR_SYS_LOG_TRUNCATED;
+    }
+    else
+    {
+        ReturnCode = CFE_SUCCESS;
+    }
+
+    /*
+     * Final sanity check -- do not bother logging empty messages
+     */
+    if (MessageLen == 0)
+    {
+        return ReturnCode;
+    }
+
+    /*
+     * Real work begins --
+     * Take a local snapshot of the head & tail index values
+     *
+     * WriteIdx -> indicates 1 byte past the end of the newest message
+     *      (this is the place where new messages will be added)
+     *
+     * EndIdx -> indicates the entire size of the buffer
+     *
+     * Keeping them in local stack variables allows more efficient modification,
+     * since CFE_ES_Global.ResetDataPtr may point directly into a slower NVRAM space.
+     */
+    WriteIdx = CFE_ES_Global.ResetDataPtr->SystemLogWriteIdx;
+    EndIdx   = CFE_ES_Global.ResetDataPtr->SystemLogEndIdx;
+
+    /*
+     * Check if the log message plus will fit between
+     * the HeadIdx and the end of the buffer.
+     *
+     * If so, then the process can proceed as normal.
+     *
+     * If not, then the action depends on the setting of "SystemLogMode" which will be
+     * to either discard (default) or overwrite
+     */
+    if ((WriteIdx + MessageLen) > CFE_PLATFORM_ES_SYSTEM_LOG_SIZE)
+    {
+        if (CFE_ES_Global.ResetDataPtr->SystemLogMode == CFE_ES_LogMode_OVERWRITE)
+        {
+            /* In "overwrite" mode, start back at the beginning of the buffer */
+            EndIdx   = WriteIdx;
+            WriteIdx = 0;
+        }
+        else if (WriteIdx < (CFE_PLATFORM_ES_SYSTEM_LOG_SIZE - CFE_TIME_PRINTED_STRING_SIZE))
+        {
+            /* In "discard" mode, save as much as possible and discard the remainder of the message
+             * However this should only be done if there is enough room for at least a full timestamp,
+             * otherwise the fragment will not be useful at all. */
+            MessageLen = CFE_PLATFORM_ES_SYSTEM_LOG_SIZE - WriteIdx;
+            ReturnCode = CFE_ES_ERR_SYS_LOG_TRUNCATED;
+        }
+        else
+        {
+            /* entire message must be discarded */
+            MessageLen = 0;
+        }
+    }
+
+    if (MessageLen == 0)
+    {
+        ReturnCode = CFE_ES_ERR_SYS_LOG_FULL;
+    }
+    else
+    {
+        /*
+         * Copy the message in, EXCEPT for the last char which is probably a newline
+         */
+        memcpy(&CFE_ES_Global.ResetDataPtr->SystemLog[WriteIdx], LogString, MessageLen - 1);
+        WriteIdx += MessageLen;
+
+        /*
+         * Ensure that the last-written character is a newline.
+         * This would have been enforced already except in cases where
+         * the message got truncated.
+         */
+        CFE_ES_Global.ResetDataPtr->SystemLog[WriteIdx - 1] = '\n';
+
+        /*
+         * Keep track of the buffer endpoint for future reference
+         */
+        if (WriteIdx > EndIdx)
+        {
+            EndIdx = WriteIdx;
+        }
+
+        /*
+         * Export updated index values to the reset area for next time.
+         */
+        CFE_ES_Global.ResetDataPtr->SystemLogWriteIdx = WriteIdx;
+        CFE_ES_Global.ResetDataPtr->SystemLogEndIdx   = EndIdx;
+        ++CFE_ES_Global.ResetDataPtr->SystemLogEntryNum;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SysLogWrite_Unsync(const char *SpecStringPtr, ...)
+{
+    char    TmpString[CFE_ES_MAX_SYSLOG_MSG_SIZE];
+    va_list ArgPtr;
+
+    va_start(ArgPtr, SpecStringPtr);
+    CFE_ES_SysLog_vsnprintf(TmpString, sizeof(TmpString), SpecStringPtr, ArgPtr);
+    va_end(ArgPtr);
+
+    /* Output the entry to the console */
+    OS_printf("%s", TmpString);
+
+    /*
+     * Append to the syslog buffer
+     */
+    return CFE_ES_SysLogAppend_Unsync(TmpString);
+}
+
+/*******************************************************************
+ *
+ * Additional helper functions
+ *
+ * These functions either perform all necessary synchronization internally,
+ * or they have no specific synchronization requirements
+ *
+ *******************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_SysLogReadData(CFE_ES_SysLogReadBuffer_t *Buffer)
+{
+    size_t BlockSize;
+
+    Buffer->BlockSize = 0;
+    while (Buffer->SizeLeft > 0 && Buffer->BlockSize < sizeof(Buffer->Data))
+    {
+        /*
+         * The next block to copy will be the SMALLEST of:
+         *  - total remaining (un-copied) size of the syslog data
+         *  - space available in the output buffer
+         *  - space between the current read offset and the end of the log buffer (wrap point)
+         */
+        BlockSize = sizeof(Buffer->Data) - Buffer->BlockSize;
+        if (Buffer->LastOffset >= Buffer->EndIdx)
+        {
+            Buffer->LastOffset = 0;
+        }
+        if ((Buffer->LastOffset + BlockSize) > Buffer->EndIdx)
+        {
+            BlockSize = Buffer->EndIdx - Buffer->LastOffset;
+        }
+        if (BlockSize > Buffer->SizeLeft)
+        {
+            BlockSize = Buffer->SizeLeft;
+        }
+
+        if (BlockSize == 0)
+        {
+            /* should be impossible for this to happen,
+             * just in case, do not spin endlessly */
+            break;
+        }
+
+        memcpy(&Buffer->Data[Buffer->BlockSize], &CFE_ES_Global.ResetDataPtr->SystemLog[Buffer->LastOffset], BlockSize);
+
+        Buffer->BlockSize += BlockSize;
+        Buffer->LastOffset += BlockSize;
+        Buffer->SizeLeft -= BlockSize;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SysLogSetMode(CFE_ES_LogMode_Enum_t Mode)
+{
+    int32 Status;
+
+    if ((Mode == CFE_ES_LogMode_OVERWRITE) || (Mode == CFE_ES_LogMode_DISCARD))
+    {
+        CFE_ES_Global.ResetDataPtr->SystemLogMode = Mode;
+        Status                                    = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_ES_BAD_ARGUMENT;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_SysLog_vsnprintf(char *Buffer, size_t BufferSize, const char *SpecStringPtr, va_list ArgPtr)
+{
+    size_t StringLen;
+    size_t MaxLen;
+    int    PrintLen;
+
+    /*
+     * write the current time into the TmpString buffer
+     *
+     * Note that CFE_TIME_Print() is expected to produce a string of exactly
+     * CFE_TIME_PRINTED_STRING_SIZE in length.
+     */
+    StringLen = 0;
+    if (BufferSize > (CFE_TIME_PRINTED_STRING_SIZE + 2))
+    {
+        /*
+         * The "useful" buffer size is two less than the supplied buffer -
+         * due to the addition of a newline and a null char to terminate the string
+         */
+        MaxLen = BufferSize - 2;
+
+        CFE_TIME_Print(Buffer, CFE_TIME_GetTime());
+
+        /* using strlen() anyway in case the specific format of CFE_TIME_Print() changes someday */
+        StringLen = strlen(Buffer);
+        if (StringLen < MaxLen)
+        {
+            /* overwrite null with a space to separate the timestamp from the content */
+            Buffer[StringLen] = ' ';
+            ++StringLen;
+
+            /* note that vsnprintf() may return a size larger than the buffer, if it truncates. */
+            PrintLen = vsnprintf(&Buffer[StringLen], BufferSize - StringLen, SpecStringPtr, ArgPtr);
+            if (PrintLen > 0)
+            {
+                StringLen += PrintLen;
+            }
+        }
+
+        if (StringLen > MaxLen)
+        {
+            /* the message got truncated */
+            StringLen = MaxLen;
+        }
+
+        /*
+         * Finalize the output string.
+         *
+         * To be consistent when writing to the console, it is important that
+         * every printed string end in a newline - particularly if the console is buffered.
+         *
+         * The caller may or may not have included a newline in the original format
+         * string.  Most callers do, but some do not.
+         *
+         * Strip off all trailing whitespace, and add back a single newline
+         */
+        while (StringLen > 0 && isspace((unsigned char)Buffer[StringLen - 1]))
+        {
+            --StringLen;
+        }
+        Buffer[StringLen] = '\n';
+        ++StringLen;
+    }
+
+    if (BufferSize > 0)
+    {
+        /* always output a null terminated string */
+        Buffer[StringLen] = 0;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SysLogDump(const char *Filename)
+{
+    osal_id_t fd = OS_OBJECT_ID_UNDEFINED;
+    int32     OsStatus;
+    int32     Status;
+    size_t    WritePos;
+    size_t    TotalSize;
+    size_t    LastReqSize;
+    union
+    {
+        CFE_ES_SysLogReadBuffer_t LogData;
+        CFE_FS_Header_t           FileHdr;
+    } Buffer;
+
+    OsStatus = OS_OpenCreate(&fd, Filename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CFE_ES_SYSLOG2_ERR_EID, CFE_EVS_EventType_ERROR, "Error creating file %s, RC = %ld", Filename,
+                          (long)OsStatus);
+        return CFE_ES_FILE_IO_ERR;
+    }
+
+    CFE_FS_InitHeader(&Buffer.FileHdr, CFE_ES_SYS_LOG_DESC, CFE_FS_SubType_ES_SYSLOG);
+
+    TotalSize   = 0;
+    LastReqSize = sizeof(CFE_FS_Header_t);
+    Status      = CFE_FS_WriteHeader(fd, &Buffer.FileHdr);
+    if (Status >= 0)
+    {
+        TotalSize += Status;
+
+        /*
+         * Get a snapshot of the buffer pointers and read the first block of
+         * data while locked - ensuring that nothing additional can be written
+         * into the syslog buffer while getting the first block of log data.
+         */
+        CFE_ES_LockSharedData(__func__, __LINE__);
+        CFE_ES_SysLogReadStart_Unsync(&Buffer.LogData);
+        CFE_ES_SysLogReadData(&Buffer.LogData);
+        CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+        while (Buffer.LogData.BlockSize > 0)
+        {
+            WritePos = 0;
+            while (WritePos < Buffer.LogData.BlockSize)
+            {
+                LastReqSize = Buffer.LogData.BlockSize - WritePos;
+                OsStatus    = OS_write(fd, &Buffer.LogData.Data[WritePos], LastReqSize);
+
+                /* NOTE: this stops for errors or EOF code (0) */
+                if (OsStatus <= 0)
+                {
+                    break;
+                }
+
+                WritePos += (long)OsStatus;
+                TotalSize += (long)OsStatus;
+            }
+
+            if (OsStatus <= 0)
+            {
+                Status = (long)OsStatus;
+                break;
+            }
+
+            /*
+             * _NOT_ taking the lock for subsequent reads --
+             *
+             * All syslog index values use the local snapshots that were taken earlier.
+             * (The shared memory index values are not referenced on subsequent reads)
+             *
+             * If a new syslog message _does_ get written while this is in progress, it
+             * should be writing to a different part of the syslog buffer anyway, and
+             * probably will not overwrite the data about to be read here.
+             *
+             * There is still a possibility of a "flood" of syslogs coming in which would
+             * potentially overwrite unread data and cause message loss/corruption.  However
+             * taking a lock here will not alleviate that situation - this means that the
+             * buffer simply isn't big enough.
+             */
+            CFE_ES_SysLogReadData(&Buffer.LogData);
+        }
+    }
+
+    OS_close(fd);
+
+    if (Status <= 0)
+    {
+        CFE_ES_FileWriteByteCntErr(Filename, LastReqSize, Status);
+        Status = CFE_ES_FILE_IO_ERR;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_SYSLOG2_EID, CFE_EVS_EventType_DEBUG, "%s written:Size=%lu,Entries=%u", Filename,
+                          (unsigned long)TotalSize,
+                          (unsigned int)CFE_ES_Global.TaskData.HkPacket.Payload.SysLogEntries);
+        Status = CFE_SUCCESS;
+    }
+
+    return Status;
+}
+```
+
+### `cfe_es_task.c`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_task.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File: cfe_es_task.c
+**
+**  Purpose:
+**  cFE Executive Services (ES) task
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+*/
+
+/*
+** Includes
+*/
+#include "cfe_es_module_all.h"
+
+#include "cfe_version.h"
+#include "target_config.h"
+#include "cfe_es_verify.h"
+
+#include "cfe_config.h"
+
+#include <string.h>
+
+/*
+** Defines
+*/
+#define CFE_ES_PERF_MASK_ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+
+#define CFE_ES_PERF_TRIGGERMASK_INT_SIZE \
+    CFE_ES_PERF_MASK_ARRAY_SIZE(CFE_ES_Global.ResetDataPtr->Perf.MetaData.TriggerMask)
+#define CFE_ES_PERF_TRIGGERMASK_EXT_SIZE \
+    CFE_ES_PERF_MASK_ARRAY_SIZE(CFE_ES_Global.TaskData.HkPacket.Payload.PerfTriggerMask)
+#define CFE_ES_PERF_FILTERMASK_INT_SIZE \
+    CFE_ES_PERF_MASK_ARRAY_SIZE(CFE_ES_Global.ResetDataPtr->Perf.MetaData.FilterMask)
+#define CFE_ES_PERF_FILTERMASK_EXT_SIZE \
+    CFE_ES_PERF_MASK_ARRAY_SIZE(CFE_ES_Global.TaskData.HkPacket.Payload.PerfFilterMask)
+
+/*
+** This define should be put in the OS API headers -- Right now it matches what the OS API uses
+*/
+#define OS_MAX_PRIORITY 255
+
+/*
+** Executive Services (ES) task global data.
+*/
+CFE_ES_TaskData_t CFE_ES_TaskData;
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_TaskMain(void)
+{
+    int32            Status;
+    uint32           AppRunStatus = CFE_ES_RunStatus_APP_RUN;
+    CFE_SB_Buffer_t *SBBufPtr;
+
+    /*
+    ** Performance Time Stamp Entry
+    */
+    CFE_ES_PerfLogEntry(CFE_MISSION_ES_MAIN_PERF_ID);
+
+    /*
+    ** Perform task specific initialization.
+    */
+    Status = CFE_ES_TaskInit();
+    if (Status != CFE_SUCCESS)
+    {
+        /*
+        ** Create a syslog entry
+        */
+        CFE_ES_WriteToSysLog("%s: Application Init Failed,RC=0x%08X\n", __func__, (unsigned int)Status);
+
+        /*
+        ** Allow Core App to Exit
+        */
+        AppRunStatus = CFE_ES_RunStatus_CORE_APP_INIT_ERROR;
+    }
+
+    /*
+     * Wait for other apps to start.
+     * It is important that the core apps are present before this starts receiving
+     * messages from the command pipe, as some of those handlers might depend on
+     * the other core apps.
+     */
+    CFE_ES_WaitForSystemState(CFE_ES_SystemState_CORE_READY, CFE_PLATFORM_CORE_MAX_STARTUP_MSEC);
+
+    /*
+    ** Main process loop
+    */
+    while (AppRunStatus == CFE_ES_RunStatus_APP_RUN)
+    {
+        /*
+        ** Increment the main task execution counter
+        **  This is normally done in the CFE_ES_RunLoop call, but
+        **  currently CFE Child tasks and the cFE core tasks do not
+        **  use the RunLoop call.
+        */
+        CFE_ES_IncrementTaskCounter();
+
+        /*
+        ** Performance Time Stamp Exit
+        */
+        CFE_ES_PerfLogExit(CFE_MISSION_ES_MAIN_PERF_ID);
+
+        /*
+        ** Wait for the next Software Bus message.
+        */
+        Status = CFE_SB_ReceiveBuffer(&SBBufPtr, CFE_ES_Global.TaskData.CmdPipe, CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Performance Time Stamp Entry
+        */
+        CFE_ES_PerfLogEntry(CFE_MISSION_ES_MAIN_PERF_ID);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /*
+            ** Process message.
+            */
+            CFE_ES_TaskPipe(SBBufPtr);
+
+            /*
+             * Wake up the background task, which includes the
+             * scanning of the ES app table for entries that may need cleanup
+             */
+            CFE_ES_BackgroundWakeup();
+        }
+        else
+        {
+            /*
+            ** SB Error: Write a SysLog Message
+            */
+            CFE_ES_WriteToSysLog("%s: Error reading cmd pipe,RC=0x%08X\n", __func__, (unsigned int)Status);
+
+            /*
+            ** Allow Core App to Exit
+            */
+            AppRunStatus = CFE_ES_RunStatus_CORE_APP_RUNTIME_ERROR;
+        }
+
+    } /* end while */
+
+    /*
+    ** Performance Time Stamp Exit
+    */
+    CFE_ES_PerfLogExit(CFE_MISSION_ES_MAIN_PERF_ID);
+
+    /*
+    ** Exit the application, CFE_ES_ExitApp will not return.
+    */
+    CFE_ES_ExitApp(AppRunStatus);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Send a single CFE_ES_VERSION_INF_EID event for a component/module
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_GenerateSingleVersionEvent(const char *ModuleType, const char *ModuleName, CFE_ConfigId_t Id)
+{
+    int32 Status;
+
+    /*
+     * Advertise the mission version information
+     * NOTE: CFE_Config_GetString() does not return NULL, so its OK to use inside an arg list
+     */
+    Status = CFE_EVS_SendEvent(CFE_ES_VERSION_INF_EID, CFE_EVS_EventType_INFORMATION, "Version Info: %s %s, version %s",
+                               ModuleType, ModuleName, CFE_Config_GetString(Id));
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Callback for iterating all configuration keys
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_ModSrcVerCallback(void *Arg, CFE_ConfigId_t Id, const char *Name)
+{
+    static const char IDNAME_PREFIX[] = "MOD_SRCVER_";
+
+    if (strncmp(Name, IDNAME_PREFIX, sizeof(IDNAME_PREFIX) - 1) == 0)
+    {
+        CFE_ES_GenerateSingleVersionEvent("Module", &Name[sizeof(IDNAME_PREFIX) - 1], Id);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Send CFE_ES_VERSION_INF_EID events for all components/modules
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_GenerateVersionEvents(void)
+{
+    int32 Status;
+
+    /*
+     * Advertise the mission version information
+     */
+    Status = CFE_ES_GenerateSingleVersionEvent("Mission", GLOBAL_CONFIGDATA.MissionName, CFE_CONFIGID_MISSION_SRCVER);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error sending mission version event:RC=0x%08X\n", __func__, (unsigned int)Status);
+    }
+
+    CFE_Config_IterateAll(NULL, CFE_ES_ModSrcVerCallback);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Sends the CFE_ES_BUILD_INF_EID event with build information
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_GenerateBuildInfoEvents(void)
+{
+    int32       Status;
+    const char *BuildDate;
+    const char *BuildUser;
+    const char *BuildHost;
+
+    /* NOTE: The config APIs using "GetString" will not return NULL */
+    BuildDate = CFE_Config_GetString(CFE_CONFIGID_CORE_BUILDINFO_DATE);
+    BuildUser = CFE_Config_GetString(CFE_CONFIGID_CORE_BUILDINFO_USER);
+    BuildHost = CFE_Config_GetString(CFE_CONFIGID_CORE_BUILDINFO_HOST);
+
+    Status = CFE_EVS_SendEvent(CFE_ES_BUILD_INF_EID, CFE_EVS_EventType_INFORMATION, "Build %s by %s@%s, config %s",
+                               BuildDate, BuildUser, BuildHost, GLOBAL_CONFIGDATA.Config);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error sending build info event:RC=0x%08X\n", __func__, (unsigned int)Status);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_TaskInit(void)
+{
+    int32   Status;
+    int32   PspStatus;
+    uint32  SizeofCfeSegment;
+    cpuaddr CfeSegmentAddr;
+    uint8   VersionNumber[4];
+
+    /*
+    ** Initialize task command execution counters
+    */
+    CFE_ES_Global.TaskData.CommandCounter      = 0;
+    CFE_ES_Global.TaskData.CommandErrorCounter = 0;
+
+    /*
+    ** Initialize systemlog to default Power On or Processor Reset mode
+    */
+    if (CFE_ES_GetResetType(NULL) == CFE_PSP_RST_TYPE_POWERON)
+    {
+        CFE_ES_Global.ResetDataPtr->SystemLogMode = CFE_PLATFORM_ES_DEFAULT_POR_SYSLOG_MODE;
+    }
+    else
+    {
+        CFE_ES_Global.ResetDataPtr->SystemLogMode = CFE_PLATFORM_ES_DEFAULT_PR_SYSLOG_MODE;
+    }
+
+    /*
+    ** Register event filter table.
+    */
+    Status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Call to CFE_EVS_Register Failed, RC = 0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Initialize housekeeping packet (clear user data area)
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_ES_Global.TaskData.HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(CFE_ES_HK_TLM_MID),
+                 sizeof(CFE_ES_Global.TaskData.HkPacket));
+
+    /*
+    ** Initialize single application telemetry packet
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_ES_Global.TaskData.OneAppPacket.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(CFE_ES_APP_TLM_MID), sizeof(CFE_ES_Global.TaskData.OneAppPacket));
+
+    /*
+    ** Initialize memory pool statistics telemetry packet
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_ES_Global.TaskData.MemStatsPacket.TelemetryHeader),
+                 CFE_SB_ValueToMsgId(CFE_ES_MEMSTATS_TLM_MID), sizeof(CFE_ES_Global.TaskData.MemStatsPacket));
+
+    /*
+    ** Create Software Bus message pipe
+    */
+    Status = CFE_SB_CreatePipe(&CFE_ES_Global.TaskData.CmdPipe, CFE_ES_PIPE_DEPTH, CFE_ES_PIPE_NAME);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Cannot Create SB Pipe, RC = 0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Subscribe to Housekeeping request commands
+    */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CFE_ES_SEND_HK_MID), CFE_ES_Global.TaskData.CmdPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Cannot Subscribe to HK packet, RC = 0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Subscribe to ES task ground command packets
+    */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CFE_ES_CMD_MID), CFE_ES_Global.TaskData.CmdPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Cannot Subscribe to ES ground commands, RC = 0x%08X\n", __func__,
+                             (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+    ** Compute the CRC for the cfe core code segment and place
+    ** in ES Housekeeping pkt.
+    */
+    PspStatus = CFE_PSP_GetCFETextSegmentInfo(&CfeSegmentAddr, &SizeofCfeSegment);
+
+    if (PspStatus == CFE_PSP_SUCCESS)
+    {
+        CFE_ES_Global.TaskData.HkPacket.Payload.CFECoreChecksum =
+            CFE_ES_CalculateCRC((void *)(CfeSegmentAddr), SizeofCfeSegment, 0, CFE_MISSION_ES_DEFAULT_CRC);
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.HkPacket.Payload.CFECoreChecksum = 0xFFFF;
+    }
+
+    /*
+    ** Initialize the version numbers in the ES Housekeeping pkt
+    */
+    CFE_ES_Global.TaskData.HkPacket.Payload.CFEMajorVersion    = CFE_MAJOR_VERSION;
+    CFE_ES_Global.TaskData.HkPacket.Payload.CFEMinorVersion    = CFE_MINOR_VERSION;
+    CFE_ES_Global.TaskData.HkPacket.Payload.CFERevision        = CFE_REVISION;
+    CFE_ES_Global.TaskData.HkPacket.Payload.CFEMissionRevision = CFE_MISSION_REV;
+
+    OS_GetVersionNumber(VersionNumber);
+    CFE_ES_Global.TaskData.HkPacket.Payload.OSALMajorVersion    = VersionNumber[0];
+    CFE_ES_Global.TaskData.HkPacket.Payload.OSALMinorVersion    = VersionNumber[1];
+    CFE_ES_Global.TaskData.HkPacket.Payload.OSALRevision        = VersionNumber[2];
+    CFE_ES_Global.TaskData.HkPacket.Payload.OSALMissionRevision = VersionNumber[3];
+
+    CFE_PSP_GetVersionNumber(VersionNumber);
+    CFE_ES_Global.TaskData.HkPacket.Payload.PSPMajorVersion    = VersionNumber[0];
+    CFE_ES_Global.TaskData.HkPacket.Payload.PSPMinorVersion    = VersionNumber[1];
+    CFE_ES_Global.TaskData.HkPacket.Payload.PSPRevision        = VersionNumber[2];
+    CFE_ES_Global.TaskData.HkPacket.Payload.PSPMissionRevision = VersionNumber[3];
+
+    /*
+    ** Task startup event message.
+    */
+    Status = CFE_EVS_SendEvent(CFE_ES_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "cFE ES Initialized: %s",
+                               CFE_VERSION_STRING);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error sending init event:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    Status =
+        CFE_EVS_SendEvent(CFE_ES_INITSTATS_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "cFS Versions: cfe %s, osal %s, psp %s. cFE chksm %d", CFE_SRC_VERSION, OS_GetVersionString(),
+                          CFE_PSP_GetVersionString(), (int)CFE_ES_Global.TaskData.HkPacket.Payload.CFECoreChecksum);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error sending init stats event:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /*
+     * Generate all module version and build info events.
+     */
+    CFE_ES_GenerateVersionEvents();
+    CFE_ES_GenerateBuildInfoEvents();
+
+    /*
+     * Initialize the "background task" which is a low priority child task
+     * devoted to maintenance duties that do not need to execute on a
+     * strict/precise schedule.
+     */
+    Status = CFE_ES_BackgroundInit();
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error initializing background task:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_HousekeepingCmd(const CFE_ES_SendHkCmd_t *data)
+{
+    OS_heap_prop_t HeapProp;
+    int32          OsStatus;
+    uint32         PerfIdx;
+
+    memset(&HeapProp, 0, sizeof(HeapProp));
+
+    /*
+    ** Get command execution counters, system log entry count & bytes used.
+    */
+    CFE_ES_Global.TaskData.HkPacket.Payload.CommandCounter      = CFE_ES_Global.TaskData.CommandCounter;
+    CFE_ES_Global.TaskData.HkPacket.Payload.CommandErrorCounter = CFE_ES_Global.TaskData.CommandErrorCounter;
+
+    CFE_ES_Global.TaskData.HkPacket.Payload.SysLogBytesUsed =
+        CFE_ES_MEMOFFSET_C(CFE_ES_Global.ResetDataPtr->SystemLogEndIdx);
+    CFE_ES_Global.TaskData.HkPacket.Payload.SysLogSize    = CFE_ES_MEMOFFSET_C(CFE_PLATFORM_ES_SYSTEM_LOG_SIZE);
+    CFE_ES_Global.TaskData.HkPacket.Payload.SysLogEntries = CFE_ES_Global.ResetDataPtr->SystemLogEntryNum;
+    CFE_ES_Global.TaskData.HkPacket.Payload.SysLogMode    = CFE_ES_Global.ResetDataPtr->SystemLogMode;
+
+    CFE_ES_Global.TaskData.HkPacket.Payload.ERLogIndex   = CFE_ES_Global.ResetDataPtr->ERLogIndex;
+    CFE_ES_Global.TaskData.HkPacket.Payload.ERLogEntries = CFE_ES_Global.ResetDataPtr->ERLogEntries;
+
+    CFE_ES_Global.TaskData.HkPacket.Payload.RegisteredCoreApps     = CFE_ES_Global.RegisteredCoreApps;
+    CFE_ES_Global.TaskData.HkPacket.Payload.RegisteredExternalApps = CFE_ES_Global.RegisteredExternalApps;
+    CFE_ES_Global.TaskData.HkPacket.Payload.RegisteredTasks        = CFE_ES_Global.RegisteredTasks;
+    CFE_ES_Global.TaskData.HkPacket.Payload.RegisteredLibs         = CFE_ES_Global.RegisteredLibs;
+
+    CFE_ES_Global.TaskData.HkPacket.Payload.ResetType       = CFE_ES_Global.ResetDataPtr->ResetVars.ResetType;
+    CFE_ES_Global.TaskData.HkPacket.Payload.ResetSubtype    = CFE_ES_Global.ResetDataPtr->ResetVars.ResetSubtype;
+    CFE_ES_Global.TaskData.HkPacket.Payload.ProcessorResets = CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount;
+    CFE_ES_Global.TaskData.HkPacket.Payload.MaxProcessorResets =
+        CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount;
+    CFE_ES_Global.TaskData.HkPacket.Payload.BootSource = CFE_ES_Global.ResetDataPtr->ResetVars.BootSource;
+
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfState        = CFE_ES_Global.ResetDataPtr->Perf.MetaData.State;
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfMode         = CFE_ES_Global.ResetDataPtr->Perf.MetaData.Mode;
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfTriggerCount = CFE_ES_Global.ResetDataPtr->Perf.MetaData.TriggerCount;
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfDataStart    = CFE_ES_Global.ResetDataPtr->Perf.MetaData.DataStart;
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfDataEnd      = CFE_ES_Global.ResetDataPtr->Perf.MetaData.DataEnd;
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfDataCount    = CFE_ES_Global.ResetDataPtr->Perf.MetaData.DataCount;
+    CFE_ES_Global.TaskData.HkPacket.Payload.PerfDataToWrite  = CFE_ES_GetPerfLogDumpRemaining();
+
+    /*
+     * Fill out the perf trigger/filter mask objects
+     * The entire array in the HK payload object (external size) must be filled,
+     * to avoid sending garbage data.
+     *
+     * If it is larger than what the platform supports (internal size), it will
+     * be padded with 0's
+     *
+     * If it is smaller than what the platform supports, then truncate.
+     */
+    for (PerfIdx = 0; PerfIdx < CFE_ES_PERF_TRIGGERMASK_EXT_SIZE; ++PerfIdx)
+    {
+        if (PerfIdx < CFE_ES_PERF_TRIGGERMASK_INT_SIZE)
+        {
+            CFE_ES_Global.TaskData.HkPacket.Payload.PerfTriggerMask[PerfIdx] =
+                CFE_ES_Global.ResetDataPtr->Perf.MetaData.TriggerMask[PerfIdx];
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.HkPacket.Payload.PerfTriggerMask[PerfIdx] = 0;
+        }
+    }
+
+    for (PerfIdx = 0; PerfIdx < CFE_ES_PERF_FILTERMASK_EXT_SIZE; ++PerfIdx)
+    {
+        if (PerfIdx < CFE_ES_PERF_FILTERMASK_INT_SIZE)
+        {
+            CFE_ES_Global.TaskData.HkPacket.Payload.PerfFilterMask[PerfIdx] =
+                CFE_ES_Global.ResetDataPtr->Perf.MetaData.FilterMask[PerfIdx];
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.HkPacket.Payload.PerfFilterMask[PerfIdx] = 0;
+        }
+    }
+
+    /* Fill in heap info if get successful/supported */
+    OsStatus = OS_HeapGetInfo(&HeapProp);
+    if (OsStatus == OS_SUCCESS)
+    {
+        CFE_ES_Global.TaskData.HkPacket.Payload.HeapBytesFree    = CFE_ES_MEMOFFSET_C(HeapProp.free_bytes);
+        CFE_ES_Global.TaskData.HkPacket.Payload.HeapBlocksFree   = CFE_ES_MEMOFFSET_C(HeapProp.free_blocks);
+        CFE_ES_Global.TaskData.HkPacket.Payload.HeapMaxBlockSize = CFE_ES_MEMOFFSET_C(HeapProp.largest_free_block);
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.HkPacket.Payload.HeapBytesFree    = CFE_ES_MEMOFFSET_C(0);
+        CFE_ES_Global.TaskData.HkPacket.Payload.HeapBlocksFree   = CFE_ES_MEMOFFSET_C(0);
+        CFE_ES_Global.TaskData.HkPacket.Payload.HeapMaxBlockSize = CFE_ES_MEMOFFSET_C(0);
+    }
+
+    /*
+    ** Send housekeeping telemetry packet.
+    */
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_ES_Global.TaskData.HkPacket.TelemetryHeader));
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_ES_Global.TaskData.HkPacket.TelemetryHeader), true);
+
+    /*
+    ** This command does not affect the command execution counter.
+    */
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_NoopCmd(const CFE_ES_NoopCmd_t *Cmd)
+{
+    /*
+    ** Advertise the build and version information with the no-op command
+    ** For unit testing purposes, it helps to put this first - the UT
+    ** is checking for the last event sent to be NOOP_INF_EID.
+    */
+    CFE_ES_GenerateBuildInfoEvents();
+
+    /*
+    ** This command will always succeed.
+    */
+    CFE_ES_Global.TaskData.CommandCounter++;
+
+    CFE_EVS_SendEvent(CFE_ES_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "No-op command:\n cFS Versions: cfe %s, osal %s, psp %s", CFE_SRC_VERSION, OS_GetVersionString(),
+                      CFE_PSP_GetVersionString());
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ResetCountersCmd(const CFE_ES_ResetCountersCmd_t *data)
+{
+    CFE_ES_Global.TaskData.CommandCounter      = 0;
+    CFE_ES_Global.TaskData.CommandErrorCounter = 0;
+
+    /*
+    ** This command will always succeed.
+    */
+    CFE_EVS_SendEvent(CFE_ES_RESET_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset Counters command");
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_RestartCmd(const CFE_ES_RestartCmd_t *data)
+{
+    const CFE_ES_RestartCmd_Payload_t *cmd = &data->Payload;
+
+    if ((cmd->RestartType != CFE_PSP_RST_TYPE_PROCESSOR) && (cmd->RestartType != CFE_PSP_RST_TYPE_POWERON))
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_BOOT_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid cFE restart type: %d",
+                          (int)cmd->RestartType);
+    }
+    else
+    {
+        /*
+        ** This function will not return.
+        */
+        CFE_ES_ResetCFE(cmd->RestartType);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_StartAppCmd(const CFE_ES_StartAppCmd_t *data)
+{
+    const CFE_ES_StartAppCmd_Payload_t *cmd = &data->Payload;
+    CFE_ES_AppId_t                      AppID;
+    int32                               Result;
+    int32                               AppEntryLen;
+    int32                               AppNameLen;
+    char                                LocalAppName[OS_MAX_API_NAME];
+    CFE_ES_AppStartParams_t             StartParams;
+
+    /* Create local copies of all input strings and ensure null termination */
+    Result = CFE_FS_ParseInputFileNameEx(StartParams.BasicInfo.FileName, cmd->AppFileName,
+                                         sizeof(StartParams.BasicInfo.FileName), sizeof(cmd->AppFileName), NULL,
+                                         CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_DYNAMIC_MODULE),
+                                         CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_DYNAMIC_MODULE));
+
+    AppEntryLen = CFE_SB_MessageStringGet(StartParams.BasicInfo.InitSymbolName, cmd->AppEntryPoint, NULL,
+                                          sizeof(StartParams.BasicInfo.InitSymbolName), sizeof(cmd->AppEntryPoint));
+
+    AppNameLen =
+        CFE_SB_MessageStringGet(LocalAppName, cmd->Application, NULL, sizeof(LocalAppName), sizeof(cmd->Application));
+
+    /*
+    ** Verify command parameters
+    */
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_START_INVALID_FILENAME_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CFE_ES_StartAppCmd: invalid filename, status=%lx", (unsigned long)Result);
+    }
+    else if (AppEntryLen <= 0)
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_START_INVALID_ENTRY_POINT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CFE_ES_StartAppCmd: App Entry Point is empty.");
+    }
+    else if (AppNameLen <= 0)
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_START_NULL_APP_NAME_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CFE_ES_StartAppCmd: App Name is empty.");
+    }
+    else if (cmd->Priority > OS_MAX_PRIORITY)
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_START_PRIORITY_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CFE_ES_StartAppCmd: Priority is too large: %d.", (int)cmd->Priority);
+    }
+    else if ((cmd->ExceptionAction != CFE_ES_ExceptionAction_RESTART_APP) &&
+             (cmd->ExceptionAction != CFE_ES_ExceptionAction_PROC_RESTART))
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_START_EXC_ACTION_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CFE_ES_StartAppCmd: Invalid Exception Action: %d.", (int)cmd->ExceptionAction);
+    }
+    else
+    {
+        /* If stack size was provided, use it, otherwise use default. */
+        StartParams.MainTaskInfo.StackSize = CFE_ES_MEMOFFSET_TO_SIZET(cmd->StackSize);
+        if (StartParams.MainTaskInfo.StackSize == 0)
+        {
+            StartParams.MainTaskInfo.StackSize = CFE_PLATFORM_ES_DEFAULT_STACK_SIZE;
+        }
+
+        StartParams.MainTaskInfo.Priority = cmd->Priority;
+        StartParams.ExceptionAction       = cmd->ExceptionAction;
+
+        /*
+        ** Invoke application loader/startup function.
+        */
+        Result = CFE_ES_AppCreate(&AppID, LocalAppName, &StartParams);
+
+        /*
+        ** Send appropriate event message
+        */
+        if (Result == CFE_SUCCESS)
+        {
+            CFE_ES_Global.TaskData.CommandCounter++;
+            CFE_EVS_SendEvent(CFE_ES_START_INF_EID, CFE_EVS_EventType_INFORMATION, "Started %s from %s, AppID = %lu",
+                              LocalAppName, StartParams.BasicInfo.FileName, CFE_RESOURCEID_TO_ULONG(AppID));
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_START_ERR_EID, CFE_EVS_EventType_ERROR, "Failed to start %s from %s, RC = 0x%08X",
+                              LocalAppName, StartParams.BasicInfo.FileName, (unsigned int)Result);
+        }
+
+    } /* End if -- command parameter validation */
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_StopAppCmd(const CFE_ES_StopAppCmd_t *data)
+{
+    const CFE_ES_AppNameCmd_Payload_t *cmd = &data->Payload;
+    char                               LocalApp[OS_MAX_API_NAME];
+    CFE_ES_AppId_t                     AppID;
+    int32                              Result;
+
+    CFE_SB_MessageStringGet(LocalApp, (char *)cmd->Application, NULL, sizeof(LocalApp), sizeof(cmd->Application));
+
+    Result = CFE_ES_GetAppIDByName(&AppID, LocalApp);
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Delete the App
+        */
+        Result = CFE_ES_DeleteApp(AppID);
+
+        /*
+        ** Send appropriate event message.
+        */
+        if (Result == CFE_SUCCESS)
+        {
+            CFE_ES_Global.TaskData.CommandCounter++;
+            CFE_EVS_SendEvent(CFE_ES_STOP_DBG_EID, CFE_EVS_EventType_DEBUG, "Stop Application %s Initiated.", LocalApp);
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_STOP_ERR1_EID, CFE_EVS_EventType_ERROR, "Stop Application %s Failed, RC = 0x%08X",
+                              LocalApp, (unsigned int)Result);
+        }
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_STOP_ERR2_EID, CFE_EVS_EventType_ERROR,
+                          "Stop Application %s, GetAppIDByName failed. RC = 0x%08X.", LocalApp, (unsigned int)Result);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_RestartAppCmd(const CFE_ES_RestartAppCmd_t *data)
+{
+    const CFE_ES_AppNameCmd_Payload_t *cmd = &data->Payload;
+    char                               LocalApp[OS_MAX_API_NAME];
+    CFE_ES_AppId_t                     AppID;
+    int32                              Result;
+
+    CFE_SB_MessageStringGet(LocalApp, (char *)cmd->Application, NULL, sizeof(LocalApp), sizeof(cmd->Application));
+
+    Result = CFE_ES_GetAppIDByName(&AppID, LocalApp);
+
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_ES_RestartApp(AppID);
+
+        /*
+        ** Send appropriate event message.
+        */
+        if (Result == CFE_SUCCESS)
+        {
+            CFE_ES_Global.TaskData.CommandCounter++;
+            CFE_EVS_SendEvent(CFE_ES_RESTART_APP_DBG_EID, CFE_EVS_EventType_DEBUG, "Restart Application %s Initiated.",
+                              LocalApp);
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_RESTART_APP_ERR1_EID, CFE_EVS_EventType_ERROR,
+                              "Restart Application %s Failed, RC = 0x%08X", LocalApp, (unsigned int)Result);
+        }
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_RESTART_APP_ERR2_EID, CFE_EVS_EventType_ERROR,
+                          "Restart Application %s, GetAppIDByName failed. RC = 0x%08X.", LocalApp,
+                          (unsigned int)Result);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ReloadAppCmd(const CFE_ES_ReloadAppCmd_t *data)
+{
+    const CFE_ES_AppReloadCmd_Payload_t *cmd = &data->Payload;
+    char                                 LocalApp[OS_MAX_API_NAME];
+    char                                 LocalFileName[OS_MAX_PATH_LEN];
+    CFE_ES_AppId_t                       AppID;
+    int32                                Result;
+
+    CFE_SB_MessageStringGet(LocalApp, (char *)cmd->Application, NULL, sizeof(LocalApp), sizeof(cmd->Application));
+
+    Result = CFE_ES_GetAppIDByName(&AppID, LocalApp);
+
+    if (Result == CFE_SUCCESS)
+    {
+        /* Read input string as a file name for dynamic module */
+        Result = CFE_FS_ParseInputFileNameEx(LocalFileName, cmd->AppFileName, sizeof(LocalFileName),
+                                             sizeof(cmd->AppFileName), NULL,
+                                             CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_DYNAMIC_MODULE),
+                                             CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_DYNAMIC_MODULE));
+
+        if (Result == CFE_SUCCESS)
+        {
+            Result = CFE_ES_ReloadApp(AppID, LocalFileName);
+        }
+
+        /*
+        ** Send appropriate event message.
+        */
+        if (Result == CFE_SUCCESS)
+        {
+            CFE_ES_Global.TaskData.CommandCounter++;
+            CFE_EVS_SendEvent(CFE_ES_RELOAD_APP_DBG_EID, CFE_EVS_EventType_DEBUG, "Reload Application %s Initiated.",
+                              LocalApp);
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_RELOAD_APP_ERR1_EID, CFE_EVS_EventType_ERROR,
+                              "Reload Application %s Failed, RC = 0x%08X", LocalApp, (unsigned int)Result);
+        }
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_RELOAD_APP_ERR2_EID, CFE_EVS_EventType_ERROR,
+                          "Reload Application %s, GetAppIDByName failed. RC = 0x%08X.", LocalApp, (unsigned int)Result);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_QueryOneCmd(const CFE_ES_QueryOneCmd_t *data)
+{
+    const CFE_ES_AppNameCmd_Payload_t *cmd = &data->Payload;
+    char                               LocalApp[OS_MAX_API_NAME];
+    union
+    {
+        CFE_ES_AppId_t   AppId;
+        CFE_ES_LibId_t   LibId;
+        CFE_ResourceId_t ResourceID;
+    } IdBuf;
+    int32 Result;
+
+    CFE_SB_MessageStringGet(LocalApp, (char *)cmd->Application, NULL, sizeof(LocalApp), sizeof(cmd->Application));
+
+    Result = CFE_ES_GetAppIDByName(&IdBuf.AppId, LocalApp);
+    if (Result == CFE_ES_ERR_NAME_NOT_FOUND)
+    {
+        /* Also check for a matching library name */
+        Result = CFE_ES_GetLibIDByName(&IdBuf.LibId, LocalApp);
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_ES_GetModuleInfo(&(CFE_ES_Global.TaskData.OneAppPacket.Payload.AppInfo), IdBuf.ResourceID);
+    }
+
+    /*
+    ** Send appropriate event message...
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Send application status telemetry packet.
+        */
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_ES_Global.TaskData.OneAppPacket.TelemetryHeader));
+        Result = CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_ES_Global.TaskData.OneAppPacket.TelemetryHeader), true);
+        if (Result == CFE_SUCCESS)
+        {
+            CFE_ES_Global.TaskData.CommandCounter++;
+            CFE_EVS_SendEvent(CFE_ES_ONE_APP_EID, CFE_EVS_EventType_DEBUG, "Sent %s application data", LocalApp);
+        }
+        else
+        {
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_ONE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Failed to send %s application data, RC = 0x%08X", LocalApp, (unsigned int)Result);
+        }
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_ONE_APPID_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Failed to send %s application data: GetAppIDByName Failed, RC = 0x%08X", LocalApp,
+                          (unsigned int)Result);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_QueryAllCmd(const CFE_ES_QueryAllCmd_t *data)
+{
+    CFE_FS_Header_t                     FileHeader;
+    osal_id_t                           FileDescriptor = OS_OBJECT_ID_UNDEFINED;
+    uint32                              i;
+    uint32                              EntryCount = 0;
+    uint32                              FileSize   = 0;
+    int32                               OsStatus;
+    int32                               Result;
+    CFE_ES_AppInfo_t                    AppInfo;
+    const CFE_ES_FileNameCmd_Payload_t *CmdPtr = &data->Payload;
+    char                                QueryAllFilename[OS_MAX_PATH_LEN];
+    CFE_ResourceId_t                    ResourceList[CFE_ES_QUERY_ALL_MAX_ENTRIES];
+    uint32                              NumResources;
+    CFE_ES_AppRecord_t *                AppRecPtr;
+    CFE_ES_LibRecord_t *                LibRecPtr;
+
+    /*
+     * Collect list of active resource IDs.
+     *
+     * This should be done while locked, but the actual writing
+     * of the AppInfo data should be done while NOT locked.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+    NumResources = 0;
+    AppRecPtr    = CFE_ES_Global.AppTable;
+    for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS && NumResources < CFE_ES_QUERY_ALL_MAX_ENTRIES; ++i)
+    {
+        if (CFE_ES_AppRecordIsUsed(AppRecPtr))
+        {
+            ResourceList[NumResources] = CFE_RESOURCEID_UNWRAP(CFE_ES_AppRecordGetID(AppRecPtr));
+            ++NumResources;
+        }
+        ++AppRecPtr;
+    }
+    LibRecPtr = CFE_ES_Global.LibTable;
+    for (i = 0; i < CFE_PLATFORM_ES_MAX_LIBRARIES && NumResources < CFE_ES_QUERY_ALL_MAX_ENTRIES; ++i)
+    {
+        if (CFE_ES_LibRecordIsUsed(LibRecPtr))
+        {
+            ResourceList[NumResources] = CFE_RESOURCEID_UNWRAP(CFE_ES_LibRecordGetID(LibRecPtr));
+            ++NumResources;
+        }
+        ++LibRecPtr;
+    }
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /* Copy the commanded filename, using default if unspecified */
+    Result = CFE_FS_ParseInputFileNameEx(QueryAllFilename, CmdPtr->FileName, sizeof(QueryAllFilename),
+                                         sizeof(CmdPtr->FileName), CFE_PLATFORM_ES_DEFAULT_APP_LOG_FILE,
+                                         CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                         CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Create (or truncate) ES task log data file
+        */
+        OsStatus = OS_OpenCreate(&FileDescriptor, QueryAllFilename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE,
+                                 OS_WRITE_ONLY);
+
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CFE_ES_OSCREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Failed to write App Info file, OS_OpenCreate RC = %ld", (long)OsStatus);
+            Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_OSCREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Failed to write App Info file, CFE_FS_ParseInputFileNameEx RC = %08x", (unsigned int)Result);
+    }
+
+    if (Result >= 0)
+    {
+        /*
+        ** Initialize cFE file header
+        */
+        CFE_FS_InitHeader(&FileHeader, CFE_ES_APP_LOG_DESC, CFE_FS_SubType_ES_QUERYALL);
+
+        /*
+        ** Output the Standard cFE File Header to the App File
+        */
+        Result = CFE_FS_WriteHeader(FileDescriptor, &FileHeader);
+
+        if (Result != sizeof(CFE_FS_Header_t))
+        {
+            OS_close(FileDescriptor);
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_WRHDR_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Failed to write App Info file, WriteHdr RC = 0x%08X, exp %d", (unsigned int)Result,
+                              (int)sizeof(CFE_FS_Header_t));
+            /*
+             * returning "success" here as there is no other recourse;
+             * the full extent of the error recovery has been done
+             */
+            return CFE_SUCCESS;
+        }
+
+        /*
+        ** Maintain statistics of amount of data written to file
+        */
+        FileSize += sizeof(CFE_FS_Header_t);
+
+        /*
+        ** Loop through the ES AppTable for main applications
+        */
+        for (i = 0; i < NumResources; ++i)
+        {
+            /*
+             ** Populate the AppInfo entry
+             */
+            Result = CFE_ES_GetModuleInfo(&AppInfo, ResourceList[i]);
+            if (Result == CFE_SUCCESS)
+            {
+                /*
+                ** Write the local entry to file
+                */
+                OsStatus = OS_write(FileDescriptor, &AppInfo, sizeof(CFE_ES_AppInfo_t));
+                if (OsStatus != sizeof(CFE_ES_AppInfo_t))
+                {
+                    OS_close(FileDescriptor);
+                    CFE_ES_Global.TaskData.CommandErrorCounter++;
+                    CFE_EVS_SendEvent(CFE_ES_TASKWR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Failed to write App Info file, Task write RC = %ld, exp %d", (long)OsStatus,
+                                      (int)sizeof(CFE_ES_AppInfo_t));
+                    /*
+                     * returning "success" here as there is no other recourse;
+                     * the full extent of the error recovery has been done
+                     */
+                    return CFE_SUCCESS;
+                }
+
+                FileSize += sizeof(CFE_ES_AppInfo_t);
+                EntryCount++;
+            }
+
+        } /* end for */
+
+        OS_close(FileDescriptor);
+        CFE_ES_Global.TaskData.CommandCounter++;
+        CFE_EVS_SendEvent(CFE_ES_ALL_APPS_EID, CFE_EVS_EventType_DEBUG,
+                          "App Info file written to %s, Entries=%d, FileSize=%d", QueryAllFilename, (int)EntryCount,
+                          (int)FileSize);
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_QueryAllTasksCmd(const CFE_ES_QueryAllTasksCmd_t *data)
+{
+    CFE_FS_Header_t                     FileHeader;
+    osal_id_t                           FileDescriptor = OS_OBJECT_ID_UNDEFINED;
+    uint32                              i;
+    uint32                              EntryCount = 0;
+    uint32                              FileSize   = 0;
+    int32                               OsStatus;
+    int32                               Result;
+    CFE_ES_TaskInfo_t                   TaskInfo;
+    const CFE_ES_FileNameCmd_Payload_t *CmdPtr = &data->Payload;
+    char                                QueryAllFilename[OS_MAX_PATH_LEN];
+    CFE_ES_TaskId_t                     TaskList[OS_MAX_TASKS];
+    uint32                              NumTasks;
+    CFE_ES_TaskRecord_t *               TaskRecPtr;
+
+    /*
+     * Collect list of active task IDs.
+     *
+     * This should be done while locked, but the actual writing
+     * of the AppInfo data should be done while NOT locked.
+     */
+    CFE_ES_LockSharedData(__func__, __LINE__);
+    NumTasks   = 0;
+    TaskRecPtr = CFE_ES_Global.TaskTable;
+    for (i = 0; i < OS_MAX_TASKS; ++i)
+    {
+        if (CFE_ES_TaskRecordIsUsed(TaskRecPtr))
+        {
+            TaskList[NumTasks] = CFE_ES_TaskRecordGetID(TaskRecPtr);
+            ++NumTasks;
+        }
+        ++TaskRecPtr;
+    }
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+    ** Copy the commanded filename into local buffer to ensure size limitation and to allow for modification
+    */
+    Result = CFE_FS_ParseInputFileNameEx(QueryAllFilename, CmdPtr->FileName, sizeof(QueryAllFilename),
+                                         sizeof(CmdPtr->FileName), CFE_PLATFORM_ES_DEFAULT_TASK_LOG_FILE,
+                                         CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                         CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Create (or truncate) ES task log data file
+        */
+        OsStatus = OS_OpenCreate(&FileDescriptor, QueryAllFilename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE,
+                                 OS_WRITE_ONLY);
+
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CFE_ES_TASKINFO_OSCREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Failed to write Task Info file, OS_OpenCreate RC = %ld", (long)OsStatus);
+            Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_TASKINFO_OSCREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Failed to write Task Info file, CFE_FS_ParseInputFileNameEx RC = %08x",
+                          (unsigned int)Result);
+    }
+
+    if (Result >= 0)
+    {
+        /*
+        ** Initialize cFE file header
+        */
+        CFE_FS_InitHeader(&FileHeader, CFE_ES_TASK_LOG_DESC, CFE_FS_SubType_ES_QUERYALLTASKS);
+
+        /*
+        ** Output the Standard cFE File Header to the App File
+        */
+        Result = CFE_FS_WriteHeader(FileDescriptor, &FileHeader);
+
+        if (Result != sizeof(CFE_FS_Header_t))
+        {
+            OS_close(FileDescriptor);
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+            CFE_EVS_SendEvent(CFE_ES_TASKINFO_WRHDR_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Failed to write Task Info file, WriteHdr RC = 0x%08X, exp %d", (unsigned int)Result,
+                              (int)sizeof(CFE_FS_Header_t));
+            /*
+             * returning "success" here as there is no other recourse;
+             * the full extent of the error recovery has been done
+             */
+            return CFE_SUCCESS;
+        }
+
+        /*
+        ** Maintain statistics of amount of data written to file
+        */
+        FileSize += sizeof(CFE_FS_Header_t);
+
+        /*
+        ** Loop through the ES AppTable for main applications
+        */
+        for (i = 0; i < NumTasks; ++i)
+        {
+            /*
+            ** Populate the AppInfo entry
+            */
+            Result = CFE_ES_GetTaskInfo(&TaskInfo, TaskList[i]);
+            if (Result == CFE_SUCCESS)
+            {
+                /*
+                ** Write the local entry to file
+                */
+                OsStatus = OS_write(FileDescriptor, &TaskInfo, sizeof(CFE_ES_TaskInfo_t));
+                if (OsStatus != sizeof(CFE_ES_TaskInfo_t))
+                {
+                    OS_close(FileDescriptor);
+                    CFE_ES_Global.TaskData.CommandErrorCounter++;
+                    CFE_EVS_SendEvent(CFE_ES_TASKINFO_WR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Failed to write Task Info file, Task write RC = %ld, exp %d", (long)OsStatus,
+                                      (int)sizeof(CFE_ES_TaskInfo_t));
+                    /*
+                     * returning "success" here as there is no other recourse;
+                     * the full extent of the error recovery has been done
+                     */
+                    return CFE_SUCCESS;
+                }
+
+                FileSize += sizeof(CFE_ES_TaskInfo_t);
+                EntryCount++;
+            }
+
+        } /* end for */
+
+        OS_close(FileDescriptor);
+        CFE_ES_Global.TaskData.CommandCounter++;
+        CFE_EVS_SendEvent(CFE_ES_TASKINFO_EID, CFE_EVS_EventType_DEBUG,
+                          "Task Info file written to %s, Entries=%d, FileSize=%d", QueryAllFilename, (int)EntryCount,
+                          (int)FileSize);
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ClearSysLogCmd(const CFE_ES_ClearSysLogCmd_t *data)
+{
+    /*
+    ** Clear syslog index and memory area
+    */
+
+    CFE_ES_LockSharedData(__func__, __LINE__);
+    CFE_ES_SysLogClear_Unsync();
+    CFE_ES_UnlockSharedData(__func__, __LINE__);
+
+    /*
+    ** This command will always succeed...
+    */
+    CFE_ES_Global.TaskData.CommandCounter++;
+    CFE_EVS_SendEvent(CFE_ES_SYSLOG1_INF_EID, CFE_EVS_EventType_INFORMATION, "Cleared Executive Services log data");
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_OverWriteSysLogCmd(const CFE_ES_OverWriteSysLogCmd_t *data)
+{
+    int32                                      Status;
+    const CFE_ES_OverWriteSysLogCmd_Payload_t *CmdPtr = &data->Payload;
+
+    Status = CFE_ES_SysLogSetMode(CmdPtr->Mode);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CFE_ES_ERR_SYSLOGMODE_EID, CFE_EVS_EventType_ERROR,
+                          "Set OverWriteSysLog Command: Invalid Mode setting = %d", (int)CmdPtr->Mode);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_SYSLOGMODE_EID, CFE_EVS_EventType_DEBUG,
+                          "Set OverWriteSysLog Command Received with Mode setting = %d", (int)CmdPtr->Mode);
+
+        CFE_ES_Global.TaskData.CommandCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_WriteSysLogCmd(const CFE_ES_WriteSysLogCmd_t *data)
+{
+    const CFE_ES_FileNameCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               Stat;
+    char                                LogFilename[OS_MAX_PATH_LEN];
+
+    /*
+    ** Copy the filename into local buffer with default name/path/extension if not specified
+    **
+    ** Note even though this fundamentally contains strings, it is written as a binary file with an FS header,
+    ** not as normal text file, so still using the BINARY DATA DUMP category for its default extension.
+    */
+    Stat = CFE_FS_ParseInputFileNameEx(LogFilename, CmdPtr->FileName, sizeof(LogFilename), sizeof(CmdPtr->FileName),
+                                       CFE_PLATFORM_ES_DEFAULT_SYSLOG_FILE,
+                                       CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                       CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+    if (Stat != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CFE_ES_SYSLOG2_ERR_EID, CFE_EVS_EventType_ERROR, "Error parsing file name RC = 0x%08X",
+                          (unsigned int)Stat);
+    }
+    else
+    {
+        Stat = CFE_ES_SysLogDump(LogFilename);
+    }
+
+    if (Stat == CFE_SUCCESS)
+    {
+        CFE_ES_Global.TaskData.CommandCounter++;
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ClearERLogCmd(const CFE_ES_ClearERLogCmd_t *data)
+{
+    /*
+    ** Clear ER log data buffer
+    */
+
+    memset(CFE_ES_Global.ResetDataPtr->ERLog, 0, sizeof(CFE_ES_Global.ResetDataPtr->ERLog));
+
+    /*
+    ** Reset ER log buffer index
+    */
+
+    CFE_ES_Global.ResetDataPtr->ERLogIndex = 0;
+
+    /*
+    ** Set Number of Entries in ER log buffer back to zero
+    */
+    CFE_ES_Global.ResetDataPtr->ERLogEntries = 0;
+
+    /*
+    ** This command will always succeed
+    */
+    CFE_ES_Global.TaskData.CommandCounter++;
+    CFE_EVS_SendEvent(CFE_ES_ERLOG1_INF_EID, CFE_EVS_EventType_INFORMATION, "Cleared ES Exception and Reset Log data");
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_WriteERLogCmd(const CFE_ES_WriteERLogCmd_t *data)
+{
+    const CFE_ES_FileNameCmd_Payload_t *CmdPtr = &data->Payload;
+    CFE_ES_BackgroundLogDumpGlobal_t *  StatePtr;
+    int32                               Status;
+
+    StatePtr = &CFE_ES_Global.BackgroundERLogDumpState;
+
+    /* check if pending before overwriting fields in the structure */
+    if (CFE_FS_BackgroundFileDumpIsPending(&StatePtr->FileWrite))
+    {
+        Status = CFE_STATUS_REQUEST_ALREADY_PENDING;
+    }
+    else
+    {
+        /* Reset the entire state object (just for good measure, ensure no stale data) */
+        memset(StatePtr, 0, sizeof(*StatePtr));
+
+        /*
+         * Fill out the remainder of meta data.
+         * This data is currently the same for every request
+         */
+        StatePtr->FileWrite.FileSubType = CFE_FS_SubType_ES_ERLOG;
+        snprintf(StatePtr->FileWrite.Description, sizeof(StatePtr->FileWrite.Description), CFE_ES_ER_LOG_DESC);
+
+        StatePtr->FileWrite.GetData = CFE_ES_BackgroundERLogFileDataGetter;
+        StatePtr->FileWrite.OnEvent = CFE_ES_BackgroundERLogFileEventHandler;
+
+        /*
+        ** Copy the filename into local buffer with default name/path/extension if not specified
+        */
+        Status = CFE_FS_ParseInputFileNameEx(StatePtr->FileWrite.FileName, CmdPtr->FileName,
+                                             sizeof(StatePtr->FileWrite.FileName), sizeof(CmdPtr->FileName),
+                                             CFE_PLATFORM_ES_DEFAULT_ER_LOG_FILE,
+                                             CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                             CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+        if (Status == CFE_SUCCESS)
+        {
+            Status = CFE_FS_BackgroundFileDumpRequest(&StatePtr->FileWrite);
+        }
+    }
+
+    if (Status != CFE_SUCCESS)
+    {
+        if (Status == CFE_STATUS_REQUEST_ALREADY_PENDING)
+        {
+            /* Specific event if already pending */
+            CFE_EVS_SendEvent(CFE_ES_ERLOG_PENDING_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error log write already in progress");
+        }
+        else
+        {
+            /* Some other validation issue e.g. bad file name */
+            CFE_EVS_SendEvent(CFE_ES_ERLOG2_ERR_EID, CFE_EVS_EventType_ERROR, "Error creating file, RC = %d",
+                              (int)Status);
+        }
+
+        /* background dump did not start, consider this an error */
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_ResetPRCountCmd(const CFE_ES_ResetPRCountCmd_t *data)
+{
+    /*
+    ** Reset the processor reset count
+    */
+    CFE_ES_Global.ResetDataPtr->ResetVars.ProcessorResetCount = 0;
+
+    /*
+    ** This command will always succeed.
+    */
+    CFE_EVS_SendEvent(CFE_ES_RESET_PR_COUNT_EID, CFE_EVS_EventType_INFORMATION, "Set Processor Reset Count to Zero");
+
+    CFE_ES_Global.TaskData.CommandCounter++;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SetMaxPRCountCmd(const CFE_ES_SetMaxPRCountCmd_t *data)
+{
+    const CFE_ES_SetMaxPRCountCmd_Payload_t *cmd = &data->Payload;
+
+    /*
+    ** Set the MAX Processor reset count
+    */
+    CFE_ES_Global.ResetDataPtr->ResetVars.MaxProcessorResetCount = cmd->MaxPRCount;
+
+    /*
+    ** This command will always succeed.
+    */
+    CFE_EVS_SendEvent(CFE_ES_SET_MAX_PR_COUNT_EID, CFE_EVS_EventType_INFORMATION,
+                      "Maximum Processor Reset Count set to: %d", (int)cmd->MaxPRCount);
+
+    CFE_ES_Global.TaskData.CommandCounter++;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_DeleteCDSCmd(const CFE_ES_DeleteCDSCmd_t *data)
+{
+    int32                                Status;
+    const CFE_ES_DeleteCDSCmd_Payload_t *cmd = &data->Payload;
+    char                                 LocalCdsName[CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN];
+
+    CFE_SB_MessageStringGet(LocalCdsName, (char *)cmd->CdsName, NULL, sizeof(LocalCdsName), sizeof(cmd->CdsName));
+
+    Status = CFE_ES_DeleteCDS(LocalCdsName, false);
+
+    if (Status == CFE_ES_CDS_WRONG_TYPE_ERR)
+    {
+        CFE_EVS_SendEvent(CFE_ES_CDS_DELETE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "CDS '%s' is a Critical Table CDS. Must be deleted via TBL Command", LocalCdsName);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+    else if (Status == CFE_ES_CDS_OWNER_ACTIVE_ERR)
+    {
+        CFE_EVS_SendEvent(CFE_ES_CDS_OWNER_ACTIVE_EID, CFE_EVS_EventType_ERROR,
+                          "CDS '%s' not deleted because owning app is active", LocalCdsName);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+    else if (Status == CFE_ES_ERR_NAME_NOT_FOUND)
+    {
+        CFE_EVS_SendEvent(CFE_ES_CDS_NAME_ERR_EID, CFE_EVS_EventType_ERROR, "Unable to locate '%s' in CDS Registry",
+                          LocalCdsName);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+    else if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CFE_ES_CDS_DELETE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error while deleting '%s' from CDS, See SysLog.(Err=0x%08X)", LocalCdsName,
+                          (unsigned int)Status);
+
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CFE_ES_CDS_DELETED_INFO_EID, CFE_EVS_EventType_INFORMATION,
+                          "Successfully removed '%s' from CDS", LocalCdsName);
+
+        CFE_ES_Global.TaskData.CommandCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_SendMemPoolStatsCmd(const CFE_ES_SendMemPoolStatsCmd_t *data)
+{
+    const CFE_ES_SendMemPoolStatsCmd_Payload_t *Cmd;
+    CFE_ES_MemHandle_t                          MemHandle;
+    bool                                        ValidHandle;
+
+    Cmd = &data->Payload;
+
+    /* Verify the handle to make sure it is legit */
+    MemHandle   = Cmd->PoolHandle;
+    ValidHandle = CFE_ES_ValidateHandle(MemHandle);
+
+    if (ValidHandle)
+    {
+        /* Extract the memory statistics from the memory pool */
+        CFE_ES_GetMemPoolStats(&CFE_ES_Global.TaskData.MemStatsPacket.Payload.PoolStats, MemHandle);
+
+        /* Echo the specified pool handle in the telemetry packet */
+        CFE_ES_Global.TaskData.MemStatsPacket.Payload.PoolHandle = MemHandle;
+
+        /*
+        ** Send memory statistics telemetry packet.
+        */
+        CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_ES_Global.TaskData.MemStatsPacket.TelemetryHeader));
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_ES_Global.TaskData.MemStatsPacket.TelemetryHeader), true);
+
+        CFE_ES_Global.TaskData.CommandCounter++;
+        CFE_EVS_SendEvent(CFE_ES_TLM_POOL_STATS_INFO_EID, CFE_EVS_EventType_DEBUG,
+                          "Successfully telemetered memory pool stats for 0x%08lX",
+                          CFE_RESOURCEID_TO_ULONG(Cmd->PoolHandle));
+    }
+    else
+    {
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+        CFE_EVS_SendEvent(CFE_ES_INVALID_POOL_HANDLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Cannot telemeter memory pool stats. Illegal Handle (0x%08lX)",
+                          CFE_RESOURCEID_TO_ULONG(Cmd->PoolHandle));
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_ES_DumpCDSRegistryCmd(const CFE_ES_DumpCDSRegistryCmd_t *data)
+{
+    CFE_FS_Header_t                            StdFileHeader;
+    osal_id_t                                  FileDescriptor = OS_OBJECT_ID_UNDEFINED;
+    int32                                      OsStatus;
+    int32                                      Status;
+    int16                                      RegIndex = 0;
+    const CFE_ES_DumpCDSRegistryCmd_Payload_t *CmdPtr   = &data->Payload;
+    char                                       DumpFilename[OS_MAX_PATH_LEN];
+    CFE_ES_CDS_RegRec_t *                      RegRecPtr;
+    CFE_ES_CDSRegDumpRec_t                     DumpRecord;
+    int32                                      FileSize   = 0;
+    int32                                      NumEntries = 0;
+
+    /*
+    ** Copy the filename into local buffer with default name/path/extension if not specified
+    */
+    Status = CFE_FS_ParseInputFileNameEx(DumpFilename, CmdPtr->DumpFilename, sizeof(DumpFilename),
+                                         sizeof(CmdPtr->DumpFilename), CFE_PLATFORM_ES_DEFAULT_CDS_REG_DUMP_FILE,
+                                         CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                         CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CFE_ES_CREATING_CDS_DUMP_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error parsing CDS dump filename, Status=0x%08X", (unsigned int)Status);
+    }
+    else
+    {
+        /* Create a new dump file, overwriting anything that may have existed previously */
+        OsStatus =
+            OS_OpenCreate(&FileDescriptor, DumpFilename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CFE_ES_CREATING_CDS_DUMP_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error creating CDS dump file '%s', Status=%ld", DumpFilename, (long)OsStatus);
+            Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+
+    if (Status == OS_SUCCESS)
+    {
+        /* Initialize the standard cFE File Header for the Dump File */
+        CFE_FS_InitHeader(&StdFileHeader, "CDS_Registry", CFE_FS_SubType_ES_CDS_REG);
+
+        /* Output the Standard cFE File Header to the Dump File */
+        Status = CFE_FS_WriteHeader(FileDescriptor, &StdFileHeader);
+
+        /* Maintain statistics of amount of data written to file */
+        FileSize += Status;
+
+        if (Status == sizeof(CFE_FS_Header_t))
+        {
+            OsStatus  = sizeof(CFE_ES_CDSRegDumpRec_t);
+            RegRecPtr = CFE_ES_Global.CDSVars.Registry;
+            while ((RegIndex < CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES) && (OsStatus == sizeof(CFE_ES_CDSRegDumpRec_t)))
+            {
+                /* Check to see if the Registry entry is empty */
+                if (CFE_ES_CDSBlockRecordIsUsed(RegRecPtr))
+                {
+                    /* Fill CDS Registry Dump Record with relevant information */
+                    memset(&DumpRecord, 0, sizeof(DumpRecord));
+                    DumpRecord.Size   = CFE_ES_MEMOFFSET_C(CFE_ES_CDSBlockRecordGetUserSize(RegRecPtr));
+                    DumpRecord.Handle = CFE_ES_CDSBlockRecordGetID(RegRecPtr);
+                    DumpRecord.Table  = RegRecPtr->Table;
+                    strncpy(DumpRecord.Name, RegRecPtr->Name, sizeof(DumpRecord.Name) - 1);
+
+                    /* Output Registry Dump Record to Registry Dump File */
+                    OsStatus = OS_write(FileDescriptor, &DumpRecord, sizeof(CFE_ES_CDSRegDumpRec_t));
+
+                    FileSize += (long)OsStatus;
+                    NumEntries++;
+                }
+
+                /* Look at the next entry in the Registry */
+                ++RegIndex;
+                ++RegRecPtr;
+            }
+
+            if (OsStatus == sizeof(CFE_ES_CDSRegDumpRec_t))
+            {
+                CFE_EVS_SendEvent(CFE_ES_CDS_REG_DUMP_INF_EID, CFE_EVS_EventType_DEBUG,
+                                  "Successfully dumped CDS Registry to '%s':Size=%d,Entries=%d", DumpFilename,
+                                  (int)FileSize, (int)NumEntries);
+
+                /* Increment Successful Command Counter */
+                CFE_ES_Global.TaskData.CommandCounter++;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CFE_ES_CDS_DUMP_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Error writing CDS Registry to '%s', Status=%ld", DumpFilename, (long)OsStatus);
+
+                /* Increment Command Error Counter */
+                CFE_ES_Global.TaskData.CommandErrorCounter++;
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CFE_ES_WRITE_CFE_HDR_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error writing cFE File Header to '%s', Status=0x%08X", DumpFilename,
+                              (unsigned int)Status);
+
+            /* Increment Command Error Counter */
+            CFE_ES_Global.TaskData.CommandErrorCounter++;
+        }
+
+        /* We are done outputting data to the dump file.  Close it. */
+        OS_close(FileDescriptor);
+    }
+    else
+    {
+        /* Increment Command Error Counter */
+        CFE_ES_Global.TaskData.CommandErrorCounter++;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_ES_FileWriteByteCntErr(const char *Filename, size_t Requested, int32 Status)
+{
+    CFE_EVS_SendEvent(CFE_ES_FILEWRITE_ERR_EID, CFE_EVS_EventType_ERROR,
+                      "File write,byte cnt err,file %s,request=%u,status=0x%08x", Filename, (unsigned int)Requested,
+                      (unsigned int)Status);
+}
+```
+
+### `cfe_es_task.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_task.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE Executive Services (ES) task header file
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+
+#ifndef CFE_ES_TASK_H
+#define CFE_ES_TASK_H
+
+/*
+** Includes
+*/
+#include "cfe_es_msg.h"
+
+#include "cfe_es_api_typedefs.h"
+#include "cfe_fs_api_typedefs.h"
+#include "cfe_sb_api_typedefs.h"
+#include "cfe_es_erlog_typedef.h"
+#include "cfe_msg_api_typedefs.h"
+
+/*************************************************************************/
+
+#define CFE_ES_PIPE_NAME  "ES_CMD_PIPE"
+#define CFE_ES_PIPE_DEPTH 12
+#define CFE_ES_LIMIT_HK   2
+#define CFE_ES_LIMIT_CMD  4
+
+/*
+** ES File descriptions
+*/
+#define CFE_ES_SYS_LOG_DESC  "ES system log data file"
+#define CFE_ES_TASK_LOG_DESC "ES Task Info file"
+#define CFE_ES_APP_LOG_DESC  "ES Application Info file"
+#define CFE_ES_ER_LOG_DESC   "ES ERlog data file"
+#define CFE_ES_PERF_LOG_DESC "ES Performance data file"
+
+/*
+ * Limit for the total number of entries that may be
+ * produced by a "query all" type command.
+ */
+#define CFE_ES_QUERY_ALL_MAX_ENTRIES (CFE_PLATFORM_ES_MAX_APPLICATIONS + CFE_PLATFORM_ES_MAX_LIBRARIES)
+
+/*************************************************************************/
+/*
+** Type definitions
+*/
+
+/*************************************************************************/
+
+/*
+** ES Task function prototypes
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Main task function for executive services
+ */
+void CFE_ES_TaskMain(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Initialization of executive services global state
+ */
+int32 CFE_ES_TaskInit(void);
+
+/*
+ * Functions related to the ES background helper task for low-priority tasks
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Initializes the ES background task state
+ */
+int32 CFE_ES_BackgroundInit(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief ES background task main function
+ *
+ * Purpose: A helper task for low priority routines that may take time to
+ * execute, such as writing log files.
+ *
+ * Assumptions and Notes: This is started from the ES initialization, and
+ * pends on a semaphore until a work request comes in.  This is intended to
+ * avoid the need to create a child task "on demand" when work items arrive,
+ * which is a form of dynamic allocation.
+ */
+void CFE_ES_BackgroundTask(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Exit/Stop the background task
+ */
+void CFE_ES_BackgroundCleanup(void);
+
+/*
+** ES Task message dispatch functions
+*/
+int32 CFE_ES_HousekeepingCmd(const CFE_ES_SendHkCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief ES task ground command (NO-OP)
+ */
+int32 CFE_ES_NoopCmd(const CFE_ES_NoopCmd_t *Cmd);
+
+/*---------------------------------------------------------------------------------------*/
+/** \brief  ES task ground command (reset counters)
+ */
+int32 CFE_ES_ResetCountersCmd(const CFE_ES_ResetCountersCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Restart cFE (may reset processor)
+ */
+int32 CFE_ES_RestartCmd(const CFE_ES_RestartCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Load (and start) single application
+ */
+int32 CFE_ES_StartAppCmd(const CFE_ES_StartAppCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Stop single application
+ */
+int32 CFE_ES_StopAppCmd(const CFE_ES_StopAppCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Restart a single application
+ */
+int32 CFE_ES_RestartAppCmd(const CFE_ES_RestartAppCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Reload a single application
+ */
+int32 CFE_ES_ReloadAppCmd(const CFE_ES_ReloadAppCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Request tlm packet with single app data
+ */
+int32 CFE_ES_QueryOneCmd(const CFE_ES_QueryOneCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Write all app data to file
+ */
+int32 CFE_ES_QueryAllCmd(const CFE_ES_QueryAllCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Write all Task Data to a file
+ */
+int32 CFE_ES_QueryAllTasksCmd(const CFE_ES_QueryAllTasksCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Clear executive services system log
+ */
+int32 CFE_ES_ClearSysLogCmd(const CFE_ES_ClearSysLogCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  set syslog mode
+ */
+int32 CFE_ES_OverWriteSysLogCmd(const CFE_ES_OverWriteSysLogCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Process Cmd to write ES System Log to file
+ */
+int32 CFE_ES_WriteSysLogCmd(const CFE_ES_WriteSysLogCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Clear The exception and reset log.
+ */
+int32 CFE_ES_ClearERLogCmd(const CFE_ES_ClearERLogCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Process Cmd to write exception & reset log to a file.
+ */
+int32 CFE_ES_WriteERLogCmd(const CFE_ES_WriteERLogCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Processor Reset Count
+ */
+int32 CFE_ES_ResetPRCountCmd(const CFE_ES_ResetPRCountCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Set Maximum Processor reset count
+ */
+int32 CFE_ES_SetMaxPRCountCmd(const CFE_ES_SetMaxPRCountCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Delete Specified Critical Data Store
+ */
+int32 CFE_ES_DeleteCDSCmd(const CFE_ES_DeleteCDSCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Command handler to start collecting performance data
+ */
+int32 CFE_ES_StartPerfDataCmd(const CFE_ES_StartPerfDataCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Command handler to stop collecting performance data
+ */
+int32 CFE_ES_StopPerfDataCmd(const CFE_ES_StopPerfDataCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Command handler to set perf ID filter mask
+ */
+int32 CFE_ES_SetPerfFilterMaskCmd(const CFE_ES_SetPerfFilterMaskCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Command handler to set perf ID trigger mask
+ */
+int32 CFE_ES_SetPerfTriggerMaskCmd(const CFE_ES_SetPerfTriggerMaskCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Telemeter Memory Pool Statistics
+ */
+int32 CFE_ES_SendMemPoolStatsCmd(const CFE_ES_SendMemPoolStatsCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief  Dump CDS Registry to a file
+ */
+int32 CFE_ES_DumpCDSRegistryCmd(const CFE_ES_DumpCDSRegistryCmd_t *data);
+
+/*
+** Message Handler Helper Functions
+*/
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Ensures that the handle passed in meets all of the requirements of a valid handle.
+ */
+bool CFE_ES_ValidateHandle(CFE_ES_MemHandle_t Handle);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Notify of file write inconsistency
+ *
+ * Send event to inform ground that a byte count discrepancy has been
+ * detected during the file write
+ */
+void CFE_ES_FileWriteByteCntErr(const char *Filename, size_t Requested, int32 Status);
+
+#endif /* CFE_ES_TASK_H */
+```
+
+### `cfe_es_verify.h`
+
+**경로:** `fsw/cfe/modules/es/fsw/src/cfe_es_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *   This header file performs compile time checking for ES configuration
+ *   parameters.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *     The upper limits are somewhat arbitrary right now.
+ *
+ */
+
+#ifndef CFE_ES_VERIFY_H
+#define CFE_ES_VERIFY_H
+
+#include <stdint.h>
+
+#if CFE_PLATFORM_ES_MAX_APPLICATIONS < 6
+#error CFE_PLATFORM_ES_MAX_APPLICATIONS cannot be less than 6!
+#endif
+
+#if CFE_PLATFORM_ES_MAX_LIBRARIES < 1
+#error CFE_PLATFORM_ES_MAX_LIBRARIES cannot be less than 1!
+#endif
+
+#if CFE_PLATFORM_ES_ER_LOG_ENTRIES < 1
+#error CFE_PLATFORM_ES_ER_LOG_ENTRIES cannot be less than 1!
+#endif
+
+#if CFE_PLATFORM_ES_SYSTEM_LOG_SIZE < 512
+#error CFE_PLATFORM_ES_SYSTEM_LOG_SIZE cannot be less than 512 Bytes!
+#endif
+
+#if CFE_PLATFORM_ES_DEFAULT_STACK_SIZE < 2048
+#error CFE_PLATFORM_ES_DEFAULT_STACK_SIZE cannot be less than 2048 Bytes!
+#endif
+
+/*
+** Number of entries in the ES Object table ( The table that controls core cFE startup )
+*/
+#if CFE_PLATFORM_ES_OBJECT_TABLE_SIZE < 15
+#error CFE_PLATFORM_ES_OBJECT_TABLE_SIZE cannot be less than 15!
+#endif
+
+/*
+** ES Application Control Scan Rate.
+*/
+#if CFE_PLATFORM_ES_APP_SCAN_RATE < 100
+#error CFE_PLATFORM_ES_APP_SCAN_RATE cannot be less than 100 milliseconds!
+#elif CFE_PLATFORM_ES_APP_SCAN_RATE > 20000
+#error CFE_PLATFORM_ES_APP_SCAN_RATE cannot be greater than 20 seconds!
+#endif
+
+/*
+** ES Application Kill Timeout
+*/
+#if CFE_PLATFORM_ES_APP_KILL_TIMEOUT < 1
+#error CFE_PLATFORM_ES_APP_KILL_TIMEOUT cannot be less than 1!
+#elif CFE_PLATFORM_ES_APP_KILL_TIMEOUT > 100
+#error CFE_PLATFORM_ES_APP_KILL_TIMEOUT cannot be greater than 100!
+#endif
+
+/*
+** ES / cFE RAM disk parameters
+*/
+#if CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE < 128
+#error CFE_PLATFORM_ES_RAM_DISK_SECTOR_SIZE cannot be less than 128!
+#endif
+
+#if CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS < 128
+#error CFE_PLATFORM_ES_RAM_DISK_NUM_SECTORS cannot be less than 128!
+#endif
+
+#if CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED < 0
+#error CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED cannot be less than 0!
+#elif CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED > 75
+#error CFE_PLATFORM_ES_RAM_DISK_PERCENT_RESERVED cannot be greater than 75!
+#endif
+
+/*
+** Critical data store size
+*/
+#if CFE_PLATFORM_ES_CDS_SIZE < (8 * 1024)
+#error CFE_PLATFORM_ES_CDS_SIZE cannot be less than 8Kbytes!
+#elif CFE_PLATFORM_ES_CDS_SIZE > UINT32_MAX
+#error CFE_PLATFORM_ES_CDS_SIZE cannot be greater than UINT32_MAX (4 Gigabytes)!
+#endif
+
+/*
+** User Reserved Memory Size.
+*/
+#if CFE_PLATFORM_ES_USER_RESERVED_SIZE < (1 * 1024)
+#error CFE_PLATFORM_ES_USER_RESERVED_SIZE cannot be less than 1Kbytes!
+#elif CFE_PLATFORM_ES_USER_RESERVED_SIZE > UINT32_MAX
+#error CFE_PLATFORM_ES_USER_RESERVED_SIZE cannot be greater than UINT32_MAX (4 Gigabytes)!
+#endif
+
+/*
+** SysLog mode
+*/
+#if CFE_PLATFORM_ES_DEFAULT_SYSLOG_MODE < 0
+#error CFE_PLATFORM_ES_DEFAULT_SYSLOG_MODE cannot be less than 0!
+#elif CFE_PLATFORM_ES_DEFAULT_SYSLOG_MODE > 1
+#error CFE_PLATFORM_ES_DEFAULT_SYSLOG_MODE cannot be greater than 1!
+#endif
+
+/*
+** Maximum number of performance IDs
+*/
+#if CFE_MISSION_ES_PERF_MAX_IDS < 32
+#error CFE_MISSION_ES_PERF_MAX_IDS cannot be less than 32!
+#endif
+
+/*
+** Performance data buffer size
+*/
+#if CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE < 1025
+#error CFE_PLATFORM_ES_PERF_DATA_BUFFER_SIZE cannot be less than 1025 entries!
+#endif
+
+/*
+** Maximum number of Registered CDS blocks
+*/
+#if CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES < 8
+#error CFE_PLATFORM_ES_CDS_MAX_NUM_ENTRIES cannot be less than 8!
+#endif
+
+/*
+** Maximum number of processor resets before a power-on
+*/
+#if CFE_PLATFORM_ES_MAX_PROCESSOR_RESETS < 0
+#error CFE_PLATFORM_ES_MAX_PROCESSOR_RESETS cannot be less than 0!
+#endif
+
+/*
+**  Alignment of ES memory pool
+*/
+#if CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN <= 0
+#error CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN cannot be less than or equal to 0!
+#elif (CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN & (CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN - 1)) != 0
+#error CFE_PLATFORM_ES_MEMPOOL_ALIGN_SIZE_MIN must be a power of 2!
+#endif
+
+/*
+**  Intermediate ES Memory Pool Block Sizes
+*/
+#if CFE_PLATFORM_ES_MAX_BLOCK_SIZE < CFE_MISSION_SB_MAX_SB_MSG_SIZE
+#error CFE_PLATFORM_ES_MAX_BLOCK_SIZE must be equal to or larger than CFE_MISSION_SB_MAX_SB_MSG_SIZE!
+#endif
+
+#if CFE_PLATFORM_ES_MAX_BLOCK_SIZE < CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE
+#error CFE_PLATFORM_ES_MAX_BLOCK_SIZE must be equal to or larger than CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE!
+#endif
+
+#if CFE_PLATFORM_ES_MAX_BLOCK_SIZE < CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE
+#error CFE_PLATFORM_ES_MAX_BLOCK_SIZE must be equal to or larger than CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE!
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_01 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_02
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_01 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_02
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_02 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_03
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_02 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_03
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_03 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_04
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_03 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_04
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_04 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_05
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_04 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_05
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_05 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_06
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_05 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_06
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_06 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_07
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_06 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_07
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_07 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_08
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_07 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_08
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_08 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_09
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_08 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_09
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_09 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_10
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_09 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_10
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_10 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_11
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_10 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_11
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_11 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_12
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_11 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_12
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_12 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_13
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_12 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_13
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_13 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_14
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_13 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_14
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_14 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_15
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_14 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_15
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_15 > CFE_PLATFORM_ES_MEM_BLOCK_SIZE_16
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_15 must be less than CFE_PLATFORM_ES_MEM_BLOCK_SIZE_16
+#endif
+
+#if CFE_PLATFORM_ES_MEM_BLOCK_SIZE_16 > CFE_PLATFORM_ES_MAX_BLOCK_SIZE
+#error CFE_PLATFORM_ES_MEM_BLOCK_SIZE_16 must be less than CFE_PLATFORM_ES_MAX_BLOCK_SIZE
+#endif
+
+/*
+**  Intermediate ES Critical Data Store Memory Pool Block Sizes
+*/
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_01 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_02
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_01 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_02
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_02 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_03
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_02 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_03
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_03 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_04
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_03 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_04
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_04 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_05
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_04 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_05
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_05 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_06
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_05 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_06
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_06 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_07
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_06 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_07
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_07 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_08
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_07 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_08
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_08 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_09
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_08 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_09
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_09 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_10
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_09 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_10
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_10 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_11
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_10 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_11
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_11 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_12
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_11 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_12
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_12 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_13
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_12 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_13
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_13 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_14
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_13 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_14
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_14 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_15
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_14 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_15
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_15 > CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_16
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_15 must be less than CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_16
+#endif
+
+#if CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_16 > CFE_PLATFORM_ES_CDS_MAX_BLOCK_SIZE
+#error CFE_PLATFORM_ES_CDS_MEM_BLOCK_SIZE_16 must be less than CFE_PLATFORM_ES_CDS_MAX_BLOCK_SIZE
+#endif
+
+/*
+** Validate task stack size...
+*/
+#if CFE_PLATFORM_ES_START_TASK_STACK_SIZE < 2048
+#error CFE_PLATFORM_ES_START_TASK_STACK_SIZE must be greater than or equal to 2048
+#endif
+
+#if ((CFE_MISSION_MAX_API_LEN % 4) != 0)
+#error CFE_MISSION_MAX_API_LEN must be a multiple of 4
+#endif
+#if ((CFE_MISSION_MAX_PATH_LEN % 4) != 0)
+#error CFE_MISSION_MAX_PATH_LEN must be a multiple of 4
+#endif
+#if ((CFE_MISSION_MAX_FILE_LEN % 4) != 0)
+#error CFE_MISSION_MAX_FILE_LEN must be a multiple of 4
+#endif
+#if ((CFE_MISSION_ES_CDS_MAX_NAME_LENGTH % 4) != 0)
+#error CFE_MISSION_ES_CDS_MAX_NAME_LENGTH must be a multiple of 4
+#endif
+#if ((CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN % 4) != 0)
+#error CFE_MISSION_ES_CDS_MAX_FULL_NAME_LEN must be a multiple of 4
+#endif
+
+#endif /* CFE_ES_VERIFY_H */
+```

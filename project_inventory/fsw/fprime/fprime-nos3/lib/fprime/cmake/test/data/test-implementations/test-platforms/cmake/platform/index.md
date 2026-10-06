@@ -3,16 +3,48 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/cmake/platform/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Darwin.cmake`
 
-file--Darwin.cmake
-file--Linux.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/cmake/platform/Darwin.cmake`
+
+
+```cmake
+####
+# Darwin.cmake:
+#
+# Darwin based platform file used for Darwin (Mac OS X) targets. Note: this sets some OS X flags before calling into the common
+# Linux implementations to use the posix types defined there.
+####
+include("${FPRIME_FRAMEWORK_PATH}/cmake/platform/Darwin.cmake")
+register_fprime_config(
+        Darwin_Special_Config
+    INTERFACE
+    CHOOSES_IMPLEMENTATIONS
+        Test_Implementation_Platform
+        Test_Override_Unused
+)
 ```
 
-## 항목
+### `Linux.cmake`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/cmake/platform/Darwin.cmake`](file--Darwin.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/cmake/platform/Linux.cmake`](file--Linux.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/test-platforms/cmake/platform/Linux.cmake`
+
+
+```cmake
+####
+# Linux.cmake:
+#
+# Linux platform file for standard linux targets. Merely defers to ./Linux.cmake.
+####
+include("${FPRIME_FRAMEWORK_PATH}/cmake/platform/Linux.cmake")
+register_fprime_config(
+        Linux_Special_Config
+    INTERFACE
+    CHOOSES_IMPLEMENTATIONS
+        Test_Implementation_Platform
+        Test_Override_Unused
+)
+
+```

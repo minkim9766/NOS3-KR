@@ -3,20 +3,30 @@
 
 **경로:** `fsw/build/CMakeFiles/3.26.0/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CompilerIdC/index
-file--CMakeCCompiler.cmake
-file--CMakeDetermineCompilerABI_C.bin
-file--CMakeSystem.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/CMakeFiles/3.26.0/CompilerIdC/`](CompilerIdC/index) — 폴더
-- [`fsw/build/CMakeFiles/3.26.0/CMakeCCompiler.cmake`](file--CMakeCCompiler.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/3.26.0/CMakeDetermineCompilerABI_C.bin`](file--CMakeDetermineCompilerABI_C.bin) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/3.26.0/CMakeSystem.cmake`](file--CMakeSystem.cmake) — 빌드 산출물 (경로만)
+### `CMakeCCompiler.cmake`
+
+**경로:** `fsw/build/CMakeFiles/3.26.0/CMakeCCompiler.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeDetermineCompilerABI_C.bin`
+
+**경로:** `fsw/build/CMakeFiles/3.26.0/CMakeDetermineCompilerABI_C.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeSystem.cmake`
+
+**경로:** `fsw/build/CMakeFiles/3.26.0/CMakeSystem.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

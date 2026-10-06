@@ -3,18 +3,91 @@
 
 **경로:** `gsw/yamcs/examples/perftest1/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/perftest1/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/perftest1/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/perftest1/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/perftest1/pom.xml`
+
+
+```xml
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>perftest1</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: Examples :: Perftest1</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>simulator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-tse</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `README.md`
+
+**경로:** `gsw/yamcs/examples/perftest1/README.md`
+
+
+```markdown
+This configuration is used to asses the performance of Yamcs for processing telemetry. The simulator sends a configurable number of packets with random content. On the Yamcs server side a MDB will be generated (by the PerfMdbLoader) to define all the packets and parameters within.
+
+Settings which can be adjusted:
+- number of packets - how many different packets will be sent. Each packet will have an identier (part of the secondary CCSDS header) and will be decomposed into a number of fixed size integer parameters. The number of packets has to be specified both in the SimulatorCommander perfTest (to configure the simulator to send that number of packets) as well as in the mdb -> PerfMdbLoader settings (to generate that number of packets in the MDB)
+- packet size  - size in bytes of each packet. Again this has to be configured both in the simulator and MDB loader.
+- interval in milliseconds between sending each batch of packets
+- parameter size in bits - this is configured in the PerfMdbLoader and implicitly determines also how many parameters are inside one packet.
+- percentange of parameters with alarms - between 0 and 100. If greater than 0, the first parameters in each packet will have warning and critical alarms configured.
+- out of limit chance for warning and critical alarms. Between 0 and 1 will be used to compute the warning and critical alarm ranges such that the probability of a randomly generated parameter value falling outside that range is the value configured.
+
+
+In the current configuration:
+ numPackets: 100
+ interval: 100 (millisec)
+ paramSizeInBits: 32
+ packetSize: 1476 (+16 bytes headers)
+
+resulting in 
+TM packet rate: 1000 packets/second, about 12Mbps incoming data rate
+TM parameter rate: 369 x 100 = 36900 parameters sampled at 10Hz -> 369000 samples/sec 
+
+The simulator sends data via TCP so it might slow down if the server is not able to process all the packets. The yamcs-web frontend page will show the actual data rates.
+
+```

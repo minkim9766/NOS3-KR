@@ -3,22 +3,187 @@
 
 **경로:** `fsw/fprime/fprime-nos3/Components/Nos3Time/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Nos3Time.cpp
-file--Nos3Time.fpp
-file--Nos3Time.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/Components/Nos3Time/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/Components/Nos3Time/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/Components/Nos3Time/Nos3Time.cpp`](file--Nos3Time.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/Components/Nos3Time/Nos3Time.fpp`](file--Nos3Time.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/Components/Nos3Time/Nos3Time.hpp`](file--Nos3Time.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/Components/Nos3Time/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+
+include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Nos3Time.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Nos3Time.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/inc/nos_link.h"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+```
+
+### `Nos3Time.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/Components/Nos3Time/Nos3Time.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Nos3Time.cpp
+// \author jstar
+// \brief  cpp file for Nos3Time component implementation class
+// ======================================================================
+
+#include "Components/Nos3Time/Nos3Time.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <config/TimeBaseEnumAc.hpp>
+// /home/jstar/dev/735_4_0_upgrade/nos3/fsw/fprime/fprime-nos3/build-fprime-automatic-native/F-Prime/default/config/TimeBaseEnumAc.hpp
+
+#include <Fw/Time/Time.hpp>
+#include <ctime>
+
+/* nos engine includes */
+#include "Client/CInterface.h"
+#include "nos_link.h"
+
+
+
+/* Constants used for NOS Engine Time and NOS Engine bus */
+
+#define ENGINE_SERVER_URI       "tcp://nos-engine-server:12000"
+#define ENGINE_BUS_NAME         "command"
+#define TICKS_PER_SECOND        100
+#define POSIX_EPOCH             1760776200 //ADVANCING TIME TO 2025-10-20:00:00 
+
+NE_Bus          *Fprime_Bus;
+pthread_mutex_t  Fprime_sim_time_mutex;
+NE_SimTime       Fprime_sim_time;
+int64_t          Fprime_ticks_per_second;
+
+int flag=0;
+
+void Fprime_NosTickCallback(NE_SimTime time)
+{
+    pthread_mutex_lock(&Fprime_sim_time_mutex);
+    Fprime_sim_time = time;
+    pthread_mutex_unlock(&Fprime_sim_time_mutex);
+}
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Nos3Time::Nos3Time(const char* name) : Nos3TimeComponentBase(name)
+    {
+    }
+
+    Nos3Time::~Nos3Time() {
+    }
+
+    void Nos3Time::timeGetPort_handler(
+            FwIndexType portNum, /*!< The port number*/
+            Fw::Time &time /*!< The U32 cmd argument*/
+        ) {
+        int32_t Nos3Time_upper;
+        int32_t Nos3Time_lower;
+
+        if(flag==0){
+        Fprime_Bus = NE_create_bus(hub, ENGINE_BUS_NAME, ENGINE_SERVER_URI);
+        NE_bus_add_time_tick_callback(Fprime_Bus, Fprime_NosTickCallback);
+        flag = 1;
+        }
+
+        Nos3Time_upper = static_cast<int32_t>((Fprime_sim_time/100)); //ticks/100 = seconds (1 tick =10000 microseconds)
+        Nos3Time_lower = static_cast<int32_t>((Fprime_sim_time % 100)*10000); //10000 for microseconds
+        
+        Nos3Time_upper += POSIX_EPOCH; //setting to 2025 
+
+
+        time.set(TimeBase::TB_WORKSTATION_TIME,0, Nos3Time_upper, Nos3Time_lower);
+    }
+
+}
+```
+
+### `Nos3Time.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/Components/Nos3Time/Nos3Time.fpp`
+
+
+```fpp
+module Components {
+    @ Nos3 time from nos engine
+    passive component Nos3Time {
+        @ Port to retrieve time
+        sync input port timeGetPort: Fw.Time
+    }
+}
+```
+
+### `Nos3Time.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/Components/Nos3Time/Nos3Time.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Nos3Time.hpp
+// \author jstar
+// \brief  hpp file for Nos3Time component implementation class
+// ======================================================================
+
+#ifndef Components_Nos3Time_HPP
+#define Components_Nos3Time_HPP
+
+#include "Components/Nos3Time/Nos3TimeComponentAc.hpp"
+
+namespace Components {
+
+  class Nos3Time: public Nos3TimeComponentBase {
+    public:
+        explicit Nos3Time(const char* compName);
+        virtual ~Nos3Time();
+    protected:
+        void timeGetPort_handler(
+                FwIndexType portNum, /*!< The port number*/
+                Fw::Time &time /*!< The U32 cmd argument*/
+            );
+    private:
+};
+
+}
+
+#endif
+```

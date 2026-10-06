@@ -3,20 +3,28 @@
 
 **경로:** `fsw/build/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_build_env_table.c`
 
-file--cfe_build_env_table.c
-file--cfe_config_map.c
-file--cfe_mission_strings.c
-file--cfe_module_version_table.c
-```
+**경로:** `fsw/build/src/cfe_build_env_table.c`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/src/cfe_build_env_table.c`](file--cfe_build_env_table.c) — 빌드 산출물 (경로만)
-- [`fsw/build/src/cfe_config_map.c`](file--cfe_config_map.c) — 빌드 산출물 (경로만)
-- [`fsw/build/src/cfe_mission_strings.c`](file--cfe_mission_strings.c) — 빌드 산출물 (경로만)
-- [`fsw/build/src/cfe_module_version_table.c`](file--cfe_module_version_table.c) — 빌드 산출물 (경로만)
+### `cfe_config_map.c`
+
+**경로:** `fsw/build/src/cfe_config_map.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_mission_strings.c`
+
+**경로:** `fsw/build/src/cfe_mission_strings.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_module_version_table.c`
+
+**경로:** `fsw/build/src/cfe_module_version_table.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

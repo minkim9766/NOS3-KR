@@ -3,58 +3,2402 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Basic.fpp`
 
-file--Basic.fpp
-file--BasicTester.cpp
-file--BasicTester.hpp
-file--BasicU32.fpp
-file--BasicU32Tester.cpp
-file--BasicU32Tester.hpp
-file--ChoiceToChoice.fpp
-file--ChoiceToChoiceTester.cpp
-file--ChoiceToChoiceTester.hpp
-file--ChoiceToState.fpp
-file--ChoiceToStateTester.cpp
-file--ChoiceToStateTester.hpp
-file--CMakeLists.txt
-file--InputPairU16U32.fpp
-file--InputPairU16U32Tester.cpp
-file--InputPairU16U32Tester.hpp
-file--main.cpp
-file--Sequence.fpp
-file--SequenceTester.cpp
-file--SequenceTester.hpp
-file--SequenceU32.fpp
-file--SequenceU32Tester.cpp
-file--SequenceU32Tester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/Basic.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    queued component Basic {
+
+      sync input port schedIn: Svc.Sched
+
+      include "../../internal/choice/include/Basic.fppi"
+
+      state machine instance basic: Basic
+
+      state machine instance smChoiceBasic: SmChoice.Basic priority 1 assert
+
+    }
+
+  }
+
+}
 ```
 
-## 항목
+### `BasicTester.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/Basic.fpp`](file--Basic.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicTester.cpp`](file--BasicTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicTester.hpp`](file--BasicTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicU32.fpp`](file--BasicU32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicU32Tester.cpp`](file--BasicU32Tester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicU32Tester.hpp`](file--BasicU32Tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToChoice.fpp`](file--ChoiceToChoice.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToChoiceTester.cpp`](file--ChoiceToChoiceTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToChoiceTester.hpp`](file--ChoiceToChoiceTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToState.fpp`](file--ChoiceToState.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToStateTester.cpp`](file--ChoiceToStateTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToStateTester.hpp`](file--ChoiceToStateTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/InputPairU16U32.fpp`](file--InputPairU16U32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/InputPairU16U32Tester.cpp`](file--InputPairU16U32Tester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/InputPairU16U32Tester.hpp`](file--InputPairU16U32Tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/Sequence.fpp`](file--Sequence.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceTester.cpp`](file--SequenceTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceTester.hpp`](file--SequenceTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceU32.fpp`](file--SequenceU32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceU32Tester.cpp`](file--SequenceU32Tester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceU32Tester.hpp`](file--SequenceU32Tester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/BasicTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTester::BasicTester(const char* const compName)
+    : BasicComponentBase(compName),
+      m_basic_action_a_history(),
+      m_basic_action_b_history(),
+      m_basic_guard_g(),
+      m_smChoiceBasic_action_a_history(),
+      m_smChoiceBasic_action_b_history(),
+      m_smChoiceBasic_guard_g() {}
+
+BasicTester::~BasicTester() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void BasicTester::schedIn_handler(FwIndexType portNum, U32 context) {
+    // Nothing to do
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTester::FppTest_SmInstanceChoice_Basic_Basic_action_a(SmId smId,
+                                                                FppTest_SmInstanceChoice_Basic_Basic::Signal signal) {
+    ASSERT_EQ(smId, SmId::basic);
+    this->m_basic_action_a_history.push(signal);
+}
+
+void BasicTester::FppTest_SmInstanceChoice_Basic_Basic_action_b(SmId smId,
+                                                                FppTest_SmInstanceChoice_Basic_Basic::Signal signal) {
+    ASSERT_EQ(smId, SmId::basic);
+    this->m_basic_action_b_history.push(signal);
+}
+
+void BasicTester::FppTest_SmChoice_Basic_action_a(SmId smId, FppTest_SmChoice_Basic::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceBasic);
+    this->m_smChoiceBasic_action_a_history.push(signal);
+}
+
+void BasicTester::FppTest_SmChoice_Basic_action_b(SmId smId, FppTest_SmChoice_Basic::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceBasic);
+    this->m_smChoiceBasic_action_b_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicTester::FppTest_SmInstanceChoice_Basic_Basic_guard_g(
+    SmId smId,
+    FppTest_SmInstanceChoice_Basic_Basic::Signal signal) const {
+    FW_ASSERT(smId == SmId::basic, static_cast<FwAssertArgType>(smId));
+    return this->m_basic_guard_g.call(signal);
+}
+
+bool BasicTester::FppTest_SmChoice_Basic_guard_g(SmId smId, FppTest_SmChoice_Basic::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceBasic, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceBasic_guard_g.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTester::testBasicTrue() {
+    this->m_basic_action_a_history.clear();
+    this->m_basic_action_b_history.clear();
+    this->m_basic_guard_g.reset();
+    this->m_basic_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->basic_getState(), Basic_Basic::State::S1);
+    ASSERT_EQ(this->m_basic_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_basic_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_basic_action_b_history.getSize(), 0);
+    this->basic_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_basic_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_basic_guard_g.getCallHistory().getItemAt(0), Basic_Basic::Signal::s);
+    ASSERT_EQ(this->m_basic_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_basic_action_a_history.getItemAt(0), Basic_Basic::Signal::s);
+    ASSERT_EQ(this->m_basic_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->basic_getState(), Basic_Basic::State::S2);
+}
+
+void BasicTester::testBasicFalse() {
+    this->m_basic_action_a_history.clear();
+    this->m_basic_action_b_history.clear();
+    this->m_basic_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->basic_getState(), Basic_Basic::State::S1);
+    ASSERT_EQ(this->m_basic_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_basic_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_basic_action_b_history.getSize(), 0);
+    this->basic_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_basic_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_basic_guard_g.getCallHistory().getItemAt(0), Basic_Basic::Signal::s);
+    ASSERT_EQ(this->m_basic_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_basic_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_basic_action_b_history.getItemAt(0), Basic_Basic::Signal::s);
+    ASSERT_EQ(this->basic_getState(), Basic_Basic::State::S3);
+}
+
+void BasicTester::testSmChoiceBasicTrue() {
+    this->m_smChoiceBasic_action_a_history.clear();
+    this->m_smChoiceBasic_action_b_history.clear();
+    this->m_smChoiceBasic_guard_g.reset();
+    this->m_smChoiceBasic_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceBasic_getState(), SmChoice_Basic::State::S1);
+    ASSERT_EQ(this->m_smChoiceBasic_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasic_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasic_action_b_history.getSize(), 0);
+    this->smChoiceBasic_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceBasic_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasic_guard_g.getCallHistory().getItemAt(0), SmChoice_Basic::Signal::s);
+    ASSERT_EQ(this->m_smChoiceBasic_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasic_action_a_history.getItemAt(0), SmChoice_Basic::Signal::s);
+    ASSERT_EQ(this->m_smChoiceBasic_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->smChoiceBasic_getState(), SmChoice_Basic::State::S2);
+}
+
+void BasicTester::testSmChoiceBasicFalse() {
+    this->m_smChoiceBasic_action_a_history.clear();
+    this->m_smChoiceBasic_action_b_history.clear();
+    this->m_smChoiceBasic_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceBasic_getState(), SmChoice_Basic::State::S1);
+    ASSERT_EQ(this->m_smChoiceBasic_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasic_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasic_action_b_history.getSize(), 0);
+    this->smChoiceBasic_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceBasic_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasic_guard_g.getCallHistory().getItemAt(0), SmChoice_Basic::Signal::s);
+    ASSERT_EQ(this->m_smChoiceBasic_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasic_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasic_action_b_history.getItemAt(0), SmChoice_Basic::Signal::s);
+    ASSERT_EQ(this->smChoiceBasic_getState(), SmChoice_Basic::State::S3);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `BasicTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_Basic_HPP
+#define FppTest_SmInstanceChoice_Basic_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/BasicComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class BasicTester : public BasicComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmInstanceChoice_Basic_Basic
+    using Basic_Basic = FppTest_SmInstanceChoice_Basic_Basic;
+
+    //! The type FppTest_SmChoice_Basic
+    using SmChoice_Basic = FppTest_SmChoice_Basic;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicTester object
+    BasicTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicTester object
+    ~BasicTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for schedIn
+    void schedIn_handler(FwIndexType portNum,  //!< The port number
+                         U32 context           //!< The call order
+                         ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmInstanceChoice_Basic_Basic
+    //!
+    //! Action a
+    void FppTest_SmInstanceChoice_Basic_Basic_action_a(
+        SmId smId,                                           //!< The state machine id
+        FppTest_SmInstanceChoice_Basic_Basic::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action b of state machine FppTest_SmInstanceChoice_Basic_Basic
+    //!
+    //! Action b
+    void FppTest_SmInstanceChoice_Basic_Basic_action_b(
+        SmId smId,                                           //!< The state machine id
+        FppTest_SmInstanceChoice_Basic_Basic::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action a of state machine FppTest_SmChoice_Basic
+    //!
+    //! Action a
+    void FppTest_SmChoice_Basic_action_a(SmId smId,                             //!< The state machine id
+                                         FppTest_SmChoice_Basic::Signal signal  //!< The signal
+                                         ) override;
+
+    //! Implementation for action b of state machine FppTest_SmChoice_Basic
+    //!
+    //! Action b
+    void FppTest_SmChoice_Basic_action_b(SmId smId,                             //!< The state machine id
+                                         FppTest_SmChoice_Basic::Signal signal  //!< The signal
+                                         ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmInstanceChoice_Basic_Basic
+    //!
+    //! Guard g
+    bool FppTest_SmInstanceChoice_Basic_Basic_guard_g(
+        SmId smId,                                           //!< The state machine id
+        FppTest_SmInstanceChoice_Basic_Basic::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard g of state machine FppTest_SmChoice_Basic
+    //!
+    //! Guard g
+    bool FppTest_SmChoice_Basic_guard_g(SmId smId,                             //!< The state machine id
+                                        FppTest_SmChoice_Basic::Signal signal  //!< The signal
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the basic test with the true guard
+    void testBasicTrue();
+
+    //! Run the basic test with the false guard
+    void testBasicFalse();
+
+    //! Run the smChoiceBasic test with the true guard
+    void testSmChoiceBasicTrue();
+
+    //! Run the smChoiceSmChoiceBasic test with the false guard
+    void testSmChoiceBasicFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of basic
+    SmHarness::History<Basic_Basic::Signal, historySize> m_basic_action_a_history;
+
+    //! The history associated with action b of basic
+    SmHarness::History<Basic_Basic::Signal, historySize> m_basic_action_b_history;
+
+    //! The guard g of basic
+    SmHarness::NoArgGuard<Basic_Basic::Signal, historySize> m_basic_guard_g;
+
+    //! The history associated with action a of smChoiceBasic
+    SmHarness::History<SmChoice_Basic::Signal, historySize> m_smChoiceBasic_action_a_history;
+
+    //! The history associated with action b of smChoiceBasic
+    SmHarness::History<SmChoice_Basic::Signal, historySize> m_smChoiceBasic_action_b_history;
+
+    //! The guard g of smChoiceBasic
+    SmHarness::NoArgGuard<SmChoice_Basic::Signal, historySize> m_smChoiceBasic_guard_g;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicU32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicU32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    active component BasicU32 {
+
+      state machine instance smChoiceBasicU32: SmChoice.BasicU32 priority 2 block
+
+    }
+
+  }
+
+}
+```
+
+### `BasicU32Tester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicU32Tester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicU32Tester.cpp
+// \author bocchino
+// \brief  cpp file for BasicU32Tester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/BasicU32Tester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicU32Tester ::BasicU32Tester(const char* const compName)
+    : BasicU32ComponentBase(compName),
+      m_smChoiceBasicU32_action_a_history(),
+      m_smChoiceBasicU32_action_b_history(),
+      m_smChoiceBasicU32_guard_g() {}
+
+BasicU32Tester ::~BasicU32Tester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicU32Tester ::FppTest_SmChoice_BasicU32_action_a(SmId smId,
+                                                         FppTest_SmChoice_BasicU32::Signal signal,
+                                                         U32 value) {
+    ASSERT_EQ(smId, SmId::smChoiceBasicU32);
+    this->m_smChoiceBasicU32_action_a_history.push(signal, value);
+}
+
+void BasicU32Tester ::FppTest_SmChoice_BasicU32_action_b(SmId smId, FppTest_SmChoice_BasicU32::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceBasicU32);
+    this->m_smChoiceBasicU32_action_b_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicU32Tester ::FppTest_SmChoice_BasicU32_guard_g(SmId smId,
+                                                        FppTest_SmChoice_BasicU32::Signal signal,
+                                                        U32 value) const {
+    FW_ASSERT(smId == SmId::smChoiceBasicU32, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceBasicU32_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicU32Tester::testTrue() {
+    this->m_smChoiceBasicU32_action_a_history.clear();
+    this->m_smChoiceBasicU32_action_b_history.clear();
+    this->m_smChoiceBasicU32_guard_g.reset();
+    this->m_smChoiceBasicU32_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceBasicU32_getState(), SmChoice_BasicU32::State::S1);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_b_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceBasicU32_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_BasicU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_a_history.getSignals().getItemAt(0), SmChoice_BasicU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_a_history.getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->smChoiceBasicU32_getState(), SmChoice_BasicU32::State::S2);
+}
+
+void BasicU32Tester::testFalse() {
+    this->m_smChoiceBasicU32_action_a_history.clear();
+    this->m_smChoiceBasicU32_action_b_history.clear();
+    this->m_smChoiceBasicU32_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceBasicU32_getState(), SmChoice_BasicU32::State::S1);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_b_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceBasicU32_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_BasicU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceBasicU32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceBasicU32_action_b_history.getItemAt(0), SmChoice_BasicU32::Signal::s);
+    ASSERT_EQ(this->smChoiceBasicU32_getState(), SmChoice_BasicU32::State::S3);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `BasicU32Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/BasicU32Tester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicU32Tester.hpp
+// \author bocchino
+// \brief  hpp file for BasicU32Tester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_BasicU32_HPP
+#define FppTest_SmInstanceChoice_BasicU32_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/BasicU32ComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class BasicU32Tester : public BasicU32ComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmChoice_BasicU32
+    using SmChoice_BasicU32 = FppTest_SmChoice_BasicU32;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicU32Tester object
+    BasicU32Tester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicU32Tester object
+    ~BasicU32Tester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmChoice_BasicU32
+    //!
+    //! Action a
+    void FppTest_SmChoice_BasicU32_action_a(SmId smId,                                 //!< The state machine id
+                                            FppTest_SmChoice_BasicU32::Signal signal,  //!< The signal
+                                            U32 value                                  //!< The value
+                                            ) override;
+
+    //! Implementation for action b of state machine FppTest_SmChoice_BasicU32
+    //!
+    //! Action b
+    void FppTest_SmChoice_BasicU32_action_b(SmId smId,                                //!< The state machine id
+                                            FppTest_SmChoice_BasicU32::Signal signal  //!< The signal
+                                            ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmChoice_BasicU32
+    //!
+    //! Guard g
+    bool FppTest_SmChoice_BasicU32_guard_g(SmId smId,                                 //!< The state machine id
+                                           FppTest_SmChoice_BasicU32::Signal signal,  //!< The signal
+                                           U32 value                                  //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test with the true guard
+    void testTrue();
+
+    //! Run the test with the false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smChoiceBasicU32
+    SmHarness::SignalValueHistory<SmChoice_BasicU32::Signal, U32, historySize> m_smChoiceBasicU32_action_a_history;
+
+    //! The history associated with action b of smChoiceBasicU32
+    SmHarness::History<SmChoice_BasicU32::Signal, historySize> m_smChoiceBasicU32_action_b_history;
+
+    //! The guard g of smChoiceBasicU32
+    SmHarness::Guard<SmChoice_BasicU32::Signal, U32, historySize> m_smChoiceBasicU32_guard_g;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `ChoiceToChoice.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToChoice.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    active component ChoiceToChoice {
+
+      state machine instance smChoiceChoiceToChoice: SmChoice.ChoiceToChoice priority 4 hook
+
+    }
+
+  }
+
+}
+```
+
+### `ChoiceToChoiceTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToChoiceTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChoiceToChoiceTester.cpp
+// \author bocchino
+// \brief  cpp file for ChoiceToChoiceTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/ChoiceToChoiceTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+ChoiceToChoiceTester ::ChoiceToChoiceTester(const char* const compName)
+    : ChoiceToChoiceComponentBase(compName),
+      m_smChoiceChoiceToChoice_actionHistory(),
+      m_smChoiceChoiceToChoice_guard_g1(),
+      m_smChoiceChoiceToChoice_guard_g2() {}
+
+ChoiceToChoiceTester ::~ChoiceToChoiceTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void ChoiceToChoiceTester ::FppTest_SmChoice_ChoiceToChoice_action_exitS1(
+    SmId smId,
+    FppTest_SmChoice_ChoiceToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToChoice);
+    this->m_smChoiceChoiceToChoice_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void ChoiceToChoiceTester ::FppTest_SmChoice_ChoiceToChoice_action_a(SmId smId,
+                                                                     FppTest_SmChoice_ChoiceToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToChoice);
+    this->m_smChoiceChoiceToChoice_actionHistory.push(signal, ActionId::A);
+}
+
+void ChoiceToChoiceTester ::FppTest_SmChoice_ChoiceToChoice_action_enterS2(
+    SmId smId,
+    FppTest_SmChoice_ChoiceToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToChoice);
+    this->m_smChoiceChoiceToChoice_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool ChoiceToChoiceTester ::FppTest_SmChoice_ChoiceToChoice_guard_g1(
+    SmId smId,
+    FppTest_SmChoice_ChoiceToChoice::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceChoiceToChoice, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceChoiceToChoice_guard_g1.call(signal);
+}
+
+bool ChoiceToChoiceTester ::FppTest_SmChoice_ChoiceToChoice_guard_g2(
+    SmId smId,
+    FppTest_SmChoice_ChoiceToChoice::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceChoiceToChoice, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceChoiceToChoice_guard_g2.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Overflow hook implementations for internal state machines
+// ----------------------------------------------------------------------
+
+void ChoiceToChoiceTester ::smChoiceChoiceToChoice_stateMachineOverflowHook(SmId smId,
+                                                                            FwEnumStoreType signal,
+                                                                            Fw::SerializeBufferBase& buffer) {
+    this->m_hookCalled = true;
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToChoice);
+    ASSERT_EQ(static_cast<SmChoice_ChoiceToChoice::Signal>(signal), SmChoice_ChoiceToChoice::Signal::s);
+    ASSERT_EQ(buffer.getBuffLeft(), 0);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void ChoiceToChoiceTester::testG1True() {
+    this->m_smChoiceChoiceToChoice_actionHistory.clear();
+    this->m_smChoiceChoiceToChoice_guard_g1.reset();
+    this->m_smChoiceChoiceToChoice_guard_g2.reset();
+    this->m_smChoiceChoiceToChoice_guard_g1.setReturnValue(true);
+    this->m_hookCalled = false;
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceChoiceToChoice_getState(), SmChoice_ChoiceToChoice::State::S1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_actionHistory.getSize(), 0);
+    this->smChoiceChoiceToChoice_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_FALSE(this->m_hookCalled);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getItemAt(0),
+              SmChoice_ChoiceToChoice::Signal::s);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g2.getCallHistory().getSize(), 0);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smChoiceChoiceToChoice_actionHistory.getSignals();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmChoice_ChoiceToChoice::Signal::s);
+    }
+    const auto& values = this->m_smChoiceChoiceToChoice_actionHistory.getValues();
+    ASSERT_EQ(values.getItemAt(0), ActionId::EXIT_S1);
+    ASSERT_EQ(values.getItemAt(1), ActionId::A);
+    ASSERT_EQ(values.getItemAt(2), ActionId::ENTER_S2);
+    ASSERT_EQ(this->smChoiceChoiceToChoice_getState(), SmChoice_ChoiceToChoice::State::S2_S3);
+}
+
+void ChoiceToChoiceTester::testG1FalseG2True() {
+    this->m_smChoiceChoiceToChoice_actionHistory.clear();
+    this->m_smChoiceChoiceToChoice_guard_g1.reset();
+    this->m_smChoiceChoiceToChoice_guard_g2.reset();
+    this->m_smChoiceChoiceToChoice_guard_g2.setReturnValue(true);
+    this->m_hookCalled = false;
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceChoiceToChoice_getState(), SmChoice_ChoiceToChoice::State::S1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_actionHistory.getSize(), 0);
+    this->smChoiceChoiceToChoice_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_FALSE(this->m_hookCalled);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getItemAt(0),
+              SmChoice_ChoiceToChoice::Signal::s);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g2.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getItemAt(0),
+              SmChoice_ChoiceToChoice::Signal::s);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smChoiceChoiceToChoice_actionHistory.getSignals();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmChoice_ChoiceToChoice::Signal::s);
+    }
+    const auto& values = this->m_smChoiceChoiceToChoice_actionHistory.getValues();
+    ASSERT_EQ(values.getItemAt(0), ActionId::EXIT_S1);
+    ASSERT_EQ(values.getItemAt(1), ActionId::A);
+    ASSERT_EQ(values.getItemAt(2), ActionId::ENTER_S2);
+    ASSERT_EQ(this->smChoiceChoiceToChoice_getState(), SmChoice_ChoiceToChoice::State::S2_S3);
+}
+
+void ChoiceToChoiceTester::testG1FalseG2False() {
+    this->m_smChoiceChoiceToChoice_actionHistory.clear();
+    this->m_smChoiceChoiceToChoice_guard_g1.reset();
+    this->m_smChoiceChoiceToChoice_guard_g2.reset();
+    this->m_hookCalled = false;
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceChoiceToChoice_getState(), SmChoice_ChoiceToChoice::State::S1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_actionHistory.getSize(), 0);
+    this->smChoiceChoiceToChoice_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_FALSE(this->m_hookCalled);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getItemAt(0),
+              SmChoice_ChoiceToChoice::Signal::s);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g2.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_guard_g1.getCallHistory().getItemAt(0),
+              SmChoice_ChoiceToChoice::Signal::s);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_smChoiceChoiceToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smChoiceChoiceToChoice_actionHistory.getSignals();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmChoice_ChoiceToChoice::Signal::s);
+    }
+    const auto& values = this->m_smChoiceChoiceToChoice_actionHistory.getValues();
+    ASSERT_EQ(values.getItemAt(0), ActionId::EXIT_S1);
+    ASSERT_EQ(values.getItemAt(1), ActionId::A);
+    ASSERT_EQ(values.getItemAt(2), ActionId::ENTER_S2);
+    ASSERT_EQ(this->smChoiceChoiceToChoice_getState(), SmChoice_ChoiceToChoice::State::S2_S4);
+}
+
+void ChoiceToChoiceTester::testOverflow() {
+    this->m_hookCalled = false;
+    this->init(queueDepth, instanceId);
+    for (FwSizeType i = 0; i < queueDepth; i++) {
+        this->smChoiceChoiceToChoice_sendSignal_s();
+        ASSERT_FALSE(this->m_hookCalled);
+    }
+    this->smChoiceChoiceToChoice_sendSignal_s();
+    ASSERT_TRUE(this->m_hookCalled);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `ChoiceToChoiceTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToChoiceTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChoiceToChoiceTester.hpp
+// \author bocchino
+// \brief  hpp file for ChoiceToChoiceTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_ChoiceToChoice_HPP
+#define FppTest_SmInstanceChoice_ChoiceToChoice_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/ChoiceToChoiceComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class ChoiceToChoiceTester : public ChoiceToChoiceComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! Action IDs
+    enum class ActionId {
+        EXIT_S1,
+        A,
+        ENTER_S2,
+    };
+
+    //! The type FppTest_SmChoice_ChoiceToChoice
+    using SmChoice_ChoiceToChoice = FppTest_SmChoice_ChoiceToChoice;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct ChoiceToChoiceTester object
+    ChoiceToChoiceTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy ChoiceToChoiceTester object
+    ~ChoiceToChoiceTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action exitS1 of state machine FppTest_SmChoice_ChoiceToChoice
+    //!
+    //! Exit S1
+    void FppTest_SmChoice_ChoiceToChoice_action_exitS1(SmId smId,  //!< The state machine id
+                                                       FppTest_SmChoice_ChoiceToChoice::Signal signal  //!< The signal
+                                                       ) override;
+
+    //! Implementation for action a of state machine FppTest_SmChoice_ChoiceToChoice
+    //!
+    //! Action a
+    void FppTest_SmChoice_ChoiceToChoice_action_a(SmId smId,  //!< The state machine id
+                                                  FppTest_SmChoice_ChoiceToChoice::Signal signal  //!< The signal
+                                                  ) override;
+
+    //! Implementation for action enterS2 of state machine FppTest_SmChoice_ChoiceToChoice
+    //!
+    //! Enter S2
+    void FppTest_SmChoice_ChoiceToChoice_action_enterS2(SmId smId,  //!< The state machine id
+                                                        FppTest_SmChoice_ChoiceToChoice::Signal signal  //!< The signal
+                                                        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g1 of state machine FppTest_SmChoice_ChoiceToChoice
+    //!
+    //! Guard g1
+    bool FppTest_SmChoice_ChoiceToChoice_guard_g1(SmId smId,  //!< The state machine id
+                                                  FppTest_SmChoice_ChoiceToChoice::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard g2 of state machine FppTest_SmChoice_ChoiceToChoice
+    //!
+    //! Guard g2
+    bool FppTest_SmChoice_ChoiceToChoice_guard_g2(SmId smId,  //!< The state machine id
+                                                  FppTest_SmChoice_ChoiceToChoice::Signal signal  //!< The signal
+    ) const override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Overflow hook implementations for internal state machines
+    // ----------------------------------------------------------------------
+
+    //! Overflow hook implementation for smChoiceChoiceToChoice
+    void smChoiceChoiceToChoice_stateMachineOverflowHook(SmId smId,                       //!< The state machine ID
+                                                         FwEnumStoreType signal,          //!< The signal
+                                                         Fw::SerializeBufferBase& buffer  //!< The message buffer
+                                                         ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test with g1 true
+    void testG1True();
+
+    //! Run the test with g1 false and g2 true
+    void testG1FalseG2True();
+
+    //! Run the test with g1 false and g2 false
+    void testG1FalseG2False();
+
+    //! Test with queue overflow
+    void testOverflow();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! Whether the overflow hook was called
+    bool m_hookCalled = false;
+
+    //! The action history for smChoiceChoiceToChoice
+    SmHarness::SignalValueHistory<SmChoice_ChoiceToChoice::Signal, ActionId, historySize>
+        m_smChoiceChoiceToChoice_actionHistory;
+
+    //! The guard g1 for smChoiceChoiceToChoice
+    SmHarness::NoArgGuard<SmChoice_ChoiceToChoice::Signal, historySize> m_smChoiceChoiceToChoice_guard_g1;
+
+    //! The guard g2 for smChoiceChoiceToChoice
+    SmHarness::NoArgGuard<SmChoice_ChoiceToChoice::Signal, historySize> m_smChoiceChoiceToChoice_guard_g2;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `ChoiceToState.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToState.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    active component ChoiceToState {
+
+      state machine instance smChoiceChoiceToState: SmChoice.ChoiceToState
+
+    }
+
+  }
+
+}
+```
+
+### `ChoiceToStateTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToStateTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChoiceToStateTester.cpp
+// \author bocchino
+// \brief  cpp file for ChoiceToStateTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/ChoiceToStateTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+ChoiceToStateTester::ChoiceToStateTester(const char* const compName)
+    : ChoiceToStateComponentBase(compName),
+      m_smChoiceChoiceToState_actionHistory(),
+      m_smChoiceChoiceToState_guard_g() {}
+
+ChoiceToStateTester::~ChoiceToStateTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void ChoiceToStateTester::FppTest_SmChoice_ChoiceToState_action_exitS1(SmId smId,
+                                                                       FppTest_SmChoice_ChoiceToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToState);
+    this->m_smChoiceChoiceToState_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void ChoiceToStateTester::FppTest_SmChoice_ChoiceToState_action_a(SmId smId,
+                                                                  FppTest_SmChoice_ChoiceToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToState);
+    this->m_smChoiceChoiceToState_actionHistory.push(signal, ActionId::A);
+}
+
+void ChoiceToStateTester::FppTest_SmChoice_ChoiceToState_action_enterS2(SmId smId,
+                                                                        FppTest_SmChoice_ChoiceToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToState);
+    this->m_smChoiceChoiceToState_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void ChoiceToStateTester::FppTest_SmChoice_ChoiceToState_action_enterS3(SmId smId,
+                                                                        FppTest_SmChoice_ChoiceToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceChoiceToState);
+    this->m_smChoiceChoiceToState_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool ChoiceToStateTester::FppTest_SmChoice_ChoiceToState_guard_g(SmId smId,
+                                                                 FppTest_SmChoice_ChoiceToState::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceChoiceToState, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceChoiceToState_guard_g.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void ChoiceToStateTester::testTrue() {
+    this->m_smChoiceChoiceToState_actionHistory.clear();
+    this->m_smChoiceChoiceToState_guard_g.reset();
+    this->m_smChoiceChoiceToState_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceChoiceToState_getState(), SmChoice_ChoiceToState::State::S1);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_actionHistory.getSize(), 0);
+    this->smChoiceChoiceToState_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_guard_g.getCallHistory().getItemAt(0), SmChoice_ChoiceToState::Signal::s);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smChoiceChoiceToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smChoiceChoiceToState_actionHistory.getSignals();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmChoice_ChoiceToState::Signal::s);
+    }
+    const auto& values = this->m_smChoiceChoiceToState_actionHistory.getValues();
+    ASSERT_EQ(values.getItemAt(0), ActionId::EXIT_S1);
+    ASSERT_EQ(values.getItemAt(1), ActionId::A);
+    ASSERT_EQ(values.getItemAt(2), ActionId::ENTER_S2);
+    ASSERT_EQ(values.getItemAt(3), ActionId::A);
+    ASSERT_EQ(values.getItemAt(4), ActionId::ENTER_S3);
+    ASSERT_EQ(this->smChoiceChoiceToState_getState(), SmChoice_ChoiceToState::State::S2_S3);
+}
+
+void ChoiceToStateTester::testFalse() {
+    this->m_smChoiceChoiceToState_actionHistory.clear();
+    this->m_smChoiceChoiceToState_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceChoiceToState_getState(), SmChoice_ChoiceToState::State::S1);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_actionHistory.getSize(), 0);
+    this->smChoiceChoiceToState_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceChoiceToState_guard_g.getCallHistory().getItemAt(0), SmChoice_ChoiceToState::Signal::s);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_smChoiceChoiceToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smChoiceChoiceToState_actionHistory.getSignals();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmChoice_ChoiceToState::Signal::s);
+    }
+    const auto& values = this->m_smChoiceChoiceToState_actionHistory.getValues();
+    ASSERT_EQ(values.getItemAt(0), ActionId::EXIT_S1);
+    ASSERT_EQ(values.getItemAt(1), ActionId::A);
+    ASSERT_EQ(values.getItemAt(2), ActionId::ENTER_S2);
+    ASSERT_EQ(values.getItemAt(3), ActionId::ENTER_S3);
+    ASSERT_EQ(this->smChoiceChoiceToState_getState(), SmChoice_ChoiceToState::State::S2_S3);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `ChoiceToStateTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/ChoiceToStateTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChoiceToStateTester.hpp
+// \author bocchino
+// \brief  hpp file for ChoiceToStateTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_ChoiceToState_HPP
+#define FppTest_SmInstanceChoice_ChoiceToState_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/ChoiceToStateComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class ChoiceToStateTester : public ChoiceToStateComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! Action IDs
+    enum class ActionId {
+        EXIT_S1,
+        A,
+        ENTER_S2,
+        ENTER_S3,
+    };
+
+    //! The type FppTest_SmChoice_ChoiceToState
+    using SmChoice_ChoiceToState = FppTest_SmChoice_ChoiceToState;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct ChoiceToStateTester object
+    ChoiceToStateTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy ChoiceToStateTester object
+    ~ChoiceToStateTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action exitS1 of state machine FppTest_SmChoice_ChoiceToState
+    //!
+    //! Exit S1
+    void FppTest_SmChoice_ChoiceToState_action_exitS1(SmId smId,  //!< The state machine id
+                                                      FppTest_SmChoice_ChoiceToState::Signal signal  //!< The signal
+                                                      ) override;
+
+    //! Implementation for action a of state machine FppTest_SmChoice_ChoiceToState
+    //!
+    //! Action a
+    void FppTest_SmChoice_ChoiceToState_action_a(SmId smId,  //!< The state machine id
+                                                 FppTest_SmChoice_ChoiceToState::Signal signal  //!< The signal
+                                                 ) override;
+
+    //! Implementation for action enterS2 of state machine FppTest_SmChoice_ChoiceToState
+    //!
+    //! Enter S2
+    void FppTest_SmChoice_ChoiceToState_action_enterS2(SmId smId,  //!< The state machine id
+                                                       FppTest_SmChoice_ChoiceToState::Signal signal  //!< The signal
+                                                       ) override;
+
+    //! Implementation for action enterS3 of state machine FppTest_SmChoice_ChoiceToState
+    //!
+    //! Enter S3
+    void FppTest_SmChoice_ChoiceToState_action_enterS3(SmId smId,  //!< The state machine id
+                                                       FppTest_SmChoice_ChoiceToState::Signal signal  //!< The signal
+                                                       ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmChoice_ChoiceToState
+    //!
+    //! Guard g
+    bool FppTest_SmChoice_ChoiceToState_guard_g(SmId smId,                                     //!< The state machine id
+                                                FppTest_SmChoice_ChoiceToState::Signal signal  //!< The signal
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test with the true guard
+    void testTrue();
+
+    //! Run the test with the false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The action history for smChoiceChoiceToState
+    SmHarness::SignalValueHistory<SmChoice_ChoiceToState::Signal, ActionId, historySize>
+        m_smChoiceChoiceToState_actionHistory;
+
+    //! The guard g for smChoiceChoiceToState
+    SmHarness::NoArgGuard<SmChoice_ChoiceToState::Signal, historySize> m_smChoiceChoiceToState_guard_g;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicU32.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ChoiceToChoice.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ChoiceToState.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/InputPairU16U32.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Sequence.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SequenceU32.fpp"
+)
+set(MOD_DEPS FppTest/state_machine/internal/harness)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicU32Tester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ChoiceToChoiceTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ChoiceToStateTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/InputPairU16U32Tester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SequenceTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SequenceU32Tester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `InputPairU16U32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/InputPairU16U32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    active component InputPairU16U32 {
+
+      state machine instance smChoiceInputPairU16U32: SmChoice.InputPairU16U32 priority 3 drop
+
+    }
+
+  }
+
+}
+```
+
+### `InputPairU16U32Tester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/InputPairU16U32Tester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  InputPairU16U32Tester.cpp
+// \author bocchino
+// \brief  cpp file for InputPairU16U32Tester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/InputPairU16U32Tester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+InputPairU16U32Tester ::InputPairU16U32Tester(const char* const compName)
+    : InputPairU16U32ComponentBase(compName),
+      m_smChoiceInputPairU16U32_action_a_history(),
+      m_smChoiceInputPairU16U32_guard_g() {}
+
+InputPairU16U32Tester ::~InputPairU16U32Tester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void InputPairU16U32Tester ::FppTest_SmChoice_InputPairU16U32_action_a(SmId smId,
+                                                                       FppTest_SmChoice_InputPairU16U32::Signal signal,
+                                                                       U32 value) {
+    ASSERT_EQ(smId, SmId::smChoiceInputPairU16U32);
+    this->m_smChoiceInputPairU16U32_action_a_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool InputPairU16U32Tester ::FppTest_SmChoice_InputPairU16U32_guard_g(SmId smId,
+                                                                      FppTest_SmChoice_InputPairU16U32::Signal signal,
+                                                                      U32 value) const {
+    FW_ASSERT(smId == SmId::smChoiceInputPairU16U32, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceInputPairU16U32_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void InputPairU16U32Tester::testS1True() {
+    this->m_smChoiceInputPairU16U32_action_a_history.clear();
+    this->m_smChoiceInputPairU16U32_guard_g.reset();
+    this->m_smChoiceInputPairU16U32_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 0);
+    const U16 value = static_cast<U16>(STest::Pick::any());
+    this->smChoiceInputPairU16U32_sendSignal_s1(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getValues().getItemAt(0), value);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S2);
+}
+
+void InputPairU16U32Tester::testS1False() {
+    this->m_smChoiceInputPairU16U32_action_a_history.clear();
+    this->m_smChoiceInputPairU16U32_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 0);
+    const U16 value = static_cast<U16>(STest::Pick::any());
+    this->smChoiceInputPairU16U32_sendSignal_s1(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getValues().getItemAt(0), value);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S3);
+}
+
+void InputPairU16U32Tester::testS2True() {
+    this->m_smChoiceInputPairU16U32_action_a_history.clear();
+    this->m_smChoiceInputPairU16U32_guard_g.reset();
+    this->m_smChoiceInputPairU16U32_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceInputPairU16U32_sendSignal_s2(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s2);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s2);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getValues().getItemAt(0), value);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S2);
+}
+
+void InputPairU16U32Tester::testS2False() {
+    this->m_smChoiceInputPairU16U32_action_a_history.clear();
+    this->m_smChoiceInputPairU16U32_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceInputPairU16U32_sendSignal_s2(value);
+    this->doDispatch();
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s2);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getSignals().getItemAt(0),
+              SmChoice_InputPairU16U32::Signal::s2);
+    ASSERT_EQ(this->m_smChoiceInputPairU16U32_action_a_history.getValues().getItemAt(0), value);
+    ASSERT_EQ(this->smChoiceInputPairU16U32_getState(), SmChoice_InputPairU16U32::State::S3);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `InputPairU16U32Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/InputPairU16U32Tester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  InputPairU16U32Tester.hpp
+// \author bocchino
+// \brief  hpp file for InputPairU16U32Tester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_InputPairU16U32_HPP
+#define FppTest_SmInstanceChoice_InputPairU16U32_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/InputPairU16U32ComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class InputPairU16U32Tester : public InputPairU16U32ComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmChoice_InputPairU16U32
+    using SmChoice_InputPairU16U32 = FppTest_SmChoice_InputPairU16U32;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct InputPairU16U32Tester object
+    InputPairU16U32Tester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy InputPairU16U32Tester object
+    ~InputPairU16U32Tester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmChoice_InputPairU16U32
+    //!
+    //! Action a
+    void FppTest_SmChoice_InputPairU16U32_action_a(SmId smId,  //!< The state machine id
+                                                   FppTest_SmChoice_InputPairU16U32::Signal signal,  //!< The signal
+                                                   U32 value                                         //!< The value
+                                                   ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmChoice_InputPairU16U32
+    //!
+    //! Guard g
+    bool FppTest_SmChoice_InputPairU16U32_guard_g(SmId smId,  //!< The state machine id
+                                                  FppTest_SmChoice_InputPairU16U32::Signal signal,  //!< The signal
+                                                  U32 value                                         //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test with signal s1 and true guard
+    void testS1True();
+
+    //! Run the test with signal s1 and false guard
+    void testS1False();
+
+    //! Run the test with signal s2 and true guard
+    void testS2True();
+
+    //! Run the test with signal s2 and false guard
+    void testS2False();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smChoiceInputPairU16U32
+    SmHarness::SignalValueHistory<SmChoice_InputPairU16U32::Signal, U32, historySize>
+        m_smChoiceInputPairU16U32_action_a_history;
+
+    //! The guard g of smChoiceInputPairU16U32
+    SmHarness::Guard<SmChoice_InputPairU16U32::Signal, U32, historySize> m_smChoiceInputPairU16U32_guard_g;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// main.cpp
+// ----------------------------------------------------------------------
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/BasicTester.hpp"
+#include "FppTest/state_machine/internal_instance/choice/BasicU32Tester.hpp"
+#include "FppTest/state_machine/internal_instance/choice/ChoiceToChoiceTester.hpp"
+#include "FppTest/state_machine/internal_instance/choice/ChoiceToStateTester.hpp"
+#include "FppTest/state_machine/internal_instance/choice/InputPairU16U32Tester.hpp"
+#include "FppTest/state_machine/internal_instance/choice/SequenceTester.hpp"
+#include "FppTest/state_machine/internal_instance/choice/SequenceU32Tester.hpp"
+#include "STest/STest/Random/Random.hpp"
+
+TEST(Basic, BasicTrue) {
+    FppTest::SmInstanceChoice::BasicTester basic("basic");
+    basic.testBasicTrue();
+}
+
+TEST(Basic, BasicFalse) {
+    FppTest::SmInstanceChoice::BasicTester basic("basic");
+    basic.testBasicFalse();
+}
+
+TEST(Basic, SmChoiceBasicTrue) {
+    FppTest::SmInstanceChoice::BasicTester basic("basic");
+    basic.testSmChoiceBasicTrue();
+}
+
+TEST(Basic, SmChoiceBasicFalse) {
+    FppTest::SmInstanceChoice::BasicTester basic("basic");
+    basic.testSmChoiceBasicFalse();
+}
+
+TEST(BasicU32, True) {
+    FppTest::SmInstanceChoice::BasicU32Tester basicU32("basicU32");
+    basicU32.testTrue();
+}
+
+TEST(BasicU32, False) {
+    FppTest::SmInstanceChoice::BasicU32Tester basicU32("basicU32");
+    basicU32.testFalse();
+}
+
+TEST(InputPairU16U32, S1True) {
+    FppTest::SmInstanceChoice::InputPairU16U32Tester inputPair("inputPair");
+    inputPair.testS1True();
+}
+
+TEST(InputPairU16U32, S1False) {
+    FppTest::SmInstanceChoice::InputPairU16U32Tester inputPair("inputPair");
+    inputPair.testS1False();
+}
+
+TEST(InputPairU16U32, S2True) {
+    FppTest::SmInstanceChoice::InputPairU16U32Tester inputPair("inputPair");
+    inputPair.testS2True();
+}
+
+TEST(InputPairU16U32, S2False) {
+    FppTest::SmInstanceChoice::InputPairU16U32Tester inputPair("inputPair");
+    inputPair.testS2False();
+}
+
+TEST(ChoiceToChoice, G1True) {
+    FppTest::SmInstanceChoice::ChoiceToChoiceTester choiceToChoice("choiceToChoice");
+    choiceToChoice.testG1True();
+}
+
+TEST(ChoiceToChoice, G1FalseG2True) {
+    FppTest::SmInstanceChoice::ChoiceToChoiceTester choiceToChoice("choiceToChoice");
+    choiceToChoice.testG1FalseG2True();
+}
+
+TEST(ChoiceToChoice, G1FalseG2False) {
+    FppTest::SmInstanceChoice::ChoiceToChoiceTester choiceToChoice("choiceToChoice");
+    choiceToChoice.testG1FalseG2False();
+}
+
+TEST(ChoiceToChoice, Overflow) {
+    FppTest::SmInstanceChoice::ChoiceToChoiceTester choiceToChoice("choiceToChoice");
+    choiceToChoice.testOverflow();
+}
+
+TEST(ChoiceToState, True) {
+    FppTest::SmInstanceChoice::ChoiceToStateTester choiceToState("choiceToState");
+    choiceToState.testTrue();
+}
+
+TEST(ChoiceToState, False) {
+    FppTest::SmInstanceChoice::ChoiceToStateTester choiceToState("choiceToState");
+    choiceToState.testFalse();
+}
+
+TEST(Sequence, G1True) {
+    FppTest::SmInstanceChoice::SequenceTester sequence("sequence");
+    sequence.testG1True();
+}
+
+TEST(Sequence, G1FalseG2True) {
+    FppTest::SmInstanceChoice::SequenceTester sequence("sequence");
+    sequence.testG1FalseG2True();
+}
+
+TEST(Sequence, G1FalseG2False) {
+    FppTest::SmInstanceChoice::SequenceTester sequence("sequence");
+    sequence.testG1FalseG2False();
+}
+
+TEST(SequenceU32, G1True) {
+    FppTest::SmInstanceChoice::SequenceU32Tester sequenceU32("sequenceU32");
+    sequenceU32.testG1True();
+}
+
+TEST(SequenceU32, G1FalseG2True) {
+    FppTest::SmInstanceChoice::SequenceU32Tester sequenceU32("sequenceU32");
+    sequenceU32.testG1FalseG2True();
+}
+
+TEST(SequenceU32, G1FalseG2False) {
+    FppTest::SmInstanceChoice::SequenceU32Tester sequenceU32("sequenceU32");
+    sequenceU32.testG1FalseG2False();
+}
+
+// ----------------------------------------------------------------------
+// Main function
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Sequence.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/Sequence.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    active component Sequence {
+
+      state machine instance smChoiceSequence: SmChoice.Sequence
+
+    }
+
+  }
+
+}
+```
+
+### `SequenceTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceTester.cpp
+// \author bocchino
+// \brief  cpp file for SequenceTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/SequenceTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+SequenceTester ::SequenceTester(const char* const compName)
+    : SequenceComponentBase(compName),
+      m_smChoiceSequence_action_a_history(),
+      m_smChoiceSequence_action_b_history(),
+      m_smChoiceSequence_guard_g1(),
+      m_smChoiceSequence_guard_g2() {}
+
+SequenceTester ::~SequenceTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void SequenceTester ::FppTest_SmChoice_Sequence_action_a(SmId smId, FppTest_SmChoice_Sequence::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceSequence);
+    this->m_smChoiceSequence_action_a_history.push(signal);
+}
+
+void SequenceTester ::FppTest_SmChoice_Sequence_action_b(SmId smId, FppTest_SmChoice_Sequence::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceSequence);
+    this->m_smChoiceSequence_action_b_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool SequenceTester ::FppTest_SmChoice_Sequence_guard_g1(SmId smId, FppTest_SmChoice_Sequence::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceSequence, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceSequence_guard_g1.call(signal);
+}
+
+bool SequenceTester ::FppTest_SmChoice_Sequence_guard_g2(SmId smId, FppTest_SmChoice_Sequence::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceSequence, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceSequence_guard_g2.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void SequenceTester::testG1True() {
+    this->m_smChoiceSequence_action_a_history.clear();
+    this->m_smChoiceSequence_action_b_history.clear();
+    this->m_smChoiceSequence_guard_g1.reset();
+    this->m_smChoiceSequence_guard_g1.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceSequence_getState(), SmChoice_Sequence::State::S1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getSize(), 0);
+    this->smChoiceSequence_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->smChoiceSequence_getState(), SmChoice_Sequence::State::S2);
+}
+
+void SequenceTester::testG1FalseG2True() {
+    this->m_smChoiceSequence_action_a_history.clear();
+    this->m_smChoiceSequence_action_b_history.clear();
+    this->m_smChoiceSequence_guard_g1.reset();
+    this->m_smChoiceSequence_guard_g2.reset();
+    this->m_smChoiceSequence_guard_g2.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceSequence_getState(), SmChoice_Sequence::State::S1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getSize(), 0);
+    this->smChoiceSequence_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->smChoiceSequence_getState(), SmChoice_Sequence::State::S3);
+}
+
+void SequenceTester::testG1FalseG2False() {
+    this->m_smChoiceSequence_action_a_history.clear();
+    this->m_smChoiceSequence_action_b_history.clear();
+    this->m_smChoiceSequence_guard_g1.reset();
+    this->m_smChoiceSequence_guard_g2.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceSequence_getState(), SmChoice_Sequence::State::S1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getSize(), 0);
+    this->smChoiceSequence_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g1.getCallHistory().getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_guard_g2.getCallHistory().getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequence_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequence_action_b_history.getItemAt(0), SmChoice_Sequence::Signal::s);
+    ASSERT_EQ(this->smChoiceSequence_getState(), SmChoice_Sequence::State::S4);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `SequenceTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceTester.hpp
+// \author bocchino
+// \brief  hpp file for SequenceTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_SequenceTester_HPP
+#define FppTest_SmInstanceChoice_SequenceTester_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/SequenceComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class SequenceTester : public SequenceComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmChoice_Sequence
+    using SmChoice_Sequence = FppTest_SmChoice_Sequence;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct Sequence object
+    SequenceTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy Sequence object
+    ~SequenceTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmChoice_Sequence
+    //!
+    //! Action a
+    void FppTest_SmChoice_Sequence_action_a(SmId smId,                                //!< The state machine id
+                                            FppTest_SmChoice_Sequence::Signal signal  //!< The signal
+                                            ) override;
+
+    //! Implementation for action b of state machine FppTest_SmChoice_Sequence
+    //!
+    //! Action b
+    void FppTest_SmChoice_Sequence_action_b(SmId smId,                                //!< The state machine id
+                                            FppTest_SmChoice_Sequence::Signal signal  //!< The signal
+                                            ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g1 of state machine FppTest_SmChoice_Sequence
+    //!
+    //! Guard g1
+    bool FppTest_SmChoice_Sequence_guard_g1(SmId smId,                                //!< The state machine id
+                                            FppTest_SmChoice_Sequence::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard g2 of state machine FppTest_SmChoice_Sequence
+    //!
+    //! Guard g2
+    bool FppTest_SmChoice_Sequence_guard_g2(SmId smId,                                //!< The state machine id
+                                            FppTest_SmChoice_Sequence::Signal signal  //!< The signal
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test with g1 true
+    void testG1True();
+
+    //! Run the test with g1 true and g2 true
+    void testG1FalseG2True();
+
+    //! Run the test with g1 true and g2 false
+    void testG1FalseG2False();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smChoiceSequence
+    SmHarness::History<SmChoice_Sequence::Signal, historySize> m_smChoiceSequence_action_a_history;
+
+    //! The history associated with action b of smChoiceSequence
+    SmHarness::History<SmChoice_Sequence::Signal, historySize> m_smChoiceSequence_action_b_history;
+
+    //! The guard g1 of smChoiceSequence
+    SmHarness::NoArgGuard<SmChoice_Sequence::Signal, historySize> m_smChoiceSequence_guard_g1;
+
+    //! The guard g2 of smChoiceSequence
+    SmHarness::NoArgGuard<SmChoice_Sequence::Signal, historySize> m_smChoiceSequence_guard_g2;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `SequenceU32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceU32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceChoice {
+
+    active component SequenceU32 {
+
+      state machine instance smChoiceSequenceU32: SmChoice.SequenceU32
+
+    }
+
+  }
+
+}
+```
+
+### `SequenceU32Tester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceU32Tester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceU32Tester.cpp
+// \author bocchino
+// \brief  cpp file for SequenceU32Tester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/choice/SequenceU32Tester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+SequenceU32Tester::SequenceU32Tester(const char* const compName)
+    : SequenceU32ComponentBase(compName),
+      m_smChoiceSequenceU32_action_a_history(),
+      m_smChoiceSequenceU32_action_b_history(),
+      m_smChoiceSequenceU32_guard_g1(),
+      m_smChoiceSequenceU32_guard_g2() {}
+
+SequenceU32Tester::~SequenceU32Tester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void SequenceU32Tester::FppTest_SmChoice_SequenceU32_action_a(SmId smId,
+                                                        FppTest_SmChoice_SequenceU32::Signal signal,
+                                                        U32 value) {
+    ASSERT_EQ(smId, SmId::smChoiceSequenceU32);
+    this->m_smChoiceSequenceU32_action_a_history.push(signal, value);
+}
+
+void SequenceU32Tester::FppTest_SmChoice_SequenceU32_action_b(SmId smId, FppTest_SmChoice_SequenceU32::Signal signal) {
+    ASSERT_EQ(smId, SmId::smChoiceSequenceU32);
+    this->m_smChoiceSequenceU32_action_b_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool SequenceU32Tester::FppTest_SmChoice_SequenceU32_guard_g1(SmId smId, FppTest_SmChoice_SequenceU32::Signal signal) const {
+    FW_ASSERT(smId == SmId::smChoiceSequenceU32, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceSequenceU32_guard_g1.call(signal);
+}
+
+bool SequenceU32Tester::FppTest_SmChoice_SequenceU32_guard_g2(SmId smId,
+                                                        FppTest_SmChoice_SequenceU32::Signal signal,
+                                                        U32 value) const {
+    FW_ASSERT(smId == SmId::smChoiceSequenceU32, static_cast<FwAssertArgType>(smId));
+    return this->m_smChoiceSequenceU32_guard_g2.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void SequenceU32Tester::testG1True() {
+    this->m_smChoiceSequenceU32_action_a_history.clear();
+    this->m_smChoiceSequenceU32_action_b_history.clear();
+    this->m_smChoiceSequenceU32_guard_g1.reset();
+    this->m_smChoiceSequenceU32_guard_g1.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceSequenceU32_getState(), SmChoice_SequenceU32::State::S1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceSequenceU32_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getItemAt(0), SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->smChoiceSequenceU32_getState(), SmChoice_SequenceU32::State::S2);
+}
+
+void SequenceU32Tester::testG1FalseG2True() {
+    this->m_smChoiceSequenceU32_action_a_history.clear();
+    this->m_smChoiceSequenceU32_action_b_history.clear();
+    this->m_smChoiceSequenceU32_guard_g1.reset();
+    this->m_smChoiceSequenceU32_guard_g2.reset();
+    this->m_smChoiceSequenceU32_guard_g2.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceSequenceU32_getState(), SmChoice_SequenceU32::State::S1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceSequenceU32_sendSignal_s(value);
+    this->doDispatch();
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getItemAt(0), SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSignals().getItemAt(0), SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getSize(), 0);
+    ASSERT_EQ(this->smChoiceSequenceU32_getState(), SmChoice_SequenceU32::State::S3);
+}
+
+void SequenceU32Tester::testG1FalseG2False() {
+    this->m_smChoiceSequenceU32_action_a_history.clear();
+    this->m_smChoiceSequenceU32_action_b_history.clear();
+    this->m_smChoiceSequenceU32_guard_g1.reset();
+    this->m_smChoiceSequenceU32_guard_g2.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smChoiceSequenceU32_getState(), SmChoice_SequenceU32::State::S1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smChoiceSequenceU32_sendSignal_s(value);
+    this->doDispatch();
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g1.getCallHistory().getItemAt(0), SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getSignals().getItemAt(0),
+              SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_guard_g2.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smChoiceSequenceU32_action_b_history.getItemAt(0), SmChoice_SequenceU32::Signal::s);
+    ASSERT_EQ(this->smChoiceSequenceU32_getState(), SmChoice_SequenceU32::State::S4);
+}
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+```
+
+### `SequenceU32Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/choice/SequenceU32Tester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceU32Tester.hpp
+// \author bocchino
+// \brief  hpp file for SequenceU32Tester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceChoice_SequenceU32Tester_HPP
+#define FppTest_SmInstanceChoice_SequenceU32Tester_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/choice/SequenceU32ComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceChoice {
+
+class SequenceU32Tester : public SequenceU32ComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmChoice_SequenceU32
+    using SmChoice_SequenceU32 = FppTest_SmChoice_SequenceU32;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct SequenceU32 object
+    SequenceU32Tester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy SequenceU32 object
+    ~SequenceU32Tester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmChoice_SequenceU32
+    //!
+    //! Action a
+    void FppTest_SmChoice_SequenceU32_action_a(SmId smId,                                    //!< The state machine id
+                                               FppTest_SmChoice_SequenceU32::Signal signal,  //!< The signal
+                                               U32 value                                     //!< The value
+                                               ) override;
+
+    //! Implementation for action b of state machine FppTest_SmChoice_SequenceU32
+    //!
+    //! Action b
+    void FppTest_SmChoice_SequenceU32_action_b(SmId smId,                                   //!< The state machine id
+                                               FppTest_SmChoice_SequenceU32::Signal signal  //!< The signal
+                                               ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g1 of state machine FppTest_SmChoice_SequenceU32
+    //!
+    //! Guard g1
+    bool FppTest_SmChoice_SequenceU32_guard_g1(SmId smId,                                   //!< The state machine id
+                                               FppTest_SmChoice_SequenceU32::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard g2 of state machine FppTest_SmChoice_SequenceU32
+    //!
+    //! Guard g2
+    bool FppTest_SmChoice_SequenceU32_guard_g2(SmId smId,                                    //!< The state machine id
+                                               FppTest_SmChoice_SequenceU32::Signal signal,  //!< The signal
+                                               U32 value                                     //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test with g1 true
+    void testG1True();
+
+    //! Run the test with g1 true and g2 true
+    void testG1FalseG2True();
+
+    //! Run the test with g1 true and g2 false
+    void testG1FalseG2False();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smChoiceSequenceU32
+    SmHarness::SignalValueHistory<SmChoice_SequenceU32::Signal, U32, historySize>
+        m_smChoiceSequenceU32_action_a_history;
+
+    //! The history associated with action b of smChoiceSequenceU32
+    SmHarness::History<SmChoice_SequenceU32::Signal, historySize> m_smChoiceSequenceU32_action_b_history;
+
+    //! The guard g1 of smChoiceSequenceU32
+    SmHarness::NoArgGuard<SmChoice_SequenceU32::Signal, historySize> m_smChoiceSequenceU32_guard_g1;
+
+    //! The guard g2 of smChoiceSequenceU32
+    SmHarness::Guard<SmChoice_SequenceU32::Signal, U32, historySize> m_smChoiceSequenceU32_guard_g2;
+};
+
+}  // namespace SmInstanceChoice
+
+}  // namespace FppTest
+
+#endif
+```

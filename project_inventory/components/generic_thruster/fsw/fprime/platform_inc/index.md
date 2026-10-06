@@ -3,14 +3,41 @@
 
 **경로:** `components/generic_thruster/fsw/fprime/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_thruster_platform_cfg.h`
 
-file--generic_thruster_platform_cfg.h
+**경로:** `components/generic_thruster/fsw/fprime/platform_inc/generic_thruster_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_thruster_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_thruster Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_THRUSTER_PLATFORM_CFG_H_
+#define _GENERIC_THRUSTER_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_THRUSTER Configuration
+*/
+#ifndef GENERIC_THRUSTER_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_THRUSTER_CFG_STRING      "usart_29"
+#define GENERIC_THRUSTER_CFG_HANDLE      29
+#define GENERIC_THRUSTER_CFG_BAUDRATE_HZ 115200
+#define GENERIC_THRUSTER_CFG_MS_TIMEOUT  50 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_THRUSTER_CFG_DEBUG
+#endif
+
+#endif /* _GENERIC_THRUSTER_PLATFORM_CFG_H_ */
 ```
-
-## 항목
-
-- [`components/generic_thruster/fsw/fprime/platform_inc/generic_thruster_platform_cfg.h`](file--generic_thruster_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함

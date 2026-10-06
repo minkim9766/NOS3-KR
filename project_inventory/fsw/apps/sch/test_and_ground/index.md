@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sch/test_and_ground/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ results/index
 scenarios/index
 ```
 
-## 항목
-
-- [`fsw/apps/sch/test_and_ground/asist/`](asist/index) — 폴더
-- [`fsw/apps/sch/test_and_ground/itos/`](itos/index) — 폴더
-- [`fsw/apps/sch/test_and_ground/results/`](results/index) — 폴더
-- [`fsw/apps/sch/test_and_ground/scenarios/`](scenarios/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

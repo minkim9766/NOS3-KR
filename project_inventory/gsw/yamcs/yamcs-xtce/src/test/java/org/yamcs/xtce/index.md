@@ -3,40 +3,1017 @@
 
 **경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AggregateDataTypeTest.java`
 
-file--AggregateDataTypeTest.java
-file--ArrayDataTypeTest.java
-file--HistoryTest.java
-file--IndirectParameterRefTest.java
-file--IntegerDataTypeTest.java
-file--PathElementTest.java
-file--TestAncillaryData.java
-file--TestBaseType.java
-file--TestInclusiveExclusiveRange.java
-file--TestParameterTypeConstructors.java
-file--TestReferenceFinder.java
-file--TestValidRange.java
-file--ToStringTest.java
-file--XtceParameterArrayTest.java
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/AggregateDataTypeTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+public class AggregateDataTypeTest {
+    Member m11, m1, m2, m3;
+    AggregateParameterType aptm11, apt;
+
+    @BeforeEach
+    public void before() {
+        IntegerParameterType ipt = new IntegerParameterType.Builder().setSizeInBits(32)
+                .setEncoding(new IntegerDataEncoding.Builder()).build();
+        IntegerParameterType ipt1 = new IntegerParameterType.Builder().setSizeInBits(32)
+                .setEncoding(new IntegerDataEncoding.Builder()).setInitialValue("5").build();
+
+        m11 = new Member("m11", ipt);
+        aptm11 = new AggregateParameterType.Builder().addMember(m11).build();
+        m1 = new Member("m1", aptm11);
+        m2 = new Member("m2", ipt);
+        m3 = new Member("m3", ipt1);
+
+        apt = new AggregateParameterType.Builder().addMembers(Arrays.asList(m1, m2, m3)).build();
+
+    }
+
+    @Test
+    public void testGetMember() {
+        assertEquals(1, aptm11.numMembers());
+
+        assertEquals(3, apt.numMembers());
+
+        assertEquals(m1, apt.getMember(0));
+        assertEquals(m2, apt.getMember(1));
+        assertEquals(m3, apt.getMember(2));
+
+        assertEquals(m1, apt.getMember("m1"));
+        assertEquals(m2, apt.getMember("m2"));
+        assertEquals(m3, apt.getMember("m3"));
+
+        assertEquals(m11, apt.getMember(new String[] { "m1", "m11" }));
+        assertNull(apt.getMember(new String[] { "m1", "m2" }));
+        assertNull(apt.getMember(new String[] { "m2", "m1" }));
+        assertNull(apt.getMember(new String[] { "m1", "m11", "m3" }));
+    }
+
+    @Test
+    public void testGetMemberInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            apt.getMember(new String[] {});
+        });
+    }
+
+    @Test
+    public void testGetMemberNames() {
+        AggregateMemberNames amn = apt.getMemberNames();
+        assertEquals("m1", amn.get(0));
+        assertEquals("m2", amn.get(1));
+
+    }
+
+    @Test
+    public void testCopyConstructor() {
+        AggregateParameterType apt2 = new AggregateParameterType(apt);
+        assertEquals(m1, apt2.getMember("m1"));
+        assertEquals(m2, apt2.getMember("m2"));
+
+        AggregateParameterType apt3 = new AggregateParameterType.Builder(apt2).build();
+        assertEquals(m1, apt3.getMember("m1"));
+        assertEquals(m2, apt3.getMember("m2"));
+        assertEquals(m3, apt3.getMember("m3"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testConvertType() {
+
+        // convert string to map
+        String s = "{\"m1\":{\"m11\":3},\"m2\":4}";
+        Map<String, Object> v = apt.convertType(s);
+
+        assertEquals(4l, v.get("m2"));
+        Map<String, Object> vm1 = (Map<String, Object>) v.get("m1");
+        assertEquals(3l, vm1.get("m11"));
+        assertEquals(5l, v.get("m3"));
+
+        // convert map to map
+        Map<String, Object> v2 = apt.convertType(v);
+        assertEquals(4l, v2.get("m2"));
+        Map<String, Object> vm2 = (Map<String, Object>) v2.get("m1");
+        assertEquals(3l, vm2.get("m11"));
+        assertEquals(5l, v2.get("m3"));
+
+        // convert map missing m3 to map
+        v.remove("m3");
+        Map<String, Object> v3 = apt.convertType(v);
+
+        assertEquals(4l, v3.get("m2"));
+        Map<String, Object> vm3 = (Map<String, Object>) v3.get("m1");
+        assertEquals(3l, vm3.get("m11"));
+        assertEquals(5l, v3.get("m3"));
+
+    }
+
+    @Test
+    public void testConvertTypeIllegal1() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            apt.convertType(3);
+        });
+    }
+
+    @Test
+    public void testConvertTypeIllegal2() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            apt.convertType("[3, 4]");
+        });
+    }
+
+    @Test
+    public void testConvertTypeIllegal3() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            apt.convertType("{m1' 3}");
+        });
+    }
+
+    @Test
+    public void testConvertTypeIllegal6() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1\":{\"m11\":3},\"m2\":4}";
+            Map<String, Object> m = apt.convertType(s);
+            m.put("m10", 10);
+
+            apt.convertType(m);
+        });
+    }
+
+    @Test
+    public void testConvertTypeIllegal7() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1\":{\"m11\":3},\"m2\":4, \"m10\": 10}";
+            apt.convertType(s);
+        });
+    }
+
+    @Test
+    public void testToStringIllegal() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1\":{\"m11\":3},\"m2\":4}";
+            Map<String, Object> m = apt.convertType(s);
+            m.put("m10", 5);
+            apt.toString(m);
+        });
+    }
+
+    @Test
+    public void testToStringIllegal1() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1\":{\"m11\":3},\"m2\":4}";
+            Map<String, Object> m = apt.convertType(s);
+            m.remove("m2");
+            apt.toString(m);
+        });
+    }
+
+    @Test
+    public void testToStringIllegal2() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            apt.toString(3);
+        });
+    }
+
+    @Test
+    public void testGetInitialValue() {
+        assertNull(apt.getInitialValue());
+        AggregateParameterType aptm3 = new AggregateParameterType.Builder().addMember(m3).build();
+        assertEquals("{\"m3\":5}", aptm3.toString(aptm3.getInitialValue()));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testConvertRaw() {
+        String s = "{\"m1\":{\"m11\":3},\"m2\":4, \"m3\": 9}";
+        Map<String, Object> v = apt.parseStringForRawValue(s);
+
+        assertEquals(4, v.get("m2"));
+        Map<String, Object> vm1 = (Map<String, Object>) v.get("m1");
+        assertEquals(3, vm1.get("m11"));
+        assertEquals(9, v.get("m3"));
+    }
+
+    @Test
+    public void testConvertRawIllegal1() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1\":{\"m11\":3},\"m2\":4}";
+            apt.parseStringForRawValue(s);
+        });
+    }
+
+    @Test
+    public void testConvertRawIllegal2() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1\":{\"m11\":3},\"m2\":4, \"m3\": 9, \"m10\": 10}";
+            apt.parseStringForRawValue(s);
+        });
+    }
+
+    @Test
+    public void testConvertRawIllegal4() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "{\"m1 :4}";
+            apt.parseStringForRawValue(s);
+        });
+    }
+
+    @Test
+    public void testConvertRawIllegal5() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            String s = "[5, 6]";
+            apt.parseStringForRawValue(s);
+        });
+    }
+}
 ```
 
-## 항목
+### `ArrayDataTypeTest.java`
 
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/AggregateDataTypeTest.java`](file--AggregateDataTypeTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/ArrayDataTypeTest.java`](file--ArrayDataTypeTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/HistoryTest.java`](file--HistoryTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/IndirectParameterRefTest.java`](file--IndirectParameterRefTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/IntegerDataTypeTest.java`](file--IntegerDataTypeTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/PathElementTest.java`](file--PathElementTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestAncillaryData.java`](file--TestAncillaryData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestBaseType.java`](file--TestBaseType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestInclusiveExclusiveRange.java`](file--TestInclusiveExclusiveRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestParameterTypeConstructors.java`](file--TestParameterTypeConstructors.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestReferenceFinder.java`](file--TestReferenceFinder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestValidRange.java`](file--TestValidRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/ToStringTest.java`](file--ToStringTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/XtceParameterArrayTest.java`](file--XtceParameterArrayTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/ArrayDataTypeTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
+public class ArrayDataTypeTest {
+    IntegerParameterType uint32 = new IntegerParameterType.Builder().setSizeInBits(31).build();
+    ArrayParameterType type2d = new ArrayParameterType.Builder()
+            .setNumberOfDimensions(2)
+            .setElementType(uint32)
+            .build();
+
+    @Test
+    public void test1() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            type2d.convertType("[1, 2,3]");
+        });
+    }
+
+    @Test
+    public void test2() {
+        Object[] o = (Object[]) type2d.convertType("[[1, 2], [3, 4]]");
+        Long[][] arr = { { 1L, 2L }, { 3L, 4L } };
+        assertArrayEquals(arr, o);
+    }
+}
+```
+
+### `HistoryTest.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/HistoryTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
+
+public class HistoryTest {
+
+    @Test
+    public void testVersionCompare() {
+        History h1 = new History("0.1 Draft", "01-05-2020", "abc", null);
+        History h2 = new History("0.2", "01-05-2020", "abc", null);
+        History h3 = new History("0.9", "01-05-2020", "abc", null);
+        History h4 = new History("0.10", "01-05-2020", "abc", null);
+        History h5 = new History("0.10.2", "01-05-2020", "abc", null);
+
+        History[] arr = new History[] { h3, h5, h1, h2, h4 };
+        Arrays.sort(arr);
+        assertEquals(h1.getVersion(), arr[0].getVersion());
+        assertEquals(h2.getVersion(), arr[1].getVersion());
+        assertEquals(h3.getVersion(), arr[2].getVersion());
+        assertEquals(h4.getVersion(), arr[3].getVersion());
+        assertEquals(h5.getVersion(), arr[4].getVersion());
+    }
+
+    @Test
+    public void testInvalidVersion() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            // don't accept non-standard versions, our comparator can't deal with it
+            new History("v0.8", "01-05-2020", "abc", null);
+        });
+    }
+}
+```
+
+### `IndirectParameterRefTest.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/IndirectParameterRefTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class IndirectParameterRefTest {
+    @Test
+    public void testIndirectParameterRef() throws Exception {
+        try (var reader = new XtceStaxReader("src/test/resources/indirect-param.xml")) {
+            var ss = reader.readXmlDocument();
+            var idValuePair = ss.getSequenceContainer("id_value_pair");
+            assertNotNull(idValuePair);
+            assertEquals(2, idValuePair.entryList.size());
+ 
+            var idEntry = (ParameterEntry) idValuePair.entryList.get(0);
+            assertEquals("id", idEntry.getParameter().name);
+
+            var indirectEntry = (IndirectParameterRefEntry) idValuePair.entryList.get(1);
+            assertNotNull(indirectEntry.getReferenceLocation());
+            var ref = indirectEntry.getParameterRef();
+            assertNotNull(ref);
+            assertEquals("id", ref.getParameter().name);
+        }
+    }
+
+    @Test
+    public void testIndirectParameterRefBadXml() throws Exception {
+        try (var reader = new XtceStaxReader("src/test/resources/ipre-no-instance.xml")) {
+            assertThrows(XMLStreamException.class, () -> {
+                reader.readXmlDocument();
+            });
+        }
+    }
+}
+```
+
+### `IntegerDataTypeTest.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/IntegerDataTypeTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+
+public class IntegerDataTypeTest {
+
+    @Test
+    public void testParseString() {
+        testParseString(getidt(3, false), "", 7, true); // empty string -> exception
+        testParseString(getidt(3, false), "abc", 7, true); // invalid characters -> exception
+        testParseString(getidt(3, false), "0b+111", 7, true);// sign in the middle -> exception
+        testParseString(getidt(3, false), "0b-111", 7, true);// sign in the middle -> exception
+
+        testParseString(getidt(3, false), "0b111", 7, false);
+        testParseString(getidt(3, false), "+0B111", 7, false);
+        testParseString(getidt(4, true), "-0b111", -7, false);
+        testParseString(getidt(3, true), "0b111", 0, true);// signed number too big to fit -> exception
+        testParseString(getidt(3, false), "-0b111", 7, true);// negative for unsigned -> exception
+
+        testParseString(getidt(64, false), "0b" + Long.toBinaryString(0xFFFFFFFA_FFFFFFFFl), 0xFFFFFFFA_FFFFFFFFl,
+                false);
+
+        testParseString(getidt(32, true), "10", 10, false);
+        testParseString(getidt(32, true), "-10", -10, false);
+        testParseString(getidt(32, false), "-10", 0, true);// negative for unsigned -> exception
+
+        testParseString(getidt(32, false), "0xFFFFFFFF", 0xffffffffL, false);
+
+        testParseString(getidt(64, false), "0XFFFFFFFF_FFFFFFFF", 0xffffffff_ffffffffL, false);
+        testParseString(getidt(64, true), "0xFFFFFFFF_FFFFFFFF", 0xffffffff_ffffffffL, true);// signed number too big to
+                                                                                             // fit -> exception
+
+        testParseString(getidt(10, true), "0o8", 0, true); // 8 is not an octal digit -> exception
+        testParseString(getidt(10, true), "0o7", 7, false);
+        testParseString(getidt(10, true), "0O77", 7 * 8 + 7, false);
+
+        testParseString(getidt(32, false), "3735928559", 3735928559L, false);
+    }
+
+    private void testParseString(IntegerDataType idt, String stringValue, long expected, boolean exceptionExpected) {
+        NumberFormatException nfe = null;
+        long actual = -1;
+        try {
+            actual = idt.convertType(stringValue);
+        } catch (NumberFormatException e) {
+            nfe = e;
+        }
+        if (exceptionExpected) {
+            assertNotNull(nfe);
+        } else {
+            assertNull(nfe);
+            assertEquals(expected, actual);
+        }
+    }
+
+    @Test
+    public void testParse() {
+        IntegerDataType idt = getidt(64, false);
+        assertNull(idt.getInitialValue());
+
+        idt = getidt(64, true);
+        assertNull(idt.getInitialValue());
+
+        Long x = idt.convertType("-0x7FFFFFFF_00000000");
+        assertEquals("-9223372032559808512", x.toString());
+    }
+
+    private IntegerDataType getidt(int sizeInBits, boolean signed) {
+        IntegerParameterType.Builder idt = new IntegerParameterType.Builder().setName("test");
+        idt.setSigned(signed);
+        idt.setSizeInBits(sizeInBits);
+        return idt.build();
+    }
+}
+```
+
+### `PathElementTest.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/PathElementTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.util.DataTypeUtil;
+
+public class PathElementTest {
+
+    @Test
+    public void test1() {
+        PathElement pe = PathElement.fromString("aa[1][2][3]");
+        assertEquals("aa", pe.name);
+        assertArrayEquals(new int[] { 1, 2, 3 }, pe.index);
+    }
+
+    @Test
+    public void test2() {
+        PathElement pe = PathElement.fromString("abc");
+        assertEquals("abc", pe.name);
+        assertNull(pe.index);
+    }
+
+    @Test
+    public void test3() {
+        IntegerParameterType.Builder intTypeb = new IntegerParameterType.Builder();
+        intTypeb.setName("m1type");
+        AggregateParameterType.Builder aggType = new AggregateParameterType.Builder();
+        aggType.setName("aggType");
+        Member m1 = new Member("m1");
+        IntegerParameterType intType = intTypeb.build();
+
+        m1.setDataType(intType);
+
+        aggType.addMember(m1);
+        ArrayParameterType.Builder arrayType = new ArrayParameterType.Builder();
+        arrayType.setName("test");
+        arrayType.setNumberOfDimensions(1);
+        arrayType.setElementType(aggType.build());
+
+        PathElement[] path = new PathElement[] { PathElement.fromString("[3]"), PathElement.fromString("m1") };
+        DataType dt = DataTypeUtil.getMemberType(arrayType.build(), path);
+
+        assertEquals(intType, dt);
+    }
+}
+```
+
+### `TestAncillaryData.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestAncillaryData.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class TestAncillaryData {
+    @Test
+    public void test1() throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        XtceStaxReader reader = new XtceStaxReader("src/test/resources/BogusSAT-1.xml");
+        SequenceContainer seq = reader.readXmlDocument()
+                .getSubsystem("SC001")
+                .getSubsystem("BusElectronics")
+                .getSequenceContainer("SensorHistoryRecord");
+        assertTrue(seq.useAsArchivePartition());
+    }
+}
+```
+
+### `TestBaseType.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestBaseType.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.IOException;
+import java.nio.ByteOrder;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class TestBaseType {
+    @Test
+    public void test1() throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        try (XtceStaxReader reader = new XtceStaxReader("src/test/resources/basetype.xml")) {
+            SpaceSystem ss = reader.readXmlDocument();
+
+            FloatParameterType ptype = (FloatParameterType) ss.getParameterType("latitude_t");
+            FloatDataEncoding encoding = (FloatDataEncoding) ptype.getEncoding();
+            assertEquals(64, encoding.getSizeInBits());
+
+            FloatArgumentType atype = (FloatArgumentType) ss.getArgumentType("temperature_t");
+            encoding = (FloatDataEncoding) atype.getEncoding();
+            assertEquals(64, encoding.getSizeInBits());
+
+            ptype = (FloatParameterType) ss.getParameterType("latitude_rad_t");
+            encoding = (FloatDataEncoding) ptype.getEncoding();
+            assertEquals(64, encoding.getSizeInBits());
+            assertEquals(ByteOrder.BIG_ENDIAN, encoding.byteOrder);
+
+            PolynomialCalibrator calib = (PolynomialCalibrator) encoding.getDefaultCalibrator();
+            assertArrayEquals(new double[] { 0, 0.01745329251994329576 }, calib.getCoefficients(), 1e-6);
+
+            ptype = (FloatParameterType) ss.getParameterType("test_lsb");
+            encoding = (FloatDataEncoding) ptype.getEncoding();
+            assertEquals(64, encoding.getSizeInBits());
+            assertEquals(ByteOrder.LITTLE_ENDIAN, encoding.byteOrder);
+
+            calib = (PolynomialCalibrator) encoding.getDefaultCalibrator();
+            assertArrayEquals(new double[] { 0, 0.01745329251994329576 }, calib.getCoefficients(), 1e-6);
+        }
+    }
+}
+```
+
+### `TestInclusiveExclusiveRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestInclusiveExclusiveRange.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.io.IOException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.util.DoubleRange;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class TestInclusiveExclusiveRange {
+    @Test
+    public void test1() throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        try (XtceStaxReader reader = new XtceStaxReader("src/test/resources/BogusSAT-1.xml")) {
+            SpaceSystem ss = reader.readXmlDocument();
+            FloatParameterType fpt = (FloatParameterType) ss.getSubsystem("SC001").getSubsystem("BusElectronics")
+                    .getParameterType("Battery_Voltage_Type");
+
+            DoubleRange dr = fpt.getDefaultAlarm().getStaticAlarmRanges().getWarningRange();
+            assertEquals(12.35, dr.getMin(), 1e-5);
+            assertFalse(dr.isMinInclusive());
+
+            assertEquals(13.80, dr.getMax(), 1e-5);
+            assertFalse(dr.isMaxInclusive());
+        }
+    }
+}
+```
+
+### `TestParameterTypeConstructors.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestParameterTypeConstructors.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import java.io.IOException;
+import java.lang.reflect.Field;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+/**
+ * Test copy of parameter types
+ * 
+ * @author nm
+ *
+ */
+public class TestParameterTypeConstructors {
+    @Test
+    public void test1() throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        XtceStaxReader reader = new XtceStaxReader("src/test/resources/BogusSAT-1.xml");
+        SpaceSystem ss = reader.readXmlDocument();
+        for (Parameter p : ss.getParameters()) {
+            ParameterType t1 = p.getParameterType();
+            if (t1 == null) {
+                continue;
+            }
+            ParameterType t2 = clone(t1);
+            assertNotEquals(t1, t2);
+            try {
+                verifyEquals(t1, t2);
+            } catch (AssertionError e) {
+                throw new AssertionError("failed to verify " + t1 + ": " + e.getMessage());
+            }
+        }
+    }
+
+    ParameterType clone(ParameterType ptype) {
+        if (ptype instanceof BinaryParameterType) {
+            BinaryParameterType t = (BinaryParameterType) ptype;
+            return new BinaryParameterType(t);
+
+        } else if (ptype instanceof BooleanParameterType) {
+            BooleanParameterType t = (BooleanParameterType) ptype;
+            return new BooleanParameterType(t);
+
+        } else if (ptype instanceof EnumeratedParameterType) {
+            EnumeratedParameterType t = (EnumeratedParameterType) ptype;
+            return new EnumeratedParameterType(t);
+
+        } else if (ptype instanceof FloatParameterType) {
+            FloatParameterType t = (FloatParameterType) ptype;
+            return new FloatParameterType(t);
+
+        } else if (ptype instanceof IntegerParameterType) {
+            IntegerParameterType t = (IntegerParameterType) ptype;
+            return new IntegerParameterType(t);
+
+        } else if (ptype instanceof StringParameterType) {
+            StringParameterType t = (StringParameterType) ptype;
+            return new StringParameterType(t);
+        } else if (ptype instanceof ArrayParameterType) {
+            ArrayParameterType t = (ArrayParameterType) ptype;
+            return new ArrayParameterType(t);
+        } else {
+            throw new IllegalArgumentException("Cannot clone type " + ptype);
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void verifyEquals(ParameterType p1, ParameterType p2)
+            throws IllegalArgumentException, IllegalAccessException {
+        Class c1 = p1.getClass();
+        Class c2 = p2.getClass();
+        while (true) {
+            assertEquals(c1, c2);
+            Field[] fa = c1.getDeclaredFields();
+            for (Field f : fa) {
+                f.setAccessible(true);
+                assertEquals(f.get(p1), f.get(p2), "When comparing " + f.getName());
+            }
+            c1 = c1.getSuperclass();
+            c2 = c2.getSuperclass();
+            if (c1 == null) {
+                break;
+            }
+        }
+    }
+}
+```
+
+### `TestReferenceFinder.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestReferenceFinder.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.util.NameReference;
+import org.yamcs.xtce.util.NameReference.Type;
+import org.yamcs.xtce.util.ReferenceFinder;
+import org.yamcs.xtce.util.ReferenceFinder.FoundReference;
+
+public class TestReferenceFinder {
+
+    @Test
+    public void testResolveReference() {
+        ParameterType ptype = new IntegerParameterType.Builder().setName("test").build();
+        ReferenceFinder refFinder = new ReferenceFinder(s -> {
+        });
+        SpaceSystem root = new SpaceSystem("");
+
+        SpaceSystem a = new SpaceSystem("a");
+        root.addSpaceSystem(a);
+
+        SpaceSystem a_b1 = new SpaceSystem("b1");
+        a.addSpaceSystem(a_b1);
+        SpaceSystem a_b2 = new SpaceSystem("b2");
+        a.addSpaceSystem(a_b2);
+        SpaceSystem a_b3 = new SpaceSystem("b3");
+        a.addSpaceSystem(a_b3);
+
+        SpaceSystem a_b2_c1 = new SpaceSystem("c1");
+        a_b2.addSpaceSystem(a_b2_c1);
+
+        Parameter a_p1 = new Parameter("p1");
+        a_p1.setParameterType(ptype);
+        a_p1.addAlias("MDB:OPS Name", "a_p1");
+        a.addParameter(a_p1);
+
+        Parameter a_b1_p1 = new Parameter("p1");
+        a_b1_p1.setParameterType(ptype);
+        a_b1_p1.addAlias("MDB:OPS Name", "a_b1_p1");
+        a_b1.addParameter(a_b1_p1);
+
+        Parameter a_b2_c1_p1 = new Parameter("p1");
+        a_b2_c1_p1.setParameterType(ptype);
+        a_b2_c1.addParameter(a_b2_c1_p1);
+
+        FoundReference rr;
+
+        rr = refFinder.findReference(root, new NameReference("/a/b2/c1/p1", Type.PARAMETER), a_b1);
+        assertEquals(a_b2_c1_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("p1", Type.PARAMETER), a_b2_c1);
+        assertEquals(a_b2_c1_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("p1", Type.PARAMETER), a_b2);
+        assertEquals(a_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("p1", Type.PARAMETER), a_b1);
+        assertEquals(a_b1_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("b2/c1/p1", Type.PARAMETER), a_b2_c1);
+        assertEquals(a_b2_c1_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("b2/.//../b2/c1/p1", Type.PARAMETER),
+                a_b2_c1);
+        assertEquals(a_b2_c1_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("../p1", Type.PARAMETER), a_b2_c1);
+        assertNull(rr);
+
+        rr = refFinder.findReference(root, new NameReference("../../p1", Type.PARAMETER), a_b2_c1);
+        assertEquals(a_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("../../p1", Type.PARAMETER), a_b3);
+        assertNull(rr);
+
+        rr = refFinder.findReference(root, new NameReference("./p1", Type.PARAMETER), a_b2_c1);
+        assertEquals(rr.getNameDescription(), a_b2_c1_p1);
+
+        rr = refFinder.findReference(root, new NameReference("./p1", Type.PARAMETER), a_b2);
+        assertNull(rr);
+
+        rr = refFinder.findReference(root, new NameReference("/a/b2/c1/.//p1", Type.PARAMETER), a_b2);
+        assertEquals(a_b2_c1_p1, rr.getNameDescription());
+
+        rr = refFinder.findReference(root, new NameReference("/a/..", Type.PARAMETER), a_b2);
+        assertNull(rr);
+
+        rr = refFinder.findReference(root, new NameReference("p2", Type.PARAMETER), a_b2);
+        assertNull(rr);
+    }
+
+    @Test
+    public void test2() {
+        SpaceSystem root = new SpaceSystem("");
+        SpaceSystem a = new SpaceSystem("a");
+        root.addSpaceSystem(a);
+        root.addSpaceSystem(new SpaceSystem("b"));
+
+        ParameterType ptype = new IntegerParameterType.Builder().setName("test").build();
+        a.addParameterType(ptype);
+
+        FoundReference fr = ReferenceFinder.findReference(a, new NameReference("b/test", Type.PARAMETER_TYPE));
+        assertNull(fr);
+    }
+}
+```
+
+### `TestValidRange.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/TestValidRange.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class TestValidRange {
+    @Test
+    public void testXtce11Range()
+            throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        XtceStaxReader reader = new XtceStaxReader("src/test/resources/BogusSAT-1.xml");
+        SpaceSystem ss = reader.readXmlDocument();
+        IntegerArgumentType argType = (IntegerArgumentType) ss.getSubsystem("SC001")
+                .getSubsystem("BusElectronics")
+                .getMetaCommand("Reaction_Wheel_Control")
+                .getArgument("RW_UNIT_ID")
+                .getArgumentType();
+        IntegerValidRange range = argType.getValidRange();
+        assertEquals(1, range.getMinInclusive());
+        assertEquals(2, range.getMaxInclusive());
+        assertTrue(range.isValidRangeAppliesToCalibrated());
+    }
+
+    @Test
+    public void testFloatArgRangeXTCE12()
+            throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        XtceStaxReader reader = new XtceStaxReader("src/test/resources/ranges-test.xml");
+        SpaceSystem ss = reader.readXmlDocument();
+        FloatArgumentType argType = (FloatArgumentType) ss.getMetaCommand("SetTemperature")
+                .getArgument("temperature")
+                .getArgumentType();
+        FloatValidRange range = argType.getValidRange();
+        assertEquals(10.0, range.getMin(), 1e-6);
+        assertEquals(40.0, range.getMax(), 1e-6);
+        assertTrue(range.isMinInclusive());
+        assertFalse(range.isMaxInclusive());
+        assertTrue(range.isValidRangeAppliesToCalibrated());
+    }
+
+    @Test
+    public void testParamRange()
+            throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        try (XtceStaxReader reader = new XtceStaxReader("src/test/resources/ranges-test.xml")) {
+            SpaceSystem ss = reader.readXmlDocument();
+
+            FloatParameterType ptype = (FloatParameterType) ss.getParameter("latitude").getParameterType();
+            FloatValidRange range = ptype.getValidRange();
+
+            assertEquals(-90.0, range.getMin(), 1e-6);
+            assertEquals(90.0, range.getMax(), 1e-6);
+            assertTrue(range.isMinInclusive());
+            assertTrue(range.isMaxInclusive());
+            assertTrue(range.isValidRangeAppliesToCalibrated());
+        }
+    }
+}
+```
+
+### `ToStringTest.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/ToStringTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class ToStringTest {
+    @Test
+    public void testFloatToString() throws Exception {
+        try (var reader = new XtceStaxReader("src/test/resources/to-string.xml")) {
+            var ss = reader.readXmlDocument();
+            var argType = (FloatParameterType) ss.getParameterType("example1_t");
+            var numberFormat = argType.getNumberFormat();
+            assertNotNull(numberFormat);
+            assertEquals(0, numberFormat.getMinimumFractionDigits());
+            assertEquals(4, numberFormat.getMaximumFractionDigits());
+            assertEquals(4, numberFormat.getMinimumIntegerDigits());
+            assertEquals(-1, numberFormat.getMaximumIntegerDigits());
+            assertNull(numberFormat.getPositiveSuffix());
+            assertNull(numberFormat.getNegativeSuffix());
+            assertEquals("+", numberFormat.getPositivePrefix());
+            assertEquals("-", numberFormat.getNegativePrefix());
+            assertFalse(numberFormat.isShowThousandsGrouping());
+            assertEquals(FloatingPointNotationType.NORMAL, numberFormat.getNotation());
+
+            argType = (FloatParameterType) ss.getParameterType("example2_t");
+            numberFormat = argType.getNumberFormat();
+            assertNotNull(numberFormat);
+            assertEquals(FloatingPointNotationType.SCIENTIFIC, numberFormat.getNotation());
+        }
+    }
+
+    @Test
+    public void testIntegerToString() throws Exception {
+        try (var reader = new XtceStaxReader("src/test/resources/to-string.xml")) {
+            var ss = reader.readXmlDocument();
+            var argType = (IntegerParameterType) ss.getParameterType("example3_t");
+            var numberFormat = argType.getNumberFormat();
+            assertNotNull(numberFormat);
+            assertEquals(RadixType.HEXADECIMAL, numberFormat.getNumberBase());
+        }
+    }
+}
+```
+
+### `XtceParameterArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-xtce/src/test/java/org/yamcs/xtce/XtceParameterArrayTest.java`
+
+
+```java
+package org.yamcs.xtce;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.io.IOException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.xml.XtceStaxReader;
+
+public class XtceParameterArrayTest {
+
+    @Test
+    public void test1() throws IllegalArgumentException, IllegalAccessException, XMLStreamException, IOException {
+        try (XtceStaxReader reader = new XtceStaxReader("src/test/resources/BogusSAT-1.xml")) {
+            SpaceSystem ss = reader.readXmlDocument();
+            ArrayParameterType pt = (ArrayParameterType) ss.getParameterType("Array_with_numberOfDimensions");
+            assertEquals(3, pt.getNumberOfDimensions());
+            assertNull(pt.getSize());
+
+            ArrayParameterType pt2 = (ArrayParameterType) ss.getParameterType("Array_with_dimensionList");
+            assertEquals(1, pt2.getNumberOfDimensions());
+            assertNotNull(pt2.getSize());
+
+            SequenceContainer sq = ss.getSequenceContainer("test_array");
+            ArrayParameterEntry ape = (ArrayParameterEntry) sq.getEntryList().get(0);
+            assertEquals(pt2.getSize(), ape.getSize());
+
+            ArrayParameterType pt3 = (ArrayParameterType) ss.getParameterType("Array_with_type_defined_later");
+            assertNotNull(pt3);
+        }
+    }
+}
+```

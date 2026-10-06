@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/plugins/kalman/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.py`
 
-file--__init__.py
-file--kalman_plugin.py
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/plugins/kalman/__init__.py`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/plugins/kalman/__init__.py`](file--__init__.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/plugins/kalman/kalman_plugin.py`](file--kalman_plugin.py) — 빌드 산출물 (경로만)
+### `kalman_plugin.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/plugins/kalman/kalman_plugin.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

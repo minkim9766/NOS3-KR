@@ -3,26 +3,5724 @@
 
 **경로:** `fsw/apps/fm/fsw/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fm_events.h`
 
-file--fm_events.h
-file--fm_extern_typedefs.h
-file--fm_msg.h
-file--fm_msgdefs.h
-file--fm_msgids.h
-file--fm_perfids.h
-file--fm_platform_cfg.h
+**경로:** `fsw/apps/fm/fsw/inc/fm_events.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS File Manager Event Identifers.
+ */
+#ifndef FM_EVENTS_H
+#define FM_EVENTS_H
+
+/**
+ * \defgroup cfsfmevents CFS File Manager Event IDs
+ * \{
+ */
+
+/**
+ * \brief FM Initialization Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message is issued after the File Manager application has
+ *  successfully completed startup initialization.
+ */
+#define FM_STARTUP_EID 1
+
+/**
+ * \brief FM Initialization Register For Event Services Failed Event ID
+ *
+ *  \par Type: Error
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  failed in its attempt to register for event services during startup
+ *  initialization.
+ *
+ *  This is a fatal error that will cause the File Manager application
+ *  to terminate.
+ */
+#define FM_STARTUP_EVENTS_ERR_EID 2
+
+/**
+ * \brief FM Initialization Create SB Input Pipe Failed Event ID
+ *
+ *  \par Type: Error
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  failed in its attempt to create a Software Bus input pipe during startup
+ *  initialization.
+ *
+ *  This is a fatal error that will cause the File Manager application
+ *  to terminate.
+ */
+#define FM_STARTUP_CREAT_PIPE_ERR_EID 3
+
+/**
+ * \brief FM Initialization Subscribe to HK Request Failed Event ID
+ *
+ *  \par Type: Error
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  failed in its attempt to subscribe to the HK telemetry request command
+ *  during startup initialization.
+ *
+ *  This is a fatal error that will cause the File Manager application
+ *  to terminate.
+ */
+#define FM_STARTUP_SUBSCRIB_HK_ERR_EID 4
+
+/**
+ * \brief FM Initialization Subscribe to FM Commands Failed Event ID
+ *
+ *  \par Type: Error
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  failed in its attempt to subscribe to the FM ground command packet
+ *  during startup initialization.
+ *
+ *  This is a fatal error that will cause the File Manager application
+ *  to terminate.
+ */
+#define FM_STARTUP_SUBSCRIB_GCMD_ERR_EID 5
+
+/**
+ * \brief FM Initialization Register Free Space Table Failed Event ID
+ *
+ *  \par Type: Error
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  failed in its attempt to register its file system free space table
+ *  during startup initialization.
+ *
+ *  This is a fatal error that will cause the File Manager application
+ *  to terminate.
+ */
+#define FM_STARTUP_TABLE_INIT_ERR_EID 6
+
+/**
+ * \brief FM Main Loop Receive from Software Bus Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  failed in its attempt to read from its Software Bus input pipe while
+ *  processing the software main loop sequence.
+ *
+ *  This is a fatal error that will cause the File Manager application
+ *  to terminate.
+ */
+#define FM_SB_RECEIVE_ERR_EID 7
+
+/**
+ * \brief FM Application Termination Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application is about
+ *  to terminate.
+ */
+#define FM_EXIT_ERR_EID 8
+
+/**
+ * \brief FM Main Loop Message ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  received an unexpected Software Bus packet.  There is no obvious
+ *  explanation of why or how FM could receive such a packet.
+ */
+#define FM_MID_ERR_EID 9
+
+/**
+ * \brief FM Main Loop Command Code Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is issued when the File Manager application has
+ *  received a command packet with an unexpected command code value.
+ *
+ *  Mal-formed command packets are generally prevented by the ground
+ *  system.  Therefore, the source for the problem command is likely
+ *  to be one of the on-board tables that contain commands.
+ */
+#define FM_CC_ERR_EID 10
+
+/**
+ * \brief FM Command Packet Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a housekeeping
+ *  request command packet with an invalid length.
+ */
+#define FM_HK_REQ_ERR_EID 11
+
+/**
+ * \brief FM No-op Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Noop command.
+ */
+#define FM_NOOP_CMD_EID 12
+
+/**
+ * \brief FM No-op Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Noop
+ *  command packet with an invalid length.
+ */
+#define FM_NOOP_PKT_ERR_EID 13
+
+/**
+ * \brief FM Reset Counters Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  This event is type debug because the command resets housekeeping
+ *  telemetry counters that also signal the completion of the command.
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_ResetCtrs command.
+ */
+#define FM_RESET_CMD_EID 14
+
+/**
+ * \brief FM Reset Counters Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_ResetCtrs
+ *  command packet with an invalid length.
+ */
+#define FM_RESET_PKT_ERR_EID 15
+
+/**
+ * \brief FM Copy File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Copy command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_COPY_CMD_EID 16
+
+/**
+ * \brief FM Copy File Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with an invalid length.
+ */
+#define FM_COPY_PKT_ERR_EID 17
+
+/**
+ * \brief FM Copy File Command Overwrite Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with an invalid overwrite argument.  Overwrite
+ *  must be set to TRUE (one) or FALSE (zero).
+ */
+#define FM_COPY_OVR_ERR_EID 18
+
+/**
+ * \brief FM Copy File Command OS Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source file exists and the target name
+ *  is unused and appears to be valid. Verify that the target
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return value.
+ */
+#define FM_COPY_OS_ERR_EID 19
+
+/**
+ * \brief FM Move File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Move command.
+ */
+#define FM_MOVE_CMD_EID 20
+
+/**
+ * \brief FM Move File Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with an invalid length.
+ */
+#define FM_MOVE_PKT_ERR_EID 21
+
+/**
+ * \brief FM Move File Command Overwrite Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with an invalid overwrite argument.  Overwrite
+ *  must be set to TRUE (one) or FALSE (zero).
+ */
+#define FM_MOVE_OVR_ERR_EID 22
+
+/**
+ * \brief FM Move File Command OS Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source file exists and the target name
+ *  is unused and appears to be valid. Verify that the target
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return value.
+ */
+#define FM_MOVE_OS_ERR_EID 23
+
+/**
+ * \brief FM Rename File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Rename command.
+ */
+#define FM_RENAME_CMD_EID 24
+
+/**
+ * \brief FM Rename File Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with an invalid length.
+ */
+#define FM_RENAME_PKT_ERR_EID 25
+
+/**
+ * \brief FM Rename File Command Overwrite Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with an invalid overwrite argument.  Overwrite
+ *  must be set to TRUE (one) or FALSE (zero).
+ */
+#define FM_RENAME_OVR_ERR_EID 26
+
+/**
+ * \brief FM Rename File Command OS Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source file exists and the target name
+ *  is unused and appears to be valid. Verify that the target
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return value.
+ */
+#define FM_RENAME_OS_ERR_EID 27
+
+/**
+ * \brief FM Delete File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Delete command.
+ */
+#define FM_DELETE_CMD_EID 28
+
+/**
+ * \brief FM Delete File Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with an invalid length.
+ */
+#define FM_DELETE_PKT_ERR_EID 29
+
+/**
+ * \brief FM Delete File Command OS Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the filename exists and is not open. Refer to the
+ *  OS-specific return value for an indication of what might have
+ *  caused this error.
+ */
+#define FM_DELETE_OS_ERR_EID 30
+
+/**
+ * \brief FM Delete All Files Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_DeleteAll command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_DELETE_ALL_CMD_EID 31
+
+/**
+ * \brief FM Delete All Files Unable To Delete All Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This general event message is issued if for any reason some files
+ *  could not be deleted.
+ */
+#define FM_DELETE_ALL_FILES_ND_WARNING_EID 32
+
+/**
+ * \brief FM Delete All Files Directories Skipped Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This general event message is issued if for any reason a directory
+ *  skipped when processing a /FM_DeleteAll command.
+ */
+#define FM_DELETE_ALL_SKIP_WARNING_EID 33
+
+/**
+ * \brief FM Delete All Files Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteAll
+ *  command packet with an invalid length.
+ */
+#define FM_DELETE_ALL_PKT_ERR_EID 34
+
+/**
+ * \brief FM Delete All Files Command OS Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists. Refer to the OS-specific
+ *  return value for an indication of what might have caused this
+ *  error.
+ */
+#define FM_DELETE_ALL_OS_ERR_EID 35
+
+/**
+ * \brief FM Decompress File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Decompress command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_DECOM_CMD_EID 36
+
+/**
+ * \brief FM Decompress File Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with an invalid length.
+ */
+#define FM_DECOM_PKT_ERR_EID 37
+
+/**
+ * \brief FM Decompress File Decompression Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source file exists. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_DECOM_CFE_ERR_EID 38
+
+/**
+ * \brief FM Concat Files Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_Concat command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_CONCAT_CMD_EID 39
+
+/**
+ * \brief FM Concat Files Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with an invalid length.
+ */
+#define FM_CONCAT_PKT_ERR_EID 40
+
+/**
+ * \brief FM Concat Files Copy Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the first source file cannot be
+ *  copied.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_CONCAT_OSCPY_ERR_EID 41
+
+/**
+ * \brief FM Concat Files Command Open Second Source File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the second source file cannot
+ *  be opened.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_CONCAT_OPEN_SRC2_ERR_EID 42
+
+/**
+ * \brief FM Concat Files Command Open Target File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the target file cannot
+ *  be opened.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_CONCAT_OPEN_TGT_ERR_EID 43
+
+/**
+ * \brief FM Concat Files Command Read Second Source File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the second source file cannot be read.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_CONCAT_OSRD_ERR_EID 44
+
+/**
+ * \brief FM Concat Files Command Write Target File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the target file cannot be written.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_CONCAT_OSWR_ERR_EID 45
+
+/**
+ * \brief FM Get File Info Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  This event is type debug because the command generates a telemetry
+ *  packet that also signals the completion of the command.
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_GetFileInfo command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_GET_FILE_INFO_CMD_EID 46
+
+/**
+ * \brief FM Get File Info Unable To Compute CRC File State Invalid Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the CRC of a file cannot be
+ *  computed because the file has an invalid state.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_GET_FILE_INFO_STATE_WARNING_EID 47
+
+/**
+ * \brief FM Get File Info Unable To Compute CRC, CRC Type Invalid Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the CRC of a file cannot be
+ *  computed because the CRC type is invalid.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_GET_FILE_INFO_TYPE_WARNING_EID 48
+
+/**
+ * \brief FM Get File Info Unable To Compute CRC File Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the CRC of a file cannot be
+ *  computed because the file cannot be opened.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_GET_FILE_INFO_OPEN_ERR_EID 49
+
+/**
+ * \brief FM Get File Info Unable To Compute CRC File Read Failed Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the CRC of a file cannot be
+ *  computed because the file cannot be read.
+ *
+ *  This event message is generated due to an API function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the source files exist. Refer to the function
+ *  specific return value for an indication of what might have caused
+ *  this particular error.
+ */
+#define FM_GET_FILE_INFO_READ_WARNING_EID 50
+
+/**
+ * \brief FM Get File Info Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetFileInfo
+ *  command packet with an invalid length.
+ */
+#define FM_GET_FILE_INFO_PKT_ERR_EID 51
+
+/**
+ * \brief FM Get File Info Command Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetFileInfo
+ *  command packet with an invalid filename.
+ */
+#define FM_GET_FILE_INFO_SRC_ERR_EID 52
+
+/**
+ * \brief FM Get Open Files Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  This event is type debug because the command generates a telemetry
+ *  packet that also signals the completion of the command.
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_GetOpenFiles command.
+ */
+#define FM_GET_OPEN_FILES_CMD_EID 53
+
+/**
+ * \brief FM Get Open Files Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetOpenFiles
+ *  command packet with an invalid length.
+ */
+#define FM_GET_OPEN_FILES_PKT_ERR_EID 54
+
+/**
+ * \brief FM Create Directory Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_CreateDir command.
+ */
+#define FM_CREATE_DIR_CMD_EID 55
+
+/**
+ * \brief FM Create Directory Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_CreateDir
+ *  command packet with an invalid length.
+ */
+#define FM_CREATE_DIR_PKT_ERR_EID 56
+
+/**
+ * \brief FM Create Directory Command OS Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory name is unused and appears to be
+ *  valid. Refer to the OS specific return value.
+ */
+#define FM_CREATE_DIR_OS_ERR_EID 57
+
+/**
+ * \brief FM Delete Directory Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_DeleteDir command.
+ */
+#define FM_DELETE_DIR_CMD_EID 58
+
+/**
+ * \brief FM Delete Directory Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteDir
+ *  command packet with an invalid length.
+ */
+#define FM_DELETE_DIR_PKT_ERR_EID 59
+
+/**
+ * \brief FM Delete Directory Command Failed Directory Not Empty Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteDir
+ *  command packet that references a directory that is not empty.
+ */
+#define FM_DELETE_DIR_EMPTY_ERR_EID 60
+
+/**
+ * \brief FM Delete Directory, Direcotry Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and appears to be valid.
+ *  Refer to the OS specific return values.
+ */
+#define FM_DELETE_OPENDIR_OS_ERR_EID 61
+
+/**
+ * \brief FM Delete Directory Remove Directory Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and appears to be valid.
+ *  Refer to the OS specific return values.
+ */
+#define FM_DELETE_RMDIR_OS_ERR_EID 62
+
+/**
+ * \brief FM Directory List To File Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_GetDirFile command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_GET_DIR_FILE_CMD_EID 63
+
+/**
+ * \brief FM Directory List To File Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with an invalid length.
+ */
+#define FM_GET_DIR_FILE_PKT_ERR_EID 64
+
+/**
+ * \brief FM Directory List To File Command Combined Path and Name Too Long Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the combined length of the
+ *  directory name plus the directory entry name exceeds the maximum
+ *  qualified filename length.  It is unclear how this condition
+ *  might arise, but since we are copying both strings into a fixed
+ *  length buffer, we must first verify the length.
+ *
+ *  The /FM_GetDirFile command handler will not write information
+ *  regarding this directory entry to the output file.
+ */
+#define FM_GET_DIR_FILE_WARNING_EID 65
+
+/**
+ * \brief FM Directory List To File Directory Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and the output filename
+ *  is unused and appears to be valid. Verify that the output
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return values.
+ */
+#define FM_GET_DIR_FILE_OSOPENDIR_ERR_EID 66
+
+/**
+ * \brief FM Directory List To File Write Blank Stats Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an error when writing a
+ *  blank stats structure using the OS_write function.  This
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and the output filename
+ *  is unused and appears to be valid. Verify that the output
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return values.
+ */
+#define FM_GET_DIR_FILE_WRBLANK_ERR_EID 67
+
+/**
+ * \brief FM Directory List To File Write Header Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the header cannot be written
+ *  to the file using #CFE_FS_WriteHeader.  This error
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and the output filename
+ *  is unused and appears to be valid. Verify that the output
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return values.
+ */
+#define FM_GET_DIR_FILE_WRHDR_ERR_EID 68
+
+/**
+ * \brief FM Directory List To File Create File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  prevents the output file from being created.  This error
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and the output filename
+ *  is unused and appears to be valid. Verify that the output
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return values.
+ */
+#define FM_GET_DIR_FILE_OSCREAT_ERR_EID 69
+
+/**
+ * \brief FM Directory List To File Write Entry Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  prevents an entry from being written.  This error
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and the output filename
+ *  is unused and appears to be valid. Verify that the output
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return values.
+ */
+#define FM_GET_DIR_FILE_WRENTRY_ERR_EID 70
+
+/**
+ * \brief FM Directory List To File Write Update Stats Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated due to an OS function error that
+ *  prevents updated statistics from being written to a file.  This
+ *  occurred after preliminary command argument verification tests
+ *  indicated that the directory exists and the output filename
+ *  is unused and appears to be valid. Verify that the output
+ *  filename is reasonable.  Also, verify that the file system has
+ *  sufficient free space for this operation. Then refer to the OS
+ *  specific return values.
+ */
+#define FM_GET_DIR_FILE_UPSTATS_ERR_EID 71
+
+/**
+ * \brief FM Directory List To Packet Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  This event is type debug because the command generates a telemetry
+ *  packet that also signals the completion of the command.
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_GetDirPkt command.
+ *
+ *  Note that the execution of this command generally occurs within the
+ *  context of the FM low priority child task.  Thus this event may not
+ *  occur until some time after the command was invoked.  However, this
+ *  event message does signal the actual completion of the command.
+ */
+#define FM_GET_DIR_PKT_CMD_EID 72
+
+/**
+ * \brief FM Directory List To Packet Command Directory and Entry Too Long Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the combined length of the
+ *  directory name plus the directory entry name exceeds the maximum
+ *  qualified filename length.  It is unclear how this condition
+ *  might arise, but since we are copying both strings into a fixed
+ *  length buffer, we must first verify the length.
+ */
+#define FM_GET_DIR_PKT_WARNING_EID 73
+
+/**
+ * \brief FM Directory List To Packet Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirPkt
+ *  command packet with an invalid length.
+ */
+#define FM_GET_DIR_PKT_PKT_ERR_EID 74
+
+/**
+ * \brief FM Directory List To Packet Directory Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  The numeric data in the event is the return value from the OS
+ *  function call.  The string data identifies the name of the
+ *  directory or the directory entry.
+ */
+#define FM_GET_DIR_PKT_OS_ERR_EID 75
+
+/**
+ * \brief FM Monitor Filesystem Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  This event is type debug because the command generates a telemetry
+ *  packet that also signals the completion of the command.
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_MonitorFilesystemSpace command.
+ */
+#define FM_MONITOR_FILESYSTEM_SPACE_CMD_EID 76
+
+/**
+ * \brief FM Get Free Space Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetFreeSpace
+ *  command packet with an invalid length.
+ */
+#define FM_GET_FREE_SPACE_PKT_ERR_EID 77
+
+/**
+ * \brief FM Get Free Space Table Not Loaded Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetFreeSpace
+ *  command packet when the FM file system free space table has not yet
+ *  been loaded.
+ */
+#define FM_GET_FREE_SPACE_TBL_ERR_EID 78
+
+/**
+ * \brief FM Set Table State Command Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_SetTableState command.
+ */
+#define FM_SET_TABLE_STATE_CMD_EID 79
+
+/**
+ * \brief FM Set Table State Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_SetTableState
+ *  command packet with an invalid length.
+ */
+#define FM_SET_TABLE_STATE_PKT_ERR_EID 80
+
+/**
+ * \brief FM Set Table State Command Table Not Loaded Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_SetTableState
+ *  command packet when the FM file system free space table has not yet
+ *  been loaded.
+ */
+#define FM_SET_TABLE_STATE_TBL_ERR_EID 81
+
+/**
+ * \brief FM Set Table State Command Index Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a FM_SetTableState
+ *  command packet with an invalid table index argument.
+ */
+#define FM_SET_TABLE_STATE_ARG_IDX_ERR_EID 82
+
+/**
+ * \brief FM Set Table State Command State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a FM_SetTableState
+ *  command packet with an invalid entry state argument.
+ */
+#define FM_SET_TABLE_STATE_ARG_STATE_ERR_EID 83
+
+/**
+ * \brief FM Set Table State Command Unused Entry Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_SetTableState
+ *  command packet that references an unused free space table entry.
+ */
+#define FM_SET_TABLE_STATE_UNUSED_ERR_EID 84
+
+/**
+ * \brief FM Free Space Table Verification Failed Empty Name Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when a file system free space table fails the table
+ *  verification process because the file system name is an empty string.  Each file
+ *  system table entry has only 2 fields: table entry state and file system name.
+ *  The table entry state field must be either enabled or disabled.  The file system
+ *  name string must have a non-zero length, include a string terminator and not
+ *  contain characters considered invalid for filenames.
+ *
+ *  If the file system free space table loaded at startup fails verification, the FM
+ *  application will not terminate.  However, the FM application will not process
+ *  commands that request the file system free space telemetry packet if a file
+ *  system free space table has not been successfully loaded.  Thereafter, if an
+ *  attempt to load a new table fails verification, the FM application will continue
+ *  to use the previous table.
+ */
+#define FM_TABLE_VERIFY_EMPTY_ERR_EID 85
+
+/**
+ * \brief FM Free Space Table Verification Failed Name Too Long Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when a file system free space table fails the table
+ *  verification process because the file system name is too long.  Each file
+ *  system table entry has only 2 fields: table entry state and file system name.
+ *  The table entry state field must be either enabled or disabled.  The file system
+ *  name string must have a non-zero length, include a string terminator and not
+ *  contain characters considered invalid for filenames.
+ *
+ *  If the file system free space table loaded at startup fails verification, the FM
+ *  application will not terminate.  However, the FM application will not process
+ *  commands that request the file system free space telemetry packet if a file
+ *  system free space table has not been successfully loaded.  Thereafter, if an
+ *  attempt to load a new table fails verification, the FM application will continue
+ *  to use the previous table.
+ */
+#define FM_TABLE_VERIFY_TOOLONG_ERR_EID 86
+
+/**
+ * \brief FM Free Space Table Verification Failed State Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when a file system free space table fails the table
+ *  verification process because a table entry has an invalid state. Each file
+ *  system table entry has only 2 fields: table entry state and file system name.
+ *  The table entry state field must be either enabled or disabled.  The file system
+ *  name string must have a non-zero length, include a string terminator and not
+ *  contain characters considered invalid for filenames.
+ *
+ *  If the file system free space table loaded at startup fails verification, the FM
+ *  application will not terminate.  However, the FM application will not process
+ *  commands that request the file system free space telemetry packet if a file
+ *  system free space table has not been successfully loaded.  Thereafter, if an
+ *  attempt to load a new table fails verification, the FM application will continue
+ *  to use the previous table.
+ */
+#define FM_TABLE_VERIFY_BAD_STATE_ERR_EID 88
+
+/**
+ * \brief FM Child Task Initialization Complete Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of the initialization
+ *  process for the FM child task.
+ */
+#define FM_CHILD_INIT_EID 89
+
+/**
+ * \brief FM Child Task Initialization Create Semaphore Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates an unsuccessful attempt to create the sempahore
+ *  for the low priority FM child task.  Commands which would have otherwise been
+ *  handed off to the child task for execution, will now be processed by the main FM
+ *  application.
+ */
+#define FM_CHILD_INIT_SEM_ERR_EID 90
+
+/**
+ * \brief FM Child Task Initialization Create Queue Count Semaphore Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates an unsuccessful attempt to create the queue count
+ *  semphore for the FM child task. Commands which would have otherwise been handed off
+ *  to the child task for execution, will now be processed by the main FM application.
+ */
+#define FM_CHILD_INIT_QSEM_ERR_EID 91
+
+/**
+ * \brief FM Child Task Initialization Create Task Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates an unsuccessful attempt to create the low
+ *  priority FM child task.  Commands which would have otherwise been handed off
+ *  to the child task for execution, will now be processed by the main FM application.
+ */
+#define FM_CHILD_INIT_CREATE_ERR_EID 92
+
+/**
+ * \brief FM Child Task Termination Error Empty Queue Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates that the FM child task has suffered a fatal error
+ *  and has terminated.  The error occurred because the child queue was empty,
+ *  indicating that the handshake between the main task and child task was
+ *  broken.
+ */
+#define FM_CHILD_TERM_EMPTYQ_ERR_EID 93
+
+/**
+ * \brief FM Child Task Termination Error Invalid Queue Index Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates that the FM child task has suffered a fatal error
+ *  and has terminated.  The error occurred because the child read index was
+ *  invalid (larger than the child queue depth).
+ */
+#define FM_CHILD_TERM_QIDX_ERR_EID 94
+
+/**
+ * \brief FM Child Task Termination Error Semaphore Take Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates that the FM child task has suffered a fatal error
+ *  and has terminated.  The error occurred when trying to take the child
+ *  handshake semaphore.
+ */
+#define FM_CHILD_TERM_SEM_ERR_EID 95
+
+/**
+ * \brief FM Child Task Command Code Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message indicates that the FM child task is unable to process the current
+ *  handshake request.  Either the handshake queue index or the handshake command code
+ *  is invalid.  This error suggests that either the handshake interface logic is flawed,
+ *  or there has been some sort of data corruption that affected the interface data.
+ *  It may be necessary to restart the FM application to resync the handshake interface.
+ */
+#define FM_CHILD_EXE_ERR_EID 96
+
+/**
+ *  \brief FM Free Space Table Validation Results Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  This event describes the results of the Free Space Table validation
+ *  function.  The cFE Table Services Manager will call this function autonomously
+ *  when the default table is loaded at startup and also whenever a table validate
+ *  command (that targets this table) is processed.
+ */
+#define FM_TABLE_VERIFY_EID 97
+
+/**
+ * \brief FM Set Permissions Command Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_SetPermissions
+ *  command packet with an invalid length.
+ */
+#define FM_SET_PERM_ERR_EID 98
+
+/**
+ * \brief FM Set Permissions Command Event ID
+ *
+ *  \par Type: DEBUG
+ *
+ *  \par Cause
+ *
+ *  This event message signals the successful completion of a
+ *  /FM_SetPerm command.
+ */
+#define FM_SET_PERM_CMD_EID 99
+
+/**
+ * \brief FM Set Permissions Command Chmod Error Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_SetPerm
+ *  command packet with an invalid length.
+ */
+#define FM_SET_PERM_OS_ERR_EID 100
+
+/**
+ * \brief FM Free Space Table Verification Failed Null Pointer Detected
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message occurs when the FM validate table callback function
+ *  receives a NULL pointer as the input argument.
+ */
+#define FM_TABLE_VERIFY_NULL_PTR_ERR_EID 101
+
+/**
+ * \brief FM Main Loop Software Bus Returned NULL On Success Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message occurs if the Software Bus returns a success status
+ *  in the main loop but provided a NULL pointer as the return argument.
+ */
+#define FM_SB_RECEIVE_NULL_PTR_ERR_EID 102
+
+/**
+ * \brief FM Get Free Space Get File System Stats Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  This event message occurs if the free space for a file system cannot be read
+ *  when processing the #FM_MonitorFilesystemSpaceCmd command.
+ */
+#define FM_OS_SYS_STAT_ERR_EID 103
+
+/**
+ * \brief FM Directory Size Estimate Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ * This event message occurs if the system encounters an error during
+ * calculation of a directory size estimate
+ */
+#define FM_DIRECTORY_ESTIMATE_ERR_EID 104
+
+/** -------------------------------------------------------------
+ *  NOTE: From here on, the event IDs will take the form of a
+ *  "base" EID + an offset.  This is done to allow unique event
+ *  IDs to be sent from utility functions.
+ ** --------------------------------------------------------------*/
+
+#define FM_FNAME_INVALID_EID_OFFSET  0
+#define FM_FNAME_DNE_EID_OFFSET      1
+#define FM_FNAME_EXIST_EID_OFFSET    1 /* mutually exclusive with DNE */
+#define FM_FNAME_ISDIR_EID_OFFSET    2
+#define FM_FNAME_ISFILE_EID_OFFSET   2 /* mutually exclusive with ISDIR */
+#define FM_FNAME_ISOPEN_EID_OFFSET   3
+#define FM_FNAME_ISCLOSED_EID_OFFSET 4
+/* Unused EID offset 5 */
+#define FM_FNAME_NUM_OFFSETS 6
+
+#define FM_CHILD_DISABLED_EID_OFFSET 0
+#define FM_CHILD_Q_FULL_EID_OFFSET   1
+#define FM_CHILD_BROKEN_EID_OFFSET   2
+#define FM_CHILD_NUM_OFFSETS         3
+
+/**
+ * \brief FM Child Task Copy File Source Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for a number of error events generated when the
+ *  /FM_Copy is received with an unusable source filename.
+ */
+#define FM_COPY_SRC_BASE_EID 151
+
+/**
+ * \brief FM Child Task Copy File Source Name Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with an invalid source filename.
+ *
+ *  Value: 151
+ */
+#define FM_COPY_SRC_INVALID_ERR_EID (FM_COPY_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Source File Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with a source filename that does not exist.
+ *
+ *  Value: 152
+ */
+#define FM_COPY_SRC_DNE_ERR_EID (FM_COPY_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Source File Name Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 153
+ */
+#define FM_COPY_SRC_ISDIR_ERR_EID (FM_COPY_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Target Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base EID for a number of error events related to the
+ *  target file in an /FM_COPY command.
+ *
+ *  Value: 157
+ */
+#define FM_COPY_TGT_BASE_EID (FM_COPY_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Copy File Target Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with an invalid target filename.
+ *
+ *  Value: 157
+ */
+#define FM_COPY_TGT_INVALID_ERR_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Target File Already Exists Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with a target filename that already exists.
+ *
+ *  Value: 158
+ */
+#define FM_COPY_TGT_EXIST_ERR_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_EXIST_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Target Filename Is A Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with a target filename that is a directory.
+ *
+ *  Value: 159
+ */
+#define FM_COPY_TGT_ISDIR_ERR_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Target Filename Exists As Open File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Copy
+ *  command packet with a target filename that is open.
+ *
+ *  Value: 160
+ */
+#define FM_COPY_TGT_ISOPEN_ERR_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 163
+ */
+#define FM_COPY_CHILD_BASE_EID (FM_COPY_TGT_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Copy File Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 163
+ */
+#define FM_COPY_CHILD_DISABLED_ERR_EID (FM_COPY_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 164
+ */
+#define FM_COPY_CHILD_FULL_ERR_EID (FM_COPY_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Copy File Child Task Interface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 165
+ *
+ */
+#define FM_COPY_CHILD_BROKEN_ERR_EID (FM_COPY_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Source Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a source filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 166
+ */
+#define FM_MOVE_SRC_BASE_EID (FM_COPY_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Move File Source Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with an invalid source filename.
+ *
+ *  Value: 166
+ */
+#define FM_MOVE_SRC_INVALID_ERR_EID (FM_MOVE_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Source File Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a source filename that does not exist.
+ *
+ *  Value: 167
+ */
+#define FM_MOVE_SRC_DNE_ERR_EID (FM_MOVE_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Source Filename Is A Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 168
+ */
+#define FM_MOVE_SRC_ISDIR_ERR_EID (FM_MOVE_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Target Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a target filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 172
+ */
+#define FM_MOVE_TGT_BASE_EID (FM_MOVE_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Move File Target Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with an invalid target filename.
+ *
+ *  Value: 172
+ */
+#define FM_MOVE_TGT_INVALID_ERR_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Target File Already Exists Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a target filename that already exists
+ *
+ *  Value: 173
+ */
+#define FM_MOVE_TGT_EXIST_ERR_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_EXIST_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Target Filename Is A Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a target filename that is a directory.
+ *
+ *  Value: 174
+ */
+#define FM_MOVE_TGT_ISDIR_ERR_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Target File Exists As An Open File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Move
+ *  command packet with a target filename that is open.
+ *
+ *  Value: 175
+ */
+#define FM_MOVE_TGT_ISOPEN_ERR_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 178
+ */
+#define FM_MOVE_CHILD_BASE_EID (FM_MOVE_TGT_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Move File Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 178
+ */
+#define FM_MOVE_CHILD_DISABLED_ERR_EID (FM_MOVE_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 179
+ */
+#define FM_MOVE_CHILD_FULL_ERR_EID (FM_MOVE_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Move File Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 180
+ *
+ */
+#define FM_MOVE_CHILD_BROKEN_ERR_EID (FM_MOVE_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Source Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a source filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 181
+ */
+#define FM_RENAME_SRC_BASE_EID (FM_MOVE_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Rename File Source Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with an invalid source filename.
+ *
+ *  Value: 181
+ */
+#define FM_RENAME_SRC_INVALID_ERR_EID (FM_RENAME_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Source File Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a source filename that does not exist.
+ *
+ *  Value: 182
+ */
+#define FM_RENAME_SRC_DNE_ERR_EID (FM_RENAME_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Source Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 183
+ */
+#define FM_RENAME_SRC_ISDIR_ERR_EID (FM_RENAME_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Target Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a target filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 187
+ */
+#define FM_RENAME_TGT_BASE_EID (FM_RENAME_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Rename File Target Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with an invalid target filename.
+ *
+ *  Value: 187
+ */
+#define FM_RENAME_TGT_INVALID_ERR_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Target File Already Exists Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a target filename that already exists.
+ *
+ *  Value: 188
+ */
+#define FM_RENAME_TGT_EXIST_ERR_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_EXIST_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Target Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a target filename that is a directory.
+ *
+ *  Value: 189
+ */
+#define FM_RENAME_TGT_ISDIR_ERR_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Target Filename Exists As Open File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Rename
+ *  command packet with a target filename that is open.
+ *
+ *  Value: 190
+ */
+#define FM_RENAME_TGT_ISOPEN_ERR_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 193
+ */
+#define FM_RENAME_CHILD_BASE_EID (FM_RENAME_TGT_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Rename File Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 193
+ */
+#define FM_RENAME_CHILD_DISABLED_ERR_EID (FM_RENAME_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 194
+ */
+#define FM_RENAME_CHILD_FULL_ERR_EID (FM_RENAME_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Rename File Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 195
+ *
+ */
+#define FM_RENAME_CHILD_BROKEN_ERR_EID (FM_RENAME_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File Source Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with a source filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 196
+ */
+#define FM_DELETE_SRC_BASE_EID (FM_RENAME_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Delete File Source Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with an invalid source filename.
+ *
+ *  Value: 196
+ */
+#define FM_DELETE_SRC_INVALID_ERR_EID (FM_DELETE_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File Source File Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with a source filename that does not exist.
+ *
+ *  Value: 197
+ */
+#define FM_DELETE_SRC_DNE_ERR_EID (FM_DELETE_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File Source Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 198
+ */
+#define FM_DELETE_SRC_ISDIR_ERR_EID (FM_DELETE_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File File Is Open Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with a source filename that is already open.
+ *
+ *  Value: 199
+ */
+#define FM_DELETE_SRC_OPEN_ERR_EID (FM_DELETE_SRC_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 202
+ */
+#define FM_DELETE_CHILD_BASE_EID (FM_DELETE_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Delete File Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 202
+ */
+#define FM_DELETE_CHILD_DISABLED_ERR_EID (FM_DELETE_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 203
+ */
+#define FM_DELETE_CHILD_FULL_ERR_EID (FM_DELETE_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete File Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 204
+ *
+ */
+#define FM_DELETE_CHILD_BROKEN_ERR_EID (FM_DELETE_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete All Files Directory Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteAll
+ *  command packet with a directory name that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 205
+ */
+#define FM_DELETE_ALL_SRC_BASE_EID (FM_DELETE_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Delete All Files Directory Name Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with an invalid source filename.
+ *
+ *  Value: 205
+ */
+#define FM_DELETE_ALL_SRC_INVALID_ERR_EID (FM_DELETE_ALL_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete All Files Directory Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteAll
+ *  command packet with a directory name that does not exist.
+ *
+ *  Value: 206
+ */
+#define FM_DELETE_ALL_SRC_DNE_ERR_EID (FM_DELETE_ALL_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete All Files Directory Name Is A File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Delete
+ *  command packet with a directory name that is a file.
+ *
+ *  Value: 207
+ */
+#define FM_DELETE_ALL_SRC_FILE_ERR_EID (FM_DELETE_ALL_SRC_BASE_EID + FM_FNAME_ISFILE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete All Files Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 211
+ */
+#define FM_DELETE_ALL_CHILD_BASE_EID (FM_DELETE_ALL_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Delete All Files Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 211
+ */
+#define FM_DELETE_ALL_CHILD_DISABLED_ERR_EID (FM_DELETE_ALL_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete All Files Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 212
+ */
+#define FM_DELETE_ALL_CHILD_FULL_ERR_EID (FM_DELETE_ALL_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete All Files Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 213
+ *
+ */
+#define FM_DELETE_ALL_CHILD_BROKEN_ERR_EID (FM_DELETE_ALL_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Source Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a source filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 214
+ */
+#define FM_DECOM_SRC_BASE_EID (FM_DELETE_ALL_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Decompress File Source Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with an invalid source filename.
+ *
+ *  Value: 214
+ */
+#define FM_DECOM_SRC_INVALID_ERR_EID (FM_DECOM_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Source Filename Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a source filename that does not exist.
+ *
+ *  Value: 215
+ */
+#define FM_DECOM_SRC_DNE_ERR_EID (FM_DECOM_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Source Filename Is A Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 216
+ */
+#define FM_DECOM_SRC_ISDIR_ERR_EID (FM_DECOM_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Source File Is Open Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a source filename that is already open.
+ *
+ *  Value: 217
+ */
+#define FM_DECOM_SRC_OPEN_ERR_EID (FM_DECOM_SRC_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Target Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a target filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 220
+ */
+#define FM_DECOM_TGT_BASE_EID (FM_DECOM_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Decompress File Target Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with an invalid target filename.
+ *
+ *  Value: 220
+ */
+#define FM_DECOM_TGT_INVALID_ERR_EID (FM_DECOM_TGT_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Target File Already Exists Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a target filename that already exists.
+ *
+ *  Value: 221
+ */
+#define FM_DECOM_TGT_EXIST_ERR_EID (FM_DECOM_TGT_BASE_EID + FM_FNAME_EXIST_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Target Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Decompress
+ *  command packet with a target filename that is a directory.
+ *
+ *  Value: 222
+ */
+#define FM_DECOM_TGT_ISDIR_ERR_EID (FM_DECOM_TGT_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 226
+ */
+#define FM_DECOM_CHILD_BASE_EID (FM_DECOM_TGT_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Decompress File Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 226
+ */
+#define FM_DECOM_CHILD_DISABLED_ERR_EID (FM_DECOM_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 227
+ */
+#define FM_DECOM_CHILD_FULL_ERR_EID (FM_DECOM_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Decompress File Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 228
+ *
+ */
+#define FM_DECOM_CHILD_BROKEN_ERR_EID (FM_DECOM_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 1 Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source 1 filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 229
+ */
+#define FM_CONCAT_SRC1_BASE_EID (FM_DECOM_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Concat Files Source 1 Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with an invalid source 1 filename.
+ *
+ *  Value: 229
+ */
+#define FM_CONCAT_SRC1_INVALID_ERR_EID (FM_CONCAT_SRC1_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 1 File Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source 1 filename that does not exist.
+ *
+ *  Value: 230
+ */
+#define FM_CONCAT_SRC1_DNE_ERR_EID (FM_CONCAT_SRC1_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 1 Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 231
+ */
+#define FM_CONCAT_SRC1_ISDIR_ERR_EID (FM_CONCAT_SRC1_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 1 File Already Open Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source filename that is already open.
+ *
+ *  Value: 232
+ */
+#define FM_CONCAT_SRC1_OPEN_ERR_EID (FM_CONCAT_SRC1_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 2 Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source 2 filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 235
+ */
+#define FM_CONCAT_SRC2_BASE_EID (FM_CONCAT_SRC1_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Concat Files Source 2 Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with an invalid source 2 filename.
+ *
+ *  Value: 235
+ */
+#define FM_CONCAT_SRC2_INVALID_ERR_EID (FM_CONCAT_SRC2_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 2 File Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source 2 filename that does not exist.
+ *
+ *  Value: 236
+ */
+#define FM_CONCAT_SRC2_DNE_ERR_EID (FM_CONCAT_SRC2_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 2 Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source filename that is a directory.
+ *
+ *  Value: 237
+ */
+#define FM_CONCAT_SRC2_ISDIR_ERR_EID (FM_CONCAT_SRC2_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Source 2 File Already Open Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a source filename that is already open.
+ *
+ *  Value: 238
+ */
+#define FM_CONCAT_SRC2_OPEN_ERR_EID (FM_CONCAT_SRC2_BASE_EID + FM_FNAME_ISOPEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Target Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a target filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 241
+ */
+#define FM_CONCAT_TGT_BASE_EID (FM_CONCAT_SRC2_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Concat Files Target Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with an invalid target filename.
+ *
+ *  Value: 241
+ */
+#define FM_CONCAT_TGT_INVALID_ERR_EID (FM_CONCAT_TGT_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Target Filename Already Exists Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a target filename that already exists.
+ *
+ *  Value: 242
+ */
+#define FM_CONCAT_TGT_EXIST_ERR_EID (FM_CONCAT_TGT_BASE_EID + FM_FNAME_EXIST_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Target Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Concat
+ *  command packet with a target filename that is a directory.
+ *
+ *  Value: 243
+ */
+#define FM_CONCAT_TGT_ISDIR_ERR_EID (FM_CONCAT_TGT_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 247
+ */
+#define FM_CONCAT_CHILD_BASE_EID (FM_CONCAT_TGT_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Concat Files Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 247
+ */
+#define FM_CONCAT_CHILD_DISABLED_ERR_EID (FM_CONCAT_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 248
+ */
+#define FM_CONCAT_CHILD_FULL_ERR_EID (FM_CONCAT_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Concat Files Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 249
+ *
+ */
+#define FM_CONCAT_CHILD_BROKEN_ERR_EID (FM_CONCAT_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Get File Info Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 250
+ */
+#define FM_FILE_INFO_CHILD_BASE_EID (FM_CONCAT_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Get File Info Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 250
+ */
+#define FM_FILE_INFO_CHILD_DISABLED_ERR_EID (FM_FILE_INFO_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Get File Info Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 251
+ */
+#define FM_FILE_INFO_CHILD_FULL_ERR_EID (FM_FILE_INFO_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Get File Info Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 252
+ *
+ */
+#define FM_FILE_INFO_CHILD_BROKEN_ERR_EID (FM_FILE_INFO_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Create Directory, Directory Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Create
+ *  command packet with a directory name that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 253
+ */
+#define FM_CREATE_DIR_SRC_BASE_EID (FM_FILE_INFO_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Create Directory Name Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Create
+ *  command packet with an invalid directory name.
+ *
+ *  Value: 253
+ */
+#define FM_CREATE_DIR_SRC_INVALID_ERR_EID (FM_CREATE_DIR_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Create Directory Name Exists As File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Create
+ *  command packet with a directory name that exists as a file.
+ *
+ *  Value: 254
+ */
+#define FM_CREATE_DIR_SRC_DNE_ERR_EID (FM_CREATE_DIR_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Create Directory Already Exists Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_Create
+ *  command pasket with a directory that already exists.
+ *
+ *  Value: 255
+ */
+#define FM_CREATE_DIR_SRC_ISDIR_ERR_EID (FM_CREATE_DIR_SRC_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Create Directory Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 259
+ */
+#define FM_CREATE_DIR_CHILD_BASE_EID (FM_CREATE_DIR_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Create Directory Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 259
+ */
+#define FM_CREATE_DIR_CHILD_DISABLED_ERR_EID (FM_CREATE_DIR_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Create Directory Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 260
+ */
+#define FM_CREATE_DIR_CHILD_FULL_ERR_EID (FM_CREATE_DIR_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Create Directory Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 261
+ *
+ */
+#define FM_CREATE_DIR_CHILD_BROKEN_ERR_EID (FM_CREATE_DIR_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete Directory, Directory Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteDir
+ *  command packet with a directory name that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 262
+ */
+#define FM_DELETE_DIR_SRC_BASE_EID (FM_CREATE_DIR_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Delete Directory Name Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteDir
+ *  command packet with an invalid directory name.
+ *
+ *  Value: 262
+ */
+#define FM_DELETE_DIR_SRC_INVALID_ERR_EID (FM_DELETE_DIR_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete Directory Name Exists As File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_DeleteDir
+ *  command packet with a directory name that exists as a file.
+ *
+ *  Value: 263
+ */
+#define FM_DELETE_DIR_SRC_DNE_ERR_EID (FM_DELETE_DIR_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete Directory Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 268
+ */
+#define FM_DELETE_DIR_CHILD_BASE_EID (FM_DELETE_DIR_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Delete Directory Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 268
+ */
+#define FM_DELETE_DIR_CHILD_DISABLED_ERR_EID (FM_DELETE_DIR_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete Directory Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 269
+ */
+#define FM_DELETE_DIR_CHILD_FULL_ERR_EID (FM_DELETE_DIR_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Delete Directory Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 270
+ *
+ */
+#define FM_DELETE_DIR_CHILD_BROKEN_ERR_EID (FM_DELETE_DIR_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Source Filename Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with a source directory name that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 271
+ */
+#define FM_GET_DIR_FILE_SRC_BASE_EID (FM_DELETE_DIR_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Directory List to File Directory Name Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with an invalid source directory name.
+ *
+ *  Value: 271
+ */
+#define FM_GET_DIR_FILE_SRC_INVALID_ERR_EID (FM_GET_DIR_FILE_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Directory Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with a source directory name that does not exist.
+ *
+ *  Value: 272
+ */
+#define FM_GET_DIR_FILE_SRC_DNE_ERR_EID (FM_GET_DIR_FILE_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Directory Name Is File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with a source directory name that is a file.
+ *
+ *  Value: 273
+ */
+#define FM_GET_DIR_FILE_SRC_ISDIR_ERR_EID (FM_GET_DIR_FILE_SRC_BASE_EID + FM_FNAME_ISFILE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Target Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with a target filename that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 277
+ */
+#define FM_GET_DIR_FILE_TGT_BASE_EID (FM_GET_DIR_FILE_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Directory List to File Target Filename Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with an invalid target file name.
+ *
+ *  Value: 277
+ */
+#define FM_GET_DIR_FILE_TGT_INVALID_ERR_EID (FM_GET_DIR_FILE_TGT_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Target Filename Is Directory Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirFile
+ *  command packet with a target filename that is a directory.
+ *
+ *  Value: 279
+ */
+#define FM_GET_DIR_FILE_TGT_ISDIR_ERR_EID (FM_GET_DIR_FILE_TGT_BASE_EID + FM_FNAME_ISDIR_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 283
+ */
+#define FM_GET_DIR_FILE_CHILD_BASE_EID (FM_GET_DIR_FILE_TGT_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Directory List to File Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 283
+ */
+#define FM_GET_DIR_FILE_CHILD_DISABLED_ERR_EID (FM_GET_DIR_FILE_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 284
+ */
+#define FM_GET_DIR_FILE_CHILD_FULL_ERR_EID (FM_GET_DIR_FILE_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to File Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 285
+ *
+ */
+#define FM_GET_DIR_FILE_CHILD_BROKEN_ERR_EID (FM_GET_DIR_FILE_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to Packet Directory Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirPkt
+ *  command packet with a source directory name that is unusable for one
+ *  of several reasons.
+ *
+ *  Value: 286
+ */
+#define FM_GET_DIR_PKT_SRC_BASE_EID (FM_GET_DIR_FILE_CHILD_BASE_EID + FM_CHILD_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Directory List to Packet Directory Name Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirPkt
+ *  command packet with an invalid source directory name.
+ *
+ *  Value: 286
+ */
+#define FM_GET_DIR_PKT_SRC_INVALID_ERR_EID (FM_GET_DIR_PKT_SRC_BASE_EID + FM_FNAME_INVALID_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to Packet Directory Does Not Exist Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirPkt
+ *  command packet with a source directory name that does not exist.
+ *
+ *  Value: 287
+ */
+#define FM_GET_DIR_PKT_SRC_DNE_ERR_EID (FM_GET_DIR_PKT_SRC_BASE_EID + FM_FNAME_DNE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to Packet Directory Is File Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated upon receipt of a /FM_GetDirPkt
+ *  command packet with a source directory name that is a file.
+ *
+ *  Value: 288
+ */
+#define FM_GET_DIR_PKT_SRC_ISDIR_ERR_EID (FM_GET_DIR_PKT_SRC_BASE_EID + FM_FNAME_ISFILE_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to Packet Child Task Error Base ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This is the base for any of several messages that are  generated when
+ *  the FM child task command queue interface cannot be used.
+ *
+ *  Value: 292
+ */
+#define FM_GET_DIR_PKT_CHILD_BASE_EID (FM_GET_DIR_PKT_SRC_BASE_EID + FM_FNAME_NUM_OFFSETS)
+
+/**
+ * \brief FM Child Task Directory List to Packet Child Task Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task is disabled.
+ *
+ *  Value: 292
+ */
+#define FM_GET_DIR_PKT_CHILD_DISABLED_ERR_EID (FM_GET_DIR_PKT_CHILD_BASE_EID + FM_CHILD_DISABLED_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to Packet Child Task Queue Full Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the child task comand queue is full.
+ *
+ *  If the child task command queue is full, the problem may be temporary,
+ *  caused by sending too many FM commands too quickly.  If the command
+ *  queue does not empty itself within a reasonable amount of time then
+ *  the child task may be hung. It may be possible to use CFE commands to
+ *  terminate the child task, which should then cause FM to process all
+ *  commands in the main task.
+ *
+ *  Value: 293
+ */
+#define FM_GET_DIR_PKT_CHILD_FULL_ERR_EID (FM_GET_DIR_PKT_CHILD_BASE_EID + FM_CHILD_Q_FULL_EID_OFFSET)
+
+/**
+ * \brief FM Child Task Directory List to Packet Child Task Inteface Broken Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause
+ *
+ *  This event message is generated when the FM child task command queue
+ *  interface cannot be used because the interface between the main task
+ *  and child task is broken.
+ *
+ *  If the child task queue is broken then either the handshake interface
+ *  logic is flawed, or there has been some sort of data corruption that
+ *  affected the interface control variables.  In either case, it may be
+ *  necessary to restart the FM application to resync the interface.
+ *
+ *  Value: 294
+ *
+ */
+#define FM_GET_DIR_PKT_CHILD_BROKEN_ERR_EID (FM_GET_DIR_PKT_CHILD_BASE_EID + FM_CHILD_BROKEN_EID_OFFSET)
+
+/**\}*/
+
+#endif
 ```
 
-## 항목
+### `fm_extern_typedefs.h`
 
-- [`fsw/apps/fm/fsw/inc/fm_events.h`](file--fm_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/fsw/inc/fm_extern_typedefs.h`](file--fm_extern_typedefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/fsw/inc/fm_msg.h`](file--fm_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/fsw/inc/fm_msgdefs.h`](file--fm_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/fsw/inc/fm_msgids.h`](file--fm_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/fsw/inc/fm_perfids.h`](file--fm_perfids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/fm/fsw/inc/fm_platform_cfg.h`](file--fm_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/fm/fsw/inc/fm_extern_typedefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for fm_extern_typedefs module
+ */
+
+#ifndef FM_EXTERN_TYPEDEFS_H
+#define FM_EXTERN_TYPEDEFS_H
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM filename status definitions                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define FM_NAME_IS_INVALID     0
+#define FM_NAME_IS_NOT_IN_USE  1
+#define FM_NAME_IS_FILE_OPEN   2
+#define FM_NAME_IS_FILE_CLOSED 3
+#define FM_NAME_IS_DIRECTORY   4
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM free space table entry state definitions                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define FM_TABLE_ENTRY_DISABLED 0
+#define FM_TABLE_ENTRY_ENABLED  1
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM directory entry definitions                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define FM_THIS_DIRECTORY   "."
+#define FM_PARENT_DIRECTORY ".."
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM argument to not calculate CRC during Get File Info command   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+#define FM_IGNORE_CRC 0
+
+#endif /* FM_EXTERN_TYPEDEFS_H */
+```
+
+### `fm_msg.h`
+
+**경로:** `fsw/apps/fm/fsw/inc/fm_msg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS FM command and telemetry messages.
+ */
+#ifndef FM_MSG_H
+#define FM_MSG_H
+
+#include <cfe.h>
+#include <fm_platform_cfg.h>
+#include <fm_extern_typedefs.h>
+
+#ifdef FM_INCLUDE_DECOMPRESS
+#include <cfs_fs_lib.h>
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- command packet structures                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \defgroup cfsfmcmdstructs CFS File Manager Command Structures
+ * \{
+ */
+
+/**
+ *  \brief Housekeeping Request command packet structure
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+} FM_HousekeepingCmd_t;
+
+/**
+ *  \brief No-Operation command packet structure
+ *
+ *  For command details see #FM_NOOP_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+} FM_NoopCmd_t;
+
+/**
+ *  \brief Reset Counters command packet structure
+ *
+ *  For command details see #FM_RESET_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+} FM_ResetCmd_t;
+
+/**
+ *  \brief Copy File command packet structure
+ *
+ *  For command details see #FM_COPY_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    uint16 Overwrite;               /**< \brief Allow overwrite */
+    char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_CopyFileCmd_t;
+
+/**
+ *  \brief Move File command packet structure
+ *
+ *  For command details see #FM_MOVE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    uint16 Overwrite;               /**< \brief Allow overwrite */
+    char   Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char   Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_MoveFileCmd_t;
+
+/**
+ *  \brief Rename File command packet structure
+ *
+ *  For command details see #FM_RENAME_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_RenameFileCmd_t;
+
+/**
+ *  \brief Delete File command packet structure
+ *
+ *  For command details see #FM_DELETE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;                 /**< \brief Command header */
+    char                    Filename[OS_MAX_PATH_LEN]; /**< \brief Delete filename */
+} FM_DeleteFileCmd_t;
+
+/**
+ *  \brief Delete All command packet structure
+ *
+ *  For command details see #FM_DELETE_ALL_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;                  /**< \brief Command header */
+    char                    Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+} FM_DeleteAllCmd_t;
+
+/**
+ *  \brief Decompress File command packet structure
+ *
+ *  For command details see #FM_DECOMPRESS_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;               /**< \brief Command header */
+    char                    Source[OS_MAX_PATH_LEN]; /**< \brief Source filename */
+    char                    Target[OS_MAX_PATH_LEN]; /**< \brief Target filename */
+} FM_DecompressCmd_t;
+
+/**
+ *  \brief Concatenate Files command packet structure
+ *
+ *  For command details see #FM_CONCAT_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char Source1[OS_MAX_PATH_LEN]; /**< \brief Source 1 filename */
+    char Source2[OS_MAX_PATH_LEN]; /**< \brief Source 2 filename */
+    char Target[OS_MAX_PATH_LEN];  /**< \brief Target filename */
+} FM_ConcatCmd_t;
+
+/**
+ *  \brief Get File Info command packet structure
+ *
+ *  For command details see #FM_GET_FILE_INFO_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char   Filename[OS_MAX_PATH_LEN]; /**< \brief Filename */
+    uint32 FileInfoCRC;               /**< \brief File info CRC method */
+} FM_GetFileInfoCmd_t;
+
+/**
+ *  \brief Get Open Files command packet structure
+ *
+ *  For command details see #FM_GET_OPEN_FILES_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+} FM_GetOpenFilesCmd_t;
+
+/**
+ *  \brief Create Directory command packet structure
+ *
+ *  For command details see #FM_CREATE_DIR_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+} FM_CreateDirCmd_t;
+
+/**
+ *  \brief Delete Directory command packet structure
+ *
+ *  For command details see #FM_DELETE_DIR_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+} FM_DeleteDirCmd_t;
+
+/**
+ *  \brief Get DIR List to File command packet structure
+ *
+ *  For command details see #FM_GET_DIR_FILE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char  Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    char  Filename[OS_MAX_PATH_LEN];  /**< \brief Filename */
+    uint8 GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
+    uint8 Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+} FM_GetDirFileCmd_t;
+
+/**
+ *  \brief Get DIR List to Packet command packet structure
+ *
+ *  For command details see #FM_GET_DIR_PKT_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char   Directory[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    uint32 DirListOffset;              /**< \brief Index of 1st dir entry to put in packet */
+    uint8  GetSizeTimeMode;            /**< \brief Option to query size, time, and mode of files (CPU intensive) */
+    uint8  Spare01[3];                 /**< \brief Padding to 32 bit boundary */
+} FM_GetDirPktCmd_t;
+
+/**
+ *  \brief Get Free Space command packet structure
+ *
+ *  For command details see #FM_MONITOR_FILESYSTEM_SPACE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+} FM_MonitorFilesystemSpaceCmd_t;
+
+/**
+ *  \brief Set Table State command packet structure
+ *
+ *  For command details see #FM_SET_TABLE_STATE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    uint32 TableEntryIndex; /**< \brief Table entry index */
+    uint32 TableEntryState; /**< \brief New table entry state */
+} FM_SetTableStateCmd_t;
+
+/**
+ *  \brief Set Permissions for a file
+ *
+ *  For command details see #FM_SET_FILE_PERM_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader; /**< \brief Command header */
+
+    char   FileName[OS_MAX_PATH_LEN]; /**< \brief File name of the permissions to set */
+    uint32 Mode;                      /**< \brief Permissions, passed directly to OS_chmod */
+} FM_SetPermCmd_t;
+
+/**\}*/
+
+/**
+ * \defgroup cfsfmtlm CFS File Manager Telemetry
+ * \{
+ */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- get directory listing telemetry structures                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Get Directory Listing entry structure
+ */
+typedef struct
+{
+    char   EntryName[OS_MAX_PATH_LEN]; /**< \brief Directory Listing Filename */
+    uint32 EntrySize;                  /**< \brief Directory Listing File Size */
+    uint32 ModifyTime;                 /**< \brief Directory Listing File Last Modification Times */
+    uint32 Mode;                       /**< \brief Mode of the file (Permissions from #OS_FILESTAT_MODE) */
+} FM_DirListEntry_t;
+
+/**
+ *  \brief Get Directory Listing telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    char              DirName[OS_MAX_PATH_LEN];          /**< \brief Directory Name */
+    uint32            TotalFiles;                        /**< \brief Number of files in the directory */
+    uint32            PacketFiles;                       /**< \brief Number of files in this packet */
+    uint32            FirstFile;                         /**< \brief Index into directory files of first packet file */
+    FM_DirListEntry_t FileList[FM_DIR_LIST_PKT_ENTRIES]; /**< \brief Directory listing file data */
+} FM_DirListPkt_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- get directory listing to file structures                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Get Directory Listing file statistics structure
+ */
+typedef struct
+{
+    char   DirName[OS_MAX_PATH_LEN]; /**< \brief Directory name */
+    uint32 DirEntries;               /**< \brief Number of entries in the directory */
+    uint32 FileEntries;              /**< \brief Number of entries written to output file */
+} FM_DirListFileStats_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- get file information telemetry structure                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Get File Info telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    uint8  FileStatus;                /**< \brief Status indicating whether the file is open or closed */
+    uint8  CRC_Computed;              /**< \brief Flag indicating whether a CRC was computed or not */
+    uint8  Spare[2];                  /**< \brief Structure padding */
+    uint32 CRC;                       /**< \brief CRC value if computed */
+    uint32 FileSize;                  /**< \brief File Size */
+    uint32 LastModifiedTime;          /**< \brief Last Modification Time of File */
+    uint32 Mode;                      /**< \brief Mode of the file (Permissions) */
+    char   Filename[OS_MAX_PATH_LEN]; /**< \brief Name of File */
+} FM_FileInfoPkt_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- get open files list telemetry structures                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Get Open Files list entry structure
+ */
+typedef struct
+{
+    char LogicalName[OS_MAX_PATH_LEN]; /**< \brief Logical filename */
+    char AppName[OS_MAX_API_NAME];     /**< \brief Application that opened file */
+} FM_OpenFilesEntry_t;
+
+/**
+ *  \brief Get Open Files telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    uint32              NumOpenFiles;                         /**< \brief Number of files opened via cFE */
+    FM_OpenFilesEntry_t OpenFilesList[OS_MAX_NUM_OPEN_FILES]; /**< \brief List of files opened via cFE */
+} FM_OpenFilesPkt_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- monitor filesystem telemetry structures                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Monitor filesystem list entry structure
+ */
+typedef struct
+{
+    uint8  ReportType;
+    char   Name[OS_MAX_PATH_LEN]; /**< \brief File system name */
+    uint64 Blocks;                /**< \brief Block count from last check/poll, 0 if unknown */
+    uint64 Bytes;                 /**< \brief Byte count from last check/poll, 0 if unknown */
+} FM_MonitorReportEntry_t;
+
+/**
+ *  \brief Monitor filesystem telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    FM_MonitorReportEntry_t FileSys[FM_TABLE_ENTRY_COUNT]; /**< \brief Array of file system free space entries */
+} FM_MonitorReportPkt_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- housekeeping telemetry structure                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief Housekeeping telemetry packet
+ */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader; /**< \brief Telemetry Header */
+
+    uint8 CommandCounter;    /**< \brief Application command counter */
+    uint8 CommandErrCounter; /**< \brief Application command error counter */
+    uint8 Spare;             /**< \brief Placeholder for unused command warning counter */
+
+    uint8 NumOpenFiles; /**< \brief Number of open files in the system */
+
+    uint8 ChildCmdCounter;     /**< \brief Child task command counter */
+    uint8 ChildCmdErrCounter;  /**< \brief Child task command error counter */
+    uint8 ChildCmdWarnCounter; /**< \brief Child task command warning counter */
+
+    uint8 ChildQueueCount; /**< \brief Number of pending commands in queue */
+
+    uint8 ChildCurrentCC;  /**< \brief Command code currently executing */
+    uint8 ChildPreviousCC; /**< \brief Command code previously executed */
+} FM_HousekeepingPkt_t;
+
+/**\}*/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- monitor filesyste table structures                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+typedef enum
+{
+    /**
+     * Table entry is not used, these entries are ignored
+     */
+    FM_MonitorTableEntry_Type_UNUSED = 0,
+
+    /**
+     * Monitor the free space on given volume
+     *
+     * The given path will be passed to OS_FileSysStatVolume() and the results
+     * will be reported in the generated TLM entry.
+     */
+    FM_MonitorTableEntry_Type_VOLUME_FREE_SPACE = 1,
+
+    /**
+     * Estimate the sum of space used by files within specified directory
+     *
+     * The given path will be opened as a directory.  The size of each regular
+     * file present in that directory will be summed to produce an estimate of the
+     * total space associated with that directory.
+     *
+     * Note that this yields only an estimate, as there can be discrepancies
+     * between the file size as observed by this method and the actual disk blocks
+     * used by a given file.
+     */
+    FM_MonitorTableEntry_Type_DIRECTORY_ESTIMATE = 2
+
+} FM_MonitorTableEntry_Type_t;
+
+/**
+ *  \brief Monitor table entry
+ */
+typedef struct
+{
+    /**
+     * Table entry type.
+     *
+     * This should be one of the enumeration values in FM_MonitorTableEntry_Type_t.
+     * It is defined as a uint8 in this table to ensure a consistent size.
+     */
+    uint8_t Type;
+
+    /**
+     * Boolean flag indicating whether this entry is active or not
+     */
+    uint8_t Enabled;
+
+    /**
+     * Location to monitor
+     *
+     * The interpretation of this string depends on Type
+     * See description of the FM_MonitorTableEntry_Type_t for how this is to be set
+     */
+    char Name[OS_MAX_PATH_LEN];
+
+} FM_MonitorTableEntry_t;
+
+/**
+ *  \brief Get Free Space table definition
+ */
+typedef struct
+{
+    FM_MonitorTableEntry_t Entries[FM_TABLE_ENTRY_COUNT]; /**< \brief One entry for each monitor */
+} FM_MonitorTable_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- child task interface command queue entry                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Child Task Interface command queue entry structure
+ */
+typedef struct
+{
+    CFE_MSG_FcnCode_t CommandCode;              /**< \brief Command code - identifies the command */
+    uint32            DirListOffset;            /**< \brief Starting entry for dir list commands */
+    uint32            FileInfoState;            /**< \brief File info state */
+    uint32            FileInfoSize;             /**< \brief File info size */
+    uint32            FileInfoTime;             /**< \brief File info time */
+    uint32            FileInfoCRC;              /**< \brief File info CRC method */
+    char              Source1[OS_MAX_PATH_LEN]; /**< \brief First source file or directory name command argument */
+    char              Source2[OS_MAX_PATH_LEN]; /**< \brief Second source filename command argument */
+    char              Target[OS_MAX_PATH_LEN];  /**< \brief Target filename command argument */
+    uint8             GetSizeTimeMode; /**< \brief Whether to invoke stat call for size and time (CPU intensive) */
+    uint32            Mode;            /**< \brief File Mode */
+} FM_ChildQueueEntry_t;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM -- application global data structure                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ *  \brief Application global data structure
+ */
+typedef struct
+{
+    FM_MonitorTable_t *MonitorTablePtr;    /**< \brief File System Table Pointer */
+    CFE_TBL_Handle_t   MonitorTableHandle; /**< \brief File System Table Handle */
+
+    CFE_SB_PipeId_t CmdPipe; /**< \brief cFE software bus command pipe */
+
+    CFE_ES_TaskId_t ChildTaskID;        /**< \brief Child task ID */
+    osal_id_t       ChildSemaphore;     /**< \brief Child task wakeup counting semaphore */
+    osal_id_t       ChildQueueCountSem; /**< \brief Child queue counter mutex semaphore */
+
+    uint8 ChildCmdCounter;     /**< \brief Child task command success counter */
+    uint8 ChildCmdErrCounter;  /**< \brief Child task command error counter */
+    uint8 ChildCmdWarnCounter; /**< \brief Child task command warning counter */
+
+    uint8 ChildWriteIndex; /**< \brief Array index for next write to command args */
+    uint8 ChildReadIndex;  /**< \brief Array index for next read from command args */
+    uint8 ChildQueueCount; /**< \brief Number of pending commands in queue */
+
+    uint8 CommandCounter;    /**< \brief Application command success counter */
+    uint8 CommandErrCounter; /**< \brief Application command error counter */
+    uint8 Spare8a;           /**< \brief Placeholder for unused command warning counter */
+
+    uint8 ChildCurrentCC;  /**< \brief Command code currently executing */
+    uint8 ChildPreviousCC; /**< \brief Command code previously executed */
+    uint8 Spare8b;         /**< \brief Structure alignment spare */
+
+    uint32 FileStatTime; /**< \brief Modify time from most recent OS_stat */
+    uint32 FileStatSize; /**< \brief File size from most recent OS_stat */
+    uint32 FileStatMode; /**< \brief File mode from most recent OS_stat (OS_FILESTAT_MODE) */
+
+    FM_DirListFileStats_t DirListFileStats; /**< \brief Get dir list to file statistics structure */
+
+    FM_DirListPkt_t DirListPkt; /**< \brief Get dir list to packet telemetry packet */
+
+    FM_MonitorReportPkt_t
+        MonitorReportPkt; /**< \brief Telemetry packet reporting status of items in the monitor table */
+
+    FM_FileInfoPkt_t FileInfoPkt; /**< \brief Get file info telemetry packet */
+
+    FM_OpenFilesPkt_t OpenFilesPkt; /**< \brief Get open files telemetry packet */
+
+    FM_HousekeepingPkt_t HousekeepingPkt; /**< \brief Application housekeeping telemetry packet */
+
+    char ChildBuffer[FM_CHILD_FILE_BLOCK_SIZE]; /**< \brief Child task file I/O buffer */
+
+    FM_ChildQueueEntry_t ChildQueue[FM_CHILD_QUEUE_DEPTH]; /**< \brief Child task command queue */
+
+#ifdef FM_INCLUDE_DECOMPRESS
+    FS_LIB_Decompress_State_t DecompressState;
+
+#endif
+} FM_GlobalData_t;
+
+/** \brief File Manager global */
+extern FM_GlobalData_t FM_GlobalData;
+
+#endif
+```
+
+### `fm_msgdefs.h`
+
+**경로:** `fsw/apps/fm/fsw/inc/fm_msgdefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS FM command and telemetry message
+ *   macro definitions.
+ */
+#ifndef FM_MSGDEFS_H
+#define FM_MSGDEFS_H
+
+/**
+ * \defgroup cfsfmcmdcodes CFS File Manager Command Codes
+ * \{
+ */
+
+/**
+ * \brief No Operation
+ *
+ *  \par Description
+ *       This command performs no operation other than to generate an
+ *       informational event that also contains software version data.
+ *       The command is most often used as a general aliveness test by
+ *       demonstrating that the application can receive commands and
+ *       generate telemetry.
+ *
+ *  \par Command Packet Structure
+ *       #FM_NoopCmd_t
+ *
+ *  \par Command Success Verification
+ *       - Informational event #FM_NOOP_CMD_EID will be sent
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - Error event #FM_NOOP_PKT_ERR_EID will be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ */
+#define FM_NOOP_CC 0
+
+/**
+ * \brief Reset Counters
+ *
+ *  \par Description
+ *       This command resets the following housekeeping telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandCounter
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter
+ *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter
+ *
+ *  \par Command Packet Structure
+ *       #FM_ResetCmd_t
+ *
+ *  \par Command Success Verification
+ *       - Command counters will be set to zero (see description)
+ *       - Debug event #FM_RESET_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - Error event #FM_RESET_PKT_ERR_EID will be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ *
+ */
+#define FM_RESET_CC 1
+
+/**
+ * \brief Copy File
+ *
+ *  \par Description
+ *       This command copies the source file to the target file.
+ *       The source must be an existing file and the target must not be a
+ *       directory name.
+ *       If the Overwrite command argument is TRUE, then the target may be
+ *       an existing file, provided that the file is closed.
+ *       If the Overwrite command argument is FALSE, then the target must not exist.
+ *       The source and target may be on different file systems.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       copying the file will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_CopyFileCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_COPY_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Overwrite is not TRUE (one) or FALSE (zero)
+ *       - Source filename is invalid
+ *       - Source file does not exist
+ *       - Source filename is a directory
+ *       - Target filename is invalid
+ *       - Target file already exists
+ *       - Target filename is a directory
+ *       - Child task interface queue is full
+ *       - Child task interface logic is broken
+ *       - Failure of OS copy function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_COPY_PKT_ERR_EID may be sent
+ *       - Error event #FM_COPY_OVR_ERR_EID may be sent
+ *       - Error event #FM_COPY_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_COPY_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_COPY_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_COPY_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_COPY_TGT_EXIST_ERR_EID may be sent
+ *       - Error event #FM_COPY_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_COPY_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_COPY_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_COPY_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_COPY_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       Copying files may consume file space needed by other
+ *       critical tasks.  Also, copying very large files may
+ *       consume more CPU resource than anticipated.
+ *
+ *  \sa #FM_MOVE_CC, #FM_RENAME_CC
+ */
+#define FM_COPY_CC 2
+
+/**
+ * \brief Move File
+ *
+ *  \par Description
+ *       This command moves the source file to the target file.
+ *       The source must be an existing file and the target must not be a
+ *       directory name.
+ *       If the Overwrite command argument is TRUE, then the target may be
+ *       an existing file, provided that the file is closed.
+ *       If the Overwrite command argument is FALSE, then the target must not exist.
+ *       Source and target must both be on the same file system.
+ *       The move command does not actually move any file data.
+ *       The command modifies the file system directory structure to
+ *       create a different file entry for the same file data.
+ *       If the user wishes to move a file across file systems, he
+ *       must first copy the file and then delete the original.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       moving the file will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ **
+ *
+ *  \par Command Packet Structure
+ *       #FM_MoveFileCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_MOVE_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Overwrite is not TRUE (one) or FALSE (zero)
+ *       - Source filename is invalid
+ *       - Source file does not exist
+ *       - Source filename is a directory
+ *       - Target filename is invalid
+ *       - Target file already exists
+ *       - Target filename is a directory
+ *       - Failure of OS move function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_MOVE_PKT_ERR_EID may be sent
+ *       - Error event #FM_MOVE_OVR_ERR_EID may be sent
+ *       - Error event #FM_MOVE_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_MOVE_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_MOVE_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_MOVE_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_MOVE_TGT_EXIST_ERR_EID may be sent
+ *       - Error event #FM_MOVE_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_MOVE_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_MOVE_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_MOVE_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_MOVE_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ *
+ *  \sa #FM_COPY_CC, #FM_RENAME_CC
+ */
+#define FM_MOVE_CC 3
+
+/**
+ * \brief Rename File
+ *
+ *  \par Description
+ *       This command renames the source file to the target file.
+ *       Source must be an existing file and target must not exist.
+ *       Source and target must both be on the same file system.
+ *       The rename command does not actually move any file data.
+ *       The command modifies the file system directory structure to
+ *       create a different file entry for the same file data.
+ *       If the user wishes to rename a file across file systems, he
+ *       must first copy the file and then delete the original.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       renaming the file will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_RenameFileCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_RENAME_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Source filename is invalid
+ *       - Source file does not exist
+ *       - Source filename is a directory
+ *       - Target filename is invalid
+ *       - Target file already exists
+ *       - Target filename is a directory
+ *       - Failure of OS rename function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_RENAME_PKT_ERR_EID may be sent
+ *       - Error event #FM_RENAME_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_RENAME_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_RENAME_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_RENAME_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_RENAME_TGT_EXIST_ERR_EID may be sent
+ *       - Error event #FM_RENAME_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_RENAME_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_RENAME_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_RENAME_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_RENAME_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ *
+ *  \sa #FM_COPY_CC, #FM_MOVE_CC
+ */
+#define FM_RENAME_CC 4
+
+/**
+ * \brief Delete File
+ *
+ *  \par Description
+ *       This command deletes the source file.
+ *       Source must be an existing file that is not open.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       deleting the file will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_DeleteFileCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_DELETE_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Filename is invalid
+ *       - File does not exist
+ *       - File is open
+ *       - Filename is a directory
+ *       - Failure of OS delete function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_DELETE_PKT_ERR_EID may be sent
+ *       - Error event #FM_DELETE_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_DELETE_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_DELETE_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_DELETE_SRC_OPEN_ERR_EID may be sent
+ *       - Error event #FM_DELETE_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_DELETE_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_DELETE_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_DELETE_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       The FM application does not provide a method to restore deleted
+ *       files.  Critical data may be lost when deleting files.
+ *
+ *  \sa #FM_DELETE_ALL_CC, #FM_DELETE_DIR_CC
+ */
+#define FM_DELETE_CC 5
+
+/**
+ * \brief Delete All Files
+ *
+ *  \par Description
+ *       This command deletes all files in the source directory.
+ *       Source must be an existing directory.
+ *       Open files and sub-directories are not deleted.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       reading the directory and deleting each file will be performed by a
+ *       lower priority child task.
+ *       As such, the return value for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_DeleteAllCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_DELETE_ALL_CMD_EID will be sent
+ *
+ *  \par Command Warning Conditions
+ *       - Directory entry is not a file (sub-directory)
+ *       - Directory entry is an open file
+ *
+ *  \par Command Warning Verification
+ *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - Informational event #FM_DELETE_ALL_FILES_ND_WARNING_EID may be sent
+ *       - Informational event #FM_DELETE_ALL_SKIP_WARNING_EID may be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid directory name
+ *       - Directory does not exist
+ *       - Directory name + separator + filename is too long
+ *       - Failure of OS delete function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_DELETE_ALL_PKT_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_SRC_FILE_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_DELETE_ALL_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       The FM application does not provide a method to restore deleted
+ *       files.  Critical data may be lost when deleting files.  Also,
+ *       deleting a very large number of files may consume more CPU resource
+ *       than anticipated.
+ *
+ *  \sa #FM_DELETE_CC, #FM_DELETE_DIR_CC
+ */
+#define FM_DELETE_ALL_CC 7
+
+/**
+ * \brief Decompress File
+ *
+ *  \par Description
+ *       This command invokes a CFE function to decompress the source
+ *       file into the target file.
+ *       Source must be an existing file and target must not exist.
+ *       Source and target may be on different file systems.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       decompressing the source file into the target file will be performed by
+ *       a lower priority child task.
+ *       As such, the return value for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *       This command is only valid if FM_INCLUDE_DECOMPRESS is defined.
+ *
+ *  \par Command Packet Structure
+ *       #FM_DecompressCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_DECOM_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid source filename
+ *       - Source file does not exist
+ *       - Invalid target filename
+ *       - Target file does exist
+ *       - Failure of CFE_FS_Decompress function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_DECOM_PKT_ERR_EID may be sent
+ *       - Error event #FM_DECOM_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_DECOM_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_DECOM_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_DECOM_SRC_OPEN_ERR_EID may be sent
+ *       - Error event #FM_DECOM_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_DECOM_TGT_EXIST_ERR_EID may be sent
+ *       - Error event #FM_DECOM_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_DECOM_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_DECOM_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_DECOM_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_DECOM_CFE_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       Decompressing a very large file may consume more CPU resource than
+ *       anticipated.
+ */
+#define FM_DECOMPRESS_CC 8
+
+/**
+ * \brief Concatenate Files
+ *
+ *  \par Description
+ *       This command concatenates two source files into the target
+ *       file.
+ *       Sources must both be existing files and target must not exist.
+ *       Sources and target may be on different file systems.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       copying the first source file to the target file and then appending the
+ *       second source file to the target file will be performed by a lower priority
+ *       child task.
+ *       As such, the return value for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_ConcatCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_CONCAT_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid source filename
+ *       - Source file does not exist
+ *       - Invalid target filename
+ *       - Target file does exist
+ *       - Failure of OS function (copy, open, read, write, etc.)
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_CONCAT_PKT_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_OSCPY_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_OPEN_SRC2_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_OPEN_TGT_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_OSRD_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_OSWR_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC1_INVALID_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC1_DNE_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC1_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC1_OPEN_ERR_EID
+ *       - Error event #FM_CONCAT_SRC2_INVALID_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC2_DNE_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC2_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_SRC2_OPEN_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_TGT_EXIST_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_CONCAT_CHILD_BROKEN_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       Concatenating very large files may consume more CPU resource
+ *       than anticipated.
+ *
+ *  \sa #FM_COPY_CC
+ */
+#define FM_CONCAT_CC 9
+
+/**
+ * \brief Get File Information
+ *
+ *  \par Description
+ *       This command creates an FM file information telemetry packet
+ *       for the source file.
+ *       The file information packet includes status that indicates
+ *       whether source is a file that is open or closed, a directory,
+ *       or does not exist.
+ *       The file information data also includes a CRC, file size,
+ *       last modify time and the source name.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       collecting the status data and calculating the CRC will be performed by
+ *       a lower priority child task.
+ *       As such, the return value for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_GetFileInfoCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_GET_FILE_INFO_CMD_EID will be sent
+ *
+ *  \par Command Warning Conditions
+ *       - File is open and CRC cannot be calculated
+ *       - Specified CRC type is not valid
+ *       - CRC cannot be calculated because file cannot be read
+ *
+ *  \par Command Warning Verification
+ *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - Informational event #FM_GET_FILE_INFO_STATE_WARNING_EID may be sent
+ *       - Informational event #FM_GET_FILE_INFO_TYPE_WARNING_EID may be sent
+ *       - Informational event #FM_GET_FILE_INFO_READ_WARNING_EID may be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid source filename
+ *       - Failure of OS_stat function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_GET_FILE_INFO_OPEN_ERR_EID may be sent
+ *       - Error event #FM_GET_FILE_INFO_PKT_ERR_EID may be sent
+ *       - Error event #FM_GET_FILE_INFO_SRC_ERR_EID may be sent
+ *       - Error event #FM_FILE_INFO_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_FILE_INFO_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_FILE_INFO_CHILD_BROKEN_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       Calculating the CRC for a very large file may consume more CPU resource than
+ *       anticipated.
+ *
+ *  \sa #FM_GET_OPEN_FILES_CC, #FM_GET_DIR_FILE_CC, #FM_GET_DIR_PKT_CC
+ */
+#define FM_GET_FILE_INFO_CC 10
+
+/**
+ * \brief Get Open Files Listing
+ *
+ *  \par Description
+ *       This command creates an FM open files telemetry packet.
+ *       The open files packet includes the number of open files and
+ *       for each open file, the name of the file and the name of the
+ *       application that has the file opened.
+ *
+ *  \par Command Packet Structure
+ *       #FM_GetOpenFilesCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - Debug event #FM_GET_OPEN_FILES_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - Error event #FM_GET_OPEN_FILES_PKT_ERR_EID will be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ *
+ *  \sa #FM_GET_FILE_INFO_CC, #FM_GET_DIR_FILE_CC, #FM_GET_DIR_PKT_CC
+ */
+#define FM_GET_OPEN_FILES_CC 11
+
+/**
+ * \brief Create Directory
+ *
+ *  \par Description
+ *       This command creates the source directory.
+ *       Source must be a valid directory name that does not exist.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       creation of the directory will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_CreateDirCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_CREATE_DIR_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid directory name
+ *       - Directory name already exists
+ *       - Failure of OS_mkdir function
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_CREATE_DIR_PKT_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_CREATE_DIR_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ *
+ *  \sa #FM_DELETE_DIR_CC
+ */
+#define FM_CREATE_DIR_CC 12
+
+/**
+ * \brief Remove Directory
+ *
+ *  \par Description
+ *       This command deletes the source directory, it does
+ *       not delete the contents of the directory.
+ *       Source must be a valid directory name that exists.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       removal of the directory will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_DeleteDirCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_DELETE_DIR_CMD_EID will be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid directory name
+ *       - Directory does not exist
+ *       - Directory is not empty
+ *       - Failure of OS function (OS_opendir, OS_rmdir)
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_DELETE_DIR_PKT_ERR_EID may be sent
+ *       - Error event #FM_DELETE_DIR_EMPTY_ERR_EID may be sent
+ *       - Error event #FM_DELETE_OPENDIR_OS_ERR_EID may be sent
+ *       - Error event #FM_DELETE_RMDIR_OS_ERR_EID may be sent
+ *       - Error event #FM_DELETE_DIR_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_DELETE_DIR_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_DELETE_DIR_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_DELETE_DIR_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_DELETE_DIR_CHILD_BROKEN_ERR_EID may be sent
+ *       - Error event #FM_DELETE_RMDIR_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       The unexpected loss of a directory may affect a critical
+ *       tasks ability to store data.
+ *
+ *  \sa #FM_CREATE_DIR_CC
+ */
+#define FM_DELETE_DIR_CC 13
+
+/**
+ * \brief Get Directory Listing to a File
+ *
+ *  \par Description
+ *       This command writes a listing of the contents of the source
+ *       directory to the target file.
+ *       If the target filename buffer is empty, then the default
+ *       target filename #FM_DIR_LIST_FILE_DEFNAME is used.
+ *       The command will overwrite a previous copy of the target
+ *       file, if one exists.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       reading the directory will be performed by a lower priority child task.
+ *       As such, the return value for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_GetDirFileCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_GET_DIR_FILE_CMD_EID will be sent
+ *
+ *  \par Command Warning Conditions
+ *       - Combined directory and entry name is too long
+ *
+ *  \par Command Warning Verification
+ *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - Informational event #FM_GET_DIR_FILE_WARNING_EID may be sent
+ *
+ *  \par Command Error Conditions
+ *       - Invalid command packet length
+ *       - Invalid source directory name
+ *       - Source directory does not exist
+ *       - Directory name + separator is too long
+ *       - Directory name + directory entry is too long
+ *       - Invalid target filename
+ *       - Target file is already open
+ *       - Failure of OS function (OS_opendir, OS_creat, OS_write)
+ *
+ *  \par Command Failure Verification
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_GET_DIR_FILE_PKT_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_OSOPENDIR_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_WRBLANK_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_WRHDR_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_OSCREAT_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_WRENTRY_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_UPSTATS_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_TGT_INVALID_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_TGT_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_FILE_CHILD_BROKEN_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       Reading a directory that contains thousands of files may consume more CPU
+ *       resource than anticipated.
+ *
+ *  \sa #FM_GET_DIR_PKT_CC
+ */
+#define FM_GET_DIR_FILE_CC 14
+
+/**
+ * \brief Get Directory Listing to a Packet
+ *
+ *  \par Description
+ *       This command creates a telemetry packet #FM_DirListPkt_t that
+ *       contains a listing of the entries in the specified directory.
+ *       Since the packet will likely hold fewer entries than will be
+ *       possible in a directory, the command also provides an index
+ *       argument to define which entry in the directory is the first
+ *       entry reported in the telemetry packet.
+ *       After reading the directory list and skipping entries until
+ *       reaching the index of the first entry reported, the remaining
+ *       entries in the packet are filled sequentially until either
+ *       the packet is full or until there are no more entries in the
+ *       directory.
+ *       The first entry index is zero based - thus, when the first
+ *       entry index is zero the first directory entry will be the
+ *       first packet entry.
+ *       The number of entries per packet #FM_DIR_LIST_PKT_ENTRIES
+ *       is a platform configuration definition.
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       reading the directory will be performed by a lower priority child task.
+ *       As such, the return value for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_GetDirPktCmd_t
+ *
+ *  \par Command Verification
+ *       Successful execution of this command may be verified with
+ *       the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - The #FM_DirListPkt_t telemetry packet will be sent
+ *       - The #FM_GET_DIR_PKT_CMD_EID debug event will be sent
+ *
+ *  \par Command Warning Conditions
+ *       - Combined directory and entry name is too long
+ *
+ *  \par Command Warning Verification
+ *       - #FM_HousekeepingPkt_t.ChildCmdWarnCounter will increment
+ *       - Informational event #FM_GET_DIR_PKT_WARNING_EID may be sent
+ *
+ *  \par Error Conditions
+ *       This command may fail for the following reason(s):
+ *       - OS error received opening directory
+ *       - OS error received requesting directory size
+ *       - OS error received closing directory
+ *       - Invalid directory pathname received
+ *       - Command packet length not as expected
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_GET_DIR_PKT_PKT_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_OS_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_SRC_INVALID_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_SRC_DNE_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_SRC_ISDIR_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_CHILD_DISABLED_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_CHILD_FULL_ERR_EID may be sent
+ *       - Error event #FM_GET_DIR_PKT_CHILD_BROKEN_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       Reading a directory that contains thousands of files may consume more CPU
+ *       resource than anticipated.
+ *
+ *  \sa #FM_GET_DIR_FILE_CC
+ */
+#define FM_GET_DIR_PKT_CC 15
+
+/**
+ * \brief Monitor Filesystem Space
+ *
+ *  \par Description
+ *       This command queries the specified location for each of the
+ *       enabled entries in the file system monitor table.  The data
+ *       is then placed in a telemetry packet and sent to ground.
+ *
+ *  \par Command Packet Structure
+ *       #FM_MonitorFilesystemSpaceCmd_t
+ *
+ *  \par Evidence of success may be found in the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - Debug event #FM_MONITOR_FILESYSTEM_SPACE_CMD_EID will be sent
+ *       - Telemetry packet #FM_MonitorReportPkt_t will be sent
+ *
+ *  \par Error Conditions
+ *       - Invalid command packet length
+ *       - Free space table is not loaded
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - Error event #FM_GET_FREE_SPACE_PKT_ERR_EID may be sent
+ *       - Error event #FM_GET_FREE_SPACE_TBL_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ */
+#define FM_MONITOR_FILESYSTEM_SPACE_CC 16
+
+/**
+ * \brief Set Free Space Table Entry State
+ *
+ *  \par Description
+ *       This command enables or disables a single entry in the FM
+ *       file system free space table.  Only table entries that are
+ *       currently enabled or disabled may be modified by command.
+ *       Unused table entries cannot be modified.
+ *
+ *  \par Command Packet Structure
+ *       #FM_SetTableStateCmd_t
+ *
+ *  \par Evidence of success may be found in the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment
+ *       - Informational event #FM_SET_TABLE_STATE_CMD_EID will be sent
+ *
+ *  \par Error Conditions
+ *       - Invalid command packet length
+ *       - FM file system free space table has not yet been loaded
+ *       - Invalid command argument, table entry index arg is out of range
+ *       - Invalid command argument, entry state arg is not enable/disable
+ *       - Invalid current table entry state, entry is unused
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter will increment
+ *       - Error event #FM_SET_TABLE_STATE_PKT_ERR_EID may be sent
+ *       - Error event #FM_SET_TABLE_STATE_TBL_ERR_EID may be sent
+ *       - Error event #FM_SET_TABLE_STATE_ARG_IDX_ERR_EID may be sent
+ *       - Error event #FM_SET_TABLE_STATE_ARG_STATE_ERR_EID may be sent
+ *       - Error event #FM_SET_TABLE_STATE_UNUSED_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ */
+#define FM_SET_TABLE_STATE_CC 17
+
+/**
+ * \brief Set Permissions of a file
+ *
+ *  \par Description
+ *       This command sets the permissions for a file. This is a direct interface
+ *       to OS_chmod in the OSAL. OS_chmod accepts a uint32 to set the file's mode.
+ *
+ *       Examples for a regular file:
+ *
+ *       OS_READ_ONLY - Read only file access
+ *       OS_WRITE_ONLY - Write only file access
+ *       OS_READ_WRITE - Read write file access
+ *
+ *       Because of the possibility that this command might take a very long time
+ *       to complete, command argument validation will be done immediately but
+ *       setting permissions will be performed by a lower priority child task.
+ *       As such, the command result for this function only refers to the result
+ *       of command argument verification and being able to place the command on
+ *       the child task interface queue.
+ *
+ *  \par Command Packet Structure
+ *       #FM_SetPermCmd_t
+ *
+ *  \par Command Success Verification
+ *       - #FM_HousekeepingPkt_t.CommandCounter will increment after validation
+ *       - #FM_HousekeepingPkt_t.ChildCmdCounter will increment after completion
+ *       - Debug event #FM_SET_PERM_CMD_EID will be sent
+ *
+ *  \par Error Conditions
+ *       - Invalid command packet length
+ *       - Error from call to OS_chmod
+ *
+ *  \par Evidence of failure may be found in the following telemetry:
+ *       - #FM_HousekeepingPkt_t.CommandErrCounter may increment
+ *       - #FM_HousekeepingPkt_t.ChildCmdErrCounter may increment
+ *       - Error event #FM_SET_PERM_ERR_EID may be sent
+ *       - Error event #FM_SET_PERM_OS_ERR_EID may be sent
+ *
+ *  \par Criticality
+ *       - There are no critical issues related to this command.
+ */
+#define FM_SET_FILE_PERM_CC 19
+
+/**\}*/
+
+#endif
+```
+
+### `fm_msgids.h`
+
+**경로:** `fsw/apps/fm/fsw/inc/fm_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS FM application software bus
+ *   message identifiers
+ */
+#ifndef FM_MSGIDS_H
+#define FM_MSGIDS_H
+
+/**
+ * \defgroup cfsfmcmdmid CFS File Manager Command Message IDs
+ * \{
+ */
+
+#define FM_CMD_MID     0x188C /** < \brief FM ground commands */
+#define FM_SEND_HK_MID 0x188D /** < \brief FM send housekeeping */
+
+/**\}*/
+
+/**
+ * \defgroup cfsfmtlmmid CFS File Manager Telemetry Message IDs
+ * \{
+ */
+
+#define FM_HK_TLM_MID         0x088A /** < \brief FM housekeeping */
+#define FM_FILE_INFO_TLM_MID  0x088B /** < \brief FM get file info */
+#define FM_DIR_LIST_TLM_MID   0x088C /** < \brief FM get dir list */
+#define FM_OPEN_FILES_TLM_MID 0x088D /** < \brief FM get open files */
+#define FM_FREE_SPACE_TLM_MID 0x088E /** < \brief FM get free space */
+
+/**\}*/
+
+#endif
+```
+
+### `fm_perfids.h`
+
+**경로:** `fsw/apps/fm/fsw/inc/fm_perfids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS File Manager (FM) Application Performance IDs
+ */
+#ifndef FM_PERFIDS_H
+#define FM_PERFIDS_H
+
+/**
+ * \defgroup cfsfmmissioncfg CFS File Manager Mission Configuration
+ * \{
+ */
+
+#define FM_APPMAIN_PERF_ID    39 /**< \brief Main application performance ID */
+#define FM_CHILD_TASK_PERF_ID 44 /**< \brief Child task performance ID */
+
+/**\}*/
+
+#endif
+```
+
+### `fm_platform_cfg.h`
+
+**경로:** `fsw/apps/fm/fsw/inc/fm_platform_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,918-1, and identified as “Core Flight
+ * Software System (cFS) File Manager Application Version 2.6.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS FM application constants
+ *   that can be configured from one platform to another
+ */
+#ifndef FM_PLATFORM_CFG_H
+#define FM_PLATFORM_CFG_H
+
+/**
+ * \defgroup cfsfmplatformcfg CFS File Manager Platform Configuration
+ * \{
+ */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM platform configuration parameters - application definitions  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief File Manager Application Name
+ *
+ *  \par Description:
+ *       This definition must match the name used at startup by the cFE
+ *       Executive Services when creating the FM application.  Note that
+ *       application names are also an argument to certain cFE commands.
+ *       For example, the application name is needed to access tables
+ *       via cFE Table Services commands.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to CFE Executive Services
+ *       for specific information on limits related to application names.
+ */
+#define FM_APP_NAME "FM"
+
+/**
+ * \brief File Manager Command Pipe Name
+ *
+ *  \par Description:
+ *       This definition is the name used at startup when creating a cFE
+ *       Software Bus command pipe for the FM application.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to CFE Software Bus Services
+ *       for specific information on limits related to pipe names.
+ */
+#define FM_APP_PIPE_NAME "FM_CMD_PIPE"
+
+/**
+ * \brief File Manager Command Pipe Depth
+ *
+ *  \par Description:
+ *       This definition sets the total number of packets that may queue
+ *       in the FM command pipe.  The limit for individual message types
+ *       in the queue is the default cFE Software Bus subscription
+ *       limit.
+ *
+ *  \par Limits:
+ *       It is recommended that this value be no less than 4 and
+ *       no greater than 20 packets, but this is not enforced by FM.
+ */
+#define FM_APP_PIPE_DEPTH 10
+
+/**
+ * \brief Mission specific version number for FM application
+ *
+ *  \par Description:
+ *       An application version number consists of four parts:
+ *       major version number, minor version number, revision
+ *       number and mission specific revision number. The mission
+ *       specific revision number is defined here and the other
+ *       parts are defined in "fm_version.h".
+ *
+ *  \par Limits:
+ *       Must be defined as a numeric value that is greater than
+ *       or equal to zero.
+ */
+#define FM_MISSION_REV 0
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM platform configuration parameters - output file definitions  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief Default Directory List Output Filename
+ *
+ *  \par Description:
+ *       This definition is the default output filename used by the Get
+ *       Directory List to File command handler when the output filename
+ *       is not provided.  The default filename is used whenever the
+ *       commanded output filename is the empty string.
+ *
+ *  \par Limits:
+ *       The FM application does not place a limit on this configuration
+ *       parameter, however the symbol must be defined and the name will
+ *       be subject to the same verification tests as a commanded output
+ *       filename.  Set this parameter to the empty string if no default
+ *       filename is desired.
+ */
+#define FM_DIR_LIST_FILE_DEFNAME "/ram/fm_dirlist.out"
+
+/**
+ * \brief Maximum Directory List Output File Entries
+ *
+ *  \par Description:
+ *       This definition sets the upper limit for the number of directory
+ *       entries that may be written to a Directory List output file.
+ *       Directory List files are variable length, based on the number of
+ *       directory entries actually written to the file.  There may zero
+ *       entries written to the file if the directory is empty.  For most
+ *       environments, this definition will play no role at all, as it
+ *       will be set to a number much larger than the count of files that
+ *       will ever exist in any directory at one time.
+ *
+ *  \par Limits:
+ *       The FM application limits this value to be no less than 100 and
+ *       no greater than 10000.
+ */
+#define FM_DIR_LIST_FILE_ENTRIES 3000
+
+/**
+ * \brief Directory List Output File Header Sub-Type
+ *
+ *  \par Description:
+ *       This definition sets the cFE File Header sub-type value for FM
+ *       Directory List data files.  The value may be used to differentiate
+ *       FM Directory List files from other data files.
+ *
+ *  \par Limits:
+ *       The FM application places no limits on this unsigned 32 bit value.
+ */
+#define FM_DIR_LIST_FILE_SUBTYPE 12345
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM platform configuration parameters - TLM packet definitions   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief Directory List Telemetry Packet Entry Count
+ *
+ *  \par Description:
+ *       This definition sets the number of directory entries contained
+ *       in the Directory List telemetry packet.  The command handler will
+ *       read directory entries until reaching the index of the start entry
+ *       (set via command argument) and then continue to read
+ *       directory entries and populate the telemtry packet until there are
+ *       either no more unread directory entries or until the telemetry
+ *       packet is full.
+ *
+ *  \par Limits:
+ *       The FM application limits this value to be no less than 10 and
+ *       and no greater than 100. The number of directory entries in the
+ *       telemetry packet will in large part determine the packet size.
+ */
+#define FM_DIR_LIST_PKT_ENTRIES 20
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM platform configuration parameters - child task definitions   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief Child Task File I/O Control Settings
+ *
+ *  \par Description:
+ *       These definitions control the amount of file data that the FM child task
+ *       will process before giving up the CPU to allow other tasks time to run.
+ *
+ *       FM_CHILD_FILE_BLOCK_SIZE defines the size of each block of file data that
+ *       the FM child task will read or write.  This value also defines the size
+ *       of the FM child task I/O buffer that exists in global memory.
+ *
+ *       FM_CHILD_FILE_LOOP_COUNT defines the number of file data blocks that may
+ *       be processed before the FM child task sleeps (gives up the CPU).
+ *
+ *       FM_CHILD_FILE_SLEEP_MS defines the length of time (in milli-secs) before
+ *       the FM child task wakes (re-acquires the CPU).  Note that many platforms
+ *       will limit the precision of this value.
+ *
+ *       Thus the combination of the 3 values control CPU use by the FM child task.
+ *       Using a smaller block size minimizes the amount of RAM used by the file
+ *       I/O buffer, but at the expense of file efficiency.  Adjust each of the
+ *       values such that the combination is appropriate for the target platform.
+ *
+ *       For example, if the block size is 2048 and the loop count is 16 and the
+ *       sleep time is 20, then while processing a 1 Mbyte file there will be
+ *       32 sleep cycles of 20ms each, for a total task delay of 0.64 seconds.
+ *
+ *  \par Limits:
+ *       FM_CHILD_FILE_BLOCK_SIZE: The FM application limits this value to be no
+ *       less than 256 bytes and no greater than 32KB.
+ *
+ *       FM_CHILD_FILE_LOOP_COUNT: The FM application limits this value to be
+ *       non-zero.  There is no upper limit - a very large number effectively
+ *       means that the FM child task will not surrender the CPU to other lower
+ *       priority tasks.
+ *
+ *       FM_CHILD_FILE_SLEEP_MS: The FM application limits this value to be no
+ *       no greater than 100 ms.  The value zero generally means a very short
+ *       task delay - refer to the target platform documentation for specifics.
+ */
+#define FM_CHILD_FILE_BLOCK_SIZE 2048
+#define FM_CHILD_FILE_LOOP_COUNT 16
+#define FM_CHILD_FILE_SLEEP_MS   20
+
+/**
+ * \brief Child file stat sleep
+ *
+ *  \par Description:
+ *       OS_stat is a CPU intensive call. FM uses the OS_stat call to query a
+ *       file’s size, date, and mode when setting up directory listings.
+ *       Querying a large number of files and/or files large in size when
+ *       processing directory listing commands can cause FM to hog the CPU. To
+ *       mitigate this, options to sleep a configurable number of milliseconds
+ *       between calls to OS_stat for a configurable number of files
+ *       in a directory listing is provided. A large sleep cycle will not hang the CPU
+ *       but it may take a long time for directory listing to complete. A shorter
+ *       sleep cycle will speed up the directory listing commands but may cause
+ *       FM to hog the CPU.
+ *
+ *       FM_CHILD_STAT_SLEEP_MS: The number of milliseconds to sleep each
+ *       cycle. One cycle is FM_CHILD_STAT_SLEEP_FILECOUNT.
+ *
+ *       FM_CHILD_STAT_SLEEP_FILECOUNT: The number of files to process (OS_stat) before
+ *       sleeping FM_CHILD_STAT_SLEEP_MS.
+ *       Works in tandem with FM_CHILD_STAT_SLEEP_MS to reduce CPU hogging
+ *       while allowing slightly more customization to balance time the operator is waiting to
+ *       get data back from a directory listing versus FM hogging the CPU with calls to OS_stat
+ *
+ *       In short:
+ *       High SLEEP_MS means less CPU hogging by FM but a longer time to process a dir listing command
+ *       Low SLEEP_MS means more potential CPU hogging by FM but shorter time to process a dir listing command
+ *       High FILECOUNT means more potential CPU hogging by FM but a shorter time to process a dir listing command
+ *       Low FILECOUNT means less CPU hogging by FM but longer time to process a dir listing command
+ *  \par Limits:
+ *       The default is zero unless the mission needs require them to be changed.
+ *
+ */
+#define FM_CHILD_STAT_SLEEP_MS        0
+#define FM_CHILD_STAT_SLEEP_FILECOUNT 0
+
+/**
+ * \brief Child Task Command Queue Entry Count
+ *
+ *  \par Description:
+ *       This definition sets the array depth for the command arguments queue in
+ *       the FM main task to FM child task handshake interface.  The value sets
+ *       the upper limit for the number of commands that can be waiting in the
+ *       queue to be processed by the low priority FM child task.  A multi-entry
+ *       command queue prevents the occasional slow command from being rejected
+ *       because the child task has not yet completed the previous slow command.
+ *
+ *  \par Limits:
+ *       The FM application limits this value to be no less than 1 and no greater
+ *       than 10.  There must be at least one because this is the method for
+ *       passing command arguments from the parent to the child task.  The upper
+ *       limit is arbitrary.
+ */
+#define FM_CHILD_QUEUE_DEPTH 3
+
+/**
+ * \brief Child Task Name - cFE object name
+ *
+ *  \par Description:
+ *       This definition sets the FM child task object name.  The task object
+ *       name is required during child task creation by cFE Executive Services.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to CFE Executive Services
+ *       for specific information on limits related to object names.
+ */
+#define FM_CHILD_TASK_NAME "FM_CHILD_TASK"
+
+/**
+ * \brief Child Task Stack Size
+ *
+ *  \par Description:
+ *       This definition sets the size in bytes of the FM child task
+ *       stack.  It is highly recommended that this assignment be made
+ *       by someone familiar with the system requirements for tasks
+ *       running on the target platform.
+ *
+ *  \par Limits:
+ *       The FM application limits this value to be no less than 2048
+ *       and no greater than 20480.  These limits are purely arbitrary
+ *       and may need to be modified for specific platforms.
+ */
+#define FM_CHILD_TASK_STACK_SIZE 20480
+
+/**
+ * \brief Child Task Execution Priority
+ *
+ *  \par Description:
+ *       This parameter sets the execution priority for the FM child task.
+ *       It is highly recommended that this assignment be made by someone
+ *       familiar with the system requirements for tasks running on the
+ *       target platform. Note: This parameter is VxWorks® specific. Not
+ *       all operating systems set task priority this way.
+ *
+ *  \par Limits:
+ *       Value to be no less than 1 and no greater than 255.
+ *
+ *  \par Priority Values:
+ *       Note that a small value has higher priority than a large value.
+ *       Thus, 100 is higher priority than 150. It is also necessary to
+ *       ensure that a child task has lower priority than its parent.
+ *       It should be clear that a child task that runs ahead of its
+ *       parent defeats the purpose of having a child task to run in
+ *       the background.
+ */
+#define FM_CHILD_TASK_PRIORITY 205
+
+/**
+ * \brief Child Task Semaphore Name - cFE object name
+ *
+ *  \par Description:
+ *       This definition sets the FM child task semaphore object name.
+ *       The semaphore object name is required during semaphore creation
+ *       by cFE Executive Services.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to CFE Executive Services
+ *       for specific information on limits related to object names.
+ */
+#define FM_CHILD_SEM_NAME "FM_CHILD_SEM"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* FM platform configuration parameters - table definitions        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/**
+ * \brief Free Space Table Name - cFE object name
+ *
+ *  \par Description:
+ *       Table object name is required during table creation.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to CFE Table Services
+ *       for specific information on limits related to table names.
+ */
+#define FM_TABLE_CFE_NAME "FreeSpace"
+
+/**
+ * \brief Monitor Table Name - filename with path
+ *
+ *  \par Description:
+ *       Table name with path is required to load table at startup.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  If the named table does not
+ *       exist or fails validation, the table load will fail.
+ */
+#define FM_TABLE_DEF_NAME "/cf/fm_monitor.tbl"
+
+/**
+ * \brief Monitor Table Name - filename without path
+ *
+ *  \par Description:
+ *       Table name without path defines the output name for the table
+ *       file created during the table make process.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  If the table name is not
+ *       valid then the make process may fail, or the table file may
+ *       be unloadable to the target hardware.
+ */
+#define FM_TABLE_FILENAME "fm_monitor.tbl"
+
+/**
+ * \brief Free Space Table Description
+ *
+ *  \par Description:
+ *       Table files contain headers that include descriptive text.
+ *       This text will be put into the file header during the table
+ *       make process.
+ *
+ *  \par Limits:
+ *       FM requires that this name be defined, but otherwise places
+ *       no limits on the definition.  Refer to cFE Table Services
+ *       for limits related to table descriptive text.
+ */
+#define FM_TABLE_DEF_DESC "FM File System Free Space Table"
+
+/**
+ * \brief Number of Free Space Table Entries
+ *
+ *  \par Description:
+ *       This value defines the number of entries in both the FM file system
+ *       free space table and the FM file system free space telemetry packet.
+ *       Note: this value does not define the number of file systems present
+ *       or supported by the CFE-OSAL, the value only defines the number of
+ *       file systems for which FM may be enabled to report free space data.
+ *
+ *  \par Limits:
+ *       FM limits this value to be not less than 1 and not greater than 32.
+ */
+#define FM_TABLE_ENTRY_COUNT 8
+
+/**
+ * \brief Table Data Validation Error Code
+ *
+ *  \par Description:
+ *       Table data is verified during the table load process.  Should
+ *       the validation process fail, this value will be returned by
+ *       FM to cFE Table Services and displayed in an event message.
+ *
+ *  \par Limits:
+ *       FM requires that this value be defined, but otherwise places
+ *       no limits on the definition.  Refer to cFE Table Services
+ *       for limits related to error return values.
+ */
+#define FM_TABLE_VALIDATION_ERR (-1)
+
+/**
+ * \brief Include Decompress
+ *
+ *  \par Description:
+ *       If this setting is defined, FM will be built with the Decompress
+ *       command.  Otherwise Decompress will not be built into the application.
+ *       If this setting is defined, FM will depend on an external FS_Lib.
+ *
+ *  \par Limits:
+ *       N/A
+ */
+/* #define FM_INCLUDE_DECOMPRESS */
+
+/**\}*/
+
+#endif
+```

@@ -3,14 +3,32 @@
 
 **경로:** `fsw/apps/hwlib/fsw/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `hwlib_msgids.h`
 
-file--hwlib_msgids.h
+**경로:** `fsw/apps/hwlib/fsw/platform_inc/hwlib_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: hwlib_msgids.h  $
+**
+** Purpose: 
+**   Hardware Lib Message IDs
+**
+** Notes:
+**
+*************************************************************************/
+
+#ifndef _hwlib_msgids_h_
+#define _hwlib_msgids_h_
+
+// define any message ids that originate from the hwlib here
+// it's OK if there isn't any
+
+
+#endif
+
 ```
-
-## 항목
-
-- [`fsw/apps/hwlib/fsw/platform_inc/hwlib_msgids.h`](file--hwlib_msgids.h) — UTF-8 텍스트 파일 본문 포함

@@ -3,16 +3,16 @@
 
 **경로:** `gsw/build/src/CMakeFiles/crypto.dir/sa/internal/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sa_interface_inmemory.template.c.o`
 
-file--sa_interface_inmemory.template.c.o
-file--sa_interface_inmemory.template.c.o.d
-```
+**경로:** `gsw/build/src/CMakeFiles/crypto.dir/sa/internal/sa_interface_inmemory.template.c.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`gsw/build/src/CMakeFiles/crypto.dir/sa/internal/sa_interface_inmemory.template.c.o`](file--sa_interface_inmemory.template.c.o) — 빌드 산출물 (경로만)
-- [`gsw/build/src/CMakeFiles/crypto.dir/sa/internal/sa_interface_inmemory.template.c.o.d`](file--sa_interface_inmemory.template.c.o.d) — 빌드 산출물 (경로만)
+### `sa_interface_inmemory.template.c.o.d`
+
+**경로:** `gsw/build/src/CMakeFiles/crypto.dir/sa/internal/sa_interface_inmemory.template.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

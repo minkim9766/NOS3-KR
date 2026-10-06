@@ -3,18 +3,64 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-script-tab.component.css`
 
-file--table-script-tab.component.css
-file--table-script-tab.component.html
-file--table-script-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/table-script-tab.component.css`
+
+
+```css
+code {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 14px;
+}
 ```
 
-## 항목
+### `table-script-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/table-script-tab.component.css`](file--table-script-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/table-script-tab.component.html`](file--table-script-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/table-script-tab.component.ts`](file--table-script-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/table-script-tab.component.html`
+
+
+```html
+@if (table$ | async; as table) {
+  <ya-panel class="sql">
+    <code [innerHTML]="formatSQL(table.script)"></code>
+  </ya-panel>
+}
+```
+
+### `table-script-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-script-tab/table-script-tab.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Table, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import * as utils from '../utils';
+
+@Component({
+  selector: 'app-table-script-tab',
+  templateUrl: './table-script-tab.component.html',
+  styleUrls: ['./table-script-tab.component.css', '../streamsql.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TableScriptTabComponent {
+  table$: Promise<Table>;
+
+  constructor(route: ActivatedRoute, yamcs: YamcsService) {
+    const parent = route.snapshot.parent!;
+    const database = parent.parent!.paramMap.get('database')!;
+    const name = parent.paramMap.get('table')!;
+    this.table$ = yamcs.yamcsClient.getTable(database, name);
+  }
+
+  formatSQL(sql: string) {
+    return utils.formatSQL(sql);
+  }
+}
+```

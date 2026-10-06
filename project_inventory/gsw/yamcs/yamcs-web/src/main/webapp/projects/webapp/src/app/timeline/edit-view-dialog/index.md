@@ -3,18 +3,138 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-view-dialog.component.css`
 
-file--edit-view-dialog.component.css
-file--edit-view-dialog.component.html
-file--edit-view-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/edit-view-dialog.component.css`
+
+
+```css
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 0;
+  position: relative;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  height: 64px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #d3d3d3;
+}
 ```
 
-## 항목
+### `edit-view-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/edit-view-dialog.component.css`](file--edit-view-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/edit-view-dialog.component.html`](file--edit-view-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/edit-view-dialog.component.ts`](file--edit-view-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/edit-view-dialog.component.html`
+
+
+```html
+<div class="ya-form" style="max-width: 600px">
+  <form [formGroup]="form" novalidate autocomplete="off">
+    <h2>Edit view</h2>
+    <ya-field label="Name" hint="(required)">
+      <input type="text" formControlName="name" />
+    </ya-field>
+
+    <ya-field-divider />
+
+    <h4>Bands</h4>
+    <app-band-multi-select formControlName="bands" />
+  </form>
+</div>
+
+<div class="footer">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <ya-button mat-dialog-close>CANCEL</ya-button>
+      &nbsp;&nbsp;
+      <ya-button
+        appearance="primary"
+        [disabled]="!(dirty$ | async) || !form.valid"
+        (click)="onConfirm()">
+        SAVE CHANGES
+      </ya-button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+</div>
+```
+
+### `edit-view-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/edit-view-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnDestroy,
+} from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MessageService,
+  TimelineBand,
+  UpdateTimelineViewRequest,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { BandMultiSelectComponent } from '../shared/band-multi-select/band-multi-select.component';
+
+@Component({
+  selector: 'app-edit-view-dialog',
+  templateUrl: './edit-view-dialog.component.html',
+  styleUrl: './edit-view-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [BandMultiSelectComponent, WebappSdkModule],
+})
+export class EditViewDialogComponent implements OnDestroy {
+  form: UntypedFormGroup;
+
+  dirty$ = new BehaviorSubject<boolean>(false);
+  private formSubscription: Subscription;
+
+  constructor(
+    private dialogRef: MatDialogRef<EditViewDialogComponent>,
+    readonly yamcs: YamcsService,
+    formBuilder: UntypedFormBuilder,
+    private messageService: MessageService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    const view = data.view;
+    this.form = formBuilder.group({
+      name: [view.name, Validators.required],
+      bands: [view.bands || [], []],
+    });
+    this.formSubscription = this.form.valueChanges.subscribe(() => {
+      this.dirty$.next(true);
+    });
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+    const options: UpdateTimelineViewRequest = {
+      name: formValue.name,
+      bands: formValue.bands.map((band: TimelineBand) => band.id),
+    };
+    const view = this.data.view;
+    this.yamcs.yamcsClient
+      .updateTimelineView(this.yamcs.instance!, view.id, options)
+      .then((updatedView) => this.dialogRef.close(updatedView))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.formSubscription?.unsubscribe();
+  }
+}
+```

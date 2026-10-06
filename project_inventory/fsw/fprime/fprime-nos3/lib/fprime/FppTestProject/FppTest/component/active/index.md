@@ -3,28 +3,865 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--active.fpp
-file--ActiveTest.cpp
-file--ActiveTest.hpp
-file--CMakeLists.txt
-file--fpp_types.fpp
-file--port_index_enums.fpp
-file--port_types.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/active.fpp`](file--active.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/ActiveTest.cpp`](file--ActiveTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/ActiveTest.hpp`](file--ActiveTest.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/fpp_types.fpp`](file--fpp_types.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/port_index_enums.fpp`](file--port_index_enums.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/port_types.fpp`](file--port_types.fpp) — UTF-8 텍스트 파일 본문 포함
+### `active.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/active.fpp`
+
+
+```fpp
+@ An active component
+active component ActiveTest {
+
+  include "../include/internal_ports.fppi"
+  import FppTest.SerialPorts
+  import FppTest.SerialPortsAsync
+  import FppTest.SpecialPorts
+  import FppTest.TypedPorts
+  import FppTest.TypedPortsAsync
+  import FppTest.OutputPorts
+
+  include "../include/commands.fppi"
+  include "../include/commands_async.fppi"
+  include "../include/events.fppi"
+  include "../include/external_params.fppi"
+  include "../include/params.fppi"
+  include "../include/telemetry.fppi"
+
+}
+```
+
+### `ActiveTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/ActiveTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ActiveTest.cpp
+// \author tiffany
+// \brief  cpp file for ActiveTest component implementation class
+// ======================================================================
+
+
+#include "ActiveTest.hpp"
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "FppTest/component/active/SerialPortIndexEnumAc.hpp"
+
+  // ----------------------------------------------------------------------
+  // Construction, initialization, and destruction
+  // ----------------------------------------------------------------------
+
+  ActiveTest ::
+    ActiveTest(
+        const char *const compName
+    ) : ActiveTestComponentBase(compName)
+  {
+
+  }
+
+  ActiveTest ::
+    ~ActiveTest()
+  {
+
+  }
+
+  #define TestComponentName ActiveTest
+  #include "FppTest/component/common/typed_async.cpp"
+  #include "FppTest/component/common/typed.cpp"
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for user-defined serial input ports
+  // ----------------------------------------------------------------------
+
+  void ActiveTest ::
+    serialAsync_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(portNum, Buffer);
+  }
+
+  void ActiveTest ::
+    serialAsyncAssert_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(SerialPortIndex::ENUM, Buffer);
+  }
+
+  void ActiveTest ::
+    serialAsyncBlockPriority_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(SerialPortIndex::ARRAY, Buffer);
+  }
+
+  void ActiveTest ::
+    serialAsyncDropPriority_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(SerialPortIndex::STRUCT, Buffer);
+  }
+
+  void ActiveTest ::
+    serialGuarded_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(portNum, Buffer);
+  }
+
+  void ActiveTest ::
+    serialSync_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase &Buffer //!< The serialization buffer
+    )
+  {
+    this->serializeStatus = this->serialOut_out(portNum, Buffer);
+  }
+
+  // ----------------------------------------------------------------------
+  // Command handler implementations
+  // ----------------------------------------------------------------------
+
+  void ActiveTest ::
+    CMD_ASYNC_NO_ARGS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq
+    )
+  {
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ASYNC_PRIMITIVE_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        U32 u32_1,
+        U32 u32_2,
+        F32 f32_1,
+        F32 f32_2,
+        bool b1,
+        bool b2
+    )
+  {
+    this->primitiveCmd.args.val1 = u32_1;
+    this->primitiveCmd.args.val2 = u32_2;
+    this->primitiveCmd.args.val3 = f32_1;
+    this->primitiveCmd.args.val4 = f32_2;
+    this->primitiveCmd.args.val5 = b1;
+    this->primitiveCmd.args.val6 = b2;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ASYNC_STRINGS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        const Fw::CmdStringArg& str1,
+        const Fw::CmdStringArg& str2
+    )
+  {
+    this->stringCmd.args.val1 = str1;
+    this->stringCmd.args.val2 = str2;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ASYNC_ENUM_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamEnum en
+    )
+  {
+    this->enumCmd.args.val = en;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ASYNC_ARRAY_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamArray arr
+    )
+  {
+    this->arrayCmd.args.val = arr;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ASYNC_STRUCT_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamStruct str
+    )
+  {
+    this->structCmd.args.val = str;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_NO_ARGS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq
+    )
+  {
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_PRIMITIVE_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        U32 u32_1,
+        U32 u32_2,
+        F32 f32_1,
+        F32 f32_2,
+        bool b1,
+        bool b2
+    )
+  {
+    this->primitiveCmd.args.val1 = u32_1;
+    this->primitiveCmd.args.val2 = u32_2;
+    this->primitiveCmd.args.val3 = f32_1;
+    this->primitiveCmd.args.val4 = f32_2;
+    this->primitiveCmd.args.val5 = b1;
+    this->primitiveCmd.args.val6 = b2;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_STRINGS_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        const Fw::CmdStringArg& str1,
+        const Fw::CmdStringArg& str2
+    )
+  {
+    this->stringCmd.args.val1 = str1;
+    this->stringCmd.args.val2 = str2;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ENUM_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamEnum en
+    )
+  {
+    this->enumCmd.args.val = en;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_ARRAY_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamArray arr
+    )
+  {
+    this->arrayCmd.args.val = arr;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  void ActiveTest ::
+    CMD_STRUCT_cmdHandler(
+        const FwOpcodeType opCode,
+        const U32 cmdSeq,
+        FormalParamStruct str
+    )
+  {
+    this->structCmd.args.val = str;
+
+    this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+  // ----------------------------------------------------------------------
+  // Internal interface handlers
+  // ----------------------------------------------------------------------
+
+  //! Internal interface handler for internalArray
+  void ActiveTest ::
+    internalArray_internalInterfaceHandler(
+        const FormalParamArray& arr //!< An array
+  )
+  {
+    this->arrayInterface.args.val = arr;
+  }
+
+  //! Internal interface handler for internalEnum
+  void ActiveTest ::
+    internalEnum_internalInterfaceHandler(
+        const FormalParamEnum& en //!< An enum
+  )
+  {
+    this->enumInterface.args.val = en;
+  }
+
+  //! Internal interface handler for internalNoArgs
+  void ActiveTest ::
+    internalNoArgs_internalInterfaceHandler()
+  {
+  }
+
+  //! Internal interface handler for internalPrimitive
+  void ActiveTest ::
+    internalPrimitive_internalInterfaceHandler(
+        U32 u32_1, //!< A U32
+        U32 u32_2, //!< A U32
+        F32 f32_1, //!< An F32
+        F32 f32_2, //!< An F32
+        bool b1, //!< A boolean
+        bool b2 //!< A boolean
+  )
+  {
+    this->primitiveInterface.args.val1 = u32_1;
+    this->primitiveInterface.args.val2 = u32_2;
+    this->primitiveInterface.args.val3 = f32_1;
+    this->primitiveInterface.args.val4 = f32_2;
+    this->primitiveInterface.args.val5 = b1;
+    this->primitiveInterface.args.val6 = b2;
+  }
+
+  //! Internal interface handler for internalString
+  void ActiveTest ::
+    internalString_internalInterfaceHandler(
+        const Fw::InternalInterfaceString& str1, //!< A string
+        const Fw::InternalInterfaceString& str2 //!< Another string
+  )
+  {
+    this->stringInterface.args.val1 = str1;
+    this->stringInterface.args.val2 = str2;
+  }
+
+  //! Internal interface handler for internalStruct
+  void ActiveTest ::
+    internalStruct_internalInterfaceHandler(
+        const FormalParamStruct& str //!< A struct
+  )
+  {
+    this->structInterface.args.val = str;
+  }
+
+  // ----------------------------------------------------------------------
+  // Overflow hook implementations for user-defined async ports interfaces
+  // ----------------------------------------------------------------------
+
+  void ActiveTest ::
+      enumArgsHook_overflowHook(
+          const FwIndexType portNum,
+          const FormalParamEnum &en,
+          FormalParamEnum &enRef,
+          const FormalAliasEnum& enA,
+          FormalAliasEnum& enARef
+  )
+  {
+      this->enumArgsHookOverflowed_out(portNum, en, enRef, enA, enARef);
+  }
+```
+
+### `ActiveTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/ActiveTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ActiveTest.hpp
+// \author tiffany
+// \brief  hpp file for ActiveTest component implementation class
+// ======================================================================
+
+#ifndef ActiveTest_HPP
+#define ActiveTest_HPP
+
+#include "FppTest/component/active/ActiveTestComponentAc.hpp"
+#include "FppTest/component/types/FormalParamTypes.hpp"
+
+
+class ActiveTest :
+  public ActiveTestComponentBase
+{
+
+  public:
+
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct ActiveTest object
+    ActiveTest(
+        const char* const compName //!< The component name
+    );
+
+    //! Destroy ActiveTest object
+    ~ActiveTest();
+
+  private:
+
+    #define HAS_ASYNC
+    #include "FppTest/component/common/typed_async.hpp"
+    #include "FppTest/component/common/typed.hpp"
+
+  private:
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined serial input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for serialAsync
+    void serialAsync_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+    //! Handler implementation for serialAsyncAssert
+    void serialAsyncAssert_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+    //! Handler implementation for serialAsyncBlockPriority
+    void serialAsyncBlockPriority_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+    //! Handler implementation for serialAsyncDropPriority
+    void serialAsyncDropPriority_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+    //! Handler implementation for serialGuarded
+    void serialGuarded_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+    //! Handler implementation for serialSync
+    void serialSync_handler(
+        FwIndexType portNum, //!< The port number
+        Fw::SerializeBufferBase& buffer //!< The serialization buffer
+    ) override;
+
+  private:
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for command CMD_NO_ARGS
+    void CMD_NO_ARGS_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq //!< The command sequence number
+    ) override;
+
+    //! Handler implementation for command CMD_PRIMITIVE
+    void CMD_PRIMITIVE_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        U32 u32_1, //!< A U32
+        U32 u32_2, //!< A U32
+        F32 f32_1, //!< An F32
+        F32 f32_2, //!< An F32
+        bool b1, //!< A boolean
+        bool b2 //!< A boolean
+    ) override;
+
+    //! Handler implementation for command CMD_STRINGS
+    void CMD_STRINGS_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        const Fw::CmdStringArg& str1, //!< A string
+        const Fw::CmdStringArg& str2 //!< Another string
+    ) override;
+
+    //! Handler implementation for command CMD_ENUM
+    void CMD_ENUM_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamEnum en //!< An enum
+    ) override;
+
+    //! Handler implementation for command CMD_ARRAY
+    void CMD_ARRAY_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamArray arr //!< An array
+    ) override;
+
+    //! Handler implementation for command CMD_STRUCT
+    void CMD_STRUCT_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamStruct str //!< A struct
+    ) override;
+
+    //! Handler implementation for command CMD_ASYNC_NO_ARGS
+    void CMD_ASYNC_NO_ARGS_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq //!< The command sequence number
+    ) override;
+
+    //! Handler implementation for command CMD_ASYNC_PRIMITIVE
+    void CMD_ASYNC_PRIMITIVE_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        U32 u32_1, //!< A U32
+        U32 u32_2, //!< A U32
+        F32 f32_1, //!< An F32
+        F32 f32_2, //!< An F32
+        bool b1, //!< A boolean
+        bool b2 //!< A boolean
+    ) override;
+
+    //! Handler implementation for command CMD_ASYNC_STRINGS
+    void CMD_ASYNC_STRINGS_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        const Fw::CmdStringArg& str1, //!< A string
+        const Fw::CmdStringArg& str2 //!< Another string
+    ) override;
+
+    //! Handler implementation for command CMD_ASYNC_ENUM
+    void CMD_ASYNC_ENUM_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamEnum en //!< An enum
+    ) override;
+
+    //! Handler implementation for command CMD_ASYNC_ARRAY
+    void CMD_ASYNC_ARRAY_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamArray arr //!< An array
+    ) override;
+
+    //! Handler implementation for command CMD_ASYNC_STRUCT
+    void CMD_ASYNC_STRUCT_cmdHandler(
+        FwOpcodeType opCode, //!< The opcode
+        U32 cmdSeq, //!< The command sequence number
+        FormalParamStruct str //!< A struct
+    ) override;
+
+  private:
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined internal interfaces
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for internalArray
+    void internalArray_internalInterfaceHandler(
+        const FormalParamArray& arr //!< An array
+    ) override;
+
+    //! Handler implementation for internalEnum
+    void internalEnum_internalInterfaceHandler(
+        const FormalParamEnum& en //!< An enum
+    ) override;
+
+    //! Handler implementation for internalNoArgs
+    void internalNoArgs_internalInterfaceHandler() override;
+
+    //! Handler implementation for internalPrimitive
+    void internalPrimitive_internalInterfaceHandler(
+        U32 u32_1, //!< A U32
+        U32 u32_2, //!< A U32
+        F32 f32_1, //!< An F32
+        F32 f32_2, //!< An F32
+        bool b1, //!< A boolean
+        bool b2 //!< A boolean
+    ) override;
+
+    //! Handler implementation for internalString
+    void internalString_internalInterfaceHandler(
+        const Fw::InternalInterfaceString& str1, //!< A string
+        const Fw::InternalInterfaceString& str2 //!< Another string
+    ) override;
+
+    //! Handler implementation for internalStruct
+    void internalStruct_internalInterfaceHandler(
+        const FormalParamStruct& str //!< A struct
+    ) override;
+
+  private:
+
+    // ----------------------------------------------------------------------
+    // Overflow hook implementations for user-defined async ports interfaces
+    // ----------------------------------------------------------------------
+
+    //! Overflow hook implementation for enumArgsOverflow
+    void enumArgsHook_overflowHook(
+        FwIndexType portNum, //!< The port number
+        const FormalParamEnum& en, //!< An enum
+        FormalParamEnum& enRef, //!< An enum ref
+        const FormalAliasEnum& enA, //!< An enum alias
+        FormalAliasEnum& enARef //!< An enum alias ref
+    ) override;
+
+  public:
+
+    //! Enables checking the serialization status of serial port invocations
+    Fw::SerializeStatus serializeStatus;
+
+    // Command test values
+    FppTest::Types::PrimitiveParams primitiveCmd;
+    FppTest::Types::CmdStringParams stringCmd;
+    FppTest::Types::EnumParam enumCmd;
+    FppTest::Types::ArrayParam arrayCmd;
+    FppTest::Types::StructParam structCmd;
+
+    // Internal interface test values
+    FppTest::Types::PrimitiveParams primitiveInterface;
+    FppTest::Types::InternalInterfaceStringParams stringInterface;
+    FppTest::Types::EnumParam enumInterface;
+    FppTest::Types::ArrayParam arrayInterface;
+    FppTest::Types::StructParam structInterface;
+
+};
+
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/CMakeLists.txt`
+
+
+```cmake
+# ======================================================================
+# CMakeLists.txt
+# ======================================================================
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ActiveTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/active.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/fpp_types.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/port_index_enums.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/port_types.fpp"
+)
+
+register_fprime_module()
+
+# Sets MODULE_NAME to unique name based on path
+get_module_name(${CMAKE_CURRENT_LIST_DIR})
+
+# Exclude test module from all build
+set_target_properties(
+  ${MODULE_NAME}
+  PROPERTIES
+  EXCLUDE_FROM_ALL TRUE
+)
+
+# Declare dependencies on test modules
+set(UT_MOD_DEPS
+  Fw/Test
+  STest
+)
+
+# Add unit test directory
+# UT_SOURCE_FILES: Sources for unit test
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/../../utils/Utils.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/AsyncCmdTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/AsyncPortTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/AsyncTesterHelpers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/AsyncTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/CmdTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/EventTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/ExternalParamTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/InternalInterfaceTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/OverflowTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/ParamTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/PortTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TesterHandlers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TesterHelpers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/Tests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TimeTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../tests/TlmTests.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/../types/FormalParamTypes.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/active.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/fpp_types.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/port_index_enums.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/port_types.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Tester.hpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ActiveTestTester.cpp"
+)
+# Needed for compiling files using Tester.hpp from outside the directory
+include_directories("${CMAKE_CURRENT_LIST_DIR}/test/ut")
+register_fprime_ut()
+```
+
+### `fpp_types.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/fpp_types.fpp`
+
+
+```fpp
+enum FormalParamEnum { X, Y, Z }
+
+array FormalParamArray = [3] U32
+
+array FormalStringArray = [3] string size 3
+
+type FormalAliasString = string size 32
+
+struct FormalParamStruct { x: U32, y: string, z: FormalAliasString }
+
+array FormalAliasStringArray = [3] FormalAliasString
+type FormalAliasEnum = FormalParamEnum
+type FormalAliasArray = FormalAliasStringArray
+```
+
+### `port_index_enums.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/port_index_enums.fpp`
+
+
+```fpp
+enum TypedPortIndex {
+  TYPED
+  SERIAL
+}
+
+enum SerialPortIndex {
+  NO_ARGS
+  PRIMITIVE
+  STRING
+  ENUM
+  ARRAY
+  STRUCT
+}
+```
+
+### `port_types.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/port_types.fpp`
+
+
+```fpp
+@ A port with no arguments
+port NoArgs
+
+@ A port with primitive arguments
+port PrimitiveArgs(
+  u32: U32
+  ref u32Ref: U32
+  f32: F32
+  ref f32Ref: F32
+  b: bool
+  ref bRef: bool
+)
+
+@ A port with string arguments
+port StringArgs(
+  str80: string @< A string of size 80
+  ref str80Ref: string
+  str100: string size 100 @< A string of size 100
+  ref str100Ref: string size 100
+)
+
+@ A port with enum arguments
+port EnumArgs(
+  en: FormalParamEnum @< An enum
+  ref enRef: FormalParamEnum @< An enum ref
+  enA: FormalAliasEnum @< An enum alias
+  ref enARef: FormalAliasEnum @< An enum alias ref
+)
+
+@ A port with array arguments
+port ArrayArgs(
+  a: FormalParamArray @< An array
+  ref aRef: FormalParamArray @< An array ref
+  b: FormalAliasArray @< alias of an array
+  ref bRef: FormalAliasArray @< alias of array ref
+  c: FormalAliasStringArray @< array of string aliases
+  ref cRef: FormalAliasStringArray @< array of string aliases ref
+)
+
+@ A port with struct arguments
+port StructArgs(
+  s: FormalParamStruct @< A struct
+  ref sRef: FormalParamStruct @< A struct ref
+)
+
+@ A port with no arguments
+port NoArgsReturn -> bool
+
+@ A port returning a primitive type
+port PrimitiveReturn(
+  u32: U32
+  ref u32Ref: U32
+  f32: F32
+  ref f32Ref: F32
+  b: bool
+  ref bRef: bool
+) -> U32
+
+@ A port returning a string type
+port StringReturn(
+  str: string @< A string
+  ref strRef: string @< A string ref
+) -> string
+
+@ A port returning a string type
+port StringAliasReturn(
+  str: string @< A string
+  ref strRef: string @< A string ref
+) -> FormalAliasString
+
+@ A port returning an enum type
+port EnumReturn(
+  en: FormalParamEnum @< An enum
+  ref enRef: FormalParamEnum @< An enum ref
+) -> FormalParamEnum
+
+@ A port returning an array type
+port ArrayReturn(
+  a: FormalParamArray @< An array
+  ref aRef: FormalParamArray @< An array ref
+) -> FormalParamArray
+
+@ A port returning an array type of string aliases
+port ArrayStringAliasReturn(
+  a: FormalParamArray @< An array
+  ref aRef: FormalParamArray @< An array ref
+) -> FormalAliasStringArray
+
+@ A port returning a struct type
+port StructReturn(
+  s: FormalParamStruct @< A struct
+  ref sRef: FormalParamStruct @< A struct ref
+) -> FormalParamStruct
+```

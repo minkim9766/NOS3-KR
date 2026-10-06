@@ -3,44 +3,1856 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BoundedIteratedScenario.hpp`
 
-file--BoundedIteratedScenario.hpp
-file--BoundedScenario.hpp
-file--ConditionalIteratedScenario.hpp
-file--ConditionalScenario.hpp
-file--InterleavedScenario.hpp
-file--IteratedScenario.hpp
-file--RandomlyBoundedScenario.hpp
-file--RandomScenario.hpp
-file--RepeatedRuleScenario.hpp
-file--RepeatedScenario.hpp
-file--RuleScenario.hpp
-file--RuleSequenceScenario.hpp
-file--Scenario.hpp
-file--ScenarioArray.hpp
-file--SelectedScenario.hpp
-file--SequenceScenario.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/BoundedIteratedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BoundedIteratedScenario.hpp
+// \author bocchino
+// \brief  Run an iterated scenario, bounding the number of iterations
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_BoundedIteratedScenario_HPP
+#define STest_BoundedIteratedScenario_HPP
+
+#include "STest/Scenario/ConditionalIteratedScenario.hpp"
+
+namespace STest {
+
+  //! Run a scenario, bounding the number of iterations
+  template<typename State> class BoundedIteratedScenario :
+    public ConditionalIteratedScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a BoundedIteratedScenario
+      BoundedIteratedScenario(
+          const char *const name, //!< The name of the BoundedIteratedScenario
+          IteratedScenario<State>& scenario, //!< The scenario to run
+          const U32 bound //!< The bound
+      ) :
+        ConditionalIteratedScenario<State>(name, scenario),
+        numIterations(0),
+        bound(bound)
+      {
+
+      }
+
+      //! Destroy a BoundedIteratedScenario
+      virtual ~BoundedIteratedScenario() {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // ConditionalIteratedScenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual condition required by ConditionalIteratedScenario
+      //! \return Whether the condition holds
+      bool condition_ConditionalIteratedScenario(
+          const State& state //!< The system state
+      ) const {
+        return this->numIterations < this->bound;
+      }
+
+      //! The virtual implementation of nextScenario required by ConditionalIteratedScenario
+      void nextScenario_ConditionalIteratedScenario(
+          const Scenario<State> *const nextScenario //!< The next scenario
+      ) {
+        if (nextScenario != nullptr) {
+          ++this->numIterations;
+        }
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The number of iterations
+      U32 numIterations;
+
+      //! The bound on the number of iterations
+      const U32 bound;
+
+  };
+
+}
+
+#endif
 ```
 
-## 항목
+### `BoundedScenario.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/BoundedIteratedScenario.hpp`](file--BoundedIteratedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/BoundedScenario.hpp`](file--BoundedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/ConditionalIteratedScenario.hpp`](file--ConditionalIteratedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/ConditionalScenario.hpp`](file--ConditionalScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/InterleavedScenario.hpp`](file--InterleavedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/IteratedScenario.hpp`](file--IteratedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RandomlyBoundedScenario.hpp`](file--RandomlyBoundedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RandomScenario.hpp`](file--RandomScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RepeatedRuleScenario.hpp`](file--RepeatedRuleScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RepeatedScenario.hpp`](file--RepeatedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RuleScenario.hpp`](file--RuleScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RuleSequenceScenario.hpp`](file--RuleSequenceScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/Scenario.hpp`](file--Scenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/ScenarioArray.hpp`](file--ScenarioArray.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/SelectedScenario.hpp`](file--SelectedScenario.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/SequenceScenario.hpp`](file--SequenceScenario.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/BoundedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BoundedScenario.hpp
+// \author bocchino
+// \brief  Run a scenario, bounding the number of steps
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_BoundedScenario_HPP
+#define STest_BoundedScenario_HPP
+
+#include "STest/Scenario/ConditionalScenario.hpp"
+
+namespace STest {
+
+  //! Run a scenario, bounding the number of steps
+  template<typename State> class BoundedScenario :
+    public ConditionalScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a BoundedScenario object
+      BoundedScenario(
+          const char *const a_name, //!< The name of the bounded scenario
+          Scenario<State>& a_scenario, //!< The scenario to run
+          const U32 a_bound //!< The bound
+      ) :
+        ConditionalScenario<State>(a_name, a_scenario),
+        numSteps(0),
+        bound(a_bound)
+      {
+
+      }
+
+      //! Destroy a BoundedScenario object
+      ~BoundedScenario() {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // ConditionalScenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual condition required by ConditionalScenario
+      //! \return Whether the condition holds
+      bool condition_ConditionalScenario(
+          const State& state //!< The system state
+      ) const {
+        return this->numSteps < this->bound;
+      }
+
+      //! The virtual implementation of nextRule required by ConditionalScenario
+      void nextRule_ConditionalScenario(
+          const Rule<State> *const nextRule //!< The next rule
+      ) {
+        if (nextRule != nullptr) {
+          ++this->numSteps;
+        }
+      }
+
+      //! The virtual implementation of reset required by ConditionalScenario
+      void reset_ConditionalScenario() {
+        this->numSteps = 0;
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The number of steps
+      U32 numSteps;
+
+      //! The bound on the number of steps
+      const U32 bound;
+
+  };
+
+}
+
+#endif
+```
+
+### `ConditionalIteratedScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/ConditionalIteratedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ConditionalIteratedScenario.hpp
+// \author bocchino
+// \brief  Iterate a scenario while a condition holds
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_ConditionalIteratedScenario_HPP
+#define STest_ConditionalIteratedScenario_HPP
+
+#include "STest/Scenario/IteratedScenario.hpp"
+
+namespace STest {
+
+  //! Iterate a scenario while a condition holds
+  template<typename State> class ConditionalIteratedScenario :
+    public IteratedScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a ConditionalIteratedScenario
+      ConditionalIteratedScenario(
+          const char *const name, //!< The name of the ConditionalIteratedScenario
+          IteratedScenario<State>& scenario //!< The scenario to run
+      ) :
+        IteratedScenario<State>(name),
+        scenario(scenario),
+        done(false)
+      {
+
+      }
+
+      //! Destroy object ConditionalIteratedScenario
+      virtual ~ConditionalIteratedScenario() {
+
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // IteratedScenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by IteratedScenario
+      void reset_IteratedScenario() {
+        this->scenario.reset();
+        this->done = this->scenario.isDone();
+      }
+
+      //! The virtual implementation of nextScenario required by IteratedScenario
+      //! \return The next scenario, assuming isDone() is false, or nullptr if none
+      Scenario<State>* nextScenario_IteratedScenario(
+          State& state //!< The system state
+      ) {
+        Scenario<State>* localScenario = nullptr;
+        if (!this->condition_ConditionalIteratedScenario(state)) {
+          this->done = true;
+        }
+        if (!this->isDone()) {
+          localScenario = this->scenario.nextScenario(state);
+          this->done = this->scenario.isDone();
+        }
+        this->nextScenario_ConditionalIteratedScenario(localScenario);
+        return localScenario;
+      }
+
+      //! The virtual implementation of isDone required by IteratedScenario
+      //! \return Whether the scenario is done
+      bool isDone_IteratedScenario() const {
+        return this->done;
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected virtual methods
+      // ----------------------------------------------------------------------
+
+      //! The virtual condition required by ConditionalIteratedScenario
+      //! \return Whether the condition holds
+      virtual bool condition_ConditionalIteratedScenario(
+          const State& state //!< The system state
+      ) const = 0;
+
+      //! The virtual implementation of nextScenario required by ConditionalIteratedScenario
+      virtual void nextScenario_ConditionalIteratedScenario(
+          const Scenario<State> *const nextScenario //!< The scenario being returned
+      ) = 0;
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenario to run
+      IteratedScenario<State>& scenario;
+
+      //! Whether the iterated scenario is done
+      bool done;
+
+  };
+
+}
+
+#endif
+```
+
+### `ConditionalScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/ConditionalScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ConditionalScenario.hpp
+// \author bocchino
+// \brief  Run a scenario while a condition holds
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_ConditionalScenario_HPP
+#define STest_ConditionalScenario_HPP
+
+#include "STest/Scenario/Scenario.hpp"
+
+namespace STest {
+
+  //! Run a scenario while a condition holds
+  template<typename State> class ConditionalScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a ConditionalScenario
+      ConditionalScenario(
+          const char *const a_name, //!< The name of the ConditionalScenario
+          Scenario<State>& a_scenario //!< The scenario to run
+      ) :
+        Scenario<State>(a_name),
+        scenario(a_scenario)
+      {
+
+      }
+
+      //! Destroy object ConditionalScenario
+      virtual ~ConditionalScenario() {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        this->scenario.reset();
+        this->reset_ConditionalScenario();
+      }
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        Rule<State>* rule = nullptr;
+        if (this->condition_ConditionalScenario(state)) {
+          rule = this->scenario.nextRule(state);
+        }
+        this->nextRule_ConditionalScenario(rule);
+        return rule;
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        return this->scenario.isDone();
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected virtual methods
+      // ----------------------------------------------------------------------
+
+      //! The virtual condition required by ConditionalScenario
+      //! \return Whether the condition holds
+      virtual bool condition_ConditionalScenario(
+          const State& state //!< The system state
+      ) const = 0;
+
+      //! The virtual implementation of nextRule required by ConditionalScenario
+      virtual void nextRule_ConditionalScenario(
+          const Rule<State> *const nextRule //!< The next rule
+      ) = 0;
+
+      //! The virtual implementation of reset required by ConditionalScenario
+      virtual void reset_ConditionalScenario() = 0;
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenario to run
+      Scenario<State>& scenario;
+
+  };
+
+}
+
+#endif
+```
+
+### `InterleavedScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/InterleavedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  InterleavedScenario.hpp
+// \author bocchino
+// \brief  Randomly interleave several scenarios
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_InterleavedScenario_HPP
+#define STest_InterleavedScenario_HPP
+
+#include <cassert>
+#include <cstring>
+
+#include "STest/Scenario/Scenario.hpp"
+#include "STest/Scenario/ScenarioArray.hpp"
+
+namespace STest {
+
+  //! Randomly interleave several scenarios
+  template<typename State> class InterleavedScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct an InterleavedScenario object
+      InterleavedScenario(
+          const char *const a_name, //!< The name of the scenario
+          Scenario<State>** scenarios, //!< An array containing the scenarios to interleave
+          const U32 size //!< The size of the array
+      ) :
+        Scenario<State>(a_name),
+        scenarioArray(new ScenarioArray<State>(scenarios, size)),
+        seen(new bool[size])
+      {
+
+      }
+
+      //! Destroy an InterleavedScenario object
+      ~InterleavedScenario() {
+        if (this->scenarioArray != nullptr) {
+          delete this->scenarioArray;
+        }
+        if (this->seen != nullptr) {
+          delete[] this->seen;
+        }
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        assert(this->scenarioArray != nullptr);
+        this->scenarioArray->reset();
+      }
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        assert(this->scenarioArray != nullptr);
+        Rule<State>* rule = nullptr;
+        memset(this->seen, 0, this->scenarioArray->size * sizeof(bool));
+        U32 numSeen = 0;
+        Scenario<State>* *const scenarios =
+          this->scenarioArray->getScenarios();
+        U32 numIterations = 0;
+        const U32 maxIterations = 0xFFFFFFFFU;
+        while (numSeen < this->scenarioArray->size) {
+          assert(numIterations < maxIterations);
+          ++numIterations;
+          const U32 i = this->scenarioArray->getRandomIndex();
+          if (this->seen[i]) {
+            continue;
+          }
+          rule = scenarios[i]->nextRule(state);
+          if (rule != nullptr) {
+            break;
+          }
+          this->seen[i] = true;
+          ++numSeen;
+        }
+        return rule;
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        bool result = true;
+        Scenario<State>* *const scenarios =
+          this->scenarioArray->getScenarios();
+        assert(scenarios != nullptr);
+        for (U32 i = 0; i < scenarioArray->size; ++i) {
+          assert(scenarios[i] != nullptr);
+          if (!scenarios[i]->isDone()) {
+            result = false;
+            break;
+          }
+        }
+        return result;
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenarios to interleave
+      ScenarioArray<State>* scenarioArray;
+
+      //! An array to store the scenarios seen
+      bool* seen;
+
+  };
+
+}
+
+#endif
+```
+
+### `IteratedScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/IteratedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  IteratedScenario.hpp
+// \author bocchino
+// \brief  Iterate over a collection of scenarios
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_IteratedScenario_HPP
+#define STest_IteratedScenario_HPP
+
+#include <cassert>
+
+#include "STest/Scenario/Scenario.hpp"
+
+namespace STest {
+
+  //! Iterate over a collection of scenarios
+  template<typename State> class IteratedScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct an IteratedScenario
+      IteratedScenario(
+          const char *const name //!< The name of the scenario
+      ) :
+        Scenario<State>(name),
+        currentScenario(nullptr)
+      {
+
+      }
+
+      //! Destroy an IteratedScenario
+      virtual ~IteratedScenario() {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public instance methods
+      // ----------------------------------------------------------------------
+
+      //! Return the next scenario to run
+      //! \return The next scenario, assuming isDone() is false, or nullptr if none
+      Scenario<State>* nextScenario(
+          State& state //!< The system state
+      ) {
+        Scenario<State> *scenario = nullptr;
+        if (!this->isDone()) {
+          scenario = this->nextScenario_IteratedScenario(state);
+        }
+        if (scenario != nullptr) {
+          scenario->reset();
+        }
+        return scenario;
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        this->currentScenario = nullptr;
+        this->reset_IteratedScenario();
+      }
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        Rule<State>* rule = nullptr;
+        if (this->currentScenario == nullptr) {
+          this->currentScenario = this->nextScenario(state);
+        }
+        if (this->currentScenario != nullptr) {
+          rule = this->currentScenario->nextRule(state);
+        }
+        while (
+            this->currentScenario != nullptr and
+            this->currentScenario->isDone() and
+            rule == nullptr
+        ) {
+          this->currentScenario = this->nextScenario(state);
+          if (this->currentScenario != nullptr) {
+            rule = this->currentScenario->nextRule(state);
+          }
+        }
+        return rule;
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        return this->isDone_IteratedScenario();
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected virtual methods
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by IteratedScenario
+      virtual void reset_IteratedScenario() = 0;
+
+      //! The virtual implementation of nextScenario required by IteratedScenario
+      //! \return The next scenario, assuming isDone() is false, or nullptr if none
+      virtual Scenario<State>* nextScenario_IteratedScenario(
+          State& state //!< The system state
+      ) = 0;
+
+      //! The virtual implementation of isDone required by IteratedScenario
+      //! \return Whether the scenario is done
+      virtual bool isDone_IteratedScenario() const = 0;
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The current scenario in the iteration
+      Scenario<State>* currentScenario;
+
+  };
+
+}
+
+#endif
+```
+
+### `RandomlyBoundedScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RandomlyBoundedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RandomlyBoundedScenario.hpp
+// \author bocchino
+// \brief  Run a scenario, applying a random bound on the number of steps
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_RandomlyBoundedScenario_HPP
+#define STest_RandomlyBoundedScenario_HPP
+
+#include "STest/Random/Random.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+
+namespace STest {
+
+  //! Run a scenario, applying a random bound on the number of steps
+  template<typename State> class RandomlyBoundedScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a RandomlyBoundedScenario
+      RandomlyBoundedScenario(
+          const char *const name, //!< The name of the bounded scenario
+          Scenario<State>& scenario, //!< The scenario to run
+          const U32 start, //!< The start value of the random range
+          const U32 length //!< The number of values in the random range, including the start value
+      ) :
+        Scenario<State>(name),
+        scenario(scenario),
+        start(start),
+        length(length),
+        boundedScenario(nullptr)
+      {
+
+      }
+
+      //! Destroy object RandomlyBoundedScenario
+      virtual ~RandomlyBoundedScenario() {
+        if (this->boundedScenario != nullptr) {
+          delete this->boundedScenario;
+        }
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        if (this->boundedScenario != nullptr) {
+          delete this->boundedScenario;
+        }
+        const U32 bound = Random::startLength(this->start, this->length);
+        this->boundedScenario = new BoundedScenario<State>(
+            this->name,
+            this->scenario,
+            bound
+        );
+        assert(this->boundedScenario != nullptr);
+        this->boundedScenario->reset();
+      }
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        assert(this->boundedScenario != nullptr);
+        return this->boundedScenario->nextRule(state);
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        assert(this->boundedScenario != nullptr);
+        return this->boundedScenario->isDone();
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenario to run
+      Scenario<State>& scenario;
+
+      //! The start value of the random range
+      const U32 start;
+
+      //! The number of values in the random range, including the start value
+      const U32 length;
+
+      //! The underlying bounded scenario
+      BoundedScenario<State>* boundedScenario;
+
+  };
+
+}
+
+#endif
+```
+
+### `RandomScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RandomScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RandomScenario.hpp
+// \author bocchino
+// \brief  Apply rules in a random sequence
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_RandomScenario_HPP
+#define STest_RandomScenario_HPP
+
+#include "STest/Scenario/InterleavedScenario.hpp"
+#include "STest/Scenario/RepeatedRuleScenario.hpp"
+
+namespace STest {
+
+  //! Apply rules in a random sequence
+  template<typename State> class RandomScenario :
+    public InterleavedScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a RandomScenario from an array of rules
+      RandomScenario(
+          const char *const a_name, //!< The name of the scenario
+          Rule<State>** rules, //!< The rules in the array
+          const U32 size //!< The size of the array
+      ) :
+        InterleavedScenario<State>(a_name, new Scenario<State>*[size], size)
+      {
+        assert(this->scenarioArray != nullptr);
+        Scenario<State>** scenarios = this->scenarioArray->getScenarios();
+        assert(scenarios != nullptr);
+        for (U32 i = 0; i < size; ++i) {
+          scenarios[i] = new RepeatedRuleScenario<State>(*rules[i]);
+        }
+      }
+
+      //! Destroy a RandomScenario
+      ~RandomScenario() {
+        assert(this->scenarioArray != nullptr);
+        Scenario<State>** scenarios = this->scenarioArray->getScenarios();
+        assert(scenarios != nullptr);
+        for (U32 i = 0; i < this->scenarioArray->size; ++i) {
+          assert(scenarios[i] != nullptr);
+          delete scenarios[i];
+        }
+        delete[] scenarios;
+      }
+
+  };
+
+}
+
+#endif
+```
+
+### `RepeatedRuleScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RepeatedRuleScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RepeatedRuleScenario.hpp
+// \author bocchino
+// \brief  Repeatedly apply a rule
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_RepeatedRuleScenario_HPP
+#define STest_RepeatedRuleScenario_HPP
+
+#include "STest/Scenario/Scenario.hpp"
+
+namespace STest {
+
+  //! Repeatedly apply a rule
+  template<typename State> class RepeatedRuleScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct object RepeatedRuleScenario
+      RepeatedRuleScenario(
+          Rule<State>& a_rule //!< The rule
+      ) :
+        Scenario<State>(a_rule.getName()),
+        rule(a_rule)
+      {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        // Do nothing
+      }
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        Rule<State> *localRule = nullptr;
+        if (this->rule.precondition(state)) {
+          localRule = &this->rule;
+        }
+        return localRule;
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        return false;
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The rule
+      Rule<State>& rule;
+
+  };
+
+}
+
+#endif
+```
+
+### `RepeatedScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RepeatedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RepeatedScenario.hpp
+// \author bocchino
+// \brief  Repeat a scenario
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_RepeatedScenario_HPP
+#define STest_RepeatedScenario_HPP
+
+#include "STest/Scenario/IteratedScenario.hpp"
+
+namespace STest {
+
+  //! \brief  Repeat a scenario
+  template<typename State> class RepeatedScenario :
+    public IteratedScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a RepeatedScenario
+      RepeatedScenario(
+          const char *const name, //!< The name of the scenario
+          Scenario<State>& scenario //!< The scenario to repeat
+      ) :
+        IteratedScenario<State>(name),
+        scenario(scenario),
+        done(false)
+      {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // IteratedScenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by IteratedScenario
+      void reset_IteratedScenario() {
+        this->scenario.reset();
+        this->done = scenario.isDone();
+      }
+
+      //! The virtual implementation of nextScenario required by IteratedScenario
+      //! \return The next scenario, assuming isDone() is false, or nullptr if none
+      Scenario<State>* nextScenario_IteratedScenario(
+          State& state //!< The system state
+      ) {
+        return &this->scenario;
+      }
+
+      //! The virtual implementation of isDone required by IteratedScenario
+      //! \return Whether the scenario is done
+      bool isDone_IteratedScenario() const {
+        return this->done;
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenario to repeat
+      Scenario<State>& scenario;
+
+      //! Whether the iterated scenario is done
+      bool done;
+
+  };
+
+}
+
+#endif
+```
+
+### `RuleScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RuleScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RuleScenario.hpp
+// \author bocchino
+// \brief  Apply a single rule once
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_RuleScenario_HPP
+#define STest_RuleScenario_HPP
+
+#include "STest/Scenario/Scenario.hpp"
+
+namespace STest {
+
+  //! Apply a single rule once
+  template<typename State> class RuleScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct object RuleScenario
+      RuleScenario(
+          Rule<State>& rule //!< The rule
+      ) :
+        Scenario<State>(rule.getName()),
+        rule(rule),
+        done(false)
+      {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        this->done = false;
+      }
+
+      //! the virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        Rule<State> *localRule = nullptr;
+        if (!this->isDone() && this->rule.precondition(state)) {
+          localRule = &this->rule;
+          this->done = true;
+        }
+        return localRule;
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        return this->done;
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The rule
+      Rule<State>& rule;
+
+      //! Whether the scenario is done
+      bool done;
+
+  };
+
+}
+
+#endif
+```
+
+### `RuleSequenceScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/RuleSequenceScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  RuleSequenceScenario.hpp
+// \author bocchino
+// \brief  Apply a fixed sequence of rules
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_RuleSequenceScenario_HPP
+#define STest_RuleSequenceScenario_HPP
+
+#include <cassert>
+
+#include "STest/Scenario/SequenceScenario.hpp"
+#include "STest/Scenario/RuleScenario.hpp"
+
+namespace STest {
+
+  //! \brief  Apply a fixed sequence of rules
+  template<typename State> class RuleSequenceScenario :
+    public SequenceScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a RuleSequenceScenario from an array of rules
+      RuleSequenceScenario(
+          const char *const name, //!< The name of the scenario
+          Rule<State>** rules, //!< The rules in the array
+          const U32 size //!< The size of the array
+      ) :
+        SequenceScenario<State>(name, new Scenario<State>*[size], size)
+      {
+        assert(this->scenarioArray != nullptr);
+        Scenario<State>* *const scenarios = this->scenarioArray->getScenarios();
+        assert(scenarios != nullptr);
+        for (U32 i = 0; i < size; ++i) {
+          scenarios[i] = new RuleScenario<State>(*rules[i]);
+        }
+      }
+
+      //! Destroy object RuleSequenceScenario
+      ~RuleSequenceScenario() {
+        assert(this->scenarioArray != nullptr);
+        Scenario<State>* *const scenarios = this->scenarioArray->getScenarios();
+        assert(scenarios != nullptr);
+        for (U32 i = 0; i < this->scenarioArray->size; ++i) {
+          assert(scenarios[i] != nullptr);
+          delete scenarios[i];
+        }
+        delete scenarios;
+      }
+
+  };
+
+}
+
+#endif
+```
+
+### `Scenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/Scenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Scenario.hpp
+// \author bocchino
+// \brief  A test scenario
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_Scenario_HPP
+#define STest_Scenario_HPP
+
+#include <cassert>
+#include <cstdio>
+#include <cstdlib>
+
+#include "STest/Random/Random.hpp"
+#include "STest/Rule/Rule.hpp"
+
+namespace STest {
+
+  //! A test scenario
+  template<typename State> class Scenario {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a Scenario object
+      Scenario(
+          const char *const a_name //!< The name of the scenario
+      ) :
+        name(a_name),
+        showRules(false)
+      {
+        this->setShowRules();
+      }
+
+      //! Destroy a Scenario object
+      virtual ~Scenario() {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public instance methods
+      // ----------------------------------------------------------------------
+
+      //! Reset the scenario state
+      void reset() {
+        this->reset_Scenario();
+      }
+
+      //! Run the scenario until there are no more rules to apply
+      //! \return The number of steps taken
+      U32 run(
+          State& state //!< The system state
+      ) {
+        U32 numSteps = 0;
+        this->runHelper(state, numSteps);
+        return numSteps;
+      }
+
+      //! Return the next rule to apply
+      //! \return The next rule, or nullptr if none
+      Rule<State>* nextRule(
+          State& state //!< The system state
+      ) {
+        Rule<State> *rule = nullptr;
+        if (!this->isDone()) {
+          rule = this->nextRule_Scenario(state);
+        }
+        return rule;
+      }
+
+      //! Query whether the scenario is done
+      //! \return Whether the scenario is done
+      bool isDone() const {
+        return this->isDone_Scenario();
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected virtual methods
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      virtual void reset_Scenario() = 0;
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      virtual Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) = 0;
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      virtual bool isDone_Scenario() const = 0;
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private helper functions
+      // ----------------------------------------------------------------------
+
+      //! Run helper function
+      void runHelper(
+          State& state, //!< The system state
+          U32& numSteps //!< The number of steps
+      ) {
+        this->reset();
+        Rule<State>* rule = this->nextRule(state);
+        while (rule != nullptr) {
+          this->applyNextRule(*rule, state);
+          ++numSteps;
+          if (this->isDone()) {
+            break;
+          }
+          rule = this->nextRule(state);
+        }
+      }
+
+      //! Apply the next rule
+      //! \return The number of steps taken
+      void applyNextRule(
+          Rule<State>& rule, //!< The rule
+          State& state //!< The state
+      ) {
+        if (this->showRules) {
+          printf(
+              "[Scenario %s] Applying rule %s\n",
+              this->name,
+              rule.getName()
+          );
+        }
+        rule.apply(state);
+      }
+
+      //! Set showRules
+      void setShowRules() {
+        const int status = system("test -f show-rules");
+        if (status == 0) {
+          showRules = true;
+        }
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public member variables
+      // ----------------------------------------------------------------------
+
+      //! The name of the scenario
+      const char *const name;
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! Whether to report rule applications
+      bool showRules;
+
+  };
+
+}
+
+#endif
+```
+
+### `ScenarioArray.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/ScenarioArray.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ScenarioArray.hpp
+// \author bocchino
+// \brief  An array of scenarios
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_ScenarioArray_HPP
+#define STest_ScenarioArray_HPP
+
+#include <cassert>
+
+#include "STest/Random/Random.hpp"
+
+namespace STest {
+
+  //! An array of scenarios
+  template<typename State>class ScenarioArray {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a ScenarioArray object
+      ScenarioArray (
+          Scenario<State>** a_scenarios, //!< The scenarios in the array
+          const U32 a_size //!< The number of scenarios in the array
+      ) :
+        size(a_size),
+        scenarios(a_scenarios),
+        sequenceIndex(0)
+      {
+
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public instance methods
+      // ----------------------------------------------------------------------
+
+      //! Get a random index into the array
+      //! \return The index
+      U32 getRandomIndex() const {
+        const U32 index = Random::startLength(0, this->size);
+        assert(index < this->size);
+        return index;
+      }
+
+      //! Reset the sequence index and reset all child scenarios
+      void reset() {
+        this->sequenceIndex = 0;
+        for (U32 i = 0; i < this->size; ++i) {
+          this->scenarios[i]->reset();
+        }
+      }
+
+      //! Return the next scenario in the sequence
+      Scenario<State>* nextScenario() {
+        Scenario<State>* scenario = nullptr;
+        if (this->sequenceIndex < this->size) {
+          scenario = this->scenarios[this->sequenceIndex];
+          ++this->sequenceIndex;
+        }
+        if (scenario != nullptr) {
+          scenario->reset();
+        }
+        return scenario;
+      }
+
+      //! Get the scenarios
+      Scenario<State>** getScenarios() const {
+        assert(this->scenarios != nullptr);
+        return this->scenarios;
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public member variables
+      // ----------------------------------------------------------------------
+
+      //! The number of scenarios in the array
+      const U32 size;
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenarios in the array
+      Scenario<State>** scenarios;
+
+      //! The sequence index
+      U32 sequenceIndex;
+
+  };
+
+}
+
+#endif
+```
+
+### `SelectedScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/SelectedScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SelectedScenario.hpp
+// \author bocchino
+// \brief  Randomly select a scenario and run it
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_SelectedScenario_HPP
+#define STest_SelectedScenario_HPP
+
+#include <cassert>
+#include <cstring>
+
+#include "STest/Random/Random.hpp"
+#include "STest/Scenario/Scenario.hpp"
+#include "STest/Scenario/ScenarioArray.hpp"
+
+namespace STest {
+
+  //! Randomly select a scenario and run it
+  template<typename State> class SelectedScenario :
+    public Scenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a SelectedScenario object
+      SelectedScenario(
+          const char *const name, //!< The name of the scenario
+          Scenario<State>** scenarios, //!< The scenarios in the array
+          const U32 size //!< The size of the array
+      ) :
+        Scenario<State>(name),
+        scenarioArray(new ScenarioArray<State>(scenarios, size)),
+        selectedScenario(nullptr),
+        seen(new bool[size])
+      {
+
+      }
+
+      //! Destroy a SelectedScenario object
+      virtual ~SelectedScenario() {
+        if (this->scenarioArray != nullptr) {
+          delete this->scenarioArray;
+        }
+        if (this->seen != nullptr) {
+          delete[] this->seen;
+        }
+      }
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Scenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by Scenario
+      void reset_Scenario() {
+        this->selectedScenario = nullptr;
+        assert(this->scenarioArray != nullptr);
+        this->scenarioArray->reset();
+      }
+
+      //! The virtual implementation of nextRule required by Scenario
+      //! \return The next rule, assuming isDone() is false, or nullptr if none
+      Rule<State>* nextRule_Scenario(
+          State& state //!< The system state
+      ) {
+        Rule<State>* rule = nullptr;
+        if (this->selectedScenario == nullptr) {
+          rule = this->selectScenario(state);
+        }
+        else {
+          rule = this->selectedScenario->nextRule(state);
+        }
+        return rule;
+      }
+
+      //! The virtual implementation of isDone required by Scenario
+      //! \return Whether the scenario is done
+      bool isDone_Scenario() const {
+        bool result = true;
+        if (this->selectedScenario != nullptr) {
+          result = this->selectedScenario->isDone();
+        }
+        else {
+          Scenario<State>* *const scenarios =
+            this->scenarioArray->getScenarios();
+          assert(scenarios != nullptr);
+          for (U32 i = 0; i < scenarioArray->size; ++i) {
+            assert(scenarios[i] != nullptr);
+            if (!scenarios[i]->isDone()) {
+              result = false;
+              break;
+            }
+          }
+        }
+        return result;
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private helper methods
+      // ----------------------------------------------------------------------
+
+      //! Select a scenario and return a rule from it
+      //! \return The rule
+      Rule<State>* selectScenario(
+          State& state //!< The system state
+      ) {
+        Rule<State>* rule = nullptr;
+        const U32 size = this->scenarioArray->size;
+        memset(this->seen, 0, size * sizeof(bool));
+        U32 numSeen = 0;
+        assert(this->scenarioArray != nullptr);
+        Scenario<State> **const scenarios =
+          this->scenarioArray->getScenarios();
+        assert(scenarios != nullptr);
+        while (numSeen < size) {
+          const U32 i = this->scenarioArray->getRandomIndex();
+          if (this->seen[i]) {
+            continue;
+          }
+          Scenario<State> *const scenario = scenarios[i];
+          assert(scenario != nullptr);
+          rule = scenario->nextRule(state);
+          if (rule != nullptr) {
+            this->selectedScenario = scenario;
+            break;
+          }
+          this->seen[i] = true;
+          ++numSeen;
+        }
+        return rule;
+      }
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! ScenarioArray containing the scenarios to select
+      ScenarioArray<State>* scenarioArray;
+
+      //! The selected scenario
+      Scenario<State>* selectedScenario;
+
+      //! An array to store the scenarios seen
+      bool* seen;
+
+  };
+
+}
+
+#endif
+```
+
+### `SequenceScenario.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Scenario/SequenceScenario.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceScenario.hpp
+// \author bocchino
+// \brief  A sequence of scenarios
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STest_SequenceScenario_HPP
+#define STest_SequenceScenario_HPP
+
+#include <cassert>
+
+#include "STest/Scenario/IteratedScenario.hpp"
+#include "STest/Scenario/ScenarioArray.hpp"
+
+namespace STest {
+
+
+  //! A sequence of scenarios
+  template<typename State> class SequenceScenario :
+    public IteratedScenario<State>
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constructors and destructors
+      // ----------------------------------------------------------------------
+
+      //! Construct a SequenceScenario from an array of scenarios
+      SequenceScenario(
+          const char *const name, //!< The name of the scenario
+          Scenario<State>** scenarios, //!< The scenarios in the array
+          const U32 size //!< The size of the array
+      ) :
+        IteratedScenario<State>(name),
+        scenarioArray(new ScenarioArray<State>(scenarios, size)),
+        done(false)
+      {
+
+      }
+
+
+      //! Destroy object SequenceScenario
+      virtual ~SequenceScenario() {
+        delete this->scenarioArray;
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // IteratedScenario implementation
+      // ----------------------------------------------------------------------
+
+      //! The virtual implementation of reset required by IteratedScenario
+      void reset_IteratedScenario() {
+        this->scenarioArray->reset();
+        this->done = false;
+      }
+
+      //! The virtual implementation of nextScenario required by IteratedScenario
+      //! \return The next scenario, assuming isDone() is false, or nullptr if none
+      Scenario<State>* nextScenario_IteratedScenario(
+          State& state //!< The system state
+      ) {
+        Scenario<State> *scenario = nullptr;
+        if (!this->done) {
+          assert(this->scenarioArray != nullptr);
+          scenario = this->scenarioArray->nextScenario();
+        }
+        if (!this->done and scenario == nullptr) {
+          this->done = true;
+        }
+        return scenario;
+      }
+
+      //! The virtual implementation of isDone required by IteratedScenario
+      //! \return Whether the scenario is done
+      bool isDone_IteratedScenario() const {
+        return this->done;
+      }
+
+    protected:
+
+      // ----------------------------------------------------------------------
+      // Protected member variables
+      // ----------------------------------------------------------------------
+
+      //! The scenario array
+      ScenarioArray<State>* scenarioArray;
+
+      //! Whether the sequence scenario is done
+      bool done;
+
+  };
+
+}
+
+#endif
+```

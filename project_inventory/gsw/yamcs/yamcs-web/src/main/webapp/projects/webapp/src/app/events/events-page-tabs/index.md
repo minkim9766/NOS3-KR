@@ -3,18 +3,72 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `events-page-tabs.component.css`
 
-file--events-page-tabs.component.css
-file--events-page-tabs.component.html
-file--events-page-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/events-page-tabs.component.css`
+
+
+```css
+.mat-mdc-tab-link {
+  height: 36px;
+  min-width: 0;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
 ```
 
-## 항목
+### `events-page-tabs.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/events-page-tabs.component.css`](file--events-page-tabs.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/events-page-tabs.component.html`](file--events-page-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/events-page-tabs.component.ts`](file--events-page-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/events-page-tabs.component.html`
+
+
+```html
+<ya-page-tabs>
+  <a
+    routerLink="/events"
+    routerLinkActive
+    [routerLinkActiveOptions]="{ matrixParams: 'exact', paths: 'exact', queryParams: 'ignored' }"
+    #rla="routerLinkActive"
+    [class.active]="rla.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Query
+  </a>
+  <a
+    routerLink="/events/queries"
+    routerLinkActive
+    #rlb="routerLinkActive"
+    [class.active]="rlb.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Saved queries
+  </a>
+
+  <ng-container actions><ng-content /></ng-container>
+</ya-page-tabs>
+```
+
+### `events-page-tabs.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/events-page-tabs.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-events-page-tabs',
+  templateUrl: './events-page-tabs.component.html',
+  styleUrl: './events-page-tabs.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class EventsPageTabsComponent {
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

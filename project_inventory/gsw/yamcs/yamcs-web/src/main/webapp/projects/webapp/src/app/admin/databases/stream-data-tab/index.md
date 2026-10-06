@@ -3,22 +3,302 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stream-data-tab.component.css`
 
-file--stream-data-tab.component.css
-file--stream-data-tab.component.html
-file--stream-data-tab.component.ts
-file--stream-data.datasource.ts
-file--StreamBuffer.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data-tab.component.css`
+
+
+```css
+.data-table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.data-table-wrapper th,
+.data-table-wrapper td {
+  white-space: nowrap;
+}
+
+.data-table-wrapper tr:hover td {
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `stream-data-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data-tab.component.css`](file--stream-data-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data-tab.component.html`](file--stream-data-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data-tab.component.ts`](file--stream-data-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data.datasource.ts`](file--stream-data.datasource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/StreamBuffer.ts`](file--StreamBuffer.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data-tab.component.html`
+
+
+```html
+<ya-detail-pane>
+  @if (selectedStreamData$ | async; as selectedStreamData) {
+    <ya-detail-toolbar>Tuple</ya-detail-toolbar>
+    <div style="padding: 0 16px">
+      <app-stream-data [streamData]="selectedStreamData" />
+    </div>
+  } @else {
+    <ya-detail-toolbar>Select a tuple</ya-detail-toolbar>
+  }
+</ya-detail-pane>
+
+<div class="data-table-wrapper">
+  <ya-panel>
+    <table mat-table #table [dataSource]="dataSource" class="ya-data-table expand">
+      @for (column of availableColumns$ | async; track column) {
+        <ng-container [cdkColumnDef]="column">
+          <th mat-header-cell *cdkHeaderCellDef>{{ column }}</th>
+          <td mat-cell *cdkCellDef="let item">
+            {{ (item.column | columnValue: column | value) || "-" }}
+          </td>
+        </ng-container>
+      }
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *cdkHeaderCellDef class="expand"></th>
+        <td mat-cell *cdkCellDef="let row"></td>
+      </ng-container>
+
+      <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *cdkRowDef="let row; columns: displayedColumns"
+        [ngClass]="{ selected: row === (selectedStreamData$ | async) }"
+        (click)="selectStreamData(row)"></tr>
+    </table>
+  </ya-panel>
+</div>
+```
+
+### `stream-data-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data-tab.component.ts`
+
+
+```typescript
+import { CdkColumnDef } from '@angular/cdk/table';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  BaseComponent,
+  StreamData,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ColumnValuePipe } from '../shared/column-value.pipe';
+import { StreamDataComponent } from '../stream-data/stream-data.component';
+import { StreamDataDataSource } from './stream-data.datasource';
+
+@Component({
+  templateUrl: './stream-data-tab.component.html',
+  styleUrl: './stream-data-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ColumnValuePipe, WebappSdkModule, StreamDataComponent],
+})
+export class StreamDataTabComponent
+  extends BaseComponent
+  implements AfterViewInit, OnDestroy
+{
+  dataSource: StreamDataDataSource;
+
+  availableColumns$: Observable<string[]>;
+  displayedColumns = ['actions'];
+
+  @ViewChildren(CdkColumnDef)
+  private columnDefinitions: QueryList<CdkColumnDef>;
+  private columnDefinitionsSubscription: Subscription;
+
+  selectedStreamData$ = new BehaviorSubject<StreamData | null>(null);
+
+  constructor(route: ActivatedRoute, yamcs: YamcsService) {
+    super();
+    const parent = route.snapshot.parent!;
+    const database = parent.parent!.paramMap.get('database')!;
+    const name = parent.paramMap.get('stream')!;
+    this.dataSource = new StreamDataDataSource(
+      yamcs,
+      this.synchronizer,
+      database,
+      name,
+    );
+    this.availableColumns$ = this.dataSource.columns$;
+  }
+
+  // The trick here is to wait until the content children
+  // are realised, before attempting to show them via
+  // displayedColumns.
+  ngAfterViewInit() {
+    this.columnDefinitionsSubscription =
+      this.columnDefinitions.changes.subscribe(() => {
+        this.columnDefinitions.forEach((def) => {
+          if (this.displayedColumns.indexOf(def.name) === -1) {
+            this.displayedColumns.splice(
+              this.displayedColumns.length - 1,
+              0,
+              def.name,
+            );
+          }
+        });
+      });
+
+    this.dataSource.startStreaming();
+  }
+
+  selectStreamData(streamData: StreamData) {
+    this.selectedStreamData$.next(streamData);
+    this.openDetailPane();
+  }
+
+  ngOnDestroy() {
+    this.columnDefinitionsSubscription?.unsubscribe();
+    this.dataSource?.stopStreaming();
+  }
+}
+```
+
+### `stream-data.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/stream-data.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  StreamData,
+  StreamSubscription,
+  Synchronizer,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { StreamBuffer } from './StreamBuffer';
+
+export class StreamDataDataSource extends DataSource<StreamData> {
+  streamData$ = new BehaviorSubject<StreamData[]>([]);
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+  public streaming$ = new BehaviorSubject<boolean>(false);
+  public columns$ = new BehaviorSubject<string[]>([]);
+
+  private streamSubscription: StreamSubscription;
+  private streamBuffer = new StreamBuffer();
+
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+    private database: string,
+    private stream: string,
+  ) {
+    super();
+    this.syncSubscription = synchronizer.sync(() => {
+      if (this.streamBuffer.dirty && !this.loading$.getValue()) {
+        this.streamData$.next(this.streamBuffer.snapshot().reverse());
+        this.streamBuffer.dirty = false;
+      }
+    });
+  }
+
+  connect() {
+    return this.streamData$;
+  }
+
+  startStreaming() {
+    this.streaming$.next(true);
+    this.streamSubscription = this.yamcs.yamcsClient.createStreamSubscription(
+      {
+        instance: this.database,
+        stream: this.stream,
+      },
+      (streamData) => {
+        if (!this.loading$.getValue()) {
+          this.streamBuffer.add(streamData);
+
+          const columns = this.columns$.value;
+          for (const newColumn of streamData.column) {
+            if (columns.indexOf(newColumn.name) === -1) {
+              columns.push(newColumn.name);
+            }
+          }
+          this.columns$.next([...columns]);
+        }
+      },
+    );
+  }
+
+  stopStreaming() {
+    if (this.streamSubscription) {
+      this.streamSubscription.cancel();
+    }
+    this.streaming$.next(false);
+  }
+
+  disconnect() {
+    if (this.streamSubscription) {
+      this.streamSubscription.cancel();
+    }
+    if (this.syncSubscription) {
+      this.syncSubscription.unsubscribe();
+    }
+    this.streamData$.complete();
+    this.loading$.complete();
+    this.streaming$.complete();
+  }
+}
+```
+
+### `StreamBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data-tab/StreamBuffer.ts`
+
+
+```typescript
+import { StreamData } from '@yamcs/webapp-sdk';
+
+export class StreamBuffer {
+  public dirty = false;
+
+  private buffer: (StreamData | undefined)[];
+  private bufferSize = 500;
+  private pointer = 0;
+  private prevPointer?: number;
+
+  constructor() {
+    this.buffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  add(streamData: StreamData) {
+    this.buffer[this.pointer] = streamData;
+    this.prevPointer = this.pointer;
+    this.pointer = (this.pointer + 1) % this.buffer.length;
+    this.dirty = true;
+  }
+
+  reset() {
+    this.buffer.fill(undefined);
+    this.pointer = 0;
+    this.prevPointer = undefined;
+    this.dirty = true;
+  }
+
+  snapshot(): StreamData[] {
+    if (this.prevPointer === undefined) {
+      return [];
+    } else {
+      const left = this.buffer.slice(0, this.prevPointer + 1); // Left of pointer (inclusive)
+      const right = this.buffer.slice(this.prevPointer + 1); // Right of pointer (exclusive)
+      return right.concat(left).filter((s) => s !== undefined) as StreamData[];
+    }
+  }
+}
+```

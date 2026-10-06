@@ -3,22 +3,73 @@
 
 **경로:** `sims/nos_time_driver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--.git
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/nos_time_driver/inc/`](inc/index) — 폴더
-- [`sims/nos_time_driver/src/`](src/index) — 폴더
-- [`sims/nos_time_driver/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`sims/nos_time_driver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`sims/nos_time_driver/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `sims/nos_time_driver/.git`
+
+
+```text
+gitdir: ../../.git/modules/sims/nos_time_driver
+```
+
+### `CMakeLists.txt`
+
+**경로:** `sims/nos_time_driver/CMakeLists.txt`
+
+
+```cmake
+project(nos_time_driver)
+
+find_package(Boost REQUIRED QUIET COMPONENTS system program_options filesystem)
+find_package(ITC_Common REQUIRED QUIET COMPONENTS itc_logger)
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client server)
+
+include_directories(inc
+                    ${sim_common_SOURCE_DIR}/inc
+                    ${ITC_Common_INCLUDE_DIRS}
+                    ${NOSENGINE_INCLUDE_DIRS}
+					${Boost_INCLUDE_DIRS})
+
+set(nos_time_driver_src
+    src/time_driver.cpp
+)
+
+# For Code::Blocks and other IDEs
+file(GLOB nos_time_driver_inc inc/*.hpp)
+
+set(nos_time_driver_libs
+    sim_common
+    ${Boost_LIBRARIES}
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+    ncurses
+)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:$ORIGIN/../lib") # Pick up .so in install directory
+
+add_library(nos_time_driver SHARED ${nos_time_driver_src} ${nos_time_driver_inc})
+target_link_libraries(nos_time_driver ${nos_time_driver_libs})
+install(TARGETS nos_time_driver LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+```
+
+### `README.md`
+
+**경로:** `sims/nos_time_driver/README.md`
+
+
+```markdown
+# nos_time_driver
+
+NOS Engine Time Driver
+```

@@ -3,38 +3,526 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 include/index
-file--Basic.cpp
-file--Basic.fpp
-file--Basic.hpp
-file--Choice.cpp
-file--Choice.fpp
-file--Choice.hpp
-file--CMakeLists.txt
-file--main.cpp
-file--Nested.cpp
-file--Nested.fpp
-file--Nested.hpp
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/include/`](include/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Basic.cpp`](file--Basic.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Basic.fpp`](file--Basic.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Basic.hpp`](file--Basic.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Choice.cpp`](file--Choice.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Choice.fpp`](file--Choice.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Choice.hpp`](file--Choice.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Nested.cpp`](file--Nested.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Nested.fpp`](file--Nested.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Nested.hpp`](file--Nested.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `Basic.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Basic.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Basic.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/initial/Basic.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmInitial {
+
+Basic::Basic() : BasicStateMachineBase(), m_action_a_history() {}
+
+void Basic::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void Basic::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedSize);
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+}
+
+}  // namespace SmInitial
+
+}  // end namespace FppTest
+```
+
+### `Basic.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Basic.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInitial {
+
+    include "include/Basic.fppi"
+
+  }
+
+}
+```
+
+### `Basic.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Basic.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Basic.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_Basic_HPP
+#define FppTest_Basic_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/initial/BasicStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmInitial {
+
+//! Basic state machine
+class Basic final : public BasicStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    Basic();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+};
+
+}  // namespace SmInitial
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `Choice.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Choice.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Choice.hpp
+// \author R. Bocchino
+// \brief  Test class for choice state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+#include <limits>
+
+#include "FppTest/state_machine/internal/initial/Choice.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmInitial {
+
+Choice::Choice() : ChoiceStateMachineBase(), m_action_a_history(), m_guard_g() {}
+
+void Choice::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+bool Choice::guard_g(Signal signal) const {
+    return m_guard_g.call(signal);
+}
+
+void Choice::testFalse() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::T);
+    const FwSizeType expectedActionSize = 5;
+    const FwSizeType expectedGuardSize = 1;
+    this->checkActionsAndGuards(expectedActionSize, expectedGuardSize);
+}
+
+void Choice::testTrue() {
+    this->m_action_a_history.clear();
+    this->m_guard_g.reset();
+    this->m_guard_g.setReturnValue(true);
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->m_state, State::S);
+    const FwSizeType expectedActionSize = 3;
+    const FwSizeType expectedGuardSize = 1;
+    this->checkActionsAndGuards(expectedActionSize, expectedGuardSize);
+}
+
+void Choice::checkActionsAndGuards(FwIndexType expectedActionSize, FwIndexType expectedGuardSize) {
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedActionSize);
+    for (FwIndexType i = 0; i < expectedActionSize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(this->m_guard_g.getCallHistory().getSize(), expectedGuardSize);
+    for (FwIndexType i = 0; i < expectedGuardSize; i++) {
+        ASSERT_EQ(this->m_guard_g.getCallHistory().getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+}
+
+}  // namespace SmInitial
+
+}  // end namespace FppTest
+```
+
+### `Choice.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Choice.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInitial {
+
+    include "include/Choice.fppi"
+
+  }
+
+}
+```
+
+### `Choice.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Choice.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Choice.hpp
+// \author R. Bocchino
+// \brief  Test class for choice state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_Choice_HPP
+#define FppTest_Choice_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/initial/ChoiceStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmInitial {
+
+//! Choice state machine
+class Choice final : public ChoiceStateMachineBase {
+  public:
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    Choice();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+    //! Implementation of guard g
+    bool guard_g(Signal signal  //!< The signal
+    ) const;
+
+  public:
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    //! Helper function for checking actions and guards
+    void checkActionsAndGuards(FwIndexType expectedActionSize,  //!< The expected action size
+                               FwIndexType expectedGuardSize    //!< The expected guard size
+    );
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+
+    //! The guard g
+    SmHarness::NoArgGuard<Signal, historySize> m_guard_g;
+};
+
+}  // namespace SmInitial
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Choice.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Nested.fpp"
+)
+set(MOD_DEPS FppTest/state_machine/internal/harness)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Choice.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Nested.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// main.cpp
+// ----------------------------------------------------------------------
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/initial/Basic.hpp"
+#include "FppTest/state_machine/internal/initial/Choice.hpp"
+#include "FppTest/state_machine/internal/initial/Nested.hpp"
+#include "STest/STest/Random/Random.hpp"
+
+TEST(Basic, Test) {
+    FppTest::SmInitial::Basic basic;
+    basic.test();
+}
+
+TEST(Choice, False) {
+    FppTest::SmInitial::Choice choice;
+    choice.testFalse();
+}
+
+TEST(Choice, True) {
+    FppTest::SmInitial::Choice choice;
+    choice.testTrue();
+}
+
+TEST(Nested, Test) {
+    FppTest::SmInitial::Nested nested;
+    nested.test();
+}
+
+// ----------------------------------------------------------------------
+// Main function
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Nested.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Nested.cpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Nested.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (implementation)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <gtest/gtest.h>
+#include <limits>
+
+#include "FppTest/state_machine/internal/initial/Nested.hpp"
+#include "STest/STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace SmInitial {
+
+Nested::Nested() : NestedStateMachineBase(), m_action_a_history() {}
+
+void Nested::action_a(Signal signal) {
+    this->m_action_a_history.push(signal);
+}
+
+void Nested::test() {
+    this->m_action_a_history.clear();
+    const FwEnumStoreType id = SmHarness::Pick::stateMachineId();
+    this->initBase(id);
+    ASSERT_EQ(this->m_id, id);
+    ASSERT_EQ(this->getState(), State::S_T);
+    const FwIndexType expectedActionSize = 6;
+    ASSERT_EQ(this->m_action_a_history.getSize(), expectedActionSize);
+    for (FwIndexType i = 0; i < expectedActionSize; i++) {
+        ASSERT_EQ(this->m_action_a_history.getItemAt(i), Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+}
+
+}  // namespace SmInitial
+
+}  // end namespace FppTest
+```
+
+### `Nested.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Nested.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInitial {
+
+    include "include/Nested.fppi"
+
+  }
+
+}
+```
+
+### `Nested.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/Nested.hpp`
+
+
+```cpp
+// ======================================================================
+//
+// \title  Nested.hpp
+// \author R. Bocchino
+// \brief  Test class for basic state machine (header)
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED. United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FppTest_Nested_HPP
+#define FppTest_Nested_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal/initial/NestedStateMachineAc.hpp"
+
+namespace FppTest {
+
+namespace SmInitial {
+
+//! Nested state machine
+class Nested final : public NestedStateMachineBase {
+  public:
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+  public:
+    //! Constructor
+    Nested();
+
+  private:
+    //! Implementation of action a
+    void action_a(Signal signal  //!< The signal
+                  ) final;
+
+  public:
+    //! Run the test
+    void test();
+
+  private:
+    //! The history associated with action a
+    SmHarness::History<Signal, historySize> m_action_a_history;
+};
+
+}  // namespace SmInitial
+
+}  // end namespace FppTest
+
+#endif
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/initial/README.md`
+
+
+```markdown
+# state_machine/internal/initial
+
+Tests for initial transitions in FPP internal state machines.
+```

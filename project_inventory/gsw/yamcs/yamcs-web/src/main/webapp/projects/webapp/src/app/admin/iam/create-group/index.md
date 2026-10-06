@@ -3,16 +3,175 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-group/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-group.component.html`
 
-file--create-group.component.html
-file--create-group.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-group/create-group.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar>
+    <ng-template app-admin-toolbar-label>
+      <ya-page-icon-button routerLink=".." icon="arrow_back" />
+      Create group
+    </ng-template>
+  </app-admin-toolbar>
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate>
+      <ya-field label="Group name">
+        <input formControlName="name" type="text" />
+      </ya-field>
+
+      <ya-field label="Description">
+        <textarea formControlName="description" rows="5"></textarea>
+      </ya-field>
+
+      <ya-field-divider />
+
+      <ya-button (click)="showAddMembersDialog()" icon="add_circle">Add members</ya-button>
+
+      @if (memberItems$ | async; as memberItems) {
+        <table yaDataTable style="width: 100%; margin-top: 16px">
+          <tr>
+            <th width="1">Type</th>
+            <th>Member</th>
+            <th></th>
+          </tr>
+          @if (!memberItems.length) {
+            <tr>
+              <td colspan="3">No rows to display</td>
+            </tr>
+          }
+          @for (item of memberItems; track item) {
+            <tr>
+              <td>
+                <mat-icon matTooltip="User" style="vertical-align: middle">person</mat-icon>
+              </td>
+              <td>{{ item.label }}</td>
+              <td style="text-align: right">
+                <ya-text-action icon="delete" (click)="deleteItem(item)">DELETE</ya-text-action>
+              </td>
+            </tr>
+          }
+        </table>
+      }
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button (click)="location.back()">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</app-admin-page>
 ```
 
-## 항목
+### `create-group.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-group/create-group.component.html`](file--create-group.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-group/create-group.component.ts`](file--create-group.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/create-group/create-group.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  CreateGroupRequest,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import {
+  AddMembersDialogComponent,
+  MemberItem,
+} from '../add-members-dialog/add-members-dialog.component';
+
+@Component({
+  templateUrl: './create-group.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+  ],
+})
+export class CreateGroupComponent {
+  form: UntypedFormGroup;
+
+  memberItems$ = new BehaviorSubject<MemberItem[]>([]);
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    title: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private dialog: MatDialog,
+    private messageService: MessageService,
+    readonly location: Location,
+  ) {
+    title.setTitle('Create a group');
+    this.form = formBuilder.group({
+      name: new UntypedFormControl('', [Validators.required]),
+      description: new UntypedFormControl(),
+    });
+  }
+
+  showAddMembersDialog() {
+    const dialogRef = this.dialog.open(AddMembersDialogComponent, {
+      data: {
+        items: this.memberItems$.value,
+      },
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((memberItems) => {
+      if (memberItems) {
+        this.updateMemberItems([...this.memberItems$.value, ...memberItems]);
+      }
+    });
+  }
+
+  private updateMemberItems(items: MemberItem[]) {
+    items.sort((i1, i2) =>
+      i1.label < i2.label ? -1 : i1.label > i2.label ? 1 : 0,
+    );
+    this.memberItems$.next(items);
+  }
+
+  deleteItem(item: MemberItem) {
+    this.updateMemberItems(this.memberItems$.value.filter((i) => i !== item));
+  }
+
+  onConfirm() {
+    const options: CreateGroupRequest = {
+      name: this.form.value.name,
+      description: this.form.value.description,
+      users: this.memberItems$.value
+        .filter((item) => item.user)
+        .map((item) => item.user!.name),
+    };
+    this.yamcs.yamcsClient
+      .createGroup(options)
+      .then(() => this.router.navigate(['..'], { relativeTo: this.route }))
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

@@ -3,16 +3,94 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_IMU/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `GENERIC_IMU_CMD.txt`
 
-file--GENERIC_IMU_CMD.txt
-file--GENERIC_IMU_TLM.txt
+**경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_IMU/cmd_tlm/GENERIC_IMU_CMD.txt`
+
+
+```text
+COMMAND GENERIC_IMU GENERIC_IMU_NOOP_CC LITTLE_ENDIAN "Generic_imu NOOP Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1925 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_IMU GENERIC_IMU_RST_COUNTERS_CC LITTLE_ENDIAN "Generic_imu Reset Counters Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1925 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 1        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_IMU GENERIC_IMU_ENABLE_CC LITTLE_ENDIAN "Generic_imu Enable Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1925 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 2        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_IMU GENERIC_IMU_DISABLE_CC LITTLE_ENDIAN "Generic_imu Disable Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1925 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 3        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_IMU GENERIC_IMU_REQ_HK LITTLE_ENDIAN "Generic_imu Request HK Packet Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1926 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_IMU GENERIC_IMU_REQ_DATA LITTLE_ENDIAN "Generic_imu Request Data Packet Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1926 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 1        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
 ```
 
-## 항목
+### `GENERIC_IMU_TLM.txt`
 
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_IMU/cmd_tlm/GENERIC_IMU_CMD.txt`](file--GENERIC_IMU_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_IMU/cmd_tlm/GENERIC_IMU_TLM.txt`](file--GENERIC_IMU_TLM.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_IMU/cmd_tlm/GENERIC_IMU_TLM.txt`
+
+
+```text
+TELEMETRY GENERIC_IMU GENERIC_IMU_HK_TLM  LITTLE_ENDIAN "GENERIC_IMU_Hk_tlm_t"
+  APPEND_ID_ITEM CCSDS_STREAMID            16 UINT 0x0925  "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SEQUENCE            16 UINT         "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_LENGTH              16 UINT         "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SECONDS             32 UINT         "CCSDS Telemetry Secondary Header (seconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SUBSECS             16 UINT         "CCSDS Telemetry Secondary Header (subseconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SPARE               32 UINT         ""
+  APPEND_ITEM    CMD_ERR_COUNT             8 UINT         "Command Error Count"
+  APPEND_ITEM    CMD_COUNT                 8 UINT         "Command Count"
+  APPEND_ITEM    DEVICE_ERR_COUNT          8 UINT         "Device Command Error Count"
+  APPEND_ITEM    DEVICE_COUNT              8 UINT         "Device Command Count"
+  APPEND_ITEM    DEVICE_ENABLED            8 UINT         "Device Enable Status"
+    STATE DISABLED 0
+    STATE ENABLED  1 
+  # GENERIC_IMU_Device_HK_tlm_t
+  APPEND_ITEM    DEVICE_COUNTER            32 UINT         "Reported Device Command Counter"
+  APPEND_ITEM    DEVICE_STATUS             32 UINT         "Reported Device Status"
+
+TELEMETRY GENERIC_IMU GENERIC_IMU_DATA_TLM LITTLE_ENDIAN "GENERIC_IMU_Device_tlm_t"
+  APPEND_ID_ITEM CCSDS_STREAMID        16 UINT 0x0926 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SEQUENCE        16 UINT        "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_LENGTH          16 UINT        "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SECONDS         32 UINT        "CCSDS Telemetry Secondary Header (seconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SUBSECS         16 UINT        "CCSDS Telemetry Secondary Header (subseconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SPARE           32 UINT        ""
+  # GENERIC_IMU_Device_Data_tlm_t
+  APPEND_ITEM    X_LINEAR_ACCELERATION 32 FLOAT       "Linear acceleration in the X-direction (m/s^2)"
+  APPEND_ITEM    X_ANGULAR_RATE        32 FLOAT       "Angular rate in the X-direction (rad/s)"
+  APPEND_ITEM    Y_LINEAR_ACCELERATION 32 FLOAT       "Linear acceleration in the Y-direction (m/s^2)"
+  APPEND_ITEM    Y_ANGULAR_RATE        32 FLOAT       "Angular rate in the Y-direction (rad/s)"
+  APPEND_ITEM    Z_LINEAR_ACCELERATION 32 FLOAT       "Linear acceleration in the Z-direction (m/s^2)"
+  APPEND_ITEM    Z_ANGULAR_RATE        32 FLOAT       "Angular rate in the Z-direction (rad/s)"
+
+```

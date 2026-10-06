@@ -3,18 +3,50 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--constant2.fpp
-file--uses_types.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/CMakeLists.txt`
+
+
+```cmake
+register_fprime_library(
+        TestRelative
+    AUTOCODER_INPUTS
+        ../constant1.fpp
+        ./constant2.fpp
+    SOURCES
+        ./uses_types.cpp
+)
 ```
 
-## 항목
+### `constant2.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/constant2.fpp`](file--constant2.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/uses_types.cpp`](file--uses_types.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/constant2.fpp`
+
+
+```fpp
+# ======================================================================
+# \title  constant1.fpp
+# \author lestarch
+# \brief  defines a constant
+# ======================================================================
+constant relative_constant2 = true
+```
+
+### `uses_types.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestRelative/uses_types.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  uses_type.cpp
+// \author lestarch
+// \brief  fails to compile if the relative FPP sources did not work
+// ======================================================================
+#include <TestDeployment/TestRelative/FppConstantsAc.hpp>
+// Constant definitions will not be defined if the module setup failed
+bool new_constant = (relative_constant1 && relative_constant2);
+```

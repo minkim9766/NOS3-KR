@@ -3,54 +3,2784 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ActivityGroup.java`
 
-file--ActivityGroup.java
-file--ActivityScheduler.java
-file--BandListener.java
-file--CommandItemProvider.java
-file--FilterMatcher.java
-file--ItemGroup.java
-file--ItemListener.java
-file--ItemProvider.java
-file--ItemReceiver.java
-file--RetrievalFilter.java
-file--TimelineActivity.java
-file--TimelineBand.java
-file--TimelineBandDb.java
-file--TimelineEvent.java
-file--TimelineItem.java
-file--TimelineItemDb.java
-file--TimelineItemLogDb.java
-file--TimelineService.java
-file--TimelineView.java
-file--TimelineViewDb.java
-file--ViewListener.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ActivityGroup.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.UUID;
+
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.yarch.Tuple;
+
+public class ActivityGroup extends TimelineActivity {
+
+    public ActivityGroup(UUID id) {
+        super(TimelineItemType.ACTIVITY_GROUP, id);
+    }
+
+    ActivityGroup(Tuple tuple) {
+        super(TimelineItemType.ACTIVITY_GROUP, tuple);
+    }
+}
 ```
 
-## 항목
+### `ActivityScheduler.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ActivityGroup.java`](file--ActivityGroup.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ActivityScheduler.java`](file--ActivityScheduler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/BandListener.java`](file--BandListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/CommandItemProvider.java`](file--CommandItemProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/FilterMatcher.java`](file--FilterMatcher.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemGroup.java`](file--ItemGroup.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemListener.java`](file--ItemListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemProvider.java`](file--ItemProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemReceiver.java`](file--ItemReceiver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/RetrievalFilter.java`](file--RetrievalFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineActivity.java`](file--TimelineActivity.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineBand.java`](file--TimelineBand.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineBandDb.java`](file--TimelineBandDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineEvent.java`](file--TimelineEvent.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItem.java`](file--TimelineItem.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItemDb.java`](file--TimelineItemDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItemLogDb.java`](file--TimelineItemLogDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineService.java`](file--TimelineService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineView.java`](file--TimelineView.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineViewDb.java`](file--TimelineViewDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ViewListener.java`](file--ViewListener.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ActivityScheduler.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineItemDb.CNAME_START;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_TYPE;
+import static org.yamcs.timeline.TimelineItemDb.TABLE_NAME;
+
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.UUID;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.activities.Activity;
+import org.yamcs.activities.ActivityListener;
+import org.yamcs.activities.ActivityService;
+import org.yamcs.http.api.GpbWellKnownHelper;
+import org.yamcs.http.api.StreamFactory;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.ExecutionStatus;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+
+import com.google.common.util.concurrent.AbstractExecutionThreadService;
+
+/**
+ * Schedules activities in the timeline
+ */
+public class ActivityScheduler extends AbstractExecutionThreadService implements ItemListener, ActivityListener {
+
+    private static final long CHECK_INTERVAL = 500;
+    private static final TimelineActivity POISON = new TimelineActivity(UUID.randomUUID());
+    private Log log;
+
+    private String yamcsInstance;
+    private ActivityService activityService;
+    private TimelineItemDb timelineItemDb;
+
+    // Contains all planned activities that have a calculated execution date
+    private PriorityQueue<TimelineActivity> planned = new PriorityQueue<>();
+
+    private ReentrantLock planningLock = new ReentrantLock();
+    private Thread dispatcher;
+
+    // Contains the activities that are ready to be provided to the ActivityService
+    private BlockingQueue<TimelineActivity> forDispatch = new LinkedBlockingQueue<>(200);
+
+    // Keep track of ongoing timeline activities, for the purpose of copying the activity result
+    private ConcurrentMap<UUID, TimelineActivity> ongoingItemsByRunId = new ConcurrentHashMap<>();
+
+    public Spec getSpec() {
+        return new Spec();
+    }
+
+    public void init(TimelineService timelineService, YConfiguration config) {
+        this.yamcsInstance = timelineService.getYamcsInstance();
+        this.activityService = timelineService.getActivityService();
+        this.timelineItemDb = timelineService.getTimelineItemDb();
+        log = new Log(getClass(), yamcsInstance);
+    }
+
+    @Override
+    protected void startUp() throws Exception {
+        timelineItemDb.addItemListener(this);
+        activityService.addActivityListener(this);
+    }
+
+    @Override
+    protected void run() throws Exception {
+        try {
+            replan();
+        } catch (Exception e) {
+            log.error("Failed to perform initial planning", e);
+            throw e;
+        }
+
+        var systemUser = YamcsServer.getServer().getSecurityStore().getSystemUser();
+
+        TimelineActivity item;
+        while ((item = forDispatch.take()) != POISON) {
+            Activity activity;
+            var def = item.getActivityDefinition();
+            if (def == null) {
+                activity = activityService.prepareActivity(
+                        ActivityService.ACTIVITY_TYPE_MANUAL,
+                        Map.of("name", item.getName()),
+                        systemUser, null);
+            } else {
+                var executorType = def.getType();
+                var executorArgs = GpbWellKnownHelper.toJava(def.getArgs());
+                activity = activityService.prepareActivity(executorType, executorArgs, systemUser, null);
+            }
+            ongoingItemsByRunId.put(activity.getId(), item);
+
+            item.setStatus(ExecutionStatus.IN_PROGRESS);
+            item.addRun(activity.getId());
+            timelineItemDb.updateItem(item);
+
+            activityService.startActivity(activity, systemUser);
+        }
+    }
+
+    @Override
+    protected void triggerShutdown() {
+        timelineItemDb.removeItemListener(this);
+        activityService.removeActivityListener(this);
+        stopDispatcher();
+        forDispatch.offer(POISON);
+    }
+
+    @Override
+    public void onItemCreated(TimelineItem item) {
+        if (item instanceof TimelineActivity) {
+            replan();
+        }
+    }
+
+    @Override
+    public void onItemUpdated(TimelineItem item) {
+        if (item instanceof TimelineActivity) {
+            replan();
+        }
+    }
+
+    @Override
+    public void onItemDeleted(TimelineItem item) {
+        if (item instanceof TimelineActivity) {
+            replan();
+        }
+    }
+
+    @Override
+    public void onActivityUpdated(Activity activity) {
+        var item = ongoingItemsByRunId.get(activity.getId());
+        if (item != null && activity.isStopped()) {
+            ongoingItemsByRunId.remove(activity.getId());
+
+            switch (activity.getStatus()) {
+            case SUCCESSFUL:
+                item.setStatus(ExecutionStatus.COMPLETED);
+                break;
+            case CANCELLED:
+                item.setStatus(ExecutionStatus.ABORTED);
+                item.setFailureReason(activity.getFailureReason());
+                break;
+            case FAILED:
+                item.setStatus(ExecutionStatus.FAILED);
+                item.setFailureReason(activity.getFailureReason());
+                break;
+            default:
+                throw new IllegalStateException("Unexpected terminal state " + activity.getStatus());
+            }
+            timelineItemDb.updateItem(item);
+        }
+    }
+
+    private void replan() {
+        try {
+            planningLock.lock();
+
+            stopDispatcher();
+            planned.clear();
+
+            var sqlb = new SqlBuilder(TABLE_NAME);
+            sqlb.whereColAfterOrEqual(CNAME_START, TimeEncoding.getWallclockTime());
+            sqlb.where(CNAME_TYPE + " = '" + TimelineItemType.ACTIVITY.name() + "'");
+
+            var latch = new CountDownLatch(1);
+            StreamFactory.stream(yamcsInstance, sqlb.toString(), sqlb.getQueryArguments(), new StreamSubscriber() {
+
+                @Override
+                public void onTuple(Stream stream, Tuple tuple) {
+                    var activity = new TimelineActivity(TimelineItemType.ACTIVITY, tuple);
+                    planned.add(activity);
+                }
+
+                @Override
+                public void streamClosed(Stream stream) {
+                    if (!planned.isEmpty()) {
+                        log.info("Upcoming:");
+                        for (var activity : planned) {
+                            log.info("- " + activity);
+                        }
+                        startDispatcher();
+                    }
+
+                    latch.countDown();
+                }
+            });
+
+            latch.await();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } finally {
+            planningLock.unlock();
+        }
+    }
+
+    private void startDispatcher() {
+        // Dispatcher runs on a special thread, because then we can respond faster
+        // to Guava service termination.
+        dispatcher = new Thread(() -> {
+            try {
+                while (true) {
+                    var nextActivity = planned.poll();
+                    if (nextActivity != null) {
+                        var now = TimeEncoding.getWallclockTime();
+                        if (now < nextActivity.start) {
+                            Thread.sleep(nextActivity.start - now);
+                        }
+                        if (!forDispatch.offer(nextActivity)) {
+                            log.error("Failed to dispatch activity " + nextActivity + " (queue full)");
+                        }
+                    } else {
+                        Thread.sleep(CHECK_INTERVAL);
+                    }
+                }
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        });
+        dispatcher.start();
+    }
+
+    private void stopDispatcher() {
+        var lDispatcher = dispatcher;
+        if (lDispatcher != null) {
+            lDispatcher.interrupt();
+            dispatcher = null;
+        }
+    }
+}
+```
+
+### `BandListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/BandListener.java`
+
+
+```java
+package org.yamcs.timeline;
+
+public interface BandListener {
+    void next(TimelineBand band);
+
+    /**
+     * 
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * <p>
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+```
+
+### `CommandItemProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/CommandItemProvider.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.CommandHistoryRecorder;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+/**
+ * Implements the "commands" timeline source providing items derived from the command history.
+ * <p>
+ * The filtering criteria which can be applied is based on the command name patterns (regular expressions matching
+ * command names)
+ *
+ */
+public class CommandItemProvider implements ItemProvider {
+    public final static String CRIT_KEY_CMD_NAME_PATTERN = "cmdNamePattern";
+    private Log log;
+    private YarchDatabaseInstance ydb;
+    TupleMatcher matcher;
+
+    public CommandItemProvider(String yamcsInstance) {
+        log = new Log(getClass(), yamcsInstance);
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        matcher = new TupleMatcher();
+    }
+
+    @Override
+    public TimelineItem getItem(String id) {
+        return null;
+    }
+
+    @Override
+    public void getItems(int limit, String next, RetrievalFilter filter, ItemReceiver consumer) {
+
+        SqlBuilder sqlb = new SqlBuilder(CommandHistoryRecorder.TABLE_NAME);
+        TimeInterval interval = filter.getTimeInterval();
+        if (interval.hasEnd()) {
+            sqlb.where("gentime < ?", interval.getEnd());
+        }
+        if (interval.hasStart()) {
+            sqlb.where("gentime >= ?", interval.getStart());
+        }
+
+        sqlb.limit(limit + 1);
+
+        try {
+            StreamSqlStatement stmt = ydb.createStatement(sqlb.toString(),
+                    sqlb.getQueryArguments().toArray());
+            ydb.execute(stmt, new ResultListener() {
+
+                @Override
+                public void next(Tuple tuple) {
+                    if (matcher.matches(filter, tuple)) {
+                        consumer.next(toItem(tuple));
+                    }
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    consumer.complete(null);
+                }
+            });
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        }
+    }
+
+    @Override
+    public void validateFilters(List<ItemFilter> filters) throws BadRequestException {
+        for (var filter : filters) {
+            for (var c : filter.getCriteriaList()) {
+                if (!CRIT_KEY_CMD_NAME_PATTERN.equals(c.getKey())) {
+                    throw new BadRequestException(
+                            "Unknonw criteria key " + c.getKey() + ". Supported key: " + CRIT_KEY_CMD_NAME_PATTERN);
+                }
+            }
+        }
+    }
+
+    @Override
+    public TimelineItem addItem(TimelineItem item) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineItem updateItem(TimelineItem item) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineItem deleteItem(UUID uuid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineItem deleteTimelineGroup(UUID uuid) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public TimelineSourceCapabilities getCapabilities() {
+        return TimelineSourceCapabilities.newBuilder()
+                .setReadOnly(true)
+                .build();
+    }
+
+    private static TimelineEvent toItem(Tuple tuple) {
+        long gentime = (Long) tuple.getColumn(PreparedCommand.CNAME_GENTIME);
+        String origin = (String) tuple.getColumn(PreparedCommand.CNAME_ORIGIN);
+        int sequenceNumber = (Integer) tuple.getColumn(PreparedCommand.CNAME_SEQNUM);
+        String id = gentime + "-" + origin + "-" + sequenceNumber;
+
+        TimelineEvent event = new TimelineEvent(id);
+        event.setStart(gentime);
+        event.setName(tuple.getColumn(PreparedCommand.CNAME_CMDNAME));
+        return event;
+    }
+
+    private static class TupleMatcher extends FilterMatcher<Tuple> {
+        @Override
+        protected boolean criterionMatch(FilterCriterion c, Tuple tuple) {
+            String cmdName = tuple.getColumn(StandardTupleDefinitions.CMDHIST_TUPLE_COL_CMDNAME);
+            if (cmdName == null) {
+                return false;
+            }
+            if (CRIT_KEY_CMD_NAME_PATTERN.equals(c.getKey())) {
+                return cmdName.matches(c.getValue());
+            } else {
+                return false;
+            }
+        }
+    }
+}
+```
+
+### `FilterMatcher.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/FilterMatcher.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+
+public abstract class FilterMatcher<T> {
+    boolean matches(RetrievalFilter filter, T item) {
+        var itemFilters = filter.getItemFilters();
+
+        if (itemFilters == null || itemFilters.isEmpty()) {
+            return true;
+        }
+        
+        for (ItemFilter f : itemFilters) {
+            if (!match(f, item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean match(ItemFilter f, T item) {
+        for (var c : f.getCriteriaList()) {
+            if (criterionMatch(c, item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected abstract boolean criterionMatch(FilterCriterion criterion, T item);
+}
+```
+
+### `ItemGroup.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemGroup.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.UUID;
+
+import org.yamcs.protobuf.TimelineItem.Builder;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.yarch.Tuple;
+
+public class ItemGroup extends TimelineItem {
+
+    public ItemGroup(UUID id) {
+        super(TimelineItemType.ITEM_GROUP, id.toString());
+    }
+
+    public ItemGroup(Tuple tuple) {
+        super(TimelineItemType.ITEM_GROUP, tuple);
+    }
+
+    @Override
+    protected void addToProto(boolean detail, Builder protob) {
+    }
+
+    @Override
+    protected void addToTuple(Tuple tuple) {
+    }
+
+}
+```
+
+### `ItemListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemListener.java`
+
+
+```java
+package org.yamcs.timeline;
+
+public interface ItemListener {
+
+    /**
+     * An item was created
+     */
+    void onItemCreated(TimelineItem item);
+
+    /**
+     * An item was updated
+     */
+    void onItemUpdated(TimelineItem item);
+
+    /**
+     * An item was deleted
+     */
+    void onItemDeleted(TimelineItem item);
+}
+```
+
+### `ItemProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemProvider.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.filetransfer.InvalidRequestException;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+
+public interface ItemProvider {
+
+    public TimelineItem getItem(String id);
+
+    public void getItems(int limit, String next, RetrievalFilter filter, ItemReceiver consumer);
+
+    /**
+     * Add an item and return the added item.
+     * <p>
+     * The returned value should have defaults (if any) filled in, also if the item has a relative time, the start time
+     * of the returned value will be computed from the relative time and the start of
+     * {@link TimelineItem#relativeItemUuid}
+     */
+    public TimelineItem addItem(TimelineItem item);
+
+    /**
+     * Update an item and return the updated item.
+     * <p>
+     * The item parameter should have the uuid set and at least the start time or relative time
+     * 
+     * @return the updated item
+     * @throws InvalidRequestException
+     *             if the item does not exist, if the groupUuuid or relatimeTimeUuid properties create a circular
+     *             dependency or other source specific error conditions
+     */
+    public TimelineItem updateItem(TimelineItem item);
+
+    /**
+     * Delete the item with the given uuid and return the deleted item.
+     * <p>
+     * If the item does not exist, return null
+     */
+    public TimelineItem deleteItem(UUID id);
+
+    public TimelineItem deleteTimelineGroup(UUID id);
+
+    public TimelineSourceCapabilities getCapabilities();
+
+    /**
+     * Checks that the source can filter based on the criteria specified
+     */
+    public void validateFilters(List<ItemFilter> filters) throws BadRequestException;
+
+    /**
+     * Returns the item log or null if the item does not exist
+     */
+    default TimelineItemLog getItemLog(String id) {
+        return TimelineItemLog.newBuilder().setId(id).build();
+    }
+
+    /**
+     * Adds an entry to the log table
+     */
+    default LogEntry addItemLog(String id, LogEntry entry) {
+        throw new UnsupportedOperationException();
+    }
+}
+```
+
+### `ItemReceiver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ItemReceiver.java`
+
+
+```java
+package org.yamcs.timeline;
+
+public interface ItemReceiver {
+
+    void next(TimelineItem item);
+
+    /**
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * <p>
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+```
+
+### `RetrievalFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/RetrievalFilter.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.List;
+
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.utils.TimeInterval;
+
+public class RetrievalFilter {
+    final TimeInterval interval;
+    final List<ItemFilter> itemFilters;
+
+    @Deprecated
+    List<String> tags;
+
+    public RetrievalFilter(TimeInterval interval, List<ItemFilter> itemFilters) {
+        this.interval = interval;
+        this.itemFilters = itemFilters;
+    }
+
+    TimeInterval getTimeInterval() {
+        return interval;
+    }
+
+    public List<ItemFilter> getItemFilters() {
+        return itemFilters;
+    }
+
+    @Deprecated
+    public List<String> getTags() {
+        return tags;
+    }
+
+    @Deprecated
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+}
+```
+
+### `TimelineActivity.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineActivity.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineItemDb.CNAME_ACTIVITY_DEFINITION;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_FAILURE_REASON;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_RUNS;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_STATUS;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.yamcs.activities.protobuf.ActivityDefinition;
+import org.yamcs.protobuf.ExecutionStatus;
+import org.yamcs.protobuf.TimelineItem.Builder;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.protobuf.activities.ActivityDefinitionInfo;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class TimelineActivity extends TimelineItem implements Comparable<TimelineActivity> {
+
+    protected List<Dependence> dependsOn;
+    protected ExecutionStatus status = ExecutionStatus.PLANNED;
+    protected String failureReason;
+    protected List<UUID> runs = new ArrayList<>();
+    protected ActivityDefinition activityDefinition;
+
+    public TimelineActivity(UUID id) {
+        super(TimelineItemType.ACTIVITY, id.toString());
+    }
+
+    protected TimelineActivity(TimelineItemType type, UUID id) {
+        super(type, id.toString());
+    }
+
+    public TimelineActivity(TimelineItemType type, Tuple tuple) {
+        super(type, tuple);
+        String dbstatus = tuple.getColumn(CNAME_STATUS);
+        this.status = ExecutionStatus.valueOf(dbstatus);
+
+        if (tuple.hasColumn(CNAME_FAILURE_REASON)) {
+            this.failureReason = tuple.getColumn(CNAME_FAILURE_REASON);
+        }
+        if (tuple.hasColumn(CNAME_RUNS)) {
+            this.runs = tuple.getColumn(CNAME_RUNS);
+        }
+        if (tuple.hasColumn(CNAME_ACTIVITY_DEFINITION)) {
+            this.activityDefinition = tuple.getColumn(CNAME_ACTIVITY_DEFINITION);
+        }
+    }
+
+    public void setStatus(ExecutionStatus status) {
+        this.status = status;
+    }
+
+    public ExecutionStatus getStatus() {
+        return status;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
+    }
+
+    public void setActivityDefinition(ActivityDefinition activityDefinition) {
+        this.activityDefinition = activityDefinition;
+    }
+
+    public ActivityDefinition getActivityDefinition() {
+        return activityDefinition;
+    }
+
+    public List<UUID> getRuns() {
+        return runs;
+    }
+
+    public void addRun(UUID runId) {
+        runs.add(runId);
+    }
+
+    @Override
+    protected void addToProto(boolean detail, Builder protob) {
+        protob.setStatus(status);
+        if (failureReason != null) {
+            protob.setFailureReason(failureReason);
+        }
+        if (activityDefinition != null) {
+            var b = ActivityDefinitionInfo.newBuilder()
+                    .setType(activityDefinition.getType())
+                    .setArgs(activityDefinition.getArgs());
+            protob.setActivityDefinition(b);
+        }
+        runs.forEach(runId -> protob.addRuns(runId.toString()));
+    }
+
+    @Override
+    protected void addToTuple(Tuple tuple) {
+        tuple.addEnumColumn(CNAME_STATUS, status.name());
+        if (failureReason != null) {
+            tuple.addColumn(CNAME_FAILURE_REASON, failureReason);
+        }
+        if (activityDefinition != null) {
+            tuple.addColumn(CNAME_ACTIVITY_DEFINITION, DataType.protobuf(ActivityDefinition.class), activityDefinition);
+        }
+
+        if (runs.isEmpty()) {
+            tuple.addColumn(CNAME_RUNS, DataType.array(DataType.UUID), null);
+        } else {
+            tuple.addColumn(CNAME_RUNS, DataType.array(DataType.UUID), runs);
+        }
+    }
+
+    @Override
+    public int compareTo(TimelineActivity other) {
+        if (this == other) {
+            return 0;
+        }
+
+        var rc = Long.compareUnsigned(start, other.start);
+        // Fallback to something unique, to make it deterministic
+        return (rc != 0) ? rc : id.compareTo(other.getId());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TimelineActivity)) {
+            return false;
+        }
+        var other = (TimelineActivity) obj;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[id=%s, start=%s]", id, TimeEncoding.toString(start));
+    }
+
+    static class Dependence {
+        UUID id;
+    }
+}
+```
+
+### `TimelineBand.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineBand.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineBandDb.CNAME_DESCRIPTION;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_FILTER;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_ID;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_NAME;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_SHARED;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_SOURCE;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_TAGS;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_TYPE;
+import static org.yamcs.timeline.TimelineBandDb.CNAME_USERNAME;
+import static org.yamcs.timeline.TimelineBandDb.PROP_PREFIX;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.TimelineBandType;
+import org.yamcs.timeline.protobuf.BandFilter;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class TimelineBand {
+
+    private final UUID id;
+
+    private String name;
+    private String description;
+    private TimelineBandType type;
+    private boolean shared;
+    private String username;
+    @Deprecated
+    private List<String> tags = new ArrayList<>();
+    private BandFilter filter;
+    private Map<String, String> properties = new HashMap<>();
+    private String source;
+
+    public TimelineBand(UUID id) {
+        this.id = id;
+    }
+
+    TimelineBand(Tuple tuple) {
+        id = tuple.getColumn(CNAME_ID);
+        name = tuple.getColumn(CNAME_NAME);
+        description = tuple.getColumn(CNAME_DESCRIPTION);
+        type = TimelineBandType.valueOf(tuple.<String> getColumn(CNAME_TYPE));
+        shared = tuple.getColumn(CNAME_SHARED);
+        username = tuple.getColumn(CNAME_USERNAME);
+        source = tuple.getColumn(CNAME_SOURCE);
+        filter = tuple.getColumn(CNAME_FILTER);
+
+        for (int i = 0; i < tuple.size(); i++) {
+            ColumnDefinition column = tuple.getColumnDefinition(i);
+            if (column.getName().startsWith(PROP_PREFIX)) {
+                String columnName = column.getName().substring(PROP_PREFIX.length());
+                properties.put(columnName, tuple.getColumn(column.getName()));
+            }
+        }
+
+        if (tuple.getColumn(CNAME_TAGS) != null) {
+            tags.addAll(tuple.getColumn(CNAME_TAGS));
+        }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(TimelineBandType type) {
+        this.type = type;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setShared(boolean shared) {
+        this.shared = shared;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags.clear();
+        this.tags.addAll(tags);
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties.clear();
+        this.properties.putAll(properties);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public org.yamcs.protobuf.TimelineBand toProtobuf() {
+        var b = org.yamcs.protobuf.TimelineBand.newBuilder()
+                .setId(id.toString())
+                .setType(type)
+                .setShared(shared)
+                .setUsername(username)
+                .putAllProperties(properties)
+                .addAllFilters(getItemFilters())
+                .addAllTags(tags);
+        if (name != null) {
+            b.setName(name);
+        }
+        if (description != null) {
+            b.setDescription(description);
+        }
+        return b.build();
+    }
+
+    public Tuple toTuple() {
+        Tuple tuple = new Tuple();
+        tuple.addColumn(CNAME_ID, DataType.UUID, id);
+        tuple.addColumn(CNAME_TYPE, type.toString());
+        tuple.addColumn(CNAME_NAME, name);
+        tuple.addColumn(CNAME_DESCRIPTION, description);
+        tuple.addColumn(CNAME_SHARED, shared);
+        tuple.addColumn(CNAME_USERNAME, username);
+        tuple.addColumn(CNAME_SOURCE, source);
+        tuple.addColumn(CNAME_FILTER, DataType.protobuf(BandFilter.class), filter);
+        for (var entry : properties.entrySet()) {
+            tuple.addColumn(PROP_PREFIX + entry.getKey(), entry.getValue());
+        }
+        if (!tags.isEmpty()) {
+            tuple.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM), tags);
+        }
+
+        return tuple;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public void setItemFilters(List<ItemFilter> filters) {
+        BandFilter.Builder b = BandFilter.newBuilder();
+        filters.stream().map(TimelineBand::fromApi).forEach(f -> b.addFilters(f));
+
+        filter = b.build();
+    }
+
+    public List<ItemFilter> getItemFilters() {
+        if (filter == null) {
+            return Collections.emptyList();
+        } else {
+            return filter.getFiltersList().stream().map(TimelineBand::toApi).collect(Collectors.toList());
+        }
+    }
+
+    static private ItemFilter toApi(BandFilter.ItemFilter f) {
+        ItemFilter.Builder ifb = ItemFilter.newBuilder();
+        f.getCriteriaList().stream().map(TimelineBand::toApi).forEach(fc -> ifb.addCriteria(fc));
+        return ifb.build();
+    }
+
+    static private FilterCriterion toApi(BandFilter.FilterCriterion fc) {
+        return FilterCriterion.newBuilder().setKey(fc.getKey()).setValue(fc.getValue()).build();
+    }
+
+    static private BandFilter.ItemFilter fromApi(ItemFilter f) {
+        var ifb = BandFilter.ItemFilter.newBuilder();
+        f.getCriteriaList().stream().map(TimelineBand::fromApi).forEach(fc -> ifb.addCriteria(fc));
+        return ifb.build();
+    }
+
+    static private BandFilter.FilterCriterion fromApi(FilterCriterion fc) {
+        return BandFilter.FilterCriterion.newBuilder().setKey(fc.getKey()).setValue(fc.getValue()).build();
+    }
+}
+```
+
+### `TimelineBandDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineBandDb.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.timeline.protobuf.BandFilter;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class TimelineBandDb {
+    public static final TupleDefinition TIMELINE_DEF = new TupleDefinition();
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_SHARED = "shared";
+    public static final String CNAME_USERNAME = "username";
+    public static final String CNAME_TAGS = "tags";
+    public static final String CNAME_SOURCE = "source";
+    public static final String CNAME_FILTER = "filter";
+
+    protected static final String PROP_PREFIX = "prop_";
+
+    static {
+        TIMELINE_DEF.addColumn(CNAME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_NAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_DESCRIPTION, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_SHARED, DataType.BOOLEAN);
+        TIMELINE_DEF.addColumn(CNAME_USERNAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_TYPE, DataType.ENUM);
+        TIMELINE_DEF.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM));
+        TIMELINE_DEF.addColumn(CNAME_SOURCE, DataType.ENUM);
+        TIMELINE_DEF.addColumn(CNAME_FILTER, DataType.protobuf(BandFilter.class));
+    }
+
+    final Log log;
+    final private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    final static String TABLE_NAME = "timeline_band";
+
+    final YarchDatabaseInstance ydb;
+    final Stream bandStream;
+
+    LoadingCache<UUID, TimelineBand> bandCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(new CacheLoader<UUID, TimelineBand>() {
+                @Override
+                public TimelineBand load(UUID uuid) {
+                    return doGetBand(uuid);
+                }
+            });
+
+    public TimelineBandDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            bandStream = setupTimelineRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    public TimelineBand deleteBand(UUID uuid) {
+        rwlock.writeLock().lock();
+        try {
+            TimelineBand band = doGetBand(uuid);
+            if (band == null) {
+                return null;
+            }
+
+            doDeleteBand(uuid);
+
+            return band;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    private Stream setupTimelineRecording() throws StreamSqlException, ParseException {
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TIMELINE_DEF.getStringDefinition1()
+                    + ", primary key(uuid))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TIMELINE_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    private TimelineBand doGetBand(UUID uuid) {
+        StreamSqlResult r = ydb.executeUnchecked("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+        try {
+            if (r.hasNext()) {
+                Tuple tuple = r.next();
+                try {
+                    TimelineBand band = new TimelineBand(tuple);
+                    log.trace("Read band from db {}", band);
+                    return band;
+                } catch (Exception e) {
+                    log.error("Cannot decode tuple {} to band", tuple);
+                }
+            }
+        } finally {
+            r.close();
+        }
+        throw new NoSuchItemException();
+    }
+
+    private void doDeleteBand(UUID uuid) {
+        bandCache.invalidate(uuid);
+        StreamSqlResult r = ydb.executeUnchecked("delete from " + TABLE_NAME + " where uuid = ?", uuid);
+        r.close();
+    }
+
+    public Collection<String> getTags() {
+        rwlock.readLock().lock();
+        try {
+            TableColumnDefinition tcd = ydb.getTable(TABLE_NAME).getColumnDefinition(CNAME_TAGS);
+            return Collections.unmodifiableSet(tcd.getEnumValues().keySet());
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    // returns null if uuid does not exist
+    private TimelineBand bandFromCache(UUID uuid) {
+        try {
+            return bandCache.getUnchecked(uuid);
+        } catch (UncheckedExecutionException e) {
+            if (e.getCause() instanceof NoSuchItemException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @SuppressWarnings("serial")
+    static class NoSuchItemException extends RuntimeException {
+    }
+
+    public TimelineBand addBand(TimelineBand band) {
+        rwlock.writeLock().lock();
+        try {
+            Tuple tuple = band.toTuple();
+            log.debug("Adding timeline band to RDB: {}", tuple);
+            bandStream.emitTuple(tuple);
+            return band;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineBand updateBand(TimelineBand band) {
+        rwlock.writeLock().lock();
+        try {
+            doDeleteBand(band.getId());
+
+            Tuple tuple = band.toTuple();
+            log.debug("Updating timeline band in RDB: {}", tuple);
+            bandStream.emitTuple(tuple);
+            return band;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineBand getBand(UUID uuid) {
+        rwlock.readLock().lock();
+        try {
+            return bandFromCache(uuid);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void listBands(String user, BandListener consumer) {
+        rwlock.readLock().lock();
+        try {
+            StreamSqlStatement stmt = ydb.createStatement(
+                    "select * from " + TABLE_NAME + " where shared or username = ?", user);
+
+            ydb.execute(stmt, new ResultListener() {
+                @Override
+                public void next(Tuple tuple) {
+                    consumer.next(new TimelineBand(tuple));
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    consumer.complete(null);
+                }
+            });
+
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+}
+```
+
+### `TimelineEvent.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineEvent.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import org.yamcs.protobuf.TimelineItem.Builder;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * Used for displaying day/night, TDRS, GS visibility, milestones (e.g. launch, a deadline), general items covering
+ * large time intervals for which no specific action is taken (e.g. mission phase).
+ * <p>
+ * In the timeline widget also enumerated telemetry (e.g. ON/OFF, NOMINAL/STAND_BY) and packet histograms are displayed
+ * as events.
+ * 
+ *
+ */
+public class TimelineEvent extends TimelineItem {
+
+    public TimelineEvent(String id) {
+        super(TimelineItemType.EVENT, id);
+    }
+
+    public TimelineEvent(Tuple tuple) {
+        super(TimelineItemType.EVENT, tuple);
+    }
+
+    @Override
+    protected void addToProto(boolean detail, Builder protob) {
+    }
+
+    @Override
+    protected void addToTuple(Tuple tuple) {
+    }
+
+    @Override
+    public String toString() {
+        return "TimelineEvent [id=" + id + ", start=" + start + ", duration=" + duration + ", relativeItemUuid="
+                + relativeItemUuid + ", relativeStart=" + relativeStart + ", groupUuid=" + groupUuid + ", source="
+                + source + ", name=" + name + ", tooltip=" + tooltip + ", description=" + description + ", tags=" + tags
+                + "]";
+    }
+}
+```
+
+### `TimelineItem.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItem.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineBandDb.PROP_PREFIX;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_DESCRIPTION;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_DURATION;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_GROUP_ID;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_ID;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_NAME;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_RELTIME_ID;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_RELTIME_START;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_START;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_TAGS;
+import static org.yamcs.timeline.TimelineItemDb.CNAME_TYPE;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.yamcs.protobuf.RelativeTime;
+import org.yamcs.protobuf.TimelineItemType;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+import com.google.protobuf.util.Durations;
+
+/**
+ * A timeline item is the entity that appears in the timeline bars.
+ * <p>
+ * They can be events or activities.
+ * <p>
+ * Each item is identified by an id (UUID).
+ * 
+ * @author nm
+ *
+ */
+public abstract class TimelineItem {
+    protected final String id;
+    protected final TimelineItemType type;
+
+    protected long start;
+    protected long duration;
+
+    // if relativeItemUuid!= null -> the item start is relative to another item
+    protected UUID relativeItemUuid;
+    protected long relativeStart;
+
+    // if the item is part of a group
+    protected UUID groupUuid;
+
+    protected String source;
+
+    protected String name;
+    protected String tooltip;
+    protected String description;
+    protected List<String> tags;
+    protected Map<String, String> properties = new HashMap<>();
+
+    protected TimelineItem(TimelineItemType type, Tuple tuple) {
+        this.id = ((UUID) tuple.getColumn(CNAME_ID)).toString();
+        this.type = type;
+        this.start = tuple.getTimestampColumn(CNAME_START);
+        this.duration = tuple.getLongColumn(CNAME_DURATION);
+
+        if (tuple.hasColumn(CNAME_NAME)) {
+            this.name = tuple.getColumn(CNAME_NAME);
+        }
+        if (tuple.hasColumn(CNAME_TAGS)) {
+            this.tags = tuple.getColumn(CNAME_TAGS);
+        }
+        if (tuple.hasColumn(CNAME_DESCRIPTION)) {
+            this.description = tuple.getColumn(CNAME_DESCRIPTION);
+        }
+
+        for (int i = 0; i < tuple.size(); i++) {
+            ColumnDefinition column = tuple.getColumnDefinition(i);
+            if (column.getName().startsWith(PROP_PREFIX)) {
+                String columnName = column.getName().substring(PROP_PREFIX.length());
+                properties.put(columnName, tuple.getColumn(column.getName()));
+            }
+        }
+    }
+
+    public TimelineItem(TimelineItemType type, String id) {
+        this.id = id;
+        this.type = type;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public UUID getRelativeItemUuid() {
+        return relativeItemUuid;
+    }
+
+    public void setRelativeItemUuid(UUID relativeItemUuid) {
+        this.relativeItemUuid = relativeItemUuid;
+    }
+
+    public long getRelativeStart() {
+        return relativeStart;
+    }
+
+    public void setRelativeStart(long relativeStart) {
+        this.relativeStart = relativeStart;
+    }
+
+    public UUID getGroupUuid() {
+        return groupUuid;
+    }
+
+    public void setGroupUuid(UUID groupUuid) {
+        this.groupUuid = groupUuid;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getTooltip() {
+        return tooltip;
+    }
+
+    public void setTooltip(String tooltip) {
+        this.tooltip = tooltip;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public TimelineItemType getType() {
+        return type;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties.clear();
+        this.properties.putAll(properties);
+    }
+
+    protected abstract void addToProto(boolean detail, org.yamcs.protobuf.TimelineItem.Builder protob);
+
+    public org.yamcs.protobuf.TimelineItem toProtoBuf(boolean detail) {
+        var protob = org.yamcs.protobuf.TimelineItem.newBuilder()
+                .setType(type)
+                .setId(id.toString())
+                .setStart(TimeEncoding.toProtobufTimestamp(start))
+                .setDuration(Durations.fromMillis(duration))
+                .putAllProperties(properties);
+        if (name != null) {
+            protob.setName(name);
+        }
+
+        if (relativeItemUuid != null) {
+            RelativeTime relTime = RelativeTime.newBuilder()
+                    .setRelto(relativeItemUuid.toString())
+                    .setRelativeStart(Durations.fromMillis(relativeStart))
+                    .build();
+            protob.setRelativeTime(relTime);
+        }
+        if (tags != null) {
+            protob.addAllTags(tags);
+        }
+
+        if (detail) {
+            if (description != null) {
+                protob.setDescription(description);
+            }
+        }
+
+        addToProto(detail, protob);
+        return protob.build();
+    }
+
+    public Tuple toTuple() {
+        Tuple tuple = new Tuple();
+
+        tuple.addColumn(CNAME_ID, DataType.UUID, UUID.fromString(id));
+        tuple.addEnumColumn(CNAME_TYPE, type.name());
+        tuple.addTimestampColumn(CNAME_START, start);
+        tuple.addColumn(CNAME_DURATION, duration);
+        if (name != null) {
+            tuple.addColumn(CNAME_NAME, name);
+        }
+        for (var entry : properties.entrySet()) {
+            tuple.addColumn(PROP_PREFIX + entry.getKey(), entry.getValue());
+        }
+        if (tags != null) {
+            tuple.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM), tags);
+        }
+        if (relativeItemUuid != null) {
+            tuple.addColumn(CNAME_RELTIME_ID, DataType.UUID, relativeItemUuid);
+            tuple.addColumn(CNAME_RELTIME_START, DataType.LONG, relativeStart);
+        }
+        if (groupUuid != null) {
+            tuple.addColumn(CNAME_GROUP_ID, DataType.UUID, groupUuid);
+        }
+        if (description != null) {
+            tuple.addColumn(CNAME_DESCRIPTION, DataType.STRING, description);
+        }
+
+        addToTuple(tuple);
+        return tuple;
+    }
+
+    protected abstract void addToTuple(Tuple tuple);
+
+    public static TimelineItem fromTuple(Tuple tuple) {
+        String types = tuple.getColumn("type");
+        TimelineItemType type = TimelineItemType.valueOf(types);
+        switch (type) {
+        case ACTIVITY_GROUP:
+            return new ActivityGroup(tuple);
+        case ACTIVITY:
+            return new TimelineActivity(TimelineItemType.ACTIVITY, tuple);
+        case EVENT:
+            return new TimelineEvent(tuple);
+        case ITEM_GROUP:
+            return new ItemGroup(tuple);
+        }
+        return null;
+    }
+}
+```
+
+### `TimelineItemDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItemDb.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.activities.protobuf.ActivityDefinition;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.ItemFilter;
+import org.yamcs.protobuf.ItemFilter.FilterCriterion;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.InvalidRequestException;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TableColumnDefinition;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class TimelineItemDb implements ItemProvider {
+    static final Random random = new Random();
+    public static final TupleDefinition TIMELINE_DEF = new TupleDefinition();
+    public static final String CNAME_START = "start";
+    public static final String CNAME_DURATION = "duration";
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_STATUS = "status";
+    public static final String CNAME_TAGS = "tags";
+    public static final String CNAME_GROUP_ID = "group_id";
+    public static final String CNAME_RELTIME_ID = "reltime_id";
+    public static final String CNAME_RELTIME_START = "reltime_start";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_FAILURE_REASON = "failure_reason";
+    public static final String CNAME_ACTIVITY_DEFINITION = "activity_definition";
+    public static final String CNAME_RUNS = "runs";
+    public static final String CRIT_KEY_TAG = "tag";
+
+    static {
+        TIMELINE_DEF.addColumn(CNAME_START, DataType.TIMESTAMP);
+        TIMELINE_DEF.addColumn(CNAME_DURATION, DataType.LONG);
+        TIMELINE_DEF.addColumn(CNAME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_NAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_TYPE, DataType.ENUM);
+        TIMELINE_DEF.addColumn(CNAME_TAGS, DataType.array(DataType.ENUM));
+        TIMELINE_DEF.addColumn(CNAME_GROUP_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_RELTIME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_RELTIME_START, DataType.LONG);
+        TIMELINE_DEF.addColumn(CNAME_ACTIVITY_DEFINITION, DataType.protobuf(ActivityDefinition.class));
+        TIMELINE_DEF.addColumn(CNAME_RUNS, DataType.array(DataType.UUID));
+    }
+    final Log log;
+    final private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    final static String TABLE_NAME = "timeline";
+
+    final YarchDatabaseInstance ydb;
+    final Stream timelineStream;
+    final TupleMatcher matcher;
+    final TimelineItemLogDb logDb;
+    private Set<ItemListener> itemListeners = new CopyOnWriteArraySet<>();
+
+    LoadingCache<UUID, TimelineItem> itemCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(
+                    new CacheLoader<UUID, TimelineItem>() {
+                        @Override
+                        public TimelineItem load(UUID uuid) {
+                            return doGetItem(uuid);
+                        }
+                    });
+
+    public TimelineItemDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            timelineStream = setupTimelineRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+
+        logDb = new TimelineItemLogDb(yamcsInstance);
+        matcher = new TupleMatcher();
+    }
+
+    private Stream setupTimelineRecording() throws StreamSqlException, ParseException {
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TIMELINE_DEF.getStringDefinition1()
+                    + ", primary key(start, uuid), index(reltime_id))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TIMELINE_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    @Override
+    public TimelineItem addItem(TimelineItem item) {
+        rwlock.writeLock().lock();
+        try {
+            if (item.getRelativeItemUuid() != null) {
+                TimelineItem relItem = fromCache(item.getRelativeItemUuid());
+                if (relItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced relative item uuid " + item.getRelativeItemUuid() + " does not exist");
+                }
+                item.setStart(relItem.getStart() + item.getRelativeStart());
+            }
+            if (item.getGroupUuid() != null) {
+                TimelineItem groupItem = fromCache(item.getGroupUuid());
+                if (groupItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced group item uuid " + item.getGroupUuid() + " does not exist");
+                }
+                if (!(groupItem instanceof ActivityGroup || groupItem instanceof ItemGroup)) {
+                    throw new InvalidRequestException(
+                            "Assigned group " + groupItem.getId() + " is not a real group");
+                }
+                if (groupItem instanceof ActivityGroup && !(item instanceof TimelineActivity)) {
+                    throw new InvalidRequestException(
+                            "An activity group " + groupItem.getId() + " can only contain activity items");
+                }
+            }
+            Tuple tuple = item.toTuple();
+            log.debug("Adding timeline item to RDB: {}", tuple);
+            timelineStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+
+        itemListeners.forEach(l -> l.onItemCreated(item));
+        return item;
+    }
+
+    @Override
+    public TimelineItem updateItem(TimelineItem item) {
+        rwlock.writeLock().lock();
+        UUID itemId = UUID.fromString(item.getId());
+        try {
+            if (item.getRelativeItemUuid() != null) {
+                TimelineItem relItem = fromCache(item.getRelativeItemUuid());
+                if (relItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced relative item uuid " + item.getRelativeItemUuid() + " does not exist");
+                }
+                verifyRelTimeCircularity(itemId, relItem);
+                item.setStart(relItem.getStart() + item.getRelativeStart());
+            }
+
+            if (item.getGroupUuid() != null) {
+                TimelineItem groupItem = fromCache(item.getGroupUuid());
+                if (groupItem == null) {
+                    throw new InvalidRequestException(
+                            "Referenced group item uuid " + item.getGroupUuid() + " does not exist");
+                }
+                if (!(groupItem instanceof ActivityGroup || groupItem instanceof ItemGroup)) {
+                    throw new InvalidRequestException(
+                            "Assigned group " + groupItem.getId() + " is not a real group");
+                }
+                if (groupItem instanceof ActivityGroup && !(item instanceof TimelineActivity)) {
+                    throw new InvalidRequestException(
+                            "An activity group " + groupItem.getId() + " can only contain activity items");
+                }
+                verifyGroupCircularity(itemId, groupItem);
+            }
+            doDeleteItem(itemId);
+
+            Tuple tuple = item.toTuple();
+            log.debug("Updating timeline item in RDB: {}", tuple);
+            timelineStream.emitTuple(tuple);
+
+            updateDependentStart(item);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+
+        itemListeners.forEach(l -> l.onItemUpdated(item));
+        return item;
+    }
+
+    // update the start time of all items having their time specified as relative to this
+    private void updateDependentStart(TimelineItem item) {
+        String query = "update " + TABLE_NAME + " set start = " + CNAME_RELTIME_START + " + ? where "
+                + CNAME_RELTIME_ID + " = ?";
+        StreamSqlResult r = ydb.executeUnchecked(query, item.getStart(), item.getId());
+        r.close();
+    }
+
+    private void verifyRelTimeCircularity(UUID uuid, TimelineItem relItem) {
+        if (uuid.toString().equals(relItem.getId())) {
+            throw new InvalidRequestException("Circular relative time reference for " + uuid);
+        }
+
+        if (relItem.getRelativeItemUuid() != null) {
+            TimelineItem relItem1 = fromCache(relItem.getRelativeItemUuid());
+            if (relItem1 == null) {
+                throw new DatabaseCorruptionException("timeline item " + relItem.getRelativeItemUuid()
+                        + " time referenced by " + relItem.getId() + " does not exist");
+            }
+            verifyRelTimeCircularity(uuid, relItem1);
+        }
+    }
+
+    private void verifyGroupCircularity(UUID uuid, TimelineItem groupItem) {
+        if (uuid.toString().equals(groupItem.getId())) {
+            throw new InvalidRequestException("Circular relative time reference for " + uuid);
+        }
+
+        if (groupItem.getGroupUuid() != null) {
+            TimelineItem groupItem1 = fromCache(groupItem.getGroupUuid());
+            if (groupItem1 == null) {
+                throw new DatabaseCorruptionException("timeline item " + groupItem.getGroupUuid()
+                        + " group referenced by " + groupItem.getId() + " does not exist");
+            }
+            verifyGroupCircularity(uuid, groupItem1);
+        }
+    }
+
+    private TimelineItem doGetItem(UUID uuid) {
+        StreamSqlResult r = ydb.executeUnchecked("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+        try {
+            if (r.hasNext()) {
+                Tuple tuple = r.next();
+                try {
+                    TimelineItem item = TimelineItem.fromTuple(tuple);
+                    log.trace("Read item from db {}", item);
+                    return item;
+                } catch (Exception e) {
+                    log.error("Cannot decode tuple {} intro timeline item", tuple);
+                }
+            }
+        } finally {
+            r.close();
+        }
+
+        throw new NoSuchItemException();
+    }
+
+    @Override
+    public TimelineItem getItem(String id) {
+        UUID uuid = UUID.fromString(id);
+        rwlock.readLock().lock();
+        try {
+            return fromCache(uuid);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public TimelineItem deleteItem(UUID uuid) {
+        TimelineItem item = null;
+        rwlock.writeLock().lock();
+        try {
+            item = doGetItem(uuid);
+            if (item == null) {
+                return null;
+            }
+
+            StreamSqlResult r = ydb.executeUnchecked(
+                    "select uuid from " + TABLE_NAME + " where " + CNAME_GROUP_ID + " = ?", uuid);
+            try {
+                if (r.hasNext()) {
+                    UUID id = r.next().getColumn(CNAME_ID);
+                    throw new InvalidRequestException(
+                            "Cannot delete " + uuid + " because it is considered as a group by item " + id);
+                }
+            } finally {
+                r.close();
+            }
+
+            r = ydb.executeUnchecked(
+                    "select uuid from " + TABLE_NAME + " where " + CNAME_RELTIME_ID + " = ?", uuid);
+            try {
+                if (r.hasNext()) {
+                    UUID id = r.next().getColumn(CNAME_ID);
+                    r.close();
+                    throw new InvalidRequestException(
+                            "Cannot delete " + uuid + " because item " + id + " time depends on it");
+                }
+            } finally {
+                r.close();
+            }
+            doDeleteItem(uuid);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+
+        var fItem = item;
+        itemListeners.forEach(l -> l.onItemDeleted(fItem));
+        return item;
+    }
+
+    @Override
+    public TimelineItem deleteTimelineGroup(UUID uuid) {
+        rwlock.writeLock().lock();
+        try {
+            TimelineItem item = doGetItem(uuid);
+            if (item == null) {
+                return null;
+            }
+
+            // delete all events from the group
+            StreamSqlResult r = ydb.executeUnchecked(
+                    "select uuid from " + TABLE_NAME + " where " + CNAME_GROUP_ID + " = ?", uuid);
+            while (r.hasNext()) {
+                UUID id = r.next().getColumn(CNAME_ID);
+                deleteItem(id);
+            }
+            r.close();
+
+            // delete the group
+            deleteItem(uuid);
+            return item;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    private void doDeleteItem(UUID uuid) {
+        itemCache.invalidate(uuid);
+        StreamSqlResult r = ydb.executeUnchecked("delete from " + TABLE_NAME + " where uuid = ?", uuid);
+        r.close();
+    }
+
+    @Override
+    public void getItems(int limit, String token, RetrievalFilter filter, ItemReceiver consumer) {
+        rwlock.readLock().lock();
+        try {
+            SqlBuilder sqlBuilder = new SqlBuilder(TABLE_NAME);
+            sqlBuilder.select("*");
+
+            TimeInterval interval = filter.getTimeInterval();
+            if (interval.hasEnd()) {
+                sqlBuilder.where("start < ?", interval.getEnd());
+            }
+            if (interval.hasStart()) {
+                sqlBuilder.where("start+duration > ?", interval.getStart());
+            }
+            List<String> tags = getTags(filter);
+
+            if (!tags.isEmpty()) {
+                sqlBuilder.where(" tags && ?", tags);
+            }
+            sqlBuilder.limit(limit + 1);
+
+            StreamSqlStatement stmt = ydb.createStatement(sqlBuilder.toString(),
+                    sqlBuilder.getQueryArguments().toArray());
+            ydb.execute(stmt, new ResultListener() {
+                int count = 0;
+
+                @Override
+                public void next(Tuple tuple) {
+                    if (matcher.matches(filter, tuple)) {
+                        if (count < limit) {
+                            consumer.next(TimelineItem.fromTuple(tuple));
+                        }
+                        count++;
+                    }
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    if (count == limit + 1) {
+                        consumer.complete(getRandomToken());
+                    } else {
+                        consumer.complete(null);
+                    }
+                }
+            });
+
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+
+    }
+
+    private List<String> getTags(RetrievalFilter filter) {
+        List<String> r = new ArrayList<>();
+        if (filter.getTags() != null) {
+            r.addAll(filter.getTags());
+        }
+        if (filter.getItemFilters() != null) {
+            for (ItemFilter f : filter.getItemFilters()) {
+                for (var c : f.getCriteriaList()) {
+                    if (CRIT_KEY_TAG.equals(c.getKey())) {
+                        r.add(c.getValue());
+                    }
+                }
+            }
+        }
+        return r;
+    }
+
+    public void addItemListener(ItemListener itemListener) {
+        itemListeners.add(itemListener);
+    }
+
+    public void removeItemListener(ItemListener itemListener) {
+        itemListeners.remove(itemListener);
+    }
+
+    private static String getRandomToken() {
+        byte[] b = new byte[16];
+        random.nextBytes(b);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(b);
+    }
+
+    public Collection<String> getTags() {
+        rwlock.readLock().lock();
+        try {
+            TableColumnDefinition tcd = ydb.getTable(TABLE_NAME).getColumnDefinition(CNAME_TAGS);
+            return Collections.unmodifiableSet(tcd.getEnumValues().keySet());
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    // returns null if uuid does not exist
+    private TimelineItem fromCache(UUID uuid) {
+        try {
+            return itemCache.getUnchecked(uuid);
+        } catch (UncheckedExecutionException e) {
+            if (e.getCause() instanceof NoSuchItemException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @Override
+    public TimelineSourceCapabilities getCapabilities() {
+        return TimelineSourceCapabilities.newBuilder()
+                .setReadOnly(false)
+                .setHasActivityGroups(true)
+                .setHasEventGroups(true)
+                .setHasManualActivities(true)
+                .setHasAutomatedActivities(true)
+                .build();
+    }
+
+    @Override
+    public void validateFilters(List<ItemFilter> filters) throws BadRequestException {
+        for (var filter : filters) {
+            for (var c : filter.getCriteriaList()) {
+                if (!CRIT_KEY_TAG.equals(c.getKey())) {
+                    throw new BadRequestException(
+                            "Unknonw criteria key " + c.getKey() + ". Supported key: " + CRIT_KEY_TAG);
+                }
+            }
+        }
+    }
+
+    private static class TupleMatcher extends FilterMatcher<Tuple> {
+        @Override
+        protected boolean criterionMatch(FilterCriterion c, Tuple tuple) {
+            String cmdName = tuple.getColumn(StandardTupleDefinitions.CMDHIST_TUPLE_COL_CMDNAME);
+            if (cmdName == null) {
+                return false;
+            }
+            if (CRIT_KEY_TAG.equals(c.getKey())) {
+                return cmdName.matches(c.getValue());
+            } else {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public TimelineItemLog getItemLog(String id) {
+        UUID uuid = UUID.fromString(id);
+        return logDb.getLog(uuid);
+    }
+
+    @Override
+    public LogEntry addItemLog(String id, LogEntry entry) {
+        UUID uuid = UUID.fromString(id);
+        return logDb.addLogEntry(uuid, entry);
+    }
+
+    @SuppressWarnings("serial")
+    static class NoSuchItemException extends RuntimeException {
+
+    }
+
+}
+```
+
+### `TimelineItemLogDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineItemLogDb.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.UUID;
+
+import org.yamcs.InitException;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.LogEntry;
+import org.yamcs.protobuf.TimelineItemLog;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+
+public class TimelineItemLogDb {
+    public static final TupleDefinition LOG_DEF = new TupleDefinition();
+    public static final String CNAME_TIME = "logtime";
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_USER = "user";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_MSG = "msg";
+
+    static {
+        LOG_DEF.addColumn(CNAME_TIME, DataType.TIMESTAMP);
+        LOG_DEF.addColumn(CNAME_ID, DataType.UUID);
+        LOG_DEF.addColumn(CNAME_USER, DataType.STRING);
+        LOG_DEF.addColumn(CNAME_TYPE, DataType.STRING);
+        LOG_DEF.addColumn(CNAME_MSG, DataType.STRING);
+    }
+
+    final Log log;
+    final static String TABLE_NAME = "timeline_log";
+
+    final YarchDatabaseInstance ydb;
+    final Stream logStream;
+
+    final TimeService timeService;
+
+    public TimelineItemLogDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            logStream = setupLogRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    private Stream setupLogRecording() throws StreamSqlException, ParseException {
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + LOG_DEF.getStringDefinition1()
+                    + ", seq long auto_increment, primary key(logtime, uuid, seq))";
+            ydb.execute(query);
+        }
+        String streamName = TABLE_NAME + "_in";
+
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + LOG_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    public TimelineItemLog getLog(UUID uuid) {
+        TimelineItemLog.Builder logb = TimelineItemLog.newBuilder().setId(uuid.toString());
+        StreamSqlResult r = null;
+        try {
+            r = ydb.execute("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+            while (r.hasNext()) {
+                logb.addEntries(fromTuple(r.next()));
+            }
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            if (r != null) {
+                r.close();
+            }
+        }
+
+        return logb.build();
+    }
+
+    public LogEntry addLogEntry(UUID uuid, LogEntry entry) {
+        Tuple tuple = toTuple(uuid, entry);
+        log.debug("Adding log {}", tuple);
+        logStream.emitTuple(tuple);
+
+        return fromTuple(tuple);
+    }
+
+    private LogEntry fromTuple(Tuple tuple) {
+        long time = tuple.getTimestampColumn(CNAME_TIME);
+        LogEntry.Builder logb = LogEntry.newBuilder().setTime(TimeEncoding.toProtobufTimestamp(time));
+
+        if (tuple.hasColumn(CNAME_USER)) {
+            logb.setUser(tuple.getColumn(CNAME_USER));
+        }
+        if (tuple.hasColumn(CNAME_TYPE)) {
+            logb.setType(tuple.getColumn(CNAME_TYPE));
+        }
+
+        if (tuple.hasColumn(CNAME_MSG)) {
+            logb.setMsg(tuple.getColumn(CNAME_MSG));
+        }
+
+        return logb.build();
+    }
+
+    private Tuple toTuple(UUID uuid, LogEntry entry) {
+        Tuple tuple = new Tuple();
+        long time = entry.hasTime() ? TimeEncoding.fromProtobufTimestamp(entry.getTime())
+                : timeService.getMissionTime();
+
+        tuple.addColumn(CNAME_TIME, DataType.TIMESTAMP, time);
+        tuple.addColumn(CNAME_ID, DataType.UUID, uuid);
+
+        if (entry.hasUser()) {
+            tuple.addColumn(CNAME_USER, entry.getUser());
+        }
+
+        if (entry.hasType()) {
+            tuple.addColumn(CNAME_TYPE, entry.getType());
+        }
+
+        if (entry.hasMsg()) {
+            tuple.addColumn(CNAME_MSG, entry.getMsg());
+        }
+
+        return tuple;
+    }
+}
+```
+
+### `TimelineService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineService.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.activities.ActivityService;
+import org.yamcs.protobuf.TimelineSourceCapabilities;
+
+import com.google.common.util.concurrent.ServiceManager;
+
+/**
+ * This service manages the Yamcs timeline.
+ * <p>
+ * The timeline is a collection of events or activities collectively called timeline items.
+ * 
+ * @author nm
+ */
+public class TimelineService extends AbstractYamcsService {
+
+    public static final String RDB_TIMELINE_SOURCE = "rdb";
+    public static final String COMMANDS_TIMELINE_SOURCE = "commands";
+
+    private static final String CONFIG_ACTIVITIES = "activities";
+    private static final String CONFIG_SCHEDULING = "scheduling";
+
+    private Map<String, ItemProvider> timelineSources = new HashMap<>();
+
+    private TimelineBandDb timelineBandDb;
+    private TimelineViewDb timelineViewDb;
+    private TimelineItemDb timelineItemDb;
+
+    // Guava manager for sub-services
+    private ServiceManager serviceManager;
+
+    private ActivityService activityService = new ActivityService();
+    private ActivityScheduler activityScheduler = new ActivityScheduler();
+
+    @Override
+    public Spec getSpec() {
+        var spec = new Spec();
+        spec.addOption(CONFIG_ACTIVITIES, OptionType.MAP)
+                .withSpec(activityService.getSpec())
+                .withApplySpecDefaults(true);
+        spec.addOption(CONFIG_SCHEDULING, OptionType.MAP)
+                .withSpec(activityScheduler.getSpec())
+                .withApplySpecDefaults(true);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        timelineItemDb = new TimelineItemDb(yamcsInstance);
+        timelineSources.put(RDB_TIMELINE_SOURCE, timelineItemDb);
+        timelineSources.put(COMMANDS_TIMELINE_SOURCE, new CommandItemProvider(yamcsInstance));
+        timelineBandDb = new TimelineBandDb(yamcsInstance);
+        timelineViewDb = new TimelineViewDb(yamcsInstance);
+
+        var activityConfig = config.getConfigOrEmpty(CONFIG_ACTIVITIES);
+        activityService.init(yamcsInstance, activityConfig);
+
+        var schedulerConfig = config.getConfigOrEmpty(CONFIG_SCHEDULING);
+        activityScheduler.init(this, schedulerConfig);
+    }
+
+    public Map<String, TimelineSourceCapabilities> getSources() {
+        Map<String, TimelineSourceCapabilities> r = new HashMap<>();
+        for (var entry : timelineSources.entrySet()) {
+            r.put(entry.getKey(), entry.getValue().getCapabilities());
+        }
+        return r;
+    }
+
+    public ItemProvider getSource(String source) {
+        return timelineSources.get(source);
+    }
+
+    public TimelineBandDb getTimelineBandDb() {
+        return timelineBandDb;
+    }
+
+    public TimelineViewDb getTimelineViewDb() {
+        return timelineViewDb;
+    }
+
+    public TimelineItemDb getTimelineItemDb() {
+        return timelineItemDb;
+    }
+
+    public ActivityService getActivityService() {
+        return activityService;
+    }
+
+    public ActivityScheduler getActivityScheduler() {
+        return activityScheduler;
+    }
+
+    @Override
+    protected void doStart() {
+        serviceManager = new ServiceManager(Arrays.asList(activityService, activityScheduler));
+        try {
+            serviceManager.startAsync().awaitHealthy(10, TimeUnit.SECONDS);
+            notifyStarted();
+        } catch (TimeoutException e) {
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        serviceManager.stopAsync();
+        try {
+            serviceManager.awaitStopped(5, TimeUnit.SECONDS);
+            notifyStopped();
+        } catch (TimeoutException e) {
+            notifyFailed(e);
+        }
+    }
+}
+```
+
+### `TimelineView.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineView.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import static org.yamcs.timeline.TimelineViewDb.CNAME_BANDS;
+import static org.yamcs.timeline.TimelineViewDb.CNAME_DESCRIPTION;
+import static org.yamcs.timeline.TimelineViewDb.CNAME_ID;
+import static org.yamcs.timeline.TimelineViewDb.CNAME_NAME;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class TimelineView {
+
+    private final UUID id;
+
+    private String name;
+    private String description;
+    private List<UUID> bands = new ArrayList<>();
+
+    public TimelineView(UUID id) {
+        this.id = id;
+    }
+
+    TimelineView(Tuple tuple) {
+        id = tuple.getColumn(CNAME_ID);
+        name = tuple.getColumn(CNAME_NAME);
+        description = tuple.getColumn(CNAME_DESCRIPTION);
+        if (tuple.getColumn(CNAME_BANDS) != null) {
+            bands.addAll(tuple.getColumn(CNAME_BANDS));
+        }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<UUID> getBands() {
+        return bands;
+    }
+
+    public void setBands(List<UUID> bands) {
+        this.bands.clear();
+        this.bands.addAll(bands);
+    }
+
+    public org.yamcs.protobuf.TimelineView toProtobuf() {
+        List<org.yamcs.protobuf.TimelineBand> bands = this.bands.stream()
+                .map(id -> org.yamcs.protobuf.TimelineBand.newBuilder()
+                        .setId(id.toString())
+                        .build())
+                .collect(Collectors.toList());
+        org.yamcs.protobuf.TimelineView.Builder b = org.yamcs.protobuf.TimelineView.newBuilder()
+                .setId(id.toString())
+                .addAllBands(bands);
+        if (name != null) {
+            b.setName(name);
+        }
+        if (description != null) {
+            b.setDescription(description);
+        }
+        return b.build();
+    }
+
+    public Tuple toTuple() {
+        Tuple tuple = new Tuple();
+        tuple.addColumn(CNAME_ID, DataType.UUID, id);
+        tuple.addColumn(CNAME_NAME, name);
+        tuple.addColumn(CNAME_DESCRIPTION, description);
+        if (!bands.isEmpty()) {
+            tuple.addColumn(CNAME_BANDS, DataType.array(DataType.UUID), bands);
+        }
+        return tuple;
+    }
+}
+```
+
+### `TimelineViewDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/TimelineViewDb.java`
+
+
+```java
+package org.yamcs.timeline;
+
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class TimelineViewDb {
+    public static final TupleDefinition TIMELINE_DEF = new TupleDefinition();
+    public static final String CNAME_ID = "uuid";
+    public static final String CNAME_NAME = "name";
+    public static final String CNAME_DESCRIPTION = "description";
+    public static final String CNAME_BANDS = "bands";
+
+    static {
+        TIMELINE_DEF.addColumn(CNAME_ID, DataType.UUID);
+        TIMELINE_DEF.addColumn(CNAME_NAME, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_DESCRIPTION, DataType.STRING);
+        TIMELINE_DEF.addColumn(CNAME_BANDS, DataType.array(DataType.UUID));
+    }
+
+    final Log log;
+    final private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+    final static String TABLE_NAME = "timeline_view";
+
+    final YarchDatabaseInstance ydb;
+    final Stream viewStream;
+
+    LoadingCache<UUID, TimelineView> viewCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .build(new CacheLoader<UUID, TimelineView>() {
+                @Override
+                public TimelineView load(UUID uuid) {
+                    return doGetview(uuid);
+                }
+            });
+
+    public TimelineViewDb(String yamcsInstance) throws InitException {
+        log = new Log(getClass(), yamcsInstance);
+
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            viewStream = setupTimelineRecording();
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    public TimelineView deleteView(UUID uuid) {
+        rwlock.writeLock().lock();
+        try {
+            TimelineView view = doGetview(uuid);
+            if (view == null) {
+                return null;
+            }
+
+            doDeleteView(uuid);
+
+            return view;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    private Stream setupTimelineRecording() throws StreamSqlException, ParseException {
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TIMELINE_DEF.getStringDefinition1()
+                    + ", primary key(uuid))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TIMELINE_DEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    private TimelineView doGetview(UUID uuid) {
+        StreamSqlResult r = ydb.executeUnchecked("select * from " + TABLE_NAME + " where uuid = ?", uuid);
+        try {
+            if (r.hasNext()) {
+                Tuple tuple = r.next();
+                try {
+                    TimelineView view = new TimelineView(tuple);
+                    log.trace("Read view from db {}", view);
+                    return view;
+                } catch (Exception e) {
+                    log.error("Cannot decode tuple {} intro timeline view", tuple);
+                }
+            }
+        } finally {
+            r.close();
+        }
+        throw new NoSuchItemException();
+    }
+
+    private void doDeleteView(UUID uuid) {
+        viewCache.invalidate(uuid);
+        StreamSqlResult r = ydb.executeUnchecked("delete from " + TABLE_NAME + " where uuid = ?", uuid);
+        r.close();
+    }
+
+    // returns null if uuid does not exist
+    private TimelineView viewFromCache(UUID uuid) {
+        try {
+            return viewCache.getUnchecked(uuid);
+        } catch (UncheckedExecutionException e) {
+            if (e.getCause() instanceof NoSuchItemException) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    @SuppressWarnings("serial")
+    static class NoSuchItemException extends RuntimeException {
+    }
+
+    public TimelineView addView(TimelineView view) {
+        rwlock.writeLock().lock();
+        try {
+            Tuple tuple = view.toTuple();
+            log.debug("Adding timeline view to RDB: {}", tuple);
+            viewStream.emitTuple(tuple);
+            return view;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineView updateView(TimelineView view) {
+        rwlock.writeLock().lock();
+        try {
+            doDeleteView(view.getId());
+
+            Tuple tuple = view.toTuple();
+            log.debug("Updating timeline view in RDB: {}", tuple);
+            viewStream.emitTuple(tuple);
+            return view;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public TimelineView getView(UUID uuid) {
+        rwlock.readLock().lock();
+        try {
+            return viewFromCache(uuid);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void listViews(ViewListener consumer) {
+        rwlock.readLock().lock();
+        try {
+            // increase the limit to generate a token when the limit is reached
+            StreamSqlStatement stmt = ydb.createStatement(
+                    "select * from " + TABLE_NAME);
+
+            ydb.execute(stmt, new ResultListener() {
+                @Override
+                public void next(Tuple tuple) {
+                    consumer.next(new TimelineView(tuple));
+                }
+
+                @Override
+                public void completeExceptionally(Throwable t) {
+                    consumer.completeExceptionally(t);
+                }
+
+                @Override
+                public void complete() {
+                    consumer.complete(null);
+                }
+            });
+
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+}
+```
+
+### `ViewListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/timeline/ViewListener.java`
+
+
+```java
+package org.yamcs.timeline;
+
+public interface ViewListener {
+
+    void next(TimelineView view);
+
+    /**
+     * 
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * <p>
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+```

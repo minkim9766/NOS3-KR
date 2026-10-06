@@ -3,14 +3,10 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/tse/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `simulator.xls`
 
-file--simulator.xls
-```
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/tse/simulator.xls`
 
-## 항목
-
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/tse/simulator.xls`](file--simulator.xls) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

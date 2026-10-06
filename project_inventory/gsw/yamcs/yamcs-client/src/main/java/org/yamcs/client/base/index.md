@@ -3,50 +3,2919 @@
 
 **경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractPage.java`
 
-file--AbstractPage.java
-file--AbstractStreamSender.java
-file--AbstractSubscription.java
-file--BulkRestDataReceiver.java
-file--BulkRestDataSender.java
-file--CertUtil.java
-file--ClientStreamingObserver.java
-file--DataObserver.java
-file--HttpClient.java
-file--HttpMethodHandler.java
-file--package-info.java
-file--ResponseObserver.java
-file--RestClient.java
-file--ServerURL.java
-file--SpnegoInfo.java
-file--SpnegoUtils.java
-file--WebSocketClient.java
-file--WebSocketClientCallback.java
-file--WebSocketClientHandler.java
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractPage.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.api.Observer;
+import org.yamcs.client.Page;
+
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Message;
+
+public abstract class AbstractPage<RequestT extends Message, ResponseT extends Message, ItemT> implements Page<ItemT> {
+
+    private static final String CONTINUATION_TOKEN = "continuationToken";
+    private static final String NEXT = "next";
+
+    private final RequestT originalRequest;
+    private final String repeatableField;
+    private final FieldDescriptor nextField;
+
+    private CompletableFuture<ResponseT> future;
+
+    // Only set when the future resolves
+    private ResponseT response;
+    private List<ItemT> items;
+    private String continuationToken;
+
+    public AbstractPage(RequestT request, String repeatableField) {
+        originalRequest = request;
+        this.repeatableField = repeatableField;
+
+        Descriptor requestDescriptor = request.getDescriptorForType();
+        nextField = requestDescriptor.findFieldByName(NEXT);
+        if (nextField == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Paging requires the request message to have a field '%s'", NEXT));
+        }
+
+        future = new CompletableFuture<>();
+        fetch(request, new ResponseObserver<>(future));
+    }
+
+    public CompletableFuture<Page<ItemT>> future() {
+        return future.thenApply(response -> {
+            readResponse(response);
+            return this;
+        });
+    }
+
+    private void readResponse(ResponseT response) {
+        this.response = response;
+        Descriptor responseDescriptor = response.getDescriptorForType();
+        FieldDescriptor continuationField = responseDescriptor.findFieldByName(CONTINUATION_TOKEN);
+        if (continuationField == null) {
+            throw new IllegalArgumentException(String.format(
+                    "Paging requires the message to have a field '%s'", CONTINUATION_TOKEN));
+        }
+
+        if (response.hasField(continuationField)) {
+            continuationToken = (String) response.getField(continuationField);
+        }
+
+        FieldDescriptor repeatableDescriptor = responseDescriptor.findFieldByName(repeatableField);
+        items = mapRepeatableField(response.getField(repeatableDescriptor));
+    }
+
+    // Can be overriden to expose a page of non-protobuf messages
+    @SuppressWarnings("unchecked")
+    protected List<ItemT> mapRepeatableField(Object field) {
+        return new ArrayList<>((List<ItemT>) field);
+    }
+
+    public ResponseT getResponse() {
+        return response;
+    }
+
+    @Override
+    public boolean hasNextPage() {
+        return continuationToken != null;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public CompletableFuture<Page<ItemT>> getNextPage() {
+        if (continuationToken == null) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        Message.Builder newRequest = originalRequest.toBuilder();
+        newRequest.setField(nextField, continuationToken);
+        RequestT continuationRequest = (RequestT) newRequest.build();
+        return new ContinuationPage(continuationRequest, repeatableField).future();
+    }
+
+    protected abstract void fetch(RequestT request, Observer<ResponseT> observer);
+
+    /**
+     * Returns an iterator. This only iterates the current page.
+     */
+    @Override
+    public Iterator<ItemT> iterator() {
+        return items.iterator();
+    }
+
+    // Delegates the actual fetch to the subclass
+    private class ContinuationPage extends AbstractPage<RequestT, ResponseT, ItemT> {
+
+        public ContinuationPage(RequestT request, String repeatableField) {
+            super(request, repeatableField);
+        }
+
+        @Override
+        protected void fetch(RequestT request, Observer<ResponseT> observer) {
+            AbstractPage.this.fetch(request, observer);
+        }
+    }
+}
 ```
 
-## 항목
+### `AbstractStreamSender.java`
 
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractPage.java`](file--AbstractPage.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractStreamSender.java`](file--AbstractStreamSender.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractSubscription.java`](file--AbstractSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/BulkRestDataReceiver.java`](file--BulkRestDataReceiver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/BulkRestDataSender.java`](file--BulkRestDataSender.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/CertUtil.java`](file--CertUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ClientStreamingObserver.java`](file--ClientStreamingObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/DataObserver.java`](file--DataObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/HttpClient.java`](file--HttpClient.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/HttpMethodHandler.java`](file--HttpMethodHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/package-info.java`](file--package-info.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ResponseObserver.java`](file--ResponseObserver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/RestClient.java`](file--RestClient.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ServerURL.java`](file--ServerURL.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/SpnegoInfo.java`](file--SpnegoInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/SpnegoUtils.java`](file--SpnegoUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClient.java`](file--WebSocketClient.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClientCallback.java`](file--WebSocketClientCallback.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClientHandler.java`](file--WebSocketClientHandler.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractStreamSender.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.client.ClientException;
+import org.yamcs.client.StreamSender;
+
+import com.google.protobuf.Message;
+
+public class AbstractStreamSender<ItemT extends Message, ResponseT> implements StreamSender<ItemT, ResponseT> {
+
+    private BulkRestDataSender baseSender;
+
+    public AbstractStreamSender(BulkRestDataSender baseSender) {
+        this.baseSender = baseSender;
+    }
+
+    @Override
+    public void send(ItemT message) {
+        try {
+            baseSender.sendData(message.toByteArray());
+        } catch (ClientException e) {
+            // TODO somehow emit to general future
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public CompletableFuture<ResponseT> complete() {
+        return null;
+    }
+}
+```
+
+### `AbstractSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/AbstractSubscription.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.api.Observer;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.Subscription;
+
+import com.google.protobuf.Message;
+
+/**
+ * Default base class for a {@link Subscription}.
+ * <p>
+ * This is designed such that most subclasses need only to provide type information. More advanced subscription
+ * subclasses may want to add custom functionality such as call-specific message processing.
+ */
+public abstract class AbstractSubscription<C extends Message, S extends Message> implements Subscription<C, S> {
+
+    // A future that resolves when the call is confirmed by the server
+    // A call is confirmed when the server has assigned it an id (upon first message)
+    private CompletableFuture<Void> confirmationFuture = new CompletableFuture<>();
+
+    // A future that resolves when the call is completed
+    private CompletableFuture<Void> wrappedFuture = new CompletableFuture<>();
+
+    protected Observer<C> clientObserver;
+
+    private Set<MessageListener<S>> messageListeners = new CopyOnWriteArraySet<>();
+
+    protected AbstractSubscription(MethodHandler methodHandler, String topic, Class<S> responseClass) {
+        WebSocketClient client = ((HttpMethodHandler) methodHandler).getWebSocketClient();
+        clientObserver = client.call(topic, new DataObserver<S>() {
+
+            @Override
+            public void confirm() {
+                confirmationFuture.complete(null);
+            }
+
+            @Override
+            public void next(S message) {
+                messageListeners.forEach(l -> l.onMessage(message));
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                messageListeners.forEach(l -> l.onError(t));
+                wrappedFuture.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete() {
+                wrappedFuture.complete(null);
+            }
+
+            @Override
+            public Class<S> getMessageClass() {
+                return responseClass;
+            }
+        });
+    }
+
+    /**
+     * Send a message (typically a subscription request) to Yamcs
+     */
+    @Override
+    public void sendMessage(C message) {
+        clientObserver.next(message);
+    }
+
+    /**
+     * Get updated on received server messages.
+     */
+    @Override
+    public void addMessageListener(MessageListener<S> listener) {
+        messageListeners.add(listener);
+    }
+
+    /**
+     * Cancel this subscription. After this method is called, you will no longer receive any messages from it.
+     */
+    @Override
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        messageListeners.clear(); // Immediately ensure nobody will receive anything anymore
+        clientObserver.complete(); // Now notify Yamcs async.
+        return true;
+    }
+
+    public CompletableFuture<Void> getConfirmationFuture() {
+        return confirmationFuture;
+    }
+
+    /**
+     * Waits until the server has confirmed the call for this subscription. Only the first client message of a call is
+     * confirmed.
+     */
+    public void awaitConfirmation() throws InterruptedException, ExecutionException {
+        confirmationFuture.get();
+    }
+
+    /**
+     * Waits until the server has confirmed the call for this subscription. Only the first client message of a call is
+     * confirmed.
+     */
+    public void awaitConfirmation(long timeout, TimeUnit unit)
+            throws InterruptedException, ExecutionException, TimeoutException {
+        confirmationFuture.get(timeout, unit);
+    }
+
+    @Override
+    public boolean isCancelled() {
+        return wrappedFuture.isCancelled();
+    }
+
+    @Override
+    public boolean isDone() {
+        return wrappedFuture.isDone();
+    }
+
+    @Override
+    public Void get() throws InterruptedException, ExecutionException {
+        return wrappedFuture.get();
+    }
+
+    @Override
+    public Void get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+        return wrappedFuture.get(timeout, unit);
+    }
+}
+```
+
+### `BulkRestDataReceiver.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/BulkRestDataReceiver.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import org.yamcs.client.ClientException;
+
+public interface BulkRestDataReceiver {
+    /**
+     * called when receiving data.
+     * 
+     * 
+     * @param data
+     * @throws ClientException
+     *             if exception is thrown the request will be aborted (connection to the server closed)
+     */
+    public void receiveData(byte[] data) throws ClientException;
+
+    /**
+     * Called when receiving an exception. Note that the CompleteableFuture returned from RestClient can also be used to
+     * intercept the exception;
+     * 
+     * @param t
+     */
+    default void receiveException(Throwable t) {
+    }
+}
+```
+
+### `BulkRestDataSender.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/BulkRestDataSender.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.nio.channels.ClosedChannelException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.client.ClientException;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.DefaultHttpContent;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+
+/**
+ * Used to post large quantities of data to yamcs. The data is sent using HTTP chuncked encoding
+ */
+public class BulkRestDataSender extends SimpleChannelInboundHandler<FullHttpResponse> {
+    ChannelHandlerContext ctx;
+    CompletableFuture<byte[]> completeRequestCf = new CompletableFuture<>();
+    volatile ClientException clientException = null;
+    int count = 0;
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        this.ctx = ctx;
+    }
+
+    /**
+     * send the next chunk of data. The caller is blocked if it sends data faster that can be transfered to the server.
+     * 
+     * @param data
+     * @throws ClientException
+     *             when there is an exception sending the data. The exception is also thrown if no data can be sent for
+     *             10 seconds
+     */
+    public void sendData(byte[] data) throws ClientException {
+        ByteBuf buf = Unpooled.wrappedBuffer(data);
+        sendData(buf);
+    }
+
+    public void sendData(ByteBuf buf) throws ClientException {
+        if (clientException != null) {
+            throw clientException;
+        }
+
+        count++;
+        try {
+            Channel ch = ctx.channel();
+            if (!ch.isOpen()) {
+                throw new ClosedChannelException();
+            }
+
+            ChannelFuture writeFuture = ctx.writeAndFlush(new DefaultHttpContent(buf));
+            if (!ch.isWritable()) {
+                boolean writeCompleted = writeFuture.await(600, TimeUnit.SECONDS);
+                if (!writeCompleted) {
+                    throw new ClientException("Channel did not become writable in 60 seconds");
+                }
+            }
+        } catch (Exception e) {
+            completeRequestCf.completeExceptionally(e);
+            if (e instanceof ClientException) {
+                throw (ClientException) e;
+            } else {
+                throw new ClientException(e.toString(), e);
+            }
+        }
+    }
+
+    /**
+     * Complete the request by a final empty chunck and return the response from the server.
+     * 
+     * @return a CompletableFuture that completes once the response from the server has been received.
+     */
+    public CompletableFuture<byte[]> completeRequest() {
+        if (completeRequestCf.isDone()) {
+            return completeRequestCf;
+        }
+
+        Channel ch = ctx.channel();
+        if (!ch.isOpen()) {
+            completeRequestCf.completeExceptionally(new ClosedChannelException());
+        }
+        ChannelFuture writeFuture = ctx.writeAndFlush(new DefaultLastHttpContent());
+        writeFuture.addListener(f -> {
+            if (!f.isSuccess()) {
+                completeRequestCf.completeExceptionally(f.cause());
+            }
+        });
+        return completeRequestCf;
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpResponse msg) throws Exception {
+        HttpResponseStatus status = msg.status();
+        if (status.equals(HttpResponseStatus.OK)) {
+            byte[] b = HttpClient.getByteArray(msg.content());
+            completeRequestCf.complete(b);
+        } else {
+            clientException = HttpClient.decodeException(msg);
+            completeRequestCf.completeExceptionally(clientException);
+        }
+    }
+
+    /**
+     *
+     * This handler expects to receive a 100 Continue message which means that the request is ok and the sender can
+     * start streaming data if this is received, a new bulk sender will be created and added to the pipeline and the
+     * CompletableFuture will be completed with the new object if any other response is received, the CompletableFuture
+     * will be completed exceptionally.
+     */
+    static class ContinuationHandler extends SimpleChannelInboundHandler<HttpResponse> {
+        CompletableFuture<BulkRestDataSender> cf;
+
+        public ContinuationHandler(CompletableFuture<BulkRestDataSender> cf) {
+            this.cf = cf;
+        }
+
+        @Override
+        protected void channelRead0(ChannelHandlerContext ctx, HttpResponse msg) {
+            if (msg.status().equals(HttpResponseStatus.CONTINUE)) {
+                ChannelPipeline pipeline = ctx.pipeline();
+                pipeline.remove(this);
+                pipeline.addLast(new HttpObjectAggregator(512 * 1024));
+                BulkRestDataSender brds = new BulkRestDataSender();
+                pipeline.addLast(brds);
+                cf.complete(brds);
+            } else {
+                cf.completeExceptionally(new ClientException("Cannot continue the bulk load: " + msg.status()));
+            }
+        }
+    }
+}
+```
+
+### `CertUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/CertUtil.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+
+public class CertUtil {
+
+    public static KeyStore loadCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        KeyStore caKeyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        caKeyStore.load(null, null);
+        try (FileInputStream fis = new FileInputStream(caCertFile)) {
+            int i = 0;
+            while (fis.available() > 0) {
+                X509Certificate cer = (X509Certificate) cf.generateCertificate(fis);
+                caKeyStore.setCertificateEntry("cacert" + (i++), cer);
+            }
+            if (i == 0) {
+                throw new IOException("No certificate could be loaded from '" + caCertFile + "'");
+            }
+        }
+        return caKeyStore;
+    }
+}
+```
+
+### `ClientStreamingObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ClientStreamingObserver.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import org.yamcs.api.AnnotationsProto;
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.Observer;
+import org.yamcs.client.ClientException;
+
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.QueryStringEncoder;
+
+/**
+ * A message observer that implements a streaming request over HTTP using chunked transfer encoding.
+ */
+public class ClientStreamingObserver implements Observer<Message> {
+
+    private MethodDescriptor method;
+    private RestClient baseClient;
+    private Message responsePrototype;
+    private Observer<Message> responseObserver;
+    private FieldDescriptor bodyField;
+
+    private BulkRestDataSender sender;
+
+    public ClientStreamingObserver(MethodDescriptor method, RestClient baseClient, Message responsePrototype,
+            Observer<Message> responseObserver) {
+        this.method = method;
+        this.baseClient = baseClient;
+        this.responsePrototype = responsePrototype;
+        this.responseObserver = responseObserver;
+
+        HttpRoute route = method.getOptions().getExtension(AnnotationsProto.route);
+
+        if (!route.hasBody()) {
+            throw new IllegalArgumentException("Route does not accept request bodies");
+        }
+        if (!"*".equals(route.getBody())) {
+            bodyField = method.getInputType().findFieldByName(route.getBody());
+        }
+    }
+
+    @Override
+    public synchronized void next(Message message) { // Synchronize so that sender is available after the first request
+        if (sender == null) {
+            HttpRoute route = method.getOptions().getExtension(AnnotationsProto.route);
+
+            // Holder for extracting route and query params
+            Message.Builder partial = message.toBuilder();
+
+            HttpMethod httpMethod = HttpMethodHandler.getMethod(route);
+            String uriTemplate = HttpMethodHandler.getPattern(route);
+            QueryStringEncoder uri = HttpMethodHandler.resolveUri(uriTemplate, message, method.getInputType(), partial);
+            message = partial.buildPartial();
+            try {
+                sender = baseClient.doBulkSendRequest(uri.toString(), httpMethod).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                cancel(e.getCause());
+            }
+        } else { // First message is always the initial request setup (no payload)
+            if (bodyField != null) {
+                message = (Message) message.getField(bodyField);
+            }
+            try {
+                sender.sendData(delimit(message));
+            } catch (ClientException e) {
+                cancel(e);
+            }
+        }
+    }
+
+    private static byte[] delimit(Message message) {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        try {
+            message.writeDelimitedTo(bout);
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
+        return bout.toByteArray();
+    }
+
+    private void cancel(Throwable reason) {
+        // TODO
+        throw new RuntimeException(reason);
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void complete() {
+        sender.completeRequest().whenComplete((data, err) -> {
+            if (err == null) {
+                Message response;
+                try {
+                    response = responsePrototype.newBuilderForType().mergeFrom(data).build();
+                    responseObserver.complete(response);
+                } catch (InvalidProtocolBufferException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            } else {
+                responseObserver.completeExceptionally(err);
+            }
+        });
+    }
+}
+```
+
+### `DataObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/DataObserver.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import org.yamcs.api.Observer;
+
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+// Some tricks to unpack data from the Any type without using descriptors
+// Only implementing the getMessageClass() is required -- which is already annoying enough.
+public interface DataObserver<T extends Message> extends Observer<T> {
+
+    Class<T> getMessageClass();
+
+    default void unpackNext(Any data) throws InvalidProtocolBufferException {
+        next(data.unpack(getMessageClass()));
+    }
+
+    /**
+     * Called when the server has confirmed this call.
+     */
+    void confirm();
+}
+```
+
+### `HttpClient.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/HttpClient.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.SSLException;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.yamcs.api.ExceptionMessage;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ClientException.ExceptionData;
+import org.yamcs.client.Credentials;
+import org.yamcs.client.OAuth2Credentials;
+import org.yamcs.client.UnauthorizedException;
+import org.yamcs.client.base.SpnegoUtils.SpnegoException;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.DefaultHttpRequest;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpContentDecompressor;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.handler.codec.http.cookie.ClientCookieEncoder;
+import io.netty.handler.codec.http.cookie.Cookie;
+import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder;
+import io.netty.handler.codec.http.multipart.HttpPostRequestEncoder.ErrorDataEncoderException;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+
+public class HttpClient {
+
+    public static final String MT_PROTOBUF = "application/protobuf";
+
+    private String sendMediaType = MT_PROTOBUF;
+    private String acceptMediaType = MT_PROTOBUF;
+    private EventLoopGroup group;
+    private List<Cookie> cookies;
+    private SslContext sslCtx;
+
+    // if set, do not verify server certificate
+    private boolean insecureTls;
+
+    private KeyStore caKeyStore;
+    private int maxResponseLength = 1024 * 1024;// max length of the expected response
+
+    private String tokenUrl;
+    private Credentials credentials;
+    private String userAgent;
+
+    public synchronized void login(String tokenUrl, String username, char[] password) throws ClientException {
+        this.tokenUrl = tokenUrl;
+        Map<String, String> attrs = new HashMap<>();
+        attrs.put("grant_type", "password");
+        attrs.put("username", username);
+        attrs.put("password", new String(password));
+
+        try {
+            credentials = requestTokens(tokenUrl, attrs).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof ClientException) {
+                throw (ClientException) e.getCause();
+            } else {
+                throw new ClientException(e.getCause());
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            throw new ClientException(e);
+        }
+    }
+
+    public synchronized void loginWithAuthorizationCode(String tokenUrl, String authorizationCode)
+            throws ClientException {
+        this.tokenUrl = tokenUrl;
+        Map<String, String> attrs = new HashMap<>();
+        attrs.put("grant_type", "authorization_code");
+        attrs.put("code", authorizationCode);
+
+        try {
+            credentials = requestTokens(tokenUrl, attrs).get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            if (e.getCause() instanceof ClientException) {
+                throw (ClientException) e.getCause();
+            } else {
+                throw new ClientException(e.getCause());
+            }
+        } catch (IOException | GeneralSecurityException e) {
+            throw new ClientException(e);
+        }
+    }
+
+    public synchronized String authorizeKerberos(SpnegoInfo info) throws ClientException {
+        try {
+            return SpnegoUtils.fetchAuthenticationCode(info);
+        } catch (SpnegoException e) {
+            throw new ClientException(e);
+        }
+    }
+
+    private synchronized void refreshAccessToken(OAuth2Credentials credentials) throws ClientException {
+        if (credentials.getRefreshToken() != null) {
+            Map<String, String> attrs = new HashMap<>();
+            attrs.put("grant_type", "refresh_token");
+            attrs.put("refresh_token", credentials.getRefreshToken());
+
+            try {
+                this.credentials = requestTokens(tokenUrl, attrs).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                if (e.getCause() instanceof ClientException) {
+                    throw (ClientException) e.getCause();
+                } else {
+                    throw new ClientException(e.getCause());
+                }
+            } catch (IOException | GeneralSecurityException e) {
+                throw new ClientException(e);
+            }
+        } else if (credentials.getSpnegoInfo() != null) {
+            SpnegoInfo spnegoInfo = credentials.getSpnegoInfo();
+            String authorizationCode = authorizeKerberos(spnegoInfo);
+            loginWithAuthorizationCode(tokenUrl, authorizationCode);
+            ((OAuth2Credentials) this.credentials).setSpnegoInfo(spnegoInfo); // We have a new credentials object
+        } else {
+            throw new ClientException("No refresh token available");
+        }
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    private CompletableFuture<OAuth2Credentials> requestTokens(String url, Map<String, String> attrs)
+            throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+
+        CompletableFuture<byte[]> responseFuture = new CompletableFuture<>();
+        HttpObjectAggregator aggregator = new HttpObjectAggregator(maxResponseLength);
+
+        ResponseHandler respHandler = new ResponseHandler(responseFuture);
+
+        HttpRequest request = new DefaultFullHttpRequest(
+                HttpVersion.HTTP_1_1, HttpMethod.POST, uri.getRawPath());
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        request.headers().set(HttpHeaderNames.HOST, host);
+        request.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+        request.headers().set(HttpHeaderNames.CONTENT_TYPE, "application/x-www-form-urlencoded");
+        if (userAgent != null) {
+            request.headers().set(HttpHeaderNames.USER_AGENT, userAgent);
+        }
+
+        try {
+            HttpPostRequestEncoder formEncoder = new HttpPostRequestEncoder(request, false);
+            for (Entry<String, String> attr : attrs.entrySet()) {
+                formEncoder.addBodyAttribute(attr.getKey(), attr.getValue());
+            }
+            formEncoder.finalizeRequest();
+        } catch (ErrorDataEncoderException e) {
+            throw new ClientException(e);
+        }
+
+        ChannelFuture channelFuture = setupChannel(uri, aggregator, respHandler);
+        channelFuture.addListener(f -> {
+            if (!f.isSuccess()) {
+                responseFuture.completeExceptionally(f.cause());
+                return;
+            }
+            channelFuture.channel().writeAndFlush(request);
+        });
+
+        return responseFuture.thenApply(data -> OAuth2Credentials.fromJsonTokenResponse(new String(data)));
+    }
+
+    public CompletableFuture<byte[]> doAsyncRequest(String url, HttpMethod httpMethod, byte[] body)
+            throws ClientException, IOException, GeneralSecurityException {
+        return doAsyncRequest(url, httpMethod, body, null);
+    }
+
+    public CompletableFuture<byte[]> doAsyncRequest(String url, HttpMethod httpMethod, byte[] body,
+            HttpHeaders extraHeaders) throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+        HttpObjectAggregator aggregator = new HttpObjectAggregator(maxResponseLength);
+
+        CompletableFuture<byte[]> responseFuture = new CompletableFuture<>();
+
+        HttpRequest request = setupRequest(uri, httpMethod, body);
+        if (extraHeaders != null) {
+            request.headers().add(extraHeaders);
+        }
+
+        ResponseHandler respHandler = new ResponseHandler(responseFuture);
+
+        ChannelFuture channelFuture = setupChannel(uri, aggregator, respHandler);
+        channelFuture.addListener(f -> {
+            if (!f.isSuccess()) {
+                responseFuture.completeExceptionally(f.cause());
+                return;
+            }
+            channelFuture.channel().writeAndFlush(request);
+        });
+        return responseFuture;
+    }
+
+    public CompletableFuture<BulkRestDataSender> doBulkSendRequest(String url, HttpMethod httpMethod)
+            throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+        CompletableFuture<BulkRestDataSender> cf = new CompletableFuture<>();
+        BulkRestDataSender.ContinuationHandler chandler = new BulkRestDataSender.ContinuationHandler(cf);
+
+        ChannelFuture chf = setupChannel(uri, chandler);
+        HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1, httpMethod, getPathWithQuery(uri));
+        fillInHeaders(request, uri);
+        request.headers().set(HttpHeaderNames.TRANSFER_ENCODING, HttpHeaderValues.CHUNKED);
+        HttpUtil.set100ContinueExpected(request, true);
+
+        chf.addListener(f -> {
+            if (!f.isSuccess()) {
+                cf.completeExceptionally(f.cause());
+                return;
+            }
+            chf.channel().writeAndFlush(request);
+        });
+
+        return cf;
+    }
+
+    static ClientException decodeException(HttpObject httpObj) throws IOException {
+        if (!(httpObj instanceof HttpResponse)) {
+            return getInvalidHttpResponseException(httpObj.toString());
+        }
+        if (!(httpObj instanceof FullHttpResponse)) {
+            return getInvalidHttpResponseException(((HttpResponse) httpObj).status().toString());
+        }
+
+        FullHttpResponse fullResp = (FullHttpResponse) httpObj;
+
+        if (fullResp.status() == HttpResponseStatus.UNAUTHORIZED) {
+            return new UnauthorizedException();
+        }
+
+        byte[] data = getByteArray(fullResp.content());
+        String contentType = fullResp.headers().get(HttpHeaderNames.CONTENT_TYPE);
+
+        if (contentType != null && MT_PROTOBUF.equals(contentType)) {
+            ExceptionMessage msg = ExceptionMessage.parseFrom(data);
+            ExceptionData excData = new ExceptionData(msg.getType(), msg.getMsg(), msg.getDetail());
+            return new ClientException(excData);
+        } else {
+            return new ClientException(fullResp.status() + ": " + new String(data));
+        }
+    }
+
+    private static ClientException getInvalidHttpResponseException(String resp) {
+        return new ClientException("Received http response: " + resp);
+    }
+
+    /**
+     * Sets the maximum size of the responses - this is not applicable to bulk requests whose response is practically
+     * unlimited and delivered piece by piece
+     * 
+     * @param length
+     */
+    public void setMaxResponseLength(int length) {
+        this.maxResponseLength = length;
+    }
+
+    /**
+     * Perform a request that potentially retrieves large amount of data. The data is forwarded to the client.
+     * 
+     * @param receiver
+     *            send all the data to this receiver. To find out when the request has been finished, the Future has to
+     *            be used
+     * @return a future indicating when the operation is completed.
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
+    public CompletableFuture<Void> doBulkReceiveRequest(String url, HttpMethod httpMethod, byte[] body,
+            BulkRestDataReceiver receiver) throws ClientException, IOException, GeneralSecurityException {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new ClientException(e);
+        }
+        BulkChannelHandler channelHandler = new BulkChannelHandler(receiver);
+
+        ChannelFuture chf = setupChannel(uri, channelHandler);
+        HttpRequest request = setupRequest(uri, httpMethod, body);
+        CompletableFuture<Void> cf = new CompletableFuture<>();
+
+        chf.addListener(f -> {
+            if (!f.isSuccess()) {
+                cf.completeExceptionally(f.cause());
+                return;
+            }
+            Channel ch = chf.channel();
+            ch.writeAndFlush(request);
+            ChannelFuture closeFuture = ch.closeFuture();
+            closeFuture.addListener(f1 -> {
+                if (channelHandler.exception != null) {
+                    cf.completeExceptionally(channelHandler.exception);
+                } else {
+                    cf.complete(null);
+                }
+            });
+
+        });
+        cf.whenComplete((v, t) -> {
+            if (t instanceof CancellationException) {
+                chf.channel().close();
+            }
+        });
+        return cf;
+    }
+
+    public CompletableFuture<Void> doBulkRequest(String url, HttpMethod httpMethod, String body,
+            BulkRestDataReceiver receiver) throws ClientException, IOException, GeneralSecurityException {
+        return doBulkReceiveRequest(url, httpMethod, body.getBytes(), receiver);
+    }
+
+    private ChannelFuture setupChannel(URI uri, ChannelHandler... channelHandler)
+            throws IOException, GeneralSecurityException {
+        String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        int port = uri.getPort();
+        if (port == -1) {
+            port = "https".equals(uri.getScheme()) ? 443 : 80;
+        }
+
+        if ("https".equalsIgnoreCase(scheme)) {
+            sslCtx = getSslContext();
+        } else if (!"http".equalsIgnoreCase(scheme)) {
+            throw new IllegalArgumentException("Only HTTP and HTTPS are supported.");
+        }
+
+        if (group == null) {
+            group = new NioEventLoopGroup();
+        }
+
+        Bootstrap b = new Bootstrap();
+        b.group(group).channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) {
+                        ChannelPipeline p = ch.pipeline();
+                        if (sslCtx != null) {
+                            p.addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        p.addLast(new HttpClientCodec());
+                        p.addLast(new HttpContentDecompressor());
+                        p.addLast(channelHandler);
+                    }
+                });
+        return b.connect(host, port);
+    }
+
+    private SslContext getSslContext() throws GeneralSecurityException, SSLException {
+        if (insecureTls) {
+            return SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        }
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+        if (caKeyStore != null) {
+            tmf.init(caKeyStore);
+        } // else the default trustStore configured with -Djavax.net.ssl.trustStore is used
+
+        return SslContextBuilder.forClient().trustManager(tmf).build();
+    }
+
+    /**
+     * In case of https connections, this file contains the CA certificates that are used to verify server certificate
+     * 
+     * @param caCertFile
+     */
+    public void setCaCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        caKeyStore = CertUtil.loadCertFile(caCertFile);
+    }
+
+    public boolean isInsecureTls() {
+        return insecureTls;
+    }
+
+    /**
+     * if true and https connections are used, do not verify server certificate
+     * 
+     * @param insecureTls
+     */
+    public void setInsecureTls(boolean insecureTls) {
+        this.insecureTls = insecureTls;
+    }
+
+    private void fillInHeaders(HttpRequest request, URI uri) throws ClientException {
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        request.headers().set(HttpHeaderNames.HOST, host);
+        request.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+        request.headers().set(HttpHeaderNames.CONTENT_TYPE, sendMediaType);
+        request.headers().set(HttpHeaderNames.ACCEPT, acceptMediaType);
+        request.headers().set(HttpHeaderNames.ACCEPT_ENCODING, HttpHeaderValues.GZIP);
+        if (userAgent != null) {
+            request.headers().set(HttpHeaderNames.USER_AGENT, userAgent);
+        }
+        if (cookies != null) {
+            String c = ClientCookieEncoder.STRICT.encode(cookies);
+            request.headers().set(HttpHeaderNames.COOKIE, c);
+        }
+        if (credentials != null) {
+            if (credentials.isExpired() && credentials instanceof OAuth2Credentials) {
+                refreshAccessToken((OAuth2Credentials) credentials); // This blocks
+            }
+            credentials.modifyRequest(request);
+        }
+    }
+
+    private HttpRequest setupRequest(URI uri, HttpMethod httpMethod, byte[] body) throws ClientException {
+        ByteBuf content = (body == null) ? Unpooled.EMPTY_BUFFER : Unpooled.copiedBuffer(body);
+        HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, httpMethod, getPathWithQuery(uri),
+                content);
+        fillInHeaders(request, uri);
+        int length = body == null ? 0 : body.length;
+        HttpUtil.setContentLength(request, length);
+        return request;
+    }
+
+    private String getPathWithQuery(URI uri) {
+        String r = uri.getRawPath();
+        if (uri.getRawQuery() != null) {
+            r += "?" + uri.getRawQuery();
+        }
+        return r;
+    }
+
+    public void addCookie(Cookie c) {
+        if (cookies == null) {
+            cookies = new ArrayList<>();
+        }
+        cookies.add(c);
+    }
+
+    public List<Cookie> getCookies() {
+        return Collections.unmodifiableList(cookies);
+    }
+
+    public String getSendMediaType() {
+        return sendMediaType;
+    }
+
+    public void setSendMediaType(String sendMediaType) {
+        this.sendMediaType = sendMediaType;
+    }
+
+    public String getAcceptMediaType() {
+        return acceptMediaType;
+    }
+
+    public void setAcceptMediaType(String acceptMediaType) {
+        this.acceptMediaType = acceptMediaType;
+    }
+
+    public void close() {
+        if (group != null) {
+            group.shutdownGracefully(0, 5, TimeUnit.SECONDS);
+        }
+    }
+
+    static byte[] getByteArray(ByteBuf buf) {
+        byte[] b = new byte[buf.readableBytes()];
+        buf.readBytes(b);
+        return b;
+    }
+
+    class ResponseHandler extends SimpleChannelInboundHandler<FullHttpResponse> {
+        Throwable exception;
+        CompletableFuture<byte[]> cf;
+
+        public ResponseHandler(CompletableFuture<byte[]> cf) {
+            this.cf = cf;
+        }
+
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, FullHttpResponse fullHttpResp) {
+            if (fullHttpResp.status().code() != HttpResponseStatus.OK.code()) {
+                try {
+                    exception = decodeException(fullHttpResp);
+                } catch (IOException e) {
+                    exception = e;
+                }
+                cf.completeExceptionally(exception);
+            } else {
+                cf.complete(getByteArray(fullHttpResp.content()));
+            }
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            // cause.printStackTrace();
+            exception = cause;
+            ctx.close();
+            cf.completeExceptionally(cause);
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            if (!cf.isDone()) {
+                cf.completeExceptionally(new IOException("connection closed: empty response received"));
+            }
+        }
+    }
+
+    static class BulkChannelHandler extends SimpleChannelInboundHandler<HttpObject> {
+        final BulkRestDataReceiver receiver;
+        Throwable exception;
+
+        BulkChannelHandler(BulkRestDataReceiver receiver) {
+            this.receiver = receiver;
+        }
+
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) throws IOException {
+            if (msg instanceof HttpResponse) {
+                HttpResponse resp = (HttpResponse) msg;
+                if (resp.status().code() != HttpResponseStatus.OK.code()) {
+                    exception = decodeException(msg);
+                    receiver.receiveException(exception);
+                    ctx.close();
+                }
+            }
+            if (msg instanceof HttpContent) {
+                HttpContent content = (HttpContent) msg;
+                try {
+                    receiver.receiveData(getByteArray(content.content()));
+                } catch (ClientException e) {
+                    exceptionCaught(ctx, e);
+                }
+                if (content instanceof LastHttpContent) {
+                    ctx.close();
+                }
+            }
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            receiver.receiveException(cause);
+            exception = cause;
+            ctx.close();
+        }
+    }
+}
+```
+
+### `HttpMethodHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/HttpMethodHandler.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.time.Instant;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.api.AnnotationsProto;
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.HttpRoute;
+import org.yamcs.api.MethodHandler;
+import org.yamcs.api.Observer;
+import org.yamcs.client.YamcsClient;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.Descriptors.MethodDescriptor;
+import com.google.protobuf.Duration;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+import com.google.protobuf.Timestamp;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.QueryStringEncoder;
+
+public class HttpMethodHandler implements MethodHandler {
+
+    private static final Pattern PATTERN_TEMPLATE_VAR = Pattern.compile("\\{([^\\*\\?\\}]+)(\\*|\\?|\\*\\*)?\\}");
+
+    private RestClient baseClient;
+    private WebSocketClient webSocketClient;
+
+    public HttpMethodHandler(YamcsClient client, RestClient baseClient, WebSocketClient webSocketClient) {
+        this.baseClient = baseClient;
+        this.webSocketClient = webSocketClient;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Observer<? extends Message> streamingCall(MethodDescriptor method, Message requestPrototype,
+            Message responsePrototype, Observer<? extends Message> responseObserver) {
+        return new ClientStreamingObserver(method, baseClient, responsePrototype, (Observer<Message>) responseObserver);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void call(MethodDescriptor method, Message request, Message responsePrototype,
+            Observer<? extends Message> observer) {
+        HttpRoute route = method.getOptions().getExtension(AnnotationsProto.route);
+
+        // Holder for extracting route and query params
+        Message.Builder partial = request.toBuilder();
+
+        String template = getPattern(route);
+        QueryStringEncoder uri = resolveUri(template, request, method.getInputType(), partial);
+        Message body = null;
+        if (route.hasBody()) {
+            if ("*".equals(route.getBody())) {
+                body = partial.buildPartial();
+            } else {
+                FieldDescriptor bodyField = method.getInputType().findFieldByName(route.getBody());
+                if (!request.hasField(bodyField)) {
+                    throw new IllegalArgumentException(
+                            "Request message must have the field '" + route.getBody() + "' set");
+                }
+                body = (Message) request.getField(bodyField);
+                partial.clearField(bodyField);
+            }
+        }
+
+        HttpMethod httpMethod = getMethod(route);
+
+        if (method.toProto().getServerStreaming()) {
+            BulkRestDataReceiver receiver = data -> {
+                try {
+                    Message serverMessage = responsePrototype.toBuilder().mergeFrom(data).build();
+                    ((Observer<Message>) observer).next(serverMessage);
+                } catch (InvalidProtocolBufferException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            };
+            CompletableFuture<Void> future;
+            if (body == null) {
+                appendQueryString(uri, partial.build(), method.getInputType());
+                future = baseClient.doBulkRequest(httpMethod, uri.toString(), receiver);
+            } else if (body instanceof HttpBody) {
+                byte[] data = ((HttpBody) body).getData().toByteArray();
+                future = baseClient.doBulkRequest(httpMethod, uri.toString(), data, receiver);
+            } else {
+                future = baseClient.doBulkRequest(httpMethod, uri.toString(), body.toByteArray(), receiver);
+            }
+            future.whenComplete((v, err) -> {
+                if (err == null) {
+                    observer.complete();
+                } else {
+                    observer.completeExceptionally(err);
+                }
+            });
+        } else {
+            CompletableFuture<byte[]> requestFuture;
+            if (body == null) {
+                appendQueryString(uri, partial.build(), method.getInputType());
+                requestFuture = baseClient.doRequest(uri.toString(), httpMethod);
+            } else if (body instanceof HttpBody) {
+                byte[] data = ((HttpBody) body).getData().toByteArray();
+                requestFuture = baseClient.doRequest(uri.toString(), httpMethod, data);
+            } else {
+                requestFuture = baseClient.doRequest(uri.toString(), httpMethod, body);
+            }
+            requestFuture.whenComplete((data, err) -> {
+                if (err == null) {
+                    if (responsePrototype instanceof HttpBody) {
+                        Message serverMessage = HttpBody.newBuilder().setData(ByteString.copyFrom(data)).build();
+                        ((Observer<Message>) observer).complete(serverMessage);
+                    } else {
+                        try {
+                            Message serverMessage = responsePrototype.toBuilder().mergeFrom(data).build();
+                            ((Observer<Message>) observer).complete(serverMessage);
+                        } catch (Exception e) {
+                            observer.completeExceptionally(e);
+                        }
+                    }
+                } else {
+                    observer.completeExceptionally(err);
+                }
+            });
+        }
+    }
+
+    static QueryStringEncoder resolveUri(String template, Message input, Descriptor inputType,
+            Message.Builder partial) {
+        StringBuffer buf = new StringBuffer();
+        Matcher matcher = PATTERN_TEMPLATE_VAR.matcher(template);
+        while (matcher.find()) {
+            String fieldName = matcher.group(1);
+            boolean optional = "**".equals(matcher.group(2)) || "?".equals(matcher.group(2));
+            FieldDescriptor field = inputType.findFieldByName(fieldName);
+            if (!optional && !input.hasField(field)) {
+                throw new IllegalArgumentException(
+                        "Request message is missing mandatory parameter '" + fieldName + "'");
+            }
+
+            Object fieldValue = input.getField(field);
+            String stringValue = String.valueOf(fieldValue);
+
+            String encodedValue = encodeURIComponent(stringValue);
+
+            matcher.appendReplacement(buf, encodedValue);
+            partial.clearField(field);
+        }
+        matcher.appendTail(buf);
+
+        String uri = buf.toString().replace("/api", "");
+        QueryStringEncoder encoder = new QueryStringEncoder(uri);
+        return encoder;
+    }
+
+    private void appendQueryString(QueryStringEncoder encoder, Message queryHolder, Descriptor inputType) {
+        for (Entry<FieldDescriptor, Object> entry : queryHolder.getAllFields().entrySet()) {
+            FieldDescriptor descriptor = entry.getKey();
+            if (descriptor.isRepeated()) {
+                List<?> params = (List<?>) entry.getValue();
+                for (Object param : params) {
+                    encoder.addParam(descriptor.getJsonName(), formatQueryParam(param));
+                }
+            } else {
+                encoder.addParam(descriptor.getJsonName(), formatQueryParam(entry.getValue()));
+            }
+        }
+    }
+
+    private static String formatQueryParam(Object value) {
+        if (value instanceof Timestamp) {
+            Timestamp proto = (Timestamp) value;
+            Instant instant = Instant.ofEpochSecond(proto.getSeconds(), proto.getNanos());
+            return instant.toString();
+        } else if (value instanceof Duration) {
+            Duration proto = (Duration) value;
+            return String.format("%d.%09ds", proto.getSeconds(), proto.getNanos());
+        } else {
+            return String.valueOf(value);
+        }
+    }
+
+    static HttpMethod getMethod(HttpRoute route) {
+        switch (route.getPatternCase()) {
+        case GET:
+            return HttpMethod.GET;
+        case POST:
+            return HttpMethod.POST;
+        case PATCH:
+            return HttpMethod.PATCH;
+        case PUT:
+            return HttpMethod.PUT;
+        case DELETE:
+            return HttpMethod.DELETE;
+        default:
+            throw new IllegalStateException();
+        }
+    }
+
+    static String getPattern(HttpRoute route) {
+        switch (route.getPatternCase()) {
+        case GET:
+            return route.getGet();
+        case POST:
+            return route.getPost();
+        case PATCH:
+            return route.getPatch();
+        case PUT:
+            return route.getPut();
+        case DELETE:
+            return route.getDelete();
+        default:
+            throw new IllegalStateException();
+        }
+    }
+
+    private static String encodeURIComponent(String component) {
+        try {
+            return URLEncoder.encode(component, "UTF-8")
+                    .replace("\\+", "%20")
+                    .replace("\\%21", "!")
+                    .replace("\\%27", "'")
+                    .replace("\\%28", "(")
+                    .replace("\\%29", ")")
+                    .replace("\\%7E", "~");
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    // TODO It may be better to handle subscriptions in here, rather than in
+    // AbstractSubscription
+    public WebSocketClient getWebSocketClient() {
+        return webSocketClient;
+    }
+}
+```
+
+### `package-info.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/package-info.java`
+
+
+```java
+/**
+ * Base implementation for Yamcs HTTP client connectivity.
+ * 
+ * Normally these classes are only needed by idiomatic clients.
+ */
+package org.yamcs.client.base;
+```
+
+### `ResponseObserver.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ResponseObserver.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.api.Observer;
+
+/**
+ * An observer that completes a future based on a single response.
+ */
+public class ResponseObserver<T> implements Observer<T> {
+
+    private CompletableFuture<T> future;
+
+    public ResponseObserver(CompletableFuture<T> future) {
+        this.future = future;
+    }
+
+    @Override
+    public void next(T message) {
+        future.complete(message);
+    }
+
+    @Override
+    public void completeExceptionally(Throwable t) {
+        future.completeExceptionally(t);
+    }
+
+    @Override
+    public void complete() {
+        if (!future.isDone()) {
+            future.completeExceptionally(new IllegalStateException("no response received"));
+        }
+    }
+}
+```
+
+### `RestClient.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/RestClient.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.client.ClientException;
+import org.yamcs.client.Credentials;
+
+import com.google.protobuf.Message;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.cookie.Cookie;
+
+/**
+ * A simple Yamcs Rest client to help with basic requests.
+ * 
+ * @author nm
+ *
+ */
+public class RestClient {
+
+    private ServerURL serverURL;
+    private final HttpClient httpClient;
+
+    /** maximum size of the responses - this is not applicable to bulk requests */
+    private final static int MAX_RESPONSE_LENGTH = 10 * 1024 * 1024;
+
+    /** max message length of an individual ProtoBuf message part of a bulk retrieval */
+    private final static int MAX_MESSAGE_LENGTH = 10 * 1024 * 1024;
+
+    private boolean autoclose = true;
+
+    /**
+     * Creates a rest client that communications using protobuf
+     */
+    public RestClient(ServerURL serverURL) {
+        this.serverURL = serverURL;
+        httpClient = new HttpClient();
+        httpClient.setMaxResponseLength(MAX_RESPONSE_LENGTH);
+        httpClient.setAcceptMediaType(HttpClient.MT_PROTOBUF);
+        httpClient.setSendMediaType(HttpClient.MT_PROTOBUF);
+    }
+
+    public synchronized void login(String username, char[] password) throws ClientException {
+        String tokenUrl = serverURL + "/auth/token";
+        httpClient.login(tokenUrl, username, password);
+    }
+
+    public synchronized void loginWithAuthorizationCode(String authorizationCode) throws ClientException {
+        String tokenUrl = serverURL + "/auth/token";
+        httpClient.loginWithAuthorizationCode(tokenUrl, authorizationCode);
+    }
+
+    public synchronized String authorizeKerberos(SpnegoInfo info) throws ClientException {
+        return httpClient.authorizeKerberos(info);
+    }
+
+    /**
+     * Performs a request with an empty body. Works using protobuf
+     * 
+     * @param resource
+     * @param method
+     * @return a the response body
+     */
+    public CompletableFuture<byte[]> doRequest(String resource, HttpMethod method) {
+        return doRequest(resource, method, new byte[0]);
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * Note that the response body will be limited to {@value #MAX_RESPONSE_LENGTH} - in case the server sends more than
+     * that, the CompletableFuture will completed with an error (the get() method will throw an Exception); the partial
+     * response will not be available.
+     * 
+     * @param resource
+     *            the url and query parameters after the "/api" part.
+     * @param method
+     *            http method to use
+     * @param body
+     *            the body of the request. Can be used even for the GET requests although strictly not allowed by the
+     *            HTTP standard.
+     * @return the response body
+     * @throws IllegalArgumentException
+     *             when the resource specification is invalid
+     */
+    public CompletableFuture<String> doRequest(String resource, HttpMethod method, String body) {
+        CompletableFuture<byte[]> cf;
+        try {
+            cf = httpClient.doAsyncRequest(serverURL + "/api" + resource, method, body.getBytes());
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            // throw a RuntimeException instead since if the code is not buggy it's
+            // unlikely to have this exception thrown
+            throw new RuntimeException(e);
+        }
+
+        if (autoclose) {
+            cf.whenComplete((v, t) -> {
+                close();
+            });
+        }
+        return cf.thenApply(b -> {
+            return new String(b);
+        });
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * To be used when performing protobuf requests.
+     * 
+     * @param resource
+     * @param method
+     * @param message
+     * @return future containing protobuf encoded data
+     */
+    public CompletableFuture<byte[]> doRequest(String resource, HttpMethod method, Message message) {
+        return doBaseRequest("/api" + resource, method, message.toByteArray());
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * To be used when performing protobuf requests.
+     * 
+     * @param resource
+     * @param method
+     * @param body
+     *            protobuf encoded data.
+     * @return future containing protobuf encoded data
+     */
+    public CompletableFuture<byte[]> doRequest(String resource, HttpMethod method, byte[] body) {
+        return doBaseRequest("/api" + resource, method, body);
+    }
+
+    /**
+     * Perform asynchronously the request indicated by the HTTP method and return the result as a future providing byte
+     * array.
+     * 
+     * To be used when performing protobuf requests.
+     * 
+     * @param resource
+     * @param method
+     * @param body
+     *            protobuf encoded data.
+     * @return future containing protobuf encoded data
+     */
+    public CompletableFuture<byte[]> doBaseRequest(String resource, HttpMethod method, byte[] body) {
+        CompletableFuture<byte[]> cf;
+        try {
+            cf = httpClient.doAsyncRequest(serverURL + resource, method, body);
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+        if (autoclose) {
+            cf.whenComplete((v, t) -> {
+                close();
+            });
+        }
+
+        return cf;
+    }
+
+    public CompletableFuture<Void> doBulkRequest(HttpMethod method, String resource, BulkRestDataReceiver receiver) {
+        return doBulkRequest(method, resource, new byte[0], receiver);
+    }
+
+    /**
+     * Performs a bulk request and provides the result piece by piece to the receiver.
+     * 
+     * The potentially large result is split into messages based on the VarInt size preceding each message. The maximum
+     * size of each individual message is limited to {@value #MAX_MESSAGE_LENGTH}
+     * 
+     * @param method
+     * @param resource
+     * @param receiver
+     * @return future that is completed when the request is finished
+     * @throws RuntimeException
+     *             if the uri + resource does not form a correct URL
+     */
+    public CompletableFuture<Void> doBulkRequest(HttpMethod method, String resource, byte[] body,
+            BulkRestDataReceiver receiver) {
+        CompletableFuture<Void> cf;
+        MessageSplitter splitter = new MessageSplitter(receiver);
+        try {
+            cf = httpClient.doBulkReceiveRequest(serverURL + "/api" + resource, method,
+                    body, splitter);
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+        if (autoclose) {
+            cf.whenComplete((v, t) -> {
+                close();
+            });
+        }
+        return cf;
+    }
+
+    private static class MessageSplitter implements BulkRestDataReceiver {
+        BulkRestDataReceiver finalReceiver;
+        byte[] buffer = new byte[2 * MAX_MESSAGE_LENGTH];
+        int readOffset = 0;
+        int writeOffset = 0;
+
+        MessageSplitter(BulkRestDataReceiver finalReceiver) {
+            this.finalReceiver = finalReceiver;
+        }
+
+        @Override
+        public void receiveData(byte[] data) throws ClientException {
+            if (data.length > MAX_MESSAGE_LENGTH) {
+                throw new ClientException(
+                        "Message too long: received " + data.length + " max length: " + MAX_MESSAGE_LENGTH);
+            }
+
+            int length = (data.length < buffer.length - writeOffset) ? data.length : buffer.length - writeOffset;
+            System.arraycopy(data, 0, buffer, writeOffset, length);
+            writeOffset += length;
+            ByteBuffer bb = ByteBuffer.wrap(buffer);
+
+            while (readOffset + 5 < writeOffset) {
+                bb.position(readOffset);
+                int msgLength = readVarInt32(bb);
+                if (msgLength > MAX_MESSAGE_LENGTH) {
+                    throw new ClientException("Message too long: decodedMessageLength: " + msgLength + " max length: "
+                            + MAX_MESSAGE_LENGTH);
+                }
+                if (msgLength > writeOffset - bb.position()) {
+                    break;
+                }
+
+                readOffset = bb.position();
+                byte[] b = new byte[msgLength];
+                System.arraycopy(buffer, readOffset, b, 0, msgLength);
+                readOffset += msgLength;
+                finalReceiver.receiveData(b);
+            }
+
+            System.arraycopy(buffer, readOffset, buffer, 0, writeOffset - readOffset);
+            writeOffset -= readOffset;
+            readOffset = 0;
+            if (length < data.length) {
+                System.arraycopy(buffer, writeOffset, data, length, data.length - length);
+                writeOffset += (data.length - length);
+            }
+        }
+
+        @Override
+        public void receiveException(Throwable t) {
+            finalReceiver.receiveException(t);
+        }
+    }
+
+    public static int readVarInt32(ByteBuffer bb) throws ClientException {
+        byte b = bb.get();
+        int v = b & 0x7F;
+        for (int shift = 7; (b & 0x80) != 0; shift += 7) {
+            if (shift > 28) {
+                throw new ClientException("Invalid VarInt32: more than 5 bytes!");
+            }
+
+            if (!bb.hasRemaining()) {
+                return Integer.MAX_VALUE;// we miss some bytes from the size itself
+            }
+            b = bb.get();
+            v |= (b & 0x7F) << shift;
+
+        }
+        return v;
+    }
+
+    public void setSendMediaType(String sendMediaType) {
+        httpClient.setSendMediaType(sendMediaType);
+    }
+
+    public void setAcceptMediaType(String acceptMediaType) {
+        httpClient.setAcceptMediaType(acceptMediaType);
+    }
+
+    public void setMaxResponseLength(int size) {
+        httpClient.setMaxResponseLength(size);
+    }
+
+    public void setUserAgent(String userAgent) {
+        httpClient.setUserAgent(userAgent);
+    }
+
+    public void close() {
+        httpClient.close();
+    }
+
+    public boolean isAutoclose() {
+        return autoclose;
+    }
+
+    public Credentials getCredentials() {
+        return httpClient.getCredentials();
+    }
+
+    public void setCredentials(Credentials credentials) {
+        httpClient.setCredentials(credentials);
+    }
+
+    /**
+     * if autoclose is set, the httpClient will be automatically closed at the end of the request, so the netty
+     * eventgroup is shutdown. Otherwise it has to be done manually - but then the same object can be used to perform
+     * multiple requests.
+     * 
+     * @param autoclose
+     */
+    public void setAutoclose(boolean autoclose) {
+        this.autoclose = autoclose;
+    }
+
+    public void addCookie(Cookie c) {
+        httpClient.addCookie(c);
+    }
+
+    public List<Cookie> getCookies() {
+        return httpClient.getCookies();
+    }
+
+    public CompletableFuture<BulkRestDataSender> doBulkSendRequest(String resource, HttpMethod method) {
+        try {
+            return httpClient.doBulkSendRequest(serverURL + "/api" + resource, method);
+        } catch (ClientException | IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean isInsecureTls() {
+        return httpClient.isInsecureTls();
+    }
+
+    /**
+     * if true and https connections are used, do not verify server certificate
+     * 
+     * @param insecureTls
+     */
+    public void setInsecureTls(boolean insecureTls) {
+        httpClient.setInsecureTls(insecureTls);
+    }
+
+    /**
+     * In case of https connections, this file contains the CA certificates that are used to verify server certificate.
+     * 
+     * If this is not set, java will use the default mechanism with the trustStore that can be configured via the
+     * javax.net.ssl.trustStore system property.
+     * 
+     * @param caCertFile
+     */
+    public void setCaCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        httpClient.setCaCertFile(caCertFile);
+    }
+}
+```
+
+### `ServerURL.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/ServerURL.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Objects;
+
+/**
+ * Parses Yamcs Server URLs and exposes standardized string outputs, as well as access to the individual URL components.
+ */
+public class ServerURL {
+
+    private final String host;
+    private final int port;
+    private boolean tls;
+    private String context;
+
+    private ServerURL(String host, int port, boolean tls, String context) {
+        this.host = host;
+        this.port = port;
+        this.tls = tls;
+        this.context = context;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public boolean isTLS() {
+        return tls;
+    }
+
+    public void setTLS(boolean tls) {
+        this.tls = tls;
+    }
+
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
+
+    /**
+     * @throws IllegalArgumentException
+     *             when the URL is not something that can be matched to a Yamcs Server URL.
+     */
+    public static ServerURL parse(String url) {
+        url = Objects.requireNonNull(url).trim();
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Failed to parse Server URL", e);
+        }
+
+        boolean tls;
+        int port = uri.getPort();
+        String scheme = uri.getScheme();
+        if ("http".equalsIgnoreCase(scheme)) {
+            tls = false;
+            if (port == -1) {
+                port = 80;
+            }
+        } else if ("https".equalsIgnoreCase(scheme)) {
+            tls = true;
+            if (port == -1) {
+                port = 443;
+            }
+        } else {
+            throw new IllegalArgumentException("Server URL should start with http:// or https://");
+        }
+
+        // Remove any leading or trailing slashes
+        String context = uri.getRawPath();
+        if (context != null && context.length() > 1) {
+            if (context.startsWith("/")) {
+                context = context.substring(1);
+            }
+            if (context.endsWith("/")) {
+                context = context.substring(0, context.length() - 1);
+            }
+        }
+        if (context != null && (context.isEmpty() || "/".equals(context))) {
+            context = null;
+        }
+
+        String host = uri.getHost();
+        return new ServerURL(host, port, tls, context);
+    }
+
+    @Override
+    public String toString() {
+        String result;
+        if (tls) {
+            result = "https://" + host;
+            if (port != 443) {
+                result += ":" + port;
+            }
+        } else {
+            result = "http://" + host;
+            if (port != 80) {
+                result += ":" + port;
+            }
+        }
+        return context == null ? result : result + "/" + context;
+    }
+}
+```
+
+### `SpnegoInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/SpnegoInfo.java`
+
+
+```java
+package org.yamcs.client.base;
+
+/**
+ * Data holder for SPNEGO information.
+ */
+public class SpnegoInfo {
+
+    private ServerURL serverURL;
+    private boolean verifyTls;
+    private String principal;
+
+    public SpnegoInfo(ServerURL serverURL, boolean verifyTls, String principal) {
+        this.serverURL = serverURL;
+        this.verifyTls = verifyTls;
+        this.principal = principal;
+    }
+
+    public ServerURL getServerURL() {
+        return serverURL;
+    }
+
+    public boolean isVerifyTLS() {
+        return verifyTls;
+    }
+
+    public String getPrincipal() {
+        return principal;
+    }
+}
+```
+
+### `SpnegoUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/SpnegoUtils.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import javax.security.auth.Subject;
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag;
+import javax.security.auth.login.Configuration;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.GSSManager;
+import org.ietf.jgss.GSSName;
+import org.ietf.jgss.Oid;
+
+public final class SpnegoUtils {
+
+    private static final String JAAS_KRB5 = "com.sun.security.auth.module.Krb5LoginModule";
+
+    private static final Oid SPNEGO_OID;
+    static {
+        try {
+            SPNEGO_OID = new Oid("1.3.6.1.5.5.2");
+        } catch (GSSException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static final HostnameVerifier NO_HOSTNAME_VERIFICATION = (hostname, session) -> true;
+    private static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+            // Ignore
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+            // Ignore
+        }
+    } };
+
+    public static synchronized String fetchAuthenticationCode(SpnegoInfo info) throws SpnegoException {
+        try {
+            byte[] token = createToken(info.getServerURL().getHost(), info.getPrincipal());
+
+            URL url = new URL(info.getServerURL() + "/auth/spnego");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Authorization", "Negotiate " + new String(token));
+
+            if (info.getServerURL().isTLS() && !info.isVerifyTLS()) {
+                try {
+                    SSLContext ctx = SSLContext.getInstance("TLS");
+                    ctx.init(null, TRUST_ALL_CERTS, new java.security.SecureRandom());
+                    ((HttpsURLConnection) conn).setSSLSocketFactory(ctx.getSocketFactory());
+                    ((HttpsURLConnection) conn).setHostnameVerifier(NO_HOSTNAME_VERIFICATION);
+                } catch (KeyManagementException | NoSuchAlgorithmException e) {
+                    throw new SpnegoException(e);
+                }
+            }
+
+            conn.connect();
+
+            if (conn.getResponseCode() == 200) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                    return reader.readLine();
+                }
+            } else {
+                throw new SpnegoException("Unexpected server response " + conn.getResponseCode());
+            }
+        } catch (PrivilegedActionException e) {
+            throw new SpnegoException(e.getCause());
+        } catch (LoginException | GSSException | IOException e) {
+            throw new SpnegoException(e);
+        }
+    }
+
+    private static synchronized byte[] createToken(String host, String principal)
+            throws LoginException, PrivilegedActionException, GSSException {
+        GSSManager gssManager = GSSManager.getInstance();
+        GSSName gssName = gssManager.createName("HTTP@" + host, GSSName.NT_HOSTBASED_SERVICE, SPNEGO_OID);
+        Subject subject = login(principal);
+
+        GSSContext gssContext = Subject.doAs(subject, (PrivilegedExceptionAction<GSSContext>) () -> {
+            GSSCredential credential = gssManager.createCredential(
+                    null, GSSCredential.DEFAULT_LIFETIME, SPNEGO_OID, GSSCredential.INITIATE_ONLY);
+
+            GSSContext context = gssManager.createContext(gssName, SPNEGO_OID, credential, GSSContext.DEFAULT_LIFETIME);
+            context.requestMutualAuth(true);
+            context.requestConf(true);
+            context.requestInteg(true);
+            context.requestReplayDet(true);
+            context.requestSequenceDet(true);
+            return context;
+        });
+
+        try {
+            byte[] token = Subject.doAs(subject, (PrivilegedExceptionAction<byte[]>) () -> {
+                return gssContext.initSecContext(new byte[0], 0, 0);
+            });
+            return Base64.getEncoder().encode(token);
+        } finally {
+            if (gssContext != null) {
+                gssContext.dispose();
+            }
+        }
+    }
+
+    private static Subject login(String principal) throws LoginException {
+        Map<String, String> options = new HashMap<>();
+        options.put("renewTGT", "true");
+        options.put("principal", principal);
+        options.put("useTicketCache", "true");
+        options.put("doNotPrompt", "true");
+
+        LoginContext context = new LoginContext("", null, null, new Configuration() {
+            @Override
+            public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
+                return new AppConfigurationEntry[] { new AppConfigurationEntry(
+                        JAAS_KRB5, LoginModuleControlFlag.REQUIRED, options) };
+            }
+        });
+
+        context.login();
+        return context.getSubject();
+    }
+
+    @SuppressWarnings("serial")
+    static class SpnegoException extends Exception {
+
+        private SpnegoException(String message) {
+            super(message);
+        }
+
+        private SpnegoException(Throwable cause) {
+            super(cause);
+        }
+    }
+}
+```
+
+### `WebSocketClient.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClient.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.yamcs.api.ExceptionMessage;
+import org.yamcs.api.Observer;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ClientException.ExceptionData;
+import org.yamcs.protobuf.CancelOptions;
+import org.yamcs.protobuf.ClientMessage;
+import org.yamcs.protobuf.Reply;
+import org.yamcs.protobuf.ServerMessage;
+
+import com.google.protobuf.Any;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultHttpHeaders;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
+import io.netty.handler.codec.http.websocketx.WebSocketVersion;
+import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketClientCompressionHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.util.concurrent.Future;
+
+/**
+ * Netty-implementation of a Yamcs web socket client.
+ */
+public class WebSocketClient {
+
+    private static final Logger log = Logger.getLogger(WebSocketClient.class.getName());
+    private Level messageLogging = Level.FINEST;
+
+    private String host;
+    private int port;
+    private boolean tls;
+    private String context;
+
+    private WebSocketClientCallback callback;
+
+    private EventLoopGroup group = new NioEventLoopGroup(1);
+    private Channel nettyChannel;
+    private String userAgent;
+    private boolean allowCompression = true;
+    private Integer timeoutMs;
+
+    private boolean tcpKeepAlive;
+    private boolean insecureTls;
+    private KeyStore caKeyStore;
+
+    private int maxFramePayloadLength = 65536;
+
+    private AtomicInteger idSequence = new AtomicInteger(1);
+
+    // Calls by client-assigned id
+    private Map<Integer, Call> calls = new ConcurrentHashMap<>();
+    // Calls by server-assigned id
+    private Map<Integer, Call> confirmedCalls = new ConcurrentHashMap<>();
+
+    public WebSocketClient(ServerURL serverURL, WebSocketClientCallback callback) {
+        this.host = serverURL.getHost();
+        this.port = serverURL.getPort();
+        this.tls = serverURL.isTLS();
+        this.context = serverURL.getContext();
+        this.callback = callback;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
+    public void setConnectionTimeoutMs(int timeoutMs) {
+        this.timeoutMs = timeoutMs;
+    }
+
+    public boolean isAllowCompression() {
+        return allowCompression;
+    }
+
+    public void setAllowCompression(boolean allowCompression) {
+        this.allowCompression = allowCompression;
+    }
+
+    /**
+     * Enables logging of all inbound and outbound messages on the request logging level.
+     * <p>
+     * By default set to {@link Level#FINEST}
+     */
+    public void setMessageLogging(Level level) {
+        messageLogging = level;
+    }
+
+    public ChannelFuture connect(String authorization) throws SSLException, GeneralSecurityException {
+        callback.connecting();
+        return createBootstrap(authorization);
+    }
+
+    private ChannelFuture createBootstrap(String authorization) throws SSLException, GeneralSecurityException {
+        HttpHeaders header = new DefaultHttpHeaders();
+        if (userAgent != null) {
+            header.add(HttpHeaderNames.USER_AGENT, userAgent);
+        }
+
+        if (authorization != null) {
+            header.add(HttpHeaderNames.AUTHORIZATION, authorization);
+        }
+        URI uri;
+        try {
+            if (context == null) {
+                uri = new URI(String.format("%s://%s:%s/api/websocket", (tls ? "wss" : "ws"), host, port));
+            } else {
+                uri = new URI(String.format("%s://%s:%s/%s/api/websocket", (tls ? "wss" : "ws"), host, port, context));
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
+        WebSocketClientHandshaker handshaker = WebSocketClientHandshakerFactory.newHandshaker(
+                uri,
+                WebSocketVersion.V13,
+                "protobuf",
+                true,
+                header,
+                maxFramePayloadLength);
+        WebSocketClientHandler webSocketHandler = new WebSocketClientHandler(handshaker, this, callback);
+
+        Bootstrap bootstrap = new Bootstrap()
+                .group(group)
+                .option(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT)
+                .channel(NioSocketChannel.class)
+                .option(ChannelOption.SO_KEEPALIVE, tcpKeepAlive);
+
+        if (timeoutMs != null) {
+            bootstrap = bootstrap.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, timeoutMs);
+        }
+        SslContext sslCtx = tls ? getSslContext() : null;
+
+        bootstrap.handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) throws Exception {
+                ChannelPipeline p = ch.pipeline();
+                if (sslCtx != null) {
+                    p.addLast(sslCtx.newHandler(ch.alloc()));
+                }
+                p.addLast(new HttpClientCodec());
+                p.addLast(new HttpObjectAggregator(8192));
+                if (allowCompression) {
+                    p.addLast(WebSocketClientCompressionHandler.INSTANCE);
+                }
+                p.addLast(webSocketHandler);
+            }
+        });
+
+        log.info("WebSocket client connecting");
+        try {
+            nettyChannel = bootstrap.connect(uri.getHost(), uri.getPort()).sync().channel();
+        } catch (Exception e) {
+            callback.connectionFailed(e);
+        }
+
+        // Finish handshake, this may still catch something like a 401
+        return webSocketHandler.handshakeFuture();
+    }
+
+    /**
+     * Initiates a new call. This does not yet communicate to Yamcs. Use the returned observer to send one or more
+     * messages.
+     */
+    public <T extends Message> Observer<T> call(String type, DataObserver<? extends Message> observer) {
+        Call call = new Call(type, observer);
+        calls.put(call.correlationId, call);
+
+        return new Observer<>() {
+
+            @Override
+            public void next(T message) {
+                try {
+                    call.write(message);
+                } catch (IOException e) {
+                    observer.completeExceptionally(e);
+                }
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+                observer.completeExceptionally(t);
+            }
+
+            @Override
+            public void complete() {
+                try {
+                    cancelCall(call.callId);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        };
+    }
+
+    public void cancelCall(int callId) throws IOException {
+        Call call = confirmedCalls.remove(callId);
+        if (call != null) {
+            calls.remove(call.correlationId);
+        }
+        writeMessage(ClientMessage.newBuilder()
+                .setType("cancel")
+                .setOptions(Any.pack(CancelOptions.newBuilder().setCall(callId).build()))
+                .build());
+    }
+
+    public void disconnect() {
+        log.info("WebSocket client sending close");
+        nettyChannel.writeAndFlush(new CloseWebSocketFrame());
+
+        // WebSocketClientHandler will close the channel when the server
+        // responds to the CloseWebSocketFrame
+        nettyChannel.closeFuture().awaitUninterruptibly();
+    }
+
+    private void writeMessage(Message message) throws IOException {
+        if (log.isLoggable(messageLogging)) {
+            log.log(messageLogging, ">>> " + message);
+        }
+        if (nettyChannel == null) {
+            throw new IllegalStateException("Not connected");
+        }
+        ByteBuf buf = nettyChannel.alloc().buffer();
+        try (ByteBufOutputStream bout = new ByteBufOutputStream(buf)) {
+            message.writeTo(bout);
+        }
+        nettyChannel.writeAndFlush(new BinaryWebSocketFrame(buf));
+    }
+
+    /**
+     * Enable/disable the TCP Keep-Alive on websocket sockets. By default it is disabled. It has to be enabled before
+     * the connection is established.
+     * 
+     * @param enableTcpKeepAlive
+     *            if true the TCP SO_KEEPALIVE option is set
+     */
+    public void enableTcpKeepAlive(boolean enableTcpKeepAlive) {
+        tcpKeepAlive = enableTcpKeepAlive;
+    }
+
+    void completeAll() {
+        calls.values().forEach(call -> call.serverObserver.complete());
+        calls.clear();
+        confirmedCalls.clear();
+    }
+
+    /**
+     * @return the Future which is notified when the executor has been terminated.
+     */
+    public Future<?> shutdown() {
+        return group.shutdownGracefully(0, 5, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Returns true if the TCP connection is opened (even before the websocket handshake has been established FIXME) 
+     */
+    public boolean isConnected() {
+        return nettyChannel != null && nettyChannel.isOpen();
+    }
+
+    private SslContext getSslContext() throws GeneralSecurityException, SSLException {
+        if (insecureTls) {
+            return SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+        }
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+
+        if (caKeyStore != null) {
+            tmf.init(caKeyStore);
+        } // else the default trustStore configured with -Djavax.net.ssl.trustStore is used
+
+        return SslContextBuilder.forClient().trustManager(tmf).build();
+    }
+
+    /**
+     * In case of https connections, this file contains the CA certificates that are used to verify server certificate
+     * 
+     * @param caCertFile
+     */
+    public void setCaCertFile(String caCertFile) throws IOException, GeneralSecurityException {
+        caKeyStore = CertUtil.loadCertFile(caCertFile);
+    }
+
+    public boolean isInsecureTls() {
+        return insecureTls;
+    }
+
+    /**
+     * if true and https connections are used, do not verify server certificate
+     * 
+     * @param insecureTls
+     */
+    public void setInsecureTls(boolean insecureTls) {
+        this.insecureTls = insecureTls;
+    }
+
+    public int getMaxFramePayloadLength() {
+        return maxFramePayloadLength;
+    }
+
+    public void setMaxFramePayloadLength(int maxFramePayloadLength) {
+        this.maxFramePayloadLength = maxFramePayloadLength;
+    }
+
+    void handleReply(ServerMessage message) throws InvalidProtocolBufferException {
+        if (log.isLoggable(messageLogging)) {
+            log.log(messageLogging, "<<< " + message);
+        }
+        Reply reply = message.getData().unpack(Reply.class);
+        Call call = calls.get(reply.getReplyTo());
+        if (call != null) {
+            if (!reply.hasException()) {
+                confirmedCalls.put(message.getCall(), call);
+                call.assignCallId(message.getCall());
+            } else {
+                ExceptionMessage err = reply.getException();
+                log.warning(String.format("Server error: %s: %s", err.getType(), err.getMsg()));
+                ExceptionData excData = new ExceptionData(err.getType(), err.getMsg(), err.getDetail());
+                call.serverObserver.completeExceptionally(new ClientException(excData));
+            }
+        } else {
+            log.warning("Received a reply for an unknown call: " + reply);
+        }
+    }
+
+    public void handleMessage(ServerMessage message) throws InvalidProtocolBufferException {
+        if (log.isLoggable(messageLogging)) {
+            log.log(messageLogging, "<<< " + message);
+        }
+        Call call = confirmedCalls.get(message.getCall());
+        if (call != null) {
+            call.serverObserver.unpackNext(message.getData());
+        } else if (log.isLoggable(Level.FINER)) {
+            // Usually just means that there was just a message underway while
+            // the call was in the process of being cancelled.
+            log.finer("Received a message for an unknown call: " + message);
+        }
+    }
+
+    private class Call {
+
+        final String type;
+        final int correlationId = idSequence.getAndIncrement();
+        final DataObserver<? extends Message> serverObserver;
+
+        boolean first = true;
+        int callId;
+        CountDownLatch callIdLatch = new CountDownLatch(1);
+
+        Call(String type, DataObserver<? extends Message> serverObserver) {
+            this.type = type;
+            this.serverObserver = serverObserver;
+        }
+
+        void write(Message data) throws IOException {
+            if (first) {
+                ClientMessage clientMessage = ClientMessage.newBuilder()
+                        .setType(type)
+                        .setId(correlationId)
+                        .setOptions(Any.pack(data))
+                        .build();
+                writeMessage(clientMessage);
+                first = false;
+            } else {
+                try {
+                    callIdLatch.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return;
+                }
+                ClientMessage clientMessage = ClientMessage.newBuilder()
+                        .setType(type)
+                        .setCall(callId)
+                        .setOptions(Any.pack(data))
+                        .build();
+                writeMessage(clientMessage);
+            }
+        }
+
+        void assignCallId(int callId) {
+            this.callId = callId;
+            serverObserver.confirm();
+            callIdLatch.countDown();
+        }
+    }
+}
+```
+
+### `WebSocketClientCallback.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClientCallback.java`
+
+
+```java
+package org.yamcs.client.base;
+
+public interface WebSocketClientCallback {
+
+    /**
+     * When a connection attempt is underway
+     */
+    default void connecting() {
+    }
+
+    /**
+     * When the connection was successfully established
+     */
+    default void connected() {
+    }
+
+    /**
+     * When the initial connection attempt failed
+     */
+    default void connectionFailed(Throwable t) {
+    }
+
+    /**
+     * When a previously successful connection was disconnected
+     */
+    default void disconnected() {
+    }
+}
+```
+
+### `WebSocketClientHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/WebSocketClientHandler.java`
+
+
+```java
+package org.yamcs.client.base;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.yamcs.protobuf.ServerMessage;
+
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelPromise;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PingWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.util.CharsetUtil;
+
+public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> {
+
+    private static final Logger log = Logger.getLogger(WebSocketClientHandler.class.getName());
+
+    private final WebSocketClientHandshaker handshaker;
+    private final WebSocketClient client;
+
+    private WebSocketClientCallback callback;
+
+    private ChannelPromise handshakeFuture;
+
+    public WebSocketClientHandler(WebSocketClientHandshaker handshaker, WebSocketClient client,
+            WebSocketClientCallback callback) {
+        this.handshaker = handshaker;
+        this.client = client;
+        this.callback = callback;
+    }
+
+    public ChannelFuture handshakeFuture() {
+        return handshakeFuture;
+    }
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
+        handshakeFuture = ctx.newPromise();
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
+        handshaker.handshake(ctx.channel());
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) {
+        log.info("WebSocket Client disconnected");
+        client.completeAll();
+        callback.disconnected();
+    }
+
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) {
+        Channel ch = ctx.channel();
+        if (!handshaker.isHandshakeComplete()) {
+            handshaker.finishHandshake(ch, (FullHttpResponse) msg);
+            log.info("WebSocket Client connected");
+            handshakeFuture.setSuccess();
+            callback.connected();
+            return;
+        }
+
+        if (msg instanceof FullHttpResponse) {
+            FullHttpResponse response = (FullHttpResponse) msg;
+            throw new IllegalStateException(
+                    "Unexpected FullHttpResponse (getStatus="
+                            + response.status() + ", content="
+                            + response.content().toString(CharsetUtil.UTF_8)
+                            + ')');
+        }
+
+        WebSocketFrame frame = (WebSocketFrame) msg;
+        if (frame instanceof BinaryWebSocketFrame) {
+            BinaryWebSocketFrame binaryFrame = (BinaryWebSocketFrame) frame;
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest("WebSocket Client received message of size " + binaryFrame.content().readableBytes());
+            }
+            handleFrame(binaryFrame);
+        } else if (frame instanceof PingWebSocketFrame) {
+            frame.content().retain();
+            ch.writeAndFlush(new PongWebSocketFrame(frame.content()));
+        } else if (frame instanceof PongWebSocketFrame) {
+            log.info("WebSocket Client received pong");
+        } else if (frame instanceof CloseWebSocketFrame) {
+            log.info("WebSocket Client received closing");
+            ch.close();
+        } else {
+            log.severe("Received unsupported web socket frame " + frame);
+            System.out.println(((TextWebSocketFrame) frame).text());
+        }
+    }
+
+    private void handleFrame(BinaryWebSocketFrame frame) {
+        try (InputStream in = new ByteBufInputStream(frame.content())) {
+            ServerMessage message = ServerMessage.newBuilder().mergeFrom(in).build();
+            if ("reply".equals(message.getType())) {
+                client.handleReply(message);
+            } else {
+                client.handleMessage(message);
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        log.log(Level.SEVERE, "WebSocket exception. Closing channel", cause);
+        if (!handshakeFuture.isDone()) {
+            handshakeFuture.setFailure(cause);
+        }
+        ctx.close();
+        callback.connectionFailed(cause);
+    }
+}
+```

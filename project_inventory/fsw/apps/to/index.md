@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/to/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,20 +11,98 @@
 analysis/index
 docs/index
 fsw/index
-file--.git
-file--.gitignore
-file--CMakeLists.txt
-file--README.md
-file--Telemetry_Output_NOSA.pdf
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/to/analysis/`](analysis/index) — 폴더
-- [`fsw/apps/to/docs/`](docs/index) — 폴더
-- [`fsw/apps/to/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/to/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/Telemetry_Output_NOSA.pdf`](file--Telemetry_Output_NOSA.pdf) — 바이너리 (경로만)
+### `.git`
+
+**경로:** `fsw/apps/to/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/apps/to
+```
+
+### `.gitignore`
+
+**경로:** `fsw/apps/to/.gitignore`
+
+
+```text
+.cproject
+.project
+.settings/
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/to/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(TO C)
+
+include_directories(fsw/mission_inc)
+include_directories(fsw/platform_inc)
+include_directories(fsw/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${ci_MISSION_DIR}/fsw/platform_inc)
+include_directories(${ci_MISSION_DIR}/fsw/mission_inc)
+include_directories(${ci_MISSION_DIR}/fsw/src)
+include_directories(${io_lib_MISSION_DIR}/fsw/public_inc/)
+
+include_directories(${MISSION_SOURCE_DIR}/apps/inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/cf/fsw/platform_inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/sch/fsw/platform_inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/hs/fsw/platform_inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/hk/fsw/platform_inc)
+include_directories(${APPLICATION_PLATFORM_INC_LIST})
+
+include_directories(${MISSION_SOURCE_DIR}/../components/cryptolib/include)
+
+include_directories(fsw/examples/${TO_TRANSPORT})
+aux_source_directory(fsw/src APP_SRC_FILES)
+aux_source_directory(fsw/examples/${TO_TRANSPORT} APP_SRC_FILES)
+
+# Create the app module
+add_cfe_app(to ${APP_SRC_FILES})
+
+if (COMMAND add_cfe_tables)
+    include_directories(fsw/tables)
+    aux_source_directory(fsw/tables APP_TBL_FILES)
+    add_cfe_tables(to fsw/tables/to_config.c)
+endif(COMMAND add_cfe_tables)
+```
+
+### `README.md`
+
+**경로:** `fsw/apps/to/README.md`
+
+
+```markdown
+# Telemetry Output
+
+NASA core Flight System Telemetry Output Application
+
+## Description
+
+Telemetry Output (TO) application is a core Flight System (cFS) application that is a plug in to the Core Flight Executive (cFE) component of the cFS.
+
+The cFS is a platform and project independent reusable software framework and set of reusable applications developed by NASA Goddard Space Flight Center. This framework is used as the basis for the flight software for satellite data systems and instruments, but can be used on other embedded systems. More information on the cFS can be found at http://cfs.gsfc.nasa.gov
+
+The Telemetry Output (TO) Application is responsible for transmitting telemetry to external destination(s) (such as a ground station) over transport devices(s).
+
+## License
+
+This software is licensed under the NASA Open Source Agreement. 
+http://ti.arc.nasa.gov/opensource/nosa
+```
+
+### `Telemetry_Output_NOSA.pdf`
+
+**경로:** `fsw/apps/to/Telemetry_Output_NOSA.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

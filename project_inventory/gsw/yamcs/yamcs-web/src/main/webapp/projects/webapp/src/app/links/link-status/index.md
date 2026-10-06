@@ -3,18 +3,134 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `link-status.component.css`
 
-file--link-status.component.css
-file--link-status.component.html
-file--link-status.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/link-status.component.css`
+
+
+```css
+:host {
+  line-height: 0;
+  font-size: 0;
+}
 ```
 
-## 항목
+### `link-status.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/link-status.component.css`](file--link-status.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/link-status.component.html`](file--link-status.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/link-status.component.ts`](file--link-status.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/link-status.component.html`
+
+
+```html
+@switch (link.status) {
+  @case ("OK") {
+    <ya-led
+      [matTooltip]="link.status"
+      [color]="okColor$ | async"
+      [fade]="parentLink && parentLink.status !== 'OK'" />
+  }
+  @case ("UNAVAIL") {
+    <ya-led
+      [matTooltip]="link.status"
+      color="red"
+      [fade]="parentLink && parentLink.status !== 'OK'" />
+  }
+  @case ("FAILED") {
+    <ya-led
+      [matTooltip]="link.status"
+      color="red"
+      [fade]="parentLink && parentLink.status !== 'OK'" />
+  }
+  @case ("DISABLED") {
+    <ya-led
+      [matTooltip]="link.status"
+      color="#aaa"
+      [fade]="parentLink && parentLink.status !== 'OK'" />
+  }
+}
+```
+
+### `link-status.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-status/link-status.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+} from '@angular/core';
+import {
+  Link,
+  OFF_COLOR,
+  ON_COLOR,
+  Synchronizer,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const EXPIRY = 2000;
+
+@Component({
+  selector: 'app-link-status',
+  templateUrl: './link-status.component.html',
+  styleUrl: './link-status.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class LinkStatusComponent implements OnChanges, OnDestroy {
+  @Input()
+  link: Link;
+
+  @Input()
+  parentLink: Link;
+
+  private prevInCount = -1;
+  private prevOutCount = -1;
+  active$ = new BehaviorSubject<boolean>(false);
+  okColor$ = this.active$.pipe(
+    map((active) => (active ? ON_COLOR : OFF_COLOR)),
+  );
+  private activeExpiration = -1;
+
+  private syncSubscription: Subscription;
+
+  constructor(synchronizer: Synchronizer) {
+    this.syncSubscription = synchronizer.syncFast(() => {
+      const now = new Date().getTime();
+      if (now >= this.activeExpiration) {
+        this.active$.next(false);
+        this.activeExpiration = -1;
+      }
+    });
+  }
+
+  ngOnChanges() {
+    if (this.link.status === 'OK') {
+      const activeIn =
+        this.prevInCount !== -1 && this.prevInCount < this.link.dataInCount;
+      const activeOut =
+        this.prevOutCount !== -1 && this.prevOutCount < this.link.dataOutCount;
+      if (activeIn || activeOut) {
+        this.active$.next(true);
+        this.activeExpiration = new Date().getTime() + EXPIRY;
+      }
+    } else {
+      this.active$.next(false);
+      this.activeExpiration = -1;
+    }
+
+    this.prevInCount = this.link.dataInCount;
+    this.prevOutCount = this.link.dataOutCount;
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+  }
+}
+```

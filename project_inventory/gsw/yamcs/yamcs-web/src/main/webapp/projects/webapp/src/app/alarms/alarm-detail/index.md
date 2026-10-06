@@ -3,16 +3,177 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-detail.component.html`
 
-file--alarm-detail.component.html
-file--alarm-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-detail/alarm-detail.component.html`
+
+
+```html
+<ya-attr-list>
+  @if (alarm.type === "PARAMETER") {
+    <ya-attr label="Parameter">
+      <a
+        [routerLink]="'/telemetry/parameters/' + alarm.id.namespace! + '/' + alarm.id.name"
+        [queryParams]="{ c: yamcs.context }"
+        class="ya-link">
+        {{ alarm.id.namespace }}/{{ alarm.id.name }}
+      </a>
+    </ya-attr>
+  }
+
+  @if (alarm.type === "EVENT") {
+    <ya-attr label="Event">
+      @if (alarm.id.name) {
+        {{ alarm.id.namespace }}/{{ alarm.id.name }}
+      } @else {
+        {{ alarm.id.namespace }}
+      }
+    </ya-attr>
+  }
+
+  <ya-attr label="Severity">
+    <app-alarm-level [level]="alarm.severity" />
+    {{ alarm.severity }}
+  </ya-attr>
+
+  <ya-attr label="Violations">
+    {{ alarm.violations | number }}
+  </ya-attr>
+
+  @if (alarm.parameterDetail; as parameterDetail) {
+    <ya-attr-divider />
+    <ya-attr label="Trigger value">
+      <app-alarm-level [level]="alarm.severity" [grayscale]="true" />
+      &nbsp;{{ parameterDetail.triggerValue.engValue | value }}
+      @if (parameterDetail.triggerValue.rangeCondition === "LOW") {
+        <span>&#8595;</span>
+      } @else if (parameterDetail.triggerValue.rangeCondition === "HIGH") {
+        <span>&#8593;</span>
+      }
+    </ya-attr>
+
+    <ya-attr-divider />
+    <ya-attr label="Live value">
+      <ya-expirable [pval]="parameterDetail.currentValue">
+        <app-alarm-level
+          [level]="parameterDetail.currentValue.monitoringResult"
+          [grayscale]="true" />
+        &nbsp;{{ parameterDetail.currentValue.engValue | value }}
+        @if (parameterDetail.currentValue.rangeCondition === "LOW") {
+          <span>&#8595;</span>
+        }
+        @if (parameterDetail.currentValue.rangeCondition === "HIGH") {
+          <span>&#8593;</span>
+        }
+      </ya-expirable>
+    </ya-attr>
+  }
+
+  @if (alarm.eventDetail; as eventDetail) {
+    <ya-attr-divider />
+    <ya-attr label="Trigger event">
+      {{ eventDetail.triggerEvent.message }}
+    </ya-attr>
+  }
+
+  @if (alarm.acknowledgeInfo) {
+    <ya-attr-divider />
+    <ya-attr>
+      <ng-template ya-attr-label>
+        Acknowledged by {{ alarm.acknowledgeInfo.acknowledgedBy }}
+      </ng-template>
+
+      On {{ alarm.acknowledgeInfo.acknowledgeTime | datetime }}
+      @if (alarm.acknowledgeInfo.acknowledgeMessage) {
+        <blockquote style="border-left: 4px solid #eee; padding-left: 1em; font-style: italic">
+          {{ alarm.acknowledgeInfo.acknowledgeMessage }}
+        </blockquote>
+      }
+    </ya-attr>
+  }
+
+  @if (alarm.shelveInfo; as shelveInfo) {
+    <ya-attr-divider />
+    <ya-attr>
+      <ng-template ya-attr-label>Shelved by {{ shelveInfo.shelvedBy }}</ng-template>
+
+      On {{ shelveInfo.shelveTime | datetime }}
+      @if (shelveInfo.shelveMessage) {
+        <blockquote style="border-left: 4px solid #eee; padding-left: 1em; font-style: italic">
+          {{ shelveInfo.shelveMessage }}
+        </blockquote>
+      }
+    </ya-attr>
+
+    @if (shelveInfo.shelveExpiration) {
+      <ya-attr label="Shelve expiration">
+        {{ shelveInfo.shelveExpiration | datetime }}
+      </ya-attr>
+    }
+  }
+</ya-attr-list>
+
+@if (mayControl && !alarm.readonly) {
+  <ya-toolbar appearance="bottom">
+    @if (!alarm.shelveInfo && !alarm.acknowledged) {
+      <ya-button (click)="acknowledgeAlarm.emit(alarm)" icon="notifications_off">
+        ACKNOWLEDGE
+      </ya-button>
+    }
+    @if (!alarm.shelveInfo) {
+      <ya-button (click)="shelveAlarm.emit(alarm)" icon="timer">SHELVE</ya-button>
+    }
+    @if (alarm.shelveInfo) {
+      <ya-button (click)="unshelveAlarm.emit(alarm)" icon="timer_off">UNSHELVE</ya-button>
+    }
+    <ya-button (click)="clearAlarm.emit(alarm)" icon="clear_all">CLEAR</ya-button>
+  </ya-toolbar>
+}
 ```
 
-## 항목
+### `alarm-detail.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-detail/alarm-detail.component.html`](file--alarm-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-detail/alarm-detail.component.ts`](file--alarm-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/alarm-detail/alarm-detail.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { Alarm, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { AlarmLevelComponent } from '../../shared/alarm-level/alarm-level.component';
+
+@Component({
+  selector: 'app-alarm-detail',
+  templateUrl: './alarm-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlarmLevelComponent, WebappSdkModule],
+})
+export class AlarmDetailComponent {
+  @Input()
+  alarm: Alarm;
+
+  @Input()
+  mayControl = false;
+
+  @Output()
+  acknowledgeAlarm = new EventEmitter<Alarm>();
+
+  @Output()
+  shelveAlarm = new EventEmitter<Alarm>();
+
+  @Output()
+  unshelveAlarm = new EventEmitter<Alarm>();
+
+  @Output()
+  clearAlarm = new EventEmitter<Alarm>();
+
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

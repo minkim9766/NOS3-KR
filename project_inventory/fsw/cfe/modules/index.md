@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -24,19 +24,4 @@ tbl/index
 time/index
 ```
 
-## 항목
-
-- [`fsw/cfe/modules/cfe_assert/`](cfe_assert/index) — 폴더
-- [`fsw/cfe/modules/cfe_testcase/`](cfe_testcase/index) — 폴더
-- [`fsw/cfe/modules/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/core_api/`](core_api/index) — 폴더
-- [`fsw/cfe/modules/core_private/`](core_private/index) — 폴더
-- [`fsw/cfe/modules/es/`](es/index) — 폴더
-- [`fsw/cfe/modules/evs/`](evs/index) — 폴더
-- [`fsw/cfe/modules/fs/`](fs/index) — 폴더
-- [`fsw/cfe/modules/msg/`](msg/index) — 폴더
-- [`fsw/cfe/modules/resourceid/`](resourceid/index) — 폴더
-- [`fsw/cfe/modules/sb/`](sb/index) — 폴더
-- [`fsw/cfe/modules/sbr/`](sbr/index) — 폴더
-- [`fsw/cfe/modules/tbl/`](tbl/index) — 폴더
-- [`fsw/cfe/modules/time/`](time/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

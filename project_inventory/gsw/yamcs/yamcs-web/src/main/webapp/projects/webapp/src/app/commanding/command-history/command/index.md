@@ -3,16 +3,95 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command.component.html`
 
-file--command.component.html
-file--command.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command/command.component.html`
+
+
+```html
+@if (command$ | async; as command) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        <ya-page-icon-button
+          routerLink=".."
+          [queryParams]="{ c: yamcs.context }"
+          icon="arrow_back" />
+        Command history / {{ command.id }}
+      </ng-template>
+    </ya-instance-toolbar>
+    <ya-panel>
+      <app-command-detail2 [command]="command" />
+    </ya-panel>
+  </ya-instance-page>
+}
 ```
 
-## 항목
+### `command.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command/command.component.html`](file--command.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command/command.component.ts`](file--command.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command/command.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  CommandHistoryEntry,
+  CommandHistoryRecord,
+  CommandSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { CommandDetailComponent } from '../command-detail/command-detail.component';
+
+@Component({
+  templateUrl: './command.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommandDetailComponent, WebappSdkModule],
+})
+export class CommandComponent {
+  private commandSubscription: CommandSubscription;
+  command$ = new BehaviorSubject<CommandHistoryRecord | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+  ) {
+    const id = route.snapshot.paramMap.get('commandId')!;
+    yamcs.yamcsClient
+      .getCommandHistoryEntry(yamcs.instance!, id)
+      .then((entry) => {
+        this.mergeEntry(entry);
+        this.commandSubscription = yamcs.yamcsClient.createCommandSubscription(
+          {
+            instance: yamcs.instance!,
+            processor: yamcs.processor!,
+            ignorePastCommands: false,
+          },
+          (wsEntry) => {
+            if (wsEntry.id === id) {
+              this.mergeEntry(wsEntry);
+            }
+          },
+        );
+      });
+  }
+
+  private mergeEntry(entry: CommandHistoryEntry) {
+    const rec = this.command$.value;
+    if (rec) {
+      const mergedRec = rec.mergeEntry(entry);
+      this.command$.next(mergedRec);
+    } else {
+      this.command$.next(new CommandHistoryRecord(entry));
+    }
+  }
+
+  ngOnDestroy() {
+    this.commandSubscription?.cancel();
+  }
+}
+```

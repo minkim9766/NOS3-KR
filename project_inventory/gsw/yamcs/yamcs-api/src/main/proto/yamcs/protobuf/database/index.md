@@ -3,14 +3,64 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/database/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `database_service.proto`
 
-file--database_service.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/database/database_service.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.archive;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "DbServiceProto";
+option java_multiple_files = true;
+
+import "google/protobuf/empty.proto";
+
+import "yamcs/api/annotations.proto";
+
+service DatabaseApi {
+
+  // List databases
+  rpc ListDatabases(google.protobuf.Empty) returns (ListDatabasesResponse) {
+    option (yamcs.api.route) = {
+      get: "/api/databases"
+    };
+  }
+  
+  // Get database
+  rpc GetDatabase(GetDatabaseRequest) returns (DatabaseInfo) {
+    option (yamcs.api.route) = {
+      get: "/api/databases/{name}"
+    };
+  }
+}
+
+message ListDatabasesResponse {
+  repeated DatabaseInfo databases = 1;
+}
+
+message GetDatabaseRequest {
+  // Database name
+  optional string name = 1;
+}
+
+message DatabaseInfo {
+  // Database name
+  optional string name = 1;
+
+  // Path on server
+  optional string path = 2;
+  optional string tablespace = 3;
+
+  // Names of the tables in this database
+  repeated string tables = 4;
+
+  // Names of the streams in this database
+  repeated string streams = 5;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/database/database_service.proto`](file--database_service.proto) — UTF-8 텍스트 파일 본문 포함

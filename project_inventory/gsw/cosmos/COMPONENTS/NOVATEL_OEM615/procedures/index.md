@@ -3,16 +3,71 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/NOVATEL_OEM615/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--novatel_oem615_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/COMPONENTS/NOVATEL_OEM615/procedures/tests/`](tests/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/NOVATEL_OEM615/procedures/novatel_oem615_test.rb`](file--novatel_oem615_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `novatel_oem615_test.rb`
+
+**경로:** `gsw/cosmos/COMPONENTS/NOVATEL_OEM615/procedures/novatel_oem615_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'gps_lib.rb'
+
+class NOVATEL_OEM615_Functional_Test < Cosmos::Test
+  def setup
+    safe_gps()
+  end
+
+  def test_application
+      start("tests/novatel_oem615_app_test.rb")
+  end
+
+  def test_device
+    start("tests/novatel_oem615_device_test.rb")
+  end
+
+  def teardown
+    safe_gps()
+  end
+end
+
+class NOVATEL_OEM615_Automated_Scenario_Test < Cosmos::Test
+  def setup 
+    safe_gps()
+  end
+
+  def test_AST
+      start("tests/novatel_oem615_ast_test.rb")
+  end
+
+  def teardown
+    safe_gps()
+  end
+end
+
+class Novatel_oem615_Test < Cosmos::TestSuite
+  def initialize
+      super()
+      add_test('NOVATEL_OEM615_Functional_Test')
+      add_test('NOVATEL_OEM615_Automated_Scenario_Test')
+  end
+
+  def setup
+    safe_gps()
+  end
+  
+  def teardown
+    safe_gps()
+  end
+end
+```

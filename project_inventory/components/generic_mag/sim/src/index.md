@@ -3,22 +3,396 @@
 
 **경로:** `components/generic_mag/sim/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_mag_42_data_provider.cpp`
 
-file--generic_mag_42_data_provider.cpp
-file--generic_mag_data_point.cpp
-file--generic_mag_data_provider.cpp
-file--generic_mag_hardware_model.cpp
-file--generic_mag_shmem_data_provider.cpp
+**경로:** `components/generic_mag/sim/src/generic_mag_42_data_provider.cpp`
+
+
+```cpp
+#include <generic_mag_42_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_mag42DataProvider,"GENERIC_MAG_42_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_mag42DataProvider::Generic_mag42DataProvider(const boost::property_tree::ptree& config) : SimData42SocketProvider(config)
+    {
+        sim_logger->trace("Generic_mag42DataProvider::Generic_mag42DataProvider:  Constructor executed");
+
+        connect_reader_thread_as_42_socket_client(
+            config.get("simulator.hardware-model.data-provider.hostname", "localhost"),
+            config.get("simulator.hardware-model.data-provider.port", 4234) );
+
+        _sc = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_mag42DataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_mag42DataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        const boost::shared_ptr<Sim42DataPoint> dp42 = boost::dynamic_pointer_cast<Sim42DataPoint>(SimData42SocketProvider::get_data_point());
+
+        /* Prepare the specific data */
+        SimIDataPoint *dp = new Generic_magDataPoint(_sc, dp42);
+
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
 ```
 
-## 항목
+### `generic_mag_data_point.cpp`
 
-- [`components/generic_mag/sim/src/generic_mag_42_data_provider.cpp`](file--generic_mag_42_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/src/generic_mag_data_point.cpp`](file--generic_mag_data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/src/generic_mag_data_provider.cpp`](file--generic_mag_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/src/generic_mag_hardware_model.cpp`](file--generic_mag_hardware_model.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/src/generic_mag_shmem_data_provider.cpp`](file--generic_mag_shmem_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_mag/sim/src/generic_mag_data_point.cpp`
+
+
+```cpp
+#include <ItcLogger/Logger.hpp>
+#include <generic_mag_data_point.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_magDataPoint::Generic_magDataPoint(double mag_x, double mag_y, double mag_z) : _not_parsed(false)
+    {
+        std::vector<float> axes(3, 0.0);
+        _generic_mag_data = axes;
+        _generic_mag_data[0] = mag_x;
+        _generic_mag_data[1] = mag_y;
+        _generic_mag_data[2] = mag_z;
+    }
+
+    Generic_magDataPoint::Generic_magDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp) : _dp(*dp), _sc(spacecraft), _not_parsed(true)
+    {
+        sim_logger->trace("Generic_magDataPoint::Generic_magDataPoint:  42 Constructor executed");
+
+        /* Initialize data */
+        std::vector<float> axes(3, 0.0);
+        _generic_mag_data = axes;
+        _generic_mag_data[0] = _generic_mag_data[1] = _generic_mag_data[2] = 0.0;
+    }
+
+    void Generic_magDataPoint::do_parsing(void) const
+    {
+        try {
+            /*
+            ** Declare 42 telemetry string prefix
+            ** 42 variables defined in `42/Include/42types.h`
+            ** 42 data stream defined in `42/Source/IPC/SimWriteToSocket.c`
+            */
+           std::string key0; // SC[N].AC.MAG[M].Field
+           key0.append("SC[").append(std::to_string(_sc)).append("].MAG");
+           std::string key1(key0), key2(key0);
+           key0.append("[0].Field");
+           key1.append("[1].Field");
+           key2.append("[2].Field");
+           
+           /* Parse 42 telemetry */
+           _generic_mag_data[0] = std::stof(_dp.get_value_for_key(key0));
+           _generic_mag_data[1] = std::stof(_dp.get_value_for_key(key1));
+           _generic_mag_data[2] = std::stof(_dp.get_value_for_key(key2));
+
+           _not_parsed = false;
+        } 
+        catch(const std::exception& e) 
+        {
+            /* Force data to be set to known values */
+            std::vector<float> axes(3, 0.0);
+            _generic_mag_data = axes; 
+            sim_logger->error("Generic_magDataPoint::Generic_magDataPoint:  Parsing exception %s", e.what());
+        }
+    }
+
+    /* Used for printing a representation of the data point */
+    std::string Generic_magDataPoint::to_string(void) const
+    {
+        sim_logger->trace("Generic_magDataPoint::to_string:  Executed");
+        std::stringstream output;
+        output << "Magnetometer values: ";
+        for (unsigned int i = 0; i < _generic_mag_data.size(); i++) {
+            output << _generic_mag_data[i];
+            if (i < _generic_mag_data.size() - 1) {
+                output << ", ";
+            }
+        }
+        return output.str();
+    }
+} /* namespace Nos3 */
+```
+
+### `generic_mag_data_provider.cpp`
+
+**경로:** `components/generic_mag/sim/src/generic_mag_data_provider.cpp`
+
+
+```cpp
+#include <generic_mag_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_magDataProvider,"GENERIC_MAG_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_magDataProvider::Generic_magDataProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        sim_logger->trace("Generic_magDataProvider::Generic_magDataProvider:  Constructor executed");
+        _request_count = 0;
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_magDataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Generic_magDataProvider::get_data_point:  Executed");
+
+        /* Prepare the provider data */
+        _request_count++;
+
+        /* Request a data point */
+        SimIDataPoint *dp = new Generic_magDataPoint(_request_count);
+
+        /* Return the data point */
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
+```
+
+### `generic_mag_hardware_model.cpp`
+
+**경로:** `components/generic_mag/sim/src/generic_mag_hardware_model.cpp`
+
+
+```cpp
+#include <generic_mag_hardware_model.hpp>
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(Generic_magHardwareModel,"GENERIC_MAG");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_magHardwareModel::Generic_magHardwareModel(const boost::property_tree::ptree& config) : SimIHardwareModel(config), _enabled(0)
+    {
+        /* Get the NOS engine connection string */
+        std::string connection_string = config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"); 
+        sim_logger->info("Generic_magHardwareModel::Generic_magHardwareModel:  NOS Engine connection string: %s.", connection_string.c_str());
+
+        /* Get a data provider */
+        // std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "GENERIC_MAG_42_PROVIDER");
+        std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "GENERIC_MAG_PROVIDER");
+        _generic_mag_dp = SimDataProviderFactory::Instance().Create(dp_name, config);
+        sim_logger->info("Generic_magHardwareModel::Generic_magHardwareModel:  Data provider %s created.", dp_name.c_str());
+
+        /* Get on a protocol bus */
+        /* Note: Initialized defaults in case value not found in config file */
+        std::string bus_name = "spi_2";
+        int chip_select = 2;
+        if (config.get_child_optional("simulator.hardware-model.connections")) 
+        {
+            /* Loop through the connections for hardware model */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("simulator.hardware-model.connections"))
+            {
+                /* v.second is the child tree (v.first is the name of the child) */
+                if (v.second.get("type", "").compare("spi") == 0)
+                {
+                    /* Configuration found */
+                    bus_name = v.second.get("bus-name", bus_name);
+                    chip_select = v.second.get("chip-select", chip_select);
+                    break;
+                }
+            }
+        }
+        _spi_slave_connection = new SpiSlaveConnection(this, chip_select, connection_string, bus_name);
+        sim_logger->info("Generic_magHardwareModel::Generic_magHardwareModel:  Now on SPI bus name %s, chip select %d.", bus_name.c_str(), chip_select);
+    
+        /* Get on the command bus*/
+        std::string time_bus_name = "command";
+        if (config.get_child_optional("hardware-model.connections")) 
+        {
+            /* Loop through the connections for the hardware model */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("hardware-model.connections"))
+            {
+                /* v.first is the name of the child */
+                /* v.second is the child tree */
+                if (v.second.get("type", "").compare("time") == 0) // 
+                {
+                    time_bus_name = v.second.get("bus-name", "command");
+                    /* Found it... don't need to go through any more items*/
+                    break; 
+                }
+            }
+        }
+        _time_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, time_bus_name));
+        sim_logger->info("Generic_magHardwareModel::Generic_magHardwareModel:  Now on time bus named %s.", time_bus_name.c_str());
+
+        /* Construction complete */
+        sim_logger->info("Generic_magHardwareModel::Generic_magHardwareModel:  Construction complete.");
+    }
+
+
+    Generic_magHardwareModel::~Generic_magHardwareModel(void)
+    {        
+        /* Close the protocol bus */
+        delete _spi_slave_connection;
+        _spi_slave_connection = nullptr;
+
+        /* Clean up the data provider */
+        delete _generic_mag_dp;
+        _generic_mag_dp = nullptr;
+
+        /* The bus will clean up the time node */
+    }
+
+
+    /* Automagically set up by the base class to be called */
+    void Generic_magHardwareModel::command_callback(NosEngine::Common::Message msg)
+    {
+        /* Get the data out of the message */
+        NosEngine::Common::DataBufferOverlay dbf(const_cast<NosEngine::Utility::Buffer&>(msg.buffer));
+        sim_logger->info("Generic_magHardwareModel::command_callback:  Received command: %s.", dbf.data);
+
+        /* Do something with the data */
+        std::string command = dbf.data;
+        std::string response = "Generic_magHardwareModel::command_callback:  INVALID COMMAND! (Try HELP)";
+        boost::to_upper(command);
+        if (command.compare(0, 4, "HELP") == 0) 
+        {
+            response = "Generic_magHardwareModel::command_callback: Valid commands are HELP, ENABLE, DISABLE, or STOP";
+        }
+        else if (command.compare(0, 6, "ENABLE") == 0) 
+        {
+            _enabled = GENERIC_MAG_SIM_SUCCESS;
+            response = "Generic_magHardwareModel::command_callback:  Enabled";
+        }
+        else if (command.compare(0, 7, "DISABLE") == 0) 
+        {
+            _enabled = GENERIC_MAG_SIM_ERROR;
+            response = "Generic_magHardwareModel::command_callback:  Disabled";
+        }
+        else if (command.compare(0, 4, "STOP") == 0) 
+        {
+            _keep_running = false;
+            response = "Generic_magHardwareModel::command_callback:  Stopping";
+        }
+
+        /* Send a reply */
+        sim_logger->info("Generic_magHardwareModel::command_callback:  Sending reply: %s.", response.c_str());
+        _command_node->send_reply_message_async(msg, response.size(), response.c_str());
+    }
+
+    /* Custom function to prepare the Generic_mag Data */
+    void Generic_magHardwareModel::prepare_generic_mag_data_from_42(std::vector<uint8_t>& out_data)
+    {
+        boost::shared_ptr<Generic_magDataPoint> data_point = boost::dynamic_pointer_cast<Generic_magDataPoint>(_generic_mag_dp->get_data_point());
+        std::vector<float> magValues = data_point->getValues();
+        sim_logger->debug("Generic_magHardwareModel::prepare_generic_mag_data_from_42:  Data point=%s", data_point->to_string().c_str());
+
+        /* Prepare data size */
+        out_data.clear();
+        out_data.resize(16, 0x00);
+
+        /* Streaming data header - 0xDEAD */
+        out_data[0] = 0xDE;
+        out_data[1] = 0xAD;
+        out_data[2] = 0xBE;
+        out_data[3] = 0xEF;
+
+        /* sim_logger->debug("Generic_magHardwareModel::prepare_generic_mag_data_from_42:  Creating data, enabled=%d", _enabled); */
+        if (_enabled == GENERIC_MAG_SIM_SUCCESS) 
+        {
+            out_data[4] = ((uint32_t) ((magValues[0] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0xFF000000) >> 24;
+            out_data[5] = ((uint32_t) ((magValues[0] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x00FF0000) >> 16;
+            out_data[6] = ((uint32_t) ((magValues[0] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x0000FF00) >> 8;
+            out_data[7] = ((uint32_t) ((magValues[0] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x000000FF);
+            out_data[8] = ((uint32_t) ((magValues[1] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0xFF000000) >> 24;
+            out_data[9] = ((uint32_t) ((magValues[1] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x00FF0000) >> 16;
+            out_data[10] = ((uint32_t) ((magValues[1] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x0000FF00) >> 8;
+            out_data[11] = ((uint32_t) ((magValues[1] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x000000FF);
+            out_data[12] = ((uint32_t) ((magValues[2] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0xFF000000) >> 24;
+            out_data[13] = ((uint32_t) ((magValues[2] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x00FF0000) >> 16;
+            out_data[14] = ((uint32_t) ((magValues[2] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x0000FF00) >> 8;
+            out_data[15] = ((uint32_t) ((magValues[2] * _nano_conversion) * _mag_conv + _mag_conv * _mag_range) & 0x000000FF);
+            /*
+            sim_logger->debug("Generic_magHardwareModel::prepare_generic_mag_data_from_42:  Creating data, data is below\nout_data[0]=0x%02x\tout_data[1]=0x%02x\tout_data[2]=0x%02x\tout_data[3]=0x%02x\nout_data[4]=0x%02x\tout_data[5]=0x%02x\tout_data[6]=0x%02x\tout_data[7]=0x%02x\nout_data[8]=0x%02x\tout_data[9]=0x%02x\tout_data[10]=0x%02x\tout_data[11]=0x%02x\nout_data[12]=0x%02x\tout_data[13]=0x%02x\tout_data[14]=0x%02x\tout_data[15]=0x%02x\n",
+                out_data[0], out_data[1], out_data[2], out_data[3], 
+                out_data[4], out_data[5], out_data[6], out_data[7], 
+                out_data[8], out_data[9], out_data[10], out_data[11], 
+                out_data[12], out_data[13], out_data[14], out_data[15]);
+            */
+        }
+    }
+
+    SpiSlaveConnection::SpiSlaveConnection(Generic_magHardwareModel* mag,
+        int chip_select, std::string connection_string, std::string bus_name)
+        : NosEngine::Spi::SpiSlave(chip_select, connection_string, bus_name)
+    {
+        _mag = mag;
+    }
+
+    size_t SpiSlaveConnection::spi_read(uint8_t *rbuf, size_t rlen) 
+    {
+        _mag->prepare_generic_mag_data_from_42(_spi_out_data);
+        sim_logger->debug("spi_read: %s", SimIHardwareModel::uint8_vector_to_hex_string(_spi_out_data).c_str()); // log data
+
+        if (_spi_out_data.size() < rlen) rlen = _spi_out_data.size();
+
+        for (size_t i = 0; i < rlen; i++) {
+            rbuf[i] = _spi_out_data[i];
+        }
+        return rlen;
+    }
+
+    size_t SpiSlaveConnection::spi_write(const uint8_t *wbuf, size_t wlen) {
+        std::vector<uint8_t> in_data(wbuf, wbuf + wlen);
+        sim_logger->debug("spi_write: %s", SimIHardwareModel::uint8_vector_to_hex_string(in_data).c_str()); // log data
+        sim_logger->error("MAG sim does not support SPI write!");
+        return wlen;
+
+    }
+}
+```
+
+### `generic_mag_shmem_data_provider.cpp`
+
+**경로:** `components/generic_mag/sim/src/generic_mag_shmem_data_provider.cpp`
+
+
+```cpp
+#include <generic_mag_shmem_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Generic_magShmemDataProvider,"GENERIC_MAG_SHMEM_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Generic_magShmemDataProvider::Generic_magShmemDataProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        sim_logger->trace("Generic_magShmemDataProvider::Generic_magShmemDataProvider:  Constructor executed");
+        const std::string shm_name = config.get("simulator.hardware-model.data-provider.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't let this go out of scope/get destroyed
+        _blackboard_data = static_cast<BlackboardData*>(_shm_region.get_address());    
+    }
+
+    boost::shared_ptr<SimIDataPoint> Generic_magShmemDataProvider::get_data_point(void) const
+    {
+        boost::shared_ptr<Generic_magDataPoint> dp;
+        {
+            dp = boost::shared_ptr<Generic_magDataPoint>(
+                new Generic_magDataPoint(_blackboard_data->bvb[0], _blackboard_data->bvb[1], _blackboard_data->bvb[2]));
+        }
+        std::vector<float> values = dp->getValues();
+        sim_logger->debug("Generic_magDataPoint::get_data_point: magnetic field=%f, %f, %f",
+            values[0], values[1], values[2]);
+        return dp;
+    }
+}
+```

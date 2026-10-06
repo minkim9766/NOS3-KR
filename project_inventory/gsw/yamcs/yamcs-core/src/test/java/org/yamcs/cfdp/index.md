@@ -3,24 +3,1280 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CfdpDownlinkIntegrationTest.java`
 
-file--CfdpDownlinkIntegrationTest.java
-file--CfdpUplinkIntegrationTest.java
-file--ChecksumTest.java
-file--ConfigTest.java
-file--DataFileTest.java
-file--PacketParseTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/CfdpDownlinkIntegrationTest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.buckets.BucketManager;
+import org.yamcs.cfdp.pdu.AckPacket;
+import org.yamcs.cfdp.pdu.AckPacket.FileDirectiveSubtypeCode;
+import org.yamcs.cfdp.pdu.AckPacket.TransactionStatus;
+import org.yamcs.cfdp.pdu.CfdpHeader;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.FileDataPacket;
+import org.yamcs.cfdp.pdu.FileDirectiveCode;
+import org.yamcs.cfdp.pdu.FinishedPacket;
+import org.yamcs.cfdp.pdu.FinishedPacket.FileStatus;
+import org.yamcs.cfdp.pdu.MetadataPacket;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.filetransfer.FileTransferClient;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.filetransfer.FileTransfer;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.protobuf.TransferInfo;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class CfdpDownlinkIntegrationTest {
+    private Random random = new Random();
+
+    static private String yamcsInstance = "cfdp-test-inst";
+
+    // MyReceiver will place the file in this bucket
+    private static Bucket incomingBucket;
+
+    private YamcsClient client;
+    private FileTransferClient cfdpClient;
+
+    private YConfiguration config;
+    static int seqNum;
+
+    Stream cfdpIn, cfdpOut;
+    // executor used by the Cfdp Service
+    ScheduledThreadPoolExecutor cfdpServiceExecutor;
+
+    // executor used by the test sender
+    ScheduledThreadPoolExecutor myExecutor;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        EventProducerFactory.setMockup(true);
+        BucketManager.setMockup();
+        Path dataDir = Path.of(System.getProperty("java.io.tmpdir"), "yamcs-cfdp-data");
+        FileUtils.deleteRecursivelyIfExists(dataDir);
+        YConfiguration.setupTest("cfdp");
+        YamcsServer.getServer().prepareStart();
+        YamcsServer.getServer().start();
+
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        incomingBucket = bucketManager.getBucket("cfdpDown");
+    }
+
+    @AfterAll
+    public static void afterClass() throws Exception {
+        YamcsServer.getServer().shutDown();
+    }
+
+    @BeforeEach
+    public void before() throws Exception {
+        client = YamcsClient.newBuilder("localhost", 9193).build();
+        cfdpClient = new FileTransferClient(client, yamcsInstance, "CfdpService");
+        config = getConfig();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        cfdpIn = ydb.getStream("cfdp_in");
+        cfdpOut = ydb.getStream("cfdp_out");
+        CfdpService cfdpService = YamcsServer.getServer().getService(yamcsInstance, CfdpService.class);
+        cfdpService.abortAll();
+
+        ydb.execute("delete from cfdp");
+        cfdpServiceExecutor = cfdpService.getExecutor();
+        myExecutor = new ScheduledThreadPoolExecutor(1);
+        EventProducerFactory.getMockupQueue().clear();
+    }
+
+    @AfterEach
+    public void after() {
+        client.close();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        Stream cfdpOut = ydb.getStream("cfdp_out");
+        cfdpOut.getSubscribers().forEach(cfdpOut::removeSubscriber);
+    }
+
+    @Test
+    public void testClass1() throws Exception {
+        byte[] data = new byte[1000];
+        random.nextBytes(data);
+
+        downloadAndCheck(config, "randomfile1", data, false, Collections.emptyList(),
+                TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2() throws Exception {
+        byte[] data = new byte[1000];
+        random.nextBytes(data);
+
+        downloadAndCheck(config, "randomfile2", data, true, Collections.emptyList(),
+                TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testFileTooLarge1() throws Exception {
+        List<Tuple> tlist = new ArrayList<>();
+        cfdpOut.addSubscriber((stream, tuple) -> tlist.add(tuple));
+        CfdpService cfdpService = YamcsServer.getServer().getService(yamcsInstance, CfdpService.class);
+        // allow more time for the finished ack timeout to avoid spurious test errors
+        cfdpService.getConfig().getRoot().put("finAckTimeout", Long.valueOf(5000));
+
+        // send a metadata packet with a file larger than max
+        CfdpHeader header = new CfdpHeader(true, true, true, false, 2, 3, 15, 12, ++seqNum);
+        MetadataPacket mp = new MetadataPacket(false, ChecksumType.MODULAR, 101 * 1024 * 1024, "large-file",
+                "large-file", null, header);
+        cfdpIn.emitTuple(mp.toTuple(header.getTransactionId(), TimeEncoding.getWallclockTime()));
+
+        synchWithExecutors(1);
+
+        // we expect to receive a Finished PDU indicating file size error
+        assertEquals(1, tlist.size());
+
+        FinishedPacket fin = (FinishedPacket) CfdpPacket.fromTuple(tlist.get(0));
+        assertEquals(ConditionCode.FILE_SIZE_ERROR, fin.getConditionCode());
+        assertEquals(FileStatus.DELIBERATELY_DISCARDED, fin.getFileStatus());
+
+        // in this time the transfer state on the downlink should be cancelling
+        TransferInfo tinfo = getTransfer(seqNum);
+        assertEquals(TransferState.CANCELLING, tinfo.getState(),
+                "Expected CANCELLING, actual state: " + tinfo);
+
+        // send the FIN ACK
+        AckPacket ack = new AckPacket(FileDirectiveCode.FINISHED, FileDirectiveSubtypeCode.FINISHED_BY_END_SYSTEM,
+                ConditionCode.CANCEL_REQUEST_RECEIVED, TransactionStatus.TERMINATED, header);
+        cfdpIn.emitTuple(ack.toTuple(header.getTransactionId(), TimeEncoding.getWallclockTime()));
+
+        synchWithExecutors(1);
+        // now the transaction should be finished
+        TransferInfo tinfo1 = cfdpClient.getTransfer(tinfo.getId()).get();
+        assertEquals(TransferState.FAILED, tinfo1.getState());
+        assertTrue(tinfo1.getFailureReason()
+                .contains("file size 103424.00 KB exceeding the maximum allowed 102400.00 KB"));
+
+        // restore back the finAckTimeout
+        cfdpService.getConfig().getRoot().put("finAckTimeout", Long.valueOf(500));
+    }
+
+    @Test
+    public void testFileTooLarge2() throws Exception {
+
+        List<Tuple> tlist = new ArrayList<>();
+        cfdpOut.addSubscriber((stream, tuple) -> tlist.add(tuple));
+        CfdpHeader header = new CfdpHeader(false, true, true, false, 2, 3, 15, 12, ++seqNum);
+        FileDataPacket fdp = new FileDataPacket(new byte[] { 0 }, 101 * 1024 * 1024l, header);
+        cfdpIn.emitTuple(fdp.toTuple(header.getTransactionId(), TimeEncoding.getWallclockTime()));
+
+        synchWithExecutors(1);
+        // we expect to receive a Finished PDU indicating file size error
+        assertEquals(1, tlist.size());
+
+        FinishedPacket fin = (FinishedPacket) CfdpPacket.fromTuple(tlist.get(0));
+        assertEquals(ConditionCode.FILE_SIZE_ERROR, fin.getConditionCode());
+        assertEquals(FileStatus.DELIBERATELY_DISCARDED, fin.getFileStatus());
+
+        TransferInfo tinfo = getTransfer(seqNum);
+        assertEquals(TransferState.CANCELLING, tinfo.getState());
+
+        // wait without sending the FIN ACK, should trigger a timeout in the receiver
+        Thread.sleep(1000);
+        TransferInfo tinfo1 = cfdpClient.getTransfer(tinfo.getId()).get();
+        assertTrue(tinfo1.getFailureReason().contains(
+                "Received data file whose end offset 105906177 is larger than the maximum file size 104857600"));
+
+        assertTrue(tinfo1.getFailureReason().contains(
+                "The Finished PDU has not been acknowledged"));
+
+        assertEquals(TransferState.FAILED, tinfo1.getState());
+    }
+
+    @Test
+    public void testClass2NoFinAck() throws Exception {
+        byte[] data = new byte[1000];
+        random.nextBytes(data);
+
+        downloadAndCheck(config, "randomfile3", data, true, Collections.emptyList(),
+                TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2EofAckDropped() throws Exception {
+        // org.yamcs.LoggingUtils.enableTracing();
+        byte[] data = new byte[1000];
+        random.nextBytes(data);
+
+        downloadAndCheck(config, "randomfile3", data, true, Arrays.asList(1),
+                TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testUnknownLocalEntity() throws Exception {
+        CfdpHeader header = new CfdpHeader(true, true, true, false, 2, 3, 15, 13, 5);
+        MetadataPacket mp = new MetadataPacket(false, ChecksumType.MODULAR, 1000, "invalid-local-entity",
+                "large-file", null, header);
+        Tuple t = mp.toTuple(TimeEncoding.getWallclockTime());
+        cfdpIn.emitTuple(t);
+
+        verifyEvent("unknown local entity Id 13");
+    }
+
+    @Test
+    public void testUnknownRemoteEntity() throws Exception {
+        CfdpHeader header = new CfdpHeader(true, true, true, false, 2, 3, 16, 12, 5);
+        MetadataPacket mp = new MetadataPacket(false, ChecksumType.MODULAR, 1000, "invalid-remote-entity",
+                "large-file", null, header);
+        Tuple t = mp.toTuple(TimeEncoding.getWallclockTime());
+        cfdpIn.emitTuple(t);
+
+        verifyEvent("unknown remote entity Id 16");
+    }
+
+    @Test
+    public void testLargeFileUnsupported() throws Exception {
+        CfdpHeader header = new CfdpHeader(true, true, true, false, 2, 3, 15, 12, 5);
+        header.setLargeFile(true);
+        MetadataPacket mp = new MetadataPacket(false, ChecksumType.MODULAR, -1, "large-file",
+                "large-file", null, header);
+        Tuple t = mp.toTuple(TimeEncoding.getWallclockTime());
+        cfdpIn.emitTuple(t);
+
+        verifyEvent("Large files not supported");
+    }
+
+    @Test
+    public void testCorruptedPdu() throws Exception {
+        byte[] pdu = new byte[10];
+        Tuple t = new Tuple(CfdpPacket.CFDP, Arrays.asList(1, 1, 1, pdu));
+        cfdpIn.emitTuple(t);
+        verifyEvent("Error decoding CFDP PDU");
+    }
+
+    @Test
+    public void testUnexpectedPdu() throws Exception {
+        CfdpHeader header = new CfdpHeader(true, true, true, false, 2, 3, 15, 12, 5);
+        header.setLargeFile(true);
+        AckPacket ack = new AckPacket(FileDirectiveCode.ACK, FileDirectiveSubtypeCode.FINISHED_BY_END_SYSTEM,
+                ConditionCode.CANCEL_REQUEST_RECEIVED, TransactionStatus.TERMINATED, header);
+        cfdpIn.emitTuple(ack.toTuple(TimeEncoding.getWallclockTime()));
+
+        verifyEvent("Unexpected CFDP PDU received");
+    }
+
+    @Test
+    public void testMaxDownlinkLimit() throws Exception {
+        for (int i = 0; i < 101; i++) {
+            startDownlink(++seqNum);
+        }
+
+        verifyEvent("Maximum number of pending downloads 100 reached.");
+        EventProducerFactory.getMockupQueue().clear();
+
+        List<TransferInfo> l = cfdpClient.listTransfers().get();
+        assertEquals(100, l.size());
+
+        for (TransferInfo tinfo : l) {
+            cfdpClient.cancel(tinfo.getId()).get();
+        }
+
+        l = cfdpClient.listTransfers().get();
+        for (TransferInfo tinfo : l) {
+            assertEquals(TransferState.CANCELLING, tinfo.getState());
+        }
+        Thread.sleep(1000);
+
+        l = cfdpClient.listTransfers().get();
+        for (TransferInfo tinfo : l) {
+            assertEquals(TransferState.FAILED, tinfo.getState());
+        }
+    }
+
+    private void startDownlink(int seqNum) {
+        CfdpHeader header = new CfdpHeader(true, true, true, false, 2, 3, 15, 12, seqNum);
+        String name = "limit-test" + seqNum;
+        MetadataPacket mp = new MetadataPacket(false, ChecksumType.MODULAR, 1000, name, name, null, header);
+        cfdpIn.emitTuple(mp.toTuple(TimeEncoding.getWallclockTime()));
+    }
+
+    private void downloadAndCheck(YConfiguration config, String objName, byte[] data, boolean reliable,
+            List<Integer> dropPackets, TransferState expectedSenderState, TransferState expectedReceiverState)
+            throws Exception {
+
+        MyFileSender sender = new MyFileSender(++seqNum, objName, data, dropPackets, config, reliable);
+
+        Thread.sleep(1000);
+        TransferInfo tinfo = getTransfer(seqNum);
+
+        assertEquals(expectedSenderState, tinfo.getState());
+        assertEquals(expectedReceiverState, sender.trsf.getTransferState());
+
+        if (expectedReceiverState == TransferState.COMPLETED) {
+            byte[] recdata = incomingBucket.getObjectAsync(tinfo.getObjectName()).get();
+            assertArrayEquals(data, recdata);
+        }
+        assertFalse(sender.trsf.eofTimer.isActive());
+    }
+
+    TransferInfo getTransfer(int seqNum) throws InterruptedException, ExecutionException {
+        return cfdpClient.listTransfers().get().stream()
+                .filter(ti -> ti.getTransactionId().getSequenceNumber() == seqNum)
+                .findAny().get();
+    }
+
+    // this is the configuration of the sender
+    // the receiver is in the src/test/resources/cfdp/yamcs.cfdp-test-inst.yaml
+    private YConfiguration getConfig() {
+        Map<String, Object> m = new HashMap<>();
+        m.put("inactivityTimeout", 10000);
+
+        m.put("sequenceNrLength", 2);
+        m.put("entityIdLength", 2);
+        m.put("sleepBetweenPdus", 10);
+
+        return YConfiguration.wrap(m);
+    }
+
+    private void verifyEvent(String evs) {
+        boolean found = false;
+
+        for (Event ev : EventProducerFactory.getMockupQueue()) {
+            if (ev.getMessage().contains(evs)) {
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found);
+    }
+
+    // allows the CFDP service to process all its incoming queue
+    private void synchWithExecutors(int count) throws Exception {
+        for (int i = 0; i < count; i++) {
+            cfdpServiceExecutor.submit(() -> {
+            }).get();
+
+            myExecutor.submit(() -> {
+            }).get();
+        }
+    }
+
+    class MyFileSender implements TransferMonitor {
+        CfdpOutgoingTransfer trsf;
+        int tcount = 0;
+        final List<Integer> dropPackets;
+
+        MyFileSender(int seqNum, String objName, byte[] data, List<Integer> dropPackets, YConfiguration config,
+                boolean reliable) {
+
+            this.dropPackets = dropPackets;
+            EventProducer eventProducer = EventProducerFactory.getEventProducer();
+            eventProducer.setSource("unit-test");
+            FilePutRequest putRequest = new FilePutRequest(15, 12, objName, objName, false, reliable, false, false,
+                    incomingBucket, data);
+
+            trsf = new CfdpOutgoingTransfer(yamcsInstance, putRequest.getSourceId(), seqNum,
+                    TimeEncoding.getWallclockTime(),
+                    myExecutor, putRequest, cfdpIn, config, null, null, null, eventProducer, this, null);
+
+            cfdpOut.addSubscriber((stream, tuple) -> {
+                tcount++;
+                CfdpPacket packet = CfdpPacket.fromTuple(tuple);
+                // System.out.println("packet" + tcount + ": " + packet);
+                if (dropPackets.contains(tcount)) {
+                    // System.out.println("dropping packet" + tcount);
+                    return;
+                }
+
+                // System.out.println("processing packet "+packet);
+                trsf.processPacket(packet);
+            });
+            trsf.start();
+        }
+
+        @Override
+        public void stateChanged(FileTransfer cfdpTransfer) {
+        }
+    }
+}
 ```
 
-## 항목
+### `CfdpUplinkIntegrationTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/CfdpDownlinkIntegrationTest.java`](file--CfdpDownlinkIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/CfdpUplinkIntegrationTest.java`](file--CfdpUplinkIntegrationTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/ChecksumTest.java`](file--ChecksumTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/ConfigTest.java`](file--ConfigTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/DataFileTest.java`](file--DataFileTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/PacketParseTest.java`](file--PacketParseTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/CfdpUplinkIntegrationTest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.filetransfer.FileTransferClient;
+import org.yamcs.client.filetransfer.FileTransferClient.UploadOptions;
+import org.yamcs.client.storage.ObjectId;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.filetransfer.FileSaveHandler;
+import org.yamcs.filetransfer.FileTransfer;
+import org.yamcs.filetransfer.TransferMonitor;
+import org.yamcs.protobuf.EntityInfo;
+import org.yamcs.protobuf.FileTransferServiceInfo;
+import org.yamcs.protobuf.TransferInfo;
+import org.yamcs.protobuf.TransferState;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class CfdpUplinkIntegrationTest {
+    private Random random = new Random();
+
+    private String yamcsInstance = "cfdp-test-inst";
+
+    // files to be sent are created here
+    private static Bucket outgoingBucket;
+
+    // MyReceiver will place the file in this bucket
+    private static Bucket incomingBucket;
+
+    private YamcsClient client;
+    private FileTransferClient cfdpClient;
+
+    private YConfiguration config;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        EventProducerFactory.setMockup(false);
+        Path dataDir = Path.of(System.getProperty("java.io.tmpdir"), "yamcs-cfdp-data");
+        FileUtils.deleteRecursivelyIfExists(dataDir);
+        YConfiguration.setupTest("cfdp");
+        YamcsServer.getServer().prepareStart();
+        YamcsServer.getServer().start();
+
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        incomingBucket = bucketManager.createBucket("cfdp-bucket-in");
+        outgoingBucket = bucketManager.createBucket("cfdp-bucket-out");
+    }
+
+    @AfterAll
+    public static void afterClass() throws Exception {
+        YamcsServer.getServer().shutDown();
+    }
+
+    @BeforeEach
+    public void before() {
+        client = YamcsClient.newBuilder("localhost", 9193).build();
+        cfdpClient = new FileTransferClient(client, yamcsInstance, "CfdpService");
+        config = getConfig();
+    }
+
+    @AfterEach
+    public void after() {
+        client.close();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        Stream cfdpOut = ydb.getStream("cfdp_out");
+        cfdpOut.getSubscribers().forEach(cfdpOut::removeSubscriber);
+    }
+
+    @Test
+    public void testGetServices() throws Exception {
+        List<FileTransferServiceInfo> l = client.getFileTransferServices(yamcsInstance).get();
+        assertEquals(1, l.size());
+        FileTransferServiceInfo ftInfo = l.get(0);
+        assertEquals("CfdpService", ftInfo.getName());
+        assertEquals(1, ftInfo.getLocalEntitiesCount());
+        assertEquals(1, ftInfo.getRemoteEntitiesCount());
+        checkEquals("local12", 12, ftInfo.getLocalEntities(0));
+        checkEquals("remote15", 15, ftInfo.getRemoteEntities(0));
+
+    }
+
+    @Test
+    public void testInvalidId() throws Exception {
+        ClientException ce = null;
+        try {
+            int invalidId = 1234567;
+            cfdpClient.getTransfer(invalidId).get();
+        } catch (ExecutionException e) {
+            ce = (ClientException) e.getCause();
+        }
+
+        assertNotNull(ce);
+        assertTrue(ce.getMessage().contains("No such transaction"));
+    }
+
+    private void checkEquals(String name, int id, EntityInfo einfo) {
+        assertEquals(name, einfo.getName());
+        assertEquals(id, einfo.getId());
+    }
+
+    @Test
+    public void testClass1() throws Exception {
+        byte[] data = createObject("randomfile1", 1000);
+        uploadAndCheck("randomfile1", data, false, Collections.emptyList(),
+                TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2() throws Exception {
+        byte[] data = createObject("randomfile2", 1000);
+        uploadAndCheck("randomfile2", data, true, Collections.emptyList(), TransferState.COMPLETED,
+                TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass1WithPacketLoss() throws Exception {
+        byte[] data = createObject("randomfile3", 1000);
+
+        YConfiguration rcvConfig = config;
+        rcvConfig.getRoot().put("inactivityTimeout", 10000);
+        rcvConfig.getRoot().put("checkAckTimeout", 1000);
+        rcvConfig.getRoot().put("checkAckLimit", 1);
+
+        // this will lose the first data packet
+        uploadAndCheck(rcvConfig, "randomfile3", data, false, Arrays.asList(2), TransferState.COMPLETED,
+                TransferState.FAILED);
+
+    }
+
+    @Test
+    public void testClass1WithPacketLoss2() throws Exception {
+        byte[] data = createObject("randomfile4", 1000);
+
+        config.getRoot().put("inactivityTimeout", 1000);
+
+        // this will lose the first data packet and the EOF
+        uploadAndCheck(config, "randomfile4", data, false, Arrays.asList(2, 5), TransferState.COMPLETED,
+                TransferState.FAILED);
+    }
+
+    @Test
+    public void testClass2WithPacketLoss() throws Exception {
+        byte[] data = createObject("randomfile51", 1000);
+        // this will lose the first data packet
+        uploadAndCheck("randomfile51", data, true, Arrays.asList(2), TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2WithPacketLoss2() throws Exception {
+        byte[] data = createObject("randomfile52", 1000);
+        // this will lose the first data packet and the first EOF
+        config.getRoot().put("immediateNak", false);
+
+        uploadAndCheck(config, "randomfile52", data, true, Arrays.asList(2, 5), TransferState.COMPLETED,
+                TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2WithPacketLoss3() throws Exception {
+        byte[] data = createObject("randomfile6", 1000);
+        config.getRoot().put("inactivityTimeout", 1000);
+
+        // this will lose the the 2 EOF
+        uploadAndCheck(config, "randomfile6", data, true, Arrays.asList(5, 6), TransferState.FAILED,
+                TransferState.FAILED);
+    }
+
+    @Test
+    public void testClass2WithMetadtaLoss() throws Exception {
+        byte[] data = createObject("randomfile71", 1000);
+        uploadAndCheck("randomfile71", data, true, Arrays.asList(1), TransferState.COMPLETED, TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2WithMetadtaAfterEof() throws Exception {
+        byte[] data = createObject("randomfile72", 1000);
+        config.getRoot().put("immediateNak", false);
+        uploadAndCheck(config, "randomfile72", data, true, Arrays.asList(1), TransferState.COMPLETED,
+                TransferState.COMPLETED);
+    }
+
+    @Test
+    public void testClass2WithDeadReceiver() throws Exception {
+        byte[] data = createObject("randomfile72", 1000);
+        uploadAndCheck(config, "randomfile72", data, true, Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7),
+                TransferState.FAILED, null);
+    }
+
+    @Test
+    public void testClass2WithLostFinAck() throws Exception {
+        byte[] data = createObject("randomfile72", 1000);
+        uploadAndCheck(config, "randomfile72", data, true, Arrays.asList(6, 7, 8),
+                TransferState.COMPLETED, TransferState.FAILED);
+    }
+
+    @Test
+    public void testClass2WithNackLimitReached() throws Exception {
+        byte[] data = createObject("randomfile81", 1000);
+        // lose the first data packet, and then all retransmissions
+        config.getRoot().put("immediateNak", false);
+        config.getRoot().put("nakTimeout", 500);
+        config.getRoot().put("nakLimit", 2);
+
+        TransferInfo tinfo = uploadAndCheck("randomfile81", data, true, Arrays.asList(2, 6, 7, 8),
+                TransferState.FAILED, TransferState.FAILED);
+
+        assertTrue(tinfo.getFailureReason().contains("NAK_LIMIT_REACHED"));
+    }
+
+    @Test
+    public void testPauseResume() throws Exception {
+
+        // patch the sleepBetweenPdus such that the transfer does not finish immediately
+        CfdpService cfdpService = YamcsServer.getServer().getServices(yamcsInstance, CfdpService.class).get(0);
+        cfdpService.getConfig().getRoot().put("sleepBetweenPdu", Long.valueOf(500));
+
+        // start receiver
+        MyFileReceiver receiver = new MyFileReceiver(Collections.emptyList(), config);
+
+        // create object
+        String objName = "randomfile23-01-2022";
+        byte[] data = createObject(objName, 1000);
+        ObjectId object = ObjectId.of(outgoingBucket.getName(), objName);
+
+        // initiate transfer
+        TransferInfo tinfo = cfdpClient.upload(object, UploadOptions.reliable(true)).get();
+        assertEquals(data.length, tinfo.getTotalSize());
+
+        cfdpClient.pause(tinfo.getId()).get();
+        int tCount = receiver.tcount;
+
+        TransferInfo tinfo1 = cfdpClient.getTransfer(tinfo.getId()).get();
+        assertEquals(TransferState.PAUSED, tinfo1.getState());
+
+        receiver.suspend();
+
+        Thread.sleep(1000);
+        assertEquals(tCount, receiver.tcount);
+
+        cfdpClient.resume(tinfo.getId()).get();
+
+        receiver.resume();
+
+        TransferInfo tinfo2 = cfdpClient.getTransfer(tinfo.getId()).get();
+        assertEquals(TransferState.RUNNING, tinfo2.getState());
+
+        waitTransferFinished(receiver, tinfo.getId());
+
+        byte[] recdata = incomingBucket.getObjectAsync(receiver.trsf.getObjectName()).get();
+        assertArrayEquals(data, recdata);
+
+        // restore back the old value (otherwise the tests following this will be slow and even fail)
+        cfdpService.getConfig().getRoot().put("sleepBetweenPdu", Long.valueOf(10));
+    }
+
+    @Test
+    public void testAutoPause() throws Exception {
+        // TODO
+    }
+
+    private TransferInfo uploadAndCheck(String objName, byte[] data, boolean reliable, List<Integer> dropPackets,
+            TransferState expectedSenderState, TransferState expectedReceiverState) throws Exception {
+        return uploadAndCheck(config, objName, data, reliable, dropPackets, expectedSenderState, expectedReceiverState);
+
+    }
+
+    private TransferInfo uploadAndCheck(YConfiguration config, String objName, byte[] data, boolean reliable,
+            List<Integer> dropPackets, TransferState expectedSenderState, TransferState expectedReceiverState)
+            throws Exception {
+        MyFileReceiver rec = new MyFileReceiver(dropPackets, config);
+
+        ObjectId object = ObjectId.of(outgoingBucket.getName(), objName);
+        TransferInfo tinf = cfdpClient.upload(object, UploadOptions.reliable(reliable)).get();
+        assertEquals(data.length, tinf.getTotalSize());
+        assertEquals(TransferState.RUNNING, tinf.getState());
+        assertEquals(reliable, tinf.getReliable());
+
+        waitTransferFinished(rec, tinf.getId());
+
+        TransferInfo tinfo1 = cfdpClient.getTransfer(tinf.getId()).get();
+        assertEquals(expectedSenderState, tinfo1.getState());
+        if (expectedReceiverState != null) {
+            assertEquals(expectedReceiverState, rec.trsf.getTransferState());
+
+            if (expectedReceiverState == TransferState.COMPLETED) {
+                byte[] recdata = incomingBucket.getObjectAsync(rec.trsf.getObjectName()).get();
+                assertArrayEquals(data, recdata);
+            }
+        }
+        return tinfo1;
+    }
+
+    private void waitTransferFinished(MyFileReceiver rec, long id) throws InterruptedException, ExecutionException {
+        for (int i = 0; i < 10; i++) {
+            Thread.sleep(1000);
+            TransferInfo tinfo1 = cfdpClient.getTransfer(id).get();
+
+            if (isFinished(tinfo1.getState()) && (rec.trsf == null || isFinished(rec.trsf.getTransferState()))) {
+                break;
+            }
+        }
+    }
+
+    private boolean isFinished(TransferState state) {
+        return state == TransferState.COMPLETED || state == TransferState.FAILED;
+    }
+
+    // create an object in a bucket
+    private byte[] createObject(String objName, int size) throws Exception {
+        byte[] data = new byte[size];
+        random.nextBytes(data);
+        outgoingBucket.putObjectAsync(objName, "bla", Collections.emptyMap(), data);
+
+        return data;
+    }
+
+    private YConfiguration getConfig() {
+        Map<String, Object> m = new HashMap<>();
+        m.put("inactivityTimeout", 10000);
+
+        m.put("finAckTimeout", 50);
+        m.put("finAckLimit", 2);
+        m.put("sleepBetweenPdus", 10);
+        m.put("directoryListingFileTemplate", ".dirlist.tmp");
+
+        return YConfiguration.wrap(m);
+    }
+
+    // this should retrieve the file
+    class MyFileReceiver implements TransferMonitor {
+        byte[] data;
+        CfdpIncomingTransfer trsf;
+        ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+        int tcount = 0;
+        final List<Integer> dropPackets;
+
+        MyFileReceiver(List<Integer> dropPackets, YConfiguration config) {
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+            Stream cfdpIn = ydb.getStream("cfdp_in");
+            Stream cfdpOut = ydb.getStream("cfdp_out");
+            this.dropPackets = dropPackets;
+            EventProducer eventProducer = EventProducerFactory.getEventProducer();
+            eventProducer.setSource("unit-test");
+
+            cfdpOut.addSubscriber(new StreamSubscriber() {
+                @Override
+                public void streamClosed(Stream stream) {
+                }
+
+                @Override
+                public void onTuple(Stream stream, Tuple tuple) {
+                    tcount++;
+                    CfdpPacket packet = CfdpPacket.fromTuple(tuple);
+                    // System.out.println("packet" + tcount + ": " + packet);
+                    if (dropPackets.contains(tcount)) {
+                        // System.out.println("dropping packet" + tcount);
+                        return;
+                    }
+
+                    if (trsf == null) {
+                        FileSaveHandler fileSaveHandler = new FileSaveHandler(yamcsInstance, incomingBucket,
+                                null, false,
+                                false, false, 1000);
+
+                        trsf = new CfdpIncomingTransfer("test", 1, TimeEncoding.getWallclockTime(), executor, config,
+                                packet.getHeader(), cfdpIn, fileSaveHandler, eventProducer, MyFileReceiver.this,
+                                Collections.emptyMap());
+                    }
+                    // System.out.println("processing packet "+packet);
+                    trsf.processPacket(packet);
+                }
+            });
+        }
+
+        public void suspend() {
+            trsf.suspend();
+        }
+
+        public void resume() {
+            trsf.resume();
+        }
+
+        @Override
+        public void stateChanged(FileTransfer cfdpTransfer) {
+        }
+    }
+}
+```
+
+### `ChecksumTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/ChecksumTest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
+import org.python.bouncycastle.util.Arrays;
+import org.yamcs.utils.StringConverter;
+
+public class ChecksumTest {
+
+    @Test
+    public void test1() {
+        byte[] data = StringConverter.hexStringToArray("000102030405060708090a0b0c0d0e");
+        assertEquals(0x181C2015, ChecksumCalculator.calculateChecksum(data));
+    }
+
+    @Test
+    public void test2() {
+        byte[] data = StringConverter.hexStringToArray("0102030405060708090a0b0c0d0e");
+        assertEquals(0x181C2015, ChecksumCalculator.calculateChecksum(data, 1, data.length));
+    }
+
+    @Test
+    public void test3() {
+        Random r = new Random();
+        byte[] data = new byte[r.nextInt(1000)];
+        r.nextBytes(data);
+
+        long checksum1 = ChecksumCalculator.calculateChecksum(data);
+
+        long checksum2 = 0;
+        int k = 0;
+        while (k < data.length) {
+            int l = 1 + r.nextInt(data.length - k);
+            checksum2 += ChecksumCalculator.calculateChecksum(Arrays.copyOfRange(data, k, k + l), k, l);
+            k += l;
+        }
+
+        assertEquals(checksum1, checksum2 & 0xFFFFFFFFl);
+    }
+}
+```
+
+### `ConfigTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/ConfigTest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.buckets.BucketManager;
+import org.yamcs.cfdp.OngoingCfdpTransfer.FaultHandlingAction;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class ConfigTest {
+    static String yamcsInstance = "cfdp-config-test";
+
+    @BeforeAll
+    public static void beforeClass() throws StreamSqlException, ParseException, IOException {
+        EventProducerFactory.setMockup(false);
+        BucketManager.setMockup();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        ydb.execute("create stream cfdp_in(pdu binary)");
+        ydb.execute("create stream cfdp_out(pdu binary)");
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testInvalidStream() throws Exception {
+        verifyInvalidConfig("{inStream: cfdp_in1, outStream: cfdp_out}", "cannot find stream cfdp_in1");
+        verifyInvalidConfig("{inStream: cfdp_in, outStream: cfdp_out1}", "cannot find stream cfdp_out1");
+    }
+
+    @Test
+    public void testNoEntity() throws Exception {
+        verifyInvalidConfig("", "No local entity specified");
+        verifyInvalidConfig("{localEntities: [ {name: local12, id: 12}]}", "No remote entity specified");
+    }
+
+    @Test
+    public void testDuplicateEntity() throws Exception {
+        verifyInvalidConfig("{localEntities: [ {name: local12, id: 12}, {name: local12, id: 13}]}",
+                "Duplicate local entity 'local12'");
+
+        String confs = "{"
+                + "   localEntities: [ {name: local12, id: 12}], "
+                + "   remoteEntities: [ {name: remote15, id: 15}, {name: remote15, id: 16}], "
+                + "}";
+        verifyInvalidConfig(confs, "Duplicate remote entity 'remote15'");
+    }
+
+    @Test
+    public void testFaultHandler() throws Exception {
+        String confs = "{"
+                + "   localEntities: [ {name: local12, id: 12}], "
+                + "   remoteEntities: [ {name: remote15, id: 15}], "
+                + "   senderFaultHandlers: { AckLimitReached: SUSPEND},"
+                + "   receiverFaultHandlers: { AckLimitReached: ABANDON}"
+                + "}";
+
+        YConfiguration conf = new YConfiguration("cfdp", new ByteArrayInputStream(confs.getBytes()), "test");
+        CfdpService cfdpService = new CfdpService();
+        conf = cfdpService.getSpec().validate(conf);
+
+        cfdpService.init(yamcsInstance, "CfdpService", conf);
+
+        assertEquals(FaultHandlingAction.SUSPEND, cfdpService.getSenderFaultHandler(ConditionCode.ACK_LIMIT_REACHED));
+        assertEquals(FaultHandlingAction.ABANDON, cfdpService.getReceiverFaultHandler(ConditionCode.ACK_LIMIT_REACHED));
+    }
+
+    @Test
+    public void testInvalidFaultHandler1() throws Exception {
+        String confs = "{"
+                + "   localEntities: [ {name: local12, id: 12}], "
+                + "   remoteEntities: [ {name: remote15, id: 15}], "
+                + "   senderFaultHandlers: { BauLimitReached: SUSPEND},"
+                + "   receiverFaultHandlers: { AckLimitReached: ABANDON}"
+                + "}";
+        verifyInvalidConfig(confs, "Unknown condition code BauLimitReached");
+    }
+
+    @Test
+    public void testInvalidFaultHandler2() throws Exception {
+        String confs = "{"
+                + "   localEntities: [ {name: local12, id: 12}], "
+                + "   remoteEntities: [ {name: remote15, id: 15}], "
+                + "   senderFaultHandlers: { AckLimitReached: BUM},"
+                + "   receiverFaultHandlers: { AckLimitReached: ABANDON}"
+                + "}";
+        verifyInvalidConfig(confs, "Unknown action BUM");
+    }
+
+    void verifyInvalidConfig(String confs, String expectedErr) throws ValidationException, InitException {
+        YConfiguration conf = new YConfiguration("cfdp", new ByteArrayInputStream(confs.getBytes()), "test");
+        CfdpService cfdpService = new CfdpService();
+        conf = cfdpService.getSpec().validate(conf);
+
+        ConfigurationException ce = null;
+        try {
+            cfdpService.init(yamcsInstance, "CfdpService", conf);
+        } catch (ConfigurationException e) {
+            ce = e;
+        }
+
+        assertNotNull(ce);
+        assertTrue(ce.getMessage().contains(expectedErr));
+    }
+}
+```
+
+### `DataFileTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/DataFileTest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.python.bouncycastle.util.Arrays;
+import org.yamcs.cfdp.pdu.FileDataPacket;
+import org.yamcs.cfdp.pdu.SegmentRequest;
+
+public class DataFileTest {
+    static int n = 100;
+    static byte[] data = new byte[n];
+
+    @BeforeAll
+    static public void beforeClass() {
+        for (int i = 0; i < n; i++) {
+            data[i] = (byte) i;
+        }
+    }
+
+    @Test
+    public void test1() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(0, 3));
+
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(3, n, lmissing.get(0));
+
+        df.addSegment(getSegment(5, 5));
+
+        lmissing = df.getMissingChunks();
+        assertEquals(2, lmissing.size());
+        verifyEquals(3, 5, lmissing.get(0));
+        verifyEquals(10, n, lmissing.get(1));
+
+        assertFalse(df.isComplete());
+        assertEquals(8, df.getReceivedSize());
+
+        df.addSegment(getSegment(3, 2));
+        df.addSegment(getSegment(10, n - 10));
+
+        assertTrue(df.isComplete());
+        lmissing = df.getMissingChunks();
+        assertEquals(0, lmissing.size());
+
+        assertArrayEquals(data, df.getData());
+    }
+
+    @Test
+    public void test2() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(0, 3));
+        df.addSegment(getSegment(1, 3));
+        assertEquals(1, df.dataFileSegments.size());
+        
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(4, n, lmissing.get(0));
+
+        verify(df);
+    }
+
+    @Test
+    public void test3() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(0, 3));
+        df.addSegment(getSegment(0, 3));
+        df.addSegment(getSegment(0, 4));
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(4, n, lmissing.get(0));
+
+        verify(df);
+    }
+
+    @Test
+    public void test4() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(10, 10));
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(2, lmissing.size());
+        verifyEquals(0, 10, lmissing.get(0));
+        verifyEquals(20, n, lmissing.get(1));
+
+        df.addSegment(getSegment(0, 10));
+        lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verify(df);
+    }
+
+    @Test
+    public void test5() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(10, 10));
+        df.addSegment(getSegment(0, 12));
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(20, n, lmissing.get(0));
+        verify(df);
+    }
+
+    @Test
+    public void test6() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(0, 10));
+        df.addSegment(getSegment(20, 10));
+        df.addSegment(getSegment(10, 10));
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(30, n, lmissing.get(0));
+        verify(df);
+    }
+
+    @Test
+    public void test7() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(0, 10));
+        df.addSegment(getSegment(20, 10));
+        df.addSegment(getSegment(5, 15));
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(30, n, lmissing.get(0));
+        verify(df);
+    }
+
+    @Test
+    public void test8() {
+        DataFile df = new DataFile(n);
+        df.addSegment(getSegment(0, 10));
+        df.addSegment(getSegment(20, 10));
+        df.addSegment(getSegment(5, 20));
+        List<SegmentRequest> lmissing = df.getMissingChunks();
+        assertEquals(1, lmissing.size());
+        verifyEquals(30, n, lmissing.get(0));
+        verify(df);
+    }
+
+    private FileDataPacket getSegment(int offset, int length) {
+        return new FileDataPacket(Arrays.copyOfRange(data, offset, offset + length), offset, null);
+    }
+
+    private void verifyEquals(long expectedStart, long expectedEnd, SegmentRequest sr) {
+        assertEquals(expectedStart, sr.getSegmentStart());
+        assertEquals(expectedEnd, sr.getSegmentEnd());
+    }
+
+    private void verify(DataFile df) {
+        byte[] data1 = df.getData();
+
+        for (DataFile.Segment dfs : df.dataFileSegments) {
+            for (int i = (int) dfs.start; i < dfs.end; i++) {
+                assertEquals(data[i], data1[i]);
+            }
+        }
+    }
+}
+```
+
+### `PacketParseTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cfdp/PacketParseTest.java`
+
+
+```java
+package org.yamcs.cfdp;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.cfdp.pdu.CfdpHeader;
+import org.yamcs.cfdp.pdu.CfdpPacket;
+import org.yamcs.cfdp.pdu.ConditionCode;
+import org.yamcs.cfdp.pdu.EofPacket;
+import org.yamcs.cfdp.pdu.PduDecodingException;
+import org.yamcs.cfdp.pdu.TLV;
+import org.yamcs.utils.StringConverter;
+
+public class PacketParseTest {
+
+    @Test
+    public void testEofPDU1() {
+        byte[] b = StringConverter.hexStringToArray("00000A130018000000010015048000000000000065fc");
+        EofPacket p = (EofPacket) CfdpPacket.getCFDPPacket(ByteBuffer.wrap(b));
+        assertEquals(ConditionCode.INACTIVITY_DETECTED, p.getConditionCode());
+    }
+
+    @Test
+    public void testEofPDU2() {
+        TLV tlv = new TLV((byte) 3, new byte[] { 3, 4 });
+        CfdpHeader header = new CfdpHeader(true, false, false, false, 2, 2, 3, 4, 10);
+        EofPacket p1 = new EofPacket(ConditionCode.FILE_CHECKSUM_FAILURE, 20, 100, tlv, header);
+        ByteBuffer bb = ByteBuffer.allocate(100);
+        p1.writeToBuffer(bb);
+
+        bb.rewind();
+        EofPacket p2 = (EofPacket) CfdpPacket.getCFDPPacket(bb);
+        assertEquals(ConditionCode.FILE_CHECKSUM_FAILURE, p2.getConditionCode());
+        assertEquals(tlv, p2.getFaultLocation());
+    }
+
+    @Test
+    public void testShortHeader() {
+        PduDecodingException e = null;
+        byte[] b = StringConverter.hexStringToArray("00010A1");
+        try {
+            CfdpPacket.getCFDPPacket(ByteBuffer.wrap(b));
+        } catch (PduDecodingException e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertArrayEquals(b, e.getData());
+
+    }
+
+    @Test
+    public void testShortPDU() {
+        PduDecodingException e = null;
+        byte[] b = StringConverter.hexStringToArray("00010A130018000000010015048000000000000065fc");
+        try {
+            CfdpPacket.getCFDPPacket(ByteBuffer.wrap(b));
+        } catch (PduDecodingException e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertArrayEquals(b, e.getData());
+    }
+}
+```

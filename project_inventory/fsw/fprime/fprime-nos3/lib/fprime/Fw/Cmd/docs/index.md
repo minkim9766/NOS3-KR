@@ -3,18 +3,68 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--.gitignore
-file--sdd.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/.gitignore`
+
+
+```text
+*.html
+```
+
+### `sdd.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/sdd.md`
+
+
+```markdown
+# Fw::Cmd / Fw::CmdResponse / Fw::CmdReg Ports
+
+## 1. Introduction
+
+The `Fw::Cmd` port is used to send a command with encoded arguments to a component.
+
+The `Fw::CmdResponse` port is used by components to report the completion status of a command.
+
+The `Fw::CmdReg` port is used by components to register their set of command opcodes.
+
+## 2. Design
+
+### 2.1 Context
+
+#### 2.1.1 Port Diagram
+
+The `Fw::Cmd` ports and types have the following diagram:
+
+![`Fw::Cmd` Diagram](img/CmdBDD.jpg "Fw::Cmd")
+
+#### 2.1.2 Serializables
+
+##### 2.1.2.1 Fw::PrmBuffer
+
+The `Fw::CmdArgBuffer` class represents a buffer to store a serialized command argument list.
+
+The `Fw::CmdString` class represents a string class used for string command arguments.
+
+The `Fw::CmdPacket` class represents a packet containing a serialized command.
+
+
+## 3. Change Log
+
+Date | Description
+---- | -----------
+6/25/2015 |  Initial Version
+
+
+
+```

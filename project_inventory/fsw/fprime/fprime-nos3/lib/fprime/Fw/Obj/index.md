@@ -3,26 +3,401 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--ObjBase.cpp
-file--ObjBase.hpp
-file--README
-file--SimpleObjRegistry.cpp
-file--SimpleObjRegistry.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/ObjBase.cpp`](file--ObjBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/ObjBase.hpp`](file--ObjBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/README`](file--README) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/SimpleObjRegistry.cpp`](file--SimpleObjRegistry.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/SimpleObjRegistry.hpp`](file--SimpleObjRegistry.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ObjBase.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SimpleObjRegistry.cpp"
+)
+set(MOD_DEPS
+  Fw/Types
+  Fw/Logger
+)
+
+register_fprime_module()
+```
+
+### `ObjBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/ObjBase.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/ExternalString.hpp>
+
+namespace Fw {
+
+#if FW_OBJECT_REGISTRATION == 1
+ObjRegistry* ObjBase::s_objRegistry = nullptr;
+#endif
+
+#if FW_OBJECT_NAMES == 1
+ObjBase::ObjBase(const char* objName) {
+    if (nullptr == objName) {
+        this->setObjName("NoName");
+    } else {
+        this->setObjName(objName);
+    }
+}
+#else
+ObjBase::ObjBase(const char* objName) {}
+#endif
+
+void ObjBase::init() {
+#if FW_OBJECT_REGISTRATION
+    if (ObjBase::s_objRegistry) {
+        ObjBase::s_objRegistry->regObject(this);
+    }
+#endif
+}
+
+ObjBase::~ObjBase() {}
+
+#if FW_OBJECT_NAMES == 1
+const char* ObjBase::getObjName() {
+    return this->m_objName.toChar();
+}
+
+void ObjBase::setObjName(const char* name) {
+    this->m_objName = name;
+}
+#if FW_OBJECT_TO_STRING == 1
+void ObjBase::toString(char* str, FwSizeType size) {
+    FW_ASSERT(size > 0);
+    FW_ASSERT(str != nullptr);
+    Fw::FormatStatus formatStatus = Fw::ExternalString(str, static_cast<Fw::ExternalString::SizeType>(size))
+                                        .format("Obj: %s", this->m_objName.toChar());
+    if (formatStatus != Fw::FormatStatus::SUCCESS) {
+        str[0] = 0;
+    }
+}
+#endif
+#endif
+
+#if FW_OBJECT_REGISTRATION == 1
+void ObjBase::setObjRegistry(ObjRegistry* reg) {
+    ObjBase::s_objRegistry = reg;
+}
+
+ObjRegistry::~ObjRegistry() {}
+
+#endif
+}  // namespace Fw
+```
+
+### `ObjBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/ObjBase.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief Declarations for Fw::ObjBase and Fw::ObjRegistry
+ *
+ * \copyright
+ * Copyright 2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+
+#ifndef FW_OBJ_BASE_HPP
+#define FW_OBJ_BASE_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#if FW_OBJECT_NAMES == 1
+#include <Fw/Types/ObjectName.hpp>
+#endif
+
+namespace Fw {
+
+#if FW_OBJECT_REGISTRATION == 1
+class ObjRegistry;  //!< forward declaration for object registry
+#endif
+
+//! \class ObjBase
+//! \brief Brief class description
+//!
+//! This class is the base class of the ISF object class hierarchy.
+//! Depending on which features of the architecture are enabled, this class:
+//! 1) Stores an object name
+//! 2) Provides for object registration
+
+class ObjBase {
+  public:
+#if FW_OBJECT_NAMES == 1
+
+    //!  \brief Returns the object's name
+    //!
+    //!  This function returns a pointer to the name of the object
+    //!
+    //!  \return object name
+    const char* getObjName();  //!< Returns object name
+
+    //!  \brief Sets the object name
+    //!
+    //!  This function takes the provided string and copies it
+    //!  to the private buffer containing the name of the object.
+    //!
+    //!  \param name the name of the object
+    void setObjName(const char* name);  //!< sets object name
+#if FW_OBJECT_TO_STRING == 1
+
+    //!  \brief Returns a string representation of the object
+    //!
+    //!  A virtual function defined for all ObjBase types. It is
+    //!  meant to be overridden by subclasses to return a description
+    //!  of the object. The default implementation in this class
+    //!  returns the name of the object.
+    //!
+    //!  \param str destination buffer where string description is placed
+    //!  \param size destination buffer size (including terminator). String should be terminated
+    virtual void toString(char* str, FwSizeType size);  //!< virtual method to get description of object
+#endif                                                  // FW_OBJECT_TO_STRING
+#endif                                                  // FW_OBJECT_NAMES
+
+#if FW_OBJECT_REGISTRATION == 1
+
+    //!  \brief static function to set object registry.
+    //!
+    //!  This function registers an instance of an object registry class (see below).
+    //!  After the registration call is made, any subsequent calls to ObjBase::init()
+    //!  will call the regObject() method on the registry.
+    //!  **NOTE** The call may not be reentrant or thread-safe. The provided
+    //!  SimObjRegistry is not reentrant.
+    //!
+    //!  \param reg Instance of registry to be stored.
+    static void setObjRegistry(ObjRegistry* reg);  //!< sets the object registry, if desired
+#endif
+
+  protected:
+#if FW_OBJECT_NAMES == 1
+    Fw::ObjectName m_objName;  //!< stores object name
+#endif
+
+    //!  \brief ObjBase constructor
+    //!
+    //!  The constructor for the base class. Protected so it will only be called
+    //!  by derived classes. Stores the object name (calls setObjName()).
+    //!
+    //!  \param name Object name
+    ObjBase(const char* name);
+
+    //!  \brief Destructor
+    //!
+    //!  ObjBase destructor. Empty.
+    //!
+    virtual ~ObjBase();  //!< Destructor. Should only be called by derived classes
+
+    //!  \brief Object initializer
+    //!
+    //!  Initializes the object. For the base class, it calls
+    //!  the object registry if registered by setObjRegistry()
+    //!
+    void init();  //!< initialization function that all objects need to implement. Allows static constructors.
+  private:
+#if FW_OBJECT_REGISTRATION == 1
+    static ObjRegistry* s_objRegistry;  //!< static pointer to object registry. Optionally populated.
+#endif
+};  // ObjBase
+
+#if FW_OBJECT_REGISTRATION == 1
+//! \class ObjRegistry
+//! \brief Base class declaration for object registry.
+//!
+//! More detailed class description (Markdown supported)
+//!
+class ObjRegistry {
+  public:
+    //!  \brief virtual function called when an object is registered
+    //!
+    //!  This pure virtual is called through a static ObjRegistry
+    //!  pointer set by a call to ObjBase::setObjRegistry(). It is passed
+    //!  a pointer to the instance of the object. What is done with that
+    //!  pointer is dependent on the derived class implementation.
+    //!  See SimpleObjRegistry for a basic example of a registry.
+    //!
+    //!  \param obj pointer to object
+    virtual void regObject(ObjBase* obj) = 0;
+
+    //!  \brief Object registry destructor
+    //!
+    //!  Destructor. Base class is empty.
+    //!
+    virtual ~ObjRegistry();
+};  // ObjRegistry
+#endif  // FW_OBJECT_REGISTRATION
+}  // namespace Fw
+#endif  // FW_OBJ_BASE_HPP
+```
+
+### `README`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/README`
+
+
+```text
+File Contents:
+
+ObjBase.hpp,.cpp - ISF Object/Object Registry base class declaration
+SimpleObjRegistry.hpp,.cpp - Declaration for a very basic object registry
+```
+
+### `SimpleObjRegistry.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/SimpleObjRegistry.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Obj/SimpleObjRegistry.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <cstdio>
+#include <cstring>
+
+#if FW_OBJECT_REGISTRATION == 1
+
+namespace Fw {
+
+SimpleObjRegistry::SimpleObjRegistry() {
+    ObjBase::setObjRegistry(this);
+    this->m_numEntries = 0;
+    // Initialize pointer array
+    for (FwSizeType entry = 0; entry < FW_OBJ_SIMPLE_REG_ENTRIES; entry++) {
+        this->m_objPtrArray[entry] = nullptr;
+    }
+}
+
+SimpleObjRegistry::~SimpleObjRegistry() {
+    ObjBase::setObjRegistry(nullptr);
+}
+
+void SimpleObjRegistry::dump() {
+    for (FwSizeType obj = 0; obj < this->m_numEntries; obj++) {
+#if FW_OBJECT_NAMES == 1
+#if FW_OBJECT_TO_STRING == 1
+        char objDump[FW_OBJ_SIMPLE_REG_BUFF_SIZE];
+        this->m_objPtrArray[obj]->toString(objDump, sizeof(objDump));
+        Fw::Logger::log("Entry: %" PRI_FwSizeType " Ptr: %p Str: %s\n", obj, this->m_objPtrArray[obj], objDump);
+#else
+        Fw::Logger::log("Entry: %" PRI_FwSizeType " Ptr: %p Name: %s\n", obj, this->m_objPtrArray[obj],
+                        this->m_objPtrArray[obj]->getObjName());
+#endif  // FW_OBJECT_TO_STRING
+#else
+        Fw::Logger::log("Entry: %" PRI_FwSizeType " Ptr: %p\n", obj, this->m_objPtrArray[obj]);
+#endif
+    }
+}
+
+#if FW_OBJECT_NAMES == 1
+void SimpleObjRegistry::dump(const char* objName) {
+    for (FwSizeType obj = 0; obj < this->m_numEntries; obj++) {
+        char objDump[FW_OBJ_SIMPLE_REG_BUFF_SIZE];
+        if (strncmp(objName, this->m_objPtrArray[obj]->getObjName(), sizeof(objDump)) == 0) {
+#if FW_OBJECT_TO_STRING == 1
+            this->m_objPtrArray[obj]->toString(objDump, sizeof(objDump));
+            Fw::Logger::log("Entry: %" PRI_FwSizeType " Ptr: %p Str: %s\n", obj, this->m_objPtrArray[obj], objDump);
+#else
+            Fw::Logger::log("Entry: %" PRI_FwSizeType " Ptr: %p Name: %s\n", obj, this->m_objPtrArray[obj],
+                            this->m_objPtrArray[obj]->getObjName());
+#endif
+        }
+    }
+}
+#endif
+void SimpleObjRegistry::regObject(ObjBase* obj) {
+    FW_ASSERT(this->m_numEntries < FW_OBJ_SIMPLE_REG_ENTRIES);
+    this->m_objPtrArray[this->m_numEntries++] = obj;
+}
+
+void SimpleObjRegistry::clear() {
+    this->m_numEntries = 0;
+}
+
+}  // namespace Fw
+
+#endif
+```
+
+### `SimpleObjRegistry.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Obj/SimpleObjRegistry.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief Class declaration for a simple object registry
+ *
+ * The simple object registry is meant to give a default implementation
+ * and an example of an object registry. When the registry is instantiated,
+ * it registers itself with the object base class static function
+ * setObjRegistry(). Objects then register with the instance as they are
+ * instantiated. The object registry can then list the objects in its
+ * registry.
+ *
+ * \copyright
+ * Copyright 2013-2016, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ *
+ */
+#ifndef FW_OBJ_SIMPLE_OBJ_REGISTRY_HPP
+#define FW_OBJ_SIMPLE_OBJ_REGISTRY_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+
+#if FW_OBJECT_REGISTRATION == 1
+
+namespace Fw {
+
+class SimpleObjRegistry : public ObjRegistry {
+  public:
+    SimpleObjRegistry();   //!< constructor for registry
+    ~SimpleObjRegistry();  //!< destructor for registry
+    void dump();           //!< dump contents of registry
+    void clear();          //!< clear registry entries
+#if FW_OBJECT_NAMES == 1
+    void dump(const char* objName);  //!< dump a particular object
+#endif
+  private:
+    void regObject(ObjBase* obj);                       //!< register an object with the registry
+    ObjBase* m_objPtrArray[FW_OBJ_SIMPLE_REG_ENTRIES];  //!< array of objects
+    FwSizeType m_numEntries;                            //!< number of entries in the registry
+};
+
+}  // namespace Fw
+
+#endif  // FW_OBJECT_REGISTRATION
+
+#endif  // FW_OBJ_SIMPLE_OBJ_REGISTRY_HPP
+```

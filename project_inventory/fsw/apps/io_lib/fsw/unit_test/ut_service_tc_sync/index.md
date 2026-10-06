@@ -3,18 +3,480 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `makefile`
 
-file--makefile
-file--tc_sync_testcase.c
-file--tc_sync_testrunner.c
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=tc_sync
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../../src/services
+VPATH += ../../src
+VPATH += ../ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../../src
+INCLUDES += -I../../public_inc
+INCLUDES += -I../ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := $(APP).o
+APP_OBJS += io_lib_utils.o
+
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += ut_cfe_time_stubs.o
+UT_OBJS += ut_cfe_fs_stubs.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcase.o
+#UT_OBJS += $(APP)_stubs.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -D_LINUX_OS_
+#COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ -DUT_VERBOSE 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(UT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov -b $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
 ```
 
-## 항목
+### `tc_sync_testcase.c`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/tc_sync_testcase.c`](file--tc_sync_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/tc_sync_testrunner.c`](file--tc_sync_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/tc_sync_testcase.c`
+
+
+```c
+/*
+ * Filename: tc_sync_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test cases for the TC_SYNC Service
+ *
+ * Modification History:
+ *   12/09/2015 Guy de Carufel, Odyssey Space Research, LLC
+ *    * Created
+ *
+ */
+
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+#include "ut_cfe_time_stubs.h"
+#include "ut_cfe_tbl_stubs.h"
+#include "ut_cfe_tbl_hooks.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include "ut_cfe_sb_stubs.h"
+#include "ut_cfe_sb_hooks.h"
+#include "ut_cfe_es_stubs.h"
+#include "ut_osapi_stubs.h"
+#include "ut_osfileapi_stubs.h"
+#include "ut_cfe_fs_stubs.h"
+
+#include "tc_sync.h"
+
+/* 2-byte Start, 8-byte tail, 10x BCH Codeblock (7-bytes + 1 parity byte) */
+uint8 cltuBuffer[90];
+/* 70 Byte TF (10x BCH Code Block -> 8x7bytes) */
+uint8 tfBuffer[70];
+
+uint8 tailSeq[8] = {0xc5, 0xc5, 0xc5, 0xc5, 0xc5, 0xc5, 0xc5, 0x79};
+
+/* ---------------------  Begin test cases  --------------------------------- */
+
+/*******************************************************************************
+**
+**  Test DeRandomizeFrame 
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TC_SYNC_DeRandomizeFrame(void)
+{
+    uint8 expSeq[5] = {0xff, 0x39, 0x9e, 0x5a, 0x68};
+
+    /* Execute Test */
+    TC_SYNC_LibInit();
+    TC_SYNC_DeRandomizeFrame(&tfBuffer[0], 70);
+
+    /* Verify Outputs */
+    UtAssert_True(tfBuffer[0] == expSeq[0], "Pseudo-Random Seq byte 0");
+    UtAssert_True(tfBuffer[1] == expSeq[1], "Pseudo-Random Seq byte 1");
+    UtAssert_True(tfBuffer[2] == expSeq[2], "Pseudo-Random Seq byte 2");
+    UtAssert_True(tfBuffer[3] == expSeq[3], "Pseudo-Random Seq byte 3");
+    UtAssert_True(tfBuffer[4] == expSeq[4], "Pseudo-Random Seq byte 4");
+    UtAssert_True(tfBuffer[32] == 0xfe, "Test Pseudo-Random 1x period lapse");
+    UtAssert_True(tfBuffer[64] == 0xfc, "Test Pseudo-Random 2x period lapse");
+
+    /* Execute Test */
+    TC_SYNC_DeRandomizeFrame(&tfBuffer[0], 70);
+
+    /* Verify Outputs */
+    UtAssert_True(tfBuffer[43] == 0x00, "Re-randomize check.");
+}
+
+
+/*******************************************************************************
+**
+**  Test GetTransferFrame
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TC_SYNC_GetTransferFrame_NullPtr(void)
+{
+    /* Execute Test */
+    int32 expected = TC_SYNC_INVALID_POINTER;
+    int32 actual = TC_SYNC_GetTransferFrame(NULL, cltuBuffer, 70, 90, false);
+    UtAssert_True(actual == expected, "NULL TF Buffer");
+
+    actual = TC_SYNC_GetTransferFrame(tfBuffer, NULL, 70, 70, false);
+    UtAssert_True(actual == expected, "NULL CLTU Buffer");
+}
+
+
+void Test_TC_SYNC_GetTransferFrame_BadCltu(void)
+{
+    /* Execute Test */
+    cltuBuffer[0] = 0x00;
+    cltuBuffer[1] = 0x90; 
+    int32 expected = TC_SYNC_INVALID_CLTU;
+    int32 actual = TC_SYNC_GetTransferFrame(tfBuffer, cltuBuffer, 70, 90, false);
+    UtAssert_True(actual == expected, "Bad CLTU Start Sequence");
+
+    cltuBuffer[0] = 0xeb;
+    cltuBuffer[1] = 0x00;
+    actual = TC_SYNC_GetTransferFrame(tfBuffer, cltuBuffer, 70, 90, false);
+    UtAssert_True(actual == expected, "Bad CLTU Start Sequence");
+    
+    cltuBuffer[0] = 0xeb;
+    cltuBuffer[1] = 0x90; 
+    actual = TC_SYNC_GetTransferFrame(tfBuffer, cltuBuffer, 70, 80, false);
+    UtAssert_True(actual == expected, "No CLTU Tail Sequence");
+}
+
+
+void Test_TC_SYNC_GetTransferFrame_BadLength(void)
+{
+    /* Execute Test */
+    int32 expected = TC_SYNC_INVALID_LENGTH;
+    int32 actual = TC_SYNC_GetTransferFrame(tfBuffer, cltuBuffer, 60, 90, false);
+    UtAssert_True(actual == expected, "TF Buffer size to small");
+}
+ 
+
+void Test_TC_SYNC_GetTransferFrame(void)
+{
+    /* Setup */
+    cltuBuffer[10] = 0xac;
+
+    /* Execute Test */
+    int32 expected = 70;
+    int32 actual = TC_SYNC_GetTransferFrame(tfBuffer, cltuBuffer, 70, 90, false);
+    UtAssert_True(actual == expected, "TF Buffer Extracted");
+    UtAssert_True(tfBuffer[7] == 0xac, "TF byte check");
+}
+
+void Test_TC_SYNC_GetTransferFrame_DeRandom(void)
+{
+    /* Setup */
+    cltuBuffer[0] = 0xeb;
+    cltuBuffer[1] = 0x90;
+    CFE_PSP_MemCpy(&cltuBuffer[82], tailSeq, 8);
+
+    /* Execute Test */
+    int32 expected = 70;
+    int32 actual = TC_SYNC_GetTransferFrame(tfBuffer, cltuBuffer, 70, 90, true);
+    UtAssert_True(actual == expected, "TF Buffer Extracted");
+    UtAssert_True(tfBuffer[32] == 0xfe, "TF Byte check");
+}
+
+/*******************************************************************************
+**
+**  Test CheckStartSeq
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TC_SYNC_CheckStartSeq_NullPtr(void)
+{
+    uint16 cltuOffset = 0;
+    
+    /* Execute Test */
+    int32 expected = TC_SYNC_INVALID_POINTER;
+    int32 actual = TC_SYNC_CheckStartSeq(NULL, &cltuOffset); 
+    UtAssert_True(actual == expected, "NULL Seq Ptr");
+
+    actual = TC_SYNC_CheckStartSeq(cltuBuffer, NULL); 
+    UtAssert_True(actual == expected, "NULL cltuOffset Ptr");
+}
+
+
+/*******************************************************************************
+**
+**  Test GetGetCodeBlockData
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TC_SYNC_GetCodeBlockData_NullPtr(void)
+{
+    uint16 cltuOffset = 0;
+    uint16 tfOffset = 0;
+    uint8 *pCodeBlock = cltuBuffer;
+    
+    /* Execute Test */
+    int32 expected = TC_SYNC_INVALID_POINTER;
+    int32 actual = TC_SYNC_GetCodeBlockData(NULL, pCodeBlock, &tfOffset,
+                                          &cltuOffset, 70, 90);
+    UtAssert_True(actual == expected, "NULL TF Buffer");
+
+    actual = TC_SYNC_GetCodeBlockData(tfBuffer, NULL, &tfOffset,
+                                          &cltuOffset, 70, 90);
+    UtAssert_True(actual == expected, "NULL Code Block Ptr");
+    
+    actual = TC_SYNC_GetCodeBlockData(tfBuffer, pCodeBlock, NULL,
+                                          &cltuOffset, 70, 90);
+    UtAssert_True(actual == expected, "NULL tfOffset Ptr");
+    
+    actual = TC_SYNC_GetCodeBlockData(tfBuffer, pCodeBlock, &tfOffset,
+                                          NULL, 70, 90);
+    UtAssert_True(actual == expected, "NULL cltuOffset Ptr");
+}
+
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+/*
+ * TC_SYNC_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void TC_SYNC_Setup(void)
+{
+    memset(cltuBuffer, 0x0, 90);    
+    memset(tfBuffer, 0x0, 70);
+
+    cltuBuffer[0] = 0xeb;
+    cltuBuffer[1] = 0x90;
+    memcpy(&cltuBuffer[82], tailSeq, 8);
+}
+
+/*
+ * TC_SYNC_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void TC_SYNC_TearDown(void)
+{
+
+}
+
+
+/*
+ * TC_SYNC_Setup_ProcessFrame
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test of TC_SYNC_ProcessFrame
+ *
+ * Notes:
+ */
+void TC_SYNC_Setup_ProcessFrame(void)
+{
+    TC_SYNC_Setup();
+}
+
+
+
+
+#define ADD_TEST(test,setup,teardown) UtTest_Add((test), (setup), (teardown), #test)
+
+/* TC_SYNC_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void TC_SYNC_AddTestCase(void)
+{
+    /* TC_SYNC_DeRandomizeFrame */
+    ADD_TEST(Test_TC_SYNC_DeRandomizeFrame,         TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_GetTransferFrame_NullPtr, TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_GetTransferFrame_BadCltu, TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_GetTransferFrame_BadLength,   TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_GetTransferFrame,             TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_GetTransferFrame_DeRandom,    TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_CheckStartSeq_NullPtr,      TC_SYNC_Setup, TC_SYNC_TearDown);
+    ADD_TEST(Test_TC_SYNC_GetCodeBlockData_NullPtr,   TC_SYNC_Setup, TC_SYNC_TearDown);
+}
+```
+
+### `tc_sync_testrunner.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/tc_sync_testrunner.c`
+
+
+```c
+
+void TC_SYNC_AddTestCase(void);
+
+/*
+ * Filename: tc_sync_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for the TC_SYNC procedure.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    TC_SYNC_AddTestCase();
+    return(UtTest_Run());
+}
+
+```

@@ -3,24 +3,347 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--LinuxI2cDriver.cpp
-file--LinuxI2cDriver.fpp
-file--LinuxI2cDriver.hpp
-file--LinuxI2cDriverStub.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriver.cpp`](file--LinuxI2cDriver.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriver.fpp`](file--LinuxI2cDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriver.hpp`](file--LinuxI2cDriver.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriverStub.cpp`](file--LinuxI2cDriverStub.cpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+if (NOT FPRIME_USE_STUBBED_DRIVERS)
+    restrict_platforms(Linux)
+endif()
+
+if(FPRIME_USE_STUBBED_DRIVERS)
+    add_definitions(-DSTUBBED_LINUX_I2C_DRIVER)
+    set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxI2cDriver.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxI2cDriverStub.cpp"
+    )
+    register_fprime_module()
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxI2cDriver.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxI2cDriver.cpp"
+    )
+    register_fprime_module()
+endif()
+
+
+```
+
+### `LinuxI2cDriver.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriver.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxI2cDriverComponentImpl.cpp
+// \author tcanham
+// \brief  cpp file for LinuxI2cDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/LinuxI2cDriver/LinuxI2cDriver.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include "Fw/Types/Assert.hpp"
+
+#include <fcntl.h>          // required for I2C device configuration
+#include <linux/i2c-dev.h>  // required for constant definitions
+#include <linux/i2c.h>      // required for struct / constant definitions
+#include <sys/ioctl.h>      // required for I2C device usage
+#include <unistd.h>         // required for I2C device access
+#include <cerrno>
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+LinuxI2cDriver ::LinuxI2cDriver(const char* const compName) : LinuxI2cDriverComponentBase(compName), m_fd(-1) {}
+
+LinuxI2cDriver::~LinuxI2cDriver() {
+    if (-1 != this->m_fd) {  // check if file is open
+        ::close(this->m_fd);
+    }
+}
+
+bool LinuxI2cDriver::open(const char* device) {
+    FW_ASSERT(device);
+    this->m_fd = ::open(device, O_RDWR);
+    return (-1 != this->m_fd);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+// Note this port handler is guarded, so we can make the ioctl call
+
+Drv::I2cStatus LinuxI2cDriver ::write_handler(const FwIndexType portNum, U32 addr, Fw::Buffer& serBuffer) {
+    // Make sure file has been opened
+    if (-1 == this->m_fd) {
+        return I2cStatus::I2C_OPEN_ERR;
+    }
+
+    // select slave address
+    int stat = ioctl(this->m_fd, I2C_SLAVE, addr);
+    if (stat == -1) {
+        return I2cStatus::I2C_ADDRESS_ERR;
+    }
+    // make sure it isn't a null pointer
+    FW_ASSERT(serBuffer.getData());
+    FW_ASSERT_NO_OVERFLOW(serBuffer.getSize(), size_t);
+    // write data
+    ssize_t status_write = write(this->m_fd, serBuffer.getData(), static_cast<size_t>(serBuffer.getSize()));
+    if (status_write == -1) {
+        return I2cStatus::I2C_WRITE_ERR;
+    }
+    return I2cStatus::I2C_OK;
+}
+
+Drv::I2cStatus LinuxI2cDriver ::read_handler(const FwIndexType portNum, U32 addr, Fw::Buffer& serBuffer) {
+    // Make sure file has been opened
+    if (-1 == this->m_fd) {
+        return I2cStatus::I2C_OPEN_ERR;
+    }
+
+    // select slave address
+    int stat = ioctl(this->m_fd, I2C_SLAVE, addr);
+    if (stat == -1) {
+        return I2cStatus::I2C_ADDRESS_ERR;
+    }
+    // make sure it isn't a null pointer
+    FW_ASSERT(serBuffer.getData());
+    // read data
+    FW_ASSERT_NO_OVERFLOW(serBuffer.getSize(), size_t);
+    ssize_t status_read = read(this->m_fd, serBuffer.getData(), static_cast<size_t>(serBuffer.getSize()));
+    if (status_read == -1) {
+        return I2cStatus::I2C_READ_ERR;
+    }
+    return I2cStatus::I2C_OK;
+}
+
+Drv::I2cStatus LinuxI2cDriver ::writeRead_handler(const FwIndexType portNum, /*!< The port number*/
+                                                  U32 addr,
+                                                  Fw::Buffer& writeBuffer,
+                                                  Fw::Buffer& readBuffer) {
+    // Make sure file has been opened
+    if (-1 == this->m_fd) {
+        return I2cStatus::I2C_OPEN_ERR;
+    }
+    FW_ASSERT(-1 != this->m_fd);
+
+    // make sure they are not null pointers
+    FW_ASSERT(writeBuffer.getData());
+    FW_ASSERT(readBuffer.getData());
+    // make sure downcasts are safe
+    FW_ASSERT_NO_OVERFLOW(addr, U16);
+    FW_ASSERT_NO_OVERFLOW(writeBuffer.getSize(), U16);
+    FW_ASSERT_NO_OVERFLOW(readBuffer.getSize(), U16);
+
+    struct i2c_msg rdwr_msgs[2];
+
+    // Start address
+    rdwr_msgs[0].addr = static_cast<U16>(addr);
+    rdwr_msgs[0].flags = 0;  // write
+    rdwr_msgs[0].len = static_cast<U16>(writeBuffer.getSize());
+    rdwr_msgs[0].buf = writeBuffer.getData();
+
+    // Read buffer
+    rdwr_msgs[1].addr = static_cast<U16>(addr);
+    rdwr_msgs[1].flags = I2C_M_RD;  // read
+    rdwr_msgs[1].len = static_cast<U16>(readBuffer.getSize());
+    rdwr_msgs[1].buf = readBuffer.getData();
+
+    struct i2c_rdwr_ioctl_data rdwr_data;
+    rdwr_data.msgs = rdwr_msgs;
+    rdwr_data.nmsgs = 2;
+
+    // Use ioctl to perform the combined write/read transaction
+    int stat = ioctl(this->m_fd, I2C_RDWR, &rdwr_data);
+
+    if (stat == -1) {
+        // Because we're using ioctl to perform the transaction we dont know exactly the type of error that occurred
+        return I2cStatus::I2C_OTHER_ERR;
+    }
+
+    return I2cStatus::I2C_OK;
+}
+
+}  // end namespace Drv
+```
+
+### `LinuxI2cDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriver.fpp`
+
+
+```fpp
+module Drv {
+
+  passive component LinuxI2cDriver {
+    import I2c
+    }
+
+}
+```
+
+### `LinuxI2cDriver.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriver.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxI2cDriver.hpp
+// \author tcanham
+// \brief  hpp file for LinuxI2cDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef LinuxI2cDriver_HPP
+#define LinuxI2cDriver_HPP
+
+#include "Drv/LinuxI2cDriver/LinuxI2cDriverComponentAc.hpp"
+
+namespace Drv {
+
+class LinuxI2cDriver final : public LinuxI2cDriverComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object LinuxI2cDriver
+    //!
+    LinuxI2cDriver(const char* const compName);
+
+    bool open(const char* device);
+    //! Destroy object LinuxI2cDriver
+    //!
+    ~LinuxI2cDriver();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for write
+    //!
+    I2cStatus write_handler(const FwIndexType portNum, /*!< The port number*/
+                            U32 addr,
+                            Fw::Buffer& serBuffer);
+
+    //! Handler implementation for read
+    //!
+    I2cStatus read_handler(const FwIndexType portNum, /*!< The port number*/
+                           U32 addr,
+                           Fw::Buffer& serBuffer);
+
+    //! Handler implementation for writeRead
+    //!
+    I2cStatus writeRead_handler(const FwIndexType portNum, /*!< The port number*/
+                                U32 addr,
+                                Fw::Buffer& writeBuffer,
+                                Fw::Buffer& readBuffer);
+
+// Prevent unused field error when using stub
+#ifndef STUBBED_LINUX_I2C_DRIVER
+    int m_fd;  //!< i2c file descriptor
+#endif
+};
+
+}  // end namespace Drv
+
+#endif
+```
+
+### `LinuxI2cDriverStub.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/LinuxI2cDriverStub.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxI2cDriver.cpp
+// \author tcanham
+// \brief  cpp file for LinuxI2cDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/LinuxI2cDriver/LinuxI2cDriver.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "Fw/Types/Assert.hpp"
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+LinuxI2cDriver ::LinuxI2cDriver(const char* const compName) : LinuxI2cDriverComponentBase(compName) {}
+
+LinuxI2cDriver ::~LinuxI2cDriver() {}
+
+bool LinuxI2cDriver::open(const char* device) {
+    return true;
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+// Note this port handler is guarded, so we can make the ioctl call
+
+I2cStatus LinuxI2cDriver ::write_handler(const FwIndexType portNum, U32 addr, Fw::Buffer& serBuffer) {
+    return I2cStatus::I2C_OK;
+}
+
+Drv::I2cStatus LinuxI2cDriver ::read_handler(const FwIndexType portNum, U32 addr, Fw::Buffer& serBuffer) {
+    return I2cStatus::I2C_OK;
+}
+
+Drv::I2cStatus LinuxI2cDriver ::writeRead_handler(const FwIndexType portNum, /*!< The port number*/
+                                                  U32 addr,
+                                                  Fw::Buffer& writeBuffer,
+                                                  Fw::Buffer& readBuffer) {
+    return I2cStatus::I2C_OK;
+}
+
+}  // end namespace Drv
+```
